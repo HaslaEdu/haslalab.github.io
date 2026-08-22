@@ -1374,6 +1374,72 @@ function frame(c,w,h,pad){ c.fillStyle="#fff"; c.fillRect(0,0,w,h);
 function mmss(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(Math.floor(s%60)).padStart(2,"0");}
 
 /* ── IPhO 2017 E1 · laser deflectogram on millimetre paper ────── */
+/* ══════════════════════════════════════════════════════════════
+   THE CONSOLE — four of the published experiments are command-line
+   programs, so their covers are the session itself: the same header,
+   the same palette, the same prompts, and output computed here by
+   the same physics the page runs.
+   ══════════════════════════════════════════════════════════════ */
+const TERM_FG="#cccccc", TERM_IN="#9cdcfe", TERM_DIM="#7d7d7d";
+function termPad(v,n,right){ let t=String(v);
+  while(t.length<n) t = right ? t+" " : " "+t;
+  return t; }
+/* reveal the transcript a character at a time, so it types itself */
+function termCut(feed,n){
+  const out=[];
+  for(const e of feed){
+    const body=e.s||"", ans=e.ans||"";
+    if(n<=0) break;
+    const a=body.slice(0,Math.min(body.length,n));
+    n-=a.length;
+    const b=n>0 ? ans.slice(0,Math.min(ans.length,n)) : "";
+    n-=b.length+1;
+    out.push({s:a, ans:b, dim:e.dim, acc:e.acc, wait:e.ans!==undefined});
+    if(a.length<body.length||b.length<ans.length) break;
+  }
+  return out;
+}
+const termLen=feed=>feed.reduce((n,e)=>n+(e.s||"").length+(e.ans||"").length+1,0);
+function termPaint(c,w,h,title,feed,n){
+  const fs=Math.max(8.5,Math.min(13,h/33)), lh=fs*1.45, padX=Math.max(9,fs);
+  c.fillStyle="#1e1e1e"; c.fillRect(0,0,w,h);
+  const hh=Math.round(fs*2.5);
+  c.fillStyle="#141414"; c.fillRect(0,0,w,hh);
+  c.fillStyle="#2a2a2a"; c.fillRect(0,hh-1,w,1);
+  c.textAlign="left"; c.textBaseline="middle";
+  c.font="600 "+(fs*1.02).toFixed(1)+"px ui-sans-serif,system-ui,'Segoe UI',sans-serif";
+  c.fillStyle="#e8e8e8"; c.fillText(title,padX,hh*0.52);
+  const bh=Math.round(fs*2.3);
+  c.fillStyle="#0c0c0c"; c.fillRect(0,hh,w,h-hh);
+  c.save(); c.beginPath(); c.rect(0,hh,w,h-hh-bh); c.clip();
+  c.font=fs.toFixed(1)+"px ui-monospace,Consolas,'Courier New',monospace";
+  const rows=termCut(feed,n);
+  const room=Math.max(1,Math.floor((h-hh-bh-fs*0.8)/lh));
+  const vis=rows.slice(Math.max(0,rows.length-room));
+  const top=hh+fs*1.1;
+  vis.forEach((L,i)=>{
+    const y=top+i*lh;
+    c.fillStyle=L.acc?"#4ec9b0":(L.dim?TERM_DIM:TERM_FG);
+    c.fillText(L.s,padX,y);
+    if(L.ans){ c.fillStyle=TERM_IN;
+      c.fillText(L.ans,padX+c.measureText(L.s).width,y); }
+  });
+  c.restore();
+  /* the input bar the page keeps at the foot */
+  c.fillStyle="#2a2a2a"; c.fillRect(0,h-bh,w,1);
+  const last=rows[rows.length-1];
+  const open=last&&last.wait&&!last.ans;
+  c.font=fs.toFixed(1)+"px ui-monospace,Consolas,'Courier New',monospace";
+  c.fillStyle=TERM_FG;
+  const ps=open?last.s:"";
+  c.fillText(ps,padX,h-bh/2);
+  if(Math.floor(n/9)%2===0){
+    c.fillStyle=TERM_IN;
+    c.fillRect(padX+c.measureText(ps).width+1,h-bh/2-fs*0.55,fs*0.55,fs*1.1);
+  }
+  c.textBaseline="alphabetic";
+}
+
 const SIG_I17E1={
   sim:"sim/ipho2017_E1_web.html", tag:"IPhO 2017 E1", span:2100, rate:260,
   capL:{ko:"모눈종이 30 × 30 cm · 편향도",en:"Millimetre paper 30 × 30 cm · deflectogram"},
@@ -1660,29 +1726,37 @@ const SIG_S26E1={
 /* ── APhO 2026 E1 · the bench itself, in the simulator's own view ── */
 const SIG_A26E1={
   sim:"sim/apho2026_E1_web.html", tag:"APhO 2026 E1", span:95, rate:7,
-  capL:{ko:"물시계 · 5 mm 구멍으로 빠져나가는 탱크 A",en:"Water clock · tank A draining through the 5 mm hole"},
+  capL:{ko:"물시계 · 받침대 위 탱크 A가 5 mm 구멍으로 빠져나간다",
+        en:"Water clock · tank A on its stand, draining through the 5 mm hole"},
   capR:{ko:"경과",en:"elapsed"},
-  read:t=>mmss(Math.min(t,95)),
+  read(t){ return mmss(Math.min(t,95)); },
   paint(c,W,H,t){
-    /* the simulator's own oblique projection, its own numbers, its own palette */
+    /* the simulator's own oblique projection, geometry, layout and palette */
     const G=981, KC=0.91355, KS=0.40674;
-    const A_T=10*10, D=0.5, A_H=Math.PI*(D/2)*(D/2), CD=0.8;
-    const H0=12.0, H_STOP=72.0/(G*(D/2));
-    const KK=CD*A_H*Math.sqrt(2*G)/(2*A_T);
+    const TW=10.0, TD=10.0, WALL=0.5, A_H=15.1, A_OUT=1.0, N_MARKS=13;
+    const B_H=15.2, B_HOLE=0.7, MEN=0.22;
+    const BX0=3.0, BX1=48.0, BZ0=0.0, BZ1=28.0, BH=16.0, BW=0.6, BFL=0.6;
+    const BASE_W=30.0, BASE_D=22.0, BASE_T=1.2;
+    const ST_W=25.0, ST_D=12.0, ST_STEP_X=13.0, ST_TALL=27.0, ST_STEP=9.0;
+    const PED=0.8;
+    /* base in the bin, stand on the base, tank A high and tank B low */
+    const bx0=7.0, bz0=1.5, plateY=BFL+PED+BASE_T;
+    const sx0=12.0, sz0=8.0, standY=plateY;
+    const ax0=sx0+1.0, az0=sz0+0.5, aY=standY+ST_TALL;
+    const bx0b=sx0+13.5, bz0b=sz0+0.5, bY=standY+ST_STEP;
+    const D=0.5, A_HOLE=Math.PI*(D/2)*(D/2), CD=0.8, H0=12.0;
+    const H_STOP=72.0/(G*(D/2)), KK=CD*A_HOLE*Math.sqrt(2*G)/(2*TW*TD);
     const rt=Math.sqrt(H0)-KK*t;
-    const head=Math.max(rt>0?rt*rt:0,H_STOP);      /* water standing above the hole */
-    /* bin · base plate · two-level stand · tank A, laid out as the kit allows */
-    const BX0=8, BX1=38, BZ0=0, BZ1=24, BH=16, BW=0.6;
-    const IX0=BX0+BW, IX1=BX1-BW, IZ0=BZ0+BW, IZ1=BZ1-BW;
-    const TX0=20.5, TX1=31.5, TZ0=8.0, TZ1=19.0, TY0=11, TW=0.5;
-    const ix0=TX0+TW, ix1=TX1-TW, iz0=TZ0+TW, iz1=TZ1-TW;
-    const FL=TY0+TW, YO=FL+1.0, TY1=FL+15.1;       /* floor · outlet · rim */
-    const pool=BW+(H0-head)*A_T/((IX1-IX0)*(IZ1-IZ0));
+    const head=Math.max(rt>0?rt*rt:0,H_STOP);
     const flowing=head>H_STOP+0.004;
-    /* fit the scene */
-    const UW=KC*(BX1+BZ1)-KC*(BX0+BZ0), VMAX=TY1+KS*(TZ1-TX0), VMIN=KS*(BZ0-BX1);
-    const S=Math.min((W-14)/UW,(H-12)/(VMAX-VMIN));
-    const OX=(W-UW*S)/2-KC*BX0*S, OY=(H-(VMAX-VMIN)*S)/2+VMAX*S;
+    const drained=(H0-head)*TW*TD;                 /* cm^3 that have left tank A */
+    const pool=BFL+drained/((BX1-BX0-2*BW)*(BZ1-BZ0-2*BW));
+    /* fit the whole rig, the way the app frames its bench */
+    const aTop=aY+WALL+A_H;
+    const UMIN=KC*(BX0+BZ0), UMAX=KC*(BX1+BZ1);
+    const VMIN=KS*(BZ0-BX1), VMAX=aTop+KS*(az0+TD+WALL-ax0);
+    const S=Math.min((W-16)/(UMAX-UMIN),(H-12)/(VMAX-VMIN));
+    const OX=(W-(UMAX-UMIN)*S)/2-UMIN*S, OY=(H-(VMAX-VMIN)*S)/2+VMAX*S;
     const P=(x,y,z)=>[OX+KC*(x+z)*S, OY-(y+KS*(z-x))*S];
     const poly=(pts,fill,stroke,lw)=>{
       c.beginPath(); c.moveTo(pts[0][0],pts[0][1]);
@@ -1693,73 +1767,130 @@ const SIG_A26E1={
     const line=(pts,col,lw)=>{ PEN(c,col,lw||1);
       c.beginPath(); c.moveTo(pts[0][0],pts[0][1]);
       for(let i=1;i<pts.length;i++) c.lineTo(pts[i][0],pts[i][1]); c.stroke();};
-    const box3=(x0,x1,y0,y1,z0,z1,top,side,front,edge)=>{
+    const box=(x0,x1,y0,y1,z0,z1,top,side,front,edge)=>{
       poly([P(x1,y0,z0),P(x1,y1,z0),P(x1,y1,z1),P(x1,y0,z1)],side,edge,1);
       poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],top,edge,1);
       poly([P(x0,y0,z0),P(x1,y0,z0),P(x1,y1,z0),P(x0,y1,z0)],front,edge,1);};
-    const water3=(x0,x1,z0,z1,yf,ys,thin)=>{ if(ys<=yf+1e-6) return;
-      const side=thin?"rgba(63,159,208,.55)":"#3f9fd0", front=thin?"rgba(74,167,212,.55)":"#4aa7d4",
-            top=thin?"rgba(127,208,238,.45)":"#7fd0ee";
-      poly([P(x1,yf,z0),P(x1,yf,z1),P(x1,ys,z1),P(x1,ys,z0)],side,null);
-      poly([P(x0,yf,z0),P(x1,yf,z0),P(x1,ys,z0),P(x0,ys,z0)],front,null);
-      poly([P(x0,ys,z0),P(x1,ys,z0),P(x1,ys,z1),P(x0,ys,z1)],top,"#8fd3ee",1);
-      poly([P(x0,ys,z0),P(x1,ys,z0),P(x1,ys+0.22,z0),P(x0,ys+0.22,z0)],thin?"rgba(191,232,250,.7)":"#bfe8fa",null);};
-    c.fillStyle="#fff"; c.fillRect(0,0,W,H);
-    /* the bin, from behind: latticed floor, then the far walls */
-    poly([P(IX0,BW,IZ0),P(IX1,BW,IZ0),P(IX1,BW,IZ1),P(IX0,BW,IZ1)],"#d3d9d9","#b3baba",1);
-    for(let x=IX0+2;x<IX1;x+=4) line([P(x,BW,IZ0),P(x,BW,IZ1)],"#c8cfcf",1);
-    for(let z=IZ0+2;z<IZ1;z+=4) line([P(IX0,BW,z),P(IX1,BW,z)],"#c8cfcf",1);
-    poly([P(IX0,BW,IZ1),P(IX1,BW,IZ1),P(IX1,BH,IZ1),P(IX0,BH,IZ1)],"#e6eaea","#b3baba",1);
-    poly([P(IX0,BW,IZ0),P(IX0,BW,IZ1),P(IX0,BH,IZ1),P(IX0,BH,IZ0)],"#e6eaea","#b3baba",1);
-    poly([P(IX1,BW,IZ0),P(IX1,BW,IZ1),P(IX1,BH,IZ1),P(IX1,BH,IZ0)],"#d3d9d9","#b3baba",1);
-    /* base plate, and the stand on it: tall part, then the low step */
-    box3(11,35,0.6,2.0,4,21,"#26282c","#17181b","#1b1c20","#050506");
-    box3(19,33,2.0,11,7,20,"#3a3e45","#141518","#202226","#050506");
-    /* tank A — the glass behind, the water, then the glass in front */
-    poly([P(ix0,FL,iz1),P(ix1,FL,iz1),P(ix1,TY1,iz1),P(ix0,TY1,iz1)],"#dbe9ef","#9dbecb",1);
-    poly([P(ix0,FL,iz0),P(ix0,FL,iz1),P(ix0,TY1,iz1),P(ix0,TY1,iz0)],"#d3e3ea","#9dbecb",1);
-    poly([P(ix0,FL,iz0),P(ix1,FL,iz0),P(ix1,FL,iz1),P(ix0,FL,iz1)],"#eff8fb","#b6d0d9",1);
-    water3(ix0,ix1,iz0,iz1,FL,YO+head);
-    poly([P(TX1,TY0,TZ0),P(TX1,TY1,TZ0),P(TX1,TY1,TZ1),P(TX1,TY0,TZ1)],null,"#dff1f7",2);
-    poly([P(TX0,TY0,TZ0),P(TX1,TY0,TZ0),P(TX1,TY1,TZ0),P(TX0,TY1,TZ0)],null,"#f2fbff",2);
-    poly([P(TX0,TY1,TZ0),P(TX1,TY1,TZ0),P(TX1,TY1,TZ1),P(TX0,TY1,TZ1)],null,"#eaf6fa",2);
-    /* the thirteen marks, engraved down the left of the front face */
-    c.font="bold "+Math.max(6,0.62*S|0)+"px IBM Plex Mono,ui-monospace,monospace";
+    const water=(x0,x1,z0,z1,yf,ys,dark)=>{ if(ys<=yf+1e-6) return;
+      const top=dark?"#2b6f95":"#7fd0ee", sd=dark?"#1f5878":"#3f9fd0",
+            fr=dark?"#24638a":"#4aa7d4", rim=dark?"#7fc0dd":"#bfe8fa";
+      poly([P(x1,yf,z0),P(x1,yf,z1),P(x1,ys,z1),P(x1,ys,z0)],sd,null);
+      poly([P(x0,yf,z0),P(x1,yf,z0),P(x1,ys,z0),P(x0,ys,z0)],fr,null);
+      poly([P(x0,ys,z0),P(x1,ys,z0),P(x1,ys,z1),P(x0,ys,z1)],top,dark?"#4d90b2":"#8fd3ee",1);
+      poly([P(x0,ys,z0),P(x1,ys,z0),P(x1,ys+MEN,z0),P(x0,ys+MEN,z0)],rim,null);
+      poly([P(x1,ys,z0),P(x1,ys,z1),P(x1,ys+MEN,z1),P(x1,ys+MEN,z0)],rim,null);};
+    const glassBack=(x0,x1,y0,y1,z0,z1)=>{
+      const i0=x0+WALL, i1=x1-WALL, j0=z0+WALL, j1=z1-WALL, fl=y0+WALL;
+      poly([P(i0,fl,j1),P(i1,fl,j1),P(i1,y1,j1),P(i0,y1,j1)],"#dbe9ef","#9dbecb",1);
+      poly([P(i0,fl,j0),P(i0,fl,j1),P(i0,y1,j1),P(i0,y1,j0)],"#d3e3ea","#9dbecb",1);
+      poly([P(i0,fl,j0),P(i1,fl,j0),P(i1,fl,j1),P(i0,fl,j1)],"#eff8fb","#b6d0d9",1);};
+    const glassFront=(x0,x1,y0,y1,z0,z1)=>{
+      poly([P(x1,y0,z0),P(x1,y1,z0),P(x1,y1,z1),P(x1,y0,z1)],null,"#dff1f7",2);
+      poly([P(x0,y0,z0),P(x1,y0,z0),P(x1,y1,z0),P(x0,y1,z0)],null,"#f2fbff",2);
+      line([P(x1-3.4,y0+1.0,z0),P(x1-1.4,y1-1.0,z0)],"#eaf6fa",1);
+      poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],null,"#eaf6fa",2);
+      poly([P(x0+WALL,y1,z0+WALL),P(x1-WALL,y1,z0+WALL),
+            P(x1-WALL,y1,z1-WALL),P(x0+WALL,y1,z1-WALL)],null,"#d3e6ec",1);};
+    /* the room behind, and the desk the bin stands on */
+    c.fillStyle="#2a3038"; c.fillRect(0,0,W,H);
+    const NP=(x,y,z)=>P(x,y,z);
+    poly([NP(-40,0,-30),NP(120,0,-30),NP(120,0,60),NP(-40,0,60)],"#b8926a",null);
+    for(let i=-40;i<120;i+=9) line([NP(i,0,-30),NP(i,0,60)],"#9d7a56",1);
+    /* the bin, from behind */
+    const i0=BX0+BW, i1=BX1-BW, j0=BZ0+BW, j1=BZ1-BW;
+    poly([P(i0,BFL,j0),P(i1,BFL,j0),P(i1,BFL,j1),P(i0,BFL,j1)],"#d3d9d9","#b3baba",1);
+    for(let x=Math.floor(i0)+2;x<i1;x+=4) line([P(x,BFL,j0),P(x,BFL,j1)],"#c8cfcf",1);
+    for(let z=Math.floor(j0)+2;z<j1;z+=4) line([P(i0,BFL,z),P(i1,BFL,z)],"#c8cfcf",1);
+    poly([P(i0,BFL,j1),P(i1,BFL,j1),P(i1,BH,j1),P(i0,BH,j1)],"#e6eaea","#b3baba",1);
+    poly([P(i0,BFL,j0),P(i0,BFL,j1),P(i0,BH,j1),P(i0,BH,j0)],"#e6eaea","#b3baba",1);
+    poly([P(i1,BFL,j0),P(i1,BFL,j1),P(i1,BH,j1),P(i1,BH,j0)],"#d3d9d9","#b3baba",1);
+    /* the levelling plate on its four pedals, and what is printed on it */
+    for(const pd of [[bx0+2.5,bz0+2.0],[bx0+BASE_W-2.5,bz0+2.0],
+                     [bx0+2.5,bz0+BASE_D-2.0],[bx0+BASE_W-2.5,bz0+BASE_D-2.0]]){
+      const a=P(pd[0],BFL,pd[1]), b=P(pd[0],BFL+PED,pd[1]);
+      line([a,b],"#1a1c20",Math.max(3,1.5*S));
+      c.beginPath(); c.ellipse(a[0],a[1],0.95*S,0.43*S,0,0,7);
+      c.fillStyle="#25282d"; c.fill(); PEN(c,"#0a0b0d",1); c.stroke(); }
+    box(bx0,bx0+BASE_W,plateY-BASE_T,plateY,bz0,bz0+BASE_D,"#17181b","#0d0e10","#26282c","#000000");
+    line([P(bx0+2,plateY,bz0+2),P(bx0+BASE_W-2,plateY,bz0+3.2)],"#3b4048",1);
+    c.font="bold "+Math.max(6,0.7*S|0)+"px IBM Plex Mono,ui-monospace,monospace";
+    c.textAlign="center"; c.textBaseline="middle";
+    ["MAG","ISO","PWM"].forEach((q,i)=>{ const p=P(bx0+7+i*8,plateY,bz0+5);
+      c.fillStyle="#1b3d6b"; c.fillText(q,p[0],p[1]); });
+    /* the two-level stand */
+    const xm=sx0+ST_STEP_X;
+    box(xm,sx0+ST_W,standY,standY+ST_STEP,sz0,sz0+ST_D,"#33363c","#141518","#202226","#050506");
+    box(sx0,xm,standY,standY+ST_TALL,sz0,sz0+ST_D,"#3a3e45","#141518","#202226","#050506");
+    for(let i=1;i<5;i++)
+      line([P(sx0+0.15*i,standY,sz0),P(sx0+0.15*i,standY+ST_TALL,sz0)],"#2a2d33",1);
+    /* tank B on the low step, its plug still in */
+    const b0=bx0b, b1=bx0b+TW+2*WALL, bz1=bz0b+TD+2*WALL, bTop=bY+WALL+B_H;
+    glassBack(b0,b1,bY,bTop,bz0b,bz1);
+    water(b0+WALL,b1-WALL,bz0b+WALL,bz1-WALL,bY+WALL,bY+WALL+9.4);
+    glassFront(b0,b1,bY,bTop,bz0b,bz1);
+    { const oy=bY+WALL+B_HOLE, zc=(bz0b+bz1)/2;
+      const a=P(b1,oy,zc), q=P(b1+0.9,oy,zc);
+      line([a,q],"#b7bcc1",Math.max(3,1.0*S));
+      c.beginPath(); c.arc(q[0],q[1],0.45*S,0,7);
+      c.fillStyle="#fbfbf8"; c.fill(); PEN(c,"#b9bcb6",1); c.stroke(); }
+    /* tank A on the tall step: glass behind, the water, then the glass in front */
+    const a0=ax0, a1=ax0+TW+2*WALL, az1=az0+TD+2*WALL, aTopY=aY+WALL+A_H;
+    const ix0=a0+WALL, ix1=a1-WALL, iz0=az0+WALL, iz1=az1-WALL;
+    const FL=aY+WALL, YO=FL+A_OUT;
+    glassBack(a0,a1,aY,aTopY,az0,az1);
+    water(ix0,ix1,iz0,iz1,FL,YO+head);
+    glassFront(a0,a1,aY,aTopY,az0,az1);
+    /* the marks engraved down the left of the front face */
+    const fs=Math.max(6,Math.min(0.52*S,12));
+    c.font="bold "+fs.toFixed(1)+"px IBM Plex Mono,ui-monospace,monospace";
     c.textAlign="right"; c.textBaseline="middle";
-    for(let k=0;k<=13;k++){ const y=YO+k; if(y>TY1-0.2) break;
-      line([P(ix0+1.35,y,iz0),P(ix0+4.35,y,iz0)],"#0d1f27",S>13?2:1);
-      if(k%5===0||k===13){ const q=P(ix0+1.15,y,iz0);
+    const every=S>7.5?1:2;
+    for(let k=0;k<=N_MARKS;k++){ const y=YO+k; if(y>aTopY-0.2) break;
+      line([P(ix0+1.35,y,iz0),P(ix0+4.35,y,iz0)],"#0d1f27",S>16?2:1);
+      if(k%every===0){ const q=P(ix0+1.15,y,iz0);
         c.fillStyle="#0b1d24"; c.fillText(String(k),q[0],q[1]); } }
-    /* the orange lever valve on the right wall, shut */
-    const vz=TZ0+TW+8.0, vc=P(TX1+1.05,YO+0.5,vz);
-    line([vc,[vc[0]+0.5*S,vc[1]+2.6*S]],"#e8622a",Math.max(3,0.62*S));
-    c.beginPath(); c.arc(vc[0]+0.5*S,vc[1]+2.6*S,0.34*S,0,7);
-    c.fillStyle="#ff8a4a"; c.fill(); PEN(c,"#8c3a12",1); c.stroke();
-    c.beginPath(); c.arc(vc[0],vc[1],0.3*S,0,7); c.fillStyle="#7d848a"; c.fill();
-    /* the 4 mm plug still in its hole, the 5 mm hole open */
-    const pg=P(ix0+6.5,YO,TZ0), pt=P(ix0+6.5,YO-1.1,TZ0-1.0);
-    line([pg,pt],"#f4f4f0",Math.max(3,1.0*S));
-    c.beginPath(); c.arc(pt[0],pt[1],0.62*S,0,7);
-    c.fillStyle="#fbfbf8"; c.fill(); PEN(c,"#b9bcb6",1); c.stroke();
-    const hp=P(ix0+3.5,YO,TZ0);
-    c.beginPath(); c.arc(hp[0],hp[1],0.32*S,0,7);
-    c.fillStyle="#123039"; c.fill(); PEN(c,"#7f97a2",1); c.stroke();
+    /* the tap on the right wall: its body, its ribs, and the lever, shut */
+    const zv=az0+WALL+8.0, dv=0.34;
+    for(const seg of [[0.0,0.55,"#8e959c",0.42],[0.55,1.55,"#c3c9ce",0.52],
+                      [1.55,2.05,"#a8aeb4",0.30],[2.05,2.95,"#c9ced3",0.36]])
+      poly([P(a1+seg[0],YO-seg[3],zv-dv),P(a1+seg[1],YO-seg[3],zv-dv),
+            P(a1+seg[1],YO+seg[3],zv-dv),P(a1+seg[0],YO+seg[3],zv-dv)],seg[2],"#5b6167",1);
+    for(const rib of [2.25,2.55,2.85])
+      line([P(a1+rib,YO-0.42,zv-dv),P(a1+rib,YO+0.42,zv-dv)],"#7d848a",1);
+    { const p=P(a1+1.05,YO+0.5,zv-dv), L=2.9*S;
+      const hx=p[0]+0.18*L, hy=p[1]+0.98*L;
+      line([p,[hx,hy]],"#e8622a",Math.max(4,0.66*S));
+      const r2=0.34*S;
+      c.beginPath(); c.arc(hx,hy,r2,0,7);
+      c.fillStyle="#ff8a4a"; c.fill(); PEN(c,"#8c3a12",1); c.stroke();
+      c.beginPath(); c.arc(p[0],p[1],r2*0.8,0,7);
+      c.fillStyle="#7d848a"; c.fill(); PEN(c,"#4d5359",1); c.stroke(); }
+    /* the 4 mm plug still in, the 5 mm hole open and running */
+    { const px=ix0+6.5, a=P(px,YO,az0), q=P(px,YO-1.1,az0-1.0);
+      line([a,q],"#f4f4f0",Math.max(3,1.0*S));
+      c.beginPath(); c.arc(q[0],q[1],0.62*S,0,7);
+      c.fillStyle="#fbfbf8"; c.fill(); PEN(c,"#b9bcb6",1); c.stroke(); }
+    { const hp=P(ix0+3.5,YO,az0);
+      c.beginPath(); c.arc(hp[0],hp[1],0.32*S,0,7);
+      c.fillStyle="#123039"; c.fill(); PEN(c,"#7f97a2",1); c.stroke(); }
     /* what the bin has caught so far */
-    water3(IX0,IX1,IZ0,IZ1,BW,pool,true);
-    /* the jet, traced the way the simulator traces it, clipped at the bin wall */
+    water(i0,i1,j0,j1,BFL,pool,true);
+    /* the jet, traced the way the simulator traces it */
     if(flowing){
+      /* the app clamps the landing point to the inside of the bin: the jet
+         meets the front wall and runs down it into what is already caught */
       const v=CD*Math.sqrt(2*G*head), pts=[]; let hit=false;
-      for(let i=0;i<120;i++){ const tau=i*0.006;
-        const pz=TZ0-1.0-v*tau, py=YO-0.5*G*tau*tau;
-        if(pz<=IZ0){ const th=(TZ0-1.0-IZ0)/v;
-                     pts.push(P(ix0+3.5,YO-0.5*G*th*th,IZ0)); hit=true; break; }
+      for(let i=0;i<200;i++){ const tau=i*0.006;
+        const pz=az0-1.0-v*tau, py=YO-0.5*G*tau*tau;
+        if(pz<=j0){ const th=(az0-1.0-j0)/v;
+                    pts.push(P(ix0+3.5,YO-0.5*G*th*th,j0)); hit=true; break; }
         pts.push(P(ix0+3.5,py,pz));
         if(py<=pool) break; }
-      const jw=Math.max(1.4,2.0*Math.sqrt(A_H/Math.PI)*S);
+      const jw=Math.max(1.4,2.0*Math.sqrt(A_HOLE/Math.PI)*S);
       if(pts.length>1) line(pts,"#a6e0f4",jw);
       const tip=pts[pts.length-1];
-      if(hit) line([tip,P(ix0+3.5,pool,IZ0)],"#a6e0f4",Math.max(1,0.45*jw));
-      const ring=hit?P(ix0+3.5,pool,IZ0):tip;
+      if(hit) line([tip,P(ix0+3.5,pool,j0)],"#a6e0f4",Math.max(1,0.45*jw));
+      const ring=hit?P(ix0+3.5,pool,j0):tip;
       PEN(c,"#c8ecf8",1.2); c.beginPath();
       c.ellipse(ring[0],ring[1],0.62*S,0.32*S,0,0,7); c.stroke();
     }
@@ -1767,7 +1898,15 @@ const SIG_A26E1={
     poly([P(BX0,0,BZ0),P(BX1,0,BZ0),P(BX1,BH,BZ0),P(BX0,BH,BZ0)],null,"#cfdada",2);
     for(let x=BX0+4;x<BX1;x+=6) line([P(x,0.4,BZ0),P(x,BH-0.6,BZ0)],"#c6d0d0",1);
     poly([P(BX1,0,BZ0),P(BX1,BH,BZ0),P(BX1,BH,BZ1),P(BX1,0,BZ1)],null,"#b8c2c2",1);
-    poly([P(BX0,BH,BZ0),P(BX1,BH,BZ0),P(BX1,BH,BZ1),P(BX0,BH,BZ1)],null,"#cdd6d6",1);
+    poly([P(BX0-0.5,BH,BZ0-0.5),P(BX1+0.5,BH,BZ0-0.5),
+          P(BX1+0.5,BH+0.5,BZ0-0.5),P(BX0-0.5,BH+0.5,BZ0-0.5)],"#e6eaea","#a8b2b2",1);
+    poly([P(BX0,BH+0.5,BZ0),P(BX1,BH+0.5,BZ0),P(BX1,BH+0.5,BZ1),P(BX0,BH+0.5,BZ1)],null,"#cdd6d6",1);
+    /* the two tanks are named on the bench, as the app names them */
+    c.font="bold "+Math.max(8,Math.min(0.8*S,13)).toFixed(1)+"px IBM Plex Mono,ui-monospace,monospace";
+    c.textAlign="right"; c.textBaseline="middle";
+    c.fillStyle="#c3d6de";
+    { const q=P(a0-0.6,aTopY-2.4,az0); c.fillText("A",q[0],q[1]); }
+    { const q=P(b0-0.6,bTop-2.4,bz0b); c.fillText("B",q[0],q[1]); }
     c.textAlign="left"; c.textBaseline="alphabetic";
   }};
 
@@ -1907,252 +2046,414 @@ const SIG_I11E1={
 
 /* ── IPhO 2011 E2 · the cylinder swinging on its thread loop ────── */
 const SIG_I11E2={
-  sim:"sim/ipho2011_E2_web.html", tag:"IPhO 2011 E2", span:24, rate:1,
+  sim:"sim/ipho2011_E2_web.html", tag:"IPhO 2011 E2", span:26, rate:1,
   capL:{ko:"실 고리에 걸어 흔드는 원통 · 구멍을 옮겨 가며 주기를 잰다",
         en:"The cylinder swinging on its thread loop, hole by hole"},
   capR:{ko:"주기",en:"period"},
-  hole(t){ return 1+Math.floor((Math.min(t,this.span)/this.span)*6)%6; },   /* holes 1..6 */
-  x(t){ return 1.6+this.hole(t)*1.9; },                                    /* pivot to centre, cm */
-  T(x){ const g=981, k=5.4; return 2*Math.PI*Math.sqrt((k*k+x*x)/(g*x)); },
-  read(t){ return this.T(this.x(t)).toFixed(3)+" s"; },
+  /* the apparatus of the official sheet, with the page's own official seed */
+  L:0.3000, D_OUT:0.0220, HOLE0:0.0110, PITCH:0.0100, NH:16,
+  M_BALL:0.02500, RATIO:2.66744, Z:0.252688, G:9.8100,
+  LOOP_DROP:0.115, RULER_LEN:0.350, RULER_H:0.030,
+  truth(){ if(this._tr) return this._tr;
+    const m=this.M_BALL, M=this.RATIO*m, L=this.L, z=this.Z;
+    const xcm=(m*z+M*L/2)/(M+m);
+    const Icm=M*L*L/12+M*Math.pow(xcm-L/2,2)+m*Math.pow(z-xcm,2);
+    const holes=[]; for(let i=0;i<this.NH;i++) holes.push(this.HOLE0+i*this.PITCH);
+    this._tr={xcm:xcm, r:Icm/(M+m), holes:holes,
+              benchY:Math.max(0.300,L-this.HOLE0+0.012)};
+    return this._tr; },
+  hole(t){ return Math.floor(t/(this.span/4))%4*3+3; },   /* four holes, in turn */
+  T(k){ const tr=this.truth(), R=Math.abs(tr.xcm-tr.holes[k]);
+        return 2*Math.PI*Math.sqrt((tr.r+R*R)/(this.G*R)); },
+  read(t){ return this.T(this.hole(t)).toFixed(3)+" s"; },
   paint(c,w,h,t){
-    const x=this.x(t), T=this.T(x), S=Math.min(w/34,h/26);
-    const px=w*0.5, py=h*0.18;                                  /* the pin */
-    /* it really swings: same period the readout claims, dying away a little */
-    const ph=2*Math.PI*(t%this.span)/T;
-    const amp=0.30*Math.exp(-((t%(this.span/6))/(this.span/6))*0.55);
-    const ang=amp*Math.sin(ph);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the stand and the pin it hangs from */
-    c.fillStyle="#3a4048"; c.fillRect(px-1.2*S,py-3.4*S,2.4*S,3.4*S);
-    c.fillStyle="#8d949b"; c.fillRect(px-5*S,py-4.4*S,10*S,1.1*S);
-    c.beginPath(); c.arc(px,py,0.5*S,0,7); c.fillStyle="#5c6167"; c.fill();
-    /* the thread loop */
-    const L=x*S*1.0;
-    const cx=px+Math.sin(ang)*L, cy=py+Math.cos(ang)*L;
-    PEN(c,"#c3ccd2",Math.max(1,0.16*S)); c.beginPath();
-    c.moveTo(px,py); c.lineTo(cx,cy); c.stroke();
-    /* the aluminium cylinder, seen from the side, with its drilled holes */
-    c.save(); c.translate(cx,cy); c.rotate(ang);
-    const CW=13*S, CH=3.1*S;
-    c.fillStyle="#d9dde1"; c.fillRect(-CW/2,-CH/2,CW,CH);
-    PEN(c,"#7d848a",1.6); c.strokeRect(-CW/2,-CH/2,CW,CH);
-    PEN(c,"#aeb6bd",1); c.beginPath();
-    c.moveTo(-CW/2,-CH*0.18); c.lineTo(CW/2,-CH*0.18); c.stroke();
-    for(let k=1;k<=6;k++){
-      const hx=-CW/2+ (1.6+k*1.9)*S;
-      c.beginPath(); c.arc(hx,0,0.42*S,0,7);
-      c.fillStyle = k===this.hole(t) ? "#2c6f9b" : "#8d949b"; c.fill();
-    }
-    c.restore();
-    /* the loop actually passes through the hole in use */
-    c.beginPath(); c.arc(cx,cy,0.55*S,0,7);
-    c.fillStyle="#2c6f9b"; c.fill();
-    /* a swept trace, so the swing reads even in a still frame */
-    PEN(c,"#dbe6ef",1.4); c.beginPath();
-    c.arc(px,py,L,Math.PI/2-amp,Math.PI/2+amp); c.stroke();
-    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="left"; c.fillText("hole "+this.hole(t),12,h-12);
+    const tr=this.truth(), k=this.hole(t), T=this.T(k);
+    const hx=tr.holes[k];
+    /* it really swings, at the period the readout claims, dying away a little */
+    const slot=this.span/4, u=t%slot;
+    const amp=0.30*Math.exp(-u*0.10), ang=amp*Math.sin(2*Math.PI*u/T);
+    /* the bench: pin at the origin, table top a little below the longest swing */
+    const need=tr.benchY+0.055, ppm=Math.min((h-14)/need, (w-24)/0.62);
+    const px=w*0.40, py=Math.max(12, (h-need*ppm)/2)+0.035*ppm;
+    const X=(a,b)=>[px+a*ppm, py+b*ppm];
+    const by=py+tr.benchY*ppm;
+    const line=(a,b,col,lw,cap,dash)=>{ PEN(c,col,lw||1);
+      if(cap) c.lineCap=cap;
+      if(dash) c.setLineDash(dash);
+      c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke();
+      c.setLineDash([]); c.lineCap="butt"; };
+    const poly=(pts,fill,stroke,lw)=>{
+      c.beginPath(); c.moveTo(pts[0][0],pts[0][1]);
+      for(let i=1;i<pts.length;i++) c.lineTo(pts[i][0],pts[i][1]);
+      c.closePath();
+      if(fill){c.fillStyle=fill;c.fill();}
+      if(stroke){PEN(c,stroke,lw||1);c.stroke();} };
+    /* the table, and the table edge the plate is clamped to */
+    c.fillStyle="#93ab8b"; c.fillRect(0,0,w,h);
+    c.fillStyle="#7e9678"; c.fillRect(0,by,w,h-by);
+    line([0,py],[w,py],"#7d9577",1,"butt",[6,6]);
+    /* the perspex base plate, seen from the front */
+    { const bw=0.150*ppm, bh=0.062*ppm, dd=0.022*ppm;
+      const top=py-bh/2, bot=py+bh/2;
+      poly([[px-bw/2,top],[px+bw/2,top],[px+bw/2+dd,top-dd],[px-bw/2+dd,top-dd]],
+           "#c3d3d8","#8fa2a8",1);
+      poly([[px-bw/2,top],[px+bw/2,top],[px+bw/2,bot],[px-bw/2,bot]],
+           "#d7e4e8","#8fa2a8",1); }
+    /* the guide the app drops from the pin while a period is being timed */
+    line([px,py],[px,py+this.L*1.05*ppm],"#7d9577",1,"butt",[3,5]);
+    /* the tube hangs from the hole in use; its axis points down the swing */
+    const ux=Math.sin(ang), uy=Math.cos(ang);
+    const ox=px-hx*ppm*ux, oy=py-hx*ppm*uy;
+    const rp=this.D_OUT*0.5*ppm, Lp=this.L*ppm;
+    const pt=(s,q)=>[ox+ux*s-uy*q, oy+uy*s+ux*q];
+    /* in pendulum mode the app hangs the tube straight on the pin: no thread */
+    /* the aluminium tube, shaded in the six bands the app uses */
+    const AL=["#63696d","#8f9599","#bcc2c6","#e3e7e9","#aeb4b8","#767c80"];
+    for(let i=0;i<AL.length;i++){
+      const t0=-rp+2*rp*i/AL.length, t1=-rp+2*rp*(i+1)/AL.length;
+      poly([pt(0,t0),pt(Lp,t0),pt(Lp,t1),pt(0,t1)],AL[i],null); }
+    poly([pt(0,-rp),pt(Lp,-rp),pt(Lp,rp),pt(0,rp)],null,"#4d5255",Math.max(1,ppm*0.0006));
+    for(const s of [0,Lp]){ const bore=rp*0.72;
+      line(pt(s,-bore),pt(s,bore),"#4a4f52",Math.max(2,ppm*0.0022)); }
+    /* the sixteen drilled holes, and a ring round the one in use */
+    const hr=0.0019*ppm;
+    for(let i=0;i<tr.holes.length;i++){
+      const s=tr.holes[i]*ppm, pl=[];
+      for(let q=0;q<8;q++){ const a=2*Math.PI*q/8;
+        pl.push(pt(s+hr*Math.cos(a), hr*0.85*Math.sin(a))); }
+      poly(pl,"#22262a","#585d60",1); }
+    { const p=pt(hx*ppm,0), q=Math.max(6,0.005*ppm);
+      PEN(c,"#ffd54f",2); c.beginPath(); c.ellipse(p[0],p[1],q,q,0,0,7); c.stroke(); }
+    /* the pin head, drawn over the thread as the app draws it */
+    { const pr=Math.max(3,0.0042*ppm);
+      c.beginPath(); c.ellipse(px,py,pr*1.5,pr*1.5,0,0,7);
+      c.fillStyle="#9aa0a4"; c.fill(); PEN(c,"#6b7175",1); c.stroke();
+      c.beginPath(); c.ellipse(px,py,pr,pr,0,0,7);
+      c.fillStyle="#3a3f43"; c.fill(); PEN(c,"#22262a",1); c.stroke(); }
+    /* the 35 cm ruler lying on the table */
+    { const rx=w*0.03, ry=by+Math.max(9,0.020*ppm);
+      const Lr=Math.min(this.RULER_LEN*ppm, w*0.52), hp=this.RULER_H*ppm*0.8;
+      const bw=Math.max(1,hp*0.05), ins=Math.max(bw*2,hp*0.22);
+      poly([[rx-ins,ry-hp/2],[rx+Lr+ins,ry-hp/2],[rx+Lr+ins,ry+hp/2],[rx-ins,ry+hp/2]],
+           "#f5efe2","#c9302c",bw);
+      const mm=Lr/350, t0=-hp/2+bw;
+      const step=mm>=3?1:(mm>=1.2?5:10);
+      for(let i=0;i<=350;i+=step){
+        let ln,col,wd;
+        if(i%10===0){ ln=hp*0.46; col="#33383a"; wd=Math.max(1,hp*0.030); }
+        else if(i%5===0){ ln=hp*0.30; col="#3b4143"; wd=Math.max(1,hp*0.024); }
+        else { ln=hp*0.16; col="#6a7073"; wd=1; }
+        line([rx+i*mm,ry+t0],[rx+i*mm,ry+t0+ln],col,wd); }
+      const fs=Math.max(5,Math.min(hp*0.34,9));
+      c.font=fs.toFixed(1)+"px -apple-system,'Segoe UI',sans-serif";
+      c.fillStyle="#33383a"; c.textAlign="center"; c.textBaseline="middle";
+      const every=(10*mm>fs*1.6)?5:10;
+      for(let i=0;i<=35;i+=every) c.fillText(String(i),rx+i*10*mm,ry+hp*0.30); }
+    /* the stopwatch of the photograph, running */
+    { const r=Math.min(h*0.15,w*0.10), sx=w-r*1.7, sy=by+r*0.15;
+      c.fillStyle="#8d9498"; c.fillRect(sx-r*0.14,sy-r*1.34,r*0.28,r*0.42);
+      PEN(c,"#5f666a",Math.max(2,r*0.07)); c.beginPath();
+      c.ellipse(sx,sy-r*1.37,r*0.24,r*0.19,0,0,7); c.stroke();
+      for(const q of [-1,1]){ c.fillStyle="#8d9498";
+        c.fillRect(sx+q*r*0.92,sy-r*0.66,r*0.22,r*0.26);
+        PEN(c,"#5f666a",1); c.strokeRect(sx+q*r*0.92,sy-r*0.66,r*0.22,r*0.26); }
+      c.beginPath(); c.ellipse(sx,sy,r,r,0,0,7);
+      c.fillStyle="#1d7a8b"; c.fill(); PEN(c,"#14606e",Math.max(1,r*0.05)); c.stroke();
+      c.beginPath(); c.ellipse(sx,sy,r*0.90,r*0.90,0,0,7);
+      c.fillStyle="#2fa5b8"; c.fill(); PEN(c,"#1d7a8b",1); c.stroke();
+      const lw2=r*0.88, lh=r*0.32;
+      c.fillStyle="#cdd8c6"; c.fillRect(sx-lw2,sy-lh-r*0.02,2*lw2,2*lh);
+      PEN(c,"#5d675a",Math.max(1,r*0.035));
+      c.strokeRect(sx-lw2,sy-lh-r*0.02,2*lw2,2*lh);
+      const laps=Math.floor(u/T)%10+1, shown=laps*T;
+      c.fillStyle="#1b2220"; c.textAlign="center"; c.textBaseline="middle";
+      c.font="bold "+Math.max(7,r*0.40).toFixed(1)+"px 'Courier New',Consolas,monospace";
+      c.fillText(shown.toFixed(2),sx,sy-r*0.02);
+      c.fillStyle="#e8f3f5";
+      c.font=Math.max(5,r*0.20).toFixed(1)+"px -apple-system,'Segoe UI',sans-serif";
+      c.fillText("ALBA",sx,sy-r*0.52);
+      c.fillStyle="#cfeaef"; c.fillText("1/100 sec",sx,sy+r*0.56); }
+    /* what the bench is showing right now, in the app's own status line */
+    c.fillStyle="#2f3a2c"; c.textAlign="left"; c.textBaseline="alphabetic";
+    c.font=Math.max(9,Math.min(h*0.035,13)).toFixed(1)+"px -apple-system,'Segoe UI',sans-serif";
+    c.fillText("hole "+(k+1)+" of "+this.NH+"   x = "+(hx*1000).toFixed(0)+" mm",
+               10,h-10);
   }};
 
 /* ── APhO 2022 E1 · the magnet carried around the phone ─────────── */
 const SIG_A22E1={
-  sim:"sim/apho2022_E1_web.html", tag:"APhO 2022 E1", span:18, rate:1,
+  sim:"sim/apho2022_E1_web.html", tag:"APhO 2022 E1", span:20, rate:1,
   capL:{ko:"자석을 휴대폰 둘레로 옮기며 읽는 자기력계",
         en:"Carrying the magnet around the phone, reading its magnetometer"},
   capR:{ko:"센서 값",en:"sensor"},
+  /* the magnet is carried round the phone; the sensor sits behind the camera */
   pos(t){ const a=2*Math.PI*(t%this.span)/this.span;
-          return [Math.cos(a)*4.2, Math.sin(a)*6.4, a]; },
-  field(t){ /* a dipole at the magnet, read at the sensor near the phone's top */
-    const [mx,my,a]=this.pos(t);
-    const sx=0, sy=-2.4;                                  /* where the sensor sits */
-    const dx=sx-mx, dy=sy-my, r=Math.max(1.2,Math.hypot(dx,dy));
-    const ux=dx/r, uy=dy/r, m=[Math.cos(a+Math.PI/2),Math.sin(a+Math.PI/2)];
-    const md=m[0]*ux+m[1]*uy, k=12000/(r*r*r);
-    return [k*(3*md*ux-m[0]), k*(3*md*uy-m[1])];
+          return [Math.cos(a)*4.6, Math.sin(a)*7.0, a+Math.PI/2]; },
+  field(t){                                        /* a dipole, read at the sensor */
+    const p=this.pos(t), sx=0, sy=-4.2;
+    const dx=sx-p[0], dy=sy-p[1], r=Math.max(1.4,Math.hypot(dx,dy));
+    const ux=dx/r, uy=dy/r, mx=Math.cos(p[2]), my=Math.sin(p[2]);
+    const md=mx*ux+my*uy, k=16000/(r*r*r);
+    return [k*(3*md*ux-mx), k*(3*md*uy-my)];
   },
-  read(t){ const b=this.field(t); return b[0].toFixed(1)+" \u03bcT"; },
+  read(t){ const b=this.field(t); return Math.hypot(b[0],b[1]).toFixed(1)+" \u03bcT"; },
+  /* the phone, the way Mobile.js builds it: 150 tall, bezels in fifteenths */
+  phone(c,X,Y,S){
+    const PH=15.0, PW=PH*0.48, sb=(4/150)*PH, tb=(1/15)*PH, bb=(14/150)*PH;
+    c.fillStyle="rgba(128,128,128,0.5)";
+    c.fillRect(X(-PW/2),Y(-PH/2),PW*S,PH*S);
+    PEN(c,"#000000",1.4); c.strokeRect(X(-PW/2),Y(-PH/2),PW*S,PH*S);
+    PEN(c,"#000000",1);
+    c.strokeRect(X(-PW/2+sb),Y(-PH/2+tb),(PW-2*sb)*S,(PH-tb-bb)*S);
+    c.beginPath(); c.arc(X(0),Y((68/150)*PH),(5/150)*PH*S,0,7); c.stroke();
+    c.fillStyle="#000000"; c.beginPath();
+    c.arc(X(0),Y(-(70/150)*PH),(2/150)*PH*S,0,7); c.fill(); c.stroke();
+    /* the two field axes the app labels on the phone */
+    const arrow=(dx,dy,lab,sub)=>{
+      const x0=X(0), y0=Y(0), x1=X(dx*3.1), y1=Y(dy*3.1);
+      PEN(c,"#000000",1.4); c.beginPath(); c.moveTo(x0,y0); c.lineTo(x1,y1); c.stroke();
+      const an=Math.atan2(y1-y0,x1-x0), hd=0.28*S;
+      c.beginPath(); c.moveTo(x1,y1);
+      c.lineTo(x1-hd*Math.cos(an-0.4),y1-hd*Math.sin(an-0.4));
+      c.lineTo(x1-hd*Math.cos(an+0.4),y1-hd*Math.sin(an+0.4));
+      c.closePath(); c.fillStyle="#000000"; c.fill();
+      c.textAlign="left"; c.textBaseline="alphabetic";
+      c.font=(0.9*S).toFixed(1)+"px Calibri,'Gill Sans',sans-serif";
+      c.fillText(lab,x1+0.2*S,y1-0.1*S);
+      c.font=(0.6*S).toFixed(1)+"px Calibri,'Gill Sans',sans-serif";
+      c.fillText(sub,x1+0.2*S+c.measureText(lab).width*0.9,y1+0.32*S);
+    };
+    arrow(1,0,"B","w"); arrow(0,-1,"B","l");
+  },
+  magnet(c,X,Y,S,x,y,ang,alpha){
+    const ML=2.9, MW=1.1;
+    c.save(); c.translate(X(x),Y(y)); c.rotate(-ang+Math.PI/2);
+    c.globalAlpha=alpha;
+    c.fillStyle="#1f51ff"; c.fillRect(-MW/2*S,-ML/2*S,MW*S,ML/2*S);
+    c.fillStyle="#ff1818"; c.fillRect(-MW/2*S,0,MW*S,ML/2*S);
+    PEN(c,"#000000",1.2); c.strokeRect(-MW/2*S,-ML/2*S,MW*S,ML*S);
+    c.beginPath(); c.moveTo(-MW/2*S,0); c.lineTo(MW/2*S,0); c.stroke();
+    c.fillStyle="#000000"; c.beginPath(); c.arc(0,0,1.6,0,7); c.fill();
+    c.globalAlpha=1; c.restore();
+  },
   paint(c,w,h,t){
-    const S=Math.min(w/16,h/15), ox=w/2, oy=h/2;
+    const S=Math.min(w/24,h/17.5), ox=w*0.46, oy=h/2;
     const X=u=>ox+u*S, Y=v=>oy+v*S;
     c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the phone, drawn the way the official simulator draws it */
-    const PW=5.0, PH=9.6;
-    c.fillStyle="#23262b";
-    c.beginPath(); c.rect(X(-PW/2),Y(-PH/2),PW*S,PH*S); c.fill();
-    PEN(c,"#4a5058",1.4); c.stroke();
-    c.fillStyle="#dfe6ec"; c.fillRect(X(-PW/2+0.28),Y(-PH/2+0.7),(PW-0.56)*S,(PH-1.7)*S);
-    c.fillStyle="#8d949b"; c.beginPath(); c.arc(X(0),Y(-PH/2+0.36),0.16*S,0,7); c.fill();
-    PEN(c,"#8d949b",1.2); c.beginPath(); c.arc(X(0),Y(PH/2-0.5),0.42*S,0,7); c.stroke();
-    /* where the magnetometer sits, and what it is reading right now */
-    const b=this.field(t), bn=Math.hypot(b[0],b[1]);
-    c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(0),Y(-2.4),0.3*S,0,7); c.fill();
-    const al=Math.min(3.4,0.7+Math.log10(1+bn)*1.1);
-    PEN(c,"#2c6f9b",2); c.beginPath();
-    c.moveTo(X(0),Y(-2.4));
-    c.lineTo(X(b[0]/bn*al),Y(-2.4+b[1]/bn*al)); c.stroke();
-    /* the path the magnet is being carried along, and the magnet on it */
-    PEN(c,"#cfd8e0",1.5); c.setLineDash([5,5]); c.beginPath();
-    c.ellipse(X(0),Y(0),4.2*S,6.4*S,0,0,7); c.stroke(); c.setLineDash([]);
-    const [mx,my,a]=this.pos(t);
-    c.save(); c.translate(X(mx),Y(my)); c.rotate(a+Math.PI/2);
-    c.fillStyle="#cc3b32"; c.fillRect(-0.5*S,-1.3*S,1.0*S,1.3*S);
-    c.fillStyle="#e6eaea"; c.fillRect(-0.5*S,0,1.0*S,1.3*S);
-    PEN(c,"#5c6167",1.2); c.strokeRect(-0.5*S,-1.3*S,1.0*S,2.6*S);
-    c.restore();
-    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="left";
-    c.fillText("Bw "+b[0].toFixed(1)+" \u03bcT",12,h-26);
-    c.fillText("Bl "+b[1].toFixed(1)+" \u03bcT",12,h-12);
+    /* where it has just been, so a still frame still shows it moving */
+    for(let k=5;k>=1;k--){ const p=this.pos(t-k*0.55);
+      this.magnet(c,X,Y,S,p[0],p[1],p[2],0.10+0.02*(5-k)); }
+    this.phone(c,X,Y,S);
+    const p=this.pos(t);
+    this.magnet(c,X,Y,S,p[0],p[1],p[2],1);
+    /* the ruler the app keeps on the bench: outline and ticks, nothing more */
+    const rx=w*0.06, ry=h-Math.max(20,h*0.10), rw=w*0.30, rh=Math.max(10,h*0.045);
+    PEN(c,"#000000",1.2); c.strokeRect(rx,ry,rw,rh);
+    c.beginPath();
+    for(let k=0;k<=10;k++){ const x=rx+k/10*rw;
+      c.moveTo(x,ry); c.lineTo(x,ry+(k%5===0?rh*0.62:rh*0.34)); }
+    c.stroke();
+    /* what the magnetometer is showing */
+    const b=this.field(t);
+    c.fillStyle="#222"; c.textAlign="left"; c.textBaseline="alphabetic";
+    c.font=Math.max(11,0.62*S).toFixed(1)+"px Calibri,'Gill Sans',sans-serif";
+    c.fillText("Bw = "+b[0].toFixed(1)+" \u03bcT",w*0.05,h*0.12);
+    c.fillText("Bl = "+b[1].toFixed(1)+" \u03bcT",w*0.05,h*0.12+0.95*S);
   }};
 
 /* ── APhO 2022 E2 · the echo train the detector hears ───────────── */
 const SIG_A22E2={
-  sim:"sim/apho2022_E2_web.html", tag:"APhO 2022 E2", span:14, rate:1.2,
-  capL:{ko:"검출기에 도달한 신호 · 음향 블랙박스",en:"What reaches the detector · acoustic black box"},
-  capR:{ko:"검출기 위치",en:"detector"},
-  read(t){ return this.d(t).toFixed(1)+" cm"; },
-  d(t){ return 6+18*(0.5-0.5*Math.cos(2*Math.PI*Math.min(t,this.span)/this.span)); },
+  sim:"sim/apho2022_E2_web.html", tag:"APhO 2022 E2", span:25, rate:1.4,
+  capL:{ko:"검출기가 받은 진동수 · 숨은 음원의 운동이 도플러로 드러난다",
+        en:"The frequency the detector receives · the hidden source's motion, in Doppler"},
+  capR:{ko:"진동수",en:"frequency"},
+  /* the page's own black box: source at (300,500) drifting and circling */
+  VC:330, F0:991, SX:300, SY:500, VX:81, VY:43, R:120, OM:1.5,
+  srcPos(t){ return [this.SX+this.VX*t+this.R*Math.cos(this.OM*t),
+                     this.SY+this.VY*t+this.R*Math.sin(this.OM*t)]; },
+  srcVel(t){ return [this.VX-this.OM*this.R*Math.sin(this.OM*t),
+                     this.VY+this.OM*this.R*Math.cos(this.OM*t)]; },
+  tEm(t){                                       /* the page's own fixed point */
+    let tb=t;
+    for(let i=0;i<400;i++){
+      const p=this.srcPos(tb), d=Math.hypot(p[0],p[1]);
+      const err=tb+d/this.VC-t;
+      if(Math.abs(err)<1e-7) break;
+      tb-=0.35*err;
+    }
+    return tb;
+  },
+  f(t){ const te=this.tEm(t);
+    if(te<0) return NaN;
+    const p=this.srcPos(te), v=this.srcVel(te), d=Math.hypot(p[0],p[1]);
+    const comp=(-p[0]/d)*v[0]+(-p[1]/d)*v[1];   /* towards the detector */
+    return this.F0*this.VC/(this.VC-comp);
+  },
+  curve(){ if(this._c) return this._c;
+    const pts=[];
+    for(let i=0;i<=500;i++){ const t=25*i/500, y=this.f(t);
+      pts.push([t,isFinite(y)?y:NaN]); }
+    const ok=pts.filter(p=>isFinite(p[1])).map(p=>p[1]);
+    this._c={pts:pts, lo:Math.min.apply(null,ok), hi:Math.max.apply(null,ok)};
+    return this._c;
+  },
+  read(t){ const y=this.f(t%this.span);
+           return isFinite(y)?y.toFixed(0)+" Hz":"\u2014"; },
   paint(c,w,h,t){
-    const d=this.d(t), v=34300;                       /* cm/s in air */
-    const paths=[[d,1.0],[Math.hypot(d,11)*1.0,0.55],[Math.hypot(d,20)*1.0,0.3]];
-    const TMAX=1.6e-3, pad=16, padL=38, padB=22;
-    const X=u=>padL+u/TMAX*(w-padL-pad);
-    const Y=a=>h-padB-(a+1.15)/2.4*(h-padB-pad);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    PEN(c,"#DCE7F0",.5); c.beginPath();
-    for(let u=0;u<=TMAX+1e-9;u+=2e-4){ c.moveTo(X(u),pad); c.lineTo(X(u),h-padB); }
-    for(let a=-1;a<=1.2;a+=0.5){ c.moveTo(padL,Y(a)); c.lineTo(w-pad,Y(a)); }
+    const C=this.curve(), tt=t%this.span;
+    c.fillStyle="#06040a"; c.fillRect(0,0,w,h);
+    const fs=Math.max(9,Math.min(14,h*0.042));
+    c.font=fs.toFixed(1)+"px 'Gill Sans',Calibri,sans-serif";
+    c.textAlign="center"; c.textBaseline="middle";
+    /* the input row the page keeps above the graph */
+    c.fillStyle="#ffffff";
+    c.fillText("d = 0 m   \u03b8 = 0\u00b0   v = 0 m/s   t\u2080 = 0 s   tf = 25 s   \u0394 = 0.02 s",
+               w/2,fs*1.3);
+    const L=Math.max(46,w*0.11), R=w-Math.max(14,w*0.03);
+    const T=fs*3.0, B=h-Math.max(26,fs*2.6);
+    const lo=Math.floor(C.lo/200)*200, hi=Math.ceil(C.hi/200)*200;
+    const X=u=>L+u/25*(R-L), Y=v=>B-(v-lo)/(hi-lo)*(B-T);
+    PEN(c,"rgba(255,255,255,0.3)",1); c.beginPath();
+    for(let u=0;u<=25.001;u+=5){ c.moveTo(X(u),T); c.lineTo(X(u),B); }
+    for(let v=lo;v<=hi+1e-6;v+=(hi-lo)/5){ c.moveTo(L,Y(v)); c.lineTo(R,Y(v)); }
     c.stroke();
-    PEN(c,"#B4CADC",1); c.beginPath();
-    c.moveTo(padL,Y(0)); c.lineTo(w-pad,Y(0));
-    c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.stroke();
-    const N=520;
-    PEN(c,"#2c6f9b",1.8); c.beginPath();
-    for(let i=0;i<=N;i++){
-      const u=TMAX*i/N; let a=0;
-      for(const [L,amp] of paths){ const t0=L/v, dt=u-t0;
-        if(dt>0) a+=amp*Math.exp(-Math.pow(dt/9e-5,2))*Math.sin(2*Math.PI*40000*dt); }
-      i?c.lineTo(X(u),Y(a)):c.moveTo(X(u),Y(a));
+    PEN(c,"#ffffff",1); c.beginPath();
+    c.moveTo(L,T); c.lineTo(L,B); c.lineTo(R,B); c.stroke();
+    c.fillStyle="#ffffff"; c.font=(fs*0.92).toFixed(1)+"px 'Gill Sans',Calibri,sans-serif";
+    for(let u=0;u<=25.001;u+=5) c.fillText(String(u),X(u),B+fs*1.1);
+    c.textAlign="right";
+    for(let v=lo;v<=hi+1e-6;v+=(hi-lo)/5) c.fillText(String(Math.round(v)),L-6,Y(v));
+    c.textAlign="center";
+    c.fillText("Time (s)",(L+R)/2,h-fs*0.7);
+    c.save(); c.translate(fs*1.0,(T+B)/2); c.rotate(-Math.PI/2);
+    c.fillText("Frequency (Hz)",0,0); c.restore();
+    /* the trace, laid down point by point the way the plot fills in */
+    PEN(c,"#ffffff",1.8); c.beginPath();
+    let down=true, lastX=null, lastY=null;
+    for(const p of C.pts){
+      if(p[0]>tt) break;
+      if(!isFinite(p[1])){ down=true; continue; }
+      const x=X(p[0]), y=Y(p[1]);
+      down?(c.moveTo(x,y),down=false):c.lineTo(x,y);
+      lastX=x; lastY=y;
     }
     c.stroke();
-    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="center"; for(let u=4e-4;u<TMAX;u+=4e-4) c.fillText((u*1000).toFixed(1)+" ms",X(u),h-7);
-    c.textAlign="right"; c.fillText("0",padL-5,Y(0)+3);
-    c.textAlign="left";
+    if(lastX!==null){ c.fillStyle="#ffffff";
+      c.beginPath(); c.arc(lastX,lastY,3,0,7); c.fill(); }
+    c.textBaseline="alphabetic"; c.textAlign="left";
   }};
 
 /* ── IPhO 2022 E1 · the ball falling off the 2000 m tower ───────── */
 const SIG_I22E1={
-  sim:"sim/ipho2022_E1_web.html", tag:"IPhO 2022 E1", span:13, rate:1,
-  capL:{ko:"2000 m 탑에서 떨어뜨린 공 · 대기가 붙잡는 만큼 느려진다",
-        en:"A ball dropped from the 2000 m tower, held back by the air"},
+  sim:"sim/ipho2022_E1_web.html", tag:"IPhO 2022 E1", span:64, rate:26,
+  capL:{ko:"주최측 콘솔 프로그램 · 2000 m 탑에서 공을 떨어뜨린다",
+        en:"The organisers' console program · dropping a ball off the 2000 m tower"},
   capR:{ko:"낙하 시간",en:"fall time"},
-  /* g and a drag that thins out with height: exactly the shape the paper sets */
-  H0:2000, G:7.6,
-  run(t){
-    const cyc=this.span, u=(t%cyc)/cyc;
-    const idx=Math.floor(t/cyc)%3;
-    const h0=[2000,1400,900][idx], rho=[7.8,2.6,0.9][idx];
-    const k=0.9/(rho*10);                                   /* drag over mass */
-    let y=h0, v=0, tt=0, dt=0.02;
-    const target=u*this.tf(h0,k);
-    while(tt<target && y>0){ const a=this.G-k*v*v*Math.exp(-y/9000);
-      v+=a*dt; y-=v*dt; tt+=dt; }
-    return {h0:h0, rho:rho, y:Math.max(0,y), v:v, t:tt, tf:this.tf(h0,k)};
+  /* the program's own planet, and its own integrator */
+  G_ACC:15.8, T_DAY:28000, WIND:1.31, RHO_A0:0.60, H_ATM:7500, GAMMA:1.4, CD:0.24,
+  rhoAir(z){ return z>=this.H_ATM ? 0
+             : this.RHO_A0*Math.pow(1-z/this.H_ATM,1/(this.GAMMA-1)); },
+  drop(hh,rcm,rhoG){
+    const OM=2*Math.PI/this.T_DAY, r=rcm*1e-2, rho=rhoG*1e3;
+    const kd=this.CD*(Math.PI*r*r)/(4/3*Math.PI*r*r*r*rho);
+    const d=st=>{ const ra=this.rhoAir(st[1]), rx=st[2]-this.WIND, rz=st[3];
+      const vr=Math.sqrt(rx*rx+rz*rz);
+      return [st[2],st[3],-kd*ra*vr*rx-2*OM*st[3],
+                          -kd*ra*vr*rz-this.G_ACC+2*OM*st[2]]; };
+    let st=[0,hh,0,0], t=0;
+    while(st[1]>0&&t<1e4){
+      let step=2e-3;
+      if(st[3]<0&&st[1]/(-st[3])<step) step=Math.max(st[1]/(-st[3])*0.5,1e-6);
+      const k1=d(st), s2=st.map((v,i)=>v+0.5*step*k1[i]);
+      const k2=d(s2), s3=st.map((v,i)=>v+0.5*step*k2[i]);
+      const k3=d(s3), s4=st.map((v,i)=>v+step*k3[i]);
+      const k4=d(s4);
+      st=st.map((v,i)=>v+step/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]));
+      t+=step;
+    }
+    return [t,Math.abs(st[0])];
   },
-  tf(h0,k){ let y=h0,v=0,tt=0,dt=0.02;
-    while(y>0&&tt<200){ const a=this.G-k*v*v*Math.exp(-y/9000); v+=a*dt; y-=v*dt; tt+=dt; }
-    return tt; },
-  read(t){ return this.run(t).t.toFixed(1)+" s"; },
+  RUNS:[[1800,20,7.8],[1200,45,0.9],[600,8,2.7]],
+  build(){
+    if(this._f) return this._f;
+    const bar=new Array(49).join("=");
+    const q=(lo,label,hi)=>termPad(lo,3)+" < "+termPad(label,13,true)+" < "+
+                           termPad(hi,5,true)+" | "+termPad(label,13)+": ";
+    const f=[{s:"Enter Valid Authorization Key: ",ans:"12345678.888"},{s:""}];
+    this._t=[];
+    for(const run of this.RUNS){
+      const res=this.drop(run[0],run[1],run[2]);
+      this._t.push(res[0]);
+      f.push({s:q("  0","h (m)","2000"),ans:String(run[0])});
+      f.push({s:q("  5","r (cm)","  50"),ans:String(run[1])});
+      f.push({s:q("0.1","rho (g/cm^3)","10.0"),ans:run[2].toFixed(2)});
+      f.push({s:"..."});
+      f.push({s:"t (s) = "+res[0].toFixed(1)+", s (m) = "+res[1].toFixed(1),acc:true});
+      f.push({s:bar,dim:true});
+    }
+    this._f=f; this._n=termLen(f);
+    return f;
+  },
+  read(t){ this.build();
+    const k=Math.min(this.RUNS.length-1,Math.floor(t/(this.span/this.RUNS.length)));
+    return this._t[k].toFixed(1)+" s"; },
   paint(c,w,h,t){
-    const r=this.run(t);
-    const pad=18, groundY=h-26, topY=pad+6;
-    const Y=y=>groundY-(y/this.H0)*(groundY-topY);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the air, thinning upwards */
-    for(let i=0;i<28;i++){
-      const y0=topY+(groundY-topY)*i/28, y1=topY+(groundY-topY)*(i+1)/28;
-      c.fillStyle="rgba(120,170,205,"+(0.03+0.10*(i/28))+")";
-      c.fillRect(pad,y0,w-2*pad,y1-y0+1);
-    }
-    /* the tower */
-    const tx=w*0.34;
-    c.fillStyle="#e7e2d6"; c.fillRect(tx-9,topY,18,groundY-topY);
-    PEN(c,"#9c968a",1.4); c.strokeRect(tx-9,topY,18,groundY-topY);
-    PEN(c,"#c9c3b6",1); c.beginPath();
-    for(let y=0;y<=this.H0;y+=200){ c.moveTo(tx-9,Y(y)); c.lineTo(tx+9,Y(y)); }
-    c.stroke();
-    /* the ground */
-    c.fillStyle="#b8926a"; c.fillRect(0,groundY,w,h-groundY);
-    /* the release mark and the ball on its way down */
-    PEN(c,"#98A6B4",1); c.setLineDash([4,4]); c.beginPath();
-    c.moveTo(pad,Y(r.h0)); c.lineTo(w-pad,Y(r.h0)); c.stroke(); c.setLineDash([]);
-    const bx=tx+34, rad=Math.max(4,Math.min(11,3+r.rho));
-    /* a short trail, so the fall reads in a still frame */
-    for(let k=1;k<=5;k++){
-      const yy=Math.min(r.h0,r.y+r.v*0.22*k);
-      c.fillStyle="rgba(44,111,155,"+(0.16-0.028*k)+")";
-      c.beginPath(); c.arc(bx,Y(yy),rad,0,7); c.fill();
-    }
-    c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(bx,Y(r.y),rad,0,7); c.fill();
-    c.fillStyle="rgba(255,255,255,.5)";
-    c.beginPath(); c.arc(bx-rad*0.3,Y(r.y)-rad*0.35,rad*0.3,0,7); c.fill();
-    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="left";
-    c.fillText("h "+r.h0+" m",12,h-26);
-    c.fillText("v "+r.v.toFixed(1)+" m/s",12,h-12);
-    c.textAlign="right";
-    c.fillText("\u03c1 "+r.rho.toFixed(1)+" g/cm\u00b3",w-12,h-12);
-    c.textAlign="left";
+    const f=this.build();
+    termPaint(c,w,h,"IPhO 2022 Q1 \u2014 Planet",f,Math.round(t*this._n/this.span));
   }};
 
 /* ── IPhO 2022 E2 · electrons crossing the coaxial diode ────────── */
 const SIG_I22E2={
-  sim:"sim/ipho2022_E2_web.html", tag:"IPhO 2022 E2", span:11, rate:1,
-  capL:{ko:"동축 진공 다이오드 · 전압을 올리면 전자 흐름이 굵어진다",
-        en:"Coaxial vacuum diode · raise the voltage and the electron flow thickens"},
-  capR:{ko:"양극 전압",en:"anode"},
-  V(t){ return 60*(0.5-0.5*Math.cos(2*Math.PI*(t%this.span)/this.span)); },
-  I(v){ return 0.021*Math.pow(Math.max(v,0),1.5); },        /* the 3/2 law, mA */
-  read(t){ return this.V(t).toFixed(1)+" V"; },
-  paint(c,w,h,t){
-    const V=this.V(t), I=this.I(V), IMAX=this.I(60);
-    const cx=w*0.40, cy=h*0.52, RC=Math.min(w,h)*0.38, RE=RC*0.17;
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the collector: a ring at potential V, the emitter a hot wire on the axis */
-    c.beginPath(); c.arc(cx,cy,RC,0,7);
-    c.fillStyle="#f4f7f9"; c.fill(); PEN(c,"#8d949b",3); c.stroke();
-    PEN(c,"#c3ccd2",1); c.beginPath(); c.arc(cx,cy,RC*0.94,0,7); c.stroke();
-    /* electrons: more of them, and faster, as V rises */
-    const n=Math.round(6+I/IMAX*58);
-    for(let i=0;i<n;i++){
-      const a=(i*2.39996+t*(0.5+2.4*I/IMAX))%(2*Math.PI);
-      const u=((i*0.618+t*(0.18+0.55*Math.sqrt(I/IMAX)))%1);
-      const rr=RE+ (RC-RE)*u;
-      const al=0.25+0.6*(1-u);
-      c.fillStyle="rgba(44,111,155,"+al.toFixed(2)+")";
-      c.beginPath(); c.arc(cx+Math.cos(a)*rr, cy+Math.sin(a)*rr, 1.9,0,7); c.fill();
+  sim:"sim/ipho2022_E2_web.html", tag:"IPhO 2022 E2", span:60, rate:26,
+  capL:{ko:"주최측 콘솔 프로그램 · 원통 다이오드에 전압을 걸고 전류를 읽는다",
+        en:"The organisers' console program · bias the cylindrical diode, read the current"},
+  capR:{ko:"전류",en:"current"},
+  /* the program's own tabulated beta^2, and its own current law */
+  LN:[0,.05,.10,.15,.20,.30,.40,.50,.60,.70,.80,.90,1.00,1.10,1.20,1.30,1.40,1.50,
+      1.60,1.70,1.80,1.90,2.00,2.10,2.20,2.302585,2.40,2.60,2.80,3.00,3.50,4.00,4.50,5.00],
+  B2:[0,.00240,.00924,.01997,.03412,.07095,.11664,.16861,.22475,.28333,.34295,.40245,
+      .46098,.51783,.57245,.62449,.67365,.71976,.76273,.80252,.83913,.87264,.90312,
+      .93070,.95549,.97819,.99732,1.02982,1.05425,1.07181,1.09288,1.09258,1.08133,1.06585],
+  beta2(ratio){ const g=Math.log(Math.max(ratio,1+1e-9));
+    if(g>=this.LN[this.LN.length-1]) return this.B2[this.B2.length-1];
+    let i=0; while(i<this.LN.length-2&&this.LN[i+1]<=g) i++;
+    const f=(g-this.LN[i])/(this.LN[i+1]-this.LN[i]);
+    return this.B2[i]+f*(this.B2[i+1]-this.B2[i]); },
+  cur(rc,re,le,v){ if(v<=0||rc<=re) return 0;
+    const b2=this.beta2(rc/re); if(b2<=0) return 0;
+    return 16.5e-6*(le/rc)*Math.pow(v,1.5)*(0.97819/b2)*
+           (1+0.1242*(rc/le)+0.0287*(rc/le)*(rc/le)); },
+  sig3(v){ if(v===0) return "0.00";
+    const d=Math.floor(Math.log(Math.abs(v))/Math.LN10);
+    return v.toFixed(Math.max(0,2-d)); },
+  show(a){ return a<1 ? this.sig3(a*1e3)+" mA" : this.sig3(a)+" A"; },
+  RUNS:[[10.0,1.0,20.0,400],[10.0,1.0,20.0,900],[10.0,1.0,20.0,1600],[5.0,1.0,20.0,900]],
+  build(){
+    if(this._f) return this._f;
+    const bar=new Array(49).join("=");
+    const f=[{s:"Enter Valid Authorization Key: ",ans:"12345678.888"},{s:""}];
+    this._i=[];
+    for(const run of this.RUNS){
+      const a=this.cur(run[0]*1e-2,run[1]*1e-2,run[2]*1e-2,run[3]);
+      this._i.push(a);
+      f.push({s:" 0.1 <  Rc (cm) < 20.0 |  Rc (cm): ",ans:run[0].toFixed(1)});
+      f.push({s:" 0.1 <  Re (cm) < 20.0 |  Re (cm): ",ans:run[1].toFixed(1)});
+      f.push({s:" 1.0 <  Le (cm) < 99.0 |  Le (cm): ",ans:run[2].toFixed(1)});
+      f.push({s:"   0 <   V (V)  < 2000 |   V (V) : ",ans:String(run[3])});
+      f.push({s:"..."});
+      f.push({s:"I = "+this.show(a),acc:true});
+      f.push({s:bar,dim:true});
     }
-    /* the emitter, glowing with its own heat */
-    const gl=c.createRadialGradient(cx,cy,0,cx,cy,RE*3.4);
-    gl.addColorStop(0,"rgba(242,193,78,.85)"); gl.addColorStop(1,"rgba(242,193,78,0)");
-    c.fillStyle=gl; c.beginPath(); c.arc(cx,cy,RE*3.4,0,7); c.fill();
-    c.beginPath(); c.arc(cx,cy,RE,0,7); c.fillStyle="#e8862a"; c.fill();
-    PEN(c,"#8a4d13",1.4); c.stroke();
-    /* the meter beside it: the current the collector actually draws */
-    const mx=w-Math.min(96,w*0.24), my=h*0.5, mw=Math.min(84,w*0.21), mh=h*0.44;
-    c.fillStyle="#15181c"; c.fillRect(mx-mw/2,my-mh/2,mw,mh);
-    PEN(c,"#2f3540",1.4); c.strokeRect(mx-mw/2,my-mh/2,mw,mh);
-    c.fillStyle="#7fd0ee"; c.textAlign="center";
-    c.font=Math.max(11,mh*0.16).toFixed(0)+"px IBM Plex Mono,ui-monospace,monospace";
-    c.fillText(I.toFixed(2)+" mA",mx,my-mh*0.12);
-    c.fillStyle="#f2c14e";
-    c.fillText(V.toFixed(1)+" V",mx,my+mh*0.14);
-    /* a bar that follows the current */
-    c.fillStyle="#243040"; c.fillRect(mx-mw*0.36,my+mh*0.24,mw*0.72,mh*0.10);
-    c.fillStyle="#2c6f9b"; c.fillRect(mx-mw*0.36,my+mh*0.24,mw*0.72*(I/IMAX),mh*0.10);
-    c.textAlign="left";
+    this._f=f; this._n=termLen(f);
+    return f;
+  },
+  read(t){ this.build();
+    const k=Math.min(this.RUNS.length-1,Math.floor(t/(this.span/this.RUNS.length)));
+    return this.show(this._i[k]); },
+  paint(c,w,h,t){
+    const f=this.build();
+    termPaint(c,w,h,"IPhO 2022 Q2 \u2014 Cylindrical Diode",f,
+              Math.round(t*this._n/this.span));
   }};
 
 /* ── RMPh 2024 · the Ising lattice cooling through T_c ──────────── */
@@ -2185,92 +2486,193 @@ const SIG_R24E1={
 
 /* ── APhO 2021 E1 · how far the clamped beam bends ──────────────── */
 const SIG_A21E1={
-  sim:"sim/apho2021_E1_web.html", tag:"APhO 2021 E1", span:13, rate:1,
-  capL:{ko:"하중에 따른 캔틸레버 처짐",en:"Cantilever deflection against load"},
-  capR:{ko:"걸어 둔 추",en:"load"},
-  read(t){ return this.m(t).toFixed(0)+" g"; },
-  m(t){ return 20+180*(0.5-0.5*Math.cos(2*Math.PI*Math.min(t,this.span)/this.span)); },
+  sim:"sim/apho2021_E1_web.html", tag:"APhO 2021 E1", span:180, rate:9,
+  capL:{ko:"PSD 화면과 180 초 기록 · 캔틸레버에 힘을 단계로 올린다",
+        en:"The PSD face and the 180 s record · the load stepped up on the cantilever"},
+  capR:{ko:"광 스폿",en:"spot"},
+  /* the app's own cantilever: silicon, 100 um long, read by an optical lever */
+  E_SI:280e9, W_C:35e-6, T2:0.2e-6, L_C:100e-6, D_PATH:0.060,
+  PSD_RANGE:1.0, SHAKE:0.26, SHAKE_TAU:26.0, NOISE:0.014,
+  STEPS:[[0,0],[30,2],[60,4],[90,6],[120,8],[150,10]],
+  force(t){ let F=0; for(const st of this.STEPS) if(t>=st[0]) F=st[1]; return F; },
+  /* mm on the PSD for a force in nN: delta = F L^3 / (3 E I), spot = 3 delta D / L */
+  perNN(){ if(this._k) return this._k;
+    const I2=this.W_C*Math.pow(this.T2,3)/12;
+    const d=1e-9*Math.pow(this.L_C,3)/(3*this.E_SI*I2);
+    this._k=3*d*this.D_PATH/this.L_C*1000;            /* mm per nN */
+    return this._k; },
+  /* a fixed, repeatable grain — the trace must not boil between frames */
+  grain(t){ const x=Math.sin(t*12.9898)*43758.5453; return (x-Math.floor(x))-0.5; },
+  spot(t){
+    let v=0, last=0;
+    for(const st of this.STEPS){ if(t<st[0]) break;
+      v+=(st[1]-last)*this.perNN()*(1-Math.exp(-(t-st[0])/1.6)); last=st[1]; }
+    v+=this.SHAKE*Math.exp(-t/this.SHAKE_TAU)*Math.sin(2*Math.PI*t/6.7);
+    return v+this.NOISE*2*this.grain(t);
+  },
+  read(t){ return this.spot(Math.min(t,this.span)).toFixed(3)+" mm"; },
   paint(c,w,h,t){
-    /* delta = m g L^3 / (3 E I): straight in the load, cubed in the length */
-    const g=9.81, L=0.32, E=70e9, bb=0.02, hh2=0.0012;
-    const I=bb*Math.pow(hh2,3)/12;
-    const D=m=>m/1000*g*Math.pow(L,3)/(3*E*I)*1000;      /* mm */
-    const MMAX=200, pad=16, padL=44, padB=22;
-    const X=u=>padL+u/MMAX*(w-padL-pad);
-    const DMAX=D(MMAX)*1.12;
-    const Y=v=>h-padB-v/DMAX*(h-padB-pad);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    PEN(c,"#DCE7F0",.5); c.beginPath();
-    for(let u=0;u<=MMAX;u+=25){ c.moveTo(X(u),pad); c.lineTo(X(u),h-padB); }
-    for(let v=0;v<=DMAX;v+=DMAX/5){ c.moveTo(padL,Y(v)); c.lineTo(w-pad,Y(v)); }
+    const tt=Math.min(t,this.span);
+    c.fillStyle="#383838"; c.fillRect(0,0,w,h);
+    c.textBaseline="middle";
+    const pad=Math.max(8,h*0.045);
+    const fs=Math.max(9,Math.min(13,h*0.040));
+    c.font=fs.toFixed(1)+"px 'Liberation Sans',Arial,sans-serif";
+    /* the PSD square, with the -1 mm / 1 mm captions the panel puts beside it */
+    const side=Math.min(h-2*pad, w*0.26);
+    const capA=c.measureText("-1 mm").width+7, capB=c.measureText("1 mm").width+7;
+    const px=pad+capA, py=(h-side)/2;
+    c.fillStyle="#979797"; c.fillRect(px,py,side,side);
+    PEN(c,"#b4b4b4",2); c.beginPath();
+    for(let k=0;k<=4;k++){ const q=k/4*side;
+      c.moveTo(px+q,py); c.lineTo(px+q,py+side);
+      c.moveTo(px,py+q); c.lineTo(px+side,py+q); }
     c.stroke();
-    PEN(c,"#B4CADC",1); c.beginPath();
-    c.moveTo(padL,Y(0)); c.lineTo(w-pad,Y(0));
-    c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.stroke();
-    PEN(c,"#2c6f9b",2.2); c.beginPath();
-    for(let i=0;i<=120;i++){ const u=MMAX*i/120; i?c.lineTo(X(u),Y(D(u))):c.moveTo(X(u),Y(D(u))); }
+    const f=Math.max(-1,Math.min(1,this.spot(tt)/this.PSD_RANGE));
+    c.fillStyle="#000";
+    c.fillRect(px+side/2-3, py+side/2-f*side/2-3, 6, 6);
+    c.fillStyle="#fff"; c.textAlign="right"; c.fillText("-1 mm",px-6,h/2);
+    c.textAlign="left"; c.fillText("1 mm",px+side+6,h/2);
+    /* Record / Stop / Reset, as the panel stacks them */
+    const bw=Math.min(76,w*0.115), bh=Math.max(17,h*0.058), bx=px+side+capB+7;
+    [["Record",true],["Stop",false],["Reset",true]].forEach((b,i)=>{
+      const by=h/2+(i-1.35)*(bh+10)-(i===2?bh*0.4:0);
+      c.fillStyle=b[1]?"#c1c1c1":"#696969"; c.fillRect(bx,by,bw,bh);
+      PEN(c,"#9a9a9a",1); c.strokeRect(bx,by,bw,bh);
+      c.fillStyle=b[1]?"#2b2b2b":"#9c9c9c"; c.textAlign="center";
+      c.fillText(b[0],bx+bw/2,by+bh/2);
+    });
+    /* the trace: 180 s across, +-1 mm high, sampled at 1 Hz */
+    const L=bx+bw+Math.max(20,w*0.035), R=w-Math.max(24,w*0.04);
+    const T=pad+fs*1.5, B=h-pad-fs*1.5;
+    const X=u=>L+u/180*(R-L), Y=v=>(T+B)/2-v/this.PSD_RANGE*(B-T)/2;
+    PEN(c,"#cfcfcf",1); c.beginPath();
+    c.moveTo(L,T); c.lineTo(L,B);
+    c.moveTo(L,(T+B)/2); c.lineTo(R,(T+B)/2); c.stroke();
+    c.fillStyle="#fff"; c.textAlign="center";
+    c.fillText("1 mm",L,T-fs*0.8); c.fillText("-1 mm",L,B+fs*0.8);
+    c.textAlign="right"; c.fillText("1 Hz",R,T-fs*0.8); c.textAlign="center";
+    for(let k=1;k<=3;k++){ const x=L+k/3*(R-L);
+      PEN(c,"#8f8f8f",1); c.beginPath(); c.moveTo(x,T); c.lineTo(x,B); c.stroke();
+      c.fillStyle="#fff"; c.fillText((60*k)+" s",x,B+fs*0.8); }
+    c.fillStyle="#e02020"; c.fillRect(L-1,Y(0)-1,3,3);
+    PEN(c,"#e02020",1.6); c.beginPath();
+    for(let u=0;u<=tt;u+=1){ const y=Y(Math.max(-1,Math.min(1,this.spot(u))));
+      u?c.lineTo(X(u),y):c.moveTo(X(u),y); }
     c.stroke();
-    const mm=this.m(t);
-    c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(mm),Y(D(mm)),3.4,0,7); c.fill();
-    /* the beam itself, bending in the corner */
-    const bx=w-pad-92, by=pad+14, BL=78, sag=D(mm)/DMAX*26;
-    PEN(c,"#7d848a",3); c.beginPath();
-    c.moveTo(bx,by);
-    c.quadraticCurveTo(bx+BL*0.6,by+sag*0.35,bx+BL,by+sag);
-    c.stroke();
-    c.fillStyle="#3a4048"; c.fillRect(bx-6,by-10,6,20);
-    c.fillStyle="#8d949b"; c.beginPath(); c.arc(bx+BL,by+sag+7,4.5,0,7); c.fill();
-    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="center"; for(const u of [50,100,150,200]) c.fillText(u+" g",X(u),h-7);
-    c.textAlign="right"; c.fillText("mm",padL-5,Y(DMAX*0.93));
-    c.textAlign="left";
+    c.textAlign="left"; c.textBaseline="alphabetic";
   }};
 
 /* ── APhO 2021 E2 · the pattern the sample throws on the screen ─── */
 const SIG_A21E2={
-  sim:"sim/apho2021_E2_web.html", tag:"APhO 2021 E2", span:17, rate:1,
-  capL:{ko:"시료가 만든 회절 무늬",en:"The diffraction pattern the sample makes"},
-  capR:{ko:"격자 간격",en:"pitch"},
-  read(t){ return (this.d(t)*1e6).toFixed(1)+" \u03bcm"; },
-  d(t){ return (28+16*Math.cos(2*Math.PI*Math.min(t,this.span)/this.span))*1e-6; },
+  sim:"sim/apho2021_E2_web.html", tag:"APhO 2021 E2", span:24, rate:1.1,
+  capL:{ko:"632.8 nm · 시료가 스크린에 만든 무늬와 광검출기 주사",
+        en:"632.8 nm · the pattern on the screen, and the photodetector scanning it"},
+  capR:{ko:"검출기",en:"detector"},
+  /* the page's own sample: the rectangles, the grid they sit on, the spheres */
+  LAM:632.8e-9, LDIST:0.90, HALF:14, A_SPH:5.627e-6,
+  L_RECT:58.59e-6, W_RECT:50.78e-6, DX:250e-6, DY:200e-6, PHI:27.0, N:24, VMAX:10.0,
+  sinc2(z){ if(Math.abs(z)<1e-12) return 1; const q=Math.sin(z)/z; return q*q; },
+  dir(z,N){ const d=Math.sin(z); if(Math.abs(d)<1e-9) return 1;
+            const r=Math.sin(N*z)/(N*d); return r*r; },
+  I(x,y){                                        /* x, y in metres on the screen */
+    const L=this.LDIST, lam=this.LAM, u=x/L, v=y/L, p=this.PHI*Math.PI/180;
+    const up=u*Math.cos(p)+v*Math.sin(p), vp=-u*Math.sin(p)+v*Math.cos(p);
+    const env=this.sinc2(Math.PI*this.L_RECT*up/lam)*this.sinc2(Math.PI*this.W_RECT*vp/lam);
+    const lat=this.dir(Math.PI*this.DX*up/lam,this.N)*this.dir(Math.PI*this.DY*vp/lam,this.N);
+    const r=Math.sqrt(u*u+v*v), sd=Math.sqrt(3)/2*this.A_SPH;
+    let ring=0;
+    for(let m=1;m<=3;m++){ const r0=m*lam/sd; if(r0>0.5) break;
+      ring+=1/m*Math.exp(-Math.pow((r-r0)/(0.045*r0),2)); }
+    return this.VMAX*Math.exp(-Math.pow(r/0.34,2))*(env*lat+0.18*ring);
+  },
+  ANG:25, SPAN_CM:1.15,
+  /* the orders the grid throws along the scan line: 250 um pitch at 90 cm */
+  ORD(m){ return m*this.LAM*this.LDIST/this.DX*100; },   /* cm */
+  probe(u){ const a=this.ANG*Math.PI/180;         /* u in cm along the scan line */
+            return [u*Math.cos(a), u*Math.sin(a)]; },
+  meter(u){ const p=this.probe(u);
+            return Math.max(0,Math.min(this.VMAX,this.I(p[0]*1e-2,p[1]*1e-2))); },
+  pattern(n){                                     /* painted once, then kept */
+    if(this._pat&&this._pat.width===n) return this._pat;
+    const cv=document.createElement("canvas"); cv.width=n; cv.height=n;
+    const g=cv.getContext("2d"), img=g.createImageData(n,n), px=img.data;
+    const col=[255,60,50], cm=2*this.HALF/n;
+    /* the grid spots are far finer than a pixel, so the middle is sampled
+       within the pixel and the brightest sample kept — the screen itself
+       integrates the same way */
+    for(let j=0;j<n;j++){ const yy=(n/2-j)/(n/2)*this.HALF;
+      for(let i=0;i<n;i++){ const xx=(i-n/2)/(n/2)*this.HALF;
+        let v=this.I(xx*1e-2,yy*1e-2);
+        if(Math.hypot(xx,yy)<4.0){
+          for(let q=0;q<9;q++){
+            const dx=((q%3)-1)*cm/3, dy=((q/3|0)-1)*cm/3;
+            const u=this.I((xx+dx)*1e-2,(yy+dy)*1e-2);
+            if(u>v) v=u; } }
+        const a=Math.min(1,v/2.2);
+        if(a<0.008) continue;
+        const k=4*(j*n+i);
+        px[k]=col[0]*a; px[k+1]=col[1]*a; px[k+2]=col[2]*a; px[k+3]=255; } }
+    g.putImageData(img,0,0);
+    this._pat=cv; return cv;
+  },
+  /* the detector is parked on one order at a time, the way D.2 is measured */
+  at(t){ const K=7, u=(t%this.span)/this.span*K, k=Math.min(K-1,Math.floor(u)), f=u-k;
+         const a=this.ORD(k-3), b=this.ORD(Math.min(k+1,K-1)-3);
+         const e=f<0.3 ? (1-Math.cos(Math.PI*f/0.3))/2 : 1;
+         return k===0 ? a : this.ORD(k-4)+(a-this.ORD(k-4))*e; },
+  read(t){ return this.meter(this.at(t)).toFixed(2)+" V"; },
   paint(c,w,h,t){
-    /* N slits of width a on a pitch d: the usual grating intensity */
-    const lam=650e-9, a=this.d(t)*0.34, d=this.d(t), N=6, Lsc=0.9;
-    const I=x=>{ const th=Math.atan2(x,Lsc);
-      const al=Math.PI*a*Math.sin(th)/lam, be=Math.PI*d*Math.sin(th)/lam;
-      const s=al===0?1:Math.sin(al)/al;
-      const g=Math.abs(Math.sin(be))<1e-9?N:Math.sin(N*be)/Math.sin(be);
-      return s*s*g*g/(N*N); };
-    const XM=0.055, pad=16, padL=32, padB=22;
-    const X=u=>padL+(u+XM)/(2*XM)*(w-padL-pad);
-    const Y=v=>h-padB-v*(h-padB-pad)*0.92;
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    PEN(c,"#DCE7F0",.5); c.beginPath();
-    for(let u=-XM;u<=XM+1e-9;u+=XM/5){ c.moveTo(X(u),pad); c.lineTo(X(u),h-padB); }
-    for(let v=0;v<=1;v+=0.25){ c.moveTo(padL,Y(v)); c.lineTo(w-pad,Y(v)); }
+    c.fillStyle="#282828"; c.fillRect(0,0,w,h);
+    const pad=Math.max(8,h*0.05);
+    const side=Math.min(h-2*pad, w*0.54);
+    const sx=pad, sy=(h-side)/2;
+    c.fillStyle="#000"; c.fillRect(sx,sy,side,side);
+    c.drawImage(this.pattern(Math.min(460,Math.round(side*1.6))),sx,sy,side,side);
+    /* the photodetector, the small yellow dot the app draws on the screen */
+    const S=side/(2*this.HALF), cx=sx+side/2, cy=sy+side/2;
+    const u=this.at(t), p=this.probe(u);
+    c.fillStyle="#e8e838";
+    c.fillRect(cx+p[0]*S-2, cy-p[1]*S-2, 4, 4);
+    PEN(c,"rgba(232,232,56,.35)",1); c.beginPath();
+    c.moveTo(cx+this.probe(-this.SPAN_CM)[0]*S, cy-this.probe(-this.SPAN_CM)[1]*S);
+    c.lineTo(cx+this.probe(this.SPAN_CM)[0]*S, cy-this.probe(this.SPAN_CM)[1]*S);
     c.stroke();
-    /* the screen strip: the fringes as they actually look */
-    const sy=pad+2, sh=Math.max(10,(h-padB-pad)*0.16);
-    for(let px=padL;px<=w-pad;px+=1){
-      const u=(px-padL)/(w-padL-pad)*2*XM-XM;
-      const v=Math.min(1,I(u));
-      c.fillStyle="rgb("+Math.round(255*(0.12+0.88*v))+","+Math.round(40+30*v)+","+Math.round(38+26*v)+")";
-      c.fillRect(px,sy,1,sh);
-    }
-    PEN(c,"#B4CADC",1); c.strokeRect(padL,sy,w-pad-padL,sh);
-    PEN(c,"#B4CADC",1); c.beginPath();
-    c.moveTo(padL,Y(0)); c.lineTo(w-pad,Y(0));
-    c.moveTo(padL,sy+sh+6); c.lineTo(padL,h-padB); c.stroke();
-    PEN(c,"#2c6f9b",1.8); c.beginPath();
-    for(let px=padL;px<=w-pad;px+=1){
-      const u=(px-padL)/(w-padL-pad)*2*XM-XM, v=Math.min(1,I(u));
-      const yy=Math.max(sy+sh+6,Y(v));
-      px===padL?c.moveTo(px,yy):c.lineTo(px,yy);
+    /* the side panel: the readings, then the scan the app plots under them */
+    const bx=sx+side+Math.max(12,w*0.03), bw=w-bx-pad;
+    const fs=Math.max(9,Math.min(13,h*0.042));
+    c.font=fs.toFixed(1)+"px 'Gill Sans',Calibri,sans-serif";
+    c.textAlign="left"; c.textBaseline="middle";
+    let ty=sy+fs;
+    const row=(k,v)=>{ c.fillStyle="#9c9c9c"; c.fillText(k,bx,ty);
+      c.fillStyle="#f0f0f0"; c.textAlign="right"; c.fillText(v,bx+bw,ty);
+      c.textAlign="left"; ty+=fs*1.7; };
+    row("laser","632.8 nm"); row("L","90.00 cm");
+    row("x",(p[0]).toFixed(2)+" cm"); row("y",(p[1]).toFixed(2)+" cm");
+    c.fillStyle="#9c9c9c"; c.fillText("photodetector",bx,ty); ty+=fs*1.5;
+    c.font="bold "+(fs*1.5).toFixed(1)+"px Consolas,monospace";
+    c.fillStyle="#e8e838"; c.fillText(this.meter(u).toFixed(2)+" V",bx,ty);
+    ty+=fs*1.6;
+    const gh=Math.max(46,h*0.26), gy=Math.min(ty,sy+side-gh);
+    c.fillStyle="#282828"; c.fillRect(bx,gy,bw,gh);
+    PEN(c,"#4a4a4a",1); c.strokeRect(bx,gy,bw,gh);
+    /* the finished scan, each column keeping the brightest sample in it */
+    const uX=uu=>bx+(uu+this.SPAN_CM)/(2*this.SPAN_CM)*bw;
+    PEN(c,"rgba(232,232,56,.35)",1); c.beginPath();
+    c.moveTo(uX(u),gy); c.lineTo(uX(u),gy+gh); c.stroke();
+    PEN(c,"#e8e838",1.2); c.beginPath();
+    const NP=Math.max(40,Math.round(bw));
+    for(let i=0;i<=NP;i++){
+      const uu=-this.SPAN_CM+2*this.SPAN_CM*i/NP;
+      let v=0;
+      for(let q=0;q<9;q++){
+        const g2=this.meter(uu+(q-4)*(2*this.SPAN_CM/NP)/9);
+        if(g2>v) v=g2; }
+      const Y=gy+gh-4-v/this.VMAX*(gh-8);
+      i?c.lineTo(uX(uu),Y):c.moveTo(uX(uu),Y);
     }
     c.stroke();
-    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="center"; for(const u of [-0.04,0,0.04]) c.fillText((u*100).toFixed(0)+" cm",X(u),h-7);
-    c.textAlign="left";
+    c.textBaseline="alphabetic";
   }};
 
 /* ── RMPh 2021 · the D0 peak coming out of real LHCb data ───────── */
@@ -2419,97 +2821,153 @@ const SIG_E21E1={
 
 /* ── EuPhO 2021 E2 · heat crawling along the rod ────────────────── */
 const SIG_E21E2={
-  sim:"sim/eupho2021_E2_web.html", tag:"EuPhO 2021 E2", span:22, rate:1,
-  capL:{ko:"한쪽 끝을 데운 30 cm 막대 · 다섯 지점의 온도가 차례로 오른다",
-        en:"A 30 cm rod heated at one end · five points warm up in turn"},
-  capR:{ko:"가열 시간",en:"heating"},
-  L:0.30, ALPHA:1.1e-4, P:12,
-  T(x,t){ /* one-dimensional heat flow from the end, room temperature 26.9 C */
-    if(t<=0) return 26.9;
-    const a=this.ALPHA, k=205, A=Math.PI*0.01*0.01;
-    const z=x/(2*Math.sqrt(a*t));
-    const erfc=u=>{ const p=0.3275911, s=1/(1+p*u);
-      return s*(0.254829592+s*(-0.284496736+s*(1.421413741+s*(-1.453152027+s*1.061405429))))*Math.exp(-u*u); };
-    const q=this.P/A;
-    return 26.9 + q*Math.sqrt(4*a*t/Math.PI)/k*(Math.exp(-z*z)-Math.sqrt(Math.PI)*z*erfc(z));
+  sim:"sim/eupho2021_E2_web.html", tag:"EuPhO 2021 E2", span:70, rate:30,
+  capL:{ko:"주최측 콘솔 프로그램 \"rod\" · 다섯 센서가 읽어 내리는 표",
+        en:"The organisers' console program \"rod\" · the table its five sensors print"},
+  capR:{ko:"가열부 온도",en:"heated end"},
+  /* the page's own solver, with the constants the official solution extracts */
+  C:115.0, K:400.0, ALPHA:2.90, BETA:0.30, LROD:0.30, RROD:0.01, LHEAT:0.03,
+  MASS:0.460, T0C:26.9, T0K:300.0, SIG:5.67e-8, NX:41,
+  simulate(power,heatDur,tStart,tEnd,dtOut,sensors){
+    const nx=this.NX, dx=this.LROD/(nx-1);
+    const area=Math.PI*this.RROD*this.RROD, perim=2*Math.PI*this.RROD;
+    const rho=this.MASS/(area*this.LROD), rhoC=rho*this.C;
+    const k=this.K, bs=this.BETA*this.SIG, t0k=this.T0K, t04=t0k*t0k*t0k*t0k;
+    const poa=perim/area, invDx2=1/(dx*dx), invHalf=1/(0.5*dx);
+    const dt=Math.min(0.4*dx*dx/(k/rhoC),0.05);
+    let T=new Float64Array(nx), Tn=new Float64Array(nx);
+    for(let i=0;i<nx;i++) T[i]=t0k;
+    let nHeat=0;
+    while(nHeat<nx&&nHeat*dx<=this.LHEAT+1e-12) nHeat++;
+    const qVol=nHeat?power/(area*(nHeat-0.5)*dx)/rhoC:0;
+    const idx=sensors.map(x=>Math.min(nx-1,Math.max(0,Math.round(x/dx))));
+    const out=[]; let t=0, next=tStart;
+    while(t<tEnd-1e-12){
+      const step=dt<tEnd-t?dt:tEnd-t, heating=t<heatDur;
+      for(let i=0;i<nx;i++){
+        const Ti=T[i];
+        const lap = i===0 ? 2*(T[1]-Ti)*invDx2
+                  : i===nx-1 ? 2*(T[nx-2]-Ti)*invDx2
+                  : (T[i+1]-2*Ti+T[i-1])*invDx2;
+        const flux=this.ALPHA*(Ti-t0k)+bs*(Ti*Ti*Ti*Ti-t04);
+        let d=(k*lap-poa*flux)/rhoC;
+        if(heating&&i<nHeat) d+=qVol;
+        if(i===0||i===nx-1) d-=flux*invHalf/rhoC;
+        Tn[i]=Ti+d*step;
+      }
+      const sw=T; T=Tn; Tn=sw; t+=step;
+      while(next<=t+1e-9&&next<=tEnd){
+        const row=[next];
+        for(const j of idx) row.push(T[j]-t0k+this.T0C);
+        out.push(row); next+=dtOut;
+      }
+    }
+    return out;
   },
-  read(t){ return (t%this.span).toFixed(0)+" s"; },
+  XS:[2,8,15,22,29],
+  build(){
+    if(this._f) return this._f;
+    const rows=this.simulate(300,120,0,300,20,this.XS.map(x=>x*0.01));
+    this._rows=rows;
+    let head="  t(s)  ";
+    for(let i=0;i<this.XS.length;i++) head+="   T"+(i+1)+"(C)  ";
+    const f=[
+      {s:"EuPhO 2021 - Experiment 2: Hot Cylinder"},
+      {s:"L = 30 cm, r = 1 cm, m = 460 g, T0 = 26.9 C, heater over 0..3 cm.",dim:true},
+      {s:""},
+      {s:"Enter the heating power in W (max 300 W): ",ans:"300"},
+      {s:"Enter the heating duration in s: ",ans:"120"},
+      {s:"Enter the starting and finishing time (s): ",ans:"0 300"},
+      {s:"Enter the time step between measurements (s): ",ans:"20"},
+      {s:"Enter up to 5 sensor locations (cm): ",ans:this.XS.join(" ")},
+      {s:""},
+      {s:"Experiment: P = 300 W for 120 s; from 0 s to 300 s every 20 s."},
+      {s:"Sensors at "+this.XS.join(" cm, ")+" cm.",dim:true},
+      {s:""},
+      {s:head,dim:true}];
+    this._head=f.length;
+    for(const r of rows){
+      let line=termPad(r[0].toFixed(1),7)+" ";
+      for(let j=1;j<r.length;j++) line+=termPad(r[j].toFixed(2),9)+" ";
+      f.push({s:line});
+    }
+    this._f=f; this._n=termLen(f);
+    return f;
+  },
+  read(t){ this.build();
+    const shown=termCut(this._f,Math.round(t*this._n/this.span)).length;
+    const k=Math.max(0,Math.min(this._rows.length-1,shown-this._head-1));
+    return this._rows[k][1].toFixed(1)+" \u00b0C"; },
   paint(c,w,h,t){
-    const tt=(t%this.span)*8;                       /* the run, sped up */
-    const pad=26, x0=pad+34, x1=w-pad, ry=h*0.34, rh=Math.max(16,h*0.14);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the rod, coloured by its own temperature */
-    for(let px=x0;px<x1;px+=2){
-      const x=(px-x0)/(x1-x0)*this.L, T=this.T(x,tt);
-      const u=Math.min(1,Math.max(0,(T-26.9)/70));
-      c.fillStyle="rgb("+Math.round(190+65*u)+","+Math.round(190-95*u)+","+Math.round(195-150*u)+")";
-      c.fillRect(px,ry,2,rh);
-    }
-    PEN(c,"#7d848a",1.6); c.strokeRect(x0,ry,x1-x0,rh);
-    /* the heater on the first 3 cm */
-    c.fillStyle="rgba(232,98,42,.85)";
-    c.fillRect(x0,ry-6,(x1-x0)*0.10,rh+12);
-    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="center"; c.fillText(this.P+" W",x0+(x1-x0)*0.05,ry-10);
-    /* the five sensors, and the temperature each is showing */
-    const gy=ry+rh+18, gh=h-gy-26;
-    PEN(c,"#B4CADC",1); c.beginPath();
-    c.moveTo(x0,gy+gh); c.lineTo(x1,gy+gh); c.stroke();
-    for(let i=0;i<5;i++){
-      const f=(i+0.5)/5, px=x0+(x1-x0)*f, T=this.T(f*this.L,tt);
-      const u=Math.min(1,Math.max(0,(T-26.9)/70));
-      PEN(c,"#c3ccd2",1); c.beginPath();
-      c.moveTo(px,ry+rh); c.lineTo(px,gy); c.stroke();
-      c.fillStyle="#2c6f9b"; c.fillRect(px-6,gy+gh-u*gh,12,u*gh);
-      c.fillStyle="#5c6773"; c.textAlign="center";
-      c.fillText(T.toFixed(0)+"\u00b0",px,gy+gh+14);
-    }
-    c.textAlign="left";
+    const f=this.build();
+    termPaint(c,w,h,"EuPhO 2021 E2 \u2014 Hot Cylinder",f,
+              Math.round(t*this._n/this.span));
   }};
 
 /* ── EuPhO 2020 E1 · electrons thrown off course by a hidden charge ─ */
 const SIG_E20E1={
-  sim:"sim/eupho2020_E1_web.html", tag:"EuPhO 2020 E1", span:15, rate:1,
-  capL:{ko:"숨은 전하에 산란되어 스크린에 찍히는 전자",
-        en:"Electrons scattered by the hidden charge onto the screen"},
-  capR:{ko:"충돌 파라미터",en:"impact b"},
-  b(t){ const u=(t%this.span)/this.span; return 0.10+0.75*(0.5-0.5*Math.cos(2*Math.PI*u)); },
-  paint(c,w,h,t){
-    const qx=w*0.46, qy=h*0.52, S=Math.min(w,h);
-    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-    /* the screen the electrons end up on */
-    const sx=w-34;
-    c.fillStyle="#eef2f6"; c.fillRect(sx,18,16,h-46);
-    PEN(c,"#9aa3ab",1.4); c.strokeRect(sx,18,16,h-46);
-    /* the hidden charge, drawn faint: the students never see it */
-    PEN(c,"#e3c6bd",1.2); c.setLineDash([4,4]);
-    for(const r of [0.06,0.11,0.17]){ c.beginPath(); c.arc(qx,qy,r*S,0,7); c.stroke(); }
-    c.setLineDash([]);
-    c.fillStyle="#e8622a"; c.beginPath(); c.arc(qx,qy,4,0,7); c.fill();
-    /* a fan of electrons: each one deflected by its own impact parameter */
-    const bs=[-0.62,-0.38,-0.2,0.2,0.38,0.62,this.b(t)];
-    bs.forEach((bb,i)=>{
-      const live=(i===bs.length-1);
-      const b=bb*S*0.22;
-      PEN(c,live?"#2c6f9b":"#cfdce7",live?2.2:1.4); c.beginPath();
-      let x=14, y=qy-b, vx=1, vy=0, hit=null;
-      c.moveTo(x,y);
-      for(let k=0;k<420 && x<sx;k++){
-        const dx=x-qx, dy=y-qy, r2=Math.max(60,dx*dx+dy*dy), r=Math.sqrt(r2);
-        const a=1400/r2;                          /* repulsion, Rutherford-like */
-        vx+=a*dx/r*0.02; vy+=a*dy/r*0.02;
-        const n=Math.hypot(vx,vy); vx/=n; vy/=n;
-        x+=vx*2.2; y+=vy*2.2; c.lineTo(x,y);
-        if(x>=sx){ hit=y; break; }
-      }
-      c.stroke();
-      if(hit!==null){ c.fillStyle=live?"#2c6f9b":"#b9c8d6";
-        c.beginPath(); c.arc(sx+8,Math.max(20,Math.min(h-30,hit)),live?4:2.6,0,7); c.fill(); }
-    });
-    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
-    c.textAlign="left"; c.fillText("b = "+this.b(t).toFixed(2),12,h-12);
+  sim:"sim/eupho2020_E1_web.html", tag:"EuPhO 2020 E1", span:58, rate:24,
+  capL:{ko:"주최측 콘솔 프로그램 · 전자빔을 쏘아 숨은 전하를 찾는다",
+        en:"The organisers' console program · fire the beam, hunt the hidden charge"},
+  capR:{ko:"스크린 도달점",en:"landing"},
+  /* EuPhO published the C++ source; these are its own numbers */
+  RP:[0.05435205,-0.0259338,-0.1150416], QP:-8.62193e-11,
+  ME:9.10938356e-31, E0:1.60217662e-19, KE:8.9875517923e9,
+  solve(x0,y0,v0){
+    const RP=this.RP;
+    const acc=(x,y,z)=>{ const r2=x*x+y*y+z*z;
+      const k=-this.KE*this.QP*this.E0/(r2*Math.sqrt(r2))/this.ME;
+      return [k*x,k*y,k*z]; };
+    let dx=x0-RP[0], dy=y0-RP[1], dz=-10-RP[2];
+    let vx=0, vy=0, vz=v0;
+    for(let i=0;i<400000;i++){
+      const rx=dx+RP[0], ry=dy+RP[1], rz=dz+RP[2];
+      if(Math.sqrt(rx*rx+ry*ry+rz*rz)>1000) break;
+      const a=acc(dx,dy,dz);
+      const dt=100/Math.sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+      const b=acc(dx+vx*dt,dy+vy*dt,dz+vz*dt);
+      const ex=0.5*(a[0]+b[0]), ey=0.5*(a[1]+b[1]), ez=0.5*(a[2]+b[2]);
+      const hf=0.5*dt*dt;
+      dx+=vx*dt+ex*hf; dy+=vy*dt+ey*hf; dz+=vz*dt+ez*hf;
+      vx+=ex*dt; vy+=ey*dt; vz+=ez*dt;
+      if(dz+RP[2]>0){ const px=dx+RP[0], py=dy+RP[1];
+        const on=px>=-0.2&&px<=0.2&&py>=-0.2&&py<=0.2;
+        return [on,px,py]; }
+    }
+    return [false,0,0];
   },
-  read(t){ return this.b(t).toFixed(2); }};
+  RUNS:[[1000,0,0],[1000,4,-2],[4000,6,-3]],
+  build(){
+    if(this._f) return this._f;
+    const sep=new Array(49).join("-");
+    const g=x=>String(Math.round(x*1e6)/1e6);
+    const f=[];
+    this._hit=[];
+    for(const run of this.RUNS){
+      const r=this.solve(run[1]/100,run[2]/100,Math.sqrt(2*run[0]*this.E0/this.ME));
+      this._hit.push(r);
+      f.push({s:"Beam accelerating voltage in V: ",ans:String(run[0])});
+      f.push({s:"x-coordinate of the electron beam in cm: ",ans:String(run[1])});
+      f.push({s:"y-coordinate of the electron beam in cm: ",ans:String(run[2])});
+      f.push({s:"Electron beam fired with parameters (x, y, V) = ("+
+                g(run[1])+"cm, "+g(run[2])+"cm, "+g(run[0])+"V)"});
+      f.push(r[0] ? {s:"Electron detected at (x, y) = ("+(r[1]*100).toFixed(1)+
+                       "cm, "+(r[2]*100).toFixed(1)+"cm)",acc:true}
+                  : {s:"Electron not detected...",dim:true});
+      f.push({s:sep,dim:true});
+    }
+    this._f=f; this._n=termLen(f);
+    return f;
+  },
+  read(t){ this.build();
+    const k=Math.min(this.RUNS.length-1,Math.floor(t/(this.span/this.RUNS.length)));
+    const r=this._hit[k];
+    return r[0] ? (r[1]*100).toFixed(1)+", "+(r[2]*100).toFixed(1)+" cm" : "\u2014"; },
+  paint(c,w,h,t){
+    const f=this.build();
+    termPaint(c,w,h,"EuPhO 2020 Experiment 1 \u2014 Hidden Charge",f,
+              Math.round(t*this._n/this.span));
+  }};
 
 /* ── EuPhO 2020 E2 · the sealed box, shaken on purpose ──────────── */
 const SIG_E20E2={
