@@ -11,7 +11,10 @@
       banner.id = "haslalab-adfit-banner";
       banner.setAttribute("aria-label", "광고");
       banner.innerHTML = '<span>광고</span><div></div>';
-      document.body.append(banner);
+      const desktop = matchMedia("(min-width: 768px)").matches;
+      const experiment = document.querySelector(".wrap, main, #app");
+      if (desktop && experiment) experiment.before(banner);
+      else document.body.append(banner);
     }
     banner.hidden = !isKorean();
     if (!isKorean() || mounted) return;
