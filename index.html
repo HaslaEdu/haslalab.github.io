@@ -346,6 +346,13 @@ section{padding:58px 0}
 .prob .top{flex-wrap:wrap}
 .tag.exp{background:rgba(184,134,43,.13);color:var(--brass)}
 
+/* ═══════ AdFit banner — Korean home only ═══════ */
+.adfit-banner{position:relative;width:320px;max-width:100%;height:50px;margin:38px auto 0}
+.adfit-banner-label{position:absolute;top:-17px;left:0;padding:3px 5px;border:1px solid #d6dce5;border-radius:4px;color:#667085;font:9px/1.1 var(--mono)}
+.adfit-banner-slot{width:320px;max-width:100%;height:50px;overflow:hidden}
+.adfit-banner:has(.adfit-banner-slot>ins[style*="display: none"]){display:none}
+@media print{.adfit-banner{display:none}}
+
 /* ═══════ footer ═══════ */
 footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px}
 .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
@@ -1154,7 +1161,12 @@ function viewHome(){
       <div><dt>${d.tLive}</dt><dd class="hot">${live}</dd></div>
     </dl>
     <p class="tallynote">${d.tallyNote}</p>
-  </div></section>`;
+  </div></section>
+
+  ${lang==="ko"?`<aside class="adfit-banner" aria-label="광고">
+    <span class="adfit-banner-label">광고</span>
+    <div class="adfit-banner-slot" id="haslalab-adfit-slot"></div>
+  </aside>`:""}`;
 }
 
 function viewComps(){
@@ -3097,6 +3109,21 @@ function setDocTitle(first, second){
   document.title = parts.length ? `${parts[0]} \u00b7 ${SITE}` : `${SITE} \u2014 ${tail}`;
 }
 
+function mountHaslaAdFit(){
+  const slot=document.getElementById("haslalab-adfit-slot");
+  if(!slot) return;
+  const ins=document.createElement("ins");
+  ins.className="kakao_ad_area";
+  ins.style.display="none";
+  ins.dataset.adUnit="DAN-iGyhh2ByjtPoCpiA";
+  ins.dataset.adWidth="320";
+  ins.dataset.adHeight="50";
+  const script=document.createElement("script");
+  script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";
+  script.async=true;
+  slot.append(ins,script);
+}
+
 function render(){
   if(animId){cancelAnimationFrame(animId);animId=null;}
   const d=UI[lang];
@@ -3118,6 +3145,7 @@ function render(){
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
   document.getElementById("footTop").textContent=d.footTop;
+  mountHaslaAdFit();
 
   buildRails();
   if(active==="home") startHero();
