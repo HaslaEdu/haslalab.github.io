@@ -346,11 +346,13 @@ section{padding:58px 0}
 .prob .top{flex-wrap:wrap}
 .tag.exp{background:rgba(184,134,43,.13);color:var(--brass)}
 
-/* ═══════ AdFit banner — Korean home only ═══════ */
-.adfit-banner{position:relative;width:320px;max-width:100%;height:50px;margin:38px auto 0}
+/* ═══════ AdFit banners — Korean pages only ═══════ */
+.adfit-banner{position:relative;width:320px;max-width:calc(100% - 32px);height:50px;margin:42px auto 6px}
 .adfit-banner-label{position:absolute;top:-17px;left:0;padding:3px 5px;border:1px solid #d6dce5;border-radius:4px;color:#667085;font:9px/1.1 var(--mono)}
 .adfit-banner-slot{width:320px;max-width:100%;height:50px;overflow:hidden}
 .adfit-banner:has(.adfit-banner-slot>ins[style*="display: none"]){display:none}
+@media (min-width:700px){.adfit-banner{margin-top:52px}}
+@media (min-width:1100px){.adfit-banner{margin-top:60px}}
 @media print{.adfit-banner{display:none}}
 
 /* ═══════ footer ═══════ */
@@ -1117,6 +1119,14 @@ const compLogo = key =>
 
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+function adFitBanner(placement){
+  if(lang!=="ko") return "";
+  return `<aside class="adfit-banner adfit-banner--${placement}" aria-label="광고">
+    <span class="adfit-banner-label">광고</span>
+    <div class="adfit-banner-slot haslalab-adfit-slot"></div>
+  </aside>`;
+}
+
 /* ══════════════════════════════════════════════════════════════
    VIEWS
    ══════════════════════════════════════════════════════════════ */
@@ -1163,10 +1173,7 @@ function viewHome(){
     <p class="tallynote">${d.tallyNote}</p>
   </div></section>
 
-  ${lang==="ko"?`<aside class="adfit-banner" aria-label="광고">
-    <span class="adfit-banner-label">광고</span>
-    <div class="adfit-banner-slot" id="haslalab-adfit-slot"></div>
-  </aside>`:""}`;
+  ${adFitBanner("home")}`;
 }
 
 function viewComps(){
@@ -1193,7 +1200,8 @@ function viewComps(){
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
-  </div>`;
+  </div>
+  ${adFitBanner("list")}`;
 }
 
 function viewAbout(){
@@ -1231,7 +1239,8 @@ function viewAbout(){
         </div>
       </div>
     </div>
-  </div>`;
+  </div>
+  ${adFitBanner("about")}`;
 }
 
 function viewComp(key){
@@ -1274,7 +1283,8 @@ function viewComp(key){
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
     </div>
-  </div>`;
+  </div>
+  ${adFitBanner("competition")}`;
 }
 
 function viewYear(key,year){
@@ -1352,7 +1362,8 @@ function viewYear(key,year){
           ${off}
         </article>`;}).join("")}
     </div>
-  </div>`;
+  </div>
+  ${adFitBanner("experiments")}`;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -3110,18 +3121,21 @@ function setDocTitle(first, second){
 }
 
 function mountHaslaAdFit(){
-  const slot=document.getElementById("haslalab-adfit-slot");
-  if(!slot) return;
-  const ins=document.createElement("ins");
-  ins.className="kakao_ad_area";
-  ins.style.display="none";
-  ins.dataset.adUnit="DAN-iGyhh2ByjtPoCpiA";
-  ins.dataset.adWidth="320";
-  ins.dataset.adHeight="50";
+  const slots=document.querySelectorAll(".haslalab-adfit-slot");
+  if(!slots.length) return;
+  slots.forEach(slot=>{
+    const ins=document.createElement("ins");
+    ins.className="kakao_ad_area";
+    ins.style.display="none";
+    ins.dataset.adUnit="DAN-iGyhh2ByjtPoCpiA";
+    ins.dataset.adWidth="320";
+    ins.dataset.adHeight="50";
+    slot.append(ins);
+  });
   const script=document.createElement("script");
   script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";
   script.async=true;
-  slot.append(ins,script);
+  document.body.append(script);
 }
 
 function render(){
