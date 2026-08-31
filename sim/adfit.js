@@ -1,5 +1,4 @@
 (() => {
-  const unit = "DAN-iGyhh2ByjtPoCpiA";
   let mounted = false;
   let requestedEnglish = new URLSearchParams(location.search).get("lang") === "en";
 
@@ -17,12 +16,17 @@
     banner.hidden = !isKorean();
     if (!isKorean() || mounted) return;
 
+    const desktop = matchMedia("(min-width: 768px)").matches;
+    const ad = desktop
+      ? {unit:"DAN-SftG79uMQrQr81Vk", width:728, height:90}
+      : {unit:"DAN-iGyhh2ByjtPoCpiA", width:320, height:50};
+    banner.classList.toggle("haslalab-adfit-desktop", desktop);
     const ins = document.createElement("ins");
     ins.className = "kakao_ad_area";
     ins.style.display = "none";
-    ins.dataset.adUnit = unit;
-    ins.dataset.adWidth = "320";
-    ins.dataset.adHeight = "50";
+    ins.dataset.adUnit = ad.unit;
+    ins.dataset.adWidth = String(ad.width);
+    ins.dataset.adHeight = String(ad.height);
     banner.querySelector("div").append(ins);
 
     const script = document.createElement("script");
@@ -34,11 +38,15 @@
 
   const style = document.createElement("style");
   style.textContent = `
-    #haslalab-adfit-banner{position:relative;width:320px;max-width:calc(100% - 32px);height:50px;margin:28px auto 44px}
+    #haslalab-adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:28px auto 44px}
     #haslalab-adfit-banner>span{position:absolute;top:-17px;left:0;color:#9aa3ab;font:9px/1.1 ui-monospace,monospace}
     #haslalab-adfit-banner>div{width:320px;max-width:100%;height:50px;overflow:hidden}
     #haslalab-adfit-banner:has(ins[style*="display: none"]){display:none}
     @media (min-width:700px){#haslalab-adfit-banner{margin-top:36px}}
+    @media (min-width:768px){
+      #haslalab-adfit-banner.haslalab-adfit-desktop{width:728px;max-width:calc(100% - 48px);height:90px;margin-top:44px}
+      #haslalab-adfit-banner.haslalab-adfit-desktop>div{width:728px;height:90px}
+    }
     @media print{#haslalab-adfit-banner{display:none}}
   `;
   document.head.append(style);

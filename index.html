@@ -347,11 +347,15 @@ section{padding:58px 0}
 .tag.exp{background:rgba(184,134,43,.13);color:var(--brass)}
 
 /* ═══════ AdFit banners — Korean pages only ═══════ */
-.adfit-banner{position:relative;width:320px;max-width:calc(100% - 32px);height:50px;margin:42px auto 6px}
+.adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-banner-label{position:absolute;top:-17px;left:0;padding:3px 5px;border:1px solid #d6dce5;border-radius:4px;color:#667085;font:9px/1.1 var(--mono)}
 .adfit-banner-slot{width:320px;max-width:100%;height:50px;overflow:hidden}
 .adfit-banner:has(.adfit-banner-slot>ins[style*="display: none"]){display:none}
 @media (min-width:700px){.adfit-banner{margin-top:52px}}
+@media (min-width:768px){
+  .adfit-banner.adfit-banner--desktop{width:728px;max-width:calc(100% - 48px);height:90px;margin-top:58px}
+  .adfit-banner--desktop .adfit-banner-slot{width:728px;height:90px}
+}
 @media (min-width:1100px){.adfit-banner{margin-top:60px}}
 @media print{.adfit-banner{display:none}}
 
@@ -3123,13 +3127,18 @@ function setDocTitle(first, second){
 function mountHaslaAdFit(){
   const slots=document.querySelectorAll(".haslalab-adfit-slot");
   if(!slots.length) return;
+  const desktop=matchMedia("(min-width: 768px)").matches;
+  const ad=desktop
+    ? {unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90}
+    : {unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50};
   slots.forEach(slot=>{
+    slot.closest(".adfit-banner").classList.toggle("adfit-banner--desktop",desktop);
     const ins=document.createElement("ins");
     ins.className="kakao_ad_area";
     ins.style.display="none";
-    ins.dataset.adUnit="DAN-iGyhh2ByjtPoCpiA";
-    ins.dataset.adWidth="320";
-    ins.dataset.adHeight="50";
+    ins.dataset.adUnit=ad.unit;
+    ins.dataset.adWidth=String(ad.width);
+    ins.dataset.adHeight=String(ad.height);
     slot.append(ins);
   });
   const script=document.createElement("script");
