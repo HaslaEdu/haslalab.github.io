@@ -1,8 +1,9 @@
 (() => {
   const unit = "DAN-iGyhh2ByjtPoCpiA";
   let mounted = false;
+  let requestedEnglish = new URLSearchParams(location.search).get("lang") === "en";
 
-  const isKorean = () => document.documentElement.lang === "ko";
+  const isKorean = () => !requestedEnglish && document.documentElement.lang === "ko";
 
   function syncAd() {
     let banner = document.getElementById("haslalab-adfit-banner");
@@ -42,5 +43,10 @@
   `;
   document.head.append(style);
   new MutationObserver(syncAd).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
+  document.addEventListener("click", event => {
+    if (event.target.closest("#btn-ko")) requestedEnglish = false;
+    if (event.target.closest("#btn-en")) requestedEnglish = true;
+    syncAd();
+  });
   syncAd();
 })();
