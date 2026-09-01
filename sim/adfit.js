@@ -43,7 +43,7 @@
   style.textContent = `
     #haslalab-adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:28px auto 44px}
     #haslalab-adfit-banner>span{position:absolute;top:-17px;left:0;color:#9aa3ab;font:9px/1.1 ui-monospace,monospace}
-    #haslalab-adfit-banner>div{width:320px;max-width:100%;height:50px;overflow:hidden;border:1px solid #33373e;border-radius:6px;background:#20252c}
+    #haslalab-adfit-banner>div{width:320px;max-width:100%;height:50px}
     @media (min-width:700px){#haslalab-adfit-banner{margin-top:36px}}
     @media (min-width:768px){
       #haslalab-adfit-banner.haslalab-adfit-desktop{width:728px;max-width:calc(100% - 48px);height:90px;margin-top:44px}
