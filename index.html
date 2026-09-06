@@ -350,6 +350,7 @@ section{padding:58px 0}
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-banner-label{position:absolute;top:-17px;left:0;color:#667085;font:9px/1.1 var(--mono)}
 .adfit-banner-slot{width:320px;max-width:100%;height:50px}
+.adfit-banner--secondary,.adfit-banner--secondary .adfit-banner-slot{height:100px}
 @media (min-width:700px){.adfit-banner{margin-top:52px}}
 @media (min-width:768px){
   .adfit-banner.adfit-banner--desktop{width:728px;max-width:calc(100% - 48px);height:90px;margin-top:58px}
@@ -1124,9 +1125,10 @@ const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 
 function adFitBanner(placement){
   if(lang!=="ko") return "";
-  return `<aside class="adfit-banner adfit-banner--${placement}" aria-label="광고">
+  const size=placement==="secondary" ? " adfit-banner--secondary" : "";
+  return `<aside class="adfit-banner${size}" aria-label="광고">
     <span class="adfit-banner-label">광고</span>
-    <div class="adfit-banner-slot haslalab-adfit-slot"></div>
+    <div class="adfit-banner-slot haslalab-adfit-slot" data-ad-placement="${placement}"></div>
   </aside>`;
 }
 
@@ -1188,6 +1190,7 @@ function viewComps(){
       <h1>${d.hComps}</h1>
       <div class="sub">${d.pComps}</div>
     </div>
+    ${adFitBanner("secondary")}
     <div class="comps" data-lang="${lang}">
       ${Object.entries(DATA).map(([key,c])=>{
         const probs=c.years.reduce((n,y)=>n+y.problems.length,0);
@@ -1204,7 +1207,7 @@ function viewComps(){
         </a>`;}).join("")}
     </div>
   </div>
-  ${adFitBanner("list")}`;
+  ${adFitBanner("primary")}`;
 }
 
 function viewAbout(){
@@ -1269,6 +1272,7 @@ function viewComp(key){
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
+    ${adFitBanner("secondary")}
     <div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>
     <div class="years">
       ${c.years.map(y=>{
@@ -1287,7 +1291,7 @@ function viewComp(key){
       }).join("")}
     </div>
   </div>
-  ${adFitBanner("competition")}`;
+  ${adFitBanner("primary")}`;
 }
 
 function viewYear(key,year){
@@ -1309,6 +1313,7 @@ function viewYear(key,year){
         <div><dt>${d.problems}</dt><dd>${yr.problems.length}</dd></div>
       </dl>
     </div>
+    ${adFitBanner("secondary")}
     <div class="shead">
       <h2 style="font-size:1.15rem">${d.pickProb}</h2>
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
@@ -1366,7 +1371,7 @@ function viewYear(key,year){
         </article>`;}).join("")}
     </div>
   </div>
-  ${adFitBanner("experiments")}`;
+  ${adFitBanner("primary")}`;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -3127,10 +3132,11 @@ function mountHaslaAdFit(){
   const slots=document.querySelectorAll(".haslalab-adfit-slot");
   if(!slots.length) return;
   const desktop=matchMedia("(min-width: 768px)").matches;
-  const ad=desktop
-    ? {unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90}
-    : {unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50};
+  const ads=desktop
+    ? {primary:{unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90},secondary:{unit:"DAN-yC9q3CmZpKwsFdMz",width:728,height:90}}
+    : {primary:{unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50},secondary:{unit:"DAN-z8B8tUfB0Ev740NV",width:320,height:100}};
   slots.forEach(slot=>{
+    const ad=ads[slot.dataset.adPlacement]||ads.primary;
     slot.closest(".adfit-banner").classList.toggle("adfit-banner--desktop",desktop);
     const ins=document.createElement("ins");
     ins.className="kakao_ad_area";
