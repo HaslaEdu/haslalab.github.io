@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1015">
+<title>IPhO 2026 E — 이상 기체, 증기압, 열전도 · Ideal Gas, Vapor Pressure and Heat Conduction · HaslaLab</title>
+<meta name="description" content="IPhO 2026 실험 문제를 브라우저에서 실행합니다. 전원을 켜고 밸브 A–E를 돌리고 펌프와 주사기로 두 실린더에 물을 채운 뒤, 히터를 켜고 압력·온도·타이머와 눈금으로 직접 측정합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2026 E — 이상 기체, 증기압, 열전도 · Ideal Gas, Vapor Pressure and Heat Conduction">
+<meta property="og:description" content="IPhO 2026 실험 문제를 브라우저에서 실행합니다. 실제 장비처럼 밸브·펌프·주사기·히터를 다루며 직접 측정합니다.">
+<style>
+  :root{
+    --bg:#0d1015; --panel:#151a20; --ink:#dfe7ee; --muted:#7f8a95;
+    --line:#26303a; --accent:#4c8fd6; --accent-soft:#1c232b; --deep:#0a0d11;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1920px;margin:0 auto;padding:10px 12px 16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#0d1015}
+  .tabs .hint{margin-left:8px}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;background:#0d1015;touch-action:none;cursor:default}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#243040;border-color:var(--accent)}
+  .hint{font-size:12px;color:var(--muted)}
+  .txt{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+       font-size:13.5px;line-height:1.75;color:#c9d3db}
+  .txt h4{margin:14px 0 4px;color:var(--accent);font-size:13px}
+  .txt h4:first-child{margin-top:0}
+  .txt ul{margin:4px 0 4px 20px;padding:0}
+  header{max-width:1920px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#0d1015}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <div class="tabs">
+      <button id="tab-lab" class="on"></button>
+      <button id="tab-info"></button>
+      <span class="hint" id="t-hint"></span>
+    </div>
+    <canvas id="cv"></canvas>
+    <div class="txt" id="info" hidden></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n
+   ══════════════════════════════════════════════════════════════ */
+const T={
+  ko:{
+    title:"IPhO 2026 실험 — 이상 기체, 증기압, 열전도",
+    sub:"가상 실험실 · 실제 계기가 보여 주는 숫자만 보입니다: 내부/대기 압력, 내부/외부 온도, 타이머.",
+    tabLab:"실험대", tabInfo:"장비 · 사용법",
+    hint:"휠: 주사기 피스톤 1 mL (Shift 5 mL) · 스페이스: 일시정지",
+    head:"IPhO 2026  —  이상 기체, 증기압, 열전도   [20점 | 5.0시간]",
+    module:"전자 모듈", notation:"Fig. 18 기호          Fig. 15 밸브 위치", vOpen:"I  열림", vShut:"II  닫힘",
+    fig17:"Fig. 17  단면", dims:["바깥지름   74.8 ± 0.1 mm","안지름     33.7 ± 0.1 mm","벽 두께     3.4 ± 0.1 mm","벽 두께     3.4 ± 0.1 mm"],
+    cont:{pg:"PG\n100 mL",cold:"찬물\n500 mL",room:"상온수",pour:"비커",jug:"폐수통"},
+    contName:{pg:"PG 병",cold:"찬물",room:"상온수",pour:"비커",jug:"폐수통"},
+    syr:{w:"물 주사기",p:"PG 주사기"}, remove:"제거", refit:"장착",
+    session:s=>"세션 "+String(s).padStart(6,"0"),
+    status:(h,m,s,sp,run)=>"경과 "+h+":"+m+":"+s+"   배속 ×"+sp+"   "+(run?"":"[일시정지]"),
+    foot:"밸브 손잡이 클릭: 돌리기  |  호스 A·C의 끝을 용기로 끌어다 놓고 다시 클릭: 클립  |  주사기를 병으로 끌어 피스톤을 당긴 뒤 호스 D에 연결  |  용기를 다른 용기 위로 끌면 따릅니다  |  스페이스 = 일시정지",
+    bench:"실험대",
+    m:{
+      powerOn:"전원 켜짐", powerOff:"전원 꺼짐", noPower:"전자 모듈에 전원이 들어와 있지 않습니다.",
+      graph:"그래프 화면은 이 실험에서 쓰지 않습니다.", heaterWet:"! 히터가 물에 완전히 잠겨 있어야 합니다.",
+      indicatorRed:"! 표시등이 아직 빨간색입니다 - 60 C 아래로 내려갈 때까지 기다리세요.",
+      primed:"펌프 공기빼기 완료 - 이제 물을 제대로 끌어올립니다.",
+      hoseIn:k=>"호스 "+k+"를 포트에 꽂았습니다", hoseOut:k=>"호스 "+k+"를 포트에서 빼냈습니다",
+      clip:(k,on)=>"호스 "+k+" "+(on?"클립으로 고정됨":"고정 해제"),
+      nothingPour:"! 따를 것이 없습니다.", poured:(v,a,b)=>v.toFixed(0)+" mL 따름  "+a+" → "+b,
+      plungerOut:"피스톤이 제거된 상태입니다.", mixedSyr:"! 주사기 안에서 두 액체가 섞였습니다.",
+      openE:"! 밸브 E를 여세요.", hoseDOut:"! 호스 D가 포트에서 빠져 있습니다.", valveDClosed:"! 밸브 D가 닫혀 있습니다.",
+      openEtoo:"! 밸브 E도 여세요. 공기가 빠져나갈 수 없습니다.", spilt:v=>"! 액체 "+v.toFixed(0)+" mL를 실험대에 흘렸습니다.",
+      mixedIC:"! PG와 물은 섞입니다 - IC 내용물이 혼합물이 되었습니다. 비우고 세척하세요.",
+      connectFirst:"! 주사기를 먼저 연결하세요.", plungerRemoved:"피스톤 제거 - 실린더가 대기에 열렸습니다.",
+      plungerBack:"피스톤을 다시 끼웠습니다.", hoseSlipped:k=>"! 호스 "+k+"가 용기에서 빠졌습니다 - 클립으로 고정하세요.",
+      hoseNot:k=>"! 호스 "+k+"가 어느 용기에도 들어 있지 않습니다.", valvesAC:"! 밸브 A와 C가 동시에 열려 있습니다.",
+      hosePortOut:k=>"! 호스 "+k+"가 포트에서 빠져 있습니다.", ocFull:"! OC가 가득 찼습니다 - 물이 넘치고 있습니다.",
+      keepLevel:"! 수위를 실린더 덮개보다 최소 1 cm 아래로 유지하세요.", heaterOff:"! 히터가 꺼졌습니다: 물에 잠겨 있지 않습니다.",
+      barrelOver:"! 주사기 실린더가 넘치고 있습니다.", barrelEmpty:"! 주사기 실린더가 비었습니다 - IC로 공기가 빨려 들어갑니다.",
+      hoseFirst:"! 호스를 먼저 용기에 넣으세요.", hoseTo:(k,dst,found)=>"호스 "+k+" → "+dst+(found?"  (호스 끝을 다시 클릭하면 클립으로 고정)":""),
+      syrDirect:"주사기를 호스 D에 직접 연결했습니다 (밸브 D 우회)", syrD:"주사기를 호스 D에 연결했습니다",
+      syrNotHome:"! 주사기가 포트에 완전히 꽂히지 않았습니다 - 노즐을 구멍에 맞추세요.",
+      nozzleIn:(s,c)=>s+" 노즐을 "+c+"에 담갔습니다"
+    }
+  },
+  en:{
+    title:"IPhO 2026 Experiment — Ideal Gas, Vapor Pressure and Heat Conduction",
+    sub:"Virtual laboratory · the only numbers are the ones a real instrument shows: internal/atmospheric pressure, internal/external temperature, the timer.",
+    tabLab:"Bench", tabInfo:"Equipment · how to use",
+    hint:"wheel: syringe plunger 1 mL (Shift 5 mL) · space: pause",
+    head:"IPhO 2026  —  Ideal Gas, Vapor Pressure and Heat Conduction   [20 pts | 5.0 h]",
+    module:"electronic module", notation:"Fig. 18 notation          Fig. 15 valve positions", vOpen:"I  open", vShut:"II  closed",
+    fig17:"Fig. 17  cross-section", dims:["outer diameter  74.8 ± 0.1 mm","inner diameter  33.7 ± 0.1 mm","wall             3.4 ± 0.1 mm","wall             3.4 ± 0.1 mm"],
+    cont:{pg:"PG\n100 mL",cold:"cold water\n500 mL",room:"room-temp.\nwater",pour:"pouring\njug",jug:"waste jug"},
+    contName:{pg:"PG bottle",cold:"cold water",room:"room-temp. water",pour:"pouring jug",jug:"waste jug"},
+    syr:{w:"water syringe",p:"PG syringe"}, remove:"remove", refit:"refit",
+    session:s=>"session "+String(s).padStart(6,"0"),
+    status:(h,m,s,sp,run)=>"elapsed "+h+":"+m+":"+s+"   speed ×"+sp+"   "+(run?"":"[paused]"),
+    foot:"click a valve handle to turn it  |  drag the end of hose A / C into a container, click again to clip  |  drag a syringe to a bottle, pull the plunger, plug it into hose D  |  drag a container onto another to pour  |  space = pause",
+    bench:"bench",
+    m:{
+      powerOn:"Power on", powerOff:"Power off", noPower:"The electronic module has no power.",
+      graph:"Graph display is not used in the experiments.", heaterWet:"! The heater must be fully under water.",
+      indicatorRed:"! The indicator is still red - wait until it drops below 60 C.",
+      primed:"Pump primed - it now draws water properly.",
+      hoseIn:k=>"Hose "+k+" pushed into its port", hoseOut:k=>"Hose "+k+" pulled out of its port",
+      clip:(k,on)=>"Hose "+k+" "+(on?"clipped":"unclipped"),
+      nothingPour:"! Nothing to pour.", poured:(v,a,b)=>"Poured "+v.toFixed(0)+" mL  "+a+" → "+b,
+      plungerOut:"The plunger is out.", mixedSyr:"! The two liquids have mixed in the syringe.",
+      openE:"! Open valve E.", hoseDOut:"! Hose D is out of its port.", valveDClosed:"! Valve D is closed.",
+      openEtoo:"! Open valve E too: the air has nowhere to go.", spilt:v=>"! Spilt "+v.toFixed(0)+" mL on the bench.",
+      mixedIC:"! PG and water mix - the IC now holds a mixture. Empty and rinse it.",
+      connectFirst:"! Connect the syringe first.", plungerRemoved:"Plunger removed - the barrel is open to the air.",
+      plungerBack:"Plunger put back.", hoseSlipped:k=>"! Hose "+k+" slipped out of the container - clip it.",
+      hoseNot:k=>"! Hose "+k+" is not in any container.", valvesAC:"! Valves A and C are both open.",
+      hosePortOut:k=>"! Hose "+k+" is out of its port.", ocFull:"! The OC is full - water is overflowing.",
+      keepLevel:"! Keep the level at least 1 cm below the cover.", heaterOff:"! Heater off: it is not under water.",
+      barrelOver:"! The syringe barrel is overflowing.", barrelEmpty:"! The syringe barrel is empty - air is drawn into the IC.",
+      hoseFirst:"! Put the hose in a container first.", hoseTo:(k,dst,found)=>"Hose "+k+" → "+dst+(found?"  (click the hose end again to clip it)":""),
+      syrDirect:"Syringe plugged straight into hose D (valve D bypassed)", syrD:"Syringe connected to hose D",
+      syrNotHome:"! The syringe is not fully home - line the nozzle up with the socket.",
+      nozzleIn:(s,c)=>s+" nozzle dipped in the "+c
+    }
+  }
+};
+const INFO={
+ko:`<h4>장치</h4>
+<ul>
+<li>바깥 실린더(OC)와 안쪽 실린더(IC) — 아크릴, 단면은 Fig. 17 (바깥지름 74.8 mm, 안지름 33.7 mm, 벽 3.4 mm).</li>
+<li>OC 안에는 히터와 외부 온도 센서, IC 위쪽에는 내부 온도·압력 센서가 연결됩니다.</li>
+<li>전자 모듈 : 화면에 INT./ATM. 압력 [kPa], INT./EXT. 온도 [C], 타이머. 버튼 1 시작/정지 · 2 리셋 · 3 그래프 · 4 히터. 전원은 뒷면 스위치.</li>
+<li>유압 보드 : 밸브 A (물 넣기), B (물 퍼지), C (물 빼기), D (주사기 연결), 그리고 실린더 위의 밸브 E. 손잡이가 관을 따라 서면(I) 열림, 가로지르면(II) 닫힘.</li>
+<li>펌프, 호스 A · C (클립으로 용기에 고정), 호스 D (주사기).</li>
+<li>100 mL 주사기 2개 (물 / PG), PG 100 mL, 찬물 500 mL, 상온수, 비커, 폐수통.</li>
+</ul>
+<h4>조작</h4>
+<ul>
+<li>뒷면 POWER 스위치를 눌러 전자 모듈을 켭니다.</li>
+<li>OC 채우기 : 호스 A 끝을 물이 든 용기로 끌어다 놓고(다시 클릭해 클립 고정) 펌프를 켭니다. 처음에는 밸브 B만 연 채 펌프를 돌려 공기를 뺀 뒤 B를 닫고 A를 엽니다.</li>
+<li>OC 비우기 : 호스 C를 폐수통에 넣고 B와 C를 연 채 펌프를 돌립니다. B만 열면 물이 순환해 온도가 고르게 됩니다.</li>
+<li>IC 채우기 : 주사기를 병으로 끌어 노즐을 담그고 피스톤을 위로 끌어(또는 휠) 액체를 빨아들인 뒤, 호스 D 소켓에 꽂고 밸브 D와 E를 연 채 피스톤을 밉니다.</li>
+<li>피스톤을 제거하면 주사기 실린더가 대기로 열린 물기둥이 됩니다.</li>
+<li>h 와 H 는 IC 눈금에서 직접 읽으세요. 가장자리의 메니스커스가 아니라 가운데 평평한 수면을 읽습니다.</li>
+</ul>
+<h4>주의</h4>
+<ul>
+<li>히터는 물에 완전히 잠겨 있을 때만 켜집니다. 65 C에서 차단되며 표시등이 빨간색이면 60 C 아래로 식을 때까지 다시 켤 수 없습니다.</li>
+<li>OC 수위는 덮개보다 최소 1 cm 아래로 유지하세요.</li>
+<li>센서는 보정이 어긋나 있을 수 있습니다 (문제지 경고와 같음).</li>
+</ul>
+<h4>이 시뮬레이터에 대하여</h4>
+<ul>
+<li>아무것도 대신 채우거나 측정하거나 표로 만들거나 맞춰 주지 않습니다.</li>
+<li>세션마다 아크릴의 열전도도, 증기압 곡선, 대기압, 센서 보정이 조금씩 다릅니다.</li>
+</ul>`,
+en:`<h4>Apparatus</h4>
+<ul>
+<li>Outer cylinder (OC) and inner cylinder (IC) — acrylic, cross-section in Fig. 17 (outer 74.8 mm, inner 33.7 mm, walls 3.4 mm).</li>
+<li>The OC holds the heater and the external temperature probe; the IC head carries the internal temperature and pressure lines.</li>
+<li>Electronic module: INT./ATM. pressure [kPa], INT./EXT. temperature [C] and a timer on the screen. Buttons 1 start/stop · 2 reset · 3 graphics · 4 heat. The power switch is at the rear.</li>
+<li>Hydraulic board: valves A (water in), B (water purge), C (water out), D (syringe line), plus valve E on top of the cylinders. Handle along the pipe (I) is open, across it (II) is closed.</li>
+<li>Pump, hoses A · C (clip them to a container), hose D (syringe).</li>
+<li>Two 100 mL syringes (water / PG), PG 100 mL, cold water 500 mL, room-temperature water, pouring jug, waste jug.</li>
+</ul>
+<h4>Operating it</h4>
+<ul>
+<li>Press the POWER switch at the rear to turn the electronic module on.</li>
+<li>Filling the OC: drag the end of hose A into a container of water (click it again to clip it) and run the pump. Prime it first with only valve B open, then close B and open A.</li>
+<li>Emptying the OC: put hose C in the waste jug and run the pump with B and C open. With B alone the water recirculates and the temperature evens out.</li>
+<li>Filling the IC: drag a syringe to a bottle, pull the plunger up (or roll the wheel) to draw liquid, plug it into the hose D socket and push with valves D and E open.</li>
+<li>With the plunger removed the syringe barrel becomes an open water column.</li>
+<li>Read h and H off the IC scale yourself — the flat middle of the surface, not the meniscus at the wall.</li>
+</ul>
+<h4>Precautions</h4>
+<ul>
+<li>The heater runs only fully under water. It cuts out at 65 C; while the indicator is red it cannot be restarted until the water is below 60 C.</li>
+<li>Keep the OC level at least 1 cm below the cover.</li>
+<li>The sensors may be decalibrated, as the problem sheet warns.</li>
+</ul>
+<h4>About this simulator</h4>
+<ul>
+<li>Nothing is filled, measured, tabulated, fitted or plotted for you.</li>
+<li>The acrylic's conductivity, the vapour-pressure curve, the atmosphere and the sensor calibration differ slightly from session to session.</li>
+</ul>`};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  CONSTANTS  —  identical to the Python (problem sheet, Fig. 17)
+   ══════════════════════════════════════════════════════════════ */
+const C0=4.184e3, RHO0=1000.0, R_GAS=8.314, T0K=273.15, RHO_AIR=1.12, RHO_PG=1036.0, G_ACC=9.81;
+const GAMMA_W20=0.0728, DGAMMA_W=-1.5e-4, GAMMA_PG=0.0360, THETA_W=70*Math.PI/180, THETA_PG=30*Math.PI/180;
+const D_IC_IN=33.7e-3, WALL=3.4e-3, D_OC_OUT=74.8e-3;
+const R1=D_IC_IN/2, R2=R1+WALL, R_OC_IN=D_OC_OUT/2-WALL;
+const L_IC=0.140, L_OC=0.180;
+const PV_T0=250.0, PV_N=3400;
+
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+class RNG{ constructor(s){ this.r=mulberry32(s>>>0); }
+  uniform(a,b){ return a+this.r()*(b-a); }
+  gauss(mu,sd){ let u=0,v=0; while(!u)u=this.r(); while(!v)v=this.r(); return mu+sd*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); } }
+const WARN=new Set(["heaterWet","indicatorRed","nothingPour","mixedSyr","openE","hoseDOut","valveDClosed","openEtoo","spilt","mixedIC",
+  "connectFirst","hoseSlipped","hoseNot","valvesAC","hosePortOut","ocFull","keepLevel","heaterOff","barrelOver","barrelEmpty","hoseFirst","syrNotHome"]);
+
+class Container{
+  constructor(key,vol,T,kind,cap){ this.key=key; this.vol=vol; this.T=T; this.kind=kind; this.cap=cap; }
+  take(mL){ mL=Math.min(mL,this.vol); this.vol-=mL; return mL; }
+  give(mL,T,kind){
+    if(this.vol<1e-9) this.kind=kind; else if(kind!==this.kind&&this.kind!=="waste") this.kind="mixed";
+    const tot=this.vol+mL; if(tot>0) this.T=(this.T*this.vol+T*mL)/tot; this.vol=Math.min(this.cap,tot);
+  }
+}
+class Syringe{ constructor(key){ this.key=key; this.cap=100; this.vol=0; this.plunger=0; this.kind=null; this.T=24;
+  this.hasPlunger=true; this.attached=null; this.placed=null; this.x=0; this.y=0; } }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE APPARATUS  —  step(dt) advances the physics
+   ══════════════════════════════════════════════════════════════ */
+class Lab{
+  constructor(seed){
+    if(seed===undefined) seed=1+Math.floor(Math.random()*999998);
+    this.seed=seed; const g=new RNG(seed); this.rng=new RNG(seed*7919+13);
+    /* hidden physical truths (never shown) */
+    this.lam=g.uniform(0.235,0.265);
+    this.ccS=g.uniform(4600,4800);
+    const pv339=g.uniform(17.6,19.6);
+    this.ccC=Math.log(pv339)+this.ccS/339;
+    this.pvTab=new Float64Array(PV_N+1);
+    for(let i=0;i<=PV_N;i++) this.pvTab[i]=1e3*Math.exp(this.ccC-this.ccS/(PV_T0+i*0.05));
+    this.P_atm0=g.uniform(94.4e3,96.0e3); this.P_atm=this.P_atm0; this.drift=0;
+    this.T_amb=g.uniform(22,26); this.P_heat=g.uniform(180,220);
+    this.Renv_oc=g.uniform(2.05,2.75); this.Renv_ic=g.uniform(100,200);
+    this.r1=R1+g.uniform(-1e-4,1e-4); this.r2=R2+g.uniform(-1e-4,1e-4);
+    this.A_ic=Math.PI*this.r1**2;
+    this.A_oc=Math.PI*((R_OC_IN+g.uniform(-1e-4,1e-4))**2-this.r2**2);
+    this.p_gain=g.uniform(1.004,1.034); this.p_off=g.uniform(-3.0e3,0.5e3);
+    this.ti_gain=g.uniform(0.9965,1.0035); this.ti_off=g.uniform(-0.4,0.4);
+    this.te_gain=g.uniform(0.9965,1.0035); this.te_off=g.uniform(-0.4,0.4);
+    this.tau_probe=g.uniform(5,9); this.tau_press=1.2;
+    this.t=0; this.power=false; this.pump=false; this.heater=false; this.heaterHot=false;
+    this.timer=0; this.timerRun=false; this.graphMode=false;
+    this.valve={A:false,B:false,C:false,D:false,E:false};
+    this.h_oc=0; this.T_oc=this.T_amb; this.strat=0;
+    this.icKind=null; this.h_ic=0; this.T_ic=this.T_amb;
+    this.n_air=this.P_atm*this.A_ic*L_IC/(R_GAS*(this.T_amb+T0K));
+    this.hoseAin=null; this.hoseCin=null; this.clip={A:false,C:false}; this.hconn={A:true,C:true,D:true};
+    this.primed=false; this.purging=false; this.slip=0;
+    this.containers={pg:new Container("pg",100,this.T_amb,"pg",120), cold:new Container("cold",500,g.uniform(3,7),"water",600),
+      room:new Container("room",1500,this.T_amb,"water",1500), pour:new Container("pour",0,this.T_amb,"water",1200),
+      jug:new Container("jug",0,this.T_amb,"waste",3000)};
+    this.syr={w:new Syringe("w"),p:new Syringe("p")};
+    this.s_tint=this.T_ic; this.s_text=this.T_oc; this.s_press=this.P_atm;
+    this.msg=null; this.msgT=-99;
+  }
+  say(k,...a){ this.msg={k,a}; this.msgT=this.t; }
+  pv(T){ const u=(T-PV_T0)*20, i=Math.floor(u);
+    if(i<0) return this.pvTab[0]; if(i>=PV_N) return 1e3*Math.exp(this.ccC-this.ccS/T);
+    const a=this.pvTab[i]; return a+(this.pvTab[i+1]-a)*(u-i); }
+  /* the bore is far wider than the capillary length: flat in the middle, a ring of
+     order lambda_c at the wall climbs lambda_c*sqrt(2(1-sin theta)) */
+  meniscus(){
+    if(this.icKind===null||this.h_ic<=1e-6) return [0,0,0];
+    let g,rho,th;
+    if(this.icKind==="pg"){ g=GAMMA_PG; rho=RHO_PG; th=THETA_PG; }
+    else { g=Math.max(0.02,GAMMA_W20+DGAMMA_W*(this.T_ic-20)); rho=RHO0; th=THETA_W; if(this.icKind==="mixed") g*=0.75; }
+    const lam=Math.sqrt(g/(rho*G_ACC)), rise=lam*Math.sqrt(Math.max(0,2*(1-Math.sin(th)))), width=1.6*lam;
+    const vol=Math.PI*(this.r1**2-Math.max(0,this.r1-width)**2)*rise*0.5;
+    return [rise,width,vol];
+  }
+  get vMen(){ return this.meniscus()[2]; }
+  get H(){ return Math.max(0,L_IC-this.h_ic); }
+  get V_air(){ return Math.max(1e-9,this.A_ic*this.H-this.vMen); }
+  get R_wall(){ const h=Math.max(Math.min(this.h_ic,this.h_oc),0.005); return Math.log(this.r2/this.r1)/(2*Math.PI*this.lam*h); }
+  get openColumn(){ const s=this.syr.w; if(s.hasPlunger) return false; if(s.attached==="Dh") return true;
+    return s.attached==="D"&&this.valve.D&&this.hconn.D; }
+  icVented(){
+    if(this.valve.E) return true;
+    const free=Object.values(this.syr).filter(s=>s.attached==="D"||s.attached==="Dh");
+    if(!this.hconn.D) return !free.some(s=>s.attached==="Dh");
+    if(this.valve.D) return !free.some(s=>s.attached==="D");
+    return false;
+  }
+  reseal(){ const T=this.T_ic+T0K, p=this.P_atm-((this.icKind==="water"||this.icKind==="mixed")?this.pv(T):0);
+    this.n_air=p*this.V_air/(R_GAS*T); }
+  truePressure(){
+    const T=this.T_ic+T0K;
+    if(this.icVented()&&!this.openColumn) return this.P_atm;
+    let p=this.n_air*R_GAS*T/Math.max(this.V_air,1e-9);
+    if(this.icKind==="water"||this.icKind==="mixed") p+=this.pv(T);
+    return p;
+  }
+  rPint(){ return this.power?Math.round((this.p_gain*this.s_press+this.p_off+this.rng.gauss(0,40))/100)/10:null; }
+  rPatm(){ return this.power?Math.round((this.P_atm/1000+this.rng.gauss(0,0.03))*10)/10:null; }
+  rTint(){ return this.power?Math.round((this.ti_gain*this.s_tint+this.ti_off+this.rng.gauss(0,0.05))*10)/10:null; }
+  rText(){ return this.power?Math.round((this.te_gain*this.s_text+this.te_off+this.rng.gauss(0,0.05))*10)/10:null; }
+  pressPower(){ this.power=!this.power; if(!this.power){ this.heater=false; this.pump=false; } this.say(this.power?"powerOn":"powerOff"); }
+  pressButton(n){
+    if(!this.power){ this.say("noPower"); return; }
+    if(n===1) this.timerRun=!this.timerRun;
+    else if(n===2) this.timer=0;
+    else if(n===3){ this.graphMode=!this.graphMode; this.say("graph"); }
+    else if(n===4){
+      if(this.h_oc<0.04){ this.say("heaterWet"); return; }
+      if(this.heaterHot&&!this.heater){ this.say("indicatorRed"); return; }
+      this.heater=!this.heater;
+    }
+  }
+  pressPump(){ if(!this.power){ this.say("noPower"); return; } this.pump=!this.pump; }
+  toggleValve(v){
+    this.valve[v]=!this.valve[v];
+    if(v==="B"){
+      if(this.valve.B&&this.pump) this.purging=true;
+      else if(!this.valve.B&&this.purging){ this.purging=false; this.primed=true; this.say("primed"); }
+    }
+    if("DE".includes(v)&&!this.icVented()) this.reseal();
+  }
+  toggleHose(k){ this.hconn[k]=!this.hconn[k]; this.say(this.hconn[k]?"hoseIn":"hoseOut",k); }
+  toggleClip(k){ this.clip[k]=!this.clip[k]; this.say("clip",k,this.clip[k]); }
+  pour(src,dst,mL){
+    mL=mL||150; const a=this.containers[src], b=this.containers[dst];
+    const got=a.take(Math.min(mL,Math.max(0,b.cap-b.vol)));
+    if(got<=0){ this.say("nothingPour"); return; }
+    b.give(got,a.T,a.kind); this.say("poured",got,src,dst);
+  }
+  syringePull(key,dmL){
+    const s=this.syr[key];
+    if(!s.hasPlunger){ this.say("plungerOut"); return; }
+    const nw=Math.min(s.cap,Math.max(0,s.plunger+dmL)), dd=nw-s.plunger;
+    if(Math.abs(dd)<1e-9) return;
+    s.plunger=nw;
+    if(this.containers[s.attached]){
+      const c=this.containers[s.attached];
+      if(dd>0){ const got=c.take(dd);
+        if(got>0){ if(s.kind&&s.kind!==c.kind){ s.kind="mixed"; this.say("mixedSyr"); } else s.kind=c.kind; s.T=c.T; s.vol+=got; } }
+      else { const give=Math.min(s.vol,-dd); if(give>0){ c.give(give,s.T,s.kind||"water"); s.vol-=give; } }
+      return;
+    }
+    if(s.attached==="Dh"){
+      if(!this.valve.E){ this.say("openE"); s.plunger-=dd; return; }
+      if(dd<0){ const give=Math.min(s.vol,-dd,(L_IC-this.h_ic)*this.A_ic*1e6); if(give>0){ this.addToIC(give,s.kind,s.T); s.vol-=give; } }
+      else { const take=Math.min(dd,this.h_ic*this.A_ic*1e6);
+        if(take>0){ this.h_ic-=take*1e-6/this.A_ic; s.kind=s.kind||this.icKind; s.vol+=take;
+          if(this.h_ic<1e-4){ this.h_ic=0; this.icKind=null; } this.reseal(); } }
+      return;
+    }
+    if(s.attached==="D"){
+      if(!this.hconn.D){ this.say("hoseDOut"); s.plunger-=dd; return; }
+      if(!this.valve.D){ this.say("valveDClosed"); s.plunger-=dd; return; }
+      if(!this.valve.E){ this.say("openEtoo"); s.plunger-=dd; return; }
+      if(dd<0){ const give=Math.min(s.vol,-dd,(L_IC-this.h_ic)*this.A_ic*1e6); if(give<=0) return;
+        this.addToIC(give,s.kind,s.T); s.vol-=give; }
+      else { const take=Math.min(dd,this.h_ic*this.A_ic*1e6); if(take<=0) return;
+        this.h_ic-=take*1e-6/this.A_ic;
+        s.kind=(s.kind&&this.icKind&&s.kind!==this.icKind)?"mixed":this.icKind;
+        s.vol+=take; if(this.h_ic<1e-4){ this.h_ic=0; this.icKind=null; } this.reseal(); }
+      return;
+    }
+    if(dd<0&&s.vol>0){ const spill=Math.min(s.vol,-dd); s.vol-=spill; this.say("spilt",spill); }
+  }
+  addToIC(mL,kind,T){
+    if(kind===null) return;
+    const first=this.h_ic<=1e-6;
+    if(this.icKind&&kind!==this.icKind){ this.icKind="mixed"; this.say("mixedIC"); } else this.icKind=kind;
+    const mOld=RHO0*this.A_ic*this.h_ic*1000, mNew=mL*1e-3;
+    if(mOld+mNew>0) this.T_ic=(this.T_ic*mOld+T*mNew)/(mOld+mNew);
+    let dv=mL*1e-6; if(first) dv-=this.vMen;
+    this.h_ic=Math.min(L_IC-0.002,this.h_ic+Math.max(0,dv)/this.A_ic);
+    this.reseal();
+  }
+  removePlunger(key){
+    const s=this.syr[key];
+    if(s.hasPlunger){ if(s.attached===null){ this.say("connectFirst"); return; } s.hasPlunger=false; this.say("plungerRemoved"); }
+    else { s.hasPlunger=true; s.plunger=s.vol; this.say("plungerBack"); }
+  }
+  step(dt){
+    this.t+=dt;
+    const f=1-Math.exp(-dt/this.tau_probe);
+    this.s_tint+=(this.T_ic-this.s_tint)*f;
+    this.s_text+=(this.T_oc+this.strat-this.s_text)*f;
+    this.s_press+=(this.truePressure()-this.s_press)*(1-Math.exp(-dt/this.tau_press));
+    this.drift+=-this.drift*dt/900+this.rng.gauss(0,6)*Math.sqrt(dt);
+    this.P_atm=this.P_atm0+this.drift;
+    if(this.timerRun) this.timer+=dt;
+    /* pump */
+    const rate=22*dt*(this.primed?1:0.05);
+    if(this.pump&&this.power){
+      const fill=this.valve.A&&!this.valve.B&&!this.valve.C;
+      const drain=this.valve.C&&this.valve.B&&!this.valve.A;
+      for(const [k,key] of [["A","hoseAin"],["C","hoseCin"]]){
+        if(this[key]&&!this.clip[k]){ this.slip+=dt;
+          if(this.slip>40){ this.slip=0; this[key]=null; this.say("hoseSlipped",k); } }
+      }
+      if(fill&&this.hconn.A&&!this.hoseAin) this.say("hoseNot","A");
+      else if(drain&&this.hconn.C&&!this.hoseCin) this.say("hoseNot","C");
+      else if(this.valve.A&&this.valve.C) this.say("valvesAC");
+      if(fill&&!this.hconn.A) this.say("hosePortOut","A");
+      else if(drain&&!this.hconn.C) this.say("hosePortOut","C");
+      if(fill&&this.hoseAin&&this.hconn.A){
+        const c=this.containers[this.hoseAin];
+        if(this.h_oc>=L_OC-1e-4) this.say("ocFull");
+        const got=c.take(Math.min(rate,Math.max(0,(L_OC-this.h_oc)*this.A_oc*1e6)));
+        if(got>0){ const mOld=RHO0*this.A_oc*this.h_oc, mNew=got*1e-6*RHO0;
+          this.T_oc=(this.T_oc*mOld+c.T*mNew)/Math.max(mOld+mNew,1e-9);
+          this.h_oc+=got*1e-6/this.A_oc; this.strat*=0.5;
+          if(this.h_oc>0.170) this.say("keepLevel"); }
+      } else if(drain&&this.hoseCin&&this.hconn.C){
+        const out=Math.min(rate,this.h_oc*this.A_oc*1e6);
+        if(out>0){ this.containers[this.hoseCin].give(out,this.T_oc,"water"); this.h_oc-=out*1e-6/this.A_oc; }
+      }
+    }
+    /* heater, with its 65 C cut-out */
+    let Q=0;
+    if(this.heater&&this.power&&this.h_oc>0.04){
+      if(this.T_oc>=65){ this.heater=false; this.heaterHot=true; } else Q=this.P_heat;
+    } else if(this.heater&&this.h_oc<=0.04){ this.heater=false; this.say("heaterOff"); }
+    if(this.heaterHot&&this.T_oc<60) this.heaterHot=false;
+    /* stratification */
+    const recirc=this.pump&&this.power&&this.valve.B&&!this.valve.A&&!this.valve.C;
+    if(recirc) this.strat*=Math.exp(-dt/8);
+    else { const tgt=Q>0?2.5:0; this.strat+=(tgt-this.strat)*(1-Math.exp(-dt/90)); }
+    /* thermal network */
+    const Cic=Math.max(C0*RHO0*this.A_ic*this.h_ic+1005*RHO_AIR*this.V_air,2);
+    const Coc=Math.max(C0*RHO0*this.A_oc*this.h_oc+40,40);
+    const q=(this.h_oc>0.005&&this.h_ic>0.005)?(this.T_oc-this.T_ic)/this.R_wall:(this.T_oc-this.T_ic)/60;
+    this.T_ic+=(q-(this.T_ic-this.T_amb)/this.Renv_ic)/Cic*dt;
+    this.T_oc+=(Q-q-(this.T_oc-this.T_amb)/this.Renv_oc)/Coc*dt;
+    /* open water column (Part B) */
+    if(this.openColumn&&(this.icKind==="water"||this.icKind==="mixed")){
+      const s=this.syr.w, T=this.T_ic+T0K, pDry=Math.max(this.P_atm-this.pv(T),1);
+      let Hn=this.n_air*R_GAS*T/(this.A_ic*pDry); Hn=Math.min(Math.max(Hn,0.004),L_IC-0.002);
+      let dV=this.A_ic*(Hn-this.H)*1e6;
+      if(dV>0){ dV=Math.min(dV,s.cap-s.vol); if(s.vol>=s.cap-1e-6) this.say("barrelOver"); }
+      else { dV=-Math.min(-dV,s.vol); if(s.vol<=1e-6){ this.say("barrelEmpty"); this.reseal(); } }
+      s.vol+=dV; this.h_ic=L_IC-(this.H+dV*1e-6/this.A_ic);
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  CANVAS  —  the Python's 1920 × 1010 design, scaled to fit
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"), ctx=cv.getContext("2d");
+const LW=1920, LH=1010, ELEV=0.20;
+const BENCH="#0d1015", STEEL="#9aa7b4", ACRYL="#8095a8", INK="#dfe7ee", DIM="#7f8a95";
+let S=1;
+function layoutCanvas(){
+  const w=cv.clientWidth||1200, dpr=Math.min(window.devicePixelRatio||1,2); S=w/LW;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  ctx.setTransform(dpr*S,0,0,dpr*S,0,0);
+}
+const FONT="'Segoe UI','Malgun Gothic','Apple SD Gothic Neo',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function lerp(c1,c2,f){ f=Math.max(0,Math.min(1,f)); const a=[1,3,5].map(i=>parseInt(c1.substr(i,2),16)), b=[1,3,5].map(i=>parseInt(c2.substr(i,2),16));
+  return "#"+a.map((v,i)=>Math.round(v+(b[i]-v)*f).toString(16).padStart(2,"0")).join(""); }
+const WRAMP=[...Array(64)].map((_,i)=>{ const f=i/63; return f<0.62?lerp("#12507f","#2f8fc4",f/0.62):lerp("#2f8fc4","#63c3e2",(f-0.62)/0.38); });
+const WTOP=WRAMP.map(c=>lerp(c,"#ffffff",0.42)), WDARK=WRAMP.map(c=>lerp(c,"#02121e",0.30));
+const wi=T=>Math.max(0,Math.min(63,Math.floor((T-5)*63/62)));
+function R(x0,y0,x1,y1,fill,stroke,lw){ if(fill){ctx.fillStyle=fill;ctx.fillRect(x0,y0,x1-x0,y1-y0);}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.strokeRect(x0,y0,x1-x0,y1-y0);} }
+function O(x0,y0,x1,y1,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+function L(pts,col,w,smooth){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]);
+  if(smooth&&pts.length===6) ctx.quadraticCurveTo(pts[2],pts[3],pts[4],pts[5]);
+  else if(smooth&&pts.length===8) ctx.bezierCurveTo(pts[2],pts[3],pts[4],pts[5],pts[6],pts[7]);
+  else for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]);
+  ctx.strokeStyle=col; ctx.lineWidth=w||1; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke(); }
+function P(pts,fill,stroke,lw){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]); ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+/* a Tk-style arc: angles in degrees, counter-clockwise from 3 o'clock */
+function A(x0,y0,x1,y1,start,extent,stroke,lw,fill){
+  ctx.beginPath(); const cx=(x0+x1)/2, cy=(y0+y1)/2;
+  ctx.ellipse(cx,cy,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,-start*Math.PI/180,-(start+extent)*Math.PI/180,true);
+  if(fill){ ctx.lineTo(cx,cy); ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function X(s,x,y,col,size,anchor,bold,font){
+  ctx.fillStyle=col; ctx.font=(bold?"700 ":"")+size+"px "+(font||FONT);
+  ctx.textAlign=anchor==="w"?"left":anchor==="e"?"right":"center"; ctx.textBaseline="middle";
+  const lines=String(s).split("\n"), lh=size*1.15;
+  lines.forEach((l,i)=>ctx.fillText(l,x,y+(i-(lines.length-1)/2)*lh)); }
+const ell=(xc,r,y,fill,stroke,lw)=>O(xc-r,y-r*ELEV,xc+r,y+r*ELEV,fill,stroke,lw);
+
+/* ---- layout (design px) ---- */
+const PXCM=29, CX=209, YB=810, YTOP=YB-18*PXCM;
+const mm=v=>v*PXCM/10;
+const W_OC_O=mm(74.8/2), W_OC_I=mm(74.8/2-3.4), W_IC_O=mm(33.7/2+3.4), W_IC_I=mm(33.7/2);
+const R_STUD=W_OC_O+5, X_STUD_F=W_OC_O*0.69, X_STUD_R=W_OC_O*0.45, DY_STUD=R_STUD*0.866*ELEV;
+const FLANGE_W=W_OC_O+15, FLANGE_H=17, COVER_W=W_OC_O+2, COVER_H=15, BASE_W=W_OC_O+30, BASE_H=26;
+const X_HEAT=-(W_IC_O+W_OC_I)/2-8, X_PROBE=(W_IC_O+W_OC_I)/2+4;
+const cm2y=c=>YB-c*PXCM;
+const MOD=[420,26,980,412], BOARD=[420,440,980,910], SIDE=[996,30,1466,200], REAR=[996,226,1326,382], PUMPP=[1276,410,1466,640];
+const NOTE=[1466,26,1906,142], CARD17=[1466,152,1906,328];
+const CONT={}; [["pg",54,132],["cold",62,156],["room",70,168],["pour",84,140],["jug",96,104]].forEach(([k,w,h],i)=>{ const x=1000+i*86; CONT[k]=[x,908-h,x+w,908]; });
+const SH=240, SW=SH*0.20, SYR_HOME={w:[1560,430],p:[1760,430]};
+const FOOT=936;
+const HOT={fig3:{screen:[0.040,0.030,0.960,0.590],btn:[[0.185,0.740],[0.353,0.740],[0.520,0.740],[0.688,0.740]],btnw:0.125,btnh:0.130},
+           fig4:{power:[0.590,0.288,0.136]}, fig8:{pump:[0.257,0.434,0.198],out:[0.255,0.660],in:[0.255,0.870]},
+           fig6:{A:[0.119,0.187],B:[0.754,0.203],C:[0.127,0.494],D:[0.754,0.769],hoseA:[0.010,0.200],hoseC:[0.010,0.505],hoseD:[0.960,0.780]}};
+const hotPt=(box,f)=>[box[0]+f[0]*(box[2]-box[0]),box[1]+f[1]*(box[3]-box[1])];
+const VALVE_XY={}; for(const k of "ABCD") VALVE_XY[k]=hotPt(BOARD,HOT.fig6[k]);
+const HOSE_PORT={A:hotPt(BOARD,HOT.fig6.hoseA),C:hotPt(BOARD,HOT.fig6.hoseC)};
+const SYR_PORT=hotPt(BOARD,HOT.fig6.hoseD), HOSE_D_END=[SYR_PORT[0]+22,SYR_PORT[1]-26];
+const CY_COVER=YTOP-FLANGE_H-22-COVER_H;
+const EXY=[CX-W_OC_O-26, YTOP-FLANGE_H-14];
+
+/* ══════════════════════════════════════════════════════════════
+   4.  STATE OF THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+let lab=new Lab(), speed=1, running=true, dragging=null, hot=[];
+const hose={A:[700,940],C:[760,940]};
+const coff={};
+for(const k of ["w","p"]){ lab.syr[k].x=SYR_HOME[k][0]; lab.syr[k].y=SYR_HOME[k][1]; }
+function addHot(tag,shape,...g){ hot.push({tag,shape,g}); }
+function hit(x,y){
+  for(let i=hot.length-1;i>=0;i--){ const h=hot[i], g=h.g;
+    if(h.shape==="r"&&x>=g[0]-3&&x<=g[2]+3&&y>=g[1]-3&&y<=g[3]+3) return h.tag;
+    if(h.shape==="c"&&(x-g[0])**2+(y-g[1])**2<=(g[2]+3)**2) return h.tag; }
+  return null;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  DRAWING
+   ══════════════════════════════════════════════════════════════ */
+function stud(x,y0,y1,bright){
+  const col=bright?"#c3ced8":"#5d6771", dk=bright?"#6d7883":"#39424b", w=bright?9:8;
+  L([x,y0,x,y1],col,w); L([x-w*.3,y0,x-w*.3,y1],dk,Math.max(1,w*.34));
+  for(let yy=y0;yy<y1-7;yy+=7) L([x-w*.48,yy+3.2,x+w*.48,yy],dk,1);
+  for(const yy of [y0+9,y1-9]) P([x-w*1.15,yy-8,x+w*1.15,yy-8,x+w*1.45,yy,x+w*1.15,yy+8,x-w*1.15,yy+8,x-w*1.45,yy],col,dk);
+}
+function plate(xc,w,ytop,h){
+  R(xc-w,ytop,xc+w,ytop+h,"#31465a");
+  for(const sg of [-1,1]) L([xc+sg*w,ytop,xc+sg*w,ytop+h],"#cfe0ee",2);
+  A(xc-w,ytop+h-w*ELEV,xc+w,ytop+h+w*ELEV,180,180,"#cfe0ee",2);
+  ell(xc,w,ytop,"#4e6c83","#dceaf5");
+  A(xc-w*.82,ytop-w*.82*ELEV,xc+w*.82,ytop+w*.82*ELEV,200,70,"#a9c8dd");
+}
+const STUDS=[[0,R_STUD],[180,R_STUD],[60,X_STUD_R],[120,X_STUD_R],[240,X_STUD_F],[300,X_STUD_F]];
+function apparatusBack(){
+  ell(CX,BASE_W,YB,"#385063","#93aabb");
+  R(CX-BASE_W,YB,CX+BASE_W,YB+BASE_H,"#22303c");
+  A(CX-BASE_W,YB+BASE_H-BASE_W*ELEV,CX+BASE_W,YB+BASE_H+BASE_W*ELEV,180,180,"#93aabb",2);
+  for(const sg of [-1,1]) L([CX+sg*BASE_W,YB,CX+sg*BASE_W,YB+BASE_H],"#93aabb",2);
+  for(const th of [35,145,215,325]){
+    const lx=CX+BASE_W*0.78*Math.cos(th*Math.PI/180), ly=YB+BASE_H+BASE_W*0.78*Math.sin(th*Math.PI/180)*ELEV;
+    const back=Math.sin(th*Math.PI/180)>0, col=back?"#22303c":"#2b3d4d", edge=back?"#7c93a6":"#b6cadb";
+    P([lx-10,ly,lx+10,ly,lx+10,ly+90,lx+4,ly+104,lx-10,ly+104],col,edge);
+  }
+  L([CX+6,YB+BASE_H,CX+14,YB+BASE_H+70,CX-6,YB+BASE_H+132],"#15181c",6,true);
+  for(const [th,rr] of STUDS){ const nx=CX+(Math.cos(th*Math.PI/180)>=0?1:-1)*rr, ny=YB-R_STUD*Math.sin(th*Math.PI/180)*ELEV;
+    R(nx-12,ny-4,nx+12,ny+2,"#b3bdc5","#5d666f"); R(nx-10,ny-13,nx+10,ny-4,"#96a1aa","#5d666f"); }
+  R(CX-W_OC_O,YTOP,CX+W_OC_O,YB,"#0f161d");
+  ell(CX,W_OC_I,YB,"#0d141a","#33424f");
+  for(const sg of [-1,1]) stud(CX+sg*X_STUD_R,YTOP-74+DY_STUD,YB+BASE_H+6+DY_STUD,false);
+}
+function liquids(){
+  if(lab.h_oc>0.001){
+    const y=cm2y(lab.h_oc*100), i=wi(lab.T_oc+lab.strat);
+    for(const sg of [-1,1]){ const a=Math.min(CX+sg*W_IC_O,CX+sg*W_OC_I), b=Math.max(CX+sg*W_IC_O,CX+sg*W_OC_I);
+      [WDARK[i],WRAMP[i],WDARK[i]].forEach((sh,j)=>R(a+(b-a)*j/3,y,a+(b-a)*(j+1)/3,YB,sh)); }
+    ell(CX,W_OC_I,y,WTOP[i]); ell(CX,W_IC_O,y,"#0f161d");
+  }
+  if(lab.h_ic>0.001){
+    const y=cm2y(lab.h_ic*100);
+    let body,top;
+    if(lab.icKind==="pg"){ body="#b3a862"; top="#dfd68f"; }
+    else if(lab.icKind==="mixed"){ body="#8fa06a"; top="#b6c58e"; }
+    else { const i=wi(lab.T_ic); body=WDARK[i]; top=WTOP[i]; }
+    const [rise,width]=lab.meniscus(), rp=rise*100*PXCM, wp=Math.min(W_IC_I*0.8,width*100*PXCM), yw=y-rp;
+    R(CX-W_IC_I,yw,CX+W_IC_I,YB,body);
+    ell(CX,W_IC_I,yw,lerp(top,"#ffffff",0.25));
+    const ri=Math.max(2,W_IC_I-wp); ell(CX,ri,y,top,"#eef6ff");
+  }
+  const hx=CX+X_HEAT;
+  R(hx-9,cm2y(9),hx+9,YB,lab.heater?"#e0603f":"#8b959e","#c3ccd4");
+  R(hx-9,cm2y(9)-9,hx+9,cm2y(9),"#c9a227","#e3c964");
+}
+function apparatusFront(){
+  const YT=YTOP;
+  for(const sg of [-1,1]){
+    for(let i=0;i<5;i++){ const f0=W_OC_I+(W_OC_O-W_OC_I)*i/5, f1=W_OC_I+(W_OC_O-W_OC_I)*(i+1)/5;
+      R(Math.min(CX+sg*f0,CX+sg*f1),YT,Math.max(CX+sg*f0,CX+sg*f1),YB,lerp("#1d2a35","#8ea6b8",(i+1)/5)); }
+    for(let i=0;i<4;i++){ const f0=W_IC_I+(W_IC_O-W_IC_I)*i/4, f1=W_IC_I+(W_IC_O-W_IC_I)*(i+1)/4;
+      R(Math.min(CX+sg*f0,CX+sg*f1),YT+4,Math.max(CX+sg*f0,CX+sg*f1),YB,lerp("#1d2a35","#8ea6b8",(i+1)/4)); }
+  }
+  const px=CX+X_PROBE;
+  R(px-7,cm2y(11),px+7,YB,"#8b959e","#c3ccd4"); R(px-8,cm2y(11)-34,px+8,cm2y(11),"#15181c","#3a4148");
+  L([px,cm2y(11)-34,px+10,YT-20],"#15181c",3);
+  for(const sg of [-1,1]){ stud(CX+sg*X_STUD_F,YT-74-DY_STUD,YB+BASE_H+6-DY_STUD,true); stud(CX+sg*R_STUD,YT-74,YB+BASE_H+6,true); }
+  for(const r of [W_OC_O,W_OC_I,W_IC_O,W_IC_I]){
+    A(CX-r,YT-r*ELEV,CX+r,YT+r*ELEV,180,180,"#b6c8d6"); A(CX-r,YT-r*ELEV,CX+r,YT+r*ELEV,0,180,"#4a5a68");
+    A(CX-r,YB-r*ELEV,CX+r,YB+r*ELEV,180,180,"#7f93a6"); }
+  A(CX-W_OC_O,YT-4-W_OC_O*ELEV,CX+W_OC_O,YT-4+W_OC_O*ELEV,180,180,"#0c0f12",7);
+  const fy=YT-FLANGE_H; plate(CX,FLANGE_W,fy,FLANGE_H);
+  const cy=fy-22; plate(CX,COVER_W,cy-COVER_H,COVER_H);
+  for(const [th,rr] of STUDS){ const nx=CX+(Math.cos(th*Math.PI/180)>=0?1:-1)*rr, dy=-R_STUD*Math.sin(th*Math.PI/180)*ELEV;
+    R(nx-10,fy+dy-12,nx+10,fy+dy-3,"#96a1aa","#5d666f"); R(nx-12,fy+dy-3,nx+12,fy+dy+1,"#b3bdc5","#5d666f");
+    const ty=cy-COVER_H+dy; R(nx-11,ty-3,nx+11,ty+8,"#8b959e","#c3ccd4");
+    A(nx-11,ty-21,nx+11,ty+5,0,180,"#e6eef4",1,"#b7c2cb"); }
+  const ty=cy-COVER_H;
+  R(CX-9,ty-26,CX+9,ty,"#aab4bc","#dfe8ef"); O(CX-13,ty-34,CX+13,ty-22,"#2f7fbf","#8fc6e8");
+  L([CX,ty-30,CX-34,ty-62,CX-96,ty-58],"#54b6e8",7,true);
+  R(CX+16,ty-20,CX+28,ty,"#8b959e","#c3ccd4");
+  L([CX+22,ty-20,CX+58,ty-52,CX+128,ty-44],"#15181c",6,true);
+  L([CX+34,ty+2,CX+76,ty-34,CX+132,ty-24],"#15181c",5,true);
+  /* the centimetre scale engraved on the inner cylinder */
+  for(let c=0;c<15;c++){ const y=cm2y(c);
+    L([CX-W_IC_I,y,CX-W_IC_I+13,y],"#eaf4fc",1.2); L([CX+W_IC_I,y,CX+W_IC_I-13,y],"#eaf4fc",1.2);
+    X(String(c),CX-W_IC_I+17,y,"#eaf4fc",11,"w");
+    for(let j=1;j<10;j++){ const yy=y-j*PXCM/10; if(yy>cm2y(14.2)){ const dd=j===5?8:5;
+      L([CX-W_IC_I,yy,CX-W_IC_I+dd,yy],"#9fb6c8",1); L([CX+W_IC_I,yy,CX+W_IC_I-dd,yy],"#9fb6c8",1); } } }
+  X("cm",CX-W_IC_I+17,cm2y(-0.5),"#eaf4fc",11,"w");
+  for(let c=0;c<19;c++){ const y=cm2y(c); L([CX+W_OC_O,y,CX+W_OC_O-(c%5===0?10:6),y],"#7f97ab",1);
+    if(c%5===0) X(String(c),CX+W_OC_O+7,y,"#7f97ab",11,"w"); }
+  X("Fig. 2",CX+FLANGE_W+10,cy+6,DIM,11,"w");
+  X("OC",CX-W_OC_O-10,cm2y(17.4),DIM,12,"e"); X("IC",CX-W_IC_I-8,cm2y(13.4),DIM,12,"e");
+}
+function ballvalve(cx,cy,rw,rh){
+  R(cx-rw,cy-rh,cx+rw,cy+rh,"#1b1e22","#727b83",2);
+  R(cx-rw,cy-rh,cx+rw,cy-rh*0.62,"#2c3238"); R(cx-rw,cy+rh*0.66,cx+rw,cy+rh,"#101215");
+  O(cx-rw*.46,cy-rh*.44,cx+rw*.46,cy+rh*.44,"#262b31","#5a636b");
+  L([cx-rw*.22,cy,cx+rw*.22,cy],"#8b959e",1); L([cx,cy-rh*.22,cx,cy+rh*.22],"#8b959e",1);
+}
+function pushfit(x,y,side){ R(x-13,y-8,x+13,y+8,"#c3ccd4","#eef3f7"); for(let i=-3;i<=3;i++) L([x+i*4,y-8,x+i*4,y+8],"#8b959e",1);
+  O(x+side*10-5,y-9,x+side*10+5,y+9,"#2f7fbf","#8fc6e8"); }
+function tee(x,y){ R(x-16,y-9,x+16,y+9,"#17191c","#3a4148"); R(x-8,y-22,x+8,y-6,"#17191c","#3a4148"); O(x-8,y-26,x+8,y-16,"#2f7fbf","#8fc6e8"); }
+function rocker(cx,cy,r,lit,tag){
+  O(cx-r,cy-r,cx+r,cy+r,"#0f1215","#3a4148",2);
+  O(cx-r*.74,cy-r*.74,cx+r*.74,cy+r*.74,lit?"#c9261b":"#5a1d16","#7a2a1e",2);
+  O(cx-r*.40,cy-r*.17,cx-r*.10,cy+r*.13,null,"#f7ece5",2); L([cx+r*.10,cy,cx+r*.42,cy],"#f7ece5",2);
+  addHot(tag,"c",cx,cy,r);
+}
+function drawFig3(){
+  const [x0,y0,x1,y1]=MOD, w=x1-x0, h=y1-y0;
+  R(x0,y0,x1,y1,"#15171a","#33383d",2);
+  const f=HOT.fig3.screen, sx0=x0+f[0]*w, sy0=y0+f[1]*h, sx1=x0+f[2]*w, sy1=y0+f[3]*h;
+  R(sx0-4,sy0-4,sx1+4,sy1+4,"#c9d2d9","#eef3f7"); R(sx0,sy0,sx1,sy1,"#04090d","#63d3e8",2);
+  X(d().module,x0+0.03*w,y1-12,"#3a4148",11,"w");
+  const labels=[["1","Start\nStop"],["2","Reset"],["3","Graphics"],["4","Heat"]];
+  labels.forEach(([n,t],i)=>{ const bx=x0+HOT.fig3.btn[i][0]*w, by=y0+HOT.fig3.btn[i][1]*h, bw=HOT.fig3.btnw*w/2, bh=HOT.fig3.btnh*h/2;
+    for(const [dx,col] of [[3,"#0d3b4c"],[0,"#27c3f1"]]){ ctx.fillStyle=col; ctx.beginPath();
+      ctx.roundRect(bx-bw+dx,by-bh+dx,2*bw,2*bh,bh); ctx.fill(); }
+    X(n,bx,by,"#eaf6ff",24,"c",true,MONO); X(t,bx,by+bh+24,"#4ad07a",13,"c");
+    addHot("btn"+n,"r",bx-bw,by-bh,bx+bw,by+bh); });
+  /* what the screen shows: dark when the module is off */
+  if(!lab.power) return;
+  R(sx0+14,sy0+22,sx0+24,sy0+96,"#3a2f14","#7a6a2e"); R(sx0+15,sy0+60,sx0+23,sy0+95,"#e0a712");
+  O(sx0+10,sy0+90,sx0+28,sy0+108,"#e0a712","#7a6a2e");
+  const band=sy1-(sy1-sy0)*0.30, cw=sx1-sx0;
+  R(sx0+6,band,sx1-6,sy1-6,"#12293a");
+  const vals=[lab.rPint(),lab.rPatm(),lab.rTint(),lab.rText()];
+  [["INT. PRESSURE","#4ad07a",0,0],["ATM. PRESSURE","#4ad07a",1,0],["INT. TEMPERATURE","#e8a33d",0,1],["EXT. TEMPERATURE","#e8a33d",1,1]].forEach(([nm,col,cc,rr],i)=>{
+    const px=sx0+cw*(0.10+cc*0.45), py=sy0+26+rr*(band-sy0-26)*0.52;
+    O(px-13,py-4,px-5,py+4,col); X(nm,px,py,"#8fd6e8",12,"w");
+    X(vals[i].toFixed(1),px,py+30,"#eaf6ff",28,"w",true,MONO);
+    X(rr===0?"kPa":"C",px+cw*0.235,py+34,"#8fd6e8",12,"w"); });
+  const mn=Math.floor(lab.timer/60), s2=lab.timer%60;
+  X("TIMER: "+String(mn).padStart(2,"0")+":"+s2.toFixed(1).padStart(4,"0"),sx0+22,(band+sy1)/2-3,"#eaf6ff",26,"w",true,MONO);
+  let ic="#1b2b33";
+  if(lab.heater) ic=Math.floor(lab.t*2)%2?"#d94a34":"#4ad07a"; else if(lab.heaterHot) ic="#d94a34";
+  R(sx1-44,(band+sy1)/2-13,sx1-20,(band+sy1)/2+11,ic,"#3a5560");
+}
+function drawFig4(){
+  const [x0,y0,x1,y1]=REAR, w=x1-x0, h=y1-y0;
+  R(x0,y0,x1,y1,"#111316","#2f353b",2);
+  const ix=x0+0.22*w, iy=y0+0.30*h;
+  R(ix-0.13*w,iy-0.20*h,ix+0.13*w,iy+0.20*h,"#1c2024","#59616a",2);
+  for(const dx of [-0.045,0.045]) O(ix+dx*w-6,iy-6,ix+dx*w+6,iy+6,"#07090b","#6b747c");
+  const f=HOT.fig4.power; rocker(x0+f[0]*w,y0+f[1]*h,f[2]*w/1.4,lab.power,"power");
+  X("SOURCE AC",ix,y0+0.80*h,"#e8edf1",13); X("POWER",x0+f[0]*w,y0+0.80*h,"#e8edf1",13);
+}
+function drawFig5(){
+  const [x0,y0,x1,y1]=SIDE, w=x1-x0, h=y1-y0;
+  R(x0,y0,x1,y1,"#0a0c0e","#2a3036",2);
+  L([x0+4,y1-8,x1-4,y1-8],"#5a3d2a",6);
+  for(const [t1,t2,fx] of [["External","Temp.",0.155],["Internal","Temp.",0.375]]){
+    const px=x0+fx*w; X(t1,px,y0+0.15*h,"#eef3f7",13); X(t2,px,y0+0.33*h,"#eef3f7",13);
+    const cy=y0+0.56*h, rw=0.050*w;
+    R(px-rw,cy-0.08*h,px+rw,cy,"#8d8778"); O(px-rw,cy-0.08*h-0.3*rw,px+rw,cy-0.08*h+0.3*rw,"#b8b1a0","#ede7d6");
+    R(px-rw*.78,cy,px+rw*.78,cy+0.09*h,"#7e786b");
+    L([px,cy+0.11*h,px-0.035*w,y0+0.92*h,px+0.03*w,y1-14],"#0d0f11",7,true);
+  }
+  X("Water",x0+0.62*w,y0+0.15*h,"#eef3f7",13,"w"); X("Heater",x0+0.62*w,y0+0.33*h,"#eef3f7",13,"w");
+  X("Internal",x0+0.62*w,y0+0.62*h,"#eef3f7",13,"w"); X("pressure",x0+0.62*w,y0+0.80*h,"#eef3f7",13,"w");
+  const px=x0+0.885*w, cy=y0+0.30*h, rw=0.045*w, rh=0.13*h;
+  O(px-rw,cy-rh,px+rw,cy+rh,"#a8853c","#e9cb86",2); O(px-rw*.5,cy-rh*.5,px+rw*.5,cy+rh*.5,"#7d6430","#e9cb86");
+  const cy2=y0+0.72*h; R(px-rw*1.1,cy2-9,px+rw*.2,cy2+9,"#c3ccd4","#eef3f7"); O(px-rw*.1,cy2-11,px+rw*.9,cy2+11,"#2f7fbf","#8fc6e8");
+  L([px+rw*.7,cy2,x1-10,cy2-0.10*h,x1-2,y1-20],"#54b6e8",7,true);
+}
+function drawFig8(){
+  const [x0,y0,x1,y1]=PUMPP, w=x1-x0, h=y1-y0;
+  R(x0,y0,x1,y1,"#0d0f11","#2a3036",2);
+  X("PUMP",x0+0.14*w,y0+0.13*h,"#eef3f7",16,"w",true);
+  const f=HOT.fig8.pump; rocker(x0+f[0]*w,y0+f[1]*h,f[2]*w/1.4,lab.pump,"pump");
+  for(const [key,t] of [["out","OUT"],["in","IN"]]){ const [px,py]=hotPt(PUMPP,HOT.fig8[key]), r=0.115*w;
+    O(px-r,py-r,px+r,py+r,"#0b0d0f","#3a4148"); O(px-r*.82,py-r*.82,px+r*.82,py+r*.82,"#2f7fbf","#8fc6e8",3);
+    O(px-r*.34,py-r*.34,px+r*.34,py+r*.34,"#08131c"); X(t,px+r+10,py,"#eef3f7",13,"w"); }
+}
+function drawFig6(){
+  const [x0,y0,x1,y1]=BOARD, w=x1-x0, h=y1-y0;
+  R(x0,y0,x1,y1,"#6b4a2c","#3d2713",2);
+  const px0=x0+0.022*w, py0=y0+0.028*h, px1=x1-0.022*w, py1=y1-0.028*h;
+  R(px0,py0,px1,py1,"#131518","#000"); R(px0+9,py0+9,px1-9,py1-9,null,"#c9d2d9");
+  const y1r=VALVE_XY.A[1], y2r=VALVE_XY.C[1];
+  L([px0,y1r,px1,y1r],"#3aa0e0",8); L([px0,y2r,px1,y2r],"#e2721f",8);
+  const t1x=x0+0.40*w, t2x=x0+0.47*w;
+  L([t1x,y0-0.02*h,t1x,y1r,t2x,y2r],"#e2721f",8,true);
+  const ex=x0+0.380*w, ey=VALVE_XY.D[1];
+  L([ex,ey,ex,py1+6],"#d8dde1",8); L([ex,ey,px1,ey],"#d8dde1",8);
+  R(ex-15,ey-15,ex+15,ey+15,"#17191c","#4a5158",2); O(ex-11,ey+12,ex+11,ey+28,"#2f7fbf","#8fc6e8"); O(ex+12,ey-11,ex+28,ey+11,"#2f7fbf","#8fc6e8");
+  tee(t1x,y1r); tee(t2x,y2r);
+  for(const [nm,[fx,fy],anc] of [["IN H2O   A",[0.055,0.075],"w"],["Water purge  B",[0.60,0.075],"w"],["OUT H2O  C",[0.055,0.390],"w"],
+      ["Outer cylinder",[0.97,0.325],"e"],["Outer cylinder",[0.97,0.590],"e"],["D",[0.70,0.665],"w"],["Syringe connection",[0.40,0.94],"w"]])
+    X(nm,x0+fx*w,y0+fy*h,"#d6dde3",14,anc);
+  for(const [fx,fy,dd] of [[0.30,0.105,1],[0.30,0.375,-1],[0.90,0.235,1],[0.90,0.505,1],[0.27,0.660,-1],[0.27,0.715,1],[0.90,0.700,1]]){
+    const ax=x0+fx*w, ay=y0+fy*h; L([ax-15*dd,ay,ax+15*dd,ay],"#9aa5ad",2);
+    P([ax+15*dd,ay,ax+8*dd,ay-4,ax+8*dd,ay+4],"#9aa5ad"); }
+  for(const k of "ABCD"){ const [vx,vy]=VALVE_XY[k];
+    pushfit(vx-0.072*w,vy,-1); pushfit(vx+0.072*w,vy,1); ballvalve(vx,vy,0.058*w,0.062*h);
+    drawHandle(vx,vy,lab.valve[k]); addHot("valve"+k,"c",vx,vy,28); }
+  for(const [tx,ty] of [SYR_PORT,HOSE_D_END]){ ctx.setLineDash([3,3]); O(tx-20,ty-20,tx+20,ty+20,null,"#4a5760"); ctx.setLineDash([]);
+    O(tx-6,ty-6,tx+6,ty+6,"#05080b","#8fa6b8"); }
+}
+function drawHandle(vx,vy,open){
+  if(open){ R(vx-8,vy-26,vx+8,vy+26,"#33383d","#6de08f",3); X("I",vx,vy+42,"#4ad07a",15,"c",true); }
+  else { R(vx-26,vy-8,vx+26,vy+8,"#33383d","#e0776a",3); X("II",vx,vy+32,"#d95c4a",15,"c",true); }
+}
+function valveArt(vx,vy,open){
+  R(vx-22,vy-9,vx+22,vy+9,"#c6ced6","#8b959e"); O(vx-13,vy-13,vx+13,vy+13,"#7d868f","#aeb7bf");
+  if(open) R(vx-4,vy-34,vx+4,vy-10,"#4ad07a","#2b7a4a"); else R(vx+10,vy-4,vx+34,vy+4,"#d95c4a","#8a3227");
+}
+function drawCards(){
+  X(d().head,18,18,"#4c8fd6",20,"w",true);
+  let [x0,y0,x1,y1]=NOTE; R(x0,y0,x1,y1,"#101215","#3a4148"); X(d().notation,x0+10,y0+13,"#56616c",12,"w");
+  const bx=x0+36, by0=y0+30, by1=y1-16;
+  R(bx,by0,bx+46,by1,null,ACRYL); R(bx+1,by0+(by1-by0)*.55,bx+45,by1-1,"#2f8fc4");
+  L([bx+58,by0,bx+58,by0+(by1-by0)*.55],INK,1); X("H",bx+68,by0+(by1-by0)*.27,INK,15);
+  L([bx+58,by0+(by1-by0)*.55,bx+58,by1],INK,1); X("h",bx+68,by0+(by1-by0)*.78,INK,15);
+  [[d().vOpen,true],[d().vShut,false]].forEach(([t,op],i)=>{ const vx=x1-128, vy=y0+50+i*52; valveArt(vx,vy,op); X(t,vx+50,vy,DIM,13,"w"); });
+  [x0,y0,x1,y1]=CARD17; R(x0,y0,x1,y1,"#101215","#3a4148"); X(d().fig17,x0+10,y0+13,"#56616c",12,"w");
+  const ccx=x0+(y1-y0)*0.52, ccy=(y0+y1)/2+6, rr=(y1-y0)*0.36;
+  for(const f of [1,0.91,0.545,0.455]) O(ccx-rr*f,ccy-rr*f,ccx+rr*f,ccy+rr*f,null,ACRYL);
+  d().dims.forEach((t,i)=>X(t,ccx+rr+22,ccy-rr*0.7+i*24,"#9fb0bf",13,"w",false,MONO));
+}
+function drawContainers(){
+  for(const k in CONT){
+    const [a,b,dd,e]=CONT[k], [ox,oy]=coff[k]||[0,0], ct=lab.containers[k], nk=(k==="pour"||k==="jug")?0:(e-b)*0.16;
+    ctx.save(); ctx.translate(ox,oy);
+    const f=ct.vol/ct.cap;
+    if(f>=0.005){ const top=b+nk+(e-b-nk)*(1-Math.min(1,f));
+      R(a+2,top,dd-2,e-2,ct.kind==="pg"?"#c8bd72":ct.kind==="waste"?"#5d6b78":ct.kind==="mixed"?"#9fb07a":WRAMP[wi(ct.T)]); }
+    if(k==="jug"||k==="pour"){ R(a,b,dd,e,null,STEEL,2); if(k==="pour") A(dd-10,b+18,dd+26,e-18,270,180,STEEL,3); }
+    else { R(a,b+nk,dd,e,null,STEEL,2); R(a+(dd-a)*.32,b,dd-(dd-a)*.32,b+nk,null,STEEL,2); }
+    ctx.restore();
+    X(d().cont[k],(a+dd)/2,b-18,DIM,12,"c");
+    addHot("cont_"+k,"r",a+ox,b+oy,dd+ox,e+oy);
+  }
+}
+function drawHoses(){
+  for(const k of ["A","C","D"]){
+    const conn=lab.hconn[k], [px,py]=k==="D"?SYR_PORT:HOSE_PORT[k];
+    O(px-7,py-11,px+7,py+11,conn?"#2f7fbf":"#5c6a74",conn?"#8fc6e8":"#8a949c",2);
+    addHot("port"+k,"c",px,py,12);
+    if(k==="D") continue;
+    let sx=px, sy=py; if(!conn){ sx-=26; sy+=34; }
+    const [hx,hy]=hose[k], sag=Math.min(Math.max(sy,hy)+70,1000);
+    L([sx,sy,(sx+hx)/2,sag,hx,hy],k==="A"?"#3aa0e0":"#e2721f",5,true);
+    O(hx-8,hy-8,hx+8,hy+8,"#c9d4de","#6f7c88"); X("hose "+k,hx,hy-17,DIM,12);
+    if(lab.clip[k]) P([hx-13,hy-3,hx+13,hy-3,hx+10,hy+14,hx-10,hy+14],"#3a4148","#8fa6b8");
+    addHot("hose"+k,"c",hx,hy,12);
+  }
+}
+function drawValveE(){
+  const [ex,ey]=EXY;
+  L([CX-FLANGE_W+6,YTOP-FLANGE_H-4,ex+16,ey-26,ex+4,ey-14],"#15181c",6,true);
+  R(ex-15,ey-14,ex+15,ey+16,"#15181c","#4a5259"); O(ex-9,ey-3,ex+9,ey+15,"#22282e","#4a5259");
+  R(ex-6,ey+16,ex+6,ey+28,"#8b959e","#c3ccd4");
+  if(lab.valve.E) L([ex,ey+1,ex+24,ey+1],"#4ad07a",7); else L([ex,ey+4,ex,ey-24],"#d95c4a",7);
+  X("E",ex-20,ey-22,INK,15,"e");
+  addHot("valveE","r",ex-18,ey-30,ex+30,ey+20);
+}
+function drawSyringes(){
+  for(const k of ["w","p"]){
+    const s=lab.syr[k], x=s.x, y=s.y;
+    R(x,y,x+SW,y+SH,"#0f151b","#b9c6d2",2);
+    for(let i=0;i<=10;i++){ const yy=y+SH-SH*i/10; L([x+SW,yy,x+SW-(i%5===0?11:7),yy],"#93a3b2",1); }
+    if(s.vol>0.2){ const top=y+SH-SH*Math.min(1,s.vol/s.cap);
+      R(x+2,top,x+SW-2,y+SH-2,s.kind==="pg"?"#c8bd72":s.kind==="mixed"?"#9fb07a":WRAMP[wi(s.T)]); }
+    P([x+SW/2-7,y+SH,x+SW/2+7,y+SH,x+SW/2+3,y+SH+20,x+SW/2-3,y+SH+20],"#4f9ad0","#8fc0e6");
+    addHot("syr_"+k,"r",x,y,x+SW,y+SH+20);
+    if(s.hasPlunger){ const py=y+SH-SH*Math.min(1,s.plunger/s.cap);
+      R(x+2,py-9,x+SW-2,py,"#5b6772","#98a5b1"); L([x+SW/2,py-9,x+SW/2,y-50],"#98a5b1",6);
+      R(x-11,y-62,x+SW+11,y-50,"#98a5b1","#c4ced8");
+      addHot("plg_"+k,"r",x-11,y-62,x+SW+11,y-50); addHot("plg_"+k,"r",x+2,py-12,x+SW-2,py+2); }
+    X(d().syr[k],x+SW/2,y-74,DIM,12);
+    R(x-12,y+SH+28,x+SW+12,y+SH+50,"#1c232b","#3a4148");
+    X(s.hasPlunger?d().remove:d().refit,x+SW/2,y+SH+39,INK,12);
+    addHot("plgtoggle_"+k,"r",x-12,y+SH+28,x+SW+12,y+SH+50);
+  }
+}
+function drawFooter(){
+  const t=lab.t, h=String(Math.floor(t/3600)).padStart(2,"0"), m=String(Math.floor(t%3600/60)).padStart(2,"0"), s=String(Math.floor(t%60)).padStart(2,"0");
+  X(d().status(h,m,s,speed,running),18,FOOT+14,"#8fa2b3",14,"w");
+  const fresh=lab.msg&&(lab.t-lab.msgT)<12*Math.max(1,speed/4);
+  if(fresh){ const f=d().m[lab.msg.k];
+    X(typeof f==="function"?f(...lab.msg.a):f,18,FOOT+36,WARN.has(lab.msg.k)?"#e0a04a":"#6fa8dc",14,"w"); }
+  X(d().foot,18,FOOT+60,"#4d5760",12,"w");
+  X(d().session(lab.seed),1906,FOOT+4,"#39424b",12,"e");
+  let x=1660; const bw=56, bh=26;
+  R(1580,FOOT+8,1638,FOOT+8+bh,"#1c232b","#3a4148"); X(running?"||":"▶",1609,FOOT+8+bh/2,INK,14);
+  addHot("runpause","r",1580,FOOT+8,1638,FOOT+8+bh);
+  for(const sp of [1,10,60,300]){ R(x,FOOT+8,x+bw,FOOT+8+bh,sp===speed?"#2a4a6e":"#1c232b","#3a4148");
+    X("×"+sp,x+bw/2,FOOT+8+bh/2,INK,13); addHot("spd"+sp,"r",x,FOOT+8,x+bw,FOOT+8+bh); x+=bw+6; }
+}
+function draw(){
+  hot=[];
+  ctx.fillStyle=BENCH; ctx.fillRect(0,0,LW,LH);
+  apparatusBack(); liquids(); apparatusFront();
+  /* the three leads from the head of the assembly to the module's side panel,
+     run behind the module */
+  [[26,"#111417"],[46,"#111417"],[66,"#54b6e8"]].forEach(([dx,col],i)=>
+    L([CX+dx,CY_COVER-22,CX+W_OC_O+30+i*12,YTOP-150,SIDE[0]-(26-i*8),SIDE[1]+(26+i*22),SIDE[0]+8,SIDE[1]+(40+i*26)],col,5,true));
+  drawCards(); drawFig3(); drawFig5(); drawFig4(); drawFig8(); drawFig6();
+  drawContainers(); drawValveE(); drawHoses(); drawSyringes(); drawFooter();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  INTERACTION
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerdown",e=>{
+  const [x,y]=lpos(e), t=hit(x,y); if(!t) return;
+  cv.setPointerCapture(e.pointerId);
+  if(t.startsWith("btn")) lab.pressButton(+t[3]);
+  else if(t==="power") lab.pressPower();
+  else if(t==="pump") lab.pressPump();
+  else if(t.startsWith("port")) lab.toggleHose(t[4]);
+  else if(t.startsWith("valve")) lab.toggleValve(t[5]);
+  else if(t.startsWith("spd")) speed=+t.slice(3);
+  else if(t==="runpause") running=!running;
+  else if(t.startsWith("plgtoggle_")) lab.removePlunger(t[10]);
+  else if(t.startsWith("plg_")) dragging=["plunger",t[4],y];
+  else if(t.startsWith("syr_")){ const k=t.slice(4); dragging=["syringe",k,[x-lab.syr[k].x,y-lab.syr[k].y]]; }
+  else if(t.startsWith("hose")) dragging=["hose",t[4],[x,y]];
+  else if(t.startsWith("cont_")){ const k=t.slice(5); coff[k]=[0,0]; dragging=["cont",k,[x,y]]; }
+});
+cv.addEventListener("pointermove",e=>{
+  if(!dragging) return; const [x,y]=lpos(e), [kind,key,ref]=dragging;
+  if(kind==="hose") hose[key]=[x,y];
+  else if(kind==="syringe"){ lab.syr[key].x=x-ref[0]; lab.syr[key].y=y-ref[1]; }
+  else if(kind==="plunger"){ const dd=(ref-y)*(100/SH); if(Math.abs(dd)>=0.5){ lab.syringePull(key,dd); dragging=[kind,key,y]; } }
+  else if(kind==="cont") coff[key]=[x-ref[0],y-ref[1]];
+});
+cv.addEventListener("pointerup",e=>{
+  if(!dragging) return; const [x,y]=lpos(e), [kind,key,ref]=dragging; dragging=null;
+  if(kind==="syringe") snap(key);
+  else if(kind==="hose"){
+    const [hx,hy]=hose[key];
+    if(Math.abs(x-ref[0])<5&&Math.abs(y-ref[1])<5){
+      const inside=key==="A"?lab.hoseAin:lab.hoseCin;
+      if(inside) lab.toggleClip(key); else lab.say("hoseFirst");
+      return;
+    }
+    let found=null;
+    for(const ck in CONT){ const [a,b,dd,f]=CONT[ck]; if(hx>=a-6&&hx<=dd+6&&hy>=b-6&&hy<=f+6) found=ck; }
+    if(key==="A") lab.hoseAin=found; else lab.hoseCin=found;
+    lab.clip[key]=false;
+    if(found){ const [a,b,dd,f]=CONT[found]; hose[key]=[(a+dd)/2,b+(f-b)*0.3]; }
+    lab.say("hoseTo",key,found||"__bench",!!found);
+  } else if(kind==="cont"){
+    let tgt=null;
+    for(const ck in CONT){ const [a,b,dd,f]=CONT[ck]; if(ck!==key&&x>=a&&x<=dd&&y>=b&&y<=f) tgt=ck; }
+    coff[key]=[0,0];
+    if(tgt) lab.pour(key,tgt);
+  }
+});
+function snap(key){
+  const s=lab.syr[key], nx=s.x+SW/2, ny=s.y+SH+20, [hx,hy]=HOSE_D_END;
+  if(Math.hypot(nx-hx,ny-hy)<20){ s.attached="Dh"; s.placed="D"; s.x=hx-SW/2; s.y=hy-SH-20; lab.say("syrDirect"); return; }
+  const dPort=Math.hypot(nx-SYR_PORT[0],ny-SYR_PORT[1]), dHose=Math.hypot(nx-hx,ny-hy);
+  if(dPort<20){ s.attached="D"; s.placed="D"; s.x=SYR_PORT[0]-SW/2; s.y=SYR_PORT[1]-SH-20; lab.say("syrD"); return; }
+  s.placed=null;
+  if(Math.min(dPort,dHose)<70){ lab.say("syrNotHome"); s.attached=null; return; }
+  for(const ck in CONT){ const [a,b,dd,e]=CONT[ck];
+    if(nx>=a-12&&nx<=dd+12&&ny>=b-12&&ny<=e+12){ s.attached=ck; lab.say("nozzleIn","__syr"+key,ck); return; } }
+  s.attached=null;
+}
+cv.addEventListener("wheel",e=>{
+  const [x,y]=lpos(e), t=hit(x,y); if(!t) return;
+  const dir=e.deltaY<0?1:-1;
+  if(t.startsWith("syr_")||t.startsWith("plg")){ e.preventDefault(); lab.syringePull(t.split("_")[1],dir*(e.shiftKey?5:1)); }
+  else if(t.startsWith("valve")){ e.preventDefault(); const v=t[5]; if(lab.valve[v]!==(dir>0)) lab.toggleValve(v); }
+  else if(t.startsWith("spd")||t==="runpause"){ e.preventDefault(); const sp=[1,10,60,300]; let i=sp.indexOf(speed); if(i<0) i=0; speed=sp[Math.max(0,Math.min(3,i+dir))]; }
+},{passive:false});
+document.addEventListener("keydown",e=>{ if(e.code==="Space"&&e.target.tagName!=="INPUT"){ e.preventDefault(); running=!running; } });
+
+/* message arguments that name things are translated when shown */
+const baseM={ko:{...T.ko.m},en:{...T.en.m}};
+for(const l of ["ko","en"]){
+  T[l].m.hoseTo=(k,dst,found)=>baseM[l].hoseTo(k,dst==="__bench"?T[l].bench:T[l].contName[dst]||dst,found);
+  T[l].m.nozzleIn=(s,c)=>baseM[l].nozzleIn(T[l].syr[s.replace("__syr","")],T[l].contName[c]);
+  T[l].m.poured=(v,a,b)=>baseM[l].poured(v,T[l].contName[a],T[l].contName[b]);
+}
+
+function setTab(k){ $("tab-lab").className=k==="lab"?"on":""; $("tab-info").className=k==="info"?"on":"";
+  $("cv").hidden=k!=="lab"; $("info").hidden=k!=="info"; $("t-hint").hidden=k!=="lab"; if(k==="lab") layoutCanvas(); }
+$("tab-lab").onclick=()=>setTab("lab"); $("tab-info").onclick=()=>setTab("info");
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
+  $("tab-lab").textContent=t.tabLab; $("tab-info").textContent=t.tabInfo; $("t-hint").textContent=t.hint;
+  $("info").innerHTML=INFO[lang];
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2026 E — 이상 기체, 증기압, 열전도 · HaslaLab":"IPhO 2026 E — Ideal Gas, Vapor Pressure and Heat Conduction · HaslaLab";
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+/* ══════════════════════════════════════════════════════════════
+   7.  MAIN LOOP  —  1 s physics steps, at most 20 ms of work a frame
+   ══════════════════════════════════════════════════════════════ */
+let last=performance.now(), acc=0;
+function tick(){
+  const now=performance.now(); let real=(now-last)/1000; last=now; if(real>0.25) real=0.25;
+  if(running){
+    acc+=real*speed; const budget=performance.now()+20;
+    while(acc>0){ const dt=acc>1?1:acc; lab.step(dt); acc-=dt; if(performance.now()>budget){ acc=0; break; } }
+  }
+  if(!$("cv").hidden) draw();
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layoutCanvas);
+applyLang(); layoutCanvas(); requestAnimationFrame(tick);
+</script>
+  <script src="adfit.js"></script>
+</body>
+</html>

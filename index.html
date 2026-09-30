@@ -599,7 +599,18 @@ const DATA={
   full:{ko:"국제물리올림피아드",en:"International Physics Olympiad"},
   scope:{ko:"국제",en:"International"},
   years:[
-   {y:2026,host:{ko:"콜롬비아 · 부카라망가",en:"Bucaramanga, Colombia"},cc:"co",problems:wip("Ideal Gas, Vapor Pressure, and Heat Conduction")},
+   {y:2026,host:{ko:"콜롬비아 · 부카라망가",en:"Bucaramanga, Colombia"},cc:"co",
+    problems:[
+      {id:"E1",
+       title:{ko:"이상 기체, 증기압, 열전도",en:"Ideal Gas, Vapor Pressure, and Heat Conduction"},
+       desc:{ko:"전원을 켜고 밸브 A–E를 돌려 펌프와 주사기로 두 실린더를 채운 뒤, 히터를 켜고 압력·온도·타이머와 실린더 눈금만으로 기체와 증기압, 아크릴의 열전도를 잽니다.",
+             en:"Power the module, turn valves A–E, fill both cylinders with the pump and the syringes, switch the heater on, and get the gas law, the vapour pressure and the acrylic's conductivity from the pressure, temperature, timer and the scale alone."},
+       tags:["열역학","증기압","열전도"], tagsEn:["Thermodynamics","Vapour pressure","Heat conduction"],
+       files:{sim:"sim/ipho2026_E1_web.html",
+              src:{ko:"src/ipho2026_E1_sim_KO.py", en:"src/ipho2026_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2026_E_EN.pdf"},
+              sol:"pdf/IPhO_2026_S.pdf"}}
+    ]},
    {y:2025,host:{ko:"프랑스 · 파리",en:"Paris, France"},cc:"fr",problems:wip("Earth's magnetic field measurement","Sand craters and dunes")},
    {y:2024,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",problems:wip("Heat Conduction in a Copper Rod","Diffraction from Phase Steps")},
    {y:2023,host:{ko:"일본 · 도쿄",en:"Tokyo, Japan"},cc:"jp",problems:wip("Mass Measurement","Birefringence")},
@@ -638,12 +649,17 @@ const DATA={
               src:{ko:"src/ipho2019_E1_sim_KO.py", en:"src/ipho2019_E1_sim_EN.py"},
               pdf:{ko:"pdf/IPhO_2019_E1_KO.pdf", en:"pdf/IPhO_2019_E1_EN.pdf"},
               sol:"pdf/IPhO_2019_S1.pdf"}},
-      {id:"E2", en:"Wiedemann–Franz Law", ko:"비데만–프란츠 법칙", state:"wip", hold:true,
-       files:{sim:"sim/ipho2019_E2_web.html",
+      {id:"E2",
+       title:{ko:"비데만–프란츠 법칙",en:"Wiedemann–Franz Law"},
+       desc:{ko:"두꺼운 구리·황동·알루미늄 튜브 속으로 자석을 떨어뜨려 전기전도도를, 저장조에 체결한 막대를 가열해 8개 온도계로 열전도도와 비열을 재어 로렌츠 수를 비교합니다.",
+             en:"Drop a magnet through thick copper, brass and aluminium tubes for the electrical conductivity, heat rods screwed onto a water reservoir and read eight thermometers for the heat conductivity and specific heat, and compare the Lorenz numbers."},
+       tags:["전기전도","열전도","맴돌이 전류"], tagsEn:["Electrical conduction","Heat conduction","Eddy currents"],
+       /* exe·pdf·sol : 빌드와 문제지가 올라오면 되살린다
               exe:{ko:REL+"v1.0/IPhO2019_E2_sim_KO.exe", en:REL+"v1.0/IPhO2019_E2_sim_EN.exe"},
-              src:{ko:"src/ipho2019_E2_sim_KO.py", en:"src/ipho2019_E2_sim_EN.py"},
               pdf:{ko:"pdf/IPhO_2019_E2_KO.pdf", en:"pdf/IPhO_2019_E2_EN.pdf"},
-              sol:"pdf/IPhO_2019_S2.pdf"}}
+              sol:"pdf/IPhO_2019_S2.pdf"                                          */
+       files:{sim:"sim/ipho2019_E2_web.html",
+              src:{ko:"src/ipho2019_E2_sim_KO.py", en:"src/ipho2019_E2_sim_EN.py"}}}
     ]},
    {y:2018,host:{ko:"포르투갈 · 리스본",en:"Lisbon, Portugal"},cc:"pt",
     problems:[
@@ -760,14 +776,30 @@ const DATA={
     ]},
    {y:2025,host:{ko:"사우디아라비아 · 다란",en:"Dhahran, Saudi Arabia"},cc:"sa",
     problems:[
-      {id:"E1", en:"Physics of Induction Cooking", ko:"인덕션 조리의 물리", state:"wip", hold:true,
+      {id:"E1",
+       title:{ko:"인덕션 조리의 물리",en:"Physics of Induction Cooking"},
+       desc:{ko:"함수 발생기·축전기·코일로 직렬 RLC를 꾸며 L과 R_L을 구하고, 두 코일 사이에 금속판을 끼워 표피 깊이를, 팬을 가열하며 NTC 저항을 읽어 비열과 부하저항을 잽니다.",
+             en:"Build a series RLC from the generator, a capacitor and the coil for L and R_L, slide metal plates between two coils for the skin depth, and heat a pan while reading its NTC for the specific heat and the load resistance."},
+       tags:["전자기 유도","RLC 공진","표피 깊이"], tagsEn:["Induction","RLC resonance","Skin depth"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/APhO2025_E1_sim_KO.exe", en:REL+"v1.0/APhO2025_E1_sim_EN.exe"}, */
        files:{sim:"sim/apho2025_E1_web.html",
-              exe:{ko:REL+"v1.0/APhO2025_E1_sim_KO.exe", en:REL+"v1.0/APhO2025_E1_sim_EN.exe"},
               src:{ko:"src/apho2025_E1_sim_KO.py", en:"src/apho2025_E1_sim_EN.py"},
-              pdf:{ko:"pdf/APhO_2025_E1_KO.pdf", en:"pdf/APhO_2025_E1_EN.pdf"},
-              sol:"pdf/APhO_2025_S1.pdf"}}
+              pdf:{en:"pdf/APhO_2025_E_EN.pdf"},
+              sol:"pdf/APhO_2025_S.pdf"}}
     ]},
-   {y:2024,host:{ko:"말레이시아 · 캄파르",en:"Kampar, Malaysia"},cc:"my",problems:wip("Gyroscope")},
+   {y:2024,host:{ko:"말레이시아 · 캄파르",en:"Kampar, Malaysia"},cc:"my",
+    problems:[
+      {id:"E1",
+       title:{ko:"자이로스코프",en:"Gyroscope"},
+       desc:{ko:"모터와 원판부터 자이로스코프를 직접 조립하고, 전압과 볼트 수를 바꿔 가며 세차 주기와 팔의 기울기를 스톱워치·각도기·자로 잽니다. 회전수는 어디에도 표시되지 않습니다.",
+             en:"Assemble the gyroscope from the motor and disks, then vary the voltage and the bolts and time the precession and read the arm's tilt with a stopwatch, goniometer and ruler. The rotor speed is never shown."},
+       tags:["역학","세차 운동","각운동량"], tagsEn:["Mechanics","Precession","Angular momentum"],
+       files:{sim:"sim/apho2024_E1_web.html",
+              src:{ko:"src/apho2024_E1_sim_KO.py", en:"src/apho2024_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2024_E_EN.pdf"},
+              sol:"pdf/APhO_2024_S.pdf"}}
+    ]},
    {y:2023,host:{ko:"몽골 · 울란바토르",en:"Ulaanbaatar, Mongolia"},cc:"mn",
     general:{en:"pdf/APhO_2023_G0.pdf"},
     problems:[
@@ -3059,10 +3091,115 @@ const SIG_E20E2={
     c.fillText("F = "+st.F.toFixed(2)+" N",gx,h-12);
   }};
 
+/* ── IPhO 2019 E2 · the eight thermometers of Rod #1, heater on ──── */
+const SIG_I19E2={
+  sim:"sim/ipho2019_E2_web.html", tag:"IPhO 2019 E2", span:1500, rate:60,
+  capL:{ko:"Rod #1의 온도계 8개 · 히터를 켠 뒤, 끝은 저장조에",en:"Rod #1's eight thermometers · heater on, far end in the reservoir"},
+  capR:{ko:"박스 시간",en:"box time"},
+  read(t){ return Math.min(t,this.span).toFixed(0)+" s"; },
+  T(i,t){ /* sensor i at 15 + 25 i mm from the water end: the profile grows towards a straight line */
+    const x=0.015+0.025*i, tau=160+2600*x*x;
+    return 23.4+3.3*(1-Math.exp(-t/240))+43*x*(1-Math.exp(-t/tau)); },
+  paint(c,w,h,t){
+    t=Math.min(t,this.span);
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const x0=w*0.10, x1=w*0.90, ry=h*0.70;
+    /* the insulated rod, heater end on the right, reservoir on the left */
+    c.fillStyle="#221b19"; c.fillRect(x0,ry-10,x1-x0,20);
+    c.fillStyle="#b7bcc0"; c.fillRect(x0-38,ry-26,34,52);
+    PEN(c,"#cf2f26",2.4); c.beginPath(); c.moveTo(x1,ry-5); c.lineTo(x1+16,ry-18); c.moveTo(x1,ry+5); c.lineTo(x1+16,ry+18); c.stroke();
+    const top=h*0.10, bot=ry-26, lo=22, hi=34;
+    const Y=v=>bot-(v-lo)/(hi-lo)*(bot-top);
+    PEN(c,"#DCE7F0",1); for(let v=lo;v<=hi;v+=2){ c.beginPath(); c.moveTo(x0,Y(v)); c.lineTo(x1,Y(v)); c.stroke(); }
+    c.font="10px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center";
+    for(let i=0;i<8;i++){
+      const px=x0+(0.015+0.025*i)/0.2*(x1-x0), v=this.T(i,t);
+      PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(px,ry-10); c.lineTo(px,Y(v)); c.stroke();
+      c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(px,Y(v),4.2,0,7); c.fill();
+      c.fillStyle="#8A99A8"; c.fillText(v.toFixed(2),px,Y(v)-9); c.fillText("T"+(i+1),px,ry+26);
+    }
+  }};
+
+/* ── APhO 2025 E1 · the voltage across R1 through resonance ──────── */
+const SIG_A25E1={
+  sim:"sim/apho2025_E1_web.html", tag:"APhO 2025 E1", span:24, rate:1,
+  capL:{ko:"R₁ 양단 전압 · 470 nF로 공진을 지나며",en:"The voltage across R₁ · sweeping through resonance with 470 nF"},
+  capR:{ko:"F",en:"F"},
+  f(t){ const u=(t%this.span)/this.span; return 25+20*(u<0.5?2*u:2-2*u); },
+  read(t){ return this.f(t).toFixed(2)+" kHz"; },
+  paint(c,w,h,t){
+    const f=this.f(t), f0=33.79, Q=4.2, A=2.24/Math.sqrt(1+Q*Q*(f/f0-f0/f)**2);
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const X0=w*0.08, Y0=h*0.08, W=w*0.84, H=h*0.70;
+    c.fillStyle="#04120c"; c.fillRect(X0,Y0,W,H);
+    PEN(c,"#1a3a2a",1);
+    for(let i=1;i<10;i++){ c.beginPath(); c.moveTo(X0+W*i/10,Y0); c.lineTo(X0+W*i/10,Y0+H); c.stroke(); }
+    for(let i=1;i<8;i++){ c.beginPath(); c.moveTo(X0,Y0+H*i/8); c.lineTo(X0+W,Y0+H*i/8); c.stroke(); }
+    PEN(c,"#7dfab0",1.6); c.beginPath();
+    for(let i=0;i<=240;i++){ const x=X0+W*i/240, y=Y0+H/2-Math.sin(2*Math.PI*f*i/240*0.1)*A/0.5*(H/8);
+      i?c.lineTo(x,y):c.moveTo(x,y); } c.stroke();
+    c.fillStyle="#7dfab0"; c.font="bold 11px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="left";
+    c.fillText("Vmax "+A.toFixed(3)+" V",X0+8,Y0+H-10); c.fillText("F "+f.toFixed(2)+" kHz",X0+W*0.62,Y0+H-10);
+    c.fillStyle="#8A99A8"; c.font="10px IBM Plex Mono,ui-monospace,monospace";
+    c.fillText("1X  AC   0.5 V/div   10 µs/div",X0+8,Y0+14);
+  }};
+
+/* ── APhO 2024 E1 · the arm precessing, seen from above ───────────── */
+const SIG_A24E1={
+  sim:"sim/apho2024_E1_web.html", tag:"APhO 2024 E1", span:91.4, rate:5,
+  capL:{ko:"위에서 본 세차 운동 · 한 바퀴를 스톱워치로 잰다",en:"Precession seen from above · time one turn with the stopwatch"},
+  capR:{ko:"스톱워치",en:"stopwatch"},
+  read(t){ t=Math.min(t,this.span); return String(Math.floor(t/60)).padStart(2,"0")+":"+(t%60).toFixed(2).padStart(5,"0"); },
+  paint(c,w,h,t){
+    t=Math.min(t,this.span);
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2, R=Math.min(w,h)*0.40, psi=2*Math.PI*t/this.span-Math.PI/2;
+    PEN(c,"#DCE7F0",1); c.beginPath(); c.arc(cx,cy,R*0.62,0,7); c.stroke();
+    PEN(c,"#e8622a",2); c.beginPath(); c.arc(cx,cy,R*0.62,-Math.PI/2,psi); c.stroke();
+    const ux=Math.cos(psi), uy=Math.sin(psi);
+    PEN(c,"#8d949b",3.2); c.beginPath(); c.moveTo(cx-ux*R*0.95,cy-uy*R*0.95); c.lineTo(cx+ux*R*0.62,cy+uy*R*0.62); c.stroke();
+    const disk=(d,rad,col)=>{ const px=cx+ux*d, py=cy+uy*d;
+      c.save(); c.translate(px,py); c.rotate(psi); c.fillStyle=col; c.fillRect(-4,-rad,8,2*rad);
+      PEN(c,"#8aa0ae",1); c.strokeRect(-4,-rad,8,2*rad); c.restore(); };
+    disk(R*0.62,R*0.30,"#dfe9ef"); disk(-R*0.95,R*0.40,"#dfe9ef");
+    c.fillStyle="#2c2f36"; c.save(); c.translate(cx+ux*R*0.52,cy+uy*R*0.52); c.rotate(psi); c.fillRect(-12,-9,24,18); c.restore();
+    c.fillStyle="#23262c"; c.fillRect(cx-9,cy-9,18,18);
+  }};
+
+/* ── IPhO 2026 E1 · the module screen while the heater runs ───────── */
+const SIG_I26E1={
+  sim:"sim/ipho2026_E1_web.html", tag:"IPhO 2026 E1", span:1800, rate:60,
+  capL:{ko:"전자 모듈 화면 · 밀폐한 IC, 히터를 켠 뒤",en:"The module screen · IC sealed, heater on"},
+  capR:{ko:"타이머",en:"timer"},
+  st(t){ t=Math.min(t,this.span); const Ti=24.3+31*(1-Math.exp(-t/700)), Te=24.1+38*(1-Math.exp(-t/420));
+    const Tk=Ti+273.15, pv=Math.exp(16.7875-4700/Tk);
+    return {Ti,Te,P:(94.9-3.0)*(Tk/297.45)*1.004+pv-1.2}; },
+  read(t){ t=Math.min(t,this.span); return String(Math.floor(t/60)).padStart(2,"0")+":"+(t%60).toFixed(1).padStart(4,"0"); },
+  paint(c,w,h,t){
+    const s=this.st(t);
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const X0=w*0.07, Y0=h*0.08, W=w*0.86, H=h*0.80;
+    c.fillStyle="#15171a"; c.fillRect(X0-8,Y0-8,W+16,H+16);
+    c.fillStyle="#04090d"; c.fillRect(X0,Y0,W,H); PEN(c,"#63d3e8",2); c.strokeRect(X0,Y0,W,H);
+    const cell=(lab,val,unit,col,cx,cy)=>{
+      c.fillStyle=col; c.beginPath(); c.arc(cx-10,cy,4,0,7); c.fill();
+      c.fillStyle="#8fd6e8"; c.font="10px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="left"; c.fillText(lab,cx,cy+4);
+      c.fillStyle="#eaf6ff"; c.font="bold "+Math.round(h*0.085)+"px IBM Plex Mono,ui-monospace,monospace"; c.fillText(val,cx,cy+h*0.12);
+      c.fillStyle="#8fd6e8"; c.font="10px IBM Plex Mono,ui-monospace,monospace"; c.fillText(unit,cx+W*0.30,cy+h*0.12); };
+    cell("INT. PRESSURE",s.P.toFixed(1),"kPa","#4ad07a",X0+W*0.08,Y0+H*0.12);
+    cell("ATM. PRESSURE","94.9","kPa","#4ad07a",X0+W*0.55,Y0+H*0.12);
+    cell("INT. TEMPERATURE",s.Ti.toFixed(1),"C","#e8a33d",X0+W*0.08,Y0+H*0.46);
+    cell("EXT. TEMPERATURE",s.Te.toFixed(1),"C","#e8a33d",X0+W*0.55,Y0+H*0.46);
+    c.fillStyle="#12293a"; c.fillRect(X0+6,Y0+H*0.76,W-12,H*0.20);
+    c.fillStyle="#eaf6ff"; c.font="bold "+Math.round(h*0.07)+"px IBM Plex Mono,ui-monospace,monospace";
+    c.fillText("TIMER: "+this.read(t),X0+W*0.05,Y0+H*0.90);
+  }};
+
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
-                SIG_E20E1,SIG_E20E2,SIG_E21E1,SIG_E21E2];
+                SIG_E20E1,SIG_E20E2,SIG_E21E1,SIG_E21E2,
+                SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){

@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171a1d">
+<title>APhO 2025 E1 — 유도가열 조리기의 물리 · Physics of Induction Cooking · HaslaLab</title>
+<meta name="description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 함수 발생기·축전기·코일로 직렬 RLC를 꾸미고, 금속판을 끼워 표피 깊이를 재고, 팬을 가열하며 NTC 저항을 직접 읽습니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2025 E1 — 유도가열 조리기의 물리 · Physics of Induction Cooking">
+<meta property="og:description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 직렬 RLC, 상호 유도, 표피 깊이, 팬 가열을 실제 계기로 직접 측정합니다.">
+<style>
+  :root{
+    --bg:#171a1d; --panel:#1f2327; --ink:#e8eaec; --muted:#8d969e;
+    --line:#2b3137; --accent:#f0a23c; --accent-soft:#262b30; --deep:#101315; --phos:#7dfab0;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1240px){ .wrap{flex-wrap:wrap} }
+
+  /* ── tray ── */
+  .tray{flex:0 0 190px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
+  .tray h3{margin:8px 2px 4px;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .tray h3:first-child{margin-top:2px}
+  .part{display:flex;align-items:center;gap:7px;width:100%;margin:3px 0;padding:6px 8px;text-align:left;font-size:12.5px}
+  .part i{flex:0 0 13px;height:13px;border-radius:2px;display:inline-block}
+  .part span{flex:1}
+  .part em{font-style:normal;color:var(--muted);font:11px ui-monospace,Consolas,monospace}
+  .part.on{background:#33291a;border-color:var(--accent)}
+
+  /* ── stage ── */
+  .stage{flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#161616}
+  .tools{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+  .tools button{width:auto;margin:0;padding:5px 10px;font-size:12.5px;color:var(--muted)}
+  .tools button.on{background:var(--accent);border-color:var(--accent);color:#161616;font-weight:600}
+  .tools .hint{margin:0 0 0 6px}
+  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;background:#1b1f23;cursor:pointer}
+  .warn{min-height:20px;font-size:12.5px;color:#f0a79f;margin-top:5px}
+  .warn.ok{color:var(--phos)}
+  .txt{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+       font:12.5px/1.75 ui-monospace,Consolas,"D2Coding",monospace;color:#c3cad0;white-space:pre-wrap;overflow:auto}
+  .logbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  .logbar button{width:auto;margin:0}
+  table.log{width:100%;border-collapse:collapse;font:12px ui-monospace,Consolas,monospace}
+  table.log th{color:var(--muted);text-align:left;border-bottom:1px solid var(--line);padding:4px 6px;font-weight:600}
+  table.log td{border-bottom:1px solid #22272b;padding:4px 6px;color:#d8dde1}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 344px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  @media (max-width:1240px){ .panel{flex:1 1 100%} .tray{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .panel canvas{display:block;width:100%;height:auto;border-radius:6px;background:#0e1113;touch-action:none}
+  .row{display:flex;gap:4px;flex-wrap:wrap}
+  .row button{flex:1 1 auto;text-align:center;margin:2px 0;padding:5px 6px;font-size:12px}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:#3a4249;border-color:#56606a;color:var(--ink)}
+  button.hot{background:#4a2320;border-color:#8e2f28;color:#f0a79f}
+  button:disabled{opacity:.4;cursor:default}
+  .hint{font-size:11.5px;color:#8d969e;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .sw{background:#0a1a12;border-radius:6px;padding:4px 10px;text-align:center;color:var(--phos);
+      font:700 28px/1.2 ui-monospace,Consolas,monospace}
+  .laps{font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--muted);min-height:18px;white-space:pre}
+  .rec{display:flex;gap:6px;margin-top:6px}
+  .rec input{flex:1;min-width:0;background:#0e1214;border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:6px 8px;font:inherit;font-size:12.5px}
+  .rec button{width:auto;margin:0}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#161616}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ═══════════ TRAY ═══════════ -->
+  <aside class="tray" id="tray"></aside>
+
+  <!-- ═══════════ STAGE ═══════════ -->
+  <div class="stage">
+    <div class="card">
+      <div class="tabs">
+        <button id="tab-lab" class="on"></button>
+        <button id="tab-task"></button>
+        <button id="tab-log"></button>
+        <button id="tab-help"></button>
+      </div>
+      <div id="v-lab">
+        <div class="tools" id="tools"></div>
+        <canvas id="bench"></canvas>
+        <div class="warn" id="warn"></div>
+      </div>
+      <div id="v-task" class="txt" hidden></div>
+      <div id="v-log" hidden>
+        <div class="logbar"><button id="csv"></button><button id="clearLog"></button></div>
+        <table class="log"><thead><tr id="logHead"></tr></thead><tbody id="logBody"></tbody></table>
+      </div>
+      <div id="v-help" class="txt" hidden></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ INSTRUMENTS ═══════════ -->
+  <aside class="panel">
+    <h2 id="t-h-speed"></h2>
+    <div class="row" id="speeds"></div>
+
+    <h2 id="t-h-fg"></h2>
+    <canvas id="fg"></canvas>
+    <div class="row">
+      <button id="fgOut"></button><button id="fgRange">RANGE ▶</button>
+      <button data-b="amp:-2">AMP −</button><button data-b="amp:2">AMP +</button>
+    </div>
+    <div class="row">
+      <button data-b="coarse:-2">COARSE −</button><button data-b="coarse:2">COARSE +</button>
+      <button data-b="fine:-2">FINE −</button><button data-b="fine:2">FINE +</button>
+    </div>
+    <p class="hint" id="t-fgtip"></p>
+
+    <h2 id="t-h-scope"></h2>
+    <canvas id="osc"></canvas>
+    <div class="row">
+      <button id="mode"></button><button id="auto">AUTO</button><button id="hold">HOLD</button><button id="px"></button>
+    </div>
+    <div class="row">
+      <button id="vUp">V/div ▲</button><button id="vDn">V/div ▼</button>
+      <button id="tDn">T/div ◀</button><button id="tUp">T/div ▶</button>
+    </div>
+    <div class="row">
+      <button id="acv">AC V</button><button id="ohm">Ω</button>
+      <button id="unclip"></button><button id="undmm"></button>
+    </div>
+
+    <h2 id="t-h-sw"></h2>
+    <div class="sw" id="swLbl">00:00.0</div>
+    <div class="row"><button id="swGo"></button><button id="swLap"></button><button id="swReset"></button></div>
+    <div class="laps" id="laps"></div>
+    <div class="rec"><input id="recName"><button id="recBtn"></button></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n
+   ══════════════════════════════════════════════════════════════ */
+const T = {
+  ko:{
+    title:"APhO 2025 실험 1 — 유도가열 조리기의 물리",
+    sub:"가상 실험실 · 케이블로 회로를 꾸미고 스코프로 읽으세요. 회귀·기울기·유도량은 제공하지 않습니다.",
+    tabLab:"실험대", tabTask:"문제", tabLog:"기록지", tabHelp:"사용법",
+    tools:{cable:"케이블 연결", probeP:"프로브 +", probeN:"프로브 −", dmmP:"DMM +", dmmN:"DMM −", erase:"지우기"},
+    hints:{cable:"단자를 두 번 눌러 케이블을 연결합니다.", probe:"스코프 프로브를 놓을 단자를 누르세요.",
+           dmm:"멀티미터 리드를 놓을 단자를 누르세요.", erase:"케이블(또는 단자)을 눌러 제거합니다."},
+    tCap:"축전기", tPlate:"금속판", tPan:"조리 팬", tMisc:"설치",
+    slotClear:"슬롯 비우기", cover:"차폐 덮개", coverOn:"닫힘", coverOff:"열림",
+    hSpeed:"시간 배속", hFg:"함수 발생기", hScope:"디지털 오실로스코프 ZOYI ZT-702S", hSw:"스톱워치",
+    out:"출력", on:"ON", off:"OFF",
+    fgtip:"노브를 위아래로 끌거나 휠을 굴려 조절합니다. 발생기에는 주파수 표시가 없습니다 — 스코프로 읽으세요.",
+    unclip:"프로브 해제", undmm:"DMM 해제",
+    start:"시작 / 정지", lap:"랩", reset:"초기화",
+    recPh:"항목 이름 (예: f, V_R1)", rec:"현재 값 기록", csv:"CSV 저장", clearLog:"기록 삭제",
+    cols:["#","시각 [s]","항목","값","주파수","조건"],
+    ovr:"코일이 뜨거워지고 있습니다 — 전류를 줄이세요 (2 A-peak 이하로)",
+    nocap:"축전기 없이 코일을 구동하면 코일이 뜨거워집니다",
+    dmmfreq:"AC 전압 모드는 40 Hz–1 kHz 에서만 유효",
+    dmmlive:"신호가 걸린 회로입니다 — 발생기 출력을 끄고 재세요",
+    coil1:"코일 #1", coil2:"코일 #2", slotEmpty:"슬롯 비어 있음", probeOff:"프로브 미연결",
+    plate:"판", exagg:"판 두께는 보기 좋게 과장되어 있습니다",
+    pinterm:"핀 단자", capins:"축전기를 꽂으세요", powres:"전력 저항 R₁", capbox:"블랙박스 · 축전기 홀더",
+    logged:"기록했습니다", saved:"CSV 파일을 내려받았습니다", wave:"이 실험에서는 정현파만 사용합니다",
+    maxcable:"케이블은 8개까지 있습니다",
+    mat:{AL:"알루미늄",CU:"구리",SS304:"스테인리스 304",SS410:"스테인리스 410"},
+    pan:{AL:"알루미늄 팬",SS410:"SS410 팬"}
+  },
+  en:{
+    title:"APhO 2025 Experiment 1 — Physics of Induction Cooking",
+    sub:"Virtual laboratory · wire the circuit with cables and read it on the scope. No fits, slopes or derived quantities.",
+    tabLab:"Bench", tabTask:"Tasks", tabLog:"Log", tabHelp:"How to use",
+    tools:{cable:"Cable", probeP:"Probe +", probeN:"Probe −", dmmP:"DMM +", dmmN:"DMM −", erase:"Remove"},
+    hints:{cable:"Click two terminals to run a cable between them.", probe:"Click the terminal to clip the scope probe onto.",
+           dmm:"Click the terminal to clip the multimeter lead onto.", erase:"Click a cable (or a terminal) to remove it."},
+    tCap:"Capacitors", tPlate:"Metal plates", tPan:"Cooking pans", tMisc:"Setup",
+    slotClear:"Empty the slot", cover:"Shield lid", coverOn:"closed", coverOff:"open",
+    hSpeed:"Time scale", hFg:"Function generator", hScope:"Digital oscilloscope ZOYI ZT-702S", hSw:"Stopwatch",
+    out:"OUTPUT", on:"ON", off:"OFF",
+    fgtip:"Drag a knob up or down, or roll the wheel on it. The generator has no frequency display: read it on the scope.",
+    unclip:"Unclip probes", undmm:"Unclip DMM",
+    start:"Start / Stop", lap:"Lap", reset:"Reset",
+    recPh:"item name (e.g. f, V_R1)", rec:"Log this reading", csv:"Save CSV", clearLog:"Clear log",
+    cols:["#","Time [s]","Item","Value","Frequency","Conditions"],
+    ovr:"The coil is warming up: turn the current down (keep it under 2 A-peak)",
+    nocap:"Driving the coil without a capacitor makes it very hot",
+    dmmfreq:"AC volts mode is valid only from 40 Hz to 1 kHz",
+    dmmlive:"That circuit is live: switch the generator output off first",
+    coil1:"coil #1", coil2:"coil #2", slotEmpty:"slot empty", probeOff:"no probe",
+    plate:"plate", exagg:"Plate thickness is drawn exaggerated",
+    pinterm:"pin terminals", capins:"insert a capacitor", powres:"POWER RESISTOR R₁", capbox:"BLACK BOX · CAPACITOR HOLDER",
+    logged:"Logged", saved:"CSV downloaded", wave:"Use the sine waveform for every part of this experiment",
+    maxcable:"Only eight cables are supplied",
+    mat:{AL:"Aluminium",CU:"Copper",SS304:"Stainless 304",SS410:"Stainless 410"},
+    pan:{AL:"Aluminium pan",SS410:"SS410 pan"}
+  }
+};
+const TASK={ko:`실험 1 — 유도 코일의 특성 (4.5점)
+  노란 저항 R₁(1 Ω), 코일 #1, 축전기로 직렬 RLC 회로를 구성합니다.
+  부하 임피던스가 변하면 발생기 출력 전압도 함께 변합니다.
+
+  1.1 (0.4) 회로를 그리고 각 부분을 표시하세요. 케이블 저항 R_C 는 무시할 수 없습니다 — 옴미터로 측정.
+  1.2 (1.2) C = 470 nF, 2200 µF 의 공진 주파수를 구하고 공진 곡선을 그려 L 을 결정하세요.
+  1.3 (0.5) 축전기 하나의 공진 자료만으로는 L 이 부정확합니다. L 과 R_L 을 함께 뽑을 선형 모형을 세우세요.
+  1.4 (1.4) C = 470 µF, 1000 µF 로도 측정하고 네 자료 전부를 새 모형으로 분석하세요.
+  1.5 (1.0) 네 축전기 각각의 L, R_L 을 구하고 평균을 내세요.
+
+실험 2 — 상호 유도와 표피 깊이 (8.1점)     구동 회로는 C = 1000 µF 직렬 RLC.
+
+  2.1 (0.4) 상호 인덕턴스 측정 배치를 그리세요.
+  2.2 (1.0) 1차·2차 코일의 역할을 바꿔 두 번 측정하고 각각 그래프를 그리세요.
+  2.3 (0.4) 각 배치의 상호 인덕턴스 M 을 구하세요.
+  2.4 (5.5) 두 코일 사이에 금속판을 넣어 금속별 주파수 지수 n 을 구하세요(정수로 반올림).
+            표피 깊이가 극단적이라 좋은 자료가 나오지 않는 금속 하나를 찾아 2.5–2.6 에서 제외하세요.
+  2.5 (0.2) 차원 해석으로 전도도 지수 m 을 구하세요.
+  2.6 (0.6) 자료가 좋은 세 금속의 전도도 σ 를 구하세요.
+
+  주어진 식:  B(z) = B₀ e^(−z/δ) cos(ωt − z/δ + φ),   δ = √(σᵐ fⁿ / πµ),   µ = µ_r µ₀
+
+실험 3 — "조리": 비열과 유효 부하저항 (7.4점)
+  C = 1000 µF, f ≈ 40 kHz, 코일 전류는 2 A-peak 이하. 복사 외의 열손실은 없다고 봅니다.
+
+  3.1 (0.2) 유도 조리기의 작동 원리를 그림으로 나타내세요.
+  3.2 (0.5) 금속 팬의 비열 c 를 구할 물리 모형을 세우세요.
+  3.3 (1.5) 알루미늄 팬의 비열을 측정하세요 (코일 #2 로 가열).
+  3.4 (1.5) SS410 팬에 대해 반복하세요.
+  3.5 (1.6) Al 팬의 R_LOAD 모형을 세우고 측정하세요. 전력을 넣고 약 30 초 뒤부터 측정하세요.
+  3.6 (1.5) SS410 팬에 대해 반복하세요.
+  3.7 (0.1) 어느 쪽이 조리용으로 더 낫습니까?  (a) 알루미늄  (b) SS410
+  3.8 (0.1) 그 선택에서 가장 지배적인 물리량은?
+            (a) 전기전도도 (b) 자기투자율 (c) 밀도 (d) 비열 (e) 열전도도
+  3.9 (0.4) 두 팬의 유도 가열 효율 η 를 계산하세요.
+
+  P_RAD = e A σ_S T⁴,   R_NTC = R₀ exp[B(1/T − 1/T₀)],  R₀ = 10 kΩ, T₀ = 298 K, B = 3950 K
+  σ_S = 5.670×10⁻⁸ W m⁻² K⁻⁴,  µ₀ = 4π×10⁻⁷ H/m
+  ρ_Al = 2700, ρ_SS410 = 7700 kg/m³,  e_Al = 0.65, e_SS410 = 0.8
+
+  치수 — 팬 2×2 cm (Al 0.73 mm, SS410 0.76 mm)
+        판 2.7×4.6 cm (Al 0.73, Cu 0.71, SS304 0.72, SS410 0.76 mm)
+        SS410 은 µ_r = 700, 나머지는 µ_r = 1`,
+en:`Experiment 1 — Characterising the induction coil (4.5 pt)
+  Build a series RLC circuit from the yellow resistor R₁ (1 Ω), coil #1 and a capacitor.
+  The generator output voltage changes as the load impedance changes.
+
+  1.1 (0.4) Sketch the circuit and label every part. Cable resistance R_C is not negligible — measure it.
+  1.2 (1.2) Find the resonance frequency for C = 470 nF and 2200 µF, plot the curve, determine L.
+  1.3 (0.5) One capacitor alone gives an inaccurate L. Develop a linear model yielding both L and R_L.
+  1.4 (1.4) Repeat for C = 470 µF and 1000 µF, then analyse all four data sets with the new model.
+  1.5 (1.0) Determine L and R_L for all four capacitors and average them.
+
+Experiment 2 — Mutual induction and skin depth (8.1 pt)   Drive with C = 1000 µF series RLC.
+
+  2.1 (0.4) Sketch the setup for measuring the mutual inductance.
+  2.2 (1.0) Measure twice, swapping the roles of the coils, and plot both.
+  2.3 (0.4) Determine M for each configuration.
+  2.4 (5.5) Insert metal plates between the coils and determine n for each metal (nearest integer).
+            Identify the one metal whose skin depth is so extreme it must be dropped from 2.5–2.6.
+  2.5 (0.2) Deduce the conductivity power factor m by dimensional analysis.
+  2.6 (0.6) Determine σ for the three metals that gave good data.
+
+  Given:  B(z) = B₀ e^(−z/δ) cos(ωt − z/δ + φ),   δ = √(σᵐ fⁿ / πµ),   µ = µ_r µ₀
+
+Experiment 3 — "Cooking": specific heat and effective load resistance (7.4 pt)
+  C = 1000 µF, f ≈ 40 kHz, keep the coil current below 2 A-peak. Radiation is the only heat loss.
+
+  3.1 (0.2) Draw how the induction cooker works.
+  3.2 (0.5) Develop a physical model for the specific heat c of the pans.
+  3.3 (1.5) Measure the specific heat of the aluminium pan, heating it with coil #2.
+  3.4 (1.5) Repeat for the SS410 pan.
+  3.5 (1.6) Model and measure R_LOAD for the Al pan, reading from about 30 s after power is applied.
+  3.6 (1.5) Repeat for the SS410 pan.
+  3.7 (0.1) Which works better as a cooking pan?  (a) aluminium  (b) SS410
+  3.8 (0.1) Which parameter dominates that choice?
+            (a) conductivity (b) magnetic permeability (c) density (d) specific heat (e) thermal cond.
+  3.9 (0.4) Calculate the induction cooking efficiency η for both pans.
+
+  P_RAD = e A σ_S T⁴,   R_NTC = R₀ exp[B(1/T − 1/T₀)],  R₀ = 10 kΩ, T₀ = 298 K, B = 3950 K
+  σ_S = 5.670×10⁻⁸ W m⁻² K⁻⁴,  µ₀ = 4π×10⁻⁷ H/m
+  ρ_Al = 2700, ρ_SS410 = 7700 kg/m³,  e_Al = 0.65, e_SS410 = 0.8
+
+  Dimensions — pans 2×2 cm (Al 0.73 mm, SS410 0.76 mm)
+               plates 2.7×4.6 cm (Al 0.73, Cu 0.71, SS304 0.72, SS410 0.76 mm)
+               SS410 has µ_r = 700, the rest µ_r = 1`};
+const HELP={ko:`실험대 사용법
+
+배선     위쪽 [케이블 연결] 을 켜고 단자를 두 번 누르면 그 사이에 케이블이 연결됩니다.
+         직렬 RLC 는 발생기 출력 → 축전기 → 코일 핀 → R₁ → 발생기 반대 단자로 한 바퀴 잇습니다.
+         케이블은 8개까지, [지우기] 로 케이블을 눌러 뺍니다.
+
+프로브   [프로브 +] / [프로브 −] 로 스코프 프로브 두 끝을 원하는 단자에 겁니다.
+         스코프는 두 단자 사이 전압만 보여 줍니다. 전류는 R₁ 양단 전압을 재서 직접 나누세요.
+
+주파수   발생기에는 주파수 표시가 없습니다. RANGE 로 대역을 고르고 COARSE·FINE 노브를 끌어
+         맞춘 뒤 스코프 화면의 F 값을 읽으세요. 노브는 위아래로 끌거나 휠을 굴려 조절합니다.
+
+멀티미터 MODE 로 DMM 으로 바꾸면 저항(Ω)과 AC 전압을 잽니다. 발생기에 연결된 회로의 저항은
+         출력을 끈 상태에서만 잴 수 있고(팬의 NTC 는 따로 떨어져 있어 가열 중에도 잴 수 있습니다),
+         AC 전압은 실제 장비와 같이 40 Hz–1 kHz 에서만 동작합니다.
+
+판과 팬  왼쪽에서 금속판을 누르면 두 코일 사이 슬롯에 한 장씩 쌓입니다(단면도).
+         팬을 고르면 슬롯에 뒤집어 고정되고 NTC 배선 두 가닥이 오른쪽으로 나옵니다.
+         팬 온도는 그 NTC 저항을 재서 알아냅니다. 뜨거워져도 팬의 색은 변하지 않습니다.
+
+시간     가열·냉각은 실제로 수 분 걸립니다. 위쪽 시간 배속으로 빠르게 돌릴 수 있고
+         스톱워치도 같은 시계를 씁니다.
+
+기록지   [현재 값 기록] 은 지금 계기에 떠 있는 값을 종이에 옮겨 적는 것과 같습니다.
+         회귀·기울기·유도량 계산은 제공하지 않습니다. 분석은 직접 하세요.
+
+
+물리 모형 메모 (공식 해설 v3.0 기준 보정)
+
+  코일 L = 47.2 µH, R_L = 0.47 Ω, M = 5.79 µH
+  R₁ = 1 Ω, 케이블 1개 22.5 mΩ (회로에 4개 → R_C = 0.09 Ω), 전해 축전기 ESR 30 mΩ
+  발생기 출력 임피던스 2 Ω, 앰프 전류 제한 4 A-peak
+  δ = 1/√(πσµf),  σ = 3.70e7 / 5.88e7 / 1.39e6 / 1.70e6 S/m (Al, Cu, SS304, SS410)
+  차폐  V₂ ∝ (1−α)e^(−Σt/δ) + α e^(−Σt/δ_f),  누설 α = 비자성 0.005, SS410 0.55
+        자성체는 자속이 판 안으로 끌려들어가 측면으로 빠져나오므로 표피 깊이 측정이 무너집니다.
+  열    mc dT/dt = I²R_LOAD − eAσ_S(T⁴−T₀⁴),  A = 2×(2 cm)², 주위 303.5 K
+        덮개를 열면 자연대류(h ≈ 8 W m⁻²K⁻¹)가 더해져 결과가 틀어집니다.
+  R_LOAD(40 kHz) = 54.6 mΩ (Al) / 137.7 mΩ (SS410), √f 비례
+  판독 잡음 0.4 %, 유효숫자 4자리, 화면 눈금의 0.25 % 오프셋`,
+en:`Using the bench
+
+Wiring     With [Cable] active, click two terminals and a cable runs between them.
+           For the series RLC loop: generator output → capacitor → coil pins → R₁ → other terminal.
+           Eight cables are supplied; [Remove] takes one out again.
+
+Probes     Clip the two scope probe ends onto any terminals with [Probe +] / [Probe −].
+           The scope shows only the voltage between them. For current, measure across R₁.
+
+Frequency  The generator has no frequency display. Pick a band with RANGE, drag COARSE and FINE,
+           then read F on the scope. Drag knobs vertically or use the wheel.
+
+Multimeter MODE switches to DMM for resistance and AC volts. Anything wired to the generator reads
+           only with the output off (the pan's NTC is separate and reads while heating); AC volts works
+           from 40 Hz to 1 kHz just like the real instrument.
+
+Plates     Clicking a metal drops one plate into the slot between the coils (cross-section view).
+and pans   Choosing a pan clamps it in the slot upside down with NTC leads running out to the right;
+           read its resistance to get the pan temperature. A hot pan looks just like a cold one.
+
+Time       Heating and cooling really take minutes. The time multiplier speeds the whole bench up,
+           stopwatch included.
+
+Log        "Log this reading" copies what the instrument shows right now, the way you would write it
+           on paper. No fitting, no slopes, no derived quantities: the analysis is yours.
+
+
+Model notes (calibrated against the official solution v3.0)
+
+  Coil L = 47.2 µH, R_L = 0.47 Ω, M = 5.79 µH
+  R₁ = 1 Ω, 22.5 mΩ per cable (four in the loop → R_C = 0.09 Ω), 30 mΩ ESR on electrolytics
+  Generator output impedance 2 Ω, amplifier current limit 4 A-peak
+  δ = 1/√(πσµf),  σ = 3.70e7 / 5.88e7 / 1.39e6 / 1.70e6 S/m (Al, Cu, SS304, SS410)
+  Shielding  V₂ ∝ (1−α)e^(−Σt/δ) + α e^(−Σt/δ_f), leakage α = 0.005 non-magnetic, 0.55 for SS410
+  Heat       mc dT/dt = I²R_LOAD − eAσ_S(T⁴−T₀⁴), A = 2×(2 cm)², ambient 303.5 K
+             Opening the lid adds convection (h ≈ 8 W m⁻²K⁻¹) and spoils the result.
+  R_LOAD(40 kHz) = 54.6 mΩ (Al) / 137.7 mΩ (SS410), scaling as √f
+  Readout noise 0.4 %, four significant figures, plus 0.25 % of full scale`};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  PHYSICS  —  identical to the Python constants
+   ══════════════════════════════════════════════════════════════ */
+const MU0=4e-7*Math.PI, SB=5.670e-8, T_AMB=303.5;
+const MAT={
+  AL:   {sigma:3.70e7,mur:1,  t:0.73e-3,alpha:0.005,n:5,c1:"#d5d9dd"},
+  CU:   {sigma:5.88e7,mur:1,  t:0.71e-3,alpha:0.005,n:5,c1:"#d98a55"},
+  SS304:{sigma:1.39e6,mur:1,  t:0.72e-3,alpha:0.005,n:4,c1:"#c3c8cc"},
+  SS410:{sigma:1.70e6,mur:700,t:0.76e-3,alpha:0.55, n:4,c1:"#cfd6da"}};
+const PAN={AL:{rho:2700,c:900,t:0.73e-3,e:0.65,r40:0.0546}, SS410:{rho:7700,c:460,t:0.76e-3,e:0.80,r40:0.1377}};
+for(const k in PAN){ const p=PAN[k]; p.area=2*0.02*0.02; p.mass=p.rho*0.02*0.02*p.t; }
+const COIL_L=47.2e-6, COIL_RL=0.47, COIL_M=5.79e-6;
+const R1_OHM=1.0, RCAB=0.0225, RSCOPE=1e6;
+const FG_EMAX=32.0, FG_RS=2.0, FG_ILIM=4.0;
+const NTC_R0=10000, NTC_T0=298, NTC_B=3950;
+const CAPS={C470N:[470e-9,0.010,"470 nF",true], C470U:[470e-6,0.030,"470 µF",false],
+            C1000U:[1000e-6,0.030,"1000 µF",false], C2200U:[2200e-6,0.030,"2200 µF",false]};
+const CAP_ORDER=["C470N","C470U","C1000U","C2200U"];
+const TERMS=["FGP","FGN","R1A","R1B","CBA","CBB","C1A","C1B","C2A","C2B","NTCA","NTCB"];
+const TIDX={}; TERMS.forEach((t,i)=>TIDX[t]=i);
+
+const skinDepth=(k,f)=>1/Math.sqrt(Math.PI*MAT[k].sigma*MAT[k].mur*MU0*Math.max(f,1e-9));
+function shielding(stack,f){
+  if(!stack.length) return 1;
+  const dFr=6e-3*Math.pow(1000/Math.max(f,1),0.15);
+  let s=0, sf=0, al=0;
+  for(const k of stack){ const m=MAT[k]; s+=m.t/skinDepth(k,f); sf+=m.t/dFr; al=Math.max(al,m.alpha); }
+  return (1-al)*Math.exp(-s)+al*Math.exp(-sf);
+}
+const rntc=T=>NTC_R0*Math.exp(NTC_B*(1/T-1/NTC_T0));
+const rload=(k,f)=>PAN[k].r40*Math.sqrt(Math.max(f,1)/40000);
+
+/* complex numbers as [re, im] */
+const C=(r,i)=>[r,i||0];
+const cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+const csub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+const cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+const cdiv=(a,b)=>{ const q=b[0]*b[0]+b[1]*b[1]; return [(a[0]*b[0]+a[1]*b[1])/q,(a[1]*b[0]-a[0]*b[1])/q]; };
+const cabs=a=>Math.hypot(a[0],a[1]);
+function csolve(A,b){
+  const n=b.length, M=A.map((r,i)=>r.map(v=>[v[0],v[1]]).concat([[b[i][0],b[i][1]]]));
+  for(let k=0;k<n;k++){
+    let piv=k, best=cabs(M[k][k]);
+    for(let i=k+1;i<n;i++){ const a=cabs(M[i][k]); if(a>best){best=a;piv=i;} }
+    if(best<1e-300) return null;
+    if(piv!==k){ const t=M[k]; M[k]=M[piv]; M[piv]=t; }
+    const dk=M[k][k];
+    for(let j=k;j<=n;j++) M[k][j]=cdiv(M[k][j],dk);
+    for(let i=0;i<n;i++){
+      if(i===k) continue;
+      const f=M[i][k]; if(f[0]===0&&f[1]===0) continue;
+      for(let j=k;j<=n;j++) M[i][j]=csub(M[i][j],cmul(f,M[k][j]));
+    }
+  }
+  return M.map(r=>r[n]);
+}
+/* complex modified nodal analysis */
+function analyze(st,f){
+  const N=TERMS.length, gnd=TIDX.FGN, w=2*Math.PI*f;
+  const nmap=new Array(N); let c=0;
+  for(let i=0;i<N;i++) nmap[i]= i===gnd ? -1 : c++;
+  const size=(N-1)+3;
+  const A=[...Array(size)].map(()=>[...Array(size)].map(()=>C(0))), b=[...Array(size)].map(()=>C(0));
+  const at=(i,j,v)=>{ if(i>=0&&j>=0) A[i][j]=cadd(A[i][j],v); };
+  const stampY=(na,nb,Y)=>{ const a=nmap[na], bb=nmap[nb]; at(a,a,Y); at(bb,bb,Y); at(a,bb,[-Y[0],-Y[1]]); at(bb,a,[-Y[0],-Y[1]]); };
+  const stampR=(na,nb,R)=>{ if(R>0) stampY(na,nb,C(1/R)); };
+  for(let i=0;i<N;i++) if(i!==gnd) at(nmap[i],nmap[i],C(1e-9));
+  for(const [ca,cb] of st.cables) stampR(TIDX[ca],TIDX[cb],RCAB);
+  stampR(TIDX.R1A,TIDX.R1B,R1_OHM);
+  if(st.cap){ const [Cc,esr]=CAPS[st.cap]; stampY(TIDX.CBA,TIDX.CBB,cdiv(C(1),C(esr,-1/(w*Cc)))); }
+  if(st.pan) stampR(TIDX.NTCA,TIDX.NTCB,rntc(st.panT));
+  if(st.scope&&st.scope[0]&&st.scope[1]) stampR(TIDX[st.scope[0]],TIDX[st.scope[1]],RSCOPE);
+  if(st.dmm&&st.dmm[0]&&st.dmm[1]) stampR(TIDX[st.dmm[0]],TIDX[st.dmm[1]],1e7);
+  let rex=0;
+  if(st.pan) rex+=rload(st.pan,f);
+  if(st.stack.length) rex+=0.02*Math.sqrt(Math.max(f,1)/40000)*st.stack.length;
+  const Meff=COIL_M*shielding(st.stack,f);
+  const bFG=N-1, bL1=N, bL2=N+1;
+  at(nmap[TIDX.FGP],bFG,C(1)); at(nmap[TIDX.FGN],bFG,C(-1));
+  at(bFG,nmap[TIDX.FGP],C(1)); at(bFG,nmap[TIDX.FGN],C(-1));
+  at(bFG,bFG,C(-FG_RS)); b[bFG]=C(st.E);
+  const Zc=C(COIL_RL+rex,w*COIL_L), Zm=C(0,w*Meff);
+  for(const [br,p,m,other] of [[bL1,"C1A","C1B",bL2],[bL2,"C2A","C2B",bL1]]){
+    at(nmap[TIDX[p]],br,C(1)); at(nmap[TIDX[m]],br,C(-1));
+    at(br,nmap[TIDX[p]],C(1)); at(br,nmap[TIDX[m]],C(-1));
+    at(br,br,[-Zc[0],-Zc[1]]); at(br,other,[-Zm[0],-Zm[1]]);
+  }
+  let x=csolve(A,b);
+  if(!x) return null;
+  const ifg=cabs(x[bFG]);
+  if(ifg>FG_ILIM){ const s2=FG_ILIM/ifg; x=x.map(v=>[v[0]*s2,v[1]*s2]); }
+  const V={}; for(const t of TERMS) V[t]= TIDX[t]===gnd ? C(0) : x[nmap[TIDX[t]]];
+  return {V, I1:x[bL1], I2:x[bL2], amp:(t1,t2)=>(t1&&t2)?cabs(csub(V[t1],V[t2])):0};
+}
+/* multimeter ohms: the generator is a 2 ohm source impedance, the capacitor is open */
+function measureR(st,ta,tb){
+  if(!ta||!tb||ta===tb) return Infinity;
+  const N=TERMS.length, G=[...Array(N)].map(()=>new Array(N).fill(0));
+  const add=(a,b,g)=>{ G[a][a]+=g; G[b][b]+=g; G[a][b]-=g; G[b][a]-=g; };
+  for(const [ca,cb] of st.cables) add(TIDX[ca],TIDX[cb],1/RCAB);
+  add(TIDX.R1A,TIDX.R1B,1/R1_OHM); add(TIDX.C1A,TIDX.C1B,1/COIL_RL); add(TIDX.C2A,TIDX.C2B,1/COIL_RL);
+  if(st.pan) add(TIDX.NTCA,TIDX.NTCB,1/rntc(st.panT));
+  add(TIDX.FGP,TIDX.FGN,1/FG_RS);
+  for(let i=0;i<N;i++) G[i][i]+=1e-12;
+  const ref=TIDX[tb], src=TIDX[ta], keep=[...Array(N).keys()].filter(i=>i!==ref);
+  const M=keep.map(i=>keep.map(j=>C(G[i][j]))), rhs=keep.map(i=>C(i===src?1:0));
+  const x=csolve(M,rhs); if(!x) return Infinity;
+  const R=x[keep.indexOf(src)][0];
+  return R>1e7?Infinity:R;
+}
+/* terminals carrying the generator's signal (both coils once either is in the net) */
+function liveTerms(st){
+  const par={}; for(const t of TERMS) par[t]=t;
+  const find=x=>{ while(par[x]!==x){ par[x]=par[par[x]]; x=par[x]; } return x; };
+  const join=(a,b)=>{ const ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; };
+  for(const [a,b] of st.cables) join(a,b);
+  join("R1A","R1B"); join("FGP","FGN"); join("C1A","C1B"); join("C2A","C2B");
+  if(st.cap) join("CBA","CBB");
+  let g=find("FGP");
+  if(find("C1A")===g||find("C2A")===g){ join("C1A","C2A"); g=find("FGP"); }
+  return new Set(TERMS.filter(t=>find(t)===g));
+}
+function thermalStep(k,T,Irms,f,dt,uncovered){
+  const p=PAN[k];
+  const Pin=Irms*Irms*rload(k,f);
+  let Pl=p.e*p.area*SB*(T**4-T_AMB**4);
+  if(uncovered) Pl+=8*p.area*(T-T_AMB);
+  return T+(Pin-Pl)*dt/(p.mass*p.c);
+}
+function gauss(){ let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE
+   ══════════════════════════════════════════════════════════════ */
+const st={cables:[],cap:null,stack:[],pan:null,panT:T_AMB,covered:true,
+          fg:{amp:25,range:2,coarse:50,fine:50,on:false},
+          sp:null,sn:null,dp:null,dn:null,mode:"SCOPE",dmmFn:"R",px:1,hold:false,held:null,
+          vi:7,ti:5,tool:"cable",pending:null,sw:0,swRun:false,laps:[],speed:20,
+          notes:[],nno:0,disp:{v:0,f:0,r:0,clip:false,off:true,t:0},sol:null,msg:"",msgUntil:0};
+const VDIV=[0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10];
+const TDIV=[1e-6,2e-6,5e-6,1e-5,2e-5,5e-5,1e-4,2e-4,5e-4,1e-3,2e-3,5e-3,1e-2,2e-2,5e-2];
+const FRANGE=[[20,200],[200,2000],[2000,20000],[20000,100000]];
+const SPEEDS=[1,5,20,60];
+function freq(){ const [lo,hi]=FRANGE[st.fg.range]; return lo*Math.pow(hi/lo,st.fg.coarse/100)*(1+0.03*(st.fg.fine-50)/50); }
+const emf=()=>st.fg.on?FG_EMAX*st.fg.amp/100:0;
+function pstate(){
+  return {cables:st.cables,cap:st.cap,stack:st.stack,pan:st.pan,panT:st.panT,E:emf(),
+          scope:st.mode==="SCOPE"?[st.sp,st.sn]:null,
+          dmm:(st.mode==="DMM"&&st.dmmFn==="V")?[st.dp,st.dn]:null};
+}
+function solve(){ st.sol=analyze(pstate(),freq()); return st.sol; }
+const termLive=t=>(t==="NTCA"||t==="NTCB")?!!st.pan:true;
+function flash(m){ st.msg=m; st.msgUntil=performance.now()+2600; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  BENCH CANVAS  (logical 1020 × 580, as in the Python)
+   ══════════════════════════════════════════════════════════════ */
+const BW=1020, BH=580;
+const bench=$("bench"), bx=bench.getContext("2d");
+const BOXES={fg:[28,34,264,158], cbox:[28,196,264,328], r1:[28,366,264,498], stage:[330,24,1000,544]};
+const TERM_DEF=[["FGP",232,72,"b","r","FG +"],["FGN",232,116,"b","k","FG −"],
+  ["CBA",74,300,"b","r","C 1"],["CBB",218,300,"b","k","C 2"],
+  ["R1A",74,470,"b","r","R1 1"],["R1B",218,470,"b","k","R1 2"],
+  ["C1A",356,252,"p","r","L1 a"],["C1B",356,292,"p","k","L1 b"],
+  ["C2A",356,440,"p","r","L2 a"],["C2B",356,480,"p","k","L2 b"],
+  ["NTCA",966,300,"p","r","NTC"],["NTCB",966,340,"p","k","NTC"]];
+const TPOS={}; for(const t of TERM_DEF) TPOS[t[0]]=[t[1],t[2]];
+const SLOT_X=402, SLOT_Y0=412, SLOT_X2=928;
+const ANCH_SCOPE=[994,46], ANCH_DMM=[994,544];
+const CCOL=["#c94b3c","#2b3238","#c94b3c","#2b3238","#3f7ec4","#7a8189"];
+let BS=1;
+function fitCanvas(cv,ctx,lw,lh){
+  const w=cv.clientWidth||lw, dpr=Math.min(window.devicePixelRatio||1,2), s=w/lw;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(lh*s*dpr); cv.style.height=(lh*s)+"px";
+  ctx.setTransform(dpr*s,0,0,dpr*s,0,0); return s;
+}
+function layout(){
+  if(!$("v-lab").hidden) BS=fitCanvas(bench,bx,BW,BH);
+  FS=fitCanvas($("fg"),fx,336,160); OS=fitCanvas($("osc"),ox,336,248);
+  drawBench(); drawFg(); drawScope();
+}
+const MONO="ui-monospace,Consolas,'DejaVu Sans Mono',monospace";
+function tx(c,x,y,s,fill,size,align,bold){
+  c.fillStyle=fill||"#8d969e"; c.font=(bold?"700 ":"")+(size||8)+"px "+MONO;
+  c.textAlign=align==="center"?"center":align==="e"?"right":"left"; c.textBaseline="middle"; c.fillText(s,x,y);
+}
+function rect(c,x0,y0,x1,y1,fill,stroke,lw){ if(fill){c.fillStyle=fill;c.fillRect(x0,y0,x1-x0,y1-y0);}
+  if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.strokeRect(x0+.5,y0+.5,x1-x0-1,y1-y0-1);} }
+function oval(c,x0,y0,x1,y1,fill,stroke,lw){ c.beginPath(); c.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
+  if(fill){c.fillStyle=fill;c.fill();} if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke();} }
+function line(c,pts,col,w,round){ c.beginPath(); c.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) c.lineTo(pts[i],pts[i+1]);
+  c.strokeStyle=col; c.lineWidth=w||1; c.lineCap=round?"round":"butt"; c.lineJoin="round"; c.stroke(); }
+function screw(c,x,y,r){ r=r||3; oval(c,x-r,y-r,x+r,y+r,"#3a4046"); line(c,[x-r*.6,y,x+r*.6,y],"#14171a",1); }
+function bez2(a,b,k){
+  const [ax,ay]=TPOS[a], [bx_,by]=TPOS[b], mx=(ax+bx_)/2, my=Math.max(ay,by)+34+(k%3)*12, out=[];
+  for(let i=0;i<=16;i++){ const t=i/16, u=1-t; out.push(u*u*ax+2*u*t*mx+t*t*bx_, u*u*ay+2*u*t*my+t*t*by); }
+  return out;
+}
+function bez3(p0,p1,p2,p3){ const out=[];
+  for(let i=0;i<=14;i++){ const t=i/14,u=1-t;
+    out.push(u**3*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t**3*p3[0], u**3*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t**3*p3[1]); }
+  return out; }
+
+function drawBench(){
+  const c=bx; if($("v-lab").hidden) return;
+  c.clearRect(0,0,BW,BH); rect(c,0,0,BW,BH,"#1b1f23");
+  c.strokeStyle="#1e2327"; c.lineWidth=1;
+  for(let x=0;x<BW;x+=26){ c.beginPath(); c.moveTo(x+.5,0); c.lineTo(x+.5,BH); c.stroke(); }
+  for(let y=0;y<BH;y+=26){ c.beginPath(); c.moveTo(0,y+.5); c.lineTo(BW,y+.5); c.stroke(); }
+  dFg(c); dCap(c); dR1(c); dStage(c); dCables(c); dTerms(c);
+}
+function dFg(c){
+  const [x0,y0,x1,y1]=BOXES.fg;
+  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#23282d","#000");
+  rect(c,x0+12,y0+22,x1-12,y1-22,"#e9e6e0","#b9b4ab");
+  tx(c,x0+20,y0+34,"FUNCTION GENERATOR","#5c6167",8);
+  const vals=[st.fg.amp,st.fg.range*33,st.fg.coarse,st.fg.fine];
+  vals.forEach((v,i)=>{ const x=x0+34+i*40, y=y0+66;
+    oval(c,x-11,y-11,x+11,y+11,"#454b51"); oval(c,x-7,y-7,x+7,y+7,"#20252a");
+    const a=-Math.PI*.75+v/100*Math.PI*1.5; line(c,[x,y,x+Math.cos(a)*9,y+Math.sin(a)*9],"#cfd3d6",2); });
+  oval(c,x0+20,y0+48,x0+28,y0+56,st.fg.on?"#ff5a4a":"#4a2320");
+  for(const [sx,sy] of [[x0+9,y0+9],[x1-9,y0+9],[x0+9,y1-9],[x1-9,y1-9]]) screw(c,sx,sy);
+}
+function dCap(c){
+  const [x0,y0,x1,y1]=BOXES.cbox;
+  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#1c2024","#000");
+  tx(c,x0+14,y0+18,d().capbox,"#6e767d",8);
+  rect(c,x0+40,y0+32,x1-40,y0+84,"#0b0d0f");
+  const mx=(x0+x1)/2, my=y0+58;
+  if(st.cap){
+    const [,,nm,film]=CAPS[st.cap];
+    if(film){ rect(c,mx-17,my-17,mx+17,my+13,"#7a4a26","#5d3719"); tx(c,mx,my+2,"470n","#f2dfc9",8,"center"); }
+    else { rect(c,mx-15,my-20,mx+15,my+16,"#2c4b8f","#1a2f5c"); rect(c,mx-15,my-16,mx-7,my+16,"#8fa8d8");
+           tx(c,mx+4,my-2,nm.replace(" ",""),"#dbe6ff",7,"center"); }
+    for(const [dx,t] of [[-10,74],[10,218]]){ line(c,[mx+dx,my+16,mx+dx,y0+84],"#9aa3ab",2); line(c,[mx+dx,y0+84,t,y0+96],"#9aa3ab",2); }
+  } else tx(c,mx,my,d().capins,"#4a5158",9,"center");
+  screw(c,x0+10,y1-10); screw(c,x1-10,y1-10);
+}
+function dR1(c){
+  const [x0,y0,x1,y1]=BOXES.r1;
+  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#1c2024","#000");
+  const rx=x0+34, ry=y0+40, rw=(x1-x0)-68, rh=30;
+  rect(c,rx,ry,rx+rw,ry+rh,"#e0bd35","#7d6210"); rect(c,rx+3,ry+4,rx+rw-3,ry+8,"#f6e69a");
+  tx(c,rx+rw/2,ry+rh/2+1,"1 Ω  100 W","#4a3a06",9,"center",true);
+  rect(c,rx-8,ry+8,rx+2,ry+22,"#8b8f93"); rect(c,rx+rw-2,ry+8,rx+rw+8,ry+22,"#8b8f93");
+  line(c,[rx-4,ry+22,74,y0+96],"#9aa3ab",2); line(c,[rx+rw+4,ry+22,218,y0+96],"#9aa3ab",2);
+  tx(c,x0+14,y0+18,d().powres,"#6e767d",8);
+  screw(c,x0+10,y1-10); screw(c,x1-10,y1-10);
+}
+function dStage(c){
+  const X0=380, X1=950;
+  rect(c,350,505,980,529,"#b8bcc0","#8f9498");
+  for(const [yy0,yy1,cy] of [[415,505,440],[230,320,272]]){
+    rect(c,X0,yy0,X1,yy1,"#22272c","#000");
+    rect(c,430,cy,900,cy+22,"#c8372d","#8e1f16"); rect(c,433,cy+3,897,cy+7,"#e06a5e");
+    for(let x=436;x<898;x+=13) line(c,[x+.5,cy+1,x+.5,cy+21],"#8e1f16",1);
+  }
+  tx(c,905,451,d().coil2,"#9aa3ab",8); tx(c,905,283,d().coil1,"#9aa3ab",8);
+  for(const x of [430,860]){ rect(c,x,208,x+60,232,"#4b5157","#000"); screw(c,x+12,220,4); screw(c,x+48,220,4); }
+  rect(c,X0,320,X0+22,415,"#1b1f22"); rect(c,X1-22,320,X1,415,"#1b1f22");
+  rect(c,SLOT_X,320,SLOT_X2,412,"#07090a");
+  if(st.pan){
+    const m=MAT[st.pan], y=356, h=18, xa=560, xb=770;
+    rect(c,xa,y,xb,y+h,m.c1,"#0b0d0f");              /* a warm pan looks like a cold one */
+    tx(c,(xa+xb)/2,y+h/2,d().pan[st.pan],"#20242a",9,"center",true);
+    oval(c,xb-23,y-9,xb-13,y+1,"#101316");
+    line(c,bez3([xb-18,y-4],[860,340],[920,300],[964,300]),"#cf4a3d",2);
+    line(c,bez3([xb-18,y-4],[870,360],[920,340],[964,340]),"#2a2f34",2);
+    tx(c,xb-18,y-16,"NTC","#cf4a3d",8,"center");
+  } else if(st.stack.length){
+    let y=SLOT_Y0;
+    for(const k of st.stack){ y-=13; rect(c,470,y,870,y+11,MAT[k].c1,"#0b0d0f"); tx(c,878,y+6,d().mat[k],"#6f787f",8); }
+    tx(c,410,330,st.stack.length+" × "+d().plate+" · "+d().exagg,"#454d54",8);
+  } else tx(c,(SLOT_X+SLOT_X2)/2,366,d().slotEmpty,"#3e454b",9,"center");
+  if(st.covered){ rect(c,366,180,966,204,"#191d21","#3a4147"); tx(c,666,192,d().cover+" — "+d().coverOn,"#6e767d",8,"center"); }
+  else tx(c,666,192,d().cover+" — "+d().coverOff,"#7a4a3a",8,"center");
+  for(const y of [252,292,440,480]) line(c,[X0,y,360,y],"#7d858c",3);
+  tx(c,386,245,d().pinterm,"#5b646c",8);
+}
+function dCables(c){
+  st.cables.forEach(([a,b],i)=>{ const pts=bez2(a,b,i); line(c,pts,"#0b0d0f",7,true); line(c,pts,CCOL[i%CCOL.length],5,true); });
+  const lead=(frm,to,col)=>{ if(!to) return; const [tx_,ty]=TPOS[to];
+    const pts=bez3(frm,[frm[0]-90,frm[1]],[tx_+110,ty-60],[tx_,ty]); line(c,pts,"#0b0d0f",5); line(c,pts,col,2); };
+  lead(ANCH_SCOPE,st.sp,"#e8c33a"); lead([ANCH_SCOPE[0],ANCH_SCOPE[1]+22],st.sn,"#2d3339");
+  lead(ANCH_DMM,st.dp,"#d24b3d"); lead([ANCH_DMM[0],ANCH_DMM[1]-22],st.dn,"#2d3339");
+  for(const [[px,py],nm] of [[ANCH_SCOPE,"SCOPE"],[ANCH_DMM,"DMM"]]){ rect(c,px-6,py-26,px+16,py+26,"#22272b","#3a4147"); tx(c,px+5,py,nm,"#6e767d",7,"center"); }
+}
+function dTerms(c){
+  const used=new Set(); for(const [a,b] of st.cables){ used.add(a); used.add(b); }
+  for(const t of [st.sp,st.sn,st.dp,st.dn]) if(t) used.add(t);
+  for(const [tid,x,y,kind,col,lab] of TERM_DEF){
+    const live=termLive(tid), fill=live?(col==="r"?"#b0392c":"#31373d"):"#22262a";
+    if(kind==="b"){ oval(c,x-11,y-11,x+11,y+11,"#0d0f11"); oval(c,x-9,y-9,x+9,y+9,fill); oval(c,x-4,y-4,x+4,y+4,"#07090a"); }
+    else { rect(c,x-8,y-6,x+8,y+6,fill); rect(c,x-2,y-9,x+2,y+9,"#c9ced2"); }
+    if(used.has(tid)) oval(c,x-14,y-14,x+14,y+14,null,"#e8c33a");
+    if(st.pending===tid) oval(c,x-17,y-17,x+17,y+17,null,"#7dfab0",2);
+    tx(c,x,y+20,lab,live?"#69727a":"#3a4147",7,"center");
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  GENERATOR + SCOPE CANVASES
+   ══════════════════════════════════════════════════════════════ */
+const fgc=$("fg"), fx=fgc.getContext("2d"); let FS=1;
+const osc=$("osc"), ox=osc.getContext("2d"); let OS=1;
+const KNOBS=[["amp",48,92,21,"AMPLITUDE"],["range",116,92,18,"FREQ RANGE"],
+             ["coarse",178,58,15,"COARSE"],["fine",178,110,15,"FINE"],["wave",238,92,18,"WAVEFORM"]];
+function knob(c,kx,ky,r,val,lab,sub){
+  const a=-Math.PI*.75+val*Math.PI*1.5;
+  oval(c,kx-r,ky-r,kx+r,ky+r,"#4a5157","#2b3137"); oval(c,kx-r*.62,ky-r*.62,kx+r*.62,ky+r*.62,"#20252a");
+  line(c,[kx+Math.cos(a)*r*.3,ky+Math.sin(a)*r*.3,kx+Math.cos(a)*(r-2),ky+Math.sin(a)*(r-2)],"#e6eaed",2,true);
+  for(let i=0;i<9;i++){ const t=-Math.PI*.75+i/8*Math.PI*1.5;
+    line(c,[kx+Math.cos(t)*(r+3),ky+Math.sin(t)*(r+3),kx+Math.cos(t)*(r+6),ky+Math.sin(t)*(r+6)],"#8d9298",1); }
+  tx(c,kx,ky-r-13,lab,"#4c5258",7,"center");
+  if(sub) tx(c,kx,ky+r+13,sub,"#2a2f34",8,"center",true);
+}
+function drawFg(){
+  const c=fx; c.clearRect(0,0,336,160);
+  rect(c,6,6,330,154,"#2b3137","#0e1113"); rect(c,14,14,322,146,"#e9e6e0","#b9b4ab");
+  tx(c,22,28,"FUNCTION GENERATOR","#5c6167",8);
+  oval(c,295,21,305,31,st.fg.on?"#ff5a4a":"#5a3733");
+  const [lo,hi]=FRANGE[st.fg.range];
+  const rl= hi>=1000 ? (lo/1000)+"–"+(hi/1000)+" kHz" : lo+"–"+hi+" Hz";
+  for(const [k,kx,ky,r,lab] of KNOBS){
+    if(k==="range") knob(c,kx,ky,r,(st.fg.range+.5)/4,lab,rl);
+    else if(k==="wave") knob(c,kx,ky,r,1/6,lab,"SINE");
+    else if(k==="amp") knob(c,kx,ky,r,st.fg.amp/100,lab,Math.round(st.fg.amp)+" %");
+    else knob(c,kx,ky,r,st.fg[k]/100,lab);
+  }
+  for(const [cy,col] of [[74,"#b0392c"],[114,"#31373d"]]){ oval(c,289,cy-11,311,cy+11,"#0d0f11"); oval(c,291,cy-9,309,cy+9,col); }
+  tx(c,300,136,"OUTPUT","#5c6167",7,"center");
+  $("fgOut").textContent=d().out+" "+(st.fg.on?d().on:d().off);
+  $("fgOut").className=st.fg.on?"hot":"";
+}
+const sig3=x=>{ if(!x||!isFinite(x)) return 0; const dd=Math.pow(10,Math.floor(Math.log10(Math.abs(x)))-3); return Math.round(x/dd)*dd; };
+const fmtV=v=>v>=1?v.toFixed(3)+" V":v>=1e-3?(v>=0.1?(v*1000).toFixed(1):(v*1000).toFixed(2))+" mV":(v*1e6).toFixed(0)+" µV";
+const fmtF=f=>!f?"- - -":f>=1000?(f>=10000?(f/1000).toFixed(2):(f/1000).toFixed(3))+" kHz":f.toFixed(1)+" Hz";
+const fmtR=R=>R===-1?"- - -":!isFinite(R)?"O.L":R>=1000?(R/1000).toFixed(3)+" kΩ":R.toFixed(3)+" Ω";
+const fmtT=x=>x>=1e-3?(x>=1e-2?(x*1e3).toFixed(0):(x*1e3).toFixed(1))+" ms":(x>=1e-5?(x*1e6).toFixed(0):(x*1e6).toFixed(1))+" µs";
+function scopeSignal(){
+  const f=freq();
+  if(!st.sp||!st.sn||!termLive(st.sp)||!termLive(st.sn)) return {off:true,amp:0,f:0};
+  const a=(st.sol&&st.fg.on)?st.sol.amp(st.sp,st.sn):0;
+  return {off:false,amp:a*st.px,f};
+}
+function refreshDisp(force){
+  const now=performance.now();
+  if(!force&&now-st.disp.t<240) return;
+  st.disp.t=now;
+  const s=scopeSignal(), vd=VDIV[st.vi];
+  let v=s.amp; const clip=v>4*vd; if(clip) v=4*vd;
+  v=sig3(v*(1+0.004*gauss())+0.0025*vd*gauss());
+  Object.assign(st.disp,{v:Math.max(0,v),clip,off:s.off,f:s.amp>0.04*vd?s.f*(1+0.0015*gauss()):0});
+  if(st.mode==="DMM"&&st.dmmFn==="R"){
+    const live=st.fg.on?liveTerms(pstate()):new Set();
+    if(live.has(st.dp)||live.has(st.dn)) st.disp.r=-1;
+    else if(!st.dp||!st.dn||!termLive(st.dp)||!termLive(st.dn)) st.disp.r=Infinity;
+    else { const R=measureR(pstate(),st.dp,st.dn);
+      st.disp.r=isFinite(R)?Math.max(0,sig3(R*(1+0.002*gauss())+0.004*gauss())):Infinity; }
+  }
+}
+function dmmAcv(){
+  const f=freq();
+  if(!st.dp||!st.dn||!termLive(st.dp)||!termLive(st.dn)||!st.fg.on) return ["0.000 V",""];
+  if(f<40||f>1000) return ["- - -",d().dmmfreq];
+  const r=analyze(pstate(),f);
+  return [(r.amp(st.dp,st.dn)/Math.SQRT2).toFixed(4)+" V",""];
+}
+function drawScope(){
+  const c=ox, X=26, Y=22, W=284, H=168;
+  c.clearRect(0,0,336,248);
+  rect(c,2,2,334,246,"#b9382c"); rect(c,12,6,324,242,"#22272c","#0e1113");
+  rect(c,4,60,16,180,"#8e1f16"); rect(c,320,60,332,180,"#8e1f16");
+  tx(c,26,14,"ZOYI  ZT-702S   DIGITAL OSCILLOSCOPE","#dfe3e6",7,"left",true);
+  rect(c,X-3,Y-3,X+W+3,Y+H+3,"#05070a");
+  refreshDisp(false);
+  if(st.mode==="DMM"){
+    rect(c,X,Y,X+W,Y+H,"#0a1a12");
+    tx(c,X+10,Y+16,st.dmmFn==="R"?"RESISTANCE":"AC VOLTAGE","#5d7d6d",8);
+    let big,warn;
+    if(st.dmmFn==="R"){ big=fmtR(st.disp.r); warn=st.disp.r===-1?d().dmmlive:""; }
+    else [big,warn]=dmmAcv();
+    tx(c,X+W/2,Y+72,big,"#7dfab0",22,"center",true);
+    tx(c,X+W/2,Y+112,warn,"#d78a6a",8,"center");
+    tx(c,X+W/2,Y+148,"MULTIMETER  ·  "+(st.dp||"—")+" ↔ "+(st.dn||"—"),"#4d6b5c",8,"center");
+  } else {
+    rect(c,X,Y,X+W,Y+H,"#04120c");
+    const dx=W/10, dy=H/8;
+    for(let i=1;i<10;i++) line(c,[X+i*dx,Y,X+i*dx,Y+H],"#1a3a2a",1);
+    for(let i=1;i<8;i++) line(c,[X,Y+i*dy,X+W,Y+i*dy],"#1a3a2a",1);
+    line(c,[X,Y+H/2,X+W,Y+H/2],"#2c5f45",1); line(c,[X+W/2,Y,X+W/2,Y+H],"#2c5f45",1);
+    const s=(st.hold&&st.held)?st.held:scopeSignal();
+    const vd=VDIV[st.vi], td=TDIV[st.ti], cy=Y+H/2, A=s.amp/vd*dy, per=td*10, pts=[];
+    for(let i=0;i<=W;i+=2){ const t=i/W*per; let v=s.amp?Math.sin(2*Math.PI*s.f*t)*A:0;
+      v+=(Math.random()-.5)*(s.off?0.6:1.1); pts.push(X+i,Math.min(Math.max(cy-v,Y+1),Y+H-1)); }
+    line(c,pts,"#7dfab0",1);
+    rect(c,X,Y,X+W,Y+13,"#02100a"); rect(c,X,Y+H-15,X+W,Y+H,"#02100a");
+    tx(c,X+5,Y+7,(st.px===10?"10X":"1X")+"  AC   "+(vd>=1?vd+" V":(vd*1000)+" mV")+"/div   "+fmtT(td)+"/div","#9fe8c4",8);
+    if(st.hold) tx(c,X+W-5,Y+7,"HOLD","#f0a23c",8,"e");
+    tx(c,X+5,Y+H-7,"Vmax "+(st.disp.clip?">":"")+fmtV(st.disp.v),st.disp.clip?"#ff8b6a":"#7dfab0",9,"left",true);
+    tx(c,X+118,Y+H-7,"Vpp "+fmtV(st.disp.v*2),"#7dfab0",9,"left",true);
+    tx(c,X+202,Y+H-7,"F "+fmtF(st.disp.f),"#7dfab0",9,"left",true);
+    if(st.disp.off) tx(c,X+W/2,Y+26,d().probeOff,"#5d7d6d",8,"center");
+  }
+  const yk=Y+H+12;
+  ["F1","F2","F3","F4"].forEach((s2,i)=>{ rect(c,30+i*46,yk,68+i*46,yk+15,"#3a4147"); tx(c,49+i*46,yk+8,s2,"#aab2b8",7,"center"); });
+  rect(c,222,yk,262,yk+15,"#b9382c"); tx(c,242,yk+8,"MODE","#ffffff",7,"center");
+  rect(c,268,yk,308,yk+15,"#3a4147"); tx(c,288,yk+8,"HOLD","#aab2b8",7,"center");
+  rect(c,30,yk+22,306,yk+42,"#2b3035"); tx(c,168,yk+32,"▲ ▼ ◀ ▶   MENU   AUTO   10A  mA  COM  VΩ","#6e767d",7,"center");
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  CONTROLS
+   ══════════════════════════════════════════════════════════════ */
+function redrawAll(){ solve(); drawBench(); drawFg(); refreshDisp(true); drawScope(); buildTray(); refreshButtons(); }
+function buildTray(){
+  const t=d(), box=$("tray"); box.innerHTML="";
+  const sect=s=>{ const h=document.createElement("h3"); h.textContent=s; box.appendChild(h); };
+  const part=(label,sw,cmd,on,dis,cnt)=>{
+    const b=document.createElement("button"); b.className="part"+(on?" on":""); b.disabled=!!dis;
+    b.innerHTML=(sw?`<i style="background:${sw}"></i>`:"")+`<span></span>`+(cnt?`<em>${cnt}</em>`:"");
+    b.querySelector("span").textContent=label; b.onclick=cmd; box.appendChild(b);
+  };
+  sect(t.tCap);
+  for(const k of CAP_ORDER){ const [,,nm,film]=CAPS[k]; part(nm,film?"#8a5228":"#2f4f9e",()=>{ st.cap=st.cap===k?null:k; redrawAll(); },st.cap===k); }
+  sect(t.tPlate);
+  for(const k in MAT){ const used=st.stack.filter(x=>x===k).length;
+    part(t.mat[k],MAT[k].c1,()=>{ st.stack.push(k); redrawAll(); },false,used>=MAT[k].n||!!st.pan||st.stack.length>=6,(MAT[k].n-used)+" / "+MAT[k].n); }
+  sect(t.tPan);
+  for(const k in PAN) part(t.pan[k],MAT[k].c1,()=>{ st.pan=st.pan===k?null:k; st.panT=T_AMB; if(st.pan) st.stack=[];
+    if(!st.pan){ for(const a of ["sp","sn","dp","dn"]) if(st[a]==="NTCA"||st[a]==="NTCB") st[a]=null;
+      st.cables=st.cables.filter(c=>!c.some(x=>x==="NTCA"||x==="NTCB")); }
+    redrawAll(); },st.pan===k,st.stack.length>0&&st.pan!==k);
+  sect(t.tMisc);
+  part(t.slotClear,null,()=>{ st.stack=[]; if(st.pan){ st.pan=null;
+    for(const a of ["sp","sn","dp","dn"]) if(st[a]==="NTCA"||st[a]==="NTCB") st[a]=null;
+    st.cables=st.cables.filter(c=>!c.some(x=>x==="NTCA"||x==="NTCB")); } redrawAll(); });
+  part(t.cover+" · "+(st.covered?t.coverOn:t.coverOff),null,()=>{ st.covered=!st.covered; redrawAll(); },st.covered);
+}
+function buildTools(){
+  const box=$("tools"); box.innerHTML="";
+  for(const k of ["cable","probeP","probeN","dmmP","dmmN","erase"]){
+    const b=document.createElement("button"); b.textContent=d().tools[k]; b.className=st.tool===k?"on":"";
+    b.onclick=()=>{ st.tool=k; st.pending=null; buildTools(); drawBench(); }; box.appendChild(b);
+  }
+  const h=document.createElement("span"); h.className="hint";
+  h.textContent=st.tool==="cable"?d().hints.cable:st.tool==="erase"?d().hints.erase:st.tool.startsWith("probe")?d().hints.probe:d().hints.dmm;
+  box.appendChild(h);
+}
+function refreshButtons(){
+  $("mode").textContent="MODE: "+st.mode;
+  $("hold").className=st.hold?"on":"";
+  $("px").textContent="PROBE "+(st.px===10?"10X":"1X"); $("px").className=st.px===10?"on":"";
+  $("acv").className=(st.mode==="DMM"&&st.dmmFn==="V")?"on":""; $("ohm").className=(st.mode==="DMM"&&st.dmmFn==="R")?"on":"";
+}
+function renderSpeeds(){
+  const box=$("speeds"); box.innerHTML="";
+  for(const s of SPEEDS){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===st.speed?"on":"";
+    b.onclick=()=>{ st.speed=s; renderSpeeds(); }; box.appendChild(b); }
+}
+/* bench clicks */
+function hitTerm(x,y){ let best=null, bd=18;
+  for(const [tid,tx_,ty] of TERM_DEF){ if(!termLive(tid)) continue; const dd=Math.hypot(tx_-x,ty-y); if(dd<bd){bd=dd;best=tid;} }
+  return best; }
+function hitCable(x,y){
+  for(let i=0;i<st.cables.length;i++){ const p=bez2(st.cables[i][0],st.cables[i][1],i);
+    for(let j=0;j<p.length;j+=2) if(Math.hypot(p[j]-x,p[j+1]-y)<9) return i; }
+  return -1; }
+bench.addEventListener("pointerdown",e=>{
+  const r=bench.getBoundingClientRect(), x=(e.clientX-r.left)/BS, y=(e.clientY-r.top)/BS, t=hitTerm(x,y);
+  if(st.tool==="erase"){
+    const i=hitCable(x,y);
+    if(i>=0) st.cables.splice(i,1);
+    else if(t){ st.cables=st.cables.filter(c=>!c.includes(t)); for(const a of ["sp","sn","dp","dn"]) if(st[a]===t) st[a]=null; }
+  } else if(st.tool==="cable"){
+    if(!t) st.pending=null;
+    else if(!st.pending) st.pending=t;
+    else if(st.pending===t) st.pending=null;
+    else { const pair=[st.pending,t];
+      if(!st.cables.some(c=>(c[0]===pair[0]&&c[1]===pair[1])||(c[0]===pair[1]&&c[1]===pair[0]))){
+        if(st.cables.length>=8) flash(d().maxcable); else st.cables.push(pair); }
+      st.pending=null; }
+  } else if(t){ const a={probeP:"sp",probeN:"sn",dmmP:"dp",dmmN:"dn"}[st.tool]; st[a]=st[a]===t?null:t; }
+  solve(); drawBench(); refreshDisp(true);
+});
+/* generator knobs: drag vertically or roll the wheel */
+let drag=null;
+function fgPos(e){ const r=fgc.getBoundingClientRect(); return [(e.clientX-r.left)/FS,(e.clientY-r.top)/FS]; }
+fgc.addEventListener("pointerdown",e=>{
+  const [x,y]=fgPos(e);
+  for(const [k,kx,ky,r] of KNOBS){
+    if(Math.hypot(kx-x,ky-y)<r+4){
+      if(k==="range"){ st.fg.range=(st.fg.range+1)%4; redrawAll(); }
+      else if(k==="wave") flash(d().wave);
+      else { drag=[k,e.clientY,st.fg[k]]; fgc.setPointerCapture(e.pointerId); }
+      return;
+    }
+  }
+  if(Math.hypot(300-x,74-y)<14||Math.hypot(300-x,114-y)<14){ st.fg.on=!st.fg.on; redrawAll(); }
+});
+fgc.addEventListener("pointermove",e=>{ if(!drag) return; const [k,y0,v0]=drag;
+  st.fg[k]=Math.max(0,Math.min(100,v0+(y0-e.clientY)*0.45/FS)); solve(); drawFg(); });
+fgc.addEventListener("pointerup",()=>{ drag=null; });
+fgc.addEventListener("wheel",e=>{ const [x,y]=fgPos(e);
+  for(const [k,kx,ky,r] of KNOBS) if(Math.hypot(kx-x,ky-y)<r+4&&k!=="range"&&k!=="wave"){
+    e.preventDefault(); st.fg[k]=Math.max(0,Math.min(100,st.fg[k]+(e.deltaY<0?1:-1)*(e.shiftKey?0.2:1))); solve(); drawFg(); return; } },{passive:false});
+document.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{ const [k,v]=b.dataset.b.split(":"); st.fg[k]=Math.max(0,Math.min(100,st.fg[k]+(+v))); solve(); drawFg(); });
+$("fgOut").onclick=()=>{ st.fg.on=!st.fg.on; redrawAll(); };
+$("fgRange").onclick=()=>{ st.fg.range=(st.fg.range+1)%4; redrawAll(); };
+$("mode").onclick=()=>{ st.mode=st.mode==="SCOPE"?"DMM":"SCOPE"; solve(); refreshButtons(); refreshDisp(true); };
+$("hold").onclick=()=>{ st.hold=!st.hold; st.held=st.hold?scopeSignal():null; refreshButtons(); };
+$("px").onclick=()=>{ st.px=st.px===1?10:1; refreshButtons(); refreshDisp(true); };
+$("vUp").onclick=()=>{ st.vi=Math.min(VDIV.length-1,st.vi+1); refreshDisp(true); };
+$("vDn").onclick=()=>{ st.vi=Math.max(0,st.vi-1); refreshDisp(true); };
+$("tUp").onclick=()=>{ st.ti=Math.min(TDIV.length-1,st.ti+1); };
+$("tDn").onclick=()=>{ st.ti=Math.max(0,st.ti-1); };
+$("acv").onclick=()=>{ st.dmmFn="V"; st.mode="DMM"; solve(); refreshButtons(); refreshDisp(true); };
+$("ohm").onclick=()=>{ st.dmmFn="R"; st.mode="DMM"; solve(); refreshButtons(); refreshDisp(true); };
+$("unclip").onclick=()=>{ st.sp=st.sn=null; redrawAll(); };
+$("undmm").onclick=()=>{ st.dp=st.dn=null; redrawAll(); };
+$("auto").onclick=()=>{
+  const s=scopeSignal();
+  if(s.amp>0){ st.vi=VDIV.length-1; for(let i=0;i<VDIV.length;i++) if(s.amp/VDIV[i]<=3.2){ st.vi=i; break; }
+    st.ti=TDIV.length-1; for(let i=0;i<TDIV.length;i++) if(TDIV[i]*10>=3/s.f){ st.ti=i; break; } }
+  refreshDisp(true);
+};
+/* stopwatch + log */
+const fmtSw=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+(t%60).toFixed(1).padStart(4,"0");
+$("swGo").onclick=()=>{ st.swRun=!st.swRun; };
+$("swLap").onclick=()=>{ st.laps=[st.sw,...st.laps].slice(0,6); renderLaps(); };
+$("swReset").onclick=()=>{ st.sw=0; st.laps=[]; renderLaps(); };
+function renderLaps(){ $("laps").textContent=st.laps.map((t,i)=>"L"+(st.laps.length-i)+"  "+t.toFixed(1)+" s").join("\n"); }
+function setupText(){
+  const p=[];
+  if(st.cap) p.push("C="+CAPS[st.cap][2]);
+  if(st.stack.length) p.push("N="+st.stack.length+"×"+st.stack[0]);
+  if(st.pan) p.push(st.pan+" pan");
+  p.push("probe "+(st.sp||"—")+"/"+(st.sn||"—"));
+  if(!st.covered) p.push("lid open");
+  return p.join(", ");
+}
+$("recBtn").onclick=()=>{
+  const nm=$("recName").value.trim()||(st.mode==="DMM"?(st.dmmFn==="R"?"R":"V(AC)"):"Vmax");
+  let val, fr;
+  if(st.mode==="DMM"){ val=st.dmmFn==="R"?fmtR(st.disp.r):dmmAcv()[0]; fr=st.fg.on?fmtF(freq()):"—"; }
+  else { val=fmtV(st.disp.v)+(st.disp.clip?" (clip)":""); fr=fmtF(st.disp.f); }
+  st.nno++; const row=[st.nno,st.sw.toFixed(1),nm,val,fr,setupText()];
+  st.notes.push(row); renderLog(); flash(d().logged+" · "+nm+" = "+val);
+};
+function renderLog(){
+  $("logHead").innerHTML=""; for(const c of d().cols){ const th=document.createElement("th"); th.textContent=c; $("logHead").appendChild(th); }
+  const tb=$("logBody"); tb.innerHTML="";
+  for(const r of [...st.notes].reverse()){ const tr=document.createElement("tr");
+    for(const v of r){ const td=document.createElement("td"); td.textContent=v; tr.appendChild(td); } tb.appendChild(tr); }
+}
+$("csv").onclick=()=>{
+  const lines=["no,time_s,item,value,frequency,conditions"].concat(st.notes.map(r=>r.slice(0,5).join(",")+',"'+r[5]+'"'));
+  const blob=new Blob(["﻿"+lines.join("\n")],{type:"text/csv"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="apho2025_E1_log.csv"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  flash(d().saved);
+};
+$("clearLog").onclick=()=>{ st.notes=[]; renderLog(); };
+
+function setTab(k){
+  for(const v of ["lab","task","log","help"]){ $("tab-"+v).className=v===k?"on":""; $("v-"+v).hidden=v!==k; }
+  if(k==="lab") layout();
+}
+for(const v of ["lab","task","log","help"]) $("tab-"+v).onclick=()=>setTab(v);
+
+/* ══════════════════════════════════════════════════════════════
+   6.  LANGUAGE
+   ══════════════════════════════════════════════════════════════ */
+function applyLang(){
+  const t=d();
+  document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
+  $("tab-lab").textContent=t.tabLab; $("tab-task").textContent=t.tabTask; $("tab-log").textContent=t.tabLog; $("tab-help").textContent=t.tabHelp;
+  $("t-h-speed").textContent=t.hSpeed; $("t-h-fg").textContent=t.hFg; $("t-h-scope").textContent=t.hScope; $("t-h-sw").textContent=t.hSw;
+  $("t-fgtip").textContent=t.fgtip; $("unclip").textContent=t.unclip; $("undmm").textContent=t.undmm;
+  $("swGo").textContent=t.start; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
+  $("recName").placeholder=t.recPh; $("recBtn").textContent=t.rec; $("csv").textContent=t.csv; $("clearLog").textContent=t.clearLog;
+  $("v-task").textContent=TASK[lang]; $("v-help").textContent=HELP[lang];
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2025 E1 — 유도가열 조리기의 물리 · HaslaLab":"APhO 2025 E1 — Physics of Induction Cooking · HaslaLab";
+  buildTools(); renderSpeeds(); renderLog(); redrawAll();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+/* ══════════════════════════════════════════════════════════════
+   7.  MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let last=performance.now(), frame=0;
+function tick(){
+  const now=performance.now(), dt=Math.min(0.25,(now-last)/1000)*st.speed; last=now;
+  solve();
+  if(st.pan&&st.sol){
+    const Irms=(cabs(st.sol.I1)+cabs(st.sol.I2))/Math.SQRT2, n=Math.max(1,Math.ceil(dt/0.5));
+    for(let i=0;i<n;i++) st.panT=thermalStep(st.pan,st.panT,Irms,freq(),dt/n,!st.covered);
+  }
+  if(st.swRun) st.sw+=dt;
+  $("swLbl").textContent=fmtSw(st.sw);
+  const Ipk=st.sol?cabs(st.sol.I1)+cabs(st.sol.I2):0;
+  let m="";
+  if(st.fg.on&&!st.cap&&Ipk>0.05) m=d().nocap; else if(Ipk>2.0) m=d().ovr;
+  const w=$("warn");
+  if(now<st.msgUntil){ w.textContent=st.msg; w.className="warn ok"; } else { w.textContent=m; w.className="warn"; }
+  if(++frame%3===0) drawScope();
+  if(frame%10===0) drawBench();
+  setTimeout(()=>requestAnimationFrame(tick),40);
+}
+window.addEventListener("resize",layout);
+applyLang(); layout(); requestAnimationFrame(tick);
+</script>
+  <script src="adfit.js"></script>
+</body>
+</html>
