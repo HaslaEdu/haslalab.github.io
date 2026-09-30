@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0d1015">
+<meta name="theme-color" content="#1c2027">
 <title>IPhO 2026 E — 이상 기체, 증기압, 열전도 · Ideal Gas, Vapor Pressure and Heat Conduction · HaslaLab</title>
-<meta name="description" content="IPhO 2026 실험 문제를 브라우저에서 실행합니다. 전원을 켜고 밸브 A–E를 돌리고 펌프와 주사기로 두 실린더에 물을 채운 뒤, 히터를 켜고 압력·온도·타이머와 눈금으로 직접 측정합니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="IPhO 2026 실험 문제를 브라우저에서 실행합니다. 전자 모듈을 켜고 밸브 A–E를 돌리고 펌프와 주사기로 두 실린더에 물을 채운 뒤, 히터를 켜고 압력·온도·타이머와 눈금으로 직접 측정합니다. 계산은 대신 해주지 않습니다.">
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IPhO 2026 E — 이상 기체, 증기압, 열전도 · Ideal Gas, Vapor Pressure and Heat Conduction">
 <meta property="og:description" content="IPhO 2026 실험 문제를 브라우저에서 실행합니다. 실제 장비처럼 밸브·펌프·주사기·히터를 다루며 직접 측정합니다.">
 <style>
   :root{
-    --bg:#0d1015; --panel:#151a20; --ink:#dfe7ee; --muted:#7f8a95;
-    --line:#26303a; --accent:#4c8fd6; --accent-soft:#1c232b; --deep:#0a0d11;
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
   }
   *{box-sizing:border-box}
   [hidden]{display:none!important}
@@ -23,31 +23,50 @@
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1920px;margin:0 auto;padding:10px 12px 16px}
+  .wrap{max-width:1720px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 200px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center}
-  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#0d1015}
-  .tabs .hint{margin-left:8px}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;background:#0d1015;touch-action:none;cursor:default}
+  .card h3{margin:0 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;
+         background:#20252c;cursor:crosshair}
+  #bench.dragging{cursor:grabbing}
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel,.tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray,.panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:6px}
+  .row button{flex:1;text-align:center}
   button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
          border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
          color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
-  button:hover:not(:disabled){background:#243040;border-color:var(--accent)}
-  .hint{font-size:12px;color:var(--muted)}
-  .txt{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
-       font-size:13.5px;line-height:1.75;color:#c9d3db}
-  .txt h4{margin:14px 0 4px;color:var(--accent);font-size:13px}
-  .txt h4:first-child{margin-top:0}
-  .txt ul{margin:4px 0 4px 20px;padding:0}
-  header{max-width:1920px;margin:0 auto;padding:16px 12px 0;
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  .clock{background:#0d1512;border-radius:6px;padding:6px 10px;margin:2px 0 4px;text-align:center;
+         color:#7dffb0;font:700 22px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.04em}
+  #cards{display:block;width:100%;height:auto;background:var(--deep);border-radius:6px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:10px;min-height:110px}
+  .status div + div{margin-top:9px}
+  .status .warn{color:#ff8b6a}
+  header{max-width:1720px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
   .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
-  .lang button.on{background:var(--accent);color:#0d1015}
+  .lang button.on{background:var(--accent);color:#1c2027}
 </style>
 </head>
 <body>
@@ -64,38 +83,65 @@
 </header>
 
 <div class="wrap">
-  <div class="card">
-    <div class="tabs">
-      <button id="tab-lab" class="on"></button>
-      <button id="tab-info"></button>
-      <span class="hint" id="t-hint"></span>
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-benchcap"></h3>
+      <canvas id="bench"></canvas>
     </div>
-    <canvas id="cv"></canvas>
-    <div class="txt" id="info" hidden></div>
   </div>
+
+  <aside class="panel">
+    <h2 id="t-h-time"></h2>
+    <div class="clock" id="clock">00:00:00</div>
+    <div class="row" id="speeds"></div>
+    <div class="hint" id="t-timehint"></div>
+
+    <h2 id="t-h-cards"></h2>
+    <canvas id="cards"></canvas>
+
+    <h2 id="t-h-view"></h2>
+    <button id="fitBtn" style="width:100%"></button>
+    <div class="hint" id="t-howto"></div>
+
+    <div class="status" id="status"></div>
+    <div class="hint" id="session" style="text-align:right;margin-top:6px"></div>
+  </aside>
 </div>
 
 <script>
 "use strict";
 /* ══════════════════════════════════════════════════════════════
-   0.  i18n
+   0.  i18n  (instrument silkscreen stays English, as on the real hardware)
    ══════════════════════════════════════════════════════════════ */
 const T={
   ko:{
     title:"IPhO 2026 실험 — 이상 기체, 증기압, 열전도",
-    sub:"가상 실험실 · 실제 계기가 보여 주는 숫자만 보입니다: 내부/대기 압력, 내부/외부 온도, 타이머.",
-    tabLab:"실험대", tabInfo:"장비 · 사용법",
-    hint:"휠: 주사기 피스톤 1 mL (Shift 5 mL) · 스페이스: 일시정지",
-    head:"IPhO 2026  —  이상 기체, 증기압, 열전도   [20점 | 5.0시간]",
-    module:"전자 모듈", notation:"Fig. 18 기호          Fig. 15 밸브 위치", vOpen:"I  열림", vShut:"II  닫힘",
-    fig17:"Fig. 17  단면", dims:["바깥지름   74.8 ± 0.1 mm","안지름     33.7 ± 0.1 mm","벽 두께     3.4 ± 0.1 mm","벽 두께     3.4 ± 0.1 mm"],
-    cont:{pg:"PG\n100 mL",cold:"찬물\n500 mL",room:"상온수",pour:"비커",jug:"폐수통"},
-    contName:{pg:"PG 병",cold:"찬물",room:"상온수",pour:"비커",jug:"폐수통"},
-    syr:{w:"물 주사기",p:"PG 주사기"}, remove:"제거", refit:"장착",
+    sub:"가상 실험실 · 실제 계기가 보여 주는 숫자(내부/대기 압력, 내부/외부 온도, 타이머)만 보입니다. 아무것도 대신 계산해 주지 않습니다.",
+    benchcap:"실험대 — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 주사기 위 휠: 피스톤 1 mL (Shift 5 mL) / 그 밖의 휠: 확대·축소 / 빈 곳 드래그: 이동",
+    tray:"부품함",
+    hTime:"시간 배속", timeHint:"가열·냉각은 실제로 수십 분이 걸립니다. 스페이스 = 일시정지",
+    hCards:"Fig. 18 기호 · Fig. 15 밸브 · Fig. 17 단면", hView:"보기", fitBtn:"화면에 맞추기",
+    howto:"· 전원: 전자 모듈 오른쪽 옆면의 POWER 스위치\n· 밸브 손잡이 클릭: 열기(I)/닫기(II)\n· 호스 A·C 끝: 집어서 용기에 넣기, 다시 클릭하면 클립 고정\n· 주사기: 집어서 병·포트 D·거치대에 놓기, 휠로 피스톤\n· 용기를 집어 다른 용기에 놓으면 따릅니다\n· 포트(파란 링) 클릭: 호스 뽑기/꽂기",
+    pause:"일시정지", run:"진행",
     session:s=>"세션 "+String(s).padStart(6,"0"),
-    status:(h,m,s,sp,run)=>"경과 "+h+":"+m+":"+s+"   배속 ×"+sp+"   "+(run?"":"[일시정지]"),
-    foot:"밸브 손잡이 클릭: 돌리기  |  호스 A·C의 끝을 용기로 끌어다 놓고 다시 클릭: 클립  |  주사기를 병으로 끌어 피스톤을 당긴 뒤 호스 D에 연결  |  용기를 다른 용기 위로 끌면 따릅니다  |  스페이스 = 일시정지",
+    trayItems:{syrW:"7. 주사기 100 mL (물)",syrP:"7. 주사기 100 mL (PG)",pg:"9. PG 100 mL",cold:"10. 찬물 보온병",
+               room:"11. 상온수 병",pour:"12. 붓는 용기",jug:"13. 폐수통"},
+    trayOut:"사용 중", trayTake:"클릭해서 집기",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠 확대·축소 / 빈 곳 드래그 이동",
+    module:"전자 모듈", vOpen:"I  열림", vShut:"II  닫힘",
+    fig17:["바깥지름 74.8 ± 0.1 mm","안지름   33.7 ± 0.1 mm","벽 두께  3.4 ± 0.1 mm"],
+    cont:{pg:"PG",cold:"찬물",room:"상온수",pour:"붓는 용기",jug:"폐수통"},
+    contName:{pg:"PG 병",cold:"찬물",room:"상온수",pour:"붓는 용기",jug:"폐수통"},
+    syr:{w:"물 주사기",p:"PG 주사기"}, remove:"피스톤 빼기", refit:"피스톤 끼우기", rack:"주사기 거치대",
     bench:"실험대",
+    st:{nothing:"부품함에서 용기와 주사기를 골라 실험대에 놓으세요. 장치 본체는 이미 조립되어 있습니다.",
+        off:"전자 모듈이 꺼져 있습니다 — 모듈 오른쪽 옆면의 POWER 스위치를 누르세요.",
+        paused:"⏸ 일시정지 중"},
     m:{
       powerOn:"전원 켜짐", powerOff:"전원 꺼짐", noPower:"전자 모듈에 전원이 들어와 있지 않습니다.",
       graph:"그래프 화면은 이 실험에서 쓰지 않습니다.", heaterWet:"! 히터가 물에 완전히 잠겨 있어야 합니다.",
@@ -117,24 +163,41 @@ const T={
       hoseFirst:"! 호스를 먼저 용기에 넣으세요.", hoseTo:(k,dst,found)=>"호스 "+k+" → "+dst+(found?"  (호스 끝을 다시 클릭하면 클립으로 고정)":""),
       syrDirect:"주사기를 호스 D에 직접 연결했습니다 (밸브 D 우회)", syrD:"주사기를 호스 D에 연결했습니다",
       syrNotHome:"! 주사기가 포트에 완전히 꽂히지 않았습니다 - 노즐을 구멍에 맞추세요.",
-      nozzleIn:(s,c)=>s+" 노즐을 "+c+"에 담갔습니다"
+      nozzleIn:(s,c)=>s+" 노즐을 "+c+"에 담갔습니다",
+      placeIt:s=>s+" — 실험대의 점선 자리를 클릭해 놓으세요. (우클릭: 취소)",
+      placed:s=>s+" — 놓았습니다.", noFit:"그곳에는 놓을 수 없습니다. 점선 자리를 클릭하세요.",
+      returned:s=>s+" — 부품함에 넣었습니다.",
+      syrTake:s=>s+" — 노즐을 병·포트 D·호스 D 끝·거치대 중 하나에 대고 클릭하세요. (우클릭: 부품함)",
+      syrRack:s=>s+"를 거치대에 꽂았습니다.",
+      contTake:s=>s+"를 들었습니다 — 다른 용기를 클릭하면 따르고, 빈 곳을 클릭하면 제자리에 놓습니다.",
+      hoseTake:k=>"호스 "+k+" 끝을 들었습니다 — 용기를 클릭해 넣으세요. (우클릭: 내려놓기)",
+      hoseDown:k=>"호스 "+k+" 끝을 실험대에 내려놓았습니다.",
+      busy:"용기에 호스나 주사기가 들어 있어 들 수 없습니다."
     }
   },
   en:{
     title:"IPhO 2026 Experiment — Ideal Gas, Vapor Pressure and Heat Conduction",
-    sub:"Virtual laboratory · the only numbers are the ones a real instrument shows: internal/atmospheric pressure, internal/external temperature, the timer.",
-    tabLab:"Bench", tabInfo:"Equipment · how to use",
-    hint:"wheel: syringe plunger 1 mL (Shift 5 mL) · space: pause",
-    head:"IPhO 2026  —  Ideal Gas, Vapor Pressure and Heat Conduction   [20 pts | 5.0 h]",
-    module:"electronic module", notation:"Fig. 18 notation          Fig. 15 valve positions", vOpen:"I  open", vShut:"II  closed",
-    fig17:"Fig. 17  cross-section", dims:["outer diameter  74.8 ± 0.1 mm","inner diameter  33.7 ± 0.1 mm","wall             3.4 ± 0.1 mm","wall             3.4 ± 0.1 mm"],
-    cont:{pg:"PG\n100 mL",cold:"cold water\n500 mL",room:"room-temp.\nwater",pour:"pouring\njug",jug:"waste jug"},
-    contName:{pg:"PG bottle",cold:"cold water",room:"room-temp. water",pour:"pouring jug",jug:"waste jug"},
-    syr:{w:"water syringe",p:"PG syringe"}, remove:"remove", refit:"refit",
+    sub:"Virtual laboratory · the only numbers are the ones the real instruments show (internal/atmospheric pressure, internal/external temperature, the timer). Nothing is computed for you.",
+    benchcap:"the bench — L-click pick/place / R-click return / wheel on a syringe: plunger 1 mL (Shift 5 mL) / wheel elsewhere: zoom / drag bare bench: pan",
+    tray:"Parts box",
+    hTime:"Time scale", timeHint:"Heating and cooling really take tens of minutes. Space = pause",
+    hCards:"Fig. 18 notation · Fig. 15 valves · Fig. 17 section", hView:"View", fitBtn:"Fit to window",
+    howto:"· Power: POWER switch on the right side of the module\n· Click a valve handle: open (I) / closed (II)\n· Hose A / C end: pick it up and put it in a container, click again to clip it\n· Syringe: pick it up and set it in a bottle, port D or the rack; wheel moves the plunger\n· Pick a container up and put it on another to pour\n· Click a port (blue ring): pull the hose out / push it in",
+    pause:"pause", run:"run",
     session:s=>"session "+String(s).padStart(6,"0"),
-    status:(h,m,s,sp,run)=>"elapsed "+h+":"+m+":"+s+"   speed ×"+sp+"   "+(run?"":"[paused]"),
-    foot:"click a valve handle to turn it  |  drag the end of hose A / C into a container, click again to clip  |  drag a syringe to a bottle, pull the plunger, plug it into hose D  |  drag a container onto another to pour  |  space = pause",
+    trayItems:{syrW:"7. 100 mL syringe (water)",syrP:"7. 100 mL syringe (PG)",pg:"9. PG 100 mL",cold:"10. Cold-water flask",
+               room:"11. Room-temp. water",pour:"12. Pouring container",jug:"13. Excess-water jug"},
+    trayOut:"in use", trayTake:"click to pick up",
+    trayHelp:"L-click pick/place, R-click return\nwheel zoom, drag bare bench to pan",
+    module:"electronic module", vOpen:"I  open", vShut:"II  closed",
+    fig17:["outer Ø  74.8 ± 0.1 mm","inner Ø  33.7 ± 0.1 mm","walls    3.4 ± 0.1 mm"],
+    cont:{pg:"PG",cold:"cold",room:"room-temp.",pour:"pouring",jug:"excess water"},
+    contName:{pg:"PG bottle",cold:"cold water",room:"room-temp. water",pour:"pouring container",jug:"excess-water jug"},
+    syr:{w:"water syringe",p:"PG syringe"}, remove:"remove plunger", refit:"refit plunger", rack:"syringe rack",
     bench:"bench",
+    st:{nothing:"Pick the containers and syringes from the parts box and put them on the bench. The apparatus itself is already assembled.",
+        off:"The electronic module is off: press the POWER switch on the right side of the module.",
+        paused:"⏸ paused"},
     m:{
       powerOn:"Power on", powerOff:"Power off", noPower:"The electronic module has no power.",
       graph:"Graph display is not used in the experiments.", heaterWet:"! The heater must be fully under water.",
@@ -156,75 +219,25 @@ const T={
       hoseFirst:"! Put the hose in a container first.", hoseTo:(k,dst,found)=>"Hose "+k+" → "+dst+(found?"  (click the hose end again to clip it)":""),
       syrDirect:"Syringe plugged straight into hose D (valve D bypassed)", syrD:"Syringe connected to hose D",
       syrNotHome:"! The syringe is not fully home - line the nozzle up with the socket.",
-      nozzleIn:(s,c)=>s+" nozzle dipped in the "+c
+      nozzleIn:(s,c)=>s+" nozzle dipped in the "+c,
+      placeIt:s=>s+" — click its dashed place on the bench. (R-click: cancel)",
+      placed:s=>s+" — placed.", noFit:"It does not go there. Click a dashed place.",
+      returned:s=>s+" — back in the parts box.",
+      syrTake:s=>s+" — click with the nozzle on a bottle, port D, the end of hose D or the rack. (R-click: parts box)",
+      syrRack:s=>s+" set in the rack.",
+      contTake:s=>"Holding the "+s+" — click another container to pour, or a bare spot to put it back.",
+      hoseTake:k=>"Holding the end of hose "+k+" — click a container to put it in. (R-click: put it down)",
+      hoseDown:k=>"Hose "+k+" end put down on the bench.",
+      busy:"A hose or a syringe is in that container, so it cannot be lifted."
     }
   }
 };
-const INFO={
-ko:`<h4>장치</h4>
-<ul>
-<li>바깥 실린더(OC)와 안쪽 실린더(IC) — 아크릴, 단면은 Fig. 17 (바깥지름 74.8 mm, 안지름 33.7 mm, 벽 3.4 mm).</li>
-<li>OC 안에는 히터와 외부 온도 센서, IC 위쪽에는 내부 온도·압력 센서가 연결됩니다.</li>
-<li>전자 모듈 : 화면에 INT./ATM. 압력 [kPa], INT./EXT. 온도 [C], 타이머. 버튼 1 시작/정지 · 2 리셋 · 3 그래프 · 4 히터. 전원은 뒷면 스위치.</li>
-<li>유압 보드 : 밸브 A (물 넣기), B (물 퍼지), C (물 빼기), D (주사기 연결), 그리고 실린더 위의 밸브 E. 손잡이가 관을 따라 서면(I) 열림, 가로지르면(II) 닫힘.</li>
-<li>펌프, 호스 A · C (클립으로 용기에 고정), 호스 D (주사기).</li>
-<li>100 mL 주사기 2개 (물 / PG), PG 100 mL, 찬물 500 mL, 상온수, 비커, 폐수통.</li>
-</ul>
-<h4>조작</h4>
-<ul>
-<li>뒷면 POWER 스위치를 눌러 전자 모듈을 켭니다.</li>
-<li>OC 채우기 : 호스 A 끝을 물이 든 용기로 끌어다 놓고(다시 클릭해 클립 고정) 펌프를 켭니다. 처음에는 밸브 B만 연 채 펌프를 돌려 공기를 뺀 뒤 B를 닫고 A를 엽니다.</li>
-<li>OC 비우기 : 호스 C를 폐수통에 넣고 B와 C를 연 채 펌프를 돌립니다. B만 열면 물이 순환해 온도가 고르게 됩니다.</li>
-<li>IC 채우기 : 주사기를 병으로 끌어 노즐을 담그고 피스톤을 위로 끌어(또는 휠) 액체를 빨아들인 뒤, 호스 D 소켓에 꽂고 밸브 D와 E를 연 채 피스톤을 밉니다.</li>
-<li>피스톤을 제거하면 주사기 실린더가 대기로 열린 물기둥이 됩니다.</li>
-<li>h 와 H 는 IC 눈금에서 직접 읽으세요. 가장자리의 메니스커스가 아니라 가운데 평평한 수면을 읽습니다.</li>
-</ul>
-<h4>주의</h4>
-<ul>
-<li>히터는 물에 완전히 잠겨 있을 때만 켜집니다. 65 C에서 차단되며 표시등이 빨간색이면 60 C 아래로 식을 때까지 다시 켤 수 없습니다.</li>
-<li>OC 수위는 덮개보다 최소 1 cm 아래로 유지하세요.</li>
-<li>센서는 보정이 어긋나 있을 수 있습니다 (문제지 경고와 같음).</li>
-</ul>
-<h4>이 시뮬레이터에 대하여</h4>
-<ul>
-<li>아무것도 대신 채우거나 측정하거나 표로 만들거나 맞춰 주지 않습니다.</li>
-<li>세션마다 아크릴의 열전도도, 증기압 곡선, 대기압, 센서 보정이 조금씩 다릅니다.</li>
-</ul>`,
-en:`<h4>Apparatus</h4>
-<ul>
-<li>Outer cylinder (OC) and inner cylinder (IC) — acrylic, cross-section in Fig. 17 (outer 74.8 mm, inner 33.7 mm, walls 3.4 mm).</li>
-<li>The OC holds the heater and the external temperature probe; the IC head carries the internal temperature and pressure lines.</li>
-<li>Electronic module: INT./ATM. pressure [kPa], INT./EXT. temperature [C] and a timer on the screen. Buttons 1 start/stop · 2 reset · 3 graphics · 4 heat. The power switch is at the rear.</li>
-<li>Hydraulic board: valves A (water in), B (water purge), C (water out), D (syringe line), plus valve E on top of the cylinders. Handle along the pipe (I) is open, across it (II) is closed.</li>
-<li>Pump, hoses A · C (clip them to a container), hose D (syringe).</li>
-<li>Two 100 mL syringes (water / PG), PG 100 mL, cold water 500 mL, room-temperature water, pouring jug, waste jug.</li>
-</ul>
-<h4>Operating it</h4>
-<ul>
-<li>Press the POWER switch at the rear to turn the electronic module on.</li>
-<li>Filling the OC: drag the end of hose A into a container of water (click it again to clip it) and run the pump. Prime it first with only valve B open, then close B and open A.</li>
-<li>Emptying the OC: put hose C in the waste jug and run the pump with B and C open. With B alone the water recirculates and the temperature evens out.</li>
-<li>Filling the IC: drag a syringe to a bottle, pull the plunger up (or roll the wheel) to draw liquid, plug it into the hose D socket and push with valves D and E open.</li>
-<li>With the plunger removed the syringe barrel becomes an open water column.</li>
-<li>Read h and H off the IC scale yourself — the flat middle of the surface, not the meniscus at the wall.</li>
-</ul>
-<h4>Precautions</h4>
-<ul>
-<li>The heater runs only fully under water. It cuts out at 65 C; while the indicator is red it cannot be restarted until the water is below 60 C.</li>
-<li>Keep the OC level at least 1 cm below the cover.</li>
-<li>The sensors may be decalibrated, as the problem sheet warns.</li>
-</ul>
-<h4>About this simulator</h4>
-<ul>
-<li>Nothing is filled, measured, tabulated, fitted or plotted for you.</li>
-<li>The acrylic's conductivity, the vapour-pressure curve, the atmosphere and the sensor calibration differ slightly from session to session.</li>
-</ul>`};
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const $=id=>document.getElementById(id);
 const d=()=>T[lang];
 
 /* ══════════════════════════════════════════════════════════════
-   1.  CONSTANTS  —  identical to the Python (problem sheet, Fig. 17)
+   1.  CONSTANTS AND PHYSICS  —  line for line the original program
    ══════════════════════════════════════════════════════════════ */
 const C0=4.184e3, RHO0=1000.0, R_GAS=8.314, T0K=273.15, RHO_AIR=1.12, RHO_PG=1036.0, G_ACC=9.81;
 const GAMMA_W20=0.0728, DGAMMA_W=-1.5e-4, GAMMA_PG=0.0360, THETA_W=70*Math.PI/180, THETA_PG=30*Math.PI/180;
@@ -291,7 +304,7 @@ class Lab{
     this.s_tint=this.T_ic; this.s_text=this.T_oc; this.s_press=this.P_atm;
     this.msg=null; this.msgT=-99;
   }
-  say(k,...a){ this.msg={k,a}; this.msgT=this.t; }
+  say(k,...a){ this.msg={k,a}; this.msgT=this.t+1e-9*(++this.msgN||(this.msgN=1)); }
   pv(T){ const u=(T-PV_T0)*20, i=Math.floor(u);
     if(i<0) return this.pvTab[0]; if(i>=PV_N) return 1e3*Math.exp(this.ccC-this.ccS/T);
     const a=this.pvTab[i]; return a+(this.pvTab[i+1]-a)*(u-i); }
@@ -476,17 +489,42 @@ class Lab{
 }
 
 /* ══════════════════════════════════════════════════════════════
-   3.  CANVAS  —  the Python's 1920 × 1010 design, scaled to fit
+   3.  CANVAS AND CAMERA  (bench drawn in a 1500 × 1000 design space)
    ══════════════════════════════════════════════════════════════ */
-const cv=$("cv"), ctx=cv.getContext("2d");
-const LW=1920, LH=1010, ELEV=0.20;
-const BENCH="#0d1015", STEEL="#9aa7b4", ACRYL="#8095a8", INK="#dfe7ee", DIM="#7f8a95";
-let S=1;
-function layoutCanvas(){
-  const w=cv.clientWidth||1200, dpr=Math.min(window.devicePixelRatio||1,2); S=w/LW;
-  cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
-  ctx.setTransform(dpr*S,0,0,dpr*S,0,0);
+const cv=$("bench"), ctx=cv.getContext("2d");
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
+const cardCv=$("cards"), cardCtx=cardCv.getContext("2d");
+const BW=1500, BH=1000, ELEV=0.20, VIEW=[0,130,1500,1000];
+const STEEL="#9aa7b4", ACRYL="#8095a8", INK="#dfe7ee", DIM="#7f8a95";
+const CAM={z:1,base:0.7,pan:[0,0],touched:false};
+let CW=0, CH=0, DPR=1, TRW=180, TRH=420, CRW=270, CRH=230;
+const TRAY_ORDER=["syrW","syrP","pg","cold","room","pour","jug"];
+const TRAY_ROW=48;
+function layout(){
+  DPR=window.devicePixelRatio||1;
+  const r=cv.parentElement.getBoundingClientRect();
+  CW=Math.max(320,Math.floor(r.width-20));
+  CH=Math.max(300,Math.min(Math.round(CW*(VIEW[3]-VIEW[1])/(VIEW[2]-VIEW[0])),Math.round(window.innerHeight*0.86)));
+  cv.style.height=CH+"px"; cv.width=Math.round(CW*DPR); cv.height=Math.round(CH*DPR);
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_ORDER.length*TRAY_ROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
+  CRW=Math.max(200,Math.floor(cardCv.parentElement.getBoundingClientRect().width-24)); CRH=Math.round(CRW*0.86);
+  cardCv.style.height=CRH+"px"; cardCv.width=Math.round(CRW*DPR); cardCv.height=Math.round(CRH*DPR);
+  fit(); drawTray(); drawCards();
 }
+function fit(){
+  if(CW<30) return;
+  if(!CAM.touched){
+    const vw=VIEW[2]-VIEW[0], vh=VIEW[3]-VIEW[1];
+    CAM.base=Math.min(CW/vw,CH/vh);
+    const k=CAM.base*CAM.z;
+    CAM.pan=[(CW-vw*k)/2-VIEW[0]*k,(CH-vh*k)/2-VIEW[1]*k];
+  }
+}
+const kk=()=>CAM.base*CAM.z;
+const toLog=(px,py)=>[(px-CAM.pan[0])/kk(),(py-CAM.pan[1])/kk()];
+
 const FONT="'Segoe UI','Malgun Gothic','Apple SD Gothic Neo',sans-serif", MONO="ui-monospace,Consolas,monospace";
 function lerp(c1,c2,f){ f=Math.max(0,Math.min(1,f)); const a=[1,3,5].map(i=>parseInt(c1.substr(i,2),16)), b=[1,3,5].map(i=>parseInt(c2.substr(i,2),16));
   return "#"+a.map((v,i)=>Math.round(v+(b[i]-v)*f).toString(16).padStart(2,"0")).join(""); }
@@ -517,46 +555,78 @@ function X(s,x,y,col,size,anchor,bold,font){
   lines.forEach((l,i)=>ctx.fillText(l,x,y+(i-(lines.length-1)/2)*lh)); }
 const ell=(xc,r,y,fill,stroke,lw)=>O(xc-r,y-r*ELEV,xc+r,y+r*ELEV,fill,stroke,lw);
 
-/* ---- layout (design px) ---- */
-const PXCM=29, CX=209, YB=810, YTOP=YB-18*PXCM;
+
+/* ---- bench layout, after Fig. 1b: containers and syringe rack on the left,
+        the electronic module at the back, the hydraulic board lying in front of it,
+        the pair of cylinders on the right ---- */
+const PXCM=29, CX=1255, YB=792, YTOP=YB-18*PXCM;
 const mm=v=>v*PXCM/10;
 const W_OC_O=mm(74.8/2), W_OC_I=mm(74.8/2-3.4), W_IC_O=mm(33.7/2+3.4), W_IC_I=mm(33.7/2);
 const R_STUD=W_OC_O+5, X_STUD_F=W_OC_O*0.69, X_STUD_R=W_OC_O*0.45, DY_STUD=R_STUD*0.866*ELEV;
 const FLANGE_W=W_OC_O+15, FLANGE_H=17, COVER_W=W_OC_O+2, COVER_H=15, BASE_W=W_OC_O+30, BASE_H=26;
 const X_HEAT=-(W_IC_O+W_OC_I)/2-8, X_PROBE=(W_IC_O+W_OC_I)/2+4;
 const cm2y=c=>YB-c*PXCM;
-const MOD=[420,26,980,412], BOARD=[420,440,980,910], SIDE=[996,30,1466,200], REAR=[996,226,1326,382], PUMPP=[1276,410,1466,640];
-const NOTE=[1466,26,1906,142], CARD17=[1466,152,1906,328];
-const CONT={}; [["pg",54,132],["cold",62,156],["room",70,168],["pour",84,140],["jug",96,104]].forEach(([k,w,h],i)=>{ const x=1000+i*86; CONT[k]=[x,908-h,x+w,908]; });
-const SH=240, SW=SH*0.20, SYR_HOME={w:[1560,430],p:[1760,430]};
-const FOOT=936;
+const CY_COVER=YTOP-FLANGE_H-22-COVER_H;
+const EXY=[CX-W_OC_O-26, YTOP-FLANGE_H-14];
+/* the instrument panels are drawn in their own local boxes and mapped onto
+   the faces of the module / the board by an affine map */
+const MOD=[0,0,560,386], BOARD=[0,0,560,470], SIDE=[0,0,470,170], REAR=[0,0,330,156], PUMPP=[0,0,190,230];
 const HOT={fig3:{screen:[0.040,0.030,0.960,0.590],btn:[[0.185,0.740],[0.353,0.740],[0.520,0.740],[0.688,0.740]],btnw:0.125,btnh:0.130},
            fig4:{power:[0.590,0.288,0.136]}, fig8:{pump:[0.257,0.434,0.198],out:[0.255,0.660],in:[0.255,0.870]},
            fig6:{A:[0.119,0.187],B:[0.754,0.203],C:[0.127,0.494],D:[0.754,0.769],hoseA:[0.010,0.200],hoseC:[0.010,0.505],hoseD:[0.960,0.780]}};
 const hotPt=(box,f)=>[box[0]+f[0]*(box[2]-box[0]),box[1]+f[1]*(box[3]-box[1])];
 const VALVE_XY={}; for(const k of "ABCD") VALVE_XY[k]=hotPt(BOARD,HOT.fig6[k]);
-const HOSE_PORT={A:hotPt(BOARD,HOT.fig6.hoseA),C:hotPt(BOARD,HOT.fig6.hoseC)};
-const SYR_PORT=hotPt(BOARD,HOT.fig6.hoseD), HOSE_D_END=[SYR_PORT[0]+22,SYR_PORT[1]-26];
-const CY_COVER=YTOP-FLANGE_H-22-COVER_H;
-const EXY=[CX-W_OC_O-26, YTOP-FLANGE_H-14];
+/* module box */
+const MX0=430, MY0=318, MX1=1040, MY1=642, MDX=104, MDY=-58;
+const F_MOD ={o:[442,330],a:[0.8,0],b:[0,0.8]};
+const F_PUMP={o:[900,352],a:[0.7,0],b:[0,0.7]};
+const F_SIDE={o:[MX1+4,MY0+8],a:[MDX/480,MDY/480],b:[0,0.72]};
+const F_REAR={o:[MX1+6,MY0+150],a:[MDX/350,MDY/350],b:[0,0.8]};
+const F_BOARD={o:[452,662],a:[1,0],b:[-0.16,0.52]};
+function fmap(F,u,v){ return [F.o[0]+u*F.a[0]+v*F.b[0], F.o[1]+u*F.a[1]+v*F.b[1]]; }
+function finv(F,x,y){
+  const dx=x-F.o[0], dy=y-F.o[1], det=F.a[0]*F.b[1]-F.a[1]*F.b[0];
+  return [(dx*F.b[1]-dy*F.b[0])/det, (F.a[0]*dy-F.a[1]*dx)/det];
+}
+const HOSE_PORT={A:fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseA)),C:fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseC))};
+const SYR_PORT=fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseD)), HOSE_D_END=[SYR_PORT[0]+26,SYR_PORT[1]-30];
+/* containers stand on the bench at fixed places */
+const CONT={pg:[22,772,76,900], cold:[92,748,154,900], room:[170,736,240,900], pour:[256,776,340,900], jug:[40,918,300,985]};
+const CONT_ORDER=["pg","cold","room","pour","jug"];
+const SH=240, SW=48;
+const RACK={y:690, holes:{w:90,p:190}};
+const HOSE_HOME={A:[372,872],C:[346,958]};
+
+/* hot spots remember the face they were drawn on */
+let hot=[], curFace=null;
+function addHot(tag,shape,...g){ hot.push({tag,shape,g,face:curFace}); }
+function hit(x,y){
+  for(let i=hot.length-1;i>=0;i--){
+    const h=hot[i]; let px=x, py=y;
+    if(h.face){ [px,py]=finv(h.face,x,y); }
+    const g=h.g, m=h.face?3/Math.hypot(h.face.a[0],h.face.a[1]):3;
+    if(h.shape==="r"&&px>=g[0]-m&&px<=g[2]+m&&py>=g[1]-m&&py<=g[3]+m) return h.tag;
+    if(h.shape==="c"&&(px-g[0])**2+(py-g[1])**2<=(g[2]+m)**2) return h.tag;
+  }
+  return null;
+}
+function onFace(F,fn){
+  ctx.save(); ctx.transform(F.a[0],F.a[1],F.b[0],F.b[1],F.o[0],F.o[1]);
+  curFace=F; fn(); curFace=null; ctx.restore();
+}
 
 /* ══════════════════════════════════════════════════════════════
    4.  STATE OF THE BENCH
    ══════════════════════════════════════════════════════════════ */
-let lab=new Lab(), speed=1, running=true, dragging=null, hot=[];
-const hose={A:[700,940],C:[760,940]};
-const coff={};
-for(const k of ["w","p"]){ lab.syr[k].x=SYR_HOME[k][0]; lab.syr[k].y=SYR_HOME[k][1]; }
-function addHot(tag,shape,...g){ hot.push({tag,shape,g}); }
-function hit(x,y){
-  for(let i=hot.length-1;i>=0;i--){ const h=hot[i], g=h.g;
-    if(h.shape==="r"&&x>=g[0]-3&&x<=g[2]+3&&y>=g[1]-3&&y<=g[3]+3) return h.tag;
-    if(h.shape==="c"&&(x-g[0])**2+(y-g[1])**2<=(g[2]+3)**2) return h.tag; }
-  return null;
-}
+let lab=new Lab(), speed=1, running=true;
+const B={ contOn:{pg:false,cold:false,room:false,pour:false,jug:false},
+          syrOn:{w:false,p:false},
+          hose:{A:HOSE_HOME.A.slice(),C:HOSE_HOME.C.slice()},
+          carry:null, down:null, plDrag:null, pan0:null, mouse:[-99,-99], mouseL:[-99,-99], zones:{} };
+const SYR_KEY={syrW:"w",syrP:"p"};
 
 /* ══════════════════════════════════════════════════════════════
-   5.  DRAWING
+   5.  DRAWING  —  the apparatus and the panels are the original program's
    ══════════════════════════════════════════════════════════════ */
 function stud(x,y0,y1,bright){
   const col=bright?"#c3ced8":"#5d6771", dk=bright?"#6d7883":"#39424b", w=bright?9:8;
@@ -754,7 +824,7 @@ function drawFig6(){
   for(const k of "ABCD"){ const [vx,vy]=VALVE_XY[k];
     pushfit(vx-0.072*w,vy,-1); pushfit(vx+0.072*w,vy,1); ballvalve(vx,vy,0.058*w,0.062*h);
     drawHandle(vx,vy,lab.valve[k]); addHot("valve"+k,"c",vx,vy,28); }
-  for(const [tx,ty] of [SYR_PORT,HOSE_D_END]){ ctx.setLineDash([3,3]); O(tx-20,ty-20,tx+20,ty+20,null,"#4a5760"); ctx.setLineDash([]);
+  for(const [tx,ty] of [hotPt(BOARD,HOT.fig6.hoseD)]){ ctx.setLineDash([3,3]); O(tx-20,ty-20,tx+20,ty+20,null,"#4a5760"); ctx.setLineDash([]);
     O(tx-6,ty-6,tx+6,ty+6,"#05080b","#8fa6b8"); }
 }
 function drawHandle(vx,vy,open){
@@ -765,46 +835,180 @@ function valveArt(vx,vy,open){
   R(vx-22,vy-9,vx+22,vy+9,"#c6ced6","#8b959e"); O(vx-13,vy-13,vx+13,vy+13,"#7d868f","#aeb7bf");
   if(open) R(vx-4,vy-34,vx+4,vy-10,"#4ad07a","#2b7a4a"); else R(vx+10,vy-4,vx+34,vy+4,"#d95c4a","#8a3227");
 }
-function drawCards(){
-  X(d().head,18,18,"#4c8fd6",20,"w",true);
-  let [x0,y0,x1,y1]=NOTE; R(x0,y0,x1,y1,"#101215","#3a4148"); X(d().notation,x0+10,y0+13,"#56616c",12,"w");
-  const bx=x0+36, by0=y0+30, by1=y1-16;
-  R(bx,by0,bx+46,by1,null,ACRYL); R(bx+1,by0+(by1-by0)*.55,bx+45,by1-1,"#2f8fc4");
-  L([bx+58,by0,bx+58,by0+(by1-by0)*.55],INK,1); X("H",bx+68,by0+(by1-by0)*.27,INK,15);
-  L([bx+58,by0+(by1-by0)*.55,bx+58,by1],INK,1); X("h",bx+68,by0+(by1-by0)*.78,INK,15);
-  [[d().vOpen,true],[d().vShut,false]].forEach(([t,op],i)=>{ const vx=x1-128, vy=y0+50+i*52; valveArt(vx,vy,op); X(t,vx+50,vy,DIM,13,"w"); });
-  [x0,y0,x1,y1]=CARD17; R(x0,y0,x1,y1,"#101215","#3a4148"); X(d().fig17,x0+10,y0+13,"#56616c",12,"w");
-  const ccx=x0+(y1-y0)*0.52, ccy=(y0+y1)/2+6, rr=(y1-y0)*0.36;
-  for(const f of [1,0.91,0.545,0.455]) O(ccx-rr*f,ccy-rr*f,ccx+rr*f,ccy+rr*f,null,ACRYL);
-  d().dims.forEach((t,i)=>X(t,ccx+rr+22,ccy-rr*0.7+i*24,"#9fb0bf",13,"w",false,MONO));
+
+/* ---- the room ---- */
+function drawRoom(){
+  const g=ctx.createLinearGradient(0,0,0,610);
+  g.addColorStop(0,"#1b2027"); g.addColorStop(1,"#2a3038");
+  ctx.fillStyle=g; ctx.fillRect(-2000,-2000,BW+4000,2610);
+  const w=ctx.createLinearGradient(0,610,0,BH);
+  w.addColorStop(0,"#9c7a55"); w.addColorStop(1,"#c49c70");
+  ctx.fillStyle=w; ctx.fillRect(-2000,610,BW+4000,BH-610+2000);
+  for(let i=0;i<9;i++){ const y=610+i*i*5.2; L([-2000,y,BW+2000,y],"rgba(90,62,36,0.35)",1); }
+  L([-2000,610,BW+2000,610],"#6b4f33",2);
+}
+/* ---- electronic module: a black box, screen and keys on its front,
+        connectors, SOURCE AC and POWER on its right side ---- */
+function drawModule(){
+  P([MX0,MY0,MX1,MY0,MX1+MDX,MY0+MDY,MX0+MDX,MY0+MDY],"#202328","#3a3f45",1.5);
+  P([MX1,MY0,MX1+MDX,MY0+MDY,MX1+MDX,MY1+MDY,MX1,MY1],"#15171a","#33383d",1.5);
+  R(MX0,MY0,MX1,MY1,"#191b1f","#3a3f45",1.5);
+  ctx.save(); ctx.transform(1,MDY/MDX*0.0,0.9,0.55*MDY/MDX,MX0+120,MY0+MDY*0.5);
+  ctx.restore();
+  const lp=[MX0+MDX*0.55+40,MY0+MDY*0.55];
+  X("IPhO",lp[0]+60,lp[1],"#6d747c",20,"c",true); X("BUCARAMANGA · COLOMBIA 2026",lp[0]+60,lp[1]+16,"#50575e",10,"c");
+  onFace(F_MOD,drawFig3);
+  onFace(F_PUMP,drawFig8);
+  onFace(F_SIDE,drawFig5);
+  onFace(F_REAR,drawFig4);
+  X(d().module,MX0+8,MY1-10,"#4b525a",11,"w");
+}
+/* tubes between module, board and cylinders */
+function drawPlumbing(){
+  const out=fmap(F_PUMP,...hotPt(PUMPP,HOT.fig8.out)), inn=fmap(F_PUMP,...hotPt(PUMPP,HOT.fig8.in));
+  const t1=fmap(F_BOARD,0.40*560,-10), t2=fmap(F_BOARD,0.10*560,-10);
+  L([out[0],out[1],out[0]-40,out[1]+120,t1[0]+10,t1[1]-50,t1[0],t1[1]],"#e2721f",7,true);
+  L([inn[0],inn[1],inn[0]-80,inn[1]+60,t2[0]+30,t2[1]-40,t2[0],t2[1]],"#3aa0e0",7,true);
+  const oc1=fmap(F_BOARD,560,0.235*470), oc2=fmap(F_BOARD,560,0.505*470);
+  L([oc1[0],oc1[1],oc1[0]+60,oc1[1]-10,CX-BASE_W-10,YB+30,CX-BASE_W*0.55,YB+14],"#3aa0e0",7,true);
+  L([oc2[0],oc2[1],oc2[0]+50,oc2[1]+30,CX-BASE_W-20,YB+60,CX-BASE_W*0.45,YB+22],"#e2721f",7,true);
+  const dd=fmap(F_BOARD,0.38*560,470);
+  L([dd[0],dd[1],dd[0]+30,dd[1]+70,CX-60,YB+140,CX-8,YB+BASE_H+4],"rgba(220,230,235,0.75)",6,true);
+}
+function drawBoard(){
+  const c=[fmap(F_BOARD,0,470),fmap(F_BOARD,560,470)];
+  P([c[0][0],c[0][1],c[1][0],c[1][1],c[1][0],c[1][1]+12,c[0][0],c[0][1]+12],"#3d2713","#2a1a0c");
+  onFace(F_BOARD,drawFig6);
+}
+/* the head leads go to the connectors on the module's side */
+function drawLeads(){
+  const pts=[[0.155,0.56,"#111417"],[0.375,0.56,"#111417"],[0.885,0.30,"#111417"],[0.885,0.72,"#54b6e8"]];
+  pts.forEach(([fx,fy,col],i)=>{
+    const [sx,sy]=fmap(F_SIDE,fx*470,fy*170+22);
+    const hx=CX-10+i*14, hy=CY_COVER-24;
+    L([hx,hy,hx-40-i*10,hy-120,sx+60,sy-40,sx,sy],col,col==="#54b6e8"?6:5,true);
+  });
+}
+function drawRack(){
+  R(28,RACK.y,252,RACK.y+10,"#c8ced3","#8b959e");
+  for(const x of [40,240]) R(x-3,RACK.y+10,x+3,905,"#aab3bb");
+  for(const k of ["w","p"]){ const x=RACK.holes[k]; O(x-9,RACK.y-3,x+9,RACK.y+5,"#5f6a73","#3b434a"); }
+  X(d().rack,34,RACK.y-12,"#9aa3ab",11,"w");
+  addHot("rack","r",28,RACK.y-12,252,RACK.y+14);
 }
 function drawContainers(){
-  for(const k in CONT){
-    const [a,b,dd,e]=CONT[k], [ox,oy]=coff[k]||[0,0], ct=lab.containers[k], nk=(k==="pour"||k==="jug")?0:(e-b)*0.16;
+  for(const k of CONT_ORDER){
+    if(!B.contOn[k]) continue;
+    const cr=B.carry;
+    let [a,b,dd,e]=CONT[k], ox=0, oy=0;
+    if(cr&&cr.k==="cont"&&cr.key===k){ const m=B.mouseL; ox=m[0]-(a+dd)/2; oy=m[1]-(b+e)/2-20; }
     ctx.save(); ctx.translate(ox,oy);
-    const f=ct.vol/ct.cap;
-    if(f>=0.005){ const top=b+nk+(e-b-nk)*(1-Math.min(1,f));
-      R(a+2,top,dd-2,e-2,ct.kind==="pg"?"#c8bd72":ct.kind==="waste"?"#5d6b78":ct.kind==="mixed"?"#9fb07a":WRAMP[wi(ct.T)]); }
-    if(k==="jug"||k==="pour"){ R(a,b,dd,e,null,STEEL,2); if(k==="pour") A(dd-10,b+18,dd+26,e-18,270,180,STEEL,3); }
-    else { R(a,b+nk,dd,e,null,STEEL,2); R(a+(dd-a)*.32,b,dd-(dd-a)*.32,b+nk,null,STEEL,2); }
+    const ct=lab.containers[k], f=ct.vol/ct.cap;
+    const nk=(k==="pour"||k==="jug")?0:(e-b)*0.16;
+    const liq=ct.kind==="pg"?"#c8bd72":ct.kind==="waste"?"#5d7b92":ct.kind==="mixed"?"#9fb07a":WRAMP[wi(ct.T)];
+    if(k==="cold"){ /* insulated flask */
+      R(a,b+nk,dd,e,"#8a9aa8","#5b6873",2); R(a+4,b+nk+6,dd-4,e-6,"#1a2530");
+      if(f>=0.005){ const top=b+nk+6+(e-b-nk-12)*(1-Math.min(1,f)); R(a+6,top,dd-6,e-8,liq); }
+      R(a+(dd-a)*.25,b,dd-(dd-a)*.25,b+nk,"#5b6873"); R(a+(dd-a)*.2,b-6,dd-(dd-a)*.2,b,"#394650");
+    } else if(k==="jug"){ /* wide tub */
+      P([a,b,dd,b,dd-10,e,a+10,e],"rgba(220,230,236,0.18)","#b8c4cc",2);
+      if(f>=0.005){ const top=e-(e-b-4)*Math.min(1,f*1.0); P([a+8,top,dd-8,top,dd-12,e-2,a+12,e-2],liq); }
+    } else if(k==="pour"){ /* jug with a handle */
+      P([a,b,dd-6,b,dd-12,e,a+6,e],"rgba(220,230,236,0.18)","#b8c4cc",2);
+      if(f>=0.005){ const top=b+(e-b)*(1-Math.min(1,f)); P([a+2+(top-b)*0.07,top,dd-8-(top-b)*0.07,top,dd-12,e-2,a+7,e-2],liq); }
+      A(dd-18,b+16,dd+22,e-26,270,180,"#b8c4cc",4);
+    } else { /* bottles */
+      R(a,b+nk,dd,e,"rgba(220,230,236,0.14)","#b8c4cc",2);
+      if(f>=0.005){ const top=b+nk+(e-b-nk)*(1-Math.min(1,f)); R(a+2,top,dd-2,e-2,liq); }
+      R(a+(dd-a)*.3,b,dd-(dd-a)*.3,b+nk,"rgba(220,230,236,0.14)","#b8c4cc",2);
+      R(a+(dd-a)*.26,b-8,dd-(dd-a)*.26,b,k==="pg"?"#e0e0e0":"#2f7fbf");
+      if(k==="pg"){ X("PG",(a+dd)/2,(b+e)/2+8,"#4b4b4b",14,"c",true); X("100mL",(a+dd)/2,(b+e)/2+26,"#4b4b4b",10,"c"); }
+    }
     ctx.restore();
-    X(d().cont[k],(a+dd)/2,b-18,DIM,12,"c");
+    X(d().cont[k],(a+dd)/2+ox,(k==="jug"?e+10:b-18)+oy,"#e8eef2",11,"c");
     addHot("cont_"+k,"r",a+ox,b+oy,dd+ox,e+oy);
   }
 }
 function drawHoses(){
   for(const k of ["A","C","D"]){
     const conn=lab.hconn[k], [px,py]=k==="D"?SYR_PORT:HOSE_PORT[k];
-    O(px-7,py-11,px+7,py+11,conn?"#2f7fbf":"#5c6a74",conn?"#8fc6e8":"#8a949c",2);
-    addHot("port"+k,"c",px,py,12);
+    O(px-8,py-12,px+8,py+12,conn?"#2f7fbf":"#5c6a74",conn?"#8fc6e8":"#8a949c",2);
+    addHot("port"+k,"c",px,py,13);
     if(k==="D") continue;
     let sx=px, sy=py; if(!conn){ sx-=26; sy+=34; }
-    const [hx,hy]=hose[k], sag=Math.min(Math.max(sy,hy)+70,1000);
+    const cr=B.carry, held=cr&&cr.k==="hose"&&cr.key===k;
+    let [hx,hy]=held?B.mouseL:B.hose[k];
+    const inside=k==="A"?lab.hoseAin:lab.hoseCin;
+    if(!held&&inside&&B.contOn[inside]){ const [a,b,dd,e]=CONT[inside]; hx=(a+dd)/2; hy=b+(e-b)*0.3; }
+    const sag=Math.min(Math.max(sy,hy)+70,995);
+    L([sx,sy,(sx+hx)/2,sag,hx,hy],"#0a0c0f",8,true);
     L([sx,sy,(sx+hx)/2,sag,hx,hy],k==="A"?"#3aa0e0":"#e2721f",5,true);
-    O(hx-8,hy-8,hx+8,hy+8,"#c9d4de","#6f7c88"); X("hose "+k,hx,hy-17,DIM,12);
+    O(hx-8,hy-8,hx+8,hy+8,"#c9d4de","#6f7c88"); X("hose "+k,hx,hy-17,"#e8eef2",12);
     if(lab.clip[k]) P([hx-13,hy-3,hx+13,hy-3,hx+10,hy+14,hx-10,hy+14],"#3a4148","#8fa6b8");
-    addHot("hose"+k,"c",hx,hy,12);
+    addHot("hose"+k,"c",hx,hy,13);
   }
+  const [tx,ty]=HOSE_D_END;
+  L([SYR_PORT[0]+6,SYR_PORT[1]-4,tx-4,ty+6,tx,ty],"rgba(220,230,235,0.8)",5,true);
+  O(tx-6,ty-6,tx+6,ty+6,"#05080b","#8fa6b8");
+}
+function syrPos(k){
+  const s=lab.syr[k], cr=B.carry;
+  if(cr&&cr.k==="syr"&&cr.key===k){ const m=B.mouseL; return [m[0]-SW/2,m[1]-SH-20]; }
+  return [s.x,s.y];
+}
+function drawSyringes(){
+  for(const k of ["w","p"]){
+    if(!B.syrOn[k]) continue;
+    const s=lab.syr[k], [x,y]=syrPos(k);
+    R(x,y,x+SW,y+SH,"rgba(210,225,236,0.16)","#b9c6d2",2);
+    for(let i=0;i<=10;i++){ const yy=y+SH-SH*i/10; L([x+SW,yy,x+SW-(i%5===0?11:7),yy],"#93a3b2",1);
+      if(i%2===0) X(String(i*10),x+SW-14,yy,"#93a3b2",9,"e"); }
+    if(s.vol>0.2){ const top=y+SH-SH*Math.min(1,s.vol/s.cap);
+      R(x+2,top,x+SW-2,y+SH-2,s.kind==="pg"?"#c8bd72":s.kind==="mixed"?"#9fb07a":WRAMP[wi(s.T)]); }
+    P([x+SW/2-7,y+SH,x+SW/2+7,y+SH,x+SW/2+3,y+SH+20,x+SW/2-3,y+SH+20],"#4f9ad0","#8fc0e6");
+    R(x-8,y+2,x+SW+8,y+8,"rgba(210,225,236,0.3)","#b9c6d2");
+    addHot("syr_"+k,"r",x,y,x+SW,y+SH+20);
+    if(s.hasPlunger){ const py=y+SH-SH*Math.min(1,s.plunger/s.cap);
+      R(x+2,py-9,x+SW-2,py,"#2b2f33","#98a5b1"); L([x+SW/2,py-9,x+SW/2,y-50],"#dfe5ea",6);
+      R(x-11,y-62,x+SW+11,y-50,"#dfe5ea","#9aa6b0");
+      addHot("plg_"+k,"r",x-11,y-66,x+SW+11,y-46); }
+    X(d().syr[k],x+SW/2,y-74,"#e8eef2",12);
+    if(s.attached&&!(B.carry&&B.carry.key===k)){
+      const bx=x+SW+10, by=y+SH-34;
+      R(bx,by,bx+104,by+24,"#1c232b","#3a4148"); X(s.hasPlunger?d().remove:d().refit,bx+52,by+12,INK,11);
+      addHot("plgtoggle_"+k,"r",bx,by,bx+104,by+24);
+    }
+  }
+}
+function drawTargets(){
+  const cr=B.carry; if(!cr) return;
+  const dash=(a,b,c,e)=>{ ctx.setLineDash([7,5]); R(a,b,c,e,"rgba(242,193,78,0.08)","#f2c14e",2); ctx.setLineDash([]); };
+  if(cr.k==="new"){ const [a,b,c,e]=CONT[cr.id]; dash(a-6,b-10,c+6,e+4); }
+  if(cr.k==="syr"){
+    for(const [x,y] of [SYR_PORT,HOSE_D_END]){ ctx.setLineDash([4,4]); O(x-22,y-22,x+22,y+22,null,"#f2c14e",2); ctx.setLineDash([]); }
+    const hx=RACK.holes[cr.key]; ctx.setLineDash([4,4]); O(hx-20,RACK.y-20,hx+20,RACK.y+20,null,"#f2c14e",2); ctx.setLineDash([]);
+  }
+  const m=B.mouseL;
+  const lbl=cr.k==="hose"?"hose "+cr.key:cr.k==="cont"?d().contName[cr.key]:cr.k==="syr"?d().syr[cr.key]:d().trayItems[cr.id];
+  X("⇱ "+lbl,m[0]+18,m[1]-16,"#f2c14e",14,"w",true);
+}
+function draw(){
+  hot=[];
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle="#20252c"; ctx.fillRect(0,0,CW,CH);
+  const k=kk();
+  ctx.setTransform(DPR*k,0,0,DPR*k,DPR*CAM.pan[0],DPR*CAM.pan[1]);
+  drawRoom();
+  drawModule();
+  drawPlumbing();
+  drawBoard();
+  drawRack();
+  apparatusBack(); liquids(); apparatusFront();
+  drawLeads(); drawValveE();
+  drawContainers();
+  drawHoses();
+  drawSyringes();
+  drawTargets();
 }
 function drawValveE(){
   const [ex,ey]=EXY;
@@ -815,121 +1019,213 @@ function drawValveE(){
   X("E",ex-20,ey-22,INK,15,"e");
   addHot("valveE","r",ex-18,ey-30,ex+30,ey+20);
 }
-function drawSyringes(){
-  for(const k of ["w","p"]){
-    const s=lab.syr[k], x=s.x, y=s.y;
-    R(x,y,x+SW,y+SH,"#0f151b","#b9c6d2",2);
-    for(let i=0;i<=10;i++){ const yy=y+SH-SH*i/10; L([x+SW,yy,x+SW-(i%5===0?11:7),yy],"#93a3b2",1); }
-    if(s.vol>0.2){ const top=y+SH-SH*Math.min(1,s.vol/s.cap);
-      R(x+2,top,x+SW-2,y+SH-2,s.kind==="pg"?"#c8bd72":s.kind==="mixed"?"#9fb07a":WRAMP[wi(s.T)]); }
-    P([x+SW/2-7,y+SH,x+SW/2+7,y+SH,x+SW/2+3,y+SH+20,x+SW/2-3,y+SH+20],"#4f9ad0","#8fc0e6");
-    addHot("syr_"+k,"r",x,y,x+SW,y+SH+20);
-    if(s.hasPlunger){ const py=y+SH-SH*Math.min(1,s.plunger/s.cap);
-      R(x+2,py-9,x+SW-2,py,"#5b6772","#98a5b1"); L([x+SW/2,py-9,x+SW/2,y-50],"#98a5b1",6);
-      R(x-11,y-62,x+SW+11,y-50,"#98a5b1","#c4ced8");
-      addHot("plg_"+k,"r",x-11,y-62,x+SW+11,y-50); addHot("plg_"+k,"r",x+2,py-12,x+SW-2,py+2); }
-    X(d().syr[k],x+SW/2,y-74,DIM,12);
-    R(x-12,y+SH+28,x+SW+12,y+SH+50,"#1c232b","#3a4148");
-    X(s.hasPlunger?d().remove:d().refit,x+SW/2,y+SH+39,INK,12);
-    addHot("plgtoggle_"+k,"r",x-12,y+SH+28,x+SW+12,y+SH+50);
+
+/* ══════════════════════════════════════════════════════════════
+   6.  TRAY AND CARDS
+   ══════════════════════════════════════════════════════════════ */
+let trayCells=[];
+function trayOut(name){ return SYR_KEY[name]?B.syrOn[SYR_KEY[name]]:B.contOn[name]; }
+function trayIcon(c,name,x,y,dim){
+  const g=dim?"#474d54":null;
+  const R2=(a,b,e,f,fill,out)=>{ if(fill){c.fillStyle=g||fill;c.fillRect(a,b,e-a,f-b);} if(out){c.strokeStyle=out;c.lineWidth=1;c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
+  if(SYR_KEY[name]){ R2(x-15,y-4,x+11,y+4,"#dfe8ef","#9aa6b0"); R2(x+11,y-1,x+16,y+1,"#4f9ad0"); R2(x-19,y-6,x-15,y+6,"#dfe8ef");
+    if(name==="syrP") R2(x-8,y-2,x+4,y+2,"#c8bd72"); else R2(x-8,y-2,x+4,y+2,"#2f8fc4"); }
+  else if(name==="pg"){ R2(x-6,y-8,x+6,y+12,"#e9edf0","#9aa6b0"); R2(x-3,y-12,x+3,y-8,"#ddd"); R2(x-5,y+2,x+5,y+11,"#c8bd72"); }
+  else if(name==="cold"){ R2(x-7,y-12,x+7,y+12,"#8a9aa8","#5b6873"); R2(x-4,y-15,x+4,y-12,"#394650"); }
+  else if(name==="room"){ R2(x-8,y-9,x+8,y+13,"#e9edf0","#9aa6b0"); R2(x-7,y-2,x+7,y+12,"#2f8fc4"); R2(x-3,y-14,x+3,y-9,"#2f7fbf"); }
+  else if(name==="pour"){ R2(x-9,y-9,x+7,y+12,"#e9edf0","#9aa6b0"); c.strokeStyle=g||"#9aa6b0"; c.lineWidth=2; c.beginPath(); c.arc(x+8,y+1,6,-1.3,1.3); c.stroke(); }
+  else if(name==="jug"){ R2(x-15,y-5,x+15,y+9,"#e9edf0","#9aa6b0"); }
+}
+function drawTray(){
+  const c=trayCtx;
+  c.setTransform(DPR,0,0,DPR,0,0);
+  c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[];
+  let y=6; const wd=TRW-12;
+  for(const name of TRAY_ORDER){
+    const out=trayOut(name), cr=B.carry;
+    const sel=cr&&((cr.k==="new"&&cr.id===name)||(cr.k==="syr"&&SYR_KEY[name]===cr.key&&cr.fromTray));
+    c.fillStyle=out?"#171a1e":"#1f242b"; c.fillRect(6,y,wd,TRAY_ROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TRAY_ROW-5);
+    trayIcon(c,name,28,y+(TRAY_ROW-4)/2,out);
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=out?"#868e96":"#e8eef2"; c.fillText(d().trayItems[name],52,y+15);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(out?d().trayOut:d().trayTake,52,y+31);
+    trayCells.push([name,y,y+TRAY_ROW-4]); y+=TRAY_ROW;
   }
+  c.font='10.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-function drawFooter(){
-  const t=lab.t, h=String(Math.floor(t/3600)).padStart(2,"0"), m=String(Math.floor(t%3600/60)).padStart(2,"0"), s=String(Math.floor(t%60)).padStart(2,"0");
-  X(d().status(h,m,s,speed,running),18,FOOT+14,"#8fa2b3",14,"w");
-  const fresh=lab.msg&&(lab.t-lab.msgT)<12*Math.max(1,speed/4);
-  if(fresh){ const f=d().m[lab.msg.k];
-    X(typeof f==="function"?f(...lab.msg.a):f,18,FOOT+36,WARN.has(lab.msg.k)?"#e0a04a":"#6fa8dc",14,"w"); }
-  X(d().foot,18,FOOT+60,"#4d5760",12,"w");
-  X(d().session(lab.seed),1906,FOOT+4,"#39424b",12,"e");
-  let x=1660; const bw=56, bh=26;
-  R(1580,FOOT+8,1638,FOOT+8+bh,"#1c232b","#3a4148"); X(running?"||":"▶",1609,FOOT+8+bh/2,INK,14);
-  addHot("runpause","r",1580,FOOT+8,1638,FOOT+8+bh);
-  for(const sp of [1,10,60,300]){ R(x,FOOT+8,x+bw,FOOT+8+bh,sp===speed?"#2a4a6e":"#1c232b","#3a4148");
-    X("×"+sp,x+bw/2,FOOT+8+bh/2,INK,13); addHot("spd"+sp,"r",x,FOOT+8,x+bw,FOOT+8+bh); x+=bw+6; }
-}
-function draw(){
-  hot=[];
-  ctx.fillStyle=BENCH; ctx.fillRect(0,0,LW,LH);
-  apparatusBack(); liquids(); apparatusFront();
-  /* the three leads from the head of the assembly to the module's side panel,
-     run behind the module */
-  [[26,"#111417"],[46,"#111417"],[66,"#54b6e8"]].forEach(([dx,col],i)=>
-    L([CX+dx,CY_COVER-22,CX+W_OC_O+30+i*12,YTOP-150,SIDE[0]-(26-i*8),SIDE[1]+(26+i*22),SIDE[0]+8,SIDE[1]+(40+i*26)],col,5,true));
-  drawCards(); drawFig3(); drawFig5(); drawFig4(); drawFig8(); drawFig6();
-  drawContainers(); drawValveE(); drawHoses(); drawSyringes(); drawFooter();
+trayCv.addEventListener("click",e=>{
+  const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  for(const [name,y0,y1] of trayCells){
+    if(y<y0||y>y1) continue;
+    cancelCarry(true);
+    if(trayOut(name)){ say(d().trayOut); return; }
+    if(SYR_KEY[name]){ B.carry={k:"syr",key:SYR_KEY[name],fromTray:true}; say(d().m.syrTake(d().syr[SYR_KEY[name]])); }
+    else { B.carry={k:"new",id:name}; say(d().m.placeIt(d().trayItems[name])); }
+    drawTray(); return;
+  }
+});
+function drawCards(){
+  const c=cardCtx, W=CRW, H=CRH, s=W/270;
+  c.setTransform(DPR*s,0,0,DPR*s,0,0);
+  c.fillStyle="#12161b"; c.fillRect(0,0,270,H/s);
+  const txt=(t,x,y,col,sz,al,font)=>{ c.font=sz+"px "+(font||'"Malgun Gothic",sans-serif'); c.fillStyle=col; c.textAlign=al||"left"; c.textBaseline="middle"; c.fillText(t,x,y); };
+  /* Fig. 18 */
+  txt("Fig. 18",10,14,"#6b757f",11);
+  c.strokeStyle=ACRYL; c.lineWidth=1.5; c.strokeRect(24,26,40,84);
+  c.fillStyle="#2f8fc4"; c.fillRect(25,72,38,37);
+  c.strokeStyle=INK; c.lineWidth=1; c.beginPath(); c.moveTo(74,27); c.lineTo(74,71); c.moveTo(74,73); c.lineTo(74,109); c.stroke();
+  txt("H",82,49,INK,14); txt("h",82,91,INK,14);
+  /* Fig. 15 */
+  txt("Fig. 15",140,14,"#6b757f",11);
+  const valve=(vx,vy,open)=>{ c.fillStyle="#c6ced6"; c.fillRect(vx-18,vy-7,36,14); c.beginPath(); c.arc(vx,vy,10,0,7); c.fillStyle="#7d868f"; c.fill();
+    c.fillStyle=open?"#4ad07a":"#d95c4a"; if(open) c.fillRect(vx-3,vy-26,6,18); else c.fillRect(vx+8,vy-3,18,6); };
+  valve(160,52,true); txt(d().vOpen,190,52,DIM,12);
+  valve(160,98,false); txt(d().vShut,190,98,DIM,12);
+  /* Fig. 17 */
+  txt("Fig. 17",10,138,"#6b757f",11);
+  const cx=62, cy=190, r=44;
+  for(const f of [1,0.91,0.545,0.455]){ c.beginPath(); c.arc(cx,cy,r*f,0,7); c.strokeStyle=ACRYL; c.lineWidth=1.3; c.stroke(); }
+  d().fig17.forEach((t,i)=>txt(t,114,168+i*20,"#9fb0bf",10.5,"left",'ui-monospace,Consolas,monospace'));
 }
 
 /* ══════════════════════════════════════════════════════════════
-   6.  INTERACTION
+   7.  INTERACTION
    ══════════════════════════════════════════════════════════════ */
-function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
-cv.addEventListener("contextmenu",e=>e.preventDefault());
-cv.addEventListener("pointerdown",e=>{
-  const [x,y]=lpos(e), t=hit(x,y); if(!t) return;
-  cv.setPointerCapture(e.pointerId);
+function say(s,warn){ B.note={s,warn:!!warn,t:performance.now(),lt:lab.msg?lab.msgT:-1}; renderStatus(); }
+function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+function contAt(x,y,except){
+  for(const k of CONT_ORDER){ if(!B.contOn[k]||k===except) continue; const [a,b,dd,e]=CONT[k];
+    if(x>=a-12&&x<=dd+12&&y>=b-12&&y<=e+12) return k; }
+  return null;
+}
+function startCarry(t,drag){
+  if(t.startsWith("syr_")){ const k=t.slice(4), s=lab.syr[k]; s.attached=null; s.placed=null; B.carry={k:"syr",key:k,drag}; say(d().m.syrTake(d().syr[k])); }
+  else if(t.startsWith("cont_")){ B.carry={k:"cont",key:t.slice(5),drag}; say(d().m.contTake(d().contName[t.slice(5)])); }
+  else if(t.startsWith("hose")){ const k=t[4]; B.carry={k:"hose",key:k,drag};
+    if(k==="A") lab.hoseAin=null; else lab.hoseCin=null; lab.clip[k]=false; say(d().m.hoseTake(k)); }
+}
+function placeCarry(p){
+  const cr=B.carry, [x,y]=p, t=d().m;
+  if(cr.k==="new"){
+    const [a,b,dd,e]=CONT[cr.id];
+    if(x>=a-14&&x<=dd+14&&y>=b-40&&y<=e+14){ B.contOn[cr.id]=true; B.carry=null; say(t.placed(d().trayItems[cr.id])); drawTray(); }
+    else say(t.noFit,true);
+    return;
+  }
+  if(cr.k==="cont"){
+    const tgt=contAt(x,y,cr.key);
+    B.carry=null;
+    if(tgt) lab.pour(cr.key,tgt);
+    return;
+  }
+  if(cr.k==="hose"){
+    const found=contAt(x,y,null), k=cr.key;
+    if(k==="A") lab.hoseAin=found; else lab.hoseCin=found;
+    lab.clip[k]=false; B.hose[k]=[x,y]; B.carry=null;
+    if(found) lab.say("hoseTo",k,found,true); else say(t.hoseDown(k));
+    return;
+  }
+  if(cr.k==="syr"){
+    const k=cr.key, s=lab.syr[k], [hx,hy]=HOSE_D_END;
+    const nx=x, ny=y;
+    const put=(ax,ay)=>{ s.x=ax-SW/2; s.y=ay-SH-20; B.syrOn[k]=true; B.carry=null; drawTray(); };
+    if(Math.hypot(nx-hx,ny-hy)<20){ put(hx,hy); s.attached="Dh"; s.placed="D"; lab.say("syrDirect"); return; }
+    const dPort=Math.hypot(nx-SYR_PORT[0],ny-SYR_PORT[1]);
+    if(dPort<22){ put(SYR_PORT[0],SYR_PORT[1]); s.attached="D"; s.placed="D"; lab.say("syrD"); return; }
+    if(dPort<70||Math.hypot(nx-hx,ny-hy)<70){ lab.say("syrNotHome"); return; }
+    const hole=RACK.holes[k];
+    if(Math.hypot(nx-hole,ny-RACK.y)<26){ put(hole,RACK.y+6); s.attached=null; s.placed="rack"; say(t.syrRack(d().syr[k])); return; }
+    const c=contAt(nx,ny,null);
+    if(c){ const [a,b,dd,e]=CONT[c]; const yy=Math.max(ny,b+10); put(nx,yy); s.attached=c; s.placed=c; lab.say("nozzleIn","__syr"+k,c); return; }
+    say(t.noFit,true);
+  }
+}
+function cancelCarry(silent){
+  const cr=B.carry; if(!cr) return;
+  B.carry=null;
+  if(cr.k==="syr"){ const s=lab.syr[cr.key];
+    if(cr.fromTray){ B.syrOn[cr.key]=false; }
+    else { B.syrOn[cr.key]=false; s.attached=null; s.placed=null; if(!silent) say(d().m.returned(d().syr[cr.key])); } }
+  else if(cr.k==="hose"){ B.hose[cr.key]=HOSE_HOME[cr.key].slice(); if(!silent) say(d().m.hoseDown(cr.key)); }
+  drawTray();
+}
+function returnToTray(t){
+  if(t.startsWith("syr_")||t.startsWith("plg")){ const k=t.split("_")[1], s=lab.syr[k];
+    s.attached=null; s.placed=null; B.syrOn[k]=false; say(d().m.returned(d().syr[k])); }
+  else if(t.startsWith("cont_")){ const k=t.slice(5);
+    if(lab.hoseAin===k){ lab.hoseAin=null; lab.clip.A=false; B.hose.A=HOSE_HOME.A.slice(); }
+    if(lab.hoseCin===k){ lab.hoseCin=null; lab.clip.C=false; B.hose.C=HOSE_HOME.C.slice(); }
+    for(const sk of ["w","p"]) if(lab.syr[sk].attached===k){ lab.syr[sk].attached=null; lab.syr[sk].placed=null; B.syrOn[sk]=false; }
+    B.contOn[k]=false; say(d().m.returned(d().trayItems[k])); }
+  else if(t.startsWith("hose")){ const k=t[4]; if(k==="A") lab.hoseAin=null; else lab.hoseCin=null; lab.clip[k]=false;
+    B.hose[k]=HOSE_HOME[k].slice(); say(d().m.hoseDown(k)); }
+  drawTray();
+}
+function clickAction(t){
+  B.note=null;
   if(t.startsWith("btn")) lab.pressButton(+t[3]);
   else if(t==="power") lab.pressPower();
   else if(t==="pump") lab.pressPump();
   else if(t.startsWith("port")) lab.toggleHose(t[4]);
   else if(t.startsWith("valve")) lab.toggleValve(t[5]);
-  else if(t.startsWith("spd")) speed=+t.slice(3);
-  else if(t==="runpause") running=!running;
   else if(t.startsWith("plgtoggle_")) lab.removePlunger(t[10]);
-  else if(t.startsWith("plg_")) dragging=["plunger",t[4],y];
-  else if(t.startsWith("syr_")){ const k=t.slice(4); dragging=["syringe",k,[x-lab.syr[k].x,y-lab.syr[k].y]]; }
-  else if(t.startsWith("hose")) dragging=["hose",t[4],[x,y]];
-  else if(t.startsWith("cont_")){ const k=t.slice(5); coff[k]=[0,0]; dragging=["cont",k,[x,y]]; }
-});
-cv.addEventListener("pointermove",e=>{
-  if(!dragging) return; const [x,y]=lpos(e), [kind,key,ref]=dragging;
-  if(kind==="hose") hose[key]=[x,y];
-  else if(kind==="syringe"){ lab.syr[key].x=x-ref[0]; lab.syr[key].y=y-ref[1]; }
-  else if(kind==="plunger"){ const dd=(ref-y)*(100/SH); if(Math.abs(dd)>=0.5){ lab.syringePull(key,dd); dragging=[kind,key,y]; } }
-  else if(kind==="cont") coff[key]=[x-ref[0],y-ref[1]];
-});
-cv.addEventListener("pointerup",e=>{
-  if(!dragging) return; const [x,y]=lpos(e), [kind,key,ref]=dragging; dragging=null;
-  if(kind==="syringe") snap(key);
-  else if(kind==="hose"){
-    const [hx,hy]=hose[key];
-    if(Math.abs(x-ref[0])<5&&Math.abs(y-ref[1])<5){
-      const inside=key==="A"?lab.hoseAin:lab.hoseCin;
-      if(inside) lab.toggleClip(key); else lab.say("hoseFirst");
-      return;
-    }
-    let found=null;
-    for(const ck in CONT){ const [a,b,dd,f]=CONT[ck]; if(hx>=a-6&&hx<=dd+6&&hy>=b-6&&hy<=f+6) found=ck; }
-    if(key==="A") lab.hoseAin=found; else lab.hoseCin=found;
-    lab.clip[key]=false;
-    if(found){ const [a,b,dd,f]=CONT[found]; hose[key]=[(a+dd)/2,b+(f-b)*0.3]; }
-    lab.say("hoseTo",key,found||"__bench",!!found);
-  } else if(kind==="cont"){
-    let tgt=null;
-    for(const ck in CONT){ const [a,b,dd,f]=CONT[ck]; if(ck!==key&&x>=a&&x<=dd&&y>=b&&y<=f) tgt=ck; }
-    coff[key]=[0,0];
-    if(tgt) lab.pour(key,tgt);
-  }
-});
-function snap(key){
-  const s=lab.syr[key], nx=s.x+SW/2, ny=s.y+SH+20, [hx,hy]=HOSE_D_END;
-  if(Math.hypot(nx-hx,ny-hy)<20){ s.attached="Dh"; s.placed="D"; s.x=hx-SW/2; s.y=hy-SH-20; lab.say("syrDirect"); return; }
-  const dPort=Math.hypot(nx-SYR_PORT[0],ny-SYR_PORT[1]), dHose=Math.hypot(nx-hx,ny-hy);
-  if(dPort<20){ s.attached="D"; s.placed="D"; s.x=SYR_PORT[0]-SW/2; s.y=SYR_PORT[1]-SH-20; lab.say("syrD"); return; }
-  s.placed=null;
-  if(Math.min(dPort,dHose)<70){ lab.say("syrNotHome"); s.attached=null; return; }
-  for(const ck in CONT){ const [a,b,dd,e]=CONT[ck];
-    if(nx>=a-12&&nx<=dd+12&&ny>=b-12&&ny<=e+12){ s.attached=ck; lab.say("nozzleIn","__syr"+key,ck); return; } }
-  s.attached=null;
+  else return false;
+  return true;
 }
+function onDown(p){
+  const L_=toLog(...p); B.mouse=p; B.mouseL=L_;
+  if(B.carry&&!B.carry.drag){ placeCarry(L_); return; }
+  const t=hit(...L_);
+  if(t&&clickAction(t)) return;
+  if(t&&t.startsWith("plg_")){ B.plDrag=[t.slice(4),L_[1]]; return; }
+  if(t&&(t.startsWith("syr_")||t.startsWith("cont_")||t.startsWith("hose"))){ B.down={t,p0:p}; return; }
+  B.pan0=[p[0],p[1],CAM.pan[0],CAM.pan[1]]; cv.classList.add("dragging");
+}
+function onMove(p){
+  B.mouse=p; B.mouseL=toLog(...p);
+  if(B.plDrag){ const [k,y0]=B.plDrag, y=B.mouseL[1], dd=(y0-y)*(100/SH);
+    if(Math.abs(dd)>=0.5){ lab.syringePull(k,dd); B.plDrag=[k,y]; } return; }
+  if(B.down&&Math.hypot(p[0]-B.down.p0[0],p[1]-B.down.p0[1])>6){ startCarry(B.down.t,true); B.down=null; return; }
+  if(B.pan0){ CAM.touched=true; CAM.pan=[B.pan0[2]+p[0]-B.pan0[0],B.pan0[3]+p[1]-B.pan0[1]]; }
+}
+function onUp(p){
+  const L_=toLog(...p);
+  if(B.down){ const t=B.down.t; B.down=null;
+    if(t.startsWith("hose")){ const k=t[4], inside=k==="A"?lab.hoseAin:lab.hoseCin;
+      if(inside){ lab.toggleClip(k); return; } }
+    startCarry(t,false); return; }
+  if(B.carry&&B.carry.drag){ B.carry.drag=false; placeCarry(L_); if(B.carry&&B.carry.k==="syr"){ /* nowhere to go: keep holding */ } }
+  B.plDrag=null; B.pan0=null; cv.classList.remove("dragging");
+}
+cv.addEventListener("mousedown",e=>{ if(e.button===0) onDown(mousePos(e)); });
+window.addEventListener("mousemove",e=>{ if(e.target===cv||B.down||B.plDrag||B.pan0||(B.carry&&B.carry.drag)) onMove(mousePos(e)); });
+window.addEventListener("mouseup",e=>{ if(e.button===0) onUp(mousePos(e)); });
+cv.addEventListener("contextmenu",e=>{ e.preventDefault();
+  if(B.carry){ const cr=B.carry;
+    if(cr.k==="cont"){ B.carry=null; return; }
+    cancelCarry(false); return; }
+  const t=hit(...toLog(...mousePos(e)));
+  if(t&&(t.startsWith("syr_")||t.startsWith("plg")||t.startsWith("cont_")||t.startsWith("hose"))) returnToTray(t);
+});
 cv.addEventListener("wheel",e=>{
-  const [x,y]=lpos(e), t=hit(x,y); if(!t) return;
-  const dir=e.deltaY<0?1:-1;
-  if(t.startsWith("syr_")||t.startsWith("plg")){ e.preventDefault(); lab.syringePull(t.split("_")[1],dir*(e.shiftKey?5:1)); }
-  else if(t.startsWith("valve")){ e.preventDefault(); const v=t[5]; if(lab.valve[v]!==(dir>0)) lab.toggleValve(v); }
-  else if(t.startsWith("spd")||t==="runpause"){ e.preventDefault(); const sp=[1,10,60,300]; let i=sp.indexOf(speed); if(i<0) i=0; speed=sp[Math.max(0,Math.min(3,i+dir))]; }
+  e.preventDefault();
+  const p=mousePos(e), L_=toLog(...p), t=hit(...L_), dir=e.deltaY<0?1:-1;
+  if(t&&(t.startsWith("syr_")||t.startsWith("plg_"))){ lab.syringePull(t.split("_")[1],dir*(e.shiftKey?5:1)); return; }
+  if(t&&t.startsWith("valve")){ const v=t[5]; if(lab.valve[v]!==(dir>0)) lab.toggleValve(v); return; }
+  CAM.z=Math.max(0.7,Math.min(6,CAM.z*(dir>0?1.15:1/1.15))); CAM.touched=true;
+  const k=kk(); CAM.pan=[p[0]-L_[0]*k,p[1]-L_[1]*k];
 },{passive:false});
-document.addEventListener("keydown",e=>{ if(e.code==="Space"&&e.target.tagName!=="INPUT"){ e.preventDefault(); running=!running; } });
+cv.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; e.preventDefault();
+  const r=cv.getBoundingClientRect(); onDown([e.touches[0].clientX-r.left,e.touches[0].clientY-r.top]); },{passive:false});
+cv.addEventListener("touchmove",e=>{ if(e.touches.length!==1) return; e.preventDefault();
+  const r=cv.getBoundingClientRect(); onMove([e.touches[0].clientX-r.left,e.touches[0].clientY-r.top]); },{passive:false});
+cv.addEventListener("touchend",()=>onUp(B.mouse),{passive:true});
+document.addEventListener("keydown",e=>{ if(e.code==="Space"&&e.target.tagName!=="INPUT"&&e.target.tagName!=="BUTTON"){ e.preventDefault(); running=!running; renderSpeeds(); } });
+$("fitBtn").onclick=()=>{ CAM.z=1; CAM.touched=false; fit(); };
 
 /* message arguments that name things are translated when shown */
 const baseM={ko:{...T.ko.m},en:{...T.en.m}};
@@ -938,36 +1234,61 @@ for(const l of ["ko","en"]){
   T[l].m.nozzleIn=(s,c)=>baseM[l].nozzleIn(T[l].syr[s.replace("__syr","")],T[l].contName[c]);
   T[l].m.poured=(v,a,b)=>baseM[l].poured(v,T[l].contName[a],T[l].contName[b]);
 }
+let lastLabMsg=null;
+function renderStatus(){
+  const L_=[], t=d();
+  if(!Object.values(B.contOn).some(Boolean)&&!B.syrOn.w&&!B.syrOn.p) L_.push([t.st.nothing,false]);
+  if(!lab.power) L_.push([t.st.off,false]);
+  if(!running) L_.push([t.st.paused,true]);
+  const fresh=lab.msg&&(lab.t-lab.msgT)<12*Math.max(1,speed/4);
+  const labNote=fresh?{s:(()=>{ const f=t.m[lab.msg.k]; return typeof f==="function"?f(...lab.msg.a):f; })(),warn:WARN.has(lab.msg.k),t:lab.msgT}:null;
+  const own=B.note&&performance.now()-B.note.t<9000&&!(lab.msg&&lab.msgT>B.note.lt)?B.note:null;
+  for(const n of [own,labNote]) if(n&&n.s) L_.push(["• "+n.s,n.warn]);
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L_){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
+}
+function renderSpeeds(){
+  const box=$("speeds"); box.innerHTML="";
+  for(const sp of [1,10,60,300]){ const b=document.createElement("button"); b.textContent="×"+sp; if(sp===speed) b.className="on";
+    b.onclick=()=>{ speed=sp; renderSpeeds(); }; box.appendChild(b); }
+  const p=document.createElement("button"); p.textContent=running?"❚❚":"▶"; p.title=running?d().pause:d().run;
+  if(!running) p.className="on"; p.onclick=()=>{ running=!running; renderSpeeds(); }; box.appendChild(p);
+}
 
-function setTab(k){ $("tab-lab").className=k==="lab"?"on":""; $("tab-info").className=k==="info"?"on":"";
-  $("cv").hidden=k!=="lab"; $("info").hidden=k!=="info"; $("t-hint").hidden=k!=="lab"; if(k==="lab") layoutCanvas(); }
-$("tab-lab").onclick=()=>setTab("lab"); $("tab-info").onclick=()=>setTab("info");
+/* ══════════════════════════════════════════════════════════════
+   8.  LANGUAGE
+   ══════════════════════════════════════════════════════════════ */
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
-  $("tab-lab").textContent=t.tabLab; $("tab-info").textContent=t.tabInfo; $("t-hint").textContent=t.hint;
-  $("info").innerHTML=INFO[lang];
+  $("t-benchcap").textContent=t.benchcap; $("t-tray").textContent=t.tray;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-cards").textContent=t.hCards; $("t-h-view").textContent=t.hView; $("fitBtn").textContent=t.fitBtn;
+  $("t-howto").textContent=t.howto; $("session").textContent=t.session(lab.seed);
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2026 E — 이상 기체, 증기압, 열전도 · HaslaLab":"IPhO 2026 E — Ideal Gas, Vapor Pressure and Heat Conduction · HaslaLab";
+  drawTray(); drawCards(); renderSpeeds(); renderStatus();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 
 /* ══════════════════════════════════════════════════════════════
-   7.  MAIN LOOP  —  1 s physics steps, at most 20 ms of work a frame
+   9.  MAIN LOOP  —  1 s physics steps, at most 20 ms of work a frame
    ══════════════════════════════════════════════════════════════ */
-let last=performance.now(), acc=0;
+let last=performance.now(), acc=0, ui=0;
 function tick(){
   const now=performance.now(); let real=(now-last)/1000; last=now; if(real>0.25) real=0.25;
   if(running){
     acc+=real*speed; const budget=performance.now()+20;
     while(acc>0){ const dt=acc>1?1:acc; lab.step(dt); acc-=dt; if(performance.now()>budget){ acc=0; break; } }
   }
-  if(!$("cv").hidden) draw();
+  if(CW>10) draw();
+  const tt=lab.t; $("clock").textContent=[Math.floor(tt/3600),Math.floor(tt%3600/60),Math.floor(tt%60)].map(v=>String(v).padStart(2,"0")).join(":");
+  if(++ui%8===0) renderStatus();
   requestAnimationFrame(tick);
 }
-window.addEventListener("resize",layoutCanvas);
-applyLang(); layoutCanvas(); requestAnimationFrame(tick);
+window.addEventListener("resize",layout);
+layout(); applyLang(); requestAnimationFrame(tick);
 </script>
   <script src="adfit.js"></script>
 </body>
