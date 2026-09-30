@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2019 E2 — 비데만–프란츠 법칙 · Wiedemann–Franz Law · HaslaLab</title>
+<meta name="description" content="IPhO 2019 실험 2번을 브라우저에서 실행합니다. 도체 튜브 속 자석의 낙하 시간을 재고, 구리·복합 막대를 가열해 8개 온도계와 전압계·전류계로 직접 측정합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2019 E2 — 비데만–프란츠 법칙 · Wiedemann–Franz Law">
+<meta property="og:description" content="IPhO 2019 실험 2번을 브라우저에서 실행합니다. 자석 낙하 시간과 막대의 온도 분포를 실제 계기로 직접 측정합니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1560px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1100px){ .wrap{flex-direction:column} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1100px){ .panel{position:static;flex:1 1 auto;width:100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1560px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ═══════════ STAGE ═══════════ -->
+  <div class="stage">
+    <div class="card">
+      <div class="tabs">
+        <button id="tab-bench" class="on"></button>
+        <button id="tab-tubes"></button>
+        <button id="tab-info"></button>
+      </div>
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+      <div class="info" id="info" hidden></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ CONTROLS ═══════════ -->
+  <aside class="panel">
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+
+    <h2 id="t-h-box"></h2>
+    <button id="redBtn"></button>
+    <label class="chk"><input type="checkbox" id="latch"><span id="t-latch"></span></label>
+    <p class="hint" id="t-boxhint"></p>
+
+    <h2 id="t-h-wire"></h2>
+    <p class="hint" id="t-wirehint"></p>
+    <button id="unwire" style="width:100%"></button>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n  —  language is switched by a button, no page reload
+   ══════════════════════════════════════════════════════════════ */
+const T = {
+  ko:{
+    title:"IPhO 2019 실험 2 — 비데만–프란츠 법칙",
+    sub:"가상 실험실 · 장비를 직접 놓고 배선하고 읽으세요. 아무것도 대신 계산해 주지 않습니다.",
+    tabBench:"B · C · D  열전도 실험대", tabTubes:"A  도체 튜브", tabInfo:"장비 · 과제",
+    capBench:"실험대 — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 단자 두 개를 차례로 클릭하면 전선 연결·제거",
+    capTubes:"도체 튜브 — 자석을 집어 튜브 입구에 놓으면 떨어집니다. 판독 박스의 빨간 버튼(또는 스페이스)으로 시간을 재세요.",
+    capInfo:"장비 목록과 과제 요약",
+    hTime:"시간 배속", timeHint:"가열 실험은 수십 분 걸립니다. 튜브 탭에서는 항상 1배속입니다.",
+    hBox:"10. 디지털 판독 박스", red:"빨간 버튼 (스페이스)",
+    latch:"빨간 버튼을 누른 채로 유지",
+    boxHint:"온도계 케이블이 꽂혀 있으면 버튼은 화면을 멈춤/해제하고,\n빠져 있으면 타이머(시작 → 정지 → 0)로 동작합니다.\n3초 이상 누르면 시간이 0으로 돌아갑니다.",
+    hWire:"14. 전선", wireHint:"단자 하나를 클릭한 뒤 다른 단자를 클릭하면 전선이 연결됩니다.\n이미 있는 전선의 두 끝을 다시 고르면 제거됩니다.",
+    unwire:"전선 모두 빼기",
+    tray:"장비 트레이 — 클릭해서 집기",
+    items:{pot:"5. 물 저장조", water:"5. 물병 2 L", rod1:"6. Rod #1", rod2:"7. Rod #2", cap:"8. 단열 캡",
+           adapter:"9. 12 V 어댑터", box:"10. 판독 박스", cable:"11. 온도계 케이블",
+           volt:"12. 전압계", amm:"13. 전류계", psu:"15. 9 V 전원"},
+    tubeName:{Al:"알루미늄", Br:"황동", Cu:"구리"},
+    magnet:"4. 자석 1.2 g",
+    left:n=>"남은 수 "+n,
+    stNoBox:"판독 박스가 아직 없습니다.",
+    stNoPower:"판독 박스에 전원이 없습니다 — 12 V 어댑터를 놓으세요.",
+    stCal:(r,ok)=>"Rod #"+r+" 온도계 : "+(ok?"보정함":"보정 안 함"),
+    stHold:"화면 멈춤 (HOLD)",
+    stImmerse:"경고: 막대를 물에 담그지 마시오.",
+    stCalNote:"보정은 막대를 저장조에 체결하거나 가열하기 전에 하십시오.",
+    m:{
+      picked:n=>n+" 을(를) 집었습니다. 점선 자리를 클릭해 놓으세요. (우클릭: 되돌리기)",
+      placed:n=>n+" 을(를) 놓았습니다.",
+      back:n=>n+" 을(를) 트레이로 되돌렸습니다.",
+      noFit:"그 자리에는 놓을 수 없습니다. 점선으로 표시된 곳에 놓으세요.",
+      needPot:"먼저 물 저장조를 놓으세요.",
+      poured:n=>"물 2 L를 부었습니다 ("+n+"/2).",
+      lidOn:"뚜껑(열교환기)을 덮었습니다. 이제 막대를 뚜껑 위에 체결할 수 있습니다.",
+      potFull:"저장조가 이미 가득 찼습니다.",
+      needWater:"저장조에 물을 채우고 뚜껑을 덮은 뒤 체결하세요.",
+      screwed:r=>"Rod #"+r+" 을(를) 저장조 뚜껑에 체결했습니다.",
+      onTable:r=>"Rod #"+r+" 을(를) 단열 받침 위에 눕혔습니다.",
+      rodBusy:"그 자리에는 이미 다른 막대가 있습니다.",
+      capOn:"단열 캡을 막대 끝에 씌웠습니다.",
+      capOff:"단열 캡을 벗겼습니다.",
+      capNeedRod:"캡은 실험대에 눕힌 막대의 끝에만 씌울 수 있습니다.",
+      capPot:"저장조에 체결하려면 캡이 벗겨집니다.",
+      cableBox:"케이블 한쪽을 판독 박스에 꽂았습니다. 다른 쪽을 막대의 커넥터에 꽂으세요.",
+      cableRod:r=>"온도계 케이블을 Rod #"+r+" 에 꽂았습니다.",
+      cableCal:r=>"버튼을 누른 채 꽂았습니다 — Rod #"+r+" 온도계를 보정했습니다.",
+      cableOut:"막대에서 케이블을 뽑았습니다.",
+      needBoxEnd:"케이블을 먼저 판독 박스에 꽂으세요.",
+      wireOn:(a,b)=>"전선 연결 : "+a+" ↔ "+b,
+      wireOff:(a,b)=>"전선 제거 : "+a+" ↔ "+b,
+      wirePick:a=>a+" 을(를) 골랐습니다. 연결할 다른 단자를 클릭하세요.",
+      rodWires:"막대를 들어 올리면서 히터 전선이 빠졌습니다.",
+      unwired:"전선을 모두 뺐습니다.",
+      knob:(n,p)=>n+" 선택 스위치 : "+p,
+      dropIn:t=>"자석을 "+t+" 튜브에 떨어뜨렸습니다.",
+      dropFloor:"자석을 받침 위에 내려놓았습니다.",
+      falling:"자석이 아직 튜브 안에 있습니다.",
+      needFirst:"먼저 위에 놓인 장비(막대·케이블)를 치우세요.",
+      reset0:"3초 눌러 시간을 0으로 돌렸습니다.",
+      wet:"경고: 막대를 물에 담그지 마시오. 막대는 뚜껑 위에 체결합니다."
+    }
+  },
+  en:{
+    title:"IPhO 2019 Experiment 2 — Wiedemann–Franz Law",
+    sub:"Virtual laboratory · place, wire and read the apparatus yourself. Nothing is computed for you.",
+    tabBench:"B · C · D  heat bench", tabTubes:"A  conducting tubes", tabInfo:"Equipment · tasks",
+    capBench:"the bench — L-click pick up / put down, R-click return to tray, click two terminals to add or remove a wire",
+    capTubes:"conducting tubes — pick the magnet up and put it on a tube mouth to drop it. Time it with the red button on the box (or the space bar).",
+    capInfo:"equipment list and summary of the tasks",
+    hTime:"Time scale", timeHint:"The heat runs take tens of minutes. The tube tab always runs at 1×.",
+    hBox:"10. Digital readout box", red:"red button (space)",
+    latch:"keep the red button held down",
+    boxHint:"With the thermometer cable in, the button freezes / releases the display;\nwithout it the box is a timer (start → stop → zero).\nHold it for 3 s to zero the time.",
+    hWire:"14. Wires", wireHint:"Click one terminal, then another, to run a wire between them.\nPick both ends of an existing wire again to remove it.",
+    unwire:"remove all wires",
+    tray:"equipment tray — click to pick up",
+    items:{pot:"5. Water reservoir", water:"5. 2 L bottle", rod1:"6. Rod #1", rod2:"7. Rod #2", cap:"8. Insulating cap",
+           adapter:"9. 12 V adapter", box:"10. Readout box", cable:"11. Thermometer cable",
+           volt:"12. Voltmeter", amm:"13. Ammeter", psu:"15. 9 V supply"},
+    tubeName:{Al:"aluminum", Br:"brass", Cu:"copper"},
+    magnet:"4. magnet 1.2 g",
+    left:n=>n+" left",
+    stNoBox:"The readout box is not on the bench yet.",
+    stNoPower:"The readout box has no power: put the 12 V adapter down.",
+    stCal:(r,ok)=>"Rod #"+r+" thermometers : "+(ok?"calibrated":"not calibrated"),
+    stHold:"display frozen (HOLD)",
+    stImmerse:"WARNING: do not immerse the rods in water.",
+    stCalNote:"Calibrate BEFORE attaching the rod to the reservoir or heating it.",
+    m:{
+      picked:n=>n+" picked up. Click a dashed place to put it down (R-click returns it).",
+      placed:n=>n+" put down.",
+      back:n=>n+" returned to the tray.",
+      noFit:"It does not go there: put it on one of the dashed places.",
+      needPot:"Put the water reservoir down first.",
+      poured:n=>"Poured 2 L of water ("+n+"/2).",
+      lidOn:"Cover (heat exchanger) closed. A rod can now be screwed onto it.",
+      potFull:"The reservoir is already full.",
+      needWater:"Fill the reservoir and close the cover before screwing a rod on.",
+      screwed:r=>"Rod #"+r+" screwed onto the reservoir cover.",
+      onTable:r=>"Rod #"+r+" laid on its insulating support.",
+      rodBusy:"Another rod is already there.",
+      capOn:"Insulating cap fitted on the rod end.",
+      capOff:"Insulating cap removed.",
+      capNeedRod:"The cap only fits the end of a rod lying on the bench.",
+      capPot:"The cap comes off when the rod is screwed onto the reservoir.",
+      cableBox:"One end plugged into the readout box. Plug the other into a rod connector.",
+      cableRod:r=>"Thermometer cable plugged into Rod #"+r+".",
+      cableCal:r=>"Plugged in with the button held: Rod #"+r+" thermometers calibrated.",
+      cableOut:"Cable unplugged from the rod.",
+      needBoxEnd:"Plug the cable into the readout box first.",
+      wireOn:(a,b)=>"wire added : "+a+" ↔ "+b,
+      wireOff:(a,b)=>"wire removed : "+a+" ↔ "+b,
+      wirePick:a=>a+" selected: click the terminal to connect it to.",
+      rodWires:"Lifting the rod pulled its heater wires out.",
+      unwired:"All wires removed.",
+      knob:(n,p)=>n+" selector : "+p,
+      dropIn:t=>"Magnet dropped into the "+t+" tube.",
+      dropFloor:"Magnet put down on the pad.",
+      falling:"The magnet is still inside a tube.",
+      needFirst:"Clear what is attached to it (rod, cable) first.",
+      reset0:"Held for 3 s: time set back to zero.",
+      wet:"WARNING: do not immerse the rods. A rod is screwed onto the cover."
+    }
+  }
+};
+let lang = (new URLSearchParams(location.search).get("lang")==="en") ? "en" : "ko";
+const $ = id => document.getElementById(id);
+const d = () => T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  APPARATUS  —  identical to the Python constants
+   ══════════════════════════════════════════════════════════════ */
+const ROD_D=0.0200, ROD_A=Math.PI*(ROD_D/2)**2;
+/* descent time per unit conductivity [s m/S], fitted tube by tube to the
+   official solution (Cu 17.96 s, Al 9.32 s, brass 5.97 s) */
+const TUBE_K={Cu:17.96/5.97e7, Al:9.32/2.89e7, Br:5.97/1.60e7};
+const DROP_JITTER=0.004;
+const ROD1_X=[0.015,0.040,0.065,0.090,0.115,0.140,0.165,0.190];
+const ROD1_ORDER=[7,6,5,4,3,2,1,0];
+const ROD2_X=[0.049,0.077,0.099,0.127,0.149,0.177,0.199,0.227];
+const ROD2_ORDER=[0,1,2,3,4,5,6,7];
+const CU=[8960.0,386.0], BRASS=[8500.0,377.0], ALU=[2700.0,900.0];
+const END_G=0.030;                     /* W/K through an uncapped end face */
+const AMM_POS=["OFF","10A","200m","20m","2000u","200u","1000","200","20"];
+const VOLT_POS=["OFF","1000","200","20","2000m","200m","10A","200u"];
+const SPEEDS=[1,10,60,300,1200];
+
+/* ── helpers ── */
+function mulberry32(a){
+  return function(){
+    a|=0; a=a+0x6D2B79F5|0;
+    let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+class RNG{
+  constructor(seed){ this.r=mulberry32(seed>>>0); this._sp=null; }
+  uniform(a,b){ return a+this.r()*(b-a); }
+  gauss(mu,sd){
+    if(this._sp!==null){ const v=this._sp; this._sp=null; return mu+sd*v; }
+    let u=0,v=0; while(u===0)u=this.r(); while(v===0)v=this.r();
+    const R=Math.sqrt(-2*Math.log(u));
+    this._sp=R*Math.sin(2*Math.PI*v);
+    return mu+sd*R*Math.cos(2*Math.PI*v);
+  }
+}
+function thomas(a,b,c,dd){
+  const n=dd.length, cp=new Float64Array(n), dp=new Float64Array(n);
+  cp[0]=c[0]/b[0]; dp[0]=dd[0]/b[0];
+  for(let i=1;i<n;i++){
+    const m=b[i]-a[i]*cp[i-1];
+    cp[i]= i<n-1 ? c[i]/m : 0;
+    dp[i]=(dd[i]-a[i]*dp[i-1])/m;
+  }
+  const x=new Float64Array(n); x[n-1]=dp[n-1];
+  for(let i=n-2;i>=0;i--) x[i]=dp[i]-cp[i]*x[i+1];
+  return x;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  PHYSICS  —  1-D transient conduction, backward Euler
+   ══════════════════════════════════════════════════════════════ */
+class Rod{
+  constructor(segs,mass,T0){
+    this.L=segs.reduce((s,g)=>s+g[0],0);
+    const n=Math.round(this.L/0.001)+1; this.n=n; this.dx=this.L/(n-1);
+    const edges=[]; let acc=0; for(const g of segs){ acc+=g[0]; edges.push(acc); }
+    const k=new Float64Array(n), rho=new Float64Array(n), cp=new Float64Array(n);
+    for(let i=0;i<n;i++){
+      const xi=i*this.dx; let j=0;
+      while(j<edges.length-1 && xi>edges[j]-1e-9) j++;
+      k[i]=segs[j][1]; rho[i]=segs[j][2]; cp[i]=segs[j][3];
+    }
+    this.dxl=new Float64Array(n).fill(this.dx); this.dxl[0]*=0.5; this.dxl[n-1]*=0.5;
+    this.C=new Float64Array(n);
+    for(let i=0;i<n;i++) this.C[i]=this.dxl[i]*ROD_A*rho[i]*cp[i];
+    if(mass){
+      let tot=0; for(let i=0;i<n;i++) tot+=this.dxl[i]*ROD_A*rho[i];
+      const f=mass/tot; for(let i=0;i<n;i++) this.C[i]*=f;
+    }
+    this.G=new Float64Array(n-1);
+    for(let i=0;i<n-1;i++) this.G[i]=2*k[i]*k[i+1]/(k[i]+k[i+1])*ROD_A/this.dx;
+    this.T=new Float64Array(n).fill(T0);
+    this.heatN=Math.max(1,Math.floor(0.015/this.dx));
+    this.a=new Float64Array(n); this.b=new Float64Array(n);
+    this.c=new Float64Array(n); this.d=new Float64Array(n);
+  }
+  step(dt,P,attached,Tw,Tamb,U,Rc,endG){
+    const n=this.n, a=this.a, b=this.b, c=this.c, dd=this.d;
+    for(let i=0;i<n;i++){
+      a[i]=0; c[i]=0;
+      b[i]=this.C[i]/dt+U*this.dxl[i];
+      dd[i]=this.C[i]/dt*this.T[i]+U*this.dxl[i]*Tamb;
+    }
+    for(let i=0;i<n-1;i++){
+      b[i]+=this.G[i]; c[i]=-this.G[i]; b[i+1]+=this.G[i]; a[i+1]=-this.G[i];
+    }
+    if(P>0){
+      let hs=0; for(let i=0;i<this.heatN;i++) hs+=this.dxl[i];
+      for(let i=0;i<this.heatN;i++) dd[i]+=P*this.dxl[i]/hs;
+    }
+    if(attached){ b[n-1]+=1/Rc; dd[n-1]+=Tw/Rc; }
+    else if(endG>0){ b[n-1]+=endG; dd[n-1]+=endG*Tamb; }
+    this.T=thomas(a,b,c,dd);
+    return attached ? (this.T[n-1]-Tw)/Rc : 0;
+  }
+  at(pos){
+    const u=pos/this.dx, i=Math.floor(u);
+    if(i>=this.n-1) return this.T[this.n-1];
+    const f=u-i; return this.T[i]*(1-f)+this.T[i+1]*f;
+  }
+  mean(){ let s=0; for(let i=0;i<this.n;i++) s+=this.T[i]; return s/this.n; }
+}
+
+/* small dense solver (Gaussian elimination, partial pivoting) */
+function gsolve(M,rhs){
+  const n=rhs.length, A=M.map((r,i)=>r.concat([rhs[i]]));
+  for(let col=0;col<n;col++){
+    let p=col; for(let r=col+1;r<n;r++) if(Math.abs(A[r][col])>Math.abs(A[p][col])) p=r;
+    if(Math.abs(A[p][col])<1e-14) return null;
+    [A[col],A[p]]=[A[p],A[col]];
+    const pv=A[col][col];
+    for(let r=0;r<n;r++){
+      if(r===col) continue;
+      const f=A[r][col]/pv; if(!f) continue;
+      for(let cc=col;cc<=n;cc++) A[r][cc]-=f*A[col][cc];
+    }
+  }
+  return A.map((r,i)=>r[n]/r[i]);
+}
+
+/* Terminals: PS+ PS- (9 V supply), H1a H2a / H1b H2b (heater leads of
+   Rod #1 / Rod #2), A1 ACOM (ammeter 10A / COM), V1 VCOM (voltmeter V / COM).
+   Modified nodal analysis gives the true reading of every instrument, so a
+   wrong circuit gives a wrong but physical reading. */
+const TERMS=["PS+","PS-","H1a","H2a","H1b","H2b","A1","ACOM","V1","VCOM"];
+class Circuit{
+  constructor(emf,rInt,rHeat){
+    this.emf=emf; this.rInt=rInt; this.rHeat=rHeat;
+    this.wires=[]; this.amm="OFF"; this.volt="OFF";
+  }
+  has(t1,t2){ return this.wires.findIndex(w=>(w[0]===t1&&w[1]===t2)||(w[0]===t2&&w[1]===t1)); }
+  toggle(t1,t2){
+    const i=this.has(t1,t2);
+    if(i>=0){ this.wires.splice(i,1); return false; }
+    this.wires.push([t1,t2]); return true;
+  }
+  rOf(kind){
+    if(kind==="A"){
+      if(this.amm==="10A") return 0.012;
+      if(["200m","20m","2000u","200u"].includes(this.amm)) return 2.0;
+      if(this.amm==="OFF") return null;
+      return 1e7;
+    }
+    if(this.volt==="OFF") return null;
+    if(this.volt==="10A") return 0.012;
+    return 1e7;
+  }
+  solve(){
+    const par={}; for(const t of TERMS) par[t]=t;
+    const find=x=>{ while(par[x]!==x){ par[x]=par[par[x]]; x=par[x]; } return x; };
+    for(const [a,b] of this.wires){ const ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; }
+    const nodes=[...new Set(TERMS.map(find))].sort();
+    const idx={}; nodes.forEach((nd,i)=>idx[nd]=i);
+    let nn=nodes.length;
+    const comps=[[find("H1a"),find("H2a"),this.rHeat[0]],[find("H1b"),find("H2b"),this.rHeat[1]]];
+    const ra=this.rOf("A"); if(ra!==null) comps.push([find("A1"),find("ACOM"),ra]);
+    const rv=this.rOf("V"); if(rv!==null) comps.push([find("V1"),find("VCOM"),rv]);
+    idx.PSX=nn; nn++;
+    comps.push(["PSX",find("PS+"),this.rInt]);
+    const size=nn+1;
+    const M=[...Array(size)].map(()=>new Array(size).fill(0)), rhs=new Array(size).fill(0);
+    for(const [a,b,R] of comps){
+      const ia=idx[a], ib=idx[b], g=1/R;
+      M[ia][ia]+=g; M[ib][ib]+=g; M[ia][ib]-=g; M[ib][ia]-=g;
+    }
+    for(let i=0;i<nn;i++) M[i][i]+=1e-9;     /* 1 nS leak: floating nodes stay solvable */
+    const ip=idx.PSX, im=idx[find("PS-")];
+    M[ip][nn]+=1; M[im][nn]-=1; M[nn][ip]+=1; M[nn][im]-=1; rhs[nn]=this.emf;
+    for(let j=0;j<size;j++) M[im][j]=0;
+    M[im][im]=1; rhs[im]=0;
+    const sol=gsolve(M,rhs);
+    if(!sol) return {P:[0,0],I:0,V:0,ok:false};
+    const v=nd=>sol[idx[nd]];
+    const vha=v(find("H1a"))-v(find("H2a")), vhb=v(find("H1b"))-v(find("H2b"));
+    return {P:[vha*vha/this.rHeat[0], vhb*vhb/this.rHeat[1]],
+            I: ra!==null ? (v(find("A1"))-v(find("ACOM")))/ra : 0,
+            V: v(find("V1"))-v(find("VCOM")), ok:true};
+  }
+}
+
+class Lab{
+  constructor(seed){
+    seed=(seed===undefined)?Math.floor(Math.random()*(1<<30)):seed;
+    const rng=this.rng=new RNG(seed);
+    this.T_amb=rng.uniform(22.4,23.1); this.T_water=this.T_amb;
+    this.C_water=4.0*4186.0+900.0;
+    this.U=rng.uniform(0.190,0.220); this.Rc=rng.uniform(0.55,0.72);
+    this.k_cu=rng.uniform(378,392); this.k_br=rng.uniform(115,125); this.k_al=rng.uniform(230,242);
+    const rh=rng.uniform(11.0,11.6);
+    this.circ=new Circuit(rng.uniform(8.92,9.08),rng.uniform(1.45,1.75),[rh,rh*rng.uniform(0.985,1.015)]);
+    this.sigma={Cu:rng.uniform(5.85e7,6.08e7), Al:rng.uniform(2.80e7,2.98e7), Br:rng.uniform(1.55e7,1.67e7)};
+    this.rod={
+      1:new Rod([[0.200,this.k_cu,...CU]],0.58,this.T_amb),
+      2:new Rod([[0.088,this.k_cu,...CU],[0.050,this.k_br,...BRASS],
+                 [0.050,this.k_al,...ALU],[0.065,this.k_cu,...CU]],null,this.T_amb)};
+    this.off={1:[...Array(8)].map(()=>rng.gauss(0,0.16)), 2:[...Array(8)].map(()=>rng.gauss(0,0.16))};
+    this.calib={1:null,2:null};             /* offsets learnt at calibration */
+    this.water=0; this.lid=false;
+    this.place={1:"tray",2:"tray"};         /* tray | hand | table | pot */
+    this.cap={1:false,2:false};           /* one cap in the kit */
+    this.capOnBench=false;                  /* the loose cap, not on a rod */
+    this.cableBox=false; this.cableRod=0; this.adapter=false;
+    this.on=new Set();                      /* instruments on the bench */
+    this.t=0; this.watch=0; this.watchRun=false; this.hold=false; this.frozen=null;
+    this.res=this.circ.solve();
+  }
+  fallTime(tube){ return TUBE_K[tube]*this.sigma[tube]*(1+this.rng.gauss(0,DROP_JITTER)); }
+  rodPlaced(r){ return this.place[r]==="table"||this.place[r]==="pot"; }
+  advance(seconds){
+    const steps=Math.max(1,Math.round(seconds/1.0)), dt=seconds/steps;
+    this.res=this.circ.solve();
+    for(let s=0;s<steps;s++){
+      for(const r of [1,2]){
+        const P=(this.res.ok&&this.rodPlaced(r)) ? Math.max(0,this.res.P[r-1]) : 0;
+        const att=this.place[r]==="pot";
+        const eg=(att||this.cap[r])?0:END_G;
+        const fl=this.rod[r].step(dt,P,att,this.T_water,this.T_amb,this.U,this.Rc,eg);
+        this.T_water+=fl*dt/this.C_water;
+      }
+      this.T_water-=(this.T_water-this.T_amb)*dt*0.9/this.C_water;
+    }
+    this.t+=seconds;
+    if(this.adapter&&(this.watchRun||this.cableRod)) this.watch+=seconds;
+  }
+  raw(r){
+    const xs=r===1?ROD1_X:ROD2_X, ord=r===1?ROD1_ORDER:ROD2_ORDER;
+    return ord.map((i,j)=>this.rod[r].at(xs[i])+this.off[r][j]);
+  }
+  readSensors(){
+    const r=this.cableRod; if(!r) return null;
+    const raw=this.raw(r), cal=this.calib[r];
+    return raw.map((v,j)=>Math.round((v-(cal?cal[j]:0)+this.rng.gauss(0,0.010))*100)/100);
+  }
+  /* The box learns the spread of the eight sensors at the moment it is
+     calibrated.  Done on a rod at one uniform temperature, that removes the
+     offsets; done on a rod with a gradient, it bakes the gradient in. */
+  calibrate(){
+    const r=this.cableRod; if(!r) return;
+    const raw=this.raw(r), m=raw.reduce((s,v)=>s+v,0)/8;
+    this.calib[r]=raw.map(v=>v-m);
+  }
+  press(){
+    if(!this.adapter||!this.on.has("box")) return;
+    if(this.cableRod){ this.hold=!this.hold; if(this.hold) this.frozen=this.readSensors(); }
+    else if(!this.watchRun&&this.watch===0) this.watchRun=true;
+    else if(this.watchRun) this.watchRun=false;
+    else this.watch=0;
+  }
+  meters(){
+    const r=this.res; if(!r.ok) return [0,0];
+    return [r.I+this.rng.gauss(0,0.004), r.V+this.rng.gauss(0,0.006)];
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  CANVAS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"), ctx=cv.getContext("2d");
+const LW=1200, LH=720;
+let S=1, view="bench";
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr);
+  cv.style.height=(LH*S)+"px";
+  ctx.setTransform(dpr*S,0,0,dpr*S,0,0);
+}
+const C_TABLE="#cdb692", C_TABLE2="#c0a684", C_WOODLN="#b99b74";
+const C_COPPER="#b0693a", C_COPPER_HI="#e09a6a", C_BRASS="#b08d2e", C_BRASS_HI="#e0c06a";
+const C_ALU="#b9bec3", C_ALU_HI="#eef1f3", C_FOAM="#221b19", C_FOAM_HI="#3a302c";
+const C_POT="#b7bcc0", C_POT_HI="#e7ecee", C_POT_SH="#80878b";
+const C_BOX="#0d2ba6", C_LCD="#1878e0", C_LCD_TXT="#f1fbff";
+const C_DMM="#232228", C_DMM_LCD="#bcc3b3", C_RED="#cf2f26", C_BLACK="#141414", C_GHOST="#7a6547";
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif";
+const MONO="ui-monospace,Consolas,monospace";
+
+function rrect(x,y,w,h,r){
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function fillR(x,y,w,h,r,fill,stroke,lw){
+  rrect(x,y,w,h,r); if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}
+}
+function text(s,x,y,col,size,align,weight,font){
+  ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y);
+}
+function vgrad(x,y,w,h,stops){
+  const g=ctx.createLinearGradient(x,y,x,y+h);
+  stops.forEach(([o,c])=>g.addColorStop(o,c)); return g;
+}
+function hgrad(x,y,w,h,stops){
+  const g=ctx.createLinearGradient(x,y,x+w,y);
+  stops.forEach(([o,c])=>g.addColorStop(o,c)); return g;
+}
+function wood(x0,y0,x1,y1){
+  ctx.fillStyle=vgrad(x0,y0,0,y1-y0,[[0,"#d3bc98"],[1,C_TABLE2]]);
+  ctx.fillRect(x0,y0,x1-x0,y1-y0);
+  ctx.strokeStyle=C_WOODLN; ctx.lineWidth=1;
+  let y=y0+18, n=0;
+  while(y<y1){ ctx.beginPath(); ctx.moveTo(x0,y);
+    for(let x=x0;x<=x1;x+=60) ctx.lineTo(x,y+Math.sin(x*0.013+n)*1.6);
+    ctx.stroke(); y+=34+(n%3)*9; n++; }
+}
+function dashed(x,y,w,h,label){
+  ctx.setLineDash([5,5]); ctx.strokeStyle=C_GHOST; ctx.lineWidth=1.3;
+  rrect(x,y,w,h,6); ctx.stroke(); ctx.setLineDash([]);
+  if(label) text(label,x+w/2,y+h/2,C_GHOST,11,"center");
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  BENCH LAYOUT  (logical px, 1200 × 720)
+   ══════════════════════════════════════════════════════════════ */
+const TRAY_Y=612;
+const SLOT={
+  box:{x:88,y:92,w:210,h:128},
+  adapter:{x:40,y:300,w:110,h:56},
+  pot:{x:548,y:250,w:200,h:190},       /* the pot body */
+  table:{x:170,y:470,w:320,h:46},      /* rod lying on its support */
+  psu:{x:960,y:70,w:170,h:84},
+  amm:{x:820,y:300,w:140,h:240},
+  volt:{x:990,y:300,w:140,h:240}
+};
+const POT_CX=648, LID_Y=262;           /* rod mount point on the cover */
+const ROD_POT={x:626,y:60,w:44,h:200}; /* rod standing on the cover */
+const TRAY_KEYS=["pot","water","rod1","rod2","cap","adapter","box","cable","volt","amm","psu"];
+
+function termXY(){
+  const m={ "PS+":[1093,100], "PS-":[1093,128],
+            "A1":[862,505], "ACOM":[918,505], "V1":[1032,505], "VCOM":[1088,505] };
+  for(const r of [1,2]){
+    const s=r===1?"a":"b";
+    if(lab.place[r]==="pot"){ m["H1"+s]=[ROD_POT.x+8,ROD_POT.y-26]; m["H2"+s]=[ROD_POT.x+36,ROD_POT.y-26]; }
+    else if(lab.place[r]==="table"){ m["H1"+s]=[SLOT.table.x-44,SLOT.table.y+4]; m["H2"+s]=[SLOT.table.x-44,SLOT.table.y+42]; }
+  }
+  return m;
+}
+const TERM_NAME={"PS+":"9 V +","PS-":"9 V −","H1a":"Rod#1 H","H2a":"Rod#1 H","H1b":"Rod#2 H","H2b":"Rod#2 H",
+                 "A1":"A 10A","ACOM":"A COM","V1":"V VΩ","VCOM":"V COM"};
+function socketXY(r){           /* thermometer connector on the rod */
+  if(lab.place[r]==="pot") return [ROD_POT.x+ROD_POT.w+10, ROD_POT.y+22];
+  if(lab.place[r]==="table") return [SLOT.table.x+26, SLOT.table.y-10];
+  return null;
+}
+function capXY(r){ return [SLOT.table.x+SLOT.table.w+18, SLOT.table.y+SLOT.table.h/2]; }
+const BOX_BTN=()=>[SLOT.box.x+SLOT.box.w/2, SLOT.box.y+SLOT.box.h+16];
+const BOX_JACK=()=>[SLOT.box.x+SLOT.box.w+6, SLOT.box.y+SLOT.box.h/2];
+const KNOB={amm:[SLOT.amm.x+70,SLOT.amm.y+138], volt:[SLOT.volt.x+70,SLOT.volt.y+138]};
+
+/* ══════════════════════════════════════════════════════════════
+   5.  STATE OF THE HANDS
+   ══════════════════════════════════════════════════════════════ */
+let lab=new Lab();
+let hand=null;            /* {k:"pot"|"water"|"rod1"|...|"cablePlug"|"magnet"} */
+let selTerm=null;
+let mouse=[0,0];
+let msg={key:null,args:[],t:0};
+let speed=1;
+let redDown=0;            /* time the red button went down (for the 3 s hold) */
+let waterLeft=2, magnet={x:1010,y:585,state:"pad",tube:null,t:0,T:0};
+
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+function itemName(k){ return d().items[k]||k; }
+
+/* ══════════════════════════════════════════════════════════════
+   6.  DRAWING — bench (parts B, C, D)
+   ══════════════════════════════════════════════════════════════ */
+function drawBench(){
+  wood(0,0,LW,TRAY_Y);
+  /* ghost places for the thing in hand */
+  if(hand){
+    const k=hand.k;
+    if(SLOT[k]&&!lab.on.has(k)){ const s=SLOT[k]; dashed(s.x,s.y,s.w,s.h,itemName(k)); }
+    if(k==="rod1"||k==="rod2"){
+      if(!onTable()) dashed(SLOT.table.x-10,SLOT.table.y-8,SLOT.table.w+20,SLOT.table.h+16);
+      if(lab.on.has("pot")&&!onPot()) dashed(ROD_POT.x-8,ROD_POT.y-8,ROD_POT.w+16,ROD_POT.h+8);
+    }
+    if(k==="cap"&&onTable()){ const [x,y]=capXY(); dashed(x-18,y-26,40,52); }
+    if(k==="water"&&lab.on.has("pot")) dashed(SLOT.pot.x-6,SLOT.pot.y-30,SLOT.pot.w+12,SLOT.pot.h+30);
+    if(k==="cable"&&lab.on.has("box")){ const [x,y]=BOX_JACK(); dashed(x-14,y-16,30,32); }
+    if(k==="cablePlug") for(const r of [1,2]){ const s=socketXY(r); if(s) dashed(s[0]-14,s[1]-14,28,28); }
+  }
+  if(lab.on.has("adapter")) drawAdapter();
+  if(lab.on.has("box")) drawBox(SLOT.box.x,SLOT.box.y,SLOT.box.w,SLOT.box.h,true);
+  if(lab.on.has("pot")) drawPot();
+  drawRodSupport();
+  const rt=onTable(); if(rt) drawRodTable(rt);
+  if(lab.capOnBench) drawLooseCap();
+  if(lab.on.has("psu")) drawPsu();
+  if(lab.on.has("amm")) drawDmm("amm");
+  if(lab.on.has("volt")) drawDmm("volt");
+  const rp=onPot(); if(rp) drawRodPot(rp);
+  drawCable();
+  drawWires();
+  drawTray();
+  drawHand();
+  /* the label printed on the reservoir, as in the kit */
+  text(d().stImmerse, LW-14, 20, "#7a4a2a", 11, "right", "600");
+}
+function onTable(){ return lab.place[1]==="table"?1:(lab.place[2]==="table"?2:0); }
+function onPot(){ return lab.place[1]==="pot"?1:(lab.place[2]==="pot"?2:0); }
+
+function drawPot(){
+  const x=SLOT.pot.x, y=SLOT.pot.y, w=SLOT.pot.w, h=SLOT.pot.h, cx=x+w/2;
+  /* shadow */
+  ctx.fillStyle="rgba(60,40,20,.28)"; ctx.beginPath(); ctx.ellipse(cx,y+h+6,w*0.56,16,0,0,7); ctx.fill();
+  /* handles */
+  for(const s of [-1,1]){ fillR(cx+s*(w/2+14)-14,y+40,28,12,5,"#2a2a2c","#111"); }
+  /* body */
+  ctx.fillStyle=hgrad(x,y,w,h,[[0,C_POT_SH],[0.28,C_POT_HI],[0.55,C_POT],[1,C_POT_SH]]);
+  ctx.beginPath(); ctx.moveTo(x,y+22); ctx.lineTo(x+8,y+h); ctx.ellipse(cx,y+h,w/2-8,14,0,Math.PI,0,true);
+  ctx.lineTo(x+w,y+22); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle="#6c7377"; ctx.lineWidth=1.2; ctx.stroke();
+  if(!lab.lid){
+    ctx.fillStyle="#6f777c"; ctx.beginPath(); ctx.ellipse(cx,y+22,w/2,22,0,0,7); ctx.fill();
+    ctx.fillStyle="#41484c"; ctx.beginPath(); ctx.ellipse(cx,y+24,w/2-8,17,0,0,7); ctx.fill();
+    if(lab.water){
+      ctx.fillStyle=lab.water>1?"#6fb2de":"#8ec4e6";
+      ctx.beginPath(); ctx.ellipse(cx,y+26,w/2-10-(2-lab.water)*6,14-(2-lab.water)*2,0,0,7); ctx.fill();
+    }
+  } else {
+    /* the cover with the heat exchanger under it */
+    ctx.fillStyle=vgrad(x,y,w,30,[[0,C_POT_HI],[1,C_POT]]);
+    ctx.beginPath(); ctx.ellipse(cx,y+18,w/2+5,24,0,0,7); ctx.fill();
+    ctx.strokeStyle=C_POT_SH; ctx.stroke();
+    ctx.fillStyle="#c9ced1"; ctx.beginPath(); ctx.ellipse(cx,y+14,w/2-26,13,0,0,7); ctx.fill();
+    /* threaded boss the rod screws into */
+    fillR(cx-16,y+4,32,12,3,"#9aa1a6","#6c7377");
+    ctx.fillStyle="#50565a"; ctx.beginPath(); ctx.ellipse(cx,y+5,10,4,0,0,7); ctx.fill();
+  }
+  ctx.strokeStyle="rgba(255,255,255,.55)"; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x+18,y+50); ctx.lineTo(x+22,y+h-12); ctx.stroke();
+  text(d().items.pot, cx, y+h+30, "#5b4630", 11, "center");
+}
+function drawRodSupport(){
+  /* the insulating support block on which a rod lies */
+  const s=SLOT.table;
+  fillR(s.x+40,s.y+s.h-4,40,26,3,"#e8e2d2","#a9a08a");
+  fillR(s.x+s.w-80,s.y+s.h-4,40,26,3,"#e8e2d2","#a9a08a");
+}
+function drawFoam(x,y,w,h,horiz,r){
+  /* black foam insulation sleeve */
+  ctx.fillStyle=horiz?vgrad(x,y,w,h,[[0,C_FOAM_HI],[0.45,"#2b2321"],[1,"#120e0d"]])
+                     :hgrad(x,y,w,h,[[0,"#120e0d"],[0.45,"#2b2321"],[1,C_FOAM_HI]]);
+  rrect(x,y,w,h,6); ctx.fill();
+  ctx.strokeStyle="#0b0909"; ctx.lineWidth=1; ctx.stroke();
+  /* sensor positions show as small bumps under the sleeve */
+  const xs=r===1?ROD1_X:ROD2_X, L=lab.rod[r].L;
+  ctx.fillStyle="#0a0808";
+  for(const p of xs){
+    if(horiz){ const px=x+p/L*w; ctx.fillRect(px-2,y-3,4,5); }
+    else { const py=y+p/L*h; ctx.fillRect(x+w-2,py-2,5,4); }
+  }
+}
+function rodLabel(x,y,r,vertical){
+  ctx.save(); ctx.translate(x,y); if(vertical) ctx.rotate(-Math.PI/2);
+  fillR(-34,-11,68,22,3,"#f2f2f0","#9a9a9a");
+  text("Rod #"+r,0,0,"#222",11,"center","700"); ctx.restore();
+}
+function drawRodTable(r){
+  const s=SLOT.table, x=s.x, y=s.y, w=s.w, h=s.h;
+  /* heater end: red leads out to two lugs */
+  ctx.strokeStyle=C_RED; ctx.lineWidth=3.5; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(x+4,y+14); ctx.bezierCurveTo(x-18,y+10,x-26,y+6,x-44,y+4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+4,y+32); ctx.bezierCurveTo(x-18,y+36,x-26,y+40,x-44,y+42); ctx.stroke();
+  drawFoam(x,y,w,h,true,r);
+  rodLabel(x+w/2,y+h/2,r,false);
+  /* thermometer socket */
+  const [sx,sy]=socketXY(r);
+  fillR(sx-11,sy-9,22,16,3,"#c8c2b1","#7c765f");
+  ctx.fillStyle="#3a352b"; ctx.fillRect(sx-6,sy-4,12,6);
+  /* far end: bare metal face or the insulating cap */
+  const mcol=r===1?C_COPPER:C_COPPER;
+  ctx.fillStyle=hgrad(x+w-2,y,12,h,[[0,mcol],[1,C_COPPER_HI]]);
+  fillR(x+w-4,y+8,12,h-16,2,ctx.fillStyle,"#6b3d1e");
+  if(lab.cap[r]){
+    fillR(x+w+2,y-6,34,h+12,5,"#d8cfb8","#8b8570",1.2);
+    ctx.fillStyle="#1a1414"; rrect(x+w+6,y-1,24,h+2,4); ctx.fill();
+  }
+}
+function drawLooseCap(){
+  const x=SLOT.table.x+SLOT.table.w+30, y=SLOT.table.y+60;
+  fillR(x,y,34,40,5,"#d8cfb8","#8b8570",1.2);
+  ctx.fillStyle="#1a1414"; rrect(x+5,y+5,24,30,4); ctx.fill();
+}
+function drawRodPot(r){
+  const {x,y,w,h}=ROD_POT;
+  /* heater leads leave the top */
+  ctx.strokeStyle=C_RED; ctx.lineWidth=3.5; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(x+14,y+4); ctx.bezierCurveTo(x+12,y-8,x+8,y-14,x+8,y-26); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+30,y+4); ctx.bezierCurveTo(x+32,y-8,x+36,y-14,x+36,y-26); ctx.stroke();
+  drawFoam(x,y,w,h,false,r);
+  rodLabel(x+w/2,y+h/2+10,r,true);
+  const [sx,sy]=socketXY(r);
+  fillR(sx-11,sy-8,18,16,3,"#c8c2b1","#7c765f");
+  ctx.fillStyle="#3a352b"; ctx.fillRect(sx-7,sy-4,8,8);
+  /* the screwed joint on the cover */
+  fillR(x+6,y+h-4,w-12,14,2,C_COPPER,"#6b3d1e");
+}
+function drawAdapter(){
+  const s=SLOT.adapter;
+  fillR(s.x,s.y,s.w,s.h,6,"#1e1e20","#000");
+  text("AC ADAPTOR",s.x+s.w/2,s.y+18,"#b9b9b9",9,"center");
+  text("12V DC",s.x+s.w/2,s.y+36,"#d0d0d0",11,"center","700");
+  const [jx,jy]=[SLOT.box.x-4,SLOT.box.y+SLOT.box.h-24];
+  ctx.strokeStyle="#111"; ctx.lineWidth=3.5;
+  ctx.beginPath(); ctx.moveTo(s.x+s.w/2,s.y); ctx.bezierCurveTo(s.x+s.w/2,s.y-60,jx-50,jy+10,jx,jy); ctx.stroke();
+}
+function drawBox(x,y,w,h,withJack){
+  ctx.fillStyle="rgba(40,30,20,.3)"; rrect(x+4,y+6,w,h,10); ctx.fill();
+  fillR(x,y,w,h,10,vgrad(x,y,w,h,[[0,"#1c47cf"],[1,C_BOX]]),"#061a63",1.5);
+  fillR(x+8,y+8,w-16,h-30,5,"#0a0a12","#000");
+  const lx0=x+15, ly0=y+14, lx1=x+w-15, ly1=y+h-28;
+  const powered=lab.adapter;
+  ctx.fillStyle=powered?C_LCD:"#15283d"; ctx.fillRect(lx0,ly0,lx1-lx0,ly1-ly0);
+  ctx.strokeStyle="#0d3f88"; ctx.strokeRect(lx0,ly0,lx1-lx0,ly1-ly0);
+  if(powered){
+    if(lab.cableRod){
+      const vals=lab.hold&&lab.frozen?lab.frozen:lab.readSensors();
+      for(let i=0;i<8;i++){
+        const r_=Math.floor(i/3), c_=i%3;
+        text(vals[i].toFixed(2).padStart(6," "),lx0+10+c_*60,ly0+13+r_*18,C_LCD_TXT,13,"left","",MONO);
+      }
+      text("Time: "+lab.watch.toFixed(2).padStart(7,"0")+" [s]",lx0+10,ly1-10,C_LCD_TXT,12,"left","",MONO);
+    } else {
+      text("Timer mode",(lx0+lx1)/2,ly0+18,C_LCD_TXT,13,"center","",MONO);
+      text(lab.watch.toFixed(2).padStart(7,"0")+" [s]",(lx0+lx1)/2,ly1-18,C_LCD_TXT,18,"center","700",MONO);
+    }
+  }
+  /* red button */
+  const [bx,by]=[x+w/2,y+h+16];
+  ctx.fillStyle="#3a0f0c"; ctx.beginPath(); ctx.arc(bx,by+2,12,0,7); ctx.fill();
+  ctx.fillStyle=(redDown||$("latch").checked)?"#9c201a":C_RED; ctx.beginPath(); ctx.arc(bx,by,10,0,7); ctx.fill();
+  ctx.fillStyle="rgba(255,255,255,.35)"; ctx.beginPath(); ctx.arc(bx-3,by-3,3.5,0,7); ctx.fill();
+  if(withJack){
+    const [jx,jy]=BOX_JACK();
+    fillR(jx-6,jy-10,12,20,2,"#8e8e8e","#444");
+  }
+}
+function drawPsu(){
+  const s=SLOT.psu;
+  ctx.fillStyle="rgba(40,30,20,.3)"; rrect(s.x+4,s.y+6,s.w,s.h,6); ctx.fill();
+  fillR(s.x,s.y,s.w,s.h,6,vgrad(s.x,s.y,s.w,s.h,[[0,"#2a2a2d"],[1,"#141416"]]),"#000");
+  text("9V DC",s.x+54,s.y+s.h/2-8,"#e0e0e0",15,"center","700");
+  text("POWER SUPPLY",s.x+54,s.y+s.h/2+14,"#8d8d8d",9,"center");
+  for(const [t,col] of [["PS+",C_RED],["PS-",C_BLACK]]){
+    const [px,py]=termXY()[t];
+    ctx.fillStyle="#0d0d0f"; ctx.beginPath(); ctx.arc(px,py,10,0,7); ctx.fill();
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,7,0,7); ctx.fill();
+    ctx.strokeStyle="#d8d8d8"; ctx.lineWidth=1; ctx.stroke();
+    text(t==="PS+"?"+":"−",px-18,py,"#cfcfcf",14,"center","700");
+  }
+}
+function dmmText(m){
+  const [i,v]=lab.meters(), c=lab.circ;
+  if(m==="amm"){
+    const r=c.amm;
+    if(r==="OFF") return "";
+    if(r==="10A") return Math.abs(i).toFixed(2);
+    if(["200m","20m","2000u","200u"].includes(r)) return Math.abs(i)>0.0005?"1   ":"0.00";
+    return " 0.00";
+  }
+  const r=c.volt;
+  if(r==="OFF") return "";
+  if(r==="20") return v.toFixed(2);
+  if(r==="200") return v.toFixed(1);
+  if(r==="1000") return v.toFixed(0);
+  if(["2000m","200m","200u"].includes(r)) return Math.abs(v)>0.2?"1   ":(v*1000).toFixed(1);
+  if(r==="10A") return Math.abs(i).toFixed(2);
+  return "";
+}
+function drawDmm(m){
+  const s=SLOT[m], x=s.x, y=s.y, w=s.w, h=s.h, c=lab.circ;
+  ctx.fillStyle="rgba(40,30,20,.3)"; rrect(x+5,y+7,w,h,12); ctx.fill();
+  fillR(x,y,w,h,12,"#f1c21b","#a38210",1.4);                    /* yellow holster */
+  fillR(x+7,y+7,w-14,h-14,9,C_DMM,"#000");
+  fillR(x+15,y+15,w-30,46,4,"#101014");
+  fillR(x+20,y+19,w-40,38,3,C_DMM_LCD,"#0d0d0d");
+  const t=dmmText(m);
+  text(t,x+w-26,y+39,"#101010",24,"right","700",MONO);
+  /* rotary selector */
+  const [kx,ky]=KNOB[m], pos=m==="amm"?AMM_POS:VOLT_POS, cur=m==="amm"?c.amm:c.volt, n=pos.length;
+  for(let k=0;k<n;k++){
+    const a=-Math.PI/2+2*Math.PI*k/n;
+    text(pos[k],kx+42*Math.cos(a),ky+42*Math.sin(a),pos[k]===cur?"#ffd45e":"#cfc9b6",8.5,"center",pos[k]===cur?"700":"");
+  }
+  ctx.fillStyle="#17171a"; ctx.beginPath(); ctx.arc(kx,ky,28,0,7); ctx.fill();
+  ctx.strokeStyle="#4a4a4f"; ctx.lineWidth=1.5; ctx.stroke();
+  const a=-Math.PI/2+2*Math.PI*pos.indexOf(cur)/n;
+  ctx.strokeStyle="#c8c8c8"; ctx.lineWidth=8; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(kx-8*Math.cos(a),ky-8*Math.sin(a)); ctx.lineTo(kx+24*Math.cos(a),ky+24*Math.sin(a)); ctx.stroke();
+  text(m==="amm"?"Ampere Meter":"Voltmeter",x+w/2,y+76,"#bbb",9,"center");
+  const tl=m==="amm"?[["A1","10A",C_RED],["ACOM","COM",C_BLACK]]:[["V1","VΩ",C_RED],["VCOM","COM",C_BLACK]];
+  for(const [id,lb,col] of tl){
+    const [px,py]=termXY()[id];
+    ctx.fillStyle="#0d0d0f"; ctx.beginPath(); ctx.arc(px,py,10,0,7); ctx.fill();
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,7,0,7); ctx.fill();
+    ctx.strokeStyle="#d8d8d8"; ctx.lineWidth=1; ctx.stroke();
+    text(lb,px,py+18,"#bdbdbd",9,"center");
+  }
+}
+function drawCable(){
+  if(!lab.cableBox) return;
+  const [jx,jy]=BOX_JACK();
+  let end=null;
+  if(lab.cableRod) end=socketXY(lab.cableRod);
+  else if(hand&&hand.k==="cablePlug") end=mouse;
+  else end=[jx+60,jy+80];
+  ctx.strokeStyle="#c9c3b2"; ctx.lineWidth=4.5; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(jx,jy);
+  ctx.bezierCurveTo(jx+90,jy+10,end[0]-40,end[1]-120,end[0],end[1]); ctx.stroke();
+  fillR(end[0]-8,end[1]-7,16,14,3,"#bdb7a6","#7c765f");
+}
+function drawWires(){
+  const xy=termXY();
+  lab.circ.wires.forEach(([a,b],i)=>{
+    const p=xy[a], q=xy[b]; if(!p||!q) return;
+    const mx=(p[0]+q[0])/2, my=Math.min(Math.max((p[1]+q[1])/2+50+(i%3)*14,40),TRAY_Y-14);
+    const col=(a.includes("+")||b.includes("+")||a==="A1"||a==="V1")?C_RED:["#1b1b1b","#2e55a8","#1b1b1b"][i%3];
+    ctx.strokeStyle="rgba(0,0,0,.35)"; ctx.lineWidth=6; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(p[0],p[1]+2); ctx.quadraticCurveTo(mx,my+4,q[0],q[1]+2); ctx.stroke();
+    ctx.strokeStyle=col; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.quadraticCurveTo(mx,my,q[0],q[1]); ctx.stroke();
+  });
+  for(const [t,p] of Object.entries(xy)){
+    if(!termLive(t)) continue;
+    if(t.startsWith("H")){
+      fillR(p[0]-7,p[1]-5,14,10,2,"#c9ced2","#6d7378");
+    }
+    if(selTerm===t){ ctx.strokeStyle="#ffd45e"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(p[0],p[1],13,0,7); ctx.stroke(); }
+  }
+}
+function termLive(t){
+  if(t==="PS+"||t==="PS-") return lab.on.has("psu");
+  if(t==="A1"||t==="ACOM") return lab.on.has("amm");
+  if(t==="V1"||t==="VCOM") return lab.on.has("volt");
+  if(t.endsWith("a")) return lab.rodPlaced(1);
+  if(t.endsWith("b")) return lab.rodPlaced(2);
+  return false;
+}
+function trayRect(i){ const w=100; return {x:14+i*(w+8), y:TRAY_Y+22, w, h:78}; }
+function trayAvail(k){
+  if(k==="water") return waterLeft>0;
+  if(k==="rod1") return lab.place[1]==="tray";
+  if(k==="rod2") return lab.place[2]==="tray";
+  if(k==="cap") return !lab.capOnBench&&!lab.cap[1]&&!lab.cap[2]&&!(hand&&hand.k==="cap");
+  if(k==="cable") return !lab.cableBox;
+  return !lab.on.has(k);
+}
+function drawTray(){
+  ctx.fillStyle="#3a3630"; ctx.fillRect(0,TRAY_Y,LW,LH-TRAY_Y);
+  text(d().tray,14,TRAY_Y+11,"#d9d2c4",11);
+  TRAY_KEYS.forEach((k,i)=>{
+    const r=trayRect(i), av=trayAvail(k)&&!(hand&&hand.k===k&&k!=="water");
+    fillR(r.x,r.y,r.w,r.h,6,av?"#4a453c":"#332f29",av?"#6b6558":"#3d3831");
+    ctx.globalAlpha=av?1:0.3;
+    icon(k,r.x+r.w/2,r.y+r.h/2-6,0.55);
+    ctx.globalAlpha=1;
+    text(itemName(k),r.x+r.w/2,r.y+r.h-9,av?"#ffe9a8":"#7b7466",9.5,"center");
+    if(k==="water") text(d().left(waterLeft),r.x+r.w-6,r.y+10,"#cfc6b2",9,"right");
+  });
+}
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "pot": fillR(-46,-22,92,50,10,C_POT,C_POT_SH); ctx.fillStyle=C_POT_HI; ctx.beginPath(); ctx.ellipse(0,-22,46,12,0,0,7); ctx.fill(); break;
+    case "water": fillR(-13,-36,26,66,5,"#bcd8ee","#88a8c0"); fillR(-8,-46,16,11,2,"#1b5fc0"); break;
+    case "rod1": case "rod2": fillR(-60,-13,120,26,5,C_FOAM,"#000"); fillR(-24,-8,48,16,2,"#f2f2f0");
+      text("#"+k[3],0,0,"#222",13,"center","700"); break;
+    case "cap": fillR(-18,-22,36,44,5,"#d8cfb8","#8b8570"); ctx.fillStyle="#1a1414"; rrect(-13,-17,26,34,4); ctx.fill(); break;
+    case "adapter": fillR(-28,-18,56,36,5,"#1e1e20","#000"); ctx.strokeStyle="#111"; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.moveTo(28,0); ctx.lineTo(48,14); ctx.stroke(); break;
+    case "box": fillR(-50,-30,100,60,8,C_BOX,"#061a63"); ctx.fillStyle=C_LCD; ctx.fillRect(-38,-21,76,34); break;
+    case "cable": ctx.strokeStyle="#c9c3b2"; ctx.lineWidth=6; ctx.beginPath(); ctx.moveTo(-44,10);
+      ctx.bezierCurveTo(-20,-30,20,30,40,-6); ctx.stroke(); fillR(34,-14,18,16,3,"#bdb7a6","#7c765f"); break;
+    case "volt": case "amm": fillR(-30,-44,60,88,8,"#f1c21b","#a38210"); fillR(-24,-38,48,76,6,C_DMM);
+      fillR(-18,-32,36,16,2,C_DMM_LCD); ctx.fillStyle="#111"; ctx.beginPath(); ctx.arc(0,10,13,0,7); ctx.fill();
+      text(k==="volt"?"V":"A",0,-24,"#222",12,"center","700"); break;
+    case "psu": fillR(-40,-22,80,44,5,"#1e1e20","#000"); text("9V",-6,0,"#ddd",16,"center","700");
+      ctx.fillStyle=C_RED; ctx.beginPath(); ctx.arc(26,-8,5,0,7); ctx.fill();
+      ctx.fillStyle="#555"; ctx.beginPath(); ctx.arc(26,8,5,0,7); ctx.fill(); break;
+    case "magnet": fillR(-8,-6,16,12,3,"#8c8c92","#40404a"); ctx.fillStyle="#b9b9c2"; ctx.fillRect(-8,-6,16,5); break;
+  }
+  ctx.restore();
+}
+function drawHand(){
+  if(!hand) return;
+  const [x,y]=mouse;
+  if(hand.k==="cablePlug") return;
+  ctx.globalAlpha=0.82;
+  icon(hand.k==="cable"?"cable":hand.k,x,y,0.7);
+  ctx.globalAlpha=1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  DRAWING — conducting tubes (part A)
+   ══════════════════════════════════════════════════════════════ */
+const TUBES=[{k:"Al",x:300,base:C_ALU,hi:C_ALU_HI,hw:20},
+             {k:"Br",x:470,base:C_BRASS,hi:C_BRASS_HI,hw:19},
+             {k:"Cu",x:640,base:C_COPPER,hi:C_COPPER_HI,hw:20}];
+const TUBE_TOP=130, TUBE_BOT=530;             /* 200 mm = 400 px */
+const TBOX={x:880,y:150,w:230,h:130};
+function drawTubes(){
+  wood(0,0,LW,LH);
+  /* foam pad that catches the magnet */
+  fillR(200,TUBE_BOT+18,560,26,6,"#3d4a55","#26303a");
+  /* retort stand holding the tubes */
+  fillR(170,70,12,TUBE_BOT-40,3,"#6b7075","#3d4145");
+  fillR(150,TUBE_BOT+44,640,12,3,"#55595e","#2f3236");
+  for(const tb of TUBES){
+    fillR(182,TUBE_TOP+60,tb.x-182,8,2,"#7b8086","#4a4e53");
+    const x0=tb.x-tb.hw, w=tb.hw*2;
+    ctx.fillStyle=hgrad(x0,0,w,0,[[0,tb.base],[0.35,tb.hi],[0.6,tb.base],[1,"#4a3b2c"]]);
+    ctx.fillRect(x0,TUBE_TOP,w,TUBE_BOT-TUBE_TOP);
+    ctx.strokeStyle="rgba(0,0,0,.45)"; ctx.lineWidth=1; ctx.strokeRect(x0,TUBE_TOP,w,TUBE_BOT-TUBE_TOP);
+    ctx.fillStyle=tb.hi; ctx.beginPath(); ctx.ellipse(tb.x,TUBE_TOP,tb.hw,6,0,0,7); ctx.fill();
+    ctx.strokeStyle="rgba(0,0,0,.4)"; ctx.stroke();
+    ctx.fillStyle="#15110d"; ctx.beginPath(); ctx.ellipse(tb.x,TUBE_TOP,6,2.2,0,0,7); ctx.fill();
+    fillR(tb.x-30,TUBE_TOP+54,60,20,4,"#2b2e33","#15171a");      /* clamp */
+    text(d().tubeName[tb.k],tb.x,TUBE_BOT+80,"#4a3a26",13,"center","600");
+    if(hand&&hand.k==="magnet") dashed(tb.x-26,TUBE_TOP-30,52,40);
+  }
+  /* the dish the magnet is kept in */
+  ctx.fillStyle="rgba(210,225,235,.55)"; ctx.beginPath(); ctx.ellipse(1010,592,46,13,0,0,7); ctx.fill();
+  ctx.strokeStyle="#8aa0ae"; ctx.lineWidth=1.2; ctx.stroke();
+  /* the magnet */
+  if(magnet.state==="pad"&&!(hand&&hand.k==="magnet")){
+    ctx.fillStyle="#6f7078"; ctx.beginPath(); ctx.ellipse(magnet.x,magnet.y+7,16,5,0,0,7); ctx.fill();
+    icon("magnet",magnet.x,magnet.y,1.1);
+  }
+  if(magnet.state==="free"){ icon("magnet",magnet.x,magnet.y,1.1); }
+  text(d().magnet,1010,625,"#4a3a26",12,"center");
+  /* the same readout box, acting as a timer */
+  if(lab.on.has("box")) drawBox(TBOX.x,TBOX.y,TBOX.w,TBOX.h,false);
+  else { dashed(TBOX.x,TBOX.y,TBOX.w,TBOX.h); text(d().stNoBox,TBOX.x+TBOX.w/2,TBOX.y+TBOX.h/2,C_GHOST,11,"center"); }
+  if(hand&&hand.k==="magnet"){ ctx.globalAlpha=0.9; icon("magnet",mouse[0],mouse[1],1.1); ctx.globalAlpha=1; }
+}
+function stepMagnet(dt){
+  if(magnet.state==="in"){
+    magnet.t+=dt;
+    if(magnet.t>=magnet.T){ magnet.state="free"; magnet.x=TUBES.find(t=>t.k===magnet.tube).x;
+      magnet.y=TUBE_BOT+4; magnet.vy=0.25; }
+  } else if(magnet.state==="free"){
+    magnet.vy+=dt*1600; magnet.y+=magnet.vy*dt;
+    if(magnet.y>=TUBE_BOT+22){ magnet.y=TUBE_BOT+22; magnet.state="pad"; }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8.  INTERACTION
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inR=(p,x,y,w,h,m)=>{ m=m||0; return p[0]>=x-m&&p[0]<=x+w+m&&p[1]>=y-m&&p[1]<=y+h+m; };
+const near=(p,q,r)=>(p[0]-q[0])**2+(p[1]-q[1])**2<=r*r;
+
+function hitTerm(p){
+  for(const [t,q] of Object.entries(termXY())) if(termLive(t)&&near(p,q,13)) return t;
+  return null;
+}
+function hitTray(p){
+  for(let i=0;i<TRAY_KEYS.length;i++){ const r=trayRect(i); if(inR(p,r.x,r.y,r.w,r.h)) return TRAY_KEYS[i]; }
+  return null;
+}
+function returnHand(){
+  if(!hand) return;
+  const k=hand.k;
+  if(k==="rod1"||k==="rod2") lab.place[+k[3]]="tray";
+  if(k==="cablePlug"){ lab.cableBox=false; lab.cableRod=0; lab.hold=false; }
+  if(k==="magnet"){ magnet.state="pad"; magnet.x=1010; magnet.y=585; }
+  say("back",itemName(k==="cablePlug"?"cable":k));
+  hand=null;
+}
+function pickRod(r){
+  /* lifting a rod pulls its heater leads and the thermometer plug */
+  const s=r===1?"a":"b", before=lab.circ.wires.length;
+  lab.circ.wires=lab.circ.wires.filter(w=>!(w[0].endsWith(s)&&w[0].startsWith("H"))&&!(w[1].endsWith(s)&&w[1].startsWith("H")));
+  if(lab.cableRod===r){ lab.cableRod=0; lab.hold=false; }
+  lab.place[r]="hand"; hand={k:"rod"+r};
+  if(lab.circ.wires.length!==before) say("rodWires"); else say("picked",itemName("rod"+r));
+}
+
+function benchClick(p,right){
+  if(right){
+    if(hand){ returnHand(); return; }
+    /* right-click returns an instrument to the tray */
+    for(const k of ["amm","volt","psu","adapter","box","pot"]){
+      const s=SLOT[k]; if(!lab.on.has(k)||!inR(p,s.x,s.y,s.w,s.h)) continue;
+      if(k==="pot"&&(onPot()||lab.water)){ say("needFirst"); return; }
+      if(k==="box"&&lab.cableBox){ say("needFirst"); return; }
+      lab.on.delete(k); if(k==="adapter") lab.adapter=false;
+      if(k==="psu"||k==="amm"||k==="volt"){
+        const ids=k==="psu"?["PS+","PS-"]:k==="amm"?["A1","ACOM"]:["V1","VCOM"];
+        lab.circ.wires=lab.circ.wires.filter(w=>!ids.includes(w[0])&&!ids.includes(w[1]));
+      }
+      say("back",itemName(k)); return;
+    }
+    for(const r of [1,2]) if(lab.rodPlaced(r)&&rodHit(r,p)){ pickRod(r); returnHand(); return; }
+    return;
+  }
+  /* ---- hand full : put it down ---- */
+  if(hand){
+    const k=hand.k;
+    if(SLOT[k]&&!(k==="rod1"||k==="rod2")){
+      const s=SLOT[k];
+      if(inR(p,s.x,s.y,s.w,s.h,40)){ lab.on.add(k); if(k==="adapter") lab.adapter=true; say("placed",itemName(k)); hand=null; }
+      else say("noFit");
+      return;
+    }
+    if(k==="water"){
+      if(!lab.on.has("pot")){ say("needPot"); return; }
+      if(!inR(p,SLOT.pot.x,SLOT.pot.y-30,SLOT.pot.w,SLOT.pot.h+30,20)){ say("noFit"); return; }
+      if(lab.water>=2){ say("potFull"); return; }
+      lab.water++; waterLeft--; hand=null;
+      if(lab.water===2){ lab.lid=true; say("lidOn"); } else say("poured",lab.water);
+      return;
+    }
+    if(k==="rod1"||k==="rod2"){
+      const r=+k[3];
+      if(lab.on.has("pot")&&inR(p,ROD_POT.x,ROD_POT.y,ROD_POT.w,ROD_POT.h+SLOT.pot.h,30)){
+        if(onPot()){ say("rodBusy"); return; }
+        if(!(lab.water===2&&lab.lid)){ say("needWater"); return; }
+        if(lab.cap[r]){ lab.cap[r]=false; lab.capOnBench=true; }
+        lab.place[r]="pot"; hand=null; say("screwed",r); return;
+      }
+      if(inR(p,SLOT.table.x,SLOT.table.y,SLOT.table.w,SLOT.table.h,40)){
+        if(onTable()){ say("rodBusy"); return; }
+        lab.place[r]="table"; hand=null; say("onTable",r); return;
+      }
+      say("noFit"); return;
+    }
+    if(k==="cap"){
+      const rt=onTable(); const [cx,cy]=capXY();
+      if(rt&&!lab.cap[rt]&&near(p,[cx,cy],44)){ lab.cap[rt]=true; hand=null; say("capOn"); return; }
+      say("capNeedRod"); return;
+    }
+    if(k==="cable"){
+      const [jx,jy]=BOX_JACK();
+      if(lab.on.has("box")&&(near(p,[jx,jy],40)||inR(p,SLOT.box.x,SLOT.box.y,SLOT.box.w,SLOT.box.h))){
+        lab.cableBox=true; hand={k:"cablePlug"}; say("cableBox"); return;
+      }
+      say("needBoxEnd"); return;
+    }
+    if(k==="cablePlug"){
+      for(const r of [1,2]){ const s=socketXY(r);
+        if(s&&near(p,s,30)){
+          lab.cableRod=r; hand=null; lab.hold=false;
+          if($("latch").checked&&lab.adapter){ lab.calibrate(); say("cableCal",r); } else say("cableRod",r);
+          return; } }
+      say("noFit"); return;
+    }
+    return;
+  }
+  /* ---- hand empty ---- */
+  const k=hitTray(p);
+  if(k){
+    if(!trayAvail(k)) return;
+    if(k==="rod1"||k==="rod2"){ lab.place[+k[3]]="hand"; }
+    hand={k}; say("picked",itemName(k)); return;
+  }
+  if(lab.on.has("box")&&near(p,BOX_BTN(),16)) return;       /* handled on pointer down/up */
+  const t=hitTerm(p);
+  if(t){
+    if(!selTerm){ selTerm=t; say("wirePick",TERM_NAME[t]); }
+    else if(selTerm===t){ selTerm=null; }
+    else { const on=lab.circ.toggle(selTerm,t); say(on?"wireOn":"wireOff",TERM_NAME[selTerm],TERM_NAME[t]); selTerm=null; }
+    lab.res=lab.circ.solve(); return;
+  }
+  for(const m of ["amm","volt"]){
+    if(lab.on.has(m)&&near(p,KNOB[m],36)){ turnKnob(m,1); return; }
+  }
+  if(lab.cableRod){ const s=socketXY(lab.cableRod);
+    if(s&&near(p,s,16)){ lab.cableRod=0; lab.hold=false; hand={k:"cablePlug"}; say("cableOut"); return; } }
+  if(lab.cableBox&&!lab.cableRod&&near(p,[BOX_JACK()[0]+60,BOX_JACK()[1]+80],18)){ hand={k:"cablePlug"}; return; }
+  const rt=onTable();
+  if(rt&&lab.cap[rt]&&near(p,capXY(),26)){ lab.cap[rt]=false; hand={k:"cap"}; say("capOff"); return; }
+  if(lab.capOnBench&&inR(p,SLOT.table.x+SLOT.table.w+30,SLOT.table.y+60,34,40,8)){
+    lab.capOnBench=false; hand={k:"cap"}; say("picked",itemName("cap")); return; }
+  for(const r of [1,2]) if(lab.rodPlaced(r)&&rodHit(r,p)){ pickRod(r); return; }
+}
+function rodHit(r,p){
+  if(lab.place[r]==="table") return inR(p,SLOT.table.x,SLOT.table.y,SLOT.table.w,SLOT.table.h,4);
+  if(lab.place[r]==="pot") return inR(p,ROD_POT.x,ROD_POT.y,ROD_POT.w,ROD_POT.h,4);
+  return false;
+}
+function turnKnob(m,dir){
+  const pos=m==="amm"?AMM_POS:VOLT_POS, c=lab.circ;
+  const cur=m==="amm"?c.amm:c.volt, i=(pos.indexOf(cur)+dir+pos.length)%pos.length;
+  if(m==="amm") c.amm=pos[i]; else c.volt=pos[i];
+  lab.res=c.solve(); say("knob",itemName(m),pos[i]);
+}
+function tubesClick(p,right){
+  if(right){ if(hand) returnHand(); return; }
+  if(hand&&hand.k==="magnet"){
+    for(const tb of TUBES){
+      if(inR(p,tb.x-30,TUBE_TOP-40,60,70)){
+        magnet.state="in"; magnet.tube=tb.k; magnet.t=0; magnet.T=lab.fallTime(tb.k);
+        hand=null; say("dropIn",d().tubeName[tb.k]); return;
+      }
+    }
+    if(p[1]>TUBE_BOT&&p[1]<TUBE_BOT+60){ magnet.state="pad"; magnet.x=Math.max(220,Math.min(1100,p[0])); magnet.y=TUBE_BOT+22;
+      hand=null; say("dropFloor"); return; }
+    magnet.state="pad"; magnet.x=1010; magnet.y=585; hand=null; say("dropFloor"); return;
+  }
+  if(magnet.state==="in"){ if(inR(p,200,TUBE_TOP-40,560,TUBE_BOT-TUBE_TOP+40)) say("falling"); }
+  if(magnet.state==="pad"&&near(p,[magnet.x,magnet.y],24)){ hand={k:"magnet"}; say("picked",d().magnet); return; }
+}
+
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{
+  const p=lpos(e); mouse=p;
+  if(e.button===0&&lab.on.has("box")){
+    const b=view==="bench"?BOX_BTN():[TBOX.x+TBOX.w/2,TBOX.y+TBOX.h+16];
+    if(near(p,b,16)&&!hand){ redDown=performance.now(); cv.setPointerCapture(e.pointerId); return; }
+  }
+  if(view==="bench") benchClick(p,e.button===2);
+  else if(view==="tubes") tubesClick(p,e.button===2);
+});
+cv.addEventListener("pointerup",e=>{ if(redDown) releaseRed(); });
+cv.addEventListener("wheel",e=>{
+  if(view!=="bench") return;
+  const p=lpos(e);
+  for(const m of ["amm","volt"]) if(lab.on.has(m)&&near(p,KNOB[m],40)){ e.preventDefault(); turnKnob(m,e.deltaY>0?1:-1); return; }
+},{passive:false});
+
+function releaseRed(){
+  const held=performance.now()-redDown; redDown=0;
+  if($("latch").checked) return;
+  if(held>=3000){ if(lab.adapter){ lab.watch=0; lab.watchRun=false; say("reset0"); } }
+  else lab.press();
+}
+$("redBtn").addEventListener("pointerdown",e=>{ redDown=performance.now(); $("redBtn").setPointerCapture(e.pointerId); });
+$("redBtn").addEventListener("pointerup",()=>{ if(redDown) releaseRed(); });
+let spaceDown=false;
+document.addEventListener("keydown",e=>{
+  if(e.code!=="Space"||e.target.tagName==="INPUT") return;
+  e.preventDefault(); if(spaceDown) return; spaceDown=true; redDown=performance.now();
+});
+document.addEventListener("keyup",e=>{
+  if(e.code!=="Space") return; e.preventDefault(); spaceDown=false; if(redDown) releaseRed();
+});
+$("unwire").onclick=()=>{ lab.circ.wires=[]; selTerm=null; lab.res=lab.circ.solve(); say("unwired"); };
+
+function setView(v){
+  if(v!==view){ if(hand) returnHand(); selTerm=null; }
+  view=v;
+  for(const k of ["bench","tubes","info"]) $("tab-"+k).className=(k===v)?"on":"";
+  $("cv").hidden=(v==="info"); $("info").hidden=(v!=="info");
+  if(v!=="info") layout();
+  $("t-cap").textContent=v==="bench"?d().capBench:v==="tubes"?d().capTubes:d().capInfo;
+  renderSpeeds();
+}
+$("tab-bench").onclick=()=>setView("bench");
+$("tab-tubes").onclick=()=>setView("tubes");
+$("tab-info").onclick=()=>setView("info");
+
+function renderSpeeds(){
+  const box=$("speeds"); box.innerHTML="";
+  for(const s of SPEEDS){
+    const b=document.createElement("button"); b.textContent=s+"×";
+    b.className=(s===speed)?"on":""; b.disabled=(view==="tubes");
+    b.onclick=()=>{ speed=s; renderSpeeds(); };
+    box.appendChild(b);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   9.  STATUS + INFO
+   ══════════════════════════════════════════════════════════════ */
+function renderStatus(){
+  const L=[], t=d();
+  if(!lab.on.has("box")) L.push([t.stNoBox,false]);
+  else if(!lab.adapter) L.push([t.stNoPower,true]);
+  if(lab.cableRod){
+    L.push([t.stCal(lab.cableRod,!!lab.calib[lab.cableRod]),false]);
+    if(lab.hold) L.push([t.stHold,false]);
+  }
+  if(view==="bench") L.push([t.stCalNote,false]);
+  if(msg.key&&performance.now()-msg.t<9000){
+    const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]);
+  }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+const INFO={
+ko:`<h4>제공 장비</h4>
+<ol>
+<li>구리 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 20.0 mm</li>
+<li>황동 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 19.0 mm</li>
+<li>알루미늄 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 20.0 mm</li>
+<li>영구자석 1.2 g</li>
+<li>물 저장조 (뚜껑 안에 열교환기) 와 2 L 물병 두 개</li>
+<li>Rod #1 — 지름 20.0 mm 구리 막대, 온도 센서 8개와 히터 내장, 단열 피복</li>
+<li>Rod #2 — 복합 막대 : 구리 88 mm · 황동 50 mm · 알루미늄 50 mm · 구리 65 mm (히터 쪽부터)</li>
+<li>단열 종단 캡</li>
+<li>판독 박스용 12 V DC 어댑터</li>
+<li>디지털 판독 박스 — 온도계 8채널과 타이머, 빨간 버튼 하나</li>
+<li>온도계 케이블</li>
+<li>전압계 (20 V DC 위치로 사용)</li>
+<li>전류계 (10 A DC 위치로 사용)</li>
+<li>전선</li>
+<li>히터용 9 V DC 전원</li>
+</ol>
+<h4>과제 요약</h4>
+<ul>
+<li><b>A.</b> 자석을 세 튜브에 떨어뜨려 낙하 시간을 재고, 문제지에 주어진 관계로 구리·황동·알루미늄의 전기전도도를 구합니다.</li>
+<li><b>B.</b> Rod #1을 저장조 뚜껑에 체결하고 히터를 켭니다. 전압과 전류로 히터 전력을, 정상 상태의 온도 분포로 구리의 열전도도를 구합니다. (정상 상태까지 약 15분)</li>
+<li><b>C.</b> Rod #1을 저장조에서 떼어 캡을 씌운 채 가열하고, 온도 상승률로 구리의 비열을 구합니다.</li>
+<li><b>D.</b> Rod #2로 같은 측정을 하여 황동과 알루미늄의 열전도도를 구합니다. (정상 상태까지 약 15분)</li>
+<li>끝으로 세 금속에 대해 로렌츠 수 L = κ / (σT) 를 비교합니다.</li>
+</ul>
+<h4>주의</h4>
+<ul>
+<li class="warn">막대를 물에 담그지 마시오. 막대는 뚜껑 위의 나사에 체결합니다.</li>
+<li>온도계 보정은 막대를 저장조에 체결하거나 가열하기 전, 막대 전체가 같은 온도일 때 하십시오 — 빨간 버튼을 누른 채 케이블을 막대에 꽂습니다.</li>
+<li>판독 박스는 온도계 케이블이 빠져 있으면 타이머로 동작합니다.</li>
+</ul>
+<h4>이 시뮬레이터에 대하여</h4>
+<ul>
+<li>실제 계기가 보여 주는 숫자만 보입니다 : 판독 박스의 여덟 온도와 시간, 두 멀티미터의 표시.</li>
+<li>전도도·기울기·맞춤·채점은 제공하지 않습니다. 분석은 직접 하세요.</li>
+<li>세션마다 재료 값과 센서 오프셋이 조금씩 다릅니다.</li>
+</ul>`,
+en:`<h4>Equipment</h4>
+<ol>
+<li>Copper tube — length 200.0 mm, bore 6.0 mm, outer diameter 20.0 mm</li>
+<li>Brass tube — length 200.0 mm, bore 6.0 mm, outer diameter 19.0 mm</li>
+<li>Aluminum tube — length 200.0 mm, bore 6.0 mm, outer diameter 20.0 mm</li>
+<li>Permanent magnet, 1.2 g</li>
+<li>Water reservoir (heat exchanger in the cover) and two 2 L bottles</li>
+<li>Rod #1 — copper rod, 20.0 mm diameter, eight temperature sensors and a built-in heater, insulated</li>
+<li>Rod #2 — composite rod: copper 88 mm · brass 50 mm · aluminum 50 mm · copper 65 mm (from the heater)</li>
+<li>Thermally insulating termination cap</li>
+<li>12 V DC adapter for the readout box</li>
+<li>Digital readout box — eight thermometers and a timer, one red button</li>
+<li>Thermometer cable</li>
+<li>Voltmeter (used on the 20 V DC position)</li>
+<li>Ammeter (used on the 10 A DC position)</li>
+<li>Electrical wires</li>
+<li>9 V DC supply for the heater</li>
+</ol>
+<h4>Tasks in short</h4>
+<ul>
+<li><b>A.</b> Drop the magnet through the three tubes, time the descent, and get the electrical conductivity of copper, brass and aluminum from the relation given on the problem sheet.</li>
+<li><b>B.</b> Screw Rod #1 onto the reservoir cover and switch the heater on. Get the heater power from V and I, and the heat conductivity of copper from the steady-state temperatures (about 15 min to settle).</li>
+<li><b>C.</b> Take Rod #1 off the reservoir, cap it, heat it, and get the specific heat of copper from the heating rate.</li>
+<li><b>D.</b> Repeat with Rod #2 for the heat conductivities of brass and aluminum (about 15 min to settle).</li>
+<li>Finally compare the Lorenz number L = κ / (σT) of the three metals.</li>
+</ul>
+<h4>Precautions</h4>
+<ul>
+<li class="warn">Do not immerse the rods in water. A rod is screwed onto the thread on the cover.</li>
+<li>Calibrate the thermometers before the rod is attached or heated, while the whole rod is at one temperature: hold the red button down while plugging the cable into the rod.</li>
+<li>With the thermometer cable out, the readout box works as a timer.</li>
+</ul>
+<h4>About this simulator</h4>
+<ul>
+<li>Only what a real instrument shows appears: the eight temperatures and the time on the box, and the two multimeter displays.</li>
+<li>No conductivity, no gradient, no fit, no marking. The analysis is yours.</li>
+<li>Material values and sensor offsets differ slightly from session to session.</li>
+</ul>`};
+
+/* ══════════════════════════════════════════════════════════════
+   10.  LANGUAGE
+   ══════════════════════════════════════════════════════════════ */
+function applyLang(){
+  const t=d();
+  document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
+  $("tab-bench").textContent=t.tabBench; $("tab-tubes").textContent=t.tabTubes; $("tab-info").textContent=t.tabInfo;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-box").textContent=t.hBox; $("redBtn").textContent=t.red; $("t-latch").textContent=t.latch;
+  $("t-boxhint").textContent=t.boxHint;
+  $("t-h-wire").textContent=t.hWire; $("t-wirehint").textContent=t.wireHint; $("unwire").textContent=t.unwire;
+  $("info").innerHTML=INFO[lang];
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2019 E2 — 비데만–프란츠 법칙 · HaslaLab":"IPhO 2019 E2 — Wiedemann–Franz Law · HaslaLab";
+  setView(view); renderStatus();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+/* ══════════════════════════════════════════════════════════════
+   11.  MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let tPrev=performance.now()/1000, uiTick=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  const sp=(view==="tubes")?1:speed;
+  lab.advance(dt*sp);
+  stepMagnet(dt);
+  if(view==="bench"){ ctx.clearRect(0,0,LW,LH); drawBench(); }
+  else if(view==="tubes"){ ctx.clearRect(0,0,LW,LH); drawTubes(); }
+  if(++uiTick%6===0) renderStatus();
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+layout(); applyLang(); requestAnimationFrame(tick);
+</script>
+  <script src="adfit.js"></script>
+</body>
+</html>

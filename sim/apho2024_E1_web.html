@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2024 E1 — 자이로스코프 · Gyroscope · HaslaLab</title>
+<meta name="description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 자이로스코프를 부품부터 조립하고, 전원 어댑터 전압을 바꿔 가며 세차 주기와 기울기를 스톱워치·각도기·자로 직접 잽니다. 회전수는 어디에도 표시되지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2024 E1 — 자이로스코프 · Gyroscope">
+<meta property="og:description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 조립부터 세차 측정, 자가균형까지 실제 장비처럼 다룹니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1600px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1150px){ .wrap{flex-direction:column} }
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .scene{display:flex;gap:10px;align-items:flex-start}
+  @media (max-width:760px){ .scene{flex-direction:column} }
+  #parts{flex:0 0 230px}
+  #cv{display:block;flex:1 1 auto;min-width:0;width:100%;height:auto;border-radius:6px;background:#f7f8f9;touch-action:none;cursor:grab}
+  .pc{display:block;width:100%;text-align:left;margin:3px 0;padding:7px 10px;font-size:12.5px}
+  .pc.done{color:#6b737b;text-decoration:line-through}
+  .pc.next{border-color:var(--accent)}
+  .pc.held{background:#4a3e1d;border-color:var(--accent)}
+  .txt{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+       font:12.5px/1.75 ui-monospace,Consolas,monospace;color:#c3cad0;white-space:pre-wrap}
+  .say{min-height:20px;font-size:12.5px;color:#9fd6a6;margin-top:6px}
+  .say.err{color:#f0a79f}
+
+  .panel{flex:0 0 330px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  @media (max-width:1150px){ .panel{width:100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+  .row button{flex:1 1 auto;text-align:center;margin:2px 0;padding:5px 6px;font-size:12px}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .lcd{background:#150708;border-radius:6px;padding:4px 12px;text-align:right;color:#ff3b30;
+       font:700 30px/1.2 ui-monospace,Consolas,monospace;letter-spacing:.05em}
+  .lcd.off{color:#3a1412}
+  .sw{background:#0d1113;border-radius:6px;padding:4px 12px;text-align:right;color:#7CFC98;
+      font:700 26px/1.2 ui-monospace,Consolas,monospace}
+  .laps{font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--muted);max-height:96px;overflow:auto;white-space:pre}
+  .chk{display:flex;align-items:center;gap:7px;margin:5px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .warn{font-size:12px;color:#f0a79f;white-space:pre-line;min-height:16px}
+  .knobs{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:3px 4px;align-items:center;font-size:12px}
+  .knobs button{margin:0;padding:3px 0;font-size:11.5px}
+  #ruler{display:block;width:100%;height:auto;background:#fdfcf2;border-radius:4px;margin-top:4px}
+  .cnt{font:700 14px ui-monospace,Consolas,monospace;min-width:74px}
+  header{max-width:1600px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stage">
+    <div class="card">
+      <div class="tabs">
+        <button id="tab-asm" class="on"></button>
+        <button id="tab-bench"></button>
+        <button id="tab-g"></button>
+        <button id="tab-info"></button>
+      </div>
+      <h3 id="t-cap"></h3>
+      <div class="scene" id="sceneBox">
+        <div id="parts"></div>
+        <canvas id="cv"></canvas>
+      </div>
+      <div class="say" id="say"></div>
+      <div class="txt" id="info" hidden></div>
+    </div>
+  </div>
+
+  <aside class="panel" id="pBench">
+    <h2 id="t-h-power"></h2>
+    <div class="lcd off" id="lcd">0.0</div>
+    <input type="range" id="volt" min="0" max="12" step="0.1" value="0">
+    <div class="row" id="vbump"></div>
+    <label class="chk"><input type="checkbox" id="pw"><span id="t-pw"></span></label>
+    <div class="warn" id="pwWarn"></div>
+
+    <h2 id="t-h-sw"></h2>
+    <div class="sw" id="swLbl">00:00.00</div>
+    <div class="row"><button id="swStart"></button><button id="swStop"></button><button id="swLap"></button><button id="swReset"></button></div>
+    <div class="laps" id="laps"></div>
+
+    <h2 id="t-h-arm"></h2>
+    <label class="chk"><input type="checkbox" id="lock" checked><span id="t-lock"></span></label>
+    <input type="range" id="arm" min="8" max="41" step="0.05" value="15">
+    <canvas id="ruler"></canvas>
+    <p class="hint" id="t-rulerhint"></p>
+
+    <h2 id="t-h-disk"></h2>
+    <div class="row" id="diskRow"></div>
+
+    <h2 id="t-h-bolts"></h2>
+    <div class="row"><span id="t-bcw" style="flex:1;font-size:12px"></span><span class="cnt" id="bcw"></span>
+      <button id="bcwM" style="flex:0 0 36px">−</button><button id="bcwP" style="flex:0 0 36px">+</button></div>
+    <div class="row"><span id="t-bsd" style="flex:1;font-size:12px"></span><span class="cnt" id="bsd"></span>
+      <button id="bsdM" style="flex:0 0 36px">−</button><button id="bsdP" style="flex:0 0 36px">+</button></div>
+
+    <h2 id="t-h-level"></h2>
+    <div class="knobs" id="knobs"></div>
+    <div class="row"><button id="turn90">↺ 90°</button><button id="turn180">↻ 180°</button></div>
+
+    <h2>Part F</h2>
+    <button id="impulse" style="width:100%"></button>
+    <div class="row"><button id="liftU"></button><button id="liftD"></button></div>
+
+    <h2 id="t-h-view"></h2>
+    <label class="chk"><input type="checkbox" id="gonio"><span id="t-gonio"></span></label>
+    <label class="chk"><input type="checkbox" id="trail"><span id="t-trail"></span></label>
+    <div class="row" id="speeds"></div>
+  </aside>
+
+  <aside class="panel" id="pG" hidden>
+    <h2 id="t-h-gbuild"></h2>
+    <div class="laps" id="gList" style="min-height:60px;color:var(--ink)"></div>
+    <div id="gAdd"></div>
+    <button id="gClear" style="width:100%">↺</button>
+    <h2 id="t-h-gdisk"></h2>
+    <div class="row" id="gDiskRow"></div>
+    <h2 id="t-h-gvolt"></h2>
+    <input type="range" id="gv" min="0" max="6" step="0.1" value="5">
+    <div class="lcd" id="gvl" style="font-size:22px">5.0 V</div>
+    <div class="row"><button id="gRun"></button><button id="gStop"></button></div>
+    <div class="warn" id="gMsg"></div>
+    <p class="hint" id="t-gnote"></p>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n
+   ══════════════════════════════════════════════════════════════ */
+const T={
+  ko:{
+    title:"APhO 2024 실험 — 자이로스코프",
+    sub:"가상 실험실 · 회전수(rpm)는 어디에도 표시되지 않습니다. 스톱워치·각도기·자로 직접 재세요.",
+    tabAsm:"1. 조립", tabBench:"2. 실험대", tabG:"3. 자가균형 (Part G)", tabInfo:"장비 제원",
+    capAsm:"부품을 클릭해 집은 뒤, 점선으로 표시된 장착 위치를 클릭하세요 · 우클릭 드래그: 시점 회전",
+    capBench:"드래그: 시점 회전 · 회전 중인 원판에 손대지 마세요",
+    capG:"부품을 아래에서 위로 쌓고 시동을 걸어 보세요",
+    capInfo:"장비 목록 · 질량 · 무부하 특성 · 주의사항",
+    parts:{mat:"정전기 방지 매트",stand:"A형 레토르트 스탠드",knobs:"별 노브 ×3 + 핸드 노브",pole:"자이로스코프 수직 스탠드",
+           tube:"알루미늄 튜브",motor:"DC 모터 + 케이스",coupler:"모터 샤프트 커플러",disk:"20 cm 회전 원판 (M3 볼트)",
+           adapter:"조절식 전원 어댑터",cw:"26 cm 균형추판 + 와셔 ×2 + M6"},
+    diskBox:"회전 원판", reset:"전부 분해", next:"다음 부품", assembled:"조립 완료 — [2. 실험대] 탭으로 이동하세요.",
+    needFirst:"먼저 설치해야 할 부품이 있습니다.", notHere:"장착 위치가 아닙니다 — 점선 표시 위에 놓으세요.",
+    notReady:"장치가 조립되지 않았습니다 — [1. 조립] 탭으로 가세요.",
+    hPower:"조절식 전원 어댑터 (ZY-009)", pw:"전원", warn6:"⚠ 6 V 초과 — 모터가 탑니다", burnt:"✖ 모터 소손 — 분해 후 재조립 필요",
+    overheat:"⚠ 10분 이상 연속 구동 — 모터를 쉬게 하세요", noLevel:"받침 기울기 지시계 없음 — 팔의 거동으로 판단하세요.",
+    hSw:"스톱워치", start:"시작", stop:"정지", lap:"랩", rs:"초기화",
+    hArm:"별 노브 (튜브 고정)", lock:"잠김 — 풀어야 튜브를 밀어 옮길 수 있습니다",
+    rulerHint:"자 : 피벗 중심(0)에서 회전 원판 중심까지. 눈금을 직접 읽으세요.",
+    hDisk:"회전 원판", hBolts:"볼트 + 너트", bcw:"26 cm 균형추판", bsd:"20 cm 회전판", sets:"세트",
+    hLevel:"받침 수평 조절", knob:"노브",
+    impulse:"카운터웨이트 순간 누르기", liftU:"팔 들어올렸다 놓기 ↑", liftD:"팔 눌렀다 놓기 ↓",
+    hView:"보기", gonio:"각도기 대기", trail:"잔상 표시", speed:"배속",
+    gonioName:"각도기", spinNote:"회전 중 — 볼트를 바꾸려면 모터를 멈추세요",
+    hGBuild:"구성 (아래 → 위)", gParts:{motor:"DC 모터 (정지)",cw:"26 cm 원판 (정지)",disk:"20 cm 회전 원판 (회전)"},
+    hGDisk:"회전 원판", hGVolt:"전압", gRun:"시동", gStop:"정지", gNoDisk:"회전 원판이 없습니다.",
+    gNote:"지지점은 최하단 부품의 중심축입니다. 직립하는지 쓰러지는지는 직접 보고 판단하세요."
+  },
+  en:{
+    title:"APhO 2024 Experiment — Gyroscope",
+    sub:"Virtual laboratory · the rotor speed (rpm) is never displayed. Measure with the stopwatch, goniometer and ruler.",
+    tabAsm:"1. Assembly", tabBench:"2. Bench", tabG:"3. Self-balancing (Part G)", tabInfo:"Specifications",
+    capAsm:"Click a part to pick it up, then click its dashed mounting point · right-drag: orbit the view",
+    capBench:"drag: orbit the view · never touch the spinning disk",
+    capG:"Stack the parts from the bottom up and start the motor",
+    capInfo:"equipment · masses · no-load characteristic · precautions",
+    parts:{mat:"Antistatic mat",stand:"A-shape retort stand",knobs:"3 × star knob + hand knob",pole:"Gyroscope main vertical stand",
+           tube:"Aluminium tube",motor:"DC motor with case",coupler:"Motor shaft coupler",disk:"20 cm spinning disk (M3 bolts)",
+           adapter:"Adjustable power adapter",cw:"26 cm counterweight disk + 2 washers + M6"},
+    diskBox:"Spinning disk", reset:"Disassemble all", next:"Next part", assembled:"Assembly complete — go to the [2. Bench] tab.",
+    needFirst:"A prerequisite part is missing.", notHere:"Not the mounting point — drop it on the dashed ghost.",
+    notReady:"The apparatus is not assembled — go to the [1. Assembly] tab.",
+    hPower:"Adjustable power adapter (ZY-009)", pw:"Power", warn6:"⚠ above 6 V — the motor will burn", burnt:"✖ Motor burnt out — disassemble and rebuild",
+    overheat:"⚠ running over 10 min — let the motor rest", noLevel:"No spirit level provided — judge from the behaviour of the arm.",
+    hSw:"Stopwatch", start:"START", stop:"STOP", lap:"LAP", rs:"RESET",
+    hArm:"Star knob (tube lock)", lock:"locked — release it to slide the tube",
+    rulerHint:"Ruler: from the pivot axis (0) to the centre of the spinning disk. Read the scale yourself.",
+    hDisk:"Spinning disk", hBolts:"Bolts + nuts", bcw:"26 cm counterweight disk", bsd:"20 cm spinning disk", sets:"sets",
+    hLevel:"Base levelling", knob:"knob",
+    impulse:"Press the counterweight briefly", liftU:"Lift the arm and release ↑", liftD:"Push the arm down and release ↓",
+    hView:"View", gonio:"Hold the goniometer up", trail:"Show trail", speed:"Time ×",
+    gonioName:"goniometer", spinNote:"Spinning — stop the motor before changing bolts",
+    hGBuild:"Stack (bottom → top)", gParts:{motor:"DC motor (static)",cw:"26 cm disk (static)",disk:"20 cm disk (spinning)"},
+    hGDisk:"Spinning disk", hGVolt:"Voltage", gRun:"RUN", gStop:"STOP", gNoDisk:"No spinning disk in the stack.",
+    gNote:"The support point is the axis of the lowest component. Watch whether it stays upright or topples."
+  }
+};
+const INFO={ko:`APhO 2024  실험 문제 — 자이로스코프
+
+[ 제공 장비 ]
+  · 자이로스코프 수직 스탠드 ×1        · 조절식 전원 어댑터 ×1 (ZY-009)
+  · DC 모터 + 케이스 + 커플러 ×1        · 각도기(goniometer) ×1
+  · 20 cm 회전 원판 두께 2 / 3 / 4 mm    · 스톱워치 ×1
+  · 26 cm 균형추 원판 ×1                · 정전기 방지 매트, 알루미늄 튜브, 레토르트 스탠드
+  · 볼트·너트, 육각렌치, 드라이버, 케이블타이, 양면테이프, 자
+
+[ 부품 질량 ]
+  20 cm × 2 mm  →  65 ± 1 g       20 cm × 3 mm  →  89 ± 1 g
+  20 cm × 4 mm  → 131 ± 1 g       26 cm × 4 mm  → 231 ± 1 g
+  DC 모터(케이스 포함) → 94 g      알루미늄 튜브 질량은 무시한다.
+
+[ Table 1 — DC 모터 무부하 특성 ]  (참고용, 재현 대상 아님)
+   3.7 V  176 mA   7 200 rpm      7.4 V  230 mA  15 600 rpm
+   4.8 V  185 mA   9 700 rpm      9.6 V  245 mA  19 800 rpm
+   6.0 V  205 mA  12 600 rpm     12.0 V  298 mA  24 500 rpm
+
+[ 주의사항 ]
+  1) 전원을 켜기 전 노브를 OFF 로. 구동 전압은 6 V 이하. 초과 시 모터가 탄다.
+  2) 10 분 이상 연속 구동 금지.
+  3) 회전 중인 원판에 손대지 말 것.
+  4) 알루미늄 튜브가 홀더에 닿지 않도록 할 것.
+
+[ 이 시뮬레이터에 대하여 ]
+  · 회전수(rpm)는 어디에도 표시되지 않는다. 실제 시험장과 같다.
+  · 세차 주기·각도·길이는 스톱워치·각도기·자로 직접 재야 한다.
+  · 조립한 뒤 팔은 스스로 균형을 잡지 않는다. 별 노브를 풀고 튜브를 밀어 균형점을 찾을 것.
+  · 분석·회귀·채점 기능은 의도적으로 넣지 않았다.
+  · 시간 배속을 쓰면 스톱워치도 같은 시간축으로 흐른다 (결과는 동일).`,
+en:`APhO 2024  Experimental Problem — Gyroscope
+
+[ Equipment provided ]
+  · Gyroscope main vertical stand ×1     · Adjustable power adapter ×1 (ZY-009)
+  · DC motor + case + coupler ×1         · Goniometer ×1
+  · 20 cm spinning disk, 2 / 3 / 4 mm    · Stopwatch ×1
+  · 26 cm counterweight disk ×1          · Antistatic mat, aluminium tube, retort stand
+  · Bolts & nuts, Allen keys, screwdriver, cable ties, double-sided tape, ruler
+
+[ Mass of components ]
+  20 cm × 2 mm  ->  65 ± 1 g       20 cm × 3 mm  ->  89 ± 1 g
+  20 cm × 4 mm  -> 131 ± 1 g       26 cm × 4 mm  -> 231 ± 1 g
+  DC motor with casing -> 94 g     The mass of the aluminium tube is neglected.
+
+[ Table 1 — DC motor no-load characteristic ]  (reference only, not for replication)
+   3.7 V  176 mA   7 200 rpm      7.4 V  230 mA  15 600 rpm
+   4.8 V  185 mA   9 700 rpm      9.6 V  245 mA  19 800 rpm
+   6.0 V  205 mA  12 600 rpm     12.0 V  298 mA  24 500 rpm
+
+[ Precautions ]
+  1) Knob OFF before switching on. Keep the driving voltage below 6 V, or the motor burns.
+  2) Do not run continuously for more than 10 minutes.
+  3) Never touch the spinning disk.
+  4) Keep the aluminium tube clear of the holder.
+
+[ About this simulator ]
+  · The rotor speed (rpm) is never displayed, exactly as in the real exam hall.
+  · Precession period, angle and length must be measured with the stopwatch,
+    goniometer and ruler yourself.
+  · The arm does not balance itself after assembly: release the star knob and slide the tube.
+  · Analysis, fitting and marking features are deliberately absent.
+  · With time acceleration the stopwatch runs on the same clock, so results are unchanged.`};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  PHYSICS  —  identical to the Python constants
+   ══════════════════════════════════════════════════════════════ */
+const G=9.81;
+const NOLOAD_SLOPE=2074.99, NOLOAD_INTCP=-143.66;
+const K_EMF=4.602099e-3, R_ARM_COIL=2.0;
+const DRAG_N=2.590, DRAG_C0=7.856826e-08, DRAG_C1=2.085102e-04, R_REF=0.100;
+const MOTOR_BURN_VOLT=6.0, MOTOR_BURN_TIME=12.0, OVERHEAT_TIME=600.0;
+const M_MOTOR=0.094;
+const DISKS={"20_2":[0.065,0.100,0.002,"20 cm × 2 mm"],"20_3":[0.089,0.100,0.003,"20 cm × 3 mm"],
+             "20_4":[0.131,0.100,0.004,"20 cm × 4 mm"],"26_4":[0.231,0.130,0.004,"26 cm × 4 mm"]};
+const M_BOLT=0.0018;
+const TUBE_L=0.53, PIVOT_Z=0.30, BASE_R=0.115, PHI_STOP=22*Math.PI/180;
+const TAU_BEARING=1.2e-3, ZETA_NUT=0.16, DAMP_PSI=0.25, L3_MIN=0.020, LEVEL_SENS=3.0, JITTER_SIGMA=0.010;
+const SAG0=14*Math.PI/180, SAG_K=175*Math.PI/180, SAG_MAX=20*Math.PI/180;
+const KNOB_STEP=5.0e-5, KNOB_RANGE=3.0e-3;
+const PART_KEYS=[["mat",null],["stand","mat"],["knobs","stand"],["pole","knobs"],["tube","pole"],
+                 ["motor","tube"],["coupler","motor"],["disk","coupler"],["adapter","pole"],["cw","tube"]];
+const REQUIRED=new Set(["mat","stand","knobs","pole","tube","motor","coupler","disk","adapter"]);
+function gauss(){ let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const TAU=2*Math.PI, mod2pi=a=>((a%TAU)+TAU)%TAU;
+
+class Kit{
+  constructor(){ this.resetAll(); }
+  resetAll(){
+    this.installed=new Set(); this.diskKey="20_3"; this.nBoltCw=0; this.nBoltSd=0;
+    this.r_m=0.15; this.tubeLocked=true;
+    this.knob=[0,1,2].map(()=>(Math.random()*2-1)*1.2e-3);
+    this.volt=0; this.powerOn=false; this.burnt=false; this.overVoltT=0; this.runT=0; this.jit=1;
+    this.resetMotion(); this.t=0;
+  }
+  resetMotion(){ this.w_s=0; this.psi=0; this.dpsi=0; this.phi=0; this.dphi=0; this.spinAng=0; this.trail=[]; }
+  ready(){ for(const k of REQUIRED) if(!this.installed.has(k)) return false; return true; }
+  disk(){ return DISKS[this.diskKey]; }
+  get r_c(){ return TUBE_L-this.r_m; }
+  mHead(){ let m=this.installed.has("motor")?M_MOTOR:0; if(this.installed.has("disk")) m+=this.disk()[0]+this.nBoltSd*M_BOLT; return m; }
+  mCw(){ return this.installed.has("cw")?DISKS["26_4"][0]+this.nBoltCw*M_BOLT:0; }
+  imbalance(){ return this.mHead()*this.r_m-this.mCw()*this.r_c; }
+  I3(){ if(!this.installed.has("disk")) return 0; const [m,R]=this.disk(); return 0.5*m*R*R+this.nBoltSd*M_BOLT*R*R; }
+  I1(){
+    let I=this.mHead()*this.r_m**2+this.mCw()*this.r_c**2;
+    if(this.installed.has("disk")){ const [m,R]=this.disk(); I+=0.25*m*R*R; }
+    if(this.installed.has("cw")) I+=0.25*DISKS["26_4"][0]*DISKS["26_4"][1]**2;
+    return Math.max(I,1e-6);
+  }
+  tilt(){
+    const h=this.knob, p=[0,1,2].map(i=>{ const a=(90+120*i)*Math.PI/180; return [BASE_R*Math.cos(a),BASE_R*Math.sin(a),h[i]]; });
+    const u=[p[1][0]-p[0][0],p[1][1]-p[0][1],p[1][2]-p[0][2]], v=[p[2][0]-p[0][0],p[2][1]-p[0][1],p[2][2]-p[0][2]];
+    let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+    const L=Math.hypot(...n); if(!L||!n[2]) return [0,0];
+    n=n.map(x=>x/L); if(n[2]<0) n=n.map(x=>-x);
+    return [Math.acos(Math.max(-1,Math.min(1,n[2]))), Math.atan2(-n[1],-n[0])];
+  }
+  dragCoef(){ if(!this.installed.has("disk")) return [0,0]; const [,R,t]=this.disk();
+    return [DRAG_C0*(R/R_REF)**5, DRAG_C1*(R/R_REF)**4*t]; }
+  step(dt){
+    this.t+=dt; if(!this.ready()) return;
+    const V=(this.powerOn&&!this.burnt)?this.volt:0;
+    const lam=Math.exp(-dt/6);
+    this.jit=1+(this.jit-1)*lam+gauss()*JITTER_SIGMA*Math.sqrt(Math.max(0,1-lam*lam));
+    if(this.powerOn&&this.volt>MOTOR_BURN_VOLT){ this.overVoltT+=dt; if(this.overVoltT>MOTOR_BURN_TIME) this.burnt=true; }
+    else this.overVoltT=Math.max(0,this.overVoltT-dt*0.5);
+    this.runT=(this.powerOn&&V>0)?this.runT+dt:Math.max(0,this.runT-dt);
+    const I3=this.I3();
+    if(I3>0){
+      const [c0,c1]=this.dragCoef(), drag=(c0+c1)*this.jit*this.w_s**DRAG_N;
+      let tq=(K_EMF/R_ARM_COIL)*((V-K_EMF*this.w_s)-drag);
+      tq-=4.0e-4*(this.w_s>0.5?1:this.w_s/0.5);
+      this.w_s=Math.max(0,this.w_s+tq/I3*dt);
+    }
+    this.spinAng=mod2pi(this.spinAng+this.w_s*dt);
+    /* fast-top linearisation: steady precession + a damped nutation oscillator.
+       phi_eq is where the arm really settles (bearing play + tube sag) */
+    const Q=this.imbalance(), I1=this.I1(), L3=I3*this.w_s, [alpha,az]=this.tilt();
+    const tauG=Q*G*(1+LEVEL_SENS*Math.sin(alpha)*Math.cos(this.psi-az));
+    const sag=Math.min(SAG_MAX,SAG0+SAG_K*Math.abs(Q*G));
+    const phiEq=Math.abs(Q)>1e-9?-Math.sign(Q)*sag:0;
+    if(L3>L3_MIN){
+      const wn=L3/I1;
+      this.dphi+=(-wn*wn*(this.phi-phiEq)-2*ZETA_NUT*wn*this.dphi)*dt;
+      this.phi+=this.dphi*dt;
+      this.dpsi=tauG/L3-wn*(this.phi-phiEq);
+      this.psi=mod2pi(this.psi+this.dpsi*dt);
+    } else {
+      this.dphi+=(-25*(this.phi-phiEq)-7*this.dphi)*dt; this.phi+=this.dphi*dt;
+      let tl=-G*Math.sin(alpha)*Q*Math.cos(this.phi)*Math.sin(this.psi-az);
+      if(Math.abs(tl)<TAU_BEARING&&Math.abs(this.dpsi)<2e-3){ tl=0; this.dpsi=0; }
+      else if(Math.abs(this.dpsi)>1e-4) tl-=Math.sign(this.dpsi)*TAU_BEARING;
+      this.dpsi+=(tl/I1-DAMP_PSI*this.dpsi)*dt;
+      this.psi=mod2pi(this.psi+this.dpsi*dt);
+    }
+    if(this.phi<-PHI_STOP){ this.phi=-PHI_STOP; this.dphi=0; }
+    if(this.phi>PHI_STOP){ this.phi=PHI_STOP; this.dphi=0; }
+    this.trail.push([this.t,this.psi,this.phi]);
+    while(this.trail.length&&this.t-this.trail[0][0]>2.5) this.trail.shift();
+  }
+  impulse(){ this.dphi+=0.55; this.trail=[]; }
+  lift(up){ this.phi+=(up?1:-1)*6*Math.PI/180; this.dphi=0; this.trail=[]; }
+  turnArm(deg){ this.psi=mod2pi(this.psi+deg*Math.PI/180); this.dpsi=0; }
+  axis(){ const c=Math.cos(this.phi); return [Math.cos(this.psi)*c,Math.sin(this.psi)*c,Math.sin(this.phi)]; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  A SMALL 3-D RENDERER  (orthographic, painter's algorithm)
+   ══════════════════════════════════════════════════════════════ */
+const norm=v=>{ const n=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/n,v[1]/n,v[2]/n]; };
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+function shade(hex,f){ const h=hex.replace("#",""); const c=[0,2,4].map(i=>Math.max(0,Math.min(255,Math.round(parseInt(h.substr(i,2),16)*f))));
+  return "#"+c.map(v=>v.toString(16).padStart(2,"0")).join(""); }
+class Scene{
+  constructor(){ this.az=38*Math.PI/180; this.el=16*Math.PI/180; this.scale=900; this.cx=460; this.cy=330; this.items=[]; }
+  dirs(){ const ca=Math.cos(this.az), sa=Math.sin(this.az), ce=Math.cos(this.el), se=Math.sin(this.el);
+    return [[-sa,ca,0],[-ca*se,-sa*se,ce],[ca*ce,sa*ce,se]]; }
+  prj(p){ const [r,u]=this.D; return [(p[0]*r[0]+p[1]*r[1]+p[2]*r[2])*this.scale+this.cx, -(p[0]*u[0]+p[1]*u[1]+p[2]*u[2])*this.scale+this.cy]; }
+  depth(p){ const f=this.D[2]; return p[0]*f[0]+p[1]*f[1]+p[2]*f[2]; }
+  begin(){ this.D=this.dirs(); this.items=[]; }
+  poly(pts,fill,outline,width,dash){ let dd=0; for(const p of pts) dd+=this.depth(p);
+    this.items.push([dd/pts.length,"poly",pts.map(p=>this.prj(p)),fill,outline,width||1,dash]); }
+  line(a,b,fill,width,dash){ this.items.push([(this.depth(a)+this.depth(b))/2,"line",[this.prj(a),this.prj(b)],fill,"",width||2,dash]); }
+  dot(p,r,fill){ this.items.push([this.depth(p),"dot",[this.prj(p),r],fill]); }
+  text(p,s,fill,size){ this.items.push([this.depth(p)+1e6,"text",[this.prj(p),s,size||9],fill]); }
+  static basis(n){ n=norm(n); const a=Math.abs(n[2])<0.9?[0,0,1]:[1,0,0]; const u=norm(cross(n,a)); return [u,cross(n,u)]; }
+  disk3(c,n,R,fill,outline,seg,width){ seg=seg||48; const [u,v]=Scene.basis(n), pts=[];
+    for(let i=0;i<seg;i++){ const t=TAU*i/seg; pts.push([c[0]+R*(Math.cos(t)*u[0]+Math.sin(t)*v[0]),c[1]+R*(Math.cos(t)*u[1]+Math.sin(t)*v[1]),c[2]+R*(Math.cos(t)*u[2]+Math.sin(t)*v[2])]); }
+    this.poly(pts,fill,outline===undefined?"#5a5a5a":outline,width); return pts; }
+  cyl(a,b,R,fill,outline,seg){ seg=seg||14; const n=[b[0]-a[0],b[1]-a[1],b[2]-a[2]], [u,v]=Scene.basis(n), ring=[];
+    for(let i=0;i<seg;i++){ const t=TAU*i/seg; ring.push([R*(Math.cos(t)*u[0]+Math.sin(t)*v[0]),R*(Math.cos(t)*u[1]+Math.sin(t)*v[1]),R*(Math.cos(t)*u[2]+Math.sin(t)*v[2])]); }
+    for(let i=0;i<seg;i++){ const o1=ring[i], o2=ring[(i+1)%seg];
+      this.poly([[a[0]+o1[0],a[1]+o1[1],a[2]+o1[2]],[a[0]+o2[0],a[1]+o2[1],a[2]+o2[2]],[b[0]+o2[0],b[1]+o2[1],b[2]+o2[2]],[b[0]+o1[0],b[1]+o1[1],b[2]+o1[2]]],
+        shade(fill,0.62+0.38*i/seg),"",1); }
+    this.disk3(b,n,R,shade(fill,1.05),outline===undefined?"#555":outline,seg); }
+  box(c,n,w,h,dd,fill){ const [u,v]=Scene.basis(n); n=norm(n); const C=[];
+    for(const sd of [-dd/2,dd/2]) for(const [sw,sh] of [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]])
+      C.push([0,1,2].map(i=>c[i]+n[i]*sd+u[i]*sw+v[i]*sh));
+    [[0,1,2,3],[4,5,6,7],[0,1,5,4],[2,3,7,6],[1,2,6,5],[0,3,7,4]].forEach((f,k)=>this.poly(f.map(i=>C[i]),shade(fill,0.72+0.09*k),"#2b2b2b",1)); }
+  render(ctx){
+    this.items.sort((a,b)=>a[0]-b[0]);
+    for(const it of this.items){
+      const kind=it[1];
+      if(kind==="poly"){ const pts=it[2]; ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
+        if(it[3]){ ctx.fillStyle=it[3]; ctx.fill(); } if(it[4]){ ctx.strokeStyle=it[4]; ctx.lineWidth=it[5]; ctx.setLineDash(it[6]||[]); ctx.stroke(); ctx.setLineDash([]); } }
+      else if(kind==="line"){ const [a,b]=it[2]; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]);
+        ctx.strokeStyle=it[3]; ctx.lineWidth=it[5]; ctx.lineCap="round"; ctx.setLineDash(it[6]||[]); ctx.stroke(); ctx.setLineDash([]); }
+      else if(kind==="dot"){ const [p,r]=it[2]; ctx.beginPath(); ctx.arc(p[0],p[1],r,0,TAU); ctx.fillStyle=it[3]; ctx.fill(); }
+      else if(kind==="text"){ const [p,s,sz]=it[2]; ctx.fillStyle=it[3]; ctx.font=sz+"px 'Segoe UI',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(s,p[0],p[1]); }
+    }
+  }
+}
+const COL_MAT="#1f7a72", COL_STAND="#20232a", COL_ALU="#c9ccd1", COL_ACRYL="#dfe9ef", COL_MOTOR="#2c2f36";
+function drawKit(sc,kit,ghost,trail){
+  const ins=kit.installed, [alpha,az]=kit.tilt(), ca=Math.cos(alpha), sa=Math.sin(alpha);
+  const W=p=>[p[0]-sa*Math.cos(az)*p[2], p[1]-sa*Math.sin(az)*p[2], p[2]*ca];
+  const GH="#8899a0";
+  if(ins.has("mat")||ghost==="mat"){ const g=ghost==="mat";
+    sc.poly([[-0.2,-0.16,0],[0.2,-0.16,0],[0.2,0.16,0],[-0.2,0.16,0]],g?"":COL_MAT,g?GH:"#155f59",2,g?[5,4]:null); }
+  if(ins.has("stand")||ghost==="stand"){ const g=ghost==="stand", hub=[0,0,0.016];
+    for(let i=0;i<3;i++){ const a=(90+120*i)*Math.PI/180, p=[BASE_R*Math.cos(a),BASE_R*Math.sin(a),0.010];
+      if(g) sc.line([p[0],p[1],0.006],hub,GH,3,[4,3]);
+      else sc.box([(p[0]+hub[0])/2,(p[1]+hub[1])/2,(p[2]+hub[2])/2],[p[0]-hub[0],p[1]-hub[1],p[2]-hub[2]],0.020,0.024,BASE_R,COL_STAND); }
+    if(!g){ sc.cyl([0,0,0.006],[0,0,0.034],0.021,"#33373f"); sc.disk3([0,0,0.034],[0,0,1],0.021,"#41464f","#1b1e23"); } }
+  if(ins.has("knobs")||ghost==="knobs"){ const g=ghost==="knobs";
+    for(let i=0;i<3;i++){ const a=(90+120*i)*Math.PI/180, p=[BASE_R*Math.cos(a),BASE_R*Math.sin(a),0];
+      const hgt=0.012+(ins.has("knobs")?kit.knob[i]:0)*6;
+      if(g) sc.dot([p[0],p[1],0.008],5,GH);
+      else { sc.cyl([p[0],p[1],0],[p[0],p[1],Math.max(0.004,hgt)],0.016,"#3a3f47"); sc.disk3([p[0],p[1],Math.max(0.004,hgt)],[0,0,1],0.017,"#4a505a","#22262c"); } } }
+  if(ins.has("pole")||ghost==="pole"){ const g=ghost==="pole", a=W([0,0,0.02]), b=W([0,0,PIVOT_Z]);
+    if(g) sc.line(a,b,GH,3,[5,4]); else { sc.cyl(a,b,0.0085,"#b9bfc6",undefined,16); sc.box(W([0,0,PIVOT_Z]),[0,0,1],0.052,0.052,0.046,"#23262c"); } }
+  if(!ins.has("pole")) return;
+  const piv=W([0,0,PIVOT_Z]), u=kit.axis(), P=s=>[piv[0]+u[0]*s,piv[1]+u[1]*s,piv[2]+u[2]*s];
+  if(ins.has("tube")||ghost==="tube"){ const g=ghost==="tube", a=P(-kit.r_c), b=P(kit.r_m-0.035);
+    if(g) sc.line(a,b,GH,3,[5,4]); else sc.cyl(a,b,0.004,COL_ALU,undefined,12); }
+  if(!ins.has("tube")) return;
+  if(ins.has("motor")||ghost==="motor"){ const c=P(kit.r_m-0.030);
+    if(ghost==="motor") sc.dot(c,8,GH); else { sc.box(c,u,0.038,0.042,0.055,COL_MOTOR); sc.cyl(P(kit.r_m-0.004),P(kit.r_m+0.006),0.0025,"#9aa0a8"); } }
+  if(ins.has("coupler")||ghost==="coupler"){ if(ghost==="coupler") sc.dot(P(kit.r_m),6,GH); else sc.cyl(P(kit.r_m-0.004),P(kit.r_m+0.006),0.009,"#c8a24a"); }
+  if(ins.has("disk")||ghost==="disk"){
+    const [,R,th]=kit.disk(), c=P(kit.r_m);
+    if(ghost==="disk") sc.disk3(c,u,R,"",GH);
+    else {
+      const back=P(kit.r_m-th/2), front=P(kit.r_m+th/2);
+      sc.cyl(back,front,R,COL_ACRYL,undefined,44);
+      const [uu,vv]=Scene.basis(u);
+      const on=(t,rr)=>[0,1,2].map(i=>front[i]+R*rr*(Math.cos(t)*uu[i]+Math.sin(t)*vv[i]));
+      if(kit.w_s<28) for(let k=0;k<3;k++) sc.line(front,on(kit.spinAng+TAU*k/3,0.88),"#7d8b94",2);
+      else if(kit.w_s>1) sc.disk3(P(kit.r_m+th/2+1e-4),u,R*0.55,"#eef4f8","#cbd6de");
+      for(let k=0;k<12;k++){ const f=k<kit.nBoltSd; sc.dot(on(TAU*k/12,0.90),f?3:2,f?"#3a3f47":"#b9c4cc"); }
+    } }
+  if(ins.has("cw")||ghost==="cw"){ const Rc=DISKS["26_4"][1], c=P(-kit.r_c);
+    if(ghost==="cw") sc.disk3(c,u,Rc,"",GH);
+    else { sc.cyl(P(-kit.r_c-0.002),P(-kit.r_c+0.002),Rc,COL_ACRYL,undefined,48);
+      const [uu,vv]=Scene.basis(u);
+      for(let k=0;k<12;k++){ const t=TAU*k/12, f=k<kit.nBoltCw;
+        sc.dot([0,1,2].map(i=>c[i]+Rc*0.9*(Math.cos(t)*uu[i]+Math.sin(t)*vv[i])+u[i]*0.003),f?4:2,f?"#2b2f35":"#b9c4cc"); } } }
+  if(ins.has("adapter")||ghost==="adapter"){ const gh=ghost==="adapter";
+    sc.poly([[0.15,-0.235,0.001],[0.32,-0.235,0.001],[0.32,-0.145,0.001],[0.15,-0.145,0.001]],gh?"":"#0e1013",gh?GH:"#000",2,gh?[5,4]:null);
+    if(!gh){ sc.poly([[0.262,-0.212,0.004],[0.306,-0.212,0.004],[0.306,-0.183,0.004],[0.262,-0.183,0.004]],"#2a0808","#000",1);
+      sc.text([0.284,-0.198,0.006],kit.powerOn?kit.volt.toFixed(1):"",  "#ff3b30",11);
+      sc.dot([0.226,-0.196,0.004],7,"#c8a24a"); sc.text([0.19,-0.163,0.004],"ADAPTER POWER","#b9c4cc",7);
+      sc.line(W([0,0,0.055]),[0.20,-0.150,0.004],"#c0392b",2); sc.line(W([0,0,0.042]),[0.215,-0.150,0.004],"#111",2); } }
+  if(trail&&kit.trail.length){ let prev=null;
+    for(let i=0;i<kit.trail.length;i+=2){ const [,ps,ph]=kit.trail[i];
+      const q=[piv[0]+Math.cos(ps)*Math.cos(ph)*kit.r_m,piv[1]+Math.sin(ps)*Math.cos(ph)*kit.r_m,piv[2]+Math.sin(ph)*kit.r_m];
+      if(prev) sc.line(prev,q,"#e08a3c",2); prev=q; } }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  PAGES
+   ══════════════════════════════════════════════════════════════ */
+const kit=new Kit();
+const cv=$("cv"), ctx=cv.getContext("2d");
+const scA=new Scene(), scB=new Scene(), scG=new Scene();
+let tab="asm", held=null, timeScale=1, sw={t:0,run:false,laps:[]};
+const LW=900, LH=640; let S=1;
+function layout(){
+  const w=cv.clientWidth||LW, dpr=Math.min(window.devicePixelRatio||1,2); S=w/LW;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  ctx.setTransform(dpr*S,0,0,dpr*S,0,0);
+}
+function say(s,err){ const e=$("say"); e.textContent=s; e.className="say"+(err?" err":""); }
+function nextGhost(){ for(const [k,req] of PART_KEYS){ if(kit.installed.has(k)) continue; if(!req||kit.installed.has(req)) return k; } return null; }
+function slotXY(key){
+  const u=kit.axis(), P=s=>[u[0]*s,u[1]*s,PIVOT_Z+u[2]*s];
+  const pos={mat:[0,0,0],stand:[0,0,0.02],knobs:[0,BASE_R,0.01],pole:[0,0,PIVOT_Z*0.55],tube:[0,0,PIVOT_Z],
+    motor:P(kit.r_m-0.03),coupler:P(kit.r_m),disk:P(kit.r_m),cw:P(-kit.r_c),adapter:[0.24,-0.19,0.02]}[key];
+  return pos?scA.prj(pos):null;
+}
+function buildParts(){
+  const box=$("parts"); box.innerHTML="";
+  const g=nextGhost();
+  for(const [k] of PART_KEYS){
+    const b=document.createElement("button"); b.className="pc"+(kit.installed.has(k)?" done":"")+(k===g?" next":"")+(held===k?" held":"");
+    b.textContent=(kit.installed.has(k)?"✔ ":"")+d().parts[k]; b.onclick=()=>{ if(kit.installed.has(k)) return; held=held===k?null:k; buildParts(); };
+    box.appendChild(b);
+  }
+  const h=document.createElement("div"); h.className="hint"; h.textContent=d().diskBox; box.appendChild(h);
+  const row=document.createElement("div"); row.className="row";
+  for(const k of ["20_2","20_3","20_4"]){ const b=document.createElement("button"); b.textContent=DISKS[k][3]; b.className=kit.diskKey===k?"on":"";
+    b.onclick=()=>{ kit.diskKey=k; kit.resetMotion(); buildParts(); buildDiskRow(); }; row.appendChild(b); }
+  box.appendChild(row);
+  const rb=document.createElement("button"); rb.textContent=d().reset; rb.style.width="100%";
+  rb.onclick=()=>{ kit.resetAll(); held=null; say(""); buildParts(); syncPanel(); }; box.appendChild(rb);
+  if(kit.ready()) say(d().assembled);
+}
+function drawAsm(){
+  const sc=scA, g=nextGhost(); sc.cx=LW*0.52; sc.cy=LH*0.64; sc.scale=Math.min(LW,LH*1.4)*0.85;
+  sc.begin(); drawKit(sc,kit,g,false); sc.render(ctx);
+  if(g){ const [x,y]=slotXY(g);
+    ctx.setLineDash([4,3]); ctx.strokeStyle="#e08a3c"; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(x,y,26,0,TAU); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle="#c2680f"; ctx.font="700 13px 'Segoe UI',sans-serif"; ctx.textAlign="center"; ctx.fillText("▼ "+d().parts[g],x,y-36); }
+}
+function drawBench(){
+  const sc=scB; sc.cx=LW*0.5; sc.cy=LH*0.66; sc.scale=Math.min(LW,LH*1.35)*0.82;
+  sc.begin(); drawKit(sc,kit,null,$("trail").checked); sc.render(ctx);
+  if(!kit.ready()){ ctx.fillStyle="#b71c1c"; ctx.font="16px 'Segoe UI',sans-serif"; ctx.textAlign="center"; ctx.fillText(d().notReady,LW/2,LH/2); return; }
+  if($("gonio").checked) drawGonio();
+}
+function drawGonio(){
+  /* the goniometer held against the tube, seen square-on: 1-degree ticks and the tube edge */
+  const cx=LW-205, cy=180, R=150;
+  ctx.fillStyle="rgba(251,251,246,.96)"; ctx.strokeStyle="#9bb7d4"; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.rect(cx-24,cy-R-24,R+48,2*R+48); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle="#0b5394"; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,R,-Math.PI/4,Math.PI/4); ctx.stroke();
+  ctx.lineWidth=1; ctx.fillStyle="#0b5394"; ctx.font="11px 'Segoe UI',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  for(let dg=-45;dg<=45;dg++){ const a=dg*Math.PI/180, r0=R-(dg%10===0?16:dg%5===0?10:5);
+    ctx.beginPath(); ctx.moveTo(cx+r0*Math.cos(a),cy-r0*Math.sin(a)); ctx.lineTo(cx+R*Math.cos(a),cy-R*Math.sin(a)); ctx.stroke();
+    if(dg%10===0) ctx.fillText(String(Math.abs(dg)),cx+(R-30)*Math.cos(a),cy-(R-30)*Math.sin(a)); }
+  ctx.setLineDash([4,3]); ctx.strokeStyle="#9bb7d4"; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+R,cy); ctx.stroke(); ctx.setLineDash([]);
+  const a=kit.phi; ctx.strokeStyle="#c0392b"; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+(R+14)*Math.cos(a),cy-(R+14)*Math.sin(a)); ctx.stroke();
+  ctx.fillStyle="#333"; ctx.beginPath(); ctx.arc(cx,cy,4,0,TAU); ctx.fill();
+  ctx.fillStyle="#555"; ctx.textAlign="left"; ctx.fillText(d().gonioName,cx-16,cy+R+12);
+}
+function drawRuler(){
+  const c=$("ruler"), w=c.clientWidth||300, dpr=Math.min(window.devicePixelRatio||1,2), H=54;
+  c.width=Math.round(w*dpr); c.height=Math.round(H*dpr); c.style.height=H+"px";
+  const x=c.getContext("2d"); x.setTransform(dpr,0,0,dpr,0,0);
+  x.fillStyle="#fdfcf2"; x.fillRect(0,0,w,H);
+  const x0=10, span=w-20, cm=span/42;
+  x.strokeStyle="#333"; x.fillStyle="#333"; x.font="9px ui-monospace,monospace"; x.textAlign="center";
+  for(let mm=0;mm<=420;mm++){ const px=x0+mm/10*cm, L=mm%10===0?14:mm%5===0?9:5;
+    x.lineWidth=mm%10===0?1:0.5; x.beginPath(); x.moveTo(px,0); x.lineTo(px,L); x.stroke();
+    if(mm%50===0) x.fillText(String(mm/10),px,23); }
+  /* the tube and the disk centre, as they lie against the ruler */
+  x.fillStyle="#c9ccd1"; x.fillRect(x0,34,span*0.99,6);
+  const pd=x0+kit.r_m*100*cm; x.fillStyle="#6c8ea2"; x.fillRect(pd-1,28,2,22);
+  x.fillStyle="#222"; x.beginPath(); x.arc(x0,37,3,0,TAU); x.fill();
+}
+/* Part G */
+const pg={stack:[],disk:"20_2",running:false,w:0,theta:4*Math.PI/180,dtheta:0,phiPrec:0};
+function gProps(){
+  let z=0,M=0,Ms=0,I1=0,I3=0;
+  for(const k of pg.stack){ let m,hh,R;
+    if(k==="motor"){ m=M_MOTOR; hh=0.055; I1+=m*(hh*hh/12+(z+hh/2)**2); }
+    else if(k==="cw"){ [m,R]=DISKS["26_4"]; hh=0.004; I1+=m*(0.25*R*R+(z+hh/2)**2); }
+    else { [m,R,hh]=DISKS[pg.disk]; I1+=m*(0.25*R*R+(z+hh/2)**2); I3=0.5*m*R*R; }
+    M+=m; Ms+=m*(z+hh/2); z+=hh; }
+  return [M,M?Ms/M:0,Math.max(I1,1e-6),I3];
+}
+function gTick(dt){
+  if(!pg.running) return;
+  const [M,l,I1,I3]=gProps(), [m,R,th]=DISKS[pg.disk];
+  const c0=DRAG_C0*(R/R_REF)**5, c1=DRAG_C1*(R/R_REF)**4*th, V=+$("gv").value;
+  const tq=(K_EMF/R_ARM_COIL)*((V-K_EMF*pg.w)-(c0+c1)*pg.w**DRAG_N);
+  pg.w=Math.max(0,pg.w+tq/Math.max(I3,1e-6)*dt);
+  const L3=I3*pg.w;
+  if(L3*L3-4*I1*M*G*l>0){       /* sleeping top: precesses and settles upright */
+    const wn=L3/I1; pg.dtheta+=(-wn*wn*0.25*pg.theta)*dt; pg.dtheta*=Math.exp(-1.2*dt);
+    pg.theta=Math.max(0,pg.theta+pg.dtheta*dt); pg.phiPrec+=(M*G*l/Math.max(L3,1e-6))*dt;
+  } else {
+    pg.dtheta+=(M*G*l*Math.sin(pg.theta)/I1)*dt; pg.theta+=pg.dtheta*dt;
+    pg.phiPrec+=(M*G*l/Math.max(L3,1e-3))*dt*0.2;
+    if(pg.theta>75*Math.PI/180){ pg.theta=75*Math.PI/180; pg.dtheta=0; }
+  }
+}
+function drawG(){
+  const sc=scG; sc.cx=LW*0.5; sc.cy=LH*0.74; sc.scale=Math.min(LW,LH*1.3)*1.6; sc.az=35*Math.PI/180; sc.el=14*Math.PI/180;
+  sc.begin(); sc.poly([[-0.12,-0.12,0],[0.12,-0.12,0],[0.12,0.12,0],[-0.12,0.12,0]],COL_MAT,"#155f59",2);
+  const th=pg.theta, ph=pg.phiPrec, n=[Math.sin(th)*Math.cos(ph),Math.sin(th)*Math.sin(ph),Math.cos(th)];
+  let z=0;
+  for(const k of pg.stack){
+    if(k==="motor"){ const hh=0.055; sc.box(n.map(v=>v*(z+hh/2)),n,0.038,0.042,hh,COL_MOTOR); z+=hh; }
+    else { const R=k==="cw"?DISKS["26_4"][1]:DISKS[pg.disk][1], hh=k==="cw"?0.004:DISKS[pg.disk][2];
+      sc.cyl(n.map(v=>v*z),n.map(v=>v*(z+hh)),R,COL_ACRYL); z+=hh; }
+  }
+  sc.render(ctx);
+}
+function renderG(){
+  $("gList").textContent=[...pg.stack].reverse().map((k,i)=>(pg.stack.length-i)+". "+d().gParts[k]).join("\n");
+  const add=$("gAdd"); add.innerHTML="";
+  for(const k of ["motor","cw","disk"]){ const b=document.createElement("button"); b.style.width="100%"; b.textContent="+ "+d().gParts[k];
+    b.disabled=pg.stack.includes(k); b.onclick=()=>{ pg.stack.push(k); renderG(); }; add.appendChild(b); }
+  const row=$("gDiskRow"); row.innerHTML="";
+  for(const k of ["20_2","20_3","20_4"]){ const b=document.createElement("button"); b.textContent=DISKS[k][3]; b.className=pg.disk===k?"on":"";
+    b.onclick=()=>{ pg.disk=k; renderG(); }; row.appendChild(b); }
+}
+$("gClear").onclick=()=>{ pg.stack=[]; pg.running=false; $("gMsg").textContent=""; renderG(); };
+$("gRun").onclick=()=>{ if(!pg.stack.includes("disk")){ $("gMsg").textContent=d().gNoDisk; return; }
+  $("gMsg").textContent=""; Object.assign(pg,{running:true,theta:4*Math.PI/180,dtheta:0,w:0}); };
+$("gStop").onclick=()=>{ pg.running=false; };
+
+/* ══════════════════════════════════════════════════════════════
+   4.  BENCH PANEL
+   ══════════════════════════════════════════════════════════════ */
+function buildDiskRow(){
+  const row=$("diskRow"); row.innerHTML="";
+  for(const k of ["20_2","20_3","20_4"]){ const b=document.createElement("button"); b.textContent=DISKS[k][3]; b.className=kit.diskKey===k?"on":"";
+    b.onclick=()=>{ if(kit.w_s>5){ say(d().spinNote,true); return; } kit.diskKey=k; kit.resetMotion(); buildDiskRow(); }; row.appendChild(b); }
+}
+function buildKnobs(){
+  const box=$("knobs"); box.innerHTML="";
+  for(let i=0;i<3;i++){
+    const l=document.createElement("span"); l.textContent=d().knob+" "+(i+1); box.appendChild(l);
+    for(const n of [1,-1,10,-10]){ const b=document.createElement("button"); b.textContent=(n>0?"▲":"▼").repeat(Math.abs(n)>1?2:1);
+      b.onclick=()=>{ kit.knob[i]=Math.max(-KNOB_RANGE,Math.min(KNOB_RANGE,kit.knob[i]+n*KNOB_STEP)); }; box.appendChild(b); }
+  }
+}
+function renderSpeeds(){
+  const box=$("speeds"); box.innerHTML="";
+  const lb=document.createElement("span"); lb.textContent=d().speed; lb.style.cssText="font-size:12px;color:#9aa3ab;margin-right:4px"; box.appendChild(lb);
+  for(const s of [1,2,5,10,20]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===timeScale?"on":"";
+    b.onclick=()=>{ timeScale=s; renderSpeeds(); }; box.appendChild(b); }
+}
+function vbump(){
+  const row=$("vbump"); row.innerHTML="";
+  for(const dv of [-1,-0.4,-0.1,0.1,0.4,1]){ const b=document.createElement("button"); b.textContent=(dv>0?"+":"")+dv.toFixed(1);
+    b.onclick=()=>{ $("volt").value=Math.max(0,Math.min(12,Math.round((+$("volt").value+dv)*10)/10)); kit.volt=+$("volt").value; }; row.appendChild(b); }
+}
+$("volt").oninput=()=>{ kit.volt=Math.round(+$("volt").value*10)/10; };
+$("pw").onchange=()=>{ kit.powerOn=$("pw").checked; };
+$("lock").onchange=()=>{ kit.tubeLocked=$("lock").checked; };
+$("arm").oninput=()=>{ if(kit.tubeLocked){ $("arm").value=kit.r_m*100; return; }
+  kit.r_m=Math.max(8,Math.min(TUBE_L*100-12,+$("arm").value))/100; };
+const bolt=(which,dn)=>{ if(kit.powerOn&&kit.w_s>5){ say(d().spinNote,true); return; }
+  if(which==="cw"){ if(!kit.installed.has("cw")) return; kit.nBoltCw=Math.max(0,Math.min(12,kit.nBoltCw+dn)); }
+  else kit.nBoltSd=Math.max(0,Math.min(12,kit.nBoltSd+dn)); };
+$("bcwM").onclick=()=>bolt("cw",-1); $("bcwP").onclick=()=>bolt("cw",1);
+$("bsdM").onclick=()=>bolt("sd",-1); $("bsdP").onclick=()=>bolt("sd",1);
+$("turn90").onclick=()=>kit.turnArm(90); $("turn180").onclick=()=>kit.turnArm(180);
+$("impulse").onclick=()=>kit.impulse(); $("liftU").onclick=()=>kit.lift(true); $("liftD").onclick=()=>kit.lift(false);
+const fmt=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+(t%60).toFixed(2).padStart(5,"0");
+$("swStart").onclick=()=>{ sw.run=true; }; $("swStop").onclick=()=>{ sw.run=false; };
+$("swLap").onclick=()=>{ if(sw.run){ sw.laps.push(sw.t); renderLaps(); } };
+$("swReset").onclick=()=>{ sw={t:0,run:false,laps:[]}; renderLaps(); };
+function renderLaps(){ $("laps").textContent=sw.laps.map((t,i)=>String(i+1).padStart(2," ")+"  "+fmt(t)).join("\n"); $("laps").scrollTop=1e6; }
+function syncPanel(){
+  $("pw").checked=kit.powerOn; $("volt").value=kit.volt; $("lock").checked=kit.tubeLocked; buildDiskRow();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  POINTER + TABS
+   ══════════════════════════════════════════════════════════════ */
+let rot=null;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerdown",e=>{
+  const r=cv.getBoundingClientRect(), x=(e.clientX-r.left)/S, y=(e.clientY-r.top)/S;
+  if(tab==="asm"&&e.button===0&&held){
+    const key=held, req=PART_KEYS.find(p=>p[0]===key)[1];
+    held=null;
+    if(req&&!kit.installed.has(req)){ say(d().needFirst,true); buildParts(); return; }
+    const t=slotXY(key); if(!t){ buildParts(); return; }
+    if((x-t[0])**2+(y-t[1])**2>95*95){ say(d().notHere,true); buildParts(); return; }
+    kit.installed.add(key); kit.resetMotion(); say(""); buildParts(); return;
+  }
+  if(tab==="bench"||(tab==="asm"&&(e.button===2||e.shiftKey))){ rot=[e.clientX,e.clientY]; cv.setPointerCapture(e.pointerId); cv.style.cursor="grabbing"; }
+});
+cv.addEventListener("pointermove",e=>{
+  if(!rot) return; const sc=tab==="asm"?scA:scB;
+  sc.az-=(e.clientX-rot[0])*0.008; sc.el=Math.max(-0.15,Math.min(1.2,sc.el+(e.clientY-rot[1])*0.006)); rot=[e.clientX,e.clientY];
+});
+cv.addEventListener("pointerup",()=>{ rot=null; cv.style.cursor="grab"; });
+function setTab(k){
+  tab=k;
+  for(const v of ["asm","bench","g","info"]) $("tab-"+v).className=v===k?"on":"";
+  $("sceneBox").hidden=k==="info"; $("info").hidden=k!=="info"; $("parts").hidden=k!=="asm";
+  $("pBench").hidden=k!=="bench"; $("pG").hidden=k!=="g";
+  $("t-cap").textContent={asm:d().capAsm,bench:d().capBench,g:d().capG,info:d().capInfo}[k];
+  if(k!=="asm") say(""); else buildParts();
+  if(k!=="info") layout();
+  if(k==="bench") drawRuler();
+}
+for(const k of ["asm","bench","g","info"]) $("tab-"+k).onclick=()=>setTab(k);
+
+/* ══════════════════════════════════════════════════════════════
+   6.  LANGUAGE
+   ══════════════════════════════════════════════════════════════ */
+function applyLang(){
+  const t=d();
+  document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
+  $("tab-asm").textContent=t.tabAsm; $("tab-bench").textContent=t.tabBench; $("tab-g").textContent=t.tabG; $("tab-info").textContent=t.tabInfo;
+  $("t-h-power").textContent=t.hPower; $("t-pw").textContent=t.pw;
+  $("t-h-sw").textContent=t.hSw; $("swStart").textContent=t.start; $("swStop").textContent=t.stop; $("swLap").textContent=t.lap; $("swReset").textContent=t.rs;
+  $("t-h-arm").textContent=t.hArm; $("t-lock").textContent=t.lock; $("t-rulerhint").textContent=t.rulerHint;
+  $("t-h-disk").textContent=t.hDisk; $("t-h-bolts").textContent=t.hBolts; $("t-bcw").textContent=t.bcw; $("t-bsd").textContent=t.bsd;
+  $("t-h-level").textContent=t.hLevel; $("impulse").textContent=t.impulse; $("liftU").textContent=t.liftU; $("liftD").textContent=t.liftD;
+  $("t-h-view").textContent=t.hView; $("t-gonio").textContent=t.gonio; $("t-trail").textContent=t.trail;
+  $("t-h-gbuild").textContent=t.hGBuild; $("t-h-gdisk").textContent=t.hGDisk; $("t-h-gvolt").textContent=t.hGVolt;
+  $("gRun").textContent=t.gRun; $("gStop").textContent=t.gStop; $("t-gnote").textContent=t.gNote;
+  $("info").textContent=INFO[lang];
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2024 E1 — 자이로스코프 · HaslaLab":"APhO 2024 E1 — Gyroscope · HaslaLab";
+  buildKnobs(); buildDiskRow(); renderSpeeds(); vbump(); renderG(); setTab(tab);
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+/* ══════════════════════════════════════════════════════════════
+   7.  MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let last=performance.now(), fr=0;
+function tick(){
+  const now=performance.now(), raw=Math.min(0.05,(now-last)/1000); last=now;
+  const dt=raw*timeScale, sub=Math.max(1,Math.floor(dt/0.004)+1);
+  for(let i=0;i<sub;i++) kit.step(dt/sub);
+  if(sw.run) sw.t+=dt;
+  gTick(raw);
+  if(tab!=="info"){
+    ctx.clearRect(0,0,LW,LH); ctx.fillStyle="#f7f8f9"; ctx.fillRect(0,0,LW,LH);
+    if(tab==="asm") drawAsm(); else if(tab==="bench") drawBench(); else drawG();
+  }
+  $("swLbl").textContent=fmt(sw.t);
+  $("lcd").textContent=kit.volt.toFixed(1); $("lcd").className="lcd"+(kit.powerOn?"":" off");
+  $("gvl").textContent=(+$("gv").value).toFixed(1)+" V";
+  $("bcw").textContent=kit.nBoltCw+" "+d().sets; $("bsd").textContent=kit.nBoltSd+" "+d().sets;
+  if(!kit.tubeLocked&&document.activeElement!==$("arm")) $("arm").value=kit.r_m*100;
+  if(++fr%10===0){
+    const m=[];
+    if(kit.burnt) m.push(d().burnt); else if(kit.powerOn&&kit.volt>MOTOR_BURN_VOLT) m.push(d().warn6);
+    if(kit.runT>OVERHEAT_TIME) m.push(d().overheat);
+    m.push(d().noLevel);
+    $("pwWarn").textContent=m.join("\n");
+    if(tab==="bench") drawRuler();
+  }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); drawRuler(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+  <script src="adfit.js"></script>
+</body>
+</html>
