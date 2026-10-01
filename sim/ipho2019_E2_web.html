@@ -180,10 +180,10 @@ const T = {
     stImmerse:"경고: 막대를 물에 담그지 마시오.",
     stCalNote:"보정은 막대를 저장조에 체결하거나 가열하기 전에 하십시오.",
     m:{
-      picked:n=>n+" 을(를) 집었습니다. 점선 자리를 클릭해 놓으세요. (우클릭: 되돌리기)",
+      picked:n=>n+" 을(를) 집었습니다. 실험대 위 놓을 곳을 클릭하세요. (우클릭: 되돌리기)",
       placed:n=>n+" 을(를) 놓았습니다.",
       back:n=>n+" 을(를) 트레이로 되돌렸습니다.",
-      noFit:"그 자리에는 놓을 수 없습니다. 점선으로 표시된 곳에 놓으세요.",
+      noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 빈 곳에 놓으세요.",
       needPot:"먼저 물 저장조를 놓으세요.",
       poured:n=>"물 2 L를 부었습니다 ("+n+"/2).",
       lidOn:"뚜껑(열교환기)을 덮었습니다. 이제 막대를 뚜껑 위에 체결할 수 있습니다.",
@@ -246,10 +246,10 @@ const T = {
     stImmerse:"WARNING: do not immerse the rods in water.",
     stCalNote:"Calibrate BEFORE attaching the rod to the reservoir or heating it.",
     m:{
-      picked:n=>n+" picked up. Click a dashed place to put it down (R-click returns it).",
+      picked:n=>n+" picked up. Click where on the bench to put it (R-click returns it).",
       placed:n=>n+" put down.",
       back:n=>n+" returned to the tray.",
-      noFit:"It does not go there: put it on one of the dashed places.",
+      noFit:"It does not fit there: put it on a clear spot of the bench.",
       needPot:"Put the water reservoir down first.",
       poured:n=>"Poured 2 L of water ("+n+"/2).",
       lidOn:"Cover (heat exchanger) closed. A rod can now be screwed onto it.",
@@ -614,12 +614,24 @@ const SLOT={
   amm:{x:820,y:300,w:140,h:240},
   volt:{x:990,y:300,w:140,h:240}
 };
-const POT_CX=648, LID_Y=262;           /* rod mount point on the cover */
-const ROD_POT={x:626,y:60,w:44,h:200}; /* rod standing on the cover */
+/* the instruments go wherever they are put down: SLOT holds where each one is now */
+const ROD_POT={get x(){ return SLOT.pot.x+78; }, get y(){ return SLOT.pot.y-190; }, w:44, h:200}; /* rod standing on the cover */
+const FREE=["box","adapter","pot","psu","amm","volt"];
+function spotFor(k,p){           /* centre the part on the click, keep it on the bench and off the others */
+  const s=SLOT[k], top=k==="pot"?200:0;
+  const x=Math.round(Math.max(0,Math.min(LW-s.w,p[0]-s.w/2))), y=Math.round(Math.max(top,Math.min(TRAY_Y-s.h-24,p[1]-s.h/2)));
+  const pad=k==="pot"?[0,210]:[0,0];
+  for(const o of FREE.concat(["table"])){
+    if(o===k||(o!=="table"&&!lab.on.has(o))) continue;
+    const q=SLOT[o], qt=o==="pot"?210:0;
+    if(x<q.x+q.w+6&&x+s.w+6>q.x&&y-pad[1]<q.y+q.h+18&&y+s.h+18>q.y-qt) return null;
+  }
+  return [x,y];
+}
 const TRAY_KEYS=["pot","water","rod1","rod2","cap","adapter","box","cable","volt","amm","psu"];
 
 function termXY(){
-  const m={ "PS+":[1093,100], "PS-":[1093,128],
+  const m={ "PS+":[SLOT.psu.x+133,SLOT.psu.y+30], "PS-":[SLOT.psu.x+133,SLOT.psu.y+58],
             "A1":[SLOT.amm.x+SLOT.amm.w-22,SLOT.amm.y+168], "ACOM":[SLOT.amm.x+SLOT.amm.w-22,SLOT.amm.y+220],
             "V1":[SLOT.volt.x+SLOT.volt.w-22,SLOT.volt.y+194], "VCOM":[SLOT.volt.x+SLOT.volt.w-22,SLOT.volt.y+220] };
   for(const r of [1,2]){
@@ -639,7 +651,7 @@ function socketXY(r){           /* thermometer connector on the rod */
 function capXY(r){ return [SLOT.table.x+SLOT.table.w+18, SLOT.table.y+SLOT.table.h/2]; }
 const BOX_BTN=()=>[SLOT.box.x+SLOT.box.w/2, SLOT.box.y+SLOT.box.h+16];
 const BOX_JACK=()=>[SLOT.box.x+SLOT.box.w+6, SLOT.box.y+SLOT.box.h/2];
-const KNOB={amm:[SLOT.amm.x+60,SLOT.amm.y+128], volt:[SLOT.volt.x+60,SLOT.volt.y+128]};
+const KNOB={get amm(){ return [SLOT.amm.x+60,SLOT.amm.y+128]; }, get volt(){ return [SLOT.volt.x+60,SLOT.volt.y+128]; }};
 
 /* ══════════════════════════════════════════════════════════════
    5.  STATE OF THE HANDS
@@ -661,19 +673,6 @@ function itemName(k){ return d().items[k]||k; }
    ══════════════════════════════════════════════════════════════ */
 function drawBench(){
   wood(0,0,LW,TRAY_Y);
-  /* ghost places for the thing in hand */
-  if(hand){
-    const k=hand.k;
-    if(SLOT[k]&&!lab.on.has(k)){ const s=SLOT[k]; dashed(s.x,s.y,s.w,s.h,itemName(k)); }
-    if(k==="rod1"||k==="rod2"){
-      if(!onTable()) dashed(SLOT.table.x-10,SLOT.table.y-8,SLOT.table.w+20,SLOT.table.h+16);
-      if(lab.on.has("pot")&&!onPot()) dashed(ROD_POT.x-8,ROD_POT.y-8,ROD_POT.w+16,ROD_POT.h+8);
-    }
-    if(k==="cap"&&onTable()){ const [x,y]=capXY(); dashed(x-18,y-26,40,52); }
-    if(k==="water"&&lab.on.has("pot")) dashed(SLOT.pot.x-6,SLOT.pot.y-30,SLOT.pot.w+12,SLOT.pot.h+30);
-    if(k==="cable"&&lab.on.has("box")){ const [x,y]=BOX_JACK(); dashed(x-14,y-16,30,32); }
-    if(k==="cablePlug") for(const r of [1,2]){ const s=socketXY(r); if(s) dashed(s[0]-14,s[1]-14,28,28); }
-  }
   if(lab.on.has("adapter")) drawAdapter();
   if(lab.on.has("box")) drawBox(SLOT.box.x,SLOT.box.y,SLOT.box.w,SLOT.box.h,true);
   if(lab.on.has("pot")) drawPot();
@@ -1083,7 +1082,6 @@ function drawTubes(){
     /* fingers holding the tube upright */
     for(const k of [0,1,2,3]) fillR(tb.x-tb.hw-9,TUBE_TOP+70+k*15,tb.hw*2+18,12,6,"rgba(224,178,150,0.92)","rgba(150,105,80,0.9)");
     text(d().tubeName[tb.k],tb.x,TUBE_BOT+80,"#4a3a26",13,"center","600");
-    if(hand&&hand.k==="magnet") dashed(tb.x-26,TUBE_TOP-30,52,40);
   }
   /* the dish the magnet is kept in */
   ctx.fillStyle="rgba(210,225,235,.55)"; ctx.beginPath(); ctx.ellipse(1010,592,46,13,0,0,7); ctx.fill();
@@ -1130,6 +1128,10 @@ function returnHand(){
   if(k==="rod1"||k==="rod2") lab.place[+k[3]]="tray";
   if(k==="cablePlug"){ lab.cableBox=false; lab.cableRod=0; lab.hold=false; }
   if(k==="magnet"){ magnet.state="pad"; magnet.x=1010; magnet.y=585; }
+  if(k==="psu"||k==="amm"||k==="volt"){        /* back in the box: its leads come off */
+    const ids=k==="psu"?["PS+","PS-"]:k==="amm"?["A1","ACOM"]:["V1","VCOM"];
+    lab.circ.wires=lab.circ.wires.filter(w=>!ids.includes(w[0])&&!ids.includes(w[1])); lab.res=lab.circ.solve();
+  }
   say("back",itemName(k==="cablePlug"?"cable":k));
   hand=null;
 }
@@ -1163,10 +1165,11 @@ function benchClick(p,right){
   /* ---- hand full : put it down ---- */
   if(hand){
     const k=hand.k;
-    if(SLOT[k]&&!(k==="rod1"||k==="rod2")){
-      const s=SLOT[k];
-      if(inR(p,s.x,s.y,s.w,s.h,40)){ lab.on.add(k); if(k==="adapter") lab.adapter=true; say("placed",itemName(k)); hand=null; }
-      else say("noFit");
+    if(FREE.includes(k)){
+      const at=spotFor(k,p);
+      if(!at){ say("noFit"); return; }
+      SLOT[k].x=at[0]; SLOT[k].y=at[1];
+      lab.on.add(k); if(k==="adapter") lab.adapter=true; say("placed",itemName(k)); hand=null;
       return;
     }
     if(k==="water"){
@@ -1239,6 +1242,12 @@ function benchClick(p,right){
   if(lab.capOnBench&&inR(p,SLOT.table.x+SLOT.table.w+30,SLOT.table.y+60,34,40,8)){
     lab.capOnBench=false; hand={k:"cap"}; say("picked",itemName("cap")); return; }
   for(const r of [1,2]) if(lab.rodPlaced(r)&&rodHit(r,p)){ pickRod(r); return; }
+  for(const k of ["amm","volt","psu","adapter","box","pot"]){
+    const s=SLOT[k]; if(!lab.on.has(k)||!inR(p,s.x,s.y,s.w,s.h)) continue;
+    if((k==="pot"&&(onPot()||lab.water))||(k==="box"&&lab.cableBox)){ say("needFirst"); return; }
+    lab.on.delete(k); if(k==="adapter") lab.adapter=false;
+    hand={k,move:true}; say("picked",itemName(k)); return;
+  }
 }
 function rodHit(r,p){
   if(lab.place[r]==="table") return inR(p,SLOT.table.x,SLOT.table.y,SLOT.table.w,SLOT.table.h,4);

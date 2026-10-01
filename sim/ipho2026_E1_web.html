@@ -164,12 +164,12 @@ const T={
       syrDirect:"주사기를 호스 D에 직접 연결했습니다 (밸브 D 우회)", syrD:"주사기를 호스 D에 연결했습니다",
       syrNotHome:"! 주사기가 포트에 완전히 꽂히지 않았습니다 - 노즐을 구멍에 맞추세요.",
       nozzleIn:(s,c)=>s+" 노즐을 "+c+"에 담갔습니다",
-      placeIt:s=>s+" — 실험대의 점선 자리를 클릭해 놓으세요. (우클릭: 취소)",
-      placed:s=>s+" — 놓았습니다.", noFit:"그곳에는 놓을 수 없습니다. 점선 자리를 클릭하세요.",
+      placeIt:s=>s+" — 실험대 위 놓을 곳을 클릭하세요. (우클릭: 취소)",
+      placed:s=>s+" — 놓았습니다.", noFit:"그곳에는 놓을 수 없습니다. 다른 기구와 겹치지 않는 빈 곳에 놓으세요.",
       returned:s=>s+" — 부품함에 넣었습니다.",
       syrTake:s=>s+" — 노즐을 병·포트 D·호스 D 끝·거치대 중 하나에 대고 클릭하세요. (우클릭: 부품함)",
       syrRack:s=>s+"를 거치대에 꽂았습니다.",
-      contTake:s=>s+"를 들었습니다 — 다른 용기를 클릭하면 따르고, 빈 곳을 클릭하면 제자리에 놓습니다.",
+      contTake:s=>s+"를 들었습니다 — 다른 용기를 클릭하면 따르고, 빈 곳을 클릭하면 그 자리로 옮깁니다.",
       hoseTake:k=>"호스 "+k+" 끝을 들었습니다 — 용기를 클릭해 넣으세요. (우클릭: 내려놓기)",
       hoseDown:k=>"호스 "+k+" 끝을 실험대에 내려놓았습니다.",
       busy:"용기에 호스나 주사기가 들어 있어 들 수 없습니다."
@@ -220,12 +220,12 @@ const T={
       syrDirect:"Syringe plugged straight into hose D (valve D bypassed)", syrD:"Syringe connected to hose D",
       syrNotHome:"! The syringe is not fully home - line the nozzle up with the socket.",
       nozzleIn:(s,c)=>s+" nozzle dipped in the "+c,
-      placeIt:s=>s+" — click its dashed place on the bench. (R-click: cancel)",
-      placed:s=>s+" — placed.", noFit:"It does not go there. Click a dashed place.",
+      placeIt:s=>s+" — click where on the bench to put it. (R-click: cancel)",
+      placed:s=>s+" — placed.", noFit:"It does not fit there. Put it on a clear spot of the bench.",
       returned:s=>s+" — back in the parts box.",
       syrTake:s=>s+" — click with the nozzle on a bottle, port D, the end of hose D or the rack. (R-click: parts box)",
       syrRack:s=>s+" set in the rack.",
-      contTake:s=>"Holding the "+s+" — click another container to pour, or a bare spot to put it back.",
+      contTake:s=>"Holding the "+s+" — click another container to pour, or a bare spot to move it there.",
       hoseTake:k=>"Holding the end of hose "+k+" — click a container to put it in. (R-click: put it down)",
       hoseDown:k=>"Hose "+k+" end put down on the bench.",
       busy:"A hose or a syringe is in that container, so it cannot be lifted."
@@ -590,8 +590,21 @@ function finv(F,x,y){
 }
 const HOSE_PORT={A:fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseA)),C:fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseC))};
 const SYR_PORT=fmap(F_BOARD,...hotPt(BOARD,HOT.fig6.hoseD)), HOSE_D_END=[SYR_PORT[0]+26,SYR_PORT[1]-30];
-/* containers stand on the bench at fixed places */
+/* containers stand wherever they are put down on the bench; CONT holds where each one is now,
+   CONT_SIZE only its footprint */
 const CONT={pg:[22,772,76,900], cold:[92,748,154,900], room:[170,736,240,900], pour:[256,776,340,900], jug:[40,918,300,985]};
+const CONT_SIZE={}; for(const k in CONT) CONT_SIZE[k]=[CONT[k][2]-CONT[k][0],CONT[k][3]-CONT[k][1]];
+/* where nothing can stand: the module box, the board lying on the bench, the cylinders */
+const BLOCK=[[426,250,1150,646],[372,656,1018,912],[1110,190,1400,824]];
+const overlap=(r,q,m=6)=>r[0]<q[2]+m&&r[2]+m>q[0]&&r[1]<q[3]+m&&r[3]+m>q[1];
+function contSpot(k,x,y){
+  const [w,h]=CONT_SIZE[k];
+  const a=Math.round(Math.max(6,Math.min(1494-w,x-w/2))), e=Math.round(Math.max(760,Math.min(995,y+h/2)));
+  const r=[a,e-h,a+w,e];
+  for(const q of BLOCK) if(overlap(r,q)) return null;
+  for(const o in CONT) if(o!==k&&B.contOn[o]&&overlap(r,CONT[o])) return null;
+  return r;
+}
 const CONT_ORDER=["pg","cold","room","pour","jug"];
 const SH=240, SW=48;
 const RACK={y:690, holes:{w:90,p:190}};
@@ -982,12 +995,6 @@ function drawSyringes(){
 }
 function drawTargets(){
   const cr=B.carry; if(!cr) return;
-  const dash=(a,b,c,e)=>{ ctx.setLineDash([7,5]); R(a,b,c,e,"rgba(242,193,78,0.08)","#f2c14e",2); ctx.setLineDash([]); };
-  if(cr.k==="new"){ const [a,b,c,e]=CONT[cr.id]; dash(a-6,b-10,c+6,e+4); }
-  if(cr.k==="syr"){
-    for(const [x,y] of [SYR_PORT,HOSE_D_END]){ ctx.setLineDash([4,4]); O(x-22,y-22,x+22,y+22,null,"#f2c14e",2); ctx.setLineDash([]); }
-    const hx=RACK.holes[cr.key]; ctx.setLineDash([4,4]); O(hx-20,RACK.y-20,hx+20,RACK.y+20,null,"#f2c14e",2); ctx.setLineDash([]);
-  }
   const m=B.mouseL;
   const lbl=cr.k==="hose"?"hose "+cr.key:cr.k==="cont"?d().contName[cr.key]:cr.k==="syr"?d().syr[cr.key]:d().trayItems[cr.id];
   X("⇱ "+lbl,m[0]+18,m[1]-16,"#f2c14e",14,"w",true);
@@ -1111,15 +1118,20 @@ function startCarry(t,drag){
 function placeCarry(p){
   const cr=B.carry, [x,y]=p, t=d().m;
   if(cr.k==="new"){
-    const [a,b,dd,e]=CONT[cr.id];
-    if(x>=a-14&&x<=dd+14&&y>=b-40&&y<=e+14){ B.contOn[cr.id]=true; B.carry=null; say(t.placed(d().trayItems[cr.id])); drawTray(); }
+    const r=contSpot(cr.id,x,y);
+    if(r){ CONT[cr.id]=r; B.contOn[cr.id]=true; B.carry=null; say(t.placed(d().trayItems[cr.id])); drawTray(); }
     else say(t.noFit,true);
     return;
   }
   if(cr.k==="cont"){
     const tgt=contAt(x,y,cr.key);
-    B.carry=null;
-    if(tgt) lab.pour(cr.key,tgt);
+    if(tgt){ B.carry=null; lab.pour(cr.key,tgt); return; }
+    const r=contSpot(cr.key,x,y);
+    if(!r){ if(cr.drag) B.carry=null; else say(t.noFit,true); return; }
+    /* a syringe standing in the container goes with it */
+    const [ox,oy]=[r[0]-CONT[cr.key][0],r[1]-CONT[cr.key][1]];
+    for(const sk of ["w","p"]) if(B.syrOn[sk]&&lab.syr[sk].attached===cr.key){ lab.syr[sk].x+=ox; lab.syr[sk].y+=oy; }
+    CONT[cr.key]=r; B.carry=null; say(t.placed(d().contName[cr.key]));
     return;
   }
   if(cr.k==="hose"){
@@ -1137,8 +1149,12 @@ function placeCarry(p){
     const dPort=Math.hypot(nx-SYR_PORT[0],ny-SYR_PORT[1]);
     if(dPort<22){ put(SYR_PORT[0],SYR_PORT[1]); s.attached="D"; s.placed="D"; lab.say("syrD"); return; }
     if(dPort<70||Math.hypot(nx-hx,ny-hy)<70){ lab.say("syrNotHome"); return; }
-    const hole=RACK.holes[k];
-    if(Math.hypot(nx-hole,ny-RACK.y)<26){ put(hole,RACK.y+6); s.attached=null; s.placed="rack"; say(t.syrRack(d().syr[k])); return; }
+    for(const hole of [RACK.holes.w,RACK.holes.p]){
+      if(Math.hypot(nx-hole,ny-RACK.y)>=26) continue;
+      const ok=k==="w"?"p":"w", o=lab.syr[ok];
+      if(B.syrOn[ok]&&o.placed==="rack"&&Math.abs(o.x+SW/2-hole)<2){ say(t.noFit,true); return; }
+      put(hole,RACK.y+6); s.attached=null; s.placed="rack"; say(t.syrRack(d().syr[k])); return;
+    }
     const c=contAt(nx,ny,null);
     if(c){ const [a,b,dd,e]=CONT[c]; const yy=Math.max(ny,b+10); put(nx,yy); s.attached=c; s.placed=c; lab.say("nozzleIn","__syr"+k,c); return; }
     say(t.noFit,true);

@@ -182,11 +182,13 @@ const T = {
          covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
          hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
     secTxt:(cl,cov,st)=>"클램프: "+cl+"   ·   "+cov+"\n"+st,
-    stNothing:"부품함에서 부품을 골라 실험대의 점선 자리에 놓으세요.",
+    stNothing:"부품함에서 부품을 골라 실험대 위 원하는 곳에 놓으세요.",
     m:{
-      placeIt:s=>s+" — 실험대에 나타난 점선 자리를 클릭해 놓으세요. (우클릭: 취소)",
+      placeIt:s=>s+" — 실험대 위 놓을 곳을 클릭하세요. (우클릭: 취소)",
+      moveIt:s=>s+"를 들었습니다 — 옮길 곳을 클릭하세요. 꽂힌 케이블은 그대로입니다. (우클릭: 제자리)",
+      stays:"제자리에 그대로 두었습니다.",
       placed:s=>s+" — 놓았습니다.",
-      noFit:"그곳에는 놓을 수 없습니다. 점선 자리를 클릭하세요.",
+      noFit:"그곳에는 놓을 수 없습니다. 책상 위, 다른 부품과 겹치지 않는 곳에 놓으세요.",
       cable1:"케이블의 한쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
       cable2:"다른 쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
       needSock:"바나나 플러그는 바나나 소켓(빨강·검정 구멍)에만 꽂힙니다.",
@@ -257,11 +259,13 @@ const T = {
          covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
          hook:"hook", gnd:"ground clip", rest:"probe rest"},
     secTxt:(cl,cov,st)=>"clamps: "+cl+"   ·   "+cov+"\n"+st,
-    stNothing:"Pick a part from the parts box and put it on its dashed place on the bench.",
+    stNothing:"Pick a part from the parts box and put it anywhere on the bench.",
     m:{
-      placeIt:s=>s+" — click the dashed place that appeared on the bench. (R-click: cancel)",
+      placeIt:s=>s+" — click where on the bench to put it. (R-click: cancel)",
+      moveIt:s=>s+" picked up — click where to move it. Its leads stay plugged in. (R-click: leave it)",
+      stays:"Left where it was.",
       placed:s=>s+" — placed.",
-      noFit:"It does not go there. Click a dashed place.",
+      noFit:"It does not fit there. Put it on the desk, clear of the other parts.",
       cable1:"Click the terminal for one end of the cable. (R-click: cancel)",
       cable2:"Click the terminal for the other end. (R-click: cancel)",
       needSock:"A banana plug only goes into a banana socket (the red and black holes).",
@@ -461,7 +465,9 @@ const S={
   probe:{tip:null,gnd:null},
   stack:[], pan:null, panItem:null, panT:T_AMB, loose:false,
   plates:{AL:5,CU:5,SS304:4,SS410:4},
-  carry:null, zones:{}, targets:[],
+  carry:null, zones:{},
+  /* each part stands wherever it was put down: its shift (cm, along x and z) from the drawing's own place */
+  at:{fg:[0,0],scope:[0,0],coil:[0,0],r1:[0,0],box:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
   fg:{pow:false,amp:0.25,range:2,coarse:0.5,fine:0.5,wave:0},
   z:{on:false,mode:"SCOPE",fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
      vi:7,ti:6,ypos:0,xpos:0,trig:0,hold:false,held:null,dfn:"ACV",rfn:0,armed:true,
@@ -515,9 +521,38 @@ const CAP_SLOT={C470N:[89,27],C470U:[94,27],C1000U:[99,27],C2200U:[104.5,27]};
 const PROBE_REST={tip:[73,0.25,31],gnd:[77.5,0.25,29.5]};
 const PLATE_T=0.12;
 
-function boxOrigin(){ return S.on.box ? BOX_SLOT[S.on.box] : null; }
-/* terminal table: position, plug direction, kind */
+function boxOrigin(){
+  if(S.on.box==="desk") return [BOX_SLOT.desk[0]+S.at.box[0],BOX_SLOT.desk[1]+S.at.box[1]];
+  if(S.on.box==="cover") return [BOX_SLOT.cover[0]+S.at.coil[0],BOX_SLOT.cover[1]+S.at.coil[1]];
+  return null;
+}
+const capAt=k=>[CAP_SLOT[k][0]+S.at[k][0],CAP_SLOT[k][1]+S.at[k][1]];
+/* footprints on the desk (x0 x1 z0 z1, unshifted) for the free placing */
+const FOOT={fg:[4,28,36,54], scope:[86,95.5,39,47.6], coil:[46,62,14,28], r1:[18,34,6,16],
+            box:[BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D]};
+for(const k in CAP_SLOT){ const [cx,cz]=CAP_SLOT[k]; FOOT[k]=[cx-1.4,cx+1.4,cz-3,cz+1.4]; }
+const DESK=[-9,127,-7,63];
+function footNow(id){ const f=FOOT[id], o=S.at[id]; return [f[0]+o[0],f[1]+o[0],f[2]+o[1],f[3]+o[1]]; }
+function onDesk(id){ return CAPS[id]?S.cap[id]==="desk":id==="box"?S.on.box==="desk":!!S.on[id]; }
+/* the shift that centres the part on (bx,bz), or null if it would hang off the desk or hit another part */
+function freeSpot(id,bx,bz){
+  const f=FOOT[id], o=[bx-(f[0]+f[1])/2, bz-(f[2]+f[3])/2];
+  const r=[f[0]+o[0],f[1]+o[0],f[2]+o[1],f[3]+o[1]];
+  if(r[0]<DESK[0]||r[1]>DESK[1]||r[2]<DESK[2]||r[3]>DESK[3]) return null;
+  for(const k in FOOT){ if(k===id||!onDesk(k)) continue; const q=footNow(k);
+    if(r[0]<q[1]+0.4&&r[1]+0.4>q[0]&&r[2]<q[3]+0.4&&r[3]+0.4>q[2]) return null; }
+  return o;
+}
+/* terminal table: position, plug direction, kind  (termLocal: where it is on the unshifted part) */
+const TERM_OWNER={FGP:"fg",FGN:"fg",DCOM:"scope",DVO:"scope",R1A:"r1",R1B:"r1",
+                  C1A:"coil",C1B:"coil",C2A:"coil",C2B:"coil",NTCA:"coil",NTCB:"coil"};
 function termInfo(id){
+  const info=termLocal(id), own=TERM_OWNER[id];
+  if(!info||!own) return info;
+  const o=S.at[own];
+  return {...info, p:[info.p[0]+o[0],info.p[1],info.p[2]+o[1]]};
+}
+function termLocal(id){
   const face=(F,a,t)=>[F.x0+a, F.y1-t, F.z];
   switch(id){
     case "FGP": return S.on.fg?{p:face(FG_FACE,21.2,2.9),d:[0,0,-1],k:"sock",col:"r"}:null;
@@ -544,7 +579,7 @@ function termInfo(id){
   if(id[0]==="K"){
     const key=CAP_KEYS[+id[1]-1];
     if(S.cap[key]!=="desk") return null;
-    const [cx,cz]=CAP_SLOT[key];
+    const [cx,cz]=capAt(key);
     return {p:[cx+(id[2]==="A"?-0.8:0.8),0.25,cz-2.6],d:[0,0,-1],k:"pin",col:"g"};
   }
   return null;
@@ -599,7 +634,11 @@ function fit(){
   }
 }
 const UV=(u,v)=>{ const k=ppcm(); return [(u-S.cam[0])*k, CH-(v-S.cam[1])*k]; };
-const NP=(x,y,z)=>{ const p=proj(x,y,z); return UV(p[0],p[1]); };
+let OFF=[0,0];               /* the part being drawn is shifted by OFF (cm) */
+const NP=(x,y,z)=>{ const p=proj(x+OFF[0],y,z+OFF[1]); return UV(p[0],p[1]); };
+function withOff(o,fn){ const keep=OFF; OFF=o; try{ return fn(); } finally{ OFF=keep; } }
+/* the bench point (y = 0) under a screen point */
+function benchAt(px,py){ const [u,v]=INV(px,py); return [(u/KC-v/KS)/2,(u/KC+v/KS)/2]; }
 const INV=(px,py)=>{ const k=ppcm(); return [px/k+S.cam[0], (CH-py)/k+S.cam[1]]; };
 /* front-face affine: local (a to the right, t downward) in cm */
 function faceM(F){ const [X,Y]=NP(F.x0,F.y1,F.z), k=ppcm(); return [k*KC,k*KS,0,k,X,Y]; }
@@ -1040,10 +1079,10 @@ function drawCapOnBox(k,pair,o){
   LINE([NP(cx+0.3,BOX_H+0.2,cz),NP(xb,BOX_H+POST_H-0.3,z)],"#d6d9dc",1.5);
   drawCapBody(k,cx,BOX_H,cz);
 }
-function drawCapsDesk(){
+function drawCapsDesk(only){
   for(const k of CAP_KEYS){
-    if(S.cap[k]!=="desk") continue;
-    const [cx,cz]=CAP_SLOT[k];
+    if(S.cap[k]!=="desk"||(only&&k!==only)) continue;
+    const [cx,cz]=capAt(k);
     LINE([NP(cx-0.25,0.2,cz),NP(cx-0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
     LINE([NP(cx+0.25,0.2,cz),NP(cx+0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
     drawCapBody(k,cx,0,cz);
@@ -1092,7 +1131,7 @@ function drawCoil(){
     TXT(p[0],p[1],lab,{size:Math.max(5,ppcm()*0.5),fill:"#cfd3d6",align:"left",bold:true});
   }
   S.zones.coil=boxRect([B[0],B[1],0,Hb[3]+0.6,B[4],B[5]]);
-  if(S.pan&&S.on.box!=="cover") drawNtcLeads(y+PLATE_T+0.15);
+  if(S.pan&&S.on.box!=="cover"){ const yb=y+PLATE_T+0.15; withOff([0,0],()=>drawNtcLeads(yb)); }
 }
 function leadPts(P0,P3,floor){
   const pts=[];
@@ -1107,7 +1146,7 @@ function leadPts(P0,P3,floor){
 function drawNtcLeads(yb){
   for(const [id,xx,col] of [["NTCA",53.85,"#c8261d"],["NTCB",54.15,"#3a3d41"]]){
     const ti=termInfo(id);
-    const pts=leadPts([xx,yb,17.3],ti.p,0.7);
+    const pts=leadPts([xx+S.at.coil[0],yb,17.3+S.at.coil[1]],ti.p,0.7);
     LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
     LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
   }
@@ -1115,7 +1154,7 @@ function drawNtcLeads(yb){
 function drawNtcLeadsCovered(){
   for(const [id,col] of [["NTCA","#c8261d"],["NTCB","#3a3d41"]]){
     const ti=termInfo(id);
-    const pts=[NP(ti.p[0],0.4,BOX_SLOT.cover[1]),NP(ti.p[0],0.25,12),NP(...ti.p)];
+    const pts=[NP(ti.p[0],0.4,boxOrigin()[1]),NP(ti.p[0],0.25,12+S.at.coil[1]),NP(...ti.p)];
     LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
     LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
   }
@@ -1173,14 +1212,14 @@ function probeEndScreen(end){
   if(cr&&cr.k==="probe"&&cr.end===end) return S.mouse;
   const t=S.probe[end];
   if(t){ const info=termInfo(t); if(info) return NP(...endPos(t,info)); }
-  return NP(...PROBE_REST[end]);
+  return withOff(S.at.scope,()=>NP(...PROBE_REST[end]));
 }
 function drawProbe(){
   if(!S.on.scope) return;
   const k=ppcm();
   const tip=probeEndScreen("tip"), gnd=probeEndScreen("gnd");
   const body=[tip[0]*0.55+gnd[0]*0.45, Math.max(tip[1],gnd[1])+k*2.2];
-  const s0=NP(89,Z_BOX[3]+0.9,41.8), s1=NP(88,4,34), s2=NP(82,0.4,28);
+  const [s0,s1,s2]=withOff(S.at.scope,()=>[NP(89,Z_BOX[3]+0.9,41.8),NP(88,4,34),NP(82,0.4,28)]);
   const coax=[];
   for(let i=0;i<=24;i++){ const t=i/24, u=1-t;
     coax.push([u*u*u*s0[0]+3*u*u*t*s1[0]+3*u*t*t*s2[0]+t*t*t*body[0],
@@ -1195,45 +1234,11 @@ function drawProbe(){
   OVAL(tip[0],tip[1],Math.max(2,k*0.18),Math.max(2,k*0.18),null,"#d9dde1",1.5);
   S.probeScr={tip,gnd};
   if(!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe")){
-    const p=NP(75,0.25,33.5); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
+    const p=withOff(S.at.scope,()=>NP(75,0.25,33.5)); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
   }
 }
-function drawTerminalsHint(){
-  const cr=S.carry;
-  if(!cr||!(cr.k==="cable"||cr.k==="probe")) return;
-  for(const id of ALL_TERMS){
-    const info=termInfo(id); if(!info||info.hidden) continue;
-    const ok=cr.k==="probe"||termOk(cr,id,info)===true;
-    const p=NP(...info.p), r=Math.max(6,ppcm()*0.7);
-    OVAL(p[0],p[1],r,r,null,ok?"rgba(242,193,78,0.95)":"rgba(160,160,160,0.35)",ok?2:1);
-  }
-}
-function drawTargets(){
-  S.targets=[];
-  const cr=S.carry;
-  if(!cr) return;
-  const add=(poly,act,lab)=>{ S.targets.push({poly,act}); POLY(poly,"rgba(242,193,78,0.10)",null);
-    LINE(poly.concat([poly[0]]),"#f2c14e",2,"butt",[6,4]);
-    if(lab){ const c=poly.reduce((a,p)=>[a[0]+p[0]/poly.length,a[1]+p[1]/poly.length],[0,0]); TXT(c[0],c[1],lab,{size:9,fill:"#f2c14e",bold:true}); } };
-  if(cr.k==="item"){
-    const id=cr.id;
-    const foot={fg:FG_BOX, scope:[Z_BOX[0],Z_BOX[1],0,0,Z_BOX[4]-1,Z_BOX[5]+4], coil:COIL.base, r1:R1_BOX};
-    if(foot[id]) add(boxFoot(foot[id]),{place:id});
-    if(id==="box"){
-      add(boxFoot([BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,0,0,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D]),{place:"box",where:"desk"});
-      if(S.on.coil) add(boxFoot([BOX_SLOT.cover[0],BOX_SLOT.cover[0]+BOX_W,0,0,BOX_SLOT.cover[1],BOX_SLOT.cover[1]+BOX_D]),{place:"box",where:"cover"},d().lab.covered);
-    }
-    if(CAPS[id]){
-      const [cx,cz]=CAP_SLOT[id];
-      add(boxFoot([cx-1.4,cx+1.4,0,0,cz-3,cz+1.4]),{place:id,where:"desk"});
-      const o=boxOrigin();
-      if(o) for(const pr of ["b12","b34"]){
-        if(CAP_KEYS.some(k=>S.cap[k]===pr)) continue;
-        const i0=pr==="b12"?0:2, x0=o[0]+POST_DX[i0]-1, x1=o[0]+POST_DX[i0+1]+1, z=o[1]+POST_Z;
-        add([NP(x0,BOX_H,z-1),NP(x1,BOX_H,z-1),NP(x1,BOX_H,z+3.4),NP(x0,BOX_H,z+3.4)],{place:id,where:pr});
-      }
-    }
-  }
+function drawCarryLabel(){
+  if(!S.carry) return;
   TXT(S.mouse[0]+16,S.mouse[1]-14,"⇱ "+carryLabel(),{size:10,fill:"#f2c14e",bold:true,align:"left"});
 }
 function carryLabel(){
@@ -1247,17 +1252,19 @@ function draw(){
   ctx.fillStyle="#232830"; ctx.fillRect(0,0,CW,CH);
   S.zones={};
   drawDesk();
-  if(S.on.fg) drawFG();
-  if(S.on.scope) drawZoyi();
-  if(S.on.r1) drawR1();
-  if(S.on.coil) drawCoil();
-  if(S.on.box==="cover"){ drawBox(); if(S.pan) drawNtcLeadsCovered(); }
-  if(S.on.box==="desk") drawBox();
-  drawCapsDesk();
+  /* the parts go wherever they were put, so draw the far ones first */
+  const parts=[];
+  const add=(id,fn)=>{ const f=footNow(id); parts.push([(f[2]+f[3])/2-(f[0]+f[1])/2,fn]); };
+  if(S.on.fg) add("fg",()=>withOff(S.at.fg,drawFG));
+  if(S.on.scope) add("scope",()=>withOff(S.at.scope,drawZoyi));
+  if(S.on.r1) add("r1",()=>withOff(S.at.r1,drawR1));
+  if(S.on.coil) add("coil",()=>{ withOff(S.at.coil,drawCoil); if(S.on.box==="cover"){ drawBox(); if(S.pan) drawNtcLeadsCovered(); } });
+  if(S.on.box==="desk") add("box",drawBox);
+  for(const k of CAP_KEYS) if(S.cap[k]==="desk") add(k,()=>drawCapsDesk(k));
+  parts.sort((a,b)=>b[0]-a[0]).forEach(q=>q[1]());
   drawCables();
   drawProbe();
-  drawTargets();
-  drawTerminalsHint();
+  drawCarryLabel();
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1370,6 +1377,7 @@ function cancelCarry(silent){
   if(cr.k==="cable") S.stock[cr.type][cr.col]++;
   if(cr.k==="plate") S.plates[cr.mat]++;
   S.carry=null;
+  if(cr.move){ say(d().m.stays); return; }
   if(!silent) say(d().m.returned(cr.k==="probe"?d().lab.probe:(d().trayItems[cr.id||cr.type]||"")));
   drawTray();
 }
@@ -1384,8 +1392,13 @@ function onPress(p){
         S.probe[end]=null; S.carry={k:"probe",end}; say(t.m.probeTake(end==="tip"?t.lab.hook:t.lab.gnd)); solve(); return; }
     }
   }
-  if(S.on.fg){ const [a,b]=faceInv(FG_FACE,x,y); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
-  if(S.on.scope){ const [a,b]=faceInv(Z_FACE,x,y); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
+  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
+  if(S.on.scope){ const [a,b]=withOff(S.at.scope,()=>faceInv(Z_FACE,x,y)); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
+  /* grab a part standing on the desk to move it (its leads stay plugged in) */
+  for(const id of ["C470N","C470U","C1000U","C2200U","box","r1","coil","scope","fg"]){
+    if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
+    S.carry={k:"item",id,move:true}; say(t.m.moveIt(t.trayItems[id])); return;
+  }
   S.view0=[x,y,S.cam[0],S.cam[1]];
   cv.classList.add("dragging");
 }
@@ -1423,18 +1436,28 @@ function place(x,y){
     solve(); drawTray(); return;
   }
   if(cr.k==="item"){
-    for(const tg of S.targets){
-      if(!inPoly(tg.poly,x,y)) continue;
-      const a=tg.act;
-      if(a.place==="box") S.on.box=a.where;
-      else if(CAPS[a.place]) S.cap[a.place]=a.where;
-      else S.on[a.place]=true;
-      S.carry=null;
-      say(CAPS[a.place]&&a.where!=="desk"?t.m.capBox:t.m.placed(t.trayItems[a.place]));
-      if(a.place==="fg"&&!S.fg.pow) setTimeout(()=>say(t.m.fgRear),1500);
-      solve(); drawTray(); return;
+    const id=cr.id, [bx,bz]=benchAt(x,y);
+    let where="desk", o=null;
+    if(id==="box"&&S.on.coil&&inRect(S.zones.coil,x,y)) where="cover";
+    if(CAPS[id]){                              /* on a pair of free posts of the box, or on the desk */
+      const bo=boxOrigin();
+      if(bo) for(const pr of ["b12","b34"]){
+        if(CAP_KEYS.some(k=>k!==id&&S.cap[k]===pr)) continue;
+        const i0=pr==="b12"?0:2, cx=bo[0]+(POST_DX[i0]+POST_DX[i0+1])/2, cz=bo[1]+POST_Z;
+        const q=NP(cx,BOX_H+POST_H,cz);
+        if(Math.hypot(q[0]-x,q[1]-y)<Math.max(14,ppcm()*2.2)){ where=pr; break; }
+      }
     }
-    say(t.m.noFit,true);
+    if(where==="desk"){ o=freeSpot(id,bx,bz); if(!o){ say(t.m.noFit,true); return; } }
+    if(id==="box"&&where==="cover"&&cr.move&&S.on.box==="cover"){ S.carry=null; return; }
+    if(o) S.at[id]=o;
+    if(id==="box") S.on.box=where;
+    else if(CAPS[id]) S.cap[id]=where;
+    else S.on[id]=true;
+    S.carry=null;
+    say(CAPS[id]&&where!=="desk"?t.m.capBox:t.m.placed(t.trayItems[id]));
+    if(id==="fg"&&!S.fg.pow&&!cr.move) setTimeout(()=>say(t.m.fgRear),1500);
+    solve(); drawTray(); return;
   }
 }
 function onRClick(p){
@@ -1485,7 +1508,7 @@ function returnItem(id){
 }
 function onWheel(p,dir,shift){
   const [x,y]=p;
-  if(S.on.fg){ const [a,b]=faceInv(FG_FACE,x,y); if(a>=0&&a<=24&&b>=0&&b<=9&&fgWheel(a,b,dir,shift)) return; }
+  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9&&fgWheel(a,b,dir,shift)) return; }
   const [u,v]=INV(x,y);
   S.zoom=Math.max(0.6,Math.min(7,S.zoom*(dir>0?1.15:1/1.15)));
   S.touched=true;
