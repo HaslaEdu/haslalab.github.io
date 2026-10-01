@@ -23,8 +23,16 @@
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1560px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
-  @media (max-width:1100px){ .wrap{flex-direction:column} }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
 
   /* ── stage ── */
   .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
@@ -44,7 +52,8 @@
   /* ── control panel ── */
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
          border-radius:10px;padding:12px;position:sticky;top:12px}
-  @media (max-width:1100px){ .panel{position:static;flex:1 1 auto;width:100%} }
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
   .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
             margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
@@ -68,7 +77,7 @@
   .status .w{color:#f0a79f}
 
   /* ── header ── */
-  header{max-width:1560px;margin:0 auto;padding:16px 12px 0;
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
@@ -92,17 +101,25 @@
 </header>
 
 <div class="wrap">
+  <!-- ═══════════ TRAY ═══════════ -->
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
   <!-- ═══════════ STAGE ═══════════ -->
   <div class="stage">
     <div class="card">
       <div class="tabs">
         <button id="tab-bench" class="on"></button>
         <button id="tab-tubes"></button>
-        <button id="tab-info"></button>
       </div>
       <h3 id="t-cap"></h3>
       <canvas id="cv"></canvas>
-      <div class="info" id="info" hidden></div>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
     </div>
   </div>
 
@@ -135,7 +152,11 @@ const T = {
   ko:{
     title:"IPhO 2019 실험 2 — 비데만–프란츠 법칙",
     sub:"가상 실험실 · 장비를 직접 놓고 배선하고 읽으세요. 아무것도 대신 계산해 주지 않습니다.",
-    tabBench:"B · C · D  열전도 실험대", tabTubes:"A  도체 튜브", tabInfo:"장비 · 과제",
+    tabBench:"B · C · D  열전도 실험대", tabTubes:"A  도체 튜브",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n단자 두 개 클릭: 전선 연결·제거",
+    trayTubes:"1–3. 도체 관 3개", trayMagnet:"4. 자석 1.2 g", trayToA:"클릭하면 A 탭으로",
+    closeCap:"계기 확대 — 실험대 위의 판독 박스와 두 멀티미터 (선택 스위치는 실험대에서 클릭·휠)",
+    held:"손으로 관을 수직으로 들고 있습니다",
     capBench:"실험대 — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 단자 두 개를 차례로 클릭하면 전선 연결·제거",
     capTubes:"도체 튜브 — 자석을 집어 튜브 입구에 놓으면 떨어집니다. 판독 박스의 빨간 버튼(또는 스페이스)으로 시간을 재세요.",
     capInfo:"장비 목록과 과제 요약",
@@ -197,7 +218,11 @@ const T = {
   en:{
     title:"IPhO 2019 Experiment 2 — Wiedemann–Franz Law",
     sub:"Virtual laboratory · place, wire and read the apparatus yourself. Nothing is computed for you.",
-    tabBench:"B · C · D  heat bench", tabTubes:"A  conducting tubes", tabInfo:"Equipment · tasks",
+    tabBench:"B · C · D  heat bench", tabTubes:"A  conducting tubes",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayHelp:"L-click pick/place, R-click return\nclick two terminals: add/remove a wire",
+    trayTubes:"1–3. Three tubes", trayMagnet:"4. Magnet 1.2 g", trayToA:"opens tab A",
+    closeCap:"instruments close up — the readout box and the two multimeters on the bench (turn the selectors on the bench: click or wheel)",
+    held:"the tube is held upright by hand",
     capBench:"the bench — L-click pick up / put down, R-click return to tray, click two terminals to add or remove a wire",
     capTubes:"conducting tubes — pick the magnet up and put it on a tube mouth to drop it. Time it with the red button on the box (or the space bar).",
     capInfo:"equipment list and summary of the tasks",
@@ -520,8 +545,9 @@ class Lab{
 /* ══════════════════════════════════════════════════════════════
    3.  CANVAS
    ══════════════════════════════════════════════════════════════ */
-const cv=$("cv"), ctx=cv.getContext("2d");
-const LW=1200, LH=720;
+const cv=$("cv"), benchCtx=cv.getContext("2d");
+let ctx=benchCtx;
+const LW=1200, LH=620;
 let S=1, view="bench";
 function layout(){
   const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
@@ -529,6 +555,7 @@ function layout(){
   cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr);
   cv.style.height=(LH*S)+"px";
   ctx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  layoutSide();
 }
 const C_TABLE="#cdb692", C_TABLE2="#c0a684", C_WOODLN="#b99b74";
 const C_COPPER="#b0693a", C_COPPER_HI="#e09a6a", C_BRASS="#b08d2e", C_BRASS_HI="#e0c06a";
@@ -577,7 +604,7 @@ function dashed(x,y,w,h,label){
 /* ══════════════════════════════════════════════════════════════
    4.  BENCH LAYOUT  (logical px, 1200 × 720)
    ══════════════════════════════════════════════════════════════ */
-const TRAY_Y=612;
+const TRAY_Y=620;
 const SLOT={
   box:{x:88,y:92,w:210,h:128},
   adapter:{x:40,y:300,w:110,h:56},
@@ -593,7 +620,8 @@ const TRAY_KEYS=["pot","water","rod1","rod2","cap","adapter","box","cable","volt
 
 function termXY(){
   const m={ "PS+":[1093,100], "PS-":[1093,128],
-            "A1":[862,505], "ACOM":[918,505], "V1":[1032,505], "VCOM":[1088,505] };
+            "A1":[SLOT.amm.x+SLOT.amm.w-22,SLOT.amm.y+168], "ACOM":[SLOT.amm.x+SLOT.amm.w-22,SLOT.amm.y+220],
+            "V1":[SLOT.volt.x+SLOT.volt.w-22,SLOT.volt.y+194], "VCOM":[SLOT.volt.x+SLOT.volt.w-22,SLOT.volt.y+220] };
   for(const r of [1,2]){
     const s=r===1?"a":"b";
     if(lab.place[r]==="pot"){ m["H1"+s]=[ROD_POT.x+8,ROD_POT.y-26]; m["H2"+s]=[ROD_POT.x+36,ROD_POT.y-26]; }
@@ -611,7 +639,7 @@ function socketXY(r){           /* thermometer connector on the rod */
 function capXY(r){ return [SLOT.table.x+SLOT.table.w+18, SLOT.table.y+SLOT.table.h/2]; }
 const BOX_BTN=()=>[SLOT.box.x+SLOT.box.w/2, SLOT.box.y+SLOT.box.h+16];
 const BOX_JACK=()=>[SLOT.box.x+SLOT.box.w+6, SLOT.box.y+SLOT.box.h/2];
-const KNOB={amm:[SLOT.amm.x+70,SLOT.amm.y+138], volt:[SLOT.volt.x+70,SLOT.volt.y+138]};
+const KNOB={amm:[SLOT.amm.x+60,SLOT.amm.y+128], volt:[SLOT.volt.x+60,SLOT.volt.y+128]};
 
 /* ══════════════════════════════════════════════════════════════
    5.  STATE OF THE HANDS
@@ -658,7 +686,6 @@ function drawBench(){
   const rp=onPot(); if(rp) drawRodPot(rp);
   drawCable();
   drawWires();
-  drawTray();
   drawHand();
   /* the label printed on the reservoir, as in the kit */
   text(d().stImmerse, LW-14, 20, "#7a4a2a", 11, "right", "600");
@@ -705,117 +732,123 @@ function drawRodSupport(){
   fillR(s.x+s.w-80,s.y+s.h-4,40,26,3,"#e8e2d2","#a9a08a");
 }
 function drawFoam(x,y,w,h,horiz,r){
-  /* black foam insulation sleeve */
-  ctx.fillStyle=horiz?vgrad(x,y,w,h,[[0,C_FOAM_HI],[0.45,"#2b2321"],[1,"#120e0d"]])
-                     :hgrad(x,y,w,h,[[0,"#120e0d"],[0.45,"#2b2321"],[1,C_FOAM_HI]]);
-  rrect(x,y,w,h,6); ctx.fill();
-  ctx.strokeStyle="#0b0909"; ctx.lineWidth=1; ctx.stroke();
-  /* sensor positions show as small bumps under the sleeve */
-  const xs=r===1?ROD1_X:ROD2_X, L=lab.rod[r].L;
-  ctx.fillStyle="#0a0808";
-  for(const p of xs){
-    if(horiz){ const px=x+p/L*w; ctx.fillRect(px-2,y-3,4,5); }
-    else { const py=y+p/L*h; ctx.fillRect(x+w-2,py-2,5,4); }
-  }
+  /* black closed-cell foam sleeve, slightly wrinkled */
+  ctx.fillStyle=horiz?vgrad(x,y,w,h,[[0,"#3b3533"],[0.35,"#26211f"],[1,"#0e0b0a"]])
+                     :hgrad(x,y,w,h,[[0,"#0e0b0a"],[0.55,"#26211f"],[1,"#3b3533"]]);
+  rrect(x,y,w,h,Math.min(w,h)*0.35); ctx.fill();
+  ctx.strokeStyle="#060505"; ctx.lineWidth=1; ctx.stroke();
+  ctx.strokeStyle="rgba(255,255,255,0.05)"; ctx.lineWidth=1;
+  for(let k=1;k<7;k++){ ctx.beginPath();
+    if(horiz){ const px=x+w*k/7; ctx.moveTo(px,y+2); ctx.quadraticCurveTo(px+5,y+h/2,px,y+h-2); }
+    else { const py=y+h*k/7; ctx.moveTo(x+2,py); ctx.quadraticCurveTo(x+w/2,py+5,x+w-2,py); }
+    ctx.stroke(); }
+  /* two turns of red wire wound round the sleeve, as on the kit */
+  ctx.strokeStyle="rgba(207,47,38,0.85)"; ctx.lineWidth=1.6;
+  for(const f of [0.3,0.62]){ ctx.beginPath();
+    if(horiz){ ctx.moveTo(x+w*f,y); ctx.lineTo(x+w*f+10,y+h); } else { ctx.moveTo(x,y+h*f); ctx.lineTo(x+w,y+h*f+10); }
+    ctx.stroke(); }
 }
 function rodLabel(x,y,r,vertical){
   ctx.save(); ctx.translate(x,y); if(vertical) ctx.rotate(-Math.PI/2);
-  fillR(-34,-11,68,22,3,"#f2f2f0","#9a9a9a");
-  text("Rod #"+r,0,0,"#222",11,"center","700"); ctx.restore();
+  fillR(-30,-10,60,20,2,"#f4f4f2","#cfcfcf");
+  text("Rod # "+r,0,0,"#111",11,"center","700"); ctx.restore();
+}
+function db9(x,y,vert){
+  /* the grey D-sub thermometer socket on the rod */
+  ctx.save(); ctx.translate(x,y); if(vert) ctx.rotate(-Math.PI/2);
+  fillR(-13,-8,26,16,3,"#cfc9b8","#8a846f"); fillR(-8,-5,16,10,2,"#a9a28c","#6f6a57");
+  ctx.fillStyle="#2a2620"; for(let i=0;i<5;i++) ctx.fillRect(-6+i*3,-3,1.6,1.6); for(let i=0;i<4;i++) ctx.fillRect(-4.5+i*3,1,1.6,1.6);
+  ctx.restore();
 }
 function drawRodTable(r){
   const s=SLOT.table, x=s.x, y=s.y, w=s.w, h=s.h;
-  /* heater end: red leads out to two lugs */
-  ctx.strokeStyle=C_RED; ctx.lineWidth=3.5; ctx.lineCap="round";
-  ctx.beginPath(); ctx.moveTo(x+4,y+14); ctx.bezierCurveTo(x-18,y+10,x-26,y+6,x-44,y+4); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+4,y+32); ctx.bezierCurveTo(x-18,y+36,x-26,y+40,x-44,y+42); ctx.stroke();
+  /* heater end: two red leads with lugs */
+  ctx.strokeStyle=C_RED; ctx.lineWidth=2.5; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(x+4,y+16); ctx.bezierCurveTo(x-18,y+10,x-26,y+6,x-44,y+4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+4,y+30); ctx.bezierCurveTo(x-18,y+36,x-26,y+40,x-44,y+42); ctx.stroke();
   drawFoam(x,y,w,h,true,r);
   rodLabel(x+w/2,y+h/2,r,false);
-  /* thermometer socket */
-  const [sx,sy]=socketXY(r);
-  fillR(sx-11,sy-9,22,16,3,"#c8c2b1","#7c765f");
-  ctx.fillStyle="#3a352b"; ctx.fillRect(sx-6,sy-4,12,6);
-  /* far end: bare metal face or the insulating cap */
-  const mcol=r===1?C_COPPER:C_COPPER;
-  ctx.fillStyle=hgrad(x+w-2,y,12,h,[[0,mcol],[1,C_COPPER_HI]]);
+  const [sx,sy]=socketXY(r); db9(sx,sy,false);
+  /* far end: the bare metal face, or the white insulating cap on it */
+  ctx.fillStyle=hgrad(x+w-2,y,12,h,[[0,C_COPPER],[1,C_COPPER_HI]]);
   fillR(x+w-4,y+8,12,h-16,2,ctx.fillStyle,"#6b3d1e");
-  if(lab.cap[r]){
-    fillR(x+w+2,y-6,34,h+12,5,"#d8cfb8","#8b8570",1.2);
-    ctx.fillStyle="#1a1414"; rrect(x+w+6,y-1,24,h+2,4); ctx.fill();
-  }
+  if(lab.cap[r]){ fillR(x+w+2,y-4,30,h+8,6,vgrad(x,y-4,30,h+8,[[0,"#fbfaf6"],[1,"#d9d4c6"]]),"#9d978a",1.2); }
 }
 function drawLooseCap(){
   const x=SLOT.table.x+SLOT.table.w+30, y=SLOT.table.y+60;
-  fillR(x,y,34,40,5,"#d8cfb8","#8b8570",1.2);
-  ctx.fillStyle="#1a1414"; rrect(x+5,y+5,24,30,4); ctx.fill();
+  fillR(x,y,34,40,6,vgrad(x,y,34,40,[[0,"#fbfaf6"],[1,"#d9d4c6"]]),"#9d978a",1.2);
+  ctx.fillStyle="#b9b3a3"; ctx.beginPath(); ctx.ellipse(x+17,y+6,12,4,0,0,7); ctx.fill();
 }
 function drawRodPot(r){
   const {x,y,w,h}=ROD_POT;
-  /* heater leads leave the top */
-  ctx.strokeStyle=C_RED; ctx.lineWidth=3.5; ctx.lineCap="round";
+  ctx.strokeStyle=C_RED; ctx.lineWidth=2.5; ctx.lineCap="round";
   ctx.beginPath(); ctx.moveTo(x+14,y+4); ctx.bezierCurveTo(x+12,y-8,x+8,y-14,x+8,y-26); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(x+30,y+4); ctx.bezierCurveTo(x+32,y-8,x+36,y-14,x+36,y-26); ctx.stroke();
   drawFoam(x,y,w,h,false,r);
   rodLabel(x+w/2,y+h/2+10,r,true);
-  const [sx,sy]=socketXY(r);
-  fillR(sx-11,sy-8,18,16,3,"#c8c2b1","#7c765f");
-  ctx.fillStyle="#3a352b"; ctx.fillRect(sx-7,sy-4,8,8);
-  /* the screwed joint on the cover */
+  const [sx,sy]=socketXY(r); db9(sx,sy,true);
+  /* the threaded joint on the cover */
   fillR(x+6,y+h-4,w-12,14,2,C_COPPER,"#6b3d1e");
 }
 function drawAdapter(){
   const s=SLOT.adapter;
-  fillR(s.x,s.y,s.w,s.h,6,"#1e1e20","#000");
-  text("AC ADAPTOR",s.x+s.w/2,s.y+18,"#b9b9b9",9,"center");
-  text("12V DC",s.x+s.w/2,s.y+36,"#d0d0d0",11,"center","700");
+  /* a black wall-plug adapter lying on the bench, its lead running to the box */
+  fillR(s.x+10,s.y+4,s.w-40,s.h-8,6,vgrad(s.x,s.y,0,s.h,[[0,"#2b2b2e"],[1,"#141416"]]),"#000");
+  ctx.fillStyle="#c9c9c9"; ctx.fillRect(s.x,s.y+16,12,4); ctx.fillRect(s.x,s.y+s.h-20,12,4);
+  text("12V ⎓ 1A",s.x+s.w/2-12,s.y+s.h/2,"#bdbdbd",10,"center","700");
   const [jx,jy]=[SLOT.box.x-4,SLOT.box.y+SLOT.box.h-24];
   ctx.strokeStyle="#111"; ctx.lineWidth=3.5;
-  ctx.beginPath(); ctx.moveTo(s.x+s.w/2,s.y); ctx.bezierCurveTo(s.x+s.w/2,s.y-60,jx-50,jy+10,jx,jy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(s.x+s.w-30,s.y+s.h/2); ctx.bezierCurveTo(s.x+s.w+30,s.y-40,jx-50,jy+10,jx,jy); ctx.stroke();
 }
 function drawBox(x,y,w,h,withJack){
+  /* the blue 3-D printed readout box with a 20 x 4 character LCD (Fig. 4) */
   ctx.fillStyle="rgba(40,30,20,.3)"; rrect(x+4,y+6,w,h,10); ctx.fill();
-  fillR(x,y,w,h,10,vgrad(x,y,w,h,[[0,"#1c47cf"],[1,C_BOX]]),"#061a63",1.5);
-  fillR(x+8,y+8,w-16,h-30,5,"#0a0a12","#000");
-  const lx0=x+15, ly0=y+14, lx1=x+w-15, ly1=y+h-28;
+  fillR(x,y,w,h,10,vgrad(x,y,w,h,[[0,"#2d63e6"],[1,"#1a44bf"]]),"#0c2a86",1.5);
+  fillR(x+8,y+8,w-16,h-30,4,"#0b0d12","#000");
+  const lx0=x+14, ly0=y+13, lx1=x+w-14, ly1=y+h-28;
   const powered=lab.adapter;
-  ctx.fillStyle=powered?C_LCD:"#15283d"; ctx.fillRect(lx0,ly0,lx1-lx0,ly1-ly0);
-  ctx.strokeStyle="#0d3f88"; ctx.strokeRect(lx0,ly0,lx1-lx0,ly1-ly0);
+  ctx.fillStyle=powered?"#1f6fe8":"#10223c"; ctx.fillRect(lx0,ly0,lx1-lx0,ly1-ly0);
   if(powered){
+    const cw=(lx1-lx0)/20, rh=(ly1-ly0)/4, fs=Math.min(13,cw*1.62);
+    const row=(i,str)=>text(str,lx0+2,ly0+rh*(i+0.55),"#eef6ff",fs,"left","",MONO);
     if(lab.cableRod){
       const vals=lab.hold&&lab.frozen?lab.frozen:lab.readSensors();
-      for(let i=0;i<8;i++){
-        const r_=Math.floor(i/3), c_=i%3;
-        text(vals[i].toFixed(2).padStart(6," "),lx0+10+c_*60,ly0+13+r_*18,C_LCD_TXT,13,"left","",MONO);
-      }
-      text("Time: "+lab.watch.toFixed(2).padStart(7,"0")+" [s]",lx0+10,ly1-10,C_LCD_TXT,12,"left","",MONO);
+      const f=v=>v.toFixed(2).padStart(6," ");
+      row(0,f(vals[0])+" "+f(vals[1])+" "+f(vals[2]));
+      row(1,f(vals[3])+" "+f(vals[4])+" "+f(vals[5]));
+      row(2,f(vals[6])+" "+f(vals[7]));
+      row(3," Time: "+lab.watch.toFixed(2).padStart(7,"0")+" [s]");
     } else {
-      text("Timer mode",(lx0+lx1)/2,ly0+18,C_LCD_TXT,13,"center","",MONO);
-      text(lab.watch.toFixed(2).padStart(7,"0")+" [s]",(lx0+lx1)/2,ly1-18,C_LCD_TXT,18,"center","700",MONO);
+      row(0,"     Timer mode");
+      row(2,"   "+lab.watch.toFixed(2).padStart(7,"0")+" [s]");
     }
   }
-  /* red button */
-  const [bx,by]=[x+w/2,y+h+16];
-  ctx.fillStyle="#3a0f0c"; ctx.beginPath(); ctx.arc(bx,by+2,12,0,7); ctx.fill();
-  ctx.fillStyle=(redDown||$("latch").checked)?"#9c201a":C_RED; ctx.beginPath(); ctx.arc(bx,by,10,0,7); ctx.fill();
-  ctx.fillStyle="rgba(255,255,255,.35)"; ctx.beginPath(); ctx.arc(bx-3,by-3,3.5,0,7); ctx.fill();
+  /* red push button on the front, DC jack on the left */
+  const [bx,by]=[x+w/2,y+h+14];
+  fillR(bx-9,by-16,18,8,2,"#1a44bf");
+  ctx.fillStyle="#3a0f0c"; ctx.beginPath(); ctx.arc(bx,by+2,10,0,7); ctx.fill();
+  ctx.fillStyle=(redDown||$("latch").checked)?"#9c201a":C_RED; ctx.beginPath(); ctx.arc(bx,by,8,0,7); ctx.fill();
+  ctx.fillStyle="rgba(255,255,255,.35)"; ctx.beginPath(); ctx.arc(bx-3,by-3,3,0,7); ctx.fill();
   if(withJack){
     const [jx,jy]=BOX_JACK();
-    fillR(jx-6,jy-10,12,20,2,"#8e8e8e","#444");
+    fillR(jx-8,jy-13,16,26,3,"#cfc9b8","#8a846f"); fillR(jx-4,jy-9,8,18,2,"#8f8a78");
   }
 }
 function drawPsu(){
+  /* 9 V wall-plug supply whose lead ends in a red and a black banana plug */
   const s=SLOT.psu;
-  ctx.fillStyle="rgba(40,30,20,.3)"; rrect(s.x+4,s.y+6,s.w,s.h,6); ctx.fill();
-  fillR(s.x,s.y,s.w,s.h,6,vgrad(s.x,s.y,s.w,s.h,[[0,"#2a2a2d"],[1,"#141416"]]),"#000");
-  text("9V DC",s.x+54,s.y+s.h/2-8,"#e0e0e0",15,"center","700");
-  text("POWER SUPPLY",s.x+54,s.y+s.h/2+14,"#8d8d8d",9,"center");
-  for(const [t,col] of [["PS+",C_RED],["PS-",C_BLACK]]){
-    const [px,py]=termXY()[t];
-    ctx.fillStyle="#0d0d0f"; ctx.beginPath(); ctx.arc(px,py,10,0,7); ctx.fill();
-    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,7,0,7); ctx.fill();
-    ctx.strokeStyle="#d8d8d8"; ctx.lineWidth=1; ctx.stroke();
-    text(t==="PS+"?"+":"−",px-18,py,"#cfcfcf",14,"center","700");
+  fillR(s.x,s.y+10,96,s.h-20,8,vgrad(s.x,s.y,0,s.h,[[0,"#2c2c2f"],[1,"#141416"]]),"#000");
+  ctx.fillStyle="#c9c9c9"; ctx.fillRect(s.x+30,s.y+2,5,10); ctx.fillRect(s.x+58,s.y+2,5,10);
+  text("9V ⎓",s.x+48,s.y+s.h/2-6,"#e0e0e0",14,"center","700");
+  text("POWER SUPPLY",s.x+48,s.y+s.h/2+12,"#8d8d8d",8,"center");
+  const [p1,p2]=[termXY()["PS+"],termXY()["PS-"]];
+  ctx.strokeStyle="#111"; ctx.lineWidth=3.5; ctx.beginPath(); ctx.moveTo(s.x+96,s.y+s.h/2); ctx.bezierCurveTo(s.x+118,s.y+s.h/2,s.x+118,s.y+s.h/2,s.x+124,s.y+s.h/2); ctx.stroke();
+  for(const [pt,col] of [[p1,C_RED],[p2,C_BLACK]]){
+    ctx.strokeStyle=col===C_RED?C_RED:"#222"; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(s.x+124,s.y+s.h/2); ctx.quadraticCurveTo(pt[0]-30,pt[1],pt[0]-16,pt[1]); ctx.stroke();
+    fillR(pt[0]-18,pt[1]-5,14,10,3,col,"#000"); ctx.fillStyle="#c9a94f"; ctx.fillRect(pt[0]-4,pt[1]-2,10,4);
   }
+  text("+",p1[0]+18,p1[1],"#cfcfcf",13,"center","700"); text("−",p2[0]+18,p2[1],"#cfcfcf",13,"center","700");
 }
 function dmmText(m){
   const [i,v]=lab.meters(), c=lab.circ;
@@ -836,33 +869,39 @@ function dmmText(m){
   return "";
 }
 function drawDmm(m){
+  /* DT-830 style handheld multimeter, black, as in Fig. 3 */
   const s=SLOT[m], x=s.x, y=s.y, w=s.w, h=s.h, c=lab.circ;
   ctx.fillStyle="rgba(40,30,20,.3)"; rrect(x+5,y+7,w,h,12); ctx.fill();
-  fillR(x,y,w,h,12,"#f1c21b","#a38210",1.4);                    /* yellow holster */
-  fillR(x+7,y+7,w-14,h-14,9,C_DMM,"#000");
-  fillR(x+15,y+15,w-30,46,4,"#101014");
-  fillR(x+20,y+19,w-40,38,3,C_DMM_LCD,"#0d0d0d");
+  fillR(x,y,w,h,12,vgrad(x,y,0,h,[[0,"#2a2b30"],[1,"#18191c"]]),"#050506",1.4);
+  fillR(x+10,y+10,w-20,48,4,"#0e0f11");
+  fillR(x+15,y+14,w-30,40,3,"#b9c0ae","#0d0d0d");
   const t=dmmText(m);
-  text(t,x+w-26,y+39,"#101010",24,"right","700",MONO);
-  /* rotary selector */
+  text(t,x+w-22,y+35,"#101010",24,"right","700",MONO);
+  if(t&&c[m]!=="OFF"&&t.trim()!=="") text(m==="amm"?"A":"V",x+22,y+46,"#303030",9,"left","700");
+  /* dial with the silk-screened ranges */
   const [kx,ky]=KNOB[m], pos=m==="amm"?AMM_POS:VOLT_POS, cur=m==="amm"?c.amm:c.volt, n=pos.length;
+  ctx.strokeStyle="#3b3d43"; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(kx,ky,52,0,7); ctx.stroke();
   for(let k=0;k<n;k++){
     const a=-Math.PI/2+2*Math.PI*k/n;
-    text(pos[k],kx+42*Math.cos(a),ky+42*Math.sin(a),pos[k]===cur?"#ffd45e":"#cfc9b6",8.5,"center",pos[k]===cur?"700":"");
+    ctx.fillStyle=pos[k]===cur?"#ffd45e":"#d8d8d0"; ctx.beginPath(); ctx.arc(kx+33*Math.cos(a),ky+33*Math.sin(a),1.6,0,7); ctx.fill();
+    text(pos[k],kx+44*Math.cos(a),ky+44*Math.sin(a),pos[k]===cur?"#ffd45e":"#cfd2c8",8.5,"center",pos[k]===cur?"700":"");
   }
-  ctx.fillStyle="#17171a"; ctx.beginPath(); ctx.arc(kx,ky,28,0,7); ctx.fill();
-  ctx.strokeStyle="#4a4a4f"; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle="#0c0c0e"; ctx.beginPath(); ctx.arc(kx,ky,28,0,7); ctx.fill();
+  ctx.strokeStyle="#34363b"; ctx.lineWidth=1.5; ctx.stroke();
   const a=-Math.PI/2+2*Math.PI*pos.indexOf(cur)/n;
-  ctx.strokeStyle="#c8c8c8"; ctx.lineWidth=8; ctx.lineCap="round";
-  ctx.beginPath(); ctx.moveTo(kx-8*Math.cos(a),ky-8*Math.sin(a)); ctx.lineTo(kx+24*Math.cos(a),ky+24*Math.sin(a)); ctx.stroke();
-  text(m==="amm"?"Ampere Meter":"Voltmeter",x+w/2,y+76,"#bbb",9,"center");
-  const tl=m==="amm"?[["A1","10A",C_RED],["ACOM","COM",C_BLACK]]:[["V1","VΩ",C_RED],["VCOM","COM",C_BLACK]];
-  for(const [id,lb,col] of tl){
-    const [px,py]=termXY()[id];
-    ctx.fillStyle="#0d0d0f"; ctx.beginPath(); ctx.arc(px,py,10,0,7); ctx.fill();
-    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(px,py,7,0,7); ctx.fill();
-    ctx.strokeStyle="#d8d8d8"; ctx.lineWidth=1; ctx.stroke();
-    text(lb,px,py+18,"#bdbdbd",9,"center");
+  ctx.strokeStyle="#1f2024"; ctx.lineWidth=14; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(kx-24*Math.cos(a),ky-24*Math.sin(a)); ctx.lineTo(kx+24*Math.cos(a),ky+24*Math.sin(a)); ctx.stroke();
+  ctx.strokeStyle="#e8e8e8"; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(kx+8*Math.cos(a),ky+8*Math.sin(a)); ctx.lineTo(kx+24*Math.cos(a),ky+24*Math.sin(a)); ctx.stroke();
+  /* the paper label and the three input jacks */
+  fillR(x+8,y+h-40,72,32,2,"#f5f5f2","#c9c9c4");
+  text(m==="amm"?"Ampere Meter":"Voltmeter",x+44,y+h-30,"#333",8.5,"center","600"); text("# 389",x+44,y+h-17,"#333",8.5,"center","600");
+  for(const [jy,lb,col] of [[y+168,"10A","#b8261d"],[y+194,"VΩmA","#b8261d"],[y+220,"COM","#141414"]]){
+    const jx=x+w-22;
+    ctx.fillStyle="#050506"; ctx.beginPath(); ctx.arc(jx,jy,9,0,7); ctx.fill();
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(jx,jy,6.5,0,7); ctx.fill();
+    ctx.fillStyle="#050506"; ctx.beginPath(); ctx.arc(jx,jy,3,0,7); ctx.fill();
+    text(lb,jx-14,jy,"#c9c9c2",7,"right","700");
   }
 }
 function drawCable(){
@@ -933,21 +972,84 @@ function icon(k,x,y,s){
     case "water": fillR(-13,-36,26,66,5,"#bcd8ee","#88a8c0"); fillR(-8,-46,16,11,2,"#1b5fc0"); break;
     case "rod1": case "rod2": fillR(-60,-13,120,26,5,C_FOAM,"#000"); fillR(-24,-8,48,16,2,"#f2f2f0");
       text("#"+k[3],0,0,"#222",13,"center","700"); break;
-    case "cap": fillR(-18,-22,36,44,5,"#d8cfb8","#8b8570"); ctx.fillStyle="#1a1414"; rrect(-13,-17,26,34,4); ctx.fill(); break;
+    case "cap": fillR(-18,-22,36,44,7,"#f4f2ea","#9d978a"); break;
     case "adapter": fillR(-28,-18,56,36,5,"#1e1e20","#000"); ctx.strokeStyle="#111"; ctx.lineWidth=4;
       ctx.beginPath(); ctx.moveTo(28,0); ctx.lineTo(48,14); ctx.stroke(); break;
-    case "box": fillR(-50,-30,100,60,8,C_BOX,"#061a63"); ctx.fillStyle=C_LCD; ctx.fillRect(-38,-21,76,34); break;
+    case "box": fillR(-50,-30,100,60,8,"#2459d8","#0c2a86"); ctx.fillStyle="#1f6fe8"; ctx.fillRect(-38,-21,76,30);
+      ctx.fillStyle=C_RED; ctx.beginPath(); ctx.arc(0,20,6,0,7); ctx.fill(); break;
     case "cable": ctx.strokeStyle="#c9c3b2"; ctx.lineWidth=6; ctx.beginPath(); ctx.moveTo(-44,10);
       ctx.bezierCurveTo(-20,-30,20,30,40,-6); ctx.stroke(); fillR(34,-14,18,16,3,"#bdb7a6","#7c765f"); break;
-    case "volt": case "amm": fillR(-30,-44,60,88,8,"#f1c21b","#a38210"); fillR(-24,-38,48,76,6,C_DMM);
-      fillR(-18,-32,36,16,2,C_DMM_LCD); ctx.fillStyle="#111"; ctx.beginPath(); ctx.arc(0,10,13,0,7); ctx.fill();
-      text(k==="volt"?"V":"A",0,-24,"#222",12,"center","700"); break;
+    case "volt": case "amm": fillR(-30,-44,60,88,8,"#26272c","#050506");
+      fillR(-22,-38,44,18,2,"#b9c0ae"); ctx.fillStyle="#0c0c0e"; ctx.beginPath(); ctx.arc(0,6,14,0,7); ctx.fill();
+      ctx.strokeStyle="#ddd"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(0,6); ctx.lineTo(8,-4); ctx.stroke();
+      text(k==="volt"?"V":"A",0,-29,"#222",12,"center","700");
+      ctx.fillStyle="#b8261d"; ctx.beginPath(); ctx.arc(-14,32,4,0,7); ctx.fill(); ctx.fillStyle="#111"; ctx.beginPath(); ctx.arc(0,32,4,0,7); ctx.fill(); break;
+    case "tubes": for(const [dx,col] of [[-12,"#c8cdd2"],[0,"#d8b44a"],[12,"#c77a45"]]) fillR(dx-5,-40,10,80,3,col,"rgba(0,0,0,.4)"); break;
     case "psu": fillR(-40,-22,80,44,5,"#1e1e20","#000"); text("9V",-6,0,"#ddd",16,"center","700");
       ctx.fillStyle=C_RED; ctx.beginPath(); ctx.arc(26,-8,5,0,7); ctx.fill();
       ctx.fillStyle="#555"; ctx.beginPath(); ctx.arc(26,8,5,0,7); ctx.fill(); break;
     case "magnet": fillR(-8,-6,16,12,3,"#8c8c92","#40404a"); ctx.fillStyle="#b9b9c2"; ctx.fillRect(-8,-6,16,5); break;
   }
   ctx.restore();
+}
+/* ── the parts box, as in every HaslaLab bench ── */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d");
+const TRAY_LIST=["tubes","magnet"].concat(TRAY_KEYS), TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
+function layoutSide(){
+  const dpr=window.devicePixelRatio||1;
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*dpr); trayCv.height=Math.round(TRH*dpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.36);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*dpr); closeCv.height=Math.round(CLH*dpr);
+  drawTrayCv();
+}
+function trayAvailK(k){ if(k==="tubes") return true; if(k==="magnet") return magnet.state==="pad"&&!(hand&&hand.k==="magnet"); return trayAvail(k)&&!(hand&&hand.k===k&&k!=="water"); }
+function drawTrayCv(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvailK(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.36); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=k==="tubes"?t.trayTubes:k==="magnet"?t.trayMagnet:itemName(k);
+    c.fillText(nm,52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    const sub=(k==="tubes"||k==="magnet")?t.trayToA:k==="water"?t.left(waterLeft):(av?t.trayTake:t.trayOut);
+    c.fillText(sub,52,y+30);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+trayCv.addEventListener("click",e=>{
+  const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  for(const [k,y0,y1] of trayCells){
+    if(y<y0||y>y1) continue;
+    if(k==="tubes"){ setView("tubes"); return; }
+    if(k==="magnet"){ setView("tubes"); if(magnet.state==="pad"&&!hand){ hand={k:"magnet"}; say("picked",d().magnet); } drawTrayCv(); return; }
+    if(view!=="bench") setView("bench");
+    if(hand) returnHand();
+    if(!trayAvail(k)) return;
+    if(k==="rod1"||k==="rod2") lab.place[+k[3]]="hand";
+    hand={k}; say("picked",itemName(k)); drawTrayCv(); return;
+  }
+});
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, c=closeCtx;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,CLW,CLH);
+  const old=ctx; ctx=c;
+  const put=(src,dx,dy,sc)=>{ c.setTransform(dpr*sc,0,0,dpr*sc,dpr*(dx-src.x*sc),dpr*(dy-src.y*sc)); };
+  const h=CLH-16, boxS=h/(SLOT.box.h+34), dmmS=h/(SLOT.amm.h+8);
+  if(lab.on.has("box")){ put(SLOT.box,8,8,boxS); drawBox(SLOT.box.x,SLOT.box.y,SLOT.box.w,SLOT.box.h,false); }
+  let x=8+SLOT.box.w*boxS+20;
+  for(const m of ["amm","volt"]){ if(lab.on.has(m)){ put(SLOT[m],x,8,dmmS); drawDmm(m); } x+=SLOT[m].w*dmmS+16; }
+  c.setTransform(dpr,0,0,dpr,0,0); ctx=old;
 }
 function drawHand(){
   if(!hand) return;
@@ -970,11 +1072,7 @@ function drawTubes(){
   wood(0,0,LW,LH);
   /* foam pad that catches the magnet */
   fillR(200,TUBE_BOT+18,560,26,6,"#3d4a55","#26303a");
-  /* retort stand holding the tubes */
-  fillR(170,70,12,TUBE_BOT-40,3,"#6b7075","#3d4145");
-  fillR(150,TUBE_BOT+44,640,12,3,"#55595e","#2f3236");
   for(const tb of TUBES){
-    fillR(182,TUBE_TOP+60,tb.x-182,8,2,"#7b8086","#4a4e53");
     const x0=tb.x-tb.hw, w=tb.hw*2;
     ctx.fillStyle=hgrad(x0,0,w,0,[[0,tb.base],[0.35,tb.hi],[0.6,tb.base],[1,"#4a3b2c"]]);
     ctx.fillRect(x0,TUBE_TOP,w,TUBE_BOT-TUBE_TOP);
@@ -982,7 +1080,8 @@ function drawTubes(){
     ctx.fillStyle=tb.hi; ctx.beginPath(); ctx.ellipse(tb.x,TUBE_TOP,tb.hw,6,0,0,7); ctx.fill();
     ctx.strokeStyle="rgba(0,0,0,.4)"; ctx.stroke();
     ctx.fillStyle="#15110d"; ctx.beginPath(); ctx.ellipse(tb.x,TUBE_TOP,6,2.2,0,0,7); ctx.fill();
-    fillR(tb.x-30,TUBE_TOP+54,60,20,4,"#2b2e33","#15171a");      /* clamp */
+    /* fingers holding the tube upright */
+    for(const k of [0,1,2,3]) fillR(tb.x-tb.hw-9,TUBE_TOP+70+k*15,tb.hw*2+18,12,6,"rgba(224,178,150,0.92)","rgba(150,105,80,0.9)");
     text(d().tubeName[tb.k],tb.x,TUBE_BOT+80,"#4a3a26",13,"center","600");
     if(hand&&hand.k==="magnet") dashed(tb.x-26,TUBE_TOP-30,52,40);
   }
@@ -995,7 +1094,8 @@ function drawTubes(){
     icon("magnet",magnet.x,magnet.y,1.1);
   }
   if(magnet.state==="free"){ icon("magnet",magnet.x,magnet.y,1.1); }
-  text(d().magnet,1010,625,"#4a3a26",12,"center");
+  text(d().magnet,1010,612,"#4a3a26",12,"center");
+  text(d().held,470,TUBE_TOP-60,"#4a3a26",12,"center");
   /* the same readout box, acting as a timer */
   if(lab.on.has("box")) drawBox(TBOX.x,TBOX.y,TBOX.w,TBOX.h,false);
   else { dashed(TBOX.x,TBOX.y,TBOX.w,TBOX.h); text(d().stNoBox,TBOX.x+TBOX.w/2,TBOX.y+TBOX.h/2,C_GHOST,11,"center"); }
@@ -1023,10 +1123,7 @@ function hitTerm(p){
   for(const [t,q] of Object.entries(termXY())) if(termLive(t)&&near(p,q,13)) return t;
   return null;
 }
-function hitTray(p){
-  for(let i=0;i<TRAY_KEYS.length;i++){ const r=trayRect(i); if(inR(p,r.x,r.y,r.w,r.h)) return TRAY_KEYS[i]; }
-  return null;
-}
+function hitTray(p){ return null; }
 function returnHand(){
   if(!hand) return;
   const k=hand.k;
@@ -1210,15 +1307,14 @@ $("unwire").onclick=()=>{ lab.circ.wires=[]; selTerm=null; lab.res=lab.circ.solv
 function setView(v){
   if(v!==view){ if(hand) returnHand(); selTerm=null; }
   view=v;
-  for(const k of ["bench","tubes","info"]) $("tab-"+k).className=(k===v)?"on":"";
-  $("cv").hidden=(v==="info"); $("info").hidden=(v!=="info");
-  if(v!=="info") layout();
-  $("t-cap").textContent=v==="bench"?d().capBench:v==="tubes"?d().capTubes:d().capInfo;
+  for(const k of ["bench","tubes"]) $("tab-"+k).className=(k===v)?"on":"";
+  layout();
+  $("t-cap").textContent=v==="bench"?d().capBench:d().capTubes;
+  drawTrayCv();
   renderSpeeds();
 }
 $("tab-bench").onclick=()=>setView("bench");
 $("tab-tubes").onclick=()=>setView("tubes");
-$("tab-info").onclick=()=>setView("info");
 
 function renderSpeeds(){
   const box=$("speeds"); box.innerHTML="";
@@ -1248,84 +1344,6 @@ function renderStatus(){
   const box=$("status"); box.innerHTML="";
   for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
 }
-const INFO={
-ko:`<h4>제공 장비</h4>
-<ol>
-<li>구리 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 20.0 mm</li>
-<li>황동 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 19.0 mm</li>
-<li>알루미늄 튜브 — 길이 200.0 mm, 안지름 6.0 mm, 바깥지름 20.0 mm</li>
-<li>영구자석 1.2 g</li>
-<li>물 저장조 (뚜껑 안에 열교환기) 와 2 L 물병 두 개</li>
-<li>Rod #1 — 지름 20.0 mm 구리 막대, 온도 센서 8개와 히터 내장, 단열 피복</li>
-<li>Rod #2 — 복합 막대 : 구리 88 mm · 황동 50 mm · 알루미늄 50 mm · 구리 65 mm (히터 쪽부터)</li>
-<li>단열 종단 캡</li>
-<li>판독 박스용 12 V DC 어댑터</li>
-<li>디지털 판독 박스 — 온도계 8채널과 타이머, 빨간 버튼 하나</li>
-<li>온도계 케이블</li>
-<li>전압계 (20 V DC 위치로 사용)</li>
-<li>전류계 (10 A DC 위치로 사용)</li>
-<li>전선</li>
-<li>히터용 9 V DC 전원</li>
-</ol>
-<h4>과제 요약</h4>
-<ul>
-<li><b>A.</b> 자석을 세 튜브에 떨어뜨려 낙하 시간을 재고, 문제지에 주어진 관계로 구리·황동·알루미늄의 전기전도도를 구합니다.</li>
-<li><b>B.</b> Rod #1을 저장조 뚜껑에 체결하고 히터를 켭니다. 전압과 전류로 히터 전력을, 정상 상태의 온도 분포로 구리의 열전도도를 구합니다. (정상 상태까지 약 15분)</li>
-<li><b>C.</b> Rod #1을 저장조에서 떼어 캡을 씌운 채 가열하고, 온도 상승률로 구리의 비열을 구합니다.</li>
-<li><b>D.</b> Rod #2로 같은 측정을 하여 황동과 알루미늄의 열전도도를 구합니다. (정상 상태까지 약 15분)</li>
-<li>끝으로 세 금속에 대해 로렌츠 수 L = κ / (σT) 를 비교합니다.</li>
-</ul>
-<h4>주의</h4>
-<ul>
-<li class="warn">막대를 물에 담그지 마시오. 막대는 뚜껑 위의 나사에 체결합니다.</li>
-<li>온도계 보정은 막대를 저장조에 체결하거나 가열하기 전, 막대 전체가 같은 온도일 때 하십시오 — 빨간 버튼을 누른 채 케이블을 막대에 꽂습니다.</li>
-<li>판독 박스는 온도계 케이블이 빠져 있으면 타이머로 동작합니다.</li>
-</ul>
-<h4>이 시뮬레이터에 대하여</h4>
-<ul>
-<li>실제 계기가 보여 주는 숫자만 보입니다 : 판독 박스의 여덟 온도와 시간, 두 멀티미터의 표시.</li>
-<li>전도도·기울기·맞춤·채점은 제공하지 않습니다. 분석은 직접 하세요.</li>
-<li>세션마다 재료 값과 센서 오프셋이 조금씩 다릅니다.</li>
-</ul>`,
-en:`<h4>Equipment</h4>
-<ol>
-<li>Copper tube — length 200.0 mm, bore 6.0 mm, outer diameter 20.0 mm</li>
-<li>Brass tube — length 200.0 mm, bore 6.0 mm, outer diameter 19.0 mm</li>
-<li>Aluminum tube — length 200.0 mm, bore 6.0 mm, outer diameter 20.0 mm</li>
-<li>Permanent magnet, 1.2 g</li>
-<li>Water reservoir (heat exchanger in the cover) and two 2 L bottles</li>
-<li>Rod #1 — copper rod, 20.0 mm diameter, eight temperature sensors and a built-in heater, insulated</li>
-<li>Rod #2 — composite rod: copper 88 mm · brass 50 mm · aluminum 50 mm · copper 65 mm (from the heater)</li>
-<li>Thermally insulating termination cap</li>
-<li>12 V DC adapter for the readout box</li>
-<li>Digital readout box — eight thermometers and a timer, one red button</li>
-<li>Thermometer cable</li>
-<li>Voltmeter (used on the 20 V DC position)</li>
-<li>Ammeter (used on the 10 A DC position)</li>
-<li>Electrical wires</li>
-<li>9 V DC supply for the heater</li>
-</ol>
-<h4>Tasks in short</h4>
-<ul>
-<li><b>A.</b> Drop the magnet through the three tubes, time the descent, and get the electrical conductivity of copper, brass and aluminum from the relation given on the problem sheet.</li>
-<li><b>B.</b> Screw Rod #1 onto the reservoir cover and switch the heater on. Get the heater power from V and I, and the heat conductivity of copper from the steady-state temperatures (about 15 min to settle).</li>
-<li><b>C.</b> Take Rod #1 off the reservoir, cap it, heat it, and get the specific heat of copper from the heating rate.</li>
-<li><b>D.</b> Repeat with Rod #2 for the heat conductivities of brass and aluminum (about 15 min to settle).</li>
-<li>Finally compare the Lorenz number L = κ / (σT) of the three metals.</li>
-</ul>
-<h4>Precautions</h4>
-<ul>
-<li class="warn">Do not immerse the rods in water. A rod is screwed onto the thread on the cover.</li>
-<li>Calibrate the thermometers before the rod is attached or heated, while the whole rod is at one temperature: hold the red button down while plugging the cable into the rod.</li>
-<li>With the thermometer cable out, the readout box works as a timer.</li>
-</ul>
-<h4>About this simulator</h4>
-<ul>
-<li>Only what a real instrument shows appears: the eight temperatures and the time on the box, and the two multimeter displays.</li>
-<li>No conductivity, no gradient, no fit, no marking. The analysis is yours.</li>
-<li>Material values and sensor offsets differ slightly from session to session.</li>
-</ul>`};
-
 /* ══════════════════════════════════════════════════════════════
    10.  LANGUAGE
    ══════════════════════════════════════════════════════════════ */
@@ -1333,12 +1351,12 @@ function applyLang(){
   const t=d();
   document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
-  $("tab-bench").textContent=t.tabBench; $("tab-tubes").textContent=t.tabTubes; $("tab-info").textContent=t.tabInfo;
+  $("tab-bench").textContent=t.tabBench; $("tab-tubes").textContent=t.tabTubes;
+  $("t-tray").textContent=t.trayTitle; $("t-closecap").textContent=t.closeCap;
   $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
   $("t-h-box").textContent=t.hBox; $("redBtn").textContent=t.red; $("t-latch").textContent=t.latch;
   $("t-boxhint").textContent=t.boxHint;
   $("t-h-wire").textContent=t.hWire; $("t-wirehint").textContent=t.wireHint; $("unwire").textContent=t.unwire;
-  $("info").innerHTML=INFO[lang];
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2019 E2 — 비데만–프란츠 법칙 · HaslaLab":"IPhO 2019 E2 — Wiedemann–Franz Law · HaslaLab";
   setView(view); renderStatus();
@@ -1357,7 +1375,8 @@ function tick(){
   stepMagnet(dt);
   if(view==="bench"){ ctx.clearRect(0,0,LW,LH); drawBench(); }
   else if(view==="tubes"){ ctx.clearRect(0,0,LW,LH); drawTubes(); }
-  if(++uiTick%6===0) renderStatus();
+  if(++uiTick%3===0) drawClose();
+  if(uiTick%6===0){ renderStatus(); drawTrayCv(); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);

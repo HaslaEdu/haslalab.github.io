@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#171a1d">
+<meta name="theme-color" content="#1c2027">
 <title>APhO 2025 E1 — 유도가열 조리기의 물리 · Physics of Induction Cooking · HaslaLab</title>
-<meta name="description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 함수 발생기·축전기·코일로 직렬 RLC를 꾸미고, 금속판을 끼워 표피 깊이를 재고, 팬을 가열하며 NTC 저항을 직접 읽습니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 함수 발생기·코일 조립체·저항·축전기를 바나나 케이블로 직접 연결하고, ZOYI 휴대용 오실로스코프와 멀티미터로 읽습니다. 계산은 대신 해주지 않습니다.">
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="APhO 2025 E1 — 유도가열 조리기의 물리 · Physics of Induction Cooking">
-<meta property="og:description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 직렬 RLC, 상호 유도, 표피 깊이, 팬 가열을 실제 계기로 직접 측정합니다.">
+<meta property="og:description" content="APhO 2025 실험 1번을 브라우저에서 실행합니다. 직렬 RLC, 상호 유도, 표피 깊이, 팬 가열을 실제 장비 그대로 측정합니다.">
 <style>
   :root{
-    --bg:#171a1d; --panel:#1f2327; --ink:#e8eaec; --muted:#8d969e;
-    --line:#2b3137; --accent:#f0a23c; --accent-soft:#262b30; --deep:#101315; --phos:#7dfab0;
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
   }
   *{box-sizing:border-box}
   [hidden]{display:none!important}
@@ -24,62 +24,59 @@
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
   .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
-  @media (max-width:1240px){ .wrap{flex-wrap:wrap} }
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
 
   /* ── tray ── */
-  .tray{flex:0 0 190px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
-  .tray h3{margin:8px 2px 4px;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  .tray h3:first-child{margin-top:2px}
-  .part{display:flex;align-items:center;gap:7px;width:100%;margin:3px 0;padding:6px 8px;text-align:left;font-size:12.5px}
-  .part i{flex:0 0 13px;height:13px;border-radius:2px;display:inline-block}
-  .part span{flex:1}
-  .part em{font-style:normal;color:var(--muted);font:11px ui-monospace,Consolas,monospace}
-  .part.on{background:#33291a;border-color:var(--accent)}
+  .tray{flex:0 0 214px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
 
   /* ── stage ── */
-  .stage{flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:10px}
+  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#161616}
-  .tools{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
-  .tools button{width:auto;margin:0;padding:5px 10px;font-size:12.5px;color:var(--muted)}
-  .tools button.on{background:var(--accent);border-color:var(--accent);color:#161616;font-weight:600}
-  .tools .hint{margin:0 0 0 6px}
-  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;background:#1b1f23;cursor:pointer}
-  .warn{min-height:20px;font-size:12.5px;color:#f0a79f;margin-top:5px}
-  .warn.ok{color:var(--phos)}
-  .txt{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
-       font:12.5px/1.75 ui-monospace,Consolas,"D2Coding",monospace;color:#c3cad0;white-space:pre-wrap;overflow:auto}
-  .logbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-  .logbar button{width:auto;margin:0}
-  table.log{width:100%;border-collapse:collapse;font:12px ui-monospace,Consolas,monospace}
-  table.log th{color:var(--muted);text-align:left;border-bottom:1px solid var(--line);padding:4px 6px;font-weight:600}
-  table.log td{border-bottom:1px solid #22272b;padding:4px 6px;color:#d8dde1}
+  .card h3{margin:0 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;
+         background:#232830;cursor:crosshair}
+  #bench.dragging{cursor:grabbing}
+  .instr{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .instr .ibox{flex:1 1 520px;min-width:280px}
+  .instr .zbox{flex:0 0 270px}
+  .instr canvas{display:block;width:100%;height:auto;background:#191c21;border-radius:6px;
+                touch-action:none;cursor:pointer}
+  .ilbl{font-size:12px;color:var(--accent);font-weight:600;margin:0 0 4px;letter-spacing:.03em}
 
   /* ── control panel ── */
-  .panel{flex:0 0 344px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-  @media (max-width:1240px){ .panel{flex:1 1 100%} .tray{flex:1 1 100%} }
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel,.tray{position:static} }
+  @media (max-width:1180px){ .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray,.panel{flex:1 1 100%} .instr .zbox{flex:1 1 100%} }
   .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
-            margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
-  .panel canvas{display:block;width:100%;height:auto;border-radius:6px;background:#0e1113;touch-action:none}
-  .row{display:flex;gap:4px;flex-wrap:wrap}
-  .row button{flex:1 1 auto;text-align:center;margin:2px 0;padding:5px 6px;font-size:12px}
+  .disp{background:#0d1512;border-radius:6px;padding:6px 10px;margin:2px 0 6px;text-align:center;
+        color:#7dffb0;font:700 30px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.04em}
+  .row{display:flex;gap:6px}
+  .row button{flex:1;text-align:center}
   button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
          border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
          color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
-  button.on{background:#3a4249;border-color:#56606a;color:var(--ink)}
-  button.hot{background:#4a2320;border-color:#8e2f28;color:#f0a79f}
-  button:disabled{opacity:.4;cursor:default}
-  .hint{font-size:11.5px;color:#8d969e;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
-  .sw{background:#0a1a12;border-radius:6px;padding:4px 10px;text-align:center;color:var(--phos);
-      font:700 28px/1.2 ui-monospace,Consolas,monospace}
-  .laps{font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--muted);min-height:18px;white-space:pre}
-  .rec{display:flex;gap:6px;margin-top:6px}
-  .rec input{flex:1;min-width:0;background:#0e1214;border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:6px 8px;font:inherit;font-size:12.5px}
-  .rec button{width:auto;margin:0}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  #swBtn{background:#2f6f3f;border-color:#2f6f3f;color:#fff;font-weight:600}
+  #swBtn.run{background:#8a3b34;border-color:#8a3b34}
+  .laps{background:var(--deep);border:1px solid var(--line);border-radius:6px;margin-top:6px;
+        height:82px;overflow:auto;font:12px/1.55 ui-monospace,Consolas,monospace;
+        color:var(--ink);padding:4px 7px}
+  #xsec{display:block;width:100%;height:auto;background:var(--deep);border-radius:6px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:10px;min-height:110px}
+  .status div + div{margin-top:9px}
+  .status .warn{color:#ff8b6a}
 
   /* ── header ── */
   header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
@@ -89,7 +86,7 @@
   .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
-  .lang button.on{background:var(--accent);color:#161616}
+  .lang button.on{background:var(--accent);color:#1c2027}
 </style>
 </head>
 <body>
@@ -107,67 +104,49 @@
 
 <div class="wrap">
   <!-- ═══════════ TRAY ═══════════ -->
-  <aside class="tray" id="tray"></aside>
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
 
   <!-- ═══════════ STAGE ═══════════ -->
   <div class="stage">
     <div class="card">
-      <div class="tabs">
-        <button id="tab-lab" class="on"></button>
-        <button id="tab-task"></button>
-        <button id="tab-log"></button>
-        <button id="tab-help"></button>
+      <h3 id="t-benchcap"></h3>
+      <canvas id="bench"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-instrcap"></h3>
+      <div class="instr">
+        <div class="ibox"><div class="ilbl" id="t-fglbl"></div><canvas id="fgCv"></canvas></div>
+        <div class="zbox"><div class="ilbl" id="t-zlbl"></div><canvas id="zoyiCv"></canvas></div>
       </div>
-      <div id="v-lab">
-        <div class="tools" id="tools"></div>
-        <canvas id="bench"></canvas>
-        <div class="warn" id="warn"></div>
-      </div>
-      <div id="v-task" class="txt" hidden></div>
-      <div id="v-log" hidden>
-        <div class="logbar"><button id="csv"></button><button id="clearLog"></button></div>
-        <table class="log"><thead><tr id="logHead"></tr></thead><tbody id="logBody"></tbody></table>
-      </div>
-      <div id="v-help" class="txt" hidden></div>
     </div>
   </div>
 
-  <!-- ═══════════ INSTRUMENTS ═══════════ -->
+  <!-- ═══════════ CONTROLS ═══════════ -->
   <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row">
+      <button id="swBtn"></button>
+      <button id="swLap"></button>
+      <button id="swReset"></button>
+    </div>
+    <div class="laps" id="laps"></div>
+
     <h2 id="t-h-speed"></h2>
     <div class="row" id="speeds"></div>
+    <div class="hint" id="t-speedhint"></div>
 
-    <h2 id="t-h-fg"></h2>
-    <canvas id="fg"></canvas>
-    <div class="row">
-      <button id="fgOut"></button><button id="fgRange">RANGE ▶</button>
-      <button data-b="amp:-2">AMP −</button><button data-b="amp:2">AMP +</button>
-    </div>
-    <div class="row">
-      <button data-b="coarse:-2">COARSE −</button><button data-b="coarse:2">COARSE +</button>
-      <button data-b="fine:-2">FINE −</button><button data-b="fine:2">FINE +</button>
-    </div>
-    <p class="hint" id="t-fgtip"></p>
+    <h2 id="t-h-sec"></h2>
+    <canvas id="xsec"></canvas>
+    <div class="hint" id="secTxt"></div>
 
-    <h2 id="t-h-scope"></h2>
-    <canvas id="osc"></canvas>
-    <div class="row">
-      <button id="mode"></button><button id="auto">AUTO</button><button id="hold">HOLD</button><button id="px"></button>
-    </div>
-    <div class="row">
-      <button id="vUp">V/div ▲</button><button id="vDn">V/div ▼</button>
-      <button id="tDn">T/div ◀</button><button id="tUp">T/div ▶</button>
-    </div>
-    <div class="row">
-      <button id="acv">AC V</button><button id="ohm">Ω</button>
-      <button id="unclip"></button><button id="undmm"></button>
-    </div>
+    <h2 id="t-h-view"></h2>
+    <button id="fitBtn" style="width:100%"></button>
 
-    <h2 id="t-h-sw"></h2>
-    <div class="sw" id="swLbl">00:00.0</div>
-    <div class="row"><button id="swGo"></button><button id="swLap"></button><button id="swReset"></button></div>
-    <div class="laps" id="laps"></div>
-    <div class="rec"><input id="recName"><button id="recBtn"></button></div>
+    <div class="status" id="status"></div>
   </aside>
 </div>
 
@@ -180,248 +159,185 @@
 const T = {
   ko:{
     title:"APhO 2025 실험 1 — 유도가열 조리기의 물리",
-    sub:"가상 실험실 · 케이블로 회로를 꾸미고 스코프로 읽으세요. 회귀·기울기·유도량은 제공하지 않습니다.",
-    tabLab:"실험대", tabTask:"문제", tabLog:"기록지", tabHelp:"사용법",
-    tools:{cable:"케이블 연결", probeP:"프로브 +", probeN:"프로브 −", dmmP:"DMM +", dmmN:"DMM −", erase:"지우기"},
-    hints:{cable:"단자를 두 번 눌러 케이블을 연결합니다.", probe:"스코프 프로브를 놓을 단자를 누르세요.",
-           dmm:"멀티미터 리드를 놓을 단자를 누르세요.", erase:"케이블(또는 단자)을 눌러 제거합니다."},
-    tCap:"축전기", tPlate:"금속판", tPan:"조리 팬", tMisc:"설치",
-    slotClear:"슬롯 비우기", cover:"차폐 덮개", coverOn:"닫힘", coverOff:"열림",
-    hSpeed:"시간 배속", hFg:"함수 발생기", hScope:"디지털 오실로스코프 ZOYI ZT-702S", hSw:"스톱워치",
-    out:"출력", on:"ON", off:"OFF",
-    fgtip:"노브를 위아래로 끌거나 휠을 굴려 조절합니다. 발생기에는 주파수 표시가 없습니다 — 스코프로 읽으세요.",
-    unclip:"프로브 해제", undmm:"DMM 해제",
-    start:"시작 / 정지", lap:"랩", reset:"초기화",
-    recPh:"항목 이름 (예: f, V_R1)", rec:"현재 값 기록", csv:"CSV 저장", clearLog:"기록 삭제",
-    cols:["#","시각 [s]","항목","값","주파수","조건"],
-    ovr:"코일이 뜨거워지고 있습니다 — 전류를 줄이세요 (2 A-peak 이하로)",
-    nocap:"축전기 없이 코일을 구동하면 코일이 뜨거워집니다",
-    dmmfreq:"AC 전압 모드는 40 Hz–1 kHz 에서만 유효",
-    dmmlive:"신호가 걸린 회로입니다 — 발생기 출력을 끄고 재세요",
-    coil1:"코일 #1", coil2:"코일 #2", slotEmpty:"슬롯 비어 있음", probeOff:"프로브 미연결",
-    plate:"판", exagg:"판 두께는 보기 좋게 과장되어 있습니다",
-    pinterm:"핀 단자", capins:"축전기를 꽂으세요", powres:"전력 저항 R₁", capbox:"블랙박스 · 축전기 홀더",
-    logged:"기록했습니다", saved:"CSV 파일을 내려받았습니다", wave:"이 실험에서는 정현파만 사용합니다",
-    maxcable:"케이블은 8개까지 있습니다",
-    mat:{AL:"알루미늄",CU:"구리",SS304:"스테인리스 304",SS410:"스테인리스 410"},
-    pan:{AL:"알루미늄 팬",SS410:"SS410 팬"}
+    sub:"가상 실험실 · 부품을 실험대에 놓고 케이블로 직접 연결한 뒤 계기를 읽으세요. 아무것도 대신 계산해 주지 않습니다.",
+    benchcap:"실험대 — 좌클릭 집기·놓기·꽂기 / 우클릭 되돌리기·뽑기 / 휠 확대·축소 / 빈 곳 드래그 이동",
+    instrcap:"계기 확대 — 실험대 위의 바로 그 장비입니다. 노브는 위아래로 끌거나 휠, 버튼은 클릭",
+    fglbl:"1. 함수 발생기 — 앞면 / 뒷면", zlbl:"2. ZOYI ZT-702S 디지털 오실로스코프",
+    tray:"부품함",
+    hSw:"4. 스톱워치", hSpeed:"시간 배속", hSec:"3. 코일 조립체 — 단면", hView:"보기",
+    speedHint:"가열·냉각은 실제로 수 분이 걸립니다. 배속은 스톱워치에도 똑같이 적용됩니다.",
+    fitBtn:"화면에 맞추기",
+    start:"시작", stop:"정지", lap:"랩", reset:"리셋",
+    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", coil:"3. 코일 조립체",
+      bb:"5. 바나나–바나나 케이블", bp:"6. 바나나–핀 케이블", r1:"7. 노란 저항 R₁",
+      box:"8. 블랙박스 (단자 4개)", C470N:"9. 축전기 470 nF", C470U:"9. 축전기 470 µF",
+      C1000U:"9. 축전기 1000 µF", C2200U:"9. 축전기 2200 µF", key:"10. 육각 렌치",
+      panAL:"11. 알루미늄 팬", panSS:"12. SS410 팬",
+      plAL:"13. 알루미늄 판", plCU:"14. 구리 판", plS4:"15. SS304 판", plS10:"16. SS410 판"},
+    trayOut:"사용 중", trayTake:"클릭해서 집기", trayLeft:n=>"남은 개수 "+n, trayNone:"모두 사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠 확대·축소 / 빈 곳 드래그 이동",
+    mat:{AL:"알루미늄",CU:"구리",SS304:"SS304",SS410:"SS410"},
+    lab:{coil1:"코일 #1",coil2:"코일 #2",clamp:"클램프",pins:"핀 단자",base:"받침판",
+         tight:"조임",loose:"풀림",empty:"두 코일 사이: 비어 있음",pan:"팬 (뒤집어 고정)",ntc:"NTC",
+         covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
+         hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
+    secTxt:(cl,cov,st)=>"클램프: "+cl+"   ·   "+cov+"\n"+st,
+    stNothing:"부품함에서 부품을 골라 실험대의 점선 자리에 놓으세요.",
+    m:{
+      placeIt:s=>s+" — 실험대에 나타난 점선 자리를 클릭해 놓으세요. (우클릭: 취소)",
+      placed:s=>s+" — 놓았습니다.",
+      noFit:"그곳에는 놓을 수 없습니다. 점선 자리를 클릭하세요.",
+      cable1:"케이블의 한쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
+      cable2:"다른 쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
+      needSock:"바나나 플러그는 바나나 소켓(빨강·검정 구멍)에만 꽂힙니다.",
+      needPin:"핀 쪽 끝은 코일 핀·축전기 다리·NTC 선에 끼웁니다.",
+      full:"그 단자에는 더 꽂을 수 없습니다.",
+      same:"같은 단자입니다.",
+      plugged:"케이블을 연결했습니다.",
+      unplug:"케이블을 뽑아 부품함에 넣었습니다.",
+      noCable:"남은 케이블이 없습니다.",
+      noTerm:"단자를 클릭하세요.",
+      probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
+      probeOn:"프로브를 물렸습니다.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
+      noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
+      keyTake:"렌치로 코일 조립체의 클램프 나사를 클릭하세요. (우클릭: 내려놓기)",
+      loosened:"클램프를 풀었습니다 — 두 코일 사이에 판이나 팬을 넣을 수 있습니다.",
+      tightened:"클램프를 조였습니다.",
+      needLoose:"클램프가 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
+      plateTake:s=>s+" 판 1장 — 코일 조립체를 클릭해 두 코일 사이에 끼우세요.",
+      plateIn:(s,n)=>s+" 판을 끼웠습니다 (지금 "+n+"장).",
+      plateOut:"맨 위 판을 빼서 부품함에 넣었습니다.",
+      slotFull:"두 코일 사이 틈이 가득 찼습니다.",
+      panTake:s=>s+" — 코일 조립체를 클릭해 두 코일 사이에 뒤집어 고정하세요.",
+      panIn:"팬을 두 코일 사이에 고정했습니다. NTC 선 두 가닥이 앞으로 나옵니다.",
+      panOut:"팬을 빼서 부품함에 넣었습니다.",
+      slotBusy:"두 코일 사이에 이미 다른 것이 들어 있습니다.",
+      noCoil:"먼저 3번 코일 조립체를 실험대에 놓으세요.",
+      covered:"코일 조립체가 블랙박스 안에 있습니다. 블랙박스를 먼저 치우세요.",
+      capBox:"축전기 다리를 블랙박스 단자 한 쌍에 물렸습니다.",
+      returned:s=>s+" — 부품함에 넣었습니다.",
+      fgPow:p=>"함수 발생기 전원 "+(p?"켜짐":"꺼짐")+" (뒷면 스위치 9)",
+      fgRear:"전원 스위치(9)는 뒷면에 있습니다 — 아래 계기 확대의 뒷면에서 누르세요.",
+      zoyiPow:p=>"오실로스코프 "+(p?"켜짐":"꺼짐"),
+      zoyiOff:"오실로스코프가 꺼져 있습니다 — POWER 키를 누르세요.",
+      wave:"이 실험에서는 항상 정현파(SINE)를 씁니다.",
+      noFgHere:"함수 발생기가 실험대에 없습니다.",
+      cableHere:"케이블은 실험대 위 단자에 꽂으세요.",
+      single:"SINGLE 트리거: 한 번 잡은 뒤 멈췄습니다. HOLD 를 눌러 다시 받습니다.",
+      probeX:p=>"PROBE 설정 "+p+"X — 화면 값이 "+p+"배로 표시됩니다."
+    },
+    st:{hot:"⚠ 코일 전류가 너무 큽니다 — 진폭을 줄이세요 (약 2 A-peak 이하).",
+        live:"⚠ 신호가 걸린 회로라 저항 값이 흔들립니다 — 발생기 출력을 끄고 재세요.",
+        band:"⚠ 멀티미터 AC 전압은 40 Hz – 1 kHz 에서만 정확합니다. 그 밖은 스코프 모드로 재세요.",
+        wave:"⚠ 파형 선택이 SINE 이 아닙니다.",
+        open:"블랙박스 덮개가 없으면 팬이 공기 대류로도 열을 잃습니다."}
   },
   en:{
     title:"APhO 2025 Experiment 1 — Physics of Induction Cooking",
-    sub:"Virtual laboratory · wire the circuit with cables and read it on the scope. No fits, slopes or derived quantities.",
-    tabLab:"Bench", tabTask:"Tasks", tabLog:"Log", tabHelp:"How to use",
-    tools:{cable:"Cable", probeP:"Probe +", probeN:"Probe −", dmmP:"DMM +", dmmN:"DMM −", erase:"Remove"},
-    hints:{cable:"Click two terminals to run a cable between them.", probe:"Click the terminal to clip the scope probe onto.",
-           dmm:"Click the terminal to clip the multimeter lead onto.", erase:"Click a cable (or a terminal) to remove it."},
-    tCap:"Capacitors", tPlate:"Metal plates", tPan:"Cooking pans", tMisc:"Setup",
-    slotClear:"Empty the slot", cover:"Shield lid", coverOn:"closed", coverOff:"open",
-    hSpeed:"Time scale", hFg:"Function generator", hScope:"Digital oscilloscope ZOYI ZT-702S", hSw:"Stopwatch",
-    out:"OUTPUT", on:"ON", off:"OFF",
-    fgtip:"Drag a knob up or down, or roll the wheel on it. The generator has no frequency display: read it on the scope.",
-    unclip:"Unclip probes", undmm:"Unclip DMM",
-    start:"Start / Stop", lap:"Lap", reset:"Reset",
-    recPh:"item name (e.g. f, V_R1)", rec:"Log this reading", csv:"Save CSV", clearLog:"Clear log",
-    cols:["#","Time [s]","Item","Value","Frequency","Conditions"],
-    ovr:"The coil is warming up: turn the current down (keep it under 2 A-peak)",
-    nocap:"Driving the coil without a capacitor makes it very hot",
-    dmmfreq:"AC volts mode is valid only from 40 Hz to 1 kHz",
-    dmmlive:"That circuit is live: switch the generator output off first",
-    coil1:"coil #1", coil2:"coil #2", slotEmpty:"slot empty", probeOff:"no probe",
-    plate:"plate", exagg:"Plate thickness is drawn exaggerated",
-    pinterm:"pin terminals", capins:"insert a capacitor", powres:"POWER RESISTOR R₁", capbox:"BLACK BOX · CAPACITOR HOLDER",
-    logged:"Logged", saved:"CSV downloaded", wave:"Use the sine waveform for every part of this experiment",
-    maxcable:"Only eight cables are supplied",
-    mat:{AL:"Aluminium",CU:"Copper",SS304:"Stainless 304",SS410:"Stainless 410"},
-    pan:{AL:"Aluminium pan",SS410:"SS410 pan"}
+    sub:"Virtual laboratory · put the parts on the bench, wire them with the cables and read the instruments. Nothing is computed for you.",
+    benchcap:"the bench — L-click pick/place/plug, R-click return/unplug / wheel zoom / drag bare bench to pan",
+    instrcap:"instruments close up — these are the very instruments on the bench. Drag a knob up/down or roll the wheel; click the keys",
+    fglbl:"1. Function generator — front / rear", zlbl:"2. ZOYI ZT-702S digital oscilloscope",
+    tray:"Parts box",
+    hSw:"4. Stopwatch", hSpeed:"Time scale", hSec:"3. Coil assembly — cross-section", hView:"View",
+    speedHint:"Heating and cooling really take minutes. The scale applies to the stopwatch too.",
+    fitBtn:"Fit to window",
+    start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
+    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", coil:"3. Coil assembly",
+      bb:"5. Banana–banana cable", bp:"6. Banana–pin cable", r1:"7. Yellow resistor R₁",
+      box:"8. Black box (4 sockets)", C470N:"9. Capacitor 470 nF", C470U:"9. Capacitor 470 µF",
+      C1000U:"9. Capacitor 1000 µF", C2200U:"9. Capacitor 2200 µF", key:"10. Allen key",
+      panAL:"11. Aluminium pan", panSS:"12. SS410 pan",
+      plAL:"13. Aluminium plate", plCU:"14. Copper plate", plS4:"15. SS304 plate", plS10:"16. SS410 plate"},
+    trayOut:"in use", trayTake:"click to pick up", trayLeft:n=>n+" left", trayNone:"all in use",
+    trayHelp:"L-click pick/place, R-click return\nwheel zoom, drag bare bench to pan",
+    mat:{AL:"aluminium",CU:"copper",SS304:"SS304",SS410:"SS410"},
+    lab:{coil1:"coil #1",coil2:"coil #2",clamp:"clamp",pins:"pin terminals",base:"base plate",
+         tight:"tight",loose:"loose",empty:"between the coils: empty",pan:"pan (clamped upside down)",ntc:"NTC",
+         covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
+         hook:"hook", gnd:"ground clip", rest:"probe rest"},
+    secTxt:(cl,cov,st)=>"clamps: "+cl+"   ·   "+cov+"\n"+st,
+    stNothing:"Pick a part from the parts box and put it on its dashed place on the bench.",
+    m:{
+      placeIt:s=>s+" — click the dashed place that appeared on the bench. (R-click: cancel)",
+      placed:s=>s+" — placed.",
+      noFit:"It does not go there. Click a dashed place.",
+      cable1:"Click the terminal for one end of the cable. (R-click: cancel)",
+      cable2:"Click the terminal for the other end. (R-click: cancel)",
+      needSock:"A banana plug only goes into a banana socket (the red and black holes).",
+      needPin:"The pin end goes onto a coil pin, a capacitor lead or an NTC lead.",
+      full:"No room for another plug on that terminal.",
+      same:"That is the same terminal.",
+      plugged:"Cable connected.",
+      unplug:"Cable unplugged and put back in the box.",
+      noCable:"No cables of that kind left.",
+      noTerm:"Click a terminal.",
+      probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
+      probeOn:"Probe clipped on.", probeOff:"Probe unclipped and hung up.",
+      noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
+      keyTake:"Click the clamp screws of the coil assembly with the key. (R-click: put it down)",
+      loosened:"Clamps loosened — plates or a pan can go between the coils.",
+      tightened:"Clamps tightened.",
+      needLoose:"The clamps are tight. Loosen them with the Allen key (item 10) first.",
+      plateTake:s=>"One "+s+" plate — click the coil assembly to slide it between the coils.",
+      plateIn:(s,n)=>s+" plate in ("+n+" now).",
+      plateOut:"Top plate taken out and put back in the box.",
+      slotFull:"The gap between the coils is full.",
+      panTake:s=>s+" — click the coil assembly to clamp it upside down between the coils.",
+      panIn:"Pan clamped between the coils. Its two NTC leads come out at the front.",
+      panOut:"Pan taken out and put back in the box.",
+      slotBusy:"Something else is already between the coils.",
+      noCoil:"Put the coil assembly (item 3) on the bench first.",
+      covered:"The coil assembly is inside the black box. Move the box first.",
+      capBox:"Capacitor leads clamped into a pair of black-box sockets.",
+      returned:s=>s+" — back in the parts box.",
+      fgPow:p=>"Function generator power "+(p?"on":"off")+" (rear switch 9)",
+      fgRear:"The power switch (9) is on the rear panel: press it in the close-up below.",
+      zoyiPow:p=>"Oscilloscope "+(p?"on":"off"),
+      zoyiOff:"The oscilloscope is off: press its POWER key.",
+      wave:"Always use the SINE waveform in this experiment.",
+      noFgHere:"The function generator is not on the bench.",
+      cableHere:"Plug cables in on the bench.",
+      single:"SINGLE trigger: captured once and stopped. Press HOLD to re-arm.",
+      probeX:p=>"PROBE set to "+p+"X — the screen now shows "+p+"× the input."
+    },
+    st:{hot:"⚠ The coil current is too large: turn the amplitude down (keep it under about 2 A-peak).",
+        live:"⚠ That circuit carries the signal, so the resistance reading wanders. Switch the generator output off.",
+        band:"⚠ Multimeter AC volts is accurate only from 40 Hz to 1 kHz. Use scope mode outside that band.",
+        wave:"⚠ The waveform selector is not on SINE.",
+        open:"Without the black-box cover the pan also loses heat by convection."}
   }
 };
-const TASK={ko:`실험 1 — 유도 코일의 특성 (4.5점)
-  노란 저항 R₁(1 Ω), 코일 #1, 축전기로 직렬 RLC 회로를 구성합니다.
-  부하 임피던스가 변하면 발생기 출력 전압도 함께 변합니다.
-
-  1.1 (0.4) 회로를 그리고 각 부분을 표시하세요. 케이블 저항 R_C 는 무시할 수 없습니다 — 옴미터로 측정.
-  1.2 (1.2) C = 470 nF, 2200 µF 의 공진 주파수를 구하고 공진 곡선을 그려 L 을 결정하세요.
-  1.3 (0.5) 축전기 하나의 공진 자료만으로는 L 이 부정확합니다. L 과 R_L 을 함께 뽑을 선형 모형을 세우세요.
-  1.4 (1.4) C = 470 µF, 1000 µF 로도 측정하고 네 자료 전부를 새 모형으로 분석하세요.
-  1.5 (1.0) 네 축전기 각각의 L, R_L 을 구하고 평균을 내세요.
-
-실험 2 — 상호 유도와 표피 깊이 (8.1점)     구동 회로는 C = 1000 µF 직렬 RLC.
-
-  2.1 (0.4) 상호 인덕턴스 측정 배치를 그리세요.
-  2.2 (1.0) 1차·2차 코일의 역할을 바꿔 두 번 측정하고 각각 그래프를 그리세요.
-  2.3 (0.4) 각 배치의 상호 인덕턴스 M 을 구하세요.
-  2.4 (5.5) 두 코일 사이에 금속판을 넣어 금속별 주파수 지수 n 을 구하세요(정수로 반올림).
-            표피 깊이가 극단적이라 좋은 자료가 나오지 않는 금속 하나를 찾아 2.5–2.6 에서 제외하세요.
-  2.5 (0.2) 차원 해석으로 전도도 지수 m 을 구하세요.
-  2.6 (0.6) 자료가 좋은 세 금속의 전도도 σ 를 구하세요.
-
-  주어진 식:  B(z) = B₀ e^(−z/δ) cos(ωt − z/δ + φ),   δ = √(σᵐ fⁿ / πµ),   µ = µ_r µ₀
-
-실험 3 — "조리": 비열과 유효 부하저항 (7.4점)
-  C = 1000 µF, f ≈ 40 kHz, 코일 전류는 2 A-peak 이하. 복사 외의 열손실은 없다고 봅니다.
-
-  3.1 (0.2) 유도 조리기의 작동 원리를 그림으로 나타내세요.
-  3.2 (0.5) 금속 팬의 비열 c 를 구할 물리 모형을 세우세요.
-  3.3 (1.5) 알루미늄 팬의 비열을 측정하세요 (코일 #2 로 가열).
-  3.4 (1.5) SS410 팬에 대해 반복하세요.
-  3.5 (1.6) Al 팬의 R_LOAD 모형을 세우고 측정하세요. 전력을 넣고 약 30 초 뒤부터 측정하세요.
-  3.6 (1.5) SS410 팬에 대해 반복하세요.
-  3.7 (0.1) 어느 쪽이 조리용으로 더 낫습니까?  (a) 알루미늄  (b) SS410
-  3.8 (0.1) 그 선택에서 가장 지배적인 물리량은?
-            (a) 전기전도도 (b) 자기투자율 (c) 밀도 (d) 비열 (e) 열전도도
-  3.9 (0.4) 두 팬의 유도 가열 효율 η 를 계산하세요.
-
-  P_RAD = e A σ_S T⁴,   R_NTC = R₀ exp[B(1/T − 1/T₀)],  R₀ = 10 kΩ, T₀ = 298 K, B = 3950 K
-  σ_S = 5.670×10⁻⁸ W m⁻² K⁻⁴,  µ₀ = 4π×10⁻⁷ H/m
-  ρ_Al = 2700, ρ_SS410 = 7700 kg/m³,  e_Al = 0.65, e_SS410 = 0.8
-
-  치수 — 팬 2×2 cm (Al 0.73 mm, SS410 0.76 mm)
-        판 2.7×4.6 cm (Al 0.73, Cu 0.71, SS304 0.72, SS410 0.76 mm)
-        SS410 은 µ_r = 700, 나머지는 µ_r = 1`,
-en:`Experiment 1 — Characterising the induction coil (4.5 pt)
-  Build a series RLC circuit from the yellow resistor R₁ (1 Ω), coil #1 and a capacitor.
-  The generator output voltage changes as the load impedance changes.
-
-  1.1 (0.4) Sketch the circuit and label every part. Cable resistance R_C is not negligible — measure it.
-  1.2 (1.2) Find the resonance frequency for C = 470 nF and 2200 µF, plot the curve, determine L.
-  1.3 (0.5) One capacitor alone gives an inaccurate L. Develop a linear model yielding both L and R_L.
-  1.4 (1.4) Repeat for C = 470 µF and 1000 µF, then analyse all four data sets with the new model.
-  1.5 (1.0) Determine L and R_L for all four capacitors and average them.
-
-Experiment 2 — Mutual induction and skin depth (8.1 pt)   Drive with C = 1000 µF series RLC.
-
-  2.1 (0.4) Sketch the setup for measuring the mutual inductance.
-  2.2 (1.0) Measure twice, swapping the roles of the coils, and plot both.
-  2.3 (0.4) Determine M for each configuration.
-  2.4 (5.5) Insert metal plates between the coils and determine n for each metal (nearest integer).
-            Identify the one metal whose skin depth is so extreme it must be dropped from 2.5–2.6.
-  2.5 (0.2) Deduce the conductivity power factor m by dimensional analysis.
-  2.6 (0.6) Determine σ for the three metals that gave good data.
-
-  Given:  B(z) = B₀ e^(−z/δ) cos(ωt − z/δ + φ),   δ = √(σᵐ fⁿ / πµ),   µ = µ_r µ₀
-
-Experiment 3 — "Cooking": specific heat and effective load resistance (7.4 pt)
-  C = 1000 µF, f ≈ 40 kHz, keep the coil current below 2 A-peak. Radiation is the only heat loss.
-
-  3.1 (0.2) Draw how the induction cooker works.
-  3.2 (0.5) Develop a physical model for the specific heat c of the pans.
-  3.3 (1.5) Measure the specific heat of the aluminium pan, heating it with coil #2.
-  3.4 (1.5) Repeat for the SS410 pan.
-  3.5 (1.6) Model and measure R_LOAD for the Al pan, reading from about 30 s after power is applied.
-  3.6 (1.5) Repeat for the SS410 pan.
-  3.7 (0.1) Which works better as a cooking pan?  (a) aluminium  (b) SS410
-  3.8 (0.1) Which parameter dominates that choice?
-            (a) conductivity (b) magnetic permeability (c) density (d) specific heat (e) thermal cond.
-  3.9 (0.4) Calculate the induction cooking efficiency η for both pans.
-
-  P_RAD = e A σ_S T⁴,   R_NTC = R₀ exp[B(1/T − 1/T₀)],  R₀ = 10 kΩ, T₀ = 298 K, B = 3950 K
-  σ_S = 5.670×10⁻⁸ W m⁻² K⁻⁴,  µ₀ = 4π×10⁻⁷ H/m
-  ρ_Al = 2700, ρ_SS410 = 7700 kg/m³,  e_Al = 0.65, e_SS410 = 0.8
-
-  Dimensions — pans 2×2 cm (Al 0.73 mm, SS410 0.76 mm)
-               plates 2.7×4.6 cm (Al 0.73, Cu 0.71, SS304 0.72, SS410 0.76 mm)
-               SS410 has µ_r = 700, the rest µ_r = 1`};
-const HELP={ko:`실험대 사용법
-
-배선     위쪽 [케이블 연결] 을 켜고 단자를 두 번 누르면 그 사이에 케이블이 연결됩니다.
-         직렬 RLC 는 발생기 출력 → 축전기 → 코일 핀 → R₁ → 발생기 반대 단자로 한 바퀴 잇습니다.
-         케이블은 8개까지, [지우기] 로 케이블을 눌러 뺍니다.
-
-프로브   [프로브 +] / [프로브 −] 로 스코프 프로브 두 끝을 원하는 단자에 겁니다.
-         스코프는 두 단자 사이 전압만 보여 줍니다. 전류는 R₁ 양단 전압을 재서 직접 나누세요.
-
-주파수   발생기에는 주파수 표시가 없습니다. RANGE 로 대역을 고르고 COARSE·FINE 노브를 끌어
-         맞춘 뒤 스코프 화면의 F 값을 읽으세요. 노브는 위아래로 끌거나 휠을 굴려 조절합니다.
-
-멀티미터 MODE 로 DMM 으로 바꾸면 저항(Ω)과 AC 전압을 잽니다. 발생기에 연결된 회로의 저항은
-         출력을 끈 상태에서만 잴 수 있고(팬의 NTC 는 따로 떨어져 있어 가열 중에도 잴 수 있습니다),
-         AC 전압은 실제 장비와 같이 40 Hz–1 kHz 에서만 동작합니다.
-
-판과 팬  왼쪽에서 금속판을 누르면 두 코일 사이 슬롯에 한 장씩 쌓입니다(단면도).
-         팬을 고르면 슬롯에 뒤집어 고정되고 NTC 배선 두 가닥이 오른쪽으로 나옵니다.
-         팬 온도는 그 NTC 저항을 재서 알아냅니다. 뜨거워져도 팬의 색은 변하지 않습니다.
-
-시간     가열·냉각은 실제로 수 분 걸립니다. 위쪽 시간 배속으로 빠르게 돌릴 수 있고
-         스톱워치도 같은 시계를 씁니다.
-
-기록지   [현재 값 기록] 은 지금 계기에 떠 있는 값을 종이에 옮겨 적는 것과 같습니다.
-         회귀·기울기·유도량 계산은 제공하지 않습니다. 분석은 직접 하세요.
-
-
-물리 모형 메모 (공식 해설 v3.0 기준 보정)
-
-  코일 L = 47.2 µH, R_L = 0.47 Ω, M = 5.79 µH
-  R₁ = 1 Ω, 케이블 1개 22.5 mΩ (회로에 4개 → R_C = 0.09 Ω), 전해 축전기 ESR 30 mΩ
-  발생기 출력 임피던스 2 Ω, 앰프 전류 제한 4 A-peak
-  δ = 1/√(πσµf),  σ = 3.70e7 / 5.88e7 / 1.39e6 / 1.70e6 S/m (Al, Cu, SS304, SS410)
-  차폐  V₂ ∝ (1−α)e^(−Σt/δ) + α e^(−Σt/δ_f),  누설 α = 비자성 0.005, SS410 0.55
-        자성체는 자속이 판 안으로 끌려들어가 측면으로 빠져나오므로 표피 깊이 측정이 무너집니다.
-  열    mc dT/dt = I²R_LOAD − eAσ_S(T⁴−T₀⁴),  A = 2×(2 cm)², 주위 303.5 K
-        덮개를 열면 자연대류(h ≈ 8 W m⁻²K⁻¹)가 더해져 결과가 틀어집니다.
-  R_LOAD(40 kHz) = 54.6 mΩ (Al) / 137.7 mΩ (SS410), √f 비례
-  판독 잡음 0.4 %, 유효숫자 4자리, 화면 눈금의 0.25 % 오프셋`,
-en:`Using the bench
-
-Wiring     With [Cable] active, click two terminals and a cable runs between them.
-           For the series RLC loop: generator output → capacitor → coil pins → R₁ → other terminal.
-           Eight cables are supplied; [Remove] takes one out again.
-
-Probes     Clip the two scope probe ends onto any terminals with [Probe +] / [Probe −].
-           The scope shows only the voltage between them. For current, measure across R₁.
-
-Frequency  The generator has no frequency display. Pick a band with RANGE, drag COARSE and FINE,
-           then read F on the scope. Drag knobs vertically or use the wheel.
-
-Multimeter MODE switches to DMM for resistance and AC volts. Anything wired to the generator reads
-           only with the output off (the pan's NTC is separate and reads while heating); AC volts works
-           from 40 Hz to 1 kHz just like the real instrument.
-
-Plates     Clicking a metal drops one plate into the slot between the coils (cross-section view).
-and pans   Choosing a pan clamps it in the slot upside down with NTC leads running out to the right;
-           read its resistance to get the pan temperature. A hot pan looks just like a cold one.
-
-Time       Heating and cooling really take minutes. The time multiplier speeds the whole bench up,
-           stopwatch included.
-
-Log        "Log this reading" copies what the instrument shows right now, the way you would write it
-           on paper. No fitting, no slopes, no derived quantities: the analysis is yours.
-
-
-Model notes (calibrated against the official solution v3.0)
-
-  Coil L = 47.2 µH, R_L = 0.47 Ω, M = 5.79 µH
-  R₁ = 1 Ω, 22.5 mΩ per cable (four in the loop → R_C = 0.09 Ω), 30 mΩ ESR on electrolytics
-  Generator output impedance 2 Ω, amplifier current limit 4 A-peak
-  δ = 1/√(πσµf),  σ = 3.70e7 / 5.88e7 / 1.39e6 / 1.70e6 S/m (Al, Cu, SS304, SS410)
-  Shielding  V₂ ∝ (1−α)e^(−Σt/δ) + α e^(−Σt/δ_f), leakage α = 0.005 non-magnetic, 0.55 for SS410
-  Heat       mc dT/dt = I²R_LOAD − eAσ_S(T⁴−T₀⁴), A = 2×(2 cm)², ambient 303.5 K
-             Opening the lid adds convection (h ≈ 8 W m⁻²K⁻¹) and spoils the result.
-  R_LOAD(40 kHz) = 54.6 mΩ (Al) / 137.7 mΩ (SS410), scaling as √f
-  Readout noise 0.4 %, four significant figures, plus 0.25 % of full scale`};
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const $=id=>document.getElementById(id);
 const d=()=>T[lang];
 
 /* ══════════════════════════════════════════════════════════════
-   1.  PHYSICS  —  identical to the Python constants
+   1.  PHYSICS
    ══════════════════════════════════════════════════════════════ */
 const MU0=4e-7*Math.PI, SB=5.670e-8, T_AMB=303.5;
 const MAT={
-  AL:   {sigma:3.70e7,mur:1,  t:0.73e-3,alpha:0.005,n:5,c1:"#d5d9dd"},
-  CU:   {sigma:5.88e7,mur:1,  t:0.71e-3,alpha:0.005,n:5,c1:"#d98a55"},
-  SS304:{sigma:1.39e6,mur:1,  t:0.72e-3,alpha:0.005,n:4,c1:"#c3c8cc"},
-  SS410:{sigma:1.70e6,mur:700,t:0.76e-3,alpha:0.55, n:4,c1:"#cfd6da"}};
+  AL:   {sigma:3.70e7,mur:1,  t:0.73e-3,alpha:0.005,n:5,col:"#d7dbdf",edge:"#9aa2a8"},
+  CU:   {sigma:5.88e7,mur:1,  t:0.71e-3,alpha:0.005,n:5,col:"#d98a55",edge:"#9c5a30"},
+  SS304:{sigma:1.39e6,mur:1,  t:0.72e-3,alpha:0.005,n:4,col:"#c3c8cc",edge:"#7c8388"},
+  SS410:{sigma:1.70e6,mur:700,t:0.76e-3,alpha:0.55, n:4,col:"#e3e8ec",edge:"#8d959b"}};
+const PLATE_OF={plAL:"AL",plCU:"CU",plS4:"SS304",plS10:"SS410"};
 const PAN={AL:{rho:2700,c:900,t:0.73e-3,e:0.65,r40:0.0546}, SS410:{rho:7700,c:460,t:0.76e-3,e:0.80,r40:0.1377}};
 for(const k in PAN){ const p=PAN[k]; p.area=2*0.02*0.02; p.mass=p.rho*0.02*0.02*p.t; }
+const PAN_OF={panAL:"AL",panSS:"SS410"};
 const COIL_L=47.2e-6, COIL_RL=0.47, COIL_M=5.79e-6;
-const R1_OHM=1.0, RCAB=0.0225, RSCOPE=1e6;
+const R1_OHM=1.0, RCAB=0.0225, RSCOPE=1e6, RDMM=1e7;
 const FG_EMAX=32.0, FG_RS=2.0, FG_ILIM=4.0;
 const NTC_R0=10000, NTC_T0=298, NTC_B=3950;
-const CAPS={C470N:[470e-9,0.010,"470 nF",true], C470U:[470e-6,0.030,"470 µF",false],
-            C1000U:[1000e-6,0.030,"1000 µF",false], C2200U:[2200e-6,0.030,"2200 µF",false]};
-const CAP_ORDER=["C470N","C470U","C1000U","C2200U"];
-const TERMS=["FGP","FGN","R1A","R1B","CBA","CBB","C1A","C1B","C2A","C2B","NTCA","NTCB"];
-const TIDX={}; TERMS.forEach((t,i)=>TIDX[t]=i);
+const CAPS={
+  C470N: {C:470e-9, esr:0.010,film:true, node:"K1",lab:"470 nF", r:0,   h:1.1},
+  C470U: {C:470e-6, esr:0.030,film:false,node:"K2",lab:"470 µF", r:0.5, h:1.6},
+  C1000U:{C:1000e-6,esr:0.030,film:false,node:"K3",lab:"1000 µF",r:0.65,h:2.0},
+  C2200U:{C:2200e-6,esr:0.030,film:false,node:"K4",lab:"2200 µF",r:0.8, h:2.6}};
+const CAP_KEYS=["C470N","C470U","C1000U","C2200U"];
+const NODES=["FGP","FGN","R1A","R1B","B1","B2","B3","B4","C1A","C1B","C2A","C2B",
+             "K1A","K1B","K2A","K2B","K3A","K3B","K4A","K4B","NTCA","NTCB","DCOM","DVO"];
+const NI={}; NODES.forEach((t,i)=>NI[t]=i);
 
 const skinDepth=(k,f)=>1/Math.sqrt(Math.PI*MAT[k].sigma*MAT[k].mur*MU0*Math.max(f,1e-9));
 function shielding(stack,f){
@@ -434,7 +350,6 @@ function shielding(stack,f){
 const rntc=T=>NTC_R0*Math.exp(NTC_B*(1/T-1/NTC_T0));
 const rload=(k,f)=>PAN[k].r40*Math.sqrt(Math.max(f,1)/40000);
 
-/* complex numbers as [re, im] */
 const C=(r,i)=>[r,i||0];
 const cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]];
 const csub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
@@ -458,9 +373,9 @@ function csolve(A,b){
   }
   return M.map(r=>r[n]);
 }
-/* complex modified nodal analysis */
-function analyze(st,f){
-  const N=TERMS.length, gnd=TIDX.FGN, w=2*Math.PI*f;
+/* complex modified nodal analysis of the whole bench */
+function analyze(net,f){
+  const N=NODES.length, gnd=NI.FGN, w=2*Math.PI*f;
   const nmap=new Array(N); let c=0;
   for(let i=0;i<N;i++) nmap[i]= i===gnd ? -1 : c++;
   const size=(N-1)+3;
@@ -469,60 +384,56 @@ function analyze(st,f){
   const stampY=(na,nb,Y)=>{ const a=nmap[na], bb=nmap[nb]; at(a,a,Y); at(bb,bb,Y); at(a,bb,[-Y[0],-Y[1]]); at(bb,a,[-Y[0],-Y[1]]); };
   const stampR=(na,nb,R)=>{ if(R>0) stampY(na,nb,C(1/R)); };
   for(let i=0;i<N;i++) if(i!==gnd) at(nmap[i],nmap[i],C(1e-9));
-  for(const [ca,cb] of st.cables) stampR(TIDX[ca],TIDX[cb],RCAB);
-  stampR(TIDX.R1A,TIDX.R1B,R1_OHM);
-  if(st.cap){ const [Cc,esr]=CAPS[st.cap]; stampY(TIDX.CBA,TIDX.CBB,cdiv(C(1),C(esr,-1/(w*Cc)))); }
-  if(st.pan) stampR(TIDX.NTCA,TIDX.NTCB,rntc(st.panT));
-  if(st.scope&&st.scope[0]&&st.scope[1]) stampR(TIDX[st.scope[0]],TIDX[st.scope[1]],RSCOPE);
-  if(st.dmm&&st.dmm[0]&&st.dmm[1]) stampR(TIDX[st.dmm[0]],TIDX[st.dmm[1]],1e7);
+  for(const [a,bb,R] of net.res) stampR(NI[a],NI[bb],R);
+  for(const [a,bb,R] of net.loads) stampR(NI[a],NI[bb],R);
+  for(const [a,bb,Cc,esr] of net.caps) stampY(NI[a],NI[bb],cdiv(C(1),C(esr,-1/(w*Cc))));
   let rex=0;
-  if(st.pan) rex+=rload(st.pan,f);
-  if(st.stack.length) rex+=0.02*Math.sqrt(Math.max(f,1)/40000)*st.stack.length;
-  const Meff=COIL_M*shielding(st.stack,f);
+  if(net.pan) rex+=rload(net.pan,f);
+  if(net.stack.length) rex+=0.02*Math.sqrt(Math.max(f,1)/40000)*net.stack.length;
+  const Meff=COIL_M*shielding(net.stack,f);
   const bFG=N-1, bL1=N, bL2=N+1;
-  at(nmap[TIDX.FGP],bFG,C(1)); at(nmap[TIDX.FGN],bFG,C(-1));
-  at(bFG,nmap[TIDX.FGP],C(1)); at(bFG,nmap[TIDX.FGN],C(-1));
-  at(bFG,bFG,C(-FG_RS)); b[bFG]=C(st.E);
+  at(nmap[NI.FGP],bFG,C(1)); at(nmap[NI.FGN],bFG,C(-1));
+  at(bFG,nmap[NI.FGP],C(1)); at(bFG,nmap[NI.FGN],C(-1));
+  at(bFG,bFG,C(-FG_RS)); b[bFG]=C(net.E);
   const Zc=C(COIL_RL+rex,w*COIL_L), Zm=C(0,w*Meff);
   for(const [br,p,m,other] of [[bL1,"C1A","C1B",bL2],[bL2,"C2A","C2B",bL1]]){
-    at(nmap[TIDX[p]],br,C(1)); at(nmap[TIDX[m]],br,C(-1));
-    at(br,nmap[TIDX[p]],C(1)); at(br,nmap[TIDX[m]],C(-1));
+    at(nmap[NI[p]],br,C(1)); at(nmap[NI[m]],br,C(-1));
+    at(br,nmap[NI[p]],C(1)); at(br,nmap[NI[m]],C(-1));
     at(br,br,[-Zc[0],-Zc[1]]); at(br,other,[-Zm[0],-Zm[1]]);
   }
   let x=csolve(A,b);
   if(!x) return null;
   const ifg=cabs(x[bFG]);
   if(ifg>FG_ILIM){ const s2=FG_ILIM/ifg; x=x.map(v=>[v[0]*s2,v[1]*s2]); }
-  const V={}; for(const t of TERMS) V[t]= TIDX[t]===gnd ? C(0) : x[nmap[TIDX[t]]];
+  const V={}; for(const t of NODES) V[t]= NI[t]===gnd ? C(0) : x[nmap[NI[t]]];
   return {V, I1:x[bL1], I2:x[bL2], amp:(t1,t2)=>(t1&&t2)?cabs(csub(V[t1],V[t2])):0};
 }
-/* multimeter ohms: the generator is a 2 ohm source impedance, the capacitor is open */
-function measureR(st,ta,tb){
-  if(!ta||!tb||ta===tb) return Infinity;
-  const N=TERMS.length, G=[...Array(N)].map(()=>new Array(N).fill(0));
+/* ohmmeter: dc, capacitors open, generator = its 2 ohm output stage */
+function measureR(net,ta,tb){
+  const N=NODES.length, G=[...Array(N)].map(()=>new Array(N).fill(0));
   const add=(a,b,g)=>{ G[a][a]+=g; G[b][b]+=g; G[a][b]-=g; G[b][a]-=g; };
-  for(const [ca,cb] of st.cables) add(TIDX[ca],TIDX[cb],1/RCAB);
-  add(TIDX.R1A,TIDX.R1B,1/R1_OHM); add(TIDX.C1A,TIDX.C1B,1/COIL_RL); add(TIDX.C2A,TIDX.C2B,1/COIL_RL);
-  if(st.pan) add(TIDX.NTCA,TIDX.NTCB,1/rntc(st.panT));
-  add(TIDX.FGP,TIDX.FGN,1/FG_RS);
+  for(const [a,b,R] of net.res) add(NI[a],NI[b],1/R);
+  add(NI.C1A,NI.C1B,1/COIL_RL); add(NI.C2A,NI.C2B,1/COIL_RL);
+  add(NI.FGP,NI.FGN,1/FG_RS);
   for(let i=0;i<N;i++) G[i][i]+=1e-12;
-  const ref=TIDX[tb], src=TIDX[ta], keep=[...Array(N).keys()].filter(i=>i!==ref);
+  const ref=NI[tb], src=NI[ta], keep=[...Array(N).keys()].filter(i=>i!==ref);
   const M=keep.map(i=>keep.map(j=>C(G[i][j]))), rhs=keep.map(i=>C(i===src?1:0));
   const x=csolve(M,rhs); if(!x) return Infinity;
   const R=x[keep.indexOf(src)][0];
-  return R>1e7?Infinity:R;
+  return R>2e7?Infinity:R;
 }
-/* terminals carrying the generator's signal (both coils once either is in the net) */
-function liveTerms(st){
-  const par={}; for(const t of TERMS) par[t]=t;
+/* nodes carrying the generator signal */
+function liveNodes(net){
+  const par={}; for(const t of NODES) par[t]=t;
   const find=x=>{ while(par[x]!==x){ par[x]=par[par[x]]; x=par[x]; } return x; };
   const join=(a,b)=>{ const ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; };
-  for(const [a,b] of st.cables) join(a,b);
-  join("R1A","R1B"); join("FGP","FGN"); join("C1A","C1B"); join("C2A","C2B");
-  if(st.cap) join("CBA","CBB");
-  let g=find("FGP");
-  if(find("C1A")===g||find("C2A")===g){ join("C1A","C2A"); g=find("FGP"); }
-  return new Set(TERMS.filter(t=>find(t)===g));
+  for(const [a,b] of net.res) join(a,b);
+  for(const [a,b] of net.caps) join(a,b);
+  join("FGP","FGN"); join("C1A","C1B"); join("C2A","C2B");
+  const g=find("FGP");
+  if(find("C1A")===g||find("C2A")===g) join("C1A","C2A");
+  const g2=find("FGP");
+  return new Set(NODES.filter(t=>find(t)===g2));
 }
 function thermalStep(k,T,Irms,f,dt,uncovered){
   const p=PAN[k];
@@ -536,485 +447,1306 @@ function gauss(){ let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random(
 /* ══════════════════════════════════════════════════════════════
    2.  STATE
    ══════════════════════════════════════════════════════════════ */
-const st={cables:[],cap:null,stack:[],pan:null,panT:T_AMB,covered:true,
-          fg:{amp:25,range:2,coarse:50,fine:50,on:false},
-          sp:null,sn:null,dp:null,dn:null,mode:"SCOPE",dmmFn:"R",px:1,hold:false,held:null,
-          vi:7,ti:5,tool:"cable",pending:null,sw:0,swRun:false,laps:[],speed:20,
-          notes:[],nno:0,disp:{v:0,f:0,r:0,clip:false,off:true,t:0},sol:null,msg:"",msgUntil:0};
+const FRANGE=[[10,100],[100,1000],[1000,10000],[10000,100000]];
+const FRANGE_LBL=["10-100","100-1K","1K-10K","10K-100K"];
+const WAVES=["SINE","TRIANGLE","SQUARE"];
 const VDIV=[0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10];
 const TDIV=[1e-6,2e-6,5e-6,1e-5,2e-5,5e-5,1e-4,2e-4,5e-4,1e-3,2e-3,5e-3,1e-2,2e-2,5e-2];
-const FRANGE=[[20,200],[200,2000],[2000,20000],[20000,100000]];
 const SPEEDS=[1,5,20,60];
-function freq(){ const [lo,hi]=FRANGE[st.fg.range]; return lo*Math.pow(hi/lo,st.fg.coarse/100)*(1+0.03*(st.fg.fine-50)/50); }
-const emf=()=>st.fg.on?FG_EMAX*st.fg.amp/100:0;
-function pstate(){
-  return {cables:st.cables,cap:st.cap,stack:st.stack,pan:st.pan,panT:st.panT,E:emf(),
-          scope:st.mode==="SCOPE"?[st.sp,st.sn]:null,
-          dmm:(st.mode==="DMM"&&st.dmmFn==="V")?[st.dp,st.dn]:null};
+const S={
+  zoom:1.0, cam:[0,0], basePpcm:7, touched:false, mouse:[0,0], view0:null, knob:null,
+  on:{fg:false,scope:false,coil:false,r1:false,box:null},        /* box: null | "desk" | "cover" */
+  cap:{C470N:null,C470U:null,C1000U:null,C2200U:null},            /* null | "desk" | "b12" | "b34" */
+  cables:[], stock:{bb:{r:2,k:2},bp:{r:2,k:2}},
+  probe:{tip:null,gnd:null},
+  stack:[], pan:null, panItem:null, panT:T_AMB, loose:false,
+  plates:{AL:5,CU:5,SS304:4,SS410:4},
+  carry:null, zones:{}, targets:[],
+  fg:{pow:false,amp:0.25,range:2,coarse:0.5,fine:0.5,wave:0},
+  z:{on:false,mode:"SCOPE",fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
+     vi:7,ti:6,ypos:0,xpos:0,trig:0,hold:false,held:null,dfn:"ACV",rfn:0,armed:true,
+     rd:{f:0,vpp:0,vmax:0,t:0,val:0,ok:true,wait:false}},
+  t:0, speed:1, swRun:false, swT0:0, swAcc:0, laps:[],
+  msg:null, sol:null, net:null
+};
+
+function freq(){
+  const [lo,hi]=FRANGE[S.fg.range];
+  const f=(lo+(hi-lo)*S.fg.coarse)*(1+0.04*(S.fg.fine-0.5));
+  return Math.max(20,Math.min(100000,f));
 }
-function solve(){ st.sol=analyze(pstate(),freq()); return st.sol; }
-const termLive=t=>(t==="NTCA"||t==="NTCB")?!!st.pan:true;
-function flash(m){ st.msg=m; st.msgUntil=performance.now()+2600; }
+function buildNet(){
+  const res=[], caps=[], loads=[];
+  for(const cb of S.cables) if(cb.b) res.push([cb.a,cb.b,RCAB]);
+  if(S.on.r1) res.push(["R1A","R1B",R1_OHM]);
+  for(const k of CAP_KEYS){
+    const p=S.cap[k]; if(!p) continue;
+    const n=CAPS[k].node;
+    caps.push([n+"A",n+"B",CAPS[k].C,CAPS[k].esr]);
+    if(p==="b12"){ res.push([n+"A","B1",1e-3],[n+"B","B2",1e-3]); }
+    else if(p==="b34"){ res.push([n+"A","B3",1e-3],[n+"B","B4",1e-3]); }
+  }
+  if(S.pan) res.push(["NTCA","NTCB",rntc(S.panT)]);
+  if(S.on.scope&&S.z.on){
+    if(S.z.mode==="SCOPE"&&S.probe.tip&&S.probe.gnd) loads.push([S.probe.tip,S.probe.gnd,RSCOPE]);
+    if(S.z.mode==="DMM"&&S.z.dfn!=="OHM") loads.push(["DVO","DCOM",RDMM]);
+  }
+  const E=(S.on.fg&&S.fg.pow)?FG_EMAX*S.fg.amp:0;
+  return {res,caps,loads,E,stack:S.stack,pan:S.pan};
+}
+function solve(){ S.net=buildNet(); S.sol=analyze(S.net,freq()); return S.sol; }
 
 /* ══════════════════════════════════════════════════════════════
-   3.  BENCH CANVAS  (logical 1020 × 580, as in the Python)
+   3.  GEOMETRY  (bench cm; x to the right, z away from you, y up)
    ══════════════════════════════════════════════════════════════ */
-const BW=1020, BH=580;
-const bench=$("bench"), bx=bench.getContext("2d");
-const BOXES={fg:[28,34,264,158], cbox:[28,196,264,328], r1:[28,366,264,498], stage:[330,24,1000,544]};
-const TERM_DEF=[["FGP",232,72,"b","r","FG +"],["FGN",232,116,"b","k","FG −"],
-  ["CBA",74,300,"b","r","C 1"],["CBB",218,300,"b","k","C 2"],
-  ["R1A",74,470,"b","r","R1 1"],["R1B",218,470,"b","k","R1 2"],
-  ["C1A",356,252,"p","r","L1 a"],["C1B",356,292,"p","k","L1 b"],
-  ["C2A",356,440,"p","r","L2 a"],["C2B",356,480,"p","k","L2 b"],
-  ["NTCA",966,300,"p","r","NTC"],["NTCB",966,340,"p","k","NTC"]];
-const TPOS={}; for(const t of TERM_DEF) TPOS[t[0]]=[t[1],t[2]];
-const SLOT_X=402, SLOT_Y0=412, SLOT_X2=928;
-const ANCH_SCOPE=[994,46], ANCH_DMM=[994,544];
-const CCOL=["#c94b3c","#2b3238","#c94b3c","#2b3238","#3f7ec4","#7a8189"];
-let BS=1;
-function fitCanvas(cv,ctx,lw,lh){
-  const w=cv.clientWidth||lw, dpr=Math.min(window.devicePixelRatio||1,2), s=w/lw;
-  cv.width=Math.round(w*dpr); cv.height=Math.round(lh*s*dpr); cv.style.height=(lh*s)+"px";
-  ctx.setTransform(dpr*s,0,0,dpr*s,0,0); return s;
+const KC=0.91355, KS=0.40674;
+const VIEW_U0=17, VIEW_U1=131, VIEW_V0=-40, VIEW_V1=33;
+function proj(x,y,z){ return [KC*(x+z), y+KS*(z-x)]; }
+const FG_BOX=[4,28,0,9.6,36,54];           /* x0 x1 y0 y1 z0 z1 */
+const FG_FACE={x0:4,y1:9.6,z:36,W:24,H:9};
+const Z_BOX=[86,95.5,0.4,18.9,40,43.6];
+const Z_FACE={x0:86,y1:18.9,z:40,W:9.5,H:18.5};
+const R1_BOX=[18,34,0,5.2,6,16];
+const COIL={base:[46,62,0,0.6,14,28], lo:[50,58,0.6,2.8,17,25], gap:[2.8,3.8], hi:[50,58,3.8,6.0,17,25]};
+const BOX_W=18, BOX_D=15, BOX_H=8;
+const BOX_SLOT={desk:[70,7], cover:[45,13.5]};
+const POST_DX=[3.5,7.5,10.5,14.5], POST_Z=5.0, POST_H=1.3;
+const CAP_SLOT={C470N:[89,27],C470U:[94,27],C1000U:[99,27],C2200U:[104.5,27]};
+const PROBE_REST={tip:[73,0.25,31],gnd:[77.5,0.25,29.5]};
+const PLATE_T=0.12;
+
+function boxOrigin(){ return S.on.box ? BOX_SLOT[S.on.box] : null; }
+/* terminal table: position, plug direction, kind */
+function termInfo(id){
+  const face=(F,a,t)=>[F.x0+a, F.y1-t, F.z];
+  switch(id){
+    case "FGP": return S.on.fg?{p:face(FG_FACE,21.2,2.9),d:[0,0,-1],k:"sock",col:"r"}:null;
+    case "FGN": return S.on.fg?{p:face(FG_FACE,21.2,6.3),d:[0,0,-1],k:"sock",col:"k"}:null;
+    case "DCOM":return S.on.scope?{p:face(Z_FACE,5.6,16.6),d:[0,0,-1],k:"sock",col:"k"}:null;
+    case "DVO": return S.on.scope?{p:face(Z_FACE,7.9,16.6),d:[0,0,-1],k:"sock",col:"r"}:null;
+    case "R1A": return S.on.r1?{p:[19.9,5.2,11],d:[0,1,0],k:"sock",col:"r"}:null;
+    case "R1B": return S.on.r1?{p:[32.1,5.2,11],d:[0,1,0],k:"sock",col:"r"}:null;
+    case "C1A": case "C1B": case "C2A": case "C2B":{
+      if(!S.on.coil) return null;
+      const x=id.endsWith("A")?50.8:52.4, y=id[1]==="1"?4.9+(S.loose?0.45:0):1.7;
+      /* under the black box the leads disappear through its front wall */
+      if(S.on.box==="cover") return {p:[x,Math.min(y,3),BOX_SLOT.cover[1]],d:[0,0,-1],k:"pin",col:"g",hidden:true};
+      return {p:[x,y,16.6],d:[0,0,-1],k:"pin",col:"g"};
+    }
+    case "NTCA": case "NTCB":
+      return S.pan?{p:[id==="NTCA"?52.3:55.7,0.25,10.6],d:[0,0,-1],k:"pin",col:id==="NTCA"?"r":"k"}:null;
+  }
+  if(id[0]==="B"&&id.length===2){
+    const o=boxOrigin(); if(!o) return null;
+    const i=+id[1]-1;
+    return {p:[o[0]+POST_DX[i],BOX_H+POST_H,o[1]+POST_Z],d:[0,1,0],k:"sock",col:(i%2===0)?"r":"k"};
+  }
+  if(id[0]==="K"){
+    const key=CAP_KEYS[+id[1]-1];
+    if(S.cap[key]!=="desk") return null;
+    const [cx,cz]=CAP_SLOT[key];
+    return {p:[cx+(id[2]==="A"?-0.8:0.8),0.25,cz-2.6],d:[0,0,-1],k:"pin",col:"g"};
+  }
+  return null;
 }
+const ALL_TERMS=NODES.slice();
+const plugsAt=t=>S.cables.filter(c=>c.a===t||c.b===t);
+
+/* ══════════════════════════════════════════════════════════════
+   4.  CANVAS / CAMERA
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("bench"), ctx=cv.getContext("2d");
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
+const fgCv=$("fgCv"), fgCtx=fgCv.getContext("2d");
+const zCv=$("zoyiCv"), zCtx=zCv.getContext("2d");
+const xsCv=$("xsec"), xsCtx=xsCv.getContext("2d");
+let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
+const ppcm=()=>S.basePpcm*S.zoom;
+const TRAY_ORDER=["fg","scope","coil","bb","bp","r1","box","C470N","C470U","C1000U","C2200U",
+                  "key","panAL","panSS","plAL","plCU","plS4","plS10"];
+const TRAY_ROW=42;
+let FGS=20, ZS=20, XSW=270, XSH=170;
+
 function layout(){
-  if(!$("v-lab").hidden) BS=fitCanvas(bench,bx,BW,BH);
-  FS=fitCanvas($("fg"),fx,336,160); OS=fitCanvas($("osc"),ox,336,248);
-  drawBench(); drawFg(); drawScope();
+  DPR=window.devicePixelRatio||1;
+  const r=cv.parentElement.getBoundingClientRect();
+  const cssW=Math.max(320,Math.floor(r.width-20));
+  const cssH=Math.max(380,Math.min(Math.round(cssW*0.64),Math.round(window.innerHeight*0.8)));
+  cv.style.height=cssH+"px";
+  cv.width=Math.round(cssW*DPR); cv.height=Math.round(cssH*DPR);
+  CW=cssW; CH=cssH;
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_ORDER.length*TRAY_ROW+50;
+  trayCv.style.height=TRH+"px";
+  trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
+  const fw=Math.max(260,Math.floor(fgCv.parentElement.getBoundingClientRect().width));
+  FGS=fw/24.8; const fh=Math.round(FGS*14.6);
+  fgCv.style.height=fh+"px"; fgCv.width=Math.round(fw*DPR); fgCv.height=Math.round(fh*DPR);
+  const zw=Math.max(200,Math.floor(zCv.parentElement.getBoundingClientRect().width));
+  ZS=zw/10.5; const zh=Math.round(ZS*20.4);
+  zCv.style.height=zh+"px"; zCv.width=Math.round(zw*DPR); zCv.height=Math.round(zh*DPR);
+  XSW=Math.max(200,Math.floor(xsCv.parentElement.getBoundingClientRect().width-24)); XSH=Math.round(XSW*0.6);
+  xsCv.style.height=XSH+"px"; xsCv.width=Math.round(XSW*DPR); xsCv.height=Math.round(XSH*DPR);
+  fit(); drawTray();
 }
-const MONO="ui-monospace,Consolas,'DejaVu Sans Mono',monospace";
-function tx(c,x,y,s,fill,size,align,bold){
-  c.fillStyle=fill||"#8d969e"; c.font=(bold?"700 ":"")+(size||8)+"px "+MONO;
-  c.textAlign=align==="center"?"center":align==="e"?"right":"left"; c.textBaseline="middle"; c.fillText(s,x,y);
+function fit(){
+  if(CW<30||CH<30) return;
+  if(!S.touched){
+    const du=VIEW_U1-VIEW_U0, dv=VIEW_V1-VIEW_V0;
+    S.basePpcm=Math.min(CW/du,CH/dv);
+    const k=S.basePpcm*S.zoom;
+    S.cam=[VIEW_U0-(CW/k-du)/2.0, VIEW_V0-(CH/k-dv)/2.0];
+  }
 }
-function rect(c,x0,y0,x1,y1,fill,stroke,lw){ if(fill){c.fillStyle=fill;c.fillRect(x0,y0,x1-x0,y1-y0);}
-  if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.strokeRect(x0+.5,y0+.5,x1-x0-1,y1-y0-1);} }
-function oval(c,x0,y0,x1,y1,fill,stroke,lw){ c.beginPath(); c.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
-  if(fill){c.fillStyle=fill;c.fill();} if(stroke){c.strokeStyle=stroke;c.lineWidth=lw||1;c.stroke();} }
-function line(c,pts,col,w,round){ c.beginPath(); c.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) c.lineTo(pts[i],pts[i+1]);
-  c.strokeStyle=col; c.lineWidth=w||1; c.lineCap=round?"round":"butt"; c.lineJoin="round"; c.stroke(); }
-function screw(c,x,y,r){ r=r||3; oval(c,x-r,y-r,x+r,y+r,"#3a4046"); line(c,[x-r*.6,y,x+r*.6,y],"#14171a",1); }
-function bez2(a,b,k){
-  const [ax,ay]=TPOS[a], [bx_,by]=TPOS[b], mx=(ax+bx_)/2, my=Math.max(ay,by)+34+(k%3)*12, out=[];
-  for(let i=0;i<=16;i++){ const t=i/16, u=1-t; out.push(u*u*ax+2*u*t*mx+t*t*bx_, u*u*ay+2*u*t*my+t*t*by); }
+const UV=(u,v)=>{ const k=ppcm(); return [(u-S.cam[0])*k, CH-(v-S.cam[1])*k]; };
+const NP=(x,y,z)=>{ const p=proj(x,y,z); return UV(p[0],p[1]); };
+const INV=(px,py)=>{ const k=ppcm(); return [px/k+S.cam[0], (CH-py)/k+S.cam[1]]; };
+/* front-face affine: local (a to the right, t downward) in cm */
+function faceM(F){ const [X,Y]=NP(F.x0,F.y1,F.z), k=ppcm(); return [k*KC,k*KS,0,k,X,Y]; }
+function faceInv(F,px,py){
+  const m=faceM(F), k=ppcm();
+  const a=(px-m[4])/(k*KC), t=(py-m[5]-k*KS*a)/k;
+  return [a,t];
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  DRAWING PRIMITIVES
+   ══════════════════════════════════════════════════════════════ */
+const FONT='"Malgun Gothic","Apple SD Gothic Neo",sans-serif';
+const MONO='ui-monospace,Consolas,"DejaVu Sans Mono",monospace';
+function TXT(x,y,txt,opt){
+  opt=opt||{};
+  ctx.font=(opt.bold?"bold ":"")+((opt.size||8)*1.33).toFixed(1)+"px "+FONT;
+  ctx.textAlign=opt.align||"center"; ctx.textBaseline=opt.base||"middle";
+  ctx.fillStyle=opt.fill||"#e8eef2";
+  ctx.fillText(txt,x,y);
+}
+function LINE(pts,stroke,width,cap,dash){
+  if(pts.length<2) return;
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.strokeStyle=stroke; ctx.lineWidth=width||1; ctx.lineJoin="round"; ctx.lineCap=cap||"round";
+  if(dash) ctx.setLineDash(dash);
+  ctx.stroke();
+  if(dash) ctx.setLineDash([]);
+}
+function POLY(pts,fill,outline,width){
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(outline){ ctx.strokeStyle=outline; ctx.lineWidth=width||1; ctx.lineJoin="round"; ctx.stroke(); }
+}
+function OVAL(cx,cy,rx,ry,fill,outline,width){
+  ctx.beginPath(); ctx.ellipse(cx,cy,Math.max(0.1,rx),Math.max(0.1,ry),0,0,2*Math.PI);
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(outline){ ctx.strokeStyle=outline; ctx.lineWidth=width||1; ctx.stroke(); }
+}
+function rectOf(pts){
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  return [Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)];
+}
+function BOX(b,top,side,front,outline){
+  const [x0,x1,y0,y1,z0,z1]=b;
+  POLY([NP(x1,y0,z0),NP(x1,y1,z0),NP(x1,y1,z1),NP(x1,y0,z1)],side,outline,1);
+  POLY([NP(x0,y1,z0),NP(x1,y1,z0),NP(x1,y1,z1),NP(x0,y1,z1)],top,outline,1);
+  if(front) POLY([NP(x0,y0,z0),NP(x1,y0,z0),NP(x1,y1,z0),NP(x0,y1,z0)],front,outline,1);
+}
+function boxRect(b){ const [x0,x1,y0,y1,z0,z1]=b; const P=[];
+  for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) P.push(NP(x,y,z));
+  return rectOf(P); }
+function boxFoot(b){ const [x0,x1,,,z0,z1]=b; return [NP(x0,0,z0),NP(x1,0,z0),NP(x1,0,z1),NP(x0,0,z1)]; }
+/* upright cylinder; horizontal circles project to axis-aligned ellipses */
+function CYL(cx,y0,y1,cz,r,side,top,outline){
+  const k=ppcm(), rx=k*KC*1.41421*r, ry=k*KS*1.41421*r;
+  const b=NP(cx,y0,cz), t=NP(cx,y1,cz);
+  OVAL(b[0],b[1],rx,ry,side,outline,1);
+  ctx.fillStyle=side; ctx.fillRect(b[0]-rx,t[1],2*rx,b[1]-t[1]);
+  if(outline){ LINE([[b[0]-rx,b[1]],[t[0]-rx,t[1]]],outline,1); LINE([[b[0]+rx,b[1]],[t[0]+rx,t[1]]],outline,1); }
+  OVAL(t[0],t[1],rx,ry,top,outline,1);
+}
+function HCIRC(cx,y,cz,r,fill,outline,w){ const k=ppcm(), c=NP(cx,y,cz);
+  OVAL(c[0],c[1],k*KC*1.41421*r,k*KS*1.41421*r,fill,outline,w); }
+function inRect(z,x,y,m){ m=m||0; return !!z&&z[0]-m<=x&&x<=z[2]+m&&z[1]-m<=y&&y<=z[3]+m; }
+function inPoly(P,x,y){ let c=false; for(let i=0,j=P.length-1;i<P.length;j=i++){
+  if(((P[i][1]>y)!==(P[j][1]>y))&&(x<(P[j][0]-P[i][0])*(y-P[i][1])/(P[j][1]-P[i][1])+P[i][0])) c=!c; } return c; }
+
+/* local-unit helpers used by the instrument faces (c = any 2-D context in cm units) */
+function rr(c,x0,y0,x1,y1,r,fill,stroke,lw){
+  c.beginPath(); c.moveTo(x0+r,y0); c.arcTo(x1,y0,x1,y1,r); c.arcTo(x1,y1,x0,y1,r);
+  c.arcTo(x0,y1,x0,y0,r); c.arcTo(x0,y0,x1,y0,r); c.closePath();
+  if(fill){ c.fillStyle=fill; c.fill(); }
+  if(stroke){ c.strokeStyle=stroke; c.lineWidth=lw||0.05; c.stroke(); }
+}
+function circ(c,x,y,r,fill,stroke,lw){ c.beginPath(); c.arc(x,y,Math.max(0.001,r),0,2*Math.PI);
+  if(fill){ c.fillStyle=fill; c.fill(); } if(stroke){ c.strokeStyle=stroke; c.lineWidth=lw||0.05; c.stroke(); } }
+function seg(c,x0,y0,x1,y1,col,lw){ c.beginPath(); c.moveTo(x0,y0); c.lineTo(x1,y1); c.strokeStyle=col; c.lineWidth=lw||0.05; c.lineCap="round"; c.stroke(); }
+/* text at size s (cm) drawn through a scale so tiny sizes stay crisp */
+function FT(c,txt,x,y,s,col,align,bold,mono){
+  c.save(); c.translate(x,y); c.scale(s/10,s/10);
+  c.font=(bold?"bold ":"")+"10px "+(mono?MONO:"Arial,Helvetica,"+FONT);
+  c.textAlign=align||"center"; c.textBaseline="middle"; c.fillStyle=col;
+  c.fillText(txt,0,0); c.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  INSTRUMENT FACES  (shared by the bench and the close-ups)
+   ══════════════════════════════════════════════════════════════ */
+const FG_CTRL={amp:{x:2.9,y:4.9,r:1.15,cont:true},
+               range:{x:6.6,y:4.9,r:1.0,n:4},
+               coarse:{x:10.6,y:2.7,r:0.95,cont:true},
+               fine:{x:10.6,y:6.5,r:0.8,cont:true},
+               wave:{x:14.5,y:4.9,r:1.0,n:3}};
+const FG_REAR={rocker:[3.2,10.6,5.0,12.9]};
+function knobAngle(key){
+  const c=FG_CTRL[key];
+  if(c.cont) return (-135+270*S.fg[key])*Math.PI/180;
+  if(key==="range") return [-120,-40,40,120][S.fg.range]*Math.PI/180;
+  return [-50,0,50][S.fg.wave]*Math.PI/180;
+}
+function drawKnob(c,x,y,r,ang){
+  circ(c,x,y+0.06,r*1.02,"#0a0b0c");
+  circ(c,x,y,r,"#26282b","#0d0e10",0.04);
+  for(let i=0;i<18;i++){ const a=i/18*2*Math.PI; seg(c,x+Math.cos(a)*r*0.82,y+Math.sin(a)*r*0.82,x+Math.cos(a)*r*0.98,y+Math.sin(a)*r*0.98,"#3b3e42",0.06); }
+  circ(c,x,y,r*0.72,"#35383c","#1a1b1d",0.03);
+  circ(c,x-r*0.2,y-r*0.2,r*0.35,"rgba(255,255,255,0.06)");
+  seg(c,x+Math.sin(ang)*r*0.15,y-Math.cos(ang)*r*0.15,x+Math.sin(ang)*r*0.9,y-Math.cos(ang)*r*0.9,"#f2f2f2",0.11);
+}
+function drawFgFace(c){
+  rr(c,0,0,24,9,0.45,"#141518");
+  rr(c,0.45,0.4,18.4,8.6,0.15,"#e6e7e8","#b9bbbd",0.03);
+  rr(c,18.7,0.4,23.55,8.6,0.15,"#e6e7e8","#b9bbbd",0.03);
+  /* label tabs */
+  rr(c,0.45,7.85,7.4,8.6,0.1,"#17181b"); FT(c,"FUNCTION GENERATOR",3.92,8.23,0.42,"#f2f2f2","center",true);
+  rr(c,19.3,7.85,23.0,8.6,0.1,"#17181b"); FT(c,"POWER AMP",21.15,8.23,0.42,"#f2f2f2","center",true);
+  /* 1 power LED */
+  circ(c,1.35,1.35,0.42,"#2a2b2e");
+  circ(c,1.35,1.35,0.3,S.fg.pow?"#ff3b2f":"#5b1f1a");
+  if(S.fg.pow) circ(c,1.35,1.35,0.55,"rgba(255,70,50,0.25)");
+  /* 2 amplitude */
+  FT(c,"AMPLITUDE",2.9,3.25,0.42,"#1b1c1e","center",true);
+  FT(c,"MIN",1.55,6.35,0.3,"#333"); FT(c,"MAX",4.25,6.35,0.3,"#333");
+  drawKnob(c,2.9,4.9,1.15,knobAngle("amp"));
+  /* 3 frequency range */
+  FT(c,"FREQUENCY",6.6,1.55,0.44,"#1b1c1e","center",true);
+  [-120,-40,40,120].forEach((a,i)=>{ const q=a*Math.PI/180;
+    seg(c,6.6+Math.sin(q)*1.12,4.9-Math.cos(q)*1.12,6.6+Math.sin(q)*1.4,4.9-Math.cos(q)*1.4,"#333",0.06);
+    FT(c,FRANGE_LBL[i],6.6+Math.sin(q)*1.95,4.9-Math.cos(q)*1.75,0.27,S.fg.range===i?"#b0261c":"#333","center",S.fg.range===i); });
+  drawKnob(c,6.6,4.9,1.0,knobAngle("range"));
+  /* 4 coarse / fine */
+  FT(c,"COARSE",10.6,1.2,0.36,"#1b1c1e","center",true);
+  FT(c,"MIN",9.25,3.95,0.27,"#333"); FT(c,"MAX",11.95,3.95,0.27,"#333");
+  drawKnob(c,10.6,2.7,0.95,knobAngle("coarse"));
+  FT(c,"FINE",10.6,5.0,0.36,"#1b1c1e","center",true);
+  FT(c,"MIN",9.45,7.55,0.27,"#333"); FT(c,"MAX",11.75,7.55,0.27,"#333");
+  drawKnob(c,10.6,6.5,0.8,knobAngle("fine"));
+  /* 5 waveform */
+  FT(c,"WAVEFORM",14.5,1.9,0.42,"#1b1c1e","center",true);
+  [-50,0,50].forEach((a,i)=>{ const q=a*Math.PI/180;
+    FT(c,WAVES[i],14.5+Math.sin(q)*1.75,4.9-Math.cos(q)*1.6,0.26,S.fg.wave===i?"#b0261c":"#333","center",S.fg.wave===i); });
+  drawKnob(c,14.5,4.9,1.0,knobAngle("wave"));
+  /* 6 BNC VOP1 (not used) */
+  FT(c,"VOP1",17.2,2.35,0.34,"#1b1c1e","center",true);
+  circ(c,17.2,3.7,0.78,"#a9adb1","#6d7175",0.05); circ(c,17.2,3.7,0.5,"#c9cdd1","#80858a",0.04);
+  circ(c,17.2,3.7,0.18,"#2b2d30");
+  /* logo */
+  FT(c,"APhO",16.8,6.55,0.62,"#1d2a6e","center",true);
+  FT(c,"Asian Physics Olympiad",16.8,7.15,0.2,"#1d2a6e","center");
+  /* 7 output sockets */
+  FT(c,"VOP+",21.15,1.15,0.34,"#1b1c1e","center",true);
+  FT(c,"VOP-",21.15,4.55,0.34,"#1b1c1e","center",true);
+  for(const [y,col,dk] of [[2.9,"#c8261d","#6e110b"],[6.3,"#1e1f22","#000"]]){
+    circ(c,21.2,y,0.95,dk); circ(c,21.2,y,0.82,col);
+    circ(c,21.2,y,0.42,"#0b0b0c"); circ(c,21.2,y,0.2,"#c9a94f");
+  }
+}
+function drawFgRear(c,y0){
+  rr(c,0,y0,24,y0+4.6,0.45,"#141518");
+  rr(c,0.45,y0+0.35,23.55,y0+4.25,0.15,"#e6e7e8","#b9bbbd",0.03);
+  FT(c,lang==="ko"?"뒷면":"REAR",1.3,y0+0.85,0.36,"#555","left",true);
+  rr(c,2.6,y0+0.9,10.0,y0+3.8,0.2,"#17181b");
+  /* 9 power rocker */
+  rr(c,3.2,y0+1.3,5.0,y0+3.4,0.1,"#2a0907");
+  rr(c,3.35,y0+(S.fg.pow?1.4:2.35),4.85,y0+(S.fg.pow?2.35:3.3),0.08,S.fg.pow?"#e3392c":"#9e1f16");
+  FT(c,S.fg.pow?"I":"O",4.1,y0+(S.fg.pow?1.9:2.85),0.42,"#fff","center",true);
+  /* 10 fuse, 8 socket */
+  rr(c,5.6,y0+1.5,6.9,y0+3.2,0.1,"#26282b"); FT(c,"⎓",6.25,y0+2.35,0.4,"#777");
+  rr(c,7.3,y0+1.3,9.5,y0+3.4,0.15,"#0c0c0d","#333",0.04);
+  for(const x of [7.9,8.4,8.9]) rr(c,x-0.1,y0+2.0,x+0.1,y0+2.7,0.03,"#6f7377");
+  FT(c,"9",4.1,y0+3.95,0.3,"#222"); FT(c,"10",6.25,y0+3.95,0.3,"#222"); FT(c,"8",8.4,y0+3.95,0.3,"#222");
+  FT(c,"POWER",4.1,y0+0.62,0.28,"#333","center",true);
+  FT(c,"KING ABDULAZIZ & HIS COMPANIONS FOUNDATION",16.5,y0+3.5,0.24,"#445","center");
+  circ(c,20.4,y0+1.9,0.75,"#dde3ea","#9fb0c0",0.04); FT(c,"◎",20.4,y0+1.9,0.7,"#2d7fb8");
+}
+
+/* ---- ZOYI ZT-702S ---- */
+const ZK={F1:[0.85,7.65,2.35,8.35],F2:[2.95,7.65,4.45,8.35],F3:[5.05,7.65,6.55,8.35],F4:[7.15,7.65,8.65,8.35],
+          POWER:[0.85,8.75,2.35,9.45],AUTO:[2.95,8.75,4.45,9.45],HOLD:[5.05,8.75,6.55,9.45],MODE:[7.15,8.75,8.65,9.45],
+          UP:[4.05,10.9,5.45,11.75],DOWN:[4.05,13.45,5.45,14.3],LEFT:[1.7,12.2,3.1,13.0],RIGHT:[6.4,12.2,7.8,13.0],
+          MENU:[3.7,12.15,5.8,13.05]};
+function drawZoyiFace(c){
+  rr(c,0,0,9.5,18.5,1.0,"#c3261c","#7c150e",0.05);
+  rr(c,-0.05,4.5,0.35,14,0.1,"#a01e15"); rr(c,9.15,4.5,9.55,14,0.1,"#a01e15");
+  rr(c,0.42,0.42,9.08,18.08,0.7,"#16181b");
+  FT(c,"ZOYI",1.05,0.78,0.33,"#fff","left",true);
+  FT(c,"ZT-702S",3.25,0.78,0.26,"#fff","center",true);
+  FT(c,"DIGITAL OSCILLOSCOPE",6.5,0.78,0.26,"#fff","center",true);
+  rr(c,0.72,1.0,8.78,6.8,0.25,"#030405");
+  c.save(); c.beginPath(); c.rect(0.86,1.12,7.78,5.56); c.clip();
+  drawZoyiScreen(c,0.86,1.12,7.78,5.56);
+  c.restore();
+  FT(c,"9999 COUNTS",0.9,7.12,0.25,"#e9e9e9","left",true);
+  FT(c,"T-RMS",0.9,7.42,0.22,"#e9e9e9","left");
+  FT(c,"AUTO POWER OFF",8.6,7.12,0.25,"#e9e9e9","right",true);
+  const key=(id,lab,fill,tc)=>{ const [x0,y0,x1,y1]=ZK[id];
+    rr(c,x0,y0,x1,y1,0.3,fill,"#0a0a0a",0.04); FT(c,lab,(x0+x1)/2,(y0+y1)/2+0.02,0.3,tc||"#e8e8e8","center",true); };
+  key("F1","F1","#4b4f54"); key("F2","F2","#4b4f54"); key("F3","F3","#4b4f54"); key("F4","F4","#4b4f54");
+  key("POWER","⏻","#c3261c","#fff"); key("AUTO","AUTO","#4b4f54"); key("HOLD","HOLD","#4b4f54"); key("MODE","MODE","#4b4f54");
+  FT(c,"RANGE",3.7,9.62,0.18,"#9a9a9a"); FT(c,"SAVE",5.8,9.62,0.18,"#9a9a9a");
+  FT(c,"CE",1.2,10.35,0.42,"#e4e4e4","center",true); FT(c,"∿∿",8.1,10.35,0.4,"#e4e4e4","center",true);
+  /* d-pad */
+  c.save(); c.translate(4.75,12.6); c.scale(3.35,1.95); circ(c,0,0,1,"#3d4146","#0b0b0b",0.02); c.restore();
+  c.save(); c.translate(4.75,12.6); c.scale(1.1,0.55); circ(c,0,0,1,"#2a2d31","#0b0b0b",0.05); c.restore();
+  FT(c,"MENU",4.75,12.62,0.3,"#e8e8e8","center",true);
+  FT(c,"▲",4.75,11.3,0.42,"#e8e8e8"); FT(c,"▼",4.75,13.9,0.42,"#e8e8e8");
+  FT(c,"◀",2.35,12.6,0.42,"#e8e8e8"); FT(c,"▶",7.15,12.6,0.42,"#e8e8e8");
+  /* input jacks */
+  const J=[[1.3,"10A","#c3261c"],[3.45,"mA","#c3261c"],[5.6,"COM","#1a1a1a"],[7.9,"VΩHz+","#c3261c"]];
+  for(const [x,l,col] of J){
+    FT(c,l,x,15.55,0.27,"#e8e8e8","center",true);
+    circ(c,x,16.6,0.62,"#050505","#555",0.04); circ(c,x,16.6,0.5,col); circ(c,x,16.6,0.25,"#050505");
+  }
+  for(const x of [2.4,4.5,6.75]){ c.beginPath(); c.moveTo(x,17.05); c.lineTo(x+0.3,17.55); c.lineTo(x-0.3,17.55); c.closePath(); c.fillStyle="#e7c23a"; c.fill(); }
+  FT(c,"CAT III 600V",4.7,17.85,0.2,"#aaa");
+}
+const fmtNum=(v,unit)=>{
+  const a=Math.abs(v);
+  if(a===0) return "0.000"+unit;
+  const pref=[[1e6,"M"],[1e3,"k"],[1,""],[1e-3,"m"],[1e-6,"µ"]];
+  for(const [m,p] of pref){ if(a>=m*0.9995||m===1e-6){ const x=v/m;
+    const dg=Math.abs(x)>=100?1:Math.abs(x)>=10?2:3; return x.toFixed(dg)+p+unit; } }
+  return v.toFixed(3)+unit;
+};
+const fmtDiv=v=>v>=1?v+"V":(Math.round(v*1000))+"mV";
+const fmtT=t=>t>=1e-3?Math.round(t*1e3)+"ms":Math.round(t*1e6)+"us";
+function drawZoyiScreen(c,x0,y0,W,H){
+  c.fillStyle="#000"; c.fillRect(x0,y0,W,H);
+  const z=S.z;
+  if(!S.on.scope||!z.on) return;
+  const sm=0.26;
+  /* status bar */
+  c.fillStyle="#0e1a2a"; c.fillRect(x0,y0,W,0.48);
+  if(z.mode==="SCOPE"){
+    const run = z.hold?["HOLD","#f0a23c"]:(z.rd.wait?["WAIT","#f0a23c"]:(z.tmode==="SINGLE"&&!z.armed?["STOP","#e55"]:["RUN","#5fd35f"]));
+    FT(c,run[0],x0+0.1,y0+0.25,sm,run[1],"left",true);
+    FT(c,"T:"+z.tmode[0],x0+1.05,y0+0.25,sm,"#ddd","left");
+    FT(c,"M:"+fmtT(TDIV[z.ti]),x0+1.7,y0+0.25,sm,"#ddd","left");
+    FT(c,z.probe+"X",x0+3.55,y0+0.25,sm,"#ffd400","left",true);
+    FT(c,z.couple,x0+4.2,y0+0.25,sm,"#ffd400","left");
+    FT(c,(z.edge>0?"↑":"↓")+" "+(z.trig*VDIV[z.vi]*z.probe).toFixed(2)+"V",x0+4.9,y0+0.25,sm,"#ddd","left");
+  }else{
+    FT(c,"AUTO",x0+0.1,y0+0.25,sm,"#5fd35f","left",true);
+    FT(c,"MULTIMETER",x0+1.2,y0+0.25,sm,"#ddd","left");
+  }
+  rr(c,x0+W-0.75,y0+0.12,x0+W-0.18,y0+0.38,0.03,null,"#9f9",0.03); c.fillStyle="#9f9"; c.fillRect(x0+W-0.72,y0+0.15,0.42,0.2);
+  if(z.mode==="SCOPE") drawScopeArea(c,x0,y0,W,H); else drawDmmArea(c,x0,y0,W,H);
+}
+function scopeInput(){
+  if(!S.probe.tip||!S.probe.gnd||!S.sol) return {amp:0,f:freq(),none:!S.probe.tip||!S.probe.gnd};
+  return {amp:S.sol.amp(S.probe.tip,S.probe.gnd),f:freq(),none:false};
+}
+function waveShape(ph){
+  const w=S.fg.wave;
+  if(w===0) return Math.sin(ph);
+  if(w===1){ const x=((ph/(2*Math.PI))%1+1)%1; return x<0.25?4*x:x<0.75?2-4*x:4*x-4; }
+  return Math.sin(ph)>=0?1:-1;
+}
+function drawScopeArea(c,x0,y0,W,H){
+  const z=S.z, gx=x0+0.08, gy=y0+0.56, GW=W-0.16, GH=3.9, dx=GW/10, dy=GH/8;
+  c.strokeStyle="#2c3036"; c.lineWidth=0.02;
+  for(let i=0;i<=10;i++){ c.beginPath(); c.moveTo(gx+i*dx,gy); c.lineTo(gx+i*dx,gy+GH); c.stroke(); }
+  for(let j=0;j<=8;j++){ c.beginPath(); c.moveTo(gx,gy+j*dy); c.lineTo(gx+GW,gy+j*dy); c.stroke(); }
+  c.strokeStyle="#4a5058"; c.beginPath(); c.moveTo(gx+GW/2,gy); c.lineTo(gx+GW/2,gy+GH);
+  c.moveTo(gx,gy+GH/2); c.lineTo(gx+GW,gy+GH/2); c.stroke();
+  const vd=VDIV[z.vi], td=TDIV[z.ti];
+  const cy=gy+GH/2-z.ypos*dy;
+  FT(c,"1▸",gx+0.02,cy,0.24,"#ffd400","left",true);
+  FT(c,"◂",gx+GW-0.02,gy+GH/2-(z.trig+z.ypos)*dy,0.26,"#f0a23c","right",true);
+  const src=z.hold&&z.held?z.held:(z.tmode==="SINGLE"&&!z.armed&&z.held?z.held:scopeView());
+  if(!src.wait){
+    const A=src.amp*z.probe/vd*dy, per=10*td;
+    const ph0=src.phase;
+    c.beginPath();
+    for(let i=0;i<=200;i++){
+      const t=(i/200-0.5)*per+z.xpos*td;
+      const v=A*waveShape(2*Math.PI*src.f*t+ph0)+src.noise[i%src.noise.length]*dy*0.05;
+      const yy=Math.max(gy+0.01,Math.min(gy+GH-0.01,cy-v));
+      if(i===0) c.moveTo(gx+i/200*GW,yy); else c.lineTo(gx+i/200*GW,yy);
+    }
+    c.strokeStyle="#ffe23a"; c.lineWidth=0.035; c.stroke();
+  }
+  FT(c,"CH1  "+fmtDiv(vd*z.probe)+"/div",gx+0.08,gy+GH-0.2,0.24,"#ffd400","left",true);
+  /* readouts */
+  const r=z.rd, ry=y0+4.72;
+  c.fillStyle="#0a0f16"; c.fillRect(x0,y0+4.5,W,0.44);
+  FT(c,"Freq:"+(r.f>0?fmtNum(r.f,"Hz"):"----"),x0+0.08,ry,0.27,"#ffd400","left",true);
+  FT(c,"Vpp:"+fmtNum(r.vpp,"V"),x0+2.8,ry,0.27,"#ffd400","left",true);
+  FT(c,"Vmax:"+fmtNum(r.vmax,"V"),x0+5.35,ry,0.27,"#ffd400","left",true);
+  /* soft keys */
+  const labs=z.menu?["BACK","MODE:"+z.tmode.slice(0,4),"EDGE:"+(z.edge>0?"↑":"↓"),"PROBE:"+z.probe+"X"]
+                   :["VOL/TIME","MOVE","TRIG",z.couple];
+  const sel=z.menu?-1:["VT","MOVE","TRIG"].indexOf(z.fsel);
+  for(let i=0;i<4;i++){ const bx=x0+i*W/4;
+    rr(c,bx+0.04,y0+5.0,bx+W/4-0.04,y0+5.5,0.06,i===sel?"#1d4a7a":"#20252c");
+    FT(c,labs[i],bx+W/8,y0+5.25,0.22,"#e8e8e8","center",true); }
+  if(z.menu){
+    rr(c,gx+GW*0.52,gy+0.2,gx+GW-0.1,gy+2.2,0.08,"rgba(20,28,40,0.94)","#5a6b80",0.03);
+    FT(c,"MENU",gx+GW*0.76,gy+0.45,0.26,"#fff","center",true);
+    FT(c,"F2 Mode : "+z.tmode,gx+GW*0.55,gy+0.95,0.23,"#ddd","left");
+    FT(c,"F3 Edge : "+(z.edge>0?"Rising":"Falling"),gx+GW*0.55,gy+1.35,0.23,"#ddd","left");
+    FT(c,"F4 Probe : "+z.probe+"X",gx+GW*0.55,gy+1.75,0.23,"#ddd","left");
+  }
+}
+function scopeView(){
+  const inp=scopeInput(), z=S.z;
+  const noise=[]; for(let i=0;i<23;i++) noise.push(gauss());
+  const v=inp.amp, lvl=z.trig*VDIV[z.vi];
+  const wait=z.tmode!=="AUTO"&&Math.abs(lvl)>v;
+  const s=v>0?Math.max(-1,Math.min(1,lvl/v)):0;
+  const phase=z.edge>0?-Math.asin(s):Math.PI+Math.asin(s);
+  return {amp:v,f:inp.f,phase,noise,wait,none:inp.none};
+}
+function dmmReading(){
+  const z=S.z, net=S.net;
+  if(z.dfn==="ACV"||z.dfn==="DCV"){
+    if(!S.sol) return {txt:"0.000",unit:"V",flag:""};
+    if(z.dfn==="DCV") return {txt:(0.0004*gauss()).toFixed(3),unit:"V",flag:"DC"};
+    const f=freq(); let v=S.sol.amp("DVO","DCOM")/Math.SQRT2;
+    const band=f<40||f>1000;
+    if(f>1000) v/=Math.sqrt(1+Math.pow(f/1000-1,2)*1.7);
+    if(f<40) v*=f/40;
+    v=v*(1+0.002*gauss());
+    const u=Math.abs(v)<1?"mV":"V", x=Math.abs(v)<1?v*1000:v;
+    return {txt:x.toFixed(Math.abs(x)>=100?1:Math.abs(x)>=10?2:3),unit:u,flag:"AC",band};
+  }
+  /* resistance family */
+  const live=net.E>0?liveNodes(net):new Set();
+  const isLive=live.has("DVO")||live.has("DCOM");
+  if(z.rfn===0||z.rfn===1){
+    let R=measureR(net,"DVO","DCOM");
+    if(isLive) R=isFinite(R)?R*(1+0.6*Math.random())+5*Math.random():1e6*Math.random();
+    const beep=z.rfn===1&&R<30;
+    if(!isFinite(R)||R>60e6) return {txt:"OL",unit:"Ω",flag:z.rfn===1?"•)))":"",live:isLive,beep};
+    R=Math.max(0,R*(1+0.0015*gauss())+0.003*gauss());
+    const [m,u]=R>=1e6?[1e6,"MΩ"]:R>=1e3?[1e3,"kΩ"]:[1,"Ω"];
+    const x=R/m;
+    return {txt:x.toFixed(x>=100?1:x>=10?2:3),unit:u,flag:z.rfn===1?"•)))":"",live:isLive,beep};
+  }
+  if(z.rfn===2) return {txt:"OL",unit:"V",flag:"▶|"};
+  return {txt:"0.000",unit:"nF",flag:"⊣⊢"};
+}
+function drawDmmArea(c,x0,y0,W,H){
+  const z=S.z, r=z.rd;
+  FT(c,r.flag||"",x0+0.3,y0+1.0,0.42,"#9fd3ff","left",true);
+  FT(c,r.txt||"",x0+W-1.35,y0+2.35,1.35,"#f2f2f2","right",true,true);
+  FT(c,r.unit||"",x0+W-0.2,y0+2.6,0.55,"#f2f2f2","right",true);
+  if(r.beep) FT(c,"♪",x0+0.5,y0+2.4,0.6,"#9fd3ff");
+  const n=Math.min(40,Math.round(((parseFloat(r.txt)||0)%10)*4));
+  for(let i=0;i<40;i++){ c.fillStyle=i<n?"#dfe":"#233"; c.fillRect(x0+0.35+i*0.175,y0+3.55,0.12,0.3); }
+  FT(c,"0",x0+0.35,y0+4.1,0.2,"#aaa","left"); FT(c,"10",x0+7.3,y0+4.1,0.2,"#aaa","right");
+  const labs=["V ~/⎓","Ω •))) ▶| ⊣⊢","",""];
+  for(let i=0;i<4;i++){ const bx=x0+i*W/4;
+    const on=(i===0&&(z.dfn==="ACV"||z.dfn==="DCV"))||(i===1&&z.dfn==="OHM");
+    rr(c,bx+0.04,y0+5.0,bx+W/4-0.04,y0+5.5,0.06,on?"#1d4a7a":"#20252c");
+    FT(c,labs[i],bx+W/8,y0+5.25,0.2,"#e8e8e8","center",true); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  SCENE
+   ══════════════════════════════════════════════════════════════ */
+function drawDesk(){
+  POLY([NP(-10,0,-8),NP(128,0,-8),NP(128,0,64),NP(-10,0,64)],"#b8926a",null);
+  for(let i=-10;i<128;i+=8) LINE([NP(i,0,-8),NP(i,0,64)],"#a78159",1,"butt");
+  for(let j=-8;j<64;j+=24) LINE([NP(-10,0,j),NP(128,0,j)],"#a37d56",0.6,"butt");
+  const p=NP(-10,0,64), q=NP(128,0,64);
+  POLY([p,q,[q[0]+60,q[1]-500],[p[0]-60,p[1]-500]],"#2a3038",null);
+}
+function withFace(F,fn){
+  const m=faceM(F);
+  ctx.save(); ctx.setTransform(DPR*m[0],DPR*m[1],DPR*m[2],DPR*m[3],DPR*m[4],DPR*m[5]);
+  fn(ctx); ctx.restore();
+}
+function drawFG(){
+  const b=FG_BOX;
+  BOX([b[0]+0.6,b[1]-0.6,0,0.6,b[4]+0.8,b[5]-0.8],"#111","#0c0c0d","#0e0e10");
+  BOX([b[0],b[1],0.6,b[3],b[4],b[5]],"#232528","#17181a",null,"#0b0b0c");
+  LINE([NP(b[0]+1,b[3],b[4]+2),NP(b[1]-1,b[3],b[4]+2)],"#2d3034",1);
+  withFace(FG_FACE,drawFgFace);
+  S.zones.fg=boxRect(b);
+}
+function drawZoyi(){
+  const b=Z_BOX;
+  POLY([NP(b[0]+1.5,0,b[5]),NP(b[1]-1.5,0,b[5]+4),NP(b[1]-1.5,9,b[5]),NP(b[0]+1.5,9,b[5]-0.2)],"#2a2c2f","#111");
+  BOX(b,"#b3231a","#8e1a12",null,"#5e0e08");
+  withFace(Z_FACE,drawZoyiFace);
+  CYL(89,b[3],b[3]+0.9,41.8,0.55,"#b9bdc1","#d9dde1","#6f7479");
+  S.zones.scope=boxRect(b);
+}
+function drawR1(){
+  const b=R1_BOX;
+  BOX(b,"#212326","#16171a","#1b1c1f","#0b0b0c");
+  const rb=[21,31,b[3],b[3]+1.7,9.4,12.6];
+  BOX([20.8,31.2,b[3],b[3]+0.25,8.6,13.4],"#c9a13c","#a8852b","#b8932f");
+  BOX(rb,"#e2b93f","#b58f27","#caa232","#7a5c12");
+  for(let x=21.6;x<31;x+=0.9) LINE([NP(x,rb[3],rb[4]),NP(x,rb[3],rb[5])],"#b8922c",1);
+  LINE([NP(21,rb[3]-0.8,rb[4]),NP(19.9,b[3]+0.6,11)],"#d6d9dc",1.5);
+  LINE([NP(31,rb[3]-0.8,rb[4]),NP(32.1,b[3]+0.6,11)],"#d6d9dc",1.5);
+  for(const x of [19.9,32.1]){ CYL(x,b[3],b[3]+0.5,11,0.62,"#8e1a12","#c8261d","#5e0e08");
+    HCIRC(x,b[3]+0.5,11,0.28,"#0b0b0c"); }
+  const p=NP(26,b[3]*0.55,b[4]);
+  TXT(p[0],p[1],d().lab.r1,{size:Math.max(5,ppcm()*0.5),fill:"#cfd3d6"});
+  S.zones.r1=boxRect([b[0],b[1],0,rb[3],b[4],b[5]]);
+}
+function drawBox(){
+  const o=boxOrigin(); if(!o) return;
+  const b=[o[0],o[0]+BOX_W,0,BOX_H,o[1],o[1]+BOX_D];
+  BOX(b,"#232528","#18191c","#1d1e21","#0a0a0b");
+  const p=NP(o[0]+1.2,BOX_H-1.4,o[1]);
+  TXT(p[0],p[1],"8",{size:Math.max(5,ppcm()*0.7),fill:"#555a60",align:"left",bold:true});
+  for(let i=0;i<4;i++){
+    const x=o[0]+POST_DX[i], z=o[1]+POST_Z, col=i%2===0?["#c8261d","#e04a3f","#6e110b"]:["#1d1e21","#3a3c40","#000"];
+    CYL(x,BOX_H,BOX_H+0.3,z,0.75,"#2c2e31","#3b3e42","#000");
+    CYL(x,BOX_H+0.3,BOX_H+POST_H,z,0.55,col[0],col[1],col[2]);
+    HCIRC(x,BOX_H+POST_H,z,0.22,"#0b0b0c");
+  }
+  S.zones.box=boxRect(b);
+  for(const k of CAP_KEYS){ const p2=S.cap[k]; if(p2==="b12"||p2==="b34") drawCapOnBox(k,p2,o); }
+}
+function drawCapBody(k,cx,y0,cz){
+  const c=CAPS[k];
+  if(c.film){
+    BOX([cx-0.8,cx+0.8,y0,y0+1.1,cz-0.35,cz+0.35],"#b5652c","#8d4b1e","#a4591f","#5e3010");
+  }else{
+    CYL(cx,y0,y0+c.h,cz,c.r,"#27479a","#3a5cb3","#10224f");
+    HCIRC(cx,y0+c.h,cz,c.r*0.8,null,"#9aa7c9",1);
+    LINE([NP(cx+c.r*0.9,y0+0.2,cz-c.r*0.3),NP(cx+c.r*0.9,y0+c.h-0.2,cz-c.r*0.3)],"#b9c4de",Math.max(1,ppcm()*0.18));
+  }
+}
+function drawCapOnBox(k,pair,o){
+  const i0=pair==="b12"?0:2;
+  const xa=o[0]+POST_DX[i0], xb=o[0]+POST_DX[i0+1], z=o[1]+POST_Z;
+  const cx=(xa+xb)/2, cz=z+2.2;
+  LINE([NP(cx-0.3,BOX_H+0.2,cz),NP(xa,BOX_H+POST_H-0.3,z)],"#d6d9dc",1.5);
+  LINE([NP(cx+0.3,BOX_H+0.2,cz),NP(xb,BOX_H+POST_H-0.3,z)],"#d6d9dc",1.5);
+  drawCapBody(k,cx,BOX_H,cz);
+}
+function drawCapsDesk(){
+  for(const k of CAP_KEYS){
+    if(S.cap[k]!=="desk") continue;
+    const [cx,cz]=CAP_SLOT[k];
+    LINE([NP(cx-0.25,0.2,cz),NP(cx-0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
+    LINE([NP(cx+0.25,0.2,cz),NP(cx+0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
+    drawCapBody(k,cx,0,cz);
+    S.zones[k]=rectOf([NP(cx-1.2,0,cz-3),NP(cx+1.2,0,cz+1.2),NP(cx-1.2,3.2,cz),NP(cx+1.2,3.2,cz)]);
+    const p=NP(cx,0,cz+1.6);
+    TXT(p[0],p[1]-ppcm()*0.3,CAPS[k].lab,{size:Math.max(5,ppcm()*0.42),fill:"#3b2d1d"});
+  }
+}
+function drawCoil(){
+  const B=COIL.base, L=COIL.lo, H=COIL.hi;
+  BOX(B,"#1f2023","#151618","#191a1c","#0a0a0b");
+  BOX(L,"#28292c","#1c1d20","#222326","#0a0a0b");
+  const lift=S.loose?0.45:0;
+  const g0=COIL.gap[0], g1=COIL.gap[1]+lift;
+  for(const [x,z] of [[L[1]-0.8,L[5]-0.8],[L[0],L[5]-0.8],[L[1]-0.8,L[4]],[L[0],L[4]]])
+    BOX([x,x+0.8,g0,g1,z,z+0.8],"#26272a","#1b1c1e","#202124","#0a0a0b");
+  let y=g0+0.02;
+  for(const m of S.stack){
+    const M=MAT[m];
+    BOX([52.65,55.35,y,y+PLATE_T,16.2,20.8],M.col,M.edge,M.edge);
+    y+=PLATE_T;
+  }
+  if(S.pan){
+    const M=MAT[S.pan==="AL"?"AL":"SS410"];
+    BOX([53,55,y,y+PLATE_T,16.4,18.4],M.col,M.edge,M.edge);
+    BOX([53.7,54.3,y+PLATE_T,y+PLATE_T+0.3,17.0,17.6],"#111","#000","#0b0b0b");
+  }
+  const Hb=[H[0],H[1],H[2]+lift,H[3]+lift,H[4],H[5]];
+  BOX(Hb,"#28292c","#1c1d20","#222326","#0a0a0b");
+  HCIRC(54,Hb[3],21,3.2,"#1a1b1d","#0e0f10",1);
+  HCIRC(54,Hb[3],21,2.4,"#b0673a","#6b3a1c",1);
+  for(let r=2.2;r>0.7;r-=0.35) HCIRC(54,Hb[3],21,r,null,"#8c4d27",1);
+  HCIRC(54,Hb[3],21,0.7,"#1a1b1d",null);
+  const cy=Hb[3]+(S.loose?0.25:0);
+  for(const x of [49.2,56.8]){
+    BOX([x,x+2,cy,cy+0.6,16.2,25.8],"#16171a","#0f1012","#131416","#000");
+    HCIRC(x+1,cy+0.6,21,0.42,"#b9bdc1","#6f7479",1);
+    HCIRC(x+1,cy+0.6,21,0.18,"#3a3d41");
+  }
+  for(const [yy,lab] of [[4.9+lift,"#1"],[1.7,"#2"]]){
+    for(const x of [50.8,52.4]){
+      POLY([NP(x-0.3,yy-0.35,17),NP(x+0.3,yy-0.35,17),NP(x+0.3,yy+0.35,17),NP(x-0.3,yy+0.35,17)],"#0d0e0f",null);
+      LINE([NP(x,yy,17),NP(x,yy,16.6)],"#d4b050",Math.max(2,ppcm()*0.28),"butt");
+    }
+    const p=NP(53.6,yy,17);
+    TXT(p[0],p[1],lab,{size:Math.max(5,ppcm()*0.5),fill:"#cfd3d6",align:"left",bold:true});
+  }
+  S.zones.coil=boxRect([B[0],B[1],0,Hb[3]+0.6,B[4],B[5]]);
+  if(S.pan&&S.on.box!=="cover") drawNtcLeads(y+PLATE_T+0.15);
+}
+function leadPts(P0,P3,floor){
+  const pts=[];
+  for(let i=0;i<=16;i++){ const t=i/16, u=1-t;
+    const x=u*u*u*P0[0]+3*u*u*t*P0[0]+3*u*t*t*P3[0]+t*t*t*P3[0];
+    const z=u*u*u*P0[2]+3*u*u*t*(P0[2]-3)+3*u*t*t*(P3[2]+2)+t*t*t*P3[2];
+    let yy=u*u*u*P0[1]+3*u*u*t*(P0[1]+0.3)+3*u*t*t*0.3+t*t*t*P3[1];
+    yy=Math.max(yy,z<14?0.2:floor);
+    pts.push(NP(x,yy,z)); }
+  return pts;
+}
+function drawNtcLeads(yb){
+  for(const [id,xx,col] of [["NTCA",53.85,"#c8261d"],["NTCB",54.15,"#3a3d41"]]){
+    const ti=termInfo(id);
+    const pts=leadPts([xx,yb,17.3],ti.p,0.7);
+    LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
+    LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
+  }
+}
+function drawNtcLeadsCovered(){
+  for(const [id,col] of [["NTCA","#c8261d"],["NTCB","#3a3d41"]]){
+    const ti=termInfo(id);
+    const pts=[NP(ti.p[0],0.4,BOX_SLOT.cover[1]),NP(ti.p[0],0.25,12),NP(...ti.p)];
+    LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
+    LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
+  }
+}
+
+/* ---- cables, plugs, probe ---- */
+function endPos(id,info){
+  const L=info.k==="sock"?1.5:0.9;
+  return [info.p[0]+info.d[0]*L, info.p[1]+info.d[1]*L, info.p[2]+info.d[2]*L];
+}
+function cablePts(a,b){
+  const A=termInfo(a), B=termInfo(b);
+  return curve3(endPos(a,A),A.d,endPos(b,B),B.d);
+}
+function curve3(p0,d0,p3,d3){
+  const dist=Math.hypot(p3[0]-p0[0],p3[2]-p0[2]);
+  const L=Math.max(3,dist*0.35);
+  const p1=[p0[0]+d0[0]*L,p0[1]+d0[1]*L,p0[2]+d0[2]*L], p2=[p3[0]+d3[0]*L,p3[1]+d3[1]*L,p3[2]+d3[2]*L];
+  const sag=Math.min(12,dist*0.25), out=[];
+  for(let i=0;i<=28;i++){ const t=i/28, u=1-t;
+    const f=(k)=>u*u*u*p0[k]+3*u*u*t*p1[k]+3*u*t*t*p2[k]+t*t*t*p3[k];
+    const y=f(1)-sag*Math.sin(Math.PI*t);
+    out.push(NP(f(0),Math.max(0.3,y),f(2))); }
   return out;
 }
-function bez3(p0,p1,p2,p3){ const out=[];
-  for(let i=0;i<=14;i++){ const t=i/14,u=1-t;
-    out.push(u**3*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t**3*p3[0], u**3*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t**3*p3[1]); }
-  return out; }
-
-function drawBench(){
-  const c=bx; if($("v-lab").hidden) return;
-  c.clearRect(0,0,BW,BH); rect(c,0,0,BW,BH,"#1b1f23");
-  c.strokeStyle="#1e2327"; c.lineWidth=1;
-  for(let x=0;x<BW;x+=26){ c.beginPath(); c.moveTo(x+.5,0); c.lineTo(x+.5,BH); c.stroke(); }
-  for(let y=0;y<BH;y+=26){ c.beginPath(); c.moveTo(0,y+.5); c.lineTo(BW,y+.5); c.stroke(); }
-  dFg(c); dCap(c); dR1(c); dStage(c); dCables(c); dTerms(c);
+const CAB_COL={r:["#c0392b","#5e1610"],k:["#33373c","#0a0a0b"]};
+function drawPlug(id,info,col){
+  if(info.hidden) return;
+  const e=endPos(id,info), p=NP(...info.p), q=NP(...e);
+  const w=Math.max(3,ppcm()*(info.k==="sock"?0.55:0.4));
+  LINE([p,q],"#0a0a0a",w+2,"butt"); LINE([p,q],col[0],w,"butt");
+  if(info.k==="sock"){ const m=[(p[0]*0.6+q[0]*0.4),(p[1]*0.6+q[1]*0.4)]; LINE([m,q],col[0]==="#c0392b"?"#e05a4b":"#4a4f55",w*0.5,"butt"); }
 }
-function dFg(c){
-  const [x0,y0,x1,y1]=BOXES.fg;
-  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#23282d","#000");
-  rect(c,x0+12,y0+22,x1-12,y1-22,"#e9e6e0","#b9b4ab");
-  tx(c,x0+20,y0+34,"FUNCTION GENERATOR","#5c6167",8);
-  const vals=[st.fg.amp,st.fg.range*33,st.fg.coarse,st.fg.fine];
-  vals.forEach((v,i)=>{ const x=x0+34+i*40, y=y0+66;
-    oval(c,x-11,y-11,x+11,y+11,"#454b51"); oval(c,x-7,y-7,x+7,y+7,"#20252a");
-    const a=-Math.PI*.75+v/100*Math.PI*1.5; line(c,[x,y,x+Math.cos(a)*9,y+Math.sin(a)*9],"#cfd3d6",2); });
-  oval(c,x0+20,y0+48,x0+28,y0+56,st.fg.on?"#ff5a4a":"#4a2320");
-  for(const [sx,sy] of [[x0+9,y0+9],[x1-9,y0+9],[x0+9,y1-9],[x1-9,y1-9]]) screw(c,sx,sy);
-}
-function dCap(c){
-  const [x0,y0,x1,y1]=BOXES.cbox;
-  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#1c2024","#000");
-  tx(c,x0+14,y0+18,d().capbox,"#6e767d",8);
-  rect(c,x0+40,y0+32,x1-40,y0+84,"#0b0d0f");
-  const mx=(x0+x1)/2, my=y0+58;
-  if(st.cap){
-    const [,,nm,film]=CAPS[st.cap];
-    if(film){ rect(c,mx-17,my-17,mx+17,my+13,"#7a4a26","#5d3719"); tx(c,mx,my+2,"470n","#f2dfc9",8,"center"); }
-    else { rect(c,mx-15,my-20,mx+15,my+16,"#2c4b8f","#1a2f5c"); rect(c,mx-15,my-16,mx-7,my+16,"#8fa8d8");
-           tx(c,mx+4,my-2,nm.replace(" ",""),"#dbe6ff",7,"center"); }
-    for(const [dx,t] of [[-10,74],[10,218]]){ line(c,[mx+dx,my+16,mx+dx,y0+84],"#9aa3ab",2); line(c,[mx+dx,y0+84,t,y0+96],"#9aa3ab",2); }
-  } else tx(c,mx,my,d().capins,"#4a5158",9,"center");
-  screw(c,x0+10,y1-10); screw(c,x1-10,y1-10);
-}
-function dR1(c){
-  const [x0,y0,x1,y1]=BOXES.r1;
-  rect(c,x0+5,y0+8,x1+5,y1+8,"#0b0d0f"); rect(c,x0,y0,x1,y1,"#1c2024","#000");
-  const rx=x0+34, ry=y0+40, rw=(x1-x0)-68, rh=30;
-  rect(c,rx,ry,rx+rw,ry+rh,"#e0bd35","#7d6210"); rect(c,rx+3,ry+4,rx+rw-3,ry+8,"#f6e69a");
-  tx(c,rx+rw/2,ry+rh/2+1,"1 Ω  100 W","#4a3a06",9,"center",true);
-  rect(c,rx-8,ry+8,rx+2,ry+22,"#8b8f93"); rect(c,rx+rw-2,ry+8,rx+rw+8,ry+22,"#8b8f93");
-  line(c,[rx-4,ry+22,74,y0+96],"#9aa3ab",2); line(c,[rx+rw+4,ry+22,218,y0+96],"#9aa3ab",2);
-  tx(c,x0+14,y0+18,d().powres,"#6e767d",8);
-  screw(c,x0+10,y1-10); screw(c,x1-10,y1-10);
-}
-function dStage(c){
-  const X0=380, X1=950;
-  rect(c,350,505,980,529,"#b8bcc0","#8f9498");
-  for(const [yy0,yy1,cy] of [[415,505,440],[230,320,272]]){
-    rect(c,X0,yy0,X1,yy1,"#22272c","#000");
-    rect(c,430,cy,900,cy+22,"#c8372d","#8e1f16"); rect(c,433,cy+3,897,cy+7,"#e06a5e");
-    for(let x=436;x<898;x+=13) line(c,[x+.5,cy+1,x+.5,cy+21],"#8e1f16",1);
-  }
-  tx(c,905,451,d().coil2,"#9aa3ab",8); tx(c,905,283,d().coil1,"#9aa3ab",8);
-  for(const x of [430,860]){ rect(c,x,208,x+60,232,"#4b5157","#000"); screw(c,x+12,220,4); screw(c,x+48,220,4); }
-  rect(c,X0,320,X0+22,415,"#1b1f22"); rect(c,X1-22,320,X1,415,"#1b1f22");
-  rect(c,SLOT_X,320,SLOT_X2,412,"#07090a");
-  if(st.pan){
-    const m=MAT[st.pan], y=356, h=18, xa=560, xb=770;
-    rect(c,xa,y,xb,y+h,m.c1,"#0b0d0f");              /* a warm pan looks like a cold one */
-    tx(c,(xa+xb)/2,y+h/2,d().pan[st.pan],"#20242a",9,"center",true);
-    oval(c,xb-23,y-9,xb-13,y+1,"#101316");
-    line(c,bez3([xb-18,y-4],[860,340],[920,300],[964,300]),"#cf4a3d",2);
-    line(c,bez3([xb-18,y-4],[870,360],[920,340],[964,340]),"#2a2f34",2);
-    tx(c,xb-18,y-16,"NTC","#cf4a3d",8,"center");
-  } else if(st.stack.length){
-    let y=SLOT_Y0;
-    for(const k of st.stack){ y-=13; rect(c,470,y,870,y+11,MAT[k].c1,"#0b0d0f"); tx(c,878,y+6,d().mat[k],"#6f787f",8); }
-    tx(c,410,330,st.stack.length+" × "+d().plate+" · "+d().exagg,"#454d54",8);
-  } else tx(c,(SLOT_X+SLOT_X2)/2,366,d().slotEmpty,"#3e454b",9,"center");
-  if(st.covered){ rect(c,366,180,966,204,"#191d21","#3a4147"); tx(c,666,192,d().cover+" — "+d().coverOn,"#6e767d",8,"center"); }
-  else tx(c,666,192,d().cover+" — "+d().coverOff,"#7a4a3a",8,"center");
-  for(const y of [252,292,440,480]) line(c,[X0,y,360,y],"#7d858c",3);
-  tx(c,386,245,d().pinterm,"#5b646c",8);
-}
-function dCables(c){
-  st.cables.forEach(([a,b],i)=>{ const pts=bez2(a,b,i); line(c,pts,"#0b0d0f",7,true); line(c,pts,CCOL[i%CCOL.length],5,true); });
-  const lead=(frm,to,col)=>{ if(!to) return; const [tx_,ty]=TPOS[to];
-    const pts=bez3(frm,[frm[0]-90,frm[1]],[tx_+110,ty-60],[tx_,ty]); line(c,pts,"#0b0d0f",5); line(c,pts,col,2); };
-  lead(ANCH_SCOPE,st.sp,"#e8c33a"); lead([ANCH_SCOPE[0],ANCH_SCOPE[1]+22],st.sn,"#2d3339");
-  lead(ANCH_DMM,st.dp,"#d24b3d"); lead([ANCH_DMM[0],ANCH_DMM[1]-22],st.dn,"#2d3339");
-  for(const [[px,py],nm] of [[ANCH_SCOPE,"SCOPE"],[ANCH_DMM,"DMM"]]){ rect(c,px-6,py-26,px+16,py+26,"#22272b","#3a4147"); tx(c,px+5,py,nm,"#6e767d",7,"center"); }
-}
-function dTerms(c){
-  const used=new Set(); for(const [a,b] of st.cables){ used.add(a); used.add(b); }
-  for(const t of [st.sp,st.sn,st.dp,st.dn]) if(t) used.add(t);
-  for(const [tid,x,y,kind,col,lab] of TERM_DEF){
-    const live=termLive(tid), fill=live?(col==="r"?"#b0392c":"#31373d"):"#22262a";
-    if(kind==="b"){ oval(c,x-11,y-11,x+11,y+11,"#0d0f11"); oval(c,x-9,y-9,x+9,y+9,fill); oval(c,x-4,y-4,x+4,y+4,"#07090a"); }
-    else { rect(c,x-8,y-6,x+8,y+6,fill); rect(c,x-2,y-9,x+2,y+9,"#c9ced2"); }
-    if(used.has(tid)) oval(c,x-14,y-14,x+14,y+14,null,"#e8c33a");
-    if(st.pending===tid) oval(c,x-17,y-17,x+17,y+17,null,"#7dfab0",2);
-    tx(c,x,y+20,lab,live?"#69727a":"#3a4147",7,"center");
+function drawCables(){
+  S.cabPts=[];
+  S.cables.forEach((cb,i)=>{
+    const col=CAB_COL[cb.col];
+    const pts=cablePts(cb.a,cb.b);
+    LINE(pts,col[1],Math.max(3,ppcm()*0.36)); LINE(pts,col[0],Math.max(2,ppcm()*0.24));
+    drawPlug(cb.a,termInfo(cb.a),col); drawPlug(cb.b,termInfo(cb.b),col);
+    S.cabPts[i]=pts;
+  });
+  const cr=S.carry;
+  if(cr&&cr.k==="cable"&&cr.a){
+    const info=termInfo(cr.a), col=CAB_COL[cr.col];
+    const s=NP(...endPos(cr.a,info)), q=S.mouse, pts=[s];
+    for(let i=1;i<=16;i++){ const t=i/16; pts.push([s[0]+(q[0]-s[0])*t, s[1]+(q[1]-s[1])*t+Math.sin(Math.PI*t)*30]); }
+    LINE(pts,col[1],Math.max(3,ppcm()*0.36)); LINE(pts,col[0],Math.max(2,ppcm()*0.24));
+    drawPlug(cr.a,info,col);
+    OVAL(q[0],q[1],5,5,col[0],"#000");
   }
 }
-
-/* ══════════════════════════════════════════════════════════════
-   4.  GENERATOR + SCOPE CANVASES
-   ══════════════════════════════════════════════════════════════ */
-const fgc=$("fg"), fx=fgc.getContext("2d"); let FS=1;
-const osc=$("osc"), ox=osc.getContext("2d"); let OS=1;
-const KNOBS=[["amp",48,92,21,"AMPLITUDE"],["range",116,92,18,"FREQ RANGE"],
-             ["coarse",178,58,15,"COARSE"],["fine",178,110,15,"FINE"],["wave",238,92,18,"WAVEFORM"]];
-function knob(c,kx,ky,r,val,lab,sub){
-  const a=-Math.PI*.75+val*Math.PI*1.5;
-  oval(c,kx-r,ky-r,kx+r,ky+r,"#4a5157","#2b3137"); oval(c,kx-r*.62,ky-r*.62,kx+r*.62,ky+r*.62,"#20252a");
-  line(c,[kx+Math.cos(a)*r*.3,ky+Math.sin(a)*r*.3,kx+Math.cos(a)*(r-2),ky+Math.sin(a)*(r-2)],"#e6eaed",2,true);
-  for(let i=0;i<9;i++){ const t=-Math.PI*.75+i/8*Math.PI*1.5;
-    line(c,[kx+Math.cos(t)*(r+3),ky+Math.sin(t)*(r+3),kx+Math.cos(t)*(r+6),ky+Math.sin(t)*(r+6)],"#8d9298",1); }
-  tx(c,kx,ky-r-13,lab,"#4c5258",7,"center");
-  if(sub) tx(c,kx,ky+r+13,sub,"#2a2f34",8,"center",true);
+function probeEndScreen(end){
+  const cr=S.carry;
+  if(cr&&cr.k==="probe"&&cr.end===end) return S.mouse;
+  const t=S.probe[end];
+  if(t){ const info=termInfo(t); if(info) return NP(...endPos(t,info)); }
+  return NP(...PROBE_REST[end]);
 }
-function drawFg(){
-  const c=fx; c.clearRect(0,0,336,160);
-  rect(c,6,6,330,154,"#2b3137","#0e1113"); rect(c,14,14,322,146,"#e9e6e0","#b9b4ab");
-  tx(c,22,28,"FUNCTION GENERATOR","#5c6167",8);
-  oval(c,295,21,305,31,st.fg.on?"#ff5a4a":"#5a3733");
-  const [lo,hi]=FRANGE[st.fg.range];
-  const rl= hi>=1000 ? (lo/1000)+"–"+(hi/1000)+" kHz" : lo+"–"+hi+" Hz";
-  for(const [k,kx,ky,r,lab] of KNOBS){
-    if(k==="range") knob(c,kx,ky,r,(st.fg.range+.5)/4,lab,rl);
-    else if(k==="wave") knob(c,kx,ky,r,1/6,lab,"SINE");
-    else if(k==="amp") knob(c,kx,ky,r,st.fg.amp/100,lab,Math.round(st.fg.amp)+" %");
-    else knob(c,kx,ky,r,st.fg[k]/100,lab);
-  }
-  for(const [cy,col] of [[74,"#b0392c"],[114,"#31373d"]]){ oval(c,289,cy-11,311,cy+11,"#0d0f11"); oval(c,291,cy-9,309,cy+9,col); }
-  tx(c,300,136,"OUTPUT","#5c6167",7,"center");
-  $("fgOut").textContent=d().out+" "+(st.fg.on?d().on:d().off);
-  $("fgOut").className=st.fg.on?"hot":"";
-}
-const sig3=x=>{ if(!x||!isFinite(x)) return 0; const dd=Math.pow(10,Math.floor(Math.log10(Math.abs(x)))-3); return Math.round(x/dd)*dd; };
-const fmtV=v=>v>=1?v.toFixed(3)+" V":v>=1e-3?(v>=0.1?(v*1000).toFixed(1):(v*1000).toFixed(2))+" mV":(v*1e6).toFixed(0)+" µV";
-const fmtF=f=>!f?"- - -":f>=1000?(f>=10000?(f/1000).toFixed(2):(f/1000).toFixed(3))+" kHz":f.toFixed(1)+" Hz";
-const fmtR=R=>R===-1?"- - -":!isFinite(R)?"O.L":R>=1000?(R/1000).toFixed(3)+" kΩ":R.toFixed(3)+" Ω";
-const fmtT=x=>x>=1e-3?(x>=1e-2?(x*1e3).toFixed(0):(x*1e3).toFixed(1))+" ms":(x>=1e-5?(x*1e6).toFixed(0):(x*1e6).toFixed(1))+" µs";
-function scopeSignal(){
-  const f=freq();
-  if(!st.sp||!st.sn||!termLive(st.sp)||!termLive(st.sn)) return {off:true,amp:0,f:0};
-  const a=(st.sol&&st.fg.on)?st.sol.amp(st.sp,st.sn):0;
-  return {off:false,amp:a*st.px,f};
-}
-function refreshDisp(force){
-  const now=performance.now();
-  if(!force&&now-st.disp.t<240) return;
-  st.disp.t=now;
-  const s=scopeSignal(), vd=VDIV[st.vi];
-  let v=s.amp; const clip=v>4*vd; if(clip) v=4*vd;
-  v=sig3(v*(1+0.004*gauss())+0.0025*vd*gauss());
-  Object.assign(st.disp,{v:Math.max(0,v),clip,off:s.off,f:s.amp>0.04*vd?s.f*(1+0.0015*gauss()):0});
-  if(st.mode==="DMM"&&st.dmmFn==="R"){
-    const live=st.fg.on?liveTerms(pstate()):new Set();
-    if(live.has(st.dp)||live.has(st.dn)) st.disp.r=-1;
-    else if(!st.dp||!st.dn||!termLive(st.dp)||!termLive(st.dn)) st.disp.r=Infinity;
-    else { const R=measureR(pstate(),st.dp,st.dn);
-      st.disp.r=isFinite(R)?Math.max(0,sig3(R*(1+0.002*gauss())+0.004*gauss())):Infinity; }
+function drawProbe(){
+  if(!S.on.scope) return;
+  const k=ppcm();
+  const tip=probeEndScreen("tip"), gnd=probeEndScreen("gnd");
+  const body=[tip[0]*0.55+gnd[0]*0.45, Math.max(tip[1],gnd[1])+k*2.2];
+  const s0=NP(89,Z_BOX[3]+0.9,41.8), s1=NP(88,4,34), s2=NP(82,0.4,28);
+  const coax=[];
+  for(let i=0;i<=24;i++){ const t=i/24, u=1-t;
+    coax.push([u*u*u*s0[0]+3*u*u*t*s1[0]+3*u*t*t*s2[0]+t*t*t*body[0],
+               u*u*u*s0[1]+3*u*u*t*s1[1]+3*u*t*t*s2[1]+t*t*t*body[1]]); }
+  LINE(coax,"#050505",Math.max(3,k*0.42)); LINE(coax,"#25272a",Math.max(2,k*0.26));
+  LINE([body,gnd],"#050505",Math.max(2,k*0.24)); LINE([body,gnd],"#2c2f33",Math.max(1,k*0.14));
+  POLY([[gnd[0]-k*0.5,gnd[1]-k*0.25],[gnd[0]+k*0.5,gnd[1]-k*0.1],[gnd[0]+k*0.5,gnd[1]+k*0.15],[gnd[0]-k*0.5,gnd[1]+k*0.3]],"#16171a","#000");
+  LINE([body,tip],"#0b0b0c",Math.max(4,k*0.75)); LINE([body,tip],"#3a3d41",Math.max(3,k*0.55));
+  const hv=[tip[0]-body[0],tip[1]-body[1]], hl=Math.hypot(hv[0],hv[1])||1;
+  const hm=[tip[0]-hv[0]/hl*k*0.9, tip[1]-hv[1]/hl*k*0.9];
+  LINE([hm,tip],"#c8261d",Math.max(3,k*0.5));
+  OVAL(tip[0],tip[1],Math.max(2,k*0.18),Math.max(2,k*0.18),null,"#d9dde1",1.5);
+  S.probeScr={tip,gnd};
+  if(!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe")){
+    const p=NP(75,0.25,33.5); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
   }
 }
-function dmmAcv(){
-  const f=freq();
-  if(!st.dp||!st.dn||!termLive(st.dp)||!termLive(st.dn)||!st.fg.on) return ["0.000 V",""];
-  if(f<40||f>1000) return ["- - -",d().dmmfreq];
-  const r=analyze(pstate(),f);
-  return [(r.amp(st.dp,st.dn)/Math.SQRT2).toFixed(4)+" V",""];
-}
-function drawScope(){
-  const c=ox, X=26, Y=22, W=284, H=168;
-  c.clearRect(0,0,336,248);
-  rect(c,2,2,334,246,"#b9382c"); rect(c,12,6,324,242,"#22272c","#0e1113");
-  rect(c,4,60,16,180,"#8e1f16"); rect(c,320,60,332,180,"#8e1f16");
-  tx(c,26,14,"ZOYI  ZT-702S   DIGITAL OSCILLOSCOPE","#dfe3e6",7,"left",true);
-  rect(c,X-3,Y-3,X+W+3,Y+H+3,"#05070a");
-  refreshDisp(false);
-  if(st.mode==="DMM"){
-    rect(c,X,Y,X+W,Y+H,"#0a1a12");
-    tx(c,X+10,Y+16,st.dmmFn==="R"?"RESISTANCE":"AC VOLTAGE","#5d7d6d",8);
-    let big,warn;
-    if(st.dmmFn==="R"){ big=fmtR(st.disp.r); warn=st.disp.r===-1?d().dmmlive:""; }
-    else [big,warn]=dmmAcv();
-    tx(c,X+W/2,Y+72,big,"#7dfab0",22,"center",true);
-    tx(c,X+W/2,Y+112,warn,"#d78a6a",8,"center");
-    tx(c,X+W/2,Y+148,"MULTIMETER  ·  "+(st.dp||"—")+" ↔ "+(st.dn||"—"),"#4d6b5c",8,"center");
-  } else {
-    rect(c,X,Y,X+W,Y+H,"#04120c");
-    const dx=W/10, dy=H/8;
-    for(let i=1;i<10;i++) line(c,[X+i*dx,Y,X+i*dx,Y+H],"#1a3a2a",1);
-    for(let i=1;i<8;i++) line(c,[X,Y+i*dy,X+W,Y+i*dy],"#1a3a2a",1);
-    line(c,[X,Y+H/2,X+W,Y+H/2],"#2c5f45",1); line(c,[X+W/2,Y,X+W/2,Y+H],"#2c5f45",1);
-    const s=(st.hold&&st.held)?st.held:scopeSignal();
-    const vd=VDIV[st.vi], td=TDIV[st.ti], cy=Y+H/2, A=s.amp/vd*dy, per=td*10, pts=[];
-    for(let i=0;i<=W;i+=2){ const t=i/W*per; let v=s.amp?Math.sin(2*Math.PI*s.f*t)*A:0;
-      v+=(Math.random()-.5)*(s.off?0.6:1.1); pts.push(X+i,Math.min(Math.max(cy-v,Y+1),Y+H-1)); }
-    line(c,pts,"#7dfab0",1);
-    rect(c,X,Y,X+W,Y+13,"#02100a"); rect(c,X,Y+H-15,X+W,Y+H,"#02100a");
-    tx(c,X+5,Y+7,(st.px===10?"10X":"1X")+"  AC   "+(vd>=1?vd+" V":(vd*1000)+" mV")+"/div   "+fmtT(td)+"/div","#9fe8c4",8);
-    if(st.hold) tx(c,X+W-5,Y+7,"HOLD","#f0a23c",8,"e");
-    tx(c,X+5,Y+H-7,"Vmax "+(st.disp.clip?">":"")+fmtV(st.disp.v),st.disp.clip?"#ff8b6a":"#7dfab0",9,"left",true);
-    tx(c,X+118,Y+H-7,"Vpp "+fmtV(st.disp.v*2),"#7dfab0",9,"left",true);
-    tx(c,X+202,Y+H-7,"F "+fmtF(st.disp.f),"#7dfab0",9,"left",true);
-    if(st.disp.off) tx(c,X+W/2,Y+26,d().probeOff,"#5d7d6d",8,"center");
+function drawTerminalsHint(){
+  const cr=S.carry;
+  if(!cr||!(cr.k==="cable"||cr.k==="probe")) return;
+  for(const id of ALL_TERMS){
+    const info=termInfo(id); if(!info||info.hidden) continue;
+    const ok=cr.k==="probe"||termOk(cr,id,info)===true;
+    const p=NP(...info.p), r=Math.max(6,ppcm()*0.7);
+    OVAL(p[0],p[1],r,r,null,ok?"rgba(242,193,78,0.95)":"rgba(160,160,160,0.35)",ok?2:1);
   }
-  const yk=Y+H+12;
-  ["F1","F2","F3","F4"].forEach((s2,i)=>{ rect(c,30+i*46,yk,68+i*46,yk+15,"#3a4147"); tx(c,49+i*46,yk+8,s2,"#aab2b8",7,"center"); });
-  rect(c,222,yk,262,yk+15,"#b9382c"); tx(c,242,yk+8,"MODE","#ffffff",7,"center");
-  rect(c,268,yk,308,yk+15,"#3a4147"); tx(c,288,yk+8,"HOLD","#aab2b8",7,"center");
-  rect(c,30,yk+22,306,yk+42,"#2b3035"); tx(c,168,yk+32,"▲ ▼ ◀ ▶   MENU   AUTO   10A  mA  COM  VΩ","#6e767d",7,"center");
 }
-
-/* ══════════════════════════════════════════════════════════════
-   5.  CONTROLS
-   ══════════════════════════════════════════════════════════════ */
-function redrawAll(){ solve(); drawBench(); drawFg(); refreshDisp(true); drawScope(); buildTray(); refreshButtons(); }
-function buildTray(){
-  const t=d(), box=$("tray"); box.innerHTML="";
-  const sect=s=>{ const h=document.createElement("h3"); h.textContent=s; box.appendChild(h); };
-  const part=(label,sw,cmd,on,dis,cnt)=>{
-    const b=document.createElement("button"); b.className="part"+(on?" on":""); b.disabled=!!dis;
-    b.innerHTML=(sw?`<i style="background:${sw}"></i>`:"")+`<span></span>`+(cnt?`<em>${cnt}</em>`:"");
-    b.querySelector("span").textContent=label; b.onclick=cmd; box.appendChild(b);
-  };
-  sect(t.tCap);
-  for(const k of CAP_ORDER){ const [,,nm,film]=CAPS[k]; part(nm,film?"#8a5228":"#2f4f9e",()=>{ st.cap=st.cap===k?null:k; redrawAll(); },st.cap===k); }
-  sect(t.tPlate);
-  for(const k in MAT){ const used=st.stack.filter(x=>x===k).length;
-    part(t.mat[k],MAT[k].c1,()=>{ st.stack.push(k); redrawAll(); },false,used>=MAT[k].n||!!st.pan||st.stack.length>=6,(MAT[k].n-used)+" / "+MAT[k].n); }
-  sect(t.tPan);
-  for(const k in PAN) part(t.pan[k],MAT[k].c1,()=>{ st.pan=st.pan===k?null:k; st.panT=T_AMB; if(st.pan) st.stack=[];
-    if(!st.pan){ for(const a of ["sp","sn","dp","dn"]) if(st[a]==="NTCA"||st[a]==="NTCB") st[a]=null;
-      st.cables=st.cables.filter(c=>!c.some(x=>x==="NTCA"||x==="NTCB")); }
-    redrawAll(); },st.pan===k,st.stack.length>0&&st.pan!==k);
-  sect(t.tMisc);
-  part(t.slotClear,null,()=>{ st.stack=[]; if(st.pan){ st.pan=null;
-    for(const a of ["sp","sn","dp","dn"]) if(st[a]==="NTCA"||st[a]==="NTCB") st[a]=null;
-    st.cables=st.cables.filter(c=>!c.some(x=>x==="NTCA"||x==="NTCB")); } redrawAll(); });
-  part(t.cover+" · "+(st.covered?t.coverOn:t.coverOff),null,()=>{ st.covered=!st.covered; redrawAll(); },st.covered);
-}
-function buildTools(){
-  const box=$("tools"); box.innerHTML="";
-  for(const k of ["cable","probeP","probeN","dmmP","dmmN","erase"]){
-    const b=document.createElement("button"); b.textContent=d().tools[k]; b.className=st.tool===k?"on":"";
-    b.onclick=()=>{ st.tool=k; st.pending=null; buildTools(); drawBench(); }; box.appendChild(b);
-  }
-  const h=document.createElement("span"); h.className="hint";
-  h.textContent=st.tool==="cable"?d().hints.cable:st.tool==="erase"?d().hints.erase:st.tool.startsWith("probe")?d().hints.probe:d().hints.dmm;
-  box.appendChild(h);
-}
-function refreshButtons(){
-  $("mode").textContent="MODE: "+st.mode;
-  $("hold").className=st.hold?"on":"";
-  $("px").textContent="PROBE "+(st.px===10?"10X":"1X"); $("px").className=st.px===10?"on":"";
-  $("acv").className=(st.mode==="DMM"&&st.dmmFn==="V")?"on":""; $("ohm").className=(st.mode==="DMM"&&st.dmmFn==="R")?"on":"";
-}
-function renderSpeeds(){
-  const box=$("speeds"); box.innerHTML="";
-  for(const s of SPEEDS){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===st.speed?"on":"";
-    b.onclick=()=>{ st.speed=s; renderSpeeds(); }; box.appendChild(b); }
-}
-/* bench clicks */
-function hitTerm(x,y){ let best=null, bd=18;
-  for(const [tid,tx_,ty] of TERM_DEF){ if(!termLive(tid)) continue; const dd=Math.hypot(tx_-x,ty-y); if(dd<bd){bd=dd;best=tid;} }
-  return best; }
-function hitCable(x,y){
-  for(let i=0;i<st.cables.length;i++){ const p=bez2(st.cables[i][0],st.cables[i][1],i);
-    for(let j=0;j<p.length;j+=2) if(Math.hypot(p[j]-x,p[j+1]-y)<9) return i; }
-  return -1; }
-bench.addEventListener("pointerdown",e=>{
-  const r=bench.getBoundingClientRect(), x=(e.clientX-r.left)/BS, y=(e.clientY-r.top)/BS, t=hitTerm(x,y);
-  if(st.tool==="erase"){
-    const i=hitCable(x,y);
-    if(i>=0) st.cables.splice(i,1);
-    else if(t){ st.cables=st.cables.filter(c=>!c.includes(t)); for(const a of ["sp","sn","dp","dn"]) if(st[a]===t) st[a]=null; }
-  } else if(st.tool==="cable"){
-    if(!t) st.pending=null;
-    else if(!st.pending) st.pending=t;
-    else if(st.pending===t) st.pending=null;
-    else { const pair=[st.pending,t];
-      if(!st.cables.some(c=>(c[0]===pair[0]&&c[1]===pair[1])||(c[0]===pair[1]&&c[1]===pair[0]))){
-        if(st.cables.length>=8) flash(d().maxcable); else st.cables.push(pair); }
-      st.pending=null; }
-  } else if(t){ const a={probeP:"sp",probeN:"sn",dmmP:"dp",dmmN:"dn"}[st.tool]; st[a]=st[a]===t?null:t; }
-  solve(); drawBench(); refreshDisp(true);
-});
-/* generator knobs: drag vertically or roll the wheel */
-let drag=null;
-function fgPos(e){ const r=fgc.getBoundingClientRect(); return [(e.clientX-r.left)/FS,(e.clientY-r.top)/FS]; }
-fgc.addEventListener("pointerdown",e=>{
-  const [x,y]=fgPos(e);
-  for(const [k,kx,ky,r] of KNOBS){
-    if(Math.hypot(kx-x,ky-y)<r+4){
-      if(k==="range"){ st.fg.range=(st.fg.range+1)%4; redrawAll(); }
-      else if(k==="wave") flash(d().wave);
-      else { drag=[k,e.clientY,st.fg[k]]; fgc.setPointerCapture(e.pointerId); }
-      return;
+function drawTargets(){
+  S.targets=[];
+  const cr=S.carry;
+  if(!cr) return;
+  const add=(poly,act,lab)=>{ S.targets.push({poly,act}); POLY(poly,"rgba(242,193,78,0.10)",null);
+    LINE(poly.concat([poly[0]]),"#f2c14e",2,"butt",[6,4]);
+    if(lab){ const c=poly.reduce((a,p)=>[a[0]+p[0]/poly.length,a[1]+p[1]/poly.length],[0,0]); TXT(c[0],c[1],lab,{size:9,fill:"#f2c14e",bold:true}); } };
+  if(cr.k==="item"){
+    const id=cr.id;
+    const foot={fg:FG_BOX, scope:[Z_BOX[0],Z_BOX[1],0,0,Z_BOX[4]-1,Z_BOX[5]+4], coil:COIL.base, r1:R1_BOX};
+    if(foot[id]) add(boxFoot(foot[id]),{place:id});
+    if(id==="box"){
+      add(boxFoot([BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,0,0,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D]),{place:"box",where:"desk"});
+      if(S.on.coil) add(boxFoot([BOX_SLOT.cover[0],BOX_SLOT.cover[0]+BOX_W,0,0,BOX_SLOT.cover[1],BOX_SLOT.cover[1]+BOX_D]),{place:"box",where:"cover"},d().lab.covered);
+    }
+    if(CAPS[id]){
+      const [cx,cz]=CAP_SLOT[id];
+      add(boxFoot([cx-1.4,cx+1.4,0,0,cz-3,cz+1.4]),{place:id,where:"desk"});
+      const o=boxOrigin();
+      if(o) for(const pr of ["b12","b34"]){
+        if(CAP_KEYS.some(k=>S.cap[k]===pr)) continue;
+        const i0=pr==="b12"?0:2, x0=o[0]+POST_DX[i0]-1, x1=o[0]+POST_DX[i0+1]+1, z=o[1]+POST_Z;
+        add([NP(x0,BOX_H,z-1),NP(x1,BOX_H,z-1),NP(x1,BOX_H,z+3.4),NP(x0,BOX_H,z+3.4)],{place:id,where:pr});
+      }
     }
   }
-  if(Math.hypot(300-x,74-y)<14||Math.hypot(300-x,114-y)<14){ st.fg.on=!st.fg.on; redrawAll(); }
-});
-fgc.addEventListener("pointermove",e=>{ if(!drag) return; const [k,y0,v0]=drag;
-  st.fg[k]=Math.max(0,Math.min(100,v0+(y0-e.clientY)*0.45/FS)); solve(); drawFg(); });
-fgc.addEventListener("pointerup",()=>{ drag=null; });
-fgc.addEventListener("wheel",e=>{ const [x,y]=fgPos(e);
-  for(const [k,kx,ky,r] of KNOBS) if(Math.hypot(kx-x,ky-y)<r+4&&k!=="range"&&k!=="wave"){
-    e.preventDefault(); st.fg[k]=Math.max(0,Math.min(100,st.fg[k]+(e.deltaY<0?1:-1)*(e.shiftKey?0.2:1))); solve(); drawFg(); return; } },{passive:false});
-document.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{ const [k,v]=b.dataset.b.split(":"); st.fg[k]=Math.max(0,Math.min(100,st.fg[k]+(+v))); solve(); drawFg(); });
-$("fgOut").onclick=()=>{ st.fg.on=!st.fg.on; redrawAll(); };
-$("fgRange").onclick=()=>{ st.fg.range=(st.fg.range+1)%4; redrawAll(); };
-$("mode").onclick=()=>{ st.mode=st.mode==="SCOPE"?"DMM":"SCOPE"; solve(); refreshButtons(); refreshDisp(true); };
-$("hold").onclick=()=>{ st.hold=!st.hold; st.held=st.hold?scopeSignal():null; refreshButtons(); };
-$("px").onclick=()=>{ st.px=st.px===1?10:1; refreshButtons(); refreshDisp(true); };
-$("vUp").onclick=()=>{ st.vi=Math.min(VDIV.length-1,st.vi+1); refreshDisp(true); };
-$("vDn").onclick=()=>{ st.vi=Math.max(0,st.vi-1); refreshDisp(true); };
-$("tUp").onclick=()=>{ st.ti=Math.min(TDIV.length-1,st.ti+1); };
-$("tDn").onclick=()=>{ st.ti=Math.max(0,st.ti-1); };
-$("acv").onclick=()=>{ st.dmmFn="V"; st.mode="DMM"; solve(); refreshButtons(); refreshDisp(true); };
-$("ohm").onclick=()=>{ st.dmmFn="R"; st.mode="DMM"; solve(); refreshButtons(); refreshDisp(true); };
-$("unclip").onclick=()=>{ st.sp=st.sn=null; redrawAll(); };
-$("undmm").onclick=()=>{ st.dp=st.dn=null; redrawAll(); };
-$("auto").onclick=()=>{
-  const s=scopeSignal();
-  if(s.amp>0){ st.vi=VDIV.length-1; for(let i=0;i<VDIV.length;i++) if(s.amp/VDIV[i]<=3.2){ st.vi=i; break; }
-    st.ti=TDIV.length-1; for(let i=0;i<TDIV.length;i++) if(TDIV[i]*10>=3/s.f){ st.ti=i; break; } }
-  refreshDisp(true);
-};
-/* stopwatch + log */
-const fmtSw=t=>String(Math.floor(t/60)).padStart(2,"0")+":"+(t%60).toFixed(1).padStart(4,"0");
-$("swGo").onclick=()=>{ st.swRun=!st.swRun; };
-$("swLap").onclick=()=>{ st.laps=[st.sw,...st.laps].slice(0,6); renderLaps(); };
-$("swReset").onclick=()=>{ st.sw=0; st.laps=[]; renderLaps(); };
-function renderLaps(){ $("laps").textContent=st.laps.map((t,i)=>"L"+(st.laps.length-i)+"  "+t.toFixed(1)+" s").join("\n"); }
-function setupText(){
-  const p=[];
-  if(st.cap) p.push("C="+CAPS[st.cap][2]);
-  if(st.stack.length) p.push("N="+st.stack.length+"×"+st.stack[0]);
-  if(st.pan) p.push(st.pan+" pan");
-  p.push("probe "+(st.sp||"—")+"/"+(st.sn||"—"));
-  if(!st.covered) p.push("lid open");
-  return p.join(", ");
+  TXT(S.mouse[0]+16,S.mouse[1]-14,"⇱ "+carryLabel(),{size:10,fill:"#f2c14e",bold:true,align:"left"});
 }
-$("recBtn").onclick=()=>{
-  const nm=$("recName").value.trim()||(st.mode==="DMM"?(st.dmmFn==="R"?"R":"V(AC)"):"Vmax");
-  let val, fr;
-  if(st.mode==="DMM"){ val=st.dmmFn==="R"?fmtR(st.disp.r):dmmAcv()[0]; fr=st.fg.on?fmtF(freq()):"—"; }
-  else { val=fmtV(st.disp.v)+(st.disp.clip?" (clip)":""); fr=fmtF(st.disp.f); }
-  st.nno++; const row=[st.nno,st.sw.toFixed(1),nm,val,fr,setupText()];
-  st.notes.push(row); renderLog(); flash(d().logged+" · "+nm+" = "+val);
-};
-function renderLog(){
-  $("logHead").innerHTML=""; for(const c of d().cols){ const th=document.createElement("th"); th.textContent=c; $("logHead").appendChild(th); }
-  const tb=$("logBody"); tb.innerHTML="";
-  for(const r of [...st.notes].reverse()){ const tr=document.createElement("tr");
-    for(const v of r){ const td=document.createElement("td"); td.textContent=v; tr.appendChild(td); } tb.appendChild(tr); }
+function carryLabel(){
+  const cr=S.carry, t=d();
+  if(cr.k==="cable") return t.trayItems[cr.type];
+  if(cr.k==="probe") return cr.end==="tip"?t.lab.hook:t.lab.gnd;
+  return t.trayItems[cr.id]||"";
 }
-$("csv").onclick=()=>{
-  const lines=["no,time_s,item,value,frequency,conditions"].concat(st.notes.map(r=>r.slice(0,5).join(",")+',"'+r[5]+'"'));
-  const blob=new Blob(["﻿"+lines.join("\n")],{type:"text/csv"}), a=document.createElement("a");
-  a.href=URL.createObjectURL(blob); a.download="apho2025_E1_log.csv"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
-  flash(d().saved);
-};
-$("clearLog").onclick=()=>{ st.notes=[]; renderLog(); };
-
-function setTab(k){
-  for(const v of ["lab","task","log","help"]){ $("tab-"+v).className=v===k?"on":""; $("v-"+v).hidden=v!==k; }
-  if(k==="lab") layout();
+function draw(){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.fillStyle="#232830"; ctx.fillRect(0,0,CW,CH);
+  S.zones={};
+  drawDesk();
+  if(S.on.fg) drawFG();
+  if(S.on.scope) drawZoyi();
+  if(S.on.r1) drawR1();
+  if(S.on.coil) drawCoil();
+  if(S.on.box==="cover"){ drawBox(); if(S.pan) drawNtcLeadsCovered(); }
+  if(S.on.box==="desk") drawBox();
+  drawCapsDesk();
+  drawCables();
+  drawProbe();
+  drawTargets();
+  drawTerminalsHint();
 }
-for(const v of ["lab","task","log","help"]) $("tab-"+v).onclick=()=>setTab(v);
 
 /* ══════════════════════════════════════════════════════════════
-   6.  LANGUAGE
+   8.  TRAY
+   ══════════════════════════════════════════════════════════════ */
+let trayCells=[];
+function trayState(name){
+  const t=d();
+  if(name==="bb"||name==="bp"){ const n=S.stock[name].r+S.stock[name].k; return [n===0,n?t.trayLeft(n):t.trayNone]; }
+  if(PLATE_OF[name]){ const n=S.plates[PLATE_OF[name]]; return [n===0,n?t.trayLeft(n):t.trayNone]; }
+  if(PAN_OF[name]){ const out=S.panItem===name; return [out,out?t.trayOut:t.trayTake]; }
+  if(CAPS[name]){ const out=!!S.cap[name]; return [out,out?t.trayOut:t.trayTake]; }
+  if(name==="key") return [false,t.trayTake];
+  const out=name==="box"?!!S.on.box:!!S.on[name];
+  return [out,out?t.trayOut:t.trayTake];
+}
+function trayIcon(c,name,x,y,dim){
+  const g=dim?"#474d54":null;
+  const R=(a,b,e,f,fill,out)=>{ if(fill){c.fillStyle=g||fill;c.fillRect(a,b,e-a,f-b);} if(out){c.strokeStyle=out;c.lineWidth=1;c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
+  const O=(a,b,r,fill,out)=>{ c.beginPath(); c.arc(a,b,r,0,7); if(fill){c.fillStyle=g||fill;c.fill();} if(out){c.strokeStyle=out;c.lineWidth=1;c.stroke();} };
+  const L=(a,b,e,f,col,w)=>{ c.beginPath(); c.moveTo(a,b); c.lineTo(e,f); c.strokeStyle=g||col; c.lineWidth=w||1; c.stroke(); };
+  if(name==="fg"){ R(x-15,y-9,x+15,y+9,"#18191c","#000"); R(x-13,y-7,x+8,y+7,"#e6e7e8"); O(x-8,y,3,"#2a2c2f"); O(x-1,y,3,"#2a2c2f"); O(x+12,y-3,2,"#c8261d"); O(x+12,y+4,2,"#222"); }
+  else if(name==="scope"){ R(x-8,y-12,x+8,y+12,"#c3261c"); R(x-6,y-10,x+6,y-1,"#050505"); L(x-5,y-5,x+5,y-5,"#ffe23a",1); R(x-5,y+2,x+5,y+8,"#3d4146"); }
+  else if(name==="coil"){ R(x-14,y+4,x+14,y+8,"#1f2023"); R(x-8,y-2,x+8,y+4,"#28292c"); R(x-8,y-9,x+8,y-4,"#28292c"); L(x-8,y-3,x+8,y-3,"#b0673a",2); L(x-10,y-1,x-8,y-1,"#d4b050",2); }
+  else if(name==="bb"||name==="bp"){ c.beginPath(); c.moveTo(x-14,y-6); c.bezierCurveTo(x-4,y+12,x+4,y-12,x+14,y+4); c.strokeStyle=g||"#c0392b"; c.lineWidth=2.5; c.stroke();
+    R(x-17,y-9,x-11,y-3,"#c0392b"); R(x+11,y+1,x+17,y+7,name==="bb"?"#c0392b":"#d4b050"); }
+  else if(name==="r1"){ R(x-14,y+1,x+14,y+8,"#212326"); R(x-9,y-6,x+9,y+1,"#e2b93f"); O(x-12,y+1,2.5,"#c8261d"); O(x+12,y+1,2.5,"#c8261d"); }
+  else if(name==="box"){ R(x-14,y-6,x+14,y+9,"#232528","#000"); for(let i=0;i<4;i++) O(x-9+i*6,y-6,2.3,i%2?"#222":"#c8261d","#000"); }
+  else if(name==="C470N"){ R(x-5,y-6,x+5,y+2,"#b5652c"); L(x-2,y+2,x-2,y+10,"#ccc",1.5); L(x+2,y+2,x+2,y+10,"#ccc",1.5); }
+  else if(CAPS[name]){ const r=3+CAPS[name].r*4; R(x-r,y-8,x+r,y+4,"#27479a"); L(x+r-2,y-7,x+r-2,y+3,"#b9c4de",1.5); L(x-2,y+4,x-2,y+10,"#ccc",1.5); L(x+2,y+4,x+2,y+10,"#ccc",1.5); }
+  else if(name==="key"){ L(x-10,y+6,x+8,y+6,"#8a8f94",3); L(x+8,y+6,x+8,y-8,"#8a8f94",3); }
+  else if(PAN_OF[name]){ R(x-8,y-5,x+8,y+5,name==="panAL"?"#d7dbdf":"#e3e8ec","#777"); O(x,y,2.5,"#111"); L(x,y,x-12,y+10,"#c8261d",1.2); L(x,y,x-10,y+11,"#333",1.2); }
+  else if(PLATE_OF[name]){ const m=MAT[PLATE_OF[name]]; R(x-7,y-11,x+7,y+11,"#e9eef1","#9aa3ab"); R(x-5,y-8,x+5,y+9,m.col,m.edge); }
+}
+function drawTray(){
+  const c=trayCtx;
+  c.setTransform(DPR,0,0,DPR,0,0);
+  c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[];
+  let y=6; const wd=TRW-12;
+  for(const name of TRAY_ORDER){
+    const [out,sub]=trayState(name);
+    const sel=S.carry&&(S.carry.id===name||S.carry.type===name);
+    c.fillStyle=out?"#171a1e":"#1f242b"; c.fillRect(6,y,wd,TRAY_ROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TRAY_ROW-5);
+    trayIcon(c,name,28,y+(TRAY_ROW-4)/2,out);
+    c.font='12px '+FONT; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=out?"#868e96":"#e8eef2";
+    c.fillText(d().trayItems[name],52,y+13);
+    c.font='9.5px '+FONT; c.fillStyle="#69717a"; c.fillText(sub,52,y+28);
+    trayCells.push([name,y,y+TRAY_ROW-4]);
+    y+=TRAY_ROW;
+  }
+  c.font='10.5px '+FONT; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+trayCv.addEventListener("click",e=>{
+  const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  for(const [name,y0,y1] of trayCells){
+    if(y<y0||y>y1) continue;
+    cancelCarry(true);
+    const [out]=trayState(name);
+    const t=d();
+    if(out){ say((name==="bb"||name==="bp")?t.m.noCable:t.trayOut); return; }
+    if(name==="bb"||name==="bp"){ const col=S.stock[name].r>=S.stock[name].k?"r":"k"; S.stock[name][col]--; S.carry={k:"cable",type:name,col,a:null}; say(t.m.cable1); }
+    else if(PLATE_OF[name]){ if(!S.on.coil){ say(t.m.noCoil,true); return; } S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
+    else if(PAN_OF[name]){ if(!S.on.coil){ say(t.m.noCoil,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
+    else if(name==="key"){ S.carry={k:"key",id:"key"}; say(t.m.keyTake); }
+    else { S.carry={k:"item",id:name}; say(t.m.placeIt(t.trayItems[name])); }
+    drawTray();
+    return;
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   9.  INTERACTION
+   ══════════════════════════════════════════════════════════════ */
+function say(s,warn){ S.msg={s,warn:!!warn,t:performance.now()}; renderStatus(); }
+function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+function termAt(px,py){
+  let best=null, bd=Math.max(9,ppcm()*0.9);
+  for(const id of ALL_TERMS){
+    const info=termInfo(id); if(!info||info.hidden) continue;
+    for(const P of [info.p,endPos(id,info)]){
+      const p=NP(...P), dd=Math.hypot(p[0]-px,p[1]-py);
+      if(dd<bd){ bd=dd; best=id; }
+    }
+  }
+  return best;
+}
+function termOk(cr,id,info){
+  const t=d().m;
+  const n=plugsAt(id).length;
+  if(cr.a===id) return t.same;
+  if(cr.type==="bb"){
+    if(info.k!=="sock") return t.needSock;
+    if(n>=2) return t.full;
+    return true;
+  }
+  if(cr.a){
+    const aKind=termInfo(cr.a).k;
+    if(aKind===info.k) return aKind==="sock"?t.needPin:t.needSock;
+  }
+  if(info.k==="sock"&&n>=2) return t.full;
+  if(info.k==="pin"&&n>=1) return t.full;
+  return true;
+}
+function cancelCarry(silent){
+  const cr=S.carry; if(!cr) return;
+  if(cr.k==="cable") S.stock[cr.type][cr.col]++;
+  if(cr.k==="plate") S.plates[cr.mat]++;
+  S.carry=null;
+  if(!silent) say(d().m.returned(cr.k==="probe"?d().lab.probe:(d().trayItems[cr.id||cr.type]||"")));
+  drawTray();
+}
+
+function onPress(p){
+  const [x,y]=p, cr=S.carry, t=d();
+  if(cr){ place(x,y); return; }
+  if(S.on.scope&&S.probeScr){
+    for(const end of ["tip","gnd"]){
+      const q=S.probeScr[end];
+      if(Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){
+        S.probe[end]=null; S.carry={k:"probe",end}; say(t.m.probeTake(end==="tip"?t.lab.hook:t.lab.gnd)); solve(); return; }
+    }
+  }
+  if(S.on.fg){ const [a,b]=faceInv(FG_FACE,x,y); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
+  if(S.on.scope){ const [a,b]=faceInv(Z_FACE,x,y); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
+  S.view0=[x,y,S.cam[0],S.cam[1]];
+  cv.classList.add("dragging");
+}
+function place(x,y){
+  const cr=S.carry, t=d();
+  if(cr.k==="cable"){
+    const id=termAt(x,y);
+    if(!id){ say(t.m.noTerm,true); return; }
+    const ok=termOk(cr,id,termInfo(id));
+    if(ok!==true){ say(ok,true); return; }
+    if(!cr.a){ cr.a=id; say(t.m.cable2); return; }
+    S.cables.push({type:cr.type,col:cr.col,a:cr.a,b:id});
+    S.carry=null; say(t.m.plugged); solve(); drawTray(); return;
+  }
+  if(cr.k==="probe"){
+    const id=termAt(x,y);
+    if(!id){ say(t.m.noTerm,true); return; }
+    S.probe[cr.end]=id; S.carry=null; say(t.m.probeOn); solve(); return;
+  }
+  if(cr.k==="key"||cr.k==="plate"||cr.k==="pan"){
+    if(!inRect(S.zones.coil,x,y,4)){
+      if(cr.k==="key"){ S.carry=null; drawTray(); say(t.m.returned(t.trayItems.key)); } else say(t.m.noFit,true);
+      return; }
+    if(S.on.box==="cover"){ say(t.m.covered,true); return; }
+    if(cr.k==="key"){ S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
+    if(!S.loose){ say(t.m.needLoose,true); return; }
+    if(cr.k==="plate"){
+      if(S.pan){ say(t.m.slotBusy,true); return; }
+      if(S.stack.length>=8){ say(t.m.slotFull,true); return; }
+      S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length));
+    }else{
+      if(S.pan||S.stack.length){ say(t.m.slotBusy,true); return; }
+      S.pan=PAN_OF[cr.id]; S.panItem=cr.id; S.panT=T_AMB; S.carry=null; say(t.m.panIn);
+    }
+    solve(); drawTray(); return;
+  }
+  if(cr.k==="item"){
+    for(const tg of S.targets){
+      if(!inPoly(tg.poly,x,y)) continue;
+      const a=tg.act;
+      if(a.place==="box") S.on.box=a.where;
+      else if(CAPS[a.place]) S.cap[a.place]=a.where;
+      else S.on[a.place]=true;
+      S.carry=null;
+      say(CAPS[a.place]&&a.where!=="desk"?t.m.capBox:t.m.placed(t.trayItems[a.place]));
+      if(a.place==="fg"&&!S.fg.pow) setTimeout(()=>say(t.m.fgRear),1500);
+      solve(); drawTray(); return;
+    }
+    say(t.m.noFit,true);
+  }
+}
+function onRClick(p){
+  const [x,y]=p, t=d();
+  if(S.carry){
+    if(S.carry.k==="probe"){ S.carry=null; say(t.m.probeOff); solve(); return; }
+    cancelCarry(false); return;
+  }
+  for(let i=S.cables.length-1;i>=0;i--){
+    const pts=S.cabPts&&S.cabPts[i]; if(!pts) continue;
+    for(let j=0;j<pts.length;j++) if(Math.hypot(pts[j][0]-x,pts[j][1]-y)<Math.max(7,ppcm()*0.6)){ removeCable(i); say(t.m.unplug); solve(); return; }
+  }
+  if(S.probeScr) for(const end of ["tip","gnd"]){ const q=S.probeScr[end];
+    if(S.probe[end]&&Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
+  if(S.on.coil&&S.on.box!=="cover"&&inRect(S.zones.coil,x,y)){
+    if(S.pan&&S.loose){ detachTerms(["NTCA","NTCB"]); S.pan=null; S.panItem=null; say(t.m.panOut); solve(); drawTray(); return; }
+    if(S.stack.length&&S.loose){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); solve(); drawTray(); return; }
+    if((S.pan||S.stack.length)&&!S.loose){ say(t.m.needLoose,true); return; }
+  }
+  for(const k of CAP_KEYS) if(S.cap[k]==="desk"&&inRect(S.zones[k],x,y)){ returnItem(k); return; }
+  for(const id of ["box","coil","r1","scope","fg"]){
+    if(inRect(S.zones[id],x,y)){ returnItem(id); return; }
+  }
+}
+function detachTerms(list){
+  for(let i=S.cables.length-1;i>=0;i--) if(list.includes(S.cables[i].a)||list.includes(S.cables[i].b)) removeCable(i);
+  for(const end of ["tip","gnd"]) if(list.includes(S.probe[end])) S.probe[end]=null;
+}
+function removeCable(i){ const cb=S.cables[i]; S.stock[cb.type][cb.col]++; S.cables.splice(i,1); drawTray(); }
+function returnItem(id){
+  const t=d();
+  if(id==="fg"){ detachTerms(["FGP","FGN"]); S.on.fg=false; S.fg.pow=false; }
+  else if(id==="scope"){ detachTerms(["DCOM","DVO"]); S.probe={tip:null,gnd:null}; S.on.scope=false; S.z.on=false; }
+  else if(id==="r1"){ detachTerms(["R1A","R1B"]); S.on.r1=false; }
+  else if(id==="coil"){
+    if(S.on.box==="cover"){ say(t.m.covered,true); return; }
+    detachTerms(["C1A","C1B","C2A","C2B","NTCA","NTCB"]);
+    for(const m of S.stack) S.plates[m]++;
+    S.stack=[]; S.pan=null; S.panItem=null; S.on.coil=false; S.loose=false;
+  }
+  else if(id==="box"){
+    detachTerms(["B1","B2","B3","B4"]);
+    for(const k of CAP_KEYS) if(S.cap[k]==="b12"||S.cap[k]==="b34"){ detachTerms([CAPS[k].node+"A",CAPS[k].node+"B"]); S.cap[k]=null; }
+    S.on.box=null;
+  }
+  else if(CAPS[id]){ detachTerms([CAPS[id].node+"A",CAPS[id].node+"B"]); S.cap[id]=null; }
+  say(t.m.returned(t.trayItems[id])); solve(); drawTray();
+}
+function onWheel(p,dir,shift){
+  const [x,y]=p;
+  if(S.on.fg){ const [a,b]=faceInv(FG_FACE,x,y); if(a>=0&&a<=24&&b>=0&&b<=9&&fgWheel(a,b,dir,shift)) return; }
+  const [u,v]=INV(x,y);
+  S.zoom=Math.max(0.6,Math.min(7,S.zoom*(dir>0?1.15:1/1.15)));
+  S.touched=true;
+  const k=ppcm();
+  S.cam=[u-x/k, v-(CH-y)/k];
+}
+cv.addEventListener("mousemove",e=>{
+  const p=mousePos(e); S.mouse=p;
+  if(S.knob){ S.knob(p[1]); return; }
+  if(S.view0){ const [x0,y0,a,b]=S.view0, k=ppcm(); S.touched=true; S.cam=[a-(p[0]-x0)/k, b+(p[1]-y0)/k]; }
+});
+cv.addEventListener("mousedown",e=>{ const p=mousePos(e); S.mouse=p; if(e.button!==0) return; onPress(p); });
+window.addEventListener("mouseup",()=>{ S.view0=null; S.knob=null; cv.classList.remove("dragging"); });
+cv.addEventListener("contextmenu",e=>{ e.preventDefault(); onRClick(mousePos(e)); });
+cv.addEventListener("wheel",e=>{ e.preventDefault(); onWheel(mousePos(e),e.deltaY<0?1:-1,e.shiftKey); },{passive:false});
+cv.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; e.preventDefault();
+  const r=cv.getBoundingClientRect(), p=[e.touches[0].clientX-r.left,e.touches[0].clientY-r.top];
+  S.mouse=p; onPress(p); },{passive:false});
+cv.addEventListener("touchmove",e=>{ if(e.touches.length!==1) return; e.preventDefault();
+  const r=cv.getBoundingClientRect(), p=[e.touches[0].clientX-r.left,e.touches[0].clientY-r.top];
+  S.mouse=p; if(S.knob){ S.knob(p[1]); return; }
+  if(S.view0){ const [x0,y0,a,b]=S.view0, k=ppcm(); S.touched=true; S.cam=[a-(p[0]-x0)/k, b+(p[1]-y0)/k]; } },{passive:false});
+cv.addEventListener("touchend",()=>{ S.view0=null; S.knob=null; },{passive:true});
+
+/* ---- instrument controls (same handlers for the bench and the close-ups) ---- */
+function fgPress(a,b,where){
+  for(const key in FG_CTRL){
+    const c=FG_CTRL[key];
+    if(Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
+    if(!c.cont){
+      if(key==="range") S.fg.range=(S.fg.range+1)%4;
+      else { S.fg.wave=(S.fg.wave+1)%3; if(S.fg.wave!==0) say(d().m.wave,true); }
+      solve(); return ()=>{};
+    }
+    const v0=S.fg[key]; let y0=null;
+    return (py)=>{ if(y0===null){ y0=py; return; }
+      const sens=key==="fine"?0.0035:0.0025;
+      S.fg[key]=Math.max(0,Math.min(1,v0+(y0-py)*sens)); solve(); };
+  }
+  if(Math.hypot(a-21.2,b-2.9)<1.1||Math.hypot(a-21.2,b-6.3)<1.1){ if(where!=="bench") say(d().m.cableHere); return null; }
+  if(where==="panel"&&a>=FG_REAR.rocker[0]&&a<=FG_REAR.rocker[2]&&b>=FG_REAR.rocker[1]&&b<=FG_REAR.rocker[3]){
+    if(!S.on.fg){ say(d().m.noFgHere,true); return ()=>{}; }
+    S.fg.pow=!S.fg.pow; say(d().m.fgPow(S.fg.pow)); solve(); return ()=>{}; }
+  return null;
+}
+function fgWheel(a,b,dir,shift){
+  for(const key in FG_CTRL){
+    const c=FG_CTRL[key];
+    if(Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
+    if(c.cont) S.fg[key]=Math.max(0,Math.min(1,S.fg[key]+dir*(shift?0.002:0.01)));
+    else if(key==="range") S.fg.range=Math.max(0,Math.min(3,S.fg.range+dir));
+    else { S.fg.wave=Math.max(0,Math.min(2,S.fg.wave+dir)); if(S.fg.wave!==0) say(d().m.wave,true); }
+    solve(); return true;
+  }
+  return false;
+}
+function zoyiPress(a,b){
+  for(const id in ZK){
+    const [x0,y0,x1,y1]=ZK[id];
+    if(a<x0-0.05||a>x1+0.05||b<y0-0.05||b>y1+0.05) continue;
+    zoyiKey(id); return true;
+  }
+  return false;
+}
+function zoyiKey(id){
+  const z=S.z, t=d();
+  if(!S.on.scope) return;
+  if(id==="POWER"){ z.on=!z.on; z.menu=false; z.hold=false; say(t.m.zoyiPow(z.on)); solve(); return; }
+  if(!z.on){ say(t.m.zoyiOff,true); return; }
+  if(id==="MODE"){ z.mode=z.mode==="SCOPE"?"DMM":"SCOPE"; z.menu=false; z.hold=false; solve(); return; }
+  if(id==="HOLD"){ if(z.tmode==="SINGLE"&&!z.armed){ z.armed=true; z.held=null; return; }
+    z.hold=!z.hold; z.held=z.hold?scopeView():null; return; }
+  if(z.mode==="DMM"){
+    if(id==="F1"){ z.dfn=z.dfn==="ACV"?"DCV":"ACV"; solve(); }
+    else if(id==="F2"){ if(z.dfn==="OHM") z.rfn=(z.rfn+1)%4; else { z.dfn="OHM"; z.rfn=0; } solve(); }
+    return;
+  }
+  if(id==="MENU"){ z.menu=!z.menu; return; }
+  if(z.menu){
+    if(id==="F1") z.menu=false;
+    else if(id==="F2"){ z.tmode=z.tmode==="AUTO"?"NORMAL":z.tmode==="NORMAL"?"SINGLE":"AUTO"; z.armed=true; z.held=null; }
+    else if(id==="F3") z.edge=-z.edge;
+    else if(id==="F4"){ z.probe=z.probe===1?10:1; say(t.m.probeX(z.probe)); }
+    return;
+  }
+  if(id==="F1") z.fsel="VT"; else if(id==="F2") z.fsel="MOVE"; else if(id==="F3") z.fsel="TRIG";
+  else if(id==="F4") z.couple=z.couple==="AC"?"DC":"AC";
+  else if(id==="AUTO"){
+    const s=scopeInput();
+    if(s.amp>0){ z.vi=VDIV.length-1; for(let i=0;i<VDIV.length;i++) if(s.amp*z.probe/VDIV[i]<=3.0){ z.vi=i; break; }
+      z.ti=TDIV.length-1; for(let i=0;i<TDIV.length;i++) if(TDIV[i]*10>=2.5/s.f){ z.ti=i; break; } }
+    z.ypos=0; z.xpos=0; z.trig=0;
+  }
+  else if(["UP","DOWN","LEFT","RIGHT"].includes(id)){
+    const dv=id==="UP"?1:id==="DOWN"?-1:0, dh=id==="RIGHT"?1:id==="LEFT"?-1:0;
+    if(z.fsel==="VT"){ z.vi=Math.max(0,Math.min(VDIV.length-1,z.vi+dv)); z.ti=Math.max(0,Math.min(TDIV.length-1,z.ti+dh)); }
+    else if(z.fsel==="MOVE"){ z.ypos=Math.max(-4,Math.min(4,z.ypos+0.2*dv)); z.xpos=Math.max(-5,Math.min(5,z.xpos+0.2*dh)); }
+    else if(z.fsel==="TRIG"){ z.trig=Math.max(-4,Math.min(4,z.trig+0.2*dv)); }
+  }
+}
+/* close-up canvases */
+function panelPos(cvs,e,s){ const r=cvs.getBoundingClientRect(); return [(e.clientX-r.left)/s,(e.clientY-r.top)/s]; }
+fgCv.addEventListener("pointerdown",e=>{
+  const [a,b]=panelPos(fgCv,e,FGS); const h=fgPress(a-0.4,b-0.4,"panel");
+  if(h){ fgCv.setPointerCapture(e.pointerId); S.knob=h; h(e.clientY); }
+});
+fgCv.addEventListener("pointermove",e=>{ if(S.knob) S.knob(e.clientY); });
+fgCv.addEventListener("pointerup",()=>{ S.knob=null; });
+fgCv.addEventListener("wheel",e=>{ const [a,b]=panelPos(fgCv,e,FGS);
+  if(fgWheel(a-0.4,b-0.4,e.deltaY<0?1:-1,e.shiftKey)) e.preventDefault(); },{passive:false});
+zCv.addEventListener("pointerdown",e=>{ const [a,b]=panelPos(zCv,e,ZS); zoyiPress(a-0.5,b-1.3); });
+
+/* ══════════════════════════════════════════════════════════════
+   10.  CLOSE-UPS, SECTION, PANEL
+   ══════════════════════════════════════════════════════════════ */
+function drawFgPanel(){
+  const c=fgCtx;
+  c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#191c21"; c.fillRect(0,0,fgCv.width,fgCv.height);
+  c.setTransform(DPR*FGS,0,0,DPR*FGS,DPR*FGS*0.4,DPR*FGS*0.4);
+  if(!S.on.fg) c.globalAlpha=0.35;
+  drawFgFace(c); drawFgRear(c,9.6);
+  c.globalAlpha=1;
+  const nums=[[1.35,0.15,"1"],[2.9,6.95,"2"],[6.6,6.95,"3"],[12.05,2.7,"4"],[12.05,6.5,"4"],[14.5,6.95,"5"],[17.2,5.0,"6"],[22.8,4.6,"7"]];
+  for(const [x,y,n] of nums){ circ(c,x,y,0.32,"#1b1c1e"); FT(c,n,x,y+0.01,0.36,"#fff","center",true); }
+}
+function drawZoyiPanel(){
+  const c=zCtx;
+  c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#191c21"; c.fillRect(0,0,zCv.width,zCv.height);
+  c.setTransform(DPR*ZS,0,0,DPR*ZS,DPR*ZS*0.5,DPR*ZS*1.3);
+  if(!S.on.scope) c.globalAlpha=0.35;
+  rr(c,2.4,-1.1,3.6,0.1,0.15,"#b9bdc1","#6f7479",0.04); rr(c,2.6,-1.25,3.4,-0.9,0.1,"#d9dde1");
+  FT(c,"BNC",4.4,-0.6,0.3,"#9aa3ab","left");
+  drawZoyiFace(c);
+  c.globalAlpha=1;
+}
+function drawXsec(){
+  const c=xsCtx, W=XSW, H=XSH, t=d();
+  c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,W,H);
+  c.fillStyle="#12161b"; c.fillRect(0,0,W,H);
+  const s=W/26, ox=W*0.08;
+  const X=x=>ox+x*s, Y=y=>H-14-y*s;
+  const R=(x0,y0,x1,y1,f,o)=>{ c.fillStyle=f; c.fillRect(X(x0),Y(y1),(x1-x0)*s,(y1-y0)*s); if(o){ c.strokeStyle=o; c.lineWidth=1; c.strokeRect(X(x0)+.5,Y(y1)+.5,(x1-x0)*s-1,(y1-y0)*s-1); } };
+  const L=(txt,x,y,col,al)=>{ c.font="11px "+FONT; c.fillStyle=col||"#9aa3ab"; c.textAlign=al||"left"; c.textBaseline="middle"; c.fillText(txt,X(x),Y(y)); };
+  if(!S.on.coil){ L("—",8,4,"#69717a","center"); $("secTxt").textContent=""; return; }
+  const lift=S.loose?0.45:0;
+  R(0,0,16,0.6,"#3a3d42","#52565c");
+  R(4,0.6,12,2.8,"#2c2f34","#52565c"); R(5,1.2,11,1.5,"#e8a2a2");
+  R(4,3.8+lift,12,6+lift,"#2c2f34","#52565c"); R(5,5.0+lift,11,5.3+lift,"#e8a2a2");
+  R(4,2.8,4.8,3.8+lift,"#2c2f34"); R(11.2,2.8,12,3.8+lift,"#2c2f34");
+  const cy=6+lift+(S.loose?0.25:0);
+  R(3.2,cy,5.2,cy+0.6,"#1a1c1f","#52565c"); R(10.8,cy,12.8,cy+0.6,"#1a1c1f","#52565c");
+  let y=2.85; const th=0.24;
+  const groups=[];
+  for(const m of S.stack){ R(6.65,y,9.35,y+th,MAT[m].col,MAT[m].edge); y+=th;
+    if(groups.length&&groups[groups.length-1][0]===m) groups[groups.length-1][1]++; else groups.push([m,1]); }
+  if(S.pan){ R(7,y,9,y+th,MAT[S.pan==="AL"?"AL":"SS410"].col); R(7.7,y+th,8.3,y+th+0.35,"#111"); }
+  for(const yy of [5.15+lift,1.35]) R(3.3,yy-0.15,4,yy+0.15,"#d4b050");
+  L(t.lab.coil1,12.6,5.1+lift,"#e8eef2"); L(t.lab.coil2,12.6,1.7,"#e8eef2");
+  L(t.lab.pins,0.1,7.6,"#d4b050");
+  L(t.lab.clamp,12.9,cy+0.3,"#9aa3ab");
+  if(S.on.box==="cover"){ c.setLineDash([5,4]); c.strokeStyle="#f2c14e"; c.strokeRect(X(-0.5),Y(9.2),17*s,9.2*s); c.setLineDash([]); }
+  const stTxt= S.pan ? t.lab.pan+" — "+t.trayItems[S.panItem].replace(/^\d+\.\s*/,"")
+             : groups.length ? groups.map(([m,n])=>t.mat[m]+" × "+n).join(" + ") : t.lab.empty;
+  $("secTxt").textContent=t.secTxt(S.loose?t.lab.loose:t.lab.tight, S.on.box==="cover"?t.lab.covered:t.lab.open, stTxt);
+}
+function renderStatus(){
+  const L=[], t=d();
+  if(!S.on.fg&&!S.on.scope&&!S.on.coil) L.push([t.stNothing,false]);
+  const sol=S.sol;
+  if(sol){ const ipk=Math.max(cabs(sol.I1),cabs(sol.I2)); if(ipk>2.0) L.push([t.st.hot,true]); }
+  if(S.on.scope&&S.z.on&&S.z.mode==="DMM"){
+    const r=S.z.rd;
+    if(r.live&&S.z.dfn==="OHM") L.push([t.st.live,true]);
+    if(r.band&&S.z.dfn==="ACV") L.push([t.st.band,true]);
+  }
+  if(S.on.fg&&S.fg.pow&&S.fg.wave!==0) L.push([t.st.wave,true]);
+  if(S.pan&&S.on.box!=="cover") L.push([t.st.open,false]);
+  if(S.msg&&performance.now()-S.msg.t<9000) L.push(["• "+S.msg.s,S.msg.warn]);
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
+}
+/* stopwatch runs on bench time */
+function fmtTime(v){ v=Math.max(0,v); const m=Math.floor(v/60), s=v-60*m; return m+":"+s.toFixed(2).padStart(5,"0"); }
+function swValue(){ return S.swAcc+(S.swRun?S.t-S.swT0:0); }
+$("swBtn").onclick=()=>{ if(S.swRun){ S.swAcc+=S.t-S.swT0; S.swRun=false; } else { S.swT0=S.t; S.swRun=true; } updSwBtn(); };
+$("swLap").onclick=()=>{ S.laps.push(swValue()); renderLaps(); };
+$("swReset").onclick=()=>{ S.swRun=false; S.swAcc=0; S.swT0=S.t; S.laps=[]; renderLaps(); updSwBtn(); };
+function updSwBtn(){ const b=$("swBtn"); b.textContent=S.swRun?d().stop:d().start; b.classList.toggle("run",S.swRun); }
+function renderLaps(){ const box=$("laps"); box.innerHTML="";
+  for(let i=S.laps.length-1;i>=0;i--){ const el=document.createElement("div"); el.textContent=String(i+1).padStart(2," ")+"   "+fmtTime(S.laps[i]); box.appendChild(el); } }
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const s of SPEEDS){ const b=document.createElement("button"); b.textContent=s+"×"; if(s===S.speed) b.className="on";
+    b.onclick=()=>{ S.speed=s; renderSpeeds(); }; box.appendChild(b); } }
+$("fitBtn").onclick=()=>{ S.zoom=1; S.touched=false; fit(); };
+
+/* the displays refresh a few times a second, like the real instrument */
+function updateReadings(){
+  const z=S.z, now=performance.now();
+  if(now-z.rd.t<260) return;
+  z.rd.t=now;
+  if(!S.on.scope||!z.on) return;
+  if(z.mode==="SCOPE"){
+    if(z.hold) return;
+    if(z.tmode==="SINGLE"&&!z.armed) return;
+    const v=scopeView();
+    z.rd.wait=v.wait;
+    if(v.wait) return;
+    if(z.tmode==="SINGLE"&&v.amp>0){ z.armed=false; z.held=v; say(d().m.single); }
+    const A=v.amp*z.probe, vd=VDIV[z.vi];
+    const clip=A/vd>4.2, shown=Math.min(A,4.2*vd);
+    const noisy=x=>Math.max(0,x*(1+0.003*gauss())+0.004*vd*gauss());
+    z.rd.vpp=noisy(2*shown); z.rd.vmax=noisy(shown)*(Math.random()<0.06?1+0.15*Math.random():1);
+    z.rd.f=A>0.3*vd?v.f*(1+(clip?0.02:0.0008)*gauss()):0;
+  }else{
+    Object.assign(z.rd,{live:false,band:false,beep:false},dmmReading());
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   11.  LANGUAGE
    ══════════════════════════════════════════════════════════════ */
 function applyLang(){
   const t=d();
   document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
-  $("tab-lab").textContent=t.tabLab; $("tab-task").textContent=t.tabTask; $("tab-log").textContent=t.tabLog; $("tab-help").textContent=t.tabHelp;
-  $("t-h-speed").textContent=t.hSpeed; $("t-h-fg").textContent=t.hFg; $("t-h-scope").textContent=t.hScope; $("t-h-sw").textContent=t.hSw;
-  $("t-fgtip").textContent=t.fgtip; $("unclip").textContent=t.unclip; $("undmm").textContent=t.undmm;
-  $("swGo").textContent=t.start; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
-  $("recName").placeholder=t.recPh; $("recBtn").textContent=t.rec; $("csv").textContent=t.csv; $("clearLog").textContent=t.clearLog;
-  $("v-task").textContent=TASK[lang]; $("v-help").textContent=HELP[lang];
+  $("t-benchcap").textContent=t.benchcap; $("t-instrcap").textContent=t.instrcap;
+  $("t-fglbl").textContent=t.fglbl; $("t-zlbl").textContent=t.zlbl;
+  $("t-tray").textContent=t.tray;
+  $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("t-h-view").textContent=t.hView;
+  $("t-speedhint").textContent=t.speedHint; $("fitBtn").textContent=t.fitBtn;
+  $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"APhO 2025 E1 — 유도가열 조리기의 물리 · HaslaLab":"APhO 2025 E1 — Physics of Induction Cooking · HaslaLab";
-  buildTools(); renderSpeeds(); renderLog(); redrawAll();
+  updSwBtn(); renderLaps(); renderSpeeds(); drawTray(); renderStatus();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 
 /* ══════════════════════════════════════════════════════════════
-   7.  MAIN LOOP
+   12.  MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
-let last=performance.now(), frame=0;
+let tPrev=performance.now()/1000, ui=0;
 function tick(){
-  const now=performance.now(), dt=Math.min(0.25,(now-last)/1000)*st.speed; last=now;
+  const now=performance.now()/1000;
+  const dtr=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  const dt=dtr*S.speed;
+  S.t+=dt;
   solve();
-  if(st.pan&&st.sol){
-    const Irms=(cabs(st.sol.I1)+cabs(st.sol.I2))/Math.SQRT2, n=Math.max(1,Math.ceil(dt/0.5));
-    for(let i=0;i<n;i++) st.panT=thermalStep(st.pan,st.panT,Irms,freq(),dt/n,!st.covered);
+  if(S.pan&&S.sol){
+    const Irms=(cabs(S.sol.I1)+cabs(S.sol.I2))/Math.SQRT2, n=Math.max(1,Math.ceil(dt/0.5));
+    for(let i=0;i<n;i++) S.panT=thermalStep(S.pan,S.panT,Irms,freq(),dt/n,S.on.box!=="cover");
   }
-  if(st.swRun) st.sw+=dt;
-  $("swLbl").textContent=fmtSw(st.sw);
-  const Ipk=st.sol?cabs(st.sol.I1)+cabs(st.sol.I2):0;
-  let m="";
-  if(st.fg.on&&!st.cap&&Ipk>0.05) m=d().nocap; else if(Ipk>2.0) m=d().ovr;
-  const w=$("warn");
-  if(now<st.msgUntil){ w.textContent=st.msg; w.className="warn ok"; } else { w.textContent=m; w.className="warn"; }
-  if(++frame%3===0) drawScope();
-  if(frame%10===0) drawBench();
-  setTimeout(()=>requestAnimationFrame(tick),40);
+  updateReadings();
+  if(CW>10) draw();
+  drawFgPanel(); drawZoyiPanel();
+  $("swLbl").textContent=fmtTime(swValue());
+  if(++ui%6===0){ drawXsec(); renderStatus(); }
+  requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
-applyLang(); layout(); requestAnimationFrame(tick);
+layout(); applyLang(); solve(); requestAnimationFrame(tick);
 </script>
   <script src="adfit.js"></script>
 </body>
