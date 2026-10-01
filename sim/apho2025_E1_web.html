@@ -180,7 +180,7 @@ const T = {
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠 확대·축소 / 빈 곳 드래그 이동",
     mat:{AL:"알루미늄",CU:"구리",SS304:"SS304",SS410:"SS410"},
     lab:{coil1:"코일 #1",coil2:"코일 #2",clamp:"클램프",pins:"핀 단자",base:"받침판",
-         tight:"조임",loose:"풀림",empty:"두 코일 사이: 비어 있음",pan:"팬 (뒤집어 고정)",ntc:"NTC",
+         tight:"조임",loose:"풀림",gap:(g,u)=>"틈 "+g+" mm 중 "+u+" mm 사용",empty:"두 코일 사이: 비어 있음",pan:"팬 (뒤집어 고정)",ntc:"NTC",
          covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
          hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
     secTxt:(cl,cov,st)=>"클램프: "+cl+"   ·   "+cov+"\n"+st,
@@ -210,10 +210,12 @@ const T = {
       tightened:"클램프를 조였습니다.",
       needLoose:"위 하우징이 클램프로 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
       keyNoUp:"클램프는 위 하우징을 아래 하우징에 고정할 때 씁니다. 지금은 하우징이 하나뿐입니다.",
-      plateTake:s=>s+" 판 1장 — 코일 하우징을 클릭(또는 끌어다 놓기)해 아래 하우징의 홈에 넣으세요.",
-      plateIn:(s,n)=>s+" 판을 아래 하우징 홈에 넣었습니다 (지금 "+n+"장).",
+      plateTake:s=>s+" 판 1장 — 조립된 코일(#1·#2)을 클릭하거나 끌어다 놓아 두 코일 사이 틈에 밀어 넣으세요.",
+      plateIn:(s,n,left)=>s+" 판을 두 코일 사이에 넣었습니다 (지금 "+n+"장, 남은 틈 "+left+" mm).",
+      needBoth:"판은 코일 #1과 #2를 모두 받침판에 쌓은 뒤, 두 코일 사이의 틈에 넣습니다.",
+      flipPlates:"두 코일 사이의 판을 먼저 빼세요.",
       plateOut:"맨 위 판을 빼서 부품함에 넣었습니다.",
-      slotFull:"두 코일 사이 틈이 가득 찼습니다.",
+      slotFull:"두 코일 사이 틈에 더는 들어가지 않습니다 (틈 두께를 넘습니다).",
       panTake:s=>s+" — 코일 하우징을 클릭(또는 끌어다 놓기)하세요. 위 하우징이 있으면 그 받침에 클램프로 물립니다.",
       panTop:"팬을 위 하우징 받침에 올렸습니다. 렌치로 조여 고정한 뒤 '맨 위 하우징 뒤집기'로 팬이 두 코일 사이로 가게 하세요.",
       panIn:"팬을 아래 하우징 홈에 넣었습니다. NTC 커넥터가 앞으로 나옵니다.",
@@ -272,7 +274,7 @@ const T = {
     trayHelp:"L-click pick/place, R-click return\nwheel zoom, drag bare bench to pan",
     mat:{AL:"aluminium",CU:"copper",SS304:"SS304",SS410:"SS410"},
     lab:{coil1:"coil #1",coil2:"coil #2",clamp:"clamp",pins:"pin terminals",base:"base plate",
-         tight:"tight",loose:"loose",empty:"between the coils: empty",pan:"pan (clamped upside down)",ntc:"NTC",
+         tight:"tight",loose:"loose",gap:(g,u)=>u+" of the "+g+" mm gap used",empty:"between the coils: empty",pan:"pan (clamped upside down)",ntc:"NTC",
          covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
          hook:"hook", gnd:"ground clip", rest:"probe rest"},
     secTxt:(cl,cov,st)=>"clamps: "+cl+"   ·   "+cov+"\n"+st,
@@ -302,10 +304,12 @@ const T = {
       tightened:"Clamps tightened.",
       needLoose:"The upper housing is clamped down. Loosen the clamps with the Allen key (10) first.",
       keyNoUp:"The clamps hold the upper housing on the lower one; there is only one housing now.",
-      plateTake:s=>"One "+s+" plate — click (or drop it on) the coil housing to lay it in the recess of the lower housing.",
-      plateIn:(s,n)=>s+" plate laid in the recess ("+n+" now).",
+      plateTake:s=>"One "+s+" plate — click (or drop it on) the assembled coils (#1 and #2) to slide it into the gap between them.",
+      plateIn:(s,n,left)=>s+" plate slid between the coils ("+n+" now, "+left+" mm of gap left).",
+      needBoth:"Plates go into the gap between coil #1 and coil #2: stack both housings on the base plate first.",
+      flipPlates:"Take the plates out from between the coils first.",
       plateOut:"Top plate taken out and put back in the box.",
-      slotFull:"The gap between the coils is full.",
+      slotFull:"No more fits: the gap between the coils is full.",
       panTake:s=>s+" — click (or drop it on) the coil housing. With an upper housing in place it is clamped onto its platform.",
       panTop:"Pan on the upper platform. Tighten the clamps, then use 'Flip the top housing' to bring the pan between the coils.",
       panIn:"Pan laid in the recess of the lower housing. Its NTC socket comes out in front.",
@@ -366,9 +370,9 @@ const FG_EMAX=32.0, FG_RS=2.0, FG_ILIM=4.0;
 const NTC_R0=10000, NTC_T0=298, NTC_B=3950;
 const CAPS={
   C470N: {C:470e-9, esr:0.010,film:true, node:"K1",lab:"470 nF", r:0,   h:1.1},
-  C470U: {C:470e-6, esr:0.030,film:false,node:"K2",lab:"470 µF", r:0.5, h:1.6},
-  C1000U:{C:1000e-6,esr:0.030,film:false,node:"K3",lab:"1000 µF",r:0.65,h:2.0},
-  C2200U:{C:2200e-6,esr:0.030,film:false,node:"K4",lab:"2200 µF",r:0.8, h:2.6}};
+  C470U: {C:470e-6, esr:0.030,film:false,node:"K2",lab:"470 µF", r:0.4, h:1.6},
+  C1000U:{C:1000e-6,esr:0.030,film:false,node:"K3",lab:"1000 µF",r:0.5, h:2.0},
+  C2200U:{C:2200e-6,esr:0.030,film:false,node:"K4",lab:"2200 µF",r:0.63,h:2.1}};
 const CAP_KEYS=["C470N","C470U","C1000U","C2200U"];
 const NODES=["FGP","FGN","R1A","R1B","B1","B2","B3","B4","C1A","C1B","C2A","C2B",
              "K1A","K1B","K2A","K2B","K3A","K3B","K4A","K4B","NTCA","NTCB","DCOM","DVO"];
@@ -540,11 +544,12 @@ function solve(){ S.net=buildNet(); S.sol=analyze(S.net,freq()); return S.sol; }
 const hsAt=slot=>S.hs.c1.at===slot?"c1":S.hs.c2.at===slot?"c2":null;
 const lowHs=()=>hsAt("low"), upHs=()=>hsAt("up"), topHs=()=>upHs()||lowHs();
 /* is the winding of housing c next to the gap between the housings? (Fig. 3b: no for both, as delivered) */
-function windingInner(c){ return S.hs[c].flip; }   /* as delivered both windings face outwards */
+
 function coilPlace(){
   const lo=lowHs(), up=upHs();
   let mfac=0;
-  if(lo&&up) mfac=(windingInner(lo)?1.35:1)*(windingInner(up)?1.35:1);
+  /* coaxial loops: M ~ (r^2+d^2)^-3/2, calibrated at the 15 mm of the kit as assembled (Fig. 3b) */
+  if(lo&&up){ const dd=Math.abs(coilY(lo)-coilY(up)), r=1.6, d0=1.5; mfac=Math.pow((r*r+d0*d0)/(r*r+dd*dd),1.5); }
   let p1=false, p2=false;
   if(S.pan){
     if(S.panPos==="gap"){ p1=!!S.hs.c1.at; p2=!!S.hs.c2.at; }
@@ -565,7 +570,11 @@ const Z_BOX=[86,95.5,0.4,18.9,40,43.6];
 const Z_FACE={x0:86,y1:18.9,z:40,W:9.5,H:18.5};
 /* coil kit (Fig. 3a): a textured plastic base and two identical black housings that stack on it */
 const BASE={x0:47.5,x1:60.5,z0:16,z1:26,t:0.5};
-const HS={x0:51,x1:57,z0:18.5,z1:23.5,h:2.2,rec:0.35};
+/* (photos) lower housing: a 9 mm plate, winding just under its top face, four 4 mm corner posts;
+   upper housing: a 7 mm plate standing on four 4 mm corner legs, so an 8 mm gap open on all sides
+   is left between the plates when the kit is assembled - the plates slide in there */
+const HS={x0:51.3,x1:56.7,z0:18.5,z1:23.5,pl:0.9,up:0.7,post:0.4,leg:0.4};
+const PLATE_MM={AL:0.73,CU:0.71,SS304:0.72,SS410:0.76}, PAN_MM={AL:0.73,SS410:0.76};
 const BOX_W=18, BOX_D=15, BOX_H=8;
 const BOX_SLOT={desk:[70,7]};
 /* binding posts on the black box: R1 between the two at the back, the capacitor posts at the front */
@@ -581,9 +590,17 @@ function boxOrigin(){
   return null;
 }
 /* bottom of a housing slot, and the height of a housing's winding */
-const hsY0=slot=>BASE.t+(slot==="low"?0:HS.h+(S.loose?0.45:0));
-function coilY(c){ const h=S.hs[c], y0=hsY0(h.at), nearTop=(h.at==="up")!==h.flip; return y0+(nearTop?HS.h-0.55:0.55); }
-const stackTop=()=>{ const t=topHs(); return t?hsY0(S.hs[t].at)+HS.h:BASE.t; };
+const LOW_TOP=BASE.t+HS.pl;                     /* top face of the lower plate */
+/* the upper plate: its bottom and top face (legs down, or flipped with the legs up) */
+function upPlate(lift){ const c=upHs(), f=c&&S.hs[c].flip, l=lift===false?0:(S.loose?0.45:0), b=LOW_TOP+HS.post+(f?0:HS.leg)+l; return [b,b+HS.up]; }
+function coilY(c){
+  const h=S.hs[c];
+  if(h.at==="low") return h.flip?BASE.t+0.12:LOW_TOP-0.12;
+  const [b,t]=upPlate(); return h.flip?b+0.12:t-0.12;
+}
+const gapMM=()=>upHs()?(upPlate(false)[0]-LOW_TOP)*10:99;
+const gapUsed=()=>S.stack.reduce((a,m)=>a+PLATE_MM[m],0)+(S.pan&&S.panPos==="gap"?PAN_MM[S.pan]:0);
+const stackTop=()=>{ const up=upHs(); if(up){ const [,t]=upPlate(); return t+(S.hs[up].flip?HS.leg:0); } return lowHs()?LOW_TOP+HS.post:BASE.t; };
 const capAt=k=>[CAP_SLOT[k][0]+S.at[k][0],CAP_SLOT[k][1]+S.at[k][1]];
 /* footprints on the desk (x0 x1 z0 z1, unshifted) for the free placing */
 const FOOT={fg:[4,28,36,54], scope:[86,95.5,39,47.6], base:[BASE.x0,BASE.x1,BASE.z0-3,BASE.z1],
@@ -1113,19 +1130,43 @@ function drawPost(o,id){
   for(const t of [0.45,0.75]) HCIRC(x,BOX_H+0.25+t,z,0.6,null,"rgba(0,0,0,0.35)",1);
   HCIRC(x,BOX_H+POST_H,z,0.24,"#0b0b0c");
 }
+/* upright, legs down (in the posts of the box) */
 function drawCapBody(k,cx,y0,cz){
   const c=CAPS[k], k2=ppcm();
-  if(c.film){                       /* brown box film capacitor */
-    BOX([cx-0.9,cx+0.9,y0,y0+1.2,cz-0.4,cz+0.4],"#a9542a","#7e3a1a","#984a22","#4e2410");
-    const p=NP(cx,y0+0.6,cz-0.4); TXT(p[0],p[1],"474J",{size:Math.max(3.5,k2*0.26),fill:"#f0d0b8"});
-  }else{                            /* dark blue electrolytic with the pale minus stripe and a scored top */
-    CYL(cx,y0,y0+c.h,cz,c.r,"#1d2e86","#2c3fa3","#0c1650");
-    LINE([NP(cx+c.r*0.75,y0+0.15,cz-c.r*0.55),NP(cx+c.r*0.75,y0+c.h-0.15,cz-c.r*0.55)],"#a9b6e3",Math.max(1.5,k2*c.r*0.35));
-    HCIRC(cx,y0+c.h,cz,c.r*0.92,"#b9bec7","#7c828c",1);
-    LINE([NP(cx-c.r*0.5,y0+c.h,cz),NP(cx+c.r*0.5,y0+c.h,cz)],"#7c828c",1);
-    LINE([NP(cx,y0+c.h,cz-c.r*0.5),NP(cx,y0+c.h,cz+c.r*0.5)],"#7c828c",1);
-    const p=NP(cx-c.r*0.2,y0+c.h*0.55,cz-c.r); TXT(p[0],p[1],c.lab.replace(" ",""),{size:Math.max(3.5,k2*0.24),fill:"#dfe5ff"});
+  if(c.film){                       /* brick-red box film capacitor, CBB 100 V 474J */
+    BOX([cx-0.55,cx+0.55,y0,y0+1.0,cz-0.25,cz+0.25],"#c4552f","#9a3f20","#b14a28","#5e2410");
+    const p=NP(cx,y0+0.55,cz-0.25); TXT(p[0],p[1],"474J",{size:Math.max(3,k2*0.2),fill:"#f3d2c0"});
+  }else{                            /* royal-blue sleeve, white print, black rubber seal at the leg end */
+    CYL(cx,y0,y0+0.12,cz,c.r,"#141416","#1c1c1f","#000");
+    CYL(cx,y0+0.12,y0+c.h,cz,c.r,"#2f45b4","#4058c8","#18256e");
+    LINE([NP(cx+c.r*0.75,y0+0.25,cz-c.r*0.55),NP(cx+c.r*0.75,y0+c.h-0.2,cz-c.r*0.55)],"#9fb0ec",Math.max(1.2,k2*c.r*0.28));
+    HCIRC(cx,y0+c.h,cz,c.r*0.9,"#3a52c2","#203090",1);
+    const p=NP(cx-c.r*0.25,y0+c.h*0.55,cz-c.r); TXT(p[0],p[1],c.lab.replace(" ",""),{size:Math.max(3,k2*0.2),fill:"#eef2ff"});
   }
+}
+/* the convex outline of a set of screen points (for a cylinder lying on its side) */
+function hull(P){
+  P=P.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]), lo=[], hi=[];
+  for(const p of P){ while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0) lo.pop(); lo.push(p); }
+  for(let i=P.length-1;i>=0;i--){ const p=P[i]; while(hi.length>=2&&cr(hi[hi.length-2],hi[hi.length-1],p)<=0) hi.pop(); hi.push(p); }
+  return lo.slice(0,-1).concat(hi.slice(0,-1));
+}
+/* lying on the desk, axis along z, legs pointing to the front (as in the kit photo) */
+function drawCapLying(k,cx,cz){
+  const c=CAPS[k], k2=ppcm();
+  if(c.film){
+    BOX([cx-0.55,cx+0.55,0,0.5,cz-0.5,cz+0.5],"#c4552f","#9a3f20","#b14a28","#5e2410");
+    const p=NP(cx,0.5,cz); TXT(p[0],p[1],"474J",{size:Math.max(3,k2*0.22),fill:"#f3d2c0"});
+    return;
+  }
+  const r=c.r, z0=cz-c.h/2, z1=cz+c.h/2, ring=z=>{ const a=[]; for(let i=0;i<24;i++){ const t=i/24*Math.PI*2; a.push(NP(cx+r*Math.cos(t),r+r*Math.sin(t),z)); } return a; };
+  const A=ring(z0), Bk=ring(z1);
+  POLY(hull(A.concat(Bk)),"#2f45b4","#18256e",1);
+  LINE([NP(cx+r*0.2,2*r-0.02,z0+0.15),NP(cx+r*0.2,2*r-0.02,z1-0.15)],"#9fb0ec",Math.max(1.2,k2*r*0.3));
+  POLY(Bk,"#3a52c2","#203090",1);                       /* top of the can (back) */
+  POLY(A,"#141416","#000",1);                           /* rubber seal with the legs (front) */
+  const p=NP(cx-r*0.6,r*1.6,cz); TXT(p[0],p[1],c.lab.replace(" ",""),{size:Math.max(3,k2*0.2),fill:"#eef2ff"});
 }
 function drawCapOnBox(k,o){         /* legs pushed into the side holes of the two front posts */
   const [ax,az]=POSTS.B1, [bx,bz]=POSTS.B2, cx=o[0]+(ax+bx)/2, cz=o[1]+az+1.6, y0=BOX_H+1.6;
@@ -1138,9 +1179,10 @@ function drawCapsDesk(only){
     if(S.cap[k]!=="desk"||(only&&k!==only)) continue;
     const [cx,cz]=capAt(k);
     /* lying in its spot with the long legs pointing to the front */
-    LINE([NP(cx-0.25,0.15,cz),NP(cx-0.35,0.12,cz-3.2)],"#d6d9dc",Math.max(1.2,ppcm()*0.1));
-    LINE([NP(cx+0.25,0.15,cz),NP(cx+0.35,0.12,cz-3.4)],"#d6d9dc",Math.max(1.2,ppcm()*0.1));
-    drawCapBody(k,cx,0,cz);
+    const c=CAPS[k], fz=c.film?cz-0.5:cz-c.h/2, ly=c.film?0.1:c.r;
+    LINE([NP(cx-0.2,ly,fz),NP(cx-0.45,0.08,fz-1.4),NP(cx-0.55,0.08,fz-3.0)],"#d6d9dc",Math.max(1.2,ppcm()*0.09));
+    LINE([NP(cx+0.2,ly,fz),NP(cx+0.45,0.08,fz-1.5),NP(cx+0.6,0.08,fz-3.3)],"#d6d9dc",Math.max(1.2,ppcm()*0.09));
+    drawCapLying(k,cx,cz);
     S.zones[k]=rectOf([NP(cx-1.2,0,cz-3),NP(cx+1.2,0,cz+1.2),NP(cx-1.2,3.2,cz),NP(cx+1.2,3.2,cz)]);
     const p=NP(cx,0,cz+1.6);
     TXT(p[0],p[1]-ppcm()*0.3,CAPS[k].lab,{size:Math.max(5,ppcm()*0.42),fill:"#3b2d1d"});
@@ -1148,66 +1190,84 @@ function drawCapsDesk(only){
 }
 /* the coil kit: plastic base, the lower and upper housings, whatever lies in the gap, the clamps */
 function drawCoilStack(){
-  const B=BASE, k=ppcm();
+  const B=BASE;
   BOX([B.x0,B.x1,0,B.t,B.z0,B.z1],"#1d1e21","#131416","#17181a","#08080a");
   for(let i=0;i<40;i++){ const r=(i*7919)%997/997, q=(i*104729)%991/991;
     const p=NP(B.x0+0.4+r*(B.x1-B.x0-0.8),B.t,B.z0+0.4+q*(B.z1-B.z0-0.8)); OVAL(p[0],p[1],0.7,0.45,"rgba(255,255,255,0.07)",null); }
-  for(const [x,z] of [[B.x0+1.2,B.z0+1.2],[B.x1-1.2,B.z1-1.2]]) HCIRC(x,B.t,z,0.25,"#0a0a0b");
   const lo=lowHs(), up=upHs();
   if(lo) drawHousing(lo,"low");
-  /* plates lie in the recess of the lower housing; a pan either lies there too or hangs under a flipped upper */
-  const gy=BASE.t+HS.h-HS.rec+0.02;
-  const open=!up||S.loose;
-  if(lo&&open){
-    let y=gy;
-    for(const m of S.stack){ const M=MAT[m]; BOX([52.65,55.35,y,y+PLATE_T,19.2,23.2],M.col,M.edge,M.edge); y+=PLATE_T; }
+  if(lo){                                   /* what lies on the lower plate, in the gap */
+    let y=LOW_TOP+0.01;
+    for(const m of S.stack){ const M=MAT[m], th=PLATE_MM[m]/10; BOX([52.65,55.35,y,y+th,18.7,23.3],M.col,M.edge,M.edge); y+=th; }
     if(S.pan&&S.panPos==="gap"){
-      const M=MAT[S.pan==="AL"?"AL":"SS410"], py=S.panOn==="up"?hsY0("up")-PLATE_T:gy;
-      BOX([53,55,py,py+PLATE_T,20.2,22.2],M.col,M.edge,M.edge);
+      const M=MAT[S.pan==="AL"?"AL":"SS410"], th=PAN_MM[S.pan]/10, py=S.panOn==="up"?upPlate()[0]-th:y;
+      BOX([53,55,py,py+th,20,22],M.col,M.edge,M.edge);
     }
   }
   if(up) drawHousing(up,"up");
-  const t=topHs(), ty=stackTop();
-  if(S.pan&&S.panPos==="top"&&t){            /* pan on the top platform, held down by the clamps */
-    const M=MAT[S.pan==="AL"?"AL":"SS410"];
-    BOX([53,55,ty,ty+PLATE_T,20,22],M.col,M.edge,M.edge);
-    HCIRC(54,ty+PLATE_T,21,0.32,"#f2f2ee","#bdbdb5",1);
-  }
-  if(up){                                    /* the two clamps and their M3 cap screws */
-    const lift=S.loose?0.35:0;
-    for(const x of [HS.x0+0.2,HS.x1-1.6]){
-      BOX([x,x+1.4,ty,ty+0.45,20.1,21.9],"#1b1c1f","#121315","#17181a","#000");
-      CYL(x+0.7,ty+0.45,ty+0.75+lift,21,0.32,"#9ea3a8","#c7cbcf","#5d6166");
-      HCIRC(x+0.7,ty+0.75+lift,21,0.14,"#2a2c2f");
-    }
+  const ty=stackTop();
+  if(S.pan&&S.panPos==="top"&&up){          /* pan on the upper platform, held by the clamps */
+    const M=MAT[S.pan==="AL"?"AL":"SS410"], th=PAN_MM[S.pan]/10;
+    BOX([53,55,ty,ty+th,20,22],M.col,M.edge,M.edge);
+    HCIRC(54,ty+th,21,0.32,"#f2f2ee","#bdbdb5",1);
   }
   S.zones.base=boxRect([B.x0,B.x1,0,B.t,B.z0,B.z1]);
-  S.zones.stack=lo?boxRect([HS.x0,HS.x1,0,ty+0.8,HS.z0,HS.z1]):null;
+  S.zones.stack=lo?boxRect([HS.x0,HS.x1,0,ty+0.6,HS.z0,HS.z1]):null;
   if(S.pan) drawNtc();
 }
+/* corner blocks: posts on the lower plate, legs under (or, flipped, over) the upper plate */
+function corners(y0,y1,col){
+  const s=0.7;
+  for(const [x,z] of [[HS.x0,HS.z1-s],[HS.x1-s,HS.z1-s],[HS.x0,HS.z0],[HS.x1-s,HS.z0]])
+    BOX([x,x+s,y0,y1,z,z+s],col[0],col[1],col[2],"#050506");
+}
 function drawHousing(c,slot){
-  const y0=hsY0(slot), y1=y0+HS.h, h=S.hs[c], k=ppcm();
-  BOX([HS.x0,HS.x1,y0,y1,HS.z0,HS.z1],"#27282c","#1a1b1e","#222327","#08080a");
-  for(let yy=y0+0.3;yy<y1;yy+=0.3) LINE([NP(HS.x0,yy,HS.z0),NP(HS.x1,yy,HS.z0)],"rgba(255,255,255,0.035)",1);   /* print layers */
-  if(slot==="low"&&!upHs()||slot==="up"){       /* the top face: the round coil window, copper if the winding is under it */
-    const nearTop=(slot==="up")!==h.flip;
-    HCIRC(54,y1,21,1.9,"#121315","#050506",1);
-    if(nearTop){ HCIRC(54,y1,21,1.6,"#7a4424",null); for(let r=1.5;r>0.5;r-=0.25) HCIRC(54,y1,21,r,null,"#a8603a",1); HCIRC(54,y1,21,0.5,"#121315"); }
-    else if(slot==="low"){ const gy=y1-HS.rec; HCIRC(54,gy,21,1.9,"#0d0e10",null); }
-    for(const [x,z] of [[HS.x0+0.7,19.2],[HS.x1-0.7,22.8]]) HCIRC(x,y1,z,0.28,slot==="low"?"#c8962e":"#0a0a0b");
+  const h=S.hs[c], k=ppcm(), C=["#2a2b2f","#1b1c1f","#232428"];
+  let y0,y1;
+  if(slot==="low"){ y0=BASE.t; y1=LOW_TOP; }
+  else [y0,y1]=upPlate();
+  const legsUp=slot==="up"&&h.flip, legsDown=slot==="up"&&!h.flip;
+  if(legsDown) corners(y0-HS.leg,y0,C);
+  BOX([HS.x0,HS.x1,y0,y1,HS.z0,HS.z1],C[0],C[1],C[2],"#08080a");
+  LINE([NP(HS.x0,(y0+y1)/2,HS.z0),NP(HS.x1,(y0+y1)/2,HS.z0)],"rgba(255,255,255,0.04)",1);    /* print layers */
+  if(slot==="low") corners(y1,y1+HS.post,C);
+  if(legsUp) corners(y1,y1+HS.leg,C);
+  /* top face: the winding in its epoxy, seen in a square recess (lower) or through a round window (upper) */
+  const top=slot==="low"?!upHs():true;
+  if(top){
+    const near=(slot==="up")?!h.flip:!h.flip;
+    if(slot==="low"){
+      POLY([NP(52.0,y1,19.2),NP(56.0,y1,19.2),NP(56.0,y1,22.8),NP(52.0,y1,22.8)],"#151618","#060607",1);
+      HCIRC(54,y1,21,1.6,near?"#2a2420":"#0d0e10","#3b3f45",1);
+      if(near){ for(let r=1.4;r>0.6;r-=0.25) HCIRC(54,y1,21,r,null,"rgba(180,110,60,0.55)",1);
+        LINE([NP(54.6,y1,21.4),NP(55.6,y1,22.6),NP(56.0,y1,22.6)],"#c47a3f",Math.max(1,k*0.08)); }
+    } else {
+      POLY([NP(52.4,y1,19.5),NP(55.6,y1,19.5),NP(55.6,y1,22.5),NP(52.4,y1,22.5)],"#141517","#060607",1);
+      HCIRC(54,y1,21,1.25,near?"#8f969c":"#2a2d31","#55595f",1);
+      if(near) HCIRC(54,y1,21,0.9,null,"rgba(200,130,80,0.6)",1);
+    }
+    for(const [x,z] of [[HS.x0+0.35,HS.z0+0.35],[HS.x1-0.35,HS.z0+0.35],[HS.x0+0.35,HS.z1-0.35],[HS.x1-0.35,HS.z1-0.35]]) if(slot==="up") HCIRC(x,y1,z,0.14,"#050506");
+    for(const x of [HS.x0+0.7,HS.x1-0.7]) HCIRC(x,y1,21,0.26,"#c8962e","#7a5a14",1);       /* brass inserts */
   }
-  /* coil pin terminals: a black 2-way header level with the winding */
+  if(slot==="up"&&!h.flip){                 /* the two clamps with their M3 cap screws */
+    const lift=S.loose?0.25:0;
+    for(const x of [HS.x0+0.05,HS.x1-1.45]){
+      BOX([x,x+1.4,y1,y1+0.3,20.0,22.0],"#1b1c1f","#121315","#17181a","#000");
+      CYL(x+0.7,y1+0.3,y1+0.5+lift,21,0.28,"#9ea3a8","#c7cbcf","#5d6166");
+      HCIRC(x+0.7,y1+0.5+lift,21,0.12,"#2a2c2f");
+    }
+  }
+  /* coil pin terminals: a black 2-way header on the front, level with the winding */
   const cy=coilY(c);
-  BOX([HS.x0+0.5,HS.x0+1.8,cy-0.32,cy+0.32,HS.z0-0.25,HS.z0],"#101012","#0a0a0b","#151517","#000");
-  for(const x of [0.85,1.45]) { const p=NP(HS.x0+x,cy,HS.z0-0.25); OVAL(p[0],p[1],Math.max(1,k*0.09),Math.max(1,k*0.09),"#c9a64a",null); }
-  const p=NP(HS.x1-1.0,y0+HS.h*0.5,HS.z0);
-  TXT(p[0],p[1],c==="c1"?"#1":"#2",{size:Math.max(5,k*0.5),fill:"#cfd3d6",bold:true});
-  if(h.flip){ const q=NP(HS.x1-2.4,y0+HS.h*0.5,HS.z0); TXT(q[0],q[1],"↕",{size:Math.max(5,k*0.5),fill:"#8a9096"}); }
+  BOX([HS.x0+0.5,HS.x0+1.8,cy-0.2,cy+0.2,HS.z0-0.25,HS.z0],"#101012","#0a0a0b","#151517","#000");
+  for(const x of [0.85,1.45]){ const p=NP(HS.x0+x,cy,HS.z0-0.25); OVAL(p[0],p[1],Math.max(1,k*0.08),Math.max(1,k*0.08),"#c9a64a",null); }
+  const p=NP(HS.x1-0.9,(y0+y1)/2,HS.z0);
+  TXT(p[0],p[1],c==="c1"?"#1":"#2",{size:Math.max(4,k*0.36),fill:"#cfd3d6",bold:true});
 }
 /* the pan's NTC leads come out of the stack and end in a small socket lying in front */
 function drawNtc(){
   const a=termInfo("NTCA"); if(!a) return;
-  const o=S.at.base, top=S.panPos==="top", sy=top?stackTop()+0.1:(S.panOn==="up"?hsY0("up"):BASE.t+HS.h)-0.05;
+  const o=S.at.base, top=S.panPos==="top", sy=top?stackTop()+0.1:(S.panOn==="up"?upPlate()[0]:LOW_TOP)-0.03;
   const start=[54+o[0],sy,20+o[1]], mid=[54+o[0],0.3,HS.z0-0.8+o[1]];
   withOff([0,0],()=>{
     for(const [dx,col] of [[-0.12,"#e8e8e8"],[0.12,"#1a1a1a"]]){
@@ -1512,12 +1572,12 @@ function place(x,y){
     const up=upHs(), lo=lowHs();
     if(!lo){ say(t.m.needHs,true); return; }
     if(cr.k==="key"){ if(!up){ say(t.m.keyNoUp,true); return; } S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
-    if(up&&!S.loose){ say(t.m.needLoose,true); return; }
-    if(cr.k==="plate"){
-      if(S.pan&&S.panPos==="gap"){ say(t.m.slotBusy,true); return; }
-      if(S.stack.length>=8){ say(t.m.slotFull,true); return; }
-      S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length));
+    if(cr.k==="plate"){                       /* slid in sideways through the open gap: no need to touch the clamps */
+      if(!up){ say(t.m.needBoth,true); return; }
+      if(gapUsed()+PLATE_MM[cr.mat]>gapMM()+1e-6){ say(t.m.slotFull,true); return; }
+      S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length,(gapMM()-gapUsed()).toFixed(1)));
     }else{
+      if(up&&!S.loose){ say(t.m.needLoose,true); return; }
       if(S.pan){ say(t.m.slotBusy,true); return; }
       if(up){ S.pan=PAN_OF[cr.id]; S.panPos="top"; S.panOn="up"; say(t.m.panTop); }
       else { if(S.stack.length){ say(t.m.slotBusy,true); return; } S.pan=PAN_OF[cr.id]; S.panPos="gap"; S.panOn="low"; say(t.m.panIn); }
@@ -1582,16 +1642,14 @@ function onRClick(p){
 function unstackOne(){
   const t=d(), up=upHs(), lo=lowHs();
   const panOut=()=>{ detachTerms(["NTCA","NTCB"]); S.pan=null; S.panItem=null; S.panPos=null; S.panOn=null; say(t.m.panOut); };
-  if(up){
+  if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }     /* plates slide out sideways */
+  else if(up){
     if(!S.loose){ say(t.m.needLoose,true); return; }
     if(S.pan&&S.panOn==="up"&&S.panPos==="top") panOut();
-    else if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }
     else if(S.pan&&S.panOn==="low") panOut();
     else { if(S.pan&&S.panOn==="up") panOut(); takeHousing(up); }
   } else if(lo){
-    if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }
-    else if(S.pan) panOut();
-    else takeHousing(lo);
+    if(S.pan) panOut(); else takeHousing(lo);
   }
   solve(); drawTray();
 }
@@ -1606,11 +1664,9 @@ function flipTop(){
   if(S.on.box==="cover"){ say(t.m.covered,true); return; }
   if(S.hs[c].at==="up"){
     if(!S.loose){ say(t.m.needLoose,true); return; }
-    if(S.pan&&S.panOn==="up"){
-      const to=S.panPos==="top"?"gap":"top";
-      if(to==="gap"&&S.stack.length){ say(t.m.slotBusy,true); return; }
-      S.panPos=to;
-    } else if(S.pan&&S.panPos==="top"){ say(t.m.slotBusy,true); return; }
+    if(S.stack.length){ say(t.m.flipPlates,true); return; }
+    if(S.pan&&S.panOn==="up") S.panPos=S.panPos==="top"?"gap":"top";
+    else if(S.pan&&S.panPos==="top"){ say(t.m.slotBusy,true); return; }
   } else if(S.stack.length||S.pan){ say(t.m.flipEmpty,true); return; }
   S.hs[c].flip=!S.hs[c].flip;
   say(t.m.flipDone(t.trayItems[c],S.hs[c].flip)); solve();
@@ -1783,41 +1839,39 @@ function drawXsec(){
   const c=xsCtx, W=XSW, H=XSH, t=d();
   c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,W,H);
   c.fillStyle="#12161b"; c.fillRect(0,0,W,H);
-  const s=W/26, ox=W*0.08;
-  const X=x=>ox+x*s, Y=y=>H-14-y*s;
-  const R=(x0,y0,x1,y1,f,o)=>{ c.fillStyle=f; c.fillRect(X(x0),Y(y1),(x1-x0)*s,(y1-y0)*s); if(o){ c.strokeStyle=o; c.lineWidth=1; c.strokeRect(X(x0)+.5,Y(y1)+.5,(x1-x0)*s-1,(y1-y0)*s-1); } };
+  const s=W/16, ox=W*0.06, sy=(H-28)/4.2;
+  const X=x=>ox+x*s, Y=y=>H-14-y*sy;          /* x in cm across the kit, y in cm (stretched x2) */
+  const R=(x0,y0,x1,y1,f,o)=>{ c.fillStyle=f; c.fillRect(X(x0),Y(y1),(x1-x0)*s,(y1-y0)*sy); if(o){ c.strokeStyle=o; c.lineWidth=1; c.strokeRect(X(x0)+.5,Y(y1)+.5,(x1-x0)*s-1,(y1-y0)*sy-1); } };
   const L=(txt,x,y,col,al)=>{ c.font="11px "+FONT; c.fillStyle=col||"#9aa3ab"; c.textAlign=al||"left"; c.textBaseline="middle"; c.fillText(txt,X(x),Y(y)); };
   $("flipBtn").disabled=!topHs();
-  if(!S.on.base){ L("—",8,4,"#69717a","center"); $("secTxt").textContent=""; return; }
-  R(0,0,16,0.6,"#3a3d42","#52565c");
-  const lo=lowHs(), up=upHs(), hh=2.6, lift=S.loose&&up?0.5:0;
-  const housing=(cc,y0,slot)=>{                   /* a housing with its recess facing the gap */
-    const inner=S.hs[cc].flip, nearTop=(slot==="up")!==inner;
-    R(4,y0,12,y0+hh,"#2c2f34","#52565c");
-    const rec=slot==="low"?[y0+hh-0.45,y0+hh]:[y0,y0+0.45];
-    R(5,rec[0],11,rec[1],"#12161b");
-    const wy=nearTop?y0+hh-0.85:y0+0.55; R(5,wy-0.15,11,wy+0.15,"#e8a2a2");
-    R(3.3,wy-0.15,4,wy+0.15,"#d4b050");
-    L((cc==="c1"?t.lab.coil1:t.lab.coil2)+(inner?" ("+t.flipped+")":""),12.6,y0+hh/2,"#e8eef2");
-  };
-  let y=0.6;
-  if(lo){ housing(lo,y,"low"); }
-  const gy=0.6+hh-0.45;
-  let py=gy; const th=0.22, groups=[];
-  for(const m of S.stack){ R(6.65,py,9.35,py+th,MAT[m].col,MAT[m].edge); py+=th;
+  if(!S.on.base){ L("—",6,1,"#69717a","center"); $("secTxt").textContent=""; return; }
+  const bx=1, hx0=3.3, hx1=8.7, col="#2c2f34", ed="#52565c";
+  R(0.3,0,11.7,BASE.t,"#3a3d42",ed);
+  const lo=lowHs(), up=upHs();
+  const wind=(cc)=>{ const y=coilY(cc); R(hx0+0.9,y-0.07,hx1-0.9,y+0.07,"#e8a2a2"); R(hx0-0.6,y-0.07,hx0,y+0.07,"#d4b050");
+    L((cc==="c1"?t.lab.coil1:t.lab.coil2)+(S.hs[cc].flip?" ("+t.flipped+")":""),hx1+1.6,y,"#e8eef2"); };
+  if(lo){ R(hx0,BASE.t,hx1,LOW_TOP,col,ed); R(hx0,LOW_TOP,hx0+0.7,LOW_TOP+HS.post,col,ed); R(hx1-0.7,LOW_TOP,hx1,LOW_TOP+HS.post,col,ed); wind(lo); }
+  let py=LOW_TOP; const groups=[];
+  for(const m of S.stack){ const th=PLATE_MM[m]/10; R(hx0+1.35,py,hx1-1.35,py+th,MAT[m].col,MAT[m].edge); py+=th;
     if(groups.length&&groups[groups.length-1][0]===m) groups[groups.length-1][1]++; else groups.push([m,1]); }
-  const uy=0.6+hh+lift;
-  if(up) housing(up,uy,"up");
-  const pc=S.pan?MAT[S.pan==="AL"?"AL":"SS410"].col:null;
-  if(S.pan&&S.panPos==="gap") R(7,S.panOn==="up"?uy:gy,9,(S.panOn==="up"?uy:gy)+th,pc,"#000");
-  const topY=(up?uy:0.6)+(lo?hh:0);
-  if(S.pan&&S.panPos==="top") R(7,topY,9,topY+th,pc,"#000");
-  if(up){ R(4.2,topY,5.6,topY+0.4,"#1a1c1f","#52565c"); R(10.4,topY,11.8,topY+0.4,"#1a1c1f","#52565c"); L(t.lab.clamp,12.9,topY+0.3,"#9aa3ab"); }
-  L(t.lab.pins,0.1,7.9,"#d4b050");
-  if(S.on.box==="cover"){ c.setLineDash([5,4]); c.strokeStyle="#f2c14e"; c.strokeRect(X(-0.5),Y(9.2),17*s,9.2*s); c.setLineDash([]); }
+  const pc=S.pan?MAT[S.pan==="AL"?"AL":"SS410"].col:null, pth=S.pan?PAN_MM[S.pan]/10:0;
+  if(up){
+    const [b,tp]=upPlate(), f=S.hs[up].flip;
+    if(!f){ R(hx0,b-HS.leg,hx0+0.7,b,col,ed); R(hx1-0.7,b-HS.leg,hx1,b,col,ed); }
+    R(hx0,b,hx1,tp,col,ed);
+    if(f){ R(hx0,tp,hx0+0.7,tp+HS.leg,col,ed); R(hx1-0.7,tp,hx1,tp+HS.leg,col,ed); }
+    else { R(hx0+0.05,tp,hx0+1.45,tp+0.3,"#1a1c1f",ed); R(hx1-1.45,tp,hx1-0.05,tp+0.3,"#1a1c1f",ed); L(t.lab.clamp,hx1+1.6,tp+0.25,"#9aa3ab"); }
+    if(S.pan&&S.panPos==="gap"&&S.panOn==="up") R(hx0+1.8,b-pth,hx1-1.8,b,pc,"#000");
+    if(S.pan&&S.panPos==="top") R(hx0+1.8,tp,hx1-1.8,tp+pth,pc,"#000");
+    wind(up);
+  }
+  if(S.pan&&S.panPos==="gap"&&S.panOn==="low") R(hx0+1.8,py,hx1-1.8,py+pth,pc,"#000");
+  L(t.lab.pins,0.1,3.9,"#d4b050");
+  if(S.on.box==="cover"){ c.setLineDash([5,4]); c.strokeStyle="#f2c14e"; c.strokeRect(X(0.1),Y(4.1),11.8*s,4.1*sy); c.setLineDash([]); }
+  const gapTxt=up?" · "+t.lab.gap(gapMM().toFixed(1),gapUsed().toFixed(2)):"";
   const stTxt= S.pan ? t.lab.pan+" — "+t.trayItems[S.panItem].replace(/^\d+\.\s*/,"")+" ("+(S.panPos==="top"?t.up:t.lo)+")"
              : groups.length ? groups.map(([m,n])=>t.mat[m]+" × "+n).join(" + ") : t.lab.empty;
-  $("secTxt").textContent=t.secTxt(up?(S.loose?t.lab.loose:t.lab.tight):"—", S.on.box==="cover"?t.lab.covered:t.lab.open, stTxt);
+  $("secTxt").textContent=t.secTxt(up?(S.loose?t.lab.loose:t.lab.tight):"—", S.on.box==="cover"?t.lab.covered:t.lab.open, stTxt+gapTxt);
 }
 function renderStatus(){
   const L=[], t=d();
