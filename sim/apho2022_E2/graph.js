@@ -4,7 +4,7 @@ function drawGraph() {
         data: {
             labels: timestamps,
             datasets: [{
-                label: "Frequency (Hz)",
+                label: L("Frequency (Hz)"),
                 data: signals,
                 backgroundColor: ["#ffffff"],
                 borderColor: ["#ffffff"],
@@ -18,7 +18,7 @@ function drawGraph() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Time (s)',
+                        text: L('Time (s)'),
                         font: {
                             family:"calibri",
                             size: 20,
@@ -34,7 +34,7 @@ function drawGraph() {
                 y: {
                     title: {
                         display: true,
-                        text: 'Frequency (Hz)',
+                        text: L('Frequency (Hz)'),
                         font: {
                             family: "calibri",
                             size: 20,

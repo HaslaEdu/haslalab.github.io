@@ -142,6 +142,7 @@
     <h2 id="t-h-sec"></h2>
     <canvas id="xsec"></canvas>
     <div class="hint" id="secTxt"></div>
+    <button id="flipBtn" style="width:100%;margin-top:6px"></button>
 
     <h2 id="t-h-view"></h2>
     <button id="fitBtn" style="width:100%"></button>
@@ -168,9 +169,10 @@ const T = {
     speedHint:"가열·냉각은 실제로 수 분이 걸립니다. 배속은 스톱워치에도 똑같이 적용됩니다.",
     fitBtn:"화면에 맞추기",
     start:"시작", stop:"정지", lap:"랩", reset:"리셋",
-    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", coil:"3. 코일 조립체",
-      bb:"5. 바나나–바나나 케이블", bp:"6. 바나나–핀 케이블", r1:"7. 노란 저항 R₁",
-      box:"8. 블랙박스 (단자 4개)", C470N:"9. 축전기 470 nF", C470U:"9. 축전기 470 µF",
+    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", base:"3. 코일 받침판",
+      c1:"3. 코일 #1 하우징", c2:"3. 코일 #2 하우징",
+      bb:"5. 바나나–바나나 케이블", bp:"6. 바나나–핀 케이블",
+      box:"7·8. 블랙박스 + 저항 R₁", C470N:"9. 축전기 470 nF", C470U:"9. 축전기 470 µF",
       C1000U:"9. 축전기 1000 µF", C2200U:"9. 축전기 2200 µF", key:"10. 육각 렌치",
       panAL:"11. 알루미늄 팬", panSS:"12. SS410 팬",
       plAL:"13. 알루미늄 판", plCU:"14. 구리 판", plS4:"15. SS304 판", plS10:"16. SS410 판"},
@@ -182,17 +184,18 @@ const T = {
          covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
          hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
     secTxt:(cl,cov,st)=>"클램프: "+cl+"   ·   "+cov+"\n"+st,
+    flipBtn:"맨 위 하우징 뒤집기", lo:"두 코일 사이", up:"위 받침", flipped:"뒤집힘", none:"하우징 없음",
     stNothing:"부품함에서 부품을 골라 실험대 위 원하는 곳에 놓으세요.",
     m:{
       placeIt:s=>s+" — 실험대 위 놓을 곳을 클릭하세요. (우클릭: 취소)",
-      moveIt:s=>s+"를 들었습니다 — 옮길 곳을 클릭하세요. 꽂힌 케이블은 그대로입니다. (우클릭: 제자리)",
+      moveIt:s=>s+"을(를) 들었습니다 — 옮길 곳을 클릭하세요. 꽂힌 케이블은 그대로입니다. (우클릭: 제자리)",
       stays:"제자리에 그대로 두었습니다.",
       placed:s=>s+" — 놓았습니다.",
       noFit:"그곳에는 놓을 수 없습니다. 책상 위, 다른 부품과 겹치지 않는 곳에 놓으세요.",
       cable1:"케이블의 한쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
       cable2:"다른 쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)",
       needSock:"바나나 플러그는 바나나 소켓(빨강·검정 구멍)에만 꽂힙니다.",
-      needPin:"핀 쪽 끝은 코일 핀·축전기 다리·NTC 선에 끼웁니다.",
+      needPin:"핀 쪽 끝은 코일 하우징의 핀 단자나 팬의 NTC 소켓에 끼웁니다.",
       full:"그 단자에는 더 꽂을 수 없습니다.",
       same:"같은 단자입니다.",
       plugged:"케이블을 연결했습니다.",
@@ -202,21 +205,34 @@ const T = {
       probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
       probeOn:"프로브를 물렸습니다.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
       noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
-      keyTake:"렌치로 코일 조립체의 클램프 나사를 클릭하세요. (우클릭: 내려놓기)",
-      loosened:"클램프를 풀었습니다 — 두 코일 사이에 판이나 팬을 넣을 수 있습니다.",
+      keyTake:"렌치로 코일 위쪽 클램프 나사를 클릭하세요. (우클릭: 내려놓기)",
+      loosened:"클램프를 풀었습니다 — 위 하우징을 들어 판·팬을 넣거나 빼고, 뒤집을 수 있습니다.",
       tightened:"클램프를 조였습니다.",
-      needLoose:"클램프가 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
-      plateTake:s=>s+" 판 1장 — 코일 조립체를 클릭해 두 코일 사이에 끼우세요.",
-      plateIn:(s,n)=>s+" 판을 끼웠습니다 (지금 "+n+"장).",
+      needLoose:"위 하우징이 클램프로 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
+      keyNoUp:"클램프는 위 하우징을 아래 하우징에 고정할 때 씁니다. 지금은 하우징이 하나뿐입니다.",
+      plateTake:s=>s+" 판 1장 — 코일 하우징을 클릭(또는 끌어다 놓기)해 아래 하우징의 홈에 넣으세요.",
+      plateIn:(s,n)=>s+" 판을 아래 하우징 홈에 넣었습니다 (지금 "+n+"장).",
       plateOut:"맨 위 판을 빼서 부품함에 넣었습니다.",
       slotFull:"두 코일 사이 틈이 가득 찼습니다.",
-      panTake:s=>s+" — 코일 조립체를 클릭해 두 코일 사이에 뒤집어 고정하세요.",
-      panIn:"팬을 두 코일 사이에 고정했습니다. NTC 선 두 가닥이 앞으로 나옵니다.",
+      panTake:s=>s+" — 코일 하우징을 클릭(또는 끌어다 놓기)하세요. 위 하우징이 있으면 그 받침에 클램프로 물립니다.",
+      panTop:"팬을 위 하우징 받침에 올렸습니다. 렌치로 조여 고정한 뒤 '맨 위 하우징 뒤집기'로 팬이 두 코일 사이로 가게 하세요.",
+      panIn:"팬을 아래 하우징 홈에 넣었습니다. NTC 커넥터가 앞으로 나옵니다.",
       panOut:"팬을 빼서 부품함에 넣었습니다.",
       slotBusy:"두 코일 사이에 이미 다른 것이 들어 있습니다.",
-      noCoil:"먼저 3번 코일 조립체를 실험대에 놓으세요.",
-      covered:"코일 조립체가 블랙박스 안에 있습니다. 블랙박스를 먼저 치우세요.",
-      capBox:"축전기 다리를 블랙박스 단자 한 쌍에 물렸습니다.",
+      noCoil:"먼저 3번 코일 받침판과 하우징을 실험대에 놓으세요.",
+      needBase:"먼저 3번 코일 받침판을 실험대에 놓으세요.",
+      needHs:"먼저 코일 하우징을 받침판 위에 올리세요.",
+      hsLow:s=>s+"을(를) 받침판에 올렸습니다 (아래 칸).",
+      hsUp:s=>s+"을(를) 위에 얹었습니다 — 육각 렌치로 클램프를 조이세요.",
+      stackFull:"하우징은 아래·위 두 칸까지만 쌓입니다.",
+      hsOut:s=>s+"을(를) 빼서 부품함에 넣었습니다.",
+      baseBusy:"받침판 위의 하우징을 먼저 빼세요.",
+      flipDone:(s,f)=>s+"을(를) "+(f?"뒤집었습니다 — 코일이 이제 두 하우징 사이 쪽에 있습니다.":"원래대로 돌려놓았습니다."),
+      flipNone:"뒤집을 하우징이 없습니다.",
+      flipEmpty:"홈에 판이나 팬이 있으면 아래 하우징을 뒤집을 수 없습니다.",
+      covered:"코일이 블랙박스 안에 있습니다. 블랙박스를 먼저 치우세요.",
+      capBox:"축전기 다리를 블랙박스 앞쪽 단자 두 개에 물렸습니다.",
+      capBusy:"블랙박스 앞 단자에는 이미 다른 축전기가 물려 있습니다.",
       returned:s=>s+" — 부품함에 넣었습니다.",
       fgPow:p=>"함수 발생기 전원 "+(p?"켜짐":"꺼짐")+" (뒷면 스위치 9)",
       fgRear:"전원 스위치(9)는 뒷면에 있습니다 — 아래 계기 확대의 뒷면에서 누르세요.",
@@ -245,9 +261,10 @@ const T = {
     speedHint:"Heating and cooling really take minutes. The scale applies to the stopwatch too.",
     fitBtn:"Fit to window",
     start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
-    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", coil:"3. Coil assembly",
-      bb:"5. Banana–banana cable", bp:"6. Banana–pin cable", r1:"7. Yellow resistor R₁",
-      box:"8. Black box (4 sockets)", C470N:"9. Capacitor 470 nF", C470U:"9. Capacitor 470 µF",
+    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", base:"3. Coil base plate",
+      c1:"3. Coil #1 housing", c2:"3. Coil #2 housing",
+      bb:"5. Banana–banana cable", bp:"6. Banana–pin cable",
+      box:"7·8. Black box + resistor R₁", C470N:"9. Capacitor 470 nF", C470U:"9. Capacitor 470 µF",
       C1000U:"9. Capacitor 1000 µF", C2200U:"9. Capacitor 2200 µF", key:"10. Allen key",
       panAL:"11. Aluminium pan", panSS:"12. SS410 pan",
       plAL:"13. Aluminium plate", plCU:"14. Copper plate", plS4:"15. SS304 plate", plS10:"16. SS410 plate"},
@@ -259,6 +276,7 @@ const T = {
          covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
          hook:"hook", gnd:"ground clip", rest:"probe rest"},
     secTxt:(cl,cov,st)=>"clamps: "+cl+"   ·   "+cov+"\n"+st,
+    flipBtn:"Flip the top housing", lo:"between the coils", up:"on the top platform", flipped:"flipped", none:"no housing",
     stNothing:"Pick a part from the parts box and put it anywhere on the bench.",
     m:{
       placeIt:s=>s+" — click where on the bench to put it. (R-click: cancel)",
@@ -269,7 +287,7 @@ const T = {
       cable1:"Click the terminal for one end of the cable. (R-click: cancel)",
       cable2:"Click the terminal for the other end. (R-click: cancel)",
       needSock:"A banana plug only goes into a banana socket (the red and black holes).",
-      needPin:"The pin end goes onto a coil pin, a capacitor lead or an NTC lead.",
+      needPin:"The pin end goes into a coil pin header or the pan's NTC socket.",
       full:"No room for another plug on that terminal.",
       same:"That is the same terminal.",
       plugged:"Cable connected.",
@@ -279,21 +297,34 @@ const T = {
       probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
       probeOn:"Probe clipped on.", probeOff:"Probe unclipped and hung up.",
       noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
-      keyTake:"Click the clamp screws of the coil assembly with the key. (R-click: put it down)",
-      loosened:"Clamps loosened — plates or a pan can go between the coils.",
+      keyTake:"Click the clamp screws on top of the coils with the key. (R-click: put it down)",
+      loosened:"Clamps loosened — lift the upper housing to put plates or a pan in or out, or to flip it.",
       tightened:"Clamps tightened.",
-      needLoose:"The clamps are tight. Loosen them with the Allen key (item 10) first.",
-      plateTake:s=>"One "+s+" plate — click the coil assembly to slide it between the coils.",
-      plateIn:(s,n)=>s+" plate in ("+n+" now).",
+      needLoose:"The upper housing is clamped down. Loosen the clamps with the Allen key (10) first.",
+      keyNoUp:"The clamps hold the upper housing on the lower one; there is only one housing now.",
+      plateTake:s=>"One "+s+" plate — click (or drop it on) the coil housing to lay it in the recess of the lower housing.",
+      plateIn:(s,n)=>s+" plate laid in the recess ("+n+" now).",
       plateOut:"Top plate taken out and put back in the box.",
       slotFull:"The gap between the coils is full.",
-      panTake:s=>s+" — click the coil assembly to clamp it upside down between the coils.",
-      panIn:"Pan clamped between the coils. Its two NTC leads come out at the front.",
+      panTake:s=>s+" — click (or drop it on) the coil housing. With an upper housing in place it is clamped onto its platform.",
+      panTop:"Pan on the upper platform. Tighten the clamps, then use 'Flip the top housing' to bring the pan between the coils.",
+      panIn:"Pan laid in the recess of the lower housing. Its NTC socket comes out in front.",
       panOut:"Pan taken out and put back in the box.",
       slotBusy:"Something else is already between the coils.",
-      noCoil:"Put the coil assembly (item 3) on the bench first.",
-      covered:"The coil assembly is inside the black box. Move the box first.",
-      capBox:"Capacitor leads clamped into a pair of black-box sockets.",
+      noCoil:"Put the coil base plate (3) and a housing on the bench first.",
+      needBase:"Put the coil base plate (3) on the bench first.",
+      needHs:"Put a coil housing on the base plate first.",
+      hsLow:s=>s+" set on the base plate (lower place).",
+      hsUp:s=>s+" set on top — tighten the clamps with the Allen key.",
+      stackFull:"Only two housings stack: lower and upper.",
+      hsOut:s=>s+" taken off and put back in the box.",
+      baseBusy:"Take the housings off the base plate first.",
+      flipDone:(s,f)=>s+(f?" flipped — its winding now faces the gap between the housings.":" turned back the right way up."),
+      flipNone:"There is no housing to flip.",
+      flipEmpty:"Take the plates or pan out of the recess before flipping the lower housing.",
+      covered:"The coils are inside the black box. Move the black box first.",
+      capBox:"Capacitor legs clamped in the two front posts of the black box.",
+      capBusy:"Another capacitor is already in the front posts of the black box.",
       returned:s=>s+" — back in the parts box.",
       fgPow:p=>"Function generator power "+(p?"on":"off")+" (rear switch 9)",
       fgRear:"The power switch (9) is on the rear panel: press it in the close-up below.",
@@ -391,16 +422,16 @@ function analyze(net,f){
   for(const [a,bb,R] of net.res) stampR(NI[a],NI[bb],R);
   for(const [a,bb,R] of net.loads) stampR(NI[a],NI[bb],R);
   for(const [a,bb,Cc,esr] of net.caps) stampY(NI[a],NI[bb],cdiv(C(1),C(esr,-1/(w*Cc))));
-  let rex=0;
-  if(net.pan) rex+=rload(net.pan,f);
-  if(net.stack.length) rex+=0.02*Math.sqrt(Math.max(f,1)/40000)*net.stack.length;
-  const Meff=COIL_M*shielding(net.stack,f);
+  /* plates between the coils load both; the pan loads the coil(s) it lies against */
+  const rs=net.stack.length?0.02*Math.sqrt(Math.max(f,1)/40000)*net.stack.length:0, rp=net.pan?rload(net.pan,f):0;
+  const rex1=rs+(net.panC1?rp:0), rex2=rs+(net.panC2?rp:0);
+  const Meff=COIL_M*net.mfac*shielding(net.stack,f);
   const bFG=N-1, bL1=N, bL2=N+1;
   at(nmap[NI.FGP],bFG,C(1)); at(nmap[NI.FGN],bFG,C(-1));
   at(bFG,nmap[NI.FGP],C(1)); at(bFG,nmap[NI.FGN],C(-1));
   at(bFG,bFG,C(-FG_RS)); b[bFG]=C(net.E);
-  const Zc=C(COIL_RL+rex,w*COIL_L), Zm=C(0,w*Meff);
-  for(const [br,p,m,other] of [[bL1,"C1A","C1B",bL2],[bL2,"C2A","C2B",bL1]]){
+  const Zm=C(0,w*Meff);
+  for(const [br,p,m,other,Zc] of [[bL1,"C1A","C1B",bL2,C(COIL_RL+rex1,w*COIL_L)],[bL2,"C2A","C2B",bL1,C(COIL_RL+rex2,w*COIL_L)]]){
     at(nmap[NI[p]],br,C(1)); at(nmap[NI[m]],br,C(-1));
     at(br,nmap[NI[p]],C(1)); at(br,nmap[NI[m]],C(-1));
     at(br,br,[-Zc[0],-Zc[1]]); at(br,other,[-Zm[0],-Zm[1]]);
@@ -459,15 +490,19 @@ const TDIV=[1e-6,2e-6,5e-6,1e-5,2e-5,5e-5,1e-4,2e-4,5e-4,1e-3,2e-3,5e-3,1e-2,2e-
 const SPEEDS=[1,5,20,60];
 const S={
   zoom:1.0, cam:[0,0], basePpcm:7, touched:false, mouse:[0,0], view0:null, knob:null,
-  on:{fg:false,scope:false,coil:false,r1:false,box:null},        /* box: null | "desk" | "cover" */
-  cap:{C470N:null,C470U:null,C1000U:null,C2200U:null},            /* null | "desk" | "b12" | "b34" */
+  on:{fg:false,scope:false,base:false,box:null},                  /* box: null | "desk" | "cover" (over the coils) */
+  /* the two identical coil housings stack on the plastic base: at null | "low" | "up";
+     flip: turned upside down (the winding then sits next to the gap instead of the outside) */
+  hs:{c1:{at:null,flip:false},c2:{at:null,flip:false}},
+  cap:{C470N:null,C470U:null,C1000U:null,C2200U:null},            /* null | "desk" | "box" (legs in the front posts) */
   cables:[], stock:{bb:{r:2,k:2},bp:{r:2,k:2}},
   probe:{tip:null,gnd:null},
   stack:[], pan:null, panItem:null, panT:T_AMB, loose:false,
+  panPos:null, panOn:null,      /* panPos: "top" (on the upper platform) | "gap";  panOn: the housing slot holding it */
   plates:{AL:5,CU:5,SS304:4,SS410:4},
   carry:null, zones:{},
   /* each part stands wherever it was put down: its shift (cm, along x and z) from the drawing's own place */
-  at:{fg:[0,0],scope:[0,0],coil:[0,0],r1:[0,0],box:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
+  at:{fg:[0,0],scope:[0,0],base:[0,0],box:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
   fg:{pow:false,amp:0.25,range:2,coarse:0.5,fine:0.5,wave:0},
   z:{on:false,mode:"SCOPE",fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
      vi:7,ti:6,ypos:0,xpos:0,trig:0,hold:false,held:null,dfn:"ACV",rfn:0,armed:true,
@@ -484,13 +519,12 @@ function freq(){
 function buildNet(){
   const res=[], caps=[], loads=[];
   for(const cb of S.cables) if(cb.b) res.push([cb.a,cb.b,RCAB]);
-  if(S.on.r1) res.push(["R1A","R1B",R1_OHM]);
+  if(S.on.box) res.push(["R1A","R1B",R1_OHM]);           /* R1 is screwed onto the black box */
   for(const k of CAP_KEYS){
     const p=S.cap[k]; if(!p) continue;
     const n=CAPS[k].node;
     caps.push([n+"A",n+"B",CAPS[k].C,CAPS[k].esr]);
-    if(p==="b12"){ res.push([n+"A","B1",1e-3],[n+"B","B2",1e-3]); }
-    else if(p==="b34"){ res.push([n+"A","B3",1e-3],[n+"B","B4",1e-3]); }
+    if(p==="box") res.push([n+"A","B1",1e-3],[n+"B","B2",1e-3]);
   }
   if(S.pan) res.push(["NTCA","NTCB",rntc(S.panT)]);
   if(S.on.scope&&S.z.on){
@@ -498,9 +532,26 @@ function buildNet(){
     if(S.z.mode==="DMM"&&S.z.dfn!=="OHM") loads.push(["DVO","DCOM",RDMM]);
   }
   const E=(S.on.fg&&S.fg.pow)?FG_EMAX*S.fg.amp:0;
-  return {res,caps,loads,E,stack:S.stack,pan:S.pan};
+  const cp=coilPlace();
+  return {res,caps,loads,E,stack:S.stack,pan:S.pan,panC1:cp.panC1,panC2:cp.panC2,mfac:cp.mfac};
 }
 function solve(){ S.net=buildNet(); S.sol=analyze(S.net,freq()); return S.sol; }
+/* which housing sits where, and what that means for the coupling */
+const hsAt=slot=>S.hs.c1.at===slot?"c1":S.hs.c2.at===slot?"c2":null;
+const lowHs=()=>hsAt("low"), upHs=()=>hsAt("up"), topHs=()=>upHs()||lowHs();
+/* is the winding of housing c next to the gap between the housings? (Fig. 3b: no for both, as delivered) */
+function windingInner(c){ return S.hs[c].flip; }   /* as delivered both windings face outwards */
+function coilPlace(){
+  const lo=lowHs(), up=upHs();
+  let mfac=0;
+  if(lo&&up) mfac=(windingInner(lo)?1.35:1)*(windingInner(up)?1.35:1);
+  let p1=false, p2=false;
+  if(S.pan){
+    if(S.panPos==="gap"){ p1=!!S.hs.c1.at; p2=!!S.hs.c2.at; }
+    else { const t=topHs(); p1=t==="c1"; p2=t==="c2"; }
+  }
+  return {mfac,panC1:p1,panC2:p2};
+}
 
 /* ══════════════════════════════════════════════════════════════
    3.  GEOMETRY  (bench cm; x to the right, z away from you, y up)
@@ -512,23 +563,30 @@ const FG_BOX=[4,28,0,9.6,36,54];           /* x0 x1 y0 y1 z0 z1 */
 const FG_FACE={x0:4,y1:9.6,z:36,W:24,H:9};
 const Z_BOX=[86,95.5,0.4,18.9,40,43.6];
 const Z_FACE={x0:86,y1:18.9,z:40,W:9.5,H:18.5};
-const R1_BOX=[18,34,0,5.2,6,16];
-const COIL={base:[46,62,0,0.6,14,28], lo:[50,58,0.6,2.8,17,25], gap:[2.8,3.8], hi:[50,58,3.8,6.0,17,25]};
+/* coil kit (Fig. 3a): a textured plastic base and two identical black housings that stack on it */
+const BASE={x0:47.5,x1:60.5,z0:16,z1:26,t:0.5};
+const HS={x0:51,x1:57,z0:18.5,z1:23.5,h:2.2,rec:0.35};
 const BOX_W=18, BOX_D=15, BOX_H=8;
-const BOX_SLOT={desk:[70,7], cover:[45,13.5]};
-const POST_DX=[3.5,7.5,10.5,14.5], POST_Z=5.0, POST_H=1.3;
+const BOX_SLOT={desk:[70,7]};
+/* binding posts on the black box: R1 between the two at the back, the capacitor posts at the front */
+const POSTS={R1A:[2.6,10,"r"],R1B:[15.4,10,"k"],B1:[5.5,4.4,"r"],B2:[12.5,4.4,"k"]};
+const POST_H=1.3;
 const CAP_SLOT={C470N:[89,27],C470U:[94,27],C1000U:[99,27],C2200U:[104.5,27]};
 const PROBE_REST={tip:[73,0.25,31],gnd:[77.5,0.25,29.5]};
 const PLATE_T=0.12;
 
 function boxOrigin(){
   if(S.on.box==="desk") return [BOX_SLOT.desk[0]+S.at.box[0],BOX_SLOT.desk[1]+S.at.box[1]];
-  if(S.on.box==="cover") return [BOX_SLOT.cover[0]+S.at.coil[0],BOX_SLOT.cover[1]+S.at.coil[1]];
+  if(S.on.box==="cover") return [(BASE.x0+BASE.x1)/2-BOX_W/2+S.at.base[0],(BASE.z0+BASE.z1)/2-BOX_D/2+S.at.base[1]];
   return null;
 }
+/* bottom of a housing slot, and the height of a housing's winding */
+const hsY0=slot=>BASE.t+(slot==="low"?0:HS.h+(S.loose?0.45:0));
+function coilY(c){ const h=S.hs[c], y0=hsY0(h.at), nearTop=(h.at==="up")!==h.flip; return y0+(nearTop?HS.h-0.55:0.55); }
+const stackTop=()=>{ const t=topHs(); return t?hsY0(S.hs[t].at)+HS.h:BASE.t; };
 const capAt=k=>[CAP_SLOT[k][0]+S.at[k][0],CAP_SLOT[k][1]+S.at[k][1]];
 /* footprints on the desk (x0 x1 z0 z1, unshifted) for the free placing */
-const FOOT={fg:[4,28,36,54], scope:[86,95.5,39,47.6], coil:[46,62,14,28], r1:[18,34,6,16],
+const FOOT={fg:[4,28,36,54], scope:[86,95.5,39,47.6], base:[BASE.x0,BASE.x1,BASE.z0-3,BASE.z1],
             box:[BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D]};
 for(const k in CAP_SLOT){ const [cx,cz]=CAP_SLOT[k]; FOOT[k]=[cx-1.4,cx+1.4,cz-3,cz+1.4]; }
 const DESK=[-9,127,-7,63];
@@ -544,8 +602,8 @@ function freeSpot(id,bx,bz){
   return o;
 }
 /* terminal table: position, plug direction, kind  (termLocal: where it is on the unshifted part) */
-const TERM_OWNER={FGP:"fg",FGN:"fg",DCOM:"scope",DVO:"scope",R1A:"r1",R1B:"r1",
-                  C1A:"coil",C1B:"coil",C2A:"coil",C2B:"coil",NTCA:"coil",NTCB:"coil"};
+const TERM_OWNER={FGP:"fg",FGN:"fg",DCOM:"scope",DVO:"scope",
+                  C1A:"base",C1B:"base",C2A:"base",C2B:"base",NTCA:"base",NTCB:"base"};
 function termInfo(id){
   const info=termLocal(id), own=TERM_OWNER[id];
   if(!info||!own) return info;
@@ -559,28 +617,19 @@ function termLocal(id){
     case "FGN": return S.on.fg?{p:face(FG_FACE,21.2,6.3),d:[0,0,-1],k:"sock",col:"k"}:null;
     case "DCOM":return S.on.scope?{p:face(Z_FACE,5.6,16.6),d:[0,0,-1],k:"sock",col:"k"}:null;
     case "DVO": return S.on.scope?{p:face(Z_FACE,7.9,16.6),d:[0,0,-1],k:"sock",col:"r"}:null;
-    case "R1A": return S.on.r1?{p:[19.9,5.2,11],d:[0,1,0],k:"sock",col:"r"}:null;
-    case "R1B": return S.on.r1?{p:[32.1,5.2,11],d:[0,1,0],k:"sock",col:"r"}:null;
     case "C1A": case "C1B": case "C2A": case "C2B":{
-      if(!S.on.coil) return null;
-      const x=id.endsWith("A")?50.8:52.4, y=id[1]==="1"?4.9+(S.loose?0.45:0):1.7;
-      /* under the black box the leads disappear through its front wall */
-      if(S.on.box==="cover") return {p:[x,Math.min(y,3),BOX_SLOT.cover[1]],d:[0,0,-1],k:"pin",col:"g",hidden:true};
-      return {p:[x,y,16.6],d:[0,0,-1],k:"pin",col:"g"};
+      /* the coil pin terminals: a 2-way header on the front of each housing, level with its winding */
+      const c=id[1]==="1"?"c1":"c2"; if(!S.on.base||!S.hs[c].at) return null;
+      const x=HS.x0+(id.endsWith("A")?0.85:1.45), y=coilY(c);
+      return {p:[x,y,HS.z0-0.25],d:[0,0,-1],k:"pin",col:"g",hidden:S.on.box==="cover"};
     }
-    case "NTCA": case "NTCB":
-      return S.pan?{p:[id==="NTCA"?52.3:55.7,0.25,10.6],d:[0,0,-1],k:"pin",col:id==="NTCA"?"r":"k"}:null;
+    case "NTCA": case "NTCB":     /* the pan's two NTC leads end in a small 2-way socket lying in front */
+      return (S.on.base&&S.pan)?{p:[id==="NTCA"?53.7:54.3,0.3,12.6],d:[0,0,-1],k:"pin",col:"g"}:null;
   }
-  if(id[0]==="B"&&id.length===2){
+  if(POSTS[id]){
     const o=boxOrigin(); if(!o) return null;
-    const i=+id[1]-1;
-    return {p:[o[0]+POST_DX[i],BOX_H+POST_H,o[1]+POST_Z],d:[0,1,0],k:"sock",col:(i%2===0)?"r":"k"};
-  }
-  if(id[0]==="K"){
-    const key=CAP_KEYS[+id[1]-1];
-    if(S.cap[key]!=="desk") return null;
-    const [cx,cz]=capAt(key);
-    return {p:[cx+(id[2]==="A"?-0.8:0.8),0.25,cz-2.6],d:[0,0,-1],k:"pin",col:"g"};
+    const [dx,dz,col]=POSTS[id];
+    return {p:[o[0]+dx,BOX_H+POST_H,o[1]+dz],d:[0,1,0],k:"sock",col};
   }
   return null;
 }
@@ -597,7 +646,7 @@ const zCv=$("zoyiCv"), zCtx=zCv.getContext("2d");
 const xsCv=$("xsec"), xsCtx=xsCv.getContext("2d");
 let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
 const ppcm=()=>S.basePpcm*S.zoom;
-const TRAY_ORDER=["fg","scope","coil","bb","bp","r1","box","C470N","C470U","C1000U","C2200U",
+const TRAY_ORDER=["fg","scope","base","c1","c2","bb","bp","box","C470N","C470U","C1000U","C2200U",
                   "key","panAL","panSS","plAL","plCU","plS4","plS10"];
 const TRAY_ROW=42;
 let FGS=20, ZS=20, XSW=270, XSH=170;
@@ -1031,135 +1080,143 @@ function drawZoyi(){
   CYL(89,b[3],b[3]+0.9,41.8,0.55,"#b9bdc1","#d9dde1","#6f7479");
   S.zones.scope=boxRect(b);
 }
-function drawR1(){
-  const b=R1_BOX;
-  BOX(b,"#212326","#16171a","#1b1c1f","#0b0b0c");
-  const rb=[21,31,b[3],b[3]+1.7,9.4,12.6];
-  BOX([20.8,31.2,b[3],b[3]+0.25,8.6,13.4],"#c9a13c","#a8852b","#b8932f");
-  BOX(rb,"#e2b93f","#b58f27","#caa232","#7a5c12");
-  for(let x=21.6;x<31;x+=0.9) LINE([NP(x,rb[3],rb[4]),NP(x,rb[3],rb[5])],"#b8922c",1);
-  LINE([NP(21,rb[3]-0.8,rb[4]),NP(19.9,b[3]+0.6,11)],"#d6d9dc",1.5);
-  LINE([NP(31,rb[3]-0.8,rb[4]),NP(32.1,b[3]+0.6,11)],"#d6d9dc",1.5);
-  for(const x of [19.9,32.1]){ CYL(x,b[3],b[3]+0.5,11,0.62,"#8e1a12","#c8261d","#5e0e08");
-    HCIRC(x,b[3]+0.5,11,0.28,"#0b0b0c"); }
-  const p=NP(26,b[3]*0.55,b[4]);
-  TXT(p[0],p[1],d().lab.r1,{size:Math.max(5,ppcm()*0.5),fill:"#cfd3d6"});
-  S.zones.r1=boxRect([b[0],b[1],0,rb[3],b[4],b[5]]);
-}
+/* black box (item 8) with the yellow 1 ohm / 100 W resistor R1 (item 7) screwed on its lid:
+   two binding posts at the ends of R1, two more in front for a capacitor's legs. It is hollow,
+   so it also goes over the coil kit as a draught cover. */
 function drawBox(){
   const o=boxOrigin(); if(!o) return;
   const b=[o[0],o[0]+BOX_W,0,BOX_H,o[1],o[1]+BOX_D];
-  BOX(b,"#232528","#18191c","#1d1e21","#0a0a0b");
-  const p=NP(o[0]+1.2,BOX_H-1.4,o[1]);
-  TXT(p[0],p[1],"8",{size:Math.max(5,ppcm()*0.7),fill:"#555a60",align:"left",bold:true});
-  for(let i=0;i<4;i++){
-    const x=o[0]+POST_DX[i], z=o[1]+POST_Z, col=i%2===0?["#c8261d","#e04a3f","#6e110b"]:["#1d1e21","#3a3c40","#000"];
-    CYL(x,BOX_H,BOX_H+0.3,z,0.75,"#2c2e31","#3b3e42","#000");
-    CYL(x,BOX_H+0.3,BOX_H+POST_H,z,0.55,col[0],col[1],col[2]);
-    HCIRC(x,BOX_H+POST_H,z,0.22,"#0b0b0c");
-  }
+  BOX(b,"#1f2023","#141517","#19191c","#08080a");
+  for(let i=0;i<46;i++){ const r=(i*7919)%997/997, q=(i*104729)%991/991;     /* crinkle paint */
+    const p=NP(o[0]+0.6+r*(BOX_W-1.2),BOX_H,o[1]+0.6+q*(BOX_D-1.2)); OVAL(p[0],p[1],0.8,0.5,"rgba(255,255,255,0.06)",null); }
+  LINE([NP(o[0],BOX_H-0.25,o[1]),NP(o[0]+BOX_W,BOX_H-0.25,o[1])],"#2c2d31",1);
+  /* R1: gold anodised finned body on a mounting flange */
+  const z0=o[1]+8.9, z1=o[1]+11.1, x0=o[0]+4.6, x1=o[0]+13.4;
+  BOX([x0-0.6,x1+0.6,BOX_H,BOX_H+0.18,z0-0.5,z1+0.5],"#b8952e","#8a6d1d","#a3832a","#5e4a12");
+  BOX([x0,x1,BOX_H+0.18,BOX_H+1.45,z0,z1],"#e8bf3a","#b48f22","#d1a92f","#6e5612");
+  for(let x=x0+0.45;x<x1;x+=0.6) LINE([NP(x,BOX_H+1.45,z0),NP(x,BOX_H+1.45,z1)],"#b8922c",1);
+  for(const x of [x0-0.35,x1+0.35]) HCIRC(x,BOX_H+0.18,(z0+z1)/2,0.18,"#3a3d41");
+  const lp=NP((x0+x1)/2,BOX_H+0.8,z0);
+  TXT(lp[0],lp[1],d().lab.r1,{size:Math.max(4,ppcm()*0.38),fill:"#5a4210"});
+  /* leads from R1 into the side holes of its posts */
+  for(const [xa,id] of [[x0,"R1A"],[x1,"R1B"]]){ const [dx,dz]=POSTS[id];
+    LINE([NP(xa,BOX_H+0.8,(z0+z1)/2),NP(o[0]+dx,BOX_H+0.7,o[1]+dz)],"#d6d9dc",Math.max(1.5,ppcm()*0.14)); }
+  for(const id in POSTS) drawPost(o,id);
   S.zones.box=boxRect(b);
-  for(const k of CAP_KEYS){ const p2=S.cap[k]; if(p2==="b12"||p2==="b34") drawCapOnBox(k,p2,o); }
+  for(const k of CAP_KEYS) if(S.cap[k]==="box") drawCapOnBox(k,o);
+}
+function drawPost(o,id){
+  const [dx,dz,col]=POSTS[id], x=o[0]+dx, z=o[1]+dz;
+  const c=col==="r"?["#b71f17","#e0473c","#5e0e08"]:["#17181a","#3a3c40","#000"];
+  CYL(x,BOX_H,BOX_H+0.25,z,0.75,"#c9ccd0","#e3e5e8","#7c8086");          /* nut */
+  CYL(x,BOX_H+0.25,BOX_H+POST_H,z,0.6,c[0],c[1],c[2]);                       /* plastic cap */
+  for(const t of [0.45,0.75]) HCIRC(x,BOX_H+0.25+t,z,0.6,null,"rgba(0,0,0,0.35)",1);
+  HCIRC(x,BOX_H+POST_H,z,0.24,"#0b0b0c");
 }
 function drawCapBody(k,cx,y0,cz){
-  const c=CAPS[k];
-  if(c.film){
-    BOX([cx-0.8,cx+0.8,y0,y0+1.1,cz-0.35,cz+0.35],"#b5652c","#8d4b1e","#a4591f","#5e3010");
-  }else{
-    CYL(cx,y0,y0+c.h,cz,c.r,"#27479a","#3a5cb3","#10224f");
-    HCIRC(cx,y0+c.h,cz,c.r*0.8,null,"#9aa7c9",1);
-    LINE([NP(cx+c.r*0.9,y0+0.2,cz-c.r*0.3),NP(cx+c.r*0.9,y0+c.h-0.2,cz-c.r*0.3)],"#b9c4de",Math.max(1,ppcm()*0.18));
+  const c=CAPS[k], k2=ppcm();
+  if(c.film){                       /* brown box film capacitor */
+    BOX([cx-0.9,cx+0.9,y0,y0+1.2,cz-0.4,cz+0.4],"#a9542a","#7e3a1a","#984a22","#4e2410");
+    const p=NP(cx,y0+0.6,cz-0.4); TXT(p[0],p[1],"474J",{size:Math.max(3.5,k2*0.26),fill:"#f0d0b8"});
+  }else{                            /* dark blue electrolytic with the pale minus stripe and a scored top */
+    CYL(cx,y0,y0+c.h,cz,c.r,"#1d2e86","#2c3fa3","#0c1650");
+    LINE([NP(cx+c.r*0.75,y0+0.15,cz-c.r*0.55),NP(cx+c.r*0.75,y0+c.h-0.15,cz-c.r*0.55)],"#a9b6e3",Math.max(1.5,k2*c.r*0.35));
+    HCIRC(cx,y0+c.h,cz,c.r*0.92,"#b9bec7","#7c828c",1);
+    LINE([NP(cx-c.r*0.5,y0+c.h,cz),NP(cx+c.r*0.5,y0+c.h,cz)],"#7c828c",1);
+    LINE([NP(cx,y0+c.h,cz-c.r*0.5),NP(cx,y0+c.h,cz+c.r*0.5)],"#7c828c",1);
+    const p=NP(cx-c.r*0.2,y0+c.h*0.55,cz-c.r); TXT(p[0],p[1],c.lab.replace(" ",""),{size:Math.max(3.5,k2*0.24),fill:"#dfe5ff"});
   }
 }
-function drawCapOnBox(k,pair,o){
-  const i0=pair==="b12"?0:2;
-  const xa=o[0]+POST_DX[i0], xb=o[0]+POST_DX[i0+1], z=o[1]+POST_Z;
-  const cx=(xa+xb)/2, cz=z+2.2;
-  LINE([NP(cx-0.3,BOX_H+0.2,cz),NP(xa,BOX_H+POST_H-0.3,z)],"#d6d9dc",1.5);
-  LINE([NP(cx+0.3,BOX_H+0.2,cz),NP(xb,BOX_H+POST_H-0.3,z)],"#d6d9dc",1.5);
-  drawCapBody(k,cx,BOX_H,cz);
+function drawCapOnBox(k,o){         /* legs pushed into the side holes of the two front posts */
+  const [ax,az]=POSTS.B1, [bx,bz]=POSTS.B2, cx=o[0]+(ax+bx)/2, cz=o[1]+az+1.6, y0=BOX_H+1.6;
+  LINE([NP(cx-0.3,y0,cz),NP(cx-0.6,BOX_H+1.0,cz-0.6),NP(o[0]+ax,BOX_H+0.85,o[1]+az)],"#d6d9dc",Math.max(1.5,ppcm()*0.12));
+  LINE([NP(cx+0.3,y0,cz),NP(cx+0.6,BOX_H+1.0,cz-0.6),NP(o[0]+bx,BOX_H+0.85,o[1]+bz)],"#d6d9dc",Math.max(1.5,ppcm()*0.12));
+  drawCapBody(k,cx,y0,cz);
 }
 function drawCapsDesk(only){
   for(const k of CAP_KEYS){
     if(S.cap[k]!=="desk"||(only&&k!==only)) continue;
     const [cx,cz]=capAt(k);
-    LINE([NP(cx-0.25,0.2,cz),NP(cx-0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
-    LINE([NP(cx+0.25,0.2,cz),NP(cx+0.8,0.25,cz-2.6)],"#d6d9dc",1.5);
+    /* lying in its spot with the long legs pointing to the front */
+    LINE([NP(cx-0.25,0.15,cz),NP(cx-0.35,0.12,cz-3.2)],"#d6d9dc",Math.max(1.2,ppcm()*0.1));
+    LINE([NP(cx+0.25,0.15,cz),NP(cx+0.35,0.12,cz-3.4)],"#d6d9dc",Math.max(1.2,ppcm()*0.1));
     drawCapBody(k,cx,0,cz);
     S.zones[k]=rectOf([NP(cx-1.2,0,cz-3),NP(cx+1.2,0,cz+1.2),NP(cx-1.2,3.2,cz),NP(cx+1.2,3.2,cz)]);
     const p=NP(cx,0,cz+1.6);
     TXT(p[0],p[1]-ppcm()*0.3,CAPS[k].lab,{size:Math.max(5,ppcm()*0.42),fill:"#3b2d1d"});
   }
 }
-function drawCoil(){
-  const B=COIL.base, L=COIL.lo, H=COIL.hi;
-  BOX(B,"#1f2023","#151618","#191a1c","#0a0a0b");
-  BOX(L,"#28292c","#1c1d20","#222326","#0a0a0b");
-  const lift=S.loose?0.45:0;
-  const g0=COIL.gap[0], g1=COIL.gap[1]+lift;
-  for(const [x,z] of [[L[1]-0.8,L[5]-0.8],[L[0],L[5]-0.8],[L[1]-0.8,L[4]],[L[0],L[4]]])
-    BOX([x,x+0.8,g0,g1,z,z+0.8],"#26272a","#1b1c1e","#202124","#0a0a0b");
-  let y=g0+0.02;
-  for(const m of S.stack){
-    const M=MAT[m];
-    BOX([52.65,55.35,y,y+PLATE_T,16.2,20.8],M.col,M.edge,M.edge);
-    y+=PLATE_T;
-  }
-  if(S.pan){
-    const M=MAT[S.pan==="AL"?"AL":"SS410"];
-    BOX([53,55,y,y+PLATE_T,16.4,18.4],M.col,M.edge,M.edge);
-    BOX([53.7,54.3,y+PLATE_T,y+PLATE_T+0.3,17.0,17.6],"#111","#000","#0b0b0b");
-  }
-  const Hb=[H[0],H[1],H[2]+lift,H[3]+lift,H[4],H[5]];
-  BOX(Hb,"#28292c","#1c1d20","#222326","#0a0a0b");
-  HCIRC(54,Hb[3],21,3.2,"#1a1b1d","#0e0f10",1);
-  HCIRC(54,Hb[3],21,2.4,"#b0673a","#6b3a1c",1);
-  for(let r=2.2;r>0.7;r-=0.35) HCIRC(54,Hb[3],21,r,null,"#8c4d27",1);
-  HCIRC(54,Hb[3],21,0.7,"#1a1b1d",null);
-  const cy=Hb[3]+(S.loose?0.25:0);
-  for(const x of [49.2,56.8]){
-    BOX([x,x+2,cy,cy+0.6,16.2,25.8],"#16171a","#0f1012","#131416","#000");
-    HCIRC(x+1,cy+0.6,21,0.42,"#b9bdc1","#6f7479",1);
-    HCIRC(x+1,cy+0.6,21,0.18,"#3a3d41");
-  }
-  for(const [yy,lab] of [[4.9+lift,"#1"],[1.7,"#2"]]){
-    for(const x of [50.8,52.4]){
-      POLY([NP(x-0.3,yy-0.35,17),NP(x+0.3,yy-0.35,17),NP(x+0.3,yy+0.35,17),NP(x-0.3,yy+0.35,17)],"#0d0e0f",null);
-      LINE([NP(x,yy,17),NP(x,yy,16.6)],"#d4b050",Math.max(2,ppcm()*0.28),"butt");
+/* the coil kit: plastic base, the lower and upper housings, whatever lies in the gap, the clamps */
+function drawCoilStack(){
+  const B=BASE, k=ppcm();
+  BOX([B.x0,B.x1,0,B.t,B.z0,B.z1],"#1d1e21","#131416","#17181a","#08080a");
+  for(let i=0;i<40;i++){ const r=(i*7919)%997/997, q=(i*104729)%991/991;
+    const p=NP(B.x0+0.4+r*(B.x1-B.x0-0.8),B.t,B.z0+0.4+q*(B.z1-B.z0-0.8)); OVAL(p[0],p[1],0.7,0.45,"rgba(255,255,255,0.07)",null); }
+  for(const [x,z] of [[B.x0+1.2,B.z0+1.2],[B.x1-1.2,B.z1-1.2]]) HCIRC(x,B.t,z,0.25,"#0a0a0b");
+  const lo=lowHs(), up=upHs();
+  if(lo) drawHousing(lo,"low");
+  /* plates lie in the recess of the lower housing; a pan either lies there too or hangs under a flipped upper */
+  const gy=BASE.t+HS.h-HS.rec+0.02;
+  const open=!up||S.loose;
+  if(lo&&open){
+    let y=gy;
+    for(const m of S.stack){ const M=MAT[m]; BOX([52.65,55.35,y,y+PLATE_T,19.2,23.2],M.col,M.edge,M.edge); y+=PLATE_T; }
+    if(S.pan&&S.panPos==="gap"){
+      const M=MAT[S.pan==="AL"?"AL":"SS410"], py=S.panOn==="up"?hsY0("up")-PLATE_T:gy;
+      BOX([53,55,py,py+PLATE_T,20.2,22.2],M.col,M.edge,M.edge);
     }
-    const p=NP(53.6,yy,17);
-    TXT(p[0],p[1],lab,{size:Math.max(5,ppcm()*0.5),fill:"#cfd3d6",align:"left",bold:true});
   }
-  S.zones.coil=boxRect([B[0],B[1],0,Hb[3]+0.6,B[4],B[5]]);
-  if(S.pan&&S.on.box!=="cover"){ const yb=y+PLATE_T+0.15; withOff([0,0],()=>drawNtcLeads(yb)); }
-}
-function leadPts(P0,P3,floor){
-  const pts=[];
-  for(let i=0;i<=16;i++){ const t=i/16, u=1-t;
-    const x=u*u*u*P0[0]+3*u*u*t*P0[0]+3*u*t*t*P3[0]+t*t*t*P3[0];
-    const z=u*u*u*P0[2]+3*u*u*t*(P0[2]-3)+3*u*t*t*(P3[2]+2)+t*t*t*P3[2];
-    let yy=u*u*u*P0[1]+3*u*u*t*(P0[1]+0.3)+3*u*t*t*0.3+t*t*t*P3[1];
-    yy=Math.max(yy,z<14?0.2:floor);
-    pts.push(NP(x,yy,z)); }
-  return pts;
-}
-function drawNtcLeads(yb){
-  for(const [id,xx,col] of [["NTCA",53.85,"#c8261d"],["NTCB",54.15,"#3a3d41"]]){
-    const ti=termInfo(id);
-    const pts=leadPts([xx+S.at.coil[0],yb,17.3+S.at.coil[1]],ti.p,0.7);
-    LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
-    LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
+  if(up) drawHousing(up,"up");
+  const t=topHs(), ty=stackTop();
+  if(S.pan&&S.panPos==="top"&&t){            /* pan on the top platform, held down by the clamps */
+    const M=MAT[S.pan==="AL"?"AL":"SS410"];
+    BOX([53,55,ty,ty+PLATE_T,20,22],M.col,M.edge,M.edge);
+    HCIRC(54,ty+PLATE_T,21,0.32,"#f2f2ee","#bdbdb5",1);
   }
-}
-function drawNtcLeadsCovered(){
-  for(const [id,col] of [["NTCA","#c8261d"],["NTCB","#3a3d41"]]){
-    const ti=termInfo(id);
-    const pts=[NP(ti.p[0],0.4,boxOrigin()[1]),NP(ti.p[0],0.25,12+S.at.coil[1]),NP(...ti.p)];
-    LINE(pts,"#0a0a0a",Math.max(2,ppcm()*0.28)); LINE(pts,col,Math.max(1,ppcm()*0.16));
-    LINE([NP(...ti.p),NP(ti.p[0],ti.p[1],ti.p[2]-0.9)],"#d4b050",Math.max(2,ppcm()*0.22),"butt");
+  if(up){                                    /* the two clamps and their M3 cap screws */
+    const lift=S.loose?0.35:0;
+    for(const x of [HS.x0+0.2,HS.x1-1.6]){
+      BOX([x,x+1.4,ty,ty+0.45,20.1,21.9],"#1b1c1f","#121315","#17181a","#000");
+      CYL(x+0.7,ty+0.45,ty+0.75+lift,21,0.32,"#9ea3a8","#c7cbcf","#5d6166");
+      HCIRC(x+0.7,ty+0.75+lift,21,0.14,"#2a2c2f");
+    }
   }
+  S.zones.base=boxRect([B.x0,B.x1,0,B.t,B.z0,B.z1]);
+  S.zones.stack=lo?boxRect([HS.x0,HS.x1,0,ty+0.8,HS.z0,HS.z1]):null;
+  if(S.pan) drawNtc();
 }
-
+function drawHousing(c,slot){
+  const y0=hsY0(slot), y1=y0+HS.h, h=S.hs[c], k=ppcm();
+  BOX([HS.x0,HS.x1,y0,y1,HS.z0,HS.z1],"#27282c","#1a1b1e","#222327","#08080a");
+  for(let yy=y0+0.3;yy<y1;yy+=0.3) LINE([NP(HS.x0,yy,HS.z0),NP(HS.x1,yy,HS.z0)],"rgba(255,255,255,0.035)",1);   /* print layers */
+  if(slot==="low"&&!upHs()||slot==="up"){       /* the top face: the round coil window, copper if the winding is under it */
+    const nearTop=(slot==="up")!==h.flip;
+    HCIRC(54,y1,21,1.9,"#121315","#050506",1);
+    if(nearTop){ HCIRC(54,y1,21,1.6,"#7a4424",null); for(let r=1.5;r>0.5;r-=0.25) HCIRC(54,y1,21,r,null,"#a8603a",1); HCIRC(54,y1,21,0.5,"#121315"); }
+    else if(slot==="low"){ const gy=y1-HS.rec; HCIRC(54,gy,21,1.9,"#0d0e10",null); }
+    for(const [x,z] of [[HS.x0+0.7,19.2],[HS.x1-0.7,22.8]]) HCIRC(x,y1,z,0.28,slot==="low"?"#c8962e":"#0a0a0b");
+  }
+  /* coil pin terminals: a black 2-way header level with the winding */
+  const cy=coilY(c);
+  BOX([HS.x0+0.5,HS.x0+1.8,cy-0.32,cy+0.32,HS.z0-0.25,HS.z0],"#101012","#0a0a0b","#151517","#000");
+  for(const x of [0.85,1.45]) { const p=NP(HS.x0+x,cy,HS.z0-0.25); OVAL(p[0],p[1],Math.max(1,k*0.09),Math.max(1,k*0.09),"#c9a64a",null); }
+  const p=NP(HS.x1-1.0,y0+HS.h*0.5,HS.z0);
+  TXT(p[0],p[1],c==="c1"?"#1":"#2",{size:Math.max(5,k*0.5),fill:"#cfd3d6",bold:true});
+  if(h.flip){ const q=NP(HS.x1-2.4,y0+HS.h*0.5,HS.z0); TXT(q[0],q[1],"↕",{size:Math.max(5,k*0.5),fill:"#8a9096"}); }
+}
+/* the pan's NTC leads come out of the stack and end in a small socket lying in front */
+function drawNtc(){
+  const a=termInfo("NTCA"); if(!a) return;
+  const o=S.at.base, top=S.panPos==="top", sy=top?stackTop()+0.1:(S.panOn==="up"?hsY0("up"):BASE.t+HS.h)-0.05;
+  const start=[54+o[0],sy,20+o[1]], mid=[54+o[0],0.3,HS.z0-0.8+o[1]];
+  withOff([0,0],()=>{
+    for(const [dx,col] of [[-0.12,"#e8e8e8"],[0.12,"#1a1a1a"]]){
+      const pts=[NP(start[0]+dx,start[1],start[2]),NP(start[0]+dx,Math.max(0.3,start[1]-0.4),HS.z0+o[1]),NP(mid[0]+dx,mid[1],mid[2]),NP(a.p[0]+(dx<0?0:0.6)+0.0,0.3,a.p[2]+0.5)];
+      LINE(pts,"#000",Math.max(2,ppcm()*0.18)); LINE(pts,col,Math.max(1,ppcm()*0.1));
+    }
+    BOX([a.p[0]-0.35,a.p[0]+0.95,0.05,0.6,a.p[2],a.p[2]+0.9],"#101012","#0a0a0b","#151517","#000");
+  });
+}
 /* ---- cables, plugs, probe ---- */
 function endPos(id,info){
   const L=info.k==="sock"?1.5:0.9;
@@ -1180,21 +1237,32 @@ function curve3(p0,d0,p3,d3){
     out.push(NP(f(0),Math.max(0.3,y),f(2))); }
   return out;
 }
-const CAB_COL={r:["#c0392b","#5e1610"],k:["#33373c","#0a0a0b"]};
+const CAB_COL={r:["#c4281e","#5e1610"],k:["#2a2c30","#060607"]};
 function drawPlug(id,info,col){
   if(info.hidden) return;
-  const e=endPos(id,info), p=NP(...info.p), q=NP(...e);
-  const w=Math.max(3,ppcm()*(info.k==="sock"?0.55:0.4));
-  LINE([p,q],"#0a0a0a",w+2,"butt"); LINE([p,q],col[0],w,"butt");
-  if(info.k==="sock"){ const m=[(p[0]*0.6+q[0]*0.4),(p[1]*0.6+q[1]*0.4)]; LINE([m,q],col[0]==="#c0392b"?"#e05a4b":"#4a4f55",w*0.5,"butt"); }
+  const e=endPos(id,info), p=NP(...info.p), q=NP(...e), k=ppcm();
+  if(info.k==="sock"){            /* stackable banana plug: metal pin, ribbed grip with a jack in its back */
+    const w=Math.max(4,k*0.62), m=[p[0]*0.8+q[0]*0.2,p[1]*0.8+q[1]*0.2];
+    LINE([p,m],"#c9ccd0",Math.max(2,k*0.22),"butt");
+    LINE([m,q],"#000",w+2,"butt"); LINE([m,q],col[0],w,"butt");
+    for(const t of [0.35,0.5,0.65]){ const r=[m[0]+(q[0]-m[0])*t,m[1]+(q[1]-m[1])*t];
+      const nx=-(q[1]-m[1]), ny=q[0]-m[0], L=Math.hypot(nx,ny)||1;
+      LINE([[r[0]-nx/L*w/2,r[1]-ny/L*w/2],[r[0]+nx/L*w/2,r[1]+ny/L*w/2]],"rgba(0,0,0,0.35)",1,"butt"); }
+    OVAL(q[0],q[1],w*0.28,w*0.28,"#0b0b0c",null);
+  }else{                          /* square dupont pin with a slim black sleeve */
+    const w=Math.max(3,k*0.32), m=[p[0]*0.45+q[0]*0.55,p[1]*0.45+q[1]*0.55];
+    LINE([p,m],"#c9a64a",Math.max(1.5,k*0.1),"butt");
+    LINE([m,q],"#000",w+1.5,"butt"); LINE([m,q],"#1c1d20",w,"butt");
+  }
 }
 function drawCables(){
   S.cabPts=[];
   S.cables.forEach((cb,i)=>{
     const col=CAB_COL[cb.col];
     const pts=cablePts(cb.a,cb.b);
-    LINE(pts,col[1],Math.max(3,ppcm()*0.36)); LINE(pts,col[0],Math.max(2,ppcm()*0.24));
-    drawPlug(cb.a,termInfo(cb.a),col); drawPlug(cb.b,termInfo(cb.b),col);
+    const wc=cb.type==="bp"?CAB_COL.k:col;
+    LINE(pts,wc[1],Math.max(2.2,ppcm()*0.2)); LINE(pts,wc[0],Math.max(1.4,ppcm()*0.12));
+    drawPlug(cb.a,termInfo(cb.a),wc); drawPlug(cb.b,termInfo(cb.b),wc);
     S.cabPts[i]=pts;
   });
   const cr=S.carry;
@@ -1202,8 +1270,9 @@ function drawCables(){
     const info=termInfo(cr.a), col=CAB_COL[cr.col];
     const s=NP(...endPos(cr.a,info)), q=S.mouse, pts=[s];
     for(let i=1;i<=16;i++){ const t=i/16; pts.push([s[0]+(q[0]-s[0])*t, s[1]+(q[1]-s[1])*t+Math.sin(Math.PI*t)*30]); }
-    LINE(pts,col[1],Math.max(3,ppcm()*0.36)); LINE(pts,col[0],Math.max(2,ppcm()*0.24));
-    drawPlug(cr.a,info,col);
+    const wc=cr.type==="bp"?CAB_COL.k:col;
+    LINE(pts,wc[1],Math.max(2.2,ppcm()*0.2)); LINE(pts,wc[0],Math.max(1.4,ppcm()*0.12));
+    drawPlug(cr.a,info,wc);
     OVAL(q[0],q[1],5,5,col[0],"#000");
   }
 }
@@ -1224,14 +1293,25 @@ function drawProbe(){
   for(let i=0;i<=24;i++){ const t=i/24, u=1-t;
     coax.push([u*u*u*s0[0]+3*u*u*t*s1[0]+3*u*t*t*s2[0]+t*t*t*body[0],
                u*u*u*s0[1]+3*u*u*t*s1[1]+3*u*t*t*s2[1]+t*t*t*body[1]]); }
-  LINE(coax,"#050505",Math.max(3,k*0.42)); LINE(coax,"#25272a",Math.max(2,k*0.26));
-  LINE([body,gnd],"#050505",Math.max(2,k*0.24)); LINE([body,gnd],"#2c2f33",Math.max(1,k*0.14));
-  POLY([[gnd[0]-k*0.5,gnd[1]-k*0.25],[gnd[0]+k*0.5,gnd[1]-k*0.1],[gnd[0]+k*0.5,gnd[1]+k*0.15],[gnd[0]-k*0.5,gnd[1]+k*0.3]],"#16171a","#000");
-  LINE([body,tip],"#0b0b0c",Math.max(4,k*0.75)); LINE([body,tip],"#3a3d41",Math.max(3,k*0.55));
-  const hv=[tip[0]-body[0],tip[1]-body[1]], hl=Math.hypot(hv[0],hv[1])||1;
-  const hm=[tip[0]-hv[0]/hl*k*0.9, tip[1]-hv[1]/hl*k*0.9];
-  LINE([hm,tip],"#c8261d",Math.max(3,k*0.5));
-  OVAL(tip[0],tip[1],Math.max(2,k*0.18),Math.max(2,k*0.18),null,"#d9dde1",1.5);
+  LINE(coax,"#050505",Math.max(3,k*0.36)); LINE(coax,"#1e2023",Math.max(2,k*0.22));
+  /* ground lead: short black wire ending in an alligator clip */
+  const gm=[body[0]*0.5+gnd[0]*0.5, body[1]*0.5+gnd[1]*0.5+k*0.8];
+  LINE([body,gm,gnd],"#050505",Math.max(2,k*0.18)); LINE([body,gm,gnd],"#2a2c30",Math.max(1,k*0.1));
+  const gv=[gnd[0]-gm[0],gnd[1]-gm[1]], gl=Math.hypot(gv[0],gv[1])||1, gu=[gv[0]/gl,gv[1]/gl], gn=[-gu[1],gu[0]], cw=k*0.28, cl=k*1.1;
+  POLY([[gnd[0]-gu[0]*cl+gn[0]*cw,gnd[1]-gu[1]*cl+gn[1]*cw],[gnd[0]+gn[0]*cw*0.4,gnd[1]+gn[1]*cw*0.4],
+        [gnd[0]-gn[0]*cw*0.4,gnd[1]-gn[1]*cw*0.4],[gnd[0]-gu[0]*cl-gn[0]*cw,gnd[1]-gu[1]*cl-gn[1]*cw]],"#141517","#000");
+  LINE([[gnd[0]-gu[0]*cl*0.3,gnd[1]-gu[1]*cl*0.3],gnd],"#9aa0a6",Math.max(1,k*0.08));
+  /* probe body: black handle with grip rings, red band, retractable hook */
+  const hv=[tip[0]-body[0],tip[1]-body[1]], hl=Math.hypot(hv[0],hv[1])||1, u=[hv[0]/hl,hv[1]/hl];
+  const hb=[tip[0]-u[0]*k*1.0, tip[1]-u[1]*k*1.0];
+  LINE([body,hb],"#000",Math.max(5,k*0.72)); LINE([body,hb],"#232528",Math.max(4,k*0.6));
+  for(const t of [0.25,0.35,0.45]){ const r=[body[0]+(hb[0]-body[0])*t,body[1]+(hb[1]-body[1])*t];
+    LINE([[r[0]-u[1]*k*0.3,r[1]+u[0]*k*0.3],[r[0]+u[1]*k*0.3,r[1]-u[0]*k*0.3]],"#3d4044",Math.max(1,k*0.08)); }
+  const rb=[body[0]+(hb[0]-body[0])*0.75,body[1]+(hb[1]-body[1])*0.75];
+  LINE([rb,[rb[0]+u[0]*k*0.25,rb[1]+u[1]*k*0.25]],"#c8261d",Math.max(4,k*0.6),"butt");
+  LINE([hb,tip],"#d9dde1",Math.max(1.5,k*0.12));
+  ctx.beginPath(); ctx.arc(tip[0]+u[1]*k*0.15,tip[1]-u[0]*k*0.15,Math.max(2,k*0.2),0,Math.PI*1.4);
+  ctx.strokeStyle="#d9dde1"; ctx.lineWidth=Math.max(1.2,k*0.08); ctx.stroke();
   S.probeScr={tip,gnd};
   if(!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe")){
     const p=withOff(S.at.scope,()=>NP(75,0.25,33.5)); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
@@ -1257,8 +1337,7 @@ function draw(){
   const add=(id,fn)=>{ const f=footNow(id); parts.push([(f[2]+f[3])/2-(f[0]+f[1])/2,fn]); };
   if(S.on.fg) add("fg",()=>withOff(S.at.fg,drawFG));
   if(S.on.scope) add("scope",()=>withOff(S.at.scope,drawZoyi));
-  if(S.on.r1) add("r1",()=>withOff(S.at.r1,drawR1));
-  if(S.on.coil) add("coil",()=>{ withOff(S.at.coil,drawCoil); if(S.on.box==="cover"){ drawBox(); if(S.pan) drawNtcLeadsCovered(); } });
+  if(S.on.base) add("base",()=>{ withOff(S.at.base,drawCoilStack); if(S.on.box==="cover"){ drawBox(); if(S.pan) withOff(S.at.base,drawNtc); } });
   if(S.on.box==="desk") add("box",drawBox);
   for(const k of CAP_KEYS) if(S.cap[k]==="desk") add(k,()=>drawCapsDesk(k));
   parts.sort((a,b)=>b[0]-a[0]).forEach(q=>q[1]());
@@ -1278,6 +1357,7 @@ function trayState(name){
   if(PAN_OF[name]){ const out=S.panItem===name; return [out,out?t.trayOut:t.trayTake]; }
   if(CAPS[name]){ const out=!!S.cap[name]; return [out,out?t.trayOut:t.trayTake]; }
   if(name==="key") return [false,t.trayTake];
+  if(S.hs[name]){ const out=!!S.hs[name].at; return [out,out?t.trayOut:t.trayTake]; }
   const out=name==="box"?!!S.on.box:!!S.on[name];
   return [out,out?t.trayOut:t.trayTake];
 }
@@ -1288,11 +1368,13 @@ function trayIcon(c,name,x,y,dim){
   const L=(a,b,e,f,col,w)=>{ c.beginPath(); c.moveTo(a,b); c.lineTo(e,f); c.strokeStyle=g||col; c.lineWidth=w||1; c.stroke(); };
   if(name==="fg"){ R(x-15,y-9,x+15,y+9,"#18191c","#000"); R(x-13,y-7,x+8,y+7,"#e6e7e8"); O(x-8,y,3,"#2a2c2f"); O(x-1,y,3,"#2a2c2f"); O(x+12,y-3,2,"#c8261d"); O(x+12,y+4,2,"#222"); }
   else if(name==="scope"){ R(x-8,y-12,x+8,y+12,"#c3261c"); R(x-6,y-10,x+6,y-1,"#050505"); L(x-5,y-5,x+5,y-5,"#ffe23a",1); R(x-5,y+2,x+5,y+8,"#3d4146"); }
-  else if(name==="coil"){ R(x-14,y+4,x+14,y+8,"#1f2023"); R(x-8,y-2,x+8,y+4,"#28292c"); R(x-8,y-9,x+8,y-4,"#28292c"); L(x-8,y-3,x+8,y-3,"#b0673a",2); L(x-10,y-1,x-8,y-1,"#d4b050",2); }
+  else if(name==="base"){ R(x-15,y-6,x+15,y+7,"#1c1d20","#000"); O(x-11,y-3,1.2,"#000"); O(x+11,y+4,1.2,"#000"); }
+  else if(name==="c1"||name==="c2"){ R(x-11,y-8,x+11,y+8,"#26272b","#000"); O(x,y,5.5,"#121315"); O(x,y,4,"#8a4a26"); O(x,y,1.5,"#121315");
+    R(x-11,y+3,x-6,y+6,"#0a0a0b"); c.fillStyle=g||"#cfd3d6"; c.font="bold 8px sans-serif"; c.textAlign="center"; c.fillText(name==="c1"?"#1":"#2",x+7,y+7); }
   else if(name==="bb"||name==="bp"){ c.beginPath(); c.moveTo(x-14,y-6); c.bezierCurveTo(x-4,y+12,x+4,y-12,x+14,y+4); c.strokeStyle=g||"#c0392b"; c.lineWidth=2.5; c.stroke();
     R(x-17,y-9,x-11,y-3,"#c0392b"); R(x+11,y+1,x+17,y+7,name==="bb"?"#c0392b":"#d4b050"); }
-  else if(name==="r1"){ R(x-14,y+1,x+14,y+8,"#212326"); R(x-9,y-6,x+9,y+1,"#e2b93f"); O(x-12,y+1,2.5,"#c8261d"); O(x+12,y+1,2.5,"#c8261d"); }
-  else if(name==="box"){ R(x-14,y-6,x+14,y+9,"#232528","#000"); for(let i=0;i<4;i++) O(x-9+i*6,y-6,2.3,i%2?"#222":"#c8261d","#000"); }
+  else if(name==="box"){ R(x-15,y-8,x+15,y+9,"#1f2023","#000"); R(x-8,y-6,x+8,y-1,"#e8bf3a"); O(x-11,y-4,2.2,"#c8261d"); O(x+11,y-4,2.2,"#17181a","#666");
+    O(x-6,y+4,2.2,"#c8261d"); O(x+6,y+4,2.2,"#17181a","#666"); }
   else if(name==="C470N"){ R(x-5,y-6,x+5,y+2,"#b5652c"); L(x-2,y+2,x-2,y+10,"#ccc",1.5); L(x+2,y+2,x+2,y+10,"#ccc",1.5); }
   else if(CAPS[name]){ const r=3+CAPS[name].r*4; R(x-r,y-8,x+r,y+4,"#27479a"); L(x+r-2,y-7,x+r-2,y+3,"#b9c4de",1.5); L(x-2,y+4,x-2,y+10,"#ccc",1.5); L(x+2,y+4,x+2,y+10,"#ccc",1.5); }
   else if(name==="key"){ L(x-10,y+6,x+8,y+6,"#8a8f94",3); L(x+8,y+6,x+8,y-8,"#8a8f94",3); }
@@ -1321,8 +1403,10 @@ function drawTray(){
   c.font='10.5px '+FONT; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
   d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-trayCv.addEventListener("click",e=>{
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return;
   const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  S.trayDrag=true;
   for(const [name,y0,y1] of trayCells){
     if(y<y0||y>y1) continue;
     cancelCarry(true);
@@ -1330,8 +1414,9 @@ trayCv.addEventListener("click",e=>{
     const t=d();
     if(out){ say((name==="bb"||name==="bp")?t.m.noCable:t.trayOut); return; }
     if(name==="bb"||name==="bp"){ const col=S.stock[name].r>=S.stock[name].k?"r":"k"; S.stock[name][col]--; S.carry={k:"cable",type:name,col,a:null}; say(t.m.cable1); }
-    else if(PLATE_OF[name]){ if(!S.on.coil){ say(t.m.noCoil,true); return; } S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
-    else if(PAN_OF[name]){ if(!S.on.coil){ say(t.m.noCoil,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
+    else if(PLATE_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
+    else if(PAN_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } if(S.pan){ say(t.m.slotBusy,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
+    else if(S.hs[name]&&!S.on.base){ say(t.m.needBase,true); return; }
     else if(name==="key"){ S.carry={k:"key",id:"key"}; say(t.m.keyTake); }
     else { S.carry={k:"item",id:name}; say(t.m.placeIt(t.trayItems[name])); }
     drawTray();
@@ -1395,7 +1480,7 @@ function onPress(p){
   if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
   if(S.on.scope){ const [a,b]=withOff(S.at.scope,()=>faceInv(Z_FACE,x,y)); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
   /* grab a part standing on the desk to move it (its leads stay plugged in) */
-  for(const id of ["C470N","C470U","C1000U","C2200U","box","r1","coil","scope","fg"]){
+  for(const id of ["C470N","C470U","C1000U","C2200U","box","base","scope","fg"]){
     if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
     S.carry={k:"item",id,move:true}; say(t.m.moveIt(t.trayItems[id])); return;
   }
@@ -1419,33 +1504,47 @@ function place(x,y){
     S.probe[cr.end]=id; S.carry=null; say(t.m.probeOn); solve(); return;
   }
   if(cr.k==="key"||cr.k==="plate"||cr.k==="pan"){
-    if(!inRect(S.zones.coil,x,y,4)){
+    const onKit=inRect(S.zones.stack,x,y,6)||inRect(S.zones.base,x,y,4)||(S.on.box==="cover"&&inRect(S.zones.box,x,y));
+    if(!onKit){
       if(cr.k==="key"){ S.carry=null; drawTray(); say(t.m.returned(t.trayItems.key)); } else say(t.m.noFit,true);
       return; }
     if(S.on.box==="cover"){ say(t.m.covered,true); return; }
-    if(cr.k==="key"){ S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
-    if(!S.loose){ say(t.m.needLoose,true); return; }
+    const up=upHs(), lo=lowHs();
+    if(!lo){ say(t.m.needHs,true); return; }
+    if(cr.k==="key"){ if(!up){ say(t.m.keyNoUp,true); return; } S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
+    if(up&&!S.loose){ say(t.m.needLoose,true); return; }
     if(cr.k==="plate"){
-      if(S.pan){ say(t.m.slotBusy,true); return; }
+      if(S.pan&&S.panPos==="gap"){ say(t.m.slotBusy,true); return; }
       if(S.stack.length>=8){ say(t.m.slotFull,true); return; }
       S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length));
     }else{
-      if(S.pan||S.stack.length){ say(t.m.slotBusy,true); return; }
-      S.pan=PAN_OF[cr.id]; S.panItem=cr.id; S.panT=T_AMB; S.carry=null; say(t.m.panIn);
+      if(S.pan){ say(t.m.slotBusy,true); return; }
+      if(up){ S.pan=PAN_OF[cr.id]; S.panPos="top"; S.panOn="up"; say(t.m.panTop); }
+      else { if(S.stack.length){ say(t.m.slotBusy,true); return; } S.pan=PAN_OF[cr.id]; S.panPos="gap"; S.panOn="low"; say(t.m.panIn); }
+      S.panItem=cr.id; S.panT=T_AMB; S.carry=null;
     }
     solve(); drawTray(); return;
   }
   if(cr.k==="item"){
     const id=cr.id, [bx,bz]=benchAt(x,y);
     let where="desk", o=null;
-    if(id==="box"&&S.on.coil&&inRect(S.zones.coil,x,y)) where="cover";
-    if(CAPS[id]){                              /* on a pair of free posts of the box, or on the desk */
+    if(S.hs[id]){                              /* a coil housing goes onto the base plate, or on the other housing */
+      if(!S.on.base){ say(t.m.needBase,true); return; }
+      if(!(inRect(S.zones.base,x,y,8)||inRect(S.zones.stack,x,y,8))){ say(t.m.noFit,true); return; }
+      if(S.on.box==="cover"){ say(t.m.covered,true); return; }
+      if(!lowHs()){ S.hs[id].at="low"; say(t.m.hsLow(t.trayItems[id])); }
+      else if(!upHs()){ S.hs[id].at="up"; S.loose=true; say(t.m.hsUp(t.trayItems[id])); }
+      else { say(t.m.stackFull,true); return; }
+      S.carry=null; solve(); drawTray(); return;
+    }
+    if(id==="box"&&S.on.base&&(inRect(S.zones.base,x,y)||inRect(S.zones.stack,x,y))) where="cover";
+    if(CAPS[id]){                              /* legs into the two front posts of the box, or lying on the desk */
       const bo=boxOrigin();
-      if(bo) for(const pr of ["b12","b34"]){
-        if(CAP_KEYS.some(k=>k!==id&&S.cap[k]===pr)) continue;
-        const i0=pr==="b12"?0:2, cx=bo[0]+(POST_DX[i0]+POST_DX[i0+1])/2, cz=bo[1]+POST_Z;
-        const q=NP(cx,BOX_H+POST_H,cz);
-        if(Math.hypot(q[0]-x,q[1]-y)<Math.max(14,ppcm()*2.2)){ where=pr; break; }
+      if(bo){
+        const q=NP(bo[0]+(POSTS.B1[0]+POSTS.B2[0])/2,BOX_H+POST_H,bo[1]+POSTS.B1[1]);
+        if(Math.hypot(q[0]-x,q[1]-y)<Math.max(16,ppcm()*3)){
+          if(CAP_KEYS.some(k=>k!==id&&S.cap[k]==="box")){ say(t.m.capBusy,true); return; }
+          where="box"; }
       }
     }
     if(where==="desk"){ o=freeSpot(id,bx,bz); if(!o){ say(t.m.noFit,true); return; } }
@@ -1472,16 +1571,51 @@ function onRClick(p){
   }
   if(S.probeScr) for(const end of ["tip","gnd"]){ const q=S.probeScr[end];
     if(S.probe[end]&&Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
-  if(S.on.coil&&S.on.box!=="cover"&&inRect(S.zones.coil,x,y)){
-    if(S.pan&&S.loose){ detachTerms(["NTCA","NTCB"]); S.pan=null; S.panItem=null; say(t.m.panOut); solve(); drawTray(); return; }
-    if(S.stack.length&&S.loose){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); solve(); drawTray(); return; }
-    if((S.pan||S.stack.length)&&!S.loose){ say(t.m.needLoose,true); return; }
-  }
+  if(S.on.box==="cover"&&inRect(S.zones.box,x,y)){ returnItem("box"); return; }
+  if(S.on.base&&inRect(S.zones.stack,x,y)){ unstackOne(); return; }
   for(const k of CAP_KEYS) if(S.cap[k]==="desk"&&inRect(S.zones[k],x,y)){ returnItem(k); return; }
-  for(const id of ["box","coil","r1","scope","fg"]){
+  for(const id of ["box","base","scope","fg"]){
     if(inRect(S.zones[id],x,y)){ returnItem(id); return; }
   }
 }
+/* right-click on the stack: take the top thing off — pan, plate, housing — in the order a hand would */
+function unstackOne(){
+  const t=d(), up=upHs(), lo=lowHs();
+  const panOut=()=>{ detachTerms(["NTCA","NTCB"]); S.pan=null; S.panItem=null; S.panPos=null; S.panOn=null; say(t.m.panOut); };
+  if(up){
+    if(!S.loose){ say(t.m.needLoose,true); return; }
+    if(S.pan&&S.panOn==="up"&&S.panPos==="top") panOut();
+    else if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }
+    else if(S.pan&&S.panOn==="low") panOut();
+    else { if(S.pan&&S.panOn==="up") panOut(); takeHousing(up); }
+  } else if(lo){
+    if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }
+    else if(S.pan) panOut();
+    else takeHousing(lo);
+  }
+  solve(); drawTray();
+}
+function takeHousing(c){
+  detachTerms(c==="c1"?["C1A","C1B"]:["C2A","C2B"]);
+  S.hs[c].at=null; S.hs[c].flip=false; S.loose=false;
+  say(d().m.hsOut(d().trayItems[c]));
+}
+function flipTop(){
+  const t=d(), c=topHs();
+  if(!c){ say(t.m.flipNone,true); return; }
+  if(S.on.box==="cover"){ say(t.m.covered,true); return; }
+  if(S.hs[c].at==="up"){
+    if(!S.loose){ say(t.m.needLoose,true); return; }
+    if(S.pan&&S.panOn==="up"){
+      const to=S.panPos==="top"?"gap":"top";
+      if(to==="gap"&&S.stack.length){ say(t.m.slotBusy,true); return; }
+      S.panPos=to;
+    } else if(S.pan&&S.panPos==="top"){ say(t.m.slotBusy,true); return; }
+  } else if(S.stack.length||S.pan){ say(t.m.flipEmpty,true); return; }
+  S.hs[c].flip=!S.hs[c].flip;
+  say(t.m.flipDone(t.trayItems[c],S.hs[c].flip)); solve();
+}
+$("flipBtn").onclick=flipTop;
 function detachTerms(list){
   for(let i=S.cables.length-1;i>=0;i--) if(list.includes(S.cables[i].a)||list.includes(S.cables[i].b)) removeCable(i);
   for(const end of ["tip","gnd"]) if(list.includes(S.probe[end])) S.probe[end]=null;
@@ -1491,16 +1625,14 @@ function returnItem(id){
   const t=d();
   if(id==="fg"){ detachTerms(["FGP","FGN"]); S.on.fg=false; S.fg.pow=false; }
   else if(id==="scope"){ detachTerms(["DCOM","DVO"]); S.probe={tip:null,gnd:null}; S.on.scope=false; S.z.on=false; }
-  else if(id==="r1"){ detachTerms(["R1A","R1B"]); S.on.r1=false; }
-  else if(id==="coil"){
+  else if(id==="base"){
     if(S.on.box==="cover"){ say(t.m.covered,true); return; }
-    detachTerms(["C1A","C1B","C2A","C2B","NTCA","NTCB"]);
-    for(const m of S.stack) S.plates[m]++;
-    S.stack=[]; S.pan=null; S.panItem=null; S.on.coil=false; S.loose=false;
+    if(lowHs()){ say(t.m.baseBusy,true); return; }
+    S.on.base=false;
   }
   else if(id==="box"){
-    detachTerms(["B1","B2","B3","B4"]);
-    for(const k of CAP_KEYS) if(S.cap[k]==="b12"||S.cap[k]==="b34"){ detachTerms([CAPS[k].node+"A",CAPS[k].node+"B"]); S.cap[k]=null; }
+    detachTerms(["R1A","R1B","B1","B2"]);
+    for(const k of CAP_KEYS) if(S.cap[k]==="box") S.cap[k]=null;
     S.on.box=null;
   }
   else if(CAPS[id]){ detachTerms([CAPS[id].node+"A",CAPS[id].node+"B"]); S.cap[id]=null; }
@@ -1521,7 +1653,10 @@ cv.addEventListener("mousemove",e=>{
   if(S.view0){ const [x0,y0,a,b]=S.view0, k=ppcm(); S.touched=true; S.cam=[a-(p[0]-x0)/k, b+(p[1]-y0)/k]; }
 });
 cv.addEventListener("mousedown",e=>{ const p=mousePos(e); S.mouse=p; if(e.button!==0) return; onPress(p); });
-window.addEventListener("mouseup",()=>{ S.view0=null; S.knob=null; cv.classList.remove("dragging"); });
+window.addEventListener("mouseup",e=>{
+  /* a part dragged out of the parts box is put down where it is let go on the bench */
+  if(S.trayDrag&&S.carry&&e.target===cv){ const p=mousePos(e); S.mouse=p; place(p[0],p[1]); }
+  S.trayDrag=false; S.view0=null; S.knob=null; cv.classList.remove("dragging"); });
 cv.addEventListener("contextmenu",e=>{ e.preventDefault(); onRClick(mousePos(e)); });
 cv.addEventListener("wheel",e=>{ e.preventDefault(); onWheel(mousePos(e),e.deltaY<0?1:-1,e.shiftKey); },{passive:false});
 cv.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; e.preventDefault();
@@ -1652,31 +1787,41 @@ function drawXsec(){
   const X=x=>ox+x*s, Y=y=>H-14-y*s;
   const R=(x0,y0,x1,y1,f,o)=>{ c.fillStyle=f; c.fillRect(X(x0),Y(y1),(x1-x0)*s,(y1-y0)*s); if(o){ c.strokeStyle=o; c.lineWidth=1; c.strokeRect(X(x0)+.5,Y(y1)+.5,(x1-x0)*s-1,(y1-y0)*s-1); } };
   const L=(txt,x,y,col,al)=>{ c.font="11px "+FONT; c.fillStyle=col||"#9aa3ab"; c.textAlign=al||"left"; c.textBaseline="middle"; c.fillText(txt,X(x),Y(y)); };
-  if(!S.on.coil){ L("—",8,4,"#69717a","center"); $("secTxt").textContent=""; return; }
-  const lift=S.loose?0.45:0;
+  $("flipBtn").disabled=!topHs();
+  if(!S.on.base){ L("—",8,4,"#69717a","center"); $("secTxt").textContent=""; return; }
   R(0,0,16,0.6,"#3a3d42","#52565c");
-  R(4,0.6,12,2.8,"#2c2f34","#52565c"); R(5,1.2,11,1.5,"#e8a2a2");
-  R(4,3.8+lift,12,6+lift,"#2c2f34","#52565c"); R(5,5.0+lift,11,5.3+lift,"#e8a2a2");
-  R(4,2.8,4.8,3.8+lift,"#2c2f34"); R(11.2,2.8,12,3.8+lift,"#2c2f34");
-  const cy=6+lift+(S.loose?0.25:0);
-  R(3.2,cy,5.2,cy+0.6,"#1a1c1f","#52565c"); R(10.8,cy,12.8,cy+0.6,"#1a1c1f","#52565c");
-  let y=2.85; const th=0.24;
-  const groups=[];
-  for(const m of S.stack){ R(6.65,y,9.35,y+th,MAT[m].col,MAT[m].edge); y+=th;
+  const lo=lowHs(), up=upHs(), hh=2.6, lift=S.loose&&up?0.5:0;
+  const housing=(cc,y0,slot)=>{                   /* a housing with its recess facing the gap */
+    const inner=S.hs[cc].flip, nearTop=(slot==="up")!==inner;
+    R(4,y0,12,y0+hh,"#2c2f34","#52565c");
+    const rec=slot==="low"?[y0+hh-0.45,y0+hh]:[y0,y0+0.45];
+    R(5,rec[0],11,rec[1],"#12161b");
+    const wy=nearTop?y0+hh-0.85:y0+0.55; R(5,wy-0.15,11,wy+0.15,"#e8a2a2");
+    R(3.3,wy-0.15,4,wy+0.15,"#d4b050");
+    L((cc==="c1"?t.lab.coil1:t.lab.coil2)+(inner?" ("+t.flipped+")":""),12.6,y0+hh/2,"#e8eef2");
+  };
+  let y=0.6;
+  if(lo){ housing(lo,y,"low"); }
+  const gy=0.6+hh-0.45;
+  let py=gy; const th=0.22, groups=[];
+  for(const m of S.stack){ R(6.65,py,9.35,py+th,MAT[m].col,MAT[m].edge); py+=th;
     if(groups.length&&groups[groups.length-1][0]===m) groups[groups.length-1][1]++; else groups.push([m,1]); }
-  if(S.pan){ R(7,y,9,y+th,MAT[S.pan==="AL"?"AL":"SS410"].col); R(7.7,y+th,8.3,y+th+0.35,"#111"); }
-  for(const yy of [5.15+lift,1.35]) R(3.3,yy-0.15,4,yy+0.15,"#d4b050");
-  L(t.lab.coil1,12.6,5.1+lift,"#e8eef2"); L(t.lab.coil2,12.6,1.7,"#e8eef2");
-  L(t.lab.pins,0.1,7.6,"#d4b050");
-  L(t.lab.clamp,12.9,cy+0.3,"#9aa3ab");
+  const uy=0.6+hh+lift;
+  if(up) housing(up,uy,"up");
+  const pc=S.pan?MAT[S.pan==="AL"?"AL":"SS410"].col:null;
+  if(S.pan&&S.panPos==="gap") R(7,S.panOn==="up"?uy:gy,9,(S.panOn==="up"?uy:gy)+th,pc,"#000");
+  const topY=(up?uy:0.6)+(lo?hh:0);
+  if(S.pan&&S.panPos==="top") R(7,topY,9,topY+th,pc,"#000");
+  if(up){ R(4.2,topY,5.6,topY+0.4,"#1a1c1f","#52565c"); R(10.4,topY,11.8,topY+0.4,"#1a1c1f","#52565c"); L(t.lab.clamp,12.9,topY+0.3,"#9aa3ab"); }
+  L(t.lab.pins,0.1,7.9,"#d4b050");
   if(S.on.box==="cover"){ c.setLineDash([5,4]); c.strokeStyle="#f2c14e"; c.strokeRect(X(-0.5),Y(9.2),17*s,9.2*s); c.setLineDash([]); }
-  const stTxt= S.pan ? t.lab.pan+" — "+t.trayItems[S.panItem].replace(/^\d+\.\s*/,"")
+  const stTxt= S.pan ? t.lab.pan+" — "+t.trayItems[S.panItem].replace(/^\d+\.\s*/,"")+" ("+(S.panPos==="top"?t.up:t.lo)+")"
              : groups.length ? groups.map(([m,n])=>t.mat[m]+" × "+n).join(" + ") : t.lab.empty;
-  $("secTxt").textContent=t.secTxt(S.loose?t.lab.loose:t.lab.tight, S.on.box==="cover"?t.lab.covered:t.lab.open, stTxt);
+  $("secTxt").textContent=t.secTxt(up?(S.loose?t.lab.loose:t.lab.tight):"—", S.on.box==="cover"?t.lab.covered:t.lab.open, stTxt);
 }
 function renderStatus(){
   const L=[], t=d();
-  if(!S.on.fg&&!S.on.scope&&!S.on.coil) L.push([t.stNothing,false]);
+  if(!S.on.fg&&!S.on.scope&&!S.on.base) L.push([t.stNothing,false]);
   const sol=S.sol;
   if(sol){ const ipk=Math.max(cabs(sol.I1),cabs(sol.I2)); if(ipk>2.0) L.push([t.st.hot,true]); }
   if(S.on.scope&&S.z.on&&S.z.mode==="DMM"){
@@ -1737,7 +1882,7 @@ function applyLang(){
   $("t-benchcap").textContent=t.benchcap; $("t-instrcap").textContent=t.instrcap;
   $("t-fglbl").textContent=t.fglbl; $("t-zlbl").textContent=t.zlbl;
   $("t-tray").textContent=t.tray;
-  $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("t-h-view").textContent=t.hView;
+  $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("flipBtn").textContent=t.flipBtn; $("t-h-view").textContent=t.hView;
   $("t-speedhint").textContent=t.speedHint; $("fitBtn").textContent=t.fitBtn;
   $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
@@ -1758,7 +1903,7 @@ function tick(){
   S.t+=dt;
   solve();
   if(S.pan&&S.sol){
-    const Irms=(cabs(S.sol.I1)+cabs(S.sol.I2))/Math.SQRT2, n=Math.max(1,Math.ceil(dt/0.5));
+    const Irms=((S.net.panC1?cabs(S.sol.I1):0)+(S.net.panC2?cabs(S.sol.I2):0))/Math.SQRT2, n=Math.max(1,Math.ceil(dt/0.5));
     for(let i=0;i<n;i++) S.panT=thermalStep(S.pan,S.panT,Irms,freq(),dt/n,S.on.box!=="cover");
   }
   updateReadings();

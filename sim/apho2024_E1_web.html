@@ -615,8 +615,10 @@ function drawTray(){
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
   d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-trayCv.addEventListener("click",e=>{
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return;
   const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top, t=d();
+  B.trayDrag=true;
   for(const [n,y0,y1] of trayCells){
     if(y<y0||y>y1) continue;
     B.carry=null;
@@ -748,6 +750,9 @@ window.addEventListener("mousemove",e=>{
     s.az-=(p[0]-B.rot[0])*0.008; s.el=Math.max(-0.05,Math.min(1.2,s.el+(p[1]-B.rot[1])*0.006)); B.rot=p; }
 });
 window.addEventListener("mouseup",e=>{
+  /* a part dragged out of the parts box is put down where it is let go */
+  if(B.trayDrag&&B.carry&&e.target===cv){ B.trayDrag=false; const p=mousePos(e); B.mouse=p; onPress(p); B.rot=null; B.press=null; cv.style.cursor="grab"; return; }
+  B.trayDrag=false;
   if(B.press&&B.tab==="bench"&&!B.carry&&e.target===cv){ const p=mousePos(e);
     if(Math.hypot(p[0]-B.press[0],p[1]-B.press[1])<4) pickBase(p); }
   B.press=null; B.rot=null; cv.style.cursor="grab"; });
