@@ -202,12 +202,13 @@ const T={
     gNote:"지지점은 맨 아래 부품의 중심축입니다. 똑바로 서는지 쓰러지는지 직접 보고 판단하세요.",
     lab:{off:"OFF",volt:"VOLTAGE",change:"CHANGE",model:"ADAPTER POWER  REGULATED  MODEL: ZY-009",gonio:"각도기",noGonio:"각도기를 부품함에서 집어 실험대에 놓으세요",
          noArm:"튜브를 설치하면 자를 댈 수 있습니다", ruler:"cm"},
-    st:{nothing:"부품함에서 대전방지 매트부터 순서대로 집어 점선 위치에 놓으세요.",
+    st:{nothing:"부품함에서 대전방지 매트부터 순서대로 집어 실험대에 놓고 조립하세요.",
         next:s=>"다음 부품: "+s, ready:"조립 완료 — 어댑터 노브를 돌려 모터를 돌리세요.",
         warn6:"⚠ 6 V 초과 — 모터가 탑니다", burnt:"✖ 모터 소손 — DC 모터를 부품함에 되돌리고 다시 설치하세요 (교체)",
         overheat:"⚠ 10분 이상 연속 구동 — 모터를 쉬게 하세요", spin:"회전 중에는 원판·볼트를 바꿀 수 없습니다 — 먼저 멈추세요."},
-    m:{placeIt:s=>s+" — 점선으로 표시된 자리를 클릭하세요. (우클릭: 취소)", placed:s=>s+" — 설치했습니다.",
-       notHere:"그 자리가 아닙니다. 점선 표시를 클릭하세요.", need:s=>"먼저 설치해야 합니다: "+s,
+    m:{placeIt:s=>s+" — 놓을 곳(또는 끼울 부품)을 클릭하세요. (우클릭: 취소)", placed:s=>s+" — 설치했습니다.",
+       moveIt:s=>s+"를 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", moved:s=>s+" — 옮겼습니다.", stays:"제자리에 그대로 두었습니다.",
+       notHere:"그곳에는 놓거나 끼울 수 없습니다. 매트는 책상 위, 스탠드는 매트 위, 나머지는 끼울 부품 위를 클릭하세요.", need:s=>"먼저 설치해야 합니다: "+s,
        removed:s=>s+" — 부품함에 되돌렸습니다.", blocked:s=>"먼저 떼어야 합니다: "+s,
        oneDisk:"회전 원판은 한 장만 달 수 있습니다.", boltOn:(w,n)=>w+"에 볼트+너트 1세트 (지금 "+n+"세트)",
        boltOff:(w,n)=>w+"에서 볼트+너트 1세트 뺌 (지금 "+n+"세트)", boltPick:"원판을 클릭해 볼트+너트를 끼우세요. (우클릭: 내려놓기)",
@@ -241,12 +242,13 @@ const T={
     gNote:"The support point is the axis of the lowest part. Watch whether it stays upright or topples.",
     lab:{off:"OFF",volt:"VOLTAGE",change:"CHANGE",model:"ADAPTER POWER  REGULATED  MODEL: ZY-009",gonio:"goniometer",noGonio:"Pick the goniometer from the parts box and put it on the bench",
          noArm:"Install the tube to lay the ruler along it", ruler:"cm"},
-    st:{nothing:"Pick the parts from the box in order, starting with the antistatic mat, and click their dashed places.",
+    st:{nothing:"Pick the parts from the box in order, starting with the antistatic mat, put them on the bench and assemble.",
         next:s=>"Next part: "+s, ready:"Assembled — turn the adapter knob to run the motor.",
         warn6:"⚠ above 6 V — the motor will burn", burnt:"✖ Motor burnt out — put the DC motor back in the box and fit it again (replacement)",
         overheat:"⚠ running over 10 min — let the motor rest", spin:"You cannot change the disk or bolts while it spins — stop it first."},
-    m:{placeIt:s=>s+" — click its dashed place. (R-click: cancel)", placed:s=>s+" — installed.",
-       notHere:"Not there. Click the dashed place.", need:s=>"Install this first: "+s,
+    m:{placeIt:s=>s+" — click where it goes (or the part it fits on). (R-click: cancel)", placed:s=>s+" — installed.",
+       moveIt:s=>s+" picked up — click where to move it. (R-click: leave it)", moved:s=>s+" — moved.", stays:"Left where it was.",
+       notHere:"It does not go there. The mat goes on the desk, the stand on the mat, the rest on the part they fit.", need:s=>"Install this first: "+s,
        removed:s=>s+" — back in the parts box.", blocked:s=>"Take this off first: "+s,
        oneDisk:"Only one spinning disk fits.", boltOn:(w,n)=>"One bolt + nut set on the "+w+" ("+n+" now)",
        boltOff:(w,n)=>"One bolt + nut set off the "+w+" ("+n+" now)", boltPick:"Click a disk to fit bolts + nuts. (R-click: put them down)",
@@ -367,11 +369,17 @@ const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
 function shade(hex,f){ const h=hex.replace("#",""); const c=[0,2,4].map(i=>Math.max(0,Math.min(255,Math.round(parseInt(h.substr(i,2),16)*f))));
   return "#"+c.map(v=>v.toString(16).padStart(2,"0")).join(""); }
 class Scene{
-  constructor(){ this.az=38*Math.PI/180; this.el=16*Math.PI/180; this.scale=900; this.cx=460; this.cy=330; this.items=[]; }
+  constructor(){ this.az=38*Math.PI/180; this.el=16*Math.PI/180; this.scale=900; this.cx=460; this.cy=330; this.items=[]; this.off=[0,0,0]; }
   dirs(){ const ca=Math.cos(this.az), sa=Math.sin(this.az), ce=Math.cos(this.el), se=Math.sin(this.el);
     return [[-sa,ca,0],[-ca*se,-sa*se,ce],[ca*ce,sa*ce,se]]; }
-  prj(p){ const [r,u]=this.D; return [(p[0]*r[0]+p[1]*r[1]+p[2]*r[2])*this.scale+this.cx, -(p[0]*u[0]+p[1]*u[1]+p[2]*u[2])*this.scale+this.cy]; }
-  depth(p){ const f=this.D[2]; return p[0]*f[0]+p[1]*f[1]+p[2]*f[2]; }
+  prj(p){ const [r,u]=this.D, o=this.off, x=p[0]+o[0], y=p[1]+o[1], z=p[2]+o[2];
+    return [(x*r[0]+y*r[1]+z*r[2])*this.scale+this.cx, -(x*u[0]+y*u[1]+z*u[2])*this.scale+this.cy]; }
+  depth(p){ const f=this.D[2], o=this.off; return (p[0]+o[0])*f[0]+(p[1]+o[1])*f[1]+(p[2]+o[2])*f[2]; }
+  /* the desk point (z = 0) under a screen point */
+  ground(X,Y){ const ca=Math.cos(this.az), sa=Math.sin(this.az), se=Math.sin(this.el);
+    if(se<0.06) return null;
+    const a=(X-this.cx)/this.scale, b=(Y-this.cy)/(this.scale*se);
+    return [ca*b-sa*a, sa*b+ca*a]; }
   begin(){ this.D=this.dirs(); this.items=[]; }
   poly(pts,fill,outline,width,dash){ let dd=0; for(const p of pts) dd+=this.depth(p);
     this.items.push([dd/pts.length,"poly",pts.map(p=>this.prj(p)),fill,outline,width||1,dash]); }
@@ -431,10 +439,11 @@ function acrylDisk(sc,c,u,R,th){
 function drawFloor(sc){
   sc.poly([[-0.75,-0.55,0],[0.75,-0.55,0],[0.75,0.55,0],[-0.75,0.55,0]],"#b08a60","",1);
   for(let i=-7;i<=7;i++) sc.line([i*0.1,-0.55,0],[i*0.1,0.55,0],"rgba(120,85,50,0.35)",1);
-  if(kit.installed.has("mat")||B.carry&&B.carry.id==="mat"){
-    const g=!kit.installed.has("mat");
-    sc.poly([[-0.2,-0.16,0.0005],[0.2,-0.16,0.0005],[0.2,0.16,0.0005],[-0.2,0.16,0.0005]],g?"":COL_MAT,g?"#f2c14e":"#156b62",2,g?[6,4]:null);
-    if(!g) sc.poly([[0.13,0.11,0.0008],[0.19,0.11,0.0008],[0.19,0.15,0.0008],[0.13,0.15,0.0008]],"#e8efe9","",1);
+  if(kit.installed.has("mat")){
+    const keep=sc.off; sc.off=[B.pos.mat[0],B.pos.mat[1],0];
+    sc.poly([[-MAT_HW,-MAT_HD,0.0005],[MAT_HW,-MAT_HD,0.0005],[MAT_HW,MAT_HD,0.0005],[-MAT_HW,MAT_HD,0.0005]],COL_MAT,"#156b62",2);
+    sc.poly([[0.13,0.11,0.0008],[0.19,0.11,0.0008],[0.19,0.15,0.0008],[0.13,0.15,0.0008]],"#e8efe9","",1);
+    sc.off=keep;
   }
 }
 function drawKit(sc,ghost){
@@ -468,11 +477,16 @@ function drawKit(sc,ghost){
   if(has("adapter")||ghost==="adapter"){
     const g=ghost==="adapter"&&!has("adapter"), C=[[0.15,-0.24],[0.32,-0.24],[0.32,-0.15],[0.15,-0.15]];
     if(g) sc.poly(C.map(([x,y])=>[x,y,0.002]),"",GH,2,dash);
-    else { sc.box([0.235,-0.195,0.014],[0,0,1],0.17,0.09,0.028,"#121316");
+    else { const keep=sc.off, so=standAt(), ao=adAt(), tip=W([0.014,0,0.06]);
+      sc.off=[0,0,0];
+      sc.line([0.15+ao[0],-0.20+ao[1],0.01],[0.05+ao[0]*0.5+so[0]*0.5,-0.12+ao[1]*0.5+so[1]*0.5,0.003],"#0c0d0f",3);
+      sc.line([0.05+ao[0]*0.5+so[0]*0.5,-0.12+ao[1]*0.5+so[1]*0.5,0.003],[tip[0]+so[0],tip[1]+so[1],tip[2]],"#0c0d0f",3);
+      sc.off=ao;
+      sc.box([0.235,-0.195,0.014],[0,0,1],0.17,0.09,0.028,"#121316");
       sc.poly([[0.25,-0.215,0.0285],[0.30,-0.215,0.0285],[0.30,-0.185,0.0285],[0.25,-0.185,0.0285]],"#2a0808","#000",1);
       sc.text([0.275,-0.200,0.030],kit.powerOn?kit.volt.toFixed(1):"","#ff3b30",12);
       sc.cyl([0.195,-0.200,0.028],[0.195,-0.200,0.040],0.013,"#2b2e33"); sc.dot([0.195,-0.200,0.041],2,"#c9cdd1");
-      sc.line([0.15,-0.20,0.01],[0.05,-0.12,0.003],"#0c0d0f",3); sc.line([0.05,-0.12,0.003],W([0.014,0,0.06]),"#0c0d0f",3); }
+      sc.off=keep; }
   }
   if(has("gonio")){ /* held in the vertical plane of the arm, behind the pivot */
     const u=[Math.cos(kit.psi),Math.sin(kit.psi),0], n=[-u[1],u[0],0], piv=W([0,0,PIVOT_Z]), R=0.085;
@@ -524,7 +538,12 @@ const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
 const adCv=$("adCv"), goCv=$("goCv"), ruCv=$("ruCv");
 const sc=new Scene(), scG=new Scene();
 const CAM0={az:38*Math.PI/180,el:18*Math.PI/180,z:1};
-const B={tab:"bench",carry:null,gonio:false,adKnob:0,zoom:1,rot:null,mouse:[0,0],knobDrag:null,note:null};
+const B={tab:"bench",carry:null,gonio:false,adKnob:0,zoom:1,rot:null,mouse:[0,0],knobDrag:null,note:null,
+         /* the mat, the stand (on the mat) and the adapter go wherever they are put down */
+         pos:{mat:[0,0],stand:[0,0],ad:[0,0]}};
+const MAT_HW=0.2, MAT_HD=0.16, AD_C=[0.235,-0.195], AD_HW=0.085, AD_HD=0.045, DESK_HW=0.75, DESK_HD=0.55;
+const standAt=()=>[B.pos.mat[0]+B.pos.stand[0],B.pos.mat[1]+B.pos.stand[1],0];
+const adAt=()=>[B.pos.ad[0],B.pos.ad[1],0];
 let timeScale=1, sw={acc:0,run:false,t0:0,laps:[]};
 let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
 const TRAY_ORDER=["mat","stand","knobs","pole","tube","motor","coupler","d20_2","d20_3","d20_4","cw","adapter","gonio","bolts"];
@@ -622,7 +641,34 @@ function slotWorld(key){
   return {mat:[0,0,0],stand:[0,0,0.02],knobs:[0,BASE_R,0.01],pole:[0,0,PIVOT_Z*0.55],tube:[0,0,PIVOT_Z],
     motor:P(kit.r_m-0.03),coupler:P(kit.r_m),disk:P(kit.r_m),cw:P(-kit.r_c),adapter:[0.235,-0.195,0.02],gonio:[0,0,PIVOT_Z]}[key];
 }
-function slotScreen(key){ const w=slotWorld(key); return w?sc.prj(w):null; }
+function slotScreen(key){
+  const w=slotWorld(key); if(!w) return null;
+  sc.off=key==="mat"?[B.pos.mat[0],B.pos.mat[1],0]:key==="adapter"?adAt():standAt();
+  const q=sc.prj(w); sc.off=[0,0,0]; return q;
+}
+/* where a base part may be put down; null if it does not fit there */
+function baseSpot(k,g){
+  if(!g) return null;
+  const inside=(x,y,hx,hy,cx,cy)=>Math.abs(x-cx)<=hx&&Math.abs(y-cy)<=hy;
+  const hitsAd=(cx,cy,hx,hy)=>kit.installed.has("adapter")&&B.carry.id!=="adapter"&&
+    Math.abs(cx-(AD_C[0]+B.pos.ad[0]))<hx+AD_HW&&Math.abs(cy-(AD_C[1]+B.pos.ad[1]))<hy+AD_HD;
+  if(k==="mat"){
+    if(!inside(g[0],g[1],DESK_HW-MAT_HW,DESK_HD-MAT_HD,0,0)||hitsAd(g[0],g[1],MAT_HW,MAT_HD)) return null;
+    return g;
+  }
+  if(k==="stand"){            /* on the mat, its feet kept on the rubber */
+    const m=B.pos.mat; if(!inside(g[0],g[1],MAT_HW,MAT_HD,m[0],m[1])) return null;
+    return [Math.max(-0.09,Math.min(0.09,g[0]-m[0])),Math.max(-0.05,Math.min(0.05,g[1]-m[1]))];
+  }
+  if(k==="adapter"){
+    const c=[g[0],g[1]];
+    if(!inside(c[0],c[1],DESK_HW-AD_HW,DESK_HD-AD_HD,0,0)) return null;
+    const m=B.pos.mat;
+    if(kit.installed.has("mat")&&Math.abs(c[0]-m[0])<MAT_HW+AD_HW&&Math.abs(c[1]-m[1])<MAT_HD+AD_HD) return null;
+    return [c[0]-AD_C[0],c[1]-AD_C[1]];
+  }
+  return null;
+}
 function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
 function near(p,key,rad){ const s=slotScreen(key); return s&&Math.hypot(s[0]-p[0],s[1]-p[1])<rad; }
 function install(n){
@@ -644,11 +690,28 @@ function onPress(p){
       else say(t.m.notHere,true);
       return;
     }
-    const k=kitKey(n), rad=Math.max(40,sc.scale*(k==="mat"?0.2:k==="disk"||k==="cw"?0.12:0.07));
+    const k=kitKey(n);
+    if(k==="mat"||k==="stand"||k==="adapter"){
+      const at=baseSpot(k,sc.ground(p[0],p[1]));
+      if(!at){ say(t.m.notHere,true); return; }
+      B.pos[k==="adapter"?"ad":k]=at;
+      if(B.carry.move){ B.carry=null; kit.resetMotion(); say(t.m.moved(t.trayItems[n])); return; }
+      install(n); return;
+    }
+    const rad=Math.max(50,sc.scale*(k==="disk"||k==="cw"?0.13:0.09));
     if(near(p,k,rad)) install(n); else say(t.m.notHere,true);
     return;
   }
-  B.rot=[p[0],p[1]]; cv.style.cursor="grabbing";
+  B.rot=[p[0],p[1]]; B.press=[p[0],p[1]]; cv.style.cursor="grabbing";
+}
+/* a click (no drag) on the adapter, the stand or the mat picks it up to move it */
+function pickBase(p){
+  const t=d();
+  for(const k of ["adapter","stand","mat"]){
+    if(!kit.installed.has(k)||!near(p,k,Math.max(30,sc.scale*(k==="mat"?0.16:0.07)))) continue;
+    if(k!=="adapter"&&kit.w_s>5){ say(t.st.spin,true); return; }
+    B.carry={id:k,move:true}; say(t.m.moveIt(t.trayItems[k])); return;
+  }
 }
 function dependents(k){
   const out=[];
@@ -658,7 +721,7 @@ function dependents(k){
 }
 function onRClick(p){
   const t=d();
-  if(B.carry){ B.carry=null; drawTray(); say(t.m.removed(t.trayItems.bolts)); return; }
+  if(B.carry){ const mv=B.carry.move; B.carry=null; drawTray(); say(mv?t.m.stays:t.m.removed(t.trayItems.bolts)); return; }
   if(B.tab!=="bench") return;
   /* the front-most installed part near the pointer */
   const cand=[...kit.installed].concat(B.gonio?["gonio"]:[]).map(k=>{ const s=slotScreen(k); return [k,s?Math.hypot(s[0]-p[0],s[1]-p[1]):1e9]; })
@@ -684,7 +747,10 @@ window.addEventListener("mousemove",e=>{
   if(B.rot){ const p=mousePos(e), s=B.tab==="bench"?sc:scG;
     s.az-=(p[0]-B.rot[0])*0.008; s.el=Math.max(-0.05,Math.min(1.2,s.el+(p[1]-B.rot[1])*0.006)); B.rot=p; }
 });
-window.addEventListener("mouseup",()=>{ B.rot=null; cv.style.cursor="grab"; });
+window.addEventListener("mouseup",e=>{
+  if(B.press&&B.tab==="bench"&&!B.carry&&e.target===cv){ const p=mousePos(e);
+    if(Math.hypot(p[0]-B.press[0],p[1]-B.press[1])<4) pickBase(p); }
+  B.press=null; B.rot=null; cv.style.cursor="grab"; });
 cv.addEventListener("contextmenu",e=>{ e.preventDefault(); onRClick(mousePos(e)); });
 cv.addEventListener("wheel",e=>{ e.preventDefault(); B.zoom=Math.max(0.6,Math.min(3.5,B.zoom*(e.deltaY<0?1.12:1/1.12))); },{passive:false});
 cv.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; e.preventDefault(); const r=cv.getBoundingClientRect();
@@ -921,7 +987,7 @@ function tick(){
   if(B.tab==="bench"){
     setupScene(sc,false);
     sc.begin(); drawFloor(sc); sc.render(ctx);
-    sc.begin(); drawKit(sc,B.carry?kitKey(B.carry.id):null); sc.render(ctx);
+    sc.begin(); sc.off=standAt(); drawKit(sc,null); sc.off=[0,0,0]; sc.render(ctx);
     if(B.carry){ ctx.fillStyle="#f2c14e"; ctx.font="bold 13px 'Malgun Gothic',sans-serif"; ctx.textAlign="left";
       ctx.fillText("⇱ "+d().trayItems[B.carry.id],B.mouse[0]+16,B.mouse[1]-12); }
   } else drawG();
