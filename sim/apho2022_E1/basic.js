@@ -192,11 +192,11 @@ function getTouchPosition(canvas, event) {
 function measureToggle() {
     if (!measuring) {
         measuring = true;
-        measure_button.innerHTML = "Pause Measurement";
+        measure_button.innerHTML = L("Pause Measurement");
     }
     else {
         measuring = false;
-        measure_button.innerHTML = "Start Measurement";
+        measure_button.innerHTML = L("Start Measurement");
         drop_button.disabled = false;
     }
 }
@@ -231,12 +231,12 @@ const export_csv = (arrayData, delimiter, fileName) => {
 function scaleToggle() {
     if (!show_scale) {
         show_scale = true;
-        scale_button.innerHTML = "Hide Scale";
+        scale_button.innerHTML = L("Hide Scale");
     }
     else {
 
         show_scale = false;
-        scale_button.innerHTML = "Show Scale";
+        scale_button.innerHTML = L("Show Scale");
     }
     updated = false;
 }

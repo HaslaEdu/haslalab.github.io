@@ -1064,8 +1064,10 @@ function drawTray(){
   c.font='10.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
   d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-trayCv.addEventListener("click",e=>{
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return;
   const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  B.trayDrag=true;
   for(const [name,y0,y1] of trayCells){
     if(y<y0||y>y1) continue;
     cancelCarry(true);
@@ -1220,6 +1222,10 @@ function onUp(p){
 cv.addEventListener("mousedown",e=>{ if(e.button===0) onDown(mousePos(e)); });
 window.addEventListener("mousemove",e=>{ if(e.target===cv||B.down||B.plDrag||B.pan0||(B.carry&&B.carry.drag)) onMove(mousePos(e)); });
 window.addEventListener("mouseup",e=>{ if(e.button===0) onUp(mousePos(e)); });
+/* a part dragged out of the parts box is put down where it is let go on the bench */
+window.addEventListener("mouseup",e=>{
+  if(B.trayDrag&&B.carry&&e.target===cv) placeCarry(toLog(...mousePos(e)));
+  B.trayDrag=false; });
 cv.addEventListener("contextmenu",e=>{ e.preventDefault();
   if(B.carry){ const cr=B.carry;
     if(cr.k==="cont"){ B.carry=null; return; }

@@ -4,7 +4,7 @@ function initGraph() {
         data: {
             labels: timestamps,
             datasets: [{
-                label: "B_w (in μT)",
+                label: L("B_w (in μT)"),
                 data: Bx_values,
                 backgroundColor: ["#ffffff"],
                 borderColor: ["#ffffff"],
@@ -17,7 +17,7 @@ function initGraph() {
                 animation: false
             },
             {
-                label: "B_l (in μT)",
+                label: L("B_l (in μT)"),
                 data: By_values,
                 backgroundColor: ["#00ff00"],
                 borderColor: ["#00ff00"],
@@ -36,7 +36,7 @@ function initGraph() {
                 x: {
                     title: {
                         display: true,
-                        text: "Time (s)",
+                        text: L("Time (s)"),
                         font: {
                             family: "calibri",
                             size: 20,
@@ -57,7 +57,7 @@ function initGraph() {
                 y: {
                     title: {
                         display: true,
-                        text: "Magnetic field (μT)",
+                        text: L("Magnetic field (μT)"),
                         font: {
                             family: "calibri",
                             size: 20,
