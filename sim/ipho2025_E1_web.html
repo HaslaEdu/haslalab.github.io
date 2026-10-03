@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2025 E1 — 지구 자기장 측정 · Earth's Magnetic Field · HaslaLab</title>
+<meta name="description" content="IPhO 2025 실험 1번을 브라우저에서 실행합니다. 아두이노·앤티-헬름홀츠 코일·자기장 센서·힘 센서로 구이 저울을 꾸며 자석의 자기 모멘트를 재고, 철사에 매단 포드의 진동과 평형각으로 지구 자기장의 수평 성분을 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2025 E1 — 지구 자기장 측정 · Earth's magnetic field measurement">
+<meta property="og:description" content="IPhO 2025 실험 1번을 브라우저에서 실행합니다. 코일·센서·전지·전선을 직접 연결하고, 포드를 흔들어 주기를 재며, 각도기를 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row">
+      <button id="swBtn"></button>
+      <button id="swLap"></button>
+      <button id="swReset"></button>
+    </div>
+    <div class="laps" id="laps"></div>
+
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+
+    <h2 id="t-h-ard"></h2>
+    <p class="hint" id="t-ardhint"></p>
+    <button id="unwire" style="width:100%"></button>
+
+    <h2 id="t-h-pod"></h2>
+    <p class="hint" id="t-podhint"></p>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2025 실험 1 — 지구 자기장 측정",
+    sub:"가상 실험실 · 장비를 직접 놓고 연결한 뒤 아두이노 화면·전류계·자·각도기·스톱워치를 읽으세요. 기울기·자기 모멘트·자기장은 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", left:n=>"남은 수 "+n,
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 120 cm × 72 cm) — 좌클릭 집기·놓기·연결 / 우클릭 되돌리기·떼기 / 놓은 장비를 다시 클릭하면 옮기기",
+    closeCap:"확대 — 왼쪽: 아두이노 화면과 전류계 · 가운데: 센서 (끌기·휠로 밀기) · 오른쪽: 스탠드 (f2a 휠로 돌리기, 포드 끌어 놓기, 우클릭 손으로 멈추기)",
+    hSw:"k. 스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
+    hTime:"시간 배속", timeHint:"배속은 포드의 진동, 전지 소모, 스톱워치에 똑같이 적용됩니다.",
+    hArd:"c. 아두이노 · e. 코일 · g. 멀티미터",
+    ardHint:"전지 (j)는 슬롯 (i)에 꽂으면 아두이노 전원, (ii)에 꽂으면 코일 전원입니다. 센서 케이블의 플러그를 집어 (iii)·(iv)에 꽂으세요.\n전선 (h)는 단자 두 곳을 차례로 클릭합니다: 아두이노 (v) ±, 코일 단자, 멀티미터 잭.\n스위치 (vi) 클릭, 전류 손잡이 (vii)는 휠 또는 좌/우 클릭.\n멀티미터는 오래 두면 꺼집니다 — OFF로 돌렸다가 다시 켜세요.",
+    unwire:"전선 모두 떼기",
+    hPod:"f. 스탠드와 포드 · l. 접착 반죽",
+    podHint:"포드에서 자석을 빼려면 확대 화면의 포드 자석을 클릭하세요 (빠진 자석은 스탠드 옆에 놓입니다). 반죽은 휠로 크기를 고른 뒤 막대 끝을 클릭해 붙입니다. 힘 센서 위에 올려 무게를 잴 수 있습니다.\n철사 길이 L은 확대 화면에서 포드를 위아래로 끌어 바꿉니다 (기둥 눈금으로 읽기).\n자석은 금속·다른 자석에서 20 cm 이상 떨어져야 합니다.",
+    items:{ard:"c. 아두이노", coils:"e. 코일", field:"d. 자기장 센서", force:"b. 힘 센서", dmm:"g. 멀티미터", batt:"j. 9 V 전지",
+           wire:"h. 전선", ruler:"i. 40 cm 자", mag3:"a. 자석 (A.5용)", stand:"f. 스탠드와 포드", podMag:"a. 포드에서 뺀 자석", paste:"l. 접착 반죽"},
+    term:{"V+":"아두이노 (v) +", "V-":"아두이노 (v) −", "C+":"코일 단자 (빨강)", "C-":"코일 단자 (검정)", "A10":"멀티미터 10A", "AmA":"멀티미터 mA", "COM":"멀티미터 COM",
+          s1:"슬롯 (i)", s2:"슬롯 (ii)", s3:"슬롯 (iii)", s4:"슬롯 (iv)"},
+    dial:{OFF:"OFF", V:"V⎓", mA:"mA", A:"10A"},
+    lens:"", noArd:"아두이노를 놓으면 화면이 여기 보입니다.", noSensor:"자기장 센서를 코일이나 자 위에 놓으면 여기 크게 보입니다.", noStand:"스탠드를 놓으면 여기 보입니다.",
+    pasteSize:g=>"반죽 덩어리 약 "+g+" g (휠로 조절)", sleep:"꺼짐",
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", flat:"코일 전지가 거의 다 닳았습니다.", broken:"⚠ 힘 센서가 망가졌습니다 (200 g 초과).",
+        near:"⚠ 포드 자석 20 cm 안에 금속이나 다른 자석이 있습니다.", noPower:"아두이노에 전원이 없습니다 (슬롯 (i))."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       battIn:s=>"전지를 슬롯 "+s+" 에 연결했습니다.", battWhere:"전지는 아두이노의 슬롯 (i) 또는 (ii)에 연결합니다.", slotBusy:"그 슬롯은 이미 쓰고 있습니다.",
+       plug:"센서 플러그를 집었습니다 — 아두이노의 슬롯 (iii) 또는 (iv)를 클릭하세요.", plugged:s=>"센서를 슬롯 "+s+" 에 꽂았습니다.",
+       inCoil:"자기장 센서를 코일 축에 끼웠습니다. 확대 화면에서 끌어 위치를 바꾸세요.", onRuler:"자기장 센서를 자 위에 놓았습니다.",
+       forceIn:"힘 센서를 코일에 끼우고 코일을 돌려 세웠습니다.", coilBusy:"코일에는 센서를 하나만 넣을 수 있습니다.",
+       magRuler:"자석을 자의 0 눈금에 반죽으로 붙였습니다.",
+       wire1:"전선 한쪽 끝을 꽂을 단자를 클릭하세요. (우클릭: 취소)", wire2:"다른 쪽 끝을 꽂을 단자를 클릭하세요.",
+       wired:(a,b)=>"전선 연결: "+a+" ↔ "+b, same:"같은 단자입니다.", noTerm:"단자를 클릭하세요.", unwire:"전선을 뗐습니다.", unwired:"전선을 모두 뗐습니다.",
+       sw:on=>"스위치 (vi) "+(on?"닫힘 — LED 켜짐":"열림"), knob:"전류 손잡이 (vii)를 돌렸습니다.", dial:p=>"멀티미터: "+p,
+       fuse:"⚠ 멀티미터 mA 퓨즈가 끊어졌습니다.", broken:"⚠ 힘 센서에 200 g 넘는 힘이 걸려 망가졌습니다.",
+       magOut:"포드에서 자석을 뺐습니다 — 스탠드 옆에 놓였습니다. 20 cm 이상 떨어뜨리세요.", magIn:"자석을 포드에 다시 넣었습니다.", magNeed:"포드에 넣을 자석이 없습니다 (빼낸 자석을 부품함에서 다시 꺼낼 수 없습니다 — 실험대 위의 자석을 클릭).",
+       paste:(s,g)=>"막대 "+s+" 끝에 반죽을 붙였습니다.", pasteOff:"막대 끝의 반죽을 떼어 냈습니다.", pasteScale:"반죽을 힘 센서 위에 올렸습니다.", pasteBack:"반죽을 힘 센서에서 집었습니다.",
+       release:"포드를 놓았습니다.", damp:"손으로 포드를 잡아 멈췄습니다.", turn:a=>"f2a 를 돌렸습니다.", L:l=>"철사 길이를 바꿨습니다.", zeroed:"힘 센서가 켜지면서 0으로 맞춰졌습니다."}
+  },
+  en:{
+    title:"IPhO 2025 Experiment 1 — Earth's magnetic field measurement",
+    sub:"Virtual laboratory · put the apparatus down, connect it and read the Arduino display, the ammeter, the rulers, the protractor and the stopwatch. Slopes, moments and fields are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", left:n=>n+" left",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 120 cm × 72 cm) — L-click pick up / put down / connect, R-click return / unplug, click a placed item to move it",
+    closeCap:"close up — left: Arduino display and ammeter · middle: the sensor (drag or wheel to slide) · right: the stand (wheel on f2a to turn, drag the pod and let go, R-click to stop it by hand)",
+    hSw:"k. Chronometer", start:"Start", stop:"Stop", lap:"Lap", reset:"Reset",
+    hTime:"Time scale", timeHint:"The scale applies to the pod, the battery drain and the chronometer alike.",
+    hArd:"c. Arduino · e. Coils · g. Multimeter",
+    ardHint:"A battery (j) in slot (i) powers the Arduino, in slot (ii) the coils. Pick up the plug of a sensor cable and push it into (iii) or (iv).\nWires (h): click two terminals in turn — Arduino (v) ±, coil terminals, multimeter jacks.\nClick the switch (vi); turn the current knob (vii) with the wheel or L/R clicks.\nThe multimeter switches itself off when left alone — turn it to OFF and back.",
+    unwire:"unplug all wires",
+    hPod:"f. Stand and pod · l. Adhesive paste",
+    podHint:"Click the magnet of the pod in the close up to take it out (it is put down beside the stand). Choose the size of a paste lump with the wheel and click the end of the bar to stick it. It can be weighed on the force sensor.\nChange the wire length L by dragging the pod up or down in the close up (read it on the post scale).\nKeep the magnet at least 20 cm from metal and other magnets.",
+    items:{ard:"c. Arduino", coils:"e. Coils", field:"d. Field sensor", force:"b. Force sensor", dmm:"g. Multimeter", batt:"j. 9 V battery",
+           wire:"h. Wire", ruler:"i. 40 cm ruler", mag3:"a. Magnet (for A.5)", stand:"f. Stand and pod", podMag:"a. Magnet out of the pod", paste:"l. Adhesive paste"},
+    term:{"V+":"Arduino (v) +", "V-":"Arduino (v) −", "C+":"coil terminal (red)", "C-":"coil terminal (black)", "A10":"multimeter 10A", "AmA":"multimeter mA", "COM":"multimeter COM",
+          s1:"slot (i)", s2:"slot (ii)", s3:"slot (iii)", s4:"slot (iv)"},
+    dial:{OFF:"OFF", V:"V⎓", mA:"mA", A:"10A"},
+    lens:"", noArd:"Put the Arduino down to see its display here.", noSensor:"Put the field sensor in the coils or on the ruler to see it here.", noStand:"Put the stand down to see it here.",
+    pasteSize:g=>"paste lump about "+g+" g (wheel to change)", sleep:"off",
+    st:{none:"Take the apparatus out of the box and put it on the bench.", flat:"The coil battery is nearly flat.", broken:"⚠ The force sensor is broken (over 200 g).",
+        near:"⚠ Metal or another magnet is within 20 cm of the pod magnet.", noPower:"The Arduino has no power (slot (i))."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       battIn:s=>"Battery connected to slot "+s+".", battWhere:"A battery goes to slot (i) or (ii) of the Arduino.", slotBusy:"That slot is in use.",
+       plug:"Sensor plug picked up — click slot (iii) or (iv) of the Arduino.", plugged:s=>"Sensor plugged into slot "+s+".",
+       inCoil:"Field sensor slid onto the coil axis. Drag it in the close up to move it.", onRuler:"Field sensor laid on the ruler.",
+       forceIn:"Force sensor put into the coils and the coils turned upright.", coilBusy:"Only one sensor fits in the coils.",
+       magRuler:"Magnet stuck at the zero of the ruler with paste.",
+       wire1:"Click the terminal for one end of the wire. (R-click: cancel)", wire2:"Click the terminal for the other end.",
+       wired:(a,b)=>"Wire: "+a+" ↔ "+b, same:"Same terminal.", noTerm:"Click a terminal.", unwire:"Wire unplugged.", unwired:"All wires unplugged.",
+       sw:on=>"Switch (vi) "+(on?"closed — LED on":"open"), knob:"Current knob (vii) turned.", dial:p=>"Multimeter: "+p,
+       fuse:"⚠ The mA fuse of the multimeter blew.", broken:"⚠ More than 200 g on the force sensor: it is broken.",
+       magOut:"Magnet taken out of the pod — put down beside the stand. Move it at least 20 cm away.", magIn:"Magnet put back into the pod.", magNeed:"There is no magnet to put in (click the magnet lying on the bench).",
+       paste:(s,g)=>"Paste stuck on the "+s+" end of the bar.", pasteOff:"Paste taken off the end of the bar.", pasteScale:"Paste put on the force sensor.", pasteBack:"Paste taken off the force sensor.",
+       release:"Pod released.", damp:"Pod stopped by hand.", turn:a=>"f2a turned.", L:l=>"Wire length changed.", zeroed:"The force sensor zeroed itself as it came on."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same kit as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2025e1)>>>0);
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const MU0=4e-7*Math.PI, G0=9.81;
+const COIL_A=0.015, COIL_S=0.030, Z0_COIL=0.023, MAG_R=0.005, MAG_L=0.010, BATT_FULL=0.300*3600;
+const K={
+  N:50.64*(1+0.015*gauss()), m:0.335+0.010*gauss(), face:0.002+0.001*gauss(),
+  Be:47.0e-6+1.5e-6*gauss(), thE:(rnd()-0.5)*0.6, Cf:5.1e-7+0.15e-7*gauss(), Jpod:6.70e-7+0.20e-7*gauss(), Jmag:1.30e-7+0.10e-7*gauss(),
+  hallOff:4e-6*gauss(), forceOff:0.15*gauss(), w0:(rnd()-0.5)*1.2, ra:0.040
+};
+K.Br=K.m*MU0/(Math.PI*MAG_R*MAG_R*MAG_L);
+const fC=u=>1/Math.pow(u*u+COIL_A*COIL_A,1.5);
+function Bcoils(z,i){ const C=MU0*K.N*COIL_A*COIL_A/2*i; return C*(fC(z-(Z0_COIL-COIL_S/2))-fC(z-(Z0_COIL+COIL_S/2))); }
+const ALPHA=3*(MU0*K.N*COIL_A*COIL_A/2)*COIL_S/Math.pow((COIL_S/2)**2+COIL_A**2,2.5);
+function Bmagnet(dd){ dd=Math.max(dd,1e-4); return K.Br/2*((dd+MAG_L)/Math.hypot(dd+MAG_L,MAG_R)-dd/Math.hypot(dd,MAG_R)); }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE AND GEOMETRY  (bench 120 cm × 72 cm, 10 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=10, TW=120, TD=72;
+const PLACE=["ard","coils","dmm","ruler","stand","field","force","mag3","podMag"];
+const SZ={ard:[17,11], coils:[12,9], dmm:[8,15], ruler:[40,3], stand:[17,17], field:[13,1.6], force:[5,4], mag3:[1.4,1.4], podMag:[1.4,1.4]};
+const ST={
+  on:{}, pos:{},
+  batts:[{q:BATT_FULL,slot:null},{q:BATT_FULL,slot:null},{q:BATT_FULL,slot:null}],
+  wires:[], sw:false, knob:0.4, dial:"OFF", idle:0, fuse:true,
+  field:{where:"bench",z:20,d:60,plug:null}, force:{where:"bench",plug:null,zero:0,powered:false,broken:false,paste:0},
+  magOnRuler:false, podMagnet:true,
+  pod:{th:K.thE+0.02, w:0, f2a:0, L:0.34, hold:null, paste:{l:[],r:[]}},
+  t:0, sw_t:0, swRun:false, laps:[]
+};
+for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:60,y:36}; }
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1;
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const at=(k,dx,dy)=>[ST.pos[k].x+dx,ST.pos[k].y+dy];
+/* terminals and slots, cm on the bench */
+const TERM={ "V+":()=>at("ard",-7.2,-3.2), "V-":()=>at("ard",-7.2,-0.8), "C+":()=>at("coils",-1.6,3.6), "C-":()=>at("coils",1.6,3.6),
+             "A10":()=>at("dmm",-2.7,5.6), "AmA":()=>at("dmm",-0.9,5.6), "COM":()=>at("dmm",0.9,5.6) };
+const TERM_OWNER={"V+":"ard","V-":"ard","C+":"coils","C-":"coils","A10":"dmm","AmA":"dmm","COM":"dmm"};
+const SLOT={ s1:()=>at("ard",7.6,-4.0), s2:()=>at("ard",-7.6,4.0), s3:()=>at("ard",-2.2,-5.0), s4:()=>at("ard",1.2,-5.0) };
+const SW=()=>at("ard",3.6,3.3), KNOB=()=>at("ard",-4.6,3.3), DIALP=()=>at("dmm",0,1.2);
+function battBody(slot){ return slot==="s1"? at("ard",11.2,-4.0) : at("ard",-11.2,4.0); }
+function plugXY(s){ const p=ST[s].plug; if(p) return SLOT[p](); const b=sensorTail(s); return [b[0]+2.5,b[1]+3.5]; }
+function sensorTail(s){                         /* where the cable leaves the sensor */
+  if(s==="force") return ST.force.where==="coil"? at("coils",0,0) : at("force",2.5,0);
+  const f=ST.field;
+  if(f.where==="coil"){ const tip=at("coils",(Z0_COIL*100-f.z/10),0); return [tip[0]+12,tip[1]]; }
+  if(f.where==="ruler"){ const tip=at("ruler",-20+f.d/10,0); return [tip[0]+12,tip[1]]; }
+  return at("field",6.5,0);
+}
+function fieldTip(){ const f=ST.field; if(f.where==="coil") return at("coils",(Z0_COIL*100-f.z/10),0); if(f.where==="ruler") return at("ruler",-20+f.d/10,0); return at("field",-6.5,0); }
+function overlap(k,pos){
+  const [w,h]=SZ[k];
+  if(pos.x-w/2<0||pos.x+w/2>TW||pos.y-h/2<0||pos.y+h/2>TD) return true;
+  for(const o of PLACE){ if(o===k||!ST.on[o]) continue;
+    if(o==="field"&&ST.field.where!=="bench") continue; if(o==="force"&&ST.force.where!=="bench") continue;
+    if(o==="mag3"&&ST.magOnRuler) continue;
+    const q=ST.pos[o], [a,b]=SZ[o];
+    if(Math.abs(pos.x-q.x)<(w+a)/2+0.4&&Math.abs(pos.y-q.y)<(h+b)/2+0.4) return true; }
+  return false;
+}
+function inItem(k,p){ if(!ST.on[k]) return false; const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(p[0]-q.x)<=w/2+0.3&&Math.abs(p[1]-q.y)<=h/2+0.3; }
+
+/* ── the coil circuit: which way the current goes, and through what ── */
+function circuit(){
+  const out={I:0, coil:0, a10:0, ama:0, ok:false};
+  if(!ST.on.ard) return out;
+  const b2=ST.batts.find(b=>b.slot==="s2"), b1=ST.batts.find(b=>b.slot==="s1");
+  if(!b1||b1.q<=0||!b2||b2.q<=0||!ST.sw) return out;
+  const f=b2.q/BATT_FULL, Imax=f>0.15?2.5:2.5*f/0.15, I=Math.min(ST.knob*2.5,Imax);
+  const edges=ST.wires.map(w=>[w.a,w.b,"w"]);
+  if(ST.on.coils) edges.push(["C+","C-","coil"]);
+  if(ST.on.dmm){ edges.push(["A10","COM","a10"]); if(ST.fuse) edges.push(["AmA","COM","ama"]); }
+  const conn=(a,b,skip)=>{ const seen=new Set([a]), st=[a];
+    while(st.length){ const x=st.pop(); if(x===b) return true;
+      for(const [p,q,t] of edges){ if(t===skip) continue; const y=p===x?q:q===x?p:null; if(y&&!seen.has(y)){ seen.add(y); st.push(y); } } }
+    return false; };
+  if(!conn("V+","V-")) return out;
+  out.ok=true; out.I=I;
+  if(!conn("V+","V-","coil")) out.coil=conn("V+","C+","coil")? I : -I;
+  if(!conn("V+","V-","a10")) out.a10=conn("V+","A10","a10")? I : -I;
+  else if(!conn("V+","V-","ama")) out.ama=conn("V+","AmA","ama")? I : -I;
+  return out;
+}
+
+/* ── the pod: torque of the wire, of the horizontal field, and of what lies around ── */
+const SOURCES={mag3:"mag", podMag:"mag", force:"mag", ard:"metal", dmm:"metal", coils:"metal"};
+const SRC_ANG={}; for(const k in SOURCES) SRC_ANG[k]=rnd()*2*Math.PI;
+function podField(){
+  let bx=K.Be*Math.sin(K.thE), by=-K.Be*Math.cos(K.thE), worst=1e9;
+  if(!ST.on.stand) return {bx,by,worst};
+  const s=at("stand",0,1.5);
+  const add=(p,k)=>{ const rx=(s[0]-p[0])/100, ry=(s[1]-p[1])/100, r=Math.hypot(rx,ry); worst=Math.min(worst,r);
+    if(r>0.6) return;
+    if(SOURCES[k]==="mag"){ const mx=Math.cos(SRC_ANG[k]), my=Math.sin(SRC_ANG[k]), ux=rx/r, uy=ry/r, md=mx*ux+my*uy, c=MU0*K.m/(4*Math.PI*r*r*r);
+      bx+=c*(3*md*ux-mx); by+=c*(3*md*uy-my); }
+    else { const c=0.15*K.Be*Math.pow(0.08/r,3); bx+=c*Math.cos(SRC_ANG[k]); by+=c*Math.sin(SRC_ANG[k]); } };
+  for(const k of ["mag3","podMag","ard","dmm","coils"]) if(ST.on[k]) add(k==="mag3"&&ST.magOnRuler?at("ruler",-20,0):[ST.pos[k].x,ST.pos[k].y],k);
+  if(ST.on.force) add(ST.force.where==="coil"?at("coils",0,0):[ST.pos.force.x,ST.pos.force.y],"force");
+  for(const b of ST.batts) if(b.slot){ const p=battBody(b.slot), rx=(s[0]-p[0])/100, ry=(s[1]-p[1])/100, r=Math.hypot(rx,ry); worst=Math.min(worst,r);
+    if(r<0.6){ const c=0.08*K.Be*Math.pow(0.08/r,3); bx+=c; } }
+  return {bx,by,worst};
+}
+function podJ(){ const P=ST.pod; return K.Jpod+(ST.podMagnet?K.Jmag:0)+(P.paste.l.reduce((a,b)=>a+b,0)+P.paste.r.reduce((a,b)=>a+b,0))*1e-3*K.ra*K.ra; }
+function podTorque(th,F){ const P=ST.pod, th0=P.f2a*Math.PI/180+K.w0;
+  let tq=-(K.Cf/P.L)*(th-th0);
+  if(ST.podMagnet){ const B=Math.hypot(F.bx,F.by), thB=Math.atan2(F.bx,-F.by); tq-=K.m*B*Math.sin(th-thB); }
+  return tq; }
+function podStep(dt,F){ const P=ST.pod; if(P.hold!==null){ P.th=P.hold; P.w=0; return; }
+  const J=podJ(), c=2*J/110; P.w+=(podTorque(P.th,F)-c*P.w)/J*dt; P.th+=P.w*dt; }
+function podDamp(F){ const P=ST.pod; let th=P.th;
+  for(let i=0;i<60;i++){ const h=1e-5, f=podTorque(th,F), g=(podTorque(th+h,F)-podTorque(th-h,F))/(2*h); if(Math.abs(g)<1e-15) break;
+    let s=-f/g; if(Math.abs(s)>0.3) s=0.3*Math.sign(s); th+=s; if(Math.abs(s)<1e-9) break; }
+  P.th=th; P.w=0; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(x,y,h,stops){ const g=ctx.createLinearGradient(x,y,x,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function bench(){
+  ctx.fillStyle=vgrad(0,0,LH,[[0,"#e9e4da"],[1,"#d9d2c4"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(120,105,80,.12)"; ctx.lineWidth=1;
+  for(let x=0;x<=LW;x+=100){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+  for(let y=0;y<=LH;y+=100){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
+}
+/* draw in cm around an item centre */
+function frame(k,fn,pos){ const p=pos||ST.pos[k]; ctx.save(); ctx.translate(p.x*PX,p.y*PX); ctx.scale(PX,PX); fn(); ctx.restore(); }
+function shadowRect(x,y,w,h){ ctx.fillStyle="rgba(60,45,25,.22)"; ctx.fillRect(x+0.3,y+0.4,w,h); }
+const T6=(s,x,y,col,sz,al,wt)=>{ ctx.save(); ctx.scale(0.1,0.1); text(s,x*10,y*10,col,sz,al,wt); ctx.restore(); };
+function drawArd(){ frame("ard",()=>{
+  shadowRect(-8.5,-5.5,17,11);
+  fillR(-8.5,-5.5,17,11,0.4,"#1d6e45","#0f3f27",0.08);
+  fillR(-8,-5,16,10,0.3,"#227a4d");
+  fillR(-3.6,-2.6,9.6,4.4,0.2,"#3a3a3a"); fillR(-3.2,-2.2,8.8,3.6,0.1,ST.batts.some(b=>b.slot==="s1"&&b.q>0)?"#9fd36a":"#5b6b4c");
+  /* (v) power posts for the coils */
+  for(const [y,c] of [[-3.2,"#c62a22"],[-0.8,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(-7.2,y,0.75,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(-7.2,y,0.5,0,7); ctx.fill(); }
+  T6("(v)",-5.6,-2.0,"#d8f1e2",6.5);
+  /* slots */
+  for(const [k,x,y,lab] of [["s1",7.6,-4.0,"(i)"],["s2",-7.6,4.0,"(ii)"],["s3",-2.2,-5.0,"(iii)"],["s4",1.2,-5.0,"(iv)"]]){
+    fillR(x-0.8,y-0.5,1.6,1.0,0.1,"#f2f2ee","#999",0.05); T6(lab,x,y+(y<0?1.2:-1.1),"#d8f1e2",6,"center"); }
+  /* (vi) switch with LED, (vii) knob */
+  fillR(2.6,2.6,2.0,1.4,0.15,"#ddd","#777",0.05); fillR(ST.sw?3.6:2.8,2.75,0.8,1.1,0.1,"#555");
+  ctx.fillStyle=ST.sw&&circ.ok?"#ff4a3a":"#5a2a26"; ctx.beginPath(); ctx.arc(5.4,3.3,0.35,0,7); ctx.fill();
+  T6("(vi)",3.6,4.6,"#d8f1e2",6,"center");
+  ctx.fillStyle="#1a1a1a"; ctx.beginPath(); ctx.arc(-4.6,3.3,0.95,0,7); ctx.fill();
+  const a=-2.4+ST.knob*4.8; ctx.strokeStyle="#eee"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(-4.6,3.3); ctx.lineTo(-4.6+Math.sin(a)*0.8,3.3-Math.cos(a)*0.8); ctx.stroke();
+  T6("(vii)",-4.6,4.75,"#d8f1e2",6,"center");
+}); }
+function drawBatt(b){ const p=battBody(b.slot), s=b.slot==="s1"?1:-1;
+  ctx.save(); ctx.translate(p[0]*PX,p[1]*PX); ctx.scale(PX,PX);
+  shadowRect(-1.3,-2.4,2.6,4.8); fillR(-1.3,-2.4,2.6,4.8,0.3,"#1f1f1f","#000",0.06); ctx.fillStyle="#d7b53b"; ctx.fillRect(-1.3,-0.6,2.6,1.1);
+  ctx.save(); ctx.scale(0.1,0.1); text("9V",0,14,"#eee",8,"center","700"); ctx.restore();
+  ctx.strokeStyle="#c62a22"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(-0.4,-2.4*s); ctx.quadraticCurveTo(-1.6*s,-3.2*s,-2.8*s,-0.1); ctx.stroke();
+  ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(0.4,-2.4*s); ctx.quadraticCurveTo(-1.4*s,-3.0*s,-2.8*s,0.1); ctx.stroke();
+  ctx.restore(); }
+function drawCoils(){ frame("coils",()=>{
+  shadowRect(-6,-4.5,12,9);
+  fillR(-6,-4.5,12,9,0.6,"#2d2f33","#141518",0.08);
+  if(ST.force.where==="coil"){                   /* turned upright: seen from above, the top coil */
+    ctx.fillStyle="#b46a2a"; ctx.beginPath(); ctx.arc(0,0,3.2,0,7); ctx.fill(); ctx.fillStyle="#2d2f33"; ctx.beginPath(); ctx.arc(0,0,1.7,0,7); ctx.fill();
+    ctx.strokeStyle="rgba(255,220,170,.5)"; ctx.lineWidth=0.06; for(let r=1.9;r<3.2;r+=0.25){ ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.stroke(); }
+    fillR(-0.9,-0.9,1.8,1.8,0.2,"#111","#000",0.05); ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(0,0,0.5,0,7); ctx.fill();
+    if(ST.force.paste>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0.2,0.1,0.35+0.2*Math.cbrt(ST.force.paste),0,7); ctx.fill(); }
+  } else {
+    for(const x of [-1.5,1.5]){ ctx.fillStyle="#3b3d42"; ctx.fillRect(x-0.75,-3.6,1.5,7.2);
+      ctx.fillStyle=vgrad(0,-3.2,6.4,[[0,"#d48a44"],[0.5,"#a65a22"],[1,"#d48a44"]]); ctx.fillRect(x-0.55,-3.2,1.1,6.4); }
+    ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.setLineDash([0.3,0.3]); ctx.lineWidth=0.05; ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(6,0); ctx.stroke(); ctx.setLineDash([]);
+  }
+  for(const [x,c] of [[-1.6,"#c62a22"],[1.6,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(x,3.6,0.7,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,3.6,0.45,0,7); ctx.fill(); }
+}); }
+function drawFieldBoard(){
+  const f=ST.field; let tip;
+  if(f.where==="bench"){ if(!ST.on.field) return; tip=at("field",-6.5,0); }
+  else tip=fieldTip();
+  ctx.save(); ctx.translate(tip[0]*PX,tip[1]*PX); ctx.scale(PX,PX);
+  fillR(0,-0.7,13,1.4,0.15,"#2d8a4a","#165a2c",0.05);
+  ctx.strokeStyle="#e9f5e9"; ctx.lineWidth=0.04; for(let i=0;i<=120;i+=2){ ctx.beginPath(); ctx.moveTo(i/10,-0.7); ctx.lineTo(i/10,i%10===0?-0.2:-0.45); ctx.stroke(); }
+  ctx.fillStyle="#111"; ctx.fillRect(0.05,-0.25,0.35,0.5);
+  ctx.fillStyle="#f5f5f2"; ctx.fillRect(11.6,-0.6,1.3,1.2);
+  ctx.restore();
+}
+function drawForce(){ if(!ST.on.force||ST.force.where!=="bench") return; frame("force",()=>{
+  shadowRect(-2.5,-2,5,4); fillR(-2.5,-2,5,4,0.3,"#1c1c1e","#000",0.06); fillR(-1.8,-1.3,2.4,2.6,0.2,"#e8e8e4");
+  ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(-0.6,0,0.6,0,7); ctx.fill(); ctx.fillStyle="#555"; ctx.beginPath(); ctx.arc(1.5,-1,0.2,0,7); ctx.arc(1.5,1,0.2,0,7); ctx.fill(); }); }
+function drawCable(s){
+  const on=s==="field"? (ST.on.field) : ST.on.force; if(!on) return;
+  if(hand&&hand.k==="plug"&&hand.s===s){ const a=sensorTail(s); ctx.strokeStyle="#3a3a3a"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX); ctx.lineTo(mouse[0],mouse[1]); ctx.stroke(); return; }
+  const a=sensorTail(s), b=plugXY(s);
+  ctx.strokeStyle="rgba(40,40,40,.9)"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX);
+  ctx.bezierCurveTo((a[0]+3)*PX,(a[1]+4)*PX,(b[0]-1)*PX,(b[1]-5)*PX,b[0]*PX,b[1]*PX); ctx.stroke();
+  for(const [dx,c] of [[-3,"#c62a22"],[0,"#222"],[3,"#e8e8e8"]]){ ctx.fillStyle=c; ctx.fillRect(b[0]*PX+dx-1,b[1]*PX-6,2,6); }
+  fillR(b[0]*PX-6,b[1]*PX-3,12,6,1,"#f5f5f0","#888");
+}
+function drawDmm(){ frame("dmm",()=>{
+  shadowRect(-4,-7.5,8,15); fillR(-4,-7.5,8,15,0.8,"#1f2124","#000",0.08); fillR(-3.6,-7.1,7.2,14.2,0.6,"#2d3035");
+  fillR(-3,-6.4,6,2.8,0.2,"#a9b6a3","#3d443b",0.05);
+  if(dmmText()) T6(dmmText(),2.6,-5,"#1d221b",15,"right","700");
+  ctx.fillStyle="#0e0f10"; ctx.beginPath(); ctx.arc(0,1.2,2.2,0,7); ctx.fill();
+  const ang={OFF:-2.2,V:-0.8,mA:0.6,A:1.8}[ST.dial]; ctx.strokeStyle="#f0f0f0"; ctx.lineWidth=0.25; ctx.beginPath(); ctx.moveTo(0,1.2); ctx.lineTo(Math.sin(ang)*1.9,1.2-Math.cos(ang)*1.9); ctx.stroke();
+  for(const [k,a] of [["OFF",-2.2],["V",-0.8],["mA",0.6],["A",1.8]]) T6(d().dial[k],Math.sin(a)*3.0*10/10,1.2-Math.cos(a)*3.0,"#cfd6dc",5.5,"center");
+  for(const [x,c,l] of [[-2.7,"#c62a22","10A"],[-0.9,"#c62a22","mA"],[0.9,"#222","COM"],[2.7,"#c62a22","VΩ"]]){
+    ctx.fillStyle="#0b0b0c"; ctx.beginPath(); ctx.arc(x,5.6,0.55,0,7); ctx.fill(); ctx.strokeStyle=c==="#222"?"#666":c; ctx.lineWidth=0.12; ctx.stroke(); T6(l,x,6.7,"#cfd6dc",5,"center"); }
+}); }
+function drawRuler(){ frame("ruler",()=>{
+  shadowRect(-20,-1.5,40,3); ctx.fillStyle="rgba(240,244,247,.92)"; ctx.fillRect(-20,-1.5,40,3); ctx.strokeStyle="#7d8a94"; ctx.lineWidth=0.04; ctx.strokeRect(-20,-1.5,40,3);
+  ctx.strokeStyle="#3b444c"; for(let i=0;i<=400;i++){ const x=-20+i/10, L=i%10===0?0.9:i%5===0?0.6:0.35; ctx.lineWidth=0.03; ctx.beginPath(); ctx.moveTo(x,-1.5); ctx.lineTo(x,-1.5+L); ctx.stroke(); }
+  ctx.save(); ctx.scale(0.1,0.1); for(let c=0;c<=40;c+=5) text(String(c),(-20+c)*10,-2,"#2b333a",5.5,"center"); ctx.restore();
+  if(ST.magOnRuler){ fillR(-21.2,-0.7,1.2,1.4,0.2,"#c7ccd2","#666",0.05); ctx.fillStyle="#eadfb0"; ctx.fillRect(-20.1,-0.6,0.25,1.2); }
+}); }
+function drawMagnet(k){ if(!ST.on[k]||(k==="mag3"&&ST.magOnRuler)) return; frame(k,()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.beginPath(); ctx.arc(0.15,0.2,0.6,0,7); ctx.fill();
+  ctx.fillStyle="#c7ccd2"; ctx.beginPath(); ctx.arc(0,0,0.55,0,7); ctx.fill(); ctx.strokeStyle="#6d737a"; ctx.lineWidth=0.06; ctx.stroke(); }); }
+function drawStandTop(){ frame("stand",()=>{
+  shadowRect(-8.5,-8.5,17,17); fillR(-8.5,-8.5,17,17,0.6,vgrad(0,-8.5,17,[[0,"#efd9b0"],[1,"#d9bd8c"]]),"#a88a5c",0.08);
+  ctx.save(); ctx.scale(0.1,0.1); text("iPhO",50,60,"#a07f50",12,"center","700"); ctx.restore();
+  ctx.fillStyle="#3d4046"; ctx.fillRect(-6,-6.6,1.2,1.2);
+  ctx.fillStyle="#2a2c30"; ctx.fillRect(-5.6,-6.4,5.6,0.8);
+  /* the pod under the discs */
+  const th=ST.pod.th, c=[0,1.5], R=4;
+  ctx.save(); ctx.translate(c[0],c[1]); ctx.rotate(th);
+  ctx.fillStyle="#222"; ctx.fillRect(-0.3,-R,0.6,2*R);
+  ctx.strokeStyle="#d6c08a"; ctx.lineWidth=0.12; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(4.6,0); ctx.stroke();
+  const pl=ST.pod.paste.l.reduce((a,b)=>a+b,0), pr=ST.pod.paste.r.reduce((a,b)=>a+b,0);
+  if(pl>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0,-R,0.3+0.25*Math.cbrt(pl),0,7); ctx.fill(); }
+  if(pr>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0,R,0.3+0.25*Math.cbrt(pr),0,7); ctx.fill(); }
+  ctx.restore();
+  ctx.fillStyle="rgba(250,250,250,.45)"; ctx.beginPath(); ctx.arc(c[0],c[1],5.5,0,7); ctx.fill(); ctx.strokeStyle="rgba(60,60,60,.6)"; ctx.lineWidth=0.06; ctx.stroke();
+  ctx.fillStyle="#2a2c30"; ctx.beginPath(); ctx.arc(c[0],c[1],1.1,0,7); ctx.fill();
+}); }
+function drawWires(){
+  const col=["#151515","#151515","#151515"];
+  ST.wires.forEach((w,i)=>wireLine(TERM[w.a](),TERM[w.b](),col[i%3]));
+  if(hand&&hand.k==="wire"&&hand.a) wireLine(TERM[hand.a](),[mouse[0]/PX,mouse[1]/PX],"#151515");
+}
+function wireLine(a,b,col){ const L=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=3+L*0.15;
+  ctx.strokeStyle="rgba(0,0,0,.18)"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(a[0]*PX+2,a[1]*PX+3);
+  ctx.bezierCurveTo((a[0]*0.7+b[0]*0.3)*PX+2,(a[1]*0.7+b[1]*0.3+sag)*PX+3,(a[0]*0.3+b[0]*0.7)*PX+2,(a[1]*0.3+b[1]*0.7+sag)*PX+3,b[0]*PX+2,b[1]*PX+3); ctx.stroke();
+  ctx.strokeStyle=col; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX);
+  ctx.bezierCurveTo((a[0]*0.7+b[0]*0.3)*PX,(a[1]*0.7+b[1]*0.3+sag)*PX,(a[0]*0.3+b[0]*0.7)*PX,(a[1]*0.3+b[1]*0.7+sag)*PX,b[0]*PX,b[1]*PX); ctx.stroke();
+  for(const p of [a,b]){ ctx.fillStyle="#333"; ctx.beginPath(); ctx.arc(p[0]*PX,p[1]*PX,4,0,7); ctx.fill(); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  INSTRUMENT READINGS
+   ══════════════════════════════════════════════════════════════ */
+let circ={I:0,coil:0,a10:0,ama:0,ok:false}, lcd=["",""], sleeping=false, zErr=0, dErr=0;
+const ardOn=()=>ST.on.ard&&ST.batts.some(b=>b.slot==="s1"&&b.q>0);
+function hallB(){
+  const f=ST.field; let B=0;
+  if(f.where==="coil") B=Bcoils(f.z/1000+zErr,circ.coil);
+  else if(f.where==="ruler"&&ST.magOnRuler) B=Bmagnet(f.d/1000-K.face+dErr);
+  return B+K.hallOff+3e-6*gauss();
+}
+function forceRaw(){
+  let m=K.forceOff+ST.force.paste;
+  if(ST.force.where==="coil") m+=K.m*ALPHA*circ.coil/G0*1000;
+  return m;
+}
+function readLcd(){
+  if(!ardOn()) return ["",""];
+  const l1=ST.field.plug==="s3"&&ST.on.field? "B: "+((Math.round(hallB()*1e5)/100).toFixed(2)).padStart(6," ")+" mT" : "B:   ---- mT";
+  let l2="m:   ---- g";
+  if(ST.force.plug==="s4"&&ST.on.force){
+    if(ST.force.broken) l2="m:   ERROR";
+    else { const v=forceRaw()-ST.force.zero+0.12*gauss(); l2="m: "+((Math.round(v*10)/10).toFixed(1)).padStart(6," ")+" g"; } }
+  return [l1,l2];
+}
+function dmmText(){
+  if(!ST.on.dmm||ST.dial==="OFF"||sleeping) return "";
+  if(ST.dial==="A") return (circ.a10+0.004*gauss()).toFixed(2);
+  if(ST.dial==="mA") return (circ.ama*1000+0.2*gauss()).toFixed(1);
+  return (0.01*gauss()).toFixed(2);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH, THE TRAY AND THE CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+function drawBench(){
+  bench();
+  if(ST.on.ruler) drawRuler();
+  if(ST.on.stand) drawStandTop();
+  if(ST.on.coils) drawCoils();
+  if(ST.on.ard) drawArd();
+  for(const b of ST.batts) if(b.slot&&ST.on.ard) drawBatt(b);
+  if(ST.on.dmm) drawDmm();
+  drawForce(); drawFieldBoard(); drawMagnet("mag3"); drawMagnet("podMag");
+  drawCable("field"); drawCable("force");
+  drawWires();
+  drawHand();
+  if(overBench&&(!hand||hand.k==="wire")){ const t=termAt(cm(mouse));
+    if(t){ const s=d().term[t]; ctx.font="12px "+FONT; const w=ctx.measureText(s).width+12;
+      fillR(mouse[0]+12,mouse[1]-26,w,19,4,"rgba(20,22,26,.85)"); text(s,mouse[0]+18,mouse[1]-16.5,"#ffe9a8",12); } }
+}
+function drawHand(){
+  if(!hand) return; const c=cm(mouse);
+  if(PLACE.includes(hand.k)){ const keep=ST.pos[hand.k], kon=ST.on[hand.k]; ST.pos[hand.k]={x:c[0],y:c[1]}; ST.on[hand.k]=true;
+    const sv={w:ST.field.where,f:ST.force.where,r:ST.magOnRuler}; if(hand.k==="field") ST.field.where="bench"; if(hand.k==="force") ST.force.where="bench"; if(hand.k==="mag3") ST.magOnRuler=false;
+    ctx.globalAlpha=0.7;
+    ({ard:drawArd,coils:drawCoils,dmm:drawDmm,ruler:drawRuler,stand:drawStandTop,field:drawFieldBoard,force:drawForce,mag3:()=>drawMagnet("mag3"),podMag:()=>drawMagnet("podMag")})[hand.k]();
+    ctx.globalAlpha=1; ST.pos[hand.k]=keep; ST.on[hand.k]=kon; ST.field.where=sv.w; ST.force.where=sv.f; ST.magOnRuler=sv.r; return; }
+  if(hand.k==="batt"){ ctx.save(); ctx.translate(mouse[0],mouse[1]); ctx.scale(PX,PX); fillR(-1.3,-2.4,2.6,4.8,0.3,"#1f1f1f"); ctx.fillStyle="#d7b53b"; ctx.fillRect(-1.3,-0.6,2.6,1.1); ctx.restore(); }
+  if(hand.k==="paste"){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(mouse[0],mouse[1],3+2.5*Math.cbrt(hand.g),0,7); ctx.fill(); ctx.strokeStyle="#b9a96a"; ctx.stroke();
+    text(d().pasteSize(hand.g.toFixed(1)),mouse[0]+14,mouse[1]+16,"#4a3f22",11); }
+}
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "ard": fillR(-22,-15,44,30,3,"#1d6e45"); fillR(-10,-7,26,12,2,"#9fd36a"); break;
+    case "coils": fillR(-20,-12,40,24,3,"#2d2f33"); ctx.fillStyle="#b46a2a"; ctx.fillRect(-8,-16,6,32); ctx.fillRect(2,-16,6,32); break;
+    case "field": fillR(-24,-4,48,8,2,"#2d8a4a"); ctx.fillStyle="#fff"; for(let i=-22;i<24;i+=4) ctx.fillRect(i,-4,1,3); break;
+    case "force": fillR(-12,-10,24,20,3,"#1c1c1e"); ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(-3,0,4,0,7); ctx.fill(); break;
+    case "dmm": fillR(-11,-18,22,36,4,"#1f2124"); fillR(-8,-15,16,7,1,"#a9b6a3"); ctx.fillStyle="#000"; ctx.beginPath(); ctx.arc(0,4,6,0,7); ctx.fill(); break;
+    case "batt": fillR(-8,-14,16,28,3,"#1f1f1f"); ctx.fillStyle="#d7b53b"; ctx.fillRect(-8,-3,16,6); break;
+    case "wire": ctx.strokeStyle="#151515"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-20,8); ctx.bezierCurveTo(-8,-16,8,16,20,-8); ctx.stroke(); break;
+    case "ruler": ctx.rotate(-0.4); ctx.fillStyle="#f0f4f7"; ctx.fillRect(-26,-5,52,10); ctx.strokeStyle="#555"; for(let i=-24;i<=24;i+=4){ ctx.beginPath(); ctx.moveTo(i,-5); ctx.lineTo(i,-1); ctx.stroke(); } break;
+    case "mag3": case "podMag": ctx.fillStyle="#c7ccd2"; ctx.fillRect(-5,-8,10,16); ctx.strokeStyle="#666"; ctx.strokeRect(-5,-8,10,16); break;
+    case "stand": fillR(-18,8,36,8,2,"#e3c99a"); ctx.fillStyle="#3d4046"; ctx.fillRect(-12,-20,3,30); ctx.fillRect(-12,-18,18,3); ctx.fillRect(-12,2,18,3); break;
+    case "paste": fillR(-14,-12,28,24,3,"#f1c232"); ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(4,4,5,0,7); ctx.fill(); break;
+  }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["ard","coils","field","force","dmm","batt","wire","ruler","mag3","stand","paste"], TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
+const battsLeft=()=>ST.batts.filter((b,i)=>!b.slot&&!(hand&&hand.k==="batt"&&hand.i===i)).length;
+const wiresLeft=()=>3-ST.wires.length-(hand&&hand.k==="wire"?1:0);
+function trayAvail(k){
+  if(hand&&hand.k===k&&k!=="batt"&&k!=="wire") return false;
+  if(k==="batt") return battsLeft()>0; if(k==="wire") return wiresLeft()>0; if(k==="paste") return true;
+  return !ST.on[k];
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.42);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16, w1=Math.round(CLW*0.24), w2=Math.round(CLW*0.31);
+  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:w2,h}; P3={x:24+w1+w2,y:8,w:CLW-32-w1-w2,h};
+  drawTray();
+}
+let P1={},P2={},P3={};
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(itemName(k),52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(k==="batt"?t.left(battsLeft()):k==="wire"?t.left(wiresLeft()):(av?t.trayTake:t.trayOut),52,y+30);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, c=closeCtx;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,CLW,CLH);
+  const old=ctx; ctx=c;
+  drawP1(); drawP2(); drawP3();
+  ctx=old;
+}
+function panelBg(P,col){ ctx.fillStyle=col||"#0f1115"; ctx.fillRect(P.x,P.y,P.w,P.h); }
+function msgIn(P,s){ text(s,P.x+P.w/2,P.y+P.h/2,"#69717a",11.5,"center"); }
+/* ── left: the Arduino display and the ammeter ── */
+function drawP1(){
+  const P=P1; panelBg(P);
+  if(!ST.on.ard){ msgIn(P,""); }
+  const x=P.x+8, w=P.w-16, lh=Math.min(64,P.h*0.28);
+  fillR(x,P.y+8,w,lh+26,6,"#1d6e45","#0f3f27",1);
+  fillR(x+8,P.y+16,w-16,lh+10,4,ST.on.ard&&ardOn()?"#9fd36a":"#4f5a43","#2d3528",1);
+  if(ST.on.ard&&ardOn()){ const fs=Math.min(18,(w-24)/7.4); text(lcd[0],x+14,P.y+16+lh*0.33,"#14240c",fs,"left","700",MONO); text(lcd[1],x+14,P.y+16+lh*0.76,"#14240c",fs,"left","700",MONO); }
+  else if(!ST.on.ard) text(d().noArd,x+w/2,P.y+16+lh/2,"#20281a",10.5,"center");
+  const y2=P.y+lh+48;
+  fillR(x,y2,w,P.h-(y2-P.y)-8,8,"#1f2124","#000",1);
+  fillR(x+10,y2+10,w-20,Math.min(60,(P.h-(y2-P.y))*0.45),4,"#a9b6a3","#3d443b",1);
+  const t=dmmText(); if(t) text(t,x+w-18,y2+10+Math.min(60,(P.h-(y2-P.y))*0.45)/2,"#1d221b",Math.min(30,w*0.16),"right","700",MONO);
+  if(ST.on.dmm){ text(ST.dial==="A"?"A":ST.dial==="mA"?"mA":ST.dial==="V"?"V":"",x+w-18,y2+Math.min(60,(P.h-(y2-P.y))*0.45)+20,"#9fb0a0",11,"right","600");
+    text(d().items.dmm+" · "+d().dial[ST.dial]+(sleeping?" ("+d().sleep+")":""),x+12,P.y+P.h-20,"#9aa3ab",11); }
+}
+/* ── middle: the field sensor in the coils or on the ruler, or the force sensor ── */
+let P2k=10;
+function drawP2(){
+  const P=P2; panelBg(P,"#e9e4da"); ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  const f=ST.field, cy=P.y+P.h*0.5;
+  if(ST.force.where==="coil"){
+    const k=P.w/10; P2k=k; const cx=P.x+P.w/2;
+    ctx.fillStyle="#2d2f33"; ctx.fillRect(cx-4.5*k,P.y+P.h-0.8*k-10,9*k,0.8*k);
+    for(const y of [-1.5,1.5]){ ctx.fillStyle="#b46a2a"; ctx.fillRect(cx-3.2*k,cy+y*k-0.55*k,1.6*k,1.1*k); ctx.fillRect(cx+1.6*k,cy+y*k-0.55*k,1.6*k,1.1*k); }
+    ctx.fillStyle="#1c1c1e"; ctx.fillRect(cx-0.6*k,cy+0.3*k,1.2*k,3*k);
+    ctx.fillStyle="#c9cdd2"; ctx.fillRect(cx-0.5*k,cy-0.7*k,1.0*k,1.0*k);
+    if(ST.force.paste>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.ellipse(cx,cy-0.7*k-0.25*k,0.55*k,0.3*k,0,0,7); ctx.fill(); }
+    text(d().items.force,P.x+8,P.y+14,"#5d5446",11);
+  } else if(f.where==="coil"&&ST.on.coils){
+    const k=P.w/9; P2k=k; const x0=P.x+3.5*k;              /* coil centre */
+    ctx.fillStyle="#3b3d42"; ctx.fillRect(P.x,cy+2.4*k,P.w,0.6*k);
+    for(const x of [-1.5,1.5]) for(const s of [-1,1]){ ctx.fillStyle="#b46a2a"; ctx.fillRect(x0+(x-0.55)*k,cy+s*1.5*k-(s>0?0:1.4*k),1.1*k,1.4*k); }
+    const tip=x0+(Z0_COIL*100-f.z/10)*k;
+    ctx.fillStyle="#2d8a4a"; ctx.fillRect(tip,cy-0.35*k,12*k,0.7*k);
+    ctx.strokeStyle="#f1fff1"; ctx.lineWidth=1;
+    for(let s=0;s<=80;s++){ const x=tip+s/10*k, L=s%10===0?0.35*k:s%5===0?0.25*k:0.15*k; ctx.beginPath(); ctx.moveTo(x,cy-0.35*k); ctx.lineTo(x,cy-0.35*k+L); ctx.stroke();
+      if(s%10===0&&k>40) text(String(s),x,cy+0.12*k,"#f1fff1",10,"center"); }
+    ctx.fillStyle="#111"; ctx.fillRect(tip,cy-0.12*k,0.25*k,0.24*k);
+    const xf=x0+2.3*k; ctx.strokeStyle="#c62a22"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(xf,cy-1.2*k); ctx.lineTo(xf,cy+1.2*k); ctx.stroke();
+    text("z = 0",xf+4,cy-1.0*k,"#c62a22",11);
+    text(d().items.coils+" · "+d().items.field,P.x+8,P.y+14,"#5d5446",11);
+  } else if(f.where==="ruler"&&ST.on.ruler){
+    const k=P.w/8; P2k=k; const tipD=f.d/10, xr=s=>P.x+P.w*0.35+(s-tipD)*k;
+    ctx.fillStyle="#f0f4f7"; ctx.fillRect(P.x,cy+0.3*k,P.w,1.2*k);
+    ctx.strokeStyle="#3b444c"; ctx.lineWidth=1;
+    for(let i=0;i<=400;i++){ const x=xr(i/10); if(x<P.x-5||x>P.x+P.w+5) continue; const L=i%10===0?0.5*k:i%5===0?0.35*k:0.2*k;
+      ctx.beginPath(); ctx.moveTo(x,cy+0.3*k); ctx.lineTo(x,cy+0.3*k+L); ctx.stroke(); if(i%10===0) text(String(i/10),x,cy+0.3*k+0.75*k,"#2b333a",11,"center"); }
+    if(ST.magOnRuler){ const x=xr(0); ctx.fillStyle="#c7ccd2"; ctx.fillRect(x-1.0*k,cy-0.5*k,1.0*k,1.0*k); ctx.strokeStyle="#666"; ctx.strokeRect(x-1.0*k,cy-0.5*k,1.0*k,1.0*k); }
+    const tip=xr(tipD); ctx.fillStyle="#2d8a4a"; ctx.fillRect(tip,cy-0.6*k,12*k,0.7*k); ctx.fillStyle="#111"; ctx.fillRect(tip,cy-0.37*k,0.25*k,0.24*k);
+    text(d().items.ruler+" · "+d().items.field,P.x+8,P.y+14,"#5d5446",11);
+  } else msgIn(P,d().noSensor);
+  ctx.restore();
+}
+/* ── right: the stand from the front, the dial f2a and the protractor f1a from above ── */
+let F3={};
+function drawP3(){
+  const P=P3; panelBg(P,"#eeeae2");
+  if(!ST.on.stand){ msgIn(P,d().noStand); F3={}; return; }
+  const fw=P.w*0.46, kz=(P.h-24)/47, xb=P.x+12, yb=P.y+P.h-10, xp=xb+0.18*fw, xpod=xb+fw*0.72;
+  const Y=z=>yb-z*kz, zc=44, zpod=zc-ST.pod.L*100;
+  ctx.fillStyle="#e3c99a"; ctx.fillRect(xb,yb-1.6*kz,fw-6,1.6*kz);
+  ctx.fillStyle="#9aa0a6"; ctx.fillRect(xp-0.4*kz,Y(46),0.8*kz,46*kz-1.6*kz);
+  /* the scale on the post, read from the clamp of the wire */
+  ctx.strokeStyle="#3b444c"; ctx.lineWidth=1;
+  for(let c=0;c<=42;c++){ const y=Y(zc-c), L=c%5===0?7:4; ctx.beginPath(); ctx.moveTo(xp+0.4*kz,y); ctx.lineTo(xp+0.4*kz+L,y); ctx.stroke(); if(c%5===0) text(String(c),xp+0.4*kz+9,y,"#2b333a",9.5); }
+  ctx.fillStyle="#2a2c30"; ctx.fillRect(xp,Y(zc+1.6),xpod-xp+1.5*kz,1.0*kz);
+  ctx.fillStyle="#1f2023"; ctx.fillRect(xpod-1.4*kz,Y(zc+0.6),2.8*kz,0.6*kz);
+  ctx.strokeStyle="#5a5a5a"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(xpod,Y(zc)); ctx.lineTo(xpod,Y(zpod+0.8)); ctx.stroke();
+  const ca=Math.cos(ST.pod.th), ra=K.ra*100;
+  ctx.fillStyle="#222"; ctx.fillRect(xpod-ra*Math.abs(ca)*kz-0.15*kz,Y(zpod+0.25),2*ra*Math.abs(ca)*kz+0.3*kz,0.5*kz);
+  ctx.fillStyle="#2a2a2e"; ctx.fillRect(xpod-0.7*kz,Y(zpod+0.8),1.4*kz,1.6*kz);
+  if(ST.podMagnet){ ctx.fillStyle="#c7ccd2"; ctx.fillRect(xpod-0.45*kz,Y(zpod+0.55),0.9*kz,1.0*kz); }
+  for(const [side,sg] of [["l",-1],["r",1]]){ const m=ST.pod.paste[side].reduce((a,b)=>a+b,0); if(m>0){ ctx.fillStyle="#efe4b0";
+    ctx.beginPath(); ctx.arc(xpod+sg*ra*ca*kz,Y(zpod+0.5),(0.3+0.25*Math.cbrt(m))*kz,0,7); ctx.fill(); ctx.strokeStyle="#b9a96a"; ctx.stroke(); } }
+  ctx.fillStyle="#2a2c30"; ctx.fillRect(xp,Y(Math.max(1.8,zpod-2.2)),xpod-xp-4.8*kz,0.8*kz);
+  F3={xpod,ypod:Y(zpod),kz,ra,ca,front:[xb,P.y,fw,P.h]};
+  /* f2a seen from above */
+  const rx=P.x+fw+16, rw=P.w-fw-24, rD=Math.min(rw*0.5,(P.h-24)/4)-4, c2=[rx+rw/2,P.y+rD+10], c1=[rx+rw/2,P.y+P.h-rD-10];
+  F3.c2=c2; F3.c1=c1; F3.r=rD;
+  dial(c2,rD,ST.pod.f2a,5,30,false);
+  text("f2a",c2[0]-rD,c2[1]-rD+4,"#5d5446",11);
+  protractor(c1,rD); text("f1a",c1[0]-rD,c1[1]-rD+4,"#5d5446",11);
+}
+function dial(c,r,ang,step,lab){
+  ctx.fillStyle="#f8f8f6"; ctx.beginPath(); ctx.arc(c[0],c[1],r,0,7); ctx.fill(); ctx.strokeStyle="#333"; ctx.lineWidth=1; ctx.stroke();
+  ctx.save(); ctx.translate(c[0],c[1]); ctx.rotate(-ang*Math.PI/180);
+  for(let a=0;a<360;a+=step){ const L=a%lab===0?0.16*r:0.08*r, t=a*Math.PI/180; ctx.beginPath(); ctx.moveTo(Math.sin(t)*r,-Math.cos(t)*r); ctx.lineTo(Math.sin(t)*(r-L),-Math.cos(t)*(r-L)); ctx.stroke();
+    if(a%lab===0){ ctx.save(); ctx.rotate(t); text(String(a),0,-r+0.27*r,"#222",Math.max(8,r*0.11),"center"); ctx.restore(); } }
+  ctx.fillStyle="#2a2c30"; ctx.beginPath(); ctx.arc(0,0,0.18*r,0,7); ctx.fill(); ctx.restore();
+  ctx.fillStyle="#c62a22"; ctx.beginPath(); ctx.moveTo(c[0],c[1]-r-1); ctx.lineTo(c[0]-6,c[1]-r-11); ctx.lineTo(c[0]+6,c[1]-r-11); ctx.closePath(); ctx.fill();
+}
+function protractor(c,r){
+  ctx.fillStyle="#f8f8f6"; ctx.beginPath(); ctx.arc(c[0],c[1],r,0,7); ctx.fill(); ctx.strokeStyle="#333"; ctx.lineWidth=0.8; ctx.stroke();
+  ctx.save(); ctx.translate(c[0],c[1]);
+  for(let a=0;a<360;a++){ const L=a%10===0?0.14*r:a%5===0?0.09*r:0.05*r, t=a*Math.PI/180; ctx.beginPath(); ctx.moveTo(Math.sin(t)*r,-Math.cos(t)*r); ctx.lineTo(Math.sin(t)*(r-L),-Math.cos(t)*(r-L)); ctx.stroke();
+    if(a%30===0){ ctx.save(); ctx.rotate(t); text(String(a),0,-r+0.24*r,"#222",Math.max(7.5,r*0.09),"center"); ctx.restore(); } }
+  const th=ST.pod.th, ra=r*0.62;
+  ctx.rotate(th);
+  ctx.fillStyle="rgba(30,30,30,.85)"; ctx.fillRect(-ra,-0.035*r,2*ra,0.07*r);
+  for(const [side,sg] of [["l",-1],["r",1]]){ const m=ST.pod.paste[side].reduce((a,b)=>a+b,0); if(m>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(sg*ra,0,0.04*r+0.03*r*Math.cbrt(m),0,7); ctx.fill(); } }
+  ctx.strokeStyle="#c9a35a"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-0.97*r); ctx.stroke();
+  ctx.fillStyle="#2a2a2e"; ctx.fillRect(-0.07*r,-0.07*r,0.14*r,0.14*r);
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  HANDS
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const cm=p=>[p[0]/PX,p[1]/PX];
+function termAt(c){ for(const t in TERM) if(ST.on[TERM_OWNER[t]]&&near(c,TERM[t](),0.9)) return t; return null; }
+function slotAt(c){ if(!ST.on.ard) return null; for(const s in SLOT) if(near(c,SLOT[s](),1.3)) return s; return null; }
+function returnHand(){
+  if(!hand) return;
+  if(hand.move){ ST.pos[hand.k]=hand.orig; if(hand.where) restoreWhere(hand); }
+  hand=null;
+}
+function restoreWhere(h){ if(h.k==="field"){ ST.field.where=h.where; ST.on.field=true; } if(h.k==="force"){ ST.force.where=h.where; ST.on.force=true; } if(h.k==="mag3"&&h.where==="ruler"){ ST.magOnRuler=true; ST.on.mag3=true; } }
+function returnItem(k){
+  ST.on[k]=false;
+  if(k==="ard"){ for(const b of ST.batts) b.slot=null; ST.field.plug=null; ST.force.plug=null; ST.wires=ST.wires.filter(w=>TERM_OWNER[w.a]!=="ard"&&TERM_OWNER[w.b]!=="ard"); }
+  if(k==="coils"||k==="dmm") ST.wires=ST.wires.filter(w=>TERM_OWNER[w.a]!==k&&TERM_OWNER[w.b]!==k);
+  if(k==="coils"){ if(ST.field.where==="coil") ST.field.where="bench", ST.on.field=false; if(ST.force.where==="coil"){ ST.force.where="bench"; ST.on.force=false; } }
+  if(k==="ruler"){ if(ST.field.where==="ruler"){ ST.field.where="bench"; ST.on.field=false; } if(ST.magOnRuler){ ST.magOnRuler=false; ST.on.mag3=false; } }
+  if(k==="field"){ ST.field.where="bench"; ST.field.plug=null; }
+  if(k==="force"){ ST.force.where="bench"; ST.force.plug=null; ST.force.paste=0; }
+  if(k==="mag3") ST.magOnRuler=false;
+  say("back",itemName(k));
+}
+function takeFromTray(k){
+  if(!trayAvail(k)) return;
+  if(k==="batt"){ const i=ST.batts.findIndex((b,j)=>!b.slot); hand={k,i}; say("picked",itemName(k)); return; }
+  if(k==="wire"){ hand={k,a:null}; say("wire1"); return; }
+  if(k==="paste"){ hand={k,g:0.5,m:null}; say("picked",itemName(k)); return; }
+  hand={k}; say("picked",itemName(k));
+}
+function podMagOut(){ ST.podMagnet=false; ST.on.podMag=true; const s=ST.pos.stand;
+  const cand=[[10.5,0],[-10.5,0],[0,10.5],[0,-10.5],[10.5,10.5],[-10.5,10.5]].map(([dx,dy])=>({x:s.x+dx,y:s.y+dy}));
+  ST.pos.podMag=cand.find(q=>!overlap("podMag",q))||cand[0]; say("magOut"); }
+function benchClick(p,right){
+  const c=cm(p);
+  if(hand) return handClick(c,right);
+  if(right){
+    for(let i=ST.wires.length-1;i>=0;i--){ const w=ST.wires[i], a=TERM[w.a](), b=TERM[w.b](), L=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=3+L*0.15;
+      for(let s=0;s<=20;s++){ const t=s/20, m=1-t, x=m*m*m*a[0]+3*m*m*t*(a[0]*0.7+b[0]*0.3)+3*m*t*t*(a[0]*0.3+b[0]*0.7)+t*t*t*b[0],
+        y=m*m*m*a[1]+3*m*m*t*(a[1]*0.7+b[1]*0.3+sag)+3*m*t*t*(a[1]*0.3+b[1]*0.7+sag)+t*t*t*b[1];
+        if(near(c,[x,y],0.8)){ ST.wires.splice(i,1); say("unwire"); return; } } }
+    for(const b of ST.batts) if(b.slot&&near(c,battBody(b.slot),2.4)){ b.slot=null; say("back",itemName("batt")); return; }
+    for(const s of ["field","force"]) if(ST[s].plug&&near(c,plugXY(s),1.2)){ ST[s].plug=null; return; }
+    if(ST.on.podMag&&inItem("podMag",c)){ ST.on.podMag=false; ST.podMagnet=true; say("magIn"); return; }
+    if(ST.field.where!=="bench"&&ST.on.field&&near(c,fieldTip(),3)){ returnItem("field"); return; }
+    if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.5)){ if(ST.force.paste>0){ ST.force.paste=0; say("pasteOff"); return; } returnItem("force"); return; }
+    if(ST.magOnRuler&&near(c,at("ruler",-20.6,0),1.5)){ returnItem("mag3"); return; }
+    for(const k of ["mag3","force","field","dmm","ard","coils","stand","ruler"]) if(inItem(k,c)&&!(k==="field"&&ST.field.where!=="bench")&&!(k==="force"&&ST.force.where!=="bench")){ returnItem(k); return; }
+    return;
+  }
+  if(ST.on.ard){
+    if(near(c,SW(),1.2)){ ST.sw=!ST.sw; say("sw",ST.sw); return; }
+    if(near(c,KNOB(),1.3)){ ST.knob=Math.max(0,Math.min(1,ST.knob+(c[0]<KNOB()[0]?-0.02:0.02))); say("knob"); return; }
+  }
+  if(ST.on.dmm&&near(c,DIALP(),2.4)){ const seq=["OFF","V","mA","A"]; ST.dial=seq[(seq.indexOf(ST.dial)+1)%4]; ST.idle=0; if(ST.dial==="OFF") sleeping=false; say("dial",d().dial[ST.dial]); return; }
+  for(const s of ["field","force"]) if(ST.on[s]&&near(c,plugXY(s),1.2)){ ST[s].plug=null; hand={k:"plug",s}; say("plug"); return; }
+  for(const [i,b] of ST.batts.entries()) if(b.slot&&near(c,battBody(b.slot),2.4)){ b.slot=null; hand={k:"batt",i}; say("picked",itemName("batt")); return; }
+  if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.4)){
+    if(ST.force.paste>0){ hand={k:"paste",g:Math.round(ST.force.paste*10)/10,m:ST.force.paste}; ST.force.paste=0; say("pasteBack"); return; }
+    hand={k:"force",move:true,orig:{...ST.pos.force},where:"coil"}; ST.force.where="bench"; ST.on.force=false; say("picked",itemName("force")); return; }
+  if(ST.field.where!=="bench"&&ST.on.field&&near(c,[fieldTip()[0]+6,fieldTip()[1]],6.5)&&Math.abs(c[1]-fieldTip()[1])<1){
+    hand={k:"field",move:true,orig:{...ST.pos.field},where:ST.field.where}; ST.field.where="bench"; ST.on.field=false; say("picked",itemName("field")); return; }
+  if(ST.magOnRuler&&near(c,at("ruler",-20.6,0),1.2)){ hand={k:"mag3",move:true,orig:{...ST.pos.mag3},where:"ruler"}; ST.magOnRuler=false; ST.on.mag3=false; say("picked",itemName("mag3")); return; }
+  for(const k of ["podMag","mag3","force","field","dmm","ard","coils","stand","ruler"]){
+    if(!inItem(k,c)) continue; if((k==="field"&&ST.field.where!=="bench")||(k==="force"&&ST.force.where!=="bench")) continue;
+    hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say("moveIt",itemName(k)); return; }
+}
+function handClick(c,right){
+  const k=hand.k;
+  if(right){
+    if(k==="wire"&&hand.a){ hand.a=null; say("wire1"); return; }
+    if(hand.move){ ST.on[k]=true; const h=hand; returnHand(); if(!h.where){} say("stays"); return; }
+    if(k==="podMag"){ hand=null; ST.podMagnet=true; say("magIn"); return; }
+    hand=null; say("back",itemName(k==="plug"?"field":k)); return;
+  }
+  if(k==="batt"){ const s=slotAt(c); if(s!=="s1"&&s!=="s2"){ say("battWhere"); return; }
+    if(ST.batts.some(b=>b.slot===s)){ say("slotBusy"); return; } ST.batts[hand.i].slot=s; hand=null; say("battIn",s==="s1"?"(i)":"(ii)"); return; }
+  if(k==="plug"){ const s=slotAt(c);
+    if(s==="s3"||s==="s4"){ if(ST.field.plug===s||ST.force.plug===s){ say("slotBusy"); return; } ST[hand.s].plug=s; hand=null; say("plugged",s==="s3"?"(iii)":"(iv)"); return; }
+    hand=null; return; }
+  if(k==="wire"){ const t=termAt(c); if(!t){ say("noTerm"); return; }
+    if(!hand.a){ hand.a=t; say("wire2"); return; } if(t===hand.a){ say("same"); return; }
+    ST.wires.push({a:hand.a,b:t}); say("wired",d().term[hand.a],d().term[t]); hand=null; return; }
+  if(k==="paste"){
+    if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.6)){ if(ST.force.paste>0){ say("slotBusy"); return; }
+      ST.force.paste=hand.m||hand.g*(1+0.08*gauss()); hand=null; say("pasteScale"); return; }
+    say("picked",itemName("paste")); return; }
+  /* putting an item down */
+  if(k==="field"&&ST.on.coils&&ST.force.where!=="coil"&&Math.abs(c[1]-ST.pos.coils.y)<1.6&&Math.abs(c[0]-ST.pos.coils.x)<6){
+    ST.field.where="coil"; ST.field.z=Math.max(0,Math.min(60,Math.round((Z0_COIL*100-(c[0]-ST.pos.coils.x))*10))); zErr=4e-4*gauss(); ST.on.field=true; hand=null; say("inCoil"); return; }
+  if(k==="field"&&ST.on.ruler&&inItem("ruler",c)){ ST.field.where="ruler"; ST.field.d=Math.max(3,Math.min(380,Math.round((c[0]-(ST.pos.ruler.x-20))*10))); dErr=5e-4*gauss(); ST.on.field=true; hand=null; say("onRuler"); return; }
+  if(k==="force"&&ST.on.coils&&inItem("coils",c)){ if(ST.field.where==="coil"){ say("coilBusy"); return; } ST.force.where="coil"; ST.on.force=true; hand=null; say("forceIn"); return; }
+  if(k==="mag3"&&ST.on.ruler&&near(c,at("ruler",-20,0),3)){ ST.magOnRuler=true; ST.on.mag3=true; hand=null; say("magRuler"); return; }
+  if(k==="podMag"&&ST.on.stand&&inItem("stand",c)){ ST.podMagnet=true; ST.on.podMag=false; hand=null; say("magIn"); return; }
+  const pos={x:c[0],y:c[1]};
+  if(overlap(k,pos)){ say("noFit"); return; }
+  ST.pos[k]=pos; ST.on[k]=true; if(k==="field") ST.field.where="bench"; if(k==="force") ST.force.where="bench"; hand=null; say("placed",itemName(k));
+}
+
+const cvEl=cv;
+cvEl.addEventListener("contextmenu",e=>e.preventDefault());
+cvEl.addEventListener("pointerenter",()=>{ overBench=true; });
+cvEl.addEventListener("pointerleave",()=>{ overBench=false; });
+cvEl.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cvEl.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+let trayDrag=false;
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cvEl){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+cvEl.addEventListener("wheel",e=>{ const c=cm(lpos(e));
+  if(hand&&hand.k==="paste"){ e.preventDefault(); hand.g=Math.max(0.1,Math.min(2.0,Math.round((hand.g+(e.deltaY<0?0.1:-0.1))*10)/10)); hand.m=null; return; }
+  if(ST.on.ard&&near(c,KNOB(),1.6)){ e.preventDefault(); ST.knob=Math.max(0,Math.min(1,ST.knob+(e.deltaY<0?0.01:-0.01))); say("knob"); } },{passive:false});
+const trayEl=trayCv;
+trayEl.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayEl.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayEl.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand(); if(!same) takeFromTray(k); drawTray(); return; } });
+
+/* the close up: slide the sensor, turn f2a, hold and let go of the pod, change L, paste and magnet */
+let drag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
+  if(inP(P2,p)&&(ST.field.where==="coil"||ST.field.where==="ruler")&&e.button===0){ drag={kind:"sensor",x:p[0],z:ST.field.z,d:ST.field.d}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(inP(P3,p)&&ST.on.stand&&F3.c1){
+    if(near(p,F3.c1,F3.r)){ if(e.button===2){ podDamp(podField()); say("damp"); return; }
+      drag={kind:"pod"}; ST.pod.hold=Math.atan2(p[0]-F3.c1[0],-(p[1]-F3.c1[1])); closeCv.setPointerCapture(e.pointerId); return; }
+    if(p[0]<F3.front[0]+F3.front[2]){
+      const ends=[["l",-1],["r",1]].map(([s,sg])=>[s,[F3.xpod+sg*F3.ra*F3.ca*F3.kz,F3.ypod]]);
+      for(const [s,q] of ends) if(near(p,q,Math.max(10,0.9*F3.kz))){
+        if(e.button===2){ if(ST.pod.paste[s].length){ ST.pod.paste[s]=[]; say("pasteOff"); } return; }
+        if(hand&&hand.k==="paste"){ ST.pod.paste[s].push(hand.m||hand.g*(1+0.08*gauss())); hand.m=null; say("paste",s); drawTray(); return; } }
+      if(e.button===0&&near(p,[F3.xpod,F3.ypod],Math.max(10,1.0*F3.kz))){
+        if(hand&&hand.k==="podMag"){ ST.podMagnet=true; hand=null; say("magIn"); drawTray(); return; }
+        if(ST.podMagnet&&!hand){ podMagOut(); return; } }
+      if(e.button===0&&Math.abs(p[0]-F3.xpod)<2.5*F3.kz){ drag={kind:"L",y:p[1],L:ST.pod.L}; closeCv.setPointerCapture(e.pointerId); return; }
+    }
+  }
+});
+closeCv.addEventListener("pointermove",e=>{ if(!drag) return; const p=clpos(e);
+  if(drag.kind==="sensor"){ const dmm=(p[0]-drag.x)/P2k*10;
+    if(ST.field.where==="coil") ST.field.z=Math.max(0,Math.min(60,drag.z-dmm)); else ST.field.d=Math.max(3,Math.min(380,drag.d+dmm)); }
+  if(drag.kind==="pod") ST.pod.hold=Math.atan2(p[0]-F3.c1[0],-(p[1]-F3.c1[1]));
+  if(drag.kind==="L"){ ST.pod.L=Math.max(0.10,Math.min(0.40,Math.round((drag.L+(p[1]-drag.y)/F3.kz/100)*200)/200)); }
+});
+closeCv.addEventListener("pointerup",()=>{ if(drag&&drag.kind==="pod"){ ST.pod.th=ST.pod.hold; ST.pod.hold=null; ST.pod.w=0; say("release"); }
+  if(drag&&drag.kind==="L") say("L"); drag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e);
+  if(inP(P2,p)&&(ST.field.where==="coil"||ST.field.where==="ruler")){ e.preventDefault(); const s=e.deltaY<0?1:-1;
+    if(ST.field.where==="coil") ST.field.z=Math.max(0,Math.min(60,Math.round((ST.field.z+0.5*s)*2)/2)); else ST.field.d=Math.max(3,Math.min(380,Math.round(ST.field.d+s))); return; }
+  if(F3.c2&&near(p,F3.c2,F3.r)){ e.preventDefault(); ST.pod.f2a=((ST.pod.f2a+(e.deltaY<0?1:-1)*(e.shiftKey?10:1))%360+360)%360; say("turn"); }
+},{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   7.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
+$("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
+$("swLap").onclick=()=>{ ST.laps.unshift(fmt(ST.sw_t)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
+$("swReset").onclick=()=>{ ST.sw_t=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
+$("unwire").onclick=()=>{ ST.wires=[]; if(hand&&hand.k==="wire") hand=null; say("unwired"); drawTray(); };
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const s of [1,2,5]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
+    b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
+function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
+  $("laps").innerHTML=ST.laps.map((s,i)=>"<div>"+(ST.laps.length-i)+". "+s+"</div>").join(""); }
+function renderStatus(F){
+  const L=[], t=d();
+  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
+  if(ST.on.ard&&!ardOn()) L.push([t.st.noPower,false]);
+  const b2=ST.batts.find(b=>b.slot==="s2"); if(b2&&b2.q<0.15*BATT_FULL) L.push([t.st.flat,true]);
+  if(ST.force.broken) L.push([t.st.broken,true]);
+  if(ST.on.stand&&ST.podMagnet&&F.worst<0.2) L.push([t.st.near,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-ard").textContent=t.hArd; $("t-ardhint").textContent=t.ardHint; $("unwire").textContent=t.unwire;
+  $("t-h-pod").textContent=t.hPod; $("t-podhint").textContent=t.podHint;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2025 E1 — 지구 자기장 측정 · HaslaLab":"IPhO 2025 E1 — Earth's Magnetic Field · HaslaLab";
+  renderPanel(); renderSpeeds(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+let tPrev=performance.now()/1000, frameN=0, lcdT=0, wasPowered=false;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  const sdt=dt*speed; ST.t+=sdt; if(ST.swRun) ST.sw_t+=sdt;
+  circ=circuit();
+  if(Math.abs(circ.ama)>0.4&&ST.fuse){ ST.fuse=false; say("fuse"); circ=circuit(); }
+  const b2=ST.batts.find(b=>b.slot==="s2"); if(b2&&circ.ok) b2.q=Math.max(0,b2.q-circ.I*sdt);
+  const b1=ST.batts.find(b=>b.slot==="s1"); if(b1&&ST.on.ard) b1.q=Math.max(0,b1.q-0.05*sdt);
+  if(ST.dial!=="OFF"){ ST.idle+=sdt; if(ST.idle>900) sleeping=true; }
+  const powered=ardOn()&&ST.force.plug==="s4"&&ST.on.force;
+  if(powered&&!wasPowered){ ST.force.zero=forceRaw(); say("zeroed"); } wasPowered=powered;
+  if(powered&&!ST.force.broken&&Math.abs(forceRaw()-K.forceOff)>200){ ST.force.broken=true; say("broken"); }
+  const F=podField(); let left=sdt; while(left>1e-9){ const h=Math.min(left,0.002); podStep(h,F); left-=h; }
+  lcdT-=dt; if(lcdT<=0){ lcd=readLcd(); lcdT=0.25; }
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  $("swLbl").textContent=fmt(ST.sw_t);
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(F); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
