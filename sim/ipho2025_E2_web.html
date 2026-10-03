@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2025 E2 — 모래 크레이터와 사구 · Sand Craters and Dunes · HaslaLab</title>
+<meta name="description" content="IPhO 2025 실험 2번을 브라우저에서 실행합니다. 모래를 고른 그릇에 강철 공을 떨어뜨려 크레이터 지름을 자로 재고, 경사 레일에서 굴린 공이 모래 트랙에서 멈추는 거리를 잽니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2025 E2 — 모래 크레이터와 사구 · Sand craters and dunes">
+<meta property="og:description" content="IPhO 2025 실험 2번을 브라우저에서 실행합니다. 모래를 채우고 고르고, 공을 떨어뜨리고 굴리며, 줄자·자·스톱워치를 직접 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row">
+      <button id="swBtn"></button>
+      <button id="swLap"></button>
+      <button id="swReset"></button>
+    </div>
+    <p class="hint" id="t-swhint"></p>
+    <div class="laps" id="laps"></div>
+
+    <h2 id="t-h-a"></h2>
+    <p class="hint" id="t-ahint"></p>
+
+    <h2 id="t-h-b"></h2>
+    <p class="hint" id="t-bhint"></p>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2025 실험 2 — 모래 크레이터와 사구",
+    sub:"가상 실험실 · 장비를 직접 놓고, 모래를 채우고 고른 뒤 공을 떨어뜨리고 굴리세요. 줄자·자·스톱워치를 읽고 에너지·지수·마찰은 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayTool:"도구 — 클릭해서 들기",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 160 cm × 96 cm) — 좌클릭 집기·놓기·쓰기 / 우클릭 되돌리기 / 놓은 장비를 다시 클릭하면 옮기기",
+    closeCap:"확대 — 왼쪽: 옆모습 (공·클램프를 위아래로 끌기, 공을 클릭하면 놓기) · 오른쪽: 모래 위에서 본 모습 (자로 읽기)",
+    hSw:"k. 스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
+    swHint:"스페이스 키로도 시작·정지할 수 있습니다. 반응 시간은 여러분의 몫입니다.",
+    hA:"A. 충돌 크레이터",
+    aHint:"상자 (a) 안에 그릇 (b)을 놓고, 병 (c)으로 모래를 채운 뒤 자 (o)로 표면을 고르세요 (누르지 말 것).\n스탠드 (f)의 가로 막대 끝이 그릇 위에 오게 놓고, 공 그릇 (d)에서 공을 집어 막대 끝에 거세요. 옆모습에서 공을 끌어 높이를 바꾸고 줄자 (e)로 읽습니다 (기둥보다 높으면 손으로 듭니다).\n충돌 뒤 자를 그릇에 대면 크레이터 위에 놓입니다. 숟가락 (n)으로 섞고 다시 고르세요. 작은 공은 체 (g)로 찾습니다.",
+    hB:"B. 레일과 모래 트랙",
+    bHint:"나무 트랙 (j)을 놓고, 레일 (h)의 아래쪽 끝을 트랙 끝에, 위쪽을 스탠드 기둥에 걸쳐 놓으세요. 반죽 (l)으로 양쪽을 고정합니다.\n옆모습에서 클램프를 끌어 높이를 맞추고 (기둥 눈금), 줄자를 레일에 대면 레일 위 거리를 읽을 수 있습니다.\n공 #4를 레일 위에 놓고 끌어 출발점을 정한 뒤 클릭하면 굴러갑니다. 트랙에 모래를 채우고 자로 긁어 고르세요.",
+    items:{box:"a. 플라스틱 상자", bowl:"b. 그릇", bottle:"c. 모래 병", balls:"d. 강철 공 6개", tape:"e. 줄자", stand:"f. 스탠드",
+           sieve:"g. 체", rail:"h. 알루미늄 레일 1 m", brush:"i. 붓", track:"j. 나무 트랙", putty:"l. 접착 반죽", spoon:"n. 숟가락", ruler:"o. 자"},
+    ball:n=>"공 #"+n, noSide:"그릇 위에 스탠드를 놓거나 레일을 걸치면 옆모습이 보입니다.", noTop:"그릇이나 트랙을 놓으면 여기 보입니다.",
+    hand:"손으로 듦", tapeLbl:"줄자 (cm)", rodLbl:"기둥",
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", notLevel:"그릇의 모래 표면이 아직 고르지 않습니다.", compact:n=>"섞지 않고 "+n+"번 충돌 — 모래가 다져지고 있습니다.",
+        trackHard:n=>"트랙을 다시 고르지 않고 "+n+"번 굴림 — 모래가 단단해지고 있습니다.", noPutty:"레일이 반죽으로 고정되지 않았습니다.", lost:"작은 공이 모래 속에 묻혔습니다 — 체로 찾으세요."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       tool:n=>n+" 을(를) 들었습니다 — 쓸 곳을 클릭하세요. (우클릭: 내려놓기)", noUse:"그곳에는 쓸 수 없습니다.",
+       bowlIn:"그릇을 상자 안에 놓았습니다.", fill:"그릇에 모래를 가득 채웠습니다 — 자로 고르세요.", fillT:"트랙에 모래를 채웠습니다 — 자로 긁어 고르세요.",
+       level:"자 모서리로 모래 표면을 골랐습니다.", scrape:"자로 트랙의 모래를 긁어 골랐습니다.", mix:"숟가락으로 모래를 섞었습니다 — 다시 고르세요.",
+       rulerOn:"자를 크레이터 위에 걸쳐 놓았습니다. 확대 화면에서 읽으세요.", rulerTrack:"자를 트랙 옆에 대었습니다.",
+       sieve:"체로 모래를 걸러 공을 찾았습니다. 모래를 다시 채우고 고르세요.", tapeA:"줄자를 그릇 옆에 세웠습니다 (0 = 모래 표면).", tapeB:"줄자를 레일을 따라 대었습니다.",
+       ballPick:b=>"공 #"+b+" 을(를) 집었습니다.", ballHold:"공을 가로 막대 끝에 걸었습니다.", ballRail:"공을 레일 위에 놓았습니다.", ballWhere:"공은 스탠드 막대 끝이나 레일 위에 놓습니다.",
+       notOver:"가로 막대 끝이 그릇 위에 있지 않습니다.", drop:"공을 놓았습니다.", impact:"공이 모래에 떨어졌습니다.", back4:"공을 집어 들었습니다.",
+       railOn:"레일을 트랙 끝과 스탠드에 걸쳤습니다.", putty:"반죽으로 레일을 고정했습니다.", brush:"붓으로 모래를 털었습니다.",
+       roll:"공을 놓았습니다 — 굴러갑니다.", stop:"공이 멈췄습니다.", off:"공이 트랙 끝을 넘어갔습니다 — 이 측정은 쓸 수 없습니다.", which:"공 그릇에서 집을 공을 클릭하세요."}
+  },
+  en:{
+    title:"IPhO 2025 Experiment 2 — Sand craters and dunes",
+    sub:"Virtual laboratory · put the apparatus down, fill and level the sand, then drop and roll the balls. Read the tape, the ruler and the chronometer; energies, exponents and friction are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayTool:"tool — click to hold",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 160 cm × 96 cm) — L-click pick up / put down / use, R-click return, click a placed item to move it",
+    closeCap:"close up — left: side view (drag the ball or the clamp up and down, click the ball to let go) · right: the sand seen from above (read with the ruler)",
+    hSw:"k. Chronometer", start:"Start", stop:"Stop", lap:"Lap", reset:"Reset",
+    swHint:"The space bar starts and stops it too. The reaction time is yours.",
+    hA:"A. Impact craters",
+    aHint:"Put the bowl (b) in the box (a), fill it from the bottle (c) and level the surface with the ruler (o) (do not compact it).\nPut the stand (f) so that the end of its horizontal rod is over the bowl, take a ball from its container (d) and hang it at the end of the rod. Drag the ball in the side view to change the height and read it on the tape (e) (above the rod it is held by hand).\nAfter the impact, lay the ruler on the bowl to put it across the crater. Mix with the spoon (n) and level again. Find the small ball with the sieve (g).",
+    hB:"B. Rail and sand track",
+    bHint:"Put the wooden track (j) down, lay the lower end of the rail (h) on the end of the track and its upper part on the stand rod. Fix both sides with putty (l).\nDrag the clamp in the side view to set the height (rod scale); lay the tape along the rail to read distances on it.\nPut ball #4 on the rail, drag it to the start and click it to let go. Fill the track with sand and scrape it flat with the ruler.",
+    items:{box:"a. Plastic box", bowl:"b. Bowl", bottle:"c. Bottle of sand", balls:"d. 6 steel balls", tape:"e. Tape measure", stand:"f. Stand",
+           sieve:"g. Sieve", rail:"h. Aluminium rail 1 m", brush:"i. Brush", track:"j. Wooden track", putty:"l. Adhesive putty", spoon:"n. Spoon", ruler:"o. Ruler"},
+    ball:n=>"ball #"+n, noSide:"Put the stand over the bowl or lay the rail to see the side view.", noTop:"Put the bowl or the track down to see it here.",
+    hand:"held by hand", tapeLbl:"tape (cm)", rodLbl:"rod",
+    st:{none:"Take the apparatus out of the box and put it on the bench.", notLevel:"The sand in the bowl is not levelled yet.", compact:n=>n+" impacts without mixing — the sand is getting compacted.",
+        trackHard:n=>n+" runs without re-preparing the track — the sand is hardening.", noPutty:"The rail is not fixed with putty.", lost:"The small ball is buried in the sand — find it with the sieve."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       tool:n=>n+" in hand — click where to use it. (R-click: put it down)", noUse:"It cannot be used there.",
+       bowlIn:"Bowl put in the box.", fill:"Bowl filled with sand — level it with the ruler.", fillT:"Track filled with sand — scrape it flat with the ruler.",
+       level:"Sand levelled with the edge of the ruler.", scrape:"Sand in the track scraped flat with the ruler.", mix:"Sand mixed with the spoon — level it again.",
+       rulerOn:"Ruler laid across the crater. Read it in the close up.", rulerTrack:"Ruler laid along the track.",
+       sieve:"Sand sieved and the ball found. Refill and level the sand.", tapeA:"Tape held upright by the bowl (0 = sand surface).", tapeB:"Tape laid along the rail.",
+       ballPick:b=>"Ball #"+b+" picked up.", ballHold:"Ball hung at the end of the rod.", ballRail:"Ball put on the rail.", ballWhere:"A ball goes at the end of the stand rod or on the rail.",
+       notOver:"The end of the horizontal rod is not over the bowl.", drop:"Ball released.", impact:"The ball hit the sand.", back4:"Ball picked up.",
+       railOn:"Rail laid on the end of the track and on the stand.", putty:"Rail fixed with putty.", brush:"Sand brushed off.",
+       roll:"Ball released — it rolls.", stop:"The ball stopped.", off:"The ball ran off the end of the track — this run is not usable.", which:"Click the ball to take from the container."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same kit as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2025e2)>>>0);
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const G=9.81, RHO_0=1.2, CX=1.0;
+const BTYPE=[{n:1,d:2.0,m:0.033},{n:2,d:5.0,m:0.51},{n:3,d:9.0,m:3.0},{n:4,d:16.0,m:17.0}];   /* mm, g */
+const BALL=[0,0,0,1,2,3];                     /* the six balls: three #1, one #2, one #3, one #4 */
+const KIT={c:0.0695*(1+0.015*gauss()), mu:0.500+0.020*gauss()};
+function impactV2(d,m,h){ const vt2=8*m*G/(Math.PI*d*d*RHO_0*CX); return vt2*(1-Math.exp(-2*G*h/vt2)); }
+function crater(i,hcm,levelled,shots){
+  const b=BTYPE[BALL[i]], d=b.d/1000, m=b.m/1000, h=hcm/100;
+  const E=0.5*m*impactV2(d,m,h);
+  let D=KIT.c*Math.pow(E,0.25)*Math.max(0.82,1-0.05*shots);
+  D*=1+0.045*gauss(); if(!levelled) D*=1+0.08*gauss();
+  return D*1000;                                  /* mm */
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE AND GEOMETRY  (bench 160 cm × 96 cm, 7.5 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=7.5, TW=160, TD=96;
+const PLACE=["box","bowl","balls","stand","rail","track"];
+const TOOLS=["bottle","tape","sieve","brush","putty","spoon","ruler"];
+const BOX={box:[-20,-15,40,30], bowl:[-10,-10,20,20], balls:[-4.5,-3,9,6], stand:[-12,-9,16,18], rail:[-50,-1,100,2], track:[-25,-4,50,8]};
+const ST={
+  on:{}, pos:{},
+  bowl:{state:"empty",shots:0,D:null,rim:[0,0,0],off:[0,0],ball:null,lost:false,ruler:false,rulerX:-30},
+  track:{state:"empty",shots:0,ruler:false,rulerX:-2,ball:null,stop:null,off:false},
+  inBox:[true,true,true,true,true,true],
+  held:null,                /* {i, where:"stand"|"rail"} */
+  h:50, s:50, clampZ:10.4, tapeA:false, tapeB:false, putty:0,
+  fall:null, roll:null, focus:"A",
+  sw:0, swRun:false, laps:[]
+};
+for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:75,y:45}; }
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const R_PT=()=>[ST.pos.stand.x+22,ST.pos.stand.y];                         /* end of the horizontal rod */
+const bowlC=()=>[ST.pos.bowl.x,ST.pos.bowl.y];
+const aActive=()=>ST.on.stand&&ST.on.bowl&&near(R_PT(),bowlC(),6);
+const railLow=()=>[ST.pos.rail.x+50,ST.pos.rail.y], railUp=()=>[ST.pos.rail.x-50,ST.pos.rail.y];
+const trackL=()=>[ST.pos.track.x-25,ST.pos.track.y];
+function railMounted(){
+  if(!(ST.on.rail&&ST.on.track&&ST.on.stand)) return false;
+  const lo=railLow(), tl=trackL(), rod=[ST.pos.stand.x,ST.pos.stand.y];
+  return Math.abs(lo[0]-tl[0])<2.5&&Math.abs(lo[1]-tl[1])<2&&Math.abs(rod[1]-ST.pos.rail.y)<2&&rod[0]>railUp()[0]+2&&rod[0]<lo[0]-30;
+}
+const EDGE_Z=1.6;                                                          /* the edge of the track the rail rests on */
+function railGeom(){ const span=railLow()[0]-ST.pos.stand.x, rise=ST.clampZ-EDGE_Z;
+  const th=Math.atan2(rise,span); return {span,rise,th,len:Math.hypot(span,rise)}; }
+function inRect(k,p){ if(!ST.on[k]) return false; const q=ST.pos[k], b=BOX[k]; return p[0]>=q.x+b[0]-0.4&&p[0]<=q.x+b[0]+b[2]+0.4&&p[1]>=q.y+b[1]-0.4&&p[1]<=q.y+b[1]+b[3]+0.4; }
+function overlap(k,pos){
+  const b=BOX[k], x0=pos.x+b[0], y0=pos.y+b[1], x1=x0+b[2], y1=y0+b[3];
+  if(x0<0||y0<0||x1>TW||y1>TD) return true;
+  for(const o of PLACE){ if(o===k||!ST.on[o]) continue;
+    const pair=[k,o].sort().join("|"); if(["bowl|box","rail|stand","rail|track"].includes(pair)) continue;
+    const c=BOX[o], q=ST.pos[o]; if(x0<q.x+c[0]+c[2]&&x1>q.x+c[0]&&y0<q.y+c[1]+c[3]&&y1>q.y+c[1]) return true; }
+  return false;
+}
+/* where the balls are in their container */
+function ballSlotXY(i){ const q=ST.pos.balls; return [[q.x-3.4,q.y-1.5],[q.x-2.4,q.y-1.5],[q.x-1.4,q.y-1.5],[q.x+0.2,q.y-1.4],[q.x+2.6,q.y-1.2],[q.x+0.5,q.y+1.3]][i]; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(x,y,h,stops){ const g=ctx.createLinearGradient(x,y,x,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+const SAND="#e2c98e", SAND_D="#c9ab68", SAND_L="#efdcae";
+function sandTex(x,y,w,h,seed){ ctx.fillStyle="rgba(150,115,60,.25)"; let s=seed||7; for(let i=0;i<w*h/40;i++){ s=(s*16807)%2147483647; const u=s/2147483647; s=(s*16807)%2147483647; const v=s/2147483647; ctx.fillRect(x+u*w,y+v*h,1.2,1.2); } }
+function bench(){
+  ctx.fillStyle=vgrad(0,0,LH,[[0,"#c79a6a"],[1,"#b38557"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(90,50,20,.18)"; ctx.lineWidth=1; let y=12,n=0;
+  while(y<LH){ ctx.beginPath(); ctx.moveTo(0,y); for(let x=0;x<=LW;x+=60) ctx.lineTo(x,y+Math.sin(x*0.012+n)*1.6); ctx.stroke(); y+=28+(n%3)*8; n++; }
+}
+function frame(k,fn,pos){ const p=pos||ST.pos[k]; ctx.save(); ctx.translate(p.x*PX,p.y*PX); ctx.scale(PX,PX); fn(); ctx.restore(); }
+function ballTop(x,y,i){ const r=BTYPE[BALL[i]].d/20;
+  const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r); g.addColorStop(0,"#f2f4f6"); g.addColorStop(0.5,"#9aa1a8"); g.addColorStop(1,"#4b5157");
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,Math.max(r,0.12),0,7); ctx.fill(); }
+function drawBox(){ frame("box",()=>{ ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-19.5,-14.4,40,30);
+  fillR(-20,-15,40,30,1.5,"rgba(196,205,212,.92)","#7f8a94",0.2); fillR(-18.6,-13.6,37.2,27.2,1,"rgba(174,184,192,.9)"); }); }
+function drawBowl(){ frame("bowl",()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.beginPath(); ctx.arc(0.4,0.5,10,0,7); ctx.fill();
+  ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); ctx.strokeStyle="#bfc3c7"; ctx.lineWidth=0.2; ctx.stroke();
+  const B=ST.bowl;
+  if(B.state!=="empty"){ ctx.fillStyle=B.state==="level"||B.state==="crater"?SAND:SAND_D; ctx.beginPath(); ctx.arc(0,0,9.1,0,7); ctx.fill();
+    if(B.state==="filled"||B.state==="mixed"){ ctx.fillStyle="rgba(255,240,200,.35)"; for(let i=0;i<9;i++){ ctx.beginPath(); ctx.arc(Math.cos(i*2.3)*5,Math.sin(i*1.7)*5,1.4,0,7); ctx.fill(); } }
+    if(B.state==="crater"&&B.D){ const R=B.D/20, [ox,oy]=B.off; ctx.fillStyle="#b9975a"; ctx.beginPath(); ctx.arc(ox,oy,R,0,7); ctx.fill(); ctx.strokeStyle="#ead39b"; ctx.lineWidth=0.25; ctx.beginPath(); ctx.arc(ox,oy,R*1.08,0,7); ctx.stroke();
+      if(B.ball!==null&&!B.lost) ballTop(ox,oy,B.ball); }
+    if(B.ruler&&B.state==="crater"){ ctx.fillStyle="rgba(232,236,240,.9)"; ctx.fillRect(-9.5,B.off[1],19,2.2); }
+  }
+  if(ST.tapeA&&aActive()){ fillR(9.5,-2,3,4,0.6,"#f1c419","#8a6d00",0.1); }
+}); }
+function drawBalls(){ frame("balls",()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-4.2,-2.7,9,6);
+  fillR(-4.5,-3,9,6,0.6,"rgba(235,240,244,.85)","#9aa3aa",0.1); });
+  for(let i=0;i<6;i++) if(ST.inBox[i]){ const p=ballSlotXY(i); ballTop(p[0]*PX,p[1]*PX,i); }
+}
+function drawStand(){ frame("stand",()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-11.6,-8.5,16,18);
+  fillR(-12,-9,16,18,0.6,vgrad(0,-9,18,[[0,"#e7cfa4"],[1,"#d4b583"]]),"#9e7f50",0.12);
+  ctx.fillStyle="#b9bec3"; ctx.beginPath(); ctx.arc(0,0,0.8,0,7); ctx.fill(); ctx.strokeStyle="#6d737a"; ctx.lineWidth=0.1; ctx.stroke();
+  if(!railMounted()){ ctx.fillStyle="#2a2c30"; ctx.fillRect(-1.6,-1.0,3.2,2.0);
+    ctx.strokeStyle="#c3c8cd"; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(1.2,0); ctx.lineTo(22,0); ctx.stroke(); }
+}); if(ST.held&&ST.held.where==="stand"){ const p=R_PT(); ballTop(p[0]*PX,p[1]*PX,ST.held.i); } }
+function drawTrack(){ frame("track",()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-24.6,-3.5,50,8);
+  fillR(-25,-4,50,8,0.4,"#e6cfa6","#a8865a",0.15); ctx.fillStyle="#d8bd8e"; ctx.fillRect(-24,-3,48,6);
+  const T=ST.track; if(T.state!=="empty"){ ctx.fillStyle=T.state==="filled"?SAND_D:SAND; ctx.fillRect(-24,-3,48,6);
+    if(T.state==="filled"){ ctx.fillStyle="rgba(255,240,200,.35)"; for(let i=0;i<12;i++){ ctx.beginPath(); ctx.arc(-22+i*4,Math.sin(i*1.9)*1.6,0.9,0,7); ctx.fill(); } } }
+  if(T.stop!==null&&T.state!=="empty"){ ctx.fillStyle="rgba(170,135,70,.6)"; ctx.fillRect(-24,-0.6,Math.min(48,T.stop),1.2); }
+  if(T.ruler){ ctx.fillStyle="rgba(232,236,240,.95)"; ctx.fillRect(-25,4.1,50,2.4); }
+}); const T=ST.track; if(T.ball!==null){ const x=ST.pos.track.x-24+Math.min(48,T.stop||0); ballTop(x*PX,ST.pos.track.y*PX,T.ball); } }
+function drawRail(){
+  frame("rail",()=>{ ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-49.6,-0.6,100,2);
+    ctx.fillStyle=vgrad(0,-1,2,[[0,"#eef1f3"],[0.5,"#b9bec3"],[1,"#8d949b"]]); ctx.fillRect(-50,-1,100,2);
+    ctx.strokeStyle="#7d848b"; ctx.lineWidth=0.08; ctx.beginPath(); ctx.moveTo(-50,0); ctx.lineTo(50,0); ctx.stroke();
+    if(ST.tapeB&&railMounted()){ ctx.fillStyle="rgba(241,196,25,.85)"; ctx.fillRect(-50,0.5,100,0.5); }
+    for(let k=0;k<ST.putty;k++){ ctx.fillStyle="#f2efe2"; ctx.beginPath(); ctx.arc(k===0?48:railMounted()?ST.pos.stand.x-ST.pos.rail.x+1.5:-48,0,1.0,0,7); ctx.fill(); }
+  });
+  if(railMounted()){ frame("stand",()=>{ ctx.fillStyle="#2a2c30"; ctx.fillRect(-1.6,-1.0,3.2,2.0); }); }
+  if(ST.held&&ST.held.where==="rail"){ const g=railGeom(), x=railLow()[0]-ST.s*Math.cos(g.th); ballTop(x*PX,ST.pos.rail.y*PX,ST.held.i); }
+}
+
+/* ── the close up ── */
+let P1={},P2={}, SV={};
+function sideMode(){ const a=aActive(), b=railMounted(); if(a&&(!b||ST.focus==="A")) return "A"; if(b) return "B"; return null; }
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, c=closeCtx;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,CLW,CLH);
+  const old=ctx; ctx=c;
+  ctx.fillStyle="#eeeae2"; ctx.fillRect(P1.x,P1.y,P1.w,P1.h); ctx.save(); ctx.beginPath(); ctx.rect(P1.x,P1.y,P1.w,P1.h); ctx.clip();
+  const m=sideMode(); SV={mode:m};
+  if(m==="A") sideA(); else if(m==="B") sideB(); else text(d().noSide,P1.x+P1.w/2,P1.y+P1.h/2,"#7a705f",11.5,"center");
+  ctx.restore();
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(P2.x,P2.y,P2.w,P2.h); ctx.save(); ctx.beginPath(); ctx.rect(P2.x,P2.y,P2.w,P2.h); ctx.clip();
+  const tm=m==="B"||(!m&&ST.on.track&&!ST.on.bowl)?"B":ST.on.bowl?"A":ST.on.track?"B":null; SV.top=tm;
+  if(tm==="A") topA(); else if(tm==="B") topB(); else text(d().noTop,P2.x+P2.w/2,P2.y+P2.h/2,"#9aa3ab",11.5,"center");
+  ctx.restore(); ctx=old;
+}
+function sideA(){
+  const P=P1, zmax=Math.max(70,ST.h+18), k=Math.min((P.h-20)/(zmax+14),(P.w-20)/56), x0=P.x+P.w*0.55, z0=P.y+P.h-10-13*k;
+  const X=x=>x0+x*k, Z=z=>z0-z*k; SV.k=k; SV.X=X; SV.Z=Z;
+  ctx.fillStyle="#b38557"; ctx.fillRect(P.x,Z(-11),P.w,P.h);
+  ctx.fillStyle="rgba(170,182,192,.8)"; ctx.fillRect(X(-19),Z(0),38*k,11*k);
+  ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.moveTo(X(-10),Z(0.4)); ctx.quadraticCurveTo(X(0),Z(-17),X(10),Z(0.4)); ctx.fill(); ctx.strokeStyle="#bfc3c7"; ctx.lineWidth=1.2; ctx.stroke();
+  const B=ST.bowl;
+  if(B.state!=="empty"){ ctx.fillStyle=SAND; ctx.beginPath(); ctx.moveTo(X(-9.4),Z(0));
+    const bumpy=B.state==="filled"||B.state==="mixed";
+    for(let x=-9.4;x<=9.4;x+=0.2){ let z=bumpy?0.5*Math.sin(x*1.3)+0.3*Math.sin(x*3.1)+0.4:0;
+      if(B.state==="crater"&&B.D){ const R=B.D/20, u=(x-B.off[0])/R; if(Math.abs(u)<1) z-=R*0.38*(1-u*u); else if(Math.abs(u)<1.25) z+=R*0.08*(1-(Math.abs(u)-1)/0.25); }
+      ctx.lineTo(X(x),Z(z)); }
+    ctx.lineTo(X(9.4),Z(0)); ctx.quadraticCurveTo(X(0),Z(-16),X(-9.4),Z(0)); ctx.fill(); }
+  /* stand: wooden tray, rod, clamp and horizontal rod; above the rod the ball is held by hand */
+  ctx.fillStyle="#d4b583"; ctx.fillRect(X(-34),Z(-9.5),16*k,1.5*k);
+  ctx.fillStyle="#a8adb3"; ctx.fillRect(X(-22.4),Z(61),0.8*k,70.5*k);
+  const hz=ST.h, onRod=hz<=58;
+  const cz=onRod?hz+0.6:58.6;
+  ctx.fillStyle="#2a2c30"; ctx.fillRect(X(-23.4),Z(cz+1.2),2.8*k,2.4*k);
+  if(onRod){ ctx.fillStyle="#c3c8cd"; ctx.fillRect(X(-20.6),Z(cz+0.25),20.6*k,0.5*k); }
+  /* the tape measure, zero at the sand surface */
+  if(ST.tapeA){ const xt=X(11);
+    ctx.fillStyle="#f1c419"; ctx.fillRect(xt,Z(zmax),1.6*k+6,(zmax)*k);
+    ctx.strokeStyle="#2b2b2b"; ctx.lineWidth=1;
+    for(let c=0;c<=zmax;c++){ const L=c%10===0?10:c%5===0?7:4; if(k<2.2&&c%5!==0) continue; ctx.beginPath(); ctx.moveTo(xt,Z(c)); ctx.lineTo(xt+L,Z(c)); ctx.stroke();
+      if(c%10===0) text(String(c),xt+12,Z(c),"#2b2b2b",9.5); }
+    fillR(xt-6,Z(-1)-2,1.6*k+18,14,3,"#f1c419","#8a6d00",1); }
+  /* the ball */
+  let bz=null, bi=null;
+  if(ST.fall){ bz=ST.fall.z; bi=ST.fall.i; } else if(ST.held&&ST.held.where==="stand"){ bz=ST.h; bi=ST.held.i; }
+  if(bi!==null){ const r=Math.max(2.5,BTYPE[BALL[bi]].d/20*k), y=Z(bz)+(ST.fall?-r:r*0.2);
+    if(!ST.fall&&!onRod){ ctx.fillStyle="#e7b892"; fillR(X(0)-r-9,y-r-14,10,12,4,"#e7b892"); fillR(X(0)+r-1,y-r-14,10,12,4,"#e7b892"); text(d().hand,X(0)+r+12,y-r-8,"#5d5446",10.5); }
+    ballSide(X(0),y,r); SV.ball=[X(0),y,r]; }
+  else SV.ball=null;
+  if(B.state==="crater"&&B.ball!==null&&!B.lost&&!ST.fall){ const r=Math.max(2.5,BTYPE[BALL[B.ball]].d/20*k); ballSide(X(B.off[0]),Z(-B.D/20*0.38)-r*0.6,r); }
+}
+function ballSide(x,y,r){ const g=ctx.createRadialGradient(x-r*0.35,y-r*0.35,r*0.1,x,y,r); g.addColorStop(0,"#f2f4f6"); g.addColorStop(0.5,"#9aa1a8"); g.addColorStop(1,"#3f454b");
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); }
+function sideB(){
+  const P=P1, g=railGeom(), rod=ST.pos.stand.x, lo=railLow()[0], tEnd=trackL()[0]+50, up=railUp()[0];
+  const xa=Math.min(up,rod-14)-4, xb=tEnd+4, k=Math.min((P.w-20)/(xb-xa),(P.h-30)/48), z0=P.y+P.h-14;
+  const X=x=>P.x+10+(x-xa)*k, Z=z=>z0-z*k; SV.k=k; SV.X=X; SV.Z=Z;
+  ctx.fillStyle="#b38557"; ctx.fillRect(P.x,z0,P.w,P.h);
+  ctx.fillStyle="#d4b583"; ctx.fillRect(X(rod-12),Z(1.5),16*k,1.5*k);
+  ctx.fillStyle="#a8adb3"; ctx.fillRect(X(rod)-0.4*k,Z(45),0.8*k,43.5*k);
+  ctx.strokeStyle="#3b444c"; ctx.lineWidth=1;
+  for(let c=0;c<=44;c++){ const L=c%10===0?8:c%5===0?6:3; ctx.beginPath(); ctx.moveTo(X(rod)-0.4*k,Z(c)); ctx.lineTo(X(rod)-0.4*k-L,Z(c)); ctx.stroke(); if(c%5===0) text(String(c),X(rod)-0.4*k-10,Z(c),"#2b333a",9,"right"); }
+  /* track */
+  const T=ST.track; ctx.fillStyle="#d8bd8e"; ctx.fillRect(X(lo),Z(1.6),50*k,1.6*k); ctx.fillStyle="#b99665"; ctx.fillRect(X(lo),Z(1.6),0.6*k,1.6*k); ctx.fillRect(X(lo+49.4),Z(1.6),0.6*k,1.6*k);
+  if(T.state!=="empty"){ ctx.fillStyle=T.state==="filled"?SAND_D:SAND; ctx.fillRect(X(lo+0.6),Z(1.3),48.8*k,1.0*k); }
+  /* rail */
+  const zAt=x=>EDGE_Z+(lo-x)*Math.tan(g.th);
+  ctx.strokeStyle="#9aa1a8"; ctx.lineWidth=Math.max(3,0.8*k); ctx.beginPath(); ctx.moveTo(X(up),Z(zAt(up))); ctx.lineTo(X(lo),Z(EDGE_Z)); ctx.stroke();
+  ctx.fillStyle="#2a2c30"; ctx.fillRect(X(rod)-1.4*k,Z(ST.clampZ-0.3),2.8*k,2.0*k); SV.clamp=[X(rod),Z(ST.clampZ)];
+  if(ST.tapeB){ ctx.strokeStyle="#c79a00"; ctx.lineWidth=1; const cs=Math.cos(g.th), sn=Math.sin(g.th);
+    for(let s=0;s<=100;s++){ const x=lo-s*cs; if(x<up) break; const L=s%10===0?7:s%5===0?5:3, px=X(x), pz=Z(EDGE_Z+s*sn);
+      ctx.beginPath(); ctx.moveTo(px,pz+2); ctx.lineTo(px+L*sn,pz+2+L*cs); ctx.stroke(); if(s%10===0) text(String(s),px+10*sn,pz+16,"#6b5400",9,"center"); } }
+  /* the ball */
+  const r=BTYPE[3].d/20*k; SV.ball=null; SV.rail={X,Z,g,lo};
+  let bx=null,bz=null;
+  if(ST.roll){ const R=ST.roll; if(R.phase==="rail"){ bx=lo-R.s*Math.cos(g.th); bz=EDGE_Z+R.s*Math.sin(g.th); } else { bx=lo+R.x; bz=T.state==="empty"?0.3:1.3; } }
+  else if(ST.held&&ST.held.where==="rail"){ bx=lo-ST.s*Math.cos(g.th); bz=EDGE_Z+ST.s*Math.sin(g.th); }
+  else if(T.ball!==null){ bx=lo+0.6+Math.min(48.8,T.stop||0); bz=T.state==="empty"?0.3:1.3; }
+  if(bx!==null){ const px=X(bx), pz=Z(bz)-r; ballSide(px,pz,r); SV.ball=[px,pz,r]; }
+}
+/* the sand seen from above */
+function topA(){
+  const P=P2, B=ST.bowl, k=P.w/9, cx=P.x+P.w/2, cy=P.y+P.h/2;  /* 9 cm across */
+  ctx.fillStyle=B.state==="empty"?"#f6f5f1":(B.state==="level"||B.state==="crater")?SAND:SAND_D; ctx.fillRect(P.x,P.y,P.w,P.h);
+  if(B.state!=="empty") sandTex(P.x,P.y,P.w,P.h,13);
+  if(B.state==="crater"&&B.D){ const R=B.D/20*k, ox=cx+B.off[0]*k*0, oy=cy;
+    ctx.beginPath(); for(let t=0;t<=6.3;t+=0.05){ const rr=R*(1+0.020*Math.sin(3*t+B.rim[0])+0.014*Math.sin(5*t+B.rim[1])+0.010*Math.sin(7*t+B.rim[2]));
+      t===0?ctx.moveTo(ox+rr*Math.cos(t),oy+rr*Math.sin(t)):ctx.lineTo(ox+rr*Math.cos(t),oy+rr*Math.sin(t)); }
+    ctx.closePath(); ctx.fillStyle="#c9a967"; ctx.fill(); ctx.strokeStyle="#a8873f"; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle="#b2914f"; ctx.beginPath(); ctx.arc(ox,oy,R*0.6,0,7); ctx.fill();
+    ctx.strokeStyle="#ecd7a0"; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(ox+2,oy-2,R*1.07,0,7); ctx.stroke();
+    if(B.ball!==null&&!B.lost) ballSide(ox,oy,BTYPE[BALL[B.ball]].d/20*k);
+    if(B.ruler){ const y=oy; ctx.fillStyle="rgba(240,242,236,.93)"; ctx.fillRect(P.x,y,P.w,0.9*k); ctx.strokeStyle="#2b333a"; ctx.lineWidth=1;
+      for(let m=0;m<=300;m++){ const x=cx+(B.rulerX+m/10)*k*1; if(x<P.x||x>P.x+P.w) continue; const L=m%10===0?0.35*k:m%5===0?0.25*k:0.15*k;
+        ctx.beginPath(); ctx.moveTo(x+0.5,y); ctx.lineTo(x+0.5,y+L); ctx.stroke(); if(m%10===0) text(String(m/10),x,y+0.55*k,"#2b333a",10,"center"); } } }
+  text(d().items.bowl,P.x+8,P.y+14,"#5d5446",11);
+}
+function topB(){
+  const P=P2, T=ST.track, k=P.w/51, x0=P.x+0.5*k, cy=P.y+P.h*0.45;
+  ctx.fillStyle="#e6cfa6"; ctx.fillRect(x0,cy-4*k,50*k,8*k); ctx.fillStyle="#d8bd8e"; ctx.fillRect(x0+0.6*k,cy-3.4*k,48.8*k,6.8*k);
+  if(T.state!=="empty"){ ctx.fillStyle=T.state==="filled"?SAND_D:SAND; ctx.fillRect(x0+0.6*k,cy-3.4*k,48.8*k,6.8*k); ctx.save(); ctx.beginPath(); ctx.rect(x0+0.6*k,cy-3.4*k,48.8*k,6.8*k); ctx.clip(); sandTex(x0,cy-3.4*k,50*k,6.8*k,29); ctx.restore(); }
+  if(T.stop!==null&&T.state!=="empty"){ ctx.fillStyle="rgba(165,128,62,.65)"; ctx.fillRect(x0+0.6*k,cy-0.5*k,Math.min(48.8,T.stop)*k,1.0*k); }
+  const bx=ST.roll&&ST.roll.phase==="sand"?ST.roll.x:(T.ball!==null?T.stop:null);
+  if(bx!==null) ballSide(x0+(0.6+Math.min(48.8,bx))*k,cy,0.8*k);
+  if(T.ruler){ const y=cy+4.2*k; ctx.fillStyle="rgba(240,242,236,.95)"; ctx.fillRect(P.x,y,P.w,2.2*k); ctx.strokeStyle="#2b333a"; ctx.lineWidth=1;
+    for(let m=0;m<=300;m++){ const x=x0+(0.6+T.rulerX+m/10)*k; if(x<P.x||x>P.x+P.w) continue; const L=m%10===0?1.0*k:m%5===0?0.7*k:0.4*k;
+      if(k<6&&m%5!==0) continue;
+      ctx.beginPath(); ctx.moveTo(x+0.5,y); ctx.lineTo(x+0.5,y+L); ctx.stroke(); if(m%(k<12?50:10)===0) text(String(m/10),x,y+1.6*k,"#2b333a",10,"center"); } }
+  text(d().items.track,P.x+8,P.y+14,"#e8eef2",11);
+}
+
+/* ── the bench ── */
+const DRAW={box:drawBox,bowl:drawBowl,balls:drawBalls,stand:drawStand,rail:drawRail,track:drawTrack};
+function drawBench(){
+  bench();
+  for(const k of ["box","track","bowl","balls","stand","rail"]) if(ST.on[k]) DRAW[k]();
+  if(hand){ const c=cm(mouse);
+    if(PLACE.includes(hand.k)){ const keep=ST.pos[hand.k], kon=ST.on[hand.k]; ST.pos[hand.k]=snapPos(hand.k,{x:c[0],y:c[1]}); ST.on[hand.k]=true;
+      ctx.globalAlpha=overlap(hand.k,ST.pos[hand.k])?0.35:0.7; DRAW[hand.k](); ctx.globalAlpha=1; ST.pos[hand.k]=keep; ST.on[hand.k]=kon; }
+    else if(hand.k==="ball") ballTop(mouse[0],mouse[1],hand.i);
+    else { ctx.save(); ctx.globalAlpha=0.9; icon(hand.k,mouse[0]+14,mouse[1]+12,0.8); ctx.restore(); } }
+}
+/* the rail is laid against the end of the track when it is put down close to it */
+function snapPos(k,pos){
+  if(k==="rail"&&ST.on.track){ const tl=trackL(); if(Math.abs(pos.x+50-tl[0])<6&&Math.abs(pos.y-tl[1])<4) return {x:tl[0]-50,y:tl[1]}; }
+  return pos;
+}
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "box": fillR(-22,-14,44,28,3,"#c4cdd4","#7f8a94"); break;
+    case "bowl": ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.arc(0,0,14,0,7); ctx.fill(); ctx.strokeStyle="#bbb"; ctx.stroke(); ctx.fillStyle=SAND; ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); break;
+    case "bottle": fillR(-9,-16,18,32,4,"#f4f4f2","#bbb"); ctx.fillStyle="#2d5fc0"; ctx.fillRect(-6,-21,12,6); break;
+    case "balls": fillR(-12,-8,24,16,3,"#e9eef2","#9aa3aa"); for(const [bx,r] of [[-6,2],[-1,3],[5,5]]){ ctx.fillStyle="#8d949b"; ctx.beginPath(); ctx.arc(bx,0,r,0,7); ctx.fill(); } break;
+    case "tape": fillR(-12,-12,24,24,5,"#f1c419","#8a6d00"); ctx.fillStyle="#222"; ctx.beginPath(); ctx.arc(0,0,5,0,7); ctx.fill(); break;
+    case "stand": fillR(-16,10,32,7,2,"#e3c99a"); ctx.fillStyle="#a8adb3"; ctx.fillRect(-10,-22,3,32); ctx.fillStyle="#222"; ctx.fillRect(-13,-8,9,5); ctx.fillStyle="#c3c8cd"; ctx.fillRect(-4,-7,20,2); break;
+    case "sieve": ctx.strokeStyle="#9aa1a8"; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(-4,0,10,0,7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(6,0); ctx.lineTo(22,0); ctx.stroke(); break;
+    case "rail": ctx.rotate(-0.4); ctx.fillStyle="#c3c8cd"; ctx.fillRect(-26,-2,52,4); break;
+    case "brush": ctx.rotate(-0.6); ctx.fillStyle="#7a1f2a"; ctx.fillRect(-14,-1.5,22,3); ctx.fillStyle="#f0a030"; ctx.fillRect(8,-2.5,8,5); break;
+    case "track": fillR(-24,-6,48,12,2,"#e6cfa6","#a8865a"); break;
+    case "putty": fillR(-12,-10,24,20,3,"#f2c232"); ctx.fillStyle="#f2efe2"; ctx.beginPath(); ctx.arc(4,3,4,0,7); ctx.fill(); break;
+    case "spoon": ctx.rotate(-0.6); ctx.fillStyle="#c3c8cd"; ctx.fillRect(-16,-1,22,2); ctx.beginPath(); ctx.ellipse(10,0,6,4,0,0,7); ctx.fill(); break;
+    case "ruler": ctx.rotate(-0.4); ctx.fillStyle="#e8ecef"; ctx.fillRect(-26,-4,52,8); ctx.strokeStyle="#c0392b"; ctx.lineWidth=2; ctx.strokeRect(-26,-4,52,8); break;
+  }
+  ctx.restore();
+}
+/* ══════════════════════════════════════════════════════════════
+   4.  TRAY, LAYOUT
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["box","bowl","bottle","balls","tape","stand","sieve","rail","brush","track","putty","spoon","ruler"], TROW=44;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
+const trayAvail=k=>TOOLS.includes(k)? !(hand&&hand.k===k) : !ST.on[k]&&!(hand&&hand.k===k);
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.42);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16, w1=Math.round((CLW-24)*0.58); P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:CLW-24-w1,h};
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(itemName(k),52,y+13);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(TOOLS.includes(k)?(av?t.trayTool:t.trayOut):(av?t.trayTake:t.trayOut),52,y+29);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  HANDS
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const cm=p=>[p[0]/PX,p[1]/PX];
+const busy=()=>!!(ST.fall||ST.roll);
+function ballHome(i){ ST.inBox[i]=true; }
+function railBallXY(){ const g=railGeom(); return [railLow()[0]-ST.s*Math.cos(g.th),ST.pos.rail.y]; }
+function returnItem(k){
+  ST.on[k]=false;
+  if(k==="bowl"){ if(ST.bowl.ball!==null) ballHome(ST.bowl.ball); ST.bowl={...ST.bowl,state:"empty",shots:0,D:null,ball:null,lost:false,ruler:false}; ST.tapeA=false; }
+  if(k==="stand"&&ST.held){ ballHome(ST.held.i); ST.held=null; }
+  if(k==="rail"){ if(ST.held&&ST.held.where==="rail"){ ballHome(ST.held.i); ST.held=null; } ST.tapeB=false; ST.putty=0; }
+  if(k==="track"){ if(ST.track.ball!==null) ballHome(ST.track.ball); ST.track={...ST.track,state:"empty",shots:0,ball:null,stop:null,ruler:false}; }
+  if(k==="balls"){ for(let i=0;i<6;i++) ballHome(i); if(ST.held) ST.held=null; ST.bowl.ball=null; ST.bowl.lost=false; ST.track.ball=null; }
+  say("back",itemName(k));
+}
+function benchClick(p,right){
+  const c=cm(p);
+  if(hand) return handClick(c,right);
+  if(busy()) return;
+  if(right){ for(const k of ["rail","stand","balls","bowl","track","box"]) if(inRect(k,c)){ returnItem(k); return; } return; }
+  if(ST.on.balls) for(let i=0;i<6;i++) if(ST.inBox[i]&&near(c,ballSlotXY(i),0.9)){ ST.inBox[i]=false; hand={k:"ball",i}; say("ballPick",BTYPE[BALL[i]].n); return; }
+  if(ST.held&&ST.held.where==="stand"&&near(c,R_PT(),1.6)){ hand={k:"ball",i:ST.held.i}; ST.held=null; say("back4"); return; }
+  if(ST.held&&ST.held.where==="rail"&&near(c,railBallXY(),1.8)){ hand={k:"ball",i:ST.held.i}; ST.held=null; say("back4"); return; }
+  const B=ST.bowl; if(ST.on.bowl&&B.ball!==null&&!B.lost&&near(c,[bowlC()[0]+B.off[0],bowlC()[1]+B.off[1]],2)){ hand={k:"ball",i:B.ball}; B.ball=null; say("back4"); return; }
+  const Tr=ST.track; if(ST.on.track&&Tr.ball!==null&&near(c,[ST.pos.track.x-24+Math.min(48,Tr.stop||0),ST.pos.track.y],2)){ hand={k:"ball",i:Tr.ball}; Tr.ball=null; say("back4"); return; }
+  for(const k of ["rail","stand","balls","bowl","track","box"]) if(inRect(k,c)){ hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say("moveIt",itemName(k)); return; }
+}
+function handClick(c,right){
+  const k=hand.k;
+  if(right){ if(hand.move){ ST.pos[k]=hand.orig; ST.on[k]=true; hand=null; say("stays"); return; }
+    if(k==="ball") ballHome(hand.i); hand=null; say("back",k==="ball"?itemName("balls"):itemName(k)); return; }
+  if(PLACE.includes(k)){ const pos=snapPos(k,{x:c[0],y:c[1]}); if(overlap(k,pos)){ say("noFit"); return; }
+    ST.pos[k]=pos; ST.on[k]=true; hand=null;
+    if(k==="bowl"&&inRect("box",c)) say("bowlIn"); else if(k==="rail"&&railMounted()) say("railOn"); else say("placed",itemName(k)); return; }
+  const onBowl=ST.on.bowl&&near(c,bowlC(),10.5), onTrack=inRect("track",c), onRail=ST.on.rail&&inRect("rail",c), B=ST.bowl, Tr=ST.track;
+  if(k==="ball"){
+    if(ST.on.stand&&!railMounted()&&near(c,R_PT(),2.5)){ ST.held={i:hand.i,where:"stand"}; hand=null; ST.focus="A"; say("ballHold"); return; }
+    if(railMounted()&&onRail&&c[0]<railLow()[0]-1){ const g=railGeom(); ST.s=Math.max(3,Math.min(95,Math.round((railLow()[0]-c[0])/Math.cos(g.th)))); ST.held={i:hand.i,where:"rail"}; hand=null; ST.focus="B"; say("ballRail"); return; }
+    say("ballWhere"); return; }
+  if(k==="bottle"){
+    if(onBowl){ if(B.ball!==null&&!B.lost){ say("noUse"); return; } Object.assign(B,{state:"filled",shots:0,D:null,ruler:false}); ST.focus="A"; say("fill"); return; }
+    if(onTrack){ if(Tr.ball!==null){ say("noUse"); return; } Object.assign(Tr,{state:"filled",shots:0,stop:null}); ST.focus="B"; say("fillT"); return; } }
+  if(k==="ruler"){
+    if(onBowl&&B.state!=="empty"){ ST.focus="A";
+      if(B.state==="crater"){ B.ruler=!B.ruler; if(B.ruler){ B.rulerX=-(B.D/20)-0.8; say("rulerOn"); } return; }
+      B.state="level"; say("level"); return; }
+    if(onTrack&&Tr.state!=="empty"){ ST.focus="B";
+      if(Tr.state==="filled"){ Tr.state="level"; Tr.shots=0; Tr.stop=null; say("scrape"); return; }
+      Tr.ruler=!Tr.ruler; if(Tr.ruler) say("rulerTrack"); return; } }
+  if(k==="spoon"){
+    if(onBowl&&B.state!=="empty"){ if(B.ball!==null&&!B.lost){ say("noUse"); return; } Object.assign(B,{state:"mixed",shots:0,D:null,ruler:false}); say("mix"); return; }
+    if(onTrack&&Tr.state!=="empty"){ if(Tr.ball!==null){ say("noUse"); return; } Tr.state="filled"; Tr.stop=null; say("mix"); return; } }
+  if(k==="sieve"&&onBowl&&B.lost){ ballHome(B.ball); Object.assign(B,{state:"mixed",shots:0,D:null,ball:null,lost:false,ruler:false}); say("sieve"); return; }
+  if(k==="tape"){ if(onBowl&&aActive()){ ST.tapeA=!ST.tapeA; if(ST.tapeA) say("tapeA"); ST.focus="A"; return; }
+    if(onRail&&railMounted()){ ST.tapeB=!ST.tapeB; if(ST.tapeB) say("tapeB"); ST.focus="B"; return; } }
+  if(k==="putty"&&onRail){ ST.putty=Math.min(2,ST.putty+1); say("putty"); return; }
+  if(k==="brush"&&(onRail||onTrack)){ say("brush"); return; }
+  say("noUse");
+}
+
+const cvEl=cv;
+cvEl.addEventListener("contextmenu",e=>e.preventDefault());
+cvEl.addEventListener("pointerenter",()=>{ overBench=true; });
+cvEl.addEventListener("pointerleave",()=>{ overBench=false; });
+cvEl.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cvEl.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+let trayDrag=false;
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cvEl){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ handClick([0,0],true); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) handClick([0,0],true);
+    if(!same&&trayAvail(k)){ hand={k}; say(TOOLS.includes(k)?"tool":"picked",itemName(k)); } drawTray(); return; } });
+
+/* the close up */
+let drag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0||busy()) return; const p=clpos(e);
+  if(inP(P1,p)){
+    if(SV.ball&&near(p,SV.ball,SV.ball[2]+9)&&ST.held){ drag={kind:SV.mode==="A"?"h":"s",y0:p[1],x0:p[0],h0:ST.h,s0:ST.s,moved:false}; closeCv.setPointerCapture(e.pointerId); return; }
+    if(SV.mode==="B"&&SV.clamp&&near(p,SV.clamp,14)){ drag={kind:"clamp",y0:p[1],z0:ST.clampZ,moved:true}; closeCv.setPointerCapture(e.pointerId); return; }
+  }
+  if(inP(P2,p)){ const tgt=SV.top==="A"?ST.bowl:ST.track; if(tgt.ruler){ drag={kind:"ruler",x0:p[0],r0:tgt.rulerX,tgt,k:SV.top==="A"?P2.w/9:P2.w/51,moved:true}; closeCv.setPointerCapture(e.pointerId); } }
+});
+closeCv.addEventListener("pointermove",e=>{ if(!drag) return; const p=clpos(e);
+  if(Math.hypot(p[0]-(drag.x0||p[0]),p[1]-(drag.y0||p[1]))>3) drag.moved=true;
+  if(drag.kind==="h") ST.h=Math.max(3,Math.min(200,Math.round((drag.h0+(drag.y0-p[1])/SV.k)*2)/2));
+  if(drag.kind==="s"&&SV.rail){ const g=SV.rail.g, ds=-((p[0]-drag.x0)*Math.cos(g.th)-(p[1]-drag.y0)*Math.sin(g.th))/SV.k; ST.s=Math.max(3,Math.min(95,Math.round((drag.s0+ds)*2)/2)); }
+  if(drag.kind==="clamp") ST.clampZ=Math.max(2.5,Math.min(43,Math.round((drag.z0+(drag.y0-p[1])/SV.k)*10)/10));
+  if(drag.kind==="ruler") drag.tgt.rulerX=drag.r0+(p[0]-drag.x0)/drag.k;
+});
+closeCv.addEventListener("pointerup",()=>{ if(drag&&!drag.moved){ if(drag.kind==="h") dropBall(); if(drag.kind==="s") rollBall(); } drag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e); if(!inP(P1,p)||!ST.held||busy()) return; e.preventDefault(); const s=e.deltaY<0?1:-1;
+  if(SV.mode==="A") ST.h=Math.max(3,Math.min(200,ST.h+0.5*s)); else ST.s=Math.max(3,Math.min(95,ST.s+0.5*s)); },{passive:false});
+
+function dropBall(){ if(!ST.held||ST.held.where!=="stand") return;
+  ST.fall={i:ST.held.i,h0:ST.h,z:ST.h,t:0,over:aActive()}; ST.held=null; say("drop"); }
+function rollBall(){ if(!ST.held||ST.held.where!=="rail") return;
+  if(ST.putty<2) ST.clampZ=Math.max(2.5,ST.clampZ+0.15*gauss());
+  const g=railGeom(); ST.roll={phase:"rail",i:ST.held.i,s0:ST.s,s:ST.s,t:0,x:0,v:0,th:g.th}; ST.held=null; say("roll"); }
+function stepMotion(dt){
+  if(ST.fall){ const F=ST.fall; F.t+=dt; F.z=F.h0-0.5*981*F.t*F.t;
+    if(F.z<=0){ ST.fall=null; const B=ST.bowl;
+      if(!F.over||B.state==="empty"){ ballHome(F.i); say("noUse"); return; }
+      const lev=B.state==="level"||B.state==="crater";
+      B.D=crater(F.i,F.h0,lev,B.shots); B.shots++; B.state="crater"; B.off=[0.6*gauss(),0.6*gauss()]; B.rim=[6*rnd(),6*rnd(),6*rnd()];
+      B.ball=F.i; B.lost=BTYPE[BALL[F.i]].n===1; B.ruler=false; say("impact"); } }
+  if(ST.roll){ const R=ST.roll, T=ST.track, acc=(5/7)*981*Math.sin(R.th);
+    R.t+=dt;
+    if(R.phase==="rail"){ R.s=R.s0-0.5*acc*R.t*R.t;
+      if(R.s<=0){ R.v=Math.sqrt(2*acc*R.s0); R.phase="sand"; R.t=0; R.x=0;
+        if(T.state!=="empty"){ const mu=KIT.mu*Math.max(0.8,1-0.05*T.shots);
+          R.L=(5/7)*Math.sin(R.th)*R.s0/mu*(1+0.06*gauss())*(T.state==="level"?1:1+0.12*gauss()); R.a=R.v*R.v/(2*R.L); }
+        else { R.L=Infinity; R.a=0; } } }
+    else { R.x=R.v*R.t-0.5*R.a*R.t*R.t;
+      const done=R.a>0&&R.t>=R.v/R.a;
+      if(done||R.x>=48.8){ const x=done?R.L:48.8; ST.roll=null; T.ball=R.i; T.stop=Math.min(48.8,x); if(T.state!=="empty") T.shots++;
+        if(x>=48.8){ say("off"); if(T.state==="empty"){ T.ball=null; ballHome(R.i); } } else say("stop"); } } }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
+function swToggle(){ ST.swRun=!ST.swRun; renderPanel(); }
+$("swBtn").onclick=swToggle;
+$("swLap").onclick=()=>{ ST.laps.unshift(fmt(ST.sw)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
+$("swReset").onclick=()=>{ ST.sw=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
+document.addEventListener("keydown",e=>{ if(e.code==="Space"&&e.target.tagName!=="INPUT"){ e.preventDefault(); if(!e.repeat) swToggle(); } });
+function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
+  $("laps").innerHTML=ST.laps.map((s,i)=>"<div>"+(ST.laps.length-i)+". "+s+"</div>").join(""); }
+function renderStatus(){
+  const L=[], t=d(), B=ST.bowl, Tr=ST.track;
+  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
+  if(ST.on.bowl&&(B.state==="filled"||B.state==="mixed")) L.push([t.st.notLevel,false]);
+  if(B.shots>=2) L.push([t.st.compact(B.shots),true]);
+  if(Tr.shots>=2) L.push([t.st.trackHard(Tr.shots),true]);
+  if(railMounted()&&ST.putty<2) L.push([t.st.noPutty,false]);
+  if(B.lost) L.push([t.st.lost,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset; $("t-swhint").textContent=t.swHint;
+  $("t-h-a").textContent=t.hA; $("t-ahint").textContent=t.aHint; $("t-h-b").textContent=t.hB; $("t-bhint").textContent=t.bHint;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2025 E2 — 모래 크레이터와 사구 · HaslaLab":"IPhO 2025 E2 — Sand Craters and Dunes · HaslaLab";
+  renderPanel(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let tPrev=performance.now()/1000, frameN=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.25,Math.max(0,now-tPrev)); tPrev=now;
+  if(ST.swRun) ST.sw+=dt;
+  for(let left=dt;left>1e-9;left-=0.005) stepMotion(Math.min(0.005,left));
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  $("swLbl").textContent=fmt(ST.sw);
+  drawClose();
+  if(++frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
