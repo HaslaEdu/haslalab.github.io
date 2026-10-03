@@ -670,11 +670,16 @@ const DATA={
     ]},
    {y:2018,host:{ko:"포르투갈 · 리스본",en:"Lisbon, Portugal"},cc:"pt",
     problems:[
-      {id:"E1", en:"Paper Transistor", ko:"종이 트랜지스터", state:"wip", hold:true,
+      {id:"E1",
+       title:{ko:"종이 트랜지스터",en:"Paper Transistor"},
+       desc:{ko:"인쇄 회로지의 탄소 저항에 은잉크로 선을 그어 전압 분배기를 만들고, 전지·멀티미터·JFET·종이 TFT를 악어클립으로 직접 배선해 특성 곡선과 TFT의 느린 켜짐, 연필로 그린 부하 저항의 인버터를 잽니다.",
+             en:"Draw silver lines across the carbon resistors of a printed sheet to make voltage dividers, wire batteries, a multimeter, a JFET and the paper TFT with alligator clips, and measure characteristic curves, the slow turn-on of the TFT and an inverter with a pencil-drawn load."},
+       tags:["전자 회로","트랜지스터","면저항"], tagsEn:["Electronics","Transistors","Sheet resistance"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2018_E1_sim_KO.exe", en:REL+"v1.0/IPhO2018_E1_sim_EN.exe"}, */
        files:{sim:"sim/ipho2018_E1_web.html",
-              exe:{ko:REL+"v1.0/IPhO2018_E1_sim_KO.exe", en:REL+"v1.0/IPhO2018_E1_sim_EN.exe"},
               src:{ko:"src/ipho2018_E1_sim_KO.py", en:"src/ipho2018_E1_sim_EN.py"},
-              pdf:{ko:"pdf/IPhO_2018_E1_KO.pdf", en:"pdf/IPhO_2018_E1_EN.pdf"},
+              pdf:{en:"pdf/IPhO_2018_E1_EN.pdf"},
               sol:"pdf/IPhO_2018_S1.pdf"}},
       {id:"E2", en:"Viscoelasticity of a Polymer Thread", ko:"고분자 실의 점탄성", state:"wip", hold:true,
        files:{sim:"sim/ipho2018_E2_web.html",
@@ -3248,7 +3253,7 @@ function startHero(){
   let t0=null;
   (function loop(now){
     if(t0===null)t0=now;
-    show(((now-t0)/1000*rate)%(sig.span*1.18));
+    show(Math.max(0,(now-t0)/1000*rate)%(sig.span*1.18));   /* the first frame can be stamped before t0 */
     animId=requestAnimationFrame(loop);
   })(performance.now());
   addEventListener("resize",()=>{fit();});
