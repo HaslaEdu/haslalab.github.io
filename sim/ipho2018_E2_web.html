@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2018 E2 — 고분자 실의 점탄성 · Viscoelasticity · HaslaLab</title>
+<meta name="description" content="IPhO 2018 실험 2번을 브라우저에서 실행합니다. TPU 실을 스탠드에 걸어 전자저울의 응력 완화를 읽고, 레이저·평면거울·A4 스크린을 실험대에 직접 배치해 실의 회절무늬로 지름을 잽니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2018 E2 — 고분자 실의 점탄성 · Viscoelasticity of a polymer thread">
+<meta property="og:description" content="IPhO 2018 실험 2번을 브라우저에서 실행합니다. 응력 완화 측정, 레이저 회절로 실 지름 재기, 일정 응력에서의 변형까지 실제 장비처럼 다룹니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #scaleLbl{color:#bfe3ff;background:#10243a}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.0</div>
+    <div class="row">
+      <button id="swBtn"></button>
+      <button id="swLap"></button>
+      <button id="swReset"></button>
+    </div>
+    <div class="laps" id="laps"></div>
+
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+
+    <h2 id="t-h-scale"></h2>
+    <div class="disp" id="scaleLbl"></div>
+    <div class="row">
+      <button id="scOn"></button>
+      <button id="scTare"></button>
+    </div>
+    <label class="chk"><input type="checkbox" id="sync" checked><span id="t-sync"></span></label>
+    <p class="hint" id="t-scalehint"></p>
+
+    <h2 id="t-h-tape"></h2>
+    <p class="hint" id="t-tapehint"></p>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2018 실험 2 — 고분자 실의 점탄성",
+    sub:"가상 실험실 · 장비를 직접 놓고, 실을 걸고, 저울과 스톱워치와 자를 읽으세요. 힘·변형률·탄성률·지름은 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayUsed:"다 썼음", left:n=>"남은 수 "+n,
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 150 cm × 90 cm) — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 휠 돌리기 (Shift: 미세) / 놓은 장비를 다시 클릭하면 옮기기",
+    closeCap:"확대 — 왼쪽: 스탠드 옆모습 (줄자는 여기서 실 길이를 잽니다) · 가운데: A4 스크린 · 오른쪽: 확대경",
+    hSw:"8. 스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
+    hTime:"시간 배속", timeHint:"응력 완화는 45분 동안 기록합니다. 배속은 스톱워치·저울 예열에도 똑같이 적용됩니다.",
+    hScale:"6. 전자저울", on:"전원", tare:"영점(TARE)", sync:"실을 걸 때 스톱워치를 동시에 시작",
+    scaleHint:"켠 뒤 약 10분 예열이 필요합니다. 표시는 0.01 g 단위입니다.",
+    hTape:"10. 줄자 · 9. 자",
+    tapeHint:"줄자를 집고 두 점을 차례로 클릭하면 그 사이 길이를 읽습니다 (1 mm 눈금). 실 길이는 아래 옆모습에서 나사 머리를 클릭하고, 광 경로는 실험대에서 실·거울·스크린의 빛점을 클릭하세요.\n자는 A4 스크린 확대 화면에 대고 끌어서 옮깁니다.",
+    items:{stand:"1. 스탠드", scale:"6. 전자저울", mass:"2·3. 추 뭉치 + 긴 실", short:"4. 짧은 TPU 실",
+           laser:"5. 레이저 + 받침", mirror:"7. 평면거울", screen:"11. A4 스크린", tape:"10. 줄자", ruler:"9. 자"},
+    snap:{P:"실 (윗 지지대 아래)", top:"위쪽 나사 머리", bot:"아래쪽 나사 머리", tip:"레이저 출구", hit:"빛점"},
+    lens:"확대경 ×3", screenNone:"레이저 빛이 A4 스크린 앞면에 닿으면 여기 보입니다.", noStand:"스탠드를 놓으면 옆모습이 보입니다.",
+    elevTape:"줄자", rulerOff:"자를 부품함에서 꺼내면 스크린에 댈 수 있습니다.",
+    st:{none:"부품함에서 스탠드와 전자저울부터 꺼내 놓으세요.", warm:"저울 예열 중입니다.",
+        hung:t=>"긴 실: 일정 변형 상태로 "+t+" 동안 걸려 있음", shortHung:t=>"짧은 실: 일정 응력으로 "+t+" 동안 매달려 있음",
+        laserOn:"레이저 켜짐 — 빛을 직접 보지 마세요.", noHit:"레이저 빛이 실에 닿지 않습니다 (회절무늬 없음)."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       busy:"실이 걸려 있는 동안에는 스탠드와 저울을 옮길 수 없습니다.",
+       massWhere:"추 뭉치는 전자저울 접시 위에 놓습니다.", massOn:"추 뭉치를 저울 접시에 놓았습니다. 실은 늘어나지 않은 채 옆에 놓여 있습니다.",
+       notUnder:"추 뭉치가 윗 지지대 바로 아래에 있지 않습니다. 실이 수직이 되도록 저울 위 추 뭉치의 자리를 옮기세요.",
+       hang:"실의 나사를 윗 지지대에 걸었습니다 — 저울 위의 추는 그대로이고 실은 일정 길이로 늘어났습니다.",
+       hangSync:"실을 걸고 동시에 스톱워치를 시작했습니다.", needOn:"저울이 꺼져 있습니다. 측정 전에 켜 두세요.",
+       unscrew:"추 뭉치를 긴 실에서 풀어냈습니다. 긴 실은 걷어 냈습니다.",
+       shortOn:"짧은 실을 추 뭉치 구멍에 끼우고 나사로 고정했습니다. 아직 늘어나지 않았습니다.",
+       shortWhere:"짧은 실은 저울 위에 둔 추 뭉치에 끼웁니다.", shortFirst:"먼저 추 뭉치를 긴 실에서 풀어내세요 (걸린 추 뭉치 클릭).",
+       hangShort:"짧은 실을 윗 지지대에 걸었습니다 — 추가 저울에서 들려 일정한 힘으로 당깁니다.",
+       laserOn:"집게로 레이저 스위치를 눌렀습니다 (켜짐).", laserOff:"집게를 풀었습니다 (꺼짐).",
+       rot:a=>"방향 "+a+"°", tape1:"줄자 끝을 댈 첫 점을 클릭하세요.", tape2:"줄자를 펼 둘째 점을 클릭하세요.",
+       tapeRead:v=>"줄자 눈금: "+v, noSnap:"줄자를 댈 곳(나사 머리·실·빛점·레이저 출구)을 클릭하세요.",
+       ruler:"자를 A4 스크린에 댔습니다. 확대 화면에서 끌어 옮기세요.", tared:"영점을 맞췄습니다.",
+       scaleOn:"저울을 켰습니다. 약 10분 예열하세요.", scaleOff:"저울을 껐습니다.", lap:(t,g)=>"랩 "+t+(g?" · 저울 "+g+" g":"")}
+  },
+  en:{
+    title:"IPhO 2018 Experiment 2 — Viscoelasticity of a polymer thread",
+    sub:"Virtual laboratory · put the apparatus down, hang the thread and read the scale, the stopwatch and the rulers. Forces, strains, moduli and the diameter are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayUsed:"used", left:n=>n+" left",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 150 cm × 90 cm) — L-click pick up / put down, R-click return, wheel to turn (Shift: fine), click a placed item to move it",
+    closeCap:"close up — left: side view of the stand (measure the thread here with the tape) · middle: the A4 screen · right: magnifier",
+    hSw:"8. Stopwatch", start:"Start", stop:"Stop", lap:"Lap", reset:"Reset",
+    hTime:"Time scale", timeHint:"Stress relaxation is recorded for about 45 min. The scale applies to the stopwatch and the warm-up of the balance too.",
+    hScale:"6. Digital scale", on:"Power", tare:"TARE", sync:"start the stopwatch when the thread is hung",
+    scaleHint:"Needs about 10 min of warm-up after switching on. Reads to 0.01 g.",
+    hTape:"10. Measuring tape · 9. Ruler",
+    tapeHint:"Pick up the tape and click two points: it reads the length between them (1 mm marks). Thread lengths: click the screw heads in the side view below. Optical path: click the thread, the spots on the mirrors and on the screen on the bench.\nThe ruler is laid against the A4 screen; drag it in the close up.",
+    items:{stand:"1. Standing structure", scale:"6. Digital scale", mass:"2·3. Mass-set + long thread", short:"4. Short TPU thread",
+           laser:"5. Laser + support", mirror:"7. Plane mirror", screen:"11. A4 screen", tape:"10. Measuring tape", ruler:"9. Ruler"},
+    snap:{P:"thread (under the support)", top:"upper screw head", bot:"lower screw head", tip:"laser aperture", hit:"light spot"},
+    lens:"magnifier ×3", screenNone:"Shows here when the laser light falls on the front of the A4 screen.", noStand:"Put the stand down to see its side view.",
+    elevTape:"tape", rulerOff:"Take the ruler out of the box to lay it on the screen.",
+    st:{none:"Take the stand and the digital scale out of the box first.", warm:"The scale is warming up.",
+        hung:t=>"Long thread: held at constant strain for "+t, shortHung:t=>"Short thread: under constant stress for "+t,
+        laserOn:"Laser on — never look into the beam.", noHit:"The laser beam misses the thread (no diffraction pattern)."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       busy:"The stand and the scale cannot be moved while a thread is hung.",
+       massWhere:"The mass-set goes on the platform of the digital scale.", massOn:"Mass-set on the scale platform. The thread lies beside it, unstretched.",
+       notUnder:"The mass-set is not right under the upper support. Move it on the platform so that the thread hangs vertically.",
+       hang:"Screw head put on the upper support — the mass-set stays on the scale and the thread is stretched to a fixed length.",
+       hangSync:"Thread hung and the stopwatch started at the same instant.", needOn:"The scale is off. Switch it on before measuring.",
+       unscrew:"Mass-set unscrewed from the long thread. The long thread is taken away.",
+       shortOn:"Short thread pushed through the hole of the mass-set and screwed. It is not stretched yet.",
+       shortWhere:"The short thread goes into the mass-set lying on the scale.", shortFirst:"Unscrew the mass-set from the long thread first (click the hanging mass-set).",
+       hangShort:"Short thread hung on the upper support — the mass is lifted off the scale and pulls with a constant force.",
+       laserOn:"Spring clamp pressing the switch: laser on.", laserOff:"Clamp released: laser off.",
+       rot:a=>"angle "+a+"°", tape1:"Click the first point for the end of the tape.", tape2:"Click the second point to stretch the tape to.",
+       tapeRead:v=>"Tape reads "+v, noSnap:"Click a point the tape can be held at (a screw head, the thread, a light spot, the laser aperture).",
+       ruler:"Ruler laid against the A4 screen. Drag it in the close up.", tared:"Tared.",
+       scaleOn:"Scale on. Let it warm up for about 10 min.", scaleOff:"Scale off.", lap:(t,g)=>"Lap "+t+(g?" · scale "+g+" g":"")}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2018e2)>>>0);
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const jit=s=>1+s*gauss();
+
+/* ══════════════════════════════════════════════════════════════
+   2.  PHYSICS  (the same thread as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+const GRAV=9.80, LAMBDA=650e-9*jit(0.004);
+/* generalised standard linear solid, calibrated on the official solution
+   (tau1 ≈ 1546 s, tau2 ≈ 177 s, tau3 ≈ 24-50 s, E0 ≈ 1.3e7 Pa) */
+const TH=(()=>{
+  const o={F0:40.320*jit(0.012), F1:2.280*jit(0.05), T1:1546*jit(0.05), F2:1.390*jit(0.06), T2:177*jit(0.06),
+           F3:2.309*jit(0.07), T3:23.6*jit(0.08)};
+  o.l=0.510*jit(0.002); o.l0=0.437*jit(0.004);                   /* m: stretched (fixed by the stand) and relaxed */
+  const eps=(o.l-o.l0)/o.l0, k=eps/0.16705;
+  for(const a of ["F0","F1","F2","F3"]) o[a]*=k;
+  o.dStr=0.480e-3*jit(0.012)*Math.pow(0.16705/eps,0.25); o.dRest=0.500e-3;
+  o.l0s=0.326*jit(0.008); o.mass=81.11e-3*jit(0.004); o.tauCreep=420*jit(0.1);
+  o.force=t=>t<=0? o.F0+o.F1+o.F2+o.F3 : o.F0+o.F1*Math.exp(-t/o.T1)+o.F2*Math.exp(-t/o.T2)+o.F3*Math.exp(-t/o.T3);
+  const area=Math.PI*(o.dStr/2)**2, E0=1e-3*GRAV*o.F0/(eps*area);
+  o.epsS=t=>o.mass*GRAV/area/E0*1.021*(1-Math.exp(-Math.max(0,t)/o.tauCreep));
+  o.lenS=t=>o.l0s*(1+o.epsS(t));
+  return o;
+})();
+/* the digital scale: 0.01 g, slow settling, warm-up drift for ~10 min */
+const SC={on:false, warm:0, value:0, shown:0, tare:0, drift:0.01*gauss(),
+  update(target,dt){ if(!this.on) return; this.warm+=dt; this.value+=(target-this.value)*(1-Math.exp(-dt/0.45));
+    const w=this.warm>600?0:0.02*Math.exp(-this.warm/240)+0.05*Math.exp(-this.warm/60);
+    this.shown=this.value+this.drift+w-this.tare+0.0015*gauss(); },
+  text(){ return this.on? (Math.round(this.shown*100)/100).toFixed(2) : ""; }};
+
+/* ══════════════════════════════════════════════════════════════
+   3.  STATE AND GEOMETRY  (the bench is 150 cm × 90 cm, 8 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=8, TW=150, TD=90;
+const PLACE=["stand","scale","laser","mirror1","mirror2","screen"];
+/* footprints in item coordinates, cm: [x, y, w, h] */
+const SHAPE={
+  stand:[[-1.5,-1.5,43,3],[38.5,-20,3,40]],
+  scale:[[-6.5,-7.5,13,16]],
+  laser:[[-6.5,-2.5,13,5]],
+  mirror1:[[-5,-0.3,10,2.3]], mirror2:[[-5,-0.3,10,2.3]],
+  screen:[[-14.85,-0.3,29.7,1.8]]};
+const ARM=14;                                   /* the thread hangs 14 cm from the post */
+const ST={
+  on:{stand:false,scale:false,laser:false,mirror1:false,mirror2:false,screen:false},
+  pos:{stand:{x:30,y:45,a:0},scale:{x:44,y:45,a:0},laser:{x:30,y:70,a:0},mirror1:{x:90,y:20,a:0},mirror2:{x:90,y:70,a:0},screen:{x:130,y:45,a:0}},
+  thread:"none",          /* none, lying, hung, detached, shortLying, shortHung */
+  massOff:{x:0,y:0},      /* mass-set on the scale platform, relative to the scale */
+  tHung:0, tShort:0, laserOn:false, ruler:false, rulerX:-2.0, zoom:5,
+  tape:null,              /* {view:"bench"|"elev", a:[x,y], b:[x,y], txt} */
+  sw:0, swRun:false, laps:[], t:0
+};
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1, beam=null;
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k.startsWith("mirror")?"mirror":k]||k;
+const P=()=>[ST.pos.stand.x+ARM, ST.pos.stand.y];
+const massXY=()=>[ST.pos.scale.x+ST.massOff.x, ST.pos.scale.y+ST.massOff.y];
+const hungState=()=>ST.thread==="hung"||ST.thread==="shortHung";
+const massOnScale=()=>["lying","hung","detached","shortLying"].includes(ST.thread);
+const rot=(x,y,a)=>[x*Math.cos(a)-y*Math.sin(a), x*Math.sin(a)+y*Math.cos(a)];
+function corners(k,pos){ pos=pos||ST.pos[k]; const a=(pos.a||0)*Math.PI/180;
+  return SHAPE[k].map(([x,y,w,h])=>[[x,y],[x+w,y],[x+w,y+h],[x,y+h]].map(([u,v])=>{ const [p,q]=rot(u,v,a); return [pos.x+p,pos.y+q]; })); }
+function polyOverlap(A,B){
+  for(const poly of [A,B]) for(let i=0;i<4;i++){ const p=poly[i], q=poly[(i+1)%4], nx=q[1]-p[1], ny=p[0]-q[0];
+    let a0=1e9,a1=-1e9,b0=1e9,b1=-1e9;
+    for(const c of A){ const s=c[0]*nx+c[1]*ny; a0=Math.min(a0,s); a1=Math.max(a1,s); }
+    for(const c of B){ const s=c[0]*nx+c[1]*ny; b0=Math.min(b0,s); b1=Math.max(b1,s); }
+    if(a1<b0||b1<a0) return false; }
+  return true;
+}
+const MAY_SHARE=new Set(["stand|scale","scale|stand","stand|laser","laser|stand"]);   /* both sit on the rails */
+function fits(k,pos){
+  const mine=corners(k,pos);
+  for(const poly of mine) for(const c of poly) if(c[0]<0||c[0]>TW||c[1]<0||c[1]>TD) return false;
+  for(const o of PLACE){ if(o===k||!ST.on[o]||MAY_SHARE.has(k+"|"+o)) continue;
+    for(const A of mine) for(const B of corners(o)) if(polyOverlap(A,B)) return false; }
+  return true;
+}
+function inItem(k,p){ if(!ST.on[k]) return false; const pos=ST.pos[k], a=-(pos.a||0)*Math.PI/180, [u,v]=rot(p[0]-pos.x,p[1]-pos.y,a);
+  return SHAPE[k].some(([x,y,w,h])=>u>=x-0.5&&u<=x+w+0.5&&v>=y-0.5&&v<=y+h+0.5); }
+function onPlatform(p){ if(!ST.on.scale) return false; const u=p[0]-ST.pos.scale.x, v=p[1]-ST.pos.scale.y; return u>-5.2&&u<5.2&&v>-6.7&&v<3.7; }
+
+/* ── the light: trace the beam from the aperture ── */
+function segHit(o,dir,a,b){
+  const ex=b[0]-a[0], ey=b[1]-a[1], den=dir[0]*ey-dir[1]*ex; if(Math.abs(den)<1e-12) return null;
+  const t=((a[0]-o[0])*ey-(a[1]-o[1])*ex)/den, s=((a[0]-o[0])*dir[1]-(a[1]-o[1])*dir[0])/den;
+  return (t>1e-6&&s>=0&&s<=1)? {t,s} : null;
+}
+function mirrorSeg(k){ const p=ST.pos[k], a=p.a*Math.PI/180, L=k==="screen"?14.85:5, u=[Math.cos(a),Math.sin(a)];
+  return {a:[p.x-u[0]*L,p.y-u[1]*L], b:[p.x+u[0]*L,p.y+u[1]*L], n:[Math.sin(a),-Math.cos(a)], u, L}; }
+function trace(){
+  if(!(ST.on.laser&&ST.laserOn)) return null;
+  const lp=ST.pos.laser, la=lp.a*Math.PI/180;
+  let o=[lp.x+Math.cos(la)*6.5, lp.y+Math.sin(la)*6.5], dir=[Math.cos(la),Math.sin(la)];
+  const legs=[], spots=[]; let diff=null, D=0, screen=null;
+  for(let n=0;n<8;n++){
+    let best={t:1e9,kind:"edge"};
+    for(const t of [(dir[0]>0?(TW-o[0]):-o[0])/dir[0], (dir[1]>0?(TD-o[1]):-o[1])/dir[1]]) if(t>0&&t<best.t) best={t,kind:"edge"};
+    if(ST.on.stand){ const s=ST.pos.stand; for(const [a,b] of [[[-1.5,-1.5],[1.5,-1.5]],[[1.5,-1.5],[1.5,1.5]],[[1.5,1.5],[-1.5,1.5]],[[-1.5,1.5],[-1.5,-1.5]]]){
+        const h=segHit(o,dir,[s.x+a[0],s.y+a[1]],[s.x+b[0],s.y+b[1]]); if(h&&h.t<best.t) best={t:h.t,kind:"block"}; } }
+    if(hungState()&&!diff){ const p=P(), wx=p[0]-o[0], wy=p[1]-o[1], t=wx*dir[0]+wy*dir[1];
+      if(t>1e-6&&Math.abs(wx*dir[1]-wy*dir[0])<0.12&&t<best.t) best={t,kind:"thread"}; }
+    for(const k of ["mirror1","mirror2","screen"]) if(ST.on[k]){ const m=mirrorSeg(k), h=segHit(o,dir,m.a,m.b);
+      if(h&&h.t<best.t) best={t:h.t,kind:k,s:h.s,m}; }
+    const e=[o[0]+dir[0]*best.t, o[1]+dir[1]*best.t];
+    legs.push([o,e]); if(diff) D+=best.t;
+    if(best.kind==="thread"){ diff={at:e}; o=e; continue; }
+    if(best.kind==="edge"||best.kind==="block") break;
+    const m=best.m, cosi=dir[0]*m.n[0]+dir[1]*m.n[1];
+    if(cosi>=0){ spots.push(e); break; }                     /* the back of a mirror or of the screen */
+    spots.push(e);
+    if(best.kind==="screen"){ screen={x:(best.s-0.5)*2*m.L, cos:-cosi, D, at:e}; break; }
+    dir=[dir[0]-2*cosi*m.n[0], dir[1]-2*cosi*m.n[1]]; o=e;
+  }
+  return {legs,spots,diff,screen};
+}
+function threadDiam(){ return ST.thread==="hung"? TH.dStr : TH.dRest/Math.sqrt(1+TH.epsS(ST.tShort)); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(x,y,h,stops){ const g=ctx.createLinearGradient(x,y,x,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function wood(){
+  ctx.fillStyle=vgrad(0,0,LH,[[0,"#b9714a"],[1,"#a35f3c"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(90,40,20,.25)"; ctx.lineWidth=1; let y=14,n=0;
+  while(y<LH){ ctx.beginPath(); ctx.moveTo(0,y); for(let x=0;x<=LW;x+=60) ctx.lineTo(x,y+Math.sin(x*0.011+n)*1.8); ctx.stroke(); y+=26+(n%3)*7; n++; }
+}
+/* item coordinates (cm) → bench px */
+function inFrame(k,fn){ const p=ST.pos[k]; ctx.save(); ctx.translate(p.x*PX,p.y*PX); ctx.rotate((p.a||0)*Math.PI/180); ctx.scale(PX,PX); fn(); ctx.restore(); }
+function rail(x,y,w,h){ ctx.fillStyle=w>h?vgrad(0,y,h,[[0,"#e6e9ec"],[0.5,"#b9bec3"],[1,"#8d9399"]]):"#c3c8cd"; ctx.fillRect(x,y,w,h);
+  ctx.strokeStyle="rgba(60,65,70,.6)"; ctx.lineWidth=0.08;
+  if(w>h){ ctx.beginPath(); ctx.moveTo(x,y+h/2); ctx.lineTo(x+w,y+h/2); ctx.stroke(); } else { ctx.beginPath(); ctx.moveTo(x+w/2,y); ctx.lineTo(x+w/2,y+h); ctx.stroke(); }
+  ctx.strokeStyle="rgba(40,45,50,.7)"; ctx.lineWidth=0.1; ctx.strokeRect(x,y,w,h); }
+function drawStand(){ inFrame("stand",()=>{
+  ctx.fillStyle="rgba(0,0,0,.18)"; ctx.fillRect(-1.2,-1.2,43,3.4); ctx.fillRect(38.8,-19.6,3.4,40);
+  rail(-1.5,-1.5,43,3); rail(38.5,-20,3,40);
+  ctx.fillStyle="#7f868d"; ctx.fillRect(-1.6,-1.6,3.2,3.2); ctx.fillStyle="#5a6066"; ctx.fillRect(-1.2,-1.2,2.4,2.4);
+}); }
+/* the arm with the red thread support, 58 cm above the bench: drawn over the scale */
+function drawArm(){ inFrame("stand",()=>{
+  ctx.globalAlpha*=0.85;
+  ctx.fillStyle="rgba(0,0,0,.18)"; ctx.fillRect(0.4,0.6,ARM+1.6,2.2);
+  ctx.fillStyle=vgrad(0,-1.2,2.4,[[0,"#d9dde1"],[1,"#9aa0a6"]]); ctx.fillRect(-1.2,-1.2,ARM+0.6,2.4);
+  ctx.fillStyle="#2e3236"; ctx.fillRect(ARM-1.6,-1.25,1.4,2.5);
+  ctx.fillStyle="#d22a20"; ctx.fillRect(ARM-0.9,-1.0,1.8,2.0); ctx.fillStyle="#8e140f"; ctx.fillRect(ARM-0.25,-1.0,0.5,1.0);
+  if(hungState()){ ctx.fillStyle="#f0f0ea"; ctx.beginPath(); ctx.arc(ARM,0,0.35,0,7); ctx.fill(); ctx.strokeStyle="#777"; ctx.lineWidth=0.06; ctx.stroke(); }
+}); }
+function drawScale(){ inFrame("scale",()=>{
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(-6.1,-7.1,13,16);
+  fillR(-6.5,-7.5,13,16,0.8,"#3a3c41","#1b1c1f",0.08);
+  fillR(-6,-7,12,10.8,0.4,vgrad(0,-7,10.8,[[0,"#eceff1"],[1,"#aeb3b8"]]),"#7d8288",0.06);
+  fillR(-4.6,4.4,6.2,2.4,0.2,SC.on?"#3f8fe8":"#1b2a3a","#0c1520",0.06);
+  if(SC.on){ ctx.save(); ctx.scale(1/PX,1/PX); text(SC.text(),1.3*PX,5.6*PX,"#e9f6ff",10,"right","700",MONO); ctx.restore(); }
+  for(const [x,c] of [[2.6,"#c9ccd0"],[4.6,"#c9ccd0"]]){ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,5.6,0.6,0,7); ctx.fill(); }
+  ctx.save(); ctx.scale(1/PX,1/PX); text("ON",2.6*PX,7.4*PX,"#c9ccd0",6,"center"); text("TARE",4.6*PX,7.4*PX,"#c9ccd0",6,"center"); ctx.restore();
+}); }
+const SC_BTN=()=>({on:[ST.pos.scale.x+2.6,ST.pos.scale.y+5.6], tare:[ST.pos.scale.x+4.6,ST.pos.scale.y+5.6]});
+function drawMassTop(){
+  if(!massOnScale()&&ST.thread!=="shortHung") return;
+  const [mx,my]=ST.thread==="shortHung"? P() : massXY();
+  ctx.save(); ctx.translate(mx*PX,my*PX); ctx.scale(PX,PX);
+  ctx.fillStyle="rgba(0,0,0,.3)"; ctx.beginPath(); ctx.arc(0.25,0.3,1.55,0,7); ctx.fill();
+  ctx.fillStyle="#b9bec4"; ctx.beginPath(); ctx.arc(0,0,1.5,0,7); ctx.fill();
+  ctx.strokeStyle="#7c8187"; ctx.lineWidth=0.08; ctx.stroke();
+  ctx.fillStyle="#eeeeea"; ctx.beginPath(); ctx.arc(0,0,0.7,0,7); ctx.fill(); ctx.strokeStyle="#999"; ctx.lineWidth=0.05; ctx.stroke();
+  ctx.restore();
+  /* the slack thread lying on the platform and the bench */
+  if(ST.thread==="lying"||ST.thread==="shortLying"){
+    const L=(ST.thread==="lying"?TH.l0:TH.l0s)*100-1;
+    ctx.strokeStyle="rgba(245,245,240,.95)"; ctx.lineWidth=1.3; ctx.beginPath(); ctx.moveTo(mx*PX,my*PX);
+    const ex=mx+L*0.86, ey=my+L*0.42;
+    ctx.bezierCurveTo((mx+L*0.3)*PX,(my-2)*PX,(mx+L*0.5)*PX,(my+L*0.5)*PX,ex*PX,ey*PX); ctx.stroke();
+    ctx.fillStyle="#f0f0ea"; ctx.fillRect(ex*PX-4,ey*PX-3,10,6);
+  }
+}
+function drawLaser(){ inFrame("laser",()=>{
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(-5.2,-2.2,11,5);
+  ctx.fillStyle=vgrad(0,-2.5,5,[[0,"#d8dcdf"],[1,"#9ea4a9"]]); ctx.fillRect(-5.5,-2.5,11,5);
+  ctx.fillStyle=vgrad(0,-0.9,1.8,[[0,"#4a4a4e"],[0.5,"#1b1b1d"],[1,"#050505"]]); fillR(-6.5,-0.9,12.4,1.8,0.6,ctx.fillStyle);
+  ctx.fillStyle="#c9cdd1"; ctx.fillRect(5.6,-0.8,0.9,1.6);
+  ctx.fillStyle="#2c2c2c"; ctx.fillRect(-1.2,-1.1,1.0,0.4);
+  /* the spring clamp: pressing the switch when closed */
+  ctx.save(); ctx.translate(-0.7,-1.2); ctx.rotate(ST.laserOn?0:-0.35);
+  ctx.fillStyle="#e0302a"; fillR(-0.7,-3.4,1.4,3.6,0.5,"#e0302a","#8e140f",0.06); ctx.restore();
+}); }
+const CLAMP=()=>{ const p=ST.pos.laser, [u,v]=rot(-0.7,-2.6,p.a*Math.PI/180); return [p.x+u,p.y+v]; };
+function drawMirror(k){ inFrame(k,()=>{
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(-4.7,0.3,10,2.3);
+  ctx.fillStyle="#8a6a3c"; ctx.fillRect(-5,0.2,10,1.8); ctx.fillStyle="#6f532d"; ctx.fillRect(-5,1.6,10,0.4);
+  ctx.fillStyle="#3a7a46"; ctx.fillRect(-5,0,10,0.25);
+  ctx.fillStyle=vgrad(0,-0.3,0.3,[[0,"#f2fbff"],[1,"#9fc4d6"]]); ctx.fillRect(-5,-0.3,10,0.3);
+}); }
+function drawScreen(){ inFrame("screen",()=>{
+  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRect(-14.5,0.1,29.7,1.6);
+  ctx.fillStyle="#e9e6dc"; ctx.beginPath(); ctx.moveTo(-14.85,0); ctx.lineTo(14.85,0); ctx.lineTo(14.85,1.5); ctx.lineTo(-14.85,1.5); ctx.closePath(); ctx.fill();
+  ctx.fillStyle="#fbfbf8"; ctx.fillRect(-14.85,-0.3,29.7,0.3);
+}); }
+function drawBeam(){
+  if(!beam) return;
+  ctx.save(); ctx.lineCap="round";
+  for(const [a,b] of beam.legs){ ctx.strokeStyle="rgba(255,40,30,.25)"; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX); ctx.lineTo(b[0]*PX,b[1]*PX); ctx.stroke();
+    ctx.strokeStyle="rgba(255,60,40,.95)"; ctx.lineWidth=1.3; ctx.stroke(); }
+  for(const s of beam.spots.concat(beam.diff?[beam.diff.at]:[])){ ctx.fillStyle="rgba(255,90,70,.9)"; ctx.beginPath(); ctx.arc(s[0]*PX,s[1]*PX,2.6,0,7); ctx.fill(); }
+  ctx.restore();
+}
+function drawTape(view){
+  const t=ST.tape; if(!t||t.view!==view) return;
+  const k=view==="bench"?PX:1;
+  const a=t.a, b=hand&&hand.k==="tape"&&hand.a&&!t.b? null : t.b;
+  if(!b) return;
+  ctx.save(); ctx.strokeStyle="rgba(240,200,40,.9)"; ctx.lineWidth=view==="bench"?5:4; ctx.beginPath(); ctx.moveTo(a[0]*k,a[1]*k); ctx.lineTo(b[0]*k,b[1]*k); ctx.stroke();
+  ctx.strokeStyle="rgba(60,40,0,.8)"; ctx.lineWidth=1; ctx.stroke();
+  const mx=(a[0]+b[0])/2*k, my=(a[1]+b[1])/2*k; ctx.font="600 12px "+FONT; const w=ctx.measureText(t.txt).width+10;
+  fillR(mx-w/2,my-20,w,17,3,"rgba(20,22,26,.85)"); text(t.txt,mx,my-11.5,"#ffe08a",12,"center","600"); ctx.restore();
+}
+
+/* ── the side view of the stand (close up, left) ── */
+const Z_B=1.6+3.2+2.2+0.5;                              /* top of the lower screw head: rails, scale, mass-set */
+const Z_T=Z_B+TH.l*100-1;                               /* the upper screw head sits on the support */
+function elevSnaps(){
+  const xm=(ST.thread==="shortHung"?ARM:massXY()[0]-ST.pos.stand.x);
+  if(ST.thread==="hung") return {top:[ARM,Z_T], bot:[xm,Z_B]};
+  if(ST.thread==="shortHung"){ const L=TH.lenS(ST.tShort)*100-1; return {top:[ARM,Z_T], bot:[ARM,Z_T-L]}; }
+  if(ST.thread==="lying"||ST.thread==="shortLying"){ const L=(ST.thread==="lying"?TH.l0:TH.l0s)*100-1, dz=Z_B-0.3;
+    return {bot:[xm,Z_B], top:[xm+Math.sqrt(L*L-dz*dz),0.3]}; }
+  return {};
+}
+let ELV={x:8,y:8,w:260,h:300,k:4};
+const eX=xc=>ELV.x+14+(xc+2)*ELV.k, eY=z=>ELV.y+ELV.h-14-z*ELV.k;
+function drawElev(c){
+  const {x,y,w,h}=ELV; ELV.k=Math.min((h-28)/(Z_T+5),(w-20)/(ARM+58));
+  c.fillStyle="#efe9dd"; c.fillRect(x,y,w,h);
+  c.fillStyle="#a35f3c"; c.fillRect(x,eY(0),w,y+h-eY(0));
+  if(!ST.on.stand){ c.fillStyle="#7a705f"; c.font='11px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.fillText(d().noStand,x+w/2,y+h/2); return; }
+  const k=ELV.k, R=(x0,z0,x1,z1,col)=>{ c.fillStyle=col; c.fillRect(eX(x0),eY(z1),(x1-x0)*k,(z1-z0)*k); };
+  R(-1.5,0,41.5,1.6,"#b9bec3"); R(-1.5,0,1.5,Z_T+3,"#aeb4b9"); R(-1.5,Z_T+1.4,ARM+0.6,Z_T+3,"#c4c9cd");
+  R(ARM-1.1,Z_T,ARM+1.1,Z_T+1.4,"#d22a20"); R(ARM-0.3,Z_T,ARM+0.3,Z_T+0.9,"#efe9dd");
+  if(ST.on.scale){ const xs=ST.pos.scale.x-ST.pos.stand.x; R(xs-6.5,1.6,xs+6.5,4.4,"#3a3c41"); R(xs-6,4.4,xs+6,4.8,"#c9cdd1");
+    if(SC.on){ c.fillStyle="#3f8fe8"; c.fillRect(eX(xs+1.5),eY(3.9),3.5*k,1.6*k); } }
+  const sn=elevSnaps();
+  const mass=(xm,ztop)=>{ R(xm-0.6,ztop-0.5,xm+0.6,ztop,"#efefea"); R(xm-1.5,ztop-2.7,xm+1.5,ztop-0.5,"#b4b9bf");
+    c.strokeStyle="#7c8187"; c.lineWidth=1; c.strokeRect(eX(xm-1.5),eY(ztop-0.5),3*k,2.2*k); };
+  const thr=(a,b)=>{ c.strokeStyle="#f4f4ee"; c.lineWidth=1.6; c.beginPath(); c.moveTo(eX(a[0]),eY(a[1])); c.lineTo(eX(b[0]),eY(b[1])); c.stroke();
+    c.strokeStyle="rgba(0,0,0,.35)"; c.lineWidth=0.5; c.stroke(); };
+  const head=p=>{ c.fillStyle="#efefea"; c.fillRect(eX(p[0]-0.6),eY(p[1]),1.2*k,0.5*k); c.strokeStyle="#999"; c.lineWidth=0.6; c.strokeRect(eX(p[0]-0.6),eY(p[1]),1.2*k,0.5*k); };
+  if(sn.top&&sn.bot){ thr(sn.top,sn.bot); mass(sn.bot[0],sn.bot[1]); head(sn.top); }
+  else if(ST.thread==="detached") mass(massXY()[0]-ST.pos.stand.x,Z_B);
+  /* tape in the side view */
+  const tp=ST.tape;
+  if(tp&&tp.view==="elev"&&tp.b){ const pa=elevPx(tp.a), pb=elevPx(tp.b); if(pa&&pb){
+    c.strokeStyle="rgba(240,200,40,.95)"; c.lineWidth=4; c.beginPath(); c.moveTo(pa[0]+6,pa[1]); c.lineTo(pb[0]+6,pb[1]); c.stroke();
+    c.font='600 11px "Malgun Gothic",sans-serif'; const tw=c.measureText(tp.txt).width+8; const mx=(pa[0]+pb[0])/2+10, my=(pa[1]+pb[1])/2;
+    c.fillStyle="rgba(20,22,26,.85)"; c.fillRect(mx,my-9,tw,17); c.fillStyle="#ffe08a"; c.textAlign="left"; c.textBaseline="middle"; c.fillText(tp.txt,mx+4,my); } }
+  if(hand&&hand.k==="tape") for(const id of ["top","bot"]){ const p=elevPx(id); if(p){ c.strokeStyle="#ffe08a"; c.lineWidth=1.2; c.beginPath(); c.arc(p[0],p[1],6,0,7); c.stroke(); } }
+  c.fillStyle="#5d5446"; c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="left"; c.textBaseline="top"; c.fillText(d().elevTape,x+6,y+5);
+}
+function elevPx(id){ const s=elevSnaps()[id]; return s? [eX(s[0]),eY(s[1])] : null; }
+
+/* ── the A4 screen (close up, middle) ── */
+let SCR={x:280,y:8,w:400,h:300};
+function drawScreenView(c){
+  const {x,y,w,h}=SCR; c.fillStyle="#0f1115"; c.fillRect(x,y,w,h);
+  const hit=beam&&beam.screen;
+  if(!hit){ c.fillStyle="#69717a"; c.font='11.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="middle"; c.fillText(d().screenNone,x+w/2,y+h/2); }
+  else {
+    const kk=w/ST.zoom, x0=hit.x, cy=y+h*0.45;
+    let s=Infinity; if(beam.diff){ s=LAMBDA*(hit.D/100)/threadDiam()/hit.cos*100; }
+    for(let i=0;i<w;i++){
+      const xs=x0+(i-w/2)/kk; if(Math.abs(xs)>14.85) continue;
+      c.fillStyle="#d9d4c6"; c.fillRect(x+i,y+14,1,h-28);
+      let I; const dx=xs-x0;
+      if(beam.diff){ const u=Math.PI*dx/s; I=u===0?1:(Math.sin(u)/u)**2; I=Math.max(I,Math.exp(-dx*dx/0.006)); }
+      else I=Math.exp(-dx*dx/0.006);
+      const b=Math.min(1,Math.sqrt(I*9)); if(b<0.01) continue;
+      const hh=Math.max(5,0.16*kk);
+      const g=c.createLinearGradient(0,cy-hh,0,cy+hh); g.addColorStop(0,"rgba(255,30,20,0)"); g.addColorStop(0.5,"rgba(255,"+Math.round(40+150*Math.max(0,b-0.8)*5)+",30,"+b+")"); g.addColorStop(1,"rgba(255,30,20,0)");
+      c.fillStyle=g; c.fillRect(x+i,cy-hh,1,2*hh);
+    }
+    if(ST.ruler){ const ry=cy+Math.max(14,0.5*kk);
+      c.fillStyle="rgba(235,240,245,.85)"; c.fillRect(x,ry,w,34); c.strokeStyle="#55606a"; c.lineWidth=1;
+      for(let m=0;m<=300;m++){ const xs=ST.rulerX+m/10, px=x+w/2+(xs-x0)*kk; if(px<x||px>x+w) continue;
+        const L=m%10===0?14:m%5===0?9:5; c.beginPath(); c.moveTo(px+0.5,ry); c.lineTo(px+0.5,ry+L); c.stroke();
+        if(m%10===0&&kk>12){ c.fillStyle="#2b333a"; c.font="10px "+MONO; c.textAlign="center"; c.textBaseline="top"; c.fillText(String(m/10),px,ry+16); } }
+    } else { c.fillStyle="#69717a"; c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="left"; c.textBaseline="bottom"; c.fillText(d().rulerOff,x+8,y+h-6); }
+  }
+  c.fillStyle="rgba(15,17,21,.75)"; c.fillRect(x,y,150,22);
+  /* view width */
+  ZBTN=[];
+  [2,5,10].forEach((z,i)=>{ const bx=x+w-150+i*48, by=y+6; c.fillStyle=z===ST.zoom?"#f2c14e":"#2b2f36"; c.fillRect(bx,by,44,18);
+    c.fillStyle=z===ST.zoom?"#1c2027":"#c9d1d8"; c.font="11px "+FONT; c.textAlign="center"; c.textBaseline="middle"; c.fillText(z+" cm",bx+22,by+9); ZBTN.push([bx,by,z]); });
+  c.fillStyle="#9aa3ab"; c.font='11px "Malgun Gothic",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillText(d().items.screen,x+8,y+15);
+}
+let ZBTN=[];
+
+/* ── the bench ── */
+function drawItem(k){ if(k==="stand") drawStand(); else if(k==="scale") drawScale(); else if(k==="laser") drawLaser();
+  else if(k==="screen") drawScreen(); else drawMirror(k); }
+const ORDER=["stand","scale","laser","mirror1","mirror2","screen"];
+function drawBench(){
+  wood();
+  ctx.strokeStyle="rgba(255,240,220,.18)"; ctx.lineWidth=1;
+  for(let x=10;x<TW;x+=10){ ctx.beginPath(); ctx.moveTo(x*PX,LH-6); ctx.lineTo(x*PX,LH); ctx.stroke(); }
+  for(const k of ORDER){
+    const ghost=hand&&hand.k===k&&!hand.move;
+    if(ST.on[k]&&!(hand&&hand.move&&hand.k===k)) drawItem(k);
+    if(k==="scale"){ drawMassTop(); if(ST.on.stand&&!(hand&&hand.k==="stand")) drawArm(); }
+    if(hand&&hand.k===k){ const keep=ST.pos[k]; if(ghost) ST.pos[k]=hand.pos;
+      ctx.globalAlpha=fits(k,ST.pos[k])?(ghost?0.7:0.88):0.35; drawItem(k); if(k==="scale") drawMassTop(); if(k==="stand") drawArm(); ctx.globalAlpha=1; if(ghost) ST.pos[k]=keep; }
+  }
+  drawBeam(); drawTape("bench");
+  if(hand&&hand.k==="tape"){ for(const s of benchSnaps()){ ctx.strokeStyle="#ffe08a"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(s.p[0]*PX,s.p[1]*PX,7,0,7); ctx.stroke(); }
+    if(hand.a&&hand.view==="bench"){ ctx.strokeStyle="rgba(240,200,40,.8)"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(hand.a[0]*PX,hand.a[1]*PX); ctx.lineTo(mouse[0],mouse[1]); ctx.stroke(); } }
+  drawHand();
+  if(overBench&&!hand){ const s=benchSnaps().find(s=>Math.hypot(s.p[0]*PX-mouse[0],s.p[1]*PX-mouse[1])<9);
+    if(s){ const t=d().snap[s.id]; ctx.font="12px "+FONT; const w=ctx.measureText(t).width+12;
+      fillR(mouse[0]+12,mouse[1]-26,w,19,4,"rgba(20,22,26,.85)"); text(t,mouse[0]+18,mouse[1]-16.5,"#ffe9a8",12); } }
+}
+function drawHand(){
+  if(!hand) return; const [x,y]=mouse;
+  if(hand.k==="mass"){ ctx.save(); ctx.globalAlpha=0.85; ctx.fillStyle="#b9bec4"; ctx.beginPath(); ctx.arc(x,y,12,0,7); ctx.fill(); ctx.fillStyle="#eee"; ctx.beginPath(); ctx.arc(x,y,5.6,0,7); ctx.fill(); ctx.restore(); }
+  if(hand.k==="short"||hand.k==="tape"){ ctx.save(); ctx.globalAlpha=0.9; icon(hand.k,x+14,y+10,0.9); ctx.restore(); }
+}
+function benchSnaps(){
+  const L=[];
+  if(ST.on.stand) L.push({id:"P",p:P()});
+  if(ST.on.laser){ const p=ST.pos.laser, a=p.a*Math.PI/180; L.push({id:"tip",p:[p.x+Math.cos(a)*6.5,p.y+Math.sin(a)*6.5]}); }
+  if(beam) for(const s of beam.spots) L.push({id:"hit",p:s});
+  return L;
+}
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "stand": ctx.fillStyle="#b9bec3"; ctx.fillRect(-3,-24,5,46); ctx.fillRect(-3,-24,22,5); ctx.fillRect(-16,18,34,4); ctx.fillStyle="#d22a20"; ctx.fillRect(14,-19,5,6); break;
+    case "scale": fillR(-20,-16,40,32,4,"#3a3c41","#111"); fillR(-17,-14,34,20,2,"#d9dde1"); fillR(-12,8,14,6,1,"#3f8fe8"); break;
+    case "mass": ctx.fillStyle="#b9bec4"; ctx.fillRect(-9,-2,18,14); ctx.fillStyle="#eee"; ctx.fillRect(-3,-7,6,5);
+      ctx.strokeStyle="#f4f4ee"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(0,-7); ctx.bezierCurveTo(10,-26,24,-6,22,-22); ctx.stroke(); break;
+    case "short": ctx.strokeStyle="#f4f4ee"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(-16,10); ctx.bezierCurveTo(-4,-14,8,14,16,-8); ctx.stroke();
+      ctx.fillStyle="#eee"; ctx.fillRect(-20,8,8,6); break;
+    case "laser": ctx.fillStyle="#c9cdd1"; ctx.fillRect(-20,-7,40,14); fillR(-24,-3,46,6,3,"#111"); ctx.fillStyle="#e0302a"; ctx.fillRect(-4,-14,5,12); break;
+    case "mirror": ctx.fillStyle="#8a6a3c"; ctx.fillRect(-20,0,40,8); ctx.fillStyle="#cfe7f2"; ctx.fillRect(-20,-3,40,3); break;
+    case "screen": ctx.fillStyle="#fbfbf8"; ctx.fillRect(-14,-20,28,38); ctx.strokeStyle="#bbb"; ctx.strokeRect(-14,-20,28,38); break;
+    case "tape": fillR(-14,-14,28,28,6,"#1c1c1c","#000"); ctx.fillStyle="#f0c419"; ctx.fillRect(10,4,16,5); ctx.fillStyle="#d64aa8"; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); break;
+    case "ruler": ctx.rotate(-0.5); ctx.fillStyle="rgba(230,236,240,.95)"; ctx.fillRect(-26,-5,52,10); ctx.strokeStyle="#555"; ctx.lineWidth=1;
+      for(let i=-24;i<=24;i+=4){ ctx.beginPath(); ctx.moveTo(i,-5); ctx.lineTo(i,i%8===0?1:-2); ctx.stroke(); } break;
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE PARTS BOX AND THE CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["stand","scale","mass","short","laser","mirror","screen","tape","ruler"], TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
+const mirrorsLeft=()=>2-["mirror1","mirror2"].filter(k=>ST.on[k]||(hand&&hand.k===k)).length;
+function trayState(k){
+  if(PLACE.includes(k)) return ST.on[k]||(hand&&hand.k===k)? "out":"in";
+  if(k==="mirror") return mirrorsLeft()>0?"in":"out";
+  if(k==="mass") return ST.thread==="none"&&!(hand&&hand.k==="mass")?"in":"out";
+  if(k==="short") return ["shortLying","shortHung"].includes(ST.thread)?"used":(hand&&hand.k==="short"?"out":"in");
+  if(k==="ruler") return ST.ruler?"out":"in";
+  return hand&&hand.k===k?"out":"in";
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.38);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16; ELV={x:8,y:8,w:Math.round(h*0.82),h,k:4}; const lw=Math.round(h*0.7);
+  SCR={x:ELV.x+ELV.w+10,y:8,w:CLW-ELV.w-lw-36,h}; LENS={x:CLW-lw-8,y:8,w:lw,h};
+  drawTray();
+}
+let LENS={x:0,y:8,w:200,h:300};
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const st=trayState(k), av=st==="in", sel=hand&&(hand.k===k||(k==="mirror"&&hand.k.startsWith("mirror")));
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(itemName(k),52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(k==="mirror"?t.left(mirrorsLeft()):st==="used"?t.trayUsed:av?t.trayTake:t.trayOut,52,y+30);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, c=closeCtx;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,CLW,CLH);
+  drawElev(c); drawScreenView(c);
+  const {x,y,w,h}=LENS; c.fillStyle="#0f1115"; c.fillRect(x,y,w,h);
+  if(overBench){ const z=3, sw=w/z/S*S, sh=h/z, kx=cv.width/LW;
+    const sx=Math.max(0,Math.min(LW-w/z,mouse[0]-w/z/2)), sy=Math.max(0,Math.min(LH-h/z,mouse[1]-h/z/2));
+    c.drawImage(cv,sx*kx,sy*kx,w/z*kx,h/z*kx,x,y,w,h); }
+  c.strokeStyle="#353b43"; c.strokeRect(x+0.5,y+0.5,w-1,h-1);
+  c.fillStyle="rgba(21,24,29,.8)"; c.fillRect(x+1,y+1,110,18); c.fillStyle="#9aa3ab"; c.font='11px "Malgun Gothic",sans-serif';
+  c.textAlign="left"; c.textBaseline="middle"; c.fillText(d().lens,x+7,y+10);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const cm=p=>[p[0]/PX,p[1]/PX];
+const busy=k=>(k==="stand"||k==="scale")&&(hungState()||(k==="scale"&&["detached","shortLying"].includes(ST.thread)));
+const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(1).padStart(4,"0");
+function returnHand(){
+  if(!hand) return;
+  if(hand.move) ST.pos[hand.k]=hand.orig;
+  if(hand.k==="mass"&&hand.st){ ST.thread=hand.st; ST.massOff=hand.off0; }
+  hand=null;
+}
+function takeFromTray(k){
+  if(k==="ruler"){ ST.ruler=!ST.ruler; if(ST.ruler){ if(beam&&beam.screen) ST.rulerX=beam.screen.x-1.5; say("ruler"); } else say("back",itemName("ruler")); return; }
+  if(trayState(k)!=="in") return;
+  if(k==="mirror") k=ST.on.mirror1||(hand&&hand.k==="mirror1")?"mirror2":"mirror1";
+  hand={k}; if(PLACE.includes(k)) hand.pos={x:mouse[0]/PX,y:mouse[1]/PX,a:k.startsWith("mirror")?45:k==="screen"?90:0};
+  say(k==="tape"?"tape1":"picked",itemName(k));
+}
+function tapeRead(a,b){ const L=Math.hypot(a[0]-b[0],a[1]-b[1])*10+0.6*gauss(); return (Math.round(L)/10).toFixed(1)+" cm"; }
+function hang(){
+  const lying=ST.thread==="lying", short=ST.thread==="shortLying";
+  if(!lying&&!short) return false;
+  const m=massXY(), p=P();
+  if(!ST.on.stand||Math.hypot(m[0]-p[0],m[1]-p[1])>0.8){ say("notUnder"); return true; }
+  if(lying){ ST.thread="hung"; ST.tHung=0;
+    if($("sync").checked){ ST.sw=0; ST.swRun=true; ST.laps=[]; renderPanel(); say("hangSync"); } else say("hang");
+    if(!SC.on) say("needOn"); }
+  else { ST.thread="shortHung"; ST.tShort=0; say("hangShort"); }
+  return true;
+}
+function benchClick(p,right){
+  const c=cm(p);
+  if(hand) return handClick(p,c,right);
+  if(right){
+    if(ST.thread==="lying"&&near(c,massXY(),1.8)){ ST.thread="none"; say("back",itemName("mass")); return; }
+    for(const k of ORDER.slice().reverse()) if(inItem(k,c)){
+      if(busy(k)){ say("busy"); return; }
+      if(k==="scale"&&ST.thread==="lying") ST.thread="none";
+      if(k==="laser") ST.laserOn=false;
+      ST.on[k]=false; say("back",itemName(k)); return; }
+    if(ST.tape){ ST.tape=null; return; }
+    return;
+  }
+  if(ST.on.scale){ const b=SC_BTN(); if(near(c,b.on,0.9)){ scaleOnOff(); return; } if(near(c,b.tare,0.9)){ tare(); return; } }
+  if(ST.on.laser&&near(c,CLAMP(),1.3)){ ST.laserOn=!ST.laserOn; say(ST.laserOn?"laserOn":"laserOff"); return; }
+  if(ST.on.stand&&near(c,P(),1.1)&&hang()) return;
+  if(massOnScale()&&near(c,massXY(),1.8)){
+    if(ST.thread==="hung"){ ST.thread="detached"; say("unscrew"); return; }
+    if(ST.thread!=="hung"){ hand={k:"mass",st:ST.thread,off0:{...ST.massOff}}; ST.thread="none"; say("picked",itemName("mass")); return; }
+  }
+  for(const k of ORDER.slice().reverse()) if(inItem(k,c)){
+    if(busy(k)){ say("busy"); return; }
+    hand={k,move:true,orig:{...ST.pos[k]},off:[c[0]-ST.pos[k].x,c[1]-ST.pos[k].y]}; say("moveIt",itemName(k)); return; }
+}
+function handClick(p,c,right){
+  const k=hand.k;
+  if(right){
+    if(k==="tape"&&hand.a){ hand.a=null; say("tape1"); return; }
+    if(k==="mass"){ if(hand.st&&hand.st!=="lying"){ returnHand(); say("stays"); } else { hand=null; ST.thread="none"; say("back",itemName("mass")); } return; }
+    const mv=hand.move; returnHand(); say(mv?"stays":"back",itemName(k)); return; }
+  if(PLACE.includes(k)){
+    const pos=hand.move? ST.pos[k] : hand.pos;
+    if(!fits(k,pos)){ say("noFit"); return; }
+    ST.pos[k]={...pos}; ST.on[k]=true; hand=null; say("placed",itemName(k)); return;
+  }
+  if(k==="mass"){
+    if(!onPlatform(c)){ say("massWhere"); return; }
+    ST.massOff={x:c[0]-ST.pos.scale.x,y:c[1]-ST.pos.scale.y}; ST.thread=hand.st||"lying"; hand=null;
+    say(ST.thread==="lying"?"massOn":"placed",itemName("mass")); return;
+  }
+  if(k==="short"){
+    if(ST.thread!=="detached"){ say(ST.thread==="hung"?"shortFirst":"shortWhere"); return; }
+    if(!near(c,massXY(),2)){ say("shortWhere"); return; }
+    ST.thread="shortLying"; hand=null; say("shortOn"); return;
+  }
+  if(k==="tape"){
+    const s=benchSnaps().find(s=>near(c,s.p,1.2)); if(!s){ say("noSnap"); return; }
+    if(!hand.a||hand.view!=="bench"){ hand.a=s.p; hand.view="bench"; say("tape2"); return; }
+    if(near(s.p,hand.a,0.05)) return;
+    ST.tape={view:"bench",a:hand.a,b:s.p,txt:tapeRead(hand.a,s.p)}; say("tapeRead",ST.tape.txt); hand.a=null; return;
+  }
+}
+function scaleOnOff(){ if(!ST.on.scale) return; SC.on=!SC.on; SC.warm=0; SC.tare=0; SC.value=0; say(SC.on?"scaleOn":"scaleOff"); }
+function tare(){ if(!SC.on) return; SC.tare+=SC.shown; say("tared"); }
+function rotate(k,dir,fine){ const st=k==="laser"?(fine?0.05:0.5):(fine?0.1:1);
+  const tgt=hand&&hand.k===k&&!hand.move? hand.pos : ST.pos[k]; let a=tgt.a+dir*st; a=((a+180)%360+360)%360-180; tgt.a=Math.round(a*100)/100;
+  say("rot",tgt.a.toFixed(k==="laser"?2:1)); }
+
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; const c=cm(p);
+  if(hand&&hand.move&&PLACE.includes(hand.k)){ ST.pos[hand.k]={...ST.pos[hand.k],x:c[0]-hand.off[0],y:c[1]-hand.off[1]}; }
+  else if(hand&&hand.pos){ hand.pos.x=c[0]; hand.pos.y=c[1]; } });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+let trayDrag=false;
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; if(hand.pos){ hand.pos.x=p[0]/PX; hand.pos.y=p[1]/PX; } benchClick(p,false); drawTray(); } trayDrag=false; });
+cv.addEventListener("wheel",e=>{ const c=cm(lpos(e)); let k=null;
+  if(hand&&["laser","mirror1","mirror2","screen"].includes(hand.k)) k=hand.k;
+  else for(const o of ["screen","mirror2","mirror1","laser"]) if(inItem(o,c)){ k=o; break; }
+  if(!k) return; e.preventDefault(); rotate(k,e.deltaY>0?1:-1,e.shiftKey); },{passive:false});
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&(hand.k===k||(k==="mirror"&&hand.k.startsWith("mirror")))&&!hand.move;
+    if(hand) returnHand(); if(!same) takeFromTray(k); drawTray(); return; }
+});
+/* close up: the tape in the side view, the ruler and the zoom on the screen */
+let rulerDrag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
+  for(const [bx,by,z] of ZBTN) if(p[0]>=bx&&p[0]<=bx+44&&p[1]>=by&&p[1]<=by+18){ ST.zoom=z; return; }
+  if(p[0]<ELV.x+ELV.w){
+    if(hand&&hand.k==="tape"){
+      if(e.button===2){ hand.a=null; return; }
+      const id=["top","bot"].find(id=>{ const q=elevPx(id); return q&&near(p,q,10); }); if(!id){ say("noSnap"); return; }
+      if(!hand.a||hand.view!=="elev"){ hand.a=id; hand.view="elev"; say("tape2"); return; }
+      if(id===hand.a) return;
+      const s=elevSnaps(); ST.tape={view:"elev",a:hand.a,b:id,txt:tapeRead(s[hand.a],s[id])}; say("tapeRead",ST.tape.txt); hand.a=null; return; }
+    if(e.button===0&&!hand){ const q=elevPx("top"); if(q&&near(p,q,12)&&hang()) return;
+      const b=elevPx("bot"); if(b&&near(p,b,14)&&ST.thread==="hung"){ ST.thread="detached"; say("unscrew"); } }
+    return;
+  }
+  if(p[0]>=SCR.x&&p[0]<=SCR.x+SCR.w&&ST.ruler&&e.button===0){ rulerDrag={x:p[0],r:ST.rulerX}; closeCv.setPointerCapture(e.pointerId); }
+});
+closeCv.addEventListener("pointermove",e=>{ if(!rulerDrag) return; const p=clpos(e); ST.rulerX=rulerDrag.r+(p[0]-rulerDrag.x)/(SCR.w/ST.zoom); });
+closeCv.addEventListener("pointerup",()=>{ rulerDrag=null; });
+
+/* ══════════════════════════════════════════════════════════════
+   7.  PANEL
+   ══════════════════════════════════════════════════════════════ */
+$("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
+$("swLap").onclick=()=>{ ST.laps.unshift({t:fmt(ST.sw),g:SC.text()}); ST.laps=ST.laps.slice(0,60); say("lap",fmt(ST.sw),SC.text()); renderPanel(); };
+$("swReset").onclick=()=>{ ST.sw=0; ST.laps=[]; renderPanel(); };
+$("scOn").onclick=()=>{ if(!ST.on.scale){ say("picked",itemName("scale")); return; } scaleOnOff(); };
+$("scTare").onclick=tare;
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const s of [1,10,60,300]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
+    b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
+function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
+  $("laps").innerHTML=ST.laps.map((s,i)=>"<div>"+(ST.laps.length-i)+". "+s.t+(s.g?" · "+s.g+" g":"")+"</div>").join(""); }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.stand||!ST.on.scale) L.push([t.st.none,false]);
+  if(SC.on&&SC.warm<600) L.push([t.st.warm,false]);
+  if(ST.thread==="hung") L.push([t.st.hung(fmt(ST.tHung)),false]);
+  if(ST.thread==="shortHung") L.push([t.st.shortHung(fmt(ST.tShort)),false]);
+  if(ST.laserOn&&ST.on.laser) L.push([t.st.laserOn,true]);
+  if(ST.laserOn&&hungState()&&beam&&!beam.diff) L.push([t.st.noHit,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-scale").textContent=t.hScale; $("scOn").textContent=t.on; $("scTare").textContent=t.tare; $("t-sync").textContent=t.sync;
+  $("t-scalehint").textContent=t.scaleHint; $("t-h-tape").textContent=t.hTape; $("t-tapehint").textContent=t.tapeHint;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2018 E2 — 고분자 실의 점탄성 · HaslaLab":"IPhO 2018 E2 — Viscoelasticity of a Polymer Thread · HaslaLab";
+  renderPanel(); renderSpeeds(); renderStatus(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+/* ══════════════════════════════════════════════════════════════
+   8.  MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let tPrev=performance.now()/1000, frame=0, scT=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  const sdt=dt*speed; ST.t+=sdt; if(ST.swRun) ST.sw+=sdt;
+  if(ST.thread==="hung") ST.tHung+=sdt; if(ST.thread==="shortHung") ST.tShort+=sdt;
+  const target=!ST.on.scale?0: ST.thread==="hung"? TH.mass*1e3-TH.force(ST.tHung) : massOnScale()? TH.mass*1e3 : 0;
+  SC.update(target,sdt);
+  scT-=dt; if(scT<=0){ $("scaleLbl").textContent=SC.on?SC.text()+" g":"—"; scT=0.3; }
+  beam=trace();
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  $("swLbl").textContent=fmt(ST.sw);
+  if(++frame%3===0) drawClose();
+  if(frame%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
