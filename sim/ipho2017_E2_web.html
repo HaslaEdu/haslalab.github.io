@@ -100,10 +100,15 @@
   .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
   .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
   input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
   textarea{width:100%;background:var(--deep);color:var(--ink);border:1px solid var(--line);border-radius:6px;
            font:12.5px/1.5 ui-monospace,Consolas,monospace;padding:6px 8px;resize:vertical}
-  #ctabs{margin-bottom:4px}
-  #cv{background:#cfc8bb}
 </style>
 </head>
 <body>
@@ -128,12 +133,10 @@
   <div class="stage">
     <div class="card">
       <h3 id="t-cap"></h3>
-      <canvas id="cv"></canvas>
-    </div>
-    <div class="card">
-      <div class="tabs" id="ctabs"><button id="ct0"></button><button id="ct1"></button><button id="ct2"></button></div>
-      <h3 id="t-closecap"></h3>
-      <canvas id="closeCv"></canvas>
+      <div class="cvwrap">
+        <canvas id="cv"></canvas>
+        <button id="btnBack" class="back" hidden></button>
+      </div>
     </div>
   </div>
 
@@ -146,8 +149,10 @@
     <label class="lbl" id="t-len"></label>
     <input type="range" id="rodLen" min="4" max="14" step="1" value="8">
     <p class="hint" id="t-rodhint"></p>
+    <h2 id="t-h-view"></h2>
+    <div class="row"><button id="vReset"></button><button id="vMeter"></button><button id="vTrap"></button><button id="vTilt"></button></div>
     <h2 id="t-h-note"></h2>
-    <textarea id="note" rows="7" spellcheck="false"></textarea>
+    <textarea id="note" rows="6" spellcheck="false"></textarea>
     <button id="btnSave"></button>
     <p class="hint" id="t-hint"></p>
     <div class="status" id="status"></div>
@@ -158,6 +163,165 @@
 "use strict";
 
 /* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  return [CAM.W/2+CAM.px+xr*CAM.k, CAM.H/2+CAM.py-up*CAM.k, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[];
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+
+/* ══════════════════════════════════════════════════════════════
    0.  i18n
    ══════════════════════════════════════════════════════════════ */
 const T={
@@ -166,8 +330,10 @@ const T={
     sub:"가상 실험실 · 부품함에서 자석, 테슬라미터, 홀 센서 탐침, 흑연 막대를 꺼내 플랫폼 위에 놓고 직접 재세요. 계기는 읽은 값만 보여 주고, 프로그램은 아무것도 계산해 주지 않습니다.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayAlways:"클릭해서 집기 (여러 번)",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·누르기 / 끌어서 옮기기 / 자석·나사 위에서 휠로 돌리기 / 우클릭 되돌리기",
-    tabs:["테슬라미터 · 탐침 끝","PDL 트랩 (정면 단면 · 위)","플랫폼 옆모습 · 나사 머리"],
+    cap:"실험대 (3D) — 빈 곳을 끌면 회전, Shift+끌기 이동, 휠 확대 / 좌클릭 집기·놓기·누르기, 끌어서 옮기기, 자석·나사 위에서 휠로 돌리기 / 테슬라미터·트랩·오른쪽 나사 클릭: 2D 보기 / 우클릭 되돌리기",
+    back:"◀ 3D로 돌아가기", hView:"보기", vReset:"3D 처음", vMeter:"테슬라미터", vTrap:"트랩", vTilt:"옆모습·나사",
+    mView:"2D 보기 — 우클릭하면 3D로 돌아갑니다.",
+    tabs:["테슬라미터 · 탐침 끝","PDL 트랩 (정면 단면 · 위)","플랫폼 옆모습 · 나사 머리"], capR:" / 우클릭: 3D로",
     caps:["테슬라미터 앞면과 탐침 끝 확대 (위에서, 10배) — 전원·범위 스위치를 클릭하세요",
           "PDL 트랩 확대 — 왼쪽: 자석 축 방향으로 본 단면 / 오른쪽: 위에서 본 모습 (트랩에 인쇄된 눈금 mm) · 이쑤시개로 막대를 밀 수 있습니다",
           "플랫폼 옆모습 (기울기는 20배로 그림) · 오른쪽 나사 머리 (휠 또는 끌어서 돌림, Shift: 미세)"],
@@ -199,8 +365,10 @@ const T={
     sub:"Virtual laboratory · take the magnets, the Teslameter, the Hall sensor probe and the graphite rods out of the parts box, put them on the platform and measure. The instruments show readings only; nothing is computed for you.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayAlways:"click to pick up (reusable)",
     trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench from above — L-click pick up / put down / press, drag to move, wheel over the magnet or the screw to turn it, R-click return",
-    tabs:["Teslameter · probe tip","PDL trap (cross section · top)","platform side view · screw head"],
+    cap:"the bench (3D) — drag empty space to turn, Shift+drag to pan, wheel to zoom / L-click pick up, put down, press, drag to move, wheel over the magnet or the screw to turn it / click the Teslameter, the trap or the right-hand screw for 2D / R-click return",
+    back:"◀ back to 3D", hView:"View", vReset:"3D home", vMeter:"Teslameter", vTrap:"trap", vTilt:"side · screw",
+    mView:"2D view — R-click to go back to 3D.",
+    tabs:["Teslameter · probe tip","PDL trap (cross section · top)","platform side view · screw head"], capR:" / R-click: back to 3D",
     caps:["front of the Teslameter and the probe tip magnified (top view, 10×) — click the power and range switches",
           "the PDL trap magnified — left: cross section along the magnet axis / right: top view (scale printed on the trap, mm) · push the rod with the toothpick",
           "the platform from the side (tilt drawn 20×) · head of the right-hand screw (wheel or drag to turn, Shift: fine)"],
@@ -296,7 +464,7 @@ const S={
   rod:null, rodLen:8, z:0, vz:0, jit:0, hold:null,
   turns:0, watch:{run:false,t:0,laps:[]}
 };
-let hand=null, drag=null, mouse=[0,0], mouseMM=[0,0], overBench=false, msg={key:null,args:[],t:0}, view=0;
+let hand=null, drag=null, mouse=[0,0], mouseMM=[0,0], overBench=false, msg={key:null,args:[],t:0}, view=null;
 function say(key,...args){ msg={key,args,t:performance.now()}; }
 const itemName=k=>d().items[k]||k;
 const tipX=()=>ST.holderX-TIP_OUT;
@@ -330,7 +498,7 @@ function meterText(){
 /* ══════════════════════════════════════════════════════════════
    3.  DRAWING  —  everything on the bench is drawn in mm
    ══════════════════════════════════════════════════════════════ */
-const cv=$("cv"); let ctx=cv.getContext("2d"); let SC=1;
+let ctx=null;
 const LW=1200, LH=720, PX0=24, PY0=20, PM=3.4;
 const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
 function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
@@ -449,25 +617,6 @@ function drawScene(){
   if(ST.on.meter) drawMeter();
   if(ST.on.watch) drawWatch();
 }
-function drawHand(){
-  if(!hand||!overBench) return; const [mx,my]=mouseMM;
-  if(hand.k==="loupe"){
-    const R=78/PM, Z=3.5;
-    ctx.save(); ctx.beginPath(); ctx.arc(mx,my,R,0,7); ctx.clip();
-    ctx.translate(mx,my); ctx.scale(Z,Z); ctx.translate(-mx,-my); drawScene(); ctx.restore();
-    circ(mx,my,R,null,"#2a2a2a",1.2); circ(mx,my,R+.6,null,"rgba(255,255,255,.6)",.4);
-    ctx.save(); ctx.translate(mx+R*.7,my+R*.7); ctx.rotate(Math.PI/4); fillR(0,-2.5,22,5,2,"#222"); ctx.restore();
-    return; }
-  if(hand.k==="pick"&&S.hold) return;
-  ctx.save(); ctx.globalAlpha=.85; ctx.translate(mx,my); ctx.scale(1/PM,1/PM); icon(hand.k,0,0,1.25); ctx.restore();
-}
-function drawBench(){
-  const dpr=Math.min(window.devicePixelRatio||1,2);
-  ctx.setTransform(dpr*SC,0,0,dpr*SC,0,0); ctx.clearRect(0,0,LW,LH);
-  ctx.translate(PX0,PY0); ctx.scale(PM,PM);
-  drawScene(); drawHand();
-}
-
 /* ══════════════════════════════════════════════════════════════
    4.  TRAY
    ══════════════════════════════════════════════════════════════ */
@@ -488,7 +637,7 @@ function icon(k,x,y,s){
   }
   ctx.restore();
 }
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), benchCtx=ctx;
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
 const TRAY_LIST=["mag","trap","meter","probe","r03","r05","r07","r09","watch","loupe","sticker","ins","pick","ruler"], TROW=42;
 const REUSE=new Set(["r03","r05","r07","r09","loupe","pick"]);
 let TRW=190, TRH=500, trayCells=[];
@@ -515,7 +664,7 @@ function drawTray(){
 /* ══════════════════════════════════════════════════════════════
    5.  HANDS ON THE BENCH  (all hit tests in mm)
    ══════════════════════════════════════════════════════════════ */
-const BX0=-PX0/PM, BY0=-PY0/PM, BX1=(LW-PX0)/PM, BY1=(LH-PY0)/PM;
+const BX0=-140, BY0=-150, BX1=520, BY1=360;      /* the desk, in platform mm */
 function rectOf(k,x,y){ const [w,h]=FP[k]; return [x-w/2,y-h/2,x+w/2,y+h/2]; }
 function rulerRect(x,y,rot){ return rot?[x-12,y-100,x+12,y+100]:[x-100,y-12,x+100,y+12]; }
 const inter=(a,b,m)=>a[0]<b[2]+(m||0)&&a[2]>b[0]-(m||0)&&a[1]<b[3]+(m||0)&&a[3]>b[1]-(m||0);
@@ -588,16 +737,16 @@ function meterPress(w){
 }
 function putDown(p){
   const k=hand.k, [x,y]=p;
-  if(k==="mag"||k==="trap"){ const f=fitsBlock(k,x,y); if(f){ say(f); return; } ST.pos[k]={x,y}; ST.on[k]=true; hand=null; say("placed",itemName(k)); if(k==="trap") view=1; return; }
-  if(k==="meter"||k==="watch"){ if(!fitsTable(k,x,y)){ say("noFit"); return; } ST.pos[k]={x,y}; ST.on[k]=true; hand=null; say("placed",itemName(k)); if(k==="meter") view=0; return; }
+  if(k==="mag"||k==="trap"){ const f=fitsBlock(k,x,y); if(f){ say(f); return; } ST.pos[k]={x,y}; ST.on[k]=true; hand=null; say("placed",itemName(k)); if(k==="trap") return; }
+  if(k==="meter"||k==="watch"){ if(!fitsTable(k,x,y)){ say("noFit"); return; } ST.pos[k]={x,y}; ST.on[k]=true; hand=null; say("placed",itemName(k)); if(k==="meter") return; }
   if(k==="ruler"){ const rot=hand.rot||0; if(!fitsRuler(x,y,rot)){ say("noFit"); return; } ST.pos.ruler={x,y,rot}; ST.on.ruler=true; hand=null; say("placed",itemName(k)); return; }
   if(k==="probe"){ if(!(y>RAIL.y0-22&&y<RAIL.y1&&x>RAIL.x0&&x<RAIL.x1)){ say("onRail"); return; }
     if(!holderOK(clamp(x,HOLD.min,HOLD.max))){ say("noFit"); return; }
-    ST.holderX=clamp(x,HOLD.min,HOLD.max); ST.on.probe=true; hand=null; say("placed",itemName(k)); view=0; return; }
+    ST.holderX=clamp(x,HOLD.min,HOLD.max); ST.on.probe=true; hand=null; say("placed",itemName(k)); return; }
   if(k[0]==="r"&&ROD_KEY[k]){ if(!ST.on.trap){ say("needTrap"); return; } if(!inBlock("trap",p)){ say("noFit"); return; }
     if(S.rod){ say("rodBusy"); return; }
-    S.rod={k,len:S.rodLen}; S.z=norm(0,0.25)*1e-3; S.vz=0; hand=null; view=1; say("rodIn",ROD_KEY[k],S.rodLen); return; }
-  if(k==="ins"){ if(!ST.on.trap){ say("needTrap"); return; } if(!inBlock("trap",p)){ say("noFit"); return; } ST.on.ins=true; hand=null; view=1; say("insOn"); return; }
+    S.rod={k,len:S.rodLen}; S.z=norm(0,0.25)*1e-3; S.vz=0; hand=null; say("rodIn",ROD_KEY[k],S.rodLen); return; }
+  if(k==="ins"){ if(!ST.on.trap){ say("needTrap"); return; } if(!inBlock("trap",p)){ say("noFit"); return; } ST.on.ins=true; hand=null; say("insOn"); return; }
   if(k==="sticker"){ if(!onMag(p)&&!inBlock("mag",p)){ say("needMag"); return; } S.stickRel=-S.magAng; ST.on.sticker=true; hand=null; say("stickOn"); return; }
   if(k==="pick"){ if(onRod(p)){ S.hold={}; say("pushed"); return; } say("noRod"); return; }
 }
@@ -614,12 +763,12 @@ function benchDown(p,right){
     for(const k of ["meter","watch","mag","trap"]) if(inBlock(k,p)){ returnItem(k); return; }
     if(onRuler(p)){ returnItem("ruler"); return; }
     return; }
-  if(ST.on.meter){ const H=METER_HIT(); if(Math.hypot(p[0]-H.pw[0],p[1]-H.pw[1])<3.5){ meterPress("pw"); view=0; return; }
-    if(Math.hypot(p[0]-H.rg[0],p[1]-H.rg[1])<4){ meterPress("rg"); view=0; return; } }
+  if(ST.on.meter){ const H=METER_HIT(); if(Math.hypot(p[0]-H.pw[0],p[1]-H.pw[1])<3.5){ meterPress("pw"); return; }
+    if(Math.hypot(p[0]-H.rg[0],p[1]-H.rg[1])<4){ meterPress("rg"); return; } }
   if(ST.on.watch){ const W=WATCH_BTN(); if(Math.hypot(p[0]-W.ss[0],p[1]-W.ss[1])<3.5){ watchPress("ss"); return; } if(Math.hypot(p[0]-W.lr[0],p[1]-W.lr[1])<3.5){ watchPress("lr"); return; } }
-  if(onScrew(p)){ drag={k:"screw",a:Math.atan2(p[1]-SCREWS[2][1],p[0]-SCREWS[2][0])}; view=2; return; }
-  if(onMag(p)){ drag={k:"rot",a:Math.atan2(p[1]-ST.pos.mag.y,p[0]-ST.pos.mag.x)}; view=0; return; }
-  if(onHolder(p)){ drag={k:"holder",dx:ST.holderX-p[0]}; view=0; return; }
+  if(onScrew(p)){ drag={k:"screw",a:Math.atan2(p[1]-SCREWS[2][1],p[0]-SCREWS[2][0])}; return; }
+  if(onMag(p)){ drag={k:"rot",a:Math.atan2(p[1]-ST.pos.mag.y,p[0]-ST.pos.mag.x)}; return; }
+  if(onHolder(p)){ drag={k:"holder",dx:ST.holderX-p[0]}; return; }
   for(const k of ["meter","watch","mag","trap"]) if(inBlock(k,p)){ drag={k,dx:ST.pos[k].x-p[0],dy:ST.pos[k].y-p[1]}; return; }
   if(onRuler(p)){ drag={k:"ruler",dx:ST.pos.ruler.x-p[0],dy:ST.pos.ruler.y-p[1]}; return; }
 }
@@ -636,28 +785,6 @@ function benchMove(p){
   if(k==="ruler"){ if(fitsRuler(x,y,ST.pos.ruler.rot)) ST.pos.ruler={x,y,rot:ST.pos.ruler.rot}; }
 }
 function releaseHold(){ if(S.hold){ if(S.hold.z!==undefined){ S.z=S.hold.z*1e-3; S.vz=0; } S.hold=null; say("released"); } }
-function lpos(e){ const r=cv.getBoundingClientRect(); const px=(e.clientX-r.left)/SC, py=(e.clientY-r.top)/SC; mouse=[px,py]; return [(px-PX0)/PM,(py-PY0)/PM]; }
-let trayDrag=false;
-cv.addEventListener("contextmenu",e=>e.preventDefault());
-cv.addEventListener("pointerenter",()=>{ overBench=true; });
-cv.addEventListener("pointerleave",()=>{ overBench=false; });
-cv.addEventListener("pointermove",e=>{ mouseMM=lpos(e); benchMove(mouseMM); });
-cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouseMM=p; if(e.button!==2) cv.setPointerCapture(e.pointerId); benchDown(p,e.button===2); benchMove(p); drawTray(); });
-cv.addEventListener("wheel",e=>{ const p=lpos(e);
-  if(hand&&hand.k==="ruler"){ e.preventDefault(); hand.rot=hand.rot?0:1; return; }
-  if(onScrew(p)){ e.preventDefault(); turnScrew((e.deltaY>0?-1:1)*(e.shiftKey?0.005:0.025)); view=2; return; }
-  if(onMag(p)||inBlock("mag",p)){ e.preventDefault(); S.magAng+=(e.deltaY>0?-1:1)*(e.shiftKey?0.5:3); view=0; return; }
-},{passive:false});
-const endDrag=()=>{ drag=null; releaseHold(); };
-cv.addEventListener("pointerup",endDrag); cv.addEventListener("pointercancel",endDrag);
-window.addEventListener("pointerup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); putDown(p); drawTray(); } trayDrag=false; });
-trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ hand=null; drawTray(); } });
-trayCv.addEventListener("pointerdown",e=>{
-  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
-  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
-    const same=hand&&hand.k===k; hand=null;
-    if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); } drawTray(); return; } });
-
 /* ══════════════════════════════════════════════════════════════
    6.  THE ROD  —  the camelback potential is a damped oscillator;
         the tilt of the platform moves its equilibrium (Part B)
@@ -675,11 +802,129 @@ function rodStep(dt){
 }
 const ringing=()=>S.rod&&!S.hold&&(Math.abs(S.vz)>3e-5);
 
+
 /* ══════════════════════════════════════════════════════════════
-   7.  CLOSE-UP  (900 × 400 logical px, three views)
+   7.  THE 3-D SCENE   (after Fig. 4: white platform on three screws,
+       glass-rod rail with the probe holder, the two magnet assemblies,
+       the black Teslameter box with its two 9 V batteries)
+       world units are cm; platform mm (x, y) → world (x/10, z = y/10)
    ══════════════════════════════════════════════════════════════ */
-const closeCv=$("closeCv"), cctx=closeCv.getContext("2d");
-const CLW=900, CLH=400; let CS=1;
+let GA=null, NOID=false;
+const _face=face; face=function(p,o){ if(GA!==null) o=Object.assign({},o,{alpha:GA,id:null}); else if(NOID) o=Object.assign({},o,{id:null}); _face(p,o); };
+const PB=0.6, PT=2.0;                              /* bottom platform top, top platform top */
+const W=(xmm,h,ymm)=>[xmm/10,h,ymm/10];
+const MAG_H=2.54, MAG_R=0.32, MB_H=1.2, TB_H=0.9;
+const HGT={rod:PT+0.9+0.32+0.22, magnet:PT+MB_H+MAG_H, magblock:PT+MB_H, trap:PT+TB_H, probe:PT+2.5, meter:3.4, watch:1.5, screw:PT+0.4, platform:PT, desk:0, rail:PT+0.3, ruler:0.2};
+const tiltY=(xmm)=>tiltRad()*Math.max(0,xmm-SCREWS[0][0])/10;   /* the top platform hinges on the left screws */
+
+function drawDesk(){
+  face([[-15,0,-15],[-15,0,36],[52,0,36],[52,0,-15]],{fill:"#b8926a",layer:-3,flat:true,id:"desk"});
+  for(let x=-15;x<=52;x+=6) poly3([[x,0,-15],[x,0,36]],"#a7825b",1,{layer:-2});
+  face([[-15,0,-15],[52,0,-15],[52,-2,-15],[-15,-2,-15]],{fill:"#8d6c4a",layer:-3,flat:true});
+}
+function drawPlatform3(){
+  const L={layer:-1};
+  box3(-0.3,26.3,0,PB,-0.3,17.3,"#d9d9d4",Object.assign({id:"platform"},L));
+  for(const [sx,sy] of SCREWS) cyl3("y",PB,PT+0.2,sx/10,sy/10,0.22,"#a7adb3",Object.assign({seg:10},L));
+  /* the top platform, tilted by the right-hand screw (the tilt itself is far too small to see) */
+  const t=k=>tiltY(k);
+  face([W(0,PT+t(0),0),W(0,PT+t(0),PH),W(PW,PT+t(PW),PH),W(PW,PT+t(PW),0)].map((p,i)=>p),{fill:"#f7f7f3",id:"platform",layer:-1,flat:true});
+  for(const [a,b] of [[[0,0],[PW,0]],[[PW,0],[PW,PH]],[[PW,PH],[0,PH]],[[0,PH],[0,0]]])
+    face([W(a[0],PT-0.6+t(a[0]),a[1]),W(b[0],PT-0.6+t(b[0]),b[1]),W(b[0],PT+t(b[0]),b[1]),W(a[0],PT+t(a[0]),a[1])],{fill:"#e7e7e2",id:"platform",layer:-1,cull:true});
+  /* printed scale, IPhO logo, the two bubble levels */
+  custom3(W(130,PT,98),c=>{
+    c.strokeStyle="#444";
+    for(let k=0;k<=200;k++){ const L2=k%10===0?3.6:k%5===0?2.5:1.5, a=P3(...W(31+k,PT+0.01,98)), b=P3(...W(31+k,PT+0.01,98-L2));
+      c.lineWidth=k%10===0?1:0.55; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
+    const a=P3(...W(30,PT+0.01,98)), b=P3(...W(232,PT+0.01,98)); c.lineWidth=0.8; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke();
+  },{layer:-1,bias:1});
+  for(let k=0;k<=20;k+=2) text3(W(31+k*10,PT+0.02,102.5),[1,0,0],[0,0,-1],String(k),0.38,"#333",{align:"center",layer:-1});
+  text3(W(222,PT+0.02,14),[1,0,0],[0,0,-1],"IPhO",0.9,"#2b6fa8",{layer:-1,weight:"800"});
+  text3(W(246,PT+0.02,14),[1,0,0],[0,0,-1],"2017",0.55,"#7fb0d6",{layer:-1});
+  const th=tiltRad()*TILT_EXAG;
+  box3(11.8,14.4,PT,PT+0.6,0.4,1.2,"#9bd98a",{alpha:0.9,layer:-1});
+  cyl3("y",PT+0.6,PT+0.62,13.1+clamp(th*4,-0.9,0.9),0.8,0.22,"#ffffff",{seg:10,layer:-1,bias:1});
+  box3(0.4,1.2,PT,PT+0.6,6.2,8.4,"#9bd98a",{alpha:0.9,layer:-1});
+  /* the three levelling screws: knurled heads */
+  SCREWS.forEach(([sx,sy],i)=>{ const x=sx/10, z=sy/10, y=PT+t(sx);
+    cyl3("y",y,y+0.35,x,z,0.62,"#d9dcdf",{seg:20,id:i===2?"screw":"platform",cap:"#e6e8ea",bias:2});
+    cyl3("y",y+0.35,y+0.4,x,z,0.22,"#b9bec3",{seg:10,bias:2.2});
+    if(i===2){ const a=-2*Math.PI*S.turns-Math.PI/2; line3([x,y+0.42,z],[x+0.46*Math.cos(a),y+0.42,z+0.46*Math.sin(a)],"#b03030",2,{bias:3}); }
+  });
+  /* the rail: two glass rods between black end blocks */
+  for(const ry of [152,160]) cyl3("x",1.4,24.6,PT+0.15,ry/10,0.13,"#dfe8ee",{seg:8,id:"rail",layer:-1});
+  box3(0.5,1.6,PT,PT+0.7,14.5,16.7,"#151515",{id:"rail"}); box3(24.4,25.5,PT,PT+0.7,14.5,16.7,"#151515",{id:"rail"});
+}
+function drawMag3(){ const p=ST.pos.mag, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x);
+  box3(x-1.3,x+1.3,y0,y0+MB_H,z-1.1,z+1.1,"#d6e8ee",{alpha:0.55,id:"magblock",stroke:"rgba(120,160,175,.8)",lw:1});
+  cyl3("y",y0+MB_H,y0+MB_H+MAG_H,x,z,MAG_R,"#c3c8cd",{seg:16,id:"magnet",cap:"#e2e5e8"});
+  const ty=y0+MB_H+MAG_H+0.01, a=S.magAng*Math.PI/180;
+  line3([x+0.25*Math.cos(a),ty,z+0.25*Math.sin(a)],[x+0.29*Math.cos(a),ty,z+0.29*Math.sin(a)],"#7a7f85",2.2,{bias:3});
+  if(ST.on.sticker){ const s=(S.magAng+S.stickRel)*Math.PI/180;
+    cyl3("y",ty,ty+0.02,x,z,0.29,"#f7d531",{seg:16,id:"magnet",bias:3});
+    line3([x-0.25*Math.cos(s),ty+0.03,z-0.25*Math.sin(s)],[x+0.25*Math.cos(s),ty+0.03,z+0.25*Math.sin(s)],"#111",1.6,{bias:4}); }
+}
+function drawTrap3(){ const p=ST.pos.trap, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x), Lm=LMAG*100, Rm=R*100, Am=A_PDL*100;
+  box3(x-2.2,x+2.2,y0,y0+TB_H,z-1.4,z+1.4,"#d6e8ee",{alpha:0.55,id:"trap",stroke:"rgba(120,160,175,.8)",lw:1});
+  for(const sy of [-Am,Am]) cyl3("x",x-Lm/2,x+Lm/2,y0+TB_H+Rm,z+sy,Rm,"#c3c8cd",{seg:16,id:"trap"});
+  const yy=y0+TB_H+0.01, zz=z+1.02;
+  custom3([x,yy,zz],c=>{ c.strokeStyle="#333";
+    for(let k=-10;k<=10;k++){ const a=P3(x+k/10,yy,zz), b=P3(x+k/10,yy,zz-(k%5?0.1:0.18)); c.lineWidth=k%5?0.6:1; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{bias:1});
+  if(ST.on.ins) box3(x+1.1,x+1.24,y0+TB_H,y0+TB_H+1.6,z-0.9,z+0.9,"#fafafa",{id:"trap",bias:1});
+  if(S.rod){ const zr=rodZ()/10, l=S.rod.len/10, dd=Math.max(ROD_D[ROD_KEY[S.rod.k]]*100/2,0.04), yr=y0+TB_H+Rm+B.y0*100;
+    cyl3("x",x+zr-l/2,x+zr+l/2,yr,z,dd,"#2a2a2a",{seg:8,id:"trap",bias:2}); }
+}
+function drawProbe3(){ const hx=ST.holderX/10, tx=tipX()/10, y=PT+2.5, z=PRY/10;
+  box3(hx-0.8,hx+0.8,PT,PT+2.9,12.4,16.9,"#1a1a1a",{id:"probe"});
+  for(const zz of [12.8,14.0]) cyl3("y",PT+2.9,PT+3.05,hx,zz,0.14,"#8a8f94",{seg:8,bias:1});
+  box3(tx,hx+0.6,y-0.35,y+0.35,z-0.35,z+0.35,"#f2c230",{id:"probe"});
+  box3(tx,tx+0.3,y-0.36,y+0.36,z-0.36,z+0.36,"#d9a915",{id:"probe",bias:0.5});
+  line3([tx+EL_IN/10,y+0.37,z-0.36],[tx+EL_IN/10,y+0.37,z+0.36],"#c0392b",1.4,{bias:1});
+  const pts=[]; const m=ST.on.meter?W(ST.pos.meter.x,1.0,ST.pos.meter.y+21):[hx+3,0.3,z+2];
+  for(let i=0;i<=20;i++){ const t=i/20; pts.push([hx+0.6+(m[0]-hx-0.6)*t, y+(m[1]-y)*t-Math.sin(Math.PI*t)*1.5, z+(m[2]-z)*t+Math.sin(Math.PI*t)*2]); }
+  poly3(pts,"#9aa6ad",2.4);
+}
+function drawMeter3(){ const m=ST.pos.meter, x=m.x/10, z=m.y/10;
+  for(const dx of [-1.7,1.3]){ box3(x+dx-0.6,x+dx+0.7,0,1.7,z-2.9,z-2.0,"#1d1d1d",{id:"meter"}); box3(x+dx-0.6,x+dx-0.2,0,1.7,z-2.9,z-2.0,"#d1a43a",{id:"meter"}); }
+  box3(x-3.6,x+3.6,0,3.4,z-1.7,z+2.1,"#141414",{id:"meter"});
+  const yt=3.41;
+  face([[x-2.2,yt,z-0.8],[x-2.2,yt,z+0.2],[x+2.2,yt,z+0.2],[x+2.2,yt,z-0.8]],{fill:S.mOn?"#2c5d6b":"#0f1c21",flat:true,id:"meter",bias:0.6});
+  text3([x+2.0,yt+0.01,z-0.3],[1,0,0],[0,0,-1],meterText(),0.42,"#d8f6ff",{align:"right",font:"ui-monospace,Consolas,monospace",weight:"700",bias:1});
+  text3([x,yt+0.01,z-1.25],[1,0,0],[0,0,-1],"Digital Teslameter",0.28,"#e6e6e6",{align:"center",bias:1});
+  const H=METER_HIT();
+  cyl3("y",yt,yt+0.25,H.pw[0]/10,H.pw[1]/10,0.24,S.mOn?"#e24a3b":"#7a2a24",{seg:12,id:"meter",bias:2});
+  box3(H.rg[0]/10-0.16,H.rg[0]/10+0.16,yt,yt+0.12,H.rg[1]/10-0.3,H.rg[1]/10+0.3,"#333",{id:"meter",bias:1.5});
+  box3(H.rg[0]/10-0.13,H.rg[0]/10+0.13,yt+0.12,yt+0.3,(S.range===800?H.rg[1]/10-0.27:H.rg[1]/10+0.01),(S.range===800?H.rg[1]/10-0.01:H.rg[1]/10+0.27),"#d33",{id:"meter",bias:2});
+  text3([H.rg[0]/10,yt+0.01,H.rg[1]/10-0.5],[1,0,0],[0,0,-1],"800mT",0.18,"#ccc",{align:"center",bias:1});
+  text3([H.rg[0]/10,yt+0.01,H.rg[1]/10+0.5],[1,0,0],[0,0,-1],"8mT",0.18,"#ccc",{align:"center",bias:1});
+  text3([H.pw[0]/10,yt+0.01,H.pw[1]/10-0.42],[1,0,0],[0,0,-1],"Power",0.2,"#ccc",{align:"center",bias:1});
+  box3(x-0.4,x+0.4,yt,yt+0.05,z+1.1,z+1.5,"#2a2a2a",{bias:1});
+}
+function drawWatch3(){ const q=ST.pos.watch, x=q.x/10, z=q.y/10, B2=WATCH_BTN();
+  box3(x-1.3,x+1.3,0,1.5,z-1.35,z+1.5,"#2b2b2b",{id:"watch"});
+  face([[x-1.0,1.51,z-0.7],[x-1.0,1.51,z+0.2],[x+1.0,1.51,z+0.2],[x+1.0,1.51,z-0.7]],{fill:"#b9c3a8",flat:true,id:"watch",bias:0.6});
+  text3([x,1.53,z-0.25],[1,0,0],[0,0,-1],fmtWatch(S.watch.t),0.34,"#1d2318",{align:"center",font:"ui-monospace,Consolas,monospace",weight:"700",bias:1});
+  for(const [k,b] of [["watch_ss",B2.ss],["watch_rs",B2.lr]]) cyl3("y",0.7,1.6,b[0]/10,b[1]/10,0.22,"#cfd3d6",{seg:10,id:k,bias:2});
+}
+function drawRuler3(){ const r=ST.pos.ruler, x=r.x/10, z=r.y/10, onP=r.x>0&&r.x<PW&&r.y>0&&r.y<PH, y=(onP?PT+tiltY(r.x):0)+0.01;
+  const u=r.rot?[0,0,1]:[1,0,0], v=r.rot?[-1,0,0]:[0,0,1];
+  const P=(a,b)=>[x+u[0]*a+v[0]*b, y, z+u[2]*a+v[2]*b];
+  face([P(-10,-1.2),P(10,-1.2),P(10,1.2),P(-10,1.2)].map(p=>p),{fill:"#e2f0e6",alpha:0.85,flat:true,id:"ruler",stroke:"#7ea08b",lw:1,bias:0.5,cull:false});
+  custom3([x,y,z],c=>{ c.strokeStyle="#244";
+    for(let t=0;t<=192;t++){ const L=t%10===0?0.45:t%5===0?0.32:0.2, a=P3(...P(-9.6+t/10,-1.2)), b=P3(...P(-9.6+t/10,-1.2+L)); c.lineWidth=t%10===0?1:0.5; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{bias:1});
+  for(let cc=0;cc<=19;cc+=1) text3([P(-9.6+cc,-0.5)[0],y+0.01,P(-9.6+cc,-0.5)[2]],u,v.map(q=>-q),String(cc),0.26,"#123",{align:"center",bias:1.2});
+}
+function drawScene3(){
+  drawDesk(); drawPlatform3();
+  if(ST.on.ruler) drawRuler3();
+  if(ST.on.trap) drawTrap3();
+  if(ST.on.mag) drawMag3();
+  if(ST.on.probe) drawProbe3();
+  if(ST.on.meter) drawMeter3();
+  if(ST.on.watch) drawWatch3();
+}
+/* ══ 8. 2-D VIEWS (the close-ups of the flat version, now opened by a click) ══ */
+const CLW=900, CLH=400;
 function msgBox(s,x,w){ text(s,x+w/2,CLH/2,"#69717a",14,"center"); }
 function magnify(cx,cy,mx,my,sc,rx,ry,rw,rh){
   ctx.save(); ctx.beginPath(); rrect(rx,ry,rw,rh,8); ctx.clip();
@@ -757,45 +1002,125 @@ function closeTilt(){
   const ph=2*Math.PI*(-S.turns); ctx.lineCap="round"; seg(h.x,h.y,h.x+0.78*h.r*Math.sin(ph),h.y-0.78*h.r*Math.cos(ph),"#b03030",4); ctx.lineCap="butt";
   circ(h.x,h.y,5,"#444"); seg(h.x,h.y-h.r-4,h.x,h.y-h.r-20,"#222",2.4); text(d().lab.ref,h.x,h.y-h.r-30,"#ccc",12,"center","600");
 }
-function drawClose(){
-  const dpr=Math.min(window.devicePixelRatio||1,2);
-  cctx.setTransform(dpr*CS,0,0,dpr*CS,0,0); cctx.fillStyle="#15181d"; cctx.fillRect(0,0,CLW,CLH);
-  const old=ctx; ctx=cctx;
-  if(view===0) closeMeter(); else if(view===1) closeTrap(); else closeTilt();
-  ctx=old;
-}
-function cpos(e){ const r=closeCv.getBoundingClientRect(); return [(e.clientX-r.left)/CS,(e.clientY-r.top)/CS]; }
-const trapMM=q=>[ST.pos.trap.x+(q[0]-670)/9, ST.pos.trap.y+(q[1]-200)/9];
-let cdrag=null;
-closeCv.addEventListener("contextmenu",e=>e.preventDefault());
-closeCv.addEventListener("pointerdown",e=>{ const q=cpos(e); closeCv.setPointerCapture(e.pointerId);
-  if(view===0&&ST.on.meter){ if(Math.hypot(q[0]-MP.pw[0],q[1]-MP.pw[1])<26) meterPress("pw"); else if(Math.hypot(q[0]-MP.rg[0],q[1]-MP.rg[1])<30) meterPress("rg"); }
-  if(view===1&&ST.on.trap&&q[0]>452&&hand&&hand.k==="pick"){ const p=trapMM(q); if(onRod(p)){ S.hold={}; S.hold.z=clamp(p[0]-ST.pos.trap.x,-8,8); say("pushed"); } else say("noRod"); }
-  if(view===2&&Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10){ cdrag={a:Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x)}; }
-});
-closeCv.addEventListener("pointermove",e=>{ const q=cpos(e);
-  if(S.hold&&view===1&&ST.on.trap){ S.hold.z=clamp(trapMM(q)[0]-ST.pos.trap.x,-8,8); }
-  if(cdrag){ const a=Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x); turnScrew(angDelta(cdrag.a,a)/(2*Math.PI)*(e.shiftKey?0.2:1)); cdrag.a=a; } });
-const cEnd=()=>{ cdrag=null; releaseHold(); };
-closeCv.addEventListener("pointerup",cEnd); closeCv.addEventListener("pointercancel",cEnd);
-closeCv.addEventListener("wheel",e=>{ if(view!==2) return; const q=cpos(e); if(Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)>HEAD.r+10) return;
-  e.preventDefault(); turnScrew((e.deltaY>0?-1:1)*(e.shiftKey?0.005:0.025)); },{passive:false});
 
 /* ══════════════════════════════════════════════════════════════
-   8.  PANEL, LAYOUT AND MAIN LOOP
+   9.  POINTER, PANEL, LOOP
    ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); ctx=cv.getContext("2d");
+function mmAt(px,py,h){ const p=onPlane(px,py,h); return [p[0]*10,p[2]*10]; }
+function heightFor(id){
+  if(id==="ruler"){ const r=ST.pos.ruler; return (r.x>0&&r.x<PW&&r.y>0&&r.y<PH)?PT:0; }
+  if(id==="watch_ss"||id==="watch_rs") return 1.5;
+  return HGT[id]!==undefined?HGT[id]:PT;
+}
+let down=null;
+function pos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+/* 2-D views are drawn at 900 × 400 and scaled to the canvas */
+let VS=1, VX=0, VY=0;
+const vpos=p=>[(p[0]-VX)/VS,(p[1]-VY)/VS];
+function openView(v){ view=v; $("btnBack").hidden=false; say("mView"); renderCap(); }
+function closeView(){ view=null; $("btnBack").hidden=true; renderCap(); }
+$("btnBack").onclick=closeView;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointerdown",e=>{
+  const p=pos(e); mouse=p; cv.setPointerCapture(e.pointerId);
+  if(view){
+    if(e.button===2){ closeView(); return; }
+    const q=vpos(p);
+    if(view==="meter"&&ST.on.meter){ if(Math.hypot(q[0]-MP.pw[0],q[1]-MP.pw[1])<26) meterPress("pw"); else if(Math.hypot(q[0]-MP.rg[0],q[1]-MP.rg[1])<30) meterPress("rg"); }
+    if(view==="trap"&&ST.on.trap&&q[0]>452&&hand&&hand.k==="pick"){ const m=[ST.pos.trap.x+(q[0]-670)/9, ST.pos.trap.y+(q[1]-200)/9]; if(onRod(m)){ S.hold={z:clamp(m[0]-ST.pos.trap.x,-8,8)}; say("pushed"); } else say("noRod"); }
+    if(view==="tilt"&&Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10) down={head:Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x)};
+    return;
+  }
+  const id=pick3(p[0],p[1]);
+  const right=e.button===2;
+  if(right){ if(hand){ hand=null; drawTray(); return; } if(id) benchDown(mmAt(p[0],p[1],heightFor(id)),true); drawTray(); return; }
+  if(hand){
+    if(hand.k==="loupe") return;
+    const k=hand.k, h=(k==="meter"||k==="watch")?0:(k==="ruler"?(id==="desk"?0:PT):(k==="probe"?PT+0.3:k==="pick"?HGT.rod:heightFor(id||"platform")));
+    benchDown(mmAt(p[0],p[1],(k==="mag"||k==="trap")?PT:h),false); drawTray(); return; }
+  if(id==="watch_ss"){ watchPress("ss"); return; } if(id==="watch_rs"){ watchPress("lr"); return; }
+  const mm=mmAt(p[0],p[1],heightFor(id));
+  down={p,id,moved:false,shift:e.shiftKey,h:heightFor(id)};
+  if(id&&id!=="desk"&&id!=="platform"&&id!=="rail") benchDown(mm,false);
+});
+cv.addEventListener("pointermove",e=>{
+  const p=pos(e), dx=p[0]-mouse[0], dy=p[1]-mouse[1]; mouse=p;
+  if(view){ if(down&&down.head!==undefined){ const q=vpos(p), a=Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x); turnScrew(angDelta(down.head,a)/(2*Math.PI)*(e.shiftKey?0.2:1)); down.head=a; }
+    if(S.hold&&view==="trap"&&ST.on.trap){ const q=vpos(p); S.hold.z=clamp(ST.pos.trap.x+(q[0]-670)/9-ST.pos.trap.x,-8,8); } return; }
+  mouseMM=mmAt(p[0],p[1],PT);
+  if(S.hold&&hand&&hand.k==="pick"&&ST.on.trap){ benchMove(mmAt(p[0],p[1],HGT.rod)); return; }
+  if(!down) return;
+  if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true;
+  if(!down.moved) return;
+  if(drag){ const k=drag.k, h=k==="meter"||k==="watch"?0:k==="ruler"?heightFor("ruler"):k==="holder"?HGT.probe:k==="rot"?HGT.magnet:k==="screw"?HGT.screw:PT; benchMove(mmAt(p[0],p[1],h)); return; }
+  if(down.shift||e.buttons===4){ CAM.px+=dx; CAM.py+=dy; }
+  else { CAM.yaw+=dx*0.008; CAM.pitch=Math.min(1.5,Math.max(0.12,CAM.pitch+dy*0.006)); }
+  cv.classList.add("grabbing");
+});
+const up=()=>{ cv.classList.remove("grabbing");
+  if(down&&down.head===undefined&&!down.moved&&!view){ const id=down.id;
+    if(id==="meter") openView("meter"); else if(id==="trap"&&!(hand&&hand.k==="pick")) openView("trap"); else if(id==="screw") openView("tilt"); }
+  down=null; drag=null; releaseHold(); };
+cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=pos(e), s=e.deltaY<0?1:-1;
+  if(view){ if(view==="tilt"){ const q=vpos(p); if(Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10) turnScrew(s*(e.shiftKey?0.005:0.025)); } return; }
+  if(hand&&hand.k==="ruler"){ hand.rot=hand.rot?0:1; return; }
+  const id=pick3(p[0],p[1]);
+  if(id==="screw"){ turnScrew(s*(e.shiftKey?0.005:0.025)); return; }
+  if(id==="magnet"||id==="magblock"){ S.magAng+=s*(e.shiftKey?0.5:3); return; }
+  const f=s>0?1.12:1/1.12, nk=Math.min(120,Math.max(4,CAM.k*f)), r=nk/CAM.k;
+  CAM.px=(p[0]-CAM.W/2)-(p[0]-CAM.W/2-CAM.px)*r; CAM.py=(p[1]-CAM.H/2)-(p[1]-CAM.H/2-CAM.py)*r; CAM.k=nk; },{passive:false});
+let trayDrag=false;
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ hand=null; drawTray(); } });
+trayCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=hand&&hand.k===k; hand=null;
+    if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); if(view&&k!=="pick") closeView(); } drawTray(); return; } });
+window.addEventListener("pointerup",e=>{ if(trayDrag&&hand&&e.target===cv&&!view){ const p=pos(e), id=pick3(p[0],p[1]), k=hand.k;
+  benchDown(mmAt(p[0],p[1],(k==="meter"||k==="watch")?0:PT),false); drawTray(); } trayDrag=false; });
+
+/* the magnifying glass: the same scene, three and a half times larger, inside a lens */
+function drawLoupe(){
+  if(!(hand&&hand.k==="loupe")||!overBench||view) return;
+  const [mx,my]=mouse, R=95, Z=3.5, sv={k:CAM.k,px:CAM.px,py:CAM.py};
+  CAM.k*=Z; CAM.px=(mx-CAM.W/2)-(mx-CAM.W/2-sv.px)*Z; CAM.py=(my-CAM.H/2)-(my-CAM.H/2-sv.py)*Z;
+  ctx.save(); ctx.beginPath(); ctx.arc(mx,my,R,0,7); ctx.clip(); ctx.fillStyle="#2a3038"; ctx.fillRect(mx-R,my-R,2*R,2*R);
+  begin3(); drawScene3(); render3(ctx); ctx.restore();
+  CAM.k=sv.k; CAM.px=sv.px; CAM.py=sv.py;
+  ctx.strokeStyle="#222"; ctx.lineWidth=5; ctx.beginPath(); ctx.arc(mx,my,R,0,7); ctx.stroke();
+  ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(mx,my,R+3,0,7); ctx.stroke();
+  ctx.save(); ctx.translate(mx+R*0.72,my+R*0.72); ctx.rotate(Math.PI/4); ctx.fillStyle="#222"; ctx.fillRect(0,-8,70,16); ctx.restore();
+}
+function drawGhost(){
+  if(!hand||!overBench||view) return;
+  const k=hand.k, [x,,z]=onPlane(mouse[0],mouse[1],(k==="meter"||k==="watch")?0:PT);
+  const sv={on:Object.assign({},ST.on),pos:JSON.parse(JSON.stringify(ST.pos)),hx:ST.holderX}; GA=0.5;
+  if(k==="mag"){ ST.pos.mag={x:x*10,y:z*10}; drawMag3(); }
+  else if(k==="trap"){ ST.pos.trap={x:x*10,y:z*10}; drawTrap3(); }
+  else if(k==="meter"){ ST.pos.meter={x:x*10,y:z*10}; drawMeter3(); }
+  else if(k==="watch"){ ST.pos.watch={x:x*10,y:z*10}; drawWatch3(); }
+  else if(k==="ruler"){ ST.pos.ruler={x:x*10,y:z*10,rot:hand.rot||0}; drawRuler3(); }
+  else if(k==="probe"){ ST.holderX=clamp(x*10,HOLD.min,HOLD.max); drawProbe3(); }
+  GA=null; Object.assign(ST.on,sv.on); ST.pos=sv.pos; ST.holderX=sv.hx;
+  if(["r03","r05","r07","r09","sticker","ins","pick"].includes(k)){ const q=P3(x,PT+3,z); ctx.save(); ctx.globalAlpha=0.85; ctx.translate(q[0],q[1]); icon(k,0,0,1.1); ctx.restore(); }
+}
 function layout(){
-  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
-  SC=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*SC*dpr); cv.style.height=(LH*SC)+"px";
-  const cw=closeCv.clientWidth||w; CS=cw/CLW; closeCv.width=Math.round(cw*dpr); closeCv.height=Math.round(CLH*CS*dpr); closeCv.style.height=(CLH*CS)+"px";
+  const dpr=Math.min(window.devicePixelRatio||1,2), w=cv.parentElement.clientWidth||900;
+  const h=Math.max(440,Math.min(Math.round(w*0.66),Math.round(window.innerHeight*0.8)));
+  cv.style.width=w+"px"; cv.style.height=h+"px"; cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+  const first=!CAM0.k; CAM.W=w; CAM.H=h; CAM.dpr=dpr;
+  if(first){ CAM.k=w/40; CAM.tx=17; CAM.ty=1; CAM.tz=10; CAM.yaw=-0.3; CAM.pitch=0.78; CAM.px=0; CAM.py=10; camSave(); }
+  VS=Math.min(w/CLW,h/CLH); VX=(w-CLW*VS)/2; VY=(h-CLH*VS)/2;
   const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
   drawTray();
 }
 function renderLaps(){ $("laps").textContent=S.watch.laps.map((t,i)=>"LAP "+String(i+1).padStart(2," ")+"   "+fmtWatch(t)).join("\n"); }
-function renderTabs(){ const t=d(); for(let i=0;i<3;i++){ const b=$("ct"+i); b.textContent=t.tabs[i]; b.className=i===view?"on":""; } $("t-closecap").textContent=t.caps[view]; }
-for(let i=0;i<3;i++) $("ct"+i).onclick=()=>{ view=i; renderTabs(); };
+function renderCap(){ const t=d(), i={meter:0,trap:1,tilt:2}[view];
+  $("t-cap").textContent=view?t.caps[i]+t.capR:t.cap; $("btnBack").textContent=t.back; }
 function renderStatus(){
   const L=[], t=d();
   if(!Object.values(ST.on).some(v=>v)) L.push([t.st.none,false]);
@@ -806,30 +1131,36 @@ function renderStatus(){
   for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
 }
 $("rodLen").oninput=e=>{ S.rodLen=+e.target.value; $("t-len").textContent=d().len(S.rodLen); };
-$("btnSS").onclick=()=>watchPress("ss");
-$("btnLap").onclick=()=>watchPress("lr");
+$("btnSS").onclick=()=>watchPress("ss"); $("btnLap").onclick=()=>watchPress("lr");
 $("btnSave").onclick=()=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([$("note").value],{type:"text/plain"})); a.download="IPhO2017_E2_notebook.txt"; a.click(); say("saved"); };
+$("vReset").onclick=()=>{ closeView(); camReset(); };
+$("vMeter").onclick=()=>openView("meter"); $("vTrap").onclick=()=>openView("trap"); $("vTilt").onclick=()=>openView("tilt");
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
-  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle; $("t-cap").textContent=t.cap;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
   $("t-h-watch").textContent=t.hWatch; $("btnSS").textContent=t.ss; $("btnLap").textContent=t.lapReset;
   $("t-h-rod").textContent=t.hRod; $("t-len").textContent=t.len(S.rodLen); $("t-rodhint").textContent=t.rodHint;
+  $("t-h-view").textContent=t.hView; $("vReset").textContent=t.vReset; $("vMeter").textContent=t.vMeter; $("vTrap").textContent=t.vTrap; $("vTilt").textContent=t.vTilt;
   $("t-h-note").textContent=t.hNote; $("note").placeholder=t.notePh; $("btnSave").textContent=t.save; $("t-hint").textContent=t.hint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2017 E2 — 평행 쌍극자선 자기 트랩 · HaslaLab":"IPhO 2017 E2 — Parallel Dipole Line Magnetic Trap · HaslaLab";
-  renderTabs(); layout();
+  renderCap(); layout();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
-let tPrev=performance.now()/1000, frameN=0, lastView=-1;
+let tPrev=performance.now()/1000, frameN=0;
 function tick(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   S.mAcc+=dt; if(S.mAcc>=0.12){ if(ST.on.meter&&S.mOn) meterStep(S.mAcc); S.mAcc=0; }
   rodStep(dt);
   if(S.watch.run) S.watch.t+=dt;
   $("clock").textContent=fmtWatch(S.watch.t);
-  if(view!==lastView){ renderTabs(); lastView=view; }
-  drawBench(); drawClose();
+  const dpr=CAM.dpr;
+  if(view){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CAM.W,CAM.H);
+    ctx.setTransform(dpr*VS,0,0,dpr*VS,dpr*VX,dpr*VY);
+    if(view==="meter") closeMeter(); else if(view==="trap") closeTrap(); else closeTilt(); }
+  else { ctx.setTransform(dpr,0,0,dpr,0,0); const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
+    begin3(); drawScene3(); drawGhost(); render3(ctx); drawLoupe(); }
   if(++frameN%6===0){ renderStatus(); drawTray(); }
   requestAnimationFrame(tick);
 }
