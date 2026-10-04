@@ -169,7 +169,7 @@ const T = {
     speedHint:"가열·냉각은 실제로 수 분이 걸립니다. 배속은 스톱워치에도 똑같이 적용됩니다.",
     fitBtn:"화면에 맞추기",
     start:"시작", stop:"정지", lap:"랩", reset:"리셋",
-    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", base:"3. 코일 받침판",
+    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", base:"3. 코일 받침판 + 코일 #2",
       c1:"3. 코일 #1 하우징", c2:"3. 코일 #2 하우징",
       bb:"5. 바나나–바나나 케이블", bp:"6. 바나나–핀 케이블",
       box:"7·8. 블랙박스 + 저항 R₁", C470N:"9. 축전기 470 nF", C470U:"9. 축전기 470 µF",
@@ -179,7 +179,7 @@ const T = {
     trayOut:"사용 중", trayTake:"클릭해서 집기", trayLeft:n=>"남은 개수 "+n, trayNone:"모두 사용 중",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠 확대·축소 / 빈 곳 드래그 이동",
     mat:{AL:"알루미늄",CU:"구리",SS304:"SS304",SS410:"SS410"},
-    lab:{coil1:"코일 #1",coil2:"코일 #2",clamp:"클램프",pins:"핀 단자",base:"받침판",
+    lab:{coil1:"코일 #1",coil2:"코일 #2 (고정)",clamp:"클램프",pins:"핀 단자",base:"받침판",
          tight:"조임",loose:"풀림",gap:(g,u)=>"틈 "+g+" mm 중 "+u+" mm 사용",empty:"두 코일 사이: 비어 있음",pan:"팬 (뒤집어 고정)",ntc:"NTC",
          covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
          hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
@@ -228,7 +228,9 @@ const T = {
       hsUp:s=>s+"을(를) 위에 얹었습니다 — 육각 렌치로 클램프를 조이세요.",
       stackFull:"하우징은 아래·위 두 칸까지만 쌓입니다.",
       hsOut:s=>s+"을(를) 빼서 부품함에 넣었습니다.",
-      baseBusy:"받침판 위의 하우징을 먼저 빼세요.",
+      baseBusy:"받침판에서 코일 #1 하우징과 판·팬을 먼저 빼세요.",
+      c2Fixed:"코일 #2 하우징은 받침판에 붙어 있어 따로 빼거나 뒤집을 수 없습니다.",
+      baseIn:"받침판을 놓았습니다 — 코일 #2 하우징이 받침판에 붙어 있습니다 (아래 칸).",
       flipDone:(s,f)=>s+"을(를) "+(f?"뒤집었습니다 — 코일이 이제 두 하우징 사이 쪽에 있습니다.":"원래대로 돌려놓았습니다."),
       flipNone:"뒤집을 하우징이 없습니다.",
       flipEmpty:"홈에 판이나 팬이 있으면 아래 하우징을 뒤집을 수 없습니다.",
@@ -263,7 +265,7 @@ const T = {
     speedHint:"Heating and cooling really take minutes. The scale applies to the stopwatch too.",
     fitBtn:"Fit to window",
     start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
-    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", base:"3. Coil base plate",
+    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", base:"3. Base plate + coil #2",
       c1:"3. Coil #1 housing", c2:"3. Coil #2 housing",
       bb:"5. Banana–banana cable", bp:"6. Banana–pin cable",
       box:"7·8. Black box + resistor R₁", C470N:"9. Capacitor 470 nF", C470U:"9. Capacitor 470 µF",
@@ -273,7 +275,7 @@ const T = {
     trayOut:"in use", trayTake:"click to pick up", trayLeft:n=>n+" left", trayNone:"all in use",
     trayHelp:"L-click pick/place, R-click return\nwheel zoom, drag bare bench to pan",
     mat:{AL:"aluminium",CU:"copper",SS304:"SS304",SS410:"SS410"},
-    lab:{coil1:"coil #1",coil2:"coil #2",clamp:"clamp",pins:"pin terminals",base:"base plate",
+    lab:{coil1:"coil #1",coil2:"coil #2 (fixed)",clamp:"clamp",pins:"pin terminals",base:"base plate",
          tight:"tight",loose:"loose",gap:(g,u)=>u+" of the "+g+" mm gap used",empty:"between the coils: empty",pan:"pan (clamped upside down)",ntc:"NTC",
          covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
          hook:"hook", gnd:"ground clip", rest:"probe rest"},
@@ -322,7 +324,9 @@ const T = {
       hsUp:s=>s+" set on top — tighten the clamps with the Allen key.",
       stackFull:"Only two housings stack: lower and upper.",
       hsOut:s=>s+" taken off and put back in the box.",
-      baseBusy:"Take the housings off the base plate first.",
+      baseBusy:"Take coil #1's housing, the plates and the pan off the base first.",
+      c2Fixed:"The coil #2 housing is fixed to the base plate: it cannot be taken off or flipped.",
+      baseIn:"Base plate set down — the coil #2 housing is fixed on it (lower place).",
       flipDone:(s,f)=>s+(f?" flipped — its winding now faces the gap between the housings.":" turned back the right way up."),
       flipNone:"There is no housing to flip.",
       flipEmpty:"Take the plates or pan out of the recess before flipping the lower housing.",
@@ -663,7 +667,7 @@ const zCv=$("zoyiCv"), zCtx=zCv.getContext("2d");
 const xsCv=$("xsec"), xsCtx=xsCv.getContext("2d");
 let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
 const ppcm=()=>S.basePpcm*S.zoom;
-const TRAY_ORDER=["fg","scope","base","c1","c2","bb","bp","box","C470N","C470U","C1000U","C2200U",
+const TRAY_ORDER=["fg","scope","base","c1","bb","bp","box","C470N","C470U","C1000U","C2200U",
                   "key","panAL","panSS","plAL","plCU","plS4","plS10"];
 const TRAY_ROW=42;
 let FGS=20, ZS=20, XSW=270, XSH=170;
@@ -1428,7 +1432,8 @@ function trayIcon(c,name,x,y,dim){
   const L=(a,b,e,f,col,w)=>{ c.beginPath(); c.moveTo(a,b); c.lineTo(e,f); c.strokeStyle=g||col; c.lineWidth=w||1; c.stroke(); };
   if(name==="fg"){ R(x-15,y-9,x+15,y+9,"#18191c","#000"); R(x-13,y-7,x+8,y+7,"#e6e7e8"); O(x-8,y,3,"#2a2c2f"); O(x-1,y,3,"#2a2c2f"); O(x+12,y-3,2,"#c8261d"); O(x+12,y+4,2,"#222"); }
   else if(name==="scope"){ R(x-8,y-12,x+8,y+12,"#c3261c"); R(x-6,y-10,x+6,y-1,"#050505"); L(x-5,y-5,x+5,y-5,"#ffe23a",1); R(x-5,y+2,x+5,y+8,"#3d4146"); }
-  else if(name==="base"){ R(x-15,y-6,x+15,y+7,"#1c1d20","#000"); O(x-11,y-3,1.2,"#000"); O(x+11,y+4,1.2,"#000"); }
+  else if(name==="base"){ R(x-16,y-9,x+16,y+9,"#1c1d20","#000"); R(x-8,y-6,x+8,y+6,"#26272b","#000"); O(x,y,4,"#121315"); O(x,y,3,"#8a4a26"); O(x,y,1,"#121315");
+    c.fillStyle=g||"#cfd3d6"; c.font="bold 7px sans-serif"; c.textAlign="center"; c.fillText("#2",x+12,y+7); }
   else if(name==="c1"||name==="c2"){ R(x-11,y-8,x+11,y+8,"#26272b","#000"); O(x,y,5.5,"#121315"); O(x,y,4,"#8a4a26"); O(x,y,1.5,"#121315");
     R(x-11,y+3,x-6,y+6,"#0a0a0b"); c.fillStyle=g||"#cfd3d6"; c.font="bold 8px sans-serif"; c.textAlign="center"; c.fillText(name==="c1"?"#1":"#2",x+7,y+7); }
   else if(name==="bb"||name==="bp"){ c.beginPath(); c.moveTo(x-14,y-6); c.bezierCurveTo(x-4,y+12,x+4,y-12,x+14,y+4); c.strokeStyle=g||"#c0392b"; c.lineWidth=2.5; c.stroke();
@@ -1592,8 +1597,7 @@ function place(x,y){
       if(!S.on.base){ say(t.m.needBase,true); return; }
       if(!(inRect(S.zones.base,x,y,8)||inRect(S.zones.stack,x,y,8))){ say(t.m.noFit,true); return; }
       if(S.on.box==="cover"){ say(t.m.covered,true); return; }
-      if(!lowHs()){ S.hs[id].at="low"; say(t.m.hsLow(t.trayItems[id])); }
-      else if(!upHs()){ S.hs[id].at="up"; S.loose=true; say(t.m.hsUp(t.trayItems[id])); }
+      if(!upHs()){ S.hs[id].at="up"; S.loose=true; say(t.m.hsUp(t.trayItems[id])); }
       else { say(t.m.stackFull,true); return; }
       S.carry=null; solve(); drawTray(); return;
     }
@@ -1614,7 +1618,8 @@ function place(x,y){
     else if(CAPS[id]) S.cap[id]=where;
     else S.on[id]=true;
     S.carry=null;
-    say(CAPS[id]&&where!=="desk"?t.m.capBox:t.m.placed(t.trayItems[id]));
+    if(id==="base"&&!S.hs.c2.at){ S.hs.c2.at="low"; S.hs.c2.flip=false; say(t.m.baseIn); }
+    else say(CAPS[id]&&where!=="desk"?t.m.capBox:t.m.placed(t.trayItems[id]));
     if(id==="fg"&&!S.fg.pow&&!cr.move) setTimeout(()=>say(t.m.fgRear),1500);
     solve(); drawTray(); return;
   }
@@ -1649,7 +1654,7 @@ function unstackOne(){
     else if(S.pan&&S.panOn==="low") panOut();
     else { if(S.pan&&S.panOn==="up") panOut(); takeHousing(up); }
   } else if(lo){
-    if(S.pan) panOut(); else takeHousing(lo);
+    if(S.pan) panOut(); else { say(t.m.c2Fixed,true); return; }
   }
   solve(); drawTray();
 }
@@ -1661,6 +1666,7 @@ function takeHousing(c){
 function flipTop(){
   const t=d(), c=topHs();
   if(!c){ say(t.m.flipNone,true); return; }
+  if(c==="c2"){ say(t.m.c2Fixed,true); return; }
   if(S.on.box==="cover"){ say(t.m.covered,true); return; }
   if(S.hs[c].at==="up"){
     if(!S.loose){ say(t.m.needLoose,true); return; }
@@ -1683,7 +1689,8 @@ function returnItem(id){
   else if(id==="scope"){ detachTerms(["DCOM","DVO"]); S.probe={tip:null,gnd:null}; S.on.scope=false; S.z.on=false; }
   else if(id==="base"){
     if(S.on.box==="cover"){ say(t.m.covered,true); return; }
-    if(lowHs()){ say(t.m.baseBusy,true); return; }
+    if(upHs()||S.stack.length||S.pan){ say(t.m.baseBusy,true); return; }
+    detachTerms(["C2A","C2B"]); S.hs.c2.at=null; S.hs.c2.flip=false;
     S.on.base=false;
   }
   else if(id==="box"){
