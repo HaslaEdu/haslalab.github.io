@@ -257,7 +257,7 @@ function Bmagnet(dd){ dd=Math.max(dd,1e-4); return K.Br/2*((dd+MAG_L)/Math.hypot
    ══════════════════════════════════════════════════════════════ */
 const LW=1200, LH=720, PX=10, TW=120, TD=72;
 const PLACE=["ard","coils","dmm","ruler","stand","field","force","mag3","podMag"];
-const SZ={ard:[17,11], coils:[12,9], dmm:[8,15], ruler:[40,3], stand:[17,17], field:[13,1.6], force:[5,4], mag3:[1.4,1.4], podMag:[1.4,1.4]};
+const SZ={ard:[17,11], coils:[8,9], dmm:[8,15], ruler:[40,3], stand:[17,17], field:[13,1.6], force:[5,4], mag3:[1.4,1.4], podMag:[1.4,1.4]};
 const ST={
   on:{}, pos:{},
   batts:[{q:BATT_FULL,slot:null},{q:BATT_FULL,slot:null},{q:BATT_FULL,slot:null}],
@@ -401,20 +401,29 @@ function drawBatt(b){ const p=battBody(b.slot), s=b.slot==="s1"?1:-1;
   ctx.strokeStyle="#c62a22"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(-0.4,-2.4*s); ctx.quadraticCurveTo(-1.6*s,-3.2*s,-2.8*s,-0.1); ctx.stroke();
   ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(0.4,-2.4*s); ctx.quadraticCurveTo(-1.4*s,-3.0*s,-2.8*s,0.1); ctx.stroke();
   ctx.restore(); }
+/* (e) two coils on black formers held by a grey printed block (Fig. 1e, Fig. 2): sockets on the front face */
 function drawCoils(){ frame("coils",()=>{
-  shadowRect(-6,-4.5,12,9);
-  fillR(-6,-4.5,12,9,0.6,"#2d2f33","#141518",0.08);
-  if(ST.force.where==="coil"){                   /* turned upright: seen from above, the top coil */
-    ctx.fillStyle="#b46a2a"; ctx.beginPath(); ctx.arc(0,0,3.2,0,7); ctx.fill(); ctx.fillStyle="#2d2f33"; ctx.beginPath(); ctx.arc(0,0,1.7,0,7); ctx.fill();
-    ctx.strokeStyle="rgba(255,220,170,.5)"; ctx.lineWidth=0.06; for(let r=1.9;r<3.2;r+=0.25){ ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.stroke(); }
+  const sock=()=>{ for(const [x,c] of [[-1.6,"#c62a22"],[1.6,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(x,3.6,0.7,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,3.6,0.45,0,7); ctx.fill(); } };
+  if(ST.force.where==="coil"){                   /* turned over as in Fig. 2(iv): the block is now a wall, the top coil seen from above */
+    shadowRect(-3.6,-3.4,7.2,8);
+    ctx.fillStyle="#141518"; ctx.beginPath(); ctx.arc(0,0,3.4,0,7); ctx.fill();
+    ctx.fillStyle="#b46a2a"; ctx.beginPath(); ctx.arc(0,0,2.7,0,7); ctx.fill(); ctx.fillStyle="#141518"; ctx.beginPath(); ctx.arc(0,0,1.6,0,7); ctx.fill();
+    ctx.strokeStyle="rgba(255,220,170,.5)"; ctx.lineWidth=0.06; for(let r=1.8;r<2.7;r+=0.22){ ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.stroke(); }
+    for(const a of [0.6,2.55,4.2]){ ctx.fillStyle="#1d1e22"; ctx.save(); ctx.rotate(a); ctx.fillRect(2.4,-0.25,1.1,0.5); ctx.restore(); }   /* cable ties */
+    fillR(-3.6,2.9,7.2,1.6,0.25,vgrad(0,2.9,1.6,[[0,"#4a4d53"],[1,"#2d2f33"]]),"#141518",0.06);
     fillR(-0.9,-0.9,1.8,1.8,0.2,"#111","#000",0.05); ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(0,0,0.5,0,7); ctx.fill();
     if(ST.force.paste>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0.2,0.1,0.35+0.2*Math.cbrt(ST.force.paste),0,7); ctx.fill(); }
-  } else {
-    for(const x of [-1.5,1.5]){ ctx.fillStyle="#3b3d42"; ctx.fillRect(x-0.75,-3.6,1.5,7.2);
-      ctx.fillStyle=vgrad(0,-3.2,6.4,[[0,"#d48a44"],[0.5,"#a65a22"],[1,"#d48a44"]]); ctx.fillRect(x-0.55,-3.2,1.1,6.4); }
+  } else {                                       /* as delivered (Fig. 2 i): both coils upright, axis along x */
+    shadowRect(-3.7,-3.0,7.4,7.7);
+    fillR(-3.4,-2.4,6.8,6.9,0.4,vgrad(0,-2.4,6.9,[[0,"#4a4d53"],[1,"#33363b"]]),"#141518",0.06);
+    for(const x of [-1.5,1.5]){
+      ctx.fillStyle="#121315"; ctx.fillRect(x-0.8,-2.8,0.25,5.6); ctx.fillRect(x+0.55,-2.8,0.25,5.6);   /* former flanges */
+      ctx.fillStyle=vgrad(0,-2.3,4.6,[[0,"#d48a44"],[0.5,"#a65a22"],[1,"#d48a44"]]); ctx.fillRect(x-0.55,-2.3,1.1,4.6);
+      ctx.strokeStyle="rgba(255,225,180,.35)"; ctx.lineWidth=0.04; for(let k=-0.45;k<0.5;k+=0.18){ ctx.beginPath(); ctx.moveTo(x+k,-2.3); ctx.lineTo(x+k,2.3); ctx.stroke(); }
+      ctx.fillStyle="#1d1e22"; ctx.fillRect(x-0.85,-0.2,1.7,0.4); }                                  /* cable tie */
     ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.setLineDash([0.3,0.3]); ctx.lineWidth=0.05; ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(6,0); ctx.stroke(); ctx.setLineDash([]);
   }
-  for(const [x,c] of [[-1.6,"#c62a22"],[1.6,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(x,3.6,0.7,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,3.6,0.45,0,7); ctx.fill(); }
+  sock();
 }); }
 function drawFieldBoard(){
   const f=ST.field; let tip;
