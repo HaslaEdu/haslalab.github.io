@@ -680,7 +680,17 @@ const DATA={
               src:{ko:"src/IPhO2023_Q1_sim_KO.py", en:"src/IPhO2023_Q1_sim_EN.py"},
               pdf:{en:"pdf/IPhO_2023_E1_EN.pdf"},
               sol:"pdf/IPhO_2023_S1.pdf"}},
-      ...papers("IPhO_2023", wip("Mass Measurement","Birefringence"), ["E1_EN", "S1"], ["E2_EN", "S2"]).slice(1)]},
+      {id:"E2",
+       title:{ko:"복굴절로 재는 두께",en:"Thickness Measurements Using Birefringence"},
+       desc:{ko:"백색 LED·슬릿·렌즈·투과 회절격자·편광판·석영판·광검출기를 회전 스테이지와 두 레일에 세워 정렬하고, 스테이지 각도와 P2 다이얼을 읽어 가며 파장별 수직·평행 성분의 세기를 재어 석영판의 두께를 구합니다.",
+             en:"Stand a white LED, slit, lenses, a transmission grating, polarizers, a quartz plate and a photodetector on a rotation stage and two rails, align them, then read the stage angle and the P2 dial while measuring the perpendicular and parallel intensities against wavelength to find the plate's thickness."},
+       tags:["복굴절","회절격자","편광"], tagsEn:["Birefringence","Diffraction grating","Polarization"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2023_E2_sim_KO.exe", en:REL+"v1.0/IPhO2023_E2_sim_EN.exe"}, */
+       files:{sim:"sim/ipho2023_E2_web.html",
+              src:{ko:"src/IPhO2023_Q2_sim_KO.py", en:"src/IPhO2023_Q2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2023_E2_EN.pdf"},
+              sol:"pdf/IPhO_2023_S2.pdf"}}]},
    {y:2022,host:{ko:"스위스 · 온라인",en:"Switzerland, online"},cc:"ch",
     problems:[
       {id:"E1",
