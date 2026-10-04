@@ -418,7 +418,7 @@ const sheet=new Sheet(), jfet=new JFET(), tft=new TFT();
 const VBAT=[3.00*jit(0.008), 2.99*jit(0.008)];
 const PLACE=["sheet","meter","holder","board"];
 const K=0.76;                                   /* bench px per figure px of the sheet */
-const SZ={sheet:{w:Math.round(477*K),h:Math.round(762*K)}, meter:{w:150,h:330}, holder:{w:206,h:124}, board:{w:236,h:156}};
+const SZ={sheet:{w:Math.round(477*K),h:Math.round(762*K)}, meter:{w:150,h:330}, holder:{w:206,h:104}, board:{w:250,h:240}};
 const ST={
   on:{sheet:false,meter:false,holder:false,board:false},
   pos:{sheet:{x:0,y:0},meter:{x:0,y:0},holder:{x:0,y:0},board:{x:0,y:0}},
@@ -448,9 +448,12 @@ function tapRect(r,t){ const w=stairW(r,t.v)||8;
 function tapsSorted(r){ return ST.taps[r].slice().sort((a,b)=>a.v-b.v); }
 function tapLetter(r,id){ const s=tapsSorted(r), i=s.findIndex(t=>t.id===id); return "ABCDEFGHIJKLMN"[(r===1?0:7)+i]; }
 /* breadboard holes */
-const holeXY=(c,r)=>[ST.pos.board.x+60+c*13, ST.pos.board.y+52+r*13];
-const jumperEnd=j=>[ST.pos.board.x+118+(j.col-4.5)*19, ST.pos.board.y+146];
-const leadTip=k=>{ const o={"A+":18,"A-":42,"B+":82,"B-":106}[k]; return [ST.pos.holder.x+198, ST.pos.holder.y+o]; };
+/* a 170-point mini-breadboard (17 columns; rows a-e and f-j on either side of the channel) on its blue support */
+const BB={x:22,y:14,w:206,h:142,P:11,cols:17};
+const holeXY=(c,r)=>[ST.pos.board.x+BB.x+15+c*BB.P, ST.pos.board.y+BB.y+(r<5?22+r*BB.P:84+(r-5)*BB.P)];
+const holeNet=(c,r)=>"bb"+c+(r<5?"t":"b");
+const jumperEnd=j=>[ST.pos.board.x+125+(j.c-8)*13+(j.r<5?0:6), ST.pos.board.y+222];
+const leadTip=k=>{ const o={"A+":14,"A-":32,"B+":70,"B-":88}[k]; return [ST.pos.holder.x+198, ST.pos.holder.y+o]; };
 const METER_JACK={red:[75,252], black:[120,252]};
 const probeRest=c=>[ST.pos.meter.x+(c==="red"?18:18), ST.pos.meter.y+(c==="red"?298:318)];
 
@@ -469,7 +472,7 @@ function anchorAlive(a){
 }
 function sameAnchor(a,b){ if(!a||!b||a.t!==b.t) return false; if(a.t==="s") return Math.hypot(a.u-b.u,a.v-b.v)<6; if(a.t==="b") return a.k===b.k; return a.id===b.id; }
 function anchorAt(p){
-  if(ST.on.board) for(const j of ST.jumpers){ const e=jumperEnd(j); if(Math.hypot(p[0]-e[0],p[1]-e[1])<9) return {t:"j",id:j.id,net:"bb"+j.c}; }
+  if(ST.on.board) for(const j of ST.jumpers){ const e=jumperEnd(j); if(Math.hypot(p[0]-e[0],p[1]-e[1])<9) return {t:"j",id:j.id,net:holeNet(j.c,j.r)}; }
   if(ST.on.holder) for(const k of ["A+","A-","B+","B-"]){ const e=leadTip(k); if(Math.hypot(p[0]-e[0],p[1]-e[1])<10) return {t:"b",k,net:k}; }
   if(ST.on.sheet){
     const [u,v]=toSheet(p[0],p[1]);
@@ -484,7 +487,7 @@ function anchorName(a){
   const t=d().term;
   if(a.net.startsWith("tp")){ const id=+a.net.slice(2), r=ST.taps[1].some(x=>x.id===id)?1:2; return t.tap(tapLetter(r,id)); }
   if(a.t==="b") return t.lead[a.k];
-  if(a.t==="j"){ const j=ST.jumpers.find(x=>x.id===a.id); return t.jp(j?j.c+1:"?"); }
+  if(a.t==="j"){ const j=ST.jumpers.find(x=>x.id===a.id); return t.jp(j?(j.c+1)+"abcdefghij"[j.r]:"?"); }
   if(/^T\d/.test(a.net)) return t.rt(a.net[1],a.net[2]==="a");
   return t[a.net]||a.net;
 }
@@ -512,7 +515,7 @@ function solveCircuit(){
     const RL=rlOhm(); if(RL) ck.R(n("D"),n("VIN"),RL);
   }
   if(ST.on.holder&&ST.batt){ ck.V(n("A+"),n("A-"),VBAT[0],0.4); ck.V(n("B+"),n("B-"),VBAT[1],0.4); }
-  if(ST.on.board&&ST.jfet){ const c=ST.jfet.c, g=n("bb"+c), s=n("bb"+(c+1)), dn=n("bb"+(c+2));
+  if(ST.on.board&&ST.jfet){ const c=ST.jfet.c, r=ST.jfet.r, g=n(holeNet(c,r)), s=n(holeNet(c+1,r)), dn=n(holeNet(c+2,r));
     ck.NL(dn,s,g,jfet); ck.R(g,s,1e9); }
   const D=DIAL[ST.dial], pr=ST.probe; let info=null;
   if(ST.on.meter&&D.m!=="OFF"&&pr.red&&pr.black){
@@ -650,51 +653,61 @@ function drawMeter(x0,y0,s,lcd){
 }
 function meterDial(){ return [ST.pos.meter.x+75, ST.pos.meter.y+168]; }
 
-/* ── 6. the battery holder with its four leads (two 2 × AA packs) ── */
+/* ── 6. the battery holder (Fig. 3, item 6): two 2 × AA holders stacked one on the other, four leads out of the end ── */
 function drawHolder(x0,y0){
-  const p=ST.pos.holder; shadow(x0,y0,140,124,6);
-  fillR(x0,y0,140,124,6,"#1b1b1d","#000",1);
-  for(let i=0;i<4;i++){ const cx=x0+10+i*31, top=y0+8;
-    fillR(cx,top,27,108,4,"#0d0d0e","#2a2a2d",1);
-    if(ST.batt){ const up=i%2===0;
-      fillR(cx+1.5,top+3,24,102,6,hgrad(cx,0,27,[[0,"#3b2a10"],[0.45,"#d4a52a"],[1,"#5a4012"]]));
-      ctx.fillStyle="#b7261e"; ctx.fillRect(cx+1.5,top+(up?16:68),24,22);
-      text("Kodak",cx+13.5,top+52,"#fff3c8",6,"center","700");
-      ctx.save(); ctx.translate(cx+13.5,top+86); text("AA",0,0,"#1e1405",6,"center","700"); ctx.restore();
-      ctx.fillStyle="#c9c9c9"; ctx.fillRect(cx+10,up?top+1:top+103,7,4);
-      text(up?"+":"−",cx+13.5,up?top+10:top+98,"#111",8,"center","700");
+  shadow(x0,y0,134,96,6);
+  /* the lower holder (pack 2) shows as a rim under the upper one */
+  fillR(x0+8,y0+10,126,86,5,"#0e0e10","#000",1);
+  for(let i=0;i<3;i++){ ctx.fillStyle="#26262a"; ctx.fillRect(x0+20+i*36,y0+90,22,3); }
+  /* the upper holder (pack 1), cells lying along the holder */
+  fillR(x0,y0,126,86,5,"#1d1d20","#000",1);
+  for(let i=0;i<2;i++){ const top=y0+8+i*36, cx=x0+8;
+    fillR(cx,top,110,32,4,"#0c0c0d","#2c2c30",1);
+    if(ST.batt){ const pr=i===0;
+      fillR(cx+3,top+3,104,26,7,vgrad(top+3,0,26,[[0,"#3b2a10"],[0.45,"#d4a52a"],[1,"#5a4012"]]));
+      ctx.fillStyle="#b7261e"; ctx.fillRect(pr?cx+70:cx+12,top+3,26,26);
+      text("Kodak MAX",cx+55,top+17,"#fff3c8",7,"center","700");
+      ctx.fillStyle="#c9c9c9"; ctx.fillRect(pr?cx+106:cx,top+12,4,8);
+      text(pr?"+":"−",pr?cx+100:cx+10,top+17,"#111",9,"center","700");
     } else {
       ctx.strokeStyle="#8a8a8a"; ctx.lineWidth=1.4; ctx.beginPath();
-      for(let k=0;k<5;k++){ ctx.moveTo(cx+7,top+100-k*2.2); ctx.lineTo(cx+20,top+101-k*2.2); } ctx.stroke();
-      ctx.fillStyle="#9a9a9a"; ctx.fillRect(cx+9,top+3,9,3);
+      const sx=i===0?cx+4:cx+98; for(let k=0;k<5;k++){ ctx.moveTo(sx+k*2.2,top+8); ctx.lineTo(sx+k*2.2+1,top+24); } ctx.stroke();
+      ctx.fillStyle="#9a9a9a"; ctx.fillRect(i===0?cx+105:cx+1,top+11,4,10);
     }
   }
-  ctx.strokeStyle="#3c3c40"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x0+70,y0+4); ctx.lineTo(x0+70,y0+120); ctx.stroke();
-  text("①",x0+36,y0+119,"#9a9a9a",8,"center"); text("②",x0+104,y0+119,"#9a9a9a",8,"center");
-  /* leads */
-  for(const [k,col,y] of [["A+","#c8241e",18],["A-","#1a1a1a",42],["B+","#c8241e",82],["B-","#1a1a1a",106]]){
-    const [tx,ty]=leadTip(k); ctx.strokeStyle=col; ctx.lineWidth=3.2; ctx.lineCap="round";
-    ctx.beginPath(); ctx.moveTo(x0+140,y0+y); ctx.bezierCurveTo(x0+160,y0+y,x0+168,ty,tx-10,ty); ctx.stroke();
+  text(lang==="en"?"① upper":"① 위",x0+30,y0+82,"#9a9a9a",7.5,"center"); text(lang==="en"?"② lower":"② 아래",x0+104,y0+101,"#7a7a7a",7.5,"center");
+  /* leads: pack 1 from the upper holder, pack 2 from the lower one */
+  for(const [k,col,y] of [["A+","#c8241e",22],["A-","#1a1a1a",40],["B+","#c8241e",58],["B-","#1a1a1a",76]]){
+    const [tx,ty]=leadTip(k), sx=k[0]==="A"?x0+126:x0+134; ctx.strokeStyle=col; ctx.lineWidth=3.2; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(sx,y0+y); ctx.bezierCurveTo(sx+22,y0+y,x0+166,ty,tx-10,ty); ctx.stroke();
     ctx.strokeStyle="#c79a55"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(tx-10,ty); ctx.lineTo(tx+2,ty); ctx.stroke(); ctx.lineCap="butt"; }
 }
 
 /* ── 7. the mini-breadboard on its support, 2. JFET, 8. jumper wires ── */
 function drawBoard(x0,y0){
-  shadow(x0,y0,SZ.board.w,SZ.board.h,8);
-  fillR(x0,y0,SZ.board.w,SZ.board.h,8,vgrad(x0,y0,SZ.board.h,[[0,"#24399c"],[1,"#18287a"]]),"#0f1a55",1);
-  ctx.fillStyle="rgba(255,255,255,.06)"; for(let i=0;i<14;i++) ctx.fillRect(x0+8,y0+10+i*10,SZ.board.w-16,1);
-  fillR(x0+42,y0+26,152,96,5,"#f1efe7","#c9c5b8",1);
-  for(let c=0;c<10;c++){ text(String(c+1),x0+60+c*13,y0+36,"#8a8578",6.5,"center","600");
-    for(let r=0;r<5;r++){ const [hx,hy]=holeXY(c,r); ctx.fillStyle="#3b3a36"; ctx.fillRect(hx-2.3,hy-2.3,4.6,4.6); } }
-  if(ST.jfet){ const [hx,hy]=holeXY(ST.jfet.c+1,ST.jfet.r);
-    ctx.strokeStyle="#b9b9b9"; ctx.lineWidth=1.5;
-    for(let k=-1;k<=1;k++){ ctx.beginPath(); ctx.moveTo(hx+k*13,hy); ctx.lineTo(hx+k*4,hy-11); ctx.stroke(); }
-    ctx.fillStyle="#121212"; ctx.beginPath(); ctx.moveTo(hx-11,hy-11); ctx.lineTo(hx+11,hy-11); ctx.arc(hx,hy-11,11,0,Math.PI,true); ctx.closePath(); ctx.fill();
-    ctx.fillStyle="#2c2c2c"; ctx.fillRect(hx-11,hy-13,22,2.4); }
+  const W=SZ.board.w, H=SZ.board.h;
+  shadow(x0,y0,W,H,8);
+  fillR(x0,y0,W,H,8,vgrad(y0,0,H,[[0,"#22378f"],[1,"#172770"]]),"#0f1a55",1);
+  ctx.fillStyle="rgba(0,0,0,.28)"; for(let i=0;i<W/12-1;i++) for(let j=0;j<H/12-1;j++) ctx.fillRect(x0+9+i*12,y0+9+j*12,4,4);
+  ctx.fillStyle="rgba(255,255,255,.07)"; for(let i=0;i<W/12-1;i++) for(let j=0;j<H/12-1;j++) ctx.fillRect(x0+9+i*12,y0+9+j*12,4,1);
+  const bx=x0+BB.x, by=y0+BB.y;
+  fillR(bx+2,by+3,BB.w,BB.h,4,"rgba(0,0,0,.35)");
+  fillR(bx,by,BB.w,BB.h,4,"#f1efe7","#c9c5b8",1);
+  fillR(bx+4,by+BB.h/2-4,BB.w-8,8,2,"#dedad0");                       /* the channel */
+  for(let c=0;c<BB.cols;c++){ const [hx]=holeXY(c,0);
+    if(c%5===0||c===BB.cols-1) { text(String(c+1),hx,by+10,"#8a8578",6,"center","600"); text(String(c+1),hx,by+BB.h-7,"#8a8578",6,"center","600"); }
+    for(let r=0;r<10;r++){ const [,hy]=holeXY(c,r); ctx.fillStyle="#3b3a36"; ctx.fillRect(hx-2,hy-2,4,4); } }
+  for(let r=0;r<10;r++){ const [,hy]=holeXY(0,r); text("abcdefghij"[r],bx+6,hy,"#8a8578",6,"center","600"); text("abcdefghij"[r],bx+BB.w-6,hy,"#8a8578",6,"center","600"); }
+  if(ST.jfet){ const [hx,hy]=holeXY(ST.jfet.c+1,ST.jfet.r), P=BB.P;
+    ctx.strokeStyle="#b9b9b9"; ctx.lineWidth=1.4;
+    for(let k=-1;k<=1;k++){ ctx.beginPath(); ctx.moveTo(hx+k*P,hy); ctx.lineTo(hx+k*3.5,hy-9); ctx.stroke(); }
+    ctx.fillStyle="#121212"; ctx.beginPath(); ctx.moveTo(hx-9.5,hy-9); ctx.lineTo(hx+9.5,hy-9); ctx.arc(hx,hy-9,9.5,0,Math.PI,true); ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#2c2c2c"; ctx.fillRect(hx-9.5,hy-11,19,2.2); text("T281",hx,hy-14,"#bbb",5,"center","600"); }
   ST.jumpers.forEach((j,i)=>{ const [hx,hy]=holeXY(j.c,j.r), [ex,ey]=jumperEnd(j);
-    ctx.strokeStyle=["#ecece6","#262626","#c6382c"][i%3]; ctx.lineWidth=3; ctx.lineCap="round";
-    ctx.beginPath(); ctx.moveTo(hx,hy); ctx.bezierCurveTo(hx,hy+26,ex,ey-30,ex,ey-7); ctx.stroke(); ctx.lineCap="butt";
-    ctx.fillStyle="#cfcfcf"; ctx.fillRect(ex-1.5,ey-7,3,10); ctx.fillStyle="#333"; ctx.fillRect(hx-2,hy-2,4,4); });
+    ctx.strokeStyle=["#ecece6","#262626","#8a8d92"][i%3]; ctx.lineWidth=2.6; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(hx,hy); ctx.bezierCurveTo(hx,hy+30,ex,ey-34,ex,ey-8); ctx.stroke(); ctx.lineCap="butt";
+    ctx.fillStyle="#1d1d1f"; ctx.fillRect(ex-2.5,ey-12,5,8); ctx.fillStyle="#cfcfcf"; ctx.fillRect(ex-1,ey-4,2,7);
+    ctx.fillStyle="#1d1d1f"; ctx.fillRect(hx-2.5,hy-2.5,5,5); });
 }
 
 /* ── cables, clips and probes ── */
@@ -765,10 +778,10 @@ function icon(k,x,y,s,inHand){
     case "sheet": fillR(-17,-27,34,54,1,"#fbfaf5","#bbb"); ctx.fillStyle="#b4b8bc"; ctx.fillRect(-15,-12,26,3); ctx.fillRect(-15,18,12,3); ctx.fillRect(-1,18,14,3);
       ctx.fillStyle="#111"; ctx.fillRect(-10,-9,4,26); ctx.fillRect(3,-9,2,26); ctx.fillStyle="#46566c"; ctx.fillRect(4,-24,6,6); break;
     case "meter": fillR(-16,-26,32,52,6,"#d8322a","#7e130f"); fillR(-11,-21,22,10,2,"#b7c1ac"); ctx.fillStyle="#222"; ctx.beginPath(); ctx.arc(0,6,9,0,7); ctx.fill(); break;
-    case "holder": fillR(-24,-18,48,36,4,"#1b1b1d","#000"); for(let i=0;i<4;i++) fillR(-21+i*11.5,-15,9,30,2,"#0d0d0e","#333");
+    case "holder": fillR(-20,-13,44,32,4,"#0e0e10","#000"); fillR(-24,-17,44,32,4,"#1d1d20","#000"); for(let i=0;i<2;i++) fillR(-21,-14+i*14,38,12,2,"#0c0c0d","#333");
       ctx.strokeStyle="#c8241e"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(24,-8); ctx.lineTo(34,-12); ctx.stroke(); ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(24,8); ctx.lineTo(34,12); ctx.stroke(); break;
     case "batt": for(let i=0;i<4;i++){ fillR(-22+i*11,-20,9,40,3,hgrad(-22+i*11,0,9,[[0,"#3b2a10"],[0.45,"#d4a52a"],[1,"#5a4012"]])); ctx.fillStyle="#b7261e"; ctx.fillRect(-22+i*11,-12,9,8); } break;
-    case "board": fillR(-26,-18,52,36,4,"#22379a","#0f1a55"); fillR(-16,-12,32,24,2,"#f1efe7"); ctx.fillStyle="#555"; for(let i=0;i<5;i++) for(let j=0;j<3;j++) ctx.fillRect(-12+i*6,-7+j*6,2,2); break;
+    case "board": fillR(-22,-24,44,46,4,"#22379a","#0f1a55"); fillR(-15,-20,30,20,2,"#f1efe7"); ctx.fillStyle="#555"; for(let i=0;i<7;i++) for(let j=0;j<4;j++) ctx.fillRect(-12+i*4,-17+j*(j<2?4:4)+(j<2?0:3),1.6,1.6); break;
     case "jfet": ctx.strokeStyle="#bbb"; ctx.lineWidth=1.5; for(const dx of [-5,0,5]){ ctx.beginPath(); ctx.moveTo(dx,0); ctx.lineTo(dx,16); ctx.stroke(); }
       ctx.fillStyle="#111"; ctx.beginPath(); ctx.moveTo(-8,0); ctx.lineTo(8,0); ctx.arc(0,0,8,0,Math.PI,true); ctx.fill(); break;
     case "jumper": ctx.strokeStyle="#ecece6"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-14,10); ctx.bezierCurveTo(-8,-18,8,18,14,-10); ctx.stroke();
@@ -866,7 +879,7 @@ const inItem=(k,p)=>ST.on[k]&&p[0]>=ST.pos[k].x&&p[0]<=ST.pos[k].x+SZ[k].w&&p[1]
 function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
 function holeAt(p){
   if(!ST.on.board) return null;
-  for(let c=0;c<10;c++) for(let r=0;r<5;r++){ const h=holeXY(c,r); if(Math.abs(p[0]-h[0])<6.5&&Math.abs(p[1]-h[1])<6.5) return {c,r}; }
+  for(let c=0;c<BB.cols;c++) for(let r=0;r<10;r++){ const h=holeXY(c,r); if(Math.abs(p[0]-h[0])<5.5&&Math.abs(p[1]-h[1])<5.5) return {c,r}; }
   return null;
 }
 function holeUsed(c,r){ if(ST.jfet&&ST.jfet.r===r&&c>=ST.jfet.c&&c<=ST.jfet.c+2) return true; return ST.jumpers.some(j=>j.c===c&&j.r===r); }
@@ -901,7 +914,7 @@ function benchClick(p,right){
     for(const c of ["red","black"]) if(ST.on.meter&&ST.probe[c]&&anchorAlive(ST.probe[c])&&near(p,probeTip(c),12)){ ST.probe[c]=null; say("probeOff"); return; }
     for(const j of ST.jumpers) if(ST.on.board&&near(p,jumperEnd(j),9)){ dropAnchors(a=>a.t==="j"&&a.id===j.id); ST.jumpers=ST.jumpers.filter(x=>x!==j); say("back",itemName("jumper")); return; }
     if(ST.jfet&&near(p,holeXY(ST.jfet.c+1,ST.jfet.r-1),14)){ ST.jfet=null; say("back",itemName("jfet")); return; }
-    if(ST.batt&&inItem("holder",p)&&p[0]<ST.pos.holder.x+140){ ST.batt=false; say("back",itemName("batt")); return; }
+    if(ST.batt&&inItem("holder",p)&&p[0]<ST.pos.holder.x+134){ ST.batt=false; say("back",itemName("batt")); return; }
     for(const k of ["meter","holder","board","sheet"]) if(inItem(k,p)){ returnItem(k); return; }
     return;
   }
@@ -924,16 +937,16 @@ function handClick(p,right){
   if(right){ if(k==="probe"){ hand=null; say("probeOff"); return; } returnHand(); say("back",itemName(k)); return; }
   if(k==="batt"){
     if(!ST.on.holder){ say("needHolder"); return; }
-    if(!inItem("holder",p)||p[0]>ST.pos.holder.x+140){ say("battWhere"); return; }
+    if(!inItem("holder",p)||p[0]>ST.pos.holder.x+134){ say("battWhere"); return; }
     ST.batt=true; hand=null; say("battIn"); return;
   }
   if(k==="jfet"||k==="jumper"){
     if(!ST.on.board){ say("needBoard"); return; }
     const h=holeAt(p); if(!h){ say(k==="jfet"?"jfetWhere":"jumperWhere"); return; }
-    if(k==="jfet"){ const c=Math.min(h.c,7); if([0,1,2].some(i=>holeUsed(c+i,h.r))){ say("holeBusy"); return; }
+    if(k==="jfet"){ const c=Math.min(h.c,BB.cols-3); if([0,1,2].some(i=>holeUsed(c+i,h.r))){ say("holeBusy"); return; }
       ST.jfet={c,r:h.r}; hand=null; say("jfetIn"); return; }
     if(holeUsed(h.c,h.r)){ say("holeBusy"); return; }
-    ST.jumpers.push({id:++ST.tapN,c:h.c,r:h.r,col:h.c}); hand=null; say("jumperIn",h.c+1); return;
+    ST.jumpers.push({id:++ST.tapN,c:h.c,r:h.r,col:h.c}); hand=null; say("jumperIn",(h.c+1)+"abcdefghij"[h.r]); return;
   }
   if(k==="cable"){
     const a=anchorAt(p); if(!a){ say("noTerm"); return; }

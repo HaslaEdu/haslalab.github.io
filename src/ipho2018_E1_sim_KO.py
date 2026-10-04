@@ -928,11 +928,12 @@ class App(tk.Tk):
                           text=T("printed circuit sheet"))
             # TFT block
             c.create_rectangle(440, 70, 640, 140, fill="#efeadd", outline="#c9c0ad")
+            c.create_rectangle(606, 76, 632, 102, fill="#46566c", outline="#2b3a4f")
             c.create_text(445, 76, anchor="nw", fill="#8d8677", text=T("paper TFT"))
             # Z track on top, V and W tracks at the bottom
-            c.create_line(150, 175, 450, 175, fill="#b9b1a1", width=7)
-            c.create_line(150, 595, 250, 595, fill="#b9b1a1", width=7)
-            c.create_line(350, 595, 450, 595, fill="#b9b1a1", width=7)
+            c.create_line(150, 175, 450, 175, fill="#b4b8bc", width=7)
+            c.create_line(150, 595, 250, 595, fill="#b4b8bc", width=7)
+            c.create_line(350, 595, 450, 595, fill="#b4b8bc", width=7)
             # staircases
             self._stair(c, 200, SEG_W, self.sheet.drawn1)
             self._stair(c, 400, SEG_W[::-1], self.sheet.drawn2)
@@ -946,19 +947,40 @@ class App(tk.Tk):
                 c.create_rectangle(585, y - 22, 610, y + 22, fill="#c9c3b8",
                                    outline="")
         if "board" in self.placed:
-            c.create_rectangle(690, 340, 900, 470, fill="#f0efe9", outline="#c2bdb0")
-            for r0 in range(5):
-                for c0 in range(6):
-                    x, y = 710 + c0 * 30, 360 + r0 * 22
-                    c.create_rectangle(x - 3, y - 3, x + 3, y + 3, outline="#b9b1a1")
-            c.create_text(695, 346, anchor="nw", fill="#a09887",
-                          text=T("mini-breadboard"))
+            # mini-breadboard (17 x 10, two halves) on its dark blue support, as in Fig. 3
+            c.create_rectangle(680, 318, 910, 470, fill="#22378f", outline="#0f1a55")
+            for i in range(19):
+                for j in range(12):
+                    x, y = 688 + i * 12, 324 + j * 12
+                    c.create_rectangle(x, y, x + 4, y + 4, fill="#1a2b78", outline="")
+            c.create_rectangle(706, 330, 884, 412, fill="#f1efe7", outline="#c9c5b8")
+            c.create_rectangle(710, 368, 880, 374, fill="#dedad0", outline="")
+            for r0 in range(10):
+                for c0 in range(17):
+                    x = 715 + c0 * 10
+                    y = 336 + r0 * 7 + (6 if r0 >= 5 else 0)
+                    c.create_rectangle(x - 1.5, y - 1.5, x + 1.5, y + 1.5,
+                                       fill="#3b3a36", outline="")
+            c.create_text(684, 458, anchor="w", fill="#c9d0f0",
+                          text=T("mini-breadboard"), font=("TkDefaultFont", 8))
         if "jfet" in self.placed:
-            c.create_arc(725, 405, 855, 470, start=0, extent=180,
+            for x in (740, 790, 840):
+                c.create_line(x, 430, 790 + (x - 790) * 0.25, 412, fill="#b9b9b9", width=2)
+            c.create_arc(768, 392, 812, 432, start=0, extent=180,
                          fill="#2b2b2b", outline="#111")
+            c.create_text(790, 386, text="T281", fill="#dfe3ea", font=("TkDefaultFont", 7))
         if "batt" in self.placed:
-            c.create_rectangle(690, 600, 890, 680, fill="#d8d2c4", outline="#a49c8a")
-            c.create_text(695, 604, anchor="nw", fill="#8d8677",
+            # two 2 x AA holders stacked one on the other (Fig. 3 item 6, Fig. 7)
+            c.create_rectangle(702, 664, 892, 700, fill="#0e0e10", outline="#000")
+            c.create_rectangle(694, 656, 884, 692, fill="#1d1d20", outline="#000")
+            for k in range(2):
+                y = 660 + k * 16
+                c.create_rectangle(700, y, 878, y + 13, fill="#c99a2a", outline="#5a4012")
+                c.create_rectangle(700 + (130 if k == 0 else 10), y, 738 + (130 if k == 0 else 10), y + 13,
+                                   fill="#b7261e", outline="")
+            for x, col in ((720, "#c8241e"), (790, "#1a1a1a"), (860, "#1a1a1a")):
+                c.create_line(x, 646, x, 656, fill=col, width=3)
+            c.create_text(696, 708, anchor="w", fill="#8d8677",
                           text=T("battery pack 4 x 1.5 V"))
         # wires
         for a, b in self.wires:
@@ -985,7 +1007,8 @@ class App(tk.Tk):
             fill = "#e8e3d8" if k != self.pending else "#ffd873"
             c.create_oval(x - 6, y - 6, x + 6, y + 6, fill=fill, outline="#6a6254")
             if lab:
-                c.create_text(x - 14, y, text=lab, anchor="e", fill="#4a443a",
+                c.create_text(x - 14, y, text=lab, anchor="e",
+                          fill="#e8eef2" if k in ("JG", "JS", "JD") else "#4a443a",
                               font=("TkDefaultFont", 8))
         if self.RL:
             x1, y1, _ = self.term["TD"]
@@ -1000,7 +1023,7 @@ class App(tk.Tk):
         for w in widths:                     # from the Z end downwards
             px = w * 10
             c.create_rectangle(cx - px / 2, y, cx + px / 2, y + 46,
-                               fill="#4a4238", outline="")
+                               fill="#1d1d1d", outline="")
             y += 46
         if drawn:
             for i in range(7):

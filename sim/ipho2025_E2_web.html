@@ -159,7 +159,7 @@ const T={
     hB:"B. 레일과 모래 트랙",
     bHint:"나무 트랙 (j)을 놓고, 레일 (h)의 아래쪽 끝을 트랙 끝에, 위쪽을 스탠드 기둥에 걸쳐 놓으세요. 반죽 (l)으로 양쪽을 고정합니다.\n옆모습에서 클램프를 끌어 높이를 맞추고 (기둥 눈금), 줄자를 레일에 대면 레일 위 거리를 읽을 수 있습니다.\n공 #4를 레일 위에 놓고 끌어 출발점을 정한 뒤 클릭하면 굴러갑니다. 트랙에 모래를 채우고 자로 긁어 고르세요.",
     items:{box:"a. 플라스틱 상자", bowl:"b. 그릇", bottle:"c. 모래 병", balls:"d. 강철 공 6개", tape:"e. 줄자", stand:"f. 스탠드",
-           sieve:"g. 체", rail:"h. 알루미늄 레일 1 m", brush:"i. 붓", track:"j. 나무 트랙", putty:"l. 접착 반죽", spoon:"n. 숟가락", ruler:"o. 자"},
+           sieve:"g. 체", rail:"h. 알루미늄 레일 1 m", brush:"i. 붓", track:"j. 나무 트랙", putty:"l. 접착 반죽", funnel:"m. 깔때기", spoon:"n. 숟가락", ruler:"o. 자"},
     ball:n=>"공 #"+n, noSide:"그릇 위에 스탠드를 놓거나 레일을 걸치면 옆모습이 보입니다.", noTop:"그릇이나 트랙을 놓으면 여기 보입니다.",
     hand:"손으로 듦", tapeLbl:"줄자 (cm)", rodLbl:"기둥",
     st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", notLevel:"그릇의 모래 표면이 아직 고르지 않습니다.", compact:n=>"섞지 않고 "+n+"번 충돌 — 모래가 다져지고 있습니다.",
@@ -173,7 +173,7 @@ const T={
        sieve:"체로 모래를 걸러 공을 찾았습니다. 모래를 다시 채우고 고르세요.", tapeA:"줄자를 그릇 옆에 세웠습니다 (0 = 모래 표면).", tapeB:"줄자를 레일을 따라 대었습니다.",
        ballPick:b=>"공 #"+b+" 을(를) 집었습니다.", ballHold:"공을 가로 막대 끝에 걸었습니다.", ballRail:"공을 레일 위에 놓았습니다.", ballWhere:"공은 스탠드 막대 끝이나 레일 위에 놓습니다.",
        notOver:"가로 막대 끝이 그릇 위에 있지 않습니다.", drop:"공을 놓았습니다.", impact:"공이 모래에 떨어졌습니다.", back4:"공을 집어 들었습니다.",
-       railOn:"레일을 트랙 끝과 스탠드에 걸쳤습니다.", putty:"반죽으로 레일을 고정했습니다.", brush:"붓으로 모래를 털었습니다.",
+       railOn:"레일을 트랙 끝과 스탠드에 걸쳤습니다.", putty:"반죽으로 레일을 고정했습니다.", brush:"붓으로 모래를 털었습니다.", funnel:"깔때기로 모래를 병에 다시 담았습니다.",
        roll:"공을 놓았습니다 — 굴러갑니다.", stop:"공이 멈췄습니다.", off:"공이 트랙 끝을 넘어갔습니다 — 이 측정은 쓸 수 없습니다.", which:"공 그릇에서 집을 공을 클릭하세요."}
   },
   en:{
@@ -190,7 +190,7 @@ const T={
     hB:"B. Rail and sand track",
     bHint:"Put the wooden track (j) down, lay the lower end of the rail (h) on the end of the track and its upper part on the stand rod. Fix both sides with putty (l).\nDrag the clamp in the side view to set the height (rod scale); lay the tape along the rail to read distances on it.\nPut ball #4 on the rail, drag it to the start and click it to let go. Fill the track with sand and scrape it flat with the ruler.",
     items:{box:"a. Plastic box", bowl:"b. Bowl", bottle:"c. Bottle of sand", balls:"d. 6 steel balls", tape:"e. Tape measure", stand:"f. Stand",
-           sieve:"g. Sieve", rail:"h. Aluminium rail 1 m", brush:"i. Brush", track:"j. Wooden track", putty:"l. Adhesive putty", spoon:"n. Spoon", ruler:"o. Ruler"},
+           sieve:"g. Sieve", rail:"h. Aluminium rail 1 m", brush:"i. Brush", track:"j. Wooden track", putty:"l. Adhesive putty", funnel:"m. Funnel", spoon:"n. Spoon", ruler:"o. Ruler"},
     ball:n=>"ball #"+n, noSide:"Put the stand over the bowl or lay the rail to see the side view.", noTop:"Put the bowl or the track down to see it here.",
     hand:"held by hand", tapeLbl:"tape (cm)", rodLbl:"rod",
     st:{none:"Take the apparatus out of the box and put it on the bench.", notLevel:"The sand in the bowl is not levelled yet.", compact:n=>n+" impacts without mixing — the sand is getting compacted.",
@@ -204,7 +204,7 @@ const T={
        sieve:"Sand sieved and the ball found. Refill and level the sand.", tapeA:"Tape held upright by the bowl (0 = sand surface).", tapeB:"Tape laid along the rail.",
        ballPick:b=>"Ball #"+b+" picked up.", ballHold:"Ball hung at the end of the rod.", ballRail:"Ball put on the rail.", ballWhere:"A ball goes at the end of the stand rod or on the rail.",
        notOver:"The end of the horizontal rod is not over the bowl.", drop:"Ball released.", impact:"The ball hit the sand.", back4:"Ball picked up.",
-       railOn:"Rail laid on the end of the track and on the stand.", putty:"Rail fixed with putty.", brush:"Sand brushed off.",
+       railOn:"Rail laid on the end of the track and on the stand.", putty:"Rail fixed with putty.", brush:"Sand brushed off.", funnel:"Sand poured back into the bottle through the funnel.",
        roll:"Ball released — it rolls.", stop:"The ball stopped.", off:"The ball ran off the end of the track — this run is not usable.", which:"Click the ball to take from the container."}
   }
 };
@@ -237,7 +237,7 @@ function crater(i,hcm,levelled,shots){
    ══════════════════════════════════════════════════════════════ */
 const LW=1200, LH=720, PX=7.5, TW=160, TD=96;
 const PLACE=["box","bowl","balls","stand","rail","track"];
-const TOOLS=["bottle","tape","sieve","brush","putty","spoon","ruler"];
+const TOOLS=["bottle","tape","sieve","brush","putty","funnel","spoon","ruler"];
 const BOX={box:[-20,-15,40,30], bowl:[-10,-10,20,20], balls:[-4.5,-3,9,6], stand:[-12,-9,16,18], rail:[-50,-1,100,2], track:[-25,-4,50,8]};
 const ST={
   on:{}, pos:{},
@@ -306,7 +306,8 @@ function drawBox(){ frame("box",()=>{ ctx.fillStyle="rgba(0,0,0,.2)"; ctx.fillRe
   fillR(-20,-15,40,30,1.5,"rgba(196,205,212,.92)","#7f8a94",0.2); fillR(-18.6,-13.6,37.2,27.2,1,"rgba(174,184,192,.9)"); }); }
 function drawBowl(){ frame("bowl",()=>{
   ctx.fillStyle="rgba(0,0,0,.2)"; ctx.beginPath(); ctx.arc(0.4,0.5,10,0,7); ctx.fill();
-  ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); ctx.strokeStyle="#bfc3c7"; ctx.lineWidth=0.2; ctx.stroke();
+  ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.moveTo(-9.2,-2.2); ctx.lineTo(-12.6,-1.6); ctx.quadraticCurveTo(-13.4,0,-12.6,1.6); ctx.lineTo(-9.2,2.2); ctx.fill(); ctx.strokeStyle="#bfc3c7"; ctx.lineWidth=0.2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); ctx.stroke();
   const B=ST.bowl;
   if(B.state!=="empty"){ ctx.fillStyle=B.state==="level"||B.state==="crater"?SAND:SAND_D; ctx.beginPath(); ctx.arc(0,0,9.1,0,7); ctx.fill();
     if(B.state==="filled"||B.state==="mixed"){ ctx.fillStyle="rgba(255,240,200,.35)"; for(let i=0;i<9;i++){ ctx.beginPath(); ctx.arc(Math.cos(i*2.3)*5,Math.sin(i*1.7)*5,1.4,0,7); ctx.fill(); } }
@@ -479,7 +480,7 @@ function icon(k,x,y,s){
   ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
   switch(k){
     case "box": fillR(-22,-14,44,28,3,"#c4cdd4","#7f8a94"); break;
-    case "bowl": ctx.fillStyle="#f6f5f1"; ctx.beginPath(); ctx.arc(0,0,14,0,7); ctx.fill(); ctx.strokeStyle="#bbb"; ctx.stroke(); ctx.fillStyle=SAND; ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); break;
+    case "bowl": ctx.fillStyle="#f6f5f1"; ctx.fillRect(-19,-3,6,6); ctx.beginPath(); ctx.arc(0,0,14,0,7); ctx.fill(); ctx.strokeStyle="#bbb"; ctx.stroke(); ctx.fillStyle=SAND; ctx.beginPath(); ctx.arc(0,0,10,0,7); ctx.fill(); break;
     case "bottle": fillR(-9,-16,18,32,4,"#f4f4f2","#bbb"); ctx.fillStyle="#2d5fc0"; ctx.fillRect(-6,-21,12,6); break;
     case "balls": fillR(-12,-8,24,16,3,"#e9eef2","#9aa3aa"); for(const [bx,r] of [[-6,2],[-1,3],[5,5]]){ ctx.fillStyle="#8d949b"; ctx.beginPath(); ctx.arc(bx,0,r,0,7); ctx.fill(); } break;
     case "tape": fillR(-12,-12,24,24,5,"#f1c419","#8a6d00"); ctx.fillStyle="#222"; ctx.beginPath(); ctx.arc(0,0,5,0,7); ctx.fill(); break;
@@ -489,6 +490,7 @@ function icon(k,x,y,s){
     case "brush": ctx.rotate(-0.6); ctx.fillStyle="#7a1f2a"; ctx.fillRect(-14,-1.5,22,3); ctx.fillStyle="#f0a030"; ctx.fillRect(8,-2.5,8,5); break;
     case "track": fillR(-24,-6,48,12,2,"#e6cfa6","#a8865a"); break;
     case "putty": fillR(-12,-10,24,20,3,"#f2c232"); ctx.fillStyle="#f2efe2"; ctx.beginPath(); ctx.arc(4,3,4,0,7); ctx.fill(); break;
+    case "funnel": ctx.fillStyle="rgba(232,238,242,.92)"; ctx.strokeStyle="#9aa3aa"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-14,-12); ctx.lineTo(14,-12); ctx.lineTo(3,4); ctx.lineTo(3,14); ctx.lineTo(-3,14); ctx.lineTo(-3,4); ctx.closePath(); ctx.fill(); ctx.stroke(); break;
     case "spoon": ctx.rotate(-0.6); ctx.fillStyle="#c3c8cd"; ctx.fillRect(-16,-1,22,2); ctx.beginPath(); ctx.ellipse(10,0,6,4,0,0,7); ctx.fill(); break;
     case "ruler": ctx.rotate(-0.4); ctx.fillStyle="#e8ecef"; ctx.fillRect(-26,-4,52,8); ctx.strokeStyle="#c0392b"; ctx.lineWidth=2; ctx.strokeRect(-26,-4,52,8); break;
   }
@@ -498,7 +500,7 @@ function icon(k,x,y,s){
    4.  TRAY, LAYOUT
    ══════════════════════════════════════════════════════════════ */
 const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
-const TRAY_LIST=["box","bowl","bottle","balls","tape","stand","sieve","rail","brush","track","putty","spoon","ruler"], TROW=44;
+const TRAY_LIST=["box","bowl","bottle","balls","tape","stand","sieve","rail","brush","track","putty","funnel","spoon","ruler"], TROW=44;
 let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
 const trayAvail=k=>TOOLS.includes(k)? !(hand&&hand.k===k) : !ST.on[k]&&!(hand&&hand.k===k);
 function layout(){
@@ -591,6 +593,10 @@ function handClick(c,right){
     if(onRail&&railMounted()){ ST.tapeB=!ST.tapeB; if(ST.tapeB) say("tapeB"); ST.focus="B"; return; } }
   if(k==="putty"&&onRail){ ST.putty=Math.min(2,ST.putty+1); say("putty"); return; }
   if(k==="brush"&&(onRail||onTrack)){ say("brush"); return; }
+  if(k==="funnel"){                      /* the sand goes back into the bottle: bowl or track emptied */
+    if(onBowl&&B.state!=="empty"){ if(B.ball!==null&&!B.lost){ say("noUse"); return; } Object.assign(B,{state:"empty",shots:0,D:null,ruler:false}); say("funnel"); return; }
+    if(onTrack&&Tr.state!=="empty"){ if(Tr.ball!==null){ say("noUse"); return; } Object.assign(Tr,{state:"empty",shots:0,stop:null,ruler:false}); say("funnel"); return; }
+    if(ST.on.box&&inRect("box",c)){ say("funnel"); return; } }
   say("noUse");
 }
 
