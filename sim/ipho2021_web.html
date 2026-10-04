@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2021 E1·E2 — 비이상적 축전기 · LED · Non-ideal Capacitors · LEDs · HaslaLab</title>
+<meta name="description" content="IPhO 2021 실험 1·2번을 브라우저에서 실행합니다. 측정·시료 보드와 태블릿 앱으로 100 MΩ 점퍼선을 통한 축전기 충전 곡선, 서미스터 전압, 펄스·연속 구동 LED의 전압을 재어 C(U), C(T), 누설과 분극, LED의 온도 계수와 열저항을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2021 E1·E2 — 비이상적 축전기 · LED">
+<meta property="og:description" content="IPhO 2021 실험 1·2번을 브라우저에서 실행합니다. 보드를 연결하고 태블릿 앱으로 전압·미분값을 기록합니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #tab{position:relative;background:#0e0f11;border:7px solid #0e0f11;border-radius:12px;color:#222;font:13px/1.35 -apple-system,'Segoe UI','Malgun Gothic',sans-serif}
+  #tab.off .tbar,#tab.off .tbody{opacity:.35;pointer-events:none}
+  .tbar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;background:#f6e0c8;padding:4px 6px;border-bottom:1px solid #e2c8aa}
+  .tbar label{display:flex;align-items:center;gap:3px;font-weight:600}
+  .tbar input:not([type]),.tbar input[size]{background:#fff;border:1px solid #c9b294;border-radius:3px;padding:2px 4px;font:12px ui-monospace,Consolas,monospace;color:#111}
+  .tbar input[type=range]{width:110px;accent-color:#c2662d}
+  .tbar button,.mbox button{width:auto;margin:0;padding:3px 8px;background:#fff;color:#222;border:1px solid #c9b294;border-radius:4px;font-size:12px}
+  .tbar button.ok,.mbox button.ok{color:#1e8449;font-weight:700}.tbar button.no{color:#c0392b;font-weight:700}
+  .tbar select,.axisx select,.axisy select{background:#fff;border:1px solid #c9b294;border-radius:3px;font-size:12px;padding:1px 3px;color:#111}
+  .toast{color:#b03020;font-weight:600;margin-left:8px}
+  .tbody{display:flex;gap:4px;background:#111}
+  .tleft{width:36%;background:#dfe3f3;display:flex;flex-direction:column;min-width:0}
+  #tLive{margin:4px 6px;font:12px/1.45 ui-monospace,Consolas,monospace;min-height:16px;white-space:pre}
+  #tTable{flex:1;overflow:auto;max-height:300px;font:11.5px ui-monospace,Consolas,monospace;margin:0 4px 4px;background:#fff}
+  #tTable table{border-collapse:collapse;width:100%}#tTable th{position:sticky;top:0;background:#c9cfe6;font-weight:600}
+  #tTable td,#tTable th{padding:1px 5px;text-align:right;border-bottom:1px solid #eef}
+  .tright{flex:1;background:#f6e0c8;display:flex;flex-direction:column;min-width:0;position:relative}
+  #chart{width:100%;height:330px;display:block}
+  .axisx{text-align:right;padding:2px 6px}.axisy{position:absolute;left:4px;top:4px;z-index:2}
+  .modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:5}
+  .modal[hidden]{display:none!important}
+  .mbox{background:#fbf4ea;color:#111;border-radius:8px;padding:14px 16px;min-width:300px;max-width:90%;max-height:88%;overflow:auto;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+  .mbox label{display:flex;align-items:center;gap:6px;margin:4px 0}.mbox input[type=text],.mbox input:not([type]){border:1px solid #c9b294;border-radius:3px;padding:3px 5px;margin:4px 0}
+  .mrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}.hintsm{font-size:11px;color:#666;margin:4px 0}
+  .mbox .fx{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 0;font:12px ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <div id="tab">
+        <div class="tbar">
+          <label><input type="checkbox" id="tMeas"> <span id="l-meas"></span></label>
+          <input id="tTitle" size="14">
+          <button id="tSave" class="ok">+</button><button id="tDel" class="no">✖</button>
+          <button id="tPick"></button>
+          <button id="tReplot">⟳</button>
+          <span>X =</span><input id="tXmin" size="5"><span>…</span><input id="tXmax" size="5">
+          <span>Y =</span><input id="tYmin" size="5"><span>…</span><input id="tYmax" size="5">
+        </div>
+        <div class="tbar">
+          <label><input type="checkbox" id="tCheck"> <span id="l-check"></span></label>
+          <button id="tSet">⚙</button>
+          <span>iH=</span><input id="tIH" size="6" value="0"><input type="range" id="sIH" min="0" max="1000" value="0"><span>mA</span>
+          <span>iL=</span><input id="tIL" size="6" value="0"><input type="range" id="sIL" min="0" max="1000" value="0"><span>mA</span>
+          <span>tL=</span><input id="tTL" size="5" value="0"><input type="range" id="sTL" min="0" max="255" value="0"><span>ms</span>
+        </div>
+        <div class="tbar">
+          <button id="tFx">✎ f(x)</button>
+          <select id="col0"></select><select id="col1"></select><select id="col2"></select>
+          <span id="tToast" class="toast"></span>
+        </div>
+        <div class="tbody">
+          <div class="tleft"><pre id="tLive"></pre><div id="tTable"></div></div>
+          <div class="tright">
+            <div class="axisy"><select id="tY"></select></div>
+            <canvas id="chart"></canvas>
+            <div class="axisx"><select id="tX"></select></div>
+          </div>
+        </div>
+        <div class="modal" id="mUsb" hidden><div class="mbox"><p id="l-perm"></p><div class="mrow"><button id="bDeny"></button><button id="bAllow"></button></div></div></div>
+        <div class="modal" id="mPick" hidden><div class="mbox"><b id="l-pick"></b><div id="pickList"></div><div class="mrow"><button id="pickCancel"></button><button id="pickOk"></button></div></div></div>
+        <div class="modal" id="mFx" hidden><div class="mbox"><b id="l-fx"></b><input id="fxIn" size="40"><div class="hintsm">uC uT uL duC duT duL iL iH t | sin cos tan exp asin acos atan ln | * / ^ + −</div><div id="fxList"></div><div class="mrow"><button id="fxAdd" class="ok">+</button><button id="fxOk">OK</button></div></div></div>
+        <div class="modal" id="mSet" hidden><div class="mbox" id="setBox"></div></div>
+        <div class="offscreen" id="tOff"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+    <h2 id="t-h-board"></h2>
+    <p class="hint" id="t-boardhint"></p>
+    <h2 id="t-h-app"></h2>
+    <p class="hint" id="t-apphint"></p>
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2021 실험 1·2 — 비이상적 축전기 · 발광 다이오드",
+    sub:"가상 실험실 · 한 장의 측정·시료 보드와 태블릿 앱으로 두 실험을 합니다 (실제 시험과 같습니다). 앱은 원시 전압·미분값·전류·시간만 보여 줍니다 — 전기용량·온도·열저항은 직접 계산하세요.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 점퍼선 끝을 집어 단자에 꽂기",
+    closeCap:"태블릿 — IPhO 2021 Experiments 앱",
+    hTime:"시간 배속", timeHint:"충전·가열은 실제로 수 분이 걸립니다. 배속은 보드와 앱의 시간에 똑같이 적용됩니다.",
+    hBoard:"1. 측정·시료 보드",
+    boardHint:"USB 전원 (2)을 꽂으면 보드가 켜지고, 보드–태블릿 케이블 (5)과 태블릿 (6)을 놓으면 앱이 USB 접근 허용을 묻습니다. 허용한 뒤 10초 안에 보드의 RESET 버튼을 누르세요.\n점퍼선 W1 (내부에 100 MΩ 저항 R1)과 W2 (0 Ω)의 끝을 집어 +9V·−9V·GND·IN 단자에 꽂습니다. S1은 클릭하면 C1 → 가운데 → C2로 바뀝니다 (가운데는 쓰지 않음).\n단열재 (4)는 항온조 위의 흰 판입니다 — 누설 측정 때는 우클릭으로 치우세요. 온도계 (7)는 시험장 온도입니다.",
+    hApp:"앱 (가이드 G1)",
+    appHint:"Measure를 켜면 기록이 시작되고, 끄면 '마지막 측정'이 됩니다. 이름을 쓰고 +로 저장, 저장한 측정은 그래프에 겹쳐 볼 수 있습니다. Check state는 기록 없이 현재 값을 보여 줍니다.\niH: 히터 전류 0–500 mA, iL: LED 전류 0–50 mA, tL: LED 펄스 폭 (0 = 연속). ⚙ 설정에서 측정 시간 간격과 스윕 측정을 고릅니다. f(x)로 원시 변수의 식을 만들어 표·그래프에 쓸 수 있습니다.\n서미스터: R(T) = R0·exp(B/T), B = 3500 K, R3 = 2.26 kΩ, 3.3 V 분압.",
+    items:{board:"1. 측정·시료 보드", charger:"2. USB 전원", W1:"3. 점퍼선 W1 (100 MΩ)", W2:"3. 점퍼선 W2 (0 Ω)", insul:"4. 단열재", cable:"5. 보드–태블릿 케이블", tablet:"6. 태블릿", therm:"7. 온도계 (시험장)"},
+    lab:{usb:"USB (j)", pin6:"6-PIN (k)", reset:"RESET (i)", id:"보드 ID", pw:"보드 전원", nopw:"전원 없음", thermo:"항온조 (PCB)", insul:"단열재", roomT:"실온", short:"⚠ 두 전압원 사이 단락 — 점퍼선을 빼세요!", app:"IPhO 2021\nExperiments"},
+    app:{meas:"Measure", check:"Check state", pick:"Tap for measurements", last:"Last measurement", usbNo:"No USB connected", perm:"앱이 USB 장치에 접근하도록 허용할까요?", allow:"허용", deny:"거부",
+         pressReset:"10초 안에 보드의 RESET 버튼을 누르세요!", connected:"장치가 연결되었습니다.", plugFirst:"먼저 보드를 연결하고 전원을 켠 뒤 리셋하세요.", denied:"USB 접근이 허용되지 않았습니다",
+         noTitle:"측정 이름이 입력되지 않았습니다!", exists:"같은 이름이 이미 있습니다!", noMeas:"해당 이름의 측정이 없습니다", saved:(n,k)=>'"'+n+'" 저장됨 ('+k+"개)", deleted:n=>n+" 삭제됨",
+         during:"측정 중에는 할 수 없습니다.", badLed:"LED 전류 값이 잘못되었습니다!", badHeat:"히터 전류 값이 잘못되었습니다!", badPulse:"LED 펄스 폭 값이 잘못되었습니다!", stopped:"측정이 멈췄습니다.",
+         cancel:"취소", select:"선택", fx:"함수 편집기", bad:"식을 읽을 수 없습니다", set:"설정", ts:"측정 시간 간격 (ms)", offLed:"측정 종료 시 LED 전류 끄기", offHeat:"측정 종료 시 히터 전류 끄기",
+         sweep:"스윕 측정", smin:"스윕 최소 전류 (mA)", smax:"스윕 최대 전류 (mA)", sn:"스윕 단계 수", sexp:"전류를 지수적으로 증가", spulse:"펄스 전류 사용", spw:"펄스 폭 (ms)", apply:"적용"},
+    st:{none:"부품함에서 보드를 꺼내 실험대에 놓으세요."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
+       noFit:"그곳에는 놓을 수 없습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       end:"점퍼선 끝을 집었습니다 — 꽂을 단자를 클릭하세요.", plugged:n=>"점퍼선 끝을 "+n+" 단자에 꽂았습니다.", busy:"그 단자는 이미 쓰고 있습니다.", dropped:"점퍼선 끝을 실험대에 내려놓았습니다.",
+       sw:s=>"S1: "+s, reset:"RESET 버튼을 눌렀습니다.", insulOff:"단열재를 치웠습니다.", insulOn:"단열재를 항온조 위에 덮었습니다.", needBoard:"먼저 보드를 놓으세요."}
+  },
+  en:{
+    title:"IPhO 2021 Experiments 1 & 2 — Non-ideal capacitors · Light emitting diodes",
+    sub:"Virtual laboratory · one measurement and sample board and one tablet app serve both experiments (as in the real examination). The app shows raw voltages, derivatives, currents and time only — capacitances, temperatures and thermal resistances are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above) — L-click pick up / put down / plug / press, R-click return / unplug, pick up a jumper wire end and plug it into a socket",
+    closeCap:"tablet — the IPhO 2021 Experiments app",
+    hTime:"Time scale", timeHint:"Charging and heating really take minutes. The scale applies to the board and the app alike.",
+    hBoard:"1. Measurement and sample board",
+    boardHint:"Plug the USB power source (2) in to power the board; put the board–tablet cable (5) and the tablet (6) down and the app asks for USB access. Allow it, then press RESET on the board within 10 s.\nPick up an end of jumper wire W1 (100 MΩ resistor R1 inside) or W2 (0 Ω) and plug it into +9V, −9V, GND or IN. Click S1 to go C1 → middle → C2 (the middle is never used).\nThe heat insulating material (4) is the white pad on the thermostat — R-click it away for leakage measurements. The thermometer (7) shows the hall temperature.",
+    hApp:"The app (guide G1)",
+    appHint:"Measure starts recording; switching it off makes the 'last measurement'. Type a title and press + to save it; saved measurements can be overlaid on the graph. Check state shows the current values without recording.\niH: heater current 0–500 mA, iL: LED current 0–50 mA, tL: LED pulse width (0 = continuous). ⚙ sets the time step and the sweep measurement. f(x) builds expressions of the raw variables for the table and the graph.\nThermistor: R(T) = R0·exp(B/T), B = 3500 K, R3 = 2.26 kΩ, 3.3 V divider.",
+    items:{board:"1. Measurement and sample board", charger:"2. USB power source", W1:"3. Jumper wire W1 (100 MΩ)", W2:"3. Jumper wire W2 (0 Ω)", insul:"4. Heat insulating material", cable:"5. Board–tablet cable", tablet:"6. Tablet", therm:"7. Thermometer (hall)"},
+    lab:{usb:"USB (j)", pin6:"6-PIN (k)", reset:"RESET (i)", id:"Board ID", pw:"board powered", nopw:"no power", thermo:"Thermostat (PCB)", insul:"insulation", roomT:"room", short:"⚠ Short circuit between two sources — pull the wire out!", app:"IPhO 2021\nExperiments"},
+    app:{meas:"Measure", check:"Check state", pick:"Tap for measurements", last:"Last measurement", usbNo:"No USB connected", perm:"Allow the app to access the USB device?", allow:"ALLOW", deny:"DENY",
+         pressReset:"Please press RESET button on the board in 10 seconds!", connected:"Device connected.", plugFirst:"Please plug in, power on and reset the board first.", denied:"USB Permission not granted",
+         noTitle:"No measurement title entered!", exists:"This name already exists!", noMeas:"No measurement with this title exists", saved:(n,k)=>'"'+n+'" saved ('+k+" pts)", deleted:n=>n+" deleted",
+         during:"You don't want to do this during measurement.", badLed:"Bad value of LED current!", badHeat:"Bad heater current value!", badPulse:"Bad value of LED current pulse width entered!", stopped:"All running measurements stopped.",
+         cancel:"CANCEL", select:"SELECT", fx:"Function Editor", bad:"Cannot read the expression", set:"Settings", ts:"Time step of measurement (ms)", offLed:"Turn off LED current when measurement is done.", offHeat:"Turn off heating current when measurement is done.",
+         sweep:"Sweep measurement", smin:"Minimum sweep current (mA)", smax:"Maximum sweep current (mA)", sn:"Number of sweep steps", sexp:"Increase current exponentially", spulse:"Set pulsed current", spw:"Pulse duration (ms)", apply:"Apply"},
+    st:{none:"Take the board out of the box and put it on the bench."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.",
+       noFit:"It does not fit there.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       end:"Wire end picked up — click the socket to plug it into.", plugged:n=>"Wire end plugged into "+n+".", busy:"That socket is in use.", dropped:"Wire end put down on the bench.",
+       sw:s=>"S1: "+s, reset:"RESET pressed.", insulOff:"Insulating material taken off.", insulOn:"Insulating material put over the thermostat.", needBoard:"Put the board down first."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  THE BOARD  (the same hardware model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2021ab)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const R_HEAT=3.90, RTH_INS=78.0, RTH_OPEN=55.0, C_TH=1.50;
+const NTC_B=3500, NTC_R0=0.03435, R3=2260, U_SUP=3.3;
+const LED_M=0.06497294, LED_IS=1.7679150e-15, LED_RS=4.70832, LED_TREF=22.0, RTH_LED=400;
+const LED_S=[[0.003,-1.563],[0.010,-1.722],[0.020,-1.790],[0.040,-2.010]];
+const C1_NOM=0.1000e-6, C2_A=19.33e-6, C2_TC=-17.8, C2_W0=2.19, C2_WT=0.025, C2_P=2.66, C2_FLOOR=0.060e-6;
+const C2_BR=[[0.060,0.030],[0.050,0.250],[0.040,1.50],[0.030,12.0]], C2_FBR=C2_BR.reduce((a,b)=>a+b[0],0);
+const R_LEAK=30.0e9, R_WET=20.0e9, I_VM=20e-12, R_W1=100e6;
+const SOURCES={P9A:9,P9B:9,N9A:-9,N9B:-9,GNDA:0,GNDB:0}, IN_S=["INA","INB"];
+const LED_MAX=50, HEAT_MAX=500, PULSE_MIN=0.1, PULSE_MAX=25.5;
+function ledDUdT(i){ const xs=LED_S.map(a=>Math.log(a[0])), ys=LED_S.map(a=>a[1]), x=Math.log(Math.max(i,1e-9)); let y;
+  if(x<=xs[0]) y=ys[0]+(ys[1]-ys[0])/(xs[1]-xs[0])*(x-xs[0]);
+  else if(x>=xs[3]) y=ys[3]+(ys[3]-ys[2])/(xs[3]-xs[2])*(x-xs[3]);
+  else for(let j=0;j<3;j++) if(xs[j]<=x&&x<=xs[j+1]){ y=ys[j]+(x-xs[j])/(xs[j+1]-xs[j])*(ys[j+1]-ys[j]); break; }
+  return Math.max(-2.2,Math.min(-1.0,y))*1e-3; }
+const qz=(x,lsb,sig)=>Math.round((x+sig*gauss())/lsb)*lsb;
+const B={
+  roomT:Math.round(U(21,26)*10)/10, id:String(Math.floor(U(100000,999999))),
+  ntcR0:NTC_R0*(1+U(-0.02,0.02)), c1:C1_NOM*(1+U(-0.006,0.006)), c2s:1+U(-0.02,0.02), ledDU:U(-0.0015,0.0015),
+  powered:false, data:false, insulation:true, sw1:"C1", wires:{W1:[null,null],W2:[null,null]}, short:false, resetAt:-1e9,
+  iH:0, iL:0, tL:0, t:0, Tpcb:0, uC:0, vb:[0,0,0,0], duC:0, duT:0, duL:0, uTp:null, uLp:null, timestep:0.140
+};
+B.Tpcb=B.roomT;
+function wirePaths(){ const out=[]; B.short=false;
+  for(const [nm,[a,b]] of Object.entries(B.wires)){ const R=nm==="W1"?R_W1:0;
+    if(a in SOURCES&&b in SOURCES&&SOURCES[a]!==SOURCES[b]&&R===0) B.short=true;
+    for(const [x,y] of [[a,b],[b,a]]) if(IN_S.includes(x)&&y in SOURCES) out.push([R,SOURCES[y]]); }
+  return out; }
+function c2Total(u,Tc){ const w=C2_W0+C2_WT*(Tc-29), hi=C2_A/(Tc-C2_TC); return B.c2s*(hi/(1+Math.pow(Math.abs(u)/w,C2_P))+C2_FLOOR); }
+function capValue(u,Tc){ if(B.sw1==="C1") return B.c1; if(B.sw1==="C2") return (1-C2_FBR)*c2Total(u,Tc); return 1e-12; }
+function ledV(imA,Tj){ if(imA<=1e-6) return 0; const i=imA*1e-3; return LED_M*Math.log1p(i/LED_IS)+LED_RS*i+B.ledDU+ledDUdT(i)*(Tj-LED_TREF); }
+function ledState(){
+  if(B.iL<=1e-6||!B.powered) return [0,B.Tpcb,0];
+  if(B.tL>0){ const u=ledV(B.iL,B.Tpcb), duty=Math.min(1,B.tL*1e-3/Math.max(B.timestep,1e-3)); return [u,B.Tpcb,u*B.iL*1e-3*duty]; }
+  let Tj=B.Tpcb, u=0; for(let k=0;k<4;k++){ u=ledV(B.iL,Tj); Tj=B.Tpcb+RTH_LED*u*B.iL*1e-3; } u=ledV(B.iL,Tj); return [u,Tj,u*B.iL*1e-3]; }
+const ntcV=()=>{ const R=B.ntcR0*Math.exp(NTC_B/(B.Tpcb+273.15)); return U_SUP*R/(R+R3); };
+function boardStep(dt){
+  if(!B.powered){ B.iH=0; B.iL=0; }
+  B.t+=dt;
+  const ph=(B.iH*1e-3)**2*R_HEAT, [uLn,,pl]=ledState(), rth=B.insulation?RTH_INS:RTH_OPEN;
+  B.Tpcb+=(ph+pl-(B.Tpcb-B.roomT)/rth)/C_TH*dt;
+  const C=capValue(B.uC,B.Tpcb); let clamp=null, iext=0;
+  for(const [R,V] of wirePaths()){ if(R<=0) clamp=V; else iext+=(V-B.uC)/R; }
+  const u=B.uC;
+  iext-=u/R_LEAK*(1+0.5*(u/9)**2);
+  if(Math.abs(u)>1e-3) iext-=Math.sign(u)*I_VM;
+  if(B.insulation) iext-=u/R_WET;
+  if(B.sw1==="C2"){ C2_BR.forEach(([f,tau],k)=>{ const Cb=f*c2Total(B.vb[k],B.Tpcb), ib=(B.uC-B.vb[k])*Cb/tau; iext-=ib; B.vb[k]+=ib/Cb*dt; }); }
+  else for(let k=0;k<4;k++) B.vb[k]+=(B.uC-B.vb[k])*dt/0.05;
+  if(clamp!==null){ B.uC=clamp; B.duC=0; }
+  else { B.duC=iext/C; B.uC=Math.max(-12,Math.min(12,B.uC+B.duC*dt)); }
+  const uTn=ntcV();
+  B.duT=B.uTp!==null?(uTn-B.uTp)/dt:0; B.duL=B.uLp!==null?(uLn-B.uLp)/dt:0; B.uTp=uTn; B.uLp=uLn;
+}
+function sample(){
+  if(!B.powered||!B.data) return null;
+  const uL=ledState()[0];
+  return {t:B.t, uC:qz(B.uC,0.25e-3,0.20e-3), uT:qz(ntcV(),0.10e-3,0.10e-3), uL:qz(uL,0.10e-3,0.15e-3),
+          duC:B.duC+0.6e-3*gauss(), duT:B.duT+3e-4*gauss(), duL:B.duL+5e-3*gauss(), iL:B.iL, iH:B.iH};
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE BENCH  (seen from above, 1200 × 720)
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const LW=1200, LH=720, FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+const PLACE=["board","charger","cable","tablet","therm","W1","W2","insul"];
+const SZ={board:[620,330],charger:[70,46],cable:[60,30],tablet:[230,150],therm:[44,130],W1:[40,40],W2:[40,40]};
+const ST={ on:{board:false,charger:false,cable:false,tablet:false,therm:false,W1:false,W2:false,insul:true},
+  pos:{board:{x:40,y:40},charger:{x:820,y:560},cable:{x:820,y:470},tablet:{x:760,y:120},therm:{x:1080,y:80},W1:{x:780,y:380},W2:{x:780,y:420}},
+  ends:{W1:[[740,380],[820,380]],W2:[[740,420],[820,420]]} };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1, simNow=0;
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const bx=()=>ST.pos.board.x, by=()=>ST.pos.board.y;
+const SOCK_NAMES=[["N9A","-9V"],["N9B","-9V"],["GNDA","GND"],["GNDB","GND"],["P9A","+9V"],["P9B","+9V"],["INA","IN"],["INB","IN"]];
+const sockXY=n=>{ const i=SOCK_NAMES.findIndex(s=>s[0]===n); return [bx()+566,by()+52+30*i]; };
+const USBP=()=>[bx()+140,by()+4], PIN6=()=>[bx()+330,by()+4], RESET=()=>[bx()+486,by()+30], SW1=()=>[bx()+462,by()+150];
+const LEDP=()=>[bx()+186,by()+266], PAD=()=>[bx()+70,by()+216,210,96];
+function endXY(w,i){ const s=B.wires[w][i]; return s&&ST.on.board?sockXY(s):ST.ends[w][i]; }
+function bench(){
+  ctx.fillStyle="#cfc8bb"; ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(120,100,70,.10)"; ctx.lineWidth=1;
+  for(let x=0;x<=LW;x+=60){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+}
+function drawBoard(){
+  const x0=bx(), y0=by(), t=d();
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(x0+5,y0+6,620,330);
+  fillR(x0,y0,620,330,8,"#1f6b3a","#12401f",3); ctx.strokeStyle="#2f8b4a"; ctx.strokeRect(x0+7,y0+7,606,316);
+  ctx.strokeStyle="#2a7d45"; for(let x=x0+24;x<x0+540;x+=34){ ctx.beginPath(); ctx.moveTo(x,y0+40); ctx.lineTo(x,y0+190); ctx.stroke(); }
+  fillR(x0+24,y0+46,80,70,4,"#123","#345"); circ(x0+56,y0+80,24,"#1a1a2a","#889"); text("1000µF",x0+56,y0+76,"#dde",7,"center"); text("6.3V",x0+56,y0+86,"#dde",7,"center");
+  fillR(x0+180,y0+50,120,56,4,"#0d1a2a","#345"); text("MCU",x0+240,y0+78,"#8ab",10,"center","700");
+  fillR(USBP()[0]-24,y0-2,48,22,3,"#b0b0b8","#666"); text(t.lab.usb,USBP()[0],y0+32,"#dfe",9,"center");
+  fillR(PIN6()[0]-28,y0-2,56,22,3,"#e8e8e0","#666"); text(t.lab.pin6,PIN6()[0],y0+32,"#dfe",9,"center");
+  circ(...RESET(),13,"#333","#999",2); text(t.lab.reset,RESET()[0],RESET()[1]+24,"#dfe",9,"center");
+  circ(x0+60,y0+138,6,B.powered?"#3f6":"#252","#062"); text(B.powered?t.lab.pw:t.lab.nopw,x0+74,y0+138,"#dfe",9.5);
+  /* terminal strip */
+  fillR(x0+540,y0+30,72,262,4,"#0e4a29","#0a3a20");
+  for(const [n,lab] of SOCK_NAMES){ const [x,y]=sockXY(n), used=Object.values(B.wires).some(w=>w.includes(n));
+    circ(x,y,9,used?"#f2e2a0":"#d8b24a","#7a5a10",2); circ(x,y,3.5,"#3a2a08"); text(lab,x+14,y,"#eafbea",10,"left","700"); }
+  /* S1 */
+  const [sx,sy]=SW1(); fillR(sx-15,sy-44,30,88,4,"#222","#888",1.5);
+  const off={C1:-28,MID:0,C2:28}[B.sw1]; fillR(sx-11,sy+off-11,22,22,3,"#ddd","#333");
+  text("C1",sx,sy-58,"#dfe",10,"center","700"); text("C2",sx,sy+58,"#dfe",10,"center","700"); text("S1",sx+26,sy,"#dfe",9,"left","700");
+  /* thermostat block with the components */
+  fillR(x0+24,y0+196,290,124,4,"#2b2b2b","#111"); text(t.lab.thermo,x0+169,y0+206,"#bbb",9,"center");
+  for(const xx of [x0+44,x0+294]){ circ(xx,y0+232,11,"#f2f2ee","#bbb"); ctx.strokeStyle="#999"; ctx.beginPath(); ctx.moveTo(xx-6,y0+232); ctx.lineTo(xx+6,y0+232); ctx.stroke(); }
+  fillR(x0+120,y0+252,46,28,3,"#8a5a20","#5a3a10"); text("C1 C2",x0+143,y0+266,"#fff",8,"center");
+  fillR(x0+204,y0+256,24,20,2,"#111","#666"); text("NTC",x0+216,y0+266,"#ddd",7,"center");
+  fillR(x0+92,y0+290,46,16,2,"#d8d8d8","#666"); text("Rheat",x0+115,y0+298,"#333",7,"center");
+  const [lx,ly]=LEDP(); circ(lx,ly,9,"#c8c8c8","#777");
+  const glow=B.powered?Math.min(1,B.iL/30)*(B.tL>0?0.35:1):0;
+  if(glow>0.02){ const g=ctx.createRadialGradient(lx,ly,0,lx,ly,12+18*glow); g.addColorStop(0,"rgba(255,246,208,1)"); g.addColorStop(0.4,"rgba(255,120,80,"+(0.6+0.4*glow)+")"); g.addColorStop(1,"rgba(255,80,60,0)"); ctx.fillStyle=g; circ(lx,ly,12+18*glow,g); }
+  if(ST.on.insul){ const [px,py,pw,ph]=PAD(); fillR(px,py,pw,ph,3,"rgba(251,251,247,.96)","#ddd"); text(t.lab.insul,px+pw/2,py+ph/2,"#999",10,"center");
+    fillR(x0+34,y0+212,270,8,2,"#e8f0f8","#b8c8d8");
+    if(glow>0.02){ const g=ctx.createRadialGradient(lx,ly,0,lx,ly,14+16*glow); g.addColorStop(0,"rgba(255,170,150,"+(0.5*glow)+")"); g.addColorStop(1,"rgba(255,170,150,0)"); circ(lx,ly,14+16*glow,g); } }
+  /* board ID */
+  fillR(x0+392,y0+236,100,74,3,"#f4f4ee","#999"); text(t.lab.id,x0+442,y0+250,"#333",9,"center");
+  text(B.id,x0+442,y0+272,"#111",14,"center","700",MONO);
+  for(let i=0;i<5;i++) for(let j=0;j<8;j++) if((i*7+j*3+(+B.id[i%6]))%3===0){ ctx.fillStyle="#111"; ctx.fillRect(x0+402+j*10,y0+286+i*4,8,3); }
+  if(B.short) text(t.lab.short,x0+310,y0+350,"#c0392b",14,"center","700");
+}
+function cableCurve(a,b,col,w){ ctx.strokeStyle=col; ctx.lineWidth=w||3; ctx.beginPath(); ctx.moveTo(...a);
+  const m=[(a[0]+b[0])/2,Math.max(a[1],b[1])+50]; ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke(); }
+function drawParts(){
+  const P=ST.pos, t=d();
+  if(ST.on.charger){ const {x,y}=P.charger; fillR(x-35,y-23,70,46,6,"#222","#000"); text("5V",x,y,"#fff",11,"center","700"); if(ST.on.board) cableCurve([x-35,y],[USBP()[0],USBP()[1]+2],"#333"); }
+  if(ST.on.cable){ const {x,y}=P.cable; fillR(x-30,y-15,60,30,4,"#888","#555"); text("6-pin",x,y,"#111",9,"center","700");
+    if(ST.on.board) cableCurve([x-30,y],[PIN6()[0],PIN6()[1]+2],"#777"); if(ST.on.tablet) cableCurve([x+30,y],[P.tablet.x,P.tablet.y+75],"#777"); }
+  if(ST.on.tablet){ const {x,y}=P.tablet; fillR(x-115,y-75,230,150,10,"#111","#000",3); fillR(x-105,y-65,210,130,4,connected?"#f6e0c8":"#3a3a3a");
+    t.lab.app.split("\n").forEach((s,i)=>text(s,x,y-8+i*16,connected?"#222":"#888",12,"center","700")); }
+  if(ST.on.therm){ const {x,y}=P.therm; fillR(x-22,y-65,44,130,8,"#fff","#666"); text(B.roomT.toFixed(1),x,y-26,"#111",14,"center","700",MONO); text("°C",x,y-6,"#111",11,"center"); text(t.lab.roomT,x,y+30,"#555",9,"center"); }
+  for(const w of ["W1","W2"]){ if(!ST.on[w]) continue;
+    const a=hand&&hand.k==="end"&&hand.w===w&&hand.i===0?mouse:endXY(w,0), b=hand&&hand.k==="end"&&hand.w===w&&hand.i===1?mouse:endXY(w,1);
+    const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.max(1e-6,Math.hypot(dx,dy)), m=[(a[0]+b[0])/2-dy/L*Math.min(90,24+0.4*L),(a[1]+b[1])/2+dx/L*Math.min(90,24+0.4*L)];
+    ctx.strokeStyle="#2a6fd6"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(...a); ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke();
+    const mid=[(a[0]+2*m[0]+b[0])/4,(a[1]+2*m[1]+b[1])/4];
+    if(w==="W1"){ fillR(mid[0]-20,mid[1]-8,40,16,3,"#e8e0c0","#444"); text("100 MΩ",mid[0],mid[1],"#222",8,"center","700"); } else text("W2 (0 Ω)",mid[0],mid[1]-12,"#1d3d78",9,"center","700");
+    for(const e of [a,b]){ circ(e[0],e[1],7,"#c0c0c8","#333",2); } }
+}
+function drawBench(){
+  bench();
+  if(ST.on.board) drawBoard();
+  drawParts();
+  if(hand&&PLACE.includes(hand.k)&&hand.k!=="insul"){ ctx.save(); ctx.globalAlpha=0.5; ctx.strokeStyle="#f2c14e"; ctx.setLineDash([6,4]); ctx.lineWidth=2;
+    const [w,h]=SZ[hand.k]; if(hand.k==="board") ctx.strokeRect(mouse[0],mouse[1],w,h); else ctx.strokeRect(mouse[0]-w/2,mouse[1]-h/2,w,h); ctx.restore(); }
+  if(hand&&hand.k==="insul"){ ctx.save(); ctx.globalAlpha=0.6; fillR(mouse[0]-60,mouse[1]-30,120,60,3,"#fbfbf7","#ccc"); ctx.restore(); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  TRAY AND HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "board": fillR(-22,-14,44,28,3,"#1f6b3a","#12401f"); for(let i=0;i<4;i++) circ(16,-9+i*6,2,"#d8b24a"); fillR(-16,2,18,10,1,"#2b2b2b"); break;
+    case "charger": fillR(-12,-9,24,18,3,"#222"); text("5V",0,0,"#fff",8,"center","700"); break;
+    case "cable": ctx.strokeStyle="#777"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-16,6); ctx.bezierCurveTo(-6,-12,6,12,16,-6); ctx.stroke(); fillR(-20,2,8,8,1,"#888"); break;
+    case "tablet": fillR(-18,-12,36,24,3,"#111"); fillR(-15,-9,30,18,1,"#f6e0c8"); break;
+    case "therm": fillR(-5,-15,10,30,3,"#fff","#666"); break;
+    case "W1": case "W2": ctx.strokeStyle="#2a6fd6"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-16,6); ctx.bezierCurveTo(-6,-12,6,12,16,-6); ctx.stroke(); if(k==="W1") fillR(-5,-4,10,7,1,"#e8e0c0","#444"); break;
+    case "insul": fillR(-16,-10,32,20,2,"#fbfbf7","#ccc"); break;
+  }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["board","charger","W1","W2","insul","cable","tablet","therm"], TROW=44;
+let TRW=190, TRH=500, trayCells=[];
+const trayAvail=k=>!ST.on[k]&&!(hand&&hand.k===k);
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  sizeChart(); drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,26,y+(TROW-4)/2,0.75); ctx.restore(); ctx=old;
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; let nm=itemName(k); while(c.measureText(nm).width>wd-52&&nm.length>4) nm=nm.slice(0,-2)+"…"; c.fillText(nm,50,y+13);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,50,y+28);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function inPart(k,p){ if(!ST.on[k]) return false;
+  if(k==="board") return p[0]>=bx()&&p[0]<=bx()+620&&p[1]>=by()&&p[1]<=by()+330;
+  const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(p[0]-q.x)<=w/2&&Math.abs(p[1]-q.y)<=h/2; }
+function fits(k,x,y){ const [w,h]=SZ[k]; if(k==="board") return x>=4&&y>=4&&x+w<=LW-4&&y+h<=LH-4&&!["charger","cable","tablet","therm"].some(o=>ST.on[o]&&ST.pos[o].x+SZ[o][0]/2>x&&ST.pos[o].x-SZ[o][0]/2<x+w&&ST.pos[o].y+SZ[o][1]/2>y&&ST.pos[o].y-SZ[o][1]/2<y+h);
+  if(x-w/2<4||y-h/2<4||x+w/2>LW-4||y+h/2>LH-4) return false;
+  if(ST.on.board&&x+w/2>bx()&&x-w/2<bx()+620&&y+h/2>by()&&y-h/2<by()+330) return false;
+  for(const o of ["charger","cable","tablet","therm"]){ if(o===k||!ST.on[o]) continue; const q=ST.pos[o], [a,b]=SZ[o]; if(Math.abs(x-q.x)<(w+a)/2+4&&Math.abs(y-q.y)<(h+b)/2+4) return false; }
+  return true; }
+function sockAt(p){ if(!ST.on.board) return null; for(const [n] of SOCK_NAMES) if(near(p,sockXY(n),12)) return n; return null; }
+function returnItem(k){
+  if(k==="board"){ for(const w of ["W1","W2"]) for(const i of [0,1]) if(B.wires[w][i]){ ST.ends[w][i]=sockXY(B.wires[w][i]); B.wires[w][i]=null; } }
+  if(k==="W1"||k==="W2") B.wires[k]=[null,null];
+  if(k==="insul") B.insulation=false;
+  ST.on[k]=false; syncLinks(); say("back",itemName(k));
+}
+function syncLinks(){ B.powered=ST.on.board&&ST.on.charger; B.data=ST.on.board&&ST.on.cable&&ST.on.tablet; if(!B.powered){ B.iH=0; B.iL=0; } }
+function returnHand(){ if(!hand) return; if(hand.move){ ST.pos[hand.k]=hand.orig; ST.on[hand.k]=true; syncLinks(); say("stays"); }
+  if(hand.k==="end"){ ST.ends[hand.w][hand.i]=hand.orig; }
+  hand=null; }
+function benchClick(p,right){
+  if(hand){
+    if(right){ returnHand(); return; }
+    const k=hand.k;
+    if(k==="end"){ const s=sockAt(p);
+      if(s){ if(Object.values(B.wires).some(w=>w.includes(s))){ say("busy"); return; } B.wires[hand.w][hand.i]=s; say("plugged",SOCK_NAMES.find(x=>x[0]===s)[1]); hand=null; return; }
+      ST.ends[hand.w][hand.i]=p.slice(); hand=null; say("dropped"); return; }
+    if(k==="insul"){ if(!ST.on.board){ say("needBoard"); return; } const [px,py,pw,ph]=PAD();
+      if(p[0]>bx()+20&&p[0]<bx()+320&&p[1]>by()+190&&p[1]<by()+325){ ST.on.insul=true; B.insulation=true; hand=null; say("insulOn"); return; } say("noFit"); return; }
+    if(k==="W1"||k==="W2"){ ST.on[k]=true; ST.ends[k]=[[p[0]-40,p[1]],[p[0]+40,p[1]]]; hand=null; say("placed",itemName(k)); return; }
+    const x=k==="board"?p[0]:p[0], y=p[1];
+    if(!fits(k,x,y)){ say("noFit"); return; }
+    ST.pos[k]={x,y}; ST.on[k]=true; hand=null; syncLinks(); say("placed",itemName(k)); return;
+  }
+  if(right){
+    for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),10)){ if(B.wires[w][i]){ ST.ends[w][i]=[endXY(w,i)[0]+30,endXY(w,i)[1]+20]; B.wires[w][i]=null; say("dropped"); } else returnItem(w); return; }
+    if(ST.on.insul&&ST.on.board){ const [px,py,pw,ph]=PAD(); if(p[0]>px&&p[0]<px+pw&&p[1]>py&&p[1]<py+ph){ ST.on.insul=false; B.insulation=false; say("insulOff"); return; } }
+    for(const k of ["charger","cable","tablet","therm","board"]) if(inPart(k,p)){ returnItem(k); return; }
+    return;
+  }
+  for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),10)){ const was=endXY(w,i); B.wires[w][i]=null; hand={k:"end",w,i,orig:was}; say("end"); return; }
+  if(ST.on.board){
+    if(near(p,RESET(),16)){ B.resetAt=simNow; say("reset"); return; }
+    const [sx,sy]=SW1(); if(Math.abs(p[0]-sx)<18&&Math.abs(p[1]-sy)<46){ B.sw1={C1:"MID",MID:"C2",C2:"C1"}[B.sw1]; if(B.sw1!=="C2") B.vb=B.vb.map(()=>B.uC); say("sw",B.sw1==="MID"?"—":B.sw1); return; } }
+  for(const k of ["charger","cable","tablet","therm","board"]) if(inPart(k,p)){
+    const orig={...ST.pos[k]}; ST.on[k]=false; hand={k,move:true,orig}; syncLinks(); say("moveIt",itemName(k)); return; }
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); } drawTray(); return; } });
+
+/* ══════════════════════════════════════════════════════════════
+   4.  THE TABLET APP  (IPhO 2021 Experiments)
+   ══════════════════════════════════════════════════════════════ */
+const VARS=["uC","uT","uL","duC","duT","duL","iL","iH","t"], FUNCS={sin:Math.sin,cos:Math.cos,tan:Math.tan,exp:Math.exp,asin:Math.asin,acos:Math.acos,atan:Math.atan,ln:Math.log,abs:Math.abs,sqrt:Math.sqrt};
+const PALETTE=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+let connected=false, permAsked=false, awaitUntil=-1, denied=false, measuring=false, checking=false;
+let rows=[], saved={}, plotted=new Set(["__last"]), functions=[], columns=["t","uC","duC"], xaxis="t", yaxis="uC";
+const settings={timestep:140, offLed:true, offHeat:false, sweep:false, smin:0.1, smax:50, sn:51, sexp:false, spulse:false, spw:1.0};
+let nextSample=0, sweepI=-1, replotCtr=0, linkWas=false;
+function compileExpr(txt){
+  const t=txt.trim(); if(!t) throw new Error("empty");
+  const js=t.replace(/\^/g,"**"); if(!/^[0-9A-Za-z_+\-*/(). ,e]*$/.test(js.replace(/\*\*/g,"*"))) throw new Error("bad characters");
+  const names=(js.replace(/\d+\.?\d*(?:[eE][+-]?\d+)?/g," ").match(/[A-Za-z_][A-Za-z_0-9]*/g)||[]);
+  for(const n of names) if(!VARS.includes(n)&&!(n in FUNCS)) throw new Error("unknown name: "+n);
+  const f=new Function(...VARS,...Object.keys(FUNCS),"return ("+js+");");
+  return {text:t, fn:r=>{ try{ const v=f(...VARS.map(k=>r[k]),...Object.values(FUNCS)); return typeof v==="number"?v:NaN; }catch(e){ return NaN; } }};
+}
+const varList=()=>[...VARS,...functions.map(f=>f.text)];
+function evalVar(name,r){ if(name in r) return r[name]; const f=functions.find(g=>g.text===name); return f?f.fn(r):NaN; }
+function fmt(v){ if(!isFinite(v)) return "NaN"; const a=Math.abs(v); if(a!==0&&(a<1e-3||a>=1e5)) return v.toExponential(4); return Number(v.toPrecision(6)).toString(); }
+let toastT=null;
+function toast(s){ $("tToast").textContent=s; clearTimeout(toastT); toastT=setTimeout(()=>{ $("tToast").textContent=""; },4000); }
+function pollLink(){
+  const link=B.powered&&B.data;
+  if(!link){ if(connected||permAsked||linkWas){ connected=false; permAsked=false; awaitUntil=-1; measuring=false; $("tMeas").checked=false; $("mUsb").hidden=true; if(linkWas) toast(d().app.usbNo); } linkWas=false; denied=false; return; }
+  linkWas=true;
+  if(connected||denied) return;
+  if(!permAsked){ permAsked=true; $("mUsb").hidden=false; return; }
+  if(awaitUntil>0){ if(B.resetAt>awaitUntil-10){ connected=true; awaitUntil=-1; B.t=0; toast(d().app.connected); }
+    else if(simNow>awaitUntil){ awaitUntil=-1; permAsked=false; toast(d().app.plugFirst); } }
+}
+$("bAllow").onclick=()=>{ $("mUsb").hidden=true; awaitUntil=simNow+10; toast(d().app.pressReset); };
+$("bDeny").onclick=()=>{ $("mUsb").hidden=true; denied=true; permAsked=false; toast(d().app.denied); };
+function liveText(r){ const f=(v,w,p)=>((v>=0?"+":"")+v.toFixed(p)).padStart(w," ");
+  return "uC ="+f(r.uC,10,4)+" V    duC ="+f(r.duC,11,4)+" V/s\nuT ="+f(r.uT,10,4)+" V    duT ="+f(r.duT,11,4)+" V/s\nuL ="+f(r.uL,10,4)+" V    duL ="+f(r.duL,11,4)+" V/s\niL ="+r.iL.toFixed(3).padStart(9," ")+" mA   iH  ="+r.iH.toFixed(1).padStart(9," ")+" mA\n t ="+r.t.toFixed(2).padStart(9," ")+" s"; }
+function appTick(now){
+  pollLink();
+  if(!connected){ if(ST.on.tablet) $("tLive").textContent=d().app.usbNo; return; }
+  if(now<nextSample) return;
+  const dt=settings.timestep/1000; nextSample=now+dt; B.timestep=dt;
+  if(measuring&&settings.sweep) sweepStep();
+  const s=sample(); if(!s) return;
+  if(checking) $("tLive").textContent=liveText(s);
+  if(measuring){ rows.push(s); appendRow(s); if(++replotCtr>=5){ replotCtr=0; replot(); } }
+}
+function sweepStep(){ sweepI++; const n=Math.max(2,settings.sn); if(sweepI>=n){ setMeasure(false); return; }
+  const f=sweepI/(n-1), lo=Math.max(settings.smin,1e-3), i=settings.sexp? lo*Math.pow(settings.smax/lo,f) : settings.smin+(settings.smax-settings.smin)*f;
+  B.iL=i; B.tL=settings.spulse?settings.spw:0; $("tIL").value=i.toFixed(2); $("sIL").value=Math.round(1000*Math.cbrt(i/LED_MAX)); $("tTL").value=B.tL; }
+function setMeasure(on){
+  if(on&&!connected){ $("tMeas").checked=false; toast(d().app.plugFirst); return; }
+  $("tMeas").checked=on;
+  if(on){ measuring=true; rows=[]; sweepI=-1; B.t=0; nextSample=0; refillTable(); }
+  else { measuring=false; if(settings.offLed){ B.iL=0; $("tIL").value="0"; $("sIL").value=0; } if(settings.offHeat){ B.iH=0; $("tIH").value="0"; $("sIH").value=0; } toast(d().app.stopped); replot(); }
+}
+$("tMeas").onchange=e=>setMeasure(e.target.checked);
+$("tCheck").onchange=e=>{ checking=e.target.checked; if(!checking) $("tLive").textContent=""; };
+function setDrive(key,val,fromSlider){
+  if(key==="iH"){ if(!(val>=0&&val<=HEAT_MAX)){ toast(d().app.badHeat); return; } B.iH=val; if(!fromSlider) $("sIH").value=Math.round(1000*val/HEAT_MAX); $("tIH").value=fromSlider?val.toFixed(1):$("tIH").value; }
+  if(key==="iL"){ if(!(val>=0&&val<=LED_MAX)){ toast(d().app.badLed); return; } B.iL=val; if(!fromSlider) $("sIL").value=Math.round(1000*Math.cbrt(val/LED_MAX)); else $("tIL").value=val.toFixed(2); }
+  if(key==="tL"){ if(val!==0&&!(val>=PULSE_MIN&&val<=PULSE_MAX)){ toast(d().app.badPulse); return; } B.tL=val; if(!fromSlider) $("sTL").value=Math.round(val*10); else $("tTL").value=val.toFixed(1); }
+}
+for(const [k,inp,sl,f] of [["iH","tIH","sIH",v=>HEAT_MAX*v/1000],["iL","tIL","sIL",v=>v<=0?0:LED_MAX*Math.pow(v/1000,3)],["tL","tTL","sTL",v=>v/10]]){
+  $(inp).onchange=()=>{ const t=$(inp).value.trim(); const v=t===""?0:Number(t); if(isNaN(v)){ toast(k==="iH"?d().app.badHeat:k==="iL"?d().app.badLed:d().app.badPulse); return; } setDrive(k,v,false); };
+  $(sl).oninput=()=>setDrive(k,f(+$(sl).value),true); }
+function fillSelects(){ const opts=varList();
+  for(let i=0;i<3;i++){ const s=$("col"+i); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=columns[i]; }
+  for(const [id,v] of [["tX",xaxis],["tY",yaxis]]){ const s=$(id); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=v; } }
+for(let i=0;i<3;i++) $("col"+i).onchange=e=>{ columns[i]=e.target.value; refillTable(); };
+$("tX").onchange=e=>{ xaxis=e.target.value; replot(); }; $("tY").onchange=e=>{ yaxis=e.target.value; replot(); };
+for(const id of ["tXmin","tXmax","tYmin","tYmax"]) $(id).onchange=replot;
+$("tReplot").onclick=replot;
+function rowHtml(r){ return "<tr>"+columns.map(c=>"<td>"+fmt(evalVar(c,r))+"</td>").join("")+"</tr>"; }
+function refillTable(){ const last=rows.slice(-300); $("tTable").innerHTML="<table><thead><tr>"+columns.map(c=>"<th>"+c.replace(/</g,"&lt;")+"</th>").join("")+"</tr></thead><tbody>"+last.map(rowHtml).join("")+"</tbody></table>"; const el=$("tTable"); el.scrollTop=el.scrollHeight; }
+function appendRow(r){ const tb=$("tTable").querySelector("tbody"); if(!tb){ refillTable(); return; } tb.insertAdjacentHTML("beforeend",rowHtml(r)); if(tb.children.length>300) tb.removeChild(tb.firstChild); const el=$("tTable"); el.scrollTop=el.scrollHeight; }
+$("tSave").onclick=()=>{ const nm=$("tTitle").value.trim(); if(!nm){ toast(d().app.noTitle); return; } if(saved[nm]){ toast(d().app.exists); return; } if(!rows.length){ toast(d().app.noMeas); return; }
+  saved[nm]=rows.slice(); plotted.add(nm); toast(d().app.saved(nm,rows.length)); replot(); };
+$("tDel").onclick=()=>{ const nm=$("tTitle").value.trim(); if(saved[nm]){ delete saved[nm]; plotted.delete(nm); toast(d().app.deleted(nm)); replot(); } else toast(d().app.noMeas); };
+$("tPick").onclick=()=>{ const opts=["__last",...Object.keys(saved).sort()];
+  $("pickList").innerHTML=opts.map(o=>'<label><input type="checkbox" value="'+o.replace(/"/g,"&quot;")+'"'+(plotted.has(o)?" checked":"")+"> "+(o==="__last"?d().app.last:o.replace(/</g,"&lt;"))+"</label>").join("");
+  $("mPick").hidden=false; };
+$("pickCancel").onclick=()=>{ $("mPick").hidden=true; };
+$("pickOk").onclick=()=>{ plotted=new Set([...$("pickList").querySelectorAll("input:checked")].map(i=>i.value)); $("mPick").hidden=true; replot(); };
+function renderFx(){ $("fxList").innerHTML=functions.map((f,i)=>'<div class="fx"><span>'+f.text.replace(/</g,"&lt;")+'</span><button data-i="'+i+'" class="no">✖</button></div>').join("");
+  for(const b of $("fxList").querySelectorAll("button")) b.onclick=()=>{ functions.splice(+b.dataset.i,1); renderFx(); fillSelects(); }; }
+$("tFx").onclick=()=>{ renderFx(); $("mFx").hidden=false; };
+$("fxAdd").onclick=()=>{ try{ const f=compileExpr($("fxIn").value); if(!functions.some(g=>g.text===f.text)) functions.push(f); $("fxIn").value=""; renderFx(); fillSelects(); }catch(e){ toast(d().app.bad+": "+e.message); } };
+$("fxOk").onclick=()=>{ $("mFx").hidden=true; };
+$("tSet").onclick=()=>{ if(measuring){ toast(d().app.during); return; } const a=d().app, s=settings;
+  const chk=(id,v,l)=>'<label><input type="checkbox" id="'+id+'"'+(v?" checked":"")+"> "+l+"</label>", num=(id,v,l)=>'<label>'+l+' <input id="'+id+'" size="7" value="'+v+'"></label>';
+  $("setBox").innerHTML="<b>"+a.set+"</b>"+num("sTs",s.timestep,a.ts)+chk("sOl",s.offLed,a.offLed)+chk("sOh",s.offHeat,a.offHeat)+chk("sSw",s.sweep,a.sweep)+num("sMn",s.smin,a.smin)+num("sMx",s.smax,a.smax)+num("sN",s.sn,a.sn)+chk("sEx",s.sexp,a.sexp)+chk("sPu",s.spulse,a.spulse)+num("sPw",s.spw,a.spw)+'<div class="mrow"><button id="sCancel">'+a.cancel+'</button><button id="sApply" class="ok">'+a.apply+"</button></div>";
+  $("mSet").hidden=false;
+  $("sCancel").onclick=()=>{ $("mSet").hidden=true; };
+  $("sApply").onclick=()=>{ const n=id=>Number($(id).value); if([n("sTs"),n("sMn"),n("sMx"),n("sN"),n("sPw")].some(isNaN)){ toast("Non-numeric value"); return; }
+    s.timestep=Math.max(20,Math.min(500,Math.round(n("sTs")))); s.offLed=$("sOl").checked; s.offHeat=$("sOh").checked; s.sweep=$("sSw").checked;
+    s.smin=Math.max(0,Math.min(LED_MAX,n("sMn"))); s.smax=Math.max(0,Math.min(LED_MAX,n("sMx"))); s.sn=Math.max(2,Math.min(2000,Math.round(n("sN"))));
+    s.sexp=$("sEx").checked; s.spulse=$("sPu").checked; const pw=n("sPw"); s.spw=pw===0?0:Math.max(PULSE_MIN,Math.min(PULSE_MAX,pw)); $("mSet").hidden=true; }; };
+/* the chart */
+const chartCv=$("chart"), chartCtx=chartCv.getContext("2d"); let CW=600, CH=330;
+function sizeChart(){ const r=chartCv.getBoundingClientRect(), dpr=window.devicePixelRatio||1; CW=Math.max(200,r.width); CH=330; chartCv.width=Math.round(CW*dpr); chartCv.height=Math.round(CH*dpr); replot(); }
+const numOr=(id)=>{ const v=$(id).value.trim(); return v===""||isNaN(+v)?null:+v; };
+function niceTicks(a,b,n){ const span=b-a; if(!(span>0)) return [a]; const st0=Math.pow(10,Math.floor(Math.log10(span/n))), st=[1,2,5,10].map(k=>k*st0).find(s=>span/s<=n)||st0*10; const out=[]; for(let v=Math.ceil(a/st)*st;v<=b+1e-9*span;v+=st) out.push(v); return out; }
+function replot(){
+  const dpr=window.devicePixelRatio||1, c=chartCtx; c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#fffaf3"; c.fillRect(0,0,CW,CH);
+  const sets=[]; if(plotted.has("__last")) sets.push([d().app.last,rows]); for(const nm of [...plotted].filter(x=>x!=="__last").sort()) if(saved[nm]) sets.push([nm,saved[nm]]);
+  const series=sets.map(([nm,rs],i)=>[nm,rs.map(r=>[evalVar(xaxis,r),evalVar(yaxis,r)]).filter(p=>isFinite(p[0])&&isFinite(p[1])),PALETTE[i%PALETTE.length]]);
+  let xs=[],ys=[]; for(const [,pts] of series) for(const [x,y] of pts){ xs.push(x); ys.push(y); }
+  let x0=numOr("tXmin"), x1=numOr("tXmax"), y0=numOr("tYmin"), y1=numOr("tYmax");
+  if(x0===null) x0=xs.length?Math.min(...xs):0; if(x1===null) x1=xs.length?Math.max(...xs):1; if(y0===null) y0=ys.length?Math.min(...ys):0; if(y1===null) y1=ys.length?Math.max(...ys):1;
+  if(x1-x0<1e-12){ x0-=0.5; x1+=0.5; } if(y1-y0<1e-12){ const m=Math.abs(y0)*0.05||0.5; y0-=m; y1+=m; }
+  const L=64, R=12, T0=10, Bm=30, X=x=>L+(x-x0)/(x1-x0)*(CW-L-R), Y=y=>CH-Bm-(y-y0)/(y1-y0)*(CH-Bm-T0);
+  c.strokeStyle="#ddd"; c.lineWidth=1; c.font="11px ui-monospace,Consolas,monospace"; c.fillStyle="#444";
+  for(const t of niceTicks(x0,x1,7)){ const x=X(t); c.beginPath(); c.moveTo(x,T0); c.lineTo(x,CH-Bm); c.stroke(); c.textAlign="center"; c.textBaseline="top"; c.fillText(fmt(t),x,CH-Bm+4); }
+  for(const t of niceTicks(y0,y1,6)){ const y=Y(t); c.beginPath(); c.moveTo(L,y); c.lineTo(CW-R,y); c.stroke(); c.textAlign="right"; c.textBaseline="middle"; c.fillText(fmt(t),L-4,y); }
+  c.strokeStyle="#666"; c.strokeRect(L,T0,CW-L-R,CH-Bm-T0);
+  c.save(); c.beginPath(); c.rect(L,T0,CW-L-R,CH-Bm-T0); c.clip();
+  for(const [,pts,col] of series){ c.fillStyle=col; for(const [x,y] of pts){ c.fillRect(X(x)-1.5,Y(y)-1.5,3,3); } }
+  c.restore();
+  let ly=T0+6; c.textAlign="left"; c.textBaseline="top"; c.font="11px "+FONT;
+  for(const [nm,,col] of series){ c.fillStyle=col; c.fillRect(CW-R-130,ly+3,8,8); c.fillStyle="#333"; c.fillText(nm,CW-R-118,ly); ly+=15; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const s of [1,2,5,10,30]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
+    b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.board) L.push([t.st.none,false]);
+  if(B.short) L.push([t.lab.short,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(), a=t.app; document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint; $("t-h-board").textContent=t.hBoard; $("t-boardhint").textContent=t.boardHint;
+  $("t-h-app").textContent=t.hApp; $("t-apphint").textContent=t.appHint;
+  $("l-meas").textContent=a.meas; $("l-check").textContent=a.check; $("tPick").textContent=a.pick; $("l-perm").textContent=a.perm; $("bAllow").textContent=a.allow; $("bDeny").textContent=a.deny;
+  $("l-pick").textContent=a.pick; $("pickCancel").textContent=a.cancel; $("pickOk").textContent=a.select; $("l-fx").textContent=a.fx;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2021 E1·E2 — 비이상적 축전기 · LED · HaslaLab":"IPhO 2021 E1·E2 — Non-ideal Capacitors · LEDs · HaslaLab";
+  renderSpeeds(); fillSelects(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let tPrev=performance.now()/1000, frameN=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  let want=dt*speed; const n=Math.min(600,Math.max(1,Math.ceil(want/0.005))), h=want/n;
+  for(let i=0;i<n;i++){ boardStep(h); simNow+=h; appTick(simNow); }
+  $("tab").classList.toggle("off",!ST.on.tablet);
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
