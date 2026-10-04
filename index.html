@@ -714,7 +714,30 @@ const DATA={
               pdf:{ko:"pdf/IPhO_2022_E_KO.pdf", en:"pdf/IPhO_2022_E_EN.pdf"},
               sol:"pdf/IPhO_2022_S.pdf"}}
     ]},
-   {y:2021,host:{ko:"리투아니아 · 빌뉴스, 온라인",en:"Vilnius, Lithuania, online"},cc:"lt",problems:papers("IPhO_2021", wip("Non-ideal Capacitors","LEDs"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2021,host:{ko:"리투아니아 · 빌뉴스, 온라인",en:"Vilnius, Lithuania, online"},cc:"lt",
+    problems:[
+      {id:"E1",
+       title:{ko:"비이상적 축전기",en:"Non-ideal Capacitors"},
+       desc:{ko:"측정·시료 보드에서 100 MΩ 점퍼선으로 축전기를 충·방전하며 태블릿 앱의 uC와 duC를 기록해 C1·C2의 전압·온도 의존성을 구하고, 서미스터를 보정하며, 누설 전류와 유전 분극 중 무엇이 주된 오차인지 가립니다.",
+             en:"Charge and discharge two capacitors on the measurement board through a 100 MΩ jumper wire, record uC and duC in the tablet app to find C1 and C2 against voltage and temperature, calibrate the thermistor and tell leakage from dielectric polarization."},
+       tags:["전기용량","유전체","서미스터"], tagsEn:["Capacitance","Dielectrics","Thermistor"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2021_sim_KO.exe", en:REL+"v1.0/IPhO2021_sim_EN.exe"}, */
+       files:{sim:"sim/ipho2021_web.html",
+              src:{ko:"src/ipho2021_sim_KO.py", en:"src/ipho2021_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2021_E1_EN.pdf"},
+              sol:"pdf/IPhO_2021_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"발광 다이오드",en:"Light Emitting Diodes"},
+       desc:{ko:"같은 보드의 항온조를 가열하며 펄스·연속 정전류로 LED를 구동해 순방향 전압을 재고, 온도 계수와 동저항, 반도체 접합과 기판 사이의 열저항을 구합니다.",
+             en:"Heat the thermostat of the same board and drive the LED with pulsed and continuous constant current to measure its forward voltage, then find the temperature coefficient, the dynamic resistance and the junction-to-board thermal resistance."},
+       tags:["LED","열저항","반도체"], tagsEn:["LED","Thermal resistance","Semiconductors"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2021_sim_KO.exe", en:REL+"v1.0/IPhO2021_sim_EN.exe"}, */
+       files:{sim:"sim/ipho2021_web.html",
+              src:{ko:"src/ipho2021_sim_KO.py", en:"src/ipho2021_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2021_E2_EN.pdf"},
+              sol:"pdf/IPhO_2021_S2.pdf"}}]},
    {y:2020,host:{ko:"IdPhO · MIPT 주관, 온라인",en:"IdPhO · organised by MIPT, online"},
     org:{abbr:"MIPT",name:"Moscow Institute of Physics and Technology"},
     problems:papers("IPhO_2020", wip("Crystallography"), ["E_EN", "S"])},
