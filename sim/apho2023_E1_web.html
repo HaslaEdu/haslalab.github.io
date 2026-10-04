@@ -109,6 +109,18 @@
   #warn:empty{display:none}
   .panel button{width:100%}
   .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #bench{background:#eceae5}
+  #vtabs{margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -132,21 +144,19 @@
 
   <div class="stage">
     <div class="card">
-      <h3 data-i18n="cap"></h3>
-      <canvas id="bench"></canvas>
-    </div>
-    <div class="card">
-      <div class="tabs"><button id="tab0" data-i18n="tab0" class="on"></button><button id="tab1" data-i18n="tab1"></button></div>
-      <section class="page on" id="page0">
-        <h3 data-i18n="scopecap"></h3>
-        <canvas id="scope"></canvas>
-        <div class="read" id="mpos">M Pos = ----</div>
-        <div class="read" id="wheel" data-i18n="wheel0"></div>
-      </section>
-      <section class="page" id="page1">
-        <h3 data-i18n="wirecap"></h3>
-        <canvas id="wire"></canvas>
-      </section>
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtbench"></button><button id="vtscope"></button><button id="vtwire"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+      <div class="vw" id="v-bench" hidden><canvas id="bench"></canvas></div>
+      <div class="vw" id="v-scope" hidden>
+        <section class="page on" id="page0">
+          <canvas id="scope"></canvas>
+          <div class="read" id="mpos">M Pos = ----</div>
+          <div class="read" id="wheel" data-i18n="wheel0"></div>
+        </section>
+      </div>
+      <div class="vw" id="v-wire" hidden><section class="page on" id="page1"><canvas id="wire"></canvas></section></div>
+      <div hidden><button id="tab0"></button><button id="tab1"></button></div>
     </div>
   </div>
 
@@ -188,8 +198,7 @@ const I18N = {
   sub: ["Virtual laboratory · hang the steel balls from the parts box on the hangers, wire the junction box to the oscilloscope and catch the photogate and contact pulses yourself. Speeds, periods and contact times are yours to work out.",
         "가상 실험실 · 부품함의 강철 공을 행어에 걸고, 접속 상자를 오실로스코프에 배선한 뒤 광게이트와 접촉 펄스를 직접 잡으세요. 속력·주기·접촉 시간은 직접 구해야 합니다."],
   trayTitle: ["Parts box", "부품함"],
-  cap: ["the bench — pendulums, protractor screen and photogate (pick a ball in the box, then click the left or right hanger; R-click the right one to take pendulum 2 off)",
-        "실험대 — 진자, 각도판, 광게이트 (부품함에서 공을 집어 왼쪽/오른쪽 행어를 클릭, 오른쪽을 우클릭하면 진자 2를 뗍니다)"],
+  cap: ["", ""],
   scopecap: ["SIGLENT SDS1202X-E — click a dial, then turn the mouse wheel over the panel", "SIGLENT SDS1202X-E — 다이얼을 클릭한 뒤 패널 위에서 마우스 휠을 돌리세요"],
   wirecap: ["cabling — click a terminal, then the terminal to join it to; click a lead to pull it out; the lever on the box is its ON/OFF switch",
             "배선 — 단자를 클릭한 뒤 이을 단자를 클릭, 리드를 클릭하면 뽑힙니다. 상자의 레버가 ON/OFF 스위치입니다"],
@@ -201,6 +210,13 @@ const I18N = {
   trayHelp: ["L-click pick up, R-click put back", "좌클릭 집기 / 우클릭 되돌리기"],
   bs1: ["pendulum 1", "진자 1"], bs2: ["pendulum 2", "진자 2"], bsNone: ["—", "없음"],
   bsBig: ["big ball", "큰 공"], bsSmall: ["small ball", "작은 공"],
+  dialhint: ["click a dial, then the mouse wheel", "다이얼 클릭 후 마우스 휠"],
+  vt3d: ["3D bench", "3D 실험대"], vtbench: ["bench, front (2D)", "실험대 정면 (2D)"], vtscope: ["oscilloscope", "오실로스코프"], vtwire: ["cabling", "배선 (접속 상자)"],
+  cap_3d: ["the bench in 3D — drag to turn, Shift+drag to pan, wheel to zoom / drag the photogate along the rail / click the oscilloscope, the junction box or the pendulums for their 2D view (R-click: back)",
+           "3D 실험대 — 끌면 회전, Shift+끌기 이동, 휠 확대 / 광게이트를 끌어 레일을 따라 이동 / 오실로스코프·접속 상자·진자를 클릭하면 2D 보기 (우클릭: 3D로)"],
+  cap_bench: ["the bench seen from the front (2D) — the protractor screens are read here / R-click: back to 3D", "실험대 정면 (2D) — 각도판은 여기서 읽습니다 / 우클릭: 3D로"],
+  cap_scope: ["SIGLENT SDS1202X-E — click a dial, then turn the mouse wheel over the panel / R-click: back to 3D", "SIGLENT SDS1202X-E — 다이얼을 클릭한 뒤 패널 위에서 마우스 휠을 돌리세요 / 우클릭: 3D로"],
+  cap_wire: ["cabling — click a terminal, then the one it goes to; click a lead to pull it out", "배선 — 단자를 클릭한 뒤 이을 단자를 클릭, 리드를 클릭하면 뽑힙니다"],
   tab0: ["Oscilloscope", "오실로스코프"],
   tab1: ["Cabling (junction box)", "배선 (접속 상자)"],
   balls: ["Balls on the hangers", "행어에 매단 공"],
@@ -1520,7 +1536,7 @@ scope.addEventListener("mousedown", ev => {
   const R = scope.getBoundingClientRect();
   const x = (ev.clientX - R.left) * IW / R.width;
   const y = (ev.clientY - R.top) * IH / R.height;
-  if (Math.hypot(x - 0.0567 * IW, y - (1 - 0.2279) * IH) < 0.0140 * IW + 8){
+  if (Math.hypot(x - 0.1103 * IW, y - (1 - 0.1270) * IH) < 0.0153 * IW + 6){
     S.power = !S.power;              /* On/Off switches the instrument */
     if (S.power){
       S.autoDone = false;            /* it boots set up for nothing */
@@ -2064,6 +2080,7 @@ function applyLang(){
   document.getElementById("coil").textContent = tr(S.held ? "coilUp" : "coilDown");
   document.title = LANG === "ko" ? "APhO 2023 E1 — 충돌하는 진자의 헤르츠 접촉 · HaslaLab" : "APhO 2023 E1 — Hertzian Contact of Colliding Pendulums · HaslaLab";
   if (typeof trayLayout === "function"){ trayLayout(); ballState(); }
+  if (typeof showView === "function"){ for (const k of ["3d","bench","scope","wire"]) document.getElementById("vt" + k).textContent = tr("vt" + k); layout3(); showView(view3); }
   refreshAll();
 }
 function setLang(l){ LANG = l; applyLang(); }
@@ -2071,6 +2088,176 @@ function setLang(l){ LANG = l; applyLang(); }
 function refreshAll(){ drawBench(); drawScope(); drawWire(); }
 document.getElementById("btn-en").onclick = () => setLang("en");
 document.getElementById("btn-ko").onclick = () => setLang("ko");
+
+/* ---- the front panel, as the desktop program draws it ------------
+   (build_instrument() in apho2023_E1_sim: every coordinate is a fraction
+   of the 1569 x 803 px straight-on photograph of the SDS 1202X-E; y is
+   measured from the bottom of the case there, so it is flipped here)   */
+function FPT(pt){ return (pt * 0.00182 * IW).toFixed(1) + "px Segoe UI, Arial, sans-serif"; }
+function FPB(pt){ return "bold " + FPT(pt); }
+function QX(f){ return f * IW; }
+function QY(f){ return (1 - f) * IH; }
+Object.assign(BTNS, {
+  save:[0.8147,0.9128,0.046,0.042,"Save\nRecall","#e8e8e6"],
+  measure:[0.7075,0.8468,0.046,0.042,"Measure","#e8e8e6"],
+  clear:[0.7611,0.8468,0.046,0.042,"Clear\nSweeps","#e8e8e6"],
+  utility:[0.8147,0.8468,0.046,0.042,"Utility","#e8e8e6"],
+  display:[0.7611,0.7808,0.046,0.042,"Display\nPersist","#e8e8e6"],
+  print:[0.8147,0.7808,0.046,0.042,"Print","#cfe4f7"],
+  history:[0.8711,0.8929,0.046,0.042,"History","#e8e8e6"],
+  decode:[0.8711,0.8032,0.046,0.042,"Decode","#e8e8e6"],
+  univbtn:[0.6367,0.9128,0.024,0.030,"","#d2d2cf"]
+});
+function drawScope(){
+  const c = sx; c.clearRect(0, 0, IW, IH);
+  /* the case, its two feet and the label band */
+  c.fillStyle = "#c2c2bf"; c.strokeStyle = "#a8a8a5"; c.lineWidth = 0.8;
+  for (const fx of [0.10, 0.78]){ c.fillRect(QX(fx), QY(0.055), QX(0.11), IH * 0.055); c.strokeRect(QX(fx), QY(0.055), QX(0.11), IH * 0.055); }
+  c.fillStyle = "#dcdcda"; rr(c, QX(0.004), QY(0.985), QX(0.992), IH * 0.955, 0.012 * IW); c.fill();
+  c.strokeStyle = "#b6b6b3"; c.lineWidth = 1.2; c.stroke();
+  c.fillStyle = "#ececeb"; c.fillRect(QX(0.030), QY(0.985), QX(0.560), IH * 0.055);
+  c.textBaseline = "middle"; c.textAlign = "left";
+  c.fillStyle = "#1f4f9c"; c.font = FPB(11); c.fillText("SIGLENT", QX(0.075), QY(0.958));
+  c.fillStyle = "#55565a"; c.font = FPT(7.5); c.fillText("SDS 1202X-E", QX(0.215), QY(0.966));
+  c.fillStyle = "#8a8b8f"; c.font = FPT(5); c.fillText("Digital Storage Oscilloscope", QX(0.215), QY(0.945));
+  c.fillStyle = "#55565a"; c.font = FPB(8); c.fillText("SPO", QX(0.375), QY(0.966));
+  c.fillStyle = "#8a8b8f"; c.font = FPT(5); c.fillText("Super Phosphor Oscilloscope", QX(0.375), QY(0.945));
+  c.fillStyle = "#55565a"; c.font = FPT(6.5); c.fillText("200 MHz", QX(0.500), QY(0.966)); c.fillText("1 GSa/s", QX(0.500), QY(0.945));
+  c.textBaseline = "alphabetic";
+  /* the LCD in its bezel */
+  c.fillStyle = "#26262a"; c.fillRect(SX0 - QX(0.009), SY0 - IH * 0.016, SW + QX(0.018), SH + IH * 0.032);
+  c.strokeStyle = "#141417"; c.lineWidth = 1; c.strokeRect(SX0 - QX(0.009), SY0 - IH * 0.016, SW + QX(0.018), SH + IH * 0.032);
+  const [gx, gy, gw, gh] = grat();
+  c.fillStyle = "#000"; c.fillRect(SX0, SY0, SW, SH);
+  if (!S.power){
+    c.fillStyle = "#0a0b0c"; c.fillRect(SX0, SY0, SW, SH);
+    drawPanel(c);
+    document.getElementById("mpos").textContent = tr("scopeoff");
+    return;
+  }
+  c.fillStyle = C_BAR;
+  c.fillRect(SX0, SY0, SW, SH * BAR_T);
+  c.fillRect(SX0 + gw, SY0, SW - gw, SH);
+  /* graticule 14 x 8, with the dotted minor divisions */
+  c.lineWidth = 0.5; c.setLineDash([1, 4]); c.strokeStyle = "#1e2320"; c.beginPath();
+  for (let i = 0; i <= NX * 5; i++){ if (i % 5 === 0) continue; const x = gx + i * gw / (NX * 5); c.moveTo(x, gy); c.lineTo(x, gy + gh); }
+  for (let j = 0; j <= NY * 5; j++){ if (j % 5 === 0) continue; const y = gy + j * gh / (NY * 5); c.moveTo(gx, y); c.lineTo(gx + gw, y); }
+  c.stroke();
+  c.strokeStyle = "#39463a"; c.lineWidth = 0.6; c.setLineDash([1, 3]); c.beginPath();
+  for (let i = 0; i <= NX; i++){ const x = gx + i * gw / NX; c.moveTo(x, gy); c.lineTo(x, gy + gh); }
+  for (let j = 0; j <= NY; j++){ const y = gy + j * gh / NY; c.moveTo(gx, y); c.lineTo(gx + gw, y); }
+  c.stroke(); c.setLineDash([]);
+  /* status bar */
+  c.fillStyle = "#fff"; c.fillRect(SX0 + 2, SY0 + 1, 0.052 * IW, SH * BAR_T - 2);
+  c.fillStyle = "#000"; c.font = FPB(4.6); c.textAlign = "center";
+  c.fillText("SIGLENT", SX0 + 2 + 0.026 * IW, SY0 + SH * BAR_T - 4); c.textAlign = "left";
+  const st = scopeState();
+  c.fillStyle = st[1]; c.font = "bold " + (0.0145 * IW).toFixed(1) + "px Consolas";
+  c.fillText(st[0], SX0 + 0.062 * IW, SY0 + SH * BAR_T - 4);
+  c.fillStyle = "#e6e6e6"; c.font = (0.0125 * IW).toFixed(1) + "px Consolas";
+  c.fillText("M " + tlab(S.tdiv) + "/   Delay:" + S.delay.toFixed(3) + "s", SX0 + 0.140 * IW, SY0 + SH * BAR_T - 4);
+  c.fillStyle = "#e6e6e6"; c.font = (0.0115 * IW).toFixed(1) + "px Consolas";
+  const r = S.run;
+  c.fillText("Sa " + (r ? fslab(r.fs) : "----"), SX0 + gw + 3, gy + 0.030 * IH);
+  c.fillText("Curr " + mlab(MEM[S.memi]), SX0 + gw + 3, gy + 0.055 * IH);
+  c.fillStyle = "#e8c020";
+  c.fillText("CH1  " + S.vdiv + "V/", SX0 + gw + 3, gy + 0.090 * IH);
+  c.fillText("L " + S.trig.toFixed(2) + " V", SX0 + gw + 3, gy + 0.115 * IH);
+  if (!S.frozen && (S.cont || S.armed) && floatNow()) drawFreeRun(c, gx, gy, gw, gh, true);
+  else if (!S.frozen && S.cont && (!S.autoDone || noSignalNow())) drawFreeRun(c, gx, gy, gw, gh, false);
+  else drawTrace(c, gx, gy, gw, gh);
+  c.fillStyle = C_TRACE; c.font = (0.013 * IW).toFixed(1) + "px Consolas";
+  c.fillText("M " + tlab(S.tdiv) + "   CH1 = " + S.vdiv + " V   M Pos = " + S.delay.toFixed(6) + " s", SX0 + 4, SY0 + SH - 6);
+  drawPanel(c);
+}
+function panelText(c, t, fx, fy, pt, col, bold, align){
+  c.fillStyle = col || "#55565a"; c.font = (bold ? FPB : FPT)(pt); c.textAlign = align || "center"; c.textBaseline = "middle";
+  c.fillText(t, QX(fx), QY(fy)); c.textAlign = "left"; c.textBaseline = "alphabetic";
+}
+function drawGroup(c, fx0, fx1, fy0, fy1, title){
+  c.strokeStyle = "#7ec8e8"; c.lineWidth = 1;
+  rr(c, QX(fx0), QY(fy1), QX(fx1 - fx0), IH * (fy1 - fy0), 0.006 * IW); c.stroke();
+  if (title) panelText(c, title, (fx0 + fx1) / 2, fy1 + 0.018, 6.5, "#3a3b3e", true);
+}
+function drawPanel(c){
+  drawGroup(c, 0.6329, 0.7859, 0.3089, 0.7098, "Vertical");
+  drawGroup(c, 0.7859, 0.8993, 0.3089, 0.7098, "Horizontal");
+  drawGroup(c, 0.8993, 0.9726, 0.3089, 0.7098, "Trigger");
+  drawGroup(c, 0.6300, 0.8700, 0.1500, 0.3100, "");
+  drawGroup(c, 0.0490, 0.4880, 0.1710, 0.2780, "");
+  panelText(c, "Intensity", 0.6431, 0.8170 + 0.052, 4.6);
+  panelText(c, "Adjust", 0.6431, 0.8170 + 0.036, 5.2, "#3a3b3e", true);
+  panelText(c, "Variable", 0.6960, 0.5760, 4.6, "#3a3b3e");
+  panelText(c, "Position", 0.6960, 0.3798, 4.6, "#3a3b3e");
+  for (const fx of [0.6431, 0.7476, 0.8508]) panelText(c, "Zero", fx, 0.3110, 4.2);
+  panelText(c, "Zoom", 0.8508, 0.5560, 4.6, "#3a3b3e");
+  panelText(c, "Position", 0.8508, 0.4300, 4.6, "#3a3b3e");
+  panelText(c, "Level", 0.9464, 0.4300, 4.6, "#3a3b3e");
+  panelText(c, "50%", 0.9464, 0.3110, 4.2);
+  /* the analog inputs */
+  for (const [fx, lab, num] of [[0.6418, "X", "1"], [0.7457, "Y", "2"], [0.8496, "", "Ext"]]){
+    const x = QX(fx), y = QY(0.2341), r = 0.0191 * IW;
+    c.fillStyle = "#c2c2bf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#8d8d8a"; c.lineWidth = 1.4; c.stroke();
+    c.fillStyle = "#4a4a48"; c.beginPath(); c.arc(x, y, r * 0.62, 0, 6.283); c.fill(); c.strokeStyle = "#6e6e6b"; c.lineWidth = 0.8; c.stroke();
+    c.fillStyle = "#d8d8d5"; c.beginPath(); c.arc(x, y, r * 0.22, 0, 6.283); c.fill();
+    if (lab) panelText(c, lab, fx - 0.0191 - 0.008, 0.2341 + 0.0191 * IW / IH + 0.020, 5, "#3a3b3e");
+    panelText(c, num, fx + 0.012, 0.2341 + 0.0191 * IW / IH + 0.020, 6, "#3a3b3e", true);
+  }
+  panelText(c, "All inputs : 1 MΩ / 16 pF   400 Vpk", 0.7457, 0.1660, 4.4, "#2f6fa8");
+  /* probe compensation */
+  c.fillStyle = "#b9b9b6"; c.strokeStyle = "#8d8d8a"; c.lineWidth = 0.7;
+  c.fillRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900); c.strokeRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900);
+  c.fillRect(QX(0.9280), QY(0.3200), QX(0.0180), IH * 0.0300); c.strokeRect(QX(0.9280), QY(0.3200), QX(0.0180), IH * 0.0300);
+  panelText(c, "┐─ 1 kHz", 0.9640, 0.2700, 4.6, "#3a3b3e", false, "left");
+  c.strokeStyle = "#3a3b3e"; c.lineWidth = 1; c.beginPath(); c.moveTo(QX(0.9600), QY(0.2100)); c.lineTo(QX(0.9700), QY(0.2100));
+  c.moveTo(QX(0.9650), QY(0.2100)); c.lineTo(QX(0.9650), QY(0.2260)); c.stroke();
+  /* softkeys, Menu On/Off, USB, power */
+  for (let i = 0; i < 6; i++) plateBtn(c, 0.1230 + i * 0.0688, 0.2192, 0.0465, 0.0386, "", "#e8e8e6");
+  c.fillStyle = "#d2d2cf"; c.beginPath(); c.arc(QX(0.0567), QY(0.2279), 0.0140 * IW, 0, 6.283); c.fill(); c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.9; c.stroke();
+  panelText(c, "Menu", 0.0567, 0.2279 + 0.042, 4.6, "#3a3b3e"); panelText(c, "On/Off", 0.0567, 0.2279 - 0.042, 4.6, "#3a3b3e");
+  c.fillStyle = "#3b3f44"; rr(c, QX(0.5330), QY(0.2430), QX(0.0400), IH * 0.0420, 0.004 * IW); c.fill(); c.strokeStyle = "#8d8d8a"; c.lineWidth = 0.8; c.stroke();
+  { const px = QX(0.1103), py = QY(0.1270), pr = 0.0153 * IW;
+    c.fillStyle = S.power ? "#cfe9c4" : "#c2c2bf"; c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill(); c.strokeStyle = "#9a9a97"; c.lineWidth = 1.2; c.stroke();
+    c.strokeStyle = S.power ? "#3c8c2c" : "#55565a"; c.lineWidth = 1.4; c.beginPath(); c.arc(px, py, 0.0070 * IW, -Math.PI * 0.35, Math.PI * 1.35); c.stroke();
+    c.beginPath(); c.moveTo(px, py); c.lineTo(px, py - 0.011 * IH * 1.6); c.stroke();
+    panelText(c, "Power", 0.1103, 0.1270 - 0.052, 4.6, "#3a3b3e"); }
+  for (const k in KNOBS) drawKnob(c, k);
+  for (const b in BTNS) drawBtn(c, b);
+  panelText(c, tr("dialhint"), 0.985, 0.055, 5, "#a9a9a6", false, "right");
+  warn(S.faultMsg || sampleWarn());
+  const rr2 = S.run;
+  document.getElementById("mpos").textContent = S.power ?
+    "M Pos = " + S.delay.toFixed(7) + " s      " + tlab(S.tdiv) + "/div      " + mlab(MEM[S.memi]) + "      " + (rr2 ? fslab(rr2.fs) : "") : tr("scopeoff");
+}
+function plateBtn(c, fx, fy, fw, fh, label, col, fg, rad){
+  const x = QX(fx) - QX(fw) / 2, y = QY(fy) - IH * fh / 2, w = QX(fw), h = IH * fh, r = (rad || 0.004) * IW;
+  c.fillStyle = "#b9b9b6"; rr(c, x + 0.0012 * IW, y + 0.003 * IH, w, h, r); c.fill();
+  c.fillStyle = col; rr(c, x, y, w, h, r); c.fill(); c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.7; c.stroke();
+  if (label){ c.fillStyle = fg || "#3a3b3e"; c.font = FPB(4.6); c.textAlign = "center"; c.textBaseline = "middle";
+    label.split("\n").forEach((s, i, A) => c.fillText(s, x + w / 2, y + h / 2 + (i - (A.length - 1) / 2) * 0.0175 * IH));
+    c.textAlign = "left"; c.textBaseline = "alphabetic"; }
+}
+function drawBtn(c, b){
+  const [fx, fy, fw, fh, lab, col] = BTNS[b];
+  const on = (b === "roll" && S.roll) || (b === "run" && S.cont);
+  const fg = (col === "#2f9fe0" || col === "#2b2c30") ? "#ffffff" : "#3a3b3e";
+  plateBtn(c, fx, fy, fw, fh, lab, on ? "#9fd97a" : col, fg);
+}
+function drawKnob(c, k){
+  const [fx, fy, fr] = KNOBS[k], x = QX(fx), y = QY(fy), r = fr * IW;
+  const ring = {vscale:"#f2c500", vpos:"#f2c500", vscale2:"#e86ab4", vpos2:"#e86ab4"}[k];
+  if (ring){ c.strokeStyle = ring; c.lineWidth = 3.2; c.beginPath(); c.arc(x, y, r + 0.010 * IW, 0, 6.283); c.stroke(); }
+  c.fillStyle = "#b9b9b6"; c.beginPath(); c.arc(x + 0.0015 * IW, y + 0.004 * IH, r * 1.03, 0, 6.283); c.fill();
+  c.fillStyle = "#d2d2cf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.9; c.stroke();
+  c.fillStyle = "#eeeeec"; c.beginPath(); c.arc(x, y - 0.003 * IH, r * 0.72, 0, 6.283); c.fill(); c.strokeStyle = "#c9c9c6"; c.lineWidth = 0.7; c.stroke();
+  c.strokeStyle = "#c4c4c1"; c.lineWidth = 0.6; c.beginPath();
+  for (let i = 0; i < 18; i++){ const a = i * Math.PI / 9; c.moveTo(x + r * 0.80 * Math.cos(a), y + r * 0.80 * Math.sin(a)); c.lineTo(x + r * 0.96 * Math.cos(a), y + r * 0.96 * Math.sin(a)); }
+  c.stroke();
+  const a = knobAng[k];
+  c.strokeStyle = "#8d8d8a"; c.lineWidth = 2.2; c.lineCap = "round"; c.beginPath();
+  c.moveTo(x + r * 0.2 * Math.sin(a), y - r * 0.2 * Math.cos(a)); c.lineTo(x + r * 0.62 * Math.sin(a), y - r * 0.62 * Math.cos(a)); c.stroke(); c.lineCap = "butt";
+  if (S.sel === k){ c.strokeStyle = "#e03030"; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r + 9, 0, 6.283); c.stroke(); }
+}
 
 /* ---- the parts box: balls for the hangers ------------------------ */
 const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d");
@@ -2134,6 +2321,363 @@ bench.addEventListener("mousedown", e => {
   document.getElementById("b1").oninput(); ballState(); setHand(null);
 });
 window.addEventListener("resize", trayLayout);
+
+
+/* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  return [CAM.W/2+CAM.px+xr*CAM.k, CAM.H/2+CAM.py-up*CAM.k, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[];
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const P=(base,ang)=>[base[0]+r*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+r*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+r*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))];
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ==================================================================
+   THE 3-D BENCH  (Figure 2 of the problem: the base platform with its
+   blue tape scale, the T column with the two hanger units, the two
+   angle screens, the photogate, the electromagnet stand, the junction
+   box and the SIGLENT on the desk).  Units cm; the pendulums swing in
+   the plane z = 0 and the pivot sits PIV above the desk.
+   The 2-D bench, the oscilloscope and the cabling page are unchanged
+   and open on a click.
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+const RAILY = 6.0, PIV = RAILY - BENCH_ART.rail * 100, SCR_Z = -5.5;
+const ALU = "#c9ced3", ALU2 = "#aeb4ba", DARK = "#1d1f22";
+let view3 = "3d";
+const W2 = (p) => [p[0] * 100, PIV + p[1] * 100, 0];      /* bench metres -> world */
+
+function desk3(){
+  face([[-90,0,-40],[-90,0,60],[80,0,60],[80,0,-40]],{fill:"#3a3d42",layer:-3,flat:true,id:"desk"});
+  for (let x = -90; x <= 80; x += 10) poly3([[x,0,-40],[x,0,60]],"#34373b",1,{layer:-2});
+}
+function base3(){
+  for (const [x, z] of [[-31,-7],[-31,7],[31,-7],[31,7]]){ cyl3("y",0,2.2,x,z,1.1,"#2a2c30",{seg:12,layer:-1}); cyl3("y",2.2,2.6,x,z,1.6,"#6f7a86",{seg:14,layer:-1}); }
+  box3(-34,34,2.6,RAILY,-8,8,ALU,{id:"rail",layer:-1,top:"#d5dade"});
+  for (const z of [-4,0,4]) line3([-34,RAILY+0.01,z],[34,RAILY+0.01,z],"#9ea5ab",1,{layer:-1});
+  /* the blue tape scale on the front */
+  face([[-30,RAILY-1.4,8.02],[30,RAILY-1.4,8.02],[30,RAILY-0.4,8.02],[-30,RAILY-0.4,8.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.5});
+  custom3([0,RAILY-0.9,8.03],c=>{ c.strokeStyle="#fff";
+    for (let mm = -300; mm <= 300; mm += 5){ const L = mm % 50 === 0 ? 0.7 : mm % 10 === 0 ? 0.5 : 0.3;
+      const a = P3(mm/10,RAILY-0.42,8.03), b = P3(mm/10,RAILY-0.42-L,8.03); c.lineWidth = mm % 10 === 0 ? 1 : 0.6; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
+  },{layer:-1,bias:1});
+}
+function column3(){
+  box3(-1.5,1.5,RAILY,PIV+3.5,-7.5,-4.5,ALU,{id:"column",top:"#dfe3e7"});
+  box3(-16,16,PIV+3.5,PIV+5.5,-7.5,3.5,ALU2,{id:"column",top:"#d5dade"});
+  const h = S.bench.hang();
+  for (let i = 0; i < 2; i++){ const x = h[i] * 100;
+    box3(x-1.3,x+1.3,PIV+0.6,PIV+3.5,-3.2,3.2,"#dfe2e6",{id:"hang"+i});
+    cyl3("y",PIV+5.5,PIV+6.7,x,-2.5,0.25,"#c8ccd1",{seg:8}); cyl3("x",x-0.9,x+0.9,PIV+7.0,-2.5,0.45,"#f2efe6",{seg:10,cap:"#fbfaf6"});
+    cyl3("y",PIV+5.5,PIV+6.2,x,1.8,0.55,i ? "#2a62b8" : "#c0392b",{seg:12}); }
+}
+function fans3(){
+  for (const side of [-1, 1]){
+    const pts = [[0, PIV, SCR_Z]];
+    for (let a = 0; a <= 90; a += 3){ const t = a * Math.PI / 180; pts.push([side * 34 * Math.sin(t), PIV - 34 * Math.cos(t), SCR_Z]); }
+    face(orient(pts,[0,0,1]),{fill:"#f4f4f1",flat:true,id:"fan",cull:false,alpha:0.95,bias:-0.5});
+  }
+  for (const side of [-1, 1]) custom3([side*17,PIV-17,SCR_Z+0.01],c=>{ c.strokeStyle="rgba(70,70,70,.75)";
+    for (let a = 0; a <= 90; a++){ const t = a * Math.PI / 180, r0 = a % 10 === 0 ? 27 : a % 5 === 0 ? 29.5 : 31;
+      const p = P3(side*r0*Math.sin(t),PIV-r0*Math.cos(t),SCR_Z+0.02), q = P3(side*33.5*Math.sin(t),PIV-33.5*Math.cos(t),SCR_Z+0.02);
+      c.lineWidth = a % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(p[0],p[1]); c.lineTo(q[0],q[1]); c.stroke(); }
+  },{bias:0.5});
+  for (const side of [-1, 1]) for (let a = 10; a <= 90; a += 10){ const t = a * Math.PI / 180;
+    text3([side*25.3*Math.sin(t),PIV-25.3*Math.cos(t),SCR_Z+0.03],[1,0,0],[0,1,0],String(a),0.9,"#444",{align:"center",bias:30}); }
+}
+function gate3(){
+  const x = S.bench.xGate / 10;
+  box3(x-1.6,x+1.6,RAILY,RAILY+1.0,-4.6,4.6,"#f2f2ee",{id:"gate"});
+  for (const z of [-4.6,3.4]) box3(x-1.6,x+1.6,RAILY+1.0,RAILY+7.0,z,z+1.2,"#f2f2ee",{id:"gate"});
+  cyl3("z",3.38,3.44,x,RAILY+4.0,0.25,"#2b2e32",{seg:8}); cyl3("z",-3.44,-3.38,x,RAILY+4.0,0.25,"#2b2e32",{seg:8});
+}
+function balls3(){
+  const st = state(), b = S.bench, h = b.hang();
+  for (let i = 0; i < (b.two ? 2 : 1); i++){
+    const c = W2(st.p[i]), R = b.R(i) * 100, top = [c[0], c[1] + R, 0];
+    for (const z of [-2.6, 2.6]) line3([h[i]*100, PIV + 0.6, z], top, "#c05a1e", 1.3);
+    sphere3(c, R, "#c9ced3", {id: "ball" + i, stroke: "#6b7078"});
+  }
+}
+function holder3(){
+  const b = S.bench;
+  let fx, fy, kx, ky;
+  if (S.held){ const p = state().p[0], n = Math.hypot(p[0], p[1]) || 1, ux = p[0] / n, uy = p[1] / n;
+    fx = (p[0] + ux * b.R(0)) * 100; fy = PIV + (p[1] + uy * b.R(0)) * 100; kx = fx + ux * 2.6; ky = fy + uy * 2.6; }
+  else { fx = -24; fy = 16; kx = -26.6; ky = 16; }
+  cylAB([fx, fy, 0], [kx, ky, 0], 1.0, "#26292d", {seg:14, cap:"#9aa0a6", id:"holder"});
+  box3(kx-0.8,kx+0.8,ky-0.8,ky+0.8,-0.8,4.6,"#d3d7dc",{id:"holder"});
+  cyl3("y",0,ky+3,kx,4.6,0.4,"#b9bec4",{seg:10,id:"holder"});
+  box3(kx-3,kx+3,0,1.2,1.5,7.5,"#2a2c30",{id:"holder"});
+  const pts = []; for (let i = 0; i <= 16; i++){ const t = i / 16; pts.push([kx + (2 - kx) * t, ky * (1 - t) + 1.2 * t + Math.sin(Math.PI * t) * 2, (1 - t) * 0.5 + t * 22]); }
+  poly3(pts, "#222", 1.6);
+}
+const BOX = [8, 0, 24];
+function box3d(){
+  const [x, , z] = BOX;
+  box3(x-4.5,x+4.5,0,5.5,z-7,z+7,"#2f7fd6",{id:"box",top:"#3a8ce0"});
+  face([[x-3,5.51,z-1],[x+3,5.51,z-1],[x+3,5.51,z+2.5],[x-3,5.51,z+2.5]],{fill:"#5fd38a",flat:true,id:"box",bias:0.5});
+  cyl3("y",5.5,6.4,x+2.6,z-4.5,0.7,"#1d3f6e",{seg:12,id:"box",bias:1});
+  cyl3("y",5.5,6.0,x-2.6,z-4.5,0.45,S.boxOn ? "#ff5040" : "#6a1a14",{seg:10,id:"box",bias:1});
+  for (const [dx, col] of [[-3,"#c0392b"],[-1,"#111"],[1,"#c0392b"],[3,"#111"]]) cyl3("y",5.5,5.9,x+dx,z+5.5,0.32,col,{seg:8,bias:1});
+  text3([x,5.52,z+4.0],[1,0,0],[0,0,-1],"6",0.9,"#fff",{align:"center",bias:1});
+  box3(18,24,0,3,22,26,"#141414",{id:"box"});
+}
+const SC0 = [-66, 0, 16], SCW = 31, SCH = 15.9, SCD = 12;
+function scope3d(){
+  const [x0, , z0] = SC0, x1 = x0 + SCW, z1 = z0 + SCD;
+  box3(x0+3,x1-3,0,SCH-1,z0-8,z0,"#3c4652",{id:"scope"});
+  box3(x0,x1,0,SCH,z0,z1,"#e4e6e3",{id:"scope",top:"#eef0ed"});
+  tex3(scope, 0, 0, scope.width, scope.height, [x0+0.3, SCH-0.3, z1+0.01], [SCW-0.6,0,0], [0,-(SCH-0.6),0], {id:"scope"});
+}
+function cables3(){
+  const L = (a, b, col, w, sag) => { const pts = []; for (let i = 0; i <= 18; i++){ const t = i / 18;
+    pts.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*(sag||3), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); };
+  if (linked("box_ch","ch1") || linked("box_ch","ch2")) L([BOX[0]-4.5,3,BOX[2]], [SC0[0]+SCW*(linked("box_ch","ch1")?0.64:0.75), 3.7, SC0[2]+SCD], "#111", 2.2, 1);
+  if (linked("photogate","box_gate")) L([S.bench.xGate/10, RAILY+6, 4.8], [BOX[0]-2, 5.5, BOX[2]-7], "#333", 1.6, 4);
+  if (linked("adaptor","box_dc")) L([21,2,24], [BOX[0]+4.5,2,BOX[2]], "#141414", 1.8, 0.3);
+  if (linked("box_ball","ball1")) L([BOX[0]+1,5.9,BOX[2]+5.5], [-2,PIV,0], "#d35400", 1, 6);
+}
+function scene3(){
+  desk3(); base3(); fans3(); column3(); gate3(); balls3(); holder3(); box3d(); scope3d(); cables3();
+}
+/* ---- camera and pointer --------------------------------------------- */
+function layout3(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ CAM.k = w / 125; CAM.tx = -12; CAM.ty = 18; CAM.tz = 6; CAM.yaw = -0.2; CAM.pitch = 0.42; CAM.px = 0; CAM.py = 10; camSave(); }
+}
+function draw3(){
+  if (view3 !== "3d") return;
+  const dpr = CAM.dpr; ctx3.setTransform(dpr,0,0,dpr,0,0);
+  const g = ctx3.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0,0,CAM.W,CAM.H);
+  begin3(); scene3(); render3(ctx3);
+}
+function showView(v){
+  view3 = v;
+  for (const k of ["3d","bench","scope","wire"]){ document.getElementById("v-" + k).hidden = k !== v; document.getElementById("vt" + k).className = k === v ? "on" : ""; }
+  document.getElementById("t-cap3").textContent = tr("cap_" + v);
+  if (v === "wire") drawWire(); if (v === "bench") drawBench(); if (v === "scope") drawScope();
+}
+for (const k of ["3d","bench","scope","wire"]) document.getElementById("vt" + k).onclick = () => showView(k);
+let down3 = null, m3 = [0,0];
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => { e.preventDefault(); if (hand){ setHand(null); return; }
+  const p = p3e(e), id = pick3(p[0], p[1]);
+  if (id === "ball1" || id === "hang1"){ document.getElementById("two").checked = false; document.getElementById("two").oninput(); ballState(); } });
+cv3.addEventListener("pointerdown", e => { if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
+  const id = pick3(p[0], p[1]);
+  if (hand){ if (id === "ball0" || id === "hang0" || id === "ball1" || id === "hang1"){ const right = id.endsWith("1");
+      document.getElementById(right ? "b2" : "b1").value = hand === "big" ? "0" : "1";
+      if (right) document.getElementById("two").checked = true;
+      document.getElementById("b1").oninput(); ballState(); setHand(null); }
+    return; }
+  down3 = {p, id, moved:false, shift:e.shiftKey}; });
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0]-down3.p[0], p[1]-down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
+  if (down3.id === "gate"){ const q = onPlane(p[0], p[1], RAILY); const g = document.getElementById("gate");
+    g.value = Math.max(-60, Math.min(60, Math.round(q[0] * 10))); g.oninput(); return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.45, Math.max(0.1, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing");
+  if (down3 && !down3.moved){ const id = down3.id;
+    if (id === "scope") showView("scope"); else if (id === "box") showView("wire");
+    else if (id === "fan" || id === "column" || id === "rail" || (id && id.startsWith("ball")) || (id && id.startsWith("hang"))) showView("bench"); }
+  down3 = null; });
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
+for (const id of ["v-bench","v-scope","v-wire"]) document.getElementById(id).addEventListener("contextmenu", e => { if (e.target.id === "wire") return; e.preventDefault(); showView("3d"); });
+window.addEventListener("resize", layout3);
+(function loop3(){ draw3(); requestAnimationFrame(loop3); })();
 applyLang();
 
 </script>

@@ -106,6 +106,17 @@
   #wwarn{color:#f0a79f}#wwarn:empty{display:none}
   .tabs button.on:hover{background:var(--accent);color:#1c2027}
   #screen{cursor:default}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #vtabs{margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -129,20 +140,14 @@
 
   <div class="stage">
     <div class="card">
-      <h3 id="t-cap"></h3>
-      <div class="pair"><canvas id="bench" width="560" height="434"></canvas><canvas id="ctrl" width="560" height="210"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="tabs"><button id="tab0" class="on"></button><button id="tab1"></button></div>
-      <section id="page0" class="page on">
-        <h3 id="t-scrcap"></h3>
-        <canvas id="screen" width="560" height="560"></canvas>
-        <p class="hint" id="ruler"></p>
-      </section>
-      <section id="page1" class="page">
-        <h3 id="t-wirecap"></h3>
-        <canvas id="wire" width="1010" height="560"></canvas>
-      </section>
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtbench"></button><button id="vtscreen"></button><button id="vtctrl"></button><button id="vtwire"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+      <div class="vw" id="v-bench" hidden><canvas id="bench" width="560" height="434"></canvas></div>
+      <div class="vw" id="v-screen" hidden><section id="page0" class="page on"><canvas id="screen" width="560" height="560"></canvas><p class="hint" id="ruler"></p></section></div>
+      <div class="vw" id="v-ctrl" hidden><canvas id="ctrl" width="560" height="210"></canvas></div>
+      <div class="vw" id="v-wire" hidden><section id="page1" class="page on"><canvas id="wire" width="1010" height="560"></canvas></section></div>
+      <div hidden><button id="tab0"></button><button id="tab1"></button><span id="t-cap"></span><span id="t-scrcap"></span><span id="t-wirecap"></span></div>
     </div>
   </div>
 
@@ -192,7 +197,13 @@ const I18N = {
   cap:     ["the optical bench (drag the screen or the target along the rail) and the control box with the two multimeters",
             "광학대 (스크린이나 시료를 레일 위에서 끌어 옮기기)와 컨트롤 박스·멀티미터 두 대"],
   scrcap:  ["the screen, face on — the reflected pattern", "스크린 정면 — 반사된 무늬"],
-  wirecap: ["cabling — click a terminal, then the one it goes to; click a lead to pull it out, R-click to cancel",
+  vt3d: ["3D bench", "3D 실험대"], vtbench: ["optical bench (2D)", "광학대 (2D)"], vtscreen: ["screen", "스크린"], vtctrl: ["control box · meters", "컨트롤 박스 · 멀티미터"], vtwire: ["cabling", "배선"],
+  cap_3d: ["the bench in 3D — drag to turn, Shift+drag to pan, wheel to zoom / drag the screen or the target along the rail / click the screen, the control box or the rail for its 2D view",
+           "3D 실험대 — 끌면 회전, Shift+끌기 이동, 휠 확대 / 스크린이나 시료를 끌어 레일을 따라 이동 / 스크린·컨트롤 박스·레일을 클릭하면 2D 보기"],
+  cap_bench: ["the optical bench from the side (2D) — drag the screen or the target / R-click: back to 3D", "광학대 옆모습 (2D) — 스크린·시료를 끌어 옮기기 / 우클릭: 3D로"],
+  cap_screen: ["the screen face on — the reflected pattern; lay the ruler on it from the parts box", "스크린 정면 — 반사 무늬, 부품함의 자를 올려 재세요"],
+  cap_ctrl: ["the control box and the two multimeters — wheel or click the knob, click the power switch / R-click: back to 3D", "컨트롤 박스와 멀티미터 — 노브는 휠이나 클릭, 전원 스위치 클릭 / 우클릭: 3D로"],
+  cap_wire: ["cabling — click a terminal, then the one it goes to; click a lead to pull it out, R-click to cancel",
             "배선 — 단자를 클릭한 뒤 이을 단자를 클릭, 리드를 클릭하면 뽑힘, 우클릭으로 취소"],
   title:   ["APhO 2023 \u2014 Experimental Problem 2 \u2014 interference from a thermally deformed surface",
             "APhO 2023 \u2014 실험 문제 2 \u2014 열변형 표면에 의한 간섭"],
@@ -1113,6 +1124,8 @@ function applyLang(){
   document.getElementById("t-scrcap").textContent = tr("scrcap");
   document.getElementById("t-wirecap").textContent = tr("wirecap");
   trayLayout();
+  for (const k of ["3d","bench","screen","ctrl","wire"]) document.getElementById("vt" + k).textContent = tr("vt" + k);
+  layout3(); showView(view3);
   document.getElementById("tab0").textContent = tr("tab0");
   document.getElementById("tab1").textContent = tr("tab1");
   document.getElementById("lg-stand").textContent = tr("stand");
@@ -1177,6 +1190,324 @@ trayCv.addEventListener("mousedown", e => {
   });
 })();
 window.addEventListener("resize", trayLayout);
+
+/* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  return [CAM.W/2+CAM.px+xr*CAM.k, CAM.H/2+CAM.py-up*CAM.k, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[];
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const P=(base,ang)=>[base[0]+r*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+r*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+r*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))];
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ==================================================================
+   THE 3-D BENCH  (the optical bench of Fig. 1: the PMMA target on its
+   adjustable stand at the left end, the screen with the hole on its
+   carrier, the laser at the right; the control box and the two
+   multimeters on the desk).  Units cm.  The bench, the screen, the
+   control box and the cabling pages are unchanged and open on a click.
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+const SCRCV = document.getElementById("screen"), CTRLCV = document.getElementById("ctrl");
+const RT3 = 5.0, BEAM = RT3 + 15.0, SCR_LO = RT3 + 1.5, SCR_HI = RT3 + 40, SCR_Z = 18;
+let view3 = "3d";
+function desk3(){
+  face([[-30,0,-30],[-30,0,60],[110,0,60],[110,0,-30]],{fill:"#3a3d42",layer:-3,flat:true,id:"desk"});
+  for (let x = -30; x <= 110; x += 10) poly3([[x,0,-30],[x,0,60]],"#34373b",1,{layer:-2});
+}
+function rail3(){
+  for (const x of [2, 78]) for (const z of [-3, 3]) cyl3("y",0,1.2,x,z,0.7,"#2a2c30",{seg:10,layer:-1});
+  box3(-2,82,1.2,RT3,-4,4,"#b9bcc2",{id:"rail",layer:-1,top:"#c8cbd0"});
+  for (const z of [-1.5,1.5]) box3(-2,82,RT3-0.2,RT3,z-0.4,z+0.4,"#8b8f96",{layer:-1});
+  face([[0,RT3-1.6,4.02],[80,RT3-1.6,4.02],[80,RT3-0.3,4.02],[0,RT3-0.3,4.02]],{fill:"#e9eaec",flat:true,layer:-1,bias:0.4});
+  custom3([40,RT3-1,4.03],c=>{ c.strokeStyle="#444";
+    for (let mm = 0; mm <= 800; mm += 5){ const L = mm % 50 === 0 ? 0.8 : mm % 10 === 0 ? 0.55 : 0.3, a = P3(mm/10,RT3-0.32,4.03), b = P3(mm/10,RT3-0.32-L,4.03);
+      c.lineWidth = mm % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{layer:-1,bias:1});
+  for (let cm = 0; cm <= 80; cm += 10) text3([cm,RT3-1.35,4.04],[1,0,0],[0,1,0],String(cm),0.45,"#333",{align:"center",layer:-1,bias:1});
+}
+function carrier3(x,id){ box3(x-3,x+3,RT3,RT3+1.4,-5,5,"#d6d8dc",{id,top:"#e3e5e8"}); cyl3("z",5,5.6,x,RT3+0.7,0.5,"#555",{seg:10}); }
+function laser3(){ const x = X_LASER;
+  carrier3(x,"laser"); cyl3("y",RT3+1.4,BEAM-1.3,x,0,0.6,"#b9bec4",{seg:10,id:"laser"});
+  box3(x-1.6,x+1.6,BEAM-1.3,BEAM-0.5,-1.6,1.6,"#7d848c",{id:"laser"});
+  box3(x-4.5,x+3.5,BEAM-0.9,BEAM+0.9,-1.4,1.4,"#4a5059",{id:"laser"});
+  cyl3("x",x-5.3,x-4.5,BEAM,0,0.55,"#2f343a",{seg:12,id:"laser",cap:app.lit&&app.cur>2?"#ff5040":"#552222"});
+}
+function screen3(){ const x = app.x_screen;
+  carrier3(x,"screen3"); cyl3("y",RT3+1.4,SCR_LO,x,0,0.6,"#b9bec4",{seg:10,id:"screen3"});
+  box3(x,x+0.5,SCR_LO,SCR_HI,-SCR_Z,SCR_Z,"#dcdcd4",{id:"screen3",top:"#ececE6"});
+  /* the pattern side faces the target: paint the screen canvas onto it */
+  const dpr = SCRCV.width / SCW, s = (SCW - 70) / (2 * HALF);
+  const zc = (cm) => (SCW / 2 + cm * s) * dpr;
+  const sx0 = zc(-SCR_Z), sx1 = zc(SCR_Z), sy0 = zc(-(SCR_HI - BEAM)), sy1 = zc(BEAM - SCR_LO);
+  tex3(SCRCV, sx0, sy0, sx1 - sx0, sy1 - sy0, [x - 0.02, SCR_HI, -SCR_Z], [0,0,2*SCR_Z], [0,-(SCR_HI-SCR_LO),0], {id:"screen3"});
+}
+function target3(){ const x = app.x_target;
+  carrier3(x,"target"); cyl3("y",RT3+1.4,BEAM-4,x-1,0,0.5,"#b9bec4",{seg:10,id:"target"});
+  box3(x-2.2,x-0.4,BEAM-5,BEAM+4.5,-2.6,2.6,"#c7ccd2",{id:"target"});
+  box3(x-0.4,x+0.3,BEAM-1.6,BEAM+1.6,-1.6,1.6,"#cfe0e6",{id:"target",alpha:0.85});
+  for (const [dy,dz] of [[3.6,-3.2],[-3.6,-3.2],[4.8,0]]) cyl3("z",dz-0.01,dz-1.2,x-1.3,BEAM+dy,0.45,"#333",{seg:10});
+}
+function beam3(){
+  if (!(app.lit && app.cur > 2.0)) return;
+  const xt = app.x_target + 0.3, xs = app.x_screen, P = BEAM;
+  const seg = (x0, x1) => custom3([(x0 + x1) / 2, P, 0], c => { const a = P3(x0, P, 0), b = P3(x1, P, 0);
+    c.strokeStyle = "rgba(255,40,30,.9)"; c.lineWidth = 2; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); });
+  seg(X_LASER - 5.3, xs + 0.5); seg(xs, xt);
+  custom3([(xt + xs) / 2, P, 0], c => { c.fillStyle = "rgba(255,40,30,.08)"; const e = P3(xt, P, 0); c.beginPath(); c.moveTo(e[0],e[1]);
+    for (let i = 0; i <= 24; i++){ const t = i / 24 * 2 * Math.PI, q = P3(xs - 0.03, P + 6 * Math.sin(t), 6 * Math.cos(t)); c.lineTo(q[0],q[1]); }
+    c.fill(); });
+}
+const CB = [8, 0, 30];
+function ctrl3(){
+  const dpr = CTRLCV.width / CW, [x, , z] = CB;
+  box3(x,x+28,0,5,z,z+16,"#2f6fa8",{id:"ctrl"});
+  tex3(CTRLCV, 20*dpr, 30*dpr, 280*dpr, 160*dpr, [x, 5.01, z], [28,0,0], [0,0,16], {id:"ctrl"});
+  for (let k = 0; k < 2; k++){ const mx = x + 31 + k * 12.5;
+    box3(mx,mx+10.4,0,4,z,z+16,"#b5443f",{id:"ctrl"});
+    tex3(CTRLCV, (330+k*118)*dpr, 30*dpr, 104*dpr, 160*dpr, [mx, 4.01, z], [10.4,0,0], [0,0,16], {id:"ctrl"}); }
+  box3(x-12,x-5,0,3,z+4,z+9,"#161616",{id:"ctrl"});
+}
+function cables3(){
+  const L = (a, b, col, w, sag) => { const pts = []; for (let i = 0; i <= 18; i++){ const t = i / 18;
+    pts.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*(sag||3), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); };
+  if (linked("adaptor","box_dc")) L([CB[0]-8,2,CB[2]+6],[CB[0],2.5,CB[2]+8],"#141414",1.8,0.2);
+  const st = wireState ? wireState() : null;
+  if (WP.links.size) L([CB[0]+20,5,CB[2]],[X_LASER-1,BEAM-1,0],"#c02020",1.6,6);
+  if (WP.links.size>1) L([CB[0]+22,5,CB[2]],[X_LASER-0.5,BEAM-1,0.5],"#222",1.6,7);
+}
+function scene3(){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
+function layout3(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ CAM.k = w / 115; CAM.tx = 40; CAM.ty = 12; CAM.tz = 12; CAM.yaw = -0.55; CAM.pitch = 0.42; CAM.px = 0; CAM.py = 10; camSave(); }
+}
+let lastTex = 0;
+function draw3(){
+  if (view3 !== "3d") return;
+  const now = performance.now(); if (now - lastTex > 300){ drawScreen(); drawCtrl(); lastTex = now; }
+  const dpr = CAM.dpr; ctx3.setTransform(dpr,0,0,dpr,0,0);
+  const g = ctx3.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0,0,CAM.W,CAM.H);
+  begin3(); scene3(); render3(ctx3);
+}
+function showView(v){
+  view3 = v;
+  for (const k of ["3d","bench","screen","ctrl","wire"]){ document.getElementById("v-" + k).hidden = k !== v; document.getElementById("vt" + k).className = k === v ? "on" : ""; }
+  document.getElementById("t-cap3").textContent = tr("cap_" + v);
+  refresh();
+}
+for (const k of ["3d","bench","screen","ctrl","wire"]) document.getElementById("vt" + k).onclick = () => showView(k);
+let down3 = null, m3 = [0,0];
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+cv3.addEventListener("pointerdown", e => { if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
+  const id = pick3(p[0], p[1]); down3 = {p, id, moved:false, shift:e.shiftKey}; });
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0]-down3.p[0], p[1]-down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
+  if (down3.id === "screen3" || down3.id === "target"){ const q = onPlane(p[0], p[1], RT3 + 1.4), cm = Math.max(0, Math.min(X_FRONT, q[0]));
+    if (down3.id === "screen3") app.x_screen = Math.min(Math.max(cm, app.x_target + 5.0), X_FRONT);
+    else app.x_target = Math.min(cm, app.x_screen - 5.0);
+    return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.45, Math.max(0.1, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing");
+  if (down3 && !down3.moved){ const id = down3.id;
+    if (id === "screen3") showView("screen"); else if (id === "ctrl") showView("ctrl");
+    else if (id === "rail" || id === "laser" || id === "target") showView("bench"); }
+  down3 = null; });
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
+for (const id of ["v-bench","v-ctrl"]) document.getElementById(id).addEventListener("contextmenu", e => { e.preventDefault(); showView("3d"); });
+window.addEventListener("resize", layout3);
+(function loop3(){ draw3(); requestAnimationFrame(loop3); })();
 
 readMeters();
 applyLang();
