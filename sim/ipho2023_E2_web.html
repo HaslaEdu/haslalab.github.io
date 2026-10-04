@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2023 E2 — 복굴절로 재는 두께 · Birefringence · HaslaLab</title>
+<meta name="description" content="IPhO 2023 실험 2번을 브라우저에서 실행합니다. 백색 LED·슬릿·렌즈·투과 회절격자·편광판·석영판·광검출기를 두 레일과 회전 스테이지에 직접 세우고 정렬한 뒤, 스테이지 각도와 P2 다이얼, 멀티미터를 읽어 석영판의 두께를 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2023 E2 — 복굴절로 재는 두께 · Thickness Measurements Using Birefringence">
+<meta property="og:description" content="IPhO 2023 실험 2번을 브라우저에서 실행합니다. 광학 부품을 레일에 세우고 정렬해 스펙트럼을 재고 석영판 두께를 구합니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-setup"></h2>
+    <p class="hint" id="t-setuphint"></p>
+    <h2 id="t-h-meas"></h2>
+    <p class="hint" id="t-meashint"></p>
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2023 실험 2 — 복굴절로 재는 두께",
+    sub:"가상 실험실 · 광학 부품을 레일과 회전 스테이지에 세우고 정렬한 뒤, 스테이지 눈금·P2 다이얼·멀티미터를 직접 읽으세요. 파장·I_Norm·Δn·두께는 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayTool:"도구 — 클릭해서 들기",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 120 cm × 72 cm) — 부품을 레일 위에 놓으면 레일에 섭니다 / 레일 끝을 끌거나 레일 위에서 휠로 돌리기 / 우클릭 되돌리기",
+    closeCap:"확대 — 위: 펼친 옆모습 (렌즈·LED는 끌거나 휠로 높이, 부품은 좌우로 끌어 위치) · 아래 왼쪽: 회전 스테이지 (끌기·휠) · 아래 오른쪽: P2 다이얼 (끌기·휠)과 멀티미터",
+    hSetup:"정렬 (절차 [1]–[18])",
+    setupHint:"짧은 레일 (15)과 긴 레일 (16)을 회전 스테이지 (6c)의 축에 겹쳐 끼웁니다 — 레일을 스테이지 위에 놓으면 됩니다. LED (1)에 건전지 (2)와 슬릿 (3)을 달고 LED를 클릭해 켭니다.\n눈금 조립체 (17)를 빔 속에 세우면 빔 중심 높이와 지름이 모눈에 보이고, 그 뒤로는 빛이 막힙니다. 옆모습에서 L1과 L2의 높이, LED의 슬릿 위치를 맞추세요.\n회절격자 (6)를 스테이지 축에 붙이고, 반사광이 슬릿으로 돌아가는 스테이지 각도를 찾으세요. 긴 레일을 돌려 α를 맞춥니다.",
+    hMeas:"측정",
+    measHint:"광검출기 (12)의 리드를 멀티미터에 꽂고 DCV로 둡니다. 차광 원통 (10)과 차광 상자 (21)는 잡광을 줄입니다. 검은 카드 (19)로 슬릿을 가리면 배경값을 잴 수 있습니다.\n스테이지 각도 θ_Stage와 P2 다이얼 φ는 눈금에서 직접 읽습니다.",
+    items:{led:"1. 백색 LED", srail:"15. 짧은 레일", lrail:"16. 긴 레일", stage:"6c. 회전 스테이지", L1:"5. 렌즈 L1", L2:"5. 렌즈 L2",
+           P1:"7. 편광판 P1", quartz:"8. 석영판 Q", P2:"9. 편광판 P2 (회전 마운트)", PD:"12. 광검출기 + 마운트", dmm:"14. 멀티미터", screen:"17. 눈금 조립체",
+           batt:"2. 건전지", slit:"3. 슬릿", grating:"6. 투과 회절격자", cyl:"10. 차광 원통", box:"21. 차광 상자", black:"19. 검은 카드", white:"18. 흰 카드", sheet:"20. 미끄럼 방지 시트"},
+    lab:{side:"펼친 옆모습 (LED → … → PD), 높이는 확대", stage:"회전 스테이지 (위에서)", readout:"눈금 읽기 장치 6(d)", dial:"P2 회전 마운트", dmm:"멀티미터 DCV",
+         noStage:"회전 스테이지를 놓으면 여기 보입니다.", off:"꺼짐", ledOff:"LED 꺼짐", card:"흰 카드"},
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 실험대에 놓았습니다.", onRail:n=>n+" 을(를) 레일 위에 세웠습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       tool:n=>n+" 을(를) 들었습니다 — 쓸 곳을 클릭하세요. (우클릭: 내려놓기)", noUse:"그곳에는 쓸 수 없습니다.",
+       railIn:"레일 끝을 스테이지 축의 '가상 구멍'에 끼웠습니다.", needStage:"레일은 회전 스테이지의 축에 끼웁니다 — 스테이지를 먼저 놓으세요.",
+       batt:n=>"건전지를 넣었습니다 ("+n+"/2).", slit:"슬릿을 LED 모듈에 나사로 달았습니다.", ledOn:on=>"LED "+(on?"켬":"끔"), ledNeed:"건전지 두 개가 있어야 켜집니다.",
+       grating:"회절격자를 스테이지 축 위에 붙였습니다.", cyl:on=>"차광 원통을 "+(on?"달았습니다.":"뗐습니다."), box:on=>"차광 상자를 "+(on?"덮었습니다.":"치웠습니다."),
+       black:on=>"검은 카드로 슬릿을 "+(on?"가렸습니다.":"치웠습니다."), sheet:"미끄럼 방지 시트를 레일 아래에 깔았습니다.", wired:"광검출기 리드를 멀티미터에 꽂았습니다.", unwired:"광검출기 리드를 뽑았습니다.",
+       rot:"레일을 돌렸습니다.", fixedRail:"미끄럼 방지 시트가 레일을 잡고 있습니다 — 우클릭으로 시트를 치우세요.", height:"높이를 바꿨습니다.", dial:s=>"멀티미터: "+s}
+  },
+  en:{
+    title:"IPhO 2023 Experiment 2 — Thickness measurements using birefringence",
+    sub:"Virtual laboratory · stand the optics on the rails and the rotation stage, align them, then read the stage scale, the P2 dial and the multimeter yourself. Wavelengths, I_Norm, Δn and the thickness are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayTool:"tool — click to hold",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 120 cm × 72 cm) — a part put down on a rail stands on it / drag the end of a rail or use the wheel on it to turn it / R-click return",
+    closeCap:"close up — top: the unrolled side view (drag or wheel the lenses and the LED for height, drag parts sideways along the rail) · bottom left: rotation stage (drag, wheel) · bottom right: P2 dial (drag, wheel) and multimeter",
+    hSetup:"Alignment (procedures [1]–[18])",
+    setupHint:"The short (15) and long (16) rails hook onto the axle of the rotation stage (6c): put them down on the stage. Fit the batteries (2) and the slit (3) to the LED (1) and click the LED to switch it on.\nThe scale assembly (17) stood in the beam shows the beam centre height and diameter on its grid, and blocks the light behind it. Set the heights of L1 and L2 and the slit position of the LED in the side view.\nStick the grating (6) on the stage axle and find the stage angle at which the reflected light goes back into the slit. Turn the long rail to set α.",
+    hMeas:"Measurement",
+    measHint:"Plug the photodetector (12) leads into the multimeter and set it to DCV. The light-shield cylinder (10) and box (21) cut stray light. Cover the slit with the black card (19) to measure the background.\nRead the stage angle θ_Stage and the P2 dial φ on their scales yourself.",
+    items:{led:"1. White LED", srail:"15. Short guide rail", lrail:"16. Long guide rail", stage:"6c. Rotation stage", L1:"5. Lens L1", L2:"5. Lens L2",
+           P1:"7. Polarizer P1", quartz:"8. Quartz plate Q", P2:"9. Polarizer P2 (rotation mount)", PD:"12. Photodetector + mount", dmm:"14. Multimeter", screen:"17. Scale assembly",
+           batt:"2. Batteries", slit:"3. Slit", grating:"6. Transmission grating", cyl:"10. Light-shield cylinder", box:"21. Light-shield box", black:"19. Black card", white:"18. White card", sheet:"20. Anti-slip sheet"},
+    lab:{side:"unrolled side view (LED → … → PD), heights magnified", stage:"rotation stage (from above)", readout:"readout device 6(d)", dial:"P2 rotation mount", dmm:"multimeter DCV",
+         noStage:"Put the rotation stage down to see it here.", off:"off", ledOff:"LED off", card:"white card"},
+    st:{none:"Take the apparatus out of the box and put it on the bench."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down on the bench.", onRail:n=>n+" stood on the rail.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       tool:n=>n+" in hand — click where to use it. (R-click: put it down)", noUse:"It cannot be used there.",
+       railIn:"Rail end hooked into the 'virtual through-hole' on the stage axle.", needStage:"The rails hook onto the axle of the rotation stage — put the stage down first.",
+       batt:n=>"Battery in ("+n+"/2).", slit:"Slit screwed onto the LED module.", ledOn:on=>"LED "+(on?"on":"off"), ledNeed:"It needs two batteries.",
+       grating:"Grating stuck on top of the stage axle.", cyl:on=>"Light-shield cylinder "+(on?"fitted.":"removed."), box:on=>"Light-shield box "+(on?"put over the detector.":"lifted off."),
+       black:on=>"Black card "+(on?"in front of the slit.":"taken away."), sheet:"Anti-slip sheet put under the rail.", wired:"Photodetector leads plugged into the multimeter.", unwired:"Photodetector leads unplugged.",
+       rot:"Rail turned.", fixedRail:"The anti-slip sheet holds the rail — R-click it away first.", height:"Height changed.", dial:s=>"Multimeter: "+s}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same optics as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2023e2)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const pick=a=>a[Math.floor(rnd()*a.length)];
+const GRATING_D=1.00e-6, F1=100, F2=80, H_PD=62, H_LED=62, PD_ACC=8;
+const AXLE=470, SR0=130, SR1=460, LR0=480, LR1=930;           /* unrolled path, mm */
+const quartzDn=um=>8.699e-3+1.378e-4/(um*um);
+const K={ dalpha:0.55*gauss(), stageOff:pick([-1,-0.5,0,0.5,1]), L:U(399,410)*1e-6, lamBlue:U(455,461), fwhm:U(23,29), gain:U(0.92,1.08),
+          phiP1:Math.floor(rnd()*360), offPar:U(0.007,0.013), offPer:U(0.003,0.007), slitOff:U(-6,6) };
+const RAILED=["led","L1","P1","quartz","P2","L2","PD","screen","white"];
+const ST={
+  on:{}, pos:{}, rail:{}, s:{}, h:{},
+  railAng:{srail:pick([-2,-1.5,2.5,3]), lrail:0}, sheet:{srail:false,lrail:false},
+  stageAng:0, grating:false, batt:0, slit:false, ledOn:false, slitOff:K.slitOff,
+  cyl:false, box:false, black:false, wired:false, dial:"OFF", phi:0
+};
+ST.railAng.lrail=180+ST.railAng.srail+pick([-3,2,4.5]);
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const NOMINAL_H={led:H_LED,L1:62,P1:62,quartz:62,P2:62,L2:62,PD:H_PD,screen:0,white:0};
+const H_INIT={L1:Math.round(U(48,78)*2)/2, L2:Math.round(U(48,78)*2)/2};
+const onR=(k,r)=>ST.on[k]&&ST.rail[k]===r;
+const X=k=>ST.s[k], Hh=k=>ST.h[k];
+const alphaTrue=()=>180+ST.railAng.srail-ST.railAng.lrail+K.dalpha;
+const theta=()=>K.stageOff-ST.stageAng;
+const lamNm=()=>{ const a=alphaTrue()*Math.PI/180, th=theta()*Math.PI/180; return 2*GRATING_D*Math.sin(a/2)*Math.cos(a/2-th)*1e9; };
+const railsIn=()=>ST.on.stage&&ST.on.srail&&ST.on.lrail;
+function chainOk(){
+  if(!(ST.ledOn&&ST.slit&&onR("led","s")&&onR("L1","s")&&railsIn()&&ST.grating&&onR("L2","l")&&onR("PD","l"))) return false;
+  return X("L1")>X("led")&&X("PD")>X("L2");
+}
+const polOk=()=>onR("P1","l")&&onR("P2","l")&&X("P2")>X("P1");
+const quartzActive=()=>onR("quartz","l")&&polOk()&&X("P1")<X("quartz")&&X("quartz")<X("P2");
+function beamAt(x){
+  if(!(ST.ledOn&&ST.slit&&onR("led","s"))) return null;
+  const xl=X("led"); if(x<xl) return null;
+  const hs=H_LED+ST.slitOff, br=Math.exp(-((ST.slitOff/5)**2));
+  if(!onR("L1","s")||x<X("L1")) return [hs,3+0.10*(x-xl),br];
+  const h1=Hh("L1"), x1=X("L1"), dir1=(h1-hs)/F1, u=(x1-xl-F1)/F1;
+  if(x>AXLE&&!(railsIn()&&ST.grating)) return null;                      /* no grating: nothing goes down the long rail */
+  if(!onR("L2","l")||x<X("L2")) return [h1+(x-x1)*dir1,6+Math.abs(0.12*u)*(x-x1),br];
+  const x2=X("L2"), h2=Hh("L2"), d1=x2-x1, hL2=h1+d1*dir1, w2=6+Math.abs(0.12*u)*d1, dir2=dir1-(hL2-h2)/F2, best=F2*(1+1.1*u), dd=x-x2;
+  return [hL2+dd*dir2, best>1?Math.max(0.4,w2*Math.abs(1-dd/best)):w2, br];
+}
+function blocker(){ let b=null; for(const k of ["screen","white"]) if(ST.on[k]&&ST.rail[k]&&onR("led","s")&&X(k)>X("led")&&(!b||X(k)<X(b))) b=k; return b; }
+function alignment(){
+  if(!chainOk()) return 0; const b=blocker(); if(b&&X(b)<X("PD")) return 0;
+  const [h,w]=beamAt(X("PD")); let f=Math.exp(-(((h-H_PD)/PD_ACC)**2))*Math.exp(-(((w-0.4)/3)**2))*Math.exp(-((ST.slitOff/5)**2));
+  if(!onR("P1","l")) f*=2; return f;
+}
+function spectrum(lam){ if(lam<=395||lam>=760) return 0; const s=K.fwhm/(2*Math.sqrt(2*Math.log(2)));
+  const blue=0.3838*Math.exp(-0.5*((lam-K.lamBlue)/s)**2), c=540.26, w=lam<c?54.82:94.21; return K.gain*(blue+0.1725*Math.exp(-(((lam-c)/w)**2))); }
+function iNorm(lam){ if(!quartzActive()) return 0; const g=2*Math.PI*quartzDn(lam*1e-3)*K.L/(lam*1e-9); return Math.sin(g/2)**2; }
+function dmmCalc(){
+  if(!ST.on.dmm||!ST.wired||!onR("PD","l")||ST.dial!=="DCV") return null;
+  let ipar=0, iper=0;
+  if(!ST.black&&chainOk()){ const lam=lamNm(), tot=spectrum(lam)*alignment(), f=iNorm(lam); ipar=tot*(1-f); iper=tot*f; }
+  const k=(ST.box?0.35:1)*(ST.cyl?0.6:1), opar=K.offPar*k, oper=K.offPer*k;
+  let v;
+  if(polOk()){ const dd=(ST.phi-K.phiP1)*Math.PI/180, w=Math.sin(dd)**2; v=ipar*Math.cos(dd)**2+iper*w+opar*(1-w)+oper*w; }
+  else if(onR("P2","l")) v=0.5*(ipar+iper)+opar; else v=ipar+iper+opar;
+  return Math.max(0,Math.round((v+5e-4*gauss())*1000)/1000);
+}
+let dmmCache={v:null,t:-1e9};
+function dmmV(){ const now=performance.now(); if(now-dmmCache.t>300){ dmmCache={v:dmmCalc(),t:now}; } return dmmCache.v; }
+const retro=()=>(ST.ledOn&&ST.slit&&ST.grating&&railsIn()&&onR("led","s"))?Math.exp(-((theta()/0.7)**2)):0;
+
+/* ══════════════════════════════════════════════════════════════
+   2.  BENCH GEOMETRY  (120 cm × 72 cm, 10 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=10, STAGE_R=10;
+const PLACE=["stage","srail","lrail",...RAILED,"dmm"];
+const TOOLS=["batt","slit","grating","cyl","box","black","sheet"];
+const SZ={stage:[20,20],srail:[2,2],lrail:[2,2],led:[4,4],L1:[5,3],L2:[5,3],P1:[5,3],quartz:[5,3],P2:[7,4],PD:[5,4],screen:[7,3],white:[5,2],dmm:[8,14]};
+for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:60,y:36}; ST.rail[k]=null; ST.s[k]=0; ST.h[k]=NOMINAL_H[k]||0; }
+ST.h.L1=H_INIT.L1; ST.h.L2=H_INIT.L2;
+const udir=a=>{ const r=a*Math.PI/180; return [-Math.cos(r),-Math.sin(r)]; };
+const SC=()=>[ST.pos.stage.x,ST.pos.stage.y];
+function sToXY(s){ const c=SC();
+  if(s<=AXLE){ const u=udir(ST.railAng.srail), L=(AXLE-s)/10; return [c[0]+u[0]*L,c[1]+u[1]*L]; }
+  const u=udir(ST.railAng.lrail), L=(s-AXLE)/10; return [c[0]+u[0]*L,c[1]+u[1]*L]; }
+const posOf=k=>ST.rail[k]?sToXY(ST.s[k]):[ST.pos[k].x,ST.pos[k].y];
+/* which rail (and where along it) a bench point falls on */
+function railAt(c,k){
+  if(!railsIn()) return null; const o=SC();
+  for(const [r,a,s0,s1,sign] of [["s",ST.railAng.srail,SR0,SR1,-1],["l",ST.railAng.lrail,LR0,LR1,1]]){
+    const u=udir(a), dx=c[0]-o[0], dy=c[1]-o[1], t=dx*u[0]+dy*u[1], perp=Math.abs(dx*u[1]-dy*u[0]);
+    const ss=r==="s"?AXLE-t*10:AXLE+t*10;
+    if(t>0&&perp<2.2&&ss>=s0&&ss<=s1) return {r,s:Math.round(ss)}; }
+  return null;
+}
+function railBusy(r,s,k){ for(const o of RAILED){ if(o===k||!onR(o,r)) continue; if(Math.abs(ST.s[o]-s)<22) return true; } return false; }
+function overlapFree(k,pos){
+  const [w,h]=SZ[k]; if(pos.x-w/2<1||pos.x+w/2>LW/PX-1||pos.y-h/2<1||pos.y+h/2>LH/PX-1) return false;
+  for(const o of PLACE){ if(o===k||!ST.on[o]||ST.rail[o]||o==="srail"||o==="lrail") continue;
+    const q=ST.pos[o], [a,b]=SZ[o]; if(Math.abs(pos.x-q.x)<(w+a)/2+0.3&&Math.abs(pos.y-q.y)<(h+b)/2+0.3) return false; }
+  if(ST.on.stage&&k!=="stage"&&Math.hypot(pos.x-ST.pos.stage.x,pos.y-ST.pos.stage.y)<STAGE_R+1) return false;
+  return true;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING THE BENCH  (in cm, seen from above)
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+const MDF="#cdae82", MDF_D="#a98a5f", MDF_L="#e0c79f";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+const T6=(s,x,y,col,sz,al,wt)=>{ ctx.save(); ctx.scale(0.1,0.1); text(s,x*10,y*10,col,sz,al,wt); ctx.restore(); };
+function frameAt(p,ang,fn){ ctx.save(); ctx.translate(p[0]*PX,p[1]*PX); ctx.scale(PX,PX); if(ang) ctx.rotate(ang); fn(); ctx.restore(); }
+function lamColour(l){
+  if(l<380||l>760) return "rgba(0,0,0,0)"; let r,g,b;
+  if(l<440){ r=-(l-440)/60; g=0; b=1; } else if(l<490){ r=0; g=(l-440)/50; b=1; } else if(l<510){ r=0; g=1; b=-(l-510)/20; }
+  else if(l<580){ r=(l-510)/70; g=1; b=0; } else if(l<645){ r=1; g=-(l-645)/65; b=0; } else { r=1; g=0; b=0; }
+  const f=l<420?0.3+0.7*(l-380)/40:l>700?0.3+0.7*(760-l)/60:1;
+  return "rgb("+[r,g,b].map(v=>Math.round(255*Math.pow(Math.max(0,v*f),0.8))).join(",")+")"; }
+function bench(){
+  ctx.fillStyle=vgrad(0,LH,[[0,"#ebe8e2"],[1,"#dcd7ce"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(120,110,90,.10)"; ctx.lineWidth=1;
+  for(let x=0;x<=LW;x+=100){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+  for(let y=0;y<=LH;y+=100){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
+}
+/* the rails, the stage, its printed scale */
+function railAngle(r){ const u=udir(ST.railAng[r]); return Math.atan2(u[1],u[0]); }
+function drawRail(r){
+  const len=r==="srail"?(AXLE-SR0+10)/10:(LR1-AXLE+10)/10;
+  frameAt(SC(),railAngle(r),()=>{
+    if(ST.sheet[r]){ ctx.fillStyle="#2e3035"; ctx.fillRect(2,-2.2,len-2,4.4); ctx.fillStyle="rgba(255,255,255,.05)"; for(let i=2;i<len;i+=0.8) ctx.fillRect(i,-2.2,0.3,4.4); }
+    ctx.fillStyle="rgba(40,30,20,.2)"; ctx.fillRect(0.3,-0.6,len,1.6);
+    fillR(-0.8,-0.9,len+0.8,1.8,0.15,MDF_L,MDF_D,0.06);
+    ctx.strokeStyle="rgba(120,90,50,.35)"; ctx.lineWidth=0.04; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(len,0); ctx.stroke();
+  });
+}
+function drawStage(p){
+  frameAt(p,0,()=>{
+    circ(0.3,0.4,STAGE_R,"rgba(40,30,20,.2)");
+    circ(0,0,STAGE_R,MDF,MDF_D,0.08);
+    circ(0,0,STAGE_R-0.4,"#efe4cf");
+    for(let a=0;a<360;a++){ const u=udir(a), L=a%10===0?1.1:a%5===0?0.75:0.45;
+      ctx.strokeStyle="#3b2e1e"; ctx.lineWidth=0.05; ctx.beginPath(); ctx.moveTo(u[0]*(STAGE_R-0.4),u[1]*(STAGE_R-0.4)); ctx.lineTo(u[0]*(STAGE_R-0.4-L),u[1]*(STAGE_R-0.4-L)); ctx.stroke();
+      if(a%30===0){ const rr=STAGE_R-2.1; T6(String(a),u[0]*rr,u[1]*rr,"#3b2e1e",4.6,"center","700"); } }
+    /* the turntable with the readout device and the grating */
+    ctx.save(); ctx.rotate(ST.stageAng*Math.PI/180);
+    fillR(-4.6,-4.6,9.2,9.2,0.8,"#b8bdc2","#6b7178",0.08); circ(0,0,3.4,"#d8dade","#6b7178",0.06); circ(0,0,0.9,"#9aa1a8");
+    const u0=udir(0); ctx.fillStyle="#c0392b"; ctx.fillRect(u0[0]*(STAGE_R-3.0)-0.15,-0.5,0.3,1.0);
+    if(ST.grating){ ctx.fillStyle="#f6f6f3"; ctx.fillRect(-0.35,-2.2,0.7,4.4); ctx.fillStyle="rgba(120,160,220,.6)"; ctx.fillRect(-0.15,-1.6,0.3,3.2); }
+    ctx.restore();
+  });
+}
+/* optics standing on the rails (oriented across the rail) or lying on the bench */
+function railRot(k){ return ST.rail[k]==="s"?railAngle("srail")+Math.PI:ST.rail[k]==="l"?railAngle("lrail"):0; }
+function drawItem(k,p,ang){
+  frameAt(p,ang,()=>{
+    const base=()=>fillR(-1.2,-2.0,2.4,4.0,0.2,MDF,MDF_D,0.06);
+    switch(k){
+      case "led": base(); fillR(0.6,-2.0,0.4,4.0,0.05,"#2f8f4e","#1d6636",0.04);
+        if(ST.slit){ ctx.fillStyle="#1d1e22"; ctx.fillRect(1.0,-1.8,0.25,3.6); }
+        circ(0.8,0,0.45,ST.ledOn?"#fffbe0":"#eee",ST.ledOn?"#ffe066":"#999",0.06); break;
+      case "L1": case "L2": base(); ctx.fillStyle=MDF_L; ctx.fillRect(-0.25,-2.4,0.5,4.8); ctx.fillStyle="rgba(200,230,250,.85)"; ctx.fillRect(-0.18,-1.4,0.36,2.8); T6(k,0,-3.0,"#3b2e1e",4,"center","700"); break;
+      case "P1": case "quartz": base(); ctx.fillStyle="#f2f1ee"; ctx.fillRect(-0.3,-2.4,0.6,4.8); ctx.fillStyle=k==="P1"?"#3a3d42":"rgba(220,235,240,.9)"; ctx.fillRect(-0.2,-1.0,0.4,2.0); T6(k==="P1"?"P1":"Q",0,-3.0,"#3b2e1e",4,"center","700"); break;
+      case "P2": base(); circ(0,0,0.01); ctx.fillStyle="#e9ecef"; ctx.fillRect(-0.35,-3.0,0.7,6.0); ctx.fillStyle="#3a3d42"; ctx.fillRect(-0.2,-1.0,0.4,2.0); T6("P2",0,-3.6,"#3b2e1e",4,"center","700"); break;
+      case "PD": base(); fillR(-0.8,-1.5,0.5,3.0,0.05,"#2f8f4e","#1d6636",0.04); if(ST.cyl){ fillR(-3.8,-0.45,3.0,0.9,0.2,"#1d1e22"); }
+        if(ST.box){ fillR(-4.2,-3.2,6.4,6.4,0.2,"rgba(60,62,66,.85)","#222",0.06); } T6("PD",1.6,-2.6,"#3b2e1e",4,"center","700"); break;
+      case "screen": fillR(-1.0,-3.2,2.0,6.4,0.1,MDF,MDF_D,0.06); ctx.fillStyle="#f6f6f3"; ctx.fillRect(-0.15,-3.0,0.3,6.0); break;
+      case "white": ctx.fillStyle="#fbfbf9"; ctx.fillRect(-0.15,-2.2,0.3,4.4); ctx.strokeStyle="#aaa"; ctx.lineWidth=0.04; ctx.strokeRect(-0.15,-2.2,0.3,4.4); break;
+      case "dmm": fillR(-4,-7,8,14,0.8,"#c0392b","#7b241c",0.1); fillR(-3.2,-6.2,6.4,3.0,0.2,"#cfe3cf","#4d5b4d",0.06);
+        { const v=dmmV(); T6(v===null?"":v.toFixed(3),2.8,-4.7,"#1c2833",9,"right","700"); }
+        circ(0,1.2,2.0,"#2c2c2c","#111",0.06); { const a=ST.dial==="DCV"?0.7:-0.7; ctx.strokeStyle="#eee"; ctx.lineWidth=0.25; ctx.beginPath(); ctx.moveTo(0,1.2); ctx.lineTo(Math.sin(a)*1.7,1.2-Math.cos(a)*1.7); ctx.stroke(); }
+        T6("OFF",-2.4,-1.0,"#f5d7d2",3.4,"center","700"); T6("DCV",2.4,-1.0,"#f5d7d2",3.4,"center","700");
+        circ(1.6,5.6,0.5,"#111","#c0392b",0.1); circ(-1.6,5.6,0.5,"#111","#555",0.1); break;
+    }
+  });
+}
+const pdPlug=()=>{ if(ST.wired&&ST.on.dmm) return [ST.pos.dmm.x,ST.pos.dmm.y+5.6]; const p=posOf("PD"); return [p[0]+2.5,p[1]+3.5]; };
+function drawBeam(){
+  if(!(ST.ledOn&&ST.slit&&onR("led","s")&&railsIn())||ST.black) return;
+  const b=blocker(), lim=s=>b&&X(b)<s?X(b):s;
+  const A=sToXY(X("led")+12), B=sToXY(lim(AXLE));
+  ctx.strokeStyle="rgba(255,252,225,.9)"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(A[0]*PX,A[1]*PX); ctx.lineTo(B[0]*PX,B[1]*PX); ctx.stroke();
+  if(!ST.grating||(b&&X(b)<AXLE)) return;
+  const end=lim(onR("PD","l")?X("PD"):LR1), C=sToXY(end), Bx=sToXY(AXLE);
+  ctx.strokeStyle=lamColour(lamNm()); ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(Bx[0]*PX,Bx[1]*PX); ctx.lineTo(C[0]*PX,C[1]*PX); ctx.stroke();
+}
+function drawBench(){
+  bench();
+  if(ST.on.stage){ for(const r of ["srail","lrail"]) if(ST.on[r]) drawRail(r); drawStage(SC()); }
+  for(const r of ["srail","lrail"]) if(ST.on[r]&&!ST.on.stage){}
+  drawBeam();
+  for(const k of [...RAILED,"dmm"]) if(ST.on[k]) drawItem(k,posOf(k),railRot(k));
+  if(ST.on.PD&&ST.on.dmm||ST.on.PD){ const a=posOf("PD"), b=pdPlug();
+    for(const [dx,col] of [[-0.2,"#c0392b"],[0.2,"#222"]]){ ctx.strokeStyle=col; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo((a[0]+dx)*PX,(a[1]+1.5)*PX);
+      const e=hand&&hand.k==="pdplug"?[mouse[0]/PX,mouse[1]/PX]:b; ctx.quadraticCurveTo((a[0]+e[0])/2*PX,((a[1]+e[1])/2+3)*PX,(e[0]+dx)*PX,e[1]*PX); ctx.stroke(); } }
+  if(hand&&PLACE.includes(hand.k)){ const c=[mouse[0]/PX,mouse[1]/PX], ra=RAILED.includes(hand.k)?railAt(c,hand.k):null;
+    ctx.save(); ctx.globalAlpha=0.7;
+    if(hand.k==="stage") drawStage(c);
+    else if(hand.k==="srail"||hand.k==="lrail"){ frameAt(c,0,()=>fillR(-6,-0.9,12,1.8,0.15,MDF_L,MDF_D,0.06)); }
+    else if(ra){ const keepR=ST.rail[hand.k], keepS=ST.s[hand.k]; ST.rail[hand.k]=ra.r; ST.s[hand.k]=ra.s; drawItem(hand.k,sToXY(ra.s),railRot(hand.k)); ST.rail[hand.k]=keepR; ST.s[hand.k]=keepS; }
+    else drawItem(hand.k,c,0);
+    ctx.restore(); }
+  if(hand&&TOOLS.includes(hand.k)){ ctx.save(); ctx.globalAlpha=0.9; icon(hand.k,mouse[0]+14,mouse[1]+12,0.8); ctx.restore(); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  TRAY, LAYOUT, CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  const post=()=>{ fillR(-6,8,12,6,1,MDF,MDF_D); ctx.fillStyle="#c3c7cb"; ctx.fillRect(-1.5,-2,3,10); };
+  switch(k){
+    case "stage": circ(0,0,14,MDF,MDF_D); circ(0,0,11,"#efe4cf"); fillR(-6,-6,12,12,2,"#b8bdc2"); break;
+    case "srail": ctx.rotate(-0.3); fillR(-14,-2,28,4,1,MDF_L,MDF_D); break;
+    case "lrail": ctx.rotate(-0.3); fillR(-20,-2,40,4,1,MDF_L,MDF_D); break;
+    case "led": post(); fillR(-8,-14,16,12,1,"#2f8f4e","#1d6636"); circ(0,-8,3,"#fffbe0"); break;
+    case "L1": case "L2": post(); fillR(-8,-16,16,14,1,MDF,MDF_D); circ(0,-9,4.5,"#dceefa","#999"); text(k,10,-14,"#cfd3d6",8,"left","700"); break;
+    case "P1": post(); fillR(-8,-16,16,14,1,"#f2f1ee","#999"); fillR(-4,-12,8,6,0,"#3a3d42"); break;
+    case "quartz": post(); fillR(-8,-16,16,14,1,"#f2f1ee","#999"); fillR(-2,-11,4,4,0,"#9fb5c0"); break;
+    case "P2": post(); circ(0,-9,8,"#e9ecef","#8d939a"); circ(0,-9,3.5,"#3a3d42"); break;
+    case "PD": fillR(-10,6,20,7,1,MDF,MDF_D); fillR(3,-12,5,18,1,"#2f8f4e"); fillR(-12,-8,14,4,1,"#1d1e22"); break;
+    case "dmm": fillR(-10,-15,20,30,3,"#c0392b","#7b241c"); fillR(-7,-12,14,6,1,"#cfe3cf"); circ(0,4,5,"#2c2c2c"); break;
+    case "screen": fillR(-12,-14,24,26,1,"#f6f6f3","#888"); ctx.strokeStyle="#9bb"; ctx.lineWidth=0.5; for(let i=-12;i<=12;i+=3){ ctx.beginPath(); ctx.moveTo(i,-14); ctx.lineTo(i,12); ctx.stroke(); } break;
+    case "white": fillR(-12,-8,24,16,1,"#fbfbf9","#aaa"); break;
+    case "black": fillR(-12,-8,24,16,1,"#151618","#555"); break;
+    case "batt": for(const dx of [-5,5]) fillR(dx-3.5,-11,7,22,3,"#e8e2d0","#999"); break;
+    case "slit": fillR(-10,-12,20,24,1,"#1d1e22"); ctx.fillStyle="#bbb"; ctx.fillRect(-0.6,-8,1.2,16); break;
+    case "grating": fillR(-10,-12,20,24,2,"#f6f6f3","#999"); fillR(-6,-8,12,14,1,"rgba(120,160,220,.6)"); break;
+    case "cyl": ctx.rotate(-0.3); fillR(-14,-3,28,6,3,"#1d1e22"); break;
+    case "box": ctx.fillStyle="#3c3f44"; ctx.beginPath(); ctx.moveTo(-12,10); ctx.lineTo(-10,-8); ctx.lineTo(10,-8); ctx.lineTo(12,10); ctx.closePath(); ctx.fill(); break;
+    case "sheet": fillR(-14,-8,28,16,1,"#2e3035","#555"); break;
+  }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["stage","srail","lrail","led","batt","slit","L1","L2","grating","P1","quartz","P2","PD","cyl","dmm","screen","white","black","box","sheet"], TROW=36;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[], P1={}, P2={}, P3={};
+function trayAvail(k){
+  if(hand&&hand.k===k) return false;
+  if(k==="batt") return ST.batt<2; if(k==="slit") return !ST.slit; if(k==="grating") return !ST.grating;
+  if(TOOLS.includes(k)) return true; return !ST.on[k]; }
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.62);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h1=Math.round(CLH*0.44), h2=CLH-24-h1, w2=Math.round((CLW-24)*0.5);
+  P1={x:8,y:8,w:CLW-16,h:h1}; P2={x:8,y:16+h1,w:w2,h:h2}; P3={x:16+w2,y:16+h1,w:CLW-24-w2,h:h2};
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,24,y+(TROW-4)/2,0.55); ctx.restore(); ctx=old;
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; let nm=itemName(k); while(c.measureText(nm).width>wd-46&&nm.length>4) nm=nm.slice(0,-2)+"…"; c.fillText(nm,44,y+11);
+    c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(TOOLS.includes(k)?t.trayTool:(av?t.trayTake:t.trayOut),44,y+24);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function panelBg(P,col){ ctx.fillStyle=col; ctx.fillRect(P.x,P.y,P.w,P.h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(P.x+0.5,P.y+0.5,P.w-1,P.h-1); }
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  drawP1(); drawP2(); drawP3(); ctx=old;
+}
+/* top: the unrolled side view - positions along the rails to scale, heights magnified */
+let SVP={};
+function drawP1(){
+  const P=P1, t=d(); panelBg(P,"#f2efe8");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.side,P.x+8,P.y+11,"#5d5446",10.5);
+  const xs=s=>P.x+12+(s-110)*(P.w-24)/840, base=P.y+P.h-16, kh=(P.h-40)/110, ys=h=>base-h*kh;
+  SVP={xs,ys,kh};
+  if(ST.on.srail){ ctx.fillStyle=MDF_L; ctx.fillRect(xs(SR0-10),base,xs(AXLE)-xs(SR0-10),7); }
+  if(ST.on.lrail){ ctx.fillStyle=MDF_L; ctx.fillRect(xs(AXLE),base,xs(LR1+10)-xs(AXLE),7); }
+  if(ST.on.stage){ ctx.fillStyle=MDF; ctx.fillRect(xs(AXLE)-20,base-6,40,6); if(ST.grating){ ctx.fillStyle="rgba(120,160,220,.7)"; ctx.fillRect(xs(AXLE)-2,ys(80),4,ys(40)-ys(80)); } }
+  /* the beam */
+  if(!ST.black&&ST.ledOn&&ST.slit&&onR("led","s")){
+    const b=blocker(), end=b?X(b):(onR("PD","l")?X("PD"):LR1+10), col=s=>s>AXLE?lamColour(lamNm()):"rgba(255,250,215,.95)";
+    for(let s=X("led")+4;s<end;s+=3){ const bm=beamAt(s); if(!bm) break; const [h,w,br]=bm;
+      ctx.fillStyle=col(s); ctx.globalAlpha=0.35+0.5*br; ctx.fillRect(xs(s),ys(h+w/2),Math.max(1,xs(s+3)-xs(s)),Math.max(1.5,w*kh)); }
+    ctx.globalAlpha=1; }
+  /* the parts */
+  for(const k of RAILED){ if(!ST.rail[k]) continue; const x=xs(X(k)), h=k==="screen"||k==="white"?0:Hh(k);
+    if(k==="screen"||k==="white"){ const top=ys(100); ctx.fillStyle=k==="screen"?"#f6f6f3":"#fbfbf9"; ctx.fillRect(x-4,top,8,base-top);
+      if(k==="screen"){ ctx.strokeStyle="rgba(100,150,170,.6)"; ctx.lineWidth=0.6; for(let mm=0;mm<=100;mm+=5){ ctx.beginPath(); ctx.moveTo(x-4,ys(mm)); ctx.lineTo(x+4,ys(mm)); ctx.stroke(); }
+        for(let mm=10;mm<=100;mm+=10) text(String(mm),x+6,ys(mm),"#5d5446",8.5); }
+      const bm=beamAt(X(k)); if(bm&&!ST.black&&(blocker()===k)){ if(X(k)<AXLE||ST.grating){ const [bh,bw]=bm; ctx.fillStyle=X(k)>AXLE?lamColour(lamNm()):"#fff7c0";
+        ctx.globalAlpha=0.9; ctx.beginPath(); ctx.ellipse(x,ys(bh),3.5,Math.max(1.5,bw*kh/2),0,0,7); ctx.fill(); ctx.globalAlpha=1; } }
+      continue; }
+    ctx.fillStyle="#c3c7cb"; ctx.fillRect(x-1.5,ys(h-8),3,base-ys(h-8)); fillR(x-8,base-8,16,8,2,MDF,MDF_D,1);
+    if(k==="led"){ fillR(x-7,ys(H_LED+14),6,ys(H_LED-14)-ys(H_LED+14),1,"#2f8f4e","#1d6636",1); if(ST.slit){ ctx.fillStyle="#1d1e22"; ctx.fillRect(x-1,ys(H_LED+14),3,ys(H_LED-14)-ys(H_LED+14)); ctx.fillStyle="#fff7c0"; ctx.fillRect(x-1,ys(H_LED+ST.slitOff+1.2),3,2.4*kh); } }
+    else if(k==="L1"||k==="L2"){ fillR(x-3,ys(h+13),6,ys(h-13)-ys(h+13),1,MDF,MDF_D,1); ctx.fillStyle="rgba(200,230,250,.9)"; ctx.fillRect(x-1.5,ys(h+8),3,ys(h-8)-ys(h+8)); text(k,x,ys(h+13)-8,"#3b2e1e",9.5,"center","700"); }
+    else if(k==="PD"){ fillR(x,ys(h+12),4,ys(h-12)-ys(h+12),1,"#2f8f4e","#1d6636",1); if(ST.cyl) fillR(x-26,ys(h+3),26,ys(h-3)-ys(h+3),2,"#1d1e22"); if(ST.box) fillR(x-34,ys(h+22),46,base-ys(h+22),2,"rgba(60,62,66,.8)"); text("PD",x+2,ys(h+12)-8,"#3b2e1e",9.5,"center","700"); }
+    else { fillR(x-3,ys(h+12),6,ys(h-12)-ys(h+12),1,"#f2f1ee","#999",1); ctx.fillStyle=k==="quartz"?"rgba(170,200,215,.9)":"#3a3d42"; ctx.fillRect(x-1.5,ys(h+6),3,ys(h-6)-ys(h+6)); text(k==="quartz"?"Q":k,x,ys(h+12)-8,"#3b2e1e",9.5,"center","700"); }
+  }
+  if(ST.black&&onR("led","s")){ const x=xs(X("led"))+8; ctx.fillStyle="#151618"; ctx.fillRect(x,ys(H_LED+16),4,ys(H_LED-16)-ys(H_LED+16)); }
+  ctx.restore();
+}
+/* bottom left: the rotation stage from above, its printed scale, the readout device and the rails */
+function drawP2(){
+  const P=P2, t=d(); panelBg(P,"#e9e4da");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.stage,P.x+8,P.y+11,"#5d5446",10.5);
+  if(!ST.on.stage){ text(t.lab.noStage,P.x+P.w/2,P.y+P.h/2,"#69717a",11,"center"); ctx.restore(); P.R=0; return; }
+  const cx=P.x+P.w*0.40, cy=P.y+P.h*0.54, R=Math.min(P.w*0.36,P.h*0.42); P.cx=cx; P.cy=cy; P.R=R;
+  for(const r of ["srail","lrail"]) if(ST.on[r]){ const u=udir(ST.railAng[r]); ctx.strokeStyle=MDF_D; ctx.lineWidth=R*0.16; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+u[0]*R*2.2,cy+u[1]*R*2.2); ctx.stroke();
+    ctx.strokeStyle="rgba(80,60,30,.6)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+u[0]*R*2.2,cy+u[1]*R*2.2); ctx.stroke(); }
+  circ(cx,cy,R,MDF,MDF_D,2); circ(cx,cy,R*0.95,"#efe4cf");
+  for(let a=0;a<360;a++){ const u=udir(a), L=a%10===0?0.12:a%5===0?0.08:0.045;
+    ctx.strokeStyle="#3b2e1e"; ctx.lineWidth=a%5===0?1.2:0.8; ctx.beginPath(); ctx.moveTo(cx+u[0]*R*0.95,cy+u[1]*R*0.95); ctx.lineTo(cx+u[0]*R*(0.95-L),cy+u[1]*R*(0.95-L)); ctx.stroke();
+    if(a%10===0) text(String(a),cx+u[0]*R*0.74,cy+u[1]*R*0.74,"#3b2e1e",Math.max(7,R*0.06),"center","600"); }
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(ST.stageAng*Math.PI/180);
+  fillR(-R*0.42,-R*0.42,R*0.84,R*0.84,R*0.06,"#b8bdc2","#6b7178",1); circ(0,0,R*0.3,"#d8dade","#6b7178",1);
+  const u0=udir(0); ctx.strokeStyle="#c0392b"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(u0[0]*R*0.42,0); ctx.lineTo(u0[0]*R*0.86,0); ctx.stroke();
+  if(ST.grating){ ctx.fillStyle="#f6f6f3"; ctx.fillRect(-R*0.04,-R*0.22,R*0.08,R*0.44); ctx.fillStyle="rgba(120,160,220,.6)"; ctx.fillRect(-R*0.02,-R*0.16,R*0.04,R*0.32); }
+  ctx.restore();
+  /* the readout device, magnified */
+  const bw=P.w*0.30, bh=P.h*0.40, bx=P.x+P.w-bw-8, by=P.y+20;
+  fillR(bx,by,bw,bh,4,"#fbf7ee","#7a828a",1); text(t.lab.readout,bx+4,by+bh+10,"#5d5446",9.5);
+  ctx.save(); ctx.beginPath(); ctx.rect(bx,by,bw,bh); ctx.clip();
+  const pxd=bw/10, a0=ST.stageAng;
+  for(let a=Math.floor(a0)-6;a<=Math.ceil(a0)+6;a++){ const x=bx+bw/2+(a-a0)*pxd, A=((a%360)+360)%360, L=a%10===0?bh*0.45:a%5===0?bh*0.32:bh*0.2;
+    ctx.strokeStyle="#3b2e1e"; ctx.lineWidth=a%5===0?1.6:1; ctx.beginPath(); ctx.moveTo(x,by); ctx.lineTo(x,by+L); ctx.stroke();
+    if(a%5===0) text(String(A),x,by+bh*0.62,"#3b2e1e",Math.min(13,pxd*0.9),"center","700"); }
+  ctx.strokeStyle="#c0392b"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(bx+bw/2,by+bh*0.75); ctx.lineTo(bx+bw/2,by+bh); ctx.stroke();
+  ctx.restore();
+  /* light sent back into the slit, seen on the slit plate */
+  const rv=retro(); if(rv>0.02){ const g=ctx.createRadialGradient(P.x+30,P.y+P.h-30,0,P.x+30,P.y+P.h-30,18); g.addColorStop(0,"rgba(255,250,215,"+rv+")"); g.addColorStop(1,"rgba(255,250,215,0)"); ctx.fillStyle=g; ctx.fillRect(P.x+8,P.y+P.h-52,44,44); }
+  fillR(P.x+22,P.y+P.h-48,16,36,2,null,"#555",1); ctx.fillStyle="#1d1e22"; ctx.fillRect(P.x+29,P.y+P.h-46,2,32);
+  ctx.restore();
+}
+/* bottom right: the P2 rotation mount and the multimeter */
+function drawP3(){
+  const P=P3, t=d(); panelBg(P,"#1a1d22");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  const r=Math.min(P.w*0.26,P.h*0.40), cx=P.x+r+18, cy=P.y+P.h/2+6; P.dcx=cx; P.dcy=cy; P.dr=r;
+  text(t.lab.dial,P.x+8,P.y+11,"#9aa3ab",10.5);
+  if(ST.on.P2){ circ(cx,cy,r,"#e9ecef","#8d939a",2);
+    for(let a=0;a<360;a+=2){ const rad=(a-90)*Math.PI/180, L=a%30===0?0.16:a%10===0?0.1:0.05;
+      ctx.strokeStyle="#55595e"; ctx.lineWidth=a%10===0?1.3:0.8; ctx.beginPath(); ctx.moveTo(cx+Math.cos(rad)*r*(1-L),cy+Math.sin(rad)*r*(1-L)); ctx.lineTo(cx+Math.cos(rad)*r,cy+Math.sin(rad)*r); ctx.stroke();
+      if(a%30===0) text(String(a),cx+Math.cos(rad)*r*0.74,cy+Math.sin(rad)*r*0.74,"#3b3e42",Math.max(7,r*0.11),"center","600"); }
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(ST.phi*Math.PI/180); circ(0,0,r*0.42,"#7c7f83","#5b5e62",1); ctx.fillStyle="#c0392b"; ctx.beginPath(); ctx.moveTo(-3,-r*0.42); ctx.lineTo(3,-r*0.42); ctx.lineTo(0,-r*0.96); ctx.closePath(); ctx.fill(); ctx.restore();
+  } else text("—",cx,cy,"#69717a",12,"center");
+  /* multimeter */
+  const mx=P.x+P.w*0.62, mw=P.w*0.34, my=P.y+22, mh=P.h-34; P.mx=mx; P.my=my; P.mw=mw; P.mh=mh;
+  if(ST.on.dmm){ fillR(mx,my,mw,mh,8,"#c0392b","#7b241c",2); fillR(mx+mw*0.1,my+mh*0.07,mw*0.8,mh*0.22,4,"#cfe3cf","#4d5b4d",1);
+    const v=dmmV(); text(v===null?"":v.toFixed(3),mx+mw*0.86,my+mh*0.18,"#1c2833",Math.min(26,mh*0.14),"right","700",MONO); text("V",mx+mw*0.88,my+mh*0.24,"#1c2833",10,"left","700");
+    const dx=mx+mw/2, dy=my+mh*0.6, dr=Math.min(mw*0.3,mh*0.18); circ(dx,dy,dr,"#2c2c2c","#111",2); const a=ST.dial==="DCV"?0.7:-0.7;
+    ctx.strokeStyle="#eee"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(dx,dy); ctx.lineTo(dx+Math.sin(a)*dr*0.85,dy-Math.cos(a)*dr*0.85); ctx.stroke();
+    text("OFF",dx-dr*1.05,dy-dr*1.05,ST.dial==="OFF"?"#ffe9a8":"#f5d7d2",10,"center","700"); text("DCV",dx+dr*1.05,dy-dr*1.05,ST.dial==="DCV"?"#ffe9a8":"#f5d7d2",10,"center","700");
+    P.ddx=dx; P.ddy=dy; P.ddr=dr; }
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const cm=p=>[p[0]/PX,p[1]/PX];
+function onItem(k,c){ if(!ST.on[k]) return false; const p=posOf(k), [w,h]=SZ[k]; return Math.hypot(c[0]-p[0],c[1]-p[1])<Math.max(w,h)/2+0.6; }
+const onStage=(c,r)=>ST.on.stage&&near(c,SC(),r||STAGE_R);
+function railEnd(r){ const len=r==="srail"?(AXLE-SR0+10)/10:(LR1-AXLE+10)/10, u=udir(ST.railAng[r]), o=SC(); return [o[0]+u[0]*len,o[1]+u[1]*len]; }
+function onRailBody(c){ if(!railsIn()&&!(ST.on.stage&&(ST.on.srail||ST.on.lrail))) return null; const o=SC();
+  for(const r of ["srail","lrail"]){ if(!ST.on[r]) continue; const u=udir(ST.railAng[r]), dx=c[0]-o[0], dy=c[1]-o[1], t=dx*u[0]+dy*u[1], perp=Math.abs(dx*u[1]-dy*u[0]);
+    const len=r==="srail"?(AXLE-SR0+10)/10:(LR1-AXLE+10)/10; if(t>STAGE_R&&t<len&&perp<1.4) return r; } return null; }
+function dropOffRails(r){ for(const k of RAILED) if(ST.rail[k]===r){ ST.rail[k]=null; ST.on[k]=false; } }
+function returnItem(k){
+  if(k==="stage"){ for(const r of ["srail","lrail"]) if(ST.on[r]){ ST.on[r]=false; dropOffRails(r==="srail"?"s":"l"); } ST.grating=false; ST.sheet.srail=ST.sheet.lrail=false; }
+  if(k==="srail"||k==="lrail"){ dropOffRails(k==="srail"?"s":"l"); ST.sheet[k]=false; }
+  if(k==="led"){ ST.ledOn=false; ST.black=false; }
+  if(k==="PD"){ ST.cyl=false; ST.box=false; ST.wired=false; }
+  if(k==="dmm"){ ST.wired=false; ST.dial="OFF"; }
+  ST.on[k]=false; ST.rail[k]=null; say("back",itemName(k));
+}
+function returnHand(){ if(!hand) return; if(hand.move){ ST.pos[hand.k]=hand.orig.pos; ST.rail[hand.k]=hand.orig.rail; ST.s[hand.k]=hand.orig.s; ST.on[hand.k]=true; say("stays"); } hand=null; }
+let rot=null;
+function benchClick(p,right){
+  const c=cm(p);
+  if(hand){
+    const k=hand.k;
+    if(right){ returnHand(); return; }
+    if(k==="pdplug"){ if(ST.on.dmm&&near(c,[ST.pos.dmm.x,ST.pos.dmm.y],7)){ ST.wired=true; say("wired"); } else say("unwired"); hand=null; return; }
+    if(TOOLS.includes(k)) return useTool(k,c);
+    if(k==="srail"||k==="lrail"){ if(!ST.on.stage){ say("needStage"); return; } if(!onStage(c,STAGE_R+3)){ say("noFit"); return; } ST.on[k]=true; hand=null; say("railIn"); return; }
+    if(RAILED.includes(k)){ const ra=railAt(c,k);
+      if(ra){ if(railBusy(ra.r,ra.s,k)){ say("noFit"); return; } ST.rail[k]=ra.r; ST.s[k]=ra.s; ST.on[k]=true; hand=null; say("onRail",itemName(k)); return; } }
+    const pos={x:c[0],y:c[1]}; if(!overlapFree(k,pos)){ say("noFit"); return; }
+    ST.pos[k]=pos; ST.rail[k]=null; ST.on[k]=true; hand=null; say("placed",itemName(k)); return;
+  }
+  if(right){
+    for(const r of ["srail","lrail"]) if(ST.sheet[r]&&onRailBody(c)===r){ ST.sheet[r]=false; say("back",itemName("sheet")); return; }
+    for(const k of [...RAILED,"dmm"]) if(onItem(k,c)){ returnItem(k); return; }
+    const rb=onRailBody(c); if(rb){ returnItem(rb); return; }
+    if(onStage(c)){ returnItem("stage"); return; }
+    return;
+  }
+  if(ST.on.PD&&near(c,pdPlug(),1.2)){ ST.wired=false; hand={k:"pdplug"}; say("tool",itemName("PD")); return; }
+  if(ST.on.dmm&&near(c,[ST.pos.dmm.x,ST.pos.dmm.y+1.2],2.2)){ ST.dial=ST.dial==="DCV"?"OFF":"DCV"; say("dial",ST.dial); return; }
+  for(const r of ["srail","lrail"]) if(ST.on[r]&&ST.on.stage&&near(c,railEnd(r),2.5)){ if(ST.sheet[r]){ say("fixedRail"); return; } rot={r}; return; }
+  for(const k of [...RAILED,"dmm"]) if(onItem(k,c)){ hand={k,move:true,orig:{pos:{...ST.pos[k]},rail:ST.rail[k],s:ST.s[k]}}; ST.on[k]=false; ST.rail[k]=null; say("moveIt",itemName(k)); return; }
+  if(onStage(c)&&!onStage(c,4)){ hand={k:"stage",move:true,orig:{pos:{...ST.pos.stage},rail:null,s:0}}; ST.on.stage=false; say("moveIt",itemName("stage")); return; }
+}
+function useTool(k,c){
+  const atLed=onItem("led",c), atPd=onItem("PD",c);
+  if(k==="batt"){ if(!atLed){ say("noUse"); return; } if(ST.batt<2){ ST.batt++; say("batt",ST.batt); } if(ST.batt>=2) hand=null; return; }
+  if(k==="slit"){ if(!atLed){ say("noUse"); return; } ST.slit=true; hand=null; say("slit"); return; }
+  if(k==="grating"){ if(!onStage(c,4)){ say("noUse"); return; } ST.grating=true; hand=null; say("grating"); return; }
+  if(k==="cyl"){ if(!atPd){ say("noUse"); return; } ST.cyl=!ST.cyl; say("cyl",ST.cyl); return; }
+  if(k==="box"){ if(!atPd){ say("noUse"); return; } ST.box=!ST.box; say("box",ST.box); return; }
+  if(k==="black"){ if(!atLed){ say("noUse"); return; } ST.black=!ST.black; say("black",ST.black); return; }
+  if(k==="sheet"){ const r=onRailBody(c); if(!r){ say("noUse"); return; } ST.sheet[r]=true; say("sheet"); return; }
+}
+function setRailFrom(r,c){ const o=SC(), dx=c[0]-o[0], dy=c[1]-o[1]; let a=Math.atan2(-dy,-dx)*180/Math.PI; a=((a%360)+360)%360;
+  if(r==="srail"&&a>180) a-=360; a=Math.round(a*2)/2;
+  if(r==="srail") ST.railAng.srail=Math.max(-25,Math.min(25,a)); else ST.railAng.lrail=Math.max(120,Math.min(240,a)); say("rot"); }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); if(rot) setRailFrom(rot.r,cm(mouse)); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); if(rot) cv.setPointerCapture(e.pointerId); drawTray(); });
+cv.addEventListener("pointerup",()=>{ rot=null; });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+cv.addEventListener("wheel",e=>{ const c=cm(lpos(e)), s=e.deltaY<0?1:-1, r=onRailBody(c);
+  if(r){ e.preventDefault(); if(ST.sheet[r]){ say("fixedRail"); return; } const st=e.shiftKey?0.1:0.5;
+    if(r==="srail") ST.railAng.srail=Math.max(-25,Math.min(25,Math.round((ST.railAng.srail+s*st)*10)/10)); else ST.railAng.lrail=Math.max(120,Math.min(240,Math.round((ST.railAng.lrail+s*st)*10)/10)); say("rot"); } },{passive:false});
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={k}; say(TOOLS.includes(k)?"tool":"picked",itemName(k)); } drawTray(); return; } });
+/* the close up */
+let drag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
+function sideItemAt(p){ if(!SVP.xs) return null; let best=null, bd=14; for(const k of RAILED){ if(!ST.rail[k]) continue; const dd=Math.abs(SVP.xs(X(k))-p[0]); if(dd<bd){ bd=dd; best=k; } } return best; }
+const sRange=k=>ST.rail[k]==="s"?[SR0,SR1]:[LR0,LR1];
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const p=clpos(e);
+  if(inP(P1,p)){ const k=sideItemAt(p); if(k){ drag={kind:"side",k,x0:p[0],y0:p[1],s0:X(k),h0:k==="led"?ST.slitOff:Hh(k),moved:false}; closeCv.setPointerCapture(e.pointerId); } return; }
+  if(P2.R&&inP(P2,p)&&near(p,[P2.cx,P2.cy],P2.R)){ drag={kind:"stage",a0:Math.atan2(p[1]-P2.cy,p[0]-P2.cx),st0:ST.stageAng}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(inP(P3,p)&&ST.on.P2&&near(p,[P3.dcx,P3.dcy],P3.dr)){ drag={kind:"phi",a0:Math.atan2(p[1]-P3.dcy,p[0]-P3.dcx),p0:ST.phi}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(inP(P3,p)&&ST.on.dmm&&P3.ddr&&near(p,[P3.ddx,P3.ddy],P3.ddr*1.6)){ ST.dial=ST.dial==="DCV"?"OFF":"DCV"; say("dial",ST.dial); } });
+closeCv.addEventListener("pointermove",e=>{ const p=clpos(e);
+  if(!drag){ closeCv.style.cursor=(inP(P1,p)&&sideItemAt(p))||(P2.R&&near(p,[P2.cx,P2.cy],P2.R))||(ST.on.P2&&near(p,[P3.dcx,P3.dcy],P3.dr||0))?"grab":"default"; return; }
+  if(drag.kind==="side"){ const k=drag.k, dx=p[0]-drag.x0, dy=p[1]-drag.y0; if(Math.hypot(dx,dy)>3) drag.moved=true;
+    if(Math.abs(dx)>Math.abs(dy)){ const [a,b]=sRange(k), ns=Math.round(Math.max(a,Math.min(b,drag.s0+dx*840/(P1.w-24)))); if(!railBusy(ST.rail[k],ns,k)) ST.s[k]=ns; }
+    else if(k==="L1"||k==="L2"){ ST.h[k]=Math.max(30,Math.min(95,Math.round((drag.h0-dy/SVP.kh)*2)/2)); say("height"); }
+    else if(k==="led"){ ST.slitOff=Math.max(-10,Math.min(10,Math.round((drag.h0-dy/SVP.kh)*4)/4)); say("height"); } return; }
+  if(drag.kind==="stage"){ const a=Math.atan2(p[1]-P2.cy,p[0]-P2.cx); ST.stageAng=Math.max(-40,Math.min(40,Math.round((drag.st0+(a-drag.a0)*180/Math.PI)*10)/10)); return; }
+  if(drag.kind==="phi"){ const a=Math.atan2(p[1]-P3.dcy,p[0]-P3.dcx); ST.phi=((Math.round(drag.p0+(a-drag.a0)*180/Math.PI))%360+360)%360; return; } });
+closeCv.addEventListener("pointerup",()=>{ if(drag&&drag.kind==="side"&&!drag.moved&&drag.k==="led"){ if(ST.batt<2) say("ledNeed"); else { ST.ledOn=!ST.ledOn; say("ledOn",ST.ledOn); } } drag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e), s=e.deltaY<0?1:-1;
+  if(inP(P1,p)){ const k=sideItemAt(p); if(k==="L1"||k==="L2"){ e.preventDefault(); ST.h[k]=Math.max(30,Math.min(95,Math.round((ST.h[k]+s*(e.shiftKey?0.1:0.5))*10)/10)); say("height"); }
+    else if(k==="led"){ e.preventDefault(); ST.slitOff=Math.max(-10,Math.min(10,ST.slitOff+s*(e.shiftKey?0.05:0.25))); say("height"); } return; }
+  if(P2.R&&inP(P2,p)){ e.preventDefault(); ST.stageAng=Math.max(-40,Math.min(40,Math.round((ST.stageAng+s*(e.shiftKey?0.1:0.5))*10)/10)); return; }
+  if(inP(P3,p)&&ST.on.P2){ e.preventDefault(); ST.phi=((ST.phi+s)%360+360)%360; } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   6.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+function renderStatus(){
+  const L=[], t=d();
+  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-setup").textContent=t.hSetup; $("t-setuphint").textContent=t.setupHint; $("t-h-meas").textContent=t.hMeas; $("t-meashint").textContent=t.measHint;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2023 E2 — 복굴절로 재는 두께 · HaslaLab":"IPhO 2023 E2 — Birefringence · HaslaLab";
+  layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0;
+function tick(){
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
