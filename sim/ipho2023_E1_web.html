@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2023 E1 — 질량 측정 · Mass Measurement · HaslaLab</title>
+<meta name="description" content="IPhO 2023 실험 1번을 브라우저에서 실행합니다. 고무줄에 매단 원통 진동자를 자석 사이에 조립하고, 직류로 추의 무게를 되돌리고, 교류로 진동시켜 유도 기전력과 공진 진동수를 재어 추와 진동자의 질량을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2023 E1 — 질량 측정 · Mass Measurement">
+<meta property="og:description" content="IPhO 2023 실험 1번을 브라우저에서 실행합니다. 진동자를 조립하고 전원 보드·멀티미터·거울 속 눈금을 직접 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+
+    <h2 id="t-h-asm"></h2>
+    <p class="hint" id="t-asmhint"></p>
+
+    <h2 id="t-h-ps"></h2>
+    <p class="hint" id="t-pshint"></p>
+    <button id="unwire" style="width:100%"></button>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2023 실험 1 — 질량 측정",
+    sub:"가상 실험실 · 진동자를 조립하고 전선을 연결한 뒤, 거울에 비친 눈금과 멀티미터를 직접 읽으세요. 기울기·BL·질량·용수철 상수는 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayTool:"도구 — 클릭해서 들기", left:n=>"남은 수 "+n,
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 120 cm × 72 cm) — 좌클릭 집기·놓기·쓰기·꽂기 / 우클릭 되돌리기·떼기 / 놓은 장비를 다시 클릭하면 옮기기",
+    closeCap:"확대 — 왼쪽: 거울로 본 마커와 눈금 · 가운데: 전원 보드 (스위치 클릭, 손잡이는 끌기·휠) · 오른쪽: 멀티미터 (선택 스위치 클릭)",
+    hTime:"보기 속도", timeHint:"진동자는 13–17 Hz로 떨립니다. 1×에서는 마커가 번진 띠로 보이고, 느리게 보기에서는 움직임이 보입니다.",
+    slow:"느리게 ×1/20",
+    hAsm:"조립 (그림 3, 4)",
+    asmHint:"베이스 (1)를 놓고, 지지대 (2)를 실험대에 따로 놓습니다. 고무줄 (6) 네 개를 지지대에 감고 진동자 (5)를 끼운 뒤, 나비나사 (3)를 베이스에 대면 지지대가 기둥에 고정됩니다 (우클릭으로 다시 떼기).\n간격은 자석 윗면과 진동자 아랫면 사이 3–5 mm여야 합니다. 심 (4)을 지지대 기둥에 대면 높아지고, 지지대를 뗀 상태에서 자석에 대면 낮아집니다 (도구를 든 채 우클릭: 하나 빼기).\n마커 (7)는 진동자에 붙이고, 라이저 블록 (11)을 베이스 옆에 놓은 뒤 거울 (10)을 그 위에 올리면 눈금이 보입니다. 추 (8)는 핀셋으로 진동자에 올립니다 (도구를 든 채 우클릭: 하나 내리기).",
+    hPs:"12. 전원 보드 · 17. 멀티미터",
+    psHint:"건전지 홀더 (13)에 건전지 (14)를 넣고 리드를 CN1·CN2에 꽂습니다. 진동자의 M·C 리드를 바인딩 포스트에 끼우고 (다시 클릭하면 서로 바꿔 끼움), U자 단자선 (15)으로 포스트 쌍과 DC·AC 출력을 잇습니다.\n멀티미터의 악어클립 선 (16)은 클립을 집어 DCmon·DCGND·ACmon·ACGND·Fmon·M±·C± 중 한 곳에 물립니다.\nDC 모드: 전류 = 1.00 A/V × V(DCmon–DCGND). AC 모드: 전류 = 0.106 A/V × V(ACmon–ACGND). 각 단계가 끝나면 DC 출력을 최소로 내리세요.",
+    unwire:"전선 모두 떼기",
+    items:{base:"1. 마운팅 베이스", support:"2. 지지대", osc:"5. 원통 진동자", riser:"11. 라이저 블록", mirror:"10. 거울",
+           holder:"13. 건전지 홀더", ps:"12. 전원 보드 (PS)", dmm:"17. 디지털 멀티미터", screw:"3. 나비나사", shim:"4. 심 (와셔)",
+           band:"6. 고무줄", marker:"7. 마커", batt:"14. 건전지", weights:"8. 추 · 9. 핀셋", crimp:"15. U자 압착 단자선"},
+    term:{Mpost:"M+/M− 포스트", Cpost:"C+/C− 포스트", DC:"DC 출력", AC:"AC 출력", CN1:"CN1", CN2:"CN2",
+          DCmon:"DCmon", DCGND:"DC GND", ACmon:"ACmon", ACGND:"AC GND", Fmon:"Fmon", "M+":"M+", "M-":"M−", "C+":"C+", "C-":"C−", Mlead:"M 코일 리드", Clead:"C 코일 리드"},
+    lab:{mirror:"거울로 본 마커와 눈금 (1 mm 눈금)", noMirror:"라이저 블록 위의 거울이 베이스 옆에 있어야 눈금이 보입니다.", noMarker:"진동자에 마커가 없습니다.",
+         noOsc:"고정된 지지대에 진동자가 없습니다.", power:"POWER", mode:"DC / AC", coarse:"Coarse", fine:"Fine", acvol:"AC Vol.", dcvol:"DC Vol.", noPs:"전원 보드를 놓으면 여기 보입니다.", noDmm:"멀티미터를 놓으면 여기 보입니다.", gap:"간격"},
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", noBatt:"건전지 홀더 두 개가 CN1·CN2에 연결되어야 전원 보드가 켜집니다.", hot:"⚠ DC 출력이 오래 켜져 있습니다 — 코일이 뜨거워집니다."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       tool:n=>n+" 을(를) 들었습니다 — 쓸 곳을 클릭하세요. (우클릭: 내려놓기)", noUse:"그곳에는 쓸 수 없습니다.",
+       band:n=>"고무줄을 지지대에 감았습니다 ("+n+"/4).", bandMax:"격자는 고무줄 네 개면 됩니다 (나머지는 예비).", bandFixed:"고정된 지지대에는 감을 수 없습니다 — 우클릭으로 먼저 떼세요.",
+       oscIn:"진동자를 고무줄 사이에 끼우고 고리 여덟 개에 걸었습니다.", needBands:"진동자는 고무줄 네 개가 만든 네모 구멍에 끼웁니다.",
+       fixed:"나비나사로 지지대를 기둥에 대각선으로 고정했습니다.", needSupport:"고정할 지지대가 실험대에 없습니다.", unfixed:"나비나사를 풀어 지지대를 떼어 냈습니다.",
+       shimUp:n=>"심을 지지대 기둥에 넣었습니다 (모두 "+n+"개).", shimDown:n=>"자석 기둥을 돌려 빼고 그 아래에 심을 넣었습니다 (모두 "+n+"개).", shimOut:"심을 하나 뺐습니다.",
+       shimMagFixed:"자석 기둥을 빼려면 지지대를 먼저 떼어 내세요.", shimNone:"심이 더 없습니다.",
+       marker:"마커를 진동자의 작은 선반에 붙였습니다.", markerAgain:"마커는 이미 붙어 있습니다.", mirrorOn:"거울을 라이저 블록 위에 세웠습니다.", needRiser:"거울은 라이저 블록 위에 세웁니다.",
+       batt:n=>"건전지를 넣었습니다 ("+n+"/4).", battFull:"홀더가 가득 찼습니다.", weightOn:n=>"추를 올렸습니다: N = "+n, weightOff:n=>"추를 내렸습니다: N = "+n, weightMax:"추는 다섯 개뿐입니다.",
+       plug:n=>n+" 을(를) 집었습니다 — 꽂을 곳을 클릭하세요.", plugged:(a,b)=>a+" → "+b, wrong:"그 플러그는 거기에 맞지 않습니다.", unplug:"뽑았습니다.", unwired:"전선을 모두 뗐습니다.",
+       leads:n=>n+" 을(를) 포스트 아래쪽 틈에 끼웠습니다.", swapLeads:"리드선 두 가닥을 서로 바꿔 끼웠습니다.",
+       crimp1:"U자 단자선 한쪽 끝을 꽂을 곳을 클릭하세요 (포스트 쌍 또는 출력).", crimp2:"다른 쪽 끝을 꽂을 곳을 클릭하세요.", crimpNone:"U자 단자선은 두 개뿐입니다.",
+       clip:"악어클립을 집었습니다 — 물릴 단자를 클릭하세요.", clipped:n=>"클립을 "+n+" 에 물렸습니다.",
+       sw:s=>"스위치: "+s, knob:"손잡이를 돌렸습니다.", dial:s=>"멀티미터: "+s}
+  },
+  en:{
+    title:"IPhO 2023 Experiment 1 — Mass measurement",
+    sub:"Virtual laboratory · assemble the oscillator, wire it up and read the scale in the mirror and the multimeter yourself. Slopes, BL, masses and spring constants are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayTool:"tool — click to hold", left:n=>n+" left",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 120 cm × 72 cm) — L-click pick up / put down / use / plug, R-click return / unplug, click a placed item to move it",
+    closeCap:"close up — left: marker and scale seen in the mirror · middle: power supply board (click the switches, drag or wheel the knobs) · right: multimeter (click the selector)",
+    hTime:"Viewing speed", timeHint:"The oscillator shakes at 13–17 Hz. At 1× the marker is a blurred band; slow motion shows the movement.",
+    slow:"slow ×1/20",
+    hAsm:"Assembly (Figs. 3, 4)",
+    asmHint:"Put the base (1) down and the support (2) on the bench beside it. Wrap four rubber bands (6) round the support, put the oscillator (5) in, then hold the thumbscrews (3) to the base: the support is screwed onto the posts (R-click to take it off again).\nThe gap between the top of the lower magnet and the bottom of the oscillator must be 3–5 mm. A shim (4) on the support posts raises the oscillator; with the support off, a shim under the magnet post lowers it (R-click with the tool: take one out).\nGlue the marker (7) to the oscillator, put the riser block (11) beside the base and the mirror (10) on it to see the scale. Weights (8) go onto the oscillator with the tweezers (R-click with the tool: take one off).",
+    hPs:"12. Power supply · 17. Multimeter",
+    psHint:"Put the batteries (14) into the holders (13) and plug their leads into CN1 and CN2. Put the M and C leads of the oscillator into the binding posts (click again to swap the two wires) and join a post pair to the DC or AC output with a crimp wire (15).\nThe alligator wires (16) of the multimeter: pick up a clip and clip it to DCmon, DC GND, ACmon, AC GND, Fmon, M± or C±.\nDC mode: current = 1.00 A/V × V(DCmon–DC GND). AC mode: current = 0.106 A/V × V(ACmon–AC GND). Turn the DC output down at the end of every step.",
+    unwire:"unplug all wires",
+    items:{base:"1. Mounting base", support:"2. Support", osc:"5. Cylindrical oscillator", riser:"11. Riser block", mirror:"10. Mirror",
+           holder:"13. Battery holder", ps:"12. Power supply (PS)", dmm:"17. Digital multimeter", screw:"3. Thumbscrews", shim:"4. Shim (washer)",
+           band:"6. Rubber band", marker:"7. Marker", batt:"14. Battery", weights:"8. Weights · 9. Tweezers", crimp:"15. U-shaped crimp wire"},
+    term:{Mpost:"M+/M− posts", Cpost:"C+/C− posts", DC:"DC output", AC:"AC output", CN1:"CN1", CN2:"CN2",
+          DCmon:"DCmon", DCGND:"DC GND", ACmon:"ACmon", ACGND:"AC GND", Fmon:"Fmon", "M+":"M+", "M-":"M−", "C+":"C+", "C-":"C−", Mlead:"M coil leads", Clead:"C coil leads"},
+    lab:{mirror:"marker and scale seen in the mirror (1 mm graduations)", noMirror:"The mirror on the riser block must stand beside the base to see the scale.", noMarker:"There is no marker on the oscillator.",
+         noOsc:"There is no oscillator on a fixed support.", power:"POWER", mode:"DC / AC", coarse:"Coarse", fine:"Fine", acvol:"AC Vol.", dcvol:"DC Vol.", noPs:"Put the power supply down to see it here.", noDmm:"Put the multimeter down to see it here.", gap:"gap"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", noBatt:"Both battery holders must be plugged into CN1 and CN2 for the board to come on.", hot:"⚠ The DC output has been on a long time — the coil is getting hot."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       tool:n=>n+" in hand — click where to use it. (R-click: put it down)", noUse:"It cannot be used there.",
+       band:n=>"Rubber band wrapped round the support ("+n+"/4).", bandMax:"Four bands make the grid; the others are spares.", bandFixed:"The support is screwed on — R-click it off first.",
+       oscIn:"Oscillator in the bands, hung on the eight little hooks.", needBands:"The oscillator goes into the square opening of four bands.",
+       fixed:"Support screwed diagonally onto the posts.", needSupport:"There is no support on the bench to fix.", unfixed:"Thumbscrews undone, support taken off.",
+       shimUp:n=>"Shim put on the support posts ("+n+" in all).", shimDown:n=>"Magnet post turned out, shim put under it ("+n+" in all).", shimOut:"One shim taken out.",
+       shimMagFixed:"Take the support off before turning the magnet post out.", shimNone:"No shims left.",
+       marker:"Marker glued to the little shelf of the oscillator.", markerAgain:"The marker is already on.", mirrorOn:"Mirror set on the riser block.", needRiser:"The mirror stands on the riser block.",
+       batt:n=>"Battery in ("+n+"/4).", battFull:"The holder is full.", weightOn:n=>"Weight on: N = "+n, weightOff:n=>"Weight off: N = "+n, weightMax:"There are only five weights.",
+       plug:n=>n+" in hand — click where to plug it.", plugged:(a,b)=>a+" → "+b, wrong:"That plug does not fit there.", unplug:"Unplugged.", unwired:"All wires unplugged.",
+       leads:n=>n+" pushed into the lower gaps of the posts.", swapLeads:"The two lead wires swapped.",
+       crimp1:"Click where one end of the crimp wire goes (a post pair or an output).", crimp2:"Click where the other end goes.", crimpNone:"There are only two crimp wires.",
+       clip:"Clip picked up — click the terminal to clip it to.", clipped:n=>"Clip on "+n+".",
+       sw:s=>"Switch: "+s, knob:"Knob turned.", dial:s=>"Multimeter: "+s}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same oscillator as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2023e1)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const G0=9.80, DC_A_PER_V=1.00, AC_A_PER_V=0.106;
+const K={ M:U(14.1,14.9)*1e-3, m:U(7.35,7.65)*1e-3, k:U(138,150), BL:U(0.680,0.712), df0:U(0.26,0.33),
+          z0:U(12.3,13.2)*1e-3, gap0:U(1.4,6.6), swap:rnd()<0.5 };
+K.kp=K.k*U(1.010,1.045); K.BpLp=K.BL*U(0.78,0.95); K.alpha=4*Math.PI*K.M*K.df0; K.ze=K.z0+K.M*G0/K.k;
+const OSC={amp:0, phase:0};
+const gap=()=>K.gap0+0.8*ST.shim-0.8*ST.shimMag;
+/* the radial field is uniform within ±3 mm of the magnet pair's centre: outside, BL falls off */
+const blFactor=()=>{ const g=gap(); return g<0.3?0.2:Math.exp(-Math.pow(Math.max(0,Math.abs(g-4)-1)/2.6,4)); };
+const hung=()=>ST.fixed&&ST.oscIn;
+const mTot=()=>K.M+ST.N*K.m;
+const freq=()=>Math.max(0.5,ST.coarse+ST.fine);
+function psOn(){ return ST.on.ps&&ST.psPower&&ST.holders.every(h=>h.on&&h.n===4&&h.plug); }
+function out(pair){ for(const c of ST.crimps){ if(c.a===pair&&c.b) return c.b; if(c.b===pair&&c.a) return c.a; } return null; }
+function mOut(){ const o=out("Mpost"); return ST.leads.M&&(o==="DC"||o==="AC")?o:null; }
+function cOut(){ const o=out("Cpost"); return ST.leads.C&&(o==="DC"||o==="AC")?o:null; }
+function iDC(){ if(!psOn()||ST.mode!=="DC"||mOut()!=="DC") return 0; return ((K.swap!==ST.mSwap)?-1:1)*DC_A_PER_V*ST.vdc; }
+function iACamp(coil){ if(!psOn()||ST.mode!=="AC") return 0; const o=coil==="main"?mOut():cOut(); return o==="AC"?Math.SQRT2*AC_A_PER_V*ST.vac:0; }
+const forceAmp=()=>(K.BL*iACamp("main")+K.BpLp*iACamp("ctrl"))*blFactor();
+function zEq(){ return K.ze-mTot()*G0/K.k+K.BL*blFactor()*iDC()/K.k; }
+function ampSteady(){ const F=forceAmp(); if(F<=0||!hung()) return 0; const w=2*Math.PI*freq(); return F/Math.hypot(K.kp-mTot()*w*w,K.alpha*w); }
+function oscStep(dt){ const tg=ampSteady(), tau=Math.max(2*mTot()/K.alpha,1e-3);
+  OSC.amp+=(tg-OSC.amp)*(1-Math.exp(-dt/tau)); OSC.phase=(OSC.phase+2*Math.PI*freq()*dt)%(2*Math.PI); }
+const emfRms=()=>2*Math.PI*freq()*OSC.amp*K.BL*blFactor()/Math.SQRT2;
+/* the multimeter, terminal pairs as in the Python edition */
+function dmmRead(){
+  const mode=ST.dial, a=ST.clip.red, b=ST.clip.black;
+  if(mode==="OFF"||!ST.on.dmm) return null;
+  const q=(v,st,nd)=>(Math.round(v/st)*st).toFixed(nd);
+  if(!a||!b||a===b) return mode==="Hz"?"0.00":"0.000";
+  const has=(x,y)=>(a===x&&b===y)||(a===y&&b===x);
+  if(has("DCmon","DCGND")){ if(mode!=="DCV") return "0.000"; const v=(psOn()&&ST.mode==="DC")?Math.abs(ST.vdc):0; return q(Math.max(0,v+2.5e-4*gauss()),1e-3,3); }
+  if(has("ACmon","ACGND")){ if(mode!=="ACV") return "0.000"; const v=(psOn()&&ST.mode==="AC")?ST.vac:0; return q(Math.max(0,v+2.5e-4*gauss()),1e-3,3); }
+  if(has("Fmon","ACGND")){ if(mode!=="Hz") return "0.000"; if(!(psOn()&&ST.mode==="AC"&&ST.vac>0.004)) return "0.00"; return q(freq()+6e-3*gauss(),1e-2,2); }
+  if(has("M+","M-")&&ST.leads.M){
+    if(mode==="ACV"){ if(cOut()==="AC"&&!mOut()) return q(Math.max(0,emfRms()+3e-4*gauss()),1e-3,3);
+      if(mOut()==="AC"&&psOn()&&ST.mode==="AC") return q(Math.max(0,1.06*ST.vac+1e-3*gauss()),1e-3,3); return "0.000"; }
+    if(mode==="DCV") return q(Math.max(0,Math.abs(iDC())*1.9+5e-4*gauss()),1e-3,3);
+    return "0.00"; }
+  if(has("C+","C-")&&ST.leads.C){ if(mode==="ACV"&&cOut()==="AC"&&psOn()&&ST.mode==="AC") return q(Math.max(0,1.06*ST.vac+1e-3*gauss()),1e-3,3); return "0.000"; }
+  return mode==="Hz"?"0.00":"0.000";
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE AND GEOMETRY  (bench 120 cm × 72 cm, 10 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=10;
+const PLACE=["base","support","osc","riser","mirror","holder1","holder2","ps","dmm"];
+const TOOLS=["screw","shim","band","marker","batt","weights","crimp"];
+const SZ={base:[18,13], support:[11,10], osc:[5,5], riser:[6,6], mirror:[6,6], holder1:[6,8], holder2:[6,8], ps:[26,18], dmm:[8,15]};
+const ST={
+  on:{}, pos:{},
+  fixed:false, bands:0, oscIn:false, marker:false, shim:0, shimMag:0, mirrorOn:false, N:0,
+  holders:[{on:false,n:0,plug:null},{on:false,n:0,plug:null}],
+  leads:{M:false,C:false}, mSwap:false, crimps:[], clip:{red:null,black:null},
+  psPower:false, mode:"DC", vdc:0, vac:0, coarse:15, fine:0, dial:"OFF", slow:false
+};
+for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:60,y:36}; }
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>k.startsWith("holder")?d().items.holder:(d().items[k]||d().term[k]||k);
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const cm=p=>[p[0]/PX,p[1]/PX];
+const at=(k,dx,dy)=>[ST.pos[k].x+dx,ST.pos[k].y+dy];
+/* base: binding posts along the front edge, magnet unit and the two support posts behind */
+const POST={"M+":[-6.6,4.6],"M-":[-4.2,4.6],"C+":[-1.8,4.6],"C-":[0.6,4.6]};
+const MAG=[3.6,-1.2];
+const supportPos=()=>ST.fixed?{x:ST.pos.base.x+MAG[0],y:ST.pos.base.y+MAG[1]}:ST.pos.support;
+const oscPos=()=>ST.oscIn?supportPos():ST.pos.osc;
+/* power supply board, cm from its centre */
+const PSL={CN1:[-11.2,-5.6],CN2:[-11.2,-1.8], AC:[-5.5,-7.4], DC:[6.5,-7.4],
+  ACmon:[-9.4,2.6], ACGND:[-7.2,2.6], Fmon:[-5.0,2.6], DCmon:[5.0,2.6], DCGND:[7.2,2.6],
+  power:[-1.2,-2.4], mode:[1.8,-2.4], coarse:[-9.0,6.4], fineK:[-5.4,6.4], acvol:[-1.8,6.4], dcvol:[7.4,6.4]};
+const termXY=t=>{
+  if(POST[t]) return at("base",...POST[t]);
+  if(t==="Mpost") return at("base",(POST["M+"][0]+POST["M-"][0])/2,POST["M+"][1]+1.4);
+  if(t==="Cpost") return at("base",(POST["C+"][0]+POST["C-"][0])/2,POST["C+"][1]+1.4);
+  if(PSL[t]) return at("ps",...PSL[t]);
+  return null; };
+const TERM_PS=["DCmon","DCGND","ACmon","ACGND","Fmon"], TERM_POST=["M+","M-","C+","C-"];
+function overlap(k,pos){
+  const [w,h]=SZ[k];
+  if(pos.x-w/2<1||pos.x+w/2>LW/PX-1||pos.y-h/2<1||pos.y+h/2>LH/PX-1) return true;
+  for(const o of PLACE){ if(o===k||!ST.on[o]) continue;
+    if(o==="osc"&&ST.oscIn) continue; if(o==="support"&&ST.fixed) continue; if(o==="mirror"&&ST.mirrorOn) continue;
+    const q=ST.pos[o], [a,b]=SZ[o];
+    if(Math.abs(pos.x-q.x)<(w+a)/2+0.4&&Math.abs(pos.y-q.y)<(h+b)/2+0.4) return true; }
+  return false;
+}
+const mirrorView=()=>ST.on.base&&ST.on.riser&&ST.mirrorOn&&Math.hypot(ST.pos.riser.x-(ST.pos.base.x+MAG[0]),ST.pos.riser.y-(ST.pos.base.y+MAG[1]))<22;
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING THE BENCH  (in cm, seen from above)
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+const T6=(s,x,y,col,sz,al,wt)=>{ ctx.save(); ctx.scale(0.1,0.1); text(s,x*10,y*10,col,sz,al,wt); ctx.restore(); };
+function frame(pos,fn){ ctx.save(); ctx.translate(pos.x*PX,pos.y*PX); ctx.scale(PX,PX); fn(); ctx.restore(); }
+function shadowR(x,y,w,h,r){ fillR(x+0.3,y+0.4,w,h,r||0.4,"rgba(40,35,25,.22)"); }
+function bench(){
+  ctx.fillStyle=vgrad(0,LH,[[0,"#e9e6e0"],[1,"#d8d4cc"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(120,110,90,.10)"; ctx.lineWidth=1;
+  for(let x=0;x<=LW;x+=100){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+  for(let y=0;y<=LH;y+=100){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
+}
+function drawBase(pos){ frame(pos,()=>{
+  shadowR(-9,-6.5,18,13,0.6);
+  fillR(-9,-6.5,18,13,0.6,"#c9ccd1","#8e949c",0.08);
+  ctx.fillStyle="#f4f4f2"; ctx.fillRect(-8.2,5.4,10.4,1.0);
+  for(const [k,[x,y]] of Object.entries(POST)){ circ(x,y,0.75,"#b8bcc2","#6b7178",0.06); circ(x,y,0.55,k.endsWith("+")?"#f2f2ee":"#1b1b1d","#555",0.04);
+    T6(k.replace("-","−"),x,5.9,"#222",4.2,"center","700"); }
+  /* the two posts the support is screwed to, diagonally */
+  for(const [x,y] of [[MAG[0]-4.6,MAG[1]-4.1],[MAG[0]+4.6,MAG[1]+4.1]]) circ(x,y,0.6,"#9aa1a8","#555",0.05);
+  /* magnet unit: a pair of discs on a post */
+  circ(MAG[0],MAG[1],2.5,"#8e949c","#555",0.06); circ(MAG[0],MAG[1],2.1,"#b9bdc2"); circ(MAG[0],MAG[1],0.5,"#6b7178");
+  for(let i=0;i<ST.shimMag;i++) circ(MAG[0],MAG[1],2.6+0.14*i,null,"#7f868e",0.06);
+  fillR(5.0,4.0,3.6,1.2,0.1,"#e67e22"); T6("WARNING",6.8,4.6,"#fff",3,"center","700");
+}); }
+function drawSupport(pos){ frame(pos,()=>{
+  shadowR(-5.5,-5,11,10,0.3);
+  fillR(-5.5,-5,11,10,0.3,"#d9b98a","#b8946a",0.08);
+  circ(0,0,3.4,"#efe8da","#b8946a",0.08);
+  ctx.fillStyle="#1b1b1d"; ctx.fillRect(4.3,-4.4,0.8,8.8);                         /* the upright mm scale */
+  ctx.strokeStyle="#ddd"; ctx.lineWidth=0.05; for(let i=0;i<9;i++){ ctx.beginPath(); ctx.moveTo(4.3,-4+i); ctx.lineTo(4.8,-4+i); ctx.stroke(); }
+  ctx.strokeStyle="#c98a3a"; ctx.lineWidth=0.3;
+  for(let i=0;i<ST.bands;i++){ ctx.beginPath(); if(i<2){ const x=-1.7+3.4*i; ctx.moveTo(x,-5); ctx.lineTo(x,5); } else { const y=-1.7+3.4*(i-2); ctx.moveTo(-5.5,y); ctx.lineTo(5.5,y); } ctx.stroke(); }
+  if(ST.fixed){ for(const [x,y] of [[-4.6,-4.1],[4.6,4.1]]){ circ(x,y,0.75,"#d8dade","#666",0.06); ctx.strokeStyle="#666"; ctx.lineWidth=0.12; ctx.beginPath(); ctx.moveTo(x-0.9,y); ctx.lineTo(x+0.9,y); ctx.stroke(); } }
+  for(let i=0;i<ST.shim;i++){ ctx.strokeStyle="#7f868e"; ctx.lineWidth=0.08; circ(-4.6,-4.1,0.9+0.12*i,null,"#7f868e",0.06); }
+}); }
+function drawOsc(pos){ frame(pos,()=>{
+  circ(0,0,2.25,"rgba(240,240,236,.92)","#b9b9b2",0.08); circ(0,0,1.8,null,"#2a2a2a",0.25); circ(0,0,1.25,"rgba(250,250,247,.9)");
+  for(let i=0;i<ST.N;i++){ circ(0,0,1.15-0.12*i,null,"#9aa1a8",0.1); }
+  ctx.fillStyle="#efe8da"; ctx.fillRect(2.1,-0.35,1.2,0.7);
+  if(ST.marker){ ctx.fillStyle="#e8d94a"; ctx.fillRect(2.4,-0.3,1.6,0.6); }
+  /* the coil leads */
+  ctx.lineWidth=0.12;
+  if(!ST.leads.M){ ctx.strokeStyle="#c98a3a"; ctx.beginPath(); ctx.moveTo(-1.2,1.5); ctx.quadraticCurveTo(-2.5,3,-3.4,4.0); ctx.stroke(); fillR(-3.9,3.8,1.2,0.6,0.1,"#c98a3a"); T6("M",-3.3,4.6,"#5d3a12",3.6,"center","700"); }
+  if(!ST.leads.C){ ctx.strokeStyle="#b35c1e"; ctx.beginPath(); ctx.moveTo(-0.2,1.9); ctx.quadraticCurveTo(-0.8,3.2,-1.4,4.4); ctx.stroke(); fillR(-1.9,4.2,1.2,0.6,0.1,"#b35c1e"); T6("C",-1.3,5.0,"#5d3a12",3.6,"center","700"); }
+}); }
+const leadTag=k=>{ const p=oscPos(); return k==="M"?[p.x-3.3,p.y+4.1]:[p.x-1.3,p.y+4.5]; };
+function drawLeadsIn(){
+  if(!ST.oscIn||!ST.fixed) return; const p=oscPos();
+  for(const [k,col,a,b] of [["M","#c98a3a","M+","M-"],["C","#b35c1e","C+","C-"]]){ if(!ST.leads[k]) continue;
+    for(const [t,dx] of [[a,-0.3],[b,0.3]]){ const q=termXY(t); ctx.strokeStyle=col; ctx.lineWidth=1.6; ctx.beginPath();
+      ctx.moveTo((p.x+dx-0.6)*PX,(p.y+1.5)*PX); ctx.quadraticCurveTo((p.x-5)*PX,(q[1]-2)*PX,q[0]*PX,(q[1]+0.3)*PX); ctx.stroke(); } }
+}
+function drawRiser(pos){ frame(pos,()=>{ shadowR(-3,-3,6,6,0.2); fillR(-3,-3,6,6,0.2,"#d9b98a","#b8946a",0.08);
+  for(let i=0;i<6;i++){ ctx.fillStyle="rgba(150,110,60,.15)"; ctx.fillRect(-2.6+i*0.9,-2.8,0.3,5.6); } }); }
+function drawMirror(pos){ frame(pos,()=>{ fillR(-2.7,-2.4,5.4,4.8,0.2,"rgba(205,220,226,.9)","#7f8c8d",0.08);
+  ctx.strokeStyle="#5d6d7e"; ctx.lineWidth=0.1; ctx.beginPath(); ctx.moveTo(-2.7,2.4); ctx.lineTo(2.7,-2.4); ctx.stroke();
+  ctx.fillStyle="rgba(40,50,60,.35)"; ctx.beginPath(); ctx.moveTo(-2.7,2.4); ctx.lineTo(2.7,-2.4); ctx.lineTo(2.7,2.4); ctx.closePath(); ctx.fill(); }); }
+function holderPlug(i){ const h=ST.holders[i]; if(h.plug) return termXY(h.plug); return at("holder"+(i+1),0,-6); }
+function drawHolder(i){ const k="holder"+(i+1); frame(ST.pos[k],()=>{ shadowR(-3,-4,6,8,0.3);
+  fillR(-3,-4,6,8,0.3,"#1d1e22","#000",0.08);
+  for(let j=0;j<4;j++){ fillR(-2.6+j*1.32,-3.6,1.1,7.2,0.3,"#2c2e33");
+    if(j<ST.holders[i].n){ fillR(-2.55+j*1.32,-3.4,1.0,6.8,0.4,vgrad(-3.4,6.8,[[0,"#3c69c7"],[1,"#1d3f8a"]])); ctx.fillStyle="#c9ccd1"; ctx.fillRect(-2.25+j*1.32,j%2?3.25:-3.6,0.4,0.3); } } }); }
+function drawPs(){ frame(ST.pos.ps,psBoard); }
+function psBoard(){ {
+  shadowR(-13,-9,26,18,0.5);
+  fillR(-13,-9,26,18,0.5,"#1f7a3f","#145c2e",0.1);
+  ctx.strokeStyle="rgba(180,230,190,.18)"; ctx.lineWidth=0.06; for(let i=0;i<14;i++){ ctx.beginPath(); ctx.moveTo(-12,-8+i*1.2); ctx.lineTo(12,-8+i*1.2+0.4); ctx.stroke(); }
+  /* heat sinks */
+  for(const x0 of [-9,3]){ for(let i=0;i<7;i++) fillR(x0+i*0.9,-5.2,0.6,3.0,0.05,"#d8d8d8","#8a8a8a",0.04); }
+  /* battery connectors and the two output terminal blocks */
+  for(const k of ["CN1","CN2"]){ const [x,y]=PSL[k]; fillR(x-0.9,y-0.8,1.8,1.6,0.15,"#f2f2ee","#999",0.05); T6(k,x+1.6,y,"#e8f5ea",3.8,"left","700"); }
+  for(const k of ["AC","DC"]){ const [x,y]=PSL[k]; fillR(x-1.8,y-0.8,3.6,1.6,0.15,"#2a64b8","#173d73",0.06); circ(x-0.9,y,0.45,"#c9ccd1"); circ(x+0.9,y,0.45,"#c9ccd1");
+    T6(k+"+",x-0.9,y-1.4,"#e8f5ea",3.4,"center","700"); T6(k+"−",x+0.9,y-1.4,"#e8f5ea",3.4,"center","700"); }
+  for(const k of TERM_PS){ const [x,y]=PSL[k]; circ(x,y,0.55,"#111","#bdc3c7",0.06); T6(k==="ACGND"?"AC GND":k==="DCGND"?"DC GND":k,x,y+1.1,"#e8f5ea",3.0,"center","700"); }
+  /* power switch and the DC/AC toggle */
+  const [px,py]=PSL.power; fillR(px-0.9,py-0.6,1.8,1.2,0.15,"#222"); fillR(ST.psPower?px:px-0.8,py-0.5,0.8,1.0,0.1,ST.psPower?"#3cf06a":"#777"); T6(d().lab.power,px,py+1.2,"#e8f5ea",3.0,"center","700");
+  const [mx,my]=PSL.mode; fillR(mx-0.9,my-0.6,1.8,1.2,0.15,"#222"); fillR(ST.mode==="AC"?mx:mx-0.8,my-0.5,0.8,1.0,0.1,"#9fd0ff"); T6("DC  AC",mx,my+1.2,"#e8f5ea",3.0,"center","700");
+  circ(px+5.0,py,0.3,psOn()?"#ff4a3a":"#5a2a26");
+  /* knobs */
+  for(const [k,v,lo,hi,lab] of knobDefs()){ const [x,y]=PSL[k]; circ(x,y,1.25,"#1c1d20","#555",0.06);
+    const a=(135+270*(v-lo)/(hi-lo))*Math.PI/180; ctx.strokeStyle="#f5f6fa"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(a)*1.05,y+Math.sin(a)*1.05); ctx.stroke();
+    T6(lab,x,y+1.9,"#e8f5ea",3.2,"center","700"); }
+  fillR(8.6,-8.6,4,1.3,0.1,"#f1c40f"); T6("CAUTION",10.6,-7.95,"#7d6608",3.2,"center","700");
+} }
+function knobDefs(){ const L=d().lab; return [["coarse",ST.coarse,5,25,L.coarse],["fineK",ST.fine,-0.6,0.6,L.fine],["acvol",ST.vac,0,0.4,L.acvol],["dcvol",ST.vdc,0,1.2,L.dcvol]]; }
+const DMM_JACK={red:[1.6,6.4],black:[-1.6,6.4]};
+const clipRest=c=>at("dmm",c==="red"?2.2:-2.2,9.6);
+const clipXY=c=>{ const t=ST.clip[c]; return t?termXY(t):clipRest(c); };
+function drawDmm(){ frame(ST.pos.dmm,dmmBody); }
+function dmmBody(){ { shadowR(-4,-7.5,8,15,0.8); fillR(-4,-7.5,8,15,0.8,"#c0392b","#7b241c",0.1);
+  fillR(-3.2,-6.6,6.4,3.0,0.2,"#cfe3cf","#4d5b4d",0.06); const r=dmmRead(); if(r!==null) T6(r,2.8,-5.1,"#1c2833",9,"right","700");
+  circ(0,0.6,2.1,"#2c2c2c","#111",0.06); const a=({OFF:-90,DCV:-45,ACV:0,Hz:45})[ST.dial]*Math.PI/180;
+  ctx.strokeStyle="#eee"; ctx.lineWidth=0.25; ctx.beginPath(); ctx.moveTo(0,0.6); ctx.lineTo(Math.sin(a)*1.8,0.6-Math.cos(a)*1.8); ctx.stroke();
+  for(const [m,a] of [["OFF",-90],["DCV",-45],["ACV",0],["Hz",45]]){ const t=a*Math.PI/180; T6(m,Math.sin(t)*2.9,0.6-Math.cos(t)*2.9,ST.dial===m?"#ffe9a8":"#f5d7d2",3.4,"center","700"); }
+  circ(1.6,6.4,0.5,"#111","#c0392b",0.1); circ(-1.6,6.4,0.5,"#111","#555",0.1); } }
+function wireCurve(a,b,col,lw){ const A=[a[0]*PX,a[1]*PX], B=[b[0]*PX,b[1]*PX], m=[(A[0]+B[0])/2,(A[1]+B[1])/2+25];
+  ctx.strokeStyle=col; ctx.lineWidth=lw||2.5; ctx.beginPath(); ctx.moveTo(...A); ctx.quadraticCurveTo(m[0],m[1],B[0],B[1]); ctx.stroke(); }
+function drawWires(){
+  for(let i=0;i<2;i++){ const k="holder"+(i+1); if(!ST.on[k]) continue; const from=at(k,0,-4);
+    const to=hand&&hand.k==="hplug"&&hand.i===i? cm(mouse) : holderPlug(i);
+    wireCurve(from,[to[0]-0.25,to[1]],"#c0392b",1.8); wireCurve(from,[to[0]+0.25,to[1]],"#151515",1.8); frame({x:to[0],y:to[1]},()=>fillR(-0.7,-0.5,1.4,1.0,0.1,"#f2f2ee","#888",0.05)); }
+  for(const c of ST.crimps){ if(!c.a||!c.b) continue; const A=termXY(c.a), B=termXY(c.b);
+    wireCurve([A[0]-0.3,A[1]],[B[0]-0.3,B[1]],"#7f8c8d",2.6); wireCurve([A[0]+0.3,A[1]],[B[0]+0.3,B[1]],"#5d6670",2.6); }
+  if(hand&&hand.k==="crimp"&&hand.a){ const A=termXY(hand.a); wireCurve(A,cm(mouse),"#7f8c8d",2.6); }
+  if(ST.on.dmm) for(const c of ["red","black"]){ const from=at("dmm",...DMM_JACK[c]);
+    const to=hand&&hand.k==="clip"&&hand.c===c? cm(mouse) : clipXY(c);
+    wireCurve(from,to,c==="red"?"#c0392b":"#2c3e50",2.2);
+    frame({x:to[0],y:to[1]},()=>{ ctx.save(); ctx.rotate(-0.5); fillR(-0.35,-1.4,0.7,1.6,0.15,c==="red"?"#c0392b":"#2c3e50"); ctx.fillStyle="#c9ccd1"; ctx.fillRect(-0.3,-0.1,0.6,0.5); ctx.restore(); }); }
+}
+function drawBench(){
+  bench();
+  if(ST.on.base) drawBase(ST.pos.base);
+  if(ST.on.support) drawSupport(supportPos());
+  if(ST.oscIn||ST.on.osc) drawOsc(oscPos());
+  if(ST.on.riser) drawRiser(ST.pos.riser);
+  if(ST.on.mirror) drawMirror(ST.mirrorOn?ST.pos.riser:ST.pos.mirror);
+  for(let i=0;i<2;i++) if(ST.on["holder"+(i+1)]) drawHolder(i);
+  if(ST.on.ps) drawPs();
+  if(ST.on.dmm) drawDmm();
+  drawLeadsIn(); drawWires();
+  if(hand&&PLACE.includes(hand.k)){ const pos={x:mouse[0]/PX,y:mouse[1]/PX}, keep=ST.pos[hand.k];
+    ctx.save(); ctx.globalAlpha=overlap(hand.k,pos)?0.35:0.75; ST.pos[hand.k]=pos;
+    ({base:()=>drawBase(pos),support:()=>drawSupport(pos),osc:()=>drawOsc(pos),riser:()=>drawRiser(pos),mirror:()=>drawMirror(pos),
+      holder1:()=>drawHolder(0),holder2:()=>drawHolder(1),ps:drawPs,dmm:drawDmm})[hand.k]();
+    ST.pos[hand.k]=keep; ctx.restore(); }
+  if(hand&&TOOLS.includes(hand.k)&&!(hand.k==="crimp"&&hand.a)){ ctx.save(); ctx.globalAlpha=0.9; icon(hand.k,mouse[0]+14,mouse[1]+12,0.8); ctx.restore(); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  TRAY, LAYOUT, CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "base": fillR(-20,-12,40,24,3,"#c9ccd1","#8e949c"); circ(8,-2,7,"#9aa1a8"); for(let i=0;i<4;i++) circ(-14+i*6,8,2.2,i%2?"#111":"#eee"); break;
+    case "support": fillR(-14,-13,28,26,1,"#d9b98a","#b8946a"); circ(0,0,8,"#efe8da"); ctx.fillStyle="#1b1b1d"; ctx.fillRect(10,-11,2.4,22); break;
+    case "osc": circ(0,0,12,"#f2f2ee","#b9b9b2"); circ(0,0,9.5,null,"#2a2a2a",3); break;
+    case "riser": fillR(-13,-11,26,22,1,"#d9b98a","#b8946a"); break;
+    case "mirror": ctx.fillStyle="#cfdde2"; ctx.beginPath(); ctx.moveTo(-14,10); ctx.lineTo(14,10); ctx.lineTo(8,-10); ctx.lineTo(-8,-10); ctx.closePath(); ctx.fill(); ctx.strokeStyle="#7f8c8d"; ctx.stroke(); break;
+    case "holder1": case "holder2": fillR(-10,-13,20,26,2,"#1d1e22"); for(let j=0;j<4;j++) fillR(-8+j*4.2,-11,3.4,22,1,"#3c69c7"); break;
+    case "ps": fillR(-20,-13,40,26,2,"#1f7a3f","#145c2e"); for(let i=0;i<4;i++) circ(-12+i*8,7,2.6,"#1c1d20"); fillR(-8,-9,16,5,1,"#d8d8d8"); break;
+    case "dmm": fillR(-10,-15,20,30,3,"#c0392b","#7b241c"); fillR(-7,-12,14,6,1,"#cfe3cf"); circ(0,4,5,"#2c2c2c"); break;
+    case "screw": for(const dx of [-6,6]){ circ(dx,0,4,"#d8dade","#666"); ctx.fillStyle="#999"; ctx.fillRect(dx-6,-1,12,2); } break;
+    case "shim": for(let i=0;i<3;i++){ circ(-8+i*8,0,4,"#bfc4ca","#7f868e"); circ(-8+i*8,0,1.6,"#1f242b"); } break;
+    case "band": ctx.strokeStyle="#c98a3a"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.ellipse(0,0,12,6,0,0,7); ctx.stroke(); break;
+    case "marker": fillR(-9,-5,8,10,1,"#f2f2ee","#aaa"); fillR(1,-5,8,10,1,"#e8d94a","#b6a92f"); break;
+    case "batt": fillR(-4,-12,8,24,3,"#3c69c7","#1d3f8a"); ctx.fillStyle="#c9ccd1"; ctx.fillRect(-1.5,-14,3,2); break;
+    case "weights": for(let i=0;i<3;i++){ circ(-8+i*8,2,4,"#b7bcc2","#7f8890"); circ(-8+i*8,2,1.5,"#1f242b"); } ctx.strokeStyle="#9aa1a8"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(-14,-8); ctx.lineTo(14,-4); ctx.moveTo(-14,-6); ctx.lineTo(14,-4); ctx.stroke(); break;
+    case "crimp": ctx.strokeStyle="#7f8c8d"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-14,4); ctx.bezierCurveTo(-5,-12,5,12,14,-4); ctx.stroke(); circ(-14,4,2,"#c9ccd1"); circ(14,-4,2,"#c9ccd1"); break;
+  }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["base","support","band","osc","screw","shim","marker","riser","mirror","weights","holder1","holder2","batt","ps","crimp","dmm"], TROW=40;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[], P1={}, P2={}, P3={};
+const shimsLeft=()=>6-ST.shim-ST.shimMag, battLeft=()=>8-ST.holders[0].n-ST.holders[1].n, crimpLeft=()=>2-ST.crimps.length-(hand&&hand.k==="crimp"?1:0);
+function trayAvail(k){
+  if(k==="shim") return shimsLeft()>0&&!(hand&&hand.k===k); if(k==="batt") return battLeft()>0&&!(hand&&hand.k===k);
+  if(k==="band") return ST.bands<6&&!(hand&&hand.k===k); if(k==="crimp") return crimpLeft()>0;
+  if(TOOLS.includes(k)) return !(hand&&hand.k===k);
+  if(k==="osc") return !ST.on.osc&&!ST.oscIn&&!(hand&&hand.k===k);
+  return !ST.on[k]&&!(hand&&hand.k===k);
+}
+function traySub(k){ const t=d();
+  if(k==="shim") return t.left(shimsLeft()); if(k==="batt") return t.left(battLeft()); if(k==="band") return t.left(6-ST.bands); if(k==="crimp") return t.left(crimpLeft());
+  if(TOOLS.includes(k)) return t.trayTool; return trayAvail(k)?t.trayTake:t.trayOut; }
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.42);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16, w1=Math.round(CLW*0.30), w3=Math.round(CLW*0.20);
+  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:CLW-32-w1-w3,h}; P3={x:CLW-8-w3,y:8,w:w3,h};
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,26,y+(TROW-4)/2,0.6); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(itemName(k),48,y+12);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(traySub(k),48,y+27);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function panelBg(P,col){ ctx.fillStyle=col; ctx.fillRect(P.x,P.y,P.w,P.h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(P.x+0.5,P.y+0.5,P.w-1,P.h-1); }
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  drawP1(); drawP2(); drawP3(); ctx=old;
+}
+/* left: through the mirror, the marker against the upright mm scale (Figs. 4d, 6) */
+function drawP1(){
+  const P=P1, t=d(); panelBg(P,"#11151a");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.mirror,P.x+8,P.y+12,"#95a5a6",10.5);
+  let why=null;
+  if(!hung()) why=t.lab.noOsc; else if(!mirrorView()) why=t.lab.noMirror; else if(!ST.marker) why=t.lab.noMarker;
+  if(why){ text(why,P.x+P.w/2,P.y+P.h/2,"#69717a",11,"center"); ctx.restore(); return; }
+  const top=P.y+26, h=P.h-40, ztop=16.0, zbot=8.0, k=h/(ztop-zbot), Y=z=>top+(ztop-z)*k;
+  const sx=P.x+P.w*0.62;
+  /* the scale: graduations every 1 mm, figures every 5 mm */
+  ctx.fillStyle="#f0e6c8"; ctx.fillRect(sx,top,P.w*0.16,h);
+  for(let mm=Math.ceil(zbot);mm<=ztop;mm++){ const y=Y(mm), L=mm%5===0?P.w*0.12:P.w*0.07;
+    ctx.strokeStyle="#2c3e50"; ctx.lineWidth=mm%5===0?2:1.2; ctx.beginPath(); ctx.moveTo(sx,y); ctx.lineTo(sx+L,y); ctx.stroke();
+    if(mm%5===0) text(String(mm),sx+P.w*0.165,y,"#e8eef2",11,"left","600"); }
+  /* the oscillator with its shelf and marker */
+  const zeq=zEq()*1e3, amp=OSC.amp*1e3, bx0=P.x+P.w*0.30, bx1=sx-3;
+  const zNow=zeq+amp*Math.sin(OSC.phase);
+  const draw=(z,alpha)=>{ const y=Y(z); ctx.globalAlpha=alpha;
+    ctx.fillStyle="#f2f2ee"; ctx.fillRect(P.x+10,y-k*9,bx0-P.x-10,k*14);
+    ctx.fillStyle="#2a2a2a"; ctx.fillRect(P.x+10,y+k*1.5,bx0-P.x-10,k*1.2);
+    ctx.fillStyle="#e8d94a"; ctx.fillRect(bx0,y-k*0.18,bx1-bx0,k*0.36); ctx.globalAlpha=1; };
+  if(ST.slow||amp<0.05) draw(ST.slow?zNow:zeq,1);
+  else { const y1=Y(zeq+amp), y2=Y(zeq-amp); ctx.fillStyle="rgba(232,217,74,.35)"; ctx.fillRect(bx0,y1,bx1-bx0,y2-y1);
+    ctx.fillStyle="rgba(232,217,74,.9)"; ctx.fillRect(bx0,y1-1,bx1-bx0,2); ctx.fillRect(bx0,y2-1,bx1-bx0,2);
+    ctx.fillStyle="rgba(242,242,238,.55)"; ctx.fillRect(P.x+10,Y(zeq+amp)-k*9,bx0-P.x-10,k*14+(y2-y1)); }
+  ctx.restore();
+}
+/* middle: the power supply board, large */
+function drawP2(){
+  const P=P2, t=d(); panelBg(P,"#1a1d22");
+  if(!ST.on.ps){ text(t.lab.noPs,P.x+P.w/2,P.y+P.h/2,"#69717a",11,"center"); P.s=0; return; }
+  const s=Math.min((P.w-12)/27,(P.h-12)/19); P.s=s; P.cx=P.x+P.w/2; P.cy=P.y+P.h/2;
+  ctx.save(); ctx.translate(P.cx,P.cy); ctx.scale(s,s); psBoard(); ctx.restore();
+}
+/* right: the multimeter, large */
+function drawP3(){
+  const P=P3, t=d(); panelBg(P,"#1a1d22");
+  if(!ST.on.dmm){ text(t.lab.noDmm,P.x+P.w/2,P.y+P.h/2,"#69717a",10.5,"center"); P.s=0; return; }
+  const s=Math.min((P.w-12)/9,(P.h-12)/16); P.s=s; P.cx=P.x+P.w/2; P.cy=P.y+P.h/2;
+  ctx.save(); ctx.translate(P.cx,P.cy); ctx.scale(s,s); dmmBody(); ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function inItem(k,c){ if(!ST.on[k]) return false; const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(c[0]-q.x)<=w/2+0.3&&Math.abs(c[1]-q.y)<=h/2+0.3; }
+const onSupport=c=>ST.on.support&&near(c,[supportPos().x,supportPos().y],5.2);
+const onOsc=c=>(ST.oscIn||ST.on.osc)&&near(c,[oscPos().x,oscPos().y],2.6);
+function termAt(c,list,r){ let best=null, bd=r||1.1; for(const t of list){ const q=termXY(t); if(!q) continue; const dd=Math.hypot(q[0]-c[0],q[1]-c[1]); if(dd<bd){ bd=dd; best=t; } } return best; }
+function pairAt(c){
+  if(ST.on.base){ if(near(c,termXY("Mpost"),1.8)||termAt(c,["M+","M-"],1.0)) return "Mpost"; if(near(c,termXY("Cpost"),1.8)||termAt(c,["C+","C-"],1.0)) return "Cpost"; }
+  if(ST.on.ps){ for(const k of ["DC","AC"]) if(near(c,termXY(k),2.0)) return k; }
+  return null; }
+function detachAt(pred){
+  ST.crimps=ST.crimps.filter(w=>!(pred(w.a)||pred(w.b)));
+  for(const c of ["red","black"]) if(ST.clip[c]&&pred(ST.clip[c])) ST.clip[c]=null;
+}
+function freeSpotNear(k,x,y){ for(let r=0;r<40;r+=2) for(let a=0;a<12;a++){ const p={x:x+r*Math.cos(a*Math.PI/6),y:y+r*Math.sin(a*Math.PI/6)}; if(!overlap(k,p)) return p; } return null; }
+function unfix(){
+  ST.fixed=false; ST.leads.M=false; ST.leads.C=false;
+  const p=freeSpotNear("support",ST.pos.base.x-16,ST.pos.base.y)||{x:ST.pos.base.x,y:ST.pos.base.y-14};
+  ST.pos.support=p; say("unfixed");
+}
+function returnItem(k){
+  if(k==="base"){ if(ST.fixed) unfix(); ST.leads.M=ST.leads.C=false; detachAt(t=>["Mpost","Cpost","M+","M-","C+","C-"].includes(t)); }
+  if(k==="support"){ if(ST.oscIn){ ST.oscIn=false; } ST.fixed=false; ST.bands=0; ST.leads.M=ST.leads.C=false; ST.N=0; }
+  if(k==="osc"){ ST.marker=false; ST.N=0; }
+  if(k==="ps"){ detachAt(t=>["DC","AC",...TERM_PS].includes(t)); ST.holders.forEach(h=>h.plug=null); ST.psPower=false; }
+  if(k==="holder1"||k==="holder2"){ const h=ST.holders[+k.slice(-1)-1]; h.n=0; h.plug=null; h.on=false; }
+  if(k==="dmm"){ ST.clip.red=ST.clip.black=null; ST.dial="OFF"; }
+  if(k==="riser"&&ST.mirrorOn){ ST.mirrorOn=false; ST.pos.mirror={...ST.pos.riser}; }
+  if(k==="mirror") ST.mirrorOn=false;
+  ST.on[k]=false; say("back",itemName(k));
+}
+function returnHand(){
+  if(!hand) return;
+  if(hand.move){ ST.pos[hand.k]=hand.orig; ST.on[hand.k]=true; if(hand.k.startsWith("holder")) ST.holders[+hand.k.slice(-1)-1].on=true; say("stays"); }
+  hand=null;
+}
+function benchClick(p,right){
+  const c=cm(p), t=d();
+  if(hand){
+    const k=hand.k;
+    if(right){
+      if(k==="shim"&&ST.on.base){ if(ST.fixed&&near(c,[ST.pos.base.x+MAG[0]-4.6,ST.pos.base.y+MAG[1]-4.1],2.5)&&ST.shim>0){ ST.shim--; say("shimOut"); return; }
+        if(near(c,[ST.pos.base.x+MAG[0],ST.pos.base.y+MAG[1]],2.8)&&ST.shimMag>0&&!ST.fixed){ ST.shimMag--; say("shimOut"); return; } }
+      if(k==="weights"&&onOsc(c)&&ST.N>0){ ST.N--; say("weightOff",ST.N); return; }
+      returnHand(); return; }
+    if(k==="hplug"){ const t2=termAt(c,["CN1","CN2"],1.6);
+      if(t2){ if(ST.holders.some((h,j)=>j!==hand.i&&h.plug===t2)){ say("wrong"); return; } ST.holders[hand.i].plug=t2; say("plugged",itemName("holder"),t2); hand=null; return; }
+      hand=null; say("unplug"); return; }
+    if(k==="clip"){ const t2=termAt(c,[...TERM_PS,...TERM_POST],1.1);
+      if(t2){ ST.clip[hand.c]=t2; say("clipped",d().term[t2]); hand=null; return; } hand=null; say("unplug"); return; }
+    if(k==="lead"){ const pr=pairAt(c);
+      if(pr===(hand.which==="M"?"Mpost":"Cpost")){ ST.leads[hand.which]=true; say("leads",d().term[hand.which+"lead"]); hand=null; return; }
+      say("wrong"); return; }
+    if(k==="crimp"){ const pr=pairAt(c); if(!pr){ say("noUse"); return; }
+      if(!hand.a){ hand.a=pr; say("crimp2"); return; }
+      const post=x=>x==="Mpost"||x==="Cpost";
+      if(post(pr)===post(hand.a)){ say("wrong"); return; }
+      if(ST.crimps.some(w=>w.a===pr||w.b===pr)){ say("wrong"); return; }
+      ST.crimps.push({a:hand.a,b:pr}); say("plugged",d().term[hand.a],d().term[pr]); hand=null; return; }
+    if(TOOLS.includes(k)) return useTool(k,c);
+    if(PLACE.includes(k)){
+      if(k==="osc"&&onSupport(c)&&!ST.fixed){ if(ST.bands<4){ say("needBands"); return; } ST.oscIn=true; ST.on.osc=false; hand=null; say("oscIn"); return; }
+      if(k==="mirror"&&ST.on.riser&&near(c,[ST.pos.riser.x,ST.pos.riser.y],4)){ ST.mirrorOn=true; ST.on.mirror=true; hand=null; say("mirrorOn"); return; }
+      const pos={x:c[0],y:c[1]}; if(overlap(k,pos)){ say("noFit"); return; }
+      ST.pos[k]=pos; ST.on[k]=true; if(k.startsWith("holder")) ST.holders[+k.slice(-1)-1].on=true;
+      if(k==="mirror") ST.mirrorOn=false;
+      say("placed",itemName(k)); hand=null; return; }
+    return;
+  }
+  if(right){
+    for(let i=ST.crimps.length-1;i>=0;i--){ const w=ST.crimps[i]; if(near(c,termXY(w.a),1.6)||near(c,termXY(w.b),1.6)){ ST.crimps.splice(i,1); say("unplug"); return; } }
+    for(const cc of ["red","black"]) if(ST.clip[cc]&&near(c,clipXY(cc),1.0)){ ST.clip[cc]=null; say("unplug"); return; }
+    for(let i=0;i<2;i++) if(ST.holders[i].plug&&near(c,holderPlug(i),1.0)){ ST.holders[i].plug=null; say("unplug"); return; }
+    for(const L of ["M","C"]) if(ST.leads[L]&&pairAt(c)===(L+"post")){ ST.leads[L]=false; say("unplug"); return; }
+    if(ST.fixed&&onSupport(c)){ unfix(); return; }
+    if(ST.on.osc&&onOsc(c)){ returnItem("osc"); return; }
+    for(const k of ["mirror","riser","dmm","holder1","holder2","ps","support","base"]) if(inItem(k,c)&&!(k==="mirror"&&ST.mirrorOn&&!near(c,[ST.pos.riser.x,ST.pos.riser.y],3))){ if(k==="mirror"&&ST.mirrorOn){ returnItem("mirror"); return; } returnItem(k); return; }
+    return;
+  }
+  for(const cc of ["red","black"]) if(ST.on.dmm&&near(c,clipXY(cc),0.9)){ ST.clip[cc]=null; hand={k:"clip",c:cc}; say("clip"); return; }
+  for(let i=0;i<2;i++) if(ST.holders[i].on&&near(c,holderPlug(i),0.9)){ ST.holders[i].plug=null; hand={k:"hplug",i}; say("plug",itemName("holder")); return; }
+  if(hung()) for(const L of ["M","C"]){ if(!ST.leads[L]&&near(c,leadTag(L),1.0)){ hand={k:"lead",which:L}; say("plug",d().term[L+"lead"]); return; } }
+  if(ST.leads.M&&pairAt(c)==="Mpost"){ ST.mSwap=!ST.mSwap; say("swapLeads"); return; }
+  if(ST.on.ps){ if(near(c,termXY("power"),1.2)){ ST.psPower=!ST.psPower; say("sw","POWER "+(ST.psPower?"ON":"OFF")); return; }
+    if(near(c,termXY("mode"),1.2)){ ST.mode=ST.mode==="DC"?"AC":"DC"; say("sw",ST.mode); return; } }
+  if(ST.on.dmm&&near(c,at("dmm",0,0.6),2.2)){ cycleDial(1); return; }
+  if(ST.oscIn&&!ST.fixed&&onOsc(c)){ ST.oscIn=false; hand={k:"osc"}; say("picked",itemName("osc")); return; }
+  if(ST.on.osc&&onOsc(c)){ hand={k:"osc",move:true,orig:{...ST.pos.osc}}; ST.on.osc=false; say("moveIt",itemName("osc")); return; }
+  if(ST.mirrorOn&&near(c,[ST.pos.riser.x,ST.pos.riser.y],2.5)){ ST.mirrorOn=false; ST.on.mirror=false; hand={k:"mirror"}; say("picked",itemName("mirror")); return; }
+  for(const k of ["dmm","holder1","holder2","ps","riser","mirror","support","base"]) if(inItem(k,c)&&!(k==="support"&&ST.fixed)){
+    if(k==="base"&&ST.fixed) return;
+    hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; if(k.startsWith("holder")) ST.holders[+k.slice(-1)-1].on=false; say("moveIt",itemName(k)); return; }
+}
+function useTool(k,c){
+  if(k==="screw"){ if(!ST.on.base||!inItem("base",c)){ say("noUse"); return; } if(!ST.on.support||ST.fixed){ say("needSupport"); return; }
+    ST.fixed=true; say("fixed"); return; }
+  if(k==="band"){ if(!onSupport(c)){ say("noUse"); return; } if(ST.fixed){ say("bandFixed"); return; } if(ST.bands>=4){ say("bandMax"); return; } ST.bands++; say("band",ST.bands); return; }
+  if(k==="shim"){ if(!ST.on.base){ say("noUse"); return; } if(shimsLeft()<=0){ say("shimNone"); return; }
+    if(near(c,[ST.pos.base.x+MAG[0],ST.pos.base.y+MAG[1]],2.8)&&!ST.fixed){ ST.shimMag++; say("shimDown",ST.shimMag); return; }
+    if(near(c,[ST.pos.base.x+MAG[0],ST.pos.base.y+MAG[1]],2.8)&&ST.fixed&&!near(c,[ST.pos.base.x+MAG[0]-4.6,ST.pos.base.y+MAG[1]-4.1],2.5)){ say("shimMagFixed"); return; }
+    if(ST.fixed&&(near(c,[ST.pos.base.x+MAG[0]-4.6,ST.pos.base.y+MAG[1]-4.1],2.5)||near(c,[ST.pos.base.x+MAG[0]+4.6,ST.pos.base.y+MAG[1]+4.1],2.5))){ ST.shim++; say("shimUp",ST.shim); return; }
+    say("noUse"); return; }
+  if(k==="marker"){ if(!onOsc(c)){ say("noUse"); return; } if(ST.marker){ say("markerAgain"); return; } ST.marker=true; say("marker"); return; }
+  if(k==="batt"){ for(let i=0;i<2;i++) if(inItem("holder"+(i+1),c)){ const h=ST.holders[i]; if(h.n>=4){ say("battFull"); return; } h.n++; say("batt",h.n); return; } say("noUse"); return; }
+  if(k==="weights"){ if(!(hung()&&onOsc(c))){ say("noUse"); return; } if(ST.N>=5){ say("weightMax"); return; } ST.N++; say("weightOn",ST.N); return; }
+}
+const DIALS=["OFF","DCV","ACV","Hz"];
+function cycleDial(s){ ST.dial=DIALS[(DIALS.indexOf(ST.dial)+s+4)%4]; say("dial",ST.dial); }
+function bumpKnob(key,s,fine){
+  const st={coarse:0.25,fineK:0.01,acvol:0.004,dcvol:0.005}[key]*(fine?0.2:1);
+  if(key==="coarse") ST.coarse=Math.max(5,Math.min(25,ST.coarse+s*st));
+  if(key==="fineK") ST.fine=Math.max(-0.6,Math.min(0.6,ST.fine+s*st));
+  if(key==="acvol") ST.vac=Math.max(0,Math.min(0.4,ST.vac+s*st));
+  if(key==="dcvol") ST.vdc=Math.max(0,Math.min(1.2,ST.vdc+s*st));
+  say("knob");
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+cv.addEventListener("wheel",e=>{ const c=cm(lpos(e)), s=e.deltaY<0?1:-1;
+  if(ST.on.ps) for(const k of ["coarse","fineK","acvol","dcvol"]) if(near(c,termXY(k),1.5)){ e.preventDefault(); bumpKnob(k,s,e.shiftKey); return; }
+  if(ST.on.dmm&&near(c,at("dmm",0,0.6),2.2)){ e.preventDefault(); cycleDial(s); } },{passive:false});
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={k}; if(k==="crimp") say("crimp1"); else say(TOOLS.includes(k)?"tool":"picked",itemName(k)); } drawTray(); return; } });
+/* the close up: the board's switches and knobs, the multimeter selector */
+let drag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
+function psLocal(p){ return [(p[0]-P2.cx)/P2.s,(p[1]-P2.cy)/P2.s]; }
+function knobAt(u){ for(const k of ["coarse","fineK","acvol","dcvol"]) if(near(u,PSL[k],1.6)) return k; return null; }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const p=clpos(e);
+  if(P2.s&&inP(P2,p)){ const u=psLocal(p);
+    if(near(u,PSL.power,1.3)){ ST.psPower=!ST.psPower; say("sw","POWER "+(ST.psPower?"ON":"OFF")); return; }
+    if(near(u,PSL.mode,1.3)){ ST.mode=ST.mode==="DC"?"AC":"DC"; say("sw",ST.mode); return; }
+    const k=knobAt(u); if(k){ drag={k,y0:p[1]}; closeCv.setPointerCapture(e.pointerId); } return; }
+  if(P3.s&&inP(P3,p)){ const u=[(p[0]-P3.cx)/P3.s,(p[1]-P3.cy)/P3.s-0.6];
+    if(Math.hypot(u[0],u[1])<3.6){ const a=Math.atan2(u[0],-u[1])*180/Math.PI; let best="OFF", bd=1e9;
+      for(const [m,aa] of [["OFF",-90],["DCV",-45],["ACV",0],["Hz",45]]) if(Math.abs(a-aa)<bd){ bd=Math.abs(a-aa); best=m; }
+      ST.dial=best; say("dial",best); } } });
+closeCv.addEventListener("pointermove",e=>{ const p=clpos(e);
+  if(drag){ const dy=drag.y0-p[1]; if(Math.abs(dy)>=3){ bumpKnob(drag.k,Math.sign(dy),e.shiftKey); drag.y0=p[1]; } return; }
+  let hot=false; if(P2.s&&inP(P2,p)){ const u=psLocal(p); hot=!!knobAt(u)||near(u,PSL.power,1.3)||near(u,PSL.mode,1.3); }
+  if(P3.s&&inP(P3,p)) hot=true; closeCv.style.cursor=hot?"pointer":"default"; });
+closeCv.addEventListener("pointerup",()=>{ drag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e), s=e.deltaY<0?1:-1;
+  if(P2.s&&inP(P2,p)){ const k=knobAt(psLocal(p)); if(k){ e.preventDefault(); bumpKnob(k,s,e.shiftKey); } }
+  if(P3.s&&inP(P3,p)){ e.preventDefault(); cycleDial(s); } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   6.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const [lab,v] of [["1×",false],[d().slow,true]]){ const b=document.createElement("button"); b.textContent=lab; b.className=ST.slow===v?"on":"";
+    b.onclick=()=>{ ST.slow=v; renderSpeeds(); }; box.appendChild(b); } }
+$("unwire").onclick=()=>{ ST.crimps=[]; ST.clip.red=ST.clip.black=null; if(hand&&(hand.k==="crimp"||hand.k==="clip")) hand=null; say("unwired"); drawTray(); };
+let dcOn=0;
+function renderStatus(){
+  const L=[], t=d();
+  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
+  if(ST.on.ps&&ST.psPower&&!psOn()) L.push([t.st.noBatt,false]);
+  if(dcOn>180) L.push([t.st.hot,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-asm").textContent=t.hAsm; $("t-asmhint").textContent=t.asmHint; $("t-h-ps").textContent=t.hPs; $("t-pshint").textContent=t.psHint; $("unwire").textContent=t.unwire;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2023 E1 — 질량 측정 · HaslaLab":"IPhO 2023 E1 — Mass Measurement · HaslaLab";
+  renderSpeeds(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let tPrev=performance.now()/1000, frameN=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  oscStep(dt*(ST.slow?0.05:1));
+  dcOn=Math.abs(iDC())>0.05? dcOn+dt : 0;
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
