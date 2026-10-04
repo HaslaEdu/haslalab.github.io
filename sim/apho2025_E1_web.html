@@ -210,7 +210,9 @@ const T = {
       tightened:"클램프를 조였습니다.",
       needLoose:"위 하우징이 클램프로 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
       keyNoUp:"클램프는 위 하우징을 아래 하우징에 고정할 때 씁니다. 지금은 하우징이 하나뿐입니다.",
-      plateTake:s=>s+" 판 1장 — 조립된 코일(#1·#2)을 클릭하거나 끌어다 놓아 두 코일 사이 틈에 밀어 넣으세요.",
+      plateTake:s=>s+" 판 1장 — 책상 빈 곳에 내려놓거나, 조립된 코일(#1·#2)을 클릭해 두 코일 사이 틈에 밀어 넣으세요.",
+      plateDesk:s=>s+" 판을 책상에 내려놓았습니다. (클릭: 다시 집기 / 우클릭: 부품함에 넣기)",
+      plateBack:s=>s+" 판을 부품함에 넣었습니다.",
       plateIn:(s,n,left)=>s+" 판을 두 코일 사이에 넣었습니다 (지금 "+n+"장, 남은 틈 "+left+" mm).",
       needBoth:"판은 코일 #1과 #2를 모두 받침판에 쌓은 뒤, 두 코일 사이의 틈에 넣습니다.",
       flipPlates:"두 코일 사이의 판을 먼저 빼세요.",
@@ -306,7 +308,9 @@ const T = {
       tightened:"Clamps tightened.",
       needLoose:"The upper housing is clamped down. Loosen the clamps with the Allen key (10) first.",
       keyNoUp:"The clamps hold the upper housing on the lower one; there is only one housing now.",
-      plateTake:s=>"One "+s+" plate — click (or drop it on) the assembled coils (#1 and #2) to slide it into the gap between them.",
+      plateTake:s=>"One "+s+" plate — put it down on a free spot of the desk, or click the assembled coils (#1 and #2) to slide it into the gap between them.",
+      plateDesk:s=>s+" plate laid on the desk. (click: pick it up again / R-click: back into the box)",
+      plateBack:s=>s+" plate put back in the box.",
       plateIn:(s,n,left)=>s+" plate slid between the coils ("+n+" now, "+left+" mm of gap left).",
       needBoth:"Plates go into the gap between coil #1 and coil #2: stack both housings on the base plate first.",
       flipPlates:"Take the plates out from between the coils first.",
@@ -508,6 +512,7 @@ const S={
   stack:[], pan:null, panItem:null, panT:T_AMB, loose:false,
   panPos:null, panOn:null,      /* panPos: "top" (on the upper platform) | "gap";  panOn: the housing slot holding it */
   plates:{AL:5,CU:5,SS304:4,SS410:4},
+  dplates:[],                   /* plates lying loose on the desk: {mat,x,z} (centre, cm) */
   carry:null, zones:{},
   /* each part stands wherever it was put down: its shift (cm, along x and z) from the drawing's own place */
   at:{fg:[0,0],scope:[0,0],base:[0,0],box:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
@@ -614,12 +619,24 @@ const DESK=[-9,127,-7,63];
 function footNow(id){ const f=FOOT[id], o=S.at[id]; return [f[0]+o[0],f[1]+o[0],f[2]+o[1],f[3]+o[1]]; }
 function onDesk(id){ return CAPS[id]?S.cap[id]==="desk":id==="box"?S.on.box==="desk":!!S.on[id]; }
 /* the shift that centres the part on (bx,bz), or null if it would hang off the desk or hit another part */
+/* a loose plate lies flat on the desk, 2.7 cm x 4.6 cm (the size it has between the coils) */
+const PL_W=1.35, PL_D=2.3;
+const plRect=q=>[q.x-PL_W,q.x+PL_W,q.z-PL_D,q.z+PL_D];
+const hitR=(r,q)=>r[0]<q[1]+0.4&&r[1]+0.4>q[0]&&r[2]<q[3]+0.4&&r[3]+0.4>q[2];
+function plateSpot(bx,bz){
+  const r=plRect({x:bx,z:bz});
+  if(r[0]<DESK[0]||r[1]>DESK[1]||r[2]<DESK[2]||r[3]>DESK[3]) return false;
+  for(const k in FOOT){ if(onDesk(k)&&hitR(r,footNow(k))) return false; }
+  for(const q of S.dplates) if(hitR(r,plRect(q))) return false;
+  return true;
+}
 function freeSpot(id,bx,bz){
   const f=FOOT[id], o=[bx-(f[0]+f[1])/2, bz-(f[2]+f[3])/2];
   const r=[f[0]+o[0],f[1]+o[0],f[2]+o[1],f[3]+o[1]];
   if(r[0]<DESK[0]||r[1]>DESK[1]||r[2]<DESK[2]||r[3]>DESK[3]) return null;
   for(const k in FOOT){ if(k===id||!onDesk(k)) continue; const q=footNow(k);
     if(r[0]<q[1]+0.4&&r[1]+0.4>q[0]&&r[2]<q[3]+0.4&&r[3]+0.4>q[2]) return null; }
+  for(const q of S.dplates) if(hitR(r,plRect(q))) return null;
   return o;
 }
 /* terminal table: position, plug direction, kind  (termLocal: where it is on the unshifted part) */
@@ -1178,6 +1195,14 @@ function drawCapOnBox(k,o){         /* legs pushed into the side holes of the tw
   LINE([NP(cx+0.3,y0,cz),NP(cx+0.6,BOX_H+1.0,cz-0.6),NP(o[0]+bx,BOX_H+0.85,o[1]+bz)],"#d6d9dc",Math.max(1.5,ppcm()*0.12));
   drawCapBody(k,cx,y0,cz);
 }
+function drawDeskPlate(i){
+  const q=S.dplates[i], M=MAT[q.mat], th=PLATE_MM[q.mat]/10, [x0,x1,z0,z1]=plRect(q);
+  BOX([x0,x1,0,th,z0,z1],M.col,M.edge,M.edge,M.edge);
+  LINE([NP(x0+0.25,th,z1-0.3),NP(x1-0.6,th,z1-0.3)],"rgba(255,255,255,0.55)",Math.max(1,ppcm()*0.08));
+  S.zones["dp"+i]=boxRect([x0,x1,0,th+0.3,z0,z1]);
+  const p=NP(q.x,0,z0-0.6);
+  TXT(p[0],p[1],d().mat[q.mat],{size:Math.max(5,ppcm()*0.4),fill:"#3b2d1d"});
+}
 function drawCapsDesk(only){
   for(const k of CAP_KEYS){
     if(S.cap[k]!=="desk"||(only&&k!==only)) continue;
@@ -1404,6 +1429,7 @@ function draw(){
   if(S.on.base) add("base",()=>{ withOff(S.at.base,drawCoilStack); if(S.on.box==="cover"){ drawBox(); if(S.pan) withOff(S.at.base,drawNtc); } });
   if(S.on.box==="desk") add("box",drawBox);
   for(const k of CAP_KEYS) if(S.cap[k]==="desk") add(k,()=>drawCapsDesk(k));
+  S.dplates.forEach((q,i)=>parts.push([q.z-q.x,()=>drawDeskPlate(i)]));
   parts.sort((a,b)=>b[0]-a[0]).forEach(q=>q[1]());
   drawCables();
   drawProbe();
@@ -1479,7 +1505,7 @@ trayCv.addEventListener("mousedown",e=>{
     const t=d();
     if(out){ say((name==="bb"||name==="bp")?t.m.noCable:t.trayOut); return; }
     if(name==="bb"||name==="bp"){ const col=S.stock[name].r>=S.stock[name].k?"r":"k"; S.stock[name][col]--; S.carry={k:"cable",type:name,col,a:null}; say(t.m.cable1); }
-    else if(PLATE_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
+    else if(PLATE_OF[name]){ S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
     else if(PAN_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } if(S.pan){ say(t.m.slotBusy,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
     else if(S.hs[name]&&!S.on.base){ say(t.m.needBase,true); return; }
     else if(name==="key"){ S.carry={k:"key",id:"key"}; say(t.m.keyTake); }
@@ -1525,7 +1551,7 @@ function termOk(cr,id,info){
 function cancelCarry(silent){
   const cr=S.carry; if(!cr) return;
   if(cr.k==="cable") S.stock[cr.type][cr.col]++;
-  if(cr.k==="plate") S.plates[cr.mat]++;
+  if(cr.k==="plate"){ if(cr.from){ S.dplates.push(cr.from); S.carry=null; say(d().m.stays); return; } S.plates[cr.mat]++; }
   S.carry=null;
   if(cr.move){ say(d().m.stays); return; }
   if(!silent) say(d().m.returned(cr.k==="probe"?d().lab.probe:(d().trayItems[cr.id||cr.type]||"")));
@@ -1544,6 +1570,12 @@ function onPress(p){
   }
   if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
   if(S.on.scope){ const [a,b]=withOff(S.at.scope,()=>faceInv(Z_FACE,x,y)); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
+  /* pick a loose plate up off the desk */
+  for(let i=S.dplates.length-1;i>=0;i--){
+    if(!inRect(S.zones["dp"+i],x,y,2)) continue;
+    const q=S.dplates.splice(i,1)[0], id=Object.keys(PLATE_OF).find(k=>PLATE_OF[k]===q.mat);
+    S.carry={k:"plate",id,mat:q.mat,from:q}; say(t.m.plateTake(t.mat[q.mat])); return;
+  }
   /* grab a part standing on the desk to move it (its leads stay plugged in) */
   for(const id of ["C470N","C470U","C1000U","C2200U","box","base","scope","fg"]){
     if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
@@ -1570,6 +1602,10 @@ function place(x,y){
   }
   if(cr.k==="key"||cr.k==="plate"||cr.k==="pan"){
     const onKit=inRect(S.zones.stack,x,y,6)||inRect(S.zones.base,x,y,4)||(S.on.box==="cover"&&inRect(S.zones.box,x,y));
+    if(!onKit&&cr.k==="plate"){
+      const [bx,bz]=benchAt(x,y);
+      if(!plateSpot(bx,bz)){ say(t.m.noFit,true); return; }
+      S.dplates.push({mat:cr.mat,x:bx,z:bz}); S.carry=null; say(t.m.plateDesk(t.mat[cr.mat])); drawTray(); return; }
     if(!onKit){
       if(cr.k==="key"){ S.carry=null; drawTray(); say(t.m.returned(t.trayItems.key)); } else say(t.m.noFit,true);
       return; }
@@ -1638,6 +1674,8 @@ function onRClick(p){
     if(S.probe[end]&&Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
   if(S.on.box==="cover"&&inRect(S.zones.box,x,y)){ returnItem("box"); return; }
   if(S.on.base&&inRect(S.zones.stack,x,y)){ unstackOne(); return; }
+  for(let i=S.dplates.length-1;i>=0;i--) if(inRect(S.zones["dp"+i],x,y,2)){
+    const q=S.dplates.splice(i,1)[0]; S.plates[q.mat]++; say(t.m.plateBack(t.mat[q.mat])); drawTray(); return; }
   for(const k of CAP_KEYS) if(S.cap[k]==="desk"&&inRect(S.zones[k],x,y)){ returnItem(k); return; }
   for(const id of ["box","base","scope","fg"]){
     if(inRect(S.zones[id],x,y)){ returnItem(id); return; }
