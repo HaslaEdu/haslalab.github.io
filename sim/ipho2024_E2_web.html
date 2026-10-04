@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2024 E2 — 위상 계단에 의한 회절 · Diffraction from Phase Steps · HaslaLab</title>
+<meta name="description" content="IPhO 2024 실험 2번을 브라우저에서 실행합니다. 레이저를 현미경 슬라이드 모서리에 맞추고 각도기를 돌리며 회절 무늬가 원래 모양으로 돌아오는 횟수를 세어, 얇은·두꺼운 슬라이드의 두께와 미지 액체의 굴절률을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2024 E2 — 위상 계단에 의한 회절 · Diffraction from Phase Steps">
+<meta property="og:description" content="IPhO 2024 실험 2번을 브라우저에서 실행합니다. 장치를 놓고 레이저·렌즈 높이를 맞춘 뒤 각도기를 돌리며 줄무늬 이동을 셉니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-cnt"></h2>
+    <div class="disp" id="cntLbl">0</div>
+    <div class="row">
+      <button id="cntUp"></button>
+      <button id="cntDn"></button>
+      <button id="cntReset"></button>
+    </div>
+    <p class="hint" id="t-cnthint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <textarea id="note" rows="9" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <h2 id="t-h-help"></h2>
+    <p class="hint" id="t-help"></p>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2024 실험 2 — 위상 계단에 의한 회절",
+    sub:"가상 실험실 · 장치를 놓고 레이저와 렌즈의 높이를 슬라이드 모서리에 맞춘 뒤, 각도기를 돌리며 무늬가 처음 모양으로 돌아오는 횟수를 세고 각도를 직접 읽으세요. 두께와 굴절률은 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayTool:"도구 — 클릭해서 들기",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습, 160 cm × 96 cm) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 놓은 장비를 다시 클릭하면 옮기기 / 보드의 전류 손잡이는 휠",
+    closeCap:"확대 — 왼쪽: 각도기 (끌거나 휠로 돌리기, Shift+휠 미세) · 가운데: 옆모습 (레이저·렌즈 높이 손잡이에 휠) · 오른쪽: 관찰 스크린",
+    hCnt:"계수기 (손으로 누르는 카운터)", up:"+1", dn:"−1", reset:"0",
+    cntHint:"무늬가 처음 모양으로 돌아올 때마다 직접 누르세요. 계수기는 아무것도 자동으로 세지 않습니다.",
+    hNote:"실험 노트", notePh:"예) S1, 공기 중\nm   θm (도)\n1   …",
+    hHelp:"장치 다루기",
+    help:"플랫폼 (1)을 놓고, 홀더 S1 (2.1) 또는 S2 (2.2)를 각도기 한가운데에 올리세요. 레이저 케이블을 보드 (6)의 Laser 단자에, 보조배터리 (7)의 USB를 보드의 5V 단자에 꽂고 On/Off 키를 누릅니다.\n스크린 (3)은 렌즈 쪽 빔 줄 위에 놓습니다. 옆모습에서 레이저 높이를 슬라이드 아래 모서리에, 렌즈 높이를 빔 높이에 맞추면 무늬가 보입니다.\n액체 실험: 홀더를 들어내고 용기 (4)를 각도기 가운데에 놓은 뒤 병 (5)으로 액체를 붓고, 홀더를 다시 올려 슬라이드를 잠기게 합니다.",
+    items:{plat:"1. 주 플랫폼", s1:"2.1 홀더 S1 (얇은)", s2:"2.2 홀더 S2 (두꺼운)", screen:"3. 관찰 스크린",
+           cont:"4. 액체 용기", bottle:"5. 분홍 액체 병", board:"6. 레이저 전자 보드", bank:"7. 보조배터리·케이블"},
+    lab:{laserH:"레이저 높이 손잡이", lensH:"렌즈 높이 손잡이", edge:"슬라이드 아래 모서리", beam:"빔", mark:"기준 표시", side:"옆모습", top:"각도기 (위에서)",
+         screen:"관찰 스크린", noScreen:"스크린이 빔 줄 위에 없습니다.", dark:"(어두움)", noPlat:"플랫폼을 놓으면 여기 보입니다.",
+         onoff:"On/Off", current:"Current Adjuster", ctrl:"Laser Current Controller", laserS:"Laser", v5:"5V Power Supply", zoom:"확대"},
+    term:{laserPlug:"레이저 케이블 플러그", usbPlug:"USB 플러그", laserSock:"보드의 Laser 단자", usbSock:"보드의 5V 단자"},
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", noPower:"레이저 보드에 전원이 없습니다 (보조배터리 USB).", noLaser:"레이저가 보드에 연결되지 않았습니다.", off:"레이저가 꺼져 있습니다 (On/Off 키).",
+        noHolder:"각도기 위에 홀더가 없습니다.", miss:"레이저가 슬라이드 모서리에 닿지 않습니다 — 옆모습에서 레이저 높이를 맞추세요.", lens:"렌즈 높이가 빔과 맞지 않습니다.",
+        noScr:"스크린이 빔 줄 위에 없습니다.", dry:"용기가 비어 있습니다."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       tool:n=>n+" 을(를) 들었습니다 — 쓸 곳을 클릭하세요. (우클릭: 내려놓기)", noUse:"그곳에는 쓸 수 없습니다.",
+       holderOn:n=>n+" 을(를) 각도기 위에 올렸습니다. 돌기 4개가 홀더를 잡습니다.", contOn:"용기를 각도기 가운데 구멍에 놓았습니다.", busy:"각도기 위에 이미 다른 것이 있습니다.",
+       contFirst:"용기를 놓으려면 먼저 홀더를 들어내세요.", fill:"용기에 분홍 액체를 부었습니다.", fillFirst:"홀더를 들어낸 뒤 부으세요.", immersed:"슬라이드가 액체에 잠겼습니다.",
+       plug:n=>n+" 을(를) 집었습니다 — 꽂을 단자를 클릭하세요.", plugged:n=>n+" 에 꽂았습니다.", unplugged:"플러그를 뽑았습니다.", wrong:"그 플러그는 거기에 맞지 않습니다.",
+       onoff:on=>"레이저 "+(on?"켬":"끔"), knob:"전류 손잡이를 돌렸습니다.", screenOn:"스크린을 빔 줄 위에 세웠습니다.", screenOff:"스크린을 놓았습니다 (빔 줄 밖).",
+       rot:"각도기를 돌렸습니다.", height:"높이 손잡이를 돌렸습니다."}
+  },
+  en:{
+    title:"IPhO 2024 Experiment 2 — Diffraction from phase steps",
+    sub:"Virtual laboratory · put the apparatus down, bring the laser and the lens to the edge of the slide, then turn the protractor, count how many times the pattern comes back to its first shape and read the angle yourself. Thicknesses and indices are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayTool:"tool — click to hold",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above, 160 cm × 96 cm) — L-click pick up / put down / plug / press, R-click return / unplug, click a placed item to move it, wheel on the current knob of the board",
+    closeCap:"close up — left: the protractor (drag or wheel to turn, Shift+wheel fine) · middle: side view (wheel on the laser and lens height knobs) · right: the observation screen",
+    hCnt:"Tally counter (pressed by hand)", up:"+1", dn:"−1", reset:"0",
+    cntHint:"Press it yourself each time the pattern comes back to its first shape. It counts nothing on its own.",
+    hNote:"Lab notebook", notePh:"e.g. S1 in air\nm   θm (deg)\n1   …",
+    hHelp:"Handling the apparatus",
+    help:"Put the platform (1) down and the holder S1 (2.1) or S2 (2.2) in the middle of the protractor. Plug the laser cable into the Laser socket of the board (6), the USB cable of the power bank (7) into its 5V socket, and press the On/Off key.\nStand the screen (3) on the beam line beyond the lens. In the side view, bring the laser to the lower edge of the slide and the lens to the height of the beam: the pattern appears.\nLiquid: lift the holder off, put the container (4) in the middle of the protractor, pour the liquid from the bottle (5) and put the holder back so that the slide dips into it.",
+    items:{plat:"1. Main platform", s1:"2.1 Holder S1 (thin)", s2:"2.2 Holder S2 (thick)", screen:"3. Observation screen",
+           cont:"4. Liquid container", bottle:"5. Bottle of pink liquid", board:"6. Laser electronic board", bank:"7. Power bank, cables"},
+    lab:{laserH:"laser height knob", lensH:"lens height knob", edge:"lower edge of the slide", beam:"beam", mark:"reference mark", side:"side view", top:"protractor (from above)",
+         screen:"observation screen", noScreen:"The screen is not on the beam line.", dark:"(dark)", noPlat:"Put the platform down to see it here.",
+         onoff:"On/Off", current:"Current Adjuster", ctrl:"Laser Current Controller", laserS:"Laser", v5:"5V Power Supply", zoom:"zoom"},
+    term:{laserPlug:"laser cable plug", usbPlug:"USB plug", laserSock:"Laser socket of the board", usbSock:"5V socket of the board"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", noPower:"The laser board has no power (power bank USB).", noLaser:"The laser is not connected to the board.", off:"The laser is off (On/Off key).",
+        noHolder:"There is no holder on the protractor.", miss:"The laser does not hit the edge of the slide — set the laser height in the side view.", lens:"The lens height does not match the beam.",
+        noScr:"The screen is not on the beam line.", dry:"The container is empty."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       tool:n=>n+" in hand — click where to use it. (R-click: put it down)", noUse:"It cannot be used there.",
+       holderOn:n=>n+" set on the protractor; the four protrusions hold it.", contOn:"Container set on the square holes in the middle of the protractor.", busy:"Something is already on the protractor.",
+       contFirst:"Lift the holder off before putting the container in.", fill:"Pink liquid poured into the container.", fillFirst:"Lift the holder off before pouring.", immersed:"The slide dips into the liquid.",
+       plug:n=>n+" in hand — click the socket.", plugged:n=>"Plugged into the "+n+".", unplugged:"Plug pulled out.", wrong:"That plug does not fit there.",
+       onoff:on=>"Laser "+(on?"on":"off"), knob:"Current knob turned.", screenOn:"Screen stood on the beam line.", screenOff:"Screen put down (off the beam line).",
+       rot:"Protractor turned.", height:"Height knob turned."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2024e2)>>>0);
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const LAMBDA=650e-9, N_GLASS=1.51, N_AIR=1.00;
+/* this session's slides and liquid (H is set so that the small-angle method of B-2 returns the official 1.061 mm) */
+const K={ h1:148.9e-6*(1+0.002*gauss()), h2:1.061e-3/1.0234*(1+0.002*gauss()), nLiq:1.3320*(1+0.0015*gauss()),
+          edge:{s1:62.0+0.6*gauss(), s2:63.0+0.6*gauss()} };
+function phase(th,thick,N){ return 2*Math.PI*thick/LAMBDA*(Math.sqrt(N_GLASS*N_GLASS-N*N*Math.sin(th)**2)-N*Math.cos(th)); }
+/* cumulative Fresnel integrals on a fine grid, C(-inf) = S(-inf) = -1/2 */
+const FV0=-12, FDV=0.001, FN=24001, FC=new Float64Array(FN), FS=new Float64Array(FN);
+(function(){ let c=0,s=0, pc=Math.cos(0.5*Math.PI*FV0*FV0), ps=Math.sin(0.5*Math.PI*FV0*FV0);
+  FC[0]=-0.5; FS[0]=-0.5;
+  for(let i=1;i<FN;i++){ const v=FV0+i*FDV, cc=Math.cos(0.5*Math.PI*v*v), ss=Math.sin(0.5*Math.PI*v*v);
+    c+=0.5*(cc+pc)*FDV; s+=0.5*(ss+ps)*FDV; pc=cc; ps=ss; FC[i]=-0.5+c; FS[i]=-0.5+s; } })();
+function fres(v){ const x=(v-FV0)/FDV; if(x<=0) return [-0.5,-0.5]; if(x>=FN-1) return [0.5,0.5];
+  const i=Math.floor(x), f=x-i; return [FC[i]+(FC[i+1]-FC[i])*f, FS[i]+(FS[i+1]-FS[i])*f]; }
+/* intensity across the edge of a half plane carrying an extra phase phi (1 far from the edge) */
+function stepI(phi,v){ const [C,S]=fres(v), cp=Math.cos(phi), sp=Math.sin(phi);
+  const a1=C+0.5, b1=S+0.5, a2=0.5-C, b2=0.5-S;
+  const re=cp*a1-sp*b1+a2, im=sp*a1+cp*b1+b2; return (re*re+im*im)/2; }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE AND GEOMETRY  (bench 160 cm × 96 cm, 7.5 px per cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, PX=7.5;
+const PLACE=["plat","s1","s2","screen","cont","board","bank"];
+const TOOLS=["bottle"];
+const SZ={plat:[46,20], s1:[12,12], s2:[12,12], screen:[3,20], cont:[9,9], board:[15,11], bank:[8,15]};
+const ST={
+  on:{}, pos:{},
+  holder:null, contOn:false, filled:false,
+  plug:{laserPlug:null, usbPlug:null}, laserOn:false, cur:15.0,
+  prot:0, laserH:55.0, lensH:72.0, cnt:0
+};
+for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:80,y:48}; }
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||d().term[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+const cm=p=>[p[0]/PX,p[1]/PX];
+const at=(k,dx,dy)=>[ST.pos[k].x+dx,ST.pos[k].y+dy];
+/* the platform: protractor centre at its pos, laser tower at -19 cm, lens tower at +19 cm, beam along +x */
+const PROT_R=9.0, LASER_X=-19.5, LENS_X=19.5;
+const LASER_SOCK=()=>at("board",-4.6,-3.0), USB_SOCK=()=>at("board",-4.6,2.6), ONOFF=()=>at("board",1.8,3.0), KNOB=()=>at("board",5.0,3.0);
+function plugPos(k){
+  if(k==="laserPlug") return ST.plug.laserPlug? LASER_SOCK() : at("plat",LASER_X-1.5,9.5);
+  return ST.plug.usbPlug? USB_SOCK() : at("bank",0,-9.5);
+}
+const powered=()=>ST.on.board&&ST.on.bank&&ST.plug.usbPlug==="sock";
+const lasing=()=>ST.on.plat&&powered()&&ST.plug.laserPlug==="sock"&&ST.laserOn;
+function screenOnBeam(){ if(!ST.on.plat||!ST.on.screen) return null; const P=ST.pos.plat, Q=ST.pos.screen;
+  if(Math.abs(Q.y-P.y)<4&&Q.x>P.x+LENS_X+2) return {D:Q.x-P.x, dy:Q.y-P.y}; return null; }
+function liquidN(){ return (ST.contOn&&ST.filled&&ST.holder)? K.nLiq : N_AIR; }
+function overlap(k,pos){
+  const [w,h]=SZ[k];
+  if(pos.x-w/2<1||pos.x+w/2>LW/PX-1||pos.y-h/2<1||pos.y+h/2>LH/PX-1) return true;
+  for(const o of PLACE){ if(o===k||!ST.on[o]) continue;
+    if((o===ST.holder||(o==="cont"&&ST.contOn))) continue;                         /* sitting on the protractor */
+    const q=ST.pos[o], [a,b]=SZ[o];
+    if(Math.abs(pos.x-q.x)<(w+a)/2+0.6&&Math.abs(pos.y-q.y)<(h+b)/2+0.6) return true; }
+  return false;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING THE BENCH  (in cm, seen from above)
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+const T6=(s,x,y,col,sz,al,wt)=>{ ctx.save(); ctx.scale(0.1,0.1); text(s,x*10,y*10,col,sz,al,wt); ctx.restore(); };
+function frame(pos,fn){ ctx.save(); ctx.translate(pos.x*PX,pos.y*PX); ctx.scale(PX,PX); fn(); ctx.restore(); }
+function bench(){
+  ctx.fillStyle=vgrad(0,LH,[[0,"#e9e6e0"],[1,"#d8d4cc"]]); ctx.fillRect(0,0,LW,LH);
+  ctx.strokeStyle="rgba(120,110,90,.10)"; ctx.lineWidth=1;
+  for(let x=0;x<=LW;x+=75){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+  for(let y=0;y<=LH;y+=75){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
+}
+function shadowR(x,y,w,h,r){ fillR(x+0.3,y+0.4,w,h,r||0.5,"rgba(40,35,25,.22)"); }
+/* protractor scale: 0 at the reference mark, 90 across, symmetric (Fig. 4-1) */
+function protScale(r0,r1,big){
+  for(let a=0;a<360;a++){ const t=(a-ST.prot)*Math.PI/180+Math.PI, L=a%10===0?0.9:a%5===0?0.6:0.35;
+    ctx.strokeStyle="#222"; ctx.lineWidth=big?0.05:0.04; ctx.beginPath(); ctx.moveTo(Math.cos(t)*r1,Math.sin(t)*r1); ctx.lineTo(Math.cos(t)*(r1-L*(r1-r0)),Math.sin(t)*(r1-L*(r1-r0))); ctx.stroke();
+    if(a%10===0){ const lab=String(90-Math.abs(((a%180)+180)%180-90)), rr=r0-0.55*(r1-r0)*0.6;
+      ctx.save(); ctx.translate(Math.cos(t)*rr,Math.sin(t)*rr); ctx.rotate(t+Math.PI/2); T6(lab,0,0,a===0?"#c0392b":"#222",big?5.2:4.2,"center","700"); ctx.restore(); } }
+}
+function drawPlat(){ frame(ST.pos.plat,()=>{
+  shadowR(-23,-10,46,20,1.2);
+  fillR(-23,-7,46,14,1.0,"#1a1b1e","#000",0.08);
+  /* laser tower (d) and lens tower (e) with their height knobs */
+  for(const [x,lab] of [[LASER_X,"d"],[LENS_X,"e"]]){
+    fillR(x-2.6,-4.8,5.2,9.6,0.5,"#25262a","#000",0.06);
+    for(const yy of [-3.6,3.6]){ circ(x,yy,0.45,"#9ba1a8"); }
+    circ(x,0,1.8,"#111","#3a3c42",0.08); circ(x,0,0.7,"#c6cbd0");
+    T6(lab,x+2.2,-4.0,"#e8eef2",5,"center","700"); }
+  ctx.fillStyle="#c0392b"; ctx.fillRect(LASER_X+1.6,-0.35,1.2,0.7);
+  ctx.fillStyle="rgba(200,230,255,.55)"; ctx.fillRect(LENS_X-2.0,-1.6,0.6,3.2);
+  /* the white rotating protractor (b) and the plate with four square holes (c) */
+  circ(0,0,PROT_R+0.6,"#0e0f11"); circ(0,0,PROT_R,"#f4f4f2","#bbb",0.05);
+  protScale(PROT_R-1.2,PROT_R,false);
+  circ(0,0,5.6,"#121316");
+  circ(0,0,4.6,"#9aa1a8","#6b7178",0.06);
+  for(const [x,y] of [[-1.3,-1.3],[1.3,-1.3],[-1.3,1.3],[1.3,1.3]]) ctx.fillRect(x-0.6,y-0.6,1.2,1.2);
+  ctx.fillStyle="#2a2c30"; for(const [x,y] of [[-1.3,-1.3],[1.3,-1.3],[-1.3,1.3],[1.3,1.3]]) ctx.fillRect(x-0.5,y-0.5,1.0,1.0);
+  /* four protrusions (f) turn with the protractor */
+  for(let i=0;i<4;i++){ const t=(i*90+45-ST.prot)*Math.PI/180; circ(Math.cos(t)*5.9,Math.sin(t)*5.9,0.35,"#d8dade","#555",0.04); }
+  /* reference mark and the angle adjustment knob */
+  ctx.fillStyle="#c0c4c8"; ctx.fillRect(-PROT_R-1.4,-0.9,1.0,1.8); ctx.fillStyle="#c0392b"; ctx.fillRect(-PROT_R-0.45,-0.06,0.75,0.12);
+  circ(11.5,6.6,1.2,"#f2f2ee","#aaa",0.06);
+}); }
+function drawHolder(k,pos,rot){ frame(pos,()=>{
+  if(!rot) shadowR(-6,-6,12,12,6);
+  circ(0,0,5.8,null,"#c8ccd2",0.7); circ(0,0,5.8,null,"#7d838a",0.08);
+  ctx.save(); ctx.rotate(-(rot?ST.prot:0)*Math.PI/180);
+  for(const y of [-4.6,4.6]) circ(0,y,0.55,"#b0b5bb","#555",0.05);
+  ctx.fillStyle="#141416"; ctx.fillRect(-0.9,-3.0,1.8,6.0);
+  ctx.fillStyle="rgba(190,225,235,.75)"; ctx.fillRect(-(k==="s2"?0.12:0.05)-0.04,-2.6,(k==="s2"?0.24:0.1)+0.08,5.2);
+  T6(k==="s1"?"S1":"S2",0,-3.7,"#333",5,"center","700");
+  ctx.restore();
+}); }
+function drawCont(pos,onProt){ frame(pos,()=>{
+  if(!onProt) shadowR(-4,-3,8,6,1);
+  ctx.fillStyle=ST.filled?"rgba(236,120,170,.75)":"rgba(225,232,238,.55)"; ctx.strokeStyle="#7a828a"; ctx.lineWidth=0.08;
+  ctx.beginPath(); ctx.moveTo(-3.6,-2.6); ctx.lineTo(3.6,-2.6); ctx.lineTo(3.6,0.6); ctx.arc(0,0.6,3.6,0,Math.PI); ctx.closePath(); ctx.fill(); ctx.stroke();
+}); }
+function drawScreen(){ frame(ST.pos.screen,()=>{
+  shadowR(-1.5,-10,3,20,0.3);
+  fillR(-1.2,-10.5,2.4,21,0.3,"#1b1c1f"); ctx.fillStyle="#f6f6f3"; ctx.fillRect(-1.0,-9.6,0.5,19.2);
+}); }
+function drawBoard(){ frame(ST.pos.board,()=>{
+  shadowR(-7.5,-5.5,15,11,0.8);
+  fillR(-7.5,-5.5,15,11,0.8,"#f2f2ef","#9aa1a8",0.08);
+  T6(d().lab.ctrl,0.6,-4.3,"#333",4.6,"center","700");
+  fillR(-4.4,-2.6,9.6,2.6,0.2,"#0d2a74");
+  if(powered()) T6("I(Laser)="+ST.cur.toFixed(1)+" mA",0.4,-1.3,"#b8e0ff",5.2,"center","700");
+  for(const [p,lab] of [[LASER_SOCK(),d().lab.laserS],[USB_SOCK(),d().lab.v5]]){ const x=p[0]-ST.pos.board.x, y=p[1]-ST.pos.board.y;
+    fillR(x-0.9,y-0.7,1.8,1.4,0.15,"#1e8a3a","#0b3d18",0.05); T6(lab,x,y+(y<0?-1.2:1.3),"#333",3.6,"center"); }
+  const o=[ONOFF()[0]-ST.pos.board.x,ONOFF()[1]-ST.pos.board.y], kk=[KNOB()[0]-ST.pos.board.x,KNOB()[1]-ST.pos.board.y];
+  fillR(o[0]-0.8,o[1]-0.8,1.6,1.6,0.2,"#222"); circ(o[0],o[1],0.45,ST.laserOn&&powered()?"#3cf06a":"#3a3a3a");
+  T6(d().lab.onoff,o[0],o[1]-1.4,"#333",3.8,"center","700");
+  circ(kk[0],kk[1],1.1,"#2a2a2d","#000",0.06); const a=-2.4+((ST.cur-4)/21)*4.8;
+  ctx.strokeStyle="#eee"; ctx.lineWidth=0.15; ctx.beginPath(); ctx.moveTo(kk[0],kk[1]); ctx.lineTo(kk[0]+Math.sin(a)*0.9,kk[1]-Math.cos(a)*0.9); ctx.stroke();
+  T6(d().lab.current,kk[0],kk[1]+1.7,"#333",3.4,"center","700");
+}); }
+function drawBank(){ frame(ST.pos.bank,()=>{ shadowR(-4,-7.5,8,15,1); fillR(-4,-7.5,8,15,1,"#26272b","#000",0.08); circ(2.4,5.8,0.25,powered()?"#3cb0ff":"#333"); }); }
+function cableTo(from,to,col,lw){ const a=[from[0]*PX,from[1]*PX], b=[to[0]*PX,to[1]*PX], m=[(a[0]+b[0])/2,(a[1]+b[1])/2+30];
+  ctx.strokeStyle=col; ctx.lineWidth=lw||3; ctx.beginPath(); ctx.moveTo(...a); ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke();
+  fillR(b[0]-5,b[1]-4,10,8,2,"#1d1e21","#000",1); }
+function drawCables(){
+  if(ST.on.plat){ const src=at("plat",LASER_X-1.0,4.8);
+    const to=hand&&hand.k==="plug"&&hand.which==="laserPlug"? [mouse[0]/PX,mouse[1]/PX] : plugPos("laserPlug"); cableTo(src,to,"#202124",3); }
+  if(ST.on.bank){ const src=at("bank",0,-7.5);
+    const to=hand&&hand.k==="plug"&&hand.which==="usbPlug"? [mouse[0]/PX,mouse[1]/PX] : plugPos("usbPlug"); cableTo(src,to,"#e8e6e0",2.5); }
+}
+function drawBeam(){
+  if(!lasing()) return;
+  const P=ST.pos.plat, sc=screenOnBeam(), x0=(P.x+LASER_X+2.8)*PX, x1=(sc? P.x+sc.D-1 : P.x+LENS_X+40)*PX, y=P.y*PX;
+  const a=Math.min(1,Math.max(0,(ST.cur-5)/10));
+  ctx.strokeStyle="rgba(255,40,40,"+(0.25+0.6*a)+")"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+  if(sc){ ctx.fillStyle="rgba(255,60,80,"+(0.4+0.5*a)+")"; ctx.beginPath(); ctx.ellipse(x1-2,y+sc.dy*0,2.5,9,0,0,7); ctx.fill(); }
+}
+function drawBench(){
+  bench();
+  for(const k of ["board","bank","screen"]) if(ST.on[k]) ({board:drawBoard,bank:drawBank,screen:drawScreen})[k]();
+  if(ST.on.plat){ drawPlat(); if(ST.contOn) drawCont(ST.pos.plat,true); if(ST.holder) drawHolder(ST.holder,ST.pos.plat,true); }
+  for(const k of ["s1","s2"]) if(ST.on[k]&&ST.holder!==k) drawHolder(k,ST.pos[k],false);
+  if(ST.on.cont&&!ST.contOn) drawCont(ST.pos.cont,false);
+  drawBeam(); drawCables();
+  if(hand&&PLACE.includes(hand.k)){ const pos={x:mouse[0]/PX,y:mouse[1]/PX}, keep=ST.pos[hand.k];
+    ctx.save(); ctx.globalAlpha=overlap(hand.k,pos)&&!onProtTarget(hand.k,pos)?0.35:0.75; ST.pos[hand.k]=pos;
+    ({plat:drawPlat,s1:()=>drawHolder("s1",pos,false),s2:()=>drawHolder("s2",pos,false),screen:drawScreen,cont:()=>drawCont(pos,false),board:drawBoard,bank:drawBank})[hand.k]();
+    ST.pos[hand.k]=keep; ctx.restore(); }
+  if(hand&&TOOLS.includes(hand.k)){ ctx.save(); ctx.globalAlpha=0.9; icon(hand.k,mouse[0]+14,mouse[1]+12,0.8); ctx.restore(); }
+}
+function onProtTarget(k,pos){ return (k==="s1"||k==="s2"||k==="cont")&&ST.on.plat&&Math.hypot(pos.x-ST.pos.plat.x,pos.y-ST.pos.plat.y)<PROT_R; }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  TRAY, LAYOUT
+   ══════════════════════════════════════════════════════════════ */
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  switch(k){
+    case "plat": fillR(-24,-8,48,16,3,"#1a1b1e","#000"); circ(0,0,9,"#f4f4f2","#999"); circ(0,0,4,"#9aa1a8"); fillR(-23,-6,5,12,1,"#2a2b30"); fillR(18,-6,5,12,1,"#2a2b30"); break;
+    case "s1": case "s2": circ(0,0,12,null,"#c8ccd2",3); ctx.fillStyle="#141416"; ctx.fillRect(-2,-8,4,16); ctx.fillStyle="#bfe3ee"; ctx.fillRect(k==="s2"?-1:-0.4,-7,k==="s2"?2:0.8,14);
+      text(k.toUpperCase(),14,-10,"#cfd3d6",8,"left","700"); break;
+    case "screen": fillR(-12,-12,24,22,2,"#f6f6f3","#555"); fillR(-4,10,8,5,1,"#222"); ctx.fillStyle="rgba(230,40,70,.7)"; ctx.fillRect(-7,-3,14,3); break;
+    case "cont": ctx.fillStyle="rgba(236,120,170,.8)"; ctx.beginPath(); ctx.moveTo(-10,-8); ctx.lineTo(10,-8); ctx.lineTo(10,0); ctx.arc(0,0,10,0,Math.PI); ctx.closePath(); ctx.fill(); break;
+    case "bottle": fillR(-7,-10,14,22,4,"#f4b4cc","#c87a98"); fillR(-4,-15,8,6,1,"#f2f2ee"); break;
+    case "board": fillR(-16,-11,32,22,2,"#f2f2ef","#888"); fillR(-10,-6,20,6,1,"#0d2a74"); circ(10,6,3,"#2a2a2d"); fillR(-12,3,5,4,1,"#1e8a3a"); break;
+    case "bank": fillR(-8,-14,16,28,3,"#26272b","#000"); ctx.strokeStyle="#ddd"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,-14); ctx.quadraticCurveTo(12,-22,16,-12); ctx.stroke(); break;
+  }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["plat","s1","s2","screen","cont","bottle","board","bank"], TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[], P1={}, P2={}, P3={};
+const trayAvail=k=>TOOLS.includes(k)? !(hand&&hand.k===k) : !ST.on[k]&&!(hand&&hand.k===k);
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.40);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16, w1=Math.round(CLW*0.27), w2=Math.round(CLW*0.36);
+  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:w2,h}; P3={x:24+w1+w2,y:8,w:CLW-32-w1-w2,h};
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    let nm=itemName(k); while(c.measureText(nm).width>wd-50&&nm.length>4) nm=nm.slice(0,-2)+"…";
+    c.fillText(nm,52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(TOOLS.includes(k)?t.trayTool:(av?t.trayTake:t.trayOut),52,y+30);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+function panelBg(P,col){ ctx.fillStyle=col; ctx.fillRect(P.x,P.y,P.w,P.h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(P.x+0.5,P.y+0.5,P.w-1,P.h-1); }
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  drawP1(); drawP2(); drawP3();
+  ctx=old;
+}
+/* left: the protractor scale next to the reference mark, magnified */
+function drawP1(){
+  const P=P1, t=d(); panelBg(P,"#e9e7e2");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  if(!ST.on.plat){ text(t.lab.noPlat,P.x+P.w/2,P.y+P.h/2,"#69717a",11,"center"); ctx.restore(); return; }
+  const pxDeg=Math.max(9,P.h/26), R=pxDeg*180/Math.PI, cx=P.x+P.w*0.30+R, cy=P.y+P.h/2;
+  ctx.fillStyle="#f6f6f3"; ctx.beginPath(); ctx.arc(cx,cy,R+4,0,7); ctx.fill();
+  ctx.fillStyle="#121316"; ctx.beginPath(); ctx.arc(cx,cy,R-pxDeg*4.6,0,7); ctx.fill();
+  for(let a=Math.floor(ST.prot)-20;a<=Math.ceil(ST.prot)+20;a++){
+    const t2=Math.PI+(a-ST.prot)*Math.PI/180, L=a%10===0?2.2:a%5===0?1.5:0.9, A=((a%360)+360)%360;
+    ctx.strokeStyle="#1d1d1d"; ctx.lineWidth=a%5===0?1.6:1.1;
+    ctx.beginPath(); ctx.moveTo(cx+Math.cos(t2)*R,cy+Math.sin(t2)*R); ctx.lineTo(cx+Math.cos(t2)*(R-L*pxDeg),cy+Math.sin(t2)*(R-L*pxDeg)); ctx.stroke();
+    if(a%10===0){ const lab=String(90-Math.abs((A%180)-90)), rr=R-2.9*pxDeg;
+      ctx.save(); ctx.translate(cx+Math.cos(t2)*rr,cy+Math.sin(t2)*rr); ctx.rotate(t2+Math.PI/2); text(lab,0,0,A===0?"#c0392b":"#1d1d1d",Math.min(16,pxDeg*1.3),"center","700"); ctx.restore(); }
+  }
+  /* the fixed reference mark on the metal plate */
+  ctx.fillStyle="#b8bdc2"; ctx.fillRect(P.x+P.w*0.30-pxDeg*2.6,cy-pxDeg*1.2,pxDeg*2.4,pxDeg*2.4);
+  ctx.strokeStyle="#c0392b"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(P.x+P.w*0.30-pxDeg*2.4,cy); ctx.lineTo(P.x+P.w*0.30+pxDeg*0.6,cy); ctx.stroke();
+  text(t.lab.mark,P.x+6,P.y+P.h-12,"#5d5446",10.5);
+  text(t.lab.top,P.x+6,P.y+12,"#5d5446",11);
+  ctx.restore();
+}
+/* middle: side view, heights in mm drawn 1:1 vertically against a compressed horizontal scale */
+let SV={};
+function drawP2(){
+  const P=P2, t=d(); panelBg(P,"#eef0f2");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.side,P.x+6,P.y+12,"#5d5446",11);
+  if(!ST.on.plat){ text(t.lab.noPlat,P.x+P.w/2,P.y+P.h/2,"#69717a",11,"center"); ctx.restore(); return; }
+  const base=P.y+P.h-14, k=(P.h-62)/104, Y=mm=>base-mm*k;          /* 0 … 104 mm */
+  const xL=P.x+P.w*0.10, xC=P.x+P.w*0.33, xR=P.x+P.w*0.56;
+  ctx.fillStyle="#1a1b1e"; ctx.fillRect(P.x+6,base,P.w*0.62,8);
+  /* towers with their knobs */
+  for(const [x,h,lab] of [[xL,ST.laserH,t.lab.laserH],[xR,ST.lensH,t.lab.lensH]]){
+    ctx.fillStyle="#9ba1a8"; ctx.fillRect(x-12,Y(92),3,Y(0)-Y(92)); ctx.fillRect(x+9,Y(92),3,Y(0)-Y(92));
+    fillR(x-16,Y(97),32,6,2,"#25262a"); circ(x,Y(97)-6,7,"#1a1a1c","#555"); ctx.fillStyle="#bbb"; ctx.fillRect(x-1.5,Y(97)-16,3,6);
+    fillR(x-13,Y(h)-9,26,18,3,"#2b2c30","#000");
+    text(lab,x+(x===xL?-4:4),P.y+30,"#5d5446",9,x===xL?"left":"right"); }
+  ctx.fillStyle="#c0392b"; ctx.fillRect(xL+10,Y(ST.laserH)-2,8,4);
+  ctx.fillStyle="rgba(180,215,240,.8)"; ctx.fillRect(xR-14,Y(ST.lensH)-12,4,24);
+  /* container, holder, slide */
+  if(ST.contOn){ ctx.fillStyle=ST.filled?"rgba(236,120,170,.55)":"rgba(220,230,236,.35)"; ctx.strokeStyle="#7a828a"; ctx.lineWidth=1;
+    ctx.fillRect(xC-22,Y(ST.filled?70:2),44,Y(2)-Y(ST.filled?70:2)); ctx.strokeRect(xC-22,Y(78),44,Y(2)-Y(78)); }
+  let edge=null;
+  if(ST.holder){ edge=K.edge[ST.holder];
+    ctx.fillStyle="#b0b5bb"; ctx.fillRect(xC-30,Y(102),3,Y(4)-Y(102)); ctx.fillRect(xC+27,Y(102),3,Y(4)-Y(102));
+    ctx.fillStyle="#141416"; ctx.fillRect(xC-12,Y(102),24,Y(88)-Y(102));
+    const w=ST.holder==="s2"?7:3; ctx.fillStyle="rgba(170,215,230,.85)"; ctx.fillRect(xC-w/2,Y(90),w,Y(edge)-Y(90));
+    ctx.strokeStyle="#5d8fa0"; ctx.lineWidth=1; ctx.strokeRect(xC-w/2,Y(90),w,Y(edge)-Y(90)); }
+  /* the beam */
+  if(lasing()){ const a=Math.min(1,Math.max(0.15,(ST.cur-5)/10)); ctx.strokeStyle="rgba(255,30,30,"+(0.35+0.55*a)+")"; ctx.lineWidth=Math.max(2,1.0*k);
+    ctx.beginPath(); ctx.moveTo(xL+18,Y(ST.laserH)); ctx.lineTo(xR-14,Y(ST.laserH)); ctx.stroke(); }
+  /* magnifier around the edge of the slide where the beam meets it */
+  if(ST.holder){ const bw=P.w*0.32, bh=P.h-70, bx=P.x+P.w*0.65, by=P.y+34, z=bh/6;   /* ±3 mm */
+    fillR(bx,by,bw,bh,4,"#fbfbf9","#7a828a",1);
+    ctx.save(); ctx.beginPath(); ctx.rect(bx,by,bw,bh); ctx.clip();
+    const yc=by+bh/2, ym=mm=>yc-(mm-ST.laserH)*z;
+    if(ST.contOn&&ST.filled){ ctx.fillStyle="rgba(236,120,170,.25)"; ctx.fillRect(bx,by,bw,bh); }
+    ctx.fillStyle="rgba(150,205,225,.8)"; ctx.fillRect(bx+bw*0.42,by-2,bw*0.16,Math.max(0,ym(edge)-by+2));
+    ctx.strokeStyle="#4d7f90"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(bx+bw*0.42,ym(edge)); ctx.lineTo(bx+bw*0.58,ym(edge)); ctx.stroke();
+    if(lasing()){ const g=ctx.createRadialGradient(bx+bw/2,yc,0,bx+bw/2,yc,z*0.9); g.addColorStop(0,"rgba(255,40,40,.85)"); g.addColorStop(1,"rgba(255,40,40,0)");
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(bx+bw/2,yc,z*0.9,0,7); ctx.fill(); }
+    ctx.restore(); text(t.lab.zoom+" ×"+(z/k).toFixed(0),bx+4,by+bh+10,"#5d5446",9.5); }
+  SV={xL,xR,Y,k};
+  ctx.restore();
+}
+/* right: the observation screen */
+const NV=180, NX=110, patCv=document.createElement("canvas"); patCv.width=NX; patCv.height=NV;
+const patCtx=patCv.getContext("2d"), patImg=patCtx.createImageData(NX,NV);
+let patKey="";
+function screenState(){
+  const sc=screenOnBeam(); if(!sc||!lasing()) return null;
+  const amp=Math.min(1.2,Math.max(0,(ST.cur-5)/10)), dl=ST.lensH-ST.laserH;
+  let phi=null, v0=0;
+  if(ST.holder){ const th=ST.prot*Math.PI/180, thick=ST.holder==="s1"?K.h1:K.h2;
+    phi=phase(th,thick,liquidN()); v0=-(ST.laserH-K.edge[ST.holder])*10; }
+  return {D:sc.D, amp, dl, phi, v0, missLens:Math.abs(dl)>4};
+}
+function renderPattern(s){
+  const key=[s.phi===null?"n":(s.phi%(2*Math.PI)).toFixed(3),s.v0.toFixed(2),s.amp.toFixed(2)].join("|");
+  if(key===patKey) return; patKey=key;
+  const VMAX=6.5, D=patImg.data;
+  const col=new Float32Array(NV);
+  for(let r=0;r<NV;r++){ const v=VMAX-2*VMAX*r/(NV-1);
+    const I=s.phi===null||Math.abs(v-s.v0)>11.5? 1 : stepI(s.phi,v-s.v0);
+    col[r]=I*Math.exp(-((v/(VMAX*0.78))**2))*s.amp; }
+  for(let c=0;c<NX;c++){ const ex=Math.exp(-((2*c/(NX-1)-1)**2)/0.42);
+    for(let r=0;r<NV;r++){ const M=Math.min(1,col[r]*ex/1.35), i=4*(r*NX+c);
+      D[i]=255*Math.min(1,M*1.35); D[i+1]=255*Math.min(1,0.85*M**3.2); D[i+2]=255*Math.min(1,0.8*M**1.9); D[i+3]=255; } }
+  patCtx.putImageData(patImg,0,0);
+}
+function drawP3(){
+  const P=P3, t=d(); panelBg(P,"#2a2c30");
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.screen,P.x+6,P.y+12,"#c9ced8",11);
+  const side=Math.min(P.w-20,P.h-36), sx=P.x+(P.w-side)/2, sy=P.y+26;
+  ctx.fillStyle="#3a3b3f"; ctx.fillRect(sx-6,sy-6,side+12,side+12);
+  const s=screenState();
+  ctx.fillStyle=s?"#1c1416":"#d9d8d3"; ctx.fillRect(sx,sy,side,side);
+  if(!ST.on.screen||!screenOnBeam()){ text(ST.on.screen?t.lab.noScreen:"—",sx+side/2,sy+side/2,"#555",11,"center"); }
+  else if(!s){ text(t.lab.dark,sx+side/2,sy+side/2,"#666",11,"center"); }
+  else {
+    const cmpx=side/20, f=s.D/100;
+    if(s.missLens){ const g=ctx.createRadialGradient(sx+side/2,sy+side/2,0,sx+side/2,sy+side/2,cmpx*0.35);
+      g.addColorStop(0,"rgba(255,90,110,"+Math.min(1,s.amp)+")"); g.addColorStop(1,"rgba(255,40,60,0)"); ctx.fillStyle=g; ctx.fillRect(sx,sy,side,side); }
+    else { renderPattern(s);
+      const h=8*f*cmpx, w=12*f*cmpx, yc=sy+side/2-s.dl*0.6*f*cmpx;
+      ctx.save(); ctx.globalAlpha=Math.exp(-((s.dl/3)**2)); ctx.globalCompositeOperation="lighter"; ctx.imageSmoothingEnabled=true;
+      ctx.drawImage(patCv,sx+side/2-w/2,yc-h/2,w,h); ctx.restore(); }
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function inItem(k,c){ if(!ST.on[k]) return false; const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(c[0]-q.x)<=w/2+0.3&&Math.abs(c[1]-q.y)<=h/2+0.3; }
+const onProt=c=>ST.on.plat&&near(c,[ST.pos.plat.x,ST.pos.plat.y],PROT_R);
+function returnItem(k){
+  if(k==="plat"){ if(ST.holder){ ST.on[ST.holder]=false; ST.holder=null; } if(ST.contOn){ ST.on.cont=false; ST.contOn=false; ST.filled=false; } ST.plug.laserPlug=null; }
+  if(k==="board"){ ST.plug.laserPlug=null; ST.plug.usbPlug=null; ST.laserOn=false; }
+  if(k==="bank") ST.plug.usbPlug=null;
+  if(k===ST.holder) ST.holder=null;
+  if(k==="cont"){ ST.contOn=false; ST.filled=false; }
+  ST.on[k]=false; say("back",itemName(k));
+}
+function returnHand(){
+  if(!hand) return;
+  if(hand.move){ ST.pos[hand.k]=hand.orig; ST.on[hand.k]=true; say("stays"); }
+  hand=null;
+}
+function benchClick(p,right){
+  const c=cm(p);
+  if(hand){
+    if(right){ returnHand(); return; }
+    const k=hand.k;
+    if(k==="plug"){ const w=hand.which;
+      const atL=ST.on.board&&near(c,LASER_SOCK(),1.4), atU=ST.on.board&&near(c,USB_SOCK(),1.4);
+      if(w==="laserPlug"&&atL){ ST.plug.laserPlug="sock"; hand=null; say("plugged",d().term.laserSock); return; }
+      if(w==="usbPlug"&&atU){ ST.plug.usbPlug="sock"; hand=null; say("plugged",d().term.usbSock); return; }
+      if(atL||atU){ say("wrong"); return; }
+      hand=null; say("unplugged"); return; }
+    if(k==="bottle"){
+      const onC=(ST.contOn&&onProt(c))||(ST.on.cont&&!ST.contOn&&inItem("cont",c));
+      if(!onC){ say("noUse"); return; }
+      if(ST.contOn&&ST.holder){ say("fillFirst"); return; }
+      ST.filled=true; say("fill"); return; }
+    if(PLACE.includes(k)){
+      const pos={x:c[0],y:c[1]};
+      if((k==="s1"||k==="s2")&&onProt(c)){ if(ST.holder){ say("busy"); return; }
+        ST.holder=k; ST.on[k]=true; ST.pos[k]={...ST.pos.plat}; hand=null; say(ST.contOn&&ST.filled?"immersed":"holderOn",itemName(k)); return; }
+      if(k==="cont"&&onProt(c)){ if(ST.holder){ say("contFirst"); return; } if(ST.contOn){ say("busy"); return; }
+        ST.contOn=true; ST.on.cont=true; hand=null; say("contOn"); return; }
+      if(overlap(k,pos)){ say("noFit"); return; }
+      ST.pos[k]=pos; ST.on[k]=true; const mv=hand.move; hand=null;
+      if(k==="screen") say(screenOnBeam()?"screenOn":"screenOff"); else say(mv?"placed":"placed",itemName(k));
+      return; }
+    return;
+  }
+  if(right){
+    for(const k of ["laserPlug","usbPlug"]) if(ST.plug[k]&&near(c,plugPos(k),1.3)){ ST.plug[k]=null; say("unplugged"); return; }
+    if(onProt(c)&&near(c,[ST.pos.plat.x,ST.pos.plat.y],6.5)){ if(ST.holder){ returnItem(ST.holder); return; } if(ST.contOn){ returnItem("cont"); return; } }
+    for(const k of ["s1","s2","cont","screen","board","bank","plat"]) if(inItem(k,c)&&!(k===ST.holder)&&!(k==="cont"&&ST.contOn)){ returnItem(k); return; }
+    return;
+  }
+  for(const k of ["laserPlug","usbPlug"]){ const src=k==="laserPlug"?ST.on.plat:ST.on.bank;
+    if(src&&near(c,plugPos(k),1.3)){ ST.plug[k]=null; hand={k:"plug",which:k}; say("plug",d().term[k]); return; } }
+  if(ST.on.board&&near(c,ONOFF(),1.1)){ ST.laserOn=!ST.laserOn; say("onoff",ST.laserOn); return; }
+  if(ST.on.board&&near(c,KNOB(),1.3)){ ST.cur=Math.min(25,ST.cur+0.5); say("knob"); return; }
+  if(onProt(c)&&near(c,[ST.pos.plat.x,ST.pos.plat.y],6.5)){
+    if(ST.holder){ const k=ST.holder; ST.holder=null; ST.on[k]=false; hand={k}; say("picked",itemName(k)); return; }
+    if(ST.contOn){ ST.contOn=false; ST.on.cont=false; hand={k:"cont"}; say("picked",itemName("cont")); return; } }
+  for(const k of ["s1","s2","cont","screen","board","bank","plat"]) if(inItem(k,c)&&k!==ST.holder&&!(k==="cont"&&ST.contOn)){
+    hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say("moveIt",itemName(k)); return; }
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+cv.addEventListener("wheel",e=>{ const c=cm(lpos(e)), s=e.deltaY<0?1:-1;
+  if(ST.on.board&&near(c,KNOB(),2)){ e.preventDefault(); ST.cur=Math.max(4,Math.min(25,Math.round((ST.cur+s*(e.shiftKey?0.1:0.5))*10)/10)); say("knob"); return; }
+  if(onProt(c)){ e.preventDefault(); turn(s*(e.shiftKey?0.05:0.25)); } },{passive:false});
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={k}; say(TOOLS.includes(k)?"tool":"picked",itemName(k)); } drawTray(); return; } });
+function turn(dd){ ST.prot=((ST.prot+dd)%360+360)%360; say("rot"); }
+/* the close up: turn the protractor, the two height knobs */
+let drag=null;
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
+function knobAt(p){ if(!ST.on.plat||!inP(P2,p)||!SV.xL) return null; if(Math.abs(p[0]-SV.xL)<34) return "laserH"; if(Math.abs(p[0]-SV.xR)<34) return "lensH"; return null; }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const p=clpos(e);
+  if(ST.on.plat&&inP(P1,p)){ drag={kind:"prot",y0:p[1],a0:ST.prot}; closeCv.setPointerCapture(e.pointerId); return; }
+  const kn=knobAt(p); if(kn){ drag={kind:kn,y0:p[1],h0:ST[kn]}; closeCv.setPointerCapture(e.pointerId); } });
+closeCv.addEventListener("pointermove",e=>{ const p=clpos(e);
+  closeCv.style.cursor=(ST.on.plat&&inP(P1,p))||knobAt(p)?"ns-resize":"default";
+  if(!drag) return;
+  if(drag.kind==="prot"){ const pxDeg=Math.max(9,P1.h/26); ST.prot=((drag.a0-(p[1]-drag.y0)/pxDeg*0.5)%360+360)%360; }
+  else { ST[drag.kind]=Math.max(30,Math.min(90,drag.h0-(p[1]-drag.y0)/(SV.k*4))); say("height"); } });
+closeCv.addEventListener("pointerup",()=>{ drag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e), s=e.deltaY<0?1:-1;
+  if(ST.on.plat&&inP(P1,p)){ e.preventDefault(); turn(s*(e.shiftKey?0.05:0.25)); return; }
+  const kn=knobAt(p); if(kn){ e.preventDefault(); const st=kn==="laserH"?(e.shiftKey?0.02:0.1):(e.shiftKey?0.05:0.25);
+    ST[kn]=Math.max(30,Math.min(90,Math.round((ST[kn]+s*st)*100)/100)); say("height"); } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   7.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+$("cntUp").onclick=()=>{ ST.cnt++; $("cntLbl").textContent=ST.cnt; };
+$("cntDn").onclick=()=>{ ST.cnt=Math.max(0,ST.cnt-1); $("cntLbl").textContent=ST.cnt; };
+$("cntReset").onclick=()=>{ ST.cnt=0; $("cntLbl").textContent=ST.cnt; };
+try{ const v=localStorage.getItem("ipho2024e2_note"); if(v) $("note").value=v; }catch(e){}
+$("note").addEventListener("input",()=>{ try{ localStorage.setItem("ipho2024e2_note",$("note").value); }catch(e){} });
+function renderStatus(){
+  const L=[], t=d();
+  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
+  else if(ST.on.plat){
+    if(!powered()) L.push([t.st.noPower,false]);
+    else if(ST.plug.laserPlug!=="sock") L.push([t.st.noLaser,false]);
+    else if(!ST.laserOn) L.push([t.st.off,false]);
+    else if(!ST.holder) L.push([t.st.noHolder,false]);
+    else { if(Math.abs(ST.laserH-K.edge[ST.holder])>0.8) L.push([t.st.miss,false]);
+      if(Math.abs(ST.lensH-ST.laserH)>4) L.push([t.st.lens,false]);
+      if(!screenOnBeam()) L.push([t.st.noScr,false]); }
+    if(ST.contOn&&!ST.filled) L.push([t.st.dry,false]);
+  }
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-cnt").textContent=t.hCnt; $("cntUp").textContent=t.up; $("cntDn").textContent=t.dn; $("cntReset").textContent=t.reset; $("t-cnthint").textContent=t.cntHint;
+  $("t-h-note").textContent=t.hNote; $("note").placeholder=t.notePh; $("t-h-help").textContent=t.hHelp; $("t-help").textContent=t.help;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2024 E2 — 위상 계단에 의한 회절 · HaslaLab":"IPhO 2024 E2 — Diffraction from Phase Steps · HaslaLab";
+  layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0;
+function tick(){
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  drawClose();
+  if(++frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>

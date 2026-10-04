@@ -656,7 +656,17 @@ const DATA={
               src:{ko:"src/ipho2024_E1_sim_KO.py", en:"src/ipho2024_E1_sim_EN.py"},
               pdf:{en:"pdf/IPhO_2024_E1_EN.pdf"},
               sol:"pdf/IPhO_2024_S1.pdf"}},
-      ...papers("IPhO_2024", wip("Heat Conduction in a Copper Rod","Diffraction from Phase Steps"), ["E1_EN", "S1"], ["E2_EN", "S2"]).slice(1)]},
+      {id:"E2",
+       title:{ko:"위상 계단에 의한 회절",en:"Diffraction from Phase Steps"},
+       desc:{ko:"레이저를 현미경 슬라이드의 아래 모서리에 맞추고 각도기를 돌리며 회절 무늬가 처음 모양으로 돌아오는 횟수와 각도를 기록해, 얇은·두꺼운 슬라이드의 두께와 분홍 액체의 굴절률을 구합니다.",
+             en:"Bring the laser to the lower edge of a microscope slide, turn the protractor and record the angle at every fringe shift of the diffraction pattern to find the thickness of a thin and a thick slide and the refractive index of a pink liquid."},
+       tags:["회절","위상차","굴절률"], tagsEn:["Diffraction","Phase difference","Refractive index"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2024_E2_sim_KO.exe", en:REL+"v1.0/IPhO2024_E2_sim_EN.exe"}, */
+       files:{sim:"sim/ipho2024_E2_web.html",
+              src:{ko:"src/ipho2024_E2_sim_KO.py", en:"src/ipho2024_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2024_E2_EN.pdf"},
+              sol:"pdf/IPhO_2024_S2.pdf"}}]},
    {y:2023,host:{ko:"일본 · 도쿄",en:"Tokyo, Japan"},cc:"jp",problems:papers("IPhO_2023", wip("Mass Measurement","Birefringence"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2022,host:{ko:"스위스 · 온라인",en:"Switzerland, online"},cc:"ch",
     problems:[
