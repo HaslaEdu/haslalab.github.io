@@ -643,7 +643,20 @@ const DATA={
               pdf:{en:"pdf/IPhO_2025_E2_EN.pdf"},
               sol:"pdf/IPhO_2025_S2.pdf"}}
     ]},
-   {y:2024,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",problems:papers("IPhO_2024", wip("Heat Conduction in a Copper Rod","Diffraction from Phase Steps"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2024,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",
+    problems:[
+      {id:"E1",
+       title:{ko:"구리 막대의 열전도",en:"Heat Conduction in a Copper Rod"},
+       desc:{ko:"AVA-T403 제어판의 히터·팬 스위치와 타이머·LAP 기록으로 짧은 막대의 PT100 저항과 서미스터 R9를, 긴 막대의 서미스터 7개 온도를 읽어 열용량·냉각 상수·띠간격과 λ·h·k, 그리고 모르는 히터 3의 출력을 구합니다.",
+             en:"Work the heater and fan switches, the timer and the LAP memory of the AVA-T403 to read the PT100 and thermistor R9 of a short rod and seven thermistors along a long one, then find a heat capacity, a cooling constant, an energy gap, λ, h, k and the power of the unknown heater 3."},
+       tags:["열전도","대류","서미스터"], tagsEn:["Heat conduction","Convection","Thermistors"],
+       /* exe : 빌드가 올라오면 되살린다
+              exe:{ko:REL+"v1.0/IPhO2024_E1_sim_KO.exe", en:REL+"v1.0/IPhO2024_E1_sim_EN.exe"}, */
+       files:{sim:"sim/ipho2024_E1_web.html",
+              src:{ko:"src/ipho2024_E1_sim_KO.py", en:"src/ipho2024_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2024_E1_EN.pdf"},
+              sol:"pdf/IPhO_2024_S1.pdf"}},
+      ...papers("IPhO_2024", wip("Heat Conduction in a Copper Rod","Diffraction from Phase Steps"), ["E1_EN", "S1"], ["E2_EN", "S2"]).slice(1)]},
    {y:2023,host:{ko:"일본 · 도쿄",en:"Tokyo, Japan"},cc:"jp",problems:papers("IPhO_2023", wip("Mass Measurement","Birefringence"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2022,host:{ko:"스위스 · 온라인",en:"Switzerland, online"},cc:"ch",
     problems:[

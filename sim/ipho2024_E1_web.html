@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2024 E1 — 구리 막대의 열전도 · Heat Conduction in a Copper Rod · HaslaLab</title>
+<meta name="description" content="IPhO 2024 실험 1번을 브라우저에서 실행합니다. AVA-T403 제어판의 스위치와 버튼으로 히터·팬·타이머를 다루고, 서미스터 7개·PT100·R9 값을 읽어 짧은 막대의 열용량·냉각 상수·띠간격, 긴 막대의 λ·h·k, 히터 3의 출력을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2024 E1 — 구리 막대의 열전도 · Heat Conduction in a Copper Rod">
+<meta property="og:description" content="IPhO 2024 실험 1번을 브라우저에서 실행합니다. 장치를 놓고 전원을 꽂은 뒤 AVA-T403의 화면과 타이머·LAP 기록을 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row">
+      <button id="swBtn"></button>
+      <button id="swLap"></button>
+      <button id="swReset"></button>
+    </div>
+    <div class="laps" id="laps"></div>
+
+    <h2 id="t-h-time"></h2>
+    <div class="row" id="speeds"></div>
+    <p class="hint" id="t-timehint"></p>
+
+    <h2 id="t-h-ava"></h2>
+    <p class="hint" id="t-avahint"></p>
+
+    <h2 id="t-h-mem"></h2>
+    <div class="laps" id="mem" style="max-height:220px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2024 실험 1 — 구리 막대의 열전도",
+    sub:"가상 실험실 · 장치를 놓고 전원을 연결한 뒤 AVA-T403의 스위치와 버튼을 다루고 화면을 읽으세요. 열용량·냉각 상수·띠간격·λ·h·k·히터 3의 출력은 직접 계산합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (앞에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 놓은 장비를 다시 클릭하면 옮기기",
+    closeCap:"확대 — 왼쪽: AVA-T403 제어판 (스위치·버튼 클릭, LAP을 5초 누르면 기록 삭제) · 오른쪽: 상자 아래에서 본 모습과 짧은 막대 (그림 3, 4)",
+    hSw:"스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
+    hTime:"시간 배속", timeHint:"막대가 데워지고 식는 데 실제로 수십 분이 걸립니다. 배속은 AVA의 타이머와 스톱워치에도 똑같이 적용됩니다.",
+    hAva:"AVA-T403",
+    avaHint:"서미스터 1–7의 온도(°C)는 왼쪽 열에, 마지막 줄에는 θb 또는 R9(Ω)가 나옵니다 — 아래 θb/R9 스위치로 바꿉니다. 오른쪽 위의 R은 PT100의 저항입니다.\nSTART/STOP: 타이머 시작·정지. 타이머가 돌 때 LAP을 누르면 화면의 값이 모두 저장되고, 멈췄을 때 누르면 타이머가 0이 됩니다 (기록은 남음). LAP을 5초 누르고 있으면 기록이 지워집니다.\nPREV/NEXT로 저장된 기록을 보고, LAP(EXIT)으로 돌아옵니다. 전원을 뽑으면 기록이 사라집니다.\n히터 1은 1.95 W, 히터 2는 명판에 P2 = 5.0 ± 0.1 W, 히터 3은 모릅니다.",
+    hMem:"AVA 메모리 (저장된 LAP)", memEmpty:"저장된 기록 없음",
+    items:{box:"금속 상자 · 구리 막대 · AVA-T403", psu:"24 V 전원 어댑터"},
+    lab:{heater:"HEATER", fan:"FAN", next:"NEXT", prev:"PREV", startStop:["START","STOP"], lapReset:["LAP","RESET","EXIT"],
+         below:"아래에서 본 모습 (그림 3)", short:"짧은 구리 막대 12.0 cm (그림 4)", sensor:i=>"서미스터 "+i, box8:"8 (θb, 상자 안 공기)",
+         heater1:"히터 1", heater2:"히터 2", heater3:"히터 3", pt100:"PT100", r9:"R9", styro:"스티로폼", noPower:"전원 없음",
+         outlet:"콘센트", dcjack:"24 V 입력", nameplate:"P2 = 5.0 ± 0.1 W"},
+    term:{mains:"어댑터 전원 플러그", dc:"어댑터 DC 플러그", outlet:"벽 콘센트", jack:"상자의 24 V 입력"},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", noPsu:"24 V 전원 어댑터를 놓고 연결하세요.", off:"AVA에 전원이 없습니다 — 어댑터를 콘센트와 상자에 꽂으세요.",
+        hot:"⚠ 화면에 \"Turn off Heater1\" — 지금 히터 1을 끄세요.", browse:"기록 보기 중 — LAP(EXIT)으로 돌아갑니다."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 실험대 위, 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       plug:n=>n+" 을(를) 집었습니다 — 꽂을 곳을 클릭하세요.", plugged:n=>n+" 에 꽂았습니다.", unplugged:"플러그를 뽑았습니다.", wrong:"그 플러그는 거기에 맞지 않습니다.",
+       powerOn:"AVA가 켜졌습니다.", powerOff:"AVA의 전원이 꺼졌습니다 — 저장된 기록이 지워졌습니다.",
+       sw:(n,on)=>n+" "+(on?"켬":"끔"), start:"타이머 시작", stop:"타이머 정지", lap:n=>"LAP "+n+" 저장", reset:"타이머를 0으로 (기록은 남음)",
+       erase:"저장된 기록을 모두 지웠습니다.", hold:"LAP을 계속 누르는 중… (5초면 기록 삭제)", browse:n=>"기록 "+n+" 보기", exit:"실시간 화면으로 돌아왔습니다.", none:"저장된 기록이 없습니다.",
+       toggle:s=>"마지막 줄: "+s, noPowerBtn:"AVA에 전원이 없습니다."}
+  },
+  en:{
+    title:"IPhO 2024 Experiment 1 — Heat conduction in a copper rod",
+    sub:"Virtual laboratory · put the apparatus down, plug it in, work the switches and keys of the AVA-T403 and read its monitor. Heat capacity, cooling constant, energy gap, λ, h, k and the power of heater 3 are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from the front) — L-click pick up / put down / plug / press, R-click return / unplug, click a placed item to move it",
+    closeCap:"close up — left: the AVA-T403 panel (click switches and keys; hold LAP 5 s to erase the data) · right: the box from below and the short rod (Figs. 3, 4)",
+    hSw:"Stopwatch", start:"Start", stop:"Stop", lap:"Lap", reset:"Reset",
+    hTime:"Time scale", timeHint:"Heating and cooling the rods really takes tens of minutes. The scale applies to AVA's timer and to the stopwatch alike.",
+    hAva:"AVA-T403",
+    avaHint:"The temperatures (°C) of thermistors 1–7 are in the left column, the last row shows θb or R9 (Ω) — switch with the θb/R9 toggle. R at the top right is the resistance of the PT100.\nSTART/STOP starts and stops the timer. LAP while it runs saves every displayed value; LAP while it is stopped resets the timer (the data stay). Hold LAP for 5 s to erase the data.\nPREV/NEXT show the saved data, LAP (EXIT) goes back. Unplugging erases the data.\nHeater 1 is 1.95 W, heater 2 is P2 = 5.0 ± 0.1 W on the nameplate, heater 3 is unknown.",
+    hMem:"AVA memory (saved LAPs)", memEmpty:"no saved data",
+    items:{box:"Metal box · copper rod · AVA-T403", psu:"24 V power supply"},
+    lab:{heater:"HEATER", fan:"FAN", next:"NEXT", prev:"PREV", startStop:["START","STOP"], lapReset:["LAP","RESET","EXIT"],
+         below:"view from below (Fig. 3)", short:"short copper rod, 12.0 cm (Fig. 4)", sensor:i=>"thermistor "+i, box8:"8 (θb, air in the box)",
+         heater1:"Heater 1", heater2:"Heater 2", heater3:"Heater 3", pt100:"PT100", r9:"R9", styro:"styrofoam", noPower:"no power",
+         outlet:"outlet", dcjack:"24 V in", nameplate:"P2 = 5.0 ± 0.1 W"},
+    term:{mains:"mains plug of the supply", dc:"DC plug of the supply", outlet:"wall outlet", jack:"24 V input of the box"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", noPsu:"Put the 24 V power supply down and connect it.", off:"AVA has no power — plug the supply into the outlet and into the box.",
+        hot:"⚠ \"Turn off Heater1\" on the monitor — switch heater 1 off now.", browse:"Browsing the saved data — LAP (EXIT) goes back."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it on the bench where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       plug:n=>n+" in hand — click where to plug it.", plugged:n=>"Plugged into the "+n+".", unplugged:"Plug pulled out.", wrong:"That plug does not fit there.",
+       powerOn:"AVA is on.", powerOff:"AVA lost power — the saved data are erased.",
+       sw:(n,on)=>n+" "+(on?"on":"off"), start:"Timer started", stop:"Timer stopped", lap:n=>"LAP "+n+" saved", reset:"Timer reset (the data stay)",
+       erase:"All saved data erased.", hold:"Holding LAP… (5 s erases the data)", browse:n=>"Saved data "+n, exit:"Back to the live display.", none:"No saved data.",
+       toggle:s=>"Last row: "+s, noPowerBtn:"AVA has no power."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2024e1)>>>0);
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const KB=8.61733e-5, R0=100.00, ALPHA=0.0039083, D_FAR=44.0;
+const SX=[0,7,14,21,28,35,42];                  /* thermistors 1..7, cm from the end of heater 2 */
+/* the apparatus of this session (the official solution is matched by the mean values) */
+const K={
+  P1:1.95, P2:5.00, P3r:0.600*(1+0.010*gauss()),
+  CS:49.8*(1+0.010*gauss()), gamma:710e-6*(1+0.008*gauss()), Eg:0.6983*(1+0.004*gauss()), R9_0:0.012012,
+  lam:0.0530*(1+0.012*gauss()), g0:3.446*(1+0.010*gauss()),
+  room:24.60+0.25*gauss(), boxGain:0.42, env:25.87+0.25*gauss()
+};
+const DELAY=32, TAU_LONG=420, TAU_BOX=240;
+const gfun=x=>K.g0*(Math.exp(-K.lam*x)+Math.exp(-2*K.lam*D_FAR)*Math.exp(K.lam*x));
+const PH={ t:0, short:K.env, tb:K.room, long:SX.map(()=>K.room), hist:[] };
+function heatersOn(){ const p=powered(); return [p&&ST.sw.h1, p&&ST.sw.h2, p&&ST.sw.h3]; }
+function steadyLong(){
+  const [,h2,h3]=heatersOn(), P2=h2?K.P2:0, P3=h3?K.P2*K.P3r:0;
+  const tb=K.room+K.boxGain*(P2+P3);
+  let prof=SX.map(x=>tb+P2*gfun(x)+P3*gfun(42-x));
+  if(!(powered()&&ST.sw.fan)) prof=prof.map(v=>tb+(v-tb)*1.35);       /* weaker convection without the fans */
+  return [prof,tb];
+}
+function physStep(dt){
+  let left=dt;
+  while(left>1e-9){
+    const h=Math.min(1.0,left); left-=h;
+    const [h1]=heatersOn(), P1=h1?K.P1:0;
+    PH.short+=(P1/K.CS-K.gamma*(PH.short-K.env))*h;
+    const [prof,tb]=steadyLong(), a=1-Math.exp(-h/TAU_LONG), b=1-Math.exp(-h/TAU_BOX);
+    for(let i=0;i<7;i++) PH.long[i]+=(prof[i]-PH.long[i])*a;
+    PH.tb+=(tb-PH.tb)*b;
+    PH.t+=h;
+    PH.hist.push([PH.t,PH.short,PH.long.slice(),PH.tb]);
+    while(PH.hist.length>2&&PH.hist[1][0]<PH.t-DELAY-5) PH.hist.shift();
+  }
+}
+PH.hist.push([0,PH.short,PH.long.slice(),PH.tb]);
+function delayed(){ const tgt=PH.t-DELAY; for(const e of PH.hist) if(e[0]>=tgt) return e; return PH.hist[PH.hist.length-1]; }
+const q=(v,s)=>Math.round(v/s)*s;
+/* what the AVA monitor shows: refreshed every 2 s */
+let reading=null, readT=-1e9;
+function readAVA(){
+  if(reading&&PH.t-readT<2) return reading;
+  const [,ths,thl,thb]=delayed();
+  const Rpt=R0*(1+ALPHA*(ths+0.004*gauss()));
+  const Tk=ths+273.15+0.010*gauss();
+  const R9=K.R9_0*Math.exp(K.Eg/(2*KB*Tk));
+  reading={R:q(Rpt,0.01), R9:Math.round(R9*(1+0.0015*gauss())), th:thl.map(v=>q(v+0.012*gauss(),0.01)), tb:q(thb+0.012*gauss(),0.01)};
+  readT=PH.t; return reading;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE AND GEOMETRY  (front view of the bench, 1200 × 720)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, TABLE_Y=560;
+const PLACE=["box","psu"];
+const SZ={box:[820,0], psu:[120,0]};             /* width on the table */
+const ST={
+  on:{box:false,psu:false}, x:{box:150,psu:1010},
+  plug:{mains:null, dc:null},                    /* null = lying on the table, else "outlet" / "jack" */
+  sw:{fan:false,h1:false,h2:false,h3:false}, show9:false,
+  timer:0, run:false, laps:[], view:-1, lapDown:null,
+  sw_t:0, swRun:false, swLaps:[]
+};
+const powered=()=>ST.on.box&&ST.on.psu&&ST.plug.mains==="outlet"&&ST.plug.dc==="jack";
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1;
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||d().term[k]||k;
+const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+/* the box: 820 px wide, 300 px tall body standing on its flanges */
+const BOX={w:820, top:TABLE_Y-372, h:300};
+const bx=()=>ST.x.box;
+const PANEL=()=>({x:bx()+245, y:BOX.top+70, s:0.55});           /* AVA panel, 600 × 360 units */
+const JACK=()=>[bx()+BOX.w-26, BOX.top+BOX.h-26];
+const OUTLET=[1150,430];
+const PSU_H=46;
+function plugPos(k){
+  if(ST.plug[k]==="outlet") return OUTLET.slice();
+  if(ST.plug[k]==="jack") return JACK();
+  const x=ST.x.psu; return k==="mains"? [x+SZ.psu[0]+34, TABLE_Y-6] : [x-34, TABLE_Y-6];
+}
+function overlapX(k,x){
+  const [w]=SZ[k];
+  if(x<10||x+w>LW-10) return true;
+  for(const o of PLACE){ if(o===k||!ST.on[o]) continue; const ow=SZ[o][0], ox=ST.x[o];
+    if(x<ox+ow+40&&x+w+40>ox) return true; }
+  return false;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  THE AVA-T403 PANEL  (Fig. 5; 600 × 360 panel units)
+   ══════════════════════════════════════════════════════════════ */
+const AVA_HIT={ fan:[30,45,50,75], h1:[30,195,48,80], h2:[84,195,48,80], h3:[138,195,48,80],
+  next:[478,72,44,84], start:[530,72,44,84], prev:[478,166,44,84], lap:[530,166,44,84], toggle:[392,288,130,42] };
+function avaHitAt(u,v){ for(const k in AVA_HIT){ const [x,y,w,h]=AVA_HIT[k]; if(u>=x&&u<=x+w&&v>=y&&v<=y+h) return k; } return null; }
+function rocker(x,y,w,h,on){
+  fillR(x,y,w,h,4,"#121214","#3a3a3e",1.2);
+  fillR(x+5,y+5,w-10,h-10,3,vgrad(y,h,on?[[0,"#141416"],[0.5,"#2b2b2f"],[1,"#3b3b40"]]:[[0,"#3b3b40"],[0.5,"#2b2b2f"],[1,"#141416"]]));
+  circ(x+w/2,y+h*0.3,5.5,null,"#eee",2);
+  ctx.strokeStyle="#eee"; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(x+w/2,y+h*0.6); ctx.lineTo(x+w/2,y+h*0.78); ctx.stroke();
+}
+function keyBtn(x,y,w,h,col,lab1,lab2,down){
+  fillR(x,y,w,h,14,"#0d0f12",col,2);
+  if(lab2) { text(lab1,x+w/2,y+16,"#e8eef2",8.5,"center","700"); text(lab2,x+w/2,y+27,"#e8eef2",8.5,"center","700"); }
+  else text(lab1,x+w/2,y+20,"#e8eef2",9,"center","700");
+  circ(x+w/2,y+h-26,11,down?"#050506":"#151618","#000",1.5); circ(x+w/2-2,y+h-28,4,down?"#111":"#2b2c30");
+}
+function drawAVA(ox,oy,s,isBench){
+  ctx.save(); ctx.translate(ox,oy); ctx.scale(s,s);
+  const t=d(), on=powered();
+  fillR(0,0,600,360,10,"#0c0d10","#2e3036",2);
+  for(const [x,y] of [[14,14],[586,14],[14,346],[586,346]]) circ(x,y,5,"#3a3c42","#111",1);
+  /* FAN */
+  text(t.lab.fan,40,30,"#e8eef2",10,"left","700");
+  rocker(...AVA_HIT.fan,ST.sw.fan); ctx.fillStyle="#32b6e8"; ctx.fillRect(34,128,42,4);
+  ctx.strokeStyle="#32b6e8"; ctx.lineWidth=2; for(let k=0;k<4;k++){ const a=k*Math.PI/2; ctx.beginPath(); ctx.arc(55+Math.cos(a)*4,148+Math.sin(a)*4,4,a,a+2); ctx.stroke(); }
+  /* the IPhO logo */
+  circ(150,80,30,null,"#cfd6e6",1.2); circ(160,80,28,null,"#8fa8d8",1); text("IPhO",160,80,"#f2f4f8",26,"center","300");
+  text("54th",206,104,"#d9b44a",8,"right","600"); text("Iran | Isfahan | 2024",160,120,"#c9ced8",7.5,"center");
+  /* HEATER */
+  text(t.lab.heater,96,184,"#e8eef2",10,"center","700");
+  fillR(26,190,166,94,4,"#18191c");
+  rocker(...AVA_HIT.h1,ST.sw.h1); rocker(...AVA_HIT.h2,ST.sw.h2); rocker(...AVA_HIT.h3,ST.sw.h3);
+  [["#e8c23a",30],["#e88a2a",84],["#e0442a",138]].forEach(([c,x],i)=>{ ctx.fillStyle=c; ctx.fillRect(x,287,48,4);
+    circ(x+24,306,9,null,c,1.6); ctx.strokeStyle=c; ctx.lineWidth=1.3;
+    for(let k=0;k<=i;k++){ const xx=x+24+(k-i/2)*4; ctx.beginPath(); ctx.moveTo(xx,301); ctx.quadraticCurveTo(xx+2,306,xx,311); ctx.stroke(); } });
+  fillR(30,322,16,12,3,"#1d5fa8"); text("Designed and produced by",54,327,"#e8eef2",8,"left","600"); text("AVA SMART WORLD",54,340,"#e8eef2",9,"left","800");
+  /* title and screen */
+  fillR(248,34,222,28,3,"#1a1b1f","#2b2d33",1); text("AVA-T403",256,48,"#f2f4f8",11,"left","800"); text("Heat Conduction in a Copper Rod",330,48,"#c9ced8",7,"left","600");
+  drawScreen(248,70,216,196,on);
+  /* keys */
+  const dn=k=>ST.press===k;
+  keyBtn(...AVA_HIT.next,"#2ab7c9",t.lab.next,null,dn("next"));
+  keyBtn(...AVA_HIT.start,"#3ccf6a",t.lab.startStop[0],t.lab.startStop[1],dn("start"));
+  keyBtn(...AVA_HIT.prev,"#2ab7c9",t.lab.prev,null,dn("prev"));
+  fillR(530,166,44,84,14,"#0d0f12","#ea7a3a",2); text(t.lab.lapReset[0],552,178,"#e8eef2",8,"center","700");
+  text(t.lab.lapReset[1],552,188,"#e8eef2",8,"center","700"); text(t.lab.lapReset[2],552,198,"#e8eef2",8,"center","700");
+  circ(552,224,11,ST.lapDown!==null?"#050506":"#151618","#000",1.5);
+  /* θb / R9 toggle */
+  fillR(...AVA_HIT.toggle,20,"#0d0f12","#e8d23a",2);
+  text("θb",408,309,"#e8eef2",13,"left","700"); text("R9",506,309,"#e8eef2",13,"right","700");
+  fillR(442,296,30,26,4,"#1d1e22","#000",1); fillR(ST.show9?457:443,298,14,22,3,"#3a3b40");
+  text("www.avasmartworld.com",586,346,"#c9ced8",8,"right","600");
+  ctx.restore();
+}
+function drawScreen(x,y,w,h,on){
+  fillR(x,y,w,h,3,"#050608","#2b2d33",1.5);
+  if(!on) return;
+  const t=d(), G="#7dff6a", O="#ff9a3c", B="#16325c";
+  ctx.fillStyle="#0b1424"; ctx.fillRect(x+3,y+3,w-6,h-6);
+  const browsing=ST.view>=0&&ST.laps[ST.view];
+  const rec=browsing? ST.laps[ST.view] : (()=>{ const r=readAVA(); return {th:r.th,tb:r.tb,R:r.R,R9:r.R9,t:Math.floor(ST.timer)}; })();
+  /* left column: NTC */
+  const cw=w*0.47, x2=x+cw+6, w2=w-cw-9;
+  ctx.fillStyle=B; ctx.fillRect(x+4,y+4,cw,12); text("NTC",x+4+cw/2,y+10,"#cfe3ff",7,"center","700");
+  const rowH=(h-22)/8;
+  for(let i=0;i<7;i++) text(("0"+(i+1))+": "+rec.th[i].toFixed(2)+"°c",x+7,y+22+rowH*(i+0.5),G,10.5,"left","700",MONO);
+  const last=ST.show9? "R9:"+String(rec.R9).padStart(6," ")+"Ω" : "θb: "+rec.tb.toFixed(2)+"°c";
+  text(last,x+7,y+22+rowH*7.5,G,10.5,"left","700",MONO);
+  /* right column: RTD, timer, status, lap count, heaters */
+  ctx.fillStyle=B; ctx.fillRect(x2,y+4,w2,12); text("RTD",x2+w2/2,y+10,"#cfe3ff",7,"center","700");
+  text("R:"+rec.R.toFixed(2)+"Ω",x2+w2/2,y+28,G,11.5,"center","700",MONO);
+  ctx.fillStyle=B; ctx.fillRect(x2,y+40,w2,11); text("Timer(Second)",x2+w2/2,y+45.5,"#cfe3ff",6.5,"center","700");
+  text(String(rec.t).padStart(5,"0"),x2+w2/2,y+63,G,15,"center","700",MONO);
+  ctx.fillStyle=B; ctx.fillRect(x2,y+78,w2/2-1,11); ctx.fillRect(x2+w2/2+1,y+78,w2/2-1,11);
+  text("Status",x2+w2/4,y+83.5,"#cfe3ff",6.5,"center","700"); text("Count Lap",x2+3*w2/4,y+83.5,"#cfe3ff",6.5,"center","700");
+  const stat=browsing?"Lap":ST.run?"Run":"Stop";
+  text(stat,x2+w2/4,y+101,browsing?"#7fd6ff":ST.run?G:"#ff5a4a",12,"center","700",MONO);
+  text(String(browsing?ST.view+1:ST.laps.length).padStart(2,"0"),x2+3*w2/4,y+101,G,12,"center","700",MONO);
+  ctx.fillStyle=B; ctx.fillRect(x2,y+116,w2,11); text("Fan and Heater's status",x2+w2/2,y+121.5,"#cfe3ff",6,"center","700");
+  if(hotWarn()&&Math.floor(performance.now()/500)%2===0){
+    text("Turn off",x2+w2/2,y+146,"#ff4a3a",11,"center","800",MONO); text("Heater1",x2+w2/2,y+162,"#ff4a3a",11,"center","800",MONO);
+  } else {
+    [["Fan",ST.sw.fan],["Heater1",ST.sw.h1],["Heater2",ST.sw.h2],["Heater3",ST.sw.h3]].forEach(([n,v],i)=>
+      text(n+": "+(v?"ON":"OFF"),x2+4,y+138+i*13,v?G:"#ff6a5a",8,"left","700",MONO));
+  }
+}
+const hotWarn=()=>powered()&&ST.sw.h1&&readAVA().R>=121;
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (Fig. 1 seen from the front)
+   ══════════════════════════════════════════════════════════════ */
+function bench(){
+  ctx.fillStyle=vgrad(0,TABLE_Y,[[0,"#3a3f47"],[1,"#2c3037"]]); ctx.fillRect(0,0,LW,TABLE_Y);
+  ctx.fillStyle=vgrad(TABLE_Y,LH-TABLE_Y,[[0,"#b98d5c"],[1,"#946c42"]]); ctx.fillRect(0,TABLE_Y,LW,LH-TABLE_Y);
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(0,TABLE_Y,LW,4);
+  ctx.strokeStyle="rgba(90,60,30,.25)"; ctx.lineWidth=1;
+  for(let y=TABLE_Y+18;y<LH;y+=22){ ctx.beginPath(); ctx.moveTo(0,y); ctx.bezierCurveTo(300,y+4,800,y-4,LW,y+2); ctx.stroke(); }
+  /* the wall outlet */
+  fillR(OUTLET[0]-26,OUTLET[1]-34,52,68,6,"#e9e6df","#a9a49a",1.2);
+  circ(OUTLET[0],OUTLET[1],15,"#d8d4cb","#a9a49a"); circ(OUTLET[0]-5,OUTLET[1],2.6,"#333"); circ(OUTLET[0]+5,OUTLET[1],2.6,"#333");
+  text(d().lab.outlet,OUTLET[0],OUTLET[1]+46,"#c9ced8",11,"center");
+}
+function styro(x,y,w,h){                       /* a styrofoam sleeve seen from the front */
+  fillR(x,y,w,h,h/2,vgrad(y,h,[[0,"#ffffff"],[0.5,"#eceae4"],[1,"#c9c6be"]]),"#b8b4aa",1);
+  ctx.fillStyle="rgba(0,0,0,.05)"; for(let i=0;i<14;i++) ctx.fillRect(x+6+((i*37)%(w-12)),y+4+((i*17)%(h-8)),2,2);
+}
+function wire(pts,col){ ctx.strokeStyle=col; ctx.lineWidth=3.5; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(...pts[0]);
+  ctx.bezierCurveTo(...pts[1],...pts[2],...pts[3]); ctx.stroke(); ctx.lineCap="butt"; }
+function drawBox(x){
+  const y=BOX.top, w=BOX.w, h=BOX.h, t=d();
+  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(x+20,TABLE_Y-6,w-40,8);
+  /* flanges and handles */
+  for(const [fx,dir] of [[x+14,-1],[x+w-14,1]]){ ctx.fillStyle="#1a1b1e"; ctx.beginPath(); ctx.moveTo(fx-12,y+h-6); ctx.lineTo(fx+12,y+h-6); ctx.lineTo(fx+dir*34,TABLE_Y); ctx.lineTo(fx+dir*14,TABLE_Y); ctx.closePath(); ctx.fill(); }
+  for(const hx of [x+22,x+w-38]){ ctx.strokeStyle="#1a1b1e"; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(hx,y+2); ctx.lineTo(hx,y-16); ctx.lineTo(hx+16,y-16); ctx.lineTo(hx+16,y+2); ctx.stroke(); }
+  /* heater wires behind the sleeves */
+  wire([[x-28,y+150],[x-70,y+190],[x-40,y+230],[x+10,y+205]],"#d0612a");
+  wire([[x+w+28,y+150],[x+w+70,y+190],[x+w+40,y+230],[x+w-10,y+205]],"#d0612a");
+  fillR(x,y,w,h,6,vgrad(y,h,[[0,"#25262a"],[1,"#18191c"]]),"#0c0c0e",1.5);
+  for(const [sx,sy] of [[x+40,y+30],[x+w-40,y+30],[x+40,y+h-30],[x+w-40,y+h-30],[x+w/2,y+18],[x+w/2,y+h-18]]) circ(sx,sy,3,"#3a3c42");
+  /* the long rod's styrofoam ends stick out on both sides */
+  styro(x-56,y+118,130,58); styro(x+w-74,y+118,130,58);
+  /* stickers */
+  const sticker=(sx,sy,lab,arrow)=>{ fillR(sx,sy,58,22,2,"#121316","#3a3c42",1); circ(sx+10,sy+11,5,null,"#e8a23a",1.2); text(lab,sx+18,sy+8,"#e8a23a",6.5,"left","700"); text(arrow,sx+30,sy+16,"#e8eef2",8,"center","700"); };
+  sticker(x+16,y+86,t.lab.heater,"←"); sticker(x+w-76,y+86,t.lab.heater,"→"); sticker(x+640,y+176,t.lab.heater,"↓");
+  /* the short rod in its styrofoam, right of the panel */
+  styro(x+590,y+206,160,60);
+  ctx.strokeStyle="#d0612a"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x+746,y+232); ctx.quadraticCurveTo(x+770,y+246,x+760,y+262); ctx.stroke();
+  /* the 24 V input */
+  const [jx,jy]=JACK(); circ(jx,jy,8,"#0a0a0b","#555",1.5); circ(jx,jy,2.5,"#888"); text(t.lab.dcjack,jx,jy-17,"#9aa3ab",9,"center");
+  const P=PANEL(); drawAVA(P.x,P.y,P.s,true);
+}
+function drawPsu(x){
+  const y=TABLE_Y-PSU_H;
+  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(x+4,TABLE_Y-4,SZ.psu[0],6);
+  fillR(x,y,SZ.psu[0],PSU_H,8,vgrad(y,PSU_H,[[0,"#2b2c30"],[1,"#141517"]]),"#000",1);
+  circ(x+SZ.psu[0]-16,y+12,2.5,powered()?"#3cf06a":"#2a3a2e");
+  text("24V DC 1A",x+12,y+PSU_H/2,"#9aa3ab",9,"left","700");
+}
+function cable(from,to,col,plugType){
+  const mid=[(from[0]+to[0])/2,Math.max(from[1],to[1])+60];
+  ctx.strokeStyle=col; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(...from);
+  ctx.bezierCurveTo(from[0],mid[1],to[0],mid[1],to[0],to[1]); ctx.stroke();
+  if(plugType==="mains"){ fillR(to[0]-9,to[1]-12,18,24,4,"#1b1c1f","#000",1); }
+  else { fillR(to[0]-5,to[1]-5,10,10,2,"#1b1c1f","#000",1); circ(to[0],to[1],2,"#aaa"); }
+}
+function drawCables(){
+  if(!ST.on.psu) return;
+  const x=ST.x.psu, y=TABLE_Y-PSU_H/2;
+  for(const k of ["mains","dc"]){
+    if(hand&&hand.k==="plug"&&hand.which===k) cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],mouse,"#151618",k);
+    else cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],plugPos(k),"#151618",k);
+  }
+}
+function drawBench(){
+  bench();
+  if(ST.on.box) drawBox(ST.x.box);
+  if(ST.on.psu) drawPsu(ST.x.psu);
+  drawCables();
+  if(hand&&PLACE.includes(hand.k)){
+    const x=Math.round(mouse[0]-SZ[hand.k][0]/2), ok=!overlapX(hand.k,x);
+    ctx.save(); ctx.globalAlpha=ok?0.75:0.35; if(hand.k==="box") drawBox(x); else drawPsu(x); ctx.restore(); }
+  if(overBench&&!hand){ const p=PANEL(); const k=avaHitAt((mouse[0]-p.x)/p.s,(mouse[1]-p.y)/p.s);
+    if(ST.on.box&&k){ const r=AVA_HIT[k]; ctx.strokeStyle="#f2c14e"; ctx.lineWidth=1.5; ctx.strokeRect(p.x+r[0]*p.s-2,p.y+r[1]*p.s-2,r[2]*p.s+4,r[3]*p.s+4); } }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  TRAY, LAYOUT, CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+function icon(k,x,y,s){
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
+  if(k==="box"){ fillR(-26,-14,52,26,3,"#1d1e22","#000"); fillR(-33,-6,12,10,5,"#f2f0ea"); fillR(21,-6,12,10,5,"#f2f0ea"); fillR(-9,-10,18,14,2,"#0c0d10","#3a3c42"); ctx.fillStyle="#7dff6a"; ctx.fillRect(-4,-7,8,7); }
+  else if(k==="psu"){ fillR(-18,-9,36,18,4,"#202124","#000"); ctx.strokeStyle="#151618"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(18,0); ctx.quadraticCurveTo(30,12,26,18); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-18,0); ctx.quadraticCurveTo(-30,12,-26,18); ctx.stroke(); }
+  ctx.restore();
+}
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["box","psu"], TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[], P1={}, P2={};
+const trayAvail=k=>!ST.on[k]&&!(hand&&hand.k===k);
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.40);
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  const h=CLH-16, w1=Math.round(Math.min(CLW*0.58,h*600/360));
+  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:CLW-24-w1,h};
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.k===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); if(c.measureText(nm).width>wd-52){ const p=nm.split(" · "); c.font='11px "Malgun Gothic",sans-serif'; c.fillText(p.length>2?p[0]+" · "+p[1]+" ·":nm,52,y+11); if(p.length>2) c.fillText(p[2],52,y+24); }
+    else c.fillText(nm,52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(av?t.trayTake:t.trayOut,52,y+36);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+let fanAng=0;
+function panelBg(P,col){ ctx.fillStyle=col; ctx.fillRect(P.x,P.y,P.w,P.h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(P.x+0.5,P.y+0.5,P.w-1,P.h-1); }
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  /* left: the panel */
+  panelBg(P1,"#101216");
+  if(ST.on.box){ const s=Math.min(P1.w/600,P1.h/360); P1.s=s; P1.ox=P1.x+(P1.w-600*s)/2; P1.oy=P1.y+(P1.h-360*s)/2; drawAVA(P1.ox,P1.oy,s,false); }
+  else text(d().st.none,P1.x+P1.w/2,P1.y+P1.h/2,"#69717a",12,"center");
+  /* right: the box from below and the short rod */
+  panelBg(P2,"#1a1c20");
+  if(ST.on.box) drawBelow(P2); else text("—",P2.x+P2.w/2,P2.y+P2.h/2,"#69717a",12,"center");
+  ctx=old;
+}
+function drawBelow(P){
+  const t=d(), k=P.w/64, x0=P.x+4*k;          /* 1 unit = 1 cm of the rod, rod from x0 to x0+57k */
+  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
+  text(t.lab.below,P.x+8,P.y+12,"#9aa3ab",11);
+  const yR=P.y+P.h*0.40, fanR=Math.min(6.4*k,P.h*0.17);
+  fillR(x0-2*k,yR-fanR-14,61*k,2*fanR+28,4,"#0d0e10","#2e3036",1.5);
+  for(let i=0;i<4;i++){ const fx=x0+(8.5+i*13.3)*k;
+    circ(fx,yR,fanR,"#141518","#2a2b30",1.2); ctx.save(); ctx.translate(fx,yR); ctx.rotate(fanAng+i*0.7);
+    for(let b=0;b<7;b++){ ctx.rotate(2*Math.PI/7); ctx.fillStyle="#26272c"; ctx.beginPath(); ctx.ellipse(fanR*0.55,0,fanR*0.42,fanR*0.16,0.5,0,7); ctx.fill(); }
+    ctx.restore(); circ(fx,yR,fanR*0.25,"#1c1d21","#33353b"); }
+  /* the rod, its two sleeves and the heaters inside */
+  const rr=Math.max(3,0.6*k);
+  ctx.fillStyle=vgrad(yR-rr,2*rr,[[0,"#e8a070"],[0.5,"#b8642e"],[1,"#7a3c18"]]); ctx.fillRect(x0,yR-rr,57*k,2*rr);
+  for(const [sx,lab] of [[x0-0.5*k,t.lab.heater2],[x0+50.5*k,t.lab.heater3]]){
+    fillR(sx,yR-2.2*k,7*k,4.4*k,2.2*k,"rgba(240,238,232,.93)","#b8b4aa",1);
+    ctx.fillStyle="#d43a2a"; ctx.fillRect(sx+(lab===t.lab.heater2?0.5:1.3)*k,yR-0.25*k,5.2*k,0.5*k);
+    text(lab,sx+3.5*k,yR+3.4*k,"#f0a080",10,"center","700"); }
+  /* the thermistors */
+  for(let i=0;i<7;i++){ const sx=x0+(7.5+SX[i])*k;
+    ctx.strokeStyle="#e8eef2"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(sx,yR-rr); ctx.lineTo(sx+3,yR-fanR-8); ctx.stroke();
+    circ(sx,yR,Math.max(2,rr*0.45),"#20242a","#e8eef2",1); text(String(i+1),sx,yR+rr+10,"#f2c14e",11,"center","700"); }
+  const s8=x0+29*k; ctx.strokeStyle="#e8eef2"; ctx.beginPath(); ctx.moveTo(s8,yR-fanR-14); ctx.lineTo(s8,yR-fanR*0.55); ctx.stroke();
+  circ(s8,yR-fanR*0.55,3,"#5ab0ff"); text(t.lab.box8,s8+6,yR-fanR*0.55,"#7fc4ff",9.5,"left");
+  for(let i=0;i<6;i++){ const a=x0+(7.5+SX[i])*k, b=x0+(7.5+SX[i+1])*k, yy=yR+rr+24;
+    ctx.strokeStyle="#69717a"; ctx.beginPath(); ctx.moveTo(a,yy); ctx.lineTo(b,yy); ctx.stroke(); text("7.0 cm",(a+b)/2,yy+8,"#9aa3ab",8.5,"center"); }
+  /* Fig. 4: the short rod */
+  const y4=P.y+P.h*0.80, L=Math.min(P.w*0.62,34*k), xs=P.x+(P.w-L)/2, hh=Math.max(14,P.h*0.09);
+  text(t.lab.short,P.x+8,y4-hh-14,"#9aa3ab",11);
+  ctx.fillStyle="#e8803a"; ctx.fillRect(xs,y4-hh/2,L,hh);
+  ctx.strokeStyle="rgba(120,50,10,.45)"; ctx.lineWidth=1; for(let u=0;u<L+hh;u+=8){ ctx.beginPath(); ctx.moveTo(xs+u,y4-hh/2); ctx.lineTo(xs+u-hh,y4+hh/2); ctx.stroke(); }
+  ctx.fillStyle="#e02a1e"; ctx.fillRect(xs+L*0.56,y4-hh*0.38,L*0.44,hh*0.76); text(t.lab.heater1,xs+L*0.78,y4,"#fff",10,"center","700");
+  ctx.fillStyle="#8c8f94"; ctx.fillRect(xs,y4,L*0.42,hh*0.36); text(t.lab.pt100,xs+L*0.21,y4+hh*0.18,"#111",8.5,"center","700");
+  ctx.fillStyle="#3aa04a"; ctx.fillRect(xs+L*0.18,y4-hh*0.44,L*0.08,hh*0.36); text(t.lab.r9,xs+L*0.22,y4-hh*0.26,"#fff",8,"center","700");
+  ctx.strokeStyle="#d43a2a"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(xs+L,y4-3); ctx.lineTo(xs+L+16,y4-3); ctx.moveTo(xs+L,y4+3); ctx.lineTo(xs+L+16,y4+3); ctx.stroke();
+  ctx.strokeStyle="#111"; ctx.lineWidth=1.5; for(const dy of [-hh*0.3,-hh*0.1,hh*0.15]){ ctx.beginPath(); ctx.moveTo(xs-16,y4+dy); ctx.lineTo(xs+4,y4+dy); ctx.stroke(); }
+  ctx.strokeStyle="#69717a"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(xs,y4+hh/2+10); ctx.lineTo(xs+L,y4+hh/2+10); ctx.stroke(); text("12.0 cm",xs+L/2,y4+hh/2+19,"#9aa3ab",9,"center");
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  THE AVA KEYS AND SWITCHES
+   ══════════════════════════════════════════════════════════════ */
+const SWNAME={fan:"FAN",h1:"HEATER 1",h2:"HEATER 2",h3:"HEATER 3"};
+function avaPress(k){
+  if(!ST.on.box) return;
+  if(k in ST.sw){ ST.sw[k]=!ST.sw[k]; say("sw",SWNAME[k],ST.sw[k]); return; }
+  if(k==="toggle"){ ST.show9=!ST.show9; say("toggle",ST.show9?"R9":"θb"); return; }
+  if(!powered()){ say("noPowerBtn"); return; }
+  ST.press=k; setTimeout(()=>{ if(ST.press===k) ST.press=null; },160);
+  if(k==="start"){ ST.run=!ST.run; say(ST.run?"start":"stop"); return; }
+  if(k==="next"||k==="prev"){
+    if(!ST.laps.length){ say("none"); return; }
+    if(ST.view<0) ST.view=ST.laps.length-1;
+    else ST.view=Math.max(0,Math.min(ST.laps.length-1,ST.view+(k==="next"?1:-1)));
+    say("browse",ST.view+1); return; }
+  if(k==="lap"){ ST.lapDown=performance.now(); ST.lapErased=false; }
+}
+function lapRelease(){
+  if(ST.lapDown===null) return;
+  const held=performance.now()-ST.lapDown; ST.lapDown=null;
+  if(ST.lapErased||held>=5000) return;
+  if(ST.view>=0){ ST.view=-1; say("exit"); return; }
+  if(ST.run){ const r=readAVA();
+    ST.laps.push({t:Math.floor(ST.timer),th:r.th.slice(),tb:r.tb,R:r.R,R9:r.R9}); say("lap",ST.laps.length); renderMem(); }
+  else { ST.timer=0; say("reset"); }
+}
+function eraseLaps(){ ST.laps=[]; ST.view=-1; renderMem(); }
+
+/* ══════════════════════════════════════════════════════════════
+   8.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function inItem(k,p){ if(!ST.on[k]) return false; const x=ST.x[k];
+  if(k==="box") return p[0]>=x-60&&p[0]<=x+BOX.w+60&&p[1]>=BOX.top-18&&p[1]<=TABLE_Y;
+  return p[0]>=x&&p[0]<=x+SZ.psu[0]&&p[1]>=TABLE_Y-PSU_H&&p[1]<=TABLE_Y; }
+function panelKeyAt(p){ if(!ST.on.box) return null; const P=PANEL(); return avaHitAt((p[0]-P.x)/P.s,(p[1]-P.y)/P.s); }
+function returnItem(k){
+  if(k==="box"){ if(ST.plug.dc==="jack") ST.plug.dc=null; }
+  if(k==="psu"){ ST.plug.mains=null; ST.plug.dc=null; }
+  ST.on[k]=false; say("back",itemName(k));
+}
+function returnHand(){
+  if(!hand) return;
+  if(hand.move){ ST.x[hand.k]=hand.orig; ST.on[hand.k]=true; say("stays"); }
+  hand=null;
+}
+function benchClick(p,right){
+  const t=d();
+  if(hand){
+    if(right){ returnHand(); return; }
+    if(PLACE.includes(hand.k)){ const x=Math.round(p[0]-SZ[hand.k][0]/2);
+      if(p[1]<BOX.top-40||overlapX(hand.k,x)){ say("noFit"); return; }
+      ST.x[hand.k]=x; ST.on[hand.k]=true; say("placed",itemName(hand.k)); hand=null; return; }
+    if(hand.k==="plug"){ const w=hand.which;
+      if(w==="mains"&&near(p,OUTLET,30)){ ST.plug.mains="outlet"; hand=null; say("plugged",t.term.outlet); return; }
+      if(w==="dc"&&ST.on.box&&near(p,JACK(),22)){ ST.plug.dc="jack"; hand=null; say("plugged",t.term.jack); return; }
+      if(near(p,OUTLET,30)||(ST.on.box&&near(p,JACK(),22))){ say("wrong"); return; }
+      if(p[1]>=TABLE_Y-20){ hand=null; say("unplugged"); return; }
+      say("wrong"); return; }
+    return;
+  }
+  if(right){
+    for(const k of ["mains","dc"]) if(ST.on.psu&&ST.plug[k]&&near(p,plugPos(k),16)){ ST.plug[k]=null; say("unplugged"); return; }
+    for(const k of ["psu","box"]) if(inItem(k,p)){ returnItem(k); return; }
+    return;
+  }
+  for(const k of ["mains","dc"]) if(ST.on.psu&&near(p,plugPos(k),16)){ ST.plug[k]=null; hand={k:"plug",which:k}; say("plug",t.term[k]); return; }
+  const key=panelKeyAt(p); if(key){ avaPress(key); return; }
+  for(const k of ["psu","box"]) if(inItem(k,p)){ hand={k,move:true,orig:ST.x[k]}; ST.on[k]=false;
+    if(k==="box"&&ST.plug.dc==="jack") ST.plug.dc=null;
+    say("moveIt",itemName(k)); return; }
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("pointerup",()=>lapRelease());
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); } drawTray(); return; } });
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0||!ST.on.box||!P1.s) return; const p=clpos(e);
+  const k=avaHitAt((p[0]-P1.ox)/P1.s,(p[1]-P1.oy)/P1.s); if(k) avaPress(k); });
+closeCv.addEventListener("pointermove",e=>{ if(!ST.on.box||!P1.s) return; const p=clpos(e);
+  closeCv.style.cursor=avaHitAt((p[0]-P1.ox)/P1.s,(p[1]-P1.oy)/P1.s)?"pointer":"default"; });
+
+/* ══════════════════════════════════════════════════════════════
+   9.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
+$("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
+$("swLap").onclick=()=>{ ST.swLaps.unshift(fmt(ST.sw_t)); ST.swLaps=ST.swLaps.slice(0,40); renderPanel(); };
+$("swReset").onclick=()=>{ ST.sw_t=0; ST.swLaps=[]; ST.swRun=false; renderPanel(); };
+function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
+  for(const s of [1,5,20,60]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
+    b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
+function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
+  $("laps").innerHTML=ST.swLaps.map((s,i)=>"<div>"+(ST.swLaps.length-i)+". "+s+"</div>").join(""); }
+function renderMem(){
+  const box=$("mem");
+  if(!ST.laps.length){ box.textContent=d().memEmpty; return; }
+  box.innerHTML=ST.laps.map((l,i)=>"<div>"+String(i+1).padStart(2,"0")+"  t="+String(l.t).padStart(5,"0")+" s  R="+l.R.toFixed(2)+" Ω<br>&nbsp;&nbsp;θ1–7: "+
+    l.th.map(v=>v.toFixed(2)).join(" ")+"<br>&nbsp;&nbsp;θb="+l.tb.toFixed(2)+" °C  R9="+l.R9+" Ω</div>").join("");
+  box.scrollTop=box.scrollHeight;
+}
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.box) L.push([t.st.none,false]);
+  else if(!ST.on.psu) L.push([t.st.noPsu,false]);
+  else if(!powered()) L.push([t.st.off,false]);
+  if(hotWarn()) L.push([t.st.hot,true]);
+  if(ST.view>=0) L.push([t.st.browse,false]);
+  if(ST.lapDown!==null&&performance.now()-ST.lapDown>600&&!ST.lapErased) L.push([t.m.hold,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
+  $("t-h-ava").textContent=t.hAva; $("t-avahint").textContent=t.avaHint; $("t-h-mem").textContent=t.hMem;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2024 E1 — 구리 막대의 열전도 · HaslaLab":"IPhO 2024 E1 — Heat Conduction in a Copper Rod · HaslaLab";
+  renderPanel(); renderSpeeds(); renderMem(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+let tPrev=performance.now()/1000, frameN=0, wasPowered=false;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  const sdt=dt*speed;
+  physStep(sdt);
+  const pw=powered();
+  if(pw&&!wasPowered){ say("powerOn"); readT=-1e9; }
+  if(!pw&&wasPowered){ ST.run=false; ST.timer=0; if(ST.laps.length) say("powerOff"); eraseLaps(); }
+  wasPowered=pw;
+  if(pw&&ST.run) ST.timer+=sdt;
+  if(ST.swRun) ST.sw_t+=sdt;
+  if(ST.lapDown!==null&&!ST.lapErased&&performance.now()-ST.lapDown>=5000){ ST.lapErased=true; eraseLaps(); say("erase"); }
+  if(pw&&ST.sw.fan) fanAng+=dt*25;
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  $("swLbl").textContent=fmt(ST.sw_t);
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
