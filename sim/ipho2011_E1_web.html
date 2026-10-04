@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#2E3945">
+<meta name="theme-color" content="#1c2027">
 <title>IPhO 2011 E1 — 전기 블랙박스 · Electrical Blackbox · HaslaLab</title>
 <meta name="description" content="IPhO 2011 실험 1번을 브라우저에서 실행합니다. 발진기에 물린 정전용량식 변위 센서의 주파수를 멀티미터로 읽고, 알려진 축전기로 눈금을 매깁니다. 계산은 대신 해주지 않습니다.">
 <link rel="canonical" href="https://haslalab.org/sim/ipho2011_E1_web.html">
@@ -20,68 +20,86 @@
 <meta name="twitter:image" content="https://haslalab.org/og.png">
 <style>
   :root{
-    --bg:#f4f6f8; --panel:#ffffff; --ink:#1b2430; --muted:#5b6b7c;
-    --line:#d8e0e8; --accent:#2c6f9b; --accent-soft:#eaf4fb;
-    --disp-bg:#101418; --disp-fg:#8fd6ff;
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html,body{margin:0;padding:0}
   body{
     background:var(--bg); color:var(--ink);
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1560px;margin:0 auto;padding:16px;display:flex;gap:16px;align-items:flex-start}
-  @media (max-width:1080px){ .wrap{flex-direction:column} }
-
-  /* ── control panel ── */
-  .panel{
-    flex:0 0 290px; background:var(--panel); border:1px solid var(--line);
-    border-radius:10px; padding:14px; position:sticky; top:16px;
-  }
-  @media (max-width:1080px){ .panel{position:static;flex:1 1 auto;width:100%} }
-  .panel h2{
-    font-size:12px; letter-spacing:.04em; text-transform:uppercase;
-    color:var(--accent); margin:16px 0 7px; padding-bottom:5px;
-    border-bottom:1px solid var(--line);
-  }
-  .panel h2:first-of-type{margin-top:0}
-  button{
-    width:100%; padding:8px 10px; margin:4px 0; cursor:pointer;
-    background:#fff; border:1px solid var(--line); border-radius:6px;
-    font:inherit; font-size:13px; color:var(--ink); text-align:left;
-    transition:background .12s,border-color .12s;
-  }
-  button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
-  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
-  button.primary:hover:not(:disabled){background:#22587c}
-  .readout{
-    font:12.5px ui-monospace,Consolas,monospace; color:var(--muted);
-    background:#f7f9fb; border:1px solid var(--line); border-radius:6px;
-    padding:6px 8px; margin-top:8px;
-  }
-  .note{font-size:11.5px;color:#8494a3;line-height:1.65;margin-top:10px;white-space:pre-line}
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
 
   /* ── stage ── */
-  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-  .card h3{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--muted)}
-  canvas{display:block;width:100%;height:auto;border-radius:6px;touch-action:none}
-  #bench{cursor:default}
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
 
   /* ── header ── */
-  header{
-    max-width:1560px;margin:0 auto;padding:18px 16px 0;
-    display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap
-  }
-  header h1{margin:0;font-size:19px;font-weight:650}
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
-  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#fff}
-  .lang button{
-    width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;
-    font-size:13px;font-weight:600;color:var(--muted);text-align:center
-  }
-  .lang button.on{background:var(--accent);color:#fff}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;white-space:pre-wrap}
+  .panel button{width:100%}
+  #bench{touch-action:none}
+  #closeCv{max-width:760px;margin:0 auto}
 </style>
 </head>
 <body>
@@ -98,24 +116,30 @@
 </header>
 
 <div class="wrap">
-  <!-- ═══════════ CONTROLS ═══════════ -->
-  <aside class="panel">
-    <h2 id="t-h-bench"></h2>
-    <button id="btnBatt"></button>
-    <button id="btnReset" class="primary"></button>
-
-    <h2 id="t-h-table"></h2>
-    <div class="readout" id="t-t1"></div>
-    <p class="note" id="t-note"></p>
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
   </aside>
 
-  <!-- ═══════════ STAGE ═══════════ -->
   <div class="stage">
     <div class="card">
       <h3 id="t-benchcap"></h3>
       <canvas id="bench"></canvas>
     </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
   </div>
+
+  <aside class="panel">
+    <h2 id="t-h-table"></h2>
+    <div class="read" id="t-t1"></div>
+    <h2 id="t-h-bench"></h2>
+    <button id="btnReset"></button>
+    <p class="hint" id="t-note"></p>
+    <div class="status" id="status"></div>
+  </aside>
 </div>
 
 <script>
@@ -128,7 +152,13 @@ const T = {
   ko:{
     title:"IPhO 2011 실험 1 — 전기 블랙박스 : 정전용량식 변위 센서",
     sub:"가상 실험실 · 리드선 끝을 끌어다 단자에 물리고, 위 극판을 밀어 보세요",
-    hBench:"실험대", newbatt:"새 건전지", reset:"처음으로",
+    hBench:"실험대", newbatt:"새 건전지", reset:"처음으로 (모두 되돌리기)",
+    tray:"부품함", trayTake:"클릭해서 집기", trayOut:"실험대 위", trayAlways:"클릭한 뒤 발진기의 건전지를 클릭",
+    trayHelp:"좌클릭 집기 · 놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    itCap:c=>"축전기 "+c, itBatt:"9 V 건전지 상자 (새것·헌것 섞임)",
+    closecap:"클로즈업 — 왼쪽: MASTECH 멀티미터 / 오른쪽: 위 극판 끝과 mm 눈금 (3배)",
+    mBatt:"발진기의 건전지를 상자에서 꺼낸 다른 건전지로 바꿨습니다.", mNeedBatt:"건전지는 발진기 위의 9 V 건전지 자리를 클릭해서 바꿉니다.",
+    mCapOn:c=>"축전기 "+c+" 을(를) 실험대에 놓았습니다.", mCapBack:c=>"축전기 "+c+" 을(를) 부품함에 넣었습니다.",
     hTable:"TABLE 1 — 축전기 표시값",
     t1:"TABLE 1   33J: 34±1   68: 68±1   82J: 84±1   151: 150±1  (pF)",
     benchcap:"실험대 — 나무 밑판 위의 블랙박스 · 발진기 · MASTECH 멀티미터",
@@ -144,7 +174,13 @@ const T = {
   en:{
     title:"IPhO 2011 Experiment 1 — Electrical Blackbox: Capacitive Displacement Sensor",
     sub:"Virtual laboratory · drag the lead ends onto the terminals and push the upper plate",
-    hBench:"Bench", newbatt:"New battery", reset:"Restart",
+    hBench:"Bench", newbatt:"New battery", reset:"Restart (put everything back)",
+    tray:"Parts box", trayTake:"click to pick up", trayOut:"on the bench", trayAlways:"click, then click the oscillator battery",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    itCap:c=>"Capacitor "+c, itBatt:"Box of 9 V batteries (new and flat mixed)",
+    closecap:"close-up — left: the MASTECH multimeter / right: the edge of the upper plate on the mm scale (3×)",
+    mBatt:"The oscillator battery was swapped for another one from the box.", mNeedBatt:"Click the 9 V battery on the oscillator to swap it.",
+    mCapOn:c=>"Capacitor "+c+" put on the bench.", mCapBack:c=>"Capacitor "+c+" put back in the box.",
     hTable:"TABLE 1 — marking on the capacitors",
     t1:"TABLE 1   33J: 34±1   68: 68±1   82J: 84±1   151: 150±1  (pF)",
     benchcap:"bench — the blackbox, the oscillator and the MASTECH multimeter on the wooden base",
@@ -241,9 +277,9 @@ function frequency(Ctot, battV){
 /* ══════════════════════════════════════════════════════════════
    3.  CANVAS — a thin tkinter-shaped drawing layer
    ══════════════════════════════════════════════════════════════ */
-const CW = 1340, CH = 760;             /* logical canvas size, as in Python */
+const CW = 1340, CH = 624;             /* logical canvas size, as in Python */
 const cv = $("bench");
-const ctx = cv.getContext("2d");
+let ctx = cv.getContext("2d"); const benchCtx = ctx;
 let DPR = 1, cssW = CW;
 
 const PT = 4/3;                        /* tk point size -> css pixels */
@@ -764,9 +800,6 @@ function redraw(){
 
   /* --- bench and tray --------------------------------------------- */
   gRect(0,0,CW,CH,C_BG,null);
-  gRect(0,624,1080,CH,C_TRAY,null);
-  gLine([[0,624],[1080,624]],"#a9afb0",2);
-  gText(12,630,T[lang].t1,"#333",fnt(9),"nw");
 
   /* --- the board, layer by layer ----------------------------------- */
   const st = osc();
@@ -829,10 +862,6 @@ function redraw(){
     gOval(jx-6,jy-6,jx+6,jy+6,"#d8b24a","#8a6b1f",1);
 
   /* --- the component tray -------------------------------------------- */
-  for(let i=0;i<4;i++){
-    const [x,y]=trayXY(i);
-    artCapCard(x,y,CARD_S,CAPS[i][0], SC.caps[i]!==undefined);
-  }
   if(drag && drag[0]==="card")
     artCapBody(drag[2],drag[3],BODY_S,CAPS[drag[1]][0],true);
   if(drag && (drag[0]==="probe"||drag[0]==="clip"||drag[0]==="batt")){
@@ -875,14 +904,6 @@ function press(ex,ey){
       drag=["card",i,ex,ey]; return;
     }
   }
-  for(let i=0;i<4;i++){
-    if(SC.caps[i]!==undefined) continue;
-    const [x,y]=trayXY(i);
-    const bx=x, by=y+24*CARD_S;
-    if(Math.abs(ex-bx) < 40*CARD_S && Math.abs(ey-by) < 48*CARD_S){
-      SC.caps[i]=[ex,ey]; drag=["card",i,ex,ey]; return;
-    }
-  }
 }
 let lastMt = 0;
 function motion(ex,ey){
@@ -909,7 +930,7 @@ function release(ex,ey){
     const i=d[1];
     delete SC.stack[i];
     for(const j of Object.keys(SC.stack)) if(SC.stack[j]===i) delete SC.stack[j];
-    if(ey > 624 && ex < 1080){                 /* put it back in the tray */
+    if(ey > CH + 40){                           /* dropped off the bench: back in the box */
       delete SC.caps[i];
     }else{
       const y = Math.max(60, Math.min(CH-80, ey));
@@ -965,7 +986,8 @@ function wheel(ex,ey,d){
 let down = false;
 cv.addEventListener("pointerdown", e=>{
   const [x,y]=evXY(e); down=true; cv.setPointerCapture(e.pointerId);
-  press(x,y); dirty=true; e.preventDefault();
+  if(e.button===2){ e.preventDefault(); return; }
+  if(hand!==null){ down=false; placeFromHand(x,y); } else press(x,y); dirty=true; drawTray(); e.preventDefault();
 });
 cv.addEventListener("pointermove", e=>{
   if(!down) return;
@@ -984,8 +1006,7 @@ cv.addEventListener("wheel", e=>{
 /* ══════════════════════════════════════════════════════════════
    9.  PANEL
    ══════════════════════════════════════════════════════════════ */
-$("btnBatt").onclick = ()=>{ SC.battV = newBattery(0.15); dirty=true; };
-$("btnReset").onclick = ()=>{ scReset(); sel=null; drag=null; dirty=true; };
+$("btnReset").onclick = ()=>{ scReset(); sel=null; drag=null; hand=null; dirty=true; drawTray(); };
 
 /* ══════════════════════════════════════════════════════════════
    10.  LANGUAGE
@@ -999,7 +1020,7 @@ function applyLang(){
   $("t-title").textContent = d.title;
   $("t-sub").textContent   = d.sub;
   $("t-h-bench").textContent = d.hBench;
-  $("btnBatt").textContent   = d.newbatt;
+  $("t-tray").textContent = d.tray; $("t-closecap").textContent = d.closecap;
   $("btnReset").textContent  = d.reset;
   $("t-h-table").textContent = d.hTable;
   $("t-t1").textContent      = d.t1;
@@ -1024,6 +1045,7 @@ function layout(){
   cv.style.height = cssH + "px";
   cv.width  = Math.round(cssW*DPR);
   cv.height = Math.round(cssH*DPR);
+  trayLayout(); closeLayout();
   dirty = true;
 }
 /* the 220 ms housekeeping tick of the Python version */
@@ -1038,13 +1060,114 @@ setInterval(()=>{
 }, 220);
 
 function tick(){
-  if(dirty){ redraw(); dirty = false; }
+  if(dirty){ redraw(); drawHand(); drawClose(); dirty = false; }
   requestAnimationFrame(tick);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   12.  PARTS BOX, HAND AND CLOSE-UP
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
+const TRAY=[0,1,2,3,"batt"], TROW=48;
+let hand=null, hover=null, TRW=190, trayCells=[], msg={k:null,a:[],t:0};
+function say(k,...a){ msg={k,a,t:performance.now()}; renderStatus(); }
+function renderStatus(){
+  const box=$("status"); box.innerHTML="";
+  if(msg.k&&performance.now()-msg.t<9000){ const f=T[lang][msg.k]; const el=document.createElement("div");
+    el.textContent="• "+(typeof f==="function"?f(...msg.a):f); box.appendChild(el); }
+}
+setInterval(renderStatus,1000);
+function trayLayout(){
+  const dpr=window.devicePixelRatio||1, r=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(r.width-16)); const h=TRAY.length*TROW+50;
+  trayCv.style.height=h+"px"; trayCv.width=Math.round(TRW*dpr); trayCv.height=Math.round(h*dpr);
+  drawTray();
+}
+const trayAvail=k=>k==="batt"?hand!=="batt":(SC.caps[k]===undefined&&hand!==k);
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, d=T[lang], h=TRAY.length*TROW+50;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,h);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY){
+    const av=trayAvail(k), sel=hand===k;
+    c.fillStyle=av||sel?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+.5,wd-1,TROW-5);
+    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av||sel?1:.35;
+    if(k==="batt"){ gRect(12,y+12,40,y+32,C_BATT,"#232326",1); gRect(16,y+15,36,y+27,"#ececed",null); gText(26,y+38,"9V","#aaa",fnt(6),"c"); }
+    else artCapBody(28,y+(TROW-4)/2+2,0.42,CAPS[k][0],true);
+    ctx.restore(); ctx=old;
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av||sel?"#e8eef2":"#868e96"; let nm=k==="batt"?d.itBatt:d.itCap(CAPS[k][0]);
+    while(c.measureText(nm).width>wd-52&&nm.length>4) nm=nm.slice(0,-2)+"…"; c.fillText(nm,50,y+14);
+    c.font='9.5px "Malgun Gothic",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(sel?"":k==="batt"?d.trayAlways:(av?d.trayTake:d.trayOut),50,y+30);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  d.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function placeFromHand(ex,ey){
+  if(hand==="batt"){
+    if(ex>X(47)&&ex<X(180)&&ey>Y(26)&&ey<Y(93)){ SC.battV=newBattery(0.30); hand=null; say("mBatt"); }
+    else say("mNeedBatt");
+    dirty=true; drawTray(); return;
+  }
+  const i=hand; hand=null;
+  SC.caps[i]=[ex,ey]; drag=["card",i,ex,ey]; release(ex,ey);
+  say("mCapOn",CAPS[i][0]); dirty=true; drawTray();
+}
+function capAt(ex,ey){
+  for(const key of Object.keys(SC.caps)){ const [x,y]=SC.caps[key];
+    if(Math.abs(ex-x)<34*BODY_S&&Math.abs(ey-y)<48*BODY_S) return +key; }
+  return null;
+}
+cv.addEventListener("contextmenu",e=>{ e.preventDefault();
+  if(hand!==null){ hand=null; dirty=true; drawTray(); return; }
+  const [x,y]=evXY(e), i=capAt(x,y); if(i===null) return;
+  delete SC.caps[i]; delete SC.stack[i]; for(const j of Object.keys(SC.stack)) if(SC.stack[j]===i) delete SC.stack[j];
+  say("mCapBack",CAPS[i][0]); dirty=true; drawTray(); });
+cv.addEventListener("pointermove",e=>{ hover=evXY(e); if(hand!==null) dirty=true; });
+cv.addEventListener("pointerleave",()=>{ hover=null; if(hand!==null) dirty=true; });
+let trayDrag=false;
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; dirty=true; drawTray(); });
+trayCv.addEventListener("pointerdown",e=>{
+  if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand===k; hand=null; if(!same&&trayAvail(k)) hand=k; dirty=true; drawTray(); return; } });
+window.addEventListener("pointerup",e=>{ if(trayDrag&&hand!==null&&e.target===cv){ const [x,y]=evXY(e); placeFromHand(x,y); } trayDrag=false; });
+function drawHand(){
+  if(hand===null||!hover) return;
+  ctx.save(); ctx.globalAlpha=.8;
+  if(hand==="batt"){ gRect(hover[0]-30,hover[1]-16,hover[0]+30,hover[1]+16,C_BATT,"#232326",2); gRect(hover[0]-22,hover[1]-10,hover[0]+22,hover[1]+6,"#ececed",null); }
+  else artCapBody(hover[0],hover[1],BODY_S,CAPS[hand][0],true);
+  ctx.restore();
+}
+
+/* the close-up: the meter face, and the plate edge on the scale */
+const closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), CLW=760, CLH=300;
+let clW=CLW;
+function closeLayout(){
+  const dpr=window.devicePixelRatio||1; clW=Math.min(CLW,closeCv.parentElement.clientWidth-20);
+  closeCv.style.width=clW+"px"; closeCv.style.height=(clW*CLH/CLW)+"px";
+  closeCv.width=Math.round(clW*dpr); closeCv.height=Math.round(clW*CLH/CLW*dpr);
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, k=clW/CLW*dpr, old=ctx; ctx=closeCtx;
+  ctx.setTransform(k,0,0,k,0,0); gRect(0,0,CLW,CLH,"#15181d",null);
+  artDMM(14,6,0.65,SC.dial,display(),unitTxt());
+  const S3=3, xr=825+SC.slide*PXMM, ox=200+280-xr*S3, oy=-300*S3+14;
+  ctx.save(); ctx.beginPath(); ctx.rect(200,8,550,284); ctx.clip();
+  gRect(200,8,750,292,C_BG,null);
+  artBoard(ox,oy,S3,SC.slide,SC.swOn,osc(),"bot");
+  artBoard(ox,oy,S3,SC.slide,SC.swOn,osc(),"slider");
+  ctx.restore(); gRect(200.5,8.5,749.5,291.5,null,"#3a4048",1.5);
+  ctx=old;
 }
 
 window.addEventListener("resize", layout);
 layout(); applyLang(); requestAnimationFrame(tick);
 </script>
-  <script src="adfit.js"></script>
+<script src="adfit.js"></script>
 </body>
 </html>

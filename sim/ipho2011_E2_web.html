@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#2E3945">
+<meta name="theme-color" content="#1c2027">
 <title>IPhO 2011 E2 — 역학 블랙박스 · Mechanical Blackbox · HaslaLab</title>
 <meta name="description" content="IPhO 2011 실험 2번을 브라우저에서 실행합니다. 공이 든 원통을 실 고리로 매달아 무게중심을 찾고, 구멍마다 걸어 진자 주기를 재어 공의 위치와 질량비를 알아냅니다. 계산은 대신 해주지 않습니다.">
 <link rel="canonical" href="https://haslalab.org/sim/ipho2011_E2_web.html">
@@ -20,84 +20,92 @@
 <meta name="twitter:image" content="https://haslalab.org/og.png">
 <style>
   :root{
-    --bg:#f4f6f8; --panel:#ffffff; --ink:#1b2430; --muted:#5b6b7c;
-    --line:#d8e0e8; --accent:#2c6f9b; --accent-soft:#eaf4fb;
-    --disp-bg:#101418; --disp-fg:#8fd6ff;
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html,body{margin:0;padding:0}
   body{
     background:var(--bg); color:var(--ink);
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1500px;margin:0 auto;padding:12px 16px 16px;display:flex;gap:16px;align-items:flex-start}
-  @media (max-width:1080px){ .wrap{flex-direction:column} }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
 
   /* ── stage ── */
-  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-  .card h3{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--muted)}
-  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:crosshair}
-  #bench.grabbing{cursor:grabbing}
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
 
   /* ── control panel ── */
-  .panel{
-    flex:0 0 300px; background:var(--panel); border:1px solid var(--line);
-    border-radius:10px; padding:14px; position:sticky; top:12px;
-  }
-  @media (max-width:1080px){ .panel{position:static;flex:1 1 auto;width:100%} }
-  .panel h2{
-    font-size:12px; letter-spacing:.04em; text-transform:uppercase;
-    color:var(--accent); margin:16px 0 7px; padding-bottom:5px;
-    border-bottom:1px solid var(--line);
-  }
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
-  button{
-    width:100%; padding:8px 10px; margin:4px 0; cursor:pointer;
-    background:#fff; border:1px solid var(--line); border-radius:6px;
-    font:inherit; font-size:13px; color:var(--ink); text-align:left;
-    transition:background .12s,border-color .12s;
-  }
-  button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
-  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
-  button.primary:hover:not(:disabled){background:#22587c}
-  .row{display:flex;gap:6px}
-  .row button{flex:1;text-align:center;margin:4px 0}
-  .readout{
-    font:12.5px ui-monospace,Consolas,monospace; color:var(--muted);
-    background:#f7f9fb; border:1px solid var(--line); border-radius:6px;
-    padding:6px 8px; margin-top:8px;
-  }
-  .status{
-    font:12.5px/1.6 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;
-    color:var(--accent); background:#f7f9fb; border:1px solid var(--line);
-    border-radius:6px; padding:8px 9px; margin-top:2px; min-height:42px;
-  }
-  .note{font-size:11.5px;color:#8494a3;line-height:1.65;margin:8px 0 0;white-space:pre-line}
-  #sw{display:block;margin:2px auto 0;background:#eef1ec;border-radius:6px;cursor:pointer}
-  .hidden{display:none !important}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
 
-  /* ── header + tabs ── */
-  header{
-    max-width:1500px;margin:0 auto;padding:18px 16px 0;
-    display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap
-  }
-  header h1{margin:0;font-size:19px;font-weight:650}
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
-  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#fff}
-  .lang button{
-    width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;
-    font-size:13px;font-weight:600;color:var(--muted);text-align:center
-  }
-  .lang button.on{background:var(--accent);color:#fff}
-  .tabs{max-width:1500px;margin:0 auto;padding:12px 16px 0;display:flex;gap:8px;flex-wrap:wrap}
-  .tabs button{
-    width:auto;margin:0;padding:8px 16px;border-radius:8px 8px 0 0;
-    border:1px solid var(--line);border-bottom-color:transparent;
-    background:#eceff3;color:var(--muted);font-weight:600;font-size:13px;text-align:center
-  }
-  .tabs button.on{background:var(--panel);color:var(--accent);border-bottom-color:var(--panel)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .hidden{display:none!important}
+  .readout{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9}
+  #actA button,#btnNew{width:100%}
+  #bench{touch-action:none;cursor:grab}
+  #bench.grabbing{cursor:grabbing}
+  #sw{display:block;margin:4px auto;border-radius:8px}
+  #closeCv{max-width:760px;margin:0 auto}
+  .tabs{margin-bottom:6px}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  .status{white-space:pre-wrap}
 </style>
 </head>
 <body>
@@ -113,25 +121,26 @@
   </div>
 </header>
 
-<div class="tabs">
-  <button id="tabA" class="on"></button>
-  <button id="tabB"></button>
-</div>
-
 <div class="wrap">
-  <!-- ═══════════ STAGE ═══════════ -->
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
   <div class="stage">
     <div class="card">
+      <div class="tabs"><button id="tabA" class="on"></button><button id="tabB"></button></div>
       <h3 id="t-benchcap"></h3>
       <canvas id="bench"></canvas>
     </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
   </div>
 
-  <!-- ═══════════ CONTROLS ═══════════ -->
   <aside class="panel">
     <h2 id="t-h-part"></h2>
-    <div class="status" id="status"></div>
-
     <div id="actA">
       <button id="btnHold"></button>
       <button id="btnRehang"></button>
@@ -139,7 +148,6 @@
     <div id="actB" class="hidden">
       <div class="readout" id="selLbl"></div>
     </div>
-
     <div id="swBox" class="hidden">
       <h2 id="t-h-sw"></h2>
       <canvas id="sw" width="254" height="182"></canvas>
@@ -149,7 +157,6 @@
         <button id="swReset"></button>
       </div>
     </div>
-
     <h2 id="t-h-view"></h2>
     <div class="readout" id="scaleLbl"></div>
     <div class="row">
@@ -157,7 +164,8 @@
       <button id="btn11"></button>
     </div>
     <button id="btnNew"></button>
-    <p class="note" id="t-note"></p>
+    <p class="hint" id="t-note"></p>
+    <div class="status" id="status"></div>
   </aside>
 </div>
 
@@ -172,6 +180,10 @@ const T = {
     title:"IPhO 2011 실험 2 — 역학 블랙박스 : 공이 든 원통",
     sub:"가상 실험실 · 실 고리로 균형을 잡고, 구멍마다 걸어 주기를 재세요",
     tabA:"Part A · 무게중심 / 길이", tabB:"Part B · 주기",
+    tray:"부품함", trayTake:"클릭해서 집기", trayOut:"실험대 위", trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    items:{ruler:"자 (35 cm)", pencil:"연필", eraser:"지우개"},
+    closecap:"돋보기 — 커서 주위를 4배로 봅니다 (자 눈금·연필 자국 읽기)",
+    mPlaced:n=>n+" 을(를) 실험대에 놓았습니다.", mBack:n=>n+" 을(를) 부품함에 넣었습니다.",
     headA:"Part A · 무게중심과 길이", headB:"Part B · 주기 측정",
     benchcapA:"실험대 — 핀에 걸린 실 고리 안의 알루미늄 원통 · 자 · 연필 · 지우개",
     benchcapB:"실험대 — 진자 구멍으로 핀에 걸린 원통 · 자 · 연필 · 지우개",
@@ -232,6 +244,10 @@ const T = {
     title:"IPhO 2011 Experiment 2 — Mechanical Blackbox: a cylinder with a ball inside",
     sub:"Virtual laboratory · balance it in the thread loop, then time it hole by hole",
     tabA:"Part A - centre of mass & length", tabB:"Part B - periods",
+    tray:"Parts box", trayTake:"click to pick up", trayOut:"on the bench", trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    items:{ruler:"Ruler (35 cm)", pencil:"Pencil", eraser:"Rubber"},
+    closecap:"magnifier — four times around the cursor (read the ruler, see the pencil marks)",
+    mPlaced:n=>n+" put on the bench.", mBack:n=>n+" put back in the box.",
     headA:"Part A - centre of mass & length", headB:"Part B - period measurement",
     benchcapA:"bench — the aluminium cylinder in the thread loop on the pin, ruler, pencil, rubber",
     benchcapB:"bench — the cylinder hung on the pin by a pivot hole, ruler, pencil, rubber",
@@ -1097,13 +1113,13 @@ function onPress(ex,ey,button){
   last = [ex,ey];
   const [wx,wy] = s2w(ex,ey);
 
-  if(rig.on_eraser(wx,wy)){
+  if(TOOLS.eraser && rig.on_eraser(wx,wy)){
     dragMode = "eraser";
     grab = [wx-rig.eraser_pos[0], wy-rig.eraser_pos[1]];
     rig.eraser_to(wx-grab[0], wy-grab[1], true);
     return;
   }
-  if(rig.on_pencil(wx,wy)){
+  if(TOOLS.pencil && rig.on_pencil(wx,wy)){
     dragMode = "pencil";
     grab = [wx-rig.pencil_pos[0], wy-rig.pencil_pos[1]];
     rig.pencil_to(wx-grab[0], wy-grab[1], true);
@@ -1149,7 +1165,7 @@ function onPress(ex,ey,button){
     }
   }
 
-  if(rig.on_ruler(wx,wy)){
+  if(TOOLS.ruler && rig.on_ruler(wx,wy)){
     dragMode = "ruler";
     grab = [wx-rig.ruler_pos[0], wy-rig.ruler_pos[1]];
     return;
@@ -1201,7 +1217,7 @@ function onWheel(ex,ey,d,fine,zoom){
     rig.nudge_loop(d>0 ? -step : step);
     return;
   }
-  if(rig.on_ruler(wx,wy)){
+  if(TOOLS.ruler && rig.on_ruler(wx,wy)){
     /* the wheel turns the ruler about the point under the cursor */
     const step = (fine ? 0.5 : 2.5)*Math.PI/180;
     rig.rotate_ruler(d>0 ? step : -step, wx, wy);
@@ -1211,11 +1227,13 @@ function onWheel(ex,ey,d,fine,zoom){
 }
 
 /* ── drawing ────────────────────────────────────────────────── */
-function redraw(){
-  G = ctx;
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0,0,cv.width,cv.height);
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+let CLOSE = false;
+function redraw(c, el){
+  c = c || ctx; el = el || cv;
+  G = c;
+  c.setTransform(1,0,0,1,0,0);
+  c.clearRect(0,0,el.width,el.height);
+  c.setTransform(DPR,0,0,DPR,0,0);
 
   const v = view(), ppm = v.ppm;
   const w = CVW, h = CVH;
@@ -1227,7 +1245,7 @@ function redraw(){
   line(0,py,w,py,"#7d9577",1,"butt",[6,6]);
   drawBasePlate(px,py,ppm);
 
-  drawRuler(...w2s(rig.ruler_pos[0], rig.ruler_pos[1]), ppm, RULER_LEN, rig.ruler_angle);
+  if(TOOLS.ruler) drawRuler(...w2s(rig.ruler_pos[0], rig.ruler_pos[1]), ppm, RULER_LEN, rig.ruler_angle);
 
   if(rig.mode!==null){
     const [oxw,oyw,ux,uy] = rig.cyl_world();
@@ -1256,8 +1274,9 @@ function redraw(){
       line(px,py,px,py+truth.L*1.05*ppm,"#7d9577",1,"butt",[3,5]);
   }
 
-  drawPencil(...w2s(rig.pencil_pos[0], rig.pencil_pos[1]), ppm);
-  drawEraser(...w2s(rig.eraser_pos[0], rig.eraser_pos[1]), ppm);
+  if(TOOLS.pencil) drawPencil(...w2s(rig.pencil_pos[0], rig.pencil_pos[1]), ppm);
+  if(TOOLS.eraser) drawEraser(...w2s(rig.eraser_pos[0], rig.eraser_pos[1]), ppm);
+  if(CLOSE) return;
 
   G.font = fontStr(13); G.fillStyle="#2f3a2c";
   G.textAlign="left"; G.textBaseline="alphabetic";
@@ -1358,6 +1377,7 @@ function evXY(e){
 let down = false;
 cv.addEventListener("pointerdown", e=>{
   if(e.button===2) return;
+  if(hand){ const [hx,hy]=evXY(e); placeTool(hx,hy); return; }
   down = true; cv.setPointerCapture(e.pointerId);
   const [x,y]=evXY(e); onPress(x,y,e.button);
   cv.classList.add("grabbing"); e.preventDefault();
@@ -1375,6 +1395,10 @@ cv.addEventListener("pointerup", ()=>{
 cv.addEventListener("pointercancel", ()=>{ down=false; dragMode=null; cv.classList.remove("grabbing"); });
 cv.addEventListener("contextmenu", e=>{
   e.preventDefault();
+  if(hand){ hand=null; drawTray(); return; }
+  { const [x,y]=evXY(e), [wx,wy]=s2w(x,y);
+    for(const [k,f] of [["eraser","on_eraser"],["pencil","on_pencil"],["ruler","on_ruler"]])
+      if(TOOLS[k] && rig[f](wx,wy)){ TOOLS[k]=false; say("mBack",T[lang].items[k]); drawTray(); return; } }
   if(part==="B") status(rig.unmount_from_pin()[1]);
 });
 cv.addEventListener("wheel", e=>{
@@ -1413,6 +1437,7 @@ function applyLang(){
   $("btnFit").textContent  = d.fit;
   $("btn11").textContent   = d.one;
   $("btnNew").textContent  = d.newrig;
+  $("t-tray").textContent = d.tray; $("t-closecap").textContent = d.closecap; drawTray();
   $("btn-ko").className = lang==="ko" ? "on" : "";
   $("btn-en").className = lang==="en" ? "on" : "";
   statusMsg = "";
@@ -1437,6 +1462,7 @@ function layout(){
   swc.width  = Math.round(254*DPR);
   swc.height = Math.round(182*DPR);
   swCache = null;
+  trayLayout(); closeLayout();
   if(!V.A.fitted && part==="A") scaleFit();
   if(!V.B.fitted && part==="B") scaleFit();
 }
@@ -1449,8 +1475,81 @@ function loop(now){
   for(let i=0;i<n;i++) rig.step(dt/n);
   drawPanelStopwatch();
   redraw();
+  drawClose();
   syncPanel();
   requestAnimationFrame(loop);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   10.  PARTS BOX AND MAGNIFIER
+   ══════════════════════════════════════════════════════════════ */
+const TOOLS={ruler:false,pencil:false,eraser:false};
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), TRAY=["ruler","pencil","eraser"], TROW=44;
+let hand=null, TRW=190, trayCells=[], toolMsg=null;
+function say(k,a){ const f=T[lang][k]; statusMsg=typeof f==="function"?f(a):f; }
+function trayLayout(){
+  const dpr=window.devicePixelRatio||1, r=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(r.width-16)); const h=TRAY.length*TROW+50;
+  trayCv.style.height=h+"px"; trayCv.width=Math.round(TRW*dpr); trayCv.height=Math.round(h*dpr); drawTray();
+}
+const trayAvail=k=>!TOOLS[k]&&hand!==k;
+function trayIcon(c,k,x,y){
+  if(k==="ruler"){ c.fillStyle="#c9302c"; c.fillRect(x-17,y-5,34,10); c.strokeStyle="#fff"; for(let i=-15;i<=15;i+=3){ c.beginPath(); c.moveTo(x+i,y-5); c.lineTo(x+i,y-(i%15?2:0)); c.stroke(); } }
+  else if(k==="pencil"){ c.save(); c.translate(x,y); c.rotate(-0.5); c.fillStyle="#e2b33c"; c.fillRect(-14,-3,24,6); c.fillStyle="#f1d3a4"; c.beginPath(); c.moveTo(10,-3); c.lineTo(17,0); c.lineTo(10,3); c.fill(); c.fillStyle="#d4524a"; c.fillRect(-17,-3,3,6); c.restore(); }
+  else { c.fillStyle="#f0d6db"; c.fillRect(x-12,y-6,24,12); c.fillStyle="#4b6fb0"; c.fillRect(x-3,y-6,8,12); }
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, d=T[lang], h=TRAY.length*TROW+50;
+  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,h);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY){
+    const av=trayAvail(k), sel=hand===k;
+    c.fillStyle=av||sel?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+.5,wd-1,TROW-5);
+    c.globalAlpha=av||sel?1:.35; trayIcon(c,k,28,y+(TROW-4)/2); c.globalAlpha=1;
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av||sel?"#e8eef2":"#868e96"; c.fillText(d.items[k],52,y+13);
+    c.font='9.5px "Malgun Gothic",sans-serif'; c.fillStyle="#69717a"; c.fillText(sel?"":av?d.trayTake:d.trayOut,52,y+28);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  d.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function placeTool(x,y){
+  const [wx,wy]=s2w(x,y), k=hand;
+  if(k==="ruler") rig.move_ruler(wx-RULER_LEN/2, wy);
+  else if(k==="pencil") rig.pencil_to(wx,wy,false);
+  else rig.eraser_to(wx,wy,false);
+  TOOLS[k]=true; hand=null; say("mPlaced",T[lang].items[k]); drawTray(); cv.style.cursor="";
+}
+let trayDrag=false;
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; drawTray(); cv.style.cursor=""; });
+trayCv.addEventListener("pointerdown",e=>{
+  if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand===k; hand=null; if(!same&&trayAvail(k)) hand=k; cv.style.cursor=hand?"copy":""; drawTray(); return; } });
+window.addEventListener("pointerup",e=>{ if(trayDrag&&hand&&e.target===cv){ const [x,y]=evXY(e); placeTool(x,y); } trayDrag=false; });
+
+const closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), CLW=760, CLH=300;
+let clW=CLW, overBench=false;
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+function closeLayout(){
+  clW=Math.min(CLW,closeCv.parentElement.clientWidth-20);
+  closeCv.style.width=clW+"px"; closeCv.style.height=(clW*CLH/CLW)+"px";
+  closeCv.width=Math.round(clW*DPR); closeCv.height=Math.round(clW*CLH/CLW*DPR);
+}
+function drawClose(){
+  /* the same bench, drawn again four times larger around the cursor */
+  const v=view(), saved={ppm:v.ppm,pan:v.pan.slice(),anchor:v.anchor}, sw=CVW, sh=CVH;
+  const c=overBench?s2w(hoverXY[0],hoverXY[1]):[0,LOOP_DROP];
+  CVW=clW; CVH=clW*CLH/CLW; v.ppm=saved.ppm*4; v.anchor=0.5;
+  v.pan=[-c[0]*v.ppm, -c[1]*v.ppm];
+  CLOSE=true;
+  try{ redraw(closeCtx,closeCv); } finally {
+    CLOSE=false; v.ppm=saved.ppm; v.pan=saved.pan; v.anchor=saved.anchor; CVW=sw; CVH=sh; G=ctx; }
+  closeCtx.setTransform(DPR,0,0,DPR,0,0); closeCtx.strokeStyle="#f2c14e"; closeCtx.lineWidth=1;
+  const mx=clW/2, my=clW*CLH/CLW/2; closeCtx.beginPath(); closeCtx.moveTo(mx-8,my); closeCtx.lineTo(mx+8,my); closeCtx.moveTo(mx,my-8); closeCtx.lineTo(mx,my+8); closeCtx.stroke();
 }
 
 /* ── boot ── */
@@ -1464,6 +1563,6 @@ scaleFit();
 applyLang();
 requestAnimationFrame(loop);
 </script>
-  <script src="adfit.js"></script>
+<script src="adfit.js"></script>
 </body>
 </html>
