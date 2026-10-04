@@ -182,7 +182,9 @@ function P3(x,y,z){
   const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
   const xr=dx*c-dz*s, zr=dx*s+dz*c;
   const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
-  return [CAM.W/2+CAM.px+xr*CAM.k, CAM.H/2+CAM.py-up*CAM.k, dep];
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
 }
 /* screen point → world point on the horizontal plane y = h */
 function onPlane(px,py,h){
@@ -212,7 +214,7 @@ function shade(col,f){
   _shadeCache.set(key,v); return v;
 }
 const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
-let ITEMS=[], HITS=[];
+let ITEMS=[], HITS=[], _REC=null;
 function begin3(){ ITEMS=[]; }
 function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
 function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
@@ -286,7 +288,7 @@ function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:O
 /* anything else: draw(ctx) is called in its depth order; ref is a world point */
 function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
 
-function render3(ctx){
+function render3_2d(ctx){
   const vis=[];
   for(const it of ITEMS){
     const q=it.p.map(p=>P3(p[0],p[1],p[2]));
@@ -326,9 +328,9 @@ function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++)
   const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
   if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
 /* the id of the nearest object under a screen point */
-function pick3(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
 /* a sphere: a shaded disc in its depth order */
-function sphere3(c,r,col,o){ o=o||{};
+function sphere3_2d(c,r,col,o){ o=o||{};
   custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
     const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
     g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
@@ -352,7 +354,7 @@ function cylAB(a,b,r,col,o){
 }
 /* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
    point of its top-left corner, U and V the world vectors along its width and down its height */
-function tex3(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
   const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
   custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
     const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
@@ -362,6 +364,191 @@ function tex3(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
     ctx.restore();
     if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
   },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
+    if(!gl){ GL3.ok=false; return false; }
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){gl_FragColor=texture2D(s,u)*a;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v);
+  t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1}; GL3.src.set(src,t); gl.bindTexture(gl.TEXTURE_2D,t.tex);
+    for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v); }
+  if(t.frame!==GL3.frame&&!(src._static&&t.frame>=0)){ t.frame=GL3.frame; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){} }
+  return t;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, base=rgba01(it.col), hi=rgba01(o.hi||"#ffffff"), lo=rgba01(o.lo||"#5d646b");
+      const L=[-0.38,0.45,0.81], col=(fx,fy)=>{ const fz=Math.sqrt(Math.max(0,1-fx*fx-fy*fy)), l=fx*L[0]+fy*L[1]+fz*L[2];
+        const m=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t); const c=l>0.75?m(base,hi,(l-0.75)/0.25):m(lo,base,Math.max(0,(l+0.2)/0.95)); return "rgb("+c.slice(0,3).map(v=>Math.round(v*255)).join(",")+")"; };
+      const N=18, rings=[0,0.45,0.8,1];
+      for(let k=1;k<rings.length;k++) for(let i=0;i<N;i++){
+        const A=i/N*6.2832, B=(i+1)/N*6.2832, pt=(f,a)=>[p[0]+R*f*Math.cos(a),p[1]+R*f*Math.sin(a),p[2]+e+it.r*Math.sqrt(Math.max(0,1-f*f))];
+        const f0=rings[k-1], f1=rings[k], fm=(f0+f1)/2, am=(A+B)/2;
+        _gtri(G,[pt(f0,A),pt(f1,A),pt(f1,B),pt(f0,B)],col(fm*Math.cos(am),-fm*Math.sin(am))); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -382,11 +569,11 @@ const T={
     hWatch:"7. 스톱워치", ss:"시작 / 정지", rst:"리셋",
     hPaper:"8. 모눈종이", trace:"연필로 레이저 선을 따라 그리기", fresh:"새 종이", png:"종이를 PNG로 저장",
     hView:"보기", vReset:"3D 처음", vScreen:"스크린", vCell:"셀", vRail:"레일 눈금",
-    hint:"• 소금물 병은 책상에 꺼낸 뒤, 병을 클릭해 들고 셀을 클릭하면 흰 선까지 붓습니다.\n• 피펫을 들고 증류수 병을 클릭하면 물을 빨아들이고, 셀 위에서 마우스를 누르고 있으면 방울이 떨어집니다.\n• 셀을 비울 때는 셀을 끌어 들어 올린 뒤 폐액통을 클릭하세요. 빨리 움직이면 출렁여서 책상에 쏟아집니다 — 휴지(11)를 뽑아 문질러 닦으세요.\n• 비운 셀 안쪽은 젖어 있습니다. 칼+휴지(10)를 들고 셀을 클릭하면 닦입니다 (젖은 채 부으면 소금물이 묽어집니다).\n• 배터리 홀더의 빨간 스위치를 클릭하면 레이저가 켜집니다.\n• Z₀·d·Z는 레일 눈금에서, ξ·δ는 모눈에서 직접 읽으세요. 셀: 6.5 × 0.8 × 9.5 cm.",
+    hint:"• 소금물 병은 책상에 꺼낸 뒤, 병을 클릭해 들고 셀을 클릭하면 흰 선까지 붓습니다.\n• 피펫을 들고 증류수 병을 클릭하면 물을 빨아들이고, 셀 위에서 마우스를 누르고 있으면 방울이 떨어집니다.\n• 셀을 비울 때는 셀을 끌어 들어 올린 뒤 폐액통을 클릭하세요. 빨리 움직이면 출렁여서 책상에 쏟아집니다 — 휴지(11)를 뽑아 문질러 닦으세요.\n• 비운 셀 안쪽은 젖어 있습니다. 칼+휴지(10)를 들고 셀을 클릭하면 닦입니다 (젖은 채 부으면 소금물이 묽어집니다).\n• 배터리 홀더를 책상에 꺼내 클릭하면 레이저의 집게 전선이 단자에 물립니다. 그다음 홀더의 빨간 버튼을 눌러 레이저를 켜고 끕니다.\n• 스톱워치는 책상에 꺼내 놓아야 잴 수 있습니다.\n• Z₀·d·Z는 레일 눈금에서, ξ·δ는 모눈에서 직접 읽으세요. 셀: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. 선 레이저 모듈", cell:"2. 확산 셀 (홀더)", screen:"3. 스크린 (홀더)", s23:"5. 소금물 23 g / 150 mL", s28:"5. 소금물 28 g / 150 mL", s33:"5. 소금물 33 g / 150 mL",
            water:"6. 증류수 (아쿠아데스트)", watch:"7. 스톱워치", paper:"8. 모눈종이", pipette:"9. 피펫", batt:"12. 배터리 홀더", bucket:"13. 폐액통 (양동이)", knife:"10. 칼 + 휴지 (셀 닦기)", tissue:"11. 휴지", sheet:"휴지 한 장"},
     lab:{lbase:"Laser Base", cbase:"Cell Base", sbase:"Screen Base", salt:"소금물", aqua:"증류수", noPaper:"모눈종이를 붙이지 않았습니다 — 부품함의 모눈종이를 집어 스크린을 클릭하세요", noScreen:"스크린이 레일에 없습니다"},
-    st:{none:"부품함에서 레이저 모듈, 확산 셀, 스크린을 꺼내 레일 위에 놓으세요.", noBatt:"레이저에 배터리 홀더를 연결하세요 (부품함 12).", off:"배터리 홀더의 스위치가 꺼져 있습니다.",
+    st:{none:"부품함에서 레이저 모듈, 확산 셀, 스크린을 꺼내 레일 위에 놓으세요.", noBatt:"배터리 홀더(부품함 12)를 책상에 꺼내세요.", noConn:"레이저 전선이 배터리 홀더에 연결되지 않았습니다 — 배터리 홀더(또는 집게)를 클릭하세요.", off:"배터리 홀더의 빨간 버튼이 꺼져 있습니다.",
         drops:n=>"떨어뜨린 증류수: "+n+" 방울", pip:n=>"피펫 안의 증류수: "+n+" 방울", full:"셀이 가득 찼습니다.", hand:n=>"손에 든 것: "+n},
     m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
        noFitRail:"레일 위의 빈 자리를 클릭하세요.", noFitDesk:"책상 위의 빈 자리를 클릭하세요.", lifted:n=>n+" 을(를) 들었습니다 — 셀이나 책상을 클릭하세요. (우클릭: 내려놓기)",
@@ -405,6 +592,8 @@ const T={
        sheet:"휴지 한 장을 뽑았습니다 — 쏟아진 곳을 누른 채 문질러 닦으세요. (폐액통 클릭: 버리기)", wiped:"책상의 물기를 닦았습니다.", sheetWet:"휴지가 흠뻑 젖었습니다 — 폐액통을 클릭해 버리고 새 휴지를 뽑으세요.",
        sheetOut:"휴지를 폐액통에 버렸습니다.", sheetDrop:"휴지를 내려놓았습니다(버렸습니다).", knifeTake:"칼에 감긴 휴지로 셀 안쪽을 닦습니다 — 빈 셀을 클릭하세요. (책상 클릭: 내려놓기)",
        dried:"셀 안쪽의 물기를 닦아 냈습니다.", dryFull:"셀에 액체가 들어 있습니다 — 먼저 비우세요.", alreadyDry:"셀 안쪽은 이미 말라 있습니다.",
+       conn:"레이저의 집게 전선을 배터리 홀더 단자에 물렸습니다. 홀더의 빨간 버튼을 누르면 레이저가 켜집니다.", needLaserC:"먼저 레이저 모듈을 레일에 놓으세요.",
+       needBattC:"먼저 배터리 홀더를 책상에 꺼내세요.", already:"전선은 이미 연결되어 있습니다.", swNoConn:s=>"버튼 "+s+" — 레이저 전선이 연결되지 않아 켜지지 않습니다.",
        wetPour:g=>"젖은 셀에 소금물 ("+g+" g / 150 mL)을 부었습니다 — 남은 물기로 조금 묽어졌습니다."}
   },
   en:{
@@ -421,11 +610,11 @@ const T={
     hWatch:"7. Stopwatch", ss:"start / stop", rst:"reset",
     hPaper:"8. Millimetre paper", trace:"trace the laser line with a pencil", fresh:"fresh sheet", png:"save the sheet as PNG",
     hView:"View", vReset:"3D home", vScreen:"screen", vCell:"cell", vRail:"rail scale",
-    hint:"• Take the salt solution bottles out onto the desk; click a bottle to lift it, then click the cell to fill it to the white line.\n• Lift the pipette and click the distilled water bottle to draw water; hold the mouse down over the cell to release drops.\n• To empty the cell, drag it to lift it and click the waste bucket. Move it too fast and it sloshes over onto the desk — pull a tissue (11) and rub the spill dry.\n• An emptied cell is wet inside. Lift the knife + tissue (10) and click the cell to wipe it (pour into a wet cell and the solution is slightly diluted).\n• Click the red switch on the battery holder to turn the laser on.\n• Read Z₀, d and Z off the rail scale and ξ, δ off the millimetre grid. Cell: 6.5 × 0.8 × 9.5 cm.",
+    hint:"• Take the salt solution bottles out onto the desk; click a bottle to lift it, then click the cell to fill it to the white line.\n• Lift the pipette and click the distilled water bottle to draw water; hold the mouse down over the cell to release drops.\n• To empty the cell, drag it to lift it and click the waste bucket. Move it too fast and it sloshes over onto the desk — pull a tissue (11) and rub the spill dry.\n• An emptied cell is wet inside. Lift the knife + tissue (10) and click the cell to wipe it (pour into a wet cell and the solution is slightly diluted).\n• Put the battery holder on the desk and click it: the laser's alligator clips go onto its terminals. Then press the red button on the holder to turn the laser on and off.\n• The stopwatch only works once it is out on the desk.\n• Read Z₀, d and Z off the rail scale and ξ, δ off the millimetre grid. Cell: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. Line laser module", cell:"2. Diffusion cell (holder)", screen:"3. Screen (holder)", s23:"5. Salt solution 23 g / 150 mL", s28:"5. Salt solution 28 g / 150 mL", s33:"5. Salt solution 33 g / 150 mL",
            water:"6. Distilled water (aquadest)", watch:"7. Stopwatch", paper:"8. Millimetre paper", pipette:"9. Pipette", batt:"12. Battery holder", bucket:"13. Waste bucket", knife:"10. Knife + tissue (cell cleaner)", tissue:"11. Tissue", sheet:"a tissue"},
     lab:{lbase:"Laser Base", cbase:"Cell Base", sbase:"Screen Base", salt:"salt water", aqua:"distilled water", noPaper:"No paper on the screen — pick up the millimetre paper and click the screen", noScreen:"No screen on the rail"},
-    st:{none:"Take the line laser module, the diffusion cell and the screen out of the box and put them on the rail.", noBatt:"Connect the battery holder to the laser (box item 12).", off:"The battery holder switch is off.",
+    st:{none:"Take the line laser module, the diffusion cell and the screen out of the box and put them on the rail.", noBatt:"Put the battery holder (box item 12) on the desk.", noConn:"The laser leads are not connected to the battery holder — click the holder (or the clips).", off:"The red button on the battery holder is off.",
         drops:n=>"Distilled water released: "+n+" drops", pip:n=>"Water in the pipette: "+n+" drops", full:"The cell is full.", hand:n=>"In your hand: "+n},
     m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.",
        noFitRail:"Click a free place on the rail.", noFitDesk:"Click a free place on the desk.", lifted:n=>n+" lifted — click the cell or the desk. (R-click: put it down)",
@@ -444,6 +633,8 @@ const T={
        sheet:"One tissue pulled out — hold the button and rub over the spill. (click the bucket: throw it away)", wiped:"The desk is wiped dry.", sheetWet:"The tissue is soaked — click the bucket to throw it away and pull a fresh one.",
        sheetOut:"Tissue thrown into the waste bucket.", sheetDrop:"Tissue put down (thrown away).", knifeTake:"The tissue round the knife wipes the inside of the cell — click the empty cell. (click the desk: put it down)",
        dried:"The inside of the cell is wiped dry.", dryFull:"There is liquid in the cell — empty it first.", alreadyDry:"The cell is already dry inside.",
+       conn:"The laser's alligator clips are on the battery holder terminals. Press the red button on the holder to turn the laser on.", needLaserC:"Put the laser module on the rail first.",
+       needBattC:"Put the battery holder on the desk first.", already:"The leads are already connected.", swNoConn:s=>"button "+s+" — the laser leads are not connected, so it stays off.",
        wetPour:g=>"Salt solution ("+g+" g / 150 mL) poured into a wet cell — the water left inside dilutes it a little."}
   }
 };
@@ -454,9 +645,9 @@ const d=()=>T[lang];
    1.  APPARATUS  —  identical to the Python constants
    ══════════════════════════════════════════════════════════════ */
 const RAIL_LEN=85.0, SCREEN_SIZE=30.0, CELL_D=0.8, CELL_W=6.5, CELL_H=9.5;
-const CELL_FOOT=1.0, FILL_LINE=5.0, BENCH_TOP=33.0;
-const LASER_X=0.0, LASER_Y0=4.5, CELL_X0=10.4, SCREEN_X0=64.6, SCREEN_Y0=17.0;
-const LASER_Y_RANGE=[2.5,8.0], SCREEN_Y_RANGE=[16.8,26.0], CELL_X_RANGE=[3.0,40.0];
+const CELL_FOOT=1.8, FILL_LINE=5.0, BENCH_TOP=33.0;     /* the glass bottom sits 1.8 cm above the rail (frame + mounting plate) */
+const LASER_X=0.0, LASER_Y0=5.3, CELL_X0=10.4, SCREEN_X0=64.6, SCREEN_Y0=17.8;
+const LASER_Y_RANGE=[3.6,8.8], SCREEN_Y_RANGE=[16.8,26.0], CELL_X_RANGE=[3.0,40.0];
 
 /* ── physics constants (calibrated to the official marking scheme) ── */
 const D_A=2.29e-5, D_B=-5.25e-5;        // D(C0)      [cm^2/s]
@@ -510,7 +701,7 @@ class Pour{
 const RT=2.6;                                     /* rail top above the desk */
 const S={
   laserX:2.0, laserY:LASER_Y0, cellX:CELL_X0, screenX:SCREEN_X0, screenY:SCREEN_Y0,
-  sw:false, focus:0.35, theta:45.0,
+  sw:false, conn:false, focus:0.35, theta:45.0,
   pour:null, filled:false, conc:23, saltLv:FILL_LINE, wlevel:0.0, cellOut:false, cellWet:false, mixT:0, puddles:[],
   slosh:{th:0,om:0,thx:0,omx:0,v:[0,0],p:null}, dripping:false, dropCredit:0, drops:0, pip:0,
   tFirst:false, tDiff:0.0, watch:{run:false,t:0}, pencil:[]
@@ -519,7 +710,7 @@ const ST={ on:{laser:false,cell:false,screen:false,paper:false,batt:false,watch:
   pos:{} };
 const DESK_ITEMS=["batt","watch","s23","s28","s33","water","pipette","bucket","tissue","knife"];
 const RAD={batt:5,watch:5,s23:3.8,s28:3.8,s33:3.8,water:3.8,pipette:6,bucket:10.5,tissue:5.6,knife:9};
-const beamOn=()=>ST.on.laser&&ST.on.batt&&S.sw;
+const beamOn=()=>ST.on.laser&&ST.on.batt&&S.conn&&S.sw;
 const onScreen=()=>beamOn()&&ST.on.screen&&S.screenX>S.laserX+3;
 const cellInPath=()=>ST.on.cell&&!S.cellOut&&S.cellX>S.laserX+0.5&&S.cellX+CELL_D<S.screenX;
 const Z0  = ()=> S.cellX - S.laserX;
@@ -619,38 +810,48 @@ function drawBase(k,label){
   line3([x,y1,BASE_D/2+0.01],[x,y0,BASE_D/2+0.01],"#ffffff",1.6,{bias:0.6});
   face([[x-0.25,y0,3.05],[x+0.25,y0,3.05],[x,y0-0.45,3.05]],{fill:"#ffffff",flat:true,bias:0.6});
 }
-/* the line laser module (Fig. 1, item 1): a black mounting plate standing on the Laser Base
-   with four silver adjusting screws through it, a carriage that slides up and down its slot
-   (locked by a black knob), the black laser housing and, at its front, the round head
-   holding the cylindrical lens with a knurled knob on top; red/black leads with clips */
-const LM_TOP=()=>RT+LASER_Y_RANGE[1]+1.7;
+/* Fig. 1 shows every rail part built the same way: a horizontal black mounting plate whose
+   four silver rods go down into the four holes of its base (Laser / Cell / Screen Base), so
+   the part can be set higher or lower and locked by the black thumb screw on the base.
+   Line laser module (item 1): a black upright arm on the plate, the laser housing on top
+   with the knurled black focus ring at its back and the cylindrical-lens barrel in front;
+   red and black leads with alligator clips go to the battery holder. */
+const LM_ARM=2.3;
+function mountPlate(k,top,o){
+  const c=baseC(k), y1=RT+BASE_T, M={id:o.id};
+  box3(c-2.3,c+2.3,top-0.45,top,-4.2,4.2,BLACK,Object.assign({top:"#26272b"},M));                 /* mounting plate */
+  for(const dx of [-1.8,1.8]) for(const dz of [-3.6,3.6]){
+    cyl3("y",y1-0.05,top-0.45,c+dx,dz,0.2,STEEL,{seg:10});                                          /* rods into the base */
+    cyl3("y",top,top+0.28,c+dx,dz,0.36,"#9ea4aa",{seg:6,cap:"#c3c8cc"});                            /* nuts on the plate */
+    cyl3("y",top+0.28,top+0.45,c+dx,dz,0.2,STEEL,{seg:10,cap:"#d7dbdf"}); }
+  cyl3("z",BASE_D/2,BASE_D/2+0.75,c,RT+BASE_T*0.5,0.36,"#141414",{seg:14,id:o.id,cap:"#2a2a2a"});     /* lock screw */
+}
+function laserLeads(x,yb){
+  const conn=ST.on.batt&&S.conn, b=ST.pos.batt;
+  for(const [col,dz,clip] of [["#b3201a",0.35,"#d8261c"],["#151515",-0.35,"#222"]]){
+    const sx=x-4.65, sy=yb, pts=[];
+    if(conn){ const ex=b[0]+3.9, ez=b[2]+(dz>0?-0.85:0.85);
+      for(let i=0;i<=26;i++){ const t=i/26; pts.push([sx+(ex-sx)*t, Math.max(0.25,sy*(1-t)*(1-t)+(1-t)*t*(-0.6)+1.9*t*t), dz+(ez-dz)*t+Math.sin(Math.PI*t)*(dz>0?2.6:1.6)]); }
+      poly3(pts,col,2.0); box3(ex-0.2,ex+1.3,1.5,2.05,ez-0.28,ez+0.28,clip,{bias:2}); }
+    else { const ex=x-6.2+dz*2, ez=BASE_D/2+1.6+dz*1.5;                                             /* hanging loose, clips on the desk */
+      for(let i=0;i<=20;i++){ const t=i/20; pts.push([sx+(ex-sx)*t, Math.max(0.2,sy*(1-t)-0.8*Math.sin(Math.PI*t)*0+0.2*t), dz+(ez-dz)*t]); }
+      poly3(pts,col,2.0); box3(ex-0.75,ex+0.75,0.05,0.5,ez-0.25,ez+0.25,clip,{id:"leads"}); }
+  }
+}
 function drawLaser(){
-  const x=S.laserX, yb=RT+S.laserY, top=LM_TOP(), L={id:"laser"};
+  const x=S.laserX, yb=RT+S.laserY, c=baseC("laser"), top=yb-LM_ARM, L={id:"laser"};
   drawBase("laser",d().lab.lbase);
-  const px0=x-4.75, px1=x-4.15;
-  boxY(px0,px1,RT+BASE_T,top,-2.1,2.1,BLACK,L,0.9);                               /* mounting plate */
-  for(let y=RT+1.6;y<top-0.55;y+=0.9) face(orient([[px0-0.01,y,-0.32],[px0-0.01,y,0.32],[px0-0.01,Math.min(y+0.9,top-0.5),0.32],[px0-0.01,Math.min(y+0.9,top-0.5),-0.32]],[-1,0,0]),{fill:"#070708",flat:true,cull:true,bias:0.05}); /* the slot */
-  for(const sy of [RT+1.7,top-0.8]) for(const sz of [-1.55,1.55]){                 /* adjusting screws */
-    cyl3("x",x-6.6,px0,sy,sz,0.13,STEEL,{seg:8});
-    cyl3("x",x-7.0,x-6.6,sy,sz,0.36,"#141414",{seg:12,id:"laser"});
-    cyl3("x",px0-0.18,px0,sy,sz,0.25,"#8e9398",{seg:6}); }
-  box3(px1,x-3.35,yb-1.0,yb+1.0,-1.35,1.35,BLACK2,L);                                /* carriage, behind the plate */
-  cyl3("x",px0-0.35,px0,yb,0,0.3,"#5f6368",{seg:10});                                /* its lock screw through the slot */
-  cyl3("x",px0-1.0,px0-0.35,yb,0,0.55,"#141414",{seg:14,id:"laser",cap:"#2a2a2a"});  /* and the lock knob */
-  box3(x-3.35,x-0.95,yb-0.55,yb+0.55,-0.8,0.8,"#121315",L);                           /* laser housing */
-  cyl3("x",x-0.95,x,yb,0,0.78,"#202225",{seg:18,id:"laser"});                        /* lens head */
-  face(orient(Array.from({length:14},(_,i)=>{ const a=i/14*2*Math.PI; return [x+0.01,yb+0.3*Math.sin(a),0.3*Math.cos(a)]; }),[1,0,0]),{fill:beamOn()?"#ffb3a8":"#8fc6dd",flat:true,cull:true,bias:1.2});
-  cyl3("y",yb+0.72,yb+1.35,x-0.47,0,0.46,"#1a1b1d",{seg:16,id:"laser",bias:1.0,cap:"#2c2e31"}); /* lens rotation knob */
-  for(let i=0;i<12;i++){ const a=i/12*2*Math.PI; line3([x-0.47+0.47*Math.cos(a),yb+0.75,0.47*Math.sin(a)],[x-0.47+0.47*Math.cos(a),yb+1.32,0.47*Math.sin(a)],"#3c3f43",0.7,{bias:1.05}); }
-  if(beamOn()) cyl3("x",x,x+0.03,yb,0,0.2,"#ff5a4a",{seg:10,flat:true,bias:1.3});
-  /* the leads: red and black, alligator clips on the battery holder */
-  if(ST.on.batt){ const b=ST.pos.batt;
-    for(const [col,dz,tz] of [["#b3201a",0.45,b[2]-0.85],["#151515",-0.45,b[2]+0.85]]){ const pts=[];
-      const sx=x-3.35, sy=yb-0.2, sz=dz, ex=b[0]+3.9, ez=tz;
-      for(let i=0;i<=26;i++){ const t=i/26;
-        pts.push([sx+(ex-sx)*t, Math.max(0.25,sy*(1-t)*(1-t)+(1-t)*t*(-0.6)+1.9*t*t), sz+(ez-sz)*t+Math.sin(Math.PI*t)*(dz>0?2.6:1.6)]); }
-      poly3(pts,col,2.0);
-      box3(ex-0.2,ex+1.3,1.5,2.05,ez-0.28,ez+0.28,col==="#151515"?"#222":"#d8261c",{bias:2}); } }
+  mountPlate("laser",top,L);
+  boxY(x-3.3,x-2.0,top,yb-0.6,-0.6,0.6,BLACK2,L,0.8);                                            /* upright arm */
+  box3(x-3.5,x-1.8,yb-0.85,yb+0.85,-0.95,0.95,"#17181b",L);                                       /* clamp block */
+  cyl3("x",x-4.4,x-0.9,yb,0,0.62,"#111214",{seg:18,id:"laser"});                                  /* laser housing */
+  cylSeg("x",x-4.75,x-4.4,yb,0,0.82,"#1c1d20",{seg:20,id:"laser",cap:"#2a2c30"},1);               /* focus ring */
+  for(let i=0;i<14;i++){ const a=i/14*2*Math.PI; line3([x-4.75,yb+0.83*Math.sin(a),0.83*Math.cos(a)],[x-4.4,yb+0.83*Math.sin(a),0.83*Math.cos(a)],"#3c3f43",0.8); }
+  cyl3("x",x-0.9,x,yb,0,0.88,"#202225",{seg:20,id:"laser"});                                      /* lens barrel */
+  for(let i=0;i<16;i++){ const a=i/16*2*Math.PI; line3([x-0.85,yb+0.89*Math.sin(a),0.89*Math.cos(a)],[x-0.4,yb+0.89*Math.sin(a),0.89*Math.cos(a)],"#3c3f43",0.8); }
+  face(orient(Array.from({length:16},(_,i)=>{ const a=i/16*2*Math.PI; return [x+0.01,yb+0.34*Math.sin(a),0.34*Math.cos(a)]; }),[1,0,0]),{fill:beamOn()?"#ffb3a8":"#8fc6dd",flat:true,cull:true});
+  if(beamOn()) cyl3("x",x,x+0.03,yb,0,0.2,"#ff5a4a",{seg:10,flat:true});
+  laserLeads(x,yb);
 }
 function cellBox(){ const x=S.cellX, y0=RT+CELL_FOOT; return [x,x+CELL_D,y0,y0+CELL_H,-CELL_W/2,CELL_W/2]; }
 /* the diffusion cell (item 2): a glass cell 6.5 × 0.8 × 9.5 cm clamped between two black
@@ -662,33 +863,35 @@ function cellLiquid(x0,x1,y0,z0,z1,tilt){
   const tz=Math.tan(tilt||0), h=(lv,z)=>Math.min(ymax,Math.max(fl,y0+lv+tz*(z-zc)));
   const lay=(lo,hi,col,al)=>{ const pts=[[h(lo,lz0),lz0],[h(lo,lz1),lz1],[h(hi,lz1),lz1],[h(hi,lz0),lz0]];
     if(pts[2][0]-pts[1][0]<0.01&&pts[3][0]-pts[0][0]<0.01) return;
-    prism3("x",lx0,lx1,pts,col,{alpha:al,cull:true,id:"cell",bias:-1.6}); };
+    prism3("x",lx0,lx1,pts,col,{alpha:al,cull:true,id:"cell"}); };
   if(S.filled&&S.saltLv>0.02){ lay(0.15,S.saltLv,"#6aaed6",0.78); if(S.wlevel>0.01) lay(S.saltLv,S.saltLv+S.wlevel,"#cbe8f7",0.6); }
   else if(S.cellWet){ for(let i=0;i<5;i++) sphere3([x1-0.13,y0+1.2+i*1.7,z0+0.9+((i*37)%5)],0.1,"#d6eef9",{lo:"#9cc8dc"}); }
 }
+/* the diffusion cell (item 2) sits in a thick black frame with a window over each big face,
+   open at the top; a silver clamping rod runs up one side. The frame stands on the same kind
+   of mounting plate as the laser; lifting the cell takes the frame with it. */
 function drawCellBody(x0,y0,o){
   o=o||{}; const x1=x0+CELL_D, y1=y0+CELL_H, z0=-CELL_W/2, z1=CELL_W/2, C={id:"cell"};
   cellLiquid(x0,x1,y0,z0,z1,o.tilt);
-  const g={fill:"#dff2fb",alpha:0.16,stroke:"rgba(160,200,220,.85)",lw:1,cull:false,id:"cell",flat:true,bias:-1.5};
+  const g={fill:"#dff2fb",alpha:0.16,stroke:"rgba(160,200,220,.85)",lw:1,cull:false,id:"cell",flat:true};
   face([[x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0]],g); face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],g);
   face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],g); face([[x1,y0,z0],[x1,y0,z1],[x1,y1,z1],[x1,y1,z0]],g);
   face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],g);
-  /* the two black frames: a bar each side and one under the glass, the window left open */
-  const fy1=y1-0.35;
-  for(const [a,b] of [[x0-0.32,x0],[x1,x1+0.32]]){
-    boxY(a,b,y0-0.2,fy1,z0-0.45,z0+0.35,BLACK,Object.assign({bias:0.4},C),1.2);
-    boxY(a,b,y0-0.2,fy1,z1-0.35,z1+0.45,BLACK,Object.assign({bias:0.4},C),1.2);
-    box3(a,b,y0-0.2,y0+0.3,z0-0.45,z1+0.45,BLACK,Object.assign({bias:0.4},C));
-    for(const sy of [y0,fy1-0.4]) for(const sz of [z0-0.05,z1+0.05]){ const xx=a<x0?a-0.08:b+0.08;
-      cyl3("x",a<x0?xx:b,a<x0?a:xx,sy,sz,0.17,"#aeb3b8",{seg:8,bias:0.8}); } }
-  /* the white fill line, scratched on the glass */
-  line3([x0-0.02,y0+FILL_LINE,z0+0.4],[x0-0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2,{bias:1});
-  line3([x1+0.02,y0+FILL_LINE,z0+0.4],[x1+0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2,{bias:1});
+  const fx0=x0-0.4, fx1=x1+0.4, fb=y0-0.6, ft=y1-0.2;
+  box3(fx0,fx1,fb,ft,z0-1.0,z0+0.35,BLACK,C);                                   /* side bars */
+  box3(fx0,fx1,fb,ft,z1-0.35,z1+1.0,BLACK,C);
+  box3(fx0,fx1,fb,y0+0.3,z0+0.35,z1-0.35,BLACK,C);                              /* bottom bar */
+  cyl3("y",fb+0.2,ft+0.6,(x0+x1)/2,z1+1.22,0.2,STEEL,{seg:10,cap:"#d7dbdf",id:"cell"}); /* clamping rod */
+  for(const yy of [fb+0.9,ft-0.9]) cyl3("z",z1+0.95,z1+1.45,(x0+x1)/2,yy,0.3,"#8e9398",{seg:8});
+  for(const [xx,yy] of [[fx0,y0+1.2],[fx0,ft-1.0],[fx1,y0+1.2],[fx1,ft-1.0]]) for(const zz of [z0-0.6,z1+0.6]){ const dx=xx<x0?-0.06:0.06;
+    cyl3("x",xx,xx+dx,yy,zz,0.17,"#aeb3b8",{seg:8}); }
+  line3([x0-0.02,y0+FILL_LINE,z0+0.4],[x0-0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2);
+  line3([x1+0.02,y0+FILL_LINE,z0+0.4],[x1+0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2);
 }
 function drawCell(){
-  const c=baseC("cell"), [x0,,y0]=cellBox();
+  const [x0,,y0]=cellBox();
   drawBase("cell",d().lab.cbase);
-  for(const z of [-1,1]) boxY(c-1.0,c+1.0,RT+BASE_T,RT+BASE_T+2.2,z>0?3.85:-4.75,z>0?4.75:-3.85,BLACK2,{id:S.cellOut?"base_cell":"cell"},1.1); /* the seat jaws */
+  mountPlate("cell",y0-0.6,{id:S.cellOut?"base_cell":"cell"});
   if(!S.cellOut) drawCellBody(x0,y0);
 }
 function screenGeom(){ const x=S.screenX, yc=RT+S.screenY; return {x, y0:yc-SCREEN_SIZE/2, y1:yc+SCREEN_SIZE/2, z0:-SCREEN_SIZE/2, z1:SCREEN_SIZE/2}; }
@@ -738,7 +941,8 @@ function drawBeam(){
 function drawBatt(p){ const [x,,z]=p;
   box3(x-3.6,x+3.6,0,2.6,z-2.2,z+2.2,"#17181a",{id:"batt"});
   for(const dz of [-0.85,0.85]){ cyl3("x",x-3.0,x+1.6,2.2,z+dz,0.72,"#2a2a2a",{seg:12,id:"batt"}); cyl3("x",x-3.0,x-1.6,2.2,z+dz,0.73,"#c9a227",{seg:12,id:"batt"}); }
-  cyl3("y",2.6,S.sw?2.9:3.3,x+2.6,z,0.65,S.sw?"#ff4636":"#a3241c",{seg:14,id:"batt_sw",cap:S.sw?"#ff6a5a":"#c0392b",bias:3});
+  for(const [dz,col] of [[-0.85,"#c0392b"],[0.85,"#222"]]) cyl3("x",x+3.6,x+4.1,1.75,z+dz,0.3,col,{seg:10,id:"batt"});   /* terminals */
+  cyl3("y",2.6,S.sw?2.9:3.3,x+2.6,z,0.65,S.sw?"#ff4636":"#a3241c",{seg:14,id:"batt_sw",cap:S.sw?"#ff6a5a":"#c0392b"});
 }
 function fmtWatch(t){ const m=Math.floor(t/60), s=t-m*60; return String(m).padStart(2,"0")+":"+s.toFixed(2).padStart(5,"0"); }
 function drawWatch(p){ const [x,,z]=p;
@@ -748,25 +952,37 @@ function drawWatch(p){ const [x,,z]=p;
   cyl3("y",0.9,1.9,x+1.8,z-4.1,0.5,"#c9ccd0",{seg:10,id:"watch_ss",bias:2}); cyl3("y",0.9,1.9,x-1.8,z-4.1,0.5,"#c9ccd0",{seg:10,id:"watch_rs",bias:2});
   text3([x+1.8,1.53,z-3.0],[1,0,0],[0,0,-1],"START",0.42,"#bbb",{align:"center"}); text3([x-1.8,1.53,z-3.0],[1,0,0],[0,0,-1],"RESET",0.42,"#bbb",{align:"center"});
 }
-/* a label band round a bottle, printed so it reads from every side */
-function bottleLabel(x,y0,z,r,lines,o){
-  cyl3("y",y0+3.6,y0+9.0,x,z,r+0.03,"#ffffff",{seg:18,caps:false,id:o.id});
-  for(const [nx,nz,U] of [[0,1,[1,0,0]],[0,-1,[-1,0,0]],[1,0,[0,0,-1]],[-1,0,[0,0,1]]]){
-    const O=[x+nx*(r+0.07),0,z+nz*(r+0.07)];
-    lines.forEach(([str,size,col,w],i)=>text3([O[0],y0+7.9-i*1.45,O[2]],U,[0,1,0],str,size,col,{align:"center",weight:w||"700",bias:0.4})); }
+/* paper labels stuck on the bottles: printed on a small canvas and wrapped round the facets */
+const _labels=new Map();
+function labelCanvas(key,lines){
+  const k=lang+"|"+key; let c=_labels.get(k); if(c) return c;
+  c=document.createElement("canvas"); c.width=360; c.height=220; c._static=true; const x=c.getContext("2d");
+  x.fillStyle="#fbfaf3"; x.fillRect(0,0,360,220);
+  x.strokeStyle="#c9c4b3"; x.lineWidth=3; x.strokeRect(5,5,350,210);
+  x.strokeStyle="#d8d3c3"; x.lineWidth=1; for(let y=70;y<200;y+=34){ x.beginPath(); x.moveTo(26,y); x.lineTo(334,y); x.stroke(); }
+  x.textAlign="center"; x.textBaseline="middle";
+  for(const [str,size,col,w,y] of lines){ x.font=(w||"700")+" "+size+"px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif"; x.fillStyle=col; x.fillText(str,180,y); }
+  _labels.set(k,c); return c;
+}
+function paperLabel(x,y0,z,r,cv,id){
+  const N=18, step=2*Math.PI/N, yt=y0+9.0, h=5.2, R=r+0.035;
+  for(const ctr of [Math.PI/2,3*Math.PI/2]){ const i0=Math.round((ctr-3*step)/step);
+    for(let j=0;j<6;j++){ const tA=(i0+6-j)*step, tB=tA-step;
+      const A=[x+R*Math.cos(tA),yt,z+R*Math.sin(tA)], B=[x+R*Math.cos(tB),yt,z+R*Math.sin(tB)];
+      tex3(cv,j*60,0,60,220,A,[B[0]-A[0],0,B[2]-A[2]],[0,-h,0],{id,bias:0.1}); } }
 }
 function drawSalt(k,p){ const [x,y,z]=p, y0=y||0, g=k.slice(1);
   cyl3("y",y0,y0+11.5,x,z,3.0,"#e8eef0",{seg:18,id:k,cap:"#f4f7f8"});
   cyl3("y",y0+11.5,y0+13.2,x,z,3.0,"#e8eef0",{seg:18,r1:1.5,id:k,caps:false});
   cyl3("y",y0+13.2,y0+15.2,x,z,1.5,"#d6261d",{seg:16,r1:1.1,id:k,cap:"#e33a2f"});
   cyl3("y",y0+15.2,y0+17.2,x,z,0.42,"#d6261d",{seg:10,r1:0.22,id:k});
-  bottleLabel(x,y0,z,3.0,[[d().lab.salt,0.62,"#555","600"],[g+" g",1.55,"#c0392b"],["/ 150 mL",0.7,"#333","600"]],{id:k});
+  paperLabel(x,y0,z,3.0,labelCanvas(k,[[d().lab.salt+"  (NaCl)",30,"#444","600",42],[g+" g",78,"#b3261e","800",112],["/ 150 mL",38,"#333","700",182]]),k);
 }
 function drawWater(p){ const [x,y,z]=p, y0=y||0;
   cyl3("y",y0,y0+12,x,z,3.2,"#f2f4f5",{seg:18,id:"water"});
   cyl3("y",y0+12,y0+13.6,x,z,3.2,"#f2f4f5",{seg:18,r1:1.4,id:"water",caps:false});
   cyl3("y",y0+13.6,y0+15.6,x,z,1.4,"#141414",{seg:16,id:"water"});
-  bottleLabel(x,y0,z,3.2,[["AQUADEST",0.7,"#2a6fd6"],[d().lab.aqua,0.6,"#333","600"]],{id:"water"});
+  paperLabel(x,y0,z,3.2,labelCanvas("water",[["AQUADEST",54,"#1f5fc4","800",80],[d().lab.aqua,40,"#333","700",150]]),"water");
 }
 function drawPipette(p,vertical){ const [x,y,z]=p;
   if(vertical){ cyl3("y",y,y+9,x,z,0.32,"rgba(235,245,250,1)",{seg:10,id:"pipette",r1:0.38});
@@ -1000,7 +1216,13 @@ function addPuddle(x,z,vol){
   for(const q of S.puddles) if(Math.hypot(q.x-x,q.z-z)<PL_R(q)+1){ q.vol+=vol; return; }
   S.puddles.push({x,z,vol,ph:Math.random()*6.28});
 }
+function connectLeads(){
+  if(!ST.on.laser){ say("needLaserC"); return; } if(!ST.on.batt){ say("needBattC"); return; }
+  if(S.conn){ say("already"); return; } S.conn=true; say("conn");
+}
 function returnItem(k){
+  if(k==="batt"||k==="laser") S.conn=false;
+  if(k==="watch"){ S.watch.run=false; S.watch.t=0; }
   if(k==="cell"&&S.cellOut){ say("cellOutNow"); return; }
   if(k==="cell"&&S.filled){ say("cellFirst"); return; }
   if(k==="screen") ST.on.paper=false;
@@ -1050,7 +1272,8 @@ cv.addEventListener("pointerdown",e=>{
   if(hand){ placeFromHand(p[0],p[1],id); drawTray(); return; }
   if(carry){ useCarried(p[0],p[1],id); return; }
   down={p,id,moved:false,shift:e.shiftKey};
-  if(id==="batt_sw"){ S.sw=!S.sw; say("sw",S.sw?"ON":"OFF"); down=null; return; }
+  if(id==="batt_sw"){ S.sw=!S.sw; say(S.conn||!S.sw?"sw":"swNoConn",S.sw?"ON":"OFF"); down=null; return; }
+  if(id==="leads"){ connectLeads(); down=null; return; }
   if(id==="watch_ss"){ watchPress("ss"); down=null; return; }
   if(id==="watch_rs"){ watchPress("rs"); down=null; return; }
   if(id&&id.startsWith("base_")){ const k=id.slice(5); drag={k:"rail",item:k,dx:refX(k)-onPlane(p[0],p[1],RT)[0]}; return; }
@@ -1080,6 +1303,7 @@ cv.addEventListener("pointermove",e=>{
 const up=e=>{ cv.classList.remove("grabbing"); S.dripping=false; S.wiping=false;
   if(down&&!down.moved&&!view){ const id=down.id;
     if(id==="tissue"){ carry={k:"sheet",wet:0}; say("sheet"); }
+    else if(id==="batt"||id==="leads") connectLeads();
     else if(id==="screen"){ openView("screen"); } else if(id==="cell"){ openView("cell"); } else if(id==="rail"){ openView("rail"); } }
   down=null; drag=null; };
 cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
@@ -1146,6 +1370,7 @@ function renderStatus(){
   const L=[], t=d();
   if(!ST.on.laser||!ST.on.cell||!ST.on.screen) L.push([t.st.none,false]);
   else if(!ST.on.batt) L.push([t.st.noBatt,false]);
+  else if(!S.conn) L.push([t.st.noConn,false]);
   else if(!S.sw) L.push([t.st.off,false]);
   if(carry) L.push([t.st.hand(itemName(carry.k)),false]);
   if(ST.on.pipette||carry&&carry.k==="pipette") L.push([t.st.pip(S.pip),false]);
@@ -1238,7 +1463,8 @@ function tick(){
   if(carry&&carry.k==="cell") slosh(dt);
   if(S.tFirst) S.tDiff+=dt*speed;
   if(S.watch.run) S.watch.t+=dt*speed;
-  $("clock").textContent=fmtWatch(S.watch.t);
+  $("clock").textContent=ST.on.watch?fmtWatch(S.watch.t):"--:--.--";
+  $("clock").style.opacity=ST.on.watch?1:0.4; $("btnSS").disabled=$("btnRst").disabled=!ST.on.watch;
   const dpr=CAM.dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
   if(view){ ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CAM.W,CAM.H); ctx.setTransform(dpr*V2.k,0,0,dpr*V2.k,dpr*V2.px,dpr*V2.py); }
   if(view==="screen") view2Screen(CAM.W,CAM.H);
