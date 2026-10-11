@@ -142,7 +142,6 @@
       <button id="scOn"></button>
       <button id="scTare"></button>
     </div>
-    <label class="chk"><input type="checkbox" id="sync" checked><span id="t-sync"></span></label>
     <p class="hint" id="t-scalehint"></p>
 
     <h2 id="t-h-tape"></h2>
@@ -172,7 +171,8 @@ const T={
            laser:"5. 레이저 + 받침", mirror:"7. 평면거울", screen:"11. A4 스크린", tape:"10. 줄자", ruler:"9. 자"},
     snap:{P:"실 (윗 지지대 아래)", top:"위쪽 나사 머리", bot:"아래쪽 나사 머리", tip:"레이저 출구", hit:"빛점"},
     lens:"확대경 ×3", screenNone:"레이저 빛이 A4 스크린 앞면에 닿으면 여기 보입니다.", noStand:"스탠드를 놓으면 옆모습이 보입니다.",
-    elevTape:"줄자", rulerOff:"자를 부품함에서 꺼내면 스크린에 댈 수 있습니다.",
+    elevTape:"줄자", pullHint:"노란 원의 나사를 끌어 올려 빨간 지지대에 놓으세요",
+    rulerOff:"자를 부품함에서 꺼내면 스크린에 댈 수 있습니다.",
     st:{none:"부품함에서 스탠드와 전자저울부터 꺼내 놓으세요.", warm:"저울 예열 중입니다.",
         hung:t=>"긴 실: 일정 변형 상태로 "+t+" 동안 걸려 있음", shortHung:t=>"짧은 실: 일정 응력으로 "+t+" 동안 매달려 있음",
         laserOn:"레이저 켜짐 — 빛을 직접 보지 마세요.", noHit:"레이저 빛이 실에 닿지 않습니다 (회절무늬 없음)."},
@@ -184,8 +184,11 @@ const T={
        notUnder:"추 뭉치가 윗 지지대(빨간 홈) 바로 아래에 있지 않습니다. 스탠드를 휠로 돌리거나 저울·추 뭉치를 옮겨 지지대 아래(2.5 cm 안)에 오게 하세요.",
        noStandH:"먼저 스탠드를 실험대에 놓으세요.", endTake:"실 끝의 고정 나사를 집었습니다 — 스탠드 위 팔 끝의 빨간 지지대를 클릭해 거세요. (우클릭: 내려놓기)",
        endWhere:"나사는 스탠드 팔 끝의 빨간 지지대에 겁니다.", endDrop:"나사를 다시 내려놓았습니다.",
-       hang:"실의 나사를 윗 지지대에 걸었습니다 — 저울 위의 추는 그대로이고 실은 일정 길이로 늘어났습니다.",
-       hangSync:"실을 걸고 동시에 스톱워치를 시작했습니다.", needOn:"저울이 꺼져 있습니다. 측정 전에 켜 두세요.",
+       hang:"나사를 지지대 홈에 놓았습니다 (이 순간이 t = 0) — 스톱워치는 직접 누르세요. 실의 나사를 윗 지지대에 걸었습니다 — 저울 위의 추는 그대로이고 실은 일정 길이로 늘어났습니다.",
+       pullSide:"실은 손으로 당겨 겁니다 — 왼쪽 아래 옆모습 창에서 노란 원의 나사를 끌어 올려 빨간 지지대에서 놓으세요.",
+       pullStart:"나사를 잡았습니다 — 끌어 올리세요. 실이 팽팽해지면 저울 눈금이 줄어듭니다.", pullTaut:"실이 팽팽해졌습니다 — 지지대 홈까지 올려서 놓으세요.",
+       pullDrop:"지지대가 아닌 곳에서 놓아 실이 다시 늘어졌습니다.", unhookFirst:"실이 지지대에 걸려 있습니다. 지지대를 우클릭해 먼저 내리세요.",
+       unhooked:"실을 지지대에서 내렸습니다.", needOn:"저울이 꺼져 있습니다. 측정 전에 켜 두세요.",
        unscrew:"추 뭉치를 긴 실에서 풀어냈습니다. 긴 실은 걷어 냈습니다.",
        shortOn:"짧은 실을 추 뭉치 구멍에 끼우고 나사로 고정했습니다. 아직 늘어나지 않았습니다.",
        shortWhere:"짧은 실은 저울 위에 둔 추 뭉치에 끼웁니다.", shortFirst:"먼저 추 뭉치를 긴 실에서 풀어내세요 (걸린 추 뭉치 클릭).",
@@ -213,7 +216,8 @@ const T={
            laser:"5. Laser + support", mirror:"7. Plane mirror", screen:"11. A4 screen", tape:"10. Measuring tape", ruler:"9. Ruler"},
     snap:{P:"thread (under the support)", top:"upper screw head", bot:"lower screw head", tip:"laser aperture", hit:"light spot"},
     lens:"magnifier ×3", screenNone:"Shows here when the laser light falls on the front of the A4 screen.", noStand:"Put the stand down to see its side view.",
-    elevTape:"tape", rulerOff:"Take the ruler out of the box to lay it on the screen.",
+    elevTape:"tape", pullHint:"drag the circled screw up and let go on the red support",
+    rulerOff:"Take the ruler out of the box to lay it on the screen.",
     st:{none:"Take the stand and the digital scale out of the box first.", warm:"The scale is warming up.",
         hung:t=>"Long thread: held at constant strain for "+t, shortHung:t=>"Short thread: under constant stress for "+t,
         laserOn:"Laser on — never look into the beam.", noHit:"The laser beam misses the thread (no diffraction pattern)."},
@@ -225,8 +229,11 @@ const T={
        notUnder:"The mass-set is not right under the upper support (red slot). Turn the stand with the wheel or move the scale / mass-set so it sits under the support (within 2.5 cm).",
        noStandH:"Put the stand on the bench first.", endTake:"Holding screw at the end of the thread picked up — click the red support at the end of the stand's arm to hang it. (R-click: put it down)",
        endWhere:"The screw goes on the red support at the end of the stand's arm.", endDrop:"Screw put down again.",
-       hang:"Screw head put on the upper support — the mass-set stays on the scale and the thread is stretched to a fixed length.",
-       hangSync:"Thread hung and the stopwatch started at the same instant.", needOn:"The scale is off. Switch it on before measuring.",
+       hang:"Screw let go in the support slot (this instant is t = 0) — start the stopwatch yourself. Screw head put on the upper support — the mass-set stays on the scale and the thread is stretched to a fixed length.",
+       pullSide:"The thread is pulled up by hand — in the side view (bottom left) drag the circled screw up and let go on the red support.",
+       pullStart:"Screw in hand — pull it up. Once the thread is taut the scale reading drops.", pullTaut:"The thread is taut — bring the screw up to the support slot and let go.",
+       pullDrop:"Let go away from the support: the thread falls slack again.", unhookFirst:"The thread is hung on the support. R-click the support to take it down first.",
+       unhooked:"Thread taken down from the support.", needOn:"The scale is off. Switch it on before measuring.",
        unscrew:"Mass-set unscrewed from the long thread. The long thread is taken away.",
        shortOn:"Short thread pushed through the hole of the mass-set and screwed. It is not stretched yet.",
        shortWhere:"The short thread goes into the mass-set lying on the scale.", shortFirst:"Unscrew the mass-set from the long thread first (click the hanging mass-set).",
@@ -486,6 +493,7 @@ const Z_B=1.6+3.2+2.2+0.5;                              /* top of the lower scre
 const Z_T=Z_B+TH.l*100-1;                               /* the upper screw head sits on the support */
 function elevSnaps(){
   const xm=(ST.thread==="shortHung"?ARM:along(massXY()));
+  if(ST.pull){ const pl=ST.pull; return {top:[pl.x,pl.z], bot:pl.bot, L:pl.L}; }
   if(ST.thread==="hung") return {top:[ARM,Z_T], bot:[xm,Z_B]};
   if(ST.thread==="shortHung"){ const L=TH.lenS(ST.tShort)*100-1; return {top:[ARM,Z_T], bot:[ARM,Z_T-L]}; }
   if(ST.thread==="lying"||ST.thread==="shortLying"){ const L=(ST.thread==="lying"?TH.l0:TH.l0s)*100-1, dz=Z_B-0.3;
@@ -507,10 +515,15 @@ function drawElev(c){
   const sn=elevSnaps();
   const mass=(xm,ztop)=>{ R(xm-0.6,ztop-0.5,xm+0.6,ztop,"#efefea"); R(xm-1.5,ztop-2.7,xm+1.5,ztop-0.5,"#b4b9bf");
     c.strokeStyle="#7c8187"; c.lineWidth=1; c.strokeRect(eX(xm-1.5),eY(ztop-0.5),3*k,2.2*k); };
-  const thr=(a,b)=>{ c.strokeStyle="#f4f4ee"; c.lineWidth=1.6; c.beginPath(); c.moveTo(eX(a[0]),eY(a[1])); c.lineTo(eX(b[0]),eY(b[1])); c.stroke();
+  const thr=(a,b,L)=>{ c.strokeStyle="#f4f4ee"; c.lineWidth=1.6; c.beginPath(); c.moveTo(eX(a[0]),eY(a[1]));
+    const dd=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=L&&L>dd?Math.sqrt(L*L-dd*dd)/2:0;      /* a slack thread hangs in a curve */
+    if(sag>0.05) c.quadraticCurveTo(eX((a[0]+b[0])/2),eY(Math.max(0.2,(a[1]+b[1])/2-sag)),eX(b[0]),eY(b[1])); else c.lineTo(eX(b[0]),eY(b[1])); c.stroke();
     c.strokeStyle="rgba(0,0,0,.35)"; c.lineWidth=0.5; c.stroke(); };
   const head=p=>{ c.fillStyle="#efefea"; c.fillRect(eX(p[0]-0.6),eY(p[1]),1.2*k,0.5*k); c.strokeStyle="#999"; c.lineWidth=0.6; c.strokeRect(eX(p[0]-0.6),eY(p[1]),1.2*k,0.5*k); };
-  if(sn.top&&sn.bot){ thr(sn.top,sn.bot); mass(sn.bot[0],sn.bot[1]); head(sn.top); }
+  if(sn.top&&sn.bot){ thr(sn.top,sn.bot,sn.L); mass(sn.bot[0],sn.bot[1]); head(sn.top); }
+  if((ST.thread==="lying"||ST.thread==="shortLying")&&!ST.pull){ const q=elevPx("top"); if(q){ c.strokeStyle="#f2c14e"; c.lineWidth=1.5; c.beginPath(); c.arc(q[0],q[1],9,0,7); c.stroke();
+    c.fillStyle="#5d5446"; c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="left"; c.textBaseline="bottom"; c.fillText(d().pullHint,x+6,y+h-4); } }
+  if(ST.pull){ const q=[eX(ARM),eY(Z_T)]; c.strokeStyle="rgba(242,193,78,.9)"; c.setLineDash([3,3]); c.beginPath(); c.arc(q[0],q[1],10,0,7); c.stroke(); c.setLineDash([]); }
   else if(ST.thread==="detached") mass(along(massXY()),Z_B);
   /* tape in the side view */
   const tp=ST.tape;
@@ -702,16 +715,22 @@ function hang(){
   if(!ST.on.stand){ say("noStandH"); return true; }
   if(Math.hypot(m[0]-p[0],m[1]-p[1])>2.5){ say("notUnder"); return true; }   /* within 2.5 cm the thread hangs within 3° of vertical */
   if(lying){ ST.thread="hung"; ST.tHung=0;
-    if($("sync").checked){ ST.sw=0; ST.swRun=true; ST.laps=[]; renderPanel(); say("hangSync"); } else say("hang");
+    say("hang");
     if(!SC.on) say("needOn"); }
   else { ST.thread="shortHung"; ST.tShort=0; say("hangShort"); }
   return true;
 }
+function unhook(){ if(ST.thread==="hung"){ ST.thread="lying"; ST.tHung=0; } else if(ST.thread==="shortHung"){ ST.thread="shortLying"; ST.tShort=0; } say("unhooked"); }
 function benchClick(p,right){
   const c=cm(p);
   if(hand) return handClick(p,c,right);
   if(right){
-    if(ST.thread==="lying"&&near(c,massXY(),1.8)){ ST.thread="none"; say("back",itemName("mass")); return; }
+    if(ST.on.stand&&near(c,P(),1.6)&&hungState()){ unhook(); return; }
+    if(massOnScale()&&near(c,massXY(),1.8)){
+      if(ST.thread==="hung"){ say("unhookFirst"); return; }
+      if(ST.thread==="shortLying"){ ST.thread="detached"; say("back",itemName("short")); return; }
+      if(ST.thread==="detached") ST.longDone=true;
+      ST.thread="none"; say("back",itemName("mass")); return; }
     for(const k of ORDER.slice().reverse()) if(inItem(k,c)){
       if(busy(k)){ say("busy"); return; }
       if(k==="scale"&&ST.thread==="lying") ST.thread="none";
@@ -722,8 +741,7 @@ function benchClick(p,right){
   }
   if(ST.on.scale){ const b=SC_BTN(); if(near(c,b.on,0.9)){ scaleOnOff(); return; } if(near(c,b.tare,0.9)){ tare(); return; } }
   if(ST.on.laser&&near(c,CLAMP(),1.3)){ ST.laserOn=!ST.laserOn; say(ST.laserOn?"laserOn":"laserOff"); return; }
-  if(ST.on.stand&&near(c,P(),1.6)&&hang()) return;
-  if((ST.thread==="lying"||ST.thread==="shortLying")&&near(c,freeEnd(),1.6)){ hand={k:"end"}; say("endTake"); return; }
+  if((ST.thread==="lying"||ST.thread==="shortLying")&&(ST.on.stand&&near(c,P(),1.6)||near(c,freeEnd(),1.6))){ say("pullSide"); return; }
   if(massOnScale()&&near(c,massXY(),1.8)){
     if(ST.thread==="hung"){ ST.thread="detached"; say("unscrew"); return; }
     if(ST.thread!=="hung"){ hand={k:"mass",st:ST.thread,off0:{...ST.massOff}}; ST.thread="none"; say("picked",itemName("mass")); return; }
@@ -747,7 +765,7 @@ function handClick(p,c,right){
   }
   if(k==="mass"){
     if(!onPlatform(c)){ say("massWhere"); return; }
-    ST.massOff={x:c[0]-ST.pos.scale.x,y:c[1]-ST.pos.scale.y}; ST.thread=hand.st||"lying"; hand=null;
+    ST.massOff={x:c[0]-ST.pos.scale.x,y:c[1]-ST.pos.scale.y}; ST.thread=hand.st||(ST.longDone?"detached":"lying"); hand=null;
     say(ST.thread==="lying"?"massOn":"placed",itemName("mass")); return;
   }
   if(k==="short"){
@@ -789,6 +807,31 @@ trayCv.addEventListener("mousedown",e=>{
     const same=hand&&(hand.k===k||(k==="mirror"&&hand.k.startsWith("mirror")))&&!hand.move;
     if(hand) returnHand(); if(!same) takeFromTray(k); drawTray(); return; }
 });
+/* pulling the thread up by hand (side view): the holding screw follows the pointer; past its relaxed
+   length the long thread stretches and the scale shows the tension, the short one lifts the mass-set.
+   Only letting go of the screw in the support slot hangs the thread — that instant is t = 0. */
+function startPull(){
+  if(!ST.on.stand){ say("noStandH"); return; }
+  const m=massXY(), p=P(); if(Math.hypot(m[0]-p[0],m[1]-p[1])>2.5){ say("notUnder"); return; }
+  const sh=ST.thread==="shortLying", L=(sh?TH.l0s:TH.l0)*100-1, s=elevSnaps().top;
+  ST.pull={short:sh,L,x:s[0],z:s[1],bot:[along(m),Z_B],F:0}; say("pullStart");
+}
+function movePull(q){
+  const pl=ST.pull, xm=along(massXY()); let x=(q[0]-ELV.x-14)/ELV.k-2, z=(ELV.y+ELV.h-14-q[1])/ELV.k;
+  z=Math.max(0.3,z);
+  if(!pl.short){ const Ls=Math.hypot(ARM-xm,Z_T-Z_B)*1.012, dx=x-xm, dz=z-Z_B, dd=Math.hypot(dx,dz);
+    if(dd>Ls){ x=xm+dx*Ls/dd; z=Z_B+dz*Ls/dd; }
+    const d2=Math.hypot(x-xm,z-Z_B), Lsup=Math.hypot(ARM-xm,Z_T-Z_B);
+    pl.F=TH.force(0)*Math.max(0,(d2-pl.L)/(Lsup-pl.L)); pl.bot=[xm,Z_B]; }
+  else { if(z>Z_T+0.5) z=Z_T+0.5; const lift=z-pl.L>Z_B; pl.bot=lift?[x,z-pl.L]:[xm,Z_B]; pl.F=lift?TH.mass*1e3:0; }
+  pl.x=x; pl.z=z;
+  if(pl.F>0&&!pl.said){ pl.said=true; say("pullTaut"); }
+}
+function endPull(){
+  const pl=ST.pull; ST.pull=null;
+  if(Math.hypot(pl.x-ARM,pl.z-Z_T)<1.4){ hang(); return; }
+  say("pullDrop");
+}
 /* close up: the tape in the side view, the ruler and the zoom on the screen */
 let rulerDrag=null;
 function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
@@ -802,14 +845,15 @@ closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
       if(!hand.a||hand.view!=="elev"){ hand.a=id; hand.view="elev"; say("tape2"); return; }
       if(id===hand.a) return;
       const s=elevSnaps(); ST.tape={view:"elev",a:hand.a,b:id,txt:tapeRead(s[hand.a],s[id])}; say("tapeRead",ST.tape.txt); hand.a=null; return; }
-    if(e.button===0&&!hand){ const q=elevPx("top"); if(q&&near(p,q,12)&&hang()) return;
+    if(e.button===0&&!hand&&(ST.thread==="lying"||ST.thread==="shortLying")){ const q=elevPx("top"); if(q&&near(p,q,14)){ startPull(); closeCv.setPointerCapture(e.pointerId); return; } }
+    if(e.button===0&&!hand){
       const b=elevPx("bot"); if(b&&near(p,b,14)&&ST.thread==="hung"){ ST.thread="detached"; say("unscrew"); } }
     return;
   }
   if(p[0]>=SCR.x&&p[0]<=SCR.x+SCR.w&&ST.ruler&&e.button===0){ rulerDrag={x:p[0],r:ST.rulerX}; closeCv.setPointerCapture(e.pointerId); }
 });
-closeCv.addEventListener("pointermove",e=>{ if(!rulerDrag) return; const p=clpos(e); ST.rulerX=rulerDrag.r+(p[0]-rulerDrag.x)/(SCR.w/ST.zoom); });
-closeCv.addEventListener("pointerup",()=>{ rulerDrag=null; });
+closeCv.addEventListener("pointermove",e=>{ if(ST.pull){ movePull(clpos(e)); return; } if(!rulerDrag) return; const p=clpos(e); ST.rulerX=rulerDrag.r+(p[0]-rulerDrag.x)/(SCR.w/ST.zoom); });
+closeCv.addEventListener("pointerup",()=>{ rulerDrag=null; if(ST.pull) endPull(); });
 
 /* ══════════════════════════════════════════════════════════════
    7.  PANEL
@@ -842,7 +886,7 @@ function applyLang(){
   $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
   $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
-  $("t-h-scale").textContent=t.hScale; $("scOn").textContent=t.on; $("scTare").textContent=t.tare; $("t-sync").textContent=t.sync;
+  $("t-h-scale").textContent=t.hScale; $("scOn").textContent=t.on; $("scTare").textContent=t.tare;
   $("t-scalehint").textContent=t.scaleHint; $("t-h-tape").textContent=t.hTape; $("t-tapehint").textContent=t.tapeHint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2018 E2 — 고분자 실의 점탄성 · HaslaLab":"IPhO 2018 E2 — Viscoelasticity of a Polymer Thread · HaslaLab";
@@ -859,7 +903,7 @@ function tick(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   const sdt=dt*speed; ST.t+=sdt; if(ST.swRun) ST.sw+=sdt;
   if(ST.thread==="hung") ST.tHung+=sdt; if(ST.thread==="shortHung") ST.tShort+=sdt;
-  const target=!ST.on.scale?0: ST.thread==="hung"? TH.mass*1e3-TH.force(ST.tHung) : massOnScale()? TH.mass*1e3 : 0;
+  const target=!ST.on.scale?0: ST.pull? TH.mass*1e3-ST.pull.F : ST.thread==="hung"? TH.mass*1e3-TH.force(ST.tHung) : massOnScale()? TH.mass*1e3 : 0;
   SC.update(target,sdt);
   scT-=dt; if(scT<=0){ $("scaleLbl").textContent=SC.on?SC.text()+" g":"—"; scT=0.3; }
   beam=trace();
