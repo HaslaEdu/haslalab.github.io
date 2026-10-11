@@ -381,6 +381,7 @@ function gl3Init(){
     const c=document.createElement("canvas");
     const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
     if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
     const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
     const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
       if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
@@ -559,7 +560,7 @@ const T={
     title:"IPhO 2017 실험 1 — 레이저 편향으로 소금물의 굴절률 기울기와 확산계수 재기",
     sub:"가상 실험실 · 책상 위의 장비를 3D로 봅니다. 레이저 모듈·확산 셀·스크린을 레일에 놓고, 소금물 병과 증류수·피펫을 책상에 꺼내 쓰세요. 스크린·셀·레일을 클릭하면 2D로 자세히 볼 수 있습니다. 프로그램은 아무것도 계산해 주지 않습니다.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"책상 위", trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (3D) — 빈 곳을 끌면 회전, Shift+끌기 이동, 휠 확대 / 받침을 끌면 레일을 따라 이동, 레이저·스크린을 위아래로 끌거나 휠로 높이 / 셀을 끌면 들어 올림 / 스크린·셀·레일 클릭: 2D 보기 / 우클릭 되돌리기",
+    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 받침을 끌면 레일을 따라 이동, 레이저·스크린을 위아래로 끌거나 휠로 높이 / 셀을 끌면 들어 올림 / 스크린·셀·레일 클릭: 2D 보기 / 우클릭 되돌리기",
     cap2:{screen:"스크린 정면 (2D) — 모눈종이 30 × 30 cm · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           cell:"확산 셀 단면 (2D, 옆에서) — 레이저 선이 셀을 지나는 모습 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           rail:"레일 옆면 (2D) — 받침의 흰 지시선과 레일 눈금 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
@@ -600,7 +601,7 @@ const T={
     title:"IPhO 2017 Experiment 1 — Refractive index gradient and diffusion coefficient of salt solution from laser deflection",
     sub:"Virtual laboratory · the apparatus on the desk in 3D. Put the line laser module, the diffusion cell and the screen on the rail and take the salt solution bottles, the distilled water and the pipette out onto the desk. Click the screen, the cell or the rail for a detailed 2D view. Nothing is computed for you.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"on the desk", trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (3D) — drag empty space to turn, Shift+drag to pan, wheel to zoom / drag a base along the rail, drag the laser or screen up and down (or wheel) for height / drag the cell to lift it / click the screen, cell or rail for 2D / R-click return",
+    cap:"the bench (3D) — drag empty space or right-drag to turn, Shift- or middle-drag to pan, wheel to zoom / drag a base along the rail, drag the laser or screen up and down (or wheel) for height / drag the cell to lift it / click the screen, cell or rail for 2D / R-click return",
     cap2:{screen:"the screen face on (2D) — millimetre paper 30 × 30 cm · wheel: zoom, drag: pan / R-click: back to 3D",
           cell:"the diffusion cell in section (2D, side view) — the laser line crossing the cell · wheel: zoom, drag: pan / R-click: back to 3D",
           rail:"the side of the rail (2D) — white index lines of the bases and the rail scale · wheel: zoom, drag: pan / R-click: back to 3D"},
@@ -1266,9 +1267,11 @@ cv.addEventListener("pointerenter",()=>{ over=true; });
 cv.addEventListener("pointerleave",()=>{ over=false; });
 cv.addEventListener("pointerdown",e=>{
   const p=pos(e); mouse=p; cv.setPointerCapture(e.pointerId);
-  if(e.button===2){ rclick(p); drawTray(); return; }
+  /* the right button: a click returns things, a drag turns the view (pans a 2-D view) */
+  if(e.button===2){ down={p,right:true,view:!!view,moved:false}; return; }
   if(view){ down={p,view:true}; return; }
   const id=pick3(p[0],p[1]);
+  if(e.button===1){ down={p,id,moved:false,shift:true}; return; }
   if(hand){ placeFromHand(p[0],p[1],id); drawTray(); return; }
   if(carry){ useCarried(p[0],p[1],id); return; }
   down={p,id,moved:false,shift:e.shiftKey};
@@ -1286,11 +1289,12 @@ cv.addEventListener("pointerdown",e=>{
 });
 cv.addEventListener("pointermove",e=>{
   const p=pos(e), dx=p[0]-mouse[0], dy=p[1]-mouse[1]; mouse=p;
-  if(view){ if(down&&down.view){ V2.px+=dx; V2.py+=dy; clampV2(); } return; }
+  if(view){ if(down&&down.view){ if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true; V2.px+=dx; V2.py+=dy; clampV2(); } return; }
   if(carry&&carry.k==="sheet"&&S.wiping) wipe(p);
   if(!down) return;
   if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true;
   if(!down.moved) return;
+  if(down.right){ CAM.yaw+=dx*0.008; CAM.pitch=Math.min(1.45,Math.max(0.12,CAM.pitch+dy*0.006)); cv.classList.add("grabbing"); return; }
   if(down.id==="cell"&&!drag){ liftCell(); down=null; return; }
   if(drag&&drag.k==="rail"){ const x=Math.round((onPlane(p[0],p[1],RT)[0]+drag.dx)*10)/10; if(railFits(drag.item,x)) setRef(drag.item,x); return; }
   if(drag&&drag.k==="height"){ const k=drag.item, q=onPlaneX(p[0],p[1],k==="laser"?S.laserX:S.screenX); if(!q) return;
@@ -1301,6 +1305,7 @@ cv.addEventListener("pointermove",e=>{
   cv.classList.add("grabbing");
 });
 const up=e=>{ cv.classList.remove("grabbing"); S.dripping=false; S.wiping=false;
+  if(down&&down.right){ if(!down.moved){ rclick(down.p); drawTray(); } down=null; drag=null; return; }
   if(down&&!down.moved&&!view){ const id=down.id;
     if(id==="tissue"){ carry={k:"sheet",wet:0}; say("sheet"); }
     else if(id==="batt"||id==="leads") connectLeads();
@@ -1453,6 +1458,10 @@ function slosh(dt){
 }
 let tPrev=performance.now()/1000, frameN=0;
 function tick(){
+  requestAnimationFrame(tick);
+  try{ frame(); }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); } if(GL3.ok===true&&!view){ GL3.ok=false; } }
+}
+function frame(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   if(S.dripping&&S.filled&&carry&&carry.k==="pipette"&&S.pip>0){
     S.dropCredit+=dt*WDROP_RATE; const landed=Math.min(Math.floor(S.dropCredit),S.pip);
@@ -1473,7 +1482,6 @@ function tick(){
   else { const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
     begin3(); drawScene3(); drawGhost(); render3(ctx); }
   if(++frameN%6===0){ renderStatus(); drawTray(); }
-  requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
 applyLang(); requestAnimationFrame(tick);

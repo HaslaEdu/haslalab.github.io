@@ -203,6 +203,8 @@ const T = {
       noCable:"남은 케이블이 없습니다.",
       noTerm:"단자를 클릭하세요.",
       probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
+      hsDesk:s=>s+"을(를) 책상 위에 세워 두었습니다. 다시 집어 받침판 위에 올릴 수 있습니다.",
+      flipDesk:(s,f)=>s+"을(를) 책상 위에서 "+(f?"뒤집어 놓았습니다 (다리가 위로).":"바로 세웠습니다."),
       probeOn:"프로브를 물렸습니다.", gndReach:"접지 집게선(약 14 cm)이 거기까지 닿지 않습니다. 프로브 고리를 먼저 가까운 단자에 물리세요.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
       noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
       keyTake:"육각 렌치로 코일 #1 받침의 클램프 나사를 클릭해 풀거나 조이세요. (우클릭: 내려놓기)",
@@ -307,6 +309,8 @@ const T = {
       noCable:"No cables of that kind left.",
       noTerm:"Click a terminal.",
       probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
+      hsDesk:s=>s+" stands on the desk by itself. Pick it up again to put it on the base plate.",
+      flipDesk:(s,f)=>s+(f?" turned upside down on the desk (legs up).":" set upright on the desk."),
       probeOn:"Probe clipped on.", gndReach:"The ground lead (about 14 cm) does not reach that far. Clip the probe hook to a nearby terminal first.", probeOff:"Probe unclipped and hung up.",
       noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
       keyTake:"Click the clamp screws on coil #1's platform with the Allen key to loosen or tighten them. (R-click: put it down)",
@@ -527,7 +531,7 @@ const S={
   dplates:[],                   /* plates lying loose on the desk: {mat,x,z} (centre, cm) */
   carry:null, zones:{},
   /* each part stands wherever it was put down: its shift (cm, along x and z) from the drawing's own place */
-  at:{fg:[0,0],scope:[0,0],base:[0,0],box:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
+  at:{fg:[0,0],scope:[0,0],base:[0,0],box:[0,0],c1:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
   fg:{pow:false,amp:0.25,range:2,coarse:0.5,fine:0.5,wave:0},
   z:{on:false,mode:"SCOPE",fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
      vi:7,ti:6,ypos:0,xpos:0,trig:0,hold:false,held:null,dfn:"ACV",rfn:0,armed:true,
@@ -573,7 +577,7 @@ function coilPlace(){
   if(lo&&up){ const dd=Math.abs(coilY(lo)-coilY(up)), r=1.6, d0=1.5; mfac=Math.pow((r*r+d0*d0)/(r*r+dd*dd),1.5); }
   let p1=false, p2=false;
   if(S.pan){
-    if(S.panPos==="gap"){ p1=!!S.hs.c1.at; p2=!!S.hs.c2.at; }
+    if(S.panPos==="gap"){ p1=!!S.hs.c1.at&&S.hs.c1.at!=="desk"; p2=!!S.hs.c2.at; }
     else { const t=topHs(); p1=t==="c1"; p2=t==="c2"; }
   }
   return {mfac,panC1:p1,panC2:p2};
@@ -602,7 +606,6 @@ const BOX_SLOT={desk:[70,7]};
 const POSTS={R1A:[2.6,10,"r"],R1B:[15.4,10,"k"],B1:[5.5,4.4,"r"],B2:[12.5,4.4,"k"]};
 const POST_H=1.3;
 const CAP_SLOT={C470N:[89,27],C470U:[94,27],C1000U:[99,27],C2200U:[104.5,27]};
-const PROBE_REST={tip:[73,0.25,31],gnd:[77.5,0.25,29.5]};
 const PLATE_T=0.12;
 
 function boxOrigin(){
@@ -620,18 +623,20 @@ function coilY(c){
   const [b,t]=upPlate(); return h.flip?b+0.12:t-0.12;
 }
 /* mid-height of a housing's plate: the pin header sits there, so flipping the housing leaves it in place */
-function plateMid(c){ if(S.hs[c].at==="low") return (BASE.t+LOW_TOP)/2; const [b,t]=upPlate(); return (b+t)/2; }
+function deskPlate(c){ const b=S.hs[c].flip?0.3:HS.leg; return [b,b+HS.up]; }
+function plateMid(c){ if(S.hs[c].at==="low") return (BASE.t+LOW_TOP)/2; if(S.hs[c].at==="desk"){ const [b,t]=deskPlate(c); return (b+t)/2; } const [b,t]=upPlate(); return (b+t)/2; }
 const gapMM=()=>upHs()?(upPlate(false)[0]-LOW_TOP)*10:99;
 const gapUsed=()=>S.stack.reduce((a,m)=>a+PLATE_MM[m],0)+(S.pan&&S.panPos==="gap"?PAN_MM[S.pan]:0);
 const stackTop=()=>{ const up=upHs(); if(up){ const [,t]=upPlate(); return t+(S.hs[up].flip?HS.leg:0); } return lowHs()?LOW_TOP+HS.post:BASE.t; };
 const capAt=k=>[CAP_SLOT[k][0]+S.at[k][0],CAP_SLOT[k][1]+S.at[k][1]];
 /* footprints on the desk (x0 x1 z0 z1, unshifted) for the free placing */
 const FOOT={fg:[4,28,36,54], scope:[86,95.5,39,47.6], base:[BASE.x0,BASE.x1,BASE.z0-3,BASE.z1],
-            box:[BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D]};
+            box:[BOX_SLOT.desk[0],BOX_SLOT.desk[0]+BOX_W,BOX_SLOT.desk[1],BOX_SLOT.desk[1]+BOX_D],
+            c1:[HS.x0,HS.x1+0.3,HS.z0,HS.z1]};          /* coil #1's housing standing by itself on the desk */
 for(const k in CAP_SLOT){ const [cx,cz]=CAP_SLOT[k]; FOOT[k]=[cx-1.4,cx+1.4,cz-3,cz+1.4]; }
 const DESK=[-9,127,-7,63];
 function footNow(id){ const f=FOOT[id], o=S.at[id]; return [f[0]+o[0],f[1]+o[0],f[2]+o[1],f[3]+o[1]]; }
-function onDesk(id){ return CAPS[id]?S.cap[id]==="desk":id==="box"?S.on.box==="desk":!!S.on[id]; }
+function onDesk(id){ return CAPS[id]?S.cap[id]==="desk":id==="box"?S.on.box==="desk":id==="c1"?S.hs.c1.at==="desk":!!S.on[id]; }
 /* the shift that centres the part on (bx,bz), or null if it would hang off the desk or hit another part */
 /* a loose plate lies flat on the desk, 2.7 cm x 4.6 cm (the size it has between the coils) */
 const PL_W=1.35, PL_D=2.3;
@@ -663,15 +668,15 @@ function termInfo(id){
   return {...info, p:[info.p[0]+o[0],info.p[1],info.p[2]+o[1]]};
 }
 function termLocal(id){
-  const face=(F,a,t)=>[F.x0+a, F.y1-t, F.z];
+  const face=(F,a,t,h)=>[F.x0+a, F.y1-t, F.z-(h||0)];
   switch(id){
-    case "FGP": return S.on.fg?{p:face(FG_FACE,21.2,2.9),d:[0,0,-1],k:"sock",col:"r"}:null;
-    case "FGN": return S.on.fg?{p:face(FG_FACE,21.2,6.3),d:[0,0,-1],k:"sock",col:"k"}:null;
+    case "FGP": return S.on.fg?{p:face(FG_FACE,21.2,2.9,FG_POST_H),d:[0,0,-1],k:"sock",col:"r"}:null;
+    case "FGN": return S.on.fg?{p:face(FG_FACE,21.2,6.3,FG_POST_H),d:[0,0,-1],k:"sock",col:"k"}:null;
     case "DCOM":return S.on.scope?{p:face(Z_FACE,5.6,16.6),d:[0,0,-1],k:"sock",col:"k"}:null;
     case "DVO": return S.on.scope?{p:face(Z_FACE,7.9,16.6),d:[0,0,-1],k:"sock",col:"r"}:null;
     case "C1A": case "C1B": case "C2A": case "C2B":{
       /* the coil pin terminals: a 2-way header on the side of each housing facing the viewer, at the plate's mid-height */
-      const c=id[1]==="1"?"c1":"c2"; if(!S.on.base||!S.hs[c].at) return null;
+      const c=id[1]==="1"?"c1":"c2"; if(!S.on.base||!S.hs[c].at||S.hs[c].at==="desk") return null;
       const z=(HS.z0+HS.z1)/2+(id.endsWith("A")?-0.3:0.3), y=plateMid(c);
       return {p:[HS.x1+0.25,y,z],d:[1,0,0],k:"pin",col:"g",hidden:S.on.box==="cover"};
     }
@@ -852,7 +857,7 @@ function drawKnob(c,x,y,r,ang){
   circ(c,x-r*0.2,y-r*0.2,r*0.35,"rgba(255,255,255,0.06)");
   seg(c,x+Math.sin(ang)*r*0.15,y-Math.cos(ang)*r*0.15,x+Math.sin(ang)*r*0.9,y-Math.cos(ang)*r*0.9,"#f2f2f2",0.11);
 }
-function drawFgFace(c){
+function drawFgFace(c,bench){
   rr(c,0,0,24,9,0.45,"#141518");
   rr(c,0.45,0.4,18.4,8.6,0.15,"#e6e7e8","#b9bbbd",0.03);
   rr(c,18.7,0.4,23.55,8.6,0.15,"#e6e7e8","#b9bbbd",0.03);
@@ -861,34 +866,34 @@ function drawFgFace(c){
   rr(c,19.3,7.85,23.0,8.6,0.1,"#17181b"); FT(c,"POWER AMP",21.15,8.23,0.42,"#f2f2f2","center",true);
   /* 1 power LED */
   circ(c,1.35,1.35,0.42,"#2a2b2e");
-  circ(c,1.35,1.35,0.3,S.fg.pow?"#ff3b2f":"#5b1f1a");
-  if(S.fg.pow) circ(c,1.35,1.35,0.55,"rgba(255,70,50,0.25)");
+  if(!bench){ circ(c,1.35,1.35,0.3,S.fg.pow?"#ff3b2f":"#5b1f1a");
+    if(S.fg.pow) circ(c,1.35,1.35,0.55,"rgba(255,70,50,0.25)"); }
   /* 2 amplitude */
   FT(c,"AMPLITUDE",2.9,3.25,0.42,"#1b1c1e","center",true);
   FT(c,"MIN",1.55,6.35,0.3,"#333"); FT(c,"MAX",4.25,6.35,0.3,"#333");
-  drawKnob(c,2.9,4.9,1.15,knobAngle("amp"));
+  if(!bench) drawKnob(c,2.9,4.9,1.15,knobAngle("amp"));
   /* 3 frequency range */
   FT(c,"FREQUENCY",6.6,1.55,0.44,"#1b1c1e","center",true);
   [-120,-40,40,120].forEach((a,i)=>{ const q=a*Math.PI/180;
     seg(c,6.6+Math.sin(q)*1.12,4.9-Math.cos(q)*1.12,6.6+Math.sin(q)*1.4,4.9-Math.cos(q)*1.4,"#333",0.06);
     FT(c,FRANGE_LBL[i],6.6+Math.sin(q)*1.95,4.9-Math.cos(q)*1.75,0.27,S.fg.range===i?"#b0261c":"#333","center",S.fg.range===i); });
-  drawKnob(c,6.6,4.9,1.0,knobAngle("range"));
+  if(!bench) drawKnob(c,6.6,4.9,1.0,knobAngle("range"));
   /* 4 coarse / fine */
   FT(c,"COARSE",10.6,1.2,0.36,"#1b1c1e","center",true);
   FT(c,"MIN",9.25,3.95,0.27,"#333"); FT(c,"MAX",11.95,3.95,0.27,"#333");
-  drawKnob(c,10.6,2.7,0.95,knobAngle("coarse"));
+  if(!bench) drawKnob(c,10.6,2.7,0.95,knobAngle("coarse"));
   FT(c,"FINE",10.6,5.0,0.36,"#1b1c1e","center",true);
   FT(c,"MIN",9.45,7.55,0.27,"#333"); FT(c,"MAX",11.75,7.55,0.27,"#333");
-  drawKnob(c,10.6,6.5,0.8,knobAngle("fine"));
+  if(!bench) drawKnob(c,10.6,6.5,0.8,knobAngle("fine"));
   /* 5 waveform */
   FT(c,"WAVEFORM",14.5,1.9,0.42,"#1b1c1e","center",true);
   [-50,0,50].forEach((a,i)=>{ const q=a*Math.PI/180;
     FT(c,WAVES[i],14.5+Math.sin(q)*1.75,4.9-Math.cos(q)*1.6,0.26,S.fg.wave===i?"#b0261c":"#333","center",S.fg.wave===i); });
-  drawKnob(c,14.5,4.9,1.0,knobAngle("wave"));
+  if(!bench) drawKnob(c,14.5,4.9,1.0,knobAngle("wave"));
   /* 6 BNC VOP1 (not used) */
   FT(c,"VOP1",17.2,2.35,0.34,"#1b1c1e","center",true);
-  circ(c,17.2,3.7,0.78,"#a9adb1","#6d7175",0.05); circ(c,17.2,3.7,0.5,"#c9cdd1","#80858a",0.04);
-  circ(c,17.2,3.7,0.18,"#2b2d30");
+  circ(c,17.2,3.7,0.78,"#a9adb1","#6d7175",0.05);
+  if(!bench){ circ(c,17.2,3.7,0.5,"#c9cdd1","#80858a",0.04); circ(c,17.2,3.7,0.18,"#2b2d30"); }
   /* logo */
   FT(c,"APhO",16.8,6.55,0.62,"#1d2a6e","center",true);
   FT(c,"Asian Physics Olympiad",16.8,7.15,0.2,"#1d2a6e","center");
@@ -896,7 +901,7 @@ function drawFgFace(c){
   FT(c,"VOP+",21.15,1.15,0.34,"#1b1c1e","center",true);
   FT(c,"VOP-",21.15,4.55,0.34,"#1b1c1e","center",true);
   for(const [y,col,dk] of [[2.9,"#c8261d","#6e110b"],[6.3,"#1e1f22","#000"]]){
-    circ(c,21.2,y,0.95,dk); circ(c,21.2,y,0.82,col);
+    circ(c,21.2,y,0.95,dk); if(bench) continue; circ(c,21.2,y,0.82,col);
     circ(c,21.2,y,0.42,"#0b0b0c"); circ(c,21.2,y,0.2,"#c9a94f");
   }
 }
@@ -919,12 +924,86 @@ function drawFgRear(c,y0){
   circ(c,20.4,y0+1.9,0.75,"#dde3ea","#9fb0c0",0.04); FT(c,"◎",20.4,y0+1.9,0.7,"#2d7fb8");
 }
 
+/* ---- solid parts standing out of a front panel (u right, v down on the panel, h towards the viewer) ---- */
+const FP3=(F,u,v,h)=>NP(F.x0+u,F.y1-v,F.z-h);
+const circUV=(u,v,r,n)=>Array.from({length:n||22},(_,i)=>{ const a=i/(n||22)*2*Math.PI; return [u+r*Math.cos(a),v+r*Math.sin(a)]; });
+function rrUV(u0,v0,u1,v1,r){ const P=[]; for(const [cu,cv,a0] of [[u1-r,v0+r,-Math.PI/2],[u1-r,v1-r,0],[u0+r,v1-r,Math.PI/2],[u0+r,v0+r,Math.PI]])
+  for(let i=0;i<=4;i++){ const a=a0+i/4*Math.PI/2; P.push([cu+r*Math.cos(a),cv+r*Math.sin(a)]); } return P; }
+/* the side walls of a convex outline pushed out of the panel from depth h0 to h1 */
+function EXTR(F,uv,h0,h1,side,edge){ const P=[]; for(const [u,v] of uv) P.push(FP3(F,u,v,h0),FP3(F,u,v,h1)); POLY(hull(P),side,edge||"#000",1); }
+const atDepth=(F,h)=>({x0:F.x0,y1:F.y1,z:F.z-h});
+const KNOB_H={amp:1.35,range:1.2,coarse:1.15,fine:1.0,wave:1.2};
+function knobHit(a,b,c,h){ for(const t of [0,0.25,0.5,0.75,1]) if(Math.hypot(a+t*h-c.x,b-2*KS*t*h-c.y)<=c.r+0.25) return true; return false; }
+const FG_POST_H=1.4;
+function drawFgFront3D(){
+  const F=FG_FACE;
+  /* power LED: a little red dome */
+  EXTR(F,circUV(1.35,1.35,0.3,14),0,0.22,S.fg.pow?"#b3261c":"#4a1814");
+  withFace(atDepth(F,0.22),c=>{ circ(c,1.35,1.35,0.3,S.fg.pow?"#ff3b2f":"#6b231c"); circ(c,1.27,1.27,0.1,"rgba(255,255,255,.45)"); });
+  if(S.fg.pow) withFace(atDepth(F,0.22),c=>circ(c,1.35,1.35,0.6,"rgba(255,70,50,0.22)"));
+  /* the knobs: a skirt and a fluted cap, standing about a centimetre out */
+  for(const key of ["amp","range","coarse","fine","wave"]){ const k=FG_CTRL[key], h=KNOB_H[key];
+    EXTR(F,circUV(k.x,k.y,k.r*1.08),0,0.25,"#0d0e10");
+    EXTR(F,circUV(k.x,k.y,k.r),0.25,h,"#16171a");
+    withFace(atDepth(F,h),c=>drawKnob(c,k.x,k.y,k.r,knobAngle(key))); }
+  /* the unused BNC socket */
+  EXTR(F,circUV(17.2,3.7,0.5),0,0.95,"#8d9297","#4b5055");
+  withFace(atDepth(F,0.95),c=>{ circ(c,17.2,3.7,0.5,"#c9cdd1","#80858a",0.04); circ(c,17.2,3.7,0.2,"#2b2d30"); circ(c,17.2,3.7,0.07,"#c9a94f"); });
+  /* the two output binding posts: a hex collar, the coloured cap with the 4 mm hole */
+  for(const [y,col,dk] of [[2.9,"#c8261d","#6e110b"],[6.3,"#2a2b2f","#060607"]]){
+    EXTR(F,circUV(21.2,y,0.9,6),0,0.3,"#5e6267","#2b2d30");
+    EXTR(F,circUV(21.2,y,0.75),0.3,FG_POST_H,dk);
+    withFace(atDepth(F,FG_POST_H),c=>{ circ(c,21.2,y,0.75,col); circ(c,21.2,y,0.33,"#0b0b0c"); circ(c,21.2,y,0.16,"#c9a94f"); }); }
+}
 /* ---- ZOYI ZT-702S ---- */
+function dpadFace(c){
+  c.save(); c.translate(4.75,12.6); c.scale(3.35,1.95); circ(c,0,0,1,"#3d4146","#0b0b0b",0.02); c.restore();
+  FT(c,"▲",4.75,11.3,0.42,"#e8e8e8"); FT(c,"▼",4.75,13.9,0.42,"#e8e8e8");
+  FT(c,"◀",2.35,12.6,0.42,"#e8e8e8"); FT(c,"▶",7.15,12.6,0.42,"#e8e8e8");
+}
+/* on the bench: the rubber holster's lip stands out round the panel, the LCD sits a little inside its
+   window, the keys and the d-pad stand out of the panel */
+const ZS_DEPTH=0.3, Z_LIP=0.45;
+function drawZoyiFront3D(){
+  const F=Z_FACE, sh=ZS_DEPTH;
+  /* the LCD, sunk into its window: the screen first, then the window's left and bottom walls */
+  const win=[[0.86,1.12],[8.64,1.12],[8.64,6.68],[0.86,6.68]].map(([u,v])=>FP3(F,u,v,0));
+  ctx.save(); ctx.beginPath(); win.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath(); ctx.clip();
+  withFace(atDepth(F,-sh),c=>{ rr(c,0.6,0.9,8.9,7.0,0,"#030405"); c.save(); c.beginPath(); c.rect(0.86,1.12,7.78,5.56); c.clip(); drawZoyiScreen(c,0.86,1.12,7.78,5.56); c.restore(); });
+  POLY([FP3(F,0.86,1.12,0),FP3(F,0.86,6.68,0),FP3(F,0.86,6.68,-sh),FP3(F,0.86,1.12,-sh)],"#0d0e10",null);
+  POLY([FP3(F,0.86,6.68,0),FP3(F,8.64,6.68,0),FP3(F,8.64,6.68,-sh),FP3(F,0.86,6.68,-sh)],"#1a1c1f",null);
+  ctx.restore();
+  /* glass glare */
+  POLY([FP3(F,0.86,1.12,0),FP3(F,3.2,1.12,0),FP3(F,1.6,6.68,0),FP3(F,0.86,6.68,0)],"rgba(255,255,255,0.05)",null);
+  /* keys */
+  const keys=[["F1","F1","#4b4f54"],["F2","F2","#4b4f54"],["F3","F3","#4b4f54"],["F4","F4","#4b4f54"],["POWER","⏻","#c3261c","#fff"],["AUTO","AUTO","#4b4f54"],["HOLD","HOLD","#4b4f54"],["MODE","MODE","#4b4f54"]];
+  for(const [id,lab,fill,tc] of keys){ const [x0,y0,x1,y1]=ZK[id], h=0.22;
+    EXTR(F,rrUV(x0,y0,x1,y1,0.3),0,h,id==="POWER"?"#7c150e":"#2a2c30");
+    withFace(atDepth(F,h),c=>{ rr(c,x0,y0,x1,y1,0.3,fill,"#0a0a0a",0.04); FT(c,lab,(x0+x1)/2,(y0+y1)/2+0.02,0.3,tc||"#e8e8e8","center",true); }); }
+  /* the d-pad and the MENU key in its middle */
+  const ell=(rx,ry)=>Array.from({length:28},(_,i)=>{ const a=i/28*2*Math.PI; return [4.75+rx*Math.cos(a),12.6+ry*Math.sin(a)]; });
+  EXTR(F,ell(3.35,1.95),0,0.28,"#24272b");
+  withFace(atDepth(F,0.28),c=>dpadFace(c));
+  EXTR(F,ell(1.1,0.55),0.28,0.42,"#16181b");
+  withFace(atDepth(F,0.42),c=>{ c.save(); c.translate(4.75,12.6); c.scale(1.1,0.55); circ(c,0,0,1,"#2a2d31","#0b0b0b",0.05); c.restore(); FT(c,"MENU",4.75,12.62,0.3,"#e8e8e8","center",true); });
+  /* input jacks: shrouded collars */
+  for(const [x,col] of [[1.3,"#c3261c"],[3.45,"#c3261c"],[5.6,"#1a1a1a"],[7.9,"#c3261c"]]){
+    EXTR(F,circUV(x,16.6,0.6,16),0,0.22,"#0a0a0a");
+    withFace(atDepth(F,0.22),c=>{ circ(c,x,16.6,0.6,"#151515","#555",0.04); circ(c,x,16.6,0.5,col); circ(c,x,16.6,0.25,"#050505"); }); }
+  /* the holster's raised lip round the panel: its inside walls, then its front */
+  const o=[0,0,9.5,18.5], i=[0.42,0.42,9.08,18.08], L=Z_LIP;
+  POLY([FP3(F,i[0],i[1],0),FP3(F,i[0],i[3],0),FP3(F,i[0],i[3],L),FP3(F,i[0],i[1],L)],"#7e170f",null);
+  POLY([FP3(F,i[0],i[3],0),FP3(F,i[2],i[3],0),FP3(F,i[2],i[3],L),FP3(F,i[0],i[3],L)],"#9c1f15",null);
+  const ring=rrUV(o[0],o[1],o[2],o[3],1.0).map(([u,v])=>FP3(F,u,v,L)), hole=rrUV(i[0],i[1],i[2],i[3],0.7).map(([u,v])=>FP3(F,u,v,L)).reverse();
+  ctx.beginPath(); ring.forEach((p,j)=>j?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  hole.forEach((p,j)=>j?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  ctx.fillStyle="#c3261c"; ctx.fill("evenodd"); ctx.strokeStyle="#7c150e"; ctx.lineWidth=1; ctx.stroke();
+}
 const ZK={F1:[0.85,7.65,2.35,8.35],F2:[2.95,7.65,4.45,8.35],F3:[5.05,7.65,6.55,8.35],F4:[7.15,7.65,8.65,8.35],
           POWER:[0.85,8.75,2.35,9.45],AUTO:[2.95,8.75,4.45,9.45],HOLD:[5.05,8.75,6.55,9.45],MODE:[7.15,8.75,8.65,9.45],
           UP:[4.05,10.9,5.45,11.75],DOWN:[4.05,13.45,5.45,14.3],LEFT:[1.7,12.2,3.1,13.0],RIGHT:[6.4,12.2,7.8,13.0],
           MENU:[3.7,12.15,5.8,13.05]};
-function drawZoyiFace(c){
+function drawZoyiFace(c,bench){
   rr(c,0,0,9.5,18.5,1.0,"#c3261c","#7c150e",0.05);
   rr(c,-0.05,4.5,0.35,14,0.1,"#a01e15"); rr(c,9.15,4.5,9.55,14,0.1,"#a01e15");
   rr(c,0.42,0.42,9.08,18.08,0.7,"#16181b");
@@ -932,24 +1011,22 @@ function drawZoyiFace(c){
   FT(c,"ZT-702S",3.25,0.78,0.26,"#fff","center",true);
   FT(c,"DIGITAL OSCILLOSCOPE",6.5,0.78,0.26,"#fff","center",true);
   rr(c,0.72,1.0,8.78,6.8,0.25,"#030405");
-  c.save(); c.beginPath(); c.rect(0.86,1.12,7.78,5.56); c.clip();
-  drawZoyiScreen(c,0.86,1.12,7.78,5.56);
-  c.restore();
+  if(!bench){ c.save(); c.beginPath(); c.rect(0.86,1.12,7.78,5.56); c.clip();
+    drawZoyiScreen(c,0.86,1.12,7.78,5.56);
+    c.restore(); }
   FT(c,"9999 COUNTS",0.9,7.12,0.25,"#e9e9e9","left",true);
   FT(c,"T-RMS",0.9,7.42,0.22,"#e9e9e9","left");
   FT(c,"AUTO POWER OFF",8.6,7.12,0.25,"#e9e9e9","right",true);
   const key=(id,lab,fill,tc)=>{ const [x0,y0,x1,y1]=ZK[id];
+    if(bench){ rr(c,x0-0.04,y0-0.04,x1+0.04,y1+0.04,0.3,"#050505"); return; }
     rr(c,x0,y0,x1,y1,0.3,fill,"#0a0a0a",0.04); FT(c,lab,(x0+x1)/2,(y0+y1)/2+0.02,0.3,tc||"#e8e8e8","center",true); };
   key("F1","F1","#4b4f54"); key("F2","F2","#4b4f54"); key("F3","F3","#4b4f54"); key("F4","F4","#4b4f54");
   key("POWER","⏻","#c3261c","#fff"); key("AUTO","AUTO","#4b4f54"); key("HOLD","HOLD","#4b4f54"); key("MODE","MODE","#4b4f54");
   FT(c,"RANGE",3.7,9.62,0.18,"#9a9a9a"); FT(c,"SAVE",5.8,9.62,0.18,"#9a9a9a");
   FT(c,"CE",1.2,10.35,0.42,"#e4e4e4","center",true); FT(c,"∿∿",8.1,10.35,0.4,"#e4e4e4","center",true);
   /* d-pad */
-  c.save(); c.translate(4.75,12.6); c.scale(3.35,1.95); circ(c,0,0,1,"#3d4146","#0b0b0b",0.02); c.restore();
-  c.save(); c.translate(4.75,12.6); c.scale(1.1,0.55); circ(c,0,0,1,"#2a2d31","#0b0b0b",0.05); c.restore();
-  FT(c,"MENU",4.75,12.62,0.3,"#e8e8e8","center",true);
-  FT(c,"▲",4.75,11.3,0.42,"#e8e8e8"); FT(c,"▼",4.75,13.9,0.42,"#e8e8e8");
-  FT(c,"◀",2.35,12.6,0.42,"#e8e8e8"); FT(c,"▶",7.15,12.6,0.42,"#e8e8e8");
+  if(bench){ c.save(); c.translate(4.75,12.6); c.scale(3.45,2.05); circ(c,0,0,1,"#050505"); c.restore(); }
+  else { dpadFace(c); FT(c,"MENU",4.75,12.62,0.3,"#e8e8e8","center",true); }
   /* input jacks */
   const J=[[1.3,"10A","#c3261c"],[3.45,"mA","#c3261c"],[5.6,"COM","#1a1a1a"],[7.9,"VΩHz+","#c3261c"]];
   for(const [x,l,col] of J){
@@ -1133,11 +1210,12 @@ function drawFG(){
   POLY([NP(b[1]+0.05,hub[1]-0.55,hub[2]-0.55),NP(b[1]+0.05,b[3]+0.5,b[4]+0.15),NP(b[1]+0.05,b[3]+0.5,b[4]+1.35),NP(b[1]+0.05,hub[1]+0.55,hub[2]+0.55)],"#121314","#000",1);
   { const c=NP(...hub); OVAL(c[0],c[1],k*1.05*KC,k*1.15,"#1d1f22","#000",1); OVAL(c[0],c[1],k*0.45*KC,k*0.5,"#3a3d42",null); }
   BOX([b[0]-0.1,b[1]+0.1,b[3],b[3]+0.5,b[4]+0.15,b[4]+1.35],"#141516","#0f1011","#121314","#000");  /* handle bar */
-  withFace(FG_FACE,drawFgFace);
+  withFace(FG_FACE,c=>drawFgFace(c,true));
   /* the raised bezel round the front panel */
   const zf=b[4]-0.3, E="#2b2d31";
   BOX([b[0],b[1],b[3]-0.45,b[3],zf,b[4]],E,E,E,"#0b0b0c"); BOX([b[0],b[1],0.6,1.0,zf,b[4]],E,E,E,"#0b0b0c");
   BOX([b[1]-0.4,b[1],0.6,b[3],zf,b[4]],E,E,E,"#0b0b0c");
+  drawFgFront3D();
   S.zones.fg=boxRect(b);
 }
 /* the handheld ZOYI scope in its red rubber holster: rounded bumper corners, a seam round the
@@ -1155,7 +1233,9 @@ function drawZoyi(){
   LINE([NP(x1+0.01,b[2]+0.9,(b[4]+b[5])/2),NP(x1+0.01,b[3]-0.9,(b[4]+b[5])/2)],"#6e130c",1.6);       /* seam */
   LINE([NP(x1+0.01,b[2]+0.9,b[4]+0.35),NP(x1+0.01,b[3]-0.9,b[4]+0.35)],"rgba(255,140,120,.35)",1);  /* lip highlight */
   { const c=NP(x1+0.02,b[2]+1.6,b[5]-0.9); OVAL(c[0],c[1],ppcm()*0.18,ppcm()*0.45,"#3a0805",null); }  /* lanyard slot */
-  withFace(Z_FACE,drawZoyiFace);
+  EXTR(Z_FACE,rrUV(0,0,9.5,18.5,1.0),0,Z_LIP,"#a11f16","#5e0e08");          /* outer walls of the holster's lip */
+  withFace(Z_FACE,c=>drawZoyiFace(c,true));
+  drawZoyiFront3D();
   CYL(89,b[3],b[3]+0.9,41.8,0.55,"#b9bdc1","#d9dde1","#6f7479");
   S.zones.scope=boxRect(b);
 }
@@ -1294,9 +1374,11 @@ function corners(y0,y1,col){
 function drawHousing(c,slot){
   const h=S.hs[c], k=ppcm(), C=["#2a2b2f","#1b1c1f","#232428"];
   let y0,y1;
+  const free=slot==="up"||slot==="desk";
   if(slot==="low"){ y0=BASE.t; y1=LOW_TOP; }
+  else if(slot==="desk") [y0,y1]=deskPlate(c);
   else [y0,y1]=upPlate();
-  const legsUp=slot==="up"&&h.flip, legsDown=slot==="up"&&!h.flip;
+  const legsUp=free&&h.flip, legsDown=free&&!h.flip;
   if(legsDown) corners(y0-HS.leg,y0,C);
   if(legsUp) for(const x of [HS.x0+0.05,HS.x1-1.45]){             /* clamps under the flipped platform */
     BOX([x,x+1.4,y0-0.3,y0,20.0,22.0],"#1b1c1f","#121315","#17181a","#000");
@@ -1319,11 +1401,11 @@ function drawHousing(c,slot){
       HCIRC(54,y1,21,1.25,near?"#8f969c":"#2a2d31","#55595f",1);
       if(near) HCIRC(54,y1,21,0.9,null,"rgba(200,130,80,0.6)",1);
     }
-    for(const [x,z] of [[HS.x0+0.35,HS.z0+0.35],[HS.x1-0.35,HS.z0+0.35],[HS.x0+0.35,HS.z1-0.35],[HS.x1-0.35,HS.z1-0.35]]) if(slot==="up") HCIRC(x,y1,z,0.14,"#050506");
+    for(const [x,z] of [[HS.x0+0.35,HS.z0+0.35],[HS.x1-0.35,HS.z0+0.35],[HS.x0+0.35,HS.z1-0.35],[HS.x1-0.35,HS.z1-0.35]]) if(free) HCIRC(x,y1,z,0.14,"#050506");
     for(const x of [HS.x0+0.7,HS.x1-0.7]) HCIRC(x,y1,21,0.26,"#c8962e","#7a5a14",1);       /* brass inserts */
   }
-  if(slot==="up"&&!h.flip){                 /* the two clamps with their M3 cap screws */
-    const lift=S.loose?0.25:0;
+  if(free&&!h.flip){                        /* the two clamps with their M3 cap screws */
+    const lift=S.loose||slot==="desk"?0.25:0;
     for(const x of [HS.x0+0.05,HS.x1-1.45]){
       BOX([x,x+1.4,y1,y1+0.3,20.0,22.0],"#1b1c1f","#121315","#17181a","#000");
       CYL(x+0.7,y1+0.3,y1+0.5+lift,21,0.28,"#9ea3a8","#c7cbcf","#5d6166");
@@ -1336,6 +1418,7 @@ function drawHousing(c,slot){
   for(const dz of [-0.3,0.3]){ const p=NP(HS.x1+0.25,cy,zc+dz); OVAL(p[0],p[1],Math.max(1,k*0.08),Math.max(1,k*0.08),"#c9a64a",null); }
   const p=NP(HS.x1-0.9,(y0+y1)/2,HS.z0);
   TXT(p[0],p[1],c==="c1"?"#1":"#2",{size:Math.max(4,k*0.36),fill:"#cfd3d6",bold:true});
+  if(slot==="desk") S.zones.c1=boxRect([HS.x0,HS.x1+0.3,0,y1+0.6,HS.z0,HS.z1]);
 }
 /* the pan's NTC leads come out of the stack and end in a small socket lying in front */
 function drawNtc(){
@@ -1409,51 +1492,80 @@ function drawCables(){
     OVAL(q[0],q[1],5,5,col[0],"#000");
   }
 }
-function probeEndScreen(end){
-  const cr=S.carry;
-  if(cr&&cr.k==="probe"&&cr.end===end) return S.mouse;
-  const t=S.probe[end];
-  if(t){ const info=termInfo(t); if(info) return NP(...endPos(t,info)); }
-  /* a free ground clip dangles from the handle once the hook has been taken up */
-  if(end==="gnd"&&(S.probe.tip||(cr&&cr.k==="probe"&&cr.end==="tip"))){ const b=probeBody(probeEndScreen("tip")), k=ppcm(); return [b[0]+k*1.6,b[1]+k*2.4]; }
-  return withOff(S.at.scope,()=>NP(...PROBE_REST[end]));
-}
-/* the probe handle goes where the hook goes (it is the part held in the hand); the coax hangs from
-   the scope to the handle, the short ground lead from the handle to its clip */
-function probeBody(tip){ const k=ppcm(); return [tip[0]+k*0.7, tip[1]+k*3.0]; }
+/* ---- the scope probe, at the size of the real one (P6100 type): a hook about 1 cm, a retractable cap,
+   a finger flange, a handle about 11 cm long and 1.1 cm thick, a strain relief and the coax; a 14 cm
+   ground lead leaves the front of the handle and ends in a 4 cm alligator clip ---- */
+const PROBE_REST={tip:[70,0.6,33],gnd:[75.2,0.4,29.6]};
+const PRB={hook:1.0,cap:2.6,flange:2.9,band:7.5,body:11.5,tail:13.5,gAt:3.2,clip:4.2,jaw:1.2};
 const GND_REACH=14;                           /* cm of ground lead */
+/* a world vector seen on the screen */
+function sv(v){ const k=ppcm(); return [k*KC*(v[0]+v[2]), -k*(v[1]+KS*(v[2]-v[0]))]; }
+function nrm(v){ const L=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/L,v[1]/L,v[2]/L]; }
+/* which way a probe part lies from the terminal it is clipped to: out of the socket, then towards the viewer */
+function leadDir(info){ const h=[info.d[0],0,info.d[2]]; if(Math.hypot(h[0],h[2])<0.1) return nrm([0.35,0,-1]); return nrm([h[0],0,h[2]-0.35]); }
+/* where one probe part is: its world point and lying direction, or (in the hand) its screen point */
+function probePart(end){
+  const cr=S.carry, t=S.probe[end];
+  if(cr&&cr.k==="probe"&&cr.end===end) return {scr:S.mouse,h:nrm(end==="tip"?[0.35,0,-1]:[-0.3,0,-1])};
+  if(t){ const info=termInfo(t); if(info) return {w:endPos(t,info),h:leadDir(info)}; }
+  const o=S.at.scope;
+  if(end==="gnd"&&(S.probe.tip||(cr&&cr.k==="probe"&&cr.end==="tip"))){       /* the free clip hangs from the handle */
+    const A=probeAxis(probePart("tip"))(PRB.gAt);
+    return {scr:[A[0]+ppcm()*1.2,A[1]+ppcm()*3.2],h:nrm([0.2,0,-1])}; }
+  const r=PROBE_REST[end];
+  return {w:[r[0]+o[0],r[1],r[2]+o[1]],h:end==="tip"?nrm([1,0,0.04]):nrm([-0.25,0,1])};
+}
+/* the screen point a distance s (cm) along a part, from its tip */
+function probeAxis(P,drop){
+  if(P.w){ const T=P.w, y0=T[1];
+    return s=>NP(T[0]+P.h[0]*s, Math.max(drop||0.55,y0-(y0-(drop||0.55))*Math.min(1,s/9)), T[2]+P.h[2]*s); }
+  return s=>{ const v=sv([P.h[0]*s,-0.12*s,P.h[2]*s]); return [P.scr[0]+v[0],P.scr[1]+v[1]]; };
+}
+function probeEndScreen(end){ const P=probePart(end); return P.scr||NP(...P.w); }
+/* the handle's ground-lead point in the world, if the handle is not in the hand */
+function probeAttachW(){ const P=probePart("tip"); if(!P.w) return null; const T=P.w, s=PRB.gAt, y0=T[1];
+  return [T[0]+P.h[0]*s, Math.max(0.55,y0-(y0-0.55)*Math.min(1,s/9)), T[2]+P.h[2]*s]; }
+const segD=(p,a,b)=>{ const vx=b[0]-a[0], vy=b[1]-a[1], L=vx*vx+vy*vy||1, t=Math.max(0,Math.min(1,((p[0]-a[0])*vx+(p[1]-a[1])*vy)/L)); return Math.hypot(p[0]-a[0]-vx*t,p[1]-a[1]-vy*t); };
 function drawProbe(){
   if(!S.on.scope) return;
-  const k=ppcm();
-  const tip=probeEndScreen("tip"), gnd=probeEndScreen("gnd"), body=probeBody(tip);
-  const [s0,s1,s2]=withOff(S.at.scope,()=>[NP(89,Z_BOX[3]+0.9,41.8),NP(88,4,34),NP(82,0.4,28)]);
+  const k=ppcm(), w=v=>Math.max(1.2,k*v);
+  const PT=probePart("tip"), PG=probePart("gnd"), at=probeAxis(PT), ag=probeAxis(PG,0.4);
+  const tip=at(0), tail=at(PRB.tail), gnd=ag(0), gTail=ag(PRB.clip);
+  /* the coax from the BNC on top of the scope to the back of the handle */
+  const [s0,s1,s2]=withOff(S.at.scope,()=>[NP(89,Z_BOX[3]+0.9,41.8),NP(88,4,34),NP(82,0.4,30)]);
   const coax=[];
   for(let i=0;i<=24;i++){ const t=i/24, u=1-t;
-    coax.push([u*u*u*s0[0]+3*u*u*t*s1[0]+3*u*t*t*s2[0]+t*t*t*body[0],
-               u*u*u*s0[1]+3*u*u*t*s1[1]+3*u*t*t*s2[1]+t*t*t*body[1]]); }
-  LINE(coax,"#050505",Math.max(3,k*0.36)); LINE(coax,"#1e2023",Math.max(2,k*0.22));
-  /* ground lead: short black wire ending in an alligator clip */
-  const gm=[body[0]*0.5+gnd[0]*0.5, body[1]*0.5+gnd[1]*0.5+k*0.8];
-  LINE([body,gm,gnd],"#050505",Math.max(2,k*0.18)); LINE([body,gm,gnd],"#2a2c30",Math.max(1,k*0.1));
-  const gv=[gnd[0]-gm[0],gnd[1]-gm[1]], gl=Math.hypot(gv[0],gv[1])||1, gu=[gv[0]/gl,gv[1]/gl], gn=[-gu[1],gu[0]], cw=k*0.28, cl=k*1.1;
-  POLY([[gnd[0]-gu[0]*cl+gn[0]*cw,gnd[1]-gu[1]*cl+gn[1]*cw],[gnd[0]+gn[0]*cw*0.4,gnd[1]+gn[1]*cw*0.4],
-        [gnd[0]-gn[0]*cw*0.4,gnd[1]-gn[1]*cw*0.4],[gnd[0]-gu[0]*cl-gn[0]*cw,gnd[1]-gu[1]*cl-gn[1]*cw]],"#141517","#000");
-  LINE([[gnd[0]-gu[0]*cl*0.3,gnd[1]-gu[1]*cl*0.3],gnd],"#9aa0a6",Math.max(1,k*0.08));
-  /* probe body: black handle with grip rings, red band, retractable hook */
-  const hv=[tip[0]-body[0],tip[1]-body[1]], hl=Math.hypot(hv[0],hv[1])||1, u=[hv[0]/hl,hv[1]/hl];
-  const hb=[tip[0]-u[0]*k*1.0, tip[1]-u[1]*k*1.0];
-  LINE([body,hb],"#000",Math.max(5,k*0.72)); LINE([body,hb],"#232528",Math.max(4,k*0.6));
-  for(const t of [0.25,0.35,0.45]){ const r=[body[0]+(hb[0]-body[0])*t,body[1]+(hb[1]-body[1])*t];
-    LINE([[r[0]-u[1]*k*0.3,r[1]+u[0]*k*0.3],[r[0]+u[1]*k*0.3,r[1]-u[0]*k*0.3]],"#3d4044",Math.max(1,k*0.08)); }
-  const rb=[body[0]+(hb[0]-body[0])*0.75,body[1]+(hb[1]-body[1])*0.75];
-  LINE([rb,[rb[0]+u[0]*k*0.25,rb[1]+u[1]*k*0.25]],"#c8261d",Math.max(4,k*0.6),"butt");
-  LINE([hb,tip],"#d9dde1",Math.max(1.5,k*0.12));
-  ctx.beginPath(); ctx.arc(tip[0]+u[1]*k*0.15,tip[1]-u[0]*k*0.15,Math.max(2,k*0.2),0,Math.PI*1.4);
-  ctx.strokeStyle="#d9dde1"; ctx.lineWidth=Math.max(1.2,k*0.08); ctx.stroke();
-  S.probeScr={tip,gnd};
+    coax.push([u*u*u*s0[0]+3*u*u*t*s1[0]+3*u*t*t*s2[0]+t*t*t*tail[0], u*u*u*s0[1]+3*u*u*t*s1[1]+3*u*t*t*s2[1]+t*t*t*tail[1]]); }
+  LINE(coax,"#050505",w(0.5)); LINE(coax,"#1e2023",w(0.36));
+  /* the ground lead, sagging between the front of the handle and the clip's boot */
+  const A=at(PRB.gAt), gm=[(A[0]+gTail[0])/2,(A[1]+gTail[1])/2+k*1.0];
+  const lead=[]; for(let i=0;i<=12;i++){ const t=i/12, u=1-t; lead.push([u*u*A[0]+2*u*t*gm[0]+t*t*gTail[0],u*u*A[1]+2*u*t*gm[1]+t*t*gTail[1]]); }
+  LINE(lead,"#050505",w(0.2)); LINE(lead,"#2a2c30",w(0.12));
+  /* the alligator clip: steel jaws and a black boot */
+  LINE([ag(PRB.jaw),gTail],"#000",w(0.95)); LINE([ag(PRB.jaw),gTail],"#1b1c1f",w(0.8));
+  LINE([ag(PRB.jaw+0.4),ag(PRB.jaw+0.45)],"#34373b",w(0.85),"butt");
+  LINE([gnd,ag(PRB.jaw)],"#6f757b",w(0.55),"butt"); LINE([gnd,ag(PRB.jaw)],"#c4c9ce",w(0.38),"butt");
+  LINE([gnd,ag(PRB.jaw*0.6)],"rgba(0,0,0,.55)",w(0.06),"butt");
+  /* the handle, front to back */
+  LINE([at(PRB.body),tail],"#000",w(0.6)); LINE([at(PRB.body),tail],"#1d1f22",w(0.48));                 /* strain relief */
+  LINE([at(PRB.flange),at(PRB.body)],"#000",w(1.18),"butt"); LINE([at(PRB.flange),at(PRB.body)],"#26282c",w(1.05),"butt");
+  for(let s=3.4;s<7.2;s+=0.45) LINE([at(s),at(s+0.12)],"#3c3f44",w(1.06),"butt");                      /* grip ribs */
+  LINE([at(PRB.band),at(PRB.band+0.3)],"#c8261d",w(1.08),"butt");                                       /* colour band */
+  LINE([at(PRB.cap),at(PRB.flange)],"#000",w(1.75),"butt"); LINE([at(PRB.cap),at(PRB.flange)],"#2c2e32",w(1.62),"butt");   /* finger flange */
+  LINE([at(PRB.hook),at(PRB.cap)],"#000",w(0.72),"butt"); LINE([at(PRB.hook),at(PRB.cap)],"#3b3e43",w(0.6),"butt");       /* retractable cap */
+  LINE([tip,at(PRB.hook)],"#d9dde1",w(0.1));
+  ctx.beginPath(); ctx.arc(tip[0],tip[1]-k*0.14,Math.max(2,k*0.17),0.2*Math.PI,1.6*Math.PI); ctx.strokeStyle="#d9dde1"; ctx.lineWidth=Math.max(1.1,k*0.07); ctx.stroke();
+  S.probeScr={tip,gnd,tipSeg:[tip,tail],gndSeg:[gnd,gTail]};
   if(!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe")){
-    const p=withOff(S.at.scope,()=>NP(75,0.25,33.5)); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
+    const p=withOff(S.at.scope,()=>NP(77,0.25,36.4)); TXT(p[0],p[1],d().lab.rest,{size:Math.max(5,k*0.45),fill:"#4a3a28"});
   }
+}
+/* which probe part is under the pointer: anywhere on the handle or the clip */
+function probeHit(x,y){
+  const P=S.probeScr; if(!P||!P.tipSeg) return null;
+  const r=Math.max(9,ppcm()*0.8), dt=segD([x,y],...P.tipSeg), dg=segD([x,y],...P.gndSeg);
+  if(Math.min(dt,dg)>r) return null;
+  return dg<dt?"gnd":"tip";
 }
 function drawCarryLabel(){
   if(!S.carry) return;
@@ -1474,14 +1586,16 @@ function draw(){
   const parts=[];
   const add=(id,fn)=>{ const f=footNow(id); parts.push([(f[2]+f[3])/2-(f[0]+f[1])/2,fn]); };
   if(S.on.fg) add("fg",()=>withOff(S.at.fg,drawFG));
-  if(S.on.scope) add("scope",()=>withOff(S.at.scope,drawZoyi));
+  const probeRests=()=>!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe");
+  if(S.on.scope) add("scope",()=>{ withOff(S.at.scope,drawZoyi); if(probeRests()) drawProbe(); });
   if(S.on.base) add("base",()=>{ withOff(S.at.base,drawCoilStack); if(S.on.box==="cover"){ drawBox(); if(S.pan) withOff(S.at.base,drawNtc); } });
   if(S.on.box==="desk") add("box",drawBox);
+  if(S.hs.c1.at==="desk") add("c1",()=>withOff(S.at.c1,()=>drawHousing("c1","desk")));
   for(const k of CAP_KEYS) if(S.cap[k]==="desk") add(k,()=>drawCapsDesk(k));
   S.dplates.forEach((q,i)=>parts.push([q.z-q.x,()=>drawDeskPlate(i)]));
   parts.sort((a,b)=>b[0]-a[0]).forEach(q=>q[1]());
   drawCables();
-  drawProbe();
+  if(!probeRests()) drawProbe();
   drawCarryLabel();
 }
 
@@ -1556,7 +1670,6 @@ trayCv.addEventListener("mousedown",e=>{
     if(name==="bb"||name==="bp"){ const col=S.stock[name].r>=S.stock[name].k?"r":"k"; S.stock[name][col]--; S.carry={k:"cable",type:name,col,a:null}; say(t.m.cable1); }
     else if(PLATE_OF[name]){ S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
     else if(PAN_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } if(S.pan){ say(t.m.slotBusy,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
-    else if(S.hs[name]&&!S.on.base){ say(t.m.needBase,true); return; }
     else if(name==="key"){ S.carry={k:"key",id:"key"}; say(t.m.keyTake); }
     else { S.carry={k:"item",id:name}; say(t.m.placeIt(t.trayItems[name])); }
     drawTray();
@@ -1570,7 +1683,7 @@ trayCv.addEventListener("mousedown",e=>{
 function say(s,warn){ S.msg={s,warn:!!warn,t:performance.now()}; renderStatus(); }
 function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
 function termAt(px,py){
-  let best=null, bd=Math.max(9,ppcm()*0.9);
+  let best=null, bd=Math.max(14,ppcm()*1.1);
   for(const id of ALL_TERMS){
     const info=termInfo(id); if(!info||info.hidden) continue;
     for(const P of [info.p,endPos(id,info)]){
@@ -1610,14 +1723,9 @@ function cancelCarry(silent){
 function onPress(p){
   const [x,y]=p, cr=S.carry, t=d();
   if(cr){ place(x,y); return; }
-  if(S.on.scope&&S.probeScr){
-    for(const end of ["tip","gnd"]){
-      const q=S.probeScr[end];
-      if(Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){
-        S.probe[end]=null; S.carry={k:"probe",end}; say(t.m.probeTake(end==="tip"?t.lab.hook:t.lab.gnd)); solve(); return; }
-    }
-  }
-  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
+  if(S.on.scope&&S.probeScr){ const end=probeHit(x,y);
+    if(end){ S.probe[end]=null; S.carry={k:"probe",end}; say(t.m.probeTake(end==="tip"?t.lab.hook:t.lab.gnd)); solve(); return; } }
+  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=-2&&a<=24&&b>=0&&b<=10.5){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
   if(S.on.scope){ const [a,b]=withOff(S.at.scope,()=>faceInv(Z_FACE,x,y)); if(a>=0&&a<=9.5&&b>=0&&b<=18.5){ if(zoyiPress(a,b)) return; } }
   /* pick a loose plate up off the desk */
   for(let i=S.dplates.length-1;i>=0;i--){
@@ -1626,8 +1734,8 @@ function onPress(p){
     S.carry={k:"plate",id,mat:q.mat,from:q}; say(t.m.plateTake(t.mat[q.mat])); return;
   }
   /* grab a part standing on the desk to move it (its leads stay plugged in) */
-  for(const id of ["C470N","C470U","C1000U","C2200U","box","base","scope","fg"]){
-    if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
+  for(const id of ["C470N","C470U","C1000U","C2200U","c1","box","base","scope","fg"]){
+    if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:id==="c1"?S.hs.c1.at==="desk":!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
     S.carry={k:"item",id,move:true}; say(t.m.moveIt(t.trayItems[id])); return;
   }
   S.view0=[x,y,S.cam[0],S.cam[1]];
@@ -1647,7 +1755,12 @@ function place(x,y){
   if(cr.k==="probe"){
     const id=termAt(x,y);
     if(!id){ say(t.m.noTerm,true); return; }
-    if(cr.end==="gnd"){ const b=probeBody(probeEndScreen("tip")); if(Math.hypot(x-b[0],y-b[1])>ppcm()*GND_REACH){ say(t.m.gndReach,true); return; } }
+    /* the ground lead is 14 cm: measured from the front of the handle to the clip */
+    const reach=(A,B)=>Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2])<=GND_REACH+0.5;
+    const ti=termInfo(id), E=endPos(id,ti);
+    if(cr.end==="gnd"){ const A=probeAttachW(); if(A&&!reach(A,E)){ say(t.m.gndReach,true); return; } }
+    else if(S.probe.gnd){ const G=termInfo(S.probe.gnd), h=leadDir(ti), s0=PRB.gAt, A=[E[0]+h[0]*s0,Math.max(0.55,E[1]-(E[1]-0.55)*Math.min(1,s0/9)),E[2]+h[2]*s0];
+      if(G&&!reach(A,endPos(S.probe.gnd,G))){ say(t.m.gndReach,true); return; } }
     S.probe[cr.end]=id; S.carry=null; say(t.m.probeOn); solve(); return;
   }
   if(cr.k==="key"||cr.k==="plate"||cr.k==="pan"){
@@ -1684,9 +1797,10 @@ function place(x,y){
   if(cr.k==="item"){
     const id=cr.id, [bx,bz]=benchAt(x,y);
     let where="desk", o=null;
-    if(S.hs[id]){                              /* a coil housing goes onto the base plate, or on the other housing */
-      if(!S.on.base){ say(t.m.needBase,true); return; }
-      if(!(inRect(S.zones.base,x,y,8)||inRect(S.zones.stack,x,y,8))){ say(t.m.noFit,true); return; }
+    if(S.hs[id]){                              /* a coil housing goes onto the base plate, on the other housing, or stands on the desk */
+      const onKit=S.on.base&&(inRect(S.zones.base,x,y,8)||inRect(S.zones.stack,x,y,8));
+      if(!onKit){ const o2=freeSpot(id,bx,bz); if(!o2){ say(t.m.noFit,true); return; }
+        S.at[id]=o2; S.hs[id].at="desk"; S.carry=null; say(t.m.hsDesk(t.trayItems[id])); solve(); drawTray(); return; }
       if(S.on.box==="cover"){ say(t.m.covered,true); return; }
       if(!upHs()){ S.hs[id].at="up"; S.loose=true; say(t.m.hsUp(t.trayItems[id])); }
       else { say(t.m.stackFull,true); return; }
@@ -1725,13 +1839,13 @@ function onRClick(p){
     const pts=S.cabPts&&S.cabPts[i]; if(!pts) continue;
     for(let j=0;j<pts.length;j++) if(Math.hypot(pts[j][0]-x,pts[j][1]-y)<Math.max(7,ppcm()*0.6)){ removeCable(i); say(t.m.unplug); solve(); return; }
   }
-  if(S.probeScr) for(const end of ["tip","gnd"]){ const q=S.probeScr[end];
-    if(S.probe[end]&&Math.hypot(q[0]-x,q[1]-y)<Math.max(10,ppcm()*0.9)){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
+  if(S.probeScr){ const end=probeHit(x,y); if(end&&S.probe[end]){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
   if(S.on.box==="cover"&&inRect(S.zones.box,x,y)){ returnItem("box"); return; }
   if(S.on.base&&inRect(S.zones.stack,x,y)){ unstackOne(); return; }
   for(let i=S.dplates.length-1;i>=0;i--) if(inRect(S.zones["dp"+i],x,y,2)){
     const q=S.dplates.splice(i,1)[0]; S.plates[q.mat]++; say(t.m.plateBack(t.mat[q.mat])); drawTray(); return; }
   for(const k of CAP_KEYS) if(S.cap[k]==="desk"&&inRect(S.zones[k],x,y)){ returnItem(k); return; }
+  if(S.hs.c1.at==="desk"&&inRect(S.zones.c1,x,y)){ returnItem("c1"); return; }
   for(const id of ["box","base","scope","fg"]){
     if(inRect(S.zones[id],x,y)){ returnItem(id); return; }
   }
@@ -1756,8 +1870,9 @@ function takeHousing(c){
   say(d().m.hsOut(d().trayItems[c]));
 }
 function flipTop(){
-  const t=d(), c=topHs();
+  const t=d(), c=topHs()||(S.hs.c1.at==="desk"?"c1":null);
   if(!c){ say(t.m.flipNone,true); return; }
+  if(S.hs[c].at==="desk"){ S.hs[c].flip=!S.hs[c].flip; say(t.m.flipDesk(t.trayItems[c],S.hs[c].flip)); return; }
   if(c==="c2"){ say(t.m.c2Fixed,true); return; }
   if(S.on.box==="cover"){ say(t.m.covered,true); return; }
   if(S.hs[c].at==="up"){
@@ -1789,11 +1904,12 @@ function returnItem(id){
     S.on.box=null;
   }
   else if(CAPS[id]){ detachTerms([CAPS[id].node+"A",CAPS[id].node+"B"]); S.cap[id]=null; }
+  else if(id==="c1"){ S.hs.c1.at=null; S.hs.c1.flip=false; }
   say(t.m.returned(t.trayItems[id])); solve(); drawTray();
 }
 function onWheel(p,dir,shift){
   const [x,y]=p;
-  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=0&&a<=24&&b>=0&&b<=9&&fgWheel(a,b,dir,shift)) return; }
+  if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=-2&&a<=24&&b>=0&&b<=10.5&&fgWheel(a,b,dir,shift,true)) return; }
   const [u,v]=INV(x,y);
   S.zoom=Math.max(0.6,Math.min(7,S.zoom*(dir>0?1.15:1/1.15)));
   S.touched=true;
@@ -1825,7 +1941,7 @@ cv.addEventListener("touchend",()=>{ S.view0=null; S.knob=null; },{passive:true}
 function fgPress(a,b,where){
   for(const key in FG_CTRL){
     const c=FG_CTRL[key];
-    if(Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
+    if(where==="bench"?!knobHit(a,b,c,KNOB_H[key]):Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
     if(!c.cont){
       if(key==="range") S.fg.range=(S.fg.range+1)%4;
       else { S.fg.wave=(S.fg.wave+1)%3; if(S.fg.wave!==0) say(d().m.wave,true); }
@@ -1836,16 +1952,16 @@ function fgPress(a,b,where){
       const sens=key==="fine"?0.0035:0.0025;
       S.fg[key]=Math.max(0,Math.min(1,v0+(y0-py)*sens)); solve(); };
   }
-  if(Math.hypot(a-21.2,b-2.9)<1.1||Math.hypot(a-21.2,b-6.3)<1.1){ if(where!=="bench") say(d().m.cableHere); return null; }
+  if(Math.hypot(a-21.2,b-2.9)<1.1||Math.hypot(a-21.2,b-6.3)<1.1||(where==="bench"&&(knobHit(a,b,{x:21.2,y:2.9,r:0.85},FG_POST_H)||knobHit(a,b,{x:21.2,y:6.3,r:0.85},FG_POST_H)))){ if(where!=="bench") say(d().m.cableHere); return null; }
   if(where==="panel"&&a>=FG_REAR.rocker[0]&&a<=FG_REAR.rocker[2]&&b>=FG_REAR.rocker[1]&&b<=FG_REAR.rocker[3]){
     if(!S.on.fg){ say(d().m.noFgHere,true); return ()=>{}; }
     S.fg.pow=!S.fg.pow; say(d().m.fgPow(S.fg.pow)); solve(); return ()=>{}; }
   return null;
 }
-function fgWheel(a,b,dir,shift){
+function fgWheel(a,b,dir,shift,bench){
   for(const key in FG_CTRL){
     const c=FG_CTRL[key];
-    if(Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
+    if(bench?!knobHit(a,b,c,KNOB_H[key]):Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
     if(c.cont) S.fg[key]=Math.max(0,Math.min(1,S.fg[key]+dir*(shift?0.002:0.01)));
     else if(key==="range") S.fg.range=Math.max(0,Math.min(3,S.fg.range+dir));
     else { S.fg.wave=Math.max(0,Math.min(2,S.fg.wave+dir)); if(S.fg.wave!==0) say(d().m.wave,true); }

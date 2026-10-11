@@ -380,6 +380,7 @@ function gl3Init(){
     const c=document.createElement("canvas");
     const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
     if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
     const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
     const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
       if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
@@ -559,11 +560,11 @@ const T={
     sub:"가상 실험실 · 부품함에서 자석, 테슬라미터, 홀 센서 탐침, 흑연 막대를 꺼내 플랫폼 위에 놓고 직접 재세요. 계기는 읽은 값만 보여 주고, 프로그램은 아무것도 계산해 주지 않습니다.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayAlways:"클릭해서 집기 (여러 번)",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (3D) — 빈 곳을 끌면 회전, Shift+끌기 이동, 휠 확대 / 좌클릭 집기·놓기·누르기, 끌어서 옮기기, 자석·나사 위에서 휠로 돌리기 / 테슬라미터·트랩·오른쪽 나사 클릭: 2D 보기 / 우클릭 되돌리기",
+    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 좌클릭 집기·놓기·누르기, 끌어서 옮기기, 자석·나사 위에서 휠로 돌리기 / 테슬라미터·트랩·오른쪽 나사 클릭: 2D 보기 / 우클릭 되돌리기",
     back:"◀ 3D로 돌아가기", hView:"보기", vReset:"3D 처음", vMeter:"테슬라미터", vTrap:"트랩", vTilt:"옆모습·나사",
     mView:"2D 보기 — 우클릭하면 3D로 돌아갑니다.",
-    tabs:["테슬라미터 · 탐침 끝","PDL 트랩 (정면 단면 · 위)","플랫폼 옆모습 · 나사 머리"], capR:" / 우클릭: 3D로",
-    caps:["테슬라미터 앞면과 탐침 끝 확대 (위에서, 10배) — 전원·범위 스위치를 클릭하세요",
+    tabs:["테슬라미터 · 탐침 끝","PDL 트랩 (정면 단면 · 위)","플랫폼 옆모습 · 나사 머리"], capR:" / 휠 확대 · 끌어 이동 / 우클릭: 3D로",
+    caps:["테슬라미터 윗면과 탐침 끝 확대 (위에서, 10배) — 전원·범위 스위치, Probe 소켓을 클릭하세요",
           "PDL 트랩 확대 — 왼쪽: 자석 축 방향으로 본 단면 / 오른쪽: 위에서 본 모습 (트랩에 인쇄된 눈금 mm) · 이쑤시개로 막대를 밀 수 있습니다",
           "플랫폼 옆모습 (기울기는 20배로 그림) · 오른쪽 나사 머리 (휠 또는 끌어서 돌림, Shift: 미세)"],
     hWatch:"8. 스톱워치", ss:"시작 / 정지", lapReset:"랩 / 리셋",
@@ -571,13 +572,13 @@ const T={
     rodHint:"막대를 집기 전에 길이를 고르세요 (부러뜨려 맞춘 길이). 막대를 집어 트랩을 클릭하면 떨어뜨립니다.",
     hNote:"공책", save:"공책을 .txt로 저장",
     notePh:"읽은 값을 직접 적으세요.\n예) x (mm)    B (mT)",
-    hint:"A1: 단일 자석은 플랫폼 위 아무 곳에나 놓을 수 있습니다. 홀 센서 탐침을 레일에 놓고 홀더를 끌어 움직이며, 자석 위에서 휠을 굴리면 자석이 돕니다. 자화 방향을 찾으면 노란 스티커를 붙여 표시하세요. 거리는 자나 플랫폼 눈금으로 직접 재세요 (돋보기를 집으면 확대됩니다).\nA2: 막대를 트랩에 떨어뜨리고, 삽입 자로 높이를, 이쑤시개로 밀었다 놓아 진동을 봅니다.\nB: 오른쪽 나사를 돌리면 플랫폼이 기울어집니다. 나사 사이 거리도 직접 재세요.\n두 자석 조립체는 서로 가까이 두면 달라붙습니다.",
-    items:{mag:"1. 단일 원통 자석 (받침)", trap:"2. PDL 자기 트랩", meter:"5. 테슬라미터 (9 V 전지 2개)", probe:"6. 홀 센서 탐침",
+    hint:"A1: 단일 자석은 플랫폼 위 아무 곳에나 놓을 수 있습니다. 홀 센서 탐침을 레일에 놓고 케이블 끝 USB 플러그를 테슬라미터의 Probe 소켓에 꽂은 뒤, 홀더를 끌어 움직이며, 자석 위에서 휠을 굴리면 자석이 돕니다. 자화 방향을 찾으면 노란 스티커를 붙여 표시하세요. 거리는 자나 플랫폼 눈금으로 직접 재세요 (휠로 확대할 수 있습니다).\nA2: 막대를 트랩에 떨어뜨리고, 삽입 자로 높이를, 이쑤시개로 밀었다 놓아 진동을 봅니다.\nB: 오른쪽 나사를 돌리면 플랫폼이 기울어집니다. 나사 사이 거리도 직접 재세요.\n두 자석 조립체는 서로 가까이 두면 달라붙습니다.",
+    items:{mag:"1. 단일 원통 자석 (받침)", trap:"2. PDL 자기 트랩", meter:"5. 테슬라미터 (9 V 전지 2개)", probe:"6. 홀 센서 탐침 (USB 케이블)",
            r03:"7. 흑연 막대 HB/0.3", r05:"7. 흑연 막대 HB/0.5", r07:"7. 흑연 막대 HB/0.7", r09:"7. 흑연 막대 HB/0.9",
-           watch:"8. 스톱워치", loupe:"9. 돋보기", sticker:"11. 노란 스티커", ins:"12. 삽입 자", pick:"13. 이쑤시개", ruler:"15. 자 (20 cm)"},
+           watch:"8. 스톱워치", sticker:"11. 노란 스티커", ins:"12. 삽입 자", pick:"13. 이쑤시개", ruler:"15. 자 (20 cm)"},
     lab:{power:"Power", probe:"Probe", title:"Digital Teslameter", off:"", noProbe:"탐침 없음", ol:"OL", noMeter:"테슬라미터가 실험대에 없습니다",
-         noTrap:"PDL 트랩이 플랫폼 위에 없습니다", ref:"기준", noTip:"탐침이 레일 위에 없습니다", magnet:"자석", graphite:"흑연"},
-    st:{none:"부품함에서 부품을 꺼내 플랫폼 위에 놓으세요.", meterOff:"테슬라미터 전원이 꺼져 있습니다.", ringing:"막대가 아직 흔들립니다."},
+         noTrap:"PDL 트랩이 플랫폼 위에 없습니다", ref:"기준", noTip:"탐침이 레일 위에 없습니다", plugHint:"Probe 소켓을 클릭하면 탐침 케이블을 꽂습니다", magnet:"자석", graphite:"흑연"},
+    st:{none:"부품함에서 부품을 꺼내 플랫폼 위에 놓으세요.", meterOff:"테슬라미터 전원이 꺼져 있습니다.", ringing:"막대가 아직 흔들립니다.", noPlug:"탐침 케이블이 테슬라미터에 꽂혀 있지 않습니다 — USB 플러그를 집어 Probe 소켓에 꽂으세요."},
     m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
        back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.", onRail:"탐침은 레일 위의 홀더에 끼웁니다 — 레일을 클릭하세요.",
        snap:"두 자석 조립체가 너무 가깝습니다 — 서로 달라붙어 버립니다! 멀리 두세요.", needTrap:"먼저 PDL 트랩을 플랫폼에 놓으세요.",
@@ -587,18 +588,18 @@ const T={
        pushed:"이쑤시개로 막대를 밀고 있습니다 — 놓으면 진동합니다.", released:"막대를 놓았습니다.", noRod:"트랩에 막대가 없습니다.",
        meter:s=>"테슬라미터 "+s, range:s=>"범위: "+s, endIn:"나사가 끝까지 조여졌습니다.", endOut:"나사가 끝까지 풀렸습니다.",
        wsStart:"스톱워치 시작", wsStop:"스톱워치 정지", wsReset:"스톱워치 리셋", wsLap:"랩 기록", needWatch:"먼저 스톱워치를 책상에 놓으세요.",
-       saved:"공책을 저장했습니다.", turn:"오른쪽 나사를 돌리는 중", hit:"탐침이 자석에 닿았습니다."}
+       saved:"공책을 저장했습니다.", probePlaced:"탐침을 홀더에 끼웠습니다 — 케이블 끝의 USB 플러그는 아직 책상 위에 있습니다.", plugTake:"USB 플러그를 집었습니다 — 테슬라미터를 클릭해 Probe 소켓에 꽂으세요. (책상을 클릭하면 내려놓기)", plugIn:"탐침 케이블을 Probe 소켓에 꽂았습니다.", plugOut:"탐침 케이블을 Probe 소켓에서 뽑았습니다.", plugDesk:"USB 플러그를 책상에 내려놓았습니다.", needProbe:"먼저 탐침을 레일 위 홀더에 끼우세요.", turn:"오른쪽 나사를 돌리는 중", hit:"탐침이 자석에 닿았습니다."}
   },
   en:{
     title:"IPhO 2017 Experiment 2 — Parallel dipole line (PDL) magnetic trap for earthquake and volcanic sensing",
     sub:"Virtual laboratory · take the magnets, the Teslameter, the Hall sensor probe and the graphite rods out of the parts box, put them on the platform and measure. The instruments show readings only; nothing is computed for you.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayAlways:"click to pick up (reusable)",
     trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (3D) — drag empty space to turn, Shift+drag to pan, wheel to zoom / L-click pick up, put down, press, drag to move, wheel over the magnet or the screw to turn it / click the Teslameter, the trap or the right-hand screw for 2D / R-click return",
+    cap:"the bench (3D) — drag empty space or right-drag to turn, Shift- or middle-drag to pan, wheel to zoom / L-click pick up, put down, press, drag to move, wheel over the magnet or the screw to turn it / click the Teslameter, the trap or the right-hand screw for 2D / R-click return",
     back:"◀ back to 3D", hView:"View", vReset:"3D home", vMeter:"Teslameter", vTrap:"trap", vTilt:"side · screw",
     mView:"2D view — R-click to go back to 3D.",
-    tabs:["Teslameter · probe tip","PDL trap (cross section · top)","platform side view · screw head"], capR:" / R-click: back to 3D",
-    caps:["front of the Teslameter and the probe tip magnified (top view, 10×) — click the power and range switches",
+    tabs:["Teslameter · probe tip","PDL trap (cross section · top)","platform side view · screw head"], capR:" / wheel zoom · drag to pan / R-click: back to 3D",
+    caps:["top of the Teslameter and the probe tip magnified (top view, 10×) — click the power and range switches and the Probe socket",
           "the PDL trap magnified — left: cross section along the magnet axis / right: top view (scale printed on the trap, mm) · push the rod with the toothpick",
           "the platform from the side (tilt drawn 20×) · head of the right-hand screw (wheel or drag to turn, Shift: fine)"],
     hWatch:"8. Stopwatch", ss:"start / stop", lapReset:"lap / reset",
@@ -606,13 +607,13 @@ const T={
     rodHint:"Choose the length before you pick a rod up (the length you break it to). Pick up a rod and click the trap to drop it in.",
     hNote:"Note book", save:"save the note book as .txt",
     notePh:"Write your readings down yourself.\ne.g. x (mm)    B (mT)",
-    hint:"A1: the single magnet can go anywhere on the platform. Put the Hall sensor probe on the rail and drag its holder; roll the wheel over the magnet to turn it. When you have found the magnetization direction, mark it with the yellow sticker. Measure distances yourself with the ruler or the platform scale (pick up the magnifying glass to look closely).\nA2: drop a rod into the trap, read its height with the insert ruler, push it with the toothpick and let go to watch it oscillate.\nB: turning the right-hand screw tilts the platform. Measure the distance between the screws yourself.\nThe two magnet assemblies snap together if you put them close.",
-    items:{mag:"1. Single diametric magnet (block)", trap:"2. PDL magnetic trap", meter:"5. Teslameter (two 9 V batteries)", probe:"6. Hall sensor probe",
+    hint:"A1: the single magnet can go anywhere on the platform. Put the Hall sensor probe on the rail, plug the USB plug at the end of its cable into the Probe socket of the Teslameter, then drag its holder; roll the wheel over the magnet to turn it. When you have found the magnetization direction, mark it with the yellow sticker. Measure distances yourself with the ruler or the platform scale (zoom in with the wheel).\nA2: drop a rod into the trap, read its height with the insert ruler, push it with the toothpick and let go to watch it oscillate.\nB: turning the right-hand screw tilts the platform. Measure the distance between the screws yourself.\nThe two magnet assemblies snap together if you put them close.",
+    items:{mag:"1. Single diametric magnet (block)", trap:"2. PDL magnetic trap", meter:"5. Teslameter (two 9 V batteries)", probe:"6. Hall sensor probe (USB cable)",
            r03:"7. Graphite rod HB/0.3", r05:"7. Graphite rod HB/0.5", r07:"7. Graphite rod HB/0.7", r09:"7. Graphite rod HB/0.9",
-           watch:"8. Stopwatch", loupe:"9. Magnifying glass", sticker:"11. Round yellow sticker", ins:"12. Insert ruler", pick:"13. Toothpick", ruler:"15. Ruler (20 cm)"},
+           watch:"8. Stopwatch", sticker:"11. Round yellow sticker", ins:"12. Insert ruler", pick:"13. Toothpick", ruler:"15. Ruler (20 cm)"},
     lab:{power:"Power", probe:"Probe", title:"Digital Teslameter", off:"", noProbe:"no probe", ol:"OL", noMeter:"No Teslameter on the bench",
-         noTrap:"No PDL trap on the platform", ref:"mark", noTip:"No probe on the rail", magnet:"magnet", graphite:"graphite"},
-    st:{none:"Take parts out of the box and put them on the platform.", meterOff:"The Teslameter is switched off.", ringing:"The rod is still swinging."},
+         noTrap:"No PDL trap on the platform", ref:"mark", noTip:"No probe on the rail", plugHint:"click the Probe socket to plug the probe cable in", magnet:"magnet", graphite:"graphite"},
+    st:{none:"Take parts out of the box and put them on the platform.", meterOff:"The Teslameter is switched off.", ringing:"The rod is still swinging.", noPlug:"The probe cable is not plugged into the Teslameter — pick up the USB plug and put it into the Probe socket."},
     m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
        back:n=>n+" put back in the box.", noFit:"It does not fit there.", onRail:"The probe goes into the holder on the rail — click the rail.",
        snap:"The two magnet assemblies are too close — they would snap together! Keep them apart.", needTrap:"Put the PDL trap on the platform first.",
@@ -622,7 +623,7 @@ const T={
        pushed:"Holding the rod with the toothpick — let go to make it oscillate.", released:"Rod released.", noRod:"There is no rod in the trap.",
        meter:s=>"Teslameter "+s, range:s=>"range: "+s, endIn:"The screw is all the way in.", endOut:"The screw is all the way out.",
        wsStart:"stopwatch started", wsStop:"stopwatch stopped", wsReset:"stopwatch reset", wsLap:"lap taken", needWatch:"Put the stopwatch on the table first.",
-       saved:"Note book saved.", turn:"turning the right-hand screw", hit:"The probe touches the magnet."}
+       saved:"Note book saved.", probePlaced:"Probe put into the holder — the USB plug at the end of its cable still lies on the desk.", plugTake:"USB plug picked up — click the Teslameter to plug it into the Probe socket. (click the desk to put it down)", plugIn:"Probe cable plugged into the Probe socket.", plugOut:"Probe cable unplugged from the Probe socket.", plugDesk:"USB plug put down on the desk.", needProbe:"Put the probe into the holder on the rail first.", turn:"turning the right-hand screw", hit:"The probe touches the magnet."}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
@@ -686,7 +687,8 @@ const RAIL={x0:4,x1:256,y0:144,y1:170}, HOLD={min:24,max:236};
 const FP={mag:[26,22],trap:[44,28],meter:[140,150],watch:[32,34]};   /* the Teslameter box is about 14 cm × 8.5 cm, its 9 V batteries lie behind it */
 const ROD_KEY={r03:"HB/0.3",r05:"HB/0.5",r07:"HB/0.7",r09:"HB/0.9"};
 const ST={ on:{mag:false,trap:false,meter:false,probe:false,watch:false,ruler:false,sticker:false,ins:false},
-  pos:{mag:{x:60,y:80},trap:{x:170,y:60},meter:{x:350,y:80},watch:{x:300,y:200},ruler:{x:120,y:112,rot:0}}, holderX:150 };
+  pos:{mag:{x:60,y:80},trap:{x:170,y:60},meter:{x:350,y:80},watch:{x:300,y:200},ruler:{x:120,y:112,rot:0}}, holderX:150,
+  plug:null };          /* the probe's USB plug: null, {at:"meter"}, {at:"hand"} or {at:"desk",x,z,dir} (cm) */
 const S={
   magAng:uni(0,360), phiOff:uni(0,360), stickRel:0,
   mOn:false, range:800, shown:0, reading:0, settling:false, mAcc:0,
@@ -716,9 +718,10 @@ function meterStep(dt){
   S.reading=S.shown+norm(0,0.15e-3);
   S.settling=Math.abs(target-S.shown)>=3e-4;
 }
+const plugged=()=>!!(ST.plug&&ST.plug.at==="meter");
 function meterText(){
   if(!ST.on.meter||!S.mOn) return "";
-  if(!ST.on.probe) return "----";
+  if(!ST.on.probe||!plugged()) return "----";
   const v=S.reading*1e3, fs=S.range;
   if(Math.abs(v)>=fs) return d().lab.ol;
   return (S.range===800?v.toFixed(1):v.toFixed(3))+" mT";
@@ -740,112 +743,9 @@ function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fil
 function seg(x1,y1,x2,y2,col,lw){ ctx.strokeStyle=col; ctx.lineWidth=lw||1; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); }
 const tiltRad=()=>S.turns*B.S/B.D;
 
-function drawTable(){
-  ctx.fillStyle="#cfc8bb"; ctx.fillRect(-PX0/PM-2,-PY0/PM-2,LW/PM+4,LH/PM+4);
-  ctx.strokeStyle="rgba(120,100,70,.08)"; ctx.lineWidth=.4;
-  for(let i=0;i<14;i++){ const y=-4+i*15; ctx.beginPath(); ctx.moveTo(-10,y); ctx.bezierCurveTo(100,y+2,240,y-2,360,y+1); ctx.stroke(); }
-}
-function drawPlatform(){
-  fillR(-2.5,-2.5,PW+6,PH+6,4,"#bdbdb6");                                  /* bottom platform */
-  fillR(0,0,PW,PH,3.5,"#f8f8f5","#c8c8c2",.5);                              /* top platform */
-  /* the printed scale */
-  const y0=98; seg(30,y0,232,y0,"#555",.25);
-  for(let t=0;t<=200;t++){ const L=t%10===0?3.6:t%5===0?2.5:1.5; seg(31+t,y0,31+t,y0-L,"#444",t%10===0?.28:.16); }
-  for(let c=0;c<=20;c++) text(String(c),31+c*10,y0+2.6,"#333",2.6,"center","",MONO);
-  text("IPhO",222,12,"#2b6fa8",5,"left","700"); text("2017",239,12,"#7fb0d6",3.4,"left");
-  /* bubble levels: the long one feels the tilt */
-  const th=tiltRad()*TILT_EXAG;
-  fillR(118,6,26,7,3.5,"#bfe9a6","#5a8f3c",.35); seg(131,6.5,131,12.5,"#5a8f3c",.2); seg(127,6.5,127,12.5,"#5a8f3c",.15); seg(135,6.5,135,12.5,"#5a8f3c",.15);
-  circ(131+clamp(th*40,-9,9),9.5,2.3,"rgba(255,255,255,.85)");
-  fillR(4,62,7,22,3.5,"#bfe9a6","#5a8f3c",.35); circ(7.5,73,2.3,"rgba(255,255,255,.85)");
-  /* the three levelling screws */
-  SCREWS.forEach(([x,y],i)=>{ circ(x,y,6.2,"#d9dcdf","#777",.35);
-    for(let k=0;k<20;k++){ const a=k/20*2*Math.PI; seg(x+5.4*Math.cos(a),y+5.4*Math.sin(a),x+6.2*Math.cos(a),y+6.2*Math.sin(a),"#999",.18); }
-    circ(x,y,2.2,"#b9bec3","#777",.25);
-    if(i===2){ const a=-2*Math.PI*S.turns-Math.PI/2; seg(x,y,x+4.6*Math.cos(a),y+4.6*Math.sin(a),"#b03030",.6); seg(x,y-6.4,x,y-8.4,"#222",.4); } });
-  /* the rail: two glass rods between black end blocks */
-  for(const yy of [152,160]){ fillR(14,yy-1.3,232,2.6,1.3,"#dfe8ee","#9fb0bc",.2); seg(15,yy-.6,245,yy-.6,"rgba(255,255,255,.9)",.35); }
-  fillR(5,145,11,22,1,"#151515"); fillR(244,145,11,22,1,"#151515");
-}
-function drawRuler(){
-  const r=ST.pos.ruler, L=200, W=24;
-  ctx.save(); ctx.translate(r.x,r.y); if(r.rot) ctx.rotate(Math.PI/2);
-  fillR(-L/2,-W/2,L,W,1.2,"rgba(232,244,236,.78)","#7ea08b",.3);
-  for(let t=0;t<=L-8;t++){ const x=-L/2+4+t, len=t%10===0?4.5:t%5===0?3.2:2; seg(x,-W/2,x,-W/2+len,"#244",t%10===0?.24:.14); }
-  for(let c=0;c<=19;c++) text(String(c),-L/2+4+c*10,-W/2+6.6,"#123",2.6,"center","",MONO);
-  text("cm",L/2-10,W/2-4,"#355",2.4,"center");
-  fillR(-L/2+30,2,L-60,4,2,"rgba(60,140,90,.35)");
-  ctx.restore();
-}
-function drawMag(){
-  const p=ST.pos.mag;
-  fillR(p.x-13,p.y-11,26,22,1.6,"rgba(214,232,238,.6)","#8fa9b4",.35);
-  fillR(p.x-11.5,p.y-9.5,23,19,1.2,null,"rgba(255,255,255,.7)",.3);
-  const g=ctx.createRadialGradient(p.x-1,p.y-1,.5,p.x,p.y,3.4); g.addColorStop(0,"#eef0f2"); g.addColorStop(1,"#9aa0a6");
-  circ(p.x,p.y,3.2,g,"#5d6369",.25);
-  const a=S.magAng*Math.PI/180; circ(p.x+2.5*Math.cos(a),p.y+2.5*Math.sin(a),.28,"#7a7f85");   /* a small chip in the nickel coat */
-  if(ST.on.sticker){ const s=(S.magAng+S.stickRel)*Math.PI/180;
-    circ(p.x,p.y,2.9,"#f7d531","#b89a10",.2);
-    seg(p.x-2.5*Math.cos(s),p.y-2.5*Math.sin(s),p.x+2.5*Math.cos(s),p.y+2.5*Math.sin(s),"#111",.35);
-    circ(p.x+2.0*Math.cos(s),p.y+2.0*Math.sin(s),.45,"#111"); }
-}
-function drawTrap(){
-  const p=ST.pos.trap, Lm=LMAG*1e3, Rm=R*1e3, Am=A_PDL*1e3;
-  fillR(p.x-22,p.y-14,44,28,1.6,"rgba(214,232,238,.6)","#8fa9b4",.35);
-  for(const sy of [-Am,Am]){ const g=ctx.createLinearGradient(0,p.y+sy-Rm,0,p.y+sy+Rm); g.addColorStop(0,"#8d9399"); g.addColorStop(.45,"#eceef0"); g.addColorStop(1,"#7d838a");
-    fillR(p.x-Lm/2,p.y+sy-Rm,Lm,2*Rm,Rm*.6,g,"#5d6369",.2); }
-  const ys=p.y+10.2; seg(p.x-10.5,ys,p.x+10.5,ys,"#333",.18);
-  for(let k=-10;k<=10;k++){ seg(p.x+k,ys,p.x+k,ys-(k%5?1:1.8),"#333",.13); if(k%5===0) text(String(k),p.x+k,ys+1.8,"#222",1.7,"center","",MONO); }
-  if(ST.on.ins){ fillR(p.x+11,p.y-9,2.4,18,.4,"#fafafa","#888",.15); for(let k=-8;k<=8;k+=1) seg(p.x+11,p.y+k,p.x+11.9,p.y+k,"#555",.08); }
-  if(S.rod){ const z=rodZ(), l=S.rod.len, dd=Math.max(ROD_D[ROD_KEY[S.rod.k]]*1e3,.35);
-    fillR(p.x+z-l/2,p.y-dd/2,l,dd,dd/2,"#2a2a2a"); }
-}
-function drawProbe(){
-  const hx=ST.holderX, t=tipX();
-  fillR(hx-8,124,16,46,1.2,"#1a1a1a","#000",.3);
-  for(const yy of [128,140]) circ(hx,yy,1.4,"#8a8f94","#333",.15);
-  fillR(t,PRY-3.5,hx+6-t,7,1.4,"#f2c230","#9d7a12",.25);
-  fillR(t,PRY-3.5,3,7,1,"#d9a915");
-  seg(t+EL_IN,PRY-3.5,t+EL_IN,PRY+3.5,"#c0392b",.18);
-  ctx.strokeStyle="#9aa6ad"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(hx+6,PRY);
-  if(ST.on.meter){ const m=ST.pos.meter; ctx.bezierCurveTo(hx+30,PRY+30,m.x-20,m.y+50,m.x,m.y+21); }
-  else ctx.bezierCurveTo(hx+20,PRY+20,hx+26,PRY+34,hx+20,PRY+30);
-  ctx.stroke(); ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=.5; ctx.stroke();
-}
 const METER_HIT=()=>{ const m=ST.pos.meter; return {pw:[m.x-57,m.y-4],rg:[m.x+56,m.y-4]}; };
-function drawMeter(){
-  const m=ST.pos.meter;
-  for(const dx of [-17,13]){ fillR(m.x+dx-6,m.y-29,13,9,1,"#1d1d1d"); fillR(m.x+dx-6,m.y-29,4,9,1,"#d1a43a"); }
-  seg(m.x-12,m.y-22,m.x-8,m.y-17,"#c33",.5); seg(m.x+16,m.y-22,m.x+12,m.y-17,"#c33",.5);
-  fillR(m.x-36,m.y-17,72,38,2.2,"#141414","#000",.3);
-  text(d().lab.title,m.x,m.y-12.5,"#e6e6e6",2.8,"center","600");
-  const on=S.mOn; fillR(m.x-22,m.y-8,44,10,1,on?"#2c5d6b":"#0f1c21","#333",.3);
-  text(meterText(),m.x+19,m.y-3,"#d8f6ff",4.2,"right","700",MONO);
-  const H=METER_HIT();
-  circ(H.pw[0],H.pw[1],2.4,on?"#e24a3b":"#7a2a24","#000",.2); text(d().lab.power,H.pw[0],H.pw[1]-4,"#ccc",2,"center");
-  fillR(H.rg[0]-1.6,H.rg[1]-3,3.2,6,.8,"#333"); fillR(H.rg[0]-1.4,S.range===800?H.rg[1]-2.8:H.rg[1],2.8,2.8,.6,"#d33");
-  text("800mT",H.rg[0],H.rg[1]-5,"#ccc",1.8,"center"); text("8mT",H.rg[0],H.rg[1]+5,"#ccc",1.8,"center");
-  fillR(m.x-4,m.y+11,8,4,.6,"#2a2a2a","#555",.2); text(d().lab.probe,m.x,m.y+8.4,"#ccc",2,"center");
-  circ(m.x-12,m.y+13,.9,on?"#7f7":"#355"); circ(m.x+12,m.y+13,.9,"#355");
-}
 const WATCH_BTN=()=>{ const q=ST.pos.watch; return {ss:[q.x+7,q.y-15.5],lr:[q.x-7,q.y-15.5]}; };
 function fmtWatch(t){ const m=Math.floor(t/60), s=t-m*60; return String(m).padStart(2,"0")+":"+s.toFixed(2).padStart(5,"0"); }
-function drawWatch(){ const q=ST.pos.watch, B2=WATCH_BTN();
-  for(const [x,y] of [B2.ss,B2.lr]) fillR(x-2.5,y-1,5,3.4,.8,"#cfd3d6","#555",.15);
-  fillR(q.x-13,q.y-13.5,26,28.5,7,"#2b2b2b","#000",.3);
-  fillR(q.x-10,q.y-7,20,9,1,"#b9c3a8","#556",.2);
-  text(fmtWatch(S.watch.t),q.x,q.y-2.5,"#1d2318",3.4,"center","700",MONO);
-  text("LAP/RESET",q.x-6,q.y+6,"#bbb",1.6,"center"); text("START/STOP",q.x+6,q.y+6,"#bbb",1.6,"center");
-}
-function drawScene(){
-  drawTable(); drawPlatform();
-  if(ST.on.ruler) drawRuler();
-  if(ST.on.trap) drawTrap();
-  if(ST.on.mag) drawMag();
-  if(ST.on.probe) drawProbe();
-  if(ST.on.meter) drawMeter();
-  if(ST.on.watch) drawWatch();
-}
 /* ══════════════════════════════════════════════════════════════
    4.  TRAY
    ══════════════════════════════════════════════════════════════ */
@@ -855,10 +755,10 @@ function icon(k,x,y,s){
     case "mag": fillR(-14,-6,28,14,2,"rgba(214,232,238,.8)","#8fa9b4"); fillR(-4,-16,8,20,2,"#c3c7cc","#666"); circ(0,-16,4,"#f7d531"); break;
     case "trap": fillR(-16,-10,32,20,2,"rgba(214,232,238,.8)","#8fa9b4"); fillR(-11,-6,22,5,2.5,"#b8bcc1"); fillR(-11,1,22,5,2.5,"#b8bcc1"); break;
     case "meter": fillR(-16,-10,32,20,2,"#151515"); fillR(-10,-6,20,6,1,"#2c5d6b"); circ(-12,5,1.8,"#e24a3b"); break;
-    case "probe": fillR(-18,-3,30,6,2,"#f2c230","#9d7a12"); fillR(10,-6,8,12,1,"#1a1a1a"); break;
+    case "probe": fillR(-19,-2.5,26,5,1,"#f2c230","#9d7a12"); fillR(-21,-2.5,3.5,5,1,"#1a1a1a"); fillR(7,-1.8,5,3.6,1.5,"#151515");
+      ctx.strokeStyle="#b9bdb2"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(12,0); ctx.bezierCurveTo(22,0,20,12,10,11); ctx.stroke(); fillR(4,8,6,6,1,"#c8ccc4"); break;
     case "r03": case "r05": case "r07": case "r09": { const w=+k.slice(1)/3+0.6; fillR(-15,-w/2,30,w,w/2,"#2a2a2a"); fillR(-17,-9,34,18,1,null,"rgba(200,200,200,.5)"); break; }
     case "watch": fillR(-11,-12,22,24,7,"#2b2b2b"); fillR(-7,-5,14,7,1,"#b9c3a8"); fillR(-8,-15,4,3,1,"#999"); fillR(4,-15,4,3,1,"#999"); break;
-    case "loupe": circ(-3,-3,9,"rgba(200,230,250,.35)","#333",2.2); ctx.save(); ctx.translate(4,4); ctx.rotate(Math.PI/4); fillR(0,-2,13,4,2,"#222"); ctx.restore(); break;
     case "sticker": circ(0,0,8,"#f7d531","#b89a10"); seg(-6,0,6,0,"#111",1.2); break;
     case "ins": fillR(-3,-14,6,28,1,"#fafafa","#888"); for(let i=-12;i<=12;i+=3) seg(-3,i,0,i,"#555",.6); break;
     case "pick": seg(-15,8,15,-8,"#d9b98a",2.4); break;
@@ -867,8 +767,8 @@ function icon(k,x,y,s){
   ctx.restore();
 }
 const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
-const TRAY_LIST=["mag","trap","meter","probe","r03","r05","r07","r09","watch","loupe","sticker","ins","pick","ruler"], TROW=42;
-const REUSE=new Set(["r03","r05","r07","r09","loupe","pick"]);
+const TRAY_LIST=["mag","trap","meter","probe","r03","r05","r07","r09","watch","sticker","ins","pick","ruler"], TROW=42;
+const REUSE=new Set(["r03","r05","r07","r09","pick"]);
 let TRW=190, TRH=500, trayCells=[];
 const trayAvail=k=>REUSE.has(k)?!(hand&&hand.k===k):(!ST.on[k]&&!(hand&&hand.k===k));
 function drawTray(){
@@ -947,7 +847,8 @@ function returnItem(k){
   if(k==="watch"){ S.watch.run=false; S.watch.t=0; S.watch.laps.length=0; }
   if(k==="mag"){ ST.on.sticker=false; }
   if(k==="trap"){ S.rod=null; ST.on.ins=false; S.hold=null; }
-  if(k==="meter") S.mOn=false;
+  if(k==="meter"){ S.mOn=false; if(plugged()) ST.plug=plugRest(); }
+  if(k==="probe"){ ST.plug=null; if(hand&&hand.k==="plug") hand=null; }
   ST.on[k]=false; say("back",itemName(k));
 }
 function turnScrew(dt){
@@ -972,18 +873,30 @@ function putDown(p){
   if(k==="ruler"){ const rot=hand.rot||0; if(!fitsRuler(x,y,rot)){ say("noFit"); return; } ST.pos.ruler={x,y,rot}; ST.on.ruler=true; hand=null; say("placed",itemName(k)); return; }
   if(k==="probe"){ if(!(y>RAIL.y0-22&&y<RAIL.y1&&x>RAIL.x0&&x<RAIL.x1)){ say("onRail"); return; }
     if(!holderOK(clamp(x,HOLD.min,HOLD.max))){ say("noFit"); return; }
-    ST.holderX=clamp(x,HOLD.min,HOLD.max); ST.on.probe=true; hand=null; say("placed",itemName(k)); return; }
+    ST.holderX=clamp(x,HOLD.min,HOLD.max); ST.on.probe=true; ST.plug=plugRest(); hand=null; say("probePlaced"); return; }
   if(k[0]==="r"&&ROD_KEY[k]){ if(!ST.on.trap){ say("needTrap"); return; } if(!inBlock("trap",p)){ say("noFit"); return; }
     if(S.rod){ say("rodBusy"); return; }
     S.rod={k,len:S.rodLen}; S.z=norm(0,0.25)*1e-3; S.vz=0; hand=null; say("rodIn",ROD_KEY[k],S.rodLen); return; }
   if(k==="ins"){ if(!ST.on.trap){ say("needTrap"); return; } if(!inBlock("trap",p)){ say("noFit"); return; } ST.on.ins=true; hand=null; say("insOn"); return; }
   if(k==="sticker"){ if(!onMag(p)&&!inBlock("mag",p)){ say("needMag"); return; } S.stickRel=-S.magAng; ST.on.sticker=true; hand=null; say("stickOn"); return; }
+  if(k==="plug"){ if(inBlock("meter",p)){ ST.plug={at:"meter"}; hand=null; S.shown=fieldAtProbe(); say("plugIn"); return; }
+    const c=[p[0]/10,p[1]/10]; if(plugFree(c[0],c[1])){ ST.plug={at:"desk",x:c[0],z:c[1],dir:c[0]>PW/20?1:-1}; hand=null; say("plugDesk"); return; }
+    say("noFit"); return; }
   if(k==="pick"){ if(onRod(p)){ S.hold={}; say("pushed"); return; } say("noRod"); return; }
 }
+/* where the USB plug lies on the desk when it is not in the meter (cm) */
+function plugFree(x,z){
+  if(x>-1.6&&x<PW/10+1.6&&z>-1.6&&z<PH/10+1.6) return false;
+  if(x<BX0/10+1||x>BX1/10-1||z<BY0/10+1||z>BY1/10-1) return false;
+  if(ST.on.meter){ const m=ST.pos.meter; if(x>m.x/10-8.2&&x<m.x/10+8.2&&z>m.y/10-8.6&&z<m.y/10+5.6) return false; }
+  if(ST.on.watch){ const q=ST.pos.watch; if(Math.hypot(x-q.x/10,z-q.y/10)<3.4) return false; }
+  return true; }
+function plugRest(){
+  for(const [x,z,dir] of [[30.5,13.2,1],[30.5,20.5,1],[-4.5,13.2,-1],[12,21.5,1]]) if(plugFree(x,z)) return {at:"desk",x,z,dir};
+  return {at:"desk",x:12,z:22,dir:1}; }
 function benchDown(p,right){
   if(hand){
-    if(right){ hand=null; return; }
-    if(hand.k==="loupe") return;
+    if(right){ if(hand.k==="plug") ST.plug=plugRest(); hand=null; return; }
     putDown(p); return; }
   if(right){
     if(onRod(p)){ S.rod=null; say("rodOut"); return; }
@@ -1118,18 +1031,73 @@ function drawTrap3(){ const p=ST.pos.trap, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x),
   if(S.rod){ const zr=rodZ()/10, l=S.rod.len/10, dd=Math.max(ROD_D[ROD_KEY[S.rod.k]]*100/2,0.04), yr=y0+TB_H+Rm+B.y0*100;
     cyl3("x",x+zr-l/2,x+zr+l/2,yr,z,dd,"#2a2a2a",{seg:8,id:"trap",bias:2}); }
 }
+/* (Fig. 4, item 6) the Hall sensor probe: a flat yellow stick about 10 cm long with the black sensor end,
+   a black strain relief at the back and a long clear USB cable to a USB-A plug */
+const STICK=10.0, RELIEF=1.4;
+function crSpline(P,n){ const out=[]; if(P.length<2) return P.slice();
+  for(let i=0;i<P.length-1;i++){ const p0=P[Math.max(0,i-1)], p1=P[i], p2=P[i+1], p3=P[Math.min(P.length-1,i+2)];
+    for(let k=0;k<n;k++){ const t=k/n, t2=t*t, t3=t2*t;
+      out.push([0,1,2].map(j=>0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3))); } }
+  out.push(P[P.length-1]); return out; }
+/* the cable's way from the back of the probe to the plug: over the platform edge, along the desk,
+   round the Teslameter box (never through it) and up its front to the Probe socket on top */
+function cableRoute(){
+  const tx=tipX()/10, y=PT+2.5, z=PRY/10, s0=tx+STICK+RELIEF, pl=ST.plug||plugRest();
+  const P=[[s0,y,z],[s0+0.9,y-0.1,z]];
+  let tail, F;
+  if(pl.at==="meter"){ const m=ST.pos.meter, mx=m.x/10, mz=m.y/10, yt=5.5;
+    F=[mx,0.2,mz+7.2];
+    tail=[[mx,0.2,mz+7.2],[mx,0.5,mz+6.1],[mx,2.4,mz+5.3],[mx,yt+0.4,mz+5.0],[mx,yt+1.8,mz+4.2],[mx,yt+2.5,mz+3.1],[mx,yt+2.25,mz+2.5]]; }
+  else { let px,pz,dir;
+    if(pl.at==="hand"){ const q=onPlane(mouse[0],mouse[1],0); px=q[0]; pz=q[2]; dir=px>PW/20?1:-1; }
+    else { px=pl.x; pz=pl.z; dir=pl.dir; }
+    const yp=pl.at==="hand"?1.6:0.33;
+    F=[px-dir*2.6,0.2,pz+0.6]; tail=[[px-dir*2.6,0.2,pz+0.6],[px-dir*1.75,yp,pz]]; }
+  /* off the platform on the side facing F */
+  const X0=-0.8, X1=26.8, Z0=-0.8, Z1=17.8;
+  const ox=F[0]>X1?1:F[0]<X0?-1:0, oz=F[2]>Z1?1:F[2]<Z0?-1:0;
+  let qx=ox>0?Math.max(X1,s0+1.4):ox<0?X0:Math.min(Math.max(F[0],X0+1),X1-1), qz=oz>0?Z1:oz<0?Z0:Math.min(Math.max(F[2],Z0+1),Z1-1);
+  if(!ox&&!oz){ qx=X1; }
+  const ux=ox||(!oz?1:0), uz=oz;
+  const mid=[(P[1][0]+qx)/2,Math.max(PT+1.7,(P[1][1]+PT+0.9)/2+0.2),(P[1][2]+qz)/2];
+  if(Math.hypot(mid[0]-P[1][0],mid[2]-P[1][2])>1.5) P.push(mid);
+  P.push([qx-ux*0.2,PT+0.9,qz-uz*0.2],[qx+ux*0.5,PT-0.4,qz+uz*0.5],[qx+ux*1.4,0.6,qz+uz*1.4],[qx+ux*2.4,0.2,qz+uz*2.4]);
+  /* round the meter box and its batteries if the straight run would cross them */
+  if(ST.on.meter){ const m=ST.pos.meter, mx=m.x/10, mz=m.y/10, R=[mx-7.9,mz-8.4,mx+7.9,mz+5.5], A=P[P.length-1];
+    const hits=(a,b)=>{ for(let i=1;i<20;i++){ const t=i/20, x=a[0]+(b[0]-a[0])*t, zz=a[2]+(b[2]-a[2])*t; if(x>R[0]&&x<R[2]&&zz>R[1]&&zz<R[3]) return true; } return false; };
+    if(hits(A,F)){ const sx=(A[0]<mx?-1:1), cx=sx<0?R[0]:R[2];
+      if(A[2]<R[1]) P.push([cx,0.2,R[1]]);
+      if(F[2]>R[3]) P.push([cx,0.2,R[3]]); else P.push([cx,0.2,F[2]]); } }
+  return crSpline(P.concat(tail),6); }
+function drawPlug(at,x,z,dir){
+  if(at==="meter"){ const m=ST.pos.meter, mx=m.x/10, mz=m.y/10, yt=5.5;
+    box3(mx-0.6,mx+0.6,yt,yt+0.3,mz+2.22,mz+2.68,"#cfd3d6",{id:"plug"});
+    box3(mx-0.72,mx+0.72,yt+0.3,yt+1.75,mz+2.12,mz+2.78,"#c8ccc4",{id:"plug",top:"#d6d9d2"});
+    cyl3("y",yt+1.75,yt+2.2,mx,mz+2.45,0.22,"#bfc3bb",{seg:10,id:"plug"});
+    return; }
+  const y0=at==="hand"?1.4:0.0, a=x+dir*0.35, b=x+dir*1.55, c=x-dir*1.1;
+  box3(Math.min(a,b),Math.max(a,b),y0+0.08,y0+0.53,z-0.6,z+0.6,"#cfd3d6",{id:"plug"});
+  box3(Math.min(a,b),Math.max(a,b),y0+0.53,y0+0.54,z-0.45,z+0.45,"#2a2a2a",{id:"plug"});
+  box3(Math.min(c,a),Math.max(c,a),y0,y0+0.66,z-0.72,z+0.72,"#c8ccc4",{id:"plug",top:"#d6d9d2"});
+  cyl3("x",Math.min(c,c-dir*0.5),Math.max(c,c-dir*0.5),y0+0.33,z,0.2,"#bfc3bb",{seg:10,id:"plug"});
+}
 function drawProbe3(){ const hx=ST.holderX/10, tx=tipX()/10, y=PT+2.5, z=PRY/10;
   /* the slider: a pair of black blocks round the two tubes, a clear upright carrying the probe */
   for(const dx of [-0.82,0.06]) box3(hx+dx,hx+dx+0.76,PT,PT+1.6,14.3,16.9,"#161616",{id:"probe",top:"#262626"});
   box3(hx-0.75,hx+0.75,PT+1.6,PT+2.15,13.6,16.9,"#1c1c1c",{id:"probe"});
   box3(hx-0.6,hx+0.6,PT+2.15,PT+2.9,z-0.55,16.4,"#d6e8ee",{id:"probe",alpha:0.55,stroke:"rgba(120,160,175,.85)",lw:1});
   cyl3("y",PT+2.9,PT+3.05,hx,15.6,0.16,"#8a8f94",{seg:8});
-  box3(tx,hx+0.6,y-0.35,y+0.35,z-0.35,z+0.35,"#f2c230",{id:"probe"});
-  box3(tx,tx+0.3,y-0.36,y+0.36,z-0.36,z+0.36,"#d9a915",{id:"probe",bias:0.5});
-  line3([tx+EL_IN/10,y+0.37,z-0.36],[tx+EL_IN/10,y+0.37,z+0.36],"#c0392b",1.4,{bias:1});
-  const pts=[]; const m=ST.on.meter?W(ST.pos.meter.x,5.6,ST.pos.meter.y+25):[hx+3,0.3,z+2];
-  for(let i=0;i<=20;i++){ const t=i/20; pts.push([hx+0.6+(m[0]-hx-0.6)*t, y+(m[1]-y)*t-Math.sin(Math.PI*t)*1.5, z+(m[2]-z)*t+Math.sin(Math.PI*t)*2]); }
-  poly3(pts,"#9aa6ad",2.4);
+  /* the flat yellow stick and its black sensor end */
+  box3(tx+0.55,tx+STICK,y-0.11,y+0.11,z-0.42,z+0.42,"#f2c230",{id:"probe",top:"#f6cf45"});
+  box3(tx,tx+0.55,y-0.13,y+0.13,z-0.43,z+0.43,"#181818",{id:"probe",top:"#222"});
+  cyl3("x",tx+STICK,tx+STICK+0.5,y,z,0.3,"#151515",{seg:12,id:"probe"});
+  cyl3("x",tx+STICK+0.5,tx+STICK+RELIEF,y,z,0.2,"#151515",{seg:10,id:"probe"});
+  /* the clear USB cable */
+  const pts=cableRoute(); poly3(pts,"#b4b8ad",3.4); poly3(pts.map(p=>[p[0],p[1]+0.03,p[2]]),"rgba(240,242,236,.75)",1.1,{bias:0.5});
+  const pl=ST.plug||plugRest();
+  if(pl.at==="meter") drawPlug("meter");
+  else if(pl.at==="hand"){ const q=onPlane(mouse[0],mouse[1],0); drawPlug("hand",q[0],q[2],q[0]>PW/20?1:-1); }
+  else drawPlug("desk",pl.x,pl.z,pl.dir);
 }
 /* the Teslameter (Fig. 4, item 5): a black box about 14 × 8.5 × 5.5 cm with bevelled top edges,
    "Digital Teslameter" over a blue LCD window, a red Power toggle on the left and the red
@@ -1194,57 +1162,117 @@ function drawScene3(){
   if(ST.on.meter) drawMeter3();
   if(ST.on.watch) drawWatch3();
 }
-/* ══ 8. 2-D VIEWS (the close-ups of the flat version, now opened by a click) ══ */
+/* ══ 8. 2-D VIEWS  (drawn at 900 × 400, opened by a click; wheel zooms, drag pans) ══
+   every part is drawn to the same sizes as the 3-D bench, in mm */
 const CLW=900, CLH=400;
 function msgBox(s,x,w){ text(s,x+w/2,CLH/2,"#69717a",14,"center"); }
-function magnify(cx,cy,mx,my,sc,rx,ry,rw,rh){
-  ctx.save(); ctx.beginPath(); rrect(rx,ry,rw,rh,8); ctx.clip();
-  ctx.translate(cx,cy); ctx.scale(sc,sc); ctx.translate(-mx,-my); drawScene(); ctx.restore();
-  fillR(rx,ry,rw,rh,8,null,"#3a4048",1.5);
+function panel(rx,ry,rw,rh,fill){ fillR(rx,ry,rw,rh,8,fill||"#f8f8f5"); ctx.save(); rrect(rx,ry,rw,rh,8); ctx.clip(); }
+function panelEnd(rx,ry,rw,rh){ ctx.restore(); fillR(rx,ry,rw,rh,8,null,"#3a4048",1.5); }
+function cylTop(x,y,r,c0,c1,edge){ const g=ctx.createRadialGradient(x-r*0.35,y-r*0.35,r*0.1,x,y,r); g.addColorStop(0,c0); g.addColorStop(1,c1); circ(x,y,r,g,edge||"#555",1); }
+function polyF(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function scaleBar(x,y,px,label){ seg(x,y,x+px,y,"#333",2); seg(x,y-5,x,y+5,"#333",1.5); seg(x+px,y-5,x+px,y+5,"#333",1.5); text(label,x+px/2,y-12,"#333",12,"center","600"); }
+
+/* ── the Teslameter's top panel (after the kit photo) ── */
+const MP={pw:[86,300],rg:[352,300],usb:[220,300]};
+function toggle2(x,y,up){
+  circ(x,y,17,"#c9cdd1","#6b7075",1.2); circ(x,y,11,"#9aa0a6","#555",1); circ(x,y,5,"#3a3d40");
+  const ty=up?y-24:y+24; ctx.lineCap="round"; seg(x,y,x,ty,"#b8bcc0",6); ctx.lineCap="butt";
+  const g=ctx.createRadialGradient(x-3,ty-3,1,x,ty,10); g.addColorStop(0,"#ff6a5c"); g.addColorStop(1,"#a51f17"); circ(x,ty,9,g,"#5a0f0a",1);
 }
-const MP={pw:[86,300],rg:[352,300]};
 function closeMeter(){
   if(!ST.on.meter){ msgBox(d().lab.noMeter,0,440); }
   else {
-    fillR(20,40,400,320,14,"#141414","#000",2);
-    text(d().lab.title,220,72,"#e6e6e6",20,"center","600");
-    fillR(52,100,336,96,8,"#2a2f33");
-    fillR(62,110,316,76,4,S.mOn?"#2c5d6b":"#0f1c21");
-    text(meterText(),364,150,"#d8f6ff",40,"right","700",MONO);
-    circ(MP.pw[0],MP.pw[1],20,S.mOn?"#e24a3b":"#7a2a24","#000",2); circ(MP.pw[0]-5,MP.pw[1]-6,6,"rgba(255,255,255,.35)");
-    text(d().lab.power,MP.pw[0],MP.pw[1]-36,"#ccc",14,"center","600");
-    fillR(MP.rg[0]-12,MP.rg[1]-26,24,52,6,"#2b2b2b","#000",1.5);
-    fillR(MP.rg[0]-9,S.range===800?MP.rg[1]-23:MP.rg[1]+1,18,22,4,"#d33");
-    text("800mT",MP.rg[0]+20,MP.rg[1]-14,"#ccc",13,"left","600"); text("8mT",MP.rg[0]+20,MP.rg[1]+14,"#ccc",13,"left","600");
-    fillR(196,288,48,22,3,"#2a2a2a","#666",1.5); fillR(204,294,32,10,2,"#111");
-    text(d().lab.probe,220,276,"#ccc",13,"center","600");
-    if(!ST.on.probe) text(d().lab.noProbe,220,334,"#888",12,"center");
+    const on=S.mOn, L=d().lab;
+    fillR(20,40,400,320,10,"#111","#000",2); fillR(26,46,388,308,7,null,"rgba(255,255,255,.08)",1.2);
+    text(L.title,220,74,"#efe6c0",19,"center","600");
+    fillR(50,98,340,98,6,"#3b3e42","#1c1c1c",2);                                   /* LCD bezel */
+    fillR(62,110,316,74,3,on?"#2346b0":"#101a3e");
+    if(on){ ctx.fillStyle="rgba(255,255,255,.05)"; for(let r=0;r<2;r++) for(let c=0;c<16;c++) ctx.fillRect(70+c*19.4,116+r*32,16,27); }
+    text(meterText(),370,148,"#eef4ff",38,"right","700",MONO);
+    toggle2(MP.pw[0],MP.pw[1],on); text(L.power,MP.pw[0],MP.pw[1]-48,"#ddd",13,"center","600");
+    toggle2(MP.rg[0],MP.rg[1],S.range===800); text("800mT",MP.rg[0]+24,MP.rg[1]-30,"#ddd",12,"left","600"); text("8mT",MP.rg[0]+24,MP.rg[1]+30,"#ddd",12,"left","600");
+    const u=MP.usb; text(L.probe,u[0],u[1]-34,"#ddd",13,"center","600");
+    fillR(u[0]-26,u[1]-12,52,24,2,"#cfd3d6","#777",1.2); fillR(u[0]-21,u[1]-5,42,10,1,"#1a1a1a"); fillR(u[0]-19,u[1]-3,38,4,1,"#3a3d40");
+    circ(u[0]-56,u[1],6,on?"#7f7":"#2c3a2c","#000",1); circ(u[0]+56,u[1],6,"#2c2c2c","#000",1);
+    if(plugged()){                                                                        /* the plug from above, cable off to the front */
+      ctx.lineCap="round"; seg(u[0],u[1]+18,u[0]+6,370,"#b4b8ad",8); seg(u[0],u[1]+18,u[0]+6,370,"rgba(255,255,255,.55)",2); ctx.lineCap="butt";
+      fillR(u[0]-30,u[1]-14,60,28,4,"#c8ccc4","#8a8e86",1.4); fillR(u[0]-24,u[1]-8,48,16,3,"rgba(255,255,255,.25)"); circ(u[0],u[1]+16,9,"#bfc3bb","#8a8e86",1); }
+    if(!ST.on.probe) text(L.noProbe,220,340,"#888",12,"center");
+    else if(!plugged()) text(L.plugHint,220,340,"#f2c14e",12,"center","600");
   }
+  /* right: the probe tip from above, ten times */
   if(ST.on.probe||ST.on.mag){
-    const c=ST.on.probe?[tipX()-1,PRY]:[ST.pos.mag.x,ST.pos.mag.y];
-    magnify(670,200,c[0],c[1],10,452,20,428,360); text("×10",866,36,"#f2c14e",13,"right","700");
+    const c=ST.on.probe?[tipX()+4,PRY]:[ST.pos.mag.x,ST.pos.mag.y], sc=10, cx=666, cy=200;
+    panel(452,20,428,360,"#f8f8f5");
+    ctx.save(); ctx.translate(cx,cy); ctx.scale(sc,sc); ctx.translate(-c[0],-c[1]); topDetail(); ctx.restore();
+    scaleBar(470,360,5*sc,"5 mm");
+    panelEnd(452,20,428,360); text("×10",866,36,"#c58a0e",13,"right","700");
   } else msgBox(d().lab.noTip,450,440);
+}
+/* the platform round the probe and the magnets, from above, in mm */
+function topDetail(){
+  ctx.fillStyle="#b8926a"; ctx.fillRect(-200,-200,700,600);
+  fillR(-8,-8,PW+16,PH+16,4,"rgba(214,232,238,.8)");                       /* clear bottom platform */
+  fillR(0,0,PW,PH,2,"#f8f8f5","#c8c8c2",.3);
+  const y0=98; seg(30,y0,232,y0,"#555",.12);                               /* the printed scale */
+  for(let t=0;t<=200;t++){ const L=t%10===0?3.6:t%5===0?2.5:1.5; seg(31+t,y0,31+t,y0-L,"#444",t%10===0?.14:.08); }
+  for(let c=0;c<=20;c++) text(String(c),31+c*10,y0+3,"#333",2.6,"center","",MONO);
+  for(const yy of [152,160]){ const g=ctx.createLinearGradient(0,yy-3.2,0,yy+3.2); g.addColorStop(0,"#b9cbd4"); g.addColorStop(.4,"#f4f8fa"); g.addColorStop(1,"#a9bcc6");
+    fillR(15,yy-3.2,230,6.4,3.2,g,"#8fa3ad",.2); }
+  if(ST.on.trap) trapTop(ST.pos.trap.x,ST.pos.trap.y);
+  if(ST.on.mag){ const p=ST.pos.mag;
+    fillR(p.x-13,p.y-11,26,22,1,"rgba(214,232,238,.55)","#8fa9b4",.3);
+    circ(p.x-7.5,p.y+4.5,3.2,"rgba(214,232,238,.7)","#8fa9b4",.25);
+    cylTop(p.x,p.y,4.2,"#e4e7ea","#9aa0a6","#5d6369"); circ(p.x,p.y,3.25,null,"#7a8086",.15);
+    const a=S.magAng*Math.PI/180; seg(p.x+2.5*Math.cos(a),p.y+2.5*Math.sin(a),p.x+2.9*Math.cos(a),p.y+2.9*Math.sin(a),"#6a6f75",.35);
+    if(ST.on.sticker){ const s=(S.magAng+S.stickRel)*Math.PI/180; circ(p.x,p.y,2.9,"#f7d531","#b89a10",.15);
+      seg(p.x-2.5*Math.cos(s),p.y-2.5*Math.sin(s),p.x+2.5*Math.cos(s),p.y+2.5*Math.sin(s),"#111",.35); } }
+  if(ST.on.probe){ const t=tipX(), hx=ST.holderX;
+    fillR(hx-6,PRY-5.5,12,40,.6,"rgba(214,232,238,.6)","#8fa9b4",.25);       /* clear upright of the holder */
+    fillR(t+5.5,PRY-4.2,STICK*10-5.5,8.4,.3,"#f2c230","#a57f10",.2);
+    fillR(t,PRY-4.3,5.5,8.6,.4,"#181818");
+    seg(t+EL_IN,PRY-3,t+EL_IN,PRY+3,"rgba(255,255,255,.55)",.12);
+    fillR(t+STICK*10,PRY-3,5,6,1,"#151515"); fillR(t+STICK*10+5,PRY-2,9,4,1,"#151515"); }
+}
+/* the PDL trap from above, in mm about its centre (x along the magnets) */
+function trapTop(cx,cy){
+  const Lm=LMAG*1e3, Rm=R*1e3, Am=A_PDL*1e3, hw=Am+Rm+4.5;
+  ctx.save(); ctx.translate(cx,cy);
+  fillR(-Lm/2+1,-5.5,Lm-2,11,.5,"rgba(214,232,238,.55)","#8fa9b4",.15);
+  for(const ex of [-Lm/2+1,Lm/2-4.2]) fillR(ex,-hw,3.2,2*hw,.6,"rgba(214,232,238,.7)","#7d9aa6",.2);
+  for(const sy of [-Am,Am]){ const g=ctx.createLinearGradient(0,sy-Rm,0,sy+Rm); g.addColorStop(0,"#80868c"); g.addColorStop(.42,"#f1f2f4"); g.addColorStop(1,"#71777e");
+    fillR(-Lm/2,sy-Rm,Lm,2*Rm,.5,g,"#4f555b",.15); }
+  const ys=10.2; seg(-10.5,ys,10.5,ys,"#333",.12);
+  for(let k=-10;k<=10;k++){ seg(k,ys,k,ys-(k%5?1:1.8),"#333",.1); if(k%5===0) text(String(k),k,ys+1.9,"#222",1.6,"center","",MONO); }
+  if(ST.on.ins) fillR(11,-9,1.4,18,.2,"#fafafa","#888",.12);
+  if(S.rod){ const z=rodZ(), l=S.rod.len, dd=Math.max(ROD_D[ROD_KEY[S.rod.k]]*1e3,.4); fillR(z-l/2,-dd/2,l,dd,dd/2,"#2a2a2a"); }
+  ctx.restore();
 }
 function closeTrap(){
   if(!ST.on.trap){ msgBox(d().lab.noTrap,0,CLW); return; }
-  /* left: cross section seen along the magnet axis, after Fig. 7 */
-  const ox=20, oy=40, X0=-9, X1=13, Y0=-5.5, Y1=8.2, sc=410/(X1-X0);
-  fillR(ox,oy,410,(Y1-Y0)*sc,8,"#eef1f3");
-  const X=v=>ox+(v-X0)*sc, Y=v=>oy+(Y1-v)*sc;
-  const Rm=R*1e3, Am=A_PDL*1e3, y0=B.y0*1e3;
-  for(const sx of [-Am,Am]){ const g=ctx.createRadialGradient(X(sx)-12,Y(0)-12,4,X(sx),Y(0),Rm*sc); g.addColorStop(0,"#f2f3f5"); g.addColorStop(1,"#9aa0a6");
-    circ(X(sx),Y(0),Rm*sc,g,"#555",1.2); }
-  fillR(X(-Am-Rm-2.2),Y(-Rm),(2*(Am+Rm)+4.4)*sc,(Y0+Rm>-5.5?1.6:1.6)*sc,2,"rgba(170,205,220,.6)");
-  if(S.rod){ const dd=ROD_D[ROD_KEY[S.rod.k]]*1e3; circ(X(0),Y(y0),Math.max(dd/2*sc,2.2),"#202020","#000",.6); }
-  if(ST.on.ins){
-    const xr=8.8; seg(X(xr),Y(Rm-5.2),X(xr),Y(Rm+1.6),"#333",1.6);
-    fillR(X(xr),Y(Rm+1.6),1.6*sc,6.8*sc,2,"rgba(255,255,255,.85)","#999",.8);
+  /* left: looking along the magnets — the clear end plate behind, the two magnets, the rod in the gap */
+  const Rm=R*1e3, Am=A_PDL*1e3, yc=TB_H*10+Rm, hw=Am+Rm+4.5, ht=yc+Rm*1.05, sc=16, ox=225, oy=318;
+  const X=v=>ox+v*sc, Y=v=>oy-v*sc;
+  panel(20,20,410,360,"#eef1f3");
+  fillR(20,Y(0),410,40,0,"#f8f8f5"); seg(20,Y(0),430,Y(0),"#9a9a94",1.2);
+  polyF([[-hw,0],[-3.5,0],[-3.5,4.5],[3.5,4.5],[3.5,0],[hw,0],[hw,ht-3.5],[hw-3.5,ht],[-hw+3.5,ht],[-hw,ht-3.5]].map(q=>[X(q[0]),Y(q[1])]),"rgba(200,225,233,.55)","#7d9aa6",1.4);
+  fillR(X(-5.5),Y(1.8),11*sc,1.8*sc,2,"rgba(180,210,222,.7)","#7d9aa6",1);
+  if(ST.on.ins){ const xr=Am+Rm+1.6;
+    fillR(X(-9),Y(25),18*sc,16*sc,3,"rgba(255,255,255,.55)","rgba(120,120,120,.6)",1);
+    seg(X(xr),Y(yc+Rm+1),X(xr),Y(yc+Rm-5.2),"#333",1.4);
     for(let k=-1.0;k<=5.001;k+=0.1){ const isInt=Math.abs(k-Math.round(k))<1e-6, half=Math.abs(k*2-Math.round(k*2))<1e-6;
-      seg(X(xr),Y(Rm-k),X(xr-(isInt?1.7:half?1.1:.55)),Y(Rm-k),"#333",isInt?1:.6);
-      if(isInt) text(String(Math.round(k)+0),X(xr+0.35),Y(Rm-k),"#111",12,"left","",MONO); }
-  }
-  /* right: the trap from above */
-  const p=ST.pos.trap; magnify(670,200,p.x,p.y,9,452,20,428,360); text("×9",866,36,"#f2c14e",13,"right","700");
+      seg(X(xr),Y(yc+Rm-k),X(xr-(isInt?1.2:half?0.8:0.4)),Y(yc+Rm-k),"#333",isInt?1:.6);
+      if(isInt) text(String(Math.round(k)),X(xr+0.3),Y(yc+Rm-k),"#111",11,"left","",MONO); } }
+  for(const sx of [-Am,Am]){ cylTop(X(sx),Y(yc),Rm*sc,"#f2f3f5","#8d939a","#444"); circ(X(sx),Y(yc),Rm*0.6*sc,null,"#3f4348",3); }
+  if(S.rod){ const dd=ROD_D[ROD_KEY[S.rod.k]]*1e3; circ(X(0),Y(yc+B.y0*1e3),Math.max(dd/2*sc,2.2),"#202020","#000",.6); }
+  scaleBar(36,358,5*sc,"5 mm");
+  panelEnd(20,20,410,360);
+  /* right: the trap from above, nine times (the toothpick works here) */
+  const p=ST.pos.trap; panel(452,20,428,360,"#f8f8f5");
+  ctx.save(); ctx.translate(670,200); ctx.scale(9,9); ctx.translate(-p.x,-p.y); topDetail(); ctx.restore();
+  scaleBar(470,360,45,"5 mm");
+  panelEnd(452,20,428,360); text("×9",866,36,"#c58a0e",13,"right","700");
 }
 const HEAD={x:760,y:210,r:110};
 function closeTilt(){
@@ -1252,20 +1280,20 @@ function closeTilt(){
   const Dmm=B.D*1e3, ox=20, oy=20, X0=-52, X1=Dmm+56, Y0=-40, Y1=116, sc=580/(X1-X0);
   fillR(ox,oy,580,(Y1-Y0)*sc,8,"#eef1f3");
   const P=q=>[ox+(q[0]-X0)*sc, oy+(Y1-q[1])*sc];
-  const ang=tiltRad()*TILT_EXAG, ca=Math.cos(ang), sa=Math.sin(ang), PT=5.0, x1=Dmm;
+  const ang=tiltRad()*TILT_EXAG, ca=Math.cos(ang), sa=Math.sin(ang), PTm=5.0, x1=Dmm;
   const onTop=(px,py)=>[px*ca-py*sa, 14.0+px*sa+py*ca];
-  const poly=(pts,fill,stroke,lw)=>{ ctx.beginPath(); pts.forEach((q,i)=>{ const v=P(q); i?ctx.lineTo(v[0],v[1]):ctx.moveTo(v[0],v[1]); }); ctx.closePath();
-    if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } };
+  const poly=(pts,fill,stroke,lw)=>polyF(pts.map(P),fill,stroke,lw);
   const line=(a,b,col,lw,dash)=>{ const A=P(a), Bq=P(b); ctx.save(); if(dash) ctx.setLineDash(dash); seg(A[0],A[1],Bq[0],Bq[1],col,lw); ctx.restore(); };
-  poly([[-40,-PT],[Dmm+40,-PT],[Dmm+40,0],[-40,0]],"#c9cbc6","#555",1);
-  poly([onTop(-34,0),onTop(Dmm+34,0),onTop(Dmm+34,PT),onTop(-34,PT)],"#f8f8f5","#555",1.1);
-  for(const xs of [0,x1]){ const top=onTop(xs,PT); line(top,[xs,0],"#5d6369",2.6);
-    poly([[top[0]-5,top[1]+0.6],[top[0]+5,top[1]+0.6],[top[0]+5,top[1]+3.2],[top[0]-5,top[1]+3.2]],"#9aa0a6","#444",.8); }
-  const cxp=Dmm/2, HW=30, HT=62;
-  for(const dz of [-HW,HW-3]) poly([onTop(cxp+dz,PT),onTop(cxp+dz,PT+HT),onTop(cxp+dz+3,PT+HT),onTop(cxp+dz+3,PT)],"rgba(214,232,238,.8)","#555",1);
-  for(const hy of [PT+12,PT+52]) line(onTop(cxp-HW,hy),onTop(cxp+HW,hy),"#666",1.4);
-  line(onTop(cxp,PT+4),onTop(cxp,PT+HT+3),"#777",.9,[6,3,2,3]);
-  if(S.rod&&ST.on.trap){ const z=rodZ(), l=S.rod.len, A=P(onTop(cxp+z-l/2,PT+22)), Bq=P(onTop(cxp+z+l/2,PT+22)); seg(A[0],A[1],Bq[0],Bq[1],"#222",6); }
+  poly([[-40,-PTm],[Dmm+40,-PTm],[Dmm+40,0],[-40,0]],"rgba(200,225,233,.8)","#7d9aa6",1);
+  poly([onTop(-34,0),onTop(Dmm+34,0),onTop(Dmm+34,PTm),onTop(-34,PTm)],"#f8f8f5","#555",1.1);
+  for(const xs of [0,x1]){ const top=onTop(xs,PTm); line(top,[xs,0],"#5d6369",2.6);
+    poly([[top[0]-6,top[1]+0.6],[top[0]+6,top[1]+0.6],[top[0]+6,top[1]+4.1],[top[0]-6,top[1]+4.1]],"#d9dcdf","#444",.8); }
+  /* the trap, seen from its side: end plates and the magnets between them, at its place along the platform */
+  if(ST.on.trap){ const Lm=LMAG*1e3, Rm=R*1e3, yc=TB_H*10+Rm, ht=yc+Rm*1.05, cxp=ST.pos.trap.x-SCREWS[0][0];
+    poly([onTop(cxp-Lm/2+1,PTm),onTop(cxp+Lm/2-1,PTm),onTop(cxp+Lm/2-1,PTm+1.8),onTop(cxp-Lm/2+1,PTm+1.8)],"rgba(200,225,233,.8)","#7d9aa6",.8);
+    for(const ex of [-Lm/2+1,Lm/2-4.2]) poly([onTop(cxp+ex,PTm),onTop(cxp+ex+3.2,PTm),onTop(cxp+ex+3.2,PTm+ht),onTop(cxp+ex,PTm+ht)],"rgba(200,225,233,.75)","#7d9aa6",1);
+    poly([onTop(cxp-Lm/2,PTm+yc-Rm),onTop(cxp+Lm/2,PTm+yc-Rm),onTop(cxp+Lm/2,PTm+yc+Rm),onTop(cxp-Lm/2,PTm+yc+Rm)],"#b9bec3","#555",1);
+    if(S.rod){ const z=rodZ(), l=S.rod.len, A=P(onTop(cxp+z-l/2,PTm+yc+B.y0*1e3)), Bq=P(onTop(cxp+z+l/2,PTm+yc+B.y0*1e3)); seg(A[0],A[1],Bq[0],Bq[1],"#222",3); } }
   /* right: the head of the right-hand screw with its reference mark */
   const h=HEAD; circ(h.x,h.y,h.r,"#d8dce0","#444",2);
   for(let k=0;k<24;k++){ const b=2*Math.PI*k/24; seg(h.x+(h.r-9)*Math.cos(b),h.y+(h.r-9)*Math.sin(b),h.x+h.r*Math.cos(b),h.y+h.r*Math.sin(b),"#8b9096",1.2); }
@@ -1287,29 +1315,36 @@ function heightFor(id){
 let down=null;
 function pos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
 /* 2-D views are drawn at 900 × 400 and scaled to the canvas */
-let VS=1, VX=0, VY=0;
-const vpos=p=>[(p[0]-VX)/VS,(p[1]-VY)/VS];
-function openView(v){ view=v; $("btnBack").hidden=false; say("mView"); renderCap(); }
+let VS=1, VX=0, VY=0, VZ=1, VPX=0, VPY=0;            /* fit, then the wheel zoom and the drag pan */
+const vpos=p=>[(p[0]-VX-VPX)/(VS*VZ),(p[1]-VY-VPY)/(VS*VZ)];
+function openView(v){ view=v; VZ=1; VPX=VPY=0; $("btnBack").hidden=false; say("mView"); renderCap(); }
 function closeView(){ view=null; $("btnBack").hidden=true; renderCap(); }
 $("btnBack").onclick=closeView;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
+function plugToggle(){ if(!ST.on.probe){ say("needProbe"); return; }
+  if(plugged()){ ST.plug=plugRest(); say("plugOut"); } else { if(hand&&hand.k==="plug") hand=null; ST.plug={at:"meter"}; S.shown=fieldAtProbe(); say("plugIn"); } }
 cv.addEventListener("pointerdown",e=>{
   const p=pos(e); mouse=p; cv.setPointerCapture(e.pointerId);
   if(view){
-    if(e.button===2){ closeView(); return; }
+    if(e.button!==0){ down={p,pan:true,right:e.button===2,moved:false}; return; }
     const q=vpos(p);
-    if(view==="meter"&&ST.on.meter){ if(Math.hypot(q[0]-MP.pw[0],q[1]-MP.pw[1])<26) meterPress("pw"); else if(Math.hypot(q[0]-MP.rg[0],q[1]-MP.rg[1])<30) meterPress("rg"); }
-    if(view==="trap"&&ST.on.trap&&q[0]>452&&hand&&hand.k==="pick"){ const m=[ST.pos.trap.x+(q[0]-670)/9, ST.pos.trap.y+(q[1]-200)/9]; if(onRod(m)){ S.hold={z:clamp(m[0]-ST.pos.trap.x,-8,8)}; say("pushed"); } else say("noRod"); }
-    if(view==="tilt"&&Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10) down={head:Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x)};
-    return;
+    if(view==="meter"&&ST.on.meter){ if(Math.hypot(q[0]-MP.pw[0],q[1]-MP.pw[1])<30){ meterPress("pw"); return; } if(Math.hypot(q[0]-MP.rg[0],q[1]-MP.rg[1])<32){ meterPress("rg"); return; }
+      if(Math.abs(q[0]-MP.usb[0])<34&&Math.abs(q[1]-MP.usb[1])<20){ plugToggle(); return; } }
+    if(view==="trap"&&ST.on.trap&&q[0]>452&&hand&&hand.k==="pick"){ const m=[ST.pos.trap.x+(q[0]-670)/9, ST.pos.trap.y+(q[1]-200)/9]; if(onRod(m)){ S.hold={z:clamp(m[0]-ST.pos.trap.x,-8,8)}; say("pushed"); } else say("noRod"); return; }
+    if(view==="tilt"&&Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10){ down={head:Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x)}; return; }
+    down={p,pan:true,moved:false}; return;
   }
   const id=pick3(p[0],p[1]);
-  const right=e.button===2;
-  if(right){ if(hand){ hand=null; drawTray(); return; } if(id) benchDown(mmAt(p[0],p[1],heightFor(id)),true); drawTray(); return; }
+  /* the right button: a click returns things, a drag turns the view */
+  if(e.button===2){ down={p,id,right:true,moved:false}; return; }
+  if(e.button===1){ down={p,id,moved:false,shift:true}; return; }
+  if(hand&&hand.k==="plug"){
+    if(id==="meter"||id==="plug"){ ST.plug={at:"meter"}; hand=null; S.shown=fieldAtProbe(); say("plugIn"); drawTray(); return; }
+    benchDown(mmAt(p[0],p[1],0),false); drawTray(); return; }
+  if(!hand&&id==="plug"){ if(plugged()) say("plugOut"); else say("plugTake"); ST.plug={at:"hand"}; hand={k:"plug"}; drawTray(); return; }
   if(hand){
-    if(hand.k==="loupe") return;
     const k=hand.k, h=(k==="meter"||k==="watch")?0:(k==="ruler"?(id==="desk"?0:PT):(k==="probe"?PT+0.3:k==="pick"?HGT.rod:heightFor(id||"platform")));
     benchDown(mmAt(p[0],p[1],(k==="mag"||k==="trap")?PT:h),false); drawTray(); return; }
   if(id==="watch_ss"){ watchPress("ss"); return; } if(id==="watch_rs"){ watchPress("lr"); return; }
@@ -1320,24 +1355,31 @@ cv.addEventListener("pointerdown",e=>{
 cv.addEventListener("pointermove",e=>{
   const p=pos(e), dx=p[0]-mouse[0], dy=p[1]-mouse[1]; mouse=p;
   if(view){ if(down&&down.head!==undefined){ const q=vpos(p), a=Math.atan2(q[1]-HEAD.y,q[0]-HEAD.x); turnScrew(angDelta(down.head,a)/(2*Math.PI)*(e.shiftKey?0.2:1)); down.head=a; }
+    if(down&&down.pan){ if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true; if(down.moved){ VPX+=dx; VPY+=dy; clampVP(); cv.classList.add("grabbing"); } }
     if(S.hold&&view==="trap"&&ST.on.trap){ const q=vpos(p); S.hold.z=clamp(ST.pos.trap.x+(q[0]-670)/9-ST.pos.trap.x,-8,8); } return; }
   mouseMM=mmAt(p[0],p[1],PT);
   if(S.hold&&hand&&hand.k==="pick"&&ST.on.trap){ benchMove(mmAt(p[0],p[1],HGT.rod)); return; }
   if(!down) return;
   if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true;
   if(!down.moved) return;
-  if(drag){ const k=drag.k, h=k==="meter"||k==="watch"?0:k==="ruler"?heightFor("ruler"):k==="holder"?HGT.probe:k==="rot"?HGT.magnet:k==="screw"?HGT.screw:PT; benchMove(mmAt(p[0],p[1],h)); return; }
+  if(drag&&!down.right){ const k=drag.k, h=k==="meter"||k==="watch"?0:k==="ruler"?heightFor("ruler"):k==="holder"?HGT.probe:k==="rot"?HGT.magnet:k==="screw"?HGT.screw:PT; benchMove(mmAt(p[0],p[1],h)); return; }
   if(down.shift||e.buttons===4){ CAM.px+=dx; CAM.py+=dy; }
   else { CAM.yaw+=dx*0.008; CAM.pitch=Math.min(1.5,Math.max(0.12,CAM.pitch+dy*0.006)); }
   cv.classList.add("grabbing");
 });
 const up=()=>{ cv.classList.remove("grabbing");
-  if(down&&down.head===undefined&&!down.moved&&!view){ const id=down.id;
+  if(down&&down.right&&!down.moved){ if(view) closeView();
+    else { if(hand){ if(hand.k==="plug") ST.plug=plugRest(); hand=null; } else if(down.id==="plug"){ if(plugged()){ ST.plug=plugRest(); say("plugOut"); } }
+      else if(down.id) benchDown(mmAt(down.p[0],down.p[1],heightFor(down.id)),true); drawTray(); }
+    down=null; drag=null; releaseHold(); return; }
+  if(down&&!down.right&&down.head===undefined&&!down.pan&&!down.moved&&!view){ const id=down.id;
     if(id==="meter") openView("meter"); else if(id==="trap"&&!(hand&&hand.k==="pick")) openView("trap"); else if(id==="screw") openView("tilt"); }
   down=null; drag=null; releaseHold(); };
 cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
 cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=pos(e), s=e.deltaY<0?1:-1;
-  if(view){ if(view==="tilt"){ const q=vpos(p); if(Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10) turnScrew(s*(e.shiftKey?0.005:0.025)); } return; }
+  if(view){ if(view==="tilt"){ const q=vpos(p); if(Math.hypot(q[0]-HEAD.x,q[1]-HEAD.y)<HEAD.r+10){ turnScrew(s*(e.shiftKey?0.005:0.025)); return; } }
+    const nz=Math.min(6,Math.max(1,VZ*(s>0?1.15:1/1.15))), r=nz/VZ, ox=VX+VPX, oy=VY+VPY;
+    VPX=p[0]-(p[0]-ox)*r-VX; VPY=p[1]-(p[1]-oy)*r-VY; VZ=nz; clampVP(); return; }
   if(hand&&hand.k==="ruler"){ hand.rot=hand.rot?0:1; return; }
   const id=pick3(p[0],p[1]);
   if(id==="screw"){ turnScrew(s*(e.shiftKey?0.005:0.025)); return; }
@@ -1352,20 +1394,13 @@ trayCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const r=tray
 window.addEventListener("pointerup",e=>{ if(trayDrag&&hand&&e.target===cv&&!view){ const p=pos(e), id=pick3(p[0],p[1]), k=hand.k;
   benchDown(mmAt(p[0],p[1],(k==="meter"||k==="watch")?0:PT),false); drawTray(); } trayDrag=false; });
 
-/* the magnifying glass: the same scene, three and a half times larger, inside a lens */
-function drawLoupe(){
-  if(!(hand&&hand.k==="loupe")||!overBench||view) return;
-  const [mx,my]=mouse, R=95, Z=3.5, sv={k:CAM.k,px:CAM.px,py:CAM.py};
-  CAM.k*=Z; CAM.px=(mx-CAM.W/2)-(mx-CAM.W/2-sv.px)*Z; CAM.py=(my-CAM.H/2)-(my-CAM.H/2-sv.py)*Z;
-  ctx.save(); ctx.beginPath(); ctx.arc(mx,my,R,0,7); ctx.clip(); ctx.fillStyle="#2a3038"; ctx.fillRect(mx-R,my-R,2*R,2*R);
-  begin3(); drawScene3(); render3(ctx); ctx.restore();
-  CAM.k=sv.k; CAM.px=sv.px; CAM.py=sv.py;
-  ctx.strokeStyle="#222"; ctx.lineWidth=5; ctx.beginPath(); ctx.arc(mx,my,R,0,7); ctx.stroke();
-  ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(mx,my,R+3,0,7); ctx.stroke();
-  ctx.save(); ctx.translate(mx+R*0.72,my+R*0.72); ctx.rotate(Math.PI/4); ctx.fillStyle="#222"; ctx.fillRect(0,-8,70,16); ctx.restore();
-}
+/* keep a zoomed 2-D view on the canvas */
+function clampVP(){ if(VZ<=1.0001){ VPX=VPY=0; return; }
+  const w=CLW*VS*VZ, h=CLH*VS*VZ;
+  VPX=Math.min(Math.max(VPX,CAM.W*0.25-w-VX),CAM.W*0.75-VX); VPY=Math.min(Math.max(VPY,CAM.H*0.25-h-VY),CAM.H*0.75-VY); }
+
 function drawGhost(){
-  if(!hand||!overBench||view) return;
+  if(!hand||!overBench||view||hand.k==="plug") return;
   const k=hand.k, [x,,z]=onPlane(mouse[0],mouse[1],(k==="meter"||k==="watch")?0:PT);
   const sv={on:Object.assign({},ST.on),pos:JSON.parse(JSON.stringify(ST.pos)),hx:ST.holderX}; GA=0.5;
   if(k==="mag"){ ST.pos.mag={x:x*10,y:z*10}; drawMag3(); }
@@ -1396,6 +1431,7 @@ function renderStatus(){
   const L=[], t=d();
   if(!Object.values(ST.on).some(v=>v)) L.push([t.st.none,false]);
   if(ST.on.meter&&!S.mOn) L.push([t.st.meterOff,false]);
+  if(ST.on.probe&&!plugged()) L.push([t.st.noPlug,false]);
   if(ringing()) L.push([t.st.ringing,false]);
   if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),msg.key==="snap"]); }
   const box=$("status"); box.innerHTML="";
@@ -1421,6 +1457,10 @@ $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 let tPrev=performance.now()/1000, frameN=0;
 function tick(){
+  requestAnimationFrame(tick);
+  try{ frame(); }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); } if(GL3.ok===true&&!view){ GL3.ok=false; } }
+}
+function frame(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   S.mAcc+=dt; if(S.mAcc>=0.12){ if(ST.on.meter&&S.mOn) meterStep(S.mAcc); S.mAcc=0; }
   rodStep(dt);
@@ -1429,12 +1469,11 @@ function tick(){
   $("clock").style.opacity=ST.on.watch?1:0.4; $("btnSS").disabled=$("btnLap").disabled=!ST.on.watch;
   const dpr=CAM.dpr;
   if(view){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CAM.W,CAM.H);
-    ctx.setTransform(dpr*VS,0,0,dpr*VS,dpr*VX,dpr*VY);
+    ctx.setTransform(dpr*VS*VZ,0,0,dpr*VS*VZ,dpr*(VX+VPX),dpr*(VY+VPY));
     if(view==="meter") closeMeter(); else if(view==="trap") closeTrap(); else closeTilt(); }
   else { ctx.setTransform(dpr,0,0,dpr,0,0); const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
-    begin3(); drawScene3(); drawGhost(); render3(ctx); drawLoupe(); }
+    begin3(); drawScene3(); drawGhost(); render3(ctx); }
   if(++frameN%6===0){ renderStatus(); drawTray(); }
-  requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
 applyLang(); requestAnimationFrame(tick);
