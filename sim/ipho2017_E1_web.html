@@ -842,23 +842,32 @@ function laserLeads(x,yb){
   }
 }
 function drawLaser(){
-  const x=S.laserX, yb=RT+S.laserY, top=yb-LM_ARM, L={id:"laser"}, ya=yb-0.62;
+  const x=S.laserX, yb=RT+S.laserY, top=yb-LM_ARM, L={id:"laser"}, ya=yb-0.62, E="#3a3d42";
   drawBase("laser",d().lab.lbase);
   mountPlate("laser",top,L);
-  /* the bracket: upright at the beam end and the arm back over the plate */
-  boxY(x-1.55,x-0.95,top,ya,-0.75,0.75,BLACK2,L,0.8);
-  box3(x-5.3,x-0.95,ya-0.38,ya,-0.75,0.75,BLACK2,Object.assign({top:"#34363b"},L));
-  for(const sx of [-4.7,-1.25]) cyl3("y",ya-0.4,ya+0.02,x+sx,0.45,0.13,"#8e9398",{seg:8,cap:"#b9bec3"});   /* screws into the arm */
+  /* the bracket, a mirrored "ㄷ" seen from the side: the upright at the beam end, a slot down its face with
+     the height-clamp thumb screw, and the arm back over the plate that carries the laser */
+  boxY(x-0.6,x+0.1,top,ya,-0.8,0.8,BLACK2,Object.assign({top:"#34363b"},L),0.8);
+  box3(x-4.7,x+0.1,ya-0.55,ya,-0.8,0.8,BLACK2,Object.assign({top:"#34363b"},L));
+  for(const [p,q] of [[[x-4.7,ya,0.8],[x+0.1,ya,0.8]],[[x-4.7,ya-0.55,0.8],[x-0.6,ya-0.55,0.8]],[[x+0.1,ya,0.8],[x+0.1,top,0.8]],[[x-0.6,ya-0.55,0.8],[x-0.6,top,0.8]]]) line3(p,q,E,1.2,{bias:0.8});
+  face([[x-0.37,top+0.35,0.805],[x-0.13,top+0.35,0.805],[x-0.13,ya-0.75,0.805],[x-0.37,ya-0.75,0.805]],{fill:"#0b0b0c",flat:true,bias:1});   /* slot */
+  const hy=Math.min(ya-0.95,top+0.9);
+  cyl3("z",0.8,1.05,x-0.25,hy,0.22,"#9ea3a8",{seg:8});
+  cyl3("z",1.05,1.55,x-0.25,hy,0.45,"#151515",{seg:14,cap:"#2a2c30",id:"laser"});                    /* height-clamp knob */
+  for(const sx of [-4.3,-2.9]) cyl3("y",ya-0.4,ya+0.02,x+sx,0.5,0.13,"#8e9398",{seg:8,cap:"#b9bec3"});
   /* two saddles with their clamp screws */
   for(const sx of [-4.1,-1.95]){ box3(x+sx-0.35,x+sx+0.35,ya,yb+0.15,-0.62,0.62,"#17181b",L);
     cyl3("z",0.62,0.95,x+sx,yb+0.02,0.15,"#9ea3a8",{seg:8,cap:"#c3c8cc"}); }
-  /* the laser tube, the white index mark of its rotation, the knurled focusing cap */
+  /* the diode laser tube, the white index of its rotation, the knurled focusing cap */
   cyl3("x",x-4.6,x-0.75,yb,0,0.55,"#141518",{seg:18,id:"laser",cap:"#26282b"});
   const th=S.theta*Math.PI/180; line3([x-3.6,yb+0.56*Math.sin(th),0.56*Math.cos(th)],[x-2.4,yb+0.56*Math.sin(th),0.56*Math.cos(th)],"#f2f2f2",1.6,{bias:1});
-  cyl3("x",x-0.75,x,yb,0,0.64,"#202225",{seg:20,id:"focus",cap:"#2a2c30"});
-  for(let i=0;i<18;i++){ const a=i/18*2*Math.PI+S.focus*3; line3([x-0.72,yb+0.65*Math.sin(a),0.65*Math.cos(a)],[x-0.08,yb+0.65*Math.sin(a),0.65*Math.cos(a)],"#44474c",0.8); }
-  face(orient(Array.from({length:16},(_,i)=>{ const a=i/16*2*Math.PI; return [x+0.01,yb+0.3*Math.sin(a),0.3*Math.cos(a)]; }),[1,0,0]),{fill:beamOn()?"#ffb3a8":"#8fc6dd",flat:true,cull:true});
-  if(beamOn()) cyl3("x",x,x+0.03,yb,0,0.18,"#ff5a4a",{seg:10,flat:true});
+  cyl3("x",x-0.75,x-0.1,yb,0,0.64,"#202225",{seg:20,id:"focus",cap:"#2a2c30"});
+  for(let i=0;i<18;i++){ const a=i/18*2*Math.PI+S.focus*3; line3([x-0.72,yb+0.65*Math.sin(a),0.65*Math.cos(a)],[x-0.14,yb+0.65*Math.sin(a),0.65*Math.cos(a)],"#44474c",0.8); }
+  /* the cylindrical lens: a short glass rod across the beam in a little holder at the front */
+  cyl3("x",x-0.1,x+0.05,yb,0,0.5,"#1a1b1e",{seg:18,id:"focus"});
+  const ca=Math.cos(th), sa=Math.sin(th);
+  cylAB([x+0.03,yb-0.42*ca,-0.42*sa],[x+0.03,yb+0.42*ca,0.42*sa],0.16,"rgba(215,236,248,0.55)",{seg:10});
+  if(beamOn()) cyl3("x",x+0.05,x+0.08,yb,0,0.12,"#ff5a4a",{seg:10,flat:true});
   cyl3("x",x-5.0,x-4.6,yb,0,0.3,"#151515",{seg:10});                                               /* lead strain relief */
   laserLeads(x,yb);
 }
@@ -890,10 +899,13 @@ function drawCellBody(x0,y0,o){
   box3(fx0,fx1,fb,ft,z0-1.0,z0+0.35,BLACK,C);                                   /* side bars */
   box3(fx0,fx1,fb,ft,z1-0.35,z1+1.0,BLACK,C);
   box3(fx0,fx1,fb,y0+0.3,z0+0.35,z1-0.35,BLACK,C);                              /* bottom bar */
-  /* the water inlet: a bore drilled down through one end bar into the bottom of the cell, seen only from above */
-  const bz=z1+0.32, bx=(x0+x1)/2;
-  cyl3("y",ft,ft+0.004,bx,bz,0.2,"#050506",{seg:16,id:"cell",bias:1});
-  poly3(Array.from({length:17},(_,i)=>{ const a=i/16*2*Math.PI; return [bx+0.21*Math.cos(a),ft+0.006,bz+0.21*Math.sin(a)]; }),"#3a3c40",1,{bias:1.5});
+  /* the water inlet: a square shaft, about half the end bar wide, cut straight down through one end bar to
+     the bottom of the cell, seen only from above */
+  const bz=z1+0.32, bx=(x0+x1)/2, h=0.36, Y=ft+0.004;
+  face([[bx-h,Y,bz-h],[bx-h,Y,bz+h],[bx+h,Y,bz+h],[bx+h,Y,bz-h]],{fill:"#050506",flat:true,id:"cell",bias:1,cull:false});
+  face([[bx-h,Y+0.001,bz+h],[bx+h,Y+0.001,bz+h],[bx+h-0.12,Y+0.001,bz+h-0.16],[bx-h+0.12,Y+0.001,bz+h-0.16]],{fill:"#2c2e32",flat:true,bias:1.2,cull:false});
+  face([[bx-h,Y+0.001,bz-h],[bx-h,Y+0.001,bz+h],[bx-h+0.12,Y+0.001,bz+h-0.16],[bx-h+0.12,Y+0.001,bz-h+0.1]],{fill:"#202226",flat:true,bias:1.2,cull:false});
+  poly3([[bx-h,Y+0.002,bz-h],[bx+h,Y+0.002,bz-h],[bx+h,Y+0.002,bz+h],[bx-h,Y+0.002,bz+h],[bx-h,Y+0.002,bz-h]],"#45484d",1,{bias:1.5});
   for(const [xx,yy] of [[fx0,y0+1.2],[fx0,ft-1.0],[fx1,y0+1.2],[fx1,ft-1.0]]) for(const zz of [z0-0.6,z1+0.6]){ const dx=xx<x0?-0.06:0.06;
     cyl3("x",xx,xx+dx,yy,zz,0.17,"#aeb3b8",{seg:8}); }
   line3([x0-0.02,y0+FILL_LINE,z0+0.4],[x0-0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2);
