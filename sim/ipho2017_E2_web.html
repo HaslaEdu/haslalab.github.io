@@ -683,10 +683,10 @@ const PW=260, PH=170;                                  /* the top platform */
 const SCREWS=[[14,14],[14,130],[14+D_TILT*1e3,72]];     /* the right-hand one tilts it */
 const PRY=132, TIP_OUT=46, EL_IN=0.8;                   /* probe axis, tip ahead of the holder, Hall element behind the tip */
 const RAIL={x0:4,x1:256,y0:144,y1:170}, HOLD={min:24,max:236};
-const FP={mag:[26,22],trap:[44,28],meter:[72,58],watch:[26,30]};
+const FP={mag:[26,22],trap:[44,28],meter:[140,150],watch:[32,34]};   /* the Teslameter box is about 14 cm × 8.5 cm, its 9 V batteries lie behind it */
 const ROD_KEY={r03:"HB/0.3",r05:"HB/0.5",r07:"HB/0.7",r09:"HB/0.9"};
 const ST={ on:{mag:false,trap:false,meter:false,probe:false,watch:false,ruler:false,sticker:false,ins:false},
-  pos:{mag:{x:60,y:80},trap:{x:170,y:60},meter:{x:304,y:60},watch:{x:300,y:150},ruler:{x:120,y:112,rot:0}}, holderX:150 };
+  pos:{mag:{x:60,y:80},trap:{x:170,y:60},meter:{x:350,y:80},watch:{x:300,y:200},ruler:{x:120,y:112,rot:0}}, holderX:150 };
 const S={
   magAng:uni(0,360), phiOff:uni(0,360), stickRel:0,
   mOn:false, range:800, shown:0, reading:0, settling:false, mAcc:0,
@@ -812,7 +812,7 @@ function drawProbe(){
   else ctx.bezierCurveTo(hx+20,PRY+20,hx+26,PRY+34,hx+20,PRY+30);
   ctx.stroke(); ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=.5; ctx.stroke();
 }
-const METER_HIT=()=>{ const m=ST.pos.meter; return {pw:[m.x-28,m.y+2],rg:[m.x+28,m.y+2]}; };
+const METER_HIT=()=>{ const m=ST.pos.meter; return {pw:[m.x-57,m.y-4],rg:[m.x+56,m.y-4]}; };
 function drawMeter(){
   const m=ST.pos.meter;
   for(const dx of [-17,13]){ fillR(m.x+dx-6,m.y-29,13,9,1,"#1d1d1d"); fillR(m.x+dx-6,m.y-29,4,9,1,"#d1a43a"); }
@@ -1044,7 +1044,7 @@ const _face=face; face=function(p,o){ if(GA!==null) o=Object.assign({},o,{alpha:
 const PB=0.6, PT=2.0;                              /* bottom platform top, top platform top */
 const W=(xmm,h,ymm)=>[xmm/10,h,ymm/10];
 const MAG_H=2.54, MAG_R=0.32, MB_H=1.2, TB_H=0.9;
-const HGT={rod:PT+0.9+0.32+0.22, magnet:PT+MB_H+MAG_H, magblock:PT+MB_H, trap:PT+TB_H, probe:PT+2.5, meter:3.4, watch:1.5, screw:PT+0.4, platform:PT, desk:0, rail:PT+0.3, ruler:0.2};
+const HGT={rod:PT+0.9+0.32+0.22, magnet:PT+MB_H+MAG_H, magblock:PT+MB_H, trap:PT+TB_H, probe:PT+2.5, meter:5.5, watch:1.5, screw:PT+0.4, platform:PT, desk:0, rail:PT+0.3, ruler:0.2};
 const tiltY=(xmm)=>tiltRad()*Math.max(0,xmm-SCREWS[0][0])/10;   /* the top platform hinges on the left screws */
 
 function drawDesk(){
@@ -1054,7 +1054,7 @@ function drawDesk(){
 }
 function drawPlatform3(){
   const L={layer:-1};
-  box3(-0.3,26.3,0,PB,-0.3,17.3,"#d9d9d4",Object.assign({id:"platform"},L));
+  box3(-0.8,26.8,0,PB,-0.8,17.8,"#dfe9ee",{id:"platform",alpha:0.42,stroke:"rgba(150,175,185,.9)",lw:1});   /* clear acrylic bottom platform */
   for(const [sx,sy] of SCREWS) cyl3("y",PB,PT+0.2,sx/10,sy/10,0.22,"#a7adb3",Object.assign({seg:10},L));
   /* the top platform, tilted by the right-hand screw (the tilt itself is far too small to see) */
   const t=k=>tiltY(k);
@@ -1071,6 +1071,9 @@ function drawPlatform3(){
   for(let k=0;k<=20;k+=2) text3(W(31+k*10,PT+0.02,102.5),[1,0,0],[0,0,-1],String(k),0.38,"#333",{align:"center",layer:-1});
   text3(W(222,PT+0.02,14),[1,0,0],[0,0,-1],"IPhO",0.9,"#2b6fa8",{layer:-1,weight:"800"});
   text3(W(246,PT+0.02,14),[1,0,0],[0,0,-1],"2017",0.55,"#7fb0d6",{layer:-1});
+  /* the IPhO 2017 swirl under the name */
+  for(let i=0;i<4;i++){ const r=0.45+i*0.33, cx=24.0, cz=2.75;
+    poly3(Array.from({length:25},(_,j)=>{ const t=Math.PI*(0.15+1.55*j/24)+i*0.35; return [cx+r*Math.cos(t),PT+0.015,cz+r*Math.sin(t)]; }),"#86cfe0",2,{layer:-1}); }
   const th=tiltRad()*TILT_EXAG;
   box3(11.8,14.4,PT,PT+0.6,0.4,1.2,"#9bd98a",{alpha:0.9,layer:-1});
   cyl3("y",PT+0.6,PT+0.62,13.1+clamp(th*4,-0.9,0.9),0.8,0.22,"#ffffff",{seg:10,layer:-1,bias:1});
@@ -1082,12 +1085,17 @@ function drawPlatform3(){
     if(i===2){ const a=-2*Math.PI*S.turns-Math.PI/2; line3([x,y+0.42,z],[x+0.46*Math.cos(a),y+0.42,z+0.46*Math.sin(a)],"#b03030",2,{bias:3}); }
   });
   /* the rail: two glass rods between black end blocks */
-  for(const ry of [152,160]) cyl3("x",1.4,24.6,PT+0.15,ry/10,0.13,"#dfe8ee",{seg:8,id:"rail",layer:-1});
-  box3(0.5,1.6,PT,PT+0.7,14.5,16.7,"#151515",{id:"rail"}); box3(24.4,25.5,PT,PT+0.7,14.5,16.7,"#151515",{id:"rail"});
+  for(const ry of [152,160]) cyl3("x",1.5,24.5,PT+0.42,ry/10,0.32,"#e8f1f5",{seg:14,id:"rail",alpha:0.55,cull:true});
+  for(const ry of [152,160]) line3([1.5,PT+0.72,ry/10],[24.5,PT+0.72,ry/10],"rgba(255,255,255,.85)",1.2);   /* highlights on the tubes */
+  box3(0.5,1.6,PT,PT+1.35,14.5,16.7,"#151515",{id:"rail",top:"#262626"}); box3(24.4,25.5,PT,PT+1.35,14.5,16.7,"#151515",{id:"rail",top:"#262626"});
 }
+/* (Fig. 4 inset) a thin clear base plate; the diametric magnet sits at the top of a steel tube
+   standing in it, a small clear collar beside the tube */
 function drawMag3(){ const p=ST.pos.mag, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x);
-  box3(x-1.3,x+1.3,y0,y0+MB_H,z-1.1,z+1.1,"#d6e8ee",{alpha:0.55,id:"magblock",stroke:"rgba(120,160,175,.8)",lw:1});
-  cyl3("y",y0+MB_H,y0+MB_H+MAG_H,x,z,MAG_R,"#c3c8cd",{seg:16,id:"magnet",cap:"#e2e5e8"});
+  box3(x-1.3,x+1.3,y0,y0+0.5,z-1.1,z+1.1,"#d6e8ee",{alpha:0.45,id:"magblock",stroke:"rgba(120,160,175,.9)",lw:1});
+  cyl3("y",y0+0.5,y0+0.8,x-0.75,z+0.45,0.32,"#d6e8ee",{seg:16,alpha:0.5,id:"magblock",stroke:"rgba(120,160,175,.9)",lw:1});
+  cyl3("y",y0+0.5,y0+0.62,x,z,MAG_R+0.18,"#d6e8ee",{seg:16,alpha:0.5,id:"magblock"});
+  cylSeg("y",y0+0.5,y0+MB_H+MAG_H,x,z,MAG_R+0.1,"#bcc1c6",{seg:18,id:"magnet",cap:"#d8dbde"},0.8);
   const ty=y0+MB_H+MAG_H+0.01, a=S.magAng*Math.PI/180;
   line3([x+0.25*Math.cos(a),ty,z+0.25*Math.sin(a)],[x+0.29*Math.cos(a),ty,z+0.29*Math.sin(a)],"#7a7f85",2.2,{bias:3});
   if(ST.on.sticker){ const s=(S.magAng+S.stickRel)*Math.PI/180;
@@ -1095,8 +1103,14 @@ function drawMag3(){ const p=ST.pos.mag, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x);
     line3([x-0.25*Math.cos(s),ty+0.03,z-0.25*Math.sin(s)],[x+0.25*Math.cos(s),ty+0.03,z+0.25*Math.sin(s)],"#111",1.6,{bias:4}); }
 }
 function drawTrap3(){ const p=ST.pos.trap, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x), Lm=LMAG*100, Rm=R*100, Am=A_PDL*100;
-  box3(x-2.2,x+2.2,y0,y0+TB_H,z-1.4,z+1.4,"#d6e8ee",{alpha:0.55,id:"trap",stroke:"rgba(120,160,175,.8)",lw:1});
-  for(const sy of [-Am,Am]) cyl3("x",x-Lm/2,x+Lm/2,y0+TB_H+Rm,z+sy,Rm,"#c3c8cd",{seg:16,id:"trap"});
+  /* (Fig. 4 inset) two thin upright clear end plates with chamfered tops; the magnets pass through them
+     and lie side by side, a narrow clear strip joins the plates' feet */
+  const G={alpha:0.45,id:"trap",stroke:"rgba(120,160,175,.9)",lw:1}, yc=y0+TB_H+Rm, hw=Am+Rm+0.45, ht=yc+Rm*1.05;
+  box3(x-Lm/2+0.1,x+Lm/2-0.1,y0,y0+0.18,z-0.55,z+0.55,"#d6e8ee",G);
+  for(const ex of [x-Lm/2+0.1,x+Lm/2-0.42]){
+    prism3("x",ex,ex+0.32,[[y0,z-hw],[y0,z-0.35],[y0+0.45,z-0.35],[y0+0.45,z+0.35],[y0,z+0.35],[y0,z+hw],[ht-0.35,z+hw],[ht,z+hw-0.35],[ht,z-hw+0.35],[ht-0.35,z-hw]],"#d6e8ee",G); }
+  for(const sy of [-Am,Am]){ cyl3("x",x-Lm/2,x+Lm/2,yc,z+sy,Rm,"#c3c8cd",{seg:18,id:"trap",cap:"#b9bec3"});
+    for(const ex of [x-Lm/2-0.005,x+Lm/2+0.005]) poly3(Array.from({length:19},(_,i)=>{ const a=i/18*2*Math.PI; return [ex,yc+Rm*0.6*Math.sin(a),z+sy+Rm*0.6*Math.cos(a)]; }),"#3f4348",2.4); }
   const yy=y0+TB_H+0.01, zz=z+1.02;
   custom3([x,yy,zz],c=>{ c.strokeStyle="#333";
     for(let k=-10;k<=10;k++){ const a=P3(x+k/10,yy,zz), b=P3(x+k/10,yy,zz-(k%5?0.1:0.18)); c.lineWidth=k%5?0.6:1; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{bias:1});
@@ -1105,35 +1119,62 @@ function drawTrap3(){ const p=ST.pos.trap, x=p.x/10, z=p.y/10, y0=PT+tiltY(p.x),
     cyl3("x",x+zr-l/2,x+zr+l/2,yr,z,dd,"#2a2a2a",{seg:8,id:"trap",bias:2}); }
 }
 function drawProbe3(){ const hx=ST.holderX/10, tx=tipX()/10, y=PT+2.5, z=PRY/10;
-  box3(hx-0.8,hx+0.8,PT,PT+2.9,12.4,16.9,"#1a1a1a",{id:"probe"});
-  for(const zz of [12.8,14.0]) cyl3("y",PT+2.9,PT+3.05,hx,zz,0.14,"#8a8f94",{seg:8,bias:1});
+  /* the slider: a pair of black blocks round the two tubes, a clear upright carrying the probe */
+  for(const dx of [-0.82,0.06]) box3(hx+dx,hx+dx+0.76,PT,PT+1.6,14.3,16.9,"#161616",{id:"probe",top:"#262626"});
+  box3(hx-0.75,hx+0.75,PT+1.6,PT+2.15,13.6,16.9,"#1c1c1c",{id:"probe"});
+  box3(hx-0.6,hx+0.6,PT+2.15,PT+2.9,z-0.55,16.4,"#d6e8ee",{id:"probe",alpha:0.55,stroke:"rgba(120,160,175,.85)",lw:1});
+  cyl3("y",PT+2.9,PT+3.05,hx,15.6,0.16,"#8a8f94",{seg:8});
   box3(tx,hx+0.6,y-0.35,y+0.35,z-0.35,z+0.35,"#f2c230",{id:"probe"});
   box3(tx,tx+0.3,y-0.36,y+0.36,z-0.36,z+0.36,"#d9a915",{id:"probe",bias:0.5});
   line3([tx+EL_IN/10,y+0.37,z-0.36],[tx+EL_IN/10,y+0.37,z+0.36],"#c0392b",1.4,{bias:1});
-  const pts=[]; const m=ST.on.meter?W(ST.pos.meter.x,1.0,ST.pos.meter.y+21):[hx+3,0.3,z+2];
+  const pts=[]; const m=ST.on.meter?W(ST.pos.meter.x,5.6,ST.pos.meter.y+25):[hx+3,0.3,z+2];
   for(let i=0;i<=20;i++){ const t=i/20; pts.push([hx+0.6+(m[0]-hx-0.6)*t, y+(m[1]-y)*t-Math.sin(Math.PI*t)*1.5, z+(m[2]-z)*t+Math.sin(Math.PI*t)*2]); }
   poly3(pts,"#9aa6ad",2.4);
 }
-function drawMeter3(){ const m=ST.pos.meter, x=m.x/10, z=m.y/10;
-  for(const dx of [-1.7,1.3]){ box3(x+dx-0.6,x+dx+0.7,0,1.7,z-2.9,z-2.0,"#1d1d1d",{id:"meter"}); box3(x+dx-0.6,x+dx-0.2,0,1.7,z-2.9,z-2.0,"#d1a43a",{id:"meter"}); }
-  box3(x-3.6,x+3.6,0,3.4,z-1.7,z+2.1,"#141414",{id:"meter"});
-  const yt=3.41;
-  face([[x-2.2,yt,z-0.8],[x-2.2,yt,z+0.2],[x+2.2,yt,z+0.2],[x+2.2,yt,z-0.8]],{fill:S.mOn?"#2c5d6b":"#0f1c21",flat:true,id:"meter",bias:0.6});
-  text3([x+2.0,yt+0.01,z-0.3],[1,0,0],[0,0,-1],meterText(),0.42,"#d8f6ff",{align:"right",font:"ui-monospace,Consolas,monospace",weight:"700",bias:1});
-  text3([x,yt+0.01,z-1.25],[1,0,0],[0,0,-1],"Digital Teslameter",0.28,"#e6e6e6",{align:"center",bias:1});
+/* the Teslameter (Fig. 4, item 5): a black box about 14 × 8.5 × 5.5 cm with bevelled top edges,
+   "Digital Teslameter" over a blue LCD window, a red Power toggle on the left and the red
+   800 mT / 8 mT range toggle on the right, the USB "Probe" socket in front; two 9 V batteries
+   lie behind it, clipped to a green terminal block on its back */
+function toggle3(x,z,yt,on,id,lab0,lab1){
+  cyl3("y",yt,yt+0.12,x,z,0.42,"#b8bcc0",{seg:14,cap:"#d0d3d6",id});
+  cyl3("y",yt+0.12,yt+0.3,x,z,0.2,"#8e9398",{seg:10,id});
+  const tip=[x,yt+1.0,z+(on?-0.45:0.45)]; cylAB([x,yt+0.3,z],tip,0.13,"#9aa0a6",{seg:8,id});
+  cylAB([tip[0],tip[1]-0.05,tip[2]],[tip[0],tip[1]+0.35,tip[2]+(on?-0.12:0.12)],0.24,"#d4302a",{seg:10,id,cap:"#e04a40"});
+  if(lab0) text3([x+(lab1?0.55:0),yt+0.01,z-0.95],[1,0,0],[0,0,-1],lab0,0.26,"#d8d8d8",{align:lab1?"left":"center"});
+  if(lab1) text3([x+0.55,yt+0.01,z+0.95],[1,0,0],[0,0,-1],lab1,0.26,"#d8d8d8",{align:"left"});
+}
+function drawMeter3(){ const m=ST.pos.meter, x=m.x/10, z=m.y/10, yb=5.0, yt=5.5;
+  /* batteries and their clip leads */
+  for(const [bx,bz] of [[x-3.2,z-6.2],[x+2.6,z-6.0]]){
+    box3(bx-2.42,bx+2.42,0,1.75,bz-1.32,bz+1.32,"#1c1c1c",{id:"meter",top:"#222"});
+    box3(bx-1.5,bx+1.5,1.751,1.752,bz-1.32,bz+1.32,"#c9a227",{id:"meter"});
+    text3([bx,1.76,bz+0.1],[1,0,0],[0,0,-1],"Panasonic",0.42,"#f2f2f2",{align:"center",weight:"700"});
+    for(const [dz,col] of [[-0.45,"#c9cdd1"],[0.45,"#9aa0a6"]]) cyl3("x",bx+2.42,bx+2.75,1.05,bz+dz,0.28,col,{seg:8});
+    for(const [dz,col] of [[-0.3,"#c0392b"],[0.3,"#1a1a1a"]]){ const pts=[]; for(let i=0;i<=14;i++){ const t=i/14;
+      pts.push([bx+2.75+(x+0.3+dz-bx-2.75)*t, 1.05+Math.sin(Math.PI*t)*1.4+(3.0-1.05)*t, bz+dz*0.5+(z-4.15-bz)*t]); } poly3(pts,col,1.6); } }
+  box3(x-0.6,x+1.2,2.4,3.4,z-4.25,z-3.8,"#2f8f4e",{id:"meter"});                      /* green terminal block */
+  /* the box */
+  box3(x-7,x+7,0,yb,z-3.8,z+4.6,"#151515",{id:"meter",top:"#1a1a1a"});
+  prism3("x",x-6.7,x+6.7,[[yb,z-3.8],[yb,z+4.6],[yt,z+4.3],[yt,z-3.5]],"#1b1b1b",{id:"meter"});
+  face(orient([[x-7,yb,z-3.8],[x-7,yb,z+4.6],[x-6.7,yt,z+4.3],[x-6.7,yt,z-3.5]],[-1,0.4,0]),{fill:"#1b1b1b",id:"meter"});
+  face(orient([[x+7,yb,z-3.8],[x+7,yb,z+4.6],[x+6.7,yt,z+4.3],[x+6.7,yt,z-3.5]],[1,0.4,0]),{fill:"#1b1b1b",id:"meter"});
+  text3([x,yt+0.01,z-2.45],[1,0,0],[0,0,-1],"Digital Teslameter",0.48,"#e6e6e6",{align:"center",weight:"600"});
+  face(orient([[x-4.3,yt+0.005,z-1.7],[x-4.3,yt+0.005,z+0.55],[x+4.0,yt+0.005,z+0.55],[x+4.0,yt+0.005,z-1.7]],[0,1,0]),{fill:"#2b2d30",flat:true,id:"meter",stroke:"#6b7075",lw:1});
+  face(orient([[x-4.0,yt+0.01,z-1.45],[x-4.0,yt+0.01,z+0.3],[x+3.7,yt+0.01,z+0.3],[x+3.7,yt+0.01,z-1.45]],[0,1,0]),{fill:S.mOn?"#2e4fb4":"#14204a",flat:true,id:"meter"});
+  text3([x+3.4,yt+0.02,z-0.58],[1,0,0],[0,0,-1],meterText(),0.62,S.mOn?"#e8f2ff":"#33437a",{align:"right",font:"ui-monospace,Consolas,monospace",weight:"700"});
   const H=METER_HIT();
-  cyl3("y",yt,yt+0.25,H.pw[0]/10,H.pw[1]/10,0.24,S.mOn?"#e24a3b":"#7a2a24",{seg:12,id:"meter",bias:2});
-  box3(H.rg[0]/10-0.16,H.rg[0]/10+0.16,yt,yt+0.12,H.rg[1]/10-0.3,H.rg[1]/10+0.3,"#333",{id:"meter",bias:1.5});
-  box3(H.rg[0]/10-0.13,H.rg[0]/10+0.13,yt+0.12,yt+0.3,(S.range===800?H.rg[1]/10-0.27:H.rg[1]/10+0.01),(S.range===800?H.rg[1]/10-0.01:H.rg[1]/10+0.27),"#d33",{id:"meter",bias:2});
-  text3([H.rg[0]/10,yt+0.01,H.rg[1]/10-0.5],[1,0,0],[0,0,-1],"800mT",0.18,"#ccc",{align:"center",bias:1});
-  text3([H.rg[0]/10,yt+0.01,H.rg[1]/10+0.5],[1,0,0],[0,0,-1],"8mT",0.18,"#ccc",{align:"center",bias:1});
-  text3([H.pw[0]/10,yt+0.01,H.pw[1]/10-0.42],[1,0,0],[0,0,-1],"Power",0.2,"#ccc",{align:"center",bias:1});
-  box3(x-0.4,x+0.4,yt,yt+0.05,z+1.1,z+1.5,"#2a2a2a",{bias:1});
+  toggle3(H.pw[0]/10,H.pw[1]/10,yt,S.mOn,"meter","Power",null);
+  toggle3(H.rg[0]/10,H.rg[1]/10,yt,S.range===800,"meter","800mT","8mT");
+  box3(x-0.65,x+0.65,yt,yt+0.12,z+2.15,z+2.75,"#9aa0a6",{id:"meter"}); box3(x-0.5,x+0.5,yt+0.12,yt+0.13,z+2.25,z+2.65,"#111",{id:"meter"});
+  text3([x,yt+0.01,z+1.6],[1,0,0],[0,0,-1],"Probe",0.3,"#d8d8d8",{align:"center"});
+  for(const dx of [-1.6,1.6]) cyl3("y",yt,yt+0.12,x+dx,z+2.45,0.22,dx<0&&S.mOn?"#7f7":"#c9cdd1",{seg:10});
 }
 function drawWatch3(){ const q=ST.pos.watch, x=q.x/10, z=q.y/10, B2=WATCH_BTN();
-  box3(x-1.3,x+1.3,0,1.5,z-1.35,z+1.5,"#2b2b2b",{id:"watch"});
-  face([[x-1.0,1.51,z-0.7],[x-1.0,1.51,z+0.2],[x+1.0,1.51,z+0.2],[x+1.0,1.51,z-0.7]],{fill:"#b9c3a8",flat:true,id:"watch",bias:0.6});
-  text3([x,1.53,z-0.25],[1,0,0],[0,0,-1],fmtWatch(S.watch.t),0.34,"#1d2318",{align:"center",font:"ui-monospace,Consolas,monospace",weight:"700",bias:1});
+  cyl3("y",0,1.3,x,z,1.55,"#232426",{seg:28,id:"watch",cap:"#2e3033"});
+  cyl3("y",1.3,1.42,x,z,1.25,"#8f969c",{seg:28,id:"watch",cap:"#9aa1a7"});
+  face(orient([[x-0.95,1.43,z-0.55],[x-0.95,1.43,z+0.25],[x+0.95,1.43,z+0.25],[x+0.95,1.43,z-0.55]],[0,1,0]),{fill:"#b9c3a8",flat:true,id:"watch"});
+  box3(x-0.25,x+0.25,0.3,0.9,z+1.45,z+2.2,"#232426",{id:"watch"});                 /* lanyard eye */
+  text3([x,1.44,z-0.15],[1,0,0],[0,0,-1],fmtWatch(S.watch.t),0.34,"#1d2318",{align:"center",font:"ui-monospace,Consolas,monospace",weight:"700",bias:1});
   for(const [k,b] of [["watch_ss",B2.ss],["watch_rs",B2.lr]]) cyl3("y",0.7,1.6,b[0]/10,b[1]/10,0.22,"#cfd3d6",{seg:10,id:k,bias:2});
 }
 function drawRuler3(){ const r=ST.pos.ruler, x=r.x/10, z=r.y/10, onP=r.x>0&&r.x<PW&&r.y>0&&r.y<PH, y=(onP?PT+tiltY(r.x):0)+0.01;

@@ -184,7 +184,7 @@ const T = {
          covered:"블랙박스로 덮음",open:"덮개 없음", r1:"R₁  1 Ω  100 W", box:"8", probe:"프로브",
          hook:"후크", gnd:"접지 클립", rest:"프로브 걸이"},
     secTxt:(cl,cov,st)=>"클램프: "+cl+"   ·   "+cov+"\n"+st,
-    flipBtn:"맨 위 하우징 뒤집기", lo:"두 코일 사이", up:"위 받침", flipped:"뒤집힘", none:"하우징 없음",
+    flipBtn:"코일 #1 뒤집기", lo:"두 코일 사이", up:"위 받침", flipped:"뒤집힘", none:"하우징 없음",
     stNothing:"부품함에서 부품을 골라 실험대 위 원하는 곳에 놓으세요.",
     m:{
       placeIt:s=>s+" — 실험대 위 놓을 곳을 클릭하세요. (우클릭: 취소)",
@@ -205,11 +205,16 @@ const T = {
       probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
       probeOn:"프로브를 물렸습니다.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
       noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
-      keyTake:"렌치로 코일 위쪽 클램프 나사를 클릭하세요. (우클릭: 내려놓기)",
-      loosened:"클램프를 풀었습니다 — 위 하우징을 들어 판·팬을 넣거나 빼고, 뒤집을 수 있습니다.",
-      tightened:"클램프를 조였습니다.",
-      needLoose:"위 하우징이 클램프로 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
-      keyNoUp:"클램프는 위 하우징을 아래 하우징에 고정할 때 씁니다. 지금은 하우징이 하나뿐입니다.",
+      keyTake:"육각 렌치로 코일 #1 받침의 클램프 나사를 클릭해 풀거나 조이세요. (우클릭: 내려놓기)",
+      loosened:"클램프를 풀었습니다 — 받침에 팬을 놓거나 뺄 수 있습니다.",
+      tightened:"클램프를 조였습니다 — 팬이 있으면 받침에 단단히 물렸습니다. 이제 코일 #1을 뒤집을 수 있습니다.",
+      panLoose:"팬이 클램프에 물려 있지 않습니다. 뒤집으면 떨어지므로 렌치로 클램프를 먼저 조이세요.",
+      panFalls:"뒤집힌 채로 클램프를 풀면 팬이 떨어집니다. 코일 #1을 먼저 되돌리세요.",
+      panNeedUp:"팬은 코일 #1 하우징의 윗면(받침)에 놓고 클램프로 물립니다 — 코일 #1을 코일 #2 위에 먼저 얹으세요.",
+      panFlipBack:"코일 #1이 뒤집혀 있어 받침이 아래를 향합니다. 먼저 되돌리세요.",
+      panUnderFlip:"팬은 뒤집힌 코일 #1 아래에 물려 있습니다. 코일 #1을 되돌린 뒤 클램프를 풀고 빼세요.",
+      needLoose:"클램프가 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
+      keyNoUp:"클램프는 코일 #1 하우징 받침에 있습니다. 코일 #1을 먼저 코일 #2 위에 얹으세요.",
       plateTake:s=>s+" 판 1장 — 책상 빈 곳에 내려놓거나, 조립된 코일(#1·#2)을 클릭해 두 코일 사이 틈에 밀어 넣으세요.",
       plateDesk:s=>s+" 판을 책상에 내려놓았습니다. (클릭: 다시 집기 / 우클릭: 부품함에 넣기)",
       plateBack:s=>s+" 판을 부품함에 넣었습니다.",
@@ -218,8 +223,8 @@ const T = {
       flipPlates:"두 코일 사이의 판을 먼저 빼세요.",
       plateOut:"맨 위 판을 빼서 부품함에 넣었습니다.",
       slotFull:"두 코일 사이 틈에 더는 들어가지 않습니다 (틈 두께를 넘습니다).",
-      panTake:s=>s+" — 코일 하우징을 클릭(또는 끌어다 놓기)하세요. 위 하우징이 있으면 그 받침에 클램프로 물립니다.",
-      panTop:"팬을 위 하우징 받침에 올렸습니다. 렌치로 조여 고정한 뒤 '맨 위 하우징 뒤집기'로 팬이 두 코일 사이로 가게 하세요.",
+      panTake:s=>s+" — 코일 #1 하우징 윗면(받침)을 클릭해 놓으세요. 그다음 렌치로 클램프를 조이고 코일 #1을 뒤집습니다 (그림 5).",
+      panTop:"팬을 코일 #1 받침에 올렸습니다. 렌치로 클램프를 조인 뒤 '코일 #1 뒤집기'로 팬이 코일 #2 쪽을 향하게 하세요.",
       panIn:"팬을 아래 하우징 홈에 넣었습니다. NTC 커넥터가 앞으로 나옵니다.",
       panOut:"팬을 빼서 부품함에 넣었습니다.",
       slotBusy:"두 코일 사이에 이미 다른 것이 들어 있습니다.",
@@ -227,7 +232,7 @@ const T = {
       needBase:"먼저 3번 코일 받침판을 실험대에 놓으세요.",
       needHs:"먼저 코일 하우징을 받침판 위에 올리세요.",
       hsLow:s=>s+"을(를) 받침판에 올렸습니다 (아래 칸).",
-      hsUp:s=>s+"을(를) 위에 얹었습니다 — 육각 렌치로 클램프를 조이세요.",
+      hsUp:s=>s+"을(를) 코일 #2 위에 얹었습니다. 두 코일 사이 틈에 금속판을 밀어 넣을 수 있습니다.",
       stackFull:"하우징은 아래·위 두 칸까지만 쌓입니다.",
       hsOut:s=>s+"을(를) 빼서 부품함에 넣었습니다.",
       baseBusy:"받침판에서 코일 #1 하우징과 판·팬을 먼저 빼세요.",
@@ -282,7 +287,7 @@ const T = {
          covered:"inside the black box",open:"no cover", r1:"R₁  1 Ω  100 W", box:"8", probe:"probe",
          hook:"hook", gnd:"ground clip", rest:"probe rest"},
     secTxt:(cl,cov,st)=>"clamps: "+cl+"   ·   "+cov+"\n"+st,
-    flipBtn:"Flip the top housing", lo:"between the coils", up:"on the top platform", flipped:"flipped", none:"no housing",
+    flipBtn:"Flip coil #1", lo:"between the coils", up:"on the top platform", flipped:"flipped", none:"no housing",
     stNothing:"Pick a part from the parts box and put it anywhere on the bench.",
     m:{
       placeIt:s=>s+" — click where on the bench to put it. (R-click: cancel)",
@@ -303,11 +308,16 @@ const T = {
       probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
       probeOn:"Probe clipped on.", probeOff:"Probe unclipped and hung up.",
       noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
-      keyTake:"Click the clamp screws on top of the coils with the key. (R-click: put it down)",
-      loosened:"Clamps loosened — lift the upper housing to put plates or a pan in or out, or to flip it.",
-      tightened:"Clamps tightened.",
-      needLoose:"The upper housing is clamped down. Loosen the clamps with the Allen key (10) first.",
-      keyNoUp:"The clamps hold the upper housing on the lower one; there is only one housing now.",
+      keyTake:"Click the clamp screws on coil #1's platform with the Allen key to loosen or tighten them. (R-click: put it down)",
+      loosened:"Clamps loosened — a pan can be put on the platform or taken off.",
+      tightened:"Clamps tightened — a pan on the platform is now held fast. Coil #1 can be flipped.",
+      panLoose:"The pan is not clamped: it would fall off when flipped. Tighten the clamps with the Allen key first.",
+      panFalls:"Loosening the clamps while coil #1 is flipped would drop the pan. Turn coil #1 back first.",
+      panNeedUp:"The pan goes on the top platform of coil #1's housing, held by its clamps — set coil #1 on coil #2 first.",
+      panFlipBack:"Coil #1 is flipped, its platform faces down. Turn it back first.",
+      panUnderFlip:"The pan is clamped under the flipped coil #1. Turn coil #1 back, loosen the clamps, then take it off.",
+      needLoose:"The clamps are tight. Loosen them with the Allen key (10) first.",
+      keyNoUp:"The clamps are on coil #1's platform. Set coil #1 on coil #2 first.",
       plateTake:s=>"One "+s+" plate — put it down on a free spot of the desk, or click the assembled coils (#1 and #2) to slide it into the gap between them.",
       plateDesk:s=>s+" plate laid on the desk. (click: pick it up again / R-click: back into the box)",
       plateBack:s=>s+" plate put back in the box.",
@@ -316,8 +326,8 @@ const T = {
       flipPlates:"Take the plates out from between the coils first.",
       plateOut:"Top plate taken out and put back in the box.",
       slotFull:"No more fits: the gap between the coils is full.",
-      panTake:s=>s+" — click (or drop it on) the coil housing. With an upper housing in place it is clamped onto its platform.",
-      panTop:"Pan on the upper platform. Tighten the clamps, then use 'Flip the top housing' to bring the pan between the coils.",
+      panTake:s=>s+" — click the top platform of coil #1's housing to put it there. Then tighten the clamps and flip coil #1 (Fig. 5).",
+      panTop:"Pan on coil #1's platform. Tighten the clamps, then 'Flip coil #1' so the pan faces coil #2.",
       panIn:"Pan laid in the recess of the lower housing. Its NTC socket comes out in front.",
       panOut:"Pan taken out and put back in the box.",
       slotBusy:"Something else is already between the coils.",
@@ -325,7 +335,7 @@ const T = {
       needBase:"Put the coil base plate (3) on the bench first.",
       needHs:"Put a coil housing on the base plate first.",
       hsLow:s=>s+" set on the base plate (lower place).",
-      hsUp:s=>s+" set on top — tighten the clamps with the Allen key.",
+      hsUp:s=>s+" set on coil #2. Metal plates can be slid into the gap between the coils.",
       stackFull:"Only two housings stack: lower and upper.",
       hsOut:s=>s+" taken off and put back in the box.",
       baseBusy:"Take coil #1's housing, the plates and the pan off the base first.",
@@ -601,7 +611,7 @@ function boxOrigin(){
 /* bottom of a housing slot, and the height of a housing's winding */
 const LOW_TOP=BASE.t+HS.pl;                     /* top face of the lower plate */
 /* the upper plate: its bottom and top face (legs down, or flipped with the legs up) */
-function upPlate(lift){ const c=upHs(), f=c&&S.hs[c].flip, l=lift===false?0:(S.loose?0.45:0), b=LOW_TOP+HS.post+(f?0:HS.leg)+l; return [b,b+HS.up]; }
+function upPlate(lift){ const c=upHs(), f=c&&S.hs[c].flip, l=0, b=LOW_TOP+HS.post+(f?0:HS.leg)+l; return [b,b+HS.up]; }
 function coilY(c){
   const h=S.hs[c];
   if(h.at==="low") return h.flip?BASE.t+0.12:LOW_TOP-0.12;
@@ -1257,6 +1267,9 @@ function drawHousing(c,slot){
   else [y0,y1]=upPlate();
   const legsUp=slot==="up"&&h.flip, legsDown=slot==="up"&&!h.flip;
   if(legsDown) corners(y0-HS.leg,y0,C);
+  if(legsUp) for(const x of [HS.x0+0.05,HS.x1-1.45]){             /* clamps under the flipped platform */
+    BOX([x,x+1.4,y0-0.3,y0,20.0,22.0],"#1b1c1f","#121315","#17181a","#000");
+    BOX([x<54?x+1.2:x,x<54?x+1.4+0.25:x+0.2,y0-0.3,y0-0.18,20.3,21.7],"#1b1c1f","#121315","#17181a","#000"); }
   BOX([HS.x0,HS.x1,y0,y1,HS.z0,HS.z1],C[0],C[1],C[2],"#08080a");
   LINE([NP(HS.x0,(y0+y1)/2,HS.z0),NP(HS.x1,(y0+y1)/2,HS.z0)],"rgba(255,255,255,0.04)",1);    /* print layers */
   if(slot==="low") corners(y1,y1+HS.post,C);
@@ -1612,16 +1625,19 @@ function place(x,y){
     if(S.on.box==="cover"){ say(t.m.covered,true); return; }
     const up=upHs(), lo=lowHs();
     if(!lo){ say(t.m.needHs,true); return; }
-    if(cr.k==="key"){ if(!up){ say(t.m.keyNoUp,true); return; } S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
+    if(cr.k==="key"){ if(!up){ say(t.m.keyNoUp,true); return; }
+      if(!S.loose&&S.pan&&S.hs[up].flip){ say(t.m.panFalls,true); return; }
+      S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
     if(cr.k==="plate"){                       /* slid in sideways through the open gap: no need to touch the clamps */
       if(!up){ say(t.m.needBoth,true); return; }
       if(gapUsed()+PLATE_MM[cr.mat]>gapMM()+1e-6){ say(t.m.slotFull,true); return; }
       S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length,(gapMM()-gapUsed()).toFixed(1)));
     }else{
-      if(up&&!S.loose){ say(t.m.needLoose,true); return; }
+      if(!up){ say(t.m.panNeedUp,true); return; }
+      if(S.hs[up].flip){ say(t.m.panFlipBack,true); return; }
+      if(!S.loose){ say(t.m.needLoose,true); return; }
       if(S.pan){ say(t.m.slotBusy,true); return; }
-      if(up){ S.pan=PAN_OF[cr.id]; S.panPos="top"; S.panOn="up"; say(t.m.panTop); }
-      else { if(S.stack.length){ say(t.m.slotBusy,true); return; } S.pan=PAN_OF[cr.id]; S.panPos="gap"; S.panOn="low"; say(t.m.panIn); }
+      S.pan=PAN_OF[cr.id]; S.panPos="top"; S.panOn="up"; say(t.m.panTop);
       S.panItem=cr.id; S.panT=T_AMB; S.carry=null;
     }
     solve(); drawTray(); return;
@@ -1687,13 +1703,12 @@ function unstackOne(){
   const panOut=()=>{ detachTerms(["NTCA","NTCB"]); S.pan=null; S.panItem=null; S.panPos=null; S.panOn=null; say(t.m.panOut); };
   if(S.stack.length){ const m=S.stack.pop(); S.plates[m]++; say(t.m.plateOut); }     /* plates slide out sideways */
   else if(up){
-    if(!S.loose){ say(t.m.needLoose,true); return; }
-    if(S.pan&&S.panOn==="up"&&S.panPos==="top") panOut();
-    else if(S.pan&&S.panOn==="low") panOut();
-    else { if(S.pan&&S.panOn==="up") panOut(); takeHousing(up); }
-  } else if(lo){
-    if(S.pan) panOut(); else { say(t.m.c2Fixed,true); return; }
-  }
+    if(S.pan){
+      if(S.hs[up].flip){ say(t.m.panUnderFlip,true); return; }
+      if(!S.loose){ say(t.m.needLoose,true); return; }
+      panOut();
+    } else takeHousing(up);
+  } else if(lo){ if(S.pan) panOut(); else { say(t.m.c2Fixed,true); return; } }
   solve(); drawTray();
 }
 function takeHousing(c){
@@ -1707,10 +1722,8 @@ function flipTop(){
   if(c==="c2"){ say(t.m.c2Fixed,true); return; }
   if(S.on.box==="cover"){ say(t.m.covered,true); return; }
   if(S.hs[c].at==="up"){
-    if(!S.loose){ say(t.m.needLoose,true); return; }
     if(S.stack.length){ say(t.m.flipPlates,true); return; }
-    if(S.pan&&S.panOn==="up") S.panPos=S.panPos==="top"?"gap":"top";
-    else if(S.pan&&S.panPos==="top"){ say(t.m.slotBusy,true); return; }
+    if(S.pan&&S.panOn==="up"){ if(S.loose){ say(t.m.panLoose,true); return; } S.panPos=S.panPos==="top"?"gap":"top"; }
   } else if(S.stack.length||S.pan){ say(t.m.flipEmpty,true); return; }
   S.hs[c].flip=!S.hs[c].flip;
   say(t.m.flipDone(t.trayItems[c],S.hs[c].flip)); solve();
@@ -1904,7 +1917,9 @@ function drawXsec(){
     const [b,tp]=upPlate(), f=S.hs[up].flip;
     if(!f){ R(hx0,b-HS.leg,hx0+0.7,b,col,ed); R(hx1-0.7,b-HS.leg,hx1,b,col,ed); }
     R(hx0,b,hx1,tp,col,ed);
-    if(f){ R(hx0,tp,hx0+0.7,tp+HS.leg,col,ed); R(hx1-0.7,tp,hx1,tp+HS.leg,col,ed); }
+    if(f){ R(hx0,tp,hx0+0.7,tp+HS.leg,col,ed); R(hx1-0.7,tp,hx1,tp+HS.leg,col,ed);
+      R(hx0+0.05,b-0.3,hx0+1.45,b,"#1a1c1f",ed); R(hx1-1.45,b-0.3,hx1-0.05,b,"#1a1c1f",ed);
+      R(hx0+1.45,b-0.3,hx0+1.85,b-0.18,"#1a1c1f",ed); R(hx1-1.85,b-0.3,hx1-1.45,b-0.18,"#1a1c1f",ed); L(t.lab.clamp,hx0-0.9,b-0.15,"#9aa3ab","right"); }
     else { R(hx0+0.05,tp,hx0+1.45,tp+0.3,"#1a1c1f",ed); R(hx1-1.45,tp,hx1-0.05,tp+0.3,"#1a1c1f",ed); L(t.lab.clamp,hx1+1.6,tp+0.25,"#9aa3ab"); }
     if(S.pan&&S.panPos==="gap"&&S.panOn==="up") R(hx0+1.8,b-pth,hx1-1.8,b,pc,"#000");
     if(S.pan&&S.panPos==="top") R(hx0+1.8,tp,hx1-1.8,tp+pth,pc,"#000");
