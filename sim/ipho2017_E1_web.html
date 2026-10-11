@@ -566,7 +566,7 @@ const T={
           rail:"레일 옆면 (2D) — 받침의 흰 지시선과 레일 눈금 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
     back:"◀ 3D로 돌아가기",
     hTime:"시간 배속", jump:"확산 30분 지점으로 건너뛰기",
-    hLaser:"1. 선 레이저 모듈", focus:"초점 (레이저 뒤쪽 링을 돌림)", theta:"레이저 회전 (선의 기울기)",
+    hLaser:"1. 선 레이저 모듈", focus:"초점 (레이저 앞쪽 캡 — 휠로도 돌림)", theta:"레이저 회전 (선의 기울기)",
     hWatch:"7. 스톱워치", ss:"시작 / 정지", rst:"리셋",
     hPaper:"8. 모눈종이", trace:"연필로 레이저 선을 따라 그리기", fresh:"새 종이", png:"종이를 PNG로 저장",
     hView:"보기", vReset:"3D 처음", vScreen:"스크린", vCell:"셀", vRail:"레일 눈금",
@@ -584,7 +584,7 @@ const T={
        paperOn:"모눈종이를 스크린에 붙였습니다.", paperOff:"모눈종이를 떼어 냈습니다.", needScreen:"모눈종이는 스크린을 클릭해 붙입니다.",
        noPaperT:"스크린에 모눈종이가 없습니다.", noLine:"스크린에 레이저 선이 보이지 않습니다.", traced:"레이저 선을 연필로 따라 그렸습니다.", fresh:"새 모눈종이로 바꿨습니다.",
        wsStart:"스톱워치 시작", wsStop:"스톱워치 정지", wsReset:"스톱워치 리셋", needWatch:"먼저 스톱워치를 책상에 꺼내세요.",
-       jumped:"확산이 30분 지점까지 진행되었습니다.", noDiff:"아직 확산이 시작되지 않았습니다.", height:(n,v)=>n+" 높이 조절",
+       jumped:"확산이 30분 지점까지 진행되었습니다.", noDiff:"아직 확산이 시작되지 않았습니다.", height:(n,v)=>n+" 높이 조절", focusT:"레이저 앞쪽 초점 캡을 돌렸습니다 — 스크린의 선 굵기를 보세요.",
        cellFirst:"셀에서 소금물을 먼저 비우세요 (셀을 끌어 들고 폐액통 클릭).", view:"2D 보기 — 휠로 확대, 끌어서 이동, 우클릭하면 3D로 돌아갑니다.",
        cellLift:"셀을 들었습니다 — 천천히 옮기세요. 폐액통을 클릭하면 비우고, Cell Base를 클릭하면 다시 꽂습니다. (우클릭: 제자리에)",
        cellBack:"셀을 다시 홀더에 꽂았습니다.", dumped:"셀을 폐액통에 비웠습니다. 안쪽에 물기가 남아 있습니다.", dumpEmpty:"셀이 이미 비어 있습니다.",
@@ -607,7 +607,7 @@ const T={
           rail:"the side of the rail (2D) — white index lines of the bases and the rail scale · wheel: zoom, drag: pan / R-click: back to 3D"},
     back:"◀ back to 3D",
     hTime:"Time scale", jump:"jump to 30 min of diffusion",
-    hLaser:"1. Line laser module", focus:"focus (turn the ring at the back)", theta:"rotation of the laser (angle of the line)",
+    hLaser:"1. Line laser module", focus:"focus (the cap at the front — or the wheel over it)", theta:"rotation of the laser (angle of the line)",
     hWatch:"7. Stopwatch", ss:"start / stop", rst:"reset",
     hPaper:"8. Millimetre paper", trace:"trace the laser line with a pencil", fresh:"fresh sheet", png:"save the sheet as PNG",
     hView:"View", vReset:"3D home", vScreen:"screen", vCell:"cell", vRail:"rail scale",
@@ -625,7 +625,7 @@ const T={
        paperOn:"Millimetre paper fixed on the screen.", paperOff:"Millimetre paper taken off.", needScreen:"Click the screen to fix the paper on it.",
        noPaperT:"There is no paper on the screen.", noLine:"There is no laser line on the screen.", traced:"The laser line traced with a pencil.", fresh:"Fresh sheet of paper.",
        wsStart:"stopwatch started", wsStop:"stopwatch stopped", wsReset:"stopwatch reset", needWatch:"Take the stopwatch out onto the desk first.",
-       jumped:"The diffusion has advanced to 30 min.", noDiff:"The diffusion has not started yet.", height:(n,v)=>n+" height",
+       jumped:"The diffusion has advanced to 30 min.", noDiff:"The diffusion has not started yet.", height:(n,v)=>n+" height", focusT:"Turned the focusing cap at the front of the laser — watch the line width on the screen.",
        cellFirst:"Empty the salt solution out of the cell first (drag the cell up, click the bucket).", view:"2D view — wheel to zoom, drag to pan, R-click to go back to 3D.",
        cellLift:"Cell lifted — move it gently. Click the waste bucket to empty it, click the Cell Base to put it back. (R-click: back in place)",
        cellBack:"The cell is back in its holder.", dumped:"The cell was emptied into the waste bucket. It is still wet inside.", dumpEmpty:"The cell is already empty.",
@@ -814,9 +814,11 @@ function drawBase(k,label){
 /* Fig. 1 shows every rail part built the same way: a horizontal black mounting plate whose
    four silver rods go down into the four holes of its base (Laser / Cell / Screen Base), so
    the part can be set higher or lower and locked by the black thumb screw on the base.
-   Line laser module (item 1): a black upright arm on the plate, the laser housing on top
-   with the knurled black focus ring at its back and the cylindrical-lens barrel in front;
-   red and black leads with alligator clips go to the battery holder. */
+   Line laser module (item 1): seen from the side its black bracket is a mirrored "ㄷ" — the
+   mounting plate below, an upright at the beam end, an arm back over the plate on top — and
+   the laser tube lies in two saddles on that arm, its knurled focusing cap sticking out past
+   the upright; turning the tube in the saddles turns the line, turning the cap focuses it.
+   Red and black leads with alligator clips go to the battery holder. */
 const LM_ARM=2.3;
 function mountPlate(k,top,o){
   const c=baseC(k), y1=RT+BASE_T, M={id:o.id};
@@ -840,18 +842,24 @@ function laserLeads(x,yb){
   }
 }
 function drawLaser(){
-  const x=S.laserX, yb=RT+S.laserY, c=baseC("laser"), top=yb-LM_ARM, L={id:"laser"};
+  const x=S.laserX, yb=RT+S.laserY, top=yb-LM_ARM, L={id:"laser"}, ya=yb-0.62;
   drawBase("laser",d().lab.lbase);
   mountPlate("laser",top,L);
-  boxY(x-3.3,x-2.0,top,yb-0.6,-0.6,0.6,BLACK2,L,0.8);                                            /* upright arm */
-  box3(x-3.5,x-1.8,yb-0.85,yb+0.85,-0.95,0.95,"#17181b",L);                                       /* clamp block */
-  cyl3("x",x-4.4,x-0.9,yb,0,0.62,"#111214",{seg:18,id:"laser"});                                  /* laser housing */
-  cylSeg("x",x-4.75,x-4.4,yb,0,0.82,"#1c1d20",{seg:20,id:"laser",cap:"#2a2c30"},1);               /* focus ring */
-  for(let i=0;i<14;i++){ const a=i/14*2*Math.PI; line3([x-4.75,yb+0.83*Math.sin(a),0.83*Math.cos(a)],[x-4.4,yb+0.83*Math.sin(a),0.83*Math.cos(a)],"#3c3f43",0.8); }
-  cyl3("x",x-0.9,x,yb,0,0.88,"#202225",{seg:20,id:"laser"});                                      /* lens barrel */
-  for(let i=0;i<16;i++){ const a=i/16*2*Math.PI; line3([x-0.85,yb+0.89*Math.sin(a),0.89*Math.cos(a)],[x-0.4,yb+0.89*Math.sin(a),0.89*Math.cos(a)],"#3c3f43",0.8); }
-  face(orient(Array.from({length:16},(_,i)=>{ const a=i/16*2*Math.PI; return [x+0.01,yb+0.34*Math.sin(a),0.34*Math.cos(a)]; }),[1,0,0]),{fill:beamOn()?"#ffb3a8":"#8fc6dd",flat:true,cull:true});
-  if(beamOn()) cyl3("x",x,x+0.03,yb,0,0.2,"#ff5a4a",{seg:10,flat:true});
+  /* the bracket: upright at the beam end and the arm back over the plate */
+  boxY(x-1.55,x-0.95,top,ya,-0.75,0.75,BLACK2,L,0.8);
+  box3(x-5.3,x-0.95,ya-0.38,ya,-0.75,0.75,BLACK2,Object.assign({top:"#34363b"},L));
+  for(const sx of [-4.7,-1.25]) cyl3("y",ya-0.4,ya+0.02,x+sx,0.45,0.13,"#8e9398",{seg:8,cap:"#b9bec3"});   /* screws into the arm */
+  /* two saddles with their clamp screws */
+  for(const sx of [-4.1,-1.95]){ box3(x+sx-0.35,x+sx+0.35,ya,yb+0.15,-0.62,0.62,"#17181b",L);
+    cyl3("z",0.62,0.95,x+sx,yb+0.02,0.15,"#9ea3a8",{seg:8,cap:"#c3c8cc"}); }
+  /* the laser tube, the white index mark of its rotation, the knurled focusing cap */
+  cyl3("x",x-4.6,x-0.75,yb,0,0.55,"#141518",{seg:18,id:"laser",cap:"#26282b"});
+  const th=S.theta*Math.PI/180; line3([x-3.6,yb+0.56*Math.sin(th),0.56*Math.cos(th)],[x-2.4,yb+0.56*Math.sin(th),0.56*Math.cos(th)],"#f2f2f2",1.6,{bias:1});
+  cyl3("x",x-0.75,x,yb,0,0.64,"#202225",{seg:20,id:"focus",cap:"#2a2c30"});
+  for(let i=0;i<18;i++){ const a=i/18*2*Math.PI+S.focus*3; line3([x-0.72,yb+0.65*Math.sin(a),0.65*Math.cos(a)],[x-0.08,yb+0.65*Math.sin(a),0.65*Math.cos(a)],"#44474c",0.8); }
+  face(orient(Array.from({length:16},(_,i)=>{ const a=i/16*2*Math.PI; return [x+0.01,yb+0.3*Math.sin(a),0.3*Math.cos(a)]; }),[1,0,0]),{fill:beamOn()?"#ffb3a8":"#8fc6dd",flat:true,cull:true});
+  if(beamOn()) cyl3("x",x,x+0.03,yb,0,0.18,"#ff5a4a",{seg:10,flat:true});
+  cyl3("x",x-5.0,x-4.6,yb,0,0.3,"#151515",{seg:10});                                               /* lead strain relief */
   laserLeads(x,yb);
 }
 function cellBox(){ const x=S.cellX, y0=RT+CELL_FOOT; return [x,x+CELL_D,y0,y0+CELL_H,-CELL_W/2,CELL_W/2]; }
@@ -882,8 +890,10 @@ function drawCellBody(x0,y0,o){
   box3(fx0,fx1,fb,ft,z0-1.0,z0+0.35,BLACK,C);                                   /* side bars */
   box3(fx0,fx1,fb,ft,z1-0.35,z1+1.0,BLACK,C);
   box3(fx0,fx1,fb,y0+0.3,z0+0.35,z1-0.35,BLACK,C);                              /* bottom bar */
-  cyl3("y",fb+0.2,ft+0.6,(x0+x1)/2,z1+1.22,0.2,STEEL,{seg:10,cap:"#d7dbdf",id:"cell"}); /* clamping rod */
-  for(const yy of [fb+0.9,ft-0.9]) cyl3("z",z1+0.95,z1+1.45,(x0+x1)/2,yy,0.3,"#8e9398",{seg:8});
+  /* the water inlet: a bore drilled down through one end bar into the bottom of the cell, seen only from above */
+  const bz=z1+0.32, bx=(x0+x1)/2;
+  cyl3("y",ft,ft+0.004,bx,bz,0.2,"#050506",{seg:16,id:"cell",bias:1});
+  poly3(Array.from({length:17},(_,i)=>{ const a=i/16*2*Math.PI; return [bx+0.21*Math.cos(a),ft+0.006,bz+0.21*Math.sin(a)]; }),"#3a3c40",1,{bias:1.5});
   for(const [xx,yy] of [[fx0,y0+1.2],[fx0,ft-1.0],[fx1,y0+1.2],[fx1,ft-1.0]]) for(const zz of [z0-0.6,z1+0.6]){ const dx=xx<x0?-0.06:0.06;
     cyl3("x",xx,xx+dx,yy,zz,0.17,"#aeb3b8",{seg:8}); }
   line3([x0-0.02,y0+FILL_LINE,z0+0.4],[x0-0.02,y0+FILL_LINE,z1-0.4],"#ffffff",2);
@@ -1315,6 +1325,7 @@ cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
 cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=pos(e), s=e.deltaY<0?1:-1;
   if(view){ const nk=Math.min(14,Math.max(1,V2.k*(s>0?1.15:1/1.15))), r=nk/V2.k; V2.px=p[0]-(p[0]-V2.px)*r; V2.py=p[1]-(p[1]-V2.py)*r; V2.k=nk; clampV2(); return; }
   const id=pick3(p[0],p[1]);
+  if(id==="focus"){ S.focus=Math.min(1,Math.max(0,S.focus+s*(e.shiftKey?0.005:0.025))); $("focus").value=S.focus; say("focusT"); return; }
   if(id==="laser"){ S.laserY=Math.min(Math.max(S.laserY+s*0.1,LASER_Y_RANGE[0]),LASER_Y_RANGE[1]); say("height",itemName("laser")); return; }
   if(id==="screen"){ S.screenY=Math.min(Math.max(S.screenY+s*0.2,SCREEN_Y_RANGE[0]),SCREEN_Y_RANGE[1]); say("height",itemName("screen")); return; }
   const f=s>0?1.12:1/1.12, nk=Math.min(40,Math.max(2,CAM.k*f)), r=nk/CAM.k;
@@ -1327,7 +1338,7 @@ function rclick(p){
   if(id==="screen"&&ST.on.paper){ ST.on.paper=false; say("paperOff"); return; }
   if(id==="cell"&&S.filled){ say("cellRclick"); return; }
   if(id==="batt_sw") return;
-  const k=id.startsWith("base_")?id.slice(5):id.startsWith("watch")?"watch":id==="batt_sw"?"batt":id;
+  const k=id.startsWith("base_")?id.slice(5):id.startsWith("watch")?"watch":id==="batt_sw"?"batt":id==="focus"?"laser":id;
   if(k in ST.on&&ST.on[k]) returnItem(k);
 }
 /* the 2-D views: wheel zooms about the cursor, drag pans */
@@ -1426,7 +1437,7 @@ function drawGhost(){
     else if(k==="sheet"){ const y=S.wiping?0.15:4, p=onPlane(mouse[0],mouse[1],y), col=carry.wet>0.05?`rgb(${Math.round(255-60*carry.wet/6)},${Math.round(255-25*carry.wet/6)},255)`:"#ffffff";
       face([[p[0]-1.8,y,p[2]-1.6],[p[0]-1.7,y+(S.wiping?0:0.4),p[2]+1.7],[p[0]+1.9,y,p[2]+1.5],[p[0]+1.6,y+(S.wiping?0:0.5),p[2]-1.8]],{fill:col,stroke:"#cfd4da",lw:0.8,flat:true,cull:false,bias:3}); }
     else if(k==="knife"){ const p=onPlane(mouse[0],mouse[1],6); drawKnife([p[0],6,p[2]],true); }
-    else if(k==="pipette"&&S.dripping&&ST.on.cell){ const [x0,x1,,y1]=cellBox(); drawPipette([(x0+x1)/2,y1+1.5,0],true); }
+    else if(k==="pipette"&&S.dripping&&ST.on.cell){ const [x0,x1,,y1,,z1]=cellBox(); drawPipette([(x0+x1)/2,y1+0.25,z1+0.32],true); }
     else { const p=onPlane(mouse[0],mouse[1],6); drawDeskItem(k,k==="pipette"?p:[p[0],6,p[2]],{vertical:k==="pipette"}); } NOID=false; }
 }
 /* the liquid in a carried cell sloshes: the surface tilt across the 6.5 cm width (and the
@@ -1459,7 +1470,8 @@ function slosh(dt){
 let tPrev=performance.now()/1000, frameN=0;
 function tick(){
   requestAnimationFrame(tick);
-  try{ frame(); }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); } if(GL3.ok===true&&!view){ GL3.ok=false; } }
+  try{ frame(); tick.bad=0; }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); }
+    if(++tick.bad>30&&GL3.ok===true&&!view){ GL3.ok=false; tick.bad=0; } }
 }
 function frame(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;

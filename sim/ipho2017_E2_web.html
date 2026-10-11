@@ -934,13 +934,23 @@ function releaseHold(){ if(S.hold){ if(S.hold.z!==undefined){ S.z=S.hold.z*1e-3;
    ══════════════════════════════════════════════════════════════ */
 const TURN_MIN=-0.5, TURN_MAX=2.0;
 const rodZ=()=>S.hold&&S.hold.z!==undefined?S.hold.z:(S.z+S.jit)*1e3;
+/* the trap's own motion while it is carried: its acceleration along the magnets pushes the rod the other way */
+function trapAccel(dt){
+  if(!ST.on.trap||dt<=0){ S.trapPX=null; S.trapV=0; return 0; }
+  const x=ST.pos.trap.x;
+  if(S.trapPX===null||S.trapPX===undefined){ S.trapPX=x; S.trapV=0; return 0; }
+  const v=(x-S.trapPX)/dt, v0=S.trapV||0; S.trapPX=x;
+  S.trapV=v0+(v-v0)*Math.min(1,dt/0.05);                       /* smooth the hand's jerks a little */
+  return clamp((S.trapV-v0)/dt,-2.5e4,2.5e4)*1e-3;                /* mm/s² → m/s² */
+}
 function rodStep(dt){
+  const aT=trapAccel(dt);
   if(!S.rod||!ST.on.trap) return;
   S.jit+=(-S.jit/2.0)*dt+norm(0,1.2e-5)*Math.sqrt(Math.max(dt,1e-4));
   if(S.hold) return;
   const w=B.omega, gam=1/benchTau(ROD_D[ROD_KEY[S.rod.k]],S.rod.len*1e-3), zeq=-GRAV*Math.sin(tiltRad())/(w*w);
   const n=Math.max(1,Math.ceil(dt/0.002)), h=dt/n;
-  for(let i=0;i<n;i++){ S.vz+=(-w*w*(S.z-zeq)-2*gam*S.vz)*h; S.z+=S.vz*h; }
+  for(let i=0;i<n;i++){ S.vz+=(-w*w*(S.z-zeq)-2*gam*S.vz-aT)*h; S.z+=S.vz*h; }
   if(Math.abs(S.z)>9e-3){ S.z=Math.sign(S.z)*9e-3; S.vz=-0.3*S.vz; }
 }
 const ringing=()=>S.rod&&!S.hold&&(Math.abs(S.vz)>3e-5);
@@ -954,10 +964,10 @@ const ringing=()=>S.rod&&!S.hold&&(Math.abs(S.vz)>3e-5);
    ══════════════════════════════════════════════════════════════ */
 let GA=null, NOID=false;
 const _face=face; face=function(p,o){ if(GA!==null) o=Object.assign({},o,{alpha:GA,id:null}); else if(NOID) o=Object.assign({},o,{id:null}); _face(p,o); };
-const PB=0.6, PT=2.0;                              /* bottom platform top, top platform top */
+const PB=0.5, PT=2.0;                              /* bottom platform top, top platform top */
 const W=(xmm,h,ymm)=>[xmm/10,h,ymm/10];
 const MAG_H=2.54, MAG_R=0.32, MB_H=1.2, TB_H=0.9;
-const HGT={rod:PT+0.9+0.32+0.22, magnet:PT+MB_H+MAG_H, magblock:PT+MB_H, trap:PT+TB_H, probe:PT+2.5, meter:5.5, watch:1.5, screw:PT+0.4, platform:PT, desk:0, rail:PT+0.3, ruler:0.2};
+const HGT={rod:PT+0.9+0.32+0.22, magnet:PT+MB_H+MAG_H, magblock:PT+MB_H, trap:PT+TB_H, probe:PT+2.5, meter:5.5, watch:1.5, screw:PT+0.6, platform:PT, desk:0, rail:PT+0.3, ruler:0.2};
 const tiltY=(xmm)=>tiltRad()*Math.max(0,xmm-SCREWS[0][0])/10;   /* the top platform hinges on the left screws */
 
 function drawDesk(){
@@ -967,13 +977,27 @@ function drawDesk(){
 }
 function drawPlatform3(){
   const L={layer:-1};
-  box3(-0.8,26.8,0,PB,-0.8,17.8,"#dfe9ee",{id:"platform",alpha:0.42,stroke:"rgba(150,175,185,.9)",lw:1});   /* clear acrylic bottom platform */
-  for(const [sx,sy] of SCREWS) cyl3("y",PB,PT+0.2,sx/10,sy/10,0.22,"#a7adb3",Object.assign({seg:10},L));
+  /* item 4, the bottom platform: a 5 mm clear acrylic sheet with rounded corners and polished edges; the
+     kit's small parts came stuck to it, their holes are still there; a little steel cup under each screw */
+  const rr2=(x0,z0,x1,z1,r)=>{ const P=[]; for(const [xc,zc,a0] of [[x1-r,z0+r,-Math.PI/2],[x1-r,z1-r,0],[x0+r,z1-r,Math.PI/2],[x0+r,z0+r,Math.PI]])
+    for(let i=0;i<=4;i++){ const a=a0+i/4*Math.PI/2; P.push([xc+r*Math.cos(a),zc+r*Math.sin(a)]); } return P; };
+  const BP=rr2(-1.2,-1.0,27.2,18.2,1.2);
+  prism3("y",0,PB,BP,"#cfe6ea",{id:"platform",alpha:0.36,cull:false});
+  poly3(BP.concat([BP[0]]).map(([x,z])=>[x,PB+0.003,z]),"rgba(150,205,215,.95)",1.4,{layer:-1});
+  poly3(BP.concat([BP[0]]).map(([x,z])=>[x,0.01,z]),"rgba(120,175,185,.6)",1,{layer:-1});
+  for(const [hx,hz] of [[25.6,0.4],[-0.2,17.0],[13.0,17.4]]) cyl3("y",PB,PB+0.004,hx,hz,0.32,"rgba(40,60,66,.55)",{seg:14,layer:-1});
+  /* the levelling screws below the top platform: an M6 threaded rod with a lock nut, its round tip in a cup */
+  SCREWS.forEach(([sx,sy])=>{ const x=sx/10, z=sy/10, yb=PT-0.6+tiltY(sx);
+    cyl3("y",PB,PB+0.12,x,z,0.42,"#b6bbc0",{seg:16,cap:"#cfd3d7"});
+    cyl3("y",PB+0.12,PB+0.3,x,z,0.24,"#c3c8cc",{seg:12,r1:0.3});
+    cyl3("y",PB+0.3,yb-0.35,x,z,0.3,"#aeb3b8",{seg:14});
+    for(let y=PB+0.4;y<yb-0.4;y+=0.1) poly3(Array.from({length:9},(_,i)=>{ const a=-0.2+i/8*Math.PI*1.4; return [x+0.305*Math.cos(a),y+0.05*i/8,z+0.305*Math.sin(a)]; }),"rgba(70,76,82,.8)",1,{bias:1});
+    cyl3("y",yb-0.35,yb,x,z,0.52,"#9da3a9",{seg:6,cap:"#b9bec3"}); });
   /* the top platform, tilted by the right-hand screw (the tilt itself is far too small to see) */
   const t=k=>tiltY(k);
   face([W(0,PT+t(0),0),W(0,PT+t(0),PH),W(PW,PT+t(PW),PH),W(PW,PT+t(PW),0)].map((p,i)=>p),{fill:"#f7f7f3",id:"platform",layer:-1,flat:true});
   for(const [a,b] of [[[0,0],[PW,0]],[[PW,0],[PW,PH]],[[PW,PH],[0,PH]],[[0,PH],[0,0]]])
-    face([W(a[0],PT-0.6+t(a[0]),a[1]),W(b[0],PT-0.6+t(b[0]),b[1]),W(b[0],PT+t(b[0]),b[1]),W(a[0],PT+t(a[0]),a[1])],{fill:"#e7e7e2",id:"platform",layer:-1,cull:true});
+    face([W(a[0],PT-0.6+t(a[0]),a[1]),W(b[0],PT-0.6+t(b[0]),b[1]),W(b[0],PT+t(b[0]),b[1]),W(a[0],PT+t(a[0]),a[1])],{fill:"#e2e2dc",id:"platform",layer:-1,cull:false});
   /* printed scale, IPhO logo, the two bubble levels */
   custom3(W(130,PT,98),c=>{
     c.strokeStyle="#444";
@@ -991,11 +1015,15 @@ function drawPlatform3(){
   box3(11.8,14.4,PT,PT+0.6,0.4,1.2,"#9bd98a",{alpha:0.9,layer:-1});
   cyl3("y",PT+0.6,PT+0.62,13.1+clamp(th*4,-0.9,0.9),0.8,0.22,"#ffffff",{seg:10,layer:-1,bias:1});
   box3(0.4,1.2,PT,PT+0.6,6.2,8.4,"#9bd98a",{alpha:0.9,layer:-1});
-  /* the three levelling screws: knurled heads */
-  SCREWS.forEach(([sx,sy],i)=>{ const x=sx/10, z=sy/10, y=PT+t(sx);
-    cyl3("y",y,y+0.35,x,z,0.62,"#d9dcdf",{seg:20,id:i===2?"screw":"platform",cap:"#e6e8ea",bias:2});
-    cyl3("y",y+0.35,y+0.4,x,z,0.22,"#b9bec3",{seg:10,bias:2.2});
-    if(i===2){ const a=-2*Math.PI*S.turns-Math.PI/2; line3([x,y+0.42,z],[x+0.46*Math.cos(a),y+0.42,z+0.46*Math.sin(a)],"#b03030",2,{bias:3}); }
+  /* the three levelling screws: white knurled thumb knobs with a red arrow, as in the kit photo */
+  SCREWS.forEach(([sx,sy],i)=>{ const x=sx/10, z=sy/10, y=PT+t(sx), id=i===2?"screw":"platform", h=0.6;
+    cyl3("y",y,y+0.08,x,z,0.48,"#d4d7da",{seg:16,id,bias:2});
+    cyl3("y",y+0.08,y+h,x,z,0.75,"#eceeef",{seg:24,id,cap:"#f6f7f7",bias:2});
+    for(let k=0;k<24;k++){ const a=k/24*2*Math.PI; line3([x+0.752*Math.cos(a),y+0.12,z+0.752*Math.sin(a)],[x+0.752*Math.cos(a),y+h-0.04,z+0.752*Math.sin(a)],"rgba(150,155,160,.7)",1,{bias:2.5}); }
+    poly3(Array.from({length:25},(_,k)=>{ const a=k/24*2*Math.PI; return [x+0.5*Math.cos(a),y+h+0.004,z+0.5*Math.sin(a)]; }),"rgba(160,165,170,.8)",1,{bias:3});
+    const a=(i===2?-2*Math.PI*S.turns:0)-Math.PI/2, c=Math.cos(a), sn=Math.sin(a), Y=y+h+0.006;
+    face([[x+0.45*c,Y,z+0.45*sn],[x-0.12*c-0.16*sn,Y,z-0.12*sn+0.16*c],[x-0.12*c+0.16*sn,Y,z-0.12*sn-0.16*c]],{fill:"#c0392b",flat:true,bias:3,cull:false});
+    line3([x,Y,z],[x-0.35*c,Y,z-0.35*sn],"#c0392b",2,{bias:3});
   });
   /* the rail: two glass rods between black end blocks */
   for(const ry of [152,160]) cyl3("x",1.5,24.5,PT+0.42,ry/10,0.32,"#e8f1f5",{seg:14,id:"rail",alpha:0.55,cull:true});
@@ -1458,7 +1486,8 @@ $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 let tPrev=performance.now()/1000, frameN=0;
 function tick(){
   requestAnimationFrame(tick);
-  try{ frame(); }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); } if(GL3.ok===true&&!view){ GL3.ok=false; } }
+  try{ frame(); tick.bad=0; }catch(err){ if(!tick.warned){ tick.warned=true; console.error(err); }
+    if(++tick.bad>30&&GL3.ok===true&&!view){ GL3.ok=false; tick.bad=0; } }
 }
 function frame(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
