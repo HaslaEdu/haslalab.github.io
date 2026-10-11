@@ -203,7 +203,7 @@ const T = {
       noCable:"남은 케이블이 없습니다.",
       noTerm:"단자를 클릭하세요.",
       probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
-      probeOn:"프로브를 물렸습니다.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
+      probeOn:"프로브를 물렸습니다.", gndReach:"접지 집게선(약 14 cm)이 거기까지 닿지 않습니다. 프로브 고리를 먼저 가까운 단자에 물리세요.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
       noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
       keyTake:"육각 렌치로 코일 #1 받침의 클램프 나사를 클릭해 풀거나 조이세요. (우클릭: 내려놓기)",
       loosened:"클램프를 풀었습니다 — 받침에 팬을 놓거나 뺄 수 있습니다.",
@@ -212,6 +212,7 @@ const T = {
       panFalls:"뒤집힌 채로 클램프를 풀면 팬이 떨어집니다. 코일 #1을 먼저 되돌리세요.",
       panNeedUp:"팬은 코일 #1 하우징의 윗면(받침)에 놓고 클램프로 물립니다 — 코일 #1을 코일 #2 위에 먼저 얹으세요.",
       panFlipBack:"코일 #1이 뒤집혀 있어 받침이 아래를 향합니다. 먼저 되돌리세요.",
+      panOnC2:"팬을 코일 #2 윗면에 올려놓았습니다. (우클릭: 빼기)", plateOnC2:(s,n)=>s+" 판을 코일 #2 위에 올려놓았습니다 (지금 "+n+"장). 코일 #1을 얹으면 두 코일 사이에 끼워집니다.",
       panUnderFlip:"팬은 뒤집힌 코일 #1 아래에 물려 있습니다. 코일 #1을 되돌린 뒤 클램프를 풀고 빼세요.",
       needLoose:"클램프가 조여져 있습니다. 10번 육각 렌치로 먼저 푸세요.",
       keyNoUp:"클램프는 코일 #1 하우징 받침에 있습니다. 코일 #1을 먼저 코일 #2 위에 얹으세요.",
@@ -223,7 +224,7 @@ const T = {
       flipPlates:"두 코일 사이의 판을 먼저 빼세요.",
       plateOut:"맨 위 판을 빼서 부품함에 넣었습니다.",
       slotFull:"두 코일 사이 틈에 더는 들어가지 않습니다 (틈 두께를 넘습니다).",
-      panTake:s=>s+" — 코일 #1 하우징 윗면(받침)을 클릭해 놓으세요. 그다음 렌치로 클램프를 조이고 코일 #1을 뒤집습니다 (그림 5).",
+      panTake:s=>s+" — 코일을 클릭해 놓으세요. 코일 #1이 있으면 그 윗면(받침)에 올리고 렌치로 클램프를 조인 뒤 뒤집습니다 (그림 5). 코일 #1이 없으면 코일 #2 위에 놓입니다.",
       panTop:"팬을 코일 #1 받침에 올렸습니다. 렌치로 클램프를 조인 뒤 '코일 #1 뒤집기'로 팬이 코일 #2 쪽을 향하게 하세요.",
       panIn:"팬을 아래 하우징 홈에 넣었습니다. NTC 커넥터가 앞으로 나옵니다.",
       panOut:"팬을 빼서 부품함에 넣었습니다.",
@@ -306,7 +307,7 @@ const T = {
       noCable:"No cables of that kind left.",
       noTerm:"Click a terminal.",
       probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
-      probeOn:"Probe clipped on.", probeOff:"Probe unclipped and hung up.",
+      probeOn:"Probe clipped on.", gndReach:"The ground lead (about 14 cm) does not reach that far. Clip the probe hook to a nearby terminal first.", probeOff:"Probe unclipped and hung up.",
       noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
       keyTake:"Click the clamp screws on coil #1's platform with the Allen key to loosen or tighten them. (R-click: put it down)",
       loosened:"Clamps loosened — a pan can be put on the platform or taken off.",
@@ -315,6 +316,7 @@ const T = {
       panFalls:"Loosening the clamps while coil #1 is flipped would drop the pan. Turn coil #1 back first.",
       panNeedUp:"The pan goes on the top platform of coil #1's housing, held by its clamps — set coil #1 on coil #2 first.",
       panFlipBack:"Coil #1 is flipped, its platform faces down. Turn it back first.",
+      panOnC2:"Pan laid on top of coil #2. (R-click: take it off)", plateOnC2:(s,n)=>s+" plate laid on coil #2 ("+n+" now). Set coil #1 on top and they sit between the coils.",
       panUnderFlip:"The pan is clamped under the flipped coil #1. Turn coil #1 back, loosen the clamps, then take it off.",
       needLoose:"The clamps are tight. Loosen them with the Allen key (10) first.",
       keyNoUp:"The clamps are on coil #1's platform. Set coil #1 on coil #2 first.",
@@ -326,7 +328,7 @@ const T = {
       flipPlates:"Take the plates out from between the coils first.",
       plateOut:"Top plate taken out and put back in the box.",
       slotFull:"No more fits: the gap between the coils is full.",
-      panTake:s=>s+" — click the top platform of coil #1's housing to put it there. Then tighten the clamps and flip coil #1 (Fig. 5).",
+      panTake:s=>s+" — click the coils to put it down. With coil #1 in place it goes on coil #1's top platform: tighten the clamps, then flip coil #1 (Fig. 5). Without coil #1 it lies on coil #2.",
       panTop:"Pan on coil #1's platform. Tighten the clamps, then 'Flip coil #1' so the pan faces coil #2.",
       panIn:"Pan laid in the recess of the lower housing. Its NTC socket comes out in front.",
       panOut:"Pan taken out and put back in the box.",
@@ -617,6 +619,8 @@ function coilY(c){
   if(h.at==="low") return h.flip?BASE.t+0.12:LOW_TOP-0.12;
   const [b,t]=upPlate(); return h.flip?b+0.12:t-0.12;
 }
+/* mid-height of a housing's plate: the pin header sits there, so flipping the housing leaves it in place */
+function plateMid(c){ if(S.hs[c].at==="low") return (BASE.t+LOW_TOP)/2; const [b,t]=upPlate(); return (b+t)/2; }
 const gapMM=()=>upHs()?(upPlate(false)[0]-LOW_TOP)*10:99;
 const gapUsed=()=>S.stack.reduce((a,m)=>a+PLATE_MM[m],0)+(S.pan&&S.panPos==="gap"?PAN_MM[S.pan]:0);
 const stackTop=()=>{ const up=upHs(); if(up){ const [,t]=upPlate(); return t+(S.hs[up].flip?HS.leg:0); } return lowHs()?LOW_TOP+HS.post:BASE.t; };
@@ -666,10 +670,10 @@ function termLocal(id){
     case "DCOM":return S.on.scope?{p:face(Z_FACE,5.6,16.6),d:[0,0,-1],k:"sock",col:"k"}:null;
     case "DVO": return S.on.scope?{p:face(Z_FACE,7.9,16.6),d:[0,0,-1],k:"sock",col:"r"}:null;
     case "C1A": case "C1B": case "C2A": case "C2B":{
-      /* the coil pin terminals: a 2-way header on the front of each housing, level with its winding */
+      /* the coil pin terminals: a 2-way header on the side of each housing facing the viewer, at the plate's mid-height */
       const c=id[1]==="1"?"c1":"c2"; if(!S.on.base||!S.hs[c].at) return null;
-      const x=HS.x0+(id.endsWith("A")?0.85:1.45), y=coilY(c);
-      return {p:[x,y,HS.z0-0.25],d:[0,0,-1],k:"pin",col:"g",hidden:S.on.box==="cover"};
+      const z=(HS.z0+HS.z1)/2+(id.endsWith("A")?-0.3:0.3), y=plateMid(c);
+      return {p:[HS.x1+0.25,y,z],d:[1,0,0],k:"pin",col:"g",hidden:S.on.box==="cover"};
     }
     case "NTCA": case "NTCB":     /* the pan's two NTC leads end in a small 2-way socket lying in front */
       return (S.on.base&&S.pan)?{p:[id==="NTCA"?53.7:54.3,0.3,12.6],d:[0,0,-1],k:"pin",col:"g"}:null;
@@ -1112,18 +1116,45 @@ function withFace(F,fn){
   ctx.save(); ctx.setTransform(DPR*m[0],DPR*m[1],DPR*m[2],DPR*m[3],DPR*m[4],DPR*m[5]);
   fn(ctx); ctx.restore();
 }
+/* the function generator (Fig. 2, item 1): a black crinkle-painted metal case on four feet, its
+   front panel inside a raised bezel, ventilation slots on the sides and the carrying handle folded
+   forward over the top, its arms pivoting on hubs on both sides */
 function drawFG(){
-  const b=FG_BOX;
-  BOX([b[0]+0.6,b[1]-0.6,0,0.6,b[4]+0.8,b[5]-0.8],"#111","#0c0c0d","#0e0e10");
-  BOX([b[0],b[1],0.6,b[3],b[4],b[5]],"#232528","#17181a",null,"#0b0b0c");
-  LINE([NP(b[0]+1,b[3],b[4]+2),NP(b[1]-1,b[3],b[4]+2)],"#2d3034",1);
+  const b=FG_BOX, k=ppcm();
+  for(const [x,z] of [[b[0]+1.2,b[4]+1.2],[b[1]-1.2,b[4]+1.2],[b[0]+1.2,b[5]-1.2],[b[1]-1.2,b[5]-1.2]])
+    CYL(x,0,0.6,z,0.7,"#0c0c0d","#151517","#000");                              /* rubber feet */
+  BOX([b[0],b[1],0.6,b[3],b[4],b[5]],"#232528","#1b1c1f",null,"#0b0b0c");
+  for(let i=0;i<60;i++){ const r=(i*7919)%997/997, q=(i*104729)%991/991;            /* crinkle paint */
+    const pp=NP(b[0]+0.5+r*(b[1]-b[0]-1),b[3],b[4]+0.5+q*(b[5]-b[4]-1)); OVAL(pp[0],pp[1],0.7,0.45,"rgba(255,255,255,0.05)",null); }
+  /* side: two rows of ventilation slots, the handle hub and arm */
+  for(let row=0;row<2;row++) for(let i=0;i<9;i++){ const z=b[4]+7+i*1.15, y=3.0+row*2.6;
+    POLY([NP(b[1]+0.01,y,z),NP(b[1]+0.01,y,z+0.55),NP(b[1]+0.01,y+1.6,z+0.55),NP(b[1]+0.01,y+1.6,z)],"#0b0b0c","#050506",1); }
+  const hub=[b[1]+0.02,5.4,b[4]+3.2];
+  POLY([NP(b[1]+0.05,hub[1]-0.55,hub[2]-0.55),NP(b[1]+0.05,b[3]+0.5,b[4]+0.15),NP(b[1]+0.05,b[3]+0.5,b[4]+1.35),NP(b[1]+0.05,hub[1]+0.55,hub[2]+0.55)],"#121314","#000",1);
+  { const c=NP(...hub); OVAL(c[0],c[1],k*1.05*KC,k*1.15,"#1d1f22","#000",1); OVAL(c[0],c[1],k*0.45*KC,k*0.5,"#3a3d42",null); }
+  BOX([b[0]-0.1,b[1]+0.1,b[3],b[3]+0.5,b[4]+0.15,b[4]+1.35],"#141516","#0f1011","#121314","#000");  /* handle bar */
   withFace(FG_FACE,drawFgFace);
+  /* the raised bezel round the front panel */
+  const zf=b[4]-0.3, E="#2b2d31";
+  BOX([b[0],b[1],b[3]-0.45,b[3],zf,b[4]],E,E,E,"#0b0b0c"); BOX([b[0],b[1],0.6,1.0,zf,b[4]],E,E,E,"#0b0b0c");
+  BOX([b[1]-0.4,b[1],0.6,b[3],zf,b[4]],E,E,E,"#0b0b0c");
   S.zones.fg=boxRect(b);
 }
+/* the handheld ZOYI scope in its red rubber holster: rounded bumper corners, a seam round the
+   sides, a lanyard slot, the folding kickstand behind it */
 function drawZoyi(){
   const b=Z_BOX;
-  POLY([NP(b[0]+1.5,0,b[5]),NP(b[1]-1.5,0,b[5]+4),NP(b[1]-1.5,9,b[5]),NP(b[0]+1.5,9,b[5]-0.2)],"#2a2c2f","#111");
-  BOX(b,"#b3231a","#8e1a12",null,"#5e0e08");
+  POLY([NP(b[0]+1.6,14.5,b[5]-0.1),NP(b[1]-1.6,14.5,b[5]-0.1),NP(b[1]-1.6,0,b[5]+4.6),NP(b[0]+1.6,0,b[5]+4.6)],"#1c1d1f","#0a0a0b",1);   /* kickstand */
+  LINE([NP(b[1]-1.6,14.5,b[5]),NP(b[1]-1.6,0,b[5]+4.6)],"#2c2e31",2);
+  const r=0.9, x1=b[1];
+  BOX([b[0]+0.15,b[1]-0.45,b[2]+0.25,b[3],b[4]+0.2,b[5]-0.25],"#b3231a","#5e0e08",null,"#5e0e08");
+  /* the side as a rubber band with rounded top and bottom corners */
+  const side=[]; for(const [yc,zc,a0] of [[b[2]+r,b[4]+r,Math.PI],[b[2]+r,b[5]-r,1.5*Math.PI],[b[3]-r,b[5]-r,0],[b[3]-r,b[4]+r,0.5*Math.PI]])
+    for(let i=0;i<=5;i++){ const a=a0+i/5*Math.PI/2; side.push(NP(x1,yc+r*Math.sin(a),zc+r*Math.cos(a))); }
+  POLY(side,"#a11f16","#5e0e08",1);
+  LINE([NP(x1+0.01,b[2]+0.9,(b[4]+b[5])/2),NP(x1+0.01,b[3]-0.9,(b[4]+b[5])/2)],"#6e130c",1.6);       /* seam */
+  LINE([NP(x1+0.01,b[2]+0.9,b[4]+0.35),NP(x1+0.01,b[3]-0.9,b[4]+0.35)],"rgba(255,140,120,.35)",1);  /* lip highlight */
+  { const c=NP(x1+0.02,b[2]+1.6,b[5]-0.9); OVAL(c[0],c[1],ppcm()*0.18,ppcm()*0.45,"#3a0805",null); }  /* lanyard slot */
   withFace(Z_FACE,drawZoyiFace);
   CYL(89,b[3],b[3]+0.9,41.8,0.55,"#b9bdc1","#d9dde1","#6f7479");
   S.zones.scope=boxRect(b);
@@ -1300,9 +1331,9 @@ function drawHousing(c,slot){
     }
   }
   /* coil pin terminals: a black 2-way header on the front, level with the winding */
-  const cy=coilY(c);
-  BOX([HS.x0+0.5,HS.x0+1.8,cy-0.2,cy+0.2,HS.z0-0.25,HS.z0],"#101012","#0a0a0b","#151517","#000");
-  for(const x of [0.85,1.45]){ const p=NP(HS.x0+x,cy,HS.z0-0.25); OVAL(p[0],p[1],Math.max(1,k*0.08),Math.max(1,k*0.08),"#c9a64a",null); }
+  const cy=plateMid(c), zc=(HS.z0+HS.z1)/2;
+  BOX([HS.x1,HS.x1+0.25,cy-0.2,cy+0.2,zc-0.65,zc+0.65],"#101012","#0a0a0b","#151517","#000");
+  for(const dz of [-0.3,0.3]){ const p=NP(HS.x1+0.25,cy,zc+dz); OVAL(p[0],p[1],Math.max(1,k*0.08),Math.max(1,k*0.08),"#c9a64a",null); }
   const p=NP(HS.x1-0.9,(y0+y1)/2,HS.z0);
   TXT(p[0],p[1],c==="c1"?"#1":"#2",{size:Math.max(4,k*0.36),fill:"#cfd3d6",bold:true});
 }
@@ -1383,13 +1414,18 @@ function probeEndScreen(end){
   if(cr&&cr.k==="probe"&&cr.end===end) return S.mouse;
   const t=S.probe[end];
   if(t){ const info=termInfo(t); if(info) return NP(...endPos(t,info)); }
+  /* a free ground clip dangles from the handle once the hook has been taken up */
+  if(end==="gnd"&&(S.probe.tip||(cr&&cr.k==="probe"&&cr.end==="tip"))){ const b=probeBody(probeEndScreen("tip")), k=ppcm(); return [b[0]+k*1.6,b[1]+k*2.4]; }
   return withOff(S.at.scope,()=>NP(...PROBE_REST[end]));
 }
+/* the probe handle goes where the hook goes (it is the part held in the hand); the coax hangs from
+   the scope to the handle, the short ground lead from the handle to its clip */
+function probeBody(tip){ const k=ppcm(); return [tip[0]+k*0.7, tip[1]+k*3.0]; }
+const GND_REACH=14;                           /* cm of ground lead */
 function drawProbe(){
   if(!S.on.scope) return;
   const k=ppcm();
-  const tip=probeEndScreen("tip"), gnd=probeEndScreen("gnd");
-  const body=[tip[0]*0.55+gnd[0]*0.45, Math.max(tip[1],gnd[1])+k*2.2];
+  const tip=probeEndScreen("tip"), gnd=probeEndScreen("gnd"), body=probeBody(tip);
   const [s0,s1,s2]=withOff(S.at.scope,()=>[NP(89,Z_BOX[3]+0.9,41.8),NP(88,4,34),NP(82,0.4,28)]);
   const coax=[];
   for(let i=0;i<=24;i++){ const t=i/24, u=1-t;
@@ -1611,6 +1647,7 @@ function place(x,y){
   if(cr.k==="probe"){
     const id=termAt(x,y);
     if(!id){ say(t.m.noTerm,true); return; }
+    if(cr.end==="gnd"){ const b=probeBody(probeEndScreen("tip")); if(Math.hypot(x-b[0],y-b[1])>ppcm()*GND_REACH){ say(t.m.gndReach,true); return; } }
     S.probe[cr.end]=id; S.carry=null; say(t.m.probeOn); solve(); return;
   }
   if(cr.k==="key"||cr.k==="plate"||cr.k==="pan"){
@@ -1629,11 +1666,13 @@ function place(x,y){
       if(!S.loose&&S.pan&&S.hs[up].flip){ say(t.m.panFalls,true); return; }
       S.loose=!S.loose; say(S.loose?t.m.loosened:t.m.tightened); return; }
     if(cr.k==="plate"){                       /* slid in sideways through the open gap: no need to touch the clamps */
-      if(!up){ say(t.m.needBoth,true); return; }
-      if(gapUsed()+PLATE_MM[cr.mat]>gapMM()+1e-6){ say(t.m.slotFull,true); return; }
-      S.stack.push(cr.mat); S.carry=null; say(t.m.plateIn(t.mat[cr.mat],S.stack.length,(gapMM()-gapUsed()).toFixed(1)));
+      if(up&&gapUsed()+PLATE_MM[cr.mat]>gapMM()+1e-6){ say(t.m.slotFull,true); return; }
+      if(!up&&S.pan){ say(t.m.slotBusy,true); return; }
+      S.stack.push(cr.mat); S.carry=null;
+      say(up?t.m.plateIn(t.mat[cr.mat],S.stack.length,(gapMM()-gapUsed()).toFixed(1)):t.m.plateOnC2(t.mat[cr.mat],S.stack.length));
     }else{
-      if(!up){ say(t.m.panNeedUp,true); return; }
+      if(!up){ if(S.pan||S.stack.length){ say(t.m.slotBusy,true); return; }
+        S.pan=PAN_OF[cr.id]; S.panPos="gap"; S.panOn="low"; S.panItem=cr.id; S.panT=T_AMB; S.carry=null; say(t.m.panOnC2); solve(); drawTray(); return; }
       if(S.hs[up].flip){ say(t.m.panFlipBack,true); return; }
       if(!S.loose){ say(t.m.needLoose,true); return; }
       if(S.pan){ say(t.m.slotBusy,true); return; }
@@ -1708,7 +1747,7 @@ function unstackOne(){
       if(!S.loose){ say(t.m.needLoose,true); return; }
       panOut();
     } else takeHousing(up);
-  } else if(lo){ if(S.pan) panOut(); else { say(t.m.c2Fixed,true); return; } }
+  } else if(lo){ if(S.pan) panOut(); else { returnItem("base"); return; } }
   solve(); drawTray();
 }
 function takeHousing(c){
@@ -1906,7 +1945,7 @@ function drawXsec(){
   const bx=1, hx0=3.3, hx1=8.7, col="#2c2f34", ed="#52565c";
   R(0.3,0,11.7,BASE.t,"#3a3d42",ed);
   const lo=lowHs(), up=upHs();
-  const wind=(cc)=>{ const y=coilY(cc); R(hx0+0.9,y-0.07,hx1-0.9,y+0.07,"#e8a2a2"); R(hx0-0.6,y-0.07,hx0,y+0.07,"#d4b050");
+  const wind=(cc)=>{ const y=coilY(cc), ym=plateMid(cc); R(hx0+0.9,y-0.07,hx1-0.9,y+0.07,"#e8a2a2"); R(hx1,ym-0.07,hx1+0.5,ym+0.07,"#d4b050");
     L((cc==="c1"?t.lab.coil1:t.lab.coil2)+(S.hs[cc].flip?" ("+t.flipped+")":""),hx1+1.6,y,"#e8eef2"); };
   if(lo){ R(hx0,BASE.t,hx1,LOW_TOP,col,ed); R(hx0,LOW_TOP,hx0+0.7,LOW_TOP+HS.post,col,ed); R(hx1-0.7,LOW_TOP,hx1,LOW_TOP+HS.post,col,ed); wind(lo); }
   let py=LOW_TOP; const groups=[];
@@ -1926,7 +1965,7 @@ function drawXsec(){
     wind(up);
   }
   if(S.pan&&S.panPos==="gap"&&S.panOn==="low") R(hx0+1.8,py,hx1-1.8,py+pth,pc,"#000");
-  L(t.lab.pins,0.1,3.9,"#d4b050");
+  L(t.lab.pins,hx1+0.6,3.9,"#d4b050");
   if(S.on.box==="cover"){ c.setLineDash([5,4]); c.strokeStyle="#f2c14e"; c.strokeRect(X(0.1),Y(4.1),11.8*s,4.1*sy); c.setLineDash([]); }
   const gapTxt=up?" · "+t.lab.gap(gapMM().toFixed(1),gapUsed().toFixed(2)):"";
   const stTxt= S.pan ? t.lab.pan+" — "+t.trayItems[S.panItem].replace(/^\d+\.\s*/,"")+" ("+(S.panPos==="top"?t.up:t.lo)+")"
