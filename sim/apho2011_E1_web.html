@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2011 E1 — 진동 자기장 속 도체의 부양 · Levitation of Conductors in an Oscillating Magnetic Field · HaslaLab</title>
+<meta name="description" content="APhO 2011 실험 1번을 브라우저에서 실행합니다. 50 Hz 전원공급기·철심 솔레노이드·알루미늄 링 세 개·멀티미터 두 대·0.01 g 저울로 링의 저항, 유도 기전력, 평균 자기력을 직접 재고 닫힌 링의 인덕턴스를 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2011 E1 — 진동 자기장 속 도체의 부양 · Levitation of Conductors in an Oscillating Magnetic Field">
+<meta property="og:description" content="APhO 2011 실험 1번을 브라우저에서 실행합니다. 링에 악어집게를 물리고, 솔레노이드를 나사로 올리내리며 멀티미터와 저울을 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #redBtn{background:#1f7a2a;border-color:#2fa03a}
+  #redBtn:hover{background:#26903a}
+  #redBtn.on{background:#3fc04f;border-color:#7be08a;color:#0c2010}
+  #closeCv{touch-action:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-psu"></h2>
+    <button id="redBtn"></button>
+    <p class="hint" id="t-psuhint"></p>
+
+    <h2 id="t-h-leads"></h2>
+    <label class="chk"><input type="checkbox" id="braid"><span id="t-braid"></span></label>
+    <p class="hint" id="t-leadhint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row">
+      <button id="noteBtn"></button>
+      <button id="noteClr"></button>
+    </div>
+    <div class="laps" id="notes" style="max-height:240px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"APhO 2011 실험 1 — 진동하는 자기장 속 도체의 부양",
+    sub:"가상 실험실 · 장치를 놓고 전선을 꽂고 링에 악어집게를 물린 뒤, 초록 버튼을 누르고 있는 동안 멀티미터와 저울을 읽으세요. 저항·기전력의 기울기·인덕턴스는 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위 앞쪽에서 본 모습) — 좌클릭 집기·놓기·꽂기·물리기 / 우클릭 되돌리기·뽑기 / 손잡이 위에서 휠: 나사 돌리기 / 초록 버튼은 누르고 있는 동안만 켜짐",
+    tabs:{meters:"계기", side:"솔레노이드 옆모습", ring:"링 (모눈종이 위)"},
+    closeCap:{
+      meters:"확대 — 멀티미터 두 대(다이얼·POWER 클릭, 다이얼 위에서 휠), 저울(ON/OFF·TARE), 전원공급기 윗면(초록 버튼을 누르고 있기)",
+      side:"확대 — 솔레노이드 아래쪽을 옆에서 본 실제 크기 (1 mm 눈금자). 오른쪽 손잡이를 끌어 돌리거나 휠로 돌립니다 (휠 한 칸 = 1/8 바퀴, Shift = 1/32 바퀴). 나사 한 바퀴에 1.41 mm.",
+      ring:"확대 — 링을 모눈종이(1 mm 격자) 위에서 내려다본 모습. 악어집게를 끌어 옮기고, 휠로 확대·끌어서 이동합니다."},
+    hPsu:"교류 전원공급기 50 Hz", red:"초록 버튼 — 누르고 있기",
+    psuHint:"버튼을 누르고 있는 동안만 전원이 들어옵니다 (빨간 램프). Space 키를 누르고 있어도 됩니다.\n작은 검은 단자 두 개(1a) ≈ 24 V — 솔레노이드 전용. 큰 빨간 단자 두 개(1b) ≈ 0.7 V.\n닫힌 링에 오래 자기장을 걸면 링이 데워집니다.",
+    hLeads:"리드선", braid:"링에서 나온 전선을 꼬아서 묶기",
+    leadHint:"악어집게 전선 네 개 중 링에 물린 것들을 서로 꼬아 둡니다. 꼬지 않으면 전선이 만드는 고리도 자기 선속을 받습니다.",
+    hNote:"실험 노트", note:"지금 계기 판독 적기", noteClr:"지우기", noteEmpty:"아직 적은 것이 없습니다",
+    noteRow:(a,b,s,pw)=>"A: "+a+"  B: "+b+"  저울: "+s+(pw?"  (버튼 누름)":""),
+    items:{psu:"교류 전원공급기 50 Hz", stand:"나사 스탠드 · 철심 솔레노이드", scale:"디지털 저울 0.01 g", block:"폴리스티렌 블록 8×7×7 cm",
+           closed:"넓은 닫힌 링", open:"넓은 열린 링", thin:"얇은 열린 링", mA:"멀티미터 A (LE9205A)", mB:"멀티미터 B (M92B)",
+           w1:"짧은 전선 1 (바나나–악어)", w2:"짧은 전선 2 (바나나–악어)", w3:"짧은 전선 3 (바나나–바나나)",
+           w4:"긴 전선 4 (바나나–악어, 빨강)", w5:"긴 전선 5 (바나나–악어, 검정)"},
+    end:{ban:"바나나 플러그", croc:"악어집게", lead:"솔레노이드 리드선 플러그"},
+    lab:{psuTitle:"AC 50 Hz", v24:"24 V", v07:"0.7 V", nopart:"(장비 없음)", contact:"닿음",
+         z:"솔레노이드 아래끝", ringTop:"링 윗면", ruler:"mm", knob:"손잡이 (위에서 본 모습)", gap:"틈",
+         noRing:"실험대에 링이 없습니다", which:"보이는 링:", turns:"",
+         sideNone:"스탠드를 놓으면 보입니다"},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", hot:"⚠ 닫힌 링이 뜨거워지고 있습니다 — 버튼에서 손을 떼고 잠시 식히세요.",
+        hand:n=>"손에 든 것: "+n},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       placedOn:(n,o)=>n+" 을(를) "+o+" 위에 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
+       noFit:"그곳에는 놓을 수 없습니다. 실험대 위, 다른 장비와 겹치지 않는 곳에 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       topFirst:"위에 놓인 것을 먼저 치우세요.", hitsSol:"솔레노이드에 걸립니다 — 나사를 돌려 솔레노이드를 먼저 올리세요.",
+       end:n=>n+" 을(를) 손에 들었습니다 — 꽂거나 물릴 곳을 클릭하세요. (우클릭: 내려놓기)",
+       plugged:n=>n+" 에 꽂았습니다.", clipped:n=>n+" 에 악어집게를 물렸습니다.", unplug:"뽑았습니다.", dropped:"전선 끝을 실험대에 내려놓았습니다.",
+       wrong:"그 끝은 거기에 맞지 않습니다.", full:"그 단자에는 이미 플러그가 꽂혀 있습니다.", reach:"전선이 거기까지 닿지 않습니다.",
+       wireBack:n=>n+" 을(를) 부품함에 넣었습니다.",
+       turn:(dir)=>"손잡이를 돌렸습니다 ("+(dir>0?"솔레노이드 올림":"솔레노이드 내림")+").", bottom:"솔레노이드가 아래에 닿았습니다 — 더 내려가지 않습니다.",
+       top:"나사 끝입니다 — 더 올라가지 않습니다.",
+       scaleOn:"저울을 켰습니다 — 지금 올려진 무게가 0이 됩니다.", scaleOff:"저울을 껐습니다.", tare:"TARE — 지금 무게를 0으로 맞췄습니다.",
+       dial:(m,s)=>m+" 다이얼: "+s, mpow:(m,on)=>m+" "+(on?"켬":"끔"), braid:on=>on?"링에서 나온 전선을 꼬아 묶었습니다.":"꼬았던 전선을 풀었습니다.",
+       noted:"판독값을 노트에 적었습니다."}
+  },
+  en:{
+    title:"APhO 2011 Experiment 1 — Levitation of conductors in an oscillating magnetic field",
+    sub:"Virtual laboratory · set the apparatus out, plug the wires in, clip the crocodiles onto a ring, and read the multimeters and the scale while you hold the green button. The resistances, the EMF slope and the inductance are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (seen from above and in front) — L-click pick up / put down / plug / clip, R-click return / unplug, wheel over the knob: turn the screw. The green button is on only while you hold it",
+    tabs:{meters:"Meters", side:"Solenoid, side view", ring:"Ring on mm paper"},
+    closeCap:{
+      meters:"close up — the two multimeters (click the dial and POWER, wheel over the dial), the scale (ON/OFF, TARE), the top of the power supply (hold the green button)",
+      side:"close up — the lower end of the solenoid seen from the side, true size, with a 1 mm ruler. Drag the knob on the right round, or use the wheel (one notch = 1/8 turn, Shift = 1/32 turn). One turn of the screw is 1.41 mm.",
+      ring:"close up — the ring seen from above on millimetre paper (1 mm grid). Drag the crocodiles along it; wheel to zoom, drag to pan."},
+    hPsu:"AC power supply 50 Hz", red:"Green button — hold",
+    psuHint:"The supply is on only while the button is held (red lamp). Holding the Space key works too.\nThe two small black sockets (1a) give about 24 V — for the solenoid only. The two large red sockets (1b) give about 0.7 V.\nA closed ring left in the field for long heats up.",
+    hLeads:"Leads", braid:"Twist the wires from the ring into a braid",
+    leadHint:"Twists together the crocodile wires that are clipped to the ring. Left apart, the loop they make picks up flux too.",
+    hNote:"Lab notebook", note:"Write down the readings now", noteClr:"Clear", noteEmpty:"nothing written yet",
+    noteRow:(a,b,s,pw)=>"A: "+a+"  B: "+b+"  scale: "+s+(pw?"  (button held)":""),
+    items:{psu:"AC power supply 50 Hz", stand:"Screw stand · iron-core solenoid", scale:"Digital scale 0.01 g", block:"Polystyrene block 8×7×7 cm",
+           closed:"Broad closed ring", open:"Broad open ring", thin:"Thin open ring", mA:"Multimeter A (LE9205A)", mB:"Multimeter B (M92B)",
+           w1:"Short wire 1 (banana–croc)", w2:"Short wire 2 (banana–croc)", w3:"Short wire 3 (banana–banana)",
+           w4:"Long wire 4 (banana–croc, red)", w5:"Long wire 5 (banana–croc, black)"},
+    end:{ban:"banana plug", croc:"crocodile clip", lead:"solenoid lead plug"},
+    lab:{psuTitle:"AC 50 Hz", v24:"24 V", v07:"0.7 V", nopart:"(not on the bench)", contact:"touching",
+         z:"lower end of the solenoid", ringTop:"top of the ring", ruler:"mm", knob:"knob (from above)", gap:"gap",
+         noRing:"no ring on the bench", which:"ring shown:", turns:"",
+         sideNone:"put the stand down to see it"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", hot:"⚠ The closed ring is getting hot — let go of the button and let it cool.",
+        hand:n=>"In hand: "+n},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       placedOn:(n,o)=>n+" put on the "+o+".", back:n=>n+" put back in the box.",
+       noFit:"It does not fit there: put it on the bench where it does not overlap anything.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       topFirst:"Take off what is on top of it first.", hitsSol:"It would hit the solenoid — raise the solenoid with the screw first.",
+       end:n=>n+" in hand — click where to plug or clip it. (R-click: put it down)",
+       plugged:n=>"Plugged into the "+n+".", clipped:n=>"Crocodile clipped onto the "+n+".", unplug:"Pulled out.", dropped:"Wire end left on the bench.",
+       wrong:"That end does not fit there.", full:"That socket already has a plug in it.", reach:"The wire does not reach that far.",
+       wireBack:n=>n+" put back in the box.",
+       turn:(dir)=>"Knob turned ("+(dir>0?"solenoid up":"solenoid down")+").", bottom:"The solenoid sits on what is below it — it goes no lower.",
+       top:"End of the screw — it goes no higher.",
+       scaleOn:"Scale on — the present load reads zero.", scaleOff:"Scale off.", tare:"TARE — the present load now reads zero.",
+       dial:(m,s)=>m+" dial: "+s, mpow:(m,on)=>m+" "+(on?"on":"off"), braid:on=>on?"The wires from the ring are twisted into a braid.":"The braid is undone.",
+       noted:"Readings written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2011e1)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const MU0=4e-7*Math.PI, G=9.80, OMEGA=2*Math.PI*50, STEP=1.41e-3, RHO_M=2700, ALPHA_AL=0.0039, C_AL=900;
+
+/* complete elliptic integrals K(m), E(m) by the AGM */
+function ellipKE(m){
+  let a=1, b=Math.sqrt(1-m), c=Math.sqrt(m), s=0.5*c*c, p=1;
+  for(let i=0;i<60;i++){ const an=0.5*(a+b), bn=Math.sqrt(a*b), cn=0.5*(a-b); a=an; b=bn; c=cn; p*=2; s+=0.5*p*c*c; if(c<1e-16) break; }
+  const K=Math.PI/(2*a); return [K,K*(1-s)];
+}
+/* Maxwell: mutual inductance of two coaxial loops of radii a, r, a distance s apart */
+function mutualLoops(a,r,s){ const m=4*a*r/((a+r)**2+s*s), k=Math.sqrt(m), [K,E]=ellipKE(m);
+  return MU0*Math.sqrt(a*r)*((2/k-k)*K-(2/k)*E); }
+/* the iron-filled solenoid as a uniformly magnetised cylinder (a current sheet) */
+const SOL={ a:0.0263*U(0.97,1.03), ell:0.0672*U(0.97,1.03), z0:0.0092*U(0.90,1.10), K:77634*U(0.96,1.04), n:40 };
+const _emfMemo=new Map();
+function emfRms(z,r){                                   /* rms EMF on a coaxial loop of radius r, z metres below the pole */
+  z=Math.max(0,z); const key=Math.round(r*1e6)+":"+Math.round(z*2e5);
+  let v=_emfMemo.get(key); if(v!==undefined) return v;
+  let tot=0; for(let i=0;i<SOL.n;i++){ const t=SOL.ell*(i+0.5)/SOL.n; tot+=mutualLoops(SOL.a,r,z+SOL.z0+t); }
+  v=OMEGA*SOL.K*tot*SOL.ell/SOL.n; _emfMemo.set(key,v); return v;
+}
+function dEmf2dz(z,r){ const h=2e-5, zp=Math.max(0,z), lo=Math.max(0,zp-h), e1=emfRms(zp+h,r), e0=emfRms(lo,r); return (e1*e1-e0*e0)/(zp+h-lo); }
+
+/* the three rings: the same alloy; the broad open ring is the closed one with a segment cut out */
+const RHO=3.586e-8*U(0.97,1.03);
+function mkRing(dOut,dIn,h,gap){ const w=(dOut-dIn)/2, dm=(dOut+dIn)/2, rm=dm/2, A=w*h, len=Math.PI*dm-gap;
+  return {dOut,dIn,h,gap,w,rm,A,len,mass:RHO_M*A*len,T:0}; }
+const RING={};
+{ const dOut=0.0960*U(0.995,1.005), w=0.00300*U(0.96,1.04);
+  RING.thin=mkRing(dOut,dOut-2*w,0.00190*U(0.95,1.05),0.0100*U(0.93,1.07)); }
+{ const dOut=0.1005*U(0.995,1.005), w=0.01225*U(0.98,1.02), h=0.00520*U(0.97,1.03);
+  RING.closed=mkRing(dOut,dOut-2*w,h,0);
+  RING.open=mkRing(dOut,dOut-2*w,h,0.0100*U(0.93,1.07)); }
+const ringRho=k=>RHO*(1+ALPHA_AL*RING[k].T);               /* T: warming above the room, K */
+const ringR=k=>ringRho(k)*RING[k].len/RING[k].A;
+/* self-inductance of the broad closed ring (rectangular section, GMD) */
+const L_CL=(()=>{ const r=RING.closed, gmd=0.2235*(r.w+r.h); return MU0*r.rm*(Math.log(8*r.rm/gmd)-2)*0.850; })();
+const BENCH={
+  v07:0.70*U(0.95,1.05), r07:0.035*U(0.85,1.15), v24:24.0, r24:0.5,
+  rShort:0.015*U(0.85,1.15), rLong:0.035*U(0.85,1.15), rShunt:0.010*U(0.9,1.1), rmA:10.0,
+  rClip:0.0090*U(0.6,1.5), zSol:[2.0,OMEGA*0.026],
+  fIron:0.25e-3*G*U(0.7,1.3), lamIron:0.0025*U(0.8,1.2),
+  pick:U(0.08,0.16),                                     /* flux through the loop of untwisted leads, relative */
+  zeroDrift:U(-0.02,0.02), emfBias:U(-0.03,0.03),
+  mBlock:11.8*U(0.97,1.03)/1000
+};
+const I_NOM=BENCH.v24/Math.hypot(BENCH.r24+BENCH.zSol[0],BENCH.zSol[1]);
+/* time-averaged downward force on the closed ring a height z below the pole, solenoid at its nominal current */
+function forceClosed(z){ const R=ringR("closed"), L=L_CL, k=L/(2*(R*R+OMEGA*OMEGA*L*L));
+  return k*Math.abs(dEmf2dz(z,RING.closed.rm))-BENCH.fIron*Math.exp(-Math.max(0,z)/BENCH.lamIron); }
+
+/* ── complex numbers and an AC nodal solver ── */
+const C=(re,im)=>[re,im||0], cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]], csub=(a,b)=>[a[0]-b[0],a[1]-b[1]],
+      cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]],
+      cdiv=(a,b)=>{ const q=b[0]*b[0]+b[1]*b[1]; return [(a[0]*b[0]+a[1]*b[1])/q,(a[1]*b[0]-a[0]*b[1])/q]; },
+      cabs=a=>Math.hypot(a[0],a[1]);
+function solveNet(net){
+  /* net.z: [a,b,Z] branches, net.v: [a,b,V] sources (V = Va - Vb); "GND" is the reference */
+  const idx={}; let N=0; const id=n=>n==="GND"?-1:(n in idx?idx[n]:(idx[n]=N++));
+  const Zs=net.z.map(([a,b,Z])=>[id(a),id(b),Z]), Vs=net.v.map(([a,b,V])=>[id(a),id(b),V]);
+  const M=Vs.length, n=N+M; if(!n) return {V:()=>C(0),I:[]};
+  const A=Array.from({length:n},()=>Array.from({length:n},()=>[0,0])), y=Array.from({length:n},()=>[0,0]);
+  const add=(i,j,v)=>{ if(i>=0&&j>=0){ A[i][j][0]+=v[0]; A[i][j][1]+=v[1]; } };
+  for(const [a,b,Z] of Zs){ const g=cdiv(C(1),cabs(Z)<1e-12?C(1e-12):Z); add(a,a,g); add(b,b,g); add(a,b,[-g[0],-g[1]]); add(b,a,[-g[0],-g[1]]); }
+  Vs.forEach(([a,b,V],k)=>{ const r=N+k; if(a>=0){ A[r][a][0]+=1; A[a][r][0]+=1; } if(b>=0){ A[r][b][0]-=1; A[b][r][0]-=1; } y[r]=cadd(y[r],V); });
+  for(let i=0;i<N;i++) A[i][i][0]+=1e-11;                /* a whisker of leakage keeps floating parts defined */
+  for(let c=0;c<n;c++){
+    let p=c, best=cabs(A[c][c]); for(let r=c+1;r<n;r++){ const v=cabs(A[r][c]); if(v>best){ best=v; p=r; } }
+    if(best<1e-20) continue;
+    if(p!==c){ [A[c],A[p]]=[A[p],A[c]]; [y[c],y[p]]=[y[p],y[c]]; }
+    const inv=cdiv(C(1),A[c][c]);
+    for(let r=c+1;r<n;r++){ const f=cmul(A[r][c],inv); if(!f[0]&&!f[1]) continue;
+      for(let k=c;k<n;k++) A[r][k]=csub(A[r][k],cmul(f,A[c][k])); y[r]=csub(y[r],cmul(f,y[c])); }
+  }
+  const x=Array.from({length:n},()=>[0,0]);
+  for(let r=n-1;r>=0;r--){ if(cabs(A[r][r])<1e-20) continue; let acc=y[r]; for(let k=r+1;k<n;k++) acc=csub(acc,cmul(A[r][k],x[k])); x[r]=cdiv(acc,A[r][r]); }
+  return {V:nm=>nm in idx?x[idx[nm]]:C(0), I:Vs.map((_,k)=>x[N+k])};
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE BENCH: ITEMS, SUPPORTS, SOCKETS  (world in mm; x right, y towards you, z up)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=700, SC=0.85, OX=24, OY=410, KY=0.52;
+const P=(x,y,z)=>[OX+SC*x, OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>[(X-OX)/SC, ((Y-OY)/SC+(z||0))/KY];
+const DESK={x0:0,x1:1380,y0:0,y1:630};
+/* footprints W × D × H (mm) */
+const DIM={ psu:[150,150,125], stand:[220,280,12], scale:[100,150,20], block:[80,70,70],
+  closed:[RING.closed.dOut*1e3,RING.closed.dOut*1e3,RING.closed.h*1e3], open:[RING.open.dOut*1e3,RING.open.dOut*1e3,RING.open.h*1e3],
+  thin:[RING.thin.dOut*1e3,RING.thin.dOut*1e3,RING.thin.h*1e3], mA:[91,189,38], mB:[91,189,38] };
+const ITEMS=["stand","psu","scale","block","closed","open","thin","mA","mB"];
+const RINGS=["closed","open","thin"];
+const COIL={r:46, h:75, dy:-65}, BOARD={w:160,d:15,h:400}, CARRIER={w:116,d:120,h:80}, PAN={w:84,d:84,dy:-17};
+const H_MAX=232, H_MIN=26;
+const WIRES={ w1:{len:520,ends:["ban","croc"],col:"#d8322a",r:"short"}, w2:{len:520,ends:["ban","croc"],col:"#e0453a",r:"short"},
+  w3:{len:520,ends:["ban","ban"],col:"#d23a30",r:"short"}, w4:{len:900,ends:["ban","croc"],col:"#cf2c25",r:"long"},
+  w5:{len:900,ends:["ban","croc"],col:"#1d1d1f",r:"long"} };
+const WKEYS=Object.keys(WIRES);
+const LEAD_LEN=760;
+const DIALS=[["OFF",""],["V⎓ 200m","Vdc"],["V~ 200m","V",0.2],["V~ 2","V",2],["V~ 20","V",20],["V~ 200","V",200],
+             ["A~ 20","A20",20],["A~ 200m","mA",0.2],["A~ 20m","mA",0.02],["Ω 200","R",200]];
+const ST={
+  it:Object.fromEntries(ITEMS.map(k=>[k,{on:false,x:0,y:0,sup:null}])),
+  wire:Object.fromEntries(WKEYS.map(k=>[k,{on:false,ends:[null,null]}])),
+  lead:[{desk:null},{desk:null}],
+  h:150, power:false, braid:false,
+  meter:{mA:{on:false,dial:0,fuse:true,disp:"",dt:0}, mB:{on:false,dial:0,fuse:true,disp:"",dt:0}},
+  scale:{on:false,boot:0,tare:0,disp:"",dt:0},
+  loadT:0, notes:[]
+};
+const SUPPORTS={stand:["scale","block","closed","open","thin"], scale:["block","closed","open","thin"], block:["closed","open","thin"]};
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+
+/* heights */
+function topOf(k){ const it=ST.it[k]; if(k==="stand") return 12; if(k==="scale") return zOf(k)+22; return zOf(k)+DIM[k][2]; }
+function zOf(k){ const s=ST.it[k].sup; return s?topOf(s):0; }
+const axis=()=>{ const s=ST.it.stand; return [s.x, s.y+COIL.dy]; };
+const coilBot=()=>12+ST.h;
+function panC(){ const s=ST.it.scale; return [s.x, s.y+PAN.dy]; }
+/* where a support puts what it carries */
+function snapOn(sup,k){
+  if(sup==="stand"){ const [ax,ay]=axis(); return k==="scale"?[ax,ay-PAN.dy]:[ax,ay]; }
+  if(sup==="scale") return panC();
+  const b=ST.it.block; return [b.x,b.y];
+}
+const childOf=s=>ITEMS.find(k=>ST.it[k].on&&ST.it[k].sup===s);
+function rect(k,x,y){ const [w,dd]=DIM[k]; return [x-w/2,y-dd/2,x+w/2,y+dd/2]; }
+const hitR=(r,x,y,m)=>x>=r[0]-(m||0)&&x<=r[2]+(m||0)&&y>=r[1]-(m||0)&&y<=r[3]+(m||0);
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function deskFree(k,x,y){
+  const r=rect(k,x,y);
+  if(r[0]<DESK.x0+4||r[2]>DESK.x1-4||r[1]<DESK.y0+4||r[3]>DESK.y1-4) return false;
+  for(const o of ITEMS){ if(o===k||!ST.it[o].on||ST.it[o].sup) continue;
+    if(overl(r,rect(o,ST.it[o].x,ST.it[o].y),RINGS.includes(k)&&RINGS.includes(o)?2:6)) return false; }
+  /* the stand's board and coil rise above the base: only the base itself takes things */
+  return true;
+}
+/* how low the coil may come: the highest thing under it */
+function coilStop(){
+  if(!ST.it.stand.on) return H_MIN;
+  const [ax,ay]=axis(); let top=12;
+  for(const k of ITEMS){ if(k==="stand"||!ST.it[k].on) continue; if(!under(k,ax,ay)) continue; top=Math.max(top,topOf(k)); }
+  return Math.max(H_MIN, top-12);
+}
+function under(k,ax,ay){
+  const it=ST.it[k];
+  if(RINGS.includes(k)){ const dd=Math.hypot(it.x-ax,it.y-ay), R=RING[k]; return dd<COIL.r+R.dOut*500-2&&dd>R.dIn*500-COIL.r; }
+  if(k==="scale"){ const [px,py]=panC(); return Math.abs(px-ax)<PAN.w/2+COIL.r&&Math.abs(py-ay)<PAN.d/2+COIL.r; }
+  const r=rect(k,it.x,it.y); return ax>r[0]-COIL.r&&ax<r[2]+COIL.r&&ay>r[1]-COIL.r&&ay<r[3]+COIL.r;
+}
+/* the ring under the coil, and its gap to the pole (m) */
+function ringGap(k){
+  const it=ST.it[k]; if(!it.on||!ST.it.stand.on) return null;
+  const [ax,ay]=axis(); if(Math.hypot(it.x-ax,it.y-ay)>3) return null;
+  return Math.max(0,(coilBot()-topOf(k))*1e-3);
+}
+
+/* ── sockets and plug ends ── */
+function sockets(){
+  const S=[]; const p=ST.it.psu;
+  if(p.on){ const z=125;
+    S.push({id:"P07a",w:[p.x-42,p.y-40,z],big:true,col:"#b8241f"},{id:"P07b",w:[p.x-42,p.y-4,z],big:true,col:"#b8241f"},
+           {id:"P24a",w:[p.x+42,p.y-44,z],big:false,col:"#16181b"},{id:"P24b",w:[p.x+42,p.y-14,z],big:false,col:"#16181b"}); }
+  for(const m of ["mA","mB"]){ const it=ST.it[m]; if(!it.on) continue;
+    ["A","m","C","V"].forEach((j,i)=>S.push({id:m+"_"+j,w:[it.x-33+22*i,it.y+70,38],big:false,col:"#0e0f11",meter:m})); }
+  return S;
+}
+const sockAt=id=>sockets().find(s=>s.id===id);
+const occupied=id=>WKEYS.some(w=>ST.wire[w].ends.some(e=>e&&e.sock===id))||ST.lead.some(l=>l.sock===id);
+function clipW(k,s){                     /* the crocodile on ring k at arc length s (m) */
+  const R=RING[k], it=ST.it[k], dl=R.gap/(2*R.rm), th=-Math.PI/2+dl+s/R.rm, r=R.rm*1e3;
+  return [it.x+r*Math.cos(th), it.y+r*Math.sin(th), topOf(k)];
+}
+function arcAt(k,x,y){                   /* nearest point of ring k to the desk point x,y, or null */
+  const R=RING[k], it=ST.it[k], dx=x-it.x, dy=y-it.y, rr=Math.hypot(dx,dy);
+  if(Math.abs(rr-R.rm*1e3)>R.w*500+6) return null;
+  const dl=R.gap/(2*R.rm); let th=Math.atan2(dy,dx)+Math.PI/2-dl; th=((th%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+  const s=th*R.rm; if(s>R.len) return null; return Math.min(R.len-0.0015,Math.max(0.0015,s));
+}
+function endW(e){
+  if(!e) return null;
+  if(e.sock){ const s=sockAt(e.sock); return s?s.w:null; }
+  if(e.ring){ return ST.it[e.ring].on?clipW(e.ring,e.s):null; }
+  if(e.desk) return [e.desk[0],e.desk[1],0];
+  return null;
+}
+function leadAnchor(){ const [ax,ay]=axis(); return [ax+30,ay+10,coilBot()+COIL.h+4]; }
+function leadW(i){ const l=ST.lead[i]; if(l.sock){ const s=sockAt(l.sock); if(s) return s.w; l.sock=null; l.desk=null; }
+  if(l.desk) return [l.desk[0],l.desk[1],0];
+  const s=ST.it.stand; return [s.x+130+i*16, s.y+70+i*18, 0]; }
+const dist3=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE CIRCUIT AND THE INSTRUMENTS
+   ══════════════════════════════════════════════════════════════ */
+const nodeOf=(w,i)=>{ const e=ST.wire[w].ends[i]; if(!e) return w+"_f"+i; if(e.sock) return sockAt(e.sock)?e.sock:w+"_f"+i; if(e.ring) return w+"_c"+i; return w+"_f"+i; };
+function drift(){ return 1+0.030*(1-Math.exp(-ST.loadT/18)); }
+let SOLN=null, GAIN=C(0), FORCE={};
+function buildNet(emf){
+  const net={z:[],v:[]}, Z=(a,b,r)=>net.z.push([a,b,typeof r==="number"?C(r):r]);
+  if(ST.it.psu.on&&ST.power){
+    net.v.push(["P07i","P07b",C(BENCH.v07*drift())]); Z("P07a","P07i",BENCH.r07);
+    net.v.push(["P24i","P24b",C(BENCH.v24)]); Z("P24a","P24i",BENCH.r24);
+  }
+  for(const m of ["mA","mB"]){ if(!ST.it[m].on) continue; const M=ST.meter[m];
+    Z(m+"_A",m+"_C",BENCH.rShunt); if(M.fuse) Z(m+"_m",m+"_C",BENCH.rmA); Z(m+"_V",m+"_C",1e7);
+    if(M.on&&DIALS[M.dial][1]==="R"){ net.v.push([m+"_Oi",m+"_C",C(0.3)]); Z(m+"_V",m+"_Oi",300); } }
+  if(ST.it.stand.on){ const n0=ST.lead[0].sock&&sockAt(ST.lead[0].sock)?ST.lead[0].sock:"L0", n1=ST.lead[1].sock&&sockAt(ST.lead[1].sock)?ST.lead[1].sock:"L1";
+    Z(n0,n1,C(...BENCH.zSol)); }
+  const onRing={};
+  for(const w of WKEYS){ const W=ST.wire[w]; if(!W.on) continue;
+    const a=nodeOf(w,0), b=nodeOf(w,1), r=WIRES[w].r==="short"?BENCH.rShort:BENCH.rLong;
+    let pick=null;
+    W.ends.forEach((e,i)=>{ if(e&&e.ring&&ST.it[e.ring].on){ (onRing[e.ring]=onRing[e.ring]||[]).push({node:w+"_c"+i,s:e.s,rc:e.rc});
+      if(emf&&emf[e.ring]&&!ST.braid) pick={ring:e.ring,s:e.s}; } });
+    if(pick){ Z(a,w+"_mid",r); net.v.push([w+"_mid",b,[0,0]]); net.v[net.v.length-1].pick=pick; }
+    else Z(a,b,r);
+  }
+  /* untwisted leads: the loop between two crocodiles on the same ring takes a share of its flux */
+  const pv=net.v.filter(v=>v.pick);
+  for(const v of pv){ const k=v.pick.ring, others=pv.filter(o=>o.pick.ring===k);
+    if(others.length<2){ v[2]=C(0); continue; }
+    const sMin=Math.min(...others.map(o=>o.pick.s)), sgn=v.pick.s===sMin?1:-1;
+    v[2]=cmul(emf[k],C(0.5*sgn*BENCH.pick)); }
+  for(const k in onRing){ const R=RING[k], clips=onRing[k].sort((p,q)=>p.s-q.s), pts=[0,...clips.map(c=>c.s),R.len];
+    const e=emf&&emf[k]?emf[k]:null;
+    for(let i=0;i<pts.length-1;i++){ const seg=Math.max(pts[i+1]-pts[i],1e-9), Rs=ringRho(k)*seg/R.A, a=k+"_n"+i, b=k+"_n"+(i+1);
+      if(e){ Z(a,k+"_s"+i,Rs); net.v.push([k+"_s"+i,b,cmul(e,C(seg/R.len))]); } else Z(a,b,Rs); }
+    if(R.gap<=0){ const a=k+"_n"+(pts.length-1), b=k+"_n0"; Z(a,b,C(ringRho(k)*1e-4/R.A,OMEGA*L_CL)); }
+    clips.forEach((c,i)=>Z(c.node,k+"_n"+(i+1),c.rc*1));
+  }
+  return net;
+}
+function solveAll(){
+  let net=buildNet(null), sol=solveNet(net);
+  GAIN=C(0);
+  if(ST.it.stand.on){ const n0=ST.lead[0].sock&&sockAt(ST.lead[0].sock)?ST.lead[0].sock:"L0", n1=ST.lead[1].sock&&sockAt(ST.lead[1].sock)?ST.lead[1].sock:"L1";
+    const I=cdiv(csub(sol.V(n0),sol.V(n1)),C(...BENCH.zSol)); GAIN=cdiv(I,C(I_NOM)); }
+  const g2=GAIN[0]**2+GAIN[1]**2, emf={};
+  FORCE={};
+  for(const k of RINGS){ const z=ringGap(k); if(z===null||g2<1e-12) continue;
+    const e=emfRms(z,RING[k].rm); emf[k]=cmul(GAIN,C(0,-e));
+    FORCE[k]=k==="closed"?g2*forceClosed(z):0; }
+  if(Object.keys(emf).length){ net=buildNet(emf); sol=solveNet(net); }
+  SOLN={sol,emf,g2}; return SOLN;
+}
+/* what each meter shows: the 3½-digit display string */
+function meterRaw(m){
+  const M=ST.meter[m], it=ST.it[m]; if(!it.on||!M.on) return null;
+  const v=SOLN.sol.V, dial=DIALS[M.dial], f=drift;
+  const vd=cabs(csub(v(m+"_V"),v(m+"_C")));
+  switch(dial[1]){
+    case "Vdc": return {kind:"Vdc",val:0.05*gauss()};
+    case "V": return {kind:"V",val:vd*(1+0.002*gauss())+(dial[2]===0.2?(BENCH.emfBias+0.03*gauss())*1e-3:0),rng:dial[2]};
+    case "A20": return {kind:"A",val:cabs(csub(v(m+"_A"),v(m+"_C")))/BENCH.rShunt+0.004*gauss(),rng:20};
+    case "mA": return {kind:"A",val:M.fuse?cabs(csub(v(m+"_m"),v(m+"_C")))/BENCH.rmA:0,rng:dial[2]};
+    case "R": { const I=cabs(csub(v(m+"_Oi"),v(m+"_V")))/300; return {kind:"R",val:I>1e-9?vd/I:1e9,rng:200}; }
+  }
+  return null;
+}
+function fmtMeter(r){
+  if(!r) return "";
+  if(r.kind==="Vdc"){ const mv=r.val; return (mv<0?"-":"")+Math.abs(mv).toFixed(1).padStart(4,"0"); }
+  if(r.kind==="V"){ const rng=r.rng;
+    if(rng===0.2){ const mv=Math.abs(r.val*1e3); return mv>199.9?"1   .":mv.toFixed(1).padStart(4,"0"); }
+    const dec=rng===2?3:rng===20?2:1; return Math.abs(r.val)>rng*0.9995?"1   .":Math.abs(r.val).toFixed(dec); }
+  if(r.kind==="A"){ const v=Math.abs(r.val), rng=r.rng;
+    if(rng===20) return v>19.99?"1   .":v.toFixed(2);
+    const ma=v*1e3; if(ma>rng*1e3*0.9995) return "1   ."; return ma.toFixed(rng===0.2?1:2); }
+  if(r.kind==="R") return r.val>199.9?"1   .":r.val.toFixed(1);
+  return "";
+}
+/* what lies on the scale pan, in grams-force */
+function loadG(k){
+  let g=0; const it=ST.it[k];
+  if(k==="block") g+=BENCH.mBlock*1e3;
+  if(RINGS.includes(k)){ g+=RING[k].mass*1e3; if(FORCE[k]) g+=FORCE[k]/G*1e3;
+    else if(SOLN&&SOLN.emf[k]&&k!=="closed") g+=0.008*gauss(); }
+  const c=childOf(k); if(c) g+=loadG(c);
+  return g;
+}
+function scaleRaw(){
+  const s=ST.it.scale; if(!s.on) return 0;
+  let g=BENCH.zeroDrift; const c=childOf("scale"); if(c) g+=loadG(c);
+  /* the steel parts of the scale feel the field when the coil comes close to the pan */
+  if(SOLN&&ST.it.stand.on&&s.sup==="stand"){ const dpan=coilBot()-topOf("scale"); g-=0.22*SOLN.g2*Math.exp(-Math.max(0,dpan)/14); }
+  return g;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+/* a box in the bench projection: top face and front face (the view has no side faces) */
+function box3(x0,y0,z0,x1,y1,z1,top,front,edge){
+  const a=P(x0,y0,z1), b=P(x1,y1,z1), f=P(x0,y1,z0);
+  ctx.fillStyle=front; ctx.fillRect(a[0],b[1],b[0]-a[0],f[1]-b[1]);
+  ctx.fillStyle=top; ctx.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.8; ctx.strokeRect(a[0]+0.4,a[1]+0.4,b[0]-a[0]-0.8,f[1]-a[1]-0.8);
+    ctx.beginPath(); ctx.moveTo(a[0],b[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+}
+/* a vertical cylinder */
+function cyl3(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.8; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.8);
+}
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  FACES (drawn in mm, flat: squashed on the bench, straight in the close up)
+   ══════════════════════════════════════════════════════════════ */
+const ORANGE="#f08519";
+/* LE9205A (meter A) and M92B (meter B), 91 × 189 mm, after Figs. 3 and 4 */
+function meterFace(m,big){
+  const M=ST.meter[m], A=m==="mA";
+  fillR(0,0,91,189,11,ORANGE,"#b85e08",0.8);
+  if(!A) for(let i=0;i<6;i++) fillR(14+i*11,180,6,8,2,"#e07a12");
+  fillR(6,5,79,178,6,"#25272a","#111",0.6);
+  if(A){ fillR(9,8,73,13,2,"#141517"); text("non",13,14.5,"#c0241c",5,"left","800"); text("LE9205A",79,14.5,"#e8eef2",5.2,"right","700"); }
+  else { fillR(10,8,71,8,1.5,"#9ea3a8"); text("DIGITAL MULTIMETER",45.5,12,"#4a4e53",3.6,"center","700"); }
+  const ly=A?24:18; fillR(11,ly,69,30,2,"#0f1012"); fillR(14,ly+3,63,24,1.5,M.on?"#b9c6a9":"#a6ae9a");
+  if(M.on) lcd(M.disp,16,ly+6.5,58,17,"#141a12",big?"rgba(20,26,18,.06)":null);
+  /* buttons */
+  if(A){ fillR(13,62,12,6,3,"#111","#000",0.5); text("DH",19,72,"#e8eef2",2.8,"center","600"); circ(19,77,1,"#c22");
+         circ(76,64,5,"#1a1b1d","#55585d",0.8); circ(76,64,3,M.on?"#2a2b2e":"#1f2022"); text("POWER",76,73,"#e8eef2",2.6,"center","600");
+         text("AUTO POWER OFF",45.5,65,"#d8b04a",2.6,"center","600"); }
+  else { circ(16,64,5,"#c62a24","#7e1814",0.8); circ(16,64,3.2,M.on?"#8e1a16":"#d8443c"); circ(76,64,5,"#e3c21c","#8d780e",0.8); text("HOLD",76,57.5,"#e3c21c",2.4,"center","700"); }
+  /* the range dial */
+  const cx=45.5, cy=112;
+  ctx.strokeStyle=A?"#d8d8d8":"#c8a838"; ctx.lineWidth=0.7; ctx.beginPath(); ctx.arc(cx,cy,25,0,7); ctx.stroke();
+  DIALS.forEach((dd,i)=>{ const a=-Math.PI/2+i*Math.PI/5.2, r=32.5;
+    const col=i===M.dial?"#ffd84a":(dd[1]==="V"||dd[1]==="Vdc"?"#e9d77a":dd[1]==="R"?"#e8eef2":dd[1]?"#f0a0a0":"#e8eef2");
+    circ(cx+Math.cos(a)*26.5,cy+Math.sin(a)*26.5,0.8,col);
+    text(dd[0].replace(" ",""),cx+Math.cos(a)*r,cy+Math.sin(a)*r,col,big?3.4:3,"center",i===M.dial?"800":"600"); });
+  circ(cx,cy,22,"#18191b","#000",0.8); circ(cx,cy,18,"#202124");
+  const a=-Math.PI/2+M.dial*Math.PI/5.2;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(a+Math.PI/2);
+  fillR(-4.2,-21,8.4,42,4,"#2c2d30","#0b0b0c",0.6); poly([[-2,-19],[2,-19],[0,-23]],"#e8eef2"); ctx.restore();
+  /* the jacks */
+  const lab=A?["20A","mA","COM","VΩ"]:["A","mA","COM","V/Ω"];
+  lab.forEach((s,i)=>{ const x=12.5+22*i, y=164.5;
+    text(s,x,155,i===2?"#d8b04a":"#e8eef2",3.4,"center","700"); circ(x,y,5.2,"#0b0b0c","#3c3e42",0.8); circ(x,y,2.6,"#000");
+    if(i<2) text("⚠",x+(A?10:9),y-1,"#e8eef2",3,"center"); });
+  if(!A){ fillR(10,173,71,6,1,"#2f3542"); text("M92B",74,176,"#e8eef2",3.2,"right","700"); }
+}
+/* the pocket scale, top view 100 × 150 mm (Fig. 2) */
+function scaleFace(big){
+  const s=ST.scale;
+  fillR(0,0,100,150,5,"#1b1c1e","#000",0.8);
+  fillR(3,2,94,9,2,"#0f1011"); fillR(5,12,90,90,2,"rgba(190,205,215,.18)","rgba(220,230,240,.5)",0.5);
+  fillR(8,16,84,84,1.5,vgrad(16,84,[[0,"#d9dde0"],[0.5,"#b9bec3"],[1,"#cfd3d7"]]),"#8b9196",0.6);
+  fillR(8,108,40,22,2,"#0e1013"); fillR(10,110,36,18,1.5,s.on?"#2c5fd8":"#323a4a");
+  if(s.on) lcd(s.disp,11,113,33,11,"#f2f6ff",null);
+  [["CAL","BL"],["MODE"],["TARE"],["ON","OFF"]].forEach((l,i)=>{ const x=57+i*10.5;
+    fillR(x-3.5,110,7,9,1.2,"#e8e9ea","#8b8e92",0.4);
+    text(l[0],x,124,"#d8dade",2.3,"center","600"); if(l[1]){ ctx.strokeStyle="#d8dade"; ctx.lineWidth=0.3; ctx.beginPath(); ctx.moveTo(x-2.5,125.6); ctx.lineTo(x+2.5,125.6); ctx.stroke(); text(l[1],x,127.6,"#d8dade",2.3,"center","600"); } });
+}
+const SCALE_BTN={tare:[77.5,110,7,9], power:[88,110,7,9]};
+/* the power supply, top view 150 × 150 mm */
+function psuFace(big){
+  fillR(0,0,150,150,2,vgrad(0,150,[[0,"#c4c7bf"],[1,"#b4b7af"]]),"#8d9089",0.8);
+  ctx.fillStyle="rgba(0,0,0,.06)"; ctx.fillRect(0,0,150,6);
+  const sock=(x,y,r,col)=>{ circ(x,y,r+1.6,shade(col,0.25),"#555",0.5); circ(x,y,r,col); circ(x,y,r*0.42,"#050505"); };
+  sock(33,35,6.4,"#b8241f"); sock(33,71,6.4,"#b8241f"); sock(117,31,4.4,"#16181b"); sock(117,61,4.4,"#16181b");
+  circ(55,113,8.5,"#c9ccd0","#7d8288",0.7); circ(55,113,6.2,ST.power?"#3fae3f":"#1f8a2a","#0f5a16",0.6); circ(53.6,111.4,2,"rgba(255,255,255,.45)");
+  circ(95,113,7,"#5a1512","#3a0c0a",0.6); circ(95,113,5.4,ST.power?"#ff4a2e":"#8a2a22");
+  if(ST.power){ ctx.save(); ctx.globalAlpha=0.35; circ(95,113,11,"#ff6a40"); ctx.restore(); }
+  for(const [x,y] of [[6,6],[144,6],[6,144],[144,144]]) circ(x,y,1.8,"#9da096","#777",0.4);
+  if(big){ text("(1b) 0.7 V",33,88,"#4a4d47",5,"center","600"); text("(1a) 24 V",117,78,"#4a4d47",5,"center","600");
+           text("(1c)",55,131,"#4a4d47",5,"center","600"); }
+}
+const PSU_BTN=[55,113,9];
+
+/* ══════════════════════════════════════════════════════════════
+   6.  THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function flat(x0,y0,z,w,dd,fn){ const o=P(x0,y0,z); ctx.save(); ctx.translate(o[0],o[1]); ctx.scale(SC,SC*KY); fn(); ctx.restore(); }
+function drawDesk(){
+  ctx.fillStyle=vgrad(0,P(0,0,0)[1],[[0,"#6f7378"],[1,"#8d9195"]]); ctx.fillRect(0,0,LW,P(0,0,0)[1]);
+  const y0=P(0,0,0)[1], y1=P(0,DESK.y1,0)[1];
+  ctx.fillStyle=vgrad(y0,y1-y0,[[0,"#c8c6c1"],[1,"#dddbd6"]]); ctx.fillRect(0,y0,LW,y1-y0);
+  /* the non-woven cloth of the photo */
+  ctx.strokeStyle="rgba(120,118,112,.10)"; ctx.lineWidth=1;
+  for(let i=0;i<46;i++){ const x=(i*233)%LW, y=y0+((i*97)%(y1-y0)); ctx.beginPath(); ctx.moveTo(x,y); ctx.bezierCurveTo(x+60,y-8,x+120,y+10,x+190,y-3); ctx.stroke(); }
+  ctx.fillStyle="#9b9893"; ctx.fillRect(0,y1,LW,LH-y1);
+}
+function drawPSU(){
+  const it=ST.it.psu, [w,dd,h]=DIM.psu, x0=it.x-w/2, y0=it.y-dd/2, z=zOf("psu");
+  /* the mains cable, coiled behind */
+  ctx.strokeStyle="#ecebe6"; ctx.lineWidth=3.2;
+  for(let i=0;i<3;i++){ const c=P(it.x-20+i*6,y0-30,40+i*8); ctx.beginPath(); ctx.ellipse(c[0],c[1],52-i*6,26-i*3,-0.3,0,7); ctx.stroke(); }
+  box3(x0,y0,z,x0+w,y0+dd,z+h,"#bfc2ba","#a4a79f","#80837c");
+  const f=P(x0,y0+dd,z+h); ctx.fillStyle="rgba(255,255,255,.18)"; ctx.fillRect(f[0],f[1],w*SC,3);
+  flat(x0,y0,z+h,w,dd,()=>psuFace(false));
+}
+function drawMeter(m){
+  const it=ST.it[m], [w,dd,h]=DIM[m], x0=it.x-w/2, y0=it.y-dd/2, z=zOf(m);
+  box3(x0,y0,z,x0+w,y0+dd,z+h,ORANGE,"#c96b10","#9a520b");
+  flat(x0,y0,z+h,w,dd,()=>meterFace(m,false));
+}
+function drawScale(){
+  const it=ST.it.scale, [w,dd,h]=DIM.scale, x0=it.x-w/2, y0=it.y-dd/2, z=zOf("scale");
+  box3(x0,y0,z,x0+w,y0+dd,z+h,"#1b1c1e","#111214","#000");
+  flat(x0,y0,z+h,w,dd,()=>scaleFace(false));
+  drawKids("scale");
+}
+function drawBlock(){
+  const it=ST.it.block, [w,dd,h]=DIM.block, x0=it.x-w/2, y0=it.y-dd/2, z=zOf("block");
+  box3(x0,y0,z,x0+w,y0+dd,z+h,"#2a2b2d","#1d1e20","#0c0c0d");
+  ctx.fillStyle="rgba(255,255,255,.05)";
+  for(let i=0;i<40;i++){ const p=P(x0+((i*37)%w),y0+dd,z+((i*53)%h)); ctx.fillRect(p[0],p[1],1.5,1.5); }
+  drawKids("block");
+}
+/* a flat ring: the band, then the top face, with its gap */
+function ringPath(k,cx,cy,z){
+  const R=RING[k], ro=R.dOut*500, ri=R.dIn*500, dl=R.gap/(2*R.rm), a0=-Math.PI/2+dl, a1=-Math.PI/2+2*Math.PI-dl, c=P(cx,cy,z);
+  ctx.beginPath(); ctx.ellipse(c[0],c[1],ro*SC,ro*SC*KY,0,a0,a1); ctx.ellipse(c[0],c[1],ri*SC,ri*SC*KY,0,a1,a0,true); ctx.closePath();
+}
+function drawRing(k){
+  const it=ST.it[k], z=zOf(k), h=RING[k].h*1e3, hot=Math.min(1,RING.closed.T/25);
+  const top=k==="closed"&&hot>0.05?shade("#c5cacf",-0.0):"#c5cacf";
+  for(let i=0;i<=Math.ceil(h*SC);i++){ ringPath(k,it.x,it.y,z+i/SC); ctx.fillStyle=i===0?"#7d8288":"#9aa0a6"; ctx.fill(); }
+  ringPath(k,it.x,it.y,z+h); ctx.fillStyle=top; ctx.fill(); ctx.strokeStyle="#7a8087"; ctx.lineWidth=0.6; ctx.stroke();
+  /* the turned surface catches the light */
+  const c=P(it.x,it.y,z+h), rm=RING[k].rm*1e3; ctx.save(); ringPath(k,it.x,it.y,z+h); ctx.clip();
+  ctx.strokeStyle="rgba(255,255,255,.35)"; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(c[0],c[1],rm*SC,rm*SC*KY,0,-2.6,-1.8); ctx.stroke();
+  ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.beginPath(); ctx.ellipse(c[0],c[1],rm*SC,rm*SC*KY,0,0.6,1.3); ctx.stroke(); ctx.restore();
+  drawKids(k);
+}
+function drawKids(s){ const c=childOf(s); if(c) drawItem(c); }
+function drawStand(){
+  const it=ST.it.stand, [w,dd]=DIM.stand, x0=it.x-w/2, y0=it.y-dd/2, [ax,ay]=axis(), cb=coilBot();
+  box3(x0,y0,0,x0+w,y0+dd,12,"#eeeeec","#d9d9d6","#b7b7b2");
+  const yel=P(x0+w-22,y0+dd-20,12); ell(yel[0],yel[1],5,3,"#f2d21b");
+  box3(it.x-BOARD.w/2,y0,12,it.x+BOARD.w/2,y0+BOARD.d,12+BOARD.h,"#f2f2f0","#e6e6e3","#bdbdb8");
+  /* the screw: a knob with a brass lever on a bracket at the top of the board, a threaded rod down to the carrier */
+  const ky=ay, kz=12+BOARD.h-26, cTop=cb+COIL.h+CARRIER.h;
+  box3(ax-12,y0+BOARD.d,kz-6,ax+12,ky+6,kz,"#c9ccd0","#a9adb2","#80858a");
+  const r0=P(ax,ky,kz), r1=P(ax,ky,cTop);
+  ctx.fillStyle=hgrad(r0[0]-3,6,[[0,"#8f959b"],[0.5,"#e3e6e9"],[1,"#8f959b"]]); ctx.fillRect(r0[0]-2.6,r0[1],5.2,r1[1]-r0[1]);
+  ctx.strokeStyle="rgba(60,64,70,.45)"; ctx.lineWidth=0.6; for(let y=r0[1]+2;y<r1[1];y+=2.2){ ctx.beginPath(); ctx.moveTo(r0[0]-2.6,y); ctx.lineTo(r0[0]+2.6,y+1); ctx.stroke(); }
+  const ang=ST.h/1.41*2*Math.PI;
+  cyl3(ax,ky,kz,kz+14,15,"#1b1b1d","#2a2a2d","#000");
+  const kt=P(ax,ky,kz+14); for(let i=0;i<8;i++){ const a=i*Math.PI/4+ang; circ(kt[0]+Math.cos(a)*15*SC,kt[1]+Math.sin(a)*15*SC*KY,2.2,"#141416"); }
+  const lv=P(ax+Math.cos(ang)*48,ky+Math.sin(ang)*48,kz+16);
+  ctx.strokeStyle="#b8933e"; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(kt[0],kt[1]-1); ctx.lineTo(lv[0],lv[1]); ctx.stroke();
+  cyl3(ax,ky,kz+14,kz+20,6,"#2a2a2d","#3a3a3e","#000");
+  drawKids("stand");
+  const cb0=P(ax,ay,cb), ct=P(ax,ay,cb+COIL.h), rx=COIL.r*SC, ry=COIL.r*SC*KY;
+  ctx.save(); ctx.beginPath(); ctx.ellipse(cb0[0],cb0[1],rx,ry,0,0,Math.PI); ctx.lineTo(ct[0]-rx,ct[1]); ctx.ellipse(ct[0],ct[1],rx,ry,0,Math.PI,0,true); ctx.closePath();
+  ctx.fillStyle=hgrad(cb0[0]-rx,2*rx,[[0,"#4a1c0c"],[0.3,"#9a4a22"],[0.55,"#c36a38"],[1,"#5a240f"]]); ctx.fill(); ctx.clip();
+  ctx.strokeStyle="rgba(40,12,4,.35)"; ctx.lineWidth=0.7;
+  for(let y=ct[1];y<cb0[1]+ry;y+=1.6){ ctx.beginPath(); ctx.ellipse(cb0[0],y,rx,ry,0,0.15,Math.PI-0.15); ctx.stroke(); }
+  ctx.restore();
+  ctx.fillStyle="rgba(230,235,240,.55)"; ctx.fillRect(ct[0]-rx*0.5,ct[1]+ry*0.6,rx*0.9,(cb0[1]-ct[1])*0.18);
+  const tf=P(ax,ay,cb+COIL.h); ell(tf[0],tf[1],rx,ry,"#5a2610","#3a1406",0.6);
+  /* the iron rods show at the pole face only from below; a dark rim marks the end */
+  ctx.strokeStyle="#2a2a2a"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.ellipse(cb0[0],cb0[1],rx,ry,0,0,Math.PI); ctx.stroke();
+  /* the carrier block and the coil hanging under it */
+  box3(ax-CARRIER.w/2,ay-CARRIER.d/2,cb+COIL.h,ax+CARRIER.w/2,ay+CARRIER.d/2,cTop,"#f4f4f2","#e9e9e6","#c4c4bf");
+}
+function drawItem(k){
+  if(k==="stand") drawStand(); else if(k==="psu") drawPSU(); else if(k==="scale") drawScale(); else if(k==="block") drawBlock();
+  else if(RINGS.includes(k)) drawRing(k); else drawMeter(k);
+}
+/* wires: banana plugs stand in their sockets, crocodiles bite the ring, the cable sags to the desk */
+function plugTop(e,w){ return e.sock?[w[0],w[1],w[2]+20]:e.ring?[w[0],w[1],w[2]+3]:[w[0],w[1],4]; }
+function drawCable(a,b,col,len){
+  const pa=P(...a), pb=P(...b), dd=Math.hypot(a[0]-b[0],a[1]-b[1]), slack=Math.max(0,len-dd-a[2]-b[2]);
+  const m=P((a[0]+b[0])/2,(a[1]+b[1])/2+Math.min(160,slack*0.25),0);
+  const c1=[pa[0]+(m[0]-pa[0])*0.5,Math.max(pa[1],m[1])], c2=[pb[0]+(m[0]-pb[0])*0.5,Math.max(pb[1],m[1])];
+  ctx.strokeStyle="rgba(0,0,0,.18)"; ctx.lineWidth=3.6; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]+2); ctx.bezierCurveTo(c1[0],c1[1]+3,c2[0],c2[1]+3,pb[0],pb[1]+2); ctx.stroke();
+  ctx.strokeStyle=col; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.bezierCurveTo(c1[0],c1[1],c2[0],c2[1],pb[0],pb[1]); ctx.stroke();
+}
+function drawPlug(e,w,col,kind){
+  if(kind==="croc"){
+    const p=P(w[0],w[1],w[2]); if(e&&e.ring){ fillR(p[0]-3,p[1]-9,6,9,1.5,col,"#000",0.5); ctx.fillStyle="#c8ccd0"; ctx.fillRect(p[0]-2.4,p[1]-2,4.8,4); }
+    else { fillR(p[0]-9,p[1]-3,14,6,2,col,"#000",0.5); ctx.fillStyle="#c8ccd0"; ctx.fillRect(p[0]+5,p[1]-2,5,4); }
+    return; }
+  const p=P(w[0],w[1],w[2]);
+  if(e&&e.sock){ const t=P(w[0],w[1],w[2]+20); fillR(t[0]-3,t[1],6,p[1]-t[1]-1,1.5,col,"#000",0.5); ctx.fillStyle="rgba(255,255,255,.25)"; ctx.fillRect(t[0]-2,t[1]+2,1.2,p[1]-t[1]-5); }
+  else { fillR(p[0]-11,p[1]-3,16,6,2,col,"#000",0.5); ctx.fillStyle="#c8a64a"; ctx.fillRect(p[0]+5,p[1]-1.2,6,2.4); }
+}
+function drawWires(){
+  for(const w of WKEYS){ const W=ST.wire[w]; if(!W.on) continue; const D=WIRES[w];
+    const ends=W.ends.map((e,i)=>{ if(e) return endW(e); if(hand&&hand.wire===w&&hand.end===i){ const q=unP(mouse[0],mouse[1],0); return [q[0],q[1],30]; } return null; });
+    if(ends[0]&&ends[1]) drawCable(plugTop(W.ends[0]||{},ends[0]),plugTop(W.ends[1]||{},ends[1]),D.col,D.len);
+    W.ends.forEach((e,i)=>{ if(ends[i]) drawPlug(e,ends[i],D.col,D.ends[i]); });
+  }
+  if(ST.it.stand.on){ const A=leadAnchor();
+    for(let i=0;i<2;i++){ let w=leadW(i); const held=hand&&hand.lead===i;
+      if(held){ const q=unP(mouse[0],mouse[1],0); w=[q[0],q[1],30]; }
+      drawCable(A,ST.lead[i].sock&&!held?[w[0],w[1],w[2]+20]:w,"#d42c22",LEAD_LEN);
+      drawPlug(held?null:ST.lead[i],w,"#d42c22","ban"); } }
+}
+function drawBench(){
+  drawDesk();
+  const order=ITEMS.filter(k=>ST.it[k].on&&!ST.it[k].sup).sort((a,b)=>(ST.it[a].y+DIM[a][1]/2)-(ST.it[b].y+DIM[b][1]/2));
+  for(const k of order) drawItem(k);
+  drawWires();
+  drawGhost();
+}
+/* what the hand holds, at the mouse */
+let ghostOK=true;
+function drawGhost(){
+  if(!hand||!overBench) return;
+  if(hand.item){ const k=hand.item, tgt=target(k,mouse); ghostOK=!!tgt;
+    const [w,dd,h]=DIM[k], z=tgt?tgt.z:0, x=tgt?tgt.x:unP(mouse[0],mouse[1],0)[0], y=tgt?tgt.y:unP(mouse[0],mouse[1],0)[1];
+    const a=P(x-w/2,y-dd/2,z+h), b=P(x+w/2,y+dd/2,z);
+    ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=tgt?"#f2c14e":"#e0605a"; ctx.lineWidth=1.6; ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]); ctx.restore();
+    text(itemName(k),a[0],a[1]-8,tgt?"#5a4410":"#8a2a24",11,"left","700"); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  TRAY, LAYOUT, CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=[...ITEMS,...WKEYS], TROW=44;
+let TRW=190, TRH=600, CLW=900, CLH=360, trayCells=[], tab="meters", CL={};
+const trayAvail=k=>WIRES[k]?!ST.wire[k].on:!ST.it[k].on&&!(hand&&hand.item===k);
+function icon(c,k){
+  const old=ctx; ctx=c;
+  if(k==="psu"){ fillR(-17,-13,34,26,2,"#bfc2ba","#80837c"); circ(-9,-6,3,"#b8241f"); circ(-9,2,3,"#b8241f"); circ(9,-7,2,"#16181b"); circ(9,-1,2,"#16181b"); circ(-4,8,2.6,"#2fa02f"); circ(5,8,2.4,"#ff4a2e"); }
+  else if(k==="stand"){ fillR(-15,12,30,5,1,"#eee","#aaa"); fillR(-11,-20,22,32,1,"#f2f2f0","#bbb"); fillR(-8,-6,16,6,1,"#fff","#bbb"); fillR(-8,0,16,9,2,"#b0582a","#5a240f"); circ(0,-21,3.4,"#1b1b1d"); }
+  else if(k==="scale"){ fillR(-12,-16,24,32,2,"#1b1c1e","#000"); fillR(-10,-14,20,19,1,"#c9ced2"); fillR(-10,8,9,5,1,"#2c5fd8"); }
+  else if(k==="block"){ fillR(-13,-12,26,24,2,"#2a2b2d","#0c0c0d"); }
+  else if(RINGS.includes(k)){ const R=RING[k], ro=R.dOut*170, ri=R.dIn*170, dl=R.gap/(2*R.rm);
+    ctx.beginPath(); ctx.arc(0,0,ro,-Math.PI/2+dl,1.5*Math.PI-dl); ctx.arc(0,0,ri,1.5*Math.PI-dl,-Math.PI/2+dl,true); ctx.closePath(); ctx.fillStyle="#c5cacf"; ctx.fill(); ctx.strokeStyle="#6f757b"; ctx.lineWidth=0.8; ctx.stroke(); }
+  else if(k==="mA"||k==="mB"){ fillR(-9,-17,18,34,4,ORANGE,"#b85e08"); fillR(-6,-13,12,6,1,"#b9c6a9"); circ(0,3,4.5,"#1a1b1d"); }
+  else if(WIRES[k]){ const D=WIRES[k]; ctx.strokeStyle=D.col; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(-15,-8); ctx.bezierCurveTo(-4,22,8,-22,15,8); ctx.stroke();
+    fillR(-19,-12,6,8,1.5,D.col); if(D.ends[1]==="croc"){ fillR(12,6,7,5,1,D.col); ctx.fillStyle="#c8ccd0"; ctx.fillRect(18,7,3,3); } else fillR(12,6,6,8,1.5,D.col); }
+  ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(300,CLW*0.46));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&(hand.item===k||hand.wire===k);
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-4)/2); c.scale(0.95,0.95); icon(c,k); c.restore();
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm];
+    if(c.measureText(nm).width>wd-52){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.55)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,52,y+(parts.length>1?10+i*13:13)));
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(av?t.trayTake:t.trayOut,52,y+34);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["meters","side","ring"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+function panelBg(x,y,w,h,col){ ctx.fillStyle=col; ctx.fillRect(x,y,w,h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(x+0.5,y+0.5,w-1,h-1); }
+/* close up 1: the meters, the scale and the supply, straight on */
+function drawMeters(){
+  const t=d(), H=CLH-36, gap=10;
+  const wantW=[91,91,100,150].map((w,i)=>w*(H/[189,189,150,150][i]));
+  const tot=wantW.reduce((a,b)=>a+b,0)+gap*5, f=Math.min(1,CLW/tot), y0=8;
+  let x=gap; CL={};
+  const parts=[["mA",91,189,()=>meterFace("mA",true)],["mB",91,189,()=>meterFace("mB",true)],["scale",100,150,()=>scaleFace(true)],["psu",150,150,()=>psuFace(true)]];
+  parts.forEach(([k,w,h,fn],i)=>{
+    const s=H/h*f, W=w*s, HH=h*s, yy=y0+(H-HH)/2;
+    if(!ST.it[k].on){ panelBg(x,yy,W,HH,"#1a1d22"); text(itemName(k),x+W/2,yy+HH/2-8,"#69717a",11,"center"); text(t.lab.nopart,x+W/2,yy+HH/2+8,"#69717a",10,"center"); }
+    else { ctx.save(); ctx.translate(x,yy); ctx.scale(s,s); fn(); ctx.restore(); }
+    CL[k]={x,y:yy,s};
+    if(k==="mA"||k==="mB"){ const M=ST.meter[k]; text(DIALS[M.dial][0],x+W/2,yy+HH+12,ST.it[k].on?"#f2c14e":"#69717a",12,"center","700"); }
+    x+=W+gap;
+  });
+}
+/* close up 2: the gap under the coil, from the side, true size */
+let sideDrag=null;
+function drawSide(){
+  const t=d(); ctx.fillStyle="#e9e7e1"; ctx.fillRect(0,0,CLW,CLH);
+  if(!ST.it.stand.on){ text(t.lab.sideNone,CLW/2,CLH/2,"#69717a",13,"center"); CL={}; return; }
+  const k=4.0, [ax,ay]=axis(), cb=coilBot();
+  /* what stands on the base under the coil */
+  const stack=[]; let s="stand"; for(;;){ const c=childOf(s); if(!c) break; stack.push(c); s=c; }
+  const topZ=stack.length?topOf(stack[stack.length-1]):12;
+  const mid=(Math.min(cb,topZ+60)+topZ)/2, cx=CLW*0.42, Y=z=>CLH*0.55-(z-mid)*k, X=x=>cx+(x-ax)*k;
+  /* the ruler, standing on the base, mm marks */
+  const rx=X(ax-COIL.r)-60;
+  ctx.fillStyle="#d9dcdf"; ctx.fillRect(rx-26,0,30,CLH); ctx.strokeStyle="#8d9399"; ctx.strokeRect(rx-26,0,30,CLH);
+  for(let z=Math.floor((mid-CLH/k)/1);z<mid+CLH/k;z++){ const y=Y(z); if(y<0||y>CLH||z<12) continue; const mm=z-12, L=mm%10===0?14:mm%5===0?10:6;
+    ctx.strokeStyle="#1d1f22"; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(rx+4,y); ctx.lineTo(rx+4-L,y); ctx.stroke();
+    if(mm%10===0) text(String(mm/10),rx-17,y,"#1d1f22",10,"center","600"); }
+  text("cm",rx-11,CLH-10,"#1d1f22",9,"center");
+  /* base, scale, block, ring in section where they are under the coil */
+  const sec=(x0,x1,z0,z1,fill,edge)=>{ ctx.fillStyle=fill; ctx.fillRect(X(x0),Y(z1),(x1-x0)*k,(z1-z0)*k); if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=1; ctx.strokeRect(X(x0),Y(z1),(x1-x0)*k,(z1-z0)*k); } };
+  sec(ax-110,ax+110,0,12,"#f2f2f0","#b7b7b2");
+  for(const kk of stack){ const it=ST.it[kk], z0=zOf(kk);
+    if(kk==="scale"){ sec(it.x-50,it.x+50,z0,z0+20,"#1b1c1e","#000"); sec(it.x-42,it.x+42,z0+20,z0+22,"#bfc4c8","#8b9196"); }
+    else if(kk==="block"){ sec(it.x-40,it.x+40,z0,z0+70,"#2a2b2d","#0c0c0d"); }
+    else { const R=RING[kk], ro=R.dOut*500, ri=R.dIn*500, h=R.h*1e3; sec(it.x-ro,it.x-ri,z0,z0+h,"#aab0b6","#6f757b"); sec(it.x+ri,it.x+ro,z0,z0+h,"#aab0b6","#6f757b");
+      ctx.setLineDash([3,3]); ctx.strokeStyle="#8d9399"; ctx.beginPath(); ctx.moveTo(X(it.x-ri),Y(z0+h/2)); ctx.lineTo(X(it.x+ri),Y(z0+h/2)); ctx.stroke(); ctx.setLineDash([]); }
+  }
+  /* the coil, its iron rods at the pole face */
+  ctx.fillStyle=hgrad(X(ax-COIL.r),2*COIL.r*k,[[0,"#4a1c0c"],[0.3,"#9a4a22"],[0.55,"#c36a38"],[1,"#5a240f"]]);
+  ctx.fillRect(X(ax-COIL.r),Y(cb+COIL.h),2*COIL.r*k,COIL.h*k);
+  ctx.strokeStyle="rgba(40,12,4,.35)"; ctx.lineWidth=0.7; for(let y=Y(cb+COIL.h);y<Y(cb);y+=2.2){ ctx.beginPath(); ctx.moveTo(X(ax-COIL.r),y); ctx.lineTo(X(ax+COIL.r),y+0.6); ctx.stroke(); }
+  ctx.fillStyle="#3d3f42"; for(let i=-3;i<=3;i++) ctx.fillRect(X(ax+i*7-2.5),Y(cb+3),5*k/4*0.8+2,3*k);
+  ctx.fillStyle="#1d1e20"; ctx.fillRect(X(ax-COIL.r),Y(cb)-1.2,2*COIL.r*k,1.6);
+  sec(ax-CARRIER.w/2,ax+CARRIER.w/2,cb+COIL.h,cb+COIL.h+CARRIER.h,"#f4f4f2","#c4c4bf");
+  if(ST.power&&SOLN&&SOLN.g2>0.01){ ctx.strokeStyle="rgba(61,109,176,.45)"; ctx.setLineDash([3,4]);
+    for(let i=1;i<=5;i++){ ctx.beginPath(); ctx.ellipse(X(ax),Y(cb),i*14*k/4*1.6,i*7*k/4*1.6,0,0.15,Math.PI-0.15); ctx.stroke(); } ctx.setLineDash([]); }
+  text(t.lab.z,X(ax+COIL.r)+10,Y(cb),"#5a3a1a",11,"left","600");
+  if(stack.length){ text(t.lab.ringTop,X(ax+COIL.r)+10,Y(topZ),"#4a4f55",11,"left","600");
+    if(cb-topZ<0.05) text("— "+t.lab.contact,X(ax+COIL.r)+10,Y(topZ)+14,"#a8322a",11,"left","700"); }
+  /* the knob, seen from above, to turn by hand */
+  const kx=CLW-110, ky=CLH/2, kr=Math.min(70,CLH*0.28), ang=ST.h/1.41*2*Math.PI;
+  text(t.lab.knob,kx,ky-kr-30,"#4a4f55",11,"center","600");
+  fillR(kx-kr*0.35,ky-kr-14,kr*0.7,kr*2+28,6,"#cfd2d6","#9aa0a6");
+  circ(kx,ky,kr,"#1b1b1d","#000",1.5);
+  for(let i=0;i<8;i++){ const a=i*Math.PI/4+ang; circ(kx+Math.cos(a)*kr,ky+Math.sin(a)*kr,kr*0.13,"#141416"); }
+  circ(kx,ky,kr*0.82,"#232326"); circ(kx,ky,kr*0.25,"#2f2f33","#000");
+  ctx.strokeStyle="#c9a24a"; ctx.lineWidth=5; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(kx,ky); ctx.lineTo(kx+Math.cos(ang)*kr*1.45,ky+Math.sin(ang)*kr*1.45); ctx.stroke(); ctx.lineCap="butt";
+  poly([[kx+kr+6,ky-5],[kx+kr+16,ky],[kx+kr+6,ky+5]],"#a8322a");
+  CL={knob:[kx,ky,kr*1.5]};
+}
+/* close up 3: the ring on millimetre paper */
+const RV={k:null,zoom:3.2,px:0,py:0}; let rvDrag=null;
+function ringsOnBench(){ return RINGS.filter(k=>ST.it[k].on); }
+function drawRingView(){
+  const t=d(); ctx.fillStyle="#f6f4ea"; ctx.fillRect(0,0,CLW,CLH);
+  const list=ringsOnBench(); if(!list.includes(RV.k)) RV.k=list[0]||null;
+  CL={btn:[]};
+  let bx=10; text(t.lab.which,bx,16,"#4a4f55",11,"left","600"); bx+=ctx.measureText(t.lab.which).width+10;
+  for(const k of list){ const w=ctx.measureText(itemName(k)).width+18; fillR(bx,6,w,20,4,k===RV.k?"#f2c14e":"#e2dfd2","#b9b5a5"); text(itemName(k),bx+9,16,"#1c2027",11,"left","600"); CL.btn.push([k,bx,6,w,20]); bx+=w+6; }
+  if(!RV.k){ text(t.lab.noRing,CLW/2,CLH/2,"#8a8676",13,"center"); return; }
+  const z=RV.zoom, cx=CLW/2+RV.px, cy=CLH/2+16+RV.py;
+  /* mm grid */
+  const x0=cx-Math.ceil(cx/z)*z, y0=cy-Math.ceil(cy/z)*z;
+  for(let i=0;x0+i*z<CLW;i++){ const x=x0+i*z, n=Math.round((x-cx)/z); ctx.strokeStyle=n%10===0?"rgba(196,120,60,.75)":n%5===0?"rgba(214,160,110,.6)":"rgba(226,190,150,.45)"; ctx.lineWidth=n%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(x,30); ctx.lineTo(x,CLH); ctx.stroke(); }
+  for(let i=0;y0+i*z<CLH;i++){ const y=y0+i*z; if(y<30) continue; const n=Math.round((y-cy)/z); ctx.strokeStyle=n%10===0?"rgba(196,120,60,.75)":n%5===0?"rgba(214,160,110,.6)":"rgba(226,190,150,.45)"; ctx.lineWidth=n%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(CLW,y); ctx.stroke(); }
+  /* the ring itself */
+  const R=RING[RV.k], ro=R.dOut*500*z, ri=R.dIn*500*z, dl=R.gap/(2*R.rm);
+  ctx.beginPath(); ctx.arc(cx,cy,ro,-Math.PI/2+dl,1.5*Math.PI-dl); ctx.arc(cx,cy,ri,1.5*Math.PI-dl,-Math.PI/2+dl,true); ctx.closePath();
+  ctx.fillStyle="rgba(178,186,194,.92)"; ctx.fill(); ctx.strokeStyle="#5f656b"; ctx.lineWidth=1; ctx.stroke();
+  /* crocodiles on it */
+  CL.clips=[];
+  for(const w of WKEYS){ ST.wire[w].ends.forEach((e,i)=>{ if(!e||e.ring!==RV.k) return;
+    const th=-Math.PI/2+dl+e.s/R.rm, rr=R.rm*1e3*z, px=cx+Math.cos(th)*rr, py=cy+Math.sin(th)*rr, col=WIRES[w].col;
+    ctx.save(); ctx.translate(px,py); ctx.rotate(th);
+    const jw=Math.max(5,2.6*z), jl=Math.max(14,(R.w*1e3/2+9)*z);
+    fillR(-jl*0.25,-jw/2,jl,jw,jw/3,"rgba(60,64,70,.65)"); ctx.fillStyle="#d8dcdf"; ctx.fillRect(-jl*0.25,-jw/2,jl*0.45,jw);
+    fillR(jl*0.2,-jw*0.7,jl*1.2,jw*1.4,jw*0.5,col,"#000",0.6);
+    ctx.restore(); CL.clips.push([w,i,px,py]); }); }
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="meters") drawMeters(); else if(tab==="side") drawSide(); else drawRingView();
+  ctx=old;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const scr=w=>P(w[0],w[1],w[2]);
+const nearS=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
+function isUnder(k,anc){ let s=ST.it[k].sup; while(s){ if(s===anc) return true; s=ST.it[s].sup; } return false; }
+/* where item k would go if dropped at the mouse */
+function target(k,m){
+  for(const s of ["block","scale","stand"]){
+    const it=ST.it[s]; if(!it.on||s===k||!SUPPORTS[s].includes(k)||isUnder(s,k)) continue;
+    const c=childOf(s); if(c&&c!==k) continue;
+    const z=topOf(s), [x,y]=unP(m[0],m[1],z); let ok=false;
+    if(s==="stand"){ const r=rect("stand",it.x,it.y); ok=hitR(r,x,y,0)&&y>r[1]+BOARD.d; }
+    else if(s==="scale"){ const [px,py]=panC(); ok=Math.abs(x-px)<PAN.w/2+8&&Math.abs(y-py)<PAN.d/2+8; }
+    else ok=hitR(rect("block",it.x,it.y),x,y,10);
+    if(!ok) continue;
+    const [sx,sy]=snapOn(s,k);
+    if(ST.it.stand.on){ const [ax,ay]=axis(), save={...ST.it[k]};
+      Object.assign(ST.it[k],{on:true,x:sx,y:sy,sup:s}); const hit=under(k,ax,ay)&&topOf(k)>coilBot()+0.01; Object.assign(ST.it[k],save);
+      if(hit) return {err:"hitsSol"}; }
+    return {sup:s,x:sx,y:sy,z};
+  }
+  const [x,y]=unP(m[0],m[1],0);
+  if(!deskFree(k,x,y)) return null;
+  if(ST.it.stand.on&&k!=="stand"){ const r=rect("stand",ST.it.stand.x,ST.it.stand.y); if(overl(rect(k,x,y),r,4)) return null; }
+  return {sup:null,x,y,z:0};
+}
+function itemRect(k){ const it=ST.it[k], [w,dd,h]=DIM[k], z=zOf(k), top=k==="stand"?12+BOARD.h:k==="scale"?z+22:z+h;
+  const a=P(it.x-w/2,it.y-dd/2,top), b=P(it.x+w/2,it.y+dd/2,z); return [a[0],a[1],b[0],b[1]]; }
+function itemAt(p){
+  const order=[]; const push=k=>{ order.push(k); const c=childOf(k); if(c) push(c); };
+  ITEMS.filter(k=>ST.it[k].on&&!ST.it[k].sup).sort((a,b)=>(ST.it[a].y+DIM[a][1]/2)-(ST.it[b].y+DIM[b][1]/2)).forEach(push);
+  for(let i=order.length-1;i>=0;i--){ const k=order[i], r=itemRect(k);
+    if(RINGS.includes(k)){ const [x,y]=unP(p[0],p[1],topOf(k)); const it=ST.it[k]; if(Math.hypot(x-it.x,y-it.y)<=RING[k].dOut*500+3) return k; continue; }
+    if(p[0]>=r[0]&&p[0]<=r[2]&&p[1]>=r[1]&&p[1]<=r[3]) return k; }
+  return null;
+}
+function psuBtnScr(){ const it=ST.it.psu; return scr([it.x-75+PSU_BTN[0],it.y-75+PSU_BTN[1],125]); }
+function knobScr(){ const [ax,ay]=axis(); return scr([ax,ay,12+BOARD.h-12]); }
+/* plugs and crocodiles that can be picked off */
+function endsNear(p){
+  for(const w of WKEYS){ const W=ST.wire[w]; if(!W.on) continue;
+    for(let i=0;i<2;i++){ const e=W.ends[i]; if(!e) continue; const wp=endW(e); if(!wp) continue;
+      const q=scr(e.sock?[wp[0],wp[1],wp[2]+12]:wp); if(nearS(p,q,e.sock?11:9)) return {wire:w,end:i}; } }
+  if(ST.it.stand.on) for(let i=0;i<2;i++){ const wp=leadW(i), q=scr(ST.lead[i].sock?[wp[0],wp[1],wp[2]+12]:wp); if(nearS(p,q,11)) return {lead:i}; }
+  return null;
+}
+function dropEndsOf(k){
+  /* plugs in an item's sockets, and crocodiles on a ring, fall to the desk */
+  for(const w of WKEYS) ST.wire[w].ends.forEach((e,i)=>{ if(!e) return; const s=e.sock?sockAt(e.sock):null;
+    if((e.sock&&(!s||(s.meter===k)||(k==="psu"&&e.sock[0]==="P")))||(e.ring===k)){ const wp=endW(e)||[ST.it[k].x,ST.it[k].y,0]; ST.wire[w].ends[i]={desk:[wp[0],wp[1]+DIM[k][1]/2+14]}; } });
+  for(const l of ST.lead) if(l.sock&&k==="psu"&&l.sock[0]==="P"){ const s=sockAt(l.sock); l.sock=null; l.desk=s?[s.w[0],s.w[1]+90]:null; }
+}
+function returnItem(k){
+  if(childOf(k)){ say("topFirst"); return false; }
+  dropEndsOf(k);
+  if(k==="stand") ST.lead.forEach(l=>{ l.sock=null; l.desk=null; });
+  if(k==="mA"||k==="mB"){ ST.meter[k].fuse=true; ST.meter[k].on=false; }
+  if(k==="scale"){ ST.scale.on=false; }
+  ST.it[k].on=false; ST.it[k].sup=null; say("back",itemName(k)); return true;
+}
+function returnWire(w){ ST.wire[w]={on:false,ends:[null,null]}; say("wireBack",itemName(w)); }
+function returnHand(){
+  if(!hand) return;
+  if(hand.item){ if(hand.move){ Object.assign(ST.it[hand.item],hand.orig,{on:true}); say("stays"); } }
+  else if(hand.wire){ const W=ST.wire[hand.wire]; if(hand.fresh) returnWire(hand.wire);
+    else { const q=unP(mouse[0],mouse[1],0), other=endW(W.ends[1-hand.end]);
+      if(hitR([DESK.x0,DESK.y0,DESK.x1,DESK.y1],q[0],q[1],0)&&(!other||dist3(other,[q[0],q[1],0])<=WIRES[hand.wire].len)){ W.ends[hand.end]={desk:q}; say("dropped"); }
+      else returnWire(hand.wire); } }
+  else if(hand.lead!==undefined){ const q=unP(mouse[0],mouse[1],0); ST.lead[hand.lead].desk=dist3(leadAnchor(),[q[0],q[1],0])<=LEAD_LEN?q:null; ST.lead[hand.lead].sock=null; say("dropped"); }
+  hand=null;
+}
+function checkReach(){
+  for(const w of WKEYS){ const W=ST.wire[w]; if(!W.on||!W.ends[0]||!W.ends[1]) continue;
+    const a=endW(W.ends[0]), b=endW(W.ends[1]); if(a&&b&&dist3(a,b)>WIRES[w].len){ W.ends[1]={desk:[a[0]+40,a[1]+40]}; } }
+  if(ST.it.stand.on) for(let i=0;i<2;i++) if(dist3(leadAnchor(),leadW(i))>LEAD_LEN){ ST.lead[i].sock=null; ST.lead[i].desk=null; }
+}
+function placeEnd(p){
+  const t=d(), isLead=hand.lead!==undefined, kind=isLead?"ban":WIRES[hand.wire].ends[hand.end];
+  const other=isLead?leadAnchor():endW(ST.wire[hand.wire].ends[1-hand.end]), len=isLead?LEAD_LEN:WIRES[hand.wire].len;
+  const finish=(at,key,arg)=>{
+    const pos=at.sock?sockAt(at.sock).w:at.ring?clipW(at.ring,at.s):[at.desk[0],at.desk[1],0];
+    if(other&&dist3(other,pos)>len){ say("reach"); return; }
+    if(isLead){ ST.lead[hand.lead]=at; hand=null; say(key,arg); return; }
+    const W=ST.wire[hand.wire]; W.on=true; W.ends[hand.end]=at; say(key,arg);
+    if(!W.ends[1-hand.end]) hand={wire:hand.wire,end:1-hand.end}; else hand=null; };
+  for(const s of sockets()){ if(!nearS(p,scr(s.w),s.big?11:9)) continue;
+    if(kind!=="ban"){ say("wrong"); return; } if(occupied(s.id)){ say("full"); return; }
+    finish({sock:s.id},"plugged",s.meter?itemName(s.meter):itemName("psu")); return; }
+  const order=RINGS.filter(k=>ST.it[k].on).sort((a,b)=>topOf(b)-topOf(a));
+  for(const k of order){ const [x,y]=unP(p[0],p[1],topOf(k)), s=arcAt(k,x,y); if(s===null) continue;
+    if(kind!=="croc"){ say("wrong"); return; }
+    finish({ring:k,s,rc:BENCH.rClip*U(0.6,1.6)},"clipped",itemName(k)); return; }
+  const [x,y]=unP(p[0],p[1],0);
+  if(x>DESK.x0&&x<DESK.x1&&y>DESK.y0&&y<DESK.y1) finish({desk:[x,y]},"dropped");
+}
+function benchClick(p,right){
+  if(hand){
+    if(right){ returnHand(); return; }
+    if(hand.item){ const k=hand.item, tg=target(k,p);
+      if(!tg){ say("noFit"); return; } if(tg.err){ say(tg.err); return; }
+      Object.assign(ST.it[k],{on:true,x:tg.x,y:tg.y,sup:tg.sup});
+      say(tg.sup?"placedOn":"placed",itemName(k),tg.sup?itemName(tg.sup):""); hand=null; checkReach(); return; }
+    placeEnd(p); return;
+  }
+  const en=endsNear(p);
+  if(right){
+    if(en){ if(en.lead!==undefined){ const l=ST.lead[en.lead]; if(l.sock){ const s=sockAt(l.sock); l.sock=null; l.desk=s?[s.w[0],s.w[1]+60]:null; say("unplug"); } return; }
+      const e=ST.wire[en.wire].ends[en.end]; if(e.desk){ returnWire(en.wire); return; }
+      const wp=endW(e); ST.wire[en.wire].ends[en.end]={desk:[wp[0],wp[1]+30]}; say("unplug"); return; }
+    const k=itemAt(p); if(k) returnItem(k); return;
+  }
+  if(ST.it.psu.on&&nearS(p,psuBtnScr(),9)){ holdPower(true,"mouse"); return; }
+  if(en){ if(en.lead!==undefined){ hand={lead:en.lead}; ST.lead[en.lead].sock=null; say("end",d().end.lead); return; }
+    const e=ST.wire[en.wire].ends[en.end]; ST.wire[en.wire].ends[en.end]=null; hand={wire:en.wire,end:en.end}; say("end",d().end[WIRES[en.wire].ends[en.end]]); return; }
+  const k=itemAt(p);
+  if(k){ if(childOf(k)){ say("topFirst"); return; }
+    hand={item:k,move:true,orig:{x:ST.it[k].x,y:ST.it[k].y,sup:ST.it[k].sup}}; dropEndsOf(k); ST.it[k].on=false; say("moveIt",itemName(k)); }
+}
+function turnScrew(turns){
+  if(!ST.it.stand.on) return;
+  let h=ST.h+turns*1.41; const lo=coilStop();
+  if(h<lo){ h=lo; if(ST.h<=lo+1e-6) say("bottom"); } else if(h>H_MAX){ h=H_MAX; say("top"); } else say("turn",turns);
+  ST.h=h; checkReach();
+}
+let powerBy=null;
+function holdPower(on,by){ if(on){ if(!ST.it.psu.on) return; ST.power=true; powerBy=by; } else if(!by||by===powerBy){ ST.power=false; powerBy=null; } }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("wheel",e=>{ if(!ST.it.stand.on) return; const p=lpos(e), r=itemRect("stand");
+  if(!(p[0]>=r[0]-30&&p[0]<=r[2]+30&&p[1]>=r[1]-30&&p[1]<=r[3])) return;
+  e.preventDefault(); turnScrew((e.deltaY<0?1:-1)*(e.shiftKey?1/32:1/8)); },{passive:false});
+window.addEventListener("pointerup",()=>{ holdPower(false,"mouse"); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.code==="Space"&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){ e.preventDefault(); if(!e.repeat) holdPower(true,"key"); }
+  if(e.key==="Escape"&&hand){ returnHand(); drawTray(); } });
+window.addEventListener("keyup",e=>{ if(e.code==="Space") holdPower(false,"key"); });
+window.addEventListener("blur",()=>holdPower(false));
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&(hand.item===k||hand.wire===k)&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ if(WIRES[k]){ hand={wire:k,end:0,fresh:true}; ST.wire[k].on=true; say("end",d().end.ban); } else { hand={item:k}; say("picked",itemName(k)); } }
+    drawTray(); return; } });
+/* the close up */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+function meterHit(m,p){ const c=CL[m]; if(!c||!ST.it[m].on) return null; const u=(p[0]-c.x)/c.s, v=(p[1]-c.y)/c.s;
+  if(Math.hypot(u-45.5,v-112)<26) return {dial:u<45.5?-1:1};
+  const pw=m==="mA"?[76,64]:[16,64]; if(Math.hypot(u-pw[0],v-pw[1])<7) return {power:true};
+  return null; }
+function setDial(m,step){ const M=ST.meter[m]; M.dial=(M.dial+step+DIALS.length)%DIALS.length; M.dt=0; say("dial",itemName(m).split(" (")[0],DIALS[M.dial][0]); }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{
+  const p=clpos(e);
+  if(tab==="meters"){
+    for(const m of ["mA","mB"]){ const h=meterHit(m,p); if(!h) continue;
+      if(h.power){ const M=ST.meter[m]; M.on=!M.on; M.dt=0; say("mpow",itemName(m).split(" (")[0],M.on); return; }
+      setDial(m,e.button===2?-1:1); return; }
+    const sc=CL.scale; if(sc&&ST.it.scale.on){ const u=(p[0]-sc.x)/sc.s, v=(p[1]-sc.y)/sc.s;
+      for(const k in SCALE_BTN){ const [x,y,w,h]=SCALE_BTN[k]; if(u>=x&&u<=x+w&&v>=y&&v<=y+h){ scaleBtn(k); return; } } }
+    const ps=CL.psu; if(ps&&ST.it.psu.on){ const u=(p[0]-ps.x)/ps.s, v=(p[1]-ps.y)/ps.s; if(Math.hypot(u-PSU_BTN[0],v-PSU_BTN[1])<PSU_BTN[2]){ holdPower(true,"mouse"); return; } }
+  } else if(tab==="side"&&CL.knob){ const [kx,ky,kr]=CL.knob; if(Math.hypot(p[0]-kx,p[1]-ky)<kr) sideDrag={a:Math.atan2(p[1]-ky,p[0]-kx)}; }
+  else if(tab==="ring"){
+    for(const [k,x,y,w,h] of CL.btn||[]) if(p[0]>=x&&p[0]<=x+w&&p[1]>=y&&p[1]<=y+h){ RV.k=k; RV.px=0; RV.py=0; return; }
+    for(const [w,i,x,y] of CL.clips||[]) if(Math.hypot(p[0]-x,p[1]-y)<12){ rvDrag={clip:[w,i]}; return; }
+    rvDrag={pan:[p[0]-RV.px,p[1]-RV.py]};
+  }
+});
+closeCv.addEventListener("pointermove",e=>{ const p=clpos(e);
+  if(sideDrag&&CL.knob){ const [kx,ky]=CL.knob, a=Math.atan2(p[1]-ky,p[0]-kx); let da=a-sideDrag.a; if(da>Math.PI) da-=2*Math.PI; if(da<-Math.PI) da+=2*Math.PI;
+    sideDrag.a=a; turnScrew(da/(2*Math.PI)); return; }
+  if(rvDrag&&rvDrag.pan){ RV.px=p[0]-rvDrag.pan[0]; RV.py=p[1]-rvDrag.pan[1]; return; }
+  if(rvDrag&&rvDrag.clip&&RV.k){ const z=RV.zoom, cx=CLW/2+RV.px, cy=CLH/2+16+RV.py, R=RING[RV.k], dl=R.gap/(2*R.rm);
+    let th=Math.atan2(p[1]-cy,p[0]-cx)+Math.PI/2-dl; th=((th%(2*Math.PI))+2*Math.PI)%(2*Math.PI); const s=th*R.rm;
+    if(s>0.0015&&s<R.len-0.0015){ const [w,i]=rvDrag.clip, e=ST.wire[w].ends[i]; e.s=s; } }
+});
+window.addEventListener("pointerup",()=>{ sideDrag=null; rvDrag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e);
+  if(tab==="meters"){ for(const m of ["mA","mB"]){ const h=meterHit(m,p); if(h&&h.dial){ e.preventDefault(); setDial(m,e.deltaY<0?-1:1); return; } } }
+  if(tab==="side"){ e.preventDefault(); turnScrew((e.deltaY<0?1:-1)*(e.shiftKey?1/32:1/8)); }
+  if(tab==="ring"){ e.preventDefault(); const z0=RV.zoom; RV.zoom=Math.max(2,Math.min(16,RV.zoom*(e.deltaY<0?1.15:1/1.15)));
+    const cx=CLW/2+RV.px, cy=CLH/2+16+RV.py; RV.px+=(p[0]-cx)*(1-RV.zoom/z0); RV.py+=(p[1]-cy)*(1-RV.zoom/z0); } },{passive:false});
+function scaleBtn(k){ const s=ST.scale;
+  if(k==="power"){ s.on=!s.on; if(s.on){ s.boot=1.4; s.disp="88888"; } say(s.on?"scaleOn":"scaleOff"); }
+  if(k==="tare"&&s.on&&s.boot<=0){ s.tare=scaleRaw(); s.dt=0; say("tare"); } }
+
+/* ══════════════════════════════════════════════════════════════
+   9.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+const rb=$("redBtn");
+rb.addEventListener("pointerdown",e=>{ e.preventDefault(); holdPower(true,"mouse"); });
+$("braid").onchange=e=>{ ST.braid=e.target.checked; say("braid",ST.braid); };
+$("noteBtn").onclick=()=>{ const a=ST.it.mA.on&&ST.meter.mA.on?ST.meter.mA.disp||"—":"—", b=ST.it.mB.on&&ST.meter.mB.on?ST.meter.mB.disp||"—":"—",
+  s=ST.it.scale.on&&ST.scale.on&&ST.scale.boot<=0?ST.scale.disp:"—";
+  ST.notes.push(d().noteRow(a.replace("1   .","1"),b.replace("1   .","1"),s,ST.power)); renderNotes(); say("noted"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; }
+  box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ITEMS.some(k=>ST.it[k].on)) L.push([t.st.none,false]);
+  if(RING.closed.T>4) L.push([t.st.hot,true]);
+  if(hand){ const n=hand.item?itemName(hand.item):hand.wire?itemName(hand.wire)+" · "+t.end[WIRES[hand.wire].ends[hand.end]]:t.end.lead; L.push([t.st.hand(n),false]); }
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-psu").textContent=t.hPsu; rb.textContent=t.red; $("t-psuhint").textContent=t.psuHint;
+  $("t-h-leads").textContent=t.hLeads; $("t-braid").textContent=t.braid; $("t-leadhint").textContent=t.leadHint;
+  $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2011 E1 — 진동 자기장 속 도체의 부양 · HaslaLab":"APhO 2011 E1 — Levitation of Conductors in an Oscillating Magnetic Field · HaslaLab";
+  renderTabs(); renderNotes(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+
+let tPrev=performance.now()/1000, frameN=0, solveT=0;
+function physStep(dt){
+  if(!SOLN) return;
+  /* contacts bed in while the 0.7 V circuit carries current: current and voltage creep up together */
+  const i07=ST.power&&ST.it.psu.on?cabs(csub(SOLN.sol.V("P07a"),SOLN.sol.V("P07i")))/BENCH.r07:0;
+  ST.loadT=i07>1?ST.loadT+dt:Math.max(0,ST.loadT-dt*0.5);
+  /* the closed ring warms while its induced current flows */
+  const R=RING.closed; let P=0;
+  if(SOLN.emf.closed){ const Rr=ringR("closed"), I=cabs(SOLN.emf.closed)/Math.hypot(Rr,OMEGA*L_CL); P=I*I*Rr; }
+  R.T+=(P/(R.mass*C_AL)-R.T/240)*dt;
+}
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  solveT-=dt; if(solveT<=0){ solveAll(); solveT=0.12; }
+  physStep(dt);
+  for(const m of ["mA","mB"]){ const M=ST.meter[m]; M.dt-=dt;
+    if(M.dt<=0){ M.disp=fmtMeter(meterRaw(m)); M.dt=0.4;
+      if(M.fuse&&ST.it[m].on&&SOLN){ const im=cabs(csub(SOLN.sol.V(m+"_m"),SOLN.sol.V(m+"_C")))/BENCH.rmA; if(im>0.3){ M.fuse=false; } } } }
+  const s=ST.scale; if(s.on){ if(s.boot>0){ s.boot-=dt; if(s.boot<=0){ s.tare=scaleRaw(); s.dt=0; } }
+    else { s.dt-=dt; if(s.dt<=0){ const g=scaleRaw()-s.tare+0.006*gauss(); s.disp=Math.abs(g)>100?"o-Ld":(g<0?"-":"")+Math.abs(g).toFixed(2); s.dt=0.35; } } }
+  rb.classList.toggle("on",ST.power);
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
