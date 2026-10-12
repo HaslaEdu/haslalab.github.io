@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2011 E2 — 광학 블랙박스 · An Optical Black Box · HaslaLab</title>
+<meta name="description" content="APhO 2011 실험 2번을 브라우저에서 실행합니다. 백색 LED 손전등과 적색 레이저, 톱니 구조 플라스틱 시료, 모눈종이 스크린, 나무 벤치 위 막대와 줄자로 반사·투과·회절 무늬를 보고 꼭지각, 편향각, 굴절률, 톱니 간격을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2011 E2 — 광학 블랙박스 · An Optical Black Box">
+<meta property="og:description" content="APhO 2011 실험 2번을 브라우저에서 실행합니다. 시료를 통해 보이는 색띠와 막대를 맞추고, 스크린의 무늬를 모눈종이에서 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  #rotRow button{padding:6px 4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-src"></h2>
+    <div class="row"><button id="srcBtn"></button><button id="lampBtn"></button></div>
+    <p class="hint" id="t-srchint"></p>
+
+    <h2 id="t-h-rot"></h2>
+    <div class="disp" id="selLbl" style="font-size:14px;letter-spacing:0"></div>
+    <div class="row" id="rotRow"></div>
+    <p class="hint" id="t-rothint"></p>
+
+    <h2 id="t-h-bench"></h2>
+    <div class="row"><button id="markBtn"></button><button id="markClr"></button></div>
+    <p class="hint" id="t-benchhint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteClr"></button></div>
+    <div class="laps" id="notes" style="max-height:200px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"APhO 2011 실험 2 — 광학 “블랙박스”",
+    sub:"가상 실험실 · 손전등이나 레이저를 스탠드에 끼우고, 시료·스크린·벤치를 놓고 돌려 맞춘 뒤 시료를 통해 보이는 모습과 스크린의 무늬를 읽으세요. 각도·굴절률·간격은 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n놓은 장비 위에서 휠: 돌리기",
+    cap:"실험대 (위 앞쪽에서 본 모습, 책상 1 m) — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 장비 위에서 휠: 돌리기(Shift: 미세) / 줄자를 놓은 뒤 두 점 클릭: 길이 재기",
+    tabs:{eye:"시료를 통해 본 모습", screen:"스크린 (모눈종이)", bench:"나무 벤치와 막대"},
+    closeCap:{
+      eye:"확대 — 시료 뒤에 눈을 대고 광원 쪽을 본 모습. 좌우로 끌면 머리를 옮겨 다른 방향을 봅니다 (휠: 미세). 가운데 파란 선은 슬라이드 틀의 중심 표시.",
+      screen:"확대 — 스크린의 모눈종이 (1 mm 격자, 구멍 포함). 휠로 확대, 끌어서 이동, 클릭으로 연필 표시, 우클릭으로 표시 지우기.",
+      bench:"확대 — 위에서 본 나무 벤치. 막대 받침을 끌어 옮기고, 오른쪽 패널의 '벤치에 표시'로 받침 왼쪽 끝을 연필로 표시합니다. 벤치를 따라 줄자를 대어 두었습니다."},
+    hSrc:"광원", srcOn:"광원 켜기", srcOff:"광원 끄기", lampOn:"탁상 램프 켜기", lampOff:"탁상 램프 끄기",
+    srcHint:"손전등은 뒤쪽 버튼, 레이저는 검은 뚜껑을 밀어 켜고 끕니다 (실험대에서 직접 클릭해도 됩니다). 레이저 파장 λ = 652 ± 2 nm.\n⚠ 레이저 빛을 직접 보거나 시료를 통해 보지 마세요 — 스크린을 쓰세요.",
+    hRot:"선택한 장비 돌리기", noSel:"(선택한 장비 없음)",
+    rotHint:"장비를 클릭하면 선택됩니다. 시료 홀더의 긴 손잡이는 미세 회전용입니다. 180°는 시료의 앞뒤를 바꿉니다.",
+    hBench:"나무 벤치", mark:"벤치에 표시", markClr:"표시 지우기",
+    benchHint:"막대 받침의 왼쪽 끝 위치에 연필 자국을 남깁니다.",
+    hNote:"실험 노트", noteClr:"지우기", noteEmpty:"줄자로 잰 길이가 여기에 적힙니다",
+    items:{src:"광원용 스탠드", flash:"백색 LED 손전등", laser:"적색 레이저 포인터", hold:"시료 홀더 · 스탠드 (시료 포함)", screen:"흰 스크린 (모눈종이, 구멍)",
+           bench:"나무 벤치 · 막대", tape:"줄자 3 m", lamp:"탁상 램프"},
+    lab:{nothing:"(시료를 통해 보이는 빛이 없습니다)", laserEye:"⚠ 레이저를 시료를 통해 보지 마세요! 스크린을 쓰세요.", noHold:"시료 홀더를 놓으면 보입니다",
+         noScreen:"스크린을 놓으면 보입니다", noBench:"벤치를 놓으면 보입니다", dark:"(어두움)", tapeTo:"줄자"},
+    st:{none:"부품함에서 장비를 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, tape:"줄자: 시작점을 클릭하세요 (우클릭: 그만)", tape2:"줄자: 끝점을 클릭하세요",
+        laserOn:"⚠ 레이저가 켜져 있습니다 — 배터리는 한 시간쯤 갑니다."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
+       mounted:n=>n+" 을(를) 스탠드에 끼웠습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
+       noFit:"그곳에는 놓을 수 없습니다. 책상 위, 다른 장비와 겹치지 않는 곳에 놓으세요.", needStand:"광원은 스탠드 머리에 끼워야 합니다 — 스탠드를 먼저 놓으세요.",
+       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       sel:n=>n+" 선택", rot:(n,a)=>n+" 을(를) 돌렸습니다", srcOn:n=>n+" 켬", srcOff:n=>n+" 끔", noSrc:"스탠드에 끼운 광원이 없습니다.",
+       lamp:on=>"탁상 램프 "+(on?"켬":"끔"), marked:"벤치에 연필 표시를 했습니다.", unmarked:"벤치의 표시를 지웠습니다.",
+       tape:mm=>"줄자 눈금: "+mm, scrMark:"스크린에 연필 표시", scrUnmark:"스크린의 표시를 지웠습니다.", inHole:"손전등 머리가 스크린 구멍에 들어갔습니다."}
+  },
+  en:{
+    title:"APhO 2011 Experiment 2 — An optical “black box”",
+    sub:"Virtual laboratory · mount the flashlight or the laser on the stand, set out and turn the sample, screen and bench, then read what you see through the sample and the patterns on the screen. Angles, indices and spacing are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\nwheel over a placed item: turn it",
+    cap:"the bench (seen from above and in front; the desk is 1 m) — L-click pick up / put down, R-click return, wheel over an item: turn it (Shift: fine), with the tape out click two points: measure",
+    tabs:{eye:"View through the sample", screen:"Screen (mm paper)", bench:"Wooden bench and stake"},
+    closeCap:{
+      eye:"close up — your eye behind the sample, looking towards the light source. Drag sideways to move your head and look in another direction (wheel: fine). The blue line marks the centre of the slide frame.",
+      screen:"close up — the millimetre paper of the screen (1 mm grid, with the hole). Wheel to zoom, drag to pan, click for a pencil mark, R-click removes marks.",
+      bench:"close up — the wooden bench from above. Drag the stake's base along it; 'Mark the bench' (right panel) puts a pencil line at the left end of the base. A tape measure lies along the bench."},
+    hSrc:"Light source", srcOn:"Source on", srcOff:"Source off", lampOn:"Desk lamp on", lampOff:"Desk lamp off",
+    srcHint:"The flashlight switches with the button at its rear, the laser by sliding its black cap (you can also click them on the bench). Laser wavelength λ = 652 ± 2 nm.\n⚠ Never look into the laser or at it through the sample — use the screen.",
+    hRot:"Turn the selected item", noSel:"(nothing selected)",
+    rotHint:"Click an item to select it. The long handle of the sample holder is for fine rotations. 180° turns the sample around.",
+    hBench:"Wooden bench", mark:"Mark the bench", markClr:"Clear marks",
+    benchHint:"Leaves a pencil line at the left end of the stake's base.",
+    hNote:"Lab notebook", noteClr:"Clear", noteEmpty:"lengths measured with the tape are written here",
+    items:{src:"Stand for the light source", flash:"White LED flashlight", laser:"Red laser pointer", hold:"Sample holder · stand (with the sample)", screen:"White screen (mm paper, hole)",
+           bench:"Wooden bench · stake", tape:"Tape measure 3 m", lamp:"Desk lamp"},
+    lab:{nothing:"(no light seen through the sample)", laserEye:"⚠ Never look at the laser through the sample! Use the screen.", noHold:"put the sample holder down to see this",
+         noScreen:"put the screen down to see it", noBench:"put the bench down to see it", dark:"(dark)", tapeTo:"tape"},
+    st:{none:"Take the equipment out of the box and put it on the bench.", hand:n=>"In hand: "+n, tape:"Tape: click the start point (R-click: stop)", tape2:"Tape: click the end point",
+        laserOn:"⚠ The laser is on — its battery lasts about an hour."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
+       mounted:n=>n+" mounted on the stand.", back:n=>n+" put back in the box.",
+       noFit:"It does not fit there: put it on the desk where it does not overlap anything.", needStand:"Sources go into the head of the stand — put the stand down first.",
+       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       sel:n=>n+" selected", rot:(n,a)=>n+" turned", srcOn:n=>n+" on", srcOff:n=>n+" off", noSrc:"No source is mounted on the stand.",
+       lamp:on=>"Desk lamp "+(on?"on":"off"), marked:"Pencil mark made on the bench.", unmarked:"Bench marks cleared.",
+       tape:mm=>"Tape reads: "+mm, scrMark:"Pencil mark on the screen", scrUnmark:"Screen marks cleared.", inHole:"The flashlight's head is in the hole of the screen."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND OPTICS  (the same model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2011e2)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+const DEG=Math.PI/180;
+/* colour of a wavelength (nm), Bruton */
+function wlRGB(nm){
+  if(nm<380||nm>780) return [0,0,0]; let r,g,b;
+  if(nm<440){ r=-(nm-440)/60; g=0; b=1; } else if(nm<490){ r=0; g=(nm-440)/50; b=1; } else if(nm<510){ r=0; g=1; b=-(nm-510)/20; }
+  else if(nm<580){ r=(nm-510)/70; g=1; b=0; } else if(nm<645){ r=1; g=-(nm-645)/65; b=0; } else { r=1; g=0; b=0; }
+  const f=nm>700?0.3+0.7*(780-nm)/80:nm<420?0.3+0.7*(nm-380)/40:1; return [r*f,g*f,b*f];
+}
+/* the sample: a transparent film with symmetric 90° saw teeth (structure A of Fig. 5) */
+const SAMPLE={ phi:Math.PI/2, d:50.2e-6*U(0.96,1.05), a:1.562056+U(-0.006,0.006), b:6.778e-15*U(0.96,1.04), violet:U(396e-9,410e-9), frame:50, ap:24 };
+SAMPLE.x=(Math.PI-SAMPLE.phi)/2; SAMPLE.h=0.5*SAMPLE.d*Math.tan(SAMPLE.x);
+const LAM_LASER=652e-9+U(-2e-9,2e-9);
+const nIdx=lam=>SAMPLE.a+SAMPLE.b/(lam*lam);
+function deviation(i1,lam){ const n=nIdx(lam), s=Math.sin(i1)/n; if(Math.abs(s)>1) return null;
+  const r1=Math.asin(s), r2=SAMPLE.x-r1, s2=n*Math.sin(r2); if(Math.abs(s2)>1) return null; return i1+Math.asin(s2)-SAMPLE.x; }
+function fringeVis(m,psi,lam){ const n=nIdx(lam); let dp=2*Math.PI*(n-1)*SAMPLE.h/lam; dp+=2*Math.PI*SAMPLE.h*Math.tan(psi)/lam; return 0.5*(1+Math.cos(Math.PI*m+dp)); }
+/* what leaves the sample at one wavelength: [angle (rad, from the outgoing axis), amplitude] */
+function features(kind,lam,mono,psi,flip){
+  const out=[], dEff=SAMPLE.d*Math.cos(psi);
+  if(kind==="trans"){
+    out.push([0,0.45]); const bands=[];
+    if(flip===0) for(const sg of [1,-1]){ const dv=deviation(SAMPLE.x-sg*psi,lam); if(dv!==null){ bands.push(sg*dv); if(!mono) out.push([sg*dv,7.0]); } }
+    const wband=3*lam/dEff;
+    for(let m=1;;m++){ const sv=m*lam/dEff; if(sv>=0.62) break; const th=Math.asin(sv), env=Math.exp(-((sv/0.34)**2)), vis=fringeVis(m,psi,lam);
+      for(const sg of [1,-1]){ let amp=0.30*env; if(mono) for(const bd of bands) amp+=7.0*Math.exp(-(((sg*sv-Math.sin(bd))/wband)**2)); out.push([sg*th,amp*vis]); } }
+    if(mono) for(const bd of bands) out.push([bd,1.6]);
+  } else {
+    const strong=flip===1?4.2:0.42; out.push([0,strong]);
+    for(let m=1;;m++){ const sv=m*lam/dEff; if(sv>=0.30) break; const th=Math.asin(sv), env=Math.exp(-((sv/0.075)**2));
+      for(const sg of [1,-1]) out.push([sg*th,strong*env*fringeVis(m,psi,lam)]); }
+  }
+  return out;
+}
+const LAMS=Array.from({length:41},(_,i)=>(384+8*i)*1e-9);
+/* the white LED: blue pump and phosphor, rolling off at the violet end */
+function ledW(lam){ const nm=lam*1e9, cut=SAMPLE.violet*1e9+25;
+  let w=Math.exp(-(((nm-452)/17)**2))+0.85*Math.exp(-(((nm-565)/62)**2));
+  if(nm<cut) w*=Math.exp(-(((cut-nm)/13)**2)); if(nm>690) w*=Math.exp(-(((nm-690)/22)**2)); return w; }
+/* accumulate the light of all features into colour columns. map(angle) -> column (float) or null; sig(angle) -> blur in columns */
+function splat(cols,kind,psi,flip,mono,map,sig,gain){
+  const N=cols.length/3, lams=mono?[mono]:LAMS;
+  for(const lam of lams){ const w=mono?1:ledW(lam); if(w<1e-3) continue; const [cr,cg,cb]=wlRGB(lam*1e9);
+    for(const [ang,amp] of features(kind,lam,!!mono,psi,flip)){ if(amp<1e-4) continue;
+      const c=map(ang); if(c===null) continue; const sg=Math.max(0.35,sig(ang)), half=Math.ceil(3.2*sg), k=amp*w*gain;
+      const i0=Math.max(0,Math.floor(c)-half), i1=Math.min(N-1,Math.floor(c)+half);
+      for(let i=i0;i<=i1;i++){ const v=k*Math.exp(-0.5*((i-c)/sg)**2); cols[3*i]+=v*cr; cols[3*i+1]+=v*cg; cols[3*i+2]+=v*cb; } } }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE DESK  (world in mm; x right, y towards you, z up; angles in the desk plane)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=820, SC=0.8, OX=160, OY=392, KY=0.55;
+const P=(x,y,z)=>[OX+SC*x, OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>[(X-OX)/SC, ((Y-OY)/SC+(z||0))/KY];
+const DESK={x0:0,x1:1100,y0:0,y1:950};
+const BEAM_Z=205, EYE_E=450;
+const v2=(a)=>[Math.cos(a),Math.sin(a)], add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k],
+      dot2=(a,b)=>a[0]*b[0]+a[1]*b[1], crs2=(a,b)=>a[0]*b[1]-a[1]*b[0], len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a)||1; return [a[0]/l,a[1]/l]; },
+      rot2=(a,t)=>[a[0]*Math.cos(t)-a[1]*Math.sin(t),a[0]*Math.sin(t)+a[1]*Math.cos(t)], ang2=(a,b)=>Math.atan2(crs2(a,b),dot2(a,b));
+const ITEMS=["screen","bench","src","hold","flash","laser","lamp","tape"];
+const ST={
+  it:{ src:{on:false,x:0,y:0,a:0}, hold:{on:false,x:0,y:0,a:Math.PI+U(-3,3)*DEG}, screen:{on:false,x:0,y:0,a:Math.PI/2}, bench:{on:false,x:0,y:0,a:0,t:0,marks:[]},
+       flash:{on:false,x:0,y:0,a:0,mount:false}, laser:{on:false,x:0,y:0,a:0,mount:false}, lamp:{on:false,x:0,y:0,a:0}, tape:{on:false} },
+  lit:{flash:false,laser:false}, lamp:true, sel:null, notes:[], scrMarks:[], tapeA:null, tapeB:null
+};
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const SCREEN={w:1000,h:400,z0:12,hole:-80,feet:400}, BENCH={L:1000,w:45,h:12}, STAND={r:45,hb:55,post:7,top:195};
+/* the mounted source, its front end and direction */
+function mounted(){ return ST.it.flash.on&&ST.it.flash.mount?"flash":ST.it.laser.on&&ST.it.laser.mount?"laser":null; }
+function srcTip(){ const s=ST.it.src, u=v2(s.a); return [s.x+u[0]*(mounted()==="laser"?78:68), s.y+u[1]*(mounted()==="laser"?78:68)]; }
+/* the screen: its paper faces direction a; s runs to the right as you face the paper */
+function scrFrame(){ const s=ST.it.screen, n=v2(s.a), t=[n[1],-n[0]]; return {c:[s.x,s.y],n,t}; }
+function onScreen(p){ const f=scrFrame(); const r=sub2(p,f.c); return {s:dot2(r,f.t),dn:dot2(r,f.n)}; }
+function scrHole(){ const f=scrFrame(); return add2(f.c,mul2(f.t,SCREEN.hole)); }
+/* does the straight path a→b cross the screen board (not through its hole)? */
+function crossesScreen(a,b,throughHole){
+  if(!ST.it.screen.on) return null; const A=onScreen(a), B=onScreen(b);
+  if(A.dn*B.dn>0) return null; const t=A.dn/(A.dn-B.dn), s=A.s+(B.s-A.s)*t;
+  if(Math.abs(s)>SCREEN.w/2) return null; if(throughHole&&Math.abs(s-SCREEN.hole)<5) return null; return {t,s};
+}
+function srcInHole(){
+  if(mounted()!=="flash"||!ST.it.screen.on) return false; const q=onScreen(srcTip()); return Math.abs(q.dn)<14&&Math.abs(q.s-SCREEN.hole)<5;
+}
+function benchK(){ const b=ST.it.bench, u=v2(b.a); return [b.x+u[0]*b.t, b.y+u[1]*b.t]; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE LIGHT PATH
+   ══════════════════════════════════════════════════════════════ */
+let OPT=null;
+function optics(){
+  const o={beam:null, sample:null};
+  const m=mounted(); if(!m||!ST.lit[m]||!ST.it.src.on) return OPT=o;
+  const F=srcTip(), vs=v2(ST.it.src.a); o.beam={kind:m,F,vs};
+  const H=ST.it.hold.on?[ST.it.hold.x,ST.it.hold.y]:null;
+  if(H){ const r=sub2(H,F), D=len2(r), along=dot2(r,vs), miss=Math.abs(crs2(vs,r));
+    const hits=m==="laser"?(along>0&&miss<SAMPLE.ap/2-1):(along>0&&Math.atan2(miss,along)<14*DEG);
+    const blocked=crossesScreen(F,H,srcInHole());
+    if(hits&&!blocked&&D>30){
+      const u=nrm2(r), nh=v2(ST.it.hold.a); let flip, psi;
+      if(dot2(nh,mul2(u,-1))>0){ flip=0; psi=ang2(mul2(u,-1),nh); } else { flip=1; psi=ang2(mul2(u,-1),mul2(nh,-1)); }
+      const off=m==="laser"?1:Math.exp(-((Math.atan2(miss,along)/(9*DEG))**2));
+      const ok=Math.abs(psi)<75*DEG;
+      o.sample={H,u,D,flip,psi,int:ok?off*Math.cos(psi):0,miss};
+      if(m==="laser"){ /* the laser spot moves across the film; the beam continues only as the patterns */ }
+    }
+  }
+  return OPT=o;
+}
+/* the patterns that reach the screen, as columns over the board, 0.5 mm each */
+const SCOLS=2000;
+let SCR=null, SCRkey="";
+function screenPattern(){
+  if(!ST.it.screen.on||!OPT||!OPT.beam){ SCR=null; return null; }
+  const key=JSON.stringify([ST.it,ST.lit,ST.lamp]); if(key===SCRkey&&SCR) return SCR; SCRkey=key;
+  const cols=new Float32Array(SCOLS*3), f=scrFrame(), b=OPT.beam, laser=b.kind==="laser", mono=laser?LAM_LASER:null;
+  let hgt=laser?0.8:30, any=false;
+  const hitS=(p,w)=>{ /* ray p + t w on the board: s, distance */ const A=onScreen(p), dn=dot2(w,f.n); if(Math.abs(dn)<1e-6) return null; const t=-A.dn/dn; if(t<=1) return null;
+    const s=A.s+t*dot2(w,f.t); if(Math.abs(s)>SCREEN.w/2) return null; return {s,t}; };
+  const toCol=s=>(s+SCREEN.w/2)*2;
+  if(OPT.sample&&OPT.sample.int>0){
+    const S=OPT.sample, ap=SAMPLE.ap/2;
+    for(const kind of ["trans","refl"]){
+      const ax=kind==="trans"?S.u:mul2(S.u,-1);
+      const c0=hitS(S.H,ax); if(!c0) continue;
+      let sig;
+      if(laser){ const path=kind==="trans"?c0.t:c0.t+S.D, bd=1.2+0.0025*path; sig=()=>bd/2.5*2; hgt=Math.max(hgt,bd*0.5); }
+      else if(kind==="trans") sig=()=>ap*2;
+      else { const spread=Math.max(0.6,ap*Math.abs(S.D-c0.t)/Math.max(S.D,1)); sig=()=>spread*2; }
+      splat(cols,kind,S.psi,S.flip,mono,ang=>{ const h=hitS(S.H,rot2(ax,ang)); return h?toCol(h.s):null; },sig,(laser?1.6:1.0)*S.int*(kind==="trans"?1:1));
+      any=true;
+    }
+  }
+  /* the source itself shining on the screen: the beam not stopped by the sample */
+  if(!OPT.sample){
+    const h=hitS(b.F,b.vs);
+    if(h){ const w=laser?(1.2+0.0025*h.t)/2.5*2:Math.max(30,h.t*Math.tan(12*DEG));
+      const g=laser?60:3.0, c=toCol(h.s), sg=w;
+      for(let i=Math.max(0,Math.floor(c-3.2*sg));i<=Math.min(SCOLS-1,Math.ceil(c+3.2*sg));i++){ const v=g*Math.exp(-0.5*((i-c)/sg)**2); if(laser){ cols[3*i]+=v; } else { cols[3*i]+=v; cols[3*i+1]+=v*0.96; cols[3*i+2]+=v*0.9; } }
+      hgt=laser?(1.2+0.0025*h.t)*0.5:Math.max(hgt,w); any=true; }
+  }
+  SCR=any?{cols,hgt,laser,ref:laser?1.5:60}:null; return SCR;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH, AS SEEN FROM ABOVE AND IN FRONT
+   ══════════════════════════════════════════════════════════════ */
+/* a box turned by a about the vertical: u along its width w, n along its depth dd */
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+function drawDesk(){
+  const y0=P(0,0,0)[1], y1=P(0,DESK.y1,0)[1];
+  ctx.fillStyle=hgrad(0,LW,[[0,"#8a5a32"],[0.5,"#9a6a3e"],[1,"#7e5230"]]); ctx.fillRect(0,0,LW,y0);
+  ctx.strokeStyle="rgba(60,30,10,.18)"; for(let x=40;x<LW;x+=170){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,y0); ctx.stroke(); }
+  ctx.fillStyle=vgrad(y0,y1-y0,[[0,"#8d9396"],[1,"#a2a8ab"]]); ctx.fillRect(0,y0,LW,y1-y0);
+  ctx.fillStyle="rgba(255,255,255,.035)"; for(let i=0;i<500;i++){ const x=(i*977)%LW, y=y0+((i*331)%(y1-y0)); ctx.fillRect(x,y,2,1.4); }
+  ctx.fillStyle="#6d7376"; ctx.fillRect(0,y1,LW,LH-y1);
+  if(!lampLit()){ ctx.fillStyle="rgba(10,14,22,.28)"; ctx.fillRect(0,0,LW,LH); }
+}
+const lampLit=()=>ST.it.lamp.on&&ST.lamp;
+/* the stands: a heavy black cylinder, a post and a head */
+function drawStandBase(x,y,top){
+  vcyl(x,y,0,STAND.hb,STAND.r,hgrad(P(x-STAND.r,0,0)[0],2*STAND.r*SC,[[0,"#0d0d0e"],[0.45,"#2c2c2f"],[1,"#0b0b0c"]]),"#222225","#000");
+  vcyl(x,y,STAND.hb,top,STAND.post,hgrad(P(x-7,0,0)[0],14*SC,[[0,"#111"],[0.5,"#3a3a3d"],[1,"#111"]]),"#2a2a2c");
+}
+function drawSource(k,x,y,a,z){
+  const u=v2(a), lit=ST.lit[k];
+  if(k==="flash"){ const tip=[x+u[0]*68,y+u[1]*68], tail=[x-u[0]*67,y-u[1]*67];
+    hcyl(tail,add2(tail,mul2(u,14)),z,6.8,"#141416");
+    hcyl(add2(tail,mul2(u,14)),add2(tip,mul2(u,-8)),z,6.5,"#9fa4a9","#e6e9ec");
+    hcyl(add2(tip,mul2(u,-8)),tip,z,5.4,"#b8bdc2","#f2f4f6");
+    const tp=P(tip[0],tip[1],z); circ(tp[0],tp[1],2.6,lit?"#ffffff":"#d9dde0");
+    if(lit){ ctx.save(); ctx.globalAlpha=0.6; circ(tp[0],tp[1],9,"rgba(255,255,240,.55)"); ctx.restore(); }
+  } else { const tip=[x+u[0]*78,y+u[1]*78], tail=[x-u[0]*80,y-u[1]*80];
+    const capS=add2(tail,mul2(u,lit?4:0));
+    hcyl(capS,add2(capS,mul2(u,48)),z,11,"#121214");
+    hcyl(add2(tail,mul2(u,48)),add2(tip,mul2(u,-38)),z,8.6,"#3c3f44","#6a6e74");
+    const lb=add2(tail,mul2(u,78)); hcyl(lb,add2(lb,mul2(u,24)),z,8.8,"#f2c81c");
+    hcyl(add2(tip,mul2(u,-38)),tip,z,8.2,"#b8bdc2","#eef0f2");
+    if(lit){ const tp=P(tip[0],tip[1],z); circ(tp[0],tp[1],2.4,"#ff3a2a"); }
+  }
+}
+function drawSrc(){
+  const s=ST.it.src; drawStandBase(s.x,s.y,STAND.top-30);
+  rbox(s.x,s.y,STAND.top-30,40,40,30,s.a,"#2a2a2d","#1c1c1e","#000");
+  const m=mounted();
+  if(m){ drawSource(m,s.x,s.y,s.a,BEAM_Z);
+    const u=v2(s.a), n=[-u[1],u[0]], a=P(s.x+n[0]*20,s.y+n[1]*20,BEAM_Z), b=P(s.x-n[0]*20,s.y-n[1]*20,BEAM_Z);
+    ctx.strokeStyle="#c9a85a"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0],a[1]+2); ctx.quadraticCurveTo((a[0]+b[0])/2,(a[1]+b[1])/2-12,b[0],b[1]+2); ctx.stroke(); }
+}
+function drawHold(){
+  const h=ST.it.hold, u=v2(h.a), t=[-u[1],u[0]];
+  drawStandBase(h.x,h.y,172);
+  rbox(h.x,h.y,172,36,26,10,h.a+Math.PI/2,"#2a2a2d","#1c1c1e","#000");
+  /* the handle for fine rotation */
+  const r0=[h.x+t[0]*14,h.y+t[1]*14], r1=[h.x+t[0]*235,h.y+t[1]*235];
+  hcyl(r0,r1,178,2.2,"#8e9398","#d6d9dc");
+  /* the slide frame: black, 50 × 50 mm, a 24 mm window on the film, a blue line at the centre */
+  const C=(i,j,z)=>P(h.x+t[0]*i, h.y+t[1]*i, z+j);
+  const face=(off)=>{ const o=mul2(u,off), Q=(i,z)=>{ const p=P(h.x+t[0]*i+o[0],h.y+t[1]*i+o[1],z); return p; };
+    poly([Q(-25,BEAM_Z-25),Q(25,BEAM_Z-25),Q(25,BEAM_Z+25),Q(-25,BEAM_Z+25)],"#121214","#000",0.6);
+    poly([Q(-12,BEAM_Z-12),Q(12,BEAM_Z-12),Q(12,BEAM_Z+12),Q(-12,BEAM_Z+12)],"rgba(190,196,202,.75)","#e8eaec",0.8);
+    const a=Q(0,BEAM_Z+24), b=Q(0,BEAM_Z+13); ctx.strokeStyle="#2f6be0"; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); };
+  /* the frame is 4 mm thick; the face we see is the one turned towards us */
+  rbox(h.x,h.y,BEAM_Z-25,50,4,50,h.a+Math.PI/2,"#1e1e21","#151517","#000");
+  face(u[1]>0?2:-2);
+  if(OPT&&OPT.sample&&OPT.beam&&OPT.beam.kind==="laser"&&OPT.sample.int>0){ const p=P(h.x,h.y,BEAM_Z); circ(p[0],p[1],2.4,"rgba(255,40,30,.9)"); }
+}
+function drawScreen(){
+  const s=ST.it.screen, f=scrFrame(), front=f.n[1]>0;
+  for(const fs of [-SCREEN.feet,SCREEN.feet]){ const c=add2(f.c,mul2(f.t,fs)); rbox(c[0],c[1],0,70,90,80,s.a-Math.PI/2,"#e2c58e","#d1b07a","#a8874f"); }
+  const p=(sv,z,dn)=>{ const q=add2(add2(f.c,mul2(f.t,sv)),mul2(f.n,dn||0)); return P(q[0],q[1],z); };
+  const z0=SCREEN.z0, z1=z0+SCREEN.h, half=SCREEN.w/2, dn=front?4:-4;
+  poly([p(-half,z1,-4),p(half,z1,-4),p(half,z1,4),p(-half,z1,4)],"#f4f4f2","#c9c9c4",0.5);
+  poly([p(-half,z0,dn),p(half,z0,dn),p(half,z1,dn),p(-half,z1,dn)],front?"#f6f5ee":"#f0f0ee","#bdbdb6",0.7);
+  if(front){ ctx.strokeStyle="rgba(150,170,150,.35)"; ctx.lineWidth=0.5; ctx.beginPath();
+    for(let sv=-half;sv<=half;sv+=10){ const a=p(sv,z0,dn), b=p(sv,z1,dn); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); }
+    for(let z=z0;z<=z1;z+=10){ const a=p(-half,z,dn), b=p(half,z,dn); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); } ctx.stroke(); }
+  const hp=p(SCREEN.hole,BEAM_Z,dn); ell(hp[0],hp[1],Math.max(1.2,2.5*SC*Math.abs(f.t[0])+0.6),5*SC,"#1a1a1a");
+  /* the light on the paper */
+  const sp=screenPattern();
+  if(sp){ const lit=lampLit(), thr=lit?0.12:0.03;
+    for(let i=0;i<SCOLS;i+=2){ let r=sp.cols[3*i],g=sp.cols[3*i+1],b=sp.cols[3*i+2];
+      r=Math.min(1,Math.sqrt(r/sp.ref)); g=Math.min(1,Math.sqrt(g/sp.ref)); b=Math.min(1,Math.sqrt(b/sp.ref)); if(Math.max(r,g,b)<thr) continue;
+      const sv=i/2-half, hh=sp.laser?Math.max(2,sp.hgt):sp.hgt, a=p(sv,BEAM_Z-hh,dn*1.1), c=p(sv,BEAM_Z+hh,dn*1.1);
+      const I=Math.max(r,g,b); ctx.strokeStyle=lit?"rgba("+Math.round(255*r/I)+","+Math.round(255*g/I)+","+Math.round(255*b/I)+","+Math.min(0.85,I*0.8)+")":"rgb("+Math.round(255*r)+","+Math.round(255*g)+","+Math.round(255*b)+")"; ctx.lineWidth=Math.max(1,SC*Math.abs(f.t[0])*1.2+0.4);
+      ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(c[0],c[1]); ctx.stroke(); } }
+  for(const m of ST.scrMarks){ const a=p(m[0],m[1]-4,dn), b=p(m[0],m[1]+4,dn); ctx.strokeStyle="#333"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+}
+function drawBenchItem(){
+  const b=ST.it.bench, u=v2(b.a), n=[-u[1],u[0]];
+  rbox(b.x,b.y,0,BENCH.L,BENCH.w,BENCH.h,b.a,"#e3c48c","#cfae74","#a9884e");
+  ctx.strokeStyle="rgba(150,110,60,.25)"; ctx.lineWidth=0.6;
+  for(const j of [-12,4,15]){ const a=P(b.x-u[0]*490+n[0]*j,b.y-u[1]*490+n[1]*j,BENCH.h), c=P(b.x+u[0]*490+n[0]*j,b.y+u[1]*490+n[1]*j,BENCH.h); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(c[0],c[1]); ctx.stroke(); }
+  for(const m of b.marks){ const a=P(b.x+u[0]*m+n[0]*20,b.y+u[1]*m+n[1]*20,BENCH.h), c=P(b.x+u[0]*m-n[0]*20,b.y+u[1]*m-n[1]*20,BENCH.h); ctx.strokeStyle="#333"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(c[0],c[1]); ctx.stroke(); }
+  const K=benchK();
+  rbox(K[0],K[1],BENCH.h,100,70,8,b.a,"#e9cf9c","#d8b880","#a9884e");
+  vcyl(K[0],K[1],BENCH.h+8,320,2.6,"#d9b77a","#e6c992","#9c7a44");
+}
+function drawLamp(){
+  const l=ST.it.lamp, lit=ST.lamp;
+  vcyl(l.x,l.y,0,18,60,"#2a2d33","#3a3e46","#111");
+  const u=v2(l.a), top=[l.x+u[0]*60,l.y+u[1]*60];
+  const a=P(l.x,l.y,18), b=P(l.x,l.y,330), c=P(top[0],top[1],360);
+  ctx.strokeStyle="#4a4f57"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.lineTo(c[0],c[1]); ctx.stroke();
+  vcyl(top[0],top[1],320,365,40,"#2a2d33","#3a3e46","#111");
+  if(lit){ const g=P(top[0],top[1],320); ctx.save(); ctx.globalAlpha=0.5; ell(g[0],g[1],40*SC,40*SC*KY,"#fff6c8"); ctx.restore(); }
+}
+function drawLying(k){ const it=ST.it[k]; drawSource(k,it.x,it.y,it.a,k==="laser"?11:7); }
+const FOOT={ src:"c45", hold:"c45", lamp:"c60", flash:"r140x16", laser:"r160x24", screen:"r1000x90", bench:"r1000x70" };
+function footprint(k,x,y,a){
+  const f=FOOT[k]; if(f[0]==="c") return [[x,y,+f.slice(1)]];
+  const [w,dd]=f.slice(1).split("x").map(Number), u=v2(a), out=[], rr=Math.max(dd/2,8), step=rr*1.2;
+  for(let s=-w/2+rr;s<=w/2-rr+1e-6;s+=step) out.push([x+u[0]*s,y+u[1]*s,rr]); if(!out.length) out.push([x,y,rr]); return out;
+}
+function drawItem(k){
+  if(k==="screen") drawScreen(); else if(k==="bench") drawBenchItem(); else if(k==="src") drawSrc(); else if(k==="hold") drawHold();
+  else if(k==="lamp") drawLamp(); else if((k==="flash"||k==="laser")&&!ST.it[k].mount) drawLying(k);
+}
+function drawSel(k){
+  if(!k||!ST.it[k].on||ST.it[k].mount) return; const it=ST.it[k];
+  ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle="rgba(242,193,78,.95)"; ctx.lineWidth=1.4;
+  if(k==="screen"||k==="bench"){ const u=v2(k==="screen"?it.a+Math.PI/2:it.a), L=k==="screen"?SCREEN.w/2+20:BENCH.L/2+20, w=50;
+    const n=[-u[1],u[0]], c=[[-L,-w],[L,-w],[L,w],[-L,w]].map(([i,j])=>P(it.x+u[0]*i+n[0]*j,it.y+u[1]*i+n[1]*j,0)); poly(c,null,"rgba(242,193,78,.95)",1.4); }
+  else { const r=(k==="lamp"?70:k==="flash"||k==="laser"?85:55), c=P(it.x,it.y,0); ctx.beginPath(); ctx.ellipse(c[0],c[1],r*SC,r*SC*KY,0,0,7); ctx.stroke(); }
+  ctx.restore();
+}
+function drawTape(){
+  if(!ST.tapeA) return; const A=ST.tapeA, B=ST.tapeB||[...unP(mouse[0],mouse[1],0),0];
+  const pa=P(A[0],A[1],A[2]||0), pb=P(B[0],B[1],B[2]||0);
+  ctx.strokeStyle="#f2d21b"; ctx.lineWidth=3.2; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.lineTo(pb[0],pb[1]); ctx.stroke();
+  ctx.strokeStyle="rgba(0,0,0,.55)"; ctx.lineWidth=0.6; const L=Math.hypot(B[0]-A[0],B[1]-A[1]);
+  for(let s=0;s<L;s+=50){ const q=[A[0]+(B[0]-A[0])*s/L,A[1]+(B[1]-A[1])*s/L], z=(A[2]||0)+((B[2]||0)-(A[2]||0))*s/L, p=P(q[0],q[1],z); ctx.beginPath(); ctx.moveTo(p[0]-2,p[1]-2); ctx.lineTo(p[0]+2,p[1]+2); ctx.stroke(); }
+  fillR(pa[0]-11,pa[1]-9,22,18,5,"#f0407a","#a01a4c",1); text("3m",pa[0],pa[1],"#ffe94a",8,"center","800");
+  if(ST.tapeB){ const s=tapeReading(); fillR(pb[0]+6,pb[1]-20,56,16,3,"rgba(255,248,210,.95)","#8a7a2a",0.8); text(s,pb[0]+34,pb[1]-12,"#3a2e0a",10.5,"center","700"); }
+}
+function drawBench(){
+  drawDesk();
+  const list=ITEMS.filter(k=>ST.it[k].on&&k!=="tape"&&!(ST.it[k].mount)).map(k=>[k,ST.it[k].y]);
+  list.sort((a,b)=>a[1]-b[1]); for(const [k] of list) drawItem(k);
+  drawSel(ST.sel); drawTape(); drawGhost();
+}
+let ghostOK=true;
+function drawGhost(){
+  if(!hand||!overBench||!hand.item) return; const k=hand.item;
+  const [x,y]=unP(mouse[0],mouse[1],0), it=ST.it[k], tg=target(k,mouse); ghostOK=!!tg;
+  ctx.save(); ctx.setLineDash([5,4]); ctx.lineWidth=1.6; ctx.strokeStyle=tg?"#f2c14e":"#e0605a";
+  for(const [cx,cy,r] of footprint(k,tg&&tg.x!==undefined?tg.x:x,tg&&tg.y!==undefined?tg.y:y,it.a)){ const c=P(cx,cy,0); ctx.beginPath(); ctx.ellipse(c[0],c[1],r*SC,r*SC*KY,0,0,7); ctx.stroke(); }
+  ctx.restore(); text(itemName(k),mouse[0]+12,mouse[1]-12,tg?"#f6e6b0":"#f0a79f",11,"left","700");
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  PLACING THINGS
+   ══════════════════════════════════════════════════════════════ */
+function feet(k,x,y,a){
+  if(k!=="screen") return footprint(k,x,y,a);
+  const n=v2(a), t=[n[1],-n[0]], out=[];
+  for(let s=-SCREEN.w/2+8;s<=SCREEN.w/2-8;s+=12) out.push([x+t[0]*s,y+t[1]*s,8]);
+  for(const fs of [-SCREEN.feet,SCREEN.feet]) out.push([x+t[0]*fs,y+t[1]*fs,40]);
+  return out;
+}
+function fits(k,x,y,a){
+  const mine=feet(k,x,y,a);
+  for(const [cx,cy,r] of mine){ if(cx-r*0.5<DESK.x0||cx+r*0.5>DESK.x1||cy-r*0.5<DESK.y0||cy+r*0.5>DESK.y1) return false; }
+  for(const o of ITEMS){ if(o===k||o==="tape"||!ST.it[o].on||ST.it[o].mount) continue; const it=ST.it[o];
+    for(const [ax,ay,ar] of feet(o,it.x,it.y,it.a)) for(const [bx,by,br] of mine) if(Math.hypot(ax-bx,ay-by)<ar+br-2) return false; }
+  return true;
+}
+function headScr(){ const s=ST.it.src; return P(s.x,s.y,STAND.top); }
+function target(k,m){
+  const [x,y]=unP(m[0],m[1],0), a=ST.it[k].a;
+  if((k==="flash"||k==="laser")&&ST.it.src.on&&!mounted()){ const h=headScr(); if(Math.hypot(m[0]-h[0],m[1]-h[1])<34) return {mount:true}; }
+  return fits(k,x,y,a)?{x,y}:null;
+}
+function segDist(p,a,b){ const ab=sub2(b,a), t=Math.max(0,Math.min(1,dot2(sub2(p,a),ab)/(dot2(ab,ab)||1))); return len2(sub2(p,add2(a,mul2(ab,t)))); }
+function inPoly(p,pts){ let c=false; for(let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i], b=pts[j];
+  if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0]) c=!c; } return c; }
+/* what is under the mouse, front first */
+function hitAt(p){
+  const list=ITEMS.filter(k=>ST.it[k].on&&k!=="tape"&&!ST.it[k].mount).sort((a,b)=>ST.it[b].y-ST.it[a].y);
+  for(const k of list){ const it=ST.it[k];
+    if(k==="src"||k==="hold"){
+      if(k==="src"&&mounted()){ const u=v2(it.a), m=mounted(), L=m==="laser"?80:68, a=P(it.x-u[0]*L,it.y-u[1]*L,BEAM_Z), b=P(it.x+u[0]*L,it.y+u[1]*L,BEAM_Z);
+        if(segDist(p,a,b)<9) return {k:"light"}; }
+      if(k==="hold"){ const u=v2(it.a), t=[-u[1],u[0]], a=P(it.x+t[0]*14,it.y+t[1]*14,178), b=P(it.x+t[0]*235,it.y+t[1]*235,178); if(segDist(p,a,b)<6) return {k}; }
+      const b=P(it.x,it.y,0), top=P(it.x,it.y,k==="hold"?235:BEAM_Z+12);
+      if(p[0]>b[0]-40&&p[0]<b[0]+40&&p[1]>top[1]&&p[1]<b[1]+STAND.r*SC*KY) return {k};
+    } else if(k==="screen"){ const f=scrFrame(), q=(s,z)=>{ const w=add2(f.c,mul2(f.t,s)); return P(w[0],w[1],z); };
+      if(inPoly(p,[q(-SCREEN.w/2,0),q(SCREEN.w/2,0),q(SCREEN.w/2,SCREEN.z0+SCREEN.h),q(-SCREEN.w/2,SCREEN.z0+SCREEN.h)])) return {k}; }
+    else if(k==="bench"){ const K=benchK(), [x,y]=unP(p[0],p[1],BENCH.h+4), u=v2(it.a), r=sub2([x,y],K);
+      if(Math.abs(dot2(r,u))<55&&Math.abs(crs2(u,r))<40) return {k:"stake"};
+      const st=P(K[0],K[1],BENCH.h); if(Math.abs(p[0]-st[0])<6&&p[1]<st[1]&&p[1]>P(K[0],K[1],320)[1]) return {k:"stake"};
+      const r2=sub2([x,y],[it.x,it.y]); if(Math.abs(dot2(r2,u))<BENCH.L/2+4&&Math.abs(crs2(u,r2))<BENCH.w/2+8) return {k}; }
+    else if(k==="lamp"){ const b=P(it.x,it.y,0), t=P(it.x,it.y,365); if(p[0]>b[0]-55&&p[0]<b[0]+80&&p[1]>t[1]-10&&p[1]<b[1]+30) return {k}; }
+    else { const u=v2(it.a), a=P(it.x-u[0]*80,it.y-u[1]*80,8), b=P(it.x+u[0]*80,it.y+u[1]*80,8); if(segDist(p,a,b)<9) return {k}; }
+  }
+  return null;
+}
+function returnItem(k){
+  const it=ST.it[k];
+  if(k==="src"){ for(const s of ["flash","laser"]) if(ST.it[s].mount){ ST.it[s].on=false; ST.it[s].mount=false; ST.lit[s]=false; } }
+  if(k==="flash"||k==="laser"){ ST.lit[k]=false; it.mount=false; }
+  if(k==="bench"){ it.marks=[]; it.t=0; }
+  if(k==="screen") ST.scrMarks=[];
+  it.on=false; if(ST.sel===k) ST.sel=null; say("back",itemName(k));
+}
+function returnHand(){ if(!hand) return; if(hand.move){ Object.assign(ST.it[hand.item],hand.orig,{on:true}); say("stays"); } hand=null; }
+/* the tape measure: two points, snapped to the things one measures to */
+function snapPt(p){
+  const cand=[];
+  if(ST.it.hold.on){ const h=ST.it.hold; cand.push([[h.x,h.y,BEAM_Z],P(h.x,h.y,BEAM_Z)]); }
+  if(ST.it.src.on&&mounted()){ const F=srcTip(); cand.push([[F[0],F[1],BEAM_Z],P(F[0],F[1],BEAM_Z)]); }
+  if(ST.it.bench.on){ const K=benchK(); cand.push([[K[0],K[1],BENCH.h+8],P(K[0],K[1],BENCH.h+8)]);
+    for(const m of ST.it.bench.marks){ const u=v2(ST.it.bench.a), q=[ST.it.bench.x+u[0]*m,ST.it.bench.y+u[1]*m]; cand.push([[q[0],q[1],BENCH.h],P(q[0],q[1],BENCH.h)]); } }
+  if(ST.it.screen.on){ const h=scrHole(); cand.push([[h[0],h[1],BEAM_Z],P(h[0],h[1],BEAM_Z)]); }
+  let best=null, bd=12; for(const [w,s] of cand){ const dd=Math.hypot(p[0]-s[0],p[1]-s[1]); if(dd<bd){ bd=dd; best=w; } }
+  if(best) return best.slice();
+  /* on the bench's centre line or along the screen's paper: the nearest point of the line */
+  for(const k of ["bench","screen"]){ if(!ST.it[k].on) continue; const it=ST.it[k], z=k==="bench"?BENCH.h:BEAM_Z, [x,y]=unP(p[0],p[1],z);
+    const u=k==="bench"?v2(it.a):scrFrame().t, r=sub2([x,y],[it.x,it.y]), s=dot2(r,u), off=crs2(u,r), half=k==="bench"?BENCH.L/2:SCREEN.w/2;
+    if(Math.abs(off)<(k==="bench"?BENCH.w/2+4:12)&&Math.abs(s)<=half){ const q=add2([it.x,it.y],mul2(u,s)); return [q[0],q[1],z]; } }
+  const [x,y]=unP(p[0],p[1],0); return [x,y,0];
+}
+const TAPE_BIAS=U(-0.4,0.4);
+function tapeReading(){ const A=ST.tapeA, B=ST.tapeB; if(!A||!B) return ""; const mm=Math.round(Math.hypot(B[0]-A[0],B[1]-A[1],(B[2]||0)-(A[2]||0))+TAPE_BIAS); return mm+" mm"; }
+function benchClick(p,right){
+  if(hand&&hand.tape){
+    if(right){ hand=null; ST.it.tape.on=false; ST.tapeA=null; ST.tapeB=null; return; }
+    if(!ST.tapeA||ST.tapeB){ ST.tapeA=snapPt(p); ST.tapeB=null; return; }
+    ST.tapeB=snapPt(p); const r=tapeReading(); ST.notes.push(d().lab.tapeTo+": "+r); renderNotes(); say("tape",r); return;
+  }
+  if(hand){
+    if(right){ returnHand(); return; }
+    const k=hand.item, tg=target(k,p); if(!tg){ say("noFit"); return; }
+    if(tg.mount){ Object.assign(ST.it[k],{on:true,mount:true}); ST.lit[k]=false; say("mounted",itemName(k)); hand=null; return; }
+    if((k==="flash"||k==="laser")&&!ST.it.src.on&&false){ say("needStand"); return; }
+    Object.assign(ST.it[k],{on:true,x:tg.x,y:tg.y}); say("placed",itemName(k)); ST.sel=k; hand=null; return;
+  }
+  const h=hitAt(p);
+  if(right){ if(!h) return; if(h.k==="light"){ const m=mounted(); returnItem(m); return; } if(h.k==="stake"){ returnItem("bench"); return; } returnItem(h.k); return; }
+  if(!h) return;
+  if(h.k==="light"){ const m=mounted(); ST.lit[m]=!ST.lit[m]; say(ST.lit[m]?"srcOn":"srcOff",itemName(m)); return; }
+  if(h.k==="stake"){ stakeDrag={}; ST.sel="bench"; return; }
+  const k=h.k; ST.sel=k; hand={item:k,move:true,orig:{x:ST.it[k].x,y:ST.it[k].y}}; ST.it[k].on=false; say("moveIt",itemName(k));
+}
+let stakeDrag=null;
+function moveStake(p){ const b=ST.it.bench, u=v2(b.a), [x,y]=unP(p[0],p[1],BENCH.h); b.t=Math.max(-450,Math.min(450,dot2(sub2([x,y],[b.x,b.y]),u))); }
+function rotateItem(k,da){
+  if(!k||!ST.it[k].on) return; const it=ST.it[k], a0=it.a; it.a+=da;
+  if(!fits(k,it.x,it.y,it.a)&&k!=="hold"&&k!=="src"){ it.a=a0; say("noFit"); return; }
+  say("rot",itemName(k));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  TRAY, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["src","flash","laser","hold","screen","bench","tape","lamp"], TROW=44;
+let TRW=190, TRH=600, CLW=900, CLH=360, trayCells=[], tab="eye";
+const trayAvail=k=>!ST.it[k].on&&!(hand&&hand.item===k)&&!(k==="tape"&&hand&&hand.tape);
+function icon(c,k){
+  const old=ctx; ctx=c;
+  if(k==="src"){ ell(0,12,14,5,"#1b1b1d"); ctx.fillStyle="#1b1b1d"; ctx.fillRect(-14,4,28,8); ell(0,4,14,5,"#2c2c2f"); ctx.fillRect(-2,-12,4,16); fillR(-6,-17,12,7,1,"#222"); }
+  else if(k==="hold"){ ell(0,12,14,5,"#1b1b1d"); ctx.fillStyle="#1b1b1d"; ctx.fillRect(-14,4,28,8); ell(0,4,14,5,"#2c2c2f"); ctx.fillRect(-2,-6,4,10); fillR(-9,-19,18,15,1,"#121214"); fillR(-4,-15,8,7,0,"#bfc4ca"); ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(5,-5); ctx.lineTo(20,-5); ctx.stroke(); }
+  else if(k==="flash"){ ctx.save(); ctx.rotate(-0.5); fillR(-17,-3,34,6,3,"#b0b5ba","#666"); fillR(-19,-3.5,5,7,2,"#151517"); circ(17,0,2,"#fff"); ctx.restore(); }
+  else if(k==="laser"){ ctx.save(); ctx.rotate(-0.5); fillR(-12,-4,24,8,2,"#3c3f44"); fillR(-19,-5.5,8,11,2,"#121214"); fillR(-1,-4,5,8,0,"#f2c81c"); fillR(12,-3.6,7,7.2,1,"#c0c4c8"); ctx.restore(); }
+  else if(k==="screen"){ fillR(-18,-12,36,20,1,"#f6f5ee","#aaa"); ctx.strokeStyle="rgba(120,150,120,.4)"; ctx.lineWidth=0.5; for(let i=-16;i<18;i+=4){ ctx.beginPath(); ctx.moveTo(i,-12); ctx.lineTo(i,8); ctx.stroke(); }
+    circ(-3,-2,1.4,"#222"); fillR(-16,6,8,6,1,"#e2c58e"); fillR(8,6,8,6,1,"#e2c58e"); }
+  else if(k==="bench"){ fillR(-19,3,38,5,1,"#e3c48c","#a9884e"); fillR(2,0,10,4,1,"#e9cf9c"); ctx.fillStyle="#d9b77a"; ctx.fillRect(6,-17,2,18); }
+  else if(k==="tape"){ fillR(-11,-10,22,20,5,"#f0407a","#a01a4c"); circ(0,0,5,"#2a5ad0"); text("3m",0,0,"#ffe94a",7,"center","800"); fillR(9,6,9,3,1,"#f2d21b"); }
+  else if(k==="lamp"){ ell(0,13,12,4,"#2a2d33"); ctx.strokeStyle="#4a4f57"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,12); ctx.lineTo(-4,-8); ctx.lineTo(8,-12); ctx.stroke(); fillR(4,-17,12,8,3,"#2a2d33"); }
+  ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(260,CLW*0.38));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&(hand.item===k||(k==="tape"&&hand.tape));
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-4)/2); icon(c,k); c.restore();
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm];
+    if(c.measureText(nm).width>wd-52){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.55)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,52,y+(parts.length>1?10+i*13:13)));
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(av?t.trayTake:t.trayOut,52,y+34);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["eye","screen","bench"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+/* close up 1: through the sample */
+const EYE={a:0, span:26*DEG}; let eyeDrag=null, eyeCache={key:"",cols:null};
+function eyeGeom(){
+  const S=OPT&&OPT.sample; const h=ST.it.hold; if(!h.on) return null;
+  /* the axis: from the source to the sample if there is one, else the holder's own normal */
+  const u=S?S.u:(ST.it.src.on?nrm2(sub2([h.x,h.y],[ST.it.src.x,ST.it.src.y])):mul2(v2(h.a),-1));
+  const L=rot2(mul2(u,-1),EYE.a), E=sub2([h.x,h.y],mul2(L,EYE_E));
+  return {u,L,E,H:[h.x,h.y]};
+}
+function drawEye(){
+  const t=d(); const lit=lampLit();
+  ctx.fillStyle=lit?"#4a4640":"#08090b"; ctx.fillRect(0,0,CLW,CLH);
+  if(!ST.it.hold.on){ text(t.lab.noHold,CLW/2,CLH/2,"#8a8f96",13,"center"); return; }
+  const g=eyeGeom(), k=CLW/EYE.span, cx=CLW/2, cy=CLH/2;
+  const bx=ang=>cx+ang*k;
+  /* the room behind: the bench, the stake, the source */
+  if(ST.it.bench.on){ const K=benchK(), r=sub2(K,g.E), b=ang2(g.L,r), dist=len2(r);
+    if(dot2(r,g.L)>0&&Math.abs(b)<EYE.span){ const w=Math.max(2,5.2/dist*k), x=bx(b), top=cy-Math.atan2(320-BEAM_Z,dist)*k, bot=cy+Math.atan2(BEAM_Z-20,dist)*k;
+      ctx.fillStyle=lit?"#c8a46a":"#3a2c18"; ctx.fillRect(x-w/2,top,w,bot-top); } }
+  if(ST.it.src.on&&mounted()){ const F=srcTip(), r=sub2(F,g.E), b=ang2(g.L,r);
+    if(dot2(r,g.L)>0&&Math.abs(b)<EYE.span){ const x=bx(b), on=ST.lit[mounted()]&&mounted()==="flash"; circ(x,cy,on?9:3,on?"rgba(255,255,245,.95)":lit?"#9aa0a6":"#202226"); if(on){ ctx.save(); ctx.globalAlpha=0.35; circ(x,cy,26,"#fffbe8"); ctx.restore(); } } }
+  /* the slide frame and the film: 50 mm square, 24 mm window */
+  const fr=Math.atan2(SAMPLE.frame/2,EYE_E)*k, ap=Math.atan2(SAMPLE.ap/2,EYE_E)*k;
+  ctx.fillStyle="#0b0b0c"; ctx.fillRect(cx-fr,cy-fr,2*fr,2*fr);
+  ctx.fillStyle=lit?"#8e9298":"#16181b"; ctx.fillRect(cx-ap,cy-ap,2*ap,2*ap);
+  const S=OPT&&OPT.sample;
+  if(S&&OPT.beam.kind==="laser"&&S.int>0){ fillR(cx-ap,cy-ap,2*ap,2*ap,0,"#2a0805"); text(t.lab.laserEye,CLW/2,cy+fr+22,"#ff7a6a",13,"center","700"); }
+  else if(S&&S.int>0){
+    const key=[EYE.a.toFixed(5),S.psi.toFixed(6),S.flip,S.D.toFixed(1),S.int.toFixed(3),CLW].join(",");
+    if(eyeCache.key!==key){ const N=Math.ceil(2*ap)+2, cols=new Float32Array(N*3), x0=cx-ap-1, srcAng=Math.max(0.0035,3/S.D);
+      splat(cols,"trans",S.psi,S.flip,null,ang=>bx(ang-EYE.a)-x0,()=>srcAng*k,1.0*S.int); eyeCache={key,cols,x0,N}; }
+    const {cols,x0,N}=eyeCache;
+    for(let i=0;i<N;i++){ const x=x0+i; if(x<cx-ap||x>cx+ap) continue;
+      const r=Math.min(1,Math.sqrt(cols[3*i]/40)), gg=Math.min(1,Math.sqrt(cols[3*i+1]/40)), b=Math.min(1,Math.sqrt(cols[3*i+2]/40));
+      if(Math.max(r,gg,b)<0.02) continue; ctx.fillStyle="rgb("+Math.round(255*r)+","+Math.round(255*gg)+","+Math.round(255*b)+")"; ctx.fillRect(x,cy-ap,1.2,2*ap); }
+  }
+  else text(t.lab.nothing,CLW/2,cy+fr+22,"#8a8f96",12,"center");
+  ctx.strokeStyle="#e8eaec"; ctx.lineWidth=1; ctx.strokeRect(cx-ap,cy-ap,2*ap,2*ap);
+  ctx.fillStyle="#2f6be0"; ctx.fillRect(cx-1,cy-fr+2,2,fr-ap-4); ctx.fillRect(cx-1,cy+ap+2,2,fr-ap-4);
+}
+/* close up 2: the screen's paper */
+const SV={zoom:0,px:0,py:0}; let svDrag=null;
+function svMap(){ if(!SV.zoom) SV.zoom=(CLW-20)/SCREEN.w; const z=SV.zoom, cx=CLW/2+SV.px, cy=CLH/2+SV.py; return {z,X:s=>cx+s*z,Y:h=>cy-(h-SCREEN.z0-SCREEN.h/2)*z, S:x=>(x-cx)/z, H:y=>SCREEN.z0+SCREEN.h/2-(y-cy)/z}; }
+function drawScreenView(){
+  const t=d(); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(!ST.it.screen.on){ text(t.lab.noScreen,CLW/2,CLH/2,"#69717a",13,"center"); return; }
+  const m=svMap(), lit=lampLit(), half=SCREEN.w/2, z0=SCREEN.z0, z1=z0+SCREEN.h;
+  const paper=lit?[246,244,236]:[52,52,48];
+  ctx.fillStyle="rgb("+paper.join(",")+")"; ctx.fillRect(m.X(-half),m.Y(z1),SCREEN.w*m.z,SCREEN.h*m.z);
+  const step=m.z>2.5?1:m.z>0.9?2:10;
+  ctx.lineWidth=0.6;
+  for(let s=-half;s<=half;s+=step){ const x=m.X(s); if(x<0||x>CLW) continue; const big=Math.abs(s%10)<1e-6, mid=Math.abs(s%5)<1e-6;
+    ctx.strokeStyle=lit?(big?"rgba(70,140,90,.55)":mid?"rgba(90,160,110,.35)":"rgba(110,170,130,.22)"):(big?"rgba(120,150,120,.35)":"rgba(120,150,120,.15)");
+    ctx.beginPath(); ctx.moveTo(x,Math.max(0,m.Y(z1))); ctx.lineTo(x,Math.min(CLH,m.Y(z0))); ctx.stroke(); }
+  for(let h=z0;h<=z1;h+=step){ const y=m.Y(h); if(y<0||y>CLH) continue; const big=Math.abs((h-z0)%10)<1e-6;
+    ctx.strokeStyle=lit?(big?"rgba(70,140,90,.55)":"rgba(110,170,130,.22)"):(big?"rgba(120,150,120,.35)":"rgba(120,150,120,.15)");
+    ctx.beginPath(); ctx.moveTo(Math.max(0,m.X(-half)),y); ctx.lineTo(Math.min(CLW,m.X(half)),y); ctx.stroke(); }
+  ctx.fillStyle="#141414"; ctx.beginPath(); ctx.ellipse(m.X(SCREEN.hole),m.Y(BEAM_Z),Math.max(1.5,4*m.z),Math.max(2.5,7*m.z),0,0,7); ctx.fill();
+  const sp=screenPattern();
+  if(sp){ ctx.save(); ctx.globalCompositeOperation=lit?"source-over":"lighter";
+    for(let i=0;i<SCOLS;i++){ const s0=i/2-half, x=m.X(s0), w=Math.max(1,0.5*m.z); if(x+w<0||x>CLW) continue;
+      let r=Math.min(1,Math.sqrt(sp.cols[3*i]/sp.ref)), g=Math.min(1,Math.sqrt(sp.cols[3*i+1]/sp.ref)), b=Math.min(1,Math.sqrt(sp.cols[3*i+2]/sp.ref));
+      if(Math.max(r,g,b)<(lit?0.12:0.02)) continue;
+      const hh=sp.laser?Math.max(1.5,sp.hgt):sp.hgt;
+      if(lit){ const I=Math.max(r,g,b); ctx.globalAlpha=Math.min(0.85,I*0.8); ctx.fillStyle="rgb("+Math.round(255*r/I)+","+Math.round(255*g/I)+","+Math.round(255*b/I)+")"; }
+      else ctx.fillStyle="rgb("+Math.round(255*r)+","+Math.round(255*g)+","+Math.round(255*b)+")";
+      ctx.fillRect(x,m.Y(BEAM_Z+hh),w,2*hh*m.z); }
+    ctx.restore(); }
+  for(const [s,h] of ST.scrMarks){ const x=m.X(s), y=m.Y(h); ctx.strokeStyle=lit?"#222":"#bbb"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x,y-6); ctx.lineTo(x,y+6); ctx.moveTo(x-3,y); ctx.lineTo(x+3,y); ctx.stroke(); }
+}
+/* close up 3: the bench from above, with the tape measure laid along it */
+const BV={zoom:0,px:0}; let bvDrag=null;
+function bvMap(){ if(!BV.zoom) BV.zoom=(CLW-40)/BENCH.L; const z=BV.zoom, cx=CLW/2+BV.px; return {z,X:s=>cx+s*z,S:x=>(x-cx)/z}; }
+function drawBenchView(){
+  const t=d(); ctx.fillStyle="#9aa0a4"; ctx.fillRect(0,0,CLW,CLH);
+  if(!ST.it.bench.on){ text(t.lab.noBench,CLW/2,CLH/2,"#3a3f45",13,"center"); return; }
+  const m=bvMap(), b=ST.it.bench, cy=CLH*0.42, bw=BENCH.w*Math.max(m.z,1.6);
+  ctx.fillStyle=hgrad(0,CLW,[[0,"#e3c48c"],[0.5,"#e9cc98"],[1,"#ddbd84"]]); ctx.fillRect(m.X(-BENCH.L/2),cy-bw/2,BENCH.L*m.z,bw);
+  ctx.strokeStyle="rgba(150,110,60,.28)"; ctx.lineWidth=0.7; for(const j of [-0.3,0.1,0.35]){ ctx.beginPath(); ctx.moveTo(m.X(-BENCH.L/2),cy+j*bw); ctx.lineTo(m.X(BENCH.L/2),cy+j*bw); ctx.stroke(); }
+  for(const mk of b.marks){ const x=m.X(mk); ctx.strokeStyle="#2a2a2a"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x,cy-bw/2); ctx.lineTo(x,cy+bw/2); ctx.stroke(); }
+  /* the stake's base and the stake from above */
+  const pw=100*m.z, ph=Math.max(70*m.z,bw*1.4), x=m.X(b.t);
+  fillR(x-pw/2,cy-ph/2,pw,ph,2,"#efd6a6","#a9884e",1); circ(x,cy,Math.max(2.5,2.6*m.z),"#c9a468","#8a6a38",1);
+  /* the tape along the near edge */
+  const ty=cy+ph/2+10, th=26;
+  ctx.fillStyle="#f2d21b"; ctx.fillRect(m.X(-BENCH.L/2),ty,BENCH.L*m.z,th);
+  ctx.strokeStyle="#1d1d1d"; ctx.fillStyle="#1d1d1d";
+  const tstep=m.z>3?1:m.z>1.2?5:10;
+  for(let s=0;s<=BENCH.L;s+=tstep){ const xx=m.X(-BENCH.L/2+s); if(xx<-5||xx>CLW+5) continue; const L=s%100===0?16:s%10===0?11:s%5===0?8:5;
+    ctx.lineWidth=s%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(xx,ty); ctx.lineTo(xx,ty+L); ctx.stroke();
+    if(s%10===0&&(m.z>1.2||s%50===0)) text(String(s/10),xx+1.5,ty+th-6,"#1d1d1d",9,"left",s%100===0?"800":"500"); }
+  text("cm",m.X(BENCH.L/2)-16,ty+th+10,"#2a2f35",10,"center");
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="eye") drawEye(); else if(tab==="screen") drawScreenView(); else drawBenchView();
+  ctx=old;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   8.  INPUT
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); if(stakeDrag) moveStake(mouse); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("wheel",e=>{ const p=lpos(e), h=hitAt(p); if(!h) return; e.preventDefault();
+  const k=h.k==="light"?"src":h.k==="stake"?"bench":h.k, fine=k==="hold"?(e.shiftKey?0.05:0.5):(e.shiftKey?0.5:5);
+  ST.sel=k; rotateItem(k,(e.deltaY<0?-1:1)*fine*DEG); },{passive:false});
+window.addEventListener("pointerup",()=>{ stakeDrag=null; eyeDrag=null; svDrag=null; bvDrag=null; });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&hand.item&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ if(hand.tape){ hand=null; ST.it.tape.on=false; ST.tapeA=ST.tapeB=null; } else returnHand(); drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ if(hand.tape){ hand=null; ST.it.tape.on=false; ST.tapeA=ST.tapeB=null; } else returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.item===k&&!hand.move; if(hand){ if(hand.tape){ hand=null; ST.it.tape.on=false; ST.tapeA=ST.tapeB=null; } else returnHand(); }
+    if(!same&&trayAvail(k)){ if(k==="tape"){ hand={tape:true}; ST.it.tape.on=true; ST.tapeA=ST.tapeB=null; }
+      else { hand={item:k}; say("picked",itemName(k)); } }
+    drawTray(); return; } });
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
+  if(tab==="eye"){ eyeDrag={x:p[0]}; return; }
+  if(tab==="screen"&&ST.it.screen.on){ const m=svMap();
+    if(e.button===2){ const n=ST.scrMarks.length; ST.scrMarks=ST.scrMarks.filter(([s,h])=>Math.hypot(m.X(s)-p[0],m.Y(h)-p[1])>9); if(ST.scrMarks.length<n) say("scrUnmark"); return; }
+    svDrag={x:p[0],y:p[1],px:SV.px,py:SV.py,moved:false}; return; }
+  if(tab==="bench"&&ST.it.bench.on){ const m=bvMap(); if(Math.abs(p[0]-m.X(ST.it.bench.t))<60*m.z+6) bvDrag={stake:true}; else bvDrag={pan:p[0]-BV.px}; }
+});
+closeCv.addEventListener("pointermove",e=>{ const p=clpos(e);
+  if(eyeDrag){ const dx=p[0]-eyeDrag.x; eyeDrag.x=p[0]; EYE.a=Math.max(-80*DEG,Math.min(80*DEG,EYE.a-dx*EYE.span/CLW)); return; }
+  if(svDrag){ const dx=p[0]-svDrag.x, dy=p[1]-svDrag.y; if(Math.hypot(dx,dy)>3) svDrag.moved=true; if(svDrag.moved){ SV.px=svDrag.px+dx; SV.py=svDrag.py+dy; } return; }
+  if(bvDrag){ const m=bvMap(); if(bvDrag.stake) ST.it.bench.t=Math.max(-450,Math.min(450,m.S(p[0]))); else BV.px=p[0]-bvDrag.pan; }
+});
+closeCv.addEventListener("pointerup",e=>{ const p=clpos(e);
+  if(tab==="screen"&&svDrag&&!svDrag.moved&&e.button===0){ const m=svMap(), s=m.S(p[0]), h=m.H(p[1]);
+    if(Math.abs(s)<=SCREEN.w/2&&h>=SCREEN.z0&&h<=SCREEN.z0+SCREEN.h){ ST.scrMarks.push([s,h]); say("scrMark"); } } });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e); e.preventDefault();
+  if(tab==="eye"){ EYE.a=Math.max(-80*DEG,Math.min(80*DEG,EYE.a+(e.deltaY<0?-1:1)*(e.shiftKey?0.02:0.1)*DEG)); return; }
+  if(tab==="screen"){ const m=svMap(), z0=SV.zoom; SV.zoom=Math.max((CLW-20)/SCREEN.w,Math.min(14,SV.zoom*(e.deltaY<0?1.2:1/1.2)));
+    const cx=CLW/2+SV.px, cy=CLH/2+SV.py; SV.px+=(p[0]-cx)*(1-SV.zoom/z0); SV.py+=(p[1]-cy)*(1-SV.zoom/z0); return; }
+  if(tab==="bench"){ const z0=bvMap().z; BV.zoom=Math.max((CLW-40)/BENCH.L,Math.min(8,BV.zoom*(e.deltaY<0?1.2:1/1.2))); const cx=CLW/2+BV.px; BV.px+=(p[0]-cx)*(1-BV.zoom/z0); }
+},{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   9.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+$("srcBtn").onclick=()=>{ const m=mounted(); if(!m){ say("noSrc"); return; } ST.lit[m]=!ST.lit[m]; say(ST.lit[m]?"srcOn":"srcOff",itemName(m)); renderPanel(); };
+$("lampBtn").onclick=()=>{ ST.lamp=!ST.lamp; say("lamp",ST.lamp); renderPanel(); };
+$("markBtn").onclick=()=>{ const b=ST.it.bench; if(!b.on) return; b.marks.push(b.t-50); say("marked"); };
+$("markClr").onclick=()=>{ ST.it.bench.marks=[]; say("unmarked"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderRot(){ const box=$("rotRow"); box.innerHTML="";
+  for(const [lab,deg] of [["⟲ 15°",-15],["⟲ 1°",-1],["⟲ 0.1°",-0.1],["0.1° ⟳",0.1],["1° ⟳",1],["15° ⟳",15],["180°",180]]){
+    const b=document.createElement("button"); b.textContent=lab; b.style.minWidth="0"; b.style.fontSize="12px";
+    b.onclick=()=>{ if(ST.sel) rotateItem(ST.sel,deg*DEG); }; box.appendChild(b); } }
+function renderPanel(){ const t=d(), m=mounted();
+  $("srcBtn").textContent=m&&ST.lit[m]?t.srcOff:t.srcOn; $("lampBtn").textContent=ST.lamp?t.lampOff:t.lampOn;
+  $("selLbl").textContent=ST.sel&&ST.it[ST.sel].on?itemName(ST.sel):t.noSel; }
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; }
+  box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ITEMS.some(k=>ST.it[k].on)) L.push([t.st.none,false]);
+  if(ST.lit.laser&&ST.it.laser.mount) L.push([t.st.laserOn,true]);
+  if(hand&&hand.tape) L.push([ST.tapeA&&!ST.tapeB?t.st.tape2:t.st.tape,false]);
+  else if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-src").textContent=t.hSrc; $("t-srchint").textContent=t.srcHint; $("t-h-rot").textContent=t.hRot; $("t-rothint").textContent=t.rotHint;
+  $("t-h-bench").textContent=t.hBench; $("markBtn").textContent=t.mark; $("markClr").textContent=t.markClr; $("t-benchhint").textContent=t.benchHint;
+  $("t-h-note").textContent=t.hNote; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2011 E2 — 광학 블랙박스 · HaslaLab":"APhO 2011 E2 — An Optical Black Box · HaslaLab";
+  renderTabs(); renderRot(); renderPanel(); renderNotes(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, wasHole=false;
+function tick(){
+  optics();
+  const hole=srcInHole(); if(hole&&!wasHole) say("inHole"); wasHole=hole;
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ SV.zoom=0; BV.zoom=0; layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>

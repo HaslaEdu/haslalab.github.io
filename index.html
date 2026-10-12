@@ -985,9 +985,60 @@ const DATA={
    {y:2016,host:{ko:"홍콩",en:"Hong Kong"},cc:"hk",problems:papers("APhO_2016", wip("Reflected Optical Diffraction Patterns from One-Dimensional Structures","Reflection Phase Shift of Metal"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2015,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",problems:papers("APhO_2015", wip("The Piezoelectric Effect and Its Applications"), ["E_EN", "S"])},
    {y:2014,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",problems:papers("APhO_2014", wip("Speed of Ultrasonic Sound in Solution"), ["E_EN", "S"])},
-   {y:2013,host:{ko:"인도네시아 · 보고르",en:"Bogor, Indonesia"},cc:"id",problems:papers("APhO_2013", wip("Wind Power and Its Metrologies"), ["E_EN", "S"])},
-   {y:2012,host:{ko:"인도 · 뉴델리",en:"New Delhi, India"},cc:"in",problems:papers("APhO_2012", wip("Friction","Electromagnetic Induction"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2011,host:{ko:"이스라엘 · 텔아비브",en:"Tel Aviv, Israel"},cc:"il",problems:papers("APhO_2011", wip("Levitation of Conductors in an Oscillating Magnetic Field",'An Optical "Black Box"'), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2013,host:{ko:"인도네시아 · 보고르",en:"Bogor, Indonesia"},cc:"id",
+    problems:[
+      {id:"E1",
+       title:{ko:"풍력과 그 계측",en:"Wind Power and Its Metrologies"},
+       desc:{ko:"흡입식 풍동에 광센서 달린 팬을 돌리고, 탁구공 진자의 기울기와 텅스텐 열선(CTA·CCA 브리지)으로 바람을 잰 뒤, 풍력 터빈에 니크롬선 부하를 걸어 최적 부하를 찾습니다.",
+             en:"Spin the fan of a suction wind tunnel with its opto-sensor, measure the wind with a ping pong pendulum and a tungsten hotwire in CTA and CCA bridges, then load a wind turbine with nichrom wire to find the best load."},
+       tags:["유체","열선 풍속계","풍력 터빈"], tagsEn:["Fluids","Hotwire anemometer","Wind turbine"],
+       files:{sim:"sim/apho2013_E1_web.html",
+              src:{ko:"src/apho2013_E1_sim_KO.py", en:"src/apho2013_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2013_E_EN.pdf"},
+              sol:"pdf/APhO_2013_S.pdf"}}
+    ]},
+   {y:2012,host:{ko:"인도 · 뉴델리",en:"New Delhi, India"},cc:"in",
+    problems:[
+      {id:"E1",
+       title:{ko:"마찰",en:"Friction"},
+       desc:{ko:"강철 파이프와 가운데 기둥에 코드를 걸고 감아 가며, 접시에 분동을 올려 눈금판 앞의 코드가 미끄러지는 순간을 찾습니다. 하중·힘·감은 각도의 관계와 미지 질량을 구합니다.",
+             en:"Pass a cord over the steel pipes and wind it round the central post, then add weights to the pan until the cord creeps past the ruled plate. Find how load, effort and wrap angle are related, and the unknown mass."},
+       tags:["역학","마찰","캡스턴"], tagsEn:["Mechanics","Friction","Capstan"],
+       files:{sim:"sim/apho2012_E1_web.html",
+              src:{ko:"src/apho2012_E1_sim_KO.py", en:"src/apho2012_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2012_E1_EN.pdf"},
+              sol:"pdf/APhO_2012_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"전자기 유도",en:"Electromagnetic Induction"},
+       desc:{ko:"1 kHz 정현파 발생기와 저항판, 동축 코일 두 개로 회로를 꾸며 교류 전압만 읽고 R, L, M, 결합 계수, 반사 임피던스와 알루미늄 봉의 맴돌이 전류 손실을 구합니다.",
+             en:"Wire a 1 kHz sine generator, the resistance boards and two coaxial coils, read nothing but ac voltages, and find R, L, M, the coupling, the reflected impedance and the eddy-current loss in an aluminium rod."},
+       tags:["전자기","상호 인덕턴스","맴돌이 전류"], tagsEn:["Electromagnetism","Mutual inductance","Eddy currents"],
+       files:{sim:"sim/apho2012_E2_web.html",
+              src:{ko:"src/apho2012_E2_sim_KO.py", en:"src/apho2012_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2012_E2_EN.pdf"},
+              sol:"pdf/APhO_2012_S2.pdf"}}
+    ]},
+   {y:2011,host:{ko:"이스라엘 · 텔아비브",en:"Tel Aviv, Israel"},cc:"il",
+    problems:[
+      {id:"E1",
+       title:{ko:"진동 자기장 속 도체의 부양",en:"Levitation of Conductors in an Oscillating Magnetic Field"},
+       desc:{ko:"알루미늄 링에 악어집게를 물려 4단자로 저항을 재고, 나사로 철심 솔레노이드를 올려 가며 열린 링의 유도 기전력과 닫힌 링을 미는 힘을 0.01 g 저울로 읽어 링의 인덕턴스를 구합니다.",
+             en:"Clip crocodiles onto aluminium rings for four-terminal resistances, then raise an iron-core solenoid turn by turn and read the EMF on the open ring and the push on the closed ring with a 0.01 g scale, giving the ring's inductance."},
+       tags:["전자기","교류","유도 기전력"], tagsEn:["Electromagnetism","AC","Induced EMF"],
+       files:{sim:"sim/apho2011_E1_web.html",
+              src:{ko:"src/apho2011_E1_sim_KO.py", en:"src/apho2011_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2011_E1_EN.pdf"},
+              sol:"pdf/APhO_2011_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"광학 블랙박스",en:'An Optical "Black Box"'},
+       desc:{ko:"톱니 구조 플라스틱 시료를 백색 LED와 적색 레이저로 비춰, 시료를 통해 보이는 색띠를 나무 벤치의 막대와 맞추고 스크린의 반사·회절 무늬를 모눈종이에서 읽어 꼭지각, 굴절률, 톱니 간격을 구합니다.",
+             en:"Light a saw-toothed plastic film with a white LED and a red laser, line the coloured bands seen through it up with a stake on a wooden bench, and read reflection and diffraction patterns off the millimetre-paper screen for the apex angle, the index and the spacing."},
+       tags:["광학","굴절","회절"], tagsEn:["Optics","Refraction","Diffraction"],
+       files:{sim:"sim/apho2011_E2_web.html",
+              src:{ko:"src/apho2011_E2_sim_KO.py", en:"src/apho2011_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2011_E2_EN.pdf"},
+              sol:"pdf/APhO_2011_S2.pdf"}}
+    ]},
    {y:2010,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:papers("APhO_2010", wip("Magnetic Force Probe","Understanding Semiconductor Lasers"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2009,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:papers("APhO_2009", wip("The Earth's Horizontal Magnetic Field","Oscillation of a Water-Filled Vessel"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2008,host:{ko:"몽골 · 울란바토르",en:"Ulaanbaatar, Mongolia"},cc:"mn",problems:papers("APhO_2008", wip("The Physics of Sound Waves"), ["E_EN"])},
@@ -3304,11 +3355,97 @@ const SIG_I26E1={
     c.fillText("TIMER: "+this.read(t),X0+W*0.05,Y0+H*0.90);
   }};
 
+/* ── APhO 2011 E1 · the scale under the closed ring, solenoid raised turn by turn ── */
+const SIG_A11E1={
+  sim:"sim/apho2011_E1_web.html", tag:"APhO 2011 E1", span:46, rate:1,
+  capL:{ko:"닫힌 링을 미는 평균 힘 · 나사를 한 바퀴씩 올리며 저울을 읽는다",en:"The mean push on the closed ring · read the scale turn by turn"},
+  capR:{ko:"저울",en:"scale"},
+  n(t){ return Math.floor((t%this.span)/2); },
+  F(n){ return 7.08*Math.exp(-0.0985*n)-0.05*Math.exp(-n/0.6); },
+  read(t){ return this.F(this.n(t)).toFixed(2)+" g"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=36, padB=22, X=n=>padL+n/22*(w-padL-pad), Y=g=>h-padB-g/7.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let n=0;n<=22;n+=2){ c.moveTo(X(n),pad); c.lineTo(X(n),h-padB); } for(let g=0;g<=7;g++){ c.moveTo(padL,Y(g)); c.lineTo(w-pad,Y(g)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.n(t);
+    for(let n=0;n<=k&&n<=22;n++){ c.fillStyle=n===k?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(n),Y(this.F(n)),n===k?4:3,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center";
+    for(const n of [0,5,10,15,20]) c.fillText(n,X(n),h-7); c.textAlign="right"; c.fillText("g",padL-5,Y(7)); c.textAlign="left";
+  }};
+/* ── APhO 2011 E2 · laser fringes on the screen as the sample turns ── */
+const SIG_A11E2={
+  sim:"sim/apho2011_E2_web.html", tag:"APhO 2011 E2", span:24, rate:1,
+  capL:{ko:"레이저 회절 무늬 · 시료를 손잡이로 천천히 돌리며",en:"Laser fringes on the screen · turning the sample slowly by its handle"},
+  capR:{ko:"손잡이",en:"handle"},
+  psi(t){ return 3*Math.sin(2*Math.PI*(t%this.span)/this.span); },
+  read(t){ const p=this.psi(t); return (p>=0?"+":"")+p.toFixed(1)+"°"; },
+  paint(c,w,h,t){
+    c.fillStyle="#141414"; c.fillRect(0,0,w,h);
+    PEN(c,"rgba(120,150,120,.25)",.5); c.beginPath(); for(let x=0;x<w;x+=6){ c.moveTo(x,0); c.lineTo(x,h); } for(let y=0;y<h;y+=6){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+    const cx=w/2, cy=h/2, sp=w/28, ph=this.psi(t)*0.9;
+    for(let m=-13;m<=13;m++){ const x=cx+m*sp, vis=0.5*(1+Math.cos(Math.PI*m+ph)), env=Math.exp(-((m/9)**2)), a=Math.min(1,0.15+0.85*vis*env+(m===0?0.5:0));
+      const g=c.createRadialGradient(x,cy,0,x,cy,sp*0.45); g.addColorStop(0,"rgba(255,70,50,"+a+")"); g.addColorStop(1,"rgba(255,40,30,0)"); c.fillStyle=g; c.beginPath(); c.arc(x,cy,sp*0.45,0,7); c.fill(); }
+    c.fillStyle="#000"; c.beginPath(); c.ellipse(cx-sp*6.5,cy,3,6,0,0,7); c.fill();
+  }};
+/* ── APhO 2012 E1 · weights into the pan until the cord creeps past the ruled plate ── */
+const SIG_A12E1={
+  sim:"sim/apho2012_E1_web.html", tag:"APhO 2012 E1", span:30, rate:1,
+  capL:{ko:"눈금판 앞의 코드 · 접시에 분동을 하나씩 올리며",en:"The cord at the ruled plate · weights go into the pan one by one"},
+  capR:{ko:"접시 분동",en:"in the pan"},
+  added(t){ const steps=[0,500,520,540,550,560,565,570,572]; return steps[Math.min(steps.length-1,Math.floor((t%this.span)/3))]; },
+  read(t){ return this.added(t)+" g"; },
+  paint(c,w,h,t){
+    c.fillStyle="#0f2a33"; c.fillRect(0,0,w,h);
+    const pitch=h/9; PEN(c,"rgba(110,170,190,.8)",1); c.beginPath(); for(let y=pitch/2;y<h;y+=pitch){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+    const a=this.added(t), slip=a<560?((t%this.span)*(560-a)*0.05):0, cw=w*0.05, x0=w/2-cw/2;
+    c.fillStyle="#f4f4f2"; c.fillRect(x0,0,cw,h); c.fillStyle="#3f6fd0";
+    const mp=pitch*2.4; for(let y=((slip*6)%mp)-mp;y<h;y+=mp) c.fillRect(x0,y,cw,pitch*0.6);
+    c.strokeStyle="#e8e2d2"; c.lineWidth=6; c.beginPath(); c.arc(w/2,h/2,Math.min(w,h)*0.47,0,7); c.stroke();
+  }};
+/* ── APhO 2012 E2 · the voltmeter across R' and across coil 1 as R' changes ── */
+const SIG_A12E2={
+  sim:"sim/apho2012_E2_web.html", tag:"APhO 2012 E2", span:20, rate:1,
+  capL:{ko:"R′과 코일 1의 전압 · 100 Ω 저항판의 탭을 옮기며",en:"Across R′ and across coil 1 · moving the tap on the 100 Ω board"},
+  capR:{ko:"V(R′)",en:"V(R′)"},
+  R(t){ return 100*(1+Math.floor((t%this.span)/2)); },
+  V(R){ const Z=Math.hypot(33+R+53,449), I=10.45/Z; return [I*R, I*Math.hypot(53,449)]; },
+  read(t){ return this.V(this.R(t))[0].toFixed(2)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=34, padB=22, X=R=>padL+(R-100)/900*(w-padL-pad), Y=v=>h-padB-v/10.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let R=100;R<=1000;R+=100){ c.moveTo(X(R),pad); c.lineTo(X(R),h-padB); } for(let v=0;v<=10;v+=2){ c.moveTo(padL,Y(v)); c.lineTo(w-pad,Y(v)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const Rn=this.R(t);
+    for(let R=100;R<=Rn;R+=100){ const [a,b]=this.V(R); c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(R),Y(a),3.2,0,7); c.fill(); c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(R),Y(b),3.2,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const R of [100,500,1000]) c.fillText(R+"Ω",X(R),h-7);
+    c.textAlign="right"; c.fillText("V",padL-5,Y(10)); c.textAlign="left";
+  }};
+/* ── APhO 2013 E1 · the fan's opto-sensor frequency as the supply is turned up ── */
+const SIG_A13E1={
+  sim:"sim/apho2013_E1_web.html", tag:"APhO 2013 E1", span:24, rate:1,
+  capL:{ko:"풍동 속 탁구공 진자 · 팬 전압을 올리며 멀티미터 #1의 주파수를 읽는다",en:"The ping pong pendulum in the tunnel · turning the fan up, reading DMM #1's frequency"},
+  capR:{ko:"DMM #1",en:"DMM #1"},
+  V(t){ return 3+9*Math.min(1,(t%this.span)/(this.span*0.85)); },
+  f(V){ const a=0.02707, b=-0.257, cc=2.886-V; return (-b+Math.sqrt(b*b-4*a*cc))/(2*a); },
+  read(t){ return this.f(this.V(t)).toFixed(2)+" Hz"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const top=h*0.22, bot=h*0.78; c.fillStyle="#43484f"; c.fillRect(w*0.12,top,w*0.8,bot-top);
+    c.fillStyle="#efede6"; c.fillRect(w*0.12,top-5,w*0.8,5); c.fillRect(w*0.12,bot,w*0.8,5);
+    c.fillStyle="#8e9299"; c.fillRect(w*0.04,top-10,w*0.08,bot-top+20);
+    const f=this.f(this.V(t)), v=0.0873*f, th=Math.atan(0.5*0.42*v**0.12*1.2*Math.PI*0.0395**2/4*v*v/(0.0025*9.81)), L=(bot-top)*0.75, px=w*0.6, py=top-14;
+    PEN(c,"#5f8fb8",2); const ph=(t*f*0.8)%40; for(let k=0;k<4;k++){ const yy=top+(bot-top)*(k+0.5)/4; for(let m=0;m<6;m++){ const x=w*0.9-((m*40+ph)%(w*0.75)); c.beginPath(); c.moveTo(x+14,yy); c.lineTo(x,yy); c.stroke(); } }
+    PEN(c,"#ddd",1); c.beginPath(); c.moveTo(px,py); c.lineTo(px-L*Math.sin(th)*6,py+L*Math.cos(th)); c.stroke();
+    c.fillStyle="#f2a11d"; c.beginPath(); c.arc(px-L*Math.sin(th)*6,py+L*Math.cos(th),h*0.07,0,7); c.fill();
+  }};
+
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
                 SIG_E20E1,SIG_E20E2,SIG_E21E1,SIG_E21E2,
-                SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1];
+                SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1,
+                SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){

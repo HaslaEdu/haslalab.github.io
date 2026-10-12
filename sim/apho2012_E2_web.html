@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2012 E2 — 전자기 유도 · Electromagnetic Induction · HaslaLab</title>
+<meta name="description" content="APhO 2012 실험 2번을 브라우저에서 실행합니다. 1 kHz 정현파 발생기, 동축 코일 두 개, 100 Ω·10 Ω 저항판과 300 Ω 판, 알루미늄 봉, 교류 전압계로 회로를 직접 꾸미고 전압을 읽어 코일의 저항·인덕턴스, 상호 인덕턴스, 반사 임피던스, 맴돌이 전류 손실을 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2012 E2 — 전자기 유도 · Electromagnetic Induction">
+<meta property="og:description" content="APhO 2012 실험 2번을 브라우저에서 실행합니다. 바나나 선으로 회로를 꾸미고, 멀티미터 프로브를 꽂아 교류 전압을 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-wire"></h2>
+    <div class="row"><button id="wRed"></button><button id="wBlack"></button></div>
+    <p class="hint" id="t-wirehint"></p>
+    <div class="row"><button id="wClear"></button></div>
+
+    <h2 id="t-h-probe"></h2>
+    <div class="row"><button id="pSwap"></button><button id="pOff"></button></div>
+    <p class="hint" id="t-probehint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <div class="laps" id="notes" style="max-height:220px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"APhO 2012 실험 2 — 전자기 유도",
+    sub:"가상 실험실 · 바나나 선으로 발생기·코일·저항판을 이어 회로를 꾸미고, 멀티미터 프로브를 꽂아 교류 전압(rms)을 읽으세요. R, L, M, k, 반사 임피던스와 맴돌이 전류 손실은 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
+    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 소켓 두 곳을 차례로 클릭: 전선 연결 / 꽂힌 플러그 우클릭: 뽑기 / 프로브 끝을 클릭해 집고 소켓에 꽂기",
+    closeCap:"확대 — 왼쪽: 정현파 발생기 앞면 (전원 스위치 클릭, AMPLITUDE 손잡이는 휠이나 끌기) · 오른쪽: 멀티미터 (다이얼 클릭·휠)",
+    hWire:"연결선", red:"빨간 선", black:"검은 선", clear:"선 모두 뽑기",
+    wireHint:"빨간 선 4개, 검은 선 4개 (가장 긴 빨강·검정 한 쌍은 멀티미터 프로브). 소켓 하나를 클릭한 뒤 다른 소켓을 클릭하면 이어집니다. 바나나 플러그는 겹쳐 꽂을 수 있습니다.",
+    hProbe:"멀티미터 프로브", swap:"두 프로브 바꿔 꽂기", off:"프로브 빼기",
+    probeHint:"빨간 프로브는 V/Ω, 검은 프로브는 COM에 꽂혀 있습니다. 발생기 출력이 대칭이 아니어서, 프로브를 바꿔 꽂으면 읽음이 조금 달라집니다.",
+    hNote:"실험 노트", note:"지금 읽음 적기", noteClr:"지우기", noteEmpty:"아직 적은 것이 없습니다",
+    noteRow:(v,a,b,rod)=>"DMM: "+v+"  (빨강 "+a+" · 검정 "+b+")"+(rod?"  [알루미늄 봉]":""),
+    items:{gen:"정현파 발생기 1 kHz", dmm:"디지털 멀티미터", coils:"동축 코일 두 개 (판)", board:"저항판 100 Ω × 10, 10 Ω × 10", b300:"300 Ω 판 (100 Ω × 3)", rod:"알루미늄 봉", wires:"연결선 (빨강·검정)"},
+    lab:{none:"(실험대에 없음)", rodIn:"코일 속", wiresLeft:(r,b)=>"남은 선: 빨강 "+r+" · 검정 "+b},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, pend:s=>"선의 한쪽 끝을 "+s+" 에 꽂았습니다 — 다른 소켓을 클릭하세요. (우클릭: 취소)", noWires:"연결선을 실험대에 꺼내 두세요."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
+       noFit:"그곳에는 놓을 수 없습니다. 다른 장비와 겹치지 않는 곳에 놓으세요.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       wired:(a,b)=>a+" — "+b+" 연결", same:"같은 소켓입니다.", noLeft:"그 색의 선을 다 썼습니다.", unplug:"플러그를 뽑았습니다.", cleared:"선을 모두 뽑았습니다.",
+       probe:n=>n+" 프로브를 집었습니다 — 소켓을 클릭하세요.", probeIn:(n,s)=>n+" 프로브를 "+s+" 에 꽂았습니다.", swapped:"두 프로브를 바꿔 꽂았습니다.", probeOff:"프로브를 뺐습니다.",
+       rodIn:"알루미늄 봉을 코일 속에 넣었습니다.", rodOut:"알루미늄 봉을 꺼냈습니다.", power:on=>"발생기 전원 "+(on?"켬":"끔"), dial:s=>"멀티미터 다이얼: "+s, noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"APhO 2012 Experiment 2 — Electromagnetic induction",
+    sub:"Virtual laboratory · build the circuits with banana leads from the generator, the coils and the resistance boards, plug the multimeter probes in and read the ac voltages (rms). R, L, M, k, the reflected impedances and the eddy-current loss are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
+    cap:"the bench (from above) — L-click pick up / put down, R-click return, click two sockets in turn: connect a lead, R-click a plug: pull it, click a probe tip to pick it up and plug it into a socket",
+    closeCap:"close up — left: the front of the sine wave generator (click the power switch; wheel or drag the AMPLITUDE knob) · right: the multimeter (click or wheel the dial)",
+    hWire:"Leads", red:"Red lead", black:"Black lead", clear:"Pull all leads",
+    wireHint:"Four red and four black leads (the longest red and black pair are the multimeter probes). Click a socket, then another, to connect them. Banana plugs stack.",
+    hProbe:"Multimeter probes", swap:"Swap the two probes", off:"Pull the probes",
+    probeHint:"The red probe sits in V/Ω, the black one in COM. The generator's output is not quite symmetric, so swapping the probes changes the reading a little.",
+    hNote:"Lab notebook", note:"Write down the reading", noteClr:"Clear", noteEmpty:"nothing written yet",
+    noteRow:(v,a,b,rod)=>"DMM: "+v+"  (red "+a+" · black "+b+")"+(rod?"  [aluminium rod]":""),
+    items:{gen:"Sine wave generator 1 kHz", dmm:"Digital multimeter", coils:"Pair of coaxial coils (board)", board:"Resistance board 100 Ω × 10, 10 Ω × 10", b300:"300 Ω board (100 Ω × 3)", rod:"Aluminium rod", wires:"Leads (red, black)"},
+    lab:{none:"(not on the bench)", rodIn:"in the coils", wiresLeft:(r,b)=>"leads left: red "+r+" · black "+b},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", hand:n=>"In hand: "+n, pend:s=>"One end of the lead is in "+s+" — click another socket. (R-click: cancel)", noWires:"Put the leads on the bench first."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.",
+       noFit:"It does not fit there: put it where it does not overlap anything.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       wired:(a,b)=>a+" — "+b+" connected", same:"That is the same socket.", noLeft:"No leads of that colour left.", unplug:"Plug pulled out.", cleared:"All leads pulled out.",
+       probe:n=>n+" probe in hand — click a socket.", probeIn:(n,s)=>n+" probe plugged into "+s+".", swapped:"The two probes swapped.", probeOff:"Probes pulled out.",
+       rodIn:"Aluminium rod put into the coils.", rodOut:"Aluminium rod taken out.", power:on=>"Generator "+(on?"on":"off"), dial:s=>"Multimeter dial: "+s, noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  RANDOM AND PHYSICS  (the same model as the Python edition)
+   ══════════════════════════════════════════════════════════════ */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const rnd=mulberry32((Date.now()^0x2012e2)>>>0);
+const U=(a,b)=>a+(b-a)*rnd();
+function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
+const C=(re,im)=>[re,im||0], cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]], csub=(a,b)=>[a[0]-b[0],a[1]-b[1]],
+      cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]],
+      cdiv=(a,b)=>{ const q=b[0]*b[0]+b[1]*b[1]; return [(a[0]*b[0]+a[1]*b[1])/q,(a[1]*b[0]-a[0]*b[1])/q]; },
+      cabs=a=>Math.hypot(a[0],a[1]);
+/* the coils and the aluminium core: two coupled coils and two eddy-current loops in the rod */
+const REF={f:1000, R1:52.57, L1:71.40e-3, R2:42.96, L2:55.18e-3, k12:0.844,
+  Ra:1.000e-4, La:5.25217e-8, Rb:1.000e-4, Lb:4.13866e-8, M1a:3.31708e-5, M2a:1.67065e-5, M1b:2.01123e-5, M2b:1.94528e-5, Mab:0, E:10.45, rint:33.0};
+function cholOK(M){ const n=M.length, L=M.map(()=>Array(n).fill(0));
+  for(let i=0;i<n;i++) for(let j=0;j<=i;j++){ let s=M[i][j]; for(let t=0;t<j;t++) s-=L[i][t]*L[j][t];
+    if(i===j){ if(s<=0) return false; L[i][i]=Math.sqrt(s); } else L[i][j]=s/L[j][j]; } return true; }
+const MODEL=(()=>{
+  for(let tries=0;tries<200;tries++){
+    const p={...REF}; p.f=+U(997,1003).toFixed(1); p.L1*=U(0.955,1.045); p.L2*=U(0.955,1.045); p.R1*=U(0.94,1.06); p.R2*=U(0.94,1.06); p.k12=U(0.815,0.872);
+    for(const k of ["Ra","Rb","La","Lb"]) p[k]*=U(0.90,1.10); for(const k of ["M1a","M2a","M1b","M2b"]) p[k]*=U(0.94,1.06);
+    p.M12=p.k12*Math.sqrt(p.L1*p.L2);
+    const Mm=[[p.L1,p.M12,p.M1a,p.M1b],[p.M12,p.L2,p.M2a,p.M2b],[p.M1a,p.M2a,p.La,p.Mab],[p.M1b,p.M2b,p.Mab,p.Lb]];
+    if(cholOK(Mm)) return {p,Mm,asym:U(0.0015,0.0035),drift:U(0.0015,0.0030),Emax:p.E*U(0.98,1.03),rint:p.rint*U(0.88,1.14),
+      tolA:Array.from({length:10},()=>1+0.004*gauss()), tolB:Array.from({length:10},()=>1+0.006*gauss()), tol3:Array.from({length:3},()=>1+0.003*gauss())};
+  }
+})();
+const OMEGA=2*Math.PI*MODEL.p.f, LIDX={coil1:0,coil2:1,coreA:2,coreB:3};
+/* nodal analysis with inductive branches (their currents are unknowns, coupled through M) */
+function solveNet(nodes,res,src,lbr,Mm,gnd){
+  const vmap={}; let k=0; for(const n of nodes) if(n!==gnd&&!(n in vmap)) vmap[n]=k++;
+  const ns=src.length, nl=lbr.length, N=k+ns+nl, A=Array.from({length:N},()=>Array.from({length:N},()=>[0,0])), b=Array.from({length:N},()=>[0,0]);
+  const vi=n=>n in vmap?vmap[n]:-1, add=(r,c,v)=>{ if(r>=0&&c>=0){ A[r][c][0]+=v[0]; A[r][c][1]+=v[1]; } };
+  for(const [a,bn,R] of res){ const g=1/R, ia=vi(a), ib=vi(bn); add(ia,ia,[g,0]); add(ib,ib,[g,0]); add(ia,ib,[-g,0]); add(ib,ia,[-g,0]); }
+  for(const n in vmap) add(vmap[n],vmap[n],[1e-9,0]);
+  src.forEach(([a,bn,E],j)=>{ const row=k+j, ia=vi(a), ib=vi(bn); add(ia,row,[1,0]); add(ib,row,[-1,0]); add(row,ia,[1,0]); add(row,ib,[-1,0]); b[row]=E; });
+  lbr.forEach(([a,bn,Rs,Ls],j)=>{ const row=k+ns+j, ia=vi(a), ib=vi(bn); add(ia,row,[1,0]); add(ib,row,[-1,0]); add(row,ia,[1,0]); add(row,ib,[-1,0]);
+    for(let l=0;l<nl;l++){ const col=k+ns+l; if(l===j){ A[row][col][0]-=Rs; A[row][col][1]-=OMEGA*Ls; } else A[row][col][1]-=OMEGA*Mm[j][l]; } });
+  for(let i=0;i<N;i++){
+    let p=i, best=cabs(A[i][i]); for(let r=i+1;r<N;r++){ const v=cabs(A[r][i]); if(v>best){ best=v; p=r; } }
+    if(best<1e-40) return null;
+    if(p!==i){ [A[i],A[p]]=[A[p],A[i]]; [b[i],b[p]]=[b[p],b[i]]; }
+    for(let r=i+1;r<N;r++){ const f=cdiv(A[r][i],A[i][i]); if(!f[0]&&!f[1]) continue; for(let c=i;c<N;c++) A[r][c]=csub(A[r][c],cmul(f,A[i][c])); b[r]=csub(b[r],cmul(f,b[i])); }
+  }
+  const x=Array.from({length:N},()=>[0,0]);
+  for(let i=N-1;i>=0;i--){ let s=b[i]; for(let c=i+1;c<N;c++) s=csub(s,cmul(A[i][c],x[c])); x[i]=cdiv(s,A[i][i]); }
+  const V={}; V[gnd]=[0,0]; for(const n in vmap) V[n]=x[vmap[n]]; return V;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE BENCH  (world in mm; x right, y towards you, z up; seen almost from above)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=720, SC=0.80, OX=30, OY=40, KY=0.86;
+const P=(x,y,z)=>[OX+SC*x, OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>[(X-OX)/SC, ((Y-OY)/SC+(z||0))/KY];
+const v2=a=>[Math.cos(a),Math.sin(a)], add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k],
+      dot2=(a,b)=>a[0]*b[0]+a[1]*b[1], len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a)||1; return [a[0]/l,a[1]/l]; };
+const DESK={x0:0,x1:1420,y0:0,y1:790};
+const ITEMS=["gen","dmm","coils","board","b300","rod","wires"];
+const DIM={gen:[260,200,110],dmm:[96,190,40],coils:[160,160,28],board:[360,130,28],b300:[200,90,28],rod:[80,30,25],wires:[150,110,20]};
+const DIALS=["OFF","V~ 200","V~ 20","V~ 2","V⎓ 20"];
+const ST={
+  it:Object.fromEntries(ITEMS.map(k=>[k,{on:false,x:0,y:0}])),
+  wires:[], left:{red:4,black:4}, col:"red", pend:null,
+  probe:{V:null,C:null}, rodIn:false, power:true, amp:1.0, dial:0, disp:"", dt:0, notes:[]
+};
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+/* the sockets of everything on the bench */
+const SOCK_NAMES={GENpa:"OUTPUT +",GENpb:"OUTPUT +",GENma:"OUTPUT −",GENmb:"OUTPUT −",CB1:"1-START",CB2:"1-END",CG1:"2-START",CG2:"2-END"};
+function sockets(){
+  const S=[];
+  const g=ST.it.gen; if(g.on){ const fy=g.y+DIM.gen[1]/2;
+    S.push({id:"GENpa",w:[g.x+70,fy,72],col:"#a8231c",front:true},{id:"GENma",w:[g.x+102,fy,72],col:"#141416",front:true},
+           {id:"GENpb",w:[g.x+70,fy,40],col:"#a8231c",front:true},{id:"GENmb",w:[g.x+102,fy,40],col:"#141416",front:true}); }
+  const c=ST.it.coils; if(c.on){ for(const [id,dx,dy,col] of [["CB1",-50,-50,"#1f4fc0"],["CB2",50,-50,"#1f4fc0"],["CG1",-50,50,"#1f8a4a"],["CG2",50,50,"#1f8a4a"]]) S.push({id,w:[c.x+dx,c.y+dy,28],col}); }
+  const b=ST.it.board; if(b.on){ for(let i=0;i<=10;i++){ S.push({id:"RB"+i,w:[b.x-150+30*i,b.y-30,28],col:"#141416"}); S.push({id:"RA"+i,w:[b.x-150+30*i,b.y+28,28],col:"#a8231c"}); } }
+  const t=ST.it.b300; if(t.on){ for(let i=0;i<4;i++) S.push({id:"Y"+i,w:[t.x-66+44*i,t.y,28],col:"#d8b21c"}); }
+  return S;
+}
+const sockAt=id=>sockets().find(s=>s.id===id);
+const sockLabel=id=>SOCK_NAMES[id]||(id[0]==="R"?(id[1]==="A"?"100Ω#":"10Ω#")+id.slice(2):id[0]==="Y"?"300Ω#"+id.slice(1):id);
+const dmmJack=k=>{ const m=ST.it.dmm; return [m.x+(k==="V"?-8:-30),m.y+68,40]; };
+/* the circuit, from the leads actually plugged in */
+function solveBench(){
+  const parent={}; const find=a=>{ if(!(a in parent)) parent[a]=a; while(parent[a]!==a){ parent[a]=parent[parent[a]]; a=parent[a]; } return a; };
+  const uni=(a,b)=>{ const ra=find(a), rb=find(b); if(ra!==rb) parent[ra]=rb; };
+  const socks=sockets(); for(const s of socks) find(s.id);
+  if(ST.it.gen.on){ uni("GENpa","GENpb"); uni("GENma","GENmb"); }
+  for(const w of ST.wires) if(sockAt(w.a)&&sockAt(w.b)) uni(w.a,w.b);
+  const nd=s=>find(s), res=[], src=[], lbr=[], names=[], nodes=new Set(socks.map(s=>find(s.id)));
+  const m=MODEL;
+  if(ST.it.gen.on){ nodes.add("GEN_INT"); src.push(["GEN_INT",nd("GENma"),C(ST.power?m.Emax*ST.amp:0)]); res.push(["GEN_INT",nd("GENpa"),m.rint]); }
+  if(ST.it.board.on){ for(let i=0;i<10;i++){ res.push([nd("RA"+i),nd("RA"+(i+1)),100*m.tolA[i]]); res.push([nd("RB"+i),nd("RB"+(i+1)),10*m.tolB[i]]); } }
+  if(ST.it.b300.on) for(let i=0;i<3;i++) res.push([nd("Y"+i),nd("Y"+(i+1)),100*m.tol3[i]]);
+  if(ST.it.coils.on){ lbr.push([nd("CB1"),nd("CB2"),m.p.R1,m.p.L1]); names.push("coil1"); lbr.push([nd("CG1"),nd("CG2"),m.p.R2,m.p.L2]); names.push("coil2");
+    if(ST.rodIn){ nodes.add("CA1"); nodes.add("CC1"); lbr.push(["CA1","CA1",m.p.Ra,m.p.La]); names.push("coreA"); lbr.push(["CC1","CC1",m.p.Rb,m.p.Lb]); names.push("coreB"); } }
+  const pv=ST.probe.V&&sockAt(ST.probe.V)?nd(ST.probe.V):null, pc=ST.probe.C&&sockAt(ST.probe.C)?nd(ST.probe.C):null;
+  if(ST.it.dmm.on&&ST.dial>0&&pv&&pc&&pv!==pc) res.push([pv,pc,1e7]);
+  if(!lbr.length&&!src.length) return null;
+  const Mm=names.map(a=>names.map(b=>a===b?0:m.Mm[LIDX[a]][LIDX[b]]));
+  const gnd=ST.it.gen.on?nd("GENma"):[...nodes][0];
+  const V=solveNet([...nodes],res,src,lbr,Mm,gnd); if(!V) return null;
+  return {V,pv,pc};
+}
+function dmmRead(){
+  if(!ST.it.dmm.on||ST.dial===0) return "";
+  const sol=solveBench(); if(!sol||!sol.pv||!sol.pc) return ST.dial===4?"0.00":ST.dial===1?"0.0":ST.dial===2?"0.00":".000";
+  const rng=[0,200,20,2,20][ST.dial];
+  if(ST.dial===4) return (0.01*gauss()).toFixed(2).replace("-0.00","0.00");
+  let v=sol.pv===sol.pc?0:cabs(csub(sol.V[sol.pv]||C(0),sol.V[sol.pc]||C(0)));
+  const pol=ST.probe.V<ST.probe.C?1:-1; v*=1+pol*MODEL.asym; v+=MODEL.drift*gauss(); v=Math.max(0,v);
+  if(v>rng*0.9995) return "1   .";
+  return rng===200?v.toFixed(1):rng===20?v.toFixed(2):v.toFixed(3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  DRAWING THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function drawDesk(){
+  ctx.fillStyle="#2f86c6"; ctx.fillRect(0,0,LW,LH);
+  ctx.fillStyle="rgba(255,255,255,.04)"; for(let i=0;i<300;i++){ const x=(i*733)%LW, y=(i*277)%LH; ctx.fillRect(x,y,3,1.5); }
+}
+function sockDraw(x,y,col,r){ circ(x,y,r+1.8,shade(col,0.35),"#222",0.6); circ(x,y,r,col); circ(x,y,r*0.42,"#0a0a0a"); }
+function drawGen(){
+  const g=ST.it.gen, [w,dd,h]=DIM.gen, x0=g.x-w/2, y0=g.y-dd/2;
+  /* the wire stand under it, then the grey case */
+  ctx.strokeStyle="#b9bec3"; ctx.lineWidth=2; const s0=P(x0+40,y0+dd+18,0), s1=P(x0+w-40,y0+dd+18,0); ctx.beginPath(); ctx.moveTo(s0[0],s0[1]); ctx.lineTo(s1[0],s1[1]); ctx.stroke();
+  const a=P(x0,y0,h), b=P(x0+w,y0+dd,h), f=P(x0,y0+dd,0);
+  ctx.fillStyle=vgrad(a[1],b[1]-a[1],[[0,"#c9ccd0"],[1,"#dfe2e5"]]); ctx.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
+  ctx.fillStyle="#e9ebee"; ctx.fillRect(a[0],b[1],b[0]-a[0],f[1]-b[1]);
+  ctx.strokeStyle="#8d9399"; ctx.lineWidth=0.8; ctx.strokeRect(a[0],a[1],b[0]-a[0],f[1]-a[1]);
+  const o=P(x0,y0+dd,h); ctx.save(); ctx.translate(o[0],o[1]); ctx.scale(SC,SC); genFace(false); ctx.restore();
+}
+/* the front panel, w × h = 260 × 110 mm, as in the photograph */
+function genFace(big){
+  fillR(0,0,260,110,2,"#eef0f2","#9aa0a6",0.8); ctx.strokeStyle="#2f5fb8"; ctx.lineWidth=1.2; ctx.strokeRect(5,5,250,100);
+  text("SINE WAVE GENERATOR",14,17,"#2f5fb8",big?9.5:9,"left","800"); text("APhO-2012",246,17,"#c0302a",big?7:6.5,"right","700");
+  text("OFF",22,32,"#2f5fb8",6,"center","700"); text("POWER",22,82,"#2f5fb8",5.5,"center","700"); text("ON",22,89,"#2f5fb8",5.5,"center","700");
+  fillR(13,42,18,30,2,"#1a1a1c"); fillR(15,44,14,26,1.5,ST.power?"#d2382c":"#a8261c"); fillR(16,ST.power?57:45,12,12,1,"rgba(255,255,255,.18)");
+  fillR(66,28,58,11,2,null,"#2f5fb8",0.8); text("AMPLITUDE",95,34,"#2f5fb8",6.5,"center","800");
+  const kx=95, ky=62; circ(kx,ky,15,"#1c1c1e"); circ(kx,ky,11,"#e8442e","#a42a1a",0.8);
+  const ang=-Math.PI*1.25+ST.amp*Math.PI*1.5; ctx.strokeStyle="#fff"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(kx,ky); ctx.lineTo(kx+Math.cos(ang)*10,ky+Math.sin(ang)*10); ctx.stroke();
+  text("MIN.",74,80,"#2f5fb8",5.5,"center","700"); text("MAX.",117,80,"#2f5fb8",5.5,"center","700");
+  text("RA INSTRUMENTS",128,94,"#c0302a",6.5,"center","800");
+  fillR(176,45,48,14,1,null,"#2f5fb8",0.6); text("OUTPUT",200,52,"#2f5fb8",5,"center","700");
+  sockDraw(200-30,38,"#a8231c",6.5); sockDraw(200+2,38,"#141416",6.5); sockDraw(200-30,70,"#a8231c",6.5); sockDraw(200+2,70,"#141416",6.5);
+}
+const GEN_HIT={power:[13,42,18,30], knob:[95,62,16]};
+function drawDMM(){
+  const m=ST.it.dmm, [w,dd,h]=DIM.dmm, x0=m.x-w/2, y0=m.y-dd/2;
+  const a=P(x0,y0,h), b=P(x0+w,y0+dd,h), f=P(x0,y0+dd,0);
+  ctx.fillStyle="#d8a51a"; ctx.fillRect(a[0],b[1],b[0]-a[0],f[1]-b[1]);
+  ctx.save(); ctx.translate(a[0],a[1]); ctx.scale(SC,SC*KY); dmmFace(false); ctx.restore();
+}
+/* the yellow handheld multimeter, 96 × 190 mm */
+function dmmFace(big){
+  fillR(0,0,96,190,8,"#f1c21e","#b48a0c",0.8);
+  fillR(14,10,68,34,3,"#3a3a32"); fillR(18,14,60,26,2,ST.dial>0?"#b7c2a6":"#a2ab95");
+  if(ST.dial>0) lcd(ST.disp,20,18.5,54,16,"#151a12",null);
+  const cx=48, cy=88; circ(cx,cy,30,"#2a2a26");
+  DIALS.forEach((s,i)=>{ const a=-Math.PI/2-0.9+i*0.45; text(s.replace(" ",""),cx+Math.cos(a)*36.5,cy+Math.sin(a)*36.5,i===ST.dial?"#c0302a":"#3a3010",big?4.4:4,"center","800"); });
+  circ(cx,cy,24,"#f3c823","#b48a0c",1); const a=-Math.PI/2-0.9+ST.dial*0.45;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(a+Math.PI/2); fillR(-5,-24,10,48,4,"#e8b818","#a07c0a",0.8); ctx.restore();
+  fillR(60,124,28,8,1,"#e2e2dc","#9a9a92",0.5);
+  for(const [lab,x] of [["COM",18],["V",40],["mA",62],["10A",84]]){ text(lab,x,150,"#2a2410",5,"center","800"); sockDraw(x,160,lab==="COM"?"#141416":lab==="V"?"#a8231c":"#8a6c4a",5); }
+  fillR(10,174,76,9,1,"#1c1c1a"); text("DIGITAL",48,178.5,"#d8d2b0",5,"center","700");
+}
+const DMM_HIT={dial:[48,88,31]};
+function drawCoils(){
+  const c=ST.it.coils, z=22;
+  for(const [dx,dy] of [[-62,-62],[62,-62],[-62,62],[62,62]]) vcyl(c.x+dx,c.y+dy,0,z,15,"#f4f4f0","#fbfbf8","#c8c8c2");
+  const a=P(c.x-80,c.y-80,z+3), b=P(c.x+80,c.y+80,z+3); ctx.fillStyle="rgba(200,226,240,.45)"; ctx.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]); ctx.strokeStyle="rgba(240,250,255,.8)"; ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);
+  text("APhO 2012",P(c.x,c.y-68,25)[0],P(c.x,c.y-68,25)[1],"rgba(255,255,255,.55)",11,"center","700");
+  text("HBCSE-TIFR, Mumbai, INDIA",P(c.x,c.y+72,25)[0],P(c.x,c.y+72,25)[1],"rgba(255,255,255,.5)",7,"center","600");
+  fillR(P(c.x-74,c.y-76,25)[0],P(c.x-74,c.y-76,25)[1],22,12,1,"#fff","#888",0.5); text("4",P(c.x-63,c.y-71,25)[0],P(c.x-63,c.y-71,25)[1],"#111",8,"center","800");
+  /* the bobbin stands upright: white flanges, copper winding, white tape */
+  vcyl(c.x,c.y,z+3,z+9,44,"#f2f2ee","#fafaf6","#c9c9c2");
+  vcyl(c.x,c.y,z+9,z+78,36,hgrad(P(c.x-36,0,0)[0],72*SC,[[0,"#5a2a10"],[0.3,"#b8642e"],[0.55,"#d98a4a"],[1,"#6a3214"]]),"#c87a40","#5a2a10");
+  vcyl(c.x,c.y,z+40,z+46,37,"#f2f2ee","#fafaf6","#c9c9c2");
+  vcyl(c.x,c.y,z+78,z+84,44,"#f2f2ee","#fafaf6","#c9c9c2");
+  const t=P(c.x,c.y,z+84); ell(t[0],t[1],22*SC,22*SC*KY,ST.rodIn?"#c9ced3":"#2a2f35","#9aa0a6",0.8);
+  if(ST.rodIn){ ell(t[0],t[1]-6*SC,12.5*SC,12.5*SC*KY,"#d9dde1","#8d9399",0.8); text("4",t[0],t[1]-6*SC,"#333",7,"center","800"); }
+  for(const n of ["CB1","CB2","CG1","CG2"]){ const s=sockAt(n), p=P(...s.w); sockDraw(p[0],p[1],s.col,5.5); }
+  for(const [n,dx,dy] of [["1-START",-50,-36],["1-END",50,-36],["2-START",-50,64],["2-END",50,64]]){ const p=P(c.x+dx,c.y+dy,25); text(n,p[0],p[1],"rgba(255,255,255,.75)",7,"center","700"); }
+}
+function drawBoard(){
+  const b=ST.it.board, z=22;
+  for(const [dx,dy] of [[-165,-50],[165,-50],[-165,50],[165,50]]) vcyl(b.x+dx,b.y+dy,0,z,14,"#f4f4f0","#fbfbf8","#c8c8c2");
+  const a=P(b.x-180,b.y-65,z+3), c=P(b.x+180,b.y+65,z+3); ctx.fillStyle="rgba(200,226,240,.42)"; ctx.fillRect(a[0],a[1],c[0]-a[0],c[1]-a[1]); ctx.strokeStyle="rgba(240,250,255,.8)"; ctx.strokeRect(a[0],a[1],c[0]-a[0],c[1]-a[1]);
+  text("SERIES RESISTOR ASSEMBLY   APhO 2012",P(b.x,b.y-52,25)[0],P(b.x,b.y-52,25)[1],"rgba(255,255,255,.55)",8,"center","700");
+  text("HBCSE-TIFR, Mumbai, INDIA",P(b.x,b.y+56,25)[0],P(b.x,b.y+56,25)[1],"rgba(255,255,255,.5)",7,"center","600");
+  for(const row of ["RB","RA"]){ const yy=row==="RB"?b.y-30:b.y+28;
+    for(let i=0;i<10;i++){ const p=P(b.x-150+30*i+15,yy+12,24); fillR(p[0]-6,p[1]-2,12,4,2,row==="RA"?"#5a8ad0":"#d6c39a","#555",0.4); text(row==="RA"?"100Ω":"10Ω",p[0],p[1]+6,"rgba(255,255,255,.75)",5.5,"center","600"); }
+    for(let i=0;i<=10;i++){ const s=sockAt(row+i), p=P(...s.w); sockDraw(p[0],p[1],s.col,5.5); } }
+}
+function drawB300(){
+  const t=ST.it.b300, z=22;
+  for(const [dx,dy] of [[-85,-30],[85,-30],[-85,30],[85,30]]) vcyl(t.x+dx,t.y+dy,0,z,13,"#f4f4f0","#fbfbf8","#c8c8c2");
+  const a=P(t.x-100,t.y-45,z+3), c=P(t.x+100,t.y+45,z+3); ctx.fillStyle="rgba(200,226,240,.42)"; ctx.fillRect(a[0],a[1],c[0]-a[0],c[1]-a[1]); ctx.strokeStyle="rgba(240,250,255,.8)"; ctx.strokeRect(a[0],a[1],c[0]-a[0],c[1]-a[1]);
+  for(let i=0;i<3;i++){ const p=P(t.x-44+44*i,t.y+12,24); text("100 Ω",p[0],p[1]+6,"rgba(255,255,255,.75)",6,"center","600"); ctx.strokeStyle="#333"; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(p[0]-14,p[1]-3); for(let k=0;k<6;k++) ctx.lineTo(p[0]-10+k*4,p[1]-3+(k%2?-3:3)); ctx.lineTo(p[0]+14,p[1]-3); ctx.stroke(); }
+  for(let i=0;i<4;i++){ const s=sockAt("Y"+i), p=P(...s.w); sockDraw(p[0],p[1],s.col,5.5); }
+}
+function drawRod(){ if(ST.rodIn) return; const r=ST.it.rod; const a=P(r.x-38,r.y,12.5), b=P(r.x+38,r.y,12.5);
+  ctx.lineCap="butt"; ctx.strokeStyle=vgrad(a[1]-10,20,[[0,"#8d949b"],[0.4,"#eef1f4"],[1,"#7a8188"]]); ctx.lineWidth=25*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  ell(b[0],b[1],5,12.5*SC,"#c9ced3","#8d9399",0.6); text("4",a[0]+12,a[1],"#333",8,"center","800"); }
+function drawWireBundle(){ const w=ST.it.wires, p=P(w.x,w.y,2);
+  for(let i=0;i<4;i++){ ctx.strokeStyle=i%2?"#141416":"#c42a22"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(p[0]+i*4-6,p[1]+i*2,48-i*6,26-i*3,0.2,0,7); ctx.stroke(); }
+  text(d().lab.wiresLeft(ST.left.red,ST.left.black),p[0],p[1]+38,"rgba(255,255,255,.85)",10,"center","600"); }
+/* leads: banana plugs standing in their sockets (they stack), cables sagging between */
+function plugTop(id,stackIdx){ const s=sockAt(id); if(!s) return null; const h=s.front?0:16+stackIdx*9; return s.front?[s.w[0],s.w[1]+16+stackIdx*9,s.w[2]]:[s.w[0],s.w[1],s.w[2]+h]; }
+function cable(a,b,col){
+  const pa=P(...a), pb=P(...b), dd=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=Math.min(80,30+dd*0.25), m=P((a[0]+b[0])/2,(a[1]+b[1])/2+sag*0.6,0);
+  ctx.strokeStyle="rgba(0,0,0,.22)"; ctx.lineWidth=3.6; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]+2); ctx.quadraticCurveTo(m[0],m[1]+4,pb[0],pb[1]+2); ctx.stroke();
+  ctx.strokeStyle=col; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.quadraticCurveTo(m[0],m[1],pb[0],pb[1]); ctx.stroke();
+}
+function plugDraw(id,stackIdx,col){ const s=sockAt(id); if(!s) return; const t=plugTop(id,stackIdx), p=P(...s.w), q=P(...t);
+  if(s.front){ fillR(Math.min(p[0],q[0])-3.5,p[1]-3.5,Math.abs(q[0]-p[0])+7,Math.max(7,Math.abs(q[1]-p[1])+7),3,col,"#000",0.5); }
+  else fillR(q[0]-3.5,q[1]-1,7,Math.max(6,p[1]-q[1]+2),2,col,"#000",0.5); }
+const COLS={red:"#c42a22",black:"#18181a"};
+function drawLeads(){
+  const stack={};
+  const take=id=>{ stack[id]=(stack[id]||0); return stack[id]++; };
+  for(const w of ST.wires){ const ia=take(w.a), ib=take(w.b), A=plugTop(w.a,ia), B=plugTop(w.b,ib); if(!A||!B) continue;
+    cable(A,B,COLS[w.col]); plugDraw(w.a,ia,COLS[w.col]); plugDraw(w.b,ib,COLS[w.col]); }
+  if(ST.pend){ const A=plugTop(ST.pend.a,take(ST.pend.a)); if(A){ const q=unP(mouse[0],mouse[1],0); cable(A,[q[0],q[1],20],COLS[ST.pend.col]); plugDraw(ST.pend.a,stack[ST.pend.a]-1,COLS[ST.pend.col]); } }
+  /* the multimeter's probe leads */
+  if(ST.it.dmm.on) for(const k of ["C","V"]){ const col=k==="V"?COLS.red:COLS.black, j=dmmJack(k);
+    let tip; if(hand&&hand.probe===k){ const q=unP(mouse[0],mouse[1],0); tip=[q[0],q[1],25]; }
+    else if(ST.probe[k]&&sockAt(ST.probe[k])){ tip=plugTop(ST.probe[k],take(ST.probe[k])); plugDraw(ST.probe[k],stack[ST.probe[k]]-1,col); }
+    else tip=probeRest(k);
+    cable([j[0],j[1],j[2]+6],tip,col);
+    if(!(ST.probe[k]&&sockAt(ST.probe[k]))||(hand&&hand.probe===k)){ const p=P(...tip); fillR(p[0]-12,p[1]-3,18,6,2,col,"#000",0.5); ctx.fillStyle="#c8a64a"; ctx.fillRect(p[0]+6,p[1]-1.2,7,2.4); }
+    const jp=P(...j); fillR(jp[0]-3.5,jp[1]-12,7,12,2,col,"#000",0.5); }
+}
+const probeRest=k=>{ const m=ST.it.dmm; return [m.x+(k==="V"?40:-55),m.y+150+(k==="V"?10:0),4]; };
+function drawBench(){
+  drawDesk();
+  const list=ITEMS.filter(k=>ST.it[k].on&&!(k==="rod"&&ST.rodIn)).sort((a,b)=>ST.it[a].y-ST.it[b].y);
+  for(const k of list){ if(k==="gen") drawGen(); else if(k==="dmm") drawDMM(); else if(k==="coils") drawCoils(); else if(k==="board") drawBoard(); else if(k==="b300") drawB300(); else if(k==="rod") drawRod(); else drawWireBundle(); }
+  drawLeads(); drawGhost();
+}
+function drawGhost(){
+  if(!hand||!hand.item||!overBench) return; const k=hand.item, [x,y]=unP(mouse[0],mouse[1],0), [w,dd]=DIM[k];
+  const a=P(x-w/2,y-dd/2,0), b=P(x+w/2,y+dd/2,0);
+  ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=fits(k,x,y)||(k==="rod"&&rodTarget(mouse))?"#f2c14e":"#e0605a"; ctx.lineWidth=1.6; ctx.strokeRect(a[0],a[1],b[0]-a[0],b[1]-a[1]); ctx.restore();
+  text(itemName(k),a[0],a[1]-8,"#fff3c4",11,"left","700");
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  PLACING, WIRING
+   ══════════════════════════════════════════════════════════════ */
+function rect(k,x,y){ const [w,dd]=DIM[k]; return [x-w/2,y-dd/2,x+w/2,y+dd/2]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y){ const r=rect(k,x,y); if(r[0]<DESK.x0+4||r[2]>DESK.x1-4||r[1]<DESK.y0+4||r[3]>DESK.y1-4) return false;
+  for(const o of ITEMS){ if(o===k||!ST.it[o].on||(o==="rod"&&ST.rodIn)) continue; if(overl(r,rect(o,ST.it[o].x,ST.it[o].y),k==="gen"||o==="gen"?28:10)) return false; } return true; }
+function rodTarget(p){ if(!ST.it.coils.on) return false; const c=ST.it.coils, q=P(c.x,c.y,100); return Math.hypot(p[0]-q[0],p[1]-q[1])<40; }
+function itemAt(p){
+  const list=ITEMS.filter(k=>ST.it[k].on&&!(k==="rod"&&ST.rodIn)).sort((a,b)=>ST.it[b].y-ST.it[a].y);
+  for(const k of list){ const it=ST.it[k], [w,dd,h]=DIM[k], a=P(it.x-w/2,it.y-dd/2,h), b=P(it.x+w/2,it.y+dd/2,0); if(p[0]>=a[0]&&p[0]<=b[0]&&p[1]>=a[1]&&p[1]<=b[1]) return k; }
+  if(ST.rodIn){ const c=ST.it.coils, q=P(c.x,c.y,106); if(Math.hypot(p[0]-q[0],p[1]-q[1])<14) return "rod"; }
+  return null;
+}
+function sockNear(p){ let best=null, bd=10; for(const s of sockets()){ const q=P(...s.w), dd=Math.hypot(p[0]-q[0],p[1]-q[1]); if(dd<bd){ bd=dd; best=s; } } return best; }
+function plugNear(p){
+  /* the topmost plug at a socket under the mouse, as [kind, index] */
+  const stack={}; const take=id=>{ stack[id]=(stack[id]||0); return stack[id]++; }; const tops=[];
+  ST.wires.forEach((w,i)=>{ tops.push(["w",i,0,w.a,take(w.a)]); tops.push(["w",i,1,w.b,take(w.b)]); });
+  for(const k of ["C","V"]) if(ST.probe[k]&&sockAt(ST.probe[k])) tops.push(["p",k,0,ST.probe[k],take(ST.probe[k])]);
+  for(let i=tops.length-1;i>=0;i--){ const [kind,idx,end,id,st]=tops[i], t=plugTop(id,st); if(!t) continue; const q=P(...t), s=P(...sockAt(id).w);
+    if(Math.hypot(p[0]-q[0],p[1]-q[1])<8||Math.hypot(p[0]-s[0],p[1]-s[1])<6) return {kind,idx,end,id}; }
+  return null;
+}
+function probeTipNear(p){ if(!ST.it.dmm.on) return null; for(const k of ["V","C"]){ if(ST.probe[k]) continue; const q=P(...probeRest(k)); if(Math.hypot(p[0]-q[0],p[1]-q[1])<14) return k; } return null; }
+function dropLeadsOf(k){ const gone=new Set(); for(const s of sockets()){ const own=(k==="gen"&&s.id.startsWith("GEN"))||(k==="coils"&&s.id[0]==="C")||(k==="board"&&s.id[0]==="R")||(k==="b300"&&s.id[0]==="Y"); if(own) gone.add(s.id); }
+  ST.wires=ST.wires.filter(w=>{ const drop=gone.has(w.a)||gone.has(w.b); if(drop) ST.left[w.col]++; return !drop; });
+  for(const q of ["V","C"]) if(gone.has(ST.probe[q])) ST.probe[q]=null; if(ST.pend&&gone.has(ST.pend.a)) ST.pend=null; }
+function returnItem(k){
+  if(k==="wires"){ for(const w of ST.wires) ST.left[w.col]++; ST.wires=[]; ST.pend=null; }
+  if(k==="dmm"){ ST.probe={V:null,C:null}; ST.dial=0; }
+  if(k==="coils"&&ST.rodIn){ ST.rodIn=false; ST.it.rod.on=false; }
+  if(k==="rod") ST.rodIn=false;
+  dropLeadsOf(k); ST.it[k].on=false; say("back",itemName(k));
+}
+function returnHand(){ if(!hand) return; if(hand.move){ Object.assign(ST.it[hand.item],hand.orig,{on:true}); if(hand.item==="rod") ST.rodIn=hand.orig.rodIn; say("stays"); } hand=null; }
+function benchClick(p,right){
+  if(hand&&hand.item){
+    if(right){ returnHand(); return; }
+    const k=hand.item, [x,y]=unP(p[0],p[1],0);
+    if(k==="rod"&&rodTarget(p)){ ST.it.rod.on=true; ST.rodIn=true; hand=null; say("rodIn"); return; }
+    if(!fits(k,x,y)){ say("noFit"); return; }
+    Object.assign(ST.it[k],{on:true,x,y}); if(k==="rod") ST.rodIn=false; say("placed",itemName(k)); hand=null; return;
+  }
+  if(hand&&hand.probe){ if(right){ hand=null; return; } const s=sockNear(p); if(s){ ST.probe[hand.probe]=s.id; say("probeIn",hand.probe==="V"?"V/Ω":"COM",sockLabel(s.id)); hand=null; } else hand=null; return; }
+  if(ST.pend){ if(right){ ST.pend=null; return; } const s=sockNear(p); if(!s) return; if(s.id===ST.pend.a){ say("same"); return; }
+    ST.wires.push({a:ST.pend.a,b:s.id,col:ST.pend.col}); say("wired",sockLabel(ST.pend.a),sockLabel(s.id)); ST.pend=null; return; }
+  if(right){ const pl=plugNear(p); if(pl){ if(pl.kind==="w"){ const w=ST.wires[pl.idx]; ST.wires.splice(pl.idx,1); ST.left[w.col]++; } else ST.probe[pl.idx]=null; say("unplug"); return; }
+    const k=itemAt(p); if(k) returnItem(k); return; }
+  if(ST.it.gen.on){ const g=ST.it.gen, o=P(g.x-DIM.gen[0]/2,g.y+DIM.gen[1]/2,DIM.gen[2]), u=(p[0]-o[0])/SC, v=(p[1]-o[1])/SC, [x,y,w,h]=GEN_HIT.power;
+    if(u>=x&&u<=x+w&&v>=y&&v<=y+h){ ST.power=!ST.power; say("power",ST.power); return; } }
+  const tip=probeTipNear(p); if(tip){ hand={probe:tip}; say("probe",tip==="V"?"V/Ω":"COM"); return; }
+  const pl=plugNear(p); if(pl&&pl.kind==="p"){ ST.probe[pl.idx]=null; hand={probe:pl.idx}; say("probe",pl.idx==="V"?"V/Ω":"COM"); return; }
+  const s=sockNear(p);
+  if(s){ if(!ST.it.wires.on){ say("noLeft"); return; } if(ST.left[ST.col]<=0){ say("noLeft"); return; } ST.left[ST.col]--; ST.pend={a:s.id,col:ST.col}; return; }
+  const k=itemAt(p); if(k){ hand={item:k,move:true,orig:{x:ST.it[k].x,y:ST.it[k].y,rodIn:ST.rodIn}}; if(k==="rod"){ ST.rodIn=false; } dropLeadsOf(k); ST.it[k].on=false; say("moveIt",itemName(k)); }
+}
+/* the pending lead goes back to the bundle if it is never finished */
+function cancelPend(){ if(ST.pend){ ST.left[ST.pend.col]++; ST.pend=null; } }
+
+/* ══════════════════════════════════════════════════════════════
+   5.  TRAY, LAYOUT, CLOSE UP
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["gen","dmm","coils","board","b300","rod","wires"], TROW=44;
+let TRW=190, TRH=600, CLW=900, CLH=360, trayCells=[], CL={};
+const trayAvail=k=>!ST.it[k].on&&!(hand&&hand.item===k);
+function icon(c,k){
+  const old=ctx; ctx=c;
+  if(k==="gen"){ fillR(-18,-12,36,22,2,"#e2e5e8","#8d9399"); circ(-8,0,4,"#e8442e"); circ(8,-4,2.4,"#a8231c"); circ(13,-4,2.4,"#141416"); circ(8,3,2.4,"#a8231c"); circ(13,3,2.4,"#141416"); fillR(-16,-6,4,7,1,"#d2382c"); }
+  else if(k==="dmm"){ fillR(-9,-17,18,34,3,"#f1c21e","#b48a0c"); fillR(-6,-14,12,6,1,"#b7c2a6"); circ(0,2,5,"#f3c823","#b48a0c"); }
+  else if(k==="coils"){ fillR(-15,-15,30,30,2,"rgba(200,226,240,.6)","#aac"); fillR(-8,-9,16,18,3,"#c87a40","#5a2a10"); circ(-11,-11,2.4,"#1f4fc0"); circ(11,-11,2.4,"#1f4fc0"); circ(-11,11,2.4,"#1f8a4a"); circ(11,11,2.4,"#1f8a4a"); }
+  else if(k==="board"){ fillR(-19,-10,38,20,2,"rgba(200,226,240,.6)","#aac"); for(let i=0;i<6;i++){ circ(-15+i*6,-4,1.8,"#141416"); circ(-15+i*6,5,1.8,"#a8231c"); } }
+  else if(k==="b300"){ fillR(-17,-7,34,14,2,"rgba(200,226,240,.6)","#aac"); for(let i=0;i<4;i++) circ(-12+i*8,0,2.2,"#d8b21c"); }
+  else if(k==="rod"){ fillR(-15,-5,30,10,2,"#d5d9dd","#8d9399"); }
+  else if(k==="wires"){ for(let i=0;i<3;i++){ ctx.strokeStyle=i%2?"#18181a":"#c42a22"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.ellipse(0,0,15-i*3,8-i*1.5,0.2,0,7); ctx.stroke(); } }
+  ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(260,CLW*0.36));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-4)/2); icon(c,k); c.restore();
+    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm];
+    if(c.measureText(nm).width>wd-52){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.55)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,52,y+(parts.length>1?10+i*13:13)));
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(av?t.trayTake:t.trayOut,52,y+34);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW;
+  }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH); CL={};
+  const H=CLH-16, sg=Math.min((CLW*0.62-20)/260,H/110), sd=Math.min((CLW*0.32)/96,H/190);
+  if(ST.it.gen.on){ const x=10, y=8+(H-110*sg)/2; ctx.save(); ctx.translate(x,y); ctx.scale(sg,sg); genFace(true); ctx.restore(); CL.gen={x,y,s:sg}; }
+  else text(itemName("gen")+" "+d().lab.none,CLW*0.3,CLH/2,"#69717a",12,"center");
+  if(ST.it.dmm.on){ const x=CLW-10-96*sd, y=8+(H-190*sd)/2; ctx.save(); ctx.translate(x,y); ctx.scale(sd,sd); dmmFace(true); ctx.restore(); CL.dmm={x,y,s:sd};
+    text(DIALS[ST.dial],x-12,y+88*sd,"#f2c14e",12,"right","700"); }
+  else text(itemName("dmm")+" "+d().lab.none,CLW*0.82,CLH/2,"#69717a",12,"center");
+  ctx=old;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   6.  INPUT, PANEL, LOOP
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+let trayDrag=false, knobDrag=null;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&hand.item&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; knobDrag=null; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand) returnHand(); cancelPend(); drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    const same=hand&&hand.item===k&&!hand.move; if(hand) returnHand();
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+function closeHit(p){
+  if(CL.gen){ const u=(p[0]-CL.gen.x)/CL.gen.s, v=(p[1]-CL.gen.y)/CL.gen.s, [x,y,w,h]=GEN_HIT.power, [kx,ky,kr]=GEN_HIT.knob;
+    if(u>=x&&u<=x+w&&v>=y&&v<=y+h) return "power"; if(Math.hypot(u-kx,v-ky)<kr+4) return "knob"; }
+  if(CL.dmm){ const u=(p[0]-CL.dmm.x)/CL.dmm.s, v=(p[1]-CL.dmm.y)/CL.dmm.s, [x,y,r]=DMM_HIT.dial; if(Math.hypot(u-x,v-y)<r+8) return "dial"; }
+  return null;
+}
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e), h=closeHit(p);
+  if(h==="power"){ ST.power=!ST.power; say("power",ST.power); }
+  else if(h==="dial"){ ST.dial=(ST.dial+(e.button===2?-1:1)+DIALS.length)%DIALS.length; ST.dt=0; say("dial",DIALS[ST.dial]); }
+  else if(h==="knob"){ knobDrag={y:p[1],a:ST.amp}; } });
+closeCv.addEventListener("pointermove",e=>{ if(!knobDrag) return; const p=clpos(e); ST.amp=Math.max(0,Math.min(1,knobDrag.a+(knobDrag.y-p[1])/180)); });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e), h=closeHit(p); if(!h) return; e.preventDefault();
+  if(h==="knob") ST.amp=Math.max(0,Math.min(1,ST.amp+(e.deltaY<0?1:-1)*(e.shiftKey?0.002:0.01)));
+  if(h==="dial"){ ST.dial=Math.max(0,Math.min(DIALS.length-1,ST.dial+(e.deltaY<0?-1:1))); ST.dt=0; } },{passive:false});
+$("wRed").onclick=()=>{ ST.col="red"; renderPanel(); }; $("wBlack").onclick=()=>{ ST.col="black"; renderPanel(); };
+$("wClear").onclick=()=>{ for(const w of ST.wires) ST.left[w.col]++; ST.wires=[]; cancelPend(); say("cleared"); };
+$("pSwap").onclick=()=>{ const v=ST.probe.V; ST.probe.V=ST.probe.C; ST.probe.C=v; ST.dt=0; say("swapped"); };
+$("pOff").onclick=()=>{ ST.probe={V:null,C:null}; say("probeOff"); };
+$("noteBtn").onclick=()=>{ const t=d(); ST.notes.push(t.noteRow(ST.dial>0?(ST.disp.startsWith("1   ")?"1":ST.disp)+" ("+DIALS[ST.dial]+")":"OFF",ST.probe.V?sockLabel(ST.probe.V):"—",ST.probe.C?sockLabel(ST.probe.C):"—",ST.rodIn)); renderNotes(); say("noted"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderPanel(){ $("wRed").className=ST.col==="red"?"on":""; $("wBlack").className=ST.col==="black"?"on":""; }
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; }
+  box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ITEMS.some(k=>ST.it[k].on)) L.push([t.st.none,false]);
+  if(hand&&hand.item) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(ST.pend) L.push([t.st.pend(sockLabel(ST.pend.a)),false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-h-wire").textContent=t.hWire; $("wRed").textContent=t.red; $("wBlack").textContent=t.black; $("t-wirehint").textContent=t.wireHint; $("wClear").textContent=t.clear;
+  $("t-h-probe").textContent=t.hProbe; $("pSwap").textContent=t.swap; $("pOff").textContent=t.off; $("t-probehint").textContent=t.probeHint;
+  $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2012 E2 — 전자기 유도 · HaslaLab":"APhO 2012 E2 — Electromagnetic Induction · HaslaLab";
+  renderPanel(); renderNotes(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let tPrev=performance.now()/1000, frameN=0;
+function tick(){
+  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
+  ST.dt-=dt; if(ST.dt<=0){ ST.disp=dmmRead(); ST.dt=0.5; }
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
