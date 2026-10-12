@@ -980,11 +980,64 @@ const DATA={
               sol:"pdf/APhO_2021_S.pdf"}}
     ]},
    {y:2019,host:{ko:"호주 · 애들레이드",en:"Adelaide, Australia"},cc:"au",problems:papers("APhO_2019", wip("Static Response of a Magnetically Active Fluid","Wave Pulses in a Magnetically Active Fluid"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2018,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:papers("APhO_2018", wip("Giant Magnetoresistance (GMR)"), ["E_EN", "S"])},
+   {y:2018,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",
+    problems:[
+      {id:"E1",
+       title:{ko:"거대 자기저항 (GMR)",en:"Giant Magnetoresistance (GMR)"},
+       desc:{ko:"GMR 센서의 휘트스톤 브리지를 리드선으로 엮어 원형 코일의 자기장에 따른 저항 변화와 히스테리시스를 재고, 강자성 시트·영구자석·지구 자기장·전력계·묻힌 회로 찾기에 씁니다.",
+             en:"Wire the GMR sensor's Wheatstone bridge with leads, measure its resistance change and hysteresis in a circular coil's field, then use it with ferromagnetic sheets, a magnet, the Earth's field, a wattmeter and a buried circuit."},
+       tags:["전자기","GMR","지구 자기장"], tagsEn:["Electromagnetism","GMR","Earth's field"],
+       files:{sim:"sim/apho2018_E1_web.html",
+              src:{ko:"src/apho2018_E1_sim_KO.py", en:"src/apho2018_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2018_E_EN.pdf"},
+              sol:"pdf/APhO_2018_S.pdf"}}
+    ]},
    {y:2017,host:{ko:"러시아 · 야쿠츠크",en:"Yakutsk, Russia"},cc:"ru",problems:papers("APhO_2017", wip("Photonic Crystal"), ["E_EN", "S"])},
-   {y:2016,host:{ko:"홍콩",en:"Hong Kong"},cc:"hk",problems:papers("APhO_2016", wip("Reflected Optical Diffraction Patterns from One-Dimensional Structures","Reflection Phase Shift of Metal"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2015,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",problems:papers("APhO_2015", wip("The Piezoelectric Effect and Its Applications"), ["E_EN", "S"])},
-   {y:2014,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",problems:papers("APhO_2014", wip("Speed of Ultrasonic Sound in Solution"), ["E_EN", "S"])},
+   {y:2016,host:{ko:"홍콩",en:"Hong Kong"},cc:"hk",
+    problems:[
+      {id:"E1",
+       title:{ko:"1차원 구조의 반사 광학 회절 무늬",en:"Reflected Optical Diffraction Patterns from 1D Structures"},
+       desc:{ko:"나사 A–D로 레이저를 정렬 시트의 영차 점에 맞추고, 회전 원판의 시료를 돌리며 반사 회절 무늬를 그래프 용지에 표시해 격자 상수, 홈의 기울기, ZnSe 격자면 간격을 구합니다.",
+             en:"Align the laser on the alignment sheet's zero-order spot with screws A–D, turn the samples on the rotary disk and mark their reflected diffraction patterns on graph paper to find the grating constant, the groove tilt and the ZnSe lattice spacing."},
+       tags:["광학","회절","RHEED"], tagsEn:["Optics","Diffraction","RHEED"],
+       files:{sim:"sim/apho2016_E1_web.html",
+              src:{ko:"src/apho2016_E1_sim_KO.py", en:"src/apho2016_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2016_E1_EN.pdf"},
+              sol:"pdf/APhO_2016_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"금속의 반사 위상 변화",en:"Reflection Phase Shift of Metal"},
+       desc:{ko:"Ti 코팅 파브리–페로 에탈론을 회전 원판에 달고, 원판을 돌리며 검출기를 2θ로 옮겨 멀티미터로 반사 세기를 읽어 공기층 두께 L과 반사 위상 ϕs를 구합니다.",
+             en:"Mount the Ti-coated Fabry–Perot etalon on the rotary disk, turn it and follow with the detector at 2θ, reading the reflected intensity on the multimeter to find the air gap L and the reflection phase ϕs."},
+       tags:["광학","간섭","에탈론"], tagsEn:["Optics","Interference","Etalon"],
+       files:{sim:"sim/apho2016_E2_web.html",
+              src:{ko:"src/apho2016_E2_sim_KO.py", en:"src/apho2016_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2016_E2_EN.pdf"},
+              sol:"pdf/APhO_2016_S2.pdf"}}
+    ]},
+   {y:2015,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",
+    problems:[
+      {id:"E1",
+       title:{ko:"압전 효과와 그 응용",en:"The Piezoelectric Effect and Its Applications"},
+       desc:{ko:"PZT 판의 치수·질량·정전용량을 재고, 신호 발생기로 공진·반공진을 찾고, 수조로 데우며 큐리 온도를 외삽한 뒤, 판 두 장으로 알루미늄 막대의 공진 봉우리에서 음속과 결함 위치를 찾습니다.",
+             en:"Measure a PZT plate's size, mass and capacitance, find its resonance and antiresonance with the signal generator, warm it in the water bath to extrapolate the Curie temperature, then use two plates on aluminium rods to find the sound speeds and a hidden defect."},
+       tags:["압전","공진","음속"], tagsEn:["Piezoelectricity","Resonance","Sound speed"],
+       files:{sim:"sim/apho2015_E1_web.html",
+              src:{ko:"src/apho2015_E1_sim_KO.py", en:"src/apho2015_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2015_E_EN.pdf"},
+              sol:"pdf/APhO_2015_S.pdf"}}
+    ]},
+   {y:2014,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",
+    problems:[
+      {id:"E1",
+       title:{ko:"용액 속 초음파의 속력",en:"Speed of Ultrasonic Sound in Solution"},
+       desc:{ko:"유리 셀 속 압전 변환기가 만든 초음파 격자에 레이저를 비추고 거울로 빛길을 늘여 회절 무늬를, 렌즈로 정상파를 스크린에 표시해 주파수, 소금물의 농도, 옥수수 시럽 속 음속을 구합니다.",
+             en:"Shine the laser through the ultrasonic grating a piezo transducer makes in a glass cell, lengthen the path with mirrors for the diffraction fringes or project the standing wave with a lens, and find the frequency, a salt concentration and the speed of sound in corn syrup."},
+       tags:["음향 광학","회절","초음파"], tagsEn:["Acousto-optics","Diffraction","Ultrasound"],
+       files:{sim:"sim/apho2014_E1_web.html",
+              src:{ko:"src/apho2014_E1_sim_KO.py", en:"src/apho2014_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2014_E_EN.pdf"},
+              sol:"pdf/APhO_2014_S.pdf"}}
+    ]},
    {y:2013,host:{ko:"인도네시아 · 보고르",en:"Bogor, Indonesia"},cc:"id",
     problems:[
       {id:"E1",
@@ -3440,12 +3493,91 @@ const SIG_A13E1={
     c.fillStyle="#f2a11d"; c.beginPath(); c.arc(px-L*Math.sin(th)*6,py+L*Math.cos(th),h*0.07,0,7); c.fill();
   }};
 
+/* ── APhO 2014 · Raman–Nath fringes on the screen as the transducer warms the water ── */
+const SIG_A14E1={
+  sim:"sim/apho2014_E1_web.html", tag:"APhO 2014", span:24, rate:1,
+  capL:{ko:"스크린의 회절 무늬 · 레이저를 제 축으로 돌려 가장 많은 무늬를 찾는다",en:"Fringes on the screen · rotating the laser about its axis for the most fringes"},
+  capR:{ko:"보이는 무늬",en:"fringes seen"},
+  n(t){ const u=(t%this.span)/this.span; return Math.round(4+7*Math.sin(Math.PI*u)); },
+  read(t){ return String(this.n(t)*2+1); },
+  paint(c,w,h,t){
+    c.fillStyle="#f4f1e8"; c.fillRect(0,0,w,h);
+    PEN(c,"#c9c0aa",1); c.beginPath(); for(let y=8;y<h;y+=8){ c.moveTo(0,y); c.lineTo(w*0.08,y); } c.stroke();
+    const n=this.n(t), cx=w/2, cy=h/2, sp=h/25;
+    for(let m=-n;m<=n;m++){ const a=Math.max(0.12,Math.exp(-((m/(n*0.8))**2))), y=cy+m*sp; const g=c.createRadialGradient(cx,y,0,cx,y,7); g.addColorStop(0,"rgba(222,28,22,"+a+")"); g.addColorStop(1,"rgba(222,28,22,0)"); c.fillStyle=g; c.beginPath(); c.ellipse(cx,y,10,3.2,0,0,7); c.fill(); }
+  }};
+/* ── APhO 2015 · the current through the PZT plate as the frequency is swept ── */
+const SIG_A15E1={
+  sim:"sim/apho2015_E1_web.html", tag:"APhO 2015", span:26, rate:1,
+  capL:{ko:"PZT 판의 전류 · 신호 발생기의 주파수를 훑으며",en:"Current through the PZT plate · sweeping the generator's frequency"},
+  capR:{ko:"주파수",en:"frequency"},
+  f(t){ return 28+8*((t%this.span)/this.span); },
+  I(f){ const w=2*Math.PI*f*1e3, C0=15.5e-9, C1=3.0e-9, L1=1/(C1*(2*Math.PI*30.7e3)**2), R=28, zr=R, zi=w*L1-1/(w*C1), m=zr*zr+zi*zi, yr=zr/m, yi=w*C0-zi/m, ym=yr*yr+yi*yi, Zr=10+yr/ym, Zi=-yi/ym; return 2.1/Math.hypot(Zr,Zi)*1e3; },
+  read(t){ return this.f(t).toFixed(2)+" kHz"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=f=>padL+(f-28)/8*(w-padL-pad), Y=i=>h-padB-Math.max(0,i)/60*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let f=28;f<=36;f++){ c.moveTo(X(f),pad); c.lineTo(X(f),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const fn=this.f(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let f=28;f<=fn;f+=0.05){ const p=[X(f),Y(this.I(f))]; f===28?c.moveTo(...p):c.lineTo(...p); } c.stroke();
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(fn),Y(this.I(fn)),3.5,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const f of [28,30,32,34,36]) c.fillText(f,X(f),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2016 E1 · Sample 3's spots on the graph paper as the disk turns ── */
+const SIG_A16E1={
+  sim:"sim/apho2016_E1_web.html", tag:"APhO 2016 E1", span:30, rate:1,
+  capL:{ko:"시료 3의 회절 점 · 회전 원판을 0°에서 90°까지 돌리며",en:"Sample 3's spots · turning the rotary disk from 0° to 90°"},
+  capR:{ko:"원판",en:"disk"},
+  phi(t){ return 90*Math.min(1,(t%this.span)/(this.span*0.85)); },
+  read(t){ return this.phi(t).toFixed(0)+"°"; },
+  paint(c,w,h,t){
+    c.fillStyle="#f0f7f1"; c.fillRect(0,0,w,h);
+    PEN(c,"#cfe7d3",.5); c.beginPath(); for(let x=0;x<w;x+=6){ c.moveTo(x,0); c.lineTo(x,h); } for(let y=0;y<h;y+=6){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+    const D=15, th=0.35, a=10.5e-4, lam=6.5e-5, ph=this.phi(t)*Math.PI/180, sx=w/24, sy=h/26, ox=w/2, oy=h-6;
+    for(let m=-8;m<=8;m++){ const x=D*m*lam*Math.cos(ph)/(a*Math.cos(th)-m*lam*Math.sin(ph)); const y2=(D*Math.cos(ph)+x*Math.sin(ph))**2/(Math.cos(th)**2*Math.cos(ph)**2+1e-9)-x*x-D*D; if(!(y2>0)) continue; const y=Math.sqrt(y2);
+      if(y>25) continue; const px=ox+x*sx, py=oy-y*sy, g=c.createRadialGradient(px,py,0,px,py,5); g.addColorStop(0,"rgba(230,30,20,.95)"); g.addColorStop(1,"rgba(230,30,20,0)"); c.fillStyle=g; c.beginPath(); c.arc(px,py,5,0,7); c.fill(); }
+    PEN(c,"#22262a",1.5); c.beginPath(); c.moveTo(0,oy); c.lineTo(w,oy); c.stroke();
+  }};
+/* ── APhO 2016 E2 · the etalon's reflected intensity against the incident angle ── */
+const SIG_A16E2={
+  sim:"sim/apho2016_E2_web.html", tag:"APhO 2016 E2", span:28, rate:1,
+  capL:{ko:"에탈론의 반사 세기 · 원판을 0.5°씩 돌리고 검출기를 따라 옮기며",en:"The etalon's reflected intensity · turning the disk by 0.5° and following with the detector"},
+  capR:{ko:"멀티미터",en:"meter"},
+  th(t){ return 60-38*((t%this.span)/this.span); },
+  V(th){ const c=Math.cos(th*Math.PI/180); return 419.5+23.2*(0.996-c)+(7.6+3*(0.996-c))*Math.cos(2*2*Math.PI/650e-9*4.0e-6*c-2.4); },
+  read(t){ return (this.V(this.th(t))/1000).toFixed(3)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=a=>padL+(60-a)/40*(w-padL-pad), Y=v=>h-padB-(v-405)/40*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=20;a<=60;a+=5){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const tn=this.th(t); for(let a=60;a>=tn;a-=0.5){ c.fillStyle=a-tn<0.5?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.V(a)),a-tn<0.5?3.6:2.4,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [60,50,40,30]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2018 · the sensor's output going round its hysteresis loop ── */
+const SIG_A18E1={
+  sim:"sim/apho2018_E1_web.html", tag:"APhO 2018", span:32, rate:1,
+  capL:{ko:"GMR 센서의 출력 S · 코일 전류를 줄였다가 방향을 바꿔 다시 올리며",en:"The GMR sensor's output S · lowering the coil current, reversing it and raising it again"},
+  capR:{ko:"출력 S",en:"output S"},
+  B(t){ const u=(t%this.span)/this.span; return 2.6*Math.cos(2*Math.PI*u); },
+  dir(t){ const u=(t%this.span)/this.span; return u<0.5?-1:1; },
+  S(B,dir){ const h=Math.abs(B+dir*0.1*0+ (dir<0?0.1:-0.1)), x=(h/1.92)**10.9; return 6300*0.135/2*Math.pow(x/(1+x),0.105); },
+  read(t){ return this.S(this.B(t),this.dir(t)).toFixed(1)+" mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=b=>w/2+b/2.8*(w/2-pad), Y=s=>h-padB-s/450*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let b=-2.5;b<=2.5;b+=0.5){ c.moveTo(X(b),pad); c.lineTo(X(b),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(X(0),pad); c.lineTo(X(0),h-padB); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const n=Math.floor((t%this.span)/this.span*80); for(let i=0;i<=n;i++){ const tt=i/80*this.span, b=this.B(tt); c.fillStyle=i===n?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(b),Y(this.S(b,this.dir(tt))),i===n?3.6:2.2,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const b of [-2,0,2]) c.fillText(b+" mT",X(b),h-7); c.textAlign="left";
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
                 SIG_E20E1,SIG_E20E2,SIG_E21E1,SIG_E21E2,
                 SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1,
-                SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1];
+                SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1,
+                SIG_A14E1,SIG_A15E1,SIG_A16E1,SIG_A16E2,SIG_A18E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
