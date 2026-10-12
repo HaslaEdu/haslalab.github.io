@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2016 E2 — 금속의 반사 위상 변화 · Reflection Phase Shift of Metal · HaslaLab</title>
+<meta name="description" content="APhO 2016 실험 2번을 브라우저에서 실행합니다. 회전 원판과 검출기 회전대가 달린 광학 플랫폼, 레이저 다이오드, 흰 마개 나사로 다는 시료 홀더와 Ti 코팅 파브리–페로 에탈론, 광검출기와 멀티미터로 입사각에 따른 반사 세기를 직접 읽습니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2016 E2 — 금속의 반사 위상 변화 · Reflection Phase Shift of Metal">
+<meta property="og:description" content="APhO 2016 실험 2번을 브라우저에서 실행합니다. 원판을 돌리고 검출기를 2θ로 옮겨 멀티미터의 전압을 읽습니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  #rotRow button{padding:6px 4px}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-laser"></h2>
+    <div class="row"><button id="swBtn"></button></div>
+    <p class="hint" id="t-laserhint"></p>
+
+    <h2 id="t-h-wire"></h2>
+    <div class="row"><button id="wClear"></button></div>
+    <p class="hint" id="t-wirehint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <div class="laps" id="notes" style="max-height:260px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"APhO 2016 실험 E2 — 금속의 반사 위상 변화",
+    sub:"가상 실험실 · 레이저가 원판 가운데를 지나 180°의 검출기에 닿게 맞춘 뒤, 시료 홀더와 Ti 코팅 에탈론을 원판에 달고, 원판을 돌리며 검출기를 2θ 근처로 옮겨 멀티미터의 전압을 읽으세요. 양쪽(0° 표시의 왼쪽·오른쪽) 모두 잽니다. L과 ϕs는 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n단자 두 곳 차례로 클릭: 선 연결",
+    cap:"실험대 (위 앞쪽에서 본 모습) — 좌클릭 집기·옮기기 / 우클릭 부품함으로 · 레이저 다이오드는 플랫폼의 거치대에, 시료 홀더는 원판에(흰 마개 나사 필요), 에탈론은 홀더에 · 검출기 단자와 멀티미터 소켓을 차례로 클릭: 선 연결 · 배터리 팩을 클릭하면 스위치",
+    tabs:{disk:"회전 원판 · 검출기", etalon:"시료 홀더 · 에탈론", holder:"레이저 거치대", meter:"멀티미터"},
+    closeCap:{disk:"확대 — 위에서 본 원판과 검출기 회전대. 원판 위에서 휠을 돌리거나 끌어 원판을 돌리고, 검출기 팔 위에서 휠·끌기로 검출기를 옮깁니다(Shift 미세). 돋보기 두 개에서 각 눈금을 읽으세요.",
+      etalon:"확대 — 빛이 오는 쪽에서 본 시료 홀더와 에탈론. 에탈론 위에서 휠을 돌리면 클립 속에서 위아래로 밀립니다. 흰 마개 나사 P·Q 위에서 휠을 돌리면 홀더가 원판 위에서 조금씩 옮겨집니다(Shift 미세).",
+      holder:"확대 — 레이저 다이오드 거치대. 나사 C(가로 위치) 손잡이 위에서 휠을 돌리세요. 드라이버가 실험대에 있으면 레이저 뒤쪽 조리개도 돌릴 수 있습니다.",
+      meter:"확대 — 멀티미터(DC 전압). 다이얼을 클릭하거나 휠을 돌려 범위를 고릅니다. 검출기는 포토다이오드에 저항을 병렬로 단 것이라, 빛의 세기가 전압으로 읽힙니다."},
+    hLaser:"레이저", swOn:"배터리 팩 스위치 켜기", swOff:"배터리 팩 스위치 끄기", laserHint:"빛을 직접 들여다보지 마세요. 노란 표지가 위를 향하게 끼웠습니다(수직 편광).",
+    hWire:"연결선", clear:"선 모두 뽑기", wireHint:"검출기의 빨강·검정 단자와 멀티미터의 VΩ·COM 소켓을 바나나 선으로 잇습니다.",
+    hNote:"실험 노트", note:"지금 읽음 적기", noteClr:"지우기", noteEmpty:"아직 적은 것이 없습니다",
+    items:{platform:"광학 플랫폼 (9)", laser:"레이저 다이오드 (1)", battery:"배터리 팩 (2)", capscrews:"흰 마개 나사 (3)", holder:"시료 홀더 (4)", leads:"바나나 선 (5)", meter:"디지털 멀티미터 (6)", box:"시료 상자 (7)", etalon:"Ti 코팅 에탈론", driver:"일자 드라이버 (8)", lamp:"LED 램프 (10)"},
+    lab:{none:"(실험대에 없음)", noPlat:"광학 플랫폼을 놓으면 보입니다", noEtalon:"홀더에 에탈론을 달면 보입니다", noHolder:"원판에 시료 홀더를 달면 보입니다", strips:"Ti 띠 두 줄", beam:"빛", det:"검출기", disk:"원판", aperture:"조리개", noMeter:"멀티미터를 실험대에 놓으면 보입니다", clip:"종이 클립"},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, pend:s=>s+" 을(를) 잡았습니다 — 이을 곳을 클릭하세요. (우클릭: 취소)", laserOn:"⚠ 레이저가 켜져 있습니다 — 빛을 들여다보지 마세요"},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
+       noFit:"그곳에는 놓을 수 없습니다.", needPlat:"먼저 광학 플랫폼을 놓으세요.", onPlat:n=>n+" 을(를) 플랫폼에 달았습니다.", needCaps:"시료 홀더는 흰 마개 나사로 원판에 고정합니다 — 나사부터 원판에 놓으세요.", capsOn:"흰 마개 나사를 원판에 놓았습니다.",
+       needHolder:"에탈론은 시료 홀더에 종이 클립으로 끼웁니다 — 홀더부터 다세요.", etalonOn:"에탈론을 홀더 벽에 대고 종이 클립 두 개로 고정했습니다.", fromBox:"에탈론은 시료 상자에서 꺼냅니다 — 상자를 실험대에 놓으세요.",
+       connected:"배터리 팩을 레이저에 연결했습니다.", sw:on=>"배터리 팩 스위치 "+(on?"켬":"끔"), noBattery:"배터리 팩이 없습니다.",
+       wired:(a,b)=>a+" — "+b+" 연결", same:"같은 곳입니다.", unplug:"선을 뽑았습니다.", cleared:"선을 모두 뽑았습니다.", noLeads:"바나나 선을 먼저 실험대에 놓으세요.", range:s=>"멀티미터: "+s, noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"APhO 2016 Experiment E2 — Reflection phase shift of metal",
+    sub:"Virtual laboratory · make the laser cross the centre of the disk and hit the detector at 180°, mount the sample holder and the Ti-coated etalon on the disk, then turn the disk, move the detector to about 2θ and read the multimeter. Measure on both sides of the 0° mark. L and ϕs are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\nclick two terminals in turn: connect",
+    cap:"the bench (seen from above and in front) — L-click pick up / move, R-click back to the box · the laser diode goes into the platform's holder, the sample holder onto the disk (with the white-capped screws), the etalon into the holder · click a detector terminal and a meter socket in turn to wire them · click the battery pack to switch it",
+    tabs:{disk:"Rotary disk · detector", etalon:"Sample holder · etalon", holder:"Laser holder", meter:"Multimeter"},
+    closeCap:{disk:"close up — the disk and the detector turntable from above. Wheel or drag on the disk to turn it; wheel or drag on the detector arm to move the detector (Shift: fine). Read each scale in its loupe.",
+      etalon:"close up — the sample holder and the etalon seen from the laser. Wheel on the etalon to slide it up or down in its clips. Wheel on the white-capped screws P and Q to shift the holder a little on the disk (Shift: fine).",
+      holder:"close up — the laser-diode holder. Wheel the knob of screw C (sideways position). With the screwdriver on the bench, the aperture at the back of the laser turns too.",
+      meter:"close up — the multimeter (DC volts). Click or wheel the dial to choose the range. The detector is a photodiode with a resistor in parallel, so the light's intensity reads as a voltage."},
+    hLaser:"Laser", swOn:"Battery pack switch on", swOff:"Battery pack switch off", laserHint:"Do not stare into the beam. The laser sits with its yellow label up (vertical polarisation).",
+    hWire:"Leads", clear:"Pull all leads", wireHint:"Join the detector's red and black terminals to the meter's VΩ and COM sockets with the banana leads.",
+    hNote:"Lab notebook", note:"Write down the reading", noteClr:"Clear", noteEmpty:"nothing written yet",
+    items:{platform:"Optical platform (9)", laser:"Laser diode (1)", battery:"Battery pack (2)", capscrews:"White-capped screws (3)", holder:"Sample holder (4)", leads:"Banana leads (5)", meter:"Digital multimeter (6)", box:"Sample box (7)", etalon:"Ti-coated etalon", driver:"Flat-head screwdriver (8)", lamp:"LED lamp (10)"},
+    lab:{none:"(not on the bench)", noPlat:"put the optical platform down to see it", noEtalon:"clip the etalon into the holder to see it", noHolder:"mount the sample holder on the disk to see it", strips:"two Ti strips", beam:"beam", det:"detector", disk:"disk", aperture:"aperture", noMeter:"put the multimeter on the bench to see it", clip:"paper clip"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", hand:n=>"In hand: "+n, pend:s=>s+" taken — click where to join it. (R-click: cancel)", laserOn:"⚠ The laser is on — do not stare into the beam"},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
+       noFit:"It does not go there.", needPlat:"Put the optical platform down first.", onPlat:n=>n+" fitted to the platform.", needCaps:"The sample holder is fixed to the disk with the white-capped screws — put the screws on the disk first.", capsOn:"White-capped screws placed on the disk.",
+       needHolder:"The etalon is clipped into the sample holder — mount the holder first.", etalonOn:"Etalon set against the holder's wall and held with the two paper clips.", fromBox:"The etalon comes out of the sample box — put the box on the bench.",
+       connected:"Battery pack connected to the laser.", sw:on=>"Battery pack switch "+(on?"on":"off"), noBattery:"There is no battery pack.",
+       wired:(a,b)=>a+" — "+b+" joined", same:"That is the same place.", unplug:"Lead pulled out.", cleared:"All leads pulled out.", noLeads:"Put the banana leads on the bench first.", range:s=>"Multimeter: "+s, noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+
+/* ══════════════════════════════════════════════════════════════
+   1.  HIDDEN TRUTH: the etalon, the platform's small misalignments
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const PH={LAM:650e-9, L:U(3.40e-6,4.60e-6), phiSn:U(-0.85,-0.15), alpha:U(0.5,1.5), v0:U(2,6), p0:U(-1.6,1.6), q0:U(-1.6,1.6), lat0:U(-2,2), id:101+Math.floor(Math.random()*299), nseed:Math.floor(Math.random()*1e6)};
+PH.v1=PH.v0-11; PH.phiS=2*Math.PI*PH.phiSn;
+const thetaActual=th=>Math.abs(th+PH.alpha);
+/* two-beam interference, Equation (1) of the problem */
+function rawSignal(th){ const c=Math.cos(thetaActual(th)*Math.PI/180), k=2*Math.PI/PH.LAM, V0=419.5+23.2*(0.996-c), A=7.6+3.0*(0.996-c); return [V0,A*Math.cos(2*k*PH.L*c+PH.phiS)]; }
+/* millivolts across the detector's resistor */
+function detectorMV(th,det,ev,p,q,lat,spot,on){
+  if(!on) return 0.4;
+  const [V0,mod]=rawSignal(th), tha=thetaActual(th)*Math.PI/180;
+  const dd=Math.abs(det-(2*th+PH.alpha)), fDet=dd<=3.5?1:dd>=11?0:Math.cos(Math.PI/2*(dd-3.5)/7.5)**2;
+  const fLat=Math.exp(-(((lat-PH.lat0)/1.7)**2));
+  const walk=2*Math.hypot(p-PH.p0,q-PH.q0)*Math.sin(tha), fAx=Math.exp(-((walk/2.8)**2));
+  const fAp=spot<=1.2?1:Math.exp(-(((spot-1.2)/1.6)**2));
+  const w=Math.max(Math.exp(-(((ev-PH.v0)/3.2)**4)),Math.exp(-(((ev-PH.v1)/3.2)**4)));
+  let v=(w*(V0+mod)+(1-w)*0.24*V0)*fDet*fLat*fAx*fAp+1.6;
+  const h=(Math.round(th*10)*7919+PH.nseed)&0xFFFF; v+=((h*2654435761)%1000/1000-0.5)*0.8;
+  return v;
+}
+/* straight through, no sample: the bare beam on the detector */
+function directMV(det,lat,spot,on){ if(!on) return 0.4; const dd=Math.abs(det-180), f=dd<=1.5?1:dd>=6?0:Math.cos(Math.PI/2*(dd-1.5)/4.5)**2;
+  return 1650*f*Math.exp(-(((lat-PH.lat0)/1.7)**2))*(spot<=1.2?1:Math.exp(-(((spot-1.2)/1.6)**2)))+1.6; }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  STATE
+   ══════════════════════════════════════════════════════════════ */
+const DESKTOP=["platform","battery","meter","box","lamp","driver","leads"], ATTACH=["laser","capscrews","holder","etalon"];
+const ITEMS=[...DESKTOP,...ATTACH];
+const DIM={platform:[320,240,10],battery:[60,30,25],meter:[90,170,40],box:[80,80,22],lamp:[60,60,160],driver:[110,14,10],leads:[80,40,6]};
+const ST={ it:Object.fromEntries(ITEMS.map(k=>[k,{on:false,x:0,y:0}])),
+  scr:{C:25,V:25,P:25,Q:25}, ap:2.4, sw:false, th:0, det:180, rng:0, wires:[], pend:null, notes:[], disp:"", dt:0 };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const itemName=k=>d().items[k]||k;
+const latMM=()=>(ST.scr.C-25)*0.25, evMM=()=>(ST.scr.V-25)*0.5, pMM=()=>(ST.scr.P-25)*0.2, qMM=()=>(ST.scr.Q-25)*0.2;
+const laserLive=()=>ST.it.laser.on&&ST.it.battery.on&&ST.sw;
+const RANGES=[["OFF",null],["200m",0.2],["2",2.0],["20",20.0]];
+/* the polarity of the leads: +1, −1 or 0 when not wired as a voltmeter */
+function polarity(){ const has=(a,b)=>ST.wires.some(w=>(w[0]===a&&w[1]===b)||(w[0]===b&&w[1]===a));
+  if(has("DET+","M.V")&&has("DET-","M.COM")) return 1; if(has("DET-","M.V")&&has("DET+","M.COM")) return -1; return 0; }
+function volts(){
+  if(!ST.it.platform.on||!ST.it.laser.on) return null;
+  const on=laserLive();
+  let mv;
+  if(ST.it.holder.on&&ST.it.etalon.on) mv=detectorMV(ST.th,ST.det,evMM(),pMM(),qMM(),latMM(),ST.ap,on);
+  else if(ST.it.holder.on) mv=on?1.6+0.3:0.4;                      /* the holder's wall blocks the straight beam */
+  else mv=directMV(ST.det,latMM(),ST.ap,on);
+  return mv/1000;
+}
+function meterText(){ const [nm,full]=RANGES[ST.rng]; if(full===null||!ST.it.meter.on) return ""; const pol=polarity(); let v=pol?(volts()??0)*pol:0;
+  v+=(Math.random()-0.5)*0.00002; if(Math.abs(v)>full) return (v<0?"-":"")+"1   "; if(full===0.2) return (v*1000).toFixed(1); if(full===2) return v.toFixed(3); return v.toFixed(2); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]-out[0]*KX<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC*Math.hypot(1,KX)*0.98, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (mm; x right, y towards you, z up; sheared view)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=640, SC=1.0, KX=0.30, KY=0.5, OX=30, OY=300;
+const P=(x,y,z)=>[OX+SC*(x+KX*y), OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>{ const y=((Y-OY)/SC+(z||0))/KY; return [(X-OX)/SC-KX*y,y]; };
+const DESK={x1:1000,y1:620}, RA=110, ZB=45;           /* detector radius, beam height above the desk */
+const v2=a=>[Math.cos(a),Math.sin(a)], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k], dot2=(a,b)=>a[0]*b[0]+a[1]*b[1], nrm2=a=>{ const l=Math.hypot(a[0],a[1])||1; return [a[0]/l,a[1]/l]; };
+const disk=()=>[ST.it.platform.x+20,ST.it.platform.y];
+const sdir=s=>{ const a=s*Math.PI/180; return [-Math.cos(a),-Math.sin(a)]; };       /* scale angle → direction from the centre */
+function rect(k,x,y){ const [w,dd]=DIM[k]; return [x-w/2,y-dd/2,x+w/2,y+dd/2]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y,ignore){ const r=rect(k,x,y); if(r[0]<4||r[2]>DESK.x1-4||r[1]<4||r[3]>DESK.y1-4) return false;
+  for(const o of DESKTOP){ if(o===k||o===ignore||!ST.it[o].on) continue; if(overl(r,rect(o,ST.it[o].x,ST.it[o].y),6)) return false; } return true; }
+function termW(t){ if(t.startsWith("DET")){ const [cx,cy]=disk(), u=sdir(ST.det), n=[-u[1],u[0]], s=t==="DET+"?6:-6; return [cx+u[0]*(RA+14)+n[0]*s,cy+u[1]*(RA+14)+n[1]*s,ZB+22]; }
+  const m=ST.it.meter; return [m.x+(t==="M.V"?22:-22),m.y+60,40]; }
+const TERMS=()=>{ const t=[]; if(ST.it.platform.on&&ST.it.leads.on) t.push("DET+","DET-"); if(ST.it.meter.on&&ST.it.leads.on) t.push("M.V","M.COM"); return t; };
+const TLAB={"DET+":"DET ●red","DET-":"DET ●black","M.V":"VΩ","M.COM":"COM"}, termLabel=t=>TLAB[t]||t, TCOL=t=>/\+|V$/.test(t)?"#c42a22":"#18181a";
+function drawDesk(){ const a=P(0,0,0), b=P(DESK.x1,0,0), c=P(DESK.x1,DESK.y1,0), e=P(0,DESK.y1,0);
+  ctx.fillStyle="#24272d"; ctx.fillRect(0,0,LW,LH); poly([a,b,c,e],vgrad(a[1],e[1]-a[1],[[0,"#c9ccc8"],[1,"#dcdedb"]]),"#9a9d99",1); poly([e,c,[c[0],c[1]+12],[e[0],e[1]+12]],"#8f928e"); }
+function ringPts(cx,cy,r,z){ const pts=[]; for(let i=0;i<=60;i++){ const a=i/60*2*Math.PI; pts.push(P(cx+Math.cos(a)*r,cy+Math.sin(a)*r,z)); } return pts; }
+function drawPlatform(){
+  const it=ST.it.platform, [cx,cy]=disk();
+  rbox(it.x,it.y,0,320,240,10,0,"#121417","#08090a","#3a4046");
+  poly(ringPts(cx,cy,RA+30,10.2),"#e9eef1","#7c848c",0.8);
+  ctx.strokeStyle="#333"; ctx.lineWidth=0.7; for(let dg=0;dg<360;dg+=10){ const u=sdir(dg), p=P(cx+u[0]*(RA+30),cy+u[1]*(RA+30),10.2), q=P(cx+u[0]*(RA+22),cy+u[1]*(RA+22),10.2); ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+  /* the detector turntable and arm */
+  poly(ringPts(cx,cy,RA-8,13),"rgba(200,206,212,.9)","#7c848c",0.8);
+  const u=sdir(ST.det), e=[cx+u[0]*(RA+12),cy+u[1]*(RA+12)];
+  ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=8; const a0=P(cx,cy,14), a1=P(e[0],e[1],14); ctx.beginPath(); ctx.moveTo(a0[0],a0[1]); ctx.lineTo(a1[0],a1[1]); ctx.stroke();
+  rbox(e[0],e[1],14,22,22,46,Math.atan2(u[1],u[0]),"#2a2d31","#1b1d20","#000");
+  const f=P(cx+u[0]*(RA+1),cy+u[1]*(RA+1),ZB); circ(f[0],f[1],4,"#3a5a8a","#000");
+  for(const t of ["DET+","DET-"]){ const q=P(...termW(t)); circ(q[0],q[1],3.4,TCOL(t),"#000",0.6); }
+  /* the rotary disk with its arrow */
+  poly(ringPts(cx,cy,64,17),"rgba(225,235,242,.9)","#8c969e",0.8);
+  const ua=sdir(ST.th), tip=P(cx+ua[0]*62,cy+ua[1]*62,17.2), nn=[-ua[1],ua[0]], b1=P(cx+ua[0]*50+nn[0]*5,cy+ua[1]*50+nn[1]*5,17.2), b2=P(cx+ua[0]*50-nn[0]*5,cy+ua[1]*50-nn[1]*5,17.2); poly([tip,b1,b2],"#c42a22");
+  if(ST.it.capscrews.on&&!ST.it.holder.on){ for(const s of [-12,12]){ const q=P(cx+nn[0]*s,cy+nn[1]*s,18); circ(q[0],q[1],4,"#f4f5f7","#999"); } }
+  if(ST.it.holder.on){ const ang=Math.atan2(ua[1],ua[0]); const bx=cx-ua[0]*(4+pMM()*0.5), by=cy-ua[1]*(4+qMM()*0.5);
+    rbox(bx-ua[0]*8,by-ua[1]*8,17,14,46,8,ang,"#eef3f7","#c4ccd3","#8c969e"); rbox(bx-ua[0]*12,by-ua[1]*12,25,6,46,30,ang,"#eef3f7","#c4ccd3","#8c969e");
+    for(const s of [-14,14]){ const q=P(bx-ua[0]*6+nn[0]*s,by-ua[1]*6+nn[1]*s,25); circ(q[0],q[1],4,"#f4f5f7","#999"); }
+    if(ST.it.etalon.on){ rbox(bx-ua[0]*6,by-ua[1]*6,25-evMM()*0.4,4,38,30,ang,"#2b3138","#1d2228","#9aa1a8"); } }
+}
+function drawHolder(){
+  const [cx,cy]=disk(), x=cx-160, y=cy+latMM();
+  rbox(x,cy,10,40,40,8,0,"#8f969c","#6c7279","#444"); vcyl(x-14,cy,18,ZB+50,4.5,"#c3c8cd","#e4e7ea","#666"); rbox(x,y,ZB-14,34,30,28,0,"#9aa0a6","#7d848a","#555");
+  const q=P(x+12,y+22,14); circ(q[0],q[1],6,"#1b1c1f","#000");
+  if(ST.it.laser.on){ const a=P(x-30,y,ZB), b=P(cx-118,y,ZB); ctx.strokeStyle="#16181b"; ctx.lineWidth=12; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); ctx.lineCap="butt";
+    ctx.strokeStyle="#e0c23a"; ctx.lineWidth=12; const m=P(x-12,y,ZB+4), m2=P(x-2,y,ZB+4); ctx.beginPath(); ctx.moveTo(m[0],m[1]); ctx.lineTo(m2[0],m2[1]); ctx.stroke(); circ(b[0]+2,b[1],3,laserLive()?"#ff3b2c":"#5a1612"); }
+}
+function drawBeam(){
+  if(!laserLive()||!ST.it.platform.on) return; const [cx,cy]=disk(), y0=cy+latMM(), a=P(cx-118,y0,ZB);
+  ctx.save(); ctx.strokeStyle="rgba(255,40,30,.85)"; ctx.lineWidth=1.3; ctx.beginPath(); ctx.moveTo(a[0],a[1]);
+  if(ST.it.holder.on){ const c=P(cx,y0,ZB); ctx.lineTo(c[0],c[1]); if(ST.it.etalon.on){ const u=sdir(2*ST.th+PH.alpha), e=P(cx+u[0]*(RA+2),y0+u[1]*(RA+2),ZB); ctx.lineTo(e[0],e[1]); } }
+  else { const e=P(cx+RA+40,y0,ZB); ctx.lineTo(e[0],e[1]); }
+  ctx.stroke(); ctx.restore();
+}
+function drawBattery(){ const it=ST.it.battery; rbox(it.x,it.y,0,60,30,25,0,"#15171a","#0d0e10","#42464b");
+  const s=P(it.x+18,it.y-4,25); fillR(s[0]-6,s[1]-4,12,8,2,"#333","#000"); fillR(s[0]+(ST.sw?0:-6),s[1]-3,6,6,1,ST.sw?"#e0e0e0":"#888");
+  if(ST.it.laser.on){ const [cx,cy]=disk(), a=P(it.x-30,it.y,12), b=P(cx-195,cy,ZB); ctx.strokeStyle="#111"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.bezierCurveTo(a[0]-60,a[1]+40,b[0]-60,b[1]+40,b[0],b[1]); ctx.stroke(); } }
+function drawMeter(){ const it=ST.it.meter; rbox(it.x,it.y,0,90,170,40,0,"#a4231f","#7c1a17","#5e100e");
+  poly([P(it.x-36,it.y-75,40),P(it.x+36,it.y-75,40),P(it.x+36,it.y-35,40),P(it.x-36,it.y-35,40)],"#98a89a","#3d4a3e",0.6);
+  if(ST.disp){ const c=P(it.x,it.y-55,40); text(ST.disp,c[0],c[1],"#1d2320",10,"center","700",MONO); }
+  const dc=P(it.x,it.y+10,40); ell(dc[0],dc[1],22,11,"#1b1c1e","#3d3f42");
+  for(const t of ["M.V","M.COM"]){ const q=P(...termW(t)); circ(q[0],q[1],4.5,TCOL(t),"#000"); circ(q[0],q[1],1.6,"#000"); } }
+function drawLeads(){
+  ST.wires.forEach(([a,b])=>{ const A=termW(a), B=termW(b), pa=P(A[0],A[1],A[2]+8), pb=P(B[0],B[1],B[2]+8), col=TCOL(a)==="#c42a22"||TCOL(b)==="#c42a22"?"#c42a22":"#1d1d1d", m=P((A[0]+B[0])/2,(A[1]+B[1])/2+60,0);
+    ctx.strokeStyle=col; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.quadraticCurveTo(m[0],m[1],pb[0],pb[1]); ctx.stroke(); });
+  if(ST.pend){ const A=termW(ST.pend), pa=P(A[0],A[1],A[2]+8); ctx.strokeStyle="#f2c14e"; ctx.lineWidth=2; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.lineTo(mouse[0],mouse[1]); ctx.stroke(); ctx.setLineDash([]); }
+}
+function drawLoose(k){ const it=ST.it[k];
+  if(k==="box"){ rbox(it.x,it.y,0,80,80,22,0,"rgba(230,235,238,.6)","#bec6cc","#888"); rbox(it.x,it.y,2,70,70,16,0,"#16181b","#0d0e10",null); if(!ST.it.etalon.on&&!(hand&&hand.item==="etalon")){ rbox(it.x,it.y,18,30,4,25,0,"#2b3138","#1d2228","#9aa1a8"); } }
+  else if(k==="lamp"){ rbox(it.x,it.y,0,60,60,14,0,"#f4f4f4","#cccccc","#888"); vcyl(it.x,it.y,14,150,3,"#c9ced3","#dddddd","#888"); const h=P(it.x+25,it.y,150); ell(h[0],h[1],16,8,"#f4f4f4","#888"); }
+  else if(k==="driver"){ rbox(it.x-25,it.y,0,50,14,12,0,"#f2c21a","#c99e10","#7a6300"); rbox(it.x+30,it.y,3,60,4,4,0,"#c9ced3","#999999",null); }
+  else if(k==="leads"){ const a=P(it.x-30,it.y-8,2), b=P(it.x+30,it.y+8,2); ctx.strokeStyle="#c42a22"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.quadraticCurveTo(a[0]+30,a[1]-14,b[0],b[1]-6); ctx.stroke(); ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(a[0],a[1]+6); ctx.quadraticCurveTo(a[0]+30,a[1]+18,b[0],b[1]+4); ctx.stroke(); }
+}
+function drawBench(){
+  drawDesk(); const list=[];
+  for(const k of DESKTOP) if(ST.it[k].on) list.push([ST.it[k].y+DIM[k][1]/2,k==="platform"?()=>{ drawPlatform(); drawHolder(); }:k==="battery"?drawBattery:k==="meter"?drawMeter:()=>drawLoose(k)]);
+  list.sort((a,b)=>a[0]-b[0]); for(const [,fn] of list) fn(); drawBeam(); drawLeads(); drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return; const k=hand.item; text(itemName(k),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700");
+  if(DIM[k]){ const [x,y]=unP(mouse[0],mouse[1],0), r=rect(k,x,y), c=[P(r[0],r[1],0),P(r[2],r[1],0),P(r[2],r[3],0),P(r[0],r[3],0)]; ctx.save(); ctx.setLineDash([5,4]); poly(c,null,fits(k,x,y,hand.move?k:null)?"#f2c14e":"#e0605a",1.6); ctx.restore(); } }
+function box3(x0,y0,z0,x1,y1,z1){ const pts=[]; for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) pts.push(P(x,y,z));
+  return [Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))]; }
+function bbox(k){ const it=ST.it[k]; if(!it.on&&k!=="disk") return null; const [cx,cy]=ST.it.platform.on?disk():[0,0];
+  if(k==="disk") return ST.it.platform.on?box3(cx-64,cy-64,10,cx+64,cy+64,40):null;
+  if(k==="laser") return box3(cx-200,cy-12,ZB-10,cx-118,cy+12,ZB+14);
+  if(k==="holder"||k==="etalon"||k==="capscrews") return box3(cx-25,cy-25,17,cx+25,cy+25,58);
+  if(DIM[k]){ const [w,dd,h]=DIM[k]; return box3(it.x-w/2,it.y-dd/2,0,it.x+w/2,it.y+dd/2,h); } return null; }
+
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["platform","laser","battery","capscrews","holder","box","meter","leads","driver","lamp"], TROW=44;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="disk", CL={};
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!ST.it[k].on&&!inHand(k);
+function icon(c,k){ const old=ctx; ctx=c;
+  if(k==="platform"){ fillR(-18,-9,36,18,2,"#121417","#3a4046"); ell(0,0,8,5,"#e9eef1","#7c848c"); fillR(8,-2,10,4,1,"#9aa0a6"); }
+  else if(k==="laser"){ fillR(-16,-4,30,8,3,"#16181b","#000"); fillR(-4,-4,6,8,0,"#e0c23a"); circ(15,0,2,"#8c1616"); }
+  else if(k==="battery"){ fillR(-14,-8,28,16,2,"#15171a","#42464b"); }
+  else if(k==="capscrews"){ circ(-7,0,5,"#f4f5f7","#999"); circ(7,0,5,"#f4f5f7","#999"); }
+  else if(k==="holder"){ fillR(-14,2,28,8,1,"#eef3f7","#8c969e"); fillR(-14,-12,6,16,1,"#eef3f7","#8c969e"); }
+  else if(k==="box"){ fillR(-12,-12,24,24,2,"#16181b","#888"); fillR(-4,-9,8,18,1,"#2b3138","#9aa1a8"); }
+  else if(k==="meter"){ fillR(-10,-16,20,32,3,"#a4231f","#5e100e"); fillR(-7,-13,14,6,1,"#98a89a"); circ(0,4,5,"#1b1c1e"); }
+  else if(k==="leads"){ ctx.strokeStyle="#c42a22"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-16,-5); ctx.quadraticCurveTo(0,-14,14,-4); ctx.stroke(); ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(-16,6); ctx.quadraticCurveTo(0,0,14,6); ctx.stroke(); }
+  else if(k==="driver"){ fillR(-16,-4,14,8,2,"#f2c21a","#7a6300"); fillR(-2,-1.5,18,3,0,"#c9ced3"); }
+  else if(k==="lamp"){ fillR(-8,8,16,5,1,"#f4f4f4","#888"); fillR(-1,-10,2,18,0,"#c9ced3"); ell(5,-12,8,4,"#f4f4f4","#888"); }
+  ctx=old; }
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px"; benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50; trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(320,CLW*0.48));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr); drawTray(); }
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d(); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){ const av=trayAvail(k), sel=inHand(k)&&!hand.move;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-4)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm]; if(c.measureText(nm).width>wd-52){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.6)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,52,y+(parts.length>1?9+i*12:12))); c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,52,y+33);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
+const TABS=["disk","etalon","holder","meter"];
+function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
+function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+/* ── the disk, the detector and two loupes ── */
+function loupe(lx,ly,LR,val,lab){ const zz=LR/6; circ(lx,ly,LR,"#e9eef1","#555",2); ctx.save(); ctx.beginPath(); ctx.arc(lx,ly,LR-2,0,7); ctx.clip();
+  for(let dg=Math.floor(val)-8;dg<=Math.ceil(val)+8;dg++){ const x=lx+(dg-val)*zz, L=dg%10===0?LR*0.5:dg%5===0?LR*0.36:LR*0.24; ctx.strokeStyle="#222"; ctx.lineWidth=dg%10===0?2:1.2; ctx.beginPath(); ctx.moveTo(x,ly-LR); ctx.lineTo(x,ly-LR+L); ctx.stroke();
+    if(dg%5===0) text(String(((dg%360)+360)%360),x,ly-LR+L+12,"#222",13,"center","700"); }
+  poly([[lx,ly-4],[lx-9,ly+26],[lx+9,ly+26]],lab==="det"?"#2a2d31":"#c42a22"); ctx.restore(); }
+const sv=(s,r,cx,cy)=>{ const a=s*Math.PI/180; return [cx-Math.cos(a)*r,cy-Math.sin(a)*r]; };
+function drawDiskView(){
+  const t=d(); if(!ST.it.platform.on){ text(t.lab.noPlat,CLW/2,CLH/2,"#69717a",13,"center"); return; }
+  const cx=CLW*0.34, cy=CLH/2, R=Math.min(CLW*0.27,CLH*0.4); CL.disk={cx,cy,R};
+  ctx.fillStyle="#121417"; ctx.fillRect(0,0,CLW,CLH);
+  circ(cx,cy,R*1.2,"#e9eef1","#7c848c");
+  for(let dg=0;dg<360;dg++){ const L=dg%10===0?R*0.1:dg%5===0?R*0.07:R*0.04, p=sv(dg,R*1.19,cx,cy), q=sv(dg,R*1.19-L,cx,cy); ctx.strokeStyle="#222"; ctx.lineWidth=dg%10===0?1.3:0.7; ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke();
+    if(dg%30===0){ const s=sv(dg,R*1.03,cx,cy); text(String(dg),s[0],s[1],"#222",11,"center","700"); } }
+  circ(cx,cy,R*0.92,"rgba(200,206,212,.9)","#7c848c");
+  const dp=sv(ST.det,R*1.05,cx,cy); ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=12; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(...dp); ctx.stroke();
+  ctx.save(); ctx.translate(...dp); ctx.rotate(ST.det*Math.PI/180); fillR(-12,-14,24,28,3,"#2a2d31","#000"); ctx.restore(); text(t.lab.det,dp[0],dp[1]-24,"#e8eef2",11,"center");
+  circ(cx,cy,R*0.62,"rgba(225,235,242,.95)","#8c969e"); const tip=sv(ST.th,R*0.6,cx,cy), ua=[-Math.cos(ST.th*Math.PI/180),-Math.sin(ST.th*Math.PI/180)], nn=[-ua[1],ua[0]];
+  poly([tip,[cx+ua[0]*R*0.48+nn[0]*7,cy+ua[1]*R*0.48+nn[1]*7],[cx+ua[0]*R*0.48-nn[0]*7,cy+ua[1]*R*0.48-nn[1]*7]],"#c42a22");
+  if(ST.it.holder.on){ ctx.save(); ctx.translate(cx,cy); ctx.rotate(ST.th*Math.PI/180); const k=R/70; fillR(4*k,-24*k,10*k,48*k,2,"#eef3f7","#8c969e"); if(ST.it.etalon.on) fillR(0,-20*k,4*k,40*k,1,"#2b3138","#9aa1a8"); for(const s of [-14,14]) circ(10*k,s*k,3.5*k,"#f4f5f7","#999"); ctx.restore(); }
+  else if(ST.it.capscrews.on){ for(const s of [-14,14]){ const k=R/70; circ(cx+nn[0]*s*k,cy+nn[1]*s*k,3.5*k,"#f4f5f7","#999"); } }
+  if(laserLive()){ const k=R/70, y0=cy-latMM()*k*0; ctx.strokeStyle="rgba(255,50,40,.85)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(cx-R*1.3,cy+latMM()*k); ctx.lineTo(cx,cy+latMM()*k);
+    if(ST.it.holder.on&&ST.it.etalon.on){ const e=sv(2*ST.th+PH.alpha,R*1.0,cx,cy); ctx.lineTo(e[0],e[1]+latMM()*k); } else if(!ST.it.holder.on) ctx.lineTo(cx+R*1.3,cy+latMM()*k); ctx.stroke(); }
+  const LR=Math.min(CLW*0.12,CLH*0.22); loupe(CLW*0.78,CLH*0.27,LR,ST.th,"disk"); text(t.lab.disk,CLW*0.78,CLH*0.27+LR+12,"#9aa3ab",11,"center");
+  loupe(CLW*0.78,CLH*0.74,LR,ST.det,"det"); text(t.lab.det,CLW*0.78,CLH*0.74+LR+12,"#9aa3ab",11,"center");
+}
+/* ── the holder and the etalon, seen from the laser ── */
+const EHIT={};
+function drawEtalonView(){
+  const t=d(); for(const k in EHIT) delete EHIT[k]; if(!ST.it.holder.on){ text(t.lab.noHolder,CLW/2,CLH/2,"#69717a",13,"center"); return; }
+  const k=Math.min(CLW/70,CLH/48), cx=CLW*0.45, cy=CLH*0.5, X=v=>cx+v*k, Y=v=>cy-v*k;
+  const k2=k; fillR(X(-26),Y(24),52*k2,42*k2,3,"#dde5ea","#8c969e"); fillR(X(-30),Y(-18),60*k2,5*k2,2,"#eef3f7","#8c969e");
+  for(const [nm,s] of [["P",-24],["Q",24]]){ circ(X(s),Y(-20.5),3.2*k,"#f4f5f7","#999"); text(nm,X(s),Y(-20.5),"#555",12,"center","700"); EHIT[nm]=[X(s),Y(-20.5),4*k]; }
+  ctx.save(); ctx.beginPath(); ctx.rect(X(-26),Y(24),52*k,42*k); ctx.clip();
+  if(ST.it.etalon.on){ const ev=evMM(), mid=(PH.v0+PH.v1)/2, c=-(ev-mid);
+    fillR(X(-20),Y(c+15),40*k,30*k,2,"#cfe0ea","#8fa3b0"); for(const v of [PH.v0,PH.v1]){ const yc=-(ev-v); ctx.fillStyle="#8d9296"; ctx.fillRect(X(-20),Y(yc+3),40*k,6*k); }
+    text("#"+PH.id,X(14),Y(c+12),"#2a3138",12,"center","700");
+    for(const s of [-15,15]){ ctx.strokeStyle="#3b4046"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(X(s-3),Y(c+17)); ctx.lineTo(X(s+3),Y(c+17)); ctx.lineTo(X(s+3),Y(c+10)); ctx.lineTo(X(s-2),Y(c+10)); ctx.stroke(); }
+    EHIT.et=[X(-20),Y(c+15),40*k,30*k]; text(t.lab.strips,X(-28),Y(0),"#98a0a8",10,"right"); }
+  else text(t.lab.noEtalon,cx,cy,"#69717a",12,"center");
+  ctx.restore();
+  if(laserLive()){ const r=Math.max(2,ST.ap*0.5*k), x=X(latMM()-PH.lat0*0); const g=ctx.createRadialGradient(x,cy,0,x,cy,r*2.4); g.addColorStop(0,"#ff8080"); g.addColorStop(0.5,"rgba(255,40,40,.7)"); g.addColorStop(1,"rgba(150,0,0,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,cy,r*2.4,0,7); ctx.fill(); }
+}
+/* ── the laser holder ── */
+const KNOB=[];
+function knob(x,y,r,turns,label){ circ(x,y,r,"#1b1c1f","#000"); for(let i=0;i<8;i++){ const a=i*Math.PI/4+turns*2*Math.PI; circ(x+Math.cos(a)*r*0.92,y+Math.sin(a)*r*0.92,r*0.22,"#1b1c1f"); }
+  const a=turns*2*Math.PI; ctx.strokeStyle="#9aa3ab"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.cos(a)*r*0.7,y+Math.sin(a)*r*0.7); ctx.stroke(); text(label,x,y-r-9,"#e8eef2",12,"center","700"); }
+function drawHolderView(){
+  const t=d(); KNOB.length=0; if(!ST.it.platform.on){ text(t.lab.noPlat,CLW/2,CLH/2,"#69717a",13,"center"); return; }
+  const s=Math.min(CLW*0.6/260,(CLH-30)/200), ox=CLW*0.2, oy=CLH-14, X=v=>ox+v*s, Y=v=>oy-v*s;
+  fillR(X(0),Y(14),240*s,14*s,2,"#121417","#3a4046"); fillR(X(30),Y(30),80*s,16*s,2,"#8f969c","#555"); fillR(X(62),Y(170),12*s,140*s,3,"#c3c8cd","#666"); fillR(X(40),Y(130),70*s,50*s,4,"#9aa0a6","#555");
+  if(ST.it.laser.on){ fillR(X(0),Y(116),220*s,22*s,8,"#16181b","#000"); fillR(X(70),Y(116),22*s,22*s,0,"#e0c23a"); }
+  knob(X(120),Y(22),Math.max(10,16*s),ST.scr.C,"C"); KNOB.push(["C",X(120),Y(22),Math.max(16,22*s)]);
+  if(ST.it.laser.on&&ST.it.driver.on){ knob(X(-14),Y(106),Math.max(9,12*s),ST.ap/1.2,t.lab.aperture); KNOB.push(["ap",X(-14),Y(106),Math.max(14,18*s)]); }
+}
+/* ── the multimeter ── */
+function drawMeterView(){
+  const t=d(); if(!ST.it.meter.on){ text(t.lab.noMeter,CLW/2,CLH/2,"#69717a",13,"center"); return; }
+  const s=Math.min((CLH-20)/190,CLW*0.5/110), x0=CLW/2-55*s, y0=10; ctx.save(); ctx.translate(x0,y0); ctx.scale(s,s);
+  fillR(0,0,110,190,8,"#a4231f","#5e100e",1); fillR(10,12,90,40,3,"#98a89a","#3d4a3e",1); if(ST.disp) text(ST.disp,92,33,"#1d2320",20,"right","700",MONO); text("DC V",16,20,"#1d2320",6,"left","700");
+  circ(55,105,30,"#1b1c1e","#3d3f42"); const a=-Math.PI/2+(ST.rng-1.5)*0.6; ctx.strokeStyle="#e8e8e8"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(55,105); ctx.lineTo(55+Math.cos(a)*24,105+Math.sin(a)*24); ctx.stroke();
+  RANGES.forEach(([nm],i)=>{ const b=-Math.PI/2+(i-1.5)*0.6; text(nm,55+Math.cos(b)*42,105+Math.sin(b)*42,i===ST.rng?"#f2c14e":"#e8e8e8",7,"center","700"); });
+  for(const [lab,x,col] of [["VΩ",35,"#c42a22"],["COM",75,"#18181a"]]){ circ(x,165,7,col,"#000"); circ(x,165,2.5,"#000"); text(lab,x,180,"#e8e8e8",5.5,"center","700"); }
+  ctx.restore(); CL.meter={x:x0,y:y0,s};
+}
+function drawClose(){ const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  ({disk:drawDiskView,etalon:drawEtalonView,holder:drawHolderView,meter:drawMeterView})[tab](); ctx=old; }
+
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inB=(b,p)=>b&&p[0]>=b[0]&&p[0]<=b[2]&&p[1]>=b[1]&&p[1]<=b[3];
+function itemAt(p){ for(const k of ["etalon","holder","capscrews","laser","battery","meter","box","lamp","driver","leads","platform"]) if(inB(bbox(k),p)) return k; return null; }
+function termNear(p){ let best=null, bd=10; for(const t of TERMS()){ const q=P(...termW(t)), dd=Math.hypot(p[0]-q[0],p[1]-q[1]); if(dd<bd){ bd=dd; best=t; } } return best; }
+function returnItem(k){
+  if(k==="platform"){ for(const q of ["laser","capscrews","holder","etalon"]) if(ST.it[q].on) returnItem(q); ST.wires=ST.wires.filter(w=>!w.some(t=>t.startsWith("DET"))); }
+  if(k==="capscrews"&&ST.it.holder.on) returnItem("holder"); if(k==="holder"&&ST.it.etalon.on) returnItem("etalon");
+  if(k==="laser"||k==="battery") ST.sw=false; if(k==="meter") ST.wires=ST.wires.filter(w=>!w.some(t=>t.startsWith("M."))); if(k==="leads") ST.wires=[];
+  ST.it[k].on=false; say("back",itemName(k)); }
+function place(k,p){
+  const it=ST.it[k], mv=hand&&hand.move, over=itemAt(p), onDisk=inB(bbox("disk"),p);
+  if(k==="laser"){ if(!ST.it.platform.on||(over!=="platform"&&over!=="laser")){ say("needPlat"); return false; } it.on=true; say(ST.it.battery.on?"connected":"onPlat",itemName(k)); return true; }
+  if(k==="capscrews"){ if(!ST.it.platform.on||!onDisk){ say("needPlat"); return false; } it.on=true; say("capsOn"); return true; }
+  if(k==="holder"){ if(!ST.it.capscrews.on){ say("needCaps"); return false; } if(!onDisk){ say("noFit"); return false; } it.on=true; say("onPlat",itemName(k)); return true; }
+  if(k==="etalon"){ if(!ST.it.holder.on){ say("needHolder"); return false; } if(!onDisk){ say("noFit"); return false; } it.on=true; say("etalonOn"); return true; }
+  const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y,mv?k:null)){ say("noFit"); return false; }
+  it.x=x; it.y=y; it.on=true; say(k==="battery"&&ST.it.laser.on?"connected":"placed",itemName(k)); return true; }
+function benchClick(p,right){
+  if(hand){ if(right){ if(hand.move){ Object.assign(ST.it[hand.item],hand.orig); say("stays"); } else say("back",itemName(hand.item)); hand=null; return; } if(place(hand.item,p)) hand=null; return; }
+  if(ST.pend){ if(right){ ST.pend=null; return; } const t=termNear(p); if(!t) return; if(t===ST.pend){ say("same"); return; } ST.wires.push([ST.pend,t]); say("wired",termLabel(ST.pend),termLabel(t)); ST.pend=null; return; }
+  if(right){ for(let i=ST.wires.length-1;i>=0;i--) for(const t of ST.wires[i]){ const q=P(...termW(t)); if(Math.hypot(p[0]-q[0],p[1]-q[1])<9){ ST.wires.splice(i,1); say("unplug"); return; } }
+    const k=itemAt(p); if(k) returnItem(k); return; }
+  const t=termNear(p); if(t){ ST.pend=t; return; }
+  const k=itemAt(p); if(!k) return;
+  if(k==="battery"){ ST.sw=!ST.sw; say("sw",ST.sw); return; }
+  if(k==="box"){ if(!ST.it.etalon.on){ hand={item:"etalon"}; say("picked",itemName("etalon")); } return; }
+  if(k==="meter"){ setTab("meter"); }
+  if(k==="etalon"||k==="holder"||k==="capscrews"){ setTab(k==="capscrews"?"disk":"etalon"); return; }
+  if(k==="laser"){ setTab("holder"); return; }
+  if(k==="platform"&&inB(bbox("disk"),p)){ setTab("disk"); return; }
+  if(!DIM[k]) return; hand={item:k,move:true,orig:{...ST.it[k]}}; ST.it[k].on=false; say("moveIt",itemName(k)); }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; }); cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand&&hand.move) Object.assign(ST.it[hand.item],hand.orig); hand=null; ST.pend=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ if(hand.move) Object.assign(ST.it[hand.item],hand.orig); hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=inHand(k)&&!hand.move; if(hand&&hand.move) Object.assign(ST.it[hand.item],hand.orig); hand=null;
+    if(!same&&trayAvail(k)){ if(k==="leads"||k==="box"||k==="lamp"||k==="driver"||k==="meter"||k==="battery"||k==="platform"||!0){ hand={item:k}; say("picked",itemName(k)); } } drawTray(); return; } });
+/* close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+let dDrag=null;
+function diskPart(p){ if(!CL.disk) return null; const {cx,cy,R}=CL.disk, r=Math.hypot(p[0]-cx,p[1]-cy); if(r<R*0.62) return "disk";
+  if(r<R*1.15){ const s=((Math.atan2(-(p[1]-cy),-(p[0]-cx))*180/Math.PI)%360+360)%360, dd=Math.abs(((s-ST.det+540)%360)-180); if(dd<14) return "det"; } return null; }
+const ang=(p)=>{ const {cx,cy}=CL.disk; return ((Math.atan2(-(p[1]-cy),-(p[0]-cx))*180/Math.PI)%360+360)%360; };
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
+  if(tab==="disk"){ const w=diskPart(p); if(w) dDrag={w,a:ang(p),v:w==="disk"?ST.th:ST.det}; return; }
+  if(tab==="meter"&&CL.meter){ const {x,y,s}=CL.meter, u=(p[0]-x)/s, v=(p[1]-y)/s; if(Math.hypot(u-55,v-105)<44){ ST.rng=(ST.rng+(e.button===2?3:1))%4; ST.dt=0; say("range",RANGES[ST.rng][0]); } } });
+closeCv.addEventListener("pointermove",e=>{ if(!dDrag) return; const p=clpos(e); let dv=ang(p)-dDrag.a; dv=((dv+540)%360)-180; const v=+(dDrag.v+dv).toFixed(1);
+  if(dDrag.w==="disk") ST.th=Math.max(-85,Math.min(85,((v+540)%360)-180)); else ST.det=((v%360)+360)%360; });
+window.addEventListener("pointerup",()=>{ dDrag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e), dir=e.deltaY<0?1:-1, fine=e.shiftKey; e.preventDefault();
+  if(tab==="disk"){ const w=diskPart(p); if(w==="disk") ST.th=Math.max(-85,Math.min(85,+(ST.th+dir*(fine?0.1:0.5)).toFixed(2))); else if(w==="det") ST.det=(((ST.det+dir*(fine?0.1:0.5))%360)+360)%360; return; }
+  if(tab==="etalon"){ if(EHIT.et){ const [x,y,w,h]=EHIT.et; if(p[0]>=x&&p[0]<=x+w&&p[1]>=y&&p[1]<=y+h){ ST.scr.V=Math.max(0,Math.min(50,+(ST.scr.V+dir*(fine?0.05:0.4)).toFixed(3))); return; } }
+    for(const nm of ["P","Q"]){ const h=EHIT[nm]; if(h&&Math.hypot(p[0]-h[0],p[1]-h[1])<h[2]+4){ ST.scr[nm]=Math.max(0,Math.min(50,+(ST.scr[nm]+dir*(fine?0.05:0.4)).toFixed(3))); return; } } return; }
+  if(tab==="holder"){ for(const [k,x,y,r] of KNOB) if(Math.hypot(p[0]-x,p[1]-y)<r){ if(k==="ap") ST.ap=Math.max(0.4,Math.min(4,+(ST.ap-dir*(fine?0.02:0.1)).toFixed(3))); else ST.scr.C=Math.max(0,Math.min(50,+(ST.scr.C+dir*(fine?0.05:0.4)).toFixed(3))); return; } return; }
+  if(tab==="meter"&&CL.meter){ ST.rng=Math.max(0,Math.min(3,ST.rng+(dir>0?1:-1))); ST.dt=0; }
+},{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+$("swBtn").onclick=()=>{ if(!ST.it.battery.on){ say("noBattery"); return; } ST.sw=!ST.sw; say("sw",ST.sw); };
+$("wClear").onclick=()=>{ ST.wires=[]; ST.pend=null; say("cleared"); };
+$("noteBtn").onclick=()=>{ ST.notes.push((lang==="ko"?"원판 눈금 ":"disk scale ")+ST.th.toFixed(1)+"° · "+(lang==="ko"?"검출기 ":"detector ")+ST.det.toFixed(1)+"° · "+(ST.disp||"—")+" "+(RANGES[ST.rng][1]===0.2?"mV":RANGES[ST.rng][1]?"V":"")); renderNotes(); say("noted"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; } box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){ const L=[], t=d();
+  if(!ITEMS.some(k=>ST.it[k].on)) L.push([t.st.none,false]); if(hand) L.push([t.st.hand(itemName(hand.item)),false]); if(ST.pend) L.push([t.st.pend(termLabel(ST.pend)),false]); if(laserLive()) L.push([t.st.laserOn,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML=""; for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); } $("swBtn").textContent=ST.sw?t.swOff:t.swOn; }
+function applyLang(){ const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle; $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-laser").textContent=t.hLaser; $("t-laserhint").textContent=t.laserHint; $("t-h-wire").textContent=t.hWire; $("wClear").textContent=t.clear; $("t-wirehint").textContent=t.wireHint;
+  $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr; $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2016 E2 — 금속의 반사 위상 변화 · HaslaLab":"APhO 2016 E2 — Reflection Phase Shift of Metal · HaslaLab"; renderTabs(); renderNotes(); renderStatus(); layout(); }
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); }; $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let tPrev=performance.now()/1000, frameN=0;
+function tick(){ const now=performance.now()/1000, dt=Math.min(0.25,Math.max(0,now-tPrev)); tPrev=now;
+  ST.dt-=dt; if(ST.dt<=0){ ST.disp=meterText(); ST.dt=0.45; }
+  ctx.clearRect(0,0,LW,LH); drawBench(); if(++frameN%2===0) drawClose(); if(frameN%6===0){ renderStatus(); drawTray(); } requestAnimationFrame(tick); }
+window.addEventListener("resize",layout);
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
