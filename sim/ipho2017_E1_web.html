@@ -812,13 +812,13 @@ function drawBase(k,label){
   face([[x-0.25,y0,3.05],[x+0.25,y0,3.05],[x,y0-0.45,3.05]],{fill:"#ffffff",flat:true,bias:0.6});
 }
 /* Fig. 1 shows every rail part built the same way: a horizontal black mounting plate whose
-   four silver rods go down into the four holes of its base (Laser / Cell / Screen Base), so
-   the part can be set higher or lower and locked by the black thumb screw on the base.
-   Line laser module (item 1): seen from the side its black bracket is a mirrored "ㄷ" — the
-   mounting plate below, an upright at the beam end, an arm back over the plate on top — and
-   the laser tube lies in two saddles on that arm, its knurled focusing cap sticking out past
-   the upright; turning the tube in the saddles turns the line, turning the cap focuses it.
-   Red and black leads with alligator clips go to the battery holder. */
+   four silver rods go down into the four holes of its base (Laser / Cell / Screen Base), locked by the
+   black thumb screw on the base.
+   Line laser module (item 1, seen from behind in the kit photo): its stand is a mirrored "ㄴ" — the
+   mounting plate, and at the beam end a tall side pillar with a long slot cut down its upper part. The
+   laser holder is bolted to the pillar through that slot; loosening the knob behind lets the holder,
+   and the laser with it, slide up and down. The laser is a short tube with a knurled focusing cap and
+   a cylindrical glass-rod lens in front; red and black leads with clips go to the battery holder. */
 const LM_ARM=2.3;
 function mountPlate(k,top,o){
   const c=baseC(k), y1=RT+BASE_T, M={id:o.id};
@@ -832,7 +832,7 @@ function mountPlate(k,top,o){
 function laserLeads(x,yb){
   const conn=ST.on.batt&&S.conn, b=ST.pos.batt;
   for(const [col,dz,clip] of [["#b3201a",0.35,"#d8261c"],["#151515",-0.35,"#222"]]){
-    const sx=x-4.65, sy=yb, pts=[];
+    const sx=x-4.0, sy=yb, pts=[];
     if(conn){ const ex=b[0]+3.9, ez=b[2]+(dz>0?-0.85:0.85);
       for(let i=0;i<=26;i++){ const t=i/26; pts.push([sx+(ex-sx)*t, Math.max(0.25,sy*(1-t)*(1-t)+(1-t)*t*(-0.6)+1.9*t*t), dz+(ez-dz)*t+Math.sin(Math.PI*t)*(dz>0?2.6:1.6)]); }
       poly3(pts,col,2.0); box3(ex-0.2,ex+1.3,1.5,2.05,ez-0.28,ez+0.28,clip,{bias:2}); }
@@ -841,34 +841,34 @@ function laserLeads(x,yb){
       poly3(pts,col,2.0); box3(ex-0.75,ex+0.75,0.05,0.5,ez-0.25,ez+0.25,clip,{id:"leads"}); }
   }
 }
+const LP={top:RT+BASE_T+1.2, pil:[-0.9,0.1], pz:[-1.9,-0.9], slot:[RT+3.0,RT+9.6], ptop:RT+10.2};
 function drawLaser(){
-  const x=S.laserX, yb=RT+S.laserY, top=yb-LM_ARM, L={id:"laser"}, ya=yb-0.62, E="#3a3d42";
+  const x=S.laserX, yb=RT+S.laserY, L={id:"laser"}, E="#3a3d42", [p0,p1]=LP.pil, [z0,z1]=LP.pz, sx=x+(p0+p1)/2;
   drawBase("laser",d().lab.lbase);
-  mountPlate("laser",top,L);
-  /* the bracket, a mirrored "ㄷ" seen from the side: the upright at the beam end, a slot down its face with
-     the height-clamp thumb screw, and the arm back over the plate that carries the laser */
-  boxY(x-0.6,x+0.1,top,ya,-0.8,0.8,BLACK2,Object.assign({top:"#34363b"},L),0.8);
-  box3(x-4.7,x+0.1,ya-0.55,ya,-0.8,0.8,BLACK2,Object.assign({top:"#34363b"},L));
-  for(const [p,q] of [[[x-4.7,ya,0.8],[x+0.1,ya,0.8]],[[x-4.7,ya-0.55,0.8],[x-0.6,ya-0.55,0.8]],[[x+0.1,ya,0.8],[x+0.1,top,0.8]],[[x-0.6,ya-0.55,0.8],[x-0.6,top,0.8]]]) line3(p,q,E,1.2,{bias:0.8});
-  face([[x-0.37,top+0.35,0.805],[x-0.13,top+0.35,0.805],[x-0.13,ya-0.75,0.805],[x-0.37,ya-0.75,0.805]],{fill:"#0b0b0c",flat:true,bias:1});   /* slot */
-  const hy=Math.min(ya-0.95,top+0.9);
-  cyl3("z",0.8,1.05,x-0.25,hy,0.22,"#9ea3a8",{seg:8});
-  cyl3("z",1.05,1.55,x-0.25,hy,0.45,"#151515",{seg:14,cap:"#2a2c30",id:"laser"});                    /* height-clamp knob */
-  for(const sx of [-4.3,-2.9]) cyl3("y",ya-0.4,ya+0.02,x+sx,0.5,0.13,"#8e9398",{seg:8,cap:"#b9bec3"});
-  /* two saddles with their clamp screws */
-  for(const sx of [-4.1,-1.95]){ box3(x+sx-0.35,x+sx+0.35,ya,yb+0.15,-0.62,0.62,"#17181b",L);
-    cyl3("z",0.62,0.95,x+sx,yb+0.02,0.15,"#9ea3a8",{seg:8,cap:"#c3c8cc"}); }
-  /* the diode laser tube, the white index of its rotation, the knurled focusing cap */
-  cyl3("x",x-4.6,x-0.75,yb,0,0.55,"#141518",{seg:18,id:"laser",cap:"#26282b"});
-  const th=S.theta*Math.PI/180; line3([x-3.6,yb+0.56*Math.sin(th),0.56*Math.cos(th)],[x-2.4,yb+0.56*Math.sin(th),0.56*Math.cos(th)],"#f2f2f2",1.6,{bias:1});
+  mountPlate("laser",LP.top,L);
+  /* the side pillar and its slot (seen on both faces) */
+  boxY(x+p0,x+p1,LP.top,LP.ptop,z0,z1,BLACK2,Object.assign({top:"#34363b"},L),1);
+  for(const zf of [z0-0.005,z1+0.005]) face([[sx-0.2,LP.slot[0],zf],[sx+0.2,LP.slot[0],zf],[sx+0.2,LP.slot[1],zf],[sx-0.2,LP.slot[1],zf]],{fill:"#08090a",flat:true,bias:1,cull:false});
+  for(const [p,q] of [[[x+p0,LP.ptop,z1],[x+p0,LP.top,z1]],[[x+p1,LP.ptop,z1],[x+p1,LP.top,z1]],[[x+p0,LP.ptop,z1],[x+p1,LP.ptop,z1]]]) line3(p,q,E,1.2,{bias:0.8});
+  cyl3("y",LP.top,LP.top+0.2,sx,(z0+z1)/2,0.75,"#26282c",{seg:6});                                  /* foot screw */
+  /* the holder: a plate on the pillar's face, a bridge, a ring clamp round the tube; the knob behind */
+  box3(x-1.75,x+0.05,yb-0.85,yb+0.85,z1,z1+0.32,"#17181b",Object.assign({top:"#222326"},L));
+  box3(x-1.5,x-0.95,yb-0.35,yb+0.35,z1+0.32,-0.45,"#17181b",L);
+  cyl3("x",x-1.65,x-0.85,yb,0,0.72,"#17181b",{seg:20,id:"laser",cap:"#222326"});
+  cyl3("y",yb+0.66,yb+0.92,x-1.25,0,0.14,"#9ea3a8",{seg:8,cap:"#c3c8cc"});                            /* ring clamp screw */
+  cyl3("z",z0-0.25,z0,sx,yb,0.2,"#9ea3a8",{seg:8});
+  cyl3("z",z0-0.85,z0-0.25,sx,yb,0.5,"#151515",{seg:14,cap:"#2a2c30",id:"laser"});                  /* height knob */
+  for(let i=0;i<12;i++){ const a=i/12*2*Math.PI; line3([sx+0.51*Math.cos(a),yb+0.51*Math.sin(a),z0-0.3],[sx+0.51*Math.cos(a),yb+0.51*Math.sin(a),z0-0.8],"#3a3d42",0.8); }
+  /* the diode laser tube, the white index of its rotation, the knurled focusing cap, the lens */
+  cyl3("x",x-3.6,x-0.75,yb,0,0.55,"#141518",{seg:18,id:"laser",cap:"#26282b"});
+  const th=S.theta*Math.PI/180; line3([x-3.2,yb+0.56*Math.sin(th),0.56*Math.cos(th)],[x-1.9,yb+0.56*Math.sin(th),0.56*Math.cos(th)],"#f2f2f2",1.6,{bias:1});
   cyl3("x",x-0.75,x-0.1,yb,0,0.64,"#202225",{seg:20,id:"focus",cap:"#2a2c30"});
   for(let i=0;i<18;i++){ const a=i/18*2*Math.PI+S.focus*3; line3([x-0.72,yb+0.65*Math.sin(a),0.65*Math.cos(a)],[x-0.14,yb+0.65*Math.sin(a),0.65*Math.cos(a)],"#44474c",0.8); }
-  /* the cylindrical lens: a short glass rod across the beam in a little holder at the front */
   cyl3("x",x-0.1,x+0.05,yb,0,0.5,"#1a1b1e",{seg:18,id:"focus"});
   const ca=Math.cos(th), sa=Math.sin(th);
   cylAB([x+0.03,yb-0.42*ca,-0.42*sa],[x+0.03,yb+0.42*ca,0.42*sa],0.16,"rgba(215,236,248,0.55)",{seg:10});
   if(beamOn()) cyl3("x",x+0.05,x+0.08,yb,0,0.12,"#ff5a4a",{seg:10,flat:true});
-  cyl3("x",x-5.0,x-4.6,yb,0,0.3,"#151515",{seg:10});                                               /* lead strain relief */
+  cyl3("x",x-4.0,x-3.6,yb,0,0.3,"#151515",{seg:10});                                               /* lead strain relief */
   laserLeads(x,yb);
 }
 function cellBox(){ const x=S.cellX, y0=RT+CELL_FOOT; return [x,x+CELL_D,y0,y0+CELL_H,-CELL_W/2,CELL_W/2]; }

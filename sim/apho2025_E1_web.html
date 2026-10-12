@@ -206,7 +206,7 @@ const T = {
       probeTake:s=>s+"을(를) 집었습니다 — 물릴 단자를 클릭하세요. (우클릭: 걸이에 걸기)",
       hsDesk:s=>s+"을(를) 책상 위에 세워 두었습니다. 다시 집어 받침판 위에 올릴 수 있습니다.",
       flipDesk:(s,f)=>s+"을(를) 책상 위에서 "+(f?"뒤집어 놓았습니다 (다리가 위로).":"바로 세웠습니다."),
-      probeOn:"프로브를 물렸습니다.", coaxReach:"프로브 케이블(약 1.2 m)이 거기까지 닿지 않습니다. 오실로스코프를 더 가까이 옮기세요.", gndReach:"접지 집게선(약 14 cm)이 거기까지 닿지 않습니다. 프로브 고리를 먼저 가까운 단자에 물리세요.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
+      probeOn:"프로브를 물렸습니다.", coaxPulled:"프로브 케이블(약 1.2 m)이 끝까지 당겨져 후크가 단자에서 빠졌습니다.", gndPulled:"접지선(약 14 cm)이 팽팽해져 접지 집게가 빠졌습니다.", coaxReach:"프로브 케이블(약 1.2 m)이 거기까지 닿지 않습니다. 오실로스코프를 더 가까이 옮기세요.", gndReach:"접지 집게선(약 14 cm)이 거기까지 닿지 않습니다. 프로브 고리를 먼저 가까운 단자에 물리세요.", probeOff:"프로브를 풀어 걸이에 걸었습니다.",
       noScope:"프로브는 오실로스코프와 한 몸입니다. 먼저 2번 오실로스코프를 놓으세요.",
       keyTake:"육각 렌치로 코일 #1 받침의 클램프 나사를 클릭해 풀거나 조이세요. (우클릭: 내려놓기)",
       loosened:"클램프를 풀었습니다 — 받침에 팬을 놓거나 뺄 수 있습니다.",
@@ -312,7 +312,7 @@ const T = {
       probeTake:s=>"Holding the "+s+" — click the terminal to clip it on. (R-click: hang it up)",
       hsDesk:s=>s+" stands on the desk by itself. Pick it up again to put it on the base plate.",
       flipDesk:(s,f)=>s+(f?" turned upside down on the desk (legs up).":" set upright on the desk."),
-      probeOn:"Probe clipped on.", coaxReach:"The probe cable (about 1.2 m) does not reach that far. Move the oscilloscope closer.", gndReach:"The ground lead (about 14 cm) does not reach that far. Clip the probe hook to a nearby terminal first.", probeOff:"Probe unclipped and hung up.",
+      probeOn:"Probe clipped on.", coaxPulled:"The probe cable (about 1.2 m) came taut and pulled the hook off its terminal.", gndPulled:"The ground lead (about 14 cm) came taut and pulled the clip off.", coaxReach:"The probe cable (about 1.2 m) does not reach that far. Move the oscilloscope closer.", gndReach:"The ground lead (about 14 cm) does not reach that far. Clip the probe hook to a nearby terminal first.", probeOff:"Probe unclipped and hung up.",
       noScope:"The probe belongs to the oscilloscope. Put item 2 on the bench first.",
       keyTake:"Click the clamp screws on coil #1's platform with the Allen key to loosen or tighten them. (R-click: put it down)",
       loosened:"Clamps loosened — a pan can be put on the platform or taken off.",
@@ -860,6 +860,30 @@ function drawKnob(c,x,y,r,ang){
   circ(c,x-r*0.2,y-r*0.2,r*0.35,"rgba(255,255,255,0.06)");
   seg(c,x+Math.sin(ang)*r*0.15,y-Math.cos(ang)*r*0.15,x+Math.sin(ang)*r*0.9,y-Math.cos(ang)*r*0.9,"#f2f2f2",0.11);
 }
+/* the APhO 2025 mark printed on the panel (after the FG photo): the emblem — a green palm crown over
+   two golden brackets, a wavy line between them and an oil derrick below — then "APhO" in heavy navy
+   capitals, "Asian Physics Olympiad" and "Dhahran , Saudi Arabia 2025" under it */
+function apho25Logo(c,X,Y,K){
+  const G="#2f8a3c", Au="#b8862b", x=0, y=0;
+  c.save(); c.translate(X,Y); c.scale(K,K);
+  c.save(); c.lineCap="round";
+  c.strokeStyle=G; c.lineWidth=0.06;                                           /* palm crown */
+  for(let i=-4;i<=4;i++){ const a=-Math.PI/2+i*0.3; c.beginPath(); c.moveTo(x+Math.cos(a)*0.12,y-0.38+Math.sin(a)*0.12); c.lineTo(x+Math.cos(a)*0.42,y-0.38+Math.sin(a)*0.36); c.stroke(); }
+  c.strokeStyle=Au; c.lineWidth=0.07;                                          /* the two brackets */
+  c.beginPath(); c.arc(x+0.12,y,0.62,Math.PI*0.68,Math.PI*1.32); c.stroke();
+  c.beginPath(); c.arc(x-0.12,y,0.62,-Math.PI*0.32,Math.PI*0.32); c.stroke();
+  c.strokeStyle="#1d2a5e"; c.lineWidth=0.035; c.beginPath();                  /* the wave */
+  for(let i=0;i<=24;i++){ const u=x-0.48+i*0.04, v=y-0.02+Math.sin(i/24*Math.PI*4)*0.06; i?c.lineTo(u,v):c.moveTo(u,v); } c.stroke();
+  c.strokeStyle=Au; c.lineWidth=0.05; c.beginPath();                           /* the derrick */
+  c.moveTo(x-0.2,y+0.58); c.lineTo(x,y+0.12); c.lineTo(x+0.2,y+0.58); c.moveTo(x-0.13,y+0.42); c.lineTo(x+0.13,y+0.42);
+  c.moveTo(x-0.08,y+0.28); c.lineTo(x+0.08,y+0.28); c.moveTo(x-0.3,y+0.6); c.lineTo(x+0.3,y+0.6); c.stroke();
+  c.restore();
+  c.save(); c.translate(x+0.78,y+0.08); c.scale(0.82,1); c.font="900 0.95px Arial,sans-serif"; c.textAlign="left"; c.textBaseline="alphabetic";
+  c.fillStyle="#1d2a5e"; c.fillText("APhO",0,0); c.restore();
+  FT(c,"Asian Physics Olympiad",x+0.82,y+0.42,0.2,"#1f4a9e","left",true);
+  FT(c,"Dhahran , Saudi Arabia 2025",x+0.82,y+0.68,0.17,"#1d2a5e","left");
+  c.restore();
+}
 function drawFgFace(c,bench){
   rr(c,0,0,24,9,0.45,"#141518");
   rr(c,0.45,0.4,18.4,8.6,0.15,"#e6e7e8","#b9bbbd",0.03);
@@ -898,8 +922,7 @@ function drawFgFace(c,bench){
   circ(c,17.2,3.7,0.78,"#a9adb1","#6d7175",0.05);
   if(!bench){ circ(c,17.2,3.7,0.5,"#c9cdd1","#80858a",0.04); circ(c,17.2,3.7,0.18,"#2b2d30"); }
   /* logo */
-  FT(c,"APhO",16.8,6.55,0.62,"#1d2a6e","center",true);
-  FT(c,"Asian Physics Olympiad",16.8,7.15,0.2,"#1d2a6e","center");
+  apho25Logo(c,15.85,6.6,0.72);
   /* 7 output sockets */
   FT(c,"VOP+",21.15,1.15,0.34,"#1b1c1e","center",true);
   FT(c,"VOP-",21.15,4.55,0.34,"#1b1c1e","center",true);
@@ -1645,7 +1668,15 @@ function carryLabel(){
   if(cr.k==="probe") return cr.end==="tip"?t.lab.hook:t.lab.gnd;
   return t.trayItems[cr.id]||"";
 }
+function probeReach(){
+  if(!S.on.scope) return; const t=d().m;
+  if(S.probe.tip){ const i=termInfo(S.probe.tip); if(i){ const E=endPos(S.probe.tip,i), C0=coaxStart();
+    if(Math.hypot(E[0]-C0[0],E[2]-C0[2])>COAX_DESK-PRB.tail+4){ S.probe.tip=null; say(t.coaxPulled,true); solve(); } } }
+  if(S.probe.gnd){ const i=termInfo(S.probe.gnd), A=probeAttachW(); if(i&&A){ const E=endPos(S.probe.gnd,i);
+    if(Math.hypot(E[0]-A[0],E[1]-A[1],E[2]-A[2])>GND_REACH+1.5){ S.probe.gnd=null; say(t.gndPulled,true); solve(); } } }
+}
 function draw(){
+  probeReach();
   ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.fillStyle="#232830"; ctx.fillRect(0,0,CW,CH);
   S.zones={};
