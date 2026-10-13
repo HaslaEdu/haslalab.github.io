@@ -383,13 +383,21 @@ function drawBeam(){
   if(sc){ ctx.fillStyle="rgba(255,60,80,"+(0.4+0.5*a)+")"; ctx.beginPath(); ctx.ellipse(x1-2,y+sc.dy*0,2.5,9,0,0,7); ctx.fill(); }
 }
 function drawBench(){
+  /* an item being moved is drawn where the hand holds it, with its cables, beam and holder following it */
+  const mv=hand&&hand.move&&PLACE.includes(hand.k)?hand.k:null, keep=mv&&ST.pos[mv];
+  if(mv){ ST.pos[mv]={x:mouse[0]/PX,y:mouse[1]/PX}; ST.on[mv]=true; }
+  try{ drawBench0(mv); } finally { if(mv){ const bad=overlap(mv,ST.pos[mv])&&!onProtTarget(mv,ST.pos[mv]), [w,h]=SZ[mv], q=ST.pos[mv];
+    if(bad){ ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle="#ff5a4a"; ctx.lineWidth=2; ctx.strokeRect((q.x-w/2)*PX,(q.y-h/2)*PX,w*PX,h*PX); ctx.restore(); }
+    ST.pos[mv]=keep; ST.on[mv]=false; } }
+}
+function drawBench0(mv){
   bench();
   for(const k of ["board","bank","screen"]) if(ST.on[k]) ({board:drawBoard,bank:drawBank,screen:drawScreen})[k]();
   if(ST.on.plat){ drawPlat(); if(ST.contOn) drawCont(ST.pos.plat,true); if(ST.holder) drawHolder(ST.holder,ST.pos.plat,true); }
   for(const k of ["s1","s2"]) if(ST.on[k]&&ST.holder!==k) drawHolder(k,ST.pos[k],false);
   if(ST.on.cont&&!ST.contOn) drawCont(ST.pos.cont,false);
   drawBeam(); drawCables();
-  if(hand&&PLACE.includes(hand.k)){ const pos={x:mouse[0]/PX,y:mouse[1]/PX}, keep=ST.pos[hand.k];
+  if(hand&&!mv&&PLACE.includes(hand.k)){ const pos={x:mouse[0]/PX,y:mouse[1]/PX}, keep=ST.pos[hand.k];
     ctx.save(); ctx.globalAlpha=overlap(hand.k,pos)&&!onProtTarget(hand.k,pos)?0.35:0.75; ST.pos[hand.k]=pos;
     ({plat:drawPlat,s1:()=>drawHolder("s1",pos,false),s2:()=>drawHolder("s2",pos,false),screen:drawScreen,cont:()=>drawCont(pos,false),board:drawBoard,bank:drawBank})[hand.k]();
     ST.pos[hand.k]=keep; ctx.restore(); }

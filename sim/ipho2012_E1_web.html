@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2012 E1 — 물의 자기 투자율 · The Magnetic Permeability of Water · HaslaLab</title>
+<meta name="description" content="IPhO 2012 실험 1을 브라우저에서 실행합니다. 네오디뮴 자석 위 1 mm 물층에서 반사된 레이저를 모눈종이 스크린에 비추고, 디지털 캘리퍼로 레이저를 옮기며 점의 높이를 읽어 수면의 모양과 물의 자기 감수율을 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2012 E1 — 물의 자기 투자율 · The Magnetic Permeability of Water">
+<meta property="og:description" content="IPhO 2012 실험 1을 브라우저에서 실행합니다. 자석 위 물 표면에서 반사된 레이저 점의 높이를 캘리퍼 위치에 따라 재어 물이 반자성임을 확인합니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-cal"></h2>
+    <div class="disp" id="calDisp">--------</div>
+    <div class="row"><button id="mv-5">◀◀ 5</button><button id="mv-1">◀ 1</button><button id="mv-01">◀ 0.1</button><button id="mv01">0.1 ▶</button><button id="mv1">1 ▶</button><button id="mv5">5 ▶</button></div>
+    <div class="hint" id="calHint"></div>
+
+    <h2 id="t-h-laser"></h2>
+    <div class="row"><button id="tubeBtn"></button></div>
+
+    <h2 id="t-h-water"></h2>
+    <div class="row"><button id="w-13">−13 ml</button><button id="w-13b">−1.3 ml</button><button id="w13b">+1.3 ml</button><button id="w13">+13 ml</button></div>
+    <div class="row"><button id="dustBtn"></button></div>
+    <div class="hint" id="waterLbl"></div>
+
+    <h2 id="t-h-align"></h2>
+    <div class="row"><button id="al-t">◀</button><button id="al+t">▶</button><button id="al+v">▲</button><button id="al-v">▼</button></div>
+    <div class="hint" id="alignHint"></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <textarea id="note" rows="9" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2012 실험 1 — 물의 자기 투자율",
+    sub:"가상 실험실 · 스탠드에 받침판·물 트레이(아래에 원기둥 네오디뮴 자석)·디지털 캘리퍼·레이저·모눈종이 스크린을 설치하세요. 레이저를 캘리퍼로 옮기면서 수면에서 반사된 점의 높이 y를 모눈종이에서 읽고, 수면의 모양과 μ − 1을 직접 구합니다. 주어진 값: L₀ = 490 mm, B₀ = 0.50 T (자석 면 위 1 mm), ρ = 1000 kg/m³, g = 9.8 m/s².",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n스탠드 → 받침판 → 트레이 순서\n원뿔관은 레이저에 대고 클릭",
+    cap:"실험대 (앞에서 본 모습) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 캘리퍼 위에서 휠: 레이저 0.1 mm (Shift 0.01 mm)",
+    tabs:{top:"위에서 (정렬)", cal:"캘리퍼·레이저", paper:"스크린 (모눈종이)", refl:"수면 반사 (A)"},
+    closeCap:{top:"확대 — 위에서 본 받침판. 트레이를 끌어 자석 축을 레이저 빔(빨간 선)과 받침판의 검은 기준선 [12]에 맞추세요. 레이저가 켜져 있으면 수면 위 빔 자국이 보입니다.",
+      cal:"확대 — 디지털 캘리퍼 [3]와 레이저 [4]. 슬라이더를 끌거나 휠로 옮기세요 (Shift: 미세). ON/OFF [8], mm/inch [10], ORIGIN [9] 버튼은 클릭. 원뿔관 [13]이 레이저 버튼을 눌러 줍니다.",
+      paper:"확대 — 세로판에 자석편 [14]으로 붙인 모눈종이 [2]. 휠: 확대·축소, 끌기: 이동. 점의 중심 높이를 직접 읽으세요.",
+      refl:"확대 — 트레이 위에서 내려다본 수면. 종이의 곧은 모서리를 수면에 비춰 본 모습입니다. 모서리를 위아래로 끌어 자석 위를 지나가게 해 보세요."},
+    hCal:"디지털 캘리퍼 [3]", calHint:"휠(캘리퍼 위): 0.1 mm · Shift+휠: 0.01 mm",
+    hLaser:"레이저 [4] · 원뿔관 [13]", tubeOn:"원뿔관 빼기 (레이저 끄기)", tubeOff:"원뿔관 끼우기 (레이저 켜기)",
+    hWater:"물 높이 — 컵 [15]·주사기 [16]", dust:"수면 먼지 불어내기", water:v=>"주사기로 넣은 물 누계: "+(v>=0?"+":"")+v.toFixed(1)+" ml (13 ml ≈ 1 mm)",
+    hAlign:"트레이 밀기 (0.5 mm)", alignHint:"◀▶: 빔 방향 · ▲▼: 빔과 수직 방향",
+    hNote:"실험 노트", note:"캘리퍼 값 적기", noteClr:"지우기",
+    items:{stand:"스탠드 [1]", plate:"받침판·기준선 [12]", tray:"물 트레이·자석 [5][7]", caliper:"디지털 캘리퍼 [3]", laser:"레이저 포인터 [4]", tube:"흰 원뿔관 [13]", screen:"모눈종이·자석편 [2][14]", cup:"물컵 [15]", syringe:"주사기 [16]"},
+    lab:{noTop:"받침판을 놓으면 보입니다", noCal:"캘리퍼를 스탠드에 달면 보입니다", noPaper:"세로판에 모눈종이를 붙이면 보입니다", noRefl:"트레이를 놓으면 보입니다",
+      line:"검은 기준선 [12]", beam:"레이저 빔", spotOff:"모눈종이에 점이 없습니다", smear:"점이 번져 보입니다 — 수면에 먼지?", edge:"종이 모서리", wet:"수면", dry:"빔이 물에 닿지 않습니다",
+      wall:"빔이 트레이 벽에 가립니다", broken:"자석 위 물층이 끊어졌습니다", origin:"ORIGIN", onoff:"OFF  ON", unit:"mm  inch"},
+    st:{none:"부품함에서 스탠드부터 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, laser:"⚠ 레이저가 켜져 있습니다 (빔과 반사를 들여다보지 마세요). 쓰지 않을 때는 끄세요.", low:"⚠ 물이 너무 얕습니다", high:"⚠ 트레이가 넘치기 직전입니다"},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.",
+       need:(a,b)=>a+" 은(는) "+b+" 이(가) 있어야 놓을 수 있습니다.", tube:"원뿔관이 레이저 버튼을 누릅니다 — 레이저가 켜졌습니다.", tubeOff:"원뿔관을 빼서 레이저를 껐습니다.", needTube:"원뿔관 [13]을 먼저 부품함에서 꺼내세요.", onLaser:"원뿔관은 레이저에 대고 클릭하세요.",
+       water:v=>"주사기로 물 "+v+" ml", needWater:"물컵과 주사기, 물 트레이가 있어야 합니다.", dust:"수면의 먼지를 불어냈습니다.", noted:"노트에 적었습니다.", calOff:"캘리퍼가 꺼져 있습니다.", origin:"현재 위치를 0으로 맞췄습니다.", unit:"단위를 바꿨습니다.", push:"트레이를 밀었습니다.", noTray:"트레이가 없습니다.", busy:"먼저 위에 있는 것을 치우세요."}
+  },
+  en:{
+    title:"IPhO 2012 Experiment 1 — The Magnetic Permeability of Water",
+    sub:"Virtual laboratory · put the support plate, the water tray (with the cylindrical neodymium magnet under the water), the digital caliper, the laser and the graph-paper screen on the stand. Move the laser with the caliper, read the height y of the reflected spot on the graph paper, and work out the shape of the water surface and μ − 1 yourself. Given: L₀ = 490 mm, B₀ = 0.50 T (1 mm above the magnet face), ρ = 1000 kg/m³, g = 9.8 m/s².",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\nstand, then plate, then tray\nclick the conical tube onto the laser",
+    cap:"the bench (front view) — L-click pick up / put down, R-click back to the box / wheel over the caliper: laser 0.1 mm (Shift: 0.01 mm)",
+    tabs:{top:"From above (alignment)", cal:"Caliper & laser", paper:"Screen (graph paper)", refl:"Reflection (A)"},
+    closeCap:{top:"close up — the support plate from above. Drag the tray so that the magnet axis lies on the laser beam (red line) and on the black line [12] of the plate. With the laser on you see where the beam meets the water.",
+      cal:"close up — the digital caliper [3] and the laser [4]. Drag the slider or use the wheel (Shift: fine). Click ON/OFF [8], mm/inch [10], ORIGIN [9]. The conical tube [13] keeps the laser button down.",
+      paper:"close up — the graph paper [2] held on the vertical plate by magnetic tablets [14]. Wheel: zoom, drag: pan. Read the height of the spot's centre yourself.",
+      refl:"close up — the water surface seen from above the tray: the straight edge of a sheet of paper reflected in it. Drag the edge up and down so that it passes over the magnet."},
+    hCal:"Digital caliper [3]", calHint:"wheel (over the caliper): 0.1 mm · Shift+wheel: 0.01 mm",
+    hLaser:"Laser [4] · conical tube [13]", tubeOn:"Take the tube off (laser off)", tubeOff:"Put the tube on (laser on)",
+    hWater:"Water level — cup [15], syringe [16]", dust:"Blow the dust off the water", water:v=>"water added with the syringe: "+(v>=0?"+":"")+v.toFixed(1)+" ml (13 ml ≈ 1 mm)",
+    hAlign:"Push the tray (0.5 mm)", alignHint:"◀▶: along the beam · ▲▼: across the beam",
+    hNote:"Lab notebook", note:"Write down the caliper", noteClr:"Clear",
+    items:{stand:"Stand [1]", plate:"Support plate, line [12]", tray:"Water tray, magnet [5][7]", caliper:"Digital caliper [3]", laser:"Laser pointer [4]", tube:"White conical tube [13]", screen:"Graph paper, tablets [2][14]", cup:"Cup of water [15]", syringe:"Syringe [16]"},
+    lab:{noTop:"put the support plate down to see it", noCal:"fix the caliper to the stand to see it", noPaper:"fix the graph paper to the vertical plate to see it", noRefl:"put the tray down to see it",
+      line:"black line [12]", beam:"laser beam", spotOff:"no spot on the graph paper", smear:"the spot looks smeared — dust on the water?", edge:"paper edge", wet:"water", dry:"the beam does not reach the water",
+      wall:"the beam is blocked by the tray wall", broken:"the water layer over the magnet has broken", origin:"ORIGIN", onoff:"OFF  ON", unit:"mm  inch"},
+    st:{none:"Take the stand out of the parts box and put it on the bench first.", hand:n=>"In hand: "+n, laser:"⚠ The laser is on (do not look into the beam or its reflections). Switch it off when not in use.", low:"⚠ The water is too shallow", high:"⚠ The tray is about to overflow"},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", noFit:"It does not go there.",
+       need:(a,b)=>a+" needs the "+b+" first.", tube:"The conical tube holds the laser button down — the laser is on.", tubeOff:"Tube taken off: the laser is off.", needTube:"Take the conical tube [13] out of the box first.", onLaser:"Click the conical tube onto the laser.",
+       water:v=>"syringe: "+v+" ml of water", needWater:"You need the cup, the syringe and the water tray.", dust:"Dust blown off the water.", noted:"Written in the notebook.", calOff:"The caliper is switched off.", origin:"Origin set at the present position.", unit:"Unit changed.", push:"Tray pushed.", noTray:"There is no tray.", busy:"Clear what stands on it first."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  THE MAGNET AND THE WATER SURFACE ABOVE IT  (SI inside, mm outside)
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const gauss=()=>{ const u=Math.max(1e-12,Math.random()), v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const MU0=4e-7*Math.PI, RHO=1000, GACC=9.8, GAMMA_W=0.0728;
+/* complete elliptic integrals K(m), E(m) by the arithmetic-geometric mean */
+function ellipKE(m){ m=Math.min(1-1e-15,Math.max(0,m)); let a=1, b=Math.sqrt(1-m), c=Math.sqrt(m), s=0.5*c*c, p=1;
+  for(let i=0;i<40&&Math.abs(c)>1e-17;i++){ const a2=0.5*(a+b), b2=Math.sqrt(a*b); c=0.5*(a-b); a=a2; b=b2; p*=2; s+=p*0.5*c*c; }
+  const K=0.5*Math.PI/a; return [K,K*(1-s)]; }
+/* (Br, Bz) of a circular current loop of radius a, unit current, at (r, zeta) */
+function loopField(a,r,z){
+  if(r<1e-12){ const dd=a*a+z*z; return [0,MU0*a*a/(2*dd*Math.sqrt(dd))]; }
+  const s=(a+r)**2+z*z, dd=(a-r)**2+z*z, [K,E]=ellipKE(4*a*r/s), rs=Math.sqrt(s);
+  return [MU0/(2*Math.PI)*z/(r*rs)*(-K+(a*a+r*r+z*z)/dd*E), MU0/(2*Math.PI)/rs*(K+(a*a-r*r-z*z)/dd*E)]; }
+function gaussLegendre(n){ const xs=[], ws=[];
+  for(let i=1;i<=n;i++){ let x=Math.cos(Math.PI*(i-0.25)/(n+0.5)), dp=1;
+    for(let it=0;it<100;it++){ let p0=1, p1=x; for(let k=2;k<=n;k++){ const p2=((2*k-1)*x*p1-(k-1)*p0)/k; p0=p1; p1=p2; } dp=n*(x*p1-p0)/(x*x-1); const dx=-p1/dp; x+=dx; if(Math.abs(dx)<1e-15) break; }
+    xs.push(x); ws.push(2/((1-x*x)*dp*dp)); }
+  return [xs,ws]; }
+const [GX,GW]=gaussLegendre(8);
+/* an axially magnetised cylinder (flat top face at z = 0) as an equivalent solenoid */
+function Magnet(R,L,Br){
+  const K=Br/MU0, edges=[0,-0.05e-3,-0.15e-3,-0.5e-3,-1.5e-3,-4e-3,-10e-3].filter(e=>e>-L); edges.push(-L);
+  const nodes=[]; for(let i=0;i<edges.length-1;i++){ const z1=edges[i], z2=edges[i+1], hm=0.5*(z2-z1), hc=0.5*(z1+z2); for(let j=0;j<8;j++) nodes.push([hc+hm*GX[j],Math.abs(hm)*GW[j]*K]); }
+  return { R, L, Br,
+    bmag(r,z){ let br=0, bz=0; for(const [zp,w] of nodes){ const [a,b]=loopField(R,r,z-zp); br+=a*w; bz+=b*w; } return Math.hypot(br,bz); },
+    bzAxis(z){ const r2=R*R; return 0.5*Br*((z+L)/Math.sqrt((z+L)**2+r2)-z/Math.sqrt(z*z+r2)); } };
+}
+/* the free surface:  rho g eta − gamma ∇²eta = chi B² / 2 mu0  (radial grid, Thomas algorithm) */
+function solveSurface(mag,depth,chi,gamma){
+  const dr=0.00025, rmax=0.070, n=Math.floor(rmax/dr)+1, b2=new Float64Array(n), db2=new Float64Array(n); let eta=new Float64Array(n);
+  for(let i=0;i<n;i++){ const r=i*dr, b1=mag.bmag(r,depth), bh=mag.bmag(r,depth+20e-6); b2[i]=b1*b1; db2[i]=(bh*bh-b1*b1)/20e-6; }
+  const rg=RHO*GACC, dr2=dr*dr;
+  for(let it=0;it<4;it++){
+    const a=new Float64Array(n), b=new Float64Array(n), c=new Float64Array(n), rhs=new Float64Array(n);
+    for(let i=0;i<n;i++) rhs[i]=chi*(b2[i]+db2[i]*eta[i])/(2*MU0);
+    b[0]=rg+gamma*4/dr2; c[0]=-gamma*4/dr2;
+    for(let i=1;i<n-1;i++){ const r=i*dr; a[i]=-gamma*(1/dr2-1/(2*r*dr)); b[i]=rg+gamma*2/dr2; c[i]=-gamma*(1/dr2+1/(2*r*dr)); }
+    b[n-1]=1; rhs[n-1]=0;
+    for(let i=1;i<n;i++){ const w=a[i]/b[i-1]; b[i]-=w*c[i-1]; rhs[i]-=w*rhs[i-1]; }
+    const x=new Float64Array(n); x[n-1]=rhs[n-1]/b[n-1]; for(let i=n-2;i>=0;i--) x[i]=(rhs[i]-c[i]*x[i+1])/b[i];
+    eta=x; }
+  return {dr,n,eta};
+}
+/* eta(r) [m] and d eta / dr, Catmull–Rom on the radial grid */
+function etaAt(S,r){ r=Math.abs(r); const t=r/S.dr, i=Math.floor(t); if(i>=S.n-2) return [0,0];
+  const f=t-i, e=S.eta, p0=i>=1?e[i-1]:e[1], p1=e[i], p2=e[i+1], p3=e[i+2];
+  const c1=0.5*(p2-p0), c2=p0-2.5*p1+2*p2-0.5*p3, c3=-0.5*p0+1.5*p1-1.5*p2+0.5*p3;
+  return [p1+f*(c1+f*(c2+f*c3)), (c1+f*(2*c2+3*f*c3))/S.dr]; }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  HIDDEN TRUTH OF THIS SESSION  (never shown)
+   ══════════════════════════════════════════════════════════════ */
+const TRUE=(()=>{ const R=U(11.6,12.4)*1e-3, L=U(16,20)*1e-3, B0=U(0.487,0.513);
+  const unit=Magnet(R,L,1), Br=B0/unit.bzAxis(1e-3);
+  return { R, L, B0, Br, mag:Magnet(R,L,Br), chi:-9.05e-6*U(0.96,1.22), gamma:GAMMA_W*U(0.97,1.03),
+    alpha:U(35.5,40.5)*Math.PI/180, L0:490*U(0.995,1.005), zRail:150, calZero:U(100,118), paperY0:U(-8,8),
+    trayV:U(3,8)*(Math.random()<0.5?-1:1), trayT:U(6,18)*(Math.random()<0.5?-1:1), depth0:U(0.86,1.14), jitter:U(0.03,0.07), beamW:U(1.1,1.6), dust:Math.random()<0.45 }; })();
+const TRAY_IN=[130,100], Z_PLATE=3, Z_FLOOR=7, Z_RIM=41, PAPER_Z0=320, PAPER_H=180, PAPER_W=120;
+const Z_MAG=()=>Z_FLOOR+TRUE.L*1e3;
+const surfCache=new Map();
+function surface(){ const k=ST.depth.toFixed(3); let s=surfCache.get(k); if(!s){ if(surfCache.size>40) surfCache.clear(); s=solveSurface(TRUE.mag,+k*1e-3,TRUE.chi,TRUE.gamma); surfCache.set(k,s); } return s; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE APPARATUS
+   ══════════════════════════════════════════════════════════════ */
+const ITEMS=["stand","plate","tray","caliper","laser","tube","screen","cup","syringe"];
+const NEEDS={plate:"stand",tray:"plate",caliper:"stand",laser:"caliper",screen:"stand"};
+const ST={ on:new Set(), pos:{}, tube:false, calOn:true, inch:false, offset:0, carriage:TRUE.calZero+50, depth:TRUE.depth0, trayT:0, trayV:0, trayV0:TRUE.trayV, trayT0:TRUE.trayT, added:0, dust:TRUE.dust, jx:0, edgeV:-9 };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+const assembled=()=>["stand","plate","tray","caliper","laser","screen"].every(has);
+const laserOn=()=>has("laser")&&ST.tube;
+const zWater=()=>Z_MAG()+ST.depth;
+const freeboard=()=>Z_RIM-zWater();
+function setCarriage(x){ ST.carriage=Math.max(TRUE.calZero,Math.min(TRUE.calZero+150,x)); }
+function calReading(){ const v=ST.carriage-TRUE.calZero-ST.offset; return ST.inch?v/25.4:v; }
+function calText(){ if(!has("caliper")||!ST.calOn) return ""; const v=calReading();
+  if(ST.inch){ const q=Math.round(v*2000)/2000; return (q<0?"-":"")+Math.abs(q).toFixed(4)+" in"; }
+  const q=Math.round(v*100)/100; return (q<0?"-":"")+Math.abs(q).toFixed(2)+" mm"; }
+/* the full ray trace for a laser carriage at x (scene mm, 0 = black line) */
+function trace(xc){
+  const out={ok:false,reason:"off"}; if(!(assembled()&&laserOn())) return out;
+  const zw=zWater(), ta=Math.tan(TRUE.alpha), u0=xc-(TRUE.zRail-zw)/ta-ST.trayT, S=surface();
+  let u=u0; for(let i=0;i<4;i++){ const r=Math.hypot(u,ST.trayV)*1e-3; u=u0+etaAt(S,r)[0]*1e3/ta; }
+  const r=Math.hypot(u,ST.trayV)*1e-3, [e,de]=etaAt(S,r), sig=r>1e-9?de*(u*1e-3/r):0, xh=u+ST.trayT;
+  Object.assign(out,{xHit:xh,u,eta:e*1e3,zw});
+  const half=TRAY_IN[0]/2; if(Math.abs(u)>half||Math.abs(ST.trayV)>TRAY_IN[1]/2){ out.reason="dry"; return out; }
+  if(ST.depth<0.30&&Math.abs(u)<TRUE.R*1e3+4){ out.reason="broken"; return out; }
+  const fb=freeboard(); if((half-u)*ta<fb){ out.reason="wall_in"; return out; }
+  const ang=TRUE.alpha-2*sig; if((half+u)*Math.tan(Math.max(ang,1e-3))<fb){ out.reason="wall_out"; return out; }
+  const D=TRUE.L0+xh; if(D<=20){ out.reason="geom"; return out; }
+  Object.assign(out,{ok:true,reason:"",zSpot:zw+e*1e3+D*Math.tan(ang),ang,D}); return out;
+}
+/* the spot on the graph paper: centre height y above the paper's bottom edge, and its vertical size */
+function spot(){
+  const tr=trace(ST.carriage); if(!tr.ok||!has("screen")) return null;
+  const y=tr.zSpot-PAPER_Z0-TRUE.paperY0; if(y<-3||y>PAPER_H+3) return null;
+  const h=0.05, a=trace(ST.carriage-h), b=trace(ST.carriage+h);
+  const dydx=(a.ok&&b.ok)?(b.zSpot-a.zSpot)/(2*h):Math.tan(TRUE.alpha);
+  const hgt=Math.max(0.6,Math.abs(dydx)*TRUE.beamW/Math.sin(TRUE.alpha)), wid=TRUE.beamW*(ST.dust?2.4:1);
+  return {y:y+ST.jx, hgt:hgt*(ST.dust?2.2:1), wid, tr};
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (oblique view from the front right, mm;
+       x along the beam, 0 = black line; y towards you; z up)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=672, SC=1.04, OX=706, OY=602, KY=0.35, KX=0.25;
+const P=(x,y,z)=>[OX+SC*(x-KX*y), OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>{ const y=((Y-OY)/SC+(z||0))/KY; return [(X-OX)/SC+KX*y,y]; };
+const TBL={x0:-620,x1:420,y0:-150,y1:160}, YS=-72, PLATE={x0:-110,x1:150,y0:-58,y1:62};
+const SCR=()=>-TRUE.L0;                                           /* the face of the screen board */
+/* a box whose visible faces are top, front (+y) and right (+x) */
+function abox(x0,y0,z0,x1,y1,z1,top,front,side,edge){
+  poly([P(x1,y0,z0),P(x1,y1,z0),P(x1,y1,z1),P(x1,y0,z1)],side,edge,0.6);
+  poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],front,edge,0.6);
+  poly([P(x0,y0,z1),P(x1,y0,z1),P(x1,y1,z1),P(x0,y1,z1)],top,edge,0.6);
+}
+const quadX=(x,y0,y1,z0,z1,fill,stroke,lw)=>poly([P(x,y0,z0),P(x,y1,z0),P(x,y1,z1),P(x,y0,z1)],fill,stroke,lw);
+const quadZ=(x0,y0,x1,y1,z,fill,stroke,lw)=>poly([P(x0,y0,z),P(x1,y0,z),P(x1,y1,z),P(x0,y1,z)],fill,stroke,lw);
+function seg3(a,b,col,w){ const p=P(...a), q=P(...b); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+const STEEL=["#4a5560","#3d4750","#323a42","#1e252b"];
+function drawTable(){
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH);
+  ctx.fillStyle=vgrad(0,OY-40,[[0,"#353a42"],[1,"#2c3037"]]); ctx.fillRect(0,0,LW,LH);
+  poly([P(TBL.x0,TBL.y0,0),P(TBL.x1,TBL.y0,0),P(TBL.x1,TBL.y1,0),P(TBL.x0,TBL.y1,0)],"#d8d6c9","#a9a593",1);
+  ctx.strokeStyle="rgba(0,0,0,.04)"; ctx.lineWidth=1; for(let x=-600;x<=400;x+=50){ seg3([x,TBL.y0,0],[x,TBL.y1,0],"rgba(0,0,0,.05)",1); }
+}
+function drawStand(){
+  if(!has("stand")){ ctx.save(); ctx.setLineDash([6,5]); quadZ(SCR()-30,YS-6,250,YS+6,0,null,"#8f8a78",1.2); ctx.restore(); return; }
+  const xs=SCR();
+  /* the base: a long bar and a cross foot under the screen board */
+  abox(xs-40,-120,0,xs-14,80,14,...STEEL);
+  abox(xs-14,YS-6,0,250,YS+6,14,...STEEL);
+  abox(225,-120,0,250,40,12,...STEEL);
+  /* the right post and the top rail */
+  abox(228,YS-6,14,244,YS+6,160,...STEEL);
+  abox(xs-14,YS-6,146,244,YS+6,160,...STEEL);
+  /* the vertical screen board, its face at x = −L0 */
+  abox(xs-14,-74,14,xs,74,548,"#5c6670","#4c555e","#e9edf0","#2a3036");
+  quadX(xs+0.01,-72,72,16,546,"#dde3e8","#9aa5ae",0.8);
+}
+function drawPaper(){
+  if(!has("screen")) return; const xs=SCR()+0.4, z0=PAPER_Z0+TRUE.paperY0;
+  quadX(xs,-PAPER_W/2,PAPER_W/2,z0-6,z0+PAPER_H+6,"#f7f5ea","#bdb69c",0.8);
+  for(let k=0;k<=PAPER_H;k+=10) seg3([xs,-PAPER_W/2,z0+k],[xs,PAPER_W/2,z0+k],k%50?"rgba(120,150,110,.35)":"rgba(90,120,80,.7)",0.8);
+  for(let k=-PAPER_W/2;k<=PAPER_W/2;k+=10) seg3([xs,k,z0],[xs,k,z0+PAPER_H],"rgba(120,150,110,.35)",0.8);
+  for(const [yy,zz] of [[-PAPER_W/2,z0+PAPER_H+2],[PAPER_W/2,z0+PAPER_H+2],[-PAPER_W/2,z0-2],[PAPER_W/2,z0-2]]){ const c=P(xs,yy,zz); circ(c[0],c[1],4,"#26292d","#000",0.6); }
+}
+function drawPlate(){
+  if(!has("plate")) return;
+  abox(PLATE.x0,PLATE.y0,0,PLATE.x1,PLATE.y1,Z_PLATE,"#f3f1ea","#dcd9cf","#cfccc1","#b3ae9f");
+  seg3([0,PLATE.y0+1,Z_PLATE+0.05],[0,PLATE.y1-1,Z_PLATE+0.05],"#111",1.6);
+  const q=P(0,PLATE.y1+10,0); text("12",q[0],q[1],"#6b6658",10,"center","700");
+}
+function trayRect(t,v){ const hx=TRAY_IN[0]/2+3, hy=TRAY_IN[1]/2+3; return [t-hx,v-hy,t+hx,v+hy]; }
+function drawWTray(tt,tv,ghost){
+  const [x0,y0,x1,y1]=trayRect(tt,tv), zw=zWater();
+  /* inside: far wall, floor, water, magnet seen through the water */
+  quadZ(x0+3,y0+3,x1-3,y1-3,Z_FLOOR,"#1c1f22");
+  poly([P(x0+3,y0+3,Z_FLOOR),P(x1-3,y0+3,Z_FLOOR),P(x1-3,y0+3,Z_RIM),P(x0+3,y0+3,Z_RIM)],"#2c3035");
+  poly([P(x0+3,y0+3,Z_FLOOR),P(x0+3,y1-3,Z_FLOOR),P(x0+3,y1-3,Z_RIM),P(x0+3,y0+3,Z_RIM)],"#25292d");
+  if(has("tray")||ghost){ const mr=TRUE.R*1e3, c=P(tt,tv,Z_MAG());
+    ell(c[0],c[1],mr*SC,mr*SC*KY,"#101214","#3a3f44",1);
+    quadZ(x0+3,y0+3,x1-3,y1-3,zw,"rgba(120,170,205,.35)","rgba(190,225,245,.6)",0.8); }
+  /* near walls and the rim */
+  poly([P(x0,y1,Z_PLATE),P(x1,y1,Z_PLATE),P(x1,y1,Z_RIM),P(x0,y1,Z_RIM)],"#232629","#0b0c0d",0.8);
+  poly([P(x1,y0,Z_PLATE),P(x1,y1,Z_PLATE),P(x1,y1,Z_RIM),P(x1,y0,Z_RIM)],"#1b1d20","#0b0c0d",0.8);
+  poly([P(x0,y0,Z_RIM),P(x1,y0,Z_RIM),P(x1,y1,Z_RIM),P(x0,y1,Z_RIM)],null,"#3a3e43",1);
+  for(const [a,b] of [[[x0,y0],[x1,y0]],[[x0,y0],[x0,y1]]]) seg3([...a,Z_RIM],[...b,Z_RIM],"#3a3e43",2.4);
+  const q=P(x0+8,y1,Z_RIM-8); text("5",q[0],q[1],"#8b949b",10,"left","700");
+}
+function drawCaliper(){
+  if(!has("caliper")) return; const lo=TRUE.calZero;
+  /* two brackets from the rail, the stainless bar, the scale */
+  for(const bx of [60,236]) abox(bx-6,YS+6,150,bx+6,-16,158,...STEEL);
+  abox(40,-16,152,lo+190,-8,170,"#cfd6dc","#b9c1c8","#9fa8b0","#6e777f");
+  for(let k=0;k<=150;k+=10){ const x=lo+k; seg3([x,-8,170],[x,-8,k%50?165:162],"#3a4048",0.8); }
+  /* the slider with its display, the jaw coming forward and down to the laser */
+  const xc=ST.carriage;
+  abox(xc-30,-18,148,xc+34,-4,176,"#2c3238","#252a30","#1b1f23","#0d0f11");
+  const s=P(xc-24,-4,172), e=P(xc+18,-4,160); fillR(s[0],s[1],e[0]-s[0],e[1]-s[1],2,ST.calOn?"#b9c9a8":"#8d9483","#111",0.6);
+  if(ST.calOn) text(calText(),(s[0]+e[0])/2,(s[1]+e[1])/2,"#1a2418",9.5,"center","700",MONO);
+  abox(xc-6,-4,140,xc+6,6,152,"#6e777f","#5c656d","#4a525a","#2a3036");
+}
+function drawLaser(){
+  if(!has("laser")) return; const xc=ST.carriage, z=TRUE.zRail, ca=Math.cos(TRUE.alpha), sa=Math.sin(TRUE.alpha), Lz=70;
+  const a=P(xc,0,z), b=P(xc+Lz*ca,0,z+Lz*sa);
+  ctx.lineCap="round"; ctx.strokeStyle="#0e1012"; ctx.lineWidth=13*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  ctx.strokeStyle="#3a4047"; ctx.lineWidth=9*SC; ctx.stroke(); ctx.strokeStyle="rgba(255,255,255,.18)"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(a[0],a[1]-4); ctx.lineTo(b[0],b[1]-4); ctx.stroke(); ctx.lineCap="butt";
+  circ(a[0],a[1],3,laserOn()?"#ff4a3a":"#5a2a26");
+  if(ST.tube){ const m0=P(xc+22*ca,0,z+22*sa), m1=P(xc+48*ca,0,z+48*sa);
+    ctx.lineCap="round"; ctx.strokeStyle="#f4f4ef"; ctx.lineWidth=17*SC; ctx.beginPath(); ctx.moveTo(m0[0],m0[1]); ctx.lineTo(m1[0],m1[1]); ctx.stroke(); ctx.strokeStyle="#d9d9d2"; ctx.lineWidth=1; ctx.stroke(); ctx.lineCap="butt"; }
+  const q=P(xc+Lz*ca+8,0,z+Lz*sa); text("4",q[0],q[1],"#9aa3ab",10,"left","700");
+}
+function drawBeam(){
+  if(!laserOn()||!has("caliper")) return; const xc=ST.carriage, z=TRUE.zRail, ta=Math.tan(TRUE.alpha), tr=trace(xc);
+  const line=(pts,glow)=>{ ctx.save(); ctx.lineCap="round"; ctx.strokeStyle="rgba(255,40,40,.18)"; ctx.lineWidth=glow||5; ctx.beginPath(); pts.forEach((p,i)=>{ const q=P(...p); i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]); }); ctx.stroke(); ctx.strokeStyle="#ff3b2c"; ctx.lineWidth=1.3; ctx.stroke(); ctx.restore(); };
+  const src=[xc,0,z];
+  if(!has("tray")){ const zt=has("plate")?Z_PLATE:0; line([src,[xc-(z-zt)/ta,0,zt]]); return; }
+  const [tx0,,tx1]=trayRect(ST.trayT,ST.trayV), zw=tr.zw||zWater();
+  if(tr.reason==="wall_in"){ const xw=tx1, zz=z-(xc-xw)*ta; line([src,[xw,0,Math.max(Z_PLATE,zz)]]); return; }
+  if(tr.reason==="dry"){ const zt=Math.abs(tr.u)>TRAY_IN[0]/2+3?Z_PLATE:Z_FLOOR; line([src,[xc-(z-zt)/ta,0,zt]]); return; }
+  const hit=[tr.xHit,0,zw+(tr.eta||0)];
+  if(tr.reason==="broken"){ line([src,hit]); return; }
+  if(tr.reason==="wall_out"){ const ang=TRUE.alpha; line([src,hit,[tx0,0,hit[2]+(hit[0]-tx0)*Math.tan(ang)]]); return; }
+  if(!tr.ok){ line([src,hit]); return; }
+  const scr=[SCR()+0.5,0,tr.zSpot]; line([src,hit,scr]);
+  const sp=spot(); if(sp){ const c=P(...scr); circ(c[0],c[1],ST.dust?5:3.5,"rgba(255,70,60,.95)","#ffd0cc",0.8); }
+}
+/* the cup of water and the syringe lie loose on the table */
+const FOOT={cup:[26,26],syringe:[42,9],tube:[26,9]};
+const LOOSE=["cup","syringe"];
+function drawLoose(k){
+  const {x,y}=ST.pos[k];
+  if(k==="cup"){ const r=26; vcyl(x,y,0,52,r,"rgba(225,236,242,.85)","rgba(170,210,235,.9)","#9fb0bb"); const w=P(x,y,30); ell(w[0],w[1],r*SC*0.95,r*SC*KY*0.95,"rgba(120,180,220,.55)"); }
+  else if(k==="syringe"){ abox(x-36,y-7,0,x+24,y+7,14,"rgba(235,242,246,.92)","rgba(215,228,236,.92)","rgba(195,210,220,.9)","#8fa3b0"); abox(x+24,y-3,4,x+44,y+3,10,"#3fa66a","#2f8a55","#257045","#1c5534"); seg3([x-36,y,7],[x-48,y,7],"#9fb0bb",2); }
+}
+function drawBench(){
+  drawTable(); drawStand(); drawPaper(); drawPlate();
+  const mvTray=hand&&hand.move&&hand.item==="tray";
+  if(has("tray")&&!mvTray) drawWTray(ST.trayT,ST.trayV,false);
+  const list=LOOSE.filter(k=>has(k)&&ST.pos[k]).sort((a,b)=>ST.pos[a].y-ST.pos[b].y); for(const k of list) drawLoose(k);
+  if(has("tube")&&!ST.tube&&ST.pos.tube){ const {x,y}=ST.pos.tube; hcyl([x-24,y],[x+24,y],8,8,"#f4f4ef","#ffffff"); }
+  drawBeam(); drawCaliper(); drawLaser();
+  drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return;
+  text(itemName(hand.item),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700");
+  if(hand.item==="tray"&&has("plate")){ const [x,y]=unP(mouse[0],mouse[1],Z_PLATE); const t=Math.max(-40,Math.min(40,x)), v=hand.move?y:ST.trayV0;
+    ctx.save(); ctx.globalAlpha=trayFits(t,v)?0.85:0.4; drawWTray(t,trayFitsV(v),true); ctx.restore(); return; }
+  if(LOOSE.includes(hand.item)||hand.item==="tube"&&!hand.onLaser){ const [x,y]=unP(mouse[0],mouse[1],0), f=footOf(hand.item,x,y); if(!f) return;
+    ctx.save(); ctx.setLineDash([5,4]); quadZ(f[0],f[1],f[2],f[3],0,null,fits(hand.item,x,y)?"#f2c14e":"#e0605a",1.6); ctx.restore(); }
+}
+const trayFitsV=v=>Math.max(-12,Math.min(12,v));
+const trayFits=(t,v)=>Math.abs(t)<=40;
+function footOf(k,x,y){ const h=FOOT[k]; if(!h) return null; return [x-h[0],y-h[1],x+h[0],y+h[1]]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y){ const f=footOf(k,x,y); if(!f) return false;
+  if(f[0]<TBL.x0+5||f[2]>TBL.x1-5||f[1]<TBL.y0+5||f[3]>TBL.y1-5) return false;
+  if(has("stand")&&(overl(f,[SCR()-40,-120,SCR(),80],2)||overl(f,[SCR()-14,YS-6,250,YS+6],2)||overl(f,[225,-120,250,40],2))) return false;
+  if(has("plate")&&overl(f,[PLATE.x0,PLATE.y0,PLATE.x1,PLATE.y1],2)) return false;
+  for(const o of [...LOOSE,"tube"]){ if(o===k||!has(o)||!ST.pos[o]||(o==="tube"&&ST.tube)) continue; if(overl(f,footOf(o,ST.pos[o].x,ST.pos[o].y),3)) return false; }
+  return true; }
+function box3(x0,y0,z0,x1,y1,z1){ const pts=[]; for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) pts.push(P(x,y,z));
+  return [Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))]; }
+function bbox(k){ if(!has(k)) return null; const xs=SCR(), xc=ST.carriage;
+  if(k==="stand") return box3(xs-40,-120,0,250,80,548);
+  if(k==="screen") return box3(xs,-PAPER_W/2,PAPER_Z0-8,xs+1,PAPER_W/2,PAPER_Z0+PAPER_H+8);
+  if(k==="plate") return box3(PLATE.x0,PLATE.y0,0,PLATE.x1,PLATE.y1,Z_PLATE);
+  if(k==="tray"){ const r=trayRect(ST.trayT,ST.trayV); return box3(r[0],r[1],Z_PLATE,r[2],r[3],Z_RIM); }
+  if(k==="caliper") return box3(40,-18,140,TRUE.calZero+190,6,176);
+  if(k==="laser"){ const ca=Math.cos(TRUE.alpha), sa=Math.sin(TRUE.alpha); return box3(xc-6,-6,TRUE.zRail-6,xc+70*ca+6,6,TRUE.zRail+70*sa+6); }
+  if(k==="tube"){ if(ST.tube){ const ca=Math.cos(TRUE.alpha), sa=Math.sin(TRUE.alpha); return box3(xc+20*ca-8,-8,TRUE.zRail+20*sa-8,xc+50*ca+8,8,TRUE.zRail+50*sa+8); }
+    const p=ST.pos.tube; return p?box3(p.x-26,p.y-9,0,p.x+26,p.y+9,16):null; }
+  const p=ST.pos[k]; if(!p) return null; const f=footOf(k,p.x,p.y); return box3(f[0],f[1],0,f[2],f[3],k==="cup"?52:14); }
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=ITEMS, TROW=40;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="top", HIT=[];
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+function icon(c,k){
+  const old=ctx; ctx=c; ctx.save(); ctx.scale(0.8,0.8);
+  if(k==="stand"){ fillR(-18,10,36,4,0,"#4a5560"); fillR(-18,-14,4,26,0,"#4a5560"); fillR(12,-2,4,14,0,"#4a5560"); fillR(-16,-3,32,3,0,"#4a5560"); fillR(-15,-12,2,14,0,"#dde3e8"); }
+  else if(k==="plate"){ fillR(-18,-8,36,16,1,"#f3f1ea","#b3ae9f"); fillR(-0.8,-8,1.6,16,0,"#111"); }
+  else if(k==="tray"){ fillR(-17,-9,34,18,2,"#232629","#0b0c0d"); fillR(-14,-6,28,12,1,"#5f8fb3"); circ(0,0,5,"#101214","#3a3f44"); }
+  else if(k==="caliper"){ fillR(-19,-3,38,5,0,"#cfd6dc","#6e777f"); fillR(-6,-8,14,14,2,"#2c3238"); fillR(-4,-6,10,5,1,"#b9c9a8"); }
+  else if(k==="laser"){ ctx.save(); ctx.rotate(-0.6); fillR(-16,-3.5,30,7,3,"#3a4047","#0e1012"); circ(-16,0,1.8,"#e84a4a"); ctx.restore(); }
+  else if(k==="tube"){ ctx.fillStyle="#f4f4ef"; ctx.beginPath(); ctx.moveTo(-14,-4); ctx.lineTo(14,-7); ctx.lineTo(14,7); ctx.lineTo(-14,4); ctx.closePath(); ctx.fill(); ctx.strokeStyle="#bbb"; ctx.stroke(); }
+  else if(k==="screen"){ fillR(-10,-14,20,28,0,"#f7f5ea","#bdb69c"); for(let i=1;i<4;i++){ fillR(-10,-14+i*7,20,0.6,0,"#9ab08c"); fillR(-10+i*5,-14,0.6,28,0,"#9ab08c"); } for(const [x,y] of [[-10,-14],[10,-14],[-10,14],[10,14]]) circ(x,y,2,"#26292d"); }
+  else if(k==="cup"){ fillR(-10,-12,20,24,3,"#e1ecf2","#9fb0bb"); fillR(-9,-2,18,13,2,"#9ed0ef"); }
+  else if(k==="syringe"){ fillR(-16,-4,24,8,1,"#ebf2f6","#8fa3b0"); fillR(8,-2,8,4,0,"#3fa66a"); fillR(-20,-1,4,2,0,"#9fb0bb"); }
+  ctx.restore(); ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+64;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(340,CLW*0.5));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  SV.z=0; drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(26,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm]; if(c.measureText(nm).width>wd-50){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.6)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,48,y+(parts.length>1?11+i*13:13)));
+    if(parts.length<2){ c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,48,y+28); }
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["top","cal","paper","refl"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+
+/* ── 1. the support plate from above (x to the right, y towards you = down) ── */
+function topMap(){ const z=Math.min((CLW-30)/280,(CLH-30)/150), cx=CLW/2-20*z, cy=CLH/2; return {z,X:x=>cx+x*z,Y:y=>cy+y*z,U:p=>(p-cx)/z,V:p=>(p-cy)/z}; }
+function drawTopView(){
+  const t=d(); if(!has("plate")){ text(t.lab.noTop,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=topMap(), z=m.z;
+  ctx.fillStyle="#d8d6c9"; ctx.fillRect(0,0,CLW,CLH);
+  fillR(m.X(PLATE.x0),m.Y(PLATE.y0),(PLATE.x1-PLATE.x0)*z,(PLATE.y1-PLATE.y0)*z,2,"#f3f1ea","#b3ae9f",1);
+  ctx.fillStyle="#111"; ctx.fillRect(m.X(0)-1.2,m.Y(PLATE.y0)+2,2.4,(PLATE.y1-PLATE.y0)*z-4);
+  text(t.lab.line,m.X(0)+6,m.Y(PLATE.y1)-10,"#6b6658",10.5,"left","600");
+  if(has("stand")){ ctx.fillStyle="#4a5560"; ctx.fillRect(0,m.Y(YS-6),CLW,12*z); }
+  const tr=laserOn()?trace(ST.carriage):null;
+  if(has("tray")){ const [x0,y0,x1,y1]=trayRect(ST.trayT,ST.trayV);
+    fillR(m.X(x0),m.Y(y0),(x1-x0)*z,(y1-y0)*z,3,"#232629","#0b0c0d",1.2);
+    ctx.fillStyle="#3f6f92"; ctx.fillRect(m.X(x0+3),m.Y(y0+3),(x1-x0-6)*z,(y1-y0-6)*z);
+    const mr=TRUE.R*1e3; circ(m.X(ST.trayT),m.Y(ST.trayV),mr*z,"rgba(12,14,16,.82)","rgba(20,30,40,.9)",1);
+    /* a faint shimmer of the surface */
+    ctx.strokeStyle="rgba(200,230,250,.18)"; ctx.lineWidth=1; for(let k=1;k<6;k++){ ctx.beginPath(); ctx.ellipse(m.X(ST.trayT),m.Y(ST.trayV),(mr+k*5)*z,(mr+k*5)*z,0,0,7); ctx.stroke(); }
+    text("5",m.X(x0)+8,m.Y(y0)+10,"#8b949b",10,"left","700"); }
+  if(has("laser")){ /* the laser seen from above, along the beam plane y = 0 */
+    const xc=ST.carriage; ctx.strokeStyle="#3a4047"; ctx.lineWidth=10*z*0.35+4; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(m.X(xc),m.Y(0)); ctx.lineTo(m.X(xc+70*Math.cos(TRUE.alpha)),m.Y(0)); ctx.stroke(); ctx.lineCap="butt"; }
+  if(tr){ ctx.save(); ctx.strokeStyle="rgba(255,40,40,.75)"; ctx.lineWidth=1.6; ctx.setLineDash([6,4]); ctx.beginPath(); ctx.moveTo(m.X(ST.carriage),m.Y(0)); ctx.lineTo(0,m.Y(0)); ctx.stroke(); ctx.restore();
+    if(tr.xHit!==undefined&&tr.reason!=="wall_in"){ const g=ctx.createRadialGradient(m.X(tr.xHit),m.Y(0),0,m.X(tr.xHit),m.Y(0),9); g.addColorStop(0,"rgba(255,240,240,1)"); g.addColorStop(0.3,"rgba(255,60,50,.9)"); g.addColorStop(1,"rgba(255,40,40,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(m.X(tr.xHit),m.Y(0),9,0,7); ctx.fill(); }
+    text(t.lab.beam,8,m.Y(0)-10,"#c22",10.5,"left","600"); }
+}
+
+/* ── 2. the caliper and the laser ── */
+function calMap(){ const lo=TRUE.calZero, x0=lo-40, x1=lo+200, z=(CLW-30)/(x1-x0); return {z,X:x=>15+(x-x0)*z,U:p=>x0+(p-15)/z}; }
+function drawCalView(){
+  const t=d(); if(!has("caliper")){ text(t.lab.noCal,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=calMap(), z=m.z, lo=TRUE.calZero, by=CLH*0.22, bh=CLH*0.12;
+  ctx.fillStyle="#2a2e34"; ctx.fillRect(0,0,CLW,CLH);
+  /* the stainless bar with its scale */
+  ctx.fillStyle=vgrad(by,bh,[[0,"#e6ebef"],[0.5,"#c8d0d6"],[1,"#aab3ba"]]); ctx.fillRect(m.X(lo-30),by,(220)*z,bh);
+  for(let k=0;k<=170;k++){ const x=m.X(lo+k), L=k%10===0?bh*0.45:k%5===0?bh*0.32:bh*0.2; ctx.strokeStyle="#2a3036"; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(x,by); ctx.lineTo(x,by+L); ctx.stroke(); if(k%10===0) text(String(k/10),x,by+bh*0.72,"#2a3036",9.5,"center","600"); }
+  /* the slider */
+  const xc=ST.carriage, sx=m.X(xc), sw=Math.max(150,64*z), sh=CLH*0.36, sy=by-sh*0.25;
+  fillR(sx-sw*0.47,sy,sw,sh,8,vgrad(sy,sh,[[0,"#3a4148"],[1,"#22272c"]]),"#0d0f11",1.5);
+  const lx=sx-sw*0.4, ly=sy+sh*0.12, lw=sw*0.62, lh=sh*0.34;
+  fillR(lx,ly,lw,lh,4,ST.calOn?"#b9c9a8":"#8d9483","#111",1);
+  if(ST.calOn){ const s=calText(); text(s.replace(/ (mm|in)$/,""),lx+lw-34,ly+lh/2+1,"#16211a",Math.min(30,lh*0.62),"right","700",MONO); text(ST.inch?"in":"mm",lx+lw-6,ly+lh/2,"#16211a",11,"right","700"); }
+  const btn=(k,x,y,w,h,lab,col)=>{ fillR(x,y,w,h,h/2,col,"#0b0c0d",1); text(lab,x+w/2,y-8,"#cfd6dc",9.5,"center","700"); hitAdd(k,x,y,w,h); };
+  const bY=ly+lh+sh*0.16, bW=sw*0.17, bH=sh*0.14;
+  btn("onoff",lx,bY,bW,bH,"OFF/ON [8]","#9b2a24"); btn("unit",lx+bW*1.35,bY,bW,bH,"mm/inch [10]","#2d6fb0"); btn("origin",lx+bW*2.7,bY,bW,bH,"ORIGIN [9]","#d6862a");
+  text("[3]",sx+sw*0.44,sy+12,"#9aa3ab",10,"right","700");
+  /* the laser hanging from the jaw, at the beam angle */
+  const ca=Math.cos(TRUE.alpha), sa=Math.sin(TRUE.alpha), jx=sx+sw*0.36, jy=sy+sh, Lp=Math.min(200,CLH*0.55);
+  fillR(jx-10,jy-4,20,CLH*0.12,2,"#5c656d","#2a3036");
+  const ex=jx, ey=jy+CLH*0.12, tx=ex+Lp*ca, ty=ey-Lp*sa*0.25+Lp*0.0;
+  const lx2=ex-Lp*ca*0.9, ly2=ey+Lp*sa*0.9;
+  ctx.lineCap="round"; ctx.strokeStyle="#0e1012"; ctx.lineWidth=26; ctx.beginPath(); ctx.moveTo(ex+Lp*ca*0.15,ey-Lp*sa*0.15); ctx.lineTo(lx2,ly2); ctx.stroke();
+  ctx.strokeStyle="#3a4047"; ctx.lineWidth=20; ctx.stroke(); ctx.lineCap="butt";
+  circ(lx2-4*ca,ly2+4*sa,4.5,laserOn()?"#ff4a3a":"#5a2a26");
+  if(laserOn()){ ctx.strokeStyle="rgba(255,50,40,.8)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(lx2,ly2); ctx.lineTo(lx2-CLH*ca,ly2+CLH*sa); ctx.stroke(); }
+  if(ST.tube){ const mx=ex-Lp*ca*0.35, my=ey+Lp*sa*0.35; ctx.save(); ctx.translate(mx,my); ctx.rotate(-TRUE.alpha); ctx.fillStyle="#f4f4ef"; ctx.beginPath(); ctx.moveTo(-34,-15); ctx.lineTo(30,-19); ctx.lineTo(30,19); ctx.lineTo(-34,15); ctx.closePath(); ctx.fill(); ctx.strokeStyle="#c9c9c0"; ctx.stroke(); ctx.restore(); text("13",mx,my-30,"#cfd6dc",10,"center","700"); }
+  text("4",lx2-18,ly2-8,"#9aa3ab",10,"center","700");
+  hitAdd("slider",sx-sw*0.47,sy,sw,sh);
+}
+
+/* ── 3. the graph paper (mm; y measured up from the paper's lower edge) ── */
+const SV={z:0,cx:0,cy:90};
+function svMap(){ if(!SV.z) SV.z=Math.min((CLW-20)/130,(CLH-20)/190); const z=SV.z; return {z,X:x=>CLW/2+(x-SV.cx)*z,Y:y=>CLH/2-(y-SV.cy)*z,U:px=>SV.cx+(px-CLW/2)/z,V:py=>SV.cy-(py-CLH/2)/z}; }
+function drawPaperView(){
+  const t=d(); if(!has("screen")||!has("stand")){ text(t.lab.noPaper,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=svMap(), z=m.z;
+  ctx.fillStyle="#dde3e8"; ctx.fillRect(0,0,CLW,CLH);
+  const x0=m.X(-PAPER_W/2), x1=m.X(PAPER_W/2), y0=m.Y(PAPER_H+6), y1=m.Y(-6);
+  ctx.fillStyle="#f7f5ea"; ctx.fillRect(x0,y0,x1-x0,y1-y0); ctx.strokeStyle="#bdb69c"; ctx.strokeRect(x0,y0,x1-x0,y1-y0);
+  const yb=m.Y(0), yt=m.Y(PAPER_H);
+  const minor="#c8d6bd", half="#a9be9a", major="#6f8f5f";
+  for(let k=-PAPER_W/2;k<=PAPER_W/2;k++){ if(z<2.2&&k%5) continue; const px=m.X(k); if(px<-2||px>CLW+2) continue; ctx.strokeStyle=k%10===0?major:k%5===0?half:minor; ctx.lineWidth=k%10===0?1.2:0.6; ctx.beginPath(); ctx.moveTo(px,yt); ctx.lineTo(px,yb); ctx.stroke(); }
+  for(let k=0;k<=PAPER_H;k++){ if(z<2.2&&k%5) continue; const py=m.Y(k); if(py<-2||py>CLH+2) continue; ctx.strokeStyle=k%10===0?major:k%5===0?half:minor; ctx.lineWidth=k%10===0?1.2:0.6; ctx.beginPath(); ctx.moveTo(x0,py); ctx.lineTo(x1,py); ctx.stroke();
+    if(k%10===0){ const fs=Math.max(9,Math.min(13,z*3)); if(x0>30) text(String(k),x0-4,py,"#5a6a52",fs,"right","600"); else { const lx=Math.max(x0+3,6); fillR(lx-1,py-fs*0.6-1,fs*1.9,fs*1.2,2,"rgba(247,245,234,.92)"); text(String(k),lx,py-fs*0.05,"#3f5537",fs,"left","700"); }
+      if(x1<CLW-30) text(String(k),x1+4,py,"#5a6a52",fs,"left","600"); } }
+  for(const [u,v] of [[-PAPER_W/2,PAPER_H+3],[PAPER_W/2,PAPER_H+3],[-PAPER_W/2,-3],[PAPER_W/2,-3]]) circ(m.X(u),m.Y(v),Math.max(5,6*z),"#26292d","#000",1);
+  const sp=spot();
+  if(sp){ const cx=m.X(0), cy=m.Y(sp.y), rx=sp.wid/2*z, ry=sp.hgt/2*z;
+    for(const [f,a] of [[2.0,0.14],[1.45,0.32],[1.0,0.7],[0.62,0.95],[0.3,0.95]]){ ctx.fillStyle=f<0.5?"rgba(255,225,220,"+a+")":"rgba(240,30,30,"+a+")"; ctx.beginPath(); ctx.ellipse(cx,cy,Math.max(3*f,rx*f),Math.max(3*f,ry*f),0,0,7); ctx.fill(); }
+    if(ST.dust) text(t.lab.smear,CLW/2,CLH-14,"#8a5a00",11,"center","600"); }
+  else if(laserOn()&&assembled()){ const tr=trace(ST.carriage); text(tr.reason==="wall_in"||tr.reason==="wall_out"?t.lab.wall:tr.reason==="broken"?t.lab.broken:tr.reason==="dry"?t.lab.dry:t.lab.spotOff,CLW/2,16,"#b3372f",12,"center","600"); }
+}
+
+/* ── 4. the water surface seen from above: the straight edge of a sheet reflected in it ── */
+function reflMap(){ const z=Math.min((CLW-20)/140,(CLH-20)/100); return {z,X:u=>CLW/2+u*z,Y:v=>CLH/2+v*z,V:p=>(p-CLH/2)/z}; }
+function drawReflView(){
+  const t=d(); if(!has("tray")){ text(t.lab.noRefl,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=reflMap(), z=m.z, S=surface(), K=300;             /* the sheet is held ~15 cm above the water */
+  ctx.fillStyle="#1d2a33"; ctx.fillRect(0,0,CLW,CLH);
+  ctx.fillStyle="#2b4b62"; ctx.fillRect(m.X(-65),m.Y(-50),130*z,100*z);
+  circ(m.X(0),m.Y(0),TRUE.R*1e3*z,"rgba(10,12,14,.55)");
+  /* the bright image of the sheet: everything on the sheet's side of the edge's mirror image */
+  ctx.beginPath(); ctx.moveTo(m.X(-65),m.Y(-50));
+  const pts=[]; for(let i=0;i<=260;i++){ const u=-65+130*i/260, v=ST.edgeV, [,de]=etaAt(S,Math.hypot(u,v)*1e-3), sl=Math.hypot(u,v)>1e-6?de*(v/Math.hypot(u,v)):0;
+    pts.push([u,Math.max(-50,Math.min(50,v+K*sl))]); }
+  for(const [u,v] of pts) ctx.lineTo(m.X(u),m.Y(v)); ctx.lineTo(m.X(65),m.Y(-50)); ctx.closePath();
+  ctx.fillStyle="rgba(236,240,232,.88)"; ctx.fill();
+  ctx.strokeStyle="#1a1a1a"; ctx.lineWidth=1.4; ctx.beginPath(); pts.forEach(([u,v],i)=>i?ctx.lineTo(m.X(u),m.Y(v)):ctx.moveTo(m.X(u),m.Y(v))); ctx.stroke();
+  ctx.strokeStyle="#0b0c0d"; ctx.lineWidth=6; ctx.strokeRect(m.X(-65)-3,m.Y(-50)-3,130*z+6,100*z+6);
+  text(t.lab.edge+" ↕",m.X(-62),m.Y(Math.max(-46,ST.edgeV-6)),"#33414d",11,"left","700");
+  hitAdd("edge",0,0,CLW,CLH);
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="top") drawTopView(); else if(tab==="cal") drawCalView(); else if(tab==="paper") drawPaperView(); else drawReflView();
+  ctx=old;
+}
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: putting things down, moving them, putting them back
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inB=(p,b,m)=>b&&p[0]>=b[0]-(m||0)&&p[0]<=b[2]+(m||0)&&p[1]>=b[1]-(m||0)&&p[1]<=b[3]+(m||0);
+function onTable(p){ const [x,y]=unP(p[0],p[1],0); return x>TBL.x0&&x<TBL.x1&&y>TBL.y0&&y<TBL.y1; }
+function place(k,p){
+  const need=NEEDS[k]; if(need&&!has(need)){ say("need",itemName(k),itemName(need)); return false; }
+  if(k==="tray"){ const [x,y]=unP(p[0],p[1],Z_PLATE); if(Math.abs(x)>90||Math.abs(y)>80){ say("noFit"); return false; }
+    ST.trayT=Math.max(-40,Math.min(40,x)); ST.trayV=hand.move?trayFitsV(y):ST.trayV0; if(!hand.move&&Math.abs(ST.trayT)<4) ST.trayT=ST.trayT0; ST.on.add(k); return true; }
+  if(k==="tube"){ if(has("laser")&&inB(p,bbox("laser"),14)){ ST.tube=true; ST.on.add(k); say("tube"); return "said"; }
+    const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y)){ say(has("laser")?"onLaser":"noFit"); return false; } ST.pos[k]={x,y}; ST.tube=false; ST.on.add(k); return true; }
+  if(LOOSE.includes(k)){ const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y)){ say("noFit"); return false; } ST.pos[k]={x,y}; ST.on.add(k); return true; }
+  if(!onTable(p)&&!(has("stand")&&inB(p,bbox("stand"),0))){ say("noFit"); return false; }
+  ST.on.add(k); return true;
+}
+function returnItem(k,quiet){
+  if(k==="stand") for(const j of ["plate","caliper","screen"]) if(has(j)) returnItem(j,true);
+  if(k==="plate"&&has("tray")) returnItem("tray",true);
+  if(k==="caliper"&&has("laser")) returnItem("laser",true);
+  if(k==="laser"&&ST.tube){ ST.tube=false; ST.on.delete("tube"); }
+  if(k==="tube") ST.tube=false;
+  if(k==="caliper"){ ST.offset=0; }
+  ST.on.delete(k); if(!quiet) say("back",itemName(k));
+}
+const PICK=["tube","laser","caliper","cup","syringe","tray","screen","plate","stand"];
+function itemAt(p){ for(const k of PICK) if(has(k)&&inB(p,bbox(k),3)) return k; return null; }
+function benchClick(p,right){
+  if(hand){ if(right){ if(hand.move){ ST.on.add(hand.item); if(hand.item==="tube"&&hand.was) ST.tube=true; say("placed",itemName(hand.item)); } else say("back",itemName(hand.item)); hand=null; return; }
+    const r=place(hand.item,p); if(r){ if(r===true) say("placed",itemName(hand.item)); hand=null; } return; }
+  const k=itemAt(p); if(!k) return;
+  if(right){ returnItem(k); return; }
+  if(k==="tray"||LOOSE.includes(k)||k==="tube"){ const was=k==="tube"&&ST.tube; ST.on.delete(k); if(k==="tube") ST.tube=false; hand={item:k,move:true,was}; say("picked",itemName(k)); }
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("wheel",e=>{ const p=lpos(e); if(!has("caliper")||!(inB(p,bbox("caliper"),6)||inB(p,bbox("laser"),6))) return; e.preventDefault(); moveCar((e.deltaY<0?1:-1)*(e.shiftKey?0.01:0.1)); },{passive:false});
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ if(hand.move){ ST.on.add(hand.item); if(hand.item==="tube"&&hand.was) ST.tube=true; } hand=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=hand&&hand.item===k; hand=null;
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+function moveCar(dx){ if(!has("caliper")) return; setCarriage(+(ST.carriage+dx).toFixed(4)); }
+
+/* the close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let cdrag=null;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e); if(e.button!==0) return;
+  if(tab==="top"&&has("tray")){ const m=topMap(), x=m.U(p[0]), y=m.V(p[1]), r=trayRect(ST.trayT,ST.trayV);
+    if(x>=r[0]&&x<=r[2]&&y>=r[1]&&y<=r[3]){ cdrag={tray:true,x,y,t:ST.trayT,v:ST.trayV}; closeCv.setPointerCapture(e.pointerId); } return; }
+  if(tab==="paper"){ cdrag={pan:true,x:p[0],y:p[1],cx:SV.cx,cy:SV.cy}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(tab==="refl"&&has("tray")){ cdrag={edge:true}; ST.edgeV=Math.max(-48,Math.min(48,reflMap().V(p[1]))); closeCv.setPointerCapture(e.pointerId); return; }
+  const h=hitAt(p); if(!h) return;
+  if(h.k==="onoff"){ ST.calOn=!ST.calOn; return; }
+  if(h.k==="unit"){ if(!ST.calOn){ say("calOff"); return; } ST.inch=!ST.inch; say("unit"); return; }
+  if(h.k==="origin"){ if(!ST.calOn){ say("calOff"); return; } ST.offset=ST.carriage-TRUE.calZero; say("origin"); return; }
+  if(h.k==="slider"){ cdrag={slider:true,x:p[0],c:ST.carriage}; closeCv.setPointerCapture(e.pointerId); } });
+closeCv.addEventListener("pointermove",e=>{ if(!cdrag) return; const p=clpos(e);
+  if(cdrag.tray){ const m=topMap(); ST.trayT=Math.max(-40,Math.min(40,cdrag.t+m.U(p[0])-cdrag.x)); ST.trayV=trayFitsV(cdrag.v+m.V(p[1])-cdrag.y); return; }
+  if(cdrag.pan){ const m=svMap(); SV.cx=cdrag.cx-(p[0]-cdrag.x)/m.z; SV.cy=cdrag.cy+(p[1]-cdrag.y)/m.z; return; }
+  if(cdrag.edge){ ST.edgeV=Math.max(-48,Math.min(48,reflMap().V(p[1]))); return; }
+  if(cdrag.slider){ const m=calMap(); setCarriage(cdrag.c+(p[0]-cdrag.x)/m.z); } });
+closeCv.addEventListener("pointerup",()=>{ cdrag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e);
+  if(tab==="cal"){ e.preventDefault(); moveCar((e.deltaY<0?1:-1)*(e.shiftKey?0.01:0.1)); return; }
+  if(tab!=="paper") return; e.preventDefault(); const m=svMap(), mx=m.U(p[0]), my=m.V(p[1]); SV.z=Math.min(40,Math.max(1,SV.z*(e.deltaY<0?1.16:1/1.16)));
+  const m2=svMap(); SV.cx+=mx-m2.U(p[0]); SV.cy+=my-m2.V(p[1]); },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+for(const [id,dx] of [["mv-5",-5],["mv-1",-1],["mv-01",-0.1],["mv01",0.1],["mv1",1],["mv5",5]]) $(id).onclick=()=>moveCar(dx);
+$("tubeBtn").onclick=()=>{ if(ST.tube){ ST.tube=false; ST.on.delete("tube"); say("tubeOff"); return; } if(!has("laser")){ say("need",itemName("tube"),itemName("laser")); return; } ST.tube=true; ST.on.add("tube"); say("tube"); };
+function addWater(ml){ if(!has("cup")||!has("syringe")||!has("tray")){ say("needWater"); return; }
+  const dz=ml/13, top=Z_RIM-0.4-Z_MAG(); ST.depth=Math.max(0.05,Math.min(top,+(ST.depth+dz).toFixed(3))); ST.added+=ml; say("water",(ml>0?"+":"")+ml); }
+for(const [id,ml] of [["w-13",-13],["w-13b",-1.3],["w13b",1.3],["w13",13]]) $(id).onclick=()=>addWater(ml);
+$("dustBtn").onclick=()=>{ ST.dust=false; dustT=performance.now(); say("dust"); };
+for(const [id,dt,dv] of [["al-t",-0.5,0],["al+t",0.5,0],["al+v",0,-0.5],["al-v",0,0.5]]) $(id).onclick=()=>{ if(!has("tray")){ say("noTray"); return; } ST.trayT=Math.max(-40,Math.min(40,ST.trayT+dt)); ST.trayV=trayFitsV(ST.trayV+dv); say("push"); };
+$("noteBtn").onclick=()=>{ const n=$("note"), s=calText(); n.value+=(n.value&&!n.value.endsWith("\n")?"\n":"")+"x = "+(s||"—")+"    y = "; n.focus(); n.scrollTop=n.scrollHeight; say("noted"); };
+$("noteClr").onclick=()=>{ $("note").value=""; };
+function renderPanel(){ const t=d(); $("calDisp").textContent=calText()||"--------"; $("tubeBtn").textContent=ST.tube?t.tubeOn:t.tubeOff; $("waterLbl").textContent=t.water(ST.added); }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(laserOn()) L.push([t.st.laser,true]);
+  if(has("tray")&&ST.depth<0.45) L.push([t.st.low,true]);
+  if(has("tray")&&freeboard()<1.2) L.push([t.st.high,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-cal").textContent=t.hCal; $("calHint").textContent=t.calHint; $("t-h-laser").textContent=t.hLaser; $("t-h-water").textContent=t.hWater; $("dustBtn").textContent=t.dust;
+  $("t-h-align").textContent=t.hAlign; $("alignHint").textContent=t.alignHint; $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2012 E1 — 물의 자기 투자율 · HaslaLab":"IPhO 2012 E1 — The Magnetic Permeability of Water · HaslaLab";
+  renderTabs(); renderPanel(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastJ=0, dustT=performance.now(), dustNext=U(180,420)*1000;
+function tick(){
+  const now=performance.now();
+  if(now-lastJ>120){ lastJ=now; ST.jx=gauss()*TRUE.jitter; }
+  if(!ST.dust&&now-dustT>dustNext){ ST.dust=true; dustT=now; dustNext=U(240,600)*1000; }
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>

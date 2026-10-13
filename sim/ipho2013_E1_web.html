@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2013 E1 — 빛의 속력 · Speed of Light · HaslaLab</title>
+<meta name="description" content="IPhO 2013 실험 1을 브라우저에서 실행합니다. 레이저 거리 측정기(LDM)로 탁자 높이를 재고, 광섬유를 잘라 가며 표시값을 읽어 코어의 굴절률을 구하고, 비스듬히 단 LDM과 물을 부은 광학 용기로 물의 굴절률을 구합니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2013 E1 — 빛의 속력 · Speed of Light">
+<meta property="og:description" content="IPhO 2013 실험 1을 브라우저에서 실행합니다. 레이저 거리 측정기, 광섬유, 앵글 철물, 광학 용기로 빛의 속력과 굴절률을 잽니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-ldm"></h2>
+    <div class="disp" id="ldmDisp">-----</div>
+    <div class="row"><button id="bA"></button><button id="bB"></button></div>
+    <div class="row"><button id="bD" style="background:#8a2a24;border-color:#b3372f;color:#fff"></button><button id="bE"></button></div>
+    <div class="hint" id="ldmHint"></div>
+
+    <h2 id="t-h-fiber"></h2>
+    <div class="row"><button id="cutBtn"></button></div>
+    <div class="hint" id="fiberLbl"></div>
+
+    <h2 id="t-h-box"></h2>
+    <div class="row"><button id="bx-10">◀ 10</button><button id="bx-1">◀ 1</button><button id="bx1">1 ▶</button><button id="bx10">10 ▶</button></div>
+    <div class="hint" id="boxHint"></div>
+
+    <h2 id="t-h-water"></h2>
+    <div class="row"><button id="w5">+5 mm</button><button id="w1">+1 mm</button><button id="wm1">−1 mm</button><button id="wm5">−5 mm</button></div>
+    <div class="row"><button id="wEmpty"></button></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <textarea id="note" rows="8" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2013 실험 1 — 빛의 속력",
+    sub:"가상 실험실 · 레이저 거리 측정기(LDM)는 빛이 송신부에서 수신부까지 가는 시간 t로 y = ½ct + k 를 보여 줍니다 (c = 2.998×10⁸ m/s, 기준은 늘 뒷면). 탁자 높이 H를 재고, 수신부를 펠트 패드로 덮고 광섬유로 송신부와 이어 길이를 잘라 가며 y를 읽고, 앵글 철물로 LDM을 비스듬히 단 뒤 물을 부은 광학 용기의 바닥까지 y를 읽어 굴절률을 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기·옮기기 / 우클릭 되돌리기\n펠트·광섬유는 LDM에, 폼 패드는 앵글 철물에,\n자석·앵글 철물은 상자에 대고 클릭",
+    cap:"실험대 (앞에서 본 모습, 탁자와 바닥) — 좌클릭 집기·놓기·옮기기 / 우클릭 부품함으로 / LDM을 탁자 오른쪽 모서리에 대고 클릭: 아래로 겨누어 들기",
+    tabs:{ldm:"LDM", front:"LDM 앞면 (렌즈)", fiber:"광섬유·줄자", vessel:"광학 용기"},
+    closeCap:{ldm:"확대 — Bosch PLR 25. A 전원, B 뒷면/앞면 기준 (켤 때는 뒷면 — 그대로 두세요), D 레이저·측정, E 연속 측정 (약 1초마다 갱신). 몇 분 지나면 잠들며, 연속 모드가 길면 온도계 표시가 뜹니다.",
+      front:"확대 — LDM 앞면. 위: 수신부 렌즈 (펠트 패드 자리), 아래: 송신부. 광섬유는 패드 구멍에서 렌즈에 닿고, 다른 끝은 송신부 유리의 빔 가운데에 댑니다.",
+      fiber:"확대 — 줄자 위에 편 광섬유 (왼쪽 끝을 0에 맞춤). 휠: 확대, 끌기: 이동. 광섬유 위를 클릭해 자를 곳을 표시한 뒤 '가위로 자르기'. 잘린 쪽은 버립니다 — 다시 얻을 수 없습니다!",
+      vessel:"확대 — 옆에서 본 광학 용기와 붙여 둔 줄자. 휠: 확대, 끌기: 이동. 물의 깊이 x 를 줄자로 읽으세요."},
+    hLdm:"레이저 거리 측정기 [A]", bA:"A 전원", bB:"B 뒷면/앞면", bD:"D 측정 ▲", bE:"E 연속", ldmHint:"표시값은 m 단위, 1 mm까지",
+    hFiber:"광섬유 [B] · 가위 [F]", cut:"가위로 자르기", fiberLbl:(n,m)=>"자른 횟수: "+n+(m?" · 자를 곳 표시됨":""),
+    hBox:"상자 옮기기 (mm)", boxHint:"상자를 탁자 위에서 수평으로 밉니다 (실험대에서 끌어 옮겨도 됩니다)",
+    hWater:"물병 · 피펫", wEmpty:"용기 비우기",
+    hNote:"실험 노트", note:"LDM 값 적기", noteClr:"지우기",
+    items:{ldm:"레이저 거리 측정기 [A]", fiber:"광섬유 케이블 [B]", felt:"검은 펠트 패드 [C]", tapem:"줄자 [D]", tape:"테이프 [E]", scis:"가위 [F]", box:"검은 상자 [G]", angle:"앵글 철물 [C']", foam:"폼 패드 [D']", magnet:"자석 [B']", vessel:"광학 용기·줄자 [A']", bottle:"물병"},
+    lab:{noLdm:"LDM을 실험대에 놓으면 보입니다", noFiber:"광섬유와 줄자를 꺼내면 보입니다", noVessel:"광학 용기를 놓으면 보입니다", rx:"수신부", tx:"송신부", felt:"펠트 패드", cutHere:"자를 곳", table:"탁자 윗면", floor:"바닥", edge:"탁자 모서리", water:"물", thermo:"온도계",
+      held:"(모서리에 대고 아래로 겨눔)", onBox:"앵글 철물 위", flat:"탁자 위", err:"Error"},
+    st:{none:"부품함에서 레이저 거리 측정기를 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, laser:"⚠ 레이저가 켜져 있습니다. 빔을 들여다보거나 다른 사람 눈에 비추지 마세요.", hot:"⚠ 온도계 표시 — LDM을 잠시 꺼서 식히세요", sleep:"LDM이 잠들었습니다 — D를 눌러 깨우세요", front:"⚠ 앞면 기준으로 바뀌어 있습니다 (문제에서는 뒷면 기준을 유지)"},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.",
+       felt:"수신부 렌즈에 펠트 패드를 붙였습니다.", fiberIn:"광섬유 한 끝을 패드 구멍에 넣어 렌즈에 대고, 다른 끝을 송신부 빔 가운데에 댔습니다.", needFelt:"먼저 수신부 렌즈를 펠트 패드로 덮으세요.", needFlat:"LDM을 탁자에 눕혀 놓은 상태에서 하세요.",
+       foam:"앵글 철물에 폼 패드 두 장을 붙였습니다.", magnet:"상자 안쪽 아래에 자석을 넣었습니다.", angle:"앵글 철물을 상자 위에 자석으로 고정했습니다.", needMagnet:"먼저 상자 안에 자석을 넣으세요.", needFoam:"먼저 앵글 철물에 폼 패드를 붙이세요.", needAngle:"상자 위에 앵글 철물이 있어야 합니다.", removeFelt:"먼저 렌즈에서 펠트 패드와 광섬유를 떼세요.",
+       mounted:"LDM을 앵글 철물에 얹었습니다 — 빔이 비스듬히 아래를 향합니다.", edge:"LDM 뒷면을 탁자 윗면 높이에 맞추고 모서리 밖으로 아래를 겨눴습니다.", onLdm:"LDM에 대고 클릭하세요.", onBox:"상자에 대고 클릭하세요.", onAngle:"앵글 철물에 대고 클릭하세요.",
+       cutMark:"자를 곳을 표시했습니다. '가위로 자르기'를 누르면 자릅니다.", cut:"광섬유를 잘랐습니다. 잘린 조각은 버렸습니다.", needScis:"가위 [F]를 먼저 꺼내 두세요.", noMark:"광섬유·줄자 화면에서 자를 곳을 먼저 클릭하세요.", tooShort:"그보다 짧게는 다룰 수 없습니다.", fiberBusy:"광섬유를 LDM에서 빼야 자를 수 있습니다.",
+       water:v=>"물 "+v, needVessel:"광학 용기와 물병이 있어야 합니다.", noted:"노트에 적었습니다.", off:"LDM이 꺼져 있습니다.", noBox:"상자가 실험대에 없습니다.", busy:"먼저 위에 있는 것을 치우세요."}
+  },
+  en:{
+    title:"IPhO 2013 Experiment 1 — Speed of Light",
+    sub:"Virtual laboratory · the laser distance meter (LDM) shows y = ½ct + k from the time t the light takes from emitter to receiver (c = 2.998×10⁸ m/s, always measured from the rear). Measure the table height H; cover the receiver with a felt pad, join it to the emitter with the optic fibre and read y while cutting the fibre shorter; then mount the LDM at an angle on the angle iron and read y down to the bottom of the optical vessel as you pour water in. The refractive indices are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place/move, R-click return\nfelt pad and fibre: click onto the LDM; foam pads: onto\nthe angle iron; magnet and angle iron: onto the box",
+    cap:"the bench (front view, table and floor) — L-click pick up / put down / move, R-click back to the box / click the LDM onto the right edge of the table: hold it there aiming down",
+    tabs:{ldm:"LDM", front:"LDM front (lenses)", fiber:"Fibre & tape", vessel:"Optical vessel"},
+    closeCap:{ldm:"close up — Bosch PLR 25. A power, B rear/front reference (rear at switch-on — keep it), D laser / measure, E continuous measurement (updates about once a second). It falls asleep after a few minutes, and a thermometer icon appears after long continuous use.",
+      front:"close up — the front of the LDM. Top: the receiver lens (where the felt pad goes), bottom: the emitter. The fibre goes through the pad's hole onto the lens; its other end touches the emitter glass in the middle of the beam.",
+      fiber:"close up — the fibre laid along the tape measure (left end at 0). Wheel: zoom, drag: pan. Click on the fibre to mark where to cut, then 'Cut with the scissors'. The cut-off piece is thrown away — there is no more cable!",
+      vessel:"close up — the optical vessel from the side with its tape measure. Wheel: zoom, drag: pan. Read the water depth x on the tape."},
+    hLdm:"Laser distance meter [A]", bA:"A power", bB:"B rear/front", bD:"D measure ▲", bE:"E continuous", ldmHint:"display in metres, to 1 mm",
+    hFiber:"Fibre [B] · scissors [F]", cut:"Cut with the scissors", fiberLbl:(n,m)=>"cuts made: "+n+(m?" · cut marked":""),
+    hBox:"Slide the box (mm)", boxHint:"slides the box horizontally on the table (you can also drag it on the bench)",
+    hWater:"Water bottle · pipette", wEmpty:"Empty the vessel",
+    hNote:"Lab notebook", note:"Write down the LDM", noteClr:"Clear",
+    items:{ldm:"Laser distance meter [A]", fiber:"Fibre optic cable [B]", felt:"Black felt pads [C]", tapem:"Tape measure [D]", tape:"Tape [E]", scis:"Scissors [F]", box:"Black box [G]", angle:"Angle iron [C']", foam:"Foam pads [D']", magnet:"Magnet [B']", vessel:"Optical vessel, tape [A']", bottle:"Water bottle"},
+    lab:{noLdm:"put the LDM on the bench to see it", noFiber:"take out the fibre and the tape measure to see them", noVessel:"put the optical vessel down to see it", rx:"receiver", tx:"emitter", felt:"felt pad", cutHere:"cut here", table:"table top", floor:"floor", edge:"table edge", water:"water", thermo:"thermometer",
+      held:"(held at the edge, aiming down)", onBox:"on the angle iron", flat:"on the table", err:"Error"},
+    st:{none:"Take the laser distance meter out of the box and put it on the bench.", hand:n=>"In hand: "+n, laser:"⚠ The laser is on. Do not look into the beam or shine it into anyone's eyes.", hot:"⚠ Thermometer icon — switch the LDM off for a while to cool it", sleep:"The LDM has fallen asleep — press D to wake it", front:"⚠ The front reference is selected (the problem keeps the rear reference)"},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", noFit:"It does not go there.",
+       felt:"Felt pad stuck over the receiver lens.", fiberIn:"One end of the fibre goes through the pad's hole onto the lens, the other touches the emitter in the middle of the beam.", needFelt:"Cover the receiver lens with a felt pad first.", needFlat:"Do it with the LDM lying on the table.",
+       foam:"Two foam pads stuck on the angle iron.", magnet:"Magnet put inside the box, under the top.", angle:"Angle iron fixed on the box with the magnet.", needMagnet:"Put the magnet inside the box first.", needFoam:"Stick the foam pads on the angle iron first.", needAngle:"The angle iron must be on the box.", removeFelt:"Take the felt pad and the fibre off the lens first.",
+       mounted:"LDM placed on the angle iron — the beam points down at an angle.", edge:"LDM held with its rear at the level of the table top, aiming down past the edge.", onLdm:"Click it onto the LDM.", onBox:"Click it onto the box.", onAngle:"Click it onto the angle iron.",
+       cutMark:"Cut marked. Press 'Cut with the scissors' to cut.", cut:"Fibre cut. The cut-off piece is thrown away.", needScis:"Take the scissors [F] out first.", noMark:"First click where to cut on the fibre & tape view.", tooShort:"It cannot be handled any shorter.", fiberBusy:"Take the fibre off the LDM before cutting it.",
+       water:v=>"water "+v, needVessel:"You need the optical vessel and the water bottle.", noted:"Written in the notebook.", off:"The LDM is off.", noBox:"The box is not on the bench.", busy:"Clear what stands on it first."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  HIDDEN TRUTH OF THIS SESSION  (never shown; SI inside, mm for the drawing)
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const gauss=()=>{ const u=Math.max(1e-12,Math.random()), v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const BODY_LEN=0.105;                                   /* rear-to-front length of the LDM [m] */
+const TRUE={ H:0.907+U(-0.008,0.010), kRear:0.1014+U(-0.0015,0.0015), nCo:1.542+U(-0.010,0.010), th1:(19.30+U(-0.45,0.45))*Math.PI/180,
+  nW:1.3317+U(-0.0012,0.0012), zLens:0.1988+U(-0.004,0.004), cable:1.000+U(-0.004,0.004), wall:U(3.05,3.35) };
+const V_IN_H=100, V_BOT=3, V_IN_W=80, V_WALL=3;          /* optical vessel [mm] */
+const BOX={w:220,d:150,h:108}, LDM_L=105, LDM_W=46, LDM_H=30, X_EDGE=1500, X_FLOOR=1960;
+function alphaW(){ const s1=Math.sin(TRUE.th1), c1=Math.cos(TRUE.th1), c2=Math.sqrt(1-(s1/TRUE.nW)**2); return TRUE.nW/c2-1/c1; }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE APPARATUS
+   ══════════════════════════════════════════════════════════════ */
+const ITEMS=["ldm","fiber","felt","tapem","tape","scis","box","angle","foam","magnet","vessel","bottle"];
+const ST={ on:new Set(), pos:{}, mode:"flat", felt:false, fiberIn:false, foam:false, magnetIn:false, angleOn:false,
+  power:false, rear:true, cont:false, laserT:0, disp:"", heat:0, hot:false, asleep:false, contT:0, lastTick:0,
+  cable:TRUE.cable*1000, cuts:0, mark:null, water:0 };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+const H_MM=()=>TRUE.H*1000;
+/* where the beam leaves the LDM and where it goes */
+function lens(){ if(ST.mode!=="angle"||!has("box")) return null; const b=ST.pos.box; return {x:b.x+BOX.w/2+15, y:b.y, z:H_MM()+TRUE.zLens*1000}; }
+const laserLit=()=>has("ldm")&&ST.power&&!ST.hot&&(ST.cont&&!ST.asleep||performance.now()<ST.laserT);
+/* the target of the tilted beam: {kind, x, z, half [m]} */
+function tiltTarget(){
+  const L=lens(); if(!L) return null; const ta=Math.tan(TRUE.th1), c1=Math.cos(TRUE.th1), H=H_MM();
+  const xAt=z=>L.x+(L.z-z)*ta, zAt=x=>L.z-(x-L.x)/ta, dist=(x,z)=>Math.hypot(x-L.x,z-L.z)/1000;
+  if(has("vessel")&&Math.abs(ST.pos.vessel.y-L.y)<V_IN_W/2+V_WALL){ const vx=ST.pos.vessel.x, xo0=vx-V_IN_W/2-V_WALL, xi0=vx-V_IN_W/2, xi1=vx+V_IN_W/2;
+    const top=H+V_BOT+V_IN_H, xt=xAt(top), xb=xAt(H+V_BOT);
+    if(xt>=xi0&&xt<=xi1){ /* in through the open top */
+      const zw=H+V_BOT+ST.water;
+      if(xb<=xi1) return {kind:"vessel", x:xb, z:H+V_BOT, half:(TRUE.zLens-V_BOT/1000)/c1+alphaW()*ST.water/1000};
+      const z=zAt(xi1); return {kind:"wall", x:xi1, z, half:dist(xi1,z)+(z<zw?0.004:0)}; }
+    if(xt<xo0&&xb>=xo0){ const z=zAt(xo0); if(z>H&&z<top) return {kind:"wall", x:xo0, z, half:dist(xo0,z)}; } }
+  const xT=xAt(H); if(xT<X_EDGE) return {kind:"table", x:xT, z:H, half:TRUE.zLens/c1};
+  return {kind:"floor", x:xAt(0), z:0, half:(TRUE.zLens+TRUE.H)/c1};
+}
+/* one reading of the instrument: the string on its display */
+function measure(){
+  const k=ST.rear?TRUE.kRear:TRUE.kRear-BODY_LEN; let half=null, sg=0.0008;
+  if(ST.mode==="edge"){ if(ST.felt) return "Error"; half=TRUE.H-TRUE.kRear; }
+  else if(ST.mode==="flat"){ if(ST.felt){ if(!ST.fiberIn) return "Error"; half=0.5*TRUE.nCo*ST.cable/1000; sg=0.004; }
+    else { const xr=ST.pos.ldm.x-LDM_L/2; half=TRUE.wall-xr/1000-TRUE.kRear; } }
+  else { if(ST.felt) return "Error"; const t=tiltTarget(); if(!t) return "Error"; half=t.half; if(t.kind==="vessel") sg=0.00035; }
+  const y=half+k+gauss()*sg; if(y<0.05||y>25) return "Error";
+  return y.toFixed(3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (front view with the table top in perspective, mm;
+       x to the right, y from the back of the table towards you, z up from the floor)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=800, S1=0.6, KY=0.2, OX=12, Y0=728;
+const P=(x,y,z)=>[OX+S1*x, Y0-S1*(z||0)+S1*KY*y];
+const unPz=(X,Y,z)=>[(X-OX)/S1, ((Y-Y0)/S1+(z||0))/KY];
+const TD=600;                                                        /* table depth */
+/* a box whose top and front faces show */
+function abox(x0,y0,z0,x1,y1,z1,top,front,edge){
+  poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],front,edge,0.7);
+  poly([P(x0,y0,z1),P(x1,y0,z1),P(x1,y1,z1),P(x0,y1,z1)],top,edge,0.7);
+}
+function seg3(a,b,col,w){ const p=P(...a), q=P(...b); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+function drawRoom(){
+  const H=H_MM();
+  ctx.fillStyle=vgrad(0,LH,[[0,"#3b4048"],[1,"#30343b"]]); ctx.fillRect(0,0,LW,LH);
+  poly([P(0,0,0),P(X_FLOOR+40,0,0),P(X_FLOOR+40,900,0),P(0,900,0)],"#8a8478","#6f6a60",1);
+  ctx.strokeStyle="rgba(0,0,0,.08)"; for(let x=0;x<=X_FLOOR;x+=200) seg3([x,0,0],[x,900,0],"rgba(0,0,0,.08)",1);
+  /* legs, then the top */
+  for(const [x,y] of [[60,40],[X_EDGE-60,40],[60,TD-40],[X_EDGE-60,TD-40]]) abox(x-20,y-20,0,x+20,y+20,H-25,"#5b4a36","#4c3d2c","#2a2118");
+  abox(0,0,H-25,X_EDGE,TD,H,"#cbb38a","#9c8460","#6f5c40");
+  const q=P(X_EDGE,TD,H); text(d().lab.edge,q[0]-4,q[1]+20,"#d9cdb4",10.5,"right","600");
+  const f=P(X_FLOOR-10,880,0); text(d().lab.floor,f[0],f[1]-6,"#d9d2c4",10.5,"right","600");
+}
+/* ---- the laser distance meter in its three ways of being used ---- */
+function ldmFlat(x,y){ const z=H_MM();
+  abox(x-LDM_L/2,y-LDM_W/2,z,x+LDM_L/2-20,y+LDM_W/2,z+LDM_H,"#1f6b4a","#164f37","#0d2e20");
+  abox(x+LDM_L/2-20,y-LDM_W/2,z,x+LDM_L/2,y+LDM_W/2,z+LDM_H,"#1a1b1d","#111214","#000");
+  const a=P(x-LDM_L/2+14,y-LDM_W/2+8,z+LDM_H), b=P(x+LDM_L/2-30,y+LDM_W/2-8,z+LDM_H); fillR(a[0],a[1],b[0]-a[0],b[1]-a[1],1,ST.power?"#b9c9a8":"#7d8a72","#000",0.5);
+  if(ST.felt){ const c=P(x+LDM_L/2+1,y+LDM_W/2,z+LDM_H*0.7); circ(c[0],c[1],4.5,"#111","#444",0.8); }
+  if(ST.fiberIn){ const a1=P(x+LDM_L/2+1,y+LDM_W/2,z+LDM_H*0.7), a2=P(x+LDM_L/2+1,y+LDM_W/2,z+LDM_H*0.3);
+    ctx.strokeStyle="#0e0e0f"; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(a1[0],a1[1]); const r=18+ST.cable*0.06; ctx.bezierCurveTo(a1[0]+r,a1[1]-r*0.8,a2[0]+r*1.6,a2[1]+r*1.2,a2[0],a2[1]); ctx.stroke(); }
+}
+function ldmEdge(){ const x=X_EDGE+30, y=TD/2, H=H_MM();
+  abox(x-LDM_H/2,y-LDM_W/2,H-LDM_L,x+LDM_H/2,y+LDM_W/2,H-20,"#1f6b4a","#1f6b4a","#0d2e20");
+  abox(x-LDM_H/2,y-LDM_W/2,H-20,x+LDM_H/2,y+LDM_W/2,H,"#1f6b4a","#164f37","#0d2e20");
+  abox(x-LDM_H/2,y-LDM_W/2,H-LDM_L-1,x+LDM_H/2,y+LDM_W/2,H-LDM_L+20,"#1a1b1d","#111214","#000");
+  const h=P(x+LDM_H/2+2,y,H-50); fillR(h[0],h[1]-14,16,26,7,"#e2b796","#a87c5c",1);           /* the hand holding it */
+  seg3([X_EDGE-60,y,H+0.5],[x+LDM_H/2,y,H+0.5],"rgba(255,230,120,.8)",1.2);
+}
+function ldmAngle(){ const L=lens(); if(!L) return; const s=Math.sin(TRUE.th1), c=Math.cos(TRUE.th1), y=L.y;
+  const pt=(u,v)=>[L.x-s*u-c*v, y, L.z+c*u-s*v];      /* u along the body (up), v across */
+  const quad=(u0,u1,v0,v1,fill,edge)=>poly([P(...pt(u0,v0)),P(...pt(u1,v0)),P(...pt(u1,v1)),P(...pt(u0,v1))],fill,edge,0.8);
+  quad(0,20,-LDM_H/2,LDM_H/2,"#1a1b1d","#000"); quad(20,LDM_L,-LDM_H/2,LDM_H/2,"#1f6b4a","#0d2e20");
+  quad(36,70,LDM_H/2-6,LDM_H/2,ST.power?"#b9c9a8":"#7d8a72","#000");
+  if(ST.felt){ const q=P(...pt(1,-6)); circ(q[0],q[1],4,"#111","#444"); }
+}
+function drawBox(){ const {x,y}=ST.pos.box, H=H_MM(), x0=x-BOX.w/2, x1=x+BOX.w/2;
+  poly([P(x0,y+BOX.d/2,H),P(x1,y+BOX.d/2,H),P(x1,y+BOX.d/2,H+BOX.h),P(x0,y+BOX.d/2,H+BOX.h+15)],"#141416","#000",0.8);       /* the top slopes by ~4° */
+  poly([P(x0,y-BOX.d/2,H+BOX.h+15),P(x1,y-BOX.d/2,H+BOX.h),P(x1,y+BOX.d/2,H+BOX.h),P(x0,y+BOX.d/2,H+BOX.h+15)],"#202124","#000",0.8);
+  const q=P(x,y+BOX.d/2,H+BOX.h*0.45); text("IPhO 2013",q[0],q[1],"#55595f",9,"center","700");
+  if(ST.angleOn){ const bx=x1-30, top=H+BOX.h+1; abox(bx-30,y-35,top,bx+30,y+35,top+3,"#c9ccd0","#9ea3a8","#6d7277");
+    const legTop=H+TRUE.zLens*1000+40, lx=x1+4;
+    poly([P(bx+27,y+35,top),P(lx,y+35,top),P(lx,y+35,top+3),P(bx+27,y+35,top+3)],"#b8bcc0","#6d7277",0.6);
+    poly([P(lx-3,y+35,top),P(lx,y+35,top),P(lx,y+35,legTop),P(lx-3,y+35,legTop)],"#b8bcc0","#6d7277",0.6);
+    if(ST.foam) for(const dz of [0.35,0.75]){ const q=P(lx,y+35,top+(legTop-top)*dz); fillR(q[0],q[1]-8,4,16,1,"#f2f2f2","#bbb",0.5); } }
+}
+function drawVessel(){ const {x,y}=ST.pos.vessel, H=H_MM(), w=V_IN_W/2+V_WALL;
+  const wz=H+V_BOT+ST.water;
+  poly([P(x-w,y-w,H),P(x+w,y-w,H),P(x+w,y-w,H+V_BOT+V_IN_H),P(x-w,y-w,H+V_BOT+V_IN_H)],"rgba(210,232,244,.25)","rgba(150,190,210,.8)",0.8);
+  if(ST.water>0){ poly([P(x-w+3,y+w,H+V_BOT),P(x+w-3,y+w,H+V_BOT),P(x+w-3,y+w,wz),P(x-w+3,y+w,wz)],"rgba(110,170,215,.45)");
+    poly([P(x-w+3,y-w+3,wz),P(x+w-3,y-w+3,wz),P(x+w-3,y+w-3,wz),P(x-w+3,y+w-3,wz)],"rgba(150,200,235,.5)","rgba(90,150,200,.7)",0.6); }
+  poly([P(x-w,y+w,H),P(x+w,y+w,H),P(x+w,y+w,H+V_BOT+V_IN_H),P(x-w,y+w,H+V_BOT+V_IN_H)],"rgba(225,240,248,.22)","rgba(150,190,210,.9)",1);
+  const t0=P(x+w-12,y+w,H), t1=P(x+w-4,y+w,H+V_BOT+V_IN_H+20); fillR(t0[0],t1[1],t1[0]-t0[0],t0[1]-t1[1],0,"#f6f2df","#bdb69c",0.5);
+  for(let k=0;k<=12;k++){ const q=P(x+w-12,y+w,H+V_BOT+k*10); ctx.strokeStyle="#333"; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(q[0],q[1]); ctx.lineTo(q[0]+2.5,q[1]); ctx.stroke(); }
+}
+const FOOT={ldm:[LDM_L/2,LDM_W/2],fiber:[60,40],felt:[16,12],tapem:[34,34],tape:[28,28],scis:[70,28],box:[BOX.w/2,BOX.d/2],angle:[40,35],foam:[22,40],magnet:[8,8],vessel:[43,43],bottle:[35,35]};
+const LOOSE=["fiber","felt","tapem","tape","scis","angle","foam","magnet","bottle"];
+function drawLoose(k){ const {x,y}=ST.pos[k], z=H_MM();
+  if(k==="fiber"){ const c=P(x,y,z+2); for(let i=0;i<3;i++){ ctx.strokeStyle="#111"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(c[0]+i*3,c[1],26-i*3,8-i,0,0,7); ctx.stroke(); } }
+  else if(k==="felt"){ for(const dx of [-7,7]){ const c=P(x+dx,y,z+2); ell(c[0],c[1],5,2.4,"#111","#444",0.6); } }
+  else if(k==="tapem"){ const c=P(x,y,z); fillR(c[0]-17,c[1]-12,34,14,3,"#f2f2ee","#b9b9b0",1); text("IKEA",c[0],c[1]-5,"#555",7,"center","700"); }
+  else if(k==="tape"){ const c=P(x,y,z); ell(c[0],c[1]-6,14,5,"#f1e9a8","#cfc98d",1); ell(c[0],c[1]-6,6,2.2,"#cbb38a"); }
+  else if(k==="scis"){ const c=P(x,y,z); ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(c[0]-30,c[1]-2); ctx.lineTo(c[0]+8,c[1]-6); ctx.moveTo(c[0]-30,c[1]-6); ctx.lineTo(c[0]+8,c[1]-1); ctx.stroke(); ell(c[0]+16,c[1]-6,8,3.5,null,"#1e9ad6",2.5); ell(c[0]+16,c[1]+1,8,3.5,null,"#1e9ad6",2.5); }
+  else if(k==="angle"){ abox(x-30,y-30,z,x+30,y+30,z+3,"#c9ccd0","#9ea3a8","#6d7277"); poly([P(x+27,y+30,z),P(x+30,y+30,z),P(x+30,y+30,z+60),P(x+27,y+30,z+60)],"#b8bcc0","#6d7277",0.6);
+    if(ST.foam){ const q=P(x+30,y+30,z+30); fillR(q[0]-1,q[1]-8,4,16,1,"#f2f2f2","#bbb",0.5); } }
+  else if(k==="foam"){ abox(x-18,y-36,z,x+18,y+36,z+3,"#f6f6f4","#dedede","#bbb"); }
+  else if(k==="magnet"){ abox(x-6,y-6,z,x+6,y+6,z+5,"#8b9096","#6d7277","#444"); }
+  else if(k==="bottle"){ const c=P(x,y,z); fillR(c[0]-14,c[1]-120,28,118,9,"rgba(220,236,246,.75)","#9fb0bb",1); fillR(c[0]-14,c[1]-70,28,22,0,"#1f63b0"); fillR(c[0]-6,c[1]-132,12,13,2,"#1f63b0"); ctx.fillStyle="rgba(120,180,230,.35)"; ctx.fillRect(c[0]-12,c[1]-100,24,96); }
+}
+function drawBeam(){
+  if(!laserLit()) return; let a=null, b=null;
+  const H=H_MM();
+  if(ST.mode==="edge"){ const x=X_EDGE+30, y=TD/2; if(ST.felt) return; a=[x,y,H-LDM_L]; b=[x,y,0]; }
+  else if(ST.mode==="flat"){ if(ST.felt) return; const {x,y}=ST.pos.ldm; a=[x+LDM_L/2,y,H+LDM_H/2]; b=[X_FLOOR+60,y,H+LDM_H/2]; }
+  else { if(ST.felt) return; const L=lens(), t=tiltTarget(); if(!L||!t) return; a=[L.x,L.y,L.z]; b=[t.x,L.y,t.z];
+    if(t.kind==="vessel"&&ST.water>0){ /* refraction at the surface, drawn */ const zw=H+V_BOT+ST.water, ta=Math.tan(TRUE.th1), xs=L.x+(L.z-zw)*ta, s2=Math.sin(TRUE.th1)/TRUE.nW, t2=s2/Math.sqrt(1-s2*s2);
+      b=[xs+(zw-H-V_BOT)*t2,L.y,H+V_BOT]; ctx.save(); ctx.strokeStyle="#ff3b2c"; ctx.lineWidth=1.4; const p=P(...a), m=P(xs,L.y,zw), q=P(...b); ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(m[0],m[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); ctx.restore(); circ(q[0],q[1],2.6,"#ff4433"); return; } }
+  const p=P(...a), q=P(...b); ctx.save(); ctx.strokeStyle="rgba(255,40,30,.25)"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); ctx.strokeStyle="#ff3b2c"; ctx.lineWidth=1.3; ctx.stroke(); ctx.restore(); circ(q[0],q[1],3,"#ff4433","#ffd0cc",0.6);
+}
+function drawBench(){
+  drawRoom();
+  const things=[]; if(has("box")&&ST.pos.box) things.push(["box",ST.pos.box.y]); if(has("vessel")&&ST.pos.vessel) things.push(["vessel",ST.pos.vessel.y+40]);
+  if(has("ldm")&&ST.mode==="flat"&&ST.pos.ldm) things.push(["ldm",ST.pos.ldm.y]); for(const k of LOOSE) if(has(k)&&ST.pos[k]) things.push([k,ST.pos[k].y]);
+  things.sort((a,b)=>a[1]-b[1]);
+  for(const [k] of things){ if(k==="box"){ drawBox(); if(has("ldm")&&ST.mode==="angle") ldmAngle(); } else if(k==="vessel") drawVessel(); else if(k==="ldm") ldmFlat(ST.pos.ldm.x,ST.pos.ldm.y); else drawLoose(k); }
+  if(has("ldm")&&ST.mode==="edge") ldmEdge();
+  drawBeam(); drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return; text(itemName(hand.item),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700");
+  if(!FOOT[hand.item]) return; const [x,y]=unPz(mouse[0],mouse[1],H_MM()), f=footOf(hand.item,x,y); if(y<0||y>TD+80) return;
+  ctx.save(); ctx.setLineDash([5,4]); poly([P(f[0],f[1],H_MM()),P(f[2],f[1],H_MM()),P(f[2],f[3],H_MM()),P(f[0],f[3],H_MM())],null,fits(hand.item,x,y)?"#f2c14e":"#e0605a",1.5); ctx.restore(); }
+function footOf(k,x,y){ const h=FOOT[k]; return [x-h[0],y-h[1],x+h[0],y+h[1]]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function onTop(k){ return k==="box"||k==="vessel"||(k==="ldm"&&ST.mode==="flat")||LOOSE.includes(k); }
+function fits(k,x,y){ const f=footOf(k,x,y);
+  if(f[0]<8||f[2]>X_EDGE-4||f[1]<8||f[3]>TD-8) return false;
+  for(const o of ITEMS){ if(o===k||!has(o)||!ST.pos[o]||!onTop(o)) continue; if(overl(f,footOf(o,ST.pos[o].x,ST.pos[o].y),4)) return false; }
+  return true; }
+function box3(x0,y0,z0,x1,y1,z1){ const pts=[]; for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) pts.push(P(x,y,z));
+  return [Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))]; }
+function bbox(k){ if(!has(k)) return null; const H=H_MM();
+  if(k==="ldm"){ if(ST.mode==="edge") return box3(X_EDGE+15,TD/2-23,H-LDM_L,X_EDGE+45,TD/2+23,H);
+    if(ST.mode==="angle"){ const L=lens(); return L?box3(L.x-LDM_L*0.5,L.y-20,L.z-10,L.x+20,L.y+20,L.z+LDM_L):null; } }
+  if(k==="angle"&&ST.angleOn){ const b=ST.pos.box; return box3(b.x+BOX.w/2-60,b.y-35,H+BOX.h,b.x+BOX.w/2,b.y+35,H+BOX.h+90); }
+  if(k==="box"){ const b=ST.pos.box; return box3(b.x-BOX.w/2,b.y-BOX.d/2,H,b.x+BOX.w/2,b.y+BOX.d/2,H+BOX.h+15); }
+  if(k==="bottle"){ const p=ST.pos.bottle; return box3(p.x-30,p.y-30,H,p.x+30,p.y+30,H+260); }
+  if(k==="vessel"){ const p=ST.pos.vessel; return box3(p.x-46,p.y-46,H,p.x+46,p.y+46,H+V_BOT+V_IN_H+20); }
+  const p=ST.pos[k]; if(!p) return null; const f=footOf(k,p.x,p.y); return box3(f[0],f[1],H,f[2],f[3],H+(k==="ldm"?LDM_H:k==="angle"?60:12)); }
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=ITEMS, TROW=38;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="ldm", HIT=[];
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+function icon(c,k){
+  const old=ctx; ctx=c; ctx.save(); ctx.scale(0.8,0.8);
+  if(k==="ldm"){ fillR(-8,-16,16,32,3,"#1f6b4a","#0d2e20"); fillR(-6,-12,12,8,1,"#b9c9a8"); fillR(-3,-1,6,3,1,"#e04a2a"); }
+  else if(k==="fiber"){ for(let i=0;i<3;i++){ ctx.strokeStyle="#111"; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(i*2,0,14-i*3,8-i*2,0,0,7); ctx.stroke(); } }
+  else if(k==="felt"){ circ(-6,0,6,"#111","#444"); circ(-6,0,1.5,"#666"); circ(8,0,6,"#111","#444"); circ(8,0,1.5,"#666"); }
+  else if(k==="tapem"){ circ(0,0,12,"#f2f2ee","#b9b9b0"); circ(0,0,4,"#fff","#b9b9b0"); fillR(8,-2,12,4,0,"#f6f2df","#999",0.5); }
+  else if(k==="tape"){ circ(0,0,11,"#f1e9a8","#cfc98d"); circ(0,0,5,"#15181d"); }
+  else if(k==="scis"){ ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-4,-4); ctx.lineTo(16,6); ctx.moveTo(-4,4); ctx.lineTo(16,-6); ctx.stroke(); circ(-10,-5,5,null,"#1e9ad6",2); circ(-10,5,5,null,"#1e9ad6",2); }
+  else if(k==="box"){ fillR(-17,-11,34,22,2,"#141416","#000"); text("IPhO",0,0,"#55595f",7,"center","700"); }
+  else if(k==="angle"){ ctx.fillStyle="#c9ccd0"; ctx.fillRect(-12,-12,5,24); ctx.fillRect(-12,7,24,5); }
+  else if(k==="foam"){ fillR(-9,-12,7,24,1,"#f6f6f4","#bbb"); fillR(2,-12,7,24,1,"#f6f6f4","#bbb"); }
+  else if(k==="magnet"){ fillR(-5,-5,10,10,1,"#8b9096","#444"); }
+  else if(k==="vessel"){ fillR(-10,-13,20,26,1,"rgba(210,232,244,.5)","#8fb4c6"); fillR(-9,0,18,12,0,"#7fb6de"); fillR(7,-13,3,26,0,"#f6f2df"); }
+  else if(k==="bottle"){ fillR(-6,-14,12,28,4,"#dcecf6","#9fb0bb"); fillR(-6,-2,12,6,0,"#1f63b0"); }
+  ctx.restore(); ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+70;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(380,CLW*0.5));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  FV.z=0; VV.z=0; drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(26,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm]; if(c.measureText(nm).width>wd-50){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.6)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,48,y+(parts.length>1?10+i*13:12)));
+    if(parts.length<2){ c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,48,y+26); }
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["ldm","front","fiber","vessel"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+
+/* ── 1. the Bosch PLR 25, after Fig. 1.2 ── */
+function drawLdmView(){
+  const t=d(); if(!has("ldm")){ text(t.lab.noLdm,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const h=CLH-20, w=h*0.46, x0=CLW/2-w/2, y0=10, X=f=>x0+f*w, Y=f=>y0+f*h;
+  fillR(x0,y0,w,h,w*0.12,vgrad(y0,h,[[0,"#25624a"],[1,"#163f2f"]]),"#0b2018",2);
+  fillR(X(0.10),Y(0.03),w*0.8,h*0.06,6,"#121314"); text("BOSCH",X(0.58),Y(0.06),"#e8eef2",w*0.075,"center","800"); circ(X(0.27),Y(0.06),w*0.04,null,"#e8eef2",1.5);
+  fillR(X(0.10),Y(0.11),w*0.8,h*0.25,6,"#2a2d30","#0b0b0c",1.5);
+  const on=ST.power; fillR(X(0.14),Y(0.13),w*0.72,h*0.21,4,on?"#b9c9a8":"#5a6252","#333",1);
+  if(on){ const ink="#1d2a1a";
+    text("M",X(0.18),Y(0.155),ink,w*0.05,"left","700");
+    if(laserLit()) text("LASER",X(0.62),Y(0.165),ink,w*0.04,"center","700");
+    /* C: the reference indicator — a bar at the rear (bottom) or the front (top) of a small LDM symbol */
+    const rx=X(0.80), ry=Y(0.20); fillR(rx-3,ry-9,6,18,1,null,ink,1.2); ctx.fillStyle=ink; ctx.fillRect(rx-6,ST.rear?ry+9:ry-11,12,2.5);
+    if(ST.cont&&!ST.asleep){ ctx.strokeStyle=ink; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(X(0.30),Y(0.165)); ctx.lineTo(X(0.30),Y(0.205)); ctx.moveTo(X(0.28),Y(0.175)); ctx.lineTo(X(0.30),Y(0.165)); ctx.lineTo(X(0.32),Y(0.175)); ctx.moveTo(X(0.28),Y(0.195)); ctx.lineTo(X(0.30),Y(0.205)); ctx.lineTo(X(0.32),Y(0.195)); ctx.stroke(); }
+    if(ST.hot){ fillR(X(0.20),Y(0.20),6,16,3,null,ink,1.2); circ(X(0.20)+3,Y(0.20)+19,5,ink); }
+    const s=ST.disp; if(s) text(s,X(0.77),Y(0.27),ink,s==="Error"?w*0.12:w*0.17,"right","700",MONO); text("m",X(0.84),Y(0.31),ink,w*0.055,"right","700"); }
+  const btn=(k,cx,cy,bw,bh,fill,lab)=>{ fillR(cx-bw/2,cy-bh/2,bw,bh,bh*0.3,fill,"#000",1.2); if(lab) text(lab,cx,cy,"#e8eef2",Math.max(10,bw*0.24),"center","700"); if(k) hitAdd(k,cx-bw/2,cy-bh/2,bw,bh); };
+  fillR(X(0.12),Y(0.40),w*0.76,h*0.52,w*0.1,"#121314","#000",1);
+  btn("D",X(0.5),Y(0.45),w*0.22,h*0.06,"#e0502a","▲"); text("D",X(0.5)+w*0.16,Y(0.45),"#f2c14e",11,"left","700");
+  [[0.27,0.55],[0.5,0.57],[0.73,0.55],[0.27,0.66],[0.5,0.68],[0.73,0.66]].forEach(([a,b])=>btn(null,X(a),Y(b),w*0.17,h*0.055,"#2b2d30",""));
+  btn("B",X(0.27),Y(0.78),w*0.17,h*0.055,"#2b2d30","⊥"); btn("A",X(0.5),Y(0.80),w*0.17,h*0.055,"#2b2d30","C⏻"); btn("E",X(0.73),Y(0.78),w*0.17,h*0.055,"#2b2d30","↕");
+  for(const [k,a] of [["B",0.27],["A",0.5],["E",0.73]]) text(k,X(a),Y(0.845),"#f2c14e",11,"center","700");
+  text("PLR 25",X(0.5),Y(0.885),"#cfd6dc",w*0.045,"center","700");
+  const sx=CLW/2+w/2+20; const lab=ST.mode==="edge"?t.lab.held:ST.mode==="angle"?t.lab.onBox:t.lab.flat; text(lab,Math.min(sx,CLW-10),CLH-20,"#9aa3ab",11,sx<CLW-200?"left":"right");
+}
+/* ── 2. the front end: receiver lens, emitter, felt pad, fibre ── */
+function drawFrontView(){
+  const t=d(); if(!has("ldm")){ text(t.lab.noLdm,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const h=CLH-30, w=h*0.62, x0=CLW/2-w/2, y0=15;
+  fillR(x0,y0,w,h,w*0.16,"#17181a","#000",2);
+  const rx=CLW/2, ry=y0+h*0.36, rr=w*0.3; circ(rx,ry,rr,"#0c0d0f","#3a3d42",3); const g=ctx.createRadialGradient(rx-rr*0.3,ry-rr*0.3,2,rx,ry,rr); g.addColorStop(0,"#4a5a7a"); g.addColorStop(1,"#0a0c12"); circ(rx,ry,rr*0.85,g);
+  text(t.lab.rx,rx+rr+10,ry-rr*0.6,"#9aa3ab",11,"left","600");
+  const ex=CLW/2, ey=y0+h*0.78, er=w*0.09; circ(ex,ey,er*1.5,"#0c0d0f","#3a3d42",2); circ(ex,ey,er,"#1c2a44","#556"); if(laserLit()&&!ST.felt) circ(ex,ey,er*0.35,"#ff4433");
+  text(t.lab.tx,ex+er*1.5+10,ey,"#9aa3ab",11,"left","600");
+  if(ST.felt){ circ(rx,ry,rr*0.55,"#111","#2a2a2a",2); for(let i=0;i<40;i++){ const a=i*2.4, r=rr*0.5*Math.sqrt((i*37%100)/100); circ(rx+Math.cos(a)*r,ry+Math.sin(a)*r,1,"#2c2c2c"); } circ(rx,ry,rr*0.07,"#3a4a6a"); text(t.lab.felt,rx-rr-10,ry-rr*0.6,"#9aa3ab",11,"right","600"); }
+  if(ST.fiberIn){ ctx.lineCap="round"; ctx.strokeStyle="#050505"; ctx.lineWidth=Math.max(5,rr*0.14); ctx.beginPath(); ctx.moveTo(rx,ry); ctx.bezierCurveTo(rx-w*0.9,ry-h*0.1,ex-w*0.9,ey+h*0.15,ex,ey); ctx.stroke(); ctx.lineCap="butt";
+    circ(rx,ry,rr*0.08,"#f2f2c0"); circ(ex,ey,er*0.45,"#f2f2c0"); if(laserLit()) circ(ex,ey,er*0.25,"rgba(255,70,50,.9)"); }
+}
+/* ── 3. the fibre on the tape measure ── */
+const FV={z:0,cx:520};
+function fvMap(){ if(!FV.z) FV.z=(CLW-40)/1100; const z=FV.z; return {z,X:x=>CLW/2+(x-FV.cx)*z,U:p=>FV.cx+(p-CLW/2)/z}; }
+function drawFiberView(){
+  const t=d(); if(!(has("fiber")||ST.fiberIn)||!has("tapem")){ text(t.lab.noFiber,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=fvMap(), z=m.z, ty=CLH*0.42, th=Math.max(26,CLH*0.16);
+  ctx.fillStyle="#bfae8c"; ctx.fillRect(0,0,CLW,CLH);
+  ctx.fillStyle="#f6f2df"; ctx.fillRect(m.X(-30),ty,(1080)*z,th); ctx.strokeStyle="#bdb69c"; ctx.strokeRect(m.X(-30),ty,1080*z,th);
+  for(let k=0;k<=1050;k++){ const px=m.X(k); if(px<-5||px>CLW+5) continue; const L=k%10===0?th*0.55:k%5===0?th*0.38:th*0.22; if(z<1.2&&k%5) continue; if(z<0.5&&k%10) continue;
+    ctx.strokeStyle="#222"; ctx.lineWidth=k%10===0?1.1:0.6; ctx.beginPath(); ctx.moveTo(px,ty); ctx.lineTo(px,ty+L); ctx.stroke();
+    if(k%10===0&&(z>=0.9||k%50===0)) text(String(k/10),px+1,ty+th*0.78,"#222",Math.max(9,Math.min(14,z*4)),"left","600"); }
+  text("IKEA cm",m.X(-25),ty+th*0.5,"#c33",10,"left","800");
+  if(!ST.fiberIn){ const fy=ty-12; ctx.lineCap="round"; ctx.strokeStyle="#0b0b0c"; ctx.lineWidth=Math.max(3,2*z); ctx.beginPath(); ctx.moveTo(m.X(0),fy); ctx.lineTo(m.X(ST.cable),fy); ctx.stroke(); ctx.lineCap="butt";
+    circ(m.X(0),fy,Math.max(1.5,0.5*z),"#f2f2c0"); circ(m.X(ST.cable),fy,Math.max(1.5,0.5*z),"#f2f2c0");
+    if(ST.mark!==null){ const px=m.X(ST.mark); ctx.strokeStyle="#f2c14e"; ctx.lineWidth=2; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.moveTo(px,fy-30); ctx.lineTo(px,ty+th+6); ctx.stroke(); ctx.setLineDash([]); text("✂ "+t.lab.cutHere,px,fy-38,"#7a4a00",11,"center","700"); }
+    hitAdd("fib",m.X(0),fy-14,(ST.cable)*z,28); }
+  else text(t.m.fiberBusy,CLW/2,ty-30,"#7a2a1a",12,"center","600");
+}
+/* ── 4. the optical vessel from the side ── */
+const VV={z:0,cy:55};
+function vvMap(){ if(!VV.z) VV.z=(CLH-30)/130; const z=VV.z; return {z,X:x=>CLW/2+x*z,Y:y=>CLH/2-(y-VV.cy)*z,V:p=>VV.cy-(p-CLH/2)/z}; }
+function drawVesselView(){
+  const t=d(); if(!has("vessel")){ text(t.lab.noVessel,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=vvMap(), z=m.z, w=V_IN_W/2+V_WALL;
+  ctx.fillStyle="#d9d2c2"; ctx.fillRect(0,0,CLW,CLH); ctx.fillStyle="#bba680"; ctx.fillRect(0,m.Y(-V_BOT),CLW,CLH);
+  fillR(m.X(-w),m.Y(V_IN_H),2*w*z,(V_IN_H+V_BOT)*z,2,"rgba(225,240,248,.55)","#8fb4c6",2);
+  ctx.fillStyle="rgba(190,215,230,.7)"; ctx.fillRect(m.X(-w),m.Y(0),2*w*z,V_BOT*z);
+  if(ST.water>0){ ctx.fillStyle="rgba(110,170,215,.55)"; ctx.fillRect(m.X(-V_IN_W/2),m.Y(ST.water),V_IN_W*z,ST.water*z);
+    ctx.strokeStyle="#2f6f9e"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(m.X(-V_IN_W/2),m.Y(ST.water)-1.2*z); ctx.quadraticCurveTo(m.X(-V_IN_W/2+2),m.Y(ST.water),m.X(-V_IN_W/2+6),m.Y(ST.water)); ctx.lineTo(m.X(V_IN_W/2-6),m.Y(ST.water)); ctx.quadraticCurveTo(m.X(V_IN_W/2-2),m.Y(ST.water),m.X(V_IN_W/2),m.Y(ST.water)-1.2*z); ctx.stroke(); }
+  /* the paper tape glued on the outside, 0 at the inner floor */
+  const tx=m.X(w+1); ctx.fillStyle="#f6f2df"; ctx.fillRect(tx,m.Y(V_IN_H+8),16*Math.max(1,z/3),(V_IN_H+10)*z);
+  for(let k=0;k<=V_IN_H+6;k++){ const py=m.Y(k), L=(k%10===0?9:k%5===0?6:3.5)*Math.max(1,z/3); if(z<2&&k%5) continue; ctx.strokeStyle="#222"; ctx.lineWidth=k%10===0?1.1:0.6; ctx.beginPath(); ctx.moveTo(tx,py); ctx.lineTo(tx+L,py); ctx.stroke();
+    if(k%10===0) text(String(k/10),tx+L+3,py,"#222",Math.max(9,Math.min(14,z*1.4)),"left","600"); }
+  if(laserLit()&&ST.mode==="angle"){ const T2=tiltTarget(); if(T2&&T2.kind==="vessel"){ const ta=Math.tan(TRUE.th1), xb=T2.x-ST.pos.vessel.x, s2=Math.sin(TRUE.th1)/TRUE.nW, t2=s2/Math.sqrt(1-s2*s2);
+    const xs=ST.water>0?xb-(ST.water)*ta:xb, xe=ST.water>0?xs+ST.water*t2:xb, top=V_IN_H+30;
+    ctx.strokeStyle="#ff3b2c"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(m.X(xs-(top-ST.water)*ta),m.Y(top)); ctx.lineTo(m.X(xs),m.Y(ST.water)); ctx.lineTo(m.X(xe),m.Y(0)); ctx.stroke(); circ(m.X(xe),m.Y(0),3,"#ff4433"); } }
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="ldm") drawLdmView(); else if(tab==="front") drawFrontView(); else if(tab==="fiber") drawFiberView(); else drawVesselView();
+  ctx=old;
+}
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: putting things down, combining them, putting them back
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inB=(p,b,m)=>b&&p[0]>=b[0]-(m||0)&&p[0]<=b[2]+(m||0)&&p[1]>=b[1]-(m||0)&&p[1]<=b[3]+(m||0);
+const onTableXY=p=>{ const [x,y]=unPz(p[0],p[1],H_MM()); return [x,y]; };
+function nearEdge(p){ const a=P(X_EDGE-20,0,H_MM()), b=P(X_EDGE+140,TD,H_MM()-140); return p[0]>=a[0]&&p[0]<=b[0]&&p[1]>=a[1]-10&&p[1]<=b[1]+20; }
+const ldmBox=()=>has("ldm")?bbox("ldm"):null;
+function place(k,p){
+  const H=H_MM();
+  if(k==="felt"){ if(!has("ldm")||!inB(p,ldmBox(),12)){ say("onLdm"); return false; } if(ST.mode!=="flat"){ say("needFlat"); return false; } ST.felt=true; ST.on.add("felt"); say("felt"); return "said"; }
+  if(k==="fiber"&&has("ldm")&&inB(p,ldmBox(),12)){ if(ST.mode!=="flat"){ say("needFlat"); return false; } if(!ST.felt){ say("needFelt"); return false; } ST.fiberIn=true; ST.on.add("fiber"); say("fiberIn"); return "said"; }
+  if(k==="foam"){ const ab=has("angle")?bbox("angle"):null; if(!ab||!inB(p,ab,12)){ say("onAngle"); return false; } ST.foam=true; ST.on.add("foam"); say("foam"); return "said"; }
+  if(k==="magnet"&&has("box")&&inB(p,bbox("box"),6)){ ST.magnetIn=true; ST.on.add("magnet"); say("magnet"); return "said"; }
+  if(k==="angle"&&has("box")&&inB(p,bbox("box"),6)){ if(!ST.magnetIn){ say("needMagnet"); return false; } ST.angleOn=true; ST.on.add("angle"); say("angle"); return "said"; }
+  if(k==="ldm"){
+    if(ST.angleOn&&has("box")&&inB(p,bbox("box"),30)&&p[1]<P(0,ST.pos.box.y,H+BOX.h)[1]+10){ if(ST.felt||ST.fiberIn){ say("removeFelt"); return false; } if(!ST.foam){ say("needFoam"); return false; } ST.mode="angle"; ST.on.add("ldm"); say("mounted"); return "said"; }
+    if(nearEdge(p)){ if(ST.fiberIn){ say("removeFelt"); return false; } ST.mode="edge"; ST.on.add("ldm"); say("edge"); return "said"; } }
+  const [x,y]=onTableXY(p); if(!fits(k,x,y)){ say("noFit"); return false; }
+  ST.pos[k]={x,y}; if(k==="ldm") ST.mode="flat"; if(k==="angle") ST.angleOn=false; if(k==="fiber") ST.fiberIn=false; ST.on.add(k); return true;
+}
+function returnItem(k){
+  if(k==="ldm"){ if(ST.fiberIn){ ST.fiberIn=false; ST.on.delete("fiber"); } if(ST.felt){ ST.felt=false; ST.on.delete("felt"); } }
+  if(k==="box"){ if(has("ldm")&&ST.mode==="angle"){ say("busy"); return; } if(ST.angleOn){ ST.angleOn=false; ST.on.delete("angle"); ST.foam=false; ST.on.delete("foam"); } if(ST.magnetIn){ ST.magnetIn=false; ST.on.delete("magnet"); } }
+  if(k==="angle"){ if(has("ldm")&&ST.mode==="angle"){ say("busy"); return; } ST.angleOn=false; if(ST.foam){ ST.foam=false; ST.on.delete("foam"); } }
+  if(k==="vessel") ST.water=0;
+  ST.on.delete(k); say("back",itemName(k));
+}
+/* R-click on the LDM takes off the fibre, then the felt pad, then the LDM itself */
+function rightLdm(){ if(ST.fiberIn){ ST.fiberIn=false; ST.on.delete("fiber"); say("back",itemName("fiber")); return; } if(ST.felt){ ST.felt=false; ST.on.delete("felt"); say("back",itemName("felt")); return; } returnItem("ldm"); }
+const PICK=["ldm","angle","bottle","vessel","fiber","felt","tapem","tape","scis","foam","magnet","box"];
+function itemAt(p){ for(const k of PICK){ if(!has(k)) continue; if((k==="fiber"&&ST.fiberIn)||(k==="felt"&&ST.felt)||(k==="foam"&&ST.foam)||(k==="magnet"&&ST.magnetIn)) continue; const b=bbox(k); if(b&&inB(p,b,3)) return k; } return null; }
+function benchClick(p,right){
+  if(hand){ if(right){ if(hand.move){ ST.on.add(hand.item); Object.assign(ST,hand.restore||{}); ST.pos[hand.item]=hand.orig; say("placed",itemName(hand.item)); } else say("back",itemName(hand.item)); hand=null; return; }
+    const r=place(hand.item,p); if(r){ if(r===true) say("placed",itemName(hand.item)); hand=null; } return; }
+  const k=itemAt(p); if(!k) return;
+  if(right){ if(k==="ldm") rightLdm(); else returnItem(k); return; }
+  if(k==="ldm"&&(ST.felt||ST.fiberIn)&&ST.mode==="flat"){ hand={item:k,move:true,orig:{...ST.pos.ldm},restore:{mode:"flat"}}; ST.on.delete(k); say("picked",itemName(k)); return; }
+  if(k==="angle"&&ST.angleOn){ if(has("ldm")&&ST.mode==="angle"){ say("busy"); return; } ST.angleOn=false; ST.on.delete("angle"); hand={item:"angle",move:true,orig:null,restore:{angleOn:true}}; say("picked",itemName(k)); return; }
+  if(k==="box"&&has("ldm")&&ST.mode==="angle"){ boxDrag={x:p[0],bx:ST.pos.box.x}; return; }
+  const orig=ST.pos[k]?{...ST.pos[k]}:null, restore={mode:ST.mode}; ST.on.delete(k); hand={item:k,move:true,orig,restore}; say("picked",itemName(k));
+}
+let trayDrag=false, boxDrag=null;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); if(boxDrag) moveBox(boxDrag.bx+(mouse[0]-boxDrag.x)/S1-ST.pos.box.x); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("pointerup",()=>{ boxDrag=null; });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ if(hand.move){ ST.on.add(hand.item); Object.assign(ST,hand.restore||{}); if(hand.orig) ST.pos[hand.item]=hand.orig; } hand=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=hand&&hand.item===k; hand=null;
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+function moveBox(dx){ if(!has("box")){ say("noBox"); return; } const b=ST.pos.box, nx=Math.max(BOX.w/2+8,Math.min(X_EDGE-BOX.w/2-2,b.x+dx));
+  const f=footOf("box",nx,b.y); for(const o of ITEMS){ if(o==="box"||!has(o)||!ST.pos[o]||!onTop(o)) continue; if(overl(f,footOf(o,ST.pos[o].x,ST.pos[o].y),2)) return; } b.x=nx; }
+
+/* the close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let cdrag=null;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e); if(e.button!==0) return; const h=hitAt(p);
+  if(h&&"ABDE".includes(h.k)&&h.k.length===1){ ldmKey(h.k); return; }
+  if(tab==="fiber"){ if(h&&h.k==="fib"){ const m=fvMap(); ST.mark=Math.round(m.U(p[0])*10)/10; say("cutMark"); return; } cdrag={x:p[0],cx:FV.cx}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(tab==="vessel"){ cdrag={y:p[1],cy:VV.cy}; closeCv.setPointerCapture(e.pointerId); } });
+closeCv.addEventListener("pointermove",e=>{ if(!cdrag) return; const p=clpos(e);
+  if(tab==="fiber"&&cdrag.cx!==undefined){ FV.cx=cdrag.cx-(p[0]-cdrag.x)/fvMap().z; }
+  if(tab==="vessel"&&cdrag.cy!==undefined){ VV.cy=cdrag.cy+(p[1]-cdrag.y)/vvMap().z; } });
+closeCv.addEventListener("pointerup",()=>{ cdrag=null; });
+closeCv.addEventListener("wheel",e=>{ const p=clpos(e);
+  if(tab==="fiber"){ e.preventDefault(); const m=fvMap(), mx=m.U(p[0]); FV.z=Math.min(30,Math.max((CLW-40)/1100,FV.z*(e.deltaY<0?1.2:1/1.2))); FV.cx+=mx-fvMap().U(p[0]); }
+  else if(tab==="vessel"){ e.preventDefault(); const m=vvMap(), my=m.V(p[1]); VV.z=Math.min(40,Math.max((CLH-30)/130,VV.z*(e.deltaY<0?1.2:1/1.2))); VV.cy+=my-vvMap().V(p[1]); } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  THE INSTRUMENT, PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+function readOnce(){ if(ST.hot){ ST.disp="----"; return; } ST.disp=measure(); }
+function ldmKey(k){
+  if(!has("ldm")) return; const now=performance.now();
+  if(k==="A"){ ST.power=!ST.power; ST.cont=false; ST.asleep=false; ST.disp=""; if(ST.power){ ST.rear=true; ST.disp="0.000"; } return; }
+  if(!ST.power){ if(k==="D"){ ST.power=true; ST.rear=true; ST.disp="0.000"; } else say("off"); return; }
+  if(k==="B"){ ST.rear=!ST.rear; return; }
+  if(k==="E"){ ST.cont=!ST.cont; ST.asleep=false; ST.contT=0; ST.lastTick=now; if(ST.cont) readOnce(); return; }
+  if(k==="D"){ if(ST.cont){ ST.asleep=false; ST.contT=0; readOnce(); return; } ST.laserT=now+1600; readOnce(); }
+}
+for(const k of "ABDE") $("b"+k).onclick=()=>ldmKey(k);
+$("cutBtn").onclick=()=>{ if(!has("scis")){ say("needScis"); return; } if(ST.fiberIn){ say("fiberBusy"); return; } if(!has("fiber")||ST.mark===null){ say("noMark"); return; }
+  if(ST.mark<30||ST.mark>ST.cable-4){ say("tooShort"); ST.mark=null; return; } ST.cable=ST.mark+gauss()*1.2; ST.cuts++; ST.mark=null; say("cut"); };
+for(const [id,dx] of [["bx-10",-10],["bx-1",-1],["bx1",1],["bx10",10]]) $(id).onclick=()=>moveBox(dx);
+function addWater(dz){ if(!has("vessel")||!has("bottle")){ say("needVessel"); return; } ST.water=Math.max(0,Math.min(V_IN_H-3,ST.water+dz+gauss()*0.25)); if(ST.water<0.3) ST.water=0; say("water",(dz>0?"+":"")+dz+" mm"); }
+for(const [id,dz] of [["w5",5],["w1",1],["wm1",-1],["wm5",-5]]) $(id).onclick=()=>addWater(dz);
+$("wEmpty").onclick=()=>{ if(!has("vessel")) return; ST.water=0; };
+$("noteBtn").onclick=()=>{ const n=$("note"); n.value+=(n.value&&!n.value.endsWith("\n")?"\n":"")+"y = "+(ST.disp||"—")+(ST.disp&&ST.disp!=="Error"?" m":"")+"    x = "; n.focus(); n.scrollTop=n.scrollHeight; say("noted"); };
+$("noteClr").onclick=()=>{ $("note").value=""; };
+function renderPanel(){ const t=d(); $("ldmDisp").textContent=ST.power?(ST.disp?(ST.disp+(ST.disp==="Error"||ST.disp==="----"?"":" m")):"0.000 m"):"-----"; $("fiberLbl").textContent=t.fiberLbl(ST.cuts,ST.mark!==null); }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(laserLit()) L.push([t.st.laser,true]);
+  if(ST.hot) L.push([t.st.hot,true]);
+  if(ST.asleep) L.push([t.st.sleep,false]);
+  if(ST.power&&!ST.rear) L.push([t.st.front,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-ldm").textContent=t.hLdm; for(const k of "ABDE") $("b"+k).textContent=t["b"+k]; $("ldmHint").textContent=t.ldmHint;
+  $("t-h-fiber").textContent=t.hFiber; $("cutBtn").textContent=t.cut; $("t-h-box").textContent=t.hBox; $("boxHint").textContent=t.boxHint;
+  $("t-h-water").textContent=t.hWater; $("wEmpty").textContent=t.wEmpty; $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2013 E1 — 빛의 속력 · HaslaLab":"IPhO 2013 E1 — Speed of Light · HaslaLab";
+  renderTabs(); renderPanel(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, tPrev=performance.now();
+function tick(){
+  const now=performance.now(), dt=Math.min(0.2,(now-tPrev)/1000); tPrev=now;
+  /* continuous mode: a new reading about once a second, sleep after three minutes, heat builds up */
+  if(ST.power&&ST.cont&&!ST.asleep){ ST.contT+=dt; ST.heat+=dt; if(now-ST.lastTick>1000){ ST.lastTick=now; readOnce(); } if(ST.contT>180) ST.asleep=true; }
+  else ST.heat=Math.max(0,ST.heat-dt*(ST.power?0.6:2.5));
+  if(!ST.hot&&ST.heat>420) ST.hot=true; if(ST.hot&&ST.heat<120) ST.hot=false;
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
