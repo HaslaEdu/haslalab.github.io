@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2010 — 얇은 판의 탄성 · 자석 사이의 힘 · Elasticity of Sheets · Forces between Magnets · HaslaLab</title>
+<meta name="description" content="IPhO 2010 실험 1·2를 브라우저에서 실행합니다. 프레스와 전자저울로 투명 필름을 말아 만든 원통의 굽힘 강성을 재고, 윗판을 뒤집어 투명 원통 속 막대자석과 고리자석 사이의 힘을 위치에 따라 잽니다. 나비너트는 한 바퀴에 2 mm, 자로 간격을 읽습니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2010 — 얇은 판의 탄성 · 자석 사이의 힘 · Elasticity of Sheets · Forces between Magnets">
+<meta property="og:description" content="IPhO 2010 실험 1·2를 브라우저에서 실행합니다. 프레스와 저울로 필름 원통의 굽힘 강성과 자석 사이의 힘을 잽니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #sheetRow button,#modeRow button{padding:6px 6px;font-size:12px}
+  #cylRow button,#kindRow button,#axisRow button,#orRow button{padding:6px 6px}
+  #ovLbl,#wLbl,#hLbl{flex:3}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-press"></h2>
+    <div class="row"><button id="flipBtn"></button></div>
+    <div class="row" id="nutRow"></div>
+    <p class="hint" id="t-nuthint"></p>
+
+    <h2 id="t-h-foil"></h2>
+    <div class="row" id="kindRow"></div>
+    <div class="row" id="axisRow"></div>
+    <div class="row"><button id="ovMinus">−</button><button id="ovLbl" disabled></button><button id="ovPlus">+</button></div>
+    <div class="row"><button id="wMinus">−</button><button id="wLbl" disabled></button><button id="wPlus">+</button></div>
+    <div class="row"><button id="hMinus">−</button><button id="hLbl" disabled></button><button id="hPlus">+</button></div>
+    <div class="row"><button id="rollBtn"></button></div>
+    <div class="row" id="cylRow"></div>
+    <div class="row"><button id="cylOn"></button><button id="cylOff"></button></div>
+
+    <h2 id="t-h-mag"></h2>
+    <div class="row" id="orRow"></div>
+    <div class="row"><button id="rodOut"></button><button id="rodFlip"></button></div>
+    <p class="hint" id="t-maghint"></p>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <div class="laps" id="notes" style="max-height:200px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2010 실험 1·2 — 얇은 판의 탄성 · 자석 사이의 힘",
+    sub:"가상 실험실 · 프레스(돌덩이·나비너트)와 전자저울 하나로 두 실험을 합니다. 실험 1: 투명 필름을 말아 원통을 만들고 나무판 위에서 눌러 저울 읽음과 판 사이 간격을 잽니다. 실험 2: 윗판을 뒤집어 알루미늄 봉으로 투명 원통 속 막대자석을 고리자석 쪽으로 밀며 힘을 잽니다. 나비너트는 한 바퀴(360°)에 2 mm 움직입니다. 굽힘 강성·영률·힘의 곡선은 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠(프레스 위): 나비너트 돌리기",
+    cap:"실험대 (프레스 정면) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 프레스 위에서 휠: 나비너트 돌리기 (위로 굴리면 윗판이 내려갑니다, 한 칸 10°, Shift 2°)",
+    tabs:{scale:"저울 · 나비너트", gap:"간격 · 자 (옆모습)", hand:"손으로 (실험 2 과제 1)"},
+    closeCap:{scale:"확대 — 전자저울 표시창과 단추 (ON/OFF, TARA, UNIT), 위에서 본 나비너트와 나사에 새긴 회전 눈금. 휠: 나비너트 돌리기.",
+      gap:"확대 — 옆에서 본 윗판 아래 공간. 자 [6]를 실험대에 꺼내 두면 저울 접시에서부터 잰 높이 눈금이 옆에 섭니다. 휠: 나비너트 돌리기 (Shift 미세).",
+      hand:"확대 — 투명 원통을 작업대에 눕혀(z축 수평) 손과 나무 막대로 막대자석을 밀어 봅니다. 휠: 나무 막대로 막대자석 밀기 (Shift 미세). 놓으면 자석이 스스로 자리를 찾습니다."},
+    hPress:"프레스 [1]", flip:"윗판 뒤집기 (실험 1 ↔ 실험 2)", nutHint:"나비너트는 한 바퀴에 2 mm. 거꾸로 돌리면 처음에 조금 헛돕니다.", ctr0:"회전 눈금 0으로", nut:["⟲ 90°","⟲ 10°","10° ⟳","90° ⟳"],
+    hFoil:"필름 원통 만들기 (가위 [5] · 테이프 [4])", kinds:{blue:"파란 필름 200 µm",clear:"무색 필름 150 µm"}, axes:{short:"짧은 변이 축 (l = 너비)",long:"긴 변이 축 (l = 길이)"},
+    ov:v=>"겹침 "+v.toFixed(1)+" mm", w:v=>"자른 너비 "+v+" mm", h:v=>"자른 길이 "+v+" mm", roll:"말아서 원통 만들기", cylOn:"원통을 나무판에", cylOff:"원통 내리기",
+    hMag:"투명 원통 [3] · 막대자석 [4]", ors:{upright:"고리 끝 위로",inverted:"고리 끝 아래로",horizontal:"작업대에 눕힘"}, rodOut:"막대로 자석 빼기", rodFlip:"자석 뒤집기",
+    magHint:"막대자석을 원통에 넣으려면 부품함의 막대자석을 원통 위로 가져가 클릭합니다. 빼려면 나무 막대 [5]가 필요합니다.",
+    hNote:"실험 노트", note:"지금 읽음 적기", noteClr:"지우기", noteEmpty:"아직 적은 것이 없습니다",
+    items:{press:"프레스 + 돌덩이 [1]", scale:"전자저울 [2]", stone:"돌덩이", wplate:"나무판 [7]", tube:"투명 원통 (고리자석) [3]", rodmag:"막대자석 [4]", ruler:"자 [6]", stick:"나무 막대 [5]", scissors:"가위 [5]", tape:"접착 테이프 [4]"},
+    lab:{none:"(실험대에 없음)", turn:"회전", noScale:"저울을 프레스 안에 넣으면 보입니다", noPress:"프레스를 놓으면 보입니다", ruler:"자 (mm, 저울 접시에서부터)", noRuler:"자 [6]를 실험대에 꺼내 두면 높이 눈금이 섭니다",
+      noTube:"투명 원통을 작업대에 눕히면(패널) 보입니다", stick:"나무 막대", rodIn:"막대자석", ring:"고리자석", g:"g", oz:"oz", on:"ON/OFF", tara:"TARA", unit:"UNIT", plate:"윗판", wp:"나무판", nut:"나비너트 (위에서)", counter:"나사의 회전 눈금"},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", hand:n=>"손에 든 것: "+n, flipped:"윗판이 뒤집혀 있습니다 (알루미늄 봉이 아래, 실험 2).", upright:"윗판이 바로 놓여 있습니다 (알루미늄 봉이 위, 실험 1)."},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.",
+       needPress:"먼저 프레스를 놓으세요.", needScale:"먼저 저울을 프레스 안에 넣으세요.", panBusy:"저울 접시에 이미 다른 것이 있습니다.", needTube:"투명 원통이 없습니다.", clearPan:"저울 위의 물체를 먼저 치우세요.", cylFirst:"필름 원통을 먼저 내리세요.", rodFirst:"막대자석을 먼저 빼내세요.", stoneScale:"저울과 돌덩이를 먼저 치우세요.",
+       hard:"윗판이 아래 물체에 닿아 더 내려가지 않습니다.", crease:"필름이 심하게 눌려 영구적으로 접혔습니다! 새로 말아야 합니다.", shot:"막대자석이 구멍에서 튀어나왔습니다.", alInWay:"알루미늄 봉이 방해합니다. 윗판을 올리거나 원통을 눕힌 뒤 넣으세요.",
+       flip:f=>f?"윗판을 뒤집었습니다: 알루미늄 봉이 아래를 향합니다 (실험 2).":"윗판을 바로 놓았습니다: 알루미늄 봉이 위를 향합니다 (실험 1).", ctr0:"회전 눈금을 0으로 맞췄습니다.",
+       needCut:"필름을 자르고 말려면 가위와 테이프를 실험대에 꺼내 두세요.", small:"둘레가 너무 짧습니다.", rolled:id=>"원통 "+id+" 를 만들었습니다.", needWplate:"먼저 저울 위에 나무판을 놓으세요.", cylPut:id=>"원통 "+id+" 를 나무판 위에 눕혔습니다.", cylGone:"원통을 내렸습니다.", noCyl:"고른 원통이 없습니다.", flippedNo:"윗판이 뒤집혀 있으면 필름을 누를 수 없습니다.",
+       orient:k=>k, rodIn:"막대자석을 구멍에 넣었습니다.", rodOut:"나무 막대로 막대자석을 빼냈습니다.", needStick:"나무 막대 [5]를 실험대에 꺼내 두세요.", notIn:"원통 안에 막대자석이 없습니다.", rodFlip:"막대자석의 방향을 뒤집었습니다.", rodInside:"먼저 막대자석을 원통에서 빼내세요.", tara:"영점(TARA)을 잡았습니다.", noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"IPhO 2010 Experiments 1 & 2 — Elasticity of sheets · Forces between magnets",
+    sub:"Virtual laboratory · one press (with a stone block and a wing nut) and one digital scale serve both experiments. Experiment 1: roll transparency foils into cylinders, press them on the wooden plate and read the scale and the plate separation. Experiment 2: turn the upper plate over and push the rod magnet in the transparent cylinder towards the ring magnet with the aluminium rod, reading the force. The wing nut moves 2 mm per 360°. Bending rigidities, Young's moduli and the force curves are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\nwheel over the press: turn the wing nut",
+    cap:"the bench (the press from the front) — L-click pick up / put down, R-click back to the box / wheel over the press: turn the wing nut (rolling up lowers the plate, 10° per notch, Shift 2°)",
+    tabs:{scale:"Scale · wing nut", gap:"Gap · ruler (side view)", hand:"By hand (exp. 2 task 1)"},
+    closeCap:{scale:"close up — the digital scale's display and buttons (ON/OFF, TARA, UNIT), the wing nut seen from above and the turn graduation on the screw. Wheel: turn the wing nut.",
+      gap:"close up — the space under the upper plate, from the side. With the ruler [6] out on the bench a scale of heights above the balance pan stands beside it. Wheel: turn the wing nut (Shift: fine).",
+      hand:"close up — the transparent cylinder lying on the bench (z axis horizontal); push the rod magnet with the wooden stick. Wheel: push the rod magnet (Shift: fine). Let go and the magnet finds its own place."},
+    hPress:"Press [1]", flip:"Turn the upper plate over (exp. 1 ↔ exp. 2)", nutHint:"The wing nut moves 2 mm per turn. After a reversal it first turns a little without moving.", ctr0:"Set the graduation to 0", nut:["⟲ 90°","⟲ 10°","10° ⟳","90° ⟳"],
+    hFoil:"Rolling foil cylinders (scissors [5] · tape [4])", kinds:{blue:"blue foil 200 µm",clear:"colourless foil 150 µm"}, axes:{short:"short side as axis (l = width)",long:"long side as axis (l = length)"},
+    ov:v=>"overlap "+v.toFixed(1)+" mm", w:v=>"cut width "+v+" mm", h:v=>"cut length "+v+" mm", roll:"Roll a cylinder", cylOn:"Cylinder onto the plate", cylOff:"Take the cylinder off",
+    hMag:"Transparent cylinder [3] · rod magnet [4]", ors:{upright:"ring end up",inverted:"ring end down",horizontal:"lying on the bench"}, rodOut:"Push the magnet out", rodFlip:"Turn the magnet around",
+    magHint:"To put the rod magnet in, take it from the box and click over the cylinder. Taking it out needs the wooden stick [5].",
+    hNote:"Lab notebook", note:"Write down the readings", noteClr:"Clear", noteEmpty:"nothing written yet",
+    items:{press:"Press + stone block [1]", scale:"Digital scale [2]", stone:"Stone block", wplate:"Wooden plate [7]", tube:"Transparent cylinder (ring magnet) [3]", rodmag:"Rod magnet [4]", ruler:"Ruler [6]", stick:"Wooden stick [5]", scissors:"Scissors [5]", tape:"Adhesive tape [4]"},
+    lab:{none:"(not on the bench)", turn:"turn", noScale:"put the scale into the press to see it", noPress:"put the press down to see it", ruler:"ruler (mm, from the balance pan)", noRuler:"put the ruler [6] out on the bench to stand a height scale here",
+      noTube:"lay the transparent cylinder on the bench (panel) to see it", stick:"wooden stick", rodIn:"rod magnet", ring:"ring magnet", g:"g", oz:"oz", on:"ON/OFF", tara:"TARA", unit:"UNIT", plate:"upper plate", wp:"wooden plate", nut:"wing nut (from above)", counter:"turn graduation on the screw"},
+    st:{none:"Take the apparatus out of the box and put it on the bench.", hand:n=>"In hand: "+n, flipped:"The upper plate is turned over (aluminium rod down, exp. 2).", upright:"The upper plate is upright (aluminium rod up, exp. 1)."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", noFit:"It does not go there.",
+       needPress:"Put the press down first.", needScale:"Put the scale into the press first.", panBusy:"Something else is on the balance pan.", needTube:"No transparent cylinder.", clearPan:"Clear the balance pan first.", cylFirst:"Take the foil cylinder off first.", rodFirst:"Take the rod magnet out first.", stoneScale:"Remove the scale and the stone first.",
+       hard:"The upper plate already rests on the object below.", crease:"The foil has been creased permanently! Roll a new one.", shot:"The rod magnet has shot out of the hole.", alInWay:"The aluminium rod is in the way: raise the upper plate or lay the cylinder down first.",
+       flip:f=>f?"Upper plate turned over: the aluminium rod points down (exp. 2).":"Upper plate upright: the aluminium rod points up (exp. 1).", ctr0:"Graduation set to zero.",
+       needCut:"Put the scissors and the tape out on the bench to cut and roll the foil.", small:"Circumference too small.", rolled:id=>"Cylinder "+id+" rolled.", needWplate:"Put the wooden plate on the pan first.", cylPut:id=>"Cylinder "+id+" lies on the wooden plate.", cylGone:"Cylinder taken off.", noCyl:"No cylinder selected.", flippedNo:"With the upper plate turned over the foil cannot be pressed.",
+       orient:k=>k, rodIn:"The rod magnet is inside the hole.", rodOut:"The rod magnet has been pushed out with the stick.", needStick:"Put the wooden stick [5] out on the bench.", notIn:"The rod magnet is not in the cylinder.", rodFlip:"The rod magnet has been turned around.", rodInside:"Take the rod magnet out of the cylinder first.", tara:"Tared.", noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  NUMERICAL HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+function gaussLegendre(n){ const xs=[], ws=[];
+  for(let i=1;i<=n;i++){ let x=Math.cos(Math.PI*(i-0.25)/(n+0.5)), dp=1;
+    for(let it=0;it<100;it++){ let p0=1, p1=x; for(let k=2;k<=n;k++){ const p2=((2*k-1)*x*p1-(k-1)*p0)/k; p0=p1; p1=p2; } dp=n*(x*p1-p0)/(x*x-1); const dx=-p1/dp; x+=dx; if(Math.abs(dx)<1e-15) break; }
+    xs.push(x); ws.push(2/((1-x*x)*dp*dp)); }
+  return [xs,ws]; }
+const [G8X,G8W]=gaussLegendre(8), [G6X,G6W]=gaussLegendre(6);
+function quad8(f,a,b){ const h=0.5*(b-a), m=0.5*(b+a); let s=0; for(let i=0;i<8;i++) s+=G8W[i]*f(m+h*G8X[i]); return h*s; }
+function quadPanels(f,a,b,n){ let s=0; const st=(b-a)/n; for(let i=0;i<n;i++) s+=quad8(f,a+i*st,a+(i+1)*st); return s; }
+function bessj1(x){ const ax=Math.abs(x);
+  if(ax<8){ const y=x*x, p=x*(72362614232.0+y*(-7895059235.0+y*(242396853.1+y*(-2972611.439+y*(15704.48260+y*(-30.16036606)))))), q=144725228442.0+y*(2300535178.0+y*(18583304.74+y*(99447.43394+y*(376.9991397+y)))); return p/q; }
+  const z=8/ax, y=z*z, xx=ax-2.356194491, p=1+y*(0.183105e-2+y*(-0.3516396496e-4+y*(0.2457520174e-5+y*(-0.240337019e-6)))), q=0.04687499995+y*(-0.2002690873e-3+y*(0.8449199096e-5+y*(-0.88228987e-6+y*0.105787412e-6)));
+  const a=Math.sqrt(0.636619772/ax)*(Math.cos(xx)*p-z*Math.sin(xx)*q); return x>0?a:-a; }
+const G_ACC=9.81, MU0=4e-7*Math.PI;
+const gauss=()=>{ const u=Math.max(1e-12,Math.random()), v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+
+/* ══════════════════════════════════════════════════════════════
+   2.  PROBLEM 1 — THE ELASTICA OF A FOIL RING PRESSED BETWEEN PLATES
+   ══════════════════════════════════════════════════════════════ */
+const UMAXE=Math.sqrt(Math.PI/2);
+const I0E=quadPanels(u=>2*u/Math.sqrt(Math.sin(u*u)),0,UMAXE,8);
+const I1E=quadPanels(u=>2*u*Math.sin(u*u)/Math.sqrt(Math.sin(u*u)),0,UMAXE,8);
+const H_THR=Math.PI*I1E/I0E, F_CONTACT=4*I1E*I1E;
+function arcInt(f,k0){ const c=2*f, k2=k0*k0;
+  return [quadPanels(u=>2*u/Math.sqrt(c*Math.sin(u*u)+k2),0,UMAXE,6), quadPanels(u=>{ const s=Math.sin(u*u); return 2*u*s/Math.sqrt(c*s+k2); },0,UMAXE,6)]; }
+function solveFK(hh,f,k0){
+  for(let it=0;it<60;it++){ const [L,D]=arcInt(f,k0), r1=L-0.5*Math.PI, r2=D-0.5*hh; if(Math.abs(r1)<1e-12&&Math.abs(r2)<1e-12) break;
+    const df=f*1e-6+1e-13, dk=k0*1e-6+1e-13, [L1,D1]=arcInt(f+df,k0), [L2,D2]=arcInt(f,k0+dk);
+    const a11=(L1-L)/df, a21=(D1-D)/df, a12=(L2-L)/dk, a22=(D2-D)/dk, det=a11*a22-a12*a21; if(det===0) break;
+    const sf=-(r1*a22-a12*r2)/det, sk=-(a11*r2-r1*a21)/det; let lam=1;
+    while((f+lam*sf<=1e-12||k0+lam*sk<=0)&&lam>1e-8) lam*=0.5; f+=lam*sf; k0+=lam*sk; }
+  return [f,k0]; }
+const FCACHE=new Map();
+/* dimensionless press force F Rc^2 / B for the plate gap hh = h/Rc */
+function forceHat(hh){
+  if(hh<=0) return Infinity; if(hh>=2) return 0; if(hh<=H_THR) return F_CONTACT/(hh*hh);
+  const key=Math.round(hh*1e6); const hit=FCACHE.get(key); if(hit!==undefined) return hit;
+  const [f]=solveFK(hh,0.5*F_CONTACT/(hh*hh),2/hh); const v=2*f; if(FCACHE.size>4000) FCACHE.clear(); FCACHE.set(key,v); return v; }
+/* the squeezed ring's outline, in units of Rc (for drawing only) */
+function outline(hh,nseg=40){
+  if(hh>=2){ const o=[]; for(let i=0;i<72;i++) o.push([Math.cos(2*Math.PI*i/72),Math.sin(2*Math.PI*i/72)]); return o; }
+  let f, k0, sf;
+  if(hh<=H_THR){ f=2*I1E*I1E/(hh*hh); k0=0; sf=I0E/Math.sqrt(2*f); }
+  else { [f,k0]=solveFK(hh,0.5*forceHat(hh),2/hh); sf=0.5*Math.PI; }
+  const c=Math.max(0,0.5*Math.PI-sf), pts=[[c,0.5*hh]]; let x=c, y=0.5*hh; const du=UMAXE/nseg;
+  for(let i=0;i<nseg;i++){ const u0=i*du; for(const sub of [0.25,0.75]){ const u=u0+du*sub, ph=u*u, ds=2*u/Math.sqrt(2*f*Math.sin(ph)+k0*k0); x+=Math.cos(ph)*ds*du*0.5; y-=Math.sin(ph)*ds*du*0.5; } pts.push([x,y]); }
+  const out=[...pts]; for(const p of [...pts.slice(0,-1)].reverse()) out.push([p[0],-p[1]]); for(const p of pts.slice(1)) out.push([-p[0],-p[1]]); for(const p of [...pts.slice(0,-1)].reverse()) out.push([-p[0],p[1]]);
+  return out; }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  PROBLEM 2 — ROD MAGNET AND RING MAGNET (magnetic surface charges, Hankel integral)
+   ══════════════════════════════════════════════════════════════ */
+function magnetModel(a,L,Ri,Ro,t,Mrod,Mring){
+  const kfine=20, npan=140, kmax=3000, nlog=80, dmax=130, dstep=0.05, edges=[];
+  for(let i=0;i<=npan;i++) edges.push(kfine*i/npan); const r=Math.pow(kmax/kfine,1/nlog); let e=kfine; for(let i=0;i<nlog;i++){ e*=r; edges.push(e); }
+  const ks=[], ws=[]; for(let i=0;i<edges.length-1;i++){ const aa=edges[i], bb=edges[i+1], hm=0.5*(bb-aa), mm=0.5*(bb+aa); for(let j=0;j<6;j++){ ks.push(mm+hm*G6X[j]); ws.push(G6W[j]*hm); } }
+  const C=Math.PI*MU0*Mrod*Mring*1e-6, W=ks.map((k,i)=>{ const s1=a*bessj1(k*a)/k, s2=(Ro*bessj1(k*Ro)-Ri*bessj1(k*Ri))/k; return C*ws[i]*k*s1*s2; });
+  const n=Math.floor(dmax/dstep)+1, tab=new Float64Array(n);
+  for(let i=0;i<n;i++){ const dd=i*dstep; let s=0; for(let j=0;j<ks.length;j++){ const ex=-ks[j]*dd; if(ex>-50) s+=W[j]*Math.exp(ex); } tab[i]=s; }
+  const DM=(n-1)*dstep;
+  const K=dd=>{ dd=Math.abs(dd); if(dd>=DM) return 0; const x=dd/dstep, i=Math.floor(x), fr=x-i;
+    if(i===0||i>=n-2) return tab[i]*(1-fr)+tab[i+1]*fr; const p0=tab[i-1], p1=tab[i], p2=tab[i+1], p3=tab[i+2], m1=0.5*(p2-p0), m2=0.5*(p3-p1);
+    return p1+m1*fr+(3*(p2-p1)-2*m1-m2)*fr*fr+(2*(p1-p2)+m1+m2)*fr**3; };
+  /* axial force on the rod [N]; z (mm) = rod centre from ring centre, + into the cylinder; o = +1 parallel, -1 anti-parallel */
+  const force=(z,o)=>{ const L2=0.5*L, t2=0.5*t; let tot=0; for(const [zi,si] of [[z+L2,1],[z-L2,-1]]) for(const [zj,sj] of [[t2,1],[-t2,-1]]){ const dd=zi-zj; if(dd!==0) tot+=si*sj*(dd>0?1:-1)*K(dd); } return o*tot; };
+  return {force};
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  HIDDEN TRUTH OF THIS SESSION
+   ══════════════════════════════════════════════════════════════ */
+const TRUE=(()=>{ const o={}, u=U;
+  o.dNom={blue:200e-6,clear:150e-6}; o.dTrue={blue:200e-6*(1+u(-0.006,0.006)),clear:150e-6*(1+u(-0.006,0.006))};
+  o.Y={blue:2.188e9*(1+u(-0.045,0.045)),clear:2.735e9*(1+u(-0.045,0.045))}; o.nu=1/3;
+  o.kappa={}; for(const k of ["blue","clear"]) o.kappa[k]=o.Y[k]*o.dTrue[k]**3/(12*(1-o.nu**2));
+  o.pitch=2*(1+u(-0.0012,0.0012)); o.backlash=u(0.05,0.11); o.compliance=u(0.8e-3,2.0e-3);
+  o.scaleOffset=u(-0.6,0.6); o.scaleNoise=u(0.25,0.45); o.scaleGain=1+u(-0.0015,0.0015); o.scaleCap=5000; o.eye=u(0.18,0.30);
+  o.rodA=2.5*(1+u(-0.02,0.02)); o.rodL=30*(1+u(-0.025,0.025)); o.ringRi=3*(1+u(-0.03,0.03)); o.ringRo=11*(1+u(-0.035,0.035)); o.ringT=5*(1+u(-0.05,0.05));
+  o.Mrod=1e6*(1+u(-0.04,0.04)); o.Mring=1e6*(1+u(-0.04,0.04)); o.rho=7.5e-3*(1+u(-0.02,0.02)); o.rodMass=Math.PI*o.rodA**2*o.rodL*o.rho; o.mu=u(0.10,0.20);
+  o.mWplate=u(118,132); o.mTube=u(46,54); o.mStone=u(1150,1290);
+  return o; })();
+const MAG=magnetModel(TRUE.rodA,TRUE.rodL,TRUE.ringRi,TRUE.ringRo,TRUE.ringT,TRUE.Mrod,TRUE.Mring);
+
+/* ══════════════════════════════════════════════════════════════
+   5.  THE APPARATUS  (mm, side view; y = 0 at the balance pan surface)
+   ══════════════════════════════════════════════════════════════ */
+const BASE_TOP=-48, BASE_W=330, BASE_TH=18, POST_X=150, POST_H=300, PLATE_W=270, PLATE_TH=18, PLATE_Y_MAX=200, PLATE_Y_MIN=2, SCREW_X=96;
+const ALROD_X=-58, ALROD_LEN=60, ALROD_D=6, WPLATE_X=-40, WPLATE_W=150, WPLATE_TH=12, TUBE_X=ALROD_X, TUBE_H=100, TUBE_OD=25, TUBE_HOLE_D=6, RING_FROM_END=15, PAN_D=180;
+const ITEMS=["press","scale","stone","wplate","tube","rodmag","ruler","stick","scissors","tape"];
+const ST={
+  placed:new Set(), flipped:false, cyl:[], cylN:0, onPan:null, cylOn:null,
+  turns:0, ctr0:0, lastDir:0, lash:0, scaleOn:true, tare:0, tareOff:0, oz:false,
+  tubeOr:"upright", rodWhere:"box", rodOr:1, rodZ:0, contact:false,
+  sheet:{kind:"blue",axis:"short",overlap:5,w:210,h:297}, sel:null, notes:[], lastScale:""
+};
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.placed.has(k);
+const itemName=k=>d().items[k]||k;
+/* ---- the foil workshop ---- */
+function rollFoil(){ const s=ST.sheet, W=Math.max(20,Math.min(210,s.w)), H=Math.max(20,Math.min(297,s.h)), ov=Math.max(0,Math.min(40,s.overlap));
+  const [l,circ]=s.axis==="short"?[W,H-ov]:[H,W-ov]; if(circ<40) return null;
+  const Rc=circ/(2*Math.PI)+U(-0.18,0.18), seam=1+U(-0.022,0.022); ST.cylN++;
+  const c={id:"C"+ST.cylN,kind:s.kind,l,circ,Rc,B:TRUE.kappa[s.kind]*(l*1e-3)*seam,creased:false,mass:1.40e-3*l*circ*(TRUE.dTrue[s.kind]*1e3),w:W,h:H,axis:s.axis,ov};
+  ST.cyl.push(c); return c; }
+const cylById=id=>ST.cyl.find(c=>c.id===id);
+/* ---- the press ---- */
+const plateYraw=()=>PLATE_Y_MAX-TRUE.pitch*ST.turns+ST.lash;
+const plateY=()=>Math.max(PLATE_Y_MIN,Math.min(PLATE_Y_MAX+4,plateYraw()+TRUE.compliance*pressForce()));
+function turnNut(deg){
+  if(!has("press")) return;
+  const dd=deg>0?1:deg<0?-1:0; if(dd&&ST.lastDir&&dd!==ST.lastDir) ST.lash+=dd>0?TRUE.backlash:-TRUE.backlash; if(dd) ST.lastDir=dd;
+  ST.turns+=deg/360; let ymin=PLATE_Y_MIN;
+  if(ST.onPan==="tube"&&ST.tubeOr!=="horizontal") ymin=TUBE_H+1.5; else if(ST.onPan==="wplate") ymin=WPLATE_TH+2;
+  if(ST.flipped&&ST.onPan==="wplate") ymin=WPLATE_TH+ALROD_LEN+1;
+  const tmax=(PLATE_Y_MAX+ST.lash-ymin)/TRUE.pitch; let hard=false; if(ST.turns>tmax){ ST.turns=tmax; hard=true; }
+  ST.turns=Math.max(-6,ST.turns); relax(); if(hard) say("hard");
+}
+function counterText(){ const x=ST.turns-ST.ctr0, ax=Math.abs(x), n=Math.floor(ax), deg=(ax-n)*360; return [x<0?"-":"",n,deg]; }
+/* ---- forces ---- */
+const foilGap=()=>plateYraw()-WPLATE_TH;
+function foilForce(){
+  const c=cylById(ST.cylOn); if(!c||ST.onPan!=="wplate"||ST.flipped) return 0;
+  const Rc=c.Rc, B=c.B*(c.creased?0.86:1), Fof=h=>{ const hh=Math.max(1e-3,h)/Rc; return hh>=2?0:forceHat(hh)*B/((Rc*1e-3)**2); };
+  let h=foilGap(); for(let i=0;i<24;i++){ const hn=foilGap()+TRUE.compliance*Fof(h); if(Math.abs(hn-h)<1e-7){ h=hn; break; } h=hn; }
+  const hh=Math.max(1e-3,h)/Rc; if(hh>=2) return 0; const F=Fof(h);
+  if(0.5*hh<0.12&&!c.creased){ c.creased=true; say("crease"); }
+  return F; }
+const ringH=()=>ST.tubeOr==="upright"?TUBE_H-RING_FROM_END:ST.tubeOr==="inverted"?RING_FROM_END:0.5*TUBE_OD;
+const zSign=()=>ST.tubeOr==="upright"?-1:1;
+const rodH=()=>ringH()+zSign()*ST.rodZ;
+function zEntry(){ const L2=0.5*TRUE.rodL; return ST.tubeOr==="inverted"?TUBE_H-RING_FROM_END-L2+1:-RING_FROM_END-L2+3.5; }
+function zLimits(){ const L2=0.5*TRUE.rodL, deep=TUBE_H-RING_FROM_END-L2; let out=-RING_FROM_END-L2+3; if(ST.tubeOr==="inverted") out=L2-RING_FROM_END; return [out,deep]; }
+const gravZ=()=>ST.tubeOr==="horizontal"?0:-zSign()*TRUE.rodMass*1e-3*G_ACC;
+function pressZBound(){ if(!(ST.flipped&&has("press")&&ST.rodWhere==="tube"&&ST.tubeOr!=="horizontal"&&ST.onPan==="tube")) return [null,null];
+  const tip=plateYraw()-ALROD_LEN, L2=0.5*TRUE.rodL, zb=zSign()*(tip-L2-ringH()); return [zb,ST.tubeOr==="upright"?"lower":"upper"]; }
+const netForce=z=>MAG.force(z,ST.rodOr)+gravZ();
+function relax(){
+  if(ST.rodWhere!=="tube"){ ST.contact=false; return; }
+  const [zlo,zhi]=zLimits(), [zb,kind]=pressZBound(); let lo=zlo, hi=zhi;
+  if(zb!==null){ if(kind==="lower") lo=Math.max(lo,zb); else hi=Math.min(hi,zb); } if(hi<lo) hi=lo;
+  let z=Math.max(lo,Math.min(hi,ST.rodZ)); const fstick=ST.tubeOr==="horizontal"?TRUE.mu*TRUE.rodMass*1e-3*G_ACC:0.0015;
+  let F=netForce(z), pinned=null;
+  if(Math.abs(F)>fstick){ const sg=F>0?1:-1, h=0.04;
+    for(;;){ const zn=z+sg*h; if(zn<=lo){ z=lo; pinned="lo"; break; } if(zn>=hi){ z=hi; pinned="hi"; break; }
+      const Fn=netForce(zn); if(Fn*sg<=0){ let a=z, b=zn; for(let i=0;i<60;i++){ const m=0.5*(a+b); if(netForce(m)*sg>0) a=m; else b=m; } z=0.5*(a+b); break; } z=zn; F=Fn; } }
+  ST.rodZ=Math.max(lo,Math.min(hi,z)); ST.contact=false;
+  if(zb!==null){ if(kind==="lower"&&pinned==="lo"&&Math.abs(ST.rodZ-zb)<1e-6) ST.contact=true; if(kind==="upper"&&pinned==="hi"&&Math.abs(ST.rodZ-zb)<1e-6) ST.contact=true; }
+  if(ST.contact) return;
+  const outLo=Math.abs(ST.rodZ-zlo)<1e-6&&pinned==="lo"&&ST.tubeOr!=="inverted", outHi=Math.abs(ST.rodZ-zhi)<1e-6&&pinned==="hi"&&ST.tubeOr==="horizontal";
+  if(outLo||outHi){ ST.rodWhere="hand"; say("shot"); }
+}
+function pressForce(){ if(!has("press")) return 0; if(!ST.flipped) return foilForce();
+  if(ST.rodWhere==="tube"&&ST.contact&&ST.onPan==="tube"){ const F=MAG.force(ST.rodZ,ST.rodOr), m=TRUE.rodMass*1e-3*G_ACC; return ST.tubeOr==="upright"?Math.max(0,-m-F):Math.max(0,F-m); }
+  return 0; }
+/* ---- the balance ---- */
+function panLoad(){ if(!has("scale")) return 0; let m=0;
+  if(ST.onPan==="wplate"){ m+=TRUE.mWplate; const c=cylById(ST.cylOn); if(c) m+=c.mass; }
+  else if(ST.onPan==="tube"&&ST.tubeOr!=="horizontal"){ m+=TRUE.mTube; if(ST.rodWhere==="tube") m+=TRUE.rodMass; }
+  return m+pressForce()/G_ACC*1000; }
+function scaleTare(){ if(!ST.scaleOn) return; ST.tare=panLoad(); ST.tareOff=TRUE.scaleOffset; }
+function scaleValue(){ if(!ST.scaleOn||!has("scale")) return null; const g=panLoad(); if(g>TRUE.scaleCap) return "OL";
+  return Math.floor((g-ST.tare)*TRUE.scaleGain+TRUE.scaleOffset-ST.tareOff+gauss()*TRUE.scaleNoise+0.5); }
+function scaleText(){ if(!has("scale")||!ST.scaleOn) return ""; const v=scaleValue(); if(v==="OL") return "O-Ld"; return ST.oz?(v*0.03527396).toFixed(2):String(v); }
+/* ---- the rod magnet ---- */
+function insertRod(){
+  if(!has("tube")) return false;
+  if(ST.flipped&&has("press")&&ST.onPan==="tube"&&ST.tubeOr!=="horizontal"&&plateYraw()-ALROD_LEN<TUBE_H+TRUE.rodL+2){ say("alInWay"); return false; }
+  ST.rodWhere="tube"; ST.rodZ=zEntry(); relax(); return true; }
+function pushRod(dz){
+  if(ST.rodWhere!=="tube"){ if(!insertRod()) return; ST.rodWhere="tube"; ST.rodZ=zEntry(); }
+  const [zlo,zhi]=zLimits(); ST.rodZ=Math.max(zlo,Math.min(zhi,ST.rodZ+dz)); relax(); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (the press seen from the front, mm; y = 0 at the balance pan)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=560, KS=1.2, CXP=330, CYP=455;
+const X=x=>CXP+x*KS, Y=y=>CYP-y*KS;
+const unX=px=>(px-CXP)/KS, unY=py=>(CYP-py)/KS;
+const TABLE_Y=BASE_TOP-BASE_TH, TOOLS=["ruler","stick","scissors","tape"];
+const TOOL_POS={ruler:[300,TABLE_Y],stick:[300,TABLE_Y+12],scissors:[480,TABLE_Y],tape:[560,TABLE_Y]};
+function rect(x0,y0,x1,y1,fill,stroke,lw){ ctx.fillStyle=fill; ctx.fillRect(X(x0),Y(y1),(x1-x0)*KS,(y1-y0)*KS); if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.strokeRect(X(x0),Y(y1),(x1-x0)*KS,(y1-y0)*KS); } }
+function ply(x0,y0,x1,y1){ rect(x0,y0,x1,y1,"#2b2724","#111",1); ctx.fillStyle="#cfa86f"; ctx.fillRect(X(x0),Y(y0)-3*KS,(x1-x0)*KS,3*KS);
+  for(let i=1;i<5;i++){ ctx.fillStyle=i%2?"#b38a52":"#d9b57c"; ctx.fillRect(X(x0),Y(y0)-(3+i*2.6)*KS,(x1-x0)*KS,1); } }
+function drawTable(){
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH);
+  ctx.fillStyle="#e9e4d4"; ctx.fillRect(0,Y(TABLE_Y),LW,LH-Y(TABLE_Y)); ctx.fillStyle="#cfc8b2"; ctx.fillRect(0,Y(TABLE_Y),LW,3);
+  ctx.fillStyle="#d8d3c5"; ctx.fillRect(0,0,LW,Y(TABLE_Y)); ctx.fillStyle="rgba(0,0,0,.04)"; for(let i=0;i<LH;i+=24) ctx.fillRect(0,i,LW,1);
+}
+function drawPress(){
+  /* base board, uprights, threaded rod */
+  ply(-BASE_W/2,BASE_TOP-BASE_TH,BASE_W/2,BASE_TOP);
+  for(const [x,y] of [[-150,BASE_TOP-BASE_TH],[150,BASE_TOP-BASE_TH]]){ ctx.fillStyle="#151517"; ctx.fillRect(X(x)-10,Y(y)-2,20,6); }
+  for(const sx of [-1,1]){ rect(sx*150-7,BASE_TOP,sx*150+7,POST_H,"#202226","#000",1); ctx.fillStyle="rgba(255,255,255,.12)"; ctx.fillRect(X(sx*150-5),Y(POST_H),2,(POST_H-BASE_TOP)*KS); }
+  const pY=plateY();
+  rect(SCREW_X-3,BASE_TOP,SCREW_X+3,POST_H+20,"#9aa0a6","#555",0.8);
+  ctx.strokeStyle="rgba(60,60,60,.5)"; ctx.lineWidth=1; for(let y=BASE_TOP;y<POST_H+20;y+=2.5){ ctx.beginPath(); ctx.moveTo(X(SCREW_X-3),Y(y)); ctx.lineTo(X(SCREW_X+3),Y(y+1.2)); ctx.stroke(); }
+  /* the wing nut under the plate */
+  const ny=pY-8, ang=((ST.turns*360)%360+360)%360*Math.PI/180, sw=Math.cos(ang);
+  rect(SCREW_X-7,ny-6,SCREW_X+7,ny+2,"#b9bec4","#555",0.8);
+  ctx.fillStyle="#c8cdd2"; ctx.strokeStyle="#555"; ctx.lineWidth=0.8;
+  for(const s of [-1,1]){ ctx.beginPath(); ctx.moveTo(X(SCREW_X+s*6),Y(ny)); ctx.lineTo(X(SCREW_X+s*(6+14*Math.abs(sw))),Y(ny+9)); ctx.lineTo(X(SCREW_X+s*(6+14*Math.abs(sw))),Y(ny+2)); ctx.lineTo(X(SCREW_X+s*6),Y(ny-5)); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  /* the upper plate, its aluminium rod and the stone block */
+  ply(-PLATE_W/2,pY,PLATE_W/2,pY+PLATE_TH);
+  if(!ST.flipped) rect(ALROD_X-ALROD_D/2,pY+PLATE_TH,ALROD_X+ALROD_D/2,pY+PLATE_TH+ALROD_LEN,"#d7dbe0","#888",0.8);
+  else rect(ALROD_X-ALROD_D/2,pY-ALROD_LEN,ALROD_X+ALROD_D/2,pY,"#d7dbe0","#888",0.8);
+  if(has("stone")){ rect(-46,pY+PLATE_TH,46,pY+PLATE_TH+62,"#55575b","#222",1); ctx.fillStyle="rgba(255,255,255,.06)"; for(let i=0;i<40;i++){ ctx.fillRect(X(-44+((i*37)%88)),Y(pY+PLATE_TH+4+((i*53)%56)),2,2); } }
+}
+function drawScale(){
+  ctx.fillStyle="#c9ced5"; ctx.strokeStyle="#7a828c"; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(X(-112),Y(BASE_TOP)); ctx.lineTo(X(112),Y(BASE_TOP)); ctx.lineTo(X(100),Y(-10)); ctx.lineTo(X(-100),Y(-10)); ctx.closePath(); ctx.fill(); ctx.stroke();
+  fillR(X(-34),Y(-20),68*KS,14*KS,3,"#2b333c"); ctx.fillStyle="#9fb4c7"; ctx.fillRect(X(-30),Y(-22),60*KS,10*KS);
+  if(ST.scaleOn) text(scaleTextCached()+(ST.oz?" oz":" g"),X(26),Y(-27),"#10202c",Math.max(9,9*KS),"right","700",MONO);
+  for(const [i,lb] of [[-1,"ON"],[0,"T"],[1,"U"]]){ const cx=X(i*30), cy=Y(-40); ell(cx,cy,9,4,"#5b7ea6","#2b3e55",0.8); }
+  rect(-8,-10,8,-6,"#9aa0a6","#555",0.6); rect(-PAN_D/2,-6,PAN_D/2,0,"#dfe3e8","#8a929b",1);
+}
+function cylOutline(c){ const pressed=ST.onPan==="wplate"&&ST.cylOn===c.id&&has("press")&&!ST.flipped, h=pressed?Math.min(2*c.Rc,foilGap()+TRUE.compliance*pressForce()):2*c.Rc;
+  return {pts:outline(Math.max(0.02,h/c.Rc)),h}; }
+function drawWplate(){ rect(WPLATE_X-WPLATE_W/2,0,WPLATE_X+WPLATE_W/2,WPLATE_TH,"#c9a370","#8a6a3f",1);
+  const c=cylById(ST.cylOn); if(!c) return; const {pts,h}=cylOutline(c), cy=WPLATE_TH+h/2;
+  ctx.fillStyle=c.kind==="blue"?"rgba(63,120,207,.35)":"rgba(201,211,222,.35)"; ctx.strokeStyle=c.kind==="blue"?"#3f78cf":"#8fa0b2"; ctx.lineWidth=2.2;
+  ctx.beginPath(); pts.forEach(([u,v],i)=>{ const px=X(WPLATE_X+u*c.Rc), py=Y(cy+v*c.Rc); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.closePath(); ctx.fill(); ctx.stroke();
+  if(c.creased){ text("✕",X(WPLATE_X),Y(cy),"#c33",14,"center","700"); } }
+/* the transparent cylinder and the two magnets; base = height of its lower face */
+function drawTube(x0,base,horizontal){
+  const H=TUBE_H, R=TUBE_OD/2;
+  if(!horizontal){ ctx.save(); ctx.globalAlpha=0.45; rect(x0-R,base,x0+R,base+H,"#d3ecf5","#8ab6c6",1.2); ctx.restore(); rect(x0-TUBE_HOLE_D/2,base,x0+TUBE_HOLE_D/2,base+H,"rgba(255,255,255,.35)",null);
+    const rc=base+(ST.tubeOr==="upright"?H-RING_FROM_END:RING_FROM_END); magRing(x0,rc,false);
+    if(ST.rodWhere==="tube"){ const yc=base+rodH(); magRod(x0,yc,false); } }
+  else { ctx.save(); ctx.globalAlpha=0.45; rect(x0,base,x0+H,base+2*R,"#d3ecf5","#8ab6c6",1.2); ctx.restore(); rect(x0,base+R-TUBE_HOLE_D/2,x0+H,base+R+TUBE_HOLE_D/2,"rgba(255,255,255,.35)",null);
+    magRing(x0+H-RING_FROM_END,base+R,true); if(ST.rodWhere==="tube") magRod(x0+H-RING_FROM_END-ST.rodZ,base+R,true); }
+}
+/* north half red, south half blue; the ring's moment points up (towards its free end) */
+function magRing(x,y,hz){ const t=TRUE.ringT, Ro=TRUE.ringRo, Ri=TRUE.ringRi;
+  if(!hz){ rect(x-Ro,y,x-Ri,y+t/2,"#c34b3e"); rect(x+Ri,y,x+Ro,y+t/2,"#c34b3e"); rect(x-Ro,y-t/2,x-Ri,y,"#3f6ac6"); rect(x+Ri,y-t/2,x+Ro,y,"#3f6ac6"); }
+  else { rect(x,y-Ro,x+t/2,y-Ri,"#c34b3e"); rect(x,y+Ri,x+t/2,y+Ro,"#c34b3e"); rect(x-t/2,y-Ro,x,y-Ri,"#3f6ac6"); rect(x-t/2,y+Ri,x,y+Ro,"#3f6ac6"); } }
+function magRod(x,y,hz){ const a=TRUE.rodA, L=TRUE.rodL, up=ST.rodOr>0;
+  if(!hz){ rect(x-a,y,x+a,y+L/2,up?"#c34b3e":"#3f6ac6","#222",0.6); rect(x-a,y-L/2,x+a,y,up?"#3f6ac6":"#c34b3e","#222",0.6); }
+  else { rect(x,y-a,x+L/2,y+a,up?"#c34b3e":"#3f6ac6","#222",0.6); rect(x-L/2,y-a,x,y+a,up?"#3f6ac6":"#c34b3e","#222",0.6); } }
+function drawTools(){
+  if(has("ruler")){ rect(250,TABLE_Y,550,TABLE_Y+3,"#efe0ab","#8a7a50",0.8); for(let i=0;i<=300;i+=10){ ctx.strokeStyle="#4a4130"; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(X(250+i),Y(TABLE_Y+3)); ctx.lineTo(X(250+i),Y(TABLE_Y+3)+(i%50?2:4)); ctx.stroke(); } }
+  if(has("stick")) rect(260,TABLE_Y+3,440,TABLE_Y+6,"#c8a26a","#7a5a2a",0.6);
+  if(has("scissors")){ const cx=X(590), cy=Y(TABLE_Y+4); ctx.strokeStyle="#888"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cx-24,cy); ctx.lineTo(cx+10,cy-6); ctx.moveTo(cx-24,cy-6); ctx.lineTo(cx+10,cy); ctx.stroke(); circ(cx+16,cy-6,6,null,"#c33",2.5); circ(cx+16,cy+2,6,null,"#c33",2.5); }
+  if(has("tape")){ const cx=X(660), cy=Y(TABLE_Y+14); circ(cx,cy,16,"#e8e0c8","#998",1); circ(cx,cy,9,"#d8d3c5","#998",1); }
+  /* the foil stock and the rolled cylinders lying about */
+  rect(600,TABLE_Y,690,TABLE_Y+2,"rgba(63,120,207,.6)","#3f78cf",0.6); rect(602,TABLE_Y+2,688,TABLE_Y+3.2,"rgba(220,230,240,.8)","#9ab",0.6);
+  ST.cyl.filter(c=>c.id!==ST.cylOn).slice(-6).forEach((c,i)=>{ const x=720+i*70-(i>2?210:0), y=TABLE_Y+(i>2?0:0)+c.Rc*0.45, r=c.Rc*0.45;
+    circ(X(x),Y(y),r*KS,c.kind==="blue"?"rgba(63,120,207,.25)":"rgba(201,211,222,.3)",c.kind==="blue"?"#3f78cf":"#8fa0b2",1.6); text(c.id,X(x),Y(y),"#333",10,"center","700"); });
+  if(ST.tubeOr==="horizontal"&&has("tube")) drawTube(250,TABLE_Y+8,true);
+  if(ST.rodWhere==="hand"&&has("rodmag")){ rect(470,TABLE_Y,470+TRUE.rodL,TABLE_Y+2*TRUE.rodA,ST.rodOr>0?"#c34b3e":"#3f6ac6","#222",0.6); rect(470,TABLE_Y,470+TRUE.rodL/2,TABLE_Y+2*TRUE.rodA,ST.rodOr>0?"#3f6ac6":"#c34b3e","#222",0.6); }
+}
+function drawBench(){
+  drawTable();
+  if(has("press")) drawPress();
+  if(has("scale")) drawScale();
+  if(ST.onPan==="wplate") drawWplate();
+  if(ST.onPan==="tube"&&ST.tubeOr!=="horizontal") drawTube(ALROD_X,0,false);
+  if(has("press")&&ST.flipped){ const pY=plateY(); rect(ALROD_X-ALROD_D/2,pY-ALROD_LEN,ALROD_X+ALROD_D/2,pY,"#d7dbe0","#888",0.8); }
+  drawTools(); drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return; text(itemName(hand.item),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700"); }
+/* screen boxes for clicking */
+function boxOf(k){
+  const pY=plateY();
+  if(k==="press") return [X(-BASE_W/2),Y(POST_H+20),X(BASE_W/2),Y(BASE_TOP-BASE_TH)];
+  if(k==="stone") return has("stone")?[X(-46),Y(pY+PLATE_TH+62),X(46),Y(pY+PLATE_TH)]:null;
+  if(k==="scale") return has("scale")?[X(-112),Y(0),X(112),Y(BASE_TOP)]:null;
+  if(k==="wplate") return ST.onPan==="wplate"?[X(-115),Y(WPLATE_TH+60),X(35),Y(0)]:null;
+  if(k==="tube"){ if(!has("tube")) return null; return ST.tubeOr==="horizontal"?[X(250),Y(TABLE_Y+33),X(350),Y(TABLE_Y+8)]:[X(ALROD_X-13),Y(TUBE_H),X(ALROD_X+13),Y(0)]; }
+  if(TOOLS.includes(k)&&has(k)){ const r={ruler:[250,TABLE_Y,550,TABLE_Y+4],stick:[260,TABLE_Y+3,440,TABLE_Y+7],scissors:[565,TABLE_Y,610,TABLE_Y+12],tape:[645,TABLE_Y,675,TABLE_Y+28]}[k]; return [X(r[0]),Y(r[3])-4,X(r[2]),Y(r[1])+4]; }
+  return null;
+}
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["press","scale","stone","wplate","tube","rodmag","ruler","stick","scissors","tape"], TROW=46;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="scale", HIT=[], SCALE_TXT="";
+const scaleTextCached=()=>SCALE_TXT;
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+function icon(c,k){
+  const old=ctx; ctx=c;
+  if(k==="press"){ fillR(-17,10,34,4,0,"#cfa86f","#333"); fillR(-15,-14,3,24,0,"#202226"); fillR(12,-14,3,24,0,"#202226"); fillR(-13,-6,26,3,0,"#cfa86f","#333"); fillR(-5,-12,10,6,0,"#55575b"); }
+  else if(k==="scale"){ fillR(-15,0,30,10,3,"#c9ced5","#7a828c"); fillR(-13,-3,26,3,1,"#dfe3e8","#8a929b"); fillR(-6,3,12,4,1,"#9fb4c7"); }
+  else if(k==="stone"){ fillR(-12,-9,24,18,1,"#55575b","#222"); }
+  else if(k==="wplate"){ fillR(-17,-3,34,6,1,"#c9a370","#8a6a3f"); ell(-2,-9,7,6,"rgba(63,120,207,.3)","#3f78cf"); }
+  else if(k==="tube"){ ctx.save(); ctx.globalAlpha=0.6; fillR(-6,-16,12,32,2,"#d3ecf5","#8ab6c6"); ctx.restore(); fillR(-6,-12,12,3,0,"#c34b3e"); fillR(-6,-9,12,3,0,"#3f6ac6"); }
+  else if(k==="rodmag"){ fillR(-14,-3,14,6,1,"#3f6ac6","#222"); fillR(0,-3,14,6,1,"#c34b3e","#222"); }
+  else if(k==="ruler"){ fillR(-18,-4,36,8,0,"#efe0ab","#8a7a50"); for(let i=0;i<9;i++) fillR(-16+i*4,-4,0.7,i%5?2:4,0,"#4a4130"); }
+  else if(k==="stick"){ ctx.save(); ctx.rotate(-0.4); fillR(-18,-1.5,36,3,1,"#c8a26a","#7a5a2a"); ctx.restore(); }
+  else if(k==="scissors"){ ctx.strokeStyle="#888"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-14,-6); ctx.lineTo(8,4); ctx.moveTo(-14,4); ctx.lineTo(8,-6); ctx.stroke(); circ(12,-5,4,null,"#c33",2); circ(12,4,4,null,"#c33",2); }
+  else if(k==="tape"){ circ(0,0,11,"#e8e0c8","#998"); circ(0,0,6,"#15181d","#998"); }
+  ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(340,CLW*0.46));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-4)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm]; if(c.measureText(nm).width>wd-52){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.6)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,52,y+(parts.length>1?9+i*12:12)));
+    c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,52,y+34);
+    trayCells.push([k,y,y+TROW-4]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["scale","gap","hand"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+
+/* ── 1. the balance's face and the wing nut from above ── */
+function drawScaleView(){
+  const t=d(), sx=16, sw=CLW*0.52, sy=20, sh=CLH-40;
+  if(!has("scale")) text(t.lab.noScale,sx+sw/2,CLH/2,"#69717a",12,"center");
+  else { fillR(sx,sy,sw,sh,16,"#c9ced5","#7a828c",2); fillR(sx+sw*0.1,sy+sh*0.12,sw*0.8,sh*0.36,8,"#2b333c");
+    fillR(sx+sw*0.14,sy+sh*0.16,sw*0.72,sh*0.28,4,ST.scaleOn?"#a9c1d6":"#6f7f8c","#1b232c");
+    if(ST.scaleOn&&SCALE_TXT) lcd(SCALE_TXT,sx+sw*0.16,sy+sh*0.2,sw*0.58,sh*0.2,"#10202c","rgba(16,32,44,.07)");
+    if(ST.scaleOn) text(ST.oz?t.lab.oz:t.lab.g,sx+sw*0.83,sy+sh*0.36,"#10202c",14,"right","700");
+    [["pw",t.lab.on],["tara",t.lab.tara],["unit",t.lab.unit]].forEach(([k,lb],i)=>{ const bx=sx+sw*(0.2+i*0.3), by=sy+sh*0.68; ell(bx,by,sw*0.1,sh*0.08,"#5b7ea6","#2b3e55",1.5); text(lb,bx,by,"#fff",12,"center","700"); hitAdd(k,bx-sw*0.1,by-sh*0.08,sw*0.2,sh*0.16); }); }
+  const nx=CLW*0.78, ny=CLH*0.46, R=Math.min(CLW*0.17,CLH*0.36);
+  if(!has("press")){ text(t.lab.noPress,nx,ny,"#69717a",12,"center"); return; }
+  circ(nx,ny,R,"#e8e4d8","#888",1.5);
+  for(let i=0;i<360;i+=10){ const a=(i-90)*Math.PI/180, L=i%30===0?R*0.16:R*0.08; ctx.strokeStyle="#333"; ctx.lineWidth=i%90===0?2:1; ctx.beginPath(); ctx.moveTo(nx+Math.cos(a)*R,ny+Math.sin(a)*R); ctx.lineTo(nx+Math.cos(a)*(R-L),ny+Math.sin(a)*(R-L)); ctx.stroke();
+    if(i%30===0) text(String(i),nx+Math.cos(a)*(R-L-11),ny+Math.sin(a)*(R-L-11),"#333",10,"center"); }
+  const ang=((ST.turns*360)%360)*Math.PI/180-Math.PI/2; ctx.save(); ctx.translate(nx,ny); ctx.rotate(ang);
+  ctx.fillStyle="#c8cdd2"; ctx.strokeStyle="#555"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(0,-R*0.18); ctx.lineTo(R*0.72,-R*0.1); ctx.quadraticCurveTo(R*0.8,0,R*0.72,R*0.1); ctx.lineTo(0,R*0.18);
+  ctx.lineTo(-R*0.72,R*0.1); ctx.quadraticCurveTo(-R*0.8,0,-R*0.72,-R*0.1); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle="#c00"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(R*0.2,0); ctx.lineTo(R*0.7,0); ctx.stroke(); ctx.restore();
+  circ(nx,ny,R*0.12,"#9aa0a6","#444",1); text(t.lab.nut,nx,ny-R-12,"#cfd6dc",11,"center","600");
+  const [sg,n,deg]=counterText(); text(t.lab.counter+":  "+sg+n+" "+t.lab.turn+" "+deg.toFixed(0)+"°",nx,ny+R+18,"#ffe680",12,"center","700",MONO);
+  hitAdd("nut",nx-R,ny-R,2*R,2*R);
+}
+
+/* ── 2. the gap, magnified, with the ruler standing on the pan ── */
+function drawGapView(){
+  const t=d(); if(!has("press")||!has("scale")){ text(t.lab.noScale,CLW/2,CLH/2,"#69717a",12,"center"); hitAdd("nut",0,0,CLW,CLH); return; }
+  const pY=plateY(), top=Math.max(130,(ST.flipped?pY:pY+ALROD_LEN*0)+30), k=(CLH-24)/(top+12), cx=CLW*0.42;
+  const GX=x=>cx+x*k, GY=y=>CLH-12-(y+12)*k;
+  ctx.fillStyle="#d8d3c5"; ctx.fillRect(0,0,CLW,CLH);
+  ctx.fillStyle="#dfe3e8"; ctx.fillRect(GX(-PAN_D/2),GY(0),PAN_D*k,6*k); ctx.strokeStyle="#8a929b"; ctx.strokeRect(GX(-PAN_D/2),GY(0),PAN_D*k,6*k);
+  /* the upper plate */
+  ctx.fillStyle="#2b2724"; ctx.fillRect(GX(-PLATE_W/2),GY(pY+PLATE_TH),PLATE_W*k,PLATE_TH*k); ctx.fillStyle="#cfa86f"; ctx.fillRect(GX(-PLATE_W/2),GY(pY)-3*k,PLATE_W*k,3*k);
+  if(ST.flipped){ ctx.fillStyle="#d7dbe0"; ctx.fillRect(GX(ALROD_X-ALROD_D/2),GY(pY),ALROD_D*k,ALROD_LEN*k); ctx.strokeStyle="#888"; ctx.strokeRect(GX(ALROD_X-ALROD_D/2),GY(pY),ALROD_D*k,ALROD_LEN*k); }
+  if(ST.onPan==="wplate"){ ctx.fillStyle="#c9a370"; ctx.fillRect(GX(WPLATE_X-WPLATE_W/2),GY(WPLATE_TH),WPLATE_W*k,WPLATE_TH*k); ctx.strokeStyle="#8a6a3f"; ctx.strokeRect(GX(WPLATE_X-WPLATE_W/2),GY(WPLATE_TH),WPLATE_W*k,WPLATE_TH*k);
+    const c=cylById(ST.cylOn); if(c){ const {pts,h}=cylOutline(c), cy=WPLATE_TH+h/2; ctx.fillStyle=c.kind==="blue"?"rgba(63,120,207,.3)":"rgba(201,211,222,.35)"; ctx.strokeStyle=c.kind==="blue"?"#3f78cf":"#8fa0b2"; ctx.lineWidth=2.5;
+      ctx.beginPath(); pts.forEach(([u,v],i)=>{ const px=GX(WPLATE_X+u*c.Rc), py=GY(cy+v*c.Rc); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.closePath(); ctx.fill(); ctx.stroke(); } }
+  if(ST.onPan==="tube"&&ST.tubeOr!=="horizontal"){ const R=TUBE_OD/2, x0=ALROD_X; ctx.save(); ctx.globalAlpha=0.45; ctx.fillStyle="#d3ecf5"; ctx.fillRect(GX(x0-R),GY(TUBE_H),2*R*k,TUBE_H*k); ctx.restore(); ctx.strokeStyle="#8ab6c6"; ctx.strokeRect(GX(x0-R),GY(TUBE_H),2*R*k,TUBE_H*k);
+    const old=[X,Y]; const rc=ST.tubeOr==="upright"?TUBE_H-RING_FROM_END:RING_FROM_END, tt=TRUE.ringT, Ro=TRUE.ringRo, Ri=TRUE.ringRi;
+    const R2=(x0_,y0_,x1_,y1_,col)=>{ ctx.fillStyle=col; ctx.fillRect(GX(x0_),GY(y1_),(x1_-x0_)*k,(y1_-y0_)*k); };
+    R2(x0-Ro,rc,x0-Ri,rc+tt/2,"#c34b3e"); R2(x0+Ri,rc,x0+Ro,rc+tt/2,"#c34b3e"); R2(x0-Ro,rc-tt/2,x0-Ri,rc,"#3f6ac6"); R2(x0+Ri,rc-tt/2,x0+Ro,rc,"#3f6ac6");
+    if(ST.rodWhere==="tube"){ const yc=rodH(), a=TRUE.rodA, L=TRUE.rodL, up=ST.rodOr>0; R2(x0-a,yc,x0+a,yc+L/2,up?"#c34b3e":"#3f6ac6"); R2(x0-a,yc-L/2,x0+a,yc,up?"#3f6ac6":"#c34b3e"); } }
+  /* the ruler, standing on the pan, graduated in mm */
+  if(has("ruler")){ const rx=GX(70), rw=Math.max(26,9*k); ctx.fillStyle="#efe0ab"; ctx.fillRect(rx,GY(top),rw,(top)*k); ctx.strokeStyle="#8a7a50"; ctx.strokeRect(rx,GY(top),rw,top*k);
+    for(let mm=0;mm<=top;mm++){ const yy=GY(mm), L=mm%10===0?rw*0.6:mm%5===0?rw*0.42:rw*0.25; ctx.strokeStyle="#3a3324"; ctx.lineWidth=mm%10===0?1.2:0.6; ctx.beginPath(); ctx.moveTo(rx,yy); ctx.lineTo(rx+L,yy); ctx.stroke();
+      if(mm%10===0) text(String(mm/10),rx+rw*0.8,yy,"#3a3324",Math.min(12,Math.max(8,k*3)),"center","700"); }
+    text(t.lab.ruler,rx+rw/2,GY(top)-8,"#3a3324",10,"center"); }
+  else text(t.lab.noRuler,CLW-10,16,"#6b6455",11,"right");
+  hitAdd("nut",0,0,CLW,CLH);
+}
+
+/* ── 3. the cylinder lying on the bench, pushed by hand ── */
+function drawHandView(){
+  const t=d(); if(!has("tube")||ST.tubeOr!=="horizontal"){ text(t.lab.noTube,CLW/2,CLH/2,"#69717a",12,"center"); return; }
+  const k=(CLW-80)/(TUBE_H+60), x0=40+30*k, cy=CLH*0.45, R=TUBE_OD/2;
+  ctx.save(); ctx.globalAlpha=0.5; ctx.fillStyle="#d3ecf5"; ctx.fillRect(x0,cy-R*k,TUBE_H*k,2*R*k); ctx.restore(); ctx.strokeStyle="#8ab6c6"; ctx.lineWidth=1.5; ctx.strokeRect(x0,cy-R*k,TUBE_H*k,2*R*k);
+  ctx.fillStyle="rgba(255,255,255,.4)"; ctx.fillRect(x0,cy-TUBE_HOLE_D/2*k,TUBE_H*k,TUBE_HOLE_D*k);
+  const xr=x0+(TUBE_H-RING_FROM_END)*k, tt=TRUE.ringT*k, Ro=TRUE.ringRo*k, Ri=TRUE.ringRi*k;
+  ctx.fillStyle="#c34b3e"; ctx.fillRect(xr,cy-Ro,tt/2,Ro-Ri); ctx.fillRect(xr,cy+Ri,tt/2,Ro-Ri); ctx.fillStyle="#3f6ac6"; ctx.fillRect(xr-tt/2,cy-Ro,tt/2,Ro-Ri); ctx.fillRect(xr-tt/2,cy+Ri,tt/2,Ro-Ri);
+  text(t.lab.ring,xr,cy-Ro-10,"#cfd6dc",11,"center","600");
+  if(ST.rodWhere==="tube"){ const xc=xr-ST.rodZ*k, a=TRUE.rodA*k, L=TRUE.rodL*k, up=ST.rodOr>0; ctx.fillStyle=up?"#c34b3e":"#3f6ac6"; ctx.fillRect(xc,cy-a,L/2,2*a); ctx.fillStyle=up?"#3f6ac6":"#c34b3e"; ctx.fillRect(xc-L/2,cy-a,L/2,2*a);
+    ctx.strokeStyle="#222"; ctx.strokeRect(xc-L/2,cy-a,L,2*a); text(t.lab.rodIn,xc,cy+R*k+16,"#cfd6dc",11,"center","600");
+    if(has("stick")){ ctx.fillStyle="#c8a26a"; ctx.fillRect(10,cy-1.5*k,xc-L/2-10,3*k); text(t.lab.stick,30,cy-3*k-8,"#c8a26a",10,"left"); } }
+  if(has("ruler")){ const ry=cy+R*k+30, rw=Math.max(18,6*k); ctx.fillStyle="#efe0ab"; ctx.fillRect(x0,ry,TUBE_H*k,rw); ctx.strokeStyle="#8a7a50"; ctx.strokeRect(x0,ry,TUBE_H*k,rw);
+    for(let mm=0;mm<=TUBE_H;mm++){ const xx=x0+mm*k, L=mm%10===0?rw*0.6:mm%5===0?rw*0.42:rw*0.25; ctx.strokeStyle="#3a3324"; ctx.lineWidth=mm%10===0?1.2:0.6; ctx.beginPath(); ctx.moveTo(xx,ry); ctx.lineTo(xx,ry+L); ctx.stroke(); if(mm%10===0) text(String(mm/10),xx,ry+rw*0.82,"#3a3324",10,"center","700"); } }
+  hitAdd("push",0,0,CLW,CLH);
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="scale") drawScaleView(); else if(tab==="gap") drawGapView(); else drawHandView();
+  ctx=old;
+}
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: putting things down and back
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inB=(p,b)=>b&&p[0]>=b[0]-3&&p[0]<=b[2]+3&&p[1]>=b[1]-3&&p[1]<=b[3]+3;
+function place(k,p){
+  if(TOOLS.includes(k)){ ST.placed.add(k); return true; }
+  if(k==="press"){ ST.placed.add(k); return true; }
+  if(!has("press")){ say("needPress"); return false; }
+  if(k==="scale"){ ST.placed.add(k); return true; }
+  if(k==="stone"){ ST.placed.add(k); return true; }
+  if(!has("scale")){ say("needScale"); return false; }
+  if(k==="wplate"){ if(ST.onPan){ say("panBusy"); return false; } ST.placed.add(k); ST.onPan="wplate"; return true; }
+  if(k==="tube"){ if(ST.onPan){ say("panBusy"); return false; } ST.placed.add(k); ST.onPan="tube"; if(ST.tubeOr==="horizontal") ST.tubeOr="upright"; relax(); return true; }
+  if(k==="rodmag"){ if(!has("tube")){ say("needTube"); return false; } if(insertRod()){ ST.placed.add(k); say("rodIn"); return true; } return false; }
+  return false;
+}
+function remove(k){
+  if(k==="wplate"&&ST.cylOn){ say("cylFirst"); return; }
+  if(k==="tube"&&ST.rodWhere==="tube"){ say("rodFirst"); return; }
+  if(k==="press"&&(has("scale")||has("stone"))){ say("stoneScale"); return; }
+  if(k==="scale"&&ST.onPan&&!(ST.onPan==="tube"&&ST.tubeOr==="horizontal")){ say("clearPan"); return; }
+  ST.placed.delete(k); if(k==="wplate"||(k==="tube"&&ST.onPan==="tube")) ST.onPan=null; if(k==="tube") ST.tubeOr="upright"; if(k==="rodmag") ST.rodWhere="box";
+  say("back",itemName(k)); }
+function itemAt(p){ for(const k of ["rodmag","stone","wplate","tube","scale",...TOOLS,"press"]){ if(k==="rodmag"){ if(ST.rodWhere!=="box"&&has("rodmag")&&inB(p,boxOf("tube"))) return "rodmagX"; continue; } if(inB(p,boxOf(k))) return k; } return null; }
+function benchClick(p,right){
+  if(hand){ if(right){ say("back",itemName(hand.item)); hand=null; return; } if(place(hand.item,p)){ if(hand.item!=="rodmag") say("placed",itemName(hand.item)); hand=null; } return; }
+  if(!right) return; const k=itemAt(p); if(!k) return;
+  if(k==="rodmagX"){ if(ST.rodWhere==="tube"){ $("rodOut").onclick(); return; } ST.placed.delete("rodmag"); ST.rodWhere="box"; say("back",itemName("rodmag")); return; }
+  remove(k);
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("wheel",e=>{ const p=lpos(e); if(!has("press")||!inB(p,boxOf("press"))) return; e.preventDefault(); turnNut((e.deltaY<0?1:-1)*(e.shiftKey?2:10)); },{passive:false});
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ hand=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=hand&&hand.item===k; hand=null;
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+
+/* the close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const h=hitAt(clpos(e)); if(!h) return;
+  if(h.k==="pw"){ ST.scaleOn=!ST.scaleOn; if(ST.scaleOn){ ST.tare=panLoad(); ST.tareOff=TRUE.scaleOffset; } }
+  else if(h.k==="tara"){ scaleTare(); say("tara"); }
+  else if(h.k==="unit") ST.oz=!ST.oz; });
+closeCv.addEventListener("wheel",e=>{ const h=hitAt(clpos(e)); if(!h) return; e.preventDefault(); const dir=e.deltaY<0?1:-1, f=e.shiftKey;
+  if(h.k==="nut") turnNut(dir*(f?2:10));
+  else if(h.k==="push"){ if(!has("stick")){ say("needStick"); return; } if(ST.rodWhere!=="tube"){ if(!has("rodmag")){ say("notIn"); return; } } pushRod((dir>0?-1:1)*(f?0.2:1.0)); } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+$("flipBtn").onclick=()=>{ if(!has("press")){ say("needPress"); return; } ST.flipped=!ST.flipped; if(ST.flipped&&ST.cylOn){ } relax(); say("flip",ST.flipped); };
+function renderNut(){ const box=$("nutRow"); box.innerHTML=""; const t=d();
+  [[-90,0],[-10,1],[10,2],[90,3]].forEach(([deg,i])=>{ const b=document.createElement("button"); b.textContent=t.nut[i]; b.style.fontSize="12px"; b.onclick=()=>{ if(!has("press")){ say("needPress"); return; } turnNut(deg); }; box.appendChild(b); });
+  const z=document.createElement("button"); z.textContent=t.ctr0; z.style.fontSize="12px"; z.onclick=()=>{ ST.ctr0=ST.turns; say("ctr0"); }; box.appendChild(z); }
+function chipRow(id,opts,cur,set){ const box=$(id); box.innerHTML=""; for(const [k,lb] of opts){ const b=document.createElement("button"); b.textContent=lb; b.className=k===cur?"on":""; b.style.fontSize="12px"; b.onclick=()=>{ set(k); renderFoil(); renderMag(); }; box.appendChild(b); } }
+function renderFoil(){ const t=d(), s=ST.sheet;
+  chipRow("kindRow",[["blue",t.kinds.blue],["clear",t.kinds.clear]],s.kind,k=>s.kind=k);
+  chipRow("axisRow",[["short",t.axes.short],["long",t.axes.long]],s.axis,k=>s.axis=k);
+  $("ovLbl").textContent=t.ov(s.overlap); $("wLbl").textContent=t.w(s.w); $("hLbl").textContent=t.h(s.h);
+  const box=$("cylRow"); box.innerHTML=""; for(const c of ST.cyl){ const b=document.createElement("button"); b.textContent=c.id+(c.id===ST.cylOn?" ▣":"")+(c.creased?" ✕":""); b.className=c.id===ST.sel?"on":""; b.style.flex="0 0 auto"; b.style.fontSize="12px";
+    b.onclick=()=>{ ST.sel=c.id; renderFoil(); }; box.appendChild(b); } }
+$("ovMinus").onclick=()=>{ ST.sheet.overlap=Math.max(0,ST.sheet.overlap-0.5); renderFoil(); }; $("ovPlus").onclick=()=>{ ST.sheet.overlap=Math.min(40,ST.sheet.overlap+0.5); renderFoil(); };
+$("wMinus").onclick=()=>{ ST.sheet.w=Math.max(40,ST.sheet.w-10); renderFoil(); }; $("wPlus").onclick=()=>{ ST.sheet.w=Math.min(210,ST.sheet.w+10); renderFoil(); };
+$("hMinus").onclick=()=>{ ST.sheet.h=Math.max(40,ST.sheet.h-10); renderFoil(); }; $("hPlus").onclick=()=>{ ST.sheet.h=Math.min(297,ST.sheet.h+10); renderFoil(); };
+$("rollBtn").onclick=()=>{ if(!has("scissors")||!has("tape")){ say("needCut"); return; } const c=rollFoil(); if(!c){ say("small"); return; } ST.sel=c.id; say("rolled",c.id); renderFoil(); };
+$("cylOn").onclick=()=>{ const c=cylById(ST.sel); if(!c){ say("noCyl"); return; } if(ST.onPan!=="wplate"){ say("needWplate"); return; } if(ST.flipped){ say("flippedNo"); return; } ST.cylOn=c.id; say("cylPut",c.id); renderFoil(); };
+$("cylOff").onclick=()=>{ ST.cylOn=null; say("cylGone"); renderFoil(); };
+function renderMag(){ const t=d(); chipRow("orRow",[["upright",t.ors.upright],["inverted",t.ors.inverted],["horizontal",t.ors.horizontal]],ST.tubeOr,k=>{
+    if(!has("tube")){ say("needTube"); return; }
+    if(k==="horizontal"){ if(ST.onPan==="tube") ST.onPan=null; ST.contact=false; }
+    else if(ST.tubeOr==="horizontal"){ if(!has("scale")){ say("needScale"); return; } if(ST.onPan){ say("panBusy"); return; } ST.onPan="tube"; }
+    ST.tubeOr=k; relax(); say("orient",t.ors[k]); }); }
+$("rodOut").onclick=()=>{ if(ST.rodWhere!=="tube"){ say("notIn"); return; } if(!has("stick")){ say("needStick"); return; } ST.rodWhere="hand"; ST.contact=false; say("rodOut"); };
+$("rodFlip").onclick=()=>{ if(ST.rodWhere==="tube"){ say("rodInside"); return; } ST.rodOr=-ST.rodOr; say("rodFlip"); };
+$("noteBtn").onclick=()=>{ const parts=[]; if(SCALE_TXT) parts.push(SCALE_TXT+(ST.oz?" oz":" g")); if(has("press")){ const [sg,n,deg]=counterText(); parts.push(sg+n+" turn "+deg.toFixed(0)+"°"); }
+  ST.notes.push(parts.join(" | ")||"—"); renderNotes(); say("noted"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; }
+  box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.placed.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(has("press")) L.push([ST.flipped?t.st.flipped:t.st.upright,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-press").textContent=t.hPress; $("flipBtn").textContent=t.flip; $("t-nuthint").textContent=t.nutHint;
+  $("t-h-foil").textContent=t.hFoil; $("rollBtn").textContent=t.roll; $("cylOn").textContent=t.cylOn; $("cylOff").textContent=t.cylOff;
+  $("t-h-mag").textContent=t.hMag; $("rodOut").textContent=t.rodOut; $("rodFlip").textContent=t.rodFlip; $("t-maghint").textContent=t.magHint;
+  $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IPhO 2010 — 얇은 판의 탄성 · 자석 사이의 힘 · HaslaLab":"IPhO 2010 — Elasticity of Sheets · Forces between Magnets · HaslaLab";
+  renderTabs(); renderNut(); renderFoil(); renderMag(); renderNotes(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastRead=0;
+function tick(){
+  const now=performance.now(); if(now-lastRead>350){ lastRead=now; SCALE_TXT=scaleText(); }
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); drawTray(); }
+  if(frameN%30===0) renderMag();
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>

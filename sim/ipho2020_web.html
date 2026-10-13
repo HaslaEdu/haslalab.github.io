@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IdPhO 2020 — 결정학 · Crystallography · HaslaLab</title>
+<meta name="description" content="IdPhO 2020 실험 문제를 브라우저에서 실행합니다. 빨간 레이저로 회절격자·단위세포·평면군·분자 치환 슬라이드를 비추고, 1 m 뒤 모눈종이에 맺힌 회절 무늬를 줄자와 눈금으로 재며, 포토다이오드·저항·압착 커넥터·멀티미터로 반사 세기를 읽습니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IdPhO 2020 — 결정학 · Crystallography">
+<meta property="og:description" content="IdPhO 2020 실험 문제를 브라우저에서 실행합니다. 슬라이드의 1·2차원 인공 결정이 만드는 회절 무늬를 모눈종이와 포토다이오드로 잽니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #sheetRow button,#modeRow button{padding:6px 6px;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-laser"></h2>
+    <div class="row"><button id="pinBtn"></button></div>
+    <div class="row"><button id="fMinus">−</button><button id="filmLbl" disabled></button><button id="fPlus">+</button></div>
+
+    <h2 id="t-h-slide"></h2>
+    <div class="row" id="sheetRow"></div>
+    <div class="row"><button id="flipBtn"></button></div>
+    <div class="hint" id="slideLbl" style="color:var(--ink)"></div>
+
+    <h2 id="t-h-view"></h2>
+    <div class="row"><button id="roomBtn"></button><button id="zoomBtn"></button></div>
+    <div class="row"><button id="expMinus">−</button><button id="expLbl" disabled></button><button id="expPlus">+</button></div>
+
+    <h2 id="t-h-read"></h2>
+    <div class="disp" id="mmDisp">----</div>
+    <div class="row"><button id="tapeBtn"></button></div>
+    <div class="hint" id="tapeLbl" style="color:#ffe680"></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <div class="laps" id="notes" style="max-height:200px"></div>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IdPhO 2020 실험 — 결정학",
+    sub:"가상 실험실 · 자성 태블릿 위에 레이저(λ = 630 nm)와 슬라이드 홀더를 세우고, 1 m 남짓 떨어진 판지에 모눈종이를 클립으로 붙여 스크린을 만드세요. 회절격자·단위세포·평면군·분자 치환 슬라이드의 회절 무늬를 모눈종이에서 읽고, 포토다이오드 회로와 멀티미터로 반사의 세기를 잽니다. 격자 상수·대칭·구조는 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n도구(테이프·바늘·클립·필름)는 레이저에 대고 클릭\n휠(스크린 위): 스크린 앞뒤로 옮기기",
+    cap:"실험대 (위 앞쪽에서 본 모습) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 스크린 위에서 휠: 슬라이드에서 멀어지기·가까워지기 (Shift 미세)",
+    tabs:{screen:"스크린 (모눈종이)", slide:"슬라이드", circuit:"세기 검출기 회로"},
+    closeCap:{screen:"확대 — 판지에 붙인 모눈종이(A4). 휠: 확대·축소, 빈 곳 끌기: 이동, 포토다이오드 끌기: 측정 위치 옮기기.",
+      slide:"확대 — 홀더에 넣은 슬라이드. 시료 칸을 클릭하면 그 시료가 레이저 앞에 섭니다. 슬라이드 제목(영어)이 위에서 왼쪽→오른쪽으로 읽히게 넣는 것이 바른 방향입니다.",
+      circuit:"확대 — 세기 검출기 (그림 17). 리드를 클릭해 집고 압착 커넥터 C1–C4를 클릭해 끼웁니다 (한 커넥터의 세 구멍은 서로 이어져 있습니다). 저항 10 kΩ / 200 kΩ, 멀티미터 다이얼은 클릭."},
+    hLaser:"레이저 [7] 빔", pinOn:"핀홀 쓰기", pinOff:"핀홀 안 쓰기", film:n=>"차광 필름 "+n+" 장",
+    hSlide:"슬라이드 [15]", flip:"슬라이드 뒤집어 넣기", flipOn:"슬라이드 바르게 넣기", sheets:{DG:"Diffraction grating",UC:"Unit cell",PG:"Plane group",MR:"Molecular replacement"},
+    slideLbl:(s,n)=>s?("홀더: "+s+(n?" · 빔 속 시료 "+n:" · 시료를 고르세요")):"홀더에 슬라이드가 없습니다",
+    hView:"보기", roomOn:"실내 조명 끄기", roomOff:"실내 조명 켜기", zoom:"배율 초기화", exp:v=>"노출 "+(v>=0?"+":"")+v.toFixed(1),
+    hRead:"멀티미터 [1] · 줄자 [14]", tape:"줄자로 슬라이드–스크린 재기", tapeVal:v=>"줄자: "+v+" mm",
+    hNote:"실험 노트", note:"지금 읽음 적기", noteClr:"지우기", noteEmpty:"아직 적은 것이 없습니다",
+    items:{tablet:"자성 태블릿 [21]", stand:"레이저 받침대 [8]", laser:"빨간 레이저 [7]", holder:"슬라이드 홀더 [18]", screwdriver:"드라이버 [11]", slides:"슬라이드 [15]",
+      cardboard:"판지 [20]", paper:"모눈종이 [19]", smallclip:"작은 클립 ×4 [17]", bigclip:"큰 클립 ×2 [13]", tape:"마스킹 테이프 [10]", needle:"바늘 [9]", film:"차광 필름 [16]",
+      pd:"포토다이오드 [2]", battery:"배터리 [3]", batholder:"배터리 홀더 [6]", resistor:"저항 10k·200k [4]", connector:"압착 커넥터 ×4 [5]", mm:"멀티미터 [1]", ruler:"자 [12]", tapemeasure:"줄자 [14]"},
+    leads:{"BAT+":"전지 + (빨강)","BAT-":"전지 − (검정)",PD_RED:"다이오드 빨강",PD_BLK:"다이오드 검정",R_A:"저항 A",R_B:"저항 B",MM_RED:"멀티미터 빨강",MM_BLK:"멀티미터 검정 (COM)"},
+    circ:{ok:"회로가 이어졌습니다",ok_swapped:"전압계 극성이 반대입니다",reversed:"다이오드 극성이 반대입니다",open:"회로가 아직 열려 있습니다",short:"저항이 단락되었습니다"},
+    lab:{none:"(실험대에 없음)", noScreen:"판지에 모눈종이를 클립으로 붙여 실험대에 세우면 보입니다", noSlide:"슬라이드 홀더에 슬라이드를 넣으면 보입니다", pd:"포토다이오드", res:"저항", conn:c=>"C"+c, mmDial:{OFF:"OFF",DCV200m:"DCV 200m",DCV2:"DCV 2",DCV20:"DCV 20",OHM:"Ω",ACV:"ACV"},
+      held:"집은 리드", noCircuit:"배터리를 홀더에 넣어 세기 검출기를 실험대에 놓으면 보입니다", dark:"(실내 조명 꺼짐)", latched:"레이저 버튼이 클립으로 눌려 있음", taped:"마스킹 테이프", pinhole:"핀홀"},
+    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요. 먼저 자성 태블릿.", hand:n=>"손에 든 것: "+n, lead:n=>"리드: "+n+" — 커넥터를 클릭하세요", laserOn:"⚠ 레이저가 켜져 있습니다 (눈에 비추지 마세요)", needle:"⚠ 바늘은 쓰지 않을 때 덮개에 꽂아 두세요"},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.",
+       needTablet:"먼저 자성 태블릿을 놓으세요.", needStand:"레이저는 받침대에 꽂습니다. 받침대를 먼저 놓으세요.", needHolderAsm:"슬라이드 홀더는 드라이버로 조립해야 합니다. 드라이버를 먼저 꺼내 두세요.", needScreenAsm:"판지에 모눈종이와 작은 클립이 있어야 스크린이 됩니다.",
+       needBatt:"배터리를 먼저 꺼내 두어야 배터리 홀더에 넣을 수 있습니다.", combine:{tape:"레이저 구멍을 마스킹 테이프로 막았습니다.",needle:"바늘로 핀홀을 뚫었습니다 (빔이 가늘어집니다).",needleNo:"먼저 마스킹 테이프로 구멍을 막으세요.",bigclip:"큰 클립으로 레이저 버튼을 눌러 고정했습니다 — 레이저가 켜집니다.",film:"차광 필름을 큰 클립에 끼워 빔 앞에 놓았습니다.",filmNo:"필름을 끼울 큰 클립이 하나 더 필요합니다."},
+       onLaser:"그 도구는 레이저에 대고 클릭하세요.", unlatched:"클립을 빼서 레이저를 껐습니다.", noPin:"핀홀이 아직 없습니다 (테이프 → 바늘).", noFilm:"차광 필름이 빔 앞에 없습니다.", sheet:s=>"슬라이드 '"+s+"' 를 홀더에 넣었습니다.", sample:n=>"시료 "+n+" 를 레이저 앞에 놓았습니다.",
+       needHolder:"슬라이드 홀더가 서 있지 않습니다.", needSlides:"슬라이드 [15]를 먼저 꺼내 두세요.", lead:n=>n+" 을(를) 집었습니다.", inserted:(n,c)=>n+" → C"+c, full:"그 커넥터는 이미 세 구멍이 다 찼습니다.", res:r=>"저항 "+r, tape:v=>"줄자: "+v+" mm", needTape:"줄자 [14]를 꺼내 두고, 홀더와 스크린을 세우세요.", noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"IdPhO 2020 Experiment — Crystallography",
+    sub:"Virtual laboratory · stand the laser (λ = 630 nm) and the slide holder on the magnetic tablet, and make a screen a metre or so away by clipping graph paper onto the cardboard. Read the diffraction patterns of the diffraction-grating, unit-cell, plane-group and molecular-replacement slides on the graph paper, and measure the intensities of the reflexes with the photodiode circuit and the multimeter. Lattice parameters, symmetries and structures are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\ntools (tape, needle, clips, film): click them onto the laser\nwheel over the screen: move it nearer or farther",
+    cap:"the bench (seen from above and in front) — L-click pick up / put down, R-click back to the box / wheel over the screen: move it away from or towards the slide (Shift: fine)",
+    tabs:{screen:"Screen (graph paper)", slide:"Slide", circuit:"Intensity detector"},
+    closeCap:{screen:"close up — the graph paper (A4) on the cardboard. Wheel: zoom, drag empty paper: pan, drag the photodiode: move the measuring spot.",
+      slide:"close up — the slide in the holder. Click a sample cell to put that sample in the beam. The right way round: the slide's English title on top, reading left to right.",
+      circuit:"close up — the intensity detector (Fig. 17). Click a lead to take it and click a splicing connector C1–C4 to put it in (all three points of a connector are joined). Resistor 10 kΩ / 200 kΩ, click the multimeter dial."},
+    hLaser:"Laser [7] beam", pinOn:"Use the pinhole", pinOff:"Do not use the pinhole", film:n=>"darkening film: "+n,
+    hSlide:"Slides [15]", flip:"Insert the slide the wrong way round", flipOn:"Insert the slide the right way", sheets:{DG:"Diffraction grating",UC:"Unit cell",PG:"Plane group",MR:"Molecular replacement"},
+    slideLbl:(s,n)=>s?("holder: "+s+(n?" · in the beam: "+n:" · choose a sample")):"no slide in the holder",
+    hView:"View", roomOn:"Room light off", roomOff:"Room light on", zoom:"Reset zoom", exp:v=>"exposure "+(v>=0?"+":"")+v.toFixed(1),
+    hRead:"Multimeter [1] · tape measure [14]", tape:"Tape: slide to screen", tapeVal:v=>"tape: "+v+" mm",
+    hNote:"Lab notebook", note:"Write down the readings", noteClr:"Clear", noteEmpty:"nothing written yet",
+    items:{tablet:"Magnetic tablet [21]", stand:"Laser stand [8]", laser:"Red laser [7]", holder:"Slide holder [18]", screwdriver:"Screwdriver [11]", slides:"Slides [15]",
+      cardboard:"Cardboard [20]", paper:"Graph paper [19]", smallclip:"Small clips ×4 [17]", bigclip:"Large clips ×2 [13]", tape:"Masking tape [10]", needle:"Needle [9]", film:"Darkening film [16]",
+      pd:"Photodiode [2]", battery:"Battery [3]", batholder:"Battery holder [6]", resistor:"Resistors 10k·200k [4]", connector:"Splicing connectors ×4 [5]", mm:"Multimeter [1]", ruler:"Ruler [12]", tapemeasure:"Tape measure [14]"},
+    leads:{"BAT+":"battery + (red)","BAT-":"battery − (black)",PD_RED:"diode red",PD_BLK:"diode black",R_A:"resistor A",R_B:"resistor B",MM_RED:"multimeter red",MM_BLK:"multimeter black (COM)"},
+    circ:{ok:"circuit closed",ok_swapped:"voltmeter leads swapped",reversed:"diode reversed",open:"circuit still open",short:"resistor shorted"},
+    lab:{none:"(not on the bench)", noScreen:"clip graph paper onto the cardboard and stand it on the bench to see it", noSlide:"put a slide into the slide holder to see it", pd:"photodiode", res:"resistor", conn:c=>"C"+c, mmDial:{OFF:"OFF",DCV200m:"DCV 200m",DCV2:"DCV 2",DCV20:"DCV 20",OHM:"Ω",ACV:"ACV"},
+      held:"lead in hand", noCircuit:"put the battery into its holder and the detector on the bench to see it", dark:"(room light off)", latched:"laser button held by a clip", taped:"masking tape", pinhole:"pinhole"},
+    st:{none:"Take the apparatus out of the box and put it on the bench, the magnetic tablet first.", hand:n=>"In hand: "+n, lead:n=>"Lead: "+n+" — click a connector", laserOn:"⚠ The laser is on (never into anyone's eyes)", needle:"⚠ Keep the needle in its cover when not in use"},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", noFit:"It does not go there.",
+       needTablet:"Put the magnetic tablet down first.", needStand:"The laser goes into its stand. Put the stand down first.", needHolderAsm:"The slide holder has to be assembled with the screwdriver. Put the screwdriver out first.", needScreenAsm:"The screen needs the graph paper and the small clips on the cardboard.",
+       needBatt:"Put the battery out first so it can go into the holder.", combine:{tape:"Laser aperture covered with masking tape.",needle:"Pinhole pierced with the needle (narrower beam).",needleNo:"Cover the aperture with masking tape first.",bigclip:"The laser button is held down by a large clip — the laser is on.",film:"Darkening film held in a large clip in front of the beam.",filmNo:"You need a second large clip to hold the film."},
+       onLaser:"Click that tool onto the laser.", unlatched:"Clip removed: the laser is off.", noPin:"There is no pinhole yet (tape, then needle).", noFilm:"No darkening film in front of the beam.", sheet:s=>"Slide '"+s+"' in the holder.", sample:n=>"Sample "+n+" is in the beam.",
+       needHolder:"The slide holder is not standing.", needSlides:"Put the slides [15] out first.", lead:n=>n+" taken.", inserted:(n,c)=>n+" → C"+c, full:"All three points of that connector are taken.", res:r=>"Resistor "+r, tape:v=>"Tape: "+v+" mm", needTape:"Put the tape measure [14] out, and stand the holder and the screen.", noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  THE KIT AND THE CRYSTALS ON THE SLIDES  (µm, mm)
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const LAMBDA_UM=0.630, LAMBDA_MM=LAMBDA_UM*1e-3, BEAM_FULL=1.20, BEAM_PIN=0.26, FILM_T=0.105, VCC=2.95;
+const sinc=u=>Math.abs(u)<1e-14?1:Math.sin(u)/u;
+function besselJ1(x){ const ax=Math.abs(x);
+  if(ax<12){ const t=x*x/4; let term=x/2, s=term; for(let m=1;m<40;m++){ term*=-t/(m*(m+1)); s+=term; if(Math.abs(term)<1e-16*(Math.abs(s)+1e-30)) break; } return s; }
+  const z=8/ax, y=z*z, p=1+0.183105e-2*y-0.3516396496e-4*y*y+0.2457520174e-5*y**3-0.240337019e-6*y**4, q=0.04687499995-0.2002690873e-3*y+0.8449199096e-5*y*y-0.88228987e-6*y**3+0.105787412e-6*y**4;
+  const xx=ax-2.356194491, r=Math.sqrt(0.636619772/ax)*(Math.cos(xx)*p-z*Math.sin(xx)*q); return x>0?r:-r; }
+const jinc=x=>Math.abs(x)<1e-12?1:2*besselJ1(x)/x;
+const PG_CELLS={
+  K:[[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],[3,2],[3,5],[3,6],[3,9],[4,2],[4,9],[5,2],[5,3],[5,8],[5,9],[6,2],[6,3],[6,8],[6,9],[7,2],[7,9],[8,2],[8,5],[8,6],[8,9],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8]],
+  L:[[4,4],[4,5],[4,6],[5,6]], M:[[1,4],[1,5],[1,6],[2,6],[9,6],[10,4],[10,5],[10,6]],
+  N:[[2,5],[2,6],[2,7],[3,7],[4,2],[4,3],[5,2],[5,9],[6,2],[6,9],[7,8],[7,9],[8,4],[9,4],[9,5],[9,6]], P:[[3,7],[4,7],[4,8],[4,9],[7,2],[7,3],[7,4],[8,4]],
+  Q:[[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[2,3],[2,8],[9,3],[9,8],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8]],
+  R:[[0,3],[0,4],[0,7],[0,8],[1,3],[1,8],[2,3],[2,8],[3,0],[3,1],[3,2],[3,9],[3,10],[3,11],[4,0],[4,11],[7,0],[7,11],[8,0],[8,1],[8,2],[8,9],[8,10],[8,11],[9,3],[9,8],[10,3],[10,8],[11,3],[11,4],[11,7],[11,8]],
+  S:[[0,11],[1,9],[1,10],[1,11],[4,3],[4,4],[4,5],[5,5],[6,6],[7,6],[7,7],[7,8],[10,0],[10,1],[10,2],[11,0]],
+  T:[[0,3],[1,1],[1,2],[1,3],[1,10],[2,4],[2,5],[2,10],[3,4],[3,10],[3,11],[4,4],[4,7],[4,8],[4,9],[5,9],[6,2],[7,2],[7,3],[7,4],[7,7],[8,0],[8,1],[8,7],[9,1],[9,6],[9,7],[10,1],[10,8],[10,9],[10,10],[11,8]]};
+const PG_SLIDE={PG1:"L",PG2:"M",PG3:"P",PG4:"R",PG5:"N",PG6:"T",PG7:"Q",PG8:"K",PG9:"S"};
+const MR_CELLS={MR0:[[0,0],[1,1],[2,1],[1,2],[3,2]],MR1:[[0,0],[1,1],[2,1],[1,2],[3,2],[2,3]],MR2:[[0,0],[3,0],[1,1],[2,1],[0,2],[1,2],[3,2]]};
+function cx(re,im){ return {re,im}; }
+function sample(name,kind,sheet,o){ return Object.assign({name,kind,sheet,refl:null},o); }
+const grating=(n,a,b)=>sample(n,"1d","DG",{a,b});
+const crystal=(n,sh,a1,a2,rects,mode)=>sample(n,"2d",sh,{a1,a2,rects,mode:mode||"opaque"});
+const fromGrid=(n,sh,grid,pitch,cells,mode)=>crystal(n,sh,[grid*pitch,0],[0,grid*pitch],cells.map(([x,y])=>[x*pitch,y*pitch,pitch,pitch]),mode);
+const SAMPLES={};
+for(const [n,a,b] of [["DG1",20,10],["DG2",50,12.5],["DG3",80,10],["DG4",80,20],["DG5",80,40]]) SAMPLES[n]=grating(n,a,b);
+SAMPLES.UC1=crystal("UC1","UC",[30,0],[0,30],[[0,0,10,10]]); SAMPLES.UC2=crystal("UC2","UC",[20,0],[0,20],[[0,0,10,10]]);
+SAMPLES.UC3=crystal("UC3","UC",[20,0],[0,20],[[0,0,10,10],[10,10,10,10]]); SAMPLES.UC4=crystal("UC4","UC",[30,0],[0,30],[[0,0,10,10],[13,14,15,15]]);
+SAMPLES.UC5=crystal("UC5","UC",[20,0],[0,40],[[0,0,10,10]]); SAMPLES.UC6=crystal("UC6","UC",[30,20],[20,-10],[[0,0,10,10]]); SAMPLES.UC7=crystal("UC7","UC",[40,0],[20,30],[[0,0,10,10]]);
+SAMPLES.UC8=sample("UC8","quasi","UC",{a:25,window:3.2});
+for(const [s,c] of Object.entries(PG_SLIDE)) SAMPLES[s]=fromGrid(s,"PG",12,10,PG_CELLS[c],"opaque");
+for(const [s,c] of Object.entries(MR_CELLS)) SAMPLES[s]=fromGrid(s,"MR",4,10,c,"transparent");
+const SHEETS={DG:["DG1","DG2","DG3","DG4","DG5"],UC:["UC1","UC2","UC3","UC4","UC5","UC6","UC7","UC8"],PG:["PG1","PG2","PG3","PG4","PG5","PG6","PG7","PG8","PG9"],MR:["MR0","MR1","MR2"]};
+const cellArea=s=>s.kind==="1d"?s.a:s.kind==="2d"?Math.abs(s.a1[0]*s.a2[1]-s.a1[1]*s.a2[0]):1;
+function recip(s){ const [x1,y1]=s.a1, [x2,y2]=s.a2, A=x1*y2-y1*x2, f=2*Math.PI/A; return [[f*y2,-f*x2],[-f*y1,f*x1]]; }
+/* |F/A|^2 of reflection (h,k) */
+function p2d(s,h,k,b){ const [[b1x,b1y],[b2x,b2y]]=b, qx=h*b1x+k*b2x, qy=h*b1y+k*b2y, A=cellArea(s);
+  if(h===0&&k===0){ const tot=s.rects.reduce((a,r)=>a+r[2]*r[3],0); const F=s.mode==="opaque"?A-tot:tot; return (F/A)**2; }
+  let re=0, im=0; for(const [x0,y0,w,hh] of s.rects){ const amp=w*hh*sinc(qx*w/2)*sinc(qy*hh/2), ph=qx*(x0+w/2)+qy*(y0+hh/2); re+=amp*Math.cos(ph); im+=amp*Math.sin(ph); }
+  return (re*re+im*im)/(A*A); }
+/* the reflections: [h, k, direction cosines sx, sy, fraction of the power] */
+function reflections(s){
+  if(s.refl) return s.refl; const out=[], SMAX=0.30;
+  if(s.kind==="1d"){ const hm=Math.floor(SMAX*s.a/LAMBDA_UM)+1; for(let h=-hm;h<=hm;h++){ const sx=h*LAMBDA_UM/s.a; if(Math.abs(sx)>SMAX) continue; const q=2*Math.PI*h/s.a, p=(s.b*sinc(q*s.b/2)/s.a)**2; if(p>1e-7) out.push([h,0,sx,0,p]); } }
+  else if(s.kind==="2d"){ const b=recip(s), [[b1x,b1y],[b2x,b2y]]=b, lim=2*Math.floor(SMAX*2*Math.PI/(LAMBDA_UM*Math.min(Math.hypot(b1x,b1y),Math.hypot(b2x,b2y))))+2;
+    for(let h=-lim;h<=lim;h++) for(let k=-lim;k<=lim;k++){ const qx=h*b1x+k*b2x, qy=h*b1y+k*b2y, sx=qx*LAMBDA_UM/(2*Math.PI), sy=qy*LAMBDA_UM/(2*Math.PI); if(Math.hypot(sx,sy)>SMAX) continue; const p=p2d(s,h,k,b); if(p>1e-7) out.push([h,k,sx,sy,p]); } }
+  else { const g=2*Math.PI/s.a, par=[...Array(5)].map((_,i)=>[g*Math.cos(2*Math.PI*i/5),g*Math.sin(2*Math.PI*i/5)]), per=[...Array(5)].map((_,i)=>[Math.cos(4*Math.PI*i/5),Math.sin(4*Math.PI*i/5)]), seen=new Map();
+    const R=[-2,-1,0,1,2]; for(const n0 of R) for(const n1 of R) for(const n2 of R) for(const n3 of R) for(const n4 of R){ const n=[n0,n1,n2,n3,n4];
+      let qx=0,qy=0,px=0,py=0; for(let i=0;i<5;i++){ qx+=n[i]*par[i][0]; qy+=n[i]*par[i][1]; px+=n[i]*per[i][0]; py+=n[i]*per[i][1]; }
+      const sx=qx*LAMBDA_UM/(2*Math.PI), sy=qy*LAMBDA_UM/(2*Math.PI); if(Math.hypot(sx,sy)>SMAX) continue; const amp=jinc(s.window*Math.hypot(px,py)), p=0.09*amp*amp, key=sx.toFixed(7)+","+sy.toFixed(7);
+      if(p>(seen.get(key)||[0])[0]) seen.set(key,[p,n0,n1,sx,sy]); }
+    for(const [p,n0,n1,sx,sy] of seen.values()) if(p>1.2e-3) out.push([n0,n1,sx,sy,p]); }
+  s.refl=out; return out; }
+
+/* ══════════════════════════════════════════════════════════════
+   2.  HIDDEN INSTRUMENT CONSTANTS OF THIS SESSION
+   ══════════════════════════════════════════════════════════════ */
+const TRUE={ gain10k:53.24*U(0.86,1.16), pdD:U(2.7,3.4), vBg:U(0.0018,0.0062), nRel:U(0.004,0.009), nAbs:U(0.00018,0.00042),
+  beamFull:BEAM_FULL*U(0.9,1.12), beamPin:BEAM_PIN*U(0.85,1.2), power:U(0.88,1.12), cdx:U(-3.4,3.4), cdy:U(-3.4,3.4), filmT:FILM_T*U(0.85,1.18), tapeBias:U(-0.8,0.8) };
+const gauss=()=>{ const u=Math.max(1e-12,Math.random()), v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE APPARATUS AND WHAT IT SHOWS
+   ══════════════════════════════════════════════════════════════ */
+const LEADS=["BAT+","BAT-","PD_RED","PD_BLK","R_A","R_B","MM_RED","MM_BLK"];
+const ITEMS=["tablet","stand","laser","holder","screwdriver","slides","cardboard","paper","smallclip","bigclip","tape","needle","film","pd","battery","batholder","resistor","connector","mm","ruler","tapemeasure"];
+const ST={ on:new Set(), pos:{}, taped:false, pin:false, usePin:false, latched:false, films:0, sheet:null, sample:null, flipped:false,
+  screenX:118, screenOK:false, conn:[[],[],[],[]], res:"10k", dial:"OFF", pdx:0, pdy:0, room:true, exp:0, lead:null, tapeTxt:"", notes:[] };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+const HOLDER_X=26, LASER_X=12;
+const Lmm=()=>(ST.screenX-HOLDER_X)*10;
+const detectorOn=()=>has("pd")&&has("batholder")&&has("resistor")&&has("connector")&&has("mm");
+const beamOK=()=>has("laser")&&ST.latched&&has("cardboard")&&ST.screenOK;
+const beamD=()=>ST.usePin&&ST.pin?TRUE.beamPin:TRUE.beamFull;
+const spotSigma=()=>Math.max(0.10,0.45*LAMBDA_MM*Lmm()/beamD());
+function transmission(){ let t=TRUE.power; if(ST.films) t*=TRUE.filmT**ST.films; if(ST.usePin&&ST.pin){ const w=TRUE.beamPin/TRUE.beamFull; t*=w*w; } return t; }
+function spots(){
+  if(!beamOK()) return [];
+  if(!ST.sample||!has("holder")) return [[TRUE.cdx,TRUE.cdy,transmission()]];
+  const s=SAMPLES[ST.sample], t=transmission(), L=Lmm(), out=[];
+  for(let [h,k,sx,sy,p] of reflections(s)){ if(ST.flipped) sx=-sx; const s2=sx*sx+sy*sy; if(s2>=0.85) continue; const f=L/Math.sqrt(1-s2), x=sx*f+TRUE.cdx, y=sy*f+TRUE.cdy;
+    if(Math.abs(x)>148.5+2||Math.abs(y)>105+2) continue; out.push([x,y,p*t]); }
+  return out; }
+function nodeOf(l){ for(let i=0;i<4;i++) if(ST.conn[i].includes(l)) return i; return null; }
+function circuitState(){
+  if(!detectorOn()) return "open"; const n={}; for(const l of LEADS){ n[l]=nodeOf(l); if(n[l]===null) return "open"; }
+  if(!((n.MM_RED===n.R_A&&n.MM_BLK===n.R_B)||(n.MM_RED===n.R_B&&n.MM_BLK===n.R_A))) return "open";
+  if(n.R_A===n.R_B) return "short";
+  if(n["BAT+"]===n.PD_RED&&(n.PD_BLK===n.R_A||n.PD_BLK===n.R_B)&&(n["BAT-"]===n.R_A||n["BAT-"]===n.R_B)&&n.PD_BLK!==n["BAT-"]) return n.MM_RED===n.PD_BLK?"ok":"ok_swapped";
+  if(n["BAT-"]===n.PD_RED&&(n.PD_BLK===n.R_A||n.PD_BLK===n.R_B)&&(n["BAT+"]===n.R_A||n["BAT+"]===n.R_B)&&n.PD_BLK!==n["BAT+"]) return "reversed";
+  return "open"; }
+function pdVoltage(){ const st=circuitState(); if(st==="open"||st==="short") return null;
+  const g=TRUE.gain10k*(ST.res==="200k"?20:1); let v=TRUE.vBg;
+  if(st==="ok"||st==="ok_swapped"){ const sg=spotSigma(), R=TRUE.pdD/2; let tot=0; for(const [x,y,p] of spots()){ const dd=Math.hypot(x-ST.pdx,y-ST.pdy); if(dd>R+6*sg) continue; tot+=p*0.5*(1-erf((dd-R)/(sg*Math.SQRT2))); } v+=g*tot; }
+  return Math.min(v,VCC); }
+function erf(x){ const t=1/(1+0.3275911*Math.abs(x)), y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x); return x>=0?y:-y; }
+function mmText(){
+  if(!has("mm")||ST.dial==="OFF") return ""; if(ST.dial==="OHM") return "0L"; if(ST.dial==="ACV") return "000.0";
+  let v=pdVoltage(); if(v===null) return ST.dial==="DCV200m"?"0.0":ST.dial==="DCV2"?"0.000":"0.00";
+  v=Math.max(0,v*(1+gauss()*TRUE.nRel)+gauss()*TRUE.nAbs); if(circuitState()==="ok_swapped") v=-v;
+  if(ST.dial==="DCV200m") return Math.abs(v)>0.1999?"1   ":(v*1000).toFixed(1);
+  if(ST.dial==="DCV2") return Math.abs(v)>1.999?"1   ":v.toFixed(3);
+  return Math.abs(v)>19.99?"1   ":v.toFixed(2); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (sheared oblique view from the front left, cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=420, SC=6.5, OX=22, OY=190, KY=0.5, KX=0.3;
+const P=(x,y,z)=>[OX+SC*(x+KX*y), OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>{ const y=((Y-OY)/SC+(z||0))/KY; return [(X-OX)/SC-KX*y,y]; };
+const TBL={x0:0,x1:160,y0:0,y1:60}, AY=18, AZ=8;               /* the beam's line and height */
+const TAB={x0:2,x1:46,y0:6,y1:32};
+function abox(x0,y0,z0,x1,y1,z1,top,front,side,edge){
+  poly([P(x0,y0,z0),P(x0,y1,z0),P(x0,y1,z1),P(x0,y0,z1)],side,edge,0.6);
+  poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],front,edge,0.6);
+  poly([P(x0,y0,z1),P(x1,y0,z1),P(x1,y1,z1),P(x0,y1,z1)],top,edge,0.6);
+}
+const quadX=(x,y0,y1,z0,z1,fill,stroke,lw)=>poly([P(x,y0,z0),P(x,y1,z0),P(x,y1,z1),P(x,y0,z1)],fill,stroke,lw);
+function seg3(a,b,col,w){ const p=P(...a), q=P(...b); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+function drawTable(){
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH);
+  poly([P(TBL.x0,TBL.y0,0),P(TBL.x1,TBL.y0,0),P(TBL.x1,TBL.y1,0),P(TBL.x0,TBL.y1,0)],"#d9d2c2","#a99f88",1);
+  ctx.strokeStyle="rgba(0,0,0,.05)"; ctx.lineWidth=1; for(let x=0;x<=160;x+=10){ const a=P(x,0,0), b=P(x,60,0); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+  if(!has("tablet")){ ctx.save(); ctx.setLineDash([5,4]); poly([P(TAB.x0,TAB.y0,0),P(TAB.x1,TAB.y0,0),P(TAB.x1,TAB.y1,0),P(TAB.x0,TAB.y1,0)],null,"#8a8270",1.2); ctx.restore(); return; }
+  abox(TAB.x0,TAB.y0,0,TAB.x1,TAB.y1,0.6,"#2a2d31","#1d1f22","#17181b","#000");
+  poly([P(TAB.x0+1,TAB.y0+1,0.61),P(TAB.x1-1,TAB.y0+1,0.61),P(TAB.x1-1,TAB.y1-1,0.61),P(TAB.x0+1,TAB.y1-1,0.61)],"#3a3e44",null);
+}
+function drawStandLaser(){
+  const x=LASER_X, y=AY;
+  if(has("stand")){ const b=P(x,y,0.6); ell(b[0],b[1],3.4*SC,3.4*SC*KY,"#22262c","#000",0.8); seg3([x,y,0.6],[x,y,AZ-1.2],"#3a4048",5); abox(x-1.2,y-1.2,AZ-1.6,x+1.2,y+1.2,AZ-0.8,"#22262c","#1a1c1f","#141518","#000"); }
+  if(!has("laser")) return;
+  abox(x-5,y-0.9,AZ-0.9,x+3,y+0.9,AZ+0.9,"#2b2f35","#22262c","#1a1d21","#000");
+  abox(x-0.6,y-1.0,AZ-1.0,x+1.4,y+1.0,AZ+1.0,"#2f6fb0","#225a92","#1a4a7a","#12385e");          /* the button collar */
+  abox(x+3,y-0.5,AZ-0.5,x+3.6,y+0.5,AZ+0.5,"#8f959c","#6f757b","#5a6066","#333");
+  const ap=P(x+3.62,y,AZ); circ(ap[0],ap[1],2.2,beamOK()?"#ff3a2a":"#4a1612");
+  if(ST.taped){ const t=P(x+3.62,y,AZ); circ(t[0],t[1],4,"rgba(233,224,190,.85)","#a99",0.6); if(ST.pin) circ(t[0],t[1],1,"#111"); }
+  if(ST.latched){ abox(x-0.8,y-1.1,AZ+0.9,x+1.6,y+1.1,AZ+2.2,"#1a1d21","#141518","#0e0f11","#000"); seg3([x-0.6,y,AZ+2.2],[x-1.6,y,AZ+3.2],"#8b9096",1.5); seg3([x+1.4,y,AZ+2.2],[x+2.4,y,AZ+3.2],"#8b9096",1.5); }
+  if(ST.films>0){ const fx=x+5.2; abox(fx-0.6,y-1.6,0.6,fx+0.6,y+1.6,2.2,"#1a1d21","#141518","#0e0f11","#000"); quadX(fx,y-1.5,y+1.5,2.2,AZ+1.6,"rgba(60,64,70,.6)","#222",0.8); }
+}
+function drawHolder(){
+  if(!has("holder")) return; const x=HOLDER_X, y=AY;
+  abox(x-1,y-4,0.6,x+1,y+4,1.6,"#f2f4f6","#dde1e5","#c9ced3","#a8b0b8");
+  for(const s of [-1,1]) abox(x-0.5,y+s*3.5-0.5,1.6,x+0.5,y+s*3.5+0.5,AZ+4,"#f2f4f6","#dde1e5","#c9ced3","#a8b0b8");
+  if(ST.sheet){ ctx.save(); ctx.globalAlpha=0.85; quadX(x-0.05,y-3,y+3,AZ-3,AZ+3.5,"rgba(225,238,246,.85)","#9fb3c0",0.8); ctx.restore();
+    const q=P(x-0.06,y,AZ+2.6); text(ST.sheet,q[0],q[1],"#5a6a7a",8,"center","700"); }
+}
+function drawScreen(){
+  if(!has("cardboard")) return; const x=ST.screenX, y=AY;
+  abox(x-0.4,y-2.5,0,x+3,y+2.5,1,"#6e6a63","#5a5650","#4a4740","#333");
+  abox(x-0.4,y-15,1,x+0.4,y+15,22,"#77726a","#6e6a63","#605c55","#403d38");
+  if(ST.screenOK){ quadX(x-0.42,y-14.85,y+14.85,1.4,22-0.1,ST.room?"#fdf6ec":"#3a3328","#c9bfa8",0.6);
+    ctx.strokeStyle=ST.room?"rgba(224,150,120,.35)":"rgba(120,90,60,.3)"; ctx.lineWidth=0.5; for(let yy=-14;yy<=14;yy+=1){ const a=P(x-0.43,y+yy,1.5), b=P(x-0.43,y+yy,21.8); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+    for(const [yy,zz] of [[-14.5,21.6],[14.5,21.6],[-14.5,1.8],[14.5,1.8]]){ const c=P(x-0.45,y+yy,zz); fillR(c[0]-3,c[1]-3,6,6,1,"#1a1d21"); }
+    /* what lands on the paper, as seen from here */
+    for(const [sx,sy,p] of spots()){ const A=p*Math.pow(10,ST.exp)/3e-4; if(A<0.5) continue; const c=P(x-0.45,y-sx/10,AZ+sy/10); circ(c[0],c[1],Math.min(4,0.8+0.5*Math.log10(A+1)),"rgba(255,50,40,.85)"); }
+    if(has("pd")){ const c=P(x-0.5,y-ST.pdx/10,AZ+ST.pdy/10); fillR(c[0]-6,c[1]-4,12,8,1,"#1f7a3c","#0c3a1c"); } }
+}
+function drawBeam(){ if(!beamOK()) return; const a=P(LASER_X+3.6,AY,AZ), x1=has("cardboard")?ST.screenX-0.4:TBL.x1;
+  ctx.save(); ctx.strokeStyle="rgba(255,40,30,.22)"; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(a[0],a[1]); const b=P(x1,AY,AZ); ctx.lineTo(b[0],b[1]); ctx.stroke(); ctx.strokeStyle="#ff3b2c"; ctx.lineWidth=1.3; ctx.stroke(); ctx.restore(); }
+/* the loose things on the table */
+const FOOT={screwdriver:[5,1.2],slides:[4,3],paper:[5,4],smallclip:[2,1.5],bigclip:[2,1.6],tape:[2,2],needle:[4,0.6],film:[2,1.6],battery:[3,0.8],batholder:[3.5,2],resistor:[2.5,0.8],connector:[3,1.5],mm:[4,6.5],ruler:[15,1.6],tapemeasure:[2.5,2.2]};
+const LOOSE=Object.keys(FOOT);
+function drawLoose(k){
+  const {x,y}=ST.pos[k];
+  if(k==="mm"){ abox(x-4,y-6.5,0,x+4,y+6.5,2.6,"#1f5b3a","#184a2f","#123a25","#0d2b1b"); const s=P(x-3,y-5.5,2.62), e=P(x+3,y-2.8,2.62); fillR(s[0],s[1],e[0]-s[0],e[1]-s[1]+3,1,"#cfd8c8","#222",0.5); const k2=P(x,y+1.5,2.65); circ(k2[0],k2[1],7,"#e8e8e8","#222",0.8); }
+  else if(k==="batholder"){ abox(x-3.5,y-2,0,x+3.5,y+2,1.6,"#20242c","#181b21","#121418","#000"); abox(x-2.8,y-0.7,1.6,x+2.4,y+0.7,2.3,"#2b3d7a","#22326a","#1a285a","#101a3a"); }
+  else if(k==="battery") abox(x-3,y-0.8,0,x+3,y+0.8,1.6,"#2b3d7a","#22326a","#1a285a","#101a3a");
+  else if(k==="resistor"){ seg3([x-2.5,y,0.4],[x+2.5,y,0.4],"#8a8a8a",1.5); abox(x-1.2,y-0.4,0,x+1.2,y+0.4,0.8,"#d8c39a","#c8b38a","#b8a37a","#8a7550"); }
+  else if(k==="connector") for(let i=0;i<4;i++){ abox(x-3+i*1.6,y-1.5,0,x-1.8+i*1.6,y+1.5,1.4,"#cfe4ef","#bcd4e2","#a8c4d4","#7a99a8"); abox(x-2.9+i*1.6,y-1.4,1.4,x-1.9+i*1.6,y-0.2,1.9,"#e8801a","#c86a10","#a3510a","#804008"); }
+  else if(k==="screwdriver"){ abox(x-5,y-0.6,0,x-1,y+0.6,1.2,"#e8801a","#c86a10","#a3510a","#804008"); seg3([x-1,y,0.6],[x+5,y,0.6],"#b9bec4",2.4); }
+  else if(k==="slides"){ for(let i=0;i<3;i++) abox(x-4+i*0.4,y-3+i*0.3,i*0.12,x+4+i*0.4,y+3+i*0.3,i*0.12+0.1,"#eaf2f7","#d5e2ea","#c5d4de","#9fb3c0"); }
+  else if(k==="paper") abox(x-5,y-4,0,x+5,y+4,0.05,"#fdf6ec","#efe5d4","#e5dbc8","#c9bfa8");
+  else if(k==="smallclip"||k==="bigclip"){ const n=k==="bigclip"?2-(ST.latched?1:0)-(ST.films>0?1:0):4; for(let i=0;i<n;i++){ const s=k==="bigclip"?1:0.65; abox(x-1.5*s+i*2.6*s,y-1*s,0,x+1.5*s+i*2.6*s,y+1*s,1.4*s,"#1a1d21","#141518","#0e0f11","#000"); } }
+  else if(k==="tape"){ const c=P(x,y,0.8); ell(c[0],c[1],2*SC,2*SC*KY,"#e8d9a8","#b8a367",1.2); ell(c[0],c[1],0.8*SC,0.8*SC*KY,"#d9d2c2","#b8a367",0.8); }
+  else if(k==="needle"){ abox(x-4,y-0.5,0,x+3,y+0.5,0.6,"#e9eef3","#d9dee3","#c9ced3","#9aa6b2"); seg3([x+3,y,0.3],[x+4.5,y,0.3],"#98a2ad",1); }
+  else if(k==="film") abox(x-2,y-1.6,0,x+2,y+1.6,0.05,"#4a4f55","#3a3f45","#2a2f35","#23262a");
+  else if(k==="ruler"){ abox(x-15,y-1.6,0,x+15,y+1.6,0.2,"#dfe3e7","#cfd3d7","#bfc3c7","#8b9096"); for(let i=0;i<=30;i++){ seg3([x-15+i,y+1.6,0.21],[x-15+i,y+1.6-(i%5?0.5:1),0.21],"#555",0.6); } }
+  else if(k==="tapemeasure") abox(x-2.5,y-2.2,0,x+2.5,y+2.2,2.6,"#1f4f8a","#1a4274","#14355e","#0e2b52");
+}
+function drawCircuitWires(){ if(!has("pd")||!has("batholder")) return;
+  const a=P(ST.screenX-0.5,AY-ST.pdx/10,AZ+ST.pdy/10); for(const k of ["batholder","resistor","mm"]){ if(!has(k)) continue; const b=P(ST.pos[k].x,ST.pos[k].y,1); ctx.strokeStyle=k==="mm"?"#c22":"#222"; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.quadraticCurveTo((a[0]+b[0])/2,Math.max(a[1],b[1])+20,b[0],b[1]); ctx.stroke(); } }
+function drawBench(){
+  drawTable(); drawStandLaser(); drawHolder(); drawBeam(); drawScreen();
+  const list=LOOSE.filter(k=>has(k)&&ST.pos[k]).sort((a,b)=>ST.pos[a].y-ST.pos[b].y); for(const k of list) drawLoose(k);
+  drawCircuitWires(); drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return; text(itemName(hand.item),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700");
+  if(LOOSE.includes(hand.item)&&hand.item!=="paper"&&!["tape","needle","bigclip","film"].includes(hand.item)||hand.item==="paper"&&!has("cardboard")){ const [x,y]=unP(mouse[0],mouse[1],0), f=footOf(hand.item,x,y); if(!f) return;
+    const q=[P(f[0],f[1],0),P(f[2],f[1],0),P(f[2],f[3],0),P(f[0],f[3],0)]; ctx.save(); ctx.setLineDash([5,4]); poly(q,null,fits(hand.item,x,y)?"#f2c14e":"#e0605a",1.6); ctx.restore(); } }
+function footOf(k,x,y){ const h=FOOT[k]; if(!h) return null; return [x-h[0],y-h[1],x+h[0],y+h[1]]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y){ const f=footOf(k,x,y); if(!f) return false;
+  if(f[0]<TBL.x0+0.5||f[2]>TBL.x1-0.5||f[1]<TBL.y0+0.5||f[3]>TBL.y1-0.5) return false;
+  if(overl(f,[TAB.x0,TAB.y0,TAB.x1,TAB.y1],0.3)) return false;
+  if(overl(f,[TAB.x1,AY-3,TBL.x1,AY+3],0)) return false;                      /* keep the beam's path clear */
+  if(has("cardboard")&&overl(f,[ST.screenX-1,AY-16,ST.screenX+3.5,AY+16],0)) return false;
+  for(const o of LOOSE){ if(o===k||!has(o)||!ST.pos[o]) continue; if(overl(f,footOf(o,ST.pos[o].x,ST.pos[o].y),0.3)) return false; }
+  return true; }
+function box3(x0,y0,z0,x1,y1,z1){ const pts=[]; for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) pts.push(P(x,y,z));
+  return [Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))]; }
+function bbox(k){ if(!has(k)) return null;
+  if(k==="tablet") return box3(TAB.x0,TAB.y0,0,TAB.x1,TAB.y1,0.6);
+  if(k==="stand") return box3(LASER_X-3.4,AY-3.4,0,LASER_X+3.4,AY+3.4,AZ-0.8);
+  if(k==="laser") return box3(LASER_X-5,AY-1.2,AZ-1.2,LASER_X+3.7,AY+1.2,AZ+2.4);
+  if(k==="holder") return box3(HOLDER_X-1,AY-4,0.6,HOLDER_X+1,AY+4,AZ+4);
+  if(k==="cardboard") return box3(ST.screenX-0.5,AY-15,0,ST.screenX+3,AY+15,22);
+  if(k==="pd") return null;
+  const p=ST.pos[k]; if(!p) return null; const f=footOf(k,p.x,p.y); return box3(f[0],f[1],0,f[2],f[3],k==="mm"?2.6:1.6); }
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=["tablet","stand","laser","holder","screwdriver","slides","cardboard","paper","smallclip","bigclip","tape","needle","film","pd","battery","batholder","resistor","connector","mm","ruler","tapemeasure"], TROW=36;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="screen", HIT=[], MMTXT="";
+const inHand=k=>hand&&hand.item===k;
+const used=k=>has(k)||(k==="tape"&&ST.taped)||(k==="needle"&&ST.pin&&false)||(k==="paper"&&ST.screenOK)||(k==="battery"&&has("batholder"))||(k==="film"&&ST.films>0);
+const trayAvail=k=>!used(k)&&!inHand(k);
+function icon(c,k){
+  const old=ctx; ctx=c; const s=0.8; ctx.save(); ctx.scale(s,s);
+  if(k==="tablet"){ fillR(-17,-12,34,24,2,"#2a2d31","#14171a"); fillR(-15,-10,30,20,1,"#3a3e44"); }
+  else if(k==="stand"){ ell(0,10,14,4,"#22262c","#000"); fillR(-1.5,-6,3,16,0,"#3a4048"); fillR(-5,-10,10,5,1,"#22262c"); }
+  else if(k==="laser"){ fillR(-18,-4,28,8,2,"#22262c","#000"); fillR(-2,-5,6,10,1,"#2f6fb0"); fillR(10,-2,4,4,0,"#8f959c"); circ(15,0,1.8,"#e84a4a"); }
+  else if(k==="holder"){ fillR(-14,6,28,5,1,"#f2f4f6","#a8b0b8"); fillR(-12,-12,4,18,0,"#f2f4f6","#a8b0b8"); fillR(8,-12,4,18,0,"#f2f4f6","#a8b0b8"); }
+  else if(k==="screwdriver"){ fillR(-16,-4,12,8,2,"#e8801a","#a3510a"); fillR(-4,-1.5,18,3,0,"#b9bec4"); }
+  else if(k==="slides"){ for(let i=0;i<3;i++) fillR(-14+i*3,-10+i*2.5,24,18,1,"#eaf2f7","#9fb3c0"); }
+  else if(k==="cardboard"){ fillR(-15,-11,30,22,1,"#6e6a63","#403d38"); }
+  else if(k==="paper"){ fillR(-15,-11,30,22,0,"#fdf6ec","#c9bfa8"); for(let i=1;i<6;i++){ fillR(-15+i*5,-11,0.6,22,0,"#e2b9a8"); fillR(-15,-11+i*3.7,30,0.6,0,"#e2b9a8"); } }
+  else if(k==="smallclip"){ for(let i=0;i<4;i++) fillR(-15+i*8,-4,6,8,1,"#1a1d21","#000"); }
+  else if(k==="bigclip"){ fillR(-14,-6,11,12,1,"#1a1d21","#000"); fillR(3,-6,11,12,1,"#1a1d21","#000"); }
+  else if(k==="tape"){ circ(0,0,11,"#e8d9a8","#b8a367"); circ(0,0,4,"#15181d"); }
+  else if(k==="needle"){ fillR(-16,-2,24,4,1,"#e9eef3","#9aa6b2"); fillR(8,-0.5,8,1,0,"#98a2ad"); }
+  else if(k==="film"){ fillR(-11,-8,22,16,1,"#4a4f55","#23262a"); }
+  else if(k==="pd"){ fillR(-11,-7,22,14,1,"#1f7a3c","#0c3a1c"); circ(-4,0,4,"#20242c"); fillR(3,-4,5,8,0,"#8a8f96"); }
+  else if(k==="battery"){ fillR(-15,-5,26,10,2,"#2b3d7a","#101a3a"); fillR(11,-2,3,4,0,"#c9ccd2"); }
+  else if(k==="batholder"){ fillR(-14,-7,26,14,2,"#20242c","#000"); ctx.strokeStyle="#c22"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(12,-3); ctx.lineTo(18,-6); ctx.stroke(); }
+  else if(k==="resistor"){ fillR(-16,-0.8,32,1.6,0,"#8a8a8a"); fillR(-7,-4,14,8,1,"#d8c39a","#8a7550"); }
+  else if(k==="connector"){ for(let i=0;i<4;i++){ fillR(-15+i*8,-3,7,9,1,"#cfe4ef","#7a99a8"); fillR(-14+i*8,-7,5,4,0,"#e8801a"); } }
+  else if(k==="mm"){ fillR(-10,-15,20,30,2,"#1f5b3a","#0d2b1b"); fillR(-7,-12,14,7,0,"#cfd8c8"); circ(0,5,5,"#e8e8e8","#222"); }
+  else if(k==="ruler"){ fillR(-18,-3,36,6,0,"#dfe3e7","#8b9096"); }
+  else if(k==="tapemeasure"){ fillR(-11,-9,22,18,2,"#1f4f8a","#0e2b52"); fillR(-7,-6,14,8,1,"#e8801a"); }
+  ctx.restore(); ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+64;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(340,CLW*0.52));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  SV.z=0; drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(26,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    const nm=itemName(k); let parts=[nm]; if(c.measureText(nm).width>wd-50){ const i=nm.lastIndexOf(" ",Math.floor(nm.length*0.6)); parts=i>0?[nm.slice(0,i),nm.slice(i+1)]:[nm]; }
+    parts.forEach((s,i)=>c.fillText(s,48,y+(parts.length>1?10+i*12:13)));
+    if(parts.length<2){ c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,48,y+27); }
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["screen","slide","circuit"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
+    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+
+/* ── 1. the graph paper (A4, mm; x to the right, y up, 0 at the paper's centre) ── */
+const SV={z:0,cx:0,cy:0};
+const RAMP_DARK=[[0.0009,"#1c0206"],[0.0025,"#2e0410"],[0.006,"#4a0614"],[0.015,"#6d0a1c"],[0.04,"#951024"],[0.10,"#bf162c"],[0.30,"#e01f35"],[1,"#f43a4c"],[4,"#fb6f80"],[20,"#ffa8b6"],[100,"#ffe0e6"],[400,"#ffffff"]];
+const RAMP_PAPER=[[0.0009,"#f7ded4"],[0.0025,"#f2c6b6"],[0.006,"#eba591"],[0.015,"#e5806a"],[0.04,"#dd5340"],[0.10,"#d3301f"],[0.30,"#c11a18"],[1,"#ad0f18"],[4,"#e0405a"],[20,"#ff9cb0"],[100,"#ffe6ea"],[400,"#ffffff"]];
+function svMap(){ if(!SV.z) SV.z=Math.min((CLW-20)/300,(CLH-30)/214); const z=SV.z; return {z,X:x=>CLW/2+(x-SV.cx)*z,Y:y=>CLH/2-(y-SV.cy)*z,U:px=>SV.cx+(px-CLW/2)/z,V:py=>SV.cy-(py-CLH/2)/z}; }
+function drawScreenView(){
+  const t=d(); if(!has("cardboard")||!ST.screenOK){ text(t.lab.noScreen,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=svMap(), z=m.z, dark=!ST.room;
+  ctx.fillStyle=dark?"#14100c":"#4a4740"; ctx.fillRect(0,0,CLW,CLH);
+  const x0=m.X(-148.5), y0=m.Y(105), x1=m.X(148.5), y1=m.Y(-105);
+  ctx.fillStyle=dark?"#1b1712":"#fdf6ec"; ctx.fillRect(x0,y0,x1-x0,y1-y0); ctx.strokeStyle="#b8ab93"; ctx.strokeRect(x0,y0,x1-x0,y1-y0);
+  const minor=dark?"#2a231b":"#f0d2c2", major=dark?"#3a3025":"#e0a68c", step=z>3?1:z>1.2?5:10;
+  for(let k=-145;k<=148;k+=step){ const px=m.X(k); if(px<x0||px>x1) continue; ctx.strokeStyle=k%10===0?major:minor; ctx.lineWidth=k%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(px,y0); ctx.lineTo(px,y1); ctx.stroke(); }
+  for(let k=-105;k<=105;k+=step){ const py=m.Y(k); ctx.strokeStyle=k%10===0?major:minor; ctx.lineWidth=k%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(x0,py); ctx.lineTo(x1,py); ctx.stroke(); }
+  /* the spots: isophotes of each Gaussian spot, the eye's own blur added */
+  const ramp=dark?RAMP_DARK:RAMP_PAPER, expo=Math.pow(10,ST.exp), sg=Math.hypot(spotSigma(),0.45);
+  for(const [sx,sy,p] of spots()){ const A=expo*p/3e-4; if(A<ramp[0][0]) continue; const px=m.X(sx), py=m.Y(sy); if(px<-40||px>CLW+40||py<-40||py>CLH+40) continue;
+    for(const [lev,col] of ramp){ if(A<=lev) continue; const r=Math.max(1.2,sg*Math.sqrt(2*Math.log(A/lev))*z); circ(px,py,r,col); } }
+  if(has("pd")){ const px=m.X(ST.pdx), py=m.Y(ST.pdy), r=TRUE.pdD/2*z; circ(px,py,r,null,"#2f6fb0",2); ctx.strokeStyle="#1f7a3c"; ctx.lineWidth=2; ctx.strokeRect(px-17,py-11,34,22);
+    text(t.lab.pd,px,py-18,"#1f7a3c",10,"center","600"); }
+  if(dark) text(t.lab.dark,CLW-10,CLH-10,"#5a626c",10,"right");
+}
+
+/* ── 2. the slide in its holder ── */
+let SLHIT=[];
+function drawSlideView(){
+  const t=d(); SLHIT=[]; if(!has("holder")||!ST.sheet){ text(t.lab.noSlide,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const w=CLW*0.8, h=CLH*0.82, x0=(CLW-w)/2, y0=(CLH-h)/2;
+  ctx.save(); if(ST.flipped){ ctx.translate(CLW,0); ctx.scale(-1,1); }
+  fillR(x0,y0,w,h,6,"#eaf2f7","#9fb3c0",1.5); text(t.sheets[ST.sheet],x0+w/2,y0+20,"#33414d",16,"center","700");
+  const names=SHEETS[ST.sheet], cols=names.length>4?3:2, rows=Math.ceil(names.length/cols), bw=(w-40)/cols, bh=Math.min(70,(h-60)/rows-10);
+  names.forEach((nm,i)=>{ const cx=x0+20+(i%cols)*bw, cy=y0+44+Math.floor(i/cols)*(bh+10), sel=ST.sample===nm;
+    fillR(cx,cy,bw-10,bh,4,sel?"#ffe9c9":"#ffffff",sel?"#b8321f":"#8fa3b0",sel?2:1);
+    ctx.fillStyle="rgba(40,50,60,.12)"; ctx.fillRect(cx+(bw-10)/2-bh*0.3,cy+bh*0.15,bh*0.6,bh*0.5);
+    text(nm,cx+(bw-10)/2,cy+bh*0.85,"#33414d",12,"center","700");
+    SLHIT.push([ST.flipped?CLW-(cx+bw-10):cx,cy,bw-10,bh,nm]); });
+  ctx.restore();
+}
+
+/* ── 3. the intensity detector's wiring and the multimeter ── */
+const DIAL=["OFF","DCV200m","DCV2","DCV20","OHM","ACV"];
+function drawCircuitView(){
+  const t=d(); if(!detectorOn()){ text(t.lab.noCircuit,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  /* the eight leads, as wire ends to pick up */
+  const lw=(CLW*0.62)/4; LEADS.forEach((l,i)=>{ const x=14+(i%4)*lw, y=14+Math.floor(i/4)*34, col=/RED|\+/.test(l)?"#c62828":"#222", sel=ST.lead===l, inC=nodeOf(l)!==null;
+    fillR(x,y,lw-10,26,4,sel?"#4a3f1a":inC?"#1d2a20":"#232830",sel?"#f2c14e":"#3a4048"); fillR(x+6,y+9,18,8,2,col,"#000"); text(t.leads[l],x+30,y+13,inC?"#7ee08a":"#cfd6dc",10.5,"left","600"); hitAdd("L:"+l,x,y,lw-10,26); });
+  /* the four lever connectors */
+  const cy=CLH*0.34, cw=Math.min(110,CLW*0.14);
+  for(let i=0;i<4;i++){ const x=14+i*(cw+18); fillR(x,cy,cw,CLH*0.32,6,"#cfe4ef","#7a99a8",1.5); text(t.lab.conn(i+1),x+cw/2,cy-10,"#cfd6dc",12,"center","700");
+    for(let j=0;j<3;j++){ const sx=x+cw*(0.2+0.3*j), lead=ST.conn[i][j]; fillR(sx-cw*0.1,cy+8,cw*0.2,CLH*0.06,2,"#e8801a","#a3510a"); fillR(sx-cw*0.07,cy+CLH*0.1,cw*0.14,CLH*0.16,2,"#eef6fa","#7a99a8");
+      if(lead){ const col=/RED|\+/.test(lead)?"#c62828":"#222"; ctx.strokeStyle=col; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(sx,cy+CLH*0.26); ctx.lineTo(sx,cy+CLH*0.36); ctx.stroke(); text(t.leads[lead].split(" ")[0],sx,cy+CLH*0.39,"#cfd6dc",9,"center"); hitAdd("U:"+i+":"+j,sx-cw*0.1,cy+CLH*0.1,cw*0.2,CLH*0.3); } }
+    hitAdd("C:"+i,x,cy,cw,CLH*0.32); }
+  /* the resistor in the circuit */
+  const rx=14, ry=CLH*0.88; text(t.lab.res,rx,ry-12,"#9aa3ab",10.5,"left"); ["10k","200k"].forEach((r,i)=>{ const bx=rx+i*80; fillR(bx,ry,70,24,4,ST.res===r?"#f2c14e":"#2b2f36","#3a4048"); text(r+"Ω",bx+35,ry+12,ST.res===r?"#1c2027":"#cfd6dc",12,"center","700"); hitAdd("R:"+r,bx,ry,70,24); });
+  /* the multimeter */
+  const mx=CLW*0.66, mw=CLW*0.32, my=10, mh=CLH-20;
+  fillR(mx,my,mw,mh,10,"#1f5b3a","#0d2b1b",1.5); fillR(mx+mw*0.1,my+mh*0.06,mw*0.8,mh*0.2,4,"#cfd8c8","#222");
+  if(MMTXT){ if(/^\d/.test(MMTXT)||MMTXT[0]==="-"||MMTXT.startsWith("1   ")) lcd(MMTXT,mx+mw*0.12,my+mh*0.09,mw*0.72,mh*0.13,"#12301f","rgba(18,48,31,.07)"); else text(MMTXT,mx+mw*0.84,my+mh*0.16,"#12301f",22,"right","700",MONO); }
+  const kx=mx+mw/2, ky=my+mh*0.6, kr=Math.min(mw*0.2,mh*0.18); circ(kx,ky,kr,"#e8e8e8","#222",1.5);
+  DIAL.forEach((dl,i)=>{ const a=-2.2+i*4.4/5, lx=kx+Math.sin(a)*kr*1.7, ly=ky-Math.cos(a)*kr*1.6; text(t.lab.mmDial[dl],lx,ly,ST.dial===dl?"#ffe680":"#cfe8d8",10,"center",ST.dial===dl?"800":"600"); hitAdd("D:"+dl,lx-26,ly-9,52,18);
+    if(ST.dial===dl){ ctx.strokeStyle="#b02"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(kx,ky); ctx.lineTo(kx+Math.sin(a)*kr*0.9,ky-Math.cos(a)*kr*0.9); ctx.stroke(); } });
+  for(const [i,col] of [[0,"#111"],[1,"#c22"]]) circ(mx+mw*(0.35+i*0.3),my+mh*0.92,mw*0.04,col,"#000");
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="screen") drawScreenView(); else if(tab==="slide") drawSlideView(); else drawCircuitView();
+  ctx=old;
+}
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: putting things down, combining tools, putting things back
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const inB=(p,b,m)=>b&&p[0]>=b[0]-(m||0)&&p[0]<=b[2]+(m||0)&&p[1]>=b[1]-(m||0)&&p[1]<=b[3]+(m||0);
+const ON_LASER=["tape","needle","bigclip","film"];
+function place(k,p){
+  if(k==="tablet"){ ST.on.add(k); return true; }
+  if(["stand","laser","holder"].includes(k)){ if(!has("tablet")){ say("needTablet"); return false; }
+    if(k==="laser"&&!has("stand")){ say("needStand"); return false; } if(k==="holder"&&!has("screwdriver")){ say("needHolderAsm"); return false; } ST.on.add(k); return true; }
+  if(k==="cardboard"){ const [x]=unP(p[0],p[1],0); ST.screenX=Math.max(40,Math.min(150,x)); ST.on.add(k); return true; }
+  if(k==="paper"&&has("cardboard")&&inB(p,bbox("cardboard"),10)){ if(!has("smallclip")){ say("needScreenAsm"); return false; } ST.screenOK=true; ST.on.add("paper"); return true; }
+  if(k==="pd"){ if(!ST.screenOK){ say("needScreenAsm"); return false; } ST.on.add(k); ST.pdx=0; ST.pdy=0; return true; }
+  if(ON_LASER.includes(k)){ if(!has("laser")||!inB(p,bbox("laser"),25)){
+      if(k==="bigclip"||k==="film"){ /* lying on the table too */ } else { say("onLaser"); return false; } }
+    if(has("laser")&&inB(p,bbox("laser"),25)){
+      if(k==="tape"){ ST.taped=true; say("combine"); msg.args=["tape"]; return "used"; }
+      if(k==="needle"){ if(!ST.taped){ say("combineNo","needleNo"); return false; } ST.pin=true; say("combine"); msg.args=["needle"]; return "kept"; }
+      if(k==="bigclip"){ ST.latched=true; say("combine"); msg.args=["bigclip"]; return "kept"; }
+      if(k==="film"){ if(ST.latched&&!has("bigclip")){ say("combineNo","filmNo"); return false; } ST.films=Math.max(1,ST.films); say("combine"); msg.args=["film"]; return "used"; } } }
+  if(k==="batholder"&&!has("battery")){ say("needBatt"); return false; }
+  const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y)){ say("noFit"); return false; } ST.pos[k]={x,y}; ST.on.add(k); if(k==="batholder") ST.on.delete("battery"), ST.pos.battery=null, ST.batIn=true; return true;
+}
+function returnItem(k){
+  if(k==="tablet"){ for(const j of ["stand","laser","holder"]) returnItem(j); }
+  if(k==="stand") returnItem("laser");
+  if(k==="laser"){ ST.latched=false; ST.taped=false; ST.pin=false; ST.usePin=false; ST.films=0; }
+  if(k==="holder"){ ST.sheet=null; ST.sample=null; }
+  if(k==="cardboard"){ ST.screenOK=false; ST.on.delete("paper"); ST.on.delete("pd"); }
+  if(k==="batholder") ST.batIn=false;
+  ST.on.delete(k); say("back",itemName(k));
+}
+function itemAt(p){ for(const k of [...LOOSE].reverse()) if(has(k)&&inB(p,bbox(k),2)) return k;
+  for(const k of ["laser","holder","stand","cardboard","tablet"]) if(has(k)&&inB(p,bbox(k),2)) return k; return null; }
+function benchClick(p,right){
+  if(hand){ if(right){ say(hand.move?"placed":"back",itemName(hand.item)); if(hand.move){ ST.on.add(hand.item); } hand=null; return; }
+    const r=place(hand.item,p); if(r){ if(r===true) say("placed",itemName(hand.item)); hand=null; } return; }
+  const k=itemAt(p); if(!k) return;
+  if(right){ if(k==="laser"&&ST.latched){ ST.latched=false; say("unlatched"); return; } returnItem(k); return; }
+  if(LOOSE.includes(k)){ ST.on.delete(k); hand={item:k,move:true}; say("picked",itemName(k)); }
+  else if(k==="cardboard"){ ST.on.delete(k); hand={item:k,move:true}; }
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("wheel",e=>{ const p=lpos(e); if(!has("cardboard")||!inB(p,bbox("cardboard"),4)) return; e.preventDefault(); ST.screenX=Math.max(40,Math.min(150,+(ST.screenX+(e.deltaY<0?1:-1)*(e.shiftKey?0.1:1)).toFixed(2))); },{passive:false});
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand&&hand.move) ST.on.add(hand.item); hand=null; ST.lead=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=hand&&hand.item===k; hand=null;
+    if(!same&&(trayAvail(k)||k==="needle"&&!has("needle"))){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+
+/* the close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let svDrag=null;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e), right=e.button===2;
+  if(tab==="screen"&&has("cardboard")&&ST.screenOK){ const m=svMap();
+    if(has("pd")&&Math.abs(p[0]-m.X(ST.pdx))<20&&Math.abs(p[1]-m.Y(ST.pdy))<14){ svDrag={pd:true}; return; }
+    svDrag={x:p[0],y:p[1],cx:SV.cx,cy:SV.cy}; return; }
+  if(tab==="slide"){ for(const [x,y,w,h,nm] of SLHIT) if(p[0]>=x&&p[0]<=x+w&&p[1]>=y&&p[1]<=y+h){ ST.sample=nm; say("sample",nm); return; } return; }
+  const h=hitAt(p); if(!h) return;
+  if(h.k.startsWith("L:")){ ST.lead=h.k.slice(2); say("lead",d().leads[ST.lead]); return; }
+  if(h.k.startsWith("U:")&&right){ const [,i,j]=h.k.split(":"); ST.conn[+i].splice(+j,1); return; }
+  if(h.k.startsWith("C:")&&ST.lead&&!right){ const i=+h.k.slice(2); for(const c of ST.conn){ const j=c.indexOf(ST.lead); if(j>=0) c.splice(j,1); } if(ST.conn[i].length>=3){ say("full"); return; } ST.conn[i].push(ST.lead); say("inserted",d().leads[ST.lead],i+1); ST.lead=null; return; }
+  if(h.k.startsWith("R:")){ ST.res=h.k.slice(2); say("res",ST.res+"Ω"); return; }
+  if(h.k.startsWith("D:")){ ST.dial=h.k.slice(2); return; } });
+closeCv.addEventListener("pointermove",e=>{ if(!svDrag) return; const p=clpos(e), m=svMap(); if(svDrag.pd){ ST.pdx=m.U(p[0]); ST.pdy=m.V(p[1]); return; } SV.cx=svDrag.cx-(p[0]-svDrag.x)/m.z; SV.cy=svDrag.cy+(p[1]-svDrag.y)/m.z; });
+closeCv.addEventListener("pointerup",()=>{ svDrag=null; });
+closeCv.addEventListener("wheel",e=>{ if(tab!=="screen") return; e.preventDefault(); const p=clpos(e), m=svMap(), mx=m.U(p[0]), my=m.V(p[1]); SV.z=Math.min(24,Math.max(0.9,SV.z*(e.deltaY<0?1.16:1/1.16)));
+  const m2=svMap(); SV.cx+=mx-m2.U(p[0]); SV.cy+=my-m2.V(p[1]); },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+$("pinBtn").onclick=()=>{ if(!ST.pin){ say("noPin"); return; } ST.usePin=!ST.usePin; };
+$("fMinus").onclick=()=>{ if(ST.films<=0){ say("noFilm"); return; } ST.films--; };
+$("fPlus").onclick=()=>{ if(ST.films<=0){ say("noFilm"); return; } ST.films=Math.min(3,ST.films+1); };
+$("flipBtn").onclick=()=>{ ST.flipped=!ST.flipped; };
+$("roomBtn").onclick=()=>{ ST.room=!ST.room; };
+$("zoomBtn").onclick=()=>{ SV.z=0; SV.cx=0; SV.cy=0; };
+$("expMinus").onclick=()=>{ ST.exp=Math.max(-3,+(ST.exp-0.5).toFixed(1)); }; $("expPlus").onclick=()=>{ ST.exp=Math.min(3,+(ST.exp+0.5).toFixed(1)); };
+$("tapeBtn").onclick=()=>{ if(!has("tapemeasure")||!has("holder")||!has("cardboard")){ say("needTape"); return; } ST.tapeTxt=String(Math.round(Lmm()+TRUE.tapeBias)); say("tape",ST.tapeTxt); };
+$("noteBtn").onclick=()=>{ const parts=[]; if(MMTXT) parts.push(MMTXT+" ("+d().lab.mmDial[ST.dial]+", "+ST.res+"Ω)"); if(ST.sample) parts.push(ST.sample); if(has("pd")) parts.push("PD "+ST.pdx.toFixed(1)+", "+ST.pdy.toFixed(1)+" mm"); if(ST.tapeTxt) parts.push("tape "+ST.tapeTxt+" mm");
+  ST.notes.push(parts.join(" | ")||"—"); renderNotes(); say("noted"); };
+$("noteClr").onclick=()=>{ ST.notes=[]; renderNotes(); };
+function renderSheets(){ const box=$("sheetRow"); box.innerHTML="";
+  for(const s of ["DG","UC","PG","MR"]){ const b=document.createElement("button"); b.textContent=s; b.className=ST.sheet===s?"on":""; b.title=d().sheets[s];
+    b.onclick=()=>{ if(!has("holder")){ say("needHolder"); return; } if(!has("slides")){ say("needSlides"); return; } ST.sheet=s; ST.sample=null; say("sheet",d().sheets[s]); renderSheets(); }; box.appendChild(b); } }
+function renderPanel(){ const t=d();
+  $("pinBtn").textContent=ST.usePin?t.pinOff:t.pinOn; $("filmLbl").textContent=t.film(ST.films); $("flipBtn").textContent=ST.flipped?t.flipOn:t.flip;
+  $("slideLbl").textContent=t.slideLbl(ST.sheet?t.sheets[ST.sheet]:null,ST.sample); $("roomBtn").textContent=ST.room?t.roomOn:t.roomOff; $("expLbl").textContent=t.exp(ST.exp);
+  $("mmDisp").textContent=MMTXT===""?"----":MMTXT+(ST.dial==="DCV200m"?" mV":ST.dial==="OHM"?"":" V"); $("tapeLbl").textContent=ST.tapeTxt?t.tapeVal(ST.tapeTxt):""; }
+function renderNotes(){ const box=$("notes"); if(!ST.notes.length){ box.textContent=d().noteEmpty; return; }
+  box.innerHTML=ST.notes.map((s,i)=>"<div>"+String(i+1).padStart(2,"0")+". "+s+"</div>").join(""); box.scrollTop=box.scrollHeight; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(ST.lead) L.push([t.st.lead(t.leads[ST.lead]),false]);
+  if(beamOK()||ST.latched&&has("laser")) L.push([t.st.laserOn,true]);
+  if(has("needle")) L.push([t.st.needle,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ let f=t.m[msg.key]; if(msg.key==="combine") f=t.m.combine[msg.args[0]]; else if(msg.key==="combineNo") f=t.m.combine[msg.args[0]];
+    if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-laser").textContent=t.hLaser; $("t-h-slide").textContent=t.hSlide; $("t-h-view").textContent=t.hView; $("zoomBtn").textContent=t.zoom;
+  $("t-h-read").textContent=t.hRead; $("tapeBtn").textContent=t.tape; $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"IdPhO 2020 — 결정학 · HaslaLab":"IdPhO 2020 — Crystallography · HaslaLab";
+  renderTabs(); renderSheets(); renderPanel(); renderNotes(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastRead=0;
+function tick(){
+  const now=performance.now(); if(now-lastRead>400){ lastRead=now; MMTXT=mmText(); }
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
