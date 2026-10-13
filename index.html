@@ -858,8 +858,48 @@ const DATA={
               pdf:{en:"pdf/IPhO_2014_E_EN.pdf"},
               sol:"pdf/IPhO_2014_S.pdf"}}
     ]},
-   {y:2013,host:{ko:"덴마크 · 코펜하겐",en:"Copenhagen, Denmark"},cc:"dk",problems:papers("IPhO_2013", wip("Speed of Light","Solar Cells"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2012,host:{ko:"에스토니아 · 타르투, 탈린",en:"Tartu and Tallinn, Estonia"},cc:"ee",problems:papers("IPhO_2012", wip("The Magnetic Permeability of Water","Nonlinear Black Box"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2013,host:{ko:"덴마크 · 코펜하겐",en:"Copenhagen, Denmark"},cc:"dk",
+    problems:[
+      {id:"E1",
+       title:{ko:"빛의 속력",en:"Speed of Light"},
+       desc:{ko:"레이저 거리 측정기로 탁자 높이를 재고, 수신부를 펠트로 덮어 광섬유를 잘라 가며 표시값을 읽고, 앵글 철물로 비스듬히 단 뒤 물을 부은 광학 용기의 바닥까지 재서 굴절률을 구합니다.",
+             en:"Measure the table height with a laser distance meter, read it through an optic fibre cut shorter and shorter, then mount it at an angle and range the bottom of a vessel as water is poured in to find refractive indices."},
+       tags:["광학","굴절률","레이저 거리계"], tagsEn:["Optics","Refractive index","Laser rangefinder"],
+       files:{sim:"sim/ipho2013_E1_web.html",
+              src:{ko:"src/ipho2013_E1_sim_KO.py", en:"src/ipho2013_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2013_E1_EN.pdf"},
+              sol:"pdf/IPhO_2013_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"태양 전지",en:"Solar Cells"},
+       desc:{ko:"슬롯 상자에 LED 광원과 태양 전지를 꽂고 가변 저항기와 두 멀티미터로 거리에 따른 전류, U–I 특성, 최대 전력, 두 전지의 연결, 물을 채운 용기의 효과를 잽니다.",
+             en:"Slot an LED source and solar cells into the box and, with a variable resistor and two multimeters, measure current against distance, the U–I curve, the maximum power, two-cell couplings and the effect of a water-filled vessel."},
+       tags:["전기","태양 전지","다이오드"], tagsEn:["Electricity","Solar cell","Diode"],
+       files:{sim:"sim/ipho2013_E2_web.html",
+              src:{ko:"src/ipho2013_E2_sim_KO.py", en:"src/ipho2013_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2013_E2_EN.pdf"},
+              sol:"pdf/IPhO_2013_S2.pdf"}}
+    ]},
+   {y:2012,host:{ko:"에스토니아 · 타르투, 탈린",en:"Tartu and Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"물의 자기 투자율",en:"The Magnetic Permeability of Water"},
+       desc:{ko:"네오디뮴 자석 위 1 mm 물층에서 반사된 레이저 점의 높이를 디지털 캘리퍼로 레이저를 옮기며 모눈종이에서 읽어, 수면의 모양과 물의 자기 감수율을 구합니다.",
+             en:"Move a laser with a digital caliper, read on graph paper where its reflection off a 1 mm water layer over a neodymium magnet lands, and work out the shape of the surface and the susceptibility of water."},
+       tags:["전자기","반자성","광학"], tagsEn:["Electromagnetism","Diamagnetism","Optics"],
+       files:{sim:"sim/ipho2012_E1_web.html",
+              src:{ko:"src/ipho2012_E1_sim_KO.py", en:"src/ipho2012_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2012_E1_EN.pdf"},
+              sol:"pdf/IPhO_2012_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"비선형 블랙박스",en:"Nonlinear Black Box"},
+       desc:{ko:"6 mA 정전류원, 이중층 축전기와 비선형 소자가 든 블랙박스, 전압·전류와 그 시간 미분을 기록하는 IPhO-measure를 테스트 리드로 엮어 I(V)와 C(V)를 구합니다.",
+             en:"Wire a 6 mA current source, a black box with a double-layer capacitor and a nonlinear element, and the IPhO-measure logger of U, I and their rates with test leads to find I(V) and C(V)."},
+       tags:["전기","비선형 소자","축전기"], tagsEn:["Electricity","Nonlinear element","Capacitor"],
+       files:{sim:"sim/ipho2012_E2_web.html",
+              src:{ko:"src/ipho2012_E2_sim_KO.py", en:"src/ipho2012_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2012_E2_EN.pdf"},
+              sol:"pdf/IPhO_2012_S2.pdf"}}
+    ]},
    {y:2011,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",
     problems:[
       {id:"E1",
@@ -1053,7 +1093,18 @@ const DATA={
               pdf:{en:"pdf/APhO_2018_E_EN.pdf"},
               sol:"pdf/APhO_2018_S.pdf"}}
     ]},
-   {y:2017,host:{ko:"러시아 · 야쿠츠크",en:"Yakutsk, Russia"},cc:"ru",problems:papers("APhO_2017", wip("Photonic Crystal"), ["E_EN", "S"])},
+   {y:2017,host:{ko:"러시아 · 야쿠츠크",en:"Yakutsk, Russia"},cc:"ru",
+    problems:[
+      {id:"E1",
+       title:{ko:"광결정",en:"Photonic Crystal"},
+       desc:{ko:"다공성 양극 산화 알루미늄 광결정 X, Y, Z를 회절격자의 무지개 띠 너머로 보고, 빨강·초록·파랑 레이저와 포토다이오드로 입사각에 따른 투과를 재며, 물을 적셔 다공도와 구조를 밝힙니다.",
+             en:"Look at a grating's rainbow through porous anodic alumina photonic crystals X, Y and Z, measure their transmission against angle with red, green and blue lasers and a photodiode, and wet them to find porosity and structure."},
+       tags:["광학","광결정","브래그 반사"], tagsEn:["Optics","Photonic crystal","Bragg reflection"],
+       files:{sim:"sim/apho2017_web.html",
+              src:{ko:"src/apho2017_sim_KO.py", en:"src/apho2017_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2017_E_EN.pdf"},
+              sol:"pdf/APhO_2017_S.pdf"}}
+    ]},
    {y:2016,host:{ko:"홍콩",en:"Hong Kong"},cc:"hk",
     problems:[
       {id:"E1",
@@ -3738,6 +3789,89 @@ const SIG_I10E2={
     c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(zt),Y(this.F(zt)),3.6,0,7); c.fill();
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const z of [-20,0,20]) c.fillText(z+" mm",X(z),h-7); c.textAlign="left";
   }};
+/* ── IPhO 2012 E1 · the spot height against the caliper reading ── */
+const SIG_I12E1={
+  sim:"sim/ipho2012_E1_web.html", tag:"IPhO 2012 E1", span:26, rate:1,
+  capL:{ko:"모눈종이 위 반사점의 높이 y · 캘리퍼로 레이저를 옮기며",en:"Height y of the reflected spot on the graph paper · moving the laser with the caliper"},
+  capR:{ko:"캘리퍼",en:"caliper"},
+  y(x){ const u=x-50; return 12+0.78*(x-10)+9*Math.exp(-(((u+13)/4.2)**2))-9*Math.exp(-(((u-11)/4.2)**2))+3*Math.exp(-((u/7)**2)); },
+  x(t){ return 10+80*((t%this.span)/this.span); },
+  read(t){ return this.x(t).toFixed(2)+" mm"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>pad+(x-5)/90*(w-2*pad), Y=y=>h-padB-(y-0)/90*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=10;x<=90;x+=10){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } for(let y=0;y<=90;y+=10){ c.moveTo(pad,Y(y)); c.lineTo(w-pad,Y(y)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const xt=this.x(t); for(let x=10;x<=xt;x+=2){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(x),Y(this.y(x)),2.2,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(xt),Y(this.y(xt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const x of [10,50,90]) c.fillText(x+" mm",X(x),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2012 E2 · charging the black box at 6 mA, then letting it run down ── */
+const SIG_I12E2={
+  sim:"sim/ipho2012_E2_web.html", tag:"IPhO 2012 E2", span:28, rate:1,
+  capL:{ko:"블랙박스 전압 U · 전류원을 켰다가 끄며",en:"Black-box voltage U · switching the current source on, then off"},
+  capR:{ko:"IPhO-measure",en:"IPhO-measure"},
+  U(s){ return s<0.55?0.55*(1-Math.exp(-s/0.16))/(1-Math.exp(-0.55/0.16)):0.55*Math.exp(-(s-0.55)/0.22); },
+  read(t){ const u=(t%this.span)/this.span; return "U= "+(this.U(u)*1000).toFixed(1)+"mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=u=>pad+u*(w-2*pad), Y=v=>h-padB-v/0.6*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let v=0;v<=0.6;v+=0.1){ c.moveTo(pad,Y(v)); c.lineTo(w-pad,Y(v)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.moveTo(X(0.55),pad); c.lineTo(X(0.55),h-padB); c.stroke();
+    const ut=(t%this.span)/this.span; for(let u=0;u<=ut;u+=0.012){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(u),Y(Math.max(0,this.U(u))),2.1,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(ut),Y(Math.max(0,this.U(ut))),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; c.fillText("on",X(0.27),h-7); c.fillText("off",X(0.78),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2013 E1 · the LDM reading against the length of the fibre ── */
+const SIG_I13E1={
+  sim:"sim/ipho2013_E1_web.html", tag:"IPhO 2013 E1", span:24, rate:1,
+  capL:{ko:"레이저 거리 측정기 표시값 y · 광섬유를 잘라 가며",en:"Laser distance meter reading y · cutting the fibre shorter"},
+  capR:{ko:"LDM",en:"LDM"},
+  pts:[1.0,0.86,0.71,0.59,0.47,0.35,0.24,0.13],
+  read(t){ const k=Math.min(7,Math.floor((t%this.span)/this.span*8)); return "y = "+(0.771*this.pts[k]+0.1014).toFixed(3)+" m"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>pad+x/1.05*(w-2*pad), Y=y=>h-padB-y/1*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=0;x<=1;x+=0.1){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } for(let y=0;y<=1;y+=0.1){ c.moveTo(pad,Y(y)); c.lineTo(w-pad,Y(y)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.moveTo(pad,pad); c.lineTo(pad,h-padB); c.stroke();
+    const k=Math.min(7,Math.floor((t%this.span)/this.span*8));
+    for(let i=0;i<=k;i++){ const x=this.pts[i]; c.fillStyle=i===k?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(x),Y(0.771*x+0.1014),i===k?3.6:2.6,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const x of [0,0.5,1]) c.fillText(x+" m",X(x),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2013 E2 · the solar cell's characteristic, turning the variable resistor ── */
+const SIG_I13E2={
+  sim:"sim/ipho2013_E2_web.html", tag:"IPhO 2013 E2", span:26, rate:1,
+  capL:{ko:"태양 전지의 단자 전압 U · 가변 저항기를 돌리며",en:"Terminal voltage U of the solar cell · turning the variable resistor"},
+  capR:{ko:"전압계 L",en:"voltmeter L"},
+  U(I){ return 0.0478*Math.log((33.5-I)/4.5e-4+1); },
+  I(t){ return 33.4*((t%this.span)/this.span); },
+  read(t){ return this.U(this.I(t)).toFixed(3)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=i=>pad+i/35*(w-2*pad), Y=u=>h-padB-u/0.6*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let i=0;i<=35;i+=5){ c.moveTo(X(i),pad); c.lineTo(X(i),h-padB); } for(let u=0;u<=0.6;u+=0.1){ c.moveTo(pad,Y(u)); c.lineTo(w-pad,Y(u)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.moveTo(pad,pad); c.lineTo(pad,h-padB); c.stroke();
+    const it=this.I(t); for(let i=0;i<=it;i+=1.2){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(i),Y(this.U(i)),2.3,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(it),Y(this.U(it)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const i of [0,15,30]) c.fillText(i+" mA",X(i),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2017 · laser light through sample X, turning it ── */
+const SIG_A17E1={
+  sim:"sim/apho2017_web.html", tag:"APhO 2017 E1", span:26, rate:1,
+  capL:{ko:"시료 X를 지난 빨강 레이저의 세기 · 시료를 돌리며",en:"Red laser light through sample X · turning the sample"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  I(th){ return 260*(1-0.0000*th)*(1-0.62*Math.exp(-0.5*((th-30)/5.8)**2))*(1-0.12*(th/70)**3); },
+  th(t){ return 70*((t%this.span)/this.span); },
+  read(t){ return this.I(this.th(t)).toFixed(0)+" µA"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=a=>pad+a/70*(w-2*pad), Y=v=>h-padB-v/300*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=0;a<=70;a+=10){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } for(let v=0;v<=300;v+=50){ c.moveTo(pad,Y(v)); c.lineTo(w-pad,Y(v)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.moveTo(pad,pad); c.lineTo(pad,h-padB); c.stroke();
+    const at=this.th(t); for(let a=0;a<=at;a+=2){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.I(a)),2.3,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(at),Y(this.I(at)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,30,60]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -3745,7 +3879,8 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1,
                 SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1,
                 SIG_A14E1,SIG_A15E1,SIG_A16E1,SIG_A16E2,SIG_A18E1,
-                SIG_I20E1,SIG_I15E1,SIG_I15E2,SIG_I14E1,SIG_I10E1,SIG_I10E2];
+                SIG_I20E1,SIG_I15E1,SIG_I15E2,SIG_I14E1,SIG_I10E1,SIG_I10E2,
+                SIG_I12E1,SIG_I12E2,SIG_I13E1,SIG_I13E2,SIG_A17E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
