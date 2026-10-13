@@ -824,7 +824,27 @@ const DATA={
         pdf:{ko:"pdf/IPhO_2017_E2_KO.pdf", en:"pdf/IPhO_2017_E2_EN.pdf"},
         sol:"pdf/IPhO_2017_S2.pdf"
       }}]},
-   {y:2016,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",problems:papers("IPhO_2016", wip("Electrical Conductivity in 2D","Jumping Beads"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2016,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",
+    problems:[
+      {id:"E1",
+       title:{ko:"2차원 전기 전도도",en:"Electrical Conductivity in Two Dimensions"},
+       desc:{ko:"흑연 종이와 크로뮴 웨이퍼에 스프링 핀 8개짜리 탐침판을 얹고, 직류 전압원과 두 멀티미터로 4탐침 저항을 잰 뒤 종이를 잘라 폭에 따른 보정 인자를 구하고 van der Pauw 방법으로 면저항을 잽니다.",
+             en:"Put the eight-pin probe plate on graphite paper and a chromium wafer, measure the four-point-probe resistance with a DC source and two multimeters, cut the paper narrower for the correction factor, and find the sheet resistivity by van der Pauw."},
+       tags:["전기","면저항","4탐침법"], tagsEn:["Electricity","Sheet resistance","Four-point probe"],
+       files:{sim:"sim/ipho2016_E1_web.html",
+              src:{ko:"src/ipho2016_E1_sim_KO.py", en:"src/ipho2016_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2016_E1_EN.pdf"},
+              sol:"pdf/IPhO_2016_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"뛰는 구슬",en:"Jumping Beads"},
+       desc:{ko:"스피커 위 두 칸 원통에 양귀비 씨앗을 넣고 톱니파 진폭을 바꿔 가며 두 칸의 씨앗 수를 세고, 연필과 밀리미터 종이로 막의 진폭을 보정해 상전이의 임계 진폭과 임계 지수를 구합니다.",
+             en:"Put poppy seeds in the two-compartment cylinder on a loudspeaker, count the seeds on each side as the saw-tooth amplitude changes, calibrate the membrane stroke with a pencil on millimetre paper, and find the critical amplitude and exponent."},
+       tags:["역학","상전이","임계 지수"], tagsEn:["Mechanics","Phase transition","Critical exponent"],
+       files:{sim:"sim/ipho2016_E2_web.html",
+              src:{ko:"src/ipho2016_E2_sim_KO.py", en:"src/ipho2016_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2016_E2_EN.pdf"},
+              sol:"pdf/IPhO_2016_S2.pdf"}}
+    ]},
    {y:2015,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",
     problems:[
       {id:"E1",
@@ -1080,7 +1100,27 @@ const DATA={
               pdf:{ko:"pdf/APhO_2021_E_KO.pdf", en:"pdf/APhO_2021_E_EN.pdf"},
               sol:"pdf/APhO_2021_S.pdf"}}
     ]},
-   {y:2019,host:{ko:"호주 · 애들레이드",en:"Adelaide, Australia"},cc:"au",problems:papers("APhO_2019", wip("Static Response of a Magnetically Active Fluid","Wave Pulses in a Magnetically Active Fluid"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2019,host:{ko:"호주 · 애들레이드",en:"Adelaide, Australia"},cc:"au",
+    problems:[
+      {id:"E1",
+       title:{ko:"자기 활성 유체의 정적 응답",en:"Static Response of a Magnetically Active Fluid"},
+       desc:{ko:"나사봉 캐리어에 단 N42·N52 자석으로 병 속 페로플루이드를 띄우고 스파이크 간격을 재며, 접시 표면에 비친 램프 상의 길이로 곡률을, 쌓은 자석으로 스파이크 개수의 이력현상을 잽니다.",
+             en:"Lift the ferrofluid in the bottle with N42 and N52 magnets on a threaded carrier and measure the spike spacing; read the curvature from the lamp image reflected in the dish, and the hysteresis of the spike count with a stacked magnet."},
+       tags:["전자기","페로플루이드","표면장력"], tagsEn:["Electromagnetism","Ferrofluid","Surface tension"],
+       files:{sim:"sim/apho2019_E1_web.html",
+              src:{ko:"src/apho2019_E1_sim_KO.py", en:"src/apho2019_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2019_E1_EN.pdf"},
+              sol:"pdf/APhO_2019_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"자기 활성 유체의 파동 펄스",en:"Wave Pulses in a Magnetically Active Fluid"},
+       desc:{ko:"유리접시를 밀어 만든 펄스를 25 fps 카메라 프레임과 투명 그리드로 잽니다. 나일론 볼트로 기울여 휘는 파면, 작은 자석 위 융기에서의 굴절, 큰 자석을 치워 만든 펄스도 봅니다.",
+             en:"Push the glass dish and measure the pulse with 25 fps camera frames and a transparent grid; tilt it with nylon bolts to curve the front, watch refraction over the lumps on small magnets, and launch pulses by withdrawing the large magnet."},
+       tags:["파동","얕은 물결","페로플루이드"], tagsEn:["Waves","Shallow-water waves","Ferrofluid"],
+       files:{sim:"sim/apho2019_E2_web.html",
+              src:{ko:"src/apho2019_E2_sim_KO.py", en:"src/apho2019_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2019_E2_EN.pdf"},
+              sol:"pdf/APhO_2019_S2.pdf"}}
+    ]},
    {y:2018,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",
     problems:[
       {id:"E1",
@@ -3872,6 +3912,74 @@ const SIG_A17E1={
     c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(at),Y(this.I(at)),3.6,0,7); c.fill();
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,30,60]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
   }};
+/* ── IPhO 2016 E1 · the 4PP resistance as the paper is cut narrower ── */
+const SIG_I16E1={
+  sim:"sim/ipho2016_E1_web.html", tag:"IPhO 2016 E1", span:24, rate:1,
+  capL:{ko:"4탐침 저항 / 전체 종이의 저항 · 종이를 잘라 폭 w/s 를 줄이며",en:"4PP resistance over that of the whole sheet · cutting the paper to a narrower w/s"},
+  capR:{ko:"w/s",en:"w/s"},
+  pts:[5,4,3,2.5,2,1.5,1.2,1,0.8,0.65,0.5,0.4,0.3],
+  f(r){ return 1+3.3*r**(r<1?-1.3:-1.5); },
+  n(t){ return Math.min(this.pts.length,1+Math.floor((t%this.span)/this.span*this.pts.length*1.15)); },
+  read(t){ const r=this.pts[this.n(t)-1]; return "w/s="+r.toFixed(2); },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=r=>pad+(5.3-r)/5.1*(w-2*pad), Y=v=>h-padB-(v-0.5)/17.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let r=1;r<=5;r++){ c.moveTo(X(r),pad); c.lineTo(X(r),h-padB); } for(let v=1;v<=15;v+=2){ c.moveTo(pad,Y(v)); c.lineTo(w-pad,Y(v)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.moveTo(pad,Y(1)); c.lineTo(w-pad,Y(1)); c.stroke();
+    const n=this.n(t); for(let i=0;i<n;i++){ const r=this.pts[i], last=i===n-1; c.fillStyle=last?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(r),Y(this.f(r)),last?3.6:2.4,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const r of [5,3,1]) c.fillText(r,X(r),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2016 E2 · the imbalance of the seeds against the speaker amplitude ── */
+const SIG_I16E2={
+  sim:"sim/ipho2016_E2_web.html", tag:"IPhO 2016 E2", span:26, rate:1,
+  capL:{ko:"두 칸의 씨앗 수 불균형 |N₁−N₂|/(N₁+N₂) · 진폭 A_D 를 올리며",en:"Imbalance of the seeds |N₁−N₂|/(N₁+N₂) · raising the amplitude A_D"},
+  capR:{ko:"A_D",en:"A_D"},
+  m(a){ const ac=1.3; if(a>=ac) return 0.06+0.03*Math.sin(a*40); return Math.min(0.95,1.7*((ac*ac-a*a)/(ac*ac))**0.66); },
+  a(t){ return 0.95+0.75*((t%this.span)/this.span); },
+  read(t){ return "A_D="+this.a(t).toFixed(2)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=a=>pad+(a-0.9)/0.85*(w-2*pad), Y=v=>h-padB-v/1.05*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=1;a<=1.7;a+=0.1){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } for(let v=0;v<=1;v+=0.25){ c.moveTo(pad,Y(v)); c.lineTo(w-pad,Y(v)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const at=this.a(t); for(let a=0.95;a<=at;a+=0.05){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.m(a)),2.4,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(at),Y(this.m(at)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [1.0,1.3,1.6]) c.fillText(a.toFixed(1)+" V",X(a),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2019 E1 · the number of spikes as the stacked magnet comes up and goes back ── */
+const SIG_A19E1={
+  sim:"sim/apho2019_E1_web.html", tag:"APhO 2019 E1", span:30, rate:1,
+  capL:{ko:"스파이크 개수 · 자석을 올렸다가 다시 내리며 (이력현상)",en:"Number of spikes · bringing the magnet up, then back down (hysteresis)"},
+  capR:{ko:"z",en:"z"},
+  N(z,dir){ const b=0.0298*Math.exp((21-z)/8.2*1.0); const r=dir>0?b:b*1.25; return Math.max(0,Math.min(10,Math.floor(1+Math.log(r/0.0298)/Math.log(1.129)))); },
+  z(t){ const u=(t%this.span)/this.span; return u<0.5?24-12*(u/0.5):12+12*((u-0.5)/0.5); },
+  read(t){ return "z="+this.z(t).toFixed(1)+" mm"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=z=>pad+(25-z)/14*(w-2*pad), Y=n=>h-padB-n/11*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let z=12;z<=24;z+=2){ c.moveTo(X(z),pad); c.lineTo(X(z),h-padB); } for(let n=0;n<=10;n+=2){ c.moveTo(pad,Y(n)); c.lineTo(w-pad,Y(n)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const u=(t%this.span)/this.span;
+    for(let s=0;s<=Math.min(u,0.5);s+=0.0125){ const z=24-12*(s/0.5); c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(z),Y(this.N(z,1)),2.2,0,7); c.fill(); }
+    if(u>0.5) for(let s=0.5;s<=u;s+=0.0125){ const z=12+12*((s-0.5)/0.5); c.fillStyle="#7aa7c7"; c.beginPath(); c.arc(X(z),Y(this.N(z,-1)),2.2,0,7); c.fill(); }
+    const zt=this.z(t); c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(zt),Y(this.N(zt,u<0.5?1:-1)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const z of [24,18,12]) c.fillText(z+" mm",X(z),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2019 E2 · the pulse front in the tilted dish, frame by frame ── */
+const SIG_A19E2={
+  sim:"sim/apho2019_E2_web.html", tag:"APhO 2019 E2", span:22, rate:1,
+  capL:{ko:"기울인 접시의 파면 · 프레임마다 (깊은 쪽이 빠름)",en:"Pulse front in the tilted dish · frame by frame (faster where it is deeper)"},
+  capR:{ko:"프레임",en:"frame"},
+  fr(t){ return 1+Math.floor(((t%this.span)/this.span)*10); },
+  read(t){ return "frame "+this.fr(t); },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>pad+x/175*(w-2*pad), Y=y=>pad+y/120*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=0;x<=175;x+=25){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } for(let y=0;y<=120;y+=20){ c.moveTo(pad,Y(y)); c.lineTo(w-pad,Y(y)); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.rect(X(0),Y(0),X(175)-X(0),Y(120)-Y(0)); c.stroke();
+    const F=this.fr(t); for(let f=1;f<=F;f++){ const last=f===F; for(let y=22;y<=120;y+=4){ const x=f*5.2*Math.sqrt(Math.max(0,(y-21)*0.102)); if(x>175) continue; c.fillStyle=last?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(x),Y(y),last?2.6:1.6,0,7); c.fill(); } }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; c.fillText("x →",X(160),h-7); c.textAlign="left"; c.fillText("y ↓",X(2)+2,Y(10));
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -3880,7 +3988,8 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1,
                 SIG_A14E1,SIG_A15E1,SIG_A16E1,SIG_A16E2,SIG_A18E1,
                 SIG_I20E1,SIG_I15E1,SIG_I15E2,SIG_I14E1,SIG_I10E1,SIG_I10E2,
-                SIG_I12E1,SIG_I12E2,SIG_I13E1,SIG_I13E2,SIG_A17E1];
+                SIG_I12E1,SIG_I12E2,SIG_I13E1,SIG_I13E2,SIG_A17E1,
+                SIG_I16E1,SIG_I16E2,SIG_A19E1,SIG_A19E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
