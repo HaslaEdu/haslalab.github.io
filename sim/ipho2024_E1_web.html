@@ -287,15 +287,19 @@ const itemName=k=>d().items[k]||d().term[k]||k;
 const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
 /* the box: 820 px wide, 300 px tall body standing on its flanges */
 const BOX={w:820, top:TABLE_Y-372, h:300};
-const bx=()=>ST.x.box;
-const PANEL=()=>({x:bx()+245, y:BOX.top+70, s:0.55});           /* AVA panel, 600 × 360 units */
-const JACK=()=>[bx()+BOX.w-26, BOX.top+BOX.h-26];
+/* an item picked up to be moved stays on the bench, plugged and powered; it is drawn where the hand holds it */
+const moving=k=>!!(hand&&hand.move&&hand.k===k);
+const ghostX=k=>Math.round(mouse[0]-SZ[k][0]/2);
+const curX=k=>moving(k)?ghostX(k):ST.x[k];
+const bx=()=>curX("box");
+const PANEL=(x=bx())=>({x:x+245, y:BOX.top+70, s:0.55});           /* AVA panel, 600 × 360 units */
+const JACK=(x=bx())=>[x+BOX.w-26, BOX.top+BOX.h-26];
 const OUTLET=[1150,430];
 const PSU_H=46;
 function plugPos(k){
   if(ST.plug[k]==="outlet") return OUTLET.slice();
   if(ST.plug[k]==="jack") return JACK();
-  const x=ST.x.psu; return k==="mains"? [x+SZ.psu[0]+34, TABLE_Y-6] : [x-34, TABLE_Y-6];
+  const x=curX("psu"); return k==="mains"? [x+SZ.psu[0]+34, TABLE_Y-6] : [x-34, TABLE_Y-6];
 }
 function overlapX(k,x){
   const [w]=SZ[k];
@@ -450,8 +454,8 @@ function drawBox(x){
   styro(x+590,y+206,160,60);
   ctx.strokeStyle="#d0612a"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x+746,y+232); ctx.quadraticCurveTo(x+770,y+246,x+760,y+262); ctx.stroke();
   /* the 24 V input */
-  const [jx,jy]=JACK(); circ(jx,jy,8,"#0a0a0b","#555",1.5); circ(jx,jy,2.5,"#888"); text(t.lab.dcjack,jx,jy-17,"#9aa3ab",9,"center");
-  const P=PANEL(); drawAVA(P.x,P.y,P.s,true);
+  const [jx,jy]=JACK(x); circ(jx,jy,8,"#0a0a0b","#555",1.5); circ(jx,jy,2.5,"#888"); text(t.lab.dcjack,jx,jy-17,"#9aa3ab",9,"center");
+  const P=PANEL(x); drawAVA(P.x,P.y,P.s,true);
 }
 function drawPsu(x){
   const y=TABLE_Y-PSU_H;
@@ -469,7 +473,7 @@ function cable(from,to,col,plugType){
 }
 function drawCables(){
   if(!ST.on.psu) return;
-  const x=ST.x.psu, y=TABLE_Y-PSU_H/2;
+  const x=curX("psu"), y=TABLE_Y-PSU_H/2;
   for(const k of ["mains","dc"]){
     if(hand&&hand.k==="plug"&&hand.which===k) cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],mouse,"#151618",k);
     else cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],plugPos(k),"#151618",k);
@@ -477,10 +481,13 @@ function drawCables(){
 }
 function drawBench(){
   bench();
-  if(ST.on.box) drawBox(ST.x.box);
-  if(ST.on.psu) drawPsu(ST.x.psu);
+  if(ST.on.box&&!moving("box")) drawBox(ST.x.box);
+  if(ST.on.psu&&!moving("psu")) drawPsu(ST.x.psu);
   drawCables();
-  if(hand&&PLACE.includes(hand.k)){
+  if(hand&&hand.move){
+    const k=hand.k, ok=!overlapX(k,ghostX(k));
+    ctx.save(); ctx.globalAlpha=ok?0.92:0.45; if(k==="box") drawBox(ghostX(k)); else drawPsu(ghostX(k)); ctx.restore(); }
+  else if(hand&&PLACE.includes(hand.k)){
     const x=Math.round(mouse[0]-SZ[hand.k][0]/2), ok=!overlapX(hand.k,x);
     ctx.save(); ctx.globalAlpha=ok?0.75:0.35; if(hand.k==="box") drawBox(x); else drawPsu(x); ctx.restore(); }
   if(overBench&&!hand){ const p=PANEL(); const k=avaHitAt((mouse[0]-p.x)/p.s,(mouse[1]-p.y)/p.s);
@@ -631,7 +638,7 @@ function returnItem(k){
 }
 function returnHand(){
   if(!hand) return;
-  if(hand.move){ ST.x[hand.k]=hand.orig; ST.on[hand.k]=true; say("stays"); }
+  if(hand.move){ ST.x[hand.k]=hand.orig; say("stays"); }
   hand=null;
 }
 function benchClick(p,right){
@@ -656,8 +663,7 @@ function benchClick(p,right){
   }
   for(const k of ["mains","dc"]) if(ST.on.psu&&near(p,plugPos(k),16)){ ST.plug[k]=null; hand={k:"plug",which:k}; say("plug",t.term[k]); return; }
   const key=panelKeyAt(p); if(key){ avaPress(key); return; }
-  for(const k of ["psu","box"]) if(inItem(k,p)){ hand={k,move:true,orig:ST.x[k]}; ST.on[k]=false;
-    if(k==="box"&&ST.plug.dc==="jack") ST.plug.dc=null;
+  for(const k of ["psu","box"]) if(inItem(k,p)){ hand={k,move:true,orig:ST.x[k]};
     say("moveIt",itemName(k)); return; }
 }
 let trayDrag=false;
