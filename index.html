@@ -740,7 +740,17 @@ const DATA={
               sol:"pdf/IPhO_2021_S2.pdf"}}]},
    {y:2020,host:{ko:"IdPhO · MIPT 주관, 온라인",en:"IdPhO · organised by MIPT, online"},
     org:{abbr:"MIPT",name:"Moscow Institute of Physics and Technology"},
-    problems:papers("IPhO_2020", wip("Crystallography"), ["E_EN", "S"])},
+    problems:[
+      {id:"E1",
+       title:{ko:"결정학",en:"Crystallography"},
+       desc:{ko:"빨간 레이저로 회절격자·단위세포·평면군·분자 치환 슬라이드를 비추고 1 m 뒤 모눈종이의 회절 무늬를 읽어, 포토다이오드 회로로 반사 세기를 재며 격자 상수·대칭·결정 구조를 찾습니다.",
+             en:"Shine the red laser through the diffraction-grating, unit-cell, plane-group and molecular-replacement slides, read the patterns on graph paper a metre away and measure the reflexes with the photodiode circuit to find lattice parameters, symmetries and structures."},
+       tags:["회절","결정학","구조 인자"], tagsEn:["Diffraction","Crystallography","Structure factor"],
+       files:{sim:"sim/ipho2020_web.html",
+              src:{ko:"src/ipho2020_sim_KO.py", en:"src/ipho2020_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2020_E_EN.pdf"},
+              sol:"pdf/IPhO_2020_S.pdf"}}
+    ]},
    {y:2019,host:{ko:"이스라엘 · 텔아비브",en:"Tel Aviv, Israel"},cc:"il",
     problems:[
       {id:"E1", en:"Optical Measurements", ko:"광학 측정", state:"wip", hold:true,
@@ -815,8 +825,39 @@ const DATA={
         sol:"pdf/IPhO_2017_S2.pdf"
       }}]},
    {y:2016,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",problems:papers("IPhO_2016", wip("Electrical Conductivity in 2D","Jumping Beads"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2015,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:papers("IPhO_2015", wip("Diffraction due to Helical Structure","Diffraction due to Surface Tension"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2014,host:{ko:"카자흐스탄 · 아스타나",en:"Astana, Kazakhstan"},cc:"kz",problems:papers("IPhO_2014", wip("To see invisible!"), ["E_EN", "S"])},
+   {y:2015,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",
+    problems:[
+      {id:"E1",
+       title:{ko:"나선 구조에 의한 회절",en:"Diffraction due to Helical Structure"},
+       desc:{ko:"나무 플랫폼에 레이저·시료 홀더·좌우 반사경·스크린을 세워 빛길을 늘이고, 나선 스프링과 이중나선 무늬가 만드는 X자 회절 무늬의 극소를 연필로 표시해 디지털 캘리퍼로 읽어 굵기·피치·반지름을 구합니다.",
+             en:"Lengthen the light path with the reflectors on the wooden platform, mark the minima of the X-shaped patterns of a helical spring and a double-helix-like pattern with a pencil, and read them with the digital caliper for the thickness, pitch and radius."},
+       tags:["회절","나선","DNA"], tagsEn:["Diffraction","Helix","DNA"],
+       files:{sim:"sim/ipho2015_E1_web.html",
+              src:{ko:"src/ipho2015_E1_sim_KO.py", en:"src/ipho2015_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2015_E1_EN.pdf"},
+              sol:"pdf/IPhO_2015_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"표면 장력파에 의한 회절",en:"Diffraction due to Surface Tension Waves"},
+       desc:{ko:"물 트레이에 바이브레이터로 표면 장력파를 만들고 스치듯 비춘 레이저의 회절 차수를 버니어 캘리퍼에 단 광센서와 조도계로 찾아, 표면 장력과 감쇠 상수·점성을 구합니다.",
+             en:"Drive surface tension waves on a water tray with the vibrator, find the diffraction orders of a laser at glancing incidence with a light sensor on a vernier caliper and a light meter, and work out the surface tension, the attenuation constant and the viscosity."},
+       tags:["표면 장력","회절","점성"], tagsEn:["Surface tension","Diffraction","Viscosity"],
+       files:{sim:"sim/ipho2015_E2_web.html",
+              src:{ko:"src/ipho2015_E2_sim_KO.py", en:"src/ipho2015_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2015_E2_EN.pdf"},
+              sol:"pdf/IPhO_2015_S2.pdf"}}
+    ]},
+   {y:2014,host:{ko:"카자흐스탄 · 아스타나",en:"Astana, Kazakhstan"},cc:"kz",
+    problems:[
+      {id:"E1",
+       title:{ko:"보이지 않는 것을 보라!",en:"To See Invisible!"},
+       desc:{ko:"광학 벤치의 교차 편광판 사이에 플라스틱 자·휘어진 띠·액정 셀을 두고 LED로 복굴절 색을 본 뒤, 레이저와 광다이오드·가변저항·스위치·멀티미터 회로로 투과 세기를 재어 위상차와 곡률 반지름을 구합니다.",
+             en:"Put plastic rulers, a curved strip and a liquid crystal cell between crossed polarizers on the optical bench, watch their birefringence colours under the LED, then measure the transmitted laser light with a photodiode, variable resistor, switch and multimeter for the phase differences and a radius of curvature."},
+       tags:["복굴절","편광","액정"], tagsEn:["Birefringence","Polarization","Liquid crystals"],
+       files:{sim:"sim/ipho2014_web.html",
+              src:{ko:"src/ipho2014_sim_KO.py", en:"src/ipho2014_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2014_E_EN.pdf"},
+              sol:"pdf/IPhO_2014_S.pdf"}}
+    ]},
    {y:2013,host:{ko:"덴마크 · 코펜하겐",en:"Copenhagen, Denmark"},cc:"dk",problems:papers("IPhO_2013", wip("Speed of Light","Solar Cells"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2012,host:{ko:"에스토니아 · 타르투, 탈린",en:"Tartu and Tallinn, Estonia"},cc:"ee",problems:papers("IPhO_2012", wip("The Magnetic Permeability of Water","Nonlinear Black Box"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2011,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",
@@ -842,7 +883,27 @@ const DATA={
               pdf:{en:"pdf/IPhO_2011_E_EN.pdf"},
               sol:"pdf/IPhO_2011_S.pdf"}}
     ]},
-   {y:2010,host:{ko:"크로아티아 · 자그레브",en:"Zagreb, Croatia"},cc:"hr",problems:papers("IPhO_2010", wip("Elasticity of Sheets","Forces between Magnets"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2010,host:{ko:"크로아티아 · 자그레브",en:"Zagreb, Croatia"},cc:"hr",
+    problems:[
+      {id:"E1",
+       title:{ko:"얇은 판의 탄성",en:"Elasticity of Sheets"},
+       desc:{ko:"투명 필름을 말아 만든 원통을 나무판 위에서 프레스로 누르며 나비너트 회전으로 판 사이 간격을, 전자저울로 힘을 읽어 굽힘 강성과 영률을 구합니다. 실험 2와 같은 장치를 씁니다.",
+             en:"Press cylinders rolled from transparency foils on a wooden plate, reading the plate separation from the wing nut's turns and the force from the digital scale, to find the bending rigidities and Young's moduli. The same setup serves experiment 2."},
+       tags:["탄성","굽힘 강성","엘라스티카"], tagsEn:["Elasticity","Bending rigidity","Elastica"],
+       files:{sim:"sim/ipho2010_web.html",
+              src:{ko:"src/ipho2010_sim_KO.py", en:"src/ipho2010_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2010_E1_EN.pdf"},
+              sol:"pdf/IPhO_2010_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"자석 사이의 힘",en:"Forces between Magnets"},
+       desc:{ko:"프레스의 윗판을 뒤집어 알루미늄 봉으로 투명 원통 속 막대자석을 고리자석 쪽으로 밀며 저울로 힘을 재고, 평행·반평행 배치의 힘 곡선과 안정·불안정 평형점을 찾습니다.",
+             en:"Turn the press's upper plate over, push the rod magnet in the transparent cylinder towards the ring magnet with the aluminium rod and read the force on the scale, mapping the force curves and the stable and unstable equilibria for parallel and antiparallel moments."},
+       tags:["자기력","평형","대칭"], tagsEn:["Magnetic force","Equilibrium","Symmetry"],
+       files:{sim:"sim/ipho2010_web.html",
+              src:{ko:"src/ipho2010_sim_KO.py", en:"src/ipho2010_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2010_E2_EN.pdf"},
+              sol:"pdf/IPhO_2010_S2.pdf"}}
+    ]},
    {y:2009,host:{ko:"멕시코 · 메리다",en:"Mérida, Mexico"},cc:"mx",problems:papers("IPhO_2009", wip("Wavelength of a Diode Laser","Birefringence of Mica"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
    {y:2008,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:papers("IPhO_2008", wip("Differential Thermometric Method"), ["E_EN", "S"])},
    {y:2007,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",problems:papers("IPhO_2007", wip("Band Gap of Semiconductor Thin Films"), ["E_EN", "S"])},
@@ -3495,7 +3556,7 @@ const SIG_A13E1={
 
 /* ── APhO 2014 · Raman–Nath fringes on the screen as the transducer warms the water ── */
 const SIG_A14E1={
-  sim:"sim/apho2014_E1_web.html", tag:"APhO 2014", span:24, rate:1,
+  sim:"sim/apho2014_E1_web.html", tag:"APhO 2014 E1", span:24, rate:1,
   capL:{ko:"스크린의 회절 무늬 · 레이저를 제 축으로 돌려 가장 많은 무늬를 찾는다",en:"Fringes on the screen · rotating the laser about its axis for the most fringes"},
   capR:{ko:"보이는 무늬",en:"fringes seen"},
   n(t){ const u=(t%this.span)/this.span; return Math.round(4+7*Math.sin(Math.PI*u)); },
@@ -3508,7 +3569,7 @@ const SIG_A14E1={
   }};
 /* ── APhO 2015 · the current through the PZT plate as the frequency is swept ── */
 const SIG_A15E1={
-  sim:"sim/apho2015_E1_web.html", tag:"APhO 2015", span:26, rate:1,
+  sim:"sim/apho2015_E1_web.html", tag:"APhO 2015 E1", span:26, rate:1,
   capL:{ko:"PZT 판의 전류 · 신호 발생기의 주파수를 훑으며",en:"Current through the PZT plate · sweeping the generator's frequency"},
   capR:{ko:"주파수",en:"frequency"},
   f(t){ return 28+8*((t%this.span)/this.span); },
@@ -3556,7 +3617,7 @@ const SIG_A16E2={
   }};
 /* ── APhO 2018 · the sensor's output going round its hysteresis loop ── */
 const SIG_A18E1={
-  sim:"sim/apho2018_E1_web.html", tag:"APhO 2018", span:32, rate:1,
+  sim:"sim/apho2018_E1_web.html", tag:"APhO 2018 E1", span:32, rate:1,
   capL:{ko:"GMR 센서의 출력 S · 코일 전류를 줄였다가 방향을 바꿔 다시 올리며",en:"The GMR sensor's output S · lowering the coil current, reversing it and raising it again"},
   capR:{ko:"출력 S",en:"output S"},
   B(t){ const u=(t%this.span)/this.span; return 2.6*Math.cos(2*Math.PI*u); },
@@ -3571,13 +3632,120 @@ const SIG_A18E1={
     const n=Math.floor((t%this.span)/this.span*80); for(let i=0;i<=n;i++){ const tt=i/80*this.span, b=this.B(tt); c.fillStyle=i===n?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(b),Y(this.S(b,this.dir(tt))),i===n?3.6:2.2,0,7); c.fill(); }
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const b of [-2,0,2]) c.fillText(b+" mT",X(b),h-7); c.textAlign="left";
   }};
+/* ── IdPhO 2020 · DG3: the photodiode stepping out along the orders ── */
+const SIG_I20E1={
+  sim:"sim/ipho2020_web.html", tag:"IPhO 2020 E1", span:24, rate:1,
+  capL:{ko:"회절격자 DG3의 반사 세기 · 포토다이오드를 차수마다 옮기며",en:"Reflex intensities of grating DG3 · moving the photodiode from order to order"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  I(h){ const x=Math.PI*h/8; return h===0?1:(Math.sin(x)/x)**2; },
+  h(t){ return Math.min(12,Math.floor((t%this.span)/this.span*14)); },
+  read(t){ return (0.884*this.I(this.h(t))+0.004).toFixed(3)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fdf6ec"; c.fillRect(0,0,w,h);
+    PEN(c,"#f0d2c2",.5); c.beginPath(); for(let x=0;x<w;x+=w/40){ c.moveTo(x,0); c.lineTo(x,h); } for(let y=0;y<h;y+=w/40){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+    const cx=w*0.12, sx=(w*0.82)/12, y0=h*0.36, base=h-24, H=base-y0-40, n=this.h(t);
+    for(let k=-12;k<=12;k++){ const I=this.I(Math.abs(k)), X=w/2+k*sx*0.5; const r=1.5+4.5*Math.sqrt(I), g=c.createRadialGradient(X,y0*0.55,0,X,y0*0.55,r); g.addColorStop(0,"rgba(230,30,40,"+(0.2+0.8*Math.sqrt(I))+")"); g.addColorStop(1,"rgba(200,20,30,0)"); c.fillStyle=g; c.beginPath(); c.arc(X,y0*0.55,r,0,7); c.fill(); }
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(cx,base); c.lineTo(w-14,base); c.stroke();
+    for(let k=0;k<=n;k++){ const X=cx+k*sx, hh=H*this.I(k); c.fillStyle=k===n?"#e8622a":"#2c6f9b"; c.fillRect(X-4,base-hh,8,hh); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const k of [0,4,8,12]) c.fillText("h="+k,cx+k*sx,h-8); c.textAlign="left";
+  }};
+/* ── IPhO 2015 E1 · the X pattern of the spring, marked minimum by minimum ── */
+const SIG_I15E1={
+  sim:"sim/ipho2015_E1_web.html", tag:"IPhO 2015 E1", span:26, rate:1,
+  capL:{ko:"나선 스프링의 X자 회절 무늬 · 팔을 따라 극소를 표시하며",en:"The spring's X-shaped pattern · marking the minima along an arm"},
+  capR:{ko:"캘리퍼",en:"caliper"},
+  n(t){ return 1+Math.floor((t%this.span)/this.span*6); },
+  read(t){ return (23.25*this.n(t)+0.4).toFixed(2)+" mm"; },
+  paint(c,w,h,t){
+    c.fillStyle="#141012"; c.fillRect(0,0,w,h);
+    const cx=w/2, cy=h/2, al=0.26, L=Math.hypot(w,h)/2, step=h/12;
+    for(const sg of [1,-1]) for(let u=-L;u<=L;u+=1.5){ const env=Math.abs(u)<1e-6?1:(Math.sin(Math.PI*u/step)/(Math.PI*u/step))**2, fr=Math.cos(Math.PI*u/(step/6))**2, I=env*fr;
+      if(I<0.002) continue; const x=cx+sg*u*Math.sin(al), y=cy+u*Math.cos(al), a=Math.min(1,Math.pow(I,0.35)); c.fillStyle="rgba(255,"+Math.round(40+150*a*a)+","+Math.round(40+120*a*a*a)+","+Math.min(1,a*1.4)+")"; c.fillRect(x-5,y-1,10,2); }
+    const n=this.n(t); for(let k=1;k<=n;k++) for(const s of [1,-1]){ const u=s*k*step, x=cx+u*Math.sin(al), y=cy+u*Math.cos(al); PEN(c,k===n?"#ffb35c":"#9fd8ee",1.4); c.beginPath(); c.moveTo(x-6,y); c.lineTo(x+6,y); c.moveTo(x,y-6); c.lineTo(x,y+6); c.stroke(); }
+    PEN(c,"rgba(255,179,92,.7)",1); c.setLineDash([4,3]); c.beginPath(); c.moveTo(cx-n*step*Math.sin(al),cy-n*step*Math.cos(al)); c.lineTo(cx+n*step*Math.sin(al),cy+n*step*Math.cos(al)); c.stroke(); c.setLineDash([]);
+  }};
+/* ── IPhO 2015 E2 · scanning the caliper across the diffraction orders ── */
+const SIG_I15E2={
+  sim:"sim/ipho2015_E2_web.html", tag:"IPhO 2015 E2", span:24, rate:1,
+  capL:{ko:"물결에서 반사된 레이저의 회절 차수 · 광센서를 캘리퍼로 올리며",en:"Diffraction orders off the rippled water · raising the light sensor on the caliper"},
+  capR:{ko:"조도계",en:"light meter"},
+  J(m,x){ let s=0, f=1; for(let i=0;i<=m;i++) f*=i||1; let t=Math.pow(x/2,m)/f; for(let i=0;i<30;i++){ s+=t; t*=-(x*x/4)/((i+1)*(i+1+m)); } return s; },
+  L(y){ let tot=0; for(let m=-3;m<=3;m++){ const j=this.J(Math.abs(m),1.2), dy=y-m*2.74; tot+=j*j*Math.exp(-dy*dy/(2*0.27*0.27)); } return 1480*tot+0.3; },
+  y(t){ return -9+18*((t%this.span)/this.span); },
+  read(t){ return Math.round(this.L(this.y(t)))+" lux"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=y=>pad+(y+9)/18*(w-2*pad), Y=v=>h-padB-Math.sqrt(v/1500)*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let y=-8;y<=8;y+=2){ c.moveTo(X(y),pad); c.lineTo(X(y),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const yt=this.y(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let y=-9;y<=yt;y+=0.02){ const px=X(y), py=Y(this.L(y)); y===-9?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(yt),Y(this.L(yt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const y of [-6,0,6]) c.fillText((y>0?"+":"")+y+" mm",X(y),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2014 · light through ruler No.1 between crossed polarizers ── */
+const SIG_I14E1={
+  sim:"sim/ipho2014_web.html", tag:"IPhO 2014 E1", span:26, rate:1,
+  capL:{ko:"교차 편광판 사이 플라스틱 자 №1의 투과 세기 · 스크린을 밀며",en:"Light through plastic ruler No.1 between crossed polarizers · sliding the screen"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  U(x){ const ph=0.059*x-0.94; return 160*Math.sin(ph/2)**2; },
+  x(t){ return 100*((t%this.span)/this.span); },
+  read(t){ return Math.round(this.U(this.x(t)))+" mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, top=h*0.22, X=x=>pad+x/100*(w-2*pad), Y=v=>h-padB-v/170*(h-padB-top-6);
+    for(let x=0;x<=100;x+=0.5){ const R=(0.059*x-0.94)*650/(2*Math.PI)*1.0, g=[0,0,0]; for(const [l,wt] of [[450,0.9],[550,1],[630,0.9]]){ const s=Math.sin(Math.PI*Math.abs(R)*3.2/l)**2; if(l===450) g[2]=s; else if(l===550) g[1]=s; else g[0]=s; }
+      c.fillStyle="rgb("+g.map(v=>Math.round(30+215*v)).join(",")+")"; c.fillRect(X(x),pad,Math.ceil((w-2*pad)/200)+1,top-pad); }
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=0;x<=100;x+=10){ c.moveTo(X(x),top+4); c.lineTo(X(x),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const xt=this.x(t); for(let x=5;x<=xt;x+=5){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(x),Y(this.U(x)),2.4,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(xt),Y(this.U(xt)),3.6,0,7); c.fill(); PEN(c,"#e8622a",1); c.beginPath(); c.moveTo(X(xt),pad); c.lineTo(X(xt),top); c.stroke();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const x of [0,5,10]) c.fillText(x+" cm",X(x*10),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2010 E1 · pressing a rolled foil: the scale against the plate gap ── */
+const SIG_I10E1={
+  sim:"sim/ipho2010_web.html", tag:"IPhO 2010 E1", span:26, rate:1,
+  capL:{ko:"말아 만든 필름 원통을 누르며 · 판 사이 간격과 저울 읽음",en:"Pressing a rolled foil · plate gap against the scale reading"},
+  capR:{ko:"전자저울",en:"scale"},
+  m(hh){ return hh>=92?0:Math.min(900,0.914*2*Math.PI*3.6e-4/((hh*1e-3)**2)/9.81*1000*(hh>66?Math.pow((92-hh)/26,1.6):1)); },
+  hh(t){ return 92-70*((t%this.span)/this.span); },
+  read(t){ return Math.round(this.m(this.hh(t)))+" g"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>w-pad-(x-20)/75*(w*0.62-pad), Y=v=>h-padB-Math.min(v,520)/520*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=20;x<=95;x+=10){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(X(95),h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const ht=this.hh(t); for(let x=92;x>=ht;x-=2){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(x),Y(this.m(x)),2.2,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(ht),Y(this.m(ht)),3.6,0,7); c.fill();
+    const cx=w*0.2, cy=h*0.55, s=w*0.0016*60, R=46*s/60, H=ht*s/60/1.0; c.fillStyle="#cfa86f"; c.fillRect(cx-w*0.14,cy+H/2,w*0.28,6); c.fillRect(cx-w*0.14,cy-H/2-6,w*0.28,6);
+    c.strokeStyle="#3f78cf"; c.lineWidth=2.2; c.beginPath(); c.ellipse(cx,cy,Math.max(R*1.0,R*(92/ht)*0.5+R*0.5),H/2,0,0,7); c.stroke();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const x of [30,60,90]) c.fillText(x+" mm",X(x),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2010 E2 · the force between rod and ring magnet along the axis ── */
+const SIG_I10E2={
+  sim:"sim/ipho2010_web.html", tag:"IPhO 2010 E2", span:28, rate:1,
+  capL:{ko:"막대자석과 고리자석 사이의 힘 · 알루미늄 봉으로 밀며",en:"Force between the rod and the ring magnet · pushing with the aluminium rod"},
+  capR:{ko:"전자저울",en:"scale"},
+  F(z){ const a=Math.abs(z), s=Math.sign(z)||1; let f; if(a<10.8) f=-170*Math.sin(Math.PI*a/10.8*0.95)*(a<8?1:Math.max(0,(10.8-a)/2.8)); else if(a<18.6) f=1150*Math.sin(Math.PI*(a-10.8)/7.8); else f=-190*Math.exp(-(a-21)*(a-21)/40)*(a<21?(a-18.6)/2.4:1); return s*f; },
+  z(t){ return -28+56*((t%this.span)/this.span); },
+  read(t){ return Math.round(this.F(this.z(t)))+" g"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=z=>w/2+z/30*(w/2-pad), Y=f=>h/2-padB/2-f/1300*(h/2-padB);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let z=-30;z<=30;z+=5){ c.moveTo(X(z),pad); c.lineTo(X(z),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,Y(0)); c.lineTo(w-pad,Y(0)); c.moveTo(X(0),pad); c.lineTo(X(0),h-padB); c.stroke();
+    const zt=this.z(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let z=-28;z<=zt;z+=0.1){ const px=X(z), py=Y(this.F(z)); z===-28?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    for(const z of [0,-18.6,18.6]){ c.fillStyle="#3aa35a"; c.beginPath(); c.arc(X(z),Y(0),3,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(zt),Y(this.F(zt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const z of [-20,0,20]) c.fillText(z+" mm",X(z),h-7); c.textAlign="left";
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
                 SIG_E20E1,SIG_E20E2,SIG_E21E1,SIG_E21E2,
                 SIG_I19E2,SIG_A25E1,SIG_A24E1,SIG_I26E1,
                 SIG_A11E1,SIG_A11E2,SIG_A12E1,SIG_A12E2,SIG_A13E1,
-                SIG_A14E1,SIG_A15E1,SIG_A16E1,SIG_A16E2,SIG_A18E1];
+                SIG_A14E1,SIG_A15E1,SIG_A16E1,SIG_A16E2,SIG_A18E1,
+                SIG_I20E1,SIG_I15E1,SIG_I15E2,SIG_I14E1,SIG_I10E1,SIG_I10E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
