@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>APhO 2019 E1 — 자기 활성 유체의 정적 응답 · Static Response of a Magnetically Active Fluid · HaslaLab</title>
+<meta name="description" content="APhO 2019 실험 1을 브라우저에서 실행합니다. 받침대의 알루미늄 관에 끼운 나사봉 자석 캐리어로 N42·N52 자석을 움직여, 병 속 페로플루이드가 떠오르는 거리, 스파이크가 생기는 거리와 간격, 접시 표면에 비친 램프 상의 길이, 스파이크 개수의 이력현상을 직접 잽니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APhO 2019 E1 — 자기 활성 유체의 정적 응답 · Static Response of a Magnetically Active Fluid">
+<meta property="og:description" content="APhO 2019 실험 1을 브라우저에서 실행합니다. 자석으로 페로플루이드를 띄우고, 표면의 곡률과 스파이크를 잽니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-car"></h2>
+    <div class="disp" id="dTurn">0</div>
+    <div class="row"><button id="u5">▲ 5</button><button id="u1">▲ 1</button><button id="uq">▲ ¼</button></div>
+    <div class="row"><button id="d5">▼ 5</button><button id="d1">▼ 1</button><button id="dq">▼ ¼</button></div>
+    <div class="row"><button id="zeroBtn"></button><button id="rotBtn"></button></div>
+    <div class="hint" id="carHint"></div>
+
+    <h2 id="t-h-lamp"></h2>
+    <div class="row"><button id="lampBtn"></button><button id="shakeBtn"></button></div>
+
+    <h2 id="t-h-meas"></h2>
+    <div class="row"><button id="rulBtn"></button><button id="gridBtn"></button></div>
+    <div class="hint" id="measHint"></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <textarea id="note" rows="8" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"APhO 2019 실험 1 — 자기 활성 유체의 정적 응답",
+    sub:"가상 실험실 · 차광 후드 겸 받침대의 옆 구멍에 알루미늄 관을 끼우고, 관을 지나는 나사봉 자석 캐리어(피치 약 0.8 mm)에 자석을 다세요. 나사봉이 아래를 향하면 쐐기 위에 옆으로 붙인 유리병(Part A·B), 위를 향하면 받침대 위 유리접시(Part C·D)를 시험합니다. 페로플루이드가 떠오르는 거리 z, 스파이크가 시작되는 거리와 간격 λ, 접시 표면에 비친 램프 상의 길이, 스파이크가 생기고 사라지는 자석 위치를 자와 투명 그리드로 직접 재세요. 밀도차·표면장력·곡률반지름은 직접 구합니다.",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n관·자석·쐐기·병·접시·기둥·램프·카메라는\n받침대에 대고 클릭하면 끼워집니다",
+    cap:"실험대 (위 앞쪽에서 본 모습) — 좌클릭 집기·놓기·옮기기 / 우클릭 부품함으로 / 부품을 받침대에 대고 클릭하면 장착",
+    tabs:{side:"옆에서 (단면)", cam:"카메라 (위에서)", thread:"나사봉 확대 (C.1)"},
+    closeCap:{side:"확대 — 받침대를 옆에서 본 단면. 자를 꺼내 두면 투명 자가 보이며 끌어서 옮깁니다(세로/가로는 패널). 병 실험에서는 아래 확대 창에 병 속 유체 윗면과 투명 그리드가 보입니다. 휠: 자석 캐리어를 ¼ 바퀴씩 돌림.",
+      cam:"확대 — 접시 위에서 내려다본 카메라 화면. 램프를 켜면 유체 표면에 비친 램프의 상이 보입니다. 투명 그리드 스트립(1 mm 눈금)을 끌어서 상의 길이나 스파이크 간격을 재세요.",
+      thread:"확대 — 자석 캐리어 나사봉과 자. 나사산 개수와 그 구간의 길이를 직접 세어 한 바퀴당 이동 거리를 구하세요. 휠: 확대, 끌기: 이동."},
+    hCar:"자석 캐리어 (나사봉 회전)", zero:"계수 0으로", rotUp:"관 돌리기 → 나사봉 아래로", rotDn:"관 돌리기 → 나사봉 위로", carHint:"▲ = 자석을 위로, ▼ = 아래로 (바퀴 수는 직접 셉니다)",
+    hLamp:"램프 · 유체", lampOn:"램프 끄기", lampOff:"램프 켜기", shake:"유체 흔들어 풀기",
+    hMeas:"자 · 투명 그리드", rulV:"자를 가로로", rulH:"자를 세로로", gridOn:"그리드 치우기", gridOff:"그리드 대기", measHint:"자와 그리드는 화면에서 끌어서 옮깁니다",
+    hNote:"실험 노트", note:"회전 계수 적기", noteClr:"지우기",
+    items:{stand:"차광 후드 겸 받침대", tube:"알루미늄 관 + 나사봉 캐리어", n42:"N42 자석 (20 × 5 mm)", n52a:"N52 자석 ① (14.2 × 3.2 mm)", n52b:"N52 자석 ② (14.2 × 3.2 mm)", wedge:"초록 쐐기", bottle:"유리병 (페로플루이드)", dish:"유리접시 (밀봉 뚜껑)", pole:"500 mm 나사봉 + 나비너트", lamp:"배터리 램프", camera:"카메라", ruler:"투명 자 (30 cm)", grid:"투명 그리드 스트립"},
+    lab:{noStand:"받침대를 실험대에 놓고 관을 끼우면 보입니다", noCam:"카메라를 받침대에 달고 접시를 올리면 보입니다", noTube:"관(나사봉 캐리어)을 받침대에 끼우면 보입니다", dark:"(램프 꺼짐)", cnt:"회전", stand:"받침대", lamp:"램프", magnet:"자석", noMag:"(자석 없음)", glass:"유리", lid:"뚜껑", grid:"투명 그리드 (1 mm)", warn:"⚠ 자석을 10초 넘게 유체에 바짝 댔습니다 — 잔류자화로 거동이 달라집니다", mag:"확대 창 — 유체 윗면"},
+    st:{none:"부품함에서 받침대를 꺼내 실험대에 놓고, 알루미늄 관과 자석을 다세요.", hand:n=>"손에 든 것: "+n, mode:{a:"구성: 병 실험 (나사봉 아래로)", c:"구성: 접시 실험 (나사봉 위로)"}},
+    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.", mounted:n=>n+" 을(를) 받침대에 장착했습니다.",
+       needStand:"먼저 받침대를 실험대에 놓으세요.", needTube:"먼저 알루미늄 관을 받침대에 끼우세요.", needWedge:"먼저 초록 쐐기를 받침대 아래에 놓으세요.", needPole:"먼저 램프 기둥을 받침대에 고정하세요.", needDish:"먼저 유리접시를 받침대 위에 올리세요.",
+       twoN52:"N52 두 개를 붙이면 안 됩니다 — 쌓기는 N52 하나와 N42 하나로만 합니다.", full:"캐리어에는 자석을 두 개까지 쌓을 수 있습니다.", stack:"N52 위에 N42를 겹쳐 쌓았습니다.", noMag:"캐리어에 자석이 없습니다.", busy:"그 자리에는 이미 다른 것이 있습니다.",
+       rot:u=>"관을 돌려 나사봉이 "+(u?"위":"아래")+"를 향하게 했습니다.", end:"나사봉 끝까지 돌렸습니다.", turned:t=>"캐리어를 "+t+" 바퀴 돌렸습니다.", lampOn:"램프를 켰습니다.", lampOff:"램프를 껐습니다.", needLamp:"램프가 기둥에 달려 있어야 합니다.", shaken:"유체를 흔들어 유리벽에서 떼어 냈습니다.",
+       needRuler:"자가 실험대에 있어야 합니다.", needGrid:"투명 그리드가 실험대에 있어야 합니다.", noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"APhO 2019 Experiment 1 — Static Response of a Magnetically Active Fluid",
+    sub:"Virtual laboratory · put the aluminium tube through the side holes of the light shroud and stand, and load a magnet on the threaded magnet carrier (pitch about 0.8 mm) that runs through it. With the rod pointing down you test the glass bottle stuck sideways on the wedge (Parts A·B); with it pointing up, the glass dish on top of the stand (Parts C·D). Measure the distance z at which the ferrofluid lifts, the distance and the spacing λ at which spikes start, the length of the lamp image reflected in the dish, and the magnet positions where spikes appear and disappear, with the ruler and the transparent grid. Density difference, surface tension and radius of curvature are yours to work out.",
+    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
+    trayHelp:"L-click pick/place, R-click return\nclick the tube, magnets, wedge, bottle, dish,\npole, lamp, camera onto the stand to mount them",
+    cap:"the bench (seen from above and in front) — L-click pick up / put down / move, R-click back to the box / click a part onto the stand to mount it",
+    tabs:{side:"Side (section)", cam:"Camera (top)", thread:"Threaded rod (C.1)"},
+    closeCap:{side:"close up — section of the stand from the side. With the ruler out you see a transparent rule you can drag (vertical/horizontal in the panel). In the bottle set-up the window below magnifies the top of the fluid in the bottle, with the transparent grid. Wheel: turn the magnet carrier by ¼ turn.",
+      cam:"close up — the camera looking down on the dish. With the lamp on you see its image reflected in the fluid surface. Drag the transparent grid strip (1 mm squares) to measure the image length or the spike spacing.",
+      thread:"close up — the threaded rod of the magnet carrier and a ruler. Count the threads over a measured length yourself to get the travel per turn. Wheel: zoom, drag: pan."},
+    hCar:"Magnet carrier (turning the rod)", zero:"Reset count", rotUp:"Turn tube → rod down", rotDn:"Turn tube → rod up", carHint:"▲ = magnet up, ▼ = down (you count the turns)",
+    hLamp:"Lamp · fluid", lampOn:"Lamp off", lampOff:"Lamp on", shake:"Shake the fluid free",
+    hMeas:"Ruler · transparent grid", rulV:"Ruler horizontal", rulH:"Ruler vertical", gridOn:"Remove the grid", gridOff:"Lay the grid", measHint:"drag the ruler and the grid in the views",
+    hNote:"Lab notebook", note:"Write down the count", noteClr:"Clear",
+    items:{stand:"Light shroud and stand", tube:"Aluminium tube + rod carrier", n42:"N42 magnet (20 × 5 mm)", n52a:"N52 magnet ① (14.2 × 3.2 mm)", n52b:"N52 magnet ② (14.2 × 3.2 mm)", wedge:"Green wedge", bottle:"Glass bottle (ferrofluid)", dish:"Glass dish (sealed lid)", pole:"500 mm rod + wing nut", lamp:"Battery lamp", camera:"Camera", ruler:"Transparent ruler (30 cm)", grid:"Transparent grid strip"},
+    lab:{noStand:"put the stand on the bench and the tube in it to see this", noCam:"mount the camera on the stand and put the dish on top to see this", noTube:"put the tube (rod carrier) through the stand to see this", dark:"(lamp off)", cnt:"turns", stand:"stand", lamp:"lamp", magnet:"magnet", noMag:"(no magnet)", glass:"glass", lid:"lid", grid:"transparent grid (1 mm)", warn:"⚠ magnet held against the fluid for over 10 s — residual magnetisation changes the behaviour", mag:"magnifier — top of the fluid"},
+    st:{none:"Take the stand out of the parts box, put it on the bench, then mount the aluminium tube and a magnet.", hand:n=>"In hand: "+n, mode:{a:"set-up: bottle (rod pointing down)", c:"set-up: dish (rod pointing up)"}},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.", noFit:"It does not go there.", mounted:n=>n+" mounted on the stand.",
+       needStand:"Put the stand on the bench first.", needTube:"Put the aluminium tube through the stand first.", needWedge:"Put the green wedge under the stand first.", needPole:"Fix the lamp pole to the stand first.", needDish:"Put the glass dish on the stand first.",
+       twoN52:"Do not put the two N52 together — a stack is one N52 and one N42.", full:"The carrier takes at most two magnets.", stack:"N42 stacked on the N52.", noMag:"There is no magnet on the carrier.", busy:"Something is already there.",
+       rot:u=>"Tube turned: the rod now points "+(u?"up":"down")+".", end:"The rod is at the end of its travel.", turned:t=>"Carrier turned by "+t+" turn.", lampOn:"Lamp on.", lampOff:"Lamp off.", needLamp:"The lamp must be on its pole.", shaken:"Fluid shaken free of the glass.",
+       needRuler:"The ruler must be on the bench.", needGrid:"The transparent grid must be on the bench.", noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  HIDDEN TRUTH OF THIS SESSION  (SI inside the formulas, mm for geometry)
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const gauss=()=>{ const u=Math.max(1e-12,Math.random()), v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const MU0=4e-7*Math.PI, G=9.81, CHI=2.64, RHO_FF=1210;
+/* magnets: radius a [mm], thickness l [mm], remanence Br [T] */
+const MAGS={N52:[7.10,3.20,1.40], N42:[10.0,5.0,1.30], STACK:[10.0,8.2,1.34]};
+const msi=k=>[MAGS[k][0]*1e-3,MAGS[k][1]*1e-3,MAGS[k][2]];
+const _F=(u,a)=>u/Math.sqrt(u*u+a*a), _dF=(u,a)=>a*a/(u*u+a*a)**1.5, _d2F=(u,a)=>-3*a*a*u/(u*u+a*a)**2.5;
+/* eq. (1) of the problem sheet, and its derivatives (z in m) */
+const Bz=(z,m)=>{ z=Math.max(z,1e-6); return 0.5*m[2]*(_F(z+m[1],m[0])-_F(z,m[0])); };
+const dBz=(z,m)=>{ z=Math.max(z,1e-6); return 0.5*m[2]*(_dF(z+m[1],m[0])-_dF(z,m[0])); };
+const d2Bz=(z,m)=>{ z=Math.max(z,1e-6); return 0.5*m[2]*(_d2F(z+m[1],m[0])-_d2F(z,m[0])); };
+const TRUE=(()=>{ const drho=15*U(0.93,1.07), lamB=6e-3*U(0.93,1.07), sigmaC=G*drho*lamB**2/(4*Math.PI**2), sigmaA=0.023*U(0.93,1.07);
+  const zc=22e-3*U(0.94,1.06);
+  return { drho, lamB:2*Math.PI*Math.sqrt(sigmaC/(G*drho))*1e3, lamA:2*Math.PI*Math.sqrt(sigmaA/(G*RHO_FF))*1e3, Ms:15500*U(0.95,1.05),
+    pitch:0.800*U(0.995,1.005), dishBase:8*U(0.97,1.03), depth:4*U(0.95,1.05), lampH:34*U(0.965,1.035), lampLen:20*U(0.97,1.03), blur:2.2,
+    BthrBottle:Bz(zc,msi("N52")), B1:0.0288*U(0.95,1.05), ratio:1.129*U(0.99,1.01), hyst:1.25*U(0.94,1.06), NMAX:12,
+    jit:[...Array(12)].map(()=>[gauss(),gauss()]) }; })();
+/* superparamagnet: Langevin magnetisation, M → χH at low field */
+function Mmag(H){ const x=3*CHI*H/TRUE.Ms; if(x<1e-4) return CHI*H; if(x>60) return TRUE.Ms; return TRUE.Ms*(1/Math.tanh(x)-1/x); }
+/* Part A: magnetic force over net buoyancy, in the dipole approximation (eq. 3) the sheet allows */
+function liftRatio(zmm,k){ const z=Math.max(zmm,0.05)*1e-3, [a,l,Br]=msi(k); return 3*CHI*Br*Br*a**4*l*l/(8*MU0)/z**7/(TRUE.drho*G); }
+/* Part C: radius of curvature of the surface centre [mm] (rho g h = u(B), u' = M/2) */
+function Rcurv(zmm,k){ const z=Math.max(zmm,0.05)*1e-3, m=msi(k), b=Bz(z,m), b1=dBz(z,m), b2=d2Bz(z,m), gam=Math.abs(0.5*b1*b1-b*b2); if(gam<1e-30) return 1e9; return 2*b*RHO_FF*G/(Mmag(b/MU0)*gam)*1e3; }
+/* length of the reflected lamp image seen by the camera [mm] (spherical mirror M = R/(R+2l)) */
+function imageLen(zmm,k){ const R=Rcurv(zmm,k), M=R/(R+2*TRUE.lampH), L=TRUE.lampLen*M; return Math.sqrt(L*L+TRUE.blur*TRUE.blur); }
+const spikeUp=n=>TRUE.B1*TRUE.ratio**(n-1), spikeDown=n=>spikeUp(n)/TRUE.hyst;
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE APPARATUS
+   ══════════════════════════════════════════════════════════════ */
+const ITEMS=["stand","tube","n42","n52a","n52b","wedge","bottle","dish","pole","lamp","camera","ruler","grid"];
+/* geometry (mm): the stand top is 200 mm above the bench; the bottle lies on the wedge under it */
+const STAND_TOP=200, BLOB_LO=37, BLOB_HI=55, MAGY_MIN=59, MAGY_MAX=168, DROP_MAX=34;
+const ST={ on:new Set(), pos:{}, mounted:new Set(), rodUp:false, mags:[], magY:150, drop:18, turns:0, lampOn:false,
+  blobUp:false, blobA:0, contact:0, nspike:0, read:{}, rul:{x:-70,y:20,vert:true}, grat:{x:-30,y:-20}, msgStuck:false };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+const isM=k=>ST.mounted.has(k);
+/* the magnet on the carrier */
+function magKey(){ const m=ST.mags; if(m.length===2) return "STACK"; if(m.length===1) return m[0]==="n42"?"N42":"N52"; return null; }
+const bottleMode=()=>isM("tube")&&!ST.rodUp&&isM("bottle");
+const dishMode=()=>isM("tube")&&ST.rodUp&&isM("dish");
+const blobTop=()=>BLOB_LO+(BLOB_HI-BLOB_LO)*ST.blobA;
+const zDish=()=>TRUE.dishBase+TRUE.depth+ST.drop;   /* magnet face → fluid surface [mm] */
+function updatePhysics(dt){
+  const k=magKey();
+  /* bottle: the blob lifts when the magnetic force beats the net buoyancy */
+  if(bottleMode()&&k){ if(!ST.blobUp){ if(liftRatio(ST.magY-BLOB_LO,k)>1) ST.blobUp=true; } else if(liftRatio(ST.magY-BLOB_HI,k)<1) ST.blobUp=false; }
+  else ST.blobUp=false;
+  const tg=ST.blobUp?1:0; ST.blobA+=(tg-ST.blobA)*Math.min(1,dt*5); if(Math.abs(ST.blobA-tg)<0.01) ST.blobA=tg;
+  const gap=ST.magY-blobTop();
+  if(bottleMode()&&k&&gap<12) ST.contact+=dt; else ST.contact=Math.max(0,ST.contact-dt/3);
+  /* dish: the number of spikes, with hysteresis */
+  if(dishMode()&&k){ const b=Bz(zDish()*1e-3,msi(k)); let n=ST.nspike; while(n<TRUE.NMAX&&b>=spikeUp(n+1)) n++; while(n>0&&b<spikeDown(n)) n--; ST.nspike=n; } else ST.nspike=0;
+}
+/* how far the spikes of the bottle have grown, 0…1 */
+function bottleSpike(){ const k=magKey(); if(!bottleMode()||!k) return 0; const gap=Math.max(0.2,ST.magY-blobTop()), b=Bz(gap*1e-3,msi(k)), thr=TRUE.BthrBottle*(ST.contact>10?0.9:1); return b<=thr?0:Math.min(1,(b/thr-1)*2.2); }
+function hexPositions(n,lam){ const pts=[]; for(let i=-4;i<=4;i++) for(let j=-4;j<=4;j++){ const x=lam*(i+0.5*j), y=lam*Math.sqrt(3)/2*j; pts.push([Math.hypot(x,y),x,y]); } pts.sort((a,b)=>a[0]-b[0]); return pts.slice(0,n).map(p=>[p[1],p[2]]); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+const add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k], dot2=(a,b)=>a[0]*b[0]+a[1]*b[1],
+      len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a); return l>1e-12?[a[0]/l,a[1]/l]:[1,0]; }, v2=a=>[Math.cos(a),Math.sin(a)];
+/* ══════════════════════════════════════════════════════════════
+   5.  THE BENCH  (sheared oblique view from the front left, cm)
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=470, SC=10, OX=60, OY=250, KY=0.5, KX=0.3;
+const P=(x,y,z)=>[OX+SC*(x+KX*y), OY+SC*(KY*y-(z||0))];
+const unP=(X,Y,z)=>{ const y=((Y-OY)/SC+(z||0))/KY; return [(X-OX)/SC-KX*y,y]; };
+const TBL={x0:0,x1:100,y0:0,y1:40};
+function abox(x0,y0,z0,x1,y1,z1,top,front,side,edge){
+  poly([P(x0,y0,z0),P(x0,y1,z0),P(x0,y1,z1),P(x0,y0,z1)],side,edge,0.6);
+  poly([P(x0,y1,z0),P(x1,y1,z0),P(x1,y1,z1),P(x0,y1,z1)],front,edge,0.6);
+  poly([P(x0,y0,z1),P(x1,y0,z1),P(x1,y1,z1),P(x0,y1,z1)],top,edge,0.6);
+}
+const SIZE={stand:[24,18,20],tube:[26,2.4,2.4],n42:[2,2,0.5],n52a:[1.5,1.5,0.4],n52b:[1.5,1.5,0.4],wedge:[12,6,2.6],bottle:[7,3.4,3.4],dish:[16,12,4.5],pole:[30,1.2,1.2],lamp:[6,5,4],camera:[11,6,7],ruler:[31,3.2,0.2],grid:[16,3,0.1]};
+const LOOSE=ITEMS;
+const onBench=k=>has(k)&&ST.pos[k];
+function drawTable(){ ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH); poly([P(TBL.x0,TBL.y0,0),P(TBL.x1,TBL.y0,0),P(TBL.x1,TBL.y1,0),P(TBL.x0,TBL.y1,0)],"#d6d3c8","#a7a394",1); }
+function seg3(a,b,col,w){ const p=P(...a), q=P(...b); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); }
+const WH="#eeece6", WH2="#dcd9d0", WH3="#c9c5ba", WHE="#a9a49a";
+function magnetAt(x,y,z,up){ /* the magnet(s) on the carrier: discs on the rod end */ let zz=z; const list=up?ST.mags:[...ST.mags];
+  for(const m of list){ const [a,l]=m==="n42"?[10,5]:[7.1,3.2]; const h=l/10; if(up){ vcyl(x,y,zz,zz+h,a/10,"#a9aeb4","#d5d9dd","#6c7278"); zz+=h; } else { vcyl(x,y,zz-h,zz,a/10,"#a9aeb4","#d5d9dd","#6c7278"); zz-=h; } } }
+function drawStand(){ const {x,y}=ST.pos.stand, [w,dp,h]=SIZE.stand, x0=x-w/2, x1=x+w/2, y0=y-dp/2, y1=y+dp/2;
+  /* back panel, the left side, then what is inside, then the right side and the top */
+  poly([P(x0,y0,0),P(x1,y0,0),P(x1,y0,h),P(x0,y0,h)],WH2,WHE,0.8);
+  poly([P(x0,y0,0),P(x0,y1,0),P(x0,y1,h),P(x0,y0,h)],WH3,WHE,0.8); const hl=P(x0,y,17); ell(hl[0],hl[1],1.4*SC*KY,1.4*SC,"#8d8a82");
+  /* the wedge and the bottle under the stand */
+  if(isM("wedge")){ poly([P(x-6,y-3,0),P(x+6,y-3,0),P(x+6,y-3,0.5),P(x-6,y-3,2.6)],"#1f8a4c","#0f5a2e",0.8); poly([P(x-6,y+3,0),P(x+6,y+3,0),P(x+6,y+3,0.5),P(x-6,y+3,2.6)],"#26a65b","#0f5a2e",0.8);
+    poly([P(x-6,y-3,2.6),P(x+6,y-3,0.5),P(x+6,y+3,0.5),P(x-6,y+3,2.6)],"#2fbf6a","#0f5a2e",0.8); }
+  if(isM("bottle")){ hcyl([x-2.8,y],[x+2.2,y],4.1,1.6,"rgba(215,232,240,.75)","rgba(255,255,255,.6)"); hcyl([x+2.2,y],[x+3.6,y],4.1,1.1,"#f3f3f1");
+    const bt=blobTop()/10, c=P(x-0.4,y,bt-0.5); ell(c[0],c[1],1.3*SC,0.55*SC,"#141418"); }
+  /* the tube and the rod with its magnet */
+  if(isM("tube")){ hcyl([x0-1,y],[x1+1,y],17,1.1,"#b9bec4","#e6e9ec");
+    const rodTop=ST.rodUp?(STAND_TOP-ST.drop)/10:17, mz=ST.rodUp?(STAND_TOP-ST.drop-magThick())/10:ST.magY/10;
+    if(ST.rodUp){ seg3([x,y,13],[x,y,mz],"#9aa0a6",3); magnetAt(x,y,mz,true); } else { seg3([x,y,19.5],[x,y,mz+magThick()/10],"#9aa0a6",3); magnetAt(x,y,mz+magThick()/10,false); } }
+  poly([P(x1,y0,0),P(x1,y1,0),P(x1,y1,h),P(x1,y0,h)],WH3,WHE,0.8); const hr=P(x1,y,17); ell(hr[0],hr[1],1.4*SC*KY,1.4*SC,"#8d8a82");
+  poly([P(x0,y1,h-3),P(x1,y1,h-3),P(x1,y1,h),P(x0,y1,h)],WH2,WHE,0.8);
+  poly([P(x0,y0,h),P(x1,y0,h),P(x1,y1,h),P(x0,y1,h)],WH,WHE,0.8);
+  for(let i=0;i<7;i++) for(let j=0;j<5;j++){ if(i===3&&j===2) continue; const q=P(x0+2.5+i*3.2,y0+2+j*3.5,h); ell(q[0],q[1],0.55*SC,0.55*SC*KY,"#b5b1a6"); }
+  const ch=P(x,y,h); ell(ch[0],ch[1],1.3*SC,1.3*SC*KY,"#6f6c64");
+  /* on top: the dish, the pole with the lamp and the camera */
+  if(isM("dish")){ abox(x-8,y-6,h,x+8,y+6,h+0.8,"rgba(200,220,230,.35)","rgba(190,210,222,.5)","rgba(180,200,212,.45)","#8fa4b0");
+    abox(x-7.6,y-5.6,h+0.8,x+7.6,y+5.6,h+1.2,"#141418","#141418","#141418",null);
+    abox(x-8,y-6,h+0.8,x+8,y+6,h+4,"rgba(210,230,240,.18)","rgba(200,222,234,.3)","rgba(190,212,224,.28)","#8fa4b0");
+    abox(x-8.3,y-6.3,h+4,x+8.3,y+6.3,h+4.6,"rgba(140,150,160,.85)","#7d8790","#6c757d","#4b535a"); }
+  if(isM("pole")){ const px=x1-2, py=y0+2; seg3([px,py,h],[px,py,h+32],"#8f969d",3.5); const wn=P(px,py,h+0.3); fillR(wn[0]-9,wn[1]-3,18,6,2,"#9aa0a6","#555",0.6);
+    if(isM("lamp")){ const lz=h+(TRUE.dishBase+TRUE.depth+TRUE.lampH)/10+1.2; seg3([px,py,lz+0.5],[x,y,lz+0.5],"#9aa0a6",2.5); abox(x-3,y-1,lz,x+3,y+1,lz+1,WH,WH2,WH3,WHE);
+      if(ST.lampOn){ const c=P(x,y,lz); ctx.fillStyle="rgba(255,244,170,.25)"; ctx.beginPath(); ctx.moveTo(c[0]-30,c[1]); ctx.lineTo(c[0]+30,c[1]); ctx.lineTo(c[0]+60,c[1]+40); ctx.lineTo(c[0]-60,c[1]+40); ctx.fill(); } }
+    if(isM("camera")){ const cz=h+24; seg3([px,py,cz],[x+4,y,cz],"#9aa0a6",2.5); abox(x-1,y-2.5,cz-2,x+5,y+2.5,cz+1.5,"#2a2d33","#1c1f24","#15171b","#000"); const l=P(x+1,y,cz-2); ell(l[0],l[1],10,5,"#333","#111"); } }
+}
+const magThick=()=>ST.mags.reduce((s,m)=>s+(m==="n42"?5:3.2),0);
+function drawLoose(k){ const {x,y}=ST.pos[k], [w,dp,h]=SIZE[k];
+  if(k==="stand") drawStand();
+  else if(k==="tube"){ hcyl([x-w/2,y],[x+w/2,y],1.1,1.1,"#b9bec4","#e6e9ec"); seg3([x,y,1],[x,y,9],"#9aa0a6",3); }
+  else if(k==="n42"||k==="n52a"||k==="n52b") vcyl(x,y,0,h,w/2,"#a9aeb4","#d5d9dd","#6c7278");
+  else if(k==="wedge"){ poly([P(x-6,y+3,0),P(x+6,y+3,0),P(x+6,y+3,0.5),P(x-6,y+3,2.6)],"#26a65b","#0f5a2e",0.8); poly([P(x-6,y-3,2.6),P(x+6,y-3,0.5),P(x+6,y+3,0.5),P(x-6,y+3,2.6)],"#2fbf6a","#0f5a2e",0.8); }
+  else if(k==="bottle"){ vcyl(x,y,0,5,1.6,"rgba(215,232,240,.8)","rgba(235,244,248,.9)","#93a9b7"); vcyl(x,y,5,6.2,1.1,"#f3f3f1","#fff","#b7b7b2"); const c=P(x,y,0.6); ell(c[0],c[1],1.3*SC,0.5*SC,"#141418"); }
+  else if(k==="dish"){ abox(x-w/2,y-dp/2,0,x+w/2,y+dp/2,0.8,"rgba(200,220,230,.35)","rgba(190,210,222,.5)","rgba(180,200,212,.45)","#8fa4b0"); abox(x-w/2+0.4,y-dp/2+0.4,0.8,x+w/2-0.4,y+dp/2-0.4,1.2,"#141418","#141418","#141418",null);
+    abox(x-w/2,y-dp/2,0.8,x+w/2,y+dp/2,4,"rgba(210,230,240,.18)","rgba(200,222,234,.3)","rgba(190,212,224,.28)","#8fa4b0"); abox(x-w/2-0.3,y-dp/2-0.3,4,x+w/2+0.3,y+dp/2+0.3,4.6,"rgba(140,150,160,.85)","#7d8790","#6c757d","#4b535a"); }
+  else if(k==="pole"){ hcyl([x-w/2,y],[x+w/2,y],0.6,0.5,"#8f969d","#cfd4d9"); const wn=P(x+w/2+1,y,0.5); fillR(wn[0]-8,wn[1]-4,16,8,2,"#9aa0a6","#555",0.6); }
+  else if(k==="lamp"){ abox(x-w/2,y-dp/2,0,x+w/2,y+dp/2,h,WH,WH2,WH3,WHE); const c=P(x,y+dp/2,h/2); fillR(c[0]-14,c[1]-4,28,8,2,"#f7ef9a","#b8ac48",0.8); }
+  else if(k==="camera"){ abox(x-w/2,y-dp/2,0,x+w/2,y+dp/2,h,"#2a2d33","#1c1f24","#15171b","#000"); const l=P(x,y+dp/2,h/2); circ(l[0],l[1],16,"#333","#111",2); circ(l[0],l[1],8,"#1a2a3a"); }
+  else if(k==="ruler"){ poly([P(x-w/2,y-dp/2,0.2),P(x+w/2,y-dp/2,0.2),P(x+w/2,y+dp/2,0.2),P(x-w/2,y+dp/2,0.2)],"rgba(225,240,245,.55)","#8fa7b4",0.8); for(let i=0;i<=30;i++) seg3([x-15+i,y+dp/2,0.2],[x-15+i,y+dp/2-(i%5===0?0.9:0.5),0.2],"#333",0.7); }
+  else if(k==="grid"){ poly([P(x-w/2,y-dp/2,0.1),P(x+w/2,y-dp/2,0.1),P(x+w/2,y+dp/2,0.1),P(x-w/2,y+dp/2,0.1)],"rgba(225,240,245,.5)","#8fa7b4",0.8); for(let i=1;i<16;i++) seg3([x-w/2+i,y-dp/2,0.1],[x-w/2+i,y+dp/2,0.1],"rgba(40,60,80,.5)",0.5); }
+}
+function drawBench(){ drawTable(); const list=LOOSE.filter(onBench).sort((a,b)=>ST.pos[a].y-ST.pos[b].y); for(const k of list) drawLoose(k); drawGhost(); }
+function drawGhost(){ if(!hand||!overBench) return; text(itemName(hand.item),mouse[0]+12,mouse[1]-12,"#ffe9b0",11,"left","700");
+  if(MOUNT.includes(hand.item)&&onBench("stand")&&inB(mouse,bbox("stand"),6)){ const b=bbox("stand"); ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle="#7fd37f"; ctx.lineWidth=1.8; ctx.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1]); ctx.restore(); return; }
+  const [x,y]=unP(mouse[0],mouse[1],0), f=footOf(hand.item,x,y); ctx.save(); ctx.setLineDash([5,4]); poly([P(f[0],f[1],0),P(f[2],f[1],0),P(f[2],f[3],0),P(f[0],f[3],0)],null,fits(hand.item,x,y)?"#f2c14e":"#e0605a",1.5); ctx.restore(); }
+function footOf(k,x,y){ const s=SIZE[k]; return [x-s[0]/2,y-s[1]/2,x+s[0]/2,y+s[1]/2]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y){ const f=footOf(k,x,y); if(f[0]<TBL.x0+0.5||f[2]>TBL.x1-0.5||f[1]<TBL.y0+0.5||f[3]>TBL.y1-0.5) return false;
+  for(const o of LOOSE){ if(o===k||!onBench(o)) continue; if(overl(f,footOf(o,ST.pos[o].x,ST.pos[o].y),0.3)) return false; } return true; }
+function box3(x0,y0,z0,x1,y1,z1){ const pts=[]; for(const x of [x0,x1]) for(const y of [y0,y1]) for(const z of [z0,z1]) pts.push(P(x,y,z));
+  return [Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))]; }
+function bbox(k){ if(!onBench(k)) return null; const p=ST.pos[k], s=SIZE[k]; const top=k==="stand"?(isM("pole")?52:isM("dish")?25:20):s[2]; return box3(p.x-s[0]/2,p.y-s[1]/2,0,p.x+s[0]/2,p.y+s[1]/2,top); }
+const inB=(p,b,m)=>b&&p[0]>=b[0]-(m||0)&&p[0]<=b[2]+(m||0)&&p[1]>=b[1]-(m||0)&&p[1]<=b[3]+(m||0);
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=ITEMS, TROW=34;
+let TRW=190, TRH=600, CLW=900, CLH=380, trayCells=[], tab="side", HIT=[], gridOn=false;
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+function icon(c,k){
+  const old=ctx; ctx=c; ctx.save(); ctx.scale(0.75,0.75);
+  if(k==="stand"){ fillR(-15,-12,30,6,2,"#eeece6","#a9a49a"); fillR(-14,-6,5,18,1,"#dcd9d0","#a9a49a"); fillR(9,-6,5,18,1,"#dcd9d0","#a9a49a"); for(let i=0;i<5;i++) circ(-10+i*5,-9,1,"#a9a49a"); }
+  else if(k==="tube"){ fillR(-17,-3,34,6,3,"#b9bec4","#7f858c"); fillR(-1,-14,2,26,0,"#9aa0a6"); }
+  else if(k==="n42"){ fillR(-10,-3,20,6,2,"#a9aeb4","#6c7278"); }
+  else if(k==="n52a"||k==="n52b"){ fillR(-7,-2,14,4,2,"#a9aeb4","#6c7278"); text(k==="n52a"?"①":"②",0,9,"#9aa3ab",9,"center"); }
+  else if(k==="wedge"){ poly([[-16,8],[16,8],[16,4],[-16,-8]],"#2fbf6a","#0f5a2e"); }
+  else if(k==="bottle"){ fillR(-12,-7,20,14,6,"rgba(215,232,240,.8)","#93a9b7"); fillR(8,-5,7,10,1,"#f3f3f1","#b7b7b2"); fillR(-9,0,14,5,2,"#141418"); }
+  else if(k==="dish"){ fillR(-16,-9,32,18,2,"rgba(200,220,230,.5)","#8fa4b0"); fillR(-14,2,28,5,0,"#141418"); fillR(-17,-11,34,4,1,"#7d8790"); }
+  else if(k==="pole"){ fillR(-1,-16,2,32,0,"#8f969d"); fillR(-6,10,12,4,1,"#9aa0a6"); }
+  else if(k==="lamp"){ fillR(-12,-6,24,12,2,"#eeece6","#a9a49a"); fillR(-9,2,18,4,1,"#f7ef9a"); }
+  else if(k==="camera"){ fillR(-13,-9,26,18,3,"#2a2d33","#000"); circ(0,0,6,"#333","#111"); circ(0,0,3,"#1a2a3a"); }
+  else if(k==="ruler"){ fillR(-17,-4,34,8,0,"rgba(225,240,245,.7)","#8fa7b4"); for(let i=0;i<=12;i++){ ctx.fillStyle="#333"; ctx.fillRect(-16+i*2.7,-4,0.6,i%5===0?4:2); } }
+  else if(k==="grid"){ fillR(-17,-5,34,10,0,"rgba(225,240,245,.6)","#8fa7b4"); ctx.strokeStyle="rgba(40,60,80,.6)"; ctx.lineWidth=0.5; for(let i=-15;i<17;i+=3){ ctx.beginPath(); ctx.moveTo(i,-5); ctx.lineTo(i,5); ctx.stroke(); } }
+  ctx.restore(); ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+64;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(420,CLW*0.6));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
+  drawTray();
+}
+function drawTray(){
+  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const av=trayAvail(k), sel=hand&&hand.item===k;
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(24,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    c.fillText(itemName(k),44,y+11); c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,44,y+24);
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["side","cam","thread"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+/* a transparent 300 mm ruler in world mm */
+function drawRuler(m,R){ const L=300, W=28, z=m.z; let X0,Y0,w,h;
+  if(R.vert){ X0=m.X(R.x); Y0=m.Y(R.y+L); w=W*z; h=L*z; } else { X0=m.X(R.x); Y0=m.Y(R.y+W); w=L*z; h=W*z; }
+  ctx.fillStyle="rgba(232,244,250,.55)"; ctx.fillRect(X0,Y0,w,h); ctx.strokeStyle="#7f9fb0"; ctx.lineWidth=1; ctx.strokeRect(X0,Y0,w,h);
+  for(let k=0;k<=L;k++){ if(z<1.6&&k%5) continue; const len=(k%10===0?9:k%5===0?6:3.5)*Math.max(1,z/2.5); ctx.strokeStyle="#222"; ctx.lineWidth=k%10===0?1:0.6; ctx.beginPath();
+    if(R.vert){ const y=m.Y(R.y+k); ctx.moveTo(X0,y); ctx.lineTo(X0+len,y); ctx.stroke(); if(k%10===0) text(String(k/10),X0+len+3,y,"#222",Math.max(9,Math.min(12,z*3)),"left","600"); }
+    else { const x=m.X(R.x+k); ctx.moveTo(x,Y0); ctx.lineTo(x,Y0+len); ctx.stroke(); if(k%10===0) text(String(k/10),x+1,Y0+len+7,"#222",Math.max(9,Math.min(12,z*3)),"center","600"); } }
+  hitAdd("ruler",X0,Y0,w,h); }
+/* ── 1. the side section of the stand ── */
+const SV={z:0,cx:0,cy:0};
+function svMap(){ const bm=bottleMode(), H=dishMode()?300:225, wfr=bm?0.64:1, z=Math.min(CLW*wfr/280,(CLH-16)/H)*(SV.z||1);
+  const X0=(bm?CLW*0.33:CLW/2)-SV.cx*z, Y0=CLH-8+SV.cy*z+ (dishMode()?0:0); return {z,X:x=>X0+x*z,Y:y=>Y0-y*z,U:p=>[(p[0]-X0)/z,(Y0-p[1])/z]}; }
+function drawSideView(){
+  const t=d(); if(!onBench("stand")||!isM("tube")){ text(t.lab.noTube,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=svMap(), z=m.z, X=m.X, Y=m.Y, R=(x0,y0,x1,y1,f,s,lw)=>fillR(X(Math.min(x0,x1)),Y(Math.max(y0,y1)),Math.abs(x1-x0)*z,Math.abs(y1-y0)*z,0,f,s,lw||1);
+  ctx.fillStyle="#f4f2ec"; ctx.fillRect(0,0,CLW,CLH); ctx.fillStyle="#d8d2c2"; ctx.fillRect(0,Y(0),CLW,CLH-Y(0));
+  /* the stand: two side walls and the top plate with its centre hole */
+  R(-120,0,-112,193,"#eeece6","#a9a49a"); R(112,0,120,193,"#eeece6","#a9a49a"); R(-122,193,-12,200,"#eeece6","#a9a49a"); R(12,193,122,200,"#eeece6","#a9a49a");
+  text(t.lab.stand,X(-90),Y(196.5),"#8b939a",10,"center");
+  /* the aluminium tube in the side holes */
+  R(-126,163,126,180,"#b9bec4","#7f858c"); R(-126,175,126,177,"#e6e9ec",null);
+  /* the carrier and the magnet */
+  const k=magKey(), th=magThick();
+  if(!ST.rodUp){ const top=ST.magY+th; drawRod(X(0),Y(185),Y(top),z); drawMags(m,0,ST.magY,false); }
+  else { const top=STAND_TOP-ST.drop; drawRod(X(0),Y(top-th),Y(130),z); drawMags(m,0,top-th,true); }
+  if(!k) text(t.lab.noMag,X(0)+12,Y(ST.rodUp?STAND_TOP-ST.drop-6:ST.magY+4),"#a33",11,"left","600");
+  /* the bottle set-up */
+  if(isM("wedge")) poly([[X(-50),Y(0)],[X(70),Y(0)],[X(70),Y(5)],[X(-50),Y(26)]],"#2fbf6a","#0f5a2e",1.5);
+  if(isM("bottle")){ R(-31,25,19,57,"rgba(215,232,240,.75)","#93a9b7",2); ctx.fillStyle="rgba(234,242,247,.8)"; ctx.beginPath(); ctx.ellipse(X(-31),Y(41),10*z/2.2,16*z,0,0,7); ctx.fill();
+    R(19,32,31,50,"rgba(215,232,240,.75)","#93a9b7",2); R(31,30,45,52,"#f3f3f1","#b7b7b2",2); drawBlob(m,0,true); }
+  /* the dish set-up: glass dish on the stand, with the fluid bump over the magnet, the lamp above */
+  if(isM("dish")){ const b=TRUE.dishBase, dd=TRUE.depth, s0=STAND_TOP; R(-64,s0,64,s0+b,"#c9d6de","#8fa4b0",2); R(-64,s0+b,64,s0+b+dd,"#141418","#8fa4b0");
+    R(-64,s0+b+dd,-60,s0+30,"rgba(215,232,240,.75)","#8fa4b0"); R(60,s0+b+dd,64,s0+30,"rgba(215,232,240,.75)","#8fa4b0"); R(-67,s0+30,67,s0+33,"#8c96a0","#5c646b",2);
+    if(dishMode()&&k) drawBump(m,s0+b+dd);
+    if(isM("pole")){ R(53,s0,57,s0+95,"#8f969d","#5c646b"); R(48,s0,62,s0+3,"#9aa0a6","#555");
+      if(isM("lamp")){ const lh=s0+b+dd+TRUE.lampH; R(-10,lh,10,lh+4,ST.lampOn?"#f7ef9a":"#d9d9c8","#b8ac48"); R(-13,lh+4,13,lh+12,"#eeece6","#bcbcb6",2); R(13,lh+7,53,lh+9,"#9aa0a6",null);
+        if(ST.lampOn){ ctx.save(); ctx.setLineDash([3,3]); ctx.strokeStyle="#d8c34a"; for(let i=-1;i<=1;i++){ ctx.beginPath(); ctx.moveTo(X(0),Y(lh)); ctx.lineTo(X(i*30),Y(s0+b+dd)); ctx.stroke(); } ctx.restore(); }
+        text(t.lab.lamp,X(-16),Y(lh+8),"#8b939a",10,"right"); }
+      if(isM("camera")){ const cz=s0+90; R(-12,cz,30,cz+26,"#2a2d33","#000"); R(-6,cz-6,8,cz,"#333","#111"); } } }
+  if(onBench("ruler")) drawRuler(m,ST.rul);
+  if(bottleMode()) drawMagnifier();
+  if(ST.contact>10&&bottleMode()) text(t.lab.warn,CLW/2,14,"#a3421c",11.5,"center","700");
+}
+function drawRod(x,ya,yb,z){ const w=Math.max(4,6*z), y0=Math.min(ya,yb), y1=Math.max(ya,yb); ctx.fillStyle="#b9bec4"; ctx.fillRect(x-w/2,y0,w,y1-y0);
+  ctx.strokeStyle="#7f858c"; ctx.lineWidth=1; const p=Math.max(2.5,TRUE.pitch*z); for(let y=y0;y<y1;y+=p){ ctx.beginPath(); ctx.moveTo(x-w/2,y); ctx.lineTo(x+w/2,y+p*0.55); ctx.stroke(); } }
+function drawMags(m,x,y,up){ let yy=y; for(const g of ST.mags){ const [a,l]=g==="n42"?[10,5]:[7.1,3.2]; fillR(m.X(x-a),m.Y(yy+l),2*a*m.z,l*m.z,1,"#a9aeb4","#5d636a",1.2); yy+=l; } }
+function blobPath(m,cx,top,spikes){ const cy=top-5, rx=13, ry=5.2, lam=TRUE.lamB, amp=bottleSpike()*Math.min(2.6,0.35*lam), pts=[];
+  for(let i=0;i<=96;i++){ const th=2*Math.PI*i/96; const x=Math.cos(th)*rx; let y=Math.sin(th)*ry; if(spikes&&amp>0.02&&y>0){ const w=Math.cos(2*Math.PI*x/lam+0.7); y+=amp*Math.max(0,w)**1.6*(1-(x/rx)**2); } pts.push([m.X(cx+x),m.Y(cy+y)]); } return pts; }
+function drawBlob(m,cx,spikes){ poly(blobPath(m,cx,blobTop(),spikes),"#141418","#2c2c34",1); ctx.fillStyle="#4a4a56"; ctx.beginPath(); ctx.ellipse(m.X(cx-3.5),m.Y(blobTop()-4.6),2.5*m.z,1.4*m.z,0,0,7); ctx.fill();
+  ctx.fillStyle="#141418"; ctx.beginPath(); ctx.ellipse(m.X(16),m.Y(46.5),2.5*m.z,1.5*m.z,0,0,7); ctx.fill(); }
+function drawBump(m,surf){ const R=Rcurv(zDish(),magKey()), halfw=Math.min(28,Math.max(6,zDish()*0.75)), h0=Math.min(TRUE.depth*1.6,halfw*halfw/(2*Math.max(R,1))), lam=TRUE.lamA, pts=[[m.X(-50),m.Y(surf)]];
+  for(let i=0;i<=120;i++){ const x=-halfw+2*halfw*i/120, u=x/halfw, env=Math.exp(-3*u*u); let y=surf+h0*env; if(ST.nspike){ const sp=Math.max(0,Math.cos(2*Math.PI*x/lam)); y+=TRUE.depth*1.5*env*sp*sp; } pts.push([m.X(x),m.Y(y)]); }
+  pts.push([m.X(50),m.Y(surf)]); poly(pts,"#141418","#2c2c34",1); }
+/* the magnifier: the top of the blob, about 10× */
+function drawMagnifier(){ const t=d(), ix=CLW*0.66, iy=CLH*0.36, iw=CLW*0.32, ih=CLH*0.42; fillR(ix,iy,iw,ih,6,"#e9eef1","#7f9fb0",2);
+  const k=iw/40, cx=ix+iw/2, top=blobTop(), mm={z:k,X:x=>cx+x*k,Y:y=>iy+ih*0.62-(y-top+3)*k};
+  ctx.save(); ctx.beginPath(); ctx.rect(ix,iy,iw,ih); ctx.clip(); ctx.fillStyle="rgba(215,232,240,.6)"; ctx.fillRect(ix,iy,iw,ih);
+  poly(blobPath(mm,0,top,true),"#141418","#2c2c34",1);
+  if(gridOn&&has("grid")){ const gx=ST.grat.x, gy=ST.grat.y; ctx.strokeStyle="rgba(30,60,90,.55)"; ctx.lineWidth=1; for(let i=-60;i<=60;i++){ const X=cx+(i+gx%1)*k; ctx.beginPath(); ctx.moveTo(X,iy); ctx.lineTo(X,iy+ih); ctx.stroke(); }
+    for(let j=-30;j<=30;j++){ const Y=iy+ih/2+(j+gy%1)*k; ctx.beginPath(); ctx.moveTo(ix,Y); ctx.lineTo(ix+iw,Y); ctx.stroke(); } hitAdd("gridmag",ix,iy,iw,ih); }
+  ctx.restore(); text(t.lab.mag,ix+8,iy+12,"#33424c",10.5,"left","700"); }
+/* ── 2. the camera looking down on the dish ── */
+function camMap(){ const z=Math.min((CLW-20)/100,(CLH-20)/80); return {z,X:x=>CLW/2+x*z,Y:y=>CLH/2-y*z}; }
+function drawCamView(){
+  const t=d(); if(!onBench("stand")||!isM("camera")||!isM("dish")){ text(t.lab.noCam,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const m=camMap(), z=m.z; ctx.fillStyle="#0b0c0e"; ctx.fillRect(0,0,CLW,CLH);
+  fillR(m.X(-48),m.Y(38),96*z,76*z,8,"#3a4048",null); fillR(m.X(-46),m.Y(36),92*z,72*z,4,"#17181c","#2a2f36",2);
+  const k=magKey(), on=ST.lampOn&&isM("lamp");
+  if(dishMode()&&k){ const rr=Math.min(30,Math.max(6,zDish()*0.75))*z; circ(m.X(0),m.Y(0),rr,null,"#24272d",1.5);
+    if(ST.nspike){ const lam=TRUE.lamA; hexPositions(ST.nspike,lam).forEach(([px,py],i)=>{ const [jx,jy]=TRUE.jit[i]; const X=m.X(px+jx*0.25), Y=m.Y(py+jy*0.25), r=0.3*lam*z;
+        circ(X,Y,r,"#26262e","#0a0a0c",1); circ(X-r*0.15,Y-r*0.15,r*0.3,"#8b8b9a"); if(on) circ(X-r*0.08,Y-r*0.08,r*0.12,"#f4f1d6"); }); }
+    else if(on){ const L=imageLen(zDish(),k), a=L*z/2, b=L*0.26*z/2; for(const [f,c] of [[2.1,"#4a4632"],[1.5,"#8d8544"],[1.15,"#d8cd63"],[1,"#fdf7c8"]]){ ctx.fillStyle=c; ctx.beginPath(); ctx.ellipse(m.X(0),m.Y(0),a*f,b*f,0,0,7); ctx.fill(); } } }
+  else if(on){ ctx.fillStyle="#fdf7c8"; ctx.beginPath(); ctx.ellipse(m.X(0),m.Y(0),TRUE.lampLen*z/2,TRUE.lampLen*0.26*z/2,0,0,7); ctx.fill(); }
+  if(!on) text(t.lab.dark,CLW/2,CLH-16,"#555b62",11,"center");
+  /* the transparent grid strip (1 mm squares), draggable */
+  if(gridOn&&has("grid")){ const gx=m.X(ST.grat.x), gy=m.Y(ST.grat.y), w=60*z, h=16*z; ctx.fillStyle="rgba(220,236,246,.10)"; ctx.fillRect(gx,gy,w,h);
+    ctx.strokeStyle="rgba(170,205,225,.55)"; ctx.lineWidth=1; for(let i=0;i<=60;i++){ ctx.lineWidth=i%10===0?1.6:i%5===0?1.1:0.6; ctx.beginPath(); ctx.moveTo(gx+i*z,gy); ctx.lineTo(gx+i*z,gy+h); ctx.stroke(); }
+    for(let j=0;j<=16;j++){ ctx.lineWidth=j%5===0?1.1:0.6; ctx.beginPath(); ctx.moveTo(gx,gy+j*z); ctx.lineTo(gx+w,gy+j*z); ctx.stroke(); } text(t.lab.grid,gx+4,gy-8,"#9fb6c4",10,"left","600"); hitAdd("gridcam",gx,gy,w,h); }
+}
+/* ── 3. the threaded rod and a ruler (C.1) ── */
+const TV={z:16,px:0};
+function drawThreadView(){
+  const t=d(); if(!has("tube")){ text(t.lab.noTube,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  ctx.fillStyle="#e9e6dc"; ctx.fillRect(0,0,CLW,CLH); const k=TV.z, x0=30-TV.px*k, y0=CLH*0.42, span=120, X=v=>x0+v*k;
+  ctx.fillStyle="#b9bec4"; ctx.fillRect(Math.max(0,X(0)),y0-26,Math.min(CLW,X(span))-Math.max(0,X(0)),52); ctx.strokeStyle="#7f858c"; ctx.strokeRect(X(0),y0-26,span*k,52);
+  for(let v=0;v<=span;v+=TRUE.pitch){ const a=X(v); if(a<-20||a>CLW+20) continue; ctx.strokeStyle="#7f858c"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a,y0-26); ctx.lineTo(a+TRUE.pitch*0.55*k,y0+26); ctx.stroke(); ctx.strokeStyle="#dfe3e6"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a,y0+26); ctx.lineTo(a+TRUE.pitch*0.55*k,y0-26); ctx.stroke(); }
+  if(onBench("ruler")){ const ry=y0+44, rx=X(-2+ST.rulT); ctx.fillStyle="rgba(225,240,248,.9)"; ctx.fillRect(0,ry,CLW,48); ctx.strokeStyle="#7fa8c0"; ctx.strokeRect(0,ry,CLW,48);
+    for(let i=0;i<=300;i++){ const xx=rx+i*k; if(xx<-5||xx>CLW+5) continue; const ln=i%10===0?30:i%5===0?20:12; ctx.strokeStyle="#0d2a3a"; ctx.lineWidth=i%10===0?1.2:0.8; ctx.beginPath(); ctx.moveTo(xx,ry); ctx.lineTo(xx,ry+ln); ctx.stroke(); if(i%10===0) text(String(i/10),xx,ry+39,"#0d2a3a",10,"center","600"); }
+    hitAdd("rulT",0,ry,CLW,48); }
+  else text(d().m.needRuler,CLW/2,y0+70,"#8a8371",11.5,"center");
+  hitAdd("rod",0,y0-26,CLW,52);
+}
+function drawClose(){
+  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
+  if(tab==="side") drawSideView(); else if(tab==="cam") drawCamView(); else drawThreadView();
+  ctx=old;
+}
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: the bench and the stand
+   ══════════════════════════════════════════════════════════════ */
+ST.rulT=0; ST.order=[];
+const MOUNT=["tube","n42","n52a","n52b","wedge","bottle","dish","pole","lamp","camera"];
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function mount(k){
+  if(!onBench("stand")){ say("needStand"); return false; }
+  if(isM(k)){ say("busy"); return false; }
+  if(k==="n42"||k==="n52a"||k==="n52b"){ if(!isM("tube")){ say("needTube"); return false; } if(ST.mags.length>=2){ say("full"); return false; }
+    if(ST.mags.length===1){ const o=ST.mags[0]; if(o!=="n42"&&k!=="n42"){ say("twoN52"); return false; } if(o==="n42"&&k==="n42"){ say("busy"); return false; } }
+    ST.mags.push(k); ST.nspike=0; ST.on.add(k); ST.mounted.add(k); ST.order.push(k); say(ST.mags.length===2?"stack":"mounted",itemName(k)); return true; }
+  if(k==="bottle"&&!isM("wedge")){ say("needWedge"); return false; }
+  if((k==="lamp"||k==="camera")&&!isM("pole")){ say("needPole"); return false; }
+  if(k==="camera"&&!isM("dish")){ say("needDish"); return false; }
+  ST.on.add(k); ST.mounted.add(k); ST.order.push(k); say("mounted",itemName(k)); return true;
+}
+function unmount(k){
+  const deps={tube:["n42","n52a","n52b"],wedge:["bottle"],pole:["lamp","camera"],dish:["camera"]};
+  for(const j of deps[k]||[]) if(isM(j)) unmount(j);
+  if(k==="n42"||k==="n52a"||k==="n52b"){ ST.mags=ST.mags.filter(x=>x!==k); ST.nspike=0; }
+  if(k==="lamp") ST.lampOn=false;
+  ST.mounted.delete(k); ST.on.delete(k); ST.order=ST.order.filter(x=>x!==k);
+}
+function returnItem(k){
+  if(k==="stand"){ for(const j of [...ST.order].reverse()) unmount(j); }
+  if(k==="grid") gridOn=false;
+  ST.on.delete(k); delete ST.pos[k]; say("back",itemName(k));
+}
+function benchClick(p,right){
+  if(hand){ if(right){ if(hand.move){ ST.on.add(hand.item); ST.pos[hand.item]=hand.orig; say("placed",itemName(hand.item)); } else say("back",itemName(hand.item)); hand=null; return; }
+    const k=hand.item;
+    if(MOUNT.includes(k)&&onBench("stand")&&inB(p,bbox("stand"),6)){ if(mount(k)) hand=null; return; }
+    const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y)){ say("noFit"); return; }
+    ST.pos[k]={x,y}; ST.on.add(k); say("placed",itemName(k)); hand=null; return; }
+  const k=[...LOOSE].reverse().find(o=>onBench(o)&&o!=="stand"&&inB(p,bbox(o),2))||(onBench("stand")&&inB(p,bbox("stand"),2)?"stand":null); if(!k) return;
+  if(right){ if(k==="stand"&&ST.order.length){ const j=ST.order[ST.order.length-1]; unmount(j); say("back",itemName(j)); return; } returnItem(k); return; }
+  hand={item:k,move:true,orig:{...ST.pos[k]}}; ST.on.delete(k); delete ST.pos[k]; say("picked",itemName(k));
+}
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand&&hand.move){ ST.on.add(hand.item); ST.pos[hand.item]=hand.orig; } hand=null; drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=hand&&hand.item===k; hand=null;
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+
+/* the magnet carrier: dt turns, + raises the magnet */
+function turn(dt){ if(!isM("tube")){ say("needTube"); return; } const p=TRUE.pitch; let real;
+  if(ST.rodUp){ const nd=Math.max(0,Math.min(DROP_MAX,ST.drop-dt*p)); real=(ST.drop-nd)/p; ST.drop=nd; }
+  else { const ny=Math.max(MAGY_MIN,Math.min(MAGY_MAX,ST.magY+dt*p)); real=(ny-ST.magY)/p; ST.magY=ny; }
+  ST.turns+=real; if(Math.abs(real)<Math.abs(dt)-1e-9) say("end"); else say("turned",(dt>0?"▲ ":"▼ ")+fmtT(Math.abs(dt))); }
+const fmtT=v=>{ const w=Math.floor(v+1e-9), f=Math.round((v-w)*4); return (w?String(w):"")+(f?["","¼","½","¾"][f]:"")||"0"; };
+/* the close ups */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let cdrag=null;
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e), h=hitAt(p); if(e.button!==0||!h) return;
+  if(h.k==="ruler"){ cdrag={k:"ruler",p,x:ST.rul.x,y:ST.rul.y,z:svMap().z}; }
+  else if(h.k==="gridcam"){ cdrag={k:"gridcam",p,x:ST.grat.x,y:ST.grat.y,z:camMap().z}; }
+  else if(h.k==="gridmag"){ cdrag={k:"gridmag",p,x:ST.grat.x,y:ST.grat.y,z:CLW*0.32/40}; }
+  else if(h.k==="rulT"){ cdrag={k:"rulT",p,x:ST.rulT}; }
+  else if(h.k==="rod"){ cdrag={k:"rod",p,x:TV.px}; }
+  if(cdrag) closeCv.setPointerCapture(e.pointerId); });
+closeCv.addEventListener("pointermove",e=>{ if(!cdrag) return; const p=clpos(e), dx=p[0]-cdrag.p[0], dy=p[1]-cdrag.p[1];
+  if(cdrag.k==="ruler"){ ST.rul.x=cdrag.x+dx/cdrag.z; ST.rul.y=cdrag.y-dy/cdrag.z; }
+  else if(cdrag.k==="gridcam"){ ST.grat.x=cdrag.x+dx/cdrag.z; ST.grat.y=cdrag.y-dy/cdrag.z; }
+  else if(cdrag.k==="gridmag"){ ST.grat.x=cdrag.x+dx/cdrag.z; ST.grat.y=cdrag.y+dy/cdrag.z; }
+  else if(cdrag.k==="rulT") ST.rulT=cdrag.x+dx/TV.z;
+  else if(cdrag.k==="rod") TV.px=cdrag.x-dx/TV.z; });
+closeCv.addEventListener("pointerup",()=>{ cdrag=null; });
+closeCv.addEventListener("wheel",e=>{ if(tab==="side"){ e.preventDefault(); turn(e.deltaY<0?0.25:-0.25); } else if(tab==="thread"){ e.preventDefault(); TV.z=Math.min(60,Math.max(4,TV.z*(e.deltaY<0?1.2:1/1.2))); } },{passive:false});
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+for(const [id,dt] of [["u5",5],["u1",1],["uq",0.25],["d5",-5],["d1",-1],["dq",-0.25]]) $(id).onclick=()=>turn(dt);
+$("zeroBtn").onclick=()=>{ ST.turns=0; };
+$("rotBtn").onclick=()=>{ if(!isM("tube")){ say("needTube"); return; } ST.rodUp=!ST.rodUp; ST.drop=18; ST.magY=150; ST.nspike=0; say("rot",ST.rodUp); };
+$("lampBtn").onclick=()=>{ if(ST.lampOn){ ST.lampOn=false; say("lampOff"); return; } if(!isM("lamp")){ say("needLamp"); return; } ST.lampOn=true; say("lampOn"); };
+$("shakeBtn").onclick=()=>{ ST.contact=0; say("shaken"); };
+$("rulBtn").onclick=()=>{ if(!onBench("ruler")){ say("needRuler"); return; } ST.rul.vert=!ST.rul.vert; };
+$("gridBtn").onclick=()=>{ if(gridOn){ gridOn=false; return; } if(!has("grid")){ say("needGrid"); return; } gridOn=true; };
+$("noteBtn").onclick=()=>{ const n=$("note"), s=d().lab.cnt+": "+$("dTurn").textContent;
+  n.value+=(n.value&&!n.value.endsWith("\n")?"\n":"")+s+"   "; n.focus(); n.scrollTop=n.scrollHeight; say("noted"); };
+$("noteClr").onclick=()=>{ $("note").value=""; };
+function renderPanel(){ const t=d(), v=ST.turns, a=Math.abs(v); $("dTurn").textContent=(v<-1e-9?"−":v>1e-9?"+":"")+fmtT(a)+" "+t.lab.cnt;
+  $("rotBtn").textContent=ST.rodUp?t.rotUp:t.rotDn; $("lampBtn").textContent=ST.lampOn?t.lampOn:t.lampOff; $("rulBtn").textContent=ST.rul.vert?t.rulV:t.rulH; $("gridBtn").textContent=gridOn?t.gridOn:t.gridOff; }
+function renderStatus(){
+  const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(isM("tube")) L.push([ST.rodUp?t.st.mode.c:t.st.mode.a,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"); box.innerHTML="";
+  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+}
+function applyLang(){
+  const t=d(); document.documentElement.lang=lang;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
+  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap[tab];
+  $("t-h-car").textContent=t.hCar; $("zeroBtn").textContent=t.zero; $("carHint").textContent=t.carHint; $("t-h-lamp").textContent=t.hLamp; $("shakeBtn").textContent=t.shake;
+  $("t-h-meas").textContent=t.hMeas; $("measHint").textContent=t.measHint; $("t-h-note").textContent=t.hNote; $("noteBtn").textContent=t.note; $("noteClr").textContent=t.noteClr;
+  $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=lang==="ko"?"APhO 2019 E1 — 자기 활성 유체의 정적 응답 · HaslaLab":"APhO 2019 E1 — Static Response of a Magnetically Active Fluid · HaslaLab";
+  renderTabs(); renderPanel(); layout();
+}
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastT=performance.now();
+function tick(){
+  const now=performance.now(), dt=Math.min(0.1,(now-lastT)/1000); lastT=now; updatePhysics(dt);
+  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick);
+}
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
