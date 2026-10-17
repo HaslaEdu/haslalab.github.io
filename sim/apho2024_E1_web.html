@@ -175,10 +175,10 @@ const T={
       gap:m=>"클램프 틈 "+m+" mm", nut:"너트", tubeEnd:"튜브 끝 (나사산)", shaft:"모터 축", tube:"튜브", rod:"수직 스탠드 막대", wire:"전선", foot:n=>"받침대 발 별 노브 "+n, height:mm=>"발 높이 "+(mm>0?"+":"")+mm+" mm (한 바퀴 = 1 mm)", footEnd:"나사 끝까지 돌렸습니다", mat:"매트",
       hintFoot:"휠·끌어 돌리기: 발 높이 조절 · 수평계는 없습니다 — 모터·원판만 단 팔을 여러 방향에 놓아 보고, 저절로 돌지 않으면 수평입니다 · 우클릭/Esc: 닫기"},
     chk:{feet:"받침대 별 노브 3개", hk:"수직 스탠드 손잡이 노브", tk:"튜브 별 노브", mc:"모터 클램프 볼트 4개", cs:"커플러 고정 나사", db:"원판 M3 볼트 2개", cw:"26 cm 원판 M6 나사", ac:"전원 플러그 → 벽", dc:"DC 플러그 → 단자", mj:"모터 → 스탠드 잭", sock:"콘센트 스위치", term:"DC 단자 나사 2개"},
-    st:{nothing:"부품함에서 대전방지 매트부터 꺼내 실험대에 놓으세요.", next:s=>"다음: "+s, tighten:s=>"조이세요: "+s, ready:"조립 완료 — 전원 어댑터 노브를 OFF에서 돌려 전압을 올리세요.", burnt:"모터가 타 버렸습니다 (6 V 넘게 오래 걸었습니다). 부품함에 되돌리고 새 모터로 바꾸세요.", warn6:"6 V를 넘었습니다 — 오래 걸면 모터가 탑니다!", overheat:"10분 넘게 계속 돌렸습니다 — 모터를 쉬게 하세요.", holder:"튜브가 받침에 닿아 있습니다 — 팔이 떠 있어야 합니다.", leadLoose:"모터 선이 매달려 흔들립니다 — 케이블 타이로 튜브에 묶어 두세요.", sockOff:"콘센트 스위치가 꺼져 있습니다 — 플러그 옆 스위치를 켜세요.", termLoose:"DC 단자 나사가 풀려 있어 전기가 통하지 않습니다.",
+    st:{nothing:"부품함에서 대전방지 매트부터 꺼내 실험대에 놓으세요.", next:s=>"다음: "+s, tighten:s=>"조이세요: "+s, ready:"조립 완료 — 전원 어댑터 노브를 OFF에서 돌려 전압을 올리세요.", burnt:"모터가 타 버렸습니다 (6 V 넘게 오래 걸었습니다). 부품함에 되돌리고 새 모터로 바꾸세요.", warn6:"6 V를 넘었습니다 — 오래 걸면 모터가 탑니다!", overheat:"10분 넘게 계속 돌렸습니다 — 모터를 쉬게 하세요.", holder:"튜브가 받침에 닿아 있습니다 — 팔이 떠 있어야 합니다.", leadLoose:"묶지 않은 모터 선이 흔들리며 팔을 당겨 세차가 고르지 않습니다 — 케이블 타이로 튜브에 묶으세요.", sockOff:"콘센트 스위치가 꺼져 있습니다 — 플러그 옆 스위치를 켜세요.", termLoose:"DC 단자 나사가 풀려 있어 전기가 통하지 않습니다.",
        mcLoose:"모터 클램프 볼트가 헐겁습니다 — 전원을 넣어도 모터 케이스가 튜브 위에서 헛돕니다.", driveLoose:"커플러 나사나 원판 M3 볼트가 헐거워 원판이 축에서 미끄러집니다.", hkLoose:"수직 스탠드가 받침대에 물려 있지 않아 흔들립니다 — 손잡이 노브를 조이세요.", tkLoose:"튜브 별 노브가 풀려 있습니다 — 튜브가 미끄러집니다.", fmFallen:"세워 둔 모터가 넘어졌습니다 — 클릭하면 다시 세웁니다.", noFeet:"받침대 발에 별 노브가 없습니다 — 수평을 맞출 수 없습니다."},
     m:{placeIt:s=>s+" — 끼울 자리를 클릭하세요. (우클릭: 되돌리기)", placed:s=>s+" — 끼웠습니다.", moveIt:s=>s+"을(를) 들었습니다 — 옮길 곳을 클릭하세요.", moved:s=>s+"을(를) 옮겼습니다.", stays:"제자리에 두었습니다.",
-       notHere:"그곳에는 놓을 수 없습니다.", need:s=>"먼저 "+s+"이(가) 필요합니다.", oneDisk:"회전 원판은 한 번에 하나만 달 수 있습니다.",
+       notHere:"그곳에는 놓을 수 없습니다.", crowded:s=>"그 자리에는 "+s+"이(가) 있습니다 — 빈 곳에 내려놓으세요.", taped:s=>s+"은(는) 양면테이프로 붙어 있습니다 — 양면테이프를 들고 테이프 자리를 클릭해 먼저 떼세요.", need:s=>"먼저 "+s+"이(가) 필요합니다.", oneDisk:"회전 원판은 한 번에 하나만 달 수 있습니다.",
        removed:s=>s+" — 부품함에 되돌렸습니다.", blocked:s=>"먼저 "+s+"을(를) 떼어 내세요.", boltPick:"볼트+너트 1세트 — 원판 가장자리 구멍을 클릭하세요. (우클릭: 내려놓기)", boltOn:(w,n)=>w+"에 볼트+너트 "+n+"세트", boltOff:(w,n)=>w+"에서 1세트 뺐습니다 ("+n+"세트 남음)", boltFull:"빈 구멍이 없습니다.",
        lock:l=>"튜브 별 노브 "+(l?"조임":"풀림 — 튜브 끝을 끌어 길이를 바꾸세요"), knob:(i,u)=>"받침대 발 "+(i+1)+" — 별 노브 "+(u?"풀어 올림":"조여 내림"),
        plugAc:"전원 플러그를 벽 콘센트 구멍에 꽂으세요.", plugDc:"DC 플러그를 수직 스탠드 아래 초록 단자에 꽂으세요.", plugMj:"모터 단자 플러그를 피벗 헤드에서 내려온 잭에 꽂으세요.", plugIn:"꽂았습니다.", plugOut:"뽑았습니다.",
@@ -217,10 +217,10 @@ const T={
       gap:m=>"clamp gap "+m+" mm", nut:"nut", tubeEnd:"tube end (threaded)", shaft:"motor shaft", tube:"tube", rod:"vertical stand rod", wire:"wire", foot:n=>"Star knob under foot "+n, height:mm=>"foot height "+(mm>0?"+":"")+mm+" mm (1 turn = 1 mm)", footEnd:"At the end of the thread", mat:"mat",
       hintFoot:"wheel or drag round: raise/lower the foot · there is no spirit level: set the arm with only motor + disk in several directions; level when it no longer turns by itself · R-click/Esc: close"},
     chk:{feet:"3 star knobs of the stand", hk:"hand knob of the vertical stand", tk:"tube star knob", mc:"4 motor clamp bolts", cs:"coupler lock screw", db:"2 M3 bolts of the disk", cw:"M6 screw of the 26 cm disk", ac:"mains plug → wall", dc:"DC plug → terminal", mj:"motor → stand jack", sock:"socket switch", term:"2 DC terminal screws"},
-    st:{nothing:"Take the antistatic mat out of the parts box first and put it on the bench.", next:s=>"next: "+s, tighten:s=>"tighten: "+s, ready:"Assembled — turn the adapter knob up from OFF.", burnt:"The motor burnt out (more than 6 V for too long). Return it to the box and take a new one.", warn6:"Above 6 V — the motor will burn if you keep it there!", overheat:"Running for over 10 minutes — let the motor rest.", holder:"The tube rests on the holder — the arm must hang free.", leadLoose:"The motor lead hangs and swings: tie it to the tube with a cable tie.", sockOff:"The socket switch is off: switch it on next to the plug.", termLoose:"A DC terminal screw is loose: no current gets through.",
+    st:{nothing:"Take the antistatic mat out of the parts box first and put it on the bench.", next:s=>"next: "+s, tighten:s=>"tighten: "+s, ready:"Assembled — turn the adapter knob up from OFF.", burnt:"The motor burnt out (more than 6 V for too long). Return it to the box and take a new one.", warn6:"Above 6 V — the motor will burn if you keep it there!", overheat:"Running for over 10 minutes — let the motor rest.", holder:"The tube rests on the holder — the arm must hang free.", leadLoose:"The loose motor lead swings and tugs the arm, so the precession is uneven: tie it to the tube with a cable tie.", sockOff:"The socket switch is off: switch it on next to the plug.", termLoose:"A DC terminal screw is loose: no current gets through.",
        mcLoose:"The motor clamp bolts are loose: with power on, the motor case just turns on the tube.", driveLoose:"The coupler screw or the disk's M3 bolts are loose: the disk slips on the shaft.", hkLoose:"The vertical stand is not clamped in the retort stand and wobbles: tighten the hand knob.", tkLoose:"The tube star knob is loose: the tube slides.", fmFallen:"The standing motor fell over: click it to stand it up again.", noFeet:"The stand has no star knobs under its feet: it cannot be levelled."},
     m:{placeIt:s=>s+" — click where it fits. (R-click: put it back)", placed:s=>s+" — fitted.", moveIt:s=>s+" picked up — click where to move it.", moved:s=>s+" moved.", stays:"Left where it was.",
-       notHere:"It does not go there.", need:s=>"You need "+s+" first.", oneDisk:"Only one spinning disk at a time.",
+       notHere:"It does not go there.", crowded:s=>"The "+s+" is in the way: put it down on a free spot.", taped:s=>"The "+s+" is stuck on with double-sided tape: take the tape and click the tape spot to peel it off first.", need:s=>"You need "+s+" first.", oneDisk:"Only one spinning disk at a time.",
        removed:s=>s+" — back in the parts box.", blocked:s=>"Take off "+s+" first.", boltPick:"One set of bolt + nut — click a hole on the rim of a disk. (R-click: put it down)", boltOn:(w,n)=>n+" set(s) on the "+w, boltOff:(w,n)=>"one set off the "+w+" ("+n+" left)", boltFull:"No free hole left.",
        lock:l=>"Tube star knob "+(l?"tightened":"loosened: drag the tube end to change its length"), knob:(i,u)=>"Foot "+(i+1)+": star knob "+(u?"unscrewed (up)":"screwed in (down)"),
        plugAc:"Plug the mains plug into a hole of the wall socket.", plugDc:"Plug the DC plug into the green terminal under the vertical stand.", plugMj:"Plug the motor terminal plug into the jack hanging from the pivot head.", plugIn:"Plugged in.", plugOut:"Unplugged.",
@@ -311,7 +311,7 @@ class Kit{
     /* fast-top linearisation: steady precession + a damped nutation oscillator.
        phi_eq is where the arm really settles (bearing play + tube sag) */
     const Q=this.imbalance(), I1=this.I1(), sgn=this.w_s<0?-1:1, L3=I3*Math.abs(this.w_s), [alpha,az]=this.tilt();
-    const tauG=Q*G*(1+LEVEL_SENS*Math.sin(alpha)*Math.cos(this.psi-az));
+    const tauG=Q*G*(1+LEVEL_SENS*Math.sin(alpha)*Math.cos(this.psi-az))*(1+(this.leadWob||0));
     const sag=Math.min(SAG_MAX,SAG0+SAG_K*Math.abs(Q*G));
     const phiEq=Math.abs(Q)>1e-9?-Math.sign(Q)*sag:0;
     if(L3>L3_MIN){
@@ -885,7 +885,8 @@ const lin=(...t)=>t.reduce((s,[v,k])=>vadd(s,vmul(v,k)),[0,0,0]);
 const Z3=[0,0,1];
 function basis(a){ const r=Math.abs(a[2])<0.95?[0,0,1]:[1,0,0]; const e1=vnrm(vcross(r,a)); return [e1,vcross(a,e1)]; }
 /* drawing in bench coordinates */
-function F(pts,col,o){ o=o||{}; let q=pts.map(M); if(o.n) q=orient(q,M(o.n)); face3(q,Object.assign({fill:col},o)); }
+const Mdir=n=>{ if(XF){ const a=XF([0,0,0]); n=vsub(XF(n),a); } return [n[0],n[2],n[1]]; };
+function F(pts,col,o){ o=o||{}; let q=pts.map(M); if(o.n) q=orient(q,Mdir(o.n)); face3(q,Object.assign({fill:col},o)); }
 function obox(c,ex,ey,ez,col,o){ o=o||{};
   for(const [n,a,b] of [[ex,ey,ez],[vmul(ex,-1),ey,ez],[ey,ez,ex],[vmul(ey,-1),ez,ex],[ez,ex,ey],[vmul(ez,-1),ex,ey]]){
     const f0=vadd(c,n), fc=o.faceCol&&o.faceCol(n);
@@ -970,12 +971,15 @@ function drawStand(){
     ZONES["foot"+i]=zoneAround([x,y,0.8],1.9); }
   XF=SXF;
   for(const i of [0,1,2]) if(!ST.feet[i]) ZONES["foot"+i]=zoneAround([Fp[i][0],Fp[i][1],zb],1.9);
-  /* the two arms of the V and the cross bar: one rigid casting */
-  const P0=i=>[Fp[i][0],Fp[i][1],zb];
+  /* one flat black casting (after the photograph): two wide arms, and between them, from the apex back to
+     the rod, a solid web; the V opens only behind the rod */
+  const P0=i=>[Fp[i][0],Fp[i][1],zb], AW=1.5, TH=1.5;
   const bar=(A,B,w,h,id)=>{ const d=vsub(B,A), Ln=vlen(d), u=vnrm(d), n=vnrm([-u[1],u[0],0]), up=vnrm(vcross(n,u)); obox(vadd(vmul(vadd(A,B),0.5),vmul(up,h)),vmul(u,Ln/2),vmul(n,w),vmul(up,h),BL,{id}); };
-  bar(P0(0),P0(1),1.25,0.75,"stand"); bar(P0(0),P0(2),1.25,0.75,"stand");
-  const C1=lin([P0(0),0.5],[P0(1),0.5]), C2=lin([P0(0),0.5],[P0(2),0.5]); bar(C1,C2,1.0,0.7,"stand");
-  for(const i of [0,1,2]){ const [x,y]=Fp[i]; ocyl([x,y,zb-0.05],Z3,1.6,1.45,BL,{id:"stand"}); if(!ST.feet[i]) F(ring3([x,y,zb-0.06],[1,0,0],[0,1,0],0.35,10),"#050505",{n:[0,0,-1],flat:true}); }
+  bar(P0(0),P0(1),AW,TH/2,"stand"); bar(P0(0),P0(2),AW,TH/2,"stand");
+  const xo=y=>FOOTV[2][0]*(FOOTV[0][1]-y)/(FOOTV[0][1]-FOOTV[2][1])+AW*Math.hypot(FOOTV[2][0],FOOTV[0][1]-FOOTV[2][1])/(FOOTV[0][1]-FOOTV[2][1]);
+  const yA=FOOTV[0][1], yB=-2.2, web=[[-xo(yA),yA],[xo(yA),yA],[xo(yB),yB],[-xo(yB),yB]].map(([u,v])=>[sx+u,sy+v]);
+  prism([0,0,zb],Z3,[1,0,0],[0,1,0],web,TH-0.01,BL,{id:"stand"});
+  for(const i of [0,1,2]){ const [x,y]=Fp[i]; ocyl([x,y,zb],Z3,TH,AW,BL,{id:"stand"}); if(!ST.feet[i]) F(ring3([x,y,zb-0.01],[1,0,0],[0,1,0],0.35,10),"#050505",{n:[0,0,-1],flat:true}); }
   /* the boss on the cross bar and the hand knob (a T-screw) through its side; unscrewed past its thread it comes out */
   ocyl([sx,sy,zb],Z3,3.6,2.0,BL,{id:"stand"});
   const hz=zb+2.4, out=ST.hkIn?0.5*(1-hkTurn())+Math.max(0,-ST.sc.hk)*0.5:0, h0=[sx-2.0,sy,hz];
@@ -983,11 +987,12 @@ function drawStand(){
     const a=ST.sc.hk*2*Math.PI; ocyl(lin([e,1],[[-1,0,0],0.45],[[0,Math.cos(a),Math.sin(a)],-1.8]),[0,Math.cos(a),Math.sin(a)],3.6,0.42,"#1e1f22",{id:"hk"}); }
   ZONES.hk=zoneAround([sx-3.4,sy,hz],1.9);
   /* the printed acrylic plate on the apex: 4 mm thick, its edges catch the light */
-  const zt=zb+1.55, tip=[Fp[0][0],Fp[0][1]+0.6], pl=[sx-5.6,sy+1.3], pr=[sx+5.6,sy+1.3];
-  prism([0,0,zt],Z3,[1,0,0],[0,1,0],[tip,pr,pl],0.4,"rgba(150,175,190,0.55)",{top:"rgba(34,36,41,0.88)",flat:true,id:"stand"});
-  PL([[...tip,zt+0.41],[...pr,zt+0.41],[...pl,zt+0.41],[...tip,zt+0.41]],"rgba(215,225,232,0.8)",1.2);
-  F(ring3([tip[0],tip[1]-1.0,zt+0.42],[1,0,0],[0,1,0],0.35,10),"#0d0e10",{n:Z3,flat:true});
-  const O=[sx-5.6,sy+1.3,zt+0.43], U=[11.2,0,0], V=[0,11.2,0]; if(PLATE.complete&&PLATE.naturalWidth){ const m=M(O); tex3(PLATE,0,0,512,512,m,vsub(M(vadd(O,U)),m),vsub(M(vadd(O,V)),m),{bias:0.6}); }
+  /* it lies on the solid web, a little inside the edge of the casting, from in front of the boss to the apex */
+  const zt=zb+TH, yb=2.4, hw=xo(yb)-0.45, ty=yA+0.75, plate=[[-hw,yb],[hw,yb],[0.75,ty-0.35],[0,ty],[-0.75,ty-0.35]].map(([u,v])=>[sx+u,sy+v]);
+  prism([0,0,zt],Z3,[1,0,0],[0,1,0],plate,0.4,"rgba(150,175,190,0.6)",{top:"rgba(30,32,36,0.92)",flat:true,id:"stand"});
+  PL(plate.concat([plate[0]]).map(q=>[...q,zt+0.41]),"rgba(215,225,232,0.8)",1.2);
+  F(ring3([sx,sy+ty-1.1,zt+0.42],[1,0,0],[0,1,0],0.35,10),"#0d0e10",{n:Z3,flat:true});
+  const O=[sx-2*hw/2,sy+yb-0.2,zt+0.43], U=[2*hw,0,0], V=[0,2*hw,0]; if(PLATE.complete&&PLATE.naturalWidth){ const m=M(O); tex3(PLATE,0,0,512,512,m,vsub(M(vadd(O,U)),m),vsub(M(vadd(O,V)),m),{bias:0.6}); }
   ZONES.stand=boxZone([sx,sy,2],[10,11,2.5]);
 }
 /* ── the vertical stand: steel rod; the red/black pair from the head down to the green screw-terminal DC jack ── */
@@ -1028,7 +1033,8 @@ function motorParts(base,ax,e1,e2,onTube){
       const t0=lin([at(0),1],[e2,-0.75]), t1=lin([at(0),1],[ax,-Math.max(1,kit.r_m*100-12)],[e2,-0.75]);
       for(const [d,col] of [[0,"#c0392b"],[0.22,"#141414"]]){ PL([vadd(a,[d,0,0]),vadd(t0,[d,0,0]),vadd(t1,[d,0,0])],col,1.3); cord(vadd(t1,[d,0,0]),vadd(pj,[d,0,0]),col,1.3,ST.mjack?2:2); }
       for(const s of [0.2,0.7]){ const p=lin([t0,1-s],[t1,s]); ocyl(vadd(p,vmul(ax,-0.15)),ax,0.3,0.62,"#f4f4f0",{seg:12}); } }
-    else { cord(a,pj,"#c0392b",1.3,ST.mjack?4:2); cord(vadd(a,[0.25,0,0]),vadd(pj,[0.25,0,0]),"#141414",1.3,ST.mjack?4:2); }
+    else { const sg=(ST.mjack?4:2)+(onTube&&kit.leadWob?1.6*Math.abs(Math.sin(kit.t*6.1)):0), pm=pj;
+      cord(a,pm,"#c0392b",1.3,sg); cord(vadd(a,[0.25,0,0]),vadd(pm,[0.25,0,0]),"#141414",1.3,sg); }
     obox(pj,[0.65,0,0],[0,0.45,0],[0,0,0.45],"#1f9e6f",{id:"mjack"}); ZONES.mjack=zoneAround(pj,1.2); }
   /* shaft, the coupler hub with its lock screw, the flange; the disk on two M3 bolts */
   const s0=7.1, hub=s0+0.3, fl=hub+0.7, dk=fl+0.35;
@@ -1099,6 +1105,42 @@ function fmScene(){ const [x,y]=ST.pos.motor, n=fmAxis(), [e1,e2]=basis(n), base
   ZONES.fm=boxZone(vadd(base,vmul(n,4.5)),[4.5,4.5,5]); }
 
 /* ── loose things on the desk, with their printing on them ── */
+/* each one's footprint (centre offset from its position, half sizes) and how tall it stands, cm */
+const FOOT={adapter:[0,0,6.2,3.1,4.0],sw:[0,-0.6,3.3,3.9,1.4],ruler:[0,0,15.5,1.6,0.2],gonio:[5,0,10,4.8,0.2],key:[-0.5,0,4.2,2.6,0.7],driver:[-0.25,0,5.75,0.8,1.5],ties:[0.5,1,4.2,2.8,1.2],tape:[0,0,2.2,2.2,1.4]};
+function footRect(k,pos){ const f=FOOT[k], p=pos||ST.pos[k]; return [p[0]+f[0]-f[2],p[1]+f[1]-f[3],p[0]+f[0]+f[2],p[1]+f[1]+f[3]]; }
+const rOver=(a,b)=>a[0]<b[2]&&b[0]<a[2]&&a[1]<b[3]&&b[1]<a[3];
+const cOver=(r,c,R)=>{ const dx=Math.max(r[0]-c[0],0,c[0]-r[2]), dy=Math.max(r[1]-c[1],0,c[1]-r[3]); return dx*dx+dy*dy<R*R; };
+const surfAt=(x,y)=>onMatXY([x,y])?0.3:0;
+const matRect=()=>{ const [mx,my]=ST.pos.mat; return [mx-MAT[0]/2,my-MAT[1]/2,mx+MAT[0]/2,my+MAT[1]/2]; };
+/* everything else standing on the desk: a box with its top, or a post that nothing can pass (the rod, the standing motor) */
+function obstacles(k){ const O=[];
+  for(const j of DESK_ITEMS){ if(j===k||!has(j)||(hand&&hand.tool===j)||(j==="gonio"&&ST.gonio)||(j==="ruler"&&ST.ruler)) continue;
+    O.push({r:footRect(j),top:FOOT[j][4]+restZ(j),k:j}); }
+  if(inst("stand")){ const [sx,sy]=standXY(); O.push({r:[sx-11.4,sy-12,sx+11.4,sy+12.3],top:zBase()+4.6,k:"stand"}); if(inst("pole")) O.push({c:[sx,sy],R:2.1,solid:true,k:"stand"}); }
+  if(ST.motorAt==="desk") O.push({c:ST.pos.motor,R:3.4,solid:true,k:"motor"});
+  return O; }
+const hits=(o,r)=>o.r?rOver(o.r,r):cOver(r,o.c,o.R);
+/* the post k would run into at pos; anything at all it would be put down on */
+const solidAt=(k,pos)=>{ const r=footRect(k,pos); return obstacles(k).find(o=>o.solid&&hits(o,r))||null; };
+const crowdAt=(k,pos)=>{ const r=footRect(k,pos); return obstacles(k).find(o=>hits(o,r))||null; };
+/* carried, it is lifted clear of whatever is under it */
+function hoverZ(k,pos){ const r=footRect(k,pos); let z=surfAt((r[0]+r[2])/2,(r[1]+r[3])/2);
+  for(const o of obstacles(k)) if(o.r&&hits(o,r)) z=Math.max(z,o.top); return z+2.2; }
+/* lying down it rests on the desk, on the mat, or across the mat's edge: then on that edge and on its own far end */
+function restPlane(k){ const f=FOOT[k], [x,y]=ST.pos[k], c=[x+f[0],y+f[1]], h=[f[2],f[3]];
+  if(!has("mat")) return [0,0,0,c];
+  const m=matRect(), T=0.3, g=[0,0]; let z=0, n=0;
+  for(const i of [0,1]){ const lo=m[i], hi=m[i+2], a=c[i]-h[i], b=c[i]+h[i];
+    if(b<=lo||a>=hi) return [0,0,0,c];                   /* clear of the mat */
+    if(c[i]>=lo&&c[i]<=hi) continue;                      /* its middle is over the mat along this way */
+    n++; if(c[i]>hi){ g[i]=-T/(b-hi); } else { g[i]=T/(lo-a); } }
+  if(!n) return [T,0,0,c];
+  const s=n===2?0.5:1, e=[c[0]>m[2]?m[2]:c[0]<m[0]?m[0]:c[0], c[1]>m[3]?m[3]:c[1]<m[1]?m[1]:c[1]];
+  z=T+s*(g[0]*(c[0]-e[0])+g[1]*(c[1]-e[1])); return [z,s*g[0],s*g[1],c]; }
+const restZ=k=>restPlane(k)[0];
+function restXF(k){ if(hand&&hand.move&&hand.item===k){ const z=hand.lz||0; return v=>[v[0],v[1],(v[2]||0)+z]; }
+  const [z,gx,gy,c]=restPlane(k); if(!z&&!gx&&!gy) return null;
+  return v=>[v[0],v[1],(v[2]||0)+z+gx*(v[0]-c[0])+gy*(v[1]-c[1])]; }
 function drawAdapter(){ const [x,y]=ST.pos.adapter, top=3.2, X=[1,0,0], Yb=[0,-1,0];
   obox([x,y,1.6],[6.2,0,0],[0,3.1,0],[0,0,1.6],"#17181b",{id:"adapter"});
   const T=(u,v)=>[x+u,y+v,top+0.01];
@@ -1111,15 +1153,16 @@ function drawAdapter(){ const [x,y]=ST.pos.adapter, top=3.2, X=[1,0,0], Yb=[0,-1
   const kc=[x+3.6,y+1.4,top]; ocyl(kc,Z3,0.75,1.0,"#2d3036",{id:"adKnob",cap:"#383c43"}); ZONES.adKnob=zoneAround(vadd(kc,[0,0,0.75]),1.2); const ka=(-150+300*ST.knob)*Math.PI/180;
   L(vadd(kc,[0.15*Math.sin(ka),-0.15*Math.cos(ka),0.77]),vadd(kc,[0.85*Math.sin(ka),-0.85*Math.cos(ka),0.77]),"#ff5a3c",2);
   ZONES.adapter=boxZone([x,y,1.6],[6.2,3.1,1.6]);
-  /* the mains cord to a Type G plug, the DC lead to a barrel plug */
-  const a0=[x-6.2,y,1.3];
+  /* the mains cord to a Type G plug, the DC lead to a barrel plug: they leave the case wherever it is, then lie in the room */
+  const IX=XF||(v=>v); XF=null;
+  const a0=IX([x-6.2,y,1.3]);
   if(ST.ac!==null){ const sx=SOCK[ST.ac]-0.8, pc=[sx,2.9,SOCKZ-0.2], ce=[sx,2.2,SOCKZ-2.6]; cord(a0,ce,"#121212",1.8,sagOf(a0,ce,AC_LEN)); plugG(pc,[0,-1,0],"acPlug"); }
   else if(hand&&hand.plug==="ac"){ const pe=heldAt(a0,AC_LEN,4); cord(a0,vadd(pe,[0,1.2,-2.4]),"#121212",1.8,sagOf(a0,pe,AC_LEN)); plugG(pe,[0,-1,0],"held"); }
-  else if(!(hand&&hand.plug==="ac")){ const pe=[x-12,y+4,1.2]; cord(a0,vadd(pe,[0,2.5,-0.8]),"#121212",1.8,1); plugG(pe,[0,0,1],"acPlug"); }
-  const d0=[x+6.2,y,1.3];
+  else if(!(hand&&hand.plug==="ac")){ const pe=[x-12,y+4,onMatXY([x-12,y+4])?1.5:1.2]; cord(a0,vadd(pe,[0,2.5,-0.8]),"#121212",1.8,1); plugG(pe,[0,0,1],"acPlug"); }
+  const d0=IX([x+6.2,y,1.3]);
   if(ST.dc&&inst("pole")){ const T2=SXF(TERM()), pe=vadd(T2,[3.0,0,0]); cord(d0,pe,"#151515",1.4,sagOf(d0,pe,DC_LEN)); ocyl(vadd(T2,[2.35,0,0]),[1,0,0],1.3,0.45,"#2a2c2f",{id:"dcPlug"}); ZONES.dcPlug=zoneAround(pe,1.6); }
   else if(hand&&hand.plug==="dc"){ const pe=heldAt(d0,DC_LEN,4); cord(d0,pe,"#151515",1.4,sagOf(d0,pe,DC_LEN)); ocyl(pe,[1,0,0],1.7,0.45,"#2a2c2f"); }
-  else if(!(hand&&hand.plug==="dc")){ const pe=[x+10,y-4,0.5]; cord(d0,pe,"#151515",1.4,1); ocyl(pe,[1,0,0],1.7,0.45,"#2a2c2f",{id:"dcPlug"}); ZONES.dcPlug=zoneAround(pe,1.6); }
+  else if(!(hand&&hand.plug==="dc")){ const pe=[x+10,y-4,onMatXY([x+10,y-4])?0.75:0.45]; cord(d0,pe,"#151515",1.4,1); ocyl(pe,[1,0,0],1.7,0.45,"#2a2c2f",{id:"dcPlug"}); ZONES.dcPlug=zoneAround(pe,1.6); }
 }
 /* the three-pin plug: a black body, pins pointing along dir */
 function plugG(c,dir,id){ const [e1,e2]=basis(dir); obox(c,vmul(dir,1.3),vmul(e1,2.2),vmul(e2,2.5),"#1a1b1d",{id});
@@ -1138,7 +1181,7 @@ function drawKey(){ const [x,y]=ST.pos.key; for(const [k,s] of [[0,1],[1,0.8],[2
 function drawDriver(){ const [x,y]=ST.pos.driver; ocyl([x-6,y,0.75],[1,0,0],5.5,0.75,"#d6302a",{id:"driver",cap:"#e94c3d"}); ocyl([x-0.5,y,0.75],[1,0,0],6,0.2,"#c9cdd2",{seg:10,id:"driver"}); ZONES.driver=zoneAround([x,y,0.7],3.5); }
 function drawTies(){ const [x,y]=ST.pos.ties; for(let i=0;i<5;i++) L([x-3,y-1+i*0.5,0.2],[x+4,y-1.5+i*0.6,0.2],"#f1f1ee",2); ocyl([x-1,y+2.6,0],Z3,1.2,1.6,"#dcd6b8",{id:"ties",cap:"#f3efd9"}); ZONES.ties=zoneAround([x,y+0.6,0.4],3.6); }
 function drawTape(){ const [x,y]=ST.pos.tape; ocyl([x,y,0],Z3,1.4,2.2,"#e8e3c9",{id:"tape",cap:"#f4f0dc"}); F(ring3([x,y,1.41],[1,0,0],[0,1,0],1.3,18),"#7a7259",{n:Z3,flat:true,id:"tape"}); ZONES.tape=zoneAround([x,y,0.7],2.6); }
-function drawRulerDesk(){ const [x,y]=ST.pos.ruler; F([[x-15.5,y-1.6,0.12],[x+15.5,y-1.6,0.12],[x+15.5,y+1.6,0.12],[x-15.5,y+1.6,0.12]],"rgba(240,244,236,0.88)",{n:Z3,flat:true,id:"ruler"});
+function drawRulerDesk(){ const [x,y]=ST.pos.ruler; obox([x,y,0.06],[15.5,0,0],[0,1.6,0],[0,0,0.06],"rgba(225,230,220,0.9)",{id:"ruler"}); F([[x-15.5,y-1.6,0.125],[x+15.5,y-1.6,0.125],[x+15.5,y+1.6,0.125],[x-15.5,y+1.6,0.125]],"rgba(240,244,236,0.92)",{n:Z3,flat:true,id:"ruler"});
   for(let i=0;i<=30;i++) L([x-15+i,y-1.6,0.13],[x-15+i,y-1.6+(i%10===0?1.2:i%5===0?0.8:0.5),0.13],"#333",0.9);
   for(let i=0;i<=30;i+=5) TX([x-15+i,y-0.0,0.14],[1,0,0],[0,-1,0],String(i),0.6,"#222",{align:"center"}); ZONES.ruler=boxZone([x,y,0.1],[15.5,1.6,0.2]); }
 function drawGonioDesk(){ const [x,y]=ST.pos.gonio, c=[x,y,0.12];
@@ -1151,11 +1194,16 @@ function drawBench(){
   FAST.length=0; CAM.dpr=DPR*S; begin3();
   drawRoom();
   if(has("mat")) drawMat();
-  for(const [k,fn] of [["adapter",drawAdapter],["sw",drawSw],["key",drawKey],["driver",drawDriver],["ties",drawTies],["tape",drawTape]]) if(has(k)&&!(hand&&hand.tool===k)) fn();
-  if(has("ruler")&&!ST.ruler) drawRulerDesk();
-  if(has("gonio")&&!ST.gonio) drawGonioDesk();
+  const carried=hand&&hand.move&&hand.item!=="mat"?hand.item:null, snap=carried&&hand.snap?carried:null;
+  if(carried){ const tgt=hoverZ(carried,ST.pos[carried]); hand.lz=hand.lz===undefined?restZ(carried):hand.lz+(tgt-hand.lz)*0.25;
+    if(!snap){ const r=footRect(carried), z=surfAt((r[0]+r[2])/2,(r[1]+r[3])/2)+0.02; F([[r[0],r[1],z],[r[2],r[1],z],[r[2],r[3],z],[r[0],r[3],z]],"rgba(0,0,0,"+Math.min(0.22,0.06*hand.lz)+")",{n:Z3,flat:true}); } }
+  for(const [k,fn] of [["adapter",drawAdapter],["sw",drawSw],["key",drawKey],["driver",drawDriver],["ties",drawTies],["tape",drawTape],["ruler",drawRulerDesk],["gonio",drawGonioDesk]]){
+    if(!has(k)||(hand&&hand.tool===k)||k===snap||(k==="ruler"&&ST.ruler)||(k==="gonio"&&ST.gonio)) continue;
+    XF=restXF(k); try{ fn(); } finally{ XF=null; } }
   SXF=standXF();
+  if(snap) ST[snap]=true;      /* held up against the head or the tube, it shows where it will go */
   if(inst("stand")){ drawStand(); XF=SXF; if(inst("pole")){ drawPole(); gyroScene(); } XF=null; }
+  if(snap) ST[snap]=false;
   if(ST.motorAt==="desk") fmScene();
   if(hand&&hand.item==="motor"&&overBench){ const [x,y]=unP(mouse[0],mouse[1],0); const keep=[ST.coupler,ST.disk]; if(!hand.asm){ ST.coupler=false; ST.disk=false; }
     motorParts([x,y,3],Z3,[1,0,0],[0,1,0],false); ST.coupler=keep[0]; ST.disk=keep[1]; delete ZONES.fm; }
@@ -1165,7 +1213,7 @@ function drawBench(){
   if(hand&&hand.tool&&!ZOOM) for(const f of FAST) if(f.tool===hand.tool){ const t=fastDone(f.id); ctx.strokeStyle=t?"rgba(120,220,140,0.95)":"rgba(255,200,70,0.95)"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(f.p[0],f.p[1],Math.max(7,0.9*SZ()),0,7); ctx.stroke(); }
   drawGhost();
 }
-function drawGhost(){ if(!hand||!overBench||ZOOM||hand.plug||hand.item==="motor") return;
+function drawGhost(){ if(!hand||!overBench||ZOOM||hand.plug||hand.item==="motor"||hand.move) return;
   const s=hand.plug?d().lab[hand.plug]:hand.tool?itemName(hand.tool):hand.item==="knobs"?itemName("knobs")+" ("+hand.left+")":itemName(hand.item);
   text("⇱ "+s,mouse[0]+14,mouse[1]-12,"#ffe9b0",12,"left","700"); }
 /* ══════════════════════════════════════════════════════════════
@@ -1429,8 +1477,27 @@ function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)
 const spinning=()=>Math.abs(kit.w_s)>5||Math.abs(FM.w)>5;
 const DESK_ITEMS=["adapter","sw","ruler","gonio","key","driver","ties","tape"];
 const HALF={mat:[MAT[0]/2,MAT[1]/2],adapter:[6.2,3.1],sw:[3.2,3.4],ruler:[15.5,1.6],gonio:[5,5],key:[4,2.5],driver:[6,1],ties:[4,3],tape:[2.2,2.2],motor:[4,4]};
-function deskXY(k,p){ const [x,y]=unP(p[0],p[1],0), h=HALF[k]||[3,3];
-  return [Math.max(DESK.x0+h[0],Math.min(DESK.x1-h[0],x)),Math.max(DESK.y0+h[1]+1,Math.min(DESK.y1-h[1],y))]; }
+/* the desk point under the pointer for k (held at height z, grabbed at offset off), kept on the desk */
+function deskXY(k,p,z,off){ let [x,y]=unP(p[0],p[1],z||0); if(off){ x+=off[0]; y+=off[1]; }
+  const f=FOOT[k]?[FOOT[k][0],FOOT[k][1],FOOT[k][2],FOOT[k][3]]:[0,0,...(HALF[k]||[3,3])];
+  return [Math.max(DESK.x0+f[2]-f[0],Math.min(DESK.x1-f[2]-f[0],x)),Math.max(DESK.y0+f[3]-f[1]+1,Math.min(DESK.y1-f[3]-f[1],y))]; }
+/* carrying k from `from` towards `to`: it goes over low things but stops at a post, sliding along it */
+function slideTo(k,from,to){ if(!FOOT[k]||solidAt(k,from)) return to;
+  let cur=from;
+  for(let it=0;it<400;it++){ const d=[to[0]-cur[0],to[1]-cur[1]], L=Math.hypot(d[0],d[1]); if(L<1e-3) break;
+    const q=[cur[0]+d[0]/L*Math.min(0.4,L),cur[1]+d[1]/L*Math.min(0.4,L)];
+    if(!solidAt(k,q)){ cur=q; continue; }
+    const qa=[cur[0]+Math.sign(d[0])*Math.min(0.4,Math.abs(d[0])),cur[1]], qb=[cur[0],cur[1]+Math.sign(d[1])*Math.min(0.4,Math.abs(d[1]))];
+    if(Math.abs(d[0])>1e-3&&!solidAt(k,qa)) cur=qa; else if(Math.abs(d[1])>1e-3&&!solidAt(k,qb)) cur=qb; else break; }
+  return cur; }
+/* the goniometer goes against the side of the head, the ruler along the tube */
+function attachOK(k,p){ if(!inst("tube")) return false;
+  if(k==="gonio") return inZ(ZONES.head,p,10)||withS(()=>len2(sub2(p,P3(tubeO())))<9*SZ());
+  if(k==="ruler") return inZ(ZONES.endR,p,6)||inZ(ZONES.endL,p,6)||onTube(p);
+  return false; }
+/* picking up a loose thing: lifted off the desk, it follows the pointer */
+function carry(k,p,extra){ const z=restZ(k)+FOOT[k][4]*0.5, q=unP(p[0],p[1],z);
+  hand=Object.assign({item:k,move:true,orig:[...ST.pos[k]],off:[ST.pos[k][0]-q[0],ST.pos[k][1]-q[1]],lz:restZ(k)},extra||{}); }
 const t_=()=>d().m, chkName=k=>d().chk[k];
 /* what has to come off first, and which screw has to be loosened first */
 function blockOf(k){
@@ -1476,7 +1543,9 @@ function place(p){
     if(hand.plug==="dc"&&inst("pole")&&inZ(ZONES.term,p,6)){ ST.dc=true; hand=null; say(t.plugIn); return; }
     if(hand.plug==="mj"&&inst("pole")&&inZ(ZONES.hjack,p,6)){ if(!mjReach()){ say(t.mjFar,true); return; } ST.mjack=true; hand=null; say(t.plugIn); return; }
     say(t.notHere,true); return; }
-  if(hand.move){ hand=null; say(t.moved(itemName(k))); return; }
+  if((k==="gonio"||k==="ruler")&&attachOK(k,p)){ ST.on.add(k); ST[k]=true; ST[k+"Taped"]=false; hand=null; say(t.heldTape(itemName(k))); return; }
+  if(hand.move){ if(k!=="mat"){ const o=crowdAt(k,ST.pos[k]); if(o){ say(t.crowded(itemName(o.k)),true); return; } }
+    const ft=hand.fromTray; hand=null; say(ft?t.placed(itemName(k)):t.moved(itemName(k))); return; }
   if(k==="knobs"){
     for(const i of [0,1,2]) if(!ST.feet[i]&&inZ(ZONES["foot"+i],p,4)){ ST.feet[i]=true; hand.left--; say(hand.left?t.knobIn(hand.left):t.placed(itemName("knobs"))); if(!hand.left) hand=null; return; }
     if(!ST.hkIn&&inZ(ZONES.hk,p,4)){ ST.hkIn=true; scReset("hk"); hand.left--; say(hand.left?t.knobIn(hand.left):t.placed(itemName("knobs"))); if(!hand.left) hand=null; return; }
@@ -1489,8 +1558,6 @@ function place(p){
     return; }
   const onTubeEnd=inst("tube")&&(inZ(ZONES.endR,p,14)||inZ(ZONES.motorCase,p,4)), onOtherEnd=inst("tube")&&inZ(ZONES.endL,p,14);
   const onMotor=ST.motorAt&&(inZ(ZONES.motorCase,p,8)||inZ(ZONES.fm,p,4)||inZ(ZONES.coupler,p,8)||(ST.motorAt==="tube"&&inZ(ZONES.endR,p,10)));
-  if(k==="gonio"&&inst("tube")&&inZ(ZONES.head,p,10)){ ST.on.add("gonio"); ST.gonio=true; ST.gonioTaped=false; hand=null; say(t.heldTape(itemName(k))); return; }
-  if(k==="ruler"&&inst("tube")&&(inZ(ZONES.endR,p,6)||inZ(ZONES.endL,p,6)||onTube(p))){ ST.on.add("ruler"); ST.ruler=true; ST.rulerTaped=false; hand=null; say(t.heldTape(itemName(k))); return; }
   if(k==="mat"||DESK_ITEMS.includes(k)){ ST.pos[k]=deskXY(k,p); ST.on.add(k); hand=null; say(t.placed(itemName(k))); return; }
   if(k==="stand"){ if(!inZ(ZONES.mat,p)){ say(t.notHere,true); return; } const [x,y]=unP(p[0],p[1],0.3);
     ST.standOff=[Math.max(-8,Math.min(8,x-ST.pos.mat[0])),Math.max(-4,Math.min(3,y-ST.pos.mat[1]))]; kit.installed.add("stand"); hand=null; say(t.placed(itemName(k))); return; }
@@ -1544,7 +1611,7 @@ function aimArm0(side,target){
   kit.psi=mod2pi(ps); kit.phi=ph; kit.dpsi=0; kit.dphi=0;
 }
 let drag=null;
-const PICKMAP={gonioOn:"head",rulerOn:"tube"};
+const PICKMAP={};
 function zoneAt(p){
   for(const z of ["lock","hk","adKnob","mjack","hjack","foot0","foot1","foot2","acPlug","dcPlug","term","swi0","swi1"]) if(inZ(ZONES[z],p,1)&&!(z==="hk"&&!inst("stand"))) return z;
   let id=pick3(p[0],p[1]); if(!id) return null; id=PICKMAP[id]||id;
@@ -1562,6 +1629,8 @@ function rightClick(z){ const t=t_();
   if(z==="dcPlug"||z==="term"){ if(ST.dc){ ST.dc=false; say(t.plugOut); } return; }
   if(z==="mjack"||z==="hjack"){ if(ST.mjack){ ST.mjack=false; say(t.plugOut); } return; }
   if(z==="hk"||z==="lock"||z.startsWith("swi")||z.startsWith("sock")||z==="wall") return;
+  if(z==="gonioOn"){ returnPart("gonio"); return; }
+  if(z==="rulerOn"){ returnPart("ruler"); return; }
   if(z==="disk"||(z==="endR"&&ST.motorAt==="tube"&&ST.disk)){ if(kit.nBoltSd){ if(spinning()){ say(t.spinning,true); return; } kit.nBoltSd--; say(t.boltOff(d().lab.disk,kit.nBoltSd)); return; } returnPart("disk"); return; }
   if(z==="cw"||(z==="endL"&&ST.cwAt==="tube")){ if(kit.nBoltCw){ if(spinning()){ say(t.spinning,true); return; } kit.nBoltCw--; say(t.boltOff(d().lab.cw,kit.nBoltCw)); return; } returnPart("cw"); return; }
   if(z==="fm"){ returnPart(ST.disk?"disk":ST.coupler?"coupler":ST.cwAt==="motor"?"cw":"motor"); return; }
@@ -1574,14 +1643,14 @@ function rightClick(z){ const t=t_();
 function benchDown(p,right,e){
   const t=t_();
   if(hand&&hand.tool){
-    if(right){ ST.pos[hand.tool]=deskXY(hand.tool,p); say(t.toolDown(itemName(hand.tool))); hand=null; return; }
+    if(right){ const k=hand.tool, q=deskXY(k,p,FOOT[k][4]*0.5), o=crowdAt(k,q)||solidAt(k,q); if(o){ say(t.crowded(itemName(o.k)),true); return; } ST.pos[k]=q; say(t.toolDown(itemName(k))); hand=null; return; }
     const fs=nearestFast(p); if(fs){ if(fs.tool!==hand.tool){ say(t.wrongTool,true); return; } if(useTie(fs.id)) return; if(fs.id.startsWith("pol")) openZoom("pol",fs.id); else openZoom(fs.id); return; }
     /* a free hand still turns knobs */
     const z=zoneAt(p); if(z==="lock"||z==="hk"||(z&&z.startsWith("foot"))){ leftZone(z,p,e); return; }
     if(!z) drag={k:e&&e.shiftKey?"pan":"orbit",p,v:e&&e.shiftKey?[CAM.px,CAM.py]:[CAM.yaw,CAM.pitch]};
     return; }
   if(hand){
-    if(right){ if(hand.move){ ST.pos[hand.item]=hand.orig; say(t.stays); } else if(hand.plug) say(t.plugOut); else if(hand.fromDesk){ ST.motorAt="desk"; ST.pos.motor=hand.fromDesk; restoreAsm(hand.asm); say(t.stays); } else if(hand.asm){ ST.motorAt=null; ST.coupler=false; ST.disk=false; scReset("cs","db0","db1"); kit.nBoltSd=0; say(t.removed(itemName("motor"))); } else say(t.removed(itemName(hand.item))); hand=null; return; }
+    if(right){ if(hand.move){ cancelMove(); } else if(hand.plug) say(t.plugOut); else if(hand.fromDesk){ ST.motorAt="desk"; ST.pos.motor=hand.fromDesk; restoreAsm(hand.asm); say(t.stays); } else if(hand.asm){ ST.motorAt=null; ST.coupler=false; ST.disk=false; scReset("cs","db0","db1"); kit.nBoltSd=0; say(t.removed(itemName("motor"))); } else say(t.removed(itemName(hand.item))); hand=null; return; }
     place(p); return; }
   const z=zoneAt(p);
   if(right){ if(z) rightClick(z); return; }
@@ -1609,11 +1678,22 @@ function leftZone(z,p,e){ const t=t_();
     const endP=withS(()=>P3(vadd(tubeO(),vmul(kit.axis(),(side>0?kit.r_m:kit.r_c)*100*side))));
     drag={k:"arm",side,p,t0:performance.now(),off:sub2(p,endP),r0:kit.r_m,moved:false,cw:z==="cw"||z==="endL"}; return; }
   if(TOOLS.includes(z)){ hand={tool:z}; say((z==="ties"||z==="tape"?t.tieTake:t.toolTake)(itemName(z))); return; }
-  if(z==="mat"&&!spinning()||DESK_ITEMS.includes(z)){ hand={item:z,move:true,orig:[...ST.pos[z]]}; say(t.moveIt(itemName(z))); return; }
+  if(z==="gonioOn"||z==="rulerOn"){ const k=z==="gonioOn"?"gonio":"ruler";
+    if(ST[k+"Taped"]){ if(k==="ruler"){ leftZone("tube",p,e); return; } say(t.taped(itemName(k)),true); return; }
+    ST[k]=false; ST.pos[k]=deskXY(k,p,3); carry(k,p,{reattach:true,snap:true}); hand.orig=k==="gonio"?deskNear():[Math.min(100,standXY()[0]+30),10]; hand.lz=3; say(t.moveIt(itemName(k))); return; }
+  if(z==="mat"&&!spinning()){ hand={item:z,move:true,orig:[...ST.pos[z]]}; say(t.moveIt(itemName(z))); return; }
+  if(DESK_ITEMS.includes(z)){ carry(z,p); say(t.moveIt(itemName(z))); return; }
   drag={k:"orbit",p,v:[CAM.yaw,CAM.pitch]};
 }
+/* putting back what was picked up: on the desk where it was, on the arm, or into the parts box */
+function cancelMove(){ const t=t_(), k=hand.item;
+  if(hand.fromTray){ ST.on.delete(k); say(t.removed(itemName(k))); }
+  else if(hand.reattach){ ST[k]=true; ST.pos[k]=hand.orig; say(t.stays); }
+  else { ST.pos[k]=hand.orig; say(t.stays); } }
 function benchMove(p){
-  if(hand&&hand.move){ const k=hand.item, want=deskXY(k,p);
+  if(hand&&hand.move){ const k=hand.item;
+    if(k==="gonio"||k==="ruler"){ hand.snap=attachOK(k,p); if(hand.snap) return; }
+    const z=k==="mat"?0:(hand.lz||0)+(FOOT[k]?FOOT[k][4]*0.5:0), want=k==="mat"?deskXY(k,p):slideTo(k,ST.pos[k],deskXY(k,p,z,hand.off));
     if(k==="adapter"||k==="mat"){ const now=performance.now(), last=hand.last||ST.pos[k], v=Math.hypot(want[0]-last[0],want[1]-last[1])/Math.max(8,now-(hand.tLast||now))*1000, bad=cordsOK(k,want);
       hand.last=want; hand.tLast=now;
       if(bad){ if(v>160&&bad.excess>2){ if(bad.cord==="ac") ST.ac=null; else ST.dc=false; say(t_().yanked(d().lab[bad.cord]),true); ST.pos[k]=want; }
@@ -1651,13 +1731,14 @@ cv.addEventListener("wheel",e=>{ e.preventDefault(); if(ZOOM){ zoomTurn(-Math.si
   if(z==="adKnob"){ if(ST.knob===0&&up) setKnob(0.005); else setKnob(ST.knob+(up?1:-1)*0.1/9); return; }
   const nk=Math.max(4,Math.min(40,CAM.k*(up?1.12:1/1.12))), k=nk/CAM.k;
   CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*k; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*k; CAM.k=nk; },{passive:false});
-window.addEventListener("keydown",e=>{ if(ZOOM){ if(e.key==="Escape") closeZoom(); if(e.key==="ArrowUp"||e.key==="ArrowRight"){ zoomTurn(15); e.preventDefault(); } if(e.key==="ArrowDown"||e.key==="ArrowLeft"){ zoomTurn(-15); e.preventDefault(); } return; } if(e.key==="Escape"&&hand){ if(hand.move) ST.pos[hand.item]=hand.orig; hand=null; drawTray(); } });
+window.addEventListener("keydown",e=>{ if(ZOOM){ if(e.key==="Escape") closeZoom(); if(e.key==="ArrowUp"||e.key==="ArrowRight"){ zoomTurn(15); e.preventDefault(); } if(e.key==="ArrowDown"||e.key==="ArrowLeft"){ zoomTurn(-15); e.preventDefault(); } return; } if(e.key==="Escape"&&hand){ if(hand.move) cancelMove(); hand=null; drawTray(); } });
 
 /* the parts box */
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move&&!hand.plug&&!hand.asm){ if(hand.tool) ST.on.delete(hand.tool); hand=null; drawTray(); } });
 trayCv.addEventListener("mousedown",e=>{
   if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top, t=t_();
   for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    if(hand&&hand.fromTray){ cancelMove(); hand=null; drawTray(); return; }
     if(hand&&(hand.move||hand.plug||hand.asm)) return;
     if(hand&&(hand.item===k||hand.tool===k)){ if(hand.tool){ ST.on.delete(k); } hand=null; drawTray(); return; }
     hand=null;
@@ -1667,6 +1748,8 @@ trayCv.addEventListener("mousedown",e=>{
     const req=REQ[k]; if(req&&!isIn(req)){ say(t.need(itemName(req)),true); drawTray(); return; }
     if(k==="knobs"){ const left=ST.feet.filter(v=>!v).length+(ST.hkIn?0:1); hand={item:"knobs",left}; say(t.knobsPick(left)); drawTray(); return; }
     if(k==="motor"){ kit.burnt=false; kit.overVoltT=0; }
+    if(k==="mat"||DESK_ITEMS.includes(k)){ ST.on.add(k); if(k!=="mat"){ ST.pos[k]=deskXY(k,overBench?mouse:P(60,40,0),2); hand={item:k,move:true,fromTray:true,off:[-FOOT[k][0],-FOOT[k][1]],lz:2}; } else hand={item:k,move:true,fromTray:true};
+      say(t.placeIt(itemName(k))); drawTray(); return; }
     hand={item:k}; say(k==="bolts"?t.boltPick:t.placeIt(itemName(k))); drawTray(); return; } });
 
 /* ══════════════════════════════════════════════════════════════
@@ -1773,6 +1856,8 @@ function tick(){
   /* feet without their star knobs rest on the casting; an unclamped rod leans in the boss */
   kit.knobEff=[0,1,2].map(i=>(ST.feet[i]?0.010+kit.knob[i]:0.002)+(inst("pole")&&!ST.hk&&i===1?0.006:0));
   powerChain();
+  /* a motor lead not tied along the tube hangs from the end of the arm and swings: its pull on the arm comes and goes */
+  kit.leadWob=ST.motorAt==="tube"&&!ST.leadTied&&ST.mjack&&Math.abs(kit.w_s)>30?0.05+0.08*Math.sin(kit.t*1.9)*Math.sin(kit.t*0.53+1.1):0;
   for(let i=0;i<sub;i++){ kit.step(dt/sub); fmTick(dt/sub); }
   /* a loose tube slides down through the head; a loose M6 screw lets the 26 cm disk come off */
   if(inst("tube")&&!ST.tk&&!kit.held&&!(drag&&drag.k==="arm")) kit.r_m=Math.max(rmMin(),Math.min(rmMax(),kit.r_m-0.06*Math.sin(kit.phi)*dt));
