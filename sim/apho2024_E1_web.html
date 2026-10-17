@@ -908,7 +908,7 @@ function TX(O,U,V,str,size,col,o){ const m=M(O), mu=M(vadd(O,U)), mv=M(vadd(O,V)
 /* given its length, a cord sags by the slack it has; pulled tight it runs straight */
 const sagOf=(a,b,len)=>{ const d=vlen(vsub(a,b)); return Math.min(25,Math.sqrt(Math.max(0,3*d*(len-d)/8))); };
 function cord(a,b,col,w,sag,id){ const s=sag===undefined?Math.min(12,vlen(vsub(a,b))*0.3):sag, pts=[];
-  for(let i=0;i<=16;i++){ const t=i/16, p=vadd(vadd(vmul(a,1-t),vmul(b,t)),[0,0,-4*s*t*(1-t)]); p[2]=Math.max(0.25,p[2]); pts.push(p); }
+  for(let i=0;i<=16;i++){ const t=i/16, p=vadd(vadd(vmul(a,1-t),vmul(b,t)),[0,0,-4*s*t*(1-t)]); p[2]=Math.max(onMatXY(p)?0.5:0.25,p[2]); p[1]=Math.max(p[1],a[1]<1.5||b[1]<1.5?p[1]:0.6); pts.push(p); }
   PL(pts,col,w*CAM.k/7.4,id?{id}:undefined); }
 
 const ZONES={}, FAST=[];      /* screen areas for dropping things; fasteners a tool can reach */
@@ -923,7 +923,7 @@ const fastDone=id=>id==="lead"?ST.leadTied:id==="cwTie"?ST.cwTied:id==="gonioTap
 const SOCK=[95.6,104.4], SOCKZ=12;
 const AC_LEN=100, DC_LEN=80, MJ_LEN=45;      /* cm of cord: mains, adapter DC lead, motor lead */
 /* where a plug held in the hand is: under the pointer, but never farther than its cord reaches */
-function heldAt(from,len,h){ const [x,y]=unP(mouse[0],mouse[1],h), p=[x,y,h], d=vsub(p,from), L=vlen(d); return L>len*0.98?vadd(from,vmul(d,len*0.98/L)):p; }
+function heldAt(from,len,h){ const [x,y0]=unP(mouse[0],mouse[1],h), y=Math.max(3.2,Math.min(DESK.y1,y0)), p=[x,y,h], d=vsub(p,from), L=vlen(d), q=L>len*0.98?vadd(from,vmul(d,len*0.98/L)):p; q[1]=Math.max(3.2,q[1]); return q; }
 function drawRoom(){
   F([[-200,-0.3,-60],[320,-0.3,-60],[320,-0.3,110],[-200,-0.3,110]],"#2f353e",{n:[0,1,0],flat:true});
   obox([60,0.5,0.8],[150,0,0],[0,0.5,0],[0,0,0.8],"#3b424c");
@@ -1335,7 +1335,7 @@ const flash=s=>{ if(ZOOM) ZOOM.flash={s,t:performance.now()}; };
 /* turning: free while the thread runs, stiffer and stiffer as the head seats; a tight one needs a firm start to come loose */
 function zoomTurn(deg){ if(!ZOOM||!deg) return; const id=ZOOM.sel, t=d().zoom, m=d().m;
   if(/^foot/.test(id)){ const i=+id[4], e=kit.knob[i]-deg*2/360*FOOT_PITCH; ZOOM.strain=Math.max(ZOOM.strain,0.3);
-    if(e<0){ kit.knob[i]=0; ZOOM.strain=1; flash(t.footEnd); return; }
+    if(e<0){ kit.knob[i]=0; ZOOM.strain=1; return; }
     if(e>KNOB_OUT){ ST.feet[i]=false; kit.knob[i]=0.004; say(m.footOut(i+1),true); closeZoom(); return; }
     kit.knob[i]=e; return; }
   if(ROTATING(id)&&spinning()){ say(m.spinning,true); return; }
@@ -1344,13 +1344,13 @@ function zoomTurn(deg){ if(!ZOOM||!deg) return; const id=ZOOM.sel, t=d().zoom, m
   else k=f>0.96?0.18:1;
   ZOOM.strain=Math.max(ZOOM.strain,1-k);
   const lo=id==="hk"?HK_OUT:0; let v=was+deg/360*k;
-  if(deg>0&&v>=N-0.02){ v=N; if(was>=N-1e-6){ ZOOM.strain=1; flash(t.stop); } else { flash(t.seated); say(zoomName(id)+" — "+t.seated); } }
-  if(v<=lo){ v=lo; if(id==="hk"){ ST.hkIn=false; ST.sc.hk=0; deriveScrews(); say(m.hkOut,true); closeZoom(); return; } if(was>lo) flash(t.backed); }
+  if(deg>0&&v>=N-0.02){ v=N; if(was>=N-1e-6) ZOOM.strain=1; }
+  if(v<=lo){ v=lo; if(id==="hk"){ ST.hkIn=false; ST.sc.hk=0; deriveScrews(); say(m.hkOut,true); closeZoom(); return; }}
   ST.sc[id]=v; deriveScrews(); }
 function zoomClick(p,right){ if(right){ closeZoom(); return; }
   const inB=b=>p[0]>=b.x&&p[0]<=b.x+b.w&&p[1]>=b.y&&p[1]<=b.y+b.h;
   if(inB(CLOSEB)||Math.hypot(p[0]-ZC[0],p[1]-ZC[1])>ZR){ closeZoom(); return; }
-  if(ZOOM.id==="pol"&&inB(SWAPB)){ const t=d().zoom; if(scBacked("polA")&&scBacked("polB")){ kit.pol*=-1; say(t.swapped); flash(t.swapped); } else say(t.needLoose,true); } }
+  if(ZOOM.id==="pol"&&inB(SWAPB)){ const t=d().zoom; if(scBacked("polA")&&scBacked("polB")){ kit.pol*=-1; say(t.swapped); } else say(t.needLoose,true); } }
 /* in the terminal close-up each screw turns about its own centre */
 const termC=k=>[ZC[0]+(k==="polA"?-1:1)*120,ZC[1]-10];
 const zoomCentre=()=>ZOOM&&ZOOM.id==="pol"?termC(ZOOM.sel):ZC;
@@ -1581,7 +1581,7 @@ function benchDown(p,right,e){
     if(!z) drag={k:e&&e.shiftKey?"pan":"orbit",p,v:e&&e.shiftKey?[CAM.px,CAM.py]:[CAM.yaw,CAM.pitch]};
     return; }
   if(hand){
-    if(right){ if(hand.move){ ST.pos[hand.item]=hand.orig; say(t.stays); } else if(hand.plug) say(t.plugOut); else if(hand.asm){ ST.motorAt=null; ST.coupler=false; ST.disk=false; scReset("cs","db0","db1"); kit.nBoltSd=0; say(t.removed(itemName("motor"))); } else say(t.removed(itemName(hand.item))); hand=null; return; }
+    if(right){ if(hand.move){ ST.pos[hand.item]=hand.orig; say(t.stays); } else if(hand.plug) say(t.plugOut); else if(hand.fromDesk){ ST.motorAt="desk"; ST.pos.motor=hand.fromDesk; restoreAsm(hand.asm); say(t.stays); } else if(hand.asm){ ST.motorAt=null; ST.coupler=false; ST.disk=false; scReset("cs","db0","db1"); kit.nBoltSd=0; say(t.removed(itemName("motor"))); } else say(t.removed(itemName(hand.item))); hand=null; return; }
     place(p); return; }
   const z=zoneAt(p);
   if(right){ if(z) rightClick(z); return; }
@@ -1599,6 +1599,9 @@ function leftZone(z,p,e){ const t=t_();
   if(z==="dcPlug"||z==="term"){ if(z==="term"&&!ST.dc) return; ST.dc=false; hand={plug:"dc"}; say(t.plugDc); return; }
   if(z==="mjack"||z==="hjack"){ if(z==="hjack"&&!ST.mjack) return; ST.mjack=false; hand={plug:"mj"}; say(t.plugMj); return; }
   if(z==="fm"){ if(fmFallen()&&Math.abs(FM.w)<30){ FM.theta=0; FM.dtheta=0; say(t.stoodUp); return; }
+    /* a still motor is picked up (with whatever is on its shaft), to go onto the tube; a spinning one gets a push */
+    if(Math.abs(FM.w)<5){ if(ST.cwAt==="motor"){ say(t.blocked(itemName("cw")),true); return; }
+      hand={item:"motor",asm:{coupler:ST.coupler,disk:ST.disk,diskKey:ST.diskKey,sc:{cs:ST.sc.cs,db0:ST.sc.db0,db1:ST.sc.db1}},fromDesk:[...ST.pos.motor]}; ST.motorAt=null; ST.mjack=false; say(t.moveIt(itemName("motor"))); return; }
     const [x,y]=ST.pos.motor, q=unP(p[0],p[1],5); if(FM.theta<0.02) FM.az=Math.atan2(y-q[1],x-q[0]); FM.dtheta+=1.6; say(t.pushed); return; }
   if(z==="motorCase"&&!nTight(ST.mc)&&!spinning()){ hand={item:"motor",asm:{coupler:ST.coupler,disk:ST.disk,diskKey:ST.diskKey,sc:{cs:ST.sc.cs,db0:ST.sc.db0,db1:ST.sc.db1}}}; ST.motorAt=null; ST.mjack=false; say(t.moveIt(itemName("motor"))); return; }
   if(["endR","endL","disk","cw","tube","motorCase"].includes(z)){
