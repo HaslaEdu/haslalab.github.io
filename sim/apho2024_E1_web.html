@@ -187,7 +187,7 @@ const T={
        tight:(s,on)=>s+(on?" — 조였습니다.":" — 풀었습니다."), mc:(n)=>"모터 클램프 볼트 "+n+"/4 조임", db:(n)=>"원판 M3 볼트 "+n+"/2 조임", pol:"드라이버로 DC 단자의 선을 바꿔 끼웠습니다 — 모터가 반대로 돕니다.", polOn:"전원을 넣은 채로 단자선을 바꿀 수 없습니다 — 노브를 OFF로.",
        knobsPick:n=>"별 노브 — 받침대 발 아래 구멍 3곳과 옆의 손잡이 구멍에 대고 클릭하세요. (남은 것 "+n+"개)", knobIn:n=>"끼웠습니다 (남은 것 "+n+"개)", hk:on=>"손잡이 노브 "+(on?"조임 — 수직 스탠드가 받침대에 물렸습니다.":"풀림"), hkMissing:"받침대 옆에 손잡이 노브가 없습니다 — 별 노브 세트에서 끼우세요.",
        motorFixed:"모터 클램프 볼트를 모두 풀어야 모터를 뗄 수 있습니다.", motorStand:"모터를 실험대에 세웠습니다 (Part G).", motorBack:"모터를 튜브 끝에 끼웠습니다 — 클램프 볼트 4개를 조이세요.", cwFell:"M6 나사가 헐거워 26 cm 원판이 튜브에서 빠졌습니다 — 부품함에 되돌렸습니다.",
-       cwMotor:"26 cm 원판을 케이블 타이로 모터 케이스에 묶었습니다 (정지 부분).", needTies:"모터 케이스에 묶으려면 케이블 타이가 실험대에 있어야 합니다.", pushed:"툭 밀었습니다.", stoodUp:"다시 세웠습니다.", mjFar:"모터 선이 거기까지 닿지 않습니다 — 모터를 스탠드 가까이 세우세요.", knobFirst:"먼저 노브를 OFF로 돌리세요.", loosen:s=>"먼저 "+s+"을(를) 푸세요.", footOut:n=>"받침대 발 "+n+"의 별 노브를 끝까지 풀어 빠졌습니다 — 그쪽 발이 주물째 내려앉았습니다.", hkOut:"손잡이 노브를 끝까지 풀어 뺐습니다 — 수직 스탠드가 받침대에 물려 있지 않습니다.", yanked:s=>"세게 당겨 "+s+"가 빠졌습니다.", taut:s=>s+" 선이 팽팽합니다 — 더 멀리 옮길 수 없습니다.", tieTake:s=>s+"을(를) 들었습니다 — 묶거나 붙일 곳에 고리가 보입니다. 클릭하면 묶이고/붙고, 다시 클릭하면 풉니다. (우클릭: 내려놓기)", heldTape:s=>s+" — 손으로 대고 있습니다. 바로 양면테이프를 꺼내 붙이세요 (다른 것을 잡거나 팔이 돌면 떨어집니다).", letGo:s=>"손을 떼자 테이프로 붙이지 않은 "+s+"이(가) 떨어졌습니다 — 하나씩 대고 바로 양면테이프로 붙이세요.", endTaken:"그쪽 끝에는 이미 26 cm 원판이 있습니다.",
+       cwMotor:"26 cm 원판을 케이블 타이로 모터 케이스에 묶었습니다 (정지 부분).", needTies:"모터 케이스에 묶으려면 케이블 타이가 실험대에 있어야 합니다.", pushed:"툭 밀었습니다.", stoodUp:"다시 세웠습니다.", mjFar:"모터 선이 거기까지 닿지 않습니다 — 모터를 스탠드 가까이 세우세요.", knobFirst:"먼저 노브를 OFF로 돌리세요.", loosen:s=>"먼저 "+s+"을(를) 푸세요.", footOut:n=>"받침대 발 "+n+"의 별 노브를 끝까지 풀어 빠졌습니다 — 그쪽 발이 주물째 내려앉았습니다.", hkOut:"손잡이 노브를 끝까지 풀어 뺐습니다 — 수직 스탠드가 받침대에 물려 있지 않습니다.", yanked:s=>"세게 당겨 "+s+"가 빠졌습니다.", taut:s=>s+" 선이 팽팽합니다 — 더 멀리 옮길 수 없습니다.", tieTake:s=>s+"을(를) 들었습니다 — 묶거나 붙일 곳에 고리가 보입니다. 클릭하면 묶이고/붙고, 다시 클릭하면 풉니다. (우클릭: 내려놓기)", heldTape:s=>s+" — 손으로 대고 있습니다. 바로 양면테이프를 꺼내 붙이세요 (다른 것을 잡거나 팔이 돌면 떨어집니다).", armClamp:"움직이는 팔이 모터 클램프에 걸립니다 — 평형추 쪽으로 튜브와 나란히 맞추세요 (그쪽에서는 90°+기울기가 아니라 90°−기울기로 읽힙니다).", letGo:s=>"손을 떼자 테이프로 붙이지 않은 "+s+"이(가) 떨어졌습니다 — 하나씩 대고 바로 양면테이프로 붙이세요.", endTaken:"그쪽 끝에는 이미 26 cm 원판이 있습니다.",
        cwOnMotor:"26 cm 원판을 모터 케이스 위에 얹었습니다 — 케이블 타이로 묶으세요.", leadTied:on=>on?"모터 선을 케이블 타이로 튜브에 묶었습니다.":"케이블 타이를 잘라 모터 선을 풀었습니다.", cwTied:on=>on?"26 cm 원판을 케이블 타이로 모터 케이스에 묶었습니다.":"케이블 타이를 잘랐습니다.",
        gonioTaped:on=>on?"각도기를 양면테이프로 피벗 옆에 붙였습니다.":"각도기의 테이프를 뗐습니다.", rulerTaped:on=>on?"자를 양면테이프로 튜브 옆에 붙였습니다.":"자의 테이프를 뗐습니다.",
        gonioFell:"붙이지 않은 각도기가 팔이 돌자 떨어졌습니다 — 책상에 있습니다.", rulerFell:"붙이지 않은 자가 팔이 돌자 떨어졌습니다 — 책상에 있습니다.", cwSlid:"묶지 않은 26 cm 원판이 모터에서 미끄러져 떨어졌습니다 — 부품함에 되돌렸습니다.",
@@ -229,7 +229,7 @@ const T={
        tight:(s,on)=>s+(on?" tightened.":" loosened."), mc:n=>"Motor clamp bolts "+n+"/4 tight", db:n=>"Disk M3 bolts "+n+"/2 tight", pol:"Wires swapped at the DC terminal with the screwdriver: the motor now turns the other way.", polOn:"Not with the power on: turn the knob to OFF.",
        knobsPick:n=>"Star knobs: click the three holes under the feet and the hole on the side of the boss. ("+n+" left)", knobIn:n=>"Screwed in ("+n+" left)", hk:on=>"Hand knob "+(on?"tightened: the vertical stand is clamped.":"loosened"), hkMissing:"There is no hand knob on the side of the stand yet: fit it from the star-knob set.",
        motorFixed:"Loosen all four motor clamp bolts before taking the motor off.", motorStand:"Motor stood on the bench (Part G).", motorBack:"Motor fitted on the end of the tube: tighten the four clamp bolts.", cwFell:"The M6 screw was loose and the 26 cm disk came off the tube: it is back in the box.",
-       cwMotor:"26 cm disk tied to the motor case with cable ties (a static part).", needTies:"The cable ties must be on the bench to tie it to the motor case.", pushed:"A little push.", stoodUp:"Stood up again.", mjFar:"The motor lead does not reach: stand the motor closer to the vertical stand.", knobFirst:"Turn the knob to OFF first.", loosen:s=>"Loosen the "+s+" first.", footOut:n=>"The star knob of foot "+n+" was unscrewed all the way and fell out: that corner of the casting drops.", hkOut:"Hand knob unscrewed and taken out: the vertical stand is not clamped.", yanked:s=>"Pulled hard: the "+s+" came out.", taut:s=>"The "+s+" cord is taut: it will not reach any farther.", tieTake:s=>s+" in hand: rings show where it can go; click to tie/stick, again to undo. (R-click: put it down)", heldTape:s=>s+" held in place by hand: take the double-sided tape and stick it on now (it falls if you take anything else or the arm turns).", letGo:s=>"You let go and the "+s+", not yet taped, fell: hold one at a time and stick it on with the tape first.", endTaken:"The 26 cm disk is already on that end.",
+       cwMotor:"26 cm disk tied to the motor case with cable ties (a static part).", needTies:"The cable ties must be on the bench to tie it to the motor case.", pushed:"A little push.", stoodUp:"Stood up again.", mjFar:"The motor lead does not reach: stand the motor closer to the vertical stand.", knobFirst:"Turn the knob to OFF first.", loosen:s=>"Loosen the "+s+" first.", footOut:n=>"The star knob of foot "+n+" was unscrewed all the way and fell out: that corner of the casting drops.", hkOut:"Hand knob unscrewed and taken out: the vertical stand is not clamped.", yanked:s=>"Pulled hard: the "+s+" came out.", taut:s=>"The "+s+" cord is taut: it will not reach any farther.", tieTake:s=>s+" in hand: rings show where it can go; click to tie/stick, again to undo. (R-click: put it down)", heldTape:s=>s+" held in place by hand: take the double-sided tape and stick it on now (it falls if you take anything else or the arm turns).", armClamp:"The moving arm runs into the motor clamp: set it along the tube on the counterweight side (there it reads 90° minus the tilt, not plus).", letGo:s=>"You let go and the "+s+", not yet taped, fell: hold one at a time and stick it on with the tape first.", endTaken:"The 26 cm disk is already on that end.",
        cwOnMotor:"26 cm disk set on the motor case: tie it with cable ties.", leadTied:on=>on?"Motor lead tied to the tube with a cable tie.":"Cable tie cut: the motor lead hangs free.", cwTied:on=>on?"26 cm disk tied to the motor case with cable ties.":"Cable ties cut.",
        gonioTaped:on=>on?"Goniometer stuck beside the pivot with double-sided tape.":"Tape peeled off the goniometer.", rulerTaped:on=>on?"Ruler stuck along the tube with double-sided tape.":"Tape peeled off the ruler.",
        gonioFell:"The goniometer was not stuck on and fell when the arm turned: it is on the desk.", rulerFell:"The ruler was not stuck on and fell when the arm turned: it is on the desk.", cwSlid:"The 26 cm disk was not tied and slid off the motor: back in the box.",
@@ -265,6 +265,7 @@ class Kit{
     this.installed=new Set(); this.diskKey="20_3"; this.nBoltCw=0; this.nBoltSd=0;
     this.r_m=0.15; this.tubeLocked=true; this.pol=1; this.held=false;
     this.knob=[0,1,2].map(()=>0.003+Math.random()*0.0025);
+    this.cast=[0,1,2].map(()=>(Math.random()-0.5)*0.0007);      /* each foot pad of the casting is a little off (±0.35 mm): bare, the stand is not quite level */
     this.volt=0; this.powerOn=false; this.burnt=false; this.overVoltT=0; this.runT=0; this.jit=1;
     this.resetMotion(); this.t=0;
   }
@@ -953,7 +954,7 @@ function drawRoom(){
 /* the stand is a V: the apex points towards you, the rod stands in the boss on the cross bar */
 const FOOTV=[[0,10.5],[-9.5,-10.5],[9.5,-10.5]];
 function footXY(i){ const [sx,sy]=standXY(); return [sx+FOOTV[i][0],sy+FOOTV[i][1]]; }
-const footZ=i=>0.3+(ST.feet[i]?1.2+kit.knob[i]*100:0.2);      /* the underside of the arms over each foot (the pads reach 0.2 lower) */
+const footZ=i=>0.3+(ST.feet[i]?1.2+kit.knob[i]*100:0.2+kit.cast[i]*100);      /* the underside of the arms over each foot (the pads reach 0.2 lower) */
 function standXF(){ if(!inst("stand")) return v=>v;
   const A=[0,1,2].map(i=>{ const [x,y]=footXY(i); return [x,y,footZ(i)]; });
   let n=vnrm(vcross(vsub(A[1],A[0]),vsub(A[2],A[0]))); if(n[2]<0) n=vmul(n,-1);
@@ -1158,9 +1159,14 @@ const CL3=()=>CAM.k/30, GON_ARM=12;      /* the goniometer's arms reach 12 cm fr
 /* the ruler lies flat against what stands out furthest in front of the tube: the motor clamp plates, or (without the
    motor) the end of the bearing insert; it is stuck there and is cantilevered from there */
 const rulerGap=()=>ST.motorAt==="tube"?2.79:0.97;
-/* the goniometer is stuck flat on the front face of the black head block, which turns with the precession but not with
-   the tilt, so its fixed arm stays vertical; its moving arm is set parallel to the tube (parallel lines make the same angle) */
-function gonioFrame(){ const [hu,b]=headAxes(); return {c:lin([pivot(),1],[b,2.33],[Z3,-5.4]),X:[0,0,-1],Y:hu,n:b}; }
+/* the goniometer is put up at the pivot: its rivet on the tilt axis, its dial flat against the end of the bearing insert
+   (or, with the ruler there, on the ruler); the fixed arm hangs down along the rod, the moving arm is set by hand */
+const gonioGap=()=>ST.ruler?TOFF+rulerGap()+RUL_TH+0.03:TOFF+0.97;
+function gonioFrame(){ const [hu,b]=headAxes(); return {c:vadd(pivot(),vmul(b,gonioGap())),X:[0,0,-1],Y:hu,n:b}; }
+/* would the moving arm at theta run into the motor clamp? (it lies in front of the tube unless the ruler holds it further out) */
+function armHitsClamp(theta){ if(ST.motorAt!=="tube"||gonioGap()-TOFF>2.75) return false;
+  const tt=90+kit.phi*180/Math.PI, d=(theta-tt)*Math.PI/180, a=kit.r_m*100-8.05, b=kit.r_m*100-1.7;
+  for(let r=2.2;r<=GON_ARM;r+=0.25){ const al=r*Math.cos(d), pe=Math.abs(r*Math.sin(d)); if(al>=a&&al<=b&&pe<=3.7) return true; } return false; }
 
 /* ── loose things on the desk, with their printing on them ── */
 /* each one's footprint (centre offset from its position, half sizes) and how tall it stands, cm */
@@ -1384,10 +1390,10 @@ function drawGoPanel(){
 /* the moving arm can be turned here too, seen square-on (no parallax): drag it round the rivet */
 let goDrag=false;
 const goAngle=e=>{ const r=goCv.getBoundingClientRect(), W=r.width, H=r.height, x=e.clientX-r.left-W*0.42, y=e.clientY-r.top-H*0.40; return ((90-Math.atan2(y,x)*180/Math.PI)%360+360)%360; };
-goCv.addEventListener("pointerdown",e=>{ if(!ST.gonio||!inst("tube")) return; goDrag=true; goCv.setPointerCapture(e.pointerId); ST.gonioArm=goAngle(e); });
-goCv.addEventListener("pointermove",e=>{ if(goDrag) ST.gonioArm=goAngle(e); });
+goCv.addEventListener("pointerdown",e=>{ if(!ST.gonio||!inst("tube")) return; goDrag=true; goCv.setPointerCapture(e.pointerId); setArm(goAngle(e)); });
+goCv.addEventListener("pointermove",e=>{ if(goDrag) setArm(goAngle(e)); });
 goCv.addEventListener("pointerup",()=>{ goDrag=false; });
-goCv.addEventListener("wheel",e=>{ if(!ST.gonio||!inst("tube")) return; e.preventDefault(); ST.gonioArm=(ST.gonioArm+(e.deltaY<0?0.5:-0.5)+360)%360; },{passive:false});
+goCv.addEventListener("wheel",e=>{ if(!ST.gonio||!inst("tube")) return; e.preventDefault(); setArm((ST.gonioArm+(e.deltaY<0?0.5:-0.5)+360)%360); },{passive:false});
 /* ── the ruler held on the tube: 0 at the centre of the pivot ── */
 function drawRuPanel(){
   const c=ruCv.getContext("2d"), W=ruCv.width/DPR, H=ruCv.height/DPR;
@@ -1659,6 +1665,8 @@ function restoreAsm(a){ if(!a) return; ST.coupler=a.coupler; ST.disk=a.disk; ST.
 /* a cable tie or a strip of tape: put on, or (clicked again) cut off */
 function useTie(id){ const t=t_(), K={lead:"leadTied",cwTie:"cwTied",gonioTape:"gonioTaped",rulerTape:"rulerTaped"}[id]; if(!K) return false;
   ST[K]=!ST[K]; say(t[K](ST[K])); return true; }
+/* the goniometer's moving arm turned by hand: it stops where it would run into the motor clamp */
+function setArm(th){ if(armHitsClamp(th)){ if(performance.now()-msg.t>1500) say(t_().armClamp,true); return false; } ST.gonioArm=th; return true; }
 function nearestFast(p){ let best=null, bd=1e9; for(const f of FAST){ const dd=len2(sub2(f.p,p)); if(dd<bd){ bd=dd; best=f; } }
   return best&&bd<Math.max(11,1.1*SZ())?best:null; }
 /* the arm in the hand: solve for the turn ψ and the tilt φ that put the grabbed end under the pointer */
@@ -1775,7 +1783,7 @@ function benchMove(p){
   if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; return; }
   if(drag.k==="orbit"){ CAM.yaw=Math.max(-1.35,Math.min(1.35,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.12,Math.min(1.3,drag.v[1]+(p[1]-drag.p[1])*0.004)); return; }
   if(drag.k==="garm"){ const g=withS(()=>{ const G=gonioFrame(); return [P3(G.c),P3(vadd(G.c,G.X)),P3(vadd(G.c,G.Y))]; }), a=sub2(g[1],g[0]), b=sub2(g[2],g[0]), q=sub2(p,g[0]), det=a[0]*b[1]-a[1]*b[0];
-    if(Math.abs(det)<1e-6) return; const al=(q[0]*b[1]-q[1]*b[0])/det, be=(a[0]*q[1]-a[1]*q[0])/det; let th=Math.atan2(be,al)*180/Math.PI; if(th<0) th+=360; ST.gonioArm=th; return; }
+    if(Math.abs(det)<1e-6) return; const al=(q[0]*b[1]-q[1]*b[0])/det, be=(a[0]*q[1]-a[1]*q[0])/det; let th=Math.atan2(be,al)*180/Math.PI; if(th<0) th+=360; setArm(th); return; }
   if(drag.k==="arm"){
     if(!drag.moved&&len2(sub2(p,drag.p))<4) return; drag.moved=true;
     if(!ST.tk){ const f=frame(), a=withS(()=>P3(along(0,f))), b=withS(()=>P3(along(1,f))), u=sub2(b,a), dr=dot2(sub2(p,drag.p),u)/dot2(u,u);
@@ -1802,7 +1810,7 @@ cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(!ZOOM&&!zoneAt(p)&&!hand
 cv.addEventListener("wheel",e=>{ e.preventDefault(); if(ZOOM){ zoomTurn(-Math.sign(e.deltaY)*Math.min(Math.abs(e.deltaY),120)*0.12); return; } const p=lpos(e), z=hand&&!hand.tool?null:zoneAt(p), up=e.deltaY<0;
   if(z&&z.startsWith("foot")){ footSteps(+z[4],up?1:-1); return; }
   if(z==="adKnob"){ if(ST.knob===0&&up) setKnob(0.005); else setKnob(ST.knob+(up?1:-1)*0.1/9); return; }
-  if(z==="gonioArm"){ ST.gonioArm=(ST.gonioArm+(up?0.5:-0.5)+360)%360; return; }
+  if(z==="gonioArm"){ setArm((ST.gonioArm+(up?0.5:-0.5)+360)%360); return; }
   const nk=Math.max(4,Math.min(40,CAM.k*(up?1.12:1/1.12))), k=nk/CAM.k;
   CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*k; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*k; CAM.k=nk; },{passive:false});
 window.addEventListener("keydown",e=>{ if(ZOOM){ if(e.key==="Escape") closeZoom(); if(e.key==="ArrowUp"||e.key==="ArrowRight"){ zoomTurn(15); e.preventDefault(); } if(e.key==="ArrowDown"||e.key==="ArrowLeft"){ zoomTurn(-15); e.preventDefault(); } return; } if(e.key==="Escape"&&hand){ if(hand.move) cancelMove(); hand=null; drawTray(); } });
@@ -1929,7 +1937,7 @@ function tick(){
   const dt=raw*timeScale, sub=Math.max(1,Math.ceil(dt/0.004));
   deriveScrews(); syncKit();
   /* feet without their star knobs rest on the casting; an unclamped rod leans in the boss */
-  kit.knobEff=[0,1,2].map(i=>(ST.feet[i]?0.010+kit.knob[i]:0.002)+(inst("pole")&&!ST.hk&&i===1?0.006:0));
+  kit.knobEff=[0,1,2].map(i=>(ST.feet[i]?0.010+kit.knob[i]:0.002+kit.cast[i])+(inst("pole")&&!ST.hk&&i===1?0.006:0));
   powerChain();
   /* a motor lead not tied along the tube hangs from the end of the arm and swings: its pull on the arm comes and goes */
   kit.leadWob=ST.motorAt==="tube"&&!ST.leadTied&&ST.mjack&&Math.abs(kit.w_s)>30?0.05+0.08*Math.sin(kit.t*1.9)*Math.sin(kit.t*0.53+1.1):0;
