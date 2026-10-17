@@ -6,11 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1c2027">
 <title>APhO 2024 E1 — 자이로스코프 · Gyroscope · HaslaLab</title>
-<meta name="description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 대전방지 매트 위에 A형 받침대부터 자이로스코프를 조립하고, 전원 어댑터 전압을 바꿔 가며 세차 주기와 기울기를 스톱워치·각도기·자로 직접 잽니다. 회전수는 어디에도 표시되지 않습니다.">
+<meta name="description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 대전방지 매트 위에 A형 받침대, 수직 스탠드, 알루미늄 튜브, DC 모터와 아크릴 원판을 직접 조립하고, 받침대 별 노브로 수평을 맞춘 뒤 조절식 전원 어댑터의 전압을 바꿔 가며 세차 주기, 팔 길이·원판 질량·볼트 너트의 효과, 장동을 스톱워치·각도기·자로 직접 잽니다. 회전수는 어디에도 표시되지 않습니다.">
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="APhO 2024 E1 — 자이로스코프 · Gyroscope">
-<meta property="og:description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 조립부터 세차 측정, 자가균형까지 실제 장비처럼 다룹니다.">
+<meta property="og:description" content="APhO 2024 실험 문제를 브라우저에서 실행합니다. 조립부터 세차 측정, 장동, 자가균형까지 실제 장비처럼 다룹니다.">
 <style>
   :root{
     --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
@@ -26,55 +26,58 @@
   }
   .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
   @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
-  .tray{flex:0 0 214px;background:var(--panel);border:1px solid var(--line);
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
         border-radius:10px;padding:8px;position:sticky;top:12px}
   .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
            color:var(--accent);text-align:center}
   #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .card h3{margin:0 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs{display:flex;gap:6px;margin-bottom:6px}
-  .tabs button{width:auto;margin:0;padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--muted)}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
   .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;background:#20252c;touch-action:none;cursor:grab}
-  .instr{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
-  .instr>div{flex:1 1 240px;min-width:220px}
-  .instr canvas{display:block;width:100%;height:auto;border-radius:6px;background:#15181d;touch-action:none}
-  .ilbl{font-size:12px;color:var(--accent);font-weight:600;margin:0 0 4px}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
          border-radius:10px;padding:12px;position:sticky;top:12px}
-  @media (max-width:1180px){ .panel,.tray{position:static} .stage{flex:1 1 100%;order:-1} }
-  @media (max-width:760px){ .tray,.panel{flex:1 1 100%} }
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
   .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
             margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
-  .row{display:flex;gap:6px;align-items:center}
-  .row button{flex:1;text-align:center}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
   button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
          border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
          color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
   button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
-  button:disabled{opacity:.4;cursor:default}
-  .disp{background:#0d1512;border-radius:6px;padding:6px 10px;margin:2px 0 6px;text-align:center;
-        color:#7dffb0;font:700 30px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.04em}
-  #swBtn{background:#2f6f3f;border-color:#2f6f3f;color:#fff;font-weight:600}
-  #swBtn.run{background:#8a3b34;border-color:#8a3b34}
-  .laps{background:var(--deep);border:1px solid var(--line);border-radius:6px;margin-top:6px;
-        height:82px;overflow:auto;font:12px/1.55 ui-monospace,Consolas,monospace;color:var(--ink);padding:4px 7px}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
   .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
-  input[type=range]{width:100%;accent-color:var(--accent)}
-  .knobs{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:3px 4px;align-items:center;font-size:12px}
-  .knobs button{margin:0;padding:3px 0;font-size:11.5px}
-  .cnt{font:700 13px ui-monospace,Consolas,monospace;min-width:64px;text-align:center}
   .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
           background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:10px;min-height:96px}
-  .status div + div{margin-top:9px}
-  .status .warn{color:#ff8b6a}
-  .chk{display:flex;align-items:center;gap:7px;margin:5px 0;cursor:pointer;font-size:13px}
-  .chk input{accent-color:var(--accent);width:15px;height:15px}
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
   header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
@@ -83,6 +86,14 @@
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
   .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  .instr3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .instr3 canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
+  .ilbl{font-size:12px;color:#f2c14e;font-weight:700;margin:0 0 4px}
+  @media(max-width:900px){.instr3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -106,13 +117,13 @@
 
   <div class="stage">
     <div class="card">
-      <div class="tabs"><button id="tab-bench" class="on"></button><button id="tab-g"></button></div>
+      <div class="tabs" id="tabs"></div>
       <h3 id="t-cap"></h3>
       <canvas id="cv"></canvas>
     </div>
     <div class="card" id="instrCard">
       <h3 id="t-instrcap"></h3>
-      <div class="instr">
+      <div class="instr3">
         <div><div class="ilbl" id="t-adlbl"></div><canvas id="adCv"></canvas></div>
         <div><div class="ilbl" id="t-golbl"></div><canvas id="goCv"></canvas></div>
         <div><div class="ilbl" id="t-rulbl"></div><canvas id="ruCv"></canvas></div>
@@ -121,48 +132,32 @@
   </div>
 
   <aside class="panel">
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row"><button id="swBtn"></button><button id="swLap"></button><button id="swReset"></button></div>
+    <div class="laps" id="laps"></div>
+    <div class="hint" id="swHint"></div>
+
+    <h2 id="t-h-speed"></h2>
+    <div class="row" id="speeds"></div>
+    <div class="hint" id="t-speedhint"></div>
+
     <div id="pBench">
-      <h2 id="t-h-sw"></h2>
-      <div class="disp" id="swLbl">0:00.00</div>
-      <div class="row"><button id="swBtn"></button><button id="swLap"></button><button id="swReset"></button></div>
-      <div class="laps" id="laps"></div>
-
-      <h2 id="t-h-speed"></h2>
-      <div class="row" id="speeds"></div>
-
-      <h2 id="t-h-arm"></h2>
-      <button id="lockBtn" style="width:100%"></button>
-      <input type="range" id="arm" min="8" max="41" step="0.05" value="15">
-      <div class="hint" id="t-armhint"></div>
-
-      <h2 id="t-h-bolts"></h2>
-      <div class="row"><span id="t-bcw" style="flex:1;font-size:12px"></span><span class="cnt" id="bcw"></span></div>
-      <div class="row"><span id="t-bsd" style="flex:1;font-size:12px"></span><span class="cnt" id="bsd"></span></div>
-      <div class="hint" id="t-bolthint"></div>
-
-      <h2 id="t-h-level"></h2>
-      <div class="knobs" id="knobs"></div>
-
       <h2 id="t-h-hand"></h2>
-      <div class="row"><button id="turn90">↺ 90°</button><button id="turn180">↻ 180°</button></div>
-      <button id="impulse" style="width:100%"></button>
-      <div class="row"><button id="liftU"></button><button id="liftD"></button></div>
-      <label class="chk"><input type="checkbox" id="trail"><span id="t-trail"></span></label>
-      <button id="fitBtn" style="width:100%"></button>
+      <div class="hint" id="t-handhelp" style="white-space:pre-line"></div>
+      <div class="row"><button id="polBtn"></button></div>
     </div>
-
     <div id="pG" hidden>
       <h2 id="t-h-gbuild"></h2>
-      <div class="laps" id="gList" style="min-height:60px"></div>
+      <div class="hint" id="t-gnote"></div>
       <div id="gAdd"></div>
-      <button id="gClear" style="width:100%">↺</button>
+      <pre class="laps" id="gList" style="min-height:60px"></pre>
+      <div class="row"><button id="gClear"></button></div>
       <h2 id="t-h-gdisk"></h2>
       <div class="row" id="gDiskRow"></div>
       <h2 id="t-h-gvolt"></h2>
-      <input type="range" id="gv" min="0" max="6" step="0.1" value="5">
-      <div class="disp" id="gvl" style="font-size:22px;color:#ff3b30;background:#150708">5.0 V</div>
+      <div class="row"><input type="range" id="gv" min="3" max="6" step="0.1" value="4.5" style="flex:1;accent-color:#f2c14e"><span id="gvl" style="width:52px;text-align:right"></span></div>
       <div class="row"><button id="gRun"></button><button id="gStop"></button></div>
-      <div class="hint" id="t-gnote"></div>
     </div>
 
     <div class="status" id="status"></div>
@@ -171,97 +166,69 @@
 
 <script>
 "use strict";
-/* ══════════════════════════════════════════════════════════════
-   0.  i18n
-   ══════════════════════════════════════════════════════════════ */
 const T={
   ko:{
     title:"APhO 2024 실험 — 자이로스코프",
-    sub:"가상 실험실 · 부품을 집어 대전방지 매트 위에 조립하세요. 회전수(rpm)는 어디에도 표시되지 않습니다 — 스톱워치·각도기·자로 직접 재세요.",
-    tabBench:"실험대", tabG:"Part G 자가균형",
-    capBench:"실험대 — 좌클릭 집기·놓기 / 우클릭 되돌리기 / 휠 확대·축소 / 빈 곳 드래그: 시점 돌리기",
-    capG:"Part G — 부품을 아래에서 위로 쌓고 시동을 걸어 보세요 / 빈 곳 드래그: 시점 돌리기",
+    sub:"가상 실험실 · 대전방지 매트 위에 A형 받침대, 수직 스탠드, 알루미늄 튜브, DC 모터, 아크릴 회전 원판을 직접 조립하고 조절식 전원 어댑터를 연결하세요. 모터 회전수는 어디에도 표시되지 않습니다 — 세차 주기는 스톱워치로, 기울기는 각도기로, 팔 길이는 자로 직접 재세요.",
+    tray:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayMany:"클릭할 때마다 1세트", trayNeed:s=>"먼저: "+s,
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n부품은 조립할 자리에 대고 클릭",
+    tabs:{bench:"실험대", g:"Part G 자가균형"},
+    capBench:"실험대 — 팔을 끌어 돌리고 기울이기 · 평형추 짧게 클릭: 순간 누르기 · 별 노브 클릭: 튜브 풀기/잠그기 · 받침대 발 휠: 수평 조절 · 우클릭: 되돌리기 · 빈 곳 끌기: 시점 돌리기 (Shift: 옮기기) · 휠: 확대 · 더블클릭: 시점 처음대로",
+    capG:"Part G — 부품을 쌓아 스스로 균형을 잡는 장치를 만들어 보세요 (오른쪽 패널)",
     instrcap:"계기 확대 — 실험대 위의 바로 그 장비입니다",
-    adlbl:"조절식 전원 어댑터 (ZY-009)", golbl:"각도기 — 튜브에 대고 본 모습", rulbl:"자 — 피벗(0)에서 회전 원판 중심까지",
-    tray:"부품함",
-    trayItems:{mat:"대전방지 매트",stand:"A형 레토르트 받침대",knobs:"별 노브 ×3 + 손잡이 노브",pole:"자이로스코프 수직 스탠드",
-      tube:"알루미늄 튜브",motor:"DC 모터 + 케이스",coupler:"모터 샤프트 커플러",
-      d20_2:"20 cm 회전 원판 · 2 mm",d20_3:"20 cm 회전 원판 · 3 mm",d20_4:"20 cm 회전 원판 · 4 mm",
-      cw:"26 cm 평형추 원판 + 와셔",adapter:"조절식 전원 어댑터",gonio:"각도기",bolts:"볼트 + 너트 (M3)"},
-    trayOut:"사용 중", trayTake:"클릭해서 집기", trayNeed:s=>"먼저: "+s, trayMany:"클릭할 때마다 1세트",
-    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n휠 확대·축소 / 빈 곳 드래그: 시점",
-    hSw:"스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
-    hSpeed:"시간 배속", hArm:"튜브 고정 별 노브", lockOn:"🔒 잠김 — 눌러서 풀기", lockOff:"🔓 풀림 — 슬라이더로 튜브를 밀기 / 눌러서 잠그기",
-    armHint:"튜브는 노브를 풀었을 때만 밀려 움직입니다. 원판까지의 거리는 아래 자로 직접 읽으세요.",
-    hBolts:"볼트 + 너트", bcw:"26 cm 평형추 원판", bsd:"20 cm 회전 원판", sets:"세트",
-    boltHint:"부품함의 볼트+너트를 집어 원판을 클릭하면 1세트씩 끼워집니다. 우클릭 원판: 1세트 빼기.",
-    hLevel:"받침 수평 조절 (별 노브 나사)", knob:"노브",
-    hHand:"손으로 다루기", impulse:"평형추를 순간 눌렀다 놓기", liftU:"팔 들었다 놓기 ↑", liftD:"팔 눌렀다 놓기 ↓",
-    trail:"잔상 표시", fit:"시점 초기화",
-    hGBuild:"구성 (아래 → 위)", gParts:{motor:"DC 모터 (고정)",cw:"26 cm 원판 (고정)",disk:"20 cm 회전 원판 (회전)"},
-    hGDisk:"회전 원판", hGVolt:"전압", gRun:"시동", gStop:"정지", gNoDisk:"회전 원판이 없습니다.",
-    gNote:"지지점은 맨 아래 부품의 중심축입니다. 똑바로 서는지 쓰러지는지 직접 보고 판단하세요.",
-    lab:{off:"OFF",volt:"VOLTAGE",change:"CHANGE",model:"ADAPTER POWER  REGULATED  MODEL: ZY-009",gonio:"각도기",noGonio:"각도기를 부품함에서 집어 실험대에 놓으세요",
-         noArm:"튜브를 설치하면 자를 댈 수 있습니다", ruler:"cm"},
-    st:{nothing:"부품함에서 대전방지 매트부터 순서대로 집어 실험대에 놓고 조립하세요.",
-        next:s=>"다음 부품: "+s, ready:"조립 완료 — 어댑터 노브를 돌려 모터를 돌리세요.",
-        warn6:"⚠ 6 V 초과 — 모터가 탑니다", burnt:"✖ 모터 소손 — DC 모터를 부품함에 되돌리고 다시 설치하세요 (교체)",
-        overheat:"⚠ 10분 이상 연속 구동 — 모터를 쉬게 하세요", spin:"회전 중에는 원판·볼트를 바꿀 수 없습니다 — 먼저 멈추세요."},
-    m:{placeIt:s=>s+" — 놓을 곳(또는 끼울 부품)을 클릭하세요. (우클릭: 취소)", placed:s=>s+" — 설치했습니다.",
-       moveIt:s=>s+"를 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", moved:s=>s+" — 옮겼습니다.", stays:"제자리에 그대로 두었습니다.",
-       notHere:"그곳에는 놓거나 끼울 수 없습니다. 매트는 책상 위, 스탠드는 매트 위, 나머지는 끼울 부품 위를 클릭하세요.", need:s=>"먼저 설치해야 합니다: "+s,
-       removed:s=>s+" — 부품함에 되돌렸습니다.", blocked:s=>"먼저 떼어야 합니다: "+s,
-       oneDisk:"회전 원판은 한 장만 달 수 있습니다.", boltOn:(w,n)=>w+"에 볼트+너트 1세트 (지금 "+n+"세트)",
-       boltOff:(w,n)=>w+"에서 볼트+너트 1세트 뺌 (지금 "+n+"세트)", boltPick:"원판을 클릭해 볼트+너트를 끼우세요. (우클릭: 내려놓기)",
-       locked:"별 노브가 잠겨 있어 튜브가 움직이지 않습니다.", knobOff:"노브를 OFF 에서 돌리면 어댑터가 켜집니다."}
+    adlbl:"2. 조절식 전원 어댑터 (ZY-009)", golbl:"5. 각도기 — 피벗 옆에서 본 모습", rulbl:"자 — 튜브 위에 댄 모습",
+    hSw:"6. 스톱워치", hSpeed:"시간 배속", speedHint:"배속은 스톱워치와 모터 과열 시간에도 똑같이 적용됩니다.",
+    hHand:"손으로 다루기",
+    handHelp:"• 튜브 끝(원판·평형추 쪽)을 끌면 팔을 돌리고 기울입니다. 놓으면 그대로 놓아 줍니다.\n• 평형추를 짧게 클릭: 순간 눌렀다 놓기 (Part F)\n• 피벗의 별 노브 클릭: 튜브 풀기·잠그기 — 풀면 튜브 끝을 끌어 길이를 바꿉니다.\n• 받침대 발(별 노브)에 휠, 또는 좌·우클릭: 높이 ¼바퀴씩\n• 볼트+너트는 원판 가장자리 구멍에 대고 클릭",
+    pol:"극성 바꾸기 (드라이버로 단자선 교체)",
+    start:"시작", stop:"정지", lap:"랩", reset:"리셋", swNeed:"스톱워치가 실험대에 없습니다 — 부품함에서 꺼내 올려 놓으세요.", swHint:"부품함의 스톱워치를 실험대에 올려야 쓸 수 있습니다.", swOk:"실험대 위의 스톱워치입니다.",
+    trayItems:{mat:"7. 대전방지 매트", stand:"9. A형 받침대 + 별 노브", pole:"1. 수직 스탠드 (피벗 헤드)", tube:"8. 알루미늄 튜브",
+      motor:"3. DC 모터 + 케이스", coupler:"모터 축 커플러", d20_2:"4. 회전 원판 20 cm · 2 mm", d20_3:"4. 회전 원판 20 cm · 3 mm", d20_4:"4. 회전 원판 20 cm · 4 mm",
+      cw:"4. 평형추 원판 26 cm + 와셔", adapter:"2. 조절식 전원 어댑터", gonio:"5. 각도기", sw:"6. 스톱워치", ruler:"10. 자 (50 cm)", bolts:"10. 볼트 + 너트 (M3)", tools:"10. 육각 렌치 · 드라이버"},
+    lab:{volt:"VOLTAGE", change:"CHANGE", off:"OFF", noGonio:"각도기를 피벗에 대면 보입니다", noRuler:"자를 튜브 위에 대면 보입니다", wall:"벽 콘센트", jack:"DC 단자", ac:"전원 플러그", dc:"DC 플러그", motorJack:"모터 잭", knob:"별 노브", lockOn:"잠김", lockOff:"풀림", pivot:"피벗", cw:"평형추", disk:"원판", zero:"0 = 피벗 중심", sets:"세트", smoke:"타는 냄새"},
+    gParts:{motor:"DC 모터 (케이스)", cw:"26 cm 평형추 원판", disk:"20 cm 회전 원판"}, gNote:"아래에서 위로 쌓습니다. 맨 아래가 매트에 닿습니다.", hGBuild:"쌓기", hGDisk:"회전 원판", hGVolt:"모터 전압", gRun:"전원 켜고 세우기", gStop:"끄기", gClear:"모두 내리기", gNoDisk:"회전 원판이 있어야 합니다.",
+    st:{nothing:"부품함에서 대전방지 매트부터 꺼내 실험대에 놓으세요.", next:s=>"다음: "+s, ready:"조립 완료 — 전원 어댑터 노브를 OFF에서 돌려 전압을 올리세요.", burnt:"모터가 타 버렸습니다 (6 V 넘게 오래 걸었습니다). 부품함에 되돌리고 새 모터로 바꾸세요.", warn6:"6 V를 넘었습니다 — 오래 걸면 모터가 탑니다!", overheat:"10분 넘게 계속 돌렸습니다 — 모터를 쉬게 하세요.", spin:"원판이 돌고 있습니다 — 전원을 끄고 멈출 때까지 기다리세요.", noPower:"어댑터 전원 플러그가 벽 콘센트에 꽂혀 있지 않습니다.", noDc:"어댑터 DC 플러그가 스탠드 아래 DC 단자에 꽂혀 있지 않습니다.", noMotorJack:"모터 잭이 스탠드 잭에 연결되어 있지 않습니다.", holder:"튜브가 받침(멈춤쇠)에 닿아 있습니다 — 팔이 떠 있어야 합니다."},
+    m:{placeIt:s=>s+" — 놓을 곳(조립할 자리)을 클릭하세요. (우클릭: 취소)", placed:s=>s+" — 설치했습니다.", moveIt:s=>s+"을(를) 들었습니다 — 옮길 곳을 클릭하세요.", moved:s=>s+"을(를) 옮겼습니다.", stays:"제자리에 두었습니다.",
+       notHere:"그곳에는 놓을 수 없습니다.", need:s=>"먼저 "+s+"이(가) 필요합니다.", needTools:"육각 렌치·드라이버가 실험대에 있어야 조일 수 있습니다.", oneDisk:"회전 원판은 한 번에 하나만 달 수 있습니다.",
+       removed:s=>s+" — 부품함에 되돌렸습니다.", blocked:s=>"먼저 "+s+"을(를) 떼어 내세요.", boltPick:"볼트+너트 1세트 — 원판 가장자리의 구멍을 클릭하세요. (우클릭: 내려놓기)", boltOn:(w,n)=>w+"에 볼트+너트 "+n+"세트", boltOff:(w,n)=>w+"에서 1세트 뺐습니다 ("+n+"세트 남음)", boltFull:"구멍이 모두 찼습니다.",
+       lock:l=>"튜브 별 노브 "+(l?"잠금":"풀림 — 튜브 끝을 끌어 길이를 바꾸세요"), locked:"튜브가 잠겨 있습니다 — 피벗의 별 노브를 먼저 푸세요.", knob:(i,u)=>"받침대 발 "+(i+1)+" — ¼바퀴 "+(u?"올림":"내림"),
+       plugAc:"전원 플러그를 벽 콘센트에 꽂으세요.", plugDc:"DC 플러그를 스탠드 아래 DC 단자에 꽂으세요.", plugIn:"꽂았습니다.", plugOut:"뽑았습니다.", motorJack:"모터 잭을 스탠드의 DC 잭에 연결했습니다.", motorJackOff:"모터 잭을 뺐습니다.",
+       pol:"드라이버로 단자선을 바꿔 극성을 뒤집었습니다 — 모터가 반대로 돕니다.", needDriver:"드라이버(10번 공구)가 실험대에 있어야 합니다.", impulse:"평형추를 순간 눌렀다 놓았습니다.", released:"팔을 놓았습니다.", spinning:"원판이 도는 중에는 그렇게 할 수 없습니다.", knobFirst:"먼저 노브를 OFF로 돌리세요."}
   },
   en:{
     title:"APhO 2024 Experiment — Gyroscope",
-    sub:"Virtual laboratory · pick the parts up and build the gyroscope on the antistatic mat. The rotor speed (rpm) is never displayed: measure with the stopwatch, goniometer and ruler.",
-    tabBench:"Bench", tabG:"Part G self-balancing",
-    capBench:"the bench — L-click pick/place / R-click return / wheel zoom / drag bare space: turn the view",
-    capG:"Part G — stack the parts from the bottom up and start the motor / drag: turn the view",
-    instrcap:"instruments close up — the very ones on the bench",
-    adlbl:"Adjustable power adapter (ZY-009)", golbl:"Goniometer held against the tube", rulbl:"Ruler — from the pivot (0) to the disk centre",
-    tray:"Parts box",
-    trayItems:{mat:"Antistatic mat",stand:"A-shape retort stand",knobs:"3 star knobs + hand knob",pole:"Gyroscope main vertical stand",
-      tube:"Aluminium tube",motor:"DC motor with case",coupler:"Motor shaft coupler",
-      d20_2:"20 cm spinning disk · 2 mm",d20_3:"20 cm spinning disk · 3 mm",d20_4:"20 cm spinning disk · 4 mm",
-      cw:"26 cm counterweight disk + washers",adapter:"Adjustable power adapter",gonio:"Goniometer",bolts:"Bolts + nuts (M3)"},
-    trayOut:"in use", trayTake:"click to pick up", trayNeed:s=>"first: "+s, trayMany:"one set per click",
-    trayHelp:"L-click pick/place, R-click return\nwheel zoom, drag bare space: view",
-    hSw:"Stopwatch", start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
-    hSpeed:"Time scale", hArm:"Tube-lock star knob", lockOn:"🔒 locked — click to release", lockOff:"🔓 released — slide the tube / click to lock",
-    armHint:"The tube slides only with the knob released. Read the distance to the disk off the ruler below.",
-    hBolts:"Bolts + nuts", bcw:"26 cm counterweight disk", bsd:"20 cm spinning disk", sets:"sets",
-    boltHint:"Pick the bolts + nuts from the parts box and click a disk: one set per click. R-click a disk: remove one set.",
-    hLevel:"Base levelling (star-knob screws)", knob:"knob",
-    hHand:"By hand", impulse:"Press the counterweight briefly", liftU:"Lift the arm and release ↑", liftD:"Push the arm down and release ↓",
-    trail:"Show trail", fit:"Reset view",
-    hGBuild:"Stack (bottom → top)", gParts:{motor:"DC motor (static)",cw:"26 cm disk (static)",disk:"20 cm disk (spinning)"},
-    hGDisk:"Spinning disk", hGVolt:"Voltage", gRun:"RUN", gStop:"STOP", gNoDisk:"No spinning disk in the stack.",
-    gNote:"The support point is the axis of the lowest part. Watch whether it stays upright or topples.",
-    lab:{off:"OFF",volt:"VOLTAGE",change:"CHANGE",model:"ADAPTER POWER  REGULATED  MODEL: ZY-009",gonio:"goniometer",noGonio:"Pick the goniometer from the parts box and put it on the bench",
-         noArm:"Install the tube to lay the ruler along it", ruler:"cm"},
-    st:{nothing:"Pick the parts from the box in order, starting with the antistatic mat, put them on the bench and assemble.",
-        next:s=>"Next part: "+s, ready:"Assembled — turn the adapter knob to run the motor.",
-        warn6:"⚠ above 6 V — the motor will burn", burnt:"✖ Motor burnt out — put the DC motor back in the box and fit it again (replacement)",
-        overheat:"⚠ running over 10 min — let the motor rest", spin:"You cannot change the disk or bolts while it spins — stop it first."},
-    m:{placeIt:s=>s+" — click where it goes (or the part it fits on). (R-click: cancel)", placed:s=>s+" — installed.",
-       moveIt:s=>s+" picked up — click where to move it. (R-click: leave it)", moved:s=>s+" — moved.", stays:"Left where it was.",
-       notHere:"It does not go there. The mat goes on the desk, the stand on the mat, the rest on the part they fit.", need:s=>"Install this first: "+s,
-       removed:s=>s+" — back in the parts box.", blocked:s=>"Take this off first: "+s,
-       oneDisk:"Only one spinning disk fits.", boltOn:(w,n)=>"One bolt + nut set on the "+w+" ("+n+" now)",
-       boltOff:(w,n)=>"One bolt + nut set off the "+w+" ("+n+" now)", boltPick:"Click a disk to fit bolts + nuts. (R-click: put them down)",
-       locked:"The star knob is locked: the tube does not move.", knobOff:"Turn the knob away from OFF to switch the adapter on."}
+    sub:"Virtual laboratory · assemble the A-shape retort stand, the vertical stand, the aluminium tube, the DC motor and an acrylic spinning disk on the antistatic mat yourself and wire the adjustable power adapter. The motor speed is shown nowhere: time the precession with the stopwatch, read the tilt on the goniometer and the arm length on the ruler.",
+    tray:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayMany:"one set per click", trayNeed:s=>"first: "+s,
+    trayHelp:"L-click pick/place, R-click return\nclick a part where it is mounted",
+    tabs:{bench:"Bench", g:"Part G self-balancing"},
+    capBench:"bench — drag the arm to turn and tilt it · short click on the counterweight: quick press · click the star knob: unlock/lock the tube · wheel on a foot of the stand: levelling · R-click: return · drag empty space: orbit the view (Shift: pan) · wheel: zoom · double-click: reset the view",
+    capG:"Part G — stack parts into a device that balances itself (panel on the right)",
+    instrcap:"close-ups — the very instruments on the bench",
+    adlbl:"2. Adjustable power adapter (ZY-009)", golbl:"5. Goniometer — seen beside the pivot", rulbl:"Ruler — laid on the tube",
+    hSw:"6. Stopwatch", hSpeed:"Time scale", speedHint:"The scale applies to the stopwatch and to the motor heating too.",
+    hHand:"By hand",
+    handHelp:"• Drag an end of the tube (disk or counterweight side) to turn and tilt the arm; let go to release it.\n• Short click on the counterweight: a quick press and release (Part F)\n• Click the star knob at the pivot: unlock/lock the tube; unlocked, drag the tube end to change its length.\n• Wheel on a foot (star knob) of the stand, or L/R-click: ¼ turn up/down\n• Bolts and nuts: click a hole on the rim of a disk",
+    pol:"Swap polarity (rewire with the screwdriver)",
+    start:"Start", stop:"Stop", lap:"Lap", reset:"Reset", swNeed:"The stopwatch is not on the bench: take it out of the parts box.", swHint:"Put the stopwatch from the parts box on the bench to use it.", swOk:"The stopwatch on the bench.",
+    trayItems:{mat:"7. Antistatic mat", stand:"9. A-shape stand + star knobs", pole:"1. Vertical stand (pivot head)", tube:"8. Aluminium tube",
+      motor:"3. DC motor + case", coupler:"Motor shaft coupler", d20_2:"4. Disk 20 cm · 2 mm", d20_3:"4. Disk 20 cm · 3 mm", d20_4:"4. Disk 20 cm · 4 mm",
+      cw:"4. Counterweight 26 cm + washers", adapter:"2. Adjustable power adapter", gonio:"5. Goniometer", sw:"6. Stopwatch", ruler:"10. Ruler (50 cm)", bolts:"10. Bolts + nuts (M3)", tools:"10. Allen keys · screwdriver"},
+    lab:{volt:"VOLTAGE", change:"CHANGE", off:"OFF", noGonio:"put the goniometer at the pivot to see this", noRuler:"lay the ruler on the tube to see this", wall:"wall socket", jack:"DC terminal", ac:"mains plug", dc:"DC plug", motorJack:"motor jack", knob:"star knob", lockOn:"locked", lockOff:"loose", pivot:"pivot", cw:"counterweight", disk:"disk", zero:"0 = centre of the pivot", sets:"sets", smoke:"burning smell"},
+    gParts:{motor:"DC motor (case)", cw:"26 cm counterweight", disk:"20 cm spinning disk"}, gNote:"Stacked from the bottom up; the lowest part stands on the mat.", hGBuild:"Stack", hGDisk:"Spinning disk", hGVolt:"Motor voltage", gRun:"Switch on and stand it up", gStop:"Off", gClear:"Take all off", gNoDisk:"You need a spinning disk.",
+    st:{nothing:"Take the antistatic mat out of the parts box first and put it on the bench.", next:s=>"next: "+s, ready:"Assembled — turn the adapter knob up from OFF.", burnt:"The motor burnt out (more than 6 V for too long). Return it to the box and take a new one.", warn6:"Above 6 V — the motor will burn if you keep it there!", overheat:"Running for over 10 minutes — let the motor rest.", spin:"The disk is spinning — switch off and wait until it stops.", noPower:"The adapter's mains plug is not in the wall socket.", noDc:"The adapter's DC plug is not in the DC terminal under the stand.", noMotorJack:"The motor jack is not connected to the jack on the stand.", holder:"The tube rests on the holder — the arm must hang free."},
+    m:{placeIt:s=>s+" — click where it goes. (R-click: cancel)", placed:s=>s+" — mounted.", moveIt:s=>s+" picked up — click where to move it.", moved:s=>s+" moved.", stays:"Left where it was.",
+       notHere:"It does not go there.", need:s=>"You need "+s+" first.", needTools:"The Allen keys and screwdriver must be on the bench to tighten it.", oneDisk:"Only one spinning disk at a time.",
+       removed:s=>s+" — back in the parts box.", blocked:s=>"Take off "+s+" first.", boltPick:"One set of bolt + nut — click a hole on the rim of a disk. (R-click: put it down)", boltOn:(w,n)=>n+" set(s) on the "+w, boltOff:(w,n)=>"one set off the "+w+" ("+n+" left)", boltFull:"All the holes are used.",
+       lock:l=>"Tube star knob "+(l?"tightened":"loosened: drag the tube end to change its length"), locked:"The tube is locked: loosen the star knob at the pivot first.", knob:(i,u)=>"Foot "+(i+1)+" of the stand: ¼ turn "+(u?"up":"down"),
+       plugAc:"Plug the mains plug into the wall socket.", plugDc:"Plug the DC plug into the DC terminal under the stand.", plugIn:"Plugged in.", plugOut:"Unplugged.", motorJack:"Motor jack connected to the jack on the stand.", motorJackOff:"Motor jack disconnected.",
+       pol:"Wires swapped with the screwdriver: the motor now turns the other way.", needDriver:"The screwdriver (tools, item 10) must be on the bench.", impulse:"Counterweight pressed and released quickly.", released:"Arm released.", spinning:"Not while the disk is spinning.", knobFirst:"Turn the knob to OFF first."}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const $=id=>document.getElementById(id);
 const d=()=>T[lang];
-
 /* ══════════════════════════════════════════════════════════════
-   1.  PHYSICS  —  identical to the Python constants
+   1.  PHYSICS — the calibrated model of the Python edition (SI units)
    ══════════════════════════════════════════════════════════════ */
 const G=9.81;
 const NOLOAD_SLOPE=2074.99, NOLOAD_INTCP=-143.66;
@@ -276,9 +243,6 @@ const TUBE_L=0.53, PIVOT_Z=0.30, BASE_R=0.115, PHI_STOP=22*Math.PI/180;
 const TAU_BEARING=1.2e-3, ZETA_NUT=0.16, DAMP_PSI=0.25, L3_MIN=0.020, LEVEL_SENS=3.0, JITTER_SIGMA=0.010;
 const SAG0=14*Math.PI/180, SAG_K=175*Math.PI/180, SAG_MAX=20*Math.PI/180;
 const KNOB_STEP=5.0e-5, KNOB_RANGE=3.0e-3;
-const PART_KEYS=[["mat",null],["stand","mat"],["knobs","stand"],["pole","knobs"],["tube","pole"],
-                 ["motor","tube"],["coupler","motor"],["disk","coupler"],["adapter","pole"],["cw","tube"]];
-const REQUIRED=new Set(["mat","stand","knobs","pole","tube","motor","coupler","disk","adapter"]);
 function gauss(){ let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 const TAU=2*Math.PI, mod2pi=a=>((a%TAU)+TAU)%TAU;
 
@@ -286,13 +250,13 @@ class Kit{
   constructor(){ this.resetAll(); }
   resetAll(){
     this.installed=new Set(); this.diskKey="20_3"; this.nBoltCw=0; this.nBoltSd=0;
-    this.r_m=0.15; this.tubeLocked=true;
+    this.r_m=0.15; this.tubeLocked=true; this.pol=1; this.held=false;
     this.knob=[0,1,2].map(()=>(Math.random()*2-1)*1.2e-3);
     this.volt=0; this.powerOn=false; this.burnt=false; this.overVoltT=0; this.runT=0; this.jit=1;
     this.resetMotion(); this.t=0;
   }
   resetMotion(){ this.w_s=0; this.psi=0; this.dpsi=0; this.phi=0; this.dphi=0; this.spinAng=0; this.trail=[]; }
-  ready(){ for(const k of REQUIRED) if(!this.installed.has(k)) return false; return true; }
+  ready(){ return this.installed.has("pole")&&this.installed.has("tube"); }
   disk(){ return DISKS[this.diskKey]; }
   get r_c(){ return TUBE_L-this.r_m; }
   mHead(){ let m=this.installed.has("motor")?M_MOTOR:0; if(this.installed.has("disk")) m+=this.disk()[0]+this.nBoltSd*M_BOLT; return m; }
@@ -317,7 +281,7 @@ class Kit{
     return [DRAG_C0*(R/R_REF)**5, DRAG_C1*(R/R_REF)**4*t]; }
   step(dt){
     this.t+=dt; if(!this.ready()) return;
-    const V=(this.powerOn&&!this.burnt)?this.volt:0;
+    const V=(this.powerOn&&!this.burnt&&this.installed.has("motor"))?this.volt*this.pol:0;
     const lam=Math.exp(-dt/6);
     this.jit=1+(this.jit-1)*lam+gauss()*JITTER_SIGMA*Math.sqrt(Math.max(0,1-lam*lam));
     if(this.powerOn&&this.volt>MOTOR_BURN_VOLT){ this.overVoltT+=dt; if(this.overVoltT>MOTOR_BURN_TIME) this.burnt=true; }
@@ -325,15 +289,16 @@ class Kit{
     this.runT=(this.powerOn&&V>0)?this.runT+dt:Math.max(0,this.runT-dt);
     const I3=this.I3();
     if(I3>0){
-      const [c0,c1]=this.dragCoef(), drag=(c0+c1)*this.jit*this.w_s**DRAG_N;
-      let tq=(K_EMF/R_ARM_COIL)*((V-K_EMF*this.w_s)-drag);
-      tq-=4.0e-4*(this.w_s>0.5?1:this.w_s/0.5);
-      this.w_s=Math.max(0,this.w_s+tq/I3*dt);
+      const w=this.w_s, aw=Math.abs(w), sg=Math.sign(w)||Math.sign(V)||1, [c0,c1]=this.dragCoef(), drag=(c0+c1)*this.jit*aw**DRAG_N;
+      let tq=(K_EMF/R_ARM_COIL)*(V-K_EMF*w)-(K_EMF/R_ARM_COIL)*drag*sg;
+      tq-=4.0e-4*sg*(aw>0.5?1:aw/0.5);
+      let nw=w+tq/I3*dt; if(V===0&&nw*w<0) nw=0; this.w_s=nw;
     }
     this.spinAng=mod2pi(this.spinAng+this.w_s*dt);
+    if(this.held){ this.trail=[]; return; }
     /* fast-top linearisation: steady precession + a damped nutation oscillator.
        phi_eq is where the arm really settles (bearing play + tube sag) */
-    const Q=this.imbalance(), I1=this.I1(), L3=I3*this.w_s, [alpha,az]=this.tilt();
+    const Q=this.imbalance(), I1=this.I1(), sgn=this.w_s<0?-1:1, L3=I3*Math.abs(this.w_s), [alpha,az]=this.tilt();
     const tauG=Q*G*(1+LEVEL_SENS*Math.sin(alpha)*Math.cos(this.psi-az));
     const sag=Math.min(SAG_MAX,SAG0+SAG_K*Math.abs(Q*G));
     const phiEq=Math.abs(Q)>1e-9?-Math.sign(Q)*sag:0;
@@ -341,7 +306,7 @@ class Kit{
       const wn=L3/I1;
       this.dphi+=(-wn*wn*(this.phi-phiEq)-2*ZETA_NUT*wn*this.dphi)*dt;
       this.phi+=this.dphi*dt;
-      this.dpsi=tauG/L3-wn*(this.phi-phiEq);
+      this.dpsi=sgn*(tauG/L3-wn*(this.phi-phiEq));
       this.psi=mod2pi(this.psi+this.dpsi*dt);
     } else {
       this.dphi+=(-25*(this.phi-phiEq)-7*this.dphi)*dt; this.phi+=this.dphi*dt;
@@ -362,617 +327,666 @@ class Kit{
   axis(){ const c=Math.cos(this.phi); return [Math.cos(this.psi)*c,Math.sin(this.psi)*c,Math.sin(this.phi)]; }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   2.  A SMALL 3-D RENDERER  (orthographic, painter's algorithm)
-   ══════════════════════════════════════════════════════════════ */
-const norm=v=>{ const n=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/n,v[1]/n,v[2]/n]; };
-const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-function shade(hex,f){ const h=hex.replace("#",""); const c=[0,2,4].map(i=>Math.max(0,Math.min(255,Math.round(parseInt(h.substr(i,2),16)*f))));
-  return "#"+c.map(v=>v.toString(16).padStart(2,"0")).join(""); }
-class Scene{
-  constructor(){ this.az=38*Math.PI/180; this.el=16*Math.PI/180; this.scale=900; this.cx=460; this.cy=330; this.items=[]; this.off=[0,0,0]; }
-  dirs(){ const ca=Math.cos(this.az), sa=Math.sin(this.az), ce=Math.cos(this.el), se=Math.sin(this.el);
-    return [[-sa,ca,0],[-ca*se,-sa*se,ce],[ca*ce,sa*ce,se]]; }
-  prj(p){ const [r,u]=this.D, o=this.off, x=p[0]+o[0], y=p[1]+o[1], z=p[2]+o[2];
-    return [(x*r[0]+y*r[1]+z*r[2])*this.scale+this.cx, -(x*u[0]+y*u[1]+z*u[2])*this.scale+this.cy]; }
-  depth(p){ const f=this.D[2], o=this.off; return (p[0]+o[0])*f[0]+(p[1]+o[1])*f[1]+(p[2]+o[2])*f[2]; }
-  /* the desk point (z = 0) under a screen point */
-  ground(X,Y){ const ca=Math.cos(this.az), sa=Math.sin(this.az), se=Math.sin(this.el);
-    if(se<0.06) return null;
-    const a=(X-this.cx)/this.scale, b=(Y-this.cy)/(this.scale*se);
-    return [ca*b-sa*a, sa*b+ca*a]; }
-  begin(){ this.D=this.dirs(); this.items=[]; }
-  poly(pts,fill,outline,width,dash){ let dd=0; for(const p of pts) dd+=this.depth(p);
-    this.items.push([dd/pts.length,"poly",pts.map(p=>this.prj(p)),fill,outline,width||1,dash]); }
-  line(a,b,fill,width,dash){ this.items.push([(this.depth(a)+this.depth(b))/2,"line",[this.prj(a),this.prj(b)],fill,"",width||2,dash]); }
-  dot(p,r,fill){ this.items.push([this.depth(p),"dot",[this.prj(p),r],fill]); }
-  text(p,s,fill,size){ this.items.push([this.depth(p)+1e6,"text",[this.prj(p),s,size||9],fill]); }
-  static basis(n){ n=norm(n); const a=Math.abs(n[2])<0.9?[0,0,1]:[1,0,0]; const u=norm(cross(n,a)); return [u,cross(n,u)]; }
-  disk3(c,n,R,fill,outline,seg,width){ seg=seg||48; const [u,v]=Scene.basis(n), pts=[];
-    for(let i=0;i<seg;i++){ const t=TAU*i/seg; pts.push([c[0]+R*(Math.cos(t)*u[0]+Math.sin(t)*v[0]),c[1]+R*(Math.cos(t)*u[1]+Math.sin(t)*v[1]),c[2]+R*(Math.cos(t)*u[2]+Math.sin(t)*v[2])]); }
-    this.poly(pts,fill,outline===undefined?"#5a5a5a":outline,width); return pts; }
-  cyl(a,b,R,fill,outline,seg){ seg=seg||14; const n=[b[0]-a[0],b[1]-a[1],b[2]-a[2]], [u,v]=Scene.basis(n), ring=[];
-    for(let i=0;i<seg;i++){ const t=TAU*i/seg; ring.push([R*(Math.cos(t)*u[0]+Math.sin(t)*v[0]),R*(Math.cos(t)*u[1]+Math.sin(t)*v[1]),R*(Math.cos(t)*u[2]+Math.sin(t)*v[2])]); }
-    for(let i=0;i<seg;i++){ const o1=ring[i], o2=ring[(i+1)%seg];
-      this.poly([[a[0]+o1[0],a[1]+o1[1],a[2]+o1[2]],[a[0]+o2[0],a[1]+o2[1],a[2]+o2[2]],[b[0]+o2[0],b[1]+o2[1],b[2]+o2[2]],[b[0]+o1[0],b[1]+o1[1],b[2]+o1[2]]],
-        shade(fill,0.62+0.38*i/seg),"",1); }
-    this.disk3(b,n,R,shade(fill,1.05),outline===undefined?"#555":outline,seg); }
-  box(c,n,w,h,dd,fill){ const [u,v]=Scene.basis(n); n=norm(n); const C=[];
-    for(const sd of [-dd/2,dd/2]) for(const [sw,sh] of [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]])
-      C.push([0,1,2].map(i=>c[i]+n[i]*sd+u[i]*sw+v[i]*sh));
-    [[0,1,2,3],[4,5,6,7],[0,1,5,4],[2,3,7,6],[1,2,6,5],[0,3,7,4]].forEach((f,k)=>this.poly(f.map(i=>C[i]),shade(fill,0.72+0.09*k),"#2b2b2b",1)); }
-  render(ctx){
-    this.items.sort((a,b)=>a[0]-b[0]);
-    for(const it of this.items){
-      const kind=it[1];
-      if(kind==="poly"){ const pts=it[2]; ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
-        if(it[3]){ ctx.fillStyle=it[3]; ctx.fill(); } if(it[4]){ ctx.strokeStyle=it[4]; ctx.lineWidth=it[5]; ctx.setLineDash(it[6]||[]); ctx.stroke(); ctx.setLineDash([]); } }
-      else if(kind==="line"){ const [a,b]=it[2]; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]);
-        ctx.strokeStyle=it[3]; ctx.lineWidth=it[5]; ctx.lineCap="round"; ctx.setLineDash(it[6]||[]); ctx.stroke(); ctx.setLineDash([]); }
-      else if(kind==="dot"){ const [p,r]=it[2]; ctx.beginPath(); ctx.arc(p[0],p[1],r,0,TAU); ctx.fillStyle=it[3]; ctx.fill(); }
-      else if(kind==="text"){ const [p,s,sz]=it[2]; ctx.fillStyle=it[3]; ctx.font=sz+"px 'Segoe UI',sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(s,p[0],p[1]); }
-    }
-  }
-}
 
 /* ══════════════════════════════════════════════════════════════
-   3.  THE KIT ON THE MAT  (world in metres, z up; the pivot at the origin)
-   ══════════════════════════════════════════════════════════════ */
-const COL_MAT="#1f8a7e", COL_STAND="#1b1d21", COL_ALU="#c9ccd1", COL_MOTOR="#23262c";
-const ACR_FACE="rgba(214,234,244,0.28)", ACR_EDGE="rgba(170,205,222,0.95)";
-const lerp3=(a,b,f)=>[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];
-const knobPos=i=>{ const a=(90+120*i)*Math.PI/180; return [BASE_R*Math.cos(a),BASE_R*Math.sin(a),0]; };
-function bar(sc,a,b,w,h,col){ sc.box(lerp3(a,b,0.5),[b[0]-a[0],b[1]-a[1],b[2]-a[2]],w,h,Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]),col); }
-function star(sc,c,r,col,lobes){
-  lobes=lobes||6; const pts=[];
-  for(let i=0;i<lobes*2;i++){ const t=TAU*i/(lobes*2), rr=i%2?r*0.62:r; pts.push([c[0]+rr*Math.cos(t),c[1]+rr*Math.sin(t),c[2]]); }
-  sc.poly(pts,col,"#050505",1);
-}
-function acrylDisk(sc,c,u,R,th){
-  const [uu,vv]=Scene.basis(u), n=48, a=[c[0]-u[0]*th/2,c[1]-u[1]*th/2,c[2]-u[2]*th/2], b=[c[0]+u[0]*th/2,c[1]+u[1]*th/2,c[2]+u[2]*th/2];
-  const ring=[]; for(let i=0;i<n;i++){ const t=TAU*i/n; ring.push([0,1,2].map(k=>R*(Math.cos(t)*uu[k]+Math.sin(t)*vv[k]))); }
-  sc.disk3(a,u,R,ACR_FACE,ACR_EDGE,n,1);
-  for(let i=0;i<n;i++){ const o1=ring[i], o2=ring[(i+1)%n];
-    sc.poly([[a[0]+o1[0],a[1]+o1[1],a[2]+o1[2]],[a[0]+o2[0],a[1]+o2[1],a[2]+o2[2]],[b[0]+o2[0],b[1]+o2[1],b[2]+o2[2]],[b[0]+o1[0],b[1]+o1[1],b[2]+o1[2]]],"rgba(190,220,235,0.55)","",1); }
-  sc.disk3(b,u,R,ACR_FACE,ACR_EDGE,n,1.5);
-  return [uu,vv,b];
-}
-function drawFloor(sc){
-  sc.poly([[-0.75,-0.55,0],[0.75,-0.55,0],[0.75,0.55,0],[-0.75,0.55,0]],"#b08a60","",1);
-  for(let i=-7;i<=7;i++) sc.line([i*0.1,-0.55,0],[i*0.1,0.55,0],"rgba(120,85,50,0.35)",1);
-  if(kit.installed.has("mat")){
-    const keep=sc.off; sc.off=[B.pos.mat[0],B.pos.mat[1],0];
-    sc.poly([[-MAT_HW,-MAT_HD,0.0005],[MAT_HW,-MAT_HD,0.0005],[MAT_HW,MAT_HD,0.0005],[-MAT_HW,MAT_HD,0.0005]],COL_MAT,"#156b62",2);
-    sc.poly([[0.13,0.11,0.0008],[0.19,0.11,0.0008],[0.19,0.15,0.0008],[0.13,0.15,0.0008]],"#e8efe9","",1);
-    sc.off=keep;
-  }
-}
-function drawKit(sc,ghost){
-  const ins=kit.installed, has=k=>ins.has(k), [alpha,az]=kit.tilt(), ca=Math.cos(alpha), sa=Math.sin(alpha);
-  const W=p=>[p[0]-sa*Math.cos(az)*p[2], p[1]-sa*Math.sin(az)*p[2], p[2]*ca];
-  const GH="#f2c14e", dash=[6,4];
-  /* A-shape retort stand: apex leg pair, a cross bar carrying the rod boss */
-  if(has("stand")||ghost==="stand"){
-    const g=ghost==="stand"&&!has("stand"), p=[0,1,2].map(i=>{ const q=knobPos(i); return [q[0],q[1],0.012]; });
-    const q1=lerp3(p[0],p[1],0.60), q2=lerp3(p[0],p[2],0.60);
-    if(g){ sc.line(p[0],p[1],GH,3,dash); sc.line(p[0],p[2],GH,3,dash); sc.line(q1,q2,GH,3,dash); }
-    else { bar(sc,p[0],p[1],0.020,0.018,COL_STAND); bar(sc,p[0],p[2],0.020,0.018,COL_STAND); bar(sc,q1,q2,0.018,0.016,COL_STAND);
-      sc.cyl([0,0,0.004],[0,0,0.036],0.020,"#26292e"); sc.disk3([0,0,0.036],[0,0,1],0.020,"#33373d","#0c0d0f");
-      sc.text(lerp3(p[0],[0,0,0.02],0.45),"APhO","#e9eef2",9); }
-  }
-  if(has("knobs")||ghost==="knobs"){
-    const g=ghost==="knobs"&&!has("knobs");
-    for(let i=0;i<3;i++){ const q=knobPos(i), hgt=0.010+(has("knobs")?kit.knob[i]:0)*6;
-      if(g) sc.dot([q[0],q[1],0.012],7,GH);
-      else { sc.cyl([q[0],q[1],0],[q[0],q[1],Math.max(0.004,hgt)],0.006,"#8a9096"); star(sc,[q[0],q[1],Math.max(0.004,hgt)+0.014],0.020,"#15171a"); } }
-    if(!g){ sc.cyl([0.020,0,0.022],[0.045,0,0.022],0.004,"#8a9096"); star(sc,[0.048,0,0.022+0.001],0.012,"#15171a",5); }
-  }
-  if(has("pole")||ghost==="pole"){
-    const g=ghost==="pole"&&!has("pole"), a=W([0,0,0.036]), b=W([0,0,PIVOT_Z]);
-    if(g) sc.line(a,b,GH,3,dash);
-    else { sc.cyl(a,b,0.0085,"#b9bfc6",undefined,16);
-      sc.box(W([0,0,PIVOT_Z]),[0,0,1],0.050,0.050,0.050,"#202227");
-      sc.cyl(W([0,0,PIVOT_Z+0.025]),W([0,0,PIVOT_Z+0.034]),0.004,"#8a9096"); star(sc,W([0,0,PIVOT_Z+0.036]),0.016,kit.tubeLocked?"#15171a":"#6e5a1e");
-      sc.box(W([0.014,0,0.06]),[1,0,0],0.012,0.014,0.010,"#101113"); }
-  }
-  if(has("adapter")||ghost==="adapter"){
-    const g=ghost==="adapter"&&!has("adapter"), C=[[0.15,-0.24],[0.32,-0.24],[0.32,-0.15],[0.15,-0.15]];
-    if(g) sc.poly(C.map(([x,y])=>[x,y,0.002]),"",GH,2,dash);
-    else { const keep=sc.off, so=standAt(), ao=adAt(), tip=W([0.014,0,0.06]);
-      sc.off=[0,0,0];
-      sc.line([0.15+ao[0],-0.20+ao[1],0.01],[0.05+ao[0]*0.5+so[0]*0.5,-0.12+ao[1]*0.5+so[1]*0.5,0.003],"#0c0d0f",3);
-      sc.line([0.05+ao[0]*0.5+so[0]*0.5,-0.12+ao[1]*0.5+so[1]*0.5,0.003],[tip[0]+so[0],tip[1]+so[1],tip[2]],"#0c0d0f",3);
-      sc.off=ao;
-      sc.box([0.235,-0.195,0.014],[0,0,1],0.17,0.09,0.028,"#121316");
-      sc.poly([[0.25,-0.215,0.0285],[0.30,-0.215,0.0285],[0.30,-0.185,0.0285],[0.25,-0.185,0.0285]],"#2a0808","#000",1);
-      sc.text([0.275,-0.200,0.030],kit.powerOn?kit.volt.toFixed(1):"","#ff3b30",12);
-      sc.cyl([0.195,-0.200,0.028],[0.195,-0.200,0.040],0.013,"#2b2e33"); sc.dot([0.195,-0.200,0.041],2,"#c9cdd1");
-      sc.off=keep; }
-  }
-  if(has("gonio")){ /* held in the vertical plane of the arm, behind the pivot */
-    const u=[Math.cos(kit.psi),Math.sin(kit.psi),0], n=[-u[1],u[0],0], piv=W([0,0,PIVOT_Z]), R=0.085;
-    const o=[piv[0]+n[0]*0.035,piv[1]+n[1]*0.035,piv[2]];
-    const pts=[]; for(let dg=-50;dg<=50;dg+=5){ const t=dg*Math.PI/180; pts.push([o[0]+u[0]*R*Math.cos(t),o[1]+u[1]*R*Math.cos(t),o[2]+R*Math.sin(t)]); }
-    pts.push(o); sc.poly(pts,"rgba(235,242,246,0.30)","rgba(120,160,200,0.9)",1);
-    for(let dg=-50;dg<=50;dg+=10){ const t=dg*Math.PI/180;
-      sc.line([o[0]+u[0]*R*0.86*Math.cos(t),o[1]+u[1]*R*0.86*Math.cos(t),o[2]+R*0.86*Math.sin(t)],[o[0]+u[0]*R*Math.cos(t),o[1]+u[1]*R*Math.cos(t),o[2]+R*Math.sin(t)],"#0b5394",1); }
-  }
-  if(!has("pole")) return;
-  const piv=W([0,0,PIVOT_Z]), u=kit.axis(), P=s=>[piv[0]+u[0]*s,piv[1]+u[1]*s,piv[2]+u[2]*s];
-  if(has("tube")||ghost==="tube"){ const a=P(-kit.r_c), b=P(kit.r_m-0.035);
-    if(!has("tube")) sc.line(a,b,GH,3,dash); else sc.cyl(a,b,0.0045,COL_ALU,undefined,12); }
-  if(!has("tube")) return;
-  if(has("motor")||ghost==="motor"){ const c=P(kit.r_m-0.030);
-    if(!has("motor")) sc.dot(c,9,GH);
-    else { sc.box(c,u,0.040,0.044,0.056,COL_MOTOR); sc.cyl(P(kit.r_m-0.002),P(kit.r_m+0.006),0.0025,"#9aa0a8");
-      const w1=P(kit.r_m-0.05), top=W([0,0,PIVOT_Z-0.02]), bot=W([0,0,0.05]);
-      sc.line(w1,top,"#c0392b",1.5); sc.line(top,bot,"#c0392b",1.5); sc.line(P(kit.r_m-0.048),top,"#111",1.5); } }
-  if(has("coupler")||ghost==="coupler"){ if(!has("coupler")) sc.dot(P(kit.r_m),7,GH); else sc.cyl(P(kit.r_m-0.002),P(kit.r_m+0.008),0.010,"#c9ccd1"); }
-  if(has("disk")||ghost==="disk"){
-    const [,R,th]=kit.disk(), c=P(kit.r_m+0.004);
-    if(!has("disk")) sc.disk3(c,u,R,"",GH,48,2);
-    else {
-      const [uu,vv,front]=acrylDisk(sc,c,u,R,th);
-      const on=(t,rr)=>[0,1,2].map(i=>front[i]+R*rr*(Math.cos(t)*uu[i]+Math.sin(t)*vv[i]));
-      if(kit.w_s<28) for(let k=0;k<3;k++) sc.line(on(kit.spinAng+TAU*k/3,0.25),on(kit.spinAng+TAU*k/3,0.82),"rgba(120,140,150,0.8)",1.5);
-      else sc.disk3(P(kit.r_m+th/2+0.0045),u,R*0.6,"rgba(238,244,248,0.35)","",32);
-      for(let k=0;k<12;k++){ const f=k<kit.nBoltSd; sc.dot(on(TAU*k/12+(kit.w_s<28?kit.spinAng:0),0.90),f?3.2:2,f?"#2b2f35":"rgba(160,180,190,0.9)"); }
-    } }
-  if(has("cw")||ghost==="cw"){ const Rc=DISKS["26_4"][1], c=P(-kit.r_c);
-    if(!has("cw")) sc.disk3(c,u,Rc,"",GH,48,2);
-    else { const [uu,vv]=acrylDisk(sc,c,u,Rc,0.004);
-      sc.cyl(P(-kit.r_c-0.006),P(-kit.r_c-0.002),0.014,"#c9ccd1"); sc.cyl(P(-kit.r_c+0.002),P(-kit.r_c+0.006),0.014,"#c9ccd1");
-      for(let k=0;k<12;k++){ const t=TAU*k/12, f=k<kit.nBoltCw;
-        sc.dot([0,1,2].map(i=>c[i]+Rc*0.9*(Math.cos(t)*uu[i]+Math.sin(t)*vv[i])+u[i]*0.003),f?4:2,f?"#2b2f35":"rgba(160,180,190,0.9)"); } } }
-  if($("trail").checked&&kit.trail.length){ let prev=null;
-    for(let i=0;i<kit.trail.length;i+=2){ const [,ps,ph]=kit.trail[i];
-      const q=[piv[0]+Math.cos(ps)*Math.cos(ph)*kit.r_m,piv[1]+Math.sin(ps)*Math.cos(ph)*kit.r_m,piv[2]+Math.sin(ph)*kit.r_m];
-      if(prev) sc.line(prev,q,"#e08a3c",2); prev=q; } }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   4.  STATE, CANVAS, CAMERA
+   2.  THE BENCH STATE  (cm on the desk; the kit itself works in metres)
    ══════════════════════════════════════════════════════════════ */
 const kit=new Kit();
-const cv=$("cv"), ctx=cv.getContext("2d");
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
-const adCv=$("adCv"), goCv=$("goCv"), ruCv=$("ruCv");
-const sc=new Scene(), scG=new Scene();
-const CAM0={az:38*Math.PI/180,el:18*Math.PI/180,z:1};
-const B={tab:"bench",carry:null,gonio:false,adKnob:0,zoom:1,rot:null,mouse:[0,0],knobDrag:null,note:null,
-         /* the mat, the stand (on the mat) and the adapter go wherever they are put down */
-         pos:{mat:[0,0],stand:[0,0],ad:[0,0]}};
-const MAT_HW=0.2, MAT_HD=0.16, AD_C=[0.235,-0.195], AD_HW=0.085, AD_HD=0.045, DESK_HW=0.75, DESK_HD=0.55;
-const standAt=()=>[B.pos.mat[0]+B.pos.stand[0],B.pos.mat[1]+B.pos.stand[1],0];
-const adAt=()=>[B.pos.ad[0],B.pos.ad[1],0];
+const PZ=PIVOT_Z*100;                        /* pivot height above the mat, cm */
+const DESK={x0:0,x1:110,y0:0,y1:62};
+const MAT=[40,32];                           /* the antistatic mat, cm */
+const ST={ on:new Set(), pos:{mat:[34,34],adapter:[80,46],sw:[96,20],tools:[12,52],ruler:[70,10],gonio:[16,16]},
+  standOff:[0,0], ac:false, dc:false, mjack:false, knob:0, gonio:false, ruler:false };
+let hand=null, mouse=[0,0], overBench=false, msg={s:null,warn:false,t:0};
 let timeScale=1, sw={acc:0,run:false,t0:0,laps:[]};
-let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
-const TRAY_ORDER=["mat","stand","knobs","pole","tube","motor","coupler","d20_2","d20_3","d20_4","cw","adapter","gonio","bolts"];
-const TRAY_ROW=42;
-const KEY_OF={d20_2:"disk",d20_3:"disk",d20_4:"disk"};
-const kitKey=n=>KEY_OF[n]||n;
-const REQ={}; for(const [k,r] of PART_KEYS) REQ[k]=r; REQ.gonio="pole";
-function layout(){
-  DPR=window.devicePixelRatio||1;
-  const r=cv.parentElement.getBoundingClientRect();
-  CW=Math.max(320,Math.floor(r.width-20)); CH=Math.max(320,Math.min(Math.round(CW*0.62),Math.round(window.innerHeight*0.78)));
-  cv.style.height=CH+"px"; cv.width=Math.round(CW*DPR); cv.height=Math.round(CH*DPR);
-  const tr=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_ORDER.length*TRAY_ROW+50;
-  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
-  for(const [c,ratio] of [[adCv,0.62],[goCv,0.62],[ruCv,0.62]]){
-    const w=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width));
-    c.style.height=Math.round(w*ratio)+"px"; c.width=Math.round(w*DPR); c.height=Math.round(w*ratio*DPR); }
-  drawTray();
-}
-function setupScene(s,g){
-  s.cx=CW*0.52; s.cy=CH*(g?0.68:0.70); s.scale=Math.min(CW,CH*1.45)*(g?1.1:1.05)*B.zoom;
-}
+const TAB={k:"bench"};
+function say(s,warn){ msg={s,warn:!!warn,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const inst=k=>kit.installed.has(k);
+const itemName=k=>d().trayItems[k]||k;
+const toolsOn=()=>has("tools");
+/* the motor gets power only through the whole chain: wall – adapter – DC terminal – pole – motor jack */
+function powerChain(){ kit.powerOn=has("adapter")&&ST.ac&&ST.dc&&ST.mjack&&inst("pole")&&ST.knob>0; kit.volt=ST.knob>0?Math.round((3+9*ST.knob)*10)/10:0; }
+const adLive=()=>has("adapter")&&ST.ac&&ST.knob>0;
+const standXY=()=>[ST.pos.mat[0]+ST.standOff[0],ST.pos.mat[1]+ST.standOff[1]];
 
 /* ══════════════════════════════════════════════════════════════
-   5.  TRAY
+   4.  DRAWING HELPERS
    ══════════════════════════════════════════════════════════════ */
-let trayCells=[];
-function trayState(n){
-  const t=d(), k=kitKey(n);
-  if(n==="bolts") return [false,t.trayMany];
-  if(n==="gonio") return B.gonio?[true,t.trayOut]:(kit.installed.has("pole")?[false,t.trayTake]:[false,t.trayNeed(t.trayItems.pole)]);
-  if(KEY_OF[n]){ const on=kit.installed.has("disk")&&kit.diskKey===n.slice(1); if(on) return [true,t.trayOut]; }
-  else if(kit.installed.has(k)) return [true,t.trayOut];
-  const r=REQ[k]; if(r&&!kit.installed.has(r)) return [false,t.trayNeed(t.trayItems[r==="disk"?"d20_3":r])];
-  return [false,t.trayTake];
-}
-function trayIcon(c,n,x,y,dim){
-  const g=dim?"#474d54":null;
-  const R=(a,b,e,f,fill,out)=>{ c.fillStyle=g||fill; c.fillRect(a,b,e-a,f-b); if(out){ c.strokeStyle=out; c.lineWidth=1; c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
-  const O=(a,b,r,fill,out)=>{ c.beginPath(); c.arc(a,b,r,0,7); if(fill){ c.fillStyle=g||fill; c.fill(); } if(out){ c.strokeStyle=out; c.lineWidth=1.5; c.stroke(); } };
-  const L=(a,b,e,f,col,w)=>{ c.beginPath(); c.moveTo(a,b); c.lineTo(e,f); c.strokeStyle=g||col; c.lineWidth=w||1; c.stroke(); };
-  if(n==="mat") R(x-15,y-9,x+15,y+9,COL_MAT);
-  else if(n==="stand"){ L(x,y-10,x-12,y+9,"#3a3d42",4); L(x,y-10,x+12,y+9,"#3a3d42",4); L(x-7,y+2,x+7,y+2,"#3a3d42",3); }
-  else if(n==="knobs"){ for(const dx of [-9,0,9]) O(x+dx,y,4,"#2a2d31","#6d737a"); }
-  else if(n==="pole"){ L(x,y+12,x,y-8,"#b9bfc6",3); R(x-5,y-13,x+5,y-6,"#202227"); }
-  else if(n==="tube") L(x-15,y+6,x+15,y-6,"#c9ccd1",3);
-  else if(n==="motor"){ R(x-8,y-7,x+8,y+7,"#23262c","#555"); L(x-8,y+6,x-14,y+11,"#c0392b",1.5); }
-  else if(n==="coupler"){ O(x,y,7,"#c9ccd1","#888"); O(x,y,2,"#555"); }
-  else if(KEY_OF[n]||n==="cw"){ O(x,y,n==="cw"?12:10,"rgba(214,234,244,0.25)","#9fc2d4"); O(x,y,2,"#9aa0a8"); }
-  else if(n==="adapter"){ R(x-12,y-7,x+12,y+7,"#121316","#444"); R(x+1,y-4,x+10,y+1,"#2a0808"); O(x-6,y,3,"#2b2e33"); }
-  else if(n==="gonio"){ c.beginPath(); c.arc(x,y+6,12,Math.PI,0); c.closePath(); c.fillStyle=g||"rgba(235,242,246,0.35)"; c.fill(); c.strokeStyle="#6fa0c8"; c.stroke(); }
-  else if(n==="bolts"){ for(const dx of [-6,6]){ R(x+dx-2,y-8,x+dx+2,y+6,"#9aa0a8"); R(x+dx-4,y-10,x+dx+4,y-7,"#6d737a"); } }
-}
-function drawTray(){
-  const c=trayCtx;
-  c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
-  trayCells=[]; let y=6; const wd=TRW-12;
-  for(const n of TRAY_ORDER){
-    const [out,sub]=trayState(n), sel=B.carry&&B.carry.id===n;
-    c.fillStyle=out?"#171a1e":"#1f242b"; c.fillRect(6,y,wd,TRAY_ROW-4);
-    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TRAY_ROW-5);
-    trayIcon(c,n,28,y+(TRAY_ROW-4)/2,out);
-    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
-    c.fillStyle=out?"#868e96":"#e8eef2"; c.fillText(d().trayItems[n],50,y+13);
-    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(sub,50,y+28);
-    trayCells.push([n,y,y+TRAY_ROW-4]); y+=TRAY_ROW;
-  }
-  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
-  d().trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
-}
-trayCv.addEventListener("mousedown",e=>{
-  if(e.button!==0) return;
-  const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top, t=d();
-  B.trayDrag=true;
-  for(const [n,y0,y1] of trayCells){
-    if(y<y0||y>y1) continue;
-    B.carry=null;
-    const [out]=trayState(n);
-    if(out){ say(t.trayOut); drawTray(); return; }
-    const k=kitKey(n), rq=REQ[k];
-    if(n!=="bolts"&&rq&&!kit.installed.has(rq)){ say(t.m.need(t.trayItems[rq==="disk"?"d20_3":rq]),true); drawTray(); return; }
-    if(k==="disk"&&kit.installed.has("disk")){ say(t.m.oneDisk,true); drawTray(); return; }
-    if((k==="disk"||n==="bolts")&&kit.w_s>5){ say(t.st.spin,true); return; }
-    B.carry={id:n};
-    say(n==="bolts"?t.m.boltPick:t.m.placeIt(t.trayItems[n]));
-    drawTray(); return;
-  }
-});
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
 
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+const add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k], dot2=(a,b)=>a[0]*b[0]+a[1]*b[1],
+      len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a); return l>1e-12?[a[0]/l,a[1]/l]:[1,0]; }, v2=a=>[Math.cos(a),Math.sin(a)];
 /* ══════════════════════════════════════════════════════════════
-   6.  INTERACTION ON THE BENCH
+   5.  THE BENCH  (oblique view from the front left; x right, y towards you, z up, cm)
    ══════════════════════════════════════════════════════════════ */
-function say(s,warn){ B.note={s,warn:!!warn,t:performance.now()}; renderStatus(); }
-function slotWorld(key){
-  const u=kit.axis(), P=s=>[u[0]*s,u[1]*s,PIVOT_Z+u[2]*s];
-  return {mat:[0,0,0],stand:[0,0,0.02],knobs:[0,BASE_R,0.01],pole:[0,0,PIVOT_Z*0.55],tube:[0,0,PIVOT_Z],
-    motor:P(kit.r_m-0.03),coupler:P(kit.r_m),disk:P(kit.r_m),cw:P(-kit.r_c),adapter:[0.235,-0.195,0.02],gonio:[0,0,PIVOT_Z]}[key];
+/* an orthographic camera that orbits the desk: az turns it about the vertical, el lifts it */
+const LW=1200, LH=640, SC=8;
+const VIEW={z:1,px:0,py:0}, CAM={az:0.36,el:0.44}, CS={ca:1,sa:0,ce:1,se:0,ox:0,oy:0};
+function setCam(){ CS.ca=Math.cos(CAM.az); CS.sa=Math.sin(CAM.az); CS.ce=Math.cos(CAM.el); CS.se=Math.sin(CAM.el);
+  /* keep the middle of the desk, a hand above it, at the same place on the screen */
+  const cx=55, cy=31, X=cx*CS.ca+cy*CS.sa, D=-cx*CS.sa+cy*CS.ca; CS.ox=LW/2-SC*X; CS.oy=LH*0.60-SC*(D*CS.se-8*CS.ce); }
+setCam();
+const dep=v=>-v[0]*CS.sa+v[1]*CS.ca;           /* how near the viewer a point is */
+const P=(x,y,z)=>{ const X=CS.ox+SC*(x*CS.ca+y*CS.sa), Y=CS.oy+SC*((-x*CS.sa+y*CS.ca)*CS.se-(z||0)*CS.ce); return [(X-LW/2)*VIEW.z+LW/2+VIEW.px,(Y-LH/2)*VIEW.z+LH/2+VIEW.py]; };
+const unP=(X,Y,z)=>{ const X0=((X-VIEW.px-LW/2)/VIEW.z+LW/2-CS.ox)/SC, Y0=((Y-VIEW.py-LH/2)/VIEW.z+LH/2-CS.oy)/SC, D=(Y0+(z||0)*CS.ce)/CS.se;
+  return [X0*CS.ca-D*CS.sa,X0*CS.sa+D*CS.ca]; };
+const SZ=()=>SC*VIEW.z;
+const P3=v=>P(v[0],v[1],v[2]);
+const vadd=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], vmul=(a,k)=>[a[0]*k,a[1]*k,a[2]*k];
+const vlen=a=>Math.hypot(a[0],a[1],a[2]), vnrm=a=>{ const l=vlen(a)||1; return [a[0]/l,a[1]/l,a[2]/l]; };
+const vcross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+function seg3(a,b,col,w){ const p=P3(a), q=P3(b); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); ctx.lineCap="butt"; }
+function quad(a,b,c,e,fill,edge,lw){ poly([P3(a),P3(b),P3(c),P3(e)],fill,edge,lw||0.8); }
+function abox(x0,y0,z0,x1,y1,z1,top,front,side,edge){
+  const xs=CS.sa>=0?x0:x1; quad([xs,y0,z0],[xs,y1,z0],[xs,y1,z1],[xs,y0,z1],side,edge); quad([x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1],front,edge); quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],top,edge); }
+/* a vertical cylinder and a disc lying flat */
+function cylV(x,y,z0,z1,r,body,top,edge){ const b=P(x,y,z0), t=P(x,y,z1), rx=r*SZ(), ry=r*SZ()*CS.se;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); } ell(t[0],t[1],rx,ry,top,edge,0.7); }
+function starKnob(x,y,z,r,rot,col){ const pts=[]; for(let i=0;i<20;i++){ const a=rot+i*Math.PI/10, rr=i%2?r*0.62:r; pts.push(P(x+rr*Math.cos(a),y+rr*Math.sin(a),z)); } poly(pts,col||"#1b1c1f","#000",0.8); }
+/* a circle of radius R in the plane through c spanned by e1, e2 */
+const ring=(c,e1,e2,R,n)=>Array.from({length:n||40},(_,i)=>{ const a=i/(n||40)*2*Math.PI; return P3(vadd(c,vadd(vmul(e1,R*Math.cos(a)),vmul(e2,R*Math.sin(a))))); });
+
+/* ── the room: desk, the wall with its socket ── */
+function drawRoom(){
+  ctx.fillStyle="#2c323b"; ctx.fillRect(0,0,LW,LH);
+  /* the skirting of the wall behind the desk, then the desk */
+  poly([P(-120,0,0),P(260,0,0),P(260,0,1.2),P(-120,0,1.2)],"#3a414b",null);
+  abox(DESK.x0,DESK.y0,-3,DESK.x1,DESK.y1,0,"#b58c63","#8d6a45","#7b5b3b","#6b4e32");
+  for(let x=8;x<DESK.x1;x+=9) seg3([x,DESK.y0,0],[x,DESK.y1,0],"rgba(120,85,50,0.35)",1);
+  /* the wall socket behind the desk */
+  quad([92,0,5],[104,0,5],[104,0,15],[92,0,15],"#eceeef","#9aa0a6",1);
+  for(const x of [95,101]){ const c=P(x,0,10); ell(c[0],c[1],2.2*SZ(),2.2*SZ(),"#d7dadd","#9aa0a6",1); for(const dz of [-0.8,0.8]){ const h=P(x+dz,0,10); circ(h[0],h[1],0.32*SZ(),"#2a2c2f"); } }
+  ZONES.wall=bbox2([P(92,0,5),P(104,0,15)]);
+  const q=P(98,0,16.5); text(d().lab.wall,q[0],q[1]-4,"#9aa3ab",10,"center");
 }
-function slotScreen(key){
-  const w=slotWorld(key); if(!w) return null;
-  sc.off=key==="mat"?[B.pos.mat[0],B.pos.mat[1],0]:key==="adapter"?adAt():standAt();
-  const q=sc.prj(w); sc.off=[0,0,0]; return q;
+const ZONES={};
+const bbox2=pts=>[Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))];
+const inZ=(z,p,m)=>z&&p[0]>=z[0]-(m||0)&&p[0]<=z[2]+(m||0)&&p[1]>=z[1]-(m||0)&&p[1]<=z[3]+(m||0);
+
+/* ── the antistatic mat and the A-shape stand with its three star-knob feet ── */
+function footXY(i){ const [sx,sy]=standXY(), a=(90+120*i)*Math.PI/180, R=BASE_R*100; return [sx+R*Math.cos(a),sy+R*Math.sin(a)]; }
+const footZ=i=>0.3+1.0+kit.knob[i]*100;      /* the underside of the casting over each foot */
+function drawMat(){ const [x,y]=ST.pos.mat; abox(x-MAT[0]/2,y-MAT[1]/2,0,x+MAT[0]/2,y+MAT[1]/2,0.3,"#1f8a7e","#17695f","#145a52","#0e3f39");
+  for(let i=1;i<8;i++) seg3([x-MAT[0]/2+i*5,y-MAT[1]/2,0.31],[x-MAT[0]/2+i*5,y+MAT[1]/2,0.31],"rgba(255,255,255,0.06)",1);
+  ZONES.mat=bbox2([P(x-MAT[0]/2,y-MAT[1]/2,0.3),P(x+MAT[0]/2,y+MAT[1]/2,0.3)]); }
+function drawStand(){
+  const [sx,sy]=standXY(), F=[0,1,2].map(footXY), zc=t=>0.3+1.0+(kit.knob[0]+kit.knob[1]+kit.knob[2])/3*100;
+  /* the cast A: two legs from the front foot to the back feet, a cross bar, the boss for the pole */
+  for(const i of [0,1,2]){ cylV(F[i][0],F[i][1],0.3,1.3+kit.knob[i]*100,0.35,"#9aa0a6","#c9cdd1","#555"); }
+  const leg=(a,b,w)=>{ const za=footZ(a), zb=footZ(b); const A=[F[a][0],F[a][1],za], Bv=[F[b][0],F[b][1],zb];
+    const dir=vnrm([Bv[0]-A[0],Bv[1]-A[1],0]), n=[-dir[1]*w,dir[0]*w,0];
+    quad(vadd(A,n),vadd(Bv,n),vadd(Bv,vmul(n,-1)),vadd(A,vmul(n,-1)),"#1d1f23","#000"); quad(vadd(vadd(A,n),[0,0,1.6]),vadd(vadd(Bv,n),[0,0,1.6]),vadd(vadd(Bv,vmul(n,-1)),[0,0,1.6]),vadd(vadd(A,vmul(n,-1)),[0,0,1.6]),"#2a2d33","#000");
+    seg3(vadd(vadd(A,vmul(n,-1)),[0,0,1.6]),vadd(vadd(Bv,vmul(n,-1)),[0,0,1.6]),"#000",1); };
+  leg(1,2,1.0); leg(0,1,1.4); leg(0,2,1.4);
+  for(const i of [0,1,2]) starKnob(F[i][0],F[i][1],footZ(i)+1.7,1.6,kit.knob[i]*4000,"#16171a");
+  for(const i of [0,1,2]) ZONES["foot"+i]=bbox2([P(F[i][0]-1.8,F[i][1]-1.8,footZ(i)+1.7),P(F[i][0]+1.8,F[i][1]+1.8,footZ(i)+1.7)]);
+  cylV(sx,sy,zc()+1.6,zc()+4.2,1.6,"#202227","#2c2f35","#000");
+  /* the hand knob on the side of the boss that clamps the pole */
+  seg3([sx+1.6,sy,zc()+3],[sx+3.4,sy,zc()+3],"#3a3d42",3); starKnob(sx+3.6,sy,zc()+3,1.1,0.4,"#16171a");
+  ZONES.stand=bbox2([P(sx-12,sy-12,0.3),P(sx+12,sy+12,5)]);
 }
-/* where a base part may be put down; null if it does not fit there */
-function baseSpot(k,g){
-  if(!g) return null;
-  const inside=(x,y,hx,hy,cx,cy)=>Math.abs(x-cx)<=hx&&Math.abs(y-cy)<=hy;
-  const hitsAd=(cx,cy,hx,hy)=>kit.installed.has("adapter")&&B.carry.id!=="adapter"&&
-    Math.abs(cx-(AD_C[0]+B.pos.ad[0]))<hx+AD_HW&&Math.abs(cy-(AD_C[1]+B.pos.ad[1]))<hy+AD_HD;
-  if(k==="mat"){
-    if(!inside(g[0],g[1],DESK_HW-MAT_HW,DESK_HD-MAT_HD,0,0)||hitsAd(g[0],g[1],MAT_HW,MAT_HD)) return null;
-    return g;
-  }
-  if(k==="stand"){            /* on the mat, its feet kept on the rubber */
-    const m=B.pos.mat; if(!inside(g[0],g[1],MAT_HW,MAT_HD,m[0],m[1])) return null;
-    return [Math.max(-0.09,Math.min(0.09,g[0]-m[0])),Math.max(-0.05,Math.min(0.05,g[1]-m[1]))];
-  }
-  if(k==="adapter"){
-    const c=[g[0],g[1]];
-    if(!inside(c[0],c[1],DESK_HW-AD_HW,DESK_HD-AD_HD,0,0)) return null;
-    const m=B.pos.mat;
-    if(kit.installed.has("mat")&&Math.abs(c[0]-m[0])<MAT_HW+AD_HW&&Math.abs(c[1]-m[1])<MAT_HD+AD_HD) return null;
-    return [c[0]-AD_C[0],c[1]-AD_C[1]];
-  }
-  return null;
+/* ── the vertical stand: steel pole, DC terminal at the bottom, the pivot head on top ── */
+function drawPoleLow(){ const [sx,sy]=standXY(), z0=5.8;
+  cylV(sx,sy,z0,PZ-2.6,0.6,"#b9bfc6","#dfe3e6","#7d848b");
+  /* the green screw-terminal DC jack, low on the pole, and the leads up to the head */
+  abox(sx-1.4,sy+0.6,z0+0.6,sx+1.4,sy+2.4,z0+2.4,"#1f9e57","#178046","#11683a","#0b4a29");
+  for(const dx of [-0.6,0.6]){ const c=P(sx+dx,sy+2.41,z0+1.5); circ(c[0],c[1],0.32*SZ(),"#c9cdd1","#555",0.6); }
+  ZONES.term=bbox2([P(sx-1.6,sy+0.6,z0+0.4),P(sx+1.6,sy+2.6,z0+2.6)]);
+  ctx.strokeStyle="#c0392b"; ctx.lineWidth=1.3; const a=P(sx+0.7,sy+0.7,z0+2.4), b=P(sx+0.7,sy+0.7,PZ-3); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  ctx.strokeStyle="#111"; const a2=P(sx+0.9,sy+0.5,z0+2.4), b2=P(sx+0.9,sy+0.5,PZ-3); ctx.beginPath(); ctx.moveTo(a2[0],a2[1]); ctx.lineTo(b2[0],b2[1]); ctx.stroke();
 }
-function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
-function near(p,key,rad){ const s=slotScreen(key); return s&&Math.hypot(s[0]-p[0],s[1]-p[1])<rad; }
-function install(n){
-  const t=d(), k=kitKey(n);
-  if(n==="gonio"){ B.gonio=true; }
-  else { if(KEY_OF[n]) kit.diskKey=n.slice(1); kit.installed.add(k); if(k==="motor"){ kit.burnt=false; kit.overVoltT=0; } kit.resetMotion(); }
-  B.carry=null; say(t.m.placed(t.trayItems[n])); drawTray();
-}
-function onPress(p){
-  const t=d();
-  if(B.tab!=="bench"){ B.rot=[p[0],p[1]]; return; }
-  if(B.carry){
-    const n=B.carry.id;
-    if(n==="bolts"){
-      const onSd=kit.installed.has("disk")&&near(p,"disk",sc.scale*0.11), onCw=kit.installed.has("cw")&&near(p,"cw",sc.scale*0.14);
-      if(kit.w_s>5){ say(t.st.spin,true); return; }
-      if(onSd&&kit.nBoltSd<12){ kit.nBoltSd++; say(t.m.boltOn(t.bsd,kit.nBoltSd)); }
-      else if(onCw&&kit.nBoltCw<12){ kit.nBoltCw++; say(t.m.boltOn(t.bcw,kit.nBoltCw)); }
-      else say(t.m.notHere,true);
-      return;
-    }
-    const k=kitKey(n);
-    if(k==="mat"||k==="stand"||k==="adapter"){
-      const at=baseSpot(k,sc.ground(p[0],p[1]));
-      if(!at){ say(t.m.notHere,true); return; }
-      B.pos[k==="adapter"?"ad":k]=at;
-      if(B.carry.move){ B.carry=null; kit.resetMotion(); say(t.m.moved(t.trayItems[n])); return; }
-      install(n); return;
-    }
-    const rad=Math.max(50,sc.scale*(k==="disk"||k==="cw"?0.13:0.09));
-    if(near(p,k,rad)) install(n); else say(t.m.notHere,true);
-    return;
-  }
-  B.rot=[p[0],p[1]]; B.press=[p[0],p[1]]; cv.style.cursor="grabbing";
-}
-/* a click (no drag) on the adapter, the stand or the mat picks it up to move it */
-function pickBase(p){
-  const t=d();
-  for(const k of ["adapter","stand","mat"]){
-    if(!kit.installed.has(k)||!near(p,k,Math.max(30,sc.scale*(k==="mat"?0.16:0.07)))) continue;
-    if(k!=="adapter"&&kit.w_s>5){ say(t.st.spin,true); return; }
-    B.carry={id:k,move:true}; say(t.m.moveIt(t.trayItems[k])); return;
-  }
-}
-function dependents(k){
-  const out=[];
-  for(const [c,r] of PART_KEYS) if(r===k&&kit.installed.has(c)) out.push(c);
-  if(k==="pole"&&B.gonio) out.push("gonio");
+function pivot(){ const [sx,sy]=standXY(); return [sx,sy,PZ]; }
+function frame(){ const u=kit.axis(), h=Math.hypot(u[0],u[1])||1, e1=[-u[1]/h,u[0]/h,0], e2=vcross(u,e1); return {u,e1,e2}; }
+const along=(s,f)=>vadd(pivot(),vmul(f.u,s));
+/* the pieces of the gyroscope, each with the depth it is drawn at */
+function gyroPieces(){
+  const out=[], f=frame(), O=pivot(), rm=kit.r_m*100, rc=kit.r_c*100, add=(y,fn)=>out.push([y,fn]);
+  /* the head turns with the arm about the pole */
+  const head=()=>{ const hu=[f.u[0],f.u[1],0], hh=Math.hypot(hu[0],hu[1])||1, a=[hu[0]/hh,hu[1]/hh,0], b=[-a[1],a[0],0];
+    const C=(i,j,k)=>vadd(O,vadd(vmul(a,i*2.4),vadd(vmul(b,j*2.0),[0,0,k])));
+    for(const [p,q,r,s,col] of [[C(-1,-1,-3),C(1,-1,-3),C(1,-1,1.6),C(-1,-1,1.6),"#24272c"],[C(-1,1,-3),C(1,1,-3),C(1,1,1.6),C(-1,1,1.6),"#2c2f35"],
+      [C(-1,-1,-3),C(-1,1,-3),C(-1,1,1.6),C(-1,-1,1.6),"#1d2024"],[C(1,-1,-3),C(1,1,-3),C(1,1,1.6),C(1,-1,1.6),"#1d2024"],[C(-1,-1,1.6),C(1,-1,1.6),C(1,1,1.6),C(-1,1,1.6),"#32363c"]])
+      quad(p,q,r,s,col,"#000");
+    /* the gimbal axle and the star knob that locks the tube */
+    const ax0=vadd(O,vmul(b,-2.4)), ax1=vadd(O,vmul(b,2.4)); seg3(ax0,ax1,"#9aa0a6",3);
+    const kz=vadd(O,[0,0,3.4]); seg3(vadd(O,[0,0,1.6]),kz,"#3a3d42",3);
+    const kp=P3(kz); starKnob(kz[0],kz[1],kz[2],1.4,kit.tubeLocked?0:0.6,kit.tubeLocked?"#16171a":"#4a2f12");
+    ZONES.lock=[kp[0]-1.8*SZ(),kp[1]-1.2*SZ(),kp[0]+1.8*SZ(),kp[1]+1.2*SZ()];
+    /* the holder: a fork under the head the tube rests on when it tips too far */
+    seg3(vadd(O,vadd(vmul(b,-1.4),[0,0,-3.2])),vadd(O,vadd(vmul(b,-1.4),[0,0,-5.2])),"#2c2f35",2);
+    seg3(vadd(O,vadd(vmul(b,1.4),[0,0,-3.2])),vadd(O,vadd(vmul(b,1.4),[0,0,-5.2])),"#2c2f35",2);
+    ZONES.head=bbox2([P3(C(-1.5,-1.5,-3.5)),P3(C(1.5,1.5,2))]); };
+  if(inst("pole")) add(dep(O)+0.01,head);
+  if(!inst("tube")) return out;
+  /* goniometer clamped at the pivot, in the vertical plane of the arm */
+  if(ST.gonio) add(dep(O)-0.5,()=>{ const hu=vnrm([f.u[0],f.u[1],0]), pts=[P3(O)]; for(let k=-60;k<=60;k+=4){ const a=k*Math.PI/180; pts.push(P3(vadd(O,vadd(vmul(hu,9*Math.cos(a)),[0,0,9*Math.sin(a)])))); }
+    poly(pts,"rgba(235,242,246,0.30)","rgba(120,160,190,0.9)",1);
+    for(let k=-60;k<=60;k+=10){ const a=k*Math.PI/180; seg3(vadd(O,vadd(vmul(hu,7.8*Math.cos(a)),[0,0,7.8*Math.sin(a)])),vadd(O,vadd(vmul(hu,9*Math.cos(a)),[0,0,9*Math.sin(a)])),"#0b5394",1); } });
+  /* the tube in two halves so the pole can be in front of one of them */
+  const tube=(s0,s1)=>()=>{ const a=along(s0,f), b=along(s1,f); seg3(a,b,"#8f969d",0.75*2*SZ()); seg3(vadd(a,vmul(f.e2,0.3)),vadd(b,vmul(f.e2,0.3)),"#e3e6e9",0.25*2*SZ()); };
+  add(dep(along(-rc/2,f)),tube(-rc,0)); add(dep(along(rm/2,f)),tube(0,rm-6.5));
+  /* the ruler held along the side of the tube, its 0 at the centre of the pivot; it stops at the disk */
+  if(ST.ruler) add(dep(along(rm/2,f))+0.02,()=>{ const s1=inst("disk")?rm-0.6:Math.min(50,rm+6), off=vmul(f.e1,3.4), a=vadd(along(-1,f),off), b=vadd(along(s1,f),off), w=vmul(f.e2,1.6);
+    quad(vadd(a,w),vadd(b,w),vadd(b,vmul(w,-1)),vadd(a,vmul(w,-1)),"rgba(240,244,230,0.9)","#8a8f80",0.8);
+    for(let k=0;k<=s1;k++){ const p=vadd(along(k,f),off); seg3(vadd(p,w),vadd(p,vmul(w,k%10===0?-0.2:k%5===0?0.3:0.6)),"#333",0.6); } });
+  /* motor case at the disk end, the coupler, the disk */
+  if(inst("motor")) add(dep(along(rm-3.5,f))+0.05,()=>{ const c=along(rm-3.7,f), B=(i,j,k)=>vadd(c,vadd(vmul(f.u,i*2.9),vadd(vmul(f.e1,j*2.1),vmul(f.e2,k*2.5))));
+    for(const [p,q,r,s] of [[B(-1,-1,-1),B(1,-1,-1),B(1,-1,1),B(-1,-1,1)],[B(-1,1,-1),B(1,1,-1),B(1,1,1),B(-1,1,1)],[B(-1,-1,1),B(1,-1,1),B(1,1,1),B(-1,1,1)],[B(-1,-1,-1),B(1,-1,-1),B(1,1,-1),B(-1,1,-1)],[B(1,-1,-1),B(1,1,-1),B(1,1,1),B(1,-1,1)]])
+      quad(p,q,r,s,"#23262c","#000");
+    for(const j of [-1,1]) for(const k of [-1,1]) circ(...P3(B(0.6,j*0.8,k*1.02)),0.22*SZ(),"#aab0b6");
+    if(kit.burnt){ const sm=P3(vadd(c,[0,0,4])); for(let i=0;i<4;i++){ ell(sm[0]+Math.sin(kit.t*2+i)*6,sm[1]-i*10,8+i*3,5+i*2,"rgba(120,120,120,"+(0.35-i*0.07)+")"); } }
+    /* the motor lead with its DC jack: plugged into the head, or hanging */
+    const jA=vadd(c,vmul(f.e2,-2.5)), jB=ST.mjack?vadd(pivot(),[0,0,-2.4]):vadd(jA,[0,0,-5]);
+    ctx.strokeStyle="#c0392b"; ctx.lineWidth=1.4; const pa=P3(jA), pb=P3(jB), pm=P3(vadd(vmul(vadd(jA,jB),0.5),[0,0,-3])); ctx.beginPath(); ctx.moveTo(pa[0],pa[1]); ctx.quadraticCurveTo(pm[0],pm[1],pb[0],pb[1]); ctx.stroke();
+    circ(pb[0],pb[1],0.55*SZ(),"#1b1c1f","#555",0.8); ZONES.mjack=[pb[0]-0.9*SZ(),pb[1]-0.9*SZ(),pb[0]+0.9*SZ(),pb[1]+0.9*SZ()]; });
+  if(inst("coupler")) add(dep(along(rm-0.5,f))+0.06,()=>{ const a=along(rm-1.2,f), b=along(rm-0.1,f); seg3(a,b,"#b9bec4",2.4*SZ()); seg3(vadd(a,vmul(f.e2,0.5)),vadd(b,vmul(f.e2,0.5)),"#e6e9ec",0.6*SZ()); });
+  const disk=(c,R,cw)=>()=>{ const pts=ring(c,f.e1,f.e2,R,48), bolts=cw?kit.nBoltCw:kit.nBoltSd, w=cw?0:kit.w_s, ang=cw?0:kit.spinAng;
+    poly(pts,"rgba(214,234,244,0.30)","rgba(150,190,210,0.95)",1.4); poly(ring(vadd(c,vmul(f.u,cw?-0.4:0.3)),f.e1,f.e2,R,48),null,"rgba(150,190,210,0.6)",1);
+    const holes=12, rh=R-1.2;
+    if(Math.abs(w)<20){ for(let i=0;i<holes;i++){ const a=ang+i*2*Math.PI/holes, p=P3(vadd(c,vadd(vmul(f.e1,rh*Math.cos(a)),vmul(f.e2,rh*Math.sin(a)))));
+        if(i<bolts){ circ(p[0],p[1],0.55*SZ(),"#9aa0a8","#3a3d42",0.8); circ(p[0],p[1],0.2*SZ(),"#5c6168"); } else circ(p[0],p[1],0.28*SZ(),"rgba(40,60,70,0.55)"); } }
+    else { poly(ring(c,f.e1,f.e2,rh,48),null,bolts?"rgba(120,126,134,0.75)":"rgba(40,60,70,0.25)",bolts?2.2:1.2); poly(ring(c,f.e1,f.e2,R*0.55,40),null,"rgba(255,255,255,0.12)",3); }
+    if(!cw){ const hub=ring(c,f.e1,f.e2,1.8,20); poly(hub,"#c9ccd1","#6d737a",1); for(const k of [0,1,2]){ const a=ang+k*2*Math.PI/3; const p=P3(vadd(c,vadd(vmul(f.e1,1.1*Math.cos(a)),vmul(f.e2,1.1*Math.sin(a))))); circ(p[0],p[1],0.25*SZ(),"#333"); } }
+    else { poly(ring(c,f.e1,f.e2,1.4,20),"#c9ccd1","#6d737a",1); poly(ring(c,f.e1,f.e2,0.6,12),"#555"); }
+    const bb=bbox2(pts); ZONES[cw?"cw":"disk"]=bb; };
+  if(inst("disk")) add(dep(along(rm,f))+0.07,disk(along(rm+0.2,f),DISKS[kit.diskKey][1]*100,false));
+  if(inst("cw")) add(dep(along(-rc,f))+0.07,disk(along(-rc,f),DISKS["26_4"][1]*100,true));
+  ZONES.endR=bbox2([P3(along(rm-8,f)),P3(along(rm+1,f))]); ZONES.endL=bbox2([P3(along(-rc,f)),P3(along(-rc+8,f))]);
   return out;
 }
-function onRClick(p){
-  const t=d();
-  if(B.carry){ const mv=B.carry.move; B.carry=null; drawTray(); say(mv?t.m.stays:t.m.removed(t.trayItems.bolts)); return; }
-  if(B.tab!=="bench") return;
-  /* the front-most installed part near the pointer */
-  const cand=[...kit.installed].concat(B.gonio?["gonio"]:[]).map(k=>{ const s=slotScreen(k); return [k,s?Math.hypot(s[0]-p[0],s[1]-p[1]):1e9]; })
-    .filter(([k,dd])=>dd<Math.max(30,sc.scale*(k==="mat"?0.2:k==="disk"||k==="cw"?0.11:0.06))).sort((a,b)=>a[1]-b[1]);
-  if(!cand.length) return;
-  let k=cand[0][0];
-  if(k==="mat"&&cand.length>1) k=cand[1][0];
-  if((k==="disk"&&kit.nBoltSd>0)||(k==="cw"&&kit.nBoltCw>0)){
-    if(kit.w_s>5){ say(t.st.spin,true); return; }
-    if(k==="disk"){ kit.nBoltSd--; say(t.m.boltOff(t.bsd,kit.nBoltSd)); } else { kit.nBoltCw--; say(t.m.boltOff(t.bcw,kit.nBoltCw)); }
-    return;
-  }
-  if((k==="disk"||k==="motor"||k==="coupler")&&kit.w_s>5){ say(t.st.spin,true); return; }
-  const dep=dependents(k);
-  if(dep.length){ say(t.m.blocked(dep.map(c=>t.trayItems[c==="disk"?"d"+kit.diskKey:c]).join(", ")),true); return; }
-  const name=k==="disk"?"d"+kit.diskKey:k;
-  if(k==="gonio") B.gonio=false; else { kit.installed.delete(k); if(k==="disk") kit.nBoltSd=0; if(k==="cw") kit.nBoltCw=0; kit.resetMotion(); }
-  say(t.m.removed(t.trayItems[name])); drawTray();
+/* ── loose things on the desk ── */
+function drawAdapter(){ const [x,y]=ST.pos.adapter;
+  abox(x-6,y-3.3,0,x+6,y+3.3,3.2,"#17181b","#111214","#0c0d0f","#000");
+  const dsp=[P(x+0.5,y-2.4,3.21),P(x+5,y-2.4,3.21),P(x+5,y-0.4,3.21),P(x+0.5,y-0.4,3.21)]; poly(dsp,"#2a0606","#000",0.8);
+  if(adLive()){ const c=P(x+2.75,y-1.4,3.22); text(ST.knob>0?kit.volt.toFixed(1):"",c[0],c[1],"#ff3b30",Math.max(7,1.1*SZ()),"center","700",MONO); }
+  const kc=P(x+3,y+1.6,3.2); ell(kc[0],kc[1],1.2*SZ(),0.6*SZ(),"#2d3036","#000",0.8); const t=P(x-3.5,y-1.6,3.21); text("ADAPTER POWER",t[0],t[1],"#cfd3d6",Math.max(5,0.55*SZ()),"center","700");
+  ZONES.adapter=bbox2([P(x-6,y-3.3,0),P(x+6,y+3.3,3.2)]);
+  /* mains cord to the wall, DC lead to the stand */
+  const acEnd=ST.ac?[98,0.2,9]:[x-9,y+3,0.4], a0=[x-6,y,1.5];
+  cord(a0,acEnd,"#111",1.8); if(!ST.ac){ const p=P3(acEnd); abox(acEnd[0]-1.2,acEnd[1]-0.9,0.2,acEnd[0]+1.2,acEnd[1]+0.9,1.6,"#1d1e20","#141516","#0f1011","#000"); ZONES.acPlug=[p[0]-1.6*SZ(),p[1]-1.6*SZ(),p[0]+1.6*SZ(),p[1]+0.6*SZ()]; } else { const p=P(98,0.4,10); circ(p[0],p[1],1.4*SZ(),"#1d1e20","#000"); ZONES.acPlug=[p[0]-1.6*SZ(),p[1]-1.6*SZ(),p[0]+1.6*SZ(),p[1]+1.6*SZ()]; }
+  const [sx,sy]=standXY(), dcEnd=ST.dc&&inst("pole")?[sx,sy+2.6,7.3]:[x+8,y-4,0.3];
+  cord([x+6,y,1.5],dcEnd,"#151515",1.4); const pd=P3(dcEnd); circ(pd[0],pd[1],0.5*SZ(),"#2a2c2f","#555",0.8); ZONES.dcPlug=[pd[0]-1.1*SZ(),pd[1]-1.1*SZ(),pd[0]+1.1*SZ(),pd[1]+1.1*SZ()];
 }
-cv.addEventListener("mousedown",e=>{ if(e.button===0) onPress(mousePos(e)); });
-window.addEventListener("mousemove",e=>{
-  if(e.target===cv) B.mouse=mousePos(e);
-  if(B.rot){ const p=mousePos(e), s=B.tab==="bench"?sc:scG;
-    s.az-=(p[0]-B.rot[0])*0.008; s.el=Math.max(-0.05,Math.min(1.2,s.el+(p[1]-B.rot[1])*0.006)); B.rot=p; }
-});
-window.addEventListener("mouseup",e=>{
-  /* a part dragged out of the parts box is put down where it is let go */
-  if(B.trayDrag&&B.carry&&e.target===cv){ B.trayDrag=false; const p=mousePos(e); B.mouse=p; onPress(p); B.rot=null; B.press=null; cv.style.cursor="grab"; return; }
-  B.trayDrag=false;
-  if(B.press&&B.tab==="bench"&&!B.carry&&e.target===cv){ const p=mousePos(e);
-    if(Math.hypot(p[0]-B.press[0],p[1]-B.press[1])<4) pickBase(p); }
-  B.press=null; B.rot=null; cv.style.cursor="grab"; });
-cv.addEventListener("contextmenu",e=>{ e.preventDefault(); onRClick(mousePos(e)); });
-cv.addEventListener("wheel",e=>{ e.preventDefault(); B.zoom=Math.max(0.6,Math.min(3.5,B.zoom*(e.deltaY<0?1.12:1/1.12))); },{passive:false});
-cv.addEventListener("touchstart",e=>{ if(e.touches.length!==1) return; e.preventDefault(); const r=cv.getBoundingClientRect();
-  const p=[e.touches[0].clientX-r.left,e.touches[0].clientY-r.top]; B.mouse=p; onPress(p); },{passive:false});
-cv.addEventListener("touchmove",e=>{ if(e.touches.length!==1||!B.rot) return; e.preventDefault(); const r=cv.getBoundingClientRect();
-  const p=[e.touches[0].clientX-r.left,e.touches[0].clientY-r.top], s=B.tab==="bench"?sc:scG;
-  s.az-=(p[0]-B.rot[0])*0.008; s.el=Math.max(-0.05,Math.min(1.2,s.el+(p[1]-B.rot[1])*0.006)); B.rot=p; },{passive:false});
-cv.addEventListener("touchend",()=>{ B.rot=null; },{passive:true});
-$("fitBtn").onclick=()=>{ sc.az=CAM0.az; sc.el=CAM0.el; B.zoom=1; };
-
+function cord(a,b,col,w){ const m=[(a[0]+b[0])/2,(a[1]+b[1])/2+3,Math.min(a[2],b[2],0.3)]; const p=P3(a), q=P3(m), r=P3(b); ctx.strokeStyle=col; ctx.lineWidth=w*VIEW.z; ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.quadraticCurveTo(q[0],q[1],r[0],r[1]); ctx.stroke(); }
+function drawSw(){ const [x,y]=ST.pos.sw; abox(x-3,y-3.5,0,x+3,y+3.5,1.5,"#25313b","#1a232b","#141b21","#05080a");
+  poly([P(x-2.2,y-2.6,1.51),P(x+2.2,y-2.6,1.51),P(x+2.2,y+0.6,1.51),P(x-2.2,y+0.6,1.51)],"#b7c4a5","#3a4436",1);
+  const c=P(x,y-1,1.52); text(fmtTime(swValue()),c[0],c[1],"#1b2316",Math.max(5,0.62*SZ()),"center","700",MONO);
+  ZONES.sw=bbox2([P(x-3,y-3.5,0),P(x+3,y+3.5,1.5)]); }
+function drawTools(){ const [x,y]=ST.pos.tools; seg3([x-5,y,0.4],[x+1,y,0.4],"#c8261d",0.9*SZ()); seg3([x+1,y,0.4],[x+6,y,0.4],"#bfc5ca",0.25*SZ());
+  seg3([x-4,y+3,0.3],[x+3,y+3,0.3],"#5c6168",0.35*SZ()); seg3([x+3,y+3,0.3],[x+3,y+0.8,0.3],"#5c6168",0.35*SZ()); ZONES.tools=bbox2([P(x-6,y-1.5,0),P(x+7,y+4,1)]); }
+function drawRulerDesk(){ const [x,y]=ST.pos.ruler; poly([P(x-25,y-1.6,0.1),P(x+25,y-1.6,0.1),P(x+25,y+1.6,0.1),P(x-25,y+1.6,0.1)],"rgba(240,244,230,0.85)","#8a8f80",0.8);
+  for(let i=0;i<=50;i+=1) seg3([x-25+i,y+1.6,0.1],[x-25+i,y+1.6-(i%10===0?1.2:i%5===0?0.8:0.5),0.1],"#333",0.6); ZONES.ruler=bbox2([P(x-25,y-1.6,0),P(x+25,y+1.6,0.2)]); }
+function drawGonioDesk(){ const [x,y]=ST.pos.gonio, pts=[P(x,y,0.1)]; for(let k=0;k<=180;k+=10){ const a=k*Math.PI/180; pts.push(P(x+7*Math.cos(a),y-7*Math.sin(a),0.1)); }
+  poly(pts,"rgba(235,242,246,0.35)","#6fa0c8",1); seg3([x,y,0.1],[x+12,y+2,0.1],"rgba(235,242,246,0.6)",1.2*SZ()); ZONES.gonio=bbox2([P(x-7,y-7,0),P(x+12,y+2,0.2)]); }
+function drawBench(){
+  drawRoom();
+  for(const k in ZONES) if(!["wall"].includes(k)) delete ZONES[k];
+  const items=[];
+  if(has("mat")) items.push([-1e6,()=>drawMat()]);
+  if(has("adapter")) items.push([dep(ST.pos.adapter),drawAdapter]);
+  if(has("sw")) items.push([dep(ST.pos.sw),drawSw]);
+  if(has("tools")) items.push([dep(ST.pos.tools),drawTools]);
+  if(has("ruler")&&!ST.ruler) items.push([dep(ST.pos.ruler),drawRulerDesk]);
+  if(has("gonio")&&!ST.gonio) items.push([dep(ST.pos.gonio),drawGonioDesk]);
+  if(inst("stand")){ const sd=dep(standXY()); items.push([sd-15,drawStand]); if(inst("pole")) items.push([sd-0.02,drawPoleLow]); for(const pc of gyroPieces()) items.push(pc); }
+  items.sort((a,b)=>a[0]-b[0]).forEach(it=>it[1]());
+  drawGhost();
+}
+function drawGhost(){ if(!hand||!overBench) return; text("⇱ "+(hand.plug?d().lab[hand.plug]:itemName(hand.item)),mouse[0]+14,mouse[1]-12,"#ffe9b0",12,"left","700"); }
 /* ══════════════════════════════════════════════════════════════
-   7.  CLOSE-UPS: power adapter, goniometer, ruler
+   6.  PARTS BOX, LAYOUT, CLOSE-UPS
    ══════════════════════════════════════════════════════════════ */
-function adKnobAngle(){ return (-150+300*B.adKnob)*Math.PI/180; }
-function drawAdapter(){
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), benchCtx=ctx, adCv=$("adCv"), goCv=$("goCv"), ruCv=$("ruCv");
+const TRAY_LIST=["mat","stand","pole","tube","motor","coupler","d20_2","d20_3","d20_4","cw","adapter","gonio","sw","ruler","bolts","tools"], TROW=34;
+const REQ={stand:"mat",pole:"stand",tube:"pole",motor:"tube",coupler:"motor",d20_2:"coupler",d20_3:"coupler",d20_4:"coupler",cw:"tube"};
+const MOUNTED=["stand","pole","tube","motor","coupler","cw"];
+let TRW=190, TRH=600, trayCells=[], DPR=1;
+function isOut(k){ if(k==="bolts") return false; if(k.startsWith("d20_")) return inst("disk")&&kit.diskKey===k.slice(1);
+  if(MOUNTED.includes(k)) return inst(k); return has(k); }
+function trayState(k){ const t=d(); if(k==="bolts") return [false,t.trayMany]; if(isOut(k)||(hand&&hand.item===k&&!hand.move)) return [true,t.trayOut];
+  const r=REQ[k]; if(r&&!inst(r)&&!has(r)) return [false,t.trayNeed(itemName(r))]; return [false,t.trayTake]; }
+function icon(c,k){
+  const old=ctx; ctx=c; ctx.save(); ctx.scale(0.75,0.75);
+  if(k==="mat") fillR(-16,-10,32,20,1,"#1f8a7e","#0e3f39");
+  else if(k==="stand"){ ctx.strokeStyle="#2a2d33"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(0,-12); ctx.lineTo(-13,10); ctx.moveTo(0,-12); ctx.lineTo(13,10); ctx.moveTo(-7,1); ctx.lineTo(7,1); ctx.stroke(); for(const [x,y] of [[0,-12],[-13,10],[13,10]]) circ(x,y,3,"#111","#555"); }
+  else if(k==="pole"){ fillR(-1.5,-12,3,24,0,"#b9bfc6"); fillR(-5,-15,10,6,1,"#202227"); fillR(-3,6,6,4,0,"#1f9e57"); }
+  else if(k==="tube"){ ctx.strokeStyle="#c9ccd1"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-16,7); ctx.lineTo(16,-7); ctx.stroke(); }
+  else if(k==="motor"){ fillR(-9,-7,18,14,2,"#23262c","#555"); ctx.strokeStyle="#c0392b"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(-9,5); ctx.lineTo(-15,10); ctx.stroke(); circ(9,0,2.5,"#c9ccd1"); }
+  else if(k==="coupler"){ circ(0,0,7,"#c9ccd1","#888"); circ(0,0,2,"#555"); circ(4,-3,1,"#333"); circ(-4,3,1,"#333"); }
+  else if(k.startsWith("d20_")||k==="cw"){ circ(0,0,k==="cw"?13:11,"rgba(214,234,244,0.3)","#9fc2d4"); for(let i=0;i<8;i++){ const a=i*Math.PI/4; circ((k==="cw"?11:9)*Math.cos(a),(k==="cw"?11:9)*Math.sin(a),0.9,"#6b8a99"); } circ(0,0,2,"#9aa0a8"); if(k!=="cw") text(k.slice(4)+"mm",0,0,"#e8eef2",7,"center","700"); }
+  else if(k==="adapter"){ fillR(-14,-8,28,16,2,"#121316","#444"); fillR(2,-5,10,6,0,"#2a0808"); text("8.8",7,-2,"#ff3b30",5,"center","700"); circ(-6,2,3.5,"#2b2e33"); }
+  else if(k==="gonio"){ ctx.beginPath(); ctx.arc(0,6,12,Math.PI,0); ctx.closePath(); ctx.fillStyle="rgba(235,242,246,0.35)"; ctx.fill(); ctx.strokeStyle="#6fa0c8"; ctx.stroke(); }
+  else if(k==="sw"){ circ(0,0,9,"#1f2a33","#0b0f12"); fillR(-6,-4,12,6,0,"#b7c4a5"); circ(-3,-11,2,"#888"); circ(3,-11,2,"#888"); }
+  else if(k==="ruler"){ fillR(-17,-4,34,8,0,"rgba(240,244,230,0.85)","#8a8f80"); for(let i=0;i<=12;i++){ ctx.fillStyle="#333"; ctx.fillRect(-16+i*2.7,-4,0.6,i%5===0?4:2); } }
+  else if(k==="bolts"){ for(const dx of [-6,6]){ fillR(dx-2,-8,4,13,0,"#9aa0a8"); fillR(dx-4,-10,8,3,0,"#6d737a"); fillR(dx-3,4,6,3,0,"#6d737a"); } }
+  else if(k==="tools"){ ctx.strokeStyle="#5c6168"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-14,8); ctx.lineTo(2,8); ctx.lineTo(2,-2); ctx.stroke(); fillR(-14,-8,12,5,2,"#c8261d"); fillR(-2,-7,14,3,0,"#bfc5ca"); }
+  ctx.restore(); ctx=old;
+}
+function layout(){
+  const w=cv.clientWidth||1000; DPR=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*DPR); cv.height=Math.round(LH*S*DPR); cv.style.height=(LH*S)+"px";
+  benchCtx.setTransform(DPR*S,0,0,DPR*S,0,0);
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
+  for(const c of [adCv,goCv,ruCv]){ const ww=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width)); c.style.height=Math.round(ww*0.62)+"px"; c.width=Math.round(ww*DPR); c.height=Math.round(ww*0.62*DPR); }
+  drawTray();
+}
+function drawTray(){
+  const c=trayCtx, t=d();
+  c.setTransform(DPR,0,0,DPR,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){
+    const [out,sub]=trayState(k), sel=hand&&hand.item===k;
+    c.fillStyle=out?"#171a1e":"#1f242b"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=out?0.35:1; c.translate(24,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=out?"#868e96":"#e8eef2";
+    c.fillText(itemName(k),44,y+11); c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(sub,44,y+24);
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+function renderTabs(){ const box=$("tabs"); box.innerHTML="";
+  for(const k of ["bench","g"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===TAB.k?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
+function setTab(k){ TAB.k=k; hand=null; renderTabs(); $("pBench").hidden=k!=="bench"; $("pG").hidden=k!=="g"; $("instrCard").hidden=k!=="bench"; $("t-cap").textContent=k==="bench"?d().capBench:d().capG; drawTray(); }
+
+/* ── 2. the adjustable power adapter, after the photograph: LED display, knob with an OFF click ── */
+let adKnobXY=[0,0,0], knobDrag=null;
+function knobAngle(){ return (-150+300*ST.knob)*Math.PI/180; }
+function drawAdPanel(){
   const c=adCv.getContext("2d"), W=adCv.width/DPR, H=adCv.height/DPR, s=W/260;
   c.setTransform(DPR*s,0,0,DPR*s,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,260,H/s);
-  if(!kit.installed.has("adapter")) c.globalAlpha=0.35;
+  if(!has("adapter")) c.globalAlpha=0.35;
   c.fillStyle="#101114"; c.beginPath(); c.roundRect(10,14,240,128,14); c.fill(); c.strokeStyle="#2c2f35"; c.lineWidth=2; c.stroke();
   c.fillStyle="#1a1c20"; c.beginPath(); c.roundRect(18,22,224,112,10); c.fill();
-  c.fillStyle="#d9dde1"; c.font="bold 11px Arial"; c.textAlign="left"; c.fillText("ADAPTER POWER",30,44);
-  c.font="bold 9px Arial"; c.textAlign="left"; c.fillText("REGULATED",146,106); c.fillText("MODEL:ZY-009",146,118);
-  c.fillText(d().lab.volt,150,40);
+  c.fillStyle="#d9dde1"; c.font="bold 13px Arial"; c.textAlign="left"; c.fillText("ADAPTER POWER",28,46);
+  c.font="bold 10px Arial"; c.fillText("REGULATED",28,98); c.fillText("MODEL:ZY-009",28,112); c.fillText(d().lab.volt,150,40);
   c.fillStyle="#2a0707"; c.fillRect(146,48,82,40); c.strokeStyle="#000"; c.strokeRect(146,48,82,40);
-  if(kit.powerOn&&kit.installed.has("adapter")){ c.fillStyle="#ff3b30"; c.font="bold 30px ui-monospace,Consolas,monospace"; c.textAlign="right"; c.fillText(kit.volt.toFixed(1),224,79); }
-  else { c.fillStyle="#3b0d0b"; c.font="bold 30px ui-monospace,Consolas,monospace"; c.textAlign="right"; c.fillText("8.8.8",224,79); }
-  /* knob with OFF detent */
-  const kx=90, ky=80, r=26;
-  c.fillStyle="#0a0b0c"; c.beginPath(); c.arc(kx,ky+2,r+1,0,7); c.fill();
-  c.fillStyle="#2d3036"; c.beginPath(); c.arc(kx,ky,r,0,7); c.fill();
-  for(let i=0;i<24;i++){ const a=i/24*TAU; c.strokeStyle="#3d4148"; c.lineWidth=2; c.beginPath(); c.moveTo(kx+Math.cos(a)*r*0.8,ky+Math.sin(a)*r*0.8); c.lineTo(kx+Math.cos(a)*r,ky+Math.sin(a)*r); c.stroke(); }
-  const a=adKnobAngle(); c.strokeStyle="#f2f2f2"; c.lineWidth=3; c.beginPath(); c.moveTo(kx+Math.sin(a)*6,ky-Math.cos(a)*6); c.lineTo(kx+Math.sin(a)*(r-4),ky-Math.cos(a)*(r-4)); c.stroke();
-  c.fillStyle="#d9dde1"; c.font="bold 9px Arial"; c.textAlign="center";
-  c.fillText(d().lab.off,kx+Math.sin(-150*Math.PI/180)*(r+12),ky-Math.cos(-150*Math.PI/180)*(r+12));
-  c.fillText(d().lab.change,kx,ky+r+14);
-  c.globalAlpha=1;
-  B.adKnobXY=[kx*s,ky*s,(r+8)*s];
+  const live=adLive(); c.font="bold 30px ui-monospace,Consolas,monospace"; c.textAlign="right";
+  c.fillStyle=live?"#ff3b30":"#3b0d0b"; c.fillText(live?kit.volt.toFixed(1):"8.8.8",224,79);
+  const kx=188, ky=114, r=17;
+  c.fillStyle="#0a0b0c"; c.beginPath(); c.arc(kx,ky+2,r+1,0,7); c.fill(); c.fillStyle="#2d3036"; c.beginPath(); c.arc(kx,ky,r,0,7); c.fill();
+  for(let i=0;i<20;i++){ const a=i/20*2*Math.PI; c.strokeStyle="#3d4148"; c.lineWidth=2; c.beginPath(); c.moveTo(kx+Math.cos(a)*r*0.78,ky+Math.sin(a)*r*0.78); c.lineTo(kx+Math.cos(a)*r,ky+Math.sin(a)*r); c.stroke(); }
+  const a=knobAngle(); c.strokeStyle="#f2f2f2"; c.lineWidth=2.5; c.beginPath(); c.moveTo(kx+Math.sin(a)*4,ky-Math.cos(a)*4); c.lineTo(kx+Math.sin(a)*(r-3),ky-Math.cos(a)*(r-3)); c.stroke();
+  c.fillStyle="#d9dde1"; c.font="bold 8px Arial"; c.textAlign="center"; c.fillText(d().lab.off,kx-28,ky+10); c.fillText(d().lab.change,kx-24,ky-14);
+  c.globalAlpha=1; adKnobXY=[kx*s,ky*s,(r+10)*s];
 }
-function adPress(e){
-  const r=adCv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top, [kx,ky,rr]=B.adKnobXY||[0,0,0];
-  if(Math.hypot(x-kx,y-ky)>rr) return;
-  if(!kit.installed.has("adapter")) return;
-  adCv.setPointerCapture(e.pointerId);
-  const v0=B.adKnob, y0=e.clientY;
-  B.knobDrag=(yy)=>{ setKnob(v0+(y0-yy)*0.004); };
-}
-function setKnob(v){
-  B.adKnob=Math.max(0,Math.min(1,v));
-  if(B.adKnob<0.004) B.adKnob=0;
-  if(B.adKnob>0) B.adKnob=Math.max(0.005,B.adKnob);
-  kit.powerOn=B.adKnob>0; kit.volt=kit.powerOn?Math.round((3+9*B.adKnob)*10)/10:0;
-}
-adCv.addEventListener("pointerdown",adPress);
-adCv.addEventListener("pointermove",e=>{ if(B.knobDrag) B.knobDrag(e.clientY); });
-adCv.addEventListener("pointerup",()=>{ B.knobDrag=null; });
-adCv.addEventListener("wheel",e=>{ if(!kit.installed.has("adapter")) return; e.preventDefault();
-  const up=e.deltaY<0;
-  if(B.adKnob===0&&up){ setKnob(0.005); return; }
-  setKnob(B.adKnob+(up?1:-1)*(e.shiftKey?0.01:0.1)/9); },{passive:false});
-function drawGonio(){
+function setKnob(v){ const was=ST.knob; ST.knob=Math.max(0,Math.min(1,v)); if(ST.knob<0.004) ST.knob=0; if(ST.knob>0&&was===0) ST.knob=Math.max(0.005,ST.knob); }
+adCv.addEventListener("pointerdown",e=>{ const r=adCv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top, [kx,ky,rr]=adKnobXY;
+  if(Math.hypot(x-kx,y-ky)>rr||!has("adapter")) return; adCv.setPointerCapture(e.pointerId); const v0=ST.knob, y0=e.clientY; knobDrag=yy=>setKnob(v0+(y0-yy)*0.004); });
+adCv.addEventListener("pointermove",e=>{ if(knobDrag) knobDrag(e.clientY); });
+adCv.addEventListener("pointerup",()=>{ knobDrag=null; });
+adCv.addEventListener("wheel",e=>{ if(!has("adapter")) return; e.preventDefault(); const up=e.deltaY<0; if(ST.knob===0&&up){ setKnob(0.005); return; } setKnob(ST.knob+(up?1:-1)*(e.shiftKey?0.01:0.1)/9); },{passive:false});
+/* ── 5. the goniometer clamped at the pivot: the arm against its scale ── */
+function drawGoPanel(){
   const c=goCv.getContext("2d"), W=goCv.width/DPR, H=goCv.height/DPR;
   c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,W,H);
-  if(!B.gonio||!kit.installed.has("tube")){ c.fillStyle="#69717a"; c.font="12px 'Malgun Gothic',sans-serif"; c.textAlign="center"; c.fillText(d().lab.noGonio,W/2,H/2); return; }
-  const cx=W*0.18, cy=H*0.5, R=Math.min(W*0.72,H*0.46);
-  c.fillStyle="rgba(250,251,246,0.95)"; c.beginPath(); c.moveTo(cx,cy); c.arc(cx,cy,R+10,-Math.PI/3.2,Math.PI/3.2); c.closePath(); c.fill();
-  c.strokeStyle="#0b5394"; c.lineWidth=1.5; c.beginPath(); c.arc(cx,cy,R,-Math.PI/3.2,Math.PI/3.2); c.stroke();
+  if(!ST.gonio||!inst("tube")){ c.fillStyle="#69717a"; c.font="12px 'Malgun Gothic',sans-serif"; c.textAlign="center"; c.fillText(d().lab.noGonio,W/2,H/2); return; }
+  const cx=W*0.16, cy=H*0.5, R=Math.min(W*0.74,H*0.46);
+  c.fillStyle="rgba(250,251,246,0.95)"; c.beginPath(); c.moveTo(cx,cy); c.arc(cx,cy,R+10,-Math.PI/3.1,Math.PI/3.1); c.closePath(); c.fill();
+  c.strokeStyle="#0b5394"; c.lineWidth=1.5; c.beginPath(); c.arc(cx,cy,R,-Math.PI/3.1,Math.PI/3.1); c.stroke();
   c.fillStyle="#0b5394"; c.font="10px Arial"; c.textAlign="center"; c.textBaseline="middle";
-  for(let dg=-55;dg<=55;dg++){ const a=dg*Math.PI/180, r0=R-(dg%10===0?14:dg%5===0?9:5);
-    c.lineWidth=dg%10===0?1.2:0.7; c.beginPath(); c.moveTo(cx+r0*Math.cos(a),cy-r0*Math.sin(a)); c.lineTo(cx+R*Math.cos(a),cy-R*Math.sin(a)); c.stroke();
+  for(let dg=-55;dg<=55;dg++){ const a=dg*Math.PI/180, r0=R-(dg%10===0?14:dg%5===0?9:5); c.lineWidth=dg%10===0?1.2:0.7; c.beginPath(); c.moveTo(cx+r0*Math.cos(a),cy-r0*Math.sin(a)); c.lineTo(cx+R*Math.cos(a),cy-R*Math.sin(a)); c.stroke();
     if(dg%10===0) c.fillText(String(Math.abs(dg)),cx+(R-24)*Math.cos(a),cy-(R-24)*Math.sin(a)); }
-  c.setLineDash([4,3]); c.strokeStyle="#9bb7d4"; c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+R,cy); c.stroke(); c.setLineDash([]);
-  const a=kit.phi; c.strokeStyle="#aeb4ba"; c.lineWidth=5; c.lineCap="round";
-  c.beginPath(); c.moveTo(cx,cy); c.lineTo(cx+(R+14)*Math.cos(a),cy-(R+14)*Math.sin(a)); c.stroke();
-  c.fillStyle="#222"; c.beginPath(); c.arc(cx,cy,5,0,TAU); c.fill();
+  const a=kit.phi; c.strokeStyle="#aeb4ba"; c.lineWidth=6; c.lineCap="round"; c.beginPath(); c.moveTo(cx-20*Math.cos(a),cy+20*Math.sin(a)); c.lineTo(cx+(R+14)*Math.cos(a),cy-(R+14)*Math.sin(a)); c.stroke(); c.lineCap="butt";
+  c.fillStyle="#1d2024"; c.fillRect(cx-9,cy-9,18,18); c.fillStyle="#9aa0a6"; c.beginPath(); c.arc(cx,cy,3,0,7); c.fill();
 }
-function drawRuler(){
+/* ── the ruler laid on the tube: 0 at the centre of the pivot ── */
+function drawRuPanel(){
   const c=ruCv.getContext("2d"), W=ruCv.width/DPR, H=ruCv.height/DPR;
   c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,W,H);
-  if(!kit.installed.has("tube")){ c.fillStyle="#69717a"; c.font="12px 'Malgun Gothic',sans-serif"; c.textAlign="center"; c.fillText(d().lab.noArm,W/2,H/2); return; }
-  const x0=12, span=W-24, cm=span/42, y0=H*0.30;
-  c.fillStyle="#fdfcf2"; c.fillRect(x0-6,y0-4,span+12,44);
-  c.strokeStyle="#333"; c.fillStyle="#333"; c.font="9px ui-monospace,monospace"; c.textAlign="center";
-  for(let mm=0;mm<=420;mm++){ const px=x0+mm/10*cm, L=mm%10===0?14:mm%5===0?9:5;
-    c.lineWidth=mm%10===0?1:0.5; c.beginPath(); c.moveTo(px,y0-4); c.lineTo(px,y0-4+L); c.stroke();
-    if(mm%50===0) c.fillText(String(mm/10),px,y0+20); }
-  c.fillStyle="#c9ccd1"; c.fillRect(x0,y0+44,span*0.99,7);
-  c.fillStyle="#222"; c.beginPath(); c.arc(x0,y0+47,4,0,TAU); c.fill();
-  if(kit.installed.has("disk")||kit.installed.has("coupler")){
-    const pd=x0+kit.r_m*100*cm; c.fillStyle="rgba(170,205,222,0.95)"; c.fillRect(pd-1.5,y0+26,3,40); }
-  c.fillStyle="#9aa3ab"; c.font="10px 'Malgun Gothic',sans-serif"; c.textAlign="left"; c.fillText(d().lab.ruler,x0,H-10);
+  if(!ST.ruler||!inst("tube")){ c.fillStyle="#69717a"; c.font="12px 'Malgun Gothic',sans-serif"; c.textAlign="center"; c.fillText(d().lab.noRuler,W/2,H/2); return; }
+  const x0=W*0.06, cm=(W*0.9)/26, y0=H*0.42, X=v=>x0+v*cm;
+  c.fillStyle="#c9ccd1"; c.fillRect(0,y0+30,W,9);
+  c.fillStyle="#1d2024"; c.fillRect(X(-1.2),y0+22,2.4*cm,26);
+  if(inst("motor")){ c.fillStyle="#23262c"; c.fillRect(X(kit.r_m*100-6.6),y0+20,5.8*cm,30); }
+  if(inst("coupler")){ c.fillStyle="#c9ccd1"; c.fillRect(X(kit.r_m*100-1.2),y0+26,1.1*cm,18); }
+  if(inst("disk")){ c.fillStyle="rgba(170,205,222,0.95)"; c.fillRect(X(kit.r_m*100)-1.5,y0-10,3+DISKS[kit.diskKey][2]*100*cm,80); }
+  c.fillStyle="rgba(250,250,238,0.94)"; c.fillRect(X(0)-4,y0-4,W,30); c.strokeStyle="#8a8f80"; c.strokeRect(X(0)-4,y0-4,W,30);
+  c.fillStyle="#333"; c.strokeStyle="#333"; c.font="10px ui-monospace,monospace"; c.textAlign="center";
+  for(let mm=0;mm<=300;mm++){ const px=X(mm/10); if(px>W) break; const L=mm%10===0?13:mm%5===0?9:5; c.lineWidth=mm%10===0?1:0.5; c.beginPath(); c.moveTo(px,y0-4); c.lineTo(px,y0-4+L); c.stroke(); if(mm%50===0) c.fillText(String(mm/10),px,y0+18); }
+  c.fillStyle="#9aa3ab"; c.font="10px 'Malgun Gothic',sans-serif"; c.textAlign="left"; c.fillText(d().lab.zero,8,H-10);
 }
+/* ── Part G: the parts stacked into a top on the mat ── */
+const pg={stack:[],disk:"20_2",running:false,w:0,theta:4*Math.PI/180,dtheta:0,phiPrec:0};
+function gProps(){ let z=0,M=0,Ms=0,I1=0,I3=0;
+  for(const k of pg.stack){ let m,hh,R;
+    if(k==="motor"){ m=M_MOTOR; hh=0.055; I1+=m*(hh*hh/12+(z+hh/2)**2); }
+    else if(k==="cw"){ [m,R]=DISKS["26_4"]; hh=0.004; I1+=m*(0.25*R*R+(z+hh/2)**2); }
+    else { [m,R,hh]=DISKS[pg.disk]; I1+=m*(0.25*R*R+(z+hh/2)**2); I3=0.5*m*R*R; }
+    M+=m; Ms+=m*(z+hh/2); z+=hh; }
+  return [M,M?Ms/M:0,Math.max(I1,1e-6),I3]; }
+function gTick(dt){ if(!pg.running) return;
+  const [M,l,I1,I3]=gProps(), [,R,th]=DISKS[pg.disk], c0=DRAG_C0*(R/R_REF)**5, c1=DRAG_C1*(R/R_REF)**4*th, V=+$("gv").value;
+  const tq=(K_EMF/R_ARM_COIL)*((V-K_EMF*pg.w)-(c0+c1)*pg.w**DRAG_N); pg.w=Math.max(0,pg.w+tq/Math.max(I3,1e-6)*dt);
+  const L3=I3*pg.w;
+  if(L3*L3-4*I1*M*G*l>0){ const wn=L3/I1; pg.dtheta+=(-wn*wn*0.25*pg.theta)*dt; pg.dtheta*=Math.exp(-1.2*dt); pg.theta=Math.max(0,pg.theta+pg.dtheta*dt); pg.phiPrec+=(M*G*l/Math.max(L3,1e-6))*dt; }
+  else { pg.dtheta+=(M*G*l*Math.sin(pg.theta)/I1)*dt; pg.theta+=pg.dtheta*dt; pg.phiPrec+=(M*G*l/Math.max(L3,1e-3))*dt*0.2; if(pg.theta>75*Math.PI/180){ pg.theta=75*Math.PI/180; pg.dtheta=0; } } }
+function drawG(){
+  drawRoom(); const [mx,my]=[55,32]; abox(mx-MAT[0]/2,my-MAT[1]/2,0,mx+MAT[0]/2,my+MAT[1]/2,0.3,"#1f8a7e","#17695f","#145a52","#0e3f39");
+  const th=pg.theta, ph=pg.phiPrec, n=[Math.sin(th)*Math.cos(ph),Math.sin(th)*Math.sin(ph),Math.cos(th)], h=Math.hypot(n[0],n[1]);
+  let e1=h>1e-6?[-n[1]/h,n[0]/h,0]:[1,0,0]; const e2=vcross(n,e1), base=[mx,my,0.3]; let z=0;
+  for(const k of pg.stack){
+    if(k==="motor"){ const hh=5.5, c=vadd(base,vmul(n,z+hh/2)), B=(i,j,k2)=>vadd(c,vadd(vmul(n,i*hh/2),vadd(vmul(e1,j*2.1),vmul(e2,k2*2.5))));
+      for(const [p,q,r,s] of [[B(-1,-1,-1),B(1,-1,-1),B(1,-1,1),B(-1,-1,1)],[B(-1,1,-1),B(1,1,-1),B(1,1,1),B(-1,1,1)],[B(-1,-1,1),B(1,-1,1),B(1,1,1),B(-1,1,1)],[B(1,-1,-1),B(1,1,-1),B(1,1,1),B(1,-1,1)]]) quad(p,q,r,s,"#23262c","#000"); z+=hh; }
+    else { const R=(k==="cw"?DISKS["26_4"][1]:DISKS[pg.disk][1])*100, hh=k==="cw"?0.4:DISKS[pg.disk][2]*100, c=vadd(base,vmul(n,z+hh/2));
+      poly(ring(c,e1,e2,R,48),"rgba(214,234,244,0.30)","rgba(150,190,210,0.95)",1.4); poly(ring(c,e1,e2,1.6,16),"#c9ccd1","#6d737a",1); z+=hh; } }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: picking up, mounting, plugging, turning the arm
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+const spinning=()=>Math.abs(kit.w_s)>5;
+const DESK_ITEMS=["adapter","sw","tools","ruler","gonio"];
+const HALF={mat:[MAT[0]/2,MAT[1]/2],adapter:[6,3.3],sw:[3,3.5],tools:[6,4],ruler:[25,1.6],gonio:[7,7]};
+function deskXY(k,p){ const [x,y]=unP(p[0],p[1],0), h=HALF[k]||[3,3];
+  return [Math.max(DESK.x0+h[0],Math.min(DESK.x1-h[0],x)),Math.max(DESK.y0+h[1]+1,Math.min(DESK.y1-h[1],y))]; }
+/* what has to come off before a part can come off */
+const BLOCK={mat:()=>inst("stand")?"stand":null, stand:()=>inst("pole")?"pole":null, pole:()=>inst("tube")?"tube":null,
+  tube:()=>inst("motor")?"motor":inst("cw")?"cw":ST.gonio?"gonio":ST.ruler?"ruler":null, motor:()=>inst("coupler")?"coupler":null, coupler:()=>inst("disk")?"d20_"+kit.diskKey.slice(3):null};
+function returnPart(k){
+  const t=d().m, key=k==="disk"?"d20_"+kit.diskKey.slice(3):k;
+  const b=BLOCK[k]&&BLOCK[k](); if(b){ say(t.blocked(itemName(b)),true); return false; }
+  if(["mat","stand","pole","tube","motor","coupler","disk","cw"].includes(k)&&spinning()){ say(t.spinning,true); return false; }
+  if(k==="disk"){ kit.installed.delete("disk"); kit.nBoltSd=0; }
+  else if(k==="cw"){ kit.installed.delete("cw"); kit.nBoltCw=0; }
+  else if(k==="motor"){ kit.installed.delete("motor"); ST.mjack=false; kit.burnt=false; kit.overVoltT=0; kit.runT=0; }
+  else if(k==="pole"){ kit.installed.delete("pole"); ST.dc=false; }
+  else if(k==="tube"){ kit.installed.delete("tube"); kit.resetMotion(); kit.tubeLocked=true; }
+  else if(k==="gonio"&&ST.gonio){ ST.gonio=false; ST.on.delete("gonio"); }
+  else if(k==="ruler"&&ST.ruler){ ST.ruler=false; ST.on.delete("ruler"); }
+  else if(k==="adapter"){ ST.on.delete("adapter"); ST.ac=false; ST.dc=false; ST.knob=0; }
+  else if(MOUNTED.includes(k)) kit.installed.delete(k);
+  else ST.on.delete(k);
+  if(k==="mat") ST.standOff=[0,0];
+  say(t.removed(itemName(key))); return true;
+}
+/* putting down what is in the hand */
+function place(p){
+  const t=d().m, k=hand.item;
+  if(hand.plug){ if(hand.plug==="ac"&&inZ(ZONES.wall,p,6)){ ST.ac=true; hand=null; say(t.plugIn); return; }
+    if(hand.plug==="dc"&&inst("pole")&&inZ(ZONES.term,p,10)){ ST.dc=true; hand=null; say(t.plugIn); return; }
+    say(t.notHere,true); return; }
+  if(hand.move){ hand=null; say(t.moved(itemName(k))); return; }
+  if(k==="bolts"){ if(!toolsOn()){ say(t.needTools,true); return; }
+    const on=inst("disk")&&inZ(ZONES.disk,p)?"disk":inst("cw")&&inZ(ZONES.cw,p)?"cw":null; if(!on){ say(t.notHere,true); return; }
+    if(spinning()){ say(t.spinning,true); return; }
+    if(on==="disk"){ if(kit.nBoltSd>=12){ say(t.boltFull,true); return; } kit.nBoltSd++; say(t.boltOn(d().lab.disk,kit.nBoltSd)); }
+    else { if(kit.nBoltCw>=12){ say(t.boltFull,true); return; } kit.nBoltCw++; say(t.boltOn(d().lab.cw,kit.nBoltCw)); }
+    return; }
+  if(k==="mat"||(DESK_ITEMS.includes(k)&&!((k==="gonio"&&inst("tube")&&inZ(ZONES.head,p,10))||(k==="ruler"&&inst("tube")&&(inZ(ZONES.endR,p,6)||inZ(ZONES.endL,p,6)||onTube(p)))))){
+    ST.pos[k]=deskXY(k,p); ST.on.add(k); hand=null; say(t.placed(itemName(k))); return; }
+  if(k==="gonio"){ ST.on.add("gonio"); ST.gonio=true; hand=null; say(t.placed(itemName(k))); return; }
+  if(k==="ruler"){ ST.on.add("ruler"); ST.ruler=true; hand=null; say(t.placed(itemName(k))); return; }
+  let ok=false;
+  if(k==="stand") ok=inZ(ZONES.mat,p);
+  else if(k==="pole") ok=inZ(ZONES.stand,p);
+  else if(k==="tube") ok=inZ(ZONES.head,p,14);
+  else if(k==="motor"||k==="coupler"||k.startsWith("d20_")) ok=inZ(ZONES.endR,p,14)||inZ(ZONES.disk,p);
+  else if(k==="cw") ok=inZ(ZONES.endL,p,14);
+  if(!ok){ say(t.notHere,true); return; }
+  if(k==="stand"){ const [x,y]=unP(p[0],p[1],0.3); ST.standOff=[Math.max(-6,Math.min(6,x-ST.pos.mat[0])),Math.max(-3,Math.min(3,y-ST.pos.mat[1]))]; }
+  if(k==="tube"){ kit.resetMotion(); kit.psi=-25*Math.PI/180; kit.phi=-PHI_STOP; }
+  if(k.startsWith("d20_")){ kit.diskKey=k.slice(1); kit.installed.add("disk"); }
+  else kit.installed.add(k);
+  hand=null; say(t.placed(itemName(k)));
+}
+/* is p near the drawn tube? */
+function onTube(p){ if(!inst("tube")) return false; const f=frame(), a=P3(along(-kit.r_c*100,f)), b=P3(along(kit.r_m*100,f)), ab=sub2(b,a), tt=Math.max(0,Math.min(1,dot2(sub2(p,a),ab)/dot2(ab,ab)));
+  return len2(sub2(p,add2(a,mul2(ab,tt))))<1.2*SZ(); }
+
+/* the arm in the hand: solve for the turn ψ and the tilt φ that put the grabbed end under the pointer */
+function aimArm(side,target){
+  const O=pivot(), L=(side>0?kit.r_m:kit.r_c)*100*side;
+  const f=(a,b)=>P3(vadd(O,vmul([Math.cos(a)*Math.cos(b),Math.sin(a)*Math.cos(b),Math.sin(b)],L)));
+  let ps=kit.psi, ph=kit.phi;
+  for(let it=0;it<10;it++){ const p0=f(ps,ph), e=[target[0]-p0[0],target[1]-p0[1]], h=1e-3, pa=f(ps+h,ph), pb=f(ps,ph+h);
+    const a=(pa[0]-p0[0])/h, b=(pb[0]-p0[0])/h, c=(pa[1]-p0[1])/h, dd=(pb[1]-p0[1])/h, lam=0.02*(a*a+b*b+c*c+dd*dd)+1e-9;
+    const m11=a*a+c*c+lam, m12=a*b+c*dd, m22=b*b+dd*dd+lam, r1=a*e[0]+c*e[1], r2=b*e[0]+dd*e[1], det=m11*m22-m12*m12;
+    let x=(m22*r1-m12*r2)/det, y=(m11*r2-m12*r1)/det; const n=Math.hypot(x,y); if(n>0.3){ x*=0.3/n; y*=0.3/n; }
+    ps+=x; ph=Math.max(-PHI_STOP,Math.min(PHI_STOP,ph+y)); }
+  kit.psi=mod2pi(ps); kit.phi=ph; kit.dpsi=0; kit.dphi=0;
+}
+let drag=null;
+function zoneAt(p){
+  for(const z of ["lock","mjack","foot0","foot1","foot2","acPlug","dcPlug","term"]) if(inZ(ZONES[z],p,2)) return z;
+  if(inst("cw")&&inZ(ZONES.cw,p)) return "cw";
+  if(inst("tube")&&inZ(ZONES.endR,p,4)) return "endR";
+  if(inst("tube")&&inZ(ZONES.endL,p,4)) return "endL";
+  for(const k of ["sw","tools","adapter","ruler","gonio"]) if(has(k)&&!(k==="gonio"&&ST.gonio)&&!(k==="ruler"&&ST.ruler)&&inZ(ZONES[k],p,2)) return k;
+  if(inst("disk")&&inZ(ZONES.disk,p)) return "disk";
+  if(inst("tube")&&onTube(p)) return "tube";
+  if(inst("pole")&&inZ(ZONES.head,p,2)) return "head";
+  if(inst("stand")&&inZ(ZONES.stand,p)) return "stand";
+  if(has("mat")&&inZ(ZONES.mat,p)) return "mat";
+  return null;
+}
+function turnFoot(i,steps){ kit.knob[i]=Math.max(-KNOB_RANGE,Math.min(KNOB_RANGE,kit.knob[i]+steps*KNOB_STEP)); }
+function benchDown(p,right,e){
+  const t=d().m;
+  if(hand){
+    if(right){ if(hand.move){ ST.pos[hand.item]=hand.orig; say(t.stays); } else if(hand.plug) say(t.plugOut); else say(t.removed(itemName(hand.item))); hand=null; return; }
+    place(p); return; }
+  let z=zoneAt(p);
+  if(right){
+    if(!z) return;
+    if(z==="endR"&&inst("disk")) z="disk"; if(z==="endL"&&inst("cw")) z="cw";
+    if(z.startsWith("foot")){ turnFoot(+z[4],-5); say(t.knob(+z[4],false)); return; }
+    if(z==="acPlug"){ if(ST.ac){ ST.ac=false; say(t.plugOut); } return; }
+    if(z==="dcPlug"||z==="term"){ if(ST.dc){ ST.dc=false; say(t.plugOut); } return; }
+    if(z==="mjack"){ if(ST.mjack){ ST.mjack=false; say(t.motorJackOff); } return; }
+    if(z==="disk"){ if(kit.nBoltSd){ if(spinning()){ say(t.spinning,true); return; } kit.nBoltSd--; say(t.boltOff(d().lab.disk,kit.nBoltSd)); return; } returnPart("disk"); return; }
+    if(z==="cw"){ if(kit.nBoltCw){ if(spinning()){ say(t.spinning,true); return; } kit.nBoltCw--; say(t.boltOff(d().lab.cw,kit.nBoltCw)); return; } returnPart("cw"); return; }
+    if(z==="endR"){ returnPart(inst("disk")?"disk":inst("coupler")?"coupler":inst("motor")?"motor":ST.ruler?"ruler":"tube"); return; }
+    if(z==="endL"){ returnPart(inst("cw")?"cw":ST.ruler?"ruler":"tube"); return; }
+    if(z==="tube"){ returnPart(ST.ruler?"ruler":"tube"); return; }
+    if(z==="head"||z==="lock"){ returnPart(ST.gonio?"gonio":inst("tube")?"tube":"pole"); return; }
+    if(z==="stand"){ returnPart(inst("pole")?"pole":"stand"); return; }
+    returnPart(z); return; }
+  if(!z){ drag=e&&e.shiftKey?{k:"pan",p,v:[VIEW.px,VIEW.py]}:{k:"orbit",p,v:[CAM.az,CAM.el]}; return; }
+  if(z==="lock"){ kit.tubeLocked=!kit.tubeLocked; say(t.lock(kit.tubeLocked)); return; }
+  if(z==="mjack"){ if(ST.mjack){ ST.mjack=false; say(t.motorJackOff); } else { ST.mjack=true; say(t.motorJack); } return; }
+  if(z.startsWith("foot")){ turnFoot(+z[4],5); say(t.knob(+z[4],true)); return; }
+  if(z==="acPlug"){ if(ST.ac){ ST.ac=false; } hand={plug:"ac"}; say(t.plugAc); return; }
+  if(z==="dcPlug"||z==="term"){ if(z==="term"&&!ST.dc) return; ST.dc=false; hand={plug:"dc"}; say(t.plugDc); return; }
+  if(z==="endR"||z==="endL"||z==="disk"||z==="cw"||z==="tube"){
+    const side=(z==="endL"||z==="cw")?-1:z==="tube"?(dot2(sub2(p,P3(pivot())),sub2(P3(along(1,frame())),P3(pivot())))>=0?1:-1):1;
+    const O=pivot(), endP=P3(vadd(O,vmul(kit.axis(),(side>0?kit.r_m:kit.r_c)*100*side)));
+    drag={k:"arm",side,p,t0:performance.now(),off:sub2(p,endP),r0:kit.r_m,moved:false,cw:z==="cw"||z==="endL"}; return; }
+  if(z==="mat"&&!spinning()||DESK_ITEMS.includes(z)){ hand={item:z,move:true,orig:[...ST.pos[z]]}; say(t.moveIt(itemName(z))); return; }
+  drag={k:"orbit",p,v:[CAM.az,CAM.el]};
+}
+function benchMove(p){
+  if(hand&&hand.move){ ST.pos[hand.item]=deskXY(hand.item,p); return; }
+  if(!drag) return;
+  if(drag.k==="pan"){ VIEW.px=drag.v[0]+p[0]-drag.p[0]; VIEW.py=drag.v[1]+p[1]-drag.p[1]; return; }
+  if(drag.k==="orbit"){ CAM.az=Math.max(-1.1,Math.min(1.1,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.el=Math.max(0.18,Math.min(1.0,drag.v[1]+(p[1]-drag.p[1])*0.004)); setCam(); return; }
+  if(drag.k==="arm"){
+    if(!drag.moved&&len2(sub2(p,drag.p))<4) return; drag.moved=true;
+    if(!kit.tubeLocked){ const f=frame(), a=P3(along(0,f)), b=P3(along(1,f)), u=sub2(b,a), dr=dot2(sub2(p,drag.p),u)/dot2(u,u);
+      kit.r_m=Math.max(0.08,Math.min(TUBE_L-0.12,drag.r0+drag.side*dr/100)); return; }
+    kit.held=true; aimArm(drag.side,sub2(p,drag.off)); }
+}
+function benchUp(){
+  if(!drag) return;
+  if(drag.k==="arm"){ const t=d().m;
+    if(kit.held){ kit.held=false; kit.dpsi=0; kit.dphi=0; kit.trail=[]; say(t.released); }
+    else if(!drag.moved&&drag.cw&&performance.now()-drag.t0<250&&kit.tubeLocked){ kit.impulse(); say(t.impulse); } }
+  drag=null;
+}
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; if(TAB.k!=="bench") return; cv.setPointerCapture(e.pointerId); benchDown(p,e.button===2,e); drawTray(); });
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; if(TAB.k!=="bench") return; benchMove(p);
+  if(!drag&&!hand){ const z=zoneAt(p); cv.style.cursor=!z?"default":["endR","endL","disk","cw","tube"].includes(z)?"grab":"pointer"; } else if(drag&&drag.k==="arm") cv.style.cursor="grabbing"; });
+cv.addEventListener("pointerup",()=>{ benchUp(); });
+cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(!zoneAt(p)){ VIEW.z=1; VIEW.px=0; VIEW.py=0; CAM.az=0.36; CAM.el=0.44; setCam(); } });
+cv.addEventListener("wheel",e=>{ if(TAB.k!=="bench") return; e.preventDefault(); const p=lpos(e), z=zoneAt(p), up=e.deltaY<0;
+  if(z&&z.startsWith("foot")){ turnFoot(+z[4],up?1:-1); return; }
+  const nz=Math.max(0.6,Math.min(3,VIEW.z*(up?1.12:1/1.12))), k=nz/VIEW.z;
+  VIEW.px=p[0]-LW/2-(p[0]-LW/2-VIEW.px)*k; VIEW.py=p[1]-LH/2-(p[1]-LH/2-VIEW.py)*k; VIEW.z=nz; },{passive:false});
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ if(hand.move) ST.pos[hand.item]=hand.orig; hand=null; drawTray(); } });
+
+/* the parts box */
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move&&!hand.plug){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top, t=d().m;
+  if(TAB.k!=="bench"){ setTab("bench"); }
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
+    if(hand&&(hand.move||hand.plug)) return;
+    if(hand&&hand.item===k){ hand=null; drawTray(); return; }
+    hand=null;
+    if(isOut(k)) return;
+    if(k.startsWith("d20_")&&inst("disk")){ say(t.oneDisk,true); drawTray(); return; }
+    const req=REQ[k]; if(req&&!inst(req)&&!has(req)){ say(t.need(itemName(req)),true); drawTray(); return; }
+    if((k==="coupler"||k.startsWith("d20_")||k==="cw")&&!toolsOn()){ say(t.needTools,true); drawTray(); return; }
+    if(k==="motor"&&kit.burnt){ kit.burnt=false; }
+    hand={item:k}; say(k==="bolts"?t.boltPick:t.placeIt(itemName(k))); drawTray(); return; } });
 
 /* ══════════════════════════════════════════════════════════════
    8.  PANEL
    ══════════════════════════════════════════════════════════════ */
 function fmtTime(v){ v=Math.max(0,v); const m=Math.floor(v/60), s=v-60*m; return m+":"+s.toFixed(2).padStart(5,"0"); }
 function swValue(){ return sw.acc+(sw.run?kit.t-sw.t0:0); }
-$("swBtn").onclick=()=>{ if(sw.run){ sw.acc+=kit.t-sw.t0; sw.run=false; } else { sw.t0=kit.t; sw.run=true; } updSw(); };
-$("swLap").onclick=()=>{ sw.laps.push(swValue()); renderLaps(); };
-$("swReset").onclick=()=>{ sw={acc:0,run:false,t0:kit.t,laps:[]}; renderLaps(); updSw(); };
+const swGate=()=>{ if(has("sw")) return true; say(d().swNeed,true); return false; };
+$("swBtn").onclick=()=>{ if(!swGate()) return; if(sw.run){ sw.acc+=kit.t-sw.t0; sw.run=false; } else { sw.t0=kit.t; sw.run=true; } updSw(); };
+$("swLap").onclick=()=>{ if(!swGate()) return; sw.laps.push(swValue()); renderLaps(); };
+$("swReset").onclick=()=>{ if(!swGate()) return; sw={acc:0,run:false,t0:kit.t,laps:[]}; renderLaps(); updSw(); };
 function updSw(){ const b=$("swBtn"); b.textContent=sw.run?d().stop:d().start; b.classList.toggle("run",sw.run); }
 function renderLaps(){ const box=$("laps"); box.innerHTML="";
   for(let i=sw.laps.length-1;i>=0;i--){ const el=document.createElement("div"); el.textContent=String(i+1).padStart(2," ")+"   "+fmtTime(sw.laps[i]); box.appendChild(el); } }
 function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of [1,2,5,10,20]){ const b=document.createElement("button"); b.textContent=s+"×"; if(s===timeScale) b.className="on";
     b.onclick=()=>{ timeScale=s; renderSpeeds(); }; box.appendChild(b); } }
-function buildKnobs(){
-  const box=$("knobs"); box.innerHTML="";
-  for(let i=0;i<3;i++){
-    const l=document.createElement("span"); l.textContent=d().knob+" "+(i+1); box.appendChild(l);
-    for(const n of [10,1,-1,-10]){ const b=document.createElement("button"); b.textContent=(n>0?"▲":"▼").repeat(Math.abs(n)>1?2:1);
-      b.onclick=()=>{ if(!kit.installed.has("knobs")) return; kit.knob[i]=Math.max(-KNOB_RANGE,Math.min(KNOB_RANGE,kit.knob[i]+n*KNOB_STEP)); }; box.appendChild(b); }
-  }
-}
-function updLock(){ $("lockBtn").textContent=kit.tubeLocked?d().lockOn:d().lockOff; $("lockBtn").className=kit.tubeLocked?"":"on"; }
-$("lockBtn").onclick=()=>{ kit.tubeLocked=!kit.tubeLocked; updLock(); };
-$("arm").oninput=()=>{ if(kit.tubeLocked){ $("arm").value=kit.r_m*100; say(d().m.locked,true); return; }
-  kit.r_m=Math.max(8,Math.min(TUBE_L*100-12,+$("arm").value))/100; };
-$("turn90").onclick=()=>kit.turnArm(90); $("turn180").onclick=()=>kit.turnArm(180);
-$("impulse").onclick=()=>kit.impulse(); $("liftU").onclick=()=>kit.lift(true); $("liftD").onclick=()=>kit.lift(false);
-function renderStatus(){
-  const L=[], t=d();
-  if(B.tab==="bench"){
-    if(!kit.installed.size) L.push([t.st.nothing,false]);
-    else if(!kit.ready()){ const nx=PART_KEYS.find(([k,r])=>REQUIRED.has(k)&&!kit.installed.has(k)&&(!r||kit.installed.has(r)));
-      if(nx) L.push([t.st.next(t.trayItems[nx[0]==="disk"?"d20_3":nx[0]]),false]); }
-    else if(!kit.powerOn) L.push([t.st.ready,false]);
-    if(kit.burnt) L.push([t.st.burnt,true]); else if(kit.powerOn&&kit.volt>MOTOR_BURN_VOLT) L.push([t.st.warn6,true]);
-    if(kit.runT>OVERHEAT_TIME) L.push([t.st.overheat,true]);
-  }
-  if(B.note&&performance.now()-B.note.t<9000) L.push(["• "+B.note.s,B.note.warn]);
-  const box=$("status"); box.innerHTML="";
-  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
-}
-
-/* ---- Part G ---- */
-/* Part G */
-const pg={stack:[],disk:"20_2",running:false,w:0,theta:4*Math.PI/180,dtheta:0,phiPrec:0};
-function gProps(){
-  let z=0,M=0,Ms=0,I1=0,I3=0;
-  for(const k of pg.stack){ let m,hh,R;
-    if(k==="motor"){ m=M_MOTOR; hh=0.055; I1+=m*(hh*hh/12+(z+hh/2)**2); }
-    else if(k==="cw"){ [m,R]=DISKS["26_4"]; hh=0.004; I1+=m*(0.25*R*R+(z+hh/2)**2); }
-    else { [m,R,hh]=DISKS[pg.disk]; I1+=m*(0.25*R*R+(z+hh/2)**2); I3=0.5*m*R*R; }
-    M+=m; Ms+=m*(z+hh/2); z+=hh; }
-  return [M,M?Ms/M:0,Math.max(I1,1e-6),I3];
-}
-function gTick(dt){
-  if(!pg.running) return;
-  const [M,l,I1,I3]=gProps(), [m,R,th]=DISKS[pg.disk];
-  const c0=DRAG_C0*(R/R_REF)**5, c1=DRAG_C1*(R/R_REF)**4*th, V=+$("gv").value;
-  const tq=(K_EMF/R_ARM_COIL)*((V-K_EMF*pg.w)-(c0+c1)*pg.w**DRAG_N);
-  pg.w=Math.max(0,pg.w+tq/Math.max(I3,1e-6)*dt);
-  const L3=I3*pg.w;
-  if(L3*L3-4*I1*M*G*l>0){       /* sleeping top: precesses and settles upright */
-    const wn=L3/I1; pg.dtheta+=(-wn*wn*0.25*pg.theta)*dt; pg.dtheta*=Math.exp(-1.2*dt);
-    pg.theta=Math.max(0,pg.theta+pg.dtheta*dt); pg.phiPrec+=(M*G*l/Math.max(L3,1e-6))*dt;
-  } else {
-    pg.dtheta+=(M*G*l*Math.sin(pg.theta)/I1)*dt; pg.theta+=pg.dtheta*dt;
-    pg.phiPrec+=(M*G*l/Math.max(L3,1e-3))*dt*0.2;
-    if(pg.theta>75*Math.PI/180){ pg.theta=75*Math.PI/180; pg.dtheta=0; }
-  }
-}
-
-function drawG(){
-  const s=scG; setupScene(s,true);
-  s.begin(); s.poly([[-0.14,-0.14,0],[0.14,-0.14,0],[0.14,0.14,0],[-0.14,0.14,0]],COL_MAT,"#156b62",2); s.render(ctx);
-  s.begin();
-  const th=pg.theta, ph=pg.phiPrec, n=[Math.sin(th)*Math.cos(ph),Math.sin(th)*Math.sin(ph),Math.cos(th)];
-  let z=0;
-  for(const k of pg.stack){
-    if(k==="motor"){ const hh=0.055; s.box(n.map(v=>v*(z+hh/2)),n,0.040,0.044,hh,COL_MOTOR); z+=hh; }
-    else { const R=k==="cw"?DISKS["26_4"][1]:DISKS[pg.disk][1], hh=k==="cw"?0.004:DISKS[pg.disk][2];
-      acrylDisk(s,n.map(v=>v*(z+hh/2)),n,R,hh); z+=hh; }
-  }
-  s.render(ctx);
-}
+$("polBtn").onclick=()=>{ const t=d().m; if(!inst("motor")) { say(t.need(itemName("motor")),true); return; } if(!toolsOn()){ say(t.needDriver,true); return; }
+  if(ST.knob>0){ say(t.knobFirst,true); return; } kit.pol*=-1; say(t.pol); };
 function renderG(){
   $("gList").textContent=[...pg.stack].reverse().map((k,i)=>(pg.stack.length-i)+". "+d().gParts[k]).join("\n");
   const add=$("gAdd"); add.innerHTML="";
   for(const k of ["motor","cw","disk"]){ const b=document.createElement("button"); b.style.width="100%"; b.textContent="+ "+d().gParts[k];
-    b.disabled=pg.stack.includes(k); b.onclick=()=>{ pg.stack.push(k); renderG(); }; add.appendChild(b); }
+    b.disabled=pg.stack.includes(k)||pg.running; b.onclick=()=>{ pg.stack.push(k); renderG(); }; add.appendChild(b); }
   const row=$("gDiskRow"); row.innerHTML="";
   for(const k of ["20_2","20_3","20_4"]){ const b=document.createElement("button"); b.textContent=DISKS[k][3]; b.className=pg.disk===k?"on":"";
     b.onclick=()=>{ pg.disk=k; renderG(); }; row.appendChild(b); }
 }
-$("gClear").onclick=()=>{ pg.stack=[]; pg.running=false; renderG(); };
+$("gClear").onclick=()=>{ pg.stack=[]; pg.running=false; pg.theta=4*Math.PI/180; pg.dtheta=0; pg.w=0; renderG(); };
 $("gRun").onclick=()=>{ if(!pg.stack.includes("disk")){ say(d().gNoDisk,true); return; }
-  Object.assign(pg,{running:true,theta:4*Math.PI/180,dtheta:0,w:0}); };
-$("gStop").onclick=()=>{ pg.running=false; };
-
-function setTab(k){
-  B.tab=k; $("tab-bench").className=k==="bench"?"on":""; $("tab-g").className=k==="g"?"on":"";
-  $("pBench").hidden=k!=="bench"; $("pG").hidden=k!=="g"; $("instrCard").hidden=k!=="bench";
-  $("t-cap").textContent=k==="bench"?d().capBench:d().capG; B.carry=null; drawTray(); renderStatus();
+  Object.assign(pg,{running:true,theta:4*Math.PI/180,dtheta:0,w:0}); renderG(); };
+$("gStop").onclick=()=>{ pg.running=false; renderG(); };
+/* what to do next, read off the bench */
+function nextStep(){
+  if(!has("mat")) return null;
+  for(const k of ["stand","pole","tube","motor","coupler"]) if(!inst(k)) return itemName(k);
+  if(!inst("disk")) return itemName("d20_3");
+  if(!has("adapter")) return itemName("adapter");
+  return "";
 }
-$("tab-bench").onclick=()=>setTab("bench"); $("tab-g").onclick=()=>setTab("g");
+function renderStatus(){
+  const L=[], t=d(), st=t.st;
+  if(TAB.k==="bench"){
+    if(!has("mat")&&!inst("stand")) L.push([st.nothing,false]);
+    else { const n=nextStep(); if(n) L.push([st.next(n),false]);
+      else if(!ST.ac) L.push([st.noPower,false]);
+      else if(!ST.dc) L.push([st.noDc,false]);
+      else if(!ST.mjack) L.push([st.noMotorJack,false]);
+      else if(ST.knob===0) L.push([st.ready,false]); }
+    if(kit.burnt) L.push([st.burnt,true]); else if(kit.powerOn&&kit.volt>MOTOR_BURN_VOLT) L.push([st.warn6,true]);
+    if(kit.runT>OVERHEAT_TIME) L.push([st.overheat,true]);
+    if(inst("tube")&&!kit.held&&Math.abs(kit.phi)>=PHI_STOP-1e-4&&Math.abs(kit.w_s)>30) L.push([st.holder,false]);
+  }
+  if(msg.s&&performance.now()-msg.t<9000) L.push(["• "+msg.s,msg.warn]);
+  const box=$("status"), html=L.map(([s,w])=>"<div"+(w?" class='w'":"")+">"+s.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</div>").join("");
+  if(box.innerHTML!==html) box.innerHTML=html;
+}
 
 /* ══════════════════════════════════════════════════════════════
    9.  LANGUAGE
    ══════════════════════════════════════════════════════════════ */
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
-  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
-  $("tab-bench").textContent=t.tabBench; $("tab-g").textContent=t.tabG;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.tray;
   $("t-instrcap").textContent=t.instrcap; $("t-adlbl").textContent=t.adlbl; $("t-golbl").textContent=t.golbl; $("t-rulbl").textContent=t.rulbl;
-  $("t-tray").textContent=t.tray; $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
-  $("t-h-speed").textContent=t.hSpeed; $("t-h-arm").textContent=t.hArm; $("t-armhint").textContent=t.armHint;
-  $("t-h-bolts").textContent=t.hBolts; $("t-bcw").textContent=t.bcw; $("t-bsd").textContent=t.bsd; $("t-bolthint").textContent=t.boltHint;
-  $("t-h-level").textContent=t.hLevel; $("t-h-hand").textContent=t.hHand; $("impulse").textContent=t.impulse;
-  $("liftU").textContent=t.liftU; $("liftD").textContent=t.liftD; $("t-trail").textContent=t.trail; $("fitBtn").textContent=t.fit;
+  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
+  $("t-h-speed").textContent=t.hSpeed; $("t-speedhint").textContent=t.speedHint;
+  $("t-h-hand").textContent=t.hHand; $("t-handhelp").textContent=t.handHelp; $("polBtn").textContent=t.pol;
   $("t-h-gbuild").textContent=t.hGBuild; $("t-h-gdisk").textContent=t.hGDisk; $("t-h-gvolt").textContent=t.hGVolt;
-  $("gRun").textContent=t.gRun; $("gStop").textContent=t.gStop; $("t-gnote").textContent=t.gNote;
+  $("gRun").textContent=t.gRun; $("gStop").textContent=t.gStop; $("gClear").textContent=t.gClear; $("t-gnote").textContent=t.gNote;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"APhO 2024 E1 — 자이로스코프 · HaslaLab":"APhO 2024 E1 — Gyroscope · HaslaLab";
-  updSw(); renderLaps(); renderSpeeds(); buildKnobs(); updLock(); renderG(); setTab(B.tab);
+  updSw(); renderLaps(); renderSpeeds(); renderG(); setTab(TAB.k); layout();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
@@ -980,34 +994,25 @@ $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 /* ══════════════════════════════════════════════════════════════
    10.  MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
-sc.az=CAM0.az; sc.el=CAM0.el; scG.az=35*Math.PI/180; scG.el=14*Math.PI/180;
 let last=performance.now(), fr=0;
 function tick(){
   const now=performance.now(), raw=Math.min(0.05,(now-last)/1000); last=now;
-  const dt=raw*timeScale, sub=Math.max(1,Math.floor(dt/0.004)+1);
+  const dt=raw*timeScale, sub=Math.max(1,Math.ceil(dt/0.004));
+  powerChain();
   for(let i=0;i<sub;i++) kit.step(dt/sub);
   gTick(raw);
-  ctx.setTransform(DPR,0,0,DPR,0,0);
-  const g=ctx.createLinearGradient(0,0,0,CH); g.addColorStop(0,"#1b2027"); g.addColorStop(1,"#2a3038");
-  ctx.fillStyle=g; ctx.fillRect(0,0,CW,CH);
-  if(B.tab==="bench"){
-    setupScene(sc,false);
-    sc.begin(); drawFloor(sc); sc.render(ctx);
-    sc.begin(); sc.off=standAt(); drawKit(sc,null); sc.off=[0,0,0]; sc.render(ctx);
-    if(B.carry){ ctx.fillStyle="#f2c14e"; ctx.font="bold 13px 'Malgun Gothic',sans-serif"; ctx.textAlign="left";
-      ctx.fillText("⇱ "+d().trayItems[B.carry.id],B.mouse[0]+16,B.mouse[1]-12); }
-  } else drawG();
-  $("swLbl").textContent=fmtTime(swValue());
+  ctx.setTransform(DPR*S,0,0,DPR*S,0,0); ctx.clearRect(0,0,LW,LH);
+  if(TAB.k==="bench") drawBench(); else drawG();
+  const on=has("sw"); $("swLbl").textContent=on?fmtTime(swValue()):"-:--.--"; $("swLbl").style.opacity=on?1:0.4;
+  $("swHint").textContent=on?d().swOk:d().swHint;
   $("gvl").textContent=(+$("gv").value).toFixed(1)+" V";
-  $("bcw").textContent=kit.nBoltCw+" "+d().sets; $("bsd").textContent=kit.nBoltSd+" "+d().sets;
-  if(document.activeElement!==$("arm")) $("arm").value=kit.r_m*100;
-  if(++fr%4===0){ drawAdapter(); drawGonio(); drawRuler(); }
-  if(fr%12===0) renderStatus();
+  if(++fr%3===0&&TAB.k==="bench"){ drawAdPanel(); drawGoPanel(); drawRuPanel(); }
+  if(fr%10===0){ renderStatus(); drawTray(); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
-layout(); applyLang(); requestAnimationFrame(tick);
+applyLang(); requestAnimationFrame(tick);
 </script>
-  <script src="adfit.js"></script>
+<script src="adfit.js"></script>
 </body>
 </html>
