@@ -902,6 +902,7 @@ const starPts=(R,n,rot)=>Array.from({length:2*n},(_,i)=>{ const a=(rot||0)+i*Mat
 const ngon=(R,n,rot)=>Array.from({length:n},(_,i)=>{ const a=(rot||0)+i*2*Math.PI/n; return [R*Math.cos(a),R*Math.sin(a)]; });
 const ring3=(c,e1,e2,R,n,a0)=>Array.from({length:n},(_,i)=>{ const a=(a0||0)+i/n*2*Math.PI; return vadd(c,vadd(vmul(e1,R*Math.cos(a)),vmul(e2,R*Math.sin(a)))); });
 function L(a,b,col,lw,o){ line3(M(a),M(b),col,lw,o); }
+const L3line=(a,b,lw)=>L(a,b,"#222",Math.max(0.35,lw*CAM.k/30));
 function PL(pts,col,lw,o){ poly3(pts.map(M),col,lw,o); }
 /* text printed on a surface: U along the line of text, V up the letters */
 function TX(O,U,V,str,size,col,o){ const m=M(O), mu=M(vadd(O,U)), mv=M(vadd(O,V)); text3(m,vsub(mu,m),vsub(mv,m),str,size,col,o); }
@@ -979,13 +980,21 @@ function drawStand(){
   const xo=y=>FOOTV[2][0]*(FOOTV[0][1]-y)/(FOOTV[0][1]-FOOTV[2][1])+AW*Math.hypot(FOOTV[2][0],FOOTV[0][1]-FOOTV[2][1])/(FOOTV[0][1]-FOOTV[2][1]);
   const yA=FOOTV[0][1], yB=-2.2, web=[[-xo(yA),yA],[xo(yA),yA],[xo(yB),yB],[-xo(yB),yB]].map(([u,v])=>[sx+u,sy+v]);
   prism([0,0,zb],Z3,[1,0,0],[0,1,0],web,TH-0.01,BL,{id:"stand"});
-  for(const i of [0,1,2]){ const [x,y]=Fp[i]; ocyl([x,y,zb],Z3,TH,AW,BL,{id:"stand"}); if(!ST.feet[i]) F(ring3([x,y,zb-0.01],[1,0,0],[0,1,0],0.35,10),"#050505",{n:[0,0,-1],flat:true}); }
+  for(const i of [0,1,2]){ const [x,y]=Fp[i]; ocyl([x,y,zb],Z3,TH+0.08,AW,BL,{id:"stand"}); if(!ST.feet[i]) F(ring3([x,y,zb-0.01],[1,0,0],[0,1,0],0.35,10),"#050505",{n:[0,0,-1],flat:true}); }
   /* the boss on the cross bar and the hand knob (a T-screw) through its side; unscrewed past its thread it comes out */
   ocyl([sx,sy,zb],Z3,3.6,2.0,BL,{id:"stand"});
-  const hz=zb+2.4, out=ST.hkIn?0.5*(1-hkTurn())+Math.max(0,-ST.sc.hk)*0.5:0, h0=[sx-2.0,sy,hz];
-  if(ST.hkIn){ ocyl(h0,[-1,0,0],1.4+out,0.33,"#8a9097"); const e=vadd(h0,[-1.4-out,0,0]); ocyl(e,[-1,0,0],0.9,0.75,"#1e1f22",{id:"hk"});
-    const a=ST.sc.hk*2*Math.PI; ocyl(lin([e,1],[[-1,0,0],0.45],[[0,Math.cos(a),Math.sin(a)],-1.8]),[0,Math.cos(a),Math.sin(a)],3.6,0.42,"#1e1f22",{id:"hk"}); }
-  ZONES.hk=zoneAround([sx-3.4,sy,hz],1.9);
+  /* (after Figure 1 of the sheet, seen from below) a small wing knob screws slantwise into the back-left of the boss,
+     out over the open V: its wings clear the casting web and the mat as it turns */
+  const A=vnrm([-1,-1,0]), X=vnrm([1,-1,0]), hz=zb+2.9, h0=vadd([sx,sy,hz],vmul(A,2.0)), out=ST.hkIn?0.5*(1-hkTurn())+Math.max(0,-ST.sc.hk)*0.5:0;
+  /* the threaded brass insert in a spot-faced seat: where the hand knob goes */
+  F(ring3(vadd(h0,vmul(A,0.02)),X,Z3,0.85,24),"#2c2e33",{n:A,flat:true,id:"stand"});
+  ocyl(h0,A,0.14,0.5,"#b59a5a",{seg:16,id:"stand",cap:"#c9ad6a"});
+  F(ring3(vadd(h0,vmul(A,0.15)),X,Z3,0.27,12),"#070708",{n:A,flat:true});
+  if(ST.hkIn){ ocyl(vadd(h0,vmul(A,0.14)),A,1.6+out,0.22,"#8a9097",{seg:10}); const e=vadd(h0,vmul(A,1.74+out));
+    ocyl(e,A,0.75,0.55,"#1e1f22",{id:"hk",seg:14});
+    const a=ST.sc.hk*2*Math.PI, r=vadd(vmul(X,Math.cos(a)),vmul(Z3,Math.sin(a))), q=vcross(A,r), m=vadd(e,vmul(A,0.4));
+    for(const sg of [1,-1]) obox(vadd(m,vmul(r,sg*1.0)),vmul(r,0.62),vmul(A,0.3),vmul(q,0.2),"#1e1f22",{id:"hk"}); }
+  ZONES.hk=zoneAround(vadd(h0,vmul(A,2.2)),1.8);
   /* the printed acrylic plate on the apex: 4 mm thick, its edges catch the light */
   /* it lies on the solid web, a little inside the edge of the casting, from in front of the boss to the apex */
   const zt=zb+TH, yb=2.4, hw=xo(yb)-0.45, ty=yA+0.75, plate=[[-hw,yb],[hw,yb],[0.75,ty-0.35],[0,ty],[-0.75,ty-0.35]].map(([u,v])=>[sx+u,sy+v]);
@@ -1082,12 +1091,16 @@ function gyroScene(){
   if(ST.gonio){ const c=vadd(tubeO(),vmul(b,0.95)), n=b; F(ring3(c,hu,Z3,4.6,40),"rgba(236,242,246,0.30)",{n:vmul(n,-1),flat:true,id:"gonioOn"});
     const arm=dir=>{ const s=vnrm(vcross(n,dir)); F([vadd(c,vmul(s,0.9)),lin([c,1],[dir,15],[s,0.9]),lin([c,1],[dir,15],[s,-0.9]),vadd(c,vmul(s,-0.9))],"rgba(236,242,246,0.30)",{n:vmul(n,-1),flat:true,id:"gonioOn"}); PL([c,vadd(c,vmul(dir,15))],"rgba(190,70,70,0.8)",1); };
     arm([0,0,-1]); arm(f.u); fastener("gonioTape",vadd(c,vmul(b,0.05)),"tape"); if(ST.gonioTaped) F(ring3(vadd(c,vmul(b,0.06)),hu,Z3,1.1,4,0.785),"rgba(240,232,190,0.85)",{n:b,flat:true}); for(let k=0;k<36;k++){ const a=k*Math.PI/18, r=vadd(vmul(hu,Math.cos(a)),vmul(Z3,Math.sin(a))); L(vadd(c,vmul(r,4.0)),vadd(c,vmul(r,4.6)),"rgba(30,80,150,0.9)",1); } }
-  /* the ruler held along the side of the tube, its 0 at the centre of the pivot */
-  if(ST.ruler){ const s1=Math.min(30,ST.motorAt==="tube"&&ST.disk?rm-0.6:rm), off=vmul(f.e1,3.2), a=vadd(along(-0.6,f),off), bb=vadd(along(s1,f),off), w=vmul(f.e2,1.5);
-    F([vadd(a,w),vadd(bb,w),vadd(bb,vmul(w,-1)),vadd(a,vmul(w,-1))],"rgba(240,244,236,0.85)",{n:f.e1,flat:true,id:"rulerOn"});
-    for(let k=0;k<=s1;k++){ const p=vadd(along(k,f),vmul(f.e1,3.25)); L(vadd(p,w),vadd(p,vmul(w,k%10===0?-0.1:k%5===0?0.35:0.6)),"#333",0.8); }
-    fastener("rulerTape",vadd(along(s1/2,f),vmul(f.e1,3.3)),"tape"); if(ST.rulerTaped) for(const k of [s1*0.25,s1*0.75]){ const p=vadd(along(k,f),vmul(f.e1,3.3)); F([lin([p,1],[f.u,-0.8],[f.e2,-1.6]),lin([p,1],[f.u,0.8],[f.e2,-1.6]),lin([p,1],[f.u,0.8],[f.e2,1.6]),lin([p,1],[f.u,-0.8],[f.e2,1.6])],"rgba(240,232,190,0.85)",{n:f.e1,flat:true}); }
-    for(let k=0;k<=s1;k+=5) TX(lin([along(k,f),1],[f.e1,3.26],[f.e2,-0.5]),f.u,f.e2,String(k),0.7,"#222",{align:"center"}); }
+  /* the 30 cm ruler held along the tube, its 0 at the centre of the pivot: it lies flat against the front of the motor
+     clamp (or of the bearing insert when there is no motor), stuck there by double-sided tape behind it; mm graduations,
+     a number every cm; it stops at the disk */
+  if(ST.ruler){ const mo=ST.motorAt==="tube", s1=mo&&ST.disk?Math.min(30.4,rm-0.15):30.4, s0=-0.6, d=mo?2.79:1.04, th=0.12, hw=1.5;
+    const P=(s,v,dd)=>lin([along(s,f),1],[f.e1,d+(dd||0)],[f.e2,v]);
+    obox(P((s0+s1)/2,0,th/2),vmul(f.u,(s1-s0)/2),vmul(f.e2,hw),vmul(f.e1,th/2),"rgba(238,240,232,0.96)",{id:"rulerOn"});
+    if(ST.rulerTaped) for(const s of mo?[rm-8.45+1.85,rm-8.45+6.75]:[0.4]) if(s<s1) F([P(s-0.9,-hw-0.15,-0.01),P(s+0.9,-hw-0.15,-0.01),P(s+0.9,hw+0.15,-0.01),P(s-0.9,hw+0.15,-0.01)],"rgba(236,226,176,0.95)",{n:vmul(f.e1,-1),flat:true});
+    for(let mm=0;mm<=Math.floor(s1*10);mm++){ const s=mm/10, L=mm%10===0?0.75:mm%5===0?0.5:0.32; L3line(P(s,hw,th+0.006),P(s,hw-L,th+0.006),mm%10===0?1.0:0.6); }
+    for(let k=0;k<=s1;k++) TX(P(k,hw-1.25,th+0.008),f.u,f.e2,String(k),k%5===0?0.5:0.4,"#1d1d1d",{align:"center",weight:k%5===0?"700":"400"});
+    fastener("rulerTape",P(mo?rm-8.45+1.85:0.4,-0.6,th+0.01),"tape"); }
   if(ST.motorAt==="tube") motorParts(along(rm-8.45,f),f.u,f.e1,f.e2,true);
   if(ST.cwAt==="tube"){ const c=along(-rc-0.25,f), out=vmul(f.u,-1);
     diskDraw(c,out,f.e1,f.e2,DISKS["26_4"][1]*100,0.4,0,0,kit.nBoltCw,"cw",false);
@@ -1436,7 +1449,7 @@ function drawZoom(){ if(!ZOOM) return; const c=ctx, t=d().zoom, id=ZOOM.sel, sp=
     else if(k==="m3"){ c.fillStyle="rgba(200,226,238,0.22)"; c.fillRect(-200,-200,400,400); c.fillStyle=metal(c,60,40,260,false); c.beginPath(); c.arc(60,40,230,0,7); c.fill(); }
     else if(k==="m6"){ c.fillStyle="rgba(190,220,234,0.35)"; c.fillRect(-200,-200,400,400); c.fillStyle="#1d1e20"; c.beginPath(); c.arc(0,0,150,0,7); c.fill(); c.fillStyle=metal(c,0,0,125,false); c.beginPath(); c.arc(0,0,125,0,7); c.fill(); }
     else if(k==="set"){ const g=c.createLinearGradient(-200,0,200,0); g.addColorStop(0,"#7d838a"); g.addColorStop(0.5,"#eef0f2"); g.addColorStop(1,"#7d838a"); c.fillStyle=g; c.fillRect(-200,-200,400,400); c.fillStyle="#3a3d42"; c.beginPath(); c.arc(0,0,52,0,7); c.fill(); }
-    else if(k==="thumb"){ c.fillStyle="#1b1c1f"; c.fillRect(-200,-200,400,400); c.fillStyle="#2a2c30"; c.beginPath(); c.arc(0,0,70,0,7); c.fill(); }
+    else if(k==="thumb"){ c.fillStyle="#1b1c1f"; c.fillRect(-200,-200,400,400); c.fillStyle="#2c2e33"; c.beginPath(); c.arc(0,0,92,0,7); c.fill(); c.fillStyle="#b59a5a"; c.beginPath(); c.arc(0,0,58,0,7); c.fill(); }
     else if(k==="star"){ c.fillStyle="#a7acb2"; c.fillRect(-200,-200,400,400); c.fillStyle="#c9cdd2"; c.beginPath(); c.arc(0,0,150,0,7); c.fill(); }
     else if(k==="foot"){ c.fillStyle="#1f8a7e"; c.fillRect(-200,-200,400,400); c.fillStyle="#1b1c1f"; c.beginPath(); c.arc(0,0,125,0,7); c.fill(); }
     /* the screw: it stands out (looks bigger) the further it is backed off */
@@ -1445,9 +1458,12 @@ function drawZoom(){ if(!ZOOM) return; const c=ctx, t=d().zoom, id=ZOOM.sel, sp=
       c.strokeStyle="rgba(255,255,255,0.18)"; c.lineWidth=2; for(let i=0;i<36;i++){ const a=ang+i*Math.PI/18; c.beginPath(); c.moveTo((r-7)*Math.cos(a),(r-7)*Math.sin(a)); c.lineTo(r*Math.cos(a),r*Math.sin(a)); c.stroke(); }
       hexPath(c,0,0,r*0.38,ang); c.fillStyle="#0b0c0d"; c.fill(); allenKey(c,0,0,r*0.34,ang-Math.PI/2); }
     else if(k==="set"){ hexPath(c,0,0,20*z,ang); c.fillStyle="#0b0c0d"; c.fill(); allenKey(c,0,0,18*z,ang-Math.PI/2); }
-    else if(k==="thumb"){ c.save(); c.rotate(ang); c.scale(z,z); c.fillStyle="#1e1f22"; rrect(-150,-24,300,48,22); c.fill(); c.strokeStyle="#000"; c.lineWidth=2; c.stroke();
-      c.strokeStyle="rgba(255,255,255,0.12)"; for(let x=-140;x<=140;x+=10){ if(Math.abs(x)<40) continue; c.beginPath(); c.moveTo(x,-20); c.lineTo(x,20); c.stroke(); } c.restore();
-      c.fillStyle=metal(c,0,0,34*z,true); c.beginPath(); c.arc(0,0,34*z,0,7); c.fill(); }
+    else if(k==="thumb"){ /* the wing knob seen end-on: two flat wings on a round hub */
+      c.save(); c.rotate(ang); c.scale(z,z); c.fillStyle="#1e1f22"; c.strokeStyle="#000"; c.lineWidth=2;
+      c.beginPath(); c.moveTo(-40,-34); c.lineTo(-118,-26); c.arc(-130,0,26,-Math.PI/2,Math.PI/2,true); c.lineTo(-40,34); c.lineTo(40,34); c.lineTo(118,26); c.arc(130,0,26,Math.PI/2,-Math.PI/2,true); c.lineTo(40,-34); c.closePath(); c.fill(); c.stroke();
+      c.fillStyle="#26282c"; c.beginPath(); c.arc(0,0,52,0,7); c.fill(); c.stroke();
+      c.strokeStyle="rgba(255,255,255,0.10)"; c.lineWidth=1.5; for(const sg of [1,-1]) for(let x=62;x<=140;x+=12){ c.beginPath(); c.moveTo(sg*x,-20); c.lineTo(sg*x,20); c.stroke(); } c.restore();
+      c.fillStyle=metal(c,0,0,22*z,true); c.beginPath(); c.arc(0,0,22*z,0,7); c.fill(); }
     else if(k==="star"){ star2(c,0,0,135*z,5,ang,"#17181b"); c.fillStyle="#2c2f34"; c.beginPath(); c.arc(0,0,30,0,7); c.fill(); }
     else if(k==="foot"){ star2(c,0,0,160*(1+0.1*(1-fr)),6,ang,"#151619"); c.fillStyle="#8a9097"; c.beginPath(); c.arc(0,0,22,0,7); c.fill(); }
   }
