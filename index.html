@@ -1286,9 +1286,50 @@ const DATA={
               pdf:{en:"pdf/APhO_2009_E2_EN.pdf"},
               sol:"pdf/APhO_2009_S2.pdf"}}
     ]},
-   {y:2008,host:{ko:"몽골 · 울란바토르",en:"Ulaanbaatar, Mongolia"},cc:"mn",problems:papers("APhO_2008", wip("The Physics of Sound Waves"), ["E_EN"])},
-   {y:2007,host:{ko:"중국 · 상하이",en:"Shanghai, China"},cc:"cn",problems:papers("APhO_2007", wip("Interference Method for the Thermal Expansion and Refractive Index of Glass","Measurement of Liquid Electric Conductivity"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2006,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:papers("APhO_2006", wip("Specific Heat of Aluminium and Latent Heat of Evaporation"), ["E_EN", "S"])},
+   {y:2008,host:{ko:"몽골 · 울란바토르",en:"Ulaanbaatar, Mongolia"},cc:"mn",
+    problems:[
+      {id:"E1",
+       title:{ko:"음파의 물리",en:"The Physics of Sound Waves"},
+       desc:{ko:"초음파 송신기와 마이크의 주파수 특성과 방향성을 아날로그 밀리볼트계로 재고, 광학 레일 위 거울과의 정상파로 파장을, 톱니 회전 원판의 도플러 이동으로 음속을 구한 뒤, 헤드폰으로 실제 소리를 들으며 자신의 가청 범위와 분해능을 잽니다.",
+             en:"Read an analog millivoltmeter for the frequency response and directivity of an ultrasonic source and microphone, find the wavelength from standing waves against a mirror on the optical bench and the speed of sound from the Doppler shift off a rotating saw-toothed disc, then measure your own hearing with real tones in headphones."},
+       tags:["파동","정상파","도플러 효과"], tagsEn:["Waves","Standing waves","Doppler effect"],
+       files:{sim:"sim/apho2008_web.html",
+              src:{ko:"src/apho2008_sim_KO.py", en:"src/apho2008_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2008_E_EN.pdf"}}}
+    ]},
+   {y:2007,host:{ko:"중국 · 상하이",en:"Shanghai, China"},cc:"cn",
+    problems:[
+      {id:"E1",
+       title:{ko:"간섭법으로 유리의 열팽창과 굴절률 온도계수 재기",en:"Interference Method for the Thermal Expansion and Refractive Index of Glass"},
+       desc:{ko:"전기 오븐으로 데우는 유리 시료(쐐기판 B·B′을 붙인 원기둥 A)에 He-Ne 레이저를 비추고, 받침대 나사로 반사 빛점을 모눈종이에 맞춘 뒤 공기층과 유리에서 지나가는 간섭무늬를 온도와 함께 세어 β와 dn/dT를 구합니다.",
+             en:"Shine a He-Ne laser on a glass sample (cylinder A with wedged plates B, B′) warming in an electric oven, tilt the platform until the reflections land on the graph paper, and count the fringes passing against temperature over the air gap and through the glass for β and dn/dT."},
+       tags:["광학","간섭","열팽창"], tagsEn:["Optics","Interference","Thermal expansion"],
+       files:{sim:"sim/apho2007_E1_web.html",
+              src:{ko:"src/apho2007_E1_sim_KO.py", en:"src/apho2007_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2007_E1_EN.pdf"},
+              sol:"pdf/APhO_2007_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"액체의 전기 전도도 재기",en:"Measurement of Liquid Electric Conductivity"},
+       desc:{ko:"두 코일 고리로 된 무접촉 센서를 단자에서 단자로 직접 배선하고, 센서를 지나는 도선에 표준 저항을 이어 V2/V1–1/R 관계를 보정한 뒤, 센서를 소금물에 담가 전기 전도도를 구합니다.",
+             en:"Wire a contactless two-ring sensor yourself, terminal to terminal, calibrate V2/V1 against 1/R with standard resistors on a thread through it, then immerse it in salt water for the conductivity."},
+       tags:["전자기","유도","전도도"], tagsEn:["Electromagnetism","Induction","Conductivity"],
+       files:{sim:"sim/apho2007_E2_web.html",
+              src:{ko:"src/apho2007_E2_sim_KO.py", en:"src/apho2007_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2007_E2_EN.pdf"},
+              sol:"pdf/APhO_2007_S2.pdf"}}
+    ]},
+   {y:2006,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",
+    problems:[
+      {id:"E1",
+       title:{ko:"알루미늄의 비열과 질소의 증발 잠열",en:"Specific Heat of Aluminium and Latent Heat of Evaporation"},
+       desc:{ko:"물 높이를 맞춘 두 냉각 곡선(뜨거운 물, 물 + 알루미늄 원기둥)으로 알루미늄의 비열을 구하고, 스스로 꺼지는 저울 위 스티로폼 컵의 액체 질소에 원기둥을 넣어 증발한 질량과 비열 곡선의 넓이로 증발 잠열을 구합니다.",
+             en:"Compare two cooling curves at the same water level (hot water, and water with the aluminium cylinder) for aluminium's specific heat, then plunge the cylinder into liquid nitrogen in a foam cup on self-switching scales and use the boil-off and the area under the specific-heat curve for the latent heat."},
+       tags:["열","비열","잠열"], tagsEn:["Heat","Specific heat","Latent heat"],
+       files:{sim:"sim/apho2006_web.html",
+              src:{ko:"src/apho2006_sim_KO.py", en:"src/apho2006_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2006_E_EN.pdf"},
+              sol:"pdf/APhO_2006_S.pdf"}}
+    ]},
    {y:2005,host:{ko:"인도네시아 · 프칸바루",en:"Pekanbaru, Indonesia"},cc:"id",problems:wip("Determination of Shapes by Reflection","Magnetic Braking on an Inclined Plane")},
    {y:2004,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:papers("APhO_2004", wip("Hall Effect and Magnetoresistivity Effect","Black Box"), ["E1_EN", "S1"], ["E2_EN"])},
    {y:2003,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:papers("APhO_2003", wip("Determination of Capacitance","Cylindrical Bore"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
@@ -3692,6 +3733,69 @@ const SIG_A09E2={
     const g=c.createLinearGradient(cx-a,0,cx+a,0); g.addColorStop(0,"#9aa0a6"); g.addColorStop(0.35,"#e1e5e8"); g.addColorStop(1,"#8c9298");
     c.fillStyle=g; c.fillRect(cx-a,zt-4,2*a,h*0.28);
   }};
+/* ── APhO 2008 · the microphone's level as the generator sweeps through its resonance ── */
+const SIG_A08E1={
+  sim:"sim/apho2008_web.html", tag:"APhO 2008 E1", span:30, rate:1,
+  capL:{ko:"마이크 신호 · 발생기 주파수를 0.5 kHz씩 올리며",en:"The microphone's signal · stepping the generator by 0.5 kHz"},
+  capR:{ko:"발생기",en:"generator"},
+  f(t){ return 33+Math.floor(t%this.span)*0.5; },
+  V(f){ const r=(f,f0,Q)=>1/Math.sqrt(1+Q*Q*(f/f0-f0/f)**2); return r(f,40.1,19)*r(f,40.0,18); },
+  read(t){ return this.f(t).toFixed(1)+" kHz"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=f=>padL+(f-33)/15*(w-padL-pad), Y=v=>h-padB-v*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let f=33;f<=48;f+=3){ c.moveTo(X(f),pad); c.lineTo(X(f),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.f(t); for(let f=33;f<=k;f+=0.5){ c.fillStyle=f===k?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(f),Y(this.V(f)),f===k?4:2.5,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const f of [35,40,45]) c.fillText(f+" kHz",X(f),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2007 E1 · interference rings moving in the reflected spot as the glass warms ── */
+const SIG_A07E1={
+  sim:"sim/apho2007_E1_web.html", tag:"APhO 2007 E1", span:24, rate:1,
+  capL:{ko:"모눈종이 위 간섭무늬 · 오븐이 시료를 데우는 동안",en:"Fringes on the graph paper · while the oven warms the sample"},
+  capR:{ko:"온도계",en:"thermometer"},
+  T(t){ return 40+(t%this.span)*1.2; },
+  read(t){ return this.T(t).toFixed(1)+" °C"; },
+  paint(c,w,h,t){
+    c.fillStyle="#f6f4e8"; c.fillRect(0,0,w,h);
+    PEN(c,"rgba(220,120,100,.35)",.6); c.beginPath(); for(let x=0;x<w;x+=8){ c.moveTo(x,0); c.lineTo(x,h); } for(let y=0;y<h;y+=8){ c.moveTo(0,y); c.lineTo(w,y); } c.stroke();
+    const cx=w*0.55, cy=h/2, fr=(this.T(t)*0.46)%1;
+    for(let k=0;k<7;k++){ const r=11*Math.sqrt(2*(k+fr)); c.strokeStyle="rgba(200,20,10,"+(0.9-k*0.1).toFixed(2)+")"; c.lineWidth=2.4; c.beginPath(); c.arc(cx,cy,r,0,7); c.stroke(); }
+    c.fillStyle="#1b1d20"; c.beginPath(); c.arc(w*0.18,cy,12,0,7); c.fill();
+  }};
+/* ── APhO 2007 E2 · V2/V1 against 1/R from the standard resistors ── */
+const SIG_A07E2={
+  sim:"sim/apho2007_E2_web.html", tag:"APhO 2007 E2", span:22, rate:1,
+  capL:{ko:"V2/V1 대 1/R · 표준 저항을 바꿔 가며",en:"V2/V1 against 1/R · changing the standard resistor"},
+  capR:{ko:"1/R",en:"1/R"},
+  x(t){ return 0.12+Math.floor(t%this.span)*0.45; },
+  y(x){ const R=1/x; return 0.434/Math.hypot(R+0.05,0.3); },
+  read(t){ return this.x(t).toFixed(2)+" Ω⁻¹"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=x=>padL+x/10*(w-padL-pad), Y=y=>h-padB-y/1.6*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=0;x<=10;x+=2){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    PEN(c,"rgba(232,98,42,.5)",1); c.setLineDash([4,4]); c.beginPath(); c.moveTo(X(0),Y(0)); c.lineTo(X(3.6),Y(0.434*3.6)); c.stroke(); c.setLineDash([]);
+    const k=this.x(t); for(let x=0.12;x<=k+1e-9;x+=0.45){ c.fillStyle=Math.abs(x-k)<1e-9?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(x),Y(this.y(x)),Math.abs(x-k)<1e-9?4:2.5,0,7); c.fill(); }
+  }};
+/* ── APhO 2006 · nitrogen boiled off: the calm, the violent boiling, the calm again ── */
+const SIG_A06E1={
+  sim:"sim/apho2006_web.html", tag:"APhO 2006 E1", span:30, rate:1,
+  capL:{ko:"증발한 질소 질량 · 원기둥을 넣기 전·중·후",en:"Nitrogen boiled off · before, during and after the cylinder goes in"},
+  capR:{ko:"저울",en:"scales"},
+  mN(tm){ return tm<5.2?5.75*tm:tm<7.8?30+(tm-5.2)*25:95+(tm-7.8)*4.03; },
+  tm(t){ return (t%this.span)/2; },
+  read(t){ return Math.round(this.mN(this.tm(t)))+" g"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=m=>padL+m/15*(w-padL-pad), Y=g=>h-padB-g/130*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let m=0;m<=15;m+=3){ c.moveTo(X(m),pad); c.lineTo(X(m),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.tm(t); for(let m=0;m<=k;m+=0.3){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(m),Y(this.mN(m)),2.3,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(k),Y(this.mN(k)),4,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const m of [0,5,10,15]) c.fillText(m+" min",X(m),h-7); c.textAlign="left";
+  }};
 /* ── APhO 2012 E1 · weights into the pan until the cord creeps past the ruled plate ── */
 const SIG_A12E1={
   sim:"sim/apho2012_E1_web.html", tag:"APhO 2012 E1", span:30, rate:1,
@@ -4089,7 +4193,8 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_I20E1,SIG_I15E1,SIG_I15E2,SIG_I14E1,SIG_I10E1,SIG_I10E2,
                 SIG_I12E1,SIG_I12E2,SIG_I13E1,SIG_I13E2,SIG_A17E1,
                 SIG_I16E1,SIG_I16E2,SIG_A19E1,SIG_A19E2,
-                SIG_A10E1,SIG_A10E2,SIG_A09E1,SIG_A09E2];
+                SIG_A10E1,SIG_A10E2,SIG_A09E1,SIG_A09E2,
+                SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
