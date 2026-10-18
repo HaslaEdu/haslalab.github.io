@@ -964,9 +964,48 @@ const DATA={
               pdf:{en:"pdf/IPhO_2010_E2_EN.pdf"},
               sol:"pdf/IPhO_2010_S2.pdf"}}
     ]},
-   {y:2009,host:{ko:"멕시코 · 메리다",en:"Mérida, Mexico"},cc:"mx",problems:papers("IPhO_2009", wip("Wavelength of a Diode Laser","Birefringence of Mica"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2008,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:papers("IPhO_2008", wip("Differential Thermometric Method"), ["E_EN", "S"])},
-   {y:2007,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",problems:papers("IPhO_2007", wip("Band Gap of Semiconductor Thin Films"), ["E_EN", "S"])},
+   {y:2009,host:{ko:"멕시코 · 메리다",en:"Mérida, Mexico"},cc:"mx",
+    problems:[
+      {id:"E1",
+       title:{ko:"다이오드 레이저의 파장",en:"Wavelength of a Diode Laser"},
+       desc:{ko:"레이저 빛을 거울과 렌즈로 넓혀 면도날 가장자리에 비추고, 스크린에 생긴 프레넬 가장자리 회절 무늬의 밝은 줄 위치를 버니어 커서로 잽니다. 면도날을 레일 위에서 옮기며 줄 간격의 변화로 파장을 구합니다.",
+             en:"Spread the laser beam with a mirror and lens onto a razor blade's edge, and read the bright Fresnel edge-diffraction fringes on the screen with a vernier cursor. Moving the blade along the rail, find the wavelength from how the fringes' spacing changes."},
+       tags:["프레넬 회절","가장자리 회절","레이저 파장"], tagsEn:["Fresnel diffraction","Edge diffraction","Laser wavelength"],
+       files:{sim:"sim/ipho2009_E1_web.html",
+              src:{ko:"src/ipho2009_E1_sim_KO.py", en:"src/ipho2009_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2009_E1_EN.pdf"},
+              sol:"pdf/IPhO_2009_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"운모의 복굴절",en:"Birefringence of Mica"},
+       desc:{ko:"레이저 빛을 편광판·운모판·편광판에 통과시켜 광검출기 전압을 재고, 숫자 없는 눈금 100개가 있는 원통을 돌려 평행·수직 성분의 세기를 각도에 따라 기록해 운모의 위상차와 복굴절 n1 − n2를 구합니다.",
+             en:"Pass the laser light through a polarizer, the mica plate and a second polarizer into a photodetector; turn the cylinder with 100 unnumbered lines and record the parallel and crossed intensities against angle to find the mica's phase difference and its birefringence n1 − n2."},
+       tags:["복굴절","편광","위상차"], tagsEn:["Birefringence","Polarization","Phase difference"],
+       files:{sim:"sim/ipho2009_E2_web.html",
+              src:{ko:"src/ipho2009_E2_sim_KO.py", en:"src/ipho2009_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2009_E2_EN.pdf"},
+              sol:"pdf/IPhO_2009_S2.pdf"}}]},
+   {y:2008,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",
+    problems:[
+      {id:"E1",
+       title:{ko:"시차 열측정법",en:"Differential Thermometric Method"},
+       desc:{ko:"두 실리콘 다이오드의 전압 차 ΔV로 온도차를 정밀하게 잽니다. 램프를 뒤집어 열원으로 쓰고 빈 접시와 시료 접시를 데운 뒤 식히며 ΔV와 V를 기록해 응고점을 찾고, 램프를 매달아 원뿔 복사 검출기로 조도를, 태양전지로 최대 전력과 효율을 구합니다.",
+             en:"Two silicon diodes' voltage difference ΔV measures temperature differences finely. With the lamp turned up as a heater, warm an empty and a sample dish, then record ΔV and V as they cool to find the solidification point; with the lamp hanging, find the irradiance with the cone detector and the solar cell's maximum power and efficiency."},
+       tags:["다이오드 온도계","잠열","태양전지"], tagsEn:["Diode thermometer","Latent heat","Solar cell"],
+       files:{sim:"sim/ipho2008_web.html",
+              src:{ko:"src/ipho2008_sim_KO.py", en:"src/ipho2008_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2008_E_EN.pdf"},
+              sol:"pdf/IPhO_2008_S.pdf"}}]},
+   {y:2007,host:{ko:"이란 · 이스파한",en:"Isfahan, Iran"},cc:"ir",
+    problems:[
+      {id:"E1",
+       title:{ko:"반도체 박막의 에너지 띠틈",en:"Band Gap of Semiconductor Thin Films"},
+       desc:{ko:"할로겐 램프와 600줄/mm 회절격자로 만든 분광기의 회전 팔 끝 광저항으로 Fe₂O₃ 박막과 맨 유리의 투과를 각도마다 재고, 버니어 각도기로 파장을 정해 (αhν)² 그래프에서 띠틈 E_g와 막 두께를 구합니다.",
+             en:"With a spectrometer built from a halogen lamp and a 600 lines/mm grating, read the transmission of an Fe₂O₃ film and of bare glass with the photoresistor at the end of the rotatable arm, take the wavelength from the vernier goniometer, and find the band gap E_g and the film's thickness from the (αhν)² plot."},
+       tags:["띠틈","회절격자 분광기","광흡수"], tagsEn:["Band gap","Grating spectrometer","Optical absorption"],
+       files:{sim:"sim/ipho2007_web.html",
+              src:{ko:"src/ipho2007_sim_KO.py", en:"src/ipho2007_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2007_E_EN.pdf"},
+              sol:"pdf/IPhO_2007_S.pdf"}}]},
    {y:2006,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",problems:papers("IPhO_2006", wip("Interference, Reflection and Diffraction"), ["E_EN", "S"])},
    {y:2005,host:{ko:"스페인 · 살라망카",en:"Salamanca, Spain"},cc:"es",problems:papers("IPhO_2005", wip("Planck's Constant in an Incandescent Lamp"), ["E_EN", "S"])},
    {y:2004,host:{ko:"대한민국 · 포항",en:"Pohang, South Korea"},cc:"kr",problems:papers("IPhO_2004", wip('Mechanical "Black Box"'), ["E_EN", "S"])},
@@ -4457,6 +4496,76 @@ const SIG_A00E2={
     c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(k),Y(this.T(k)),4,0,7); c.fill();
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const m of [0,30,60]) c.fillText(m+" min",X(m),h-7); c.textAlign="left";
   }};
+/* ── IPhO 2009 E1 · the Fresnel fringes beyond a razor's edge ── */
+const SIG_I09E1={
+  sim:"sim/ipho2009_E1_web.html", tag:"IPhO 2009 E1", span:22, rate:1,
+  capL:{ko:"면도날 가장자리의 프레넬 무늬 · 버니어 커서로 밝은 줄 읽기",en:"Fresnel fringes at a razor's edge · reading bright fringes with the cursor"},
+  capR:{ko:"커서",en:"cursor"},
+  I(x){ /* edge diffraction, x in Fresnel units */ let C=0,S=0; const n=160; for(let i=0;i<n;i++){ const u=x*(i+0.5)/n; C+=Math.cos(Math.PI*u*u/2); S+=Math.sin(Math.PI*u*u/2); } C*=x/n; S*=x/n; return 0.5*((C+0.5)**2+(S+0.5)**2); },
+  x(t){ return -1.5+6.5*((t%this.span)/this.span); },
+  read(t){ return (this.x(t)*1.6+12).toFixed(2)+" mm"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>pad+(x+1.5)/6.5*(w-2*pad), Y=v=>h-padB-v/1.5*(h-padB-pad);
+    for(let px=pad;px<w-pad;px+=2){ const v=this.I(-1.5+(px-pad)/(w-2*pad)*6.5), g=Math.round(Math.min(1,v*0.75)*255); c.fillStyle="rgb("+g+","+Math.round(g*0.15)+","+Math.round(g*0.1)+")"; c.fillRect(px,pad,2,(h-padB-pad)*0.35); }
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const xt=this.x(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let x=-1.5;x<=xt;x+=0.03){ const px=X(x), py=Y(this.I(x)); x===-1.5?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    PEN(c,"#e8622a",1.4); c.beginPath(); c.moveTo(X(xt),pad); c.lineTo(X(xt),h-padB); c.stroke();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; c.fillText("edge",X(0),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2009 E2 · the crossed intensity as the mica turns ── */
+const SIG_I09E2={
+  sim:"sim/ipho2009_E2_web.html", tag:"IPhO 2009 E2", span:24, rate:1,
+  capL:{ko:"운모를 돌리며 · 수직 성분의 세기 IO",en:"Turning the mica · the crossed intensity IO"},
+  capR:{ko:"광검출기",en:"detector"},
+  IO(th){ return 0.5*(1-Math.cos(2.35))*Math.pow(Math.sin(2*(th-6)*Math.PI/180),2); },
+  th(t){ return 180*((t%this.span)/this.span); },
+  read(t){ return (100*this.IO(this.th(t))+0.4).toFixed(1)+" mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=a=>pad+a/180*(w-2*pad), Y=v=>h-padB-v/0.9*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=0;a<=180;a+=45){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const tt=this.th(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let a=0;a<=tt;a+=1){ const px=X(a), py=Y(this.IO(a)); a===0?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    for(let a=0;a<=tt;a+=3.6){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.IO(a)),1.8,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(tt),Y(this.IO(tt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,90,180]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2008 · ΔV dips on the sample's solidification plateau ── */
+const SIG_I08E1={
+  sim:"sim/ipho2008_web.html", tag:"IPhO 2008 E1", span:26, rate:1,
+  capL:{ko:"식어 가는 두 접시 · ΔV = V2 − V1의 응고 고원",en:"Two dishes cooling · the plateau in ΔV = V2 − V1"},
+  capR:{ko:"ΔV",en:"ΔV"},
+  dV(s){ /* s: seconds of cooling */ const p=s<455?0:s<480?(s-455)/25:Math.exp(-(s-480)/14); return 5.1+0.0006*s-1.5*p+(s>480?0.25*Math.exp(-(s-500)*(s-500)/300):0); },
+  s(t){ return 700*((t%this.span)/this.span); },
+  read(t){ return this.dV(this.s(t)).toFixed(1)+" mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=s=>pad+s/700*(w-2*pad), Y=v=>h-padB-(v-3.0)/3.2*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let s=0;s<=700;s+=100){ c.moveTo(X(s),pad); c.lineTo(X(s),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const st=this.s(t); for(let s=0;s<=st;s+=6){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(s),Y(this.dV(s)+0.05*Math.sin(s*1.7)),1.9,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(st),Y(this.dV(st)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const s of [0,300,600]) c.fillText(s+" s",X(s),h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2007 · the photoresistor behind glass and film across the first order ── */
+const SIG_I07E1={
+  sim:"sim/ipho2007_web.html", tag:"IPhO 2007 E1", span:26, rate:1,
+  capL:{ko:"1차 스펙트럼을 따라 팔을 돌리며 · 유리와 박막 뒤의 광저항",en:"Turning the arm along the first order · the photoresistor behind glass and film"},
+  capR:{ko:"저항",en:"ohms"},
+  Rg(p){ const l=1667*Math.sin(p*Math.PI/180); return 1/(0.1+5.2*Math.exp(-Math.pow((l-565)/(l<565?62:36),2))+1.1*Math.exp(-Math.pow((l-650)/60,2))); },
+  T(p){ const E=1239.84/(1667*Math.sin(p*Math.PI/180)), x=(E-2.17)/0.035, sp=x>30?x:Math.log1p(Math.exp(x)); return 0.92*(0.988*Math.exp(-(14.6*Math.sqrt(0.035*sp)/E+0.75))+0.012); },
+  p(t){ return 15+10*((t%this.span)/this.span); },
+  read(t){ const p=this.p(t), R=this.Rg(p)/this.T(p); return (R<2?R.toFixed(3):R<20?R.toFixed(2):R.toFixed(1))+" MΩ"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=p=>pad+(p-15)/10*(w-2*pad), Y=R=>h-padB-(Math.log10(R)+1)/3.4*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let p=15;p<=25;p+=1){ c.moveTo(X(p),pad); c.lineTo(X(p),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const pt=this.p(t); for(let p=15;p<=pt;p+=0.25){ c.fillStyle="#8fb0c8"; c.beginPath(); c.arc(X(p),Y(this.Rg(p)),1.9,0,7); c.fill(); c.fillStyle="#b4532a"; c.beginPath(); c.arc(X(p),Y(this.Rg(p)/this.T(p)),1.9,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(pt),Y(this.Rg(pt)/this.T(pt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const p of [15,20,25]) c.fillText(p+"°",X(p),h-7); c.textAlign="left";
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -4470,7 +4579,8 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A10E1,SIG_A10E2,SIG_A09E1,SIG_A09E2,
                 SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1,
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
-                SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2];
+                SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
+                SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){

@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>IPhO 2007 — 반도체 박막의 에너지 띠틈 · Band Gap of Thin Films · HaslaLab</title>
+<meta name="description" content="IPhO 2007 실험을 브라우저에서 실행합니다. 할로겐 램프와 600줄/mm 회절격자 분광기의 회전 팔 끝 광저항으로 Fe₂O₃ 박막과 유리의 투과 스펙트럼을 재고, 버니어 각도기로 파장을 정해 (αhν)² 그래프에서 띠틈 E_g와 막 두께를 구합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPhO 2007 — 반도체 박막의 에너지 띠틈 · Band Gap of Thin Films">
+<meta property="og:description" content="IPhO 2007 실험을 브라우저에서 실행합니다. 회절격자 분광기와 광저항으로 박막의 띠틈을 잽니다.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  .instr3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .instr3 canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
+  .ilbl{font-size:12px;color:#f2c14e;font-weight:700;margin:0 0 4px}
+  @media(max-width:900px){.instr3{grid-template-columns:1fr}}
+  .chklist{font-size:12px;line-height:1.7}
+  .chklist div{display:flex;justify-content:space-between;gap:8px;color:#9aa3ab}
+  .chklist b{font-weight:600}.chklist .ok{color:#7fd39a}.chklist .no{color:#f0b35a}.chklist .na{color:#5c646d}
+button.on{background:#3a3220;border-color:#f2c14e;color:#ffd77a}
+  .row button.on{background:#f2c14e;color:#1b1d20;border-color:#f2c14e}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-v"></h2>
+    <div class="disp" id="dV"></div>
+    <div class="row"><button id="r_200">200Ω</button><button id="r_2k">2k</button><button id="r_20k">20k</button><button id="r_200k">200k</button></div>
+    <div class="row"><button id="r_2M">2M</button><button id="r_20M">20M</button><button id="r_200M">200M</button></div>
+    <div class="row"><button id="pwrBtn"></button><button id="holdBtn"></button></div>
+
+    <h2 id="t-h-l"></h2>
+    <div class="row"><button id="lampBtn"></button><button id="coverBtn"></button></div>
+    <div class="row"><button id="lpm">◀</button><span id="lpv" style="flex:1;text-align:center;font-size:12px;color:#c9d1d9;align-self:center"></span><button id="lpp">▶</button></div>
+    <div class="hint" id="lHint"></div>
+
+    <h2 id="t-h-a"></h2>
+    <div class="row"><button id="l18Btn"></button></div>
+    <div class="row"><button id="am1">−1°</button><button id="am01">−0.1°</button><button id="ap01">+0.1°</button><button id="ap1">+1°</button></div>
+    <div class="row"><button id="af5m">⟲ 5′</button><button id="af1m">⟲ 1′</button><button id="af1p">⟳ 1′</button><button id="af5p">⟳ 5′</button></div>
+    <div class="hint" id="aHint"></div>
+
+    <h2 id="t-h-z"></h2>
+    <div class="row"><button id="l9Btn"></button></div>
+    <div class="row"><button id="zm1">−1°</button><button id="zm01">−0.1°</button><button id="zp01">+0.1°</button><button id="zp1">+1°</button><button id="zf1m">⟲ 1′</button><button id="zf1p">⟳ 1′</button></div>
+
+    <h2 id="t-h-g"></h2>
+    <div class="row"><button id="l12Btn"></button></div>
+    <div class="row"><button id="gm1">−1°</button><button id="gm01">−0.1°</button><button id="gm002">−0.02°</button><button id="gp002">+0.02°</button><button id="gp01">+0.1°</button><button id="gp1">+1°</button></div>
+    <div class="row"><button id="tm">⤵ −0.2°</button><button id="tp">⤴ +0.2°</button></div>
+    <div class="hint" id="gHint"></div>
+
+    <h2 id="t-h-s"></h2>
+    <div class="row"><button id="um05">−0.5 mm</button><button id="um01">−0.1 mm</button><button id="up01">+0.1 mm</button><button id="up05">+0.5 mm</button></div>
+
+    <h2 id="t-h-t"></h2>
+    <div class="row"><button id="sp1">×1</button><button id="sp10">×10</button><button id="sp30">×30</button><span id="clock" style="flex:1;text-align:right;font:12px ui-monospace,Consolas,monospace;color:#c9d1d9;align-self:center"></span></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><input id="cfg" style="flex:1;min-width:0;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;padding:5px 6px;font:12px ui-monospace,Consolas,monospace"></div>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button></div>
+    <textarea id="note" rows="10" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"IPhO 2007 실험 — 반도체 박막의 에너지 띠틈",
+    sub:"가상 실험실 · 할로겐 램프의 빛을 렌즈로 평행하게 만들어 600줄/mm 투과 회절격자에 보내고, 회전 팔 끝의 광저항(빛이 셀수록 저항이 작아짐, I = C(λ)/R)으로 1차 회절 스펙트럼을 잽니다. 팔 끝 입구 구멍 앞에 산화철(Fe₂O₃) 박막을 입힌 유리와 맨 유리를 번갈아 두면 T_film = I_film/I_glass = R_glass/R_film입니다. 각도기의 버니어는 5′까지 읽습니다. 과제 1: (a) 버니어 정밀도, (b) 카드의 구멍으로 반사광을 맞춰 격자를 광축에 수직으로 세우고 정밀도와 1차 가시광의 각도 범위를 구하기, (c) 0차에서 R이 최소가 되게 영점 맞추기, 1차에서 R 최소, (d) 덮개를 닫고 각 φ마다 R_glass, R_film 재기(높은 저항에서는 3–4분 기다리기), (e) φ = −20°의 T_film과 같은 T_film이 되는 각에서 Δφ 구하기 → λ = d sin(φ − Δφ/2). 과제 2–3: T_film(λ), x = hν, y = (αt·hν)² 그래프에서 A = 0.071 eV^½/nm로 E_g와 두께 t. 계산은 대신 해주지 않습니다.",
+    docTitle:"IPhO 2007 — 반도체 박막의 에너지 띠틈 · HaslaLab",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 / 우클릭 부품함으로\n분광기를 먼저 테이블에 놓고\n덮개를 연 뒤 격자·광저항·시료틀·카드를\n분광기 위에 대고 클릭하면 끼워집니다\n흰 덮개를 클릭하면 여닫힙니다",
+    items:{spectro:"분광기 (흰 상자, 램프·각도기)",grating:"회절격자 600줄/mm",detector:"광저항 검출기 (홀더)",sample:"시료틀 (박막 S2·유리 S3)",card:"구멍 뚫린 카드",dmm:"멀티미터 (저항, 200 MΩ)",ruler:"자 (30 cm)",labels:"빈 라벨"},
+    cap:"실험대 (3D) — 좌클릭 집기·놓기·옮기기 / 우클릭 부품함으로 · 흰 덮개 클릭: 여닫기 · 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점",
+    tabs:{gonio:"각도기와 버니어",card:"카드와 반사광",sample:"시료틀과 입구 구멍"},
+    closeCap:{gonio:"분광기를 위에서 본 모습 — 회전 팔(나사 18을 풀면 끌어서 돌림)과 각도기, 오른쪽은 돋보기로 본 버니어. 광저항이 없으면 팔 끝 카드에 보이는 빛의 색을 볼 수 있습니다.",
+              card:"램프 앞 카드를 격자 쪽에서 본 모습 — 격자에서 반사된 빛이 구멍에 오도록 격자대를 돌리세요(나사 12). 오른쪽: 자로 잰 카드–격자 거리.",
+              sample:"입구 구멍 S1 앞의 시료틀 — 박막(S2)·유리(S3)·빈 칸을 고르고 틀을 끌어 위치를 맞추세요(Shift: 느리게). 같은 자리를 다시 쓰도록 라벨로 표시해 두세요."},
+    lab:{noSpec:"분광기를 실험대에 놓으세요", cardEnd:"팔 끝", armLocked:"나사 18 잠김 — 미세 조정 나사 19로 돌립니다", armFree:"나사 18 풀림 — 팔을 끌어 돌릴 수 있습니다", magn:"버니어 (돋보기)",
+      vLocked:"나사 9 잠김 — 미세 조정 나사 10", vFree:"나사 9 풀림 — 각도기 눈금을 돌릴 수 있습니다", gonioHint:"위 눈금 30′, 아래 버니어 5′",
+      noCard:"카드를 분광기에 끼우세요 (렌즈와 격자 사이)", spotOff:"반사광이 카드 밖에 있습니다", cardFront:"카드 (격자 쪽에서)", side:"옆에서: 카드 → 격자", cardL:"카드", gratL:"격자", noRuler:"자를 실험대에 놓으면 거리를 잴 수 있습니다", cardHint:"구멍과 반사광 사이 거리 r, 카드–격자 거리 a → 2θ₀ ≈ r/a",
+      noSample:"시료틀을 회전 팔에 끼우세요", frame:{film:"박막 S2",glass:"유리 S3",open:"빈 칸"}, mark:"여기에 라벨 붙이기", unmark:"라벨 떼기", noLabels:"빈 라벨이 있으면 표시할 수 있습니다", sampleHint:"노란 원: 입구 구멍 S1 · 흰 표: 라벨"},
+    hV:"멀티미터 (광저항)", pwrB:"전원 M1", holdB:"HOLD M3",
+    hL:"램프 · 덮개", lampOnB:"램프 켜기", lampOff:"램프 끄기", coverOpen:"덮개 열기", coverClose:"덮개 닫기", lampPosTxt:n=>"램프 팔 "+n+"/8", lHint:"◀▶: 램프 팔 길이 — 렌즈에서 멀수록 빛이 평행해집니다. 측정은 덮개를 닫고 어두운 곳에서 하세요. 램프는 켜 둔 채로 두는 편이 좋습니다.",
+    hA:"회전 팔", lockTxt:(n,on)=>"나사 "+n+": "+(on?"잠김":"풀림"), aHint:"풀린 상태에서 크게, 잠근 뒤 미세 조정 나사 19로 1′씩 돌립니다.",
+    hZ:"버니어 영점 (나사 9 · 미세 10)", hG:"격자대 (나사 12) · 수평 나사", gHint:"⤵⤴: 격자대 수평 나사 — 격자 줄이 기울면 1차 빛이 광저항 위아래로 비껴갑니다.",
+    hS:"시료틀 미세 위치", hT:"시간 배속", clock:t=>"경과 "+Math.floor(t/60)+"분 "+String(Math.floor(t%60)).padStart(2,"0")+"초",
+    hNote:"실험 노트", note:"적기", noteClr:"지우기", cfgPh:"예: φ = 18°30′, R_glass = 0.365 MΩ, R_film = 5.40 MΩ",
+    st:{none:"부품함에서 분광기를 꺼내 테이블 가운데에 놓으세요.", hand:n=>"손에 든 것: "+n, warming:"램프가 데워지는 중…", room:"덮개가 열려 있어 방의 빛이 광저항에 들어갑니다.", autoOff:"멀티미터가 자동으로 꺼졌습니다 — 전원 M1을 두 번 누르세요.", hold:"HOLD가 켜져 있습니다 — 표시가 멈춰 있습니다.", edge:"시료틀이 너무 밀려 구멍 일부가 비어 있습니다.", over:"멀티미터: 범위를 넘었습니다 (1)."},
+    m:{picked:n=>n+" — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+"을(를) 놓았습니다.", mounted:n=>n+"을(를) 분광기에 끼웠습니다.", back:n=>n+"을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다.",
+       needFor:n=>"먼저 "+n+"을(를) 놓으세요.", specFirst:"먼저 분광기를 놓아야 끼울 수 있습니다.", coverShut:"덮개가 닫혀 있습니다 — 먼저 여세요.", coverUp:"덮개를 열었습니다.", coverDown:"덮개를 닫았습니다.", lampOn:"램프를 켰습니다.", lampOff:"램프를 껐습니다.",
+       tight:n=>"나사 "+n+"을(를) 조였습니다.", loose:n=>"나사 "+n+"을(를) 풀었습니다.", locked18:"나사 18이 잠겨 있습니다 — 미세 조정 나사 19를 쓰거나 18을 푸세요.", fine18:"미세 조정 나사 19는 나사 18을 잠근 뒤에 씁니다.", locked9:"나사 9가 잠겨 있습니다.", fine10:"미세 조정 나사 10은 나사 9를 잠근 뒤에 씁니다.", locked12:"나사 12가 잠겨 있습니다.",
+       frame:n=>"입구 구멍 앞: "+n, marked:"라벨을 붙였습니다.", unmarked:"라벨을 뗐습니다.", noted:"노트에 적었습니다."}
+  },
+  en:{
+    title:"IPhO 2007 Experiment — Energy Band Gap of Semiconductor Thin Films",
+    sub:"Virtual lab · a halogen lamp's light, made parallel by a lens, falls on a 600 lines/mm transmission grating; a photoresistor at the end of the rotatable arm (the more light, the lower its resistance: I = C(λ)/R) reads the first-order spectrum. Put the glass coated with an iron-oxide (Fe₂O₃) film or the bare glass before the arm's entrance hole: T_film = I_film/I_glass = R_glass/R_film. The goniometer's vernier reads to 5′. Task 1: (a) the vernier's precision; (b) set the grating normal to the optical axis by sending its reflection back into the card's hole, the precision of that, and the angles of first-order visible light; (c) zero the arm where R is least in the zeroth order, R's least value in the first; (d) with the cover closed, R_glass and R_film at each φ (wait 3–4 min at high resistance); (e) Δφ from the angle whose T_film equals that at φ = −20° → λ = d sin(φ − Δφ/2). Tasks 2–3: T_film(λ), then x = hν, y = (αt·hν)² with A = 0.071 eV^½/nm for E_g and the thickness t. No calculation is done for you.",
+    docTitle:"IPhO 2007 — Band Gap of Semiconductor Thin Films · HaslaLab",
+    trayTitle:"Parts box", trayTake:"click to take", trayOut:"in use",
+    trayHelp:"L-click take / put down\nR-click back to the box\nput the spectrometer on the table first,\nopen its cover, then click the grating,\nphotoresistor, frame or card onto it\nclick the white cover to open or close it",
+    items:{spectro:"Spectrometer (white box, lamp, goniometer)",grating:"Grating 600 lines/mm",detector:"Photoresistor detector (holder)",sample:"Sample frame (film S2, glass S3)",card:"Card with a hole",dmm:"Multimeter (ohms, 200 MΩ)",ruler:"Ruler (30 cm)",labels:"Blank labels"},
+    cap:"The bench (3D) — L-click take / put down / move, R-click back to the box · click the white cover: open/close · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset view",
+    tabs:{gonio:"Goniometer and vernier",card:"Card and reflection",sample:"Sample frame and hole"},
+    closeCap:{gonio:"The spectrometer from above — the rotatable arm (drag it round with screw 18 loose) and the protractor; right, the vernier through a magnifier. With no photoresistor you see the light's colour on a card at the arm's end.",
+              card:"The card before the lamp, seen from the grating — turn the grating's stage (screw 12) until the reflected light falls into the hole. Right: the card-to-grating distance on the ruler.",
+              sample:"The sample frame before the entrance hole S1 — choose the film (S2), the glass (S3) or the empty slot and drag the frame to place it (Shift: slowly). Mark the place with a label to come back to the same spot."},
+    lab:{noSpec:"put the spectrometer on the bench", cardEnd:"arm's end", armLocked:"screw 18 tight — turn with the fine screw 19", armFree:"screw 18 loose — drag the arm round", magn:"Vernier (magnifier)",
+      vLocked:"screw 9 tight — fine screw 10", vFree:"screw 9 loose — the protractor's scale turns", gonioHint:"top: main scale 30′, bottom: vernier 5′",
+      noCard:"fit the card into the spectrometer (between lens and grating)", spotOff:"the reflection misses the card", cardFront:"The card (from the grating's side)", side:"From the side: card → grating", cardL:"card", gratL:"grating", noRuler:"put the ruler on the bench to measure the distance", cardHint:"spot-to-hole distance r, card-to-grating distance a → 2θ₀ ≈ r/a",
+      noSample:"fit the sample frame onto the rotatable arm", frame:{film:"Film S2",glass:"Glass S3",open:"Empty"}, mark:"Stick a label here", unmark:"Remove labels", noLabels:"blank labels let you mark the place", sampleHint:"yellow ring: entrance hole S1 · white tabs: labels"},
+    hV:"Multimeter (photoresistor)", pwrB:"Power M1", holdB:"HOLD M3",
+    hL:"Lamp · cover", lampOnB:"Lamp on", lampOff:"Lamp off", coverOpen:"Open cover", coverClose:"Close cover", lampPosTxt:n=>"lamp arm "+n+"/8", lHint:"◀▶: the lamp arm's length — the further from the lens, the more parallel the light. Measure in the dark with the cover closed. Better leave the lamp on throughout.",
+    hA:"Rotatable arm", lockTxt:(n,on)=>"screw "+n+": "+(on?"tight":"loose"), aHint:"Loose: move it in large steps; tight: turn the fine screw 19 by 1′.",
+    hZ:"Vernier zero (screw 9 · fine 10)", hG:"Grating stage (screw 12) · levelling screws", gHint:"⤵⤴: the stage's levelling screws — leaning lines carry the first order above or below the photoresistor.",
+    hS:"Sample frame, fine place", hT:"Time speed", clock:t=>"elapsed "+Math.floor(t/60)+" min "+String(Math.floor(t%60)).padStart(2,"0")+" s",
+    hNote:"Notebook", note:"Write", noteClr:"Clear", cfgPh:"e.g. φ = 18°30′, R_glass = 0.365 MΩ, R_film = 5.40 MΩ",
+    st:{none:"Take the spectrometer out of the box and put it in the middle of the table.", hand:n=>"In hand: "+n, warming:"The lamp is warming up…", room:"The cover is open: the room's light reaches the photoresistor.", autoOff:"The multimeter switched itself off: press Power M1 twice.", hold:"HOLD is on: the display is frozen.", edge:"The frame is pushed too far: part of the hole is bare.", over:"Multimeter: over range (1)."},
+    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", mounted:n=>n+" fitted to the spectrometer.", back:n=>n+" put back in the box.", noFit:"It does not go there.",
+       needFor:n=>"Put the "+n+" out first.", specFirst:"Put the spectrometer down first to fit this.", coverShut:"The cover is closed: open it first.", coverUp:"Cover opened.", coverDown:"Cover closed.", lampOn:"Lamp on.", lampOff:"Lamp off.",
+       tight:n=>"Screw "+n+" tightened.", loose:n=>"Screw "+n+" loosened.", locked18:"Screw 18 is tight: use the fine screw 19 or loosen 18.", fine18:"The fine screw 19 works with screw 18 tight.", locked9:"Screw 9 is tight.", fine10:"The fine screw 10 works with screw 9 tight.", locked12:"Screw 12 is tight.",
+       frame:n=>"At the entrance hole: "+n, marked:"Label stuck.", unmarked:"Labels removed.", noted:"Written in the notebook."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  THE HIDDEN TRUTH OF THIS SESSION  (bench cm, angles in degrees)
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const RAD=Math.PI/180, DG=1e6/600;               /* the grating's period, nm (600 lines/mm) */
+const TRUE={
+  Eg:U(2.10,2.26),                              /* the film's band gap, eV: what the problem is after */
+  t:U(180,232),                                 /* the film's thickness, nm */
+  bk:U(0.62,0.85),                              /* what the film takes below its gap (reflection, scatter), as −ln T */
+  grad:U(-0.05,0.05),                           /* the film thins or thickens across its window, per mm */
+  leak:U(0.008,0.016),                          /* pinholes in the film pass light unabsorbed */
+  Eu:0.035,                                     /* the absorption edge's tail, eV */
+  gs:U(0.8,1.25), gsh:U(-6,6),                  /* the lamp × photoresistor response: its scale and shift (nm) */
+  effM:U(1.15,1.55),                            /* the −1 order is brighter than the +1 (the grating's blaze) */
+  gN:U(-7,7),                                   /* the grating stage's reading when the grating faces the beam */
+  psi0:U(-2.2,2.2),                             /* the grating's lines lean this much off the vertical, at a level stage */
+  z0:U(-4,4),                                   /* where the vernier's zero starts */
+  th0:U(-9,9),                                  /* where the rotatable arm starts */
+  a:U(6.6,7.4) };                               /* the card stands this far before the grating, cm */
+/* A in (αhν) = A(hν − Eg)^½, eV^½/nm */
+const A_ABS=0.071;
+/* the lamp's light as the photoresistor feels it through a clean glass, 1/R in 1/MΩ at the first order (smoothed) */
+const GTAB=[[360,0],[380,0.02],[400,0.10],[420,0.22],[440,0.38],[460,0.62],[480,1.05],[500,1.6],[520,2.5],[540,3.7],[555,4.6],[565,5.1],[575,4.9],[585,3.9],[595,2.7],
+  [610,1.7],[625,1.3],[640,1.17],[660,1.0],[680,0.78],[700,0.55],[720,0.40],[740,0.28],[760,0.18],[800,0.08],[850,0.03],[900,0]];
+function Gl(l){ l-=TRUE.gsh; if(l<=GTAB[0][0]||l>=GTAB[GTAB.length-1][0]) return 0; let i=1; while(GTAB[i][0]<l) i++; const [x0,y0]=GTAB[i-1], [x1,y1]=GTAB[i]; return TRUE.gs*(y0+(y1-y0)*(l-x0)/(x1-x0))/0.92; }
+const hv=l=>1239.84/l;
+/* the film's −ln T at λ (nm), for a thickness t (nm) */
+function filmOD(l,t){ const E=hv(l), x=(E-TRUE.Eg)/TRUE.Eu, sp=x>30?x:Math.log1p(Math.exp(x)); return A_ABS*t*Math.sqrt(TRUE.Eu*sp)/E+TRUE.bk; }
+/* ══════════════════════════════════════════════════════════════
+   2.  THE BENCH STATE
+   ══════════════════════════════════════════════════════════════ */
+const PARTS=["spectro","grating","detector","sample","card","dmm","ruler","labels"];
+const ONSPEC=["grating","detector","sample","card"];
+const ST={ on:new Set(), pos:{}, at:{},
+  cover:true,                                   /* the white cover: open (up) or closed (down) */
+  lampOn:false, warm:0, lampPos:0.2,            /* the lamp: switch, minutes on, how far back on its arm (0–1) */
+  th:TRUE.th0, lock18:false,                    /* the rotatable arm's true angle from the optical axis, and its lock */
+  z:TRUE.z0, lock9:true,                        /* the vernier's zero: its scale's turn, and its lock */
+  g:TRUE.gN+U(-8,8)*(Math.random()<0.5?-1:1), lock12:false,   /* the grating stage's turn, its lock */
+  tilt:0,                                       /* the stage's levelling screws (deg) */
+  frame:"open", u:U(-0.8,0.8), marks:[],        /* the sample frame: what is at the hole, its fine place (mm), your labels */
+  range:"2M", power:"on", hold:false, idle:0, disp:null, logR:Math.log(5000),
+  speed:1 };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+const mounted=k=>has(k)&&ST.at[k]==="spectro";
+/* the goniometer's reading: the arm's angle against the vernier's zero */
+const reading=()=>ST.th-ST.z;
+/* the grating's tilt from the optical axis, θ0 */
+const theta0=()=>ST.g-TRUE.gN;
+/* the light's angular spread at the arm (deg): wider when the lamp sits close to the lens */
+const spread=()=>0.5+0.45*(1-ST.lampPos);
+/* what stands at the entrance hole lets through this share at λ */
+function sampleT(l){ if(!mounted("sample")||ST.frame==="open") return 1;
+  const off=Math.max(0,Math.abs(ST.u)-2.5), c=Math.max(0,1-off/3);       /* slid too far, part of the hole is bare */
+  const T=ST.frame==="glass"?0.92:0.92*((1-TRUE.leak)*Math.exp(-filmOD(l,TRUE.t*(1+TRUE.grad*ST.u)))+TRUE.leak);
+  return c*T+(1-c); }
+/* the grating's orders reaching an arm at θ' (deg): [λ, weight] */
+function orders(thp){ const s=DG*(Math.sin((thp-theta0())*RAD)+Math.sin(theta0()*RAD)), out=[];
+  if(s>0) out.push([s,1]); else out.push([-s,TRUE.effM]);
+  out.push([Math.abs(s)/2,0.18]); return out; }
+/* the lines lean off the vertical: the diffracted spot rides up or down off the photoresistor */
+const leanF=thp=>{ const v=(ST.tilt-TRUE.psi0)*Math.sin(Math.abs(thp)*RAD)/0.55; return Math.exp(-v*v/2); };
+const KW=(()=>{ const n=15, out=[]; let s=0; for(let i=0;i<n;i++){ const x=-2.6+5.2*i/(n-1), w=Math.exp(-x*x/2); out.push([x,w]); s+=w; } return out.map(([x,w])=>[x,w/s]); })();
+/* the light on the photoresistor, as 1/R (1/MΩ) */
+function lightAt(th){ if(!has("spectro")) return 0; let G=0;
+  if(ST.lampOn){ const lamp=(1-Math.exp(-ST.warm/20))*(0.86+0.14*ST.lampPos)*(mounted("card")?0.15:1), sg=spread();
+    /* the straight-through beam: white light, through the sample */
+    let tz=0, wz=0; for(let l=400;l<=760;l+=20){ const g=Gl(l); tz+=g*sampleT(l); wz+=g; }
+    G+=46*TRUE.gs*Math.exp(-th*th/(2*sg*sg))*(tz/wz);
+    if(mounted("grating")) for(const [x,w] of KW){ const thp=th+x*sg; let s=0; for(const [l,e] of orders(thp)) s+=e*Gl(l)*sampleT(l); G+=w*s*leanF(thp); }
+    else G*=1.1;
+    G*=lamp; }
+  return G+(ST.cover?0:2.6)+0.0002; }
+/* the photoresistor's true resistance (MΩ) where the arm stands now */
+function targetR(){ return 1/lightAt(ST.th); }
+/* ══════════════════════════════════════════════════════════════
+   3.  THE OHMMETER: 200 Ω … 200 MΩ, 3½ digits, auto-off after 15 min
+   ══════════════════════════════════════════════════════════════ */
+const RANGES={"200":{full:199.9e-6,unit:"Ω",k:1e6,dec:1},"2k":{full:1.999e-3,unit:"kΩ",k:1e3,dec:3},"20k":{full:19.99e-3,unit:"kΩ",k:1e3,dec:2},"200k":{full:199.9e-3,unit:"kΩ",k:1e3,dec:1},
+  "2M":{full:1.999,unit:"MΩ",k:1,dec:3},"20M":{full:19.99,unit:"MΩ",k:1,dec:2},"200M":{full:199.9,unit:"MΩ",k:1,dec:1}};
+const RKEYS=Object.keys(RANGES);
+const meterOn=()=>has("dmm")&&ST.power==="on";
+function stepPhys(dt){
+  if(ST.lampOn) ST.warm+=dt; else ST.warm=Math.max(0,ST.warm-dt*2);
+  /* the photoresistor follows the light slowly, most slowly in the dark */
+  const tgt=Math.log(targetR()), cur=ST.logR, tau=tgt>cur?2.5*Math.pow(Math.exp(tgt)/0.2,0.4):1.2*Math.pow(Math.exp(cur)/0.2,0.2);
+  ST.logR+=(tgt-cur)*(1-Math.exp(-dt/Math.max(0.3,tau)));
+  if(has("dmm")){ ST.idle+=dt; if(ST.power==="on"&&ST.idle>900) ST.power="auto"; } }
+function meterRaw(){ if(!mounted("detector")) return Infinity; return Math.exp(ST.logR); }
+let dispT=0;
+function updDisp(dt){ dispT-=dt; if(dispT>0) return; dispT=0.4; if(!meterOn()||ST.hold) return; const R=meterRaw(), rg=RANGES[ST.range];
+  if(!isFinite(R)||R>rg.full){ ST.disp="1"; return; }
+  const q=Math.pow(10,-rg.dec)/rg.k, v=R*(1+(Math.random()-0.5)*0.003)+(Math.random()-0.5)*q*1.2*(ST.range==="200M"?3:1);
+  ST.disp=(v*rg.k).toFixed(rg.dec); }
+function meterShow(){ if(!has("dmm")) return null; if(ST.power!=="on") return ""; return ST.disp===null?"":ST.disp; }
+const meterUnit=()=>RANGES[ST.range].unit;
+/* ══════════════════════════════════════════════════════════════
+   4.  THE LIGHT YOU SEE ON A CARD AT THE ARM'S END (no photoresistor)
+   ══════════════════════════════════════════════════════════════ */
+function wlRGB(l){ let r=0,g=0,b=0;
+  if(l>=380&&l<440){ r=-(l-440)/60; b=1; } else if(l<490){ g=(l-440)/50; b=1; } else if(l<510){ g=1; b=-(l-510)/20; } else if(l<580){ r=(l-510)/70; g=1; } else if(l<645){ r=1; g=-(l-645)/65; } else if(l<=780){ r=1; }
+  const f=l<420?0.3+0.7*(l-380)/40:l>700?0.3+0.7*(780-l)/80:1; return [r*f,g*f,b*f]; }
+const EYE=l=>Math.exp(-Math.pow((l-555)/85,2));
+function seenColour(th){ if(!ST.lampOn||!has("spectro")) return null; const sg=spread(); let c=[0,0,0], I=0;
+  if(Math.abs(th)<2.5*sg){ const k=Math.exp(-th*th/(2*sg*sg)); return {rgb:[1,0.97,0.88],I:k}; }
+  if(!mounted("grating")) return null;
+  for(const [x,w] of KW){ const thp=th+x*sg; for(const [l,e] of orders(thp)){ if(l<380||l>780) continue; const s=w*e*(0.4+l/700)*EYE(l)*sampleT(l)*leanF(thp), q=wlRGB(l); c=[c[0]+q[0]*s,c[1]+q[1]*s,c[2]+q[2]*s]; I+=s; } }
+  if(I<0.01) return null; const m=Math.max(...c); return {rgb:c.map(v=>v/m),I:Math.min(1,I*1.6)}; }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+const add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k], dot2=(a,b)=>a[0]*b[0]+a[1]*b[1],
+      len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a); return l>1e-12?[a[0]/l,a[1]/l]:[1,0]; }, v2=a=>[Math.cos(a),Math.sin(a)];
+/* ══════════════════════════════════════════════════════════════
+   5.  LAB3D — the HaslaLab 3-D bench renderer (as in IPhO 2017): the scene is listed
+   every frame and drawn with WebGL and a depth buffer, so no part can show through
+   another from any angle; text3 prints labels onto the surfaces of the instruments.
+   Its world has y up; the bench code below works in x right, y towards you, z up.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function L3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade3(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT3=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face3(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT3[0]+nn[1]*LIGHT3[1]+nn[2]*LIGHT3[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad3(a,b,c,d,o){ face3([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face3([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face3([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face3([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face3([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face3([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face3([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face3(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face3(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face3(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face3(orient(A,ax.map(c=>-c*sg)),f); face3(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face3(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>L3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade3(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=L3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const P=(base,ang)=>[base[0]+r*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+r*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+r*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))];
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face3(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face3(orient(c0,n.map(x=>-x)),cf); face3(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=L3(...O), b=L3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=L3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){gl_FragColor=texture2D(s,u)*a;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v);
+  t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1}; GL3.src.set(src,t); gl.bindTexture(gl.TEXTURE_2D,t.tex);
+    for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v); }
+  if(t.frame!==GL3.frame&&!(src._static&&t.frame>=0)){ t.frame=GL3.frame; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){} }
+  return t;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>L3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade3(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=L3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=L3(...it.O), pu=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=L3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=L3(...it.O), b=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=L3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=L3(...it.c), R=it.r*CAM.k, base=rgba01(it.col), hi=rgba01(o.hi||"#ffffff"), lo=rgba01(o.lo||"#5d646b");
+      const L=[-0.38,0.45,0.81], col=(fx,fy)=>{ const fz=Math.sqrt(Math.max(0,1-fx*fx-fy*fy)), l=fx*L[0]+fy*L[1]+fz*L[2];
+        const m=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t); const c=l>0.75?m(base,hi,(l-0.75)/0.25):m(lo,base,Math.max(0,(l+0.2)/0.95)); return "rgb("+c.slice(0,3).map(v=>Math.round(v*255)).join(",")+")"; };
+      const N=18, rings=[0,0.45,0.8,1];
+      for(let k=1;k<rings.length;k++) for(let i=0;i<N;i++){
+        const A=i/N*6.2832, B=(i+1)/N*6.2832, pt=(f,a)=>[p[0]+R*f*Math.cos(a),p[1]+R*f*Math.sin(a),p[2]+e+it.r*Math.sqrt(Math.max(0,1-f*f))];
+        const f0=rings[k-1], f1=rings[k], fm=(f0+f1)/2, am=(A+B)/2;
+        _gtri(G,[pt(f0,A),pt(f1,A),pt(f1,B),pt(f0,B)],col(fm*Math.cos(am),-fm*Math.sin(am))); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=L3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE BENCH  (x right, y towards you, z up, cm), drawn through LAB3D
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=560;
+Object.assign(CAM,{yaw:-0.12,pitch:0.78,k:8.6,tx:60,ty:6,tz:25,px:0,py:20,W:LW,H:LH}); camSave();
+const onMatXY=()=>false;
+let XF=null, SXF=v=>v;
+const M=v=>{ if(XF) v=XF(v); return [v[0],v[2]||0,v[1]]; };   /* bench → LAB3D (y up) */
+const P3=v=>{ if(XF) v=XF(v); const q=L3(v[0],v[2]||0,v[1]); return [q[0],q[1]]; };
+const P=(x,y,z)=>P3([x,y,z||0]);
+const dep=v=>L3(v[0],v[2]||0,v[1])[2];
+const unP=(X,Y,z)=>{ const w=onPlane(X,Y,z||0); return [w[0],w[2]]; };
+const SZ=()=>CAM.k;
+const vadd=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], vsub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], vmul=(a,k)=>[a[0]*k,a[1]*k,a[2]*k];
+const vdot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], vlen=a=>Math.hypot(a[0],a[1],a[2]), vnrm=a=>{ const l=vlen(a)||1; return [a[0]/l,a[1]/l,a[2]/l]; };
+const vcross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const lin=(...t)=>t.reduce((s,[v,k])=>vadd(s,vmul(v,k)),[0,0,0]);
+const Z3=[0,0,1];
+function basis(a){ const r=Math.abs(a[2])<0.95?[0,0,1]:[1,0,0]; const e1=vnrm(vcross(r,a)); return [e1,vcross(a,e1)]; }
+/* drawing in bench coordinates */
+const Mdir=n=>{ if(XF){ const a=XF([0,0,0]); n=vsub(XF(n),a); } return [n[0],n[2],n[1]]; };
+function F(pts,col,o){ o=o||{}; let q=pts.map(M); if(o.n) q=orient(q,Mdir(o.n)); face3(q,Object.assign({fill:col},o)); }
+function obox(c,ex,ey,ez,col,o){ o=o||{};
+  for(const [n,a,b] of [[ex,ey,ez],[vmul(ex,-1),ey,ez],[ey,ez,ex],[vmul(ey,-1),ez,ex],[ez,ex,ey],[vmul(ez,-1),ex,ey]]){
+    const f0=vadd(c,n), fc=o.faceCol&&o.faceCol(n);
+    F([lin([f0,1],[a,-1],[b,-1]),lin([f0,1],[a,1],[b,-1]),lin([f0,1],[a,1],[b,1]),lin([f0,1],[a,-1],[b,1])],fc||col,Object.assign({n,cull:true},o)); } }
+function ocyl(c0,ax,L,r,col,o){ if(L<=0) return; cylAB(M(c0),M(vadd(c0,vmul(ax,L))),r,col,Object.assign({seg:18},o||{})); }
+/* a flat polygon (in the plane e1,e2 at c) extruded along ax by h: star knobs, hex heads, triangles */
+function prism(c,ax,e1,e2,pts2,h,col,o){ o=o||{}; const A=pts2.map(([u,v])=>lin([c,1],[e1,u],[e2,v])), B=A.map(p=>vadd(p,vmul(ax,h)));
+  F(B,o.top||col,Object.assign({},o,{n:ax})); F(A,col,Object.assign({},o,{n:vmul(ax,-1)}));
+  let cu=0,cv=0; for(const [u,v] of pts2){ cu+=u; cv+=v; } cu/=pts2.length; cv/=pts2.length;
+  for(let i=0;i<A.length;i++){ const j=(i+1)%A.length, mu=(pts2[i][0]+pts2[j][0])/2-cu, mv=(pts2[i][1]+pts2[j][1])/2-cv;
+    F([A[i],A[j],B[j],B[i]],col,Object.assign({},o,{n:lin([e1,mu],[e2,mv])})); } }
+const starPts=(R,n,rot)=>Array.from({length:2*n},(_,i)=>{ const a=(rot||0)+i*Math.PI/n, r=i%2?R*0.68:R; return [r*Math.cos(a),r*Math.sin(a)]; });
+const ngon=(R,n,rot)=>Array.from({length:n},(_,i)=>{ const a=(rot||0)+i*2*Math.PI/n; return [R*Math.cos(a),R*Math.sin(a)]; });
+const ring3=(c,e1,e2,R,n,a0)=>Array.from({length:n},(_,i)=>{ const a=(a0||0)+i/n*2*Math.PI; return vadd(c,vadd(vmul(e1,R*Math.cos(a)),vmul(e2,R*Math.sin(a)))); });
+function L(a,b,col,lw,o){ line3(M(a),M(b),col,lw,o); }
+const L3line=(a,b,lw)=>L(a,b,"#222",Math.max(0.35,lw*CAM.k/30));
+function PL(pts,col,lw,o){ poly3(pts.map(M),col,lw,o); }
+/* text printed on a surface: U along the line of text, V up the letters */
+function TX(O,U,V,str,size,col,o){ const m=M(O), mu=M(vadd(O,U)), mv=M(vadd(O,V)); text3(m,vsub(mu,m),vsub(mv,m),str,size,col,o); }
+/* a cord that hangs between two points, resting on the desk where it reaches it */
+/* given its length, a cord sags by the slack it has; pulled tight it runs straight */
+const sagOf=(a,b,len)=>{ const d=vlen(vsub(a,b)); return Math.min(25,Math.sqrt(Math.max(0,3*d*(len-d)/8))); };
+function cord(a,b,col,w,sag,id){ const s=sag===undefined?Math.min(12,vlen(vsub(a,b))*0.3):sag, pts=[];
+  for(let i=0;i<=16;i++){ const t=i/16, p=vadd(vadd(vmul(a,1-t),vmul(b,t)),[0,0,-4*s*t*(1-t)]); p[2]=Math.max(onMatXY(p)?0.5:0.25,p[2]); p[1]=Math.max(p[1],a[1]<1.5||b[1]<1.5?p[1]:0.6); pts.push(p); }
+  PL(pts,col,w*CAM.k/7.4,id?{id}:undefined); }
+
+const ZONES={}, FAST=[];      /* screen areas for dropping things; fasteners a tool can reach */
+const bbox2=pts=>[Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))];
+const inZ=(z,p,m)=>z&&p[0]>=z[0]-(m||0)&&p[0]<=z[2]+(m||0)&&p[1]>=z[1]-(m||0)&&p[1]<=z[3]+(m||0);
+const RUL_TH=0.12, RUL_HW=1.5;
+function rulerModel(P0,u,w,n,s0,s1,id){ const hw=RUL_HW, Pt=(s,v,dn)=>lin([P0,1],[u,s],[w,v],[n,dn||0]);
+  obox(Pt((s0+s1)/2,0,-RUL_TH/2),vmul(u,(s1-s0)/2),vmul(w,hw),vmul(n,RUL_TH/2),"rgba(214,228,236,0.30)",{id});
+  PL([Pt(s0,-hw,0.002),Pt(s1,-hw,0.002),Pt(s1,hw,0.002),Pt(s0,hw,0.002),Pt(s0,-hw,0.002)],"rgba(150,172,186,0.85)",1);
+  for(let mm=0;mm<=Math.floor(s1*10+1e-6);mm++){ const s=mm/10, Lm=mm%10===0?0.75:mm%5===0?0.5:0.32; L3line(Pt(s,hw,0.004),Pt(s,hw-Lm,0.004),mm%10===0?1.0:0.6); }
+  for(let k=0;k<=s1+1e-6;k++) TX(Pt(k,hw-1.22,0.006),u,w,String(k),k%5===0?0.48:0.4,"#141414",{align:"center",weight:k%5===0?"700":"400"});
+  TX(Pt(0.55,-hw+0.25,0.006),u,w,"cm",0.3,"#141414",{}); }
+const inB=(p,b,m)=>b&&p[0]>=b[0]-(m||0)&&p[0]<=b[2]+(m||0)&&p[1]>=b[1]-(m||0)&&p[1]<=b[3]+(m||0);
+const TBL={x0:0,x1:120,y0:0,y1:50};
+const SIZE={spectro:[66,32,4],grating:[3,1,4],detector:[3,3,3],sample:[5,1,5],card:[6,0.4,7],dmm:[8,15,3],ruler:[32,3,0.3],labels:[5,3,0.3]};
+const LOOSE=PARTS, H0=8.0, ARM=26, PROT=10;
+/* the spectrometer's landmarks: its base centre, the grating stage, the lamp */
+const SP0=()=>ST.pos.spectro;
+const GC=()=>{ const s=SP0(); return [s.x+6,s.y,0]; };
+const armDir=a=>[Math.cos(a*RAD),Math.sin(a*RAD),0];
+const lampX=()=>GC()[0]-24-8*ST.lampPos;
+function baseOf(k){ if(ST.at[k]==="spectro"){ const g=GC(); if(k==="grating") return {x:g[0],y:g[1],z:3.4}; if(k==="card") return {x:g[0]-TRUE.a,y:g[1],z:2.4};
+    const u=armDir(ST.th), r=k==="detector"?ARM-0.6:ARM-3.4; return {x:g[0]+u[0]*r,y:g[1]+u[1]*r,z:2.6}; }
+  return ST.pos[k]?{x:ST.pos[k].x,y:ST.pos[k].y,z:0}:null; }
+/* the cover's hinge runs along the base's back edge */
+let coverAng=0;
+function coverXF(){ const s=SP0(), yb=s.y-16, zb=1.6, a=coverAng*RAD, c=Math.cos(a), sn=Math.sin(a);
+  return v=>{ const dy=v[1]-yb, dz=(v[2]||0)-zb; return [v[0],yb+dy*c-dz*sn,zb+dy*sn+dz*c]; }; }
+function drawSpectro(id){ const s=SP0(), g=GC(), X0=s.x-33, X1=s.x+33, Y0=s.y-16, Y1=s.y+16;
+  /* the base and its levelling screws */
+  obox([s.x,s.y,0.8],[33,0,0],[0,16,0],[0,0,0.8],"#eeeeea",{id,faceCol:n=>n[2]>0.5?"#f6f6f2":null});
+  for(const [x,y] of [[X0+2,Y0+2],[X1-2,Y0+2],[X0+2,Y1-2],[X1-2,Y1-2]]) ocyl([x,y,1.6],Z3,0.9,0.9,"#2a2d33",{id,seg:14,cap:"#3a3d42"});
+  TX([X0+1.5,Y1-0.02,1.2],[1,0,0],[0,0,1],"No. 17",0.9,"#1b1d20",{weight:"700"});
+  /* the fixed arm, the lamp with its fan, the diffusing glass, the lens */
+  const lx=lampX(); obox([(lx+g[0]-11)/2,g[1],2.0],[(g[0]-11-lx)/2,0,0],[0,1.2,0],[0,0,0.4],"#b7bdc3",{id});
+  obox([lx-2.5,g[1],H0],[3.2,0,0],[0,3.2,0],[0,0,3.6],"#2a2d33",{id}); ocyl([lx-2.5,g[1],1.6],Z3,H0-5.2,0.6,"#9aa1a8",{id,seg:10});
+  for(let i=-2;i<=2;i++) L([lx-5.75,g[1]+i*0.9,H0-2.5],[lx-5.75,g[1]+i*0.9,H0+2.5],"#555",0.8);
+  if(ST.lampOn) sphere3(M([lx+0.9,g[1],H0]),0.8,"#fff2c4",{glow:true});
+  obox([lx+1.6,g[1],H0],[0.1,0,0],[0,2.4,0],[0,0,2.4],"rgba(235,240,245,0.75)",{id});
+  ocyl([g[0]-12.2,g[1],H0],[1,0,0],0.5,2.3,"#2a2d33",{id,seg:24,cap:"rgba(190,215,235,0.7)"}); ocyl([g[0]-12,g[1],1.6],Z3,H0-3.9,0.5,"#9aa1a8",{id,seg:10});
+  ocyl([lx+3,g[1]+2,2.0],[0,1,0],0.8,0.45,"#3a3d42",{id,seg:10});     /* the arm's length screw */
+  /* the grating stage and its levelling screws */
+  ocyl([g[0],g[1],1.6],Z3,1.6,3.2,"#7a8088",{id,seg:30,cap:"#8d939b"});
+  for(let i=0;i<3;i++){ const a=(90+i*120)*RAD; ocyl([g[0]+2.6*Math.cos(a),g[1]+2.6*Math.sin(a),3.2],Z3,0.5,0.4,"#c9ced3",{id,seg:10}); }
+  /* the protractor: 0 ± 90°, turned by the vernier's zero */
+  const P0=[g[0],g[1],1.7]; const arc=[]; for(let a=-95;a<=95;a+=5) arc.push(vadd(P0,vmul(armDir(a+ST.z),PROT)));
+  F([P0,...arc],"#f4f2e8",{id,n:Z3}); for(let v=-90;v<=90;v+=1){ const u=armDir(v+ST.z), L0=v%10===0?1.2:v%5===0?0.8:0.45; L(vadd(P0,vmul(u,PROT-L0)),vadd(P0,vmul(u,PROT)),"#222",v%10===0?0.9:0.5); }
+  for(let v=-90;v<=90;v+=10){ const u=armDir(v+ST.z), q=vadd(P0,vmul(u,PROT-2.1)); TX(vadd(q,[0,0,0.02]),[-u[1],u[0],0],[u[0],u[1],0],String(Math.abs(v)),0.55,"#1b1d20",{align:"center"}); }
+  /* the rotatable arm with its vernier, lock and fine screw */
+  const u=armDir(ST.th), n=[-u[1],u[0],0]; obox(vadd([g[0],g[1],2.3],vmul(u,ARM/2)),vmul(u,ARM/2),vmul(n,1.1),[0,0,0.35],"#b7bdc3",{id:"arm"});
+  F([vadd(P0,vadd(vmul(u,PROT+0.05),vmul(n,-2.2))),vadd(P0,vadd(vmul(u,PROT+2),vmul(n,-2.2))),vadd(P0,vadd(vmul(u,PROT+2),vmul(n,2.2))),vadd(P0,vadd(vmul(u,PROT+0.05),vmul(n,2.2)))].map(p=>vadd(p,[0,0,0.9])),"#d9dde1",{id:"arm",n:Z3});
+  ocyl(vadd([g[0],g[1],0.4],vmul(u,6)),Z3,1.3,0.7,ST.lock18?"#c0392b":"#3a3d42",{id:"arm",seg:12});
+  ocyl(vadd([g[0],g[1],2.3],vadd(vmul(u,16),vmul(n,1.1))),n,1.4,0.4,"#2a2d33",{id:"arm",seg:10,cap:"#3a3d42"});
+  /* the entrance hole's block at the arm's end */
+  const E=vadd([g[0],g[1],0],vmul(u,ARM-2.2)); obox(vadd(E,[0,0,H0-0.2]),vmul(u,0.5),vmul(n,2),[0,0,2.5],"#2a2d33",{id:"arm"}); ocyl(vadd(E,[0,0,2.6]),Z3,H0-5.3,0.6,"#9aa1a8",{id:"arm",seg:10});
+  ocyl(vadd(vadd(E,[0,0,H0]),vmul(u,-0.52)),u,0.04,0.35,"#0d0e10",{seg:12});
+  /* the socket for the detector's wire, and the meter's lead from the base */
+  ocyl([X1-3,Y1-0.5,1.6],Z3,0.6,0.5,"#1b1d20",{id,seg:10}); }
+function drawCover(){ const s=SP0(); XF=coverXF(); const col="rgba(250,250,247,"+(coverAng<5?0.9:0.95)+")";
+  try{ obox([s.x,s.y,1.6+9],[33,0,0],[0,16,0],[0,0,9],col,{id:"cover",faceCol:n=>n[2]>0.5?"rgba(255,255,252,0.93)":null}); TX([s.x-30,s.y+16.02,1.6+16],[1,0,0],[0,0,1],"IPhO 2007",1.2,"#5a6168",{weight:"700"}); } finally{ XF=null; } }
+function drawGrating(b,id){ const n=armDir(ST.g-TRUE.gN), r=[-n[1],n[0],0];
+  obox([b.x,b.y,b.z+0.2],vmul(n,0.8),vmul(r,1.6),[0,0,0.2],"#3a3d42",{id}); obox([b.x,b.y,b.z+2.2],vmul(n,0.25),vmul(r,1.6),[0,0,1.8],"rgba(170,200,230,0.55)",{id});
+  for(let i=-3;i<=3;i++) L(vadd([b.x,b.y,b.z+0.4],vmul(r,i*0.4)),vadd([b.x,b.y,b.z+4],vmul(r,i*0.4)),"rgba(120,150,190,0.6)",0.5); }
+function drawDetector(b,id){ const u=armDir(ST.th); obox([b.x,b.y,H0],vmul(u,0.7),[-u[1]*1.2,u[0]*1.2,0],[0,0,1.2],"#c9b27a",{id}); ocyl([b.x,b.y,H0+1.2],Z3,1.6,0.25,"#c0392b",{id,seg:8});
+  if(ST.on.has("spectro")){ const s=SP0(); cord([b.x,b.y,H0+2.8],[s.x+30,s.y+15.5,2.2],"#c0392b",0.35,4); } }
+function drawSample(b,id){ const u=armDir(ST.th), n=[-u[1],u[0],0], c=[b.x,b.y,H0], tilt={open:22,glass:-22,film:0}[ST.frame], fu=Math.cos(tilt*RAD), fv=Math.sin(tilt*RAD), e1=vadd(vmul(n,fu),[0,0,fv]), e2=vadd(vmul(n,-fv),[0,0,fu]);
+  obox(c,vmul(u,0.2),vmul(e1,1.3),vmul(e2,3.4),"#3a3d42",{id});
+  F([vadd(c,lin([u,-0.22],[e1,-1.0],[e2,0.3])),vadd(c,lin([u,-0.22],[e1,1.0],[e2,0.3])),vadd(c,lin([u,-0.22],[e1,1.0],[e2,2.8])),vadd(c,lin([u,-0.22],[e1,-1.0],[e2,2.8]))],"rgba(200,95,35,0.85)",{id,n:vmul(u,-1)});
+  F([vadd(c,lin([u,-0.22],[e1,-1.0],[e2,-0.3])),vadd(c,lin([u,-0.22],[e1,1.0],[e2,-0.3])),vadd(c,lin([u,-0.22],[e1,1.0],[e2,-2.8])),vadd(c,lin([u,-0.22],[e1,-1.0],[e2,-2.8]))],"rgba(215,232,240,0.7)",{id,n:vmul(u,-1)});
+  for(const m of ST.marks){ const q=Math.max(-3.2,Math.min(3.2,(m-({film:0,glass:-14,open:14}[ST.frame]+ST.u))*0.1)); F([vadd(c,lin([u,-0.23],[e1,1.05],[e2,q-0.12])),vadd(c,lin([u,-0.23],[e1,1.3],[e2,q-0.12])),vadd(c,lin([u,-0.23],[e1,1.3],[e2,q+0.12])),vadd(c,lin([u,-0.23],[e1,1.05],[e2,q+0.12]))],"#f4f4f0",{n:vmul(u,-1)}); } }
+function drawCard(b,id){ const onSp=ST.at.card==="spectro", z0=onSp?H0-3.5:0;
+  if(onSp){ obox([b.x,b.y,z0+3.5],[0.05,0,0],[0,3,0],[0,0,3.5],"#fbfbf8",{id}); ocyl([b.x-0.06,b.y,H0],[1,0,0],0.12,0.15,"#111",{seg:10});
+    const r=TRUE.a*Math.tan(2*theta0()*RAD); if(ST.lampOn&&mounted("grating")&&Math.abs(r)<2.8) ocyl([b.x-0.07,b.y+r,H0],[-1,0,0],0.01,0.28,"rgba(255,248,220,0.95)",{seg:12}); }
+  else{ obox([b.x,b.y,0.05],[3,0,0],[0,3.5,0],[0,0,0.05],"#fbfbf8",{id}); ocyl([b.x,b.y,0.1],Z3,0.02,0.15,"#111",{seg:10}); } }
+function drawDmm(b,id){ obox([b.x,b.y,1.5],[4,0,0],[0,7.5,0],[0,0,1.5],"#2b2d31",{id,faceCol:n=>n[2]>0.5?"#3a3d42":null}); obox([b.x,b.y-4,3.02],[3.1,0,0],[0,1.6,0],[0,0,0.02],"#9fae8f",{id});
+  const s=meterShow(); if(s) TX([b.x+2.8,b.y-3.5,3.06],[1,0,0],[0,-1,0],s,0.95,"#1b1d20",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
+  ocyl([b.x,b.y+1.2,3.0],Z3,0.3,1.8,"#1b1d20",{id,seg:20,cap:"#33363a"}); ocyl([b.x-4.05,b.y-2,1.6],[-1,0,0],0.2,0.5,"#c9ced3",{id,seg:8});
+  if(has("spectro")){ const s=SP0(); cord([s.x+31,s.y+16,1.0],[b.x-1.5,b.y+6.5,3.0],"#c0392b",0.35,5); cord([s.x+32,s.y+16,1.0],[b.x+1.5,b.y+6.5,3.0],"#1b1d20",0.35,5); } }
+function drawLoose(k,id){ const b=baseOf(k); if(!b) return;
+  if(k==="spectro") drawSpectro(id); else if(k==="grating"){ if(ST.at.grating==="spectro") drawGrating(b,id); else{ obox([b.x,b.y,0.4],[1.5,0,0],[0,1,0],[0,0,0.4],"#3a3d42",{id}); obox([b.x,b.y,0.85],[1.2,0,0],[0,0.7,0],[0,0,0.05],"rgba(170,200,230,0.8)",{id}); } }
+  else if(k==="detector"){ if(ST.at.detector==="spectro") drawDetector(b,id); else obox([b.x,b.y,0.6],[1.5,0,0],[0,1,0],[0,0,0.6],"#c9b27a",{id}); }
+  else if(k==="sample"){ if(ST.at.sample==="spectro") drawSample(b,id); else{ obox([b.x,b.y,0.2],[2.5,0,0],[0,1,0],[0,0,0.2],"#3a3d42",{id}); obox([b.x-1,b.y,0.42],[1,0,0],[0,0.7,0],[0,0,0.02],"rgba(200,95,35,0.85)",{id}); } }
+  else if(k==="card") drawCard(b,id); else if(k==="dmm") drawDmm(b,id);
+  else if(k==="ruler") rulerModel([b.x-15,b.y,0],[1,0,0],[0,-1,0],[0,0,1],0,30,id);
+  else if(k==="labels"){ obox([b.x,b.y,0.05],[2.5,0,0],[0,1.5,0],[0,0,0.05],"#f4f4f0",{id}); for(let i=0;i<4;i++) obox([b.x-1.8+i*1.2,b.y,0.11],[0.45,0,0],[0,1,0],[0,0,0.01],"#ffffff",{}); } }
+/* the light inside: the beam to the grating, and the coloured first orders spreading out */
+function drawLight(){ if(!has("spectro")||!ST.lampOn) return; const g=GC(), lx=lampX();
+  L([lx+1.7,g[1],H0],[g[0],g[1],H0],"rgba(255,246,210,0.55)",3);
+  if(mounted("grating")){ for(const l of [440,500,560,620,680]){ for(const sgn of [1,-1]){ const s=sgn*l/DG-Math.sin(theta0()*RAD), th=Math.asin(Math.max(-1,Math.min(1,s)))/RAD+theta0(), q=wlRGB(l);
+      L([g[0],g[1],H0],vadd([g[0],g[1],H0],vmul(armDir(th),ARM-2.4)),"rgba("+q.map(v=>Math.round(v*255)).join(",")+",0.35)",1.6); } } }
+  L([g[0],g[1],H0],vadd([g[0],g[1],H0],vmul([1,0,0],ARM-2.4)),"rgba(255,246,210,0.45)",2.2); }
+function footOf(k,x,y){ const s=SIZE[k]; return [x-s[0]/2,y-s[1]/2,x+s[0]/2,y+s[1]/2]; }
+const overl=(a,b,m)=>a[0]<b[2]+m&&a[2]>b[0]-m&&a[1]<b[3]+m&&a[3]>b[1]-m;
+function fits(k,x,y){ const f=footOf(k,x,y); if(f[0]<TBL.x0+0.3||f[2]>TBL.x1-0.3||f[1]<TBL.y0+0.3||f[3]>TBL.y1-0.3) return false;
+  for(const o of PARTS){ if(o===k||!has(o)||ST.at[o]) continue; const b=baseOf(o); if(b&&overl(f,footOf(o,b.x,b.y),0.2)) return false; } return true; }
+function bboxAt(k,b){ const s=SIZE[k], pts=[]; for(const xx of [b.x-s[0]/2,b.x+s[0]/2]) for(const yy of [b.y-s[1]/2,b.y+s[1]/2]) for(const zz of [b.z,b.z+Math.max(0.8,s[2])]) pts.push(P(xx,yy,zz)); return bbox2(pts); }
+function bbox(k){ if(!has(k)) return null; const b=baseOf(k); if(!b) return null; if(k==="spectro"){ const s=SP0(); return bbox2([P(s.x-33,s.y-16,0),P(s.x+33,s.y+16,0),P(s.x-33,s.y-16,20),P(s.x+33,s.y+16,20)]); } return bboxAt(k,b); }
+function drawHand(){ if(!hand||!overBench) return; const k=hand.item, lift=1.5;
+  if(ONSPEC.includes(k)&&has("spectro")&&inB(mouse,bbox("spectro"),0)){ const s=SP0(); PL([[s.x-33,s.y-16,1.7],[s.x+33,s.y-16,1.7],[s.x+33,s.y+16,1.7],[s.x-33,s.y+16,1.7],[s.x-33,s.y-16,1.7]],ST.cover?"#e0605a":"#7fd37f",2); return; }
+  const [x,y]=unP(mouse[0],mouse[1],lift), f=footOf(k,x,y), ok=fits(k,x,y);
+  PL([[f[0],f[1],0.06],[f[2],f[1],0.06],[f[2],f[3],0.06],[f[0],f[3],0.06],[f[0],f[1],0.06]],ok?"#f2c14e":"#e0605a",1.6);
+  const keep=ST.pos[k]; ST.pos[k]={x,y}; XF=v=>[v[0],v[1],(v[2]||0)+lift]; try{ if(k==="spectro") obox([x,y,0.8],[33,0,0],[0,16,0],[0,0,0.8],"rgba(240,240,236,0.6)"); else drawLoose(k,null); } finally{ XF=null; if(keep) ST.pos[k]=keep; else delete ST.pos[k]; } }
+function drawRoom(){
+  F([[-140,-0.6,-80],[260,-0.6,-80],[260,-0.6,130],[-140,-0.6,130]],"#2f353e",{n:[0,1,0],flat:true});
+  obox([60,25,-1.5],[62,0,0],[0,26,0],[0,0,1.5],"#b98a55",{faceCol:n=>n[2]>0.5?"#c99a62":null});
+  for(const [x,y] of [[2,3],[118,3],[2,48],[118,48]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#8a8f96");
+  F([[-140,-0.5,-75],[260,-0.5,-75],[260,90,-75],[-140,90,-75]],"#3a3f47",{n:Z3,flat:true}); }
+function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3();
+  const want=ST.cover?0:100; coverAng+=(want-coverAng)*0.25; if(Math.abs(want-coverAng)<0.5) coverAng=want;
+  drawRoom(); for(const k of LOOSE) if(has(k)) drawLoose(k,k); drawLight(); if(has("spectro")) drawCover(); drawHand();
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
+/* ══════════════════════════════════════════════════════════════
+   5.  PARTS BOX, LAYOUT, CLOSE-UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=PARTS, TROW=36;
+let TRW=190, TRH=400, CLW=900, CLH=420, trayCells=[], tab="gonio", HIT=[];
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+function icon(c,k){ const old=ctx; ctx=c; ctx.save(); ctx.scale(0.75,0.75);
+  if(k==="spectro"){ fillR(-18,-6,36,14,2,"#f4f4f0","#999"); fillR(-14,-3,6,6,1,"#2a2d33"); circ(8,2,5,"#7a8088"); }
+  else if(k==="grating"){ fillR(-10,-9,20,18,1,"#3a3d42"); fillR(-7,-6,14,12,0,"rgba(170,200,230,.85)"); }
+  else if(k==="detector"){ fillR(-10,-6,20,12,2,"#c9b27a","#7a6a3a"); circ(-4,0,3,"#c0392b"); }
+  else if(k==="sample"){ fillR(-14,-8,28,16,1,"#3a3d42"); fillR(-11,-5,9,10,0,"rgba(200,95,35,.9)"); fillR(2,-5,9,10,0,"rgba(215,232,240,.8)"); }
+  else if(k==="card"){ fillR(-10,-12,20,24,1,"#fbfbf8","#999"); circ(0,-2,1.6,"#111"); }
+  else if(k==="dmm"){ fillR(-8,-13,16,26,2,"#2b2d31","#555"); fillR(-6,-10,12,6,1,"#9fae8f"); circ(0,4,4,"#1b1d20"); }
+  else if(k==="ruler"){ fillR(-17,-4,34,8,1,"rgba(214,228,236,.6)","#8aa"); for(let i=-15;i<=15;i+=3) fillR(i,-4,0.8,3,0,"#222"); }
+  else if(k==="labels"){ fillR(-12,-8,24,16,1,"#f4f4f0","#999"); for(let i=0;i<3;i++) fillR(-9+i*7,-4,5,8,1,"#ffffff","#bbb"); }
+  ctx.restore(); ctx=old; }
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px"; benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+24+14*d().trayHelp.split("\n").length;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(420,CLW*0.52));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr); drawTray(); }
+function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){ const av=trayAvail(k), sel=inHand(k);
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(24,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    c.fillText(itemName(k),44,y+12); c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,44,y+25);
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
+function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of ["gonio","card","sample"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
+/* ── 1. the goniometer from above, with its vernier through the magnifier ── */
+let GM={};
+function drawGonio(){ const t=d(); ctx.fillStyle="#e9e7e0"; ctx.fillRect(0,0,CLW,CLH);
+  if(!has("spectro")){ text(t.lab.noSpec,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const W=CLW*0.52, cx=W*0.42, cy=CLH*0.5, k=Math.min(W/52,CLH/40);           /* px per cm */
+  GM={cx,cy,k};
+  /* lamp, glass, lens, card along the optical axis */
+  const lx=cx+(lampX()-GC()[0])*k; fillR(lx-6*k,cy-3.2*k,6.4*k,6.4*k,3,"#2a2d33"); if(ST.lampOn) circ(lx+0.8*k,cy,0.6*k,"#ffe9a8");
+  fillR(lx+1.5*k,cy-2.4*k,0.25*k,4.8*k,0,"rgba(180,190,200,.8)"); fillR(cx-12.4*k,cy-2.3*k,0.6*k,4.6*k,1,"#2a2d33");
+  if(ST.lampOn){ ctx.fillStyle="rgba(255,240,190,.45)"; ctx.fillRect(lx+1.8*k,cy-0.25*k,(cx-lx-1.8*k),0.5*k); }
+  if(mounted("card")) fillR(cx-TRUE.a*k-0.1*k,cy-3*k,0.25*k,6*k,0,"#fbfbf8","#999");
+  /* the protractor, turned by the vernier's zero */
+  ctx.save(); ctx.translate(cx,cy); ctx.fillStyle="#f4f2e8"; ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,PROT*k,(-95+ST.z)*RAD,(95+ST.z)*RAD); ctx.closePath(); ctx.fill(); ctx.strokeStyle="#999"; ctx.stroke();
+  for(let v=-90;v<=90;v++){ const a=(v+ST.z)*RAD, L0=v%10===0?1.2:v%5===0?0.8:0.45; ctx.strokeStyle="#222"; ctx.lineWidth=v%10===0?1:0.6; ctx.beginPath(); ctx.moveTo(Math.cos(a)*(PROT-L0)*k,Math.sin(a)*(PROT-L0)*k); ctx.lineTo(Math.cos(a)*PROT*k,Math.sin(a)*PROT*k); ctx.stroke(); }
+  for(let v=-90;v<=90;v+=10){ const a=(v+ST.z)*RAD; text(String(Math.abs(v)),Math.cos(a)*(PROT-2)*k,Math.sin(a)*(PROT-2)*k,"#1b1d20",9,"center"); }
+  ctx.restore();
+  /* the grating on its stage */
+  circ(cx,cy,3.2*k,"#8d939b","#666"); if(mounted("grating")){ const n=v2((ST.g-TRUE.gN)*RAD); ctx.strokeStyle="#2b6cb0"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cx-n[1]*1.6*k,cy+n[0]*1.6*k); ctx.lineTo(cx+n[1]*1.6*k,cy-n[0]*1.6*k); ctx.stroke(); ctx.lineWidth=1; }
+  /* the light leaving the grating */
+  if(ST.lampOn){ ctx.strokeStyle="rgba(255,240,190,.5)"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+ARM*k,cy); ctx.stroke();
+    if(mounted("grating")) for(let l=420;l<=700;l+=20) for(const sgn of [1,-1]){ const s=sgn*l/DG-Math.sin(theta0()*RAD), th=Math.asin(s)/RAD+theta0(), q=wlRGB(l); ctx.strokeStyle="rgba("+q.map(v=>Math.round(v*255)).join(",")+",.45)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(th*RAD)*ARM*k,cy+Math.sin(th*RAD)*ARM*k); ctx.stroke(); }
+    ctx.lineWidth=1; }
+  /* the rotatable arm */
+  const u=v2(ST.th*RAD), n=[-u[1],u[0]], E=[cx+u[0]*ARM*k,cy+u[1]*ARM*k];
+  ctx.strokeStyle="#9aa1a8"; ctx.lineWidth=1.8*k; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(E[0],E[1]); ctx.stroke(); ctx.lineCap="butt"; ctx.lineWidth=1;
+  poly([[cx+u[0]*PROT*k+n[0]*2*k,cy+u[1]*PROT*k+n[1]*2*k],[cx+u[0]*(PROT+2)*k+n[0]*2*k,cy+u[1]*(PROT+2)*k+n[1]*2*k],[cx+u[0]*(PROT+2)*k-n[0]*2*k,cy+u[1]*(PROT+2)*k-n[1]*2*k],[cx+u[0]*PROT*k-n[0]*2*k,cy+u[1]*PROT*k-n[1]*2*k]],"rgba(215,220,225,.9)","#777");
+  ctx.strokeStyle="#c0392b"; ctx.beginPath(); ctx.moveTo(cx+u[0]*(PROT-0.2)*k,cy+u[1]*(PROT-0.2)*k); ctx.lineTo(cx+u[0]*(PROT+2)*k,cy+u[1]*(PROT+2)*k); ctx.stroke();
+  const H=[cx+u[0]*(ARM-2.2)*k,cy+u[1]*(ARM-2.2)*k]; ctx.save(); ctx.translate(H[0],H[1]); ctx.rotate(ST.th*RAD); fillR(-0.25*k,-2*k,0.5*k,4*k,1,"#2a2d33"); ctx.restore();
+  /* what you would see on a card held at the arm's end */
+  const sc=seenColour(ST.th), hole=[E[0]+u[0]*1.2*k,E[1]+u[1]*1.2*k];
+  if(mounted("detector")){ ctx.save(); ctx.translate(E[0],E[1]); ctx.rotate(ST.th*RAD); fillR(-0.6*k,-1.2*k,1.4*k,2.4*k,2,"#c9b27a","#7a6a3a"); ctx.restore(); }
+  else{ ctx.save(); ctx.translate(hole[0],hole[1]); ctx.rotate(ST.th*RAD); fillR(-0.1*k,-2.4*k,0.3*k,4.8*k,0,"#fbfbf8","#aaa"); ctx.restore();
+    if(sc){ const c=sc.rgb.map(v=>Math.round(v*255)); ctx.fillStyle="rgba("+c.join(",")+","+(0.25+0.75*sc.I).toFixed(2)+")"; ctx.beginPath(); ctx.arc(hole[0]+u[0]*0.3*k,hole[1]+u[1]*0.3*k,0.9*k,0,7); ctx.fill(); }
+    text(t.lab.cardEnd,hole[0]+u[0]*1.2*k,hole[1]+u[1]*1.2*k+14,"#555",10,"center"); }
+  hitAdd("arm",cx+u[0]*(PROT+3)*k-12,cy+u[1]*(PROT+3)*k-12,24,24); hitAdd("armEnd",E[0]-16,E[1]-16,32,32);
+  text(ST.lock18?t.lab.armLocked:t.lab.armFree,10,CLH-12,ST.lock18?"#7a1b1b":"#1b4d1b",11,"left","700");
+  drawVernier(W,t); }
+/* the vernier through the magnifier: main scale 30′, vernier of 6 parts reading 5′ */
+function drawVernier(W,t){ const x0=W+10, w=CLW-x0-10, y0=CLH*0.18, h=CLH*0.5, cx=x0+w/2, ppd=w/7.5, phi=reading();
+  fillR(x0,y0,w,h,10,"#fbfaf4","#888"); ctx.save(); rrect(x0,y0,w,h,10); ctx.clip();
+  /* the main scale: every 0.5°, numbered each degree, as the protractor prints them */
+  const ym=y0+h*0.48; ctx.fillStyle="#f4f2e8"; ctx.fillRect(x0,y0,w,ym-y0);
+  for(let v=Math.floor((phi-4)*2)/2;v<=phi+4;v+=0.5){ const X=cx+(v-phi)*ppd, full=Math.abs(v-Math.round(v))<1e-6, L0=full?(Math.round(v)%5===0?h*0.2:h*0.14):h*0.09;
+    ctx.strokeStyle="#222"; ctx.lineWidth=full?1.4:1; ctx.beginPath(); ctx.moveTo(X,ym); ctx.lineTo(X,ym-L0); ctx.stroke(); if(full) text(String(Math.abs(Math.round(v))),X,ym-h*0.28,"#1b1d20",12,"center","700"); }
+  /* the vernier: 25′ apart, 6 parts each side of its zero */
+  ctx.fillStyle="#d9dde1"; ctx.fillRect(x0,ym,w,y0+h-ym);
+  for(let i=-6;i<=6;i++){ const X=cx+i*(25/60)*ppd; ctx.strokeStyle=i===0?"#c0392b":"#222"; ctx.lineWidth=i===0?1.6:1; ctx.beginPath(); ctx.moveTo(X,ym); ctx.lineTo(X,ym+h*(i%3===0?0.17:0.11)); ctx.stroke();
+    if(i%3===0) text(String(Math.abs(i)*5)+"′",X,ym+h*0.26,"#1b1d20",10,"center"); }
+  ctx.restore(); text(t.lab.magn,x0+w/2,y0-12,"#555",11,"center","700");
+  hitAdd("vern",x0,y0,w,h);
+  text(ST.lock9?t.lab.vLocked:t.lab.vFree,x0+w/2,y0+h+18,ST.lock9?"#7a1b1b":"#1b4d1b",11,"center","700");
+  text(t.lab.gonioHint,x0+w/2,y0+h+38,"#555",10.5,"center"); }
+/* ── 2. the card with its hole, seen from the grating's side, and the ruler from hole to grating ── */
+function drawCardView(){ const t=d(); ctx.fillStyle="#e9e7e0"; ctx.fillRect(0,0,CLW,CLH);
+  if(!mounted("card")){ text(t.lab.noCard,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const cx=CLW*0.3, cy=CLH*0.47, k=Math.min(CLW*0.5/62,CLH/80);          /* px per mm */
+  fillR(cx-30*k,cy-34*k,60*k,68*k,3,"#fbfbf8","#999"); circ(cx,cy,1.5*k,"#111");
+  for(let mm=-25;mm<=25;mm+=5){ ctx.strokeStyle="#ccc"; ctx.beginPath(); ctx.moveTo(cx+mm*k,cy+30*k); ctx.lineTo(cx+mm*k,cy+32*k); ctx.stroke(); }
+  if(ST.lampOn&&mounted("grating")){ const r=TRUE.a*10*Math.tan(2*theta0()*RAD); if(Math.abs(r)<29){ const g=ctx.createRadialGradient(cx-r*k,cy,0,cx-r*k,cy,2.2*k); g.addColorStop(0,"rgba(255,246,200,1)"); g.addColorStop(0.6,"rgba(255,226,140,.8)"); g.addColorStop(1,"rgba(255,226,140,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx-r*k,cy,2.2*k,0,7); ctx.fill(); }
+    else text(t.lab.spotOff,cx,cy+22*k,"#7a1b1b",11,"center","700"); }
+  text(t.lab.cardFront,cx,cy-34*k-12,"#555",11,"center","700");
+  /* the ruler laid from the card to the grating: read a */
+  const x0=CLW*0.62, x1=CLW-24, y=CLH*0.45, s=(x1-x0)/90;
+  text(t.lab.side,(x0+x1)/2,y-70,"#555",11,"center","700");
+  fillR(x0+(90-TRUE.a*10)*s-3,y-46,6,58,1,"#fbfbf8","#999"); fillR(x1-10*s,y-40,20*s,46,3,"#8d939b"); fillR(x1-1.2*s,y-36,2.4*s,38,0,"rgba(120,160,210,.8)");
+  text(t.lab.cardL,x0+(90-TRUE.a*10)*s,y-54,"#555",10,"center"); text(t.lab.gratL,x1,y-48,"#555",10,"center");
+  if(has("ruler")){ fillR(x0-6,y+14,x1-x0+12,32,2,"rgba(214,228,236,.75)","#8aa");
+    for(let mm=0;mm<=90;mm++){ const X=x1-mm*s, L0=mm%10===0?14:mm%5===0?10:6; ctx.strokeStyle="#222"; ctx.lineWidth=mm%10===0?1.2:0.7; ctx.beginPath(); ctx.moveTo(X,y+14); ctx.lineTo(X,y+14+L0); ctx.stroke(); if(mm%10===0) text(String(mm/10),X,y+38,"#1b1d20",10,"center"); } }
+  else text(t.lab.noRuler,(x0+x1)/2,y+30,"#69717a",11,"center");
+  text(t.lab.cardHint,10,CLH-12,"#555",11,"left"); }
+/* ── 3. the sample frame at the entrance hole ── */
+function drawSampleView(){ const t=d(); ctx.fillStyle="#e9e7e0"; ctx.fillRect(0,0,CLW,CLH);
+  if(!mounted("sample")){ text(t.lab.noSample,CLW/2,CLH/2,"#69717a",12.5,"center"); return; }
+  const cx=CLW*0.38, cy=CLH*0.48, k=Math.min(CLW/70,CLH/34);                 /* px per mm */
+  /* the frame turns round its screw; the window chosen slides before the hole by u */
+  const off={film:0,glass:-14,open:14}[ST.frame], fx=cx-(off+ST.u)*k;
+  fillR(fx-23*k,cy-8*k,46*k,16*k,4,"#3a3d42","#222");
+  const fg=ctx.createLinearGradient(fx-4*k,0,fx+4*k,0); const tt=x=>{ const od=filmOD(560,TRUE.t*(1+TRUE.grad*x)); return Math.max(0,Math.min(1,Math.exp(-od*0.55))); };
+  for(const [p,x] of [[0,-4],[0.5,0],[1,4]]){ const v=tt(x); fg.addColorStop(p,"rgba("+Math.round(150+80*v)+","+Math.round(60+90*v)+","+Math.round(25+60*v)+",0.95)"); }
+  ctx.fillStyle=fg; ctx.fillRect(fx-4*k,cy-4*k,8*k,8*k); fillR(fx-14*k-4*k,cy-4*k,8*k,8*k,0,"rgba(215,232,240,.85)");
+  text("S2",fx,cy+6*k,"#e8eef2",10,"center","700"); text("S3",fx-14*k,cy+6*k,"#e8eef2",10,"center","700");
+  for(const m of ST.marks){ const X=fx+m*k; fillR(X-0.6*k,cy+8*k,1.2*k,3*k,1,"#ffffff","#999"); }
+  /* the arm's face with the entrance hole S1, fixed */
+  ctx.strokeStyle="#f2c14e"; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,1.5*k,0,7); ctx.stroke(); ctx.lineWidth=1;
+  ctx.fillStyle="#f2c14e"; ctx.beginPath(); ctx.moveTo(cx,cy-8.2*k); ctx.lineTo(cx-0.8*k,cy-9.8*k); ctx.lineTo(cx+0.8*k,cy-9.8*k); ctx.closePath(); ctx.fill();
+  text("S1",cx,cy-11.2*k,"#555",11,"center","700");
+  /* buttons */
+  const bx=CLW*0.78, bw=CLW*0.2; let by=CLH*0.16;
+  for(const fr of ["film","glass","open"]){ fillR(bx,by,bw,28,4,ST.frame===fr?"#f2c14e":"#3a3d42","#111"); text(t.lab.frame[fr],bx+bw/2,by+14,ST.frame===fr?"#1b1d20":"#e8eef2",11,"center","700"); hitAdd("fr:"+fr,bx,by,bw,28); by+=34; }
+  by+=10; if(has("labels")){ fillR(bx,by,bw,28,4,"#3a3d42","#111"); text(t.lab.mark,bx+bw/2,by+14,"#e8eef2",11,"center","700"); hitAdd("mark",bx,by,bw,28); by+=34;
+    fillR(bx,by,bw,28,4,"#3a3d42","#111"); text(t.lab.unmark,bx+bw/2,by+14,"#e8eef2",11,"center","700"); hitAdd("unmark",bx,by,bw,28); }
+  else text(t.lab.noLabels,bx+bw/2,by+14,"#69717a",10.5,"center");
+  hitAdd("frame",cx-23*k,cy-8*k,46*k,16*k);
+  text(t.lab.sampleHint,10,CLH-12,"#555",11,"left"); }
+let cmouse=[0,0];
+function drawClose(){ const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  try{ if(tab==="card") drawCardView(); else if(tab==="sample") drawSampleView(); else drawGonio(); } finally{ ctx=old; } }
+/* ══════════════════════════════════════════════════════════════
+   6.  HANDS: the bench and the close-ups
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function hitItem(p){ let id=pick3(p[0],p[1]); if(id==="cover"||id==="arm") return id; if(id&&LOOSE.includes(id)&&has(id)) return id;
+  return [...LOOSE].reverse().find(o=>has(o)&&o!=="spectro"&&baseOf(o)&&inB(p,bbox(o),0.3))||null; }
+let drag=null;
+function cancelHand(){ const k=hand.item; if(hand.move&&hand.orig){ if(hand.orig.at) ST.at[k]=hand.orig.at; else ST.pos[k]={x:hand.orig.x,y:hand.orig.y}; ST.on.add(k); say("placed",itemName(k)); } else say("back",itemName(k)); hand=null; }
+function takeUp(k){ if(ST.at[k]==="spectro"){ if(ST.cover){ say("coverShut"); return false; } hand={item:k,move:true,orig:{at:"spectro"}}; delete ST.at[k]; }
+  else{ const b=ST.pos[k]; hand={item:k,move:true,orig:{x:b.x,y:b.y}}; }
+  ST.on.delete(k); delete ST.pos[k]; say("picked",itemName(k)); return true; }
+function mount(k){ if(ST.cover){ say("coverShut"); return false; } ST.at[k]="spectro"; delete ST.pos[k]; ST.on.add(k); say("mounted",itemName(k)); return true; }
+function benchClick(p,right,e){
+  if(hand){ const k=hand.item;
+    if(right){ cancelHand(); return; }
+    if(ONSPEC.includes(k)&&has("spectro")&&inB(p,bbox("spectro"),0)){ if(mount(k)) hand=null; return; }
+    if(k==="spectro"&&has("spectro")) return;
+    const [x,y]=unP(p[0],p[1],1.5); if(!fits(k,x,y)){ say("noFit"); return; } ST.pos[k]={x,y}; ST.on.add(k); say("placed",itemName(k)); hand=null; return; }
+  const k=hitItem(p);
+  if(k==="cover"){ ST.cover=!ST.cover; say(ST.cover?"coverDown":"coverUp"); return; }
+  if(!k||k==="arm"){ if(!right) drag=e&&e.shiftKey?{k:"pan",p,v:[CAM.px,CAM.py]}:{k:"orbit",p,v:[CAM.yaw,CAM.pitch]}; return; }
+  if(right){ if(ST.at[k]==="spectro"&&ST.cover){ say("coverShut"); return; } ST.on.delete(k); delete ST.pos[k]; delete ST.at[k]; say("back",itemName(k)); return; }
+  takeUp(k); }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p;
+  if(drag){ if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.4,Math.min(1.4,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.35,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
+  const h=hitItem(p); cv.style.cursor=hand?"crosshair":h&&h!=="arm"?"pointer":"grab"; });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId); benchClick(p,e.button===2,e); drawTray(); });
+cv.addEventListener("pointerup",()=>{ drag=null; });
+cv.addEventListener("dblclick",e=>{ if(!hand&&!hitItem(lpos(e))) camReset(); });
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0, nk=Math.max(3,Math.min(60,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
+  CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*f; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*f; CAM.k=nk; },{passive:false});
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&!hand.move&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ cancelHand(); drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=inHand(k); hand=null;
+    if(!same&&trayAvail(k)){ if(k!=="spectro"&&!has("spectro")&&ONSPEC.includes(k)) say("specFirst"); hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+
+/* the close-ups: drag the arm round (lock 18 loose), the frame along (Shift: finely) */
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let cdrag=null;
+closeCv.addEventListener("pointermove",e=>{ cmouse=clpos(e); if(!cdrag) return;
+  if(cdrag.k==="arm"){ const a=Math.atan2(cmouse[1]-GM.cy,cmouse[0]-GM.cx)/RAD; setArm(Math.round(a*20)/20); }
+  else if(cdrag.k==="frame"){ const k=Math.min(CLW/70,CLH/34); ST.u=Math.max(-6,Math.min(6,Math.round((cdrag.v-(cmouse[0]-cdrag.x)/k*(e.shiftKey?0.2:1))*20)/20)); } });
+closeCv.addEventListener("pointerup",()=>{ cdrag=null; });
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e), h=hitAt(p); if(e.button!==0||!h) return;
+  if(h.k==="arm"||h.k==="armEnd"){ if(ST.lock18){ say("locked18"); return; } cdrag={k:"arm"}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(h.k==="frame"){ cdrag={k:"frame",x:p[0],v:ST.u}; closeCv.setPointerCapture(e.pointerId); return; }
+  if(h.k.startsWith("fr:")){ ST.frame=h.k.slice(3); say("frame",d().lab.frame[ST.frame]); return; }
+  if(h.k==="mark"){ ST.marks.push(Math.round(({film:0,glass:-14,open:14}[ST.frame]+ST.u)*10)/10); say("marked"); return; }
+  if(h.k==="unmark"){ ST.marks=[]; say("unmarked"); } });
+
+/* ══════════════════════════════════════════════════════════════
+   7.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let simT=0, rows=0;
+const needSpec=()=>{ if(!has("spectro")){ say("needFor",itemName("spectro")); return false; } return true; };
+function setArm(a){ ST.th=Math.max(-60,Math.min(60,a)); }
+function armCoarse(da){ if(!needSpec()) return; if(ST.lock18){ say("locked18"); return; } setArm(Math.round((ST.th+da)*1000)/1000); }
+function armFine(da){ if(!needSpec()) return; if(!ST.lock18){ say("fine18"); return; } setArm(Math.round((ST.th+da)*10000)/10000); }
+function zCoarse(da){ if(!needSpec()) return; if(ST.lock9){ say("locked9"); return; } ST.z=Math.round((ST.z+da)*1000)/1000; }
+function zFine(da){ if(!needSpec()) return; if(!ST.lock9){ say("fine10"); return; } ST.z=Math.round((ST.z+da)*10000)/10000; }
+function gTurn(da){ if(!needSpec()) return; if(!mounted("grating")){ say("needFor",itemName("grating")); return; } if(ST.lock12){ say("locked12"); return; } ST.g=Math.round((ST.g+da)*1000)/1000; }
+function gTilt(da){ if(!needSpec()) return; ST.tilt=Math.round((ST.tilt+da)*100)/100; }
+function slide(du){ if(!mounted("sample")){ say("needFor",itemName("sample")); return; } ST.u=Math.max(-6,Math.min(6,Math.round((ST.u+du)*100)/100)); }
+const touch=()=>{ ST.idle=0; };
+$("lampBtn").onclick=()=>{ if(!needSpec()) return; ST.lampOn=!ST.lampOn; say(ST.lampOn?"lampOn":"lampOff"); };
+$("coverBtn").onclick=()=>{ if(!needSpec()) return; ST.cover=!ST.cover; say(ST.cover?"coverDown":"coverUp"); };
+$("lpm").onclick=()=>{ if(needSpec()) ST.lampPos=Math.max(0,Math.round((ST.lampPos-0.125)*1000)/1000); };
+$("lpp").onclick=()=>{ if(needSpec()) ST.lampPos=Math.min(1,Math.round((ST.lampPos+0.125)*1000)/1000); };
+$("l18Btn").onclick=()=>{ if(needSpec()){ ST.lock18=!ST.lock18; say(ST.lock18?"tight":"loose","18"); } };
+$("l9Btn").onclick=()=>{ if(needSpec()){ ST.lock9=!ST.lock9; say(ST.lock9?"tight":"loose","9"); } };
+$("l12Btn").onclick=()=>{ if(needSpec()){ ST.lock12=!ST.lock12; say(ST.lock12?"tight":"loose","12"); } };
+for(const [id,f,v] of [["am1",armCoarse,-1],["am01",armCoarse,-0.1],["ap01",armCoarse,0.1],["ap1",armCoarse,1],["af5m",armFine,-5/60],["af1m",armFine,-1/60],["af1p",armFine,1/60],["af5p",armFine,5/60],
+  ["zm1",zCoarse,-1],["zm01",zCoarse,-0.1],["zp01",zCoarse,0.1],["zp1",zCoarse,1],["zf1m",zFine,-1/60],["zf1p",zFine,1/60],
+  ["gm1",gTurn,-1],["gm01",gTurn,-0.1],["gm002",gTurn,-0.02],["gp002",gTurn,0.02],["gp01",gTurn,0.1],["gp1",gTurn,1],["tm",gTilt,-0.2],["tp",gTilt,0.2],
+  ["um05",slide,-0.5],["um01",slide,-0.1],["up01",slide,0.1],["up05",slide,0.5]]) $(id).onclick=()=>f(v);
+for(const r of RKEYS) $("r_"+r).onclick=()=>{ if(!has("dmm")){ say("needFor",itemName("dmm")); return; } touch(); ST.range=r; dispT=0; };
+$("pwrBtn").onclick=()=>{ if(!has("dmm")){ say("needFor",itemName("dmm")); return; } touch(); ST.power=ST.power==="on"?"off":ST.power==="auto"?"off":"on"; dispT=0; if(ST.power==="on") ST.disp=null; };
+$("holdBtn").onclick=()=>{ if(!has("dmm")) return; touch(); ST.hold=!ST.hold; };
+for(const s of [1,10,30]) $("sp"+s).onclick=()=>{ ST.speed=s; };
+$("noteBtn").onclick=()=>{ rows++; const n=$("note"), line=rows+")  "+$("cfg").value.trim(); n.value+=(n.value&&!n.value.endsWith("\n")?"\n":"")+line; n.scrollTop=n.scrollHeight; say("noted"); };
+$("noteClr").onclick=()=>{ $("note").value=""; rows=0; };
+function renderPanel(){ const t=d(), s=meterShow(); $("dV").textContent=s===null?"—":s===""?" ":(s==="1"?"1 .  ":s)+" "+meterUnit();
+  for(const r of RKEYS) $("r_"+r).className=ST.range===r?"on":"";
+  $("pwrBtn").className=ST.power==="on"?"on":""; $("holdBtn").className=ST.hold?"on":"";
+  $("lampBtn").textContent=ST.lampOn?t.lampOff:t.lampOnB; $("lampBtn").className=ST.lampOn?"on":""; $("coverBtn").textContent=ST.cover?t.coverOpen:t.coverClose;
+  $("lpv").textContent=t.lampPosTxt(Math.round(ST.lampPos*8));
+  $("l18Btn").textContent=t.lockTxt("18",ST.lock18); $("l18Btn").className=ST.lock18?"on":""; $("l9Btn").textContent=t.lockTxt("9",ST.lock9); $("l9Btn").className=ST.lock9?"on":""; $("l12Btn").textContent=t.lockTxt("12",ST.lock12); $("l12Btn").className=ST.lock12?"on":"";
+  for(const s of [1,10,30]) $("sp"+s).className=ST.speed===s?"on":""; $("clock").textContent=t.clock(simT); }
+function renderStatus(){ const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(itemName(hand.item)),false]);
+  if(ST.lampOn&&ST.warm<60) L.push([t.st.warming,false]);
+  if(mounted("detector")&&!ST.cover&&has("dmm")) L.push([t.st.room,true]);
+  if(has("dmm")&&ST.power==="auto") L.push([t.st.autoOff,true]);
+  if(ST.hold) L.push([t.st.hold,true]);
+  if(mounted("sample")&&ST.frame!=="open"&&Math.abs(ST.u)>2.5) L.push([t.st.edge,true]);
+  if(meterShow()==="1"&&mounted("detector")) L.push([t.st.over,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const box=$("status"), html=L.map(([s,w])=>"<div"+(w?" class='w'":"")+">"+s.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</div>").join(""); if(box.innerHTML!==html) box.innerHTML=html; }
+function applyLang(){ const t=d(); document.documentElement.lang=lang;
+  for(const [id,k] of [["t-title","title"],["t-sub","sub"],["t-tray","trayTitle"],["t-cap","cap"],["t-h-v","hV"],["t-h-l","hL"],["lHint","lHint"],["t-h-a","hA"],["aHint","aHint"],["t-h-z","hZ"],["t-h-g","hG"],["gHint","gHint"],["t-h-s","hS"],["t-h-t","hT"],["t-h-note","hNote"],["noteBtn","note"],["noteClr","noteClr"],["holdBtn","holdB"],["pwrBtn","pwrB"]]) $(id).textContent=t[k];
+  $("cfg").placeholder=t.cfgPh; $("t-closecap").textContent=t.closeCap[tab]; $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=t.docTitle; renderTabs(); renderPanel(); layout(); }
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastT=performance.now();
+function advance(dt){ let T=dt*ST.speed; simT+=T; while(T>0){ const h=Math.min(0.5,T); stepPhys(h); T-=h; } updDisp(dt); }
+function tick(){ const now=performance.now(), dt=Math.min(0.05,(now-lastT)/1000); lastT=now; advance(dt);
+  ctx.clearRect(0,0,LW,LH); drawBench(); if(++frameN%2===0) drawClose();
+  if(frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick); }
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
