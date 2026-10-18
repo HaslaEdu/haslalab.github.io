@@ -428,7 +428,7 @@ class BenchTab(ttk.Frame):
             cv.create_text(660, 42, text=fmtF(self.freq) if self.fgOn.get() else T("함수 발생기", "generator"), fill="#9cf06a" if self.fgOn.get() else "#e8eef2", font=("Courier", 10, "bold"))
         if self.has("scope"):
             cv.create_rectangle(590, 120, 730, 260, fill="#c9cbc4", outline="#777", width=2)
-        own = lambda t: "fg" if t.startswith("FG") else "scope" if t[0] in "G" or t.startswith("CH") else "box" if t.startswith("FG") else "scope"
+        own = lambda t: "fg" if t.startswith("FG") else "scope" if t[0] == "G" or t.startswith("CH") else "box"
         for t, (x, y) in P.items():
             if not self.has(own(t)):
                 continue
