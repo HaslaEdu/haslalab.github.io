@@ -1006,11 +1006,70 @@ const DATA={
               src:{ko:"src/ipho2007_sim_KO.py", en:"src/ipho2007_sim_EN.py"},
               pdf:{en:"pdf/IPhO_2007_E_EN.pdf"},
               sol:"pdf/IPhO_2007_S.pdf"}}]},
-   {y:2006,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",problems:papers("IPhO_2006", wip("Interference, Reflection and Diffraction"), ["E_EN", "S"])},
-   {y:2005,host:{ko:"스페인 · 살라망카",en:"Salamanca, Spain"},cc:"es",problems:papers("IPhO_2005", wip("Planck's Constant in an Incandescent Lamp"), ["E_EN", "S"])},
-   {y:2004,host:{ko:"대한민국 · 포항",en:"Pohang, South Korea"},cc:"kr",problems:papers("IPhO_2004", wip('Mechanical "Black Box"'), ["E_EN", "S"])},
-   {y:2003,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:papers("IPhO_2003", wip("Optical Properties of Laser Diode"), ["E_EN", "S"])},
-   {y:2002,host:{ko:"인도네시아 · 발리",en:"Bali, Indonesia"},cc:"id",problems:papers("IPhO_2002", wip("Physical Constants with Electrolysis","Optical Black Box"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
+   {y:2006,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",
+    problems:[
+      {id:"E1",
+       title:{ko:"마이크로파 광학 — 간섭·반사·회절",en:"Microwave Optics — Interference, Reflection and Diffraction"},
+       desc:{ko:"송신기·수신기와 각도기 위의 반사판·빔 분리기·프리즘으로 마이컬슨 간섭계에서 파장을 재고, 유전체 판의 반사 간섭, 두 프리즘 사이 틈의 내부 전반사 감쇠(FTIR), 막대 격자의 브래그 회절을 측정합니다.",
+             en:"With a microwave transmitter and receiver, reflectors, a beam splitter and prisms on a goniometer: the wavelength from a Michelson interferometer, interference in a dielectric slab, frustrated total internal reflection across the gap between two prisms, and Bragg diffraction from a lattice of rods."},
+       tags:["마이컬슨 간섭계","전반사 감쇠","브래그 회절"], tagsEn:["Michelson interferometer","Frustrated TIR","Bragg diffraction"],
+       files:{sim:"sim/ipho2006_web.html",
+              src:{ko:"src/ipho2006_sim_KO.py", en:"src/ipho2006_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2006_E_EN.pdf"},
+              sol:"pdf/IPhO_2006_S.pdf"}}]},
+   {y:2005,host:{ko:"스페인 · 살라망카",en:"Salamanca, Spain"},cc:"es",
+    problems:[
+      {id:"E1",
+       title:{ko:"백열등 빛으로 재는 플랑크 상수",en:"Planck's Constant in the Light of an Incandescent Lamp"},
+       desc:{ko:"전위차계로 전구 전압을 바꾸며 필라멘트 저항으로 온도를 정하고, 액체 필터를 지난 빛을 광저항으로 재어 ln R 대 R_B^−0.83 그래프의 기울기에서 플랑크 상수 h를 구합니다.",
+             en:"Vary the bulb's voltage with a potentiometer, find the filament's temperature from its resistance, measure the light through a liquid filter with a photoresistor, and get Planck's constant h from the slope of ln R against R_B^−0.83."},
+       tags:["플랑크 상수","흑체 복사","광저항"], tagsEn:["Planck's constant","Black-body radiation","Photoresistor"],
+       files:{sim:"sim/ipho2005_web.html",
+              src:{ko:"src/ipho2005_sim_KO.py", en:"src/ipho2005_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2005_E_EN.pdf"},
+              sol:"pdf/IPhO_2005_S.pdf"}}]},
+   {y:2004,host:{ko:"대한민국 · 포항",en:"Pohang, South Korea"},cc:"kr",
+    problems:[
+      {id:"E1",
+       title:{ko:"역학적 블랙박스",en:"Mechanical \"Black Box\""},
+       desc:{ko:"검은 원통 안에서 두 용수철에 매달린 공의 질량 m과 용수철 상수 k1, k2를 열지 않고 구합니다 — 받침 위 균형점과 전자저울, 회전대에 감은 실의 추를 떨어뜨려 광문으로 잰 속력, 양 끝에 매단 진자의 주기.",
+             en:"Without opening the black cylinder, find the mass m of the ball hung between two springs inside it and the spring constants k1, k2 — from its balance point and an electronic balance, the speed of a falling weight spinning it on a rotation stage timed through a photogate, and its periods as a pendulum hung by either end."},
+       tags:["블랙박스","관성 모멘트","광 게이트"], tagsEn:["Black box","Moment of inertia","Photogate"],
+       files:{sim:"sim/ipho2004_web.html",
+              src:{ko:"src/ipho2004_sim_KO.py", en:"src/ipho2004_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2004_E_EN.pdf"},
+              sol:"pdf/IPhO_2004_S.pdf"}}]},
+   {y:2003,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",
+    problems:[
+      {id:"E1",
+       title:{ko:"레이저 다이오드와 액정의 광학적 성질",en:"Optical Properties of a Laser Diode and Liquid Crystals"},
+       desc:{ko:"레이저 다이오드의 전류–광출력 곡선에서 문턱 전류를 찾고, 편광판으로 빛의 편광을 확인한 뒤, 함수 발생기 전압에 따른 TN 액정과 평행 정렬 액정 셀의 투과를 포토다이오드로 재어 복굴절을 구합니다.",
+             en:"Find the laser diode's threshold current from its current–light curve, check its polarisation with polarisers, and measure the transmission of a twisted-nematic and a parallel-aligned liquid-crystal cell against the applied voltage to get the birefringence."},
+       tags:["레이저 다이오드","액정","편광"], tagsEn:["Laser diode","Liquid crystal","Polarisation"],
+       files:{sim:"sim/ipho2003_web.html",
+              src:{ko:"src/ipho2003_sim_KO.py", en:"src/ipho2003_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2003_E_EN.pdf"},
+              sol:"pdf/IPhO_2003_S.pdf"}}]},
+   {y:2002,host:{ko:"인도네시아 · 발리",en:"Bali, Indonesia"},cc:"id",
+    problems:[
+      {id:"E1",
+       title:{ko:"전기분해로 재는 e/k_B",en:"e/k_B Through Electrolysis"},
+       desc:{ko:"강철 공 진자의 길이를 줄의 눈금으로 바꾸며 주기를 재어 임의 눈금을 mm로 보정하고, 물을 전기분해해 눈금 시험관에 모은 수소의 부피와 흐른 전하로 e/k_B를 구합니다.",
+             en:"Calibrate the arbitrary scale in mm by timing a steel-ball pendulum whose length is set on that scale, then electrolyse water, trap the hydrogen in the scaled test tube, and get e/k_B from its volume and the charge that flowed."},
+       tags:["전기분해","진자","볼츠만 상수"], tagsEn:["Electrolysis","Pendulum","Boltzmann constant"],
+       files:{sim:"sim/ipho2002_E1_web.html",
+              src:{ko:"src/ipho2002_E1_sim_KO.py", en:"src/ipho2002_E1_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2002_E1_EN.pdf"},
+              sol:"pdf/IPhO_2002_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"광학 블랙박스",en:"Optical Black Box"},
+       desc:{ko:"레이저와 레일, 회전 받침대와 모눈종이 스크린으로 봉인된 상자 속 세 광학 소자(회절격자, 평행판, 프리즘, 렌즈 …)의 종류와 위치와 사양을 알아냅니다.",
+             en:"With a laser, a scaled rail, a turntable and graph paper on a screen, identify the three optical components sealed in a box (gratings, a plane-parallel plate, a prism, a lens …) with their positions and specifications."},
+       tags:["블랙박스","회절격자","평행판"], tagsEn:["Black box","Diffraction grating","Plane-parallel plate"],
+       files:{sim:"sim/ipho2002_E2_web.html",
+              src:{ko:"src/ipho2002_E2_sim_KO.py", en:"src/ipho2002_E2_sim_EN.py"},
+              pdf:{en:"pdf/IPhO_2002_E2_EN.pdf"},
+              sol:"pdf/IPhO_2002_S2.pdf"}}]},
    {y:2001,host:{ko:"튀르키예 · 안탈리아",en:"Antalya, Turkey"},cc:"tr",problems:papers("IPhO_2001", wip("Rotating Liquid"), ["E_EN", "S"])},
    {y:2000,host:{ko:"영국 · 레스터",en:"Leicester, United Kingdom"},cc:"gb",problems:papers("IPhO_2000", wip("CD-ROM Spectrometer","The Magnetic Puck"), ["E1_EN"], ["E2_EN"])}
   ]},
@@ -4566,6 +4625,108 @@ const SIG_I07E1={
     c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(pt),Y(this.Rg(pt)/this.T(pt)),3.6,0,7); c.fill();
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const p of [15,20,25]) c.fillText(p+"°",X(p),h-7); c.textAlign="left";
   }};
+/* ── IPhO 2006 · the Michelson fringes as the reflector moves ── */
+const SIG_I06E1={
+  sim:"sim/ipho2006_web.html", tag:"IPhO 2006 E1", span:22, rate:1,
+  capL:{ko:"반사판을 옮기며 · 마이컬슨 간섭계의 수신기 전류",en:"Moving the reflector · the receiver current in the Michelson interferometer"},
+  capR:{ko:"수신기",en:"receiver"},
+  I(x){ return 0.08+1.6*Math.pow(Math.cos(2*Math.PI*x/1.43+0.4),2)*(1-0.012*x); },
+  x(t){ return 8*((t%this.span)/this.span); },
+  read(t){ return this.I(this.x(t)).toFixed(2)+" mA"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=x=>pad+x/8*(w-2*pad), Y=v=>h-padB-v/1.8*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let x=0;x<=8;x+=1){ c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const xt=this.x(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let x=0;x<=xt;x+=0.02){ const px=X(x), py=Y(this.I(x)); x===0?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(xt),Y(this.I(xt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("x / cm",w-pad,h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2005 · ln R of the photoresistor against R_B^-0.83 ── */
+const SIG_I05E1={
+  sim:"sim/ipho2005_web.html", tag:"IPhO 2005 E1", span:24, rate:1,
+  capL:{ko:"전위차계를 돌리며 · 필터 뒤 광저항의 ln R",en:"Turning the potentiometer · ln R of the photoresistor behind the filter"},
+  capR:{ko:"광저항",en:"LDR"},
+  pts:[0.205,0.198,0.191,0.185,0.179,0.174,0.169,0.165,0.161,0.157,0.154,0.151],
+  lnR(q){ return 8.6+58*(q-0.151); },
+  n(t){ return Math.min(this.pts.length,1+Math.floor((t%this.span)/this.span*(this.pts.length+3))); },
+  read(t){ const q=this.pts[this.n(t)-1]; return (Math.exp(this.lnR(q))/1000).toFixed(2)+" kΩ"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=q=>pad+(q-0.148)/0.06*(w-2*pad), Y=v=>h-padB-(v-8.3)/3.8*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let q=0.15;q<=0.21;q+=0.01){ c.moveTo(X(q),pad); c.lineTo(X(q),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    PEN(c,"#8fb0c8",1); c.beginPath(); c.moveTo(X(0.149),Y(this.lnR(0.149))); c.lineTo(X(0.207),Y(this.lnR(0.207))); c.stroke();
+    const n=this.n(t); for(let i=0;i<n;i++){ const q=this.pts[i]; c.fillStyle=i===n-1?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(q),Y(this.lnR(q)+(i%3-1)*0.04),i===n-1?3.6:2.4,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("R_B^-0.83",w-pad,h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2004 · the falling weight's height against v² on the rotation stage ── */
+const SIG_I04E1={
+  sim:"sim/ipho2004_web.html", tag:"IPhO 2004 E1", span:24, rate:1,
+  capL:{ko:"추를 떨어뜨리며 · 높이 h와 광문 속력 v²",en:"Dropping the weight · height h against the photogate speed v²"},
+  capR:{ko:"광문",en:"photogate"},
+  h(v2){ return v2<0.42?1.1*v2:Math.max(1.1*0.42,0.82*v2+0.12); },
+  pts:[0.08,0.15,0.22,0.3,0.37,0.42,0.47,0.55,0.63,0.72,0.8,0.88],
+  n(t){ return Math.min(this.pts.length,1+Math.floor((t%this.span)/this.span*(this.pts.length+3))); },
+  read(t){ return Math.sqrt(this.pts[this.n(t)-1]).toFixed(3)+" m/s"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=v=>pad+v/0.95*(w-2*pad), Y=y=>h-padB-y/0.9*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let v=0;v<=0.9;v+=0.1){ c.moveTo(X(v),pad); c.lineTo(X(v),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const n=this.n(t); for(let i=0;i<n;i++){ const v=this.pts[i]; c.fillStyle=i===n-1?"#e8622a":v<0.42?"#2c6f9b":"#b4532a"; c.beginPath(); c.arc(X(v),Y(this.h(v)),i===n-1?3.6:2.4,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("v² / m²s⁻²",w-pad,h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2003 · the laser diode's light against its current ── */
+const SIG_I03E1={
+  sim:"sim/ipho2003_web.html", tag:"IPhO 2003 E1", span:22, rate:1,
+  capL:{ko:"가변저항을 돌리며 · 레이저 다이오드의 J–I 곡선",en:"Turning the rheostat · the laser diode's J–I curve"},
+  capR:{ko:"포토다이오드",en:"photodiode"},
+  J(I){ const th=23.5; return I<th?0.012*I:Math.min(8.28,0.28+1.02*(I-th)*(1-0.004*(I-th))); },
+  I(t){ return 5+27*((t%this.span)/this.span); },
+  read(t){ return this.J(this.I(t)).toFixed(2)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=I=>pad+(I-5)/27*(w-2*pad), Y=J=>h-padB-J/9*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let I=5;I<=32;I+=3){ c.moveTo(X(I),pad); c.lineTo(X(I),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const It=this.I(t); PEN(c,"#2c6f9b",1.6); c.beginPath(); for(let I=5;I<=It;I+=0.1){ const px=X(I), py=Y(this.J(I)); I===5?c.moveTo(px,py):c.lineTo(px,py); } c.stroke();
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(It),Y(this.J(It)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("I / mA",w-pad,h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2002 E1 · the water level in the tube as hydrogen collects ── */
+const SIG_I02E1={
+  sim:"sim/ipho2002_E1_web.html", tag:"IPhO 2002 E1", span:24, rate:1,
+  capL:{ko:"전기분해 중 · 시험관 속 수면의 눈금",en:"Electrolysing · the water level in the scaled tube"},
+  capR:{ko:"시험관",en:"tube"},
+  lev(m){ return 4.2+m*0.42; },
+  m(t){ return 30*((t%this.span)/this.span); },
+  read(t){ return this.lev(this.m(t)).toFixed(1)+" div"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padB=22, X=m=>pad+m/30*(w-2*pad), Y=v=>h-padB-(v-3)/14*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let m=0;m<=30;m+=5){ c.moveTo(X(m),pad); c.lineTo(X(m),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const mt=this.m(t); for(let m=0;m<=mt;m+=1){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(m),Y(this.lev(m)+((m*7)%5-2)*0.05),2.2,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(mt),Y(this.lev(mt)),3.6,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("t / min",w-pad,h-7); c.textAlign="left";
+  }};
+/* ── IPhO 2002 E2 · the spots on the graph paper behind the black box ── */
+const SIG_I02E2={
+  sim:"sim/ipho2002_E2_web.html", tag:"IPhO 2002 E2", span:20, rate:1,
+  capL:{ko:"상자를 스크린에 가까이 · 모눈종이 위 레이저 점들",en:"Box close to the screen · the laser spots on the graph paper"},
+  capR:{ko:"스크린",en:"screen"},
+  D(t){ return 4+8*((t%this.span)/this.span); },
+  read(t){ return "D = "+(this.D(t)/0.088).toFixed(0)+" div"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fbfaf2"; c.fillRect(0,0,w,h);
+    for(let x=0;x<w;x+=6){ PEN(c,x%30===0?"rgba(205,95,70,.55)":"rgba(225,150,130,.25)",x%30===0?1:.5); c.beginPath(); c.moveTo(x,0); c.lineTo(x,h); c.stroke(); }
+    for(let y=0;y<h;y+=6){ PEN(c,y%30===0?"rgba(205,95,70,.55)":"rgba(225,150,130,.25)",y%30===0?1:.5); c.beginPath(); c.moveTo(0,y); c.lineTo(w,y); c.stroke(); }
+    const D=this.D(t), k=Math.min(w,h)/34, cx=w/2+0.73*k*2, cy=h/2;
+    for(const [mx,ax,ix] of [[0,0,1],[1,0.36,0.45],[-1,-0.36,0.45]]) for(const [mz,az,iz] of [[0,0,1],[1,1.03,0.5],[-1,-1.03,0.5]]){
+      const x=cx+ax*D*k, y=cy-az*Math.min(D,6)*k, I=ix*iz; if(x<4||x>w-4||y<4||y>h-4) continue;
+      const g=c.createRadialGradient(x,y,0,x,y,7*Math.sqrt(I)+2); g.addColorStop(0,"rgba(230,0,0,"+(0.35+0.6*I).toFixed(2)+")"); g.addColorStop(1,"rgba(255,80,60,0)"); c.fillStyle=g; c.beginPath(); c.arc(x,y,9,0,7); c.fill(); }
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -4580,7 +4741,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1,
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
-                SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1];
+                SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
