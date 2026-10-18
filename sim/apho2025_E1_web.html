@@ -1344,8 +1344,14 @@ function drawZoyi(){
   POLY([NP(x1+0.01,g0,b[4]+0.55),NP(x1+0.01,g0+0.6,b[4]+0.35),NP(x1+0.01,g1-0.6,b[4]+0.35),NP(x1+0.01,g1,b[4]+0.55),
         NP(x1+0.01,g1,b[5]-0.55),NP(x1+0.01,g1-0.6,b[5]-0.35),NP(x1+0.01,g0+0.6,b[5]-0.35),NP(x1+0.01,g0,b[5]-0.55)],"#1b1c1f","#050506",1);
   for(let y=g0+0.6;y<g1-0.4;y+=0.55) LINE([NP(x1+0.02,y,b[4]+0.6),NP(x1+0.02,y,b[5]-0.6)],"#2b2d31",1);
-  POLY([NP(x1+0.02,y1-4.7,b[4]+0.9),NP(x1+0.02,y1-1.9,b[4]+0.9),NP(x1+0.02,y1-1.9,b[5]-0.9),NP(x1+0.02,y1-4.7,b[5]-0.9)],"#141517","#000",1);  /* flap */
-  LINE([NP(x1+0.03,y1-3.6,zm-0.5),NP(x1+0.03,y1-3.6,zm+0.5)],"#3a3d42",2);
+  /* the silicone flap at the top of the right side: closed, or folded down and out with the USB-C port showing */
+  const fy0=y1-4.7, fy1=y1-1.9, fz0=b[4]+0.9, fz1=b[5]-0.9, plugged=S.cord.chg.scope;
+  if(!plugged){ POLY([NP(x1+0.02,fy0,fz0),NP(x1+0.02,fy1,fz0),NP(x1+0.02,fy1,fz1),NP(x1+0.02,fy0,fz1)],"#141517","#000",1);
+    LINE([NP(x1+0.03,fy1-0.5,zm-0.5),NP(x1+0.03,fy1-0.5,zm+0.5)],"#3a3d42",2);
+    { const q=NP(x1+0.03,(fy0+fy1)/2-0.2,zm); TXT(q[0],q[1],"⎓5V",{size:Math.max(3,ppcm()*0.28),fill:"#55585d"}); } }
+  else { POLY([NP(x1+0.01,fy0,fz0),NP(x1+0.01,fy1,fz0),NP(x1+0.01,fy1,fz1),NP(x1+0.01,fy0,fz1)],"#0a0a0b","#000",1);
+    const p=[x1,y1-3.3,zm]; POLY([NP(x1+0.02,p[1]-0.17,p[2]-0.45),NP(x1+0.02,p[1]+0.17,p[2]-0.45),NP(x1+0.02,p[1]+0.17,p[2]+0.45),NP(x1+0.02,p[1]-0.17,p[2]+0.45)],"#9ea3a8","#5d6166",1);
+    POLY([NP(x1+0.02,fy0,fz0),NP(x1+1.6,fy0-2.3,fz0),NP(x1+1.6,fy0-2.3,fz1),NP(x1+0.02,fy0,fz1)],"#1b1c1f","#000",1); }
   /* top: red corners, black between, the two BNC sockets in their wells */
   { const P=[], R=0.9; for(const [xc,zc,a0] of [[b[0]+R,b[4]+R,Math.PI],[b[1]-R,b[4]+R,1.5*Math.PI],[b[1]-R,b[5]-R,0],[b[0]+R,b[5]-R,0.5*Math.PI]])
       for(let i=0;i<=5;i++){ const t=a0+i/5*Math.PI/2; P.push(NP(xc+R*Math.cos(t),y1,zc+R*Math.sin(t))); }
@@ -1738,14 +1744,54 @@ const fgInlet=()=>{ const o=S.at.fg; return [FG_BOX[1]-8.4+o[0],4.6,FG_BOX[5]+o[
 const scopePort=()=>{ const o=S.at.scope; return [Z_BOX[1]+o[0],Z_BOX[3]-3.3,(Z_BOX[4]+Z_BOX[5])/2+o[1]]; };
 function sockPos(i){ return [OUT_X,OUT_Y[i],WALL_Z]; }
 /* where each cord's free end lies on the desk when it is not plugged into its instrument */
-const CORD_REST={fgcord:{p:[47,0.9,58.5],d:[1,0,0]},charger:{p:[69,0.5,58.5],d:[-1,0,0]}};
+const CORD_REST={fgcord:{p:[45,1.1,59],d:[0,0,1]},charger:{p:[51,0.3,58.5],d:[0,0,1]}};
+/* real sizes (cm): an IEC 60320 C13 connector 3.1 × 2.2 face, 3.0 body + 1.6 boot; a NEMA 5-15 plug; a USB-C plug
+   (overmould 1.0 × 0.55, 1.8 long, boot 0.8; metal shell 0.84 × 0.26) */
+const C13={w:3.1,h:2.2,L:3.0,boot:1.6}, USBC={w:1.0,h:0.55,L:1.8,boot:0.8};
 function cordEnds(id){ /* the two ends of a cord, each with the direction the cord leaves it; the wall end is always plugged in */
-  const c=id==="fgcord"?S.cord.fg:S.cord.chg, p=sockPos(c.sock), out=[{p:[p[0],p[1]-(id==="fgcord"?1.6:2.9),p[2]-(id==="fgcord"?2.4:3.4)],d:[0,-0.5,-0.85]}];
-  if(id==="fgcord"&&c.fg&&S.on.fg) out.push({p:fgInlet(),d:[0,0,1]});
-  else if(id==="charger"&&c.scope&&S.on.scope) out.push({p:scopePort(),d:[1,0,0]});
+  const c=id==="fgcord"?S.cord.fg:S.cord.chg, p=sockPos(c.sock), out=[{p:id==="fgcord"?[p[0],p[1]-2.9,p[2]-1.1]:[p[0],p[1]-6.1,p[2]-1.6],d:[0,-1,-0.25]}];
+  if(id==="fgcord"&&c.fg&&S.on.fg){ const q=fgInlet(); out.push({p:[q[0],q[1],q[2]+C13.L+C13.boot],d:[0,0,1]}); }
+  else if(id==="charger"&&c.scope&&S.on.scope){ const q=scopePort(); out.push({p:[q[0]+USBC.L+USBC.boot,q[1],q[2]],d:[1,0,0]}); }
   else if(!(S.carry&&S.carry.k==="cord"&&S.carry.id===id)) out.push(Object.assign({rest:true},CORD_REST[id]));
   return out;
 }
+/* the USB-C plug in the scope's side port, drawn after the scope so it stands out of its side */
+function drawScopePlug(){ if(!(S.cord.chg.scope&&S.on.scope)) return; const p=scopePort(), hw=USBC.w/2, hh=USBC.h/2;
+  BOX([p[0]+0.05,p[0]+USBC.L,p[1]-hh,p[1]+hh,p[2]-hw,p[2]+hw],"#eceef0","#dadde0","#d0d3d6","#8a9096");
+  BOX([p[0]+USBC.L,p[0]+USBC.L+USBC.boot,p[1]-0.17,p[1]+0.17,p[2]-0.25,p[2]+0.25],"#e2e4e7","#cfd3d6","#c4c8cc","#8a9096"); }
+/* the same two plugs lying on the desk pointing at you (their faces on the front), the cord leaving at the back */
+function c13Z(x,z){ const L=C13.L, w=C13.w/2, H=C13.h, Z=z-C13.boot-L;
+  BOX([x-0.7,x+0.7,0.25,1.25,z-C13.boot,z],"#1a1b1d","#141516","#101113","#000");
+  for(let i=1;i<4;i++) LINE([NP(x-0.7,1.25,z-i*0.4),NP(x+0.7,1.25,z-i*0.4)],"#2c2e31",1);
+  BOX([x-w,x+w,0,H,Z,z-C13.boot],"#1d1e20","#16171a","#18191b","#000");
+  const Q=(xx,y)=>NP(xx,y,Z-0.01);
+  POLY([Q(x-w+0.25,0.25),Q(x+w-0.25,0.25),Q(x+w-0.25,H-0.75),Q(x+w-0.75,H-0.25),Q(x-w+0.75,H-0.25),Q(x-w+0.25,H-0.75)],"#0c0d0e","#2c2e31",1);
+  for(const dx of [-0.7,0.7]) POLY([Q(x+dx-0.2,0.85),Q(x+dx+0.2,0.85),Q(x+dx+0.2,1.0),Q(x+dx-0.2,1.0)],"#000",null);
+  POLY([Q(x-0.08,1.35),Q(x+0.08,1.35),Q(x+0.08,1.7),Q(x-0.08,1.7)],"#000",null); }
+function usbcZ(x,z){ const hw=USBC.w/2, h=USBC.h, Z=z-USBC.boot-USBC.L;
+  BOX([x-0.25,x+0.25,0,0.34,z-USBC.boot,z],"#e2e4e7","#cfd3d6","#c4c8cc","#8a9096");
+  BOX([x-hw,x+hw,0,h,Z,z-USBC.boot],"#eceef0","#dadde0","#d0d3d6","#8a9096");
+  const yc=h/2; BOX([x-0.42,x+0.42,yc-0.13,yc+0.13,Z-0.65,Z],"#c9cdd1","#aeb3b8","#b8bdc2","#6d7277");
+  const Q=(xx,y)=>NP(xx,y,Z-0.66); POLY([Q(x-0.38,yc-0.09),Q(x+0.38,yc-0.09),Q(x+0.42,yc),Q(x+0.38,yc+0.09),Q(x-0.38,yc+0.09),Q(x-0.42,yc)],"#2a2c2f",null);
+  LINE([Q(x-0.3,yc),Q(x+0.3,yc)],"#9aa0a6",1); }
+/* an IEC 60320 C13 connector lying on the desk, its socket face (+x) towards you: the keyed outline
+   with the two corners cut off, the line and neutral slots and the earth slot; its boot behind it */
+function c13X(x,z){ const L=C13.L, w=C13.w/2, H=C13.h, X=x+C13.boot+L;
+  BOX([x,x+C13.boot,0.25,1.25,z-0.7,z+0.7],"#1a1b1d","#141516","#101113","#000");
+  for(let i=1;i<4;i++) LINE([NP(x+i*0.4,1.25,z-0.7),NP(x+i*0.4,1.25,z+0.7)],"#2c2e31",1);
+  BOX([x+C13.boot,X,0,H,z-w,z+w],"#1d1e20","#16171a","#18191b","#000");
+  const Q=(zz,y)=>NP(X+0.01,y,zz);
+  POLY([Q(z-w+0.25,0.25),Q(z+w-0.25,0.25),Q(z+w-0.25,H-0.75),Q(z+w-0.75,H-0.25),Q(z-w+0.75,H-0.25),Q(z-w+0.25,H-0.75)],"#0c0d0e","#2c2e31",1);
+  for(const dz of [-0.7,0.7]) POLY([Q(z+dz-0.2,0.85),Q(z+dz+0.2,0.85),Q(z+dz+0.2,1.0),Q(z+dz-0.2,1.0)],"#000",null);
+  POLY([Q(z-0.08,1.35),Q(z+0.08,1.35),Q(z+0.08,1.7),Q(z-0.08,1.7)],"#000",null); }
+/* a USB-C plug lying on the desk, pointing +x: the white overmould with its boot behind, the steel shell
+   with its oval mouth and the tongue slot */
+function usbcX(x,z){ const hw=USBC.w/2, h=USBC.h;
+  BOX([x,x+USBC.boot,0,0.34,z-0.25,z+0.25],"#e2e4e7","#cfd3d6","#c4c8cc","#8a9096");
+  BOX([x+USBC.boot,x+USBC.boot+USBC.L,0,h,z-hw,z+hw],"#eceef0","#dadde0","#d0d3d6","#8a9096");
+  const x0=x+USBC.boot+USBC.L, yc=h/2; BOX([x0,x0+0.65,yc-0.13,yc+0.13,z-0.42,z+0.42],"#c9cdd1","#aeb3b8","#b8bdc2","#6d7277");
+  const Q=(zz,y)=>NP(x0+0.66,y,zz); POLY([Q(z-0.38,yc-0.09),Q(z+0.38,yc-0.09),Q(z+0.42,yc),Q(z+0.38,yc+0.09),Q(z-0.38,yc+0.09),Q(z-0.42,yc)],"#2a2c2f",null);
+  LINE([Q(z-0.3,yc),Q(z+0.3,yc)],"#9aa0a6",1); }
 function drawCord(id){
   const e=cordEnds(id), col=id==="fgcord"?["#121314","#000"]:["#eceef0","#9aa0a6"], w=id==="fgcord"?0.32:0.2;
   let pts=null;
@@ -1755,13 +1801,15 @@ function drawCord(id){
   LINE(pts,col[1],Math.max(2.4,ppcm()*w*1.25)); LINE(pts,col[0],Math.max(1.6,ppcm()*w));
   S.cordPts[id]=pts;
   const r=e[1]&&e[1].rest?e[1].p:null;
-  /* the free end lying on the desk: the IEC connector, the USB-C plug */
-  if(r&&id==="fgcord") BOX([r[0]-2.6,r[0],0,1.8,r[2]-1.2,r[2]+1.2],"#1d1e20","#141516","#18191b","#000");
-  if(r&&id==="charger") BOX([r[0],r[0]+1.6,0,0.7,r[2]-0.5,r[2]+0.5],"#e9ebed","#d6d9dc","#c9cdd1","#8a9096");
+  /* the free end lying on the desk, its face towards you on the right: the IEC C13 connector, the USB-C plug */
+  if(r&&id==="fgcord") c13Z(r[0],r[2]);
+  if(r&&id==="charger") usbcZ(r[0],r[2]);
   if(S.carry&&S.carry.k==="cord"&&S.carry.id===id){ const q=S.mouse; OVAL(q[0],q[1],ppcm()*0.7,ppcm()*0.5,id==="fgcord"?"#1d1e20":"#e9ebed","#000",1); }
-  /* the plug in the generator's rear inlet, the USB-C plug in the scope */
-  if(id==="fgcord"&&S.cord.fg.fg&&S.on.fg){ const p=fgInlet(); BOX([p[0]-1.1,p[0]+1.1,p[1]-0.9,p[1]+0.9,p[2],p[2]+1.8],"#1b1c1e","#141516","#0f1011","#000"); }
-  if(id==="charger"&&S.cord.chg.scope&&S.on.scope){ const p=scopePort(); BOX([p[0],p[0]+1.4,p[1]-0.35,p[1]+0.35,p[2]-0.5,p[2]+0.5],"#e9ebed","#d6d9dc","#c9cdd1","#8a9096"); }
+  /* the C13 in the generator's rear inlet (C14), the USB-C plug in the scope's side port */
+  if(id==="fgcord"&&S.cord.fg.fg&&S.on.fg){ const p=fgInlet(), w=C13.w/2, h=C13.h/2;
+    BOX([p[0]-w,p[0]+w,p[1]-h,p[1]+h,p[2],p[2]+C13.L],"#1d1e20","#16171a","#111214","#000");
+    BOX([p[0]-0.75,p[0]+0.75,p[1]-0.6,p[1]+0.5,p[2]+C13.L,p[2]+C13.L+C13.boot],"#1a1b1d","#141516","#101113","#000");
+    for(let i=1;i<4;i++) LINE([NP(p[0]-0.75,p[1]+0.5,p[2]+C13.L+i*0.4),NP(p[0]+0.75,p[1]+0.5,p[2]+C13.L+i*0.4)],"#2c2e31",1); }
 }
 /* a duplex 110 V receptacle (two vertical slots and a round earth hole each) on a white plate on the wall */
 function drawOutlet(){
@@ -1774,8 +1822,14 @@ function drawOutlet(){
     for(const [dx,hh] of [[-0.62,0.75],[0.62,0.6]]) POLY([Q(OUT_X+dx-0.12,y+0.2-hh/2+0.3),Q(OUT_X+dx+0.12,y+0.2-hh/2+0.3),Q(OUT_X+dx+0.12,y+0.2+hh/2+0.3),Q(OUT_X+dx-0.12,y+0.2+hh/2+0.3)],"#26282b",null);
     { const c=Q(OUT_X,y-0.95); OVAL(c[0],c[1],ppcm()*0.22,ppcm()*0.26,"#26282b",null); }
     const u=sockUser(i);
-    if(u==="fgcord") BOX([OUT_X-1.5,OUT_X+1.5,y-1.6,y+1.6,z-2.4,z],"#1d1e20","#2c2d30","#18191b","#000");
-    if(u==="charger") BOX([OUT_X-2.1,OUT_X+2.1,y-2.9,y+2.0,z-3.4,z],"#f6f7f8","#e3e5e7","#eceef0","#9aa0a6"); }
+    if(u==="fgcord"){ BOX([OUT_X-1.45,OUT_X+1.45,y-1.7,y+1.5,z-2.3,z],"#1d1e20","#26272a","#18191b","#000");
+      for(let i=0;i<3;i++) LINE([NP(OUT_X-1.45,y-1.2+i*0.9,z-2.31),NP(OUT_X+1.45,y-1.2+i*0.9,z-2.31)],"#2e3034",1);
+      BOX([OUT_X-0.6,OUT_X+0.6,y-2.9,y-1.7,z-1.6,z-0.6],"#1a1b1d","#141516","#101113","#000"); }
+    if(u==="charger"){ BOX([OUT_X-2.0,OUT_X+2.0,y-3.0,y+2.0,z-3.2,z],"#f6f7f8","#e3e5e7","#eceef0","#9aa0a6");
+      { const c=NP(OUT_X,y-0.4,z-3.21); TXT(c[0],c[1],"5V⎓2A",{size:Math.max(3,ppcm()*0.3),fill:"#8a9096"}); }
+      BOX([OUT_X-0.62,OUT_X+0.62,y-3.7,y-3.0,z-2.0,z-1.2],"#c9cdd1","#aeb3b8","#b8bdc2","#6d7277");
+      BOX([OUT_X-0.75,OUT_X+0.75,y-5.3,y-3.7,z-2.1,z-1.05],"#eceef0","#dadde0","#d0d3d6","#8a9096");
+      BOX([OUT_X-0.28,OUT_X+0.28,y-6.1,y-5.3,z-1.85,z-1.35],"#e2e4e7","#cfd3d6","#c4c8cc","#8a9096"); } }
   { const q=NP(OUT_X,17.6,z); TXT(q[0],q[1]-6,d().pw.wall,{size:Math.max(5,ppcm()*0.55),fill:"#d9dde1"}); }
 }
 /* ── the stopwatch lying on the desk (round, the display on its face, two buttons at the top): it shows the same time as the panel ── */
@@ -1796,6 +1850,10 @@ function screenAxes(){ const o=NP(0,0,0), ex=NP(1,0,0), ez=NP(0,0,1), X=[ex[0]-o
   if(H[0]*X[0]+H[1]*Z[0]<0) H=[-H[0],-H[1]];                      /* left to right */
   if(V[0]*X[1]+V[1]*Z[1]>0) V=[-V[0],-V[1]];                      /* up the screen */
   return [H,V]; }
+/* text printed flat on a horizontal surface at height y: O is the middle of the line (desk x,z), H along it, V up the letters */
+function flatText(W,u,y,H,V,txt,h,col){ const p=W(0,u), o=NP(p[0],y,p[1]), a=NP(p[0]+H[0],y,p[1]+H[1]), b=NP(p[0]+V[0],y,p[1]+V[1]);
+  ctx.save(); ctx.transform((a[0]-o[0])/10,(a[1]-o[1])/10,-(b[0]-o[0])/10,-(b[1]-o[1])/10,o[0],o[1]);
+  ctx.font="bold "+(h*10).toFixed(1)+"px "+FONT; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillStyle=col; ctx.fillText(txt,0,0); ctx.restore(); }
 function drawSw(){
   const o=S.at.sw, cx=107.25+o[0], cz=6.1+o[1], R=3.25, h=1.3, [H,V]=screenAxes(), W=(u,v)=>[cx+H[0]*u+V[0]*v,cz+H[1]*u+V[1]*v];
   for(const du of [-1.15,1.15]){ const p=W(du,R+0.25); CYL(p[0],0.35,1.05,p[1],0.42,"#7e858c","#a9afb5","#444"); }   /* start/stop and reset at the top */
@@ -1806,7 +1864,7 @@ function drawSw(){
   POLY([Q(-2.15,-1.1,y+0.005),Q(2.15,-1.1,y+0.005),Q(2.15,1.1,y+0.005),Q(-2.15,1.1,y+0.005)],"#b7c4a5","#3a4436",1);
   const str=fmtTime(swValue()), n=str.length-2, w=3.9/(n+0.8), O=W(-1.95,-0.75);
   swDigits(str,O,H,V,w,1.5,y+0.01,"#1b2316",Math.max(1,ppcm()*0.07));
-  { const q=Q(0,-R+0.8,y); TXT(q[0],q[1],"STOPWATCH",{size:Math.max(3,ppcm()*0.22),fill:"#9aa6b0"}); }
+  flatText(W,-R+0.8,y,H,V,"STOPWATCH",0.3,"#9aa6b0");
   S.zones.sw=boxRect([cx-R,cx+R,0,h+0.3,cz-R-0.7,cz+R+0.7]);
 }
 function draw(){
@@ -1820,7 +1878,7 @@ function draw(){
   const add=(id,fn)=>{ const f=footNow(id); parts.push([(f[2]+f[3])/2-(f[0]+f[1])/2,fn]); };
   if(S.on.fg) add("fg",()=>withOff(S.at.fg,drawFG));
   const probeRests=()=>!S.probe.tip&&!S.probe.gnd&&!(S.carry&&S.carry.k==="probe");
-  if(S.on.scope) add("scope",()=>{ withOff(S.at.scope,drawZoyi); if(probeRests()) drawProbe(); });
+  if(S.on.scope) add("scope",()=>{ withOff(S.at.scope,drawZoyi); drawScopePlug(); if(probeRests()) drawProbe(); });
   if(S.on.base) add("base",()=>{ withOff(S.at.base,drawCoilStack); if(S.on.box==="cover"){ drawBox(); if(S.pan) withOff(S.at.base,drawNtc); } });
   if(S.on.box==="desk") add("box",drawBox);
   S.cordPts={};
