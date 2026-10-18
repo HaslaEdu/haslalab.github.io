@@ -1330,12 +1330,121 @@ const DATA={
               pdf:{en:"pdf/APhO_2006_E_EN.pdf"},
               sol:"pdf/APhO_2006_S.pdf"}}
     ]},
-   {y:2005,host:{ko:"인도네시아 · 프칸바루",en:"Pekanbaru, Indonesia"},cc:"id",problems:wip("Determination of Shapes by Reflection","Magnetic Braking on an Inclined Plane")},
-   {y:2004,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:papers("APhO_2004", wip("Hall Effect and Magnetoresistivity Effect","Black Box"), ["E1_EN", "S1"], ["E2_EN"])},
-   {y:2003,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:papers("APhO_2003", wip("Determination of Capacitance","Cylindrical Bore"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2002,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",problems:papers("APhO_2002", wip("Measurement of Reflectance and Determination of Refractive Index","Frequency of Vibration of a Tuning Fork"), ["E1_EN"], ["E2_EN", "S2"])},
-   {y:2001,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:papers("APhO_2001", wip("Basic Characteristics of Solar Cells"), ["E_EN", "S"])},
-   {y:2000,host:{ko:"인도네시아 · 카라와치",en:"Karawaci, Indonesia"},cc:"id",problems:wip("Determination of the Density of Oil","Determination of the Stefan–Boltzmann Constant")}
+   {y:2005,host:{ko:"인도네시아 · 프칸바루",en:"Pekanbaru, Indonesia"},cc:"id",
+    problems:[
+      {id:"E1",
+       title:{ko:"반사로 모양 알아내기",en:"Determination of Shapes by Reflection"},
+       desc:{ko:"닫힌 원통 상자 두 개 속 거울 같은 금속 물체를 뚜껑의 손잡이로 돌리며, 옆에 끼운 레이저 빛이 반사되어 둘레 눈금에 맺히는 각 β를 물체의 각 α에 따라 읽어 변의 개수, 축까지의 거리, 변의 길이와 사잇각, 오목한 곡면을 알아냅니다.",
+             en:"Turn the mirror-sided metal objects inside two closed cylindrical boxes with the knobs on their lids, read where the laser's reflection lands on the wall's scale (β) against the object's angle (α), and work out the number of sides, their distances from the axis, their lengths and angles, and a concave curved side."},
+       tags:["광학","반사","간접 측정"], tagsEn:["Optics","Reflection","Indirect measurement"],
+       files:{sim:"sim/apho2005_E1_web.html",
+              src:{ko:"src/apho2005_E1_sim_KO.py", en:"src/apho2005_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2005_E_EN.pdf"},
+              sol:"pdf/APhO_2005_S.pdf"}},
+      {id:"E2",
+       title:{ko:"경사면 위의 자기 제동",en:"Magnetic Braking on an Inclined Plane"},
+       desc:{ko:"두 알루미늄 막대 사이의 홈을 굴러 내려가는 고리 네오디뮴 자석의 종단 속도를 스톱워치로 재어, 경사(sin θ = h/l)와 막대 간격 d를 바꿔 가며 자기 제동력 F = −k0 d^p v^n의 지수 n과 p를 구합니다. 지구 자기장의 비틀림을 줄이도록 판의 방향도 맞춰야 합니다.",
+             en:"Time the terminal speed of a ring NdFeB magnet rolling down a groove between two aluminium bars, varying the slope (sin θ = h/l) and the bar distance d, to find the exponents n and p of the braking force F = −k0 d^p v^n. Turn the plane so the earth's field twists the magnet least."},
+       tags:["전자기","맴돌이 전류","종단 속도"], tagsEn:["Electromagnetism","Eddy currents","Terminal velocity"],
+       files:{sim:"sim/apho2005_E2_web.html",
+              src:{ko:"src/apho2005_E2_sim_KO.py", en:"src/apho2005_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2005_E_EN.pdf"},
+              sol:"pdf/APhO_2005_S.pdf"}}
+    ]},
+   {y:2004,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",
+    problems:[
+      {id:"E1",
+       title:{ko:"홀 효과와 자기저항",en:"Hall Effect and Magnetoresistivity"},
+       desc:{ko:"각도기 중심의 바늘에 홀 센서를 세우고 원판 자석을 거리와 각도를 바꿔 놓으며 건전지·10 kΩ 가변저항·멀티미터 세 대로 홀 전압과 전극 어긋남 전압, 홀 감도 α, 자기저항 ΔR/R = cB^k의 k를 재고, 토로이드 코일의 틈에 센서를 넣어 감은 수를 세고 코어의 비투자율 μ를 구합니다.",
+             en:"Stand the Hall sensor on the needle at the protractor's centre and set the disc magnet at different distances and angles; with batteries, a 10 kΩ resistor and three multimeters measure the Hall and misalignment voltages, the sensitivity α and the exponent k of ΔR/R = cB^k, then put the sensor in the toroid's gap, count the turns and find the core's permeability μ."},
+       tags:["전자기","홀 효과","자기저항"], tagsEn:["Electromagnetism","Hall effect","Magnetoresistance"],
+       files:{sim:"sim/apho2004_E1_web.html",
+              src:{ko:"src/apho2004_E1_sim_KO.py", en:"src/apho2004_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2004_E1_EN.pdf"},
+              sol:"pdf/APhO_2004_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"블랙박스",en:"Black Box"},
+       desc:{ko:"두 겹 빔 오실로스코프, 함수 발생기, 표준 저항 Rn = 5 kΩ으로 블랙박스 속 별 모양 회로 두 개의 소자(R, C, L)의 종류와 값을 알아내고, 다섯 단자를 묶어 만든 새 상자에서 진폭비 K와 위상차 φ를 주파수에 따라 재어 특별한 주파수 f0를 찾습니다. 두 계기의 접지가 이미 이어져 있다는 점에 주의해야 합니다.",
+             en:"With a double-beam oscilloscope, a function generator and a standard 5 kΩ resistor, identify the type and value (R, C, L) of the elements in the box's two star networks, then join five terminals into a new box and plot the amplitude ratio K and the phase shift φ against frequency to find the particular frequency f0. Mind that both instruments' grounds are already joined."},
+       tags:["전기회로","교류","오실로스코프"], tagsEn:["Circuits","AC","Oscilloscope"],
+       files:{sim:"sim/apho2004_E2_web.html",
+              src:{ko:"src/apho2004_E2_sim_KO.py", en:"src/apho2004_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2004_E2_EN.pdf"}}}
+    ]},
+   {y:2003,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",
+    problems:[
+      {id:"E1",
+       title:{ko:"전기용량 재기",en:"Determination of Capacitance"},
+       desc:{ko:"50 Hz 변압기에 축전기와 표준 저항을 이은 판에서 교류 전압계 하나로 각 부분의 전압을 재고, 직접 고른 배선으로 축전기의 전기용량을 구합니다.",
+             en:"On a board with a 50 Hz transformer, a capacitor and standard resistors, measure the voltages across the parts with a single AC voltmeter and find the capacitance from wiring you choose yourself."},
+       tags:["전기회로","교류","전기용량"], tagsEn:["Circuits","AC","Capacitance"],
+       files:{sim:"sim/apho2003_E1_web.html",
+              src:{ko:"src/apho2003_E1_sim_KO.py", en:"src/apho2003_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2003_E1_EN.pdf"},
+              sol:"pdf/APhO_2003_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"원기둥 구멍",en:"Cylindrical Bore"},
+       desc:{ko:"원기둥 구멍이 뚫린 황동 정육면체를 두 실로 매다는 두 가지 방법으로 비틀림 진동 주기를 재어, 겉으로 보이지 않는 구멍의 지름을 구합니다.",
+             en:"Hang a brass cube with a hidden cylindrical bore by two threads in two ways, time its torsional oscillations and find the diameter of the bore."},
+       tags:["역학","관성 모멘트","진동"], tagsEn:["Mechanics","Moment of inertia","Oscillation"],
+       files:{sim:"sim/apho2003_E2_web.html",
+              src:{ko:"src/apho2003_E2_sim_KO.py", en:"src/apho2003_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2003_E2_EN.pdf"},
+              sol:"pdf/APhO_2003_S2.pdf"}}
+    ]},
+   {y:2002,host:{ko:"싱가포르",en:"Singapore"},cc:"sg",
+    problems:[
+      {id:"E1",
+       title:{ko:"반사율 재기와 굴절률 구하기",en:"Measurement of Reflectance and Determination of Refractive Index"},
+       desc:{ko:"회전대 위의 레이저와 편광판으로 유리판과 실리콘 웨이퍼의 p·s 편광 반사율을 입사각에 따라 광 파워미터로 재어, 브루스터 각과 프레넬 식으로 굴절률을 구합니다.",
+             en:"With a laser and a polarizer on rotary stages and an optical power meter, measure the p and s reflectance of a glass plate and a silicon wafer against the angle of incidence, and find their refractive indices from Brewster's angle and the Fresnel equations."},
+       tags:["광학","편광","반사율"], tagsEn:["Optics","Polarization","Reflectance"],
+       files:{sim:"sim/apho2002_E1_web.html",
+              src:{ko:"src/apho2002_E1_sim_KO.py", en:"src/apho2002_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2002_E1_EN.pdf"}}},
+      {id:"E2",
+       title:{ko:"소리굽쇠의 진동수",en:"Frequency of Vibration of a Tuning Fork"},
+       desc:{ko:"섬광등으로 소리굽쇠의 갈래를 비추며 보이는 상의 개수로 진동수를 맞추고, 갈래에 물린 추의 질량을 바꿔 f = 1/√(A(m+B))의 관계를 확인한 뒤 모르는 질량을 구합니다.",
+             en:"Light the tuning fork's prongs with a stroboscope and match its frequency by the number of images, then change the masses clamped on the prongs to check f = 1/√(A(m+B)) and find an unknown mass."},
+       tags:["진동","섬광등","진동수"], tagsEn:["Oscillation","Stroboscope","Frequency"],
+       files:{sim:"sim/apho2002_E2_web.html",
+              src:{ko:"src/apho2002_E2_sim_KO.py", en:"src/apho2002_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2002_E2_EN.pdf"},
+              sol:"pdf/APhO_2002_S2.pdf"}}
+    ]},
+   {y:2001,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",
+    problems:[
+      {id:"E1",
+       title:{ko:"태양전지의 기본 특성",en:"Basic Characteristics of Solar Cells"},
+       desc:{ko:"건전지·10회전 정밀 가변저항·멀티미터 두 대로 태양전지의 어두운 상태 I–V(β, I₀), 빛을 받을 때의 Isc·Voc·최대 전력·채움률을 재고, 편광판 두 장으로 빛의 세기를, 색 필터로 가장 긴 응답 파장을 알아냅니다.",
+             en:"With dry cells, a 10-turn precision resistor and two multimeters, measure the solar cell's dark I–V (β, I₀) and its Isc, Voc, maximum power and fill factor in the light; vary the light with two polarizers and find the longest working wavelength with colour filters."},
+       tags:["반도체","태양전지","I–V 특성"], tagsEn:["Semiconductors","Solar cell","I–V curve"],
+       files:{sim:"sim/apho2001_web.html",
+              src:{ko:"src/apho2001_sim_KO.py", en:"src/apho2001_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2001_E_EN.pdf"},
+              sol:"pdf/APhO_2001_S.pdf"}}
+    ]},
+   {y:2000,host:{ko:"인도네시아 · 카라와치",en:"Karawaci, Indonesia"},cc:"id",
+    problems:[
+      {id:"E1",
+       title:{ko:"기름의 밀도 구하기",en:"Determination of the Density of Oil"},
+       desc:{ko:"물에 띄운 둥근 바닥 시험관에 스포이트로 물과 기름을 넣어 가며 잠긴 깊이를 자로 재고, 뜨는 조건에서 기름의 밀도를 구합니다.",
+             en:"Float a round-bottomed test tube in water, add water and oil with a dropper, measure how deep it sinks with a ruler, and find the oil's density from the floating condition."},
+       tags:["유체","부력","밀도"], tagsEn:["Fluids","Buoyancy","Density"],
+       files:{sim:"sim/apho2000_E1_web.html",
+              src:{ko:"src/apho2000_E1_sim_KO.py", en:"src/apho2000_E1_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2000_E_EN.pdf"},
+              sol:"pdf/APhO_2000_S.pdf"}},
+      {id:"E2",
+       title:{ko:"슈테판–볼츠만 상수 구하기",en:"Determination of the Stefan–Boltzmann Constant"},
+       desc:{ko:"그을음을 입힌 원기둥을 전열선으로 데우고 열전대로 온도를 재며, 공급 전력과 가열·냉각 곡선에서 복사로 잃는 열을 갈라내 슈테판–볼츠만 상수를 구합니다.",
+             en:"Heat a soot-blackened cylinder electrically, follow its temperature with a thermocouple, and separate the radiated heat from the supplied power and the heating and cooling curves to find the Stefan–Boltzmann constant."},
+       tags:["열","복사","슈테판–볼츠만"], tagsEn:["Heat","Radiation","Stefan–Boltzmann"],
+       files:{sim:"sim/apho2000_E2_web.html",
+              src:{ko:"src/apho2000_E2_sim_KO.py", en:"src/apho2000_E2_sim_EN.py"},
+              pdf:{en:"pdf/APhO_2000_E_EN.pdf"},
+              sol:"pdf/APhO_2000_S.pdf"}}
+    ]}
   ]},
  eupho:{
   abbr:"EuPhO", since:2017,
@@ -4183,6 +4292,171 @@ const SIG_A19E2={
     const F=this.fr(t); for(let f=1;f<=F;f++){ const last=f===F; for(let y=22;y<=120;y+=4){ const x=f*5.2*Math.sqrt(Math.max(0,(y-21)*0.102)); if(x>175) continue; c.fillStyle=last?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(x),Y(y),last?2.6:1.6,0,7); c.fill(); } }
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; c.fillText("x →",X(160),h-7); c.textAlign="left"; c.fillText("y ↓",X(2)+2,Y(10));
   }};
+/* ── APhO 2005 E1 · the reflected spot's angle against the knob: a jump at every corner ── */
+const SIG_A05E1={
+  sim:"sim/apho2005_E1_web.html", tag:"APhO 2005 E1", span:30, rate:1,
+  capL:{ko:"반사각 β 대 물체의 각 α · 손잡이를 10°씩 돌리며",en:"Reflection angle β against the object's angle α · turning the knob 10° at a time"},
+  capR:{ko:"α",en:"α"},
+  a(t){ return Math.floor(t%this.span)*12; },
+  b(a){ const seg=[[0,1.98,-149],[140,1.73,-329],[220,1.78,-505]]; let s=seg[0]; for(const q of seg) if(a>=q[0]) s=q; const v=s[1]*a+s[2]; return ((v+180)%360+360)%360-180; },
+  read(t){ return this.a(t)+"°"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=a=>padL+a/360*(w-padL-pad), Y=b=>h-padB-(b+180)/360*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=0;a<=360;a+=60){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } c.moveTo(padL,Y(0)); c.lineTo(w-pad,Y(0)); c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.a(t); for(let a=0;a<=k;a+=12){ c.fillStyle=a===k?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.b(a)),a===k?4:2.5,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,120,240,360]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2005 E2 · the ring magnet rolling slowly between the aluminium bars ── */
+const SIG_A05E2={
+  sim:"sim/apho2005_E2_web.html", tag:"APhO 2005 E2", span:20, rate:1,
+  capL:{ko:"알루미늄 막대 사이를 구르는 자석 · 종단 속도",en:"The magnet rolling between the aluminium bars · terminal speed"},
+  capR:{ko:"스톱워치",en:"stopwatch"},
+  read(t){ return (t%this.span).toFixed(2)+" s"; },
+  paint(c,w,h,t){
+    c.fillStyle="#f4f2ec"; c.fillRect(0,0,w,h);
+    const x0=14, y0=h-18, x1=w-14, y1=26, u=(t%this.span)/this.span, sl=(y0-y1)/(x1-x0);
+    c.fillStyle="rgba(190,220,232,.9)"; c.beginPath(); c.moveTo(x0,y0); c.lineTo(x1,y1); c.lineTo(x1,y1+6); c.lineTo(x0,y0+6); c.fill();
+    PEN(c,"#223",.6); c.beginPath(); for(let i=0;i<=40;i++){ const x=x0+(x1-x0)*i/40, y=y0-(x-x0)*sl; c.moveTo(x,y); c.lineTo(x,y-(i%5===0?6:3)); } c.stroke();
+    const mx=x1-30-(x1-x0-60)*u, my=y0-(mx-x0)*sl-13, r=12; c.fillStyle="#6a7078"; c.beginPath(); c.arc(mx,my,r,0,7); c.fill(); c.fillStyle="#f4f2ec"; c.beginPath(); c.arc(mx,my,4,0,7); c.fill();
+    const a=-u*40; PEN(c,"#f2c14e",2.2); c.beginPath(); c.moveTo(mx+4*Math.cos(a),my+4*Math.sin(a)); c.lineTo(mx+11*Math.cos(a),my+11*Math.sin(a)); c.stroke();
+    c.fillStyle="rgba(170,178,186,.5)"; c.beginPath(); c.moveTo(x0+30,y0-30*sl); c.lineTo(x1-10,y1+10*sl); c.lineTo(x1-10,y1+10*sl-16); c.lineTo(x0+30,y0-30*sl-16); c.fill();
+  }};
+/* ── APhO 2004 E1 · the Hall voltage as the magnet goes round the protractor ── */
+const SIG_A04E1={
+  sim:"sim/apho2004_E1_web.html", tag:"APhO 2004 E1", span:19, rate:1,
+  capL:{ko:"홀 전압 U_MN 대 자석의 각 · y = 2 cm",en:"Hall voltage U_MN against the magnet's angle · y = 2 cm"},
+  capR:{ko:"U_MN",en:"U_MN"},
+  a(t){ return Math.floor(t%this.span)*10; },
+  U(a){ return 0.6+4.4*Math.sin((a-12)*Math.PI/180); },
+  read(t){ return this.U(this.a(t)).toFixed(2)+" mV"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=a=>padL+a/180*(w-padL-pad), Y=u=>h-padB-(u+1)/6.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=0;a<=180;a+=30){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } c.moveTo(padL,Y(0)); c.lineTo(w-pad,Y(0)); c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.a(t); for(let a=0;a<=k;a+=10){ c.fillStyle=a===k?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(a),Y(this.U(a)),a===k?4:2.5,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,90,180]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2004 E2 · the two traces on the scope, sliding into phase as f nears f0 ── */
+const SIG_A04E2={
+  sim:"sim/apho2004_E2_web.html", tag:"APhO 2004 E2", span:24, rate:1,
+  capL:{ko:"오실로스코프 · U_DA′(초록)와 U_D′A′(파랑)",en:"Oscilloscope · U_DA′ (green) and U_D′A′ (blue)"},
+  capR:{ko:"주파수",en:"frequency"},
+  f(t){ return 1+Math.floor(t%this.span)*0.25; },
+  read(t){ return this.f(t).toFixed(2)+" kHz"; },
+  paint(c,w,h,t){
+    c.fillStyle="#0d1a12"; c.fillRect(0,0,w,h);
+    PEN(c,"rgba(140,190,150,.3)",1); c.beginPath(); for(let i=0;i<=10;i++){ c.moveTo(i*w/10,0); c.lineTo(i*w/10,h); } for(let j=0;j<=8;j++){ c.moveTo(0,j*h/8); c.lineTo(w,j*h/8); } c.stroke();
+    const f=this.f(t), ph=Math.atan((f-3.4)*0.9), K=0.85/Math.sqrt(1+((f-3.4)*0.6)**2);
+    for(const [k,p,col] of [[1,0,"#7cf29a"],[K,ph,"#79c7ff"]]){ PEN(c,col,1.8); c.beginPath(); for(let x=0;x<=w;x+=2){ const y=h/2-k*h*0.38*Math.sin(x/w*4*Math.PI+p); x?c.lineTo(x,y):c.moveTo(x,y); } c.stroke(); }
+  }};
+/* ── APhO 2003 E1 · the voltages round the RC circuit on the 50 Hz supply ── */
+const SIG_A03E1={
+  sim:"sim/apho2003_E1_web.html", tag:"APhO 2003 E1", span:18, rate:1,
+  capL:{ko:"저항 RA·RB·RC를 바꿔 가며 축전기와 저항에 걸린 전압",en:"Voltage across the capacitor and the resistor · RA, RB, RC in turn"},
+  capR:{ko:"교류 전압계",en:"AC voltmeter"},
+  k(t){ return Math.floor((t%this.span)/6); },
+  V(k){ const R=[680,1500,3300][k], Xc=1/(2*Math.PI*50*2e-6), Z=Math.hypot(R,Xc); return [24*Xc/Z,24*R/Z]; },
+  read(t){ return this.V(this.k(t))[0].toFixed(2)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const padB=22, k=this.k(t), bw=(w-60)/6;
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(24,h-padB); c.lineTo(w-12,h-padB); c.stroke();
+    for(let i=0;i<=k;i++){ const [a,b]=this.V(i), x=30+i*bw*2; c.fillStyle="#2c6f9b"; c.fillRect(x,h-padB-a/26*(h-padB-14),bw*0.8,a/26*(h-padB-14)); c.fillStyle="#e8622a"; c.fillRect(x+bw*0.85,h-padB-b/26*(h-padB-14),bw*0.8,b/26*(h-padB-14)); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; ["RA","RB","RC"].forEach((s,i)=>c.fillText(s,30+i*bw*2+bw*0.8,h-7)); c.textAlign="left";
+  }};
+/* ── APhO 2003 E2 · the cube twisting on its two threads ── */
+const SIG_A03E2={
+  sim:"sim/apho2003_E2_web.html", tag:"APhO 2003 E2", span:20, rate:1,
+  capL:{ko:"두 실에 매단 정육면체의 비틀림 진동",en:"The cube's torsional oscillation on its two threads"},
+  capR:{ko:"시간",en:"time"},
+  read(t){ return (t%this.span).toFixed(1)+" s"; },
+  paint(c,w,h,t){
+    c.fillStyle="#f4f2ec"; c.fillRect(0,0,w,h);
+    const tt=t%this.span, a=0.5*Math.exp(-tt/25)*Math.cos(2*Math.PI*tt/1.6), cx=w/2, cy=h*0.62, s=Math.min(w,h)*0.22, k=Math.cos(a), q=Math.sin(a);
+    PEN(c,"#555",1); c.beginPath(); c.moveTo(cx-s*0.5,8); c.lineTo(cx-s*0.5*k,cy-s); c.moveTo(cx+s*0.5,8); c.lineTo(cx+s*0.5*k,cy-s); c.stroke();
+    c.fillStyle="#c9a64a"; c.fillRect(cx-s*k,cy-s,2*s*k,2*s); c.fillStyle="#b08a33"; c.fillRect(cx+s*k,cy-s,Math.abs(q)*s*0.9,2*s);
+    c.fillStyle="#3a3020"; c.beginPath(); c.ellipse(cx+s*0.2*k,cy,s*0.25*k,s*0.25,0,0,7); c.fill();
+  }};
+/* ── APhO 2002 E1 · p and s reflectance against the angle, the p dip at Brewster's angle ── */
+const SIG_A02E1={
+  sim:"sim/apho2002_E1_web.html", tag:"APhO 2002 E1", span:18, rate:1,
+  capL:{ko:"유리판의 반사율 · p(파랑)와 s(주황)",en:"Reflectance of the glass plate · p (blue) and s (orange)"},
+  capR:{ko:"입사각",en:"incidence"},
+  a(t){ return 5+Math.floor(t%this.span)*5; },
+  R(a){ const n=1.57, ti=a*Math.PI/180, tt=Math.asin(Math.sin(ti)/n), rs=(Math.cos(ti)-n*Math.cos(tt))/(Math.cos(ti)+n*Math.cos(tt)), rp=(n*Math.cos(ti)-Math.cos(tt))/(n*Math.cos(ti)+Math.cos(tt)); return [rp*rp,rs*rs]; },
+  read(t){ return this.a(t)+"°"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=a=>padL+a/90*(w-padL-pad), Y=r=>h-padB-r/0.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let a=0;a<=90;a+=15){ c.moveTo(X(a),pad); c.lineTo(X(a),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.a(t); for(let a=5;a<=k;a+=5){ const [p,s]=this.R(a); c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(a),Y(p),2.8,0,7); c.fill(); c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(a),Y(s),2.8,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const a of [0,45,90]) c.fillText(a+"°",X(a),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2002 E2 · the prong frozen by the strobe: three images at 3/2 of its frequency ── */
+const SIG_A02E2={
+  sim:"sim/apho2002_E2_web.html", tag:"APhO 2002 E2", span:16, rate:1,
+  capL:{ko:"섬광등에 멈춰 보이는 갈래 · 섬광 주파수에 따라 상의 개수가",en:"The prong frozen by the strobe · the number of images follows the flash rate"},
+  capR:{ko:"섬광/갈래",en:"flash/fork"},
+  r(t){ return [[1,1],[2,1],[3,2],[5,2]][Math.floor((t%this.span)/4)]; },
+  read(t){ const r=this.r(t); return r[0]+"/"+r[1]; },
+  paint(c,w,h,t){
+    c.fillStyle="#15181d"; c.fillRect(0,0,w,h);
+    const [p,q]=this.r(t), n=p, cx=w/2, A=w*0.18;
+    for(let i=0;i<n;i++){ const x=cx+A*Math.cos(2*Math.PI*i*q/p+0.4); c.fillStyle="rgba(220,226,232,"+(0.55+0.4*Math.random()).toFixed(2)+")"; c.fillRect(x-4,h*0.15,8,h*0.7); }
+    c.fillStyle="#555"; c.fillRect(cx-A*1.4,h*0.85,A*2.8,6);
+  }};
+/* ── APhO 2001 · the solar cell's I–V under the lamp ── */
+const SIG_A01E1={
+  sim:"sim/apho2001_web.html", tag:"APhO 2001 E1", span:24, rate:1,
+  capL:{ko:"빛을 받는 태양전지의 I–V · 부하를 바꿔 가며",en:"The lit solar cell's I–V · changing the load"},
+  capR:{ko:"전압",en:"voltage"},
+  V(t){ return Math.floor(t%this.span)*0.13; },
+  I(v){ return Math.max(0,3.2-1.6e-5*(Math.exp(4.4*v)-1)); },
+  read(t){ return this.V(t).toFixed(2)+" V"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=v=>padL+v/3.2*(w-padL-pad), Y=i=>h-padB-i/3.5*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let v=0;v<=3;v+=0.5){ c.moveTo(X(v),pad); c.lineTo(X(v),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.V(t); for(let v=0;v<=k+1e-9;v+=0.13){ c.fillStyle=Math.abs(v-k)<1e-9?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(v),Y(this.I(v)),Math.abs(v-k)<1e-9?4:2.5,0,7); c.fill(); }
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const v of [0,1,2,3]) c.fillText(v+" V",X(v),h-7); c.textAlign="left";
+  }};
+/* ── APhO 2000 E1 · the test tube sinking deeper drop by drop ── */
+const SIG_A00E1={
+  sim:"sim/apho2000_E1_web.html", tag:"APhO 2000 E1", span:24, rate:1,
+  capL:{ko:"잠긴 깊이 대 넣은 부피 · 물, 그다음 기름",en:"Depth sunk against the volume added · water, then oil"},
+  capR:{ko:"넣은 부피",en:"added"},
+  v(t){ return Math.floor(t%this.span); },
+  d(v){ return v<12?3.1+0.42*v:3.1+0.42*12+0.36*(v-12); },
+  read(t){ return this.v(t)+" cm³"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=v=>padL+v/24*(w-padL-pad), Y=d=>h-padB-d/13*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let v=0;v<=24;v+=4){ c.moveTo(X(v),pad); c.lineTo(X(v),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.v(t); for(let v=0;v<=k;v++){ c.fillStyle=v===k?"#e8622a":v<12?"#2c6f9b":"#c9a227"; c.beginPath(); c.arc(X(v),Y(this.d(v)),v===k?4:2.5,0,7); c.fill(); }
+  }};
+/* ── APhO 2000 E2 · the blackened cylinder heating, then cooling ── */
+const SIG_A00E2={
+  sim:"sim/apho2000_E2_web.html", tag:"APhO 2000 E2", span:30, rate:1,
+  capL:{ko:"그을린 원기둥의 온도 · 가열과 냉각",en:"The blackened cylinder's temperature · heating and cooling"},
+  capR:{ko:"온도",en:"temperature"},
+  tm(t){ return (t%this.span)*2; },
+  T(m){ return m<36?27+140*(1-Math.exp(-m/14)):27+(140*(1-Math.exp(-36/14)))*Math.exp(-(m-36)/16); },
+  read(t){ return this.T(this.tm(t)).toFixed(0)+" °C"; },
+  paint(c,w,h,t){
+    c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+    const pad=16, padL=30, padB=22, X=m=>padL+m/60*(w-padL-pad), Y=T=>h-padB-(T-20)/140*(h-padB-pad);
+    PEN(c,"#DCE7F0",.5); c.beginPath(); for(let m=0;m<=60;m+=10){ c.moveTo(X(m),pad); c.lineTo(X(m),h-padB); } c.stroke();
+    PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(padL,pad); c.lineTo(padL,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+    const k=this.tm(t); for(let m=0;m<=k;m+=1.5){ c.fillStyle="#2c6f9b"; c.beginPath(); c.arc(X(m),Y(this.T(m)),2.3,0,7); c.fill(); }
+    c.fillStyle="#e8622a"; c.beginPath(); c.arc(X(k),Y(this.T(k)),4,0,7); c.fill();
+    c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="center"; for(const m of [0,30,60]) c.fillText(m+" min",X(m),h-7); c.textAlign="left";
+  }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -4194,7 +4468,9 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_I12E1,SIG_I12E2,SIG_I13E1,SIG_I13E2,SIG_A17E1,
                 SIG_I16E1,SIG_I16E2,SIG_A19E1,SIG_A19E2,
                 SIG_A10E1,SIG_A10E2,SIG_A09E1,SIG_A09E2,
-                SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1];
+                SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1,
+                SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
+                SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
