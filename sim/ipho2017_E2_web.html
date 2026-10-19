@@ -149,8 +149,6 @@
     <label class="lbl" id="t-len"></label>
     <input type="range" id="rodLen" min="4" max="14" step="1" value="8">
     <p class="hint" id="t-rodhint"></p>
-    <h2 id="t-h-view"></h2>
-    <div class="row"><button id="vReset"></button><button id="vMeter"></button><button id="vTrap"></button><button id="vTilt"></button></div>
     <h2 id="t-h-note"></h2>
     <textarea id="note" rows="6" spellcheck="false"></textarea>
     <button id="btnSave"></button>
@@ -560,9 +558,9 @@ const T={
     sub:"가상 실험실 · 부품함에서 자석, 테슬라미터, 홀 센서 탐침, 흑연 막대를 꺼내 플랫폼 위에 놓고 직접 재세요. 계기는 읽은 값만 보여 주고, 프로그램은 아무것도 계산해 주지 않습니다.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayAlways:"클릭해서 집기 (여러 번)",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 좌클릭 집기·놓기·누르기, 끌어서 옮기기, 자석·나사 위에서 휠로 돌리기 / 테슬라미터·트랩·오른쪽 나사 클릭: 2D 보기 / 우클릭 되돌리기",
-    back:"◀ 3D로 돌아가기", hView:"보기", vReset:"3D 처음", vMeter:"테슬라미터", vTrap:"트랩", vTilt:"옆모습·나사",
-    mView:"2D 보기 — 우클릭하면 3D로 돌아갑니다.",
+    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 좌클릭 집기·놓기·누르기, 끌어서 옮기기, 자석·나사 위에서 휠로 돌리기 / 테슬라미터·트랩·오른쪽 나사 클릭: 그 부분의 확대 화면 / 빈 곳 더블클릭: 시점 처음대로 / 우클릭 되돌리기",
+    back:"◀ 3D로 돌아가기", 
+    mView:"확대 화면 — 우클릭하면 3D로 돌아갑니다.",
     tabs:["테슬라미터 · 탐침 끝","PDL 트랩 (정면 단면 · 위)","플랫폼 옆모습 · 나사 머리"], capR:" / 휠 확대 · 끌어 이동 / 우클릭: 3D로",
     caps:["테슬라미터 윗면과 탐침 끝 확대 (위에서, 10배) — 전원·범위 스위치, Probe 소켓을 클릭하세요",
           "PDL 트랩 확대 — 왼쪽: 자석 축 방향으로 본 단면 / 오른쪽: 위에서 본 모습 (트랩에 인쇄된 눈금 mm) · 이쑤시개로 막대를 밀 수 있습니다",
@@ -595,9 +593,9 @@ const T={
     sub:"Virtual laboratory · take the magnets, the Teslameter, the Hall sensor probe and the graphite rods out of the parts box, put them on the platform and measure. The instruments show readings only; nothing is computed for you.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayAlways:"click to pick up (reusable)",
     trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (3D) — drag empty space or right-drag to turn, Shift- or middle-drag to pan, wheel to zoom / L-click pick up, put down, press, drag to move, wheel over the magnet or the screw to turn it / click the Teslameter, the trap or the right-hand screw for 2D / R-click return",
-    back:"◀ back to 3D", hView:"View", vReset:"3D home", vMeter:"Teslameter", vTrap:"trap", vTilt:"side · screw",
-    mView:"2D view — R-click to go back to 3D.",
+    cap:"the bench (3D) — drag empty space or right-drag to turn, Shift- or middle-drag to pan, wheel to zoom / L-click pick up, put down, press, drag to move, wheel over the magnet or the screw to turn it / click the Teslameter, the trap or the right-hand screw for its close-up / double-click empty space: reset the view / R-click return",
+    back:"◀ back to 3D", 
+    mView:"Close-up — R-click to go back to 3D.",
     tabs:["Teslameter · probe tip","PDL trap (cross section · top)","platform side view · screw head"], capR:" / wheel zoom · drag to pan / R-click: back to 3D",
     caps:["top of the Teslameter and the probe tip magnified (top view, 10×) — click the power and range switches and the Probe socket",
           "the PDL trap magnified — left: cross section along the magnet axis / right: top view (scale printed on the trap, mm) · push the rod with the toothpick",
@@ -1493,14 +1491,13 @@ function renderStatus(){
 $("rodLen").oninput=e=>{ S.rodLen=+e.target.value; $("t-len").textContent=d().len(S.rodLen); };
 $("btnSS").onclick=()=>watchPress("ss"); $("btnLap").onclick=()=>watchPress("lr");
 $("btnSave").onclick=()=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([$("note").value],{type:"text/plain"})); a.download="IPhO2017_E2_notebook.txt"; a.click(); say("saved"); };
-$("vReset").onclick=()=>{ closeView(); camReset(); };
-$("vMeter").onclick=()=>openView("meter"); $("vTrap").onclick=()=>openView("trap"); $("vTilt").onclick=()=>openView("tilt");
+/* a double-click on empty space puts the 3-D view back as it was */
+cv.addEventListener("dblclick",e=>{ if(view||hand) return; const p=pos(e), id=pick3(p[0],p[1]); if(!id||id==="desk") camReset(); });
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
   $("t-h-watch").textContent=t.hWatch; $("btnSS").textContent=t.ss; $("btnLap").textContent=t.lapReset;
   $("t-h-rod").textContent=t.hRod; $("t-len").textContent=t.len(S.rodLen); $("t-rodhint").textContent=t.rodHint;
-  $("t-h-view").textContent=t.hView; $("vReset").textContent=t.vReset; $("vMeter").textContent=t.vMeter; $("vTrap").textContent=t.vTrap; $("vTilt").textContent=t.vTilt;
   $("t-h-note").textContent=t.hNote; $("note").placeholder=t.notePh; $("btnSave").textContent=t.save; $("t-hint").textContent=t.hint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2017 E2 — 평행 쌍극자선 자기 트랩 · HaslaLab":"IPhO 2017 E2 — Parallel Dipole Line Magnetic Trap · HaslaLab";

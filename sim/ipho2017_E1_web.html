@@ -153,8 +153,6 @@
     <h2 id="t-h-paper"></h2>
     <button id="btnTrace"></button>
     <div class="row"><button id="btnFresh"></button><button id="btnPng"></button></div>
-    <h2 id="t-h-view"></h2>
-    <div class="row"><button id="vReset"></button><button id="vScreen"></button><button id="vCell"></button><button id="vRail"></button></div>
     <p class="hint" id="t-hint"></p>
     <div class="status" id="status"></div>
   </aside>
@@ -558,18 +556,18 @@ function pick3(x,y){
 const T={
   ko:{
     title:"IPhO 2017 실험 1 — 레이저 편향으로 소금물의 굴절률 기울기와 확산계수 재기",
-    sub:"가상 실험실 · 책상 위의 장비를 3D로 봅니다. 레이저 모듈·확산 셀·스크린을 레일에 놓고, 소금물 병과 증류수·피펫을 책상에 꺼내 쓰세요. 스크린·셀·레일을 클릭하면 2D로 자세히 볼 수 있습니다. 프로그램은 아무것도 계산해 주지 않습니다.",
+    sub:"가상 실험실 · 책상 위의 장비를 3D로 봅니다. 레이저 모듈·확산 셀·스크린을 레일에 놓고, 소금물 병과 증류수·피펫을 책상에 꺼내 쓰세요. 스크린·셀·레일을 클릭하면 그 부분의 확대 화면이 열립니다. 프로그램은 아무것도 계산해 주지 않습니다.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"책상 위", trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 받침을 끌면 레일을 따라 이동, 레이저·스크린을 위아래로 끌거나 휠로 높이 / 셀을 끌면 들어 올림 / 스크린·셀·레일 클릭: 2D 보기 / 우클릭 되돌리기",
+    cap:"실험대 (3D) — 빈 곳을 끌거나 우클릭으로 끌면 회전, Shift·휠 버튼 끌기 이동, 휠 확대 / 받침을 끌면 레일을 따라 이동, 레이저·스크린을 위아래로 끌거나 휠로 높이 / 셀을 끌면 들어 올림 / 스크린·셀·레일 클릭: 확대 화면 / 빈 곳 더블클릭: 시점 처음대로 / 우클릭 되돌리기",
     cap2:{screen:"스크린 정면 (2D) — 모눈종이 30 × 30 cm · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
-          cell:"확산 셀 단면 (2D, 옆에서) — 레이저 선이 셀을 지나는 모습 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
-          rail:"레일 옆면 (2D) — 받침의 흰 지시선과 레일 눈금 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
+          cell:"확산 셀 확대 — 실험대의 3D 셀을 레이저 쪽 옆에서 본 모습: 넓은 유리면 너머의 소금물·물 층과 흰 채움선 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
+          rail:"레일 옆면 확대 — 실험대의 3D 레일을 정면 옆에서 본 모습: 받침의 흰 지시선과 레일 눈금 (확대하면 mm 눈금) · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
     back:"◀ 3D로 돌아가기",
     hTime:"시간 배속", jump:"확산 30분 지점으로 건너뛰기",
     hLaser:"1. 선 레이저 모듈", focus:"초점 (레이저 앞쪽 캡 — 휠로도 돌림)", theta:"레이저 회전 (선의 기울기)",
     hWatch:"7. 스톱워치", ss:"시작 / 정지", rst:"리셋",
     hPaper:"8. 모눈종이", trace:"연필로 레이저 선을 따라 그리기", fresh:"새 종이", png:"종이를 PNG로 저장",
-    hView:"보기", vReset:"3D 처음", vScreen:"스크린", vCell:"셀", vRail:"레일 눈금",
+   
     hint:"• 소금물 병은 책상에 꺼낸 뒤, 병을 클릭해 들고 셀을 클릭하면 흰 선까지 붓습니다.\n• 피펫을 들고 증류수 병을 클릭하면 물을 빨아들이고, 셀 위에서 마우스를 누르고 있으면 방울이 떨어집니다.\n• 셀을 비울 때는 셀을 끌어 들어 올린 뒤 폐액통을 클릭하세요. 빨리 움직이면 출렁여서 책상에 쏟아집니다 — 휴지(11)를 뽑아 문질러 닦으세요.\n• 비운 셀 안쪽은 젖어 있습니다. 칼+휴지(10)를 들고 셀을 클릭하면 닦입니다 (젖은 채 부으면 소금물이 묽어집니다).\n• 배터리 홀더를 책상에 꺼내 클릭하면 레이저의 집게 전선이 단자에 물립니다. 그다음 홀더의 빨간 버튼을 눌러 레이저를 켜고 끕니다.\n• 스톱워치는 책상에 꺼내 놓아야 잴 수 있습니다.\n• Z₀·d·Z는 레일 눈금에서, ξ·δ는 모눈에서 직접 읽으세요. 셀: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. 선 레이저 모듈", cell:"2. 확산 셀 (홀더)", screen:"3. 스크린 (홀더)", s23:"5. 소금물 23 g / 150 mL", s28:"5. 소금물 28 g / 150 mL", s33:"5. 소금물 33 g / 150 mL",
            water:"6. 증류수 (아쿠아데스트)", watch:"7. 스톱워치", paper:"8. 모눈종이", pipette:"9. 피펫", batt:"12. 배터리 홀더", bucket:"13. 폐액통 (양동이)", knife:"10. 칼 + 휴지 (셀 닦기)", tissue:"11. 휴지", sheet:"휴지 한 장"},
@@ -585,7 +583,7 @@ const T={
        noPaperT:"스크린에 모눈종이가 없습니다.", noLine:"스크린에 레이저 선이 보이지 않습니다.", traced:"레이저 선을 연필로 따라 그렸습니다.", fresh:"새 모눈종이로 바꿨습니다.",
        wsStart:"스톱워치 시작", wsStop:"스톱워치 정지", wsReset:"스톱워치 리셋", needWatch:"먼저 스톱워치를 책상에 꺼내세요.",
        jumped:"확산이 30분 지점까지 진행되었습니다.", noDiff:"아직 확산이 시작되지 않았습니다.", height:(n,v)=>n+" 높이 조절", focusT:"레이저 앞쪽 초점 캡을 돌렸습니다 — 스크린의 선 굵기를 보세요.",
-       cellFirst:"셀에서 소금물을 먼저 비우세요 (셀을 끌어 들고 폐액통 클릭).", view:"2D 보기 — 휠로 확대, 끌어서 이동, 우클릭하면 3D로 돌아갑니다.",
+       cellFirst:"셀에서 소금물을 먼저 비우세요 (셀을 끌어 들고 폐액통 클릭).", view:"확대 화면 — 휠로 확대, 끌어서 이동, 우클릭하면 3D로 돌아갑니다.",
        cellLift:"셀을 들었습니다 — 천천히 옮기세요. 폐액통을 클릭하면 비우고, Cell Base를 클릭하면 다시 꽂습니다. (우클릭: 제자리에)",
        cellBack:"셀을 다시 홀더에 꽂았습니다.", dumped:"셀을 폐액통에 비웠습니다. 안쪽에 물기가 남아 있습니다.", dumpEmpty:"셀이 이미 비어 있습니다.",
        needSeat:"셀은 레일 위 Cell Base의 홀더에 꽂습니다.", cellRclick:"셀은 끌어서 들어 올린 뒤 폐액통에 비우세요.", cellOutNow:"셀이 홀더에 없습니다 — 먼저 셀을 다시 꽂으세요.",
@@ -599,18 +597,18 @@ const T={
   },
   en:{
     title:"IPhO 2017 Experiment 1 — Refractive index gradient and diffusion coefficient of salt solution from laser deflection",
-    sub:"Virtual laboratory · the apparatus on the desk in 3D. Put the line laser module, the diffusion cell and the screen on the rail and take the salt solution bottles, the distilled water and the pipette out onto the desk. Click the screen, the cell or the rail for a detailed 2D view. Nothing is computed for you.",
+    sub:"Virtual laboratory · the apparatus on the desk in 3D. Put the line laser module, the diffusion cell and the screen on the rail and take the salt solution bottles, the distilled water and the pipette out onto the desk. Click the screen, the cell or the rail for its close-up. Nothing is computed for you.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"on the desk", trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
     cap:"the bench (3D) — drag empty space or right-drag to turn, Shift- or middle-drag to pan, wheel to zoom / drag a base along the rail, drag the laser or screen up and down (or wheel) for height / drag the cell to lift it / click the screen, cell or rail for 2D / R-click return",
     cap2:{screen:"the screen face on (2D) — millimetre paper 30 × 30 cm · wheel: zoom, drag: pan / R-click: back to 3D",
-          cell:"the diffusion cell in section (2D, side view) — the laser line crossing the cell · wheel: zoom, drag: pan / R-click: back to 3D",
-          rail:"the side of the rail (2D) — white index lines of the bases and the rail scale · wheel: zoom, drag: pan / R-click: back to 3D"},
+          cell:"the diffusion cell close up — the 3D cell on the bench seen from the laser side: the salt solution and water layers behind the big glass face and the white fill line · wheel: zoom, drag: pan / R-click: back to 3D",
+          rail:"the side of the rail close up — the 3D rail on the bench seen square from the front: the bases' white index lines on the rail scale (zoom in for millimetres) · wheel: zoom, drag: pan / R-click: back to 3D"},
     back:"◀ back to 3D",
     hTime:"Time scale", jump:"jump to 30 min of diffusion",
     hLaser:"1. Line laser module", focus:"focus (the cap at the front — or the wheel over it)", theta:"rotation of the laser (angle of the line)",
     hWatch:"7. Stopwatch", ss:"start / stop", rst:"reset",
     hPaper:"8. Millimetre paper", trace:"trace the laser line with a pencil", fresh:"fresh sheet", png:"save the sheet as PNG",
-    hView:"View", vReset:"3D home", vScreen:"screen", vCell:"cell", vRail:"rail scale",
+   
     hint:"• Take the salt solution bottles out onto the desk; click a bottle to lift it, then click the cell to fill it to the white line.\n• Lift the pipette and click the distilled water bottle to draw water; hold the mouse down over the cell to release drops.\n• To empty the cell, drag it to lift it and click the waste bucket. Move it too fast and it sloshes over onto the desk — pull a tissue (11) and rub the spill dry.\n• An emptied cell is wet inside. Lift the knife + tissue (10) and click the cell to wipe it (pour into a wet cell and the solution is slightly diluted).\n• Put the battery holder on the desk and click it: the laser's alligator clips go onto its terminals. Then press the red button on the holder to turn the laser on and off.\n• The stopwatch only works once it is out on the desk.\n• Read Z₀, d and Z off the rail scale and ξ, δ off the millimetre grid. Cell: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. Line laser module", cell:"2. Diffusion cell (holder)", screen:"3. Screen (holder)", s23:"5. Salt solution 23 g / 150 mL", s28:"5. Salt solution 28 g / 150 mL", s33:"5. Salt solution 33 g / 150 mL",
            water:"6. Distilled water (aquadest)", watch:"7. Stopwatch", paper:"8. Millimetre paper", pipette:"9. Pipette", batt:"12. Battery holder", bucket:"13. Waste bucket", knife:"10. Knife + tissue (cell cleaner)", tissue:"11. Tissue", sheet:"a tissue"},
@@ -626,7 +624,7 @@ const T={
        noPaperT:"There is no paper on the screen.", noLine:"There is no laser line on the screen.", traced:"The laser line traced with a pencil.", fresh:"Fresh sheet of paper.",
        wsStart:"stopwatch started", wsStop:"stopwatch stopped", wsReset:"stopwatch reset", needWatch:"Take the stopwatch out onto the desk first.",
        jumped:"The diffusion has advanced to 30 min.", noDiff:"The diffusion has not started yet.", height:(n,v)=>n+" height", focusT:"Turned the focusing cap at the front of the laser — watch the line width on the screen.",
-       cellFirst:"Empty the salt solution out of the cell first (drag the cell up, click the bucket).", view:"2D view — wheel to zoom, drag to pan, R-click to go back to 3D.",
+       cellFirst:"Empty the salt solution out of the cell first (drag the cell up, click the bucket).", view:"Close-up — wheel to zoom, drag to pan, R-click to go back to 3D.",
        cellLift:"Cell lifted — move it gently. Click the waste bucket to empty it, click the Cell Base to put it back. (R-click: back in place)",
        cellBack:"The cell is back in its holder.", dumped:"The cell was emptied into the waste bucket. It is still wet inside.", dumpEmpty:"The cell is already empty.",
        needSeat:"The cell goes back into the holder on the Cell Base on the rail.", cellRclick:"Drag the cell to lift it, then empty it into the waste bucket.", cellOutNow:"The cell is not in its holder — put it back first.",
@@ -799,8 +797,12 @@ function drawRail(){
     ctx.strokeStyle="rgba(240,240,240,.85)"; ctx.lineCap="butt";
     for(let c=0;c<=85;c++){ const L=c%10===0?0.75:c%5===0?0.55:0.32;
       const a=P3(c,y1,z), b=P3(c,y1-L,z); ctx.lineWidth=c%5===0?1.1:0.7; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+    if(CAM.k>14){ ctx.lineWidth=Math.min(1,CAM.k/40);
+      for(let mm=0;mm<850;mm++){ if(mm%10===0) continue; const L=mm%5===0?0.25:0.16, a=P3(mm/10,y1,z), b=P3(mm/10,y1-L,z); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke(); }
+    }
   },{bias:0.5,layer:-1});
   for(let c=0;c<=80;c+=10) text3([c,RT-1.0,3.03],[1,0,0],[0,1,0],String(c),0.5,"#f0f0f0",{align:"center",layer:-1});
+  if(CAM.k>14) for(let c=1;c<=85;c++) if(c%10) text3([c,RT-1.0,3.03],[1,0,0],[0,1,0],String(c),0.36,"#d8d8d8",{align:"center",layer:-1});   /* seen close: every centimetre */
 }
 function drawBase(k,label){
   const c=baseC(k), x=refX(k), y0=RT, y1=RT+BASE_T;
@@ -882,7 +884,17 @@ function cellLiquid(x0,x1,y0,z0,z1,tilt){
   const lay=(lo,hi,col,al)=>{ const pts=[[h(lo,lz0),lz0],[h(lo,lz1),lz1],[h(hi,lz1),lz1],[h(hi,lz0),lz0]];
     if(pts[2][0]-pts[1][0]<0.01&&pts[3][0]-pts[0][0]<0.01) return;
     prism3("x",lx0,lx1,pts,col,{alpha:al,cull:true,id:"cell"}); };
-  if(S.filled&&S.saltLv>0.02){ lay(0.15,S.saltLv,"#6aaed6",0.78); if(S.wlevel>0.01) lay(S.saltLv,S.saltLv+S.wlevel,"#cbe8f7",0.6); }
+  if(S.filled&&S.saltLv>0.02&&S.tFirst&&S.pour&&S.wlevel>0.01){
+    /* water on salt solution: the boundary spreads as erfc, seen through the glass as the blue fading into the pale water */
+    const yi=S.saltLv+S.pour.dh, w=2*Math.sqrt(S.pour.D*Math.max(S.tDiff+S.mixT,1)), top=S.saltLv+S.wlevel;
+    face([[lx0,h(top,lz0),lz0],[lx0,h(top,lz1),lz1],[lx1,h(top,lz1),lz1],[lx1,h(top,lz0),lz0]],{fill:"#cbe8f7",alpha:0.6,flat:true,cull:false,id:"cell"});   /* the surface */
+    /* thin bands painted on both big faces (each seen only from its own side) */
+    const n=Math.min(120,Math.max(24,Math.ceil((top-0.15)/0.06)));
+    for(let i=0;i<n;i++){ const lo=0.15+(top-0.15)*i/n, hi=0.15+(top-0.15)*(i+1)/n, f=0.5*erfc(((lo+hi)/2-yi)/w);
+      const col="#"+[[203,106],[232,174],[247,214]].map(([c0,c1])=>Math.round(c0+(c1-c0)*f).toString(16).padStart(2,"0")).join("");
+      for(const [xf,nx] of [[lx0,-1],[lx1,1]])
+        face(orient([[xf,h(lo,lz0),lz0],[xf,h(lo,lz1),lz1],[xf,h(hi,lz1),lz1],[xf,h(hi,lz0),lz0]],[nx,0,0]),{fill:col,alpha:0.45+0.33*f,flat:true,cull:true,id:"cell",bias:0.3}); } }
+  else if(S.filled&&S.saltLv>0.02){ lay(0.15,S.saltLv,"#6aaed6",0.78); if(S.wlevel>0.01) lay(S.saltLv,S.saltLv+S.wlevel,"#cbe8f7",0.6); }
   else if(S.cellWet){ for(let i=0;i<5;i++) sphere3([x1-0.13,y0+1.2+i*1.7,z0+0.9+((i*37)%5)],0.1,"#d6eef9",{lo:"#9cc8dc"}); }
 }
 /* the diffusion cell (item 2) sits in a thick black frame with a window over each big face,
@@ -1098,68 +1110,31 @@ function view2Screen(W,H){
 function erfc(x){ const z=Math.abs(x), t=1/(1+0.5*z);
   const r=t*Math.exp(-z*z-1.26551223+t*(1.00002368+t*(0.37409196+t*(0.09678418+t*(-0.18628806+t*(0.27886807+t*(-1.13520398+t*(1.48851587+t*(-0.82215223+t*0.17087277)))))))));
   return x>=0?r:2-r; }
-function view2Cell(W,H){
-  ctx.fillStyle="#15181d"; ctx.fillRect(0,0,W,H);
-  if(!ST.on.cell){ txt(d().items.cell,W/2,H/2,"#888",15,"center"); return; }
-  if(S.cellOut){ txt(d().m.cellOutNow,W/2,H/2,"#f2c14e",15,"center"); return; }
-  /* side elevation (along the beam) around the cell, 1 cm = k px */
-  const k=Math.min((H-60)/(CELL_FOOT+CELL_H+3.5),(W-60)/22), x0=S.cellX-8, ox=30, oy=H-30;
-  const X=x=>ox+(x-x0)*k, Y=y=>oy-y*k;                       /* y measured from the rail top */
-  ctx.fillStyle="#2a2b2f"; ctx.fillRect(X(x0),Y(0),20*k,0.8*k);
-  ctx.fillStyle="#1d1e21"; ctx.fillRect(X(S.cellX-2),Y(CELL_FOOT),4*k+CELL_D*k,(CELL_FOOT-0.0)*k);
-  const gx=X(S.cellX), gw=CELL_D*k, gb=Y(CELL_FOOT), gt=Y(CELL_FOOT+CELL_H);
-  /* liquid with the concentration seen as colour */
-  if(S.filled){
-    const yint=CELL_FOOT+S.saltLv+(S.pour?S.pour.dh:0), top=CELL_FOOT+S.saltLv+S.wlevel;
-    const s=S.tFirst&&S.pour?2*Math.sqrt(S.pour.D*Math.max(S.tDiff+S.mixT,1)):0.02;
-    for(let py=Math.floor(Y(top));py<gb;py++){ const y=(oy-py)/k;
-      const f=S.wlevel>0.01?0.5*erfc((y-yint)/s):1; const a=[203,232,247], b=[70,150,205];
-      ctx.fillStyle=`rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`; ctx.fillRect(gx+2,py,gw-4,1.2); }
-  }
-  ctx.strokeStyle="#9cc8dc"; ctx.lineWidth=2; ctx.strokeRect(gx,gt,gw,gb-gt);
-  ctx.strokeStyle="#fff"; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(gx-8,Y(CELL_FOOT+FILL_LINE)); ctx.lineTo(gx+gw+8,Y(CELL_FOOT+FILL_LINE)); ctx.stroke();
-  /* the laser fan entering the cell */
-  if(beamOn()&&S.laserX<S.cellX){ const ex=X(S.laserX), ey=Y(S.laserY);
-    ctx.strokeStyle="rgba(255,50,40,.55)"; ctx.lineWidth=1;
-    for(let i=0;i<=10;i++){ const yy=Y(S.laserY+(i-5)*0.9*(S.cellX-S.laserX)/12); ctx.beginPath(); ctx.moveTo(Math.max(ex,0),ey+(Math.max(0,-ex))*(yy-ey)/(X(S.cellX)-ex)); ctx.lineTo(gx+gw,yy); ctx.lineTo(W,yy+(W-gx-gw)*(yy-ey)/(gx+gw-ex)); ctx.stroke(); } }
-  ctx.fillStyle="#bbb"; ctx.font="12px "+FONT; ctx.textAlign="left";
-  ctx.fillText("0.8 cm",gx+gw+12,gt+14); ctx.fillText(d().items.cell,gx+gw+12,gt+32);
+/* the close-ups of the cell and of the rail are the 3-D bench itself, looked at square from the side and
+   magnified: the rail from the front (its scale and the bases' index marks), the cell from the laser side
+   (through its big glass face). Only what stands there is drawn, so nothing nearer the eye hides it. */
+function sideCam(v,W,H){
+  if(v==="rail") return {yaw:0,pitch:0.02,k:(W-40)/96,tx:42.5,ty:RT+0.22*H/((W-40)/96),tz:0};
+  const [x0,,y0]=cellBox(); return {yaw:-Math.PI/2,pitch:0.06,k:Math.min((H-40)/(CELL_H+5),(W-40)/(CELL_W+10)),tx:x0+CELL_D/2,ty:y0+CELL_H/2-1.2,tz:0};
 }
-function view2Rail(W,H){
-  ctx.fillStyle="#d4cdbf"; ctx.fillRect(0,0,W,H);
-  const k=(W-60)/93, ox=30+4*k, ry=H*0.62, X=x=>ox+x*k, Y=y=>ry-y*k;
-  const scene=()=>{
-    ctx.fillStyle="#b08f63"; ctx.fillRect(-1e4,ry+1.2*k+RT*k,3e4,1e4);
-    ctx.fillStyle="#161616"; ctx.fillRect(X(-4),ry,93*k,1.2*k);
-    ctx.strokeStyle="rgba(240,240,240,.9)";
-    for(let mm=0;mm<=850;mm++){ const x=X(mm/10), L=mm%50===0?0.75:mm%10===0?0.55:mm%5===0?0.4:0.25; ctx.lineWidth=mm%10===0?0.9:0.45;
-      ctx.beginPath(); ctx.moveTo(x,ry+0.05*k); ctx.lineTo(x,ry+L*k); ctx.stroke(); }
-    ctx.fillStyle="#f2f2f2"; ctx.font="600 "+(0.42*k)+"px "+MONO; ctx.textAlign="center"; ctx.textBaseline="alphabetic";
-    for(let c=0;c<=85;c+=5) ctx.fillText(String(c),X(c),ry+1.12*k);
-    for(const kk of ["laser","cell","screen"]) if(ST.on[kk]){
-      const c=baseC(kk), x=refX(kk); ctx.fillStyle="#232428"; ctx.fillRect(X(c-BASE_W/2),Y(BASE_T),BASE_W*k,BASE_T*k);
-      ctx.strokeStyle="#fff"; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(X(x),Y(BASE_T)); ctx.lineTo(X(x),ry+0.3*k); ctx.stroke();
-      ctx.fillStyle="#fff"; ctx.beginPath(); ctx.moveTo(X(x)-0.25*k,ry); ctx.lineTo(X(x)+0.25*k,ry); ctx.lineTo(X(x),ry+0.4*k); ctx.fill(); }
-    if(ST.on.laser){ const x=S.laserX, y=S.laserY, top=LASER_Y_RANGE[1]+1.7;
-      ctx.fillStyle="#1d1e21"; ctx.fillRect(X(x-4.75),Y(top),0.6*k,(top-BASE_T)*k);
-      ctx.fillStyle="#aeb3b8"; for(const sy of [1.7,top-0.8]) ctx.fillRect(X(x-6.6),Y(sy)-0.07*k,2.45*k,0.14*k);
-      ctx.fillStyle="#141414"; for(const sy of [1.7,top-0.8]) ctx.fillRect(X(x-7.0),Y(sy)-0.36*k,0.4*k,0.72*k);
-      ctx.fillStyle="#2a2c30"; ctx.fillRect(X(x-4.15),Y(y+1),0.8*k,2*k);
-      ctx.fillStyle="#121315"; ctx.fillRect(X(x-3.35),Y(y+0.55),2.4*k,1.1*k);
-      ctx.fillStyle="#202225"; ctx.fillRect(X(x-0.95),Y(y+0.78),0.95*k,1.56*k); ctx.fillRect(X(x-0.93),Y(y+1.35),0.92*k,0.6*k); }
-    if(ST.on.cell){ const [x0,x1]=cellBox(); ctx.fillStyle="#2a2c30"; ctx.fillRect(X(baseC("cell")-1.0),Y(CELL_FOOT-0.35),2.0*k,(CELL_FOOT-0.35-BASE_T)*k);
-      if(!S.cellOut){ ctx.fillStyle="#1d1e21"; ctx.fillRect(X(x0-0.32),Y(CELL_FOOT+CELL_H-0.35),(CELL_D+0.64)*k,(CELL_H+0.35-0.35+0.35)*k);
-      ctx.fillStyle="rgba(200,230,245,.85)"; ctx.fillRect(X(x0),Y(CELL_FOOT+CELL_H),CELL_D*k,CELL_H*k);
-      if(S.filled){ ctx.fillStyle="#6aaed6"; ctx.fillRect(X(x0),Y(CELL_FOOT+S.saltLv),CELL_D*k,S.saltLv*k);
-        ctx.fillStyle="#cbe8f7"; ctx.fillRect(X(x0),Y(CELL_FOOT+S.saltLv+S.wlevel),CELL_D*k,S.wlevel*k); } }
-      if(!S.cellOut){ ctx.strokeStyle="#fff"; ctx.beginPath(); ctx.moveTo(X(x0)-3,Y(CELL_FOOT+FILL_LINE)); ctx.lineTo(X(x1)+3,Y(CELL_FOOT+FILL_LINE)); ctx.stroke(); } }
-    if(ST.on.screen){ const x=S.screenX; ctx.fillStyle="#999"; ctx.fillRect(X(baseC("screen"))-0.4*k,Y(S.screenY-15),0.8*k,(S.screenY-15-BASE_T)*k);
-      ctx.fillStyle="#0e0f11"; ctx.fillRect(X(x),Y(S.screenY+15),0.7*k,30*k); if(ST.on.paper){ ctx.fillStyle="#fbfcf7"; ctx.fillRect(X(x)-2,Y(S.screenY+15)+3,2,30*k-6); } }
-    if(beamOn()){ const ex=X(S.laserX), ey=Y(S.laserY), xe=ST.on.screen?X(S.screenX):X(S.laserX+40);
-      const h=ST.on.screen&&onScreen()?15*k:10*k, yc=ST.on.screen&&onScreen()?Y(S.screenY):ey;
-      ctx.fillStyle="rgba(255,40,30,.13)"; ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(xe,yc-h); ctx.lineTo(xe,yc+h); ctx.fill(); }
-  };
-  scene();
+/* the laser's light sheet where it meets the cell's near glass face: a red line tilted by θ */
+function cellBeamLine(){
+  if(!beamOn()||!(S.cellX>S.laserX+0.5)) return;
+  const E=[S.laserX+0.02,RT+S.laserY,0], X=S.cellX-0.02, L=X-E[0], th=S.theta*Math.PI/180, hh=L*0.25;
+  const a=[X,E[1]-hh*Math.sin(th),-hh*Math.cos(th)], b=[X,E[1]+hh*Math.sin(th),hh*Math.cos(th)];
+  custom3([X,E[1],0],ctx=>{ const p=P3(...a), q=P3(...b); ctx.strokeStyle="rgba(255,50,35,.9)"; ctx.lineWidth=Math.max(1.5,(0.06+0.25*S.focus)*CAM.k); ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); },{bias:3});
+}
+function view3Side(v,W,H){
+  const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  if(v==="cell"){ if(!ST.on.cell){ txt(d().items.cell,W/2,H/2,"#888",15,"center"); return; } if(S.cellOut){ txt(d().m.cellOutNow,W/2,H/2,"#f2c14e",15,"center"); return; } }
+  const keep=Object.assign({},CAM), c=sideCam(v,W,H);
+  Object.assign(CAM,c,{k:c.k*V2.k,px:V2.k*W/2+V2.px-W/2,py:V2.k*H/2+V2.py-H/2});
+  begin3(); drawRail();
+  if(v==="rail"){ if(ST.on.laser) drawLaser(); if(ST.on.cell) drawCell(); if(ST.on.screen) drawScreen(); drawBeam(); }
+  else { drawCell(); cellBeamLine(); }
+  render3(ctx);
+  Object.assign(CAM,keep);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1422,8 +1397,8 @@ $("btnFresh").onclick=()=>{ S.pencil.length=0; say("fresh"); };
 $("btnPng").onclick=()=>{ const N=1500, off=document.createElement("canvas"); off.width=N; off.height=N; const c=off.getContext("2d");
   const pv=ST.on.paper, lv=S.sw; ST.on.paper=true; S.sw=false; c.translate(0,N); c.scale(N/30,-N/30); paperScene(c); ST.on.paper=pv; S.sw=lv;
   const a=document.createElement("a"); a.download="mm_paper.png"; a.href=off.toDataURL("image/png"); a.click(); };
-$("vReset").onclick=()=>{ closeView(); camReset(); };
-$("vScreen").onclick=()=>openView("screen"); $("vCell").onclick=()=>openView("cell"); $("vRail").onclick=()=>openView("rail");
+/* a double-click on empty space puts the 3-D view back as it was */
+cv.addEventListener("dblclick",e=>{ if(view||hand||carry) return; const p=pos(e), id=pick3(p[0],p[1]); if(!id||id==="desk") camReset(); });
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
@@ -1431,7 +1406,6 @@ function applyLang(){
   $("t-h-laser").textContent=t.hLaser; $("t-focus").textContent=t.focus; $("t-theta").textContent=t.theta;
   $("t-h-watch").textContent=t.hWatch; $("btnSS").textContent=t.ss; $("btnRst").textContent=t.rst;
   $("t-h-paper").textContent=t.hPaper; $("btnTrace").textContent=t.trace; $("btnFresh").textContent=t.fresh; $("btnPng").textContent=t.png;
-  $("t-h-view").textContent=t.hView; $("vReset").textContent=t.vReset; $("vScreen").textContent=t.vScreen; $("vCell").textContent=t.vCell; $("vRail").textContent=t.vRail;
   $("t-hint").textContent=t.hint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2017 E1 — 소금 용액의 광학 · HaslaLab":"IPhO 2017 E1 — Optics of a Salt Solution · HaslaLab";
@@ -1499,10 +1473,8 @@ function frame(){
   $("clock").textContent=ST.on.watch?fmtWatch(S.watch.t):"--:--.--";
   $("clock").style.opacity=ST.on.watch?1:0.4; $("btnSS").disabled=$("btnRst").disabled=!ST.on.watch;
   const dpr=CAM.dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-  if(view){ ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CAM.W,CAM.H); ctx.setTransform(dpr*V2.k,0,0,dpr*V2.k,dpr*V2.px,dpr*V2.py); }
-  if(view==="screen") view2Screen(CAM.W,CAM.H);
-  else if(view==="cell") view2Cell(CAM.W,CAM.H);
-  else if(view==="rail") view2Rail(CAM.W,CAM.H);
+  if(view==="screen"){ ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CAM.W,CAM.H); ctx.setTransform(dpr*V2.k,0,0,dpr*V2.k,dpr*V2.px,dpr*V2.py); view2Screen(CAM.W,CAM.H); }
+  else if(view) view3Side(view,CAM.W,CAM.H);
   else { const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
     begin3(); drawScene3(); drawGhost(); render3(ctx); }
   if(++frameN%6===0){ renderStatus(); drawTray(); }
