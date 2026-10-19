@@ -46,14 +46,15 @@
   }
   function toggle(){
     var box=document.createElement("div");
-    box.style.cssText="position:fixed;top:8px;left:8px;z-index:50;display:flex;gap:4px;font:13px sans-serif";
+    box.id="hl-lang"; box.style.cssText="position:relative;z-index:50;display:flex;justify-content:flex-end;gap:4px;padding:16px 12px 0;font:13px sans-serif";
     ["ko","en"].forEach(function(l){
       var a=document.createElement("a"); a.textContent=l==="ko"?"한국어":"English";
       var u=new URL(location.href); u.searchParams.set("lang",l); a.href=u.toString();
-      a.style.cssText="padding:4px 10px;border-radius:6px;text-decoration:none;"+(l===LANG?"background:#f2c14e;color:#111;font-weight:700":"background:#2a2f37;color:#e8eef2");
+      a.style.cssText="padding:4px 10px;min-width:44px;text-align:center;border-radius:6px;text-decoration:none;"+(l===LANG?"background:#f2c14e;color:#111;font-weight:700":"background:#2a2f37;color:#e8eef2");
       box.appendChild(a);
     });
-    document.body.appendChild(box);
+    var ad=document.getElementById("haslalab-adfit-banner");
+    if(ad) ad.after(box); else document.body.prepend(box);
   }
   document.addEventListener("DOMContentLoaded",function(){
     toggle();

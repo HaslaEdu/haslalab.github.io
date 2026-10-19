@@ -41,6 +41,12 @@
   #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;
          background:#232830;cursor:crosshair}
   #bench.dragging{cursor:grabbing}
+  .imodal{position:fixed;inset:0;z-index:60;background:rgba(8,10,14,.74);display:flex;align-items:center;justify-content:center}
+  .imodal[hidden]{display:none}
+  .imbox{background:#1f242b;border:1px solid #353b43;border-radius:10px;padding:10px 12px 12px;max-height:96vh;max-width:96vw;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .imhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;font-size:12.5px;color:#9aa3ab}
+  .imhead button{flex:0 0 auto}
+  #imBody canvas{display:block;width:100%;height:auto;background:#191c21;border-radius:6px}
   .instr{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
   .instr .ibox{flex:1 1 520px;min-width:280px}
   .instr .zbox{flex:0 0 270px}
@@ -103,6 +109,9 @@
   </div>
 </header>
 
+<div class="imodal" id="imodal" hidden><div class="imbox" id="imbox">
+  <div class="imhead"><span id="t-instrcap"></span><button id="imClose"></button></div>
+  <div id="imBody"></div></div></div>
 <div class="wrap">
   <!-- ═══════════ TRAY ═══════════ -->
   <aside class="tray">
@@ -116,12 +125,9 @@
       <h3 id="t-benchcap"></h3>
       <canvas id="bench"></canvas>
     </div>
-    <div class="card">
-      <h3 id="t-instrcap"></h3>
-      <div class="instr">
-        <div class="ibox"><div class="ilbl" id="t-fglbl"></div><canvas id="fgCv"></canvas></div>
-        <div class="zbox"><div class="ilbl" id="t-zlbl"></div><canvas id="zoyiCv"></canvas></div>
-      </div>
+    <div class="instrHold" hidden>
+      <div class="ibox" id="fgBox"><div class="ilbl" id="t-fglbl"></div><canvas id="fgCv"></canvas></div>
+      <div class="zbox" id="zBox"><div class="ilbl" id="t-zlbl"></div><canvas id="zoyiCv"></canvas></div>
     </div>
   </div>
 
@@ -148,6 +154,7 @@
 
     <h2 id="t-h-view"></h2>
     <button id="fitBtn" style="width:100%"></button>
+    <div class="row" style="margin-top:6px"><button id="zFgBtn"></button><button id="zZBtn"></button></div>
 
     <div class="status" id="status"></div>
   </aside>
@@ -163,15 +170,15 @@ const T = {
   ko:{
     title:"APhO 2025 실험 1 — 유도가열 조리기의 물리",
     sub:"가상 실험실 · 부품을 실험대에 놓고 케이블로 직접 연결한 뒤 계기를 읽으세요. 아무것도 대신 계산해 주지 않습니다.",
-    benchcap:"실험대 — 좌클릭 집기·놓기·꽂기 / 우클릭 되돌리기·뽑기 / 휠 확대·축소 / 빈 곳 드래그 이동",
-    instrcap:"계기 확대 — 실험대 위의 바로 그 장비입니다. 노브는 위아래로 끌거나 휠, 버튼은 클릭",
+    benchcap:"실험대 — 좌클릭 집기·놓기·꽂기 / 우클릭 되돌리기·뽑기 / 휠 확대·축소 / 빈 곳 드래그 이동 / 함수 발생기·오실로스코프 더블클릭: 확대",
+    instrcap:"실험대 위의 바로 그 장비입니다. 노브는 위아래로 끌거나 휠, 버튼은 클릭",
     fglbl:"1. 함수 발생기 — 앞면 / 뒷면", zlbl:"2. ZOYI ZT-703S 디지털 오실로스코프·멀티미터",
     tray:"부품함",
     hSw:"4. 스톱워치", hSpeed:"시간 배속", hSec:"3. 코일 조립체 — 단면", hView:"보기",
     speedHint:"가열·냉각은 실제로 수 분이 걸립니다. 배속은 스톱워치에도 똑같이 적용됩니다.",
-    fitBtn:"화면에 맞추기",
+    fitBtn:"화면에 맞추기", zFg:"함수 발생기 확대", zZ:"오실로스코프 확대", imClose:"닫기 (Esc)",
     start:"시작", stop:"정지", lap:"랩", reset:"리셋",
-    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프 + 프로브", fgcord:"함수 발생기 전원코드", charger:"스코프 충전기 (USB-C)", sw:"4. 스톱워치", base:"3. 코일 받침판 + 코일 #2",
+    trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프", probe:"2. 스코프 프로브 (×1/×10)", fgcord:"함수 발생기 전원코드", charger:"스코프 충전기 (USB-C)", sw:"4. 스톱워치", base:"3. 코일 받침판 + 코일 #2",
       c1:"3. 코일 #1 하우징", c2:"3. 코일 #2 하우징",
       bb:"5. 바나나–바나나 케이블", bp:"6. 바나나–핀 케이블",
       box:"7·8. 블랙박스 + 저항 R₁", C470N:"9. 축전기 470 nF", C470U:"9. 축전기 470 µF",
@@ -192,10 +199,13 @@ const T = {
     swHint:"부품함에서 스톱워치를 꺼내 실험대에 올려야 쓸 수 있습니다.", swOk:"실험대 위의 스톱워치입니다.",
     pw:{wall:"벽 콘센트 110 V", noMains:"함수 발생기 스위치는 켜져 있지만 전원이 들어오지 않습니다 — 벽 콘센트의 전원 코드를 함수 발생기 뒷면에 꽂으세요.", bat0:"오실로스코프 배터리 부족 — 충전하세요."},
     m:{
-      cord1:"함수 발생기 전원 코드를 들었습니다 — 함수 발생기(뒷면 전원 소켓 8)를 클릭하세요. (우클릭: 내려놓기)",
+      cordWall:"플러그를 벽 콘센트에 꽂으세요 — 콘센트의 위 또는 아래 구멍을 클릭하세요. (우클릭: 부품함으로)",
+      needScope:"먼저 오실로스코프를 실험대에 놓으세요.", probeWhere:"프로브의 BNC 플러그는 스코프 윗면의 CH1에 꽂습니다 — 오실로스코프를 클릭하세요.", probeIn:"프로브를 CH1에 꽂았습니다.",
+      cableEnd:"케이블 한쪽 끝을 뽑았습니다 — 꽂을 단자를 클릭하세요. (우클릭: 케이블을 부품함으로)",
+      cord1:"벽에 꽂았습니다. 다른 끝을 들었습니다 — 함수 발생기(뒷면 전원 소켓 8)를 클릭하세요. (우클릭: 책상에 내려놓기)",
       cord2:"다른 쪽 끝을 꽂을 곳을 클릭하세요. (우클릭: 취소)",
-      chg1:"충전기 케이블을 들었습니다 — 오실로스코프(오른쪽 옆면 고무 덮개 안의 USB-C 단자)를 클릭하세요. (우클릭: 내려놓기)",
-      cordIn:"꽂았습니다.", cordOut:s=>s+"을(를) 뽑아 책상 위에 내려놓았습니다 (벽 콘센트에는 꽂힌 채).", cordDrop:"케이블을 책상 위에 내려놓았습니다.", sockBusy:"그 콘센트는 이미 쓰고 있습니다.", cordWhere:"그곳에는 꽂을 수 없습니다.",
+      chg1:"충전기를 벽에 꽂았습니다. 케이블 끝을 들었습니다 — 오실로스코프(오른쪽 옆면 고무 덮개 안의 USB-C 단자)를 클릭하세요. (우클릭: 책상에 내려놓기)",
+      cordIn:"꽂았습니다.", cordOut:s=>s+"을(를) 뽑아 책상 위에 내려놓았습니다 (벽 콘센트에는 꽂힌 채, 콘센트를 우클릭하면 부품함으로).", cordDrop:"케이블을 책상 위에 내려놓았습니다.", sockBusy:"그 콘센트는 이미 쓰고 있습니다.", cordWhere:"그곳에는 꽂을 수 없습니다.",
       noMains:"스위치를 켰지만 함수 발생기에 전원이 들어오지 않습니다 — 벽 콘센트에서 내려온 전원 코드를 클릭해 함수 발생기 뒷면에 꽂으세요.",
       batDead:"배터리가 다 되어 오실로스코프가 꺼졌습니다 — 충전기를 연결하세요.", batNo:"배터리가 비어 켜지지 않습니다 — 충전기를 연결하세요.",
       batLow:"배터리 표시가 비었습니다 — 낮은 전압은 측정 정확도에 영향을 줄 수 있습니다.", chgOn:"충전 중 — POWER 키의 빨간 불이 켜졌습니다.", chgFull:"충전 완료 — POWER 키의 빨간 불이 꺼졌습니다.",
@@ -280,15 +290,15 @@ const T = {
   en:{
     title:"APhO 2025 Experiment 1 — Physics of Induction Cooking",
     sub:"Virtual laboratory · put the parts on the bench, wire them with the cables and read the instruments. Nothing is computed for you.",
-    benchcap:"the bench — L-click pick/place/plug, R-click return/unplug / wheel zoom / drag bare bench to pan",
-    instrcap:"instruments close up — these are the very instruments on the bench. Drag a knob up/down or roll the wheel; click the keys",
+    benchcap:"the bench — L-click pick/place/plug, R-click return/unplug / wheel zoom / drag bare bench to pan / double-click the generator or the scope: close up",
+    instrcap:"the very instrument on the bench. Drag a knob up/down or roll the wheel; click the keys",
     fglbl:"1. Function generator — front / rear", zlbl:"2. ZOYI ZT-703S digital oscilloscope multimeter",
     tray:"Parts box",
     hSw:"4. Stopwatch", hSpeed:"Time scale", hSec:"3. Coil assembly — cross-section", hView:"View",
     speedHint:"Heating and cooling really take minutes. The scale applies to the stopwatch too.",
-    fitBtn:"Fit to window",
+    fitBtn:"Fit to window", zFg:"Function generator close up", zZ:"Oscilloscope close up", imClose:"Close (Esc)",
     start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
-    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope + probe", fgcord:"Function generator mains cord", charger:"Scope charger (USB-C)", sw:"4. Stopwatch", base:"3. Base plate + coil #2",
+    trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope", probe:"2. Scope probe (×1/×10)", fgcord:"Function generator mains cord", charger:"Scope charger (USB-C)", sw:"4. Stopwatch", base:"3. Base plate + coil #2",
       c1:"3. Coil #1 housing", c2:"3. Coil #2 housing",
       bb:"5. Banana–banana cable", bp:"6. Banana–pin cable",
       box:"7·8. Black box + resistor R₁", C470N:"9. Capacitor 470 nF", C470U:"9. Capacitor 470 µF",
@@ -309,10 +319,13 @@ const T = {
     swHint:"Take the stopwatch out of the parts box and put it on the bench to use it.", swOk:"The stopwatch on the bench.",
     pw:{wall:"wall outlet 110 V", noMains:"The function generator is switched on but has no power — plug the mains cord from the wall outlet into its rear inlet.", bat0:"Scope battery low — charge it."},
     m:{
-      cord1:"Mains cord picked up — click the function generator (rear inlet 8). (R-click: put it down)",
+      cordWall:"Plug it into the wall outlet: click the upper or lower socket. (R-click: back to the box)",
+      needScope:"Put the oscilloscope on the bench first.", probeWhere:"The probe's BNC plug goes into CH1 on top of the scope: click the oscilloscope.", probeIn:"Probe plugged into CH1.",
+      cableEnd:"One end of the cable pulled out: click the terminal to plug it into. (R-click: cable back to the box)",
+      cord1:"Plugged into the wall; holding the other end — click the function generator (rear inlet 8). (R-click: lay it on the desk)",
       cord2:"Click where the other end goes. (R-click: cancel)",
-      chg1:"Charger cable picked up — click the oscilloscope (the USB-C port under the rubber flap on its right side). (R-click: put it down)",
-      cordIn:"Plugged in.", cordOut:s=>s+" unplugged and laid on the desk (still in the wall outlet).", cordDrop:"Cable laid on the desk.", sockBusy:"That socket is in use.", cordWhere:"That does not plug in there.",
+      chg1:"Charger in the wall; holding its cable — click the oscilloscope (the USB-C port under the rubber flap on its right side). (R-click: lay it on the desk)",
+      cordIn:"Plugged in.", cordOut:s=>s+" unplugged and laid on the desk (still in the wall outlet; R-click the outlet to put it away).", cordDrop:"Cable laid on the desk.", sockBusy:"That socket is in use.", cordWhere:"That does not plug in there.",
       noMains:"Switched on, but the function generator gets no power: click the mains cord hanging from the wall outlet and plug it into the generator's rear inlet.",
       batDead:"The battery ran flat and the oscilloscope switched off: connect the charger.", batNo:"The battery is flat, it will not switch on: connect the charger.",
       batLow:"The battery icon is empty: a low voltage can affect the accuracy.", chgOn:"Charging: the red light in the POWER key is on.", chgFull:"Fully charged: the red light in the POWER key went out.",
@@ -542,9 +555,9 @@ const TDIV=[1e-6,2e-6,5e-6,1e-5,2e-5,5e-5,1e-4,2e-4,5e-4,1e-3,2e-3,5e-3,1e-2,2e-
 const SPEEDS=[1,5,20,60];
 const S={
   zoom:1.0, cam:[0,0], basePpcm:7, touched:false, mouse:[0,0], view0:null, knob:null,
-  on:{fg:false,scope:false,base:false,box:null,sw:false},
-  /* mains: both cords hang from the duplex wall outlet (110 V): the function generator cord (its free end goes into the generator) and the scope charger (adapter in the outlet, USB-C into the scope) */
-  cord:{fg:{fg:false,sock:0},chg:{sock:1,scope:false}},
+  on:{fg:false,scope:false,probe:false,base:false,box:null,sw:false},
+  /* mains: both cords start in the parts box; the plug goes into the duplex wall outlet (110 V), the other end into the generator (C13) or the scope (USB-C) */
+  cord:{fg:{fg:false,sock:null},chg:{sock:null,scope:false}},
   /* the scope runs on one 18650 Li-ion cell, 3.7 V 3400 mAh; it is not full when you get it */
   bat:{soc:0.32+0.33*Math.random(),dead:false,full:false},                  /* box: null | "desk" | "cover" (over the coils) */
   /* the two identical coil housings stack on the plastic base: at null | "low" | "up";
@@ -570,7 +583,7 @@ const S={
 
 /* ── mains and the scope battery ── */
 /* the duplex wall outlet on the wall behind the desk: its centre (x), the two sockets' heights, the wall's plane (z) */
-const OUT_X=58, OUT_Y=8.2, OUT_DX=3.3, WALL_Z=64.2;     /* a duplex outlet lying sideways: two receptacles side by side */
+const OUT_X=58, OUT_Y=8.6, OUT_DY=2.5, WALL_Z=64.2;     /* a duplex outlet standing upright: socket 0 above, socket 1 below */
 const fgMains=()=>S.on.fg&&S.cord.fg.fg&&S.cord.fg.sock!==null;
 const fgLive=()=>fgMains()&&S.fg.pow;
 const chgLive=()=>S.on.scope&&S.cord.chg.scope&&S.cord.chg.sock!==null;
@@ -753,7 +766,7 @@ const zCv=$("zoyiCv"), zCtx=zCv.getContext("2d");
 const xsCv=$("xsec"), xsCtx=xsCv.getContext("2d");
 let CW=0, CH=0, DPR=1, TRW=180, TRH=700;
 const ppcm=()=>S.basePpcm*S.zoom;
-const TRAY_ORDER=["fg","scope","sw","base","c1","bb","bp","box","C470N","C470U","C1000U","C2200U",
+const TRAY_ORDER=["fg","fgcord","scope","probe","charger","sw","base","c1","bb","bp","box","C470N","C470U","C1000U","C2200U",
                   "key","panAL","panSS","plAL","plCU","plS4","plS10"];
 const TRAY_ROW=42;
 let FGS=20, ZS=20, XSW=270, XSH=170;
@@ -1362,12 +1375,16 @@ function drawZoyi(){
     CYL(x,y1-0.35,y1-0.05,zm,0.5,"#9ea3a8","#c9cdd1","#5d6166");
     HCIRC(x,y1-0.05,zm,0.24,"#1a1b1d"); HCIRC(x,y1-0.05,zm,0.06,"#c9a94f");
     for(const s of [-1,1]){ const q=NP(x+s*0.52,y1-0.15,zm); OVAL(q[0],q[1],Math.max(1,ppcm()*0.07),Math.max(1,ppcm()*0.07),"#c9cdd1",null); }
-    const t=NP(x,y1+0.01,zm-1.35); TXT(t[0],t[1],lab,{size:Math.max(4,ppcm()*0.32),fill:"#e9e9e9",bold:true}); }
+    topText(x,y1+0.012,zm-1.25,lab,0.36,"#e9e9e9"); }
   EXTR(Z_FACE,rrUV(0,0,ZW,ZH,1.0),0,Z_LIP,"#a11f16","#5e0e08");          /* outer walls of the holster's lip */
   withFace(Z_FACE,c=>drawZoyiFace(c,true));
   drawZoyiFront3D();
   S.zones.scope=boxRect(b);
 }
+/* text printed flat on a horizontal face at height y, centred on (x,z): the line runs along +x, the letters stand up along +z (away from you) */
+function topText(x,y,z,txt,h,col){ const o=NP(x,y,z), a=NP(x+1,y,z), b=NP(x,y,z+1);
+  ctx.save(); ctx.transform(a[0]-o[0],a[1]-o[1],-(b[0]-o[0]),-(b[1]-o[1]),o[0],o[1]);
+  ctx.font="bold "+h.toFixed(2)+"px "+FONT; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillStyle=col; ctx.fillText(txt,0,0); ctx.restore(); }
 /* black box (item 8) with the yellow 1 ohm / 100 W resistor R1 (item 7) screwed on its lid:
    two binding posts at the ends of R1, two more in front for a capacitor's legs. It is hollow,
    so it also goes over the coil kit as a draught cover. */
@@ -1676,7 +1693,8 @@ function probeAttachW(){ const P=probePart("tip"); if(!P.w) return null; const T
   return [T[0]+P.h[0]*s, Math.max(0.55,y0-(y0-0.55)*Math.min(1,s/9)), T[2]+P.h[2]*s]; }
 const segD=(p,a,b)=>{ const vx=b[0]-a[0], vy=b[1]-a[1], L=vx*vx+vy*vy||1, t=Math.max(0,Math.min(1,((p[0]-a[0])*vx+(p[1]-a[1])*vy)/L)); return Math.hypot(p[0]-a[0]-vx*t,p[1]-a[1]-vy*t); };
 function drawProbe(){
-  if(!S.on.scope) return;
+  S.probeScr=null;
+  if(!S.on.scope||!S.on.probe) return;
   const k=ppcm(), w=v=>Math.max(1.2,k*v);
   const PT=probePart("tip"), PG=probePart("gnd"), at=probeAxis(PT), ag=probeAxis(PG,0.4);
   const tip=at(0), tail=at(PRB.tail), gnd=ag(0), gTail=ag(PRB.clip);
@@ -1742,14 +1760,14 @@ function probeReach(){
 /* ── the wall outlet behind the desk, and the two mains cords hanging from it ── */
 const fgInlet=()=>{ const o=S.at.fg; return [FG_BOX[1]-8.4+o[0],4.6,FG_BOX[5]+o[1]]; };
 const scopePort=()=>{ const o=S.at.scope; return [Z_BOX[1]+o[0],Z_BOX[3]-3.3,(Z_BOX[4]+Z_BOX[5])/2+o[1]]; };
-function sockPos(i){ return [OUT_X+(i?OUT_DX:-OUT_DX),OUT_Y,WALL_Z]; }
+function sockPos(i){ return [OUT_X,OUT_Y+(i?-OUT_DY:OUT_DY),WALL_Z]; }
 /* where each cord's free end lies on the desk when it is not plugged into its instrument */
 const CORD_REST={fgcord:{p:[45,1.1,59],d:[0,0,1]},charger:{p:[51,0.3,58.5],d:[0,0,1]}};
 /* real sizes (cm): an IEC 60320 C13 connector 3.1 × 2.2 face, 3.0 body + 1.6 boot; a NEMA 5-15 plug; a USB-C plug
    (overmould 1.0 × 0.55, 1.8 long, boot 0.8; metal shell 0.84 × 0.26) */
 const C13={w:3.1,h:2.2,L:3.0,boot:1.6}, USBC={w:1.0,h:0.55,L:1.8,boot:0.8};
 function cordEnds(id){ /* the two ends of a cord, each with the direction the cord leaves it; the wall end is always plugged in */
-  const c=id==="fgcord"?S.cord.fg:S.cord.chg, p=sockPos(c.sock), out=[id==="fgcord"?{p:[p[0],p[1]-2.7,p[2]-1.0],d:[0,-1,-0.15]}:{p:[p[0],p[1]-1.2,p[2]-5.9],d:[0,-0.25,-1]}];
+  const c=id==="fgcord"?S.cord.fg:S.cord.chg, p=sockPos(c.sock), out=[id==="fgcord"?{p:[p[0],p[1]-2.7,p[2]-1.0],d:[0,-1,-0.15]}:{p:[p[0],p[1]-1.0,p[2]-5.9],d:[0,-0.25,-1]}];
   if(S.carry&&S.carry.k==="cord"&&S.carry.id===id){ const [mx,mz]=benchAt(S.mouse[0],S.mouse[1]), lift=2.2, len=id==="fgcord"?C13.L+C13.boot:USBC.L+USBC.boot;
     out.push({p:[mx,lift+(id==="fgcord"?0.75:0.17),mz+len/2],d:[0,0.3,1],carried:true,lift}); return out; }
   if(id==="fgcord"&&c.fg&&S.on.fg){ const q=fgInlet(); out.push({p:[q[0],q[1],q[2]+C13.L+C13.boot],d:[0,0,1]}); }
@@ -1795,6 +1813,7 @@ function usbcX(x,z){ const hw=USBC.w/2, h=USBC.h;
   const Q=(zz,y)=>NP(x0+0.66,y,zz); POLY([Q(z-0.38,yc-0.09),Q(z+0.38,yc-0.09),Q(z+0.42,yc),Q(z+0.38,yc+0.09),Q(z-0.38,yc+0.09),Q(z-0.42,yc)],"#2a2c2f",null);
   LINE([Q(z-0.3,yc),Q(z+0.3,yc)],"#9aa0a6",1); }
 function drawCord(id,late){
+  if((id==="fgcord"?S.cord.fg:S.cord.chg).sock===null) return;
   const e=cordEnds(id), col=id==="fgcord"?["#121314","#000"]:["#eceef0","#9aa0a6"], w=id==="fgcord"?0.32:0.2;
   const carried=e[1]&&e[1].carried; if(!!carried!==!!late) return;
   if(e.length<2) return;
@@ -1815,27 +1834,29 @@ function drawCord(id,late){
 }
 /* a duplex 110 V receptacle (two vertical slots and a round earth hole each) on a white plate on the wall */
 function drawOutlet(){
-  const z=WALL_Z, y=OUT_Y, Q=(x,yy)=>NP(x,yy,z-0.02);
-  POLY([NP(OUT_X-6.6,y-4.1,z),NP(OUT_X+6.6,y-4.1,z),NP(OUT_X+6.6,y+4.1,z),NP(OUT_X-6.6,y+4.1,z)],"#cfd2d4","#8a9096",1);
-  POLY([NP(OUT_X-6.3,y-3.8,z-0.01),NP(OUT_X+6.3,y-3.8,z-0.01),NP(OUT_X+6.3,y+3.8,z-0.01),NP(OUT_X-6.3,y+3.8,z-0.01)],"#f3f3ef","#b5b9bc",1);
+  const z=WALL_Z, y=OUT_Y, Q=(x,yy)=>NP(x,yy,z-0.02), hw=3.6, hh=6.0;
+  POLY([NP(OUT_X-hw,y-hh,z),NP(OUT_X+hw,y-hh,z),NP(OUT_X+hw,y+hh,z),NP(OUT_X-hw,y+hh,z)],"#cfd2d4","#8a9096",1);
+  POLY([NP(OUT_X-hw+0.3,y-hh+0.3,z-0.01),NP(OUT_X+hw-0.3,y-hh+0.3,z-0.01),NP(OUT_X+hw-0.3,y+hh-0.3,z-0.01),NP(OUT_X-hw+0.3,y+hh-0.3,z-0.01)],"#f3f3ef","#b5b9bc",1);
   { const c=Q(OUT_X,y); OVAL(c[0],c[1],ppcm()*0.18,ppcm()*0.18,"#9aa0a6","#555",1); }
-  for(let i=0;i<2;i++){ const [sx]=sockPos(i);
-    POLY([Q(sx-1.9,y-1.9),Q(sx+1.9,y-1.9),Q(sx+1.9,y+1.9),Q(sx-1.9,y+1.9)],"#e6e6e0","#c7c9c6",1);
-    for(const [dx,hh] of [[-0.62,0.75],[0.62,0.6]]) POLY([Q(sx+dx-0.12,y+0.5-hh/2),Q(sx+dx+0.12,y+0.5-hh/2),Q(sx+dx+0.12,y+0.5+hh/2),Q(sx+dx-0.12,y+0.5+hh/2)],"#26282b",null);
-    { const c=Q(sx,y-0.85); OVAL(c[0],c[1],ppcm()*0.22,ppcm()*0.26,"#26282b",null); }
+  S.zones.sock=[];
+  for(let i=0;i<2;i++){ const [sx,sy]=sockPos(i);
+    POLY([Q(sx-1.9,sy-1.9),Q(sx+1.9,sy-1.9),Q(sx+1.9,sy+1.9),Q(sx-1.9,sy+1.9)],"#e6e6e0","#c7c9c6",1);
+    for(const [dx,h2] of [[-0.62,0.75],[0.62,0.6]]) POLY([Q(sx+dx-0.12,sy+0.5-h2/2),Q(sx+dx+0.12,sy+0.5-h2/2),Q(sx+dx+0.12,sy+0.5+h2/2),Q(sx+dx-0.12,sy+0.5+h2/2)],"#26282b",null);
+    { const c=Q(sx,sy-0.85); OVAL(c[0],c[1],ppcm()*0.22,ppcm()*0.26,"#26282b",null); }
+    S.zones.sock[i]=boxRect([sx-2.0,sx+2.0,sy-2.0,sy+2.0,z-0.5,z]);
     const u=sockUser(i);
-    /* a moulded 3-pin plug, the cord leaving its underside through a short boot */
-    if(u==="fgcord"){ BOX([sx-1.4,sx+1.4,y-1.6,y+1.5,z-2.2,z],"#1d1e20","#26272a","#18191b","#000");
-      for(let k=0;k<4;k++) LINE([NP(sx+1.41,y-1.2+k*0.75,z-1.9),NP(sx+1.41,y-1.2+k*0.75,z-0.3)],"#34363a",1);
-      BOX([sx-0.55,sx+0.55,y-2.7,y-1.6,z-1.5,z-0.5],"#1a1b1d","#141516","#101113","#000"); }
+    /* a moulded 3-pin plug pushed square into the receptacle, the cord leaving its underside through a short boot */
+    if(u==="fgcord"){ BOX([sx-1.5,sx+1.5,sy-1.6,sy+1.6,z-2.2,z],"#1d1e20","#26272a","#18191b","#000");
+      for(let k=0;k<4;k++) LINE([NP(sx+1.51,sy-1.2+k*0.8,z-1.9),NP(sx+1.51,sy-1.2+k*0.8,z-0.3)],"#34363a",1);
+      BOX([sx-0.55,sx+0.55,sy-2.7,sy-1.6,z-1.6,z-0.6],"#1a1b1d","#141516","#101113","#000"); }
     /* the charger: a white wall adapter, a USB-A plug in the port on its face */
-    if(u==="charger"){ BOX([sx-2.0,sx+2.0,y-2.6,y+2.2,z-3.0,z],"#f6f7f8","#e3e5e7","#eceef0","#9aa0a6");
-      const yp=y-1.2;
-      { const c=NP(sx,y+1.0,z-3.01); TXT(c[0],c[1],"5V⎓2A",{size:Math.max(3,ppcm()*0.3),fill:"#8a9096"}); }
+    if(u==="charger"){ BOX([sx-2.0,sx+2.0,sy-2.4,sy+2.4,z-3.0,z],"#f6f7f8","#e3e5e7","#eceef0","#9aa0a6");
+      const yp=sy-1.0;
+      { const c=NP(sx,sy+1.2,z-3.01); TXT(c[0],c[1],"5V⎓2A",{size:Math.max(3,ppcm()*0.3),fill:"#8a9096"}); }
       BOX([sx-0.62,sx+0.62,yp-0.23,yp+0.23,z-3.5,z-3.0],"#c9cdd1","#aeb3b8","#b8bdc2","#6d7277");
       BOX([sx-0.8,sx+0.8,yp-0.4,yp+0.4,z-5.2,z-3.5],"#eceef0","#dadde0","#d0d3d6","#8a9096");
       BOX([sx-0.3,sx+0.3,yp-0.2,yp+0.2,z-5.9,z-5.2],"#e2e4e7","#cfd3d6","#c4c8cc","#8a9096"); } }
-  { const q=NP(OUT_X,y+5.4,z); TXT(q[0],q[1]-4,d().pw.wall,{size:Math.max(5,ppcm()*0.55),fill:"#d9dde1"}); }
+  { const q=NP(OUT_X,y+hh+0.8,z); TXT(q[0],q[1]-4,d().pw.wall,{size:Math.max(5,ppcm()*0.55),fill:"#d9dde1"}); }
 }
 /* ── the stopwatch lying on the desk (round, the display on its face, two buttons at the top): it shows the same time as the panel ── */
 const SEG7={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg"};
@@ -1910,7 +1931,8 @@ function trayState(name){
   if(PAN_OF[name]){ const out=S.panItem===name; return [out,out?t.trayOut:t.trayTake]; }
   if(CAPS[name]){ const out=!!S.cap[name]; return [out,out?t.trayOut:t.trayTake]; }
   if(name==="key") return [false,t.trayTake];
-  if(name==="fgcord"||name==="charger"){ const c=name==="fgcord"?S.cord.fg:S.cord.chg, out=c.sock!==null||!!(c.fg||c.scope)||(S.carry&&S.carry.id===name); return [out,out?t.trayOut:t.trayTake]; }
+  if(name==="fgcord"||name==="charger"){ const c=name==="fgcord"?S.cord.fg:S.cord.chg, out=c.sock!==null||!!(c.fg||c.scope)||!!(S.carry&&S.carry.id===name); return [out,out?t.trayOut:t.trayTake]; }
+  if(name==="probe"){ const out=S.on.probe||!!(S.carry&&S.carry.id==="probe"); return [out,out?t.trayOut:t.trayTake]; }
   if(S.hs[name]){ const out=!!S.hs[name].at; return [out,out?t.trayOut:t.trayTake]; }
   const out=name==="box"?!!S.on.box:!!S.on[name];
   return [out,out?t.trayOut:t.trayTake];
@@ -1935,6 +1957,7 @@ function trayIcon(c,name,x,y,dim){
   else if(name==="key"){ L(x-10,y+6,x+8,y+6,"#8a8f94",3); L(x+8,y+6,x+8,y-8,"#8a8f94",3); }
   else if(name==="fgcord"){ c.beginPath(); c.moveTo(x-12,y-6); c.bezierCurveTo(x-2,y+12,x+4,y-12,x+12,y+4); c.strokeStyle=g||"#111"; c.lineWidth=2.5; c.stroke(); R(x-16,y-10,x-9,y-3,"#1a1a1a"); R(x+9,y+1,x+16,y+8,"#1a1a1a"); }
   else if(name==="charger"){ R(x-15,y-7,x-5,y+5,"#f4f5f6","#9aa0a6"); c.beginPath(); c.moveTo(x-5,y); c.bezierCurveTo(x+3,y+10,x+6,y-8,x+13,y); c.strokeStyle=g||"#e9eaec"; c.lineWidth=2; c.stroke(); R(x+12,y-2,x+16,y+2,"#cfd3d6"); }
+  else if(name==="probe"){ L(x-15,y+7,x-6,y+2,"#1e2023",2.5); L(x-6,y+2,x+9,y-6,"#26282c",5); L(x+9,y-6,x+13,y-8,"#d9dde1",1.2); L(x-4,y+1,x+4,y+9,"#2a2c30",1.2); R(x+3,y+7,x+9,y+11,"#c4c9ce"); R(x-17,y+6,x-13,y+10,"#a9aeb3"); }
   else if(name==="sw"){ O(x,y,9,"#1f2a33","#0b0f12"); R(x-6,y-4,x+6,y+2,"#b7c4a5"); O(x-3,y-11,2,"#888"); O(x+3,y-11,2,"#888"); }
   else if(PAN_OF[name]){ R(x-8,y-5,x+8,y+5,name==="panAL"?"#d7dbdf":"#e3e8ec","#777"); O(x,y,2.5,"#111"); L(x,y,x-12,y+10,"#c8261d",1.2); L(x,y,x-10,y+11,"#333",1.2); }
   else if(PLATE_OF[name]){ const m=MAT[PLATE_OF[name]]; R(x-7,y-11,x+7,y+11,"#e9eef1","#9aa3ab"); R(x-5,y-8,x+5,y+9,m.col,m.edge); }
@@ -1975,6 +1998,8 @@ trayCv.addEventListener("mousedown",e=>{
     else if(PLATE_OF[name]){ S.plates[PLATE_OF[name]]--; S.carry={k:"plate",id:name,mat:PLATE_OF[name]}; say(t.m.plateTake(t.mat[PLATE_OF[name]])); }
     else if(PAN_OF[name]){ if(!lowHs()){ say(t.m.noCoil,true); return; } if(S.pan){ say(t.m.slotBusy,true); return; } S.carry={k:"pan",id:name}; say(t.m.panTake(t.trayItems[name])); }
     else if(name==="key"){ S.carry={k:"key",id:"key"}; say(t.m.keyTake); }
+    else if(name==="fgcord"||name==="charger"){ S.carry={k:"cord",id:name}; say(t.m.cordWall); }
+    else if(name==="probe"){ if(!S.on.scope){ say(t.m.needScope,true); return; } S.carry={k:"item",id:"probe"}; say(t.m.probeWhere); }
       else { S.carry={k:"item",id:name}; say(t.m.placeIt(t.trayItems[name])); }
     drawTray();
     return;
@@ -2017,7 +2042,7 @@ function termOk(cr,id,info){
 function cancelCarry(silent){
   const cr=S.carry; if(!cr) return;
   if(cr.k==="cable") S.stock[cr.type][cr.col]++;
-  if(cr.k==="cord"){ S.carry=null; say(d().m.cordDrop); solve(); drawTray(); return; }
+  if(cr.k==="cord"){ const c=cr.id==="fgcord"?S.cord.fg:S.cord.chg; S.carry=null; say(c.sock===null?d().m.returned(d().trayItems[cr.id]):d().m.cordDrop); solve(); drawTray(); return; }
   if(cr.k==="plate"){ if(cr.from){ S.dplates.push(cr.from); S.carry=null; say(d().m.stays); return; } S.plates[cr.mat]++; }
   S.carry=null;
   if(cr.move){ say(d().m.stays); return; }
@@ -2030,6 +2055,8 @@ function onPress(p){
   if(cr){ place(x,y); return; }
   if(S.on.scope&&S.probeScr){ const end=probeHit(x,y);
     if(end){ S.probe[end]=null; S.carry={k:"probe",end}; say(t.m.probeTake(end==="tip"?t.lab.hook:t.lab.gnd)); solve(); return; } }
+  { const hit=cableEndAt(x,y); if(hit){ const cb=S.cables.splice(hit.i,1)[0];
+      S.carry={k:"cable",type:cb.type,col:cb.col,a:hit.end==="a"?cb.b:cb.a}; say(t.m.cableEnd); solve(); drawTray(); return; } }
   if(S.on.fg){ const [a,b]=withOff(S.at.fg,()=>faceInv(FG_FACE,x,y)); if(a>=-2&&a<=24&&b>=0&&b<=10.5){ const h=fgPress(a,b,"bench"); if(h){ S.knob=h; h(y); return; } } }
   if(S.on.scope){ const [a,b]=withOff(S.at.scope,()=>faceInv(Z_FACE,x,y)); if(a>=-0.5&&a<=Z_FACE.W&&b>=0&&b<=Z_FACE.H){ if(zoyiPress(a,b)) return; } }
   /* pick a loose plate up off the desk */
@@ -2044,11 +2071,19 @@ function onPress(p){
     if(pts.some(q=>Math.hypot(q[0]-x,q[1]-y)<Math.max(7,ppcm()*0.6))){ if(id==="fgcord") S.cord.fg.fg=false; else S.cord.chg.scope=false; S.carry={k:"cord",id}; say(id==="fgcord"?t.m.cord1:t.m.chg1); solve(); return; } }
   for(const id of ["sw","C470N","C470U","C1000U","C2200U","c1","box","base","scope","fg"]){
     if(!(CAPS[id]?S.cap[id]==="desk":id==="box"?!!S.on.box:id==="c1"?S.hs.c1.at==="desk":!!S.on[id])||!inRect(S.zones[id],x,y)) continue;
-    S.carry={k:"item",id,move:true}; say(t.m.moveIt(t.trayItems[id])); return;
+    S.carry={k:"item",id,move:true}; S.lastMove={id,at:S.at[id]?S.at[id].slice():null,box:S.on.box,t:performance.now()}; say(t.m.moveIt(t.trayItems[id])); return;
   }
   S.view0=[x,y,S.cam[0],S.cam[1]];
   cv.classList.add("dragging");
 }
+/* the plug of a banana cable under the pointer: the last one plugged in is on top */
+function cableEndAt(x,y){
+  const r=Math.max(8,ppcm()*0.55);
+  for(let i=S.cables.length-1;i>=0;i--){ const cb=S.cables[i];
+    for(const end of ["a","b"]){ const id=cb[end], info=termInfo(id); if(!info||info.hidden) continue;
+      const p=NP(...info.p), q=NP(...endPos(id,info));
+      if(segD([x,y],p,q)<r) return {i,end}; } }
+  return null; }
 const sockUser=i=>S.cord.fg.sock===i?"fgcord":S.cord.chg.sock===i?"charger":null;
 function cordEnd(tg){
   const cr=S.carry, t=d(), c=cr.id==="fgcord"?S.cord.fg:S.cord.chg;
@@ -2062,6 +2097,12 @@ function unplugCord(id){ if(id==="fgcord") S.cord.fg.fg=false; else S.cord.chg.s
 function place(x,y){
   const cr=S.carry, t=d();
   if(cr.k==="cord"){
+    const c=cr.id==="fgcord"?S.cord.fg:S.cord.chg;
+    if(c.sock===null){                        /* first the plug into the wall */
+      const i=[0,1].find(j=>inRect((S.zones.sock||[])[j],x,y,4));
+      if(i===undefined){ say(t.m.cordWall,true); return; }
+      if(sockUser(i)){ say(t.m.sockBusy,true); return; }
+      c.sock=i; say(cr.id==="fgcord"?t.m.cord1:t.m.chg1); drawTray(); return; }
     if(cr.id==="fgcord"&&S.on.fg&&inRect(S.zones.fg,x,y)){ cordEnd("fg"); return; }
     if(cr.id==="charger"&&S.on.scope&&inRect(S.zones.scope,x,y)){ cordEnd("scope"); return; }
     say(t.m.cordWhere,true); return;
@@ -2118,6 +2159,10 @@ function place(x,y){
     }
     solve(); drawTray(); return;
   }
+  if(cr.k==="item"&&cr.id==="probe"){        /* its BNC plug goes into CH1 on top of the scope */
+    if(!S.on.scope){ say(t.m.needScope,true); return; }
+    if(!inRect(S.zones.scope,x,y,6)){ say(t.m.probeWhere,true); return; }
+    S.on.probe=true; S.carry=null; say(t.m.probeIn); solve(); drawTray(); return; }
   if(cr.k==="item"){
     const id=cr.id, [bx,bz]=benchAt(x,y);
     let where="desk", o=null;
@@ -2163,8 +2208,11 @@ function onRClick(p){
     const pts=S.cabPts&&S.cabPts[i]; if(!pts) continue;
     for(let j=0;j<pts.length;j++) if(Math.hypot(pts[j][0]-x,pts[j][1]-y)<Math.max(7,ppcm()*0.6)){ removeCable(i); say(t.m.unplug); solve(); return; }
   }
-  if(S.probeScr){ const end=probeHit(x,y); if(end&&S.probe[end]){ S.probe[end]=null; say(t.m.probeOff); solve(); return; } }
-  for(const id in (S.cordPts||{})){ const c=id==="fgcord"?S.cord.fg.fg:S.cord.chg.scope; if(!c) continue; const pts=S.cordPts[id]; for(const q of pts) if(Math.hypot(q[0]-x,q[1]-y)<Math.max(7,ppcm()*0.6)){ unplugCord(id); return; } }
+  if(S.probeScr){ const end=probeHit(x,y); if(end&&S.probe[end]){ S.probe[end]=null; say(t.m.probeOff); solve(); return; }
+    if(end&&!S.probe.tip&&!S.probe.gnd){ returnItem("probe"); return; } }
+  for(const id in (S.cordPts||{})){ const c=id==="fgcord"?S.cord.fg:S.cord.chg, inst=id==="fgcord"?c.fg:c.scope; const pts=S.cordPts[id];
+    for(const q of pts) if(Math.hypot(q[0]-x,q[1]-y)<Math.max(7,ppcm()*0.6)){ if(inst) unplugCord(id); else { c.sock=null; say(t.m.returned(t.trayItems[id])); solve(); drawTray(); } return; } }
+  for(const i of [0,1]){ const u=sockUser(i); if(u&&inRect((S.zones.sock||[])[i],x,y,2)){ const c=u==="fgcord"?S.cord.fg:S.cord.chg; c.sock=null; c.fg=false; c.scope=false; say(t.m.returned(t.trayItems[u])); solve(); drawTray(); return; } }
   if(S.on.box==="cover"&&inRect(S.zones.box,x,y)){ returnItem("box"); return; }
   if(S.on.base&&inRect(S.zones.stack,x,y)){ unstackOne(); return; }
   for(let i=S.dplates.length-1;i>=0;i--) if(inRect(S.zones["dp"+i],x,y,2)){
@@ -2216,7 +2264,8 @@ function removeCable(i){ const cb=S.cables[i]; S.stock[cb.type][cb.col]++; S.cab
 function returnItem(id){
   const t=d();
   if(id==="fg"){ detachTerms(["FGP","FGN"]); S.on.fg=false; S.fg.pow=false; S.cord.fg.fg=false; }
-  else if(id==="scope"){ detachTerms(["DCOM","DVO"]); S.probe={tip:null,gnd:null}; S.on.scope=false; S.z.on=false; S.cord.chg.scope=false; }
+  else if(id==="scope"){ detachTerms(["DCOM","DVO"]); S.probe={tip:null,gnd:null}; S.on.scope=false; S.on.probe=false; S.z.on=false; S.cord.chg.scope=false; }
+  else if(id==="probe"){ S.probe={tip:null,gnd:null}; S.on.probe=false; }
   else if(id==="sw"){ S.on.sw=false; S.swRun=false; S.swAcc=0; S.swT0=S.t; S.laps=[]; renderLaps(); updSwBtn(); }
   else if(id==="base"){
     if(S.on.box==="cover"){ say(t.m.covered,true); return; }
@@ -2371,8 +2420,9 @@ function drawZoyiPanel(){
   c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#191c21"; c.fillRect(0,0,zCv.width,zCv.height);
   c.setTransform(DPR*ZS,0,0,DPR*ZS,DPR*ZS*0.5,DPR*ZS*1.3);
   if(!S.on.scope) c.globalAlpha=0.35;
-  for(const [x,lab] of Z_BNC){ const u=x-Z_FACE.x0; rr(c,u-0.6,-1.0,u+0.6,0.05,0.12,"#b9bdc1","#6f7479",0.04); rr(c,u-0.4,-1.15,u+0.4,-0.85,0.08,"#d9dde1");
-    FT(c,lab,u,-1.45,0.3,"#9aa3ab","center",true); }
+  for(const [x,lab] of Z_BNC){ const u=x-Z_FACE.x0; rr(c,u-0.55,-0.26,u+0.55,0.05,0.08,"#b9bdc1","#6f7479",0.03);
+    if(lab==="CH1"&&S.on.probe){ rr(c,u-0.4,-0.62,u+0.4,-0.24,0.06,"#a9aeb3","#5d6166",0.03); rr(c,u-0.28,-1.0,u+0.28,-0.6,0.05,"#1b1c1f"); }
+    if(lab==="CH1"&&S.on.probe) FT(c,lab,u-0.62,-0.3,0.3,"#9aa3ab","right",true); else FT(c,lab,u,-0.55,0.3,"#9aa3ab","center",true); }
   drawZoyiFace(c);
   c.globalAlpha=1;
 }
@@ -2454,6 +2504,23 @@ function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of SPEEDS){ const b=document.createElement("button"); b.textContent=s+"×"; if(s===S.speed) b.className="on";
     b.onclick=()=>{ S.speed=s; renderSpeeds(); }; box.appendChild(b); } }
 $("fitBtn").onclick=()=>{ S.zoom=1; S.touched=false; fit(); };
+/* the close-up window: the instrument's own canvas is moved into it, so it is the very same instrument */
+let imOpen=null;
+function openInstr(which){
+  closeInstr(); const box=$(which==="fg"?"fgBox":"zBox"), vw=window.innerWidth, vh=window.innerHeight;
+  const w=which==="fg"?Math.min(1000,vw*0.92):Math.max(240,Math.min(480,vw*0.92,(vh*0.92-70)*9.9/19.6));
+  box.style.width=Math.floor(w)+"px"; $("imBody").appendChild(box); $("imodal").hidden=false; imOpen=which; layout(); }
+function closeInstr(){ if(!imOpen) return; const box=$(imOpen==="fg"?"fgBox":"zBox"); box.style.width=""; document.querySelector(".instrHold").appendChild(box); $("imodal").hidden=true; imOpen=null; S.knob=null; layout(); }
+$("imClose").onclick=closeInstr;
+$("imodal").addEventListener("mousedown",e=>{ if(e.target===$("imodal")) closeInstr(); });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&imOpen) closeInstr(); });
+$("zFgBtn").onclick=()=>openInstr("fg"); $("zZBtn").onclick=()=>openInstr("scope");
+cv.addEventListener("dblclick",e=>{ const [x,y]=mousePos(e);
+  const which=S.on.fg&&inRect(S.zones.fg,x,y)?"fg":S.on.scope&&inRect(S.zones.scope,x,y)?"scope":null; if(!which) return;
+  /* the two clicks of a double-click must not leave the part moved or picked up */
+  const m=S.lastMove; if(m&&performance.now()-m.t<700&&m.id===which){ if(m.at) S.at[which]=m.at; }
+  if(S.carry&&S.carry.move) S.carry=null;
+  S.knob=null; openInstr(which); });
 
 /* the displays refresh a few times a second, like the real instrument */
 function updateReadings(){
@@ -2489,7 +2556,7 @@ function applyLang(){
   $("t-fglbl").textContent=t.fglbl; $("t-zlbl").textContent=t.zlbl;
   $("t-tray").textContent=t.tray;
   $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("flipBtn").textContent=t.flipBtn; $("t-h-view").textContent=t.hView;
-  $("t-speedhint").textContent=t.speedHint; $("fitBtn").textContent=t.fitBtn;
+  $("t-speedhint").textContent=t.speedHint; $("fitBtn").textContent=t.fitBtn; $("zFgBtn").textContent=t.zFg; $("zZBtn").textContent=t.zZ; $("imClose").textContent=t.imClose;
   $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"APhO 2025 E1 — 유도가열 조리기의 물리 · HaslaLab":"APhO 2025 E1 — Physics of Induction Cooking · HaslaLab";

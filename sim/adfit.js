@@ -11,10 +11,10 @@
       banner = document.createElement("aside");
       banner.id = "haslalab-adfit-banner";
       banner.innerHTML = '<span></span><div></div>';
-      const desktop = matchMedia("(min-width: 768px)").matches;
-      const experiment = document.querySelector(".wrap, main, #app");
-      if (desktop && experiment) experiment.before(banner);
-      else document.body.append(banner);
+      /* always the first thing on the page, so it sits in the same place in Korean and in English */
+      document.body.prepend(banner);
+      const pick = document.getElementById("hl-lang");
+      if (pick) banner.after(pick);
     }
     banner.setAttribute("aria-label", isKorean() ? "광고" : "Advertisement");
     banner.querySelector("span").textContent = label();
@@ -51,6 +51,10 @@
       #haslalab-adfit-banner.haslalab-adfit-desktop>div{width:728px;height:90px}
     }
     @media print{#haslalab-adfit-banner{display:none}}
+    /* the language buttons: always in the top right corner of the header, whatever the title and subtitle are */
+    header:has(> .lang){position:relative;padding-right:190px !important}
+    header > .lang{position:absolute;top:16px;right:12px}
+    @media (max-width:600px){header:has(> .lang){padding-right:12px !important;padding-top:56px !important} header > .lang{top:12px}}
   `;
   document.head.append(style);
   new MutationObserver(syncAd).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
