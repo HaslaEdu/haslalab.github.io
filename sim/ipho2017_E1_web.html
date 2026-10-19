@@ -907,7 +907,7 @@ function drawCellBody(x0,y0,o){
   face([[x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0]],g); face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],g);
   face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],g); face([[x1,y0,z0],[x1,y0,z1],[x1,y1,z1],[x1,y1,z0]],g);
   face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],g);
-  const fx0=x0-0.4, fx1=x1+0.4, fb=y0-0.6, ft=y1-0.2;
+  const fx0=x0-0.4, fx1=x1+0.4, fb=y0-0.6, ft=y1;                          /* the frame stands as high as the glass */
   box3(fx0,fx1,fb,ft,z0-1.0,z0+0.35,BLACK,C);                                   /* side bars */
   box3(fx0,fx1,fb,ft,z1-0.35,z1+1.0,BLACK,C);
   box3(fx0,fx1,fb,y0+0.3,z0+0.35,z1-0.35,BLACK,C);                              /* bottom bar */
