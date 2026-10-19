@@ -200,7 +200,7 @@ const T = {
     pw:{wall:"벽 콘센트 110 V", noMains:"함수 발생기 스위치는 켜져 있지만 전원이 들어오지 않습니다 — 벽 콘센트의 전원 코드를 함수 발생기 뒷면에 꽂으세요.", bat0:"오실로스코프 배터리 부족 — 충전하세요."},
     m:{
       cordWall:"플러그를 벽 콘센트에 꽂으세요 — 콘센트의 위 또는 아래 구멍을 클릭하세요. (우클릭: 부품함으로)",
-      needScope:"먼저 오실로스코프를 실험대에 놓으세요.", probeWhere:"프로브의 BNC 플러그는 스코프 윗면의 CH1에 꽂습니다 — 오실로스코프를 클릭하세요.", probeIn:"프로브를 CH1에 꽂았습니다.",
+      needScope:"먼저 오실로스코프를 실험대에 놓으세요.", probeWhere:"프로브의 BNC 플러그는 스코프 윗면의 CH1이나 CH2에 꽂습니다 — 꽂을 단자 쪽을 클릭하세요.", probeIn:c=>"프로브를 "+c+"에 꽂았습니다. 스코프에서 그 채널을 보세요 (MENU → F1).",
       cableEnd:"케이블 한쪽 끝을 뽑았습니다 — 꽂을 단자를 클릭하세요. (우클릭: 케이블을 부품함으로)",
       cord1:"벽에 꽂았습니다. 다른 끝을 들었습니다 — 함수 발생기(뒷면 전원 소켓 8)를 클릭하세요. (우클릭: 책상에 내려놓기)",
       cord2:"다른 쪽 끝을 꽂을 곳을 클릭하세요. (우클릭: 취소)",
@@ -320,7 +320,7 @@ const T = {
     pw:{wall:"wall outlet 110 V", noMains:"The function generator is switched on but has no power — plug the mains cord from the wall outlet into its rear inlet.", bat0:"Scope battery low — charge it."},
     m:{
       cordWall:"Plug it into the wall outlet: click the upper or lower socket. (R-click: back to the box)",
-      needScope:"Put the oscilloscope on the bench first.", probeWhere:"The probe's BNC plug goes into CH1 on top of the scope: click the oscilloscope.", probeIn:"Probe plugged into CH1.",
+      needScope:"Put the oscilloscope on the bench first.", probeWhere:"The probe's BNC plug goes into CH1 or CH2 on top of the scope: click near the socket you want.", probeIn:c=>"Probe plugged into "+c+". Show that channel on the scope (MENU → F1).",
       cableEnd:"One end of the cable pulled out: click the terminal to plug it into. (R-click: cable back to the box)",
       cord1:"Plugged into the wall; holding the other end — click the function generator (rear inlet 8). (R-click: lay it on the desk)",
       cord2:"Click where the other end goes. (R-click: cancel)",
@@ -574,7 +574,8 @@ const S={
   /* each part stands wherever it was put down: its shift (cm, along x and z) from the drawing's own place */
   at:{fg:[0,0],scope:[0,0],base:[0,0],box:[0,0],c1:[0,0],sw:[0,0],C470N:[0,0],C470U:[0,0],C1000U:[0,0],C2200U:[0,0]},
   fg:{pow:false,amp:0.25,range:2,coarse:0.5,fine:0.5,wave:0},
-  z:{on:false,mode:"SCOPE",fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
+  probeCh:0,                    /* the BNC socket the probe is in: 0 = CH1, 1 = CH2 */
+  z:{on:false,mode:"SCOPE",ch:0,fsel:"VT",menu:false,couple:"AC",probe:1,tmode:"AUTO",edge:1,
      vi:7,ti:6,ypos:0,xpos:0,trig:0,hold:false,held:null,dfn:"ACV",rfn:0,armed:true,
      rd:{f:0,vpp:0,vmax:0,t:0,val:0,ok:true,wait:false}},
   t:0, speed:1, swRun:false, swT0:0, swAcc:0, laps:[],
@@ -1191,6 +1192,7 @@ function drawZoyiScreen(c,x0,y0,W,H){
   if(z.mode==="SCOPE") drawScopeArea(c,x0,y0,W,H); else drawDmmArea(c,x0,y0,W,H);
 }
 function scopeInput(){
+  if(S.probeCh!==S.z.ch) return {amp:0,f:freq(),none:true};
   if(!S.probe.tip||!S.probe.gnd||!S.sol) return {amp:0,f:freq(),none:!S.probe.tip||!S.probe.gnd};
   return {amp:S.sol.amp(S.probe.tip,S.probe.gnd),f:freq(),none:false};
 }
@@ -1209,7 +1211,7 @@ function drawScopeArea(c,x0,y0,W,H){
   c.moveTo(gx,gy+GH/2); c.lineTo(gx+GW,gy+GH/2); c.stroke();
   const vd=VDIV[z.vi], td=TDIV[z.ti];
   const cy=gy+GH/2-z.ypos*dy;
-  FT(c,"1▸",gx+0.02,cy,0.24,"#ffd400","left",true);
+  const chc=z.ch?"#3fd3ff":"#ffd400"; FT(c,(z.ch+1)+"▸",gx+0.02,cy,0.24,chc,"left",true);
   FT(c,"◂",gx+GW-0.02,gy+GH/2-(z.trig+z.ypos)*dy,0.26,"#f0a23c","right",true);
   const src=z.hold&&z.held?z.held:(z.tmode==="SINGLE"&&!z.armed&&z.held?z.held:scopeView());
   if(!src.wait){
@@ -1222,17 +1224,17 @@ function drawScopeArea(c,x0,y0,W,H){
       const yy=Math.max(gy+0.01,Math.min(gy+GH-0.01,cy-v));
       if(i===0) c.moveTo(gx+i/200*GW,yy); else c.lineTo(gx+i/200*GW,yy);
     }
-    c.strokeStyle="#ffe23a"; c.lineWidth=0.035; c.stroke();
+    c.strokeStyle=z.ch?"#3fd3ff":"#ffe23a"; c.lineWidth=0.035; c.stroke();
   }
-  FT(c,"CH1  "+fmtDiv(vd*z.probe)+"/div",gx+0.08,gy+GH-0.2,0.24,"#ffd400","left",true);
+  FT(c,(z.ch?"CH2":"CH1")+"  "+fmtDiv(vd*z.probe)+"/div",gx+0.08,gy+GH-0.2,0.24,chc,"left",true);
   /* readouts */
   const r=z.rd, ry=y0+4.72;
   c.fillStyle="#0a0f16"; c.fillRect(x0,y0+4.5,W,0.44);
-  FT(c,"Freq:"+(r.f>0?fmtNum(r.f,"Hz"):"----"),x0+0.08,ry,0.27,"#ffd400","left",true);
-  FT(c,"Vpp:"+fmtNum(r.vpp,"V"),x0+2.8,ry,0.27,"#ffd400","left",true);
-  FT(c,"Vmax:"+fmtNum(r.vmax,"V"),x0+5.35,ry,0.27,"#ffd400","left",true);
+  FT(c,"Freq:"+(r.f>0?fmtNum(r.f,"Hz"):"----"),x0+0.08,ry,0.27,chc,"left",true);
+  FT(c,"Vpp:"+fmtNum(r.vpp,"V"),x0+2.8,ry,0.27,chc,"left",true);
+  FT(c,"Vmax:"+fmtNum(r.vmax,"V"),x0+5.35,ry,0.27,chc,"left",true);
   /* soft keys */
-  const labs=z.menu?["BACK","MODE:"+z.tmode.slice(0,4),"EDGE:"+(z.edge>0?"↑":"↓"),"PROBE:"+z.probe+"X"]
+  const labs=z.menu?["CH:"+(z.ch?"CH2":"CH1"),"MODE:"+z.tmode.slice(0,4),"EDGE:"+(z.edge>0?"↑":"↓"),"PROBE:"+z.probe+"X"]
                    :["VOL/TIME","MOVE","TRIG",z.couple];
   const sel=z.menu?-1:["VT","MOVE","TRIG"].indexOf(z.fsel);
   for(let i=0;i<4;i++){ const bx=x0+i*W/4;
@@ -1241,9 +1243,11 @@ function drawScopeArea(c,x0,y0,W,H){
   if(z.menu){
     rr(c,gx+GW*0.52,gy+0.2,gx+GW-0.1,gy+2.2,0.08,"rgba(20,28,40,0.94)","#5a6b80",0.03);
     FT(c,"MENU",gx+GW*0.76,gy+0.45,0.26,"#fff","center",true);
-    FT(c,"F2 Mode : "+z.tmode,gx+GW*0.55,gy+0.95,0.23,"#ddd","left");
+    FT(c,"F1 Channel : "+(z.ch?"CH2":"CH1"),gx+GW*0.55,gy+0.75,0.23,"#ddd","left");
+    FT(c,"F2 Mode : "+z.tmode,gx+GW*0.55,gy+1.05,0.23,"#ddd","left");
     FT(c,"F3 Edge : "+(z.edge>0?"Rising":"Falling"),gx+GW*0.55,gy+1.35,0.23,"#ddd","left");
-    FT(c,"F4 Probe : "+z.probe+"X",gx+GW*0.55,gy+1.75,0.23,"#ddd","left");
+    FT(c,"F4 Probe : "+z.probe+"X",gx+GW*0.55,gy+1.65,0.23,"#ddd","left");
+    FT(c,"MENU: back",gx+GW*0.55,gy+1.95,0.2,"#9aa3ab","left");
   }
 }
 function scopeView(){
@@ -1664,7 +1668,7 @@ function probePart(end){
 /* the coax, about 1.2 m: the part that climbs out of the BNC and down the scope's front, and where it
    reaches the desk; what is left (COAX_DESK cm) can lie on the desk */
 const COAX_LEN=120, COAX_DESK=96;
-function coaxUp(){ const o=S.at.scope, x=Z_BNC[0][0]+o[0], y=Z_BOX[3], z=(Z_BOX[4]+Z_BOX[5])/2+o[1], f=Z_BOX[4]+o[1];
+function coaxUp(){ const o=S.at.scope, x=Z_BNC[S.probeCh][0]+o[0], y=Z_BOX[3], z=(Z_BOX[4]+Z_BOX[5])/2+o[1], f=Z_BOX[4]+o[1];
   const xl=Z_BOX[0]+o[0];                                  /* it hangs down the scope's left side, clear of the screen */
   return [[x,y+1.6,z],[x,y+3.0,z],[xl+0.6,y+2.6,z],[xl-1.4,y+0.6,z+0.3],[xl-2.4,y-5,z+0.5],[xl-3.0,4,z],[xl-3.4,1.2,z-1.4],[xl-3.6,0.32,z-3.4]]; }
 function coaxStart(){ const u=coaxUp(); return u[u.length-1]; }
@@ -1698,7 +1702,7 @@ function drawProbe(){
   const k=ppcm(), w=v=>Math.max(1.2,k*v);
   const PT=probePart("tip"), PG=probePart("gnd"), at=probeAxis(PT), ag=probeAxis(PG,0.4);
   const tip=at(0), tail=at(PRB.tail), gnd=ag(0), gTail=ag(PRB.clip);
-  withOff(S.at.scope,()=>{ const x=Z_BNC[0][0], y=Z_BOX[3], z=(Z_BOX[4]+Z_BOX[5])/2;          /* the probe's BNC plug in CH1 */
+  withOff(S.at.scope,()=>{ const x=Z_BNC[S.probeCh][0], y=Z_BOX[3], z=(Z_BOX[4]+Z_BOX[5])/2;          /* the probe's BNC plug in CH1 or CH2 */
     CYL(x,y-0.05,y+0.75,z,0.56,"#a9aeb3","#d1d5d9","#5d6166"); CYL(x,y+0.75,y+1.6,z,0.38,"#1b1c1f","#2a2c30","#000");
     const q=NP(x+0.25,y+1.15,z-0.3); OVAL(q[0],q[1],Math.max(1.5,ppcm()*0.12),Math.max(1.5,ppcm()*0.12),"#e5c32a",null); });
   /* the 1.2 m coax: up out of the BNC, over the front of the scope down to the desk, then lying on the
@@ -2162,7 +2166,8 @@ function place(x,y){
   if(cr.k==="item"&&cr.id==="probe"){        /* its BNC plug goes into CH1 on top of the scope */
     if(!S.on.scope){ say(t.m.needScope,true); return; }
     if(!inRect(S.zones.scope,x,y,6)){ say(t.m.probeWhere,true); return; }
-    S.on.probe=true; S.carry=null; say(t.m.probeIn); solve(); drawTray(); return; }
+    const dz=Z_BNC.map(([bx])=>{ const q=withOff(S.at.scope,()=>NP(bx,Z_BOX[3],(Z_BOX[4]+Z_BOX[5])/2)); return Math.hypot(q[0]-x,q[1]-y); });
+    S.probeCh=dz[1]<dz[0]?1:0; S.on.probe=true; S.carry=null; say(t.m.probeIn(Z_BNC[S.probeCh][1])); solve(); drawTray(); return; }
   if(cr.k==="item"){
     const id=cr.id, [bx,bz]=benchAt(x,y);
     let where="desk", o=null;
@@ -2369,7 +2374,7 @@ function zoyiKey(id){
   }
   if(id==="MENU"){ z.menu=!z.menu; return; }
   if(z.menu){
-    if(id==="F1") z.menu=false;
+    if(id==="F1"){ z.ch=1-z.ch; z.held=null; z.hold=false; }
     else if(id==="F2"){ z.tmode=z.tmode==="AUTO"?"NORMAL":z.tmode==="NORMAL"?"SINGLE":"AUTO"; z.armed=true; z.held=null; }
     else if(id==="F3") z.edge=-z.edge;
     else if(id==="F4"){ z.probe=z.probe===1?10:1; say(t.m.probeX(z.probe)); }
@@ -2421,8 +2426,9 @@ function drawZoyiPanel(){
   c.setTransform(DPR*ZS,0,0,DPR*ZS,DPR*ZS*0.5,DPR*ZS*1.3);
   if(!S.on.scope) c.globalAlpha=0.35;
   for(const [x,lab] of Z_BNC){ const u=x-Z_FACE.x0; rr(c,u-0.55,-0.26,u+0.55,0.05,0.08,"#b9bdc1","#6f7479",0.03);
-    if(lab==="CH1"&&S.on.probe){ rr(c,u-0.4,-0.62,u+0.4,-0.24,0.06,"#a9aeb3","#5d6166",0.03); rr(c,u-0.28,-1.0,u+0.28,-0.6,0.05,"#1b1c1f"); }
-    if(lab==="CH1"&&S.on.probe) FT(c,lab,u-0.62,-0.3,0.3,"#9aa3ab","right",true); else FT(c,lab,u,-0.55,0.3,"#9aa3ab","center",true); }
+    const here=S.on.probe&&Z_BNC[S.probeCh][1]===lab;
+    if(here){ rr(c,u-0.4,-0.62,u+0.4,-0.24,0.06,"#a9aeb3","#5d6166",0.03); rr(c,u-0.28,-1.0,u+0.28,-0.6,0.05,"#1b1c1f"); }
+    if(here) FT(c,lab,u-0.62,-0.3,0.3,"#9aa3ab","right",true); else FT(c,lab,u,-0.55,0.3,"#9aa3ab","center",true); }
   drawZoyiFace(c);
   c.globalAlpha=1;
 }

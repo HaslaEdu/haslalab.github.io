@@ -90,10 +90,14 @@
         border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
   .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
   #closeCv{touch-action:none}
-  .instr3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .instr3 canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
+  .iwin{position:fixed;z-index:60;right:12px;bottom:12px;width:min(470px,94vw);background:#1f242b;border:1px solid #4a525c;border-radius:10px;padding:8px 10px 10px;box-shadow:0 10px 40px rgba(0,0,0,.55)}
+  .iwin[hidden]{display:none}
+  .iwhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;cursor:move;user-select:none}
+  .iwhead button{width:auto;margin:0;flex:0 0 auto;padding:4px 10px}
+  .iwin .ihint{font-size:11.5px;color:#9aa3ab;margin:6px 0 0}
+  .iwin canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
+  .iwin .ipane[hidden]{display:none}
   .ilbl{font-size:12px;color:#f2c14e;font-weight:700;margin:0 0 4px}
-  @media(max-width:900px){.instr3{grid-template-columns:1fr}}
   .chklist{font-size:12px;line-height:1.7}
   .chklist div{display:flex;justify-content:space-between;gap:8px;color:#9aa3ab}
   .chklist b{font-weight:600}.chklist .ok{color:#7fd39a}.chklist .no{color:#f0b35a}.chklist .na{color:#5c646d}
@@ -112,6 +116,14 @@
   </div>
 </header>
 
+<!-- the close-up of one instrument: it floats over the page without blocking it, so the stopwatch still works -->
+<div class="iwin" id="iwin" hidden>
+  <div class="iwhead" id="iwhead"><span class="ilbl" id="iwTitle"></span><button id="iwClose"></button></div>
+  <div class="ipane" id="pane-ad" hidden><canvas id="adCv"></canvas></div>
+  <div class="ipane" id="pane-go" hidden><canvas id="goCv"></canvas></div>
+  <div class="ipane" id="pane-ru" hidden><canvas id="ruCv"></canvas></div>
+  <div class="ihint" id="t-instrcap"></div>
+</div>
 <div class="wrap">
   <aside class="tray">
     <h3 id="t-tray"></h3>
@@ -122,14 +134,6 @@
     <div class="card">
       <h3 id="t-cap"></h3>
       <canvas id="cv"></canvas>
-    </div>
-    <div class="card" id="instrCard">
-      <h3 id="t-instrcap"></h3>
-      <div class="instr3">
-        <div><div class="ilbl" id="t-adlbl"></div><canvas id="adCv"></canvas></div>
-        <div><div class="ilbl" id="t-golbl"></div><canvas id="goCv"></canvas></div>
-        <div><div class="ilbl" id="t-rulbl"></div><canvas id="ruCv"></canvas></div>
-      </div>
     </div>
   </div>
 
@@ -156,8 +160,8 @@ const T={
     sub:"가상 실험실 · 문제지의 조립 순서 그대로, 매트 위에 A형 받침대를 놓고 별 노브를 끼우고, 수직 스탠드·알루미늄 튜브·DC 모터·커플러·원판을 직접 끼운 다음 육각 렌치와 드라이버로 나사를 하나하나 조이세요. 모터 회전수는 어디에도 표시되지 않습니다 — 세차 주기는 스톱워치로, 기울기는 각도기로, 팔 길이는 자로 직접 재세요.",
     tray:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중", trayHand:"손에 들고 있음", trayMany:"클릭할 때마다 1세트", trayNeed:s=>"먼저: "+s,
     trayHelp:"좌클릭 집기·놓기·조이기 / 우클릭 되돌리기\n공구는 집어서 나사에 대고 클릭",
-    cap:"실험대 — 좌클릭 집기·놓기·꽂기·조이기 / 우클릭 되돌리기·뽑기 / 휠 확대 / 빈 곳 끌기: 시점 돌리기 (Shift: 옮기기) / 더블클릭: 시점 처음대로",
-    instrcap:"계기 확대 — 실험대 위의 바로 그 장비입니다. 어댑터 노브는 위아래로 끌거나 휠",
+    cap:"실험대 — 좌클릭 집기·놓기·꽂기·조이기 / 우클릭 되돌리기·뽑기 / 휠 확대 / 빈 곳 끌기: 시점 돌리기 (Shift: 옮기기) / 빈 곳 더블클릭: 시점 처음대로 / 어댑터·각도기·자 더블클릭: 계기 확대",
+    instrcap:"실험대 위의 바로 그 장비입니다. 어댑터 노브는 위아래로 끌거나 휠 · 제목을 끌어 창 옮기기 · Esc: 닫기", iwClose:"닫기 (Esc)",
     adlbl:"2. 조절식 전원 어댑터 (ZY-009)", golbl:"5. 각도기 — 피벗에 대고 본 모습", rulbl:"10. 자 — 튜브에 댄 모습",
     hSw:"6. 스톱워치", hSpeed:"시간 배속", speedHint:"배속은 스톱워치와 모터 과열 시간에도 똑같이 적용됩니다.",
     hChk:"조립 점검", hHand:"손으로 다루기",
@@ -198,8 +202,8 @@ const T={
     sub:"Virtual laboratory · in the order of the problem sheet: put the A-shape retort stand on the mat, screw in its star knobs, then fit the vertical stand, the aluminium tube, the DC motor, the coupler and the disk yourself and tighten every screw with the Allen key and the screwdriver. The motor speed is shown nowhere: time the precession with the stopwatch, read the tilt on the goniometer and the arm length on the ruler.",
     tray:"Parts box", trayTake:"click to pick up", trayOut:"in use", trayHand:"in your hand", trayMany:"one set per click", trayNeed:s=>"first: "+s,
     trayHelp:"L-click pick/place/tighten, R-click return\npick up a tool and click a screw",
-    cap:"bench — L-click pick/place/plug/tighten, R-click return/unplug / wheel zoom / drag empty space: orbit (Shift: pan) / double-click: reset the view",
-    instrcap:"close-ups — the very instruments on the bench. Drag the adapter knob up/down or roll the wheel",
+    cap:"bench — L-click pick/place/plug/tighten, R-click return/unplug / wheel zoom / drag empty space: orbit (Shift: pan) / double-click empty space: reset the view / double-click the adapter, goniometer or ruler: close-up",
+    instrcap:"The very instrument on the bench. Drag the adapter knob up/down or roll the wheel · drag the title to move the window · Esc: close", iwClose:"Close (Esc)",
     adlbl:"2. Adjustable power adapter (ZY-009)", golbl:"5. Goniometer — held at the pivot", rulbl:"10. Ruler — held on the tube",
     hSw:"6. Stopwatch", hSpeed:"Time scale", speedHint:"The scale applies to the stopwatch and to the motor heating too.",
     hChk:"Assembly check", hHand:"By hand",
@@ -1315,7 +1319,7 @@ function layout(){
   const tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
-  for(const c of [adCv,goCv,ruCv]){ const ww=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width)); c.style.height=Math.round(ww*0.62)+"px"; c.width=Math.round(ww*DPR); c.height=Math.round(ww*0.62*DPR); }
+  for(const c of [adCv,goCv,ruCv]){ if(c.parentElement.hidden) continue; const ww=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width)); c.style.height=Math.round(ww*0.62)+"px"; c.width=Math.round(ww*DPR); c.height=Math.round(ww*0.62*DPR); }
   drawTray();
 }
 function drawTray(){
@@ -1715,6 +1719,7 @@ function rightClick(z){ const t=t_();
 }
 function benchDown(p,right,e){
   const t=t_();
+  if(!hand&&!right){ const z=zoneAt(p), k=IZ[z]; lastPick=k?{t:performance.now(),z,pos:{adapter:[...ST.pos.adapter],gonio:[...ST.pos.gonio],ruler:[...ST.pos.ruler]},gonio:ST.gonio,ruler:ST.ruler}:null; }
   if(hand&&hand.tool){
     if(right){ const k=hand.tool, q=deskXY(k,p,FOOT[k][4]*0.5), o=crowdAt(k,q)||solidAt(k,q); if(o){ say(t.crowded(itemName(o.k)),true); return; } ST.pos[k]=q; say(t.toolDown(itemName(k))); hand=null; return; }
     const fs=nearestFast(p); if(fs){ if(fs.tool!==hand.tool){ say(t.wrongTool,true); return; } if(useTie(fs.id)) return; if(fs.id.startsWith("pol")) openZoom("pol",fs.id); else openZoom(fs.id); return; }
@@ -1754,7 +1759,7 @@ function leftZone(z,p,e){ const t=t_();
     drag={k:"arm",side,p,t0:performance.now(),off:sub2(p,endP),r0:kit.r_m,moved:false,cw:z==="cw"||z==="endL"}; return; }
   if(TOOLS.includes(z)){ hand={tool:z}; say((z==="ties"||z==="tape"?t.tieTake:t.toolTake)(itemName(z))); return; }
   if(z==="gonioOn"||z==="rulerOn"){ const k=z==="gonioOn"?"gonio":"ruler";
-    if(ST[k+"Taped"]){ if(k==="ruler"){ leftZone("tube",p,e); return; } say(t.taped(itemName(k)),true); return; }
+    if(ST[k+"Taped"]){ if(k==="ruler"){ leftZone("tube",p,e); return; } openI("go"); return; }
     ST[k]=false; ST.pos[k]=deskXY(k,p,3); carry(k,p,{reattach:true,snap:true}); hand.orig=k==="gonio"?deskNear():[Math.min(100,standXY()[0]+30),10]; hand.lz=3; say(t.moveIt(itemName(k))); return; }
   if(z==="mat"&&!spinning()){ hand={item:z,move:true,orig:[...ST.pos[z]]}; say(t.moveIt(itemName(z))); return; }
   if(DESK_ITEMS.includes(z)){ carry(z,p); say(t.moveIt(itemName(z))); return; }
@@ -1806,7 +1811,23 @@ cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; if(ZOOM){ zoomH
   else if(hand&&hand.tool) cv.style.cursor=nearestFast(p)?"pointer":"crosshair";
   else if(!drag&&!hand){ const z=zoneAt(p); cv.style.cursor=!z?"default":["endR","endL","disk","cw","tube","gonioArm"].includes(z)?"grab":"pointer"; } });
 cv.addEventListener("pointerup",()=>{ zoomUp(); benchUp(); });
-cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(!ZOOM&&!zoneAt(p)&&!hand) camReset(); });
+cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(ZOOM) return;
+  /* the two clicks of a double-click on an instrument must leave it where it was */
+  const m=lastPick; if(m&&performance.now()-m.t<800){ hand=null; drag=null; Object.assign(ST.pos,m.pos); ST.gonio=m.gonio; ST.ruler=m.ruler; lastPick=null; openI(IZ[m.z]); say(d()[IZ[m.z]+"lbl"]); drawTray(); return; }
+  const z=zoneAt(p); if(IZ[z]){ openI(IZ[z]); return; }
+  if(!z&&!hand) camReset(); });
+/* the instrument close-up window */
+const IZ={adapter:"ad",adKnob:"ad",gonio:"go",gonioOn:"go",gonioArm:"go",ruler:"ru",rulerOn:"ru"};
+let lastPick=null, iwOpen=null;
+function openI(w){ iwOpen=w; for(const k of ["ad","go","ru"]) $("pane-"+k).hidden=k!==w; $("iwTitle").textContent=d()[w+"lbl"]; $("iwin").hidden=false; layout(); ({ad:drawAdPanel,go:drawGoPanel,ru:drawRuPanel})[w](); }
+function closeI(){ iwOpen=null; $("iwin").hidden=true; }
+$("iwClose").onclick=closeI;
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&iwOpen&&!ZOOM) closeI(); });
+{ let dw=null; const hd=$("iwhead"), w=$("iwin");
+  hd.addEventListener("pointerdown",e=>{ if(e.target.tagName==="BUTTON") return; const r=w.getBoundingClientRect(); dw={dx:e.clientX-r.left,dy:e.clientY-r.top}; hd.setPointerCapture(e.pointerId); });
+  hd.addEventListener("pointermove",e=>{ if(!dw) return; w.style.right="auto"; w.style.bottom="auto";
+    w.style.left=Math.max(0,Math.min(innerWidth-60,e.clientX-dw.dx))+"px"; w.style.top=Math.max(0,Math.min(innerHeight-40,e.clientY-dw.dy))+"px"; });
+  hd.addEventListener("pointerup",()=>{ dw=null; }); }
 cv.addEventListener("wheel",e=>{ e.preventDefault(); if(ZOOM){ zoomTurn(-Math.sign(e.deltaY)*Math.min(Math.abs(e.deltaY),120)*0.12); return; } const p=lpos(e), z=hand&&!hand.tool?null:zoneAt(p), up=e.deltaY<0;
   if(z&&z.startsWith("foot")){ footSteps(+z[4],up?1:-1); return; }
   if(z==="adKnob"){ if(ST.knob===0&&up) setKnob(0.005); else setKnob(ST.knob+(up?1:-1)*0.1/9); return; }
@@ -1917,7 +1938,7 @@ function renderStatus(){
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.tray; $("t-cap").textContent=t.cap;
-  $("t-instrcap").textContent=t.instrcap; $("t-adlbl").textContent=t.adlbl; $("t-golbl").textContent=t.golbl; $("t-rulbl").textContent=t.rulbl;
+  $("t-instrcap").textContent=t.instrcap; $("iwClose").textContent=t.iwClose; if(iwOpen) $("iwTitle").textContent=t[iwOpen+"lbl"];
   $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("t-h-speed").textContent=t.hSpeed; $("t-speedhint").textContent=t.speedHint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
@@ -1957,7 +1978,7 @@ function tick(){
   drawBench(); drawZoom();
   const on=has("sw"); $("swLbl").textContent=on?fmtTime(swValue()):"-:--.--"; $("swLbl").style.opacity=on?1:0.4;
   $("swHint").textContent=on?d().swOk:d().swHint;
-  if(++fr%3===0){ drawAdPanel(); drawGoPanel(); drawRuPanel(); }
+  if(++fr%3===0&&iwOpen){ ({ad:drawAdPanel,go:drawGoPanel,ru:drawRuPanel})[iwOpen](); }
   if(fr%10===0){ renderStatus(); drawTray(); }
   requestAnimationFrame(tick);
 }
