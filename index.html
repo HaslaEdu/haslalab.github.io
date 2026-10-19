@@ -1697,9 +1697,41 @@ const DATA={
               pdf:{ko:"pdf/EuPhO_2020_E_KO.pdf", en:"pdf/EuPhO_2020_E_EN.pdf"},
               sol:"pdf/EuPhO_2020_S.pdf"}}
     ]},
-   {y:2019,host:{ko:"라트비아 · 리가",en:"Riga, Latvia"},cc:"lv",problems:papers("EuPhO_2019", wip("Propagation of Radio Waves"), ["E_EN"])},
-   {y:2018,host:{ko:"러시아 · 돌고프루드니",en:"Dolgoprudny, Russia"},cc:"ru",problems:papers("EuPhO_2018", wip("Porous Membrane"), ["E_EN", "S"])},
-   {y:2017,host:{ko:"에스토니아 · 타르투",en:"Tartu, Estonia"},cc:"ee",problems:papers("EuPhO_2017", wip("Light-Emitting Diode"), ["E_EN", "S"])}
+   {y:2019,host:{ko:"라트비아 · 리가",en:"Riga, Latvia"},cc:"lv",
+    problems:[
+      {id:"E1",
+       title:{ko:"전파의 전파",en:"Propagation of Radio Waves"},
+       desc:{ko:"방수 송신기와 dBm 전력계로 자유 공간과 포일 반사판의 정상파, 물 상자와 물 채운 관 속 파장·감쇠, 차단 주파수 아래 금속관 속 감쇠를 자로 재어 공기와 물의 전파 성질을 밝힙니다.",
+             en:"With a waterproof emitter and a dBm power meter, measure the standing waves in free space and before a foil reflector, the wavelength and decay in a water box and a water-filled tube, and the decay in metal tubes below cut-off."},
+       tags:["전자기파","정상파","도파관"], tagsEn:["Radio waves","Standing waves","Waveguides"],
+       files:{sim:"sim/eupho2019_E1_web.html",
+              src:{ko:"src/eupho2019_E1_sim_KO.py", en:"src/eupho2019_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2019_E_EN.pdf"}}}
+    ]},
+   {y:2018,host:{ko:"러시아 · 돌고프루드니",en:"Dolgoprudny, Russia"},cc:"ru",
+    problems:[
+      {id:"E1",
+       title:{ko:"다공성 막",en:"Porous Membrane"},
+       desc:{ko:"양극산화 알루미늄 막을 통한 CO₂ 확산 시간을 센서로 기록하고, 회전대 위 막의 반사 간섭으로 두께 h를, 두 편광판 사이 복굴절로 Δn과 다공도 p를 구해 채널 지름 d를 추정합니다.",
+             en:"Log how CO₂ leaks out through an anodic alumina membrane, find its thickness h from the interference of reflections on a rotary table and Δn and the porosity p from its birefringence between two polarisers, then estimate the channel diameter d."},
+       tags:["확산","박막 간섭","복굴절"], tagsEn:["Diffusion","Thin-film interference","Birefringence"],
+       files:{sim:"sim/eupho2018_E1_web.html",
+              src:{ko:"src/eupho2018_E1_sim_KO.py", en:"src/eupho2018_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2018_E_EN.pdf"},
+              sol:"pdf/EuPhO_2018_S.pdf"}}
+    ]},
+   {y:2017,host:{ko:"에스토니아 · 타르투",en:"Tartu, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"발광 다이오드",en:"Light-Emitting Diode"},
+       desc:{ko:"LED·가열 저항·서미스터가 붙은 기판을 전원과 멀티미터로 재어 VG0·n·A·Rs를 구하고, 병 속 공기의 팽창을 U자관으로 읽어 효율을, 마주 본 LED의 광전류로 최대 전력을 찾습니다.",
+             en:"With a supply, potentiometers and multimeters find the LED's VG0, n, A and Rs on a board with a heater and a thermistor, read its efficiency from the warming air of a closed bottle on a U-tube manometer, and harvest power from a facing LED."},
+       tags:["반도체","열측정","광전류"], tagsEn:["Semiconductors","Calorimetry","Photocurrent"],
+       files:{sim:"sim/eupho2017_E1_web.html",
+              src:{ko:"src/eupho2017_E1_sim_KO.py", en:"src/eupho2017_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2017_E_EN.pdf"},
+              sol:"pdf/EuPhO_2017_S.pdf"}}
+    ]}
   ]},
  nbpho:{
   abbr:"NBPhO", since:2003,
@@ -4937,6 +4969,30 @@ const SIG_E26E1={
   f:n=>n*5.05*35/10+60,
   read(t){ const n=this.pts[this.n(t)-1]; return (this.f(n)-60).toFixed(0)+" mm"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:-4,x1:5,y0:0,y1:140,f:this.f,xl:"node n"},t,this); }};
+const SIG_E17E1={
+  sim:"sim/eupho2017_E1_web.html", tag:"EuPhO 2017 E1", span:20, rate:1,
+  capL:{ko:"전류를 바꾸며 · LED 양단 전압",en:"Changing the current · the LED's voltage"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  pts:[-7,-6,-5,-4,-3,-2,-1.5,-1,-0.5,-0.3], n:euN, jit:0.002,
+  f:l=>0.0398*(47.6+l*2.3026)+0.7*Math.pow(10,l),
+  read(t){ const l=this.pts[this.n(t)-1]; return this.f(l).toFixed(3)+" V"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:-7.5,x1:0,y0:1.1,y1:2.4,f:this.f,xl:"log₁₀ I / A"},t,this); }};
+const SIG_E18E1={
+  sim:"sim/eupho2018_E1_web.html", tag:"EuPhO 2018 E1", span:40, rate:60,
+  capL:{ko:"막을 통한 확산 · 용기 속 CO₂ 농도",en:"Diffusion through the membrane · CO₂ in the vessel"},
+  capR:{ko:"CO₂ 센서",en:"CO₂ sensor"},
+  pts:[0,300,600,900,1200,1500,1800,2100,2400,2700], n:euN, jit:0.01,
+  f:t=>0.05+0.42*Math.exp(-t/1600),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3)+" %"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:2900,y0:0,y1:0.5,f:this.f,xl:"t / s"},t,this); }};
+const SIG_E19E1={
+  sim:"sim/eupho2019_E1_web.html", tag:"EuPhO 2019 E1", span:30, rate:15,
+  capL:{ko:"관 속으로 밀어 넣으며 · 수신 세기",en:"Pushing the emitter in · the received power"},
+  capR:{ko:"전력계",en:"power meter"},
+  pts:[1,2,3,4,5,6,7,8,9,10], n:euN, jit:0.003,
+  f:z=>-30-6.6*z,
+  read(t){ const z=this.pts[this.n(t)-1]; return this.f(z).toFixed(1)+" dBm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:11,y0:-105,y1:-25,f:this.f,xl:"z / cm"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -4952,7 +5008,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
