@@ -346,7 +346,7 @@ section{padding:58px 0}
 .prob .top{flex-wrap:wrap}
 .tag.exp{background:rgba(184,134,43,.13);color:var(--brass)}
 
-/* ═══════ AdFit banners — Korean pages only ═══════ */
+/* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-banner-label{position:absolute;top:-17px;left:0;color:#667085;font:9px/1.1 var(--mono)}
 .adfit-banner-slot{width:320px;max-width:100%;height:50px}
@@ -1578,17 +1578,83 @@ const DATA={
   years:[
    {y:2026,host:{ko:"스웨덴 · 예테보리",en:"Gothenburg, Sweden"},cc:"se",
     problems:[
-      {id:"E1", en:"Acoustic Levitation", ko:"음향 부양", state:"wip", hold:true,
+      {id:"E1",
+       title:{ko:"음향 부양",en:"Acoustic Levitation"},
+       desc:{ko:"초음파 정상파의 마디에 스티로폼·플라스틱·유리 구슬과 액체 방울을 띄우고, 빨간 LED가 스크린에 드리운 그림자를 자로 재어 마디 간격, 밀도, 표면장력, 굴절률을 구합니다.",
+             en:"Float polystyrene, plastic and glass beads and liquid drops in the nodes of an ultrasonic standing wave, measure the shadows a red LED casts on a screen, and get the node spacing, densities, surface tension and refractive index."},
+       tags:["음향","정상파","그림자 측정"], tagsEn:["Acoustics","Standing waves","Shadowgraphy"],
        files:{sim:"sim/eupho2026_E1_web.html",
               exe:{ko:REL+"v1.0/EuPhO2026_E1_sim_KO.exe", en:REL+"v1.0/EuPhO2026_E1_sim_EN.exe"},
               src:{ko:"src/eupho2026_E1_sim_KO.py", en:"src/eupho2026_E1_sim_EN.py"},
-              pdf:{ko:"pdf/EuPhO_2026_E1_KO.pdf", en:"pdf/EuPhO_2026_E1_EN.pdf"},
+              pdf:{en:"pdf/EuPhO_2026_E1_EN.pdf"},
               sol:"pdf/EuPhO_2026_S1.pdf"}}
     ]},
-   {y:2025,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg",problems:papers("EuPhO_2025", wip("Deep Learning","Hidden Pattern"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2024,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",problems:papers("EuPhO_2024", wip("Physics of Piezoelectricity"), ["E_EN", "S"])},
-   {y:2023,host:{ko:"독일 · 하노버",en:"Hannover, Germany"},cc:"de",problems:papers("EuPhO_2023", wip("Magnetic Pendulum","Optical Black-Box"), ["E1_EN", "S1"], ["E2_EN", "S2"])},
-   {y:2022,host:{ko:"슬로베니아 · 류블랴나",en:"Ljubljana, Slovenia"},cc:"si",problems:papers("EuPhO_2022", wip("Physics of Illumination"), ["E_EN", "S"])},
+   {y:2025,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg",
+    problems:[
+      {id:"E1",
+       title:{ko:"딥러닝",en:"Deep Learning"},
+       desc:{ko:"두 입력 전압으로 y = Aσ(w₁x₁ + w₂x₂ + b)를 내는 전자 '뉴런' 상자를 바나나 전선과 멀티미터로 배선해, 가변 저항 R_P·R_L, 진폭 A, 가중치와 편향, 출력 저항을 찾고 원하는 함수를 흉내 내도록 '학습'시킵니다.",
+             en:"Wire up an electronic 'neuron' box, y = Aσ(w₁x₁ + w₂x₂ + b), with banana leads and a multimeter: find the potentiometers' R_P and R_L, the amplitude, the weights and bias and the output resistance, then 'train' it to imitate given functions."},
+       tags:["전기회로","멀티미터","블랙박스"], tagsEn:["Circuits","Multimeter","Black box"],
+       files:{sim:"sim/eupho2025_E1_web.html",
+              src:{ko:"src/eupho2025_E1_sim_KO.py", en:"src/eupho2025_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2025_E1_EN.pdf"},
+              sol:"pdf/EuPhO_2025_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"숨은 무늬",en:"Hidden Pattern"},
+       desc:{ko:"맨눈에 보이지 않는 사인 곡선 무늬가 인쇄된 필름에 레이저를 비추고, 필름 받침을 밀며 스크린 각도기 위 회절 무늬의 기울기와 점 간격을 읽어 주기 Λ, 간격 d, 진폭 A, 계단 높이 s를 구합니다.",
+             en:"Shine a laser through a foil printed with invisible sinusoids, slide its stand across the beam, and read the tilt and spacing of the diffraction spots on a goniometer to find the period Λ, the offset d, the amplitude A and the step height s."},
+       tags:["광학","회절","각도기"], tagsEn:["Optics","Diffraction","Goniometer"],
+       files:{sim:"sim/eupho2025_E2_web.html",
+              src:{ko:"src/eupho2025_E2_sim_KO.py", en:"src/eupho2025_E2_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2025_E2_EN.pdf"},
+              sol:"pdf/EuPhO_2025_S2.pdf"}}
+    ]},
+   {y:2024,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",
+    problems:[
+      {id:"E1",
+       title:{ko:"압전 현상의 물리",en:"Physics of Piezoelectricity"},
+       desc:{ko:"압전 소자를 누르거나 쇠공을 떨어뜨려 생긴 전하를 축전기와 다이오드 회로로 모으고, 저울과 자, 전압계로 압전 계수, 충돌 시간, 공의 반발을 측정합니다.",
+             en:"Press a piezo disc or drop steel balls on it, collect the charge through a capacitor and diode circuit, and with scales, a ruler and a voltmeter measure the piezo coefficient, the impact and the bounce of the balls."},
+       tags:["압전","회로","충돌"], tagsEn:["Piezoelectricity","Circuits","Impacts"],
+       files:{sim:"sim/eupho2024_E1_web.html",
+              src:{ko:"src/eupho2024_E1_sim_KO.py", en:"src/eupho2024_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2024_E_EN.pdf"},
+              sol:"pdf/EuPhO_2024_S.pdf"}}
+    ]},
+   {y:2023,host:{ko:"독일 · 하노버",en:"Hannover, Germany"},cc:"de",
+    problems:[
+      {id:"E1",
+       title:{ko:"자기 진자",en:"Magnetic Pendulum"},
+       desc:{ko:"레일 위 자석들이 만드는 자기장 속에서 자석 진자를 흔들어 주기를 재고, 레이저 거울 반사점과 자 위의 균형으로 쌍극자 상호작용의 세기와 보정 거리를 찾습니다.",
+             en:"Swing a magnetic pendulum above magnets on rails, time it, follow a laser spot from its mirror and balance it on a ruler's edge to find the strength of the dipole interaction and the compensating distance."},
+       tags:["자기","진동","레이저"], tagsEn:["Magnetism","Oscillations","Laser"],
+       files:{sim:"sim/eupho2023_E1_web.html",
+              src:{ko:"src/eupho2023_E1_sim_KO.py", en:"src/eupho2023_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2023_E1_EN.pdf"},
+              sol:"pdf/EuPhO_2023_S1.pdf"}},
+      {id:"E2",
+       title:{ko:"광학 블랙박스",en:"Optical Black-Box"},
+       desc:{ko:"네 개의 창이 뚫린 상자 안 광학 소자를 레이저와 카드, 편광 휠로만 조사해 무엇이 어떻게 놓였는지 밝히고, 회절격자 간격과 브루스터 각을 측정합니다.",
+             en:"Probe the optics hidden in a box with four ports using only a laser, a card and a polariser wheel: work out what sits inside and how, and measure the grating spacing and Brewster's angle."},
+       tags:["광학","편광","블랙박스"], tagsEn:["Optics","Polarisation","Black box"],
+       files:{sim:"sim/eupho2023_E2_web.html",
+              src:{ko:"src/eupho2023_E2_sim_KO.py", en:"src/eupho2023_E2_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2023_E2_EN.pdf"},
+              sol:"pdf/EuPhO_2023_S2.pdf"}}
+    ]},
+   {y:2022,host:{ko:"슬로베니아 · 류블랴나",en:"Ljubljana, Slovenia"},cc:"si",
+    problems:[
+      {id:"E1",
+       title:{ko:"조명의 물리",en:"Physics of Illumination"},
+       desc:{ko:"백열전구와 LED를 전원 장치로 켜고 조도계, 빨강·초록·파랑 필터, 적외선 온도계, 흑백 플라스틱 판으로 필라멘트 온도, 광효율, 복사 가열에 의한 열전달 계수와 열전도도를 구합니다.",
+             en:"Light an incandescent bulb and an LED from a bench supply and, with a light meter, red, green and blue filters, an infrared thermometer and black and white plastic plates, find the filament temperature, the luminous efficacy, and the heat transfer coefficient and conductivity under radiative heating."},
+       tags:["광측정","전원 장치","열복사"], tagsEn:["Photometry","Power supply","Thermal radiation"],
+       files:{sim:"sim/eupho2022_E1_web.html",
+              src:{ko:"src/eupho2022_E1_sim_KO.py", en:"src/eupho2022_E1_sim_EN.py"},
+              pdf:{en:"pdf/EuPhO_2022_E_EN.pdf"},
+              sol:"pdf/EuPhO_2022_S.pdf"}}
+    ]},
    {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",
     problems:[
       {id:"E1",
@@ -1836,10 +1902,10 @@ const compLogo = key =>
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function adFitBanner(placement){
-  if(lang!=="ko") return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
-  return `<aside class="adfit-banner${size}" aria-label="광고">
-    <span class="adfit-banner-label">광고</span>
+  const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
+  return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
+    <span class="adfit-banner-label">${ad.label}</span>
     <div class="adfit-banner-slot haslalab-adfit-slot" data-ad-placement="${placement}"></div>
   </aside>`;
 }
@@ -4805,6 +4871,72 @@ const SIG_I00E2={
     const n=this.n(t); for(let i=0;i<n;i++){ const v=this.pts[i]; c.fillStyle=i===n-1?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(v),Y(v*0.64*(1+((i*5)%4-1.5)*0.015)),i===n-1?3.6:2.4,0,7); c.fill(); }
     c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText("v / m s⁻¹",w-pad,h-7); c.textAlign="left";
   }};
+/* ── EuPhO 2022–2026 · one plot helper for the seven previews ───── */
+function euPlot(c,w,h,o,t,self){
+  c.fillStyle="#fff"; c.fillRect(0,0,w,h);
+  const pad=16, padB=22, X=x=>pad+(x-o.x0)/(o.x1-o.x0)*(w-2*pad), Y=y=>h-padB-(y-o.y0)/(o.y1-o.y0)*(h-padB-pad);
+  PEN(c,"#DCE7F0",.5); c.beginPath(); for(let i=0;i<=8;i++){ const x=o.x0+(o.x1-o.x0)*i/8; c.moveTo(X(x),pad); c.lineTo(X(x),h-padB); } c.stroke();
+  PEN(c,"#B4CADC",1); c.beginPath(); c.moveTo(pad,h-padB); c.lineTo(w-pad,h-padB); c.stroke();
+  PEN(c,"#8fb0c8",1); c.beginPath(); for(let i=0;i<=60;i++){ const x=o.x0+(o.x1-o.x0)*i/60; i?c.lineTo(X(x),Y(o.f(x))):c.moveTo(X(x),Y(o.f(x))); } c.stroke();
+  const n=self.n(t); for(let i=0;i<n;i++){ const x=self.pts[i], y=o.f(x)*(1+((i*5)%4-1.5)*(o.jit||0.012)); c.fillStyle=i===n-1?"#e8622a":"#2c6f9b"; c.beginPath(); c.arc(X(x),Y(y),i===n-1?3.6:2.4,0,7); c.fill(); }
+  c.fillStyle="#8A99A8"; c.font="9.5px IBM Plex Mono,ui-monospace,monospace"; c.textAlign="right"; c.fillText(o.xl,w-pad,h-7); c.textAlign="left"; }
+const euN=function(t){ return Math.min(this.pts.length,1+Math.floor((t%this.span)/this.span*(this.pts.length+3))); };
+const SIG_E22E1={
+  sim:"sim/eupho2022_E1_web.html", tag:"EuPhO 2022 E1", span:20, rate:1,
+  capL:{ko:"전력을 올리며 · 백열전구의 광효율",en:"Raising the power · the bulb's luminous efficacy"},
+  capR:{ko:"조도계",en:"light meter"},
+  pts:[3,5,7,9,11,13,15,17,19,21], n:euN,
+  f:P=>Math.max(0,21*Math.pow(Math.max(0,(P-1.5)/18.5),1.25)),
+  read(t){ const P=this.pts[this.n(t)-1]; return (this.f(P)*P*1.1).toFixed(0)+" lm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:22,y0:0,y1:26,f:this.f,xl:"P / W"},t,this); }};
+const SIG_E23E1={
+  sim:"sim/eupho2023_E1_web.html", tag:"EuPhO 2023 E1", span:20, rate:1,
+  capL:{ko:"자석 사이를 바꾸며 · 진자 각진동수의 제곱",en:"Changing the gap · the pendulum's ω²"},
+  capR:{ko:"스톱워치",en:"stopwatch"},
+  pts:[4.5,5,5.5,6,6.5,7,7.5,8,9,10], n:euN,
+  f:d=>2.1e6/Math.pow(d,5)*0.06+9.8,
+  read(t){ const d=this.pts[this.n(t)-1]; return "10T = "+(20*Math.PI/Math.sqrt(this.f(d))).toFixed(2)+" s"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:4,x1:10.5,y0:0,y1:80,f:this.f,xl:"d / cm"},t,this); }};
+const SIG_E23E2={
+  sim:"sim/eupho2023_E2_web.html", tag:"EuPhO 2023 E2", span:18, rate:1,
+  capL:{ko:"카드를 옮기며 · 회절 점 사이 거리",en:"Moving the card · the spacing of the orders"},
+  capR:{ko:"자",en:"ruler"},
+  pts:[5,8,11,14,17,20,23,26,29], n:euN,
+  f:x=>0.34*x+0.6,
+  read(t){ const x=this.pts[this.n(t)-1]; return (this.f(x)*10).toFixed(0)+" mm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:32,y0:0,y1:12,f:this.f,xl:"x / cm"},t,this); }};
+const SIG_E24E1={
+  sim:"sim/eupho2024_E1_web.html", tag:"EuPhO 2024 E1", span:60, rate:6,
+  capL:{ko:"누른 뒤 시간에 따라 · 축전기 전압",en:"After the press · the capacitor's voltage"},
+  capR:{ko:"전압계",en:"voltmeter"},
+  pts:[0,6,12,18,24,30,36,42,48,54], n:euN,
+  f:t=>4.6*Math.exp(-t/25),
+  read(t){ const x=this.pts[this.n(t)-1]; return (this.f(x)).toFixed(2)+" V"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:58,y0:0,y1:5,f:this.f,xl:"t / s"},t,this); }};
+const SIG_E25E1={
+  sim:"sim/eupho2025_E1_web.html", tag:"EuPhO 2025 E1", span:20, rate:1,
+  capL:{ko:"입력 x₂를 바꾸며 · 뉴런의 출력 y",en:"Changing x₂ · the neuron's output y"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  pts:[0,0.35,0.7,1.05,1.4,1.75,2.1,2.45,2.8,3.15], n:euN,
+  f:x=>2.75/(1+Math.exp(-(-0.95*x+1.3))),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" V"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:-0.1,x1:3.3,y0:0,y1:3,f:this.f,xl:"x₂ / V"},t,this); }};
+const SIG_E25E2={
+  sim:"sim/eupho2025_E2_web.html", tag:"EuPhO 2025 E2", span:22, rate:1,
+  capL:{ko:"필름 받침을 밀며 · 회절 무늬의 기울기 θ",en:"Sliding the foil · the tilt θ of the pattern"},
+  capR:{ko:"각도기",en:"goniometer"},
+  pts:[4,10,16,22,28,34,40,46,52,58], n:euN, jit:0.02,
+  f:x=>Math.atan(0.52*Math.cos(2*Math.PI/61*(x-25)))*180/Math.PI+30,
+  read(t){ const x=this.pts[this.n(t)-1]; return "θ = "+(this.f(x)-30).toFixed(1)+"°"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:62,y0:0,y1:60,f:this.f,xl:"x / mm"},t,this); }};
+const SIG_E26E1={
+  sim:"sim/eupho2026_E1_web.html", tag:"EuPhO 2026 E1", span:20, rate:1,
+  capL:{ko:"마디마다 · 스크린 위 그림자의 높이",en:"Node by node · the shadows' heights on the screen"},
+  capR:{ko:"투명 자",en:"clear ruler"},
+  pts:[-3,-2,-1,0,1,2,3,4], n:euN, jit:0.004,
+  f:n=>n*5.05*35/10+60,
+  read(t){ const n=this.pts[this.n(t)-1]; return (this.f(n)-60).toFixed(0)+" mm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:-4,x1:5,y0:0,y1:140,f:this.f,xl:"node n"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -4819,7 +4951,8 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A08E1,SIG_A07E1,SIG_A07E2,SIG_A06E1,
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
-                SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2];
+                SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){

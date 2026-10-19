@@ -3,21 +3,22 @@
   let requestedEnglish = new URLSearchParams(location.search).get("lang") === "en";
 
   const isKorean = () => !requestedEnglish && document.documentElement.lang === "ko";
+  const label = () => isKorean() ? "광고" : "Ad";
 
   function syncAd() {
     let banner = document.getElementById("haslalab-adfit-banner");
     if (!banner) {
       banner = document.createElement("aside");
       banner.id = "haslalab-adfit-banner";
-      banner.setAttribute("aria-label", "광고");
-      banner.innerHTML = '<span>광고</span><div></div>';
+      banner.innerHTML = '<span></span><div></div>';
       const desktop = matchMedia("(min-width: 768px)").matches;
       const experiment = document.querySelector(".wrap, main, #app");
       if (desktop && experiment) experiment.before(banner);
       else document.body.append(banner);
     }
-    banner.hidden = !isKorean();
-    if (!isKorean() || mounted) return;
+    banner.setAttribute("aria-label", isKorean() ? "광고" : "Advertisement");
+    banner.querySelector("span").textContent = label();
+    if (mounted) return;
 
     const desktop = matchMedia("(min-width: 768px)").matches;
     const ad = desktop
