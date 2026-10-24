@@ -328,8 +328,16 @@ section{padding:58px 0}
 .prob .code{font-family:var(--mono);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
 .prob h3{font-size:15.5px;line-height:1.38}
 .prob p{margin:0;font-size:13px;color:var(--graphite);flex:1}
-.prob .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px}
+.prob .acts{display:flex;flex-direction:column;gap:8px;margin-top:3px}
+.prob .acts .main{display:flex;gap:8px}
+.prob .acts .main .btn{flex:1;justify-content:center;text-align:center}
+.prob .acts .docs{display:grid;gap:8px}
+.prob .acts .docs.n1{grid-template-columns:1fr} .prob .acts .docs.n2{grid-template-columns:1fr 1fr} .prob .acts .docs.n3{grid-template-columns:1fr 1fr 1fr}
 .prob .acts .btn{padding:8px 13px;font-size:12.5px}
+.prob .acts .docs .btn{padding:8px 6px;font-size:12px;justify-content:center;text-align:center;line-height:1.25}
+.prob .top .tr{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.prob .top .tr .thytag{margin-left:0}
+.prob .exenote{margin-top:auto}
 .status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;
         letter-spacing:.1em;text-transform:uppercase}
 .status i{width:6px;height:6px;border-radius:50%;display:inline-block}
@@ -461,6 +469,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/ispho2025_E1_web.html">ISPhO 2025 E1 — LED의 색</a></li>
       <li><a href="sim/ispho2024_E1_web.html">ISPhO 2024 E1 — 흡수 분광과 화학 반응 속도</a></li>
       <li><a href="sim/ispho2025_T1_web.html">ISPhO 2025 T1 — 강자성 자구벽 동역학</a></li>
+      <li><a href="sim/ispho2024_T1_web.html">ISPhO 2024 T1 — 열산화</a></li>
+      <li><a href="sim/ispho2023_T1_web.html">ISPhO 2023 T1 — 다결정 확산</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1811,14 +1821,26 @@ const DATA={
               src:{ko:"src/ispho2024_E1_spectro_sim_KO.py", en:"src/ispho2024_E1_spectro_sim_EN.py"},
               pdf:{ko:"pdf/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
               sol:"pdf/ISPhO_2024_S_E.pdf"}},
-      {id:"T1", en:"Thermal Oxidation", ko:"열산화", state:"wip", theory:true,
-       files:{pdf:{ko:"pdf/ISPhO_2024_T_KO.pdf", en:"pdf/ISPhO_2024_T_EN.pdf"},
+      {id:"T1", theory:true,
+       title:{ko:"열산화",en:"Thermal Oxidation"},
+       desc:{ko:"3층 박막의 반사 계수로 타원편광 각 Ψ, Δ 를 그려 가장 민감한 입사각을 찾고, 동료의 측정에서 각과 두께를 맞추며, 노 속에서 자라는 SiO₂ 막의 두께로 딜–그로브 상수와 두 활성화 에너지를 구합니다.",
+             en:"Plot the ellipsometric angles Ψ, Δ of a three-layer film to find the most sensitive angle, fit a colleague's spectra for angle and thickness, and follow an oxide growing in the furnace to get the Deal–Grove constants and two activation energies."},
+       tags:["타원편광","박막","산화"], tagsEn:["Ellipsometry","Thin film","Oxidation"],
+       files:{sim:"sim/ispho2024_T1_web.html",
+              src:{ko:"src/ispho2024_T1_oxide_sim_KO.py", en:"src/ispho2024_T1_oxide_sim_EN.py"},
+              pdf:{ko:"pdf/ISPhO_2024_T_KO.pdf", en:"pdf/ISPhO_2024_T_EN.pdf"},
               sol:"pdf/ISPhO_2024_S_T.pdf"}}
     ]},
    {y:2023,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
     problems:[
-      {id:"T1", en:"Polycrystal Diffusion", ko:"다결정 확산", state:"wip", theory:true,
-       files:{pdf:{ko:"pdf/ISPhO_2023_T_KO.pdf", en:"pdf/ISPhO_2023_T_EN.pdf"},
+      {id:"T1", theory:true,
+       title:{ko:"다결정 확산",en:"Polycrystal Diffusion"},
+       desc:{ko:"격자 속 불순물의 무작위 걸음으로 확산의 활성화 에너지를 재고, 다결정 속 농도 분포 ln c̄ 로 유효 확산 계수의 α 와 B형 동역학의 지수 ξ, η, ζ, 상수 C 를 찾습니다.",
+             en:"Time a random walk between lattice inter-nodes for the activation energy, then read ln c̄ inside a polycrystal for the effective-diffusion coefficient α and the type-B exponents ξ, η, ζ and constant C."},
+       tags:["확산","무작위 걸음","다결정"], tagsEn:["Diffusion","Random walk","Polycrystal"],
+       files:{sim:"sim/ispho2023_T1_web.html",
+              src:{ko:"src/ispho2023_T1_diffusion_sim_KO.py", en:"src/ispho2023_T1_diffusion_sim_EN.py"},
+              pdf:{ko:"pdf/ISPhO_2023_T_KO.pdf", en:"pdf/ISPhO_2023_T_EN.pdf"},
               sol:"pdf/ISPhO_2023_S_T.pdf"}}
     ]}
   ]},
@@ -1853,7 +1875,7 @@ const DATA={
               src:{ko:"src/rmph2023_E1_rotating_sim.py", en:"src/rmph2023_E1_rotating_sim.py"},
               pdf:{ko:"pdf/RMPh_2023_E_KO.pdf", en:"pdf/RMPh_2023_E_EN.pdf"}}}
     ]},
-   {y:2021,host:{ko:"온라인",en:"Online"},
+   {y:2021,host:{ko:"온라인 · 루마니아 주관",en:"Online, hosted by Romania"},cc:"ro",
     problems:[
       {id:"E1",
        title:{ko:"D\u2070 중간자 수명 측정",en:"Measurement of D\u2070 lifetime"},
@@ -2161,36 +2183,37 @@ function viewYear(key,year){
         const heading = p.title ? p.title[lang] : ((lang==="ko"?p.ko:p.en)||p.en||d.soonTitle);
         const body    = p.desc ? p.desc[lang] : d.soonDesc;
         const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : d.wip;
-        const b=[];
+        const b=[], docs=[];
         if(held){
           const soon=(lbl,g)=>b.push(`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`);
           if(f.sim) soon(d.actRun,false);
           if(f.exe) soon(d.actExe,!!f.sim);
           if(!f.sim && !f.exe) soon(d.actRun,true);
-          if(f.pdf) soon(d.actPdf,true);
-          if(f.sol) soon(d.actSol,true);
-          if(f.src) soon(d.actSrc,true);
+          const later=lbl=>docs.push(`<button class="btn ghost" disabled>${lbl}</button>`);
+          if(f.pdf) later(d.actPdf);
+          if(f.sol) later(d.actSol);
+          if(f.src) later(d.actSrc);
         } else {
         if(f.sim) b.push(`<a class="btn" href="${f.sim}?lang=${lang}">${d.actRun}</a>`);
         if(f.exe) b.push(`<a class="btn${f.sim?" ghost":""}" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>`);
         if(!f.sim && !f.exe) b.push(`<button class="btn ghost" disabled>${d.actRun}</button>`);
-        if(f.pdf) b.push(`<a class="btn ghost" href="${pick(f.pdf)}" target="_blank" rel="noopener">${d.actPdf}${tag(f.pdf)}</a>`);
-        if(f.sol) b.push(`<a class="btn ghost" href="${pick(f.sol)}" target="_blank" rel="noopener">${d.actSol}${tag(f.sol)}</a>`);
-        if(f.src) b.push(`<a class="btn ghost" href="${pick(f.src)}">${d.actSrc}${tag(f.src)}</a>`);
+        if(f.pdf) docs.push(`<a class="btn ghost" href="${pick(f.pdf)}" target="_blank" rel="noopener">${d.actPdf}${tag(f.pdf)}</a>`);
+        if(f.sol) docs.push(`<a class="btn ghost" href="${pick(f.sol)}" target="_blank" rel="noopener">${d.actSol}${tag(f.sol)}</a>`);
+        if(f.src) docs.push(`<a class="btn ghost" href="${pick(f.src)}">${d.actSrc}${tag(f.src)}</a>`);
         }
         /* a quiet footnote about the unsigned Windows build */
         const off = (!held && f.exe) ? `<p class="exenote">${d.exeNote}</p>` : "";
         return `<article class="prob ${mode==="wip"?"soon":""}">
           <div class="top">
             <span class="code">${p.id}</span>
-            <span class="status ${mode}"><i></i>${chip}</span>
-            ${p.theory?`<span class="thytag">${d.theoryTag}</span>`:""}
+            <span class="tr"><span class="status ${mode}"><i></i>${chip}</span>
+            ${p.theory?`<span class="thytag">${d.theoryTag}</span>`:""}</span>
           </div>
           <h3>${esc(heading)}</h3>
           <p>${body}</p>
           <div class="tags">${tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
-          <div class="acts">${b.join("\n")}</div>
           ${off}
+          <div class="acts"><div class="main">${b.join("\n")}</div>${docs.length?`<div class="docs n${docs.length}">${docs.join("\n")}</div>`:""}</div>
         </article>`;}).join("")}
     </div>
   </div>
@@ -5022,6 +5045,22 @@ const SIG_S24E1={
   f:t=>0.02+0.40*Math.exp(-t/260),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3); },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:560,y0:0,y1:0.45,f:this.f,xl:"t / s"},t,this); }};
+const SIG_S24T1={
+  sim:"sim/ispho2024_T1_web.html", tag:"ISPhO 2024 T1", span:24, rate:8,
+  capL:{ko:"노 속 시간 · SiO₂ 막 두께",en:"Time in the furnace · SiO₂ thickness"},
+  capR:{ko:"타원편광계",en:"ellipsometer"},
+  pts:[4,10,20,30,45,60,75,90,105,120], n:euN, jit:0.4,
+  f:t=>{ const B=160, A=157; return (-A+Math.sqrt(A*A+4*B*(t+3)))/2+14*(1-Math.exp(-t/9)); },
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" nm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:125,y0:0,y1:100,f:this.f,xl:"t / min"},t,this); }};
+const SIG_S23T1={
+  sim:"sim/ispho2023_T1_web.html", tag:"ISPhO 2023 T1", span:24, rate:8,
+  capL:{ko:"다결정 속 깊이² · ln c̄",en:"Depth² into the polycrystal · ln c̄"},
+  capR:{ko:"B.exe",en:"B.exe"},
+  pts:[1,5,10,20,30,40,50,60,70,80], n:euN, jit:0.05,
+  f:z=>-1.43-z/(4*1.15*5),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2); },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:85,y0:-6,y1:-1,f:this.f,xl:"z²"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5037,7 +5076,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
