@@ -474,6 +474,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2026_E1_web.html">NBPhO 2026 P5 — 물의 포화 증기압</a></li>
       <li><a href="sim/nbpho2026_E2_web.html">NBPhO 2026 P10 — 공 자석</a></li>
       <li><a href="sim/nbpho2025_E1_web.html">NBPhO 2025 P4 — 블랙박스</a></li>
+      <li><a href="sim/nbpho2025_E2_web.html">NBPhO 2025 P9 — 뜨거운 판</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1787,7 +1788,15 @@ const DATA={
               src:{ko:"src/nbpho2025_E1_blackbox_sim_KO.py", en:"src/nbpho2025_E1_blackbox_sim_EN.py"},
               pdf:{en:"pdf/NBPhO_2025_E_EN.pdf"},
               sol:"pdf/NBPhO_2025_S.pdf"}},
-      papers("NBPhO_2025", wip("Black Box", "Hot Plate"), ["E_EN", "S"], ["E_EN", "S"])[1]
+      {id:"E2",
+       title:{ko:"뜨거운 판",en:"Hot Plate"},
+       desc:{ko:"뜨거운 물에 함께 담갔다 꺼낸 광택 판과 검은 판을 적외선 온도계로 재어 광택 판의 방사율을 구하고, 220 Ω 저항 위에 올린 검은 판이 데워지는 곡선으로 열전달 계수와 열용량을, 실리콘 패드를 한 장씩 덮어 식히는 곡선으로 패드의 열전도를 구합니다 (문제 9).",
+             en:"Take the polished and the black plate out of the same hot water and read both with the IR thermometer to get the polished plate's emissivity; heat the black plate on the 220 Ω resistor to get the heat transfer coefficient and the heat capacity; cool it under one, two, three silicone pads to get their heat conductance (problem 9)."},
+       tags:["열복사","방사율","열전도"], tagsEn:["Thermal radiation","Emissivity","Heat conduction"],
+       files:{sim:"sim/nbpho2025_E2_web.html",
+              src:{ko:"src/nbpho2025_E2_hotplate_sim_KO.py", en:"src/nbpho2025_E2_hotplate_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2025_E_EN.pdf"},
+              sol:"pdf/NBPhO_2025_S.pdf"}}
     ]},
    {y:2024,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2024", wip("String and Pendulum", "Kitchen Physics"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2023", wip("Black Box", "Surface Tension"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5116,6 +5125,14 @@ const SIG_N25E1={
   f:v=>Math.max(0,v-1.78)*0.99+Math.min(6,0.6*Math.exp((v-4.42)/0.06)),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" mA"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:1.4,x1:4.7,y0:0,y1:9,f:this.f,xl:"V / V"},t,this); }};
+const SIG_N25E2={
+  sim:"sim/nbpho2025_E2_web.html", tag:"NBPhO 2025 P9", span:24, rate:8,
+  capL:{ko:"저항 위 검은 판을 15 V로 데우는 시간 · 적외선 온도계",en:"Time heating the black plate on the resistor at 15 V · IR thermometer"},
+  capR:{ko:"적외선 온도계",en:"IR thermometer"},
+  pts:[0,1,2,3,4,5,6,8,10,14,20], n:euN, jit:0.15,
+  f:v=>23+25*(1-Math.exp(-0.14*v)),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" °C"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:22,y0:20,y1:52,f:this.f,xl:"t / min"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5131,7 +5148,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
