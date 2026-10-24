@@ -2200,26 +2200,17 @@ function viewYear(key,year){
         const heading = p.title ? p.title[lang] : ((lang==="ko"?p.ko:p.en)||p.en||d.soonTitle);
         const body    = p.desc ? p.desc[lang] : d.soonDesc;
         const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : d.wip;
-        const b=[], docs=[];
-        if(held){
-          const soon=(lbl,g)=>b.push(`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`);
-          if(f.sim) soon(d.actRun,false);
-          if(f.exe) soon(d.actExe,!!f.sim);
-          if(!f.sim && !f.exe) soon(d.actRun,true);
-          const later=lbl=>docs.push(`<button class="btn ghost" disabled>${lbl}</button>`);
-          if(f.pdf) later(d.actPdf);
-          if(f.sol) later(d.actSol);
-          if(f.src) later(d.actSrc);
-        } else {
-        if(f.sim) b.push(`<a class="btn" href="${f.sim}?lang=${lang}">${d.actRun}</a>`);
-        if(f.exe) b.push(`<a class="btn${f.sim?" ghost":""}" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>`);
-        if(!f.sim && !f.exe) b.push(`<button class="btn ghost" disabled>${d.actRun}</button>`);
-        if(f.pdf) docs.push(`<a class="btn ghost" href="${pick(f.pdf)}" target="_blank" rel="noopener">${d.actPdf}${tag(f.pdf)}</a>`);
-        if(f.sol) docs.push(`<a class="btn ghost" href="${pick(f.sol)}" target="_blank" rel="noopener">${d.actSol}${tag(f.sol)}</a>`);
-        if(f.src) docs.push(`<a class="btn ghost" href="${pick(f.src)}">${d.actSrc}${tag(f.src)}</a>`);
-        }
-        /* a quiet footnote about the unsigned Windows build */
-        const off = (!held && f.exe) ? `<p class="exenote">${d.exeNote}</p>` : "";
+        /* every card has the same layout as IPhO 2017: the note on the unsigned
+           Windows build, then [run][Windows], then [sheet][solution][source];
+           whatever is not there (or not released yet) stays as a greyed button */
+        const live=!held;
+        const off=(lbl,g)=>`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`;
+        const b=[
+          (live&&f.sim) ? `<a class="btn" href="${f.sim}?lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
+          (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
+        const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${pick(v)}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
+        const docs=[doc(f.pdf,d.actPdf,true), doc(f.sol,d.actSol,true), doc(f.src,d.actSrc,false)];
+        const note = `<p class="exenote">${d.exeNote}</p>`;
         return `<article class="prob ${mode==="wip"?"soon":""}">
           <div class="top">
             <span class="code">${p.id}</span>
@@ -2229,8 +2220,8 @@ function viewYear(key,year){
           <h3>${esc(heading)}</h3>
           <p>${body}</p>
           <div class="tags">${tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
-          ${off}
-          <div class="acts"><div class="main">${b.join("\n")}</div>${docs.length?`<div class="docs n${docs.length}">${docs.join("\n")}</div>`:""}</div>
+          ${note}
+          <div class="acts"><div class="main">${b.join("\n")}</div><div class="docs n3">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
     </div>
   </div>
