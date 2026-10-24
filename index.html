@@ -473,6 +473,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/ispho2023_T1_web.html">ISPhO 2023 T1 — 다결정 확산</a></li>
       <li><a href="sim/nbpho2026_E1_web.html">NBPhO 2026 P5 — 물의 포화 증기압</a></li>
       <li><a href="sim/nbpho2026_E2_web.html">NBPhO 2026 P10 — 공 자석</a></li>
+      <li><a href="sim/nbpho2025_E1_web.html">NBPhO 2025 P4 — 블랙박스</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1775,7 +1776,19 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2026_E_EN.pdf"},
               sol:"pdf/NBPhO_2026_S.pdf"}}
     ]},
-   {y:2025,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2025", wip("Black Box", "Hot Plate"), ["E_EN", "S"], ["E_EN", "S"])},
+   {y:2025,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"블랙박스",en:"Black Box"},
+       desc:{ko:"다이오드 3개와 저항 1개가 든 상자의 두 도선에, 제한 저항이 든 노란 전원 도선과 멀티미터 2대(전압계·전류계)를 이어 정방향과 역방향의 V–I 곡선을 잽니다. 곡선의 모양으로 안의 회로를 밝히고, 직선 구간의 기울기로 저항값을, 1 mA 가 흐르는 전압으로 세 다이오드의 열림 전압을 구합니다 (문제 4).",
+             en:"Wire the box's two leads, holding three diodes and a resistor, to the yellow supply lead with its built-in limiting resistor and to two multimeters (voltmeter and ammeter), and take the V–I curve both ways. Its shape gives the circuit inside, the straight part's slope the resistance, and the voltage at 1 mA each diode's opening voltage (problem 4)."},
+       tags:["다이오드","V–I 특성","블랙박스"], tagsEn:["Diodes","V–I curve","Black box"],
+       files:{sim:"sim/nbpho2025_E1_web.html",
+              src:{ko:"src/nbpho2025_E1_blackbox_sim_KO.py", en:"src/nbpho2025_E1_blackbox_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2025_E_EN.pdf"},
+              sol:"pdf/NBPhO_2025_S.pdf"}},
+      papers("NBPhO_2025", wip("Black Box", "Hot Plate"), ["E_EN", "S"], ["E_EN", "S"])[1]
+    ]},
    {y:2024,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2024", wip("String and Pendulum", "Kitchen Physics"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2023", wip("Black Box", "Surface Tension"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2022", wip("Ferromagnetic Stripe", "Magnet in Glass"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5095,6 +5108,14 @@ const SIG_N26E2={
   f:v=>25*(1-0.095*Math.sin(v*Math.PI/180)**2),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" mm"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:90,y0:20,y1:27,f:this.f,xl:"ψ / °"},t,this); }};
+const SIG_N25E1={
+  sim:"sim/nbpho2025_E1_web.html", tag:"NBPhO 2025 P4", span:24, rate:8,
+  capL:{ko:"블랙박스에 걸린 전압 · 흐르는 전류 (정방향)",en:"Voltage across the black box · current through it (forward)"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  pts:[1.6,1.8,2.2,2.6,3.0,3.4,3.8,4.2,4.4,4.5,4.6], n:euN, jit:0.02,
+  f:v=>Math.max(0,v-1.78)*0.99+Math.min(6,0.6*Math.exp((v-4.42)/0.06)),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" mA"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:1.4,x1:4.7,y0:0,y1:9,f:this.f,xl:"V / V"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5110,7 +5131,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
