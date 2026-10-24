@@ -459,6 +459,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/apho2023_E1_web.html">APhO 2023 E1 — 충돌하는 진자의 헤르츠 접촉</a></li>
       <li><a href="sim/apho2023_E2_web.html">APhO 2023 E2 — 열변형된 표면에 의한 간섭</a></li>
       <li><a href="sim/ispho2025_E1_web.html">ISPhO 2025 E1 — LED의 색</a></li>
+      <li><a href="sim/ispho2024_E1_web.html">ISPhO 2024 E1 — 흡수 분광과 화학 반응 속도</a></li>
       <li><a href="sim/ispho2025_T1_web.html">ISPhO 2025 T1 — 강자성 자구벽 동역학</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
@@ -1801,9 +1802,14 @@ const DATA={
     ]},
    {y:2024,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
     problems:[
-      {id:"E1", en:"Absorption Spectroscopy and Chemical Kinetics",
-       ko:"흡수 분광법과 화학 반응속도론", state:"wip",
-       files:{pdf:{ko:"pdf/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
+      {id:"E1",
+       title:{ko:"흡수 분광법과 화학 반응속도론",en:"Absorption Spectroscopy and Chemical Kinetics"},
+       desc:{ko:"렌즈·회절격자·CCD 분광기를 LED-RGB로 보정한 뒤, 큐벳을 지난 LED-CON의 빛으로 인디고 카민의 흡수 단면적 σ(λ)를 구하고, 이온 세기를 맞춘 NaOH·NaCl 용액에서 페놀프탈레인이 탈색되는 속도로 반응 차수 p를 찾으며, 포도당 속 인디고 카민의 화학 신호등을 시계열로 기록합니다.",
+             en:"Calibrate a lens–grating–CCD spectrometer with LED-RGB, then use LED-CON light through a cuvette to find the absorption cross-section σ(λ) of indigo carmine, the order p from how fast phenolphthalein fades in NaOH + NaCl solutions of equal ionic strength, and record indigo carmine's chemical traffic light in glucose as a time series."},
+       tags:["분광","흡수","반응 속도"], tagsEn:["Spectroscopy","Absorption","Kinetics"],
+       files:{sim:"sim/ispho2024_E1_web.html",
+              src:{ko:"src/ispho2024_E1_spectro_sim_KO.py", en:"src/ispho2024_E1_spectro_sim_EN.py"},
+              pdf:{ko:"pdf/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
               sol:"pdf/ISPhO_2024_S_E.pdf"}},
       {id:"T1", en:"Thermal Oxidation", ko:"열산화", state:"wip", theory:true,
        files:{pdf:{ko:"pdf/ISPhO_2024_T_KO.pdf", en:"pdf/ISPhO_2024_T_EN.pdf"},
@@ -5008,6 +5014,14 @@ const SIG_S25E1={
   f:t=>590.5+6.2*(1-Math.exp(-t/1.5))+7.0*(1-Math.exp(-t/45)),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" nm"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:190,y0:589,y1:605,f:this.f,xl:"t / s"},t,this); }};
+const SIG_S24E1={
+  sim:"sim/ispho2024_E1_web.html", tag:"ISPhO 2024 E1", span:24, rate:8,
+  capL:{ko:"In을 넣은 뒤 시간 · 552 nm 흡광도 ln(I₀/I)",en:"Time after adding In · absorbance ln(I₀/I) at 552 nm"},
+  capR:{ko:"CCD 분광기",en:"CCD spectrometer"},
+  pts:[0,30,60,90,120,180,240,300,420,540], n:euN, jit:0.004,
+  f:t=>0.02+0.40*Math.exp(-t/260),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3); },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:560,y0:0,y1:0.45,f:this.f,xl:"t / s"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5023,7 +5037,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
