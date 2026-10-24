@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<title>ISPhO 2024 실험 — 흡수 분광과 화학 반응 속도 · HaslaLab</title>
+<meta name="description" content="ISPhO 2024 실험 문제 흡수 분광과 화학 반응 속도를 브라우저에서 실행합니다. 렌즈·회절격자·CCD로 분광기를 맞추고 RGB LED로 보정한 다음, 인디고 카민의 흡수 단면적(비어-람베르트 법칙), 페놀프탈레인 탈색 반응의 차수 p, 화학 신호등의 색 변화를 큐벳과 주사기로 직접 측정합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ISPhO 2024 실험 — 흡수 분광과 화학 반응 속도 · Absorption Spectroscopy and Chemical Kinetics">
+<meta property="og:description" content="ISPhO 2024 실험: 분광기 보정, 인디고 카민의 흡수 단면적, 페놀프탈레인 반응 속도, 화학 신호등.">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  #closeCv{touch-action:none}
+  .instr3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .instr3 canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
+  .ilbl{font-size:12px;color:#f2c14e;font-weight:700;margin:0 0 4px}
+  @media(max-width:900px){.instr3{grid-template-columns:1fr}}
+  .chklist{font-size:12px;line-height:1.7}
+  .chklist div{display:flex;justify-content:space-between;gap:8px;color:#9aa3ab}
+  .chklist b{font-weight:600}.chklist .ok{color:#7fd39a}.chklist .no{color:#f0b35a}.chklist .na{color:#5c646d}
+button.on{background:#3a3220;border-color:#f2c14e;color:#ffd77a}
+  .row button.on{background:#f2c14e;color:#1b1d20;border-color:#f2c14e}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="t-title"></h1>
+    <p id="t-sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <h3 id="t-cap"></h3>
+      <canvas id="cv"></canvas>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <h3 id="t-closecap"></h3>
+      <canvas id="closeCv"></canvas>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="t-h-psu"></h2>
+    <div class="disp" id="psuV"></div>
+    <div class="row"><button id="psuBtn"></button><button id="adBtn"></button></div>
+    <div class="row"><button id="vm1">−1</button><button id="vm01">−0.1</button><button id="vp01">+0.1</button><button id="vp1">+1</button></div>
+    <div class="row"><button id="vzero"></button></div>
+
+    <h2 id="t-h-rgb"></h2>
+    <div class="row"><button id="rgbR">R</button><button id="rgbG">G</button><button id="rgbB">B</button></div>
+
+    <h2 id="t-h-opt"></h2>
+    <div class="hint" id="optSel"></div>
+    <div class="row"><button id="om1">−1 cm</button><button id="om01">−1 mm</button><button id="op01">+1 mm</button><button id="op1">+1 cm</button></div>
+
+    <h2 id="t-h-sp"></h2>
+    <div class="row"><button id="sp1">×1</button><button id="sp5">×5</button><button id="sp20">×20</button><button id="sp60">×60</button></div>
+    <div class="disp" id="swV">0:00.0</div>
+    <div class="row"><button id="swGo"></button><button id="swRst"></button></div>
+
+    <h2 id="t-h-note"></h2>
+    <div class="row"><input id="cfg" style="flex:1;min-width:0;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;padding:5px 6px;font:12px ui-monospace,Consolas,monospace"></div>
+    <div class="hint" id="cfgHint"></div>
+    <div class="row"><button id="noteBtn"></button><button id="noteClr"></button><button id="noteSave"></button></div>
+    <textarea id="note" rows="8" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+
+    <div class="status" id="status"></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+const T={
+  ko:{
+    title:"ISPhO 2024 실험 — 흡수 분광과 화학 반응 속도",
+    sub:"가상 실험실 · 광원 받침대, 렌즈 L₁, 큐벳 받침대, 회절격자가 붙은 렌즈 L₂, CCD 센서가 달린 스크린으로 분광기를 꾸미고 LED-RGB(620·520·460 nm)로 픽셀 번호 N을 파장 λ = k₀N + λ₀로 보정합니다. 그다음 LED-CON의 빛이 큐벳을 지나며 줄어드는 것을 재어 인디고 카민(IC)의 흡수 단면적 σ(λ)를 구하고(L = 1.05 cm), 이온 세기를 J₀로 맞춘 NaOH·NaCl 용액에서 페놀프탈레인(In)이 탈색되는 속도로 차수 p를 구하며, 포도당·NaOH 속 IC의 \"화학 신호등\"을 시계열로 기록합니다. 주사기 눈금과 방울 수는 직접 읽고 세어야 하며, 계산은 대신 해주지 않습니다.",
+    docTitle:"ISPhO 2024 실험 — 흡수 분광과 화학 반응 속도 · HaslaLab",
+    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
+    trayHelp:"좌클릭 집기·놓기 · 우클릭 되돌리기\n광학 부품은 광학대 위를 클릭\nLED는 광원 받침대, 큐벳은 큐벳 받침대\n화학 작업은 '화학 작업대' 화면에서",
+    items:{table:"O1. 광학대",sunshield:"X6. 차광판",holder:"O2. 광원 받침대",diaphragm:"O7. 조리개",L1:"O3. 렌즈 L₁",cuvhold:"O9. 큐벳 받침대",L2:"O4. 렌즈 L₂ + 회절격자 G",screen:"O5. 스크린",sensor:"O6. CCD 센서 (컴퓨터 연결)",
+      psu:"E1. 직류 전원 (0–15 V)",adapter:"E2. 스위치 어댑터",con4:"E3. 4단자 커넥터",con2:"E4. 2단자 커넥터",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (연속 스펙트럼)",ledunk:"E7. LED-UNK (모르는 색)",
+      wash:"C12. 세척병 (증류수)",naoh:"C2. NaOH 알갱이",ic:"C3. 인디고 카민 IC 0.70 mg/ml",ind:"C4. 페놀프탈레인 In",gl:"C5. 포도당 Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
+      syr3:"C8. 주사기 3 ml",syrIns:"C7. 인슐린 주사기 0.5 ml ×4",tubes:"C10·11. 코니컬 튜브·100 ml 용기",cuvettes:"O8. 뚜껑 있는 큐벳 ×10",waste:"X4. 폐액 통",gloves:"X3. 장갑",laptop:"컴퓨터",cuv:i=>"큐벳 "+(i+1)},
+    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 컴퓨터·광학대·시약을 클릭하면 그 확대 화면이 열립니다",
+    tabs:{prog:"Spectroscopy 프로그램",opt:"광학대 (위에서)",chem:"화학 작업대"},
+    closeCap:{prog:"Spectroscopy 프로그램 — 픽셀 번호 N에 따른 세기(임의 단위, 4095에서 포화 \"Overflow\"). Launch: 실시간, Single spectrum: 한 장, Time Series: Launch 뒤에만 기록(간격 Δt). 휠: N축 확대, 끌기: 이동, 더블클릭: 전체. 저장 파일 이름은 노트 입력칸에 ○○.csv로 적으면 그 이름이 됩니다.",
+              opt:"광학대를 위에서 본 모습 — 부품을 끌어 광축을 따라 옮깁니다(오른쪽 ± 버튼으로 미세 조정). 보정한 뒤에는 광원·큐벳·조리개를 넣고 빼는 것 말고는 건드리지 마세요. 오른쪽 위 그림은 스크린 면: 0차 점과 CCD 위의 1차 스펙트럼.",
+              chem:"화학 작업대 — 위: 인슐린 주사기(0.5 ml, 눈금 0.01 ml, 한 방울씩 짜기), 가운데: 3 ml 주사기(눈금 0.1 ml), 왼쪽 아래: 시약, 오른쪽: 고른 큐벳. 큐벳은 뚜껑을 닫고 흔들어 섞고, 벽의 거품은 톡톡 쳐서 없앱니다. NaOH는 장갑을 끼고 다루세요."},
+    lab:{noSensor:"CCD 센서를 꺼내 놓으세요",noTable:"광학대를 꺼내 놓으세요",screen:"스크린 면",ccd:"CCD",zero:"0차",
+      launch:"Launch",pause:"Pause",single:"Single spectrum",saveS:"Save spectrum",tsOn:"Time Series ●",tsOff:"Time Series",saveTS:"Save time series",sens:"Sensitivity",live:"실시간",held:"한 장",ts:n=>"기록 중 "+n+" 장",over:"Overflow",dt:"Δt",
+      ins:"인슐린 주사기",syr3:"3 ml 주사기",fill:"0.50 ml까지 채우기",drop:"한 방울 → 큐벳",dropW:"한 방울 → 폐액",push1:"0.01 ml 밀기 → 큐벳",push5:"0.05 ml 밀기 → 큐벳",emptyS:"폐액에 비우기",
+      draw:"빨아들이기",inject:"전부 큐벳에",src:"시약",none:"비어 있음",
+      water:"증류수",naoh:"NaOH 용액",nacl:"NaCl",gl:"Gl",ic:"IC",ind:"In",
+      stock:"NaOH 원액 만들기",gran:m=>"알갱이 질량(미세 튜브에 인쇄): "+m.toFixed(3)+" g",upTo:v=>"물을 부어 "+v.toFixed(1)+" ml로",dissolve:"녹이기",stockHas:v=>"100 ml 용기: NaOH 용액 "+v.toFixed(1)+" ml",noStock:"아직 원액이 없습니다",
+      cuvSel:"큐벳",cap:"뚜껑",capOff:"뚜껑 열기",capOn:"뚜껑 닫기",shake:"흔들어 섞기",tap:"톡톡 (거품 빼기)",rot:"90° 돌리기",label:"테이프에 쓰기",emptyC:"비우고 씻기",toH:"받침대에 넣기",fromH:"받침대에서 빼기",
+      inHolder:"받침대 안",unmixed:"덜 섞임",bubbles:"벽에 거품",grooved:"홈 난 면이 빛 쪽",gloves:"장갑 끼기",glovesOn:"장갑 낌",
+      vol:"넣은 양은 직접 기록하세요"},
+    hPsu:"직류 전원 · 어댑터", psuOn:"전원 끄기", psuOff:"전원 켜기", adOn:"어댑터 스위치 끄기", adOff:"어댑터 스위치 켜기", vzero:"노브를 맨 왼쪽(0 V)으로",
+    knob:(v,on)=>v.toFixed(1)+" V"+(on?"":" (꺼짐)"),
+    hRgb:"LED-RGB 단자 (4단자 커넥터)", hOpt:"광학 부품 미세 조정", optSel:s=>s?"고른 부품: "+s:"광학대 확대 화면에서 부품을 클릭해 고르세요",
+    hSp:"시간 배속 · 스톱워치", swGo:"시작/정지", swRst:"리셋",
+    hNote:"실험 노트", note:"적기", noteClr:"지우기", noteSave:"저장", cfgPh:"예: OH 0.06 M · 또는 파일 이름 R-0.csv", cfgHint:"이 칸은 노트 한 줄, 저장 파일 이름(○○.csv), 큐벳 테이프 글씨로 함께 씁니다.",
+    st:{none:"부품함에서 광학대, 광원 받침대, 렌즈, 스크린, CCD 센서부터 꺼내 놓으세요.",hand:n=>"손에 든 것: "+n,over:"센서가 포화되었습니다(4095) — 전압이나 Sensitivity를 낮추세요.",room:"차광판 없이 방의 빛이 센서에 들어옵니다.",naoh:"장갑 없이 NaOH를 다루면 안 됩니다!"},
+    m:{picked:n=>n+" — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)",placed:n=>n+"을(를) 놓았습니다.",back:n=>n+"을(를) 부품함에 넣었습니다.",needFor:n=>"먼저 "+n+"이(가) 필요합니다.",
+      onTable:n=>n+"을(를) 광학대에 놓았습니다.",notTable:"광학 부품은 광학대 위에 놓습니다.",inHolder:n=>n+"을(를) 광원 받침대에 꽂았습니다.",holderBusy:"받침대에 이미 다른 것이 꽂혀 있습니다.",
+      outHolder:n=>n+"을(를) 받침대에서 뺐습니다.",jit:"받침대에 꽂힌 LED에 선을 꽂아서 받침대가 움직였습니다 — 보정이 달라졌을 수 있습니다.",moved:n=>n+" 위치를 옮겼습니다.",
+      plug:(a,b)=>a+"을(를) "+b+"에 꽂았습니다.",unplug:n=>n+"을(를) 뺐습니다.",wrongCon:"4단자 커넥터는 LED-RGB에, 2단자 커넥터는 LED-CON·LED-UNK에 꽂습니다.",
+      cuvIn:i=>"큐벳 "+(i+1)+"을(를) 받침대에 넣었습니다.",cuvOut:i=>"큐벳 "+(i+1)+"을(를) 받침대에서 뺐습니다.",cuvBusy:"큐벳 받침대에 이미 큐벳이 있습니다.",cuvRack:i=>"큐벳 "+(i+1)+"을(를) 꽂이에 돌려놓았습니다.",
+      gloves:"장갑을 꼈습니다.",glovesOff:"장갑을 벗었습니다.",noGloves:"장갑부터 끼세요 — NaOH는 매우 부식성이 강합니다.",
+      stock:(v,m)=>"NaOH 알갱이 "+m.toFixed(3)+" g을 녹여 "+v.toFixed(1)+" ml 용액을 만들었습니다.",noStock:"NaOH 용액이 아직 없습니다 — 알갱이를 녹여 원액부터 만드세요.",
+      drew:(v,s)=>"3 ml 주사기에 "+s+"을(를) 빨아들였습니다.",syrMix:"주사기에 다른 시약이 들어 있습니다 — 먼저 비우세요.",syrEmpty:"주사기가 비어 있습니다.",syrFull:"주사기가 가득 찼습니다.",
+      inj:i=>"큐벳 "+(i+1)+"에 넣었습니다.",full:"큐벳이 넘칩니다 — 넘친 만큼은 흘러 버렸습니다.",insFill:(k,s)=>"인슐린 주사기 "+(k+1)+"에 "+s+"을(를) 채웠습니다.",drop:"한 방울 떨어졌습니다.",insEmpty:"인슐린 주사기가 비었습니다.",
+      capped:"뚜껑을 닫았습니다.",uncapped:"뚜껑을 열었습니다.",needCap:"흔들기 전에 뚜껑을 닫으세요.",shaken:"흔들어 섞었습니다 (벽에 거품이 생겼을 수 있습니다).",tapped:"톡톡 쳐서 거품을 뺐습니다.",rot:"큐벳을 90° 돌렸습니다.",labeled:s=>"테이프에 \""+s+"\"라고 썼습니다.",
+      emptied:i=>"큐벳 "+(i+1)+"을(를) 비우고 씻었습니다.",capFirst:"뚜껑을 열어야 넣을 수 있습니다.",noted:"노트에 적었습니다.",
+      saved:n=>n+" 파일로 저장했습니다.",noLaunch:"Time Series는 Launch를 누른 다음에만 켤 수 있습니다.",noTS:"저장할 Time Series 기록이 없습니다.",noSingle:"먼저 Single spectrum으로 한 장을 찍으세요.",sensorNo:"CCD 센서가 없습니다.",
+      psuClick:"전원과 어댑터 스위치는 오른쪽 패널에서 다룹니다."}
+  },
+  en:{
+    title:"ISPhO 2024 Experiment — Absorption Spectroscopy and Chemical Kinetics",
+    sub:"Virtual laboratory · build a spectrometer from the light-source holder, lens L₁, the cuvette holder, lens L₂ with its diffraction grating and the screen carrying the CCD sensor, and calibrate pixel number N against wavelength, λ = k₀N + λ₀, with LED-RGB (620, 520, 460 nm). Then measure how the LED-CON light weakens through a cuvette to find the absorption cross-section σ(λ) of indigo carmine IC (L = 1.05 cm), find the order p from how fast phenolphthalein In fades in NaOH + NaCl solutions of equal ionic strength J₀, and record the \"chemical traffic light\" of IC in glucose + NaOH as a time series. You read the syringe scales and count the drops yourself; no calculation is done for you.",
+    docTitle:"ISPhO 2024 Experiment — Absorption Spectroscopy and Chemical Kinetics · HaslaLab",
+    trayTitle:"Parts box", trayTake:"click to take", trayOut:"in use",
+    trayHelp:"L-click take / put · R-click return\noptics: click the optical table\nLEDs: the source holder, cuvettes: the cuvette holder\nchemistry: in the 'Chemistry bench' close-up",
+    items:{table:"O1. Optical table",sunshield:"X6. Sunshield",holder:"O2. Light-source holder",diaphragm:"O7. Diaphragm",L1:"O3. Lens L₁",cuvhold:"O9. Cuvette holder",L2:"O4. Lens L₂ + grating G",screen:"O5. Screen",sensor:"O6. CCD sensor (to computer)",
+      psu:"E1. DC power supply (0–15 V)",adapter:"E2. Adapter with switch",con4:"E3. Connector, 4 outputs",con2:"E4. Connector, 2 outputs",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (full spectrum)",ledunk:"E7. LED-UNK (unknown colour)",
+      wash:"C12. Wash bottle (water)",naoh:"C2. NaOH granules",ic:"C3. Indigo carmine IC 0.70 mg/ml",ind:"C4. Phenolphthalein In",gl:"C5. Glucose Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
+      syr3:"C8. Syringe 3 ml",syrIns:"C7. Insulin syringes 0.5 ml ×4",tubes:"C10·11. Conical tubes, 100 ml container",cuvettes:"O8. Cuvettes with caps ×10",waste:"X4. Waste container",gloves:"X3. Gloves",laptop:"Computer",cuv:i=>"cuvette "+(i+1)},
+    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click the computer, the optical table or a reagent to open its close-up",
+    tabs:{prog:"Spectroscopy program",opt:"Optical table (top)",chem:"Chemistry bench"},
+    closeCap:{prog:"The Spectroscopy program — intensity (arbitrary units, saturating at 4095, \"Overflow\") against pixel number N. Launch: live, Single spectrum: one shot, Time Series: records only after Launch (interval Δt). Wheel: zoom N, drag: pan, double-click: all. Type a name such as R-0.csv in the notebook field to save under that name.",
+              opt:"The optical table from above — drag a part along the axis (fine steps with the ± buttons on the right). After calibrating, touch nothing but the source, the cuvette and the diaphragm. Top right: the face of the screen, with the zero-order spot and the first-order spectrum on the CCD.",
+              chem:"The chemistry bench — top: insulin syringe (0.5 ml, 0.01 ml marks, squeeze one drop at a time), middle: 3 ml syringe (0.1 ml marks), lower left: reagents, right: the chosen cuvette. Cap a cuvette and shake it to mix; tap bubbles off the walls. Handle NaOH with gloves on."},
+    lab:{noSensor:"take out the CCD sensor",noTable:"take out the optical table",screen:"screen face",ccd:"CCD",zero:"0th",
+      launch:"Launch",pause:"Pause",single:"Single spectrum",saveS:"Save spectrum",tsOn:"Time Series ●",tsOff:"Time Series",saveTS:"Save time series",sens:"Sensitivity",live:"live",held:"single",ts:n=>"recording "+n+" frames",over:"Overflow",dt:"Δt",
+      ins:"insulin syringe",syr3:"3 ml syringe",fill:"fill to 0.50 ml",drop:"one drop → cuvette",dropW:"one drop → waste",push1:"push 0.01 ml → cuvette",push5:"push 0.05 ml → cuvette",emptyS:"empty to waste",
+      draw:"draw",inject:"all into cuvette",src:"reagent",none:"empty",
+      water:"water",naoh:"NaOH sol.",nacl:"NaCl",gl:"Gl",ic:"IC",ind:"In",
+      stock:"Make the NaOH stock",gran:m=>"granule mass (printed on the microtube): "+m.toFixed(3)+" g",upTo:v=>"add water up to "+v.toFixed(1)+" ml",dissolve:"Dissolve",stockHas:v=>"100 ml container: NaOH solution "+v.toFixed(1)+" ml",noStock:"no stock solution yet",
+      cuvSel:"cuvette",cap:"cap",capOff:"Uncap",capOn:"Cap",shake:"Shake to mix",tap:"Tap (bubbles)",rot:"Turn 90°",label:"Write on tape",emptyC:"Empty and wash",toH:"Into the holder",fromH:"Out of the holder",
+      inHolder:"in the holder",unmixed:"not mixed",bubbles:"bubbles on the walls",grooved:"grooved faces in the beam",gloves:"Put gloves on",glovesOn:"gloves on",
+      vol:"note down what you add"},
+    hPsu:"DC supply · adapter", psuOn:"Supply off", psuOff:"Supply on", adOn:"Adapter switch off", adOff:"Adapter switch on", vzero:"Knob fully left (0 V)",
+    knob:(v,on)=>v.toFixed(1)+" V"+(on?"":" (off)"),
+    hRgb:"LED-RGB output (4-output connector)", hOpt:"Fine positioning of optics", optSel:s=>s?"selected: "+s:"click a part in the optical-table close-up to select it",
+    hSp:"Time speed · stopwatch", swGo:"Start/stop", swRst:"Reset",
+    hNote:"Notebook", note:"Write", noteClr:"Clear", noteSave:"Save", cfgPh:"e.g. OH 0.06 M · or a file name R-0.csv", cfgHint:"This field serves as the notebook line, the file name for saving (….csv) and the text for a cuvette's tape.",
+    st:{none:"Take the optical table, the source holder, the lenses, the screen and the CCD sensor out of the box first.",hand:n=>"In hand: "+n,over:"The sensor is saturated (4095) — lower the voltage or the Sensitivity.",room:"Without the sunshield the room light reaches the sensor.",naoh:"Never handle NaOH without gloves!"},
+    m:{picked:n=>n+" — click where it goes. (R-click: return)",placed:n=>n+" put out.",back:n=>n+" put back in the box.",needFor:n=>"You need the "+n+" first.",
+      onTable:n=>n+" set on the optical table.",notTable:"Optical parts go on the optical table.",inHolder:n=>n+" pushed into the source holder.",holderBusy:"Something is already in the holder.",
+      outHolder:n=>n+" taken out of the holder.",jit:"Plugging a lead into the LED in the holder moved the holder — the calibration may have changed.",moved:n=>n+" moved.",
+      plug:(a,b)=>a+" plugged into "+b+".",unplug:n=>n+" unplugged.",wrongCon:"The 4-output connector goes to LED-RGB, the 2-output one to LED-CON or LED-UNK.",
+      cuvIn:i=>"Cuvette "+(i+1)+" put into the holder.",cuvOut:i=>"Cuvette "+(i+1)+" taken out of the holder.",cuvBusy:"There is already a cuvette in the holder.",cuvRack:i=>"Cuvette "+(i+1)+" back in the rack.",
+      gloves:"Gloves on.",glovesOff:"Gloves off.",noGloves:"Put the gloves on first — NaOH is extremely caustic.",
+      stock:(v,m)=>m.toFixed(3)+" g of NaOH granules dissolved to "+v.toFixed(1)+" ml of solution.",noStock:"No NaOH solution yet — dissolve the granules into a stock first.",
+      drew:(v,s)=>s+" drawn into the 3 ml syringe.",syrMix:"The syringe holds another reagent — empty it first.",syrEmpty:"The syringe is empty.",syrFull:"The syringe is full.",
+      inj:i=>"Added to cuvette "+(i+1)+".",full:"The cuvette overflows — the excess is spilt.",insFill:(k,s)=>"Insulin syringe "+(k+1)+" filled with "+s+".",drop:"One drop fell.",insEmpty:"The insulin syringe is empty.",
+      capped:"Cap on.",uncapped:"Cap off.",needCap:"Cap the cuvette before shaking it.",shaken:"Shaken and mixed (there may be bubbles on the walls).",tapped:"Tapped the bubbles off.",rot:"Cuvette turned by 90°.",labeled:s=>"\""+s+"\" written on the tape.",
+      emptied:i=>"Cuvette "+(i+1)+" emptied and washed.",capFirst:"Take the cap off to add anything.",noted:"Written in the notebook.",
+      saved:n=>"Saved as "+n+".",noLaunch:"Time Series can only be started after Launch.",noTS:"No time series recorded yet.",noSingle:"Take a Single spectrum first.",sensorNo:"No CCD sensor.",
+      psuClick:"The supply and the adapter switch are worked from the panel on the right."}
+  }
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+const d=()=>T[lang];
+/* ══════════════════════════════════════════════════════════════
+   1.  THE HIDDEN TRUTH OF THIS SESSION
+   ══════════════════════════════════════════════════════════════ */
+const U=(a,b)=>a+Math.random()*(b-a);
+const gauss=(m,s)=>{ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const NA=6.02e23, MU={NaOH:40.0,IC:466.4,Gl:180.0,NaCl:58.4}, L_CUV=1.05e-2;   /* as printed on the sheet */
+const NPIX=3650, OVERFLOW=4095;
+const G=(l,l0,w)=>Math.exp(-0.5*Math.pow((l-l0)/w,2));
+const TRUE=(()=>{ const t={};
+  /* the light sources: shape of the spectrum (relative), fixed; only the brightness follows the voltage */
+  t.con=[[U(447,453),U(9,11),1.0],[U(548,562),U(50,58),U(0.20,0.24)],[U(615,630),U(32,40),U(0.08,0.12)]];
+  t.rgb={R:[U(617,623),U(8,10)],G:[U(514,522),U(15,19)],B:[U(458,464),U(10,12)]};
+  t.unk=[U(582,596),U(7,9)];
+  t.vth={con:U(2.6,2.9),rgb:U(1.8,2.1),unk:U(1.9,2.2)};
+  /* the spectrometer: lambda = k0 N + lambda0 at the right distances */
+  t.F1=U(11.6,12.4); t.F2=U(11.6,12.4); t.k00=-0.0752*U(0.97,1.03); t.l00=U(664,678);
+  t.dark=U(30,45); t.ron=U(1.5,3); t.room=U(0.75,1.0);
+  /* chemistry */
+  t.mNaOH=Math.round(U(0.55,0.66)*1000)/1000;          /* g, printed on the microtube */
+  t.Vd=[0,1,2,3].map(()=>U(4.2,5.8)*1e-9);              /* m^3, drop volume of each 0.5 ml syringe */
+  t.ic={a:U(4.8,5.3)*1e-21,l1:U(606,614),w1:U(28,32),l2:U(560,572),w2:U(26,32),a2:U(0.32,0.40),l3:U(415,425),w3:U(25,32),a3:U(0.14,0.20)};
+  t.inA=U(0.20,0.25);                                   /* ln-absorbance at the In2- peak of one drop of In in 3 ml */
+  t.inL=U(548,556); t.inW=U(36,42);
+  t.chi=U(0.032,0.042); t.p=1; t.psiR=U(0.03,0.05);     /* phenolphthalein: k = chi c^p f(J) + psi */
+  t.jSlope=U(0.7,1.1);
+  t.tr={iL:U(535,545),iW:U(32,38),fL:U(418,428),fW:U(30,36),fA:U(0.55,0.70),iA:U(0.75,0.9),kg:U(0.38,0.52),k1:U(0.10,0.16),k2:U(0.025,0.04),kox:U(0.15,0.25),gA:U(0.5,0.6),gL:U(440,450)};
+  return t; })();
+/* the absorption cross-sections / ln-absorbance shapes (per unit) */
+const sigIC=l=>{ const c=TRUE.ic; return c.a*(G(l,c.l1,c.w1)+c.a2*G(l,c.l2,c.w2)+c.a3*G(l,c.l3,c.w3)); };
+const shpIn=l=>G(l,TRUE.inL,TRUE.inW)+0.08*G(l,370,25);
+const shpI=l=>G(l,TRUE.tr.iL,TRUE.tr.iW)+0.25*G(l,TRUE.tr.iL-90,30);
+const shpF=l=>G(l,TRUE.tr.fL,TRUE.tr.fW)+0.18*G(l,470,30);
+
+/* ══════════════════════════════════════════════════════════════
+   2.  THE BENCH STATE
+   ══════════════════════════════════════════════════════════════ */
+const PARTS=["table","sunshield","holder","diaphragm","L1","cuvhold","L2","screen","sensor","psu","adapter","con4","con2","ledcon","ledrgb","ledunk",
+  "wash","naoh","ic","ind","gl","nacl","syr3","syrIns","tubes","cuvettes","waste","gloves"];
+const OPT=["holder","diaphragm","L1","cuvhold","L2","screen"];
+const PSU_MAX=15;
+function newCuv(i){ return {i,V:{w:0,naoh:0,nacl:0,gl:0},cNaOH:0,icV:0,inV:0,mixed:true,unmix:1,bubbles:0,cap:false,rot:false,label:"",ph:{h:0,n:0,b:0},tr:null}; }
+const ST={ on:new Set(), x:{holder:null,diaphragm:null,L1:null,cuvhold:null,L2:null,screen:null},
+  src:null,                          /* which LED board is in the holder: "ledcon" | "ledrgb" | "ledunk" | null */
+  pin:"R", adSw:false, plug:{con4:null,con2:null}, psuOn:false, psuV:0, standJit:0,
+  cuv:Array.from({length:10},(_,i)=>newCuv(i)), inHolder:null, sel:0,
+  naohSol:null,                      /* the NaOH solution made from the granules: {V (ml), c (mol/l)} */
+  syr3:{src:null,V:0,set:1.0}, ins:[0,1,2,3].map(()=>({src:null,V:0})), insK:0, stockSet:50,
+  gloves:false, sens:4, tsDt:2, t:0, speed:1, sw:{run:false,t:0}, wasted:0 };
+let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
+function say(key,...args){ msg={key,args,t:performance.now()}; }
+const has=k=>ST.on.has(k);
+const itemName=k=>d().items[k]||k;
+/* the voltage across the LED board while its circuit is closed */
+const ledV=()=>{ if(!ST.src||!has("psu")||!ST.psuOn||!has("adapter")||!ST.adSw) return 0;
+  const ck=ST.src==="ledrgb"?"con4":"con2"; if(!has(ck)||ST.plug[ck]!==ST.src) return 0; return ST.psuV; };
+function brightness(){ const k=ST.src==="ledcon"?"con":ST.src==="ledrgb"?"rgb":"unk", v=ledV(); return Math.max(0,v-TRUE.vth[k])/(PSU_MAX-TRUE.vth[k]); }
+
+/* ══════════════════════════════════════════════════════════════
+   3.  SOLUTIONS AND THEIR REACTIONS
+   ══════════════════════════════════════════════════════════════ */
+const cuvVol=c=>c.V.w+c.V.naoh+c.V.nacl+c.V.gl+c.icV+c.inV;          /* ml */
+function conc(c){ const V=Math.max(1e-6,cuvVol(c)); return {OH:c.cNaOH*c.V.naoh/V, Na:(c.cNaOH*c.V.naoh+0.30*c.V.nacl)/V, Cl:0.30*c.V.nacl/V, Gl:0.50*c.V.gl/V}; }
+const ionJ=c=>{ const q=conc(c); return 0.5*(q.Na+q.OH+q.Cl); };                 /* mol/l */
+/* molecules of IC per m^3 of the cuvette's solution */
+function nIC(c){ const V=cuvVol(c)*1e-6; if(V<=0) return 0; const m=(0.70*(c.icV*1e-6))*1e3; return m/MU.IC*NA/V; }
+/* the absorbance ln(I0/I) the cuvette's contents give at wavelength l (nm) along the beam */
+function absorb(c,l){ let A=0; const icN=nIC(c);
+  if(icN>0){ if(c.tr){ const t=c.tr, s=(sigIC(l)+TRUE.ic.a*TRUE.tr.gA*G(l,TRUE.tr.gL,30))*icN*L_CUV; A+=s*t.n+icN*L_CUV*TRUE.ic.a*(TRUE.tr.iA*shpI(l)*t.i+TRUE.tr.fA*shpF(l)*t.f); } else A+=sigIC(l)*icN*L_CUV; }
+  if(c.inV>0) A+=TRUE.inA*c.ph.n*shpIn(l)*3.0/Math.max(1,cuvVol(c));
+  return A; }
+function chemStep(c,dt){
+  const q=conc(c);
+  /* phenolphthalein: H2In -> In2- at once in base; In2- + p OH- <-> In2-(OH)p slowly */
+  if(c.inV>0&&q.OH>=1e-4){ const p=c.ph, J=ionJ(c), f=Math.max(0.2,1+TRUE.jSlope*(Math.sqrt(J)-Math.sqrt(0.30)));
+    p.n+=p.h; p.h=0; const kf=TRUE.chi*Math.pow(q.OH,TRUE.p)*f, kb=TRUE.psiR*TRUE.chi*0.30, tot=p.n+p.b, ne=tot*kb/(kf+kb);
+    p.n=ne+(p.n-ne)*Math.exp(-(kf+kb)*dt); p.b=tot-p.n; }
+  /* indigo carmine in base with glucose: the dissolved oxygen is used up first, then neutral -> intermediate -> final */
+  if(c.tr){ const t=c.tr, T=TRUE.tr, r=Math.max(0,q.OH*q.Gl)/(0.15*0.25);
+    t.O=Math.max(0,t.O-T.kg*0.0375*r*dt);
+    const sw=1/(1+Math.pow(Math.max(t.O,0)/0.08,4)), k1=T.k1*r*sw, k2=T.k2*r*sw, ko=T.kox*t.O;
+    for(let s=0,n=Math.max(1,Math.ceil(dt/0.2)),h=dt/n;s<n;s++){
+      const dn=-k1*t.n+ko*t.i, di=k1*t.n-k2*t.i-ko*t.i+ko*t.f*0.5, df=k2*t.i-ko*t.f*0.5; t.n+=dn*h; t.i+=di*h; t.f+=df*h; }
+    const sum=t.n+t.i+t.f; if(sum>0){ t.n/=sum; t.i/=sum; t.f/=sum; } }
+  if(c.bubbles>0&&!c.cap) c.bubbles=Math.max(0,c.bubbles-dt/400); }
+function step(dt){ if(dt<=0) return; for(const c of ST.cuv) chemStep(c,dt); ST.t+=dt; if(ST.sw.run) ST.sw.t+=dt; specStep(dt); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  THE SPECTROMETER
+   ══════════════════════════════════════════════════════════════ */
+function optics(){ const x=ST.x; if(!has("table")||!has("holder")||!has("L1")||!has("L2")||!has("screen")) return null;
+  if(!(x.holder<x.L1&&x.L1<x.L2&&x.L2<x.screen)) return null;
+  const e1=(x.L1-x.holder)-TRUE.F1, e2=(x.screen-x.L2)-TRUE.F2;
+  return {e1,e2,amp:1/(1+Math.pow(e1/1.4,2))*1/(1+Math.pow(e2/4,2)),blur:0.4+2.0*Math.abs(e2)+1.1*Math.abs(e1)}; }
+function pixScale(){ const o=optics(), L2S=o?Math.max(4,ST.x.screen-ST.x.L2):TRUE.F2; const k0=TRUE.k00*TRUE.F2/L2S, lc=TRUE.l00+TRUE.k00*NPIX/2; return {k0, l0:lc-k0*NPIX/2+ST.standJit}; }
+/* the emission of what is in the holder (relative units per nm) */
+function emission(l){ const b=brightness(); if(b<=0) return 0;
+  if(ST.src==="ledcon"){ let s=0; for(const [l0,w,a] of TRUE.con) s+=a*G(l,l0,w); return 1.6*b*s; }
+  if(ST.src==="ledrgb"){ const [l0,w]=TRUE.rgb[ST.pin]; return 1.2*b*G(l,l0,w); }
+  const [l0,w]=TRUE.unk; return 1.1*b*G(l,l0,w); }
+/* the room's light reaching the sensor, without the sunshield */
+const roomLight=l=>(has("sunshield")?0.06:1)*TRUE.room*(0.55*G(l,546,6)+0.4*G(l,612,8)+0.35*G(l,436,5)+0.25*G(l,560,60));
+const SPEC={live:false,hold:null,frame:new Float32Array(NPIX),ts:null,tsDone:null,next:0,acc:0,t0:0};
+function cuvTrans(l){ if(!has("cuvhold")||ST.inHolder===null) return 1; const c=ST.cuv[ST.inHolder], V=cuvVol(c);
+  let T=V>0.2?0.93:0.86; if(c.rot) T*=0.33; if(c.bubbles>0) T*=Math.exp(-0.25*c.bubbles);
+  const fill=Math.max(0,Math.min(1,(V-1.6)/0.6));                       /* the beam crosses the liquid once it is above 2.2 ml */
+  let A=absorb(c,l); if(!c.mixed) A*=c.unmix; return T*(fill*Math.exp(-A)+(1-fill)); }
+function specFrame(){ const o=optics(), sc=pixScale(), out=SPEC.frame, gain=Math.pow(2,ST.sens-4);
+  const dia=has("diaphragm")?0.55:1, roomF=has("diaphragm")?0.7:1;
+  const blur=o?o.blur:0, amp=o?o.amp:0, rot=ST.inHolder!==null&&ST.cuv[ST.inHolder].rot;
+  for(let n=0;n<NPIX;n++){ const l=sc.l0+sc.k0*n; let s=0;
+    if(o&&ST.src){ /* a little blur: average the emission over the instrumental width */
+      const w=blur; s=(0.5*emission(l)+0.25*emission(l-w)+0.25*emission(l+w))*cuvTrans(l)*amp*dia; }
+    let v=TRUE.dark+gain*(2600*s+620*roomLight(l)*roomF)+gauss(0,TRUE.ron*(1+0.25*gain))+(rot?gauss(0,25*s*gain):0);
+    out[n]=Math.max(0,Math.min(OVERFLOW,v)); }
+  return out; }
+function specStep(dt){ if(!has("sensor")||!SPEC.live) return; if(SPEC.ts&&ST.t>=SPEC.next){ specFrame(); SPEC.ts.push([ST.t-SPEC.t0,Uint16Array.from(SPEC.frame)]); SPEC.next=ST.t+ST.tsDt; } }
+/* the colour the eye sees through a cuvette lit by white light (for the drawings) */
+function cuvColor(c,alpha){ if(cuvVol(c)<0.05) return "rgba(225,238,245,"+(alpha||0.3)+")"; const ch=[[600,40],[545,35],[450,30]].map(([l0,w])=>{ let s=0,n=0; for(let l=400;l<=700;l+=10){ const g=G(l,l0,w); s+=g*Math.exp(-absorb(c,l)*0.9); n+=g; } return s/n; });
+  return "rgba("+ch.map(v=>Math.round(25+230*v)).join(",")+","+(alpha||0.55)+")"; }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  DRAWING HELPERS
+   ══════════════════════════════════════════════════════════════ */
+const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
+function rrect(x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
+  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
+function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
+function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function ell(x,y,rx,ry,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse(x,y,Math.max(0.1,rx),Math.max(0.1,ry),0,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function poly(pts,fill,stroke,lw){ ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function shade(hex,f){ if(hex[0]!=="#") return hex; if(hex.length===4) hex="#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]; const n=parseInt(hex.slice(1),16); let r=n>>16,g=n>>8&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f); r=Math.round((t-r)*p+r); g=Math.round((t-g)*p+g); b=Math.round((t-b)*p+b);
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+
+function rbox(cx,cy,z0,w,dd,h,a,top,side,edge){
+  const u=v2(a), n=[-u[1],u[0]], C=(i,j)=>[cx+u[0]*i*w/2+n[0]*j*dd/2, cy+u[1]*i*w/2+n[1]*j*dd/2];
+  const c=[C(-1,-1),C(1,-1),C(1,1),C(-1,1)];
+  for(let k=0;k<4;k++){ const p=c[k], q=c[(k+1)%4], N=nrm2([q[1]-p[1],-(q[0]-p[0])]);
+    const out=dot2(N,sub2(p,[cx,cy]))>0?N:mul2(N,-1); if(out[1]<=0.02) continue;
+    const f=0.80+0.2*out[1]-0.08*out[0];
+    poly([P(p[0],p[1],z0),P(q[0],q[1],z0),P(q[0],q[1],z0+h),P(p[0],p[1],z0+h)],shade(side,f-1),edge,0.6); }
+  poly(c.map(p=>P(p[0],p[1],z0+h)),top,edge,0.6);
+  return c;
+}
+function vcyl(x,y,z0,z1,r,body,top,edge){
+  const b=P(x,y,z0), t=P(x,y,z1), rx=r*SC, ry=r*SC*KY;
+  ctx.fillStyle=body; ctx.beginPath(); ctx.ellipse(b[0],b[1],rx,ry,0,0,Math.PI); ctx.lineTo(t[0]-rx,t[1]); ctx.ellipse(t[0],t[1],rx,ry,0,Math.PI,0,true); ctx.closePath(); ctx.fill();
+  if(edge){ ctx.strokeStyle=edge; ctx.lineWidth=0.7; ctx.stroke(); }
+  ell(t[0],t[1],rx,ry,top,edge,0.7);
+}
+function hcyl(p0,p1,z,r,col,hi){
+  const a=P(p0[0],p0[1],z), b=P(p1[0],p1[1],z);
+  ctx.lineCap="round"; ctx.strokeStyle=col; ctx.lineWidth=2*r*SC; ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  if(hi){ ctx.strokeStyle=hi; ctx.lineWidth=Math.max(0.8,r*SC*0.5); ctx.beginPath(); ctx.moveTo(a[0],a[1]-r*SC*0.45); ctx.lineTo(b[0],b[1]-r*SC*0.45); ctx.stroke(); }
+  ctx.lineCap="butt";
+}
+
+/* seven-segment digits, for the meters and the scale */
+const SEG={"0":"abcdef","1":"bc","2":"abged","3":"abgcd","4":"fgbc","5":"afgcd","6":"afgedc","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","o":"cdeg","L":"fed","d":"bcdeg","E":"afged","r":"eg"," ":""};
+function seg7(str,x,y,h,on,off){
+  const w=h*0.52, th=Math.max(1.2,h*0.11), sk=h*0.08; let cx=x;
+  const L=(x0,y0,x1,y1)=>{ ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); };
+  ctx.lineCap="round"; ctx.lineWidth=th;
+  for(let i=0;i<str.length;i++){ const ch=str[i];
+    if(ch==="."){ ctx.fillStyle=on; ctx.beginPath(); ctx.arc(cx-w*0.22,y+h,th*0.7,0,7); ctx.fill(); continue; }
+    const set=SEG[ch]||"";
+    for(const sgm of "abcdefg"){ const lit=set.includes(sgm); if(!lit&&!off) continue; ctx.strokeStyle=lit?on:off;
+      const top=y, mid=y+h/2, bot=y+h, k=t=>sk*(1-t/h);
+      if(sgm==="a") L(cx+th+k(0),top,cx+w-th+k(0),top);
+      if(sgm==="b") L(cx+w+k(0),top+th,cx+w+k(h/2),mid-th);
+      if(sgm==="c") L(cx+w+k(h/2),mid+th,cx+w,bot-th);
+      if(sgm==="d") L(cx+th,bot,cx+w-th,bot);
+      if(sgm==="e") L(cx+k(h/2),mid+th,cx,bot-th);
+      if(sgm==="f") L(cx+k(0),top+th,cx+k(h/2),mid-th);
+      if(sgm==="g") L(cx+th+k(h/2),mid,cx+w-th+k(h/2),mid); }
+    cx+=w*1.42;
+  }
+  ctx.lineCap="butt";
+}
+/* the strings the meters show, right-aligned on 3½ digits */
+function lcd(str,x,y,w,h,col,ghost){
+  if(!str) return;
+  if(str.startsWith("1   ")){ seg7("1",x+w*0.06,y,h,col,ghost); return; }
+  const neg=str[0]==="-"; let s=neg?str.slice(1):str; const digits=s.replace(".","").length, cw=h*0.52*1.42;
+  const x0=x+w-digits*cw-h*0.1; if(neg){ ctx.strokeStyle=col; ctx.lineWidth=Math.max(1.2,h*0.11); ctx.beginPath(); ctx.moveTo(x0-cw*0.9,y+h/2); ctx.lineTo(x0-cw*0.3,y+h/2); ctx.stroke(); }
+  seg7(s,x0,y,h,col,ghost);
+}
+const add2=(a,b)=>[a[0]+b[0],a[1]+b[1]], sub2=(a,b)=>[a[0]-b[0],a[1]-b[1]], mul2=(a,k)=>[a[0]*k,a[1]*k], dot2=(a,b)=>a[0]*b[0]+a[1]*b[1],
+      len2=a=>Math.hypot(a[0],a[1]), nrm2=a=>{ const l=len2(a); return l>1e-12?[a[0]/l,a[1]/l]:[1,0]; }, v2=a=>[Math.cos(a),Math.sin(a)];
+/* ══════════════════════════════════════════════════════════════
+   5.  LAB3D — the HaslaLab 3-D bench renderer (as in IPhO 2017): the scene is listed
+   every frame and drawn with WebGL and a depth buffer, so no part can show through
+   another from any angle; text3 prints labels onto the surfaces of the instruments.
+   Its world has y up; the bench code below works in x right, y towards you, z up.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function L3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade3(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT3=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face3(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT3[0]+nn[1]*LIGHT3[1]+nn[2]*LIGHT3[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad3(a,b,c,d,o){ face3([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face3([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face3([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face3([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face3([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face3([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face3([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face3(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face3(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face3(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face3(orient(A,ax.map(c=>-c*sg)),f); face3(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face3(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>L3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade3(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=L3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const P=(base,ang)=>[base[0]+r*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+r*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+r*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))];
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face3(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face3(orient(c0,n.map(x=>-x)),cf); face3(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=L3(...O), b=L3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=L3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){gl_FragColor=texture2D(s,u)*a;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v);
+  t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1}; GL3.src.set(src,t); gl.bindTexture(gl.TEXTURE_2D,t.tex);
+    for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v); }
+  if(t.frame!==GL3.frame&&!(src._static&&t.frame>=0)){ t.frame=GL3.frame; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){} }
+  return t;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>L3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade3(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=L3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=L3(...it.O), pu=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=L3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=L3(...it.O), b=L3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=L3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=L3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=L3(...it.c), R=it.r*CAM.k, base=rgba01(it.col), hi=rgba01(o.hi||"#ffffff"), lo=rgba01(o.lo||"#5d646b");
+      const L=[-0.38,0.45,0.81], col=(fx,fy)=>{ const fz=Math.sqrt(Math.max(0,1-fx*fx-fy*fy)), l=fx*L[0]+fy*L[1]+fz*L[2];
+        const m=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t); const c=l>0.75?m(base,hi,(l-0.75)/0.25):m(lo,base,Math.max(0,(l+0.2)/0.95)); return "rgb("+c.slice(0,3).map(v=>Math.round(v*255)).join(",")+")"; };
+      const N=18, rings=[0,0.45,0.8,1];
+      for(let k=1;k<rings.length;k++) for(let i=0;i<N;i++){
+        const A=i/N*6.2832, B=(i+1)/N*6.2832, pt=(f,a)=>[p[0]+R*f*Math.cos(a),p[1]+R*f*Math.sin(a),p[2]+e+it.r*Math.sqrt(Math.max(0,1-f*f))];
+        const f0=rings[k-1], f1=rings[k], fm=(f0+f1)/2, am=(A+B)/2;
+        _gtri(G,[pt(f0,A),pt(f1,A),pt(f1,B),pt(f0,B)],col(fm*Math.cos(am),-fm*Math.sin(am))); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=L3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE BENCH  (x right, y towards you, z up, cm), drawn through LAB3D
+   ══════════════════════════════════════════════════════════════ */
+const LW=1200, LH=560;
+Object.assign(CAM,{yaw:-0.22,pitch:0.62,k:7.4,tx:62,ty:4,tz:34,px:0,py:20,W:LW,H:LH}); camSave();
+const onMatXY=()=>false;
+let XF=null, SXF=v=>v;
+const M=v=>{ if(XF) v=XF(v); return [v[0],v[2]||0,v[1]]; };   /* bench → LAB3D (y up) */
+const P3=v=>{ if(XF) v=XF(v); const q=L3(v[0],v[2]||0,v[1]); return [q[0],q[1]]; };
+const P=(x,y,z)=>P3([x,y,z||0]);
+const dep=v=>L3(v[0],v[2]||0,v[1])[2];
+const unP=(X,Y,z)=>{ const w=onPlane(X,Y,z||0); return [w[0],w[2]]; };
+const SZ=()=>CAM.k;
+const vadd=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], vsub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], vmul=(a,k)=>[a[0]*k,a[1]*k,a[2]*k];
+const vdot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], vlen=a=>Math.hypot(a[0],a[1],a[2]), vnrm=a=>{ const l=vlen(a)||1; return [a[0]/l,a[1]/l,a[2]/l]; };
+const vcross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const lin=(...t)=>t.reduce((s,[v,k])=>vadd(s,vmul(v,k)),[0,0,0]);
+const Z3=[0,0,1];
+function basis(a){ const r=Math.abs(a[2])<0.95?[0,0,1]:[1,0,0]; const e1=vnrm(vcross(r,a)); return [e1,vcross(a,e1)]; }
+/* drawing in bench coordinates */
+const Mdir=n=>{ if(XF){ const a=XF([0,0,0]); n=vsub(XF(n),a); } return [n[0],n[2],n[1]]; };
+function F(pts,col,o){ o=o||{}; let q=pts.map(M); if(o.n) q=orient(q,Mdir(o.n)); face3(q,Object.assign({fill:col},o)); }
+function obox(c,ex,ey,ez,col,o){ o=o||{};
+  for(const [n,a,b] of [[ex,ey,ez],[vmul(ex,-1),ey,ez],[ey,ez,ex],[vmul(ey,-1),ez,ex],[ez,ex,ey],[vmul(ez,-1),ex,ey]]){
+    const f0=vadd(c,n), fc=o.faceCol&&o.faceCol(n);
+    F([lin([f0,1],[a,-1],[b,-1]),lin([f0,1],[a,1],[b,-1]),lin([f0,1],[a,1],[b,1]),lin([f0,1],[a,-1],[b,1])],fc||col,Object.assign({n,cull:true},o)); } }
+function ocyl(c0,ax,L,r,col,o){ if(L<=0) return; cylAB(M(c0),M(vadd(c0,vmul(ax,L))),r,col,Object.assign({seg:18},o||{})); }
+/* a flat polygon (in the plane e1,e2 at c) extruded along ax by h: star knobs, hex heads, triangles */
+function prism(c,ax,e1,e2,pts2,h,col,o){ o=o||{}; const A=pts2.map(([u,v])=>lin([c,1],[e1,u],[e2,v])), B=A.map(p=>vadd(p,vmul(ax,h)));
+  F(B,o.top||col,Object.assign({},o,{n:ax})); F(A,col,Object.assign({},o,{n:vmul(ax,-1)}));
+  let cu=0,cv=0; for(const [u,v] of pts2){ cu+=u; cv+=v; } cu/=pts2.length; cv/=pts2.length;
+  for(let i=0;i<A.length;i++){ const j=(i+1)%A.length, mu=(pts2[i][0]+pts2[j][0])/2-cu, mv=(pts2[i][1]+pts2[j][1])/2-cv;
+    F([A[i],A[j],B[j],B[i]],col,Object.assign({},o,{n:lin([e1,mu],[e2,mv])})); } }
+const starPts=(R,n,rot)=>Array.from({length:2*n},(_,i)=>{ const a=(rot||0)+i*Math.PI/n, r=i%2?R*0.68:R; return [r*Math.cos(a),r*Math.sin(a)]; });
+const ngon=(R,n,rot)=>Array.from({length:n},(_,i)=>{ const a=(rot||0)+i*2*Math.PI/n; return [R*Math.cos(a),R*Math.sin(a)]; });
+const ring3=(c,e1,e2,R,n,a0)=>Array.from({length:n},(_,i)=>{ const a=(a0||0)+i/n*2*Math.PI; return vadd(c,vadd(vmul(e1,R*Math.cos(a)),vmul(e2,R*Math.sin(a)))); });
+function L(a,b,col,lw,o){ line3(M(a),M(b),col,lw,o); }
+const L3line=(a,b,lw)=>L(a,b,"#222",Math.max(0.35,lw*CAM.k/30));
+function PL(pts,col,lw,o){ poly3(pts.map(M),col,lw,o); }
+/* text printed on a surface: U along the line of text, V up the letters */
+function TX(O,U,V,str,size,col,o){ const m=M(O), mu=M(vadd(O,U)), mv=M(vadd(O,V)); text3(m,vsub(mu,m),vsub(mv,m),str,size,col,o); }
+/* a cord that hangs between two points, resting on the desk where it reaches it */
+/* given its length, a cord sags by the slack it has; pulled tight it runs straight */
+const sagOf=(a,b,len)=>{ const d=vlen(vsub(a,b)); return Math.min(25,Math.sqrt(Math.max(0,3*d*(len-d)/8))); };
+function cord(a,b,col,w,sag,id){ const s=sag===undefined?Math.min(12,vlen(vsub(a,b))*0.3):sag, pts=[];
+  for(let i=0;i<=16;i++){ const t=i/16, p=vadd(vadd(vmul(a,1-t),vmul(b,t)),[0,0,-4*s*t*(1-t)]); p[2]=Math.max(onMatXY(p)?0.5:0.25,p[2]); p[1]=Math.max(p[1],a[1]<1.5||b[1]<1.5?p[1]:0.6); pts.push(p); }
+  PL(pts,col,w*CAM.k/7.4,id?{id}:undefined); }
+
+const ZONES={}, FAST=[];      /* screen areas for dropping things; fasteners a tool can reach */
+const bbox2=pts=>[Math.min(...pts.map(p=>p[0])),Math.min(...pts.map(p=>p[1])),Math.max(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))];
+const inZ=(z,p,m)=>z&&p[0]>=z[0]-(m||0)&&p[0]<=z[2]+(m||0)&&p[1]>=z[1]-(m||0)&&p[1]<=z[3]+(m||0);
+const RUL_TH=0.12, RUL_HW=1.5;
+function rulerModel(P0,u,w,n,s0,s1,id){ const hw=RUL_HW, Pt=(s,v,dn)=>lin([P0,1],[u,s],[w,v],[n,dn||0]);
+  obox(Pt((s0+s1)/2,0,-RUL_TH/2),vmul(u,(s1-s0)/2),vmul(w,hw),vmul(n,RUL_TH/2),"rgba(214,228,236,0.30)",{id});
+  PL([Pt(s0,-hw,0.002),Pt(s1,-hw,0.002),Pt(s1,hw,0.002),Pt(s0,hw,0.002),Pt(s0,-hw,0.002)],"rgba(150,172,186,0.85)",1);
+  for(let mm=0;mm<=Math.floor(s1*10+1e-6);mm++){ const s=mm/10, Lm=mm%10===0?0.75:mm%5===0?0.5:0.32; L3line(Pt(s,hw,0.004),Pt(s,hw-Lm,0.004),mm%10===0?1.0:0.6); }
+  for(let k=0;k<=s1+1e-6;k++) TX(Pt(k,hw-1.22,0.006),u,w,String(k),k%5===0?0.48:0.4,"#141414",{align:"center",weight:k%5===0?"700":"400"});
+  TX(Pt(0.55,-hw+0.25,0.006),u,w,"cm",0.3,"#141414",{}); }
+
+
+/* ── where everything stands on the bench (cm) ── */
+const TBL={x0:12,x1:82,y0:10,y1:22,h:1.2}, AY=16, AZ=TBL.h+6.5, TBL_L=TBL.x1-TBL.x0;
+const xw=t=>TBL.x0+t;
+const POS={psu:[106,44],adapter:[46,40],con4:[40,32],con2:[52,32],sensor:[92,30],laptop:[106,12],ledcon:[26,30],ledrgb:[31,30],ledunk:[36,30],
+  wash:[6,46],naoh:[14,58],ic:[18,58],ind:[22,58],gl:[28,58],nacl:[33,58],syr3:[44,64],syrIns:[44,68],tubes:[60,60],cuvettes:[76,36],waste:[90,62],gloves:[18,68]};
+const BLACK="#16171a", BLACK2="#22242a", GLASS="rgba(214,232,240,0.30)";
+function drawTable(){ const {x0,x1,y0,y1,h}=TBL, id="table";
+  obox([(x0+x1)/2,(y0+y1)/2,h/2],[(x1-x0)/2,0,0],[0,(y1-y0)/2,0],[0,0,h/2],"#121316",{id,faceCol:n=>n[2]>0.5?"#17181b":null});
+  for(const [x,y] of [[x0+1.2,y0+1.2],[x1-1.2,y0+1.2],[x0+1.2,y1-1.2],[x1-1.2,y1-1.2]]) ocyl([x,y,h],Z3,0.05,0.35,"#9aa0a6",{seg:10}); }
+function ledGlow(c,col,a){ if(a<=0.01) return; sphere3(M(c),0.55+0.5*a,"rgba("+col+","+Math.min(0.85,0.25+0.6*a).toFixed(2)+")"); }
+/* an LED board: a small green board, the LED dome on its face */
+function drawLedBoard(k,c,up){ const id=k, col=k==="ledcon"?"#f6f6f0":k==="ledrgb"?"#eef0f4":"#f3e9c8";
+  if(up){ obox([c[0],c[1],c[2]+2.4],[0.08,0,0],[0,1.5,0],[0,0,2.4],"#1f6b3a",{id}); sphere3(M([c[0]+0.3,AY,AZ]),0.42,col,{id});
+    const b=brightness(); if(b>0.01&&ST.src===k){ const glow=k==="ledcon"?"235,240,255":k==="ledunk"?"255,190,60":ST.pin==="R"?"255,60,40":ST.pin==="G"?"60,255,90":"70,110,255"; ledGlow([c[0]+0.35,AY,AZ],glow,b); } return; }
+  obox([c[0],c[1],0.08],[2.0,0,0],[0,1.2,0],[0,0,0.08],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null}); sphere3(M([c[0]-1.0,c[1],0.4]),0.4,col,{id});
+  TX([c[0]-0.4,c[1]+0.3,0.17],[1,0,0],[0,-1,0],k==="ledcon"?"CON":k==="ledrgb"?"RGB":"UNK",0.42,"#d8f0dc",{weight:"700"}); }
+/* the holder for the light source */
+function drawHolder(x){ const id="holder", z0=TBL.h;
+  obox([x,AY,z0+0.45],[1.8,0,0],[0,2.2,0],[0,0,0.45],BLACK,{id}); obox([x-0.6,AY,z0+0.9+2.6],[0.5,0,0],[0,1.9,0],[0,0,2.6],BLACK2,{id});
+  if(ST.src) drawLedBoard(ST.src,[x+0.1,AY,z0+0.9],true); }
+function drawDiaphragm(x){ const id="diaphragm", z0=TBL.h; obox([x,AY,z0+0.35],[1.2,0,0],[0,2.0,0],[0,0,0.35],BLACK,{id});
+  obox([x,AY,AZ],[0.1,0,0],[0,2.2,0],[0,0,2.6],"#111214",{id}); F(ring3([x-0.11,AY,AZ],[0,1,0],[0,0,1],0.45,16),"#3a3d42",{id,n:[-1,0,0]});
+  obox([x,AY,(z0+0.7+AZ-2.6)/2],[0.1,0,0],[0,0.5,0],[0,0,(AZ-2.6-z0-0.7)/2],"#111214",{id}); }
+function drawLens(k,x){ const id=k, z0=TBL.h, zc=AZ;
+  obox([x,AY,z0+0.4],[1.6,0,0],[0,2.4,0],[0,0,0.4],BLACK,{id});
+  obox([x,AY-2.45,zc],[0.35,0,0],[0,0.55,0],[0,0,3.2],BLACK2,{id}); obox([x,AY+2.45,zc],[0.35,0,0],[0,0.55,0],[0,0,3.2],BLACK2,{id});
+  obox([x,AY,zc+2.65],[0.35,0,0],[0,1.9,0],[0,0,0.55],BLACK2,{id}); obox([x,AY,zc-2.65],[0.35,0,0],[0,1.9,0],[0,0,0.55],BLACK2,{id});
+  obox([x,AY,(z0+0.8+zc-3.2)/2],[0.3,0,0],[0,1.0,0],[0,0,(zc-3.2-z0-0.8)/2],BLACK2,{id});
+  if(k==="L2"){ for(const sx of [-0.06,0.06]) F([[x+sx,AY-1.9,zc-2.1],[x+sx,AY+1.9,zc-2.1],[x+sx,AY+1.9,zc+2.1],[x+sx,AY-1.9,zc+2.1]],"rgba(170,140,230,0.32)",{id,n:[Math.sign(sx),0,0]});
+    for(let i=0;i<7;i++){ const hue=["#ff4040","#ff9a30","#ffe640","#50e060","#40c0ff","#6a60ff","#c050ff"][i]; L([x+0.08,AY-1.9+i*0.6,zc+1.2],[x+0.08,AY-1.4+i*0.6,zc+1.9],hue,1.2); } }
+  ocyl([x-0.12,AY,zc],[1,0,0],0.24,1.75,"rgba(200,225,240,0.45)",{id,seg:28}); }
+/* the cuvette: 1 cm square glass with two clear and two grooved faces, a cap */
+function drawCuvette(i,c,up){ const cv=ST.cuv[i], id="cuv"+i, w=0.62, h=4.5, z0=c[2], V=cuvVol(cv);
+  const lv=Math.min(4.2,V/3.5*4.2); if(lv>0.05) obox([c[0],c[1],z0+0.12+lv/2],[w-0.06,0,0],[0,w-0.06,0],[0,0,lv/2],cuvColor(cv,0.6),{id});
+  obox([c[0],c[1],z0+h/2],[w,0,0],[0,w,0],[0,0,h/2],GLASS,{id});
+  const gr=cv.rot?[1,0,0]:[0,1,0]; for(const s of [-1,1]) for(let k=0;k<6;k++){ const o=vmul(gr,s*(w+0.005)), e=cv.rot?[0,1,0]:[1,0,0]; L(vadd([c[0],c[1],z0+0.4+k*0.7],vadd(o,vmul(e,-w*0.9))),vadd([c[0],c[1],z0+0.4+k*0.7],vadd(o,vmul(e,w*0.9))),"rgba(255,255,255,0.55)",1); }
+  if(cv.cap) ocyl([c[0],c[1],z0+h],Z3,0.6,0.7,"#e8e8e4",{id,seg:14,cap:"#f2f2ee"});
+  if(cv.bubbles>0.05) for(let k=0;k<5;k++) sphere3(M([c[0]+0.3*Math.sin(k*1.7),c[1]+0.3*Math.cos(k*2.3),z0+0.6+k*0.6]),0.08,"rgba(255,255,255,0.8)");
+  if(!up&&cv.label) TX([c[0]-0.5,c[1]+w+0.02,z0+3.4],[1,0,0],[0,0,1],cv.label,0.4,"#1b1d20",{weight:"700"}); }
+function drawCuvHold(x){ const id="cuvhold", z0=TBL.h; obox([x,AY,z0+0.4],[1.6,0,0],[0,2.2,0],[0,0,0.4],BLACK,{id});
+  for(const s of [-1,1]) obox([x,AY+s*1.1,z0+0.8+2.0],[0.9,0,0],[0,0.25,0],[0,0,2.0],BLACK2,{id});
+  if(ST.inHolder!==null) drawCuvette(ST.inHolder,[x,AY,AZ-1.6],true); }
+function drawScreen(x){ const id="screen", z0=TBL.h;
+  obox([x,AY,z0+0.4],[1.6,0,0],[0,3.0,0],[0,0,0.4],BLACK,{id});
+  obox([x,AY,z0+0.8+6.8],[0.18,0,0],[0,5.0,0],[0,0,6.8],"rgba(232,234,236,0.88)",{id});
+  if(has("sensor")){ obox([x-0.3,AY,AZ+3.4],[0.1,0,0],[0,1.3,0],[0,0,2.2],"#101113",{id:"sensor"}); F([[x-0.41,AY-0.18,AZ+1.6],[x-0.41,AY+0.18,AZ+1.6],[x-0.41,AY+0.18,AZ+5.2],[x-0.41,AY-0.18,AZ+5.2]],"#3b4048",{id:"sensor",n:[-1,0,0]}); }
+  const o=optics(); if(o&&brightness()>0.01) F(ring3([x-0.2,AY,AZ],[0,1,0],[0,0,1],0.3+o.blur*0.2,16),"rgba(255,245,225,0.85)",{n:[-1,0,0]}); }
+/* the sunshield: a large white board standing behind the table */
+function drawSunshield(){ const id="sunshield", x0=TBL.x0-4, x1=TBL.x1+4, y=TBL.y0-4;
+  F([[x0,y,0],[x1,y,0],[x1,y-6,36],[x0,y-6,36]],"#f4f4f2",{id,n:[0,1,0.17]}); F([[x0,y,0],[x0,TBL.y1+6,0],[x0,TBL.y1+6,26],[x0,y-6,36]],"rgba(244,244,242,0.9)",{id,n:[1,0,0]}); }
+function drawSensorBoard(){ const [x,y]=POS.sensor, id="sensor";
+  obox([x,y,1.0],[5.5,0,0],[0,3.4,0],[0,0,1.0],"rgba(220,235,245,0.35)",{id}); obox([x,y,0.5],[5.0,0,0],[0,3.0,0],[0,0,0.1],"#1f6b3a",{id});
+  cord([x+5.5,y,0.6],[POS.laptop[0]-9,POS.laptop[1],0.6],"#2a2c30",0.25,1.5);
+  if(ST.x.screen!==null&&has("screen")) cord([x-5.5,y+1,0.8],[xw(ST.x.screen)+0.5,AY-1.2,AZ+2.5],"#d0c070",0.35,4); }
+const PROGCV=document.createElement("canvas"); PROGCV.width=560; PROGCV.height=350;
+function drawLaptop(){ const [x,y]=POS.laptop, id="laptop";
+  obox([x,y+2,0.4],[10,0,0],[0,6.5,0],[0,0,0.4],"#a9adb3",{id,faceCol:n=>n[2]>0.5?"#b9bdc2":null});
+  F([[x-8.5,y+3,0.82],[x+8.5,y+3,0.82],[x+8.5,y+8,0.82],[x-8.5,y+8,0.82]],"#2a2c30",{id,n:Z3});
+  const b=[x-10,y-4.2,0.8], u=[20,0,0], v=[0,-2.6,12.4];
+  obox(lin([b,1],[u,0.5],[v,0.5]),[10,0,0],[0,0.25,0],vmul(v,0.5),"#9ea2a8",{id});
+  const s0=lin([b,1],[u,0.04],[v,0.06],[[0,1,0],0.3]); tex3(PROGCV,0,0,PROGCV.width,PROGCV.height,M(vadd(s0,vmul(v,0.9))),Mdir(vmul(u,0.92)),Mdir(vmul(v,-0.9)),{id,bias:0.6}); }
+function drawPsu(){ const [x,y]=POS.psu, id="psu";
+  obox([x,y,5],[9,0,0],[0,7,0],[0,0,5],"#c9ccd0",{id,faceCol:n=>n[2]>0.5?"#d4d7da":n[1]>0.5?"#bfc3c8":null});
+  F([[x-7.5,y+7.01,6.5],[x-1,y+7.01,6.5],[x-1,y+7.01,9],[x-7.5,y+7.01,9]],"#16181c",{id,n:[0,1,0]});
+  if(ST.psuOn) TX([x-1.4,y+7.02,7.1],[1,0,0],[0,0,1],ST.psuV.toFixed(1),1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
+  const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x+3,y+7,6.5],[0,1,0],1.2,1.4,"#2a2c30",{id,seg:20,cap:"#383b40"}); L([x+3,y+8.25,6.5],[x+3+1.1*Math.sin(a),y+8.25,6.5+1.1*Math.cos(a)],"#f2f2f0",2);
+  ocyl([x+4,y+7,2.2],[0,1,0],0.5,0.5,"#d0352b",{id,seg:12}); ocyl([x+6.5,y+7,2.2],[0,1,0],0.5,0.5,"#1b1d20",{id,seg:12});
+  ocyl([x-5,y+7,3],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); }
+function drawAdapter(){ const [x,y]=POS.adapter, id="adapter"; obox([x,y,0.12],[2.6,0,0],[0,2.0,0],[0,0,0.12],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null});
+  for(const [dx,c] of [[-1.2,"#d0352b"],[0.2,"#1b1d20"]]) ocyl([x+dx,y+0.6,0.24],Z3,1.2,0.42,c,{id,seg:14,cap:"#111"});
+  const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.9,0.1,"#d9dde1",{seg:8,id}); obox([x+1.7,y-0.8,0.4],[0.35,0,0],[0,0.3,0],[0,0,0.2],"#2a2c30",{id});
+  if(has("psu")) for(const [dx,c] of [[-1.2,"#c0392b"],[0.2,"#1b1d20"]]) cord([x+dx,y+0.6,1.5],[POS.psu[0]+(c==="#c0392b"?4:6.5),POS.psu[1]+7.6,2.2],c,0.22,6); }
+function drawConnector(k){ const [x,y]=POS[k], id=k, n=k==="con4"?4:2, b=ST.plug[k];
+  const end=b?(ST.src===b&&ST.x.holder!==null?[xw(ST.x.holder)+0.1,AY,TBL.h+0.9+4.6]:[POS[b][0]+1.6,POS[b][1],0.3]):[x,y,0.3];
+  cord([POS.adapter[0]-1.6,POS.adapter[1]-1.3,0.4],end,"#bfc4cc",0.18*n,b&&ST.src===b?2:5,id); obox(vadd(end,[0,0,0.2]),[0.25*n,0,0],[0,0.3,0],[0,0,0.2],"#111",{id}); }
+/* the chemistry */
+function tube(x,y,h,r,liq,lcol,capCol,id,lab){ ocyl([x,y,0],Z3,h,r,"rgba(225,238,245,0.35)",{id,seg:16}); if(liq>0) ocyl([x,y,0.05],Z3,h*liq,r*0.92,lcol,{id,seg:16});
+  ocyl([x,y,h],Z3,0.4,r*1.1,capCol,{id,seg:16,cap:capCol}); if(lab) TX([x-r,y+r+0.02,h*0.55],[1,0,0],[0,0,1],lab,0.45,"#1b1d20",{weight:"700"}); }
+function drawChem3(k){ const p=POS[k];
+  if(k==="wash"){ ocyl([p[0],p[1],0],Z3,11,3.6,"rgba(235,240,245,0.7)",{id:k,seg:24,cap:"rgba(235,240,245,0.6)"}); ocyl([p[0],p[1],11],Z3,1.2,1.6,"#f0f0ec",{id:k,seg:16}); L([p[0],p[1],12.2],[p[0]+3,p[1],13.5],"#e8e8e4",3); }
+  else if(k==="naoh") tube(p[0],p[1],4,0.55,0.25,"#f4f4f0","#2f6fd0",k,"NaOH");
+  else if(k==="ic") tube(p[0],p[1],4,0.55,0.6,"rgba(40,60,190,0.85)","#c0392b",k,"IC");
+  else if(k==="ind") tube(p[0],p[1],4,0.55,0.6,"rgba(240,240,236,0.7)","#e0b62a",k,"In");
+  else if(k==="gl") tube(p[0],p[1],11,1.4,0.7,"rgba(240,240,225,0.55)","#2e9e57",k,"Gl");
+  else if(k==="nacl") tube(p[0],p[1],11,1.4,0.7,"rgba(235,240,245,0.55)","#8e44ad",k,"NaCl");
+  else if(k==="syr3"){ ocyl([p[0]-5,p[1],0.6],[1,0,0],7,0.55,"rgba(240,244,246,0.85)",{id:k,seg:14}); ocyl([p[0]+2,p[1],0.6],[1,0,0],2.6,0.2,"#ddd",{id:k,seg:8}); }
+  else if(k==="syrIns"){ ocyl([p[0]-4,p[1],0.4],[1,0,0],6,0.3,"rgba(240,244,246,0.85)",{id:k,seg:12}); ocyl([p[0]-5.4,p[1],0.4],[1,0,0],1.4,0.04,"#aaa",{id:k,seg:6}); ocyl([p[0]+2,p[1],0.4],[1,0,0],2,0.12,"#f2a03a",{id:k,seg:8}); }
+  else if(k==="tubes"){ obox([p[0],p[1],1.5],[8,0,0],[0,2,0],[0,0,1.5],"#d9d9d4",{id:k}); for(let i=0;i<5;i++){ const lq=ST.naohSol&&i===0?0.6:0; tube(p[0]-6+i*3,p[1],9,1.3,lq,"rgba(240,240,236,0.6)","#2f6fd0",k,i===0&&ST.naohSol?"NaOH":""); } }
+  else if(k==="cuvettes"){ obox([p[0],p[1],0.8],[10,0,0],[0,1.4,0],[0,0,0.8],"#e4e4e0",{id:k}); for(let i=0;i<10;i++) if(ST.inHolder!==i) drawCuvette(i,[p[0]-9+i*2,p[1],1.6],false); }
+  else if(k==="waste"){ ocyl([p[0],p[1],0],Z3,6,4.2,"#f08a2a",{id:k,seg:24,cap:"#c76a18"}); }
+  else if(k==="gloves"){ obox([p[0],p[1],0.3],[3.5,0,0],[0,2,0],[0,0,0.3],"#2a3fb5",{id:k}); } }
+const WCOL3=["#c0392b","#1b1d20"];
+function drawRoom(){
+  F([[-160,-0.6,-90],[260,-0.6,-90],[260,-0.6,170],[-160,-0.6,170]],"#2f353e",{n:[0,1,0],flat:true});
+  obox([62,36,-1.5],[62,0,0],[0,36,0],[0,0,1.5],"#e9e9e6",{faceCol:n=>n[2]>0.5?"#f1f1ef":null});
+  for(const [x,y] of [[2,1],[122,1],[2,71],[122,71]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#8a8f96");
+  F([[-160,-0.5,-80],[260,-0.5,-80],[260,160,-80],[-160,160,-80]],"#3a3f47",{n:Z3,flat:true}); }
+function drawLoose(k){
+  if(k==="table") drawTable(); else if(k==="sunshield") drawSunshield();
+  else if(OPT.includes(k)){ if(ST.x[k]===null||(hand&&hand.item===k&&hand.move)) return; const x=xw(ST.x[k]);
+    if(k==="holder") drawHolder(x); else if(k==="diaphragm") drawDiaphragm(x); else if(k==="cuvhold") drawCuvHold(x); else if(k==="screen") drawScreen(x); else drawLens(k,x); }
+  else if(k==="sensor") drawSensorBoard(); else if(k==="psu") drawPsu(); else if(k==="adapter") drawAdapter(); else if(k==="con4"||k==="con2") drawConnector(k);
+  else if(k==="ledcon"||k==="ledrgb"||k==="ledunk"){ if(ST.src!==k&&!(hand&&hand.item===k)) drawLedBoard(k,[POS[k][0],POS[k][1],0],false); }
+  else drawChem3(k); }
+function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3();
+  drawRoom(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k);
+  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
+/* ══════════════════════════════════════════════════════════════
+   6.  PARTS BOX, LAYOUT, CLOSE-UPS
+   ══════════════════════════════════════════════════════════════ */
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
+const TRAY_LIST=PARTS, TROW=24;
+let TRW=190, TRH=400, CLW=900, CLH=470, trayCells=[], tab="opt", HIT=[], HS=1;
+const inHand=k=>hand&&hand.item===k;
+const trayAvail=k=>!has(k)&&!inHand(k);
+const handName=()=>hand.item==="cuv"?d().items.cuv(hand.i):itemName(hand.item);
+function icon(c,k){ const old=ctx; ctx=c; ctx.save(); ctx.scale(0.5,0.5);
+  if(k==="table") fillR(-16,-6,32,12,2,"#141518","#444");
+  else if(k==="sunshield") fillR(-15,-12,30,24,2,"#f4f4f2","#999");
+  else if(k==="holder"){ fillR(-12,6,24,6,1,"#16171a","#555"); fillR(-6,-12,6,18,1,"#22242a","#555"); }
+  else if(k==="diaphragm"){ fillR(-12,-13,24,26,2,"#111214","#555"); circ(0,0,3,"#3a3d42"); }
+  else if(k==="L1"||k==="L2"){ fillR(-12,-12,24,24,2,"#22242a","#555"); circ(0,0,8,k==="L2"?"rgba(170,140,230,0.8)":"rgba(200,225,240,0.8)"); }
+  else if(k==="cuvhold"){ fillR(-12,6,24,6,1,"#16171a","#555"); fillR(-10,-10,4,16,1,"#22242a"); fillR(6,-10,4,16,1,"#22242a"); fillR(-5,-12,10,18,1,"rgba(214,232,240,0.6)","#89a"); }
+  else if(k==="screen") fillR(-12,-14,24,28,2,"#e8eaec","#888");
+  else if(k==="sensor"){ fillR(-15,-8,30,16,2,"#1f6b3a","#0d3"); fillR(-10,-2,20,4,1,"#101113"); }
+  else if(k==="psu"){ fillR(-15,-11,30,22,3,"#c9ccd0","#777"); fillR(-12,-7,12,7,1,"#16181c"); circ(7,-3,5,"#2a2c30"); circ(4,7,2.4,"#d0352b"); circ(10,7,2.4,"#1b1d20"); }
+  else if(k==="adapter"){ fillR(-13,-9,26,18,2,"#1f6b3a","#0d3"); circ(-5,-2,3,"#d0352b"); circ(3,-2,3,"#1b1d20"); fillR(8,2,3,7,1,"#d9dde1"); }
+  else if(k==="con4"||k==="con2"){ ctx.strokeStyle="#bfc4cc"; ctx.lineWidth=k==="con4"?5:3; ctx.beginPath(); ctx.moveTo(-15,8); ctx.bezierCurveTo(-5,-14,5,14,12,-6); ctx.stroke(); fillR(9,-10,8,8,1,"#111"); }
+  else if(k==="ledcon"||k==="ledrgb"||k==="ledunk"){ fillR(-14,-6,28,12,2,"#1f6b3a","#0d3"); circ(-7,0,3.5,k==="ledunk"?"#f3e9c8":"#f3f3ee"); }
+  else if(k==="wash"){ fillR(-8,-12,16,24,5,"rgba(235,240,245,0.85)","#89a"); ctx.strokeStyle="#ddd"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,-12); ctx.lineTo(10,-16); ctx.stroke(); }
+  else if(k==="naoh"||k==="ic"||k==="ind"){ fillR(-4,-12,8,24,3,k==="ic"?"rgba(40,60,190,0.9)":"rgba(240,240,236,0.8)","#89a"); fillR(-5,-14,10,4,1,k==="naoh"?"#2f6fd0":k==="ic"?"#c0392b":"#e0b62a"); }
+  else if(k==="gl"||k==="nacl"){ fillR(-6,-13,12,26,3,"rgba(235,240,245,0.7)","#89a"); fillR(-7,-15,14,5,1,k==="gl"?"#2e9e57":"#8e44ad"); }
+  else if(k==="syr3"){ fillR(-14,-3,20,6,2,"rgba(240,244,246,0.95)","#999"); fillR(6,-1,8,2,1,"#ddd"); }
+  else if(k==="syrIns"){ fillR(-12,-2,16,4,2,"rgba(240,244,246,0.95)","#999"); fillR(4,-1.5,8,3,1,"#f2a03a"); ctx.strokeStyle="#aaa"; ctx.beginPath(); ctx.moveTo(-12,0); ctx.lineTo(-17,0); ctx.stroke(); }
+  else if(k==="tubes"){ for(let i=0;i<3;i++) fillR(-12+i*9,-12,6,24,3,"rgba(235,240,245,0.7)","#89a"); }
+  else if(k==="cuvettes"){ fillR(-15,4,30,6,1,"#e4e4e0","#888"); for(let i=0;i<4;i++) fillR(-13+i*7,-12,5,16,1,"rgba(214,232,240,0.7)","#89a"); }
+  else if(k==="waste") fillR(-10,-12,20,24,3,"#f08a2a","#a55");
+  else if(k==="gloves") fillR(-12,-8,24,16,4,"#2a3fb5","#123");
+  ctx.restore(); ctx=old; }
+function layout(){
+  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
+  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px"; benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+24+14*d().trayHelp.split("\n").length;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
+  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(470,CLW*0.53));
+  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr); drawTray(); }
+function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){ const av=trayAvail(k), sel=inHand(k);
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(21,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='10px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
+    c.fillText(itemName(k),37,y+7.5); c.font='8px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,37,y+16.5);
+    trayCells.push([k,y,y+TROW-3]); y+=TROW; }
+  c.font='10px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
+const TABS=["prog","opt","chem"];
+function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
+const hitAdd=(k,x,y,w,h,extra)=>HIT.push(Object.assign({k,x:x*HS,y:y*HS,w:w*HS,h:h*HS},extra||{}));
+function btn(k,x,y,w,h,label,on,dis){ fillR(x,y,w,h,5,dis?"#d7d9dc":on?"#2f6fd0":"#f4f5f7",on?"#1f4f9f":"#9aa3ab",1); text(label,x+w/2,y+h/2,dis?"#9aa3ab":on?"#fff":"#1b1d20",Math.min(12,h*0.5),"center","600"); if(!dis) hitAdd(k,x,y,w,h); }
+/* the colour of light of wavelength l (nm) */
+function wlRGB(l){ let r=0,g=0,b=0;
+  if(l<440){ r=(440-l)/60; b=1; } else if(l<490){ g=(l-440)/50; b=1; } else if(l<510){ g=1; b=(510-l)/20; } else if(l<580){ r=(l-510)/70; g=1; } else if(l<645){ r=1; g=(645-l)/65; } else r=1;
+  const f=l<420?0.3+0.7*(l-380)/40:l>700?0.3+0.7*(780-l)/80:1; return [r,g,b].map(v=>Math.round(255*Math.max(0,Math.min(1,v*f)))).join(","); }
+const lightOn=()=>!!ST.src&&brightness()>0.01;
+const lightCol=()=>ST.src==="ledcon"?"255,246,228":ST.src==="ledunk"?"255,190,60":ST.pin==="R"?"255,70,50":ST.pin==="G"?"70,240,100":"80,120,255";
+
+/* ── 1. the Spectroscopy program: intensity against pixel number ── */
+const PV={n0:0,n1:NPIX};
+function progData(){ return SPEC.live?SPEC.frame:SPEC.hold; }
+function niceMax(v){ const p=Math.pow(10,Math.floor(Math.log10(Math.max(v,1)))); for(const m of [1,2,2.5,5,10]) if(m*p>=v) return m*p; return 10*p; }
+function drawProg(W,H,small){ const t=d(), L=t.lab, u=small?1:Math.min(1.2,Math.max(0.78,W/920));
+  ctx.fillStyle="#eceef1"; ctx.fillRect(0,0,W,H); fillR(0,0,W,28*u,0,"#d9dde3"); text("Spectroscopy",10*u,14*u,"#1b1d20",12*u,"left","700");
+  if(!has("sensor")){ text(L.noSensor,W/2,H/2,"#69717a",13*u,"center"); return; }
+  const live=SPEC.live, bh=24*u, by=36*u; let bx=10*u;
+  const B=(k,w,lab,on,dis)=>{ if(!small) btn(k,bx,by,w*u,bh,lab,on,dis); else { fillR(bx,by,w*u,bh,4,on?"#2f6fd0":"#f4f5f7","#9aa3ab"); text(lab,bx+w*u/2,by+bh/2,on?"#fff":"#1b1d20",9*u,"center"); } bx+=w*u+5*u; };
+  B("p:launch",62,L.launch,live); B("p:pause",54,L.pause,false,!live); B("p:single",108,L.single,false); B("p:saveS",100,L.saveS,false,!SPEC.hold&&!live);
+  B("p:ts",98,SPEC.ts?L.tsOn:L.tsOff,!!SPEC.ts,!live&&!SPEC.ts); B("p:saveTS",116,L.saveTS,false,!SPEC.tsDone&&!SPEC.ts);
+  text(L.dt,bx+4*u,by+bh/2,"#333",11*u,"left","600"); bx+=20*u; B("p:dm",22,"−",false,!!SPEC.ts); text(ST.tsDt+" s",bx+2*u,by+bh/2,"#1b1d20",12*u,"left","700"); bx+=34*u; B("p:dp",22,"+",false,!!SPEC.ts);
+  text(L.sens,bx+4*u,by+bh/2,"#333",11*u,"left","600"); bx+=68*u; B("p:sm",22,"−",false); text(String(ST.sens),bx+2*u,by+bh/2,"#1b1d20",13*u,"left","700"); bx+=16*u; B("p:sp",22,"+",false);
+  const px0=58*u, py0=by+bh+14*u, pw=W-px0-16*u, ph=H-py0-38*u; fillR(px0,py0,pw,ph,0,"#fff","#9aa3ab",1);
+  const data=progData(); let mx=64, over=false; if(data){ for(let n=0;n<NPIX;n++){ if(data[n]>=OVERFLOW) over=true; if(n>=PV.n0&&n<PV.n1&&data[n]>mx) mx=data[n]; } }
+  const ym=Math.min(4500,niceMax(mx*1.12)), X=n=>px0+(n-PV.n0)/(PV.n1-PV.n0)*pw, Y=v=>py0+ph-v/ym*ph;
+  ctx.strokeStyle="#e3e6ea"; ctx.lineWidth=1;
+  const st=[1,2,5,10,20,50,100,200,500,1000].find(s=>(PV.n1-PV.n0)/s<=10)||1000;
+  for(let n=Math.ceil(PV.n0/st)*st;n<=PV.n1;n+=st){ const x=X(n); ctx.beginPath(); ctx.moveTo(x,py0); ctx.lineTo(x,py0+ph); ctx.stroke(); text(String(n),x,py0+ph+12*u,"#333",10*u,"center"); }
+  for(let i=0;i<=5;i++){ const v=ym*i/5, y=Y(v); ctx.beginPath(); ctx.moveTo(px0,y); ctx.lineTo(px0+pw,y); ctx.stroke(); text(String(Math.round(v)),px0-6*u,y,"#333",10*u,"right"); }
+  if(ym>=OVERFLOW){ ctx.strokeStyle="rgba(200,40,40,0.5)"; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(px0,Y(OVERFLOW)); ctx.lineTo(px0+pw,Y(OVERFLOW)); ctx.stroke(); ctx.setLineDash([]); }
+  text("N",px0+pw/2,py0+ph+26*u,"#333",11*u,"center","700"); ctx.save(); ctx.translate(14*u,py0+ph/2); ctx.rotate(-Math.PI/2); text("I, a.u.",0,0,"#333",11*u,"center","700"); ctx.restore();
+  if(data){ ctx.save(); ctx.beginPath(); ctx.rect(px0,py0,pw,ph); ctx.clip(); ctx.strokeStyle="#1f5fbf"; ctx.lineWidth=1.2; ctx.beginPath();
+    const n0=Math.max(0,Math.floor(PV.n0)), n1=Math.min(NPIX-1,Math.ceil(PV.n1)), stp=Math.max(1,Math.floor((n1-n0)/(pw*1.5)));
+    for(let n=n0;n<=n1;n+=stp){ let v=data[n]; if(stp>1){ for(let j=1;j<stp&&n+j<=n1;j++) v=Math.max(v,data[n+j]); } const x=X(n), y=Y(v); n===n0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.restore(); }
+  const mode=SPEC.ts?L.ts(SPEC.ts.length):live?L.live:SPEC.hold?L.held:"";
+  text(mode,px0+pw-6*u,py0+12*u,SPEC.ts?"#c0392b":"#555",11*u,"right","700");
+  if(over){ fillR(px0+pw-96*u,py0+22*u,90*u,20*u,4,"#c0392b"); text(L.over,px0+pw-51*u,py0+32*u,"#fff",11*u,"center","800"); }
+  if(!small){ PROG_AREA=[px0,py0,pw,ph];
+    if(data&&cmouse[0]>=px0&&cmouse[0]<=px0+pw&&cmouse[1]>=py0&&cmouse[1]<=py0+ph){ const n=Math.round(PV.n0+(cmouse[0]-px0)/pw*(PV.n1-PV.n0)); if(n>=0&&n<NPIX){
+      ctx.strokeStyle="rgba(200,40,40,0.6)"; ctx.beginPath(); ctx.moveTo(X(n),py0); ctx.lineTo(X(n),py0+ph); ctx.stroke();
+      text("N = "+n+"   I = "+Math.round(data[n]),px0+8*u,py0+12*u,"#b3261e",11*u,"left","700"); } } } }
+let PROG_AREA=null;
+
+/* ── 2. the optical table from above, with the face of the screen ── */
+let OSEL=null;
+const OXY=()=>{ const u=Math.min(CLW/900,CLH/470), x0=40*u, x1=CLW-40*u, sc=(x1-x0)/TBL_L, yc=CLH*0.74; return {u,x0,x1,sc,yc,X:t=>x0+t*sc}; };
+function drawOpt(){ const t=d(), L=t.lab; ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,CLW,CLH);
+  if(!has("table")){ text(L.noTable,CLW/2,CLH/2,"#c9ced3",13,"center"); return; }
+  const {u,x0,x1,sc,yc,X}=OXY(), hw=6*sc;
+  if(has("sunshield")){ ctx.fillStyle="rgba(244,244,242,0.85)"; ctx.fillRect(x0-14,yc-hw-22*u,x1-x0+28,8*u); text(itemName("sunshield"),x0,yc-hw-28*u,"#c9ced3",11,"left"); }
+  fillR(x0-6,yc-hw-6,x1-x0+12,2*hw+12,6,"#121316","#3a3d42",1.2);
+  for(let i=0;i<4;i++) circ(i<2?x0+6:x1-6,i%2?yc+hw:yc-hw,3,"#9aa0a6");
+  ctx.strokeStyle="rgba(255,255,255,0.08)"; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.moveTo(x0,yc); ctx.lineTo(x1,yc); ctx.stroke(); ctx.setLineDash([]);
+  const xs=ST.x, o=optics(), lit=lightOn();
+  if(lit&&xs.holder!==null){ const segs=[], els=[]; if(has("L1")&&xs.L1!==null) els.push([xs.L1,TRUE.F1,1.75]); if(has("L2")&&xs.L2!==null) els.push([xs.L2,TRUE.F2,1.75]); els.sort((a,b)=>a[0]-b[0]);
+    const end=has("screen")&&xs.screen!==null&&xs.screen>xs.holder?xs.screen:TBL_L;
+    for(const s0 of [0.12,-0.12]){ let x=xs.holder, y=0, sl=s0; const pts=[[x,y]];
+      for(const [xl,F,ap] of els){ if(xl<=x) continue; if(xl>end) break; y=y+sl*(xl-x); x=xl; pts.push([x,y]); if(Math.abs(y)>ap){ sl=null; break; } sl=sl-y/F; }
+      if(sl!==null) pts.push([end,y+sl*(end-x)]); segs.push(pts); }
+    const col=lightCol(); ctx.fillStyle="rgba("+col+",0.18)"; ctx.beginPath(); const a=segs[0], b=segs[1];
+    a.forEach((p,i)=>i?ctx.lineTo(X(p[0]),yc-p[1]*sc):ctx.moveTo(X(p[0]),yc-p[1]*sc)); for(let i=b.length-1;i>=0;i--) ctx.lineTo(X(b[i][0]),yc-b[i][1]*sc); ctx.closePath(); ctx.fill();
+    for(const s of segs){ ctx.strokeStyle="rgba("+col+",0.75)"; ctx.lineWidth=1.2; ctx.beginPath(); s.forEach((p,i)=>i?ctx.lineTo(X(p[0]),yc-p[1]*sc):ctx.moveTo(X(p[0]),yc-p[1]*sc)); ctx.stroke(); } }
+  for(const k of OPT){ if(!has(k)||xs[k]===null) continue; const x=X(xs[k]), sel=OSEL===k;
+    const w=(k==="holder"?3.6:k==="diaphragm"?2.4:3.2)*sc, h=(k==="screen"?10:k==="holder"?4.4:k==="cuvhold"?4.4:k==="diaphragm"?4.4:6)*sc;
+    const col=k==="screen"?"#e8eaec":k==="holder"||k==="diaphragm"?"#22242a":"#2c2f35";
+    fillR(x-w/2,yc-h/2,w,h,3,col,sel?"#f2c14e":"#666",sel?2.5:1);
+    if(k==="L1"||k==="L2"){ ctx.fillStyle=k==="L2"?"rgba(170,140,230,0.7)":"rgba(200,225,240,0.7)"; ctx.fillRect(x-1.5,yc-1.75*sc,3,3.5*sc); }
+    if(k==="diaphragm"){ ctx.fillStyle="#3a3d42"; ctx.fillRect(x-1.5,yc-0.45*sc,3,0.9*sc); }
+    if(k==="holder"&&ST.src) circ(x+0.4*sc,yc,3.2,ST.src==="ledunk"?"#f3e9c8":"#f3f3ee");
+    if(k==="cuvhold"&&ST.inHolder!==null){ const c=ST.cuv[ST.inHolder]; fillR(x-0.62*sc,yc-0.62*sc,1.24*sc,1.24*sc,1,cuvColor(c,0.9),"#9ab"); }
+    if(k==="screen"&&has("sensor")) fillR(x-0.8*sc-4,yc-1.3*sc,4,2.6*sc,1,"#101113");
+    text(itemName(k).replace(/^O\d\. /,"").replace(/ \+.*$/,""),x,yc+h/2+(OPT.indexOf(k)%2?28:14),"#e8eef2",11.5,"center","700");
+    hitAdd("o:"+k,x-Math.max(w,16)/2,yc-h/2,Math.max(w,16),h); }
+  /* the face of the screen, as you would see it */
+  const fh=Math.min(CLH*0.5,280*u), fw=fh/1.1, fx=CLW-fw-16, fy=12; fillR(fx,fy,fw,fh,6,"#e6e8ea","#888",1.2); text(L.screen,fx+8,fy+12,"#333",11,"left","700");
+  if(has("screen")&&xs.screen!==null){ const cx=fx+fw*0.42, zy=fy+fh*0.86, sz=fh/16, ccdTop=zy-7.2*sz, ccdH=4.6*sz;
+    if(has("sensor")){ fillR(cx-1.1*sz,ccdTop-0.4*sz,2.2*sz,ccdH+0.8*sz,2,"#101113"); text(L.ccd,cx+1.6*sz,ccdTop+ccdH/2,"#333",10,"left","700"); }
+    text(L.zero,cx+1.4*sz,zy,"#333",10,"left");
+    if(o&&lit){ const bl=Math.min(30,2+o.blur*3), sc2=pixScale();
+      const g=ctx.createRadialGradient(cx,zy,0,cx,zy,bl+4); g.addColorStop(0,"rgba(255,250,235,1)"); g.addColorStop(1,"rgba(255,250,235,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,zy,bl+4,0,7); ctx.fill();
+      /* the first order, spread up the screen: pixel N sits at ccdTop + N/NPIX * ccdH */
+      let mx=0; const S2=[]; for(let i=-60;i<=200;i++){ const n=i/140*NPIX, l=sc2.l0+sc2.k0*n; const v=l>380&&l<780?emission(l)*cuvTrans(l):0; S2.push([n,l,v]); if(v>mx) mx=v; }
+      if(mx>0) for(const [n,l,v] of S2){ const y=ccdTop+n/NPIX*ccdH, a=Math.sqrt(Math.min(1,v/mx))*Math.min(1,0.3+o.amp); if(a<0.02||y<fy+20||y>zy-bl) continue;
+        ctx.fillStyle="rgba("+wlRGB(l)+","+(0.95*a).toFixed(2)+")"; ctx.fillRect(cx-bl*0.4-4,y,2*(bl*0.4+4),ccdH/140+1.2); }
+      if(has("sensor")) fillR(cx-0.25*sz,ccdTop,0.5*sz,ccdH,1,"rgba(59,64,72,0.55)"); } }
+  text(t.optSel(OSEL?itemName(OSEL):null),16,CLH-14,"#c9ced3",11.5,"left"); }
+
+/* ── 3. the chemistry bench (drawn on a 900 × 470 page, scaled) ── */
+const SRC3=["water","naoh","nacl","gl"], SRCI=["ic","ind"];
+function syrBody(x0,y0,len,h,V,Vmax,col,needle){ /* a syringe lying left to right: needle on the left, plunger on the right */
+  ctx.strokeStyle="#9aa0a6"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x0-needle,y0+h/2); ctx.lineTo(x0-8,y0+h/2); ctx.stroke();
+  fillR(x0-10,y0+h/2-4,10,8,2,"#e8e8e4","#999");
+  const xv=x0+len*V/Vmax; if(V>0.0005){ ctx.fillStyle=col; ctx.fillRect(x0,y0+3,xv-x0,h-6); }
+  fillR(x0,y0,len+16,h,3,"rgba(240,244,246,0.55)","#7d8790",1.4);
+  fillR(xv,y0+2,7,h-4,1,"#2a2c30"); fillR(xv+7,y0+h/2-3,len+60-(xv-x0),6,1,"#e9e9e4","#aaa"); fillR(x0+len+60+7,y0+h/2-h*0.45,6,h*0.9,1,"#e9e9e4","#aaa");
+  fillR(x0+len+16,y0-8,6,h+16,1,"#e9e9e4","#aaa"); }
+function drawChem(){ const t=d(), L=t.lab, u=Math.min(CLW/900,CLH/470); ctx.fillStyle="#e9e7e0"; ctx.fillRect(0,0,CLW,CLH);
+  ctx.save(); ctx.scale(u,u); HS=u; try{
+  const srcName=s=>s?L[s]:L.none, srcCol=s=>s==="ic"?"rgba(40,60,190,0.85)":s==="ind"||s==="water"||s==="nacl"||s==="naoh"?"rgba(205,225,240,0.75)":s==="gl"?"rgba(240,236,205,0.8)":"rgba(0,0,0,0)";
+  /* the insulin syringes */
+  const ins=ST.ins[ST.insK]; text(L.ins,12,18,"#333",12,"left","700");
+  for(let k=0;k<4;k++) btn("c:insk:"+k,110+k*34,8,30,20,"#"+(k+1),ST.insK===k);
+  text(L.src+": "+srcName(ins.src),260,18,"#333",11.5,"left","600");
+  { const x0=70, y0=40, len=500, h=26; syrBody(x0,y0,len,h,ins.V,0.5,srcCol(ins.src),36);
+    for(let i=0;i<=50;i++){ const x=x0+len*i/50, Lm=i%10===0?h*0.7:i%5===0?h*0.5:h*0.3; ctx.strokeStyle="#222"; ctx.lineWidth=i%10===0?1.2:0.7; ctx.beginPath(); ctx.moveTo(x,y0+h); ctx.lineTo(x,y0+h-Lm); ctx.stroke();
+      if(i%10===0) text((i/100).toFixed(1),x,y0+h+9,"#222",10,"center","600"); }
+    text("ml",x0+len+30,y0+h+9,"#222",10,"left");
+    if(ins.drop>0){ const r=3+5*ins.drop; circ(x0-36-r*0.6,y0+h/2+r*0.8,r,srcCol(ins.src)||"rgba(205,225,240,0.75)","#7d8790"); } }
+  let bx=650; const B=(k,w,lab,on,dis)=>{ btn(k,bx,by,w,22,lab,on,dis); bx+=w+6; }; let by=8;
+  B("c:insfill:ic",112,L.fill+" IC",false); by=8; bx=650+118; B("c:insfill:ind",112,L.fill+" In",false);
+  by=36; bx=650; B("c:drop",112,L.drop,false,!(ins.V>0)); B("c:dropW",112,L.dropW,false,!(ins.V>0));
+  by=64; bx=650; B("c:push:0.01",112,L.push1,false,!(ins.V>0)); B("c:push:0.05",112,L.push5,false,!(ins.V>0));
+  by=92; bx=650; B("c:insEmpty",230,L.emptyS,false,!(ins.V>0));
+  /* the 3 ml syringe */
+  const s3=ST.syr3; text(L.syr3,12,140,"#333",12,"left","700"); text(L.src+": "+srcName(s3.src),110,140,"#333",11.5,"left","600");
+  { const x0=70, y0=158, len=450, h=34; syrBody(x0,y0,len,h,s3.V,3,srcCol(s3.src),24);
+    for(let i=0;i<=30;i++){ const x=x0+len*i/30, Lm=i%10===0?h*0.7:i%5===0?h*0.5:h*0.3; ctx.strokeStyle="#222"; ctx.lineWidth=i%10===0?1.2:0.7; ctx.beginPath(); ctx.moveTo(x,y0+h); ctx.lineTo(x,y0+h-Lm); ctx.stroke();
+      if(i%5===0) text(String(i/10),x,y0+h+9,"#222",10,"center","600"); }
+    text("ml",x0+len+30,y0+h+9,"#222",10,"left"); }
+  by=126; bx=650; for(const s of SRC3) B("c:s3src:"+s,54,L[s],s3.src===s,s==="naoh"&&!ST.naohSol);
+  by=154; bx=650; for(const [k,lab] of [["-1","−1"],["-0.1","−0.1"],["0.1","+0.1"],["1","+1"]]) B("c:s3:"+k,54,lab+" ml",false,!s3.src);
+  by=182; bx=650; B("c:s3inj",112,L.inject,false,!(s3.V>0)); B("c:s3waste",112,L.emptyS,false,!(s3.V>0));
+  /* the reagents */
+  const ry=318; fillR(10,236,600,228,8,"#dcd9d0","#b9b5aa");
+  const shelf=[["water",40,"rgba(235,240,245,0.9)",60,32],["naohG",100,"rgba(245,245,240,0.9)",40,14],["ic",140,"rgba(40,60,190,0.9)",40,14],["ind",180,"rgba(240,240,236,0.8)",40,14],["gl",230,"rgba(240,236,205,0.8)",70,22],["nacl",285,"rgba(235,240,245,0.8)",70,22],["stock",350,"rgba(235,240,245,0.85)",60,40]];
+  for(const [k,x,col,h,w] of shelf){ const lv=k==="stock"?(ST.naohSol?Math.min(1,ST.naohSol.V/100):0):0.7; fillR(x-w/2,ry-h,w,h,4,"rgba(235,240,245,0.4)","#7d8790",1.2);
+    if(k==="naohG"){ for(let i=0;i<8;i++) circ(x-4+(i%3)*4,ry-4-Math.floor(i/3)*4,2,"#fafaf6","#bbb"); } else if(lv>0) { ctx.fillStyle=col; ctx.fillRect(x-w/2+2,ry-h*lv,w-4,h*lv-2); }
+    const capC=k==="ic"?"#c0392b":k==="ind"?"#e0b62a":k==="naohG"?"#2f6fd0":k==="gl"?"#2e9e57":k==="nacl"?"#8e44ad":k==="stock"?"#2f6fd0":"#f0f0ec"; fillR(x-w/2-1,ry-h-7,w+2,7,2,capC);
+    text(k==="naohG"?"NaOH":k==="stock"?"NaOH sol.":k==="water"?"H₂O":L[k],x,ry+12,"#333",10.5,"center","700"); }
+  text(L.gran(TRUE.mNaOH),20,ry+36,"#333",11,"left","600");
+  text(L.stock,20,ry+58,"#333",12,"left","700");
+  by=ry+70; bx=20; for(const [k,lab] of [["-10","−10"],["-1","−1"],["-0.1","−0.1"],["0.1","+0.1"],["1","+1"],["10","+10"]]) B("c:st:"+k,48,lab,false,!!ST.naohSol);
+  text(L.upTo(ST.stockSet),bx+6,by+11,"#1b1d20",12,"left","700");
+  by=ry+100; bx=20; B("c:dissolve",110,L.dissolve,false,!!ST.naohSol); B("c:gloves",120,ST.gloves?L.glovesOn:L.gloves,ST.gloves,!has("gloves"));
+  text(ST.naohSol?L.stockHas(ST.naohSol.V):L.noStock,bx+8,by+11,"#333",11,"left","600");
+  /* the cuvettes */
+  const cx0=630; text(L.cuvSel,cx0,128+90,"#333",12,"left","700");
+  for(let i=0;i<10;i++){ by=232+Math.floor(i/5)*26; bx=cx0+(i%5)*52; B("c:sel:"+i,46,String(i+1),ST.sel===i,!has("cuvettes")); }
+  const c=ST.cuv[ST.sel], gx=cx0+20, gy=296, gw=60, gh=124, V=cuvVol(c), lv=Math.min(1,V/4.5);
+  if(has("cuvettes")){
+    if(lv>0.005){ ctx.fillStyle=cuvColor(c,0.85); ctx.fillRect(gx+3,gy+gh-3-lv*(gh-12),gw-6,lv*(gh-12)); if(!c.mixed){ ctx.fillStyle="rgba(255,255,255,0.25)"; for(let k=0;k<4;k++) ctx.fillRect(gx+3,gy+gh-3-lv*(gh-12)+k*lv*(gh-12)/4,gw-6,lv*(gh-12)/8); } }
+    fillR(gx,gy,gw,gh,3,"rgba(214,232,240,0.25)","#7a95a8",2);
+    for(let k=0;k<8;k++){ ctx.strokeStyle="rgba(255,255,255,0.7)"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(gx+(c.rot?2:6),gy+18+k*16); ctx.lineTo(gx+(c.rot?gw-2:gw-6),gy+18+k*16); ctx.stroke(); }
+    if(c.bubbles>0.05) for(let k=0;k<Math.round(10*c.bubbles);k++) circ(gx+8+((k*23)%(gw-16)),gy+gh-12-((k*37)%Math.max(10,lv*(gh-20))),2.2,"rgba(255,255,255,0.9)","#9ab",0.6);
+    if(c.cap) fillR(gx-4,gy-14,gw+8,16,3,"#e8e8e4","#999");
+    if(c.label){ fillR(gx+4,gy+20,gw-8,18,2,"#f3e3a6","#c9b56a"); text(c.label,gx+gw/2,gy+29,"#1b1d20",10,"center","700"); }
+    const flags=[]; if(ST.inHolder===ST.sel) flags.push(L.inHolder); if(!c.mixed) flags.push(L.unmixed); if(c.bubbles>0.05) flags.push(L.bubbles); if(c.rot) flags.push(L.grooved);
+    if(flags.length) text(flags.join(" · "),gx-10,gy+gh+10,"#7a3b2e",10.5,"left","600");
+    by=300; bx=gx+gw+18; B("c:cap",100,c.cap?L.capOff:L.capOn,c.cap); by=326; bx=gx+gw+18; B("c:shake",100,L.shake,false);
+    by=352; bx=gx+gw+18; B("c:tap",100,L.tap,false); by=378; bx=gx+gw+18; B("c:rot",100,L.rot,c.rot);
+    by=404; bx=gx+gw+18; B("c:label",100,L.label,false); by=430; bx=gx+gw+18; B("c:emptyC",100,L.emptyC,false);
+    by=436; bx=gx-14; B("c:holder",88,ST.inHolder===ST.sel?L.fromH:L.toH,ST.inHolder===ST.sel,!has("cuvhold")||ST.x.cuvhold===null); }
+  } finally { ctx.restore(); HS=1; } }
+let cmouse=[0,0];
+function drawClose(){ const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
+  try{ if(tab==="prog") drawProg(CLW,CLH,false); else if(tab==="opt") drawOpt(); else drawChem(); } finally{ ctx=old; } }
+function drawLaptopScreen(){ const old=ctx, c=PROGCV.getContext("2d"); ctx=c; c.setTransform(1,0,0,1,0,0); const keep=HIT, km=cmouse; HIT=[]; cmouse=[-1,-1];
+  try{ drawProg(PROGCV.width,PROGCV.height,true); } finally{ ctx=old; HIT=keep; cmouse=km; } }
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS: the bench and the close-ups
+   ══════════════════════════════════════════════════════════════ */
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function hitItem(p){ return pick3(p[0],p[1])||null; }
+let drag=null;
+const LEDS=["ledcon","ledrgb","ledunk"], CHEM=["wash","naoh","ic","ind","gl","nacl","syr3","syrIns","tubes","waste"];
+const conFor=b=>b==="ledrgb"?"con4":"con2";
+function stopSpec(){ SPEC.live=false; if(SPEC.ts){ SPEC.tsDone=SPEC.ts; SPEC.ts=null; } }
+function nudge(s){ ST.standJit+=gauss(0,s); }
+function clearK(k){
+  if(OPT.includes(k)){ ST.x[k]=null; if(k==="holder") ST.src=null; if(k==="cuvhold") ST.inHolder=null; if(k==="screen") stopSpec(); }
+  if(k==="table"){ for(const q of OPT){ ST.x[q]=null; ST.on.delete(q); } ST.src=null; ST.inHolder=null; stopSpec(); }
+  if(LEDS.includes(k)){ if(ST.src===k) ST.src=null; for(const c of ["con4","con2"]) if(ST.plug[c]===k) ST.plug[c]=null; }
+  if(k==="con4"||k==="con2") ST.plug[k]=null;
+  if(k==="cuvettes") ST.inHolder=null;
+  if(k==="sensor") stopSpec();
+  if(k==="psu") ST.psuOn=false;
+  if(k==="gloves") ST.gloves=false;
+  ST.on.delete(k); return true; }
+/* the point on the optical table under the pointer, in cm from its left end (or null) */
+function tableT(p){ const q=unP(p[0],p[1],TBL.h); if(q[0]<TBL.x0-1||q[0]>TBL.x1+1||q[1]<TBL.y0-4||q[1]>TBL.y1+4) return null; return Math.max(1,Math.min(TBL_L-1,Math.round((q[0]-TBL.x0)*10)/10)); }
+const cuvId=k=>k&&/^cuv\d$/.test(k)?+k.slice(3):null;
+/* the board the pointer is on: a loose one, or the one in the holder */
+const boardAt=k0=>LEDS.includes(k0)?k0:(k0==="holder"&&ST.src)?ST.src:null;
+function plugInto(k,b){ if(conFor(b)!==k){ say("wrongCon"); return false; }
+  for(const c of ["con4","con2"]) if(ST.plug[c]===b&&c!==k) ST.plug[c]=null;
+  ST.plug[k]=b; ST.on.add(k); say("plug",itemName(k),itemName(b)); if(ST.src===b){ nudge(1.2); say("jit"); } return true; }
+/* put the thing in the hand where the pointer is */
+function place(k,k0,p){
+  if(k==="cuv"){ const i=hand.i;
+    if((k0==="cuvhold"||ST.inHolder!==null&&cuvId(k0)===ST.inHolder)&&ST.x.cuvhold!==null){ if(ST.inHolder!==null){ say("cuvBusy"); return false; } ST.inHolder=i; ST.sel=i; say("cuvIn",i); return true; }
+    if(k0==="waste"){ emptyCuv(i); return false; }
+    say("cuvRack",i); return true; }
+  if(OPT.includes(k)){ if(!has("table")){ say("needFor",itemName("table")); return false; } const t=tableT(p); if(t===null){ say("notTable"); return false; }
+    const old=ST.x[k]; ST.x[k]=t; ST.on.add(k); if((k==="holder"||k==="cuvhold")&&old!==null&&Math.abs(old-t)>0.05) nudge(0.5); OSEL=k; say(hand.move?"moved":"onTable",itemName(k)); return true; }
+  if(LEDS.includes(k)){
+    if((k0==="holder"||boardAt(k0)===ST.src&&ST.src)&&ST.x.holder!==null){ if(ST.src){ say("holderBusy"); return false; } ST.src=k; ST.on.add(k); nudge(0.05); say("inHolder",itemName(k)); return true; }
+    ST.on.add(k); say("placed",itemName(k)); return true; }
+  if(k==="con4"||k==="con2"){ const b=boardAt(k0); if(b&&has(b)||b&&ST.src===b){ return plugInto(k,b); } ST.on.add(k); say("placed",itemName(k)); return true; }
+  ST.on.add(k); say("placed",itemName(k)); if(CHEM.includes(k)||k==="cuvettes") setTab("chem"); return true; }
+function benchClick(p,right,e){
+  let k0=hitItem(p);
+  /* a cuvette or an LED board in the hand snaps into its holder when the pointer is just above it */
+  if(hand&&!right&&(k0===null||k0==="table"||k0==="sunshield")){ const near=k=>{ if(ST.x[k]===null||!has(k)) return false; const q=unP(p[0],p[1],AZ); return Math.abs(q[0]-xw(ST.x[k]))<2.5&&Math.abs(q[1]-AY)<5; };
+    if(hand.item==="cuv"&&near("cuvhold")) k0="cuvhold"; else if(LEDS.includes(hand.item)&&near("holder")) k0="holder"; }
+  if(hand){ const k=hand.item;
+    if(right){ if(hand.move&&OPT.includes(k)){ ST.x[k]=hand.old; hand=null; say("placed",itemName(k)); return; }
+      if(k==="cuv"){ say("cuvRack",hand.i); hand=null; return; }
+      if(hand.fromHolder){ if(!ST.src){ ST.src=k; } ST.on.add(k); hand=null; return; }
+      if(hand.fromBench){ ST.on.add(k); hand=null; return; }
+      say("back",itemName(k)); hand=null; return; }
+    if(place(k,k0,p)) hand=null; return; }
+  const k=k0;
+  if(!k){ if(!right) drag=e&&e.shiftKey?{k:"pan",p,v:[CAM.px,CAM.py]}:{k:"orbit",p,v:[CAM.yaw,CAM.pitch]}; return; }
+  const ci=cuvId(k);
+  if(right){ if(k==="laptop"||ci!==null) return; if(clearK(k)) say("back",itemName(k)); return; }
+  if(ci!==null){ if(ST.inHolder===ci){ ST.inHolder=null; say("cuvOut",ci); } hand={item:"cuv",i:ci}; ST.sel=ci; setTab("chem"); return; }
+  if(OPT.includes(k)){ hand={item:k,move:true,old:ST.x[k]}; OSEL=k; setTab("opt"); say("picked",itemName(k)); return; }
+  if(LEDS.includes(k)){ if(ST.src===k){ ST.src=null; hand={item:k,fromHolder:true}; ST.on.delete(k); say("outHolder",itemName(k)); return; }
+    hand={item:k,fromBench:true}; ST.on.delete(k); say("picked",itemName(k)); return; }
+  if(k==="con4"||k==="con2"){ if(ST.plug[k]){ const b=ST.plug[k]; ST.plug[k]=null; if(ST.src===b){ nudge(1.2); say("jit"); } else say("unplug",itemName(k)); return; }
+    hand={item:k,fromBench:true}; ST.on.delete(k); say("picked",itemName(k)); return; }
+  if(k==="gloves"){ ST.gloves=!ST.gloves; say(ST.gloves?"gloves":"glovesOff"); return; }
+  if(k==="laptop"||k==="sensor") setTab("prog"); else if(k==="table"||k==="sunshield") setTab("opt");
+  else if(CHEM.includes(k)||k==="cuvettes") setTab("chem"); else if(k==="psu"||k==="adapter") say("psuClick"); }
+let trayDrag=false;
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerenter",()=>{ overBench=true; });
+cv.addEventListener("pointerleave",()=>{ overBench=false; });
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p;
+  if(drag){ if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
+  cv.style.cursor=hand?"crosshair":hitItem(p)?"pointer":"grab"; });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId); benchClick(p,e.button===2,e); drawTray(); });
+cv.addEventListener("pointerup",()=>{ drag=null; });
+cv.addEventListener("dblclick",e=>{ if(!hand&&!hitItem(lpos(e))) camReset(); });
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0, nk=Math.max(3,Math.min(160,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
+  CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*f; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*f; CAM.k=nk; },{passive:false});
+window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ benchClick(mouse,true); drawTray(); } });
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move&&!hand.fromHolder&&!hand.fromBench&&hand.item!=="cuv"){ hand=null; drawTray(); } });
+trayCv.addEventListener("mousedown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=inHand(k); if(hand&&(hand.move||hand.fromHolder||hand.fromBench||hand.item==="cuv")) return; hand=null;
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); } drawTray(); return; } });
+
+/* ── the chemistry ── */
+const STOCK={water:()=>1,nacl:()=>0.30,gl:()=>0.50};
+const cuvMax=4.5;
+function emptyCuv(i){ const c=ST.cuv[i], lab=c.label; ST.cuv[i]=newCuv(i); ST.cuv[i].label=lab; ST.wasted++; say("emptied",i); }
+function ensureTr(c){ const q=conc(c); if(!c.tr&&c.icV>0&&q.OH>1e-3&&q.Gl>1e-3) c.tr={n:1,i:0,f:0,O:1}; }
+/* pour v ml of reagent s into cuvette c */
+function addTo(c,s,v){ if(!(v>0)) return false; if(c.cap){ say("capFirst"); return false; }
+  if(s==="water") c.V.w+=v; else if(s==="nacl") c.V.nacl+=v; else if(s==="gl") c.V.gl+=v;
+  else if(s==="naoh"){ const cs=ST.naohSol.c; c.cNaOH=(c.cNaOH*c.V.naoh+cs*v)/(c.V.naoh+v); c.V.naoh+=v; }
+  else if(s==="ic") c.icV+=v; else if(s==="ind"){ c.inV+=v; c.ph.h+=v/0.005; }
+  const V=cuvVol(c); if(V>cuvMax){ const f=cuvMax/V; for(const q in c.V) c.V[q]*=f; c.icV*=f; c.inV*=f; c.ph.h*=f; c.ph.n*=f; c.ph.b*=f; say("full"); } else say("inj",c.i);
+  c.mixed=false; c.unmix=U(0.35,1.9); ensureTr(c); return true; }
+const selCuv=()=>has("cuvettes")?ST.cuv[ST.sel]:null;
+function insDrop(toCuv){ const s=ST.ins[ST.insK]; if(!(s.V>0)){ say("insEmpty"); return; }
+  const v=Math.min(s.V,TRUE.Vd[ST.insK]*1e6*(1+gauss(0,0.03))); s.V=Math.max(0,s.V-v); s.drop=0;
+  if(toCuv){ const c=selCuv(); if(!c){ say("needFor",itemName("cuvettes")); s.V+=v; return; } if(!addTo(c,s.src,v)){ s.V+=v; return; } }
+  say("drop"); }
+function chem(cmd){ const [_,a,b]=cmd.split(":"), L=d().lab;
+  if(a==="insk"){ ST.insK=+b; return; }
+  if(a==="insfill"){ const s=ST.ins[ST.insK]; if(s.src&&s.src!==b&&s.V>0){ say("syrMix"); return; } s.src=b; s.V=0.5; say("insFill",ST.insK,L[b]); return; }
+  if(a==="drop") return insDrop(true); if(a==="dropW") return insDrop(false);
+  if(a==="push"){ const s=ST.ins[ST.insK], c=selCuv(); if(!c){ say("needFor",itemName("cuvettes")); return; } const v=Math.min(s.V,+b); if(!(v>0)){ say("insEmpty"); return; }
+    if(addTo(c,s.src,v*(1+gauss(0,0.01)))) s.V=Math.max(0,s.V-v); return; }
+  if(a==="insEmpty"){ ST.ins[ST.insK].V=0; return; }
+  const s3=ST.syr3;
+  if(a==="s3src"){ if(s3.V>0&&s3.src!==b){ say("syrMix"); return; } if(b==="naoh"&&!ST.gloves){ say("noGloves"); return; } s3.src=b; return; }
+  if(a==="s3"){ const dv=+b; if(s3.src==="naoh"&&!ST.gloves){ say("noGloves"); return; }
+    if(dv>0){ if(s3.V>=3-1e-9){ say("syrFull"); return; } let v=Math.min(3-s3.V,dv+gauss(0,0.006)); if(s3.src==="naoh"){ if(!ST.naohSol){ say("noStock"); return; } v=Math.min(v,ST.naohSol.V); ST.naohSol.V-=v; } s3.V+=v; say("drew",s3.V,L[s3.src]); }
+    else { const v=Math.min(s3.V,-dv+gauss(0,0.006)); s3.V=Math.max(0,s3.V-v); if(s3.src==="naoh"&&ST.naohSol) ST.naohSol.V+=v; if(s3.V<0.003) s3.V=0; }
+    return; }
+  if(a==="s3inj"){ const c=selCuv(); if(!c){ say("needFor",itemName("cuvettes")); return; } if(s3.src==="naoh"&&!ST.gloves){ say("noGloves"); return; } if(addTo(c,s3.src,s3.V)) s3.V=0; return; }
+  if(a==="s3waste"){ s3.V=0; return; }
+  if(a==="st"){ ST.stockSet=Math.max(1,Math.min(100,Math.round((ST.stockSet+ +b)*10)/10)); return; }
+  if(a==="dissolve"){ if(!has("naoh")){ say("needFor",itemName("naoh")); return; } if(!ST.gloves){ say("noGloves"); return; }
+    const V=ST.stockSet*(1+gauss(0,0.004)); ST.naohSol={V:ST.stockSet,c:TRUE.mNaOH/MU.NaOH/(V*1e-3)}; say("stock",ST.stockSet,TRUE.mNaOH); return; }
+  if(a==="gloves"){ ST.gloves=!ST.gloves; say(ST.gloves?"gloves":"glovesOff"); return; }
+  if(a==="sel"){ ST.sel=+b; return; }
+  const c=selCuv(); if(!c) return;
+  if(a==="cap"){ c.cap=!c.cap; say(c.cap?"capped":"uncapped"); }
+  else if(a==="shake"){ if(!c.cap){ say("needCap"); return; } c.mixed=true; c.bubbles=cuvVol(c)>0.1?U(0.5,1.3):0; if(c.tr) c.tr.O=1; say("shaken"); }
+  else if(a==="tap"){ c.bubbles=0; say("tapped"); }
+  else if(a==="rot"){ c.rot=!c.rot; say("rot"); }
+  else if(a==="label"){ const s=$("cfg").value.trim()||String(ST.sel+1); c.label=s.slice(0,12); say("labeled",c.label); }
+  else if(a==="emptyC") emptyCuv(ST.sel);
+  else if(a==="holder"){ if(ST.inHolder===ST.sel){ ST.inHolder=null; say("cuvOut",ST.sel); } else { if(ST.inHolder!==null){ say("cuvBusy"); return; } if(hand&&hand.item==="cuv"&&hand.i===ST.sel) hand=null; ST.inHolder=ST.sel; say("cuvIn",ST.sel); } } }
+
+/* ── the close-ups ── */
+closeCv.addEventListener("contextmenu",e=>e.preventDefault());
+function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const hitAt=p=>{ for(let i=HIT.length-1;i>=0;i--){ const h=HIT[i]; if(p[0]>=h.x&&p[0]<=h.x+h.w&&p[1]>=h.y&&p[1]<=h.y+h.h) return h; } return null; };
+let cdrag=null;
+const fname=def=>{ const s=$("cfg").value.trim(); return /\.csv$/i.test(s)?s.replace(/[\\/:*?"<>|]/g,"_"):def; };
+function saveText(name,txt,mime){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([txt],{type:mime||"text/csv"})); a.download=name; document.body.appendChild(a); a.click(); a.remove(); say("saved",name); }
+const DTS=[0.5,1,2,5,10];
+function progBtn(k){
+  if(!has("sensor")){ say("sensorNo"); return; }
+  if(k==="launch"){ SPEC.live=true; }
+  else if(k==="pause"){ stopSpec(); }
+  else if(k==="single"){ specFrame(); SPEC.hold=Float32Array.from(SPEC.frame); }
+  else if(k==="saveS"){ const dt=SPEC.live?SPEC.frame:SPEC.hold; if(!dt){ say("noSingle"); return; } let s="N,I\n"; for(let n=0;n<NPIX;n++) s+=n+","+Math.round(dt[n])+"\n"; saveText(fname("spectrum.csv"),s); }
+  else if(k==="ts"){ if(SPEC.ts){ SPEC.tsDone=SPEC.ts; SPEC.ts=null; return; } if(!SPEC.live){ say("noLaunch"); return; } SPEC.ts=[]; SPEC.t0=ST.t; SPEC.next=ST.t; }
+  else if(k==="saveTS"){ const ts=SPEC.ts||SPEC.tsDone; if(!ts||!ts.length){ say("noTS"); return; } const rows=["t_s,"+Array.from({length:NPIX},(_,n)=>"N"+n).join(",")];
+    for(const [t,f] of ts) rows.push(t.toFixed(2)+","+Array.prototype.join.call(f,",")); saveText(fname("time_series.csv"),rows.join("\n")+"\n"); }
+  else if(k==="dm"||k==="dp"){ const i=DTS.indexOf(ST.tsDt); ST.tsDt=DTS[Math.max(0,Math.min(DTS.length-1,(i<0?2:i)+(k==="dp"?1:-1)))]; }
+  else if(k==="sm") ST.sens=Math.max(1,ST.sens-1); else if(k==="sp") ST.sens=Math.min(8,ST.sens+1); }
+closeCv.addEventListener("wheel",e=>{ if(tab!=="prog"||!PROG_AREA) return; e.preventDefault(); const p=clpos(e), [x0,,w]=PROG_AREA, f=(p[0]-x0)/w, c=PV.n0+f*(PV.n1-PV.n0), span=Math.max(20,Math.min(NPIX,(PV.n1-PV.n0)*(e.deltaY<0?1/1.25:1.25)));
+  PV.n0=c-f*span; PV.n1=PV.n0+span; if(PV.n0<0){ PV.n1-=PV.n0; PV.n0=0; } if(PV.n1>NPIX){ PV.n0-=PV.n1-NPIX; PV.n1=NPIX; } PV.n0=Math.max(0,PV.n0); },{passive:false});
+closeCv.addEventListener("dblclick",()=>{ if(tab==="prog"){ PV.n0=0; PV.n1=NPIX; } });
+closeCv.addEventListener("pointermove",e=>{ cmouse=clpos(e); if(!cdrag) return;
+  if(cdrag.k==="opt"){ const {sc}=OXY(); const t=Math.max(1,Math.min(TBL_L-1,Math.round((cdrag.t0+(cmouse[0]-cdrag.x)/sc)*10)/10)); ST.x[cdrag.item]=t; cdrag.moved=true; }
+  else if(cdrag.k==="pan"&&PROG_AREA){ const span=PV.n1-PV.n0, dn=-(cmouse[0]-cdrag.x)/PROG_AREA[2]*span; PV.n0=Math.max(0,Math.min(NPIX-span,cdrag.n0+dn)); PV.n1=PV.n0+span; } });
+closeCv.addEventListener("pointerup",()=>{ if(cdrag&&cdrag.k==="opt"&&cdrag.moved&&(cdrag.item==="holder"||cdrag.item==="cuvhold")) nudge(0.5); cdrag=null; });
+closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e); closeCv.setPointerCapture(e.pointerId); drawClose(); const h=hitAt(p);
+  if(tab==="prog"){ if(h&&h.k.startsWith("p:")){ progBtn(h.k.slice(2)); return; } if(PROG_AREA) cdrag={k:"pan",x:p[0],n0:PV.n0}; return; }
+  if(tab==="opt"){ if(h&&h.k.startsWith("o:")){ OSEL=h.k.slice(2); cdrag={k:"opt",item:OSEL,x:p[0],t0:ST.x[OSEL],moved:false}; } return; }
+  if(tab==="chem"&&h&&h.k.startsWith("c:")) chem(h.k); });
+
+/* ══════════════════════════════════════════════════════════════
+   8.  PANEL AND MAIN LOOP
+   ══════════════════════════════════════════════════════════════ */
+let rows=0;
+const need=k=>{ if(!has(k)){ say("needFor",itemName(k)); return false; } return true; };
+$("psuBtn").onclick=()=>{ if(!need("psu")) return; ST.psuOn=!ST.psuOn; };
+$("adBtn").onclick=()=>{ if(!need("adapter")) return; ST.adSw=!ST.adSw; };
+for(const [id,dv] of [["vm1",-1],["vm01",-0.1],["vp01",0.1],["vp1",1]]) $(id).onclick=()=>{ if(!need("psu")) return; ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((ST.psuV+dv)*10)/10)); };
+$("vzero").onclick=()=>{ if(!need("psu")) return; ST.psuV=0; };
+for(const [id,s] of [["rgbR","R"],["rgbG","G"],["rgbB","B"]]) $(id).onclick=()=>{ if(!need("con4")) return; ST.pin=s; };
+for(const [id,dv] of [["om1",-1],["om01",-0.1],["op01",0.1],["op1",1]]) $(id).onclick=()=>{ if(!OSEL||ST.x[OSEL]===null){ say("needFor",d().tabs.opt); return; } ST.x[OSEL]=Math.max(1,Math.min(TBL_L-1,Math.round((ST.x[OSEL]+dv)*10)/10)); if(OSEL==="holder"||OSEL==="cuvhold") nudge(0.3); };
+for(const [id,s] of [["sp1",1],["sp5",5],["sp20",20],["sp60",60]]) $(id).onclick=()=>{ ST.speed=s; };
+$("swGo").onclick=()=>{ ST.sw.run=!ST.sw.run; }; $("swRst").onclick=()=>{ ST.sw.run=false; ST.sw.t=0; };
+$("noteBtn").onclick=()=>{ rows++; const n=$("note"), line=rows+")  "+$("cfg").value.trim(); n.value+=(n.value&&!n.value.endsWith("\n")?"\n":"")+line; n.scrollTop=n.scrollHeight; say("noted"); };
+$("noteClr").onclick=()=>{ $("note").value=""; rows=0; };
+$("noteSave").onclick=()=>{ saveText("ISPhO2024_E1_notebook.txt",$("note").value,"text/plain"); };
+function renderPanel(){ const t=d();
+  $("psuV").textContent=!has("psu")?"—":t.knob(ST.psuV,ST.psuOn);
+  $("psuBtn").textContent=ST.psuOn?t.psuOn:t.psuOff; $("psuBtn").className=ST.psuOn?"on":"";
+  $("adBtn").textContent=ST.adSw?t.adOn:t.adOff; $("adBtn").className=ST.adSw?"on":"";
+  for(const [id,s] of [["rgbR","R"],["rgbG","G"],["rgbB","B"]]) $(id).className=ST.pin===s?"on":"";
+  $("optSel").textContent=t.optSel(OSEL&&ST.x[OSEL]!==null?itemName(OSEL):null);
+  for(const [id,s] of [["sp1",1],["sp5",5],["sp20",20],["sp60",60]]) $(id).className=ST.speed===s?"on":"";
+  const st=ST.sw.t; $("swV").textContent=Math.floor(st/60)+":"+(st%60).toFixed(1).padStart(4,"0"); }
+function renderStatus(){ const L=[], t=d();
+  if(!ST.on.size) L.push([t.st.none,false]);
+  if(hand) L.push([t.st.hand(handName()),false]);
+  const f=progData(); if(f&&has("sensor")){ let o=false; for(let n=0;n<NPIX;n+=7) if(f[n]>=OVERFLOW){ o=true; break; } if(o) L.push([t.st.over,true]); }
+  if(SPEC.live&&!has("sunshield")) L.push([t.st.room,false]);
+  if(msg.key&&performance.now()-msg.t<9000){ const g=t.m[msg.key]; if(g!==undefined) L.push(["• "+(typeof g==="function"?g(...msg.args):g),false]); }
+  const box=$("status"), html=L.map(([s,w])=>"<div"+(w?" class='w'":"")+">"+s.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</div>").join(""); if(box.innerHTML!==html) box.innerHTML=html; }
+function applyLang(){ const t=d(); document.documentElement.lang=lang;
+  for(const [id,k] of [["t-title","title"],["t-sub","sub"],["t-tray","trayTitle"],["t-cap","cap"],["t-h-psu","hPsu"],["t-h-rgb","hRgb"],["t-h-opt","hOpt"],["t-h-sp","hSp"],["swGo","swGo"],["swRst","swRst"],["t-h-note","hNote"],["noteBtn","note"],["noteClr","noteClr"],["noteSave","noteSave"],["vzero","vzero"],["cfgHint","cfgHint"]]) $(id).textContent=t[k];
+  $("cfg").placeholder=t.cfgPh; $("t-closecap").textContent=t.closeCap[tab]; $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
+  document.title=t.docTitle; renderTabs(); renderPanel(); layout(); }
+$("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
+$("btn-en").onclick=()=>{ lang="en"; applyLang(); };
+let frameN=0, lastT=performance.now();
+function tick(){ const now=performance.now(), dt=Math.min(0.05,(now-lastT)/1000); lastT=now;
+  let rem=dt*ST.speed; while(rem>1e-9){ const h=Math.min(0.25,rem); step(h); rem-=h; }
+  for(const s of ST.ins) if(s.drop!==undefined) s.drop=Math.min(1,s.drop+dt*2);
+  if(SPEC.live&&has("sensor")&&frameN%3===0) specFrame();
+  if(frameN%4===0) drawLaptopScreen();
+  ctx.clearRect(0,0,LW,LH); drawBench(); drawClose();
+  if(++frameN%6===0){ renderStatus(); renderPanel(); drawTray(); }
+  requestAnimationFrame(tick); }
+window.addEventListener("resize",()=>{ layout(); });
+applyLang(); requestAnimationFrame(tick);
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
