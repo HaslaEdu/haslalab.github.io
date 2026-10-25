@@ -481,6 +481,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2023_E2_web.html">NBPhO 2023 P9 — 표면장력</a></li>
       <li><a href="sim/nbpho2022_E1_web.html">NBPhO 2022 P5 — 강자성 띠</a></li>
       <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
+      <li><a href="sim/nbpho2021_E1_web.html">NBPhO 2021 P4 — 고무장갑 늘이기</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
@@ -1874,7 +1875,18 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2022_E_EN.pdf"},
               sol:"pdf/NBPhO_2022_S.pdf"}}
     ]},
-   {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2021", wip("Stretching Gloves"), ["E_EN", "S"])},
+   {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"고무장갑 늘이기",en:"Stretching Gloves"},
+       desc:{ko:"라텍스 장갑을 폭이 다른 띠로 잘라 표시선을 긋고, 말아서 사슬로 이어 줄자 위에서 당깁니다. 같은 힘이 걸린 띠들의 늘어난 길이로 띠가 끊어지는 최대 변형률 εm과, 최대 응력에 대한 상대 응력–변형률 곡선을 구합니다 (문제 4).",
+             en:"Cut latex gloves into bands of different widths, mark them, roll them and join them into a chain, then pull it along a measuring tape. From how far bands under the same force stretch, find the breaking strain εm and the stress–strain curve relative to the maximal stress (problem 4)."},
+       tags:["탄성","라텍스","응력–변형률"], tagsEn:["Elasticity","Latex","Stress–strain"],
+       files:{sim:"sim/nbpho2021_E1_web.html",
+              src:{ko:"src/nbpho2021_E1_gloves_sim_KO.py", en:"src/nbpho2021_E1_gloves_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2021_E_EN.pdf"},
+              sol:"pdf/NBPhO_2021_S.pdf"}}
+    ]},
    {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2020", wip("Bottle's Sound"), ["E_EN", "S"])},
    {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2018", wip("Fresnel Prism", "LCR Circuit"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2017,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2017", wip("Virtual Mass", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
