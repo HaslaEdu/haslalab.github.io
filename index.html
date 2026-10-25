@@ -9,7 +9,7 @@
 <!-- 링크 미리보기. 사이트 주소를 옮기면 아래 세 줄의 주소도 함께 바꿔야 합니다. -->
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:title" content="HaslaLab — 물리올림피아드 실험 시뮬레이터 · Physics Olympiad Experimental Simulations">
-<meta property="og:description" content="IPhO · APhO · EuPhO · NBPhO · ISPhO · RMPh 실험 문제를 실제로 조작할 수 있는 장치로 다시 만들었습니다. 계산은 대신 해주지 않습니다.">
+<meta property="og:description" content="IPhO · APhO · EuPhO · NBPhO · ISPhO · OPhO · RMPh 실험 문제를 실제로 조작할 수 있는 장치로 다시 만들었습니다. 계산은 대신 해주지 않습니다.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ko_KR">
@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="HaslaLab — 물리올림피아드 실험 시뮬레이터">
 <meta name="twitter:description" content="IPhO, APhO and EuPhO experimental problems, rebuilt as working apparatus.">
 <meta name="twitter:image" content="https://haslalab.org/og.png">
-<meta name="description" content="국제물리올림피아드(IPhO)·아시아물리올림피아드(APhO)·EuPhO·NBPhO·ISPhO·RMPh의 실험 문제 150개를 연도별로 정리하고, 브라우저에서 바로 돌아가는 가상 실험 장치로 다시 만들었습니다. 계기가 보여주는 것만 보여주고 계산은 대신 해주지 않습니다. Physics olympiad experimental problems rebuilt as working apparatus in your browser.">
+<meta name="description" content="국제물리올림피아드(IPhO)·아시아물리올림피아드(APhO)·EuPhO·NBPhO·ISPhO·OPhO·RMPh의 실험 문제 157개를 연도별로 정리하고, 브라우저에서 바로 돌아가는 가상 실험 장치로 다시 만들었습니다. 계기가 보여주는 것만 보여주고 계산은 대신 해주지 않습니다. Physics olympiad experimental problems rebuilt as working apparatus in your browser.">
 <link rel="canonical" href="https://haslalab.org/">
 <!-- Google and Bing are verified by a DNS TXT record on haslalab.org, so they
      need nothing here.  Naver Search Advisor accepts only an HTML file or a
@@ -449,13 +449,13 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 
 <!-- Everything on this page is drawn by JavaScript, and the routes are hash
      fragments, which a crawler cannot hold as separate URLs.  problems.html
-     is a plain, static index of all 150 problems; this block is the path to
+     is a plain, static index of all 157 problems; this block is the path to
      it for anything that does not run scripts. -->
 <noscript>
   <div class="shell" style="padding-top:60px;padding-bottom:60px">
     <h1 style="font-size:1.8rem;margin:0 0 12px">HaslaLab — 물리올림피아드 실험 시뮬레이터</h1>
     <p style="max-width:60ch;color:#5C6B7A">
-      IPhO · APhO · EuPhO · NBPhO · ISPhO · RMPh의 실험 문제를, 실제 계측기가 보여주는 것만
+      IPhO · APhO · EuPhO · NBPhO · ISPhO · OPhO · RMPh의 실험 문제를, 실제 계측기가 보여주는 것만
       보여주는 가상 실험 장치로 다시 만들었습니다. 이 페이지는 자바스크립트로 그려집니다.
       전체 목록은 아래 정적 페이지에서 볼 수 있습니다.
     </p>
@@ -482,6 +482,12 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2022_E1_web.html">NBPhO 2022 P5 — 강자성 띠</a></li>
       <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
+      <li><a href="sim/opho2026_22_web.html">OPhO 2026 #22 — 아인슈타인 고리</a></li>
+      <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
+      <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
+      <li><a href="sim/opho2024_E_web.html">OPhO 2024 — 강자성의 Ising 모형</a></li>
+      <li><a href="sim/opho2023_E_web.html">OPhO 2023 — 로렌즈 계</a></li>
+      <li><a href="sim/opho2021_E_web.html">OPhO 2021 — 슬릿 간섭 무늬</a></li>
     </ul>
   </div>
 </noscript>
@@ -1960,6 +1966,89 @@ const DATA={
               sol:{ko:"pdf/ISPhO_2023_S_T_KO.pdf", en:"pdf/ISPhO_2023_S_T.pdf"}}}
     ]}
   ]},
+ opho:{
+  abbr:"OPhO", since:2020,
+  full:{ko:"온라인 물리 올림피아드",en:"Online Physics Olympiad"},
+  scope:{ko:"온라인 · 국제",en:"Online · International"},
+  note:{ko:"팀으로 치르는 온라인 대회입니다. 실험은 주최측이 내놓은 프로그램이나 노트북을 돌려 자료를 얻는 시뮬레이션 실험이라, 아래 시뮬레이터도 숫자를 넣으면 결과가 나오는 방식으로 만들었습니다. 2021·2023·2024년은 주최측 노트북을 그대로 옮겼고(원본은 ‘소스’), 2022년은 주최측이 지정한 공개 앱으로 연결됩니다. 2025년과 2026년은 주최측 프로그램이 공개되지 않아 HaslaLab이 같은 입출력으로 만들었습니다.",
+        en:"A team contest held online. Its experiments are simulation labs, run on a program or notebook the organisers hand out, so the simulators below work the same way: numbers in, results out. 2021, 2023 and 2024 port the organisers' notebooks unchanged (the originals are the ‘source’ downloads), and 2022 links to the public app the organisers named. The 2025 and 2026 programs were never published, so HaslaLab rebuilt them with the same input and output."},
+  years:[
+   {y:2026,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"22", theory:true,
+       title:{ko:"아인슈타인 고리",en:"Einstein Ring"},
+       desc:{ko:"형광 염료를 넣은 투명 구의 홈에 자외선을 비추고 위에서 찍은 사진의 고리에서 n_b, n_u를 구합니다. 굴절률을 넣으면 사진과 밝기 분포 I(b)가 숫자로 나옵니다.",
+             en:"UV light enters a dyed transparent sphere through an indent; find n_b and n_u from the ring in the photo taken from above. Enter the indices and get the picture and the brightness I(b) as numbers."},
+       tags:["광학","굴절","형광"], tagsEn:["Optics","Refraction","Fluorescence"],
+       files:{sim:"sim/opho2026_22_web.html",
+              src:{ko:"src/opho2026_22_ring_sim_KO.py", en:"src/opho2026_22_ring_sim_EN.py"},
+              pdf:"pdf/OPhO_2026_22.pdf", sol:"pdf/OPhO_2026_S22.pdf"}},
+      {id:"23",
+       title:{ko:"스핀, 스핀, 스핀",en:"Spinny Spin Spin"},
+       desc:{ko:"막대 위 전자 스핀 10만 개를 90° 돌린 뒤 바이어스 자기장과 측정 시각을 정해 자화 Mx, My를 재고, g, B₀, B₁을 찾습니다.",
+             en:"Turn 100 000 electron spins on a rod by 90°, choose a bias field and the read-out times, measure Mx and My, and find g, B₀ and B₁."},
+       tags:["자기공명","스핀","신호분석"], tagsEn:["Magnetic resonance","Spin","Signal analysis"],
+       files:{sim:"sim/opho2026_23_web.html",
+              src:{ko:"src/opho2026_23_spin_sim_KO.py", en:"src/opho2026_23_spin_sim_EN.py"},
+              pdf:"pdf/OPhO_2026_23.pdf", sol:"pdf/OPhO_2026_S23.pdf"}}
+    ]},
+   {y:2025,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"E",
+       title:{ko:"공 감각",en:"Ball Knowledge"},
+       desc:{ko:"알 수 없는 행성에서 v₀, θ₀, ω₀로 축구공을 차고, 카메라가 찍은 x,y 자료로 바람·공기 밀도·중력·프레임 속도와 마그누스·관성 계수를 찾습니다.",
+             en:"Kick a football on an unknown planet with chosen v₀, θ₀ and ω₀, and from the camera's x,y data find the wind, air density, gravity, frame rate and the Magnus and inertial coefficients."},
+       tags:["역학","마그누스 효과","궤적 분석"], tagsEn:["Mechanics","Magnus effect","Trajectory analysis"],
+       files:{sim:"sim/opho2025_E_web.html",
+              src:{ko:"src/opho2025_E_magnus_sim_KO.py", en:"src/opho2025_E_magnus_sim_EN.py"},
+              pdf:"pdf/OPhO_2025_E.pdf"}}
+    ]},
+   {y:2024,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"E",
+       title:{ko:"강자성의 Ising 모형",en:"Ising Model of Ferromagnetism"},
+       desc:{ko:"50×50 격자의 스핀을 메트로폴리스 몬테카를로로 뒤집으며 T와 B를 바꿔, 임계 온도 T_c, 에너지와 열용량, 임계 지수 β를 구합니다.",
+             en:"Flip the spins of a 50×50 lattice by Metropolis Monte Carlo while sweeping T and B, and find T_c, the energy and heat capacity, and the critical exponent β."},
+       tags:["통계물리","상전이","몬테카를로"], tagsEn:["Statistical physics","Phase transition","Monte Carlo"],
+       files:{sim:"sim/opho2024_E_web.html", src:"src/opho2024_E_ising_official.ipynb",
+              pdf:"pdf/OPhO_2024_E.pdf", sol:"pdf/OPhO_2024_S_E.pdf"}}
+    ]},
+   {y:2023,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"E",
+       title:{ko:"로렌즈 계",en:"The Lorenz System"},
+       desc:{ko:"로렌즈 방정식을 RK4와 RK2로 풀어 끌개와 안정성을 살피고, 두 궤적의 거리로 최대 랴푸노프 지수와 시뮬레이션이 믿을 만한 시간 T_max를 잽니다.",
+             en:"Integrate the Lorenz equations with RK4 and RK2, look at the attractors and their stability, and use the distance between two trajectories for the maximal Lyapunov exponent and the time T_max a run stays accurate."},
+       tags:["비선형 동역학","카오스","수치적분"], tagsEn:["Nonlinear dynamics","Chaos","Numerics"],
+       files:{sim:"sim/opho2023_E_web.html", src:"src/opho2023_E_lorenz_official.ipynb",
+              pdf:"pdf/OPhO_2023_E.pdf"}}
+    ]},
+   {y:2022,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"E",
+       title:{ko:"유체역학",en:"Fluid Dynamics"},
+       desc:{ko:"격자 볼츠만 유체 앱으로 좁아지는 관을 그려 두 단면의 질량 유량을 비교하고, 벽 가까이의 속도 분포로 벽 법칙의 κ와 C를 구합니다. 실행 버튼은 주최측이 지정한 공개 앱(D. Schroeder)으로 연결됩니다.",
+             en:"Draw a narrowing pipe in a lattice-Boltzmann fluid app to compare the mass flow through two sections, then use the velocity profile near a wall for κ and C of the law of the wall. The run button opens the public app the organisers named (D. Schroeder)."},
+       tags:["유체역학","격자 볼츠만","벽 법칙"], tagsEn:["Fluid dynamics","Lattice Boltzmann","Law of the wall"],
+       files:{sim:"https://physics.weber.edu/schroeder/fluids/", pdf:"pdf/OPhO_2022_E.pdf"}}
+    ]},
+   {y:2021,host:{ko:"온라인",en:"Online"},
+    org:{abbr:"OPhO",name:"Online Physics Olympiad"},
+    problems:[
+      {id:"E",
+       title:{ko:"슬릿 간섭 무늬",en:"Slit Interference"},
+       desc:{ko:"슬릿 배열을 바꿔 가며 간섭 무늬를 계산해 sin x/x의 곱 공식과 cosⁿ 진폭 패턴을 확인하고, 주어진 세기 자료에서 숨겨진 슬릿 배열을 푸리에 광학으로 되찾습니다.",
+             en:"Compute the patterns of different slit arrays to check the product formula for sin x/x and the cosⁿ amplitude patterns, then recover hidden apertures from given intensity data with Fourier optics."},
+       tags:["광학","간섭","푸리에 광학"], tagsEn:["Optics","Interference","Fourier optics"],
+       files:{sim:"sim/opho2021_E_web.html", src:"src/opho2021_E_slits_official.ipynb",
+              pdf:"pdf/OPhO_2021_E.pdf", sol:"pdf/OPhO_2021_S_E.pdf"}}
+    ]}
+  ]},
  rmph:{
   abbr:"RMPh", since:2010,
   full:{ko:"루마니안 마스터 오브 피직스",en:"Romanian Master of Physics"},
@@ -2069,7 +2158,7 @@ const LOGO_V = 3;
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
-                   ispho:0.468, rmph:0.760};
+                   ispho:0.468, rmph:0.760, opho:0.39};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
