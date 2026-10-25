@@ -475,6 +475,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2026_E2_web.html">NBPhO 2026 P10 — 공 자석</a></li>
       <li><a href="sim/nbpho2025_E1_web.html">NBPhO 2025 P4 — 블랙박스</a></li>
       <li><a href="sim/nbpho2025_E2_web.html">NBPhO 2025 P9 — 뜨거운 판</a></li>
+      <li><a href="sim/nbpho2024_E1_web.html">NBPhO 2024 P5 — 실과 진자</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1798,7 +1799,19 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2025_E_EN.pdf"},
               sol:"pdf/NBPhO_2025_S.pdf"}}
     ]},
-   {y:2024,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2024", wip("String and Pendulum", "Kitchen Physics"), ["E_EN", "S"], ["E_EN", "S"])},
+   {y:2024,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"실과 진자",en:"String and Pendulum"},
+       desc:{ko:"나무 블록에 물린 두 너트 진자 가운데 긴 것은 작은 진폭, 짧은 것은 큰 진폭으로 함께 놓아 걸음이 맞을 때까지 길이를 바꿉니다. 두 길이와 큰 진폭으로 T = 2π√(l/g)(1+Aα²)의 A를 구하고, 막대에 묶은 빨간 실 가운데에 스테이플을 매달아 실이 이루는 두 각으로 실 1 m의 질량을 구합니다 (문제 5).",
+             en:"Release the two nut pendulums clamped between wooden blocks together, the longer at a small amplitude and the shorter at a large one, and change the lengths until they keep in step. The two lengths and the large amplitude give A in T = 2π√(l/g)(1+Aα²). Then hang the staple at the middle of the red string tied to the bar and get the mass of one metre of string from the string's two angles (problem 5)."},
+       tags:["진자","비선형 진동","현수선"], tagsEn:["Pendulum","Anharmonicity","Catenary"],
+       files:{sim:"sim/nbpho2024_E1_web.html",
+              src:{ko:"src/nbpho2024_E1_pendulum_sim_KO.py", en:"src/nbpho2024_E1_pendulum_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2024_E_EN.pdf"},
+              sol:"pdf/NBPhO_2024_S.pdf"}},
+      papers("NBPhO_2024", wip("String and Pendulum", "Kitchen Physics"), ["E_EN", "S"], ["E_EN", "S"])[1]
+    ]},
    {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2023", wip("Black Box", "Surface Tension"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2022", wip("Ferromagnetic Stripe", "Magnet in Glass"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2021", wip("Stretching Gloves"), ["E_EN", "S"])},
@@ -5133,6 +5146,14 @@ const SIG_N25E2={
   f:v=>23+25*(1-Math.exp(-0.14*v)),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" °C"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:22,y0:20,y1:52,f:this.f,xl:"t / min"},t,this); }};
+const SIG_N24E1={
+  sim:"sim/nbpho2024_E1_web.html", tag:"NBPhO 2024 P5", span:24, rate:8,
+  capL:{ko:"짧은 진자의 진폭 · 걸음이 맞는 두 길이의 비 l₀/l₁",en:"Amplitude of the shorter pendulum · ratio l₀/l₁ of lengths in step"},
+  capR:{ko:"줄자와 각도기",en:"tape and protractor"},
+  pts:[10,20,30,40,50,55,60,70,80], n:euN, jit:0.002,
+  f:v=>{ const a=v*Math.PI/180; return (1+a*a/16+11*a**4/3072)**2; },
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3); },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:90,y0:1,y1:1.32,f:this.f,xl:"α / °"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5148,7 +5169,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
