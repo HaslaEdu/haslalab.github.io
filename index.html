@@ -477,6 +477,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2025_E2_web.html">NBPhO 2025 P9 — 뜨거운 판</a></li>
       <li><a href="sim/nbpho2024_E1_web.html">NBPhO 2024 P5 — 실과 진자</a></li>
       <li><a href="sim/nbpho2024_E2_web.html">NBPhO 2024 P10 — 부엌의 물리</a></li>
+      <li><a href="sim/nbpho2023_E1_web.html">NBPhO 2023 P4 — 블랙박스</a></li>
+      <li><a href="sim/nbpho2023_E2_web.html">NBPhO 2023 P9 — 표면장력</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1821,7 +1823,27 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2024_E_EN.pdf"},
               sol:"pdf/NBPhO_2024_S.pdf"}}
     ]},
-   {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2023", wip("Black Box", "Surface Tension"), ["E_EN", "S"], ["E_EN", "S"])},
+   {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"블랙박스",en:"Black Box"},
+       desc:{ko:"두 단자만 나온 상자를 멀티미터와 스톱워치로 조사합니다. 단자를 단락했다가 풀었을 때 전압이, 열어 두었다가 마이크로암미터를 이었을 때 전류가 시간에 따라 지수적으로 변하는 모양에서 상자 속 전지·저항 2개·축전기의 연결과 기전력, 저항, 전기용량을 구합니다 (문제 4).",
+             en:"Probe a box with only two terminals using a multimeter and a stopwatch. From how the voltage after releasing a short, and the current through the microammeter after leaving it open, relax exponentially in time, find how a battery, two resistors and a capacitor are connected inside, and their EMF, resistances and capacitance (problem 4)."},
+       tags:["RC 회로","블랙박스","지수 이완"], tagsEn:["RC circuit","Black box","Exponential relaxation"],
+       files:{sim:"sim/nbpho2023_E1_web.html",
+              src:{ko:"src/nbpho2023_E1_blackbox_sim_KO.py", en:"src/nbpho2023_E1_blackbox_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2023_E_EN.pdf"},
+              sol:"pdf/NBPhO_2023_S.pdf"}},
+      {id:"E2",
+       title:{ko:"표면장력",en:"Surface Tension"},
+       desc:{ko:"유리판 위 작은 물방울은 평볼록 렌즈입니다. 받침의 너트와 마개로 높이를 맞춰 천장 조명의 상이 또렷해지는 곳에서 초점거리를 재고, 지름과 함께 곡률반경과 접촉각을 구합니다. 물을 늘려 판을 덮게 하고 모눈종이로 넓이를 세어 물층 두께를 얻고 표면장력을 구합니다 (문제 9).",
+             en:"A small drop on the glass plate is a plano-convex lens. Set the holder's nut and cap until the image of the ceiling lights is sharp to get its focal length, and with its diameter the curvature radius and the contact angle. Then let water cover the plate, count its area on the graph paper for the layer's thickness, and get the surface tension (problem 9)."},
+       tags:["표면장력","접촉각","렌즈"], tagsEn:["Surface tension","Contact angle","Lens"],
+       files:{sim:"sim/nbpho2023_E2_web.html",
+              src:{ko:"src/nbpho2023_E2_surface_sim_KO.py", en:"src/nbpho2023_E2_surface_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2023_E_EN.pdf"},
+              sol:"pdf/NBPhO_2023_S.pdf"}}
+    ]},
    {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2022", wip("Ferromagnetic Stripe", "Magnet in Glass"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2021", wip("Stretching Gloves"), ["E_EN", "S"])},
    {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2020", wip("Bottle's Sound"), ["E_EN", "S"])},
@@ -5171,6 +5193,22 @@ const SIG_N24E2={
   f:v=>0.3+2.7e-8*v/(8e-3*6.3e-6),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" Ω"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:10.5,y0:0,y1:6,f:this.f,xl:"l / m"},t,this); }};
+const SIG_N23E1={
+  sim:"sim/nbpho2023_E1_web.html", tag:"NBPhO 2023 P4", span:24, rate:8,
+  capL:{ko:"단락을 푼 뒤의 시간 · 블랙박스 단자 전압",en:"Time after releasing the short · voltage across the box"},
+  capR:{ko:"멀티미터와 스톱워치",en:"multimeter and stopwatch"},
+  pts:[0,10,20,30,40,60,80,100,130,160,200], n:euN, jit:0.01,
+  f:v=>3.155-2.08*Math.exp(-v/35),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3)+" V"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:210,y0:0,y1:3.4,f:this.f,xl:"t / s"},t,this); }};
+const SIG_N23E2={
+  sim:"sim/nbpho2023_E2_web.html", tag:"NBPhO 2023 P9", span:24, rate:8,
+  capL:{ko:"너트 높이 · 스크린 위 조명 상의 번짐",en:"Nut height · blur of the lights' image on the screen"},
+  capR:{ko:"캘리퍼",en:"caliper"},
+  pts:[13,13.5,14,14.5,15,15.5,16,16.5,17], n:euN, jit:0.02,
+  f:v=>Math.max(0.03,5.8*Math.abs(v-15.2)/15.9),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" mm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:12.5,x1:17.5,y0:0,y1:0.9,f:this.f,xl:"h / mm"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5186,7 +5224,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
