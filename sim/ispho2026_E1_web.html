@@ -133,7 +133,7 @@ let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const Y_OPT=0.45, FREQ=1.0, N_C=1.444, A_TEMP=6.67e-6, T_SOLID=110;
 const HF_BASE=20, HF_DELTA=30, THETA_OPT=-27;
 const KAPPA0=8.699999999999998e-8, KAPPA_PAR=8.699999999999998e-8,
-      KAPPA_PER=6.089999999999998e-8, DN_F=1e-5;
+      KAPPA_PER=6.089999999999998e-8, DN_F=2.70e-5;   /* per mN: the official E2 slope, 41.8 nm/N */
 const NPTS=50000, LAM_MIN=1540.0, LAM_MAX=1560.0;
 
 /* 원본이 스스로 구현해 둔 gaussian_filter1d (sigma = 4) */
@@ -187,22 +187,25 @@ function spectrumDb(gs,wlMin,wlMax){
 
 const kappaOf=dY=>KAPPA0*Math.exp(-Math.pow(dY-Y_OPT,2)/8);
 const lambdaOf=v=>v/FREQ*1000.0;                  /* nm */
-/* Part D — 원본 run_cooling_simulation : 110 °C 에서 평탄부, HF_BASE/HF_DELTA */
+/* Part D — the cooling curve the organisers' program draws, read off the official solution's
+   D1 table (t at every minute from 0 to 40 min: a fall from 150 °C to a sloping plateau near 110 °C,
+   then on); past 40 min it keeps relaxing to the 25 °C air with the same 20-min constant. */
+const COOL=[150.5,144.5,138.7,133.5,128.1,123.3,119.6,116.9,115.1,113.7,112.0,110.7,109.6,108.4,107.3,105.7,104.2,102.1,99.7,96.6,93.1,
+  89.9,86.7,83.9,81.0,78.3,75.8,73.1,71.1,68.8,66.8,64.6,62.9,60.9,59.2,57.7,55.9,54.4,53.1,51.8,50.6];
 function coolTemp(frame){
-  const tau=frame;
-  const hot=HF_BASE, dl=HF_DELTA;
-  if(tau<hot)      return T_SOLID + (140-T_SOLID)*(1-tau/hot);
-  if(tau<hot+dl)   return T_SOLID;
-  return T_SOLID - (T_SOLID-25)*(1-Math.exp(-(tau-hot-dl)/18));
+  const tau=Math.max(0,frame);
+  if(tau<=40){ const i=Math.min(39,Math.floor(tau)), f=tau-i; return COOL[i]+(COOL[i+1]-COOL[i])*f; }
+  return 25+(COOL[40]-25)*Math.exp(-(tau-40)/20);
 }
-/* Part E.II — 원본 : F = 0.5 x^2 - 4.5 x + 24.5  (x 가 클 때)  /  2.5 x (작을 때) */
-const forceOf=x => x<=2.5 ? 2.5*x : 0.5*x*x-4.5*x+24.5;
+/* Part E.II — the spring obeys Hooke's law (2.5 mN/mm) up to 8 mm and then stiffens; this is what the
+   official E4 table shows (an earlier port had the bend at 2.5 mm). */
+const forceOf=x => x<8 ? 2.5*x : 0.5*x*x-4.5*x+24.5;
 
 const TABS=[
  {id:"A",label:"Part A",fields:[["dY","dY (\u00b5m)"],["v","v (mm/s)"],["L","L (mm)"]]},
  {id:"C",label:"Part C",fields:[["t","t (\u00b0C)"]]},
  {id:"D",label:"Part D",fields:[["tau","\u03c4 (min)"]]},
- {id:"E1",label:"Part E.I",fields:[["F","F (N)"]]},
+ {id:"E1",label:"Part E.I",fields:[["F","F (mN)"]]},
  {id:"E2",label:"Part E.II",fields:[["x","x (mm)"]]},
  {id:"F",label:"Part F",fields:[["th","\u03b8 (deg)"]]}];
 const S={tab:"A",val:{dY:0,v:0.5,L:50,t:25,tau:0,F:0,x:0,th:0},
@@ -223,7 +226,7 @@ function gratingNow(){
                        kappa:kappaOf(0.0), L_nm:L50}];
    case "F":  {const c=Math.cos((V.th-THETA_OPT)*Math.PI/180);
                return [{Lambda:lambdaOf(0.536), kappa:KAPPA_PAR, L_nm:L50, w:c*c},
-                       {Lambda:lambdaOf(0.536)*(1+DN_F), kappa:KAPPA_PER, L_nm:L50, w:1-c*c}];}
+                       {Lambda:lambdaOf(0.536)*(1-1e-5), kappa:KAPPA_PER, L_nm:L50, w:1-c*c}];}
   }
 }
 function compute(){
