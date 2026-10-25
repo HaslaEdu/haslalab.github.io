@@ -21,189 +21,868 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://haslalab.org/og.png">
 <style>
-  :root{
-    --bg:#f4f6f8; --panel:#fff; --ink:#1b2430; --muted:#5b6b7c;
-    --line:#d8e0e8; --accent:#2c6f9b; --accent-soft:#eaf4fb;
-    --disp-bg:#101418; --disp-fg:#8fd6ff;
-    --mx:#e02424; --my:#b8862b; --mz:#2c6f9b;
-  }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);
-    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
-         "Apple SD Gothic Neo","Malgun Gothic",sans-serif}
-  .wrap{max-width:1400px;margin:0 auto;padding:16px;display:flex;gap:16px;align-items:flex-start}
-  @media(max-width:1080px){.wrap{flex-direction:column}}
-  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
-    border-radius:10px;padding:14px;position:sticky;top:16px}
-  @media(max-width:1080px){.panel{position:static;width:100%;flex:1 1 auto}}
-  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
-    margin:16px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
-  .panel h2:first-of-type{margin-top:0}
-  label.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-    margin:11px 0 3px;color:var(--muted);font-size:12.5px}
-  label.row b{font:600 13px ui-monospace,Consolas,monospace;color:var(--ink)}
-  input[type=range]{width:100%;accent-color:var(--accent)}
-  input[type=number]{width:100%;padding:6px 8px;border:1px solid var(--line);
-    border-radius:6px;font:13px ui-monospace,monospace}
-  button{width:100%;padding:9px 10px;margin:5px 0;cursor:pointer;background:#fff;
-    border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
-    color:var(--ink);text-align:left;transition:.12s}
-  button:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
-  button:disabled{opacity:.45;cursor:not-allowed}
-  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);
-    font-weight:600;text-align:center}
-  button.primary:hover:not(:disabled){background:#22587c}
-  .seg{display:flex;gap:6px;margin:4px 0}
-  .seg button{flex:1;text-align:center;margin:0;padding:7px 4px}
-  .seg button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .disp{background:var(--disp-bg);border-radius:6px;padding:9px 12px;margin:8px 0;
-    text-align:right;color:var(--disp-fg);
-    font:700 22px/1.15 ui-monospace,Consolas,monospace}
-  .disp small{display:block;font:400 10px/1.4 ui-monospace,monospace;color:#5d7f96;
-    letter-spacing:.12em;text-transform:uppercase;text-align:left}
-  .bar{height:5px;background:#e6ecf2;border-radius:3px;overflow:hidden;margin:8px 0 2px}
-  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .1s}
-  .readout{font:12px ui-monospace,Consolas,monospace;color:var(--muted);background:#f7f9fb;
-    border:1px solid var(--line);border-radius:6px;padding:7px 9px;margin-top:8px;line-height:1.7}
-  .note{font-size:11.5px;color:#8494a3;line-height:1.65;margin-top:10px}
-  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
-  .card h3{margin:0 0 4px;font-size:13px;font-weight:600;color:var(--muted);
-    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-  .legend{display:flex;gap:12px;font:11px ui-monospace,monospace}
-  .legend span{display:flex;align-items:center;gap:5px}
-  .legend i{width:14px;height:2.5px;border-radius:2px}
-  canvas{display:block;width:100%;height:auto;border-radius:6px;touch-action:none}
-  header{max-width:1400px;margin:0 auto;padding:18px 16px 0;display:flex;
-    justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-  header h1{margin:0;font-size:19px;font-weight:650}
-  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
-  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:#fff}
-  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;
-    font-size:13px;font-weight:600;color:var(--muted);text-align:center}
-  .lang button.on{background:var(--accent);color:#fff}
-  textarea{width:100%;font:12px/1.5 ui-monospace,Consolas,monospace;border:1px solid var(--line);border-radius:6px;padding:6px 8px;resize:vertical;tab-size:8}
-  .panel h2:not(:first-of-type){margin-top:16px}
+  html,body{margin:0;padding:0;background:#e8ebee}
+  body{font:13px/1.45 "Segoe UI",-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#000}
+  .bar{max-width:1640px;margin:0 auto;padding:14px 16px 0;display:flex;justify-content:space-between;
+       align-items:flex-end;gap:10px;flex-wrap:wrap}
+  .bar h1{margin:0;font-size:16px;font-weight:650}
+  .bar p{margin:2px 0 0;font-size:12px;color:#5b6b7c}
+  .lang{display:flex;border:1px solid #c3ccd4;border-radius:6px;overflow:hidden;background:#fff}
+  .lang button{border:0;padding:6px 13px;font:600 12px inherit;color:#5b6b7c;background:#fff;cursor:pointer}
+  .lang button.on{background:#2c6f9b;color:#fff}
+  .winwrap{max-width:1640px;margin:12px auto 0;padding:0 16px 4px;overflow-x:auto}
+  .note{max-width:1640px;margin:8px auto 26px;padding:0 16px;font-size:12px;color:#5f6d7a;line-height:1.65}
+  .note b{color:#33414e}
+
+  /* ── a Windows 10 window holding a Tk (ttk "vista") application ── */
+  .win{margin:0 auto;background:#f0f0f0;border:1px solid #8f8f8f;box-shadow:0 8px 28px -12px rgba(0,0,0,.45);
+       display:flex;flex-direction:column;font:12px "Segoe UI",Tahoma,"Malgun Gothic",sans-serif;color:#000;
+       user-select:none;-webkit-user-select:none}
+  .cap{height:30px;flex:0 0 30px;background:#fff;display:flex;align-items:center;font-size:12px}
+  .cap svg{margin:0 8px 0 9px}
+  .cap .tt{flex:1}
+  .cap .wb{width:46px;height:30px;display:flex;align-items:center;justify-content:center}
+  .cap .wb:hover{background:#e5e5e5}
+  .cap .wb.x:hover{background:#e81123}
+  .cap .wb.x:hover svg path{stroke:#fff}
+  .client{flex:1;display:flex;flex-direction:column;min-height:0}
+  .nb{flex:1;display:flex;flex-direction:column;min-height:0}
+  .nbtabs{display:flex;padding:2px 2px 0;position:relative;z-index:1;height:23px}
+  .nbtabs div{padding:2px 6px 3px;border:1px solid #d9d9d9;border-bottom:0;margin-right:-1px;margin-top:2px;
+       background:#f0f0f0;cursor:default;white-space:nowrap;height:19px;line-height:14px}
+  .nbtabs div:hover{background:#d8eaf9;border-color:#3c7fb1}
+  .nbtabs div.on{background:#fff;margin-top:0;height:22px;padding:3px 8px 3px;margin-left:-2px;margin-right:-3px;
+       border-color:#d9d9d9;position:relative;z-index:2}
+  .pane{flex:1;border:1px solid #d9d9d9;margin-top:-1px;display:flex;min-height:0;background:#f0f0f0}
+  .lf{border:1px solid #dcdcdc;position:relative;padding:15px;margin:10px}
+  .lf>.lfl{position:absolute;left:6px;top:-9px;background:#f0f0f0;padding:0 2px;line-height:16px;white-space:pre}
+  .ctrl{display:grid;grid-template-columns:auto auto;align-content:start;column-gap:0;row-gap:0}
+  .ctrl .lab{padding:5px 0;align-self:center;white-space:nowrap}
+  .ent{width:88px;height:21px;border:1px solid #7a7a7a;background:#fff;font:12px "Segoe UI",Tahoma,sans-serif;
+       padding:0 2px;outline:0;margin:5px;border-radius:0;color:#000}
+  .ent:hover{border-color:#171717}
+  .ent:focus{border-color:#0078d7}
+  .tb{height:23px;border:1px solid #adadad;background:#e1e1e1;font:12px "Segoe UI",Tahoma,sans-serif;color:#000;
+      padding:0 8px;cursor:default;position:relative;outline:0;border-radius:0}
+  .tb:hover{background:#e5f1fb;border-color:#0078d7}
+  .tb:active{background:#cce4f7;border-color:#005499}
+  .tb.focus::after{content:"";position:absolute;inset:2px;border:1px dotted #000}
+  .calc{grid-column:1/3;margin:20px 0}
+  .plotf{flex:1;display:flex;flex-direction:column;margin:10px;min-width:0;min-height:0}
+  .cvwrap{flex:1;position:relative;min-height:0;background:#fff}
+  .cvwrap canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+  .navbar{flex:0 0 auto;display:flex;align-items:center;border:2px solid #f0f0f0;height:40px;padding:0}
+  .navbar .nbt{width:30px;height:30px;border:1px solid transparent;display:flex;align-items:center;justify-content:center;
+      background:#f0f0f0;cursor:default}
+  .navbar .nbt img{width:24px;height:24px;display:block}
+  .navbar .nbt:hover{border:1px solid #a0a0a0;box-shadow:inset 1px 1px #fff,inset -1px -1px #fff}
+  .navbar .nbt.on{background:#dadada;border:1px solid #6f6f6f;box-shadow:inset 1px 1px #a0a0a0}
+  .navbar .nbt.dis img{opacity:.35}
+  .navbar .nbt.dis:hover{border-color:transparent;box-shadow:none}
+  .navbar .sep{width:2px;height:24px;background:#a9a9a9;margin:0 4px;border-left:1px solid #8a8a8a}
+  .navbar .msg{margin-left:auto;font-size:13.3px;white-space:pre;text-align:right;padding-right:4px;line-height:17px}
+  .bottom{margin:10px;padding:10px 10px 10px 10px;display:flex;align-items:center}
+  .bottom .lab{white-space:nowrap}
+  .bottom .ent{width:74px}
+  .dsub{display:flex;align-items:center;grid-column:1/3;margin:5px 0}
+  .dsub .tb{width:32px;padding:0;margin:0 2px}
+  .dsub .ent{width:64px;margin:0 2px;text-align:center}
+  .dinfo{grid-column:1/3;font:bold 12px Arial,sans-serif;margin:10px 0;white-space:nowrap}
+
+  /* message box and the subplot tool: Windows 10 dialogs */
+  .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center}
+  .dlg{background:#fff;border:1px solid #8f8f8f;box-shadow:0 10px 32px -8px rgba(0,0,0,.5);min-width:300px;max-width:520px;
+       font:12px "Segoe UI",Tahoma,"Malgun Gothic",sans-serif;user-select:none}
+  .dlg .dcap{height:30px;display:flex;align-items:center;padding-left:10px}
+  .dlg .dcap span{flex:1}
+  .dlg .dbody{display:flex;gap:12px;align-items:flex-start;padding:16px 26px 24px 18px}
+  .dlg .dbody p{margin:6px 0 0;white-space:pre-wrap;line-height:1.45}
+  .dlg .dfoot{background:#f0f0f0;padding:11px 11px;display:flex;justify-content:flex-end}
+  .dlg .dfoot .tb{width:88px;height:26px}
+  .stool{position:fixed;z-index:40;background:#f0f0f0;border:1px solid #8f8f8f;box-shadow:0 10px 32px -8px rgba(0,0,0,.5);
+         font:12px "Segoe UI",Tahoma,sans-serif;user-select:none}
+  .stool .dcap{height:30px;display:flex;align-items:center;padding-left:8px;background:#fff;cursor:move}
+  .stool .dcap span{flex:1;margin-left:6px}
+  .stool canvas{display:block;background:#fff}
+  /* the left column of LabelFrames, tk.Text, ttk.Progressbar, ttk.Radiobutton, ttk.Scale */
+  .lcol{flex:0 0 auto;display:flex;flex-direction:column;width:300px;min-height:0;overflow:auto}
+  .lcol .lf{margin-bottom:0}
+  .lf.col{display:flex;flex-direction:column;align-items:stretch}
+  .lf.col>.lab{padding:0 0 3px}
+  .lf.col .calc{margin:12px 0 2px}
+  .lf.col .tb{margin-top:6px}
+  .lf.ctrl .ent{width:110px}
+  .lf .dinfo{grid-column:1/3;white-space:pre;margin:10px 0 0;line-height:16px;min-height:16px}
+  .lf .info{white-space:pre;line-height:17px}
+  .txt{font:13px/16px Consolas,"Courier New",monospace;border:1px solid #828790;background:#fff;color:#000;padding:1px 2px;
+       resize:none;outline:0;tab-size:8;-moz-tab-size:8;white-space:pre;overflow:auto;border-radius:0;user-select:text;-webkit-user-select:text}
+  .txt:focus{border-color:#0078d7}
+  .brow{display:flex;gap:6px;margin-top:8px}
+  .brow .tb{flex:1;margin-top:0}
+  .tb:disabled{color:#a0a0a0;background:#ccc;border-color:#bfbfbf}
+  .tb:disabled:hover{background:#ccc;border-color:#bfbfbf}
+  .pbar{height:18px;border:1px solid #bcbcbc;background:#e6e6e6;margin-top:8px;position:relative;overflow:hidden}
+  .pbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:#06b025}
+  .rgrp{display:flex;gap:18px;padding:2px 0}
+  .rb{display:flex;align-items:center;gap:5px}
+  .rb input{margin:0;width:13px;height:13px;accent-color:#0078d7}
+  .scrow{display:grid;grid-template-columns:44px 1fr 62px;align-items:center;gap:4px;margin:4px 0}
+  .scrow .v{text-align:right;font-variant-numeric:tabular-nums}
+  .scl{-webkit-appearance:none;appearance:none;height:21px;background:transparent;margin:0;width:100%}
+  .scl::-webkit-slider-runnable-track{height:4px;background:#e7eaea;border:1px solid #d6d6d6}
+  .scl::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:21px;background:#007ad9;border:0;margin-top:-9px}
+  .scl::-moz-range-track{height:4px;background:#e7eaea;border:1px solid #d6d6d6}
+  .scl::-moz-range-thumb{width:11px;height:21px;background:#007ad9;border:0;border-radius:0}
+  .scl:hover::-webkit-slider-thumb{background:#171717}
+  .bottom .out{flex:1;white-space:pre;overflow:hidden;text-overflow:ellipsis;margin:0 10px}
+  .plotf{margin:10px 10px 10px 0}
+
 </style>
 </head>
 <body>
-<header>
-  <div><h1 id="t-title"></h1><p id="t-sub"></p></div>
-  <div class="lang">
-    <button id="lang-ko" class="on">한국어</button>
-    <button id="lang-en">English</button>
-  </div>
-</header>
-
-<div class="wrap">
-  <aside class="panel">
-    <h2 id="t-h-task"></h2>
-    <div class="seg" id="taskSeg"></div>
-    <p class="note" id="t-taskdesc" style="margin-top:2px"></p>
-
-    <div id="boxA">
-      <h2>A.py · A_in.txt</h2>
-      <textarea id="ainA" rows="6" spellcheck="false"></textarea>
-      <button class="primary" id="runA"></button>
+<div class="bar">
+  <div><h1 id="t-h1"></h1><p id="t-h2"></p></div>
+  <div class="lang"><button id="lang-ko" class="on">한국어</button><button id="lang-en">English</button></div>
+</div>
+<div class="winwrap">
+  <div class="win" id="win">
+    <div class="cap">
+      <svg width="16" height="16" viewBox="0 0 16 16"><path d="M13.6 1.2c-3.9.6-7.2 3.4-8.6 7.3L3.3 13l.9.4 1.4-3.2c2.6-.4 5.2-1.9 6.6-4.4-1.1.3-2.2.3-3.3.1 1.5-.6 2.9-1.6 3.8-3 .5-.6.8-1.2.9-1.7z" fill="#4a7fbd" stroke="#2b5a8f" stroke-width=".6"/><path d="M4.1 13.4l7.7-10.6" stroke="#fff" stroke-width=".7"/></svg>
+      <span class="tt">Thermal Oxidation</span>
+      <span class="wb"><svg width="10" height="10"><path d="M0 5.5h10" stroke="#000"/></svg></span>
+      <span class="wb"><svg width="10" height="10"><path d="M.5.5h9v9h-9z" stroke="#000" fill="none"/></svg></span>
+      <span class="wb x"><svg width="10" height="10"><path d="M0 0l10 10M10 0L0 10" stroke="#000"/></svg></span>
     </div>
-
-    <div id="boxB12">
-      <h2 id="t-h-b12"></h2>
-      <div class="seg" id="sampSeg"></div>
-      <label class="row"><span>Φ, °</span><b id="v-phi"></b></label>
-      <input type="number" id="phi" min="20" max="80" step="0.1" value="60">
-      <label class="row"><span>d, nm</span><b id="v-d"></b></label>
-      <input type="number" id="dd" min="0" max="250" step="0.1" value="50">
-      <button class="primary" id="runB12"></button>
-      <div class="disp"><small id="t-err"></small><span id="v-err">—</span></div>
+    <div class="client">
+      <div class="nb">
+        <div class="nbtabs" id="tabs"></div>
+        <div class="pane" id="pane"></div>
+      </div>
+      <div class="lf bottom"><span class="lfl">Output</span>
+        <span class="out" id="out"> </span>
+        <button class="tb" id="save">Save data as CSV</button>
+      </div>
     </div>
-
-    <div id="boxB3">
-      <h2>B_in.txt</h2>
-      <textarea id="ainB" rows="3" spellcheck="false"></textarea>
-      <button class="primary" id="gen"></button>
-      <button id="stop" disabled></button>
-      <div class="bar"><i id="prog"></i></div>
-      <button id="proc"></button>
-      <button id="b7"></button>
-      <div class="readout" id="b7out">—</div>
-      <button id="toB8" disabled></button>
-    </div>
-
-    <div id="boxB8">
-      <h2>B8.py · B8_in.txt</h2>
-      <textarea id="ainB8" rows="7" spellcheck="false"></textarea>
-      <button class="primary" id="runB8"></button>
-      <div class="readout" id="b8out">—</div>
-    </div>
-
-    <div class="readout" id="status">—</div>
-    <button id="csv" disabled></button>
-    <p class="note" id="t-note"></p>
-  </aside>
-
-  <div class="stage">
-    <div class="card"><h3><span id="t-cap1"></span></h3><canvas id="cv1"></canvas></div>
-    <div class="card"><h3><span id="t-cap2"></span></h3><canvas id="cv2"></canvas></div>
   </div>
 </div>
-
+<p class="note" id="t-note"></p>
 <script>
 "use strict";
-/* ══════════════════════════════════════════════════════════════
-   PLOTTING — matplotlib-like axes on a canvas
-   ══════════════════════════════════════════════════════════════ */
-const PAL=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
-function fit(cv,ratio){
-  const dpr=Math.min(devicePixelRatio||1,2), w=cv.clientWidth||700, h=w*ratio;
-  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); cv.style.height=h+"px";
-  const c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); return [c,w,h];
+const ICON={"home":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAXZJREFUSInt1LFLllEUBvDfSSPFJTfHlpoih1YhSjLaam/LocgG+xMaXBoKarP+ASF0iZbmmgKnaq4hKS3bTMvT4BVu76ff91oKCR048N5zOM/z3HPOeyMzHaQdOVD0/wSHiyAiLkTEx4j4HBGXq/iHiMiI2IyIiY7CzOzpuIENZPEfmC65L1X8SkdtD+A+PKwAHmCmOs9itRtB7PajRcRxzOFiUX8L3zCATTzGsUbZ1cxc6NkinMS7omoZ53G3UnoPY1iqYu1ahPGqr29wBk8bQIlnOI3FKjbVlQA3q2E+L+CLO4BnJWAU8+X8E3c6CGyt66Oq8D7O4VMX8G1fKXOqh/8E/TXBcOnnOiZxHd9bgG/7BqZwDWulxSO/bVFEnMVgueZLf2aXbK1tX2a+wq5Dbqu86R1b1L8HdbN4Ub7HcLtN0V4IXmfmHETE0bYE/85rup8Eq3+B97UZ2PGxi4hTGGqE32fmSskP40Qjv5aZb1sR7Kf9ArsbUbWu3OyGAAAAAElFTkSuQmCC",
+"home_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAArhJREFUaIHtmDtoFFEUhr8Tgxg1+Ir4gAhBTAoVfICihaRQEDYgmFRa2RmwEB9VFCwU7GwEK2MXwYCIFsFGRBMliKTRJoiCEYMo+Aw+s8di7uo6uXf2unt3JyHzw4Fh7j9z/n/m/DszK6rKTEZd2gIqRWYgbWQG0kZmIG1kBtJGZiBtVMWAiDSJyA0R+WaqX0SWOLiDIqKxmhSRbq9mqhq0gPXAc0BjNQq0WvjvLFwFLvj0C3oHRCQHPARaLMvrgGER2R2yZzADInIcuAk0JtAWAwPe4+GDACMzF7iMfQz6gOuOtYvAHCocoUrFNwH3LM3zQI/hCHDOIfI28DEVA7jDOgHsN5yNQJvZPgh8dYitrQEgB3yyNB0DNhvOPuAz8AHYa/ZtB8ZTNQCcACYtDYeBlYbTY8aosPYLOGbWmoGRmhsgCmuvo1kfMA9oMNsuUb3mPAtwhzu8AWA5cN/SJA+cMpzVwCOPKzsErCA53OEMABuAF5YGE0Cn4WwDXnvOtgIvgU3m2APYw/0My5P7vwwAHbjDuqXMX5fiC9BVItzvgT1lGQBO4g7rKqKn+PkyhMdH8IwZJ1e4fwJHvA0QheyKo+FVorA2ArcqFF9c/cB8ksN9CahPNAAsBQYdV+q04bQATwKKL9QIsMbcjbMOzh1gUZKBTstBxbPajvvdJUS9AXaWCHdHkoE6ojfKAvkVf8N6GPhRRfGF+g4ccoT7GiClMrAQeIwJq9l3tAbC49VtejcX6WmI660nBlX9AmyN7W6L82qAVgBVHWOqnj/IPurTxpQRCoC3RB85NrQDy0I2q4aBp6raZVsQkQfAjpDNZvwIZQbSRmYgbcwaA1pVFXbkfUi+Bu5SWxN53A/DfyDmja80UWQXsJbogyMJ46o64DhHjugfiSQoMKqqQ166fA1MV8yaEE9b/AYHSRClnvMAQQAAAABJRU5ErkJggg==",
+back:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAR5JREFUSIm1lLFKA0EQhr8/EUHF9FaKTd4hL2BnbxFSBSvNVb6GWNsLiTY+gGjvE+QBTGFjY3eGsQiRY83ezmWTgYFlj3++uZnZkZmxTWttNfo6AEmnko7dAjNzO3AFzIESGLg0DYJfA1bxOXCW0rlKJGkE3AXXLaCXXSJgFGS+9BlwklWiRPBuVg+AIjd4FLCp4GaGwpcsqQBuIy37AD4Tbf0GhmY2/ddk4DKSeVN/jo1pkcjOa4fLQwh42RCg/DsFJWoDY/LKUwLn0SlKQN6BI6BT47ueMd2pgbwBB1nvoAKZ1ED2swAOyCuwlwWoQB4jkJuUPrmuzewHuACeVnz+SundO2XFn9zDYtU02kV1JqkN9FnM+oM5xI0A69gvQ2TbY/OHay4AAAAASUVORK5CYII=",
+"back_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAAg5JREFUaIHtmb1LHEEYh5/RYGvhmTaCH43YpIgEm2BnI/4b4vlxrX+BIKQKpBdJFSJYWijYWfrViDZnAuJx4J3YiOdrcXfkvI+9ndkZ9z3wB2+zu7PzPPsxs8sYEaGX05c2QNK8C6Sdnhf4ELoDY8wnYB54AH6LSNlrByISrIBF4AmQWhWBr177CAifbQBvrDIwo1ogAr5e98AXlQLAchf4eh2qE7CAr1efGgFgxRI+r+YOOMALkFUh4Ai/4e3OJ4RfTRM+kYAGeGcBLfBOAsCaFnhrAW3wVgIa4UUEU4OLjDEmB3zveuDrlIA/lm3apQIcAVsi8tiyN8aVz2F/5UPUjvUjpAi+XtPNjB1/KY0xc9g/NqHzuXlD1D/xUkAQ1/Q3b4gS+BgQxFuiBPbejCJ+WobMKIFN4CQci1OKLVu6jEIZ4Jj0Rx8B7oBB65lYicQl8C3JTJwB9oGprgf/TwlYAC4s2rRLBSiIyHPbvRbfQhmq74TNlfsHTKj4mEsoMa5CoCYx7CDxFxhTIdAgcapBwr2hm8Q1MKpCQItE8hNUJc4sJfLAiAqBBBK7PvqONZHFiTFmGDgAJmM2qQAD0mmCihlva2QiUgBmgfOYTe6SwoPnRT4RuSW+xA9fnXovqj9D53R+/rfxsDbg7SW2lPgF9HvrJ5RATWII+AncAFfAuk94r6NQWun5lfqeF3gBKjvAnb7bVwoAAAAASUVORK5CYII=",
+forward:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAQdJREFUSIm1lD9OAlEQh78R/NOAHbEwQOMlLLmBIfEM1mxlbPUAnsAQ7iB0JBxEr2BLKMYCVh6bfb6Zl91JfsV7yfy+2Z2ZJ6pKm3HWqrsHICK3InLnJqhqUsAU2AIKPFty/nIN5vfA7mBe6qVJQFExd0EsgBvgKxdi7cEwF2JvFoyAby/EDMiFdIM5HwMfwHVisjuR+1cRQVXfavcAWEQq86oIvyDc5F6icmvMwkMI2DUEWJ+cgl804fgc5OoTuIxOEXAO9P/RANhYzb17cAWsPOaeTc4yt75FF7nmVsBTrnl1D2LxU3O3BB5UdZvMNvbg3Vt5KTkYJENEHtmP6lxVzUtpBuTGL/zMDtAHluTmAAAAAElFTkSuQmCC",
+"forward_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAAfNJREFUaIHtl79KXEEUh79jdhELIwbWN0hhK0iKpFvIE9inEiSQJ7A3/gl2mjxEIAQLG/v0bm8TJEIgIUklBk+Kexc27Ny9c3fPmdkL/mCqObv3+2bmzp0RVaXNWcgNMGseBHKn9QId6z8UkRVgC1gCPqvqV+tn/BdVNWvAC+AnoGW7A7YtnzH2TGP4PyPww3YP7My1APCsAt5dwkrgywR4VwkL+G4EvJuE1Qxc55KwEnjTQMBUwm4qYS+HhJlAKfE2tYSpQCmxn1LCXKCUOEgl4SJQShymkHATKCWOvCVcBUqJd54SweO0iCwCr4BN4FGopmF+A48jawU4FRFU9UNtdWDEBDij2ah5tKiZCAk8nwP4aInQlXKjdtrSZbicXlYVhAQs1rxlBHhd1dmWS/1aVUdIQB1Bps1FVUdI4IcjyDQZAMeVvYFd6AnFvp17B1LgEug1/hIDfeBq3uFVFSmBxyIiC0CP2XeldeATsNzgNwOgr6rfayudz0HrwA0OI+9+mEsB7yaQCt5FICW8uUBqeFOBHPBmAsDTHPCWAuc54FUnfMhiIyJd4Jbi2BuT+I9URCyO03+BX5G1pvBgIKDFFL6PKDWHHwJYvAMd4CMJ1rzLS1wj4QZvKjAisUtxFP8GnACrXvAmu1DutOVSX5nWC/wDCDO0hf1f5TcAAAAASUVORK5CYII=",
+move:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAYNJREFUSIm1lTtLA0EUhb8TggqBEEJqLewFtRFB8JF/oNhZiV2wM621ttrYa6OFRbooFkYrrfQPCIKViBAVFORaOOo4yW52Vzxw2d37OGd25s6MzIz/RC5NsqQlScupFMwskQE1wJzVE9dlIE8lkpU8sYjiFlmSgDZQiEh5A4pm9hrFEbvI9qk+CkwDDS905HwjceRfJEnXYYefqdlNWtfxB5ImJRVjR9UFkgqSpkJ/LkiqAefAWloBYBU4lVTvKuDIt9znQAaBfvfc+CUS0YpPwF1gz178pUu8TZcWBpggus//ajMAReDiH8ivgLLMDEkl4BgYdzPXAPaCOV4B5tz7GbAdxBecAVwDs2Z27/d5Cbh06ptp9wGw7o280rEPzOwRqAIHQJP0OAEOv0fukPcznMhiBnLMrAW0Qn+qCycLYk9TAEn7wDAwCFSc+wG4AW6BeTN7j6rPRwU8DAFjga/srHd9glPU766wzys96xMe1aFIIvKeN5oPtxmbQB9Q9VsxDh9ePiFv5GfibAAAAABJRU5ErkJggg==",
+"move_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAAqFJREFUaIHtmL1rFEEYxn9PkstBBEEugkmlgjaWFmlFsbBNYQr/iIC2ud5S7AVBiB8QxMbaf8DCCxIVFa1SRIvgiaiJr8Xumb3cze7ezuyuKz4wcDs7777PM3PM+yEzo8mYqpuAL2bK+rCkWWAV2Adum9leKY7MLPgA2sBTwOKxAbRK8VUB+VJFVEW+NBFVki9FRNXkg4uog3xQEb7kBTwpQH4w7vsKUEykECTNAzuFPxBhzsy+FTX2jcSfgcce9us+5AG/EwCQNA2cBFrx1BJw17F8BejFv38AH8zsl49/71TCzPaBd4NnSYspyz+a2Stfn0k0Ppn7L6BupAqQ1Jb0SFJf0o2qSEnqSvoq6Z6kVuriCSLsHjCVI7hdxB24lnLYzzFBxB57ApLaRPf7lcT0NCUWQAm0Dz0vAw9cJzEiwEG+bgxEjGzg0EQO8qck/cxwtpDyblHS6Qz7o475ZeChpBVLlqcBssqqxwYwM5SNNoj8iIiBgJt/AalJRzd5C3VoHuaBPydwAnhN/buad/SAzlBFRnR7NEFEDzg+tiKTtAA8A846ju0aUactDeeAruPdGvA2w/4IcMfxbhO4ZGYHVeCYUJ52ErMVpBLHHLZDO+9MJcxsG7gAvMnYqSoxuvMxxuZCDhEGeJV/OXG4CewkDynpdELEVjy1bmV1mIf9fuGgUfCCFPKQkV2a2bak80RFe5V/qavAGeC9mX1PW5iZHsdtj62sdSERn3Qun/92SdkENF5AiO70GvAJ2I1HH3cg6yfW7QDX627udmLyPqi1ubsLvPSwf+7b3PUSEF93lykWIzYJ0Tjw/Q8WTMXHJmaFfIf4yIQigpEPKiCniKDkgwvIEBGcfCkCHCJKIW/mGQfSEJent4jy+1Uz840XY/EbWU5kqYWiQGsAAAAASUVORK5CYII=",
+zoom_to_rect:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAbRJREFUSIm1lb1KXFEQx3//KCjYabFgYZNYGGwVKwVFQiCQIoUSiE3U9HaCKL6ApEiTB4iNhcFHELRJHkAjSsCkSJQICpqFXcdi74W5Z+/HCdGBgcvc/8feOXNmZWY8ZDx6UPUyA0ldkuYk7Uo6lfRH0ndJO5KeS1KUg5m1JbAM/AasJL8Bs3n8jFaO+IcKYZ+3wEK0QY54E/gMvAFeAovA3r+YePHJgHgIPC5o4Thw4bB1oFZlsO0Ix0B/6afDCHDlOKuFBsAA0HDguarDS3jvHecn0FlksOCA50BXpMFg0NaREJPegz43uQdmVi8aax9mdgTcuFJviEkNLKcWGyp4zoidudpTST1RytIw0O1Kp22gpJc1WqOW9vJd5Bl8dJyTqjH9RHYinlSITwF/HWejymCM7ET8IGcqkj6/Aq4d9pKCexOS1wITA/aBJWAeWKF1w0PMNTAdu+zyTGIy16Sov28Lfmm4q9bJboA2k7JDFPAM2AK+AgfAF2ADmAA6EtzrMpPKUYwc19DkBhj1q+K/wsw2af1nNJNSN/AifXlvCczQuhu/gCEzQ8mLe4tkzTTShXkHu78AJI6s+WwAAAAASUVORK5CYII=",
+"zoom_to_rect_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAA5pJREFUaIHVmUtIVVEUhr9ten0UUURZqQ0qHBSaoFI4KYRIGhQFTQoaBA4aRA2aNIiIiogmYdGoB70IogY9hkEFvdPeWKEpUWFJBCpFD3U12Lc43u7eZ+9zjnn7YU3uXvdf/7/f5xwlIvzPyBtrAXHx3xvIT4pIKVUElAKFwBAwICK9SfEb60ZdA0qpCcAaoAGoB+bzd4f0Aq3puCQibdGlGiAiXgFUAi1AHyCecQdYB6R86xr1eAgvBPahp4ev8MxoB+r/mQGgFniegPBgDAJ7gIJRNQA0Al8SFh+Mi3FMjLX42CaMu5BSqgq4C5RkTRiJh+gF+gi9uPOB2ejdaQkwyYHjlIisd8gbCUPPF6TF2HptGDgOVIeMYgnQDHSF8AmwOpEpBOwMKdQNLPYqBOOBwyG8vcDUWAaAMuCHpUg7UBp50cGWEBOH4hrYZSF/G0d8oMZ2S40BYGIkA0AK+GAhXxpXfLpOHnDLUmdTVAMrLaTnkhAfqFVlqdXmypN5nV6EGS2WNm+IyDPguqG5WilV7MKTaaDOkNctIjcdtfnghOH3fKDGhSDTQK0h756rIk/ct7SZOnME/hhQSqWAyYa8Jx6ifPAS+G5oK3UhCI5AoSVvwFWRD0RkGPhqaC5y4QgaGLTkpVxFRYCJe8jlz0ED39AncDZU+ihyhVJqJvqKkQ0fXTj+GBC9OT815NX7SXOGjfeVC0HmLtRqyKtRSs1ykuSHFZa2Fy4EmQYeGPLGARtdCF2hlJoCrDU0d4hIlxNRxvE+Db2tZTve+4BZCV4lDhrqCLA/0l0oTXzaQnwVyEtAfCP6gchUZ0EcAwstxAIci2MCfdp/tvBf9uIzFLkSYuIsHnf2AG9TiPhhPN8XmQrNCCkkwBtglctoAOXAkRA+AU56d4ql6DqHgoJ+WN8BLEtvAin04VQFbADOAz8dufqBhkQMpE3sdiycZHiZcJm3OW3CdfFtxXw+jKkJnx2kGnickLhB4ADwOq4J322wANgMdMYQfgaYl+ariGvCy0DAiAKWAxeAnhABw+hH0m3A7CxcFQ4dYjQR+RNTEEqpMvTVeCZQjH4Y+YS+Er8Skf6Q/5ej31DMsaQNAE0icnvEr1FGYDQCfdi5jERd7Ck0yiY6QkzcSHwKJYn0dLoGzLWk5YvIEOTgh24ReYf+KNJpSOn5LR5y0ACAiLxHm+jI0rw3MzlnA5gOHEW/MX8ONI/KNjqWyMkp5INfkG9PhY1CxMkAAAAASUVORK5CYII=",
+subplots:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAV9JREFUSIndlU8rRGEUxn/PdE3KhpJJSnZio5SSGBtb22FtZ+UDKEsfQBZmyRfAF5hSw0IpJVF2FkiIbHFs3hnvnXune93cyFtPnfd07vn73PPKzMjzFHL1/n8DSCpLupR05XAhaSJLgMBzOgL0uusMMNxiOyupM6XfZzM7A8DMcEzaA8xhy5MbqMbo2qHW8Bt8BWUD2HfyUExW18BSygpumlIjkg9gHnj3MnoD5uJsk6C8f7Qg2SR6JHUAC0DRqT6AXTN7iRhnKRuoEB3sapytT9N1oJyyiKMYXZ+kupNPzGwFwi3qBkopAxRjdAXv+56mNmOLFom2aO3HWCSpC1gmPORtM7uN2P7qeyCpKunOw6EkfSeAz6JxwkN+AqZbdCVgTFJ/gt9HMzsG2i47A+rAOdmWXi0yZElTwICXxQOwCYy2ZDcJDCZUcG9mB6EK2tBxB3j1cIojxp9Zdrm/yZ8o4mq2upPnWAAAAABJRU5ErkJggg==",
+"subplots_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAAjhJREFUaIHtmD1rFFEUhp/XzyjiJ7GytLNQsBNFQWTB2kYsLCwCImpjpSCmEWzyC+xstNHGJk2IECz8CRbGwkKMGrTYDRavXVg3Mzvnzt2dYeM+cJsz77xzLveeO2dGtplkdrSdQC7TCbTNdAJtM51A2/xfE5A0J6krySVjTdL5cSVbmFPKm1jSOnCoQrZou5OVVQKpW2hvQDNTJ5G67BoMSLoG3C3Q3o6aDvHIZcH26/7AlgkAJ4ALBfGqrRPxyOXVYGDiT6GiFVgBHhbEPyf4lnnk8n4wkHoKdaku0ne2LyYmVpvULfR1RJqRkboCZ4DHlK/Cd+C+7bUR5BbLafpJ2TJFp9BYkbQT2FdyecP2nxS/RldAUgf4PWT0JN1J8myyBiQtAZcqZN9sH496Nl0DewKaSMO4SVEzdwN4kGIS5GlUKOks8LzIw/bL/kBREc8Cp9NyCzGboD1QksMWj215jC4xnl5+Gbge1H4syWF5MND0KbQCnKuQ/bId/vZoegt9GZFmk6bfxHPAT+BYyfUuMJ9iOG3m2iZrC0naDxwsudyzvZ7jH8J2rQF0gB7gIWO+rn901K4BSW+BqxWyDdtj/dGVUwO7A5pI85ZFUTN3E3hUcd+z6AMknQLeJOZVxhPbL/oDRUV8BDhZYXQ04aEzAb8ohwcD2/IYXQRuVdz3AbgcfMZqwC9K3p+5f26UFoErFTLbHusq55ivBjSfMvxD5LyJ7wE/gLIP8B6wkOEfYtrMtc3ET+AvmIYILEPX3ygAAAAASUVORK5CYII=",
+filesave:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAADsAAAA7ABJ8QPrQAAAWxJREFUSInVlr1KA0EUhb8bgrERBMEylRbRBwgWggbtbMRCUKt0qVJYamvjO9jZCIKK4gvYCVZBtA1apBIUlYA/xyKzuK6z2WRxAx4Y5nL3zjlz7/ytSSJL5DJlB/KBYWY5oAwM9TG+DVxJeo+NkIQr0w6gFO0OmAt4oi1comngBagCB565HLpvVWDf+fZcxudmVknK4Bh4cPamZ6a1UOy68y0AJaAFvAKVbhmkgqQbYB54As6imfzJLvKITKURsBg7LLIIFIB64M9HAx0+PL4tM1tzdtEXJ6lhZvfARJLAEbAKjEX8465vA6fApWesCGXoFZDUBGZixPtC5lfF4O6iMMxsEjjh9xrE4RFYkdToSQBYonNCL4DnBPJhOmdgGehZIChdTdJ1N3YzKwJNYsr9/xd5oLtIQMHM6sCs822YWSuBY9T1ZTd2xHE51u87fpt0L5qv7Qa8Fv6rMLMS/b3JPrwBt5I+gZ8CWeALA9y6UzVKmtYAAAAASUVORK5CYII=",
+"filesave_large":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYQAAB2EBlcO4tgAAAnJJREFUaIHtmr9rFUEQxz+TaF5CokZBK7Gw0tSGqH+AadQilZ0iWNiI2GhhJVaC/4Cp7ew0GF8pFhIQC3+AWloIkaci6oP4YyzuJPvWvbvdu/eyd3BfWNidm9mZ780yu9yeqCpNxljsAKqiJRAbjSewzSUUkWngDLBnhL5/Ae+BFVXtl55FVQcaMA08BnSLWg+4BUzZsfg0F4GzWxi82Z4Cs6EEXEtot9H/Abw0xvOA5GU0xSvguyWbAeaM8TqwC+ik4wWgKyInVPWLh48EjgxcZvOtPLOe9Sl+k8+dqU6IvzD0rgL7gFXLfo2ATIyiCn3NeFFqP1PVdeA0sGKI50kyMevjLHoZVdUNYImSJKITgGokakEAypOoDQHIJbEqIlMum1oRgEwSC8B1l37tCMAAia4hviAiE7buKAjkbXTe/lIS54DfqWgvsGjrOQ9zFXFURG4D3yz5TuBIyESq+kFE3gGHUtF+WyeUQB+YLNDZDlzxnMsHG0Z/3H4YuoTuBupnoQc8GsZEoRm4BHwEjpew/YfPwE1VfVPSfgBBQaTnmRvDcDws1LKMhqAlEBstgdgIqkIiMk7yBaFKGc3CT+AJcE1V//gahQZxBzgfaBOCY8AO4KKvQegSWgrUL4MgH6EZMM9By8DbQPssHGYzs0VnrQFUWcf3VLVbrFYMETlJyaXZ+CrUEoiNlkBstARio/EEXBuZefM9JyKvjXHH6C+LiH2JURYzZt/yeTAjNsBNoGf0J0m2eRcOeIcXhrEcn73/JI6blA7wkDj3ZHntATBhxyuufyVEpAOcYrTXrL5Q4BNwP/3cOAAngSah8VWo8QT+AinIt5vrPaigAAAAAElFTkSuQmCC"};
+const T={
+"ko": {
+"h1": "ISPhO 2024 T1 — 열산화",
+"h2": "문제지와 풀이를 보고 다시 만든 A.py · B1.py · B2.py · gen_data · B.py · B7.py · B8.py — 2026 FBG Writer 와 같은 창",
+"note": "주최측 프로그램은 공개되지 않아 문제지에 적힌 입력·출력 형식과 풀이의 결과에 맞추어 HaslaLab 이 다시 썼습니다. 창의 글자는 문제지가 인용하는 대로 영어로 두었습니다. <b>Part A</b>: A_in.txt 의 줄마다 (이름, θ1, d) 로 Ψ(λ), Δ(λ) 를 그립니다(분산 없음). <b>Part B.1–B.2</b>: 동료가 Φ 를 적어 두지 않은 두 시료의 측정값입니다. Φ 와 d 를 넣으면 근사 곡선과 오차를 보여 줍니다(Si·SiO₂ 의 분산 포함). <b>Part B.3–B.7</b>: B_in.txt 에 (이름, Φ, T, t) 를 적고 <b>Run gen_data</b> — t = 0 에 순수 Si 를 노에 넣고 2분마다 Ψ, Δ 를 잽니다(언제든 Stop). <b>Run B.py</b> 는 각 측정의 d 와 그 오차를, <b>Run B7.py</b> 는 d ≥ 25 nm 인 점으로 B 와 B/A 를 구합니다. <b>Part B.8</b>: B8_in.txt 의 표로 ln B, ln(B/A) 를 1/T 에 대해 그리고 기울기를 줍니다. 그래프 아래 도구 모음은 matplotlib 과 같습니다(확대·이동·처음 범위·저장). 아래쪽 <b>Save data as CSV</b> 는 지금 탭의 데이터를 저장합니다. θopt, Φ, d, B, B/A, ΔEa, ΔEb 는 직접 찾아야 하며, 숨은 참값은 창을 열 때마다 조금씩 달라집니다.",
+"msg": {
+"row": [
+"입력 오류",
+"이 줄을 읽을 수 없습니다: {}\n줄마다 이름과 숫자들이 있어야 합니다."
+],
+"theta": [
+"범위 밖",
+"θ1 은 20° 와 80° 사이여야 합니다 ({})."
+],
+"d": [
+"범위 밖",
+"d 는 0 과 250 nm 사이여야 합니다 ({})."
+],
+"empty": [
+"입력 오류",
+"A_in.txt 에 데이터 줄이 없습니다."
+],
+"num": [
+"입력 오류",
+"숫자를 입력했는지 확인하세요. 소수점 기호(0.0/0,0)도 확인하세요."
+],
+"phi": [
+"범위 밖",
+"Φ 는 20° 와 80° 사이여야 합니다."
+],
+"brow": [
+"입력 오류",
+"B_in.txt 에는 한 줄이 필요합니다: Name  Phi  T  t"
+],
+"T": [
+"범위 밖",
+"노의 온도는 800 °C 와 1200 °C 사이입니다."
+],
+"tmax": [
+"범위 밖",
+"t 는 0 과 200 min 사이여야 합니다."
+],
+"noexp": [
+"FileNotFoundError",
+"“{}” 이라는 gen_data 결과가 없습니다. 먼저 gen_data 를 실행하세요."
+],
+"noproc": [
+"FileNotFoundError",
+"“{}” 의 res 가 없습니다. 먼저 B.py 를 실행하세요."
+],
+"thin": [
+"B7.py",
+"Final layer is too thin to approximate"
+],
+"pos": [
+"입력 오류",
+"B 와 B/A 는 양수여야 합니다: {}"
+],
+"b8need": [
+"입력 오류",
+"B8_in.txt 에 두 줄 이상 필요합니다."
+],
+"nodata": [
+"저장할 데이터 없음",
+"먼저 계산하고 그리세요."
+]
+},
+"say": {
+"idle": "입력을 정하고 실행하세요.",
+"A": "A.py: 곡선 {} 개",
+"B12": "{}.py: error = {} deg",
+"gen": "gen_data {}: 측정 {} / {}",
+"genDone": "gen_data {}: 측정 {} 개를 남겼습니다.",
+"proc": "B.py: {} / {}",
+"procDone": "B.py {}: d(t) 를 res 에 저장했습니다.",
+"b7": "B7.py {}: d ≥ 25 nm 인 점 {} 개로 맞췄습니다.",
+"added": "B8_in.txt 에 한 줄 추가했습니다.",
+"B8": "B8.py: 온도 {} 개",
+"saved": "{} 로 저장했습니다."
 }
-function nice(span,n){ const r=span/n, p=Math.pow(10,Math.floor(Math.log10(r))); for(const m of [1,2,2.5,5,10]) if(m*p>=r) return m*p; return 10*p; }
-const fmtTick=(v,st)=>{ const dg=Math.max(0,-Math.floor(Math.log10(st)+1e-9)); return v.toFixed(Math.min(6,dg)); };
-/* series: {x:[], y:[], err?:[], col, label, mode:"line"|"pts"|"both"} */
-function plot(cv,o){
-  const [c,w,h]=fit(cv,o.ratio||0.42);
-  c.fillStyle="#fff"; c.fillRect(0,0,w,h);
-  const L=62,R=14,Tp=o.title?26:12,B=40, pw=w-L-R, ph=h-Tp-B;
-  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
-  for(const s of o.series||[]) for(let i=0;i<s.x.length;i++){ const x=s.x[i], y=s.y[i]; if(!isFinite(x)||!isFinite(y)) continue;
-    const e=s.err?s.err[i]:0; x0=Math.min(x0,x); x1=Math.max(x1,x); y0=Math.min(y0,y-e); y1=Math.max(y1,y+e); }
-  if(o.xr){ x0=o.xr[0]; x1=o.xr[1]; } if(o.yr){ y0=o.yr[0]; y1=o.yr[1]; }
-  if(!isFinite(x0)){ x0=0; x1=1; y0=0; y1=1; }
-  if(x1-x0<1e-12){ x0-=1; x1+=1; } if(y1-y0<1e-12){ y0-=Math.abs(y0)*0.01+1e-3; y1+=Math.abs(y1)*0.01+1e-3; }
-  if(!o.yr){ const m=(y1-y0)*0.06; y0-=m; y1+=m; } if(!o.xr&&o.padX){ const m=(x1-x0)*0.04; x0-=m; x1+=m; }
-  const X=x=>L+(x-x0)/(x1-x0)*pw, Y=y=>Tp+(1-(y-y0)/(y1-y0))*ph;
-  c.strokeStyle="#000"; c.lineWidth=0.8; c.strokeRect(L,Tp,pw,ph);
-  c.font="10.5px 'DejaVu Sans',sans-serif"; c.fillStyle="#222";
-  const sx=nice(x1-x0,7), sy=nice(y1-y0,6);
-  c.textAlign="center"; c.textBaseline="top";
-  for(let v=Math.ceil(x0/sx)*sx; v<=x1+1e-9; v+=sx){ const x=X(v); c.strokeStyle="#e8e8e8"; c.beginPath(); c.moveTo(x,Tp); c.lineTo(x,Tp+ph); c.stroke();
-    c.strokeStyle="#000"; c.beginPath(); c.moveTo(x,Tp+ph); c.lineTo(x,Tp+ph+4); c.stroke(); c.fillText(fmtTick(v,sx),x,Tp+ph+6); }
-  c.textAlign="right"; c.textBaseline="middle";
-  for(let v=Math.ceil(y0/sy)*sy; v<=y1+1e-9; v+=sy){ const y=Y(v); c.strokeStyle="#e8e8e8"; c.beginPath(); c.moveTo(L,y); c.lineTo(L+pw,y); c.stroke();
-    c.strokeStyle="#000"; c.beginPath(); c.moveTo(L-4,y); c.lineTo(L,y); c.stroke(); c.fillText(fmtTick(v,sy),L-6,y); }
-  c.font="12px 'DejaVu Sans',sans-serif"; c.textAlign="center"; c.textBaseline="bottom"; c.fillText(o.xl||"",L+pw/2,h-3);
-  c.save(); c.translate(13,Tp+ph/2); c.rotate(-Math.PI/2); c.textBaseline="middle"; c.fillText(o.yl||"",0,0); c.restore();
-  if(o.title){ c.textBaseline="top"; c.fillText(o.title,L+pw/2,5); }
-  if(!(o.series&&o.series.length)){ if(o.empty){ c.fillStyle="#98a6b4"; c.textBaseline="middle"; c.fillText(o.empty,L+pw/2,Tp+ph/2); } return; }
-  c.save(); c.beginPath(); c.rect(L,Tp,pw,ph); c.clip();
-  for(const s of o.series){ const col=s.col||"#1f77b4";
-    if(s.mode!=="pts"){ c.strokeStyle=col; c.lineWidth=s.lw||1.5; c.setLineDash(s.dash||[]); c.beginPath(); let up=false;
-      for(let i=0;i<s.x.length;i++){ if(!isFinite(s.y[i])){ up=false; continue; } const x=X(s.x[i]), y=Y(s.y[i]); if(up) c.lineTo(x,y); else c.moveTo(x,y); up=true; } c.stroke(); c.setLineDash([]); }
-    if(s.mode==="pts"||s.mode==="both"){ c.fillStyle=col; c.strokeStyle=col; c.lineWidth=1;
-      for(let i=0;i<s.x.length;i++){ if(!isFinite(s.y[i])) continue; const x=X(s.x[i]), y=Y(s.y[i]);
-        if(s.err){ c.beginPath(); c.moveTo(x,Y(s.y[i]-s.err[i])); c.lineTo(x,Y(s.y[i]+s.err[i])); c.moveTo(x-3,Y(s.y[i]-s.err[i])); c.lineTo(x+3,Y(s.y[i]-s.err[i])); c.moveTo(x-3,Y(s.y[i]+s.err[i])); c.lineTo(x+3,Y(s.y[i]+s.err[i])); c.stroke(); }
-        c.beginPath(); c.arc(x,y,s.r||2.2,0,7); c.fill(); } } }
-  c.restore();
-  const named=o.series.filter(s=>s.label); if(named.length){ c.font="11px 'DejaVu Sans',sans-serif"; c.textAlign="left"; c.textBaseline="middle";
-    const wd=Math.max(...named.map(s=>c.measureText(s.label).width))+40, bh=named.length*15+8, bx=o.legendLeft?L+8:L+pw-wd-8, by=Tp+8;
-    c.fillStyle="rgba(255,255,255,.88)"; c.fillRect(bx,by,wd,bh); c.strokeStyle="#c8c8c8"; c.lineWidth=0.8; c.strokeRect(bx,by,wd,bh);
-    named.forEach((s,i)=>{ const y=by+11+i*15; c.strokeStyle=s.col; c.fillStyle=s.col; c.lineWidth=1.5;
-      if(s.mode==="pts"){ c.beginPath(); c.arc(bx+15,y,2.5,0,7); c.fill(); } else { c.beginPath(); c.moveTo(bx+6,y); c.lineTo(bx+26,y); c.stroke(); }
-      c.fillStyle="#000"; c.fillText(s.label,bx+32,y); }); }
+},
+"en": {
+"h1": "ISPhO 2024 T1 — Thermal Oxidation",
+"h2": "A.py · B1.py · B2.py · gen_data · B.py · B7.py · B8.py rebuilt from the sheet and the solution — in the window of the 2026 FBG Writer",
+"note": "The organisers' programs were never published, so HaslaLab rewrote them to the input and output formats on the problem sheet and the results of the solution. <b>Part A</b>: each line of A_in.txt (name, θ1, d) gives Ψ(λ) and Δ(λ) (no dispersion). <b>Part B.1–B.2</b>: your colleague's two samples, measured without noting Φ. Enter Φ and d to see the approximating curves and the error (dispersion of Si and SiO₂ included). <b>Part B.3–B.7</b>: write (name, Φ, T, t) in B_in.txt and <b>Run gen_data</b> — pure Si goes into the furnace at t = 0 and Ψ, Δ are taken every 2 min (Stop at any time). <b>Run B.py</b> picks d and its error for each measurement, <b>Run B7.py</b> fits B and B/A to the points with d ≥ 25 nm. <b>Part B.8</b>: from the table in B8_in.txt, ln B and ln(B/A) against 1/T with the slopes. The toolbar under the plot is matplotlib's (zoom, pan, home, save). <b>Save data as CSV</b> at the bottom saves the data of the active tab. θopt, Φ, d, B, B/A, ΔEa and ΔEb are yours to find; the hidden true values change a little every time the window opens.",
+"msg": {
+"row": [
+"Input error",
+"Cannot read the line: {}\nEach line needs a name and numerical values."
+],
+"theta": [
+"Out of bounds",
+"θ1 must be between 20° and 80° ({})."
+],
+"d": [
+"Out of bounds",
+"d must be between 0 and 250 nm ({})."
+],
+"empty": [
+"Input error",
+"A_in.txt has no data lines."
+],
+"num": [
+"Input error",
+"Please ensure you have entered a numerical value. Also check decimal delimiter (0.0/0,0)."
+],
+"phi": [
+"Out of bounds",
+"Φ must be between 20° and 80°."
+],
+"brow": [
+"Input error",
+"B_in.txt needs one line: Name  Phi  T  t"
+],
+"T": [
+"Out of bounds",
+"The furnace works between 800 °C and 1200 °C."
+],
+"tmax": [
+"Out of bounds",
+"t must be between 0 and 200 min."
+],
+"noexp": [
+"FileNotFoundError",
+"No gen_data result named “{}”. Run gen_data first."
+],
+"noproc": [
+"FileNotFoundError",
+"No res for “{}”. Run B.py first."
+],
+"thin": [
+"B7.py",
+"Final layer is too thin to approximate"
+],
+"pos": [
+"Input error",
+"B and B/A must be positive: {}"
+],
+"b8need": [
+"Input error",
+"B8_in.txt needs at least two lines."
+],
+"nodata": [
+"Nothing to save",
+"Calculate and plot first."
+]
+},
+"say": {
+"idle": "Set the input and run.",
+"A": "A.py: {} curves",
+"B12": "{}.py: error = {} deg",
+"gen": "gen_data {}: measurement {} / {}",
+"genDone": "gen_data {}: {} measurements kept.",
+"proc": "B.py: {} / {}",
+"procDone": "B.py {}: d(t) saved to res.",
+"b7": "B7.py {}: fitted to {} points with d ≥ 25 nm.",
+"added": "Appended a line to B8_in.txt.",
+"B8": "B8.py: {} temperatures",
+"saved": "Saved as {}."
 }
+}
+};
+let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
+const $=id=>document.getElementById(id);
+
+/* ── a small matplotlib 3.7 for one Axes: MaxNLocator('auto'), AutoMinorLocator,
+      ScalarFormatter (offset, order of magnitude, sig. figures), format_data_short ── */
+const MPL=(()=>{
+  const STEPS=[0.1,0.2,0.25,0.5,1,2,2.5,5,10,20];         /* MaxNLocator._extended_steps */
+  const log10=Math.log10, floor=Math.floor;
+  /* Python's float divmod, which floor() of a quotient does not always reproduce */
+  function pyDivmod(v,w){
+    let mod=v%w, div=(v-mod)/w;
+    if(mod){ if((w<0)!==(mod<0)){ mod+=w; div-=1; } } else mod=0*Math.sign(w);
+    let fd;
+    if(div){ fd=Math.floor(div); if(div-fd>0.5) fd+=1; } else fd=0*Math.sign(v/w);
+    return [fd,mod];
+  }
+  const pyFloorDiv=(a,b)=>pyDivmod(a,b)[0];
+  const pyMod=(a,b)=>pyDivmod(a,b)[1];
+  function scaleRange(vmin,vmax,n){
+    const dv=Math.abs(vmax-vmin), meanv=(vmax+vmin)/2;
+    let offset=0;
+    if(!(Math.abs(meanv)/dv<100)) offset=Math.sign(meanv)*Math.pow(10,floor(log10(Math.abs(meanv))));
+    const scale=Math.pow(10,floor(log10(dv/n)));
+    return [scale,offset];
+  }
+  function edge(step,offset){
+    const closeto=(ms,e)=>{
+      let tol;
+      if(offset>0){const digits=log10(offset/step); tol=Math.max(1e-10,Math.pow(10,digits-12)); tol=Math.min(0.4999,tol);}
+      else tol=1e-10;
+      return Math.abs(ms-e)<tol;};
+    return {
+      le:x=>{const d=pyFloorDiv(x,step),m=pyMod(x,step); return closeto(m/step,1)?d+1:d;},
+      ge:x=>{const d=pyFloorDiv(x,step),m=pyMod(x,step); return closeto(m/step,0)?d:d+1;}};
+  }
+  function nonsingular(a,b){
+    if(!isFinite(a)||!isFinite(b)) return [-0.001,0.001];
+    let flip=false; if(b<a){[a,b]=[b,a];flip=true;}
+    const maxabs=Math.max(Math.abs(a),Math.abs(b));
+    if(maxabs<(1e6/Number.MIN_VALUE)*Number.EPSILON*0 + 1e-300){ a=-0.001; b=0.001; }
+    else if(b-a<=maxabs*1e-13){ if(b===0&&a===0){a=-0.001;b=0.001;} else {a-=1e-13*Math.abs(a); b+=1e-13*Math.abs(b);} }
+    return flip?[b,a]:[a,b];
+  }
+  function majorTicks(vmin,vmax,nbins){
+    [vmin,vmax]=nonsingular(vmin,vmax);
+    const [scale,offset]=scaleRange(vmin,vmax,nbins);
+    const _vmin=vmin-offset,_vmax=vmax-offset;
+    const steps=STEPS.map(s=>s*scale);
+    const raw=(_vmax-_vmin)/nbins;
+    let istep=steps.findIndex(s=>s>=raw); if(istep<0) istep=steps.length-1;
+    let ticks=[];
+    for(let k=istep;k<steps.length;k++){
+      const step=steps[k];
+      const best=pyFloorDiv(_vmin,step)*step;
+      const e=edge(step,offset);
+      const low=e.le(_vmin-best), high=e.ge(_vmax-best);
+      ticks=[]; for(let i=low;i<=high;i++) ticks.push(i*step+best);
+      const n=ticks.filter(t=>t<=_vmax&&t>=_vmin).length;
+      if(n>=2) break;
+    }
+    return ticks.map(t=>t+offset);
+  }
+  function minorTicks(maj,vmin,vmax){
+    if(maj.length<2) return [];
+    const ms=maj[1]-maj[0];
+    const ne=Math.pow(10,pyMod(log10(ms),1));
+    const ndivs=[1,2.5,5,10].some(v=>Math.abs(ne-v)<=1e-8+1e-5*v)?5:4;
+    const st=ms/ndivs; if(vmin>vmax)[vmin,vmax]=[vmax,vmin];
+    const t0=maj[0];
+    const tmin=(pyFloorDiv(vmin-t0,st)+1)*st, tmax=(pyFloorDiv(vmax-t0,st)+1)*st;
+    const out=[]; const n=Math.ceil((tmax-tmin)/st);
+    for(let i=0;i<n;i++) out.push(tmin+i*st+t0);
+    /* Axis drops minor ticks that sit on major ones */
+    const tol=(maj[1]-maj[0])*1e-5;
+    return out.filter(m=>!maj.some(M=>Math.abs(M-m)<tol));
+  }
+  const fixMinus=s=>s.replace(/-/g,"−");
+  function fmtF(v,d){ let s=v.toFixed(d); if(/^-0\.?0*$/.test(s)) s=s.slice(1); return s; }
+  function pctG(v,prec,alt){ /* printf %#.Ng (alt keeps trailing zeros) */
+    if(v===0) return alt?(prec>1?"0."+"0".repeat(prec-1):"0."):"0";
+    const P=prec===0?1:prec;
+    const X=floor(log10(Math.abs(v)));
+    let e=X; let r=Math.abs(v).toExponential(P-1); e=parseInt(r.split("e")[1]);
+    let s;
+    if(P>e && e>=-4){ s=v.toFixed(P-1-e); if(alt&&s.indexOf(".")<0) s+="."; if(!alt) s=s.replace(/\.?0+$/,""); }
+    else { s=v.toExponential(P-1); let [m,ex]=s.split("e"); if(!alt) m=m.replace(/\.?0+$/,""); else if(m.indexOf(".")<0) m+=".";
+      const en=parseInt(ex); s=m+"e"+(en<0?"-":"+")+String(Math.abs(en)).padStart(2,"0"); }
+    return s;
+  }
+  function formatData(value){
+    const e=floor(log10(Math.abs(value)));
+    const s=Math.round(value/Math.pow(10,e)*1e10)/1e10;
+    const sig=(s%1===0)?String(s):pctG(s,10,false);
+    return e===0?sig:sig+"e"+e;
+  }
+  function scalar(locs,vmin,vmax){
+    if(vmin>vmax)[vmin,vmax]=[vmax,vmin];
+    const vis=locs.filter(l=>vmin<=l&&l<=vmax);
+    /* _compute_offset */
+    let offset=0;
+    if(vis.length){
+      const lmin=Math.min(...vis), lmax=Math.max(...vis);
+      if(!(lmin===lmax||(lmin<=0&&0<=lmax))){
+        const [amin,amax]=[Math.abs(lmin),Math.abs(lmax)].sort((a,b)=>a-b);
+        const sign=lmin<0?-1:1;
+        const oomMax=Math.ceil(log10(amax));
+        let oom=oomMax; while(pyFloorDiv(amin,10**oom)===pyFloorDiv(amax,10**oom)) oom--; oom+=1;
+        if((amax-amin)/10**oom<=1e-2){ oom=oomMax; while(!(pyFloorDiv(amax,10**oom)-pyFloorDiv(amin,10**oom)>1)) oom--; oom+=1; }
+        offset=pyFloorDiv(amax,10**oom)>=1000 ? sign*pyFloorDiv(amax,10**oom)*10**oom : 0;
+      }
+    }
+    /* _set_order_of_magnitude, powerlimits (-5, 6) */
+    let om=0;
+    if(vis.length){
+      let oom;
+      if(offset) oom=floor(log10(vmax-vmin));
+      else { const v=Math.max(...vis.map(Math.abs)); oom=v===0?0:floor(log10(v)); }
+      om=(oom<=-5||oom>=6)?oom:0;
+    }
+    /* _set_format */
+    let L=(locs.length<2?[...locs,vmin,vmax]:locs).map(l=>(l-offset)/10**om);
+    let range=Math.max(...L)-Math.min(...L);
+    if(range===0) range=Math.max(...L.map(Math.abs)); if(range===0) range=1;
+    if(locs.length<2) L=L.slice(0,-2);
+    const rOom=floor(log10(range));
+    let sig=Math.max(0,3-rOom); const thresh=1e-3*10**rOom;
+    const rnd=(x,d)=>{const f=10**d; return Math.round(x*f)/f;};
+    while(sig>=0){ if(Math.max(...L.map(x=>Math.abs(x-rnd(x,sig))))<thresh) sig--; else break; }
+    sig+=1;
+    const labels=locs.map(l=>fixMinus(fmtF((l-offset)/10**om,sig)));
+    let off="";
+    if(om||offset){ let o=""; if(offset){o=formatData(offset); if(offset>0)o="+"+o;} off=fixMinus((om?"1e"+om:"")+o); }
+    return {labels,offset:off};
+  }
+  function gSig(value,delta){
+    if(!isFinite(value)) return 0;
+    return Math.max(0,(value?floor(log10(Math.abs(value)))+1:1)-floor(log10(delta)));
+  }
+  const short=(v,delta)=>fixMinus(pctG(v,gSig(v,delta),true));
+  return {majorTicks,minorTicks,scalar,short,formatData,pctG};
+})();
+
+/* ─────────────── message boxes (tkinter.messagebox) ─────────────── */
+const ICO_WARN='<svg width="32" height="32" viewBox="0 0 32 32"><path d="M16 2.5L30.5 29h-29z" fill="#fcd116" stroke="#c8a400"/><rect x="14.6" y="11" width="2.8" height="10" rx="1" fill="#000"/><rect x="14.6" y="23" width="2.8" height="2.8" rx="1" fill="#000"/></svg>';
+const ICO_ERR='<svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="#e81123"/><path d="M10.5 10.5l11 11M21.5 10.5l-11 11" stroke="#fff" stroke-width="2.4"/></svg>';
+let modalQ=Promise.resolve();
+function msgbox(kind,key,arg){
+  const m=T[lang].msg[key]; const title=m[0], text=m[1].replace("{}",arg);
+  modalQ=modalQ.then(()=>new Promise(res=>{
+    const prev=document.activeElement;
+    const w=document.createElement("div"); w.className="modal";
+    w.innerHTML='<div class="dlg"><div class="dcap"><span></span><span class="wbx" style="width:46px;height:30px;display:flex;align-items:center;justify-content:center"><svg width="10" height="10"><path d="M0 0l10 10M10 0L0 10" stroke="#000"/></svg></span></div><div class="dbody">'+(kind==="warn"?ICO_WARN:ICO_ERR)+'<p></p></div><div class="dfoot"><button class="tb focus">OK</button></div></div>';
+    w.querySelector(".dcap span").textContent=title; w.querySelector("p").textContent=text;
+    const close=()=>{ w.remove(); document.removeEventListener("keydown",kd,true); res(); };
+    const kd=e=>{ if(e.key==="Enter"||e.key==="Escape"||e.key===" "){ e.preventDefault(); e.stopPropagation(); close(); } };
+    w.querySelector("button").onclick=close; w.querySelector(".wbx").onclick=close;
+    document.addEventListener("keydown",kd,true);
+    document.body.appendChild(w); setTimeout(()=>w.querySelector("button").focus({preventScroll:true}),0);
+  }));
+}
+const warn=(k,a)=>msgbox("warn",k,a), error=(k,a)=>msgbox("err",k,a);
+
+/* ───────────── a matplotlib Figure (subplots stacked in one column) + NavigationToolbar2Tk ───────────── */
+const SCREEN_W=screen.width;
+const BASE_FS = SCREEN_W>=2560?14:(SCREEN_W>=1920?11:9);
+const DPI=100, PT=DPI/72;
+const FONT="'DejaVu Sans','Bitstream Vera Sans',Verdana,Geneva,sans-serif";
+const C10=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+const VIRIDIS=[[68,1,84],[72,35,116],[64,67,135],[52,94,141],[41,120,142],[32,144,140],[34,167,132],[68,190,112],[121,209,81],[189,222,38],[253,231,37]];
+function viridis(f){ f=Math.max(0,Math.min(1,f))*10; const i=Math.min(9,Math.floor(f)), u=f-i, a=VIRIDIS[i], b=VIRIDIS[i+1];
+  return [a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u]; }
+function segBox(x0,y0,x1,y1,a,b,c,d){ /* does a segment cross the box? (Liang–Barsky) */
+  let t0=0,t1=1; const dx=x1-x0, dy=y1-y0;
+  for(const [p,q] of [[-dx,x0-a],[dx,c-x0],[-dy,y0-b],[dy,d-y0]]){
+    if(p===0){ if(q<0) return false; } else { const r=q/p; if(p<0){ if(r>t1) return false; if(r>t0) t0=r; } else { if(r<t0) return false; if(r<t1) t1=r; } } }
+  return true; }
+function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+
+/* one matplotlib Axes: plot, errorbar, bar (hist), imshow (+ colorbar), legend */
+class Axes{
+  constructor(){ this.clear(); }
+  clear(){ this.items=[]; this.title=""; this.xlabel=""; this.ylabel=""; this.cbar=null; this.leg=false; this.ci=0;
+    this.xlim=[0,1]; this.ylim=[0,1]; this.flipY=false; this.lockX=null; this.lockY=null; }
+  color(o){ return o.color||C10[(this.ci++)%10]; }
+  plot(x,y,o={}){ const it={kind:"line",x:Array.from(x),y:Array.from(y),color:this.color(o),lw:o.lw??1.5,ls:o.ls??"-",
+      marker:o.marker||null,ms:o.ms??(o.marker==="."?6:6),label:o.label||null,alpha:o.alpha??1}; this.items.push(it); return it; }
+  errorbar(x,y,yerr,o={}){ const it=this.plot(x,y,{ls:"none",marker:"o",...o}); it.yerr=Array.from(yerr); it.kind="err"; return it; }
+  bar(x,h,width,o={}){ const it={kind:"bar",x:Array.from(x),h:Array.from(h),w:width,color:this.color(o),label:o.label||null}; this.items.push(it); return it; }
+  /* nx × ny cells; px(i,j) → [r,g,b] or null (i along x, j along y from the bottom) */
+  imshow(nx,ny,px,extent,o={}){ const it={kind:"img",nx,ny,px,extent,val:o.val||null,label:null}; this.items.push(it);
+    if(o.cbar) this.cbar={vmin:o.vmin,vmax:o.vmax,label:o.cbarLabel||""}; return it; }
+  legend(){ this.leg=true; }
+  /* autoscale_view with the default 5 % margins; bars stick to y = 0, images to their extent */
+  autoscale(){
+    let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity, stickX=null, stickY=null;
+    const add=(x,y)=>{ if(!isFinite(x)||!isFinite(y)) return; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; };
+    for(const it of this.items){
+      if(it.kind==="img"){ const e=it.extent; add(e[0],e[2]); add(e[1],e[3]); stickX=[Math.min(e[0],e[1]),Math.max(e[0],e[1])]; stickY=[Math.min(e[2],e[3]),Math.max(e[2],e[3])]; }
+      else if(it.kind==="bar"){ it.x.forEach((v,i)=>{ add(v-it.w/2,0); add(v+it.w/2,it.h[i]); }); stickY=[0,null]; }
+      else it.x.forEach((v,i)=>{ const e=it.yerr?it.yerr[i]:0; add(v,it.y[i]-e); add(v,it.y[i]+e); });
+    }
+    const lim=(a,b,st)=>{
+      if(!isFinite(a)) return [-0.055,0.055];
+      if(b-a===0){ if(a===0) return [-0.055,0.055]; const e=Math.abs(a)*0.05; return [a-e,a+e]; }
+      const m=(b-a)*0.05; let lo=a-m, hi=b+m;
+      if(st){ if(st[0]!==null&&st[0]>=lo&&st[0]<=a) lo=st[0]; if(st[1]!==null&&st[1]<=hi&&st[1]>=b) hi=st[1]; }
+      return [lo,hi]; };
+    this.xlim=this.lockX?this.lockX.slice():lim(x0,x1,stickX); this.ylim=this.lockY?this.lockY.slice():lim(y0,y1,stickY);
+    if(this.flipY) this.ylim=[this.ylim[1],this.ylim[0]];
+  }
+}
+
+class Figure{
+  constructor(host,n){
+    this.axes=[]; for(let i=0;i<(n||1);i++) this.axes.push(new Axes());
+    this.sub=null; this.stack=[]; this.pos=-1; this.mode="";
+    const wrap=el("div","cvwrap"); this.cv=el("canvas"); this.ov=el("canvas"); wrap.appendChild(this.cv); wrap.appendChild(this.ov);
+    const bar=el("div","navbar");
+    const B=(name,tip,fn)=>{const b=el("div","nbt"); b.title=tip;
+      b.innerHTML='<img alt="'+name+'" src="'+ICON[name]+'" srcset="'+ICON[name]+' 1x, '+ICON[name+"_large"]+' 2x">';
+      b.onmousedown=e=>e.preventDefault(); b.onclick=()=>{ if(!b.classList.contains("dis")) fn(); }; bar.appendChild(b); return b;};
+    const S=()=>bar.appendChild(el("div","sep"));
+    B("home","Reset original view",()=>this.home());
+    this.bBack=B("back","Back to previous view",()=>this.back());
+    this.bFwd=B("forward","Forward to next view",()=>this.forward());
+    S();
+    this.bPan=B("move","Left button pans, Right button zooms\nx/y fixes axis, CTRL fixes aspect",()=>this.toggle("pan/zoom"));
+    this.bZoom=B("zoom_to_rect","Zoom to rectangle\nx/y fixes axis",()=>this.toggle("zoom rect"));
+    B("subplots","Configure subplots",()=>this.subplotTool());
+    S();
+    B("filesave","Save the figure",()=>this.save());
+    this.msg=el("div","msg"); this.msg.textContent=" \n "; bar.appendChild(this.msg);
+    host.appendChild(wrap); host.appendChild(bar);
+    this.setHistory(); this.events();
+    new ResizeObserver(()=>this.render()).observe(wrap);
+  }
+  ax(i){ return this.axes[i||0]; }
+  clear(){ this.axes.forEach(a=>a.clear()); }
+  /* canvas.draw() after new data: autoscale, forget the navigation history, toolbar.update() */
+  draw(){ this.axes.forEach(a=>a.autoscale()); this.stack=[]; this.pos=-1; this.setHistory(); this.render(); }
+  setMessage(s){ this.msg.textContent=s||" "; }
+  ticks(len,space,lo,hi){
+    const nb=Math.max(1,Math.min(9,Math.floor(len/DPI*72/(BASE_FS*space))));
+    const a=Math.min(lo,hi), b=Math.max(lo,hi);
+    const maj=MPL.majorTicks(a,b,nb), f=MPL.scalar(maj,a,b), e=(b-a)*1e-10, inV=v=>v>=a-e&&v<=b+e;
+    return {maj,lab:f.labels,off:f.offset,vis:maj.map(inV),minor:MPL.minorTicks(maj,a,b).filter(inV)}; }
+  /* tight_layout(pad = 1.08 × fontsize, h_pad = pad) for a column of Axes, with colorbars on the right */
+  layout(c,W,H){
+    const fs=BASE_FS*PT, fsL=(BASE_FS+1)*PT, fsT=(BASE_FS+2)*PT, pad=1.08*fs, n=this.axes.length;
+    const cbw=a=>a.cbar?1:0;
+    if(this.sub){ const s=this.sub, hs=s.hspace, h=(s.top-s.bottom)*H/(n+(n-1)*hs);
+      return this.axes.map((a,i)=>{ const y0=(1-s.top)*H+i*h*(1+hs), g={x0:s.left*W,x1:s.right*W,y0,y1:y0+h};
+        if(a.cbar){ const cw=(g.x1-g.x0)*0.15; g.cb={x0:g.x1-cw+cw*0.33,x1:g.x1-cw+cw*0.33+Math.min(cw*0.33,h/20)}; g.x1-=cw; } return g; }); }
+    let G=this.axes.map(()=>({x0:0.125*W,x1:0.9*W,y0:0.12*H,y1:0.88*H}));
+    for(let it=0;it<3;it++){
+      let left=0,right=0; const tops=[],bots=[],cbs=[];
+      this.axes.forEach((a,i)=>{ const g=G[i];
+        const Y=this.ticks(g.y1-g.y0,2,a.ylim[0],a.ylim[1]), X=this.ticks(g.x1-g.x0,3,a.xlim[0],a.xlim[1]);
+        c.font=fs+"px "+FONT; let wy=0; Y.lab.forEach((l,k)=>{ if(Y.vis[k]) wy=Math.max(wy,c.measureText(l).width); });
+        let l=3.5*PT+3.5*PT+wy+(a.ylabel?4*PT+fsL*1.165:0);
+        let ovR=0; X.maj.forEach((v,k)=>{ if(!X.vis[k]) return; const px=g.x0+(v-a.xlim[0])/(a.xlim[1]-a.xlim[0])*(g.x1-g.x0);
+          ovR=Math.max(ovR,px+c.measureText(X.lab[k]).width/2-g.x1); });
+        let r=Math.max(0,ovR), cb=0;
+        if(a.cbar){ const C=this.ticks(g.y1-g.y0,2,a.cbar.vmin,a.cbar.vmax); let wc=0; C.lab.forEach((s,k)=>{ if(C.vis[k]) wc=Math.max(wc,c.measureText(s).width); });
+          cb=(g.y1-g.y0)/20; r=Math.max(r,0)+0; cbs[i]={w:cb,deco:7*PT+wc+(a.cbar.label?4*PT+fsL*1.165:0)}; }
+        left=Math.max(left,l); right=Math.max(right,r+(cbs[i]?cbs[i].w+cbs[i].deco+0.05*W*0.4:0));
+        let t=Y.vis.some(v=>v)?fs*0.6:0; if(Y.off) t=Math.max(t,3*PT+fs*1.165); if(a.title) t=Math.max(t,6*PT+fsT*1.165);
+        let b=3.5*PT+3.5*PT+fs*1.165+(X.off?3*PT+fs*1.165:0)+(a.xlabel?4*PT+fsL*1.165:0);
+        tops.push(t); bots.push(b); });
+      const avail=H-2*pad-tops.reduce((s,v)=>s+v,0)-bots.reduce((s,v)=>s+v,0)-(n-1)*pad, h=Math.max(10,avail/n);
+      let y=pad; G=this.axes.map((a,i)=>{ y+=tops[i]; const g={x0:pad+left,x1:W-pad-right,y0:y,y1:y+h}; y+=h+bots[i]+pad;
+        if(cbs[i]){ const p=0.05*W*0.4; g.cb={x0:g.x1+p,x1:g.x1+p+cbs[i].w}; } return g; });
+    }
+    return G;
+  }
+  geom(){ const r=this.cv.parentNode.getBoundingClientRect(); return {W:r.width,H:r.height}; }
+  render(target){
+    const {W,H}=this.geom(); if(W<10||H<10) return;
+    const dpr=target?1:Math.min(window.devicePixelRatio||1,3), cv=target||this.cv;
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); if(!target){ this.ov.width=cv.width; this.ov.height=cv.height; }
+    const c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#fff"; c.fillRect(0,0,W,H);
+    const G=this.layout(c,W,H); this.G=G; this.W=W; this.H=H;
+    this.axes.forEach((a,i)=>this.drawAxes(c,a,G[i],dpr));
+  }
+  drawAxes(c,a,g,dpr){
+    const fs=BASE_FS*PT, fsL=(BASE_FS+1)*PT, fsT=(BASE_FS+2)*PT;
+    const [xa,xb]=a.xlim,[ya,yb]=a.ylim;
+    const X=this.ticks(g.x1-g.x0,3,xa,xb), Y=this.ticks(g.y1-g.y0,2,ya,yb);
+    const sx=v=>g.x0+(v-xa)/(xb-xa)*(g.x1-g.x0), sy=v=>g.y1-(v-ya)/(yb-ya)*(g.y1-g.y0);
+    const snap=v=>Math.round(v*dpr)/dpr+0.5/dpr;
+    /* images under the grid (zorder 0 against the grid's... matplotlib draws the grid below artists only with axisbelow) */
+    c.save(); c.beginPath(); c.rect(g.x0,g.y0,g.x1-g.x0,g.y1-g.y0); c.clip();
+    for(const it of a.items) if(it.kind==="img") this.drawImg(c,it,sx,sy);
+    c.restore();
+    /* grid: major solid α .5, minor dashed α .3 (both #b0b0b0, 0.8 pt), below the data (axes.axisbelow 'line') */
+    c.lineWidth=0.8*PT; c.strokeStyle="#b0b0b0";
+    c.globalAlpha=0.3; c.setLineDash([2.96*PT,1.28*PT]); c.beginPath();
+    for(const v of X.minor){const p=snap(sx(v)); c.moveTo(p,g.y0); c.lineTo(p,g.y1);}
+    for(const v of Y.minor){const p=snap(sy(v)); c.moveTo(g.x0,p); c.lineTo(g.x1,p);}
+    c.stroke(); c.setLineDash([]); c.globalAlpha=0.5; c.beginPath();
+    X.maj.forEach((v,k)=>{ if(X.vis[k]){const p=snap(sx(v)); c.moveTo(p,g.y0); c.lineTo(p,g.y1);} });
+    Y.maj.forEach((v,k)=>{ if(Y.vis[k]){const p=snap(sy(v)); c.moveTo(g.x0,p); c.lineTo(g.x1,p);} });
+    c.stroke(); c.globalAlpha=1;
+    /* the artists */
+    c.save(); c.beginPath(); c.rect(g.x0,g.y0,g.x1-g.x0,g.y1-g.y0); c.clip();
+    for(const it of a.items){
+      if(it.kind==="bar"){ c.fillStyle=it.color; it.x.forEach((v,k)=>{ const x0=sx(v-it.w/2), x1=sx(v+it.w/2), y0=sy(0), y1=sy(it.h[k]);
+          c.fillRect(Math.min(x0,x1),Math.min(y0,y1),Math.abs(x1-x0),Math.abs(y1-y0)); }); continue; }
+      if(it.kind==="img") continue;
+      c.globalAlpha=it.alpha;
+      if(it.yerr){ c.strokeStyle=it.color; c.lineWidth=1.5*PT; c.beginPath();
+        it.x.forEach((v,k)=>{ if(!isFinite(it.y[k])) return; const px=sx(v); c.moveTo(px,sy(it.y[k]-it.yerr[k])); c.lineTo(px,sy(it.y[k]+it.yerr[k])); }); c.stroke(); }
+      if(it.ls!=="none"){ c.strokeStyle=it.color; c.lineWidth=it.lw*PT; c.lineJoin="round"; c.lineCap=it.ls==="-"?"square":"butt";
+        c.setLineDash(it.ls==="--"?[3.7*it.lw*PT,1.6*it.lw*PT]:it.ls===":"?[1*it.lw*PT,1.65*it.lw*PT]:[]);
+        c.beginPath(); let pen=false;
+        it.x.forEach((v,k)=>{ const y=it.y[k]; if(!isFinite(y)||!isFinite(v)){pen=false;return;} const px=sx(v), py=sy(y); if(pen) c.lineTo(px,py); else {c.moveTo(px,py);pen=true;} });
+        c.stroke(); c.setLineDash([]); }
+      if(it.marker) this.markers(c,it,it.x.map(sx),it.y.map(sy));
+      c.globalAlpha=1;
+    }
+    c.restore();
+    /* spines, ticks, tick labels */
+    c.strokeStyle="#000"; c.lineWidth=0.8*PT; c.strokeRect(snap(g.x0),snap(g.y0),Math.round(g.x1-g.x0),Math.round(g.y1-g.y0));
+    const tk=(list,len,w,hz,f)=>{ c.lineWidth=w*PT; c.beginPath();
+      for(const v of list){ if(hz){const p=snap(f(v)); c.moveTo(p,g.y1); c.lineTo(p,g.y1+len*PT);} else {const p=snap(f(v)); c.moveTo(g.x0,p); c.lineTo(g.x0-len*PT,p);} } c.stroke(); };
+    tk(X.minor,2,0.6,true,sx); tk(Y.minor,2,0.6,false,sy);
+    tk(X.maj.filter((_,k)=>X.vis[k]),3.5,0.8,true,sx); tk(Y.maj.filter((_,k)=>Y.vis[k]),3.5,0.8,false,sy);
+    c.fillStyle="#000"; c.font=fs+"px "+FONT; c.textBaseline="alphabetic";
+    const ly=g.y1+7*PT, asc=fs*0.76, hgt=fs*1.165;
+    c.textAlign="center"; X.maj.forEach((v,k)=>{ if(X.vis[k]) c.fillText(X.lab[k],sx(v),ly+asc); });
+    c.textAlign="right"; let wmax=0;
+    Y.maj.forEach((v,k)=>{ if(Y.vis[k]){ c.fillText(Y.lab[k],g.x0-7*PT,sy(v)+fs*0.36); wmax=Math.max(wmax,c.measureText(Y.lab[k]).width); } });
+    if(X.off){ c.textAlign="right"; c.fillText(X.off,g.x1,ly+hgt+3*PT+asc); }
+    if(Y.off){ c.textAlign="left"; c.fillText(Y.off,g.x0,g.y0-3*PT-fs*0.24); }
+    c.font=fsL+"px "+FONT; c.textAlign="center";
+    if(a.xlabel) c.fillText(a.xlabel,(g.x0+g.x1)/2,ly+hgt+(X.off?3*PT+hgt:0)+4*PT+fsL*0.76);
+    if(a.ylabel){ c.save(); c.translate(g.x0-7*PT-wmax-4*PT-fsL*0.24,(g.y0+g.y1)/2); c.rotate(-Math.PI/2); c.fillText(a.ylabel,0,0); c.restore(); }
+    if(a.title){ c.font=fsT+"px "+FONT; c.fillText(a.title,(g.x0+g.x1)/2,g.y0-6*PT-fsT*0.24); }
+    if(a.cbar&&g.cb) this.colorbar(c,a.cbar,g,dpr);
+    if(a.leg&&a.items.some(it=>it.label)) this.legend(c,a,g,sx,sy);
+  }
+  markers(c,it,PX,PY){
+    const d=(it.marker==="."?0.5:1)*it.ms*PT, r=d/2;
+    c.fillStyle=it.color; c.strokeStyle=it.color; c.lineWidth=1*PT;
+    for(let k=0;k<PX.length;k++){ const x=PX[k], y=PY[k]; if(!isFinite(x)||!isFinite(y)) continue;
+      c.beginPath(); if(it.marker==="s") c.rect(x-r,y-r,d,d); else c.arc(x,y,r,0,2*Math.PI); c.fill(); c.stroke(); }
+  }
+  drawImg(c,it,sx,sy){
+    if(!it.cache){ const o=document.createElement("canvas"); o.width=it.nx; o.height=it.ny; const oc=o.getContext("2d"), im=oc.createImageData(it.nx,it.ny);
+      for(let j=0;j<it.ny;j++) for(let i=0;i<it.nx;i++){ const p=it.px(i,j), q=4*((it.ny-1-j)*it.nx+i);
+        if(p){ im.data[q]=p[0]; im.data[q+1]=p[1]; im.data[q+2]=p[2]; im.data[q+3]=255; } }
+      oc.putImageData(im,0,0); it.cache=o; }
+    const e=it.extent, x0=sx(e[0]), x1=sx(e[1]), y0=sy(e[3]), y1=sy(e[2]);
+    c.imageSmoothingEnabled=false; c.drawImage(it.cache,Math.min(x0,x1),Math.min(y0,y1),Math.abs(x1-x0),Math.abs(y1-y0)); c.imageSmoothingEnabled=true;
+  }
+  colorbar(c,cb,g,dpr){
+    const fs=BASE_FS*PT, fsL=(BASE_FS+1)*PT, x0=g.cb.x0, x1=g.cb.x1, y0=g.y0, y1=g.y1, n=256;
+    for(let k=0;k<n;k++){ const col=viridis(k/(n-1)); c.fillStyle="rgb("+col.map(Math.round).join(",")+")";
+      const ya=y1-(k+1)/n*(y1-y0), yb=y1-k/n*(y1-y0); c.fillRect(x0,ya,x1-x0,yb-ya+0.6); }
+    c.strokeStyle="#000"; c.lineWidth=0.8*PT; c.strokeRect(Math.round(x0)+0.5/dpr,Math.round(y0)+0.5/dpr,Math.round(x1-x0),Math.round(y1-y0));
+    const C=this.ticks(y1-y0,2,cb.vmin,cb.vmax), sy=v=>y1-(v-cb.vmin)/(cb.vmax-cb.vmin)*(y1-y0);
+    c.lineWidth=0.8*PT; c.beginPath(); C.maj.forEach((v,k)=>{ if(C.vis[k]){ const p=Math.round(sy(v))+0.5/dpr; c.moveTo(x1,p); c.lineTo(x1+3.5*PT,p); } }); c.stroke();
+    c.fillStyle="#000"; c.font=fs+"px "+FONT; c.textAlign="left"; let w=0;
+    C.maj.forEach((v,k)=>{ if(C.vis[k]){ c.fillText(C.lab[k],x1+7*PT,sy(v)+fs*0.36); w=Math.max(w,c.measureText(C.lab[k]).width); } });
+    if(cb.label){ c.font=fsL+"px "+FONT; c.textAlign="center"; c.save(); c.translate(x1+7*PT+w+4*PT+fsL*0.76,(y0+y1)/2); c.rotate(-Math.PI/2); c.fillText(cb.label,0,0); c.restore(); }
+  }
+  /* legend(loc='best'): the first of matplotlib's nine positions that covers the fewest data */
+  legend(c,a,g,sx,sy){
+    const fs=BASE_FS*PT, bp=0.4*fs, hl=2*fs, htp=0.8*fs, ls=0.5*fs, bap=0.5*fs, rowh=fs*1.07;
+    const its=a.items.filter(it=>it.label); c.font=fs+"px "+FONT;
+    const tw=Math.max(...its.map(it=>c.measureText(it.label).width));
+    const w=2*bp+hl+htp+tw, h=2*bp+its.length*rowh+(its.length-1)*ls;
+    const L=g.x0+bap, R=g.x1-bap-w, Tp=g.y0+bap, Bt=g.y1-bap-h, CX=(g.x0+g.x1)/2-w/2, CY=(g.y0+g.y1)/2-h/2;
+    const cand=[[R,Tp],[L,Tp],[L,Bt],[R,Bt],[R,CY],[L,CY],[R,CY],[CX,Bt],[CX,Tp],[CX,CY]];
+    let best=cand[0],bb=Infinity;
+    for(const [x,y] of cand){ let bad=0;
+      for(const it of a.items){ if(it.kind==="img") continue; let p0=null;
+        const xs=it.kind==="bar"?it.x:it.x, ys=it.kind==="bar"?it.h:it.y;
+        for(let k=0;k<xs.length;k++){ const px=sx(xs[k]), py=sy(ys[k]); if(!isFinite(px)||!isFinite(py)){ p0=null; continue; }
+          if(px>=x&&px<=x+w&&py>=y&&py<=y+h) bad++;
+          if(p0&&it.kind==="line"&&it.ls!=="none"&&segBox(p0[0],p0[1],px,py,x,y,x+w,y+h)) bad++;
+          p0=[px,py]; } }
+      if(bad<bb){ bb=bad; best=[x,y]; } if(bad===0) break; }
+    const [x,y]=best;
+    c.save(); c.globalAlpha=0.8; c.fillStyle="#fff"; rr(c,x,y,w,h,0.2*fs); c.fill(); c.globalAlpha=1;
+    c.strokeStyle="#cccccc"; c.lineWidth=1*PT; rr(c,x+0.5,y+0.5,w-1,h-1,0.2*fs); c.stroke(); c.restore();
+    its.forEach((it,k)=>{ const cy=y+bp+k*(rowh+ls)+rowh/2, mx=x+bp+hl/2;
+      if(it.kind==="bar"){ c.fillStyle=it.color; c.fillRect(x+bp,cy-0.35*fs,hl,0.7*fs); }
+      else { if(it.ls!=="none"){ c.strokeStyle=it.color; c.lineWidth=it.lw*PT; c.setLineDash(it.ls==="--"?[3.7*it.lw*PT,1.6*it.lw*PT]:[]);
+          c.beginPath(); c.moveTo(x+bp,cy); c.lineTo(x+bp+hl,cy); c.stroke(); c.setLineDash([]); }
+        if(it.yerr){ c.strokeStyle=it.color; c.lineWidth=1.5*PT; c.beginPath(); c.moveTo(mx,cy-0.5*fs); c.lineTo(mx,cy+0.5*fs); c.stroke(); }
+        if(it.marker) this.markers(c,it,[mx],[cy]); }
+      c.fillStyle="#000"; c.textAlign="left"; c.font=fs+"px "+FONT; c.fillText(it.label,x+bp+hl+htp,cy+fs*0.36); });
+  }
+  /* ---- navigation (NavigationToolbar2): the Axes under the cursor ---- */
+  view(){ return this.axes.map(a=>({x:a.xlim.slice(),y:a.ylim.slice()})); }
+  push(){ this.stack=this.stack.slice(0,this.pos+1); this.stack.push(this.view()); this.pos=this.stack.length-1; this.setHistory(); }
+  apply(v){ v.forEach((q,i)=>{ this.axes[i].xlim=q.x.slice(); this.axes[i].ylim=q.y.slice(); }); this.render(); }
+  home(){ if(this.stack.length){ this.pos=0; this.apply(this.stack[0]); } this.setHistory(); }
+  back(){ if(this.pos>0){ this.pos--; this.apply(this.stack[this.pos]); } this.setHistory(); }
+  forward(){ if(this.pos<this.stack.length-1){ this.pos++; this.apply(this.stack[this.pos]); } this.setHistory(); }
+  setHistory(){ this.bBack.classList.toggle("dis",!(this.pos>0)); this.bFwd.classList.toggle("dis",!(this.pos<this.stack.length-1)); }
+  toggle(m){ this.mode=(this.mode===m)?"":m; this.bPan.classList.toggle("on",this.mode==="pan/zoom");
+    this.bZoom.classList.toggle("on",this.mode==="zoom rect"); this.setMessage(this.mode); this.ov.style.cursor=""; }
+  hit(px,py){ if(!this.G) return -1; return this.G.findIndex(g=>px>=g.x0&&px<=g.x1&&py>=g.y0&&py<=g.y1); }
+  data(i,px,py){ const g=this.G[i], a=this.axes[i];
+    return [a.xlim[0]+(px-g.x0)/(g.x1-g.x0)*(a.xlim[1]-a.xlim[0]), a.ylim[0]+(g.y1-py)/(g.y1-g.y0)*(a.ylim[1]-a.ylim[0])]; }
+  events(){
+    const ov=this.ov; let drag=null;
+    const pos=e=>{const r=ov.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top];};
+    ov.addEventListener("contextmenu",e=>e.preventDefault());
+    ov.addEventListener("pointerdown",e=>{ const [px,py]=pos(e), i=this.hit(px,py); if(!this.mode||i<0) return;
+      ov.setPointerCapture(e.pointerId); if(!this.stack.length) this.push(); drag={i,b:e.button===2?3:1,px,py,v:this.view()[i]}; });
+    ov.addEventListener("pointermove",e=>{
+      const [px,py]=pos(e);
+      if(drag){ const g=this.G[drag.i], a=this.axes[drag.i], v=drag.v;
+        if(this.mode==="zoom rect"){ drag.qx=Math.min(Math.max(px,g.x0),g.x1); drag.qy=Math.min(Math.max(py,g.y0),g.y1); this.rubber(drag.px,drag.py,drag.qx,drag.qy); }
+        else { const dx=px-drag.px, dy=-(py-drag.py), w=g.x1-g.x0, h=g.y1-g.y0;
+          if(drag.b===1){ const kx=(v.x[1]-v.x[0])/w, ky=(v.y[1]-v.y[0])/h; a.xlim=[v.x[0]-dx*kx,v.x[1]-dx*kx]; a.ylim=[v.y[0]-dy*ky,v.y[1]-dy*ky]; }
+          else { const sx0=v.x[0]+(drag.px-g.x0)/w*(v.x[1]-v.x[0]), sy0=v.y[0]+(g.y1-drag.py)/h*(v.y[1]-v.y[0]), fx=Math.pow(10,-dx/w), fy=Math.pow(10,-dy/h);
+            a.xlim=[sx0+fx*(v.x[0]-sx0),sx0+fx*(v.x[1]-sx0)]; a.ylim=[sy0+fy*(v.y[0]-sy0),sy0+fy*(v.y[1]-sy0)]; }
+          this.render(); } }
+      const i=this.hit(px,py);
+      if(i>=0&&this.axes[i].items.length){ const g=this.G[i], a=this.axes[i], [xv,yv]=this.data(i,px,py);
+        let s="x="+MPL.short(xv,Math.abs((a.xlim[1]-a.xlim[0])/(g.x1-g.x0)))+" y="+MPL.short(yv,Math.abs((a.ylim[1]-a.ylim[0])/(g.y1-g.y0)));
+        const im=a.items.find(it=>it.kind==="img"&&it.val);
+        if(im){ const e=im.extent, ii=Math.floor((xv-e[0])/(e[1]-e[0])*im.nx), jj=Math.floor((yv-e[2])/(e[3]-e[2])*im.ny);
+          if(ii>=0&&ii<im.nx&&jj>=0&&jj<im.ny){ const z=im.val(ii,jj); s+="\n["+(isFinite(z)?MPL.pctG(z,4,false).replace(/-/g,"−"):"--")+"]"; } }
+        this.setMessage(s); ov.style.cursor=this.mode==="zoom rect"?"crosshair":(this.mode==="pan/zoom"?"move":""); }
+      else { if(!drag) this.setMessage(this.mode); ov.style.cursor=""; } });
+    const end=()=>{ if(!drag) return; const d=drag; drag=null; this.rubber();
+      if(this.mode==="zoom rect"&&d.qx!==undefined){ const g=this.G[d.i], a=this.axes[d.i], x0=Math.min(d.px,d.qx), x1=Math.max(d.px,d.qx), y0=Math.min(d.py,d.qy), y1=Math.max(d.py,d.qy);
+        if(x1-x0<5||y1-y0<5) return;
+        const toX=p=>d.v.x[0]+(p-g.x0)/(g.x1-g.x0)*(d.v.x[1]-d.v.x[0]), toY=p=>d.v.y[0]+(g.y1-p)/(g.y1-g.y0)*(d.v.y[1]-d.v.y[0]);
+        let nx=[toX(x0),toX(x1)], ny=[toY(y1),toY(y0)];
+        if(d.b===3){ const [p,q]=d.v.x,[r,s]=d.v.y, ax=(q-p)/(nx[1]-nx[0]), ay=(s-r)/(ny[1]-ny[0]);
+          nx=[p-ax*(nx[0]-p),q+ax*(q-nx[1])]; ny=[r-ay*(ny[0]-r),s+ay*(s-ny[1])]; }
+        a.xlim=nx; a.ylim=ny; this.render(); this.push(); }
+      else if(this.mode==="pan/zoom") this.push(); };
+    ov.addEventListener("pointerup",end); ov.addEventListener("pointercancel",end);
+    ov.addEventListener("pointerleave",()=>{ if(!drag) this.setMessage(this.mode); });
+  }
+  rubber(x0,y0,x1,y1){
+    const c=this.ov.getContext("2d"), dpr=this.ov.width/(this.W||1);
+    c.setTransform(1,0,0,1,0,0); c.clearRect(0,0,this.ov.width,this.ov.height);
+    if(x0===undefined) return; c.setTransform(dpr,0,0,dpr,0,0);
+    const r=[Math.round(Math.min(x0,x1))+0.5,Math.round(Math.min(y0,y1))+0.5,Math.round(Math.abs(x1-x0)),Math.round(Math.abs(y1-y0))];
+    c.lineWidth=1; c.strokeStyle="#000"; c.setLineDash([]); c.strokeRect(...r);
+    c.strokeStyle="#fff"; c.setLineDash([3,3]); c.strokeRect(...r); c.setLineDash([]);
+  }
+  save(){ const cv=document.createElement("canvas"); this.render(cv);
+    const a=document.createElement("a"); a.download="Figure_1.png"; a.href=cv.toDataURL("image/png"); a.click(); this.render(); }
+  /* configure_subplots: matplotlib's SubplotTool in its own window */
+  subplotTool(){
+    if(Figure.tool) Figure.tool.remove();
+    const G=this.G, W0=this.W, H0=this.H, n=G.length;
+    const init={left:G[0].x0/W0,bottom:1-G[n-1].y1/H0,right:(G[0].cb?G[0].x1+(G[0].x1-G[0].x0)*0:G[0].x1)/W0,top:1-G[0].y0/H0,wspace:0.2,
+      hspace:n>1?(G[1].y0-G[0].y1)/(G[0].y1-G[0].y0):0.2};
+    if(!this.sub) this.sub=Object.assign({},init);
+    const w=el("div","stool"); Figure.tool=w;
+    w.innerHTML='<div class="dcap"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M13.6 1.2c-3.9.6-7.2 3.4-8.6 7.3L3.3 13l.9.4 1.4-3.2c2.6-.4 5.2-1.9 6.6-4.4-1.1.3-2.2.3-3.3.1 1.5-.6 2.9-1.6 3.8-3 .5-.6.8-1.2.9-1.7z" fill="#4a7fbd"/></svg><span>Subplot configuration tool</span><span class="wbx" style="width:46px;height:30px;display:flex;align-items:center;justify-content:center"><svg width="10" height="10"><path d="M0 0l10 10M10 0L0 10" stroke="#000"/></svg></span></div><canvas></canvas>';
+    const cv=w.querySelector("canvas"), Wd=600, Hd=300; cv.style.width=Wd+"px"; cv.style.height=Hd+"px";
+    const dpr=Math.min(window.devicePixelRatio||1,3); cv.width=Wd*dpr; cv.height=Hd*dpr;
+    const keys=["left","bottom","right","top","wspace","hspace"], fs=BASE_FS*PT, L0=0.2*Wd, L1=0.8*Wd, rowY=i=>Hd-(Hd*(0.1+0.1*(5-i))+fs*0.2)-Hd*0.02;
+    const bt=[{t:"Tight layout",x0:0.325,x1:0.475},{t:"Reset",x0:0.525,x1:0.675}];
+    const lim=k=>k==="left"?[0,this.sub.right-0.001]:k==="right"?[this.sub.left+0.001,1]:k==="bottom"?[0,this.sub.top-0.001]:k==="top"?[this.sub.bottom+0.001,1]:[0,1];
+    const draw=()=>{ const c=cv.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#fff"; c.fillRect(0,0,Wd,Hd);
+      c.font=fs+"px "+FONT; c.textBaseline="middle"; const s=this.sub||init;
+      keys.forEach((k,i)=>{ const y=rowY(i), v=s[k], px=L0+v*(L1-L0);
+        c.fillStyle="#d3d3d3"; c.fillRect(L0,y-2.5,L1-L0,5); c.fillStyle="#1f77b4"; c.fillRect(L0,y-2.5,px-L0,5);
+        c.beginPath(); c.arc(px,y,6,0,2*Math.PI); c.fillStyle="#fff"; c.fill(); c.strokeStyle="#808080"; c.lineWidth=1; c.stroke();
+        c.fillStyle="#000"; c.textAlign="right"; c.fillText(k,L0-10,y); c.textAlign="left"; c.fillText(v.toFixed(3),L1+10,y); });
+      bt.forEach(b=>{ const x=b.x0*Wd, y=Hd*0.85, bw=(b.x1-b.x0)*Wd, bh=Hd*0.08; c.fillStyle="#d9d9d9"; c.fillRect(x,y,bw,bh);
+        c.fillStyle="#000"; c.textAlign="center"; c.fillText(b.t,x+bw/2,y+bh/2); }); };
+    let dk=null; const at=e=>{const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top];};
+    cv.onpointerdown=e=>{ const [x,y]=at(e);
+      for(const b of bt){ if(x>=b.x0*Wd&&x<=b.x1*Wd&&y>=Hd*0.85&&y<=Hd*0.93){ this.sub=b.t==="Reset"?Object.assign({},init):null; draw(); this.render(); return; } }
+      keys.forEach((k,i)=>{ if(Math.abs(y-rowY(i))<10&&x>=L0-8&&x<=L1+8) dk=k; });
+      if(dk){ if(!this.sub){ const G2=this.G; this.sub={left:G2[0].x0/this.W,bottom:1-G2[n-1].y1/this.H,right:G2[0].x1/this.W,top:1-G2[0].y0/this.H,wspace:0.2,hspace:n>1?(G2[1].y0-G2[0].y1)/(G2[0].y1-G2[0].y0):0.2}; }
+        cv.setPointerCapture(e.pointerId); cv.onpointermove(e); } };
+    cv.onpointermove=e=>{ if(!dk) return; const [x]=at(e), [a,b]=lim(dk); this.sub[dk]=Math.min(b,Math.max(a,(x-L0)/(L1-L0))); draw(); this.render(); };
+    cv.onpointerup=()=>{dk=null;};
+    w.querySelector(".wbx").onclick=()=>{w.remove();Figure.tool=null;};
+    const cap=w.querySelector(".dcap"); let mv=null;
+    cap.onpointerdown=e=>{ if(e.target.closest(".wbx")) return; mv=[e.clientX-w.offsetLeft,e.clientY-w.offsetTop]; cap.setPointerCapture(e.pointerId); };
+    cap.onpointermove=e=>{ if(mv){ w.style.left=(e.clientX-mv[0])+"px"; w.style.top=(e.clientY-mv[1])+"px"; } };
+    cap.onpointerup=()=>{mv=null;};
+    document.body.appendChild(w); w.style.left=Math.max(8,(innerWidth-Wd)/2)+"px"; w.style.top=Math.max(8,(innerHeight-Hd)/2-40)+"px"; draw();
+  }
+}
+
+/* ─────────────────────────── ttk helpers ─────────────────────────── */
+function el(tag,cls,txt){ const e=document.createElement(tag); if(cls)e.className=cls; if(txt!==undefined)e.textContent=txt; return e; }
+function entry(v,cls){ const e=el("input","ent"+(cls?" "+cls:"")); e.value=v; e.spellcheck=false; return e; }
+function button(t,fn,cls){ const b=el("button","tb"+(cls?" "+cls:""),t);
+  b.onmousedown=e=>e.preventDefault(); b.onclick=()=>{ if(!b.disabled) fn(); }; return b; }
+function labelFrame(title,cls){ const f=el("div","lf "+(cls||"ctrl")); f.appendChild(el("span","lfl",title)); return f; }
+/* tk.Text */
+function text(v,rows){ const t=el("textarea","txt"); t.value=v; t.rows=rows; t.spellcheck=false; t.wrap="off"; return t; }
+/* ttk.Progressbar */
+function progress(){ const p=el("div","pbar"); const i=el("i"); p.appendChild(i); p.set=v=>{ i.style.width=(Math.max(0,Math.min(1,v))*100)+"%"; }; return p; }
+/* ttk.Radiobutton group */
+function radios(name,opts,val,fn){ const box=el("div","rgrp"); opts.forEach(([v,l])=>{ const lab=el("label","rb"); const r=el("input"); r.type="radio"; r.name=name; r.value=v;
+  r.checked=v===val; r.onchange=()=>fn(v); lab.appendChild(r); lab.appendChild(el("span","",l)); box.appendChild(lab); }); return box; }
+/* ttk.Scale with its value */
+function scale(min,max,v,fn){ const s=el("input","scl"); s.type="range"; s.min=min; s.max=max; s.step="any"; s.value=v; s.oninput=()=>fn(+s.value); return s; }
+function saveText(name,txt){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv"})); a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+
+/* the notebook */
+const tabs=[]; let active=0;
+function addTab(label,setup){
+  const t=el("div","",label); const p=el("div",""); p.style.cssText="display:none;flex:1;min-width:0;min-height:0";
+  $("tabs").appendChild(t); $("pane").appendChild(p);
+  const i=tabs.length; tabs.push({t,p});
+  t.onmousedown=e=>{ e.preventDefault(); select(i); };
+  setup(p);
+}
+function select(i){
+  if(i===active&&tabs[i].p.style.display==="flex") return;
+  const ae=document.activeElement; if(ae&&tabs[active].p.contains(ae)) ae.blur();
+  active=i; tabs.forEach((q,k)=>{ q.t.className=k===i?"on":""; q.p.style.display=k===i?"flex":"none"; });
+  if(typeof on_tab_change==="function") on_tab_change();
+}
+/* left column of LabelFrames, the figure on the right */
+function columns(p){ const l=el("div","lcol"); p.appendChild(l); const r=el("div","plotf"); p.appendChild(r); return [l,r]; }
+function sizeWindow(){
+  const w=Math.max(1000,Math.min(Math.trunc(screen.width*0.8),1600));
+  const h=Math.max(650,Math.min(Math.trunc(screen.height*0.8),900));
+  const avail=document.querySelector(".winwrap").clientWidth-32;
+  const win=$("win"); win.style.width=Math.max(Math.min(w,avail),760)+"px"; win.style.height=(h+30)+"px";
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   The organisers' programs of ISPhO 2024 T1 — A.py, B1.py, B2.py,
+   gen_data, B.py, B7.py and B8.py — as the tabs of one Tk window.
+   ══════════════════════════════════════════════════════════════════════ */
+const gauss=(m,s)=>{ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+const U=(a,b)=>a+Math.random()*(b-a);
 /* least squares y = a + b x (weights optional); returns {a,b,sa,sb} */
 function linfit(x,y,wt){ const n=x.length; let S=0,Sx=0,Sy=0,Sxx=0,Sxy=0;
   for(let i=0;i<n;i++){ const w=wt?wt[i]:1; S+=w; Sx+=w*x[i]; Sy+=w*y[i]; Sxx+=w*x[i]*x[i]; Sxy+=w*x[i]*y[i]; }
@@ -211,60 +890,14 @@ function linfit(x,y,wt){ const n=x.length; let S=0,Sx=0,Sy=0,Sxx=0,Sxy=0;
   let chi=0; for(let i=0;i<n;i++){ const w=wt?wt[i]:1; chi+=w*(y[i]-a-b*x[i])**2; }
   const s2=wt?Math.max(1,chi/Math.max(1,n-2)):chi/Math.max(1,n-2);
   return {a,b,sa:Math.sqrt(s2*Sxx/D),sb:Math.sqrt(s2*S/D)}; }
-const gauss=(m,s)=>{ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
-const U=(a,b)=>a+Math.random()*(b-a);
-function saveText(name,txt){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"})); a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
-/* ══════════════════════════════════════════════════════════════
-   i18n
-   ══════════════════════════════════════════════════════════════ */
-const T={
-ko:{
- title:"ISPhO 2024 T1 — 열산화",
- sub:"주최측 A.py · B1.py · B2.py · gen_data · B.py · B7.py · B8.py 를 브라우저로 옮긴 것",
- hTask:"과제",
- tA:"A7", tB12:"B1 · B2", tB3:"B3 · B7", tB8:"B8",
- dA:"A_in.txt 의 줄마다 (이름, θ₁°, d nm) 로 Ψ(λ), Δ(λ) 를 그립니다. 분산 없음: ε공기 = 1.00, εSi = 17.2 − 0.430i, εSiO₂ = 2.13. 20° ≤ θ₁ ≤ 80°, d ≤ 250 nm.",
- dB12:"동료가 Φ 를 적어 두지 않은 두 시료의 측정값(B1.txt, B2.txt)입니다. Φ 와 d 를 넣으면 그 근사 곡선과 오차(error)를 보여 줍니다. Si·SiO₂ 의 광학 분산이 들어 있습니다.",
- dB3:"B_in.txt 에 (이름, Φ°, T °C, t min) 을 적고 gen_data 로 동료의 실험을 빠르게 흉내 냅니다: t = 0 에 순수 Si 를 노에 넣고 2분마다 Ψ, Δ 스펙트럼을 잽니다. 언제든 멈출 수 있고, 그때까지의 측정은 남습니다. B.py 는 각 측정에서 d 와 그 통계 오차를 고르고, B7.py 는 d ≥ 25 nm 인 점으로 B 와 B/A 를 구합니다.",
- dB8:"B8_in.txt 의 표 (T °C, B, ΔB, B/A, Δ(B/A)) 로 ln(B·min/nm²) 과 ln(B/A·min/nm) 를 1/T 에 대해 그리고 직선의 기울기를 줍니다.",
- hB12:"B1.py · B2.py", sB1:"B1.txt", sB2:"B2.txt", err:"error (deg)",
- runA:"A.py 실행", runB12:"근사 곡선 그리기", gen:"gen_data 실행", stop:"중단", proc:"B.py 실행 (처리)", b7:"B7.py 실행", toB8:"이 결과를 B8_in.txt 에 한 줄 추가",
- runB8:"B8.py 실행", csv:"그래프 데이터를 CSV로 저장",
- cap1A:"Ψ(λ)", cap2A:"Δ(λ)", cap1B:"Ψ(λ) — 데이터와 근사", cap2B:"Δ(λ) — 데이터와 근사",
- cap1C:"B.py — d(t)", cap2C:"마지막 측정 스펙트럼 Ψ(λ), Δ(λ)", cap1D:"ln B 대 1/T", cap2D:"ln(B/A) 대 1/T",
- idle:"입력을 정하고 실행하세요.", bad:"입력 범위를 벗어난 줄이 있습니다: ", noExp:"그 이름의 gen_data 결과가 없습니다 — 먼저 gen_data 를 실행하세요. (FileNotFoundError)",
- thin:"Final layer is too thin to approximate", genRun:"gen_data 실행 중… 측정 ", genDone:"gen_data 끝 — 측정 ", proc0:"B.py 처리 중… ", procDone:"B.py 끝 — res 에 d(t) 를 저장했습니다.",
- needProc:"먼저 B.py 로 처리하세요.", added:"B8_in.txt 에 추가했습니다.", b8need:"B8_in.txt 에 두 줄 이상 필요합니다.",
- slope:"기울기", note:"모든 값은 프로그램이 내놓는 그대로이며, θopt, Φ, d, B, B/A, ΔEa, ΔEb 는 직접 찾아야 합니다. 숨은 참값은 실행할 때마다 조금씩 달라집니다."
-},
-en:{
- title:"ISPhO 2024 T1 — Thermal Oxidation",
- sub:"the organisers' A.py · B1.py · B2.py · gen_data · B.py · B7.py · B8.py, moved into the browser",
- hTask:"Task",
- tA:"A7", tB12:"B1 · B2", tB3:"B3 · B7", tB8:"B8",
- dA:"Each line of A_in.txt (name, θ₁°, d nm) gives Ψ(λ) and Δ(λ). No dispersion: ε_air = 1.00, ε_Si = 17.2 − 0.430i, ε_SiO₂ = 2.13. 20° ≤ θ₁ ≤ 80°, d ≤ 250 nm.",
- dB12:"Your colleague's two samples (B1.txt, B2.txt), measured without noting Φ. Enter Φ and d to see the approximating curves and the error. The optical dispersion of Si and SiO₂ is built in.",
- dB3:"Write (name, Φ°, T °C, t min) in B_in.txt and let gen_data mimic your colleague in accelerated mode: pure Si goes into the furnace at t = 0 and Ψ, Δ spectra are taken every 2 min. You may stop it at any time; what was measured stays. B.py picks d and its statistical error for each measurement; B7.py fits B and B/A to the points with d ≥ 25 nm.",
- dB8:"From the table in B8_in.txt (T °C, B, ΔB, B/A, Δ(B/A)) B8.py plots ln(B·min/nm²) and ln(B/A·min/nm) against 1/T and gives the slopes of the fitted lines.",
- hB12:"B1.py · B2.py", sB1:"B1.txt", sB2:"B2.txt", err:"error (deg)",
- runA:"run A.py", runB12:"draw the approximation", gen:"run gen_data", stop:"interrupt", proc:"run B.py (processing)", b7:"run B7.py", toB8:"append this result to B8_in.txt",
- runB8:"run B8.py", csv:"save the plotted data as CSV",
- cap1A:"Ψ(λ)", cap2A:"Δ(λ)", cap1B:"Ψ(λ) — data and fit", cap2B:"Δ(λ) — data and fit",
- cap1C:"B.py — d(t)", cap2C:"latest measured spectrum Ψ(λ), Δ(λ)", cap1D:"ln B against 1/T", cap2D:"ln(B/A) against 1/T",
- idle:"Set the input and run.", bad:"A line is outside the allowed range: ", noExp:"No gen_data result under that name — run gen_data first. (FileNotFoundError)",
- thin:"Final layer is too thin to approximate", genRun:"gen_data running… measurement ", genDone:"gen_data finished — measurements ", proc0:"B.py processing… ", procDone:"B.py finished — d(t) saved to res.",
- needProc:"Process with B.py first.", added:"Appended to B8_in.txt.", b8need:"B8_in.txt needs at least two lines.",
- slope:"slope", note:"Every number is what the programs print; θopt, Φ, d, B, B/A, ΔEa and ΔEb are yours to find. The hidden true values change a little from run to run."
-}};
-let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
-const $=id=>document.getElementById(id);
+function pyFloat(s){ const t=String(s).trim();
+  if(!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(t)) throw new ValueError(); return parseFloat(t); }
+function ValueError(){}
 
-/* ══════════════════════════════════════════════════════════════
-   OPTICS — the sheet's three-layer formula
+/* ── optics: the sheet's three-layer formula
      r = (A + B e^{2ik2x d}) / (AB + e^{2ik2x d})
      s: A=(k2+k3)/(k2−k3), B=(k1+k2)/(k1−k2);  p: the same with κ = kx/ε
-     tan Ψ e^{iΔ} = r_p / r_s   (Δ in the convention of the organisers' plots)
-   ══════════════════════════════════════════════════════════════ */
+     tan Ψ e^{iΔ} = r_p / r_s ── */
 const Cx=(a,b)=>[a,b||0], cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]], csub=(a,b)=>[a[0]-b[0],a[1]-b[1]],
   cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]], cdiv=(a,b)=>{ const q=b[0]*b[0]+b[1]*b[1]; return [(a[0]*b[0]+a[1]*b[1])/q,(a[1]*b[0]-a[0]*b[1])/q]; },
   csqrt=a=>{ const r=Math.hypot(a[0],a[1]), x=Math.sqrt((r+a[0])/2), y=Math.sqrt(Math.max(0,(r-a[0])/2)); return [x,a[1]<0?-y:y]; },
@@ -274,7 +907,7 @@ function psiDelta(lam,thDeg,d,e1,e2,e3){ const th=thDeg*Math.PI/180, s2=Math.sin
   const E=cexp(cmul(Cx(0,2*d),k2));
   const r=(a1,a2,a3)=>{ const A=cdiv(cadd(a2,a3),csub(a2,a3)), B=cdiv(cadd(a1,a2),csub(a1,a2)); return cdiv(cadd(A,cmul(B,E)),cadd(cmul(A,B),E)); };
   const rs=r(k1,k2,k3), rp=r(cdiv(k1,e1),cdiv(k2,e2),cdiv(k3,e3)), q=cdiv(rp,rs);
-  let D=Math.atan2(-q[1],-q[0])*180/Math.PI; return [Math.atan(Math.hypot(q[0],q[1]))*180/Math.PI, D]; }
+  return [Math.atan(Math.hypot(q[0],q[1]))*180/Math.PI, Math.atan2(-q[1],-q[0])*180/Math.PI]; }
 /* dispersion: Si after Green (2008), SiO2 after Malitson (Sellmeier) */
 const SI=[[400,5.570,0.387],[425,5.000,0.230],[450,4.674,0.135],[475,4.460,0.093],[500,4.298,0.073],[525,4.180,0.056],[550,4.077,0.041],[575,4.000,0.031],[600,3.939,0.025],[650,3.844,0.016],[700,3.776,0.0108],[750,3.728,0.0076],[800,3.688,0.0055]];
 function epsSi(l){ let i=0; while(i<SI.length-2&&SI[i+1][0]<l) i++; const [l0,n0,k0]=SI[i],[l1,n1,k1]=SI[i+1], f=(l-l0)/(l1-l0), n=n0+f*(n1-n0), k=k0+f*(k1-k0); return [n*n-k*k,-2*n*k]; }
@@ -285,9 +918,7 @@ const spec=(th,d,disp)=>{ const P=[],D=[]; for(const l of LAM){ const [p,q]=disp
 const wrap=x=>((x+180)%360+360)%360-180;
 const SIG_P=0.15, SIG_D=0.80;     /* the ellipsometer's noise, degrees */
 
-/* ══════════════════════════════════════════════════════════════
-   THE HIDDEN TRUTH OF THIS SESSION
-   ══════════════════════════════════════════════════════════════ */
+/* ── the hidden truth of this session ── */
 const kB=8.617e-5;
 const TRUE={ b1:{phi:U(66,75),d:U(52,85)}, b2:{phi:U(52,62),d:U(205,245)},
   B0:U(150,172), Ea:U(1.30,1.45), BA0:U(0.95,1.12), Eb:U(1.90,2.10), K0:U(3,4), Lm:U(5,6), dn:U(1.0,1.8) };
@@ -299,116 +930,201 @@ function noisy([P,D]){ return [P.map(v=>v+gauss(0,SIG_P)), D.map(v=>wrap(v+gauss
 const DATA={B1:noisy(spec(TRUE.b1.phi,TRUE.b1.d,true)), B2:noisy(spec(TRUE.b2.phi,TRUE.b2.d,true))};
 function errOf(data,[P,D]){ let s=0; for(let i=0;i<LAM.length;i++){ s+=(data[0][i]-P[i])**2+wrap(data[1][i]-D[i])**2; } return Math.sqrt(s/(2*LAM.length)); }
 
-/* ══════════════════════════════════════════════════════════════
-   STATE
-   ══════════════════════════════════════════════════════════════ */
-const S={task:"A", samp:"B1", A:null, B12:null, exps:{}, cur:null, gen:null, b7:null, b8:null, csv:null};
-$("ainA").value="Name\tθ1\td\nex1\t50\t40\nex2\t30\t100";
-$("ainB").value="Name\tPhi\tT\tt\ntest\t50\t1000\t40";
-$("ainB8").value="T\tB\tdB\tB/A\td(B/A)";
-const rowsOf=txt=>txt.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&!/^name|^t\s/i.test(s)).map(s=>s.split(/\s+/));
-
-/* ── A.py ── */
-function runA(){ const d=T[lang], rows=rowsOf($("ainA").value), out=[];
-  for(const r of rows){ const th=+r[1], dd=+r[2]; if(r.length<3||!(th>=20&&th<=80)||!(dd>=0&&dd<=250)){ say(d.bad+r.join(" ")); return; } out.push({name:r[0],th,d:dd,s:spec(th,dd,false)}); }
-  S.A=out; say("A.py: "+out.length); draw(); }
-/* ── B1.py / B2.py ── */
-function runB12(){ const d=T[lang], phi=+$("phi").value, dd=+$("dd").value;
-  if(!(phi>=20&&phi<=80)||!(dd>=0&&dd<=250)){ say(d.bad+phi+" "+dd); return; }
-  const s=spec(phi,dd,true); S.B12={samp:S.samp,phi,d:dd,s,err:errOf(DATA[S.samp],s)}; $("v-err").textContent=S.B12.err.toFixed(3); say(S.samp+".py: Φ = "+phi+"°, d = "+dd+" nm"); draw(); }
-/* ── gen_data ── */
-function readB(){ const r=rowsOf($("ainB").value)[0]; if(!r||r.length<4) return null; const o={name:r[0],phi:+r[1],T:+r[2],tmax:+r[3]};
-  if(!(o.phi>=20&&o.phi<=80)||!(o.T>=800&&o.T<=1200)||!(o.tmax>0&&o.tmax<=200)) return null; return o; }
-function gen(){ const d=T[lang], o=readB(); if(!o){ say(d.bad+$("ainB").value.split("\n")[1]); return; } if(S.gen) return;
-  const ex={...o,frames:[],res:null}; S.exps[o.name]=ex; S.cur=o.name; S.b7=null; $("toB8").disabled=true;
-  let t=0, dd=TRUE.dn; const n=Math.floor(o.tmax/2);
-  $("gen").disabled=true; $("stop").disabled=false;
-  S.gen=setInterval(()=>{ for(let k=0;k<20;k++) dd=grow(o.T,0.1,dd); t+=2;
-    ex.frames.push({t,s:noisy(spec(o.phi+gauss(0,0.12),dd,true))});   /* the beam wanders by a tenth of a degree between measurements */ $("prog").style.width=(100*ex.frames.length/n).toFixed(1)+"%"; say(d.genRun+ex.frames.length+" / "+n);
-    if(ex.frames.length>=n) stopGen(); draw(); },110); }
-function stopGen(){ if(!S.gen) return; clearInterval(S.gen); S.gen=null; $("gen").disabled=false; $("stop").disabled=true; const ex=S.exps[S.cur]; say(T[lang].genDone+(ex?ex.frames.length:0)); draw(); }
-/* ── B.py: pick d for each spectrum, with its statistical error ── */
+/* B.py: the thickness that best explains one spectrum, with its statistical error */
 function fitD(phi,data){ const r=dd=>{ const [P,D]=spec(phi,dd,true); let s=0; for(let i=0;i<LAM.length;i++) s+=((data[0][i]-P[i])/SIG_P)**2+(wrap(data[1][i]-D[i])/SIG_D)**2; return s; };
   let best=0, bv=Infinity; for(let dd=0;dd<=300;dd+=1){ const v=r(dd); if(v<bv){ bv=v; best=dd; } }
   let a=Math.max(0,best-1), b=best+1; for(let k=0;k<40;k++){ const m1=a+(b-a)*0.382, m2=a+(b-a)*0.618; if(r(m1)<r(m2)) b=m2; else a=m1; }
   const dm=(a+b)/2, h=0.05, c=(r(dm+h)-2*r(dm)+r(Math.max(0,dm-h)))/(h*h), chi=r(dm)/(2*LAM.length-1);
   return [dm, Math.sqrt(2*Math.max(chi,1)/Math.max(c,1e-9))]; }
-function proc(){ const d=T[lang], o=readB(); const ex=o&&S.exps[o.name]; if(!ex||!ex.frames.length){ say(d.noExp); return; }
-  S.cur=o.name; ex.res=[]; let i=0; $("proc").disabled=true;
-  const go=()=>{ const until=Math.min(ex.frames.length,i+4); for(;i<until;i++){ const f=ex.frames[i], [dm,de]=fitD(ex.phi,f.s); ex.res.push({t:f.t,d:dm,dd:de}); }
-    $("prog").style.width=(100*i/ex.frames.length).toFixed(1)+"%"; say(d.proc0+i+" / "+ex.frames.length); draw();
-    if(i<ex.frames.length) setTimeout(go,0); else { $("proc").disabled=false; say(d.procDone); } };
-  go(); }
-/* ── B7.py: t = d²/B + d/(B/A) − τ for d ≥ 25 nm ── */
-function b7(){ const d=T[lang], o=readB(); const ex=o&&S.exps[o.name]; if(!ex){ say(d.noExp); return; } if(!ex.res){ say(d.needProc); return; }
-  const pts=ex.res.filter(p=>p.d>=25); if(pts.length<4){ $("b7out").textContent=d.thin; S.b7=null; $("toB8").disabled=true; return; }
-  /* weighted least squares in (d², d, 1) */
+function inv3(m){ const [a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2], A=e*i-f*h, B=-(d*i-f*g), C=d*h-e*g, det=a*A+b*B+c*C;
+  return [[A/det,-(b*i-c*h)/det,(b*f-c*e)/det],[B/det,(a*i-c*g)/det,-(a*f-c*d)/det],[C/det,-(a*h-b*g)/det,(a*e-b*d)/det]]; }
+
+/* the input files: header lines (Name …, T …) are skipped, fields split on white space */
+const rowsOf=txt=>txt.split(/\r?\n/).map(s=>s.trim()).filter(s=>s&&!/^name\b|^t\s/i.test(s)).map(s=>s.split(/\s+/));
+
+/* ─────────────────────────────── the window ─────────────────────────────── */
+const app={exps:{}, cur:null, gen:null, b7:null};
+function say(s){ app.out.textContent=s; }
+
+/* Part A — A.py */
+function plot_part_a(){
+  const out=[];
+  for(const r of rowsOf(app.ainA.value)){
+    let th,d; try{ if(r.length<3) throw new ValueError(); th=pyFloat(r[1]); d=pyFloat(r[2]); }
+    catch(e){ error("row",r.join(" ")); return; }
+    if(!(th>=20&&th<=80)){ warn("theta",r[0]); return; }
+    if(!(d>=0&&d<=250)){ warn("d",r[0]); return; }
+    out.push({name:r[0],th,d,s:spec(th,d,false)}); }
+  if(!out.length){ warn("empty"); return; }
+  app.resA=out;
+  const f=app.fig_a; f.clear(); const [a1,a2]=f.axes;
+  out.forEach(r=>{ const lab=`${r.name}: θ1 = ${r.th}°, d = ${r.d} nm`; a1.plot(LAM,r.s[0],{label:lab}); a2.plot(LAM,r.s[1],{label:lab}); });
+  a1.ylabel="Ψ, deg"; a2.ylabel="Δ, deg"; a2.xlabel="λ, nm"; a1.legend(); f.draw();
+  say(T[lang].say.A.replace("{}",out.length));
+}
+/* Part B.1–B.2 — B1.py, B2.py */
+function plot_part_b12(fitToo){
+  const smp=app.samp, D=DATA[smp];
+  const f=app.fig_b12; f.clear(); const [a1,a2]=f.axes;
+  a1.plot(LAM,D[0],{ls:"none",marker:"o",ms:4,label:smp+".txt"}); a2.plot(LAM,D[1],{ls:"none",marker:"o",ms:4,label:smp+".txt"});
+  if(fitToo){
+    let phi,d; try{ phi=pyFloat(app.e_phi.value); d=pyFloat(app.e_d.value); }catch(e){ error("num"); return; }
+    if(!(phi>=20&&phi<=80)){ warn("phi"); return; }
+    if(!(d>=0&&d<=250)){ warn("d",smp); return; }
+    const s=spec(phi,d,true), err=errOf(D,s); app.resB12={smp,phi,d,s,err};
+    a1.plot(LAM,s[0],{label:`Φ = ${phi}°, d = ${d} nm`}); a2.plot(LAM,s[1],{label:`Φ = ${phi}°, d = ${d} nm`});
+    app.lbl_err.textContent="error = "+err.toFixed(3)+" deg";
+    say(T[lang].say.B12.replace("{}",smp).replace("{}",err.toFixed(3)));
+  } else if(app.resB12&&app.resB12.smp===smp){ const r=app.resB12;
+    a1.plot(LAM,r.s[0],{label:`Φ = ${r.phi}°, d = ${r.d} nm`}); a2.plot(LAM,r.s[1],{label:`Φ = ${r.phi}°, d = ${r.d} nm`}); }
+  else app.lbl_err.textContent="error = — deg";
+  a1.ylabel="Ψ, deg"; a2.ylabel="Δ, deg"; a2.xlabel="λ, nm"; a1.legend(); f.draw();
+}
+/* Part B.3–B.7 — gen_data, B.py, B7.py */
+function readB(){ const r=rowsOf(app.ainB.value)[0];
+  if(!r||r.length<4){ error("brow"); return null; }
+  let o; try{ o={name:r[0],phi:pyFloat(r[1]),T:pyFloat(r[2]),tmax:pyFloat(r[3])}; }catch(e){ error("brow"); return null; }
+  if(!(o.phi>=20&&o.phi<=80)){ warn("phi"); return null; }
+  if(!(o.T>=800&&o.T<=1200)){ warn("T"); return null; }
+  if(!(o.tmax>0&&o.tmax<=200)){ warn("tmax"); return null; }
+  return o; }
+function gen_data(){
+  if(app.gen) return; const o=readB(); if(!o) return;
+  const ex={...o,frames:[],res:null}; app.exps[o.name]=ex; app.cur=o.name; app.b7=null; app.lbl_b7.textContent=""; app.b_to8.disabled=true;
+  let t=0, dd=TRUE.dn; const n=Math.floor(o.tmax/2);
+  app.b_gen.disabled=true; app.b_stop.disabled=false; app.b_proc.disabled=true; app.b_b7.disabled=true;
+  app.gen=setInterval(()=>{ for(let k=0;k<20;k++) dd=grow(o.T,0.1,dd); t+=2;
+    /* the beam wanders by a tenth of a degree between measurements */
+    ex.frames.push({t,s:noisy(spec(o.phi+gauss(0,0.12),dd,true))});
+    app.pb.set(ex.frames.length/n); say(T[lang].say.gen.replace("{}",ex.name).replace("{}",ex.frames.length).replace("{}",n));
+    if(ex.frames.length>=n) stop_gen(); else draw_b3(); },110);
+}
+function stop_gen(){ if(!app.gen) return; clearInterval(app.gen); app.gen=null;
+  app.b_gen.disabled=false; app.b_stop.disabled=true; app.b_proc.disabled=false; app.b_b7.disabled=false;
+  const ex=app.exps[app.cur]; say(T[lang].say.genDone.replace("{}",ex.name).replace("{}",ex.frames.length)); draw_b3(); }
+function run_b(){
+  const o=readB(); if(!o) return; const ex=app.exps[o.name];
+  if(!ex||!ex.frames.length){ error("noexp",o.name); return; }
+  app.cur=o.name; ex.res=[]; let i=0; app.b_proc.disabled=true; app.b_gen.disabled=true; app.b_b7.disabled=true;
+  const go=()=>{ const until=Math.min(ex.frames.length,i+4);
+    for(;i<until;i++){ const f=ex.frames[i], [dm,de]=fitD(ex.phi,f.s); ex.res.push({t:f.t,d:dm,dd:de}); }
+    app.pb.set(i/ex.frames.length); say(T[lang].say.proc.replace("{}",i).replace("{}",ex.frames.length)); draw_b3();
+    if(i<ex.frames.length) setTimeout(go,0);
+    else { app.b_proc.disabled=false; app.b_gen.disabled=false; app.b_b7.disabled=false; say(T[lang].say.procDone.replace("{}",ex.name)); } };
+  go();
+}
+function run_b7(){
+  const o=readB(); if(!o) return; const ex=app.exps[o.name];
+  if(!ex){ error("noexp",o.name); return; } if(!ex.res){ error("noproc",o.name); return; }
+  const pts=ex.res.filter(p=>p.d>=25);
+  if(pts.length<4){ app.b7=null; app.b_to8.disabled=true; app.lbl_b7.textContent=""; warn("thin"); draw_b3(); return; }
   const M=[[0,0,0],[0,0,0],[0,0,0]], v=[0,0,0];
-  for(const p of pts){ const w=1, f=[p.d*p.d,p.d,1]; for(let a=0;a<3;a++){ v[a]+=w*f[a]*p.t; for(let b=0;b<3;b++) M[a][b]+=w*f[a]*f[b]; } }
+  for(const p of pts){ const f=[p.d*p.d,p.d,1]; for(let a=0;a<3;a++){ v[a]+=f[a]*p.t; for(let b=0;b<3;b++) M[a][b]+=f[a]*f[b]; } }
   const inv=inv3(M), c=[0,1,2].map(a=>inv[a][0]*v[0]+inv[a][1]*v[1]+inv[a][2]*v[2]);
   let chi=0; for(const p of pts){ chi+=(p.t-(c[0]*p.d*p.d+c[1]*p.d+c[2]))**2; } const s2=chi/Math.max(1,pts.length-3);
   const B=1/c[0], BA=1/c[1], sB=Math.sqrt(s2*inv[0][0])/(c[0]*c[0]), sBA=Math.sqrt(s2*inv[1][1])/(c[1]*c[1]);
-  S.b7={T:ex.T,B,sB,BA,sBA}; $("toB8").disabled=false;
-  $("b7out").innerHTML=`T = ${ex.T} °C<br>B = ${B.toFixed(1)} ± ${sB.toFixed(1)} nm²/min<br>B/A = ${BA.toFixed(3)} ± ${sBA.toFixed(3)} nm/min`; draw(); }
-function inv3(m){ const [a,b,c]=m[0],[d,e,f]=m[1],[g,h,i]=m[2], A=e*i-f*h, B=-(d*i-f*g), C=d*h-e*g, det=a*A+b*B+c*C;
-  return [[A/det,-(b*i-c*h)/det,(b*f-c*e)/det],[B/det,(a*i-c*g)/det,-(a*f-c*d)/det],[C/det,-(a*h-b*g)/det,(a*e-b*d)/det]]; }
-function toB8(){ if(!S.b7) return; const r=S.b7, ta=$("ainB8"); ta.value=ta.value.replace(/\s*$/,"")+`\n${r.T}\t${r.B.toFixed(1)}\t${r.sB.toFixed(1)}\t${r.BA.toFixed(3)}\t${r.sBA.toFixed(3)}`; say(T[lang].added); }
-/* ── B8.py ── */
-function runB8(){ const d=T[lang], rows=rowsOf($("ainB8").value).map(r=>r.map(Number)).filter(r=>r.length>=5&&r.every(isFinite)&&r[1]>0&&r[3]>0);
-  if(rows.length<2){ say(d.b8need); return; }
+  app.b7={name:ex.name,T:ex.T,B,sB,BA,sBA,c}; app.b_to8.disabled=false;
+  app.lbl_b7.textContent=`T = ${ex.T} °C\nB = ${B.toFixed(1)} ± ${sB.toFixed(1)} nm²/min\nB/A = ${BA.toFixed(3)} ± ${sBA.toFixed(3)} nm/min`;
+  say(T[lang].say.b7.replace("{}",ex.name).replace("{}",pts.length)); draw_b3();
+}
+function to_b8(){ if(!app.b7) return; const r=app.b7, ta=app.ainB8;
+  ta.value=ta.value.replace(/\s*$/,"")+`\n${r.T}\t${r.B.toFixed(1)}\t${r.sB.toFixed(1)}\t${r.BA.toFixed(3)}\t${r.sBA.toFixed(3)}`; say(T[lang].say.added); }
+function draw_b3(){
+  const f=app.fig_b3; f.clear(); const [a1,a2]=f.axes, ex=app.exps[app.cur];
+  a1.xlabel="t, min"; a1.ylabel="d, nm"; a2.xlabel="λ, nm"; a2.ylabel="Ψ, Δ, deg";
+  if(ex&&ex.res&&ex.res.length){
+    a1.errorbar(ex.res.map(p=>p.t),ex.res.map(p=>p.d),ex.res.map(p=>p.dd),{marker:"o",ms:4,label:ex.name+" (B.py)"});
+    if(app.b7&&app.b7.name===ex.name){ const [c0,c1,c2]=app.b7.c, ds=[], ts=[], dmax=Math.max(...ex.res.map(p=>p.d));
+      for(let dd=25;dd<=dmax;dd+=0.5){ ds.push(dd); ts.push(c0*dd*dd+c1*dd+c2); }
+      a1.plot(ts,ds,{label:"t = d²/B + d/(B/A) + c (B7.py)"}); }
+    a1.legend(); }
+  if(ex&&ex.frames.length){ const fr=ex.frames[ex.frames.length-1];
+    a2.plot(LAM,fr.s[0],{ls:"none",marker:"o",ms:4,label:"Ψ"}); a2.plot(LAM,fr.s[1],{ls:"none",marker:"o",ms:4,label:"Δ"}); a2.legend();
+    a2.title=`${ex.name}:  Φ = ${ex.phi}°,  T = ${ex.T} °C,  t = ${fr.t} min`; }
+  f.draw();
+}
+/* Part B.8 — B8.py */
+function plot_part_b8(){
+  const rows=[];
+  for(const r of rowsOf(app.ainB8.value)){ let v; try{ if(r.length<5) throw new ValueError(); v=r.slice(0,5).map(pyFloat); }catch(e){ error("row",r.join(" ")); return; }
+    if(!(v[1]>0&&v[3]>0)){ warn("pos",r.join(" ")); return; } rows.push(v); }
+  if(rows.length<2){ warn("b8need"); return; }
   const x=rows.map(r=>1/(r[0]+273.15)), yB=rows.map(r=>Math.log(r[1])), eB=rows.map(r=>r[2]/r[1]), yA=rows.map(r=>Math.log(r[3])), eA=rows.map(r=>r[4]/r[3]);
   const fB=linfit(x,yB,eB.map(e=>1/Math.max(e,1e-6)**2)), fA=linfit(x,yA,eA.map(e=>1/Math.max(e,1e-6)**2));
-  S.b8={x,yB,eB,yA,eA,fB,fA};
-  $("b8out").innerHTML=`ln B: ${d.slope} = ${fB.b.toFixed(0)} ± ${fB.sb.toFixed(0)} K<br>ln(B/A): ${d.slope} = ${fA.b.toFixed(0)} ± ${fA.sb.toFixed(0)} K`; draw(); }
+  app.resB8={x,yB,eB,yA,eA};
+  const f=app.fig_b8; f.clear(); const [a1,a2]=f.axes, xs=[Math.min(...x),Math.max(...x)];
+  a1.errorbar(x,yB,eB,{marker:"o",ms:5,label:"B8_in.txt"}); a1.plot(xs,xs.map(v=>fB.a+fB.b*v),{label:`slope = ${fB.b.toFixed(0)} ± ${fB.sb.toFixed(0)} K`});
+  a2.errorbar(x,yA,eA,{marker:"o",ms:5,label:"B8_in.txt"}); a2.plot(xs,xs.map(v=>fA.a+fA.b*v),{label:`slope = ${fA.b.toFixed(0)} ± ${fA.sb.toFixed(0)} K`});
+  a1.ylabel="ln(B·min/nm²)"; a2.ylabel="ln(B/A·min/nm)"; a2.xlabel="1/T, 1/K"; a1.legend(); a2.legend(); f.draw();
+  app.lbl_b8.textContent=`ln B:      slope = ${fB.b.toFixed(0)} ± ${fB.sb.toFixed(0)} K\nln(B/A):  slope = ${fA.b.toFixed(0)} ± ${fA.sb.toFixed(0)} K`;
+  say(T[lang].say.B8.replace("{}",rows.length));
+}
+/* File ▸ save the data behind the active plot */
+function save_csv(){
+  let name, txt=null;
+  if(active===0&&app.resA){ name="A_out.csv"; txt=["lambda_nm",...app.resA.flatMap(r=>[r.name+"_Psi",r.name+"_Delta"])].join(",")+"\n"+LAM.map((l,i)=>[l,...app.resA.flatMap(r=>[r.s[0][i].toFixed(5),r.s[1][i].toFixed(5)])].join(",")).join("\n"); }
+  else if(active===1){ const D=DATA[app.samp]; name=app.samp+".csv"; txt="lambda_nm,Psi_deg,Delta_deg\n"+LAM.map((l,i)=>[l,D[0][i].toFixed(3),D[1][i].toFixed(3)].join(",")).join("\n"); }
+  else if(active===2){ const ex=app.exps[app.cur];
+    if(ex&&ex.res&&ex.res.length){ name="res_"+ex.name+".csv"; txt="t_min,d_nm,dd_nm\n"+ex.res.map(p=>[p.t,p.d.toFixed(2),p.dd.toFixed(2)].join(",")).join("\n"); }
+    else if(ex&&ex.frames.length){ const fr=ex.frames[ex.frames.length-1]; name=ex.name+"_t"+fr.t+".csv"; txt="lambda_nm,Psi_deg,Delta_deg\n"+LAM.map((l,i)=>[l,fr.s[0][i].toFixed(3),fr.s[1][i].toFixed(3)].join(",")).join("\n"); } }
+  else if(active===3&&app.resB8){ const b=app.resB8; name="B8_out.csv"; txt="invT_K,lnB,dlnB,lnBA,dlnBA\n"+b.x.map((v,i)=>[v.toExponential(6),b.yB[i].toFixed(5),b.eB[i].toFixed(5),b.yA[i].toFixed(5),b.eA[i].toFixed(5)].join(",")).join("\n"); }
+  if(txt===null){ warn("nodata"); return; }
+  saveText(name,txt+"\n"); say(T[lang].say.saved.replace("{}",name));
+}
+function on_tab_change(){ if(active===1) plot_part_b12(false); else if(active===2) draw_b3(); }
 
-/* ══════════════════════════════════════════════════════════════
-   DRAWING
-   ══════════════════════════════════════════════════════════════ */
-function say(s){ $("status").textContent=s; }
-function draw(){ const d=T[lang]; let s1=[],s2=[],o1={xl:"λ, nm",yl:"Ψ, deg"},o2={xl:"λ, nm",yl:"Δ, deg"}; S.csv=null;
-  if(S.task==="A"){ $("t-cap1").textContent=d.cap1A; $("t-cap2").textContent=d.cap2A;
-    if(S.A){ S.A.forEach((r,i)=>{ const lab=`${r.name}: ${r.th}°, ${r.d} nm`; s1.push({x:LAM,y:r.s[0],col:PAL[i%10],label:lab}); s2.push({x:LAM,y:r.s[1],col:PAL[i%10],label:lab}); });
-      S.csv=["lambda_nm",...S.A.flatMap(r=>[r.name+"_Psi",r.name+"_Delta"])].join(",")+"\n"+LAM.map((l,i)=>[l,...S.A.flatMap(r=>[r.s[0][i].toFixed(5),r.s[1][i].toFixed(5)])].join(",")).join("\n"); } }
-  else if(S.task==="B12"){ $("t-cap1").textContent=d.cap1B; $("t-cap2").textContent=d.cap2B; const D=DATA[S.samp];
-    s1.push({x:LAM,y:D[0],col:PAL[0],mode:"pts",label:"data"}); s2.push({x:LAM,y:D[1],col:PAL[0],mode:"pts",label:"data"});
-    if(S.B12&&S.B12.samp===S.samp){ s1.push({x:LAM,y:S.B12.s[0],col:PAL[1],label:"fit"}); s2.push({x:LAM,y:S.B12.s[1],col:PAL[1],label:"fit"}); }
-    o1.yr=null; S.csv="lambda_nm,Psi_deg,Delta_deg\n"+LAM.map((l,i)=>[l,D[0][i].toFixed(3),D[1][i].toFixed(3)].join(",")).join("\n"); }
-  else if(S.task==="B3"){ $("t-cap1").textContent=d.cap1C; $("t-cap2").textContent=d.cap2C; const ex=S.exps[S.cur];
-    o1={xl:"t, min",yl:"d, nm",padX:true}; o2={xl:"λ, nm",yl:"Ψ, Δ, deg"};
-    if(ex&&ex.res&&ex.res.length){ s1.push({x:ex.res.map(p=>p.t),y:ex.res.map(p=>p.d),err:ex.res.map(p=>p.dd),col:PAL[0],mode:"pts",label:ex.name});
-      if(S.b7&&S.b7.T===ex.T){ const ts=[],ds=[]; const B=S.b7.B, A=B/S.b7.BA; const p25=ex.res.filter(p=>p.d>=25); if(p25.length){ const tau=(p25[0].d**2+A*p25[0].d)/B-p25[0].t;
-        for(let dd=25;dd<=Math.max(...ex.res.map(p=>p.d));dd+=0.5){ ts.push((dd*dd+A*dd)/B-tau); ds.push(dd); } s1.push({x:ts,y:ds,col:PAL[1],label:"d² + Ad = B(t + τ)"}); } }
-      S.csv="t_min,d_nm,dd_nm\n"+ex.res.map(p=>[p.t,p.d.toFixed(2),p.dd.toFixed(2)].join(",")).join("\n"); }
-    if(ex&&ex.frames.length){ const f=ex.frames[ex.frames.length-1]; s2.push({x:LAM,y:f.s[0],col:PAL[0],mode:"pts",label:"Ψ"},{x:LAM,y:f.s[1],col:PAL[3],mode:"pts",label:"Δ"});
-      o2.title=`${ex.name} · Φ = ${ex.phi}° · T = ${ex.T} °C · t = ${f.t} min`; if(!S.csv) S.csv="lambda_nm,Psi_deg,Delta_deg\n"+LAM.map((l,i)=>[l,f.s[0][i].toFixed(3),f.s[1][i].toFixed(3)].join(",")).join("\n"); } }
-  else { $("t-cap1").textContent=d.cap1D; $("t-cap2").textContent=d.cap2D; o1={xl:"1/T, 1/K",yl:"ln(B·min/nm²)",padX:true}; o2={xl:"1/T, 1/K",yl:"ln(B/A·min/nm)",padX:true};
-    if(S.b8){ const b=S.b8, xs=[Math.min(...b.x),Math.max(...b.x)];
-      s1.push({x:b.x,y:b.yB,err:b.eB,col:PAL[0],mode:"pts"},{x:xs,y:xs.map(v=>b.fB.a+b.fB.b*v),col:PAL[1],label:`${d.slope} ${b.fB.b.toFixed(0)} ± ${b.fB.sb.toFixed(0)} K`});
-      s2.push({x:b.x,y:b.yA,err:b.eA,col:PAL[0],mode:"pts"},{x:xs,y:xs.map(v=>b.fA.a+b.fA.b*v),col:PAL[1],label:`${d.slope} ${b.fA.b.toFixed(0)} ± ${b.fA.sb.toFixed(0)} K`});
-      S.csv="invT_K,lnB,dlnB,lnBA,dlnBA\n"+b.x.map((v,i)=>[v.toExponential(6),b.yB[i].toFixed(5),b.eB[i].toFixed(5),b.yA[i].toFixed(5),b.eA[i].toFixed(5)].join(",")).join("\n"); } }
-  plot($("cv1"),{...o1,series:s1,empty:d.idle,ratio:0.42}); plot($("cv2"),{...o2,series:s2,empty:d.idle,ratio:0.42});
-  $("csv").disabled=!S.csv; }
+sizeWindow(); addEventListener("resize",sizeWindow);
+addTab("Part A",p=>{ const [l,r]=columns(p);
+  const f=labelFrame(" A_in.txt ","col"); l.appendChild(f);
+  f.appendChild(el("span","lab","Name    θ1 (°)    d (nm)"));
+  app.ainA=text("Name\tθ1\td\nex1\t50\t40\nex2\t30\t100",9); f.appendChild(app.ainA);
+  f.appendChild(button("Calculate and plot",plot_part_a,"calc"));
+  const g=labelFrame(" Constants ","col"); l.appendChild(g);
+  g.appendChild(el("div","info","ε(air) = 1.00\nε(Si) = 17.2 − 0.430i\nε(SiO2) = 2.13\n20° ≤ θ1 ≤ 80°,  0 ≤ d ≤ 250 nm"));
+  app.fig_a=new Figure(r,2); });
+addTab("Part B.1–B.2",p=>{ const [l,r]=columns(p);
+  const f=labelFrame(" Sample ","col"); l.appendChild(f);
+  app.samp="B1"; f.appendChild(radios("samp",[["B1","B1.txt"],["B2","B2.txt"]],"B1",v=>{ app.samp=v; plot_part_b12(false); }));
+  const g=labelFrame(" Parameters "); l.appendChild(g);
+  g.appendChild(el("span","lab","Φ (°):")); app.e_phi=entry("60.0"); g.appendChild(app.e_phi);
+  g.appendChild(el("span","lab","d (nm):")); app.e_d=entry("50.0"); g.appendChild(app.e_d);
+  g.appendChild(button("Calculate and plot",()=>plot_part_b12(true),"calc"));
+  app.lbl_err=el("div","dinfo","error = — deg"); g.appendChild(app.lbl_err);
+  [app.e_phi,app.e_d].forEach(e=>e.addEventListener("keydown",ev=>{ if(ev.key==="Enter"){ ev.preventDefault(); plot_part_b12(true); } }));
+  app.fig_b12=new Figure(r,2); });
+addTab("Part B.3–B.7",p=>{ const [l,r]=columns(p);
+  const f=labelFrame(" B_in.txt ","col"); l.appendChild(f);
+  f.appendChild(el("span","lab","Name    Φ (°)    T (°C)    t (min)"));
+  app.ainB=text("Name\tPhi\tT\tt\ntest\t50\t1000\t40",3); f.appendChild(app.ainB);
+  const row=el("div","brow"); f.appendChild(row);
+  app.b_gen=button("Run gen_data",gen_data); app.b_stop=button("Stop",stop_gen); app.b_stop.disabled=true; row.appendChild(app.b_gen); row.appendChild(app.b_stop);
+  app.pb=progress(); f.appendChild(app.pb);
+  const g=labelFrame(" Processing ","col"); l.appendChild(g);
+  const row2=el("div","brow"); g.appendChild(row2);
+  app.b_proc=button("Run B.py",run_b); app.b_b7=button("Run B7.py",run_b7); row2.appendChild(app.b_proc); row2.appendChild(app.b_b7);
+  app.lbl_b7=el("div","dinfo",""); g.appendChild(app.lbl_b7);
+  app.b_to8=button("Append to B8_in.txt",to_b8); app.b_to8.disabled=true; g.appendChild(app.b_to8);
+  app.fig_b3=new Figure(r,2); });
+addTab("Part B.8",p=>{ const [l,r]=columns(p);
+  const f=labelFrame(" B8_in.txt ","col"); l.appendChild(f);
+  f.appendChild(el("span","lab","T (°C)   B   ΔB   B/A   Δ(B/A)"));
+  app.ainB8=text("T\tB\tdB\tB/A\td(B/A)",9); f.appendChild(app.ainB8);
+  f.appendChild(button("Calculate and plot",plot_part_b8,"calc"));
+  app.lbl_b8=el("div","dinfo",""); f.appendChild(app.lbl_b8);
+  app.fig_b8=new Figure(r,2); });
+app.out=$("out"); $("save").onmousedown=e=>e.preventDefault(); $("save").onclick=save_csv;
 
-/* ══════════════════════════════════════════════════════════════
-   CONTROLS AND LANGUAGE
-   ══════════════════════════════════════════════════════════════ */
-function buildSeg(){ const d=T[lang], box=$("taskSeg"); box.innerHTML="";
-  [["A",d.tA],["B12",d.tB12],["B3",d.tB3],["B8",d.tB8]].forEach(([k,l])=>{ const b=document.createElement("button"); b.textContent=l; if(k===S.task) b.className="on"; b.onclick=()=>{ S.task=k; buildSeg(); applyLang(); draw(); }; box.appendChild(b); });
-  const sb=$("sampSeg"); sb.innerHTML=""; [["B1",d.sB1],["B2",d.sB2]].forEach(([k,l])=>{ const b=document.createElement("button"); b.textContent=l; if(k===S.samp) b.className="on"; b.onclick=()=>{ S.samp=k; $("v-err").textContent="—"; buildSeg(); draw(); }; sb.appendChild(b); });
-  for(const [k,id] of [["A","boxA"],["B12","boxB12"],["B3","boxB3"],["B8","boxB8"]]) $(id).style.display=S.task===k?"block":"none"; }
+active=0; tabs[0].t.className="on"; tabs[0].p.style.display="flex";
+requestAnimationFrame(()=>{ [1,2,3].forEach(k=>tabs[k].p.style.display="flex");
+  plot_part_b12(false); draw_b3(); [app.fig_b8].forEach(f=>{ const [a1,a2]=f.axes; a1.ylabel="ln(B·min/nm²)"; a2.ylabel="ln(B/A·min/nm)"; a2.xlabel="1/T, 1/K"; f.draw(); });
+  [1,2,3].forEach(k=>tabs[k].p.style.display="none"); plot_part_a(); say(T[lang].say.idle); });
+
 function applyLang(){ const d=T[lang]; document.documentElement.lang=lang;
-  $("t-title").textContent=d.title; $("t-sub").textContent=d.sub; $("t-h-task").textContent=d.hTask;
-  $("t-taskdesc").textContent={A:d.dA,B12:d.dB12,B3:d.dB3,B8:d.dB8}[S.task];
-  $("t-h-b12").textContent=d.hB12; $("t-err").textContent=d.err;
-  for(const [id,k] of [["runA","runA"],["runB12","runB12"],["gen","gen"],["stop","stop"],["proc","proc"],["b7","b7"],["toB8","toB8"],["runB8","runB8"],["csv","csv"],["t-note","note"]]) $(id).textContent=d[k];
-  $("lang-ko").className=lang==="ko"?"on":""; $("lang-en").className=lang==="en"?"on":""; document.title=d.title+" · HaslaLab"; }
-$("runA").onclick=runA; $("runB12").onclick=runB12; $("gen").onclick=gen; $("stop").onclick=stopGen; $("proc").onclick=proc; $("b7").onclick=b7; $("toB8").onclick=toB8; $("runB8").onclick=runB8;
-$("phi").oninput=()=>{ $("v-phi").textContent=$("phi").value; }; $("dd").oninput=()=>{ $("v-d").textContent=$("dd").value; };
-$("csv").onclick=()=>{ if(S.csv) saveText("ISPhO2024_T1_"+S.task+".csv",S.csv+"\n"); };
-$("lang-ko").onclick=()=>{ lang="ko"; buildSeg(); applyLang(); draw(); };
-$("lang-en").onclick=()=>{ lang="en"; buildSeg(); applyLang(); draw(); };
-addEventListener("resize",draw);
-buildSeg(); applyLang(); say(T[lang].idle); $("v-phi").textContent=$("phi").value; $("v-d").textContent=$("dd").value; draw();
+  $("t-h1").textContent=d.h1; $("t-h2").textContent=d.h2; $("t-note").innerHTML=d.note;
+  $("lang-ko").className=lang==="ko"?"on":""; $("lang-en").className=lang==="en"?"on":""; }
+$("lang-ko").onclick=()=>{lang="ko";applyLang();};
+$("lang-en").onclick=()=>{lang="en";applyLang();};
+applyLang();
 </script>
   <script src="adfit.js"></script>
 </body>

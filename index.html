@@ -1910,8 +1910,8 @@ const DATA={
   abbr:"ISPhO", since:2023,
   full:{ko:"국제과학물리올림피아드",en:"International Scientific Physics Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"MIPT가 주최합니다. 실험 라운드 외에, 주최측이 시뮬레이터를 함께 배포한 이론 문제도 T로 표시해 함께 실었습니다.",
-        en:"Run by MIPT. Alongside the experimental round, theory problems that shipped with their own simulator are listed here too, marked T."},
+  note:{ko:"MIPT가 주최합니다. 실험 라운드 외에, 시뮬레이터로 자료를 얻는 이론 문제도 T로 표시해 함께 실었습니다. 2025 T1은 주최측 프로그램을 그대로 옮겼고, 2023·2024 T1은 주최측 프로그램이 공개되지 않아 문제지와 풀이에 맞추어 HaslaLab이 2026 E1 FBG Writer와 같은 창으로 다시 만들었습니다.",
+        en:"Run by MIPT. Alongside the experimental round, theory problems whose data come from a simulator are listed here too, marked T. The 2025 T1 program is the organisers' own; the 2023 and 2024 T1 programs were never published, so HaslaLab rebuilt them from the sheet and the solution in the window of the 2026 E1 FBG Writer."},
   years:[
    {y:2026,host:{ko:"온라인",en:"Online"},
     org:{abbr:"MIPT",name:"Moscow Institute of Physics and Technology"},
@@ -1940,11 +1940,10 @@ const DATA={
               sol:{ko:"pdf/ISPhO_2025_S_E_KO.pdf", en:"pdf/ISPhO_2025_S_E.pdf"}}},
       {id:"T1", theory:true,
        title:{ko:"강자성 자구벽 동역학",en:"Ferromagnetic Domain Wall Dynamics"},
-       desc:{ko:"스핀 사슬의 란다우–리프시츠–길버트 방정식을 풀어, 자구벽의 폭과 외부 자기장 아래에서의 이동을 관찰합니다.",
-             en:"Integrate the Landau–Lifshitz–Gilbert equation on a spin chain and watch the wall's width and its motion under an applied field."},
+       desc:{ko:"주최측 Ferromagnetic Simulator 를 그대로 옮겼습니다. 스핀 사슬의 란다우–리프시츠–길버트 방정식을 풀어, 자구벽의 폭과 외부 자기장 아래에서의 이동을 관찰합니다.",
+             en:"The organisers' Ferromagnetic Simulator, moved over as it is. Integrate the Landau–Lifshitz–Gilbert equation on a spin chain and watch the wall's width and its motion under an applied field."},
        tags:["자성","자구벽","수치적분"], tagsEn:["Magnetism","Domain wall","Numerics"],
        files:{sim:"sim/ispho2025_T1_web.html",
-              exe:{ko:REL+"v1.0/ISPhO2025_T1_sim_KO.exe", en:REL+"v1.0/ISPhO2025_T1_sim_EN.exe"},
               src:{ko:"src/ispho2025_T1_ferro_sim_KO.py", en:"src/ispho2025_T1_ferro_sim_EN.py"},
               pdf:{ko:"pdf/ISPhO_2025_T_KO.pdf", en:"pdf/ISPhO_2025_T_EN.pdf"},
               sol:{ko:"pdf/ISPhO_2025_S_T_KO.pdf", en:"pdf/ISPhO_2025_S_T.pdf"}}}
@@ -1987,8 +1986,8 @@ const DATA={
   abbr:"OPhO", since:2020,
   full:{ko:"온라인 물리 올림피아드",en:"Online Physics Olympiad"},
   scope:{ko:"온라인 · 국제",en:"Online · International"},
-  note:{ko:"팀으로 치르는 온라인 대회입니다. 실험은 주최측이 내놓은 프로그램이나 노트북을 돌려 자료를 얻는 시뮬레이션 실험이라, 아래 시뮬레이터도 숫자를 넣으면 결과가 나오는 방식으로 만들었습니다. 2021·2023·2024년은 주최측 노트북을 그대로 옮겼고(원본은 ‘소스’), 2022년은 주최측이 지정한 D. Schroeder의 공개 유체 앱을 같은 알고리즘으로 다시 만들었습니다. 2025년과 2026년은 주최측 프로그램이 공개되지 않아 HaslaLab이 같은 입출력으로 만들었습니다. 2026년은 시뮬레이션 랩(23번)만 실었습니다.",
-        en:"A team contest held online. Its experiments are simulation labs, run on a program or notebook the organisers hand out, so the simulators below work the same way: numbers in, results out. 2021, 2023 and 2024 port the organisers' notebooks unchanged (the originals are the ‘source’ downloads), and 2022 rebuilds D. Schroeder's public fluid app, which the organisers named, with the same algorithm. The 2025 and 2026 programs were never published, so HaslaLab rebuilt them with the same input and output. For 2026 only the simulation lab (problem 23) is listed."},
+  note:{ko:"팀으로 치르는 온라인 대회입니다. 실험은 주최측이 내놓은 프로그램이나 노트북을 돌려 자료를 얻는 시뮬레이션 실험이라, 아래 시뮬레이터도 숫자를 넣으면 결과가 나오는 방식으로 만들었습니다. 2021·2023·2024년은 주최측 노트북을 그대로 옮겼고(원본은 ‘소스’), 2022년은 주최측이 지정한 D. Schroeder의 공개 유체 앱을 같은 알고리즘으로 다시 만들었습니다. 2025년과 2026년은 주최측 프로그램이 공개되지 않아 HaslaLab이 같은 입출력으로 만들었습니다. 2026년은 시뮬레이션 랩(23번)만 실었습니다. 한국어 문제지와 해설은 원본과 같은 판형·글꼴·배치로 다시 짰습니다. 공식 해설이 없는 2022·2023·2025년 해설은 HaslaLab이 시뮬레이터로 직접 풀어 썼고, 2025년 해설의 숫자는 HaslaLab 시뮬레이터의 숨은 값 기준입니다.",
+        en:"A team contest held online. Its experiments are simulation labs, run on a program or notebook the organisers hand out, so the simulators below work the same way: numbers in, results out. 2021, 2023 and 2024 port the organisers' notebooks unchanged (the originals are the ‘source’ downloads), and 2022 rebuilds D. Schroeder's public fluid app, which the organisers named, with the same algorithm. The 2025 and 2026 programs were never published, so HaslaLab rebuilt them with the same input and output. For 2026 only the simulation lab (problem 23) is listed. The Korean papers and solutions are re-typeset in the originals' page size, fonts and layout. No official solutions exist for 2022, 2023 and 2025; HaslaLab worked them out on the simulators, and the 2025 numbers refer to the HaslaLab simulator's hidden values."},
   years:[
    {y:2026,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2000,7 +1999,8 @@ const DATA={
        tags:["자기공명","스핀","신호분석"], tagsEn:["Magnetic resonance","Spin","Signal analysis"],
        files:{sim:"sim/opho2026_23_web.html",
               src:{ko:"src/opho2026_23_spin_sim_KO.py", en:"src/opho2026_23_spin_sim_EN.py"},
-              pdf:"pdf/OPhO_2026_23.pdf", sol:"pdf/OPhO_2026_S23.pdf"}}
+              pdf:{ko:"pdf/OPhO_2026_23_KO.pdf", en:"pdf/OPhO_2026_23.pdf"},
+              sol:{ko:"pdf/OPhO_2026_S23_KO.pdf", en:"pdf/OPhO_2026_S23.pdf"}}}
     ]},
    {y:2025,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2012,7 +2012,8 @@ const DATA={
        tags:["역학","마그누스 효과","궤적 분석"], tagsEn:["Mechanics","Magnus effect","Trajectory analysis"],
        files:{sim:"sim/opho2025_E_web.html",
               src:{ko:"src/opho2025_E_magnus_sim_KO.py", en:"src/opho2025_E_magnus_sim_EN.py"},
-              pdf:"pdf/OPhO_2025_E.pdf"}}
+              pdf:{ko:"pdf/OPhO_2025_E_KO.pdf", en:"pdf/OPhO_2025_E.pdf"},
+              sol:{ko:"pdf/OPhO_2025_S_E_KO.pdf", en:"pdf/OPhO_2025_S_E.pdf"}}}
     ]},
    {y:2024,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2023,7 +2024,8 @@ const DATA={
              en:"Flip the spins of a 50×50 lattice by Metropolis Monte Carlo while sweeping T and B, and find T_c, the energy and heat capacity, and the critical exponent β."},
        tags:["통계물리","상전이","몬테카를로"], tagsEn:["Statistical physics","Phase transition","Monte Carlo"],
        files:{sim:"sim/opho2024_E_web.html", src:"src/opho2024_E_ising_official.ipynb",
-              pdf:"pdf/OPhO_2024_E.pdf", sol:"pdf/OPhO_2024_S_E.pdf"}}
+              pdf:{ko:"pdf/OPhO_2024_E_KO.pdf", en:"pdf/OPhO_2024_E.pdf"},
+              sol:{ko:"pdf/OPhO_2024_S_E_KO.pdf", en:"pdf/OPhO_2024_S_E.pdf"}}}
     ]},
    {y:2023,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2034,7 +2036,8 @@ const DATA={
              en:"Integrate the Lorenz equations with RK4 and RK2, look at the attractors and their stability, and use the distance between two trajectories for the maximal Lyapunov exponent and the time T_max a run stays accurate."},
        tags:["비선형 동역학","카오스","수치적분"], tagsEn:["Nonlinear dynamics","Chaos","Numerics"],
        files:{sim:"sim/opho2023_E_web.html", src:"src/opho2023_E_lorenz_official.ipynb",
-              pdf:"pdf/OPhO_2023_E.pdf"}}
+              pdf:{ko:"pdf/OPhO_2023_E_KO.pdf", en:"pdf/OPhO_2023_E.pdf"},
+              sol:{ko:"pdf/OPhO_2023_S_E_KO.pdf", en:"pdf/OPhO_2023_S_E.pdf"}}}
     ]},
    {y:2022,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2044,7 +2047,8 @@ const DATA={
        desc:{ko:"격자 볼츠만 풍동에 갑자기 좁아지는 관을 그려 두 단면의 질량 유량을 비교하고, 벽 가까이의 속도 분포로 벽 법칙의 κ와 C를 구합니다.",
              en:"Draw a pipe that narrows abruptly in a lattice-Boltzmann wind tunnel to compare the mass flow through two sections, then use the velocity profile near a wall for κ and C of the law of the wall."},
        tags:["유체역학","격자 볼츠만","벽 법칙"], tagsEn:["Fluid dynamics","Lattice Boltzmann","Law of the wall"],
-       files:{sim:"sim/opho2022_E_web.html", pdf:"pdf/OPhO_2022_E.pdf"}}
+       files:{sim:"sim/opho2022_E_web.html", pdf:{ko:"pdf/OPhO_2022_E_KO.pdf", en:"pdf/OPhO_2022_E.pdf"},
+              sol:{ko:"pdf/OPhO_2022_S_E_KO.pdf", en:"pdf/OPhO_2022_S_E.pdf"}}}
     ]},
    {y:2021,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2055,7 +2059,8 @@ const DATA={
              en:"Compute the patterns of different slit arrays to check the product formula for sin x/x and the cosⁿ amplitude patterns, then recover hidden apertures from given intensity data with Fourier optics."},
        tags:["광학","간섭","푸리에 광학"], tagsEn:["Optics","Interference","Fourier optics"],
        files:{sim:"sim/opho2021_E_web.html", src:"src/opho2021_E_slits_official.ipynb",
-              pdf:"pdf/OPhO_2021_E.pdf", sol:"pdf/OPhO_2021_S_E.pdf"}}
+              pdf:{ko:"pdf/OPhO_2021_E_KO.pdf", en:"pdf/OPhO_2021_E.pdf"},
+              sol:{ko:"pdf/OPhO_2021_S_E_KO.pdf", en:"pdf/OPhO_2021_S_E.pdf"}}}
     ]}
   ]},
  rmph:{
@@ -2117,8 +2122,8 @@ const DATA={
   abbr:"USAPhO", since:1986,
   full:{ko:"미국 물리올림피아드 · 대표 선발 시험",en:"USA Physics Olympiad · Team Selection Test"},
   scope:{ko:"국가 · 미국",en:"National \u00b7 USA"},
-  note:{ko:"USAPhO를 거쳐 뽑힌 학생들이 미국 대표팀 캠프에서 치르는 마지막 선발 시험(TST)입니다. 공개된 실험 문제는 2022년 하나뿐인데, 실험실에서 실험을 할 수 없던 해라 시뮬레이션 실험으로 치렀습니다. 시뮬레이터는 코치 Kevin Zhou와 Kye Shi의 공개 프로그램을 그대로 옮겼습니다.",
-        en:"The final selection test (TST) taken at the U.S. Physics Team camp by students chosen through USAPhO. The only published experimental paper is 2022's, a simulation lab set in a year without physical labs; the simulator ports the coaches' (Kevin Zhou and Kye Shi) public program unchanged."},
+  note:{ko:"USAPhO를 거쳐 뽑힌 학생들이 미국 대표팀 캠프에서 치르는 마지막 선발 시험(TST)입니다. 공개된 실험 문제는 2022년 하나뿐인데, 실험실에서 실험을 할 수 없던 해라 시뮬레이션 실험으로 치렀습니다. 시뮬레이터는 코치 Kevin Zhou와 Kye Shi의 공개 프로그램을 그대로 옮겼고, 원본처럼 터미널에 명령과 값을 직접 입력해 돌립니다. 한국어 문제지와 해설은 원본과 같은 판형으로 다시 짰습니다.",
+        en:"The final selection test (TST) taken at the U.S. Physics Team camp by students chosen through USAPhO. The only published experimental paper is 2022's, a simulation lab set in a year without physical labs; the simulator ports the coaches' (Kevin Zhou and Kye Shi) public program unchanged and, like the original, is driven by typing commands and values into a terminal. The Korean paper and solution are re-typeset in the originals' layout."},
   years:[
    {y:2022,host:{ko:"미국",en:"United States"},cc:"us",
     problems:[
@@ -2129,7 +2134,8 @@ const DATA={
        tags:["역학","충돌","블랙박스"], tagsEn:["Mechanics","Collisions","Black box"],
        files:{sim:"sim/usapho2022_E_web.html",
               exe:"https://github.com/USPhysicsTeam/2022-future-circular-collider/releases",
-              pdf:"pdf/USAPhO_2022_TST_E.pdf", sol:"pdf/USAPhO_2022_TST_S_E.pdf"}}
+              pdf:{ko:"pdf/USAPhO_2022_TST_E_KO.pdf", en:"pdf/USAPhO_2022_TST_E.pdf"},
+              sol:{ko:"pdf/USAPhO_2022_TST_S_E_KO.pdf", en:"pdf/USAPhO_2022_TST_S_E.pdf"}}}
     ]}
   ]},
  gpho:{
