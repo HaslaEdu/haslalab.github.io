@@ -476,6 +476,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2025_E1_web.html">NBPhO 2025 P4 — 블랙박스</a></li>
       <li><a href="sim/nbpho2025_E2_web.html">NBPhO 2025 P9 — 뜨거운 판</a></li>
       <li><a href="sim/nbpho2024_E1_web.html">NBPhO 2024 P5 — 실과 진자</a></li>
+      <li><a href="sim/nbpho2024_E2_web.html">NBPhO 2024 P10 — 부엌의 물리</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1810,7 +1811,15 @@ const DATA={
               src:{ko:"src/nbpho2024_E1_pendulum_sim_KO.py", en:"src/nbpho2024_E1_pendulum_sim_EN.py"},
               pdf:{en:"pdf/NBPhO_2024_E_EN.pdf"},
               sol:"pdf/NBPhO_2024_S.pdf"}},
-      papers("NBPhO_2024", wip("String and Pendulum", "Kitchen Physics"), ["E_EN", "S"], ["E_EN", "S"])[1]
+      {id:"E2",
+       title:{ko:"부엌의 물리",en:"Kitchen Physics"},
+       desc:{ko:"알루미늄을 입힌 종이봉투를 길고 가는 띠로 지그재그로 잘라 양 끝을 스펀지로 문지르고 저항을 재어 R = ρl/(wt)로 알루미늄 코팅의 두께를 구합니다. 두 알루미늄 호일 사이에 랩을 끼우고 폼과 합판으로 눌러 공기층을 뺀 축전기의 전기용량과 마이크로미터로 잰 랩 두께로 랩의 비유전율을 구합니다 (문제 10).",
+             en:"Cut the aluminium-laminated paper bag zigzag into a long, thin strip, scrape its ends with the sponge and measure its resistance to get the aluminium coating's thickness from R = ρl/(wt). Put plastic wrap between two aluminium foils, press the air out with the foam and the plate, and get the wrap's relative permittivity from the capacitance and the wrap's thickness measured with the micrometer (problem 10)."},
+       tags:["전기 저항","축전기","유전율"], tagsEn:["Resistance","Capacitor","Permittivity"],
+       files:{sim:"sim/nbpho2024_E2_web.html",
+              src:{ko:"src/nbpho2024_E2_kitchen_sim_KO.py", en:"src/nbpho2024_E2_kitchen_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2024_E_EN.pdf"},
+              sol:"pdf/NBPhO_2024_S.pdf"}}
     ]},
    {y:2023,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2023", wip("Black Box", "Surface Tension"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2022", wip("Ferromagnetic Stripe", "Magnet in Glass"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5154,6 +5163,14 @@ const SIG_N24E1={
   f:v=>{ const a=v*Math.PI/180; return (1+a*a/16+11*a**4/3072)**2; },
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(3); },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:90,y0:1,y1:1.32,f:this.f,xl:"α / °"},t,this); }};
+const SIG_N24E2={
+  sim:"sim/nbpho2024_E2_web.html", tag:"NBPhO 2024 P10", span:24, rate:8,
+  capL:{ko:"알루미늄 띠의 길이 · 멀티미터 저항 (양 끝 문지름)",en:"Length of the aluminium strip · resistance on the multimeter (ends scraped)"},
+  capR:{ko:"멀티미터",en:"multimeter"},
+  pts:[0.5,1,1.5,2,3,4,5,6,8,10], n:euN, jit:0.05,
+  f:v=>0.3+2.7e-8*v/(8e-3*6.3e-6),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" Ω"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:10.5,y0:0,y1:6,f:this.f,xl:"l / m"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5169,7 +5186,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
