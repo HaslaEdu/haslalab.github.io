@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="HaslaLab — 물리올림피아드 실험 시뮬레이터">
 <meta name="twitter:description" content="IPhO, APhO and EuPhO experimental problems, rebuilt as working apparatus.">
 <meta name="twitter:image" content="https://haslalab.org/og.png">
-<meta name="description" content="국제물리올림피아드(IPhO)·아시아물리올림피아드(APhO)·EuPhO·NBPhO·ISPhO·OPhO·RMPh의 실험 문제 157개를 연도별로 정리하고, 브라우저에서 바로 돌아가는 가상 실험 장치로 다시 만들었습니다. 계기가 보여주는 것만 보여주고 계산은 대신 해주지 않습니다. Physics olympiad experimental problems rebuilt as working apparatus in your browser.">
+<meta name="description" content="국제물리올림피아드(IPhO)·아시아물리올림피아드(APhO)·EuPhO·NBPhO·ISPhO·OPhO·RMPh의 실험 문제 156개를 연도별로 정리하고, 브라우저에서 바로 돌아가는 가상 실험 장치로 다시 만들었습니다. 계기가 보여주는 것만 보여주고 계산은 대신 해주지 않습니다. Physics olympiad experimental problems rebuilt as working apparatus in your browser.">
 <link rel="canonical" href="https://haslalab.org/">
 <!-- Google and Bing are verified by a DNS TXT record on haslalab.org, so they
      need nothing here.  Naver Search Advisor accepts only an HTML file or a
@@ -449,7 +449,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 
 <!-- Everything on this page is drawn by JavaScript, and the routes are hash
      fragments, which a crawler cannot hold as separate URLs.  problems.html
-     is a plain, static index of all 157 problems; this block is the path to
+     is a plain, static index of all 156 problems; this block is the path to
      it for anything that does not run scripts. -->
 <noscript>
   <div class="shell" style="padding-top:60px;padding-bottom:60px">
@@ -482,11 +482,11 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2022_E1_web.html">NBPhO 2022 P5 — 강자성 띠</a></li>
       <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
-      <li><a href="sim/opho2026_22_web.html">OPhO 2026 #22 — 아인슈타인 고리</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
       <li><a href="sim/opho2024_E_web.html">OPhO 2024 — 강자성의 Ising 모형</a></li>
       <li><a href="sim/opho2023_E_web.html">OPhO 2023 — 로렌즈 계</a></li>
+      <li><a href="sim/opho2022_E_web.html">OPhO 2022 — 유체역학</a></li>
       <li><a href="sim/opho2021_E_web.html">OPhO 2021 — 슬릿 간섭 무늬</a></li>
     </ul>
   </div>
@@ -1970,20 +1970,12 @@ const DATA={
   abbr:"OPhO", since:2020,
   full:{ko:"온라인 물리 올림피아드",en:"Online Physics Olympiad"},
   scope:{ko:"온라인 · 국제",en:"Online · International"},
-  note:{ko:"팀으로 치르는 온라인 대회입니다. 실험은 주최측이 내놓은 프로그램이나 노트북을 돌려 자료를 얻는 시뮬레이션 실험이라, 아래 시뮬레이터도 숫자를 넣으면 결과가 나오는 방식으로 만들었습니다. 2021·2023·2024년은 주최측 노트북을 그대로 옮겼고(원본은 ‘소스’), 2022년은 주최측이 지정한 공개 앱으로 연결됩니다. 2025년과 2026년은 주최측 프로그램이 공개되지 않아 HaslaLab이 같은 입출력으로 만들었습니다.",
-        en:"A team contest held online. Its experiments are simulation labs, run on a program or notebook the organisers hand out, so the simulators below work the same way: numbers in, results out. 2021, 2023 and 2024 port the organisers' notebooks unchanged (the originals are the ‘source’ downloads), and 2022 links to the public app the organisers named. The 2025 and 2026 programs were never published, so HaslaLab rebuilt them with the same input and output."},
+  note:{ko:"팀으로 치르는 온라인 대회입니다. 실험은 주최측이 내놓은 프로그램이나 노트북을 돌려 자료를 얻는 시뮬레이션 실험이라, 아래 시뮬레이터도 숫자를 넣으면 결과가 나오는 방식으로 만들었습니다. 2021·2023·2024년은 주최측 노트북을 그대로 옮겼고(원본은 ‘소스’), 2022년은 주최측이 지정한 D. Schroeder의 공개 유체 앱을 같은 알고리즘으로 다시 만들었습니다. 2025년과 2026년은 주최측 프로그램이 공개되지 않아 HaslaLab이 같은 입출력으로 만들었습니다. 2026년은 시뮬레이션 랩(23번)만 실었습니다.",
+        en:"A team contest held online. Its experiments are simulation labs, run on a program or notebook the organisers hand out, so the simulators below work the same way: numbers in, results out. 2021, 2023 and 2024 port the organisers' notebooks unchanged (the originals are the ‘source’ downloads), and 2022 rebuilds D. Schroeder's public fluid app, which the organisers named, with the same algorithm. The 2025 and 2026 programs were never published, so HaslaLab rebuilt them with the same input and output. For 2026 only the simulation lab (problem 23) is listed."},
   years:[
    {y:2026,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
     problems:[
-      {id:"22", theory:true,
-       title:{ko:"아인슈타인 고리",en:"Einstein Ring"},
-       desc:{ko:"형광 염료를 넣은 투명 구의 홈에 자외선을 비추고 위에서 찍은 사진의 고리에서 n_b, n_u를 구합니다. 굴절률을 넣으면 사진과 밝기 분포 I(b)가 숫자로 나옵니다.",
-             en:"UV light enters a dyed transparent sphere through an indent; find n_b and n_u from the ring in the photo taken from above. Enter the indices and get the picture and the brightness I(b) as numbers."},
-       tags:["광학","굴절","형광"], tagsEn:["Optics","Refraction","Fluorescence"],
-       files:{sim:"sim/opho2026_22_web.html",
-              src:{ko:"src/opho2026_22_ring_sim_KO.py", en:"src/opho2026_22_ring_sim_EN.py"},
-              pdf:"pdf/OPhO_2026_22.pdf", sol:"pdf/OPhO_2026_S22.pdf"}},
       {id:"23",
        title:{ko:"스핀, 스핀, 스핀",en:"Spinny Spin Spin"},
        desc:{ko:"막대 위 전자 스핀 10만 개를 90° 돌린 뒤 바이어스 자기장과 측정 시각을 정해 자화 Mx, My를 재고, g, B₀, B₁을 찾습니다.",
@@ -2032,10 +2024,10 @@ const DATA={
     problems:[
       {id:"E",
        title:{ko:"유체역학",en:"Fluid Dynamics"},
-       desc:{ko:"격자 볼츠만 유체 앱으로 좁아지는 관을 그려 두 단면의 질량 유량을 비교하고, 벽 가까이의 속도 분포로 벽 법칙의 κ와 C를 구합니다. 실행 버튼은 주최측이 지정한 공개 앱(D. Schroeder)으로 연결됩니다.",
-             en:"Draw a narrowing pipe in a lattice-Boltzmann fluid app to compare the mass flow through two sections, then use the velocity profile near a wall for κ and C of the law of the wall. The run button opens the public app the organisers named (D. Schroeder)."},
+       desc:{ko:"격자 볼츠만 풍동에 갑자기 좁아지는 관을 그려 두 단면의 질량 유량을 비교하고, 벽 가까이의 속도 분포로 벽 법칙의 κ와 C를 구합니다.",
+             en:"Draw a pipe that narrows abruptly in a lattice-Boltzmann wind tunnel to compare the mass flow through two sections, then use the velocity profile near a wall for κ and C of the law of the wall."},
        tags:["유체역학","격자 볼츠만","벽 법칙"], tagsEn:["Fluid dynamics","Lattice Boltzmann","Law of the wall"],
-       files:{sim:"https://physics.weber.edu/schroeder/fluids/", pdf:"pdf/OPhO_2022_E.pdf"}}
+       files:{sim:"sim/opho2022_E_web.html", pdf:"pdf/OPhO_2022_E.pdf"}}
     ]},
    {y:2021,host:{ko:"온라인",en:"Online"},
     org:{abbr:"OPhO",name:"Online Physics Olympiad"},
@@ -2152,13 +2144,13 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 3;
+const LOGO_V = 4;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
-                   ispho:0.468, rmph:0.760, opho:0.39};
+                   ispho:0.468, rmph:0.760, opho:0.42};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";

@@ -98,7 +98,6 @@
       <pre class="out" id="out"></pre>
       <div class="stat" id="stat"></div>
       <div class="row"><button class="btn ghost" id="copy" data-t="copy"></button><button class="btn ghost" id="csv" data-t="csv"></button></div>
-      <canvas id="plot"></canvas>
     </div>
   </div>
   <p class="foot" data-t="foot"></p>
@@ -180,18 +179,15 @@ function measure(b,t0,t1,dt){
   return out;
 }
 function text(){ return "t_ns, Mx_muB, My_muB\n"+rows.map(r=>r[0].toFixed(3)+", "+r[1].toFixed(2)+", "+r[2].toFixed(2)).join("\n"); }
-function draw(){ plotXY($("plot"),[{x:rows.map(r=>r[0]),y:rows.map(r=>r[1]),color:"#a7e26e",label:"Mx",lw:1},
-  {x:rows.map(r=>r[0]),y:rows.map(r=>r[2]),color:"#e0b45a",label:"My",lw:1}],{xl:"t (ns)",yl:"M (μ_B)",aspect:0.42}); }
 $("run").onclick=()=>{
   let b=parseFloat($("b").value), t0=parseFloat($("t0").value), t1=parseFloat($("t1").value), dt=parseFloat($("dt").value);
   if([b,t0,t1,dt].some(isNaN)||dt<=0) return;
   b=Math.max(-0.01,Math.min(0.01,b)); $("b").value=b;
   const span=Math.min(10000,t1)-Math.max(100,t0); if(span/dt>20000){ dt=span/20000; $("dt").value=dt.toPrecision(3); }
-  rows=measure(b,t0,t1,dt); $("out").textContent=text(); $("stat").textContent=rows.length+T[lang].n+"  ·  b = "+b+" T"; draw(); };
+  rows=measure(b,t0,t1,dt); $("out").textContent=text(); $("stat").textContent=rows.length+T[lang].n+"  ·  b = "+b+" T"; };
 $("copy").onclick=()=>navigator.clipboard&&navigator.clipboard.writeText(text());
 $("csv").onclick=()=>rows.length&&download("spins_b"+$("b").value+".csv",text(),"text/csv");
 function onLang(){ if(rows.length) $("stat").textContent=rows.length+T[lang].n; }
-addEventListener("resize",()=>rows.length&&draw());
 applyLang(); $("run").click();
 </script>
   <script src="adfit.js"></script>
