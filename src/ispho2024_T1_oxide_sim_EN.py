@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 ISPhO 2024 Theoretical Problem 1 — "Thermal oxidation"
-The organisers' programs in one window: A.py, B1.py, B2.py, gen_data, B.py,
-B7.py and B8.py.
+A.py, B1.py, B2.py, gen_data, B.py, B7.py and B8.py as the tabs of one Tk
+window, laid out like the organisers' FBG Writer of ISPhO 2026.
+
+The organisers' programs were never published; these are rebuilt from the
+input and output formats on the problem sheet and the results of the
+solution.  Every label on the window stays in English, as the sheet quotes
+them; the dialogs and the output line follow LANG.
 
 Ellipsometry of a film d on a substrate, the sheet's three-layer formula
 
@@ -17,39 +22,81 @@ with the dispersion of Si (Green 2008) and SiO2 (Malitson).
 The furnace grows the oxide by Deal-Grove plus a fast initial term that dies
 away within a few nanometres, which is why the model is fitted from 25 nm.
 Every hidden constant (the two samples, B, B/A, their activation energies)
-is drawn afresh for each session; theta_opt, Phi, d, B, B/A, dEa and dEb are
-left for the user to find.
+is drawn afresh each time the window opens; theta_opt, Phi, d, B, B/A, dEa
+and dEb are left for the user to find.
 
-    python ispho2024_T1_oxide_sim_KO.py
+    python ispho2024_T1_oxide_sim_KO.py          (needs numpy and matplotlib)
 """
 
 import csv
 import random
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, messagebox, filedialog
 
 import numpy as np
-import matplotlib
-matplotlib.use("TkAgg")
+from matplotlib import rcParams
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 LANG = "EN"          # the EN edition differs only in this line
 
-TXT = {
- "KO": dict(title="ISPhO 2024 T1 — 열산화", A="A7 — A.py", B12="B1 · B2", B3="B3 · B7", B8="B8 — B8.py",
-            runA="A.py 실행", runB12="근사 곡선 그리기", gen="gen_data 실행", stop="중단", proc="B.py 실행",
-            b7="B7.py 실행", toB8="B8_in.txt 에 한 줄 추가", runB8="B8.py 실행", csv="CSV로 저장",
-            err="error (deg)", thin="Final layer is too thin to approximate", noexp="그 이름의 gen_data 결과가 없습니다 (FileNotFoundError)",
-            bad="입력 범위를 벗어났습니다", slope="기울기", idle="입력을 정하고 실행하세요.",
-            note="θopt, Φ, d, B, B/A, ΔEa, ΔEb 는 직접 찾으세요."),
- "EN": dict(title="ISPhO 2024 T1 — Thermal Oxidation", A="A7 — A.py", B12="B1 · B2", B3="B3 · B7", B8="B8 — B8.py",
-            runA="run A.py", runB12="draw the approximation", gen="run gen_data", stop="interrupt", proc="run B.py",
-            b7="run B7.py", toB8="append to B8_in.txt", runB8="run B8.py", csv="save as CSV",
-            err="error (deg)", thin="Final layer is too thin to approximate", noexp="No gen_data result under that name (FileNotFoundError)",
-            bad="Input out of range", slope="slope", idle="Set the input and run.",
-            note="theta_opt, Phi, d, B, B/A, dEa and dEb are yours to find."),
+MSG = {
+ "EN": {
+  "row": ("Input error", "Cannot read the line: {}\nEach line needs a name and numerical values."),
+  "theta": ("Out of bounds", "θ1 must be between 20° and 80° ({})."),
+  "d": ("Out of bounds", "d must be between 0 and 250 nm ({})."),
+  "empty": ("Input error", "A_in.txt has no data lines."),
+  "num": ("Input error", "Please ensure you have entered a numerical value. Also check decimal delimiter (0.0/0,0)."),
+  "phi": ("Out of bounds", "Φ must be between 20° and 80°."),
+  "brow": ("Input error", "B_in.txt needs one line: Name  Phi  T  t"),
+  "T": ("Out of bounds", "The furnace works between 800 °C and 1200 °C."),
+  "tmax": ("Out of bounds", "t must be between 0 and 200 min."),
+  "noexp": ("FileNotFoundError", "No gen_data result named “{}”. Run gen_data first."),
+  "noproc": ("FileNotFoundError", "No res for “{}”. Run B.py first."),
+  "thin": ("B7.py", "Final layer is too thin to approximate"),
+  "pos": ("Input error", "B and B/A must be positive: {}"),
+  "b8need": ("Input error", "B8_in.txt needs at least two lines."),
+  "nodata": ("Nothing to save", "Calculate and plot first."),
+ },
+ "KO": {
+  "row": ("입력 오류", "이 줄을 읽을 수 없습니다: {}\n줄마다 이름과 숫자들이 있어야 합니다."),
+  "theta": ("범위 밖", "θ1 은 20° 와 80° 사이여야 합니다 ({})."),
+  "d": ("범위 밖", "d 는 0 과 250 nm 사이여야 합니다 ({})."),
+  "empty": ("입력 오류", "A_in.txt 에 데이터 줄이 없습니다."),
+  "num": ("입력 오류", "숫자를 입력했는지 확인하세요. 소수점 기호(0.0/0,0)도 확인하세요."),
+  "phi": ("범위 밖", "Φ 는 20° 와 80° 사이여야 합니다."),
+  "brow": ("입력 오류", "B_in.txt 에는 한 줄이 필요합니다: Name  Phi  T  t"),
+  "T": ("범위 밖", "노의 온도는 800 °C 와 1200 °C 사이입니다."),
+  "tmax": ("범위 밖", "t 는 0 과 200 min 사이여야 합니다."),
+  "noexp": ("FileNotFoundError", "“{}” 이라는 gen_data 결과가 없습니다. 먼저 gen_data 를 실행하세요."),
+  "noproc": ("FileNotFoundError", "“{}” 의 res 가 없습니다. 먼저 B.py 를 실행하세요."),
+  "thin": ("B7.py", "Final layer is too thin to approximate"),
+  "pos": ("입력 오류", "B 와 B/A 는 양수여야 합니다: {}"),
+  "b8need": ("입력 오류", "B8_in.txt 에 두 줄 이상 필요합니다."),
+  "nodata": ("저장할 데이터 없음", "먼저 계산하고 그리세요."),
+ }}[LANG]
+
+SAY = {
+ "EN": dict(idle="Set the input and run.", A="A.py: {} curves", B12="{}.py: error = {} deg",
+            gen="gen_data {}: measurement {} / {}", genDone="gen_data {}: {} measurements kept.", proc="B.py: {} / {}",
+            procDone="B.py {}: d(t) saved to res.", b7="B7.py {}: fitted to {} points with d ≥ 25 nm.",
+            added="Appended a line to B8_in.txt.", B8="B8.py: {} temperatures", saved="Saved as {}."),
+ "KO": dict(idle="입력을 정하고 실행하세요.", A="A.py: 곡선 {} 개", B12="{}.py: error = {} deg",
+            gen="gen_data {}: 측정 {} / {}", genDone="gen_data {}: 측정 {} 개를 남겼습니다.", proc="B.py: {} / {}",
+            procDone="B.py {}: d(t) 를 res 에 저장했습니다.", b7="B7.py {}: d ≥ 25 nm 인 점 {} 개로 맞췄습니다.",
+            added="B8_in.txt 에 한 줄 추가했습니다.", B8="B8.py: 온도 {} 개", saved="{} 로 저장했습니다."),
 }[LANG]
+
+
+def warn(key, *a):
+    t, m = MSG[key]
+    messagebox.showwarning(t, m.format(*a))
+
+
+def error(key, *a):
+    t, m = MSG[key]
+    messagebox.showerror(t, m.format(*a))
+
 
 LAM = np.arange(400, 801, 4.0)
 SI = np.array([[400, 5.570, 0.387], [425, 5.000, 0.230], [450, 4.674, 0.135], [475, 4.460, 0.093], [500, 4.298, 0.073],
@@ -144,154 +191,303 @@ def fit_d(phi, data):
     return dm, np.sqrt(2 * max(red, 1) / max(c, 1e-9))
 
 
-class App(tk.Tk):
+def rows_of(text):
+    """The input files: header lines (Name ..., T ...) are skipped, fields split on white space."""
+    return [p for p in (ln.split() for ln in text.splitlines()) if p and p[0].lower() not in ("name", "t")]
+
+
+class OxidationApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title(TXT["title"]); self.geometry("1240x800")
-        self.res_A = self.res_B12 = self.b7res = self.b8res = None
-        self.exps, self.cur, self.gen = {}, None, None
-        self._build(); self._redraw()
+        screen_w = self.winfo_screenwidth()
+        screen_h = self.winfo_screenheight()
+        if screen_w >= 2560:
+            base_font_size = 14
+        elif screen_w >= 1920:
+            base_font_size = 11
+        else:
+            base_font_size = 9
+        rcParams.update({'font.size': base_font_size, 'axes.labelsize': base_font_size + 1,
+                         'axes.titlesize': base_font_size + 2, 'xtick.labelsize': base_font_size,
+                         'ytick.labelsize': base_font_size, 'legend.fontsize': base_font_size})
+        rcParams.update({'axes.grid': True, 'axes.grid.which': 'both',
+                         'xtick.minor.visible': True, 'ytick.minor.visible': True})
+        width = max(1000, min(int(screen_w * 0.8), 1600))
+        height = max(650, min(int(screen_h * 0.8), 900))
+        self.geometry(f'{width}x{height}+{int((screen_w-width)/2)}+{int((screen_h-height)/2)}')
+        self.title('Thermal Oxidation')
+        self.exps, self.cur, self.gen, self.b7 = {}, None, None, None
+        self.res_a = self.res_b12 = self.res_b8 = None
+        self.setup_bottom_panel()
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+        for key, label in (('a', 'Part A'), ('b12', 'Part B.1–B.2'), ('b3', 'Part B.3–B.7'), ('b8', 'Part B.8')):
+            fr = ttk.Frame(self.notebook)
+            setattr(self, 'tab_' + key, fr)
+            self.notebook.add(fr, text=label)
+            getattr(self, 'setup_tab_' + key)()
+        self.notebook.bind('<<NotebookTabChanged>>', self.on_tab_change)
+        self.say(SAY['idle'])
 
-    # ---------------- layout ----------------
-    def _build(self):
-        left = ttk.Frame(self, padding=10); left.pack(side="left", fill="y")
-        right = ttk.Frame(self, padding=10); right.pack(side="right", fill="both", expand=True)
-        nb = ttk.Notebook(left, width=330); nb.pack(fill="both", expand=True)
-        nb.bind("<<NotebookTabChanged>>", lambda e: self._redraw())
-        self.nb = nb
-        fA, fB, fC, fD = (ttk.Frame(nb, padding=6) for _ in range(4))
-        for f, k in ((fA, "A"), (fB, "B12"), (fC, "B3"), (fD, "B8")):
-            nb.add(f, text=TXT[k])
-
-        ttk.Label(fA, text="A_in.txt  (Name  θ1  d)").pack(anchor="w")
-        self.ainA = tk.Text(fA, height=8, width=36, font=("Consolas", 10)); self.ainA.pack(fill="x")
-        self.ainA.insert("1.0", "Name\tθ1\td\nex1\t50\t40\nex2\t30\t100\n")
-        ttk.Button(fA, text=TXT["runA"], command=self._runA).pack(fill="x", pady=6)
-
-        self.samp = tk.StringVar(value="B1")
-        fr = ttk.Frame(fB); fr.pack(fill="x")
-        for k in ("B1", "B2"):
-            ttk.Radiobutton(fr, text=k + ".txt", value=k, variable=self.samp, command=self._redraw).pack(side="left")
-        self.phi = tk.DoubleVar(value=60); self.dd = tk.DoubleVar(value=50)
-        for lab, var in (("Φ, °", self.phi), ("d, nm", self.dd)):
-            ttk.Label(fB, text=lab).pack(anchor="w", pady=(8, 0))
-            ttk.Entry(fB, textvariable=var).pack(fill="x")
-        ttk.Button(fB, text=TXT["runB12"], command=self._runB12).pack(fill="x", pady=6)
-        self.errl = tk.Label(fB, text=TXT["err"] + ": —", font=("Consolas", 16, "bold"), bg="#101418", fg="#8fd6ff")
-        self.errl.pack(fill="x")
-
-        ttk.Label(fC, text="B_in.txt  (Name  Phi  T  t)").pack(anchor="w")
-        self.ainB = tk.Text(fC, height=3, width=36, font=("Consolas", 10)); self.ainB.pack(fill="x")
-        self.ainB.insert("1.0", "Name\tPhi\tT\tt\ntest\t50\t1000\t40\n")
-        for lab, cmd in ((TXT["gen"], self._gen), (TXT["stop"], self._stop), (TXT["proc"], self._proc),
-                         (TXT["b7"], self._b7), (TXT["toB8"], self._toB8)):
-            ttk.Button(fC, text=lab, command=cmd).pack(fill="x", pady=2)
-        self.prog = ttk.Progressbar(fC, maximum=1.0); self.prog.pack(fill="x", pady=4)
-        self.b7l = ttk.Label(fC, text="—", font=("Consolas", 10), justify="left"); self.b7l.pack(anchor="w")
-
-        ttk.Label(fD, text="B8_in.txt  (T  B  dB  B/A  d(B/A))").pack(anchor="w")
-        self.ainB8 = tk.Text(fD, height=9, width=36, font=("Consolas", 10)); self.ainB8.pack(fill="x")
-        self.ainB8.insert("1.0", "T\tB\tdB\tB/A\td(B/A)\n")
-        ttk.Button(fD, text=TXT["runB8"], command=self._runB8).pack(fill="x", pady=6)
-        self.b8l = ttk.Label(fD, text="—", font=("Consolas", 10), justify="left"); self.b8l.pack(anchor="w")
-
-        self.status = ttk.Label(left, text=TXT["idle"], wraplength=320, foreground="#b3261e"); self.status.pack(fill="x", pady=6)
-        ttk.Button(left, text=TXT["csv"], command=self._csv).pack(fill="x")
-        ttk.Label(left, text=TXT["note"], wraplength=320, foreground="#7a8794").pack(fill="x", pady=8)
-
-        self.fig = Figure(figsize=(8.2, 6.6), dpi=100)
-        self.ax1 = self.fig.add_subplot(211); self.ax2 = self.fig.add_subplot(212)
-        self.canvas = FigureCanvasTkAgg(self.fig, master=right)
-        self.canvas.get_tk_widget().pack(fill="both", expand=True)
-
-    def task(self):
-        return ["A", "B12", "B3", "B8"][self.nb.index(self.nb.select())]
-
-    @staticmethod
-    def rows(text):
-        return [p for p in (ln.split() for ln in text.splitlines()) if p and p[0].lower() not in ("name", "t")]
+    # ---------------- frame ----------------
+    def setup_bottom_panel(self):
+        f = ttk.LabelFrame(self, text='Output', padding=10)
+        f.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=10)
+        self.lbl_out = ttk.Label(f, text=' ')
+        self.lbl_out.pack(side=tk.LEFT, padx=(10, 2))
+        ttk.Button(f, text='Save data as CSV', command=self.save_csv).pack(side=tk.RIGHT, padx=10)
 
     def say(self, s):
-        self.status.config(text=s)
+        self.lbl_out.config(text=s)
 
-    # ---------------- programs ----------------
-    def _runA(self):
+    def on_tab_change(self, event):
+        i = self.notebook.index(self.notebook.select())
+        if i == 1:
+            self.plot_part_b12(False)
+        elif i == 2:
+            self.draw_b3()
+
+    def _left(self, tab):
+        col = ttk.Frame(tab)
+        col.pack(side=tk.LEFT, fill=tk.Y)
+        return col
+
+    def _frame(self, col, title):
+        f = ttk.LabelFrame(col, text=title, padding=15)
+        f.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+        return f
+
+    def _text(self, f, value, rows):
+        t = tk.Text(f, height=rows, width=34, font=('Consolas', 10), wrap=tk.NONE, tabs=('1.6c',))
+        t.insert('1.0', value)
+        t.pack(fill=tk.X)
+        return t
+
+    def _plot(self, tab, key, n):
+        pf = ttk.Frame(tab)
+        pf.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(0, 10), pady=10)
+        fig = Figure(figsize=(6, 4), dpi=100)
+        axes = [fig.add_subplot(n, 1, i + 1) for i in range(n)]
+        cv = FigureCanvasTkAgg(fig, master=pf); cv.draw()
+        tf = ttk.Frame(pf); tf.pack(side=tk.BOTTOM, fill=tk.X)
+        tb = NavigationToolbar2Tk(cv, tf); tb.update()
+        cv.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        setattr(self, 'fig_' + key, fig); setattr(self, 'axes_' + key, axes)
+        setattr(self, 'canvas_' + key, cv); setattr(self, 'toolbar_' + key, tb)
+
+    def _show(self, key):
+        fig = getattr(self, 'fig_' + key)
+        for ax in getattr(self, 'axes_' + key):
+            ax.grid(True, linestyle='-', alpha=0.5)
+            ax.grid(True, linestyle='--', which='minor', alpha=0.3)
+            if ax.get_legend_handles_labels()[0]:
+                ax.legend(loc='best')
+        fig.tight_layout()
+        getattr(self, 'canvas_' + key).draw(); getattr(self, 'toolbar_' + key).update()
+
+    # ---------------- Part A — A.py ----------------
+    def setup_tab_a(self):
+        col = self._left(self.tab_a)
+        f = self._frame(col, ' A_in.txt ')
+        ttk.Label(f, text='Name    θ1 (°)    d (nm)').pack(anchor=tk.W)
+        self.ain_a = self._text(f, 'Name\tθ1\td\nex1\t50\t40\nex2\t30\t100\n', 9)
+        ttk.Button(f, text='Calculate and plot', command=self.plot_part_a).pack(fill=tk.X, pady=(12, 0))
+        g = self._frame(col, ' Constants ')
+        ttk.Label(g, text='ε(air) = 1.00\nε(Si) = 17.2 − 0.430i\nε(SiO2) = 2.13\n20° ≤ θ1 ≤ 80°,  0 ≤ d ≤ 250 nm',
+                  justify=tk.LEFT).pack(anchor=tk.W)
+        self._plot(self.tab_a, 'a', 2)
+        self.plot_part_a()
+
+    def plot_part_a(self):
         out = []
-        for r in self.rows(self.ainA.get("1.0", "end")):
+        for r in rows_of(self.ain_a.get('1.0', tk.END)):
             try:
+                if len(r) < 3:
+                    raise ValueError
                 th, d = float(r[1]), float(r[2])
-            except (IndexError, ValueError):
-                continue
-            if not (20 <= th <= 80 and 0 <= d <= 250):
-                self.say(TXT["bad"] + ": " + " ".join(r)); return
+            except ValueError:
+                error('row', ' '.join(r)); return
+            if not 20 <= th <= 80:
+                warn('theta', r[0]); return
+            if not 0 <= d <= 250:
+                warn('d', r[0]); return
             out.append((r[0], th, d, psi_delta(th, d, False)))
-        self.res_A = out; self._redraw()
+        if not out:
+            warn('empty'); return
+        self.res_a = out
+        a1, a2 = self.axes_a
+        a1.clear(); a2.clear()
+        for name, th, d, (P, D) in out:
+            lab = f'{name}: θ1 = {th:g}°, d = {d:g} nm'
+            a1.plot(LAM, P, label=lab); a2.plot(LAM, D, label=lab)
+        a1.set_ylabel('Ψ, deg'); a2.set_ylabel('Δ, deg'); a2.set_xlabel('λ, nm')
+        a1.legend(loc='best')
+        self._show_no_legend2('a')
+        self.say(SAY['A'].format(len(out)))
 
-    def _runB12(self):
-        phi, d = self.phi.get(), self.dd.get()
-        if not (20 <= phi <= 80 and 0 <= d <= 250):
-            self.say(TXT["bad"]); return
-        P, D = psi_delta(phi, d, True); dat = DATA[self.samp.get()]
-        err = np.sqrt(np.mean(np.concatenate([(dat[0] - P) ** 2, wrap(dat[1] - D) ** 2])))
-        self.res_B12 = (self.samp.get(), P, D); self.errl.config(text=f"{TXT['err']}: {err:.3f}"); self._redraw()
+    def _show_no_legend2(self, key):
+        """Part A keeps the legend on the upper Axes only."""
+        fig = getattr(self, 'fig_' + key)
+        for ax in getattr(self, 'axes_' + key):
+            ax.grid(True, linestyle='-', alpha=0.5)
+            ax.grid(True, linestyle='--', which='minor', alpha=0.3)
+        fig.tight_layout()
+        getattr(self, 'canvas_' + key).draw(); getattr(self, 'toolbar_' + key).update()
 
-    def readB(self):
-        r = [x for x in self.rows(self.ainB.get("1.0", "end")) if len(x) >= 4]
-        if not r:
-            return None
+    # ---------------- Part B.1–B.2 — B1.py, B2.py ----------------
+    def setup_tab_b12(self):
+        col = self._left(self.tab_b12)
+        f = self._frame(col, ' Sample ')
+        self.samp = tk.StringVar(value='B1')
+        for k in ('B1', 'B2'):
+            ttk.Radiobutton(f, text=k + '.txt', value=k, variable=self.samp,
+                            command=lambda: self.plot_part_b12(False)).pack(side=tk.LEFT, padx=(0, 18))
+        g = self._frame(col, ' Parameters ')
+        ttk.Label(g, text='Φ (°):').grid(row=0, column=0, sticky=tk.W, pady=5)
+        self.entry_phi = ttk.Entry(g, width=12); self.entry_phi.insert(0, '60.0'); self.entry_phi.grid(row=0, column=1, pady=5, padx=5)
+        ttk.Label(g, text='d (nm):').grid(row=1, column=0, sticky=tk.W, pady=5)
+        self.entry_d = ttk.Entry(g, width=12); self.entry_d.insert(0, '50.0'); self.entry_d.grid(row=1, column=1, pady=5, padx=5)
+        ttk.Button(g, text='Calculate and plot', command=lambda: self.plot_part_b12(True)).grid(
+            row=2, column=0, columnspan=2, pady=20, sticky=tk.EW)
+        self.lbl_err = ttk.Label(g, text='error = — deg', font=('Arial', 9, 'bold'))
+        self.lbl_err.grid(row=3, column=0, columnspan=2, sticky=tk.W)
+        for e in (self.entry_phi, self.entry_d):
+            e.bind('<Return>', lambda ev: self.plot_part_b12(True))
+        self._plot(self.tab_b12, 'b12', 2)
+
+    def plot_part_b12(self, fit_too):
+        smp = self.samp.get(); dat = DATA[smp]
+        a1, a2 = self.axes_b12
+        if fit_too:
+            try:
+                phi, d = float(self.entry_phi.get()), float(self.entry_d.get())
+            except ValueError:
+                error('num'); return
+            if not 20 <= phi <= 80:
+                warn('phi'); return
+            if not 0 <= d <= 250:
+                warn('d', smp); return
+            P, D = psi_delta(phi, d, True)
+            err = np.sqrt(np.mean(np.concatenate([(dat[0] - P) ** 2, wrap(dat[1] - D) ** 2])))
+            self.res_b12 = (smp, phi, d, P, D)
+            self.lbl_err.config(text=f'error = {err:.3f} deg')
+            self.say(SAY['B12'].format(smp, f'{err:.3f}'))
+        elif not (self.res_b12 and self.res_b12[0] == smp):
+            self.lbl_err.config(text='error = — deg')
+        a1.clear(); a2.clear()
+        a1.plot(LAM, dat[0], 'o', ms=4, label=smp + '.txt'); a2.plot(LAM, dat[1], 'o', ms=4, label=smp + '.txt')
+        if self.res_b12 and self.res_b12[0] == smp:
+            _, phi, d, P, D = self.res_b12
+            a1.plot(LAM, P, label=f'Φ = {phi:g}°, d = {d:g} nm'); a2.plot(LAM, D, label=f'Φ = {phi:g}°, d = {d:g} nm')
+        a1.set_ylabel('Ψ, deg'); a2.set_ylabel('Δ, deg'); a2.set_xlabel('λ, nm')
+        a1.legend(loc='best')
+        self._show_no_legend2('b12')
+
+    # ---------------- Part B.3–B.7 — gen_data, B.py, B7.py ----------------
+    def setup_tab_b3(self):
+        col = self._left(self.tab_b3)
+        f = self._frame(col, ' B_in.txt ')
+        ttk.Label(f, text='Name    Φ (°)    T (°C)    t (min)').pack(anchor=tk.W)
+        self.ain_b = self._text(f, 'Name\tPhi\tT\tt\ntest\t50\t1000\t40\n', 3)
+        row = ttk.Frame(f); row.pack(fill=tk.X, pady=(8, 0))
+        self.btn_gen = ttk.Button(row, text='Run gen_data', command=self.gen_data); self.btn_gen.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0, 3))
+        self.btn_stop = ttk.Button(row, text='Stop', command=self.stop_gen, state=tk.DISABLED); self.btn_stop.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(3, 0))
+        self.pb = ttk.Progressbar(f, maximum=1.0); self.pb.pack(fill=tk.X, pady=(8, 0))
+        g = self._frame(col, ' Processing ')
+        row = ttk.Frame(g); row.pack(fill=tk.X)
+        self.btn_proc = ttk.Button(row, text='Run B.py', command=self.run_b); self.btn_proc.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0, 3))
+        self.btn_b7 = ttk.Button(row, text='Run B7.py', command=self.run_b7); self.btn_b7.pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(3, 0))
+        self.lbl_b7 = ttk.Label(g, text='', font=('Arial', 9, 'bold'), justify=tk.LEFT); self.lbl_b7.pack(anchor=tk.W, pady=(10, 0))
+        self.btn_to8 = ttk.Button(g, text='Append to B8_in.txt', command=self.to_b8, state=tk.DISABLED); self.btn_to8.pack(fill=tk.X, pady=(6, 0))
+        self._plot(self.tab_b3, 'b3', 2)
+
+    def read_b(self):
+        r = rows_of(self.ain_b.get('1.0', tk.END))
+        if not r or len(r[0]) < 4:
+            error('brow'); return None
         try:
             o = dict(name=r[0][0], phi=float(r[0][1]), T=float(r[0][2]), tmax=float(r[0][3]))
         except ValueError:
-            return None
-        if not (20 <= o["phi"] <= 80 and 800 <= o["T"] <= 1200 and 0 < o["tmax"] <= 200):
-            return None
+            error('brow'); return None
+        if not 20 <= o['phi'] <= 80:
+            warn('phi'); return None
+        if not 800 <= o['T'] <= 1200:
+            warn('T'); return None
+        if not 0 < o['tmax'] <= 200:
+            warn('tmax'); return None
         return o
 
-    def _gen(self):
-        o = self.readB()
-        if not o:
-            self.say(TXT["bad"]); return
+    def _buttons(self, running):
+        s = tk.DISABLED if running else tk.NORMAL
+        for b in (self.btn_gen, self.btn_proc, self.btn_b7):
+            b.config(state=s)
+
+    def gen_data(self):
         if self.gen:
             return
+        o = self.read_b()
+        if not o:
+            return
         o.update(frames=[], res=None, d=TR.dn, t=0)
-        self.exps[o["name"]] = o; self.cur = o["name"]; self.gen = o
-        self.after(10, self._gen_step)
+        self.exps[o['name']] = o; self.cur = o['name']; self.gen = o; self.b7 = None
+        self.lbl_b7.config(text=''); self.btn_to8.config(state=tk.DISABLED)
+        self._buttons(True); self.btn_stop.config(state=tk.NORMAL)
+        self.after(110, self._gen_step)
 
     def _gen_step(self):
         o = self.gen
         if not o:
             return
         for _ in range(20):
-            o["d"] = TR.grow(o["T"], 0.1, o["d"])
-        o["t"] += 2
-        o["frames"].append((o["t"], noisy(psi_delta(o["phi"] + np.random.normal(0, 0.12), o["d"], True))))
-        n = int(o["tmax"] // 2)
-        self.prog.config(value=len(o["frames"]) / n); self.say(f"gen_data: {len(o['frames'])} / {n}"); self._redraw()
-        if len(o["frames"]) >= n:
-            self.gen = None
+            o['d'] = TR.grow(o['T'], 0.1, o['d'])
+        o['t'] += 2
+        # the beam wanders by a tenth of a degree between measurements
+        o['frames'].append((o['t'], noisy(psi_delta(o['phi'] + np.random.normal(0, 0.12), o['d'], True))))
+        n = int(o['tmax'] // 2)
+        self.pb.config(value=len(o['frames']) / n)
+        self.say(SAY['gen'].format(o['name'], len(o['frames']), n))
+        if len(o['frames']) >= n:
+            self.stop_gen()
         else:
-            self.after(60, self._gen_step)
+            self.draw_b3()
+            self.after(110, self._gen_step)
 
-    def _stop(self):
-        self.gen = None
+    def stop_gen(self):
+        if not self.gen:
+            return
+        o = self.gen; self.gen = None
+        self._buttons(False); self.btn_stop.config(state=tk.DISABLED)
+        self.say(SAY['genDone'].format(o['name'], len(o['frames']))); self.draw_b3()
 
-    def _proc(self):
-        o = self.readB(); ex = o and self.exps.get(o["name"])
-        if not ex or not ex["frames"]:
-            self.say(TXT["noexp"]); return
-        self.cur = o["name"]; ex["res"] = []
-        for i, (t, s) in enumerate(ex["frames"]):
-            d, e = fit_d(ex["phi"], s); ex["res"].append((t, d, e))
-            self.prog.config(value=(i + 1) / len(ex["frames"])); self.update_idletasks()
-        self.say("B.py: res"); self._redraw()
+    def run_b(self):
+        o = self.read_b()
+        if not o:
+            return
+        ex = self.exps.get(o['name'])
+        if not ex or not ex['frames']:
+            error('noexp', o['name']); return
+        self.cur = o['name']; ex['res'] = []
+        self._buttons(True)
+        for i, (t, s) in enumerate(ex['frames']):
+            d, e = fit_d(ex['phi'], s); ex['res'].append((t, d, e))
+            self.pb.config(value=(i + 1) / len(ex['frames']))
+            self.say(SAY['proc'].format(i + 1, len(ex['frames']))); self.update()
+        self._buttons(False)
+        self.say(SAY['procDone'].format(ex['name'])); self.draw_b3()
 
-    def _b7(self):
-        o = self.readB(); ex = o and self.exps.get(o["name"])
-        if not ex or not ex["res"]:
-            self.say(TXT["noexp"]); return
-        p = np.array([r for r in ex["res"] if r[1] >= 25])
+    def run_b7(self):
+        o = self.read_b()
+        if not o:
+            return
+        ex = self.exps.get(o['name'])
+        if not ex:
+            error('noexp', o['name']); return
+        if not ex['res']:
+            error('noproc', o['name']); return
+        p = np.array([r for r in ex['res'] if r[1] >= 25])
         if len(p) < 4:
-            self.b7l.config(text=TXT["thin"]); self.b7res = None; return
+            self.b7 = None; self.btn_to8.config(state=tk.DISABLED); self.lbl_b7.config(text='')
+            warn('thin'); self.draw_b3(); return
         t, d = p[:, 0], p[:, 1]
         M = np.vstack([d * d, d, np.ones_like(d)]).T
         c, *_ = np.linalg.lstsq(M, t, rcond=None)
@@ -299,96 +495,120 @@ class App(tk.Tk):
         cov = s2 * np.linalg.inv(M.T @ M)
         B, BA = 1 / c[0], 1 / c[1]
         sB, sBA = np.sqrt(cov[0, 0]) / c[0] ** 2, np.sqrt(cov[1, 1]) / c[1] ** 2
-        self.b7res = (ex["T"], B, sB, BA, sBA)
-        self.b7l.config(text=f"T = {ex['T']:.0f} °C\nB = {B:.1f} ± {sB:.1f} nm²/min\nB/A = {BA:.3f} ± {sBA:.3f} nm/min")
-        self._redraw()
+        self.b7 = dict(name=ex['name'], T=ex['T'], B=B, sB=sB, BA=BA, sBA=sBA, c=c)
+        self.btn_to8.config(state=tk.NORMAL)
+        self.lbl_b7.config(text=f"T = {ex['T']:g} °C\nB = {B:.1f} ± {sB:.1f} nm²/min\nB/A = {BA:.3f} ± {sBA:.3f} nm/min")
+        self.say(SAY['b7'].format(ex['name'], len(p))); self.draw_b3()
 
-    def _toB8(self):
-        if self.b7res:
-            T, B, sB, BA, sBA = self.b7res
-            self.ainB8.insert("end", f"{T:.0f}\t{B:.1f}\t{sB:.1f}\t{BA:.3f}\t{sBA:.3f}\n")
+    def to_b8(self):
+        if self.b7:
+            r = self.b7
+            body = self.ain_b8.get('1.0', tk.END).rstrip()
+            self.ain_b8.delete('1.0', tk.END)
+            self.ain_b8.insert('1.0', body + f"\n{r['T']:g}\t{r['B']:.1f}\t{r['sB']:.1f}\t{r['BA']:.3f}\t{r['sBA']:.3f}\n")
+            self.say(SAY['added'])
 
-    def _runB8(self):
+    def draw_b3(self):
+        a1, a2 = self.axes_b3
+        a1.clear(); a2.clear()
+        ex = self.exps.get(self.cur)
+        if ex and ex['res']:
+            r = np.array(ex['res'])
+            a1.errorbar(r[:, 0], r[:, 1], yerr=r[:, 2], fmt='o', ms=4, label=ex['name'] + ' (B.py)')
+            if self.b7 and self.b7['name'] == ex['name']:
+                ds = np.arange(25, r[:, 1].max() + 1e-9, 0.5); c = self.b7['c']
+                a1.plot(c[0] * ds ** 2 + c[1] * ds + c[2], ds, label='t = d²/B + d/(B/A) + c (B7.py)')
+        if ex and ex['frames']:
+            t, (P, D) = ex['frames'][-1]
+            a2.plot(LAM, P, 'o', ms=4, label='Ψ'); a2.plot(LAM, D, 'o', ms=4, label='Δ')
+            a2.set_title(f"{ex['name']}:  Φ = {ex['phi']:g}°,  T = {ex['T']:g} °C,  t = {t} min")
+        a1.set_xlabel('t, min'); a1.set_ylabel('d, nm'); a2.set_xlabel('λ, nm'); a2.set_ylabel('Ψ, Δ, deg')
+        self._show('b3')
+
+    # ---------------- Part B.8 — B8.py ----------------
+    def setup_tab_b8(self):
+        col = self._left(self.tab_b8)
+        f = self._frame(col, ' B8_in.txt ')
+        ttk.Label(f, text='T (°C)   B   ΔB   B/A   Δ(B/A)').pack(anchor=tk.W)
+        self.ain_b8 = self._text(f, 'T\tB\tdB\tB/A\td(B/A)\n', 9)
+        ttk.Button(f, text='Calculate and plot', command=self.plot_part_b8).pack(fill=tk.X, pady=(12, 0))
+        self.lbl_b8 = ttk.Label(f, text='', font=('Arial', 9, 'bold'), justify=tk.LEFT); self.lbl_b8.pack(anchor=tk.W, pady=(10, 0))
+        self._plot(self.tab_b8, 'b8', 2)
+        a1, a2 = self.axes_b8
+        a1.set_ylabel('ln(B·min/nm²)'); a2.set_ylabel('ln(B/A·min/nm)'); a2.set_xlabel('1/T, 1/K')
+        self.fig_b8.tight_layout()
+
+    def plot_part_b8(self):
         R = []
-        for r in self.rows(self.ainB8.get("1.0", "end")):
+        for r in rows_of(self.ain_b8.get('1.0', tk.END)):
             try:
+                if len(r) < 5:
+                    raise ValueError
                 v = [float(x) for x in r[:5]]
             except ValueError:
-                continue
-            if len(v) == 5 and v[1] > 0 and v[3] > 0:
-                R.append(v)
+                error('row', ' '.join(r)); return
+            if not (v[1] > 0 and v[3] > 0):
+                warn('pos', ' '.join(r)); return
+            R.append(v)
         if len(R) < 2:
-            return
+            warn('b8need'); return
         R = np.array(R); x = 1 / (R[:, 0] + 273.15)
-        out = {}
-        for key, y, e in (("B", np.log(R[:, 1]), R[:, 2] / R[:, 1]), ("BA", np.log(R[:, 3]), R[:, 4] / R[:, 3])):
-            w = 1 / np.maximum(e, 1e-6) ** 2
-            if len(x) > 2:
-                (b, a), cov = np.polyfit(x, y, 1, w=np.sqrt(w), cov="unscaled")
-            else:
-                (b, a), cov = np.polyfit(x, y, 1), np.zeros((2, 2))
-            out[key] = (x, y, e, a, b, np.sqrt(cov[0, 0]))
-        self.b8res = out
-        self.b8l.config(text=f"ln B: {TXT['slope']} = {out['B'][4]:.0f} ± {out['B'][5]:.0f} K\n"
-                             f"ln(B/A): {TXT['slope']} = {out['BA'][4]:.0f} ± {out['BA'][5]:.0f} K")
-        self._redraw()
-
-    # ---------------- drawing ----------------
-    def _redraw(self):
-        a1, a2 = self.ax1, self.ax2
+        a1, a2 = self.axes_b8
         a1.clear(); a2.clear()
-        k = self.task()
-        if k == "A":
-            for name, th, d, (P, D) in self.res_A or []:
-                a1.plot(LAM, P, label=f"{name}: {th:g}°, {d:g} nm"); a2.plot(LAM, D, label=f"{name}")
-            a1.set_ylabel("Ψ, deg"); a2.set_ylabel("Δ, deg"); a2.set_xlabel("λ, nm")
-        elif k == "B12":
-            dat = DATA[self.samp.get()]
-            a1.plot(LAM, dat[0], ".", label="data"); a2.plot(LAM, dat[1], ".", label="data")
-            if self.res_B12 and self.res_B12[0] == self.samp.get():
-                a1.plot(LAM, self.res_B12[1], label="fit"); a2.plot(LAM, self.res_B12[2], label="fit")
-            a1.set_ylabel("Ψ, deg"); a2.set_ylabel("Δ, deg"); a2.set_xlabel("λ, nm")
-        elif k == "B3":
-            ex = self.exps.get(self.cur)
-            if ex and ex["res"]:
-                r = np.array(ex["res"]); a1.errorbar(r[:, 0], r[:, 1], yerr=r[:, 2], fmt=".", label=ex["name"])
-            if ex and ex["frames"]:
-                t, (P, D) = ex["frames"][-1]
-                a2.plot(LAM, P, ".", label="Ψ"); a2.plot(LAM, D, ".", label="Δ")
-                a2.set_title(f"{ex['name']} · Φ = {ex['phi']:g}° · T = {ex['T']:g} °C · t = {t} min")
-            a1.set_xlabel("t, min"); a1.set_ylabel("d, nm"); a2.set_xlabel("λ, nm"); a2.set_ylabel("deg")
-        else:
-            if self.b8res:
-                for ax, key, lab in ((a1, "B", "ln(B·min/nm²)"), (a2, "BA", "ln(B/A·min/nm)")):
-                    x, y, e, a, b, sb = self.b8res[key]
-                    ax.errorbar(x, y, yerr=e, fmt="o"); xs = np.array([x.min(), x.max()])
-                    ax.plot(xs, a + b * xs, label=f"{TXT['slope']} {b:.0f} ± {sb:.0f} K"); ax.set_ylabel(lab)
-            a2.set_xlabel("1/T, 1/K")
-        for ax in (a1, a2):
-            ax.grid(True, alpha=0.4)
-            if ax.get_legend_handles_labels()[0]:
-                ax.legend(fontsize=8)
-        self.fig.tight_layout(); self.canvas.draw_idle()
+        out = {}
+        for ax, key, y, e, lab in ((a1, 'B', np.log(R[:, 1]), R[:, 2] / R[:, 1], 'ln(B·min/nm²)'),
+                                   (a2, 'BA', np.log(R[:, 3]), R[:, 4] / R[:, 3], 'ln(B/A·min/nm)')):
+            w = 1 / np.maximum(e, 1e-6) ** 2
+            S, Sx, Sy, Sxx, Sxy = w.sum(), (w * x).sum(), (w * y).sum(), (w * x * x).sum(), (w * x * y).sum()
+            Dt = S * Sxx - Sx ** 2; b = (S * Sxy - Sx * Sy) / Dt; a = (Sy - b * Sx) / S
+            chi = (w * (y - a - b * x) ** 2).sum(); s2 = max(1.0, chi / max(1, len(x) - 2))
+            sb = np.sqrt(s2 * S / Dt)
+            out[key] = (b, sb)
+            ax.errorbar(x, y, yerr=e, fmt='o', ms=5, label='B8_in.txt')
+            xs = np.array([x.min(), x.max()])
+            ax.plot(xs, a + b * xs, label=f'slope = {b:.0f} ± {sb:.0f} K')
+            ax.set_ylabel(lab)
+        a2.set_xlabel('1/T, 1/K')
+        self.res_b8 = (x, R)
+        self.lbl_b8.config(text=f"ln B:      slope = {out['B'][0]:.0f} ± {out['B'][1]:.0f} K\n"
+                                f"ln(B/A):  slope = {out['BA'][0]:.0f} ± {out['BA'][1]:.0f} K")
+        self._show('b8')
+        self.say(SAY['B8'].format(len(R)))
 
-    def _csv(self):
-        p = filedialog.asksaveasfilename(defaultextension=".csv", initialfile=f"ISPhO2024_T1_{self.task()}.csv")
+    # ---------------- Save data as CSV ----------------
+    def save_csv(self):
+        i = self.notebook.index(self.notebook.select())
+        rows = name = None
+        if i == 0 and self.res_a:
+            name = 'A_out.csv'
+            rows = [['lambda_nm'] + [s for r in self.res_a for s in (r[0] + '_Psi', r[0] + '_Delta')]]
+            rows += [[l] + [f'{v:.5f}' for r in self.res_a for v in (r[3][0][k], r[3][1][k])] for k, l in enumerate(LAM)]
+        elif i == 1:
+            smp = self.samp.get(); dat = DATA[smp]; name = smp + '.csv'
+            rows = [['lambda_nm', 'Psi_deg', 'Delta_deg']] + [[l, f'{dat[0][k]:.3f}', f'{dat[1][k]:.3f}'] for k, l in enumerate(LAM)]
+        elif i == 2:
+            ex = self.exps.get(self.cur)
+            if ex and ex['res']:
+                name = 'res_' + ex['name'] + '.csv'
+                rows = [['t_min', 'd_nm', 'dd_nm']] + [[t, f'{d:.2f}', f'{e:.2f}'] for t, d, e in ex['res']]
+            elif ex and ex['frames']:
+                t, (P, D) = ex['frames'][-1]; name = f"{ex['name']}_t{t}.csv"
+                rows = [['lambda_nm', 'Psi_deg', 'Delta_deg']] + [[l, f'{P[k]:.3f}', f'{D[k]:.3f}'] for k, l in enumerate(LAM)]
+        elif i == 3 and self.res_b8:
+            x, R = self.res_b8; name = 'B8_out.csv'
+            rows = [['invT_K', 'lnB', 'dlnB', 'lnBA', 'dlnBA']] + [
+                [f'{x[k]:.6e}', f'{np.log(R[k, 1]):.5f}', f'{R[k, 2] / R[k, 1]:.5f}', f'{np.log(R[k, 3]):.5f}', f'{R[k, 4] / R[k, 3]:.5f}']
+                for k in range(len(x))]
+        if rows is None:
+            warn('nodata'); return
+        p = filedialog.asksaveasfilename(defaultextension='.csv', initialfile=name, filetypes=[('CSV', '*.csv')])
         if not p:
             return
-        with open(p, "w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f); k = self.task()
-            if k == "A" and self.res_A:
-                w.writerow(["lambda_nm"] + [s for r in self.res_A for s in (r[0] + "_Psi", r[0] + "_Delta")])
-                for i, l in enumerate(LAM):
-                    w.writerow([l] + [f"{v:.5f}" for r in self.res_A for v in (r[3][0][i], r[3][1][i])])
-            elif k == "B12":
-                dat = DATA[self.samp.get()]; w.writerow(["lambda_nm", "Psi_deg", "Delta_deg"])
-                for i, l in enumerate(LAM):
-                    w.writerow([l, f"{dat[0][i]:.3f}", f"{dat[1][i]:.3f}"])
-            elif k == "B3" and self.exps.get(self.cur, {}).get("res"):
-                w.writerow(["t_min", "d_nm", "dd_nm"])
-                for t, d, e in self.exps[self.cur]["res"]:
-                    w.writerow([t, f"{d:.2f}", f"{e:.2f}"])
+        with open(p, 'w', newline='', encoding='utf-8') as f:
+            csv.writer(f).writerows(rows)
+        self.say(SAY['saved'].format(p))
 
 
-if __name__ == "__main__":
-    App().mainloop()
+if __name__ == '__main__':
+    app = OxidationApp()
+    app.mainloop()
