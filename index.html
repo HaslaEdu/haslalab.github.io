@@ -479,6 +479,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2024_E2_web.html">NBPhO 2024 P10 — 부엌의 물리</a></li>
       <li><a href="sim/nbpho2023_E1_web.html">NBPhO 2023 P4 — 블랙박스</a></li>
       <li><a href="sim/nbpho2023_E2_web.html">NBPhO 2023 P9 — 표면장력</a></li>
+      <li><a href="sim/nbpho2022_E1_web.html">NBPhO 2022 P5 — 강자성 띠</a></li>
+      <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
     </ul>
   </div>
@@ -1844,7 +1846,27 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2023_E_EN.pdf"},
               sol:"pdf/NBPhO_2023_S.pdf"}}
     ]},
-   {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2022", wip("Ferromagnetic Stripe", "Magnet in Glass"), ["E_EN", "S"], ["E_EN", "S"])},
+   {y:2022,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"강자성 띠",en:"Ferromagnetic Stripe"},
+       desc:{ko:"건전지로 동작하는 자기장 센서와 멀티미터로 센서의 오프셋과 지구 자기장(크기, 연직과의 각)을 구합니다. 자석을 붙인 연자성 띠 위에서 폭 방향과 길이 방향으로 연직 자기장을 재고, 띠를 빼낸 자석만의 자기장을 빼서 띠에서 새어 나오는 자기 선속을 적분해 포화 자화 µ0Js를 추정합니다 (문제 5).",
+             en:"With a battery-powered magnetic field sensor and a multimeter, find the sensor's offset and Earth's field (magnitude, angle to the vertical). On the soft stripe with the magnet attached, measure the vertical field across and along it, subtract the magnet's own field with the stripe slid away, and integrate the flux leaking out to estimate the saturation magnetisation µ0Js (problem 5)."},
+       tags:["자기장","강자성체","포화 자화"], tagsEn:["Magnetic field","Ferromagnet","Saturation"],
+       files:{sim:"sim/nbpho2022_E1_web.html",
+              src:{ko:"src/nbpho2022_E1_stripe_sim_KO.py", en:"src/nbpho2022_E1_stripe_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2022_E_EN.pdf"},
+              sol:"pdf/NBPhO_2022_S.pdf"}},
+      {id:"E2",
+       title:{ko:"유리 속 자석",en:"Magnet in Glass"},
+       desc:{ko:"자석이 든 유리 원통과 균일한 원통을 기울기가 조금 다른 두 경사면에서 동시에 굴려 함께 도착하는 차이 s로 κ = I/MR²를 구합니다. 원통을 들여다보며 마커로 표시하고 캘리퍼로 재어 자석의 높이, 스치는 시선의 현으로 자석 지름, 겉보기 지름으로 바깥 유리의 굴절률 no, 가운데 유리를 지나는 상의 위치로 nc를 구합니다 (문제 9).",
+             en:"Race the glass cylinder with the magnet against a homogeneous one on two slightly different slopes and find κ = I/MR² from the shift s at which they tie. Looking into the cylinder, mark it and measure with the caliper: the magnet's height, its diameter from the chord of a grazing line of sight, the outer glass's index no from its apparent width, and nc from the images through the core (problem 9)."},
+       tags:["굴림 운동","관성 모멘트","굴절"], tagsEn:["Rolling","Moment of inertia","Refraction"],
+       files:{sim:"sim/nbpho2022_E2_web.html",
+              src:{ko:"src/nbpho2022_E2_magnet_sim_KO.py", en:"src/nbpho2022_E2_magnet_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2022_E_EN.pdf"},
+              sol:"pdf/NBPhO_2022_S.pdf"}}
+    ]},
    {y:2021,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2021", wip("Stretching Gloves"), ["E_EN", "S"])},
    {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2020", wip("Bottle's Sound"), ["E_EN", "S"])},
    {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2018", wip("Fresnel Prism", "LCR Circuit"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5209,6 +5231,22 @@ const SIG_N23E2={
   f:v=>Math.max(0.03,5.8*Math.abs(v-15.2)/15.9),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" mm"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:12.5,x1:17.5,y0:0,y1:0.9,f:this.f,xl:"h / mm"},t,this); }};
+const SIG_N22E1={
+  sim:"sim/nbpho2022_E1_web.html", tag:"NBPhO 2022 P5", span:24, rate:8,
+  capL:{ko:"자석에서 띠를 따라 잰 거리 · 띠에서 새어 나오는 Bz",en:"Distance along the stripe from the magnet · Bz leaking out of it"},
+  capR:{ko:"자기장 센서",en:"magnetic field sensor"},
+  pts:[3,4,5,6,7,10,15,20,30,40,50,60], n:euN, jit:12,
+  f:v=>260*Math.cosh((70-v)/28)/Math.cosh(70/28)*2.6+2400*Math.exp(-(v-3)/1.2),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(0)+" µT"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:70,y0:0,y1:3200,f:this.f,xl:"x / cm"},t,this); }};
+const SIG_N22E2={
+  sim:"sim/nbpho2022_E2_web.html", tag:"NBPhO 2022 P9", span:24, rate:8,
+  capL:{ko:"시선의 가로 위치 · 원통 뒤에서 보이는 지점의 각",en:"Lateral position of the line of sight · angle of the point seen behind"},
+  capR:{ko:"마커와 캘리퍼",en:"marker and caliper"},
+  pts:[0,1,2,3,4,5,6,7,8,9,10,11,12], n:euN, jit:0.4,
+  f:v=>{ const R=12.5, n=1.51, a=Math.asin(v/R), b=Math.asin(Math.sin(a)/n); return (Math.PI-2*b+a-Math.PI/2)*57.3; },
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(0)+"°"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:12.5,y0:80,y1:140,f:this.f,xl:"x / mm"},t,this); }};
 const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_A26E1,SIG_A26E2,
                 SIG_I11E1,SIG_I11E2,SIG_A22E1,SIG_A22E2,SIG_I22E1,SIG_I22E2,SIG_R24E1,
                 SIG_A21E1,SIG_A21E2,SIG_R21E1,SIG_R23E1,
@@ -5224,7 +5262,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
