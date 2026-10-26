@@ -1610,38 +1610,47 @@ function gridTex(w, h){ const key = w + "x" + h; if (GRIDTEX[key]) return GRIDTE
   return GRIDTEX[key] = c; }
 /* the optical bench: a slotted aluminium extrusion on levelling feet, a ruler tape along its front */
 function rail3(){
-  for (const x of [2, 78]) for (const z of [-3, 3]){ cyl3("y",0,1.2,x,z,0.4,"#9aa0a6",{seg:10,layer:-1}); knurl3("y",0.4,1.4,x,z,1.0,"#6f7a86",{layer:-1}); }
-  box3(-2,82,1.4,RT3-0.5,-4,4,"#b9bcc2",{id:"rail",layer:-1,top:"#c8cbd0"});
-  for (const [z0, z1] of [[-4,-2.4],[-0.8,0.8],[2.4,4]]) box3(-2,82,RT3-0.5,RT3,z0,z1,"#cfd2d6",{id:"rail",layer:-1,top:"#dadde0"});
-  for (const [z0, z1] of [[-2.4,-0.8],[0.8,2.4]]) face([[-2,RT3-0.45,z0],[-2,RT3-0.45,z1],[82,RT3-0.45,z1],[82,RT3-0.45,z0]],{fill:"#5a5e64",flat:true,layer:-1,id:"rail"});
-  for (const s of [-1,1]) box3(s>0?82:-2.6,s>0?82.6:-2,1.3,RT3+0.1,-4.1,4.1,"#2d3035",{layer:-1});
-  face([[0,RT3-1.6,4.02],[30,RT3-1.6,4.02],[30,RT3-0.3,4.02],[0,RT3-0.3,4.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.4});
-  face([[30,RT3-1.6,4.02],[80,RT3-1.6,4.02],[80,RT3-0.3,4.02],[30,RT3-0.3,4.02]],{fill:"#e9eaec",flat:true,layer:-1,bias:0.4});
-  custom3([40,RT3-1,4.03],c=>{
-    for (let mm = 0; mm <= 800; mm += 5){ const L = mm % 50 === 0 ? 0.8 : mm % 10 === 0 ? 0.55 : 0.3, a = P3(mm/10,RT3-0.32,4.03), b = P3(mm/10,RT3-0.32-L,4.03);
+  for (const x of [2, 78]) for (const z of [-4.2, 4.2]){ cyl3("y",0,1.2,x,z,0.4,"#9aa0a6",{seg:10,layer:-1}); knurl3("y",0.4,1.4,x,z,1.0,"#6f7a86",{layer:-1}); }
+  /* the floor with its ribs, and two walls with T-slots on their tops and outer faces */
+  box3(-2,82,1.4,RT3-2.2,-5.8,5.8,"#b9bcc2",{id:"rail",layer:-1,top:"#c3c6cb"});
+  for (const z of [-2.4,0,2.4]) box3(-2,82,RT3-2.2,RT3-1.95,z-0.2,z+0.2,"#b1b5bb",{id:"rail",layer:-1,top:"#c9ccd1"});
+  for (const sg of [-1,1]){ const zi = sg * 4.7, zo = sg * 5.8;
+    box3(-2,82,RT3-2.2,RT3+0.3,Math.min(zi,zo),Math.max(zi,zo),"#cfd2d6",{id:"rail",layer:-1,top:"#dadde0"});
+    face(orient([[-2,RT3+0.305,sg*5.05],[82,RT3+0.305,sg*5.05],[82,RT3+0.305,sg*5.45],[-2,RT3+0.305,sg*5.45]],[0,1,0]),{fill:"#5a5e64",flat:true,layer:-1,id:"rail"});
+    face(orient([[-2,RT3-1.6,sg*5.805],[82,RT3-1.6,sg*5.805],[82,RT3-1.2,sg*5.805],[-2,RT3-1.2,sg*5.805]],[0,0,sg]),{fill:"#8e959b",flat:true,layer:-1,bias:0.3}); }
+  for (const sg of [-1,1]) box3(sg>0?82:-2.6,sg>0?82.6:-2,1.3,RT3+0.4,-5.9,5.9,"#2d3035",{layer:-1});
+  face([[0,RT3-0.9,5.82],[30,RT3-0.9,5.82],[30,RT3+0.2,5.82],[0,RT3+0.2,5.82]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.4});
+  face([[30,RT3-0.9,5.82],[80,RT3-0.9,5.82],[80,RT3+0.2,5.82],[30,RT3+0.2,5.82]],{fill:"#e9eaec",flat:true,layer:-1,bias:0.4});
+  custom3([40,RT3-0.3,5.83],c=>{
+    for (let mm = 0; mm <= 800; mm += 5){ const L = mm % 50 === 0 ? 0.7 : mm % 10 === 0 ? 0.5 : 0.28, a = P3(mm/10,RT3+0.18,5.83), b = P3(mm/10,RT3+0.18-L,5.83);
       c.strokeStyle = mm < 300 ? "#fff" : "#444"; c.lineWidth = mm % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{layer:-1,bias:1});
-  for (let cm = 0; cm <= 80; cm += 10) text3([cm,RT3-1.35,4.04],[1,0,0],[0,1,0],String(cm),0.45,cm < 30 ? "#fff" : "#333",{align:"center",layer:-1,bias:1});
+  for (let cm = 0; cm <= 80; cm += 10) text3([cm,RT3-0.7,5.84],[1,0,0],[0,1,0],String(cm),0.4,cm < 30 ? "#fff" : "#333",{align:"center",layer:-1,bias:1});
+  /* the star knob of the bench clamp at the target end */
+  box3(-4.6,-2,0,1.2,3.5,8.5,"#c9ced3",{id:"rail"}); cyl3("y",1.2,3.6,-3.3,6,0.35,"#c9ced3",{seg:10}); knurl3("y",3.6,4.8,-3.3,6,1.3,"#1b1c1f",{id:"rail"});
 }
 /* a rail carriage: black anodised block with a knurled clamp screw on the front */
-function carrier3(x,id){ box3(x-3,x+3,RT3,RT3+1.6,-4.6,4.6,"#1f2125",{id,top:"#2a2d31"}); knurl3("z",4.6,5.7,x,RT3+0.8,0.6,"#8a939d",{id}); }
+function carrier3(x,id){ box3(x-3,x+3,RT3-1.9,RT3+1.6,-4.6,4.6,"#1f2125",{id,top:"#2a2d31"}); box3(x-3.2,x+3.2,RT3+0.3,RT3+1.6,-5.9,5.9,"#1f2125",{id,top:"#2a2d31"}); knurl3("z",5.9,7.0,x,RT3+0.9,0.6,"#8a939d",{id}); }
 /* the laser on its kinematic mount (Fig. 1b): post holder, post, the fixed and the tilting plates with two
    adjusting screws, the module with its focusing ring pointing back along the rail */
 function laser3(){ const x = X_LASER;
   carrier3(x,"laser");
-  cyl3("y",RT3+1.6,RT3+7,x,0,1.0,"#1f2125",{seg:16,id:"laser",cap:"#2a2d31"}); knurl3("z",1.0,1.9,x,RT3+5.6,0.45,"#a9a089",{id:"laser"});
-  cylSeg("y",RT3+7,BEAM-2.4,x,0,0.6,"#c9ced3",{seg:12,id:"laser"},3);
-  box3(x-1.2,x+1.2,BEAM-2.4,BEAM-1.2,-1.2,1.2,"#1f2125",{id:"laser"});
-  /* the fixed plate and the tilting plate, the springs between them, the two adjusting screws */
-  boxY(x+0.6,x+1.4,BEAM-2.6,BEAM+3.8,-2.6,2.6,"#18191c",{id:"laser"},2);
-  boxY(x-0.6,x+0.2,BEAM-2.6,BEAM+3.8,-2.6,2.6,"#18191c",{id:"laser"},2);
-  for (const y of [BEAM-1.6, BEAM+2.6]) for (const z of [-1.8, 1.8]) cyl3("x",x+0.2,x+0.6,y,z,0.18,"#b9bec4",{seg:6});
-  for (const [y, z] of [[BEAM+2.9,-2.0],[BEAM-1.9,-2.0]]){ cyl3("x",x+1.4,x+2.6,y,z,0.18,"#c9ced3",{seg:8}); knurl3("x",x+2.6,x+3.6,y,z,0.5,"#b8ab8a",{id:"laser"}); }
-  cyl3("y",BEAM+3.8,BEAM+5,x+1,1.6,0.18,"#c9ced3",{seg:8}); knurl3("y",BEAM+5,BEAM+5.8,x+1,1.6,0.45,"#b8ab8a",{id:"laser"});
-  /* the module: black barrel, knurled focus ring, red aperture */
-  cyl3("x",x-6.2,x-0.6,BEAM,0,0.75,"#141518",{seg:18,id:"laser",cap:"#2a2c30"});
-  knurl3("x",x-6.6,x-4.9,BEAM,0,0.85,"#1d1f22",{id:"laser"});
-  cyl3("x",x-6.75,x-6.6,BEAM,0,0.32,app.lit&&app.cur>2?"#ff5040":"#552222",{seg:12,id:"laser"});
-  if (app.lit && app.cur > 2) sphere3([x-6.8,BEAM,0],0.6,"rgba(255,60,40,0.35)");
+  /* the post holder with its thumbscrew, the post */
+  box3(x-1.3,x+1.3,RT3+1.6,RT3+7,-1.3,1.3,"#1f2125",{id:"laser",top:"#2a2d31"}); knurl3("z",1.3,2.3,x,RT3+5.6,0.45,"#a9a089",{id:"laser"});
+  cylSeg("y",RT3+7,BEAM-3.2,x,0,0.6,"#c9ced3",{seg:12,id:"laser"},3);
+  /* the fixed plate on the post, the tilting plate in front of it, springs and the two adjusting screws */
+  box3(x-0.7,x+0.7,BEAM-4.2,BEAM-3.0,-0.9,0.9,"#1f2125",{id:"laser"});
+  boxY(x+0.3,x+1.0,BEAM-3.0,BEAM+3.0,-2.6,2.6,"#18191c",{id:"laser"},2);
+  boxY(x-0.9,x-0.2,BEAM-3.0,BEAM+3.0,-2.6,2.6,"#18191c",{id:"laser"},2);
+  for (const y of [BEAM-2.0, BEAM+2.0]) for (const z of [-1.8, 1.8]) cyl3("x",x-0.2,x+0.3,y,z,0.18,"#b9bec4",{seg:6});
+  for (const [y, z] of [[BEAM+2.4,-1.9],[BEAM-2.4,-1.9]]){ cyl3("x",x+1.0,x+2.0,y,z,0.18,"#c9ced3",{seg:8}); knurl3("x",x+2.0,x+2.9,y,z,0.5,"#b8ab8a",{id:"laser"}); }
+  cyl3("y",BEAM+3.0,BEAM+4.0,x+0.6,1.8,0.18,"#c9ced3",{seg:8}); knurl3("y",BEAM+4.0,BEAM+4.8,x+0.6,1.8,0.45,"#b8ab8a",{id:"laser"});
+  /* the module: through both plates, its weight over the post; the focusing ring at the output */
+  cyl3("x",x-3.4,x+2.6,BEAM,0,0.75,"#141518",{seg:18,id:"laser",cap:"#2a2c30"});
+  knurl3("x",x-3.7,x-2.4,BEAM,0,0.85,"#1d1f22",{id:"laser"});
+  cyl3("x",x-3.85,x-3.7,BEAM,0,0.32,app.lit&&app.cur>2?"#ff5040":"#552222",{seg:12,id:"laser"});
+  if (app.lit && app.cur > 2) sphere3([x-3.9,BEAM,0],0.6,"rgba(255,60,40,0.35)");
+  /* its two leads, down to the red and black posts on the carriage */
+  for (const k of ["laser_p","laser_n"]){ const t = term3(k); poly3([[x+2.6,BEAM,k === "laser_p" ? 0.25 : -0.25],[x+3.4,BEAM-1,0.2],[x+3.4,RT3+2.4,2],[t[0],t[1]+0.8,t[2]-0.6],[t[0],t[1],t[2]-0.3]], WP.T[k].col, 1.2); }
 }
 /* the screen: grid paper on both faces of a wooden board with a hole for the beam, on a clamp carriage */
 function screen3(){ const x = app.x_screen, H = SCR_HI - SCR_LO, W = 2 * SCR_Z;
@@ -1673,56 +1682,137 @@ function beam3(){
   const xt = app.x_target + 0.3, xs = app.x_screen, P = BEAM;
   const seg = (x0, x1) => custom3([(x0 + x1) / 2, P, 0], c => { const a = P3(x0, P, 0), b = P3(x1, P, 0);
     c.strokeStyle = "rgba(255,40,30,.9)"; c.lineWidth = 2; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); });
-  seg(X_LASER - 6.8, xs + 0.5); seg(xs, xt);
+  seg(X_LASER - 3.9, xs + 0.5); seg(xs, xt);
   custom3([(xt + xs) / 2, P, 0], c => { c.fillStyle = "rgba(255,40,30,.08)"; const e = P3(xt, P, 0); c.beginPath(); c.moveTo(e[0],e[1]);
     for (let i = 0; i <= 24; i++){ const t = i / 24 * 2 * Math.PI, q = P3(xs - 0.03, P + 6 * Math.sin(t), 6 * Math.cos(t)); c.lineTo(q[0],q[1]); }
     c.fill(); });
 }
-/* the control box (blue enclosure, its panel painted from the close-up) and the two UNI-T meters in their red holsters */
-const CB = [8, 0, 30];
-function ctrl3(){
-  const dpr = CTRLCV.width / CW, [x, , z] = CB;
-  box3(x+0.3,x+27.7,0,0.5,z+0.3,z+15.7,"#1d4f8a",{id:"ctrl"});
-  box3(x,x+28,0.5,5,z,z+16,"#2f6fa8",{id:"ctrl",top:"#3a7cb8"});
-  tex3(CTRLCV, 20*dpr, 30*dpr, 280*dpr, 160*dpr, [x, 5.01, z], [28,0,0], [0,0,16], {id:"ctrl"});
-  for (let k = 0; k < 2; k++){ const mx = x + 31 + k * 12.5;
-    /* holster: a red rubber frame raised round the dark face */
-    box3(mx,mx+10.4,0,3.6,z,z+16,"#c63a33",{id:"ctrl",top:"#d4473f"});
-    for (const [x0, x1, z0, z1] of [[mx,mx+10.4,z,z+0.7],[mx,mx+10.4,z+15.3,z+16],[mx,mx+0.7,z,z+16],[mx+9.7,mx+10.4,z,z+16]]) box3(x0,x1,3.6,4.3,z0,z1,"#d4473f",{id:"ctrl"});
-    tex3(CTRLCV, (330+k*118)*dpr, 30*dpr, 104*dpr, 160*dpr, [mx+0.7, 3.62, z+0.7], [9.0,0,0], [0,0,14.6], {id:"ctrl"});
-    for (const zz of [z+3, z+13]) box3(mx+10.4,mx+10.9,1,2.6,zz-1,zz+1,"#a8312b"); }
-  box3(x-12,x-5,0,3,z+4,z+9,"#161616",{id:"ctrl",top:"#1f1f1f"});
-  for (let k = 0; k < 4; k++) line3([x-11.4+k*1.6,3.01,z+4.5],[x-11.4+k*1.6,3.01,z+8.5],"#2a2a2a",1);
+/* the junction box (the same one as in E1): a black body under a blue lid with its labels, the COIL / LASER lamp,
+   the ON/OFF toggle (POWER) and the ADJUST knob (the laser current); jacks on its left side */
+const CB = [8, 0, 30], BX = 14, BZ = 38, BXH = 4.0, BXL = 5.2;
+const JBTEX = (() => { const px = 40, W = 8.2, L = 16.2, c = document.createElement("canvas"); c.width = W * px; c.height = L * px; c._static = true;
+  const g = c.getContext("2d"), X = v => v * px; g.fillStyle = "#2f8fd3"; g.fillRect(0, 0, c.width, c.height);
+  g.strokeStyle = "rgba(255,255,255,0.9)"; g.lineWidth = 2; g.beginPath(); g.moveTo(0, X(5.6)); g.lineTo(c.width, X(5.6)); g.stroke();
+  g.fillStyle = "#fff"; g.textBaseline = "middle"; const T2 = (t, x, y, sz, al) => { g.font = "bold " + Math.round(sz * px) + "px Arial"; g.textAlign = al || "left"; g.fillText(t, X(x), X(y)); };
+  T2("◄ COIL / LASER", 0.25, 0.9, 0.42); T2("ON / OFF", 0.6, 4.4, 0.36); T2("ADJUST", 6.2, 4.6, 0.36, "center");
+  g.fillStyle = "#8fd18a"; g.fillRect(X(3.9), X(6.4), X(4.0), X(3.6)); g.strokeStyle = "#fff"; g.lineWidth = 1.5; g.strokeRect(X(3.9), X(6.4), X(4.0), X(3.6));
+  g.fillStyle = "#16424f"; T2("OSCILLOSCOPE", 5.9, 8.2, 0.34, "center"); g.fillStyle = "#fff"; T2("CH1 ►", 8.0, 7.0, 0.36, "right"); T2("GND ►", 8.0, 9.6, 0.36, "right");
+  T2("◄ PHOTOGATE", 0.2, 7.9, 0.38); T2("◄ DC 12V", 0.2, 11.6, 0.38); T2("▲   ▼", 3.6, 13.6, 0.4); T2("BALL WIRES ►", 8.0, 15.2, 0.36, "right");
+  return c; })();
+const KNOB3 = [BX + 2.1, BZ - 5.1];
+function jbox3(){ const x = BX, z = BZ, lit = app.lit && app.cur > 2.0;
+  box3(x-4,x+4,0,BXH,z-8,z+8,"#17181b",{id:"ctrl",top:"#1f2024"});
+  box3(x-4.1,x+4.1,BXH,BXL,z-8.1,z+8.1,"#2f8fd3",{id:"ctrl",top:"#2f8fd3"});
+  tex3(JBTEX,0,0,JBTEX.width,JBTEX.height,[x-4.1,BXL+0.005,z-8.1],[8.2,0,0],[0,0,16.2],{id:"ctrl"});
+  for (const [dx, dz] of [[-3.7,-7.7],[3.7,-7.7],[-3.7,7.7],[3.7,7.7]]) cyl3("y",BXL,BXL+0.06,x+dx,z+dz,0.22,"#c3c8cd",{seg:8,cap:"#d5d9dd"});
+  cyl3("y",BXL,BXL+0.25,x+0.5,z-7.2,0.38,lit?"#ff4030":"#5a1a18",{seg:12,id:"ctrl",cap:lit?"#ff6a50":"#6a2420"}); if (lit) sphere3([x+0.5,BXL+0.35,z-7.2],0.55,"rgba(255,80,60,0.35)");
+  cyl3("y",BXL,BXL+0.35,x-2.3,z-5.0,0.62,"#c9ced3",{seg:16,id:"boxsw",cap:"#d8dce0"});
+  const a = app.on ? -0.45 : 0.45, tip = [x-2.3, BXL+0.35+1.5*Math.cos(a), z-5.0+1.5*Math.sin(a)];
+  cylAB([x-2.3,BXL+0.35,z-5.0], tip, 0.16, "#cfd3d7", {seg:8, id:"boxsw"}); cylAB(tip, [tip[0], tip[1] + 0.4*Math.cos(a), tip[2] + 0.4*Math.sin(a)], 0.3, "#d0352b", {seg:10, id:"boxsw", cap:"#e04a3c"});
+  /* the ADJUST knob: knurled, a white index line that turns with it */
+  cyl3("y",BXL,BXL+0.3,KNOB3[0],KNOB3[1],0.95,"#c9ced3",{seg:16,cap:"#d8dce0"}); knurl3("y",BXL+0.3,BXL+1.6,KNOB3[0],KNOB3[1],0.8,"#1f4fa8",{id:"knob"});
+  const ka = app.knob_a; line3([KNOB3[0]+0.15*Math.sin(ka),BXL+1.62,KNOB3[1]-0.15*Math.cos(ka)],[KNOB3[0]+0.75*Math.sin(ka),BXL+1.62,KNOB3[1]-0.75*Math.cos(ka)],"#f2f2f2",2);
+  for (const k of ["box_dc"]) socket3(k);
+  { const t = [x-4, 2.2, z-6.2]; cylAB([t[0]+0.02,t[1],t[2]],[t[0]-0.25,t[1],t[2]],0.55,"#c9ced3",{seg:14,cap:"#0b0b0b"}); }
+  /* the 12 V adaptor */
+  box3(x-18,x-12,0,3,z-3,z+2,"#161616",{id:"ctrl",top:"#1f1f1f"});
+  for (let k = 0; k < 4; k++) line3([x-17.4+k*1.6,3.01,z-2.5],[x-17.4+k*1.6,3.01,z+1.5],"#2a2a2a",1);
 }
-/* where each terminal is: the sockets on the control box, the meters' sockets, the laser's two posts,
-   and the adaptor's plug (in its socket, or lying by the adaptor) */
-function mx3(k){ return CB[0] + 31 + k * 12.5; }
-function term3(k){ const [x, , z] = CB;
-  const T3 = {box_dc:[x-0.05,2.6,z+8], box_lp:[x+22,2.6,z+16.05], box_ln:[x+25.5,2.6,z+16.05],
-    amp_in:[mx3(0)+3.2,4.35,z+13.6], amp_com:[mx3(0)+7.2,4.35,z+13.6], volt_in:[mx3(1)+3.2,4.35,z+13.6], volt_com:[mx3(1)+7.2,4.35,z+13.6],
-    laser_p:[X_LASER-1.6,RT3+0.8,4.75], laser_n:[X_LASER+1.6,RT3+0.8,4.75]};
-  if (T3[k]) return T3[k];
-  if (linked("adaptor", "box_dc")){ const t = T3.box_dc; return [t[0] - 0.8, t[1], t[2]]; }
-  return [x - 6, 0.5, z + 12]; }
+/* the UNI-T UT33C+ multimeters lying on the desk in their red holsters: the LCD, the HOLD/SEL and light keys,
+   the rotary switch, the 10A, COM and VΩmA sockets */
+const MC = [[30, 38], [41, 38]], MW = 3.7, ML = 7.0;
+const MTEX = [0, 1].map(() => { const c = document.createElement("canvas"); c.width = 296; c.height = 560; return c; });
+function meterFace(k){ const c = MTEX[k], g = c.getContext("2d"), W = c.width, H = c.height, [i, v] = app.reading;
+  g.fillStyle = "#2a2d32"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#e8e8e6"; g.font = "bold 22px Arial"; g.textAlign = "left"; g.fillText("UNI-T", 22, 34); g.textAlign = "right"; g.font = "italic bold 18px Arial"; g.fillText("UT33C+", W - 20, 34);
+  g.fillStyle = "#1a1c1f"; g.fillRect(18, 48, W - 36, 120); g.fillStyle = "#b9c2a4"; g.fillRect(26, 56, W - 52, 104);
+  const s = k === 0 ? (i === null ? "0.0" : i.toFixed(1)) : (v === null ? "0.00" : v.toFixed(2));
+  g.fillStyle = "#1c2018"; g.font = "bold 66px 'DSEG7 Classic', Consolas, monospace"; g.textAlign = "right"; g.fillText(s, W - 42, 138);
+  g.font = "bold 18px Arial"; g.fillText(k === 0 ? "mA" : "V", W - 34, 72); g.textAlign = "left"; g.fillText("DC", 36, 72);
+  g.fillStyle = "#f2c230"; g.fillRect(24, 186, 70, 28); g.fillStyle = "#8ec0e8"; g.fillRect(W - 94, 186, 70, 28);
+  g.fillStyle = "#e8e8e6"; g.font = "bold 13px Arial"; g.textAlign = "center"; g.fillText("HOLD/SEL", 59, 230); g.fillText("☼", W - 59, 230);
+  /* the switch's ranges round the dial */
+  const labs = ["OFF","V~","V⎓","200m","Ω","→+","2000µ","20m","200m","10A"], cx = W / 2, cy = 352;
+  labs.forEach((t, n) => { const a = -Math.PI * 0.85 + n * Math.PI * 1.7 / (labs.length - 1); g.fillText(t, cx + 112 * Math.sin(a), cy - 112 * Math.cos(a) + 5); });
+  g.strokeStyle = "#555"; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 92, 0, 7); g.stroke();
+  g.fillStyle = "#e8e8e6"; g.font = "bold 14px Arial"; [["10A",56],["COM",W/2],["VΩmA",W-56]].forEach(([t, x]) => g.fillText(t, x, 536));
+  g.fillStyle = "#f2c230"; g.fillText("⚠", W / 2 - 46, 500); return c; }
+const mDial = k => k === 0 ? 7 : 2;
+function meter3(k){ const [x, z] = MC[k], id = "ctrl", face = meterFace(k);
+  /* the holster: a red frame, thicker at the ends, round the dark body */
+  box3(x-MW,x+MW,0,3.0,z-ML,z+ML,"#c8312b",{id,top:"#d43b33"});
+  for (const [x0, x1, z0, z1] of [[x-MW,x+MW,z-ML,z-ML+0.8],[x-MW,x+MW,z+ML-0.8,z+ML],[x-MW,x-MW+0.55,z-ML,z+ML],[x+MW-0.55,x+MW,z-ML,z+ML]]) box3(x0,x1,3.0,3.55,z0,z1,"#d43b33",{id,top:"#de463d"});
+  box3(x-MW+0.55,x+MW-0.55,3.0,3.1,z-ML+0.8,z+ML-0.8,"#2a2d32",{id});
+  tex3(face,0,0,face.width,face.height,[x-MW+0.6,3.11,z-ML+0.85],[2*MW-1.2,0,0],[0,0,2*ML-1.7],{id});
+  /* the keys, the rotary knob with its pointer bar, the sockets */
+  for (const [dx, col] of [[-1.75,"#f2c230"],[1.75,"#8ec0e8"]]) box3(x+dx-0.55,x+dx+0.55,3.1,3.35,z-ML+0.85+3.4,z-ML+0.85+3.95,col,{id});
+  const cz = z - ML + 0.85 + 352 / 560 * (2 * ML - 1.7), a = -Math.PI * 0.85 + mDial(k) * Math.PI * 1.7 / 9;
+  cyl3("y",3.1,3.4,x,cz,2.05,"#1d1f22",{seg:24,id,cap:"#25282c"}); box3(x-0.35,x+0.35,3.4,4.0,cz-1.7,cz+1.7,"#2b2e33",{id});
+  line3([x+1.5*Math.sin(a),4.01,cz-1.5*Math.cos(a)],[x+0.5*Math.sin(a),4.01,cz-0.5*Math.cos(a)],"#f2f2f2",2.2);
+  for (const [dx, ring] of [[-2.0,"#9a9a9a"],[0,"#1b1d20"],[2.0,"#d0352b"]]){ const sz = z - ML + 0.85 + 470 / 560 * (2 * ML - 1.7);
+    cyl3("y",3.1,3.2,x+dx,sz,0.55,ring,{seg:14}); cyl3("y",3.0,3.21,x+dx,sz,0.32,"#0b0b0b",{seg:12}); } }
+function ctrl3(){ jbox3(); meter3(0); meter3(1); }
+/* ---- terminals and leads: each lead leaves its terminal along its direction, drops to the desk clear of
+   everything and runs round the instruments; banana plugs, a barrel plug, the posts */
+const TERM = {box_dc:{n:[-1,0,0], kind:"barrel"}, adaptor:{n:[-1,0,0], kind:"barrel"}, box_lp:{n:[0,1,0], kind:"banana"}, box_ln:{n:[0,1,0], kind:"banana"},
+  amp_in:{n:[0,1,0], kind:"banana"}, amp_com:{n:[0,1,0], kind:"banana"}, volt_in:{n:[0,1,0], kind:"banana"}, volt_com:{n:[0,1,0], kind:"banana"},
+  laser_p:{n:[0,0,1], kind:"banana"}, laser_n:{n:[0,0,1], kind:"banana"}};
+const PLUGS3 = {adaptor:1, box_lp:1, box_ln:1};
+const sockZ = k => MC[k][1] - ML + 0.85 + 470 / 560 * (2 * ML - 1.7);
+function term3(k){ const T3 = {box_dc:[BX-4,2.2,BZ+3.4], amp_in:[MC[0][0]+2.0,3.2,sockZ(0)], amp_com:[MC[0][0],3.2,sockZ(0)], volt_in:[MC[1][0]+2.0,3.2,sockZ(1)], volt_com:[MC[1][0],3.2,sockZ(1)],
+    laser_p:[X_LASER-1.6,RT3+0.9,5.9], laser_n:[X_LASER+1.6,RT3+0.9,5.9]};
+  return T3[k] || plugAt(k); }
+const REST3 = {adaptor:[BX-10,0.6,BZ+6], box_lp:[BX-9,0.6,BZ-1.5], box_ln:[BX-9,0.6,BZ+0.5]};
+function partnersOf(k){ const r = []; for (const l of WP.links){ const [a, b] = l.split("|"); if (a === k) r.push(b); else if (b === k) r.push(a); } return r; }
+function plugAt(k){ const o = partnersOf(k).find(q => !PLUGS3[q]); return o ? term3(o) : REST3[k]; }
+const plugDir = k => { const o = partnersOf(k).find(q => !PLUGS3[q]); return o ? TERM[o].n : [0, 1, 0]; };
+/* where a plug's own lead comes from: the adaptor brick, or the box's COIL / LASER jack (a red and black pair) */
+const leadRoot = k => k === "adaptor" ? {p:[BX-12,1.5,BZ-0.5], n:[1,0,0]} : {p:[BX-4.3,2.2,BZ-6.2], n:[-1,0,0]};
 const tCol = k => WP.held === k ? "#ff8a2a" : WP.T[k].col;
-function sag3(a, b, col, w, sag){ const pts = []; for (let i = 0; i <= 22; i++){ const t = i / 22;
-  pts.push([a[0]+(b[0]-a[0])*t, Math.max(0.25, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*sag), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); }
+function obstacles(){ return [[-3,-6.5,83,7.5],[BX-4.6,BZ-8.6,BX+4.6,BZ+8.6],[MC[0][0]-MW-0.5,MC[0][1]-ML-0.5,MC[0][0]+MW+0.5,MC[0][1]+ML+0.5],[MC[1][0]-MW-0.5,MC[1][1]-ML-0.5,MC[1][0]+MW+0.5,MC[1][1]+ML+0.5],[BX-18.5,BZ-3.5,BX-11.5,BZ+2.5],[-5,3,-1.5,9]]; }
+const inRect = (p, r) => p[0] > r[0] && p[0] < r[2] && p[1] > r[1] && p[1] < r[3];
+function segHits(a, b, r){ let t0 = 0, t1 = 1; const dx = b[0] - a[0], dz = b[1] - a[1];
+  for (const [pp, q] of [[-dx, a[0] - r[0]], [dx, r[2] - a[0]], [-dz, a[1] - r[1]], [dz, r[3] - a[1]]]){
+    if (Math.abs(pp) < 1e-9){ if (q <= 0) return false; continue; } const t = q / pp; if (pp < 0){ if (t > t0) t0 = t; } else if (t < t1) t1 = t; if (t0 >= t1) return false; }
+  return t1 - t0 > 1e-6; }
+function deskRoute(A, B){ const R2 = obstacles(), free = (a, b) => R2.every(r => inRect(a, r) || inRect(b, r) || !segHits(a, b, r));
+  if (free(A, B)) return [A, B];
+  const N = [A, B]; for (const r of R2) for (const c of [[r[0]-1,r[1]-1],[r[2]+1,r[1]-1],[r[2]+1,r[3]+1],[r[0]-1,r[3]+1]]) if (!R2.some(q => inRect(c, q))) N.push(c);
+  const d = N.map(() => Infinity), prev = N.map(() => -1), done = N.map(() => false); d[0] = 0;
+  for (;;){ let u = -1; for (let i = 0; i < N.length; i++) if (!done[i] && (u < 0 || d[i] < d[u])) u = i; if (u < 0 || d[u] === Infinity || u === 1) break; done[u] = true;
+    for (let v = 0; v < N.length; v++) if (!done[v] && free(N[u], N[v])){ const w = d[u] + Math.hypot(N[u][0]-N[v][0], N[u][1]-N[v][1]); if (w < d[v]){ d[v] = w; prev[v] = u; } } }
+  if (prev[1] < 0) return [A, B]; const path = []; for (let v = 1; v >= 0; v = prev[v]) path.unshift(N[v]); return path; }
+function exitOf(p, n){ let q = [p[0] + n[0] * 1.6, p[1] + n[1] * 1.6, p[2] + n[2] * 1.6]; const R2 = obstacles(), dir = Math.abs(n[1]) > 0.5 ? [0, 0, 1] : n;
+  for (let k = 0; k < 60 && R2.some(r => inRect([q[0], q[2]], r)); k++) q = [q[0] + dir[0], q[1], q[2] + dir[2]]; return q; }
+function leadPath(a, na, b, nb){ const ea = exitOf(a, na), eb = exitOf(b, nb), mid = deskRoute([ea[0], ea[2]], [eb[0], eb[2]]);
+  const pts = [a, [a[0] + na[0] * 1.6, a[1] + na[1] * 1.6, a[2] + na[2] * 1.6]];
+  if (Math.hypot(ea[0] - pts[1][0], ea[2] - pts[1][2]) > 0.1) pts.push(ea);
+  for (const m of mid) pts.push([m[0], 0.32, m[1]]);
+  if (Math.hypot(eb[0] - b[0] - nb[0] * 1.6, eb[2] - b[2] - nb[2] * 1.6) > 0.1) pts.push(eb);
+  pts.push([b[0] + nb[0] * 1.6, b[1] + nb[1] * 1.6, b[2] + nb[2] * 1.6], b);
+  let q = pts; for (let it = 0; it < 2; it++){ const r = [q[0]]; for (let i = 0; i < q.length - 1; i++){ const A2 = q[i], B2 = q[i + 1];
+    if (i > 0) r.push([A2[0]*0.75+B2[0]*0.25, A2[1]*0.75+B2[1]*0.25, A2[2]*0.75+B2[2]*0.25]); if (i < q.length - 2) r.push([A2[0]*0.25+B2[0]*0.75, A2[1]*0.25+B2[1]*0.75, A2[2]*0.25+B2[2]*0.75]); }
+    r.push(q[q.length - 1]); q = r; }
+  return q; }
+function plugModel(kind, p, n, col, id){ const o = id ? {id} : {}, at = d => [p[0] + n[0] * d, p[1] + n[1] * d, p[2] + n[2] * d];
+  if (kind === "banana"){ cylAB(p, at(0.5), 0.2, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.5), at(2.4), 0.42, col, Object.assign({seg:12}, o)); cylAB(at(1.0), at(1.4), 0.5, col, Object.assign({seg:12}, o)); }
+  else { cylAB(p, at(0.3), 0.3, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.3), at(2.0), 0.48, "#1b1c1f", Object.assign({seg:12}, o)); } }
+function socket3(k){ const t = term3(k), n = TERM[k].n, col = WP.held === k ? "#ff8a2a" : null, at = d => [t[0] + n[0] * d, t[1] + n[1] * d, t[2] + n[2] * d], id = "t:" + k;
+  if (TERM[k].kind === "barrel") cylAB(at(-0.02), at(0.25), 0.55, col || "#c9ced3", {seg:14, id, cap:"#0b0b0b"});
+  else cylAB(at(-0.02), at(0.45), 0.6, col || WP.T[k].col, {seg:14, id, cap:"#0b0b0b"}); }
+const sag3 = (a, b, col, w) => poly3(leadPath(a, [0, 0, 0], b, [0, 1, 0]), col, w);
 function cables3(){
-  /* the sockets */
-  const [x, , z] = CB;
-  for (const k of ["box_lp","box_ln"]){ const t = term3(k); cyl3("z", t[2] - 0.05, t[2] + 0.5, t[0], t[1], 0.55, tCol(k), {seg:14, id:"t:" + k, cap:"#0b0b0b"}); }
-  { const t = term3("box_dc"); cyl3("x", t[0] + 0.05, t[0] - 0.5, t[1], t[2], 0.5, tCol("box_dc"), {seg:14, id:"t:box_dc", cap:"#0b0b0b"}); }
-  text3([x+23.75,4.0,z+16.06],[1,0,0],[0,1,0],"LASER  +   −",0.42,"#fff",{align:"center",bias:2});
-  text3([x-0.06,4.0,z+8],[0,0,-1],[0,1,0],"DC 12V",0.42,"#fff",{align:"center",bias:2});
-  for (const k of ["amp_in","amp_com","volt_in","volt_com"]){ const t = term3(k); cyl3("y", t[1] - 0.1, t[1] + 0.25, t[0], t[2], 0.55, tCol(k), {seg:14, id:"t:" + k, cap:"#111"}); }
-  for (const k of ["laser_p","laser_n"]){ const t = term3(k); cyl3("z", t[2] - 0.1, t[2] + 0.7, t[0], t[1], 0.35, tCol(k), {seg:10, id:"t:" + k, cap:"#c9ced3"});
-    sag3([X_LASER - 3, BEAM - 0.6, 0.4], [t[0], t[1] + 0.3, t[2]], WP.T[k].col, 1.2, 1); }
-  /* the adaptor's own lead and plug */
-  const ap = term3("adaptor"); sag3([x - 8.5, 2, z + 6.5], ap, "#141414", 1.8, 0.4); sphere3(ap, 0.7, tCol("adaptor"), {id:"t:adaptor"});
-  /* the patch leads */
-  for (const l of WP.links){ const [a, b] = l.split("|"); if (a === "adaptor" || b === "adaptor") continue;
-    const A = term3(a), B = term3(b), d = Math.hypot(A[0]-B[0], A[1]-B[1], A[2]-B[2]); sag3(A, B, WP.T[a].col, 2, Math.min(16, d * 0.22)); }
-  if (WP.held !== null){ const A = term3(WP.held), q = onPlane(m3[0], m3[1], 2.5); sag3(A, q, "#ff8a2a", 1.4, 2); }
+  for (const k of ["amp_in","amp_com","volt_in","volt_com","laser_p","laser_n"]) socket3(k);
+  /* the leads fixed at one end: the adaptor's, and the pair from the box's COIL / LASER jack */
+  for (const k of ["adaptor","box_lp","box_ln"]){ const r = leadRoot(k), e = plugAt(k), n = plugDir(k), end = [e[0] + n[0] * 2.2, e[1] + n[1] * 2.2, e[2] + n[2] * 2.2];
+    poly3(leadPath(r.p, r.n, end, n), k === "adaptor" ? "#141414" : WP.T[k].col, 1.7);
+    plugModel(TERM[k].kind, e, n, tCol(k), "t:" + k); }
+  /* the patch leads with a banana plug at each end */
+  for (const l of WP.links){ const [a, b] = l.split("|"); if (PLUGS3[a] || PLUGS3[b]) continue;
+    const A = term3(a), B = term3(b), na = TERM[a].n, nb = TERM[b].n, ea = [A[0] + na[0] * 2.2, A[1] + na[1] * 2.2, A[2] + na[2] * 2.2], eb = [B[0] + nb[0] * 2.2, B[1] + nb[1] * 2.2, B[2] + nb[2] * 2.2];
+    poly3(leadPath(ea, na, eb, nb), WP.T[a].col, 1.8); plugModel("banana", A, na, WP.T[a].col); plugModel("banana", B, nb, WP.T[a].col); }
+  if (WP.held !== null){ const k = WP.held, A = PLUGS3[k] ? leadRoot(k).p : term3(k), n = PLUGS3[k] ? leadRoot(k).n : TERM[k].n, q = onPlane(m3[0], m3[1], 0.4);
+    poly3(leadPath(A, n, q, [0, 1, 0]), "#ff8a2a", 1.6); }
 }
 function scene3(){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
 function layout3(){
@@ -1736,7 +1826,7 @@ let lastTex = 0, freeCam = null;
 function viewCam(v){ const W = CAM.W, H = CAM.H;
   if (v === "bench") return {yaw:0, pitch:0.04, k:Math.min(W / 92, H / 52), tx:40, ty:(SCR_LO + SCR_HI) / 2 - 4, tz:0, px:0, py:0};
   if (v === "screen") return {yaw:-Math.PI / 2, pitch:0.0, k:Math.min(W / (2 * SCR_Z + 6), H / (SCR_HI - SCR_LO + 6)), tx:app.x_screen, ty:(SCR_LO + SCR_HI) / 2, tz:0, px:0, py:0};
-  if (v === "ctrl") return {yaw:0, pitch:1.25, k:Math.min(W / 62, H / 26), tx:CB[0] + 24, ty:3, tz:CB[2] + 8, px:0, py:0};
+  if (v === "ctrl") return {yaw:0, pitch:1.05, k:Math.min(W / 50, H / 26), tx:28, ty:3, tz:38, px:0, py:0};
   return {yaw:-0.25, pitch:0.78, k:Math.min(W / 110, H / 70), tx:40, ty:6, tz:20, px:0, py:0}; }
 function sceneView(v){
   if (v === "screen"){ screen3(); return; }
@@ -1784,7 +1874,9 @@ cv3.addEventListener("contextmenu", e => { e.preventDefault(); const p = p3e(e),
 cv3.addEventListener("pointerdown", e => { if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
   const id = pick3(p[0], p[1]);
   if (id && id.startsWith("t:")){ wireClick(id.slice(2)); return; }
-  if (view3 === "ctrl" && id === "ctrl"){ const q = ctrlAt(p); if (q){ ctrlClick(q[0], q[1]); return; } }
+  /* the box's ON/OFF toggle, and its ADJUST knob: its right half turns it up, its left half down, its middle switches coarse/fine */
+  if (id === "boxsw"){ app.on = !app.on; readMeters(); refresh(); return; }
+  if (id === "knob"){ const c = P3(KNOB3[0], BXL + 1.6, KNOB3[1]), d = p[0] - c[0]; if (Math.hypot(p[0] - c[0], p[1] - c[1]) < 0.3 * CAM.k){ app.fine = !app.fine; refresh(); } else turnKnob(d > 0 ? 1 : -1); return; }
   if (view3 === "screen"){ const q = screenAt(p);
     if (q && hand === "ruler"){ app.ruler.x = q[0]; app.ruler.y = q[1]; app.ruler.ang = 0; app.ruler.on = true; hand = null; drawScreen(); drawTray(); return; }
     if (q && rulerGrab(q[0], q[1])){ down3 = {p, id:"ruler", moved:true}; return; } }
@@ -1805,7 +1897,7 @@ cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing"); rule
     else if (id === "rail" || id === "laser" || id === "target") showView("bench"); }
   down3 = null; });
 cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
-  if (view3 === "ctrl"){ const q = ctrlAt(p); if (q && ctrlWheel(q[0], q[1], s)) return; }
+  if (pick3(p[0], p[1]) === "knob"){ turnKnob(s); return; }
   if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.ang += s * Math.PI / 90; drawScreen(); return; } }
   const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
