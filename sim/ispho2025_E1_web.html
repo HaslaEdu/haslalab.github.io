@@ -195,7 +195,7 @@ const T={
     items:{table:"6. 자석 광학대",shield:"7. 차광 상자",stand:"2. LED 받침대",L1:"3. 렌즈 L₁",L2:"4. 렌즈 L₂ + 회절격자 G",screen:"5. 스크린",sensor:"1. CCD 센서 + 제어판",
       rgb:"3. \"RGB\" LED 기판",rib4:"7. 4가닥 리본 케이블",main1:"4. \"MAIN\" LED 큐벳",main2:"4. 예비 \"MAIN\" LED 큐벳",rib2:"8. 2가닥 리본 케이블",adapter:"5. 스위치 어댑터",r0:"9. 저항 R₀",
       psu:"1. 직류 전원 (0–15 V)",m1:"2. 멀티미터 V₁",m2:"2. 멀티미터 V₂",wires:"바나나 선",water:"3. 증류수 통",pipette:"4. 스포이트",clamp:"5. 집게",tube:"2. 실에 매단 관",beaker:"6. 폐액 비커",thermos:"1. 액체질소 보온병",laptop:"컴퓨터"},
-    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 계기·컴퓨터·큐벳을 클릭하면 그 확대 화면이 열립니다 · 전원 노브는 끌어서 돌리고(Shift: 미세), 전원·어댑터 스위치는 눌러서 켭니다",
+    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 책상 위 기구를 끌면 원하는 자리로 옮겨집니다 · 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 계기·컴퓨터·큐벳을 클릭하면 그 확대 화면이 열립니다 · 전원 노브는 끌거나 휠로 돌리고(Shift: 미세), 스위치는 눌러서 켭니다 · 바나나 선: 단자를 클릭해 한쪽 끝을 들고 다른 단자를 클릭(단자 우클릭: 선 빼기) · 멀티미터 다이얼: 클릭/우클릭·휠로 한 칸씩",
     tabs:{prog:"센서 프로그램",opt:"광학대 (위에서)",wire:"배선",meters:"멀티미터",cuv:"큐벳"},
     closeCap:{prog:"센서 프로그램 — 픽셀 번호 N에 따른 세기(임의 단위). Launch: 실시간, Single spectrum: 한 장, Time Series: Launch 뒤에만 기록. 휠: N축 확대, 끌기: 이동, 더블클릭: 전체.",
               opt:"광학대를 위에서 본 모습 — 부품을 끌어 광축을 따라 옮깁니다(오른쪽 ± 버튼으로 미세 조정). 오른쪽 위 그림은 스크린 면: 0차 점과 CCD 위의 1차 스펙트럼.",
@@ -224,7 +224,7 @@ const T={
       wiped:"큐벳 앞면의 서리를 닦았습니다.",dead:"LED가 과전류로 망가졌습니다 — 예비 큐벳을 쓰세요.",over:"전류가 100 mA를 넘었습니다!",fuse:k=>"V"+k+" 멀티미터의 퓨즈가 끊어졌습니다.",noFuse:"남은 퓨즈가 없습니다.",fuseNew:"퓨즈를 갈았습니다.",
       sel:n=>n+" 선택 — 이을 단자를 클릭하세요.",same:"같은 단자입니다.",wired:(a,b)=>a+" ↔ "+b+" 연결",unwired:"선을 뺐습니다.",noted:"노트에 적었습니다.",
       saved:"파일로 저장했습니다.",noLaunch:"Time Series는 Launch를 누른 다음에만 켤 수 있습니다.",noTS:"저장할 Time Series 기록이 없습니다.",noSingle:"먼저 Single spectrum으로 한 장을 찍으세요.",
-      sensorNo:"CCD 센서가 없습니다.",moved:n=>n+" 위치를 옮겼습니다."}
+      sensorNo:"CCD 센서가 없습니다.",moved:n=>n+" 위치를 옮겼습니다.",noRoom:"거기에는 놓을 수 없습니다 — 다른 기구와 겹치거나 책상 밖입니다.",leadDown:"들고 있던 선을 내려놓았습니다."}
   },
   en:{
     title:"ISPhO 2025 Experiment — LED Color",
@@ -235,7 +235,7 @@ const T={
     items:{table:"6. Magnetic optical table",shield:"7. Shielding box",stand:"2. LED stand",L1:"3. Lens L₁",L2:"4. Lens L₂ + grating G",screen:"5. Screen",sensor:"1. CCD sensor + control board",
       rgb:"3. \"RGB\" LED board",rib4:"7. 4-lead ribbon cable",main1:"4. \"MAIN\" LED cuvette",main2:"4. Reserve \"MAIN\" LED cuvette",rib2:"8. 2-lead ribbon cable",adapter:"5. Adapter with switch",r0:"9. Resistor R₀",
       psu:"1. DC source (0–15 V)",m1:"2. Multimeter V₁",m2:"2. Multimeter V₂",wires:"Banana leads",water:"3. Distilled water",pipette:"4. Pasteur pipette",clamp:"5. Clamp",tube:"2. Tube on a thread",beaker:"6. Waste beaker",thermos:"1. Liquid nitrogen thermos",laptop:"Computer"},
-    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click an instrument, the computer or the cuvette to open its close-up · drag the supply knob to turn it (Shift: fine), click the supply or adapter switch to flip it",
+    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag a thing on the bench to move it anywhere it fits · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click an instrument, the computer or the cuvette to open its close-up · drag or wheel the supply knob (Shift: fine), click a switch to flip it · banana leads: click a terminal to take one end, then click another terminal (R-click a terminal: pull its lead) · multimeter switch: click / R-click / wheel, one step at a time",
     tabs:{prog:"Sensor program",opt:"Optical table (top)",wire:"Wiring",meters:"Multimeters",cuv:"Cuvette"},
     closeCap:{prog:"The sensor program — intensity (arbitrary units) against pixel number N. Launch: live, Single spectrum: one shot, Time Series: records only after Launch. Wheel: zoom N, drag: pan, double-click: all.",
               opt:"The optical table from above — drag a part along the axis (fine steps with the ± buttons on the right). Top right: the face of the screen, with the zero-order spot and the first-order spectrum on the CCD.",
@@ -264,7 +264,7 @@ const T={
       wiped:"Frost wiped off the front of the cuvette.",dead:"The LED was destroyed by over-current — use the reserve cuvette.",over:"The current is over 100 mA!",fuse:k=>"Fuse blown in multimeter V"+k+".",noFuse:"No fuses left.",fuseNew:"Fuse replaced.",
       sel:n=>n+" selected — click the terminal to join it to.",same:"That is the same terminal.",wired:(a,b)=>a+" ↔ "+b+" joined",unwired:"Lead pulled out.",noted:"Written in the notebook.",
       saved:"Saved to a file.",noLaunch:"Time Series can only be started after Launch.",noTS:"No time series recorded yet.",noSingle:"Take a Single spectrum first.",
-      sensorNo:"No CCD sensor.",moved:n=>n+" moved."}
+      sensorNo:"No CCD sensor.",moved:n=>n+" moved.",noRoom:"No room there — it would overlap something or hang off the bench.",leadDown:"Lead put down."}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
@@ -1000,6 +1000,38 @@ const POS={psu:[104,44],m1:[58,56],m2:[72,56],r0:[34,56],adapter:[44,40],sensor:
   rgb:[50,30],main1:[56,31],main2:[61,31]};
 const OPT=["stand","L1","L2","screen"];
 const DEF_T={stand:6,L1:18,L2:34,screen:47};
+/* ── free placement: each loose thing has its own spot on the bench, and may go anywhere it fits ── */
+/* footprint round its POS point: [x0, y0, x1, y1] (cm) */
+const FOOT={psu:[-9,-7,9,8.4],m1:[-4.4,-7.6,4.4,7.6],m2:[-4.4,-7.6,4.4,7.6],r0:[-3.4,-2.3,4,2.3],adapter:[-2.6,-2,2.6,2],sensor:[-5.6,-3.6,6.4,4.4],
+  laptop:[-10,-6.8,10,8.5],thermos:[-4.3,-4.3,4.3,4.3],water:[-3,-3,3,3],pipette:[-8.3,-0.5,4.4,0.5],clamp:[-2.4,-1.2,2.6,0.6],tube:[-7.6,-0.6,3,5.9],
+  beaker:[-2.8,-2.8,3.4,2.8],rgb:[-2.3,-1.2,2.3,1.2],main1:[-0.65,-0.65,0.65,0.65],main2:[-0.65,-0.65,0.65,0.65]};
+const BENCH={x0:0.5,x1:123.5,y0:0.5,y1:71.5};
+/* is k lying on the bench (not in the stand, the flask or the hand)? */
+const onBench=k=>(k==="laptop"||k==="thermos"||has(k))&&!(hand&&hand.item===k)&&ST.inStand!==k&&!(k==="tube"&&ST.tubeIn!==null);
+const footAt=(k,c)=>{ const f=FOOT[k]; return [c[0]+f[0],c[1]+f[1],c[0]+f[2],c[1]+f[3]]; };
+const overlap=(a,b)=>a[0]<b[2]&&b[0]<a[2]&&a[1]<b[3]&&b[1]<a[3];
+function blocked(k,c){ const r=footAt(k,c);
+  if(r[0]<BENCH.x0||r[2]>BENCH.x1||r[1]<BENCH.y0||r[3]>BENCH.y1) return true;
+  if(has("table")&&overlap(r,[TBL.x0-0.4,TBL.y0-0.4,TBL.x1+0.4,TBL.y1+0.4])) return true;
+  if(has("shield")&&overlap(r,[TBL.x0-9.3,TBL.y0-5.3,TBL.x0+12.3,TBL.y1+5.3])) return true;
+  for(const o in FOOT) if(o!==k&&onBench(o)&&overlap(r,footAt(o,POS[o]))) return true;
+  return false; }
+/* where k would stand with its middle under the pointer */
+function benchSpot(k,p){ const q=unP(p[0],p[1],0), f=FOOT[k]; return [Math.round((q[0]-(f[0]+f[2])/2)*10)/10,Math.round((q[1]-(f[1]+f[3])/2)*10)/10]; }
+function putDown(k,p){ if(!(k in FOOT)){ ST.on.add(k); say("placed",itemName(k)); return true; }
+  const c=benchSpot(k,p); if(blocked(k,c)){ say("noRoom"); return false; }
+  POS[k]=c; ST.on.add(k); say("placed",itemName(k)); return true; }
+/* the thing in the hand drawn faintly where it would go (red where it cannot) */
+function drawGhost(){ if(!hand||!overBench) return; const k=hand.item, h=hand, n0=ITEMS.length; let bad=false;
+  const k0=hitItem(mouse); if(k0&&k0!=="table"&&k0!=="shield"&&!(k in FOOT&&k0===k)) return;
+  if(OPT.includes(k)){ if(!has("table")) return; const t=tableT(mouse); if(t===null) return; const keep=ST.x[k]; ST.x[k]=t; hand=null; try{ drawLoose(k); } finally{ hand=h; ST.x[k]=keep; } }
+  else if(k in FOOT){ const c=benchSpot(k,mouse), keep=POS[k], on=has(k); bad=blocked(k,c); POS[k]=c; hand=null; ST.on.add(k);
+    try{ drawLoose(k); } finally{ hand=h; POS[k]=keep; if(!on) ST.on.delete(k); } }
+  else return;
+  const out=ITEMS.slice(0,n0);
+  for(const it of ITEMS.slice(n0)){ if(it.t==="f"){ it.o=Object.assign({},it.o,{alpha:0.45,id:undefined,stroke:undefined}); if(bad) it.o.fill="#d23c32"; out.push(it); }
+    else if(it.t==="l"||it.t==="pl"){ it.o=Object.assign({},it.o,{alpha:0.45}); out.push(it); } }
+  ITEMS=out; }
 const BLACK="#16171a", BLACK2="#22242a", GLASS="rgba(214,232,240,0.30)";
 /* ── printed surfaces: small canvases painted once and laid on faces ── */
 const TEXC={};
@@ -1166,7 +1198,7 @@ function drawPsu(){ const [x,y]=POS.psu, id="psu";
   for(let i=0;i<=10;i++){ const b=-2.4+0.48*i; L([x-2+1.8*Math.sin(b),y+7.04,5.5+1.8*Math.cos(b)],[x-2+2.1*Math.sin(b),y+7.04,5.5+2.1*Math.cos(b)],"#333",1); }
   ocyl([x-6.4,y+7,5.5],[0,1,0],1.0,1.1,"#8e9297",{id,seg:18,cap:"#a2a6ab"}); TX([x-7.4,y+7.05,3.6],[1,0,0],[0,0,1],"CURRENT",0.4,"#444",{weight:"700"});
   TX([x-3.4,y+7.05,8.4],[1,0,0],[0,0,1],"0 — 15 V",0.55,"#333",{weight:"700"});
-  for(const [dx,c] of [[4,"#d0352b"],[6.5,"#1b1d20"],[1.6,"#e3c21f"]]){ ocyl([x+dx,y+7,2.2],[0,1,0],0.55,0.55,c,{id,seg:12}); ocyl([x+dx,y+7.55,2.2],[0,1,0],0.05,0.2,"#777",{seg:8}); }
+  for(const [dx,c,t] of [[4,"#d0352b","t:PSU.+"],[6.5,"#1b1d20","t:PSU.-"],[1.6,"#e3c21f",id]]){ ocyl([x+dx,y+7,2.2],[0,1,0],0.55,0.55,c,{id:t,seg:12,cap:WSEL&&t==="t:"+WSEL?"#ff9a3a":undefined}); ocyl([x+dx,y+7.55,2.2],[0,1,0],0.05,0.2,"#777",{seg:8,id:t}); }
   ocyl([x+5.2,y+7,7.2],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); obox([x+7,y+7.1,7.2],[0.7,0,0],[0,0.2,0],[0,0,0.5],ST.psuOn?"#e8e8e4":"#9a9a96",{id:"psuSw"}); }
 /* a Mastech MAS830: dark face in a green rubber holster, the LCD, the dial and three sockets */
 function drawMeter(k){ const [x,y]=POS["m"+k], m=ST.meters[k-1], id="m"+k;
@@ -1176,18 +1208,21 @@ function drawMeter(k){ const [x,y]=POS["m"+k], m=ST.meters[k-1], id="m"+k;
   F([[x-2.9,y-6.3,2.69],[x+2.9,y-6.3,2.69],[x+2.9,y-3.8,2.69],[x-2.9,y-3.8,2.69]],"#bec8ad",{id,n:Z3});
   TX([x+2.7,y-4.6,2.7],[1,0,0],[0,-1,0],m.shown||"",1.15,"#1b1d20",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
   TX([x-3.2,y-2.8,2.68],[1,0,0],[0,-1,0],"MASTECH  MAS830",0.42,"#e6e6e6",{weight:"700"});
-  ocyl([x,y+0.8,2.66],Z3,0.45,2.2,"#1b1d20",{id,seg:24}); const a=dialAng(m); L([x,y+0.8,3.13],[x+2.0*Math.sin(a),y+0.8-2.0*Math.cos(a),3.13],"#f2f2f0",2.2);
-  for(const [dx,c] of [[-2.4,"#1b1d20"],[0,"#d0352b"],[2.4,"#d0352b"]]){ ocyl([x+dx,y+5.8,2.66],Z3,0.3,0.48,"#2a2c30",{id,seg:12}); ocyl([x+dx,y+5.8,2.7],Z3,0.28,0.3,c,{id,seg:12}); }
+  /* the rotary switch: positions printed round it, the pointer on the knob shows the one chosen */
+  ocyl([x,y+0.8,2.66],Z3,0.45,2.2,"#1b1d20",{id:"dial"+k,seg:24}); const a=dialAng(m); L([x,y+0.8,3.13],[x+2.0*Math.sin(a),y+0.8-2.0*Math.cos(a),3.13],"#f2f2f0",2.2);
+  DIAL.forEach((_,i)=>{ const b=i*2*Math.PI/DIAL.length; L([x+2.35*Math.sin(b),y+0.8-2.35*Math.cos(b),2.67],[x+2.75*Math.sin(b),y+0.8-2.75*Math.cos(b),2.67],i===dialIdx(m)?"#ffd77a":"#9aa0a6",1); });
+  for(const [dx,c,t] of [[-2.4,"#1b1d20","t:M"+k+".LO"],[0,"#d0352b",id],[2.4,"#d0352b","t:M"+k+".HI"]]){ const sel=WSEL&&t==="t:"+WSEL; ocyl([x+dx,y+5.8,2.66],Z3,0.3,0.48,sel?"#ff9a3a":"#2a2c30",{id:t,seg:12}); ocyl([x+dx,y+5.8,2.7],Z3,0.28,0.3,c,{id:t,seg:12}); }
   TX([x-3.6,y+7.2,2.68],[1,0,0],[0,-1,0],"V"+k,0.8,"#f0f0f0",{weight:"800"}); }
 /* R0: a white ceramic resistor on a black card hung from a lanyard */
 function drawR0(){ const [x,y]=POS.r0, id="r0"; obox([x,y,0.06],[3.4,0,0],[0,2.3,0],[0,0,0.06],"#141518",{id});
   obox([x-0.2,y,0.4],[1.5,0,0],[0,0.42,0],[0,0,0.3],"#efede6",{id}); for(const s of [-1,1]) L([x-0.2+s*1.5,y,0.4],[x+s*2.6,y+1.4,0.14],"#c9cdd2",1.3);
+  for(const [s,t] of [[-1,"R0.A"],[1,"R0.B"]]) ocyl([x+s*2.8,y+1.6,0.12],Z3,0.12,0.42,WSEL===t?"#ff9a3a":"#c9cdd2",{id:"t:"+t,seg:10});
   F(ring3([x-2.6,y-1.5,0.13],[1,0,0],[0,1,0],0.5,12),"#3a5fa8",{id,n:Z3}); TX([x+0.8,y-1.6,0.13],[1,0,0],[0,-1,0],"ISPhO",0.42,"#e8e8e8",{weight:"700"});
   TX([x-1.4,y+0.15,0.71],[1,0,0],[0,-1,0],"R₀",0.45,"#555",{weight:"700"});
   obox([x+3.6,y-1.4,0.1],[0.4,0,0],[0,0.6,0],[0,0,0.1],"#d9d9d6",{id}); PL([[x+4,y-1.4,0.08],[x+8,y-3,0.05],[x+12,y-1,0.05],[x+15,y-4,0.05]],"#151619",4); }
 /* the switch adapter: a green board with red and black sockets, a slide switch and the 2-pin header */
 function drawAdapter(){ const [x,y]=POS.adapter, id="adapter"; obox([x,y,0.12],[2.6,0,0],[0,2.0,0],[0,0,0.12],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null});
-  for(const [dx,c] of [[-1.2,"#c8302a"],[0.2,"#1b1d20"]]){ obox([x+dx,y+0.6,0.85],[0.6,0,0],[0,0.6,0],[0,0,0.6],c,{id}); ocyl([x+dx,y+0.6,1.45],Z3,0.05,0.32,"#111",{id,seg:12}); }
+  for(const [dx,c,t] of [[-1.2,"#c8302a","AD.R"],[0.2,"#1b1d20","AD.K"]]){ obox([x+dx,y+0.6,0.85],[0.6,0,0],[0,0.6,0],[0,0,0.6],c,{id:"t:"+t}); ocyl([x+dx,y+0.6,1.45],Z3,0.05,0.32,WSEL===t?"#ff9a3a":"#111",{id:"t:"+t,seg:12}); }
   const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.7,0.1,"#d9dde1",{seg:8,id:"adSw"}); obox([x+1.7,y-0.8,0.4],[0.45,0,0],[0,0.3,0],[0,0,0.18],"#2a2c30",{id:"adSw"});
   obox([x-1.6,y-1.3,0.4],[0.5,0,0],[0,0.25,0],[0,0,0.28],"#111",{id}); for(const dx of [-0.25,0.25]) ocyl([x-1.6+dx,y-1.3,0.68],Z3,0.45,0.05,"#d4b25a",{seg:6,id}); }
 function drawRibbons(){ if(!has("rib2")) return; const [x,y]=POS.adapter, a=[x-1.6,y-1.3,0.6];
@@ -1200,6 +1235,9 @@ function anchor(t){ const [a,b]=t.split(".");
   if(a==="R0"){ const p=POS.r0; return [p[0]+(b==="A"?-2.8:2.8),p[1]+1.6,0.35]; }
   if(a==="AD"){ const p=POS.adapter; return [p[0]+(b==="R"?-1.2:0.2),p[1]+0.6,1.5]; } return null; }
 const WCOL3=["#c0392b","#1b1d20","#2f6fd0","#e8c22a","#2e9e57","#8e44ad","#e67e22","#7f8c8d"];
+/* a lead taken by one end: it hangs from that terminal to the hand */
+function drawLead(){ if(!WSEL||hand) return; const A=anchor(WSEL); if(!A) return; const q=unP(mouse[0],mouse[1],2.5);
+  cord(A,[q[0],q[1],2.5],WCOL3[ST.wires.length%WCOL3.length],0.2,Math.min(10,vlen(vsub(A,[q[0],q[1],2.5]))*0.25)); }
 function drawWires3(){ ST.wires.forEach(([a,b],i)=>{ const A=anchor(a), B=anchor(b); if(A&&B) cord(A,B,WCOL3[i%WCOL3.length],0.2,Math.min(10,vlen(vsub(A,B))*0.25),"wires"); }); }
 /* the lab: a light wall, a white bench on grey legs, a grey floor */
 function drawRoom(){
@@ -1217,7 +1255,7 @@ function drawLoose(k){
   else if(k==="adapter") drawAdapter(); else if(k==="r0") drawR0(); else if(k==="psu") drawPsu(); else if(k==="m1"||k==="m2") drawMeter(+k[1]);
   else if(["water","pipette","clamp","tube","beaker"].includes(k)) drawChem(k); }
 function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3();
-  drawRoom(); drawThermos(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k); drawRibbons(); drawWires3();
+  drawRoom(); drawThermos(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k); drawRibbons(); drawWires3(); drawLead(); drawGhost();
   ctx.fillStyle="#dfe3e7"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
 /* ══════════════════════════════════════════════════════════════
    6.  PARTS BOX, LAYOUT, CLOSE-UPS
@@ -1462,16 +1500,25 @@ function place(k,k0,p){
     if(k0==="beaker"&&isCuv(k)){ const c=ST.cuv[k]; if(c.med==="air"){ say("empty"); return false; } c.med="air"; c.lvl=0; c.wet=1; say("poured"); return false; }
     if((k0==="stand"||k0==="rgb"||isCuv(k0))&&ST.x.stand!==null&&(k0==="stand"||ST.inStand===k0)){ if(ST.inStand){ say("standBusy"); return false; }
       ST.inStand=k; ST.on.add(k); nudgeStand(hand.fromStand?0.45:0.25); say("inStand",itemName(k)); if(isCuv(k)) setTab("cuv"); return true; }
-    ST.on.add(k); say("placed",itemName(k)); return true; }
+    return putDown(k,p); }
   if(k==="pipette"){ if(k0==="water"){ ST.pip=true; say("pipFill"); return false; }
     const c=cuvAt(k0); if(c){ if(!ST.pip){ say("pipEmpty"); return false; } pourWater(c); return false; }
-    ST.on.add(k); say("placed",itemName(k)); return true; }
+    return putDown(k,p); }
   if(k==="tube"){ if(k0==="thermos"){ ST.tubeIn=0; ST.on.add("tube"); say("tubeIn"); return true; }
-    const c=cuvAt(k0); if(c){ pourN2(c); return false; } ST.on.add(k); say("placed",itemName(k)); return true; }
-  ST.on.add(k); say("placed",itemName(k)); return true; }
+    const c=cuvAt(k0); if(c){ pourN2(c); return false; } return putDown(k,p); }
+  return putDown(k,p); }
 function benchClick(p,right,e){
   let k0=hitItem(p);
   if(k0==="shield"&&!right&&ST.x.stand!==null&&(hand||ST.inStand)){ const q=unP(p[0],p[1],AZ); if(Math.abs(q[0]-xw(ST.x.stand))<6&&Math.abs(q[1]-AY)<8) k0=hand?"stand":ST.inStand; }
+  /* leads: take one by a terminal, then touch its other end to another terminal; R-click a terminal pulls its lead */
+  if(!hand&&k0&&k0.startsWith("t:")){ const n=k0.slice(2);
+    if(right){ for(let i=ST.wires.length-1;i>=0;i--) if(ST.wires[i].includes(n)){ ST.wires.splice(i,1); say("unwired"); break; } WSEL=null; return; }
+    if(!has("wires")){ say("needFor",itemName("wires")); return; }
+    if(!WSEL){ WSEL=n; say("sel",tName(n)); return; } if(WSEL===n){ WSEL=null; say("same"); return; }
+    ST.wires.push([WSEL,n]); say("wired",tName(WSEL),tName(n)); WSEL=null; return; }
+  if(!hand&&WSEL){ WSEL=null; say("leadDown"); return; }
+  /* the multimeter's rotary switch: a click turns it one step on, R-click one step back */
+  if(!hand&&k0&&k0.startsWith("dial")){ const m=+k0.slice(4), i=dialIdx(ST.meters[m-1]); setDial(m,(i+(right?DIAL.length-1:1))%DIAL.length); return; }
   if(hand){ const k=hand.item;
     if(right){ if(hand.move&&OPT.includes(k)){ ST.x[k]=hand.old; hand=null; say("placed",itemName(k)); return; }
       if(hand.fromStand){ if(!ST.inStand){ ST.inStand=k; nudgeStand(0.45); } else ST.on.add(k); hand=null; return; }
@@ -1498,16 +1545,28 @@ let trayDrag=false;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
-cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p;
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; overBench=true;
+  /* a thing on the bench follows the hand while it is dragged, and stops where it would bump into something */
+  if(pend){ if(!pend.moving&&Math.hypot(p[0]-pend.p[0],p[1]-pend.p[1])>5){ const q=unP(pend.p[0],pend.p[1],0); pend.moving=true; pend.off=[POS[pend.k][0]-q[0],POS[pend.k][1]-q[1]]; }
+    if(pend.moving){ const q=unP(p[0],p[1],0), c=[Math.round((q[0]+pend.off[0])*10)/10,Math.round((q[1]+pend.off[1])*10)/10]; if(!blocked(pend.k,c)) POS[pend.k]=c; cv.style.cursor="grabbing"; } return; }
   if(drag){ if(drag.k==="knob"){ const dv=(p[0]-drag.p[0]-(p[1]-drag.p[1]))*(e.shiftKey?0.002:0.01); ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((drag.v+dv)*1000)/1000)); } else if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
   cv.style.cursor=hand?"crosshair":hitItem(p)?"pointer":"grab"; });
-cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId); benchClick(p,e.button===2,e); drawTray(); });
-cv.addEventListener("pointerup",()=>{ drag=null; });
+let pend=null;
+const ownerOf=k0=>!k0?null:k0.startsWith("dial")?"m"+k0.slice(4):k0.startsWith("t:")?{PSU:"psu",M1:"m1",M2:"m2",R0:"r0",AD:"adapter"}[k0.slice(2).split(".")[0]]:k0==="psuSw"?"psu":k0==="adSw"?"adapter":k0==="toggle"?"sensor":k0;
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId);
+  /* a press on a thing, or on its switch, dial or terminal, may become a drag of the whole thing; a plain click still works the part */
+  if(!hand&&!WSEL&&e.button===0){ const k=ownerOf(hitItem(p)); if(k&&k in FOOT&&onBench(k)){ pend={k,p,e,moving:false}; return; } }
+  benchClick(p,e.button===2,e); drawTray(); });
+cv.addEventListener("pointerup",()=>{ if(pend){ const q=pend; pend=null; if(q.moving) say("moved",itemName(q.k)); else { benchClick(q.p,false,q.e); drawTray(); } } drag=null; });
 cv.addEventListener("dblclick",e=>{ if(!hand&&!hitItem(lpos(e))) camReset(); });
-cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0, nk=Math.max(3,Math.min(160,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0, k0=hitItem(p);
+  /* the wheel turns what is under it: the supply's voltage knob (Shift: fine), a multimeter's switch */
+  if(k0==="psuKnob"){ ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((ST.psuV+(up?1:-1)*(e.shiftKey?0.01:0.1))*1000)/1000)); return; }
+  if(k0&&k0.startsWith("dial")){ const m=+k0.slice(4), i=dialIdx(ST.meters[m-1]); setDial(m,(i+(up?1:DIAL.length-1))%DIAL.length); return; }
+  const nk=Math.max(3,Math.min(160,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
   CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*f; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*f; CAM.k=nk; },{passive:false});
 window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
-window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand&&hand.move&&OPT.includes(hand.item)) ST.x[hand.item]=hand.old; hand=null; WSEL=null; drawTray(); } });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape"){ pend=null; if(hand&&hand.move&&OPT.includes(hand.item)) ST.x[hand.item]=hand.old; hand=null; WSEL=null; drawTray(); } });
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move&&!hand.fromStand&&hand.item!=="tube"){ hand=null; drawTray(); } });
 trayCv.addEventListener("mousedown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
   for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=inHand(k); if(hand&&(hand.move||hand.fromStand)) return; hand=null;
