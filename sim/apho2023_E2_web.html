@@ -197,14 +197,14 @@ const I18N = {
   cap:     ["the optical bench (drag the screen or the target along the rail) and the control box with the two multimeters",
             "광학대 (스크린이나 시료를 레일 위에서 끌어 옮기기)와 컨트롤 박스·멀티미터 두 대"],
   scrcap:  ["the screen, face on — the reflected pattern", "스크린 정면 — 반사된 무늬"],
-  vt3d: ["3D bench", "3D 실험대"], vtbench: ["optical bench (2D)", "광학대 (2D)"], vtscreen: ["screen", "스크린"], vtctrl: ["control box · meters", "컨트롤 박스 · 멀티미터"], vtwire: ["cabling", "배선"],
-  cap_3d: ["the bench in 3D — drag to turn, Shift+drag to pan, wheel to zoom / drag the screen or the target along the rail / click the screen, the control box or the rail for its 2D view",
-           "3D 실험대 — 끌면 회전, Shift+끌기 이동, 휠 확대 / 스크린이나 시료를 끌어 레일을 따라 이동 / 스크린·컨트롤 박스·레일을 클릭하면 2D 보기"],
-  cap_bench: ["the optical bench from the side (2D) — drag the screen or the target / R-click: back to 3D", "광학대 옆모습 (2D) — 스크린·시료를 끌어 옮기기 / 우클릭: 3D로"],
-  cap_screen: ["the screen face on — the reflected pattern; lay the ruler on it from the parts box", "스크린 정면 — 반사 무늬, 부품함의 자를 올려 재세요"],
-  cap_ctrl: ["the control box and the two multimeters — wheel or click the knob, click the power switch / R-click: back to 3D", "컨트롤 박스와 멀티미터 — 노브는 휠이나 클릭, 전원 스위치 클릭 / 우클릭: 3D로"],
-  cap_wire: ["cabling — click a terminal, then the one it goes to; click a lead to pull it out, R-click to cancel",
-            "배선 — 단자를 클릭한 뒤 이을 단자를 클릭, 리드를 클릭하면 뽑힘, 우클릭으로 취소"],
+  vt3d: ["3D bench", "3D 실험대"], vtbench: ["optical bench, front", "광학대 정면"], vtscreen: ["screen, face on", "스크린 정면"], vtctrl: ["control box · meters", "컨트롤 박스 · 멀티미터"], vtwire: ["cabling", "배선"],
+  cap_3d: ["the bench in 3D — drag to turn, Shift+drag to pan, wheel to zoom / drag the screen or the target along the rail / click a plug or socket to wire it / click the screen, the control box or the rail to look at it close",
+           "3D 실험대 — 끌면 회전, Shift+끌기 이동, 휠 확대 / 스크린이나 시료를 끌어 레일을 따라 이동 / 플러그·소켓을 클릭해 배선 / 스크린·컨트롤 박스·레일을 클릭하면 가까이 보기"],
+  cap_bench: ["the optical bench face on — drag the screen or the target along the rail; wheel: zoom, drag elsewhere: move / R-click: back to 3D", "광학대 정면 — 스크린·시료를 끌어 레일을 따라 옮기기, 휠: 확대, 빈 곳 끌기: 이동 / 우클릭: 3D로"],
+  cap_screen: ["the screen face on — the reflected pattern; take the ruler from the parts box and click to lay it, drag it, wheel over it to turn it (R-click: back in the box); wheel elsewhere: zoom", "스크린 정면 — 반사 무늬. 부품함에서 자를 꺼내 클릭해 올리고, 끌어 옮기고, 자 위에서 휠로 돌립니다 (자 우클릭: 부품함으로). 빈 곳 휠: 확대"],
+  cap_ctrl: ["the control box and the two multimeters from above — wheel or click the knob, click the power switch; wheel elsewhere: zoom / R-click: back to 3D", "컨트롤 박스와 멀티미터 (위에서) — 노브는 휠이나 클릭, 전원 스위치 클릭, 빈 곳 휠: 확대 / 우클릭: 3D로"],
+  cap_wire: ["cabling — click a plug or socket, then the one it goes to; R-click a socket pulls its leads / R-click elsewhere: back to 3D",
+            "배선 — 플러그나 소켓을 클릭한 뒤 이을 곳을 클릭, 소켓을 우클릭하면 선이 빠집니다 / 빈 곳 우클릭: 3D로"],
   title:   ["APhO 2023 \u2014 Experimental Problem 2 \u2014 interference from a thermally deformed surface",
             "APhO 2023 \u2014 실험 문제 2 \u2014 열변형 표면에 의한 간섭"],
   tab0:    ["Screen", "스크린"],
@@ -814,25 +814,17 @@ function turnKnob(s){
     return [(ev.clientX - b.left) * CW / b.width,
             (ev.clientY - b.top) * CH / b.height];
   };
-  cv.addEventListener("click", ev => {
-    const [x, y] = at(ev);
-    if (x >= SX && x <= SX + SW && y >= SY && y <= SY + SH){
-      app.on = !app.on; readMeters(); refresh(); return;
-    }
-    const d = Math.hypot(x - KX, y - KY);
-    if (d <= KR + 5){
-      if (d < 11){ app.fine = !app.fine; refresh(); }
-      else turnKnob(x > KX ? 1 : -1);
-    }
-  });
-  cv.addEventListener("wheel", ev => {
-    const [x, y] = at(ev);
-    if (Math.hypot(x - KX, y - KY) > KR + 5) return;
-    ev.preventDefault();
-    turnKnob(ev.deltaY < 0 ? 1 : -1);
-  }, {passive: false});
+  cv.addEventListener("click", ev => { const [x, y] = at(ev); ctrlClick(x, y); });
+  cv.addEventListener("wheel", ev => { const [x, y] = at(ev); if (ctrlWheel(x, y, ev.deltaY < 0 ? 1 : -1)) ev.preventDefault(); }, {passive: false});
 })();
+/* the control panel at (x, y) in its own pixels: the POWER switch, the knob (its middle: coarse/fine) */
+function ctrlClick(x, y){
+  if (x >= SX && x <= SX + SW && y >= SY && y <= SY + SH){ app.on = !app.on; readMeters(); refresh(); return; }
+  const d = Math.hypot(x - KX, y - KY);
+  if (d <= KR + 5){ if (d < 11){ app.fine = !app.fine; refresh(); } else turnKnob(x > KX ? 1 : -1); } }
+function ctrlWheel(x, y, s){ if (Math.hypot(x - KX, y - KY) > KR + 5) return false; turnKnob(s); return true; }
 
+let rulerGrab = () => false, rulerMove = () => false, rulerDrop = () => false;
 /* ==================================================================
    THE SCREEN  (class ScreenCanvas)
    ================================================================== */
@@ -945,6 +937,9 @@ function drawScreen(){
       cv.setPointerCapture(ev.pointerId);
     }
   });
+  rulerGrab = (X, Y) => { if (!app.ruler.on || !app.ruler.contains(X, Y)) return false; drag = [X - app.ruler.x, Y - app.ruler.y]; return true; };
+  rulerMove = (X, Y) => { if (!drag) return false; app.ruler.x = X - drag[0]; app.ruler.y = Y - drag[1]; drawScreen(); return true; };
+  rulerDrop = () => { const was = !!drag; drag = null; return was; };
   cv.addEventListener("pointermove", ev => {
     if (!drag) return;
     const [X, Y] = at(ev);
@@ -1052,14 +1047,7 @@ function drawWire(){
       app.on = !app.on; readMeters(); refresh(); return;
     }
     const k = wireAt(x, y);
-    if (k !== null){
-      if (WP.held === null || WP.held === k)
-        WP.held = (WP.held === k) ? null : k;
-      else if (WP.ALLOWED.has(key2(WP.held, k))){
-        plug(WP.held, k); WP.held = null; readMeters(); refresh(); return;
-      } else WP.held = k;
-      drawWire(); return;
-    }
+    if (k !== null){ wireClick(k); return; }
     const c = cableAt(x, y);
     if (c !== null){
       WP.links.delete(c); WP.held = null; readMeters(); refresh(); return;
@@ -1074,6 +1062,14 @@ function drawWire(){
     ev.preventDefault(); WP.held = null; drawWire();
   });
 })();
+
+/* a terminal clicked: the first one takes a lead's end, the second one plugs it in (where the pair is allowed) */
+function wireClick(k){
+  if (WP.held === null || WP.held === k) WP.held = (WP.held === k) ? null : k;
+  else if (WP.ALLOWED.has(key2(WP.held, k))){ plug(WP.held, k); WP.held = null; readMeters(); refresh(); return; }
+  else WP.held = k;
+  drawWire(); }
+function unplug(k){ for (const l of [...WP.links]) if (l.split("|").includes(k)) WP.links.delete(l); WP.held = null; readMeters(); refresh(); }
 
 /* ==================================================================
    the stand, the tabs, and the language switch
@@ -1653,7 +1649,7 @@ function screen3(){ const x = app.x_screen, H = SCR_HI - SCR_LO, W = 2 * SCR_Z;
   boxY(x,x+0.5,SCR_LO,SCR_HI,-SCR_Z,SCR_Z,"#c98a4b",{id:"screen3",top:"#d19256"},8);
   const live = app.lit && app.cur > 2.0, G = gridTex(W, H);
   tex3(G, 0, 0, G.width, G.height, [x + 0.52, SCR_HI, SCR_Z], [0,0,-W], [0,-H,0], {id:"screen3"});
-  if (live){
+  if (live || app.ruler.on){
     /* the pattern side faces the target: paint the screen canvas onto it */
     const dpr = SCRCV.width / SCW, s = (SCW - 70) / (2 * HALF);
     const zc = (cm) => (SCW / 2 + cm * s) * dpr;
@@ -1698,13 +1694,35 @@ function ctrl3(){
   box3(x-12,x-5,0,3,z+4,z+9,"#161616",{id:"ctrl",top:"#1f1f1f"});
   for (let k = 0; k < 4; k++) line3([x-11.4+k*1.6,3.01,z+4.5],[x-11.4+k*1.6,3.01,z+8.5],"#2a2a2a",1);
 }
+/* where each terminal is: the sockets on the control box, the meters' sockets, the laser's two posts,
+   and the adaptor's plug (in its socket, or lying by the adaptor) */
+function mx3(k){ return CB[0] + 31 + k * 12.5; }
+function term3(k){ const [x, , z] = CB;
+  const T3 = {box_dc:[x-0.05,2.6,z+8], box_lp:[x+22,2.6,z+16.05], box_ln:[x+25.5,2.6,z+16.05],
+    amp_in:[mx3(0)+3.2,4.35,z+13.6], amp_com:[mx3(0)+7.2,4.35,z+13.6], volt_in:[mx3(1)+3.2,4.35,z+13.6], volt_com:[mx3(1)+7.2,4.35,z+13.6],
+    laser_p:[X_LASER-1.6,RT3+0.8,4.75], laser_n:[X_LASER+1.6,RT3+0.8,4.75]};
+  if (T3[k]) return T3[k];
+  if (linked("adaptor", "box_dc")){ const t = T3.box_dc; return [t[0] - 0.8, t[1], t[2]]; }
+  return [x - 6, 0.5, z + 12]; }
+const tCol = k => WP.held === k ? "#ff8a2a" : WP.T[k].col;
+function sag3(a, b, col, w, sag){ const pts = []; for (let i = 0; i <= 22; i++){ const t = i / 22;
+  pts.push([a[0]+(b[0]-a[0])*t, Math.max(0.25, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*sag), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); }
 function cables3(){
-  const L = (a, b, col, w, sag) => { const pts = []; for (let i = 0; i <= 18; i++){ const t = i / 18;
-    pts.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*(sag||3), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); };
-  if (linked("adaptor","box_dc")) L([CB[0]-8,2,CB[2]+6],[CB[0],2.5,CB[2]+8],"#141414",1.8,0.2);
-  const st = wireState ? wireState() : null;
-  if (WP.links.size) L([CB[0]+20,5,CB[2]],[X_LASER-1,BEAM-2.4,0],"#c02020",1.6,6);
-  if (WP.links.size>1) L([CB[0]+22,5,CB[2]],[X_LASER-0.5,BEAM-1,0.5],"#222",1.6,7);
+  /* the sockets */
+  const [x, , z] = CB;
+  for (const k of ["box_lp","box_ln"]){ const t = term3(k); cyl3("z", t[2] - 0.05, t[2] + 0.5, t[0], t[1], 0.55, tCol(k), {seg:14, id:"t:" + k, cap:"#0b0b0b"}); }
+  { const t = term3("box_dc"); cyl3("x", t[0] + 0.05, t[0] - 0.5, t[1], t[2], 0.5, tCol("box_dc"), {seg:14, id:"t:box_dc", cap:"#0b0b0b"}); }
+  text3([x+23.75,4.0,z+16.06],[1,0,0],[0,1,0],"LASER  +   −",0.42,"#fff",{align:"center",bias:2});
+  text3([x-0.06,4.0,z+8],[0,0,-1],[0,1,0],"DC 12V",0.42,"#fff",{align:"center",bias:2});
+  for (const k of ["amp_in","amp_com","volt_in","volt_com"]){ const t = term3(k); cyl3("y", t[1] - 0.1, t[1] + 0.25, t[0], t[2], 0.55, tCol(k), {seg:14, id:"t:" + k, cap:"#111"}); }
+  for (const k of ["laser_p","laser_n"]){ const t = term3(k); cyl3("z", t[2] - 0.1, t[2] + 0.7, t[0], t[1], 0.35, tCol(k), {seg:10, id:"t:" + k, cap:"#c9ced3"});
+    sag3([X_LASER - 3, BEAM - 0.6, 0.4], [t[0], t[1] + 0.3, t[2]], WP.T[k].col, 1.2, 1); }
+  /* the adaptor's own lead and plug */
+  const ap = term3("adaptor"); sag3([x - 8.5, 2, z + 6.5], ap, "#141414", 1.8, 0.4); sphere3(ap, 0.7, tCol("adaptor"), {id:"t:adaptor"});
+  /* the patch leads */
+  for (const l of WP.links){ const [a, b] = l.split("|"); if (a === "adaptor" || b === "adaptor") continue;
+    const A = term3(a), B = term3(b), d = Math.hypot(A[0]-B[0], A[1]-B[1], A[2]-B[2]); sag3(A, B, WP.T[a].col, 2, Math.min(16, d * 0.22)); }
+  if (WP.held !== null){ const A = term3(WP.held), q = onPlane(m3[0], m3[1], 2.5); sag3(A, q, "#ff8a2a", 1.4, 2); }
 }
 function scene3(){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
 function layout3(){
@@ -1714,40 +1732,81 @@ function layout3(){
   const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
   if (first){ CAM.k = w / 115; CAM.tx = 40; CAM.ty = 12; CAM.tz = 12; CAM.yaw = -0.55; CAM.pitch = 0.42; CAM.px = 0; CAM.py = 10; camSave(); }
 }
-let lastTex = 0;
+let lastTex = 0, freeCam = null;
+function viewCam(v){ const W = CAM.W, H = CAM.H;
+  if (v === "bench") return {yaw:0, pitch:0.04, k:Math.min(W / 92, H / 52), tx:40, ty:(SCR_LO + SCR_HI) / 2 - 4, tz:0, px:0, py:0};
+  if (v === "screen") return {yaw:-Math.PI / 2, pitch:0.0, k:Math.min(W / (2 * SCR_Z + 6), H / (SCR_HI - SCR_LO + 6)), tx:app.x_screen, ty:(SCR_LO + SCR_HI) / 2, tz:0, px:0, py:0};
+  if (v === "ctrl") return {yaw:0, pitch:1.25, k:Math.min(W / 62, H / 26), tx:CB[0] + 24, ty:3, tz:CB[2] + 8, px:0, py:0};
+  return {yaw:-0.25, pitch:0.78, k:Math.min(W / 110, H / 70), tx:40, ty:6, tz:20, px:0, py:0}; }
+function sceneView(v){
+  if (v === "screen"){ screen3(); return; }
+  if (v === "bench"){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); cables3(); return; }
+  if (v === "ctrl"){ desk3(); ctrl3(); cables3(); return; }
+  scene3(); }
+/* a screen point on a textured rectangle O + u U + v V, as (u, v) in 0..1 (or null) */
+function onFace(p, O, U, V){ const a = P3(O[0], O[1], O[2]), b = P3(O[0] + U[0], O[1] + U[1], O[2] + U[2]), c = P3(O[0] + V[0], O[1] + V[1], O[2] + V[2]);
+  const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1], det = ux * vy - uy * vx; if (Math.abs(det) < 1e-9) return null;
+  const dx = p[0] - a[0], dy = p[1] - a[1], u = (dx * vy - dy * vx) / det, w = (ux * dy - uy * dx) / det; return u >= 0 && u <= 1 && w >= 0 && w <= 1 ? [u, w] : null; }
+/* the control panel's own pixels under a screen point (its top face carries CTRLCV 20..300 x 30..190) */
+function ctrlAt(p){ const [x, , z] = CB, q = onFace(p, [x, 5.01, z], [28, 0, 0], [0, 0, 16]); return q ? [20 + q[0] * 280, 30 + q[1] * 160] : null; }
+/* the screen's cm coordinates under a screen point, on the pattern side */
+function screenAt(p){ const W = 2 * SCR_Z, H = SCR_HI - SCR_LO, q = onFace(p, [app.x_screen - 0.02, SCR_HI, -SCR_Z], [0, 0, W], [0, -H, 0]); if (!q) return null;
+  const s = (SCW - 70) / (2 * HALF), zc = cm => SCW / 2 + cm * s, lx = zc(-SCR_Z) + q[0] * (zc(SCR_Z) - zc(-SCR_Z)), ly = zc(-(SCR_HI - BEAM)) + q[1] * (zc(BEAM - SCR_LO) - zc(-(SCR_HI - BEAM)));
+  return [scm(lx), scm(ly)]; }
+/* the rail position under a screen point, along the beam line */
+function railAt(p){ const a = P3(0, RT3 + 1.4, 0), b = P3(1, RT3 + 1.4, 0), dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy; return L > 1e-9 ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L : null; }
 function draw3(){
-  if (view3 !== "3d") return;
-  const now = performance.now(); if (now - lastTex > 300){ drawScreen(); drawCtrl(); lastTex = now; }
+  const now = performance.now(); if (now - lastTex > (view3 === "3d" ? 300 : 120)){ drawScreen(); drawCtrl(); lastTex = now; }
   const dpr = CAM.dpr; ctx3.setTransform(dpr,0,0,dpr,0,0);
   const g = ctx3.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0,0,CAM.W,CAM.H);
-  begin3(); scene3(); render3(ctx3);
+  begin3(); if (view3 === "3d") scene3(); else sceneView(view3); render3(ctx3);
 }
 function showView(v){
+  if (v !== view3){
+    if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
+    Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v));
+  }
   view3 = v;
-  for (const k of ["3d","bench","screen","ctrl","wire"]){ document.getElementById("v-" + k).hidden = k !== v; document.getElementById("vt" + k).className = k === v ? "on" : ""; }
+  for (const k of ["3d","bench","screen","ctrl","wire"]){ document.getElementById("v-" + k).hidden = k !== "3d"; document.getElementById("vt" + k).className = k === v ? "on" : ""; }
   document.getElementById("t-cap3").textContent = tr("cap_" + v);
   refresh();
 }
 for (const k of ["3d","bench","screen","ctrl","wire"]) document.getElementById("vt" + k).onclick = () => showView(k);
 let down3 = null, m3 = [0,0];
 const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-cv3.addEventListener("contextmenu", e => e.preventDefault());
+cv3.addEventListener("pointermove", e => { m3 = p3e(e); });
+cv3.addEventListener("contextmenu", e => { e.preventDefault(); const p = p3e(e), id = pick3(p[0], p[1]);
+  if (hand){ hand = null; drawTray(); return; }
+  if (WP.held !== null){ WP.held = null; drawWire(); return; }
+  if (id && id.startsWith("t:")){ unplug(id.slice(2)); return; }
+  if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.on = false; drawScreen(); drawTray(); return; } }
+  if (view3 !== "3d") showView("3d"); });
 cv3.addEventListener("pointerdown", e => { if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
-  const id = pick3(p[0], p[1]); down3 = {p, id, moved:false, shift:e.shiftKey}; });
+  const id = pick3(p[0], p[1]);
+  if (id && id.startsWith("t:")){ wireClick(id.slice(2)); return; }
+  if (view3 === "ctrl" && id === "ctrl"){ const q = ctrlAt(p); if (q){ ctrlClick(q[0], q[1]); return; } }
+  if (view3 === "screen"){ const q = screenAt(p);
+    if (q && hand === "ruler"){ app.ruler.x = q[0]; app.ruler.y = q[1]; app.ruler.ang = 0; app.ruler.on = true; hand = null; drawScreen(); drawTray(); return; }
+    if (q && rulerGrab(q[0], q[1])){ down3 = {p, id:"ruler", moved:true}; return; } }
+  if (WP.held !== null){ WP.held = null; drawWire(); }
+  down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
 cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
   if (!down3) return; if (Math.hypot(p[0]-down3.p[0], p[1]-down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
-  if (down3.id === "screen3" || down3.id === "target"){ const q = onPlane(p[0], p[1], RT3 + 1.4), cm = Math.max(0, Math.min(X_FRONT, q[0]));
+  if (down3.id === "ruler"){ const q = screenAt(p); if (q) rulerMove(q[0], q[1]); return; }
+  if ((down3.id === "screen3" || down3.id === "target") && view3 !== "screen" && view3 !== "ctrl"){ const rx = view3 === "3d" ? onPlane(p[0], p[1], RT3 + 1.4)[0] : railAt(p); if (rx === null) return; const cm = Math.max(0, Math.min(X_FRONT, rx));
     if (down3.id === "screen3") app.x_screen = Math.min(Math.max(cm, app.x_target + 5.0), X_FRONT);
     else app.x_target = Math.min(cm, app.x_screen - 5.0);
     return; }
   if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.45, Math.max(0.1, CAM.pitch + dy * 0.006)); }
   cv3.classList.add("grabbing"); });
-cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing");
-  if (down3 && !down3.moved){ const id = down3.id;
+cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing"); rulerDrop();
+  if (down3 && !down3.moved && view3 === "3d"){ const id = down3.id;
     if (id === "screen3") showView("screen"); else if (id === "ctrl") showView("ctrl");
     else if (id === "rail" || id === "laser" || id === "target") showView("bench"); }
   down3 = null; });
 cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
+  if (view3 === "ctrl"){ const q = ctrlAt(p); if (q && ctrlWheel(q[0], q[1], s)) return; }
+  if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.ang += s * Math.PI / 90; drawScreen(); return; } }
   const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
 for (const id of ["v-bench","v-ctrl"]) document.getElementById(id).addEventListener("contextmenu", e => { e.preventDefault(); showView("3d"); });
