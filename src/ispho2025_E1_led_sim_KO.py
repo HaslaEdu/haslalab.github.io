@@ -80,7 +80,7 @@ class Truth:
         self.eta_p = U(0.78, 0.86)
         iref = U(0.7e-5, 1.4e-5)
         self.ln_i0r = math.log(iref) - 1.60 * Q_E / (self.eta_r * K_B * T_ROOM)
-        self.beta = U(0.075, 0.095)
+        self.beta = U(0.18, 0.20)  # I0 grows ~6.7x per 10 K (official solution, F3)
         eta77 = self.eta_r * (T_ROOM / T_N2) ** self.eta_p
         ln77 = math.log(U(3.5e-7, 9e-7)) - 2.10 * Q_E / (eta77 * K_B * T_N2)
         dd = T_N2 - T_ROOM
@@ -407,7 +407,7 @@ class Bench:
                 nl.R(hi, lo, SHUNT[mm.range] if mm.fuse else 1e9)
             elif mm.mode == "OHM":
                 nl.I(lo, hi, ITEST[mm.range])
-                nl.R(hi, lo, 1e8)
+                nl.R(hi, lo, 1e11)
         E = self.psu_v
         self.psu_cc = False
         for _ in range(6):
@@ -486,9 +486,10 @@ class Bench:
             if key == self.main() and led:
                 if abs(I) > 0.16 and not c.dead:
                     c.dead = True
-                if abs(I) > 0.103:
-                    self.over += dt
-                    if self.over > 2.5 and not c.dead:
+                if abs(I) > 0.1005:
+                    # a few per cent over wears it slowly (about a minute), 115 mA kills it in seconds
+                    self.over += dt * (1 if abs(I) > 0.115 else 0.05)
+                    if self.over > 3 and not c.dead:
                         c.dead = True
                 else:
                     self.over = max(0, self.over - dt * 0.5)
