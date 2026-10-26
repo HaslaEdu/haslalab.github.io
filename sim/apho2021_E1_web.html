@@ -20,59 +20,50 @@
 <meta name="twitter:image" content="https://haslalab.org/og.png">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAETklEQVR4nO2YS28bVRiGnxmPL7Gd+BInTho3du0khZKmN4VStQq3Cgk2ZQl/gBV/gP/BAqgQiwoktgikFgpIlQqhtGlLAmpzaRI3sZ00dnwfezwzH4skJaVUQtDWQuKVzmLmaOZ9zpnvnKN3EBG223EROSciKyJiy+OXJSJLInJWRMZ3fHfMz4jI/BMwfZRmtz1hm2b2KZrvaF5EjqvAO8AwT18p4F1FRJaAeBsAADKKiFiA2iYAUdtoDqC00xz4l6MXEVqm3T4AyxbKtSa2yJMHsCybhmFiWn+M2GhZXL+Vod5o/WMA7VEd64Uas8sbdPrciAir9yrki3X29HQS7w8wHPNRruikcyVGU2H8HhtEQFERnGyWmximhWnZhLs68HqcfwfABquG3SpycTLDt1ez7O3tolRr0OX3EOr0sLBS4NaiB3O0Qa6oMDldIR4q0ncIbNskXxZ+yUS5eruCAtQaBoN9QV48liA5EEJV1b8AsA1En0WaqygK5IoOrswUEXFgWjZul8Zbrx0kFQuTXivx6Vc3mFwIEAp0UNM3qDNCxZlgcXWTmfkc12/neC4V5ZlEhEJZ56fpFb68dIu3X+0nGlTAPQCKCwAVMbEyH2JlP0bxHUAJnubn9AD5CuzbE8TrcZKKhdkfj+ByOhiKhUkMhKg2WugNE4CV9TK3l/I0DIvlbJmTh+O8dGwfg31BomE/LxyMYdpwc9FAL0xhr326NduAhthIcxWpTiOF82yqx7k2s8hIPMJgX5DpuRwtyyZfqtMT8rFZ1tks62iag3qjhcvpQEUh2Onh14V1qrrB4ZE+Lvw4R26jgmULpw7HGU1FEauGqa/g0irb9QIaqgst/h526TJ2+Qql7AccCQnJ4Qmy5TppLzRbFp98MUUqFmYpUyS7UeFAshfTsgj4PczcWWM2vYEtEPC70ZsmpWqDUMBLvWEQ8DtRzQzZ9BW01CCOyAQojl01oAVQu9+g7JzgswvncTksTg+NszyVw+HQGUtGKVUaZDYqdPrcnDoSZ388wg83l7mzsklVN/C4NUS2luZcOs+JsUH8HS40TcXrVrh4uUR3aByl+3lwan8qwm3dmL3HTBrefHkUfzCJIQ1qjTojg93sT0So1g08Lo1OnxsA0xKWs0UmjiY4kOzh869nqNYNvm/e4fWTI8R6u9CbLS5MLmLYAU4cHcXjenDh3b9qGibpXJGx4V5OHdqLokCw08Xevi463M77bbdcTgfhQAfHnt3D6FCUS9eXWS9UGRuKcmlqiWu/ZShWdaJhP6+MJ+nv9j+0DygiW/uoCLRMC0UBp7b1ffRmC6Nl4fU479/brXypTqGkEw378Ha4mL+bx7RsEv0h1gpVPC6Ncq1JT8hHJOh96PkHANql//Zx/D/A4wJoZxHaKpBtI8BdFfiujQDfqMD7wEIbzOeBj3aH07mnnAvPyK50vBNSz8qTi+f29rvPydavAESE3wEDMC7ThY7dWgAAAABJRU5ErkJggg==">
 <style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --deep:#12161b;
+  }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:#e8ebee}
-  body{font:13px/1.45 "Segoe UI",-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#000}
-  .bar{max-width:1640px;margin:0 auto;padding:14px 16px 0;display:flex;justify-content:space-between;
-       align-items:flex-end;gap:10px;flex-wrap:wrap}
-  .bar h1{margin:0;font-size:16px;font-weight:650}
-  .bar p{margin:2px 0 0;font-size:12px;color:#5b6b7c}
-  .lang{display:flex;border:1px solid #c3ccd4;border-radius:6px;overflow:hidden;background:#fff}
-  .lang button{border:0;padding:6px 13px;font:600 12px inherit;color:#5b6b7c;background:#fff;cursor:pointer}
-  .lang button.on{background:#2c6f9b;color:#fff}
-  .winwrap{max-width:1640px;margin:12px auto 0;padding:0 16px 4px}
-  .note{max-width:1640px;margin:8px auto 26px;padding:0 16px;font-size:12px;color:#5f6d7a;line-height:1.65}
-  .note b{color:#33414e}
-  /* a Windows 10 window holding the Unity player (1024 x 768, not resizable) */
-  .win{margin:0 auto;background:#fff;border:1px solid #8f8f8f;box-shadow:0 8px 28px -12px rgba(0,0,0,.45);
-       display:flex;flex-direction:column;user-select:none;-webkit-user-select:none;max-width:1026px}
-  .cap{height:30px;flex:0 0 30px;background:#fff;display:flex;align-items:center;font:12px "Segoe UI",Tahoma,sans-serif}
-  .cap img{width:16px;height:16px;margin:0 8px 0 8px}
-  .cap .tt{flex:1}
-  .cap .wb{width:46px;height:30px;display:flex;align-items:center;justify-content:center}
-  .cap .wb.dis svg path{stroke:#c5c5c5}
-  .cap .wb:hover{background:#e5e5e5}
-  .cap .wb.dis:hover{background:none}
-  .cap .wb.x:hover{background:#e81123}
-  .cap .wb.x:hover svg path{stroke:#fff}
-  #unity{display:block;width:100%;aspect-ratio:4/3;background:#323232;outline:0;touch-action:none;cursor:default}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{margin:0;border:0;border-radius:0;padding:7px 15px;font:inherit;font-size:13px;cursor:pointer;
+               font-weight:600;color:var(--muted);background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:12px;align-items:center}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;max-width:1046px}
+  .card h3{margin:2px 0 8px;font-size:13px;font-weight:600;color:var(--muted)}
+  #unity{display:block;width:100%;aspect-ratio:4/3;background:#323232;border-radius:6px;outline:0;touch-action:none;cursor:default}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2;margin:0}
+  .info b{color:var(--accent);font-weight:600}
 </style>
 </head>
 <body>
-<div class="bar">
+<header>
   <div><h1 id="t-h1"></h1><p id="t-h2"></p></div>
   <div class="lang"><button id="lang-ko" class="on">한국어</button><button id="lang-en">English</button></div>
-</div>
-<div class="winwrap">
-  <div class="win" id="win">
-    <div class="cap">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABi0lEQVR4nKWUTU8TYRSFn/ftDNNhmDA1JShqGkOUABFkwcL4X12RsLRrlq5MjKzcKCQIyEehA6Xz0fl8rwtrdNVgOat7c3Oe1TkXEemIyK6IpHJ/JSKyIyIdxsO02lUikgCzTKdMiYhMaQZATzrWRsjLeiLA+ne5DCNGWcUgzmj5Dr6rOe8nvF4OqE2DQWzQWhH4Lkr9AZgcymsGUcL77gmVWGyvPeXg+AqLETdRxWN/gS/fhwxzl7yo2Hz5iI3lFjTm0Cb6jIRdvv3oU9WC17TZXn/GYnue42vh6s6wf9QgTGbwmjbOjMXPix5pbw9Mhtb+FnHjDednX3m3ZqOVYe/TIZf9mBdLAXfxiI/7R8RpQVHWBHM2tkrA2wLdxEJ7nCarVF6LxaU2q3rI283nuI7N4WlI7ybG9xwOTkIWWh63UcGrzgqz808AUCIieVmjAKWgqg2uYwOQ5RVZUaG1YpSXiBG0VrQDD63VX8BUARhrYg7uC8ge4E810H0A4APjOu/8Z51T+f0COr8Af4xWFJdPd+0AAAAASUVORK5CYII=" alt="">
-      <span class="tt">APHO</span>
-      <span class="wb"><svg width="10" height="10"><path d="M0 5.5h10" stroke="#000"/></svg></span>
-      <span class="wb dis"><svg width="10" height="10"><path d="M.5.5h9v9h-9z" stroke="#000" fill="none"/></svg></span>
-      <span class="wb x"><svg width="10" height="10"><path d="M0 0l10 10M10 0L0 10" stroke="#000"/></svg></span>
-    </div>
+</header>
+<div class="wrap">
+  <div class="card">
+    <h3 id="t-cap"></h3>
     <canvas id="unity" tabindex="0"></canvas>
   </div>
+  <div class="card"><p class="info" id="t-note"></p></div>
 </div>
-<p class="note" id="t-note"></p>
 <script>
 "use strict";
-const PAGE={"ko": {"h1": "APhO 2021 실험 1 — 외팔보의 탄성", "h2": "주최측 프로그램 APHO.exe (Unity) 의 코드와 장면을 그대로 옮긴 것", "note": "APhO 2021 주최측이 배포한 실험 프로그램 <b>APHO.exe</b> (Unity 2019.4) 를 그대로 옮겼습니다. 실행 파일의 스크립트(Assembly-CSharp.dll)를 디컴파일해 빔 처짐 계산(nano_beam_core), 반사 광선 작도, 레이저 떨림(DOTween), 온도 변화, 기록 그래프, 끌기·회전·버튼 동작을 한 줄씩 옮겼고, 네 장면의 배치·색·글꼴·그림은 실행 파일의 장면 데이터에서 그대로 읽어 1024 × 768 창에 원본과 같은 픽셀로 그립니다. 처음 화면에서 <b>COUNTRY</b> 와 <b>NAME</b> 을 넣고 <b>NEXT</b> 를 누르면 1 A–1 D (실험 1), 2 A, 2 B–2 E (실험 2) 를 고를 수 있고, 왼쪽 위 <b>Back</b> 으로 돌아옵니다. 2 A–2 E 의 스크린 사진은 원본 배포본에 빠져 있어(Addressables 번들 dr-351 … dr-1444, dr-488-0 누락) 공식 풀이가 밝힌 시료 — 지름 5.627 µm 미세구의 조밀 배열, 58.6 × 51.0 µm 직사각형(긴 변 27°), 250 × 200 µm 격자, 이중 슬릿 최적 위치 (3700, −2900) µm — 로 원본과 같은 이름·크기(500 × 500 px = ±10 cm)의 그림을 계산해 넣었습니다. 광검출기 값은 원본처럼 그림의 회색값 × 5.5 V 입니다."}, "en": {"h1": "APhO 2021 Experiment 1 — Elasticity of a cantilever", "h2": "the organisers' APHO.exe (Unity), its code and scenes moved into the browser", "note": "This is the organisers' experiment program <b>APHO.exe</b> (Unity 2019.4) of APhO 2021, moved into the browser. The scripts of the executable (Assembly-CSharp.dll) were decompiled and carried over line for line: the beam deflection code (nano_beam_core), the reflected ray construction, the laser jitter (DOTween), the heater, the recorder and every drag, rotation and button. The layout, colours, fonts and pictures of the four scenes are read straight out of the executable's scene data and drawn into the 1024 × 768 window on the same pixels as the original. Enter <b>COUNTRY</b> and <b>NAME</b> and press <b>NEXT</b> to choose 1 A–1 D (experiment 1), 2 A or 2 B–2 E (experiment 2); <b>Back</b> at the top left returns to the menu. The screen pictures of 2 A–2 E were not in the released package (its Addressables bundles dr-351 … dr-1444 and dr-488-0 are missing), so they are computed from the sample the official solution describes — close-packed 5.627 µm microspheres, 58.6 × 51.0 µm rectangles with the long side at 27°, a 250 × 200 µm grid, a double slit best at (3700, −2900) µm — under the original names and at the original size (500 × 500 px for ±10 cm). The photodetector reads the picture's grey value × 5.5 V, as in the original."}};
+const PAGE={"ko": {"cap": "APHO.exe — 1024 × 768, 주최측 프로그램 그대로 · 클릭해서 키보드(방향키) 입력", "h1": "APhO 2021 실험 1 — 외팔보의 탄성", "h2": "주최측 프로그램 APHO.exe (Unity) 의 코드와 장면을 그대로 옮긴 것", "note": "APhO 2021 주최측이 배포한 실험 프로그램 <b>APHO.exe</b> (Unity 2019.4) 를 그대로 옮겼습니다. 실행 파일의 스크립트(Assembly-CSharp.dll)를 디컴파일해 빔 처짐 계산(nano_beam_core), 반사 광선 작도, 레이저 떨림(DOTween), 온도 변화, 기록 그래프, 끌기·회전·버튼 동작을 한 줄씩 옮겼고, 네 장면의 배치·색·글꼴·그림은 실행 파일의 장면 데이터에서 그대로 읽어 1024 × 768 창에 원본과 같은 픽셀로 그립니다. 처음 화면에서 <b>COUNTRY</b> 와 <b>NAME</b> 을 넣고 <b>NEXT</b> 를 누르면 1 A–1 D (실험 1), 2 A, 2 B–2 E (실험 2) 를 고를 수 있고, 왼쪽 위 <b>Back</b> 으로 돌아옵니다. 2 A–2 E 의 스크린 사진은 원본 배포본에 빠져 있어(Addressables 번들 dr-351 … dr-1444, dr-488-0 누락) 공식 풀이가 밝힌 시료 — 지름 5.627 µm 미세구의 조밀 배열, 58.6 × 51.0 µm 직사각형(긴 변 27°), 250 × 200 µm 격자, 이중 슬릿 최적 위치 (3700, −2900) µm — 로 원본과 같은 이름·크기(500 × 500 px = ±10 cm)의 그림을 계산해 넣었습니다. 광검출기 값은 원본처럼 그림의 회색값 × 5.5 V 입니다."}, "en": {"cap": "APHO.exe — 1024 × 768, the organisers' program as it is · click it to type and use the arrow keys", "h1": "APhO 2021 Experiment 1 — Elasticity of a cantilever", "h2": "the organisers' APHO.exe (Unity), its code and scenes moved into the browser", "note": "This is the organisers' experiment program <b>APHO.exe</b> (Unity 2019.4) of APhO 2021, moved into the browser. The scripts of the executable (Assembly-CSharp.dll) were decompiled and carried over line for line: the beam deflection code (nano_beam_core), the reflected ray construction, the laser jitter (DOTween), the heater, the recorder and every drag, rotation and button. The layout, colours, fonts and pictures of the four scenes are read straight out of the executable's scene data and drawn into the 1024 × 768 window on the same pixels as the original. Enter <b>COUNTRY</b> and <b>NAME</b> and press <b>NEXT</b> to choose 1 A–1 D (experiment 1), 2 A or 2 B–2 E (experiment 2); <b>Back</b> at the top left returns to the menu. The screen pictures of 2 A–2 E were not in the released package (its Addressables bundles dr-351 … dr-1444 and dr-488-0 are missing), so they are computed from the sample the official solution describes — close-packed 5.627 µm microspheres, 58.6 × 51.0 µm rectangles with the long side at 27°, a 250 × 200 µm grid, a double slit best at (3700, −2900) µm — under the original names and at the original size (500 × 500 px for ±10 cm). The photodetector reads the picture's grey value × 5.5 V, as in the original."}};
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 function applyLang(){ const d=PAGE[lang]; document.documentElement.lang=lang;
   document.getElementById("t-h1").textContent=d.h1; document.getElementById("t-h2").textContent=d.h2;
-  document.getElementById("t-note").innerHTML=d.note;
+  document.getElementById("t-note").innerHTML=d.note; document.getElementById("t-cap").textContent=d.cap;
   document.getElementById("lang-ko").className=lang==="ko"?"on":""; document.getElementById("lang-en").className=lang==="en"?"on":""; }
 document.getElementById("lang-ko").onclick=()=>{lang="ko";applyLang();};
 document.getElementById("lang-en").onclick=()=>{lang="en";applyLang();};
