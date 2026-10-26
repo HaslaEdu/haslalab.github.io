@@ -193,7 +193,7 @@ const T={
       psu:"E1. 직류 전원 (0–15 V)",adapter:"E2. 스위치 어댑터",con4:"E3. 4단자 커넥터",con2:"E4. 2단자 커넥터",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (연속 스펙트럼)",ledunk:"E7. LED-UNK (모르는 색)",
       wash:"C12. 세척병 (증류수)",naoh:"C2. NaOH 알갱이",ic:"C3. 인디고 카민 IC 0.70 mg/ml",ind:"C4. 페놀프탈레인 In",gl:"C5. 포도당 Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
       syr3:"C8. 주사기 3 ml",syrIns:"C7. 인슐린 주사기 0.5 ml ×4",tubes:"C10·11. 코니컬 튜브·100 ml 용기",cuvettes:"O8. 뚜껑 있는 큐벳 ×10",waste:"X4. 폐액 통",gloves:"X3. 장갑",laptop:"컴퓨터",cuv:i=>"큐벳 "+(i+1)},
-    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 컴퓨터·광학대·시약을 클릭하면 그 확대 화면이 열립니다 · 전원 노브는 끌어서 돌리고(Shift: 미세), 전원·어댑터 스위치는 눌러서 켭니다",
+    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 책상 위 기구를 끌면 원하는 자리로 옮겨집니다 · 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 컴퓨터·광학대·시약을 클릭하면 그 확대 화면이 열립니다 · 전원 노브는 끌거나 휠로 돌리고(Shift: 미세), 전원·어댑터 스위치는 눌러서 켭니다",
     tabs:{prog:"Spectroscopy 프로그램",opt:"광학대 (위에서)",chem:"화학 작업대"},
     closeCap:{prog:"Spectroscopy 프로그램 — 픽셀 번호 N에 따른 세기(임의 단위, 4095에서 포화 \"Overflow\"). Launch: 실시간, Single spectrum: 한 장, Time Series: Launch 뒤에만 기록(간격 Δt). 휠: N축 확대, 끌기: 이동, 더블클릭: 전체. 저장 파일 이름은 노트 입력칸에 ○○.csv로 적으면 그 이름이 됩니다.",
               opt:"광학대를 위에서 본 모습 — 부품을 끌어 광축을 따라 옮깁니다(오른쪽 ± 버튼으로 미세 조정). 보정한 뒤에는 광원·큐벳·조리개를 넣고 빼는 것 말고는 건드리지 마세요. 오른쪽 위 그림은 스크린 면: 0차 점과 CCD 위의 1차 스펙트럼.",
@@ -215,7 +215,7 @@ const T={
     st:{none:"부품함에서 광학대, 광원 받침대, 렌즈, 스크린, CCD 센서부터 꺼내 놓으세요.",hand:n=>"손에 든 것: "+n,over:"센서가 포화되었습니다(4095) — 전압이나 Sensitivity를 낮추세요.",room:"차광판 없이 방의 빛이 센서에 들어옵니다.",naoh:"장갑 없이 NaOH를 다루면 안 됩니다!"},
     m:{picked:n=>n+" — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)",placed:n=>n+"을(를) 놓았습니다.",back:n=>n+"을(를) 부품함에 넣었습니다.",needFor:n=>"먼저 "+n+"이(가) 필요합니다.",
       onTable:n=>n+"을(를) 광학대에 놓았습니다.",notTable:"광학 부품은 광학대 위에 놓습니다.",inHolder:n=>n+"을(를) 광원 받침대에 꽂았습니다.",holderBusy:"받침대에 이미 다른 것이 꽂혀 있습니다.",
-      outHolder:n=>n+"을(를) 받침대에서 뺐습니다.",jit:"받침대에 꽂힌 LED에 선을 꽂아서 받침대가 움직였습니다 — 보정이 달라졌을 수 있습니다.",moved:n=>n+" 위치를 옮겼습니다.",
+      outHolder:n=>n+"을(를) 받침대에서 뺐습니다.",jit:"받침대에 꽂힌 LED에 선을 꽂아서 받침대가 움직였습니다 — 보정이 달라졌을 수 있습니다.",moved:n=>n+" 위치를 옮겼습니다.",noRoom:"거기에는 놓을 수 없습니다 — 다른 기구와 겹치거나 책상 밖입니다.",
       plug:(a,b)=>a+"을(를) "+b+"에 꽂았습니다.",unplug:n=>n+"을(를) 뺐습니다.",wrongCon:"4단자 커넥터는 LED-RGB에, 2단자 커넥터는 LED-CON·LED-UNK에 꽂습니다.",
       cuvIn:i=>"큐벳 "+(i+1)+"을(를) 받침대에 넣었습니다.",cuvOut:i=>"큐벳 "+(i+1)+"을(를) 받침대에서 뺐습니다.",cuvBusy:"큐벳 받침대에 이미 큐벳이 있습니다.",cuvRack:i=>"큐벳 "+(i+1)+"을(를) 꽂이에 돌려놓았습니다.",
       gloves:"장갑을 꼈습니다.",glovesOff:"장갑을 벗었습니다.",noGloves:"장갑부터 끼세요 — NaOH는 매우 부식성이 강합니다.",
@@ -237,7 +237,7 @@ const T={
       psu:"E1. DC power supply (0–15 V)",adapter:"E2. Adapter with switch",con4:"E3. Connector, 4 outputs",con2:"E4. Connector, 2 outputs",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (full spectrum)",ledunk:"E7. LED-UNK (unknown colour)",
       wash:"C12. Wash bottle (water)",naoh:"C2. NaOH granules",ic:"C3. Indigo carmine IC 0.70 mg/ml",ind:"C4. Phenolphthalein In",gl:"C5. Glucose Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
       syr3:"C8. Syringe 3 ml",syrIns:"C7. Insulin syringes 0.5 ml ×4",tubes:"C10·11. Conical tubes, 100 ml container",cuvettes:"O8. Cuvettes with caps ×10",waste:"X4. Waste container",gloves:"X3. Gloves",laptop:"Computer",cuv:i=>"cuvette "+(i+1)},
-    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click the computer, the optical table or a reagent to open its close-up · drag the supply knob to turn it (Shift: fine), click the supply or adapter switch to flip it",
+    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag a thing on the bench to move it anywhere it fits · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click the computer, the optical table or a reagent to open its close-up · drag or wheel the supply knob (Shift: fine), click the supply or adapter switch to flip it",
     tabs:{prog:"Spectroscopy program",opt:"Optical table (top)",chem:"Chemistry bench"},
     closeCap:{prog:"The Spectroscopy program — intensity (arbitrary units, saturating at 4095, \"Overflow\") against pixel number N. Launch: live, Single spectrum: one shot, Time Series: records only after Launch (interval Δt). Wheel: zoom N, drag: pan, double-click: all. Type a name such as R-0.csv in the notebook field to save under that name.",
               opt:"The optical table from above — drag a part along the axis (fine steps with the ± buttons on the right). After calibrating, touch nothing but the source, the cuvette and the diaphragm. Top right: the face of the screen, with the zero-order spot and the first-order spectrum on the CCD.",
@@ -259,7 +259,7 @@ const T={
     st:{none:"Take the optical table, the source holder, the lenses, the screen and the CCD sensor out of the box first.",hand:n=>"In hand: "+n,over:"The sensor is saturated (4095) — lower the voltage or the Sensitivity.",room:"Without the sunshield the room light reaches the sensor.",naoh:"Never handle NaOH without gloves!"},
     m:{picked:n=>n+" — click where it goes. (R-click: return)",placed:n=>n+" put out.",back:n=>n+" put back in the box.",needFor:n=>"You need the "+n+" first.",
       onTable:n=>n+" set on the optical table.",notTable:"Optical parts go on the optical table.",inHolder:n=>n+" pushed into the source holder.",holderBusy:"Something is already in the holder.",
-      outHolder:n=>n+" taken out of the holder.",jit:"Plugging a lead into the LED in the holder moved the holder — the calibration may have changed.",moved:n=>n+" moved.",
+      outHolder:n=>n+" taken out of the holder.",jit:"Plugging a lead into the LED in the holder moved the holder — the calibration may have changed.",moved:n=>n+" moved.",noRoom:"No room there — it would overlap something or hang off the bench.",
       plug:(a,b)=>a+" plugged into "+b+".",unplug:n=>n+" unplugged.",wrongCon:"The 4-output connector goes to LED-RGB, the 2-output one to LED-CON or LED-UNK.",
       cuvIn:i=>"Cuvette "+(i+1)+" put into the holder.",cuvOut:i=>"Cuvette "+(i+1)+" taken out of the holder.",cuvBusy:"There is already a cuvette in the holder.",cuvRack:i=>"Cuvette "+(i+1)+" back in the rack.",
       gloves:"Gloves on.",glovesOff:"Gloves off.",noGloves:"Put the gloves on first — NaOH is extremely caustic.",
@@ -922,6 +922,38 @@ const TBL={x0:12,x1:82,y0:10,y1:22,h:1.2}, AY=16, AZ=TBL.h+6.5, TBL_L=TBL.x1-TBL
 const xw=t=>TBL.x0+t;
 const POS={psu:[106,44],adapter:[46,40],con4:[40,32],con2:[52,32],sensor:[92,30],laptop:[106,12],ledcon:[26,30],ledrgb:[31,30],ledunk:[36,30],
   wash:[6,46],naoh:[14,58],ic:[18,58],ind:[22,58],gl:[28,58],nacl:[33,58],syr3:[44,64],syrIns:[44,68],tubes:[60,60],cuvettes:[76,36],waste:[90,62],gloves:[18,68]};
+/* ── free placement: each loose thing has its own spot on the bench, and may go anywhere it fits ── */
+/* footprint round its POS point: [x0, y0, x1, y1] (cm) */
+const FOOT={psu:[-9,-7,9,8.4],adapter:[-2.6,-2,2.6,2],con4:[-1.2,-0.5,1.2,0.5],con2:[-0.8,-0.5,0.8,0.5],sensor:[-6.4,-3.6,5.6,3.6],laptop:[-10,-6.8,10,8.5],
+  ledcon:[-2.3,-1.2,2.3,1.2],ledrgb:[-2.3,-1.2,2.3,1.2],ledunk:[-2.3,-1.2,2.3,1.2],wash:[-3.6,-3.6,3.6,3.6],naoh:[-0.6,-0.6,0.6,0.6],ic:[-0.6,-0.6,0.6,0.6],ind:[-0.6,-0.6,0.6,0.6],
+  gl:[-1.7,-1.7,1.7,1.7],nacl:[-1.7,-1.7,1.7,1.7],syr3:[-9,-0.8,4.8,0.8],syrIns:[-5.5,-1.6,4.1,1.2],tubes:[-8,-2.8,9.8,2.8],cuvettes:[-8.2,-3,8.2,3],waste:[-4.4,-4.4,4.4,4.4],gloves:[-3.5,-2,5.3,2]};
+const BENCH={x0:0.5,x1:123.5,y0:0.5,y1:71.5};
+/* is k lying on the bench (not in the holder, plugged in, or in the hand)? */
+const onBench=k=>(k==="laptop"||has(k))&&!(hand&&hand.item===k)&&ST.src!==k&&!((k==="con4"||k==="con2")&&ST.plug[k]);
+const footAt=(k,c)=>{ const f=FOOT[k]; return [c[0]+f[0],c[1]+f[1],c[0]+f[2],c[1]+f[3]]; };
+const overlap=(a,b)=>a[0]<b[2]&&b[0]<a[2]&&a[1]<b[3]&&b[1]<a[3];
+function blocked(k,c){ const r=footAt(k,c);
+  if(r[0]<BENCH.x0||r[2]>BENCH.x1||r[1]<BENCH.y0||r[3]>BENCH.y1) return true;
+  if(has("table")&&overlap(r,[TBL.x0-0.4,TBL.y0-0.4,TBL.x1+0.4,TBL.y1+0.4])) return true;
+  if(has("sunshield")&&(overlap(r,[TBL.x0-4.3,0,TBL.x1+4.3,TBL.y0-3.6])||overlap(r,[TBL.x0-4.6,0,TBL.x0-3.4,TBL.y1+6.4]))) return true;
+  for(const o in FOOT) if(o!==k&&onBench(o)&&overlap(r,footAt(o,POS[o]))) return true;
+  return false; }
+/* where k would stand with its middle under the pointer */
+function benchSpot(k,p){ const q=unP(p[0],p[1],0), f=FOOT[k]; return [Math.round((q[0]-(f[0]+f[2])/2)*10)/10,Math.round((q[1]-(f[1]+f[3])/2)*10)/10]; }
+function putDown(k,p){ if(!(k in FOOT)){ ST.on.add(k); say("placed",itemName(k)); return true; }
+  const c=benchSpot(k,p); if(blocked(k,c)){ say("noRoom"); return false; }
+  POS[k]=c; ST.on.add(k); say("placed",itemName(k)); return true; }
+/* the thing in the hand drawn faintly where it would go (red where it cannot) */
+function drawGhost(){ if(!hand||!overBench) return; const k=hand.item, h=hand, n0=ITEMS.length; let bad=false;
+  const k0=hitItem(mouse); if(k0&&k0!=="table"&&k0!=="sunshield"&&!(k in FOOT&&k0===k)) return;
+  if(OPT.includes(k)){ if(!has("table")) return; const t=tableT(mouse); if(t===null) return; const keep=ST.x[k]; ST.x[k]=t; hand=null; try{ drawLoose(k); } finally{ hand=h; ST.x[k]=keep; } }
+  else if(k in FOOT){ const c=benchSpot(k,mouse), keep=POS[k], on=has(k); bad=blocked(k,c); POS[k]=c; hand=null; ST.on.add(k);
+    try{ drawLoose(k); } finally{ hand=h; POS[k]=keep; if(!on) ST.on.delete(k); } }
+  else return;
+  const out=ITEMS.slice(0,n0);
+  for(const it of ITEMS.slice(n0)){ if(it.t==="f"){ it.o=Object.assign({},it.o,{alpha:0.45,id:undefined,stroke:undefined}); if(bad) it.o.fill="#d23c32"; out.push(it); }
+    else if(it.t==="l"||it.t==="pl"){ it.o=Object.assign({},it.o,{alpha:0.45}); out.push(it); } }
+  ITEMS=out; }
 const BLACK="#16171a", BLACK2="#22242a", GLASS="rgba(214,232,240,0.30)";
 /* ── printed surfaces: small canvases painted once and laid on faces ── */
 const TEXC={};
@@ -1110,7 +1142,7 @@ function drawLoose(k){
   else if(k==="ledcon"||k==="ledrgb"||k==="ledunk"){ if(ST.src!==k&&!(hand&&hand.item===k)) drawLedBoard(k,[POS[k][0],POS[k][1],0],false); }
   else drawChem3(k); }
 function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3();
-  drawRoom(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k);
+  drawRoom(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k); drawGhost();
   ctx.fillStyle="#dfe3e7"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
 /* ══════════════════════════════════════════════════════════════
    6.  PARTS BOX, LAYOUT, CLOSE-UPS
@@ -1363,9 +1395,9 @@ function place(k,k0,p){
     const old=ST.x[k]; ST.x[k]=t; ST.on.add(k); if((k==="holder"||k==="cuvhold")&&old!==null&&Math.abs(old-t)>0.05) nudge(0.5); OSEL=k; say(hand.move?"moved":"onTable",itemName(k)); return true; }
   if(LEDS.includes(k)){
     if((k0==="holder"||boardAt(k0)===ST.src&&ST.src)&&ST.x.holder!==null){ if(ST.src){ say("holderBusy"); return false; } ST.src=k; ST.on.add(k); nudge(0.05); say("inHolder",itemName(k)); return true; }
-    ST.on.add(k); say("placed",itemName(k)); return true; }
-  if(k==="con4"||k==="con2"){ const b=boardAt(k0); if(b&&has(b)||b&&ST.src===b){ return plugInto(k,b); } ST.on.add(k); say("placed",itemName(k)); return true; }
-  ST.on.add(k); say("placed",itemName(k)); if(CHEM.includes(k)||k==="cuvettes") setTab("chem"); return true; }
+    return putDown(k,p); }
+  if(k==="con4"||k==="con2"){ const b=boardAt(k0); if(b&&has(b)||b&&ST.src===b){ return plugInto(k,b); } return putDown(k,p); }
+  if(!putDown(k,p)) return false; if(CHEM.includes(k)||k==="cuvettes") setTab("chem"); return true; }
 function benchClick(p,right,e){
   let k0=hitItem(p);
   /* a cuvette or an LED board in the hand snaps into its holder when the pointer is just above it */
@@ -1399,16 +1431,27 @@ let trayDrag=false;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
-cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p;
+cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; overBench=true;
+  /* a thing on the bench follows the hand while it is dragged, and stops where it would bump into something */
+  if(pend){ if(!pend.moving&&Math.hypot(p[0]-pend.p[0],p[1]-pend.p[1])>5){ const q=unP(pend.p[0],pend.p[1],0); pend.moving=true; pend.off=[POS[pend.k][0]-q[0],POS[pend.k][1]-q[1]]; }
+    if(pend.moving){ const q=unP(p[0],p[1],0), c=[Math.round((q[0]+pend.off[0])*10)/10,Math.round((q[1]+pend.off[1])*10)/10]; if(!blocked(pend.k,c)) POS[pend.k]=c; cv.style.cursor="grabbing"; } return; }
   if(drag){ if(drag.k==="knob"){ const dv=(p[0]-drag.p[0]-(p[1]-drag.p[1]))*(e.shiftKey?0.002:0.01); ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((drag.v+dv)*1000)/1000)); } else if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
   cv.style.cursor=hand?"crosshair":hitItem(p)?"pointer":"grab"; });
-cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId); benchClick(p,e.button===2,e); drawTray(); });
-cv.addEventListener("pointerup",()=>{ drag=null; });
+let pend=null;
+const ownerOf=k0=>k0==="psuSw"?"psu":k0==="adSw"?"adapter":k0;
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId);
+  /* a press on a thing, or on its switch, may become a drag of the whole thing; a plain click still works it */
+  if(!hand&&e.button===0){ const k=ownerOf(hitItem(p)); if(k&&k in FOOT&&onBench(k)){ pend={k,p,e,moving:false}; return; } }
+  benchClick(p,e.button===2,e); drawTray(); });
+cv.addEventListener("pointerup",()=>{ if(pend){ const q=pend; pend=null; if(q.moving) say("moved",itemName(q.k)); else { benchClick(q.p,false,q.e); drawTray(); } } drag=null; });
 cv.addEventListener("dblclick",e=>{ if(!hand&&!hitItem(lpos(e))) camReset(); });
-cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0, nk=Math.max(3,Math.min(160,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0;
+  /* the wheel over the supply's voltage knob turns it (Shift: fine) */
+  if(hitItem(p)==="psuKnob"){ ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((ST.psuV+(up?1:-1)*(e.shiftKey?0.01:0.1))*1000)/1000)); return; }
+  const nk=Math.max(3,Math.min(160,CAM.k*(up?1.12:1/1.12))), f=nk/CAM.k;
   CAM.px=p[0]-LW/2-(p[0]-LW/2-CAM.px)*f; CAM.py=p[1]-LH/2-(p[1]-LH/2-CAM.py)*f; CAM.k=nk; },{passive:false});
 window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
-window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&hand){ benchClick(mouse,true); drawTray(); } });
+window.addEventListener("keydown",e=>{ if(e.key==="Escape") pend=null; if(e.key==="Escape"&&hand){ benchClick(mouse,true); drawTray(); } });
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.move&&!hand.fromHolder&&!hand.fromBench&&hand.item!=="cuv"){ hand=null; drawTray(); } });
 trayCv.addEventListener("mousedown",e=>{ if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
   for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=inHand(k); if(hand&&(hand.move||hand.fromHolder||hand.fromBench||hand.item==="cuv")) return; hand=null;
