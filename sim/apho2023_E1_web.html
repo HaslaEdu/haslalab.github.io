@@ -2731,83 +2731,153 @@ function desk3(){
   face([[-90,0,-40],[-90,0,60],[80,0,60],[80,0,-40]],{fill:"#3a3d42",layer:-3,flat:true,id:"desk"});
   for (let x = -90; x <= 80; x += 10) poly3([[x,0,-40],[x,0,60]],"#34373b",1,{layer:-2});
 }
+/* a knurled thumb knob: a short cylinder with ribs round its rim */
+function knurl3(axis, a0, a1, u, v, r, col, o){
+  cyl3(axis, a0, a1, u, v, r, col, Object.assign({seg:20, cap:shade(col, 1.18)}, o || {}));
+  for (let i = 0; i < 16; i++){ const t = i / 16 * 2 * Math.PI, cu = u + r * 1.01 * Math.cos(t), cv = v + r * 1.01 * Math.sin(t);
+    const W = a => axis === "x" ? [a, cu, cv] : axis === "y" ? [cu, a, cv] : [cu, cv, a];
+    line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), shade(col, 0.62), 0.8); }
+}
+/* the base platform: a slotted aluminium extrusion on four levelling feet, the ruler tape on its front */
 function base3(){
-  for (const [x, z] of [[-31,-7],[-31,7],[31,-7],[31,7]]){ cyl3("y",0,2.2,x,z,1.1,"#2a2c30",{seg:12,layer:-1}); cyl3("y",2.2,2.6,x,z,1.6,"#6f7a86",{seg:14,layer:-1}); }
-  box3(-34,34,2.6,RAILY,-8,8,ALU,{id:"rail",layer:-1,top:"#d5dade"});
-  for (const z of [-4,0,4]) line3([-34,RAILY+0.01,z],[34,RAILY+0.01,z],"#9ea5ab",1,{layer:-1});
-  /* the blue tape scale on the front */
-  face([[-30,RAILY-1.4,8.02],[30,RAILY-1.4,8.02],[30,RAILY-0.4,8.02],[-30,RAILY-0.4,8.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.5});
-  custom3([0,RAILY-0.9,8.03],c=>{ c.strokeStyle="#fff";
+  for (const [x, z] of [[-31,-7],[-31,7],[31,-7],[31,7]]){ cyl3("y",0,1.6,x,z,0.5,"#9aa0a6",{seg:10,layer:-1}); knurl3("y",1.0,2.6,x,z,1.5,"#6f7a86",{layer:-1}); }
+  box3(-34,34,2.6,RAILY-0.6,-8,8,ALU,{id:"rail",layer:-1,top:"#d5dade"});
+  /* the top face: two lips either side of each slot, the slots dark */
+  for (const [z0, z1] of [[-8,-5.6],[-4.4,-1.2],[1.2,4.4],[5.6,8]]) box3(-34,34,RAILY-0.6,RAILY,z0,z1,"#d3d8dc",{id:"rail",layer:-1,top:"#dde1e5"});
+  for (const [z0, z1] of [[-5.6,-4.4],[-1.2,1.2],[4.4,5.6]]) face([[-34,RAILY-0.55,z0],[-34,RAILY-0.55,z1],[34,RAILY-0.55,z1],[34,RAILY-0.55,z0]],{fill:"#55595f",flat:true,layer:-1,id:"rail"});
+  for (const z of [-5.6,-4.4,-1.2,1.2,4.4,5.6]) line3([-34,RAILY+0.01,z],[34,RAILY+0.01,z],"#8f969c",0.8,{layer:-1});
+  /* a groove along the front face and the end caps */
+  face([[-34,4.0,8.01],[34,4.0,8.01],[34,4.4,8.01],[-34,4.4,8.01]],{fill:"#8e959b",flat:true,layer:-1,bias:0.3});
+  for (const s of [-1,1]) box3(s>0?34:-34.6,s>0?34.6:-34,2.5,RAILY+0.1,-8.1,8.1,"#2d3035",{layer:-1});
+  /* the ruler tape on the front: blue and white halves */
+  face([[-30,RAILY-1.6,8.02],[0,RAILY-1.6,8.02],[0,RAILY-0.4,8.02],[-30,RAILY-0.4,8.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.5});
+  face([[0,RAILY-1.6,8.02],[30,RAILY-1.6,8.02],[30,RAILY-0.4,8.02],[0,RAILY-0.4,8.02]],{fill:"#f2f3f0",flat:true,layer:-1,bias:0.5});
+  custom3([0,RAILY-0.9,8.03],c=>{
     for (let mm = -300; mm <= 300; mm += 5){ const L = mm % 50 === 0 ? 0.7 : mm % 10 === 0 ? 0.5 : 0.3;
+      c.strokeStyle = mm < 0 ? "#fff" : "#2a62b8";
       const a = P3(mm/10,RAILY-0.42,8.03), b = P3(mm/10,RAILY-0.42-L,8.03); c.lineWidth = mm % 10 === 0 ? 1 : 0.6; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
   },{layer:-1,bias:1});
+  /* the sand-blasted plate the column stands on, with its two gussets */
+  box3(-9,9,RAILY,RAILY+0.8,-9.5,3,"#c3c8cc",{id:"rail",top:"#cfd3d6"});
+  for (const s of [-1,1]) prism3("z",-8.6,-8.0,[[s*2.0,RAILY+0.8],[s*7.5,RAILY+0.8],[s*2.0,RAILY+6.5]],"#b9bfc4",{id:"column"});
+  for (const [x, z] of [[-6,-8.3],[6,-8.3],[-6,1.5],[6,1.5]]) cyl3("y",RAILY+0.8,RAILY+1.05,x,z,0.45,"#8e959b",{seg:10,cap:"#a9afb5"});
 }
+/* the column: a 40 x 40 slotted profile, the crossbar on top and the two hanger units */
 function column3(){
-  box3(-1.5,1.5,RAILY,PIV+3.5,-7.5,-4.5,ALU,{id:"column",top:"#dfe3e7"});
-  box3(-16,16,PIV+3.5,PIV+5.5,-7.5,3.5,ALU2,{id:"column",top:"#d5dade"});
+  const zc0 = -8.6, zc1 = -4.6;
+  boxY(-2,2,RAILY+0.8,PIV+3.5,zc0,zc1,ALU,{id:"column",top:"#dfe3e7"},6);
+  for (const x of [-2.01, 2.01]) face(orient([[x,RAILY+0.8,-6.9],[x,PIV+3.5,-6.9],[x,PIV+3.5,-6.3],[x,RAILY+0.8,-6.3]],[Math.sign(x),0,0]),{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  face([[-0.3,RAILY+0.8,zc1+0.01],[0.3,RAILY+0.8,zc1+0.01],[0.3,PIV+3.5,zc1+0.01],[-0.3,PIV+3.5,zc1+0.01]],{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  /* the crossbar */
+  box3(-15,15,PIV+3.5,PIV+5.5,-9.2,-4.2,ALU2,{id:"column",top:"#d5dade"});
+  face([[-15,PIV+5.51,-6.9],[-15,PIV+5.51,-6.4],[15,PIV+5.51,-6.4],[15,PIV+5.51,-6.9]],{fill:"#6d747a",flat:true,id:"column",bias:0.3});
+  for (const s of [-1,1]){ knurl3("y",PIV+5.5,PIV+6.7,s*11,-6.7,1.0,"#7b8590",{id:"column"}); }
   const h = S.bench.hang();
-  for (let i = 0; i < 2; i++){ const x = h[i] * 100;
-    box3(x-1.3,x+1.3,PIV+0.6,PIV+3.5,-3.2,3.2,"#dfe2e6",{id:"hang"+i});
-    cyl3("y",PIV+5.5,PIV+6.7,x,-2.5,0.25,"#c8ccd1",{seg:8}); cyl3("x",x-0.9,x+0.9,PIV+7.0,-2.5,0.45,"#f2efe6",{seg:10,cap:"#fbfaf6"});
-    cyl3("y",PIV+5.5,PIV+6.2,x,1.8,0.55,i ? "#2a62b8" : "#c0392b",{seg:12}); }
-}
-function fans3(){
-  for (const side of [-1, 1]){
-    const pts = [[0, PIV, SCR_Z]];
-    for (let a = 0; a <= 90; a += 3){ const t = a * Math.PI / 180; pts.push([side * 34 * Math.sin(t), PIV - 34 * Math.cos(t), SCR_Z]); }
-    face(orient(pts,[0,0,1]),{fill:"#f4f4f1",flat:true,id:"fan",cull:false,alpha:0.95,bias:-0.5});
+  for (let i = 0; i < 2; i++){ const x = h[i] * 100, id = "hang" + i;
+    /* the arm along the bench depth, a channel under its front end carrying the two wire rollers */
+    box3(x-1.45,x+1.45,PIV+2.3,PIV+3.5,-9.6,3.9,"#dfe2e6",{id,top:"#eceef0"});
+    face([[x-0.25,PIV+3.51,-9.2],[x+0.25,PIV+3.51,-9.2],[x+0.25,PIV+3.51,3.5],[x-0.25,PIV+3.51,3.5]],{fill:"#9ba2a8",flat:true,id,bias:0.3});
+    for (const s of [-1,1]) box3(x+s*1.45-(s>0?0.25:0),x+s*1.45+(s>0?0:0.25),PIV+0.3,PIV+2.3,-3.4,3.4,"#d3d7db",{id});
+    for (const z of [-2.6, 2.6]){ cyl3("x",x-1.2,x+1.2,PIV+0.9,z,0.32,"#b87333",{seg:10,cap:"#9aa0a6",id});
+      for (let k = -4; k <= 4; k++) cyl3("x",x+k*0.22-0.05,x+k*0.22+0.05,PIV+0.9,z,0.36,"#d0884a",{seg:8,caps:false}); }
+    /* the two string-tuning knobs, the clamp wing screw, the terminal */
+    for (const z of [-2.6, 2.6]){ cyl3("y",PIV+3.5,PIV+4.2,x,z,0.22,"#c8ccd1",{seg:8,id}); knurl3("y",PIV+4.2,PIV+5.3,x,z,0.75,"#8a939d",{id}); }
+    cyl3("y",PIV+3.5,PIV+5.6,x,-8.4,0.18,"#c8ccd1",{seg:8,id});
+    prism3("x",x-0.15,x+0.15,[[PIV+5.6,-9.4],[PIV+6.9,-9.6],[PIV+7.3,-8.4],[PIV+6.9,-7.2],[PIV+5.6,-7.4]].map(([y,z])=>[y,z]),"#f2efe6",{id});
+    cyl3("y",PIV+3.5,PIV+4.3,x,-0.4,0.42,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:i ? "#333" : "#d6493a"});
+    cyl3("y",PIV+4.3,PIV+5.4,x,-0.4,0.3,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:"#666"});
+    if (i === 1){ box3(x-1.2,x+1.2,PIV+3.5,PIV+4.4,1.0,3.4,"#2f86d8",{id,top:"#3d95e6"}); cyl3("y",PIV+4.4,PIV+4.5,x,2.2,0.55,"#e8f4fa",{seg:14,id}); sphere3([x,PIV+4.5,2.2],0.18,"#9be36b"); }
   }
-  for (const side of [-1, 1]) custom3([side*17,PIV-17,SCR_Z+0.01],c=>{ c.strokeStyle="rgba(70,70,70,.75)";
-    for (let a = 0; a <= 90; a++){ const t = a * Math.PI / 180, r0 = a % 10 === 0 ? 27 : a % 5 === 0 ? 29.5 : 31;
-      const p = P3(side*r0*Math.sin(t),PIV-r0*Math.cos(t),SCR_Z+0.02), q = P3(side*33.5*Math.sin(t),PIV-33.5*Math.cos(t),SCR_Z+0.02);
-      c.lineWidth = a % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(p[0],p[1]); c.lineTo(q[0],q[1]); c.stroke(); }
-  },{bias:0.5});
-  for (const side of [-1, 1]) for (let a = 10; a <= 90; a += 10){ const t = a * Math.PI / 180;
-    text3([side*25.3*Math.sin(t),PIV-25.3*Math.cos(t),SCR_Z+0.03],[1,0,0],[0,1,0],String(a),0.9,"#444",{align:"center",bias:30}); }
 }
+/* the angle screens: two white boards with the printed degree scale, centred on the pivot */
+const FANTEX = {};
+function fanTex(side){ if (FANTEX[side]) return FANTEX[side];
+  const W = 34.6, H = PIV + 2 - (RAILY + 0.8), px = 18, c = document.createElement("canvas"); c.width = Math.round(W * px); c.height = Math.round(H * px); c._static = true;
+  const g = c.getContext("2d"); g.fillStyle = "#f6f6f3"; g.fillRect(0, 0, c.width, c.height);
+  const ox = side > 0 ? -2.2 * px : (W + 2.2) * px, oy = 2 * px, P = (r, a) => [ox + side * r * px * Math.sin(a), oy + r * px * Math.cos(a)];
+  g.strokeStyle = "rgba(60,60,60,0.55)"; g.lineWidth = 1;
+  for (let d = 0; d <= 90; d += 5){ const a = d * Math.PI / 180, p = P(4, a), q = P(26.5, a); g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.stroke(); }
+  for (let d = 0; d <= 90; d += 0.5){ const a = d * Math.PI / 180, r0 = d % 10 === 0 ? 27 : d % 5 === 0 ? 28.4 : d % 1 === 0 ? 30 : 31.6, p = P(r0, a), q = P(33.6, a);
+    g.lineWidth = d % 5 === 0 ? 1.6 : 0.8; g.strokeStyle = "rgba(40,40,40,0.8)"; g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.stroke(); }
+  g.lineWidth = 1.4; for (const r of [27, 33.6]){ g.beginPath(); for (let d = 0; d <= 90; d += 1){ const p = P(r, d * Math.PI / 180); d ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); } g.stroke(); }
+  g.fillStyle = "#333"; g.font = "bold " + Math.round(0.95 * px) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle";
+  for (let d = 0; d <= 90; d += 5){ const a = d * Math.PI / 180, p = P(25.4, a); g.save(); g.translate(p[0], p[1]); g.rotate(-side * a); g.fillText(String(d), 0, 0); g.restore(); }
+  return FANTEX[side] = c; }
+function fans3(){
+  const yb = RAILY + 0.8, yt = PIV + 2;
+  for (const side of [-1, 1]){ const x0 = side > 0 ? 2.2 : -36.8, x1 = side > 0 ? 36.8 : -2.2;
+    box3(x0, x1, yb, yt, SCR_Z - 0.35, SCR_Z, "#e9e9e5", {id:"fan", top:"#f1f1ec"});
+    tex3(fanTex(side), 0, 0, fanTex(side).width, fanTex(side).height, [x0, yt, SCR_Z + 0.02], [x1 - x0, 0, 0], [0, -(yt - yb), 0], {id:"fan"});
+    /* the two little brackets that hold the board on the base */
+    for (const xb of [x0 + side * 4, x1 - side * 4]) box3(Math.min(xb, xb + 3) - 1.5, Math.min(xb, xb + 3) + 1.5, RAILY, RAILY + 3, SCR_Z, SCR_Z + 1.2, "#b9bfc4", {id:"fan"});
+  }
+}
+/* the photogate: a white U bracket on a carriage, a black emitter and detector facing across the gap */
 function gate3(){
   const x = S.bench.xGate / 10;
-  box3(x-1.6,x+1.6,RAILY,RAILY+1.0,-4.6,4.6,"#f2f2ee",{id:"gate"});
-  for (const z of [-4.6,3.4]) box3(x-1.6,x+1.6,RAILY+1.0,RAILY+7.0,z,z+1.2,"#f2f2ee",{id:"gate"});
-  cyl3("z",3.38,3.44,x,RAILY+4.0,0.25,"#2b2e32",{seg:8}); cyl3("z",-3.44,-3.38,x,RAILY+4.0,0.25,"#2b2e32",{seg:8});
+  box3(x-2.2,x+2.2,RAILY,RAILY+1.0,-6.2,6.2,"#2d3035",{id:"gate",top:"#3a3e44"});
+  knurl3("z",6.2,7.2,x,RAILY+0.5,0.6,"#8a939d",{id:"gate"});
+  box3(x-1.6,x+1.6,RAILY+1.0,RAILY+1.6,-4.8,4.8,"#f2f2ee",{id:"gate"});
+  for (const z of [-4.8,3.6]) boxY(x-1.6,x+1.6,RAILY+1.6,RAILY+8.0,z,z+1.2,"#f2f2ee",{id:"gate"},2);
+  for (const [z0, z1] of [[-3.6,-2.6],[2.6,3.6]]) box3(x-0.9,x+0.9,RAILY+3.4,RAILY+4.8,z0,z1,"#15161a",{id:"gate"});
+  for (const z of [-2.59, 2.59]) cyl3("z",z,z+(z<0?0.1:-0.1),x,RAILY+4.1,0.25,"#c0392b",{seg:8});
 }
 function balls3(){
   const st = state(), b = S.bench, h = b.hang();
   for (let i = 0; i < (b.two ? 2 : 1); i++){
     const c = W2(st.p[i]), R = b.R(i) * 100, top = [c[0], c[1] + R, 0];
-    for (const z of [-2.6, 2.6]) line3([h[i]*100, PIV + 0.6, z], top, "#c05a1e", 1.3);
-    sphere3(c, R, "#c9ced3", {id: "ball" + i, stroke: "#6b7078"});
+    for (const z of [-2.6, 2.6]) line3([h[i]*100, PIV + 0.9, z], top, "#c05a1e", 1.3);
+    cyl3("y",top[1]-0.15,top[1]+0.35,top[0],0,0.22,"#9aa0a6",{seg:8});
+    sphere3(c, R, "#cfd4d9", {id: "ball" + i, stroke: "#6b7078"});
   }
 }
+/* the electromagnet stand: a heavy foot, a chrome rod, a boss head with two knurled screws and the black magnet */
 function holder3(){
   const b = S.bench;
   let fx, fy, kx, ky;
   if (S.held){ const p = state().p[0], n = Math.hypot(p[0], p[1]) || 1, ux = p[0] / n, uy = p[1] / n;
-    fx = (p[0] + ux * b.R(0)) * 100; fy = PIV + (p[1] + uy * b.R(0)) * 100; kx = fx + ux * 2.6; ky = fy + uy * 2.6; }
-  else { fx = -24; fy = 16; kx = -26.6; ky = 16; }
-  cylAB([fx, fy, 0], [kx, ky, 0], 1.0, "#26292d", {seg:14, cap:"#9aa0a6", id:"holder"});
-  box3(kx-0.8,kx+0.8,ky-0.8,ky+0.8,-0.8,4.6,"#d3d7dc",{id:"holder"});
-  cyl3("y",0,ky+3,kx,4.6,0.4,"#b9bec4",{seg:10,id:"holder"});
-  box3(kx-3,kx+3,0,1.2,1.5,7.5,"#2a2c30",{id:"holder"});
-  const pts = []; for (let i = 0; i <= 16; i++){ const t = i / 16; pts.push([kx + (2 - kx) * t, ky * (1 - t) + 1.2 * t + Math.sin(Math.PI * t) * 2, (1 - t) * 0.5 + t * 22]); }
+    fx = (p[0] + ux * b.R(0)) * 100; fy = PIV + (p[1] + uy * b.R(0)) * 100; kx = fx + ux * 3.2; ky = fy + uy * 3.2; }
+  else { fx = -24; fy = 16; kx = -27.2; ky = 16; }
+  cylAB([fx, fy, 0], [kx, ky, 0], 1.15, "#1e2023", {seg:16, cap:"#9aa0a6", id:"holder"});
+  cylAB([fx, fy, 0], [fx + (kx - fx) * 0.08, fy + (ky - fy) * 0.08, 0], 1.18, "#a9afb5", {seg:16, id:"holder"});
+  /* the arm from the magnet back to the boss on the rod */
+  box3(Math.min(kx, kx) - 0.5, kx + 0.5, ky - 0.5, ky + 0.5, -0.5, 4.6, "#2a2c30", {id:"holder"});
+  cylSeg("y", 0.6, Math.max(ky + 6, 30), kx, 4.6, 0.45, "#c9ced3", {seg:12, id:"holder", cap:"#e6e8ea"}, 4);
+  line3([kx - 0.15, 0.6, 5.04], [kx - 0.15, Math.max(ky + 6, 30), 5.04], "#f4f6f8", 1);
+  box3(kx - 1.3, kx + 1.3, ky - 1.3, ky + 1.3, 3.3, 5.9, "#c3c8cd", {id:"holder", top:"#d3d7dc"});
+  knurl3("x", kx + 1.3, kx + 2.2, ky, 4.6, 0.7, "#5e6772", {id:"holder"}); knurl3("z", 5.9, 6.8, kx, ky, 0.7, "#5e6772", {id:"holder"});
+  /* the foot */
+  box3(kx - 4, kx + 4, 0, 1.0, 0.6, 8.6, "#26282c", {id:"holder", top:"#303339"});
+  knurl3("y", 1.0, 1.9, kx, 4.6, 0.9, "#5e6772", {id:"holder"});
+  const pts = []; for (let i = 0; i <= 20; i++){ const t = i / 20; pts.push([kx + (2 - kx) * t + Math.sin(t * 18) * 0.4 * (1 - t), ky * (1 - t) + 1.2 * t + Math.sin(Math.PI * t) * 2, (1 - t) * 0.5 + t * 22]); }
   poly3(pts, "#222", 1.6);
 }
+/* the junction box: blue enclosure, power switch, lamp, magnet switch and the sockets */
 const BOX = [8, 0, 24];
 function box3d(){
   const [x, , z] = BOX;
-  box3(x-4.5,x+4.5,0,5.5,z-7,z+7,"#2f7fd6",{id:"box",top:"#3a8ce0"});
-  face([[x-3,5.51,z-1],[x+3,5.51,z-1],[x+3,5.51,z+2.5],[x-3,5.51,z+2.5]],{fill:"#5fd38a",flat:true,id:"box",bias:0.5});
-  cyl3("y",5.5,6.4,x+2.6,z-4.5,0.7,"#1d3f6e",{seg:12,id:"box",bias:1});
-  cyl3("y",5.5,6.0,x-2.6,z-4.5,0.45,S.boxOn ? "#ff5040" : "#6a1a14",{seg:10,id:"box",bias:1});
-  for (const [dx, col] of [[-3,"#c0392b"],[-1,"#111"],[1,"#c0392b"],[3,"#111"]]) cyl3("y",5.5,5.9,x+dx,z+5.5,0.32,col,{seg:8,bias:1});
-  text3([x,5.52,z+4.0],[1,0,0],[0,0,-1],"6",0.9,"#fff",{align:"center",bias:1});
-  box3(18,24,0,3,22,26,"#141414",{id:"box"});
+  box3(x-4.6,x+4.6,0.4,5.5,z-7,z+7,"#2f7fd6",{id:"box",top:"#3a8ce0"});
+  box3(x-4.4,x+4.4,0,0.4,z-6.8,z+6.8,"#1d4f8a",{id:"box"});
+  face([[x-3.6,5.51,z-6.2],[x+3.6,5.51,z-6.2],[x+3.6,5.51,z-3.2],[x-3.6,5.51,z-3.2]],{fill:"#e8edf2",flat:true,id:"box",bias:0.5});
+  text3([x,5.53,z-4.7],[1,0,0],[0,0,-1],"JUNCTION BOX",0.6,"#1d4f8a",{align:"center",bias:2});
+  box3(x+1.6,x+3.6,5.5,6.0,z-1.5,z+0.8,"#1b1d20",{id:"box"});
+  const a = S.boxOn ? 0.35 : -0.35; box3(x+2.2,x+3.0,6.0,6.4,z-0.8+a,z+0.2+a,"#c0392b",{id:"box"});
+  cyl3("y",5.5,6.0,x-2.6,z-0.3,0.45,S.boxOn ? "#ff5040" : "#6a1a14",{seg:10,id:"box",bias:1});
+  if (S.boxOn) sphere3([x-2.6,6.1,z-0.3],0.55,"rgba(255,90,60,0.35)");
+  for (const [dx, col] of [[-3,"#c0392b"],[-1,"#111"],[1,"#c0392b"],[3,"#111"]]){ cyl3("y",5.5,6.1,x+dx,z+4.2,0.55,col,{seg:12,bias:1}); cyl3("y",6.1,6.15,x+dx,z+4.2,0.22,"#0a0a0a",{seg:8}); }
+  text3([x,5.53,z+5.9],[1,0,0],[0,0,-1],"BALL        GATE",0.5,"#fff",{align:"center",bias:2});
+  box3(18,24,0,3,22,26,"#141414",{id:"box",top:"#1e1e1e"});
+  for (let k = 0; k < 4; k++) line3([18.5+k*1.3,3.01,22.5],[18.5+k*1.3,3.01,25.5],"#2a2a2a",1);
 }
 const SC0 = [-66, 0, 16], SCW = 31, SCH = 15.9, SCD = 12;
 function scope3d(){
   const [x0, , z0] = SC0, x1 = x0 + SCW, z1 = z0 + SCD;
-  box3(x0+3,x1-3,0,SCH-1,z0-8,z0,"#3c4652",{id:"scope"});
-  box3(x0,x1,0,SCH,z0,z1,"#e4e6e3",{id:"scope",top:"#eef0ed"});
+  box3(x0+3,x1-3,1,SCH-2,z0-9,z0,"#3c4652",{id:"scope"});
+  for (let k = 0; k < 6; k++) line3([x0+3,4+k*1.6,z0-8],[x0+3,4+k*1.6,z0-1],"#2a313a",1);
+  box3(x0,x1,0.6,SCH,z0,z1,"#e4e6e3",{id:"scope",top:"#eef0ed"});
+  for (const xx of [x0+2, x1-2]) box3(xx-1,xx+1,0,0.6,z1-2,z1,"#2a2c30");
+  /* the carrying handle folded over the top */
+  for (const s of [-1,1]) box3(s<0?x0-0.6:x1,s<0?x0:x1+0.6,SCH*0.35,SCH*0.65,z0+2,z0+6,"#cfd2cf",{id:"scope"});
   tex3(scope, 0, 0, scope.width, scope.height, [x0+0.3, SCH-0.3, z1+0.01], [SCW-0.6,0,0], [0,-(SCH-0.6),0], {id:"scope"});
 }
 function cables3(){
