@@ -861,7 +861,7 @@ function pick3(x,y){
    3.  THE BENCH  (x right, y towards you, z up, cm), drawn through LAB3D
    ══════════════════════════════════════════════════════════════ */
 const LW=1200, LH=560;
-Object.assign(CAM,{yaw:-0.22,pitch:0.62,k:7.4,tx:62,ty:4,tz:34,px:0,py:20,W:LW,H:LH}); camSave();
+Object.assign(CAM,{yaw:-0.18,pitch:0.64,k:6.0,tx:80,ty:4,tz:40,px:-22,py:16,W:LW,H:LH}); camSave();
 const onMatXY=()=>false;
 let XF=null, SXF=v=>v;
 const M=v=>{ if(XF) v=XF(v); return [v[0],v[2]||0,v[1]]; };   /* bench → LAB3D (y up) */
@@ -918,7 +918,7 @@ function rulerModel(P0,u,w,n,s0,s1,id){ const hw=RUL_HW, Pt=(s,v,dn)=>lin([P0,1]
 
 
 /* ── where everything stands on the bench (cm) ── */
-const TBL={x0:12,x1:82,y0:10,y1:22,h:1.2}, AY=16, AZ=TBL.h+6.5, TBL_L=TBL.x1-TBL.x0;
+const TBL={x0:12,x1:82,y0:10,y1:22,h:1.2}; let AY=16; const AZ=TBL.h+6.5, TBL_L=TBL.x1-TBL.x0;
 const xw=t=>TBL.x0+t;
 const POS={psu:[106,44],adapter:[46,40],con4:[40,32],con2:[52,32],sensor:[92,30],laptop:[106,12],ledcon:[26,30],ledrgb:[31,30],ledunk:[36,30],
   wash:[6,46],naoh:[14,58],ic:[18,58],ind:[22,58],gl:[28,58],nacl:[33,58],syr3:[44,64],syrIns:[44,68],tubes:[60,60],cuvettes:[76,36],waste:[90,62],gloves:[18,68]};
@@ -927,7 +927,7 @@ const POS={psu:[106,44],adapter:[46,40],con4:[40,32],con2:[52,32],sensor:[92,30]
 const FOOT={psu:[-9,-7,9,8.4],adapter:[-2.6,-2,2.6,2],con4:[-1.2,-0.5,1.2,0.5],con2:[-0.8,-0.5,0.8,0.5],sensor:[-6.4,-3.6,5.6,3.6],laptop:[-10,-6.8,10,8.5],
   ledcon:[-2.3,-1.2,2.3,1.2],ledrgb:[-2.3,-1.2,2.3,1.2],ledunk:[-2.3,-1.2,2.3,1.2],wash:[-3.6,-3.6,3.6,3.6],naoh:[-0.6,-0.6,0.6,0.6],ic:[-0.6,-0.6,0.6,0.6],ind:[-0.6,-0.6,0.6,0.6],
   gl:[-1.7,-1.7,1.7,1.7],nacl:[-1.7,-1.7,1.7,1.7],syr3:[-9,-0.8,4.8,0.8],syrIns:[-5.5,-1.6,4.1,1.2],tubes:[-8,-2.8,9.8,2.8],cuvettes:[-8.2,-3,8.2,3],waste:[-4.4,-4.4,4.4,4.4],gloves:[-3.5,-2,5.3,2]};
-const BENCH={x0:0.5,x1:123.5,y0:0.5,y1:71.5};
+const BENCH={x0:0.5,x1:169.5,y0:0.5,y1:89.5};
 /* is k lying on the bench (not in the holder, plugged in, or in the hand)? */
 const onBench=k=>(k==="laptop"||has(k))&&!(hand&&hand.item===k)&&ST.src!==k&&!((k==="con4"||k==="con2")&&ST.plug[k]);
 const footAt=(k,c)=>{ const f=FOOT[k]; return [c[0]+f[0],c[1]+f[1],c[0]+f[2],c[1]+f[3]]; };
@@ -935,18 +935,26 @@ const overlap=(a,b)=>a[0]<b[2]&&b[0]<a[2]&&a[1]<b[3]&&b[1]<a[3];
 function blocked(k,c){ const r=footAt(k,c);
   if(r[0]<BENCH.x0||r[2]>BENCH.x1||r[1]<BENCH.y0||r[3]>BENCH.y1) return true;
   if(has("table")&&overlap(r,[TBL.x0-0.4,TBL.y0-0.4,TBL.x1+0.4,TBL.y1+0.4])) return true;
-  if(has("sunshield")&&(overlap(r,[TBL.x0-4.3,0,TBL.x1+4.3,TBL.y0-3.6])||overlap(r,[TBL.x0-4.6,0,TBL.x0-3.4,TBL.y1+6.4]))) return true;
+  if(has("sunshield")&&(overlap(r,[TBL.x0-4.3,TBL.y0-9.5,TBL.x1+4.3,TBL.y0-3.6])||overlap(r,[TBL.x0-4.6,TBL.y0-9.5,TBL.x0-3.4,TBL.y1+6.4]))) return true;
   for(const o in FOOT) if(o!==k&&onBench(o)&&overlap(r,footAt(o,POS[o]))) return true;
   return false; }
+/* the optical table moves as a whole, with everything standing on it and the sunshield that belongs to it */
+function tableRect(x0,y0){ const W=TBL.y1-TBL.y0, sh=has("sunshield"); return [x0-(sh?4.6:0.4),y0-(sh?9.5:0.4),x0+TBL_L+(sh?4.3:0.4),y0+W+(sh?6.4:0.4)]; }
+function tableBlocked(c){ const r=tableRect(c[0],c[1]); if(r[0]<BENCH.x0||r[2]>BENCH.x1||r[1]<BENCH.y0||r[3]>BENCH.y1) return true;
+  for(const o in FOOT) if(onBench(o)&&overlap(r,footAt(o,POS[o]))) return true; return false; }
+function moveTable(c){ const W=TBL.y1-TBL.y0; TBL.x0=c[0]; TBL.x1=c[0]+TBL_L; TBL.y0=c[1]; TBL.y1=c[1]+W; AY=TBL.y0+W/2; }
+const tableSpot=p=>{ const q=unP(p[0],p[1],0); return [Math.round((q[0]-TBL_L/2)*10)/10,Math.round((q[1]-(TBL.y1-TBL.y0)/2)*10)/10]; };
 /* where k would stand with its middle under the pointer */
 function benchSpot(k,p){ const q=unP(p[0],p[1],0), f=FOOT[k]; return [Math.round((q[0]-(f[0]+f[2])/2)*10)/10,Math.round((q[1]-(f[1]+f[3])/2)*10)/10]; }
-function putDown(k,p){ if(!(k in FOOT)){ ST.on.add(k); say("placed",itemName(k)); return true; }
+function putDown(k,p){ if(k==="table"){ const c=tableSpot(p); if(tableBlocked(c)){ say("noRoom"); return false; } moveTable(c); ST.on.add(k); say("placed",itemName(k)); return true; }
+  if(!(k in FOOT)){ ST.on.add(k); say("placed",itemName(k)); return true; }
   const c=benchSpot(k,p); if(blocked(k,c)){ say("noRoom"); return false; }
   POS[k]=c; ST.on.add(k); say("placed",itemName(k)); return true; }
 /* the thing in the hand drawn faintly where it would go (red where it cannot) */
 function drawGhost(){ if(!hand||!overBench) return; const k=hand.item, h=hand, n0=ITEMS.length; let bad=false;
-  const k0=hitItem(mouse); if(k0&&k0!=="table"&&k0!=="sunshield"&&!(k in FOOT&&k0===k)) return;
+  const k0=hitItem(mouse); if(k!=="table"&&k0&&k0!=="table"&&k0!=="sunshield"&&!(k in FOOT&&k0===k)) return;
   if(OPT.includes(k)){ if(!has("table")) return; const t=tableT(mouse); if(t===null) return; const keep=ST.x[k]; ST.x[k]=t; hand=null; try{ drawLoose(k); } finally{ hand=h; ST.x[k]=keep; } }
+  else if(k==="table"){ const c=tableSpot(mouse), keep=[TBL.x0,TBL.y0]; bad=tableBlocked(c); moveTable(c); hand=null; try{ drawTable(); } finally{ hand=h; moveTable(keep); } }
   else if(k in FOOT){ const c=benchSpot(k,mouse), keep=POS[k], on=has(k); bad=blocked(k,c); POS[k]=c; hand=null; ST.on.add(k);
     try{ drawLoose(k); } finally{ hand=h; POS[k]=keep; if(!on) ST.on.delete(k); } }
   else return;
@@ -1070,7 +1078,7 @@ function drawSensorBoard(){ const [x,y]=POS.sensor, id="sensor";
   ocyl([x-5.5,y-1.5,0.9],[-1,0,0],0.9,0.32,"#c9ccd0",{seg:10,id}); cord([x-6.4,y-1.5,0.9],[POS.laptop[0]-9,POS.laptop[1],0.6],"#1d1e21",0.25,1.5);
   if(ST.x.screen!==null&&has("screen")){ const e=[xw(ST.x.screen)-0.2,AY-2.0,AZ+1.05];
     RAINBOW.slice(0,6).forEach((c,i)=>cord([x-5.5,y+0.6+i*0.14,0.8],vadd(e,[0,i*0.14,0]),c,0.07,4)); } }
-const PROGCV=document.createElement("canvas"); PROGCV.width=560; PROGCV.height=350;
+const PROGCV=document.createElement("canvas"); PROGCV.width=960; PROGCV.height=600;
 function drawLaptop(){ const [x,y]=POS.laptop, id="laptop";
   obox([x,y+2,0.4],[10,0,0],[0,6.5,0],[0,0,0.4],"#a9adb3",{id,faceCol:n=>n[2]>0.5?"#b9bdc2":null});
   F([[x-8.5,y+3,0.82],[x+8.5,y+3,0.82],[x+8.5,y+8,0.82],[x-8.5,y+8,0.82]],"#2a2c30",{id,n:Z3});
@@ -1131,8 +1139,8 @@ const WCOL3=["#c0392b","#1b1d20"];
 /* the lab: a light wall, a white bench on grey legs, a grey floor */
 function drawRoom(){
   F([[-160,-0.6,-90],[260,-0.6,-90],[260,-0.6,170],[-160,-0.6,170]],"#dfe3e7",{n:[0,1,0],flat:true});
-  obox([62,36,-1.5],[62,0,0],[0,36,0],[0,0,1.5],"#d8d6d0",{faceCol:n=>n[2]>0.5?"#f1efea":null});
-  for(const [x,y] of [[2,1],[122,1],[2,71],[122,71]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#9ba1a8");
+  obox([85,45,-1.5],[85,0,0],[0,45,0],[0,0,1.5],"#d8d6d0",{faceCol:n=>n[2]>0.5?"#f1efea":null});
+  for(const [x,y] of [[2,1],[168,1],[2,89],[168,89]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#9ba1a8");
   F([[-160,-0.5,-80],[260,-0.5,-80],[260,160,-80],[-160,160,-80]],"#c7ccd2",{n:Z3,flat:true}); }
 function drawLoose(k){
   if(k==="table") drawTable(); else if(k==="sunshield") drawSunshield();
@@ -1210,7 +1218,8 @@ const lightCol=()=>ST.src==="ledcon"?"255,246,228":ST.src==="ledunk"?"255,190,60
 const PV={n0:0,n1:NPIX};
 function progData(){ return SPEC.live?SPEC.frame:SPEC.hold; }
 function niceMax(v){ const p=Math.pow(10,Math.floor(Math.log10(Math.max(v,1)))); for(const m of [1,2,2.5,5,10]) if(m*p>=v) return m*p; return 10*p; }
-function drawProg(W,H,small){ const t=d(), L=t.lab, u=small?1:Math.min(1.2,Math.max(0.78,W/920));
+const progU=W=>Math.min(1.2,Math.max(0.78,W/920));
+function drawProg(W,H,small){ const t=d(), L=t.lab, u=small?1:progU(W);
   ctx.fillStyle="#f0f0f0"; ctx.fillRect(0,0,W,H); fillR(0,0,W,28*u,0,"#fff"); text("Spectroscopy",10*u,14*u,"#000",12*u,"left","400");
   ctx.strokeStyle="#000"; ctx.lineWidth=1; const wb=(i)=>W-(i+0.5)*40*u; ctx.beginPath(); ctx.moveTo(wb(2)-5*u,14*u); ctx.lineTo(wb(2)+5*u,14*u); ctx.rect(wb(1)-4.5*u,9.5*u,9*u,9*u);
   ctx.moveTo(wb(0)-5*u,9*u); ctx.lineTo(wb(0)+5*u,19*u); ctx.moveTo(wb(0)+5*u,9*u); ctx.lineTo(wb(0)-5*u,19*u); ctx.stroke(); ctx.strokeStyle="#8f8f8f"; ctx.strokeRect(0.5,0.5,W-1,H-1);
@@ -1354,9 +1363,9 @@ function drawChem(){ const t=d(), L=t.lab, u=Math.min(CLW/900,CLH/470); ctx.fill
   } finally { ctx.restore(); HS=1; } }
 let cmouse=[0,0];
 function drawClose(){ const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx; ctx.setTransform(dpr,0,0,dpr,0,0); HIT=[];
-  try{ if(tab==="prog") drawProg(CLW,CLH,false); else if(tab==="opt") drawOpt(); else drawChem(); } finally{ ctx=old; } }
+  try{ if(tab==="prog") drawOS(CLW,CLH,false); else if(tab==="opt") drawOpt(); else drawChem(); } finally{ ctx=old; } }
 function drawLaptopScreen(){ const old=ctx, c=PROGCV.getContext("2d"); ctx=c; c.setTransform(1,0,0,1,0,0); const keep=HIT, km=cmouse; HIT=[]; cmouse=[-1,-1];
-  try{ drawProg(PROGCV.width,PROGCV.height,true); } finally{ ctx=old; HIT=keep; cmouse=km; } }
+  try{ drawOS(PROGCV.width,PROGCV.height,true); } finally{ ctx=old; HIT=keep; cmouse=km; } }
 /* ══════════════════════════════════════════════════════════════
    7.  HANDS: the bench and the close-ups
    ══════════════════════════════════════════════════════════════ */
@@ -1433,17 +1442,23 @@ cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
 cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p; overBench=true;
   /* a thing on the bench follows the hand while it is dragged, and stops where it would bump into something */
-  if(pend){ if(!pend.moving&&Math.hypot(p[0]-pend.p[0],p[1]-pend.p[1])>5){ const q=unP(pend.p[0],pend.p[1],0); pend.moving=true; pend.off=[POS[pend.k][0]-q[0],POS[pend.k][1]-q[1]]; }
-    if(pend.moving){ const q=unP(p[0],p[1],0), c=[Math.round((q[0]+pend.off[0])*10)/10,Math.round((q[1]+pend.off[1])*10)/10]; if(!blocked(pend.k,c)) POS[pend.k]=c; cv.style.cursor="grabbing"; } return; }
+  if(pend){ const k=pend.k, opt=OPT.includes(k), z=opt?TBL.h:0;
+    if(!pend.moving&&Math.hypot(p[0]-pend.p[0],p[1]-pend.p[1])>5){ const q=unP(pend.p[0],pend.p[1],z); pend.moving=true;
+      pend.off=k==="table"?[TBL.x0-q[0],TBL.y0-q[1]]:opt?[ST.x[k]-(q[0]-TBL.x0),0]:[POS[k][0]-q[0],POS[k][1]-q[1]]; }
+    if(pend.moving){ const q=unP(p[0],p[1],z), c=[Math.round((q[0]+pend.off[0])*10)/10,Math.round((q[1]+pend.off[1])*10)/10];
+      if(k==="table"){ if(!tableBlocked(c)) moveTable(c); }
+      else if(opt){ ST.x[k]=Math.max(1,Math.min(TBL_L-1,Math.round((q[0]-TBL.x0+pend.off[0])*10)/10)); OSEL=k; }
+      else if(!blocked(k,c)) POS[k]=c;
+      cv.style.cursor="grabbing"; } return; }
   if(drag){ if(drag.k==="knob"){ const dv=(p[0]-drag.p[0]-(p[1]-drag.p[1]))*(e.shiftKey?0.002:0.01); ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((drag.v+dv)*1000)/1000)); } else if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
   cv.style.cursor=hand?"crosshair":hitItem(p)?"pointer":"grab"; });
 let pend=null;
-const ownerOf=k0=>k0==="psuSw"?"psu":k0==="adSw"?"adapter":k0;
+const ownerOf=k0=>k0==="psuSw"?"psu":k0==="adSw"?"adapter":k0==="sunshield"?"table":k0;
 cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId);
   /* a press on a thing, or on its switch, may become a drag of the whole thing; a plain click still works it */
-  if(!hand&&e.button===0){ const k=ownerOf(hitItem(p)); if(k&&k in FOOT&&onBench(k)){ pend={k,p,e,moving:false}; return; } }
+  if(!hand&&e.button===0){ const k=ownerOf(hitItem(p)); if(k&&(k in FOOT&&onBench(k)||k==="table"&&has("table")||OPT.includes(k)&&ST.x[k]!==null)){ pend={k,p,e,moving:false}; return; } }
   benchClick(p,e.button===2,e); drawTray(); });
-cv.addEventListener("pointerup",()=>{ if(pend){ const q=pend; pend=null; if(q.moving) say("moved",itemName(q.k)); else { benchClick(q.p,false,q.e); drawTray(); } } drag=null; });
+cv.addEventListener("pointerup",()=>{ if(pend){ const q=pend; pend=null; if(q.moving){ say("moved",itemName(q.k)); if((q.k==="table"||q.k==="holder")&&ST.x.holder!==null) nudge(q.k==="table"?0.4:0.6); } else { benchClick(q.p,false,q.e); drawTray(); } } drag=null; });
 cv.addEventListener("dblclick",e=>{ if(!hand&&!hitItem(lpos(e))) camReset(); });
 cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), up=e.deltaY<0;
   /* the wheel over the supply's voltage knob turns it (Shift: fine) */
@@ -1504,6 +1519,200 @@ function chem(cmd){ const [_,a,b]=cmd.split(":"), L=d().lab;
   else if(a==="emptyC") emptyCuv(ST.sel);
   else if(a==="holder"){ if(ST.inHolder===ST.sel){ ST.inHolder=null; say("cuvOut",ST.sel); } else { if(ST.inHolder!==null){ say("cuvBusy"); return; } if(hand&&hand.item==="cuv"&&hand.i===ST.sel) hand=null; ST.inHolder=ST.sel; say("cuvIn",ST.sel); } } }
 
+/* ══════════════════════════════════════════════════════════════
+   THE LAPTOP: a small Windows desktop — the sensor program, Notepad,
+   Calculator and File Explorer in windows that move, shrink and close
+   ══════════════════════════════════════════════════════════════ */
+const VW=1280, VH=800, TBH=48;                          /* the screen in its own pixels; the taskbar */
+const OSL={ko:{notepad:"메모장",untitled:"제목 없음",calc:"계산기",explorer:"파일 탐색기",bin:"휴지통",spec:"CCD Spectrometer",
+    menu:["파일","편집","서식","보기","도움말"],fileNew:"새로 만들기",fileSave:"저장",fileOpen:"파일 탐색기에서 열기",
+    home:"홈",docs:"문서",down:"다운로드",pc:"내 PC",cols:["이름","수정한 날짜","유형","크기"],empty:"이 폴더는 비어 있습니다. 센서 프로그램에서 저장한 파일이 여기에 나타납니다.",
+    csv:"CSV 파일",txt:"텍스트 문서",pinned:"고정됨",search:"검색하려면 여기에 입력하세요",user:"HaslaLab",sleep:"절전",wake:"아무 곳이나 클릭하면 깨어납니다",
+    status:(l,c)=>"줄 "+l+", 열 "+c,cut:"… (파일이 길어 처음 200줄만 보입니다)",sel:n=>n+"개 항목"},
+  en:{notepad:"Notepad",untitled:"Untitled",calc:"Calculator",explorer:"File Explorer",bin:"Recycle Bin",spec:"CCD Spectrometer",
+    menu:["File","Edit","Format","View","Help"],fileNew:"New",fileSave:"Save",fileOpen:"Open in File Explorer",
+    home:"Home",docs:"Documents",down:"Downloads",pc:"This PC",cols:["Name","Date modified","Type","Size"],empty:"This folder is empty. Files saved from the sensor program appear here.",
+    csv:"CSV file",txt:"Text document",pinned:"Pinned",search:"Type here to search",user:"HaslaLab",sleep:"Sleep",wake:"Click anywhere to wake it",
+    status:(l,c)=>"Ln "+l+", Col "+c,cut:"… (long file: only the first 200 lines are shown)",sel:n=>n+" items"}};
+const ot=()=>OSL[lang];
+const APPS={spec:{title:()=>ot().spec,w:1040,h:640},note:{title:()=>(OS.note.name||ot().untitled)+" - "+ot().notepad,w:640,h:460},
+  calc:{title:()=>ot().calc,w:330,h:500},files:{title:()=>ot().explorer,w:760,h:460}};
+const OS={wins:[],z:0,start:false,sel:null,sleep:false,files:[],note:{name:null,text:"",menu:false},calc:{disp:"0",acc:null,op:null,fresh:true,hist:""},exSel:null,kb:false,clickT:0,clickK:null};
+let OSHIT=[], OSHIT_LAST=[], OSXF={s:1,ox:0,oy:0};
+function osOpen(a){ let w=OS.wins.find(w=>w.a===a);
+  if(!w){ const n=OS.wins.length; w={a,x:90+n*34,y:40+n*28,w:APPS[a].w,h:APPS[a].h,min:false,max:false}; OS.wins.push(w); }
+  w.min=false; w.z=++OS.z; OS.start=false; return w; }
+function osTop(){ let t=null; for(const w of OS.wins) if(!w.min&&(!t||w.z>t.z)) t=w; return t; }
+function osClose(w){ OS.wins=OS.wins.filter(q=>q!==w); if(w.a==="spec") stopSpec(); if(w.a==="note") OS.note.menu=false; }
+const wRect=w=>w.max?[0,0,VW,VH-TBH]:[w.x,w.y,w.w,w.h];
+osOpen("spec").max=true;
+/* files saved by the program stay in Documents as well as going to the real downloads */
+function osFile(name,txt){ const old=OS.files.find(f=>f.name===name); const f={name,text:txt,t:new Date()}; if(old) Object.assign(old,f); else OS.files.push(f); }
+{ const f0=saveText; saveText=function(name,txt,mime){ osFile(name,txt); return f0(name,txt,mime); }; }
+const osHit=(k,x,y,w,h)=>OSHIT.push({k,x,y,w,h});
+/* the Windows 11 wallpaper, painted once */
+const WALL=(()=>{ const c=document.createElement("canvas"); c.width=VW; c.height=VH; const g=c.getContext("2d");
+  const bg=g.createLinearGradient(0,0,VW,VH); bg.addColorStop(0,"#0b2a6b"); bg.addColorStop(0.55,"#1d5fc4"); bg.addColorStop(1,"#0a2b6e"); g.fillStyle=bg; g.fillRect(0,0,VW,VH);
+  const cx=VW*0.56, cy=VH*0.58;
+  for(let i=0;i<7;i++){ const a=-Math.PI/2+(i-3)*0.42; g.save(); g.translate(cx,cy); g.rotate(a);
+    const pg=g.createLinearGradient(0,-260,0,40); pg.addColorStop(0,"rgba(120,190,255,0.0)"); pg.addColorStop(0.45,"rgba(95,170,255,0.55)"); pg.addColorStop(1,"rgba(30,90,220,0.85)");
+    g.fillStyle=pg; g.beginPath(); g.moveTo(0,40); g.bezierCurveTo(-150,-60,-90,-250,0,-300); g.bezierCurveTo(90,-250,150,-60,0,40); g.fill(); g.restore(); }
+  const gl=g.createRadialGradient(cx,cy-40,10,cx,cy-40,260); gl.addColorStop(0,"rgba(190,225,255,0.55)"); gl.addColorStop(1,"rgba(190,225,255,0)"); g.fillStyle=gl; g.fillRect(0,0,VW,VH);
+  return c; })();
+/* app icons */
+function appIcon(a,x,y,s){ ctx.save(); ctx.translate(x,y); ctx.scale(s/32,s/32);
+  if(a==="spec"){ fillR(0,2,32,28,4,"#1f2f4f"); ctx.strokeStyle="#5fd0ff"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(3,24); for(let i=0;i<=26;i++){ const t=i/26; ctx.lineTo(3+t*26,24-16*Math.exp(-Math.pow((t-0.55)/0.12,2))-2*Math.sin(t*20)*0.2); } ctx.stroke(); }
+  else if(a==="note"){ fillR(5,1,22,30,3,"#ffffff","#7a8ea6",1.4); fillR(5,1,22,6,2,"#3c8ce7"); for(let i=0;i<4;i++) fillR(9,11+i*5,14,1.6,0,"#8aa0b8"); }
+  else if(a==="calc"){ fillR(4,1,24,30,4,"#3a3f47"); fillR(7,4,18,7,1.5,"#d6e8f2"); for(let r=0;r<3;r++) for(let c=0;c<3;c++) fillR(7+c*6.4,14+r*5.6,4.8,4,1,c===2&&r===2?"#4ca3ff":"#8b929c"); }
+  else if(a==="files"){ fillR(1,7,30,22,3,"#f5c240"); fillR(1,4,13,6,2,"#e8a920"); fillR(1,11,30,18,3,"#ffd65c"); }
+  else if(a==="bin"){ fillR(8,8,16,22,2,"rgba(220,235,245,0.9)","#7d93a8",1.2); fillR(6,5,20,4,1.5,"#9fb3c6"); for(let i=0;i<3;i++) fillR(11+i*4,12,1.6,14,0,"#9fb3c6"); }
+  else if(a==="win"){ for(const [dx,dy] of [[2,2],[17,2],[2,17],[17,17]]) fillR(dx,dy,13,13,1,"#2a8cf0"); }
+  ctx.restore(); }
+function osDrawWin(w,small){ const [x,y,ww,hh]=wRect(w), top=osTop()===w, t=ot(), TH=32;
+  if(!w.max){ ctx.save(); ctx.shadowColor="rgba(0,0,0,0.35)"; ctx.shadowBlur=22; ctx.shadowOffsetY=6; fillR(x,y,ww,hh,8,"#ffffff"); ctx.restore(); }
+  ctx.save(); rrect(x,y,ww,hh,w.max?0:8); ctx.clip();
+  fillR(x,y,ww,hh,0,w.a==="calc"?"#f3f3f3":"#ffffff");
+  if(!small) osHit("win:"+OS.wins.indexOf(w),x,y,ww,hh);
+  /* the title bar */
+  fillR(x,y,ww,TH,0,top?"#eff4f9":"#f6f6f6"); appIcon(w.a,x+12,y+8,16); text(APPS[w.a].title(),x+38,y+TH/2,top?"#1b1b1b":"#8a8a8a",13,"left","400",'"Segoe UI","Malgun Gothic",sans-serif');
+  const bx=i=>x+ww-(3-i)*46;
+  ctx.strokeStyle=top?"#1b1b1b":"#8a8a8a"; ctx.lineWidth=1.1; ctx.beginPath();
+  ctx.moveTo(bx(0)+18,y+16.5); ctx.lineTo(bx(0)+28,y+16.5);
+  if(w.max){ ctx.rect(bx(1)+18.5,y+12.5,8,8); ctx.moveTo(bx(1)+20.5,y+10.5); ctx.lineTo(bx(1)+28.5,y+10.5); ctx.lineTo(bx(1)+28.5,y+18.5); } else ctx.rect(bx(1)+18.5,y+11.5,10,10);
+  ctx.moveTo(bx(2)+18,y+11); ctx.lineTo(bx(2)+28,y+21); ctx.moveTo(bx(2)+28,y+11); ctx.lineTo(bx(2)+18,y+21); ctx.stroke();
+  if(!small){ osHit("min:"+OS.wins.indexOf(w),bx(0),y,46,TH); osHit("max:"+OS.wins.indexOf(w),bx(1),y,46,TH); osHit("close:"+OS.wins.indexOf(w),bx(2),y,46,TH); osHit("title:"+OS.wins.indexOf(w),x,y,ww-138,TH); }
+  const cx=x, cy=y+TH, cw=ww, ch=hh-TH;
+  ctx.save(); ctx.beginPath(); ctx.rect(cx,cy,cw,ch); ctx.clip();
+  if(w.a==="spec") osSpec(cx,cy,cw,ch,small,top);
+  else if(w.a==="note") osNote(cx,cy,cw,ch,small,top);
+  else if(w.a==="calc") osCalc(cx,cy,cw,ch,small);
+  else if(w.a==="files") osFiles(cx,cy,cw,ch,small);
+  ctx.restore(); ctx.restore();
+  if(!w.max) fillR(x+0.5,y+0.5,ww-1,hh-1,8,null,top?"rgba(40,90,160,0.55)":"rgba(0,0,0,0.25)",1); }
+/* the sensor program inside its window: its own header is replaced by the window's title bar */
+function osSpec(cx,cy,cw,ch,small,top){ const hdr=28*(small?1:progU(cw)), {s,ox,oy}=OSXF, n0=HIT.length, km=cmouse;
+  if(!small){ const lx=(cmouse[0]-ox)/s-cx, ly=(cmouse[1]-oy)/s-(cy-hdr), over=osAt([(cmouse[0]-ox)/s,(cmouse[1]-oy)/s],OSHIT_LAST);
+    cmouse=over&&over.k.startsWith("win:")&&OS.wins[+over.k.slice(4)]&&OS.wins[+over.k.slice(4)].a==="spec"?[lx,ly]:[-1,-1]; PROG_AREA=null; }
+  ctx.save(); ctx.translate(cx,cy-hdr);
+  try{ drawProg(cw,ch+hdr,small); } finally{ ctx.restore(); cmouse=km; }
+  if(!small){ const X=v=>ox+s*(cx+v), Y=v=>oy+s*(cy-hdr+v);
+    for(let i=n0;i<HIT.length;i++){ const h=HIT[i]; h.x=X(h.x); h.y=Y(h.y); h.w*=s; h.h*=s; }
+    if(PROG_AREA){ const [a,b,c,d2]=PROG_AREA; PROG_AREA=[X(a),Y(b),c*s,d2*s]; } } }
+function osNote(cx,cy,cw,ch,small,top){ const t=ot(), F='Consolas,"D2Coding",ui-monospace,monospace';
+  fillR(cx,cy,cw,28,0,"#ffffff"); t.menu.forEach((m,i)=>text(m,cx+12+i*52,cy+14,"#1b1b1b",13,"left","400")); if(!small) osHit("nmenu",cx+4,cy,48,28);
+  ctx.strokeStyle="#e5e5e5"; ctx.beginPath(); ctx.moveTo(cx,cy+28.5); ctx.lineTo(cx+cw,cy+28.5); ctx.stroke();
+  const lines=OS.note.text.split("\n"), shown=lines.slice(0,200); ctx.font="15px "+F;
+  shown.forEach((ln,i)=>text(ln,cx+8,cy+44+i*19,"#111",15,"left","400",F));
+  if(lines.length>200) text(t.cut,cx+8,cy+44+200*19,"#888",13,"left","400");
+  if(top&&!small&&OS.kb&&(performance.now()/530|0)%2===0){ const last=shown[shown.length-1]||"", w=ctx.measureText(last).width, yy=cy+44+(shown.length-1)*19; ctx.fillStyle="#111"; ctx.fillRect(cx+8+w+1,yy-9,1.4,18); }
+  fillR(cx,cy+ch-26,cw,26,0,"#f3f3f3"); text(t.status(lines.length,(lines[lines.length-1]||"").length+1)+"     100%     Windows (CRLF)     UTF-8",cx+12,cy+ch-13,"#333",12,"left","400");
+  if(!small) osHit("ntext",cx,cy+28,cw,ch-54);
+  if(OS.note.menu){ fillR(cx+6,cy+28,190,96,6,"#f9f9f9","#d0d0d0",1); [t.fileNew,t.fileSave,t.fileOpen].forEach((m,i)=>{ text(m,cx+20,cy+46+i*30,"#1b1b1b",13,"left","400"); if(!small) osHit("nm:"+i,cx+8,cy+32+i*30,186,28); }); } }
+const CALCK=[["%","CE","C","⌫"],["1/x","x²","√x","÷"],["7","8","9","×"],["4","5","6","−"],["1","2","3","+"],["±","0",".","="]];
+function osCalc(cx,cy,cw,ch,small){ const c=OS.calc;
+  text(c.hist,cx+cw-16,cy+28,"#707070",13,"right","400"); text(c.disp.length>14?Number(c.disp).toExponential(8):c.disp,cx+cw-16,cy+72,"#1b1b1b",40,"right","600");
+  const bw=(cw-12)/4, bh=(ch-112)/6;
+  CALCK.forEach((row,r)=>row.forEach((k,i)=>{ const x=cx+4+i*(bw+1), y=cy+108+r*(bh+1), num=/^[0-9.]$|^±$/.test(k);
+    fillR(x,y,bw-2,bh-2,4,k==="="?"#2a6fd6":num?"#ffffff":"#f9f9f9","#e5e5e5",1); text(k,x+bw/2-1,y+bh/2-1,k==="="?"#fff":"#1b1b1b",17,"center",num?"600":"400");
+    if(!small) osHit("ck:"+k,x,y,bw-2,bh-2); })); }
+function calcKey(k){ const c=OS.calc, v=()=>parseFloat(c.disp)||0, fmt=x=>{ if(!isFinite(x)) return "Error"; const s=String(+x.toPrecision(12)); return s; };
+  const ap=(a,b,o)=>o==="+"?a+b:o==="−"?a-b:o==="×"?a*b:o==="÷"?a/b:b;
+  if(/^[0-9]$/.test(k)){ c.disp=c.fresh||c.disp==="0"?k:c.disp+k; c.fresh=false; return; }
+  if(k==="."){ if(c.fresh){ c.disp="0."; c.fresh=false; } else if(!c.disp.includes(".")) c.disp+="."; return; }
+  if(k==="C"){ Object.assign(c,{disp:"0",acc:null,op:null,fresh:true,hist:""}); return; } if(k==="CE"){ c.disp="0"; c.fresh=true; return; }
+  if(k==="⌫"){ if(!c.fresh) c.disp=c.disp.length>1?c.disp.slice(0,-1):"0"; return; }
+  if(k==="±"){ c.disp=fmt(-v()); return; } if(k==="%"){ c.disp=fmt(c.acc!==null?c.acc*v()/100:v()/100); return; }
+  if(k==="1/x"){ c.hist="1/("+c.disp+")"; c.disp=fmt(1/v()); c.fresh=true; return; } if(k==="x²"){ c.hist="sqr("+c.disp+")"; c.disp=fmt(v()*v()); c.fresh=true; return; }
+  if(k==="√x"){ c.hist="√("+c.disp+")"; c.disp=fmt(Math.sqrt(v())); c.fresh=true; return; }
+  if("+−×÷".includes(k)){ if(c.op&&!c.fresh) c.acc=ap(c.acc,v(),c.op); else if(c.acc===null||!c.op) c.acc=v(); c.op=k; c.hist=fmt(c.acc)+" "+k; c.disp=fmt(c.acc); c.fresh=true; return; }
+  if(k==="="&&c.op){ const b=v(); c.hist=fmt(c.acc)+" "+c.op+" "+fmt(b)+" ="; c.disp=fmt(ap(c.acc,b,c.op)); c.acc=null; c.op=null; c.fresh=true; } }
+function osFiles(cx,cy,cw,ch,small){ const t=ot();
+  fillR(cx,cy,cw,40,0,"#f7f9fc"); text("‹  ›  ↑   "+t.pc+"  ›  "+t.docs,cx+14,cy+20,"#333",13,"left","400");
+  fillR(cx,cy+40,170,ch-40,0,"#f3f6fb"); [[t.home,0],[t.docs,1],[t.down,0],[t.pc,0]].forEach(([n,on],i)=>{ if(on) fillR(cx+6,cy+50+i*32,158,28,4,"#dbe8f7"); appIcon(i===3?"spec":"files",cx+16,cy+56+i*32,16); text(n,cx+40,cy+64+i*32,"#1b1b1b",13,"left","400"); });
+  const x0=cx+180, cws=[260,170,110,80]; let xx=x0;
+  t.cols.forEach((n,i)=>{ text(n,xx+6,cy+56,"#4a4a4a",12,"left","400"); xx+=cws[i]; });
+  ctx.strokeStyle="#e5e5e5"; ctx.beginPath(); ctx.moveTo(x0,cy+70.5); ctx.lineTo(cx+cw-10,cy+70.5); ctx.stroke();
+  if(!OS.files.length) text(t.empty,x0+6,cy+96,"#6b6b6b",13,"left","400");
+  OS.files.forEach((f,i)=>{ const y=cy+76+i*28; if(OS.exSel===i) fillR(x0,y,cw-190,26,3,"#cce4f7");
+    appIcon("note",x0+6,y+5,16); text(f.name,x0+28,y+13,"#1b1b1b",13,"left","400");
+    const dt=f.t, p2=n=>String(n).padStart(2,"0"); text(dt.getFullYear()+"-"+p2(dt.getMonth()+1)+"-"+p2(dt.getDate())+" "+p2(dt.getHours())+":"+p2(dt.getMinutes()),x0+cws[0]+6,y+13,"#555",12,"left","400");
+    text(/\.csv$/i.test(f.name)?t.csv:t.txt,x0+cws[0]+cws[1]+6,y+13,"#555",12,"left","400"); text(Math.max(1,Math.ceil(f.text.length/1024))+" KB",x0+cws[0]+cws[1]+cws[2]+cws[3]-8,y+13,"#555",12,"right","400");
+    if(!small) osHit("file:"+i,x0,y,cw-190,26); });
+  fillR(cx,cy+ch-24,cw,24,0,"#ffffff"); text(t.sel(OS.files.length),cx+12,cy+ch-12,"#555",12,"left","400"); }
+function osDrawTaskbar(small){ const y=VH-TBH, t=ot();
+  fillR(0,y,VW,TBH,0,"rgba(238,242,247,0.93)"); ctx.strokeStyle="rgba(0,0,0,0.08)"; ctx.beginPath(); ctx.moveTo(0,y+0.5); ctx.lineTo(VW,y+0.5); ctx.stroke();
+  const items=["win","files","spec","note","calc"], x0=VW/2-items.length*24;
+  items.forEach((a,i)=>{ const x=x0+i*48; const w=OS.wins.find(q=>q.a===a), act=w&&osTop()===w;
+    if(act) fillR(x+2,y+4,44,40,5,"rgba(255,255,255,0.75)"); appIcon(a,x+12,y+12,24);
+    if(w) fillR(x+(act?16:20),y+42,act?16:8,3,1.5,act?"#2a6fd6":"#8a8f96");
+    if(!small) osHit("tb:"+a,x+2,y+2,44,44); });
+  const now=new Date(), h=now.getHours(), m=String(now.getMinutes()).padStart(2,"0");
+  const tm=lang==="ko"?(h<12?"오전 ":"오후 ")+((h+11)%12+1)+":"+m:((h+11)%12+1)+":"+m+(h<12?" AM":" PM");
+  const dt=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+  text(tm,VW-62,y+15,"#1b1b1b",12,"center","400"); text(dt,VW-62,y+33,"#1b1b1b",12,"center","400");
+  /* wifi, speaker and battery */
+  ctx.strokeStyle="#1b1b1b"; ctx.lineWidth=1.4; for(let r=4;r<=12;r+=4){ ctx.beginPath(); ctx.arc(VW-180,y+30,r,-Math.PI*0.75,-Math.PI*0.25); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(VW-158,y+20); ctx.lineTo(VW-154,y+20); ctx.lineTo(VW-149,y+15); ctx.lineTo(VW-149,y+33); ctx.lineTo(VW-154,y+28); ctx.lineTo(VW-158,y+28); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.arc(VW-147,y+24,6,-0.8,0.8); ctx.stroke();
+  fillR(VW-132,y+17,20,12,2,null,"#1b1b1b",1.3); fillR(VW-130,y+19,13,8,1,"#1b1b1b"); fillR(VW-111,y+21,2,4,0,"#1b1b1b"); }
+function osDrawStart(small){ if(!OS.start) return; const t=ot(), w=600, h=560, x=VW/2-w/2, y=VH-TBH-h-12;
+  ctx.save(); ctx.shadowColor="rgba(0,0,0,0.35)"; ctx.shadowBlur=26; fillR(x,y,w,h,10,"rgba(242,245,249,0.97)"); ctx.restore(); fillR(x,y,w,h,10,null,"rgba(0,0,0,0.12)",1);
+  if(!small) osHit("startmenu",x,y,w,h);
+  fillR(x+30,y+26,w-60,36,18,"#ffffff","#d6dbe2",1); text("⌕  "+t.search,x+50,y+44,"#777",13,"left","400");
+  text(t.pinned,x+44,y+92,"#1b1b1b",14,"left","700");
+  [["spec",t.spec],["files",t.explorer],["note",t.notepad],["calc",t.calc]].forEach(([a,n],i)=>{ const bx=x+40+i*130, by=y+112;
+    appIcon(a,bx+37,by+8,36); text(n,bx+55,by+64,"#1b1b1b",12,"center","400"); if(!small) osHit("sm:"+a,bx,by,110,80); });
+  fillR(x,y+h-64,w,64,0,"rgba(232,236,242,0.97)"); circ(x+52,y+h-32,15,"#7a8ea6"); text(t.user,x+78,y+h-32,"#1b1b1b",13,"left","400");
+  ctx.strokeStyle="#1b1b1b"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(x+w-52,y+h-31,9,-Math.PI*0.32,Math.PI*1.32); ctx.moveTo(x+w-52,y+h-44); ctx.lineTo(x+w-52,y+h-31); ctx.stroke();
+  if(!small) osHit("power",x+w-72,y+h-52,40,40); }
+const DESK_ICONS=[["bin",()=>ot().bin],["spec",()=>ot().spec],["files",()=>ot().explorer],["note",()=>ot().notepad],["calc",()=>ot().calc]];
+function drawOS(W,H,small){ const s=Math.min(W/VW,H/VH), ox=(W-VW*s)/2, oy=(H-VH*s)/2;
+  ctx.fillStyle="#000"; ctx.fillRect(0,0,W,H); if(!small){ OSXF={s,ox,oy}; OSHIT_LAST=OSHIT; OSHIT=[]; PROG_AREA=null; }
+  ctx.save(); ctx.translate(ox,oy); ctx.scale(s,s);
+  if(OS.sleep){ if(!small){ text(ot().wake,VW/2,VH/2,"#3a3a3a",16,"center","400"); osHit("wake",0,0,VW,VH); } ctx.restore(); return; }
+  ctx.drawImage(WALL,0,0);
+  DESK_ICONS.forEach(([a,n],i)=>{ const x=10, y=10+i*96; if(OS.sel===a) fillR(x,y,84,88,3,"rgba(255,255,255,0.25)","rgba(255,255,255,0.5)",1);
+    appIcon(a,x+24,y+8,36); ctx.save(); ctx.shadowColor="rgba(0,0,0,0.8)"; ctx.shadowBlur=3; text(n(),x+42,y+64,"#ffffff",12,"center","400"); ctx.restore(); if(!small) osHit("icon:"+a,x,y,84,88); });
+  for(const w of OS.wins.slice().sort((a,b)=>a.z-b.z)) if(!w.min) osDrawWin(w,small);
+  osDrawTaskbar(small); osDrawStart(small);
+  ctx.restore(); }
+/* ── the laptop's pointer and keyboard ── */
+const osV=p=>[(p[0]-OSXF.ox)/OSXF.s,(p[1]-OSXF.oy)/OSXF.s];
+function osAt(v,L){ L=L||OSHIT; for(let i=L.length-1;i>=0;i--){ const h=L[i]; if(v[0]>=h.x&&v[0]<=h.x+h.w&&v[1]>=h.y&&v[1]<=h.y+h.h) return h; } return null; }
+function osDown(p,right){ const v=osV(p), h=osAt(v), now=performance.now(), dbl=h&&OS.clickK===h.k&&now-OS.clickT<420; OS.clickK=h&&h.k; OS.clickT=now;
+  if(OS.sleep){ OS.sleep=false; return; }
+  if(!h){ OS.start=false; return; }
+  const k=h.k, idx=k.includes(":")?+k.split(":")[1]:-1, w=OS.wins[idx];
+  if(OS.start&&k!=="startmenu"&&!k.startsWith("sm:")&&k!=="power"&&k!=="tb:win") OS.start=false;
+  if(k.startsWith("icon:")){ OS.sel=k.slice(5); if(dbl&&OS.sel!=="bin") osOpen(OS.sel); return; }
+  if(k.startsWith("tb:")){ const a=k.slice(3); if(a==="win"){ OS.start=!OS.start; return; } const q=OS.wins.find(x=>x.a===a);
+    if(!q) osOpen(a); else if(osTop()===q) q.min=true; else { q.min=false; q.z=++OS.z; } return; }
+  if(k.startsWith("sm:")){ osOpen(k.slice(3)); return; }
+  if(k==="power"){ OS.start=false; OS.sleep=true; return; }
+  if(k==="startmenu") return;
+  OS.sel=null;
+  if(w&&!k.startsWith("close:")) w.z=++OS.z;
+  if(k.startsWith("min:")){ w.min=true; return; }
+  if(k.startsWith("max:")){ w.max=!w.max; return; }
+  if(k.startsWith("close:")){ osClose(w); return; }
+  if(k.startsWith("title:")){ if(dbl){ w.max=!w.max; return; } if(!w.max) cdrag={k:"win",w,dx:v[0]-w.x,dy:v[1]-w.y}; return; }
+  if(k==="nmenu"){ OS.note.menu=!OS.note.menu; return; }
+  if(k.startsWith("nm:")){ OS.note.menu=false; const i=+k.slice(3);
+    if(i===0){ OS.note.text=""; OS.note.name=null; } else if(i===1){ const n=OS.note.name||(lang==="ko"?"메모.txt":"notes.txt"); OS.note.name=n; saveText(n,OS.note.text.replace(/\n/g,"\r\n"),"text/plain"); } else osOpen("files"); return; }
+  if(OS.note.menu) OS.note.menu=false;
+  if(k.startsWith("ck:")){ calcKey(k.slice(3)); return; }
+  if(k.startsWith("file:")){ const i=+k.slice(5); OS.exSel=i; if(dbl){ const f=OS.files[i]; OS.note.name=f.name; OS.note.text=f.text.replace(/\r/g,""); osOpen("note"); } return; }
+  if(k.startsWith("win:")&&w&&w.a==="spec"){ const hh=hitAt(p); if(hh&&hh.k.startsWith("p:")){ progBtn(hh.k.slice(2)); return; }
+    if(PROG_AREA&&p[0]>=PROG_AREA[0]&&p[0]<=PROG_AREA[0]+PROG_AREA[2]&&p[1]>=PROG_AREA[1]&&p[1]<=PROG_AREA[1]+PROG_AREA[3]) cdrag={k:"pan",x:p[0],n0:PV.n0}; } }
+function osMove(p){ if(cdrag&&cdrag.k==="win"){ const v=osV(p), w=cdrag.w; w.x=Math.max(-w.w+120,Math.min(VW-120,v[0]-cdrag.dx)); w.y=Math.max(0,Math.min(VH-TBH-32,v[1]-cdrag.dy)); return true; } return false; }
+const inProg=p=>PROG_AREA&&p[0]>=PROG_AREA[0]&&p[0]<=PROG_AREA[0]+PROG_AREA[2]&&p[1]>=PROG_AREA[1]&&p[1]<=PROG_AREA[1]+PROG_AREA[3];
+function osKey(e){ const w=osTop(); if(!w) return false;
+  if(w.a==="note"){ const n=OS.note; if(e.key==="Backspace") n.text=n.text.slice(0,-1); else if(e.key==="Enter") n.text+="\n"; else if(e.key==="Tab") n.text+="    ";
+    else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey) n.text+=e.key; else return false; return true; }
+  if(w.a==="calc"){ const m={"*":"×","/":"÷","-":"−","+":"+","Enter":"=","=":"=","Backspace":"⌫","Escape":"C",",":"."}; const k=m[e.key]||(/^[0-9.%]$/.test(e.key)?e.key:null); if(!k) return false; calcKey(k); return true; }
+  return false; }
+document.addEventListener("pointerdown",e=>{ if(e.target!==closeCv) OS.kb=false; },true);
+window.addEventListener("keydown",e=>{ if(tab!=="prog"||!OS.kb||OS.sleep) return; const tg=e.target&&e.target.tagName; if(tg==="INPUT"||tg==="TEXTAREA") return; if(osKey(e)) e.preventDefault(); });
+
 /* ── the close-ups ── */
 closeCv.addEventListener("contextmenu",e=>e.preventDefault());
 function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
@@ -1523,15 +1732,15 @@ function progBtn(k){
     for(const [t,f] of ts) rows.push(t.toFixed(2)+","+Array.prototype.join.call(f,",")); saveText(fname("time_series.csv"),rows.join("\n")+"\n"); }
   else if(k==="dm"||k==="dp"){ const i=DTS.indexOf(ST.tsDt); ST.tsDt=DTS[Math.max(0,Math.min(DTS.length-1,(i<0?2:i)+(k==="dp"?1:-1)))]; }
   else if(k==="sm") ST.sens=Math.max(1,ST.sens-1); else if(k==="sp") ST.sens=Math.min(8,ST.sens+1); }
-closeCv.addEventListener("wheel",e=>{ if(tab!=="prog"||!PROG_AREA) return; e.preventDefault(); const p=clpos(e), [x0,,w]=PROG_AREA, f=(p[0]-x0)/w, c=PV.n0+f*(PV.n1-PV.n0), span=Math.max(20,Math.min(NPIX,(PV.n1-PV.n0)*(e.deltaY<0?1/1.25:1.25)));
+closeCv.addEventListener("wheel",e=>{ if(tab!=="prog"||!PROG_AREA||!inProg(clpos(e))) return; e.preventDefault(); const p=clpos(e), [x0,,w]=PROG_AREA, f=(p[0]-x0)/w, c=PV.n0+f*(PV.n1-PV.n0), span=Math.max(20,Math.min(NPIX,(PV.n1-PV.n0)*(e.deltaY<0?1/1.25:1.25)));
   PV.n0=c-f*span; PV.n1=PV.n0+span; if(PV.n0<0){ PV.n1-=PV.n0; PV.n0=0; } if(PV.n1>NPIX){ PV.n0-=PV.n1-NPIX; PV.n1=NPIX; } PV.n0=Math.max(0,PV.n0); },{passive:false});
-closeCv.addEventListener("dblclick",()=>{ if(tab==="prog"){ PV.n0=0; PV.n1=NPIX; } });
-closeCv.addEventListener("pointermove",e=>{ cmouse=clpos(e); if(!cdrag) return;
+closeCv.addEventListener("dblclick",e=>{ if(tab==="prog"&&inProg(clpos(e))){ PV.n0=0; PV.n1=NPIX; } });
+closeCv.addEventListener("pointermove",e=>{ cmouse=clpos(e); if(!cdrag) return; if(osMove(cmouse)) return;
   if(cdrag.k==="opt"){ const {sc}=OXY(); const t=Math.max(1,Math.min(TBL_L-1,Math.round((cdrag.t0+(cmouse[0]-cdrag.x)/sc)*10)/10)); ST.x[cdrag.item]=t; cdrag.moved=true; }
   else if(cdrag.k==="pan"&&PROG_AREA){ const span=PV.n1-PV.n0, dn=-(cmouse[0]-cdrag.x)/PROG_AREA[2]*span; PV.n0=Math.max(0,Math.min(NPIX-span,cdrag.n0+dn)); PV.n1=PV.n0+span; } });
 closeCv.addEventListener("pointerup",()=>{ if(cdrag&&cdrag.k==="opt"&&cdrag.moved&&(cdrag.item==="holder"||cdrag.item==="cuvhold")) nudge(0.5); cdrag=null; });
 closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e); closeCv.setPointerCapture(e.pointerId); drawClose(); const h=hitAt(p);
-  if(tab==="prog"){ if(h&&h.k.startsWith("p:")){ progBtn(h.k.slice(2)); return; } if(PROG_AREA) cdrag={k:"pan",x:p[0],n0:PV.n0}; return; }
+  if(tab==="prog"){ OS.kb=true; osDown(p,e.button===2); return; }
   if(tab==="opt"){ if(h&&h.k.startsWith("o:")){ OSEL=h.k.slice(2); cdrag={k:"opt",item:OSEL,x:p[0],t0:ST.x[OSEL],moved:false}; } return; }
   if(tab==="chem"&&h&&h.k.startsWith("c:")) chem(h.k); });
 
