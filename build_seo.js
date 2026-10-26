@@ -43,6 +43,13 @@ const exists = p => fs.existsSync(path.join(ROOT, p));
 const rows = [];          // one per problem
 const simPages = new Set();
 const docs = new Set();   // pdfs that are actually on disk
+/* a document given as a path or as {ko, en}: keep the ones on disk, per language */
+const langs = v => {
+  if (typeof v === "string") return exists(v) ? { ko: v, en: v } : null;
+  if (!v || typeof v !== "object") return null;
+  const ko = v.ko && exists(v.ko) ? v.ko : null, en = v.en && exists(v.en) ? v.en : null;
+  return ko || en ? { ko: ko || en, en: en || ko } : null;
+};
 
 for (const [key, c] of Object.entries(DATA)) {
   if (c.general) for (const v of Object.values(c.general)) if (exists(v)) docs.add(v);
@@ -65,10 +72,8 @@ for (const [key, c] of Object.entries(DATA)) {
         theory: !!p.theory,
         released,
         sim: released && f.sim && exists(f.sim) ? f.sim : null,
-        pdf: f.pdf && typeof f.pdf === "object"
-             ? Object.values(f.pdf).find(exists) || null
-             : (typeof f.pdf === "string" && exists(f.pdf) ? f.pdf : null),
-        sol: typeof f.sol === "string" && exists(f.sol) ? f.sol : null,
+        pdf: langs(f.pdf),
+        sol: langs(f.sol),
       });
     }
   }
@@ -132,22 +137,25 @@ Sitemap: ${ORIGIN}/sitemap.xml
 `);
 
 /* ── problems.html / problems-en.html ── */
+const ABBR = Object.values(DATA).map(c => c.abbr);
+const KO_NUM = {6: "여섯", 7: "일곱", 8: "여덟", 9: "아홉", 10: "열", 11: "열한", 12: "열두"};
+const EN_NUM = {6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"};
 const T = {
   ko: {
     lang: "ko", other: "problems-en.html", otherLabel: "English",
     title: "실험 문제 전체 목록 — 국제물리올림피아드 실험 시뮬레이터 · HaslaLab",
-    desc: "IPhO · APhO · EuPhO · NBPhO · ISPhO · RMPh의 실험 문제 131개를 연도별로 정리했습니다. 브라우저에서 바로 실행되는 가상 실험 장치와 문제지 PDF로 이어집니다.",
+    desc: `${ABBR.join(" · ")}의 실험 문제 ${rows.length}개를 연도별로 정리했습니다. 브라우저에서 바로 실행되는 가상 실험 장치와 문제지 PDF로 이어집니다.`,
     h1: "실험 문제 전체 목록",
-    lede: "국제 물리올림피아드 여섯 개 대회의 실험 문제를 연도순으로 모았습니다. 「실행」이 붙은 문제는 브라우저에서 실제 계측기와 같은 방식으로 조작할 수 있고, 어떤 물리량도 대신 계산해 주지 않습니다.",
+    lede: `물리올림피아드 ${KO_NUM[ABBR.length] || ABBR.length} 개 대회의 실험 문제를 연도순으로 모았습니다. 「실행」이 붙은 문제는 브라우저에서 실제 계측기와 같은 방식으로 조작할 수 있고, 어떤 물리량도 대신 계산해 주지 않습니다.`,
     run: "실행", sheet: "문제지", sol: "해설", theory: "이론", soon: "준비 중",
     home: "홈으로", counts: (y, p) => `${y}개 연도 · 실험 문제 ${p}개`,
   },
   en: {
     lang: "en", other: "problems.html", otherLabel: "한국어",
     title: "Every experimental problem — Physics Olympiad simulators · HaslaLab",
-    desc: "All 131 experimental problems from IPhO, APhO, EuPhO, NBPhO, ISPhO and RMPh, indexed by year, linking to browser simulators and problem sheets.",
+    desc: `All ${rows.length} experimental problems from ${ABBR.slice(0, -1).join(", ")} and ${ABBR[ABBR.length - 1]}, indexed by year, linking to browser simulators and problem sheets.`,
     h1: "Every experimental problem",
-    lede: "The experimental problems of six international physics olympiads, by year. Anything marked Run opens as working apparatus in the browser — it shows what the instruments show and computes nothing for you.",
+    lede: `The experimental problems of ${EN_NUM[ABBR.length] || ABBR.length} physics olympiads, by year. Anything marked Run opens as working apparatus in the browser — it shows what the instruments show and computes nothing for you.`,
     run: "Run", sheet: "Sheet", sol: "Solution", theory: "Theory", soon: "In preparation",
     home: "Home", counts: (y, p) => `${y} years · ${p} experimental problems`,
   },
@@ -171,8 +179,8 @@ function page(L) {
         const name = esc(L === "ko" ? (r.ko || r.en) : (r.en || r.ko));
         const links = [];
         if (r.sim) links.push(`<a href="${esc(r.sim)}?lang=${L}">${t.run}</a>`);
-        if (r.pdf) links.push(`<a href="${esc(r.pdf)}">${t.sheet}</a>`);
-        if (r.sol) links.push(`<a href="${esc(r.sol)}">${t.sol}</a>`);
+        if (r.pdf) links.push(`<a href="${esc(r.pdf[L])}">${t.sheet}</a>`);
+        if (r.sol) links.push(`<a href="${esc(r.sol[L])}">${t.sol}</a>`);
         const tag = r.theory ? ` <span class="tag">${t.theory}</span>` : "";
         const state = links.length ? links.join(" · ") : `<span class="soon">${t.soon}</span>`;
         return `      <li><b>${esc(r.id)}</b> ${name}${tag} <span class="lk">${state}</span></li>`;
