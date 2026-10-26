@@ -32,6 +32,9 @@
                color:var(--muted);background:#fff;cursor:pointer;text-align:center}
   .lang button:hover:not(.on){background:#f3f6f8;border:0}
   .lang button.on{background:#2c6f9b;color:#fff}
+  .lang button{height:auto;line-height:18px}
+  /* in line with the window's right edge and the title, as on the ISPhO 2026 page */
+  body > header > .lang{top:10px;right:16px}
 
   /* ── the window ── */
   .winwrap{max-width:1680px;margin:12px auto 26px;padding:0 16px}
@@ -49,7 +52,7 @@
 
   /* group boxes: a thin border with the caption cut into its top edge */
   .tray,.card,.panel{background:#f0f0f0;border:1px solid #dcdcdc;border-radius:0;position:relative}
-  .tray{flex:0 0 206px;padding:16px 8px 8px;position:sticky;top:12px}
+  .tray{flex:0 0 262px;padding:16px 8px 8px;position:sticky;top:12px}
   .tray h3{position:absolute;left:6px;top:-9px;margin:0;padding:0 2px;background:#f0f0f0;
            font-size:12px;font-weight:400;line-height:16px;color:#000;letter-spacing:0;text-transform:none}
   #tray{display:block;width:100%;height:auto;background:#fff;border:1px solid #dcdcdc;cursor:pointer}
@@ -190,7 +193,7 @@ const T={
       psu:"E1. 직류 전원 (0–15 V)",adapter:"E2. 스위치 어댑터",con4:"E3. 4단자 커넥터",con2:"E4. 2단자 커넥터",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (연속 스펙트럼)",ledunk:"E7. LED-UNK (모르는 색)",
       wash:"C12. 세척병 (증류수)",naoh:"C2. NaOH 알갱이",ic:"C3. 인디고 카민 IC 0.70 mg/ml",ind:"C4. 페놀프탈레인 In",gl:"C5. 포도당 Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
       syr3:"C8. 주사기 3 ml",syrIns:"C7. 인슐린 주사기 0.5 ml ×4",tubes:"C10·11. 코니컬 튜브·100 ml 용기",cuvettes:"O8. 뚜껑 있는 큐벳 ×10",waste:"X4. 폐액 통",gloves:"X3. 장갑",laptop:"컴퓨터",cuv:i=>"큐벳 "+(i+1)},
-    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 컴퓨터·광학대·시약을 클릭하면 그 확대 화면이 열립니다",
+    cap:"실험대 (3D) — 좌클릭 집기·놓기 / 우클릭 부품함으로 / 빈 곳 끌기: 시점 돌리기, Shift+끌기: 이동, 휠: 확대, 더블클릭: 원래 시점 · 컴퓨터·광학대·시약을 클릭하면 그 확대 화면이 열립니다 · 전원 노브는 끌어서 돌리고(Shift: 미세), 전원·어댑터 스위치는 눌러서 켭니다",
     tabs:{prog:"Spectroscopy 프로그램",opt:"광학대 (위에서)",chem:"화학 작업대"},
     closeCap:{prog:"Spectroscopy 프로그램 — 픽셀 번호 N에 따른 세기(임의 단위, 4095에서 포화 \"Overflow\"). Launch: 실시간, Single spectrum: 한 장, Time Series: Launch 뒤에만 기록(간격 Δt). 휠: N축 확대, 끌기: 이동, 더블클릭: 전체. 저장 파일 이름은 노트 입력칸에 ○○.csv로 적으면 그 이름이 됩니다.",
               opt:"광학대를 위에서 본 모습 — 부품을 끌어 광축을 따라 옮깁니다(오른쪽 ± 버튼으로 미세 조정). 보정한 뒤에는 광원·큐벳·조리개를 넣고 빼는 것 말고는 건드리지 마세요. 오른쪽 위 그림은 스크린 면: 0차 점과 CCD 위의 1차 스펙트럼.",
@@ -234,7 +237,7 @@ const T={
       psu:"E1. DC power supply (0–15 V)",adapter:"E2. Adapter with switch",con4:"E3. Connector, 4 outputs",con2:"E4. Connector, 2 outputs",ledrgb:"E5. LED-RGB",ledcon:"E6. LED-CON (full spectrum)",ledunk:"E7. LED-UNK (unknown colour)",
       wash:"C12. Wash bottle (water)",naoh:"C2. NaOH granules",ic:"C3. Indigo carmine IC 0.70 mg/ml",ind:"C4. Phenolphthalein In",gl:"C5. Glucose Gl 0.50 mol/l",nacl:"C6. NaCl 0.30 mol/l",
       syr3:"C8. Syringe 3 ml",syrIns:"C7. Insulin syringes 0.5 ml ×4",tubes:"C10·11. Conical tubes, 100 ml container",cuvettes:"O8. Cuvettes with caps ×10",waste:"X4. Waste container",gloves:"X3. Gloves",laptop:"Computer",cuv:i=>"cuvette "+(i+1)},
-    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click the computer, the optical table or a reagent to open its close-up",
+    cap:"The bench (3D) — L-click take / put, R-click back to the box · drag empty space: turn the view, Shift+drag: pan, wheel: zoom, double-click: reset · click the computer, the optical table or a reagent to open its close-up · drag the supply knob to turn it (Shift: fine), click the supply or adapter switch to flip it",
     tabs:{prog:"Spectroscopy program",opt:"Optical table (top)",chem:"Chemistry bench"},
     closeCap:{prog:"The Spectroscopy program — intensity (arbitrary units, saturating at 4095, \"Overflow\") against pixel number N. Launch: live, Single spectrum: one shot, Time Series: records only after Launch (interval Δt). Wheel: zoom N, drag: pan, double-click: all. Type a name such as R-0.csv in the notebook field to save under that name.",
               opt:"The optical table from above — drag a part along the axis (fine steps with the ± buttons on the right). After calibrating, touch nothing but the source, the cuvette and the diaphragm. Top right: the face of the screen, with the zero-order spot and the first-order spectrum on the CCD.",
@@ -1051,14 +1054,14 @@ function drawPsu(){ const [x,y]=POS.psu, id="psu";
   F([[x+1,y+7.04,6.5],[x+7.5,y+7.04,6.5],[x+7.5,y+7.04,9],[x+1,y+7.04,9]],"#16181c",{id,n:[0,1,0]});
   if(ST.psuOn){ TX([x-1.4,y+7.06,7.1],[1,0,0],[0,0,1],ST.psuV.toFixed(1),1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
     TX([x+7.1,y+7.06,7.1],[1,0,0],[0,0,1],"0.00",1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"}); }
-  const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x-4.2,y+7,4.4],[0,1,0],1.3,1.0,"#8e9297",{id,seg:18,cap:"#a5a9ae"}); L([x-4.2,y+8.32,4.4],[x-4.2+0.8*Math.sin(a),y+8.32,4.4+0.8*Math.cos(a)],"#2a2c30",2);
+  const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x-4.2,y+7,4.4],[0,1,0],1.3,1.0,"#8e9297",{id:"psuKnob",seg:18,cap:"#a5a9ae"}); L([x-4.2,y+8.32,4.4],[x-4.2+0.8*Math.sin(a),y+8.32,4.4+0.8*Math.cos(a)],"#2a2c30",2);
   for(const dx of [-7.2,-1.4,2.8,7.6]) ocyl([x+dx,y+7,4.4],[0,1,0],1.1,0.85,"#8e9297",{id,seg:16,cap:"#a5a9ae"});
   for(const [dx,c] of [[4,"#d0352b"],[6.5,"#1b1d20"],[0.6,"#e3c21f"]]){ ocyl([x+dx,y+7,2.2],[0,1,0],0.55,0.5,c,{id,seg:12}); ocyl([x+dx,y+7.55,2.2],[0,1,0],0.05,0.2,"#777",{seg:8}); }
-  ocyl([x-7.4,y+7,1.6],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); }
+  ocyl([x-7.4,y+7,1.6],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); obox([x-5.6,y+7.1,1.6],[0.7,0,0],[0,0.2,0],[0,0,0.5],ST.psuOn?"#e8e8e4":"#9a9a96",{id:"psuSw"}); }
 /* the adapter: a small green board with red and black sockets, the slide switch and the pin header */
 function drawAdapter(){ const [x,y]=POS.adapter, id="adapter"; obox([x,y,0.12],[2.6,0,0],[0,2.0,0],[0,0,0.12],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null});
   for(const [dx,c] of [[-1.2,"#c8302a"],[0.2,"#1b1d20"]]){ obox([x+dx,y+0.6,0.85],[0.6,0,0],[0,0.6,0],[0,0,0.6],c,{id}); ocyl([x+dx,y+0.6,1.45],Z3,0.05,0.32,"#111",{id,seg:12}); }
-  const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.7,0.1,"#d9dde1",{seg:8,id}); obox([x+1.7,y-0.8,0.4],[0.45,0,0],[0,0.3,0],[0,0,0.18],"#2a2c30",{id});
+  const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.7,0.1,"#d9dde1",{seg:8,id:"adSw"}); obox([x+1.7,y-0.8,0.4],[0.45,0,0],[0,0.3,0],[0,0,0.18],"#2a2c30",{id:"adSw"});
   obox([x-1.6,y-1.3,0.4],[0.6,0,0],[0,0.25,0],[0,0,0.28],"#111",{id}); for(const dx of [-0.36,-0.12,0.12,0.36]) ocyl([x-1.6+dx,y-1.3,0.68],Z3,0.45,0.05,"#d4b25a",{seg:6,id});
   if(has("psu")) for(const [dx,c] of [[-1.2,"#c0392b"],[0.2,"#1b1d20"]]) cord([x+dx,y+0.6,1.5],[POS.psu[0]+(c==="#c0392b"?4:6.5),POS.psu[1]+7.6,2.2],c,0.22,6); }
 /* the connectors: a purple-and-white four-lead ribbon and a red-and-black pair, black plugs on the ends */
@@ -1113,12 +1116,12 @@ function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3()
    6.  PARTS BOX, LAYOUT, CLOSE-UPS
    ══════════════════════════════════════════════════════════════ */
 const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
-const TRAY_LIST=PARTS, TROW=24;
+const TRAY_LIST=PARTS, TROW=32;
 let TRW=190, TRH=400, CLW=900, CLH=470, trayCells=[], tab="opt", HIT=[], HS=1;
 const inHand=k=>hand&&hand.item===k;
 const trayAvail=k=>!has(k)&&!inHand(k);
 const handName=()=>hand.item==="cuv"?d().items.cuv(hand.i):itemName(hand.item);
-function icon(c,k){ const old=ctx; ctx=c; ctx.save(); ctx.scale(0.5,0.5);
+function icon(c,k){ const old=ctx; ctx=c; ctx.save(); ctx.scale(0.7,0.7);
   if(k==="table") fillR(-16,-6,32,12,2,"#141518","#444");
   else if(k==="sunshield") fillR(-15,-12,30,24,2,"#f4f4f2","#999");
   else if(k==="holder"){ fillR(-12,6,24,6,1,"#16171a","#555"); fillR(-6,-12,6,18,1,"#22242a","#555"); }
@@ -1145,7 +1148,7 @@ function layout(){
   const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
   S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px"; benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
   const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+24+14*d().trayHelp.split("\n").length;
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+24+17*d().trayHelp.split("\n").length;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
   CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(470,CLW*0.53));
   closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr); drawTray(); }
@@ -1154,11 +1157,11 @@ function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
   trayCells=[]; let y=6; const wd=TRW-12;
   for(const k of TRAY_LIST){ const av=trayAvail(k), sel=inHand(k);
     c.fillStyle=av?(sel?"#cce8ff":"#f5f5f5"):"#fafafa"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#0078d7":"#dcdcdc"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
-    c.save(); c.globalAlpha=av?1:0.35; c.translate(21,y+(TROW-3)/2); icon(c,k); c.restore();
-    c.font='10px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#000":"#9a9a9a";
-    c.fillText(itemName(k),37,y+7.5); c.font='8px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#6b7680"; c.fillText(av?t.trayTake:t.trayOut,37,y+16.5);
+    c.save(); c.globalAlpha=av?1:0.35; c.translate(28,y+(TROW-3)/2); icon(c,k); c.restore();
+    c.font='12px "Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#000":"#9a9a9a";
+    c.fillText(itemName(k),54,y+(TROW-3)*0.31); c.font='10px "Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#6b7680"; c.fillText(av?t.trayTake:t.trayOut,54,y+(TROW-3)*0.76);
     trayCells.push([k,y,y+TROW-3]); y+=TROW; }
-  c.font='10px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
+  c.font='12px "Segoe UI","Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#5b6b7c"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*17)); }
 const TABS=["prog","opt","chem"];
 function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
@@ -1375,7 +1378,11 @@ function benchClick(p,right,e){
       if(hand.fromBench){ ST.on.add(k); hand=null; return; }
       say("back",itemName(k)); hand=null; return; }
     if(place(k,k0,p)) hand=null; return; }
-  const k=k0;
+  /* the supply knob turns as it is dragged (Shift: fine), the switches flip */
+  if(!right&&k0==="psuKnob"){ drag={k:"knob",p,v:ST.psuV}; return; }
+  if(!right&&k0==="psuSw"){ ST.psuOn=!ST.psuOn; return; }
+  if(!right&&k0==="adSw"){ ST.adSw=!ST.adSw; return; }
+  const k=k0==="psuKnob"||k0==="psuSw"?"psu":k0==="adSw"?"adapter":k0;
   if(!k){ if(!right) drag=e&&e.shiftKey?{k:"pan",p,v:[CAM.px,CAM.py]}:{k:"orbit",p,v:[CAM.yaw,CAM.pitch]}; return; }
   const ci=cuvId(k);
   if(right){ if(k==="laptop"||ci!==null) return; if(clearK(k)) say("back",itemName(k)); return; }
@@ -1393,7 +1400,7 @@ cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
 cv.addEventListener("pointermove",e=>{ const p=lpos(e); mouse=p;
-  if(drag){ if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
+  if(drag){ if(drag.k==="knob"){ const dv=(p[0]-drag.p[0]-(p[1]-drag.p[1]))*(e.shiftKey?0.002:0.01); ST.psuV=Math.max(0,Math.min(PSU_MAX,Math.round((drag.v+dv)*1000)/1000)); } else if(drag.k==="pan"){ CAM.px=drag.v[0]+p[0]-drag.p[0]; CAM.py=drag.v[1]+p[1]-drag.p[1]; } else { CAM.yaw=Math.max(-1.5,Math.min(1.5,drag.v[0]+(p[0]-drag.p[0])*0.006)); CAM.pitch=Math.max(0.05,Math.min(1.45,drag.v[1]+(p[1]-drag.p[1])*0.004)); } cv.style.cursor="grabbing"; return; }
   cv.style.cursor=hand?"crosshair":hitItem(p)?"pointer":"grab"; });
 cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; cv.setPointerCapture(e.pointerId); benchClick(p,e.button===2,e); drawTray(); });
 cv.addEventListener("pointerup",()=>{ drag=null; });
@@ -1446,7 +1453,8 @@ function chem(cmd){ const [_,a,b]=cmd.split(":"), L=d().lab;
   if(a==="sel"){ ST.sel=+b; return; }
   const c=selCuv(); if(!c) return;
   if(a==="cap"){ c.cap=!c.cap; say(c.cap?"capped":"uncapped"); }
-  else if(a==="shake"){ if(!c.cap){ say("needCap"); return; } c.mixed=true; c.bubbles=cuvVol(c)>0.1?U(0.5,1.3):0; if(c.tr) c.tr.O=1; say("shaken"); }
+  else if(a==="shake"){ if(!c.cap){ say("needCap"); return; } c.mixed=true; c.bubbles=cuvVol(c)>0.1?U(0.5,1.3):0; /* shaking dissolves oxygen from the air above the liquid; the capped cuvette's air holds less each time, so a restart turns purple sooner */
+    if(c.tr){ c.tr.k=(c.tr.k||0)+1; c.tr.O=Math.max(c.tr.O,Math.pow(0.7,c.tr.k-1)); } say("shaken"); }
   else if(a==="tap"){ c.bubbles=0; say("tapped"); }
   else if(a==="rot"){ c.rot=!c.rot; say("rot"); }
   else if(a==="label"){ const s=$("cfg").value.trim()||String(ST.sel+1); c.label=s.slice(0,12); say("labeled",c.label); }

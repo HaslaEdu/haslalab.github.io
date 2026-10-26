@@ -618,7 +618,10 @@ class App:
         c.mixed = True
         c.bubbles = U(0.5, 1.3) if c.vol() > 0.1 else 0.0
         if c.tr:
-            c.tr["O"] = 1.0
+            # oxygen from the air above the liquid; the capped cuvette's air holds less each time,
+            # so a restart turns purple sooner
+            c.tr["k"] = c.tr.get("k", 0) + 1
+            c.tr["O"] = max(c.tr["O"], 0.7 ** (c.tr["k"] - 1))
         self.say(T("흔들어 섞었습니다 (벽에 거품이 생겼을 수 있습니다).", "Shaken and mixed (there may be bubbles on the walls)."))
 
     def tap(self):
