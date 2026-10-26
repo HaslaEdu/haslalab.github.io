@@ -2753,15 +2753,17 @@ function knurl3(axis, a0, a1, u, v, r, col, o){
     line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), shade(col, 0.62), 0.8); }
 }
 /* the base platform: a slotted aluminium extrusion on four levelling feet, the ruler tape on its front */
+const RAIL_FL = 3.2;                       /* the floor of the rail's channel */
 function base3(){
   for (const [x, z] of [[-31,-7],[-31,7],[31,-7],[31,7]]){ cyl3("y",0,1.6,x,z,0.5,"#9aa0a6",{seg:10,layer:-1}); knurl3("y",1.0,2.6,x,z,1.5,"#6f7a86",{layer:-1}); }
-  box3(-34,34,2.6,RAILY-0.6,-8,8,ALU,{id:"rail",layer:-1,top:"#d5dade"});
-  /* the top face: two lips either side of each slot, the slots dark */
-  for (const [z0, z1] of [[-8,-5.6],[-4.4,-1.2],[1.2,4.4],[5.6,8]]) box3(-34,34,RAILY-0.6,RAILY,z0,z1,"#d3d8dc",{id:"rail",layer:-1,top:"#dde1e5"});
-  for (const [z0, z1] of [[-5.6,-4.4],[-1.2,1.2],[4.4,5.6]]) face([[-34,RAILY-0.55,z0],[-34,RAILY-0.55,z1],[34,RAILY-0.55,z1],[34,RAILY-0.55,z0]],{fill:"#55595f",flat:true,layer:-1,id:"rail"});
-  for (const z of [-5.6,-4.4,-1.2,1.2,4.4,5.6]) line3([-34,RAILY+0.01,z],[34,RAILY+0.01,z],"#8f969c",0.8,{layer:-1});
-  /* a groove along the front face and the end caps */
-  face([[-34,4.0,8.01],[34,4.0,8.01],[34,4.4,8.01],[-34,4.4,8.01]],{fill:"#8e959b",flat:true,layer:-1,bias:0.3});
+  /* a wide channel extrusion: a ribbed floor, two walls with a T-slot along their tops and their outer faces */
+  box3(-34,34,2.6,RAIL_FL,-8,8,ALU,{id:"rail",layer:-1,top:"#c9ced2"});
+  for (const z of [-3.6,-1.2,1.2,3.6]) box3(-34,34,RAIL_FL,RAIL_FL+0.25,z-0.2,z+0.2,"#bfc5ca",{id:"rail",layer:-1,top:"#d0d5d9"});
+  for (const s of [-1,1]){ const zi = s * 6.3, zo = s * 8;
+    box3(-34,34,RAIL_FL,RAILY,Math.min(zi,zo),Math.max(zi,zo),"#cdd2d6",{id:"rail",layer:-1,top:"#dde1e5"});
+    face(orient([[-34,RAILY+0.005,s*6.9],[34,RAILY+0.005,s*6.9],[34,RAILY+0.005,s*7.4],[-34,RAILY+0.005,s*7.4]],[0,1,0]),{fill:"#5c6167",flat:true,layer:-1,id:"rail"});
+    face(orient([[-34,RAIL_FL+0.5,s*8.005],[34,RAIL_FL+0.5,s*8.005],[34,RAIL_FL+1.0,s*8.005],[-34,RAIL_FL+0.5+0.5,s*8.005]],[0,0,s]),{fill:"#8e959b",flat:true,layer:-1,bias:0.3});
+    for (const y of [RAIL_FL+0.3, RAILY-0.05]) line3([-34,y,zi],[34,y,zi],"#9aa1a7",0.8,{layer:-1}); }
   for (const s of [-1,1]) box3(s>0?34:-34.6,s>0?34.6:-34,2.5,RAILY+0.1,-8.1,8.1,"#2d3035",{layer:-1});
   /* the ruler tape on the front: blue and white halves */
   face([[-30,RAILY-1.6,8.02],[0,RAILY-1.6,8.02],[0,RAILY-0.4,8.02],[-30,RAILY-0.4,8.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.5});
@@ -2826,16 +2828,21 @@ function fans3(){
     for (const xb of [x0 + side * 4, x1 - side * 4]) box3(Math.min(xb, xb + 3) - 1.5, Math.min(xb, xb + 3) + 1.5, RAILY, RAILY + 3, SCR_Z, SCR_Z + 1.2, "#b9bfc4", {id:"fan"});
   }
 }
-/* the photogate: a white U bracket on a carriage, a black emitter and detector facing across the gap */
-function gate3(){
-  const x = S.bench.xGate / 10;
-  box3(x-2.2,x+2.2,RAILY,RAILY+1.0,-6.2,6.2,"#2d3035",{id:"gate",top:"#3a3e44"});
-  knurl3("z",6.2,7.2,x,RAILY+0.5,0.6,"#8a939d",{id:"gate"});
-  box3(x-1.6,x+1.6,RAILY+1.0,RAILY+1.6,-4.8,4.8,"#f2f2ee",{id:"gate"});
-  for (const z of [-4.8,3.6]) boxY(x-1.6,x+1.6,RAILY+1.6,RAILY+8.0,z,z+1.2,"#f2f2ee",{id:"gate"},2);
-  for (const [z0, z1] of [[-3.6,-2.6],[2.6,3.6]]) box3(x-0.9,x+0.9,RAILY+3.4,RAILY+4.8,z0,z1,"#15161a",{id:"gate"});
-  for (const z of [-2.59, 2.59]) cyl3("z",z,z+(z<0?0.1:-0.1),x,RAILY+4.1,0.25,"#c0392b",{seg:8});
-}
+/* the photogate (Fig. 2, item 10): two white acrylic U plates either side of a black U core, four screws on each
+   face, the emitter and the detector in the inner faces of the slot, a 3.5 mm jack on the side of one arm.
+   It stands on the floor of the rail's channel, the ball passing through its slot */
+const GATE = {H:11, hz:6, sz:2.7, sd:7.0, t:1.25, beam:9.0};
+function gate3(){ const x = S.bench.xGate / 10, y0 = RAIL_FL, {H, hz, sz, sd, t} = GATE, ys = y0 + H - sd;
+  const U = (x0, x1, col, inset, o) => { const i = inset || 0;
+    box3(x0, x1, y0 + i, ys + i, -hz + i, hz - i, col, o);
+    box3(x0, x1, ys + i, y0 + H - i, -hz + i, -sz - i, col, o); box3(x0, x1, ys + i, y0 + H - i, sz + i, hz - i, col, o); };
+  U(x - t + 0.35, x + t - 0.35, "#1b1d20", 0.35, {id:"gate"});
+  for (const s2 of [-1, 1]){ U(s2 < 0 ? x - t : x + t - 0.35, s2 < 0 ? x - t + 0.35 : x + t, "#f2f2ef", 0, {id:"gate", top:"#f7f7f4"});
+    for (const [yy, zz] of [[y0 + 1.1, -hz + 0.9], [y0 + 1.1, hz - 0.9], [ys + 0.2, -hz + 0.9], [ys + 0.2, hz - 0.9]]) cyl3("x", x + s2 * t, x + s2 * (t + 0.08), yy, zz, 0.22, "#c3c8cd", {seg:10, cap:"#9aa0a6"}); }
+  for (const zz of [-sz, sz]){ const d = zz < 0 ? 0.01 : -0.01; face(orient(Array.from({length:12}, (_, k) => { const a = k / 12 * 2 * Math.PI; return [x + 0.3 * Math.cos(a), GATE.beam + 0.3 * Math.sin(a), zz + d]; }), [0, 0, zz < 0 ? 1 : -1]), {fill:"#0b0b0c", flat:true, bias:1}); }
+  /* the jack on the outer side of the front arm */
+  const J = gateJack(); cyl3("z", hz, hz + 0.35, x, J[1], 0.42, "#c9ced3", {seg:14, cap:"#2a2c30"}); }
+const gateJack = () => [S.bench.xGate / 10, RAIL_FL + GATE.H - 2.4, GATE.hz + 0.35];
 function balls3(){
   const st = state(), b = S.bench, h = b.hang();
   for (let i = 0; i < (b.two ? 2 : 1); i++){
@@ -2863,75 +2870,167 @@ function holder3(){
   /* the foot */
   box3(kx - 4, kx + 4, 0, 1.0, 0.6, 8.6, "#26282c", {id:"holder", top:"#303339"});
   knurl3("y", 1.0, 1.9, kx, 4.6, 0.9, "#5e6772", {id:"holder"});
-  const e = plugAt("magnet"), pts = []; for (let i = 0; i <= 20; i++){ const t = i / 20; pts.push([kx + (e[0] - kx) * t + Math.sin(t * 18) * 0.4 * (1 - t), ky * (1 - t) + e[1] * t + Math.sin(Math.PI * t) * 2, (1 - t) * 0.5 + t * e[2]]); }
-  poly3(pts, "#222", 1.6); plug3("magnet");
 }
-/* the junction box: blue enclosure, power switch, lamp, magnet switch and the sockets */
-const BOX = [8, 0, 24];
+/* the junction box (Fig. 2, item 6): a black body under a blue lid printed with the labels, the COIL / LASER lamp and
+   ON/OFF toggle, the ADJUST knob; jacks for the coil, the photogate and 12 V on its left side, the scope's CH1 and GND
+   posts on its right side, the BALL WIRES socket on its front end */
+const BOX = [8, 0, 24], BXH = 4.0, BXL = 5.2;
+const JBTEX = (() => { const px = 40, W = 8.2, L = 16.2, c = document.createElement("canvas"); c.width = W * px; c.height = L * px; c._static = true;
+  const g = c.getContext("2d"), X = v => v * px; g.fillStyle = "#2f8fd3"; g.fillRect(0, 0, c.width, c.height);
+  g.strokeStyle = "rgba(255,255,255,0.9)"; g.lineWidth = 2; g.beginPath(); g.moveTo(0, X(5.6)); g.lineTo(c.width, X(5.6)); g.stroke();
+  g.fillStyle = "#fff"; g.textBaseline = "middle"; const T2 = (t, x, y, sz, al) => { g.font = "bold " + Math.round(sz * px) + "px Arial"; g.textAlign = al || "left"; g.fillText(t, X(x), X(y)); };
+  T2("◄ COIL / LASER", 0.25, 0.9, 0.42); T2("ON / OFF", 0.6, 4.4, 0.36); T2("ADJUST", 6.2, 4.6, 0.36, "center");
+  g.fillStyle = "#8fd18a"; g.fillRect(X(3.9), X(6.4), X(4.0), X(3.6)); g.strokeStyle = "#fff"; g.lineWidth = 1.5; g.strokeRect(X(3.9), X(6.4), X(4.0), X(3.6));
+  g.fillStyle = "#16424f"; T2("OSCILLOSCOPE", 5.9, 8.2, 0.34, "center"); g.fillStyle = "#fff"; T2("CH1 ►", 8.0, 7.0, 0.36, "right"); T2("GND ►", 8.0, 9.6, 0.36, "right");
+  T2("◄ PHOTOGATE", 0.2, 7.9, 0.38); T2("◄ DC 12V", 0.2, 11.6, 0.38); T2("▲   ▼", 3.6, 13.6, 0.4); T2("BALL WIRES ►", 8.0, 15.2, 0.36, "right");
+  return c; })();
 function box3d(){
   const [x, , z] = BOX;
-  box3(x-4.6,x+4.6,0.4,5.5,z-7,z+7,"#2f7fd6",{id:"box",top:"#3a8ce0"});
-  box3(x-4.4,x+4.4,0,0.4,z-6.8,z+6.8,"#1d4f8a",{id:"box"});
-  face([[x-3.6,5.51,z-6.2],[x+3.6,5.51,z-6.2],[x+3.6,5.51,z-3.2],[x-3.6,5.51,z-3.2]],{fill:"#e8edf2",flat:true,id:"box",bias:0.5});
-  text3([x,5.53,z-4.7],[1,0,0],[0,0,-1],"JUNCTION BOX",0.6,"#1d4f8a",{align:"center",bias:2});
-  box3(x+1.6,x+3.6,5.5,6.0,z-1.5,z+0.8,"#1b1d20",{id:"box"});
-  box3(x+1.6,x+3.6,5.5,6.0,z-1.5,z+0.8,"#1b1d20",{id:"boxsw"});
-  const a = S.boxOn ? 0.35 : -0.35; box3(x+2.2,x+3.0,6.0,6.4,z-0.8+a,z+0.2+a,"#c0392b",{id:"boxsw"});
-  cyl3("y",5.5,6.0,x-2.6,z-0.3,0.45,S.boxOn ? "#ff5040" : "#6a1a14",{seg:10,id:"box",bias:1});
-  if (S.boxOn) sphere3([x-2.6,6.1,z-0.3],0.55,"rgba(255,90,60,0.35)");
-  /* the sockets: GATE, MAGNET, DC 12V on the side facing the bench, CH and GND on the far side, BALL on the front */
-  for (const k of ["box_gate","box_mag","box_dc","box_ch","box_gnd","box_ball"]) socket3(k);
-  text3([x-4.62,4.6,z-3.5],[0,0,-1],[0,1,0],"GATE",0.42,"#fff",{align:"center",bias:2});
-  text3([x-4.62,4.6,z],[0,0,-1],[0,1,0],"MAGNET",0.42,"#fff",{align:"center",bias:2});
-  text3([x-4.62,4.6,z+3.5],[0,0,-1],[0,1,0],"DC 12V",0.42,"#fff",{align:"center",bias:2});
-  text3([x-2.8,4.6,z+7.02],[1,0,0],[0,1,0],"CH",0.42,"#fff",{align:"center",bias:2});
-  text3([x-0.6,4.6,z+7.02],[1,0,0],[0,1,0],"GND",0.42,"#fff",{align:"center",bias:2});
-  text3([x+2.4,4.6,z+7.02],[1,0,0],[0,1,0],"BALL",0.42,"#fff",{align:"center",bias:2});
+  box3(x-4,x+4,0,BXH,z-8,z+8,"#17181b",{id:"box",top:"#1f2024"});
+  for (const [dx, dz] of [[-3.3,-7.3],[3.3,-7.3],[-3.3,7.3],[3.3,7.3]]) cyl3("y",-0.05,0.05,x+dx,z+dz,0.6,"#0d0d0e",{seg:10});
+  box3(x-4.1,x+4.1,BXH,BXL,z-8.1,z+8.1,"#2f8fd3",{id:"box",top:"#2f8fd3"});
+  tex3(JBTEX,0,0,JBTEX.width,JBTEX.height,[x-4.1,BXL+0.005,z-8.1],[8.2,0,0],[0,0,16.2],{id:"box"});
+  for (const [dx, dz] of [[-3.7,-7.7],[3.7,-7.7],[-3.7,7.7],[3.7,7.7]]) cyl3("y",BXL,BXL+0.06,x+dx,z+dz,0.22,"#c3c8cd",{seg:8,cap:"#d5d9dd"});
+  /* the lamp, the toggle (its red lever is the box's ON/OFF) and the ADJUST knob */
+  const on = S.boxOn, lit = circuit().powered;
+  cyl3("y",BXL,BXL+0.25,x+0.5,z-7.2,0.38,lit?"#ff4030":"#5a1a18",{seg:12,id:"box",cap:lit?"#ff6a50":"#6a2420"}); if (lit) sphere3([x+0.5,BXL+0.35,z-7.2],0.55,"rgba(255,80,60,0.35)");
+  cyl3("y",BXL,BXL+0.35,x-2.3,z-5.0,0.62,"#c9ced3",{seg:16,id:"boxsw",cap:"#d8dce0"});
+  const a = on ? -0.45 : 0.45, tip = [x-2.3, BXL+0.35+1.5*Math.cos(a), z-5.0+1.5*Math.sin(a)];
+  cylAB([x-2.3,BXL+0.35,z-5.0], tip, 0.16, "#cfd3d7", {seg:8, id:"boxsw"}); cylAB(tip, [tip[0], tip[1] + 0.4*Math.cos(a), tip[2] + 0.4*Math.sin(a)], 0.3, "#d0352b", {seg:10, id:"boxsw", cap:"#e04a3c"});
+  cyl3("y",BXL,BXL+0.3,x+2.1,z-5.1,0.95,"#c9ced3",{seg:16,cap:"#d8dce0"}); knurl3("y",BXL+0.3,BXL+1.6,x+2.1,z-5.1,0.8,"#1f4fa8",{id:"box"});
+  /* the sockets */
+  for (const k of ["box_mag","box_gate","box_dc","box_ch","box_gnd","box_ball"]) socket3(k);
+  /* the 12 V adaptor: a black brick with its pins, lying on the desk */
   box3(18,24,0,3,22,26,"#141414",{id:"box",top:"#1e1e1e"});
   for (let k = 0; k < 4; k++) line3([18.5+k*1.3,3.01,22.5],[18.5+k*1.3,3.01,25.5],"#2a2a2a",1);
+  for (const dz of [-0.9, 0.9]) cyl3("x",24,25.6,1.5,24+dz,0.2,"#c9ced3",{seg:8});
 }
 const SC0 = [-66, 0, 16], SCW = 31, SCH = 15.9, SCD = 12;
+/* a point of the scope's front panel art (fx from the left, fy from the bottom) on the 3D face */
+const SCF = (fx, fy, dz) => [SC0[0] + 0.3 + fx * (SCW - 0.6), SCH - 0.3 - (1 - fy) * (SCH - 0.6), SC0[2] + SCD + (dz || 0)];
+/* the SIGLENT SDS1202X-E: a light front bezel on a dark grey case that steps in to a smaller rear housing,
+   vent slots on its sides and top, rubber feet and fold-out legs, the knobs, keys and BNC inputs standing proud */
 function scope3d(){
-  const [x0, , z0] = SC0, x1 = x0 + SCW, z1 = z0 + SCD;
-  box3(x0+3,x1-3,1,SCH-2,z0-9,z0,"#3c4652",{id:"scope"});
-  for (let k = 0; k < 6; k++) line3([x0+3,4+k*1.6,z0-8],[x0+3,4+k*1.6,z0-1],"#2a313a",1);
-  box3(x0,x1,0.6,SCH,z0,z1,"#e4e6e3",{id:"scope",top:"#eef0ed"});
-  for (const xx of [x0+2, x1-2]) box3(xx-1,xx+1,0,0.6,z1-2,z1,"#2a2c30");
-  /* the carrying handle folded over the top */
-  for (const s of [-1,1]) box3(s<0?x0-0.6:x1,s<0?x0:x1+0.6,SCH*0.35,SCH*0.65,z0+2,z0+6,"#cfd2cf",{id:"scope"});
+  const [x0, , z0] = SC0, x1 = x0 + SCW, z1 = z0 + SCD, zb = z1 - 2.4, BODY = "#4a515b", DARK = "#3b4149", BEZ = "#e4e6e3";
+  box3(x0+3.4,x1-3.4,2.0,SCH-3.4,z0-8.5,z0-5.5,DARK,{id:"scope",top:"#434a53"});
+  box3(x0+1.8,x1-1.8,1.2,SCH-1.8,z0-5.5,z0+0.01,DARK,{id:"scope",top:"#454c56"});
+  box3(x0+0.5,x1-0.5,0.9,SCH-0.5,z0,zb,BODY,{id:"scope",top:"#535b66"});
+  for (const s2 of [-1, 1]){ const xs = s2 < 0 ? x0 + 0.49 : x1 - 0.49;
+    for (let k = 0; k < 8; k++) line3([xs, 3.4 + k * 1.2, z0 + 1.2], [xs, 3.4 + k * 1.2, zb - 1.8], "#2a2f36", 1.3);
+    const xr = s2 < 0 ? x0 + 1.79 : x1 - 1.79; for (let k = 0; k < 6; k++) line3([xr, 3.4 + k * 1.4, z0 - 4.8], [xr, 3.4 + k * 1.4, z0 - 0.6], "#2a2f36", 1.2); }
+  for (let k = 0; k < 10; k++) line3([x0 + 4.5 + k * 2.4, SCH - 1.79, z0 - 4.8], [x0 + 4.5 + k * 2.4, SCH - 1.79, z0 - 0.8], "#2a2f36", 1.2);
+  /* the recessed carrying grip moulded into the top of the case */
+  box3(x0+9,x1-9,SCH-0.5,SCH-0.48,z0+1.2,z0+4.4,"#2e333a",{id:"scope"}); face([[x0+9.4,SCH-0.47,z0+1.6],[x1-9.4,SCH-0.47,z0+1.6],[x1-9.4,SCH-0.47,z0+2.4],[x0+9.4,SCH-0.47,z0+2.4]],{fill:"#1f2328",flat:true});
+  /* the bezel, bevelled at its front edge */
+  box3(x0,x1,0.6,SCH,zb,z1-0.35,BEZ,{id:"scope",top:"#eef0ed"});
+  box3(x0+0.3,x1-0.3,0.9,SCH-0.3,z1-0.35,z1,BEZ,{id:"scope",top:"#eef0ed"});
   tex3(scope, 0, 0, scope.width, scope.height, [x0+0.3, SCH-0.3, z1+0.01], [SCW-0.6,0,0], [0,-(SCH-0.6),0], {id:"scope"});
+  /* feet: rubber pads at the back, fold-out legs at the front */
+  for (const xx of [x0 + 2.5, x1 - 2.5]){ box3(xx-1,xx+1,0,0.9,z0-8.2,z0-6.4,"#1d1f22"); box3(xx-1,xx+1,0,0.6,zb-1.6,zb,"#2a2c30"); box3(xx-0.9,xx+0.9,0,0.5,zb-3.6,zb-1.6,"#3a3d42"); }
+  /* knobs: grey caps with a pointer, on short skirts */
+  for (const k in KNOBS){ const [fx, fy, fr] = KNOBS[k], c = SCF(fx, fy), r = fr * (SCW - 0.6), h = r > 0.7 ? 1.1 : 0.85;
+    cyl3("z", z1, z1 + 0.25, c[0], c[1], r * 1.08, "#c9cbc8", {seg:20, id:"scope"});
+    cyl3("z", z1 + 0.25, z1 + h, c[0], c[1], r, "#dcdedb", {seg:20, id:"scope", cap:"#eceeeb"});
+    line3([c[0], c[1] + r * 0.35, z1 + h + 0.01], [c[0], c[1] + r * 0.9, z1 + h + 0.01], "#7a7d80", 1.6); }
+  /* keys: raised rubber caps in their colours, the label printed on top */
+  for (const b in BTNS){ const [fx, fy, fw, fh, lab, col] = BTNS[b], c = SCF(fx, fy), w = fw * (SCW - 0.6) / 2, hh = fh * (SCH - 0.6) / 2;
+    box3(c[0]-w*0.92, c[0]+w*0.92, c[1]-hh*0.88, c[1]+hh*0.88, z1, z1+0.32, col, {id:"scope"});
+    text3([c[0], c[1], z1 + 0.33], [1,0,0], [0,1,0], lab.replace("\n", " "), Math.min(0.32, hh * 0.7), col === "#2b2c30" || col === "#2f9fe0" ? "#fff" : "#222", {align:"center", bias:2}); }
+  for (let i = 0; i < 6; i++){ const c = SCF(0.1230 + i * 0.0688, 0.2192); box3(c[0]-0.62,c[0]+0.62,c[1]-0.27,c[1]+0.27,z1,z1+0.25,"#ececea",{id:"scope"}); }
+  { const c = SCF(0.0567, 0.2279); cyl3("z", z1, z1 + 0.3, c[0], c[1], 0.42, "#d6d6d3", {seg:14, id:"scope"}); }
+  { const c = SCF(0.1103, 0.1270); cyl3("z", z1, z1 + 0.35, c[0], c[1], 0.46, S.power ? "#bfe3b1" : "#c6c6c3", {seg:16, id:"scope", cap:S.power ? "#cfeec4" : "#d2d2cf"}); }
+  /* the BNC inputs: a nickel barrel with two bayonet studs */
+  for (const fx of [0.6418, 0.7457, 0.8496]){ const c = SCF(fx, 0.2341);
+    cyl3("z", z1, z1 + 0.25, c[0], c[1], 0.62, "#a9adb1", {seg:16}); cyl3("z", z1 + 0.25, z1 + 1.0, c[0], c[1], 0.42, "#cfd3d7", {seg:16, cap:"#2a2c2e"});
+    for (const s2 of [-1, 1]) cyl3("x", c[0] + s2 * 0.42, c[0] + s2 * 0.6, c[1], z1 + 0.7, 0.07, "#cfd3d7", {seg:6}); }
 }
-/* where each terminal is on the bench: sockets on the box, inputs on the scope, the pendulum terminals,
-   and the plugs at the ends of the photogate, holder and adaptor leads (in their socket, or lying on the desk) */
+/* ---- the terminals and the leads -------------------------------------------------------------
+   Each terminal has a place, an outward direction and the kind of plug that goes in it. A lead leaves its
+   terminal along that direction, drops to the desk once it is clear of the instruments, and runs round them. */
+const TERM = {
+  box_mag: {n:[-1,0,0], kind:"jack"}, box_gate:{n:[-1,0,0], kind:"jack"}, box_dc:{n:[-1,0,0], kind:"barrel"},
+  box_ch:  {n:[1,0,0], kind:"post"},  box_gnd: {n:[1,0,0], kind:"post"},  box_ball:{n:[0,0,1], kind:"banana"},
+  ch1:{n:[0,0,1], kind:"bnc"}, ch2:{n:[0,0,1], kind:"bnc"}, gnd:{n:[0,0,1], kind:"lug"},
+  ball1:{n:[0,1,0], kind:"post"}, ball2:{n:[0,1,0], kind:"post"},
+  photogate:{n:[0,0,1], kind:"jack"}, magnet:{n:[0,0,1], kind:"jack"}, adaptor:{n:[1,0,0], kind:"barrel"} };
 function term3(k){
-  const [bx, , bz] = BOX, h = S.bench.hang(), F = (fx, fy) => [SC0[0] + 0.3 + fx * (SCW - 0.6), SCH - 0.3 - (1 - fy) * (SCH - 0.6), SC0[2] + SCD + 0.05];
-  return {box_gate:[bx-4.6,3.2,bz-3.5], box_mag:[bx-4.6,3.2,bz], box_dc:[bx-4.6,3.2,bz+3.5], box_ch:[bx-2.8,3.2,bz+7], box_gnd:[bx-0.6,3.2,bz+7], box_ball:[bx+2.4,3.2,bz+7],
-    ch1:F(0.6418,0.2341), ch2:F(0.7457,0.2341), gnd:F(0.937,0.255), ball1:[h[0]*100,PIV+5.4,-0.4], ball2:[h[1]*100,PIV+5.4,-0.4]}[k] || plugAt(k); }
+  const [bx, , bz] = BOX, h = S.bench.hang(), ys = 2.2;
+  const P = {box_mag:[bx-4,ys,bz-6.2], box_gate:[bx-4,ys,bz-0.4], box_dc:[bx-4,ys,bz+3.4], box_ch:[bx+4,ys+0.3,bz-1.0], box_gnd:[bx+4,ys+0.3,bz+1.6], box_ball:[bx+2.2,ys,bz+8],
+    ch1:SCF(0.6418,0.2341,1.0), ch2:SCF(0.7457,0.2341,1.0), gnd:SCF(0.937,0.235,0.3), ball1:[h[0]*100,PIV+5.4,-0.4], ball2:[h[1]*100,PIV+5.4,-0.4]}[k];
+  return P || plugAt(k); }
 const PLUGS = {photogate:"box_gate", magnet:"box_mag", adaptor:"box_dc"};
-const REST = {photogate:[-4,0.5,13], magnet:[-10,0.5,17], adaptor:[15,0.5,29]};
-function plugAt(k){ for (const l of S.links){ const [a, b] = l.split("|"), o = a === k ? b : b === k ? a : null; if (o && !PLUGS[o]){ const t = term3(o); return o.startsWith("box_") ? [t[0] + (t[0] < BOX[0] ? -0.7 : 0.7), t[1], t[2]] : [t[0], t[1], t[2] + 0.8]; } }
-  return k === "photogate" ? [S.bench.xGate/10 + REST.photogate[0], REST.photogate[1], REST.photogate[2]] : REST[k]; }
+const REST = {photogate:[-4,0.6,14], magnet:[-12,0.6,18], adaptor:[14,0.6,30]};
+/* where a device's own lead starts on the device */
+function leadRoot(k){ if (k === "photogate"){ const j = gateJack(); return {p:j, n:[0,0,1]}; }
+  if (k === "magnet"){ const [kx, ky] = holderK(); return {p:[kx, ky - 0.6, 1.4], n:[0,0,1]}; }
+  return {p:[24.3, 1.5, 23.2], n:[1,0,0]}; }
+function partnerOf(k){ for (const l of S.links){ const [a, b] = l.split("|"); if (a === k) return b; if (b === k) return a; } return null; }
+/* the plug at the end of a device's lead: in its socket, or lying on the desk */
+function plugAt(k){ const o = partnerOf(k); if (o && !PLUGS[o]) return term3(o); return k === "photogate" ? [S.bench.xGate / 10 + REST.photogate[0], REST.photogate[1], REST.photogate[2]] : REST[k]; }
+const plugDir = k => { const o = partnerOf(k); return o && !PLUGS[o] ? TERM[o].n : [0, 0, 1]; };
 const pickCol = k => S.pick === k ? "#ff8a2a" : null;
-function socket3(k){ const t = term3(k), side = ["box_ch","box_gnd","box_ball"].includes(k) ? "z" : "x", col = pickCol(k) || T[k].c;
-  if (side === "x"){ const o = t[0] < BOX[0] ? -1 : 1; cyl3("x", t[0], t[0] + o * 0.45, t[1], t[2], 0.6, col, {seg:14, id:"t:" + k, cap:"#0b0b0b"}); }
-  else cyl3("z", t[2], t[2] + 0.45, t[0], t[1], 0.6, col, {seg:14, id:"t:" + k, cap:"#0b0b0b"}); }
-function plug3(k){ const e = plugAt(k), col = pickCol(k) || T[k].c; sphere3(e, 0.75, col, {id:"t:" + k}); }
-function sag3(a, b, col, w, sag, id){ const pts = []; for (let i = 0; i <= 22; i++){ const t = i / 22;
-  pts.push([a[0]+(b[0]-a[0])*t, Math.max(0.25, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*sag), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w, id ? {id} : undefined); }
+/* obstacles on the desk, as x-z rectangles a lead must go round */
+function holderK(){ if (S.held){ const p = state().p[0], n = Math.hypot(p[0], p[1]) || 1, b = S.bench; return [(p[0] + p[0] / n * b.R(0)) * 100 + p[0] / n * 3.2, PIV + (p[1] + p[1] / n * b.R(0)) * 100 + p[1] / n * 3.2]; } return [-27.2, 16]; }
+function obstacles(){ const [bx, , bz] = BOX, kx = holderK()[0];
+  return [[-35.2,-9.8,35.2,9.6],[SC0[0]-0.6,SC0[2]-9.2,SC0[0]+SCW+0.6,SC0[2]+SCD+0.6],[bx-4.6,bz-8.6,bx+4.6,bz+8.6],[17.5,21.5,24.5,26.5],[kx-4.6,0,kx+4.6,9.2]]; }
+const inRect = (p, r) => p[0] > r[0] && p[0] < r[2] && p[1] > r[1] && p[1] < r[3];
+function segHits(a, b, r){ let t0 = 0, t1 = 1; const dx = b[0] - a[0], dz = b[1] - a[1];
+  for (const [pp, q] of [[-dx, a[0] - r[0]], [dx, r[2] - a[0]], [-dz, a[1] - r[1]], [dz, r[3] - a[1]]]){
+    if (Math.abs(pp) < 1e-9){ if (q <= 0) return false; continue; } const t = q / pp; if (pp < 0){ if (t > t0) t0 = t; } else if (t < t1) t1 = t; if (t0 >= t1) return false; }
+  return t1 - t0 > 1e-6; }
+/* the shortest way round the obstacles on the desk between two points */
+function deskRoute(A, B){ const R2 = obstacles(), free = (a, b) => R2.every(r => inRect(a, r) || inRect(b, r) || !segHits(a, b, r));
+  if (free(A, B)) return [A, B];
+  const N = [A, B]; for (const r of R2) for (const c of [[r[0]-1,r[1]-1],[r[2]+1,r[1]-1],[r[2]+1,r[3]+1],[r[0]-1,r[3]+1]]) if (!R2.some(q => inRect(c, q))) N.push(c);
+  const d = N.map(() => Infinity), prev = N.map(() => -1), done = N.map(() => false); d[0] = 0;
+  for (;;){ let u = -1; for (let i = 0; i < N.length; i++) if (!done[i] && (u < 0 || d[i] < d[u])) u = i; if (u < 0 || d[u] === Infinity || u === 1) break; done[u] = true;
+    for (let v = 0; v < N.length; v++) if (!done[v] && free(N[u], N[v])){ const w = d[u] + Math.hypot(N[u][0]-N[v][0], N[u][1]-N[v][1]); if (w < d[v]){ d[v] = w; prev[v] = u; } } }
+  if (prev[1] < 0) return [A, B]; const path = []; for (let v = 1; v >= 0; v = prev[v]) path.unshift(N[v]); return path; }
+/* the point where a lead leaving terminal position p along n comes down onto the desk */
+function exitOf(p, n){ let q = [p[0] + n[0] * 1.6, p[1] + n[1] * 1.6, p[2] + n[2] * 1.6]; const R2 = obstacles();
+  const out = [0, 0, 1], dir = Math.abs(n[1]) > 0.5 ? out : n;
+  for (let k = 0; k < 60 && R2.some(r => inRect([q[0], q[2]], r)); k++) q = [q[0] + dir[0], q[1], q[2] + dir[2]];
+  return q; }
+function leadPath(a, na, b, nb){ const ea = exitOf(a, na), eb = exitOf(b, nb), mid = deskRoute([ea[0], ea[2]], [eb[0], eb[2]]);
+  const pts = [a, [a[0] + na[0] * 1.6, a[1] + na[1] * 1.6, a[2] + na[2] * 1.6]];
+  if (Math.hypot(ea[0] - pts[1][0], ea[2] - pts[1][2]) > 0.1) pts.push(ea);
+  for (const m of mid) pts.push([m[0], 0.32, m[1]]);
+  if (Math.hypot(eb[0] - b[0] - nb[0] * 1.6, eb[2] - b[2] - nb[2] * 1.6) > 0.1) pts.push(eb);
+  pts.push([b[0] + nb[0] * 1.6, b[1] + nb[1] * 1.6, b[2] + nb[2] * 1.6], b);
+  /* soften the corners so it lies like a cable */
+  let q = pts; for (let it = 0; it < 2; it++){ const r = [q[0]]; for (let i = 0; i < q.length - 1; i++){ const A2 = q[i], B2 = q[i + 1];
+    if (i > 0) r.push([A2[0]*0.75+B2[0]*0.25, A2[1]*0.75+B2[1]*0.25, A2[2]*0.75+B2[2]*0.25]); if (i < q.length - 2) r.push([A2[0]*0.25+B2[0]*0.75, A2[1]*0.25+B2[1]*0.75, A2[2]*0.25+B2[2]*0.75]); }
+    r.push(q[q.length - 1]); q = r; }
+  return q; }
+/* a plug of the given kind seated at p and pointing out along n */
+function plugModel(kind, p, n, col, id){ const o = id ? {id} : {}, at = d => [p[0] + n[0] * d, p[1] + n[1] * d, p[2] + n[2] * d];
+  if (kind === "banana"){ cylAB(p, at(0.5), 0.2, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.5), at(2.4), 0.42, col, Object.assign({seg:12}, o)); cylAB(at(1.0), at(1.4), 0.5, col, Object.assign({seg:12}, o)); }
+  else if (kind === "bnc"){ cylAB(p, at(1.1), 0.68, "#c4c8cc", Object.assign({seg:14}, o)); cylAB(at(1.1), at(2.8), 0.48, "#1d1f22", Object.assign({seg:12}, o)); }
+  else if (kind === "jack" || kind === "barrel"){ cylAB(p, at(0.3), 0.3, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.3), at(2.0), kind === "barrel" ? 0.48 : 0.38, "#1b1c1f", Object.assign({seg:12}, o)); }
+  else if (kind === "post" || kind === "lug"){ /* an alligator clip on the post */ cylAB(p, at(0.6), 0.25, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.6), at(2.6), 0.42, col, Object.assign({seg:10}, o)); }
+}
+function socket3(k){ const t = term3(k), n = TERM[k].n, col = pickCol(k), at = d => [t[0] + n[0] * d, t[1] + n[1] * d, t[2] + n[2] * d], id = "t:" + k, kind = TERM[k].kind;
+  if (kind === "jack" || kind === "barrel"){ cylAB(at(-0.02), at(0.25), 0.55, col || "#c9ced3", {seg:14, id, cap:"#0b0b0b"}); }
+  else if (kind === "post"){ cylAB(at(-0.02), at(0.8), 0.3, "#d8dcdf", {seg:10, id}); cylAB(at(0.4), at(0.75), 0.5, col || "#c9ced3", {seg:14, id, cap:"#e2e5e8"}); }
+  else if (kind === "banana"){ cylAB(at(-0.02), at(0.45), 0.6, col || "#d0352b", {seg:14, id, cap:"#3a0e0b"}); } }
 function cables3(){
-  /* the leads fixed to their instruments */
-  const g = S.bench.xGate / 10;
-  sag3([g, RAILY+6, 4.8], plugAt("photogate"), "#2b2e32", 1.6, 4); plug3("photogate");
-  sag3([21, 2, 24], plugAt("adaptor"), "#141414", 1.8, 0.6); plug3("adaptor");
-  /* the patch leads */
-  for (const l of S.links){ const [a, b] = l.split("|"); if (PLUGS[a] || PLUGS[b]) continue;
-    const A = term3(a), B = term3(b), d = Math.hypot(A[0]-B[0], A[1]-B[1], A[2]-B[2]);
-    sag3(A, B, a === "box_ch" || b === "box_ch" ? "#151515" : T[a].c, 2, Math.min(14, d * 0.25)); }
-  for (const k of ["ch1","ch2","gnd"]){ const t = term3(k); if (k === "gnd") box3(t[0]-0.35,t[0]+0.35,t[1]-0.8,t[1]+0.8,t[2]-0.05,t[2]+0.35,pickCol(k)||"#b9b9b6",{id:"t:"+k});
-    else cyl3("z", t[2] - 0.05, t[2] + 0.9, t[0], t[1], 0.55, pickCol(k) || "#c2c2bf", {seg:14, id:"t:" + k, cap:"#4a4a48"}); }
+  for (const k of ["ch1","ch2"]){ const t = term3(k); if (pickCol(k)) cyl3("z", t[2] - 0.1, t[2] + 0.05, t[0], t[1], 0.7, "#ff8a2a", {seg:14}); sphere3([t[0], t[1], t[2] - 0.2], 0.5, "rgba(0,0,0,0)", {id:"t:" + k}); }
+  { const t = term3("gnd"); box3(t[0]-0.32,t[0]+0.32,t[1]-0.9,t[1]+0.9,t[2]-0.3,t[2],pickCol("gnd")||"#c4c8cc",{id:"t:gnd"}); }
   for (const k of ["ball1","ball2"]) if (k === "ball1" || S.bench.two){ const t = term3(k); sphere3(t, 0.45, pickCol(k) || "#d6493a", {id:"t:" + k}); }
+  /* the leads fixed to their instruments, to their plugs */
+  for (const k of ["photogate","magnet","adaptor"]){ const r = leadRoot(k), e = plugAt(k), n = plugDir(k), o = partnerOf(k);
+    const end = [e[0] + n[0] * 2.0, e[1] + n[1] * 2.0, e[2] + n[2] * 2.0];
+    poly3(o ? leadPath(r.p, r.n, end, n) : leadPath(r.p, r.n, end, n).slice(0, -1).concat([end]), k === "magnet" ? "#2a2a2a" : "#151517", 1.8);
+    plugModel(k === "adaptor" ? "barrel" : "jack", e, n, pickCol(k) || "#1b1c1f", "t:" + k); }
+  /* the patch leads: the scope probe (BNC to the CH post), the ground lead, the thin red ball wires */
+  for (const l of S.links){ const [a, b] = l.split("|"); if (PLUGS[a] || PLUGS[b]) continue;
+    const A = term3(a), B = term3(b), na = TERM[a].n, nb = TERM[b].n, col = a === "box_ch" || b === "box_ch" ? "#151515" : (a.startsWith("ball") || b.startsWith("ball") || a === "box_ball" || b === "box_ball") ? "#d84a2a" : "#2a2a2a";
+    const ea = [A[0] + na[0] * 2.4, A[1] + na[1] * 2.4, A[2] + na[2] * 2.4], eb = [B[0] + nb[0] * 2.4, B[1] + nb[1] * 2.4, B[2] + nb[2] * 2.4];
+    poly3(leadPath(ea, na, eb, nb), col, col === "#d84a2a" ? 1.1 : 1.8);
+    for (const [k, P, n] of [[a, A, na], [b, B, nb]]) plugModel(TERM[k].kind, P, n, TERM[k].kind === "bnc" ? "#1d1f22" : k === "box_ball" ? "#d0352b" : k.startsWith("ball") ? "#d84a2a" : "#2a2a2a"); }
   /* a lead being carried: from its terminal to the hand */
-  if (S.pick){ const A = term3(S.pick), q = onPlane(m3[0], m3[1], 2.5); sag3(A, q, "#ff8a2a", 1.4, 2); }
+  if (S.pick){ const A = PLUGS[S.pick] ? leadRoot(S.pick).p : term3(S.pick), n = PLUGS[S.pick] ? leadRoot(S.pick).n : TERM[S.pick].n, q = onPlane(m3[0], m3[1], 0.4);
+    poly3(leadPath(A, n, q, [0, 1, 0]), "#ff8a2a", 1.6); }
 }
 function scene3(){
   desk3(); base3(); fans3(); column3(); gate3(); balls3(); holder3(); box3d(); scope3d(); cables3();
