@@ -938,13 +938,28 @@ class App:
             (T("실시간", "live") if self.live else (T("한 장", "single") if self.hold else ""))
         cv.create_text(x1 - 6, y0 + 12, anchor="e", text=mode, font=("Arial", 10, "bold"))
 
+    def ccd_plate(self, c, cx, y0, y1):
+        """the CCD as on the sheet: a black square plate, four screws, the long chip down its middle"""
+        s = (y1 - y0) / 2
+        c.create_rectangle(cx - s, y0, cx + s, y1, fill="#141416", outline="#000")
+        c.create_polygon(cx - 0.55 * s, y1, cx - 0.55 * s, y1 - 0.6 * s, cx, y1 - 0.95 * s, cx + 0.55 * s, y1 - 0.6 * s, cx + 0.55 * s, y1, fill="#1d1e21", outline="")
+        c.create_rectangle(cx - 0.2 * s, y0 + 0.08 * s, cx + 0.2 * s, y1 - 0.08 * s, fill="#2b2c30", outline="#b89a5a")
+        c.create_rectangle(cx - 0.1 * s, y0 + 0.18 * s, cx + 0.1 * s, y1 - 0.18 * s, fill="#7a7f88", outline="")
+        for dx in (-0.78, 0.78):
+            for dy in (0.22, 1.78):
+                x, y = cx + dx * s, y0 + dy * s
+                c.create_oval(x - 4, y - 4, x + 4, y + 4, fill="#c3c8cd", outline="#7b8087")
+        for i, col in enumerate(("#e8463c", "#f39a2e", "#f1d93a", "#43b649", "#2f8fd6", "#a347b8")):
+            x = cx - 0.3 * s + i * 0.12 * s
+            c.create_line(x, y1, x, y1 + 0.35 * s, fill=col, width=2)
+
     def draw_screen(self):
         c = self.screen_cv
         c.delete("all")
         o = self.B.optics()
         c.create_text(8, 10, anchor="w", text=T("스크린 면", "screen face"), font=("Arial", 9, "bold"))
         cx, zy, sz = 100, 180, 12
-        c.create_rectangle(cx - 8, zy - 5.8 * sz, cx + 8, zy - 2.2 * sz, fill="#101113")
+        self.ccd_plate(c, cx, zy - 6.3 * sz, zy - 1.6 * sz)
         lit = o and self.B.sources()
         if lit:
             bl = min(30, 2 + o[1] * 3)

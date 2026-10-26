@@ -12,93 +12,106 @@
 <meta property="og:title" content="ISPhO 2024 실험 — 흡수 분광과 화학 반응 속도 · Absorption Spectroscopy and Chemical Kinetics">
 <meta property="og:description" content="ISPhO 2024 실험: 분광기 보정, 인디고 카민의 흡수 단면적, 페놀프탈레인 반응 속도, 화학 신호등.">
 <style>
+  /* the ISPhO 2026 look: a light page, the lab in a Windows 10 window with Tk-style group boxes */
   :root{
-    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
-    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+    --bg:#e8ebee; --panel:#f0f0f0; --ink:#000; --muted:#5b6b7c;
+    --line:#dcdcdc; --accent:#2c6f9b; --accent-soft:#e1e1e1; --deep:#fff;
   }
   *{box-sizing:border-box}
   [hidden]{display:none!important}
-  html,body{margin:0;padding:0}
-  body{
-    background:var(--bg); color:var(--ink);
-    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
-         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  }
-  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  html,body{margin:0;padding:0;background:var(--bg)}
+  body{color:#000;font:13px/1.45 "Segoe UI",-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:14px 16px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+  header h1{margin:0;font-size:16px;font-weight:650;color:#000}
+  header p{margin:2px 0 0;font-size:12px;color:var(--muted);max-width:1200px}
+  .lang{display:flex;border:1px solid #c3ccd4;border-radius:6px;overflow:hidden;background:#fff}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:6px 13px;font:600 12px inherit;
+               color:var(--muted);background:#fff;cursor:pointer;text-align:center}
+  .lang button:hover:not(.on){background:#f3f6f8;border:0}
+  .lang button.on{background:#2c6f9b;color:#fff}
+
+  /* ── the window ── */
+  .winwrap{max-width:1680px;margin:12px auto 26px;padding:0 16px}
+  .win{background:#f0f0f0;border:1px solid #8f8f8f;box-shadow:0 8px 28px -12px rgba(0,0,0,.45);
+       font:12px "Segoe UI",Tahoma,"Malgun Gothic",sans-serif;color:#000}
+  .cap{height:30px;background:#fff;display:flex;align-items:center;font-size:12px;user-select:none}
+  .cap svg{margin:0 8px 0 9px}
+  .cap .tt{flex:1}
+  .cap .wb{width:46px;height:30px;display:flex;align-items:center;justify-content:center}
+  .cap .wb:hover{background:#e5e5e5}
+  .cap .wb.x:hover{background:#e81123}
+  .cap .wb.x:hover svg path{stroke:#fff}
+  .wrap{padding:10px;display:flex;gap:10px;align-items:flex-start}
   @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
-  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
-        border-radius:10px;padding:8px;position:sticky;top:12px}
-  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
-           color:var(--accent);text-align:center}
-  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+
+  /* group boxes: a thin border with the caption cut into its top edge */
+  .tray,.card,.panel{background:#f0f0f0;border:1px solid #dcdcdc;border-radius:0;position:relative}
+  .tray{flex:0 0 206px;padding:16px 8px 8px;position:sticky;top:12px}
+  .tray h3{position:absolute;left:6px;top:-9px;margin:0;padding:0 2px;background:#f0f0f0;
+           font-size:12px;font-weight:400;line-height:16px;color:#000;letter-spacing:0;text-transform:none}
+  #tray{display:block;width:100%;height:auto;background:#fff;border:1px solid #dcdcdc;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;background:#fff;border:1px solid #d9d9d9;border-top:0;touch-action:none}
   @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
   @media (max-width:760px){ .tray{flex:1 1 100%} }
 
   /* ── stage ── */
-  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap}
-  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
-  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
-        font-size:13.5px;line-height:1.7;color:#d6dde2}
-  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:14px}
+  .card{padding:14px 10px 10px}
+  .card h3{margin:0 0 6px;font-size:12px;font-weight:400;color:#33414e;line-height:1.45}
+  #cv{display:block;width:100%;height:auto;touch-action:none;cursor:default;background:#dfe3e7;border:1px solid #adadad}
+  /* the close-up tabs: a Tk notebook */
+  .tabs{display:flex;gap:0;flex-wrap:wrap;padding:0 2px;position:relative;z-index:1}
+  .tabs button{width:auto;margin:2px -1px 0 0;padding:2px 8px 3px;font-size:12px;font-weight:400;color:#000;height:21px;line-height:14px;
+               background:#f0f0f0;border:1px solid #d9d9d9;border-bottom:0;border-radius:0}
+  .tabs button:hover:not(.on){background:#d8eaf9;border-color:#3c7fb1}
+  .tabs button.on{background:#fff;margin-top:0;height:23px;padding:3px 10px;border-color:#d9d9d9;color:#000;font-weight:400;position:relative;z-index:2}
+  .card .tabs + h3{background:#fff;border:1px solid #d9d9d9;border-bottom:0;margin:-1px 0 0;padding:6px 8px;color:#33414e}
+  .info{background:#fff;border:1px solid #dcdcdc;padding:14px 18px;font-size:13px;line-height:1.7;color:#1b1d20}
+  .info h4{margin:14px 0 4px;color:#2c6f9b;font-size:13px}
   .info h4:first-child{margin-top:0}
   .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
-  .info .warn{color:#f0a79f;font-weight:600}
+  .info .warn{color:#c42b1c;font-weight:600}
 
   /* ── control panel ── */
-  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
-         border-radius:10px;padding:12px;position:sticky;top:12px}
+  .panel{flex:0 0 300px;padding:12px 12px 12px;position:sticky;top:12px}
   @media (max-width:1180px){ .panel{position:static} }
   @media (max-width:760px){ .panel{flex:1 1 100%} }
-  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
-            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2{font-size:12px;font-weight:400;color:#000;letter-spacing:0;text-transform:none;
+            margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #dcdcdc}
   .panel h2:first-of-type{margin-top:0}
-  .row{display:flex;gap:5px;flex-wrap:wrap}
-  .row button{flex:1;text-align:center;min-width:0}
-  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
-         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
-         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
-  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
-  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
-  button:disabled{opacity:.45;cursor:default}
-  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
-  #redBtn:hover{background:#a3322b}
-  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
-  .chk input{accent-color:var(--accent);width:15px;height:15px}
-  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
-  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
-          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:12px;min-height:120px}
-  .status div + div{margin-top:8px}
-  .status .w{color:#f0a79f}
-
-  /* ── header ── */
-  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
-         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
-  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
-  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
-  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
-               font-weight:600;color:var(--muted);text-align:center;background:transparent}
-  .lang button.on{background:var(--accent);color:#1c2027}
-  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
-        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
-  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
-  #closeCv{touch-action:none}
+  .row{display:flex;gap:4px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0;padding:0 3px}
+  button{height:23px;padding:0 8px;margin:3px 0;cursor:default;background:#e1e1e1;border:1px solid #adadad;border-radius:0;
+         font:12px "Segoe UI",Tahoma,"Malgun Gothic",sans-serif;color:#000;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  button:hover:not(:disabled){background:#e5f1fb;border-color:#0078d7}
+  button:active:not(:disabled){background:#cce4f7;border-color:#005499}
+  button.on,.row button.on{background:#cce4f7;border-color:#005499;color:#000;font-weight:600}
+  button:disabled{color:#a0a0a0;background:#ececec;border-color:#cfcfcf}
+  #redBtn{width:100%;height:30px;background:#c42b1c;border-color:#8e1f14;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#d83b2b;border-color:#8e1f14}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;font-size:12px}
+  .chk input{accent-color:#0078d7;width:13px;height:13px}
+  .hint{font-size:12px;color:#33414e;line-height:1.55;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12px/1.6 "Segoe UI","Malgun Gothic",sans-serif;color:#000;background:#fff;border:1px solid #7a7a7a;
+          padding:7px 8px;margin-top:12px;min-height:120px}
+  .status div + div{margin-top:7px}
+  .status .w{color:#c42b1c}
+  .disp{font:600 22px/1.2 Consolas,ui-monospace,monospace;text-align:center;background:#fff;border:1px solid #7a7a7a;
+        padding:4px 0;color:#000;letter-spacing:.04em;margin:2px 0 3px}
+  .laps{font:12px/1.6 Consolas,ui-monospace,monospace;color:#33414e;max-height:130px;overflow:auto;margin-top:4px}
+  .ent{width:100%;background:#fff;color:#000;border:1px solid #7a7a7a;border-radius:0;outline:0;font:12px Consolas,ui-monospace,monospace;padding:3px 4px}
+  .ent:hover{border-color:#171717}
+  .ent:focus{border-color:#0078d7}
   .instr3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .instr3 canvas{display:block;width:100%;background:var(--deep);border-radius:6px}
-  .ilbl{font-size:12px;color:#f2c14e;font-weight:700;margin:0 0 4px}
+  .instr3 canvas{display:block;width:100%;background:#fff;border:1px solid #dcdcdc}
+  .ilbl{font-size:12px;color:#2c6f9b;font-weight:700;margin:0 0 4px}
   @media(max-width:900px){.instr3{grid-template-columns:1fr}}
   .chklist{font-size:12px;line-height:1.7}
-  .chklist div{display:flex;justify-content:space-between;gap:8px;color:#9aa3ab}
-  .chklist b{font-weight:600}.chklist .ok{color:#7fd39a}.chklist .no{color:#f0b35a}.chklist .na{color:#5c646d}
-button.on{background:#3a3220;border-color:#f2c14e;color:#ffd77a}
-  .row button.on{background:#f2c14e;color:#1b1d20;border-color:#f2c14e}
+  .chklist div{display:flex;justify-content:space-between;gap:8px;color:#33414e}
+  .chklist b{font-weight:600}.chklist .ok{color:#107c10}.chklist .no{color:#b85c00}.chklist .na{color:#8a8a8a}
 </style>
 </head>
 <body>
@@ -114,6 +127,8 @@ button.on{background:#3a3220;border-color:#f2c14e;color:#ffd77a}
   </div>
 </header>
 
+<div class="winwrap"><div class="win">
+  <div class="cap"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 1.5h4M6.8 1.5v4.2L2.6 13a1.3 1.3 0 0 0 1.1 1.9h8.6a1.3 1.3 0 0 0 1.1-1.9L9.2 5.7V1.5" fill="#dbe9f5" stroke="#2b5a8f" stroke-width="1"/><path d="M4.1 10.5h7.8l1.3 2.4a.9.9 0 0 1-.8 1.3H3.6a.9.9 0 0 1-.8-1.3z" fill="#4a7fbd"/></svg><span class="tt">HaslaLab — ISPhO 2024 E1 · Absorption Spectroscopy</span><span class="wb"><svg width="10" height="10"><path d="M0 5.5h10" stroke="#000"/></svg></span><span class="wb"><svg width="10" height="10"><path d="M.5.5h9v9h-9z" stroke="#000" fill="none"/></svg></span><span class="wb x"><svg width="10" height="10"><path d="M0 0l10 10M10 0L0 10" stroke="#000"/></svg></span></div>
 <div class="wrap">
   <aside class="tray">
     <h3 id="t-tray"></h3>
@@ -152,14 +167,15 @@ button.on{background:#3a3220;border-color:#f2c14e;color:#ffd77a}
     <div class="row"><button id="swGo"></button><button id="swRst"></button></div>
 
     <h2 id="t-h-note"></h2>
-    <div class="row"><input id="cfg" style="flex:1;min-width:0;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;padding:5px 6px;font:12px ui-monospace,Consolas,monospace"></div>
+    <div class="row"><input id="cfg" class="ent" style="flex:1;min-width:0"></div>
     <div class="hint" id="cfgHint"></div>
     <div class="row"><button id="noteBtn"></button><button id="noteClr"></button><button id="noteSave"></button></div>
-    <textarea id="note" rows="8" style="width:100%;resize:vertical;background:var(--deep);color:#e8eef2;border:1px solid var(--line);border-radius:6px;font:12px/1.5 ui-monospace,Consolas,monospace;padding:6px"></textarea>
+    <textarea id="note" class="ent" rows="8" style="resize:vertical;font:12px/1.5 Consolas,ui-monospace,monospace;padding:5px"></textarea>
 
     <div class="status" id="status"></div>
   </aside>
 </div>
+</div></div>
 
 <script>
 "use strict";
@@ -904,31 +920,76 @@ const xw=t=>TBL.x0+t;
 const POS={psu:[106,44],adapter:[46,40],con4:[40,32],con2:[52,32],sensor:[92,30],laptop:[106,12],ledcon:[26,30],ledrgb:[31,30],ledunk:[36,30],
   wash:[6,46],naoh:[14,58],ic:[18,58],ind:[22,58],gl:[28,58],nacl:[33,58],syr3:[44,64],syrIns:[44,68],tubes:[60,60],cuvettes:[76,36],waste:[90,62],gloves:[18,68]};
 const BLACK="#16171a", BLACK2="#22242a", GLASS="rgba(214,232,240,0.30)";
+/* ── printed surfaces: small canvases painted once and laid on faces ── */
+const TEXC={};
+function texCv(key,w,h,fn){ let c=TEXC[key]; if(!c){ c=document.createElement("canvas"); c.width=w; c.height=h; fn(c.getContext("2d"),w,h); c._static=true; TEXC[key]=c; } return c; }
+/* O: the top-left corner, U: along the picture's width, V: down its height (bench cm) */
+function texQ(cv,O,U,V,id){ tex3(cv,0,0,cv.width,cv.height,M(O),Mdir(U),Mdir(V),{id,bias:0.6}); }
+/* a cone frustum (conical tubes, cups) */
+function frustum(c0,ax,len,r0,r1,col,o){ o=o||{}; const n=o.seg||24, t=Math.abs(ax[2])<0.9?Z3:[1,0,0];
+  let u=[ax[1]*t[2]-ax[2]*t[1],ax[2]*t[0]-ax[0]*t[2],ax[0]*t[1]-ax[1]*t[0]]; u=vmul(u,1/vlen(u)); const v=[ax[1]*u[2]-ax[2]*u[1],ax[2]*u[0]-ax[0]*u[2],ax[0]*u[1]-ax[1]*u[0]];
+  const c1=vadd(c0,vmul(ax,len)), A=ring3(c0,u,v,r0,n), B=ring3(c1,u,v,r1,n);
+  for(let i=0;i<n;i++){ const j=(i+1)%n, m=vmul(vadd(vsub(A[i],c0),vsub(A[j],c0)),0.5); F([A[i],A[j],B[j],B[i]],col,Object.assign({},o,{n:vadd(m,vmul(ax,(r0-r1)/len*vlen(m)))})); }
+  if(o.cap) F(B,o.cap,Object.assign({},o,{n:ax})); }
+/* a pan-head screw seen on a face with outward normal n */
+function screw(c,n,r,id){ ocyl(c,n,0.08,r||0.26,"#c3c8cd",{seg:10,id,cap:"#d9dde1"}); }
+const RAINBOW=["#e8463c","#f39a2e","#f1d93a","#43b649","#2f8fd6","#5a4fc9","#a347b8"];
+
+/* the magnetic optical table: a black steel plate on a white base board */
 function drawTable(){ const {x0,x1,y0,y1,h}=TBL, id="table";
-  obox([(x0+x1)/2,(y0+y1)/2,h/2],[(x1-x0)/2,0,0],[0,(y1-y0)/2,0],[0,0,h/2],"#121316",{id,faceCol:n=>n[2]>0.5?"#17181b":null});
-  for(const [x,y] of [[x0+1.2,y0+1.2],[x1-1.2,y0+1.2],[x0+1.2,y1-1.2],[x1-1.2,y1-1.2]]) ocyl([x,y,h],Z3,0.05,0.35,"#9aa0a6",{seg:10}); }
+  obox([(x0+x1)/2,(y0+y1)/2,0.05],[(x1-x0)/2+1.2,0,0],[0,(y1-y0)/2+1.2,0],[0,0,0.05],"#ecebe7",{id});
+  obox([(x0+x1)/2,(y0+y1)/2,h/2],[(x1-x0)/2,0,0],[0,(y1-y0)/2,0],[0,0,h/2],"#121316",{id,faceCol:n=>n[2]>0.5?"#18191c":null}); }
+/* the foot every holder stands on: a black bar across the table with two studs */
+function drawFoot(x,id,half){ const z0=TBL.h, hy=half||3.6;
+  obox([x,AY,z0+0.35],[1.15,0,0],[0,hy,0],[0,0,0.35],BLACK,{id,faceCol:n=>n[2]>0.5?"#1c1d21":null});
+  for(const s of [-1,1]){ screw([x+0.55,AY+s*(hy-0.75),z0+0.7],Z3,0.3,id); ocyl([x+0.2,AY+s*(hy-1.5),z0+0.7],Z3,0.9,0.07,"#c3c8cd",{seg:6,id}); } }
+/* a black acrylic plate standing across the axis with a window wy × wz (half sizes) round the axis, four screws */
+function drawPlate(x,id,hw,zb,zt,wy,wz,zc){ const cz=zc||AZ, th=0.16;
+  obox([x,AY-(hw+wy)/2,(zb+zt)/2],[th,0,0],[0,(hw-wy)/2,0],[0,0,(zt-zb)/2],BLACK2,{id});
+  obox([x,AY+(hw+wy)/2,(zb+zt)/2],[th,0,0],[0,(hw-wy)/2,0],[0,0,(zt-zb)/2],BLACK2,{id});
+  obox([x,AY,(zt+cz+wz)/2],[th,0,0],[0,wy,0],[0,0,(zt-cz-wz)/2],BLACK2,{id});
+  obox([x,AY,(zb+cz-wz)/2],[th,0,0],[0,wy,0],[0,0,(cz-wz-zb)/2],BLACK2,{id});
+  if(hw-wy>1.0) for(const s of [-1,1]) for(const zz of [zt-0.6,zb+0.9]) for(const f of [-1,1]) screw([x+f*th,AY+s*(hw-0.55),zz],[f,0,0],0.24,id); }
 function ledGlow(c,col,a){ if(a<=0.01) return; sphere3(M(c),0.55+0.5*a,"rgba("+col+","+Math.min(0.85,0.25+0.6*a).toFixed(2)+")"); }
-/* an LED board: a small green board, the LED dome on its face */
-function drawLedBoard(k,c,up){ const id=k, col=k==="ledcon"?"#f6f6f0":k==="ledrgb"?"#eef0f4":"#f3e9c8";
-  if(up){ obox([c[0],c[1],c[2]+2.4],[0.08,0,0],[0,1.5,0],[0,0,2.4],"#1f6b3a",{id}); sphere3(M([c[0]+0.3,AY,AZ]),0.42,col,{id});
-    const b=brightness(); if(b>0.01&&ST.src===k){ const glow=k==="ledcon"?"235,240,255":k==="ledunk"?"255,190,60":ST.pin==="R"?"255,60,40":ST.pin==="G"?"60,255,90":"70,110,255"; ledGlow([c[0]+0.35,AY,AZ],glow,b); } return; }
-  obox([c[0],c[1],0.08],[2.0,0,0],[0,1.2,0],[0,0,0.08],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null}); sphere3(M([c[0]-1.0,c[1],0.4]),0.4,col,{id});
-  TX([c[0]-0.4,c[1]+0.3,0.17],[1,0,0],[0,-1,0],k==="ledcon"?"CON":k==="ledrgb"?"RGB":"UNK",0.42,"#d8f0dc",{weight:"700"}); }
-/* the holder for the light source */
+/* an LED board: a small green board, the LED dome on its face, a pin header at the top */
+const PCB_LED=k=>texCv("led"+k,60,110,(g,w,h)=>{ g.fillStyle="#1d7a3c"; g.fillRect(0,0,w,h); g.fillStyle="#2a9150"; g.fillRect(3,3,w-6,h-6);
+  const n=k==="ledrgb"?4:2; g.strokeStyle="#c7d97a"; g.lineWidth=1.2;
+  for(let i=0;i<n;i++){ const xx=30+(i-(n-1)/2)*9; g.beginPath(); g.moveTo(xx,98); g.lineTo(xx,72); g.lineTo(30,52); g.stroke(); g.fillStyle="#d8c070"; g.beginPath(); g.arc(xx,98,3.8,0,7); g.fill(); }
+  g.fillStyle="#e9e9e2"; g.fillRect(24,42,12,12); g.fillStyle="#e8f4e8"; g.font="bold 10px sans-serif"; g.save(); g.translate(48,14); g.rotate(Math.PI); g.fillText(k==="ledcon"?"CON":k==="ledrgb"?"RGB":"UNK",0,0); g.restore(); });
+function drawLedBoard(k,c,up){ const id=k, col=k==="ledcon"?"#f6f6f0":k==="ledrgb"?"#eef0f4":"#f3e9c8", n=k==="ledrgb"?4:2;
+  if(up){ const x=c[0], zb=AZ-2.0;
+    obox([x,c[1],zb+2.3],[0.08,0,0],[0,1.2,0],[0,0,2.3],"#1f6b3a",{id}); texQ(PCB_LED(k),[x+0.09,c[1]-1.2,zb],[0,2.4,0],[0,0,4.6],id);
+    sphere3(M([x+0.3,AY,AZ]),0.42,col,{id});
+    for(let i=0;i<n;i++) ocyl([x,c[1]+(i-(n-1)/2)*0.36,zb+4.6],Z3,0.45,0.07,"#c9a64a",{seg:6,id});
+    const b=brightness(); if(b>0.01&&ST.src===k){ const glow=k==="ledcon"?"235,240,255":k==="ledunk"?"255,190,60":ST.pin==="R"?"255,60,40":ST.pin==="G"?"60,255,90":"70,110,255"; ledGlow([x+0.35,AY,AZ],glow,b); } return; }
+  obox([c[0],c[1],0.08],[2.3,0,0],[0,1.2,0],[0,0,0.08],"#1f6b3a",{id}); texQ(PCB_LED(k),[c[0]-2.3,c[1]-1.2,0.17],[0,2.4,0],[4.6,0,0],id);
+  sphere3(M([c[0]-0.3,c[1],0.35]),0.4,col,{id}); }
+/* the holder for the light source: a black block with two U-clips at its back and the slot for the board */
 function drawHolder(x){ const id="holder", z0=TBL.h;
-  obox([x,AY,z0+0.45],[1.8,0,0],[0,2.2,0],[0,0,0.45],BLACK,{id}); obox([x-0.6,AY,z0+0.9+2.6],[0.5,0,0],[0,1.9,0],[0,0,2.6],BLACK2,{id});
-  if(ST.src) drawLedBoard(ST.src,[x+0.1,AY,z0+0.9],true); }
-function drawDiaphragm(x){ const id="diaphragm", z0=TBL.h; obox([x,AY,z0+0.35],[1.2,0,0],[0,2.0,0],[0,0,0.35],BLACK,{id});
-  obox([x,AY,AZ],[0.1,0,0],[0,2.2,0],[0,0,2.6],"#111214",{id}); F(ring3([x-0.11,AY,AZ],[0,1,0],[0,0,1],0.45,16),"#3a3d42",{id,n:[-1,0,0]});
-  obox([x,AY,(z0+0.7+AZ-2.6)/2],[0.1,0,0],[0,0.5,0],[0,0,(AZ-2.6-z0-0.7)/2],"#111214",{id}); }
-function drawLens(k,x){ const id=k, z0=TBL.h, zc=AZ;
-  obox([x,AY,z0+0.4],[1.6,0,0],[0,2.4,0],[0,0,0.4],BLACK,{id});
-  obox([x,AY-2.45,zc],[0.35,0,0],[0,0.55,0],[0,0,3.2],BLACK2,{id}); obox([x,AY+2.45,zc],[0.35,0,0],[0,0.55,0],[0,0,3.2],BLACK2,{id});
-  obox([x,AY,zc+2.65],[0.35,0,0],[0,1.9,0],[0,0,0.55],BLACK2,{id}); obox([x,AY,zc-2.65],[0.35,0,0],[0,1.9,0],[0,0,0.55],BLACK2,{id});
-  obox([x,AY,(z0+0.8+zc-3.2)/2],[0.3,0,0],[0,1.0,0],[0,0,(zc-3.2-z0-0.8)/2],BLACK2,{id});
-  if(k==="L2"){ for(const sx of [-0.06,0.06]) F([[x+sx,AY-1.9,zc-2.1],[x+sx,AY+1.9,zc-2.1],[x+sx,AY+1.9,zc+2.1],[x+sx,AY-1.9,zc+2.1]],"rgba(170,140,230,0.32)",{id,n:[Math.sign(sx),0,0]});
-    for(let i=0;i<7;i++){ const hue=["#ff4040","#ff9a30","#ffe640","#50e060","#40c0ff","#6a60ff","#c050ff"][i]; L([x+0.08,AY-1.9+i*0.6,zc+1.2],[x+0.08,AY-1.4+i*0.6,zc+1.9],hue,1.2); } }
-  ocyl([x-0.12,AY,zc],[1,0,0],0.24,1.75,"rgba(200,225,240,0.45)",{id,seg:28}); }
+  obox([x,AY,z0+0.5],[2.0,0,0],[0,2.4,0],[0,0,0.5],BLACK,{id,faceCol:n=>n[2]>0.5?"#1d1e22":null});
+  obox([x-0.6,AY,z0+1.0+2.4],[0.6,0,0],[0,1.7,0],[0,0,2.4],BLACK2,{id});
+  F([[x-0.0,AY-1.0,z0+1.02],[x-0.0,AY+1.0,z0+1.02],[x-0.0,AY+1.0,z0+5.6],[x-0.0,AY-1.0,z0+5.6]],"#0b0b0c",{id,n:[1,0,0]});
+  for(const s of [-1,1]){ const yc=AY+s*2.0;
+    obox([x-2.2,yc,z0+1.0+0.25],[0.9,0,0],[0,0.55,0],[0,0,0.25],BLACK2,{id});
+    for(const dz of [0.5,2.1]) obox([x-2.2,yc,z0+1.0+dz+0.25],[0.9,0,0],[0,0.55,0],[0,0,0.25],BLACK2,{id});
+    obox([x-3.0,yc,z0+1.0+1.4],[0.1,0,0],[0,0.55,0],[0,0,1.4],BLACK2,{id});
+    for(const dz of [0.75,2.35]) screw([x-2.0,yc+s*0.55,z0+1.0+dz],[0,s,0],0.2,id); }
+  if(ST.src) drawLedBoard(ST.src,[x+0.1,AY,z0+1.0],true); }
+/* the diaphragm: a small black plate with a narrow rectangular slit, on its own foot */
+function drawDiaphragm(x){ const id="diaphragm", z0=TBL.h;
+  obox([x,AY,z0+0.3],[0.9,0,0],[0,1.9,0],[0,0,0.3],BLACK,{id});
+  drawPlate(x,id,1.7,z0+0.6,AZ+2.6,0.32,0.95); }
+/* the holographic film of the grating: a rainbow card with the dark grating window and its print */
+const GRATING=()=>texCv("grating24",120,100,(g,w,h)=>{ const lg=g.createLinearGradient(0,0,w,h); RAINBOW.forEach((c,i)=>lg.addColorStop(i/(RAINBOW.length-1),c)); g.fillStyle=lg;
+  g.beginPath(); g.roundRect?g.roundRect(0,0,w,h,10):g.rect(0,0,w,h); g.fill();
+  g.fillStyle="rgba(40,44,52,0.92)"; g.fillRect(16,28,w-32,h-50); g.fillStyle="rgba(140,150,170,0.35)"; for(let i=18;i<w-16;i+=3) g.fillRect(i,30,1,h-54);
+  g.fillStyle="#fff"; g.font="bold 9px sans-serif"; g.textAlign="center"; g.fillText("Linear Diffraction Grating",w/2,14); g.font="7px sans-serif"; g.fillText("1000 lines / mm",w/2,24);
+  g.fillRect(24,h-14,w-48,2); });
+/* the two lenses: a black square plate with four screws on the foot, the lens behind a rectangular window; L2 carries the grating card */
+function drawLens(k,x){ const id=k, zc=AZ;
+  drawFoot(x,id); drawPlate(x,id,3.2,TBL.h+0.7,zc+3.2,1.6,1.1);
+  ocyl([x-0.12,AY,zc],[1,0,0],0.24,1.7,"rgba(200,225,240,0.42)",{id,seg:28});
+  if(k==="L2") for(const f of [-1,1]) texQ(GRATING(),[x+f*0.2,AY+f*2.5,zc+2.1],[0,-f*5.0,0],[0,0,-4.2],id); }
 /* the cuvette: 1 cm square glass with two clear and two grooved faces, a cap */
 function drawCuvette(i,c,up){ const cv=ST.cuv[i], id="cuv"+i, w=0.62, h=4.5, z0=c[2], V=cuvVol(cv);
   const lv=Math.min(4.2,V/3.5*4.2); if(lv>0.05) obox([c[0],c[1],z0+0.12+lv/2],[w-0.06,0,0],[0,w-0.06,0],[0,0,lv/2],cuvColor(cv,0.6),{id});
@@ -937,21 +998,43 @@ function drawCuvette(i,c,up){ const cv=ST.cuv[i], id="cuv"+i, w=0.62, h=4.5, z0=
   if(cv.cap) ocyl([c[0],c[1],z0+h],Z3,0.6,0.7,"#e8e8e4",{id,seg:14,cap:"#f2f2ee"});
   if(cv.bubbles>0.05) for(let k=0;k<5;k++) sphere3(M([c[0]+0.3*Math.sin(k*1.7),c[1]+0.3*Math.cos(k*2.3),z0+0.6+k*0.6]),0.08,"rgba(255,255,255,0.8)");
   if(!up&&cv.label) TX([c[0]-0.5,c[1]+w+0.02,z0+3.4],[1,0,0],[0,0,1],cv.label,0.4,"#1b1d20",{weight:"700"}); }
-function drawCuvHold(x){ const id="cuvhold", z0=TBL.h; obox([x,AY,z0+0.4],[1.6,0,0],[0,2.2,0],[0,0,0.4],BLACK,{id});
-  for(const s of [-1,1]) obox([x,AY+s*1.1,z0+0.8+2.0],[0.9,0,0],[0,0.25,0],[0,0,2.0],BLACK2,{id});
+function drawCuvHold(x){ const id="cuvhold", z0=TBL.h; obox([x,AY,z0+0.4],[1.6,0,0],[0,2.2,0],[0,0,0.4],BLACK,{id,faceCol:n=>n[2]>0.5?"#1d1e22":null});
+  for(const s of [-1,1]){ obox([x,AY+s*1.1,z0+0.8+2.0],[0.9,0,0],[0,0.25,0],[0,0,2.0],BLACK2,{id}); screw([x,AY+s*1.35,z0+2.8],[0,s,0],0.2,id); }
+  for(const [dx,dy] of [[-1.2,-1.8],[1.2,-1.8],[-1.2,1.8],[1.2,1.8]]) screw([x+dx,AY+dy,z0+0.8],Z3,0.22,id);
   if(ST.inHolder!==null) drawCuvette(ST.inHolder,[x,AY,AZ-1.6],true); }
-function drawScreen(x){ const id="screen", z0=TBL.h;
-  obox([x,AY,z0+0.4],[1.6,0,0],[0,3.0,0],[0,0,0.4],BLACK,{id});
-  obox([x,AY,z0+0.8+6.8],[0.18,0,0],[0,5.0,0],[0,0,6.8],"rgba(232,234,236,0.88)",{id});
-  if(has("sensor")){ obox([x-0.3,AY,AZ+3.4],[0.1,0,0],[0,1.3,0],[0,0,2.2],"#101113",{id:"sensor"}); F([[x-0.41,AY-0.18,AZ+1.6],[x-0.41,AY+0.18,AZ+1.6],[x-0.41,AY+0.18,AZ+5.2],[x-0.41,AY-0.18,AZ+5.2]],"#3b4048",{id:"sensor",n:[-1,0,0]}); }
-  const o=optics(); if(o&&brightness()>0.01) F(ring3([x-0.2,AY,AZ],[0,1,0],[0,0,1],0.3+o.blur*0.2,16),"rgba(255,245,225,0.85)",{n:[-1,0,0]}); }
-/* the sunshield: a large white board standing behind the table */
+/* the screen: a frosted plate in a black frame on the foot; the CCD plate is screwed on its face above the axis */
+const CCDF=()=>texCv("ccd",120,120,(g,w,h)=>{ g.fillStyle="#141416"; g.fillRect(0,0,w,h);
+  g.fillStyle="#1d1e21"; g.beginPath(); g.moveTo(26,118); g.lineTo(26,80); g.lineTo(60,58); g.lineTo(94,80); g.lineTo(94,118); g.fill();
+  g.fillStyle="#2b2c30"; g.fillRect(48,6,24,108); g.fillStyle="#b89a5a"; for(let i=0;i<20;i++){ g.fillRect(44,10+i*5.2,3,2); g.fillRect(73,10+i*5.2,3,2); }
+  g.fillStyle="#6c7078"; g.fillRect(54,12,12,96); g.fillStyle="#9aa0aa"; g.fillRect(58,14,4,92);
+  for(const [xx,yy] of [[14,14],[106,14],[14,106],[106,106]]){ g.fillStyle="#c3c8cd"; g.beginPath(); g.arc(xx,yy,6,0,7); g.fill(); g.fillStyle="#7b8087"; g.beginPath(); g.arc(xx,yy,2.4,0,7); g.fill(); } });
+function drawScreen(x){ const id="screen", z0=TBL.h, zt=z0+13.4, hy=4.4;
+  drawFoot(x,id,4.6);
+  for(const s of [-1,1]) obox([x,AY+s*hy,(z0+0.7+zt)/2],[0.3,0,0],[0,0.3,0],[0,0,(zt-z0-0.7)/2],BLACK2,{id});
+  obox([x,AY,zt-0.3],[0.3,0,0],[0,hy,0],[0,0,0.3],BLACK2,{id}); obox([x,AY,z0+1.0],[0.3,0,0],[0,hy,0],[0,0,0.3],BLACK2,{id});
+  for(const s of [-1,1]) for(const zz of [z0+3,zt-2]) screw([x+0.3,AY+s*hy,zz],[1,0,0],0.18,id);
+  obox([x,AY,(z0+1.3+zt-0.6)/2],[0.08,0,0],[0,hy-0.3,0],[0,0,(zt-0.6-z0-1.3)/2],"rgba(226,229,232,0.86)",{id});
+  if(has("sensor")){ obox([x-0.2,AY,AZ+3.4],[0.12,0,0],[0,2.35,0],[0,0,2.35],"#121214",{id:"sensor"}); texQ(CCDF(),[x-0.32,AY-2.35,AZ+5.75],[0,4.7,0],[0,0,-4.7],"sensor"); }
+  const o=optics(); if(o&&brightness()>0.01) F(ring3([x-0.1,AY,AZ],[0,1,0],[0,0,1],0.3+o.blur*0.2,16),"rgba(255,245,225,0.85)",{n:[-1,0,0]}); }
+/* the sunshield: a large white board in a grey frame standing behind the table */
 function drawSunshield(){ const id="sunshield", x0=TBL.x0-4, x1=TBL.x1+4, y=TBL.y0-4;
-  F([[x0,y,0],[x1,y,0],[x1,y-6,36],[x0,y-6,36]],"#f4f4f2",{id,n:[0,1,0.17]}); F([[x0,y,0],[x0,TBL.y1+6,0],[x0,TBL.y1+6,26],[x0,y-6,36]],"rgba(244,244,242,0.9)",{id,n:[1,0,0]}); }
+  F([[x0,y,0],[x1,y,0],[x1,y-6,36],[x0,y-6,36]],"#f7f7f5",{id,n:[0,1,0.17]}); F([[x0,y,0],[x0,TBL.y1+6,0],[x0,TBL.y1+6,26],[x0,y-6,36]],"rgba(247,247,245,0.9)",{id,n:[1,0,0]});
+  for(const [a,b] of [[[x0,y,0],[x0,y-6,36]],[[x1,y,0],[x1,y-6,36]],[[x0,y-6,36],[x1,y-6,36]],[[x0,y-6,36],[x0,TBL.y1+6,26]],[[x0,TBL.y1+6,0],[x0,TBL.y1+6,26]]]) L(a,b,"#55595f",3,{id}); }
+/* the sensor controller: a Nucleo board with a green shield in a clear acrylic case on black standoffs */
+const NUCLEO=()=>texCv("nucleo",220,140,(g,w,h)=>{ g.fillStyle="#fafaf8"; g.fillRect(0,0,w,h);
+  g.fillStyle="#1a1a1a"; g.fillRect(4,4,212,8); g.fillRect(4,128,212,8); g.fillRect(4,16,6,108);
+  g.fillStyle="#2a2a2a"; g.fillRect(40,52,30,30); g.fillStyle="#3b5fa8"; g.fillRect(20,96,14,10); g.fillStyle="#c33"; g.beginPath(); g.arc(28,30,4,0,7); g.fill(); g.fillStyle="#e2b33c"; g.fillRect(70,24,10,8);
+  g.fillStyle="#555"; g.font="bold 10px sans-serif"; g.fillText("nucleo",36,44);
+  g.fillStyle="#1f7a3e"; g.fillRect(120,8,96,124); g.fillStyle="#2b8d4d"; g.fillRect(124,12,88,116);
+  g.fillStyle="#d9b860"; for(let i=0;i<10;i++) g.fillRect(202,20+i*10,4,4); g.fillStyle="#f4f4f0"; g.font="bold 8px sans-serif"; g.save(); g.translate(150,110); g.rotate(-Math.PI/2); g.fillText("ISPhO 2024 CCD",0,0); g.restore(); });
 function drawSensorBoard(){ const [x,y]=POS.sensor, id="sensor";
-  obox([x,y,1.0],[5.5,0,0],[0,3.4,0],[0,0,1.0],"rgba(220,235,245,0.35)",{id}); obox([x,y,0.5],[5.0,0,0],[0,3.0,0],[0,0,0.1],"#1f6b3a",{id});
-  cord([x+5.5,y,0.6],[POS.laptop[0]-9,POS.laptop[1],0.6],"#2a2c30",0.25,1.5);
-  if(ST.x.screen!==null&&has("screen")) cord([x-5.5,y+1,0.8],[xw(ST.x.screen)+0.5,AY-1.2,AZ+2.5],"#d0c070",0.35,4); }
+  obox([x,y,0.1],[5.5,0,0],[0,3.6,0],[0,0,0.1],"rgba(225,238,246,0.40)",{id});
+  for(const [dx,dy] of [[-5,-3.1],[5,-3.1],[-5,3.1],[5,3.1]]){ ocyl([x+dx,y+dy,0.2],Z3,2.0,0.32,"#1a1b1e",{seg:8,id}); screw([x+dx,y+dy,2.32],Z3,0.24,id); }
+  obox([x,y,0.55],[5.2,0,0],[0,3.3,0],[0,0,0.07],"#e9eae6",{id}); texQ(NUCLEO(),[x-5.2,y-3.3,0.63],[10.4,0,0],[0,6.6,0],id);
+  obox([x,y,2.25],[5.5,0,0],[0,3.6,0],[0,0,0.07],"rgba(225,238,246,0.22)",{id});
+  ocyl([x-5.5,y-1.5,0.9],[-1,0,0],0.9,0.32,"#c9ccd0",{seg:10,id}); cord([x-6.4,y-1.5,0.9],[POS.laptop[0]-9,POS.laptop[1],0.6],"#1d1e21",0.25,1.5);
+  if(ST.x.screen!==null&&has("screen")){ const e=[xw(ST.x.screen)-0.2,AY-2.0,AZ+1.05];
+    RAINBOW.slice(0,6).forEach((c,i)=>cord([x-5.5,y+0.6+i*0.14,0.8],vadd(e,[0,i*0.14,0]),c,0.07,4)); } }
 const PROGCV=document.createElement("canvas"); PROGCV.width=560; PROGCV.height=350;
 function drawLaptop(){ const [x,y]=POS.laptop, id="laptop";
   obox([x,y+2,0.4],[10,0,0],[0,6.5,0],[0,0,0.4],"#a9adb3",{id,faceCol:n=>n[2]>0.5?"#b9bdc2":null});
@@ -959,42 +1042,63 @@ function drawLaptop(){ const [x,y]=POS.laptop, id="laptop";
   const b=[x-10,y-4.2,0.8], u=[20,0,0], v=[0,-2.6,12.4];
   obox(lin([b,1],[u,0.5],[v,0.5]),[10,0,0],[0,0.25,0],vmul(v,0.5),"#9ea2a8",{id});
   const s0=lin([b,1],[u,0.04],[v,0.06],[[0,1,0],0.3]); tex3(PROGCV,0,0,PROGCV.width,PROGCV.height,M(vadd(s0,vmul(v,0.9))),Mdir(vmul(u,0.92)),Mdir(vmul(v,-0.9)),{id,bias:0.6}); }
+/* the DC supply: a beige-grey case, the front strip with the display, five grey knobs, black/yellow/red sockets */
 function drawPsu(){ const [x,y]=POS.psu, id="psu";
-  obox([x,y,5],[9,0,0],[0,7,0],[0,0,5],"#c9ccd0",{id,faceCol:n=>n[2]>0.5?"#d4d7da":n[1]>0.5?"#bfc3c8":null});
-  F([[x-7.5,y+7.01,6.5],[x-1,y+7.01,6.5],[x-1,y+7.01,9],[x-7.5,y+7.01,9]],"#16181c",{id,n:[0,1,0]});
-  if(ST.psuOn) TX([x-1.4,y+7.02,7.1],[1,0,0],[0,0,1],ST.psuV.toFixed(1),1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
-  const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x+3,y+7,6.5],[0,1,0],1.2,1.4,"#2a2c30",{id,seg:20,cap:"#383b40"}); L([x+3,y+8.25,6.5],[x+3+1.1*Math.sin(a),y+8.25,6.5+1.1*Math.cos(a)],"#f2f2f0",2);
-  ocyl([x+4,y+7,2.2],[0,1,0],0.5,0.5,"#d0352b",{id,seg:12}); ocyl([x+6.5,y+7,2.2],[0,1,0],0.5,0.5,"#1b1d20",{id,seg:12});
-  ocyl([x-5,y+7,3],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); }
+  obox([x,y,5],[9,0,0],[0,7,0],[0,0,5],"#c8c4b4",{id,faceCol:n=>n[2]>0.5?"#d2cebf":n[1]>0.5?"#bfbbac":null});
+  for(let i=0;i<6;i++) L([x-9.02,y-4+i*0.8,3],[x-9.02,y-4+i*0.8,7],"#8e8a7c",1.4);
+  F([[x-8.6,y+7.02,0.4],[x+8.6,y+7.02,0.4],[x+8.6,y+7.02,9.6],[x-8.6,y+7.02,9.6]],"#d6d3c6",{id,n:[0,1,0]});
+  F([[x-7.5,y+7.04,6.5],[x-1,y+7.04,6.5],[x-1,y+7.04,9],[x-7.5,y+7.04,9]],"#16181c",{id,n:[0,1,0]});
+  F([[x+1,y+7.04,6.5],[x+7.5,y+7.04,6.5],[x+7.5,y+7.04,9],[x+1,y+7.04,9]],"#16181c",{id,n:[0,1,0]});
+  if(ST.psuOn){ TX([x-1.4,y+7.06,7.1],[1,0,0],[0,0,1],ST.psuV.toFixed(1),1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
+    TX([x+7.1,y+7.06,7.1],[1,0,0],[0,0,1],"0.00",1.5,"#ff5a3a",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"}); }
+  const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x-4.2,y+7,4.4],[0,1,0],1.3,1.0,"#8e9297",{id,seg:18,cap:"#a5a9ae"}); L([x-4.2,y+8.32,4.4],[x-4.2+0.8*Math.sin(a),y+8.32,4.4+0.8*Math.cos(a)],"#2a2c30",2);
+  for(const dx of [-7.2,-1.4,2.8,7.6]) ocyl([x+dx,y+7,4.4],[0,1,0],1.1,0.85,"#8e9297",{id,seg:16,cap:"#a5a9ae"});
+  for(const [dx,c] of [[4,"#d0352b"],[6.5,"#1b1d20"],[0.6,"#e3c21f"]]){ ocyl([x+dx,y+7,2.2],[0,1,0],0.55,0.5,c,{id,seg:12}); ocyl([x+dx,y+7.55,2.2],[0,1,0],0.05,0.2,"#777",{seg:8}); }
+  ocyl([x-7.4,y+7,1.6],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); }
+/* the adapter: a small green board with red and black sockets, the slide switch and the pin header */
 function drawAdapter(){ const [x,y]=POS.adapter, id="adapter"; obox([x,y,0.12],[2.6,0,0],[0,2.0,0],[0,0,0.12],"#1f6b3a",{id,faceCol:n=>n[2]>0.5?"#24773f":null});
-  for(const [dx,c] of [[-1.2,"#d0352b"],[0.2,"#1b1d20"]]) ocyl([x+dx,y+0.6,0.24],Z3,1.2,0.42,c,{id,seg:14,cap:"#111"});
-  const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.9,0.1,"#d9dde1",{seg:8,id}); obox([x+1.7,y-0.8,0.4],[0.35,0,0],[0,0.3,0],[0,0,0.2],"#2a2c30",{id});
+  for(const [dx,c] of [[-1.2,"#c8302a"],[0.2,"#1b1d20"]]){ obox([x+dx,y+0.6,0.85],[0.6,0,0],[0,0.6,0],[0,0,0.6],c,{id}); ocyl([x+dx,y+0.6,1.45],Z3,0.05,0.32,"#111",{id,seg:12}); }
+  const a=ST.adSw?0.45:-0.45; ocyl([x+1.7,y-0.8,0.5],[Math.sin(a),0,Math.cos(a)],0.7,0.1,"#d9dde1",{seg:8,id}); obox([x+1.7,y-0.8,0.4],[0.45,0,0],[0,0.3,0],[0,0,0.18],"#2a2c30",{id});
+  obox([x-1.6,y-1.3,0.4],[0.6,0,0],[0,0.25,0],[0,0,0.28],"#111",{id}); for(const dx of [-0.36,-0.12,0.12,0.36]) ocyl([x-1.6+dx,y-1.3,0.68],Z3,0.45,0.05,"#d4b25a",{seg:6,id});
   if(has("psu")) for(const [dx,c] of [[-1.2,"#c0392b"],[0.2,"#1b1d20"]]) cord([x+dx,y+0.6,1.5],[POS.psu[0]+(c==="#c0392b"?4:6.5),POS.psu[1]+7.6,2.2],c,0.22,6); }
+/* the connectors: a purple-and-white four-lead ribbon and a red-and-black pair, black plugs on the ends */
 function drawConnector(k){ const [x,y]=POS[k], id=k, n=k==="con4"?4:2, b=ST.plug[k];
-  const end=b?(ST.src===b&&ST.x.holder!==null?[xw(ST.x.holder)+0.1,AY,TBL.h+0.9+4.6]:[POS[b][0]+1.6,POS[b][1],0.3]):[x,y,0.3];
-  cord([POS.adapter[0]-1.6,POS.adapter[1]-1.3,0.4],end,"#bfc4cc",0.18*n,b&&ST.src===b?2:5,id); obox(vadd(end,[0,0,0.2]),[0.25*n,0,0],[0,0.3,0],[0,0,0.2],"#111",{id}); }
+  const end=b?(ST.src===b&&ST.x.holder!==null?[xw(ST.x.holder)+0.1,AY,AZ+3.1]:[POS[b][0]+1.6,POS[b][1],0.3]):[x,y,0.3];
+  const cols=n===4?["#6a4bc4","#f0f0ee","#6a4bc4","#f0f0ee"]:["#c0392b","#1b1d20"], a=[POS.adapter[0]-1.6,POS.adapter[1]-1.3,0.4];
+  cols.forEach((c,i)=>cord(vadd(a,[(i-(n-1)/2)*0.12,0,0]),vadd(end,[0,(i-(n-1)/2)*0.12,0]),c,0.08,b&&ST.src===b?2:5,id));
+  obox(vadd(end,[0,0,0.2]),[0.25*n,0,0],[0,0.3,0],[0,0,0.2],"#111",{id}); }
 /* the chemistry */
-function tube(x,y,h,r,liq,lcol,capCol,id,lab){ ocyl([x,y,0],Z3,h,r,"rgba(225,238,245,0.35)",{id,seg:16}); if(liq>0) ocyl([x,y,0.05],Z3,h*liq,r*0.92,lcol,{id,seg:16});
-  ocyl([x,y,h],Z3,0.4,r*1.1,capCol,{id,seg:16,cap:capCol}); if(lab) TX([x-r,y+r+0.02,h*0.55],[1,0,0],[0,0,1],lab,0.45,"#1b1d20",{weight:"700"}); }
+function tube(x,y,h,r,liq,lcol,capCol,id,lab,cone){ const zb=cone?r*1.6:0;
+  if(cone) frustum([x,y,0],Z3,zb,0.12,r,"rgba(225,238,245,0.45)",{id,seg:16});
+  ocyl([x,y,zb],Z3,h-zb,r,"rgba(225,238,245,0.35)",{id,seg:16}); if(liq>0) ocyl([x,y,zb+0.05],Z3,(h-zb)*liq,r*0.92,lcol,{id,seg:16});
+  ocyl([x,y,h],Z3,0.6,r*1.12,capCol,{id,seg:16,cap:capCol}); if(lab) TX([x-r,y+r+0.02,h*0.55],[1,0,0],[0,0,1],lab,0.45,"#1b1d20",{weight:"700"}); }
 function drawChem3(k){ const p=POS[k];
-  if(k==="wash"){ ocyl([p[0],p[1],0],Z3,11,3.6,"rgba(235,240,245,0.7)",{id:k,seg:24,cap:"rgba(235,240,245,0.6)"}); ocyl([p[0],p[1],11],Z3,1.2,1.6,"#f0f0ec",{id:k,seg:16}); L([p[0],p[1],12.2],[p[0]+3,p[1],13.5],"#e8e8e4",3); }
-  else if(k==="naoh") tube(p[0],p[1],4,0.55,0.25,"#f4f4f0","#2f6fd0",k,"NaOH");
-  else if(k==="ic") tube(p[0],p[1],4,0.55,0.6,"rgba(40,60,190,0.85)","#c0392b",k,"IC");
-  else if(k==="ind") tube(p[0],p[1],4,0.55,0.6,"rgba(240,240,236,0.7)","#e0b62a",k,"In");
-  else if(k==="gl") tube(p[0],p[1],11,1.4,0.7,"rgba(240,240,225,0.55)","#2e9e57",k,"Gl");
-  else if(k==="nacl") tube(p[0],p[1],11,1.4,0.7,"rgba(235,240,245,0.55)","#8e44ad",k,"NaCl");
-  else if(k==="syr3"){ ocyl([p[0]-5,p[1],0.6],[1,0,0],7,0.55,"rgba(240,244,246,0.85)",{id:k,seg:14}); ocyl([p[0]+2,p[1],0.6],[1,0,0],2.6,0.2,"#ddd",{id:k,seg:8}); }
-  else if(k==="syrIns"){ ocyl([p[0]-4,p[1],0.4],[1,0,0],6,0.3,"rgba(240,244,246,0.85)",{id:k,seg:12}); ocyl([p[0]-5.4,p[1],0.4],[1,0,0],1.4,0.04,"#aaa",{id:k,seg:6}); ocyl([p[0]+2,p[1],0.4],[1,0,0],2,0.12,"#f2a03a",{id:k,seg:8}); }
-  else if(k==="tubes"){ obox([p[0],p[1],1.5],[8,0,0],[0,2,0],[0,0,1.5],"#d9d9d4",{id:k}); for(let i=0;i<5;i++){ const lq=ST.naohSol&&i===0?0.6:0; tube(p[0]-6+i*3,p[1],9,1.3,lq,"rgba(240,240,236,0.6)","#2f6fd0",k,i===0&&ST.naohSol?"NaOH":""); } }
-  else if(k==="cuvettes"){ obox([p[0],p[1],0.8],[10,0,0],[0,1.4,0],[0,0,0.8],"#e4e4e0",{id:k}); for(let i=0;i<10;i++) if(ST.inHolder!==i) drawCuvette(i,[p[0]-9+i*2,p[1],1.6],false); }
-  else if(k==="waste"){ ocyl([p[0],p[1],0],Z3,6,4.2,"#f08a2a",{id:k,seg:24,cap:"#c76a18"}); }
-  else if(k==="gloves"){ obox([p[0],p[1],0.3],[3.5,0,0],[0,2,0],[0,0,0.3],"#2a3fb5",{id:k}); } }
+  if(k==="wash"){ frustum([p[0],p[1],0],Z3,11,3.4,3.6,"rgba(242,244,246,0.82)",{id:k,seg:24}); frustum([p[0],p[1],11],Z3,1.4,3.6,1.5,"rgba(242,244,246,0.82)",{id:k,seg:24});
+    ocyl([p[0],p[1],12.4],Z3,1.2,1.5,"#f0f0ec",{id:k,seg:16,cap:"#f4f4f0"}); ocyl([p[0],p[1],13.6],[0.6,0,0.8],4,0.18,"#f0f0ec",{id:k,seg:8}); }
+  else if(k==="naoh") tube(p[0],p[1],3.2,0.45,0.25,"#f4f4f0","#f2f2ee",k,"NaOH",true);
+  else if(k==="ic") tube(p[0],p[1],3.2,0.45,0.6,"rgba(40,60,190,0.85)","#f2f2ee",k,"IC",true);
+  else if(k==="ind") tube(p[0],p[1],3.2,0.45,0.6,"rgba(240,240,236,0.7)","#f2f2ee",k,"In",true);
+  else if(k==="gl") tube(p[0],p[1],11.5,1.45,0.7,"rgba(240,240,225,0.55)","#2f5fd0",k,"GLY",true);
+  else if(k==="nacl") tube(p[0],p[1],11.5,1.45,0.7,"rgba(235,240,245,0.55)","#2f5fd0",k,"NaCl",true);
+  else if(k==="syr3"){ ocyl([p[0]-5,p[1],0.6],[1,0,0],7,0.55,"rgba(240,244,246,0.85)",{id:k,seg:14}); ocyl([p[0]+2,p[1],0.6],[1,0,0],2.6,0.25,"#2f4fb0",{id:k,seg:8}); ocyl([p[0]+4.6,p[1],0.6],[1,0,0],0.2,0.7,"#2f4fb0",{id:k,seg:12});
+    ocyl([p[0]-6,p[1],0.6],[1,0,0],1,0.25,"#3fb7c9",{id:k,seg:8}); ocyl([p[0]-9,p[1],0.6],[1,0,0],3,0.03,"#c0c4c8",{id:k,seg:6}); }
+  else if(k==="syrIns"){ for(let i=0;i<4;i++){ const yy=p[1]-1.2+i*0.8; ocyl([p[0]-4,yy,0.4],[1,0,0],6,0.3,"rgba(240,244,246,0.85)",{id:k,seg:12}); ocyl([p[0]-5.4,yy,0.4],[1,0,0],1.4,0.22,"#f06a2a",{id:k,seg:8}); ocyl([p[0]+2,yy,0.4],[1,0,0],2,0.12,"#f06a2a",{id:k,seg:8}); } }
+  else if(k==="tubes"){ obox([p[0]-2,p[1],1.6],[6,0,0],[0,1.8,0],[0,0,1.6],"#7b46c8",{id:k,faceCol:n=>n[2]>0.5?"#8a55d6":null});
+    for(let i=0;i<6;i++) F(ring3([p[0]-6.5+i*1.8,p[1]+1.81,1.6],[1,0,0],[0,0,1],0.45,10),"#5a2fa0",{id:k,n:[0,1,0]});
+    for(let i=0;i<3;i++){ const lq=ST.naohSol&&i===0?0.6:0; tube(p[0]-6+i*4,p[1],9.5,1.3,lq,"rgba(240,240,236,0.6)","#2f5fd0",k,i===0&&ST.naohSol?"NaOH":"",true); }
+    ocyl([p[0]+7,p[1],0],Z3,6,2.6,"rgba(232,240,246,0.55)",{id:k,seg:22}); ocyl([p[0]+7,p[1],6],Z3,1.2,2.75,"#d93a3a",{id:k,seg:22,cap:"#e04848"}); }
+  else if(k==="cuvettes"){ obox([p[0],p[1],0.8],[8.2,0,0],[0,3.0,0],[0,0,0.8],"rgba(240,242,242,0.92)",{id:k,faceCol:n=>n[2]>0.5?"rgba(246,247,247,0.95)":null});
+    for(let r=0;r<2;r++) for(let i=0;i<6;i++) F([[p[0]-7.5+i*3-0.7,p[1]-1.5+r*3-0.7,1.61],[p[0]-7.5+i*3+0.7,p[1]-1.5+r*3-0.7,1.61],[p[0]-7.5+i*3+0.7,p[1]-1.5+r*3+0.7,1.61],[p[0]-7.5+i*3-0.7,p[1]-1.5+r*3+0.7,1.61]],"#d6dadc",{id:k,n:Z3});
+    for(let i=0;i<10;i++) if(ST.inHolder!==i) drawCuvette(i,[p[0]-7.5+(i%5)*3,p[1]-1.5+Math.floor(i/5)*3,1.6],false); }
+  else if(k==="waste"){ frustum([p[0],p[1],0],Z3,5,3.2,4.4,"#f08a2a",{id:k,seg:24}); F(ring3([p[0],p[1],0.3],[1,0,0],[0,1,0],3.3,24),"#c76a18",{id:k,n:Z3}); }
+  else if(k==="gloves"){ obox([p[0],p[1],0.3],[3.5,0,0],[0,2,0],[0,0,0.3],"#2a3fb5",{id:k}); for(let i=0;i<4;i++) obox([p[0]+3.5+0.9,p[1]-1.2+i*0.8,0.25],[0.9,0,0],[0,0.3,0],[0,0,0.25],"#2a3fb5",{id:k}); } }
 const WCOL3=["#c0392b","#1b1d20"];
+/* the lab: a light wall, a white bench on grey legs, a grey floor */
 function drawRoom(){
-  F([[-160,-0.6,-90],[260,-0.6,-90],[260,-0.6,170],[-160,-0.6,170]],"#2f353e",{n:[0,1,0],flat:true});
-  obox([62,36,-1.5],[62,0,0],[0,36,0],[0,0,1.5],"#e9e9e6",{faceCol:n=>n[2]>0.5?"#f1f1ef":null});
-  for(const [x,y] of [[2,1],[122,1],[2,71],[122,71]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#8a8f96");
-  F([[-160,-0.5,-80],[260,-0.5,-80],[260,160,-80],[-160,160,-80]],"#3a3f47",{n:Z3,flat:true}); }
+  F([[-160,-0.6,-90],[260,-0.6,-90],[260,-0.6,170],[-160,-0.6,170]],"#dfe3e7",{n:[0,1,0],flat:true});
+  obox([62,36,-1.5],[62,0,0],[0,36,0],[0,0,1.5],"#d8d6d0",{faceCol:n=>n[2]>0.5?"#f1efea":null});
+  for(const [x,y] of [[2,1],[122,1],[2,71],[122,71]]) obox([x,y,-39],[1.5,0,0],[0,1.5,0],[0,0,36],"#9ba1a8");
+  F([[-160,-0.5,-80],[260,-0.5,-80],[260,160,-80],[-160,160,-80]],"#c7ccd2",{n:Z3,flat:true}); }
 function drawLoose(k){
   if(k==="table") drawTable(); else if(k==="sunshield") drawSunshield();
   else if(OPT.includes(k)){ if(ST.x[k]===null||(hand&&hand.item===k&&hand.move)) return; const x=xw(ST.x[k]);
@@ -1004,7 +1108,7 @@ function drawLoose(k){
   else drawChem3(k); }
 function drawBench(){ CAM.dpr=Math.min(window.devicePixelRatio||1,2)*S; begin3();
   drawRoom(); drawLaptop(); for(const k of PARTS) if(has(k)) drawLoose(k);
-  ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
+  ctx.fillStyle="#dfe3e7"; ctx.fillRect(0,0,LW,LH); render3(ctx); }
 /* ══════════════════════════════════════════════════════════════
    6.  PARTS BOX, LAYOUT, CLOSE-UPS
    ══════════════════════════════════════════════════════════════ */
@@ -1046,20 +1150,20 @@ function layout(){
   CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(Math.max(470,CLW*0.53));
   closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr); drawTray(); }
 function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
-  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#fff"; c.fillRect(0,0,TRW,TRH);
   trayCells=[]; let y=6; const wd=TRW-12;
   for(const k of TRAY_LIST){ const av=trayAvail(k), sel=inHand(k);
-    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
+    c.fillStyle=av?(sel?"#cce8ff":"#f5f5f5"):"#fafafa"; c.fillRect(6,y,wd,TROW-3); c.strokeStyle=sel?"#0078d7":"#dcdcdc"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-4);
     c.save(); c.globalAlpha=av?1:0.35; c.translate(21,y+(TROW-3)/2); icon(c,k); c.restore();
-    c.font='10px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#e8eef2":"#868e96";
-    c.fillText(itemName(k),37,y+7.5); c.font='8px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,37,y+16.5);
+    c.font='10px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle"; c.fillStyle=av?"#000":"#9a9a9a";
+    c.fillText(itemName(k),37,y+7.5); c.font='8px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#6b7680"; c.fillText(av?t.trayTake:t.trayOut,37,y+16.5);
     trayCells.push([k,y,y+TROW-3]); y+=TROW; }
   c.font='10px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
 const TABS=["prog","opt","chem"];
 function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h,extra)=>HIT.push(Object.assign({k,x:x*HS,y:y*HS,w:w*HS,h:h*HS},extra||{}));
-function btn(k,x,y,w,h,label,on,dis){ fillR(x,y,w,h,5,dis?"#d7d9dc":on?"#2f6fd0":"#f4f5f7",on?"#1f4f9f":"#9aa3ab",1); text(label,x+w/2,y+h/2,dis?"#9aa3ab":on?"#fff":"#1b1d20",Math.min(12,h*0.5),"center","600"); if(!dis) hitAdd(k,x,y,w,h); }
+function btn(k,x,y,w,h,label,on,dis){ fillR(x,y,w,h,0,dis?"#ececec":on?"#cce4f7":"#e1e1e1",dis?"#cfcfcf":on?"#005499":"#adadad",1); text(label,x+w/2,y+h/2,dis?"#a0a0a0":"#000",Math.min(12,h*0.5),"center","400"); if(!dis) hitAdd(k,x,y,w,h); }
 /* the colour of light of wavelength l (nm) */
 function wlRGB(l){ let r=0,g=0,b=0;
   if(l<440){ r=(440-l)/60; b=1; } else if(l<490){ g=(l-440)/50; b=1; } else if(l<510){ g=1; b=(510-l)/20; } else if(l<580){ r=(l-510)/70; g=1; } else if(l<645){ r=1; g=(645-l)/65; } else r=1;
@@ -1072,10 +1176,12 @@ const PV={n0:0,n1:NPIX};
 function progData(){ return SPEC.live?SPEC.frame:SPEC.hold; }
 function niceMax(v){ const p=Math.pow(10,Math.floor(Math.log10(Math.max(v,1)))); for(const m of [1,2,2.5,5,10]) if(m*p>=v) return m*p; return 10*p; }
 function drawProg(W,H,small){ const t=d(), L=t.lab, u=small?1:Math.min(1.2,Math.max(0.78,W/920));
-  ctx.fillStyle="#eceef1"; ctx.fillRect(0,0,W,H); fillR(0,0,W,28*u,0,"#d9dde3"); text("Spectroscopy",10*u,14*u,"#1b1d20",12*u,"left","700");
+  ctx.fillStyle="#f0f0f0"; ctx.fillRect(0,0,W,H); fillR(0,0,W,28*u,0,"#fff"); text("Spectroscopy",10*u,14*u,"#000",12*u,"left","400");
+  ctx.strokeStyle="#000"; ctx.lineWidth=1; const wb=(i)=>W-(i+0.5)*40*u; ctx.beginPath(); ctx.moveTo(wb(2)-5*u,14*u); ctx.lineTo(wb(2)+5*u,14*u); ctx.rect(wb(1)-4.5*u,9.5*u,9*u,9*u);
+  ctx.moveTo(wb(0)-5*u,9*u); ctx.lineTo(wb(0)+5*u,19*u); ctx.moveTo(wb(0)+5*u,9*u); ctx.lineTo(wb(0)-5*u,19*u); ctx.stroke(); ctx.strokeStyle="#8f8f8f"; ctx.strokeRect(0.5,0.5,W-1,H-1);
   if(!has("sensor")){ text(L.noSensor,W/2,H/2,"#69717a",13*u,"center"); return; }
   const live=SPEC.live, bh=24*u, by=36*u; let bx=10*u;
-  const B=(k,w,lab,on,dis)=>{ if(!small) btn(k,bx,by,w*u,bh,lab,on,dis); else { fillR(bx,by,w*u,bh,4,on?"#2f6fd0":"#f4f5f7","#9aa3ab"); text(lab,bx+w*u/2,by+bh/2,on?"#fff":"#1b1d20",9*u,"center"); } bx+=w*u+5*u; };
+  const B=(k,w,lab,on,dis)=>{ if(!small) btn(k,bx,by,w*u,bh,lab,on,dis); else { fillR(bx,by,w*u,bh,0,on?"#cce4f7":"#e1e1e1",on?"#005499":"#adadad"); text(lab,bx+w*u/2,by+bh/2,"#000",9*u,"center"); } bx+=w*u+5*u; };
   B("p:launch",62,L.launch,live); B("p:pause",54,L.pause,false,!live); B("p:single",108,L.single,false); B("p:saveS",100,L.saveS,false,!SPEC.hold&&!live);
   B("p:ts",98,SPEC.ts?L.tsOn:L.tsOff,!!SPEC.ts,!live&&!SPEC.ts); B("p:saveTS",116,L.saveTS,false,!SPEC.tsDone&&!SPEC.ts);
   text(L.dt,bx+4*u,by+bh/2,"#333",11*u,"left","600"); bx+=20*u; B("p:dm",22,"−",false,!!SPEC.ts); text(ST.tsDt+" s",bx+2*u,by+bh/2,"#1b1d20",12*u,"left","700"); bx+=34*u; B("p:dp",22,"+",false,!!SPEC.ts);
@@ -1104,10 +1210,10 @@ let PROG_AREA=null;
 /* ── 2. the optical table from above, with the face of the screen ── */
 let OSEL=null;
 const OXY=()=>{ const u=Math.min(CLW/900,CLH/470), x0=40*u, x1=CLW-40*u, sc=(x1-x0)/TBL_L, yc=CLH*0.74; return {u,x0,x1,sc,yc,X:t=>x0+t*sc}; };
-function drawOpt(){ const t=d(), L=t.lab; ctx.fillStyle="#2a2d33"; ctx.fillRect(0,0,CLW,CLH);
-  if(!has("table")){ text(L.noTable,CLW/2,CLH/2,"#c9ced3",13,"center"); return; }
+function drawOpt(){ const t=d(), L=t.lab; ctx.fillStyle="#fff"; ctx.fillRect(0,0,CLW,CLH);
+  if(!has("table")){ text(L.noTable,CLW/2,CLH/2,"#5b6b7c",13,"center"); return; }
   const {u,x0,x1,sc,yc,X}=OXY(), hw=6*sc;
-  if(has("sunshield")){ ctx.fillStyle="rgba(244,244,242,0.85)"; ctx.fillRect(x0-14,yc-hw-22*u,x1-x0+28,8*u); text(itemName("sunshield"),x0,yc-hw-28*u,"#c9ced3",11,"left"); }
+  if(has("sunshield")){ ctx.fillStyle="rgba(244,244,242,0.85)"; ctx.fillRect(x0-14,yc-hw-22*u,x1-x0+28,8*u); text(itemName("sunshield"),x0,yc-hw-28*u,"#5b6b7c",11,"left"); }
   fillR(x0-6,yc-hw-6,x1-x0+12,2*hw+12,6,"#121316","#3a3d42",1.2);
   for(let i=0;i<4;i++) circ(i<2?x0+6:x1-6,i%2?yc+hw:yc-hw,3,"#9aa0a6");
   ctx.strokeStyle="rgba(255,255,255,0.08)"; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.moveTo(x0,yc); ctx.lineTo(x1,yc); ctx.stroke(); ctx.setLineDash([]);
@@ -1123,18 +1229,18 @@ function drawOpt(){ const t=d(), L=t.lab; ctx.fillStyle="#2a2d33"; ctx.fillRect(
   for(const k of OPT){ if(!has(k)||xs[k]===null) continue; const x=X(xs[k]), sel=OSEL===k;
     const w=(k==="holder"?3.6:k==="diaphragm"?2.4:3.2)*sc, h=(k==="screen"?10:k==="holder"?4.4:k==="cuvhold"?4.4:k==="diaphragm"?4.4:6)*sc;
     const col=k==="screen"?"#e8eaec":k==="holder"||k==="diaphragm"?"#22242a":"#2c2f35";
-    fillR(x-w/2,yc-h/2,w,h,3,col,sel?"#f2c14e":"#666",sel?2.5:1);
+    fillR(x-w/2,yc-h/2,w,h,3,col,sel?"#0078d7":"#666",sel?2.5:1);
     if(k==="L1"||k==="L2"){ ctx.fillStyle=k==="L2"?"rgba(170,140,230,0.7)":"rgba(200,225,240,0.7)"; ctx.fillRect(x-1.5,yc-1.75*sc,3,3.5*sc); }
     if(k==="diaphragm"){ ctx.fillStyle="#3a3d42"; ctx.fillRect(x-1.5,yc-0.45*sc,3,0.9*sc); }
     if(k==="holder"&&ST.src) circ(x+0.4*sc,yc,3.2,ST.src==="ledunk"?"#f3e9c8":"#f3f3ee");
     if(k==="cuvhold"&&ST.inHolder!==null){ const c=ST.cuv[ST.inHolder]; fillR(x-0.62*sc,yc-0.62*sc,1.24*sc,1.24*sc,1,cuvColor(c,0.9),"#9ab"); }
     if(k==="screen"&&has("sensor")) fillR(x-0.8*sc-4,yc-1.3*sc,4,2.6*sc,1,"#101113");
-    text(itemName(k).replace(/^O\d\. /,"").replace(/ \+.*$/,""),x,yc+h/2+(OPT.indexOf(k)%2?28:14),"#e8eef2",11.5,"center","700");
+    text(itemName(k).replace(/^O\d\. /,"").replace(/ \+.*$/,""),x,k==="screen"?yc-h/2-8:yc+h/2+(OPT.indexOf(k)%2?28:14),"#e8eef2",11.5,"center","700");
     hitAdd("o:"+k,x-Math.max(w,16)/2,yc-h/2,Math.max(w,16),h); }
   /* the face of the screen, as you would see it */
   const fh=Math.min(CLH*0.5,280*u), fw=fh/1.1, fx=CLW-fw-16, fy=12; fillR(fx,fy,fw,fh,6,"#e6e8ea","#888",1.2); text(L.screen,fx+8,fy+12,"#333",11,"left","700");
   if(has("screen")&&xs.screen!==null){ const cx=fx+fw*0.42, zy=fy+fh*0.86, sz=fh/16, ccdTop=zy-7.2*sz, ccdH=4.6*sz;
-    if(has("sensor")){ fillR(cx-1.1*sz,ccdTop-0.4*sz,2.2*sz,ccdH+0.8*sz,2,"#101113"); text(L.ccd,cx+1.6*sz,ccdTop+ccdH/2,"#333",10,"left","700"); }
+    if(has("sensor")){ const s=ccdH+0.8*sz; ctx.drawImage(CCDF(),cx-s/2,ccdTop-0.4*sz,s,s); text(L.ccd,cx+s/2+6,ccdTop+ccdH/2,"#333",10,"left","700"); }
     text(L.zero,cx+1.4*sz,zy,"#333",10,"left");
     if(o&&lit){ const bl=Math.min(30,2+o.blur*3), sc2=pixScale();
       const g=ctx.createRadialGradient(cx,zy,0,cx,zy,bl+4); g.addColorStop(0,"rgba(255,250,235,1)"); g.addColorStop(1,"rgba(255,250,235,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,zy,bl+4,0,7); ctx.fill();
@@ -1143,7 +1249,7 @@ function drawOpt(){ const t=d(), L=t.lab; ctx.fillStyle="#2a2d33"; ctx.fillRect(
       if(mx>0) for(const [n,l,v] of S2){ const y=ccdTop+n/NPIX*ccdH, a=Math.sqrt(Math.min(1,v/mx))*Math.min(1,0.3+o.amp); if(a<0.02||y<fy+20||y>zy-bl) continue;
         ctx.fillStyle="rgba("+wlRGB(l)+","+(0.95*a).toFixed(2)+")"; ctx.fillRect(cx-bl*0.4-4,y,2*(bl*0.4+4),ccdH/140+1.2); }
       if(has("sensor")) fillR(cx-0.25*sz,ccdTop,0.5*sz,ccdH,1,"rgba(59,64,72,0.55)"); } }
-  text(t.optSel(OSEL?itemName(OSEL):null),16,CLH-14,"#c9ced3",11.5,"left"); }
+  text(t.optSel(OSEL?itemName(OSEL):null),16,CLH-14,"#5b6b7c",11.5,"left"); }
 
 /* ── 3. the chemistry bench (drawn on a 900 × 470 page, scaled) ── */
 const SRC3=["water","naoh","nacl","gl"], SRCI=["ic","ind"];
@@ -1154,7 +1260,7 @@ function syrBody(x0,y0,len,h,V,Vmax,col,needle){ /* a syringe lying left to righ
   fillR(x0,y0,len+16,h,3,"rgba(240,244,246,0.55)","#7d8790",1.4);
   fillR(xv,y0+2,7,h-4,1,"#2a2c30"); fillR(xv+7,y0+h/2-3,len+60-(xv-x0),6,1,"#e9e9e4","#aaa"); fillR(x0+len+60+7,y0+h/2-h*0.45,6,h*0.9,1,"#e9e9e4","#aaa");
   fillR(x0+len+16,y0-8,6,h+16,1,"#e9e9e4","#aaa"); }
-function drawChem(){ const t=d(), L=t.lab, u=Math.min(CLW/900,CLH/470); ctx.fillStyle="#e9e7e0"; ctx.fillRect(0,0,CLW,CLH);
+function drawChem(){ const t=d(), L=t.lab, u=Math.min(CLW/900,CLH/470); ctx.fillStyle="#fff"; ctx.fillRect(0,0,CLW,CLH);
   ctx.save(); ctx.scale(u,u); HS=u; try{
   const srcName=s=>s?L[s]:L.none, srcCol=s=>s==="ic"?"rgba(40,60,190,0.85)":s==="ind"||s==="water"||s==="nacl"||s==="naoh"?"rgba(205,225,240,0.75)":s==="gl"?"rgba(240,236,205,0.8)":"rgba(0,0,0,0)";
   /* the insulin syringes */
