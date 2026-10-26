@@ -1595,36 +1595,81 @@ function desk3(){
   face([[-30,0,-30],[-30,0,60],[110,0,60],[110,0,-30]],{fill:"#3a3d42",layer:-3,flat:true,id:"desk"});
   for (let x = -30; x <= 110; x += 10) poly3([[x,0,-30],[x,0,60]],"#34373b",1,{layer:-2});
 }
+/* a knurled thumb knob: a short cylinder with ribs round its rim */
+function knurl3(axis, a0, a1, u, v, r, col, o){
+  cyl3(axis, a0, a1, u, v, r, col, Object.assign({seg:20, cap:shade(col, 1.18)}, o || {}));
+  for (let i = 0; i < 16; i++){ const t = i / 16 * 2 * Math.PI, cu = u + r * 1.01 * Math.cos(t), cv = v + r * 1.01 * Math.sin(t);
+    const W = a => axis === "x" ? [a, cu, cv] : axis === "y" ? [cu, a, cv] : [cu, cv, a];
+    line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), shade(col, 0.62), 0.8); }
+}
+/* grid paper: 1 mm lines, 1 cm lines darker, printed cm numbers on the centre lines */
+const GRIDTEX = {};
+function gridTex(w, h){ const key = w + "x" + h; if (GRIDTEX[key]) return GRIDTEX[key];
+  const px = 14, c = document.createElement("canvas"); c.width = Math.round(w * px); c.height = Math.round(h * px); c._static = true;
+  const g = c.getContext("2d"); g.fillStyle = "#f3f4f2"; g.fillRect(0, 0, c.width, c.height);
+  for (let mm = 0; mm <= w * 10; mm++){ const x = mm / 10 * px; g.strokeStyle = mm % 10 === 0 ? "rgba(60,70,80,0.75)" : "rgba(120,135,150,0.35)"; g.lineWidth = mm % 10 === 0 ? 1.1 : 0.5; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, c.height); g.stroke(); }
+  for (let mm = 0; mm <= h * 10; mm++){ const y = mm / 10 * px; g.strokeStyle = mm % 10 === 0 ? "rgba(60,70,80,0.75)" : "rgba(120,135,150,0.35)"; g.lineWidth = mm % 10 === 0 ? 1.1 : 0.5; g.beginPath(); g.moveTo(0, y); g.lineTo(c.width, y); g.stroke(); }
+  g.fillStyle = "#555"; g.font = Math.round(0.6 * px) + "px Arial"; g.textAlign = "center";
+  for (let k = 1; k < w; k += 1) g.fillText(String(Math.abs(k - Math.round(w / 2))), k * px, (h - (BEAM - SCR_LO)) * px - 0.25 * px);
+  return GRIDTEX[key] = c; }
+/* the optical bench: a slotted aluminium extrusion on levelling feet, a ruler tape along its front */
 function rail3(){
-  for (const x of [2, 78]) for (const z of [-3, 3]) cyl3("y",0,1.2,x,z,0.7,"#2a2c30",{seg:10,layer:-1});
-  box3(-2,82,1.2,RT3,-4,4,"#b9bcc2",{id:"rail",layer:-1,top:"#c8cbd0"});
-  for (const z of [-1.5,1.5]) box3(-2,82,RT3-0.2,RT3,z-0.4,z+0.4,"#8b8f96",{layer:-1});
-  face([[0,RT3-1.6,4.02],[80,RT3-1.6,4.02],[80,RT3-0.3,4.02],[0,RT3-0.3,4.02]],{fill:"#e9eaec",flat:true,layer:-1,bias:0.4});
-  custom3([40,RT3-1,4.03],c=>{ c.strokeStyle="#444";
+  for (const x of [2, 78]) for (const z of [-3, 3]){ cyl3("y",0,1.2,x,z,0.4,"#9aa0a6",{seg:10,layer:-1}); knurl3("y",0.4,1.4,x,z,1.0,"#6f7a86",{layer:-1}); }
+  box3(-2,82,1.4,RT3-0.5,-4,4,"#b9bcc2",{id:"rail",layer:-1,top:"#c8cbd0"});
+  for (const [z0, z1] of [[-4,-2.4],[-0.8,0.8],[2.4,4]]) box3(-2,82,RT3-0.5,RT3,z0,z1,"#cfd2d6",{id:"rail",layer:-1,top:"#dadde0"});
+  for (const [z0, z1] of [[-2.4,-0.8],[0.8,2.4]]) face([[-2,RT3-0.45,z0],[-2,RT3-0.45,z1],[82,RT3-0.45,z1],[82,RT3-0.45,z0]],{fill:"#5a5e64",flat:true,layer:-1,id:"rail"});
+  for (const s of [-1,1]) box3(s>0?82:-2.6,s>0?82.6:-2,1.3,RT3+0.1,-4.1,4.1,"#2d3035",{layer:-1});
+  face([[0,RT3-1.6,4.02],[30,RT3-1.6,4.02],[30,RT3-0.3,4.02],[0,RT3-0.3,4.02]],{fill:"#2a62b8",flat:true,layer:-1,bias:0.4});
+  face([[30,RT3-1.6,4.02],[80,RT3-1.6,4.02],[80,RT3-0.3,4.02],[30,RT3-0.3,4.02]],{fill:"#e9eaec",flat:true,layer:-1,bias:0.4});
+  custom3([40,RT3-1,4.03],c=>{
     for (let mm = 0; mm <= 800; mm += 5){ const L = mm % 50 === 0 ? 0.8 : mm % 10 === 0 ? 0.55 : 0.3, a = P3(mm/10,RT3-0.32,4.03), b = P3(mm/10,RT3-0.32-L,4.03);
-      c.lineWidth = mm % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{layer:-1,bias:1});
-  for (let cm = 0; cm <= 80; cm += 10) text3([cm,RT3-1.35,4.04],[1,0,0],[0,1,0],String(cm),0.45,"#333",{align:"center",layer:-1,bias:1});
+      c.strokeStyle = mm < 300 ? "#fff" : "#444"; c.lineWidth = mm % 10 === 0 ? 0.9 : 0.5; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); } },{layer:-1,bias:1});
+  for (let cm = 0; cm <= 80; cm += 10) text3([cm,RT3-1.35,4.04],[1,0,0],[0,1,0],String(cm),0.45,cm < 30 ? "#fff" : "#333",{align:"center",layer:-1,bias:1});
 }
-function carrier3(x,id){ box3(x-3,x+3,RT3,RT3+1.4,-5,5,"#d6d8dc",{id,top:"#e3e5e8"}); cyl3("z",5,5.6,x,RT3+0.7,0.5,"#555",{seg:10}); }
+/* a rail carriage: black anodised block with a knurled clamp screw on the front */
+function carrier3(x,id){ box3(x-3,x+3,RT3,RT3+1.6,-4.6,4.6,"#1f2125",{id,top:"#2a2d31"}); knurl3("z",4.6,5.7,x,RT3+0.8,0.6,"#8a939d",{id}); }
+/* the laser on its kinematic mount (Fig. 1b): post holder, post, the fixed and the tilting plates with two
+   adjusting screws, the module with its focusing ring pointing back along the rail */
 function laser3(){ const x = X_LASER;
-  carrier3(x,"laser"); cyl3("y",RT3+1.4,BEAM-1.3,x,0,0.6,"#b9bec4",{seg:10,id:"laser"});
-  box3(x-1.6,x+1.6,BEAM-1.3,BEAM-0.5,-1.6,1.6,"#7d848c",{id:"laser"});
-  box3(x-4.5,x+3.5,BEAM-0.9,BEAM+0.9,-1.4,1.4,"#4a5059",{id:"laser"});
-  cyl3("x",x-5.3,x-4.5,BEAM,0,0.55,"#2f343a",{seg:12,id:"laser",cap:app.lit&&app.cur>2?"#ff5040":"#552222"});
+  carrier3(x,"laser");
+  cyl3("y",RT3+1.6,RT3+7,x,0,1.0,"#1f2125",{seg:16,id:"laser",cap:"#2a2d31"}); knurl3("z",1.0,1.9,x,RT3+5.6,0.45,"#a9a089",{id:"laser"});
+  cylSeg("y",RT3+7,BEAM-2.4,x,0,0.6,"#c9ced3",{seg:12,id:"laser"},3);
+  box3(x-1.2,x+1.2,BEAM-2.4,BEAM-1.2,-1.2,1.2,"#1f2125",{id:"laser"});
+  /* the fixed plate and the tilting plate, the springs between them, the two adjusting screws */
+  boxY(x+0.6,x+1.4,BEAM-2.6,BEAM+3.8,-2.6,2.6,"#18191c",{id:"laser"},2);
+  boxY(x-0.6,x+0.2,BEAM-2.6,BEAM+3.8,-2.6,2.6,"#18191c",{id:"laser"},2);
+  for (const y of [BEAM-1.6, BEAM+2.6]) for (const z of [-1.8, 1.8]) cyl3("x",x+0.2,x+0.6,y,z,0.18,"#b9bec4",{seg:6});
+  for (const [y, z] of [[BEAM+2.9,-2.0],[BEAM-1.9,-2.0]]){ cyl3("x",x+1.4,x+2.6,y,z,0.18,"#c9ced3",{seg:8}); knurl3("x",x+2.6,x+3.6,y,z,0.5,"#b8ab8a",{id:"laser"}); }
+  cyl3("y",BEAM+3.8,BEAM+5,x+1,1.6,0.18,"#c9ced3",{seg:8}); knurl3("y",BEAM+5,BEAM+5.8,x+1,1.6,0.45,"#b8ab8a",{id:"laser"});
+  /* the module: black barrel, knurled focus ring, red aperture */
+  cyl3("x",x-6.2,x-0.6,BEAM,0,0.75,"#141518",{seg:18,id:"laser",cap:"#2a2c30"});
+  knurl3("x",x-6.6,x-4.9,BEAM,0,0.85,"#1d1f22",{id:"laser"});
+  cyl3("x",x-6.75,x-6.6,BEAM,0,0.32,app.lit&&app.cur>2?"#ff5040":"#552222",{seg:12,id:"laser"});
+  if (app.lit && app.cur > 2) sphere3([x-6.8,BEAM,0],0.6,"rgba(255,60,40,0.35)");
 }
-function screen3(){ const x = app.x_screen;
-  carrier3(x,"screen3"); cyl3("y",RT3+1.4,SCR_LO,x,0,0.6,"#b9bec4",{seg:10,id:"screen3"});
-  box3(x,x+0.5,SCR_LO,SCR_HI,-SCR_Z,SCR_Z,"#dcdcd4",{id:"screen3",top:"#ececE6"});
-  /* the pattern side faces the target: paint the screen canvas onto it */
-  const dpr = SCRCV.width / SCW, s = (SCW - 70) / (2 * HALF);
-  const zc = (cm) => (SCW / 2 + cm * s) * dpr;
-  const sx0 = zc(-SCR_Z), sx1 = zc(SCR_Z), sy0 = zc(-(SCR_HI - BEAM)), sy1 = zc(BEAM - SCR_LO);
-  tex3(SCRCV, sx0, sy0, sx1 - sx0, sy1 - sy0, [x - 0.02, SCR_HI, -SCR_Z], [0,0,2*SCR_Z], [0,-(SCR_HI-SCR_LO),0], {id:"screen3"});
+/* the screen: grid paper on both faces of a wooden board with a hole for the beam, on a clamp carriage */
+function screen3(){ const x = app.x_screen, H = SCR_HI - SCR_LO, W = 2 * SCR_Z;
+  carrier3(x,"screen3"); box3(x-1.4,x+1.9,RT3+1.6,SCR_LO+1.4,-1.6,1.6,"#1f2125",{id:"screen3"}); knurl3("z",1.6,2.5,x,SCR_LO+0.4,0.45,"#8a939d",{id:"screen3"});
+  boxY(x,x+0.5,SCR_LO,SCR_HI,-SCR_Z,SCR_Z,"#c98a4b",{id:"screen3",top:"#d19256"},8);
+  const live = app.lit && app.cur > 2.0, G = gridTex(W, H);
+  tex3(G, 0, 0, G.width, G.height, [x + 0.52, SCR_HI, SCR_Z], [0,0,-W], [0,-H,0], {id:"screen3"});
+  if (live){
+    /* the pattern side faces the target: paint the screen canvas onto it */
+    const dpr = SCRCV.width / SCW, s = (SCW - 70) / (2 * HALF);
+    const zc = (cm) => (SCW / 2 + cm * s) * dpr;
+    const sx0 = zc(-SCR_Z), sx1 = zc(SCR_Z), sy0 = zc(-(SCR_HI - BEAM)), sy1 = zc(BEAM - SCR_LO);
+    tex3(SCRCV, sx0, sy0, sx1 - sx0, sy1 - sy0, [x - 0.02, SCR_HI, -SCR_Z], [0,0,W], [0,-H,0], {id:"screen3"});
+  } else tex3(G, 0, 0, G.width, G.height, [x - 0.02, SCR_HI, -SCR_Z], [0,0,W], [0,-H,0], {id:"screen3"});
+  for (const xx of [x - 0.04, x + 0.54]) face(orient(ring3c([xx, BEAM, 0], 0.45), [xx < x ? -1 : 1, 0, 0]), {fill:"#141414", flat:true, bias:2});
 }
+const ring3c = (c, r) => Array.from({length:16}, (_, i) => { const t = i / 16 * 2 * Math.PI; return [c[0], c[1] + r * Math.sin(t), c[2] + r * Math.cos(t)]; });
+/* the acrylic target on its adjustable stand: post, a black magnetic holder, the clear plate with the paper sticker behind */
 function target3(){ const x = app.x_target;
-  carrier3(x,"target"); cyl3("y",RT3+1.4,BEAM-4,x-1,0,0.5,"#b9bec4",{seg:10,id:"target"});
-  box3(x-2.2,x-0.4,BEAM-5,BEAM+4.5,-2.6,2.6,"#c7ccd2",{id:"target"});
-  box3(x-0.4,x+0.3,BEAM-1.6,BEAM+1.6,-1.6,1.6,"#cfe0e6",{id:"target",alpha:0.85});
+  carrier3(x,"target"); cylSeg("y",RT3+1.6,BEAM-4,x-1,0,0.5,"#c9ced3",{seg:10,id:"target"},3);
+  box3(x-2.2,x-0.4,BEAM-5,BEAM+4.5,-2.6,2.6,"#1f2125",{id:"target"});
+  knurl3("z",2.6,3.6,x-1.3,BEAM-3.8,0.45,"#8a939d",{id:"target"});
+  box3(x-0.4,x-0.1,BEAM-2.4,BEAM+2.4,-2.4,2.4,"#f3f3ef",{id:"target"});
+  box3(x-0.1,x+0.3,BEAM-2.4,BEAM+2.4,-2.4,2.4,"rgba(205,228,236,0.55)",{id:"target"});
   for (const [dy,dz] of [[3.6,-3.2],[-3.6,-3.2],[4.8,0]]) cyl3("z",dz-0.01,dz-1.2,x-1.3,BEAM+dy,0.45,"#333",{seg:10});
 }
 function beam3(){
@@ -1632,27 +1677,33 @@ function beam3(){
   const xt = app.x_target + 0.3, xs = app.x_screen, P = BEAM;
   const seg = (x0, x1) => custom3([(x0 + x1) / 2, P, 0], c => { const a = P3(x0, P, 0), b = P3(x1, P, 0);
     c.strokeStyle = "rgba(255,40,30,.9)"; c.lineWidth = 2; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); });
-  seg(X_LASER - 5.3, xs + 0.5); seg(xs, xt);
+  seg(X_LASER - 6.8, xs + 0.5); seg(xs, xt);
   custom3([(xt + xs) / 2, P, 0], c => { c.fillStyle = "rgba(255,40,30,.08)"; const e = P3(xt, P, 0); c.beginPath(); c.moveTo(e[0],e[1]);
     for (let i = 0; i <= 24; i++){ const t = i / 24 * 2 * Math.PI, q = P3(xs - 0.03, P + 6 * Math.sin(t), 6 * Math.cos(t)); c.lineTo(q[0],q[1]); }
     c.fill(); });
 }
+/* the control box (blue enclosure, its panel painted from the close-up) and the two UNI-T meters in their red holsters */
 const CB = [8, 0, 30];
 function ctrl3(){
   const dpr = CTRLCV.width / CW, [x, , z] = CB;
-  box3(x,x+28,0,5,z,z+16,"#2f6fa8",{id:"ctrl"});
+  box3(x+0.3,x+27.7,0,0.5,z+0.3,z+15.7,"#1d4f8a",{id:"ctrl"});
+  box3(x,x+28,0.5,5,z,z+16,"#2f6fa8",{id:"ctrl",top:"#3a7cb8"});
   tex3(CTRLCV, 20*dpr, 30*dpr, 280*dpr, 160*dpr, [x, 5.01, z], [28,0,0], [0,0,16], {id:"ctrl"});
   for (let k = 0; k < 2; k++){ const mx = x + 31 + k * 12.5;
-    box3(mx,mx+10.4,0,4,z,z+16,"#b5443f",{id:"ctrl"});
-    tex3(CTRLCV, (330+k*118)*dpr, 30*dpr, 104*dpr, 160*dpr, [mx, 4.01, z], [10.4,0,0], [0,0,16], {id:"ctrl"}); }
-  box3(x-12,x-5,0,3,z+4,z+9,"#161616",{id:"ctrl"});
+    /* holster: a red rubber frame raised round the dark face */
+    box3(mx,mx+10.4,0,3.6,z,z+16,"#c63a33",{id:"ctrl",top:"#d4473f"});
+    for (const [x0, x1, z0, z1] of [[mx,mx+10.4,z,z+0.7],[mx,mx+10.4,z+15.3,z+16],[mx,mx+0.7,z,z+16],[mx+9.7,mx+10.4,z,z+16]]) box3(x0,x1,3.6,4.3,z0,z1,"#d4473f",{id:"ctrl"});
+    tex3(CTRLCV, (330+k*118)*dpr, 30*dpr, 104*dpr, 160*dpr, [mx+0.7, 3.62, z+0.7], [9.0,0,0], [0,0,14.6], {id:"ctrl"});
+    for (const zz of [z+3, z+13]) box3(mx+10.4,mx+10.9,1,2.6,zz-1,zz+1,"#a8312b"); }
+  box3(x-12,x-5,0,3,z+4,z+9,"#161616",{id:"ctrl",top:"#1f1f1f"});
+  for (let k = 0; k < 4; k++) line3([x-11.4+k*1.6,3.01,z+4.5],[x-11.4+k*1.6,3.01,z+8.5],"#2a2a2a",1);
 }
 function cables3(){
   const L = (a, b, col, w, sag) => { const pts = []; for (let i = 0; i <= 18; i++){ const t = i / 18;
     pts.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t - Math.sin(Math.PI*t)*(sag||3), a[2]+(b[2]-a[2])*t]); } poly3(pts, col, w); };
   if (linked("adaptor","box_dc")) L([CB[0]-8,2,CB[2]+6],[CB[0],2.5,CB[2]+8],"#141414",1.8,0.2);
   const st = wireState ? wireState() : null;
-  if (WP.links.size) L([CB[0]+20,5,CB[2]],[X_LASER-1,BEAM-1,0],"#c02020",1.6,6);
+  if (WP.links.size) L([CB[0]+20,5,CB[2]],[X_LASER-1,BEAM-2.4,0],"#c02020",1.6,6);
   if (WP.links.size>1) L([CB[0]+22,5,CB[2]],[X_LASER-0.5,BEAM-1,0.5],"#222",1.6,7);
 }
 function scene3(){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
