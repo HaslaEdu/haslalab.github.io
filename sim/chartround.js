@@ -90,7 +90,8 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
     for (const id in C.maps) { const M = C.maps[id]; if (M.img) { const im = new Image(); im.onload = im.onerror = () => { if (curMap === id) showMap(id); }; im.src = C.assets + M.img; IMGS[id] = im; } }
     function sheetOf(id) {
       if (LABS[id]) return LABS[id]; const M = C.maps[id], host = document.createElement("div"); labs.appendChild(host);
-      if (M.paper) LABS[id] = DataDesk.paper(host, {key: C.key + "-" + id, lang: () => lang, title: M.paper.title, w_mm: M.paper.w_mm, h_mm: M.paper.h_mm});
+      if (M.custom) LABS[id] = M.custom(host, () => lang);
+      else if (M.paper) LABS[id] = DataDesk.paper(host, {key: C.key + "-" + id, lang: () => lang, title: M.paper.title, w_mm: M.paper.w_mm, h_mm: M.paper.h_mm});
       else { const im = IMGS[id], paint = M.paint || ((g, W, H) => { g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); if (im.complete && im.naturalWidth) g.drawImage(im, 0, 0, W, H); });
         const lab = ChartLab.create({el: host, w: M.w, h: M.h, paint, key: C.key + "-" + id, lang: () => lang}); LABS[id] = {lang: lab.lang, show: lab.show};
         /* a tall sheet is kept within the window's height; the wheel zooms in on it */
@@ -98,6 +99,7 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
       return LABS[id]; }
     function showMap(id) { curMap = id; const M = C.maps[id];
       if (M.img && !(IMGS[id].complete && IMGS[id].naturalWidth)) return;
+      maps.hidden = cur.maps.length < 2 && !!M.custom; sheet.hidden = !!M.custom;
       for (const k in LABS) LABS[k].show(k === id); sheetOf(id).show(true);
       mapName.textContent = tx(M.name, lang); mapNote.textContent = M.note ? tx(M.note, lang) : M.paper ? UI[lang].paperNote : "";
       for (const b of maps.querySelectorAll("button")) b.className = b.dataset.m === id ? "on" : ""; }
@@ -124,11 +126,16 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
       ansBox.innerHTML = ""; const F = cur.fields || [];
       if (!F.length) ansBox.appendChild(el("p", "cr-hint", t.none));
       for (const [id, lab, opts] of F) { const d = el("div", "cr-fld"), l = el("label"); l.textContent = tx(lab, L); d.appendChild(l);
+        const k = cur.id + "." + id;
+        if (opts && opts.checks) { const box = el("div"); box.style.cssText = "display:flex;flex-direction:column;gap:2px"; const on = new Set((ANS[k] || "").split("|").filter(Boolean));
+          for (const o of opts.checks) { const v = tx(o, "en"), lb = el("label"), cb = el("input"); cb.type = "checkbox"; cb.style.width = "auto"; cb.checked = on.has(v); lb.style.cssText = "display:flex;gap:6px;align-items:center;font-size:12.5px";
+            cb.onchange = () => { cb.checked ? on.add(v) : on.delete(v); ANS[k] = [...on].join("|"); store.set(SK, ANS); }; lb.append(cb, document.createTextNode(tx(o, L))); box.appendChild(lb); }
+          d.style.gridTemplateColumns = "1fr"; d.appendChild(box); ansBox.appendChild(d); continue; }
         let e; if (opts) { e = el("select"); e.innerHTML = '<option value="">—</option>' + opts.map((o) => "<option>" + tx(o, L) + "</option>").join(""); } else e = el("input");
-        const k = cur.id + "." + id; e.value = ANS[k] || ""; e.oninput = e.onchange = () => { ANS[k] = e.value; store.set(SK, ANS); }; e.onkeydown = (ev) => ev.stopPropagation(); d.appendChild(e); ansBox.appendChild(d); }
+        e.value = ANS[k] || ""; e.oninput = e.onchange = () => { ANS[k] = e.value; store.set(SK, ANS); }; e.onkeydown = (ev) => ev.stopPropagation(); d.appendChild(e); ansBox.appendChild(d); }
       renderSol(); history.replaceState(null, "", "?" + (C.tasks.length > 1 ? "task=" + cur.id + "&" : "") + (lang === "en" ? "lang=en" : "")); }
-    function renderSol() { const t = UI[lang]; solCard.hidden = !solOn; bSol.textContent = solOn ? t.bSolOff : t.bSol; bSol.className = "cr-btn" + (solOn ? " on" : ""); if (!solOn) return;
-      solBox.innerHTML = (cur.solNote ? '<p class="note">' + tx(cur.solNote, lang) + "</p>" : "") + (cur.key && cur.key.length ? "<table>" + cur.key.map(([k, v]) => "<tr><td>" + k + "</td><td>" + tx(v, lang) + "</td></tr>").join("") + "</table>" : "");
+    function renderSol() { const t = UI[lang]; solCard.hidden = !solOn; if (C.onSol) C.onSol(solOn); bSol.textContent = solOn ? t.bSolOff : t.bSol; bSol.className = "cr-btn" + (solOn ? " on" : ""); if (!solOn) return;
+      solBox.innerHTML = (cur.solNote ? '<p class="note">' + tx(cur.solNote, lang) + "</p>" : "") + (cur.key && cur.key.length ? "<table>" + cur.key.map(([k, v]) => "<tr><td>" + k + "</td><td>" + (typeof v === "function" ? v(lang, ANS) : tx(v, lang)) + "</td></tr>").join("") + "</table>" : "");
       for (const s of cur.sol || []) {
         if (Array.isArray(s)) { solBox.appendChild(el("p", "cap", s[1])); const im = el("img"); im.loading = "lazy"; im.alt = s[1]; im.src = C.assets + s[0]; solBox.appendChild(im); }
         else { solBox.appendChild(el("p", "cap", tx(s.cap, lang))); const c = el("canvas"); c.width = s.w * 2; c.height = s.h * 2; c.style.width = s.w + "px"; const g = c.getContext("2d"); g.scale(2, 2);
@@ -141,7 +148,7 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
       for (const k in LABS) LABS[k].lang(); renderTask(); }
     bko.onclick = () => { lang = "ko"; applyLang(); }; ben.onclick = () => { lang = "en"; applyLang(); };
     applyLang();
-    return {lang: () => lang};
+    return {lang: () => lang, answers: () => ANS, refreshSol: () => renderSol()};
   }
   window.ChartRound = {page};
 })();
