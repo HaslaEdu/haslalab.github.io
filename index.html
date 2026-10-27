@@ -225,6 +225,23 @@ section{padding:58px 0}
 .mark img{width:27px;height:27px;display:block;flex:none;position:relative;top:1px}
 .wm{width:206px;height:auto;display:block;margin:0 0 20px}
 
+/* ═══════ learn ═══════ */
+.lsubj .abbr{font-size:1.35rem}
+.lsec{margin:0 0 38px}
+.lsec>h2{font-size:1.25rem;margin:0 0 6px}
+.lsec>p{margin:0 0 16px;color:var(--graphite);font-size:13.5px;max-width:72ch}
+.rlist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:780px){.rlist{grid-template-columns:1fr}}
+.ritem{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:16px 18px;
+  display:flex;flex-direction:column;gap:6px;transition:.16s}
+a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 14px 30px -22px rgba(22,33,46,.55)}
+.ritem.soon{border-style:dashed;background:transparent}
+.ritem .rk{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--graphite)}
+.ritem .rk b{color:var(--laser);font-weight:500}
+.ritem h3{font-size:15px;letter-spacing:-.01em}
+.ritem .rd{font-size:13px;color:var(--graphite);line-height:1.55}
+.ritem .rs{font-family:var(--mono);font-size:10.5px;color:var(--graphite);margin-top:auto;padding-top:4px;word-break:break-all}
+
 /* ═══════ competition cards ═══════ */
 .comps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 /* three columns get too cramped for the figures before the single-column
@@ -530,7 +547,13 @@ const REL = "https://github.com/haslalab/haslalab.github.io/releases/download/";
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"대회", navAbout:"소개",
+  navHome:"홈", navComps:"대회", navLearn:"학습", navAbout:"소개",
+  ebLearn:"학습", hLearn:"실험과 관측을 공부하세요",
+  pLearn:"물리 · 화학 · 생물 · 천문 실험과 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
+  lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
+  ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
+  foundNote:"아래 자료는 각 기관과 저자가 인터넷에 무료로 공개한 것입니다. 링크는 원래 사이트로 연결되고, HaslaLab이 내용을 고치거나 다시 올리지 않았습니다.",
+  kOfficial:"공식", kFree:"무료 교재", kGuide:"지침", kTool:"도구", kArchive:"기출", lOpen:"열기",
   eyebrow:"실험 라운드 · 가상 광학 벤치",
   headline:"레일 위에 놓고,<br>직접 재세요.",
   lede:"IPhO · APhO · EuPhO 실험 문제를 실제 장비처럼 재현했습니다. "+
@@ -576,7 +599,13 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Competitions", navAbout:"About",
+  navHome:"Home", navComps:"Competitions", navLearn:"Learn", navAbout:"About",
+  ebLearn:"Learn", hLearn:"Study experiments and observation",
+  pLearn:"Textbooks, study guides and basic experiments and observations for physics, chemistry, biology and astronomy. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
+  lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
+  ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
+  foundNote:"The material below is published free on the internet by its institutions and authors. The links go to the original sites; HaslaLab has not edited or re-hosted it.",
+  kOfficial:"Official", kFree:"Free textbook", kGuide:"Guide", kTool:"Tool", kArchive:"Past papers", lOpen:"Open",
   eyebrow:"Experimental round · virtual optical bench",
   headline:"Set it on the rail.<br>Read it yourself.",
   lede:"IPhO, APhO and EuPhO experimental problems, rebuilt as working apparatus. "+
@@ -2636,8 +2665,8 @@ const DATA={
   abbr:"IBO", since:1990,
   full:{ko:"국제생물올림피아드",en:"International Biology Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"실험(practical) 시험만 실었습니다. 문제지와 해답은 IBO 공식 아카이브(ibo-info.org/en/info/papers.html)에서 비밀번호 없이 공개된 파일과 olimpicos의 공개본입니다. 공식 아카이브의 나머지 문제지(1992–2014년 대부분, 2019, 2022년, 2023년 실험 3)는 IBO가 일부러 비밀번호를 걸어 두어 각국 대표 담당자에게서 받도록 하고 있어 싣지 않았고, 최근 2년 치는 공개가 유예됩니다. 큰 파일은 화면용 해상도로 줄였습니다.",
-        en:"Practical exams only. The sheets and solutions are the files the official IBO archive (ibo-info.org/en/info/papers.html) publishes without a password, plus the public copies on olimpicos. The rest of the official archive (most of 1992–2014, 2019, 2022 and 2023's practical 3) is password-protected on purpose, to be obtained from a national coordinator, and is not reproduced here; the latest two years are under a black-out period. Large files are reduced to screen resolution."},
+  note:{ko:"실험(practical) 시험만 실었습니다. 2013년 이후는 IBO 공식 아카이브(ibo-info.org/en/info/papers.html)에서 비밀번호 없이 공개된 파일과 olimpicos의 공개본입니다. 1994–2011년은 IBO가 공식 사이트(ibo-info.org/en/info/results-reports.html)에 누구나 받을 수 있게 올려 둔 연도별 최종 보고서에서 실험 시험과 정답 부분만 잘라 왔고, 1997년은 olimpicos의 정답표입니다. 공식 아카이브에서 비밀번호가 걸린 문제지(2019, 2022년, 2023년 실험 3 등)는 공개된 사본을 찾지 못해 싣지 않았고, 비밀번호를 풀지도 않았습니다. 2004–2007, 2010, 2012, 2014년은 최종 보고서에 문제가 실려 있지 않고, 최근 2년 치는 공개가 유예됩니다. 큰 파일은 화면용 해상도로 줄였습니다.",
+        en:"Practical exams only. From 2013 the sheets and solutions are the files the official IBO archive (ibo-info.org/en/info/papers.html) publishes without a password, plus the public copies on olimpicos. For 1994–2011 the practical tests and answer keys are cut from the yearly final reports the IBO publishes openly (ibo-info.org/en/info/results-reports.html); 1997 is the answer key on olimpicos. Papers that are password-protected in the official archive (2019, 2022, 2023's practical 3 and others) have no public copy that we could find, so they are not reproduced, and no password was broken. The final reports for 2004–2007, 2010, 2012 and 2014 do not include the problems, and the latest two years are under a black-out period. Large files are reduced to screen resolution."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2024,host:{ko:"카자흐스탄 · 아스타나",en:"Astana, Kazakhstan"},cc:"kz",problems:lst([
@@ -2675,8 +2704,32 @@ const DATA={
     ["P4","Biochemistry","생화학","IBO_2015_P4_EN.pdf",null]])},
    {y:2013,host:{ko:"스위스 · 베른",en:"Bern, Switzerland"},cc:"ch",problems:lst([
     ["P","Practical Exams 1–4","실험 시험 1–4","IBO_2013_P_EN.pdf",null]])},
+   {y:2011,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:lst([
+    ["P","Practical Tests 1–4: Biochemistry and Cell Biology; Animal Physiology and Anatomy; Ecology and Systematics; Plant Anatomy, Physiology and Genetics","실험 시험 1–4: 생화학과 세포생물학 · 동물 생리와 해부 · 생태와 계통 · 식물 해부 · 생리 · 유전","IBO_2011_P_EN.pdf","IBO_2011_S.pdf"]])},
+   {y:2009,host:{ko:"일본 · 쓰쿠바",en:"Tsukuba, Japan"},cc:"jp",problems:lst([
+    ["P","Experimental Tests 1–4: Animal and Plant Anatomy; Biochemistry; Genetics; Cell Physiology","실험 시험 1–4: 동식물 해부 · 생화학 · 유전 · 세포 생리","IBO_2009_P_EN.pdf","IBO_2009_S.pdf"]])},
+   {y:2008,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:lst([
+    ["P","Practical Tests 1–4: Plant Anatomy and Physiology; Animal Anatomy and Physiology; Biochemistry and Cell Biology; Animal Behaviour","실험 시험 1–4: 식물 해부와 생리 · 동물 해부와 생리 · 생화학과 세포생물학 · 동물 행동","IBO_2008_P_EN.pdf","IBO_2008_S.pdf"]])},
    {y:2003,host:{ko:"벨라루스 · 민스크",en:"Minsk, Belarus"},cc:"by",problems:lst([
-    ["P","Practical Tests (answers only)","실험 시험 (정답만)",null,"IBO_2003_S.pdf"]])}
+    ["P","Practical Tests 1–4: Plant Physiology, Morphology and Anatomy; Animal Morphology, Anatomy and Systematics; Microbiology and Biotechnology; Genetics","실험 시험 1–4: 식물 생리 · 형태 · 해부 · 동물 형태 · 해부 · 계통 · 미생물과 생명공학 · 유전","IBO_2003_P_EN.pdf","IBO_2003_S.pdf"]])},
+   {y:2002,host:{ko:"라트비아 · 리가",en:"Riga, Latvia"},cc:"lv",problems:lst([
+    ["P","Practical Tests I–IV: Animal Systematics and Morphology; Plant Systematics, Anatomy and Physiology; Molecular Biology; Dendroecology","실험 시험 I–IV: 동물 계통과 형태 · 식물 계통 · 해부 · 생리 · 분자생물학 · 수목생태학","IBO_2002_P_EN.pdf",null]])},
+   {y:2001,host:{ko:"벨기에 · 브뤼셀",en:"Brussels, Belgium"},cc:"be",problems:lst([
+    ["P","Practical Tests 1–4: Plant Anatomy, Morphology and Taxonomy; Animal Anatomy and Morphology; Plant Pigment Analysis; Ethology","실험 시험 1–4: 식물 해부 · 형태 · 분류 · 동물 해부와 형태 · 식물 색소 분석 · 동물행동학","IBO_2001_P_EN.pdf","IBO_2001_S.pdf"]])},
+   {y:2000,host:{ko:"튀르키예 · 안탈리아",en:"Antalya, Turkey"},cc:"tr",problems:lst([
+    ["P","Practical Tests, Laboratories I–IV","실험 시험 (실험실 I–IV)","IBO_2000_P_EN.pdf","IBO_2000_S.pdf"]])},
+   {y:1999,host:{ko:"스웨덴 · 웁살라",en:"Uppsala, Sweden"},cc:"se",problems:lst([
+    ["P","Practical Tests 1–4: Microbiology; Genetics and Histology; Morphology and Physiology; Behaviour","실험 시험 1–4: 미생물 · 유전과 조직 · 형태와 생리 · 행동","IBO_1999_P_EN.pdf",null]])},
+   {y:1998,host:{ko:"독일 · 킬",en:"Kiel, Germany"},cc:"de",problems:lst([
+    ["P","Practical Tests 1–4: Systematics and Anatomy; Physiology; Genetics and Microbiology; Ethology","실험 시험 1–4: 계통과 해부 · 생리 · 유전과 미생물 · 동물행동학","IBO_1998_P_EN.pdf",null]])},
+   {y:1997,host:{ko:"투르크메니스탄 · 아시가바트",en:"Ashgabat, Turkmenistan"},cc:"tm",problems:lst([
+    ["P","Practical and Theoretical Tests (answer key only)","실험 · 이론 시험 (정답만)",null,"IBO_1997_S.pdf"]])},
+   {y:1996,host:{ko:"우크라이나 · 크림",en:"Crimea, Ukraine"},cc:"ua",problems:lst([
+    ["P","Practical Tests A–D: Genetics; Human Morphology and Physiology; Plant Physiology; Zoology (Russian and English)","실험 시험 A–D: 유전 · 인체 형태와 생리 · 식물 생리 · 동물 (러시아어 · 영어)","IBO_1996_P_EN.pdf",null]])},
+   {y:1995,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:lst([
+    ["P","Practical Tests, Laboratories I–IV","실험 시험 (실험실 I–IV)","IBO_1995_P_EN.pdf",null]])},
+   {y:1994,host:{ko:"불가리아 · 바르나",en:"Varna, Bulgaria"},cc:"bg",problems:lst([
+    ["P","Practical Test: Biodiversity and Ecology","실험 시험: 생물다양성과 생태","IBO_1994_P_EN.pdf","IBO_1994_S.pdf"]])}
   ]},
  ioaa:{
   abbr:"IOAA", since:2007, obs:true,
@@ -2958,7 +3011,7 @@ const LOGO_V = 10;
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
-                   ijso:0.42, ioaa:0.50, icho:0.16, imcho:0.26, ioaajr:0.42,
+                   ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
                    iao:0.30, owao:0.35, apao:0.30, ibo:0.33};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
@@ -3059,6 +3112,125 @@ function viewComps(){
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
+  </div>
+  ${adFitBanner("primary")}`;
+}
+
+/* ── learn: textbooks, study guides, basic experiments and observation ──
+   HaslaLab's own material is still to be written; until then each subject
+   lists what its olympiad and open publishers already put on the internet.
+   s: "g" textbooks / study guides, "b" basic experiments and observation;
+   k: official | free | guide | tool | archive */
+const LR=(s,k,u,tko,ten,bko,ben,dko,den)=>({s,k,u,t:{ko:tko,en:ten},by:{ko:bko,en:ben},d:{ko:dko,en:den}});
+const LEARN={
+ physics:{name:{ko:"물리",en:"Physics"},abbr:"Phys",comps:"IPhO · APhO · EuPhO",items:[
+  LR("g","official","https://www.ipho-new.org/statutes-syllabus/","IPhO 규정과 출제 범위","IPhO Statutes and Syllabus","국제물리올림피아드","International Physics Olympiad",
+    "이론과 실험의 공식 출제 범위입니다. 실험 부분에서 요구하는 측정 기구, 불확도 처리, 그래프 해석이 정리되어 있습니다.","The official syllabus for theory and experiment, including the instruments, uncertainty treatment and graph work the experimental round expects."),
+  LR("g","free","https://openstax.org/details/books/university-physics-volume-1","University Physics 1–3권","University Physics, Volumes 1–3","OpenStax (Rice University)","OpenStax (Rice University)",
+    "역학부터 전자기, 광학, 현대물리까지 다루는 대학 일반물리 교재입니다. CC BY 라이선스로 무료입니다.","A university physics course from mechanics to electromagnetism, optics and modern physics; free under CC BY."),
+  LR("g","archive","https://phoxiv.org/contests/ipho","IPhO 기출 아카이브","IPhO past-paper archive","phoxiv","phoxiv",
+    "역대 IPhO 이론 · 실험 문제지와 해답을 연도별로 모은 공개 아카이브입니다.","A public archive of IPhO theory and experimental papers and solutions by year."),
+  LR("b","guide","https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf","측정 불확도 표현 지침 (GUM)","Guide to the Expression of Uncertainty in Measurement (GUM)","국제도량형국 BIPM · JCGM 100:2008","BIPM · JCGM 100:2008",
+    "측정 불확도를 계산하고 보고하는 국제 표준 지침입니다. 실험 답안의 오차 처리의 기준이 됩니다.","The international standard for evaluating and reporting measurement uncertainty, the reference behind error treatment in experimental answers."),
+  LR("b","guide","https://www.itl.nist.gov/div898/handbook/","NIST/SEMATECH 통계 방법 핸드북","NIST/SEMATECH e-Handbook of Statistical Methods","미국 국립표준기술연구소 NIST","NIST",
+    "데이터 탐색, 회귀, 측정 과정의 특성 평가를 예제와 함께 설명합니다.","Exploratory data analysis, regression and the characterisation of measurement processes, with worked examples."),
+  LR("b","free","https://ocw.mit.edu/courses/8-13-14-experimental-physics-i-ii-junior-lab-fall-2016-spring-2017/","실험물리 I · II (Junior Lab)","Experimental Physics I & II (Junior Lab)","MIT OpenCourseWare","MIT OpenCourseWare",
+    "MIT 물리학과의 실험 과목 자료입니다. 실험 설계, 오차 분석, 보고서 작성 지침이 함께 있습니다.","MIT's physics laboratory course, with guidance on experiment design, error analysis and lab reports."),
+  LR("b","free","https://openstax.org/details/books/introductory-statistics-2e","Introductory Statistics 2e","Introductory Statistics 2e","OpenStax","OpenStax",
+    "평균, 표준편차, 선형 회귀 등 실험 데이터 처리에 필요한 기초 통계 교재입니다.","The basic statistics behind experimental data: means, standard deviations, linear regression.")]},
+ chemistry:{name:{ko:"화학",en:"Chemistry"},abbr:"Chem",comps:"IChO · IMChO",items:[
+  LR("g","official","https://www.ichosc.org/regulations","IChO 규정과 출제 범위 (부록 C)","IChO Regulations and Syllabus (Appendix C)","IChO 운영위원회","IChO Steering Committee",
+    "이론과 실험의 공식 출제 범위입니다. 적정, 여과, 결정화, pH 측정 같은 기본 실험 기능 목록이 들어 있습니다.","The official syllabus, including the list of basic laboratory skills such as titration, filtration, recrystallisation and pH measurement."),
+  LR("g","free","https://openstax.org/details/books/chemistry-2e","Chemistry 2e","Chemistry 2e","OpenStax","OpenStax",
+    "일반화학 전 범위를 다루는 무료 교재입니다.","A free textbook covering the whole of general chemistry."),
+  LR("g","archive","https://icho2025.ae/preparatory-problems","IChO 2025 준비 문제","IChO 2025 Preparatory Problems","IChO 2025 조직위원회 (UAE)","IChO 2025 organisers (UAE)",
+    "주최국이 대회 전에 공개하는 이론 · 실험 준비 문제입니다. 실험 준비 문제에는 그해 요구하는 고급 실험 기술이 들어 있습니다.","The theory and practical preparatory problems the host publishes before the competition; the practical set introduces that year's advanced techniques."),
+  LR("g","archive","https://scheikundeolympiade.science.ru.nl/internationaal/","역대 IChO 문제와 준비 문제 모음","IChO problems and preparatory problems by year","네덜란드 화학올림피아드 (Radboud 대학교)","Dutch Chemistry Olympiad (Radboud University)",
+    "연도별 IChO 문제지와 준비 문제를 모아 둔 아카이브입니다.","An archive of IChO papers and preparatory problems by year."),
+  LR("b","free","https://chem.libretexts.org/Ancillary_Materials/Laboratory_Experiments","화학 실험 매뉴얼 모음","Chemistry laboratory experiments","LibreTexts","LibreTexts",
+    "일반화학 · 분석화학 · 유기화학 실험 절차와 안전 수칙을 담은 공개 실험서 모음입니다.","Open lab manuals for general, analytical and organic chemistry, with procedures and safety notes.")]},
+ biology:{name:{ko:"생물",en:"Biology"},abbr:"Bio",comps:"IBO · IJSO",items:[
+  LR("g","official","https://www.ibo-info.org/en/info/rules-guidelines.html?file=files/downloads/rules/IBO%20Operational%20Guidelines_v.7.pdf&cid=157","IBO 운영 지침 (부록 2: 실험 기능 목록)","IBO Operational Guidelines (Appendix 2: practical skills)","국제생물올림피아드","International Biology Olympiad",
+    "실험 시험에서 요구하는 기능을 관찰 · 측정 · 분류 · 계산부터 현미경, 해부, 생화학 기법까지 정리한 공식 목록이 부록에 있습니다.","The appendix lists the skills the practical exams require, from observation, measurement, classification and calculation to microscopy, dissection and biochemical techniques."),
+  LR("g","free","https://openstax.org/details/books/biology-2e","Biology 2e","Biology 2e","OpenStax","OpenStax",
+    "세포부터 생태까지 다루는 무료 대학 생물학 교재입니다.","A free university biology textbook from cells to ecology."),
+  LR("g","guide","https://biolympiads.com/practical-skills-for-biology-olympiads/","생물올림피아드 실험 기능 안내","Practical skills for biology olympiads","Biolympiads","Biolympiads",
+    "IBO 실험 시험에 필요한 기능을 분야별로 설명한 학습 안내입니다.","A study guide to the skills the IBO practical exams test, by field."),
+  LR("g","archive","https://www.ibo-info.org/en/info/papers.html","IBO 공식 기출 아카이브","IBO examination papers archive","국제생물올림피아드","International Biology Olympiad",
+    "IBO가 공개한 역대 이론 · 실험 문제지와 해답입니다.","The theory and practical papers and answer keys the IBO publishes."),
+  LR("b","official","https://www.ibo-info.org/en/info/rules-guidelines.html?file=files/downloads/rules/IBO%20Laboratory%20Health%20and%20Safety%20Regulations%20v1.0.pdf&cid=278","IBO 실험실 보건 · 안전 규정","IBO Laboratory Health and Safety Regulations","국제생물올림피아드","International Biology Olympiad",
+    "실험 시험장에서 지켜야 할 안전 규정입니다.","The safety rules that apply in the practical exam laboratories."),
+  LR("b","free","https://bio.libretexts.org/Learning_Objects/Laboratory_Experiments","생물 실험 매뉴얼 모음","Biology laboratory experiments","LibreTexts","LibreTexts",
+    "현미경 관찰, 세포, 유전, 생리 실험 절차를 담은 공개 실험서 모음입니다.","Open lab manuals for microscopy, cells, genetics and physiology.")]},
+ astronomy:{name:{ko:"천문",en:"Astronomy"},abbr:"Astro",comps:"IOAA · IOAA Jr · IAO · APAO · OWAO",obs:true,items:[
+  LR("g","official","https://ioaastrophysics.org/resources/ioaa-syllabus","IOAA 출제 범위","IOAA Syllabus","국제천문및천체물리올림피아드","International Olympiad on Astronomy and Astrophysics",
+    "이론 · 자료 분석 · 관측의 공식 출제 범위입니다. 맨눈 관측, 성도와 목록 사용, 등급 추정, 망원경 다루기가 들어 있습니다.","The official syllabus for theory, data analysis and observation, including naked-eye work, star maps and catalogues, magnitude estimation and telescopes."),
+  LR("g","official","https://ioaastrophysics.org/junior-ioaa/junior-ioaa-syllabus","IOAA Jr 출제 범위","Junior IOAA Syllabus","IOAA","IOAA",
+    "주니어 대회의 공식 출제 범위입니다.","The official syllabus of the junior competition."),
+  LR("g","archive","https://cdn.ioaastrophysics.org/assets/IOAA%20problems/ioaa-problem-book-2007-2025.pdf","IOAA 문제집 2007–2025","IOAA Problem Book 2007–2025","IOAA","IOAA",
+    "2007년부터 2025년까지의 IOAA 이론 · 자료 분석 · 관측 문제와 해답을 분야별로 묶은 문제집입니다.","Every IOAA theory, data-analysis and observation problem from 2007 to 2025 with solutions, organised by topic."),
+  LR("g","free","https://openstax.org/details/books/astronomy-2e","Astronomy 2e","Astronomy 2e","OpenStax","OpenStax",
+    "천구와 시간부터 별, 은하, 우주론까지 다루는 무료 천문학 교재입니다.","A free astronomy textbook from the celestial sphere and time to stars, galaxies and cosmology."),
+  LR("b","guide","https://www.aavso.org/visual-observing-manual","변광성 안시 관측 매뉴얼","AAVSO Visual Observing Manual","미국변광성관측자협회 AAVSO","AAVSO",
+    "비교성으로 변광성의 등급을 눈으로 추정하는 방법을 설명합니다. 관측 라운드의 등급 추정 과제와 같은 기법입니다.","How to estimate a variable star's magnitude by eye against comparison stars — the technique behind the magnitude tasks of the observation round."),
+  LR("b","tool","https://astro4edu.org/iau-constellation-diagrams/","IAU 별자리 성도","IAU constellation diagrams","IAU 천문교육사무국","IAU Office of Astronomy for Education",
+    "88개 별자리의 성도를 PDF로 받을 수 있습니다. 맨눈 관측 연습에 씁니다.","Charts of all 88 constellations as PDFs, for naked-eye practice."),
+  LR("b","tool","https://stellarium-web.org/","Stellarium Web","Stellarium Web","Stellarium","Stellarium",
+    "브라우저에서 원하는 장소와 시각의 하늘을 보여 주는 무료 플라네타륨입니다. 관측 계획과 성도 읽기 연습에 씁니다.","A free in-browser planetarium for any place and time, for planning observations and practising chart reading.")]}
+};
+const LKIND={official:"kOfficial",free:"kFree",guide:"kGuide",tool:"kTool",archive:"kArchive"};
+const lhost=u=>u.replace(/^https?:\/\//,"").split("/")[0];
+
+function viewLearn(){
+  const d=UI[lang];
+  return `
+  <div class="shell">
+    <div class="phead">
+      <p class="eyebrow">${d.ebLearn}</p>
+      <h1>${d.hLearn}</h1>
+      <div class="sub">${d.pLearn}</div>
+    </div>
+    <div class="comps" data-lang="${lang}">
+      ${Object.entries(LEARN).map(([key,L])=>{
+        const g=L.items.filter(r=>r.s==="g").length, b=L.items.filter(r=>r.s==="b").length;
+        return `<a class="comp lsubj" href="#/learn/${key}">
+          <div class="chead"><div class="abbr">${L.name[lang]}</div></div>
+          <div class="full">${L.comps}</div>
+          <dl>
+            <div><dt>${d.lGuides}</dt><dd>${g}</dd></div>
+            <div><dt>${d.lBasics}</dt><dd>${b}</dd></div>
+          </dl>
+          <span class="go">→</span>
+        </a>`;}).join("")}
+    </div>
+  </div>
+  ${adFitBanner("primary")}`;
+}
+
+function viewLearnSubject(key){
+  const d=UI[lang], L=LEARN[key];
+  if(!L) return viewLearn();
+  const card=r=>`<a class="ritem" href="${esc(r.u)}" target="_blank" rel="noopener">
+      <span class="rk">${d[LKIND[r.k]]} · ${esc(r.by[lang])}</span>
+      <h3>${esc(r.t[lang])}</h3>
+      <span class="rd">${esc(r.d[lang])}</span>
+      <span class="rs">${esc(lhost(r.u))} ↗</span></a>`;
+  const own=t=>`<div class="ritem soon"><span class="rk"><b>${d.lOwn}</b></span><h3>${t}</h3><span class="rd">${d.soonOwn}</span></div>`;
+  const sec=(s,title,ownT)=>`
+    <div class="lsec">
+      <h2>${title}</h2>
+      <p>${d.foundNote}</p>
+      <div class="rlist">${own(ownT)}${L.items.filter(r=>r.s===s).map(card).join("")}</div>
+    </div>`;
+  return `
+  <div class="shell">
+    <div class="phead">
+      <p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p>
+      <h1>${L.name[lang]}</h1>
+      <div class="sub">${L.comps}</div>
+    </div>
+    ${sec("g",d.lGuides,d.ownGuide)}
+    ${sec("b",d.lBasics,d.ownBasics)}
   </div>
   ${adFitBanner("primary")}`;
 }
@@ -6287,6 +6459,7 @@ function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
   else if(first==="comps")       parts.push(d.hComps);
+  else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=DATA[first];
     parts.push(second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
@@ -6328,6 +6501,7 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
+  else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps();  active="comps"; }
   else if(first && DATA[first]){  html=second?viewYear(first,second):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
@@ -6338,6 +6512,7 @@ function render(){
   document.getElementById("nav").innerHTML=
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
+     <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
   document.getElementById("footTop").textContent=d.footTop;
