@@ -3,13 +3,13 @@
    (JPL approximate elements), the Moon (Meeus, main terms) with its phase, atmospheric extinction and refraction,
    and the brightness of the sky from the night sky, the Moon (Krisciunas & Schaefer 1991) and the town; the faintest
    star the eye catches follows from it (Schaefer).  The view turns with the mouse; widening it does not magnify.
-   Tools: look, point (what you show the examiner), and the hand held at arm's length (finger 1°, three fingers 5°,
-   fist 10°, spread hand 20°).
+   Tools: look, point (what you show the examiner), trace (sweep the hand across the sky) and the hand held at
+   arm's length (finger 1°, three fingers 5°, fist 10°, spread hand 20°).  overcast: true covers the sky with cloud.
 
    NightSky.astro  — the astronomy, usable alone
    NightSky.create({el, site: {lat, lon, tz, name}, start: [y, m, d, localHour], look: {az, alt, fov}, lang,
                     skyline(az) -> deg, ground: {sea: [az0, az1], lights: [[az, strength]]}, mags: [[ra, dec, V]],
-                    onPoint(p), drawOver(g, view)}) */
+                    tools: [..], overcast, onPoint(p), onTrace(points), drawOver(g, view)}) */
 (function () {
   "use strict";
   const DEG = Math.PI / 180, norm360 = (a) => ((a % 360) + 360) % 360;
@@ -82,9 +82,9 @@
 
   /* ---------------------------------------------------------------- the view */
   const T = {
-    ko: {look: "둘러보기", point: "가리키기", hand: "손 재기", f1: "손가락 1°", f3: "세 손가락 5°", fist: "주먹 10°", span: "편 손 20°", wide: "시야", hint: "끌기: 둘러보기 / 휠: 시야 넓히기·좁히기(배율은 그대로) / 가리키기: 클릭한 곳을 시험관에게 가리킵니다 / 손 재기: 팔을 쭉 뻗은 손",
+    ko: {look: "둘러보기", point: "가리키기", trace: "손으로 그리기", hand: "손 재기", f1: "손가락 1°", f3: "세 손가락 5°", fist: "주먹 10°", span: "편 손 20°", wide: "시야", hint: "끌기: 둘러보기 / 휠: 시야 넓히기·좁히기(배율은 그대로) / 가리키기: 클릭한 곳을 시험관에게 가리킵니다 / 손으로 그리기: 끌어서 하늘에 손을 움직인 길을 그립니다 / 손 재기: 팔을 쭉 뻗은 손",
          dirs: ["북", "동", "남", "서"], local: "현지 시각"},
-    en: {look: "Look", point: "Point", hand: "Hand", f1: "Finger 1°", f3: "Three fingers 5°", fist: "Fist 10°", span: "Spread hand 20°", wide: "Field", hint: "Drag: look around / wheel: wider or narrower view (no magnification) / Point: show the examiner where you click / Hand: your hand at arm's length",
+    en: {look: "Look", point: "Point", trace: "Trace by hand", hand: "Hand", f1: "Finger 1°", f3: "Three fingers 5°", fist: "Fist 10°", span: "Spread hand 20°", wide: "Field", hint: "Drag: look around / wheel: wider or narrower view (no magnification) / Point: show the examiner where you click / Trace: drag to sweep your hand across the sky / Hand: your hand at arm's length",
          dirs: ["N", "E", "S", "W"], local: "local time"}};
   const CSS = `.ns{display:flex;flex-direction:column;gap:6px}.ns-bar{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .ns-bar button{height:30px;margin:0;padding:0 10px;border-radius:6px;border:1px solid #3a3f47;background:#2b2f36;color:#e8eef2;font:600 12.5px "Segoe UI","Malgun Gothic",sans-serif;cursor:pointer}
@@ -132,7 +132,17 @@
       if (s.sunAlt > -18) B += nL(21.7) * 60 * Math.pow((s.sunAlt + 18) / 6, 3) * Math.exp(-alt / 30);
       return B; }
     const limAt = (alt, az, s) => nelm(magOf(skyB(alt, az, s))) - 0.3;
-    function paintBG(B, s) { const d = BGI.data, W = 240, H = 150;
+    /* an overcast sky: the cloud deck lit from below by the town, a little texture, no stars */
+    const vn = (x, y) => { const h = (a, b) => { const n = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return n - Math.floor(n); }, X = Math.floor(x), Y = Math.floor(y), fx = x - X, fy = y - Y, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+      return h(X, Y) * (1 - u) * (1 - v) + h(X + 1, Y) * u * (1 - v) + h(X, Y + 1) * (1 - u) * v + h(X + 1, Y + 1) * u * v; };
+    function paintCloud(B) { const d = BGI.data, W = 240, H = 150, t = performance.now() / 60000;
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = unproj(B, (x + 0.5) * view.W / W, (y + 0.5) * view.H / H), [alt, az] = altaz(v), i = (y * W + x) * 4;
+        let glow = 0.18; for (const [A, str, hs] of (o.ground && o.ground.domes) || []) { const dd = Math.abs(((az - A + 540) % 360) - 180); glow += 0.5 * str * Math.exp(-Math.max(0.3, alt) / (hs * 2.5)) * Math.exp(-((dd / 60) ** 2)); }
+        const r = 1 / Math.max(0.12, Math.sin(Math.max(1, alt) * DEG)), px = v[0] * r * 3 + t, py = v[1] * r * 3, tex = 0.55 * vn(px, py) + 0.3 * vn(px * 2.3, py * 2.3) + 0.15 * vn(px * 5, py * 5);
+        const L = Math.min(1, glow * (0.75 + 0.5 * tex));
+        d[i] = 14 + 70 * L; d[i + 1] = 13 + 58 * L; d[i + 2] = 16 + 50 * L; d[i + 3] = 255; }
+      bgx.putImageData(BGI, 0, 0); }
+    function paintBG(B, s) { if (o.overcast) return paintCloud(B); const d = BGI.data, W = 240, H = 150;
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = unproj(B, (x + 0.5) * view.W / W, (y + 0.5) * view.H / H), [alt, az] = altaz(v); const i = (y * W + x) * 4;
         const q = magOf(skyB(Math.max(0.3, alt), az, s)), b = Math.max(0, Math.min(1, (22 - q) / 6.5)), lum = Math.pow(b, 1.6);
         const moonish = s.moon.alt > 0 ? Math.min(1, s.moon.phase < 90 ? 1 : 1.6 - s.moon.phase / 150) : 0;
@@ -156,6 +166,7 @@
       const key = view.az.toFixed(2) + view.alt.toFixed(2) + view.fov.toFixed(2) + W + Math.floor(j * 1440);
       if (key !== bgKey) { paintBG(B, s); bgKey = key; }
       g.imageSmoothingEnabled = true; g.drawImage(BG, 0, 0, W, H);
+      if (!o.overcast) {
       g.globalCompositeOperation = "lighter";
       const LIM = new Float32Array(36 * 18); for (let a = 0; a < 18; a++) for (let z = 0; z < 36; z++) LIM[a * 36 + z] = limAt(a * 5 + 2.5, z * 10 + 5, s);
       /* under a bright sky the eye still sees a bright star as bright: the steps above the limit count for more */
@@ -173,10 +184,12 @@
           const gl = g.createRadialGradient(p[0], p[1], R, p[0], p[1], R * 9); gl.addColorStop(0, "rgba(220,230,255,0.25)"); gl.addColorStop(1, "rgba(220,230,255,0)"); g.fillStyle = gl; g.beginPath(); g.arc(p[0], p[1], R * 9, 0, 7); g.fill();
           g.save(); g.translate(p[0], p[1]); g.rotate(ang); g.fillStyle = "rgba(40,44,56,0.9)"; g.beginPath(); g.arc(0, 0, R, 0, 7); g.fill();
           g.fillStyle = "#f6f2e2"; g.beginPath(); g.arc(0, 0, R, -Math.PI / 2, Math.PI / 2); g.ellipse(0, 0, Math.abs(k) * R, R, 0, Math.PI / 2, -Math.PI / 2, k < 0); g.fill(); g.restore(); } }
+      }
       drawGround(B, s);
       if (o.drawOver) o.drawOver(g, {proj: (v) => proj(B, v), hor: (v) => { const h = mv(s.HM, v); let [a, z] = altaz(h); a += refr(a); return hvec(a, z); }, J: j, state: s, W, H, solved});
       for (const P of points) { const p = proj(B, P.h); if (!p) continue; g.strokeStyle = "rgba(255,90,70,0.9)"; g.lineWidth = 2; g.beginPath(); g.moveTo(W / 2, H + 10); g.lineTo(p[0], p[1]); g.stroke();
         g.fillStyle = "#ff5a46"; g.beginPath(); g.arc(p[0], p[1], 4, 0, 7); g.fill(); g.font = "bold 13px 'Segoe UI',sans-serif"; g.fillText(P.n, p[0] + 7, p[1] - 6); }
+      for (const tr of traces.concat(cur ? [cur] : [])) drawTrace(B, tr);
       if (tool === "hand" && mouse) drawHand(B, mouse);
       clk.textContent = L().local + " " + timeStr(j); }
     function timeStr(j) { const h = ((j + 0.5 + site.tz / 24) % 1) * 24, hh = Math.floor(h), mm = Math.floor((h - hh) * 60), ss = Math.floor(((h - hh) * 60 - mm) * 60); return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss; }
@@ -204,30 +217,39 @@
       else { R(-4.5 * s, -2 * s, 13 * s, 11 * s, 3 * s); for (let k = 0; k < 4; k++) { g.save(); g.rotate((k - 1.5) * 0.12); R(-3.6 * s + k * 2.4 * s, -10 * s, 1.9 * s, 9 * s, 0.9 * s); g.restore(); }
         g.save(); g.rotate(-1.05); R(-3.5 * s, -14.5 * s, 2.2 * s, 8 * s, 1.1 * s); g.restore(); }
       g.restore(); g.font = "600 12px 'Segoe UI',sans-serif"; g.fillStyle = "#f2c14e"; g.textAlign = "center"; g.fillText(L()[hand], x, y - (hand === "span" ? 16 : hand === "f1" ? 4 : 5) * s - 10); g.textAlign = "left"; }
-    const points = [];
+    const points = [], traces = []; let cur = null;
+    /* a sweep of the hand across the sky, with arrowheads along it to show the direction */
+    function drawTrace(B, tr) { const P = tr.pts.map((h) => proj(B, h)); g.strokeStyle = tr.col || "rgba(120,220,255,0.95)"; g.fillStyle = g.strokeStyle; g.lineWidth = 2.5; g.lineCap = g.lineJoin = "round";
+      g.beginPath(); let on = false; for (const p of P) { if (!p) { on = false; continue; } on ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); on = true; } g.stroke();
+      let acc = 0; for (let i = 1; i < P.length; i++) { const a = P[i - 1], b = P[i]; if (!a || !b) continue; const l = Math.hypot(b[0] - a[0], b[1] - a[1]); acc += l;
+        if (acc > 70 && l > 0.5) { acc = 0; const ux = (b[0] - a[0]) / l, uy = (b[1] - a[1]) / l; g.beginPath(); g.moveTo(b[0] + ux * 6, b[1] + uy * 6); g.lineTo(b[0] - ux * 6 - uy * 6, b[1] - uy * 6 + ux * 6); g.lineTo(b[0] - ux * 6 + uy * 6, b[1] - uy * 6 - ux * 6); g.closePath(); g.fill(); } }
+      if (tr.label && P.length && P[0]) { g.font = "bold 13px 'Segoe UI',sans-serif"; g.fillText(tr.label, P[0][0] + 8, P[0][1] - 8); } }
     function layout() { const w = wrap.clientWidth || 900; view.dpr = Math.min(window.devicePixelRatio || 1, 2); view.W = w; view.H = Math.round(Math.min(w * 0.62, Math.max(380, innerHeight - 220)));
       cv.width = Math.round(view.W * view.dpr); cv.height = Math.round(view.H * view.dpr); cv.style.height = view.H + "px"; bgKey = ""; }
     function buildBar() { const t = L(); bar.innerHTML = "";
       const mk = (lab, on, fn) => { const b = document.createElement("button"); b.textContent = lab; if (on) b.className = "on"; b.onclick = fn; bar.appendChild(b); return b; };
-      mk(t.look, tool === "look", () => setTool("look")); mk(t.point, tool === "point", () => setTool("point")); mk(t.hand, tool === "hand", () => setTool("hand"));
+      for (const k of o.tools || ["look", "point", "hand"]) mk(t[k], tool === k, () => setTool(k));
       if (tool === "hand") { const s = document.createElement("span"); s.className = "sep"; bar.appendChild(s); for (const k of ["f1", "f3", "fist", "span"]) mk(t[k], hand === k, () => { hand = k; buildBar(); }); }
       bar.appendChild(clk); hint.textContent = t.hint; }
     const clk = document.createElement("span"); clk.className = "clock";
-    function setTool(k) { tool = k; wrap.style.cursor = k === "look" ? "grab" : k === "point" ? "crosshair" : "none"; buildBar(); }
+    function setTool(k) { tool = k; wrap.style.cursor = k === "look" ? "grab" : k === "point" || k === "trace" ? "crosshair" : "none"; buildBar(); }
     const pos = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * view.W / r.width, (e.clientY - r.top) * view.H / r.height]; };
     cv.addEventListener("pointerdown", (e) => { const p = pos(e); cv.setPointerCapture(e.pointerId);
       if (tool === "point" && e.button === 0) { const B = basis(), h = unproj(B, p[0], p[1]); if (o.onPoint) o.onPoint({h, eq: horToEq(h)}); return; }
+      if (tool === "trace" && e.button === 0) { cur = {pts: [unproj(basis(), p[0], p[1])]}; return; }
       drag = {p, az: view.az, alt: view.alt}; if (tool === "look") wrap.style.cursor = "grabbing"; });
-    cv.addEventListener("pointermove", (e) => { const p = pos(e); mouse = p; if (!drag) return; const k = view.fov / view.W;
+    cv.addEventListener("pointermove", (e) => { const p = pos(e); mouse = p;
+      if (cur) { const h = unproj(basis(), p[0], p[1]), last = cur.pts[cur.pts.length - 1]; if (dot(h, last) < Math.cos(0.8 * DEG)) cur.pts.push(h); return; }
+      if (!drag) return; const k = view.fov / view.W;
       view.az = norm360(drag.az - (p[0] - drag.p[0]) * k); view.alt = Math.max(-5, Math.min(90, drag.alt + (p[1] - drag.p[1]) * k)); });
-    cv.addEventListener("pointerup", () => { drag = null; if (tool === "look") wrap.style.cursor = "grab"; });
+    cv.addEventListener("pointerup", () => { if (cur) { const c = cur; cur = null; if (c.pts.length > 2 && o.onTrace) o.onTrace(c.pts); } drag = null; if (tool === "look") wrap.style.cursor = "grab"; });
     cv.addEventListener("pointerleave", () => { mouse = null; });
     cv.addEventListener("wheel", (e) => { e.preventDefault(); view.fov = Math.max(50, Math.min(130, view.fov * (e.deltaY > 0 ? 1.08 : 1 / 1.08))); }, {passive: false});
     /* the inverse of the horizon rotation: a direction in the local sky -> J2000, for checking what was pointed at */
     function horToEq(h) { const s = state(J()), M = s.HM; return [M[0][0] * h[0] + M[1][0] * h[1] + M[2][0] * h[2], M[0][1] * h[0] + M[1][1] * h[1] + M[2][1] * h[2], M[0][2] * h[0] + M[1][2] * h[1] + M[2][2] * h[2]]; }
     function loop() { try { draw(); } catch (err) { console.error(err); } raf = requestAnimationFrame(loop); }
     addEventListener("resize", layout); layout(); buildBar(); loop();
-    return {J, state: () => state(J()), view, lang: buildBar, setPoints(list) { points.length = 0; for (const p of list) points.push(p); }, horToEq,
+    return {J, state: () => state(J()), view, lang: buildBar, setPoints(list) { points.length = 0; for (const p of list) points.push(p); }, setTraces(list) { traces.length = 0; for (const t of list) traces.push(t); }, horToEq,
       solve(v) { solved = v; }, setTime(localHour) { clock.J0 = jdUT(o.start[0], o.start[1], o.start[2], localHour - site.tz); clock.t0 = performance.now(); clock.off = 0; ST = null; },
       show(v) { root.style.display = v ? "" : "none"; if (v) layout(); }};
   }
