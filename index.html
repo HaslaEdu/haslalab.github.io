@@ -905,12 +905,29 @@ const KO_PAPERS = new Set([
   "IOAA_2022_O1_KO.pdf", "IOAA_2022_O2_KO.pdf", "IOAA_2023_D1_KO.pdf", "IOAA_2023_O1_KO.pdf",
   "IOAA_2023_O2_KO.pdf", "IOAA_2024_D1_KO.pdf", "IOAA_2024_O1_KO.pdf", "IOAA_2024_O2_KO.pdf",
   "IOAA_2025_D1_KO.pdf", "IOAA_2025_G1_KO.pdf", "IOAA_2025_O1_KO.pdf", "IOAA_2025_O2_KO.pdf",
-  "IOAA_2025_O3_KO.pdf"]);
+  "IOAA_2025_O3_KO.pdf", "APAO_2009_P_KO.pdf", "APAO_2009_O_KO.pdf"]);
+/* 한국어 해답: 영문 해답 이름에 _KO 를 붙인 것만 적는다 — lst 가 sol 을 {ko, en} 으로 만든다 */
+const KO_SOLS = new Set([
+  "IOAA_2007_D1_S_KO.pdf", "IOAA_2007_O1_S_KO.pdf", "IOAA_2008_D1_S_KO.pdf", "IOAA_2008_O1i_S_KO.pdf",
+  "IOAA_2008_O2i_S_KO.pdf", "IOAA_2009_D1_S_KO.pdf", "IOAA_2009_O1_S_KO.pdf", "IOAA_2010_D1_S_KO.pdf",
+  "IOAA_2010_O1_S_KO.pdf", "IOAA_2011_D1_S_KO.pdf", "IOAA_2011_O1_S_KO.pdf", "IOAA_2011_O2_S_KO.pdf",
+  "IOAA_2012_D1_S_KO.pdf", "IOAA_2012_O1_S_KO.pdf", "IOAA_2013_D1_S_KO.pdf", "IOAA_2013_O1_S_KO.pdf",
+  "IOAA_2014_D1_S_KO.pdf", "IOAA_2014_O2_S_KO.pdf", "IOAA_2015_D1_S_KO.pdf", "IOAA_2015_O1_S_KO.pdf",
+  "IOAA_2015_O2_S_KO.pdf", "IOAA_2015_O3_S_KO.pdf", "IOAA_2015_O4_S_KO.pdf", "IOAA_2016_D1_S_KO.pdf",
+  "IOAA_2017_D1_S_KO.pdf", "IOAA_2018_D1_S_KO.pdf", "IOAA_2018_O1_S_KO.pdf", "IOAA_2018_O2_S_KO.pdf",
+  "IOAA_2019_D1_S_KO.pdf", "IOAA_2019_O1_S_KO.pdf", "IOAA_2019_O2_S_KO.pdf", "IOAA_2021_D1_S_KO.pdf",
+  "IOAA_2021_D2_S_KO.pdf", "IOAA_2021_O1_S_KO.pdf", "IOAA_2021_O2_S_KO.pdf", "IOAA_2022_D1i_S_KO.pdf",
+  "IOAA_2022_D2i_S_KO.pdf", "IOAA_2022_O1_S_KO.pdf", "IOAA_2023_O1_S_KO.pdf", "IOAA_2023_O2_S_KO.pdf",
+  "IOAA_2024_D1_S_KO.pdf", "IOAA_2024_O1_S_KO.pdf", "IOAA_2024_O2_S_KO.pdf", "IOAA_2025_D1_S_KO.pdf",
+  "IOAA_2025_G1_S_KO.pdf", "IOAA_2025_O1_S_KO.pdf", "IOAA_2025_O2_S_KO.pdf", "IOAA_2025_O3_S_KO.pdf",
+  "IAO_2005_P_S_KO.pdf", "IAO_2009_P_S_KO.pdf", "IAO_2019_P_S_KO.pdf", "IAO_2019_O_S_KO.pdf"]);
 const lst = rows => rows.map(([id,en,ko,q,s])=>{
   const at=x=>/^https?:/.test(x)?x:"pdf/"+x;
   /* 문제지는 이름 끝(_EN·_KO·_RU)이 말하는 언어 칸에 — 한국어만 있는 회차도 그대로 적는다 */
   const lg=q&&(/_(KO|RU)\.pdf$/.exec(q)||[,"EN"])[1].toLowerCase();
-  const f={}; if(q) f.pdf={[lg]:at(q)}; if(s) f.sol=at(s);
+  const f={}; if(q) f.pdf={[lg]:at(q)};
+  const ks=s&&s.replace(/\.pdf$/,"_KO.pdf");
+  if(s) f.sol=KO_SOLS.has(ks)?{ko:at(ks), en:at(s)}:at(s);
   const k=q&&q.replace(/_EN\.pdf$/,"_KO.pdf");
   if(k&&k!==q&&KO_PAPERS.has(k)) f.pdf={ko:at(k), ...f.pdf};
   return {id, en, ko, state:"wip", files:f};
@@ -3036,7 +3053,7 @@ const DATA={
     ["O4","Know Your Grid","좌표 격자 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
     ["O5","Know Your Time","시각 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
     ["O6","Discovery of 'Z'","'Z'의 발견","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"],
-    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]]).concat([{id:"G1",title:{ko:"전파망원경으로 찾는 우리은하의 암흑물질 (그룹 경기)",en:"Uncovering Galactic Dark Matter Using a Radio Telescope (group)"},desc:{ko:"2025년 7월 24일 저녁 뭄바이(북위 19.10°, 동경 72.85°)에서 혼 전파망원경을 각도기와 디지털 경사계로 겨누어 은경 30°–70°의 21 cm HI 선을 60초씩 기록합니다. 땅(300 K)과 은하면에서 먼 하늘(5 K)로 이득과 수신기 온도를 보정하고, 가장 많이 적색이동한 진동수에서 회전 속도와 은하 중심 거리, 둘러싸인 질량과 암흑물질 질량을 구합니다. 실제로 측정하는 그룹 실험이었습니다.",en:"On the evening of 24 July 2025 in Mumbai (19.10° N, 72.85° E) point the horn radio telescope with its protractor and digital inclinometer and record 60 s of the 21-cm HI line at Galactic longitudes 30°–70°. Calibrate gain and receiver temperature on the ground (300 K) and on sky away from the plane (5 K); the most redshifted frequency gives the rotation speed and Galactocentric radius, then the enclosed and the dark mass. This was a hands-on group measurement."},tags:["전파천문학","21 cm 선","회전 곡선"],tagsEn:["Radio astronomy","21-cm line","Rotation curve"],files:{sim:"sim/ioaa2025_G1_web.html",src:{ko:"src/ioaa2025_G1_radio_sim_KO.py",en:"src/ioaa2025_G1_radio_sim_EN.py"},pdf:{ko:"pdf/IOAA_2025_G1_KO.pdf", en:"pdf/IOAA_2025_G1_EN.pdf"},sol:"pdf/IOAA_2025_G1_S.pdf"}}])},
+    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]]).concat([{id:"G1",title:{ko:"전파망원경으로 찾는 우리은하의 암흑물질 (그룹 경기)",en:"Uncovering Galactic Dark Matter Using a Radio Telescope (group)"},desc:{ko:"2025년 7월 24일 저녁 뭄바이(북위 19.10°, 동경 72.85°)에서 혼 전파망원경을 각도기와 디지털 경사계로 겨누어 은경 30°–70°의 21 cm HI 선을 60초씩 기록합니다. 땅(300 K)과 은하면에서 먼 하늘(5 K)로 이득과 수신기 온도를 보정하고, 가장 많이 적색이동한 진동수에서 회전 속도와 은하 중심 거리, 둘러싸인 질량과 암흑물질 질량을 구합니다. 실제로 측정하는 그룹 실험이었습니다.",en:"On the evening of 24 July 2025 in Mumbai (19.10° N, 72.85° E) point the horn radio telescope with its protractor and digital inclinometer and record 60 s of the 21-cm HI line at Galactic longitudes 30°–70°. Calibrate gain and receiver temperature on the ground (300 K) and on sky away from the plane (5 K); the most redshifted frequency gives the rotation speed and Galactocentric radius, then the enclosed and the dark mass. This was a hands-on group measurement."},tags:["전파천문학","21 cm 선","회전 곡선"],tagsEn:["Radio astronomy","21-cm line","Rotation curve"],files:{sim:"sim/ioaa2025_G1_web.html",src:{ko:"src/ioaa2025_G1_radio_sim_KO.py",en:"src/ioaa2025_G1_radio_sim_EN.py"},pdf:{ko:"pdf/IOAA_2025_G1_KO.pdf", en:"pdf/IOAA_2025_G1_EN.pdf"},sol:{ko:"pdf/IOAA_2025_G1_S_KO.pdf", en:"pdf/IOAA_2025_G1_S.pdf"}}}])},
    {y:2024,host:{ko:"브라질 · 바소우라스",en:"Vassouras, Brazil"},cc:"br",problems:lst([
     ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
     ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
@@ -3069,7 +3086,7 @@ const DATA={
     ["O1","Observation","관측","IOAA_2020_O1i_EN.pdf",null]])},
    {y:2019,host:{ko:"헝가리 · 케스트헤이",en:"Keszthely, Hungary"},cc:"hu",problems:lst([
     ["D1","Photometry and Spectroscopy of Nova Del 2013","Nova Del 2013의 측광과 분광","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"],
-    ["D2","Triply Eclipsing Hierarchical Triple Star","세 번 가려지는 계층적 삼중성","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"]]).concat([{id:"O1–O5",title:{ko:"야간 관측: 파인더 정렬 · 토성과 타이탄 · M57의 시야 · 변광성 AF Cyg · 맨눈 등급",en:"Night Observation: Finderscope Alignment, Saturn and Titan, M57 Field of View, AF Cygni, Naked-Eye Magnitudes"},desc:{ko:"2019년 8월 4·5일 밤 23:42(CEST)부터 케스트헤이(북위 46.76°, 동경 17.25°) 관측장의 실제 하늘에서, 구동 장치 없는 적도의에 얹은 150/750 뉴턴식 망원경과 정렬되지 않은 파인더로 다섯 과제를 제한 시간 안에 수행합니다. 별은 히파르코스·티코-2 목록, 토성의 고리 기울기와 타이탄 위치는 공식 해답(164″, 109° / 129″, 124°)에 맞췄고, 연무가 낀 밤에는 대체 과제(알타이르, 거문고자리 엡실론)로 바뀝니다. 과제가 끝날 때마다 조교가 망원경을 확인하고, 답안지는 공식 채점 기준으로 채점합니다.",en:"From 23:42 CEST on the night of 4 or 5 August 2019, under the real sky over the observing field at Keszthely (46.76° N, 17.25° E): a 150/750 Newtonian on an equatorial mount without a drive and a finder that is not aligned, five tasks against the clock. Stars from Hipparcos and Tycho-2; Saturn's ring tilt and Titan's position match the official solution (164″, 109° / 129″, 124°); on a hazy night the alternative tasks (Altair, epsilon Lyrae) apply. The assistant checks the telescope at the end of each task and the answer sheet is marked with the official scheme."},tags:["야간 관측","망원경","토성","변광성"],tagsEn:["Night observation","Telescope","Saturn","Variable star"],files:{sim:"sim/ioaa2019_O1_web.html",src:{ko:"src/ioaa2019_O1_sky_sim_KO.py",en:"src/ioaa2019_O1_sky_sim_EN.py"},pdf:{ko:"pdf/IOAA_2019_O1_KO.pdf", en:"pdf/IOAA_2019_O1_EN.pdf"},sol:"pdf/IOAA_2019_O1_S.pdf"}}]).concat(lst([
+    ["D2","Triply Eclipsing Hierarchical Triple Star","세 번 가려지는 계층적 삼중성","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"]]).concat([{id:"O1–O5",title:{ko:"야간 관측: 파인더 정렬 · 토성과 타이탄 · M57의 시야 · 변광성 AF Cyg · 맨눈 등급",en:"Night Observation: Finderscope Alignment, Saturn and Titan, M57 Field of View, AF Cygni, Naked-Eye Magnitudes"},desc:{ko:"2019년 8월 4·5일 밤 23:42(CEST)부터 케스트헤이(북위 46.76°, 동경 17.25°) 관측장의 실제 하늘에서, 구동 장치 없는 적도의에 얹은 150/750 뉴턴식 망원경과 정렬되지 않은 파인더로 다섯 과제를 제한 시간 안에 수행합니다. 별은 히파르코스·티코-2 목록, 토성의 고리 기울기와 타이탄 위치는 공식 해답(164″, 109° / 129″, 124°)에 맞췄고, 연무가 낀 밤에는 대체 과제(알타이르, 거문고자리 엡실론)로 바뀝니다. 과제가 끝날 때마다 조교가 망원경을 확인하고, 답안지는 공식 채점 기준으로 채점합니다.",en:"From 23:42 CEST on the night of 4 or 5 August 2019, under the real sky over the observing field at Keszthely (46.76° N, 17.25° E): a 150/750 Newtonian on an equatorial mount without a drive and a finder that is not aligned, five tasks against the clock. Stars from Hipparcos and Tycho-2; Saturn's ring tilt and Titan's position match the official solution (164″, 109° / 129″, 124°); on a hazy night the alternative tasks (Altair, epsilon Lyrae) apply. The assistant checks the telescope at the end of each task and the answer sheet is marked with the official scheme."},tags:["야간 관측","망원경","토성","변광성"],tagsEn:["Night observation","Telescope","Saturn","Variable star"],files:{sim:"sim/ioaa2019_O1_web.html",src:{ko:"src/ioaa2019_O1_sky_sim_KO.py",en:"src/ioaa2019_O1_sky_sim_EN.py"},pdf:{ko:"pdf/IOAA_2019_O1_KO.pdf", en:"pdf/IOAA_2019_O1_EN.pdf"},sol:{ko:"pdf/IOAA_2019_O1_S_KO.pdf", en:"pdf/IOAA_2019_O1_S.pdf"}}}]).concat(lst([
     ["O6","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2019_O2_EN.pdf","IOAA_2019_O2_S.pdf"]]))},
    {y:2018,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
     ["D1","Dust and Young Stars in Star-forming Galaxies","별 생성 은하의 먼지와 어린 별","IOAA_2018_D1_EN.pdf","IOAA_2018_D1_S.pdf"],
@@ -3172,8 +3189,8 @@ const DATA={
   abbr:"IAO", since:1996, obs:true,
   full:{ko:"국제천문올림피아드",en:"International Astronomy Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다. 그 밖의 해(2005–2013, 2016, 2018, 2019, 2021, 2022)는 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐이며, 이 해들의 영문 공식 문제지는 공식 사이트에 없습니다. 2021년과 2022년은 원격 대회(IRAO)여서 관측 라운드가 없습니다.",
-        en:"Run by the Euro-Asian Astronomical Society. The theoretical round is left out; only the practical (P) and observational (O) rounds are listed. The sheets are the English problem booklets still on the official IAO site (issp.ac.ru/iao), with the problems for both age groups (α and β) and the pictures and charts that go with them bound into one file per round. Only 2014 and 2015 still have their practical and observational problems on the official site, and no official solutions are published. The other years (2005-2013, 2016, 2018, 2019, 2021, 2022) have only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept; their English official sheets are not on the official site. 2021 and 2022 were held remotely (IRAO) and had no observational round."},
+  note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다. 그 밖의 해(2005–2013, 2016, 2018, 2019, 2021, 2022)는 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐이며, 이 해들의 영문 공식 문제지는 공식 사이트에 없습니다. 2021년과 2022년은 원격 대회(IRAO)여서 관측 라운드가 없습니다. 2005년 · 2009년 실기와 2019년 실기 · 관측은 해답을 영문판과 한국어판으로 함께 실었습니다. 2019년 6번 해답은 원본이 루마니아어여서 영문판 자리에 루마니아어가 그대로 남아 있습니다.",
+        en:"Run by the Euro-Asian Astronomical Society. The theoretical round is left out; only the practical (P) and observational (O) rounds are listed. The sheets are the English problem booklets still on the official IAO site (issp.ac.ru/iao), with the problems for both age groups (α and β) and the pictures and charts that go with them bound into one file per round. Only 2014 and 2015 still have their practical and observational problems on the official site, and no official solutions are published. The other years (2005-2013, 2016, 2018, 2019, 2021, 2022) have only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept; their English official sheets are not on the official site. 2021 and 2022 were held remotely (IRAO) and had no observational round. The solutions to the 2005 and 2009 practical rounds and to the 2019 practical and observational rounds are given in English and Korean; the 2019 problem 6 solution was written in Romanian, and the English file keeps it that way."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2022,host:{ko:"이탈리아 · 마테라, 온라인",en:"Matera, Italy, online"},cc:"it",problems:lst([
@@ -3181,8 +3198,8 @@ const DATA={
    {y:2021,host:{ko:"이탈리아 · 밀라노, 온라인",en:"Milan, Italy, online"},cc:"it",problems:lst([
     ["P","Practical round","실기 라운드","IAO_2021_P_KO.pdf",null]])},
    {y:2019,host:{ko:"루마니아 · 피아트라네암츠",en:"Piatra Neamț, Romania"},cc:"ro",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2019_P_KO.pdf",null],
-    ["O","Observational round","관측 라운드","IAO_2019_O_KO.pdf",null]])},
+    ["P","Practical round","실기 라운드","IAO_2019_P_KO.pdf","IAO_2019_P_S.pdf"],
+    ["O","Observational round","관측 라운드","IAO_2019_O_KO.pdf","IAO_2019_O_S.pdf"]])},
    {y:2018,host:{ko:"스리랑카 · 콜롬보",en:"Colombo, Sri Lanka"},cc:"lk",problems:lst([
     ["P","Practical round","실기 라운드","IAO_2018_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2018_O_KO.pdf",null]])},
@@ -3214,7 +3231,7 @@ const DATA={
     ["P","Practical round","실기 라운드","IAO_2010_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2010_O_KO.pdf",null]])},
    {y:2009,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2009_P_KO.pdf",null],
+    ["P","Practical round","실기 라운드","IAO_2009_P_KO.pdf","IAO_2009_P_S.pdf"],
     ["O","Observational round","관측 라운드","IAO_2009_O_KO.pdf",null]])},
    {y:2008,host:{ko:"이탈리아 · 트리에스테",en:"Trieste, Italy"},cc:"it",problems:lst([
     ["P","Practical round","실기 라운드","IAO_2008_P_KO.pdf",null],
@@ -3226,15 +3243,15 @@ const DATA={
     ["P","Practical round","실기 라운드","IAO_2006_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2006_O_KO.pdf",null]])},
    {y:2005,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2005_P_KO.pdf",null],
+    ["P","Practical round","실기 라운드","IAO_2005_P_KO.pdf","IAO_2005_P_S.pdf"],
     ["O","Observational round","관측 라운드","IAO_2005_O_KO.pdf",null]])}
   ]},
  apao:{
   abbr:"APAO", since:2005, obs:true,
   full:{ko:"아시아태평양천문올림피아드",en:"Asian-Pacific Astronomy Olympiad"},
   scope:{ko:"아시아 · 태평양",en:"Asia-Pacific"},
-  note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다. 2006–2008, 2010, 2011, 2013, 2016, 2018년은 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐입니다.",
-        en:"The Asia-Pacific competition run by the Euro-Asian Astronomical Society, which also runs the IAO. Only the practical (P), sky map (M) and observational (O) rounds are listed, from the 2012, 2014 and 2015 booklets still on the official site (issp.ac.ru/iao/apao). The 2014 practical round survives there only in Russian, and the data sheet for 2015 problem 9 is missing from the site. No official solutions are published. For 2006-2008, 2010, 2011, 2013, 2016 and 2018 there are only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept."},
+  note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다. 2006–2008, 2010, 2011, 2013, 2016, 2018년은 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐입니다. 2009년은 영문 문제지와 한국어판이 함께 있습니다.",
+        en:"The Asia-Pacific competition run by the Euro-Asian Astronomical Society, which also runs the IAO. Only the practical (P), sky map (M) and observational (O) rounds are listed, from the 2012, 2014 and 2015 booklets still on the official site (issp.ac.ru/iao/apao). The 2014 practical round survives there only in Russian, and the data sheet for 2015 problem 9 is missing from the site. No official solutions are published. For 2006-2008, 2010, 2011, 2013, 2016 and 2018 there are only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept. 2009 has both the English sheets and the Korean ones."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2018,host:{ko:"중국 · 리장",en:"Lijiang, China"},cc:"cn",problems:lst([
@@ -3273,6 +3290,13 @@ const DATA={
    {y:2010,host:{ko:"인도네시아 · 카루바가",en:"Karubaga, Indonesia"},cc:"id",problems:lst([
     ["P","Practical round","실기 라운드","APAO_2010_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2010_O_KO.pdf",null]])},
+   {y:2009,host:{ko:"대한민국 · 담양",en:"Damyang, South Korea"},cc:"kr",problems:lst([
+    ["P7α","Cepheid (group α)","세페이드 변광성 (α조)","APAO_2009_P_EN.pdf",null],
+    ["P8α","Venus (group α)","금성 (α조)","APAO_2009_P_EN.pdf",null],
+    ["P7β","Quasar (group β)","퀘이사 (β조)","APAO_2009_P_EN.pdf",null],
+    ["P8β","Open Cluster (group β)","산개성단 (β조)","APAO_2009_P_EN.pdf",null],
+    ["O9","Jupiter and its Four Galilean Satellites","목성과 네 갈릴레이 위성","APAO_2009_O_EN.pdf",null],
+    ["O10","β Lyrae (a binary system)","거문고자리 베타 (쌍성)","APAO_2009_O_EN.pdf",null]])},
    {y:2008,host:{ko:"키르기스스탄 · 비슈케크",en:"Bishkek, Kyrgyzstan"},cc:"kg",problems:lst([
     ["P","Practical round","실기 라운드","APAO_2008_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2008_O_KO.pdf",null]])},
