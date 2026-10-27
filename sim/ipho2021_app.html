@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#c2662d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="IPhO 2021">
+<link rel="manifest" href="ipho2021_app.webmanifest">
+<link rel="icon" href="ipho2021_app_icon.svg" type="image/svg+xml">
+<title>IPhO 2021 Experiments · HaslaLab</title>
+<meta name="description" content="The IPhO 2021 Experiments app for the HaslaLab virtual board: open it on your own tablet, phone or computer and connect it to the simulator.">
+<style>
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:#0e0f11;color:#222;font:13px/1.35 -apple-system,'Segoe UI',Roboto,'Malgun Gothic',sans-serif}
+  .abar{display:flex;align-items:center;gap:10px;background:#c2662d;color:#fff;padding:0 12px;height:40px;font-weight:600;font-size:15px}
+  .abar .sub{margin-left:auto;font-weight:400;font-size:11.5px;opacity:.9}
+  #tab{position:relative;background:#0e0f11;min-height:calc(100% - 40px)}
+  .tbar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;background:#f6e0c8;padding:4px 6px;border-bottom:1px solid #e2c8aa}
+  .tbar label{display:flex;align-items:center;gap:3px;font-weight:600}
+  .tbar input:not([type]),.tbar input[size]{background:#fff;border:1px solid #c9b294;border-radius:3px;padding:2px 4px;font:12px ui-monospace,Consolas,monospace;color:#111}
+  .tbar input[type=range]{width:110px;accent-color:#c2662d}
+  .tbar button,.mbox button{width:auto;margin:0;padding:3px 8px;background:#fff;color:#222;border:1px solid #c9b294;border-radius:4px;font-size:12px;cursor:pointer}
+  .tbar button.ok,.mbox button.ok{color:#1e8449;font-weight:700}.tbar button.no{color:#c0392b;font-weight:700}
+  .tbar select,.axisx select,.axisy select{background:#fff;border:1px solid #c9b294;border-radius:3px;font-size:12px;padding:1px 3px;color:#111}
+  .toast{color:#b03020;font-weight:600;margin-left:8px}
+  .tbody{display:flex;gap:4px;background:#111}
+  .tleft{width:36%;background:#dfe3f3;display:flex;flex-direction:column;min-width:0}
+  #tLive{margin:4px 6px;font:12px/1.45 ui-monospace,Consolas,monospace;min-height:16px;white-space:pre;overflow:auto}
+  #tTable{flex:1;overflow:auto;max-height:300px;font:11.5px ui-monospace,Consolas,monospace;margin:0 4px 4px;background:#fff}
+  #tTable table{border-collapse:collapse;width:100%}#tTable th{position:sticky;top:0;background:#c9cfe6;font-weight:600}
+  #tTable td,#tTable th{padding:1px 5px;text-align:right;border-bottom:1px solid #eef}
+  .tright{flex:1;background:#f6e0c8;display:flex;flex-direction:column;min-width:0;position:relative}
+  #chart{width:100%;height:330px;display:block}
+  .axisx{text-align:right;padding:2px 6px}.axisy{position:absolute;left:4px;top:4px;z-index:2}
+  @media (max-width:700px){ .tbody{flex-direction:column} .tleft{width:100%} #tTable{max-height:180px} }
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:5}
+  .mbox{background:#fbf4ea;color:#111;border-radius:8px;padding:14px 16px;min-width:280px;max-width:92%;max-height:88%;overflow:auto;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+  .mbox label{display:flex;align-items:center;gap:6px;margin:4px 0}.mbox input:not([type]){border:1px solid #c9b294;border-radius:3px;padding:3px 5px;margin:4px 0}
+  .mrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}.hintsm{font-size:11px;color:#666;margin:4px 0}
+  .mbox .fx{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 0;font:12px ui-monospace,Consolas,monospace}
+  /* the Android system dialog for USB access */
+  .sysd{background:#fff;color:#202124;border-radius:10px;padding:20px 22px 10px;width:330px;max-width:92%;box-shadow:0 10px 30px rgba(0,0,0,.45);font-family:Roboto,'Segoe UI','Malgun Gothic',sans-serif}
+  .sysd p{margin:0 0 14px;font-size:15px;line-height:1.45}
+  .sysd .mrow button{background:none;border:0;color:#1a73e8;font-weight:600;font-size:14px;padding:8px 10px;cursor:pointer;text-transform:uppercase}
+  /* connecting to the board */
+  #conn{position:fixed;inset:40px 0 0 0;background:#f6e0c8;display:flex;align-items:center;justify-content:center;z-index:8;padding:16px}
+  .cbox{background:#fff;border:1px solid #e2c8aa;border-radius:12px;padding:20px 22px;max-width:440px;width:100%;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+  .cbox h2{margin:0 0 6px;font-size:17px;color:#7a3a12}
+  .cbox p{margin:6px 0;color:#444;font-size:13px;line-height:1.55}
+  .cbox input{font:600 22px ui-monospace,Consolas,monospace;letter-spacing:.25em;text-transform:uppercase;width:100%;padding:8px 10px;border:1px solid #c9b294;border-radius:6px;text-align:center;margin:8px 0}
+  .cbox button{width:100%;padding:10px;border-radius:6px;border:0;background:#c2662d;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+  .cbox .st{margin-top:10px;font-weight:600;color:#b03020;min-height:1.4em}
+  .cbox .small{font-size:11.5px;color:#777}
+</style>
+</head>
+<body>
+<div class="abar"><span>IPhO 2021 Experiments</span><span class="sub" id="aSub"></span></div>
+
+<div id="conn" hidden>
+  <div class="cbox">
+    <h2 id="cH"></h2>
+    <p id="cP"></p>
+    <input id="cCode" maxlength="6" autocomplete="off" spellcheck="false">
+    <button id="cGo"></button>
+    <div class="st" id="cSt"></div>
+    <p class="small" id="cSmall"></p>
+  </div>
+</div>
+
+<div id="tab">
+  <div class="tbar">
+    <label><input type="checkbox" id="tMeas"> <span id="l-meas"></span></label>
+    <input id="tTitle" size="14">
+    <button id="tSave" class="ok">+</button><button id="tDel" class="no">✖</button>
+    <button id="tPick"></button>
+    <button id="tReplot">⟳</button>
+    <span>X =</span><input id="tXmin" size="5"><span>…</span><input id="tXmax" size="5">
+    <span>Y =</span><input id="tYmin" size="5"><span>…</span><input id="tYmax" size="5">
+  </div>
+  <div class="tbar">
+    <label><input type="checkbox" id="tCheck"> <span id="l-check"></span></label>
+    <button id="tSet">⚙</button>
+    <span>iH=</span><input id="tIH" size="6" value="0"><input type="range" id="sIH" min="0" max="1000" value="0"><span>mA</span>
+    <span>iL=</span><input id="tIL" size="6" value="0"><input type="range" id="sIL" min="0" max="1000" value="0"><span>mA</span>
+    <span>tL=</span><input id="tTL" size="5" value="0"><input type="range" id="sTL" min="0" max="255" value="0"><span>ms</span>
+  </div>
+  <div class="tbar">
+    <button id="tFx">✎ f(x)</button>
+    <select id="col0"></select><select id="col1"></select><select id="col2"></select>
+    <span id="tToast" class="toast"></span>
+  </div>
+  <div class="tbody">
+    <div class="tleft"><pre id="tLive"></pre><div id="tTable"></div></div>
+    <div class="tright">
+      <div class="axisy"><select id="tY"></select></div>
+      <canvas id="chart"></canvas>
+      <div class="axisx"><select id="tX"></select></div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="mUsb" hidden><div class="sysd"><p id="l-perm"></p><div class="mrow"><button id="bDeny"></button><button id="bAllow"></button></div></div></div>
+<div class="modal" id="mPick" hidden><div class="mbox"><b id="l-pick"></b><div id="pickList"></div><div class="mrow"><button id="pickCancel"></button><button id="pickOk"></button></div></div></div>
+<div class="modal" id="mFx" hidden><div class="mbox"><b id="l-fx"></b><input id="fxIn" size="40"><div class="hintsm">uC uT uL duC duT duL iL iH t | sin cos tan exp asin acos atan ln | * / ^ + −</div><div id="fxList"></div><div class="mrow"><button id="fxAdd" class="ok">+</button><button id="fxOk">OK</button></div></div></div>
+<div class="modal" id="mSet" hidden><div class="mbox" id="setBox"></div></div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════════
+   THE IPhO 2021 EXPERIMENTS APP
+   It talks to the HaslaLab measurement board over one of three links:
+     embed  - inside the simulator's virtual tablet (postMessage)
+     bc     - a window on the same computer (BroadcastChannel)
+     peer   - another device: tablet, phone, computer (WebRTC via PeerJS)
+   The board streams raw samples; the app records, tabulates and plots
+   them.  Nothing is derived for the student.
+   ══════════════════════════════════════════════════════════════ */
+const Q=new URLSearchParams(location.search);
+let lang=Q.get("lang")==="en"?"en":"ko";
+const EMBED=Q.get("embed")==="1";
+const A={
+  ko:{meas:"Measure", check:"Check state", pick:"Tap for measurements", last:"Last measurement", usbNo:"No USB connected", perm:"IPhO 2021 Experiments 앱이 USB 장치(HaslaLab IPhO 2021 board)에 접근하도록 허용할까요?", allow:"허용", deny:"거부",
+      pressReset:"10초 안에 보드의 RESET 버튼을 누르세요!", connected:"장치가 연결되었습니다.", plugFirst:"먼저 보드를 연결하고 전원을 켠 뒤 리셋하세요.", denied:"USB 접근이 허용되지 않았습니다",
+      noTitle:"측정 이름이 입력되지 않았습니다!", exists:"같은 이름이 이미 있습니다!", noMeas:"해당 이름의 측정이 없습니다", saved:(n,k)=>'"'+n+'" 저장됨 ('+k+"개)", deleted:n=>n+" 삭제됨",
+      during:"측정 중에는 할 수 없습니다.", badLed:"LED 전류 값이 잘못되었습니다!", badHeat:"히터 전류 값이 잘못되었습니다!", badPulse:"LED 펄스 폭 값이 잘못되었습니다!", stopped:"측정이 멈췄습니다.",
+      cancel:"취소", select:"선택", fx:"함수 편집기", bad:"식을 읽을 수 없습니다", set:"설정", ts:"측정 시간 간격 (ms)", offLed:"측정 종료 시 LED 전류 끄기", offHeat:"측정 종료 시 히터 전류 끄기",
+      sweep:"스윕 측정", smin:"스윕 최소 전류 (mA)", smax:"스윕 최대 전류 (mA)", sn:"스윕 단계 수", sexp:"전류를 지수적으로 증가", spulse:"펄스 전류 사용", spw:"펄스 폭 (ms)", apply:"적용",
+      cH:"HaslaLab 보드에 연결", cP:"시뮬레이터(IPhO 2021 실험 페이지)의 '내 태블릿 · 컴퓨터' 화면에 나온 연결 코드 6자리를 입력하세요. QR 코드로 열었다면 코드가 이미 들어 있습니다.",
+      cGo:"연결", cWait:"연결하는 중…", cFail:"보드를 찾지 못했습니다. 시뮬레이터 페이지가 열려 있고 코드가 맞는지 확인하세요.", cLost:"보드와의 연결이 끊겼습니다. 다시 연결하세요.",
+      cSmall:"같은 컴퓨터의 다른 창은 곧바로, 다른 기기(태블릿 · 휴대폰)는 인터넷을 거쳐 직접 연결됩니다. 이 앱은 홈 화면에 추가해 설치할 수 있습니다.",
+      subEmbed:"", subLink:k=>"보드 링크: "+k},
+  en:{meas:"Measure", check:"Check state", pick:"Tap for measurements", last:"Last measurement", usbNo:"No USB connected", perm:"Allow the app IPhO 2021 Experiments to access the USB device (HaslaLab IPhO 2021 board)?", allow:"ALLOW", deny:"DENY",
+      pressReset:"Please press RESET button on the board in 10 seconds!", connected:"Device connected.", plugFirst:"Please plug in, power on and reset the board first.", denied:"USB Permission not granted",
+      noTitle:"No measurement title entered!", exists:"This name already exists!", noMeas:"No measurement with this title exists", saved:(n,k)=>'"'+n+'" saved ('+k+" pts)", deleted:n=>n+" deleted",
+      during:"You don't want to do this during measurement.", badLed:"Bad value of LED current!", badHeat:"Bad heater current value!", badPulse:"Bad value of LED current pulse width entered!", stopped:"All running measurements stopped.",
+      cancel:"CANCEL", select:"SELECT", fx:"Function Editor", bad:"Cannot read the expression", set:"Settings", ts:"Time step of measurement (ms)", offLed:"Turn off LED current when measurement is done.", offHeat:"Turn off heating current when measurement is done.",
+      sweep:"Sweep measurement", smin:"Minimum sweep current (mA)", smax:"Maximum sweep current (mA)", sn:"Number of sweep steps", sexp:"Increase current exponentially", spulse:"Set pulsed current", spw:"Pulse duration (ms)", apply:"Apply",
+      cH:"Connect to the HaslaLab board", cP:"Type the six-character code shown on the simulator's (IPhO 2021 experiment page) 'my tablet or computer' screen. If you opened this from the QR code, the code is already in.",
+      cGo:"Connect", cWait:"Connecting…", cFail:"No board found. Check that the simulator page is open and the code is right.", cLost:"The link to the board was lost. Connect again.",
+      cSmall:"A window on the same computer connects at once; another device (tablet, phone) connects directly over the internet. You can install this app by adding it to your home screen.",
+      subEmbed:"", subLink:k=>"board link: "+k}
+};
+const $=id=>document.getElementById(id);
+const a=()=>A[lang];
+
+/* ---- the link to the board ------------------------------------------------- */
+let send=()=>{}, linkKind="", boardSeen=false;
+function onBoard(m){ if(!m||typeof m!=="object") return;
+  switch(m.type){
+    case "welcome": boardSeen=true; $("conn").hidden=true; if(m.lang&&!Q.get("lang")){ lang=m.lang; applyLang(); } if(m.state) showState(m.state); $("aSub").textContent=EMBED?"":a().subLink(linkKind); break;
+    case "lang": lang=m.lang==="en"?"en":"ko"; applyLang(); break;
+    case "link": link=!!m.on; if(typeof m.now==="number") simNow=m.now; pollLink(); break;
+    case "clock": simNow=m.now; pollLink(); break;
+    case "reset": lastReset=m.at; pollLink(); break;
+    case "samples": simNow=m.now; for(const s of m.list) onSample(s); pollLink(); break;
+    case "sweepDone": if(measuring) setMeasure(false); break;
+    case "state": showState(m); break;
+    case "bye": lost(); break;
+  }
+}
+function lost(){ boardSeen=false; link=false; pollLink(); if(!EMBED){ $("conn").hidden=false; $("cSt").textContent=a().cLost; } }
+function useEmbed(){ linkKind="embed"; send=m=>parent.postMessage({hl21app:m},"*");
+  addEventListener("message",e=>{ if(e.source===parent&&e.data&&e.data.hl21board) onBoard(e.data.hl21board); });
+  send({type:"hello"}); }
+function tryBC(code){ return new Promise(res=>{ if(!("BroadcastChannel" in window)) return res(false);
+  const bc=new BroadcastChannel("haslalab-ipho2021-"+code); let ok=false;
+  bc.onmessage=e=>{ const m=e.data&&e.data.hl21board; if(!m) return; if(!ok&&m.type==="welcome"){ ok=true; linkKind="bc"; send=x=>bc.postMessage({hl21app:x}); res(true); } onBoard(m); };
+  bc.postMessage({hl21app:{type:"hello"}}); setTimeout(()=>{ if(!ok){ bc.close(); res(false); } },900); }); }
+function loadPeer(){ return new Promise((res,rej)=>{ if(window.Peer) return res(); const s=document.createElement("script");
+  s.src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"; s.onload=()=>res(); s.onerror=rej; document.head.appendChild(s); }); }
+async function tryPeer(code){ await loadPeer();
+  return new Promise(res=>{ const p=new Peer(); let done=false; const fail=()=>{ if(!done){ done=true; try{ p.destroy(); }catch(e){} res(false); } };
+    p.on("error",fail); setTimeout(fail,15000);
+    p.on("open",()=>{ const c=p.connect("haslalab-ipho2021-"+code,{reliable:true});
+      c.on("open",()=>{ linkKind="peer"; send=m=>{ try{ c.send({hl21app:m}); }catch(e){} }; send({type:"hello"}); });
+      c.on("data",d=>{ const m=d&&d.hl21board; if(!m) return; if(!done&&m.type==="welcome"){ done=true; res(true); } onBoard(m); });
+      c.on("close",lost); c.on("error",fail); }); }); }
+async function connect(){ const code=$("cCode").value.trim().toUpperCase(); if(code.length<4) return;
+  $("cSt").textContent=a().cWait; $("cGo").disabled=true;
+  const ok=(await tryBC(code))||(await tryPeer(code).catch(()=>false));
+  $("cGo").disabled=false; if(!ok) $("cSt").textContent=a().cFail; else { $("cSt").textContent=""; history.replaceState(null,"","?code="+code+(Q.get("lang")?"&lang="+lang:"")); } }
+$("cGo").onclick=connect; $("cCode").onkeydown=e=>{ if(e.key==="Enter") connect(); };
+
+/* ---- the app proper (guide G1) ------------------------------------------------ */
+const VARS=["uC","uT","uL","duC","duT","duL","iL","iH","t"], FUNCS={sin:Math.sin,cos:Math.cos,tan:Math.tan,exp:Math.exp,asin:Math.asin,acos:Math.acos,atan:Math.atan,ln:Math.log,abs:Math.abs,sqrt:Math.sqrt};
+const PALETTE=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+const LED_MAX=50, HEAT_MAX=500, PULSE_MIN=0.1, PULSE_MAX=25.5;
+let link=false, simNow=0, lastReset=-1e9;
+let connected=false, permAsked=false, awaitUntil=-1, denied=false, measuring=false, checking=false, linkWas=false;
+let epoch=0, rows=[], saved={}, plotted=new Set(["__last"]), functions=[], columns=["t","uC","duC"], xaxis="t", yaxis="uC", replotCtr=0;
+const settings={timestep:140, offLed:true, offHeat:false, sweep:false, smin:0.1, smax:50, sn:51, sexp:false, spulse:false, spw:1.0};
+function compileExpr(txt){
+  const t=txt.trim(); if(!t) throw new Error("empty");
+  const js=t.replace(/\^/g,"**"); if(!/^[0-9A-Za-z_+\-*/(). ,e]*$/.test(js.replace(/\*\*/g,"*"))) throw new Error("bad characters");
+  const names=(js.replace(/\d+\.?\d*(?:[eE][+-]?\d+)?/g," ").match(/[A-Za-z_][A-Za-z_0-9]*/g)||[]);
+  for(const n of names) if(!VARS.includes(n)&&!(n in FUNCS)) throw new Error("unknown name: "+n);
+  const f=new Function(...VARS,...Object.keys(FUNCS),"return ("+js+");");
+  return {text:t, fn:r=>{ try{ const v=f(...VARS.map(k=>r[k]),...Object.values(FUNCS)); return typeof v==="number"?v:NaN; }catch(e){ return NaN; } }};
+}
+const varList=()=>[...VARS,...functions.map(f=>f.text)];
+function evalVar(name,r){ if(name in r) return r[name]; const f=functions.find(g=>g.text===name); return f?f.fn(r):NaN; }
+function fmt(v){ if(!isFinite(v)) return "NaN"; const x=Math.abs(v); if(x!==0&&(x<1e-3||x>=1e5)) return v.toExponential(4); return Number(v.toPrecision(6)).toString(); }
+let toastT=null;
+function toast(s){ $("tToast").textContent=s; clearTimeout(toastT); toastT=setTimeout(()=>{ $("tToast").textContent=""; },4000); }
+function pollLink(){
+  if(!link){ if(connected||permAsked||linkWas){ if(measuring) setMeasure(false,true); connected=false; permAsked=false; awaitUntil=-1; $("mUsb").hidden=true; send({type:"stream",on:false}); if(linkWas) toast(a().usbNo); }
+    linkWas=false; denied=false; $("tLive").textContent=a().usbNo; return; }
+  linkWas=true;
+  if(connected||denied) return;
+  if(!permAsked){ permAsked=true; $("mUsb").hidden=false; return; }
+  if(awaitUntil>0){ if(lastReset>awaitUntil-10){ connected=true; awaitUntil=-1; send({type:"zero"}); send({type:"stream",on:true,ts:settings.timestep/1000}); toast(a().connected); $("tLive").textContent=""; }
+    else if(simNow>awaitUntil){ awaitUntil=-1; permAsked=false; toast(a().plugFirst); } }
+}
+$("bAllow").onclick=()=>{ $("mUsb").hidden=true; awaitUntil=simNow+10; toast(a().pressReset); };
+$("bDeny").onclick=()=>{ $("mUsb").hidden=true; denied=true; permAsked=false; toast(a().denied); };
+function liveText(r){ const f=(v,w,p)=>((v>=0?"+":"")+v.toFixed(p)).padStart(w," ");
+  return "uC ="+f(r.uC,10,4)+" V    duC ="+f(r.duC,11,4)+" V/s\nuT ="+f(r.uT,10,4)+" V    duT ="+f(r.duT,11,4)+" V/s\nuL ="+f(r.uL,10,4)+" V    duL ="+f(r.duL,11,4)+" V/s\niL ="+r.iL.toFixed(3).padStart(9," ")+" mA   iH  ="+r.iH.toFixed(1).padStart(8," ")+" mA\nt  ="+r.t.toFixed(3).padStart(10," ")+" s"; }
+function onSample(s){ if(!connected) return; if(measuring&&s.ep!==epoch) return;
+  if(checking) $("tLive").textContent=liveText(s);
+  if(measuring){ rows.push(s); appendRow(s); if(settings.sweep){ $("tIL").value=s.iL.toFixed(2); $("sIL").value=Math.round(1000*Math.cbrt(s.iL/LED_MAX)); $("tTL").value=s.tL!==undefined?s.tL:$("tTL").value; }
+    if(++replotCtr>=5){ replotCtr=0; replot(); } } }
+function setMeasure(on,quiet){
+  if(on&&!connected){ $("tMeas").checked=false; toast(a().plugFirst); return; }
+  $("tMeas").checked=on;
+  if(on){ measuring=true; rows=[]; refillTable(); epoch++; send({type:"zero",epoch});
+    send({type:"sweep",cfg:settings.sweep?{min:settings.smin,max:settings.smax,n:settings.sn,exp:settings.sexp,pw:settings.spulse?settings.spw:0}:null}); }
+  else { measuring=false; send({type:"sweep",cfg:null});
+    if(settings.offLed) setDrive("iL",0,false); if(settings.offHeat) setDrive("iH",0,false);
+    if(!quiet) toast(a().stopped); replot(); }
+}
+$("tMeas").onchange=e=>setMeasure(e.target.checked);
+$("tCheck").onchange=e=>{ checking=e.target.checked; if(!checking) $("tLive").textContent=connected?"":a().usbNo; };
+function setDrive(key,val,fromSlider){
+  if(key==="iH"){ if(!(val>=0&&val<=HEAT_MAX)){ toast(a().badHeat); return; } send({type:"set",iH:val}); if(!fromSlider){ $("sIH").value=Math.round(1000*val/HEAT_MAX); $("tIH").value=String(val); } else $("tIH").value=val.toFixed(1); }
+  if(key==="iL"){ if(!(val>=0&&val<=LED_MAX)){ toast(a().badLed); return; } send({type:"set",iL:val}); if(!fromSlider){ $("sIL").value=Math.round(1000*Math.cbrt(val/LED_MAX)); $("tIL").value=String(val); } else $("tIL").value=val.toFixed(2); }
+  if(key==="tL"){ if(val!==0&&!(val>=PULSE_MIN&&val<=PULSE_MAX)){ toast(a().badPulse); return; } send({type:"set",tL:val}); if(!fromSlider){ $("sTL").value=Math.round(val*10); $("tTL").value=String(val); } else $("tTL").value=val.toFixed(1); }
+}
+function showState(s){ if(typeof s.iH==="number"){ $("tIH").value=String(s.iH); $("sIH").value=Math.round(1000*s.iH/HEAT_MAX); }
+  if(typeof s.iL==="number"){ $("tIL").value=String(+s.iL.toFixed(3)); $("sIL").value=Math.round(1000*Math.cbrt(s.iL/LED_MAX)); }
+  if(typeof s.tL==="number"){ $("tTL").value=String(s.tL); $("sTL").value=Math.round(s.tL*10); } }
+for(const [k,inp,sl,f] of [["iH","tIH","sIH",v=>HEAT_MAX*v/1000],["iL","tIL","sIL",v=>v<=0?0:LED_MAX*Math.pow(v/1000,3)],["tL","tTL","sTL",v=>v/10]]){
+  $(inp).onchange=()=>{ const t=$(inp).value.trim(); const v=t===""?0:Number(t); if(isNaN(v)){ toast(k==="iH"?a().badHeat:k==="iL"?a().badLed:a().badPulse); return; } setDrive(k,v,false); };
+  $(sl).oninput=()=>setDrive(k,f(+$(sl).value),true); }
+function fillSelects(){ const opts=varList();
+  for(let i=0;i<3;i++){ const s=$("col"+i); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=columns[i]; }
+  for(const [id,v] of [["tX",xaxis],["tY",yaxis]]){ const s=$(id); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=v; } }
+for(let i=0;i<3;i++) $("col"+i).onchange=e=>{ columns[i]=e.target.value; refillTable(); };
+$("tX").onchange=e=>{ xaxis=e.target.value; replot(); }; $("tY").onchange=e=>{ yaxis=e.target.value; replot(); };
+for(const id of ["tXmin","tXmax","tYmin","tYmax"]) $(id).onchange=replot;
+$("tReplot").onclick=replot;
+function rowHtml(r){ return "<tr>"+columns.map(c=>"<td>"+fmt(evalVar(c,r))+"</td>").join("")+"</tr>"; }
+function refillTable(){ const last=rows.slice(-300); $("tTable").innerHTML="<table><thead><tr>"+columns.map(c=>"<th>"+c.replace(/</g,"&lt;")+"</th>").join("")+"</tr></thead><tbody>"+last.map(rowHtml).join("")+"</tbody></table>"; const el=$("tTable"); el.scrollTop=el.scrollHeight; }
+function appendRow(r){ const tb=$("tTable").querySelector("tbody"); if(!tb){ refillTable(); return; } tb.insertAdjacentHTML("beforeend",rowHtml(r)); if(tb.children.length>300) tb.removeChild(tb.firstChild); const el=$("tTable"); el.scrollTop=el.scrollHeight; }
+$("tSave").onclick=()=>{ const nm=$("tTitle").value.trim(); if(!nm){ toast(a().noTitle); return; } if(saved[nm]){ toast(a().exists); return; } if(!rows.length){ toast(a().noMeas); return; }
+  saved[nm]=rows.slice(); plotted.add(nm); toast(a().saved(nm,rows.length)); replot(); };
+$("tDel").onclick=()=>{ const nm=$("tTitle").value.trim(); if(saved[nm]){ delete saved[nm]; plotted.delete(nm); toast(a().deleted(nm)); replot(); } else toast(a().noMeas); };
+$("tPick").onclick=()=>{ const opts=["__last",...Object.keys(saved).sort()];
+  $("pickList").innerHTML=opts.map(o=>'<label><input type="checkbox" value="'+o.replace(/"/g,"&quot;")+'"'+(plotted.has(o)?" checked":"")+"> "+(o==="__last"?a().last:o.replace(/</g,"&lt;"))+"</label>").join("");
+  $("mPick").hidden=false; };
+$("pickCancel").onclick=()=>{ $("mPick").hidden=true; };
+$("pickOk").onclick=()=>{ plotted=new Set([...$("pickList").querySelectorAll("input:checked")].map(i=>i.value)); $("mPick").hidden=true; replot(); };
+function renderFx(){ $("fxList").innerHTML=functions.map((f,i)=>'<div class="fx"><span>'+f.text.replace(/</g,"&lt;")+'</span><button data-i="'+i+'" class="no">✖</button></div>').join("");
+  for(const b of $("fxList").querySelectorAll("button")) b.onclick=()=>{ functions.splice(+b.dataset.i,1); renderFx(); fillSelects(); }; }
+$("tFx").onclick=()=>{ renderFx(); $("mFx").hidden=false; };
+$("fxAdd").onclick=()=>{ try{ const f=compileExpr($("fxIn").value); if(!functions.some(g=>g.text===f.text)) functions.push(f); $("fxIn").value=""; renderFx(); fillSelects(); }catch(e){ toast(a().bad+": "+e.message); } };
+$("fxOk").onclick=()=>{ $("mFx").hidden=true; };
+$("tSet").onclick=()=>{ if(measuring){ toast(a().during); return; } const t=a(), s=settings;
+  const chk=(id,v,l)=>'<label><input type="checkbox" id="'+id+'"'+(v?" checked":"")+"> "+l+"</label>", num=(id,v,l)=>'<label>'+l+' <input id="'+id+'" size="7" value="'+v+'"></label>';
+  $("setBox").innerHTML="<b>"+t.set+"</b>"+num("sTs",s.timestep,t.ts)+chk("sOl",s.offLed,t.offLed)+chk("sOh",s.offHeat,t.offHeat)+chk("sSw",s.sweep,t.sweep)+num("sMn",s.smin,t.smin)+num("sMx",s.smax,t.smax)+num("sN",s.sn,t.sn)+chk("sEx",s.sexp,t.sexp)+chk("sPu",s.spulse,t.spulse)+num("sPw",s.spw,t.spw)+'<div class="mrow"><button id="sCancel">'+t.cancel+'</button><button id="sApply" class="ok">'+t.apply+"</button></div>";
+  $("mSet").hidden=false;
+  $("sCancel").onclick=()=>{ $("mSet").hidden=true; };
+  $("sApply").onclick=()=>{ const n=id=>Number($(id).value); if([n("sTs"),n("sMn"),n("sMx"),n("sN"),n("sPw")].some(isNaN)){ toast("Non-numeric value"); return; }
+    s.timestep=Math.max(20,Math.min(500,Math.round(n("sTs")))); s.offLed=$("sOl").checked; s.offHeat=$("sOh").checked; s.sweep=$("sSw").checked;
+    s.smin=Math.max(0,Math.min(LED_MAX,n("sMn"))); s.smax=Math.max(0,Math.min(LED_MAX,n("sMx"))); s.sn=Math.max(2,Math.min(2000,Math.round(n("sN"))));
+    s.sexp=$("sEx").checked; s.spulse=$("sPu").checked; const pw=n("sPw"); s.spw=pw===0?0:Math.max(PULSE_MIN,Math.min(PULSE_MAX,pw)); $("mSet").hidden=true;
+    if(connected) send({type:"stream",on:true,ts:s.timestep/1000}); }; };
+/* the chart */
+const chartCv=$("chart"), chartCtx=chartCv.getContext("2d"); let CW=600, CH=330;
+function sizeChart(){ const r=chartCv.getBoundingClientRect(), dpr=window.devicePixelRatio||1; CW=Math.max(200,r.width); CH=330; chartCv.width=Math.round(CW*dpr); chartCv.height=Math.round(CH*dpr); replot(); }
+const numOr=(id)=>{ const v=$(id).value.trim(); return v===""||isNaN(+v)?null:+v; };
+function niceTicks(lo,hi,n){ const span=hi-lo; if(!(span>0)) return [lo]; const st0=Math.pow(10,Math.floor(Math.log10(span/n))), st=[1,2,5,10].map(k=>k*st0).find(s=>span/s<=n)||st0*10; const out=[]; for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9*span;v+=st) out.push(Math.abs(v)<st*1e-9?0:v); return out; }
+function replot(){
+  const dpr=window.devicePixelRatio||1, c=chartCtx; c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#fffaf3"; c.fillRect(0,0,CW,CH);
+  const sets=[]; if(plotted.has("__last")) sets.push([a().last,rows]); for(const nm of [...plotted].filter(x=>x!=="__last").sort()) if(saved[nm]) sets.push([nm,saved[nm]]);
+  const series=sets.map(([nm,rs],i)=>[nm,rs.map(r=>[evalVar(xaxis,r),evalVar(yaxis,r)]).filter(p=>isFinite(p[0])&&isFinite(p[1])),PALETTE[i%PALETTE.length]]);
+  let xs=[],ys=[]; for(const [,pts] of series) for(const [x,y] of pts){ xs.push(x); ys.push(y); }
+  let x0=numOr("tXmin"), x1=numOr("tXmax"), y0=numOr("tYmin"), y1=numOr("tYmax");
+  if(x0===null) x0=xs.length?Math.min(...xs):0; if(x1===null) x1=xs.length?Math.max(...xs):1; if(y0===null) y0=ys.length?Math.min(...ys):0; if(y1===null) y1=ys.length?Math.max(...ys):1;
+  if(x1-x0<1e-12){ x0-=0.5; x1+=0.5; } if(y1-y0<1e-12){ const m=Math.abs(y0)*0.05||0.5; y0-=m; y1+=m; }
+  const L=64, R=12, T0=10, Bm=30, X=x=>L+(x-x0)/(x1-x0)*(CW-L-R), Y=y=>CH-Bm-(y-y0)/(y1-y0)*(CH-Bm-T0);
+  c.strokeStyle="#ddd"; c.lineWidth=1; c.font="11px ui-monospace,Consolas,monospace"; c.fillStyle="#444";
+  for(const t of niceTicks(x0,x1,7)){ const x=X(t); c.beginPath(); c.moveTo(x,T0); c.lineTo(x,CH-Bm); c.stroke(); c.textAlign="center"; c.textBaseline="top"; c.fillText(fmt(t),x,CH-Bm+4); }
+  for(const t of niceTicks(y0,y1,6)){ const y=Y(t); c.beginPath(); c.moveTo(L,y); c.lineTo(CW-R,y); c.stroke(); c.textAlign="right"; c.textBaseline="middle"; c.fillText(fmt(t),L-4,y); }
+  c.strokeStyle="#666"; c.strokeRect(L,T0,CW-L-R,CH-Bm-T0);
+  c.save(); c.beginPath(); c.rect(L,T0,CW-L-R,CH-Bm-T0); c.clip();
+  for(const [,pts,col] of series){ c.fillStyle=col; for(const [x,y] of pts){ c.fillRect(X(x)-1.5,Y(y)-1.5,3,3); } }
+  c.restore();
+  let ly=T0+6; c.textAlign="left"; c.textBaseline="top"; c.font="11px -apple-system,'Segoe UI','Malgun Gothic',sans-serif";
+  for(const [nm,,col] of series){ c.fillStyle=col; c.fillRect(CW-R-130,ly+3,8,8); c.fillStyle="#333"; c.fillText(nm,CW-R-118,ly); ly+=15; }
+}
+function applyLang(){ const t=a(); document.documentElement.lang=lang;
+  $("l-meas").textContent=t.meas; $("l-check").textContent=t.check; $("tPick").textContent=t.pick; $("l-perm").textContent=t.perm; $("bAllow").textContent=t.allow; $("bDeny").textContent=t.deny;
+  $("l-pick").textContent=t.pick; $("pickCancel").textContent=t.cancel; $("pickOk").textContent=t.select; $("l-fx").textContent=t.fx;
+  $("cH").textContent=t.cH; $("cP").textContent=t.cP; $("cGo").textContent=t.cGo; $("cSmall").textContent=t.cSmall;
+  if(!connected) $("tLive").textContent=t.usbNo; if(boardSeen&&!EMBED) $("aSub").textContent=t.subLink(linkKind);
+  fillSelects(); replot(); }
+addEventListener("resize",sizeChart);
+if("ResizeObserver" in window) new ResizeObserver(()=>{ const r=chartCv.getBoundingClientRect(); if(r.width>0&&Math.abs(r.width-CW)>1) sizeChart(); }).observe(chartCv);
+applyLang(); sizeChart();
+/* the Python edition serves this page from the student's own computer; the app polls it */
+function usePy(){ linkKind="py"; let since=0;
+  send=m=>{ fetch("cmd",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(m)}).catch(()=>{}); };
+  $("conn").hidden=true; send({type:"hello"});
+  (async function poll(){ for(;;){ try{ const r=await fetch("poll?since="+since,{cache:"no-store"}); const j=await r.json(); if(j.seq<since) since=0; else since=j.seq; for(const m of j.msgs) onBoard(m); }
+    catch(e){ if(boardSeen) lost(); } await new Promise(r=>setTimeout(r,120)); } })(); }
+addEventListener("pagehide",()=>{ try{ send({type:"bye"}); }catch(e){} });
+if(EMBED) useEmbed();
+else if(Q.get("py")==="1") usePy();
+else { $("conn").hidden=false; const code=(Q.get("code")||"").toUpperCase(); $("cCode").value=code; if(code) connect(); }
+</script>
+</body>
+</html>
