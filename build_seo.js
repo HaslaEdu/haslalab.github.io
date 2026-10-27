@@ -57,7 +57,8 @@ for (const [key, c] of Object.entries(DATA)) {
     for (const p of y.problems || []) {
       const f = p.files || {};
       const released = !p.hold && !!(f.sim || f.exe);
-      if (!p.hold && f.sim && exists(f.sim)) simPages.add(f.sim);
+      const simFile = f.sim ? f.sim.split("?")[0] : null;          /* a page holding several problems takes ?task= */
+      if (!p.hold && simFile && exists(simFile)) simPages.add(simFile);
       for (const k of ["pdf", "sol"]) {
         const v = f[k];
         if (!v) continue;
@@ -71,7 +72,7 @@ for (const [key, c] of Object.entries(DATA)) {
         ko: p.title ? p.title.ko : p.ko,
         theory: !!p.theory,
         released,
-        sim: released && f.sim && exists(f.sim) ? f.sim : null,
+        sim: released && simFile && exists(simFile) ? f.sim : null,
         pdf: langs(f.pdf),
         sol: langs(f.sol),
       });
@@ -178,7 +179,7 @@ function page(L) {
       const lis = ys.map(r => {
         const name = esc(L === "ko" ? (r.ko || r.en) : (r.en || r.ko));
         const links = [];
-        if (r.sim) links.push(`<a href="${esc(r.sim)}?lang=${L}">${t.run}</a>`);
+        if (r.sim) links.push(`<a href="${esc(r.sim)}${r.sim.includes("?") ? "&amp;" : "?"}lang=${L}">${t.run}</a>`);
         if (r.pdf) links.push(`<a href="${esc(r.pdf[L])}">${t.sheet}</a>`);
         if (r.sol) links.push(`<a href="${esc(r.sol[L])}">${t.sol}</a>`);
         const tag = r.theory ? ` <span class="tag">${t.theory}</span>` : "";

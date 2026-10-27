@@ -3326,7 +3326,13 @@ const DATA={
     ["P7β","Spectral Observations","분광 관측","IAO_2015_P_B_EN.pdf",null],
     ["O8","The Moon (planetarium)","달 (플라네타륨)","IAO_2015_O_EN.pdf",null],
     ["O9","Motion of the Planets (planetarium)","행성의 운동 (플라네타륨)","IAO_2015_O_EN.pdf",null],
-    ["O10","Outline (telescope, cloudy sky)","윤곽 (망원경 · 흐린 하늘)","IAO_2015_O_EN.pdf",null]])},
+    ["O10","Outline (telescope, cloudy sky)","윤곽 (망원경 · 흐린 하늘)","IAO_2015_O_EN.pdf",null]]).map(p=>p.id!=="O8"&&p.id!=="O9"?p:(delete p.state,Object.assign(p,p.id==="O8"?{
+      desc:{ko:"카잔 대학 플라네타륨에서 매일 저녁 같은 시각의 하늘을 빨리 돌려, 달이 차오르며 별 사이를 지나는 모습을 시험 진행 그대로(읽기 3분, 4분 동안 두 번 상영, 쓰기 2분) 보고 관측한 달(月)을 알아냅니다. 원래 애니메이션은 공개되지 않아 같은 형식의 장면을 천체 계산으로 새로 만들었습니다(기본 2015년 12월, 연습용 무작위 장면). HaslaLab 해답 포함.",
+            en:"In the Kazan University planetarium, the sky at the same hour every evening runs fast: watch the Moon wax and move among the stars, run as on the sheet (3 minutes to read, two showings in 4 minutes, 2 minutes to write), and find the month. The original animation was not published, so scenes of the same kind are computed afresh (December 2015 by default, random scenes for practice). HaslaLab's solution included."},
+      tags:["플라네타륨","달의 위상","황도"],tagsEn:["Planetarium","Lunar phases","Ecliptic"]}:{
+      desc:{ko:"일주 운동을 끈 플라네타륨에서 해와 행성이 별 사이를 움직이는 빠른 애니메이션을 두 번(5분) 보고, 해의 위치로 시작·끝 날짜(±1주)를 어림하고 화성과 금성이 지난 별자리를 세 글자 약어로 씁니다. 원래 애니메이션은 공개되지 않아 같은 형식의 장면을 새로 계산했습니다(기본 2015년 8–10월, 연습용 무작위 장면). 별자리는 IAU 경계로 채점합니다.",
+            en:"With the daily motion turned off, the Sun and the planets move among the stars, shown twice in 5 minutes: estimate the start and end dates (±1 week) from the Sun's place and list the constellations Mars and Venus passed. The original animation was not published, so scenes of the same kind are computed afresh (August to October 2015 by default, random scenes for practice). Constellations are checked against the IAU boundaries."},
+      tags:["플라네타륨","행성 운동","별자리"],tagsEn:["Planetarium","Planetary motion","Constellations"]}),Object.assign(p.files,{sim:"sim/iao2015_O_web.html"+(p.id==="O9"?"?task=9":""),src:{ko:"src/iao2015_O_planetarium_KO.py",en:"src/iao2015_O_planetarium_EN.py"}}),p))},
    {y:2014,host:{ko:"키르기스스탄 · 비슈케크 – 촐폰아타",en:"Bishkek – Cholpon-Ata, Kyrgyzstan"},cc:"kg",problems:lst([
     ["P7","Jupiter","목성","IAO_2014_P_EN.pdf",null],
     ["P8α","Comet","혜성","IAO_2014_P_A_EN.pdf",null],
@@ -3958,7 +3964,7 @@ function viewYear(key,year){
         const live=!held;
         const off=(lbl,g)=>`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`;
         const b=[
-          (live&&f.sim) ? `<a class="btn" href="${f.sim}?lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
+          (live&&f.sim) ? `<a class="btn" href="${f.sim}${f.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
         const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${pick(v)}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
         const docs=[doc(f.pdf,d.actPdf,true), doc(f.sol,d.actSol,true), doc(f.src,d.actSrc,false)];
@@ -7007,7 +7013,7 @@ function liveSigs(){
 }
 /* a cover without a browser build sends you to its year instead */
 function heroHref(sig){
-  if(sig.sim) return sig.sim+"?lang="+lang;
+  if(sig.sim) return sig.sim+(sig.sim.includes("?")?"&":"?")+"lang="+lang;
   const p=sig.tag.split(" ");
   return "#/"+p[0].toLowerCase()+"/"+p[1];
 }
