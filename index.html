@@ -3252,7 +3252,13 @@ const DATA={
     ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_Q-D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
     ["D2","Galactic Surveys","은하 서베이","IOAA_2022_Q-D2_EN.pdf","IOAA_2022_D2i_S.pdf"],
     ["O1","Observation (Night)","관측 (야간)","IOAA_2022_O1_EN.pdf","IOAA_2022_O1_S.pdf"],
-    ["O2","Observation (Day)","관측 (주간)","IOAA_2022_O2_EN.pdf","IOAA_2022_O1_S.pdf"]])},
+    ["O2","Observation (Day)","관측 (주간)","IOAA_2022_O2_EN.pdf","IOAA_2022_O1_S.pdf"]]).map(p=>p.id!=="D1"&&p.id!=="D2"?p:(delete p.state,Object.assign(p,p.id==="D1"?{
+      desc:{ko:"GW170817의 LIGO 시간–주파수 그림을 자로 재어 시간과 주파수를 읽고, f^(−8/3)을 시간에 대해 그려 처프 질량과 오차를 구한 뒤, 적색 이동을 고쳐 두 중성자별의 질량 범위를 냅니다.",
+            en:"Read times and frequencies off the LIGO time–frequency plot of GW170817 with a ruler, plot f^(−8/3) against time for the chirp mass and its error, correct for redshift and give the mass ranges of the two neutron stars."},
+      tags:["중력파","반로그 그래프","처프 질량"],tagsEn:["Gravitational waves","Semi-log graph","Chirp mass"]}:{
+      desc:{ko:"한 암흑물질 헤일로의 위성 은하 무리 16개를 원반 좌표계로 옮겨 거리·방위각 히스토그램을 만들고, 공전 운동으로 생긴 적색 이동 거리 오차를 고친 뒤, 은하 쌍 전체의 확률 밀도를 조합해 후보 그래프 A–F 중 하나를 고릅니다.",
+            en:"Move 16 satellite groups of one dark-matter halo into the disk's frame, make distance and azimuth histograms, correct the redshift distances for orbital motion, then combine the densities of all galaxy pairs and pick one of the graphs A–F."},
+      tags:["은하 분포","좌표 변환","히스토그램"],tagsEn:["Galaxy distribution","Coordinate transformation","Histograms"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2022_D_web.html":"sim/ioaa2022_D_web.html?task=D2",src:{ko:"src/ioaa2022_D_data_sim_KO.py",en:"src/ioaa2022_D_data_sim_EN.py"}}),p))},
    {y:2021,host:{ko:"온라인 · 콜롬비아 주관",en:"Online, hosted by Colombia"},cc:"co",problems:lst([
     ["D1","Scaling Relations","스케일링 관계","IOAA_2021_D1_EN.pdf","IOAA_2021_D1_S.pdf"],
     ["D2","Stars and Exoplanets","별과 외계행성","IOAA_2021_D2_EN.pdf","IOAA_2021_D2_S.pdf"],
