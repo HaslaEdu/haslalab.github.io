@@ -3348,8 +3348,10 @@ const DATA={
    {y:2014,host:{ko:"러시아 · 이르쿠츠크 – 리스트뱐카",en:"Irkutsk – Listvyanka, Russia"},cc:"ru",problems:lst([
     ["P7","Solar Activity (Russian sheet)","태양 활동 (러시아어 문제지)","APAO_2014_P_RU.pdf",null],
     ["P8","Analemma (Russian sheet)","아날렘마 (러시아어 문제지)","APAO_2014_P_RU.pdf",null],
-    ["O9","Orion (cloudy sky)","오리온자리 (흐린 하늘)","APAO_2014_O_EN.pdf",null],
-    ["O10","Diurnal Motion (cloudy sky)","일주 운동 (흐린 하늘)","APAO_2014_O_EN.pdf",null]])},
+    ["O9–O10","Orion, Diurnal Motion (cloudy sky)","오리온자리 · 일주 운동 (흐린 하늘)","APAO_2014_O_EN.pdf",null]]).map(p=>p.id!=="O9–O10"?p:(delete p.state,Object.assign(p,{
+      desc:{ko:"구름이 덮인 바이칼 호숫가(2014년 11월 27일 밤, 리스트뱐카)에서 별 없이 하늘의 좌표를 떠올려 손으로 답합니다. 오리온 벨트가 남중하는 곳을 가리키고, 천정을 지나는 별의 일주 경로를 손으로 그립니다. 공식 해답이 없어 HaslaLab 해답(정남 고도 37°, 천구 북극을 중심으로 반지름 38.1°인 원)과 그린 길을 원과 비교하는 자체 점검을 실었습니다. 11번(불빛 사진)과 12번(망원경)은 현장이 있어야 해서 빠졌습니다.",
+            en:"On the Baikal shore at Listvyanka under a closed cloud deck (night of 27 November 2014), picture the sky's coordinates and answer with your hand: point where Orion's Belt culminates, and sweep the diurnal path of a star through the zenith. No official solution was published, so HaslaLab's is included (due south at 37°; a 38.1° circle round the celestial pole) with a self-check of your path against it. Questions 11 (a photo of lights) and 12 (a telescope) need the place itself and are left out."},
+      tags:["맨눈 관측","천구 좌표","일주 운동"],tagsEn:["Naked eye","Celestial coordinates","Diurnal motion"]}),Object.assign(p.files,{sim:"sim/apao2014_O_web.html",src:{ko:"src/apao2014_O_sky_sim_KO.py",en:"src/apao2014_O_sky_sim_EN.py"}}),p))},
    {y:2013,host:{ko:"인도네시아 · 토모혼",en:"Tomohon, Indonesia"},cc:"id",problems:lst([
     ["P","Practical round","실기 라운드","APAO_2013_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2013_O_KO.pdf",null]])},
