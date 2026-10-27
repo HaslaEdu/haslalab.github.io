@@ -3316,7 +3316,10 @@ const DATA={
     ["P7","Jupiter","목성","IAO_2014_P_EN.pdf",null],
     ["P8α","Comet","혜성","IAO_2014_P_EN.pdf",null],
     ["P8β","A New Variable Star","새 변광성","IAO_2014_P_EN.pdf",null],
-    ["O","Observational Round: Naked Eye and Telescope","관측 라운드 — 맨눈과 망원경","IAO_2014_O_EN.pdf",null]])},
+    ["O9–O13","Colours, the Pole, the Equinoxes, M45, π Peg (naked eye and telescope)","별의 색 · 천구 북극 · 분점 · M45 · π Peg (맨눈과 망원경)","IAO_2014_O_EN.pdf",null]]).map(p=>p.id!=="O9–O13"?p:(delete p.state,Object.assign(p,{
+      desc:{ko:"이식쿨 호숫가 촐폰아타의 맑은 하늘(2014년 10월 18일 밤으로 가정)에서 맨눈으로 다섯 별의 색을 가리고, α Cas와 천구 북극 사이를 손으로 재고, 춘분점과 추분점(땅 아래)을 가리킵니다. 이어 추적 장치 없는 돕소니언 망원경을 손으로 밀어 M45를 시험관에게 보이고, 문제지의 성도를 길잡이로 쌍성 π Peg를 찾아 두 별 사이 거리를 어림합니다. 망원경 시야는 티코-2 성표의 11.5등급 별까지 그립니다. 공식 해답이 없어 HaslaLab 해답(33.4°, 남남동 고도 45°의 춘분점 · 물고기자리와 처녀자리, OC, 9.5′)을 함께 실었습니다.",
+            en:"Under the clear sky at Cholpon-Ata on Issyk-Kul (taken as the night of 18 October 2014), judge the colours of five stars by eye, measure α Cas to the celestial pole with your hand and point to the two equinoxes (one below the ground). Then push an undriven Dobsonian by hand to show M45 to the examiner, and find the double π Peg with the sheet's chart to estimate its separation. The telescope fields show Tycho-2 stars to V 11.5. No official solution was published, so HaslaLab's is included (33.4°; the vernal point SSE at 45° in Pisces, the autumnal in Virgo; OC; 9.5′)."},
+      tags:["맨눈 관측","망원경","천구 좌표"],tagsEn:["Naked eye","Telescope","Celestial coordinates"]}),Object.assign(p.files,{sim:"sim/iao2014_O_web.html",src:{ko:"src/iao2014_O_sky_sim_KO.py",en:"src/iao2014_O_sky_sim_EN.py"}}),p))},
    {y:2013,host:{ko:"리투아니아 · 빌뉴스",en:"Vilnius, Lithuania"},cc:"lt",problems:lst([
     ["P","Practical round","실기 라운드","IAO_2013_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2013_O_KO.pdf",null]])},
