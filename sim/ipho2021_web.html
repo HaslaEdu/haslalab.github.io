@@ -89,34 +89,61 @@
   .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
         border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
   .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
-  #tab{position:relative;background:#0e0f11;border:7px solid #0e0f11;border-radius:12px;color:#222;font:13px/1.35 -apple-system,'Segoe UI','Malgun Gothic',sans-serif}
-  #tab.off .tbar,#tab.off .tbody{opacity:.35;pointer-events:none}
-  .tbar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;background:#f6e0c8;padding:4px 6px;border-bottom:1px solid #e2c8aa}
-  .tbar label{display:flex;align-items:center;gap:3px;font-weight:600}
-  .tbar input:not([type]),.tbar input[size]{background:#fff;border:1px solid #c9b294;border-radius:3px;padding:2px 4px;font:12px ui-monospace,Consolas,monospace;color:#111}
-  .tbar input[type=range]{width:110px;accent-color:#c2662d}
-  .tbar button,.mbox button{width:auto;margin:0;padding:3px 8px;background:#fff;color:#222;border:1px solid #c9b294;border-radius:4px;font-size:12px}
-  .tbar button.ok,.mbox button.ok{color:#1e8449;font-weight:700}.tbar button.no{color:#c0392b;font-weight:700}
-  .tbar select,.axisx select,.axisy select{background:#fff;border:1px solid #c9b294;border-radius:3px;font-size:12px;padding:1px 3px;color:#111}
-  .toast{color:#b03020;font-weight:600;margin-left:8px}
-  .tbody{display:flex;gap:4px;background:#111}
-  .tleft{width:36%;background:#dfe3f3;display:flex;flex-direction:column;min-width:0}
-  #tLive{margin:4px 6px;font:12px/1.45 ui-monospace,Consolas,monospace;min-height:16px;white-space:pre}
-  #tTable{flex:1;overflow:auto;max-height:300px;font:11.5px ui-monospace,Consolas,monospace;margin:0 4px 4px;background:#fff}
-  #tTable table{border-collapse:collapse;width:100%}#tTable th{position:sticky;top:0;background:#c9cfe6;font-weight:600}
-  #tTable td,#tTable th{padding:1px 5px;text-align:right;border-bottom:1px solid #eef}
-  .tright{flex:1;background:#f6e0c8;display:flex;flex-direction:column;min-width:0;position:relative}
-  #chart{width:100%;height:330px;display:block}
-  .axisx{text-align:right;padding:2px 6px}.axisy{position:absolute;left:4px;top:4px;z-index:2}
-  .modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:5}
-  .modal[hidden]{display:none!important}
-  .mbox{background:#fbf4ea;color:#111;border-radius:8px;padding:14px 16px;min-width:300px;max-width:90%;max-height:88%;overflow:auto;box-shadow:0 6px 20px rgba(0,0,0,.4)}
-  .mbox label{display:flex;align-items:center;gap:6px;margin:4px 0}.mbox input[type=text],.mbox input:not([type]){border:1px solid #c9b294;border-radius:3px;padding:3px 5px;margin:4px 0}
-  .mrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}.hintsm{font-size:11px;color:#666;margin:4px 0}
-  .mbox .fx{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 0;font:12px ui-monospace,Consolas,monospace}
+  /* ── the virtual Android tablet ── */
+  .droid{background:#111;border-radius:26px;padding:14px 16px 8px;max-width:980px;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,.4);border:1px solid #2a2a2a}
+  .dscr{position:relative;height:520px;border-radius:6px;overflow:hidden;background:#000;font-family:Roboto,'Segoe UI','Malgun Gothic',sans-serif}
+  .dstat{position:absolute;top:0;left:0;right:0;height:24px;display:flex;justify-content:space-between;align-items:center;padding:0 12px;color:#fff;font-size:12px;z-index:6;background:rgba(0,0,0,.25)}
+  .dstat .dic{letter-spacing:.08em;opacity:.9}
+  .dhome{position:absolute;inset:24px 0 0 0;background:radial-gradient(circle at 20% 15%,#3b6e8f,transparent 55%),radial-gradient(circle at 85% 80%,#8f4a2b,transparent 50%),linear-gradient(135deg,#1d2b3a,#2c2238);display:flex;align-items:flex-start;justify-content:flex-start;padding:30px 34px}
+  .dgrid{display:grid;grid-template-columns:repeat(auto-fill,96px);gap:22px 18px;width:100%}
+  .dapp{background:none;border:0;color:#fff;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;padding:4px;margin:0;font-size:11.5px;text-shadow:0 1px 2px rgba(0,0,0,.6);text-align:center}
+  .dapp:hover{background:rgba(255,255,255,.08)!important;border-radius:10px}
+  .dapp img,.dapp .ic{width:58px;height:58px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+  .ic.calc{background:#4a5560;color:#fff}.ic.set{background:#e8eaed;color:#455a64}
+  .dwin{position:absolute;inset:24px 0 0 0;border:0;width:100%;height:calc(100% - 24px);background:#fff}
+  .calc{background:#202124;color:#fff;display:flex;flex-direction:column;padding:16px;gap:10px}
+  .calc .cd{font:300 34px Roboto,sans-serif;text-align:right;padding:10px;min-height:60px;word-break:break-all;background:#2b2c2f;border-radius:8px}
+  .calc .ck{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;flex:1}
+  .calc .ck button{font-size:18px;background:#3c4043;border:0;color:#fff;border-radius:22px;margin:0}
+  .calc .ck button.op{background:#5f6368}.calc .ck button.eq{background:#8ab4f8;color:#202124}
+  .setw{padding:18px 22px;color:#202124;overflow:auto}.setw h4{margin:6px 0 10px;font-size:20px;font-weight:400}
+  .setw .it{border-bottom:1px solid #eee;padding:11px 2px}.setw .it b{display:block;font-weight:500}.setw .it span{color:#5f6368;font-size:12.5px}
+  .rec{background:rgba(20,20,22,.92);display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:30px}
+  .rec .card2{width:240px;height:160px;background:#f6e0c8;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#222;cursor:pointer;font-weight:600;gap:8px}
+  .rec .card2 img{width:44px;border-radius:10px}.rec .none{color:#bbb}
+  .dnotif{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:min(440px,90%);background:#fff;color:#202124;border-radius:14px;padding:10px 14px;box-shadow:0 6px 18px rgba(0,0,0,.4);z-index:7;font-size:12.5px;display:flex;gap:10px;align-items:center}
+  .dnotif img{width:26px;border-radius:6px}.dnotif b{display:block;font-size:13px}
+  .doff{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center;color:#555;font-size:13px;z-index:8;text-align:center;padding:20px}
+  .dnav{display:flex;justify-content:center;gap:70px;padding:6px 0 0}
+  .dnav button{background:none;border:0;color:#bbb;font-size:18px;width:auto;padding:2px 12px;margin:0}
+  .dnav button:hover{color:#fff;background:none!important}
+  /* ── your own device ── */
+  .rbox{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:16px}
+  @media (max-width:760px){ .rbox{grid-template-columns:1fr} }
+  #qr{background:#fff;padding:8px;border-radius:6px;width:166px;height:166px}
+  .rcode{font:700 30px ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--accent)}
+  .rurl{font:12px ui-monospace,Consolas,monospace;color:#c9d1d9;word-break:break-all;background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:6px 8px;margin:6px 0}
+  .rst{font-weight:600;margin-top:6px}.rst.ok{color:#8fd19e}.rst.wait{color:var(--accent)}.rst.bad{color:#f0a79f}
+  .rbox ol{margin:6px 0 6px 18px;padding:0;color:#c9d1d9;font-size:13px;line-height:1.7}
+  .rbtns{display:flex;gap:6px;flex-wrap:wrap}.rbtns button{width:auto}
+  /* ── before the experiment ── */
+  .ov{position:fixed;inset:0;background:rgba(8,10,14,.82);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .ovbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:760px;width:100%;padding:22px 24px;max-height:94vh;overflow:auto}
+  .ovbox h2{margin:0 0 6px;color:var(--accent);font-size:18px}.ovbox>p{color:#c9d1d9;margin:6px 0 14px;font-size:13.5px;line-height:1.65}
+  .ovapp{display:flex;gap:14px;align-items:center;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+  .ovapp img{width:54px;border-radius:12px}.ovapp b{display:block;font-size:15px}.ovapp span{color:var(--muted);font-size:12.5px}
+  .ovapp a{margin-left:auto;color:var(--accent);font-size:13px;text-decoration:none;white-space:nowrap}
+  .ovch{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:640px){ .ovch{grid-template-columns:1fr} }
+  .ovch button{display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px;margin:0;border-radius:10px}
+  .ovch button b{font-size:15px;color:var(--accent)}.ovch button span{color:#c9d1d9;font-size:12.5px;line-height:1.6;font-weight:400}
 </style>
 </head>
 <body>
+<div class="ov" id="startOv" hidden><div class="ovbox">
+  <h2 id="ovH"></h2><p id="ovP"></p>
+  <div class="ovapp"><img src="ipho2021_app_icon.svg" alt=""><div><b>IPhO 2021 Experiments</b><span id="ovInfo"></span></div><a id="ovOpen" href="ipho2021_app.html" target="_blank" rel="noopener"></a></div>
+  <div class="ovch"><button id="ovVirt"><b id="ovVirtH"></b><span id="ovVirtP"></span></button><button id="ovRem"><b id="ovRemH"></b><span id="ovRemP"></span></button></div>
+</div></div>
 
 <header>
   <div>
@@ -142,41 +169,37 @@
     </div>
     <div class="card">
       <h3 id="t-closecap"></h3>
-      <div id="tab">
-        <div class="tbar">
-          <label><input type="checkbox" id="tMeas"> <span id="l-meas"></span></label>
-          <input id="tTitle" size="14">
-          <button id="tSave" class="ok">+</button><button id="tDel" class="no">✖</button>
-          <button id="tPick"></button>
-          <button id="tReplot">⟳</button>
-          <span>X =</span><input id="tXmin" size="5"><span>…</span><input id="tXmax" size="5">
-          <span>Y =</span><input id="tYmin" size="5"><span>…</span><input id="tYmax" size="5">
+      <div id="droidWrap">
+        <div class="droid">
+          <div class="dscr">
+            <div class="dstat"><span id="dClock">9:41</span><span class="dic">▾ ◥ ▮ 100%</span></div>
+            <div class="dhome" id="dHome"><div class="dgrid">
+              <button class="dapp" data-app="exp"><img src="ipho2021_app_icon.svg" alt=""><span>IPhO 2021 Experiments</span></button>
+              <button class="dapp" data-app="calc"><span class="ic calc">±</span><span id="dnCalc">Calculator</span></button>
+              <button class="dapp" data-app="set"><span class="ic set">⚙</span><span id="dnSet">Settings</span></button>
+            </div></div>
+            <iframe id="dApp" class="dwin" title="IPhO 2021 Experiments" hidden></iframe>
+            <div id="dCalc" class="dwin calc" hidden><div class="cd" id="cDisp">0</div><div class="ck" id="cKeys"></div></div>
+            <div id="dSet" class="dwin setw" hidden></div>
+            <div id="dRec" class="dwin rec" hidden></div>
+            <div id="dNotif" class="dnotif" hidden></div>
+            <div id="dOff" class="doff" hidden></div>
+          </div>
+          <div class="dnav"><button id="nBack" title="Back">◁</button><button id="nHome" title="Home">○</button><button id="nRec" title="Recents">□</button></div>
         </div>
-        <div class="tbar">
-          <label><input type="checkbox" id="tCheck"> <span id="l-check"></span></label>
-          <button id="tSet">⚙</button>
-          <span>iH=</span><input id="tIH" size="6" value="0"><input type="range" id="sIH" min="0" max="1000" value="0"><span>mA</span>
-          <span>iL=</span><input id="tIL" size="6" value="0"><input type="range" id="sIL" min="0" max="1000" value="0"><span>mA</span>
-          <span>tL=</span><input id="tTL" size="5" value="0"><input type="range" id="sTL" min="0" max="255" value="0"><span>ms</span>
-        </div>
-        <div class="tbar">
-          <button id="tFx">✎ f(x)</button>
-          <select id="col0"></select><select id="col1"></select><select id="col2"></select>
-          <span id="tToast" class="toast"></span>
-        </div>
-        <div class="tbody">
-          <div class="tleft"><pre id="tLive"></pre><div id="tTable"></div></div>
-          <div class="tright">
-            <div class="axisy"><select id="tY"></select></div>
-            <canvas id="chart"></canvas>
-            <div class="axisx"><select id="tX"></select></div>
+      </div>
+      <div id="remoteWrap" hidden>
+        <div class="rbox">
+          <div><div id="qr"></div></div>
+          <div>
+            <div class="hint" id="rLead"></div>
+            <div class="rcode" id="rCode">------</div>
+            <div class="rurl" id="rUrl"></div>
+            <div class="rbtns"><button id="rCopy"></button><button id="rWin"></button></div>
+            <ol id="rSteps"></ol>
+            <div class="rst wait" id="rSt"></div>
           </div>
         </div>
-        <div class="modal" id="mUsb" hidden><div class="mbox"><p id="l-perm"></p><div class="mrow"><button id="bDeny"></button><button id="bAllow"></button></div></div></div>
-        <div class="modal" id="mPick" hidden><div class="mbox"><b id="l-pick"></b><div id="pickList"></div><div class="mrow"><button id="pickCancel"></button><button id="pickOk"></button></div></div></div>
-        <div class="modal" id="mFx" hidden><div class="mbox"><b id="l-fx"></b><input id="fxIn" size="40"><div class="hintsm">uC uT uL duC duT duL iL iH t | sin cos tan exp asin acos atan ln | * / ^ + −</div><div id="fxList"></div><div class="mrow"><button id="fxAdd" class="ok">+</button><button id="fxOk">OK</button></div></div></div>
-        <div class="modal" id="mSet" hidden><div class="mbox" id="setBox"></div></div>
-        <div class="offscreen" id="tOff"></div>
       </div>
     </div>
   </div>
@@ -189,6 +212,8 @@
     <p class="hint" id="t-boardhint"></p>
     <h2 id="t-h-app"></h2>
     <p class="hint" id="t-apphint"></p>
+    <p class="hint" id="t-linkmode"></p>
+    <button id="bLinkMode" style="width:100%"></button>
     <div class="status" id="status"></div>
   </aside>
 </div>
@@ -217,10 +242,24 @@ const T={
          cancel:"취소", select:"선택", fx:"함수 편집기", bad:"식을 읽을 수 없습니다", set:"설정", ts:"측정 시간 간격 (ms)", offLed:"측정 종료 시 LED 전류 끄기", offHeat:"측정 종료 시 히터 전류 끄기",
          sweep:"스윕 측정", smin:"스윕 최소 전류 (mA)", smax:"스윕 최대 전류 (mA)", sn:"스윕 단계 수", sexp:"전류를 지수적으로 증가", spulse:"펄스 전류 사용", spw:"펄스 폭 (ms)", apply:"적용"},
     st:{none:"부품함에서 보드를 꺼내 실험대에 놓으세요."},
+    ln:{ovH:"실험을 시작하기 전에 — IPhO 2021 Experiments 앱",
+        ovP:"실제 시험에서는 보드에 연결할 안드로이드 태블릿에 이 앱이 미리 설치되어 있었습니다. 시뮬레이터에서는 앱이 따로 있는 웹앱입니다. 실험대의 가상 태블릿에서 쓸지, 내 태블릿 · 휴대폰 · 컴퓨터에서 열어 보드와 연결할지 고르세요. 실험 중에도 오른쪽 패널에서 바꿀 수 있습니다.",
+        ovInfo:"보드의 원시 전압 · 미분값 · 전류 · 시간을 기록하고 표와 그래프로 보여 주는 앱 (가이드 G1). 홈 화면에 추가해 설치할 수 있습니다.", ovOpen:"앱 열기 ↗",
+        virtH:"가상 태블릿 사용", virtP:"실험대 아래의 안드로이드 태블릿 화면에서 앱을 엽니다. 홈 화면 · 앱 · 계산기 · 설정과 뒤로 · 홈 · 최근 앱 버튼이 있습니다.",
+        remH:"내 태블릿 · 컴퓨터에서 앱 사용", remP:"QR 코드나 연결 코드로 내 기기(태블릿 · 휴대폰 · 다른 컴퓨터)나 이 컴퓨터의 새 창에서 앱을 열어 가상 보드와 연결합니다. 다른 기기는 인터넷을 거쳐 직접(WebRTC) 연결됩니다.",
+        capVirtual:"태블릿 (안드로이드) — 앱 아이콘을 눌러 IPhO 2021 Experiments를 여세요",
+        capRemote:"내 태블릿 · 컴퓨터 — 기기에서 앱을 열어 이 보드와 연결하세요",
+        modeVirtual:"앱 실행 위치: 가상 태블릿", modeRemote:"앱 실행 위치: 내 태블릿 · 컴퓨터", change:"앱 연결 방식 바꾸기",
+        lead:"연결 코드", copy:"주소 복사", window:"이 컴퓨터의 새 창에서 열기",
+        steps:["내 태블릿 · 휴대폰으로 QR 코드를 찍거나 위 주소를 엽니다 (같은 컴퓨터라면 '새 창에서 열기').","앱에 연결 코드가 들어가 보드와 연결됩니다.","부품함의 '6. 내 태블릿 · 컴퓨터'와 '5. 보드–태블릿 케이블'을 실험대에 놓으면, 앱이 USB 접근 허용을 묻습니다. 허용한 뒤 보드의 RESET을 누르세요."],
+        waiting:"앱의 연결을 기다리는 중…", starting:"연결 준비 중…", noPeer:"다른 기기용 연결 서버에 닿지 못했습니다. 같은 컴퓨터의 새 창은 그대로 쓸 수 있습니다.",
+        linked:n=>"앱 "+n+"개가 연결되었습니다.", myDevItem:"6. 내 태블릿 · 컴퓨터", myDev:"내 태블릿 · 컴퓨터", devOn:"(앱 연결됨)", devOff:"(앱 연결 대기)",
+        calc:"계산기", settings:"설정", noRecent:"최근 앱 없음", usbTitle:"USB 장치 연결됨", usbBody:"HaslaLab IPhO 2021 board — 눌러서 IPhO 2021 Experiments 열기",
+        about:[["태블릿 정보","Android 11 · 시험용 태블릿 (가상)"],["설치된 앱","IPhO 2021 Experiments 1.0"],["USB","보드–태블릿 케이블로 측정 보드에 연결"]], boardId:"연결할 보드 ID", off:"태블릿이 실험대에 없습니다 — 부품함에서 '6. 태블릿'을 꺼내 놓으세요."},
     m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
        noFit:"그곳에는 놓을 수 없습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
        end:"점퍼선 끝을 집었습니다 — 꽂을 단자를 클릭하세요.", plugged:n=>"점퍼선 끝을 "+n+" 단자에 꽂았습니다.", busy:"그 단자는 이미 쓰고 있습니다.", dropped:"점퍼선 끝을 실험대에 내려놓았습니다.",
-       sw:s=>"S1: "+s, reset:"RESET 버튼을 눌렀습니다.", insulOff:"단열재를 치웠습니다.", insulOn:"단열재를 항온조 위에 덮었습니다.", needBoard:"먼저 보드를 놓으세요."}
+       sw:s=>"S1: "+s, copied:"앱 주소를 복사했습니다.", reset:"RESET 버튼을 눌렀습니다.", insulOff:"단열재를 치웠습니다.", insulOn:"단열재를 항온조 위에 덮었습니다.", needBoard:"먼저 보드를 놓으세요."}
   },
   en:{
     title:"IPhO 2021 Experiments 1 & 2 — Non-ideal capacitors · Light emitting diodes",
@@ -243,10 +282,24 @@ const T={
          cancel:"CANCEL", select:"SELECT", fx:"Function Editor", bad:"Cannot read the expression", set:"Settings", ts:"Time step of measurement (ms)", offLed:"Turn off LED current when measurement is done.", offHeat:"Turn off heating current when measurement is done.",
          sweep:"Sweep measurement", smin:"Minimum sweep current (mA)", smax:"Maximum sweep current (mA)", sn:"Number of sweep steps", sexp:"Increase current exponentially", spulse:"Set pulsed current", spw:"Pulse duration (ms)", apply:"Apply"},
     st:{none:"Take the board out of the box and put it on the bench."},
+    ln:{ovH:"Before the experiment — the IPhO 2021 Experiments app",
+        ovP:"In the real examination this app came installed on the Android tablet that connects to the board. In the simulator it is a separate web app. Choose whether to use it on the virtual tablet at the bench, or to open it on your own tablet, phone or computer and link it to the board. You can switch from the right-hand panel at any time.",
+        ovInfo:"Records the board's raw voltages, derivatives, currents and time and shows them as a table and graph (guide G1). It can be installed by adding it to the home screen.", ovOpen:"open the app ↗",
+        virtH:"Use the virtual tablet", virtP:"Open the app on the Android tablet below the bench: a home screen, the app, a calculator, settings, and the back, home and recents buttons.",
+        remH:"Use the app on my tablet or computer", remP:"Open the app on your own device (tablet, phone, another computer) or in a new window on this computer with the QR code or the pairing code, and link it to the virtual board. Other devices connect directly over the internet (WebRTC).",
+        capVirtual:"tablet (Android) — tap the app icon to open IPhO 2021 Experiments",
+        capRemote:"my tablet or computer — open the app on your device and link it to this board",
+        modeVirtual:"App runs on: the virtual tablet", modeRemote:"App runs on: my tablet or computer", change:"Change how the app connects",
+        lead:"Pairing code", copy:"Copy address", window:"Open in a new window on this computer",
+        steps:["Scan the QR code with your tablet or phone, or open the address above (on this computer, 'open in a new window').","The app gets the pairing code and links to the board.","Put '6. My tablet or computer' and '5. Board–tablet cable' from the box on the bench; the app asks for USB access. Allow it, then press RESET on the board."],
+        waiting:"Waiting for the app to connect…", starting:"Getting the link ready…", noPeer:"Could not reach the pairing server for other devices. A new window on this computer still works.",
+        linked:n=>n+" app"+(n>1?"s":"")+" connected.", myDevItem:"6. My tablet or computer", myDev:"My tablet or computer", devOn:"(app linked)", devOff:"(waiting for the app)",
+        calc:"Calculator", settings:"Settings", noRecent:"No recent apps", usbTitle:"USB device attached", usbBody:"HaslaLab IPhO 2021 board — tap to open IPhO 2021 Experiments",
+        about:[["About tablet","Android 11 · examination tablet (virtual)"],["Installed app","IPhO 2021 Experiments 1.0"],["USB","linked to the measurement board by the board–tablet cable"]], boardId:"Board ID to connect", off:"The tablet is not on the bench — take '6. Tablet' out of the box and put it down."},
     m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.",
        noFit:"It does not fit there.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
        end:"Wire end picked up — click the socket to plug it into.", plugged:n=>"Wire end plugged into "+n+".", busy:"That socket is in use.", dropped:"Wire end put down on the bench.",
-       sw:s=>"S1: "+s, reset:"RESET pressed.", insulOff:"Insulating material taken off.", insulOn:"Insulating material put over the thermostat.", needBoard:"Put the board down first."}
+       sw:s=>"S1: "+s, copied:"App address copied.", reset:"RESET pressed.", insulOff:"Insulating material taken off.", insulOn:"Insulating material put over the thermostat.", needBoard:"Put the board down first."}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
@@ -340,7 +393,7 @@ const ST={ on:{board:false,charger:false,cable:false,tablet:false,therm:false,W1
   ends:{W1:[[740,380],[820,380]],W2:[[740,420],[820,420]]} };
 let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1, simNow=0;
 function say(key,...args){ msg={key,args,t:performance.now()}; }
-const itemName=k=>d().items[k]||k;
+const itemName=k=>k==="tablet"&&LINK.mode==="remote"?d().ln.myDevItem:(d().items[k]||k);
 const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
 const bx=()=>ST.pos.board.x, by=()=>ST.pos.board.y;
 const SOCK_NAMES=[["N9A","-9V"],["N9B","-9V"],["GNDA","GND"],["GNDB","GND"],["P9A","+9V"],["P9B","+9V"],["INA","IN"],["INB","IN"]];
@@ -397,8 +450,8 @@ function drawParts(){
   if(ST.on.charger){ const {x,y}=P.charger; fillR(x-35,y-23,70,46,6,"#222","#000"); text("5V",x,y,"#fff",11,"center","700"); if(ST.on.board) cableCurve([x-35,y],[USBP()[0],USBP()[1]+2],"#333"); }
   if(ST.on.cable){ const {x,y}=P.cable; fillR(x-30,y-15,60,30,4,"#888","#555"); text("6-pin",x,y,"#111",9,"center","700");
     if(ST.on.board) cableCurve([x-30,y],[PIN6()[0],PIN6()[1]+2],"#777"); if(ST.on.tablet) cableCurve([x+30,y],[P.tablet.x,P.tablet.y+75],"#777"); }
-  if(ST.on.tablet){ const {x,y}=P.tablet; fillR(x-115,y-75,230,150,10,"#111","#000",3); fillR(x-105,y-65,210,130,4,connected?"#f6e0c8":"#3a3a3a");
-    t.lab.app.split("\n").forEach((s,i)=>text(s,x,y-8+i*16,connected?"#222":"#888",12,"center","700")); }
+  if(ST.on.tablet){ const {x,y}=P.tablet; fillR(x-115,y-75,230,150,10,"#111","#000",3); const live=LINK.stream&&linkOn(); fillR(x-105,y-65,210,130,4,live?"#f6e0c8":"#3a3a3a");
+    (LINK.mode==="remote"?t.ln.myDev+(LINK.remote>0?"\n"+t.ln.devOn:"\n"+t.ln.devOff):t.lab.app).split("\n").forEach((s,i)=>text(s,x,y-8+i*16,live?"#222":"#888",12,"center","700")); }
   if(ST.on.therm){ const {x,y}=P.therm; fillR(x-22,y-65,44,130,8,"#fff","#666"); text(B.roomT.toFixed(1),x,y-26,"#111",14,"center","700",MONO); text("°C",x,y-6,"#111",11,"center"); text(t.lab.roomT,x,y+30,"#555",9,"center"); }
   for(const w of ["W1","W2"]){ if(!ST.on[w]) continue;
     const a=hand&&hand.k==="end"&&hand.w===w&&hand.i===0?mouse:endXY(w,0), b=hand&&hand.k==="end"&&hand.w===w&&hand.i===1?mouse:endXY(w,1);
@@ -444,7 +497,7 @@ function layout(){
   const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
-  sizeChart(); drawTray();
+  drawTray();
 }
 function drawTray(){
   const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
@@ -505,7 +558,7 @@ function benchClick(p,right){
   }
   for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),10)){ const was=endXY(w,i); B.wires[w][i]=null; hand={k:"end",w,i,orig:was}; say("end"); return; }
   if(ST.on.board){
-    if(near(p,RESET(),16)){ B.resetAt=simNow; say("reset"); return; }
+    if(near(p,RESET(),16)){ B.resetAt=simNow; toApp({type:"reset",at:simNow}); say("reset"); return; }
     const [sx,sy]=SW1(); if(Math.abs(p[0]-sx)<18&&Math.abs(p[1]-sy)<46){ B.sw1={C1:"MID",MID:"C2",C2:"C1"}[B.sw1]; if(B.sw1!=="C2") B.vb=B.vb.map(()=>B.uC); say("sw",B.sw1==="MID"?"—":B.sw1); return; } }
   for(const k of ["charger","cable","tablet","therm","board"]) if(inPart(k,p)){
     const orig={...ST.pos[k]}; ST.on[k]=false; hand={k,move:true,orig}; syncLinks(); say("moveIt",itemName(k)); return; }
@@ -525,125 +578,123 @@ trayCv.addEventListener("mousedown",e=>{
     if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); } drawTray(); return; } });
 
 /* ══════════════════════════════════════════════════════════════
-   4.  THE TABLET APP  (IPhO 2021 Experiments)
+   4.  THE LINK TO THE APP  (IPhO 2021 Experiments)
+   The app is its own page, ipho2021_app.html, as it was its own program
+   on the examination tablet.  Before the round the student chooses where
+   it runs: on the virtual Android tablet below the bench (an iframe), or
+   on their own tablet, phone or computer, paired by a code - a window on
+   the same computer over BroadcastChannel, another device over WebRTC
+   (PeerJS).  The board streams raw samples at the app's time step; the
+   app sends the drive currents and the sweep.
    ══════════════════════════════════════════════════════════════ */
-const VARS=["uC","uT","uL","duC","duT","duL","iL","iH","t"], FUNCS={sin:Math.sin,cos:Math.cos,tan:Math.tan,exp:Math.exp,asin:Math.asin,acos:Math.acos,atan:Math.atan,ln:Math.log,abs:Math.abs,sqrt:Math.sqrt};
-const PALETTE=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
-let connected=false, permAsked=false, awaitUntil=-1, denied=false, measuring=false, checking=false;
-let rows=[], saved={}, plotted=new Set(["__last"]), functions=[], columns=["t","uC","duC"], xaxis="t", yaxis="uC";
-const settings={timestep:140, offLed:true, offHeat:false, sweep:false, smin:0.1, smax:50, sn:51, sexp:false, spulse:false, spw:1.0};
-let nextSample=0, sweepI=-1, replotCtr=0, linkWas=false;
-function compileExpr(txt){
-  const t=txt.trim(); if(!t) throw new Error("empty");
-  const js=t.replace(/\^/g,"**"); if(!/^[0-9A-Za-z_+\-*/(). ,e]*$/.test(js.replace(/\*\*/g,"*"))) throw new Error("bad characters");
-  const names=(js.replace(/\d+\.?\d*(?:[eE][+-]?\d+)?/g," ").match(/[A-Za-z_][A-Za-z_0-9]*/g)||[]);
-  for(const n of names) if(!VARS.includes(n)&&!(n in FUNCS)) throw new Error("unknown name: "+n);
-  const f=new Function(...VARS,...Object.keys(FUNCS),"return ("+js+");");
-  return {text:t, fn:r=>{ try{ const v=f(...VARS.map(k=>r[k]),...Object.values(FUNCS)); return typeof v==="number"?v:NaN; }catch(e){ return NaN; } }};
+const LINK={mode:null, code:"", peer:null, peerState:"", conns:new Set(), bc:null, bcSeen:false, remote:0,
+  stream:false, epoch:0, ts:0.140, next:0, sweep:null, sweepI:-1, sweepDone:false, out:[], lastLink:null, lastClock:0};
+const frame=$("dApp");
+const deviceHere=()=>ST.on.tablet&&(LINK.mode==="virtual"||(LINK.mode==="remote"&&LINK.remote>0));
+const linkOn=()=>B.powered&&B.data&&deviceHere();
+function toApp(m){
+  if(LINK.mode==="virtual"){ if(frame.contentWindow&&frame.src) frame.contentWindow.postMessage({hl21board:m},"*"); }
+  else if(LINK.mode==="remote"){ if(LINK.bc&&LINK.bcSeen) LINK.bc.postMessage({hl21board:m}); for(const c of LINK.conns){ try{ c.send({hl21board:m}); }catch(e){} } }
 }
-const varList=()=>[...VARS,...functions.map(f=>f.text)];
-function evalVar(name,r){ if(name in r) return r[name]; const f=functions.find(g=>g.text===name); return f?f.fn(r):NaN; }
-function fmt(v){ if(!isFinite(v)) return "NaN"; const a=Math.abs(v); if(a!==0&&(a<1e-3||a>=1e5)) return v.toExponential(4); return Number(v.toPrecision(6)).toString(); }
-let toastT=null;
-function toast(s){ $("tToast").textContent=s; clearTimeout(toastT); toastT=setTimeout(()=>{ $("tToast").textContent=""; },4000); }
-function pollLink(){
-  const link=B.powered&&B.data;
-  if(!link){ if(connected||permAsked||linkWas){ connected=false; permAsked=false; awaitUntil=-1; measuring=false; $("tMeas").checked=false; $("mUsb").hidden=true; if(linkWas) toast(d().app.usbNo); } linkWas=false; denied=false; return; }
-  linkWas=true;
-  if(connected||denied) return;
-  if(!permAsked){ permAsked=true; $("mUsb").hidden=false; return; }
-  if(awaitUntil>0){ if(B.resetAt>awaitUntil-10){ connected=true; awaitUntil=-1; B.t=0; toast(d().app.connected); }
-    else if(simNow>awaitUntil){ awaitUntil=-1; permAsked=false; toast(d().app.plugFirst); } }
+function countRemote(){ LINK.remote=LINK.conns.size+(LINK.bcSeen?1:0); renderLinkUI(); }
+function fromApp(m,src){ if(!m||typeof m!=="object"||src!==LINK.mode) return;
+  switch(m.type){
+    case "hello": toApp({type:"welcome",lang,state:{iH:B.iH,iL:B.iL,tL:B.tL}}); LINK.lastLink=null; break;
+    case "bye": if(src==="remote"){ LINK.bcSeen=false; countRemote(); } break;
+    case "stream": LINK.stream=!!m.on&&linkOn(); if(m.ts){ LINK.ts=Math.max(0.02,Math.min(0.5,m.ts)); B.timestep=LINK.ts; } LINK.next=simNow; break;
+    case "zero": B.t=0; LINK.next=simNow; LINK.epoch=m.epoch||0; break;
+    case "set": if(!B.powered) break; if(typeof m.iH==="number") B.iH=Math.max(0,Math.min(HEAT_MAX,m.iH)); if(typeof m.iL==="number") B.iL=Math.max(0,Math.min(LED_MAX,m.iL)); if(typeof m.tL==="number") B.tL=m.tL; break;
+    case "sweep": LINK.sweep=m.cfg||null; LINK.sweepI=-1; break;
+  }
 }
-$("bAllow").onclick=()=>{ $("mUsb").hidden=true; awaitUntil=simNow+10; toast(d().app.pressReset); };
-$("bDeny").onclick=()=>{ $("mUsb").hidden=true; denied=true; permAsked=false; toast(d().app.denied); };
-function liveText(r){ const f=(v,w,p)=>((v>=0?"+":"")+v.toFixed(p)).padStart(w," ");
-  return "uC ="+f(r.uC,10,4)+" V    duC ="+f(r.duC,11,4)+" V/s\nuT ="+f(r.uT,10,4)+" V    duT ="+f(r.duT,11,4)+" V/s\nuL ="+f(r.uL,10,4)+" V    duL ="+f(r.duL,11,4)+" V/s\niL ="+r.iL.toFixed(3).padStart(9," ")+" mA   iH  ="+r.iH.toFixed(1).padStart(9," ")+" mA\n t ="+r.t.toFixed(2).padStart(9," ")+" s"; }
-function appTick(now){
-  pollLink();
-  if(!connected){ if(ST.on.tablet) $("tLive").textContent=d().app.usbNo; return; }
-  if(now<nextSample) return;
-  const dt=settings.timestep/1000; nextSample=now+dt; B.timestep=dt;
-  if(measuring&&settings.sweep) sweepStep();
-  const s=sample(); if(!s) return;
-  if(checking) $("tLive").textContent=liveText(s);
-  if(measuring){ rows.push(s); appendRow(s); if(++replotCtr>=5){ replotCtr=0; replot(); } }
+addEventListener("message",e=>{ if(e.source===frame.contentWindow&&e.data&&e.data.hl21app) fromApp(e.data.hl21app,"virtual"); });
+/* the board firmware: one sample every time step while the app streams */
+function linkStep(){
+  if(!LINK.stream) return;
+  if(!linkOn()){ LINK.stream=false; LINK.sweep=null; return; }
+  if(simNow<LINK.next) return;
+  LINK.next=simNow+LINK.ts; B.timestep=LINK.ts;
+  if(LINK.sweep){ const c=LINK.sweep, n=Math.max(2,c.n); LINK.sweepI++;
+    if(LINK.sweepI>=n){ LINK.sweep=null; LINK.sweepDone=true; return; }
+    const f=LINK.sweepI/(n-1), lo=Math.max(c.min,1e-3); B.iL=c.exp? lo*Math.pow(c.max/lo,f) : c.min+(c.max-c.min)*f; B.tL=c.pw||0; }
+  const s=sample(); if(s){ s.tL=B.tL; s.ep=LINK.epoch; LINK.out.push(s); }
 }
-function sweepStep(){ sweepI++; const n=Math.max(2,settings.sn); if(sweepI>=n){ setMeasure(false); return; }
-  const f=sweepI/(n-1), lo=Math.max(settings.smin,1e-3), i=settings.sexp? lo*Math.pow(settings.smax/lo,f) : settings.smin+(settings.smax-settings.smin)*f;
-  B.iL=i; B.tL=settings.spulse?settings.spw:0; $("tIL").value=i.toFixed(2); $("sIL").value=Math.round(1000*Math.cbrt(i/LED_MAX)); $("tTL").value=B.tL; }
-function setMeasure(on){
-  if(on&&!connected){ $("tMeas").checked=false; toast(d().app.plugFirst); return; }
-  $("tMeas").checked=on;
-  if(on){ measuring=true; rows=[]; sweepI=-1; B.t=0; nextSample=0; refillTable(); }
-  else { measuring=false; if(settings.offLed){ B.iL=0; $("tIL").value="0"; $("sIL").value=0; } if(settings.offHeat){ B.iH=0; $("tIH").value="0"; $("sIH").value=0; } toast(d().app.stopped); replot(); }
+function flushLink(){
+  const on=linkOn();
+  if(on!==LINK.lastLink){ LINK.lastLink=on; toApp({type:"link",on,now:simNow}); if(on&&LINK.mode==="virtual") droidNotify(); }
+  if(LINK.out.length){ toApp({type:"samples",list:LINK.out,now:simNow}); LINK.out=[]; }
+  if(LINK.sweepDone){ LINK.sweepDone=false; toApp({type:"sweepDone"}); }
+  const now=performance.now(); if(now-LINK.lastClock>200){ LINK.lastClock=now; toApp({type:"clock",now:simNow}); }
 }
-$("tMeas").onchange=e=>setMeasure(e.target.checked);
-$("tCheck").onchange=e=>{ checking=e.target.checked; if(!checking) $("tLive").textContent=""; };
-function setDrive(key,val,fromSlider){
-  if(key==="iH"){ if(!(val>=0&&val<=HEAT_MAX)){ toast(d().app.badHeat); return; } B.iH=val; if(!fromSlider) $("sIH").value=Math.round(1000*val/HEAT_MAX); $("tIH").value=fromSlider?val.toFixed(1):$("tIH").value; }
-  if(key==="iL"){ if(!(val>=0&&val<=LED_MAX)){ toast(d().app.badLed); return; } B.iL=val; if(!fromSlider) $("sIL").value=Math.round(1000*Math.cbrt(val/LED_MAX)); else $("tIL").value=val.toFixed(2); }
-  if(key==="tL"){ if(val!==0&&!(val>=PULSE_MIN&&val<=PULSE_MAX)){ toast(d().app.badPulse); return; } B.tL=val; if(!fromSlider) $("sTL").value=Math.round(val*10); else $("tTL").value=val.toFixed(1); }
+/* pairing your own device */
+const CODE_CH="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const newCode=()=>Array.from({length:6},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join("");
+const ONLINE="https://haslalab.org/sim/";
+function appUrl(code,forOther){ const base=(location.protocol==="file:"||forOther&&/^(localhost|127\.)/.test(location.hostname))?ONLINE:new URL(".",location.href).href; return base+"ipho2021_app.html?code="+code+"&lang="+lang; }
+function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement("script"); s.src=src; s.onload=()=>res(); s.onerror=rej; document.head.appendChild(s); }); }
+function startRemote(){
+  if(!LINK.code) LINK.code=newCode();
+  if(!LINK.bc&&"BroadcastChannel" in window){ LINK.bc=new BroadcastChannel("haslalab-ipho2021-"+LINK.code);
+    LINK.bc.onmessage=e=>{ const m=e.data&&e.data.hl21app; if(!m) return; if(m.type==="hello"){ LINK.bcSeen=true; countRemote(); } fromApp(m,"remote"); }; }
+  if(!LINK.peer){ LINK.peerState="load"; renderLinkUI();
+    (window.Peer?Promise.resolve():loadScript("https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js")).then(()=>{
+      const p=new Peer("haslalab-ipho2021-"+LINK.code); LINK.peer=p;
+      p.on("open",()=>{ LINK.peerState="ready"; renderLinkUI(); });
+      p.on("disconnected",()=>{ try{ p.reconnect(); }catch(e){} });
+      p.on("error",err=>{ LINK.peerState="error"; if(err&&err.type==="unavailable-id"){ try{ p.destroy(); }catch(e){} LINK.peer=null; LINK.code=newCode(); if(LINK.bc){ LINK.bc.close(); LINK.bc=null; } startRemote(); return; } renderLinkUI(); });
+      p.on("connection",c=>{ c.on("open",()=>{ LINK.conns.add(c); countRemote(); }); c.on("data",dt=>fromApp(dt&&dt.hl21app,"remote")); c.on("close",()=>{ LINK.conns.delete(c); countRemote(); }); });
+    }).catch(()=>{ LINK.peerState="noload"; renderLinkUI(); }); }
+  drawQR(); renderLinkUI();
 }
-for(const [k,inp,sl,f] of [["iH","tIH","sIH",v=>HEAT_MAX*v/1000],["iL","tIL","sIL",v=>v<=0?0:LED_MAX*Math.pow(v/1000,3)],["tL","tTL","sTL",v=>v/10]]){
-  $(inp).onchange=()=>{ const t=$(inp).value.trim(); const v=t===""?0:Number(t); if(isNaN(v)){ toast(k==="iH"?d().app.badHeat:k==="iL"?d().app.badLed:d().app.badPulse); return; } setDrive(k,v,false); };
-  $(sl).oninput=()=>setDrive(k,f(+$(sl).value),true); }
-function fillSelects(){ const opts=varList();
-  for(let i=0;i<3;i++){ const s=$("col"+i); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=columns[i]; }
-  for(const [id,v] of [["tX",xaxis],["tY",yaxis]]){ const s=$(id); s.innerHTML=opts.map(o=>"<option>"+o.replace(/</g,"&lt;")+"</option>").join(""); s.value=v; } }
-for(let i=0;i<3;i++) $("col"+i).onchange=e=>{ columns[i]=e.target.value; refillTable(); };
-$("tX").onchange=e=>{ xaxis=e.target.value; replot(); }; $("tY").onchange=e=>{ yaxis=e.target.value; replot(); };
-for(const id of ["tXmin","tXmax","tYmin","tYmax"]) $(id).onchange=replot;
-$("tReplot").onclick=replot;
-function rowHtml(r){ return "<tr>"+columns.map(c=>"<td>"+fmt(evalVar(c,r))+"</td>").join("")+"</tr>"; }
-function refillTable(){ const last=rows.slice(-300); $("tTable").innerHTML="<table><thead><tr>"+columns.map(c=>"<th>"+c.replace(/</g,"&lt;")+"</th>").join("")+"</tr></thead><tbody>"+last.map(rowHtml).join("")+"</tbody></table>"; const el=$("tTable"); el.scrollTop=el.scrollHeight; }
-function appendRow(r){ const tb=$("tTable").querySelector("tbody"); if(!tb){ refillTable(); return; } tb.insertAdjacentHTML("beforeend",rowHtml(r)); if(tb.children.length>300) tb.removeChild(tb.firstChild); const el=$("tTable"); el.scrollTop=el.scrollHeight; }
-$("tSave").onclick=()=>{ const nm=$("tTitle").value.trim(); if(!nm){ toast(d().app.noTitle); return; } if(saved[nm]){ toast(d().app.exists); return; } if(!rows.length){ toast(d().app.noMeas); return; }
-  saved[nm]=rows.slice(); plotted.add(nm); toast(d().app.saved(nm,rows.length)); replot(); };
-$("tDel").onclick=()=>{ const nm=$("tTitle").value.trim(); if(saved[nm]){ delete saved[nm]; plotted.delete(nm); toast(d().app.deleted(nm)); replot(); } else toast(d().app.noMeas); };
-$("tPick").onclick=()=>{ const opts=["__last",...Object.keys(saved).sort()];
-  $("pickList").innerHTML=opts.map(o=>'<label><input type="checkbox" value="'+o.replace(/"/g,"&quot;")+'"'+(plotted.has(o)?" checked":"")+"> "+(o==="__last"?d().app.last:o.replace(/</g,"&lt;"))+"</label>").join("");
-  $("mPick").hidden=false; };
-$("pickCancel").onclick=()=>{ $("mPick").hidden=true; };
-$("pickOk").onclick=()=>{ plotted=new Set([...$("pickList").querySelectorAll("input:checked")].map(i=>i.value)); $("mPick").hidden=true; replot(); };
-function renderFx(){ $("fxList").innerHTML=functions.map((f,i)=>'<div class="fx"><span>'+f.text.replace(/</g,"&lt;")+'</span><button data-i="'+i+'" class="no">✖</button></div>').join("");
-  for(const b of $("fxList").querySelectorAll("button")) b.onclick=()=>{ functions.splice(+b.dataset.i,1); renderFx(); fillSelects(); }; }
-$("tFx").onclick=()=>{ renderFx(); $("mFx").hidden=false; };
-$("fxAdd").onclick=()=>{ try{ const f=compileExpr($("fxIn").value); if(!functions.some(g=>g.text===f.text)) functions.push(f); $("fxIn").value=""; renderFx(); fillSelects(); }catch(e){ toast(d().app.bad+": "+e.message); } };
-$("fxOk").onclick=()=>{ $("mFx").hidden=true; };
-$("tSet").onclick=()=>{ if(measuring){ toast(d().app.during); return; } const a=d().app, s=settings;
-  const chk=(id,v,l)=>'<label><input type="checkbox" id="'+id+'"'+(v?" checked":"")+"> "+l+"</label>", num=(id,v,l)=>'<label>'+l+' <input id="'+id+'" size="7" value="'+v+'"></label>';
-  $("setBox").innerHTML="<b>"+a.set+"</b>"+num("sTs",s.timestep,a.ts)+chk("sOl",s.offLed,a.offLed)+chk("sOh",s.offHeat,a.offHeat)+chk("sSw",s.sweep,a.sweep)+num("sMn",s.smin,a.smin)+num("sMx",s.smax,a.smax)+num("sN",s.sn,a.sn)+chk("sEx",s.sexp,a.sexp)+chk("sPu",s.spulse,a.spulse)+num("sPw",s.spw,a.spw)+'<div class="mrow"><button id="sCancel">'+a.cancel+'</button><button id="sApply" class="ok">'+a.apply+"</button></div>";
-  $("mSet").hidden=false;
-  $("sCancel").onclick=()=>{ $("mSet").hidden=true; };
-  $("sApply").onclick=()=>{ const n=id=>Number($(id).value); if([n("sTs"),n("sMn"),n("sMx"),n("sN"),n("sPw")].some(isNaN)){ toast("Non-numeric value"); return; }
-    s.timestep=Math.max(20,Math.min(500,Math.round(n("sTs")))); s.offLed=$("sOl").checked; s.offHeat=$("sOh").checked; s.sweep=$("sSw").checked;
-    s.smin=Math.max(0,Math.min(LED_MAX,n("sMn"))); s.smax=Math.max(0,Math.min(LED_MAX,n("sMx"))); s.sn=Math.max(2,Math.min(2000,Math.round(n("sN"))));
-    s.sexp=$("sEx").checked; s.spulse=$("sPu").checked; const pw=n("sPw"); s.spw=pw===0?0:Math.max(PULSE_MIN,Math.min(PULSE_MAX,pw)); $("mSet").hidden=true; }; };
-/* the chart */
-const chartCv=$("chart"), chartCtx=chartCv.getContext("2d"); let CW=600, CH=330;
-function sizeChart(){ const r=chartCv.getBoundingClientRect(), dpr=window.devicePixelRatio||1; CW=Math.max(200,r.width); CH=330; chartCv.width=Math.round(CW*dpr); chartCv.height=Math.round(CH*dpr); replot(); }
-const numOr=(id)=>{ const v=$(id).value.trim(); return v===""||isNaN(+v)?null:+v; };
-function niceTicks(a,b,n){ const span=b-a; if(!(span>0)) return [a]; const st0=Math.pow(10,Math.floor(Math.log10(span/n))), st=[1,2,5,10].map(k=>k*st0).find(s=>span/s<=n)||st0*10; const out=[]; for(let v=Math.ceil(a/st)*st;v<=b+1e-9*span;v+=st) out.push(v); return out; }
-function replot(){
-  const dpr=window.devicePixelRatio||1, c=chartCtx; c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#fffaf3"; c.fillRect(0,0,CW,CH);
-  const sets=[]; if(plotted.has("__last")) sets.push([d().app.last,rows]); for(const nm of [...plotted].filter(x=>x!=="__last").sort()) if(saved[nm]) sets.push([nm,saved[nm]]);
-  const series=sets.map(([nm,rs],i)=>[nm,rs.map(r=>[evalVar(xaxis,r),evalVar(yaxis,r)]).filter(p=>isFinite(p[0])&&isFinite(p[1])),PALETTE[i%PALETTE.length]]);
-  let xs=[],ys=[]; for(const [,pts] of series) for(const [x,y] of pts){ xs.push(x); ys.push(y); }
-  let x0=numOr("tXmin"), x1=numOr("tXmax"), y0=numOr("tYmin"), y1=numOr("tYmax");
-  if(x0===null) x0=xs.length?Math.min(...xs):0; if(x1===null) x1=xs.length?Math.max(...xs):1; if(y0===null) y0=ys.length?Math.min(...ys):0; if(y1===null) y1=ys.length?Math.max(...ys):1;
-  if(x1-x0<1e-12){ x0-=0.5; x1+=0.5; } if(y1-y0<1e-12){ const m=Math.abs(y0)*0.05||0.5; y0-=m; y1+=m; }
-  const L=64, R=12, T0=10, Bm=30, X=x=>L+(x-x0)/(x1-x0)*(CW-L-R), Y=y=>CH-Bm-(y-y0)/(y1-y0)*(CH-Bm-T0);
-  c.strokeStyle="#ddd"; c.lineWidth=1; c.font="11px ui-monospace,Consolas,monospace"; c.fillStyle="#444";
-  for(const t of niceTicks(x0,x1,7)){ const x=X(t); c.beginPath(); c.moveTo(x,T0); c.lineTo(x,CH-Bm); c.stroke(); c.textAlign="center"; c.textBaseline="top"; c.fillText(fmt(t),x,CH-Bm+4); }
-  for(const t of niceTicks(y0,y1,6)){ const y=Y(t); c.beginPath(); c.moveTo(L,y); c.lineTo(CW-R,y); c.stroke(); c.textAlign="right"; c.textBaseline="middle"; c.fillText(fmt(t),L-4,y); }
-  c.strokeStyle="#666"; c.strokeRect(L,T0,CW-L-R,CH-Bm-T0);
-  c.save(); c.beginPath(); c.rect(L,T0,CW-L-R,CH-Bm-T0); c.clip();
-  for(const [,pts,col] of series){ c.fillStyle=col; for(const [x,y] of pts){ c.fillRect(X(x)-1.5,Y(y)-1.5,3,3); } }
-  c.restore();
-  let ly=T0+6; c.textAlign="left"; c.textBaseline="top"; c.font="11px "+FONT;
-  for(const [nm,,col] of series){ c.fillStyle=col; c.fillRect(CW-R-130,ly+3,8,8); c.fillStyle="#333"; c.fillText(nm,CW-R-118,ly); ly+=15; }
+let qrFor="";
+function drawQR(){ const url=appUrl(LINK.code,true); if(qrFor===url) return; qrFor=url; $("qr").innerHTML="";
+  (window.QRCode?Promise.resolve():loadScript("https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js")).then(()=>{ new QRCode($("qr"),{text:url,width:150,height:150,correctLevel:QRCode.CorrectLevel.M}); }).catch(()=>{ $("qr").textContent="QR"; }); }
+function renderLinkUI(){ const t=d().ln;
+  $("droidWrap").hidden=LINK.mode!=="virtual"; $("remoteWrap").hidden=LINK.mode!=="remote";
+  $("t-closecap").textContent=LINK.mode==="remote"?t.capRemote:t.capVirtual;
+  $("t-linkmode").textContent=LINK.mode==="remote"?t.modeRemote:LINK.mode==="virtual"?t.modeVirtual:"";
+  $("bLinkMode").textContent=t.change;
+  if(LINK.mode!=="remote") return;
+  $("rLead").textContent=t.lead; $("rCode").textContent=LINK.code; $("rUrl").textContent=appUrl(LINK.code,true);
+  $("rCopy").textContent=t.copy; $("rWin").textContent=t.window;
+  $("rSteps").innerHTML=t.steps.map(x=>"<li>"+x+"</li>").join("");
+  const st=$("rSt");
+  if(LINK.remote>0){ st.className="rst ok"; st.textContent=t.linked(LINK.remote); }
+  else if(LINK.peerState==="ready"){ st.className="rst wait"; st.textContent=t.waiting; }
+  else if(LINK.peerState==="error"||LINK.peerState==="noload"){ st.className="rst bad"; st.textContent=t.noPeer; }
+  else { st.className="rst wait"; st.textContent=t.starting; }
 }
+$("rCopy").onclick=()=>{ const u=appUrl(LINK.code,true); (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>say("copied")).catch(()=>say("copied")); };
+$("rWin").onclick=()=>{ window.open(appUrl(LINK.code,false),"hl21app","width=1100,height=680"); };
+function setMode(mode){ LINK.mode=mode; LINK.stream=false; LINK.sweep=null; LINK.lastLink=null; $("startOv").hidden=true;
+  if(mode==="virtual"){ if(!frame.src) frame.src="ipho2021_app.html?embed=1&lang="+lang; droidHome(); }
+  else startRemote();
+  renderLinkUI(); drawTray(); }
+$("ovVirt").onclick=()=>setMode("virtual"); $("ovRem").onclick=()=>setMode("remote");
+$("bLinkMode").onclick=()=>{ $("startOv").hidden=false; };
+/* the virtual Android tablet: home screen, the app, a calculator, settings */
+let droidApp=null, droidStack=[];
+function droidShow(app){ droidApp=app; for(const [k,id] of [["exp","dApp"],["calc","dCalc"],["set","dSet"],["rec","dRec"]]) $(id).hidden=k!==app; }
+function droidHome(){ droidShow(null); }
+function droidOpen(app){ if(app==="exp"&&!frame.src) frame.src="ipho2021_app.html?embed=1&lang="+lang; if(!droidStack.includes(app)) droidStack.push(app); if(app==="set") renderSettings(); droidShow(app); }
+for(const b of document.querySelectorAll(".dapp")) b.onclick=()=>droidOpen(b.dataset.app);
+$("nHome").onclick=droidHome; $("nBack").onclick=()=>{ if(droidApp==="rec") droidHome(); else if(droidApp) droidHome(); };
+$("nRec").onclick=()=>{ if(droidApp==="rec"){ droidHome(); return; } const t=d().ln, names={exp:["IPhO 2021 Experiments",'<img src="ipho2021_app_icon.svg" alt="">'],calc:[t.calc,"±"],set:[t.settings,"⚙"]};
+  $("dRec").innerHTML=droidStack.length?droidStack.map(k=>'<div class="card2" data-app="'+k+'">'+names[k][1]+"<span>"+names[k][0]+"</span></div>").join(""):'<span class="none">'+t.noRecent+"</span>";
+  for(const c of $("dRec").querySelectorAll(".card2")) c.onclick=()=>droidOpen(c.dataset.app); droidShow("rec"); };
+function droidNotify(){ const t=d().ln, n=$("dNotif"); n.innerHTML='<img src="ipho2021_app_icon.svg" alt=""><div><b>'+t.usbTitle+"</b>"+t.usbBody+"</div>"; n.hidden=false; clearTimeout(droidNotify.t); droidNotify.t=setTimeout(()=>{ n.hidden=true; },3500); n.onclick=()=>{ n.hidden=true; droidOpen("exp"); }; }
+function renderSettings(){ const t=d().ln; $("dSet").innerHTML="<h4>"+t.settings+"</h4>"+t.about.map(([k,v])=>'<div class="it"><b>'+k+"</b><span>"+v+"</span></div>").join("")+'<div class="it"><b>'+t.boardId+"</b><span>"+B.id+"</span></div>"; }
+const CALC_KEYS=["7","8","9","÷","(",")","4","5","6","×","√","^","1","2","3","−","ln","exp","0",".","+","π","C","="];
+let calcExpr="";
+function calcPress(k){ const disp=$("cDisp");
+  if(k==="C"){ calcExpr=""; disp.textContent="0"; return; }
+  if(k==="="){ try{ const js=calcExpr.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/π/g,"Math.PI").replace(/√\(/g,"Math.sqrt(").replace(/ln\(/g,"Math.log(").replace(/exp\(/g,"Math.exp(").replace(/\^/g,"**");
+      if(!/^[0-9+\-*/().eMathPIsqrtlogxp ]*$/.test(js)) throw 0; const v=Function("return ("+js+")")(); calcExpr=String(+v.toPrecision(12)); disp.textContent=calcExpr; }catch(e){ disp.textContent="Error"; calcExpr=""; } return; }
+  calcExpr+=(k==="√"||k==="ln"||k==="exp")?k+"(":k; disp.textContent=calcExpr; }
+$("cKeys").innerHTML=CALC_KEYS.map(k=>'<button class="'+(k==="="?"eq":/[÷×−+^()]/.test(k)?"op":"")+'">'+k+"</button>").join("");
+for(const b of $("cKeys").querySelectorAll("button")) b.onclick=()=>calcPress(b.textContent);
+function droidFrame(){ const off=!ST.on.tablet; const o=$("dOff"); o.hidden=!off; if(off) o.textContent=d().ln.off;
+  const dt=new Date(); $("dClock").textContent=dt.getHours()+":"+String(dt.getMinutes()).padStart(2,"0"); }
 
 /* ══════════════════════════════════════════════════════════════
    5.  PANEL AND MAIN LOOP
@@ -665,11 +716,12 @@ function applyLang(){
   $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
   $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint; $("t-h-board").textContent=t.hBoard; $("t-boardhint").textContent=t.boardHint;
   $("t-h-app").textContent=t.hApp; $("t-apphint").textContent=t.appHint;
-  $("l-meas").textContent=a.meas; $("l-check").textContent=a.check; $("tPick").textContent=a.pick; $("l-perm").textContent=a.perm; $("bAllow").textContent=a.allow; $("bDeny").textContent=a.deny;
-  $("l-pick").textContent=a.pick; $("pickCancel").textContent=a.cancel; $("pickOk").textContent=a.select; $("l-fx").textContent=a.fx;
+  const ln=t.ln; $("ovH").textContent=ln.ovH; $("ovP").textContent=ln.ovP; $("ovInfo").textContent=ln.ovInfo; $("ovOpen").textContent=ln.ovOpen;
+  $("ovVirtH").textContent=ln.virtH; $("ovVirtP").textContent=ln.virtP; $("ovRemH").textContent=ln.remH; $("ovRemP").textContent=ln.remP;
+  $("dnCalc").textContent=ln.calc; $("dnSet").textContent=ln.settings; toApp({type:"lang",lang}); renderLinkUI(); if(LINK.mode==="remote") drawQR(); if(droidApp==="set") renderSettings();
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2021 E1·E2 — 비이상적 축전기 · LED · HaslaLab":"IPhO 2021 E1·E2 — Non-ideal Capacitors · LEDs · HaslaLab";
-  renderSpeeds(); fillSelects(); layout();
+  renderSpeeds(); layout();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
@@ -677,14 +729,14 @@ let tPrev=performance.now()/1000, frameN=0;
 function tick(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   let want=dt*speed; const n=Math.min(600,Math.max(1,Math.ceil(want/0.005))), h=want/n;
-  for(let i=0;i<n;i++){ boardStep(h); simNow+=h; appTick(simNow); }
-  $("tab").classList.toggle("off",!ST.on.tablet);
+  for(let i=0;i<n;i++){ boardStep(h); simNow+=h; linkStep(); }
+  flushLink(); if(frameN%15===0&&LINK.mode==='virtual') droidFrame();
   ctx.clearRect(0,0,LW,LH); drawBench();
   if(++frameN%6===0){ renderStatus(); drawTray(); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
-applyLang(); requestAnimationFrame(tick);
+applyLang(); renderLinkUI(); $("startOv").hidden=false; requestAnimationFrame(tick);
 </script>
 <script src="adfit.js"></script>
 </body>
