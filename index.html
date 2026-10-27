@@ -3263,7 +3263,13 @@ const DATA={
     ["D1","Scaling Relations","스케일링 관계","IOAA_2021_D1_EN.pdf","IOAA_2021_D1_S.pdf"],
     ["D2","Stars and Exoplanets","별과 외계행성","IOAA_2021_D2_EN.pdf","IOAA_2021_D2_S.pdf"],
     ["O1","The Solar Slap (Solar Physics)","솔라 슬랩 (태양 물리)","IOAA_2021_O1_EN.pdf","IOAA_2021_O1_S.pdf"],
-    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2021_O2_EN.pdf","IOAA_2021_O2_S.pdf"]])},
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2021_O2_EN.pdf","IOAA_2021_O2_S.pdf"]]).map(p=>p.id!=="D1"&&p.id!=="D2"?p:(delete p.state,Object.assign(p,p.id==="D1"?{
+      desc:{ko:"그림의 기체 비율 직선과 털리–피셔 다섯 점의 최소제곱 맞춤으로 스케일링 관계를 정하고, 두 은하의 겉보기 등급에서 별·기체·전체 질량비를 구한 뒤, 계통·통계 불확도를 넣어 지수를 구간으로 다시 냅니다.",
+            en:"Fix the scaling relations from the gas-fraction line and a least-squares Tully–Fisher fit of five galaxies, turn two apparent magnitudes into stellar, gas and total mass ratios, then redo the exponents as intervals with systematic and statistical uncertainties."},
+      tags:["털리–피셔 관계","최소제곱법","암흑물질"],tagsEn:["Tully–Fisher relation","Least squares","Dark matter"]}:{
+      desc:{ko:"HD 209458의 시차·등급·표면 중력·통과 깊이로 별과 행성의 물리량을 구하고, 눈금 없는 거주 가능 영역 그림에 축을 붙여 일곱 계를 판정한 뒤, 외계행성 38개의 질량을 시그마 클리핑해 모항성 온도를 상자 그림으로 비교합니다.",
+            en:"Get the star's and planet's parameters for HD 209458 from parallax, magnitude, surface gravity and transit depth, calibrate the unlabelled habitable-zone chart and judge seven systems, then sigma-clip 38 exoplanet masses and compare host temperatures with boxplots."},
+      tags:["외계행성","거주 가능 영역","시그마 클리핑"],tagsEn:["Exoplanets","Habitable zone","Sigma clipping"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2021_D_web.html":"sim/ioaa2021_D_web.html?task=D2",src:{ko:"src/ioaa2021_D_data_sim_KO.py",en:"src/ioaa2021_D_data_sim_EN.py"}}),p))},
    {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:lst([
     ["D1","AGN","활동은하핵","IOAA_2020_Q-D1_EN.pdf",null],
     ["D2","Minor Planet","소행성","IOAA_2020_Q-D2_EN.pdf",null],
