@@ -373,8 +373,9 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 /* IAO · APAO 조 — 배지와 고르개 */
 .grptag{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;padding:2.5px 7px;border-radius:4px;
   background:#F1F5F9;color:var(--graphite);white-space:nowrap}
-.grptag.jr{background:rgba(46,139,87,.13);color:#23704A}
-.grptag.sr{background:rgba(44,111,155,.13);color:#245E86}
+.grptag.ga{background:rgba(46,139,87,.13);color:#23704A}
+.grptag.gb{background:rgba(44,111,155,.13);color:#245E86}
+.grptag.gc{background:rgba(124,77,160,.13);color:#6A3F8C}
 .grpsel{display:inline-flex;gap:2px;padding:3px;margin:-12px 0 22px;border:1px solid var(--grid-bold);
   border-radius:8px;background:#fff;flex-wrap:wrap}
 .grpsel button{display:flex;align-items:center;gap:6px;padding:5px 11px;border:0;border-radius:6px;
@@ -382,7 +383,9 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .grpsel button i{font-style:normal;font-family:var(--mono);font-size:10.5px;opacity:.7}
 .grpsel button:hover{background:#F1F5F9;color:var(--ink)}
 .grpsel button[aria-pressed="true"]{background:var(--rail);color:#fff}
-.probs[data-show="jr"] .prob[data-grp="sr"], .probs[data-show="sr"] .prob[data-grp="jr"]{display:none}
+.probs[data-show="a"] .prob[data-grp]:not([data-grp*="a"]),
+.probs[data-show="b"] .prob[data-grp]:not([data-grp*="b"]),
+.probs[data-show="c"] .prob[data-grp]:not([data-grp*="c"]){display:none}
 
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
@@ -885,8 +888,8 @@ ko:{
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
   kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
-  grp:{jr:"주니어 α",sr:"시니어 β",both:"α · β 공통"}, grpAll:"전체",
-  grpHint:"α는 주니어 조, β는 시니어 조입니다. 공통 문제는 두 조에 모두 나옵니다.",
+  grp:{a:"주니어 α",b:"시니어 β",c:"γ조"}, grpShared:"공통", grpAll:"전체",
+  grpHint:"α는 주니어 조, β는 시니어 조입니다(2021 · 2022년 IAO에는 γ조도 있었습니다). 공통 문제는 여러 조에 함께 나옵니다.",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
   pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
@@ -941,8 +944,8 @@ en:{
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
   kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
-  grp:{jr:"Junior α",sr:"Senior β",both:"α · β both"}, grpAll:"All",
-  grpHint:"α is the junior group and β the senior group; shared problems are set to both.",
+  grp:{a:"Junior α",b:"Senior β",c:"Group γ"}, grpShared:"shared", grpAll:"All",
+  grpHint:"α is the junior group and β the senior group (the 2021 and 2022 IAO also had a γ group); shared problems are set to more than one.",
   ebComps:"Covered competitions", hComps:"Choose a competition",
   pComps:"Pick a year, then open that year's experimental problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
@@ -1000,7 +1003,8 @@ const KO_PAPERS = new Set([
   "IOAA_2022_O1_KO.pdf", "IOAA_2022_O2_KO.pdf", "IOAA_2023_D1_KO.pdf", "IOAA_2023_O1_KO.pdf",
   "IOAA_2023_O2_KO.pdf", "IOAA_2024_D1_KO.pdf", "IOAA_2024_O1_KO.pdf", "IOAA_2024_O2_KO.pdf",
   "IOAA_2025_D1_KO.pdf", "IOAA_2025_G1_KO.pdf", "IOAA_2025_O1_KO.pdf", "IOAA_2025_O2_KO.pdf",
-  "IOAA_2025_O3_KO.pdf", "APAO_2009_P_KO.pdf", "APAO_2009_O_KO.pdf"]);
+  "IOAA_2025_O3_KO.pdf", "APAO_2009_P_KO.pdf", "APAO_2009_O_KO.pdf",
+  "IAO_2015_P_A_KO.pdf", "IAO_2015_P_B_KO.pdf", "IAO_2014_P_A_KO.pdf", "IAO_2014_P_B_KO.pdf", "APAO_2012_P_A_KO.pdf", "APAO_2012_P_B_KO.pdf", "APAO_2009_P_A_KO.pdf", "APAO_2009_P_B_KO.pdf"]);
 /* 한국어 해답: 영문 해답 이름에 _KO 를 붙인 것만 적는다 — lst 가 sol 을 {ko, en} 으로 만든다 */
 const KO_SOLS = new Set([
   "IOAA_2007_D1_S_KO.pdf", "IOAA_2007_O1_S_KO.pdf", "IOAA_2008_D1_S_KO.pdf", "IOAA_2008_O1i_S_KO.pdf",
@@ -1016,7 +1020,7 @@ const KO_SOLS = new Set([
   "IOAA_2024_D1_S_KO.pdf", "IOAA_2024_O1_S_KO.pdf", "IOAA_2024_O2_S_KO.pdf", "IOAA_2025_D1_S_KO.pdf",
   "IOAA_2025_G1_S_KO.pdf", "IOAA_2025_O1_S_KO.pdf", "IOAA_2025_O2_S_KO.pdf", "IOAA_2025_O3_S_KO.pdf",
   "IAO_2005_P_S_KO.pdf", "IAO_2009_P_S_KO.pdf", "IAO_2019_P_S_KO.pdf", "IAO_2019_O_S_KO.pdf"]);
-const lst = rows => rows.map(([id,en,ko,q,s])=>{
+const lst = rows => rows.map(([id,en,ko,q,s,gr])=>{
   const at=x=>/^https?:/.test(x)?x:"pdf/"+x;
   /* 문제지는 이름 끝(_EN·_KO·_RU)이 말하는 언어 칸에 — 한국어만 있는 회차도 그대로 적는다 */
   const lg=q&&(/_(KO|RU)\.pdf$/.exec(q)||[,"EN"])[1].toLowerCase();
@@ -1025,9 +1029,10 @@ const lst = rows => rows.map(([id,en,ko,q,s])=>{
   if(s) f.sol=KO_SOLS.has(ks)?{ko:at(ks), en:at(s)}:at(s);
   const k=q&&q.replace(/_EN\.pdf$/,"_KO.pdf");
   if(k&&k!==q&&KO_PAPERS.has(k)) f.pdf={ko:at(k), ...f.pdf};
-  /* IAO · APAO 의 조: 번호 끝 α 는 주니어, β 는 시니어 — 글자가 없으면 두 조 모두 */
-  const g=(/[αβ]+$/.exec(id)||[""])[0];
-  return {id, en, ko, state:"wip", files:f, ...(g==="α"?{grp:"jr"}:g==="β"?{grp:"sr"}:{})};
+  /* IAO · APAO 의 조: 여섯째 칸이나 번호 끝의 그리스 글자(α 주니어, β 시니어, γ) — 없으면 α · β 공통.
+     안에서는 a · b · c 로 적는다(CSS 속성 고르개가 글자를 찾을 수 있게) */
+  const g=(gr||(/[αβγ]+$/.exec(id)||[""])[0]).replace(/α/g,"a").replace(/β/g,"b").replace(/γ/g,"c");
+  return {id, en, ko, state:"wip", files:f, ...(g?{grp:g}:{})};
 });
 
 const DATA={
@@ -3293,59 +3298,89 @@ const DATA={
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2022,host:{ko:"이탈리아 · 마테라, 온라인",en:"Matera, Italy, online"},cc:"it",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2022_P_KO.pdf",null]])},
+    ["P13","Differential Rotation of the Sun","태양의 차등 자전","IAO_2022_P_KO.pdf",null,"αγ"],
+    ["P14","The Hubble Constant","허블 상수","IAO_2022_P_KO.pdf",null,"αβγ"],
+    ["P15","Stages of Stellar Evolution","별의 진화 단계","IAO_2022_P_KO.pdf",null,"βγ"]])},
    {y:2021,host:{ko:"이탈리아 · 밀라노, 온라인",en:"Milan, Italy, online"},cc:"it",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2021_P_KO.pdf",null]])},
+    ["P12","Motion of Mars Seen from Earth","지구에서 본 화성의 움직임","IAO_2021_P_KO.pdf",null,"αγ"],
+    ["P13","Observing at INAF Abruzzo Observatory","INAF 아브루초 천문대 관측","IAO_2021_P_KO.pdf",null,"αγ"],
+    ["P14","The Galilean Moons","갈릴레이 위성","IAO_2021_P_KO.pdf",null,"βγ"]])},
    {y:2019,host:{ko:"루마니아 · 피아트라네암츠",en:"Piatra Neamț, Romania"},cc:"ro",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2019_P_KO.pdf","IAO_2019_P_S.pdf"],
+    ["P6","Asteroid 2110GD37 (6.4α, 6.4β, 6.5β, 6.6β by group)","소행성 2110GD37 (6.4α·6.4β·6.5β·6.6β 는 조별)","IAO_2019_P_KO.pdf","IAO_2019_P_S.pdf"],
+    ["P7","Analemma","아날레마","IAO_2019_P_KO.pdf","IAO_2019_P_S.pdf"],
     ["O","Observational round","관측 라운드","IAO_2019_O_KO.pdf","IAO_2019_O_S.pdf"]])},
    {y:2018,host:{ko:"스리랑카 · 콜롬보",en:"Colombo, Sri Lanka"},cc:"lk",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2018_P_KO.pdf",null],
+    ["P6α","Pulsation Period of a Variable Star","변광성의 맥동 주기","IAO_2018_P_KO.pdf",null],
+    ["P6β","The Binary System S Ant","쌍성계 S Ant","IAO_2018_P_KO.pdf",null],
+    ["P7","Calibrating the Solar Spectrum","태양 스펙트럼의 눈금 맞추기","IAO_2018_P_KO.pdf",null],
+    ["P8","Analysing a Star's Variability","별의 변광 분석","IAO_2018_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2018_O_KO.pdf",null]])},
    {y:2016,host:{ko:"불가리아 · 팜포로보 – 스몰랸",en:"Pamporovo – Smolyan, Bulgaria"},cc:"bg",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2016_P_KO.pdf",null],
+    ["P6α","Comet Observer","혜성 관측자","IAO_2016_P_KO.pdf",null],
+    ["P6β","The First Detection of Gravitational Waves","최초의 중력파 검출","IAO_2016_P_KO.pdf",null],
+    ["P7","Initial Mass Function and Supernovae","초기 질량 함수와 초신성","IAO_2016_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2016_O_KO.pdf",null]])},
    {y:2015,host:{ko:"러시아 · 카잔",en:"Kazan, Russia"},cc:"ru",problems:lst([
     ["P6","The Extinction in the Terrestrial Atmosphere","지구 대기의 소광","IAO_2015_P_EN.pdf",null],
-    ["P7α","Variable Star","변광성","IAO_2015_P_EN.pdf",null],
-    ["P7β","Spectral Observations","분광 관측","IAO_2015_P_EN.pdf",null],
+    ["P7α","Variable Star","변광성","IAO_2015_P_A_EN.pdf",null],
+    ["P7β","Spectral Observations","분광 관측","IAO_2015_P_B_EN.pdf",null],
     ["O8","The Moon (planetarium)","달 (플라네타륨)","IAO_2015_O_EN.pdf",null],
     ["O9","Motion of the Planets (planetarium)","행성의 운동 (플라네타륨)","IAO_2015_O_EN.pdf",null],
     ["O10","Outline (telescope, cloudy sky)","윤곽 (망원경 · 흐린 하늘)","IAO_2015_O_EN.pdf",null]])},
    {y:2014,host:{ko:"키르기스스탄 · 비슈케크 – 촐폰아타",en:"Bishkek – Cholpon-Ata, Kyrgyzstan"},cc:"kg",problems:lst([
     ["P7","Jupiter","목성","IAO_2014_P_EN.pdf",null],
-    ["P8α","Comet","혜성","IAO_2014_P_EN.pdf",null],
-    ["P8β","A New Variable Star","새 변광성","IAO_2014_P_EN.pdf",null],
+    ["P8α","Comet","혜성","IAO_2014_P_A_EN.pdf",null],
+    ["P8β","A New Variable Star","새 변광성","IAO_2014_P_B_EN.pdf",null],
     ["O9–O13","Colours, the Pole, the Equinoxes, M45, π Peg (naked eye and telescope)","별의 색 · 천구 북극 · 분점 · M45 · π Peg (맨눈과 망원경)","IAO_2014_O_EN.pdf",null]]).map(p=>p.id!=="O9–O13"?p:(delete p.state,Object.assign(p,{
       desc:{ko:"이식쿨 호숫가 촐폰아타의 맑은 하늘(2014년 10월 18일 밤으로 가정)에서 맨눈으로 다섯 별의 색을 가리고, α Cas와 천구 북극 사이를 손으로 재고, 춘분점과 추분점(땅 아래)을 가리킵니다. 이어 추적 장치 없는 돕소니언 망원경을 손으로 밀어 M45를 시험관에게 보이고, 문제지의 성도를 길잡이로 쌍성 π Peg를 찾아 두 별 사이 거리를 어림합니다. 망원경 시야는 티코-2 성표의 11.5등급 별까지 그립니다. 공식 해답이 없어 HaslaLab 해답(33.4°, 남남동 고도 45°의 춘분점 · 물고기자리와 처녀자리, OC, 9.5′)을 함께 실었습니다.",
             en:"Under the clear sky at Cholpon-Ata on Issyk-Kul (taken as the night of 18 October 2014), judge the colours of five stars by eye, measure α Cas to the celestial pole with your hand and point to the two equinoxes (one below the ground). Then push an undriven Dobsonian by hand to show M45 to the examiner, and find the double π Peg with the sheet's chart to estimate its separation. The telescope fields show Tycho-2 stars to V 11.5. No official solution was published, so HaslaLab's is included (33.4°; the vernal point SSE at 45° in Pisces, the autumnal in Virgo; OC; 9.5′)."},
       tags:["맨눈 관측","망원경","천구 좌표"],tagsEn:["Naked eye","Telescope","Celestial coordinates"]}),Object.assign(p.files,{sim:"sim/iao2014_O_web.html",src:{ko:"src/iao2014_O_sky_sim_KO.py",en:"src/iao2014_O_sky_sim_EN.py"}}),p))},
    {y:2013,host:{ko:"리투아니아 · 빌뉴스",en:"Vilnius, Lithuania"},cc:"lt",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2013_P_KO.pdf",null],
+    ["P7α","Parallax of a Near-Earth Asteroid","지구 근접 소행성의 시차","IAO_2013_P_KO.pdf",null],
+    ["P7β","Distance from a Nova","신성으로 잰 거리","IAO_2013_P_KO.pdf",null],
+    ["P8","Observing Jupiter and Its Moons (with group-specific parts)","목성과 위성 관측 (조별 소문항 있음)","IAO_2013_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2013_O_KO.pdf",null]])},
    {y:2012,host:{ko:"대한민국 · 광주",en:"Gwangju, South Korea"},cc:"kr",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2012_P_KO.pdf",null],
+    ["P7","Fireball","화구","IAO_2012_P_KO.pdf",null],
+    ["P8α","The Moon (Astronomical Almanac)","달 (천문역서)","IAO_2012_P_KO.pdf",null],
+    ["P8β","Star Clusters (Hyades and NGC 2682)","성단 (히아데스·NGC 2682)","IAO_2012_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2012_O_KO.pdf",null]])},
    {y:2011,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2011_P_KO.pdf",null],
+    ["P6α","Saturn's Rotation Period and the Great Storm","토성의 자전 주기와 거대 폭풍","IAO_2011_P_KO.pdf",null],
+    ["P6β","Planetary Nebula NGC 5643","행성상 성운 NGC 5643","IAO_2011_P_KO.pdf",null],
+    ["P7","Hot Jupiter","뜨거운 목성","IAO_2011_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2011_O_KO.pdf",null]])},
    {y:2010,host:{ko:"우크라이나 · 크림 수다크",en:"Sudak, Crimea, Ukraine"},cc:"ua",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2010_P_KO.pdf",null],
+    ["P6","Naked-Eye Observation of a Meteor Shower","유성우 육안 관측","IAO_2010_P_KO.pdf",null],
+    ["P7","WZ Sge-Type Cataclysmic Variable","WZ Sge형 격변 변광성","IAO_2010_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2010_O_KO.pdf",null]])},
    {y:2009,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2009_P_KO.pdf","IAO_2009_P_S.pdf"],
+    ["P6α","Motion of the Planets","행성의 운동","IAO_2009_P_KO.pdf","IAO_2009_P_S.pdf"],
+    ["P6β","Light Echo","빛 메아리","IAO_2009_P_KO.pdf","IAO_2009_P_S.pdf"],
+    ["P7","Saturn's Equinox","토성의 춘분일","IAO_2009_P_KO.pdf","IAO_2009_P_S.pdf"],
     ["O","Observational round","관측 라운드","IAO_2009_O_KO.pdf",null]])},
    {y:2008,host:{ko:"이탈리아 · 트리에스테",en:"Trieste, Italy"},cc:"it",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2008_P_KO.pdf",null],
+    ["P1","Exoplanet Transit (with extra senior parts)","외계행성 통과 (시니어 추가 문항 포함)","IAO_2008_P_KO.pdf",null],
+    ["P2α","Rømer's Speed of Light (Eclipses of Io)","뢰머의 빛의 속도 측정 (이오의 식)","IAO_2008_P_KO.pdf",null],
+    ["P2β","Rømer's Speed of Light (Eclipses of Io)","뢰머의 빛의 속도 측정 (이오의 식)","IAO_2008_P_KO.pdf",null],
+    ["P2","Speed of Light: Marking Opposition, Conjunction and Quadrature","빛의 속도: 충·합·구 표시와 계산","IAO_2008_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2008_O_KO.pdf",null]])},
    {y:2007,host:{ko:"우크라이나 · 크림 시메이즈",en:"Simeiz, Crimea, Ukraine"},cc:"ua",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2007_P_KO.pdf",null],
+    ["P6α","Mira Variable","미라형 변광성","IAO_2007_P_KO.pdf",null],
+    ["P7α","Cepheid Variable","세페이드 변광성","IAO_2007_P_KO.pdf",null],
+    ["P6β","Hubble Diagram and Type Ia Supernovae","허블 그래프와 Ia형 초신성","IAO_2007_P_KO.pdf",null],
+    ["P7β","Cepheids on the Sagittarius–Scutum Border","궁수자리·방패자리 경계의 세페이드 변광성","IAO_2007_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2007_O_KO.pdf",null]])},
    {y:2006,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2006_P_KO.pdf",null],
+    ["P6α","Rotation Curve of the Spiral Galaxy NGC 1325","나선은하 NGC 1325 의 회전 곡선","IAO_2006_P_KO.pdf",null],
+    ["P7α","The GMRT Antenna Array","GMRT 안테나 배열","IAO_2006_P_KO.pdf",null],
+    ["P6β","Photometry of Bright Stars Seen from Mumbai","뭄바이에서 본 밝은 별의 측광","IAO_2006_P_KO.pdf",null],
+    ["P7β","Radio Pulsar","전파 펄서","IAO_2006_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","IAO_2006_O_KO.pdf",null]])},
    {y:2005,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","IAO_2005_P_KO.pdf","IAO_2005_P_S.pdf"],
+    ["P7","Refraction","굴절","IAO_2005_P_KO.pdf","IAO_2005_P_S.pdf"],
+    ["P8α","Cosmic-Ray Observations (Wuchang and Xilinhot)","우주선 관측 (우창·시린하오터)","IAO_2005_P_KO.pdf","IAO_2005_P_S.pdf"],
+    ["P8β","Planetary Nebula IC 418","행성상 성운 IC 418","IAO_2005_P_KO.pdf","IAO_2005_P_S.pdf"],
     ["O","Observational round","관측 라운드","IAO_2005_O_KO.pdf",null]])}
   ]},
  apao:{
@@ -3357,10 +3392,15 @@ const DATA={
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2018,host:{ko:"중국 · 리장",en:"Lijiang, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2018_P_KO.pdf",null],
+    ["P6","Longitude and Latitude","경도와 위도","APAO_2018_P_KO.pdf",null],
+    ["P7α","Eclipsing Binary","식쌍성","APAO_2018_P_KO.pdf",null],
+    ["P7β","Black Hole","블랙홀","APAO_2018_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2018_O_KO.pdf",null]])},
    {y:2016,host:{ko:"대한민국 · 고흥",en:"Goheung, South Korea"},cc:"kr",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2016_P_KO.pdf",null],
+    ["P7","Hubble's Law (7.5 is senior only)","허블의 법칙 (7.5 는 시니어)","APAO_2016_P_KO.pdf",null],
+    ["P8α","Supergiant","초거성","APAO_2016_P_KO.pdf",null],
+    ["P8β","Planets","행성","APAO_2016_P_KO.pdf",null],
+    ["P9","A Planet of Proxima Centauri","프록시마 센타우리의 행성","APAO_2016_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2016_O_KO.pdf",null]])},
    {y:2015,host:{ko:"방글라데시 · 다카",en:"Dhaka, Bangladesh"},cc:"bd",problems:lst([
     ["P8","The Binary Star YY Gem","쌍성 쌍둥이자리 YY","APAO_2015_P_EN.pdf",null],
@@ -3381,37 +3421,49 @@ const DATA={
             en:"On the Baikal shore at Listvyanka under a closed cloud deck (night of 27 November 2014), picture the sky's coordinates and answer with your hand: point where Orion's Belt culminates, and sweep the diurnal path of a star through the zenith. No official solution was published, so HaslaLab's is included (due south at 37°; a 38.1° circle round the celestial pole) with a self-check of your path against it. Questions 11 (a photo of lights) and 12 (a telescope) need the place itself and are left out."},
       tags:["맨눈 관측","천구 좌표","일주 운동"],tagsEn:["Naked eye","Celestial coordinates","Diurnal motion"]}),Object.assign(p.files,{sim:"sim/apao2014_O_web.html",src:{ko:"src/apao2014_O_sky_sim_KO.py",en:"src/apao2014_O_sky_sim_EN.py"}}),p))},
    {y:2013,host:{ko:"인도네시아 · 토모혼",en:"Tomohon, Indonesia"},cc:"id",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2013_P_KO.pdf",null],
-    ["O","Observational round","관측 라운드","APAO_2013_O_KO.pdf",null]])},
+    ["P7α","Coronal Mass Ejection","코로나 질량 방출","APAO_2013_P_KO.pdf",null],
+    ["P7β","P Cygni","P Cygni","APAO_2013_P_KO.pdf",null],
+    ["P8","Galilean Moons (with extra senior parts)","갈릴레오 위성 (시니어 추가 문항 포함)","APAO_2013_P_KO.pdf",null],
+    ["O9","Solar Observation (page 2 is senior only)","태양 관측 (2쪽은 시니어 전용)","APAO_2013_O_KO.pdf",null],
+    ["O10","Naked-Eye Observation (10.2 is senior only)","맨눈 관측 (10.2 는 시니어)","APAO_2013_O_KO.pdf",null],
+    ["O11","Telescope Observation: Jupiter (11.2 is senior only)","망원경 관측: 목성 (11.2 는 시니어)","APAO_2013_O_KO.pdf",null]])},
    {y:2012,host:{ko:"방글라데시 · 콕스바자르",en:"Cox's Bazar, Bangladesh"},cc:"bd",problems:lst([
     ["P7","Noon","정오","APAO_2012_P_EN.pdf",null],
-    ["P8α","The Black Cloud","검은 구름","APAO_2012_P_EN.pdf",null],
-    ["P8β","Variable Stars","변광성","APAO_2012_P_EN.pdf",null],
+    ["P8α","The Black Cloud","검은 구름","APAO_2012_P_A_EN.pdf",null],
+    ["P8β","Variable Stars","변광성","APAO_2012_P_B_EN.pdf",null],
     ["O9–O12","Area, Pegasus, Cassiopeia, Alnath (naked eye)","넓이 · 페가수스 · 카시오페이아 · 엘나스 (맨눈 관측)","APAO_2012_O_EN.pdf",null]]).map(p=>p.id!=="O9–O12"?p:(delete p.state,Object.assign(p,{
       desc:{ko:"2012년 11월 29일 밤 콕스바자르 바닷가의 실제 하늘에서 맨눈과 손으로만 푸는 관측 라운드입니다. 보름 하루 뒤의 달빛 속에서 달 · 목성 · 알데바란 삼각형의 넓이를 손으로 재어 어림하고, 페가수스자리와 맞닿은 별자리를 고르고, 주어진 별과 견주어 α Cas의 등급을 어림한 뒤, 엘나스 · 카펠라 · 안드로메다 은하를 차례로 가리킵니다. 하늘 밝기는 달빛과 읍내 불빛으로 계산해 맨눈 한계 등급을 정합니다. 공식 해답이 없어 HaslaLab 해답(넓이 ≈ 19 °²)을 실었습니다.",
             en:"An observational round worked with the eyes and hands only, under the real sky over the beach at Cox's Bazar on the night of 29 November 2012. In the light of a Moon one day past full, measure the triangle of the Moon, Jupiter and Aldebaran with your hand and estimate its area, pick the constellations that border Pegasus, estimate the magnitude of α Cas against the given stars, then point at Alnath, Capella and the Andromeda Galaxy in turn. The sky brightness comes from the moonlight and the town, and sets the naked-eye limit. No official solution was published, so HaslaLab's is included (area ≈ 19 deg²)."},
       tags:["맨눈 관측","실제 하늘","달빛"],tagsEn:["Naked eye","Real sky","Moonlight"]}),Object.assign(p.files,{sim:"sim/apao2012_O_web.html",src:{ko:"src/apao2012_O_sky_sim_KO.py",en:"src/apao2012_O_sky_sim_EN.py"}}),p))},
    {y:2011,host:{ko:"카자흐스탄 · 악토베",en:"Aktobe, Kazakhstan"},cc:"kz",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2011_P_KO.pdf",null],
+    ["P7α","Mars","화성","APAO_2011_P_KO.pdf",null],
+    ["P7β","The Sun (Sunspots)","태양 (흑점)","APAO_2011_P_KO.pdf",null],
+    ["P8","Asteroid Vesta","소행성 베스타","APAO_2011_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2011_O_KO.pdf",null]])},
    {y:2010,host:{ko:"인도네시아 · 카루바가",en:"Karubaga, Indonesia"},cc:"id",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2010_P_KO.pdf",null],
+    ["P7","Eclipsing Binary δ Cap","식쌍성 δ Cap","APAO_2010_P_KO.pdf",null],
+    ["P8","Age of a Star Cluster","성단의 나이","APAO_2010_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2010_O_KO.pdf",null]])},
    {y:2009,host:{ko:"대한민국 · 담양",en:"Damyang, South Korea"},cc:"kr",problems:lst([
-    ["P7α","Cepheid","세페이드 변광성","APAO_2009_P_EN.pdf",null],
-    ["P8α","Venus","금성","APAO_2009_P_EN.pdf",null],
-    ["P7β","Quasar","퀘이사","APAO_2009_P_EN.pdf",null],
-    ["P8β","Open Cluster","산개성단","APAO_2009_P_EN.pdf",null],
+    ["P7α","Cepheid","세페이드 변광성","APAO_2009_P_A_EN.pdf",null],
+    ["P8α","Venus","금성","APAO_2009_P_A_EN.pdf",null],
+    ["P7β","Quasar","퀘이사","APAO_2009_P_B_EN.pdf",null],
+    ["P8β","Open Cluster","산개성단","APAO_2009_P_B_EN.pdf",null],
     ["O9","Jupiter and its Four Galilean Satellites","목성과 네 갈릴레이 위성","APAO_2009_O_EN.pdf",null],
     ["O10","β Lyrae (a binary system)","거문고자리 베타 (쌍성)","APAO_2009_O_EN.pdf",null]])},
    {y:2008,host:{ko:"키르기스스탄 · 비슈케크",en:"Bishkek, Kyrgyzstan"},cc:"kg",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2008_P_KO.pdf",null],
+    ["P7","Night Sky from a Zenith-Pointing Camera","천정 고정 카메라로 찍은 밤하늘","APAO_2008_P_KO.pdf",null],
+    ["P8α","A Comet Seen by SOHO","SOHO 로 본 혜성","APAO_2008_P_KO.pdf",null],
+    ["P8β","Motion of Jupiter's Clouds","목성 구름의 움직임","APAO_2008_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2008_O_KO.pdf",null]])},
    {y:2007,host:{ko:"중국 · 샤먼",en:"Xiamen, China"},cc:"cn",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2007_P_KO.pdf",null],
+    ["P7","Distances from Type Ia Supernovae","Ia형 초신성으로 잰 거리","APAO_2007_P_KO.pdf",null],
+    ["P8","Comet 17P/Holmes (8.3 differs for α and β)","혜성 17P/Holmes (8.3 은 α·β 따로)","APAO_2007_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2007_O_KO.pdf",null]])},
    {y:2006,host:{ko:"러시아 · 블라디보스토크",en:"Vladivostok, Russia"},cc:"ru",problems:lst([
-    ["P","Practical round","실기 라운드","APAO_2006_P_KO.pdf",null],
+    ["P7","Geostationary Satellite","지구 정지 궤도 위성","APAO_2006_P_KO.pdf",null],
+    ["P8α","Jupiter and the Galilean Moons","목성과 갈릴레오 위성","APAO_2006_P_KO.pdf",null],
+    ["P8β","Velocity Curve of a Spiral Galaxy","나선은하의 속도 곡선","APAO_2006_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2006_O_KO.pdf",null]])}
   ]},
  owao:{
@@ -3519,7 +3571,10 @@ const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
    (O observation, D data analysis, P practical, M sky map) */
 /* IAO · APAO 는 주니어(α)와 시니어(β) 조가 따로 푼다 — 고른 조는 페이지를 옮겨도 남는다 */
 let grpSel = "all";
-const grpOf = (c,p) => c&&c.groups ? (p.grp||"both") : null;
+const grpOf = (c,p) => c&&c.groups ? (p.grp||"ab") : null;
+const GRP_L = {a:"α", b:"β", c:"γ"};
+const grpTag = (d,g) => g.length===1 ? `<span class="grptag g${g}">${d.grp[g]}</span>`
+  : `<span class="grptag">${[...g].map(x=>GRP_L[x]).join(" · ")} ${d.grpShared}</span>`;
 function setGrp(g){
   grpSel=g;
   const box=document.querySelector(".probs"); if(box) box.dataset.show=g;
@@ -3851,6 +3906,9 @@ function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
   const yr = c && c.years.find(y=>String(y.y)===String(year));
   if(!yr) return viewComp(key);
+  /* 이 해에 있는 조만 고르개에 — 다른 해에서 고른 조가 없으면 전체를 보인다 */
+  const yrGroups = c.groups ? ["a","b","c"].filter(g=>yr.problems.some(p=>grpOf(c,p).includes(g))) : [];
+  const grpShow = yrGroups.includes(grpSel) ? grpSel : "all";
   return `
   <div class="shell">
     <div class="crumb">
@@ -3872,10 +3930,10 @@ function viewYear(key,year){
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
          target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
     </div>
-    ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all","jr","sr"].map(g=>
-      `<button type="button" data-g="${g}" aria-pressed="${grpSel===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
-       <i>${yr.problems.filter(p=>g==="all"||[g,"both"].includes(grpOf(c,p))).length}</i></button>`).join("")}</div>`:""}
-    <div class="probs"${c.groups?` data-show="${grpSel}"`:""}>
+    ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
+      `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
+       <i>${yr.problems.filter(p=>g==="all"||grpOf(c,p).includes(g)).length}</i></button>`).join("")}</div>`:""}
+    <div class="probs"${c.groups?` data-show="${grpShow}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
         /* 요청한 언어가 없으면 있는 것을 주되, 어느 언어인지 밝힌다 */
@@ -3911,8 +3969,8 @@ function viewYear(key,year){
         const grp = grpOf(c,p);
         return `<article class="prob ${mode==="wip"?"soon":""}"${grp?` data-grp="${grp}"`:""}>
           <div class="top">
-            <span class="code">${grp?p.id.replace(/[αβ]+$/,""):p.id}</span>
-            <span class="tr">${grp?`<span class="grptag ${grp}">${d.grp[grp]}</span>`:""}<span class="status ${mode}"><i></i>${chip}</span>
+            <span class="code">${grp?p.id.replace(/[αβγ]+$/,""):p.id}</span>
+            <span class="tr">${grp?grpTag(d,grp):""}<span class="status ${mode}"><i></i>${chip}</span>
             ${p.theory?`<span class="thytag">${d.theoryTag}</span>`:""}</span>
           </div>
           <h3>${esc(heading)}</h3>
