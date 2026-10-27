@@ -21,7 +21,11 @@ Design rule (non-negotiable):
     (Titan's phase fitted to the official positions for both nights).
     Extinction, a sky glow towards the town and, on a hazy night, the
     low haze that hid Saturn - then tasks 1 and 2 become the official
-    alternatives.
+    alternatives.  The eye sees only the stars above its limit, the
+    faintest of them only now and then, and does not zoom.  Around the
+    field stands the land as it is there: the town and its church spire
+    to the north, the Keszthely Hills, Lake Balaton with Badacsony on the
+    far shore, the marsh to the south and the other teams' telescopes.
 
     The telescope is the one of the round: a 150/750 Newtonian on a
     polar-aligned equatorial mount without a drive, a 6x30 finder that is
@@ -276,7 +280,7 @@ def extinct(alt):
 #  dark zenith (21.6 mag/arcsec^2).  The eye's limiting magnitude follows from it (Schaefer 1990), stars
 #  lose light along the air mass, and every star is a point whose brightness - not its size - tells its
 #  magnitude; only the brightest carry the eye's glare and show their colour.
-SITE = {"lp_zen": 0.75, "domes": ((4, 2.6, 13), (32, 0.9, 10), (302, 0.8, 9), (140, 0.18, 6))}
+SITE = {"lp_zen": 0.85, "domes": ((4, 2.6, 13), (32, 0.9, 10), (302, 0.8, 9), (140, 0.18, 6))}
 SUN = [-30.0, 0.0]
 
 
@@ -308,8 +312,11 @@ def adapt():                          # the eye adapts to the dark over the firs
     return min(1.0, 0.6 + SKY["t"] / 300)
 
 
+OBSERVER = 0.3                        # Schaefer's limit is an experienced observer's; a student sees about 0.3 mag less
+
+
 def lim_eye(alt, az=180.0):
-    return nelm_of(sqm_of(sky_lum(alt, az))) - 1.0 * (1 - adapt())
+    return nelm_of(sqm_of(sky_lum(alt, az))) - 1.0 * (1 - adapt()) - OBSERVER
 
 
 def twinkle(i, X, amp):               # stars twinkle, more near the horizon
@@ -441,7 +448,7 @@ COMPS = _comps()
 
 
 # ======================================================================
-#   THE SKY GLOW, THE MILKY WAY AND THE SKYLINE
+#   THE SKY GLOW, THE MILKY WAY AND THE LAND AROUND THE SITE
 # ======================================================================
 def milky(v):
     g = mv(MGAL, v)
@@ -455,26 +462,131 @@ def milky(v):
     return I
 
 
-def _skyline():
-    a, s = [], 0.0
-    for i in range(720):
-        az = i / 2
-        north, east = max(0, math.cos(az * DEG)), max(0, math.sin(az * DEG)) * 0.4
-        s = 0.85 * s + 0.15 * (RNG.random() - 0.5) * 6
-        tree = max(0, 1.5 + 6.5 * north + 2.5 * east + s + 1.6 * math.sin(az * 0.35) * north)
-        lake = 0.35 + 0.15 * math.sin(az * 0.9)            # the far shore of Balaton and its hills
-        if 125 < az < 235:
-            a.append(lake + ((140 - az) / 15 * tree if az < 140 else 0) + ((az - 220) / 15 * tree if az > 220 else 0))
-        else:
-            a.append(tree)
-    return a
+# ---- the observing field: the students' lawn at the southern edge of Keszthely --------------------
+#  What stands against the sky, as seen from there: the town and its trees to the north with the spire
+#  of the Our Lady church, the Keszthely Hills behind them to the north-west, Lake Balaton from the
+#  east to the south-east with the table mountain of Badacsony, the cones of Gulacs and Toti and the
+#  twin hills of Szigliget on the far north shore, the low Somogy shore across the water, the reeds
+#  and the flat marsh of Kis-Balaton to the south (the "panorama towards the south" the organisers
+#  chose the site for), the low Zala hills to the west, and the other teams' telescopes on the lawn.
+#  Profiles are altitudes in degrees against azimuth on a 0.1 deg grid.
+LRNG = random.Random(20190804)
 
 
-SKYLINE = _skyline()
+def azd(a, b):
+    return ((a - b + 540) % 360) - 180
+
+
+def sstep(e0, e1, x):
+    t = max(0.0, min(1.0, (x - e0) / (e1 - e0)))
+    return t * t * (3 - 2 * t)
+
+
+def arc(az, a0, a1, e):
+    """1 inside the arc from a0 to a1 (clockwise), easing out over e degrees"""
+    w, x = norm360(a1 - a0), norm360(az - a0)
+    return sstep(0, e, x) * sstep(0, e, w - x) if x <= w else 0.0
+
+
+HARM = [(2 + int(LRNG.random() * 180), LRNG.random() * 6.283) for _ in range(40)]
+
+
+def harm(az, k0, n, amp):
+    return amp * sum(math.sin(HARM[(k0 + i) % 40][0] * az * DEG + HARM[(k0 + i) % 40][1]) / (1 + i * 0.6) for i in range(n))
+
+
+def _land():
+    N = 3600
+    far, mid, bld, lake, tree = [0.0] * N, [0.0] * N, [0.0] * N, [0.0] * N, [0.0] * N
+
+    def crowns(a0, a1, h_lo, h_hi, r_lo, r_hi, gap):
+        """trees as crowns: round tops of different widths and heights, now and then a poplar"""
+        a = a0
+        while a < a1:
+            pop = LRNG.random() < 0.12
+            r = 0.25 + 0.2 * LRNG.random() if pop else r_lo + (r_hi - r_lo) * LRNG.random()
+            h = h_lo + (h_hi - h_lo) * LRNG.random() * (1.5 if pop else 1)
+            sd = LRNG.random() * 99
+            for q in range(-math.ceil(r * 10), math.ceil(r * 10) + 1):
+                x = q / 10
+                u = x / r
+                if abs(u) > 1:
+                    continue
+                i = round((a + x) * 10) % N
+                top = h - r * (2.6 if pop else 0.9) * (1 - math.sqrt(1 - u * u)) + 0.05 * r * math.sin(x * 47 + sd) * math.sin(x * 23 + sd)
+                tree[i] = max(tree[i], top)
+            a += r * (0.7 + 0.9 * LRNG.random()) + (0.6 + 2.5 * LRNG.random() if LRNG.random() < gap else 0)
+
+    crowns(288, 424, 3.0, 6.2, 0.6, 1.9, 0.08)        # the town's gardens and avenues
+    crowns(226, 300, 2.2, 4.8, 0.5, 1.6, 0.15)        # the trees round the campus
+    crowns(424, 446, 0.5, 1.4, 0.4, 1.1, 0.5)         # low bushes toward the bay: the far shore shows over them
+    crowns(160, 236, 0.15, 0.8, 0.3, 1.2, 0.55)       # willows and reeds on the edge of the marsh
+    roofs, a = [], 286.0                               # the roofs of the town, in blocks a few degrees wide
+    while a < 426:
+        w = 1.2 + 3.2 * LRNG.random()
+        roofs.append((a, a + w, 1.3 + 3.0 * LRNG.random() * LRNG.random() + (1.4 if LRNG.random() < 0.25 else 0)))
+        a += w + (1.5 * LRNG.random() if LRNG.random() < 0.35 else 0)
+    for i in range(N):
+        az = i / 10
+        f = 0.12 + abs(harm(az, 0, 6, 0.03))
+        f = max(f, arc(az, 268, 48, 18) * (1.25 + harm(az, 3, 8, 0.32)) + 0.9 * math.exp(-(azd(az, 322) / 9) ** 2) + 0.55 * math.exp(-(azd(az, 349) / 6) ** 2))
+        f = max(f, 1.02 * sstep(3.0, 1.9, abs(azd(az, 75.5))) + 0.04 * math.sin(az * 9))                   # Badacsony: a flat-topped basalt table
+        f = max(f, 0.74 * max(0, 1 - abs(azd(az, 80.6)) / 1.0) ** 0.8, 0.6 * max(0, 1 - abs(azd(az, 83.4)) / 1.3) ** 0.9)   # Gulacs, Toti-hegy
+        f = max(f, 0.55 * math.exp(-(azd(az, 66.2) / 1.1) ** 2) + 0.45 * math.exp(-(azd(az, 64.4) / 0.8) ** 2))  # Szigliget
+        f = max(f, arc(az, 160, 245, 10) * (0.42 + harm(az, 11, 7, 0.1) + 0.12 * abs(harm(az, 19, 5, 1))))      # tree lines on the marsh
+        f = max(f, arc(az, 240, 292, 12) * (0.75 + harm(az, 23, 6, 0.22)))                                       # the Zala hills
+        far[i] = f
+        town = arc(az, 292, 62, 14)
+        b, x = 0.0, (az + 360 if az < 200 else az)
+        for a0, a1, h in roofs:
+            if a0 <= x < a1:
+                b = h * town
+        sp = abs(azd(az, 6.4))                                                                                  # the church: nave, tower, spire
+        b = max(b, 3.6 if sp < 2.2 else 0, 7.6 + 4.2 * (1 - sp / 0.42) if sp < 0.42 else 0)
+        bld[i], mid[i], lake[i] = b, max(tree[i], b), arc(az, 84, 168, 5)
+    return far, mid, bld, lake
+
+
+LAND_FAR, LAND_MID, LAND_BLD, LAND_LAKE = _land()
+
+
+def land_at(A, az):
+    return A[int(norm360(az) * 10) % 3600]
 
 
 def skyline(az):
-    return SKYLINE[int(norm360(az) * 2) % 720]
+    return max(land_at(LAND_FAR, az), land_at(LAND_MID, az))
+
+
+def _lights():
+    """windows and street lamps of the town, the villages across the water, the foot of Badacsony"""
+    L = []
+    for _ in range(140):
+        az = norm360(292 + 130 * LRNG.random())
+        b, t = land_at(LAND_BLD, az), land_at(LAND_MID, az)
+        if b > 0.8 and b >= t - 0.2:
+            alt = 0.35 + (b - 0.7) * LRNG.random()
+            if alt < b - 0.25:
+                L.append((az, alt, (255, 196, 120) if LRNG.random() < 0.8 else (210, 225, 255), 0.25 + 0.4 * LRNG.random(), "win"))
+    for _ in range(26):
+        L.append((norm360(296 + 120 * LRNG.random()), 0.2 + 0.9 * LRNG.random(), (255, 170, 80), 0.5 + 0.4 * LRNG.random(), "lamp"))
+    for _ in range(60):
+        az = 92 + 72 * LRNG.random()
+        L.append((az, land_at(LAND_FAR, az) * (0.2 + 0.6 * LRNG.random()), (255, 190, 110) if LRNG.random() < 0.7 else (235, 240, 255), 0.25 + 0.5 * LRNG.random() * LRNG.random(), "shore"))
+    for _ in range(18):
+        L.append((69 + 14 * LRNG.random(), 0.04 + 0.12 * LRNG.random(), (255, 200, 130), 0.2 + 0.3 * LRNG.random(), "shore"))
+    return L
+
+
+LIGHTS = _lights()
+FIELD_SCOPES = [(az, d, 20 + 30 * LRNG.random(), 180 + 60 * (LRNG.random() - 0.5)) for az, d in ((118, 7.5), (146, 9.5), (236, 8), (262, 12.5), (196, 16), (98, 15), (305, 11))]
+
+
+def sky_rgb(L):
+    nat, lp, tw = L
+    tot = nat + lp + tw
+    v = 5 + 11 * tot ** 0.55
+    return v * (0.5 * nat + 0.9 * lp + 0.45 * tw) / tot, v * (0.64 * nat + 0.78 * lp + 0.66 * tw) / tot, v * (1.0 * nat + 0.64 * lp + 1.0 * tw) / tot
 
 
 def bv_rgb(bv):
@@ -887,8 +999,8 @@ class App:
         self.view = v
         for k, b in self.tabb.items():
             b.configure(bg=ACC if k == v else "#2b2f36", fg="#1c2027" if k == v else INK)
-        cap = {"sky": T("관측장에서 본 하늘 — 끌기: 둘러보기, 휠: 확대 · 클러치를 풀고 하늘을 클릭하면 눈대중으로 경통을 그쪽으로 돌립니다",
-                        "the sky from the observing field — drag to look around, wheel to zoom · with the clutches loose, click the sky to swing the tube there by eye"),
+        cap = {"sky": T("관측장에서 맨눈으로 본 하늘 — 끌기: 둘러보기 · 클러치를 풀고 하늘을 클릭하면 눈대중으로 경통을 그쪽으로 돌립니다",
+                        "the sky from the observing field, as the naked eye sees it — drag to look around · with the clutches loose, click the sky to swing the tube there by eye"),
                "finder": T("6×30 파인더 (상이 뒤집힘) — 끌기 또는 화살표: 미동 나사 · '파인더 나사 조정'을 켜면 끌기로 십자선이 움직입니다",
                            "the 6×30 finder (image inverted) — drag or arrow keys: slow motions · with 'adjust finder screws' on, drag moves the crosshair"),
                "eye": T("주경 접안렌즈 (상이 뒤집힘, 남쪽이 위) — 끌기 또는 화살표: 적경 / 적위 미동, 휠: 초점", "the main eyepiece (image inverted, south up) — drag or arrow keys: RA / Dec slow motions, wheel: focus")}
@@ -958,10 +1070,7 @@ class App:
         self.say(T("경통을 눈대중으로 그쪽으로 돌렸습니다 — 파인더로 확인하세요", "you swing the tube there by eye — check in the finder"))
 
     def on_wheel(self, s, shift):
-        if self.view == "sky":
-            self.look["fov"] = max(15, min(120, self.look["fov"] * (1 / 1.1 if s > 0 else 1.1)))
-            self.bg_key = None
-        elif self.view == "eye":
+        if self.view == "eye":                       # the naked eye does not zoom
             EP["focus"] += s * (0.02 if shift else 0.08)
 
     def on_key(self, e):
@@ -1012,7 +1121,7 @@ class App:
                 q = sqm_of((nat, lp, tw))
                 mwv = max(0, min(1, (q - 19.8) / 1.6))
                 mw = milky(mvT(HM, x)) * min(1, alt / 20) * 10 ** (-0.4 * SKY["k"] * (airmass(max(1, alt)) - 1)) * mwv if alt > 0 else 0
-                nat += 1.7 * mw
+                nat += 1.4 * mw
                 tot = nat + lp + tw
                 v = 5 + 11 * tot ** 0.55                 # a compressive response, like the eye's
                 r = v * (0.5 * nat + 0.9 * lp + 0.45 * tw) / tot
@@ -1032,7 +1141,7 @@ class App:
             g = min(10, 1.8 + 1.1 * (d - 3.2)) * core
             c.create_oval(x - g, y - g, x + g, y + g, fill=mix(bg, rgb, min(0.22, 0.04 + 0.035 * (d - 3.2))), outline="")
         r = (1.0 if d < 2 else 1.25) * core              # Tk draws a 2-3 px dot: the smallest point it can make round
-        c.create_oval(x - r, y - r, x + r, y + r, fill=mix(bg, rgb, min(1, 0.24 + 0.16 * d)), outline="")
+        c.create_oval(x - r, y - r, x + r, y + r, fill=mix(bg, rgb, min(1, 0.12 + 0.16 * d)), outline="")
 
     def draw_sky(self):
         c, J = self.cv, jd_now()
@@ -1055,12 +1164,17 @@ class App:
             if alt < skyline(az):
                 continue
             d = lim_at(alt, az) - (m + extinct(alt))
-            if d < -0.6:
+            if d < -0.35:
                 continue
             p = self.proj(B, hvec(alt, az))
             if not p or not (-5 < p[0] < self.W + 5 and -5 < p[1] < self.H + 5):
                 continue
-            self.point_star(p[0], p[1], d + twinkle(i, airmass(alt), 0.06), bv, bg)
+            d += twinkle(i, airmass(alt), 0.06)
+            if d < 0.25:                             # at the threshold a star is only caught now and then, with averted vision
+                if math.sin(SKY["t"] * 0.9 + i * 2.71) * math.sin(SKY["t"] * 0.37 + i * 1.13) < 0.3:
+                    continue
+                d = 0.25
+            self.point_star(p[0], p[1], d, bv, bg)
         for pl, m0, bv in (("jupiter", -2.4, 0.85), ("saturn", 0.2, 1.05), ("mars", 1.8, 1.5), ("venus", -3.9, 0.8)):
             alt, az = altaz(mv(HM, unit(planet_geo(pl, J))))
             alt += refr(alt)
@@ -1093,14 +1207,7 @@ class App:
                     pts.append(seg)
                 for s in pts:
                     c.create_line(*s, fill="#3d5679")
-        ground = []
-        for i in range(241):
-            az = self.look["az"] - 180 + i * 1.5
-            p = self.proj(B, hvec(skyline(az), az))
-            if p:
-                ground += p
-        if len(ground) >= 4:
-            c.create_polygon(*ground, self.W + 50, self.H + 50, -50, self.H + 50, fill="#06080b", outline="")
+        self.draw_land(B)
         for lbl, az in (("N", 0), ("NE", 45), ("E", 90), ("SE", 135), ("S", 180), ("SW", 225), ("W", 270), ("NW", 315)):
             p = self.proj(B, hvec(-3, az))
             if p and 0 < p[0] < self.W and p[1] < self.H:
@@ -1113,6 +1220,70 @@ class App:
         tp = self.proj(B, hvec(ta, tz))
         if tp:
             c.create_oval(tp[0] - 9, tp[1] - 9, tp[0] + 9, tp[1] + 9, outline="#a85a46", dash=(3, 4))
+
+    def draw_land(self, B):
+        """the land, the lake and the lawn with the other teams' telescopes: silhouettes lit by the sky"""
+        c, a0 = self.cv, self.look["az"]
+        h0 = sky_rgb(sky_lum(1.5, a0))
+        hx = lambda k: "#%02x%02x%02x" % tuple(int(max(0, min(255, v * k))) for v in h0)
+        azs = [a0 + i * 0.25 for i in range(-400, 401)]
+
+        def line(top):
+            pts = []
+            for az in azs:
+                p = self.proj(B, hvec(top(az), az))
+                if p:
+                    pts += p
+            return pts
+
+        def poly(top, col):
+            pts = line(top)
+            if len(pts) >= 4:
+                c.create_polygon(*pts, self.W + 50, self.H + 50, -50, self.H + 50, fill=col, outline="")
+
+        poly(lambda az: land_at(LAND_FAR, az), hx(0.86 if SKY["haze"] else 0.6))            # far hills, paled by the air
+        lk = [az for az in azs if land_at(LAND_LAKE, az) > 0.5]                             # the lake mirrors the sky
+        if lk:
+            top = [q for az in lk for q in (self.proj(B, hvec(0, az)) or ())]
+            bot = [q for az in reversed(lk) for q in (self.proj(B, hvec(-2.4, az)) or ())]
+            if len(top) + len(bot) >= 6:
+                c.create_polygon(*top, *bot, fill=hx(0.72), outline="")
+        poly(lambda az: land_at(LAND_MID, az) if land_at(LAND_MID, az) > 0.05 else -8, hx(0.16))   # trees and roofs
+        poly(lambda az: -0.6 if land_at(LAND_MID, az) > 0.05 else (-2.4 if land_at(LAND_LAKE, az) > 0.5 else 0), hx(0.07))   # the lawn
+        eye = 1.6                                                                            # the other teams' telescopes
+        for az, dist, tilt, aim in FIELD_SCOPES:
+            se, sn = math.sin(az * DEG) * dist, math.cos(az * DEG) * dist
+            P = lambda de, dn, h: self.proj(B, unit((se + de, sn + dn, h - eye)))
+            wpx = lambda m: max(1, m / dist * B[3])
+            apex = P(0, 0, 1.05)
+            if not apex:
+                continue
+            for q in range(3):
+                a = q * 2.094 + az
+                f = P(0.42 * math.cos(a), 0.42 * math.sin(a), 0)
+                if f:
+                    c.create_line(*apex, *f, fill="#040507", width=wpx(0.035))
+            ux, uy, uz = math.sin(aim * DEG) * math.cos(tilt * DEG), math.cos(aim * DEG) * math.cos(tilt * DEG), math.sin(tilt * DEG)
+            top, bot = P(0.38 * ux, 0.38 * uy, 1.3 + 0.38 * uz), P(-0.37 * ux, -0.37 * uy, 1.3 - 0.37 * uz)
+            if top and bot:
+                c.create_line(*bot, *top, fill="#040507", width=wpx(0.19), capstyle="round")
+            torch = P(0.25, -0.1, 0.95)
+            if torch:
+                c.create_oval(torch[0] - 2, torch[1] - 2, torch[0] + 2, torch[1] + 2, fill="#7a1810", outline="")
+        fade = 0.45 if SKY["haze"] else 1.0                                                  # lights, and their reflections on the lake
+        for az, alt, col, b, kind in LIGHTS:
+            p = self.proj(B, hvec(alt, az))
+            if not p or not (-10 < p[0] < self.W + 10 and -10 < p[1] < self.H + 10):
+                continue
+            bgc = tuple(int(v * 0.16) for v in h0)
+            a = b * (1 if kind == "win" else fade)
+            rgb = tuple(v / 255 for v in col)
+            r = 1.6 if kind == "lamp" else 1.1
+            if kind == "shore" and land_at(LAND_LAKE, az) > 0.5:
+                q = self.proj(B, hvec(-0.9 - 0.5 * b, az))
+                if q:
+                    c.create_line(p[0], p[1] + 2, q[0], q[1], fill=mix(tuple(int(v * 0.72) for v in h0), rgb, 0.25 * a))
+            c.create_oval(p[0] - r, p[1] - r, p[0] + r, p[1] + r, fill=mix(bgc, rgb, min(1, 0.4 + a)), outline="")
 
     # ---- through the finder and the eyepiece ------------------------------------
     def draw_scope(self, kind):
@@ -1142,7 +1313,7 @@ class App:
         if not blocked:
             ext = extinct(palt)
             # what the instrument reaches: the eye's limit here + the aperture's gain + a darker field
-            lim = nelm_of(q) - (1 - adapt()) + 5 * math.log10(D / 7) + 2.5 * math.log10(T_) + (1.25 * math.log10(7 / xp) if xp < 7 else 0)
+            lim = nelm_of(q) - (1 - adapt()) - OBSERVER + 5 * math.log10(D / 7) + 2.5 * math.log10(T_) + (1.25 * math.log10(7 / xp) if xp < 7 else 0)
             if SKY["haze"] and palt < 30:
                 lim -= 6 * min(1, (30 - palt) / 8)
             blur = 0 if isF else abs(EP["focus"] - focus_zero()) * M / 30 * 6 * ez
