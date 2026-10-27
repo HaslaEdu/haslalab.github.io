@@ -392,87 +392,218 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   html{scroll-behavior:auto}}
 
-/* ═══════ community ═══════ */
-.cmbar{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;margin-bottom:18px}
-.cmtabs{display:flex;gap:6px;flex-wrap:wrap}
-.cmtabs a{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:6px 12px;border-radius:7px;white-space:nowrap;
-  border:1px solid var(--grid-bold);background:#fff;color:var(--graphite);transition:.14s}
-.cmtabs a:hover{color:var(--ink);border-color:var(--rail)}
-.cmtabs a.on{background:var(--rail);border-color:var(--rail);color:#fff}
-.cmuser{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--graphite)}
-.cmuser b{color:var(--ink);font-weight:600}
-.cmuser .btn{padding:7px 13px;font-size:13px}
-.cmlink{background:none;border:0;padding:0;font:inherit;color:var(--graphite);cursor:pointer;
-  border-bottom:1px solid var(--grid-bold)}
-.cmlink:hover{color:var(--laser);border-color:var(--laser)}
-.cmsearch{display:flex;gap:8px;margin:0 0 14px}
-.cmsearch input{flex:1;max-width:340px}
-.cmbox{background:#fff;border:1px solid var(--grid-bold);border-radius:10px}
-.cmlist{list-style:none;margin:0;padding:0}
-.cmlist li{border-top:1px solid var(--grid-fine)}
-.cmlist li:first-child{border-top:0}
-.cmlist a{display:grid;grid-template-columns:96px 1fr auto;gap:4px 14px;align-items:baseline;padding:13px 16px;transition:.12s}
-.cmlist a:hover{background:#F6F9FB}
-.cmlist .bd{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--brass);white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis}
-.cmlist .tt{font-weight:550;font-size:14.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cmlist .tt em{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--laser);margin-left:6px}
-.cmlist .mt{font-family:var(--mono);font-size:11px;color:var(--graphite);white-space:nowrap}
-@media(max-width:640px){
-  .cmlist a{grid-template-columns:1fr}
-  .cmtabs{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px;scrollbar-width:none}
+/* ═══════ community ═══════
+   a board people already know how to read: a channel rail on the left (Discord), a numbered list with
+   tags, comment counts, notices and best posts (DC Inside, Arca), a card view with up/down votes and
+   threaded replies (Reddit) */
+.cm{--cm-acc:#3b5bdb;--cm-acc2:#2f4ac0;--cm-up:#ff4500;--cm-down:#6a7fdb;--cm-rail:#1f2630;--cm-rail2:#2a323e;
+    --cm-line:#e3e8ee;--cm-soft:#f6f8fb}
+.cm .cmtop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:20px 0 16px}
+.cm .cmtop h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.03em}
+.cm .cmtop p{margin:4px 0 0;color:var(--graphite);font-size:14px}
+.cmgrid{display:grid;grid-template-columns:220px minmax(0,1fr) 270px;gap:18px;align-items:start}
+@media(max-width:1100px){.cmgrid{grid-template-columns:200px minmax(0,1fr)}.cmright{grid-column:1/-1}}
+@media(max-width:760px){.cmgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* the channel rail */
+.cmrail{background:var(--cm-rail);color:#c9d1db;border-radius:12px;padding:12px 8px;position:sticky;top:76px}
+.cmrail .srv{display:flex;align-items:center;gap:9px;padding:4px 8px 12px;border-bottom:1px solid #313a47;margin-bottom:8px}
+.cmrail .srv img{width:28px;height:28px;border-radius:8px;background:#fff}
+.cmrail .srv b{color:#fff;font-size:14.5px}
+.cmrail .sec{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8793a3;padding:10px 8px 4px}
+.cmrail a.ch{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:14px;color:#aab4c0;transition:.12s}
+.cmrail a.ch:hover{background:var(--cm-rail2);color:#fff}
+.cmrail a.ch.on{background:#3a4453;color:#fff}
+.cmrail a.ch .hash{color:#7d8896;font-weight:600;width:14px;text-align:center}
+.cmrail a.ch .cnt{margin-left:auto;font-size:11px;font-family:var(--mono);color:#8793a3}
+.cmrail a.ch .new{margin-left:auto;background:#f23f43;color:#fff;font-size:10.5px;font-weight:700;border-radius:9px;padding:0 6px;line-height:17px}
+.cmrail .me{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 8px 2px;border-top:1px solid #313a47}
+.cmrail .me .nm{font-size:13px;color:#fff;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmrail .me .sub{font-size:11px;color:#8793a3}
+.cmrail .me .ops{margin-left:auto;display:flex;gap:4px}
+.cmrail .me .ops a,.cmrail .me .ops button{background:none;border:0;color:#aab4c0;cursor:pointer;font-size:12px;padding:4px 6px;border-radius:5px;font-family:inherit}
+.cmrail .me .ops a:hover,.cmrail .me .ops button:hover{background:var(--cm-rail2);color:#fff}
+.cmrail .auth{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #313a47}
+.cmrail .auth a{text-align:center;padding:8px;border-radius:7px;font-size:13px;font-weight:600}
+.cmrail .auth .pri{background:var(--cm-acc);color:#fff}
+.cmrail .auth .sec2{background:var(--cm-rail2);color:#dfe5ec}
+@media(max-width:760px){
+  .cmrail{position:static;display:flex;gap:4px;overflow-x:auto;padding:8px;scrollbar-width:none;border-radius:10px}
+  .cmrail .srv,.cmrail .sec,.cmrail .me,.cmrail .auth{display:none}
+  .cmrail a.ch{white-space:nowrap;flex:none}
 }
-.cmempty{padding:42px 16px;text-align:center;color:var(--graphite);font-size:14px}
-.cmpager{display:flex;gap:6px;justify-content:center;margin:18px 0 0;flex-wrap:wrap}
-.cmpager a,.cmpager span{font-family:var(--mono);font-size:12px;min-width:32px;text-align:center;
-  padding:6px 8px;border-radius:6px;border:1px solid var(--grid-bold);background:#fff}
-.cmpager span{background:var(--rail);border-color:var(--rail);color:#fff}
-.cmnote{padding:16px 18px;background:#fff;border:1px solid var(--grid-bold);border-left:3px solid var(--brass);
-  border-radius:8px;font-size:14px;color:var(--graphite)}
-.cmnote b{color:var(--ink)}
-.cmerr{color:var(--laser);font-size:13px;min-height:1.4em;margin:8px 0 0}
-.cmpost{padding:22px 24px}
-.cmpost h2{font-size:1.45rem;letter-spacing:-.025em;word-break:break-word}
-.cmmeta{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--graphite)}
-.cmmeta .bd{color:var(--brass)}
-.cmtext{margin-top:18px;padding-top:18px;border-top:1px dashed var(--grid-bold);font-size:15px;line-height:1.75;
-  white-space:pre-wrap;word-break:break-word}
-.cmtext a{color:#1D5FB8;border-bottom:1px solid rgba(29,95,184,.3)}
-.cmacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:20px}
-.cmacts .btn{padding:7px 13px;font-size:13px}
-.btn.like.on{background:var(--laser);border-color:var(--laser);color:#fff}
+.cmav{width:30px;height:30px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:13px;line-height:1}
+.cmav.s{width:22px;height:22px;font-size:10.5px}
+.cmav.l{width:56px;height:56px;font-size:22px}
+
+/* the board */
+.cmpanel{background:#fff;border:1px solid var(--cm-line);border-radius:12px;overflow:hidden}
+.cmbh{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:2px solid var(--cm-acc)}
+.cmbh h2{font-size:1.2rem;letter-spacing:-.02em}
+.cmbh h2 span{color:var(--graphite);font-weight:500}
+.cmbh p{margin:2px 0 0;font-size:12.5px;color:var(--graphite)}
+.cmbh .sp{flex:1}
+.cmbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--cm-line);
+  background:#fff;color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.12s;white-space:nowrap}
+.cmbtn:hover{border-color:#c5ced9;background:var(--cm-soft)}
+.cmbtn.pri{background:var(--cm-acc);border-color:var(--cm-acc);color:#fff}
+.cmbtn.pri:hover{background:var(--cm-acc2)}
+.cmbtn.sm{padding:5px 10px;font-size:12px}
+.cmbtn[disabled]{opacity:.5;pointer-events:none}
+.cmbar2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--cm-line);background:var(--cm-soft)}
+.cmseg{display:inline-flex;border:1px solid var(--cm-line);border-radius:8px;overflow:hidden;background:#fff}
+.cmseg a,.cmseg button{padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--graphite);border:0;background:none;cursor:pointer;font-family:inherit}
+.cmseg a+a,.cmseg button+button{border-left:1px solid var(--cm-line)}
+.cmseg .on{background:var(--cm-acc);color:#fff}
+.cmtags{display:flex;gap:5px;flex-wrap:wrap}
+.cmtags a{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--cm-line);background:#fff;color:var(--graphite)}
+.cmtags a.on{border-color:var(--cm-acc);color:var(--cm-acc);font-weight:700}
+.cmbar2 .sp{flex:1}
+.cm .cmsel{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid var(--cm-line);border-radius:7px;background:#fff;color:var(--ink);width:auto}
+
+/* the numbered list */
+.cmtbl{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
+.cmtbl th{font-size:12px;font-weight:600;color:var(--graphite);padding:9px 6px;border-bottom:1px solid var(--cm-line);background:#fff}
+.cmtbl td{padding:9px 6px;border-bottom:1px solid #eef1f5;text-align:center;color:var(--graphite);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmtbl td.t{text-align:left;color:var(--ink);font-size:14px}
+.cmtbl tr:hover td{background:#f8fafc}
+.cmtbl tr.nt td{background:#fffbea}
+.cmtbl tr.nt td.t a{font-weight:700}
+.cmtbl td.t a{display:inline;color:inherit}
+.cmtbl td.t a:visited{color:#6b5b95}
+.cmtbl .cc{color:#e03131;font-weight:700;font-size:12px;margin-left:4px}
+.cm .nb{display:inline-block;background:#fa5252;color:#fff;font-size:9.5px;font-weight:800;border-radius:3px;padding:0 3px;margin-left:5px;vertical-align:1px}
+.cmtbl .bs{color:#f59f00;margin-right:3px}
+.cmtag{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;background:#eef2ff;color:#3b5bdb;white-space:nowrap}
+.cmtag.q{background:#e6fcf5;color:#0b8a6b}.cmtag.info{background:#fff4e6;color:#d9480f}.cmtag.review{background:#f3f0ff;color:#6741d9}
+.cmtag.bug{background:#fff5f5;color:#c92a2a}.cmtag.notice{background:#3b5bdb;color:#fff}.cmtag.gen{background:#f1f3f5;color:#495057}
+.cmtbl .c-no{width:58px}.cmtbl .c-tag{width:62px}.cmtbl .c-au{width:110px}.cmtbl .c-dt{width:64px}.cmtbl .c-v{width:48px}.cmtbl .c-r{width:48px}
+.cmtbl .mm{display:none}
+@media(max-width:760px){
+  .cmtbl .c-no,.cmtbl .c-tag,.cmtbl .c-au,.cmtbl .c-dt,.cmtbl .c-v,.cmtbl .c-r,.cmtbl td:not(.t),.cmtbl thead{display:none}
+  .cmtbl td.t{white-space:normal}
+  .cmtbl .mm{display:block;margin-top:3px;font-size:11.5px;color:var(--graphite)}
+}
+.cm .cmm{display:none}
+@media(max-width:760px){.cm .cmm{display:inline-flex}}
+.cmempty{padding:52px 16px;text-align:center;color:var(--graphite);font-size:14px}
+
+/* the card view */
+.cmcards{display:flex;flex-direction:column}
+.cmcard{display:flex;gap:0;border-bottom:1px solid var(--cm-line)}
+.cmcard:hover{background:#fbfcfe}
+.cmvote{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;width:52px;flex:none;background:var(--cm-soft)}
+.cmvote button{width:30px;height:26px;border:0;background:none;border-radius:6px;cursor:pointer;color:#8a96a6;font-size:15px;line-height:1}
+.cmvote button:hover{background:#e9edf3}
+.cmvote button.up.on{color:var(--cm-up)}.cmvote button.dn.on{color:var(--cm-down)}
+.cmvote b{font-size:13px;font-family:var(--mono)}
+.cmcard .bd{padding:10px 14px;min-width:0;flex:1}
+.cmcard .mt{font-size:12px;color:var(--graphite);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cmcard .mt b{color:var(--ink)}
+.cmcard h3{font-size:16px;margin:5px 0 4px;letter-spacing:-.01em;word-break:break-word}
+.cmcard h3 a:hover{color:var(--cm-acc)}
+.cmcard .sn{font-size:13.5px;color:#4b5563;line-height:1.55;max-height:3.1em;overflow:hidden;word-break:break-word}
+.cmcard .ft{display:flex;gap:14px;margin-top:8px;font-size:12px;color:var(--graphite)}
+
+/* bottom: search + pages */
+.cmfoot{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px}
+.cmpg{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.cmpg a,.cmpg span{min-width:30px;padding:5px 8px;text-align:center;font-size:13px;border-radius:6px;color:var(--ink)}
+.cmpg a:hover{background:var(--cm-soft)}
+.cmpg span{background:var(--cm-acc);color:#fff;font-weight:700}
+.cmsrch{display:flex;gap:6px;width:100%;max-width:520px}
+.cmsrch input{flex:1;min-width:0}
+
+/* side cards */
+.cmright{display:flex;flex-direction:column;gap:14px}
+.cmside{background:#fff;border:1px solid var(--cm-line);border-radius:12px;overflow:hidden}
+.cmside h3{font-size:13px;padding:11px 14px;margin:0;background:var(--cm-soft);border-bottom:1px solid var(--cm-line)}
+.cmside .in{padding:12px 14px;font-size:13px;color:#4b5563}
+.cmside ol,.cmside ul{margin:0;padding-left:18px}
+.cmside li{margin:4px 0}
+.cmside .stat{display:flex;gap:18px;margin-top:8px}
+.cmside .stat b{display:block;font-size:17px;color:var(--ink)}
+.cmside .stat span{font-size:11px}
+.cmside .hot a{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed var(--cm-line);font-size:13px;color:var(--ink)}
+.cmside .hot a:last-child{border-bottom:0}
+.cmside .hot em{font-style:normal;color:var(--cm-up);font-weight:700;font-family:var(--mono);min-width:22px}
+
+/* a post */
+.cmpost{padding:18px 20px 6px}
+.cmcrumb{font-size:12.5px;color:var(--graphite);display:flex;gap:6px;align-items:center}
+.cmcrumb a:hover{color:var(--cm-acc)}
+.cmpost h2{font-size:1.4rem;letter-spacing:-.025em;margin:8px 0 10px;word-break:break-word;line-height:1.35}
+.cmpm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--graphite);padding-bottom:12px;border-bottom:1px solid var(--cm-line)}
+.cmpm b{color:var(--ink)}
+.cmpm .sp{flex:1}
+.cmtext{padding:20px 2px;font-size:15px;line-height:1.8;white-space:pre-wrap;word-break:break-word;min-height:80px}
+.cmtext a{color:var(--cm-acc);border-bottom:1px solid rgba(59,91,219,.3)}
+.cmrec{display:flex;justify-content:center;gap:10px;padding:10px 0 22px}
+.cmrec button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:92px;padding:10px 16px;border-radius:12px;cursor:pointer;
+  font:inherit;background:#fff;border:2px solid var(--cm-line);transition:.12s}
+.cmrec button b{font-size:20px;font-family:var(--mono)}
+.cmrec button span{font-size:12px;font-weight:700}
+.cmrec .up{color:var(--cm-up)}.cmrec .dn{color:var(--cm-down)}
+.cmrec .up:hover,.cmrec .up.on{border-color:var(--cm-up);background:#fff4ef}
+.cmrec .dn:hover,.cmrec .dn.on{border-color:var(--cm-down);background:#f2f4ff}
+.cmacts{display:flex;gap:6px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--cm-line)}
 .cmacts .sp{flex:1}
-.cmcmts{margin-top:18px}
-.cmcmts h3{font-size:15px;margin:0 0 10px}
-.cmcmt{padding:13px 16px;border-top:1px solid var(--grid-fine)}
-.cmcmt:first-child{border-top:0}
-.cmcmt .who{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:13px}
-.cmcmt .who b{font-weight:600}
-.cmcmt .who span{font-family:var(--mono);font-size:11px;color:var(--graphite)}
-.cmcmt .who .ops{margin-left:auto;display:flex;gap:10px;font-size:12px}
-.cmcmt .tx{margin-top:5px;font-size:14px;white-space:pre-wrap;word-break:break-word}
-.cmform{display:flex;flex-direction:column;gap:12px}
-.cmform.narrow{max-width:420px}
-.cmform label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:550}
-.cmform label small{font-weight:400;color:var(--graphite);font-size:12px}
-.cmform .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* comments */
+.cmcmts{border-top:8px solid var(--cm-soft);padding:14px 20px 18px}
+.cmcmts .hd{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.cmcmts .hd h3{font-size:15px}
+.cmcmts .hd h3 em{font-style:normal;color:#e03131}
+.cmc{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #eef1f5}
+.cmc.rp{margin-left:28px;padding-left:12px;border-left:2px solid #dbe3ee}
+.cmc .cb{min-width:0;flex:1}
+.cmc .who{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}
+.cmc .who b{font-weight:700}
+.cmc .who .op{font-size:10.5px;font-weight:700;color:var(--cm-acc);border:1px solid var(--cm-acc);border-radius:4px;padding:0 4px}
+.cmc .who time{font-size:11.5px;color:var(--graphite)}
+.cmc .tx{margin-top:4px;font-size:14px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.cmc .ops{display:flex;gap:10px;margin-top:5px}
+.cmc .ops button{background:none;border:0;padding:0;font:inherit;font-size:12px;color:var(--graphite);cursor:pointer}
+.cmc .ops button:hover{color:var(--cm-acc)}
+.cmcf{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--cm-line);border-radius:10px;background:var(--cm-soft)}
+.cmcf .row{display:flex;align-items:center;gap:8px}
+.cmcf .row .sp{flex:1}
+.cmerr{color:#e03131;font-size:12.5px;min-height:1.2em}
+
+/* forms */
 .cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
-  font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--grid-bold);
-  border-radius:7px;padding:9px 11px;width:100%;transition:border-color .14s}
-.cm textarea{resize:vertical;min-height:110px;line-height:1.6}
-.cm textarea.big{min-height:300px}
-.cm input:focus,.cm select:focus,.cm textarea:focus{outline:none;border-color:var(--rail);
-  box-shadow:0 0 0 3px rgba(46,57,69,.1)}
-.cm .chk{flex-direction:row;align-items:flex-start;gap:8px;font-weight:400;color:var(--graphite)}
-.cm .chk input{margin-top:4px}
-.cmrules{margin:0;padding:12px 14px 12px 30px;background:#F6F9FB;border:1px solid var(--grid-fine);
-  border-radius:8px;font-size:13px;color:var(--graphite)}
-.cmrules li{margin:2px 0}
-.cmsplit{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:26px;align-items:start}
-@media(max-width:860px){.cmsplit{grid-template-columns:1fr}}
-.cmside{padding:16px 18px;font-size:13px;color:var(--graphite)}
-.cmside h3{font-size:13.5px;color:var(--ink);margin:0 0 8px}
-.cmside ul{margin:0;padding-left:18px}
+  font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid #d5dde7;border-radius:8px;padding:9px 11px;width:100%;transition:.12s}
+.cm textarea{resize:vertical;min-height:84px;line-height:1.6}
+.cm textarea.big{min-height:340px}
+.cm input:focus,.cm select:focus,.cm textarea:focus{outline:none;border-color:var(--cm-acc);box-shadow:0 0 0 3px rgba(59,91,219,.15)}
+.cmform{display:flex;flex-direction:column;gap:12px;padding:18px 20px}
+.cmform .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmform label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#4b5563;letter-spacing:.02em}
+.cmform label small{font-weight:400;color:var(--graphite);letter-spacing:0}
+.cmform .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cmform .row .sp{flex:1}
+.cmform .cnt{font-size:11.5px;color:var(--graphite);font-family:var(--mono)}
+.cmprev{border:1px dashed #d5dde7;border-radius:8px;padding:14px;min-height:340px;font-size:15px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+
+/* sign in / up: a centred card */
+.cmauth{display:flex;justify-content:center;padding:24px 0 40px}
+.cmauth .card{width:100%;max-width:440px;background:#fff;border:1px solid var(--cm-line);border-radius:16px;box-shadow:0 18px 40px -26px rgba(22,33,46,.45);padding:28px}
+.cmauth h2{font-size:1.45rem;text-align:center}
+.cmauth .lead{text-align:center;color:var(--graphite);font-size:14px;margin:6px 0 18px}
+.cmauth form{display:flex;flex-direction:column;gap:13px}
+.cmauth label{display:flex;flex-direction:column;gap:6px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#4b5563}
+.cmauth label small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--graphite)}
+.cmauth .cmbtn.pri{width:100%;padding:11px;font-size:14.5px}
+.cmauth .alt{text-align:center;font-size:13px;color:var(--graphite);margin-top:12px}
+.cmauth .alt a{color:var(--cm-acc);font-weight:600}
+.cmauth .rules{margin:0;padding:10px 12px 10px 28px;background:var(--cm-soft);border-radius:8px;font-size:12.5px;color:#4b5563}
+.cmauth .chk{flex-direction:row;align-items:flex-start;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px}
+.cmauth .chk input{margin-top:3px;width:auto}
+.cmnote{padding:16px 18px;background:#fff;border:1px solid var(--cm-line);border-left:4px solid var(--brass);border-radius:10px;font-size:14px;color:var(--graphite)}
+.cmnote b{color:var(--ink)}
+.cmtoast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1f2630;color:#fff;padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:90;
+  box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -6710,45 +6841,55 @@ function startHero(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   COMMUNITY — talks to the Cloudflare Worker in /community
-   (Workers + D1). Until COMMUNITY_API is filled in, the page says
-   the server is not connected instead of failing.
+   COMMUNITY — talks to the Cloudflare Worker in /community (Workers + D1).
+   Laid out the way Korean and international boards are read: a channel rail
+   (Discord), a numbered list with 말머리, [comment counts], notices on top and
+   개념글 (DC Inside, Arca), a card view with up/down votes and threaded
+   replies (Reddit).
    ══════════════════════════════════════════════════════════════ */
 const COMMUNITY_API = "https://haslalab-community.mgsnew88.workers.dev";   // Cloudflare Worker in /community
 const CM_BOARDS = ["free","qna","sim","study"];
+const CM_TAGS = ["gen","q","info","review","bug","notice"];
 const CMT = {
   ko:{
-    eb:"커뮤니티", h:"커뮤니티",
-    sub:"실험 문제와 시뮬레이터, 대회 준비에 대해 묻고 답하는 곳입니다.",
-    all:"전체", boards:{free:"자유게시판", qna:"질문 · 답변", sim:"시뮬레이터 제보", study:"스터디 · 자료"},
-    boardDesc:{free:"무엇이든 이야기하세요.", qna:"실험 문제, 측정, 오차 분석에 대한 질문.",
-               sim:"시뮬레이터의 오류나 실제 장비와 다른 점을 알려 주세요.", study:"스터디 모집, 공부 자료 공유."},
-    login:"로그인", signup:"회원가입", logout:"로그아웃", account:"내 계정", write:"글쓰기",
-    search:"검색", searchPh:"제목 · 내용 검색", loading:"불러오는 중…", empty:"아직 글이 없습니다.",
-    noResult:"검색 결과가 없습니다.",
-    off:"<b>커뮤니티 서버가 아직 연결되지 않았습니다.</b> 서버를 연결하면 이곳에서 글을 쓰고 댓글을 달 수 있습니다.",
-    views:"조회", likes:"좋아요", comments:"댓글", edited:"수정됨", gone:"탈퇴한 사용자",
-    like:"좋아요", edit:"수정", del:"삭제", report:"신고", toList:"목록",
-    cmtPh:"댓글을 입력하세요", cmtSend:"댓글 달기", cmtLogin:"로그인하면 댓글을 달 수 있습니다.",
-    save:"저장", cancel:"취소", post:"올리기", board:"게시판", title:"제목", body:"내용",
-    newPost:"새 글", editPost:"글 수정",
+    h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
+    secBoards:"게시판", secMore:"모아보기", all:"전체글", best:"개념글", hot:"실시간 인기",
+    boards:{free:"자유게시판", qna:"질문 · 답변", sim:"시뮬레이터 제보", study:"스터디 · 자료"},
+    boardDesc:{all:"모든 게시판의 글을 한곳에서 봅니다.", best:"추천을 받은 글만 모았습니다.", hot:"최근에 반응이 많은 글입니다.",
+               free:"무엇이든 이야기하세요.", qna:"실험 문제, 측정, 오차 분석에 대한 질문과 답변.",
+               sim:"시뮬레이터의 오류나 실제 장비와 다른 점을 알려 주세요.", study:"스터디 모집, 공부 자료와 후기."},
+    tags:{gen:"일반", q:"질문", info:"정보", review:"후기", bug:"버그", notice:"공지"}, tagAll:"전체",
+    sorts:{new:"최신순", hot:"인기순", top:"추천순", cmt:"댓글순"}, vList:"목록", vCard:"카드",
+    cols:{no:"번호", tag:"말머리", title:"제목", au:"글쓴이", dt:"작성일", v:"조회", r:"추천"},
+    login:"로그인", signup:"회원가입", logout:"로그아웃", account:"내 정보", write:"글쓰기",
+    search:"검색", fAll:"제목+내용", fTitle:"제목", fAuthor:"글쓴이", searchPh:"검색어", loading:"불러오는 중…",
+    empty:"아직 글이 없습니다. 첫 글을 써 보세요!", noResult:"검색 결과가 없습니다.",
+    off:"<b>커뮤니티 서버에 연결하지 못했습니다.</b> 잠시 뒤에 다시 와 주세요.",
+    views:"조회", up:"추천", down:"비추", comments:"댓글", edited:"수정됨", gone:"탈퇴한 사용자", op:"글쓴이",
+    edit:"수정", del:"삭제", report:"신고", toList:"목록", share:"링크 복사", copied:"링크를 복사했습니다.",
+    reply:"답글", cmtPh:"댓글을 남겨 보세요. 서로 존중하는 말로 써 주세요.", cmtSend:"등록", cmtLogin:"로그인하면 댓글을 쓸 수 있습니다.",
+    oldest:"등록순", newest:"최신순", save:"저장", cancel:"취소", post:"등록", board:"게시판", tag:"말머리", title:"제목", body:"내용",
+    preview:"미리보기", editTab:"쓰기", newPost:"글쓰기", editPost:"글 수정", titlePh:"제목을 입력하세요",
+    bodyPh:"내용을 입력하세요.\n링크는 그대로 붙여 넣으면 됩니다.",
     username:"아이디", usernameHelp:"영문 · 숫자 · _ 3–20자. 로그인에만 쓰입니다.",
     nickname:"닉네임", nicknameHelp:"2–16자. 글과 댓글에 표시됩니다.",
     password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
-    agree:"아래 커뮤니티 규칙을 읽었고 지키겠습니다.",
-    rulesH:"커뮤니티 규칙",
+    welcome:"다시 오신 걸 환영해요!", welcomeSub:"HaslaLab 커뮤니티에 로그인하세요.",
+    create:"계정 만들기", createSub:"가입하고 질문하고, 답하고, 추천하세요.",
+    agree:"커뮤니티 규칙을 읽었고 지키겠습니다.", rulesH:"커뮤니티 규칙",
     rules:["서로 존중해 주세요. 욕설, 비하, 괴롭힘은 삭제됩니다.",
            "대회 기간 중 공개되지 않은 문제나 답을 올리지 마세요.",
            "광고, 도배, 개인정보(전화번호, 주소 등) 게시는 금지입니다.",
            "실명이나 학교를 밝힐 필요는 없습니다."],
-    haveAcc:"이미 계정이 있나요?", noAcc:"계정이 없나요?",
+    haveAcc:"이미 계정이 있나요?", noAcc:"계정이 필요한가요?",
     joined:"가입일", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
     pwDone:"비밀번호를 바꿨습니다. 다른 기기의 로그인은 모두 풀렸습니다.",
     delAcc:"계정 삭제", delAccHelp:"계정을 지우면 다시 로그인할 수 없습니다. 쓴 글과 댓글은 남고 이름은 ‘탈퇴한 사용자’로 바뀝니다.",
-    confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.",
+    confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.", myPosts:"내가 쓴 글",
     confirmDel:"삭제할까요?", reportAsk:"신고 사유를 적어 주세요.", reported:"신고를 접수했습니다.",
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
-    justNow:"방금", minAgo:"분 전", hrAgo:"시간 전",
+    justNow:"방금", minAgo:"분 전", hrAgo:"시간 전", dayAgo:"일 전",
+    stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
     err:{bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
          bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
@@ -6762,37 +6903,44 @@ const CMT = {
          server_error:"서버 오류가 났습니다."}
   },
   en:{
-    eb:"Community", h:"Community",
-    sub:"Ask and answer about the problems, the simulators and getting ready for the olympiads.",
-    all:"All", boards:{free:"General", qna:"Q&A", sim:"Simulator reports", study:"Study & resources"},
-    boardDesc:{free:"Talk about anything.", qna:"Questions on problems, measurement and error analysis.",
-               sim:"Bugs, or places where a simulator differs from the real apparatus.", study:"Study groups and shared material."},
-    login:"Log in", signup:"Sign up", logout:"Log out", account:"Account", write:"New post",
-    search:"Search", searchPh:"Search titles and text", loading:"Loading…", empty:"No posts yet.",
-    noResult:"Nothing matched.",
-    off:"<b>The community server is not connected yet.</b> Once it is, you can post and comment here.",
-    views:"views", likes:"likes", comments:"comments", edited:"edited", gone:"Deleted user",
-    like:"Like", edit:"Edit", del:"Delete", report:"Report", toList:"Back to list",
-    cmtPh:"Write a comment", cmtSend:"Comment", cmtLogin:"Log in to comment.",
-    save:"Save", cancel:"Cancel", post:"Post", board:"Board", title:"Title", body:"Text",
-    newPost:"New post", editPost:"Edit post",
+    h:"HaslaLab Community", sub:"Problems, simulators, getting ready for the olympiads — ask, answer, share",
+    secBoards:"Boards", secMore:"Browse", all:"All posts", best:"Best", hot:"Trending",
+    boards:{free:"General", qna:"Q&A", sim:"Simulator reports", study:"Study & resources"},
+    boardDesc:{all:"Posts from every board in one place.", best:"Only posts the community voted up.", hot:"What people are reacting to right now.",
+               free:"Talk about anything.", qna:"Questions and answers on problems, measurement and error analysis.",
+               sim:"Bugs, or places where a simulator differs from the real apparatus.", study:"Study groups, material and write-ups."},
+    tags:{gen:"General", q:"Question", info:"Info", review:"Review", bug:"Bug", notice:"Notice"}, tagAll:"All",
+    sorts:{new:"New", hot:"Hot", top:"Top", cmt:"Most comments"}, vList:"List", vCard:"Cards",
+    cols:{no:"No.", tag:"Tag", title:"Title", au:"Author", dt:"Date", v:"Views", r:"Votes"},
+    login:"Log in", signup:"Sign up", logout:"Log out", account:"Profile", write:"New post",
+    search:"Search", fAll:"Title + text", fTitle:"Title", fAuthor:"Author", searchPh:"Search", loading:"Loading…",
+    empty:"No posts yet. Be the first!", noResult:"Nothing matched.",
+    off:"<b>Couldn't reach the community server.</b> Please come back in a little while.",
+    views:"views", up:"Upvote", down:"Downvote", comments:"comments", edited:"edited", gone:"Deleted user", op:"OP",
+    edit:"Edit", del:"Delete", report:"Report", toList:"Back to list", share:"Copy link", copied:"Link copied.",
+    reply:"Reply", cmtPh:"Add a comment. Keep it kind.", cmtSend:"Comment", cmtLogin:"Log in to comment.",
+    oldest:"Oldest", newest:"Newest", save:"Save", cancel:"Cancel", post:"Post", board:"Board", tag:"Tag", title:"Title", body:"Text",
+    preview:"Preview", editTab:"Write", newPost:"New post", editPost:"Edit post", titlePh:"An interesting title",
+    bodyPh:"Text.\nPaste links as they are.",
     username:"Username", usernameHelp:"3–20 letters, digits or _. Used only to log in.",
     nickname:"Display name", nicknameHelp:"2–16 characters. Shown on posts and comments.",
     password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
-    agree:"I have read the community rules below and will follow them.",
-    rulesH:"Community rules",
+    welcome:"Welcome back!", welcomeSub:"Log in to the HaslaLab community.",
+    create:"Create an account", createSub:"Join to ask, answer and vote.",
+    agree:"I have read the community rules and will follow them.", rulesH:"Community rules",
     rules:["Be respectful. Abuse, slurs and harassment are removed.",
            "Do not post problems or answers that are still embargoed during a competition.",
            "No advertising, flooding, or personal details (phone numbers, addresses…).",
            "You don't need to give your real name or school."],
-    haveAcc:"Already have an account?", noAcc:"No account yet?",
+    haveAcc:"Already have an account?", noAcc:"Need an account?",
     joined:"Joined", changePw:"Change password", oldPw:"Current password", newPw:"New password",
     pwDone:"Password changed. Every other device has been signed out.",
     delAcc:"Delete account", delAccHelp:"A deleted account can't sign in again. Your posts and comments stay, under the name ‘Deleted user’.",
-    confirmDelAcc:"Delete your account? This can't be undone.",
+    confirmDelAcc:"Delete your account? This can't be undone.", myPosts:"My posts",
     confirmDel:"Delete this?", reportAsk:"Why are you reporting this?", reported:"Thanks — the report was sent.",
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
-    justNow:"just now", minAgo:" min ago", hrAgo:" h ago",
+    justNow:"just now", minAgo:"m ago", hrAgo:"h ago", dayAgo:"d ago",
+    stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
     err:{bad_username:"Usernames are 3–20 letters, digits or _.",
          bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
          bad_password:"Passwords need at least 8 characters.",
@@ -6807,7 +6955,8 @@ const CMT = {
   }
 };
 
-const cm = { me:null, meChecked:false, seq:0, draft:{} };
+const cm = { me:null, meChecked:false, seq:0, draft:{}, v:0, boards:null, view:"list" };
+try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }catch(e){}
 
 function cmBase(){
   let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
@@ -6834,21 +6983,34 @@ async function cmApi(method, path, body){
   return j;
 }
 const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
+function cmToast(msg){ const d=document.createElement("div"); d.className="cmtoast"; d.textContent=msg; document.body.append(d); setTimeout(()=>d.remove(),2200); }
 
-function cmTime(s){
+const p2 = n => String(n).padStart(2,"0");
+function cmTime(s){                            /* "3분 전", "2시간 전", then the date */
   const T=CMT[lang], d=Math.floor(Date.now()/1000)-s;
   if(d<60) return T.justNow;
   if(d<3600) return Math.floor(d/60)+T.minAgo;
   if(d<86400) return Math.floor(d/3600)+T.hrAgo;
-  const D=new Date(s*1000);
-  return `${D.getFullYear()}.${String(D.getMonth()+1).padStart(2,"0")}.${String(D.getDate()).padStart(2,"0")}`;
+  if(d<86400*7) return Math.floor(d/86400)+T.dayAgo;
+  const D=new Date(s*1000); return `${D.getFullYear()}.${p2(D.getMonth()+1)}.${p2(D.getDate())}`;
 }
+function cmShort(s){                           /* the list's date column: time today, month.day before */
+  const D=new Date(s*1000), N=new Date();
+  return D.toDateString()===N.toDateString() ? `${p2(D.getHours())}:${p2(D.getMinutes())}` : `${p2(D.getMonth()+1)}.${p2(D.getDate())}`;
+}
+function cmFull(s){ const D=new Date(s*1000); return `${D.getFullYear()}.${p2(D.getMonth()+1)}.${p2(D.getDate())} ${p2(D.getHours())}:${p2(D.getMinutes())}`; }
 /* escape first, then turn bare URLs into links — the text itself is never HTML */
 function cmFmt(s){
   return esc(s).replace(/https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]'’]/g,
     u=>`<a href="${u}" target="_blank" rel="noopener nofollow ugc">${u}</a>`);
 }
 const cmName = o => o.gone ? CMT[lang].gone : esc(o.nickname);
+function cmAv(name, cls){                      /* a letter avatar, its colour fixed by the name */
+  const n=String(name||"?"); let h=0; for(const ch of n) h=(h*31+ch.codePointAt(0))>>>0;
+  const hue=h%360; return `<span class="cmav ${cls||""}" style="background:hsl(${hue} 55% 46%)">${esc([...n][0]||"?").toUpperCase()}</span>`;
+}
+const cmTag = t => t ? `<span class="cmtag ${esc(t)}">${CMT[lang].tags[t]||esc(t)}</span>` : "";
+const cmScore = p => (p.n_likes||0)-(p.n_dislikes||0);
 
 function cmHash(){
   const raw=location.hash.replace(/^#\/?/,"");
@@ -6865,41 +7027,58 @@ function cmBack(){
   let b=""; try{ b=sessionStorage.getItem("hlCmBack")||""; sessionStorage.removeItem("hlCmBack"); }catch(e){}
   location.hash = (b && !/\/(login|signup)\b/.test(b)) ? b : "#/community";
 }
+/* list URLs: #/community/<all|best|hot|board>/<page>?tag=&sort=&q=&field= */
+function cmListHref(o){
+  const qs=new URLSearchParams();
+  for(const k of ["tag","sort","q","field"]) if(o[k]) qs.set(k,o[k]);
+  const s=qs.toString(); return `#/community/${o.where||"all"}/${o.page||1}${s?"?"+s:""}`;
+}
 
 function viewCommunity(){
   const T=CMT[lang];
   return `
   <div class="shell cm">
-    <div class="phead">
-      <p class="eyebrow">${T.eb}</p>
-      <h1>${T.h}</h1>
-      <div class="sub">${T.sub}</div>
+    <div class="cmtop"><div><h1>${T.h}</h1><p>${T.sub}</p></div></div>
+    <div class="cmgrid">
+      <aside class="cmrail" id="cmRail"></aside>
+      <div id="cmRoot"><div class="cmpanel"><p class="cmempty">${T.loading}</p></div></div>
+      <aside class="cmright" id="cmRight"></aside>
     </div>
-    <div id="cmRoot"><p class="cmempty">${T.loading}</p></div>
   </div>
   ${adFitBanner("primary")}`;
 }
 
-function cmBar(active){
-  const T=CMT[lang];
-  const tabs=[["all",T.all],...CM_BOARDS.map(b=>[b,T.boards[b]])]
-    .map(([k,n])=>`<a href="#/community/${k}" class="${active===k?"on":""}">${n}</a>`).join("");
-  const user = cm.me
-    ? `<span><b>${esc(cm.me.nickname)}</b></span>
-       <a class="cmlink" href="#/community/account">${T.account}</a>
-       <button class="cmlink" type="button" data-cm="logout">${T.logout}</button>
-       <a class="btn" href="#/community/write${CM_BOARDS.includes(active)?"/"+active:""}">${T.write}</a>`
-    : `<button class="cmlink" type="button" data-cm="login">${T.login}</button>
-       <a class="btn ghost" href="#/community/signup">${T.signup}</a>`;
-  return `<div class="cmbar"><nav class="cmtabs" aria-label="${T.board}">${tabs}</nav><div class="cmuser">${user}</div></div>`;
+function cmRailHtml(active){
+  const T=CMT[lang], B=cm.boards||{};
+  const logo=(document.querySelector(".mark img")||{}).src||"og.png";
+  const ch=(k,label,icon,extra)=>`<a class="ch ${active===k?"on":""}" href="#/community/${k}"><span class="hash">${icon}</span>${label}${extra||""}</a>`;
+  const cnt=k=>{ const b=B[k]; if(!b) return ""; return b.today>0 ? `<span class="new">${b.today}</span>` : `<span class="cnt">${b.n}</span>`; };
+  const me = cm.me
+    ? `<div class="me">${cmAv(cm.me.nickname,"")}<div style="min-width:0"><div class="nm">${esc(cm.me.nickname)}</div><div class="sub">@${esc(cm.me.username)}</div></div>
+         <div class="ops"><a href="#/community/account" title="${T.account}">⚙</a><button type="button" data-cm="logout" title="${T.logout}">⎋</button></div></div>`
+    : `<div class="auth"><a class="pri" href="#/community/login">${T.login}</a><a class="sec2" href="#/community/signup">${T.signup}</a></div>`;
+  return `<div class="srv"><img src="${logo}" alt=""><b>HaslaLab</b></div>
+    <div class="sec">${T.secMore}</div>
+    ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
+    <div class="sec">${T.secBoards}</div>
+    ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
+    ${me}`;
 }
-function cmSide(){
-  const T=CMT[lang];
-  return `<aside class="cmbox cmside">
-    <h3>${T.rulesH}</h3><ul>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ul>
-    <h3 style="margin-top:14px">${T.board}</h3>
-    <ul>${CM_BOARDS.map(b=>`<li><b>${T.boards[b]}</b> — ${T.boardDesc[b]}</li>`).join("")}</ul>
-  </aside>`;
+async function cmRight(where){
+  const el=document.getElementById("cmRight"); if(!el) return;
+  const T=CMT[lang], B=cm.boards||{}, isB=CM_BOARDS.includes(where);
+  const tot=isB ? (B[where]||{n:0,today:0}) : Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});
+  el.innerHTML=`
+    <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
+      <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
+    <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
+    <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+  try{
+    const j=await cmApi("GET","/posts?sort=hot&page=1"+(isB?"&board="+where:""));
+    const h=document.getElementById("cmHot"); if(!h) return;
+    const top=j.posts.slice(0,6);
+    h.innerHTML=top.length ? top.map(p=>`<a href="#/community/post/${p.id}"><em>${cmScore(p)}</em><span>${esc(p.title)}</span></a>`).join("") : `<span>${T.empty}</span>`;
+  }catch(e){ const h=document.getElementById("cmHot"); if(h) h.textContent=""; }
 }
 
 async function cmMount(){
@@ -6908,70 +7087,119 @@ async function cmMount(){
   const T=CMT[lang], my=++cm.seq;
   const alive=()=>my===cm.seq && document.getElementById("cmRoot")===root;
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
-
-  if(!cm.meChecked && cmTok()){
-    try{ cm.me=(await cmApi("GET","/me")).user; }catch(e){}
-    cm.meChecked=true;
-    if(!alive()) return;
-  }
   const {parts,q}=cmHash();
   const [a,b]=parts;
+  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  /* who is signed in, the server's version and the board counts — once, then from memory */
+  try{
+    const jobs=[];
+    if(!cm.meChecked && cmTok()) jobs.push(cmApi("GET","/me").then(r=>{cm.me=r.user;}).catch(()=>{}));
+    if(!cm.v) jobs.push(cmApi("GET","/health").then(r=>{cm.v=r.v||1;}).catch(()=>{cm.v=1;}));
+    if(!cm.boards) jobs.push(cmApi("GET","/boards").then(r=>{cm.boards={}; for(const x of r.boards) cm.boards[x.board]={n:x.n,today:x.today||0};}).catch(()=>{cm.boards={};}));
+    await Promise.all(jobs); cm.meChecked=true;
+  }catch(e){}
+  if(!alive()) return;
+  const rail=document.getElementById("cmRail"); if(rail) rail.innerHTML=cmRailHtml(where||a);
   try{
     if(a==="post" && b)                 await cmPost(root,+b,alive);
     else if(a==="write")                cmWrite(root,null,CM_BOARDS.includes(b)?b:"free");
     else if(a==="edit" && b)            await cmEdit(root,+b,alive);
     else if(a==="login")                cmLogin(root);
     else if(a==="signup")               cmSignup(root);
-    else if(a==="account")              cmAccount(root);
-    else                                await cmList(root,CM_BOARDS.includes(a)?a:"all",Math.max(1,parseInt(b)||1),q.get("q")||"",alive);
+    else if(a==="account")              await cmAccount(root,alive);
+    else                                await cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
   }catch(e){
-    if(alive()) root.innerHTML=`${cmBar("")}<div class="cmnote">${esc(cmErr(e))}</div>`;
+    if(alive()) root.innerHTML=`<div class="cmnote">${esc(cmErr(e))}</div>`;
   }
-  if(alive()) cmWire(root);
+  if(!alive()) return;
+  cmWire(document.querySelector(".cm"));
+  const right=document.getElementById("cmRight");
+  if(right){ if(["login","signup"].includes(a)) right.innerHTML=""; else cmRight(where||"all"); }
 }
-
-/* buttons shared by every screen */
-function cmWire(root){
-  root.querySelectorAll("[data-cm]").forEach(el=>el.onclick=async()=>{
+function cmWire(scope){
+  if(!scope) return;
+  scope.querySelectorAll("[data-cm]").forEach(el=>el.onclick=async()=>{
     const k=el.dataset.cm;
     if(k==="login") cmGoLogin();
     if(k==="logout"){ try{ await cmApi("POST","/logout"); }catch(e){} cmTok(null); cm.me=null; cmMount(); }
   });
 }
+/* voting from anywhere: list cards and the post itself */
+async function cmVote(id, v){
+  if(!cm.me){ cmGoLogin(); return null; }
+  if(cm.v<2 && v<0) return null;
+  try{ return cm.v>=2 ? await cmApi("POST",`/posts/${id}/vote`,{v}) : await cmApi("POST",`/posts/${id}/like`); }
+  catch(e){ cmToast(cmErr(e)); return null; }
+}
 
-async function cmList(root, board, page, q, alive){
-  const T=CMT[lang];
-  const qs=new URLSearchParams({page}); if(board!=="all") qs.set("board",board); if(q) qs.set("q",q);
+async function cmList(root, o, alive){
+  const T=CMT[lang], qs=new URLSearchParams({page:o.page});
+  if(CM_BOARDS.includes(o.where)) qs.set("board",o.where);
+  if(o.where==="best") qs.set("best","1");
+  const sort=o.sort||(o.where==="hot"?"hot":"new"); qs.set("sort",sort);
+  if(o.tag) qs.set("tag",o.tag); if(o.q){ qs.set("q",o.q); qs.set("field",o.field||"all"); }
   const j=await cmApi("GET","/posts?"+qs);
   if(!alive()) return;
-  const rows=j.posts.map(p=>`<li><a href="#/community/post/${p.id}">
-      <span class="bd">${T.boards[p.board]||p.board}</span>
-      <span class="tt">${esc(p.title)}${p.n_comments?`<em>[${p.n_comments}]</em>`:""}</span>
-      <span class="mt">${cmName(p)} · ${cmTime(p.created_at)} · ♥ ${p.n_likes} · ${T.views} ${p.views}</span>
-    </a></li>`).join("");
-  const pages=Math.max(1,Math.ceil(j.total/j.per));
-  const href=n=>`#/community/${board}/${n}${q?"?q="+encodeURIComponent(q):""}`;
-  let pager="";
-  if(pages>1){
-    const lo=Math.max(1,page-4), hi=Math.min(pages,lo+9);
-    for(let n=lo;n<=hi;n++) pager+= n===page?`<span>${n}</span>`:`<a href="${href(n)}">${n}</a>`;
-    if(page>1) pager=`<a href="${href(page-1)}">‹</a>`+pager;
-    if(page<pages) pager+=`<a href="${href(page+1)}">›</a>`;
+  const name = CM_BOARDS.includes(o.where) ? T.boards[o.where] : o.where==="best" ? T.best : o.where==="hot" ? T.hot : T.all;
+  const icon = CM_BOARDS.includes(o.where) ? "#" : o.where==="best" ? "★" : o.where==="hot" ? "🔥" : "≡";
+  const href = x => cmListHref({...o, page:1, ...x});
+  const isNew = p => Date.now()/1000-p.created_at < 12*3600;
+  const total=j.total, notices=j.notices||[];
+  const no = i => total-((o.page-1)*j.per)-i;
+  let body;
+  if(!j.posts.length && !notices.length) body=`<p class="cmempty">${o.q?T.noResult:T.empty}</p>`;
+  else if(cm.view==="card"){
+    const card=p=>`<div class="cmcard" data-id="${p.id}">
+        <div class="cmvote"><button class="up" type="button" data-v="1" aria-label="${T.up}">▲</button><b>${cmScore(p)}</b><button class="dn" type="button" data-v="-1" aria-label="${T.down}">▼</button></div>
+        <div class="bd"><div class="mt">${cmTag(p.tag)}<b>${T.boards[p.board]||p.board}</b> · ${cmAv(p.gone?"?":p.nickname,"s")} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
+          <h3><a href="#/community/post/${p.id}">${esc(p.title)}</a></h3>
+          ${p.snip?`<div class="sn">${esc(p.snip)}</div>`:""}
+          <div class="ft"><span>💬 ${p.n_comments} ${T.comments}</span><span>👁 ${p.views}</span></div></div></div>`;
+    body=`<div class="cmcards">${[...notices,...j.posts].map(card).join("")}</div>`;
+  } else {
+    const row=(p,i,nt)=>`<tr class="${nt?"nt":""}">
+        <td class="c-no">${nt?`<span class="cmtag notice">${T.tags.notice}</span>`:no(i)}</td>
+        <td class="c-tag">${nt?"":cmTag(p.tag)}</td>
+        <td class="t">${cmScore(p)>=3&&!nt?'<span class="bs">★</span>':""}<a href="#/community/post/${p.id}">${esc(p.title)}</a>${p.n_comments?`<span class="cc">[${p.n_comments}]</span>`:""}${isNew(p)?'<span class="nb">N</span>':""}
+          <div class="mm">${cmTag(p.tag)} ${cmName(p)} · ${cmShort(p.created_at)} · ${T.views} ${p.views} · ${T.cols.r} ${cmScore(p)}</div></td>
+        <td class="c-au">${cmName(p)}</td><td class="c-dt">${cmShort(p.created_at)}</td><td class="c-v">${p.views}</td><td class="c-r">${cmScore(p)}</td></tr>`;
+    body=`<table class="cmtbl"><thead><tr><th class="c-no">${T.cols.no}</th><th class="c-tag">${T.cols.tag}</th><th>${T.cols.title}</th><th class="c-au">${T.cols.au}</th><th class="c-dt">${T.cols.dt}</th><th class="c-v">${T.cols.v}</th><th class="c-r">${T.cols.r}</th></tr></thead>
+      <tbody>${notices.map((p,i)=>row(p,i,true)).join("")}${j.posts.map((p,i)=>row(p,i,false)).join("")}</tbody></table>`;
   }
-  root.innerHTML=`${cmBar(board)}
-    <div class="cmsplit"><div>
-      <form class="cmsearch" id="cmSearch" role="search">
-        <input type="search" name="q" value="${esc(q)}" placeholder="${T.searchPh}" aria-label="${T.search}">
-        <button class="btn ghost" type="submit">${T.search}</button>
+  const pages=Math.max(1,Math.ceil(total/j.per)), ph=n=>cmListHref({...o,page:n});
+  let pg=""; const lo=Math.max(1,o.page-4), hi=Math.min(pages,lo+9);
+  if(o.page>1) pg+=`<a href="${ph(1)}">«</a><a href="${ph(o.page-1)}">‹</a>`;
+  for(let n=lo;n<=hi;n++) pg+= n===o.page?`<span>${n}</span>`:`<a href="${ph(n)}">${n}</a>`;
+  if(o.page<pages) pg+=`<a href="${ph(o.page+1)}">›</a><a href="${ph(pages)}">»</a>`;
+  const writeTo = CM_BOARDS.includes(o.where) ? "/"+o.where : "";
+  root.innerHTML=`<div class="cmpanel">
+    <div class="cmbh"><div><h2><span>${icon}</span> ${name}</h2><p>${T.boardDesc[o.where]||""}</p></div><span class="sp"></span>
+      ${cm.me?`<a class="cmbtn cmm" href="#/community/account">${cmAv(cm.me.nickname,"s")}</a>`:`<a class="cmbtn cmm" href="#/community/login">${T.login}</a>`}
+      <a class="cmbtn pri" href="#/community/write${writeTo}">✎ ${T.write}</a></div>
+    <div class="cmbar2">
+      <div class="cmseg"><a href="${cmListHref({...o,where:CM_BOARDS.includes(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
+      <div class="cmtags"><a href="${href({tag:""})}" class="${!o.tag?"on":""}">${T.tagAll}</a>${CM_TAGS.filter(t=>t!=="notice").map(t=>`<a href="${href({tag:t})}" class="${o.tag===t?"on":""}">${T.tags[t]}</a>`).join("")}</div>
+      <span class="sp"></span>
+      <select class="cmsel" id="cmSort" aria-label="sort">${Object.entries(T.sorts).map(([k,v])=>`<option value="${k}" ${sort===k?"selected":""}>${v}</option>`).join("")}</select>
+      <div class="cmseg"><button type="button" data-view="list" class="${cm.view==="list"?"on":""}">☰ ${T.vList}</button><button type="button" data-view="card" class="${cm.view==="card"?"on":""}">▦ ${T.vCard}</button></div>
+    </div>
+    ${body}
+    <div class="cmfoot">
+      ${pages>1?`<nav class="cmpg">${pg}</nav>`:""}
+      <form class="cmsrch" id="cmSearch" role="search">
+        <select class="cmsel" name="field" style="width:auto">${[["all",T.fAll],["title",T.fTitle],["author",T.fAuthor]].map(([k,v])=>`<option value="${k}" ${(o.field||"all")===k?"selected":""}>${v}</option>`).join("")}</select>
+        <input type="search" name="q" value="${esc(o.q)}" placeholder="${T.searchPh}" aria-label="${T.search}">
+        <button class="cmbtn" type="submit">${T.search}</button>
       </form>
-      <div class="cmbox">${rows?`<ul class="cmlist">${rows}</ul>`:`<p class="cmempty">${q?T.noResult:T.empty}</p>`}</div>
-      ${pager?`<nav class="cmpager">${pager}</nav>`:""}
-    </div>${cmSide()}</div>`;
-  root.querySelector("#cmSearch").onsubmit=e=>{
-    e.preventDefault();
-    const v=e.target.q.value.trim();
-    location.hash=`#/community/${board}/1${v?"?q="+encodeURIComponent(v):""}`;
-  };
+    </div></div>`;
+  root.querySelector("#cmSort").onchange=e=>{ location.hash=cmListHref({...o,page:1,sort:e.target.value}); };
+  root.querySelectorAll("[data-view]").forEach(bn=>bn.onclick=()=>{ cm.view=bn.dataset.view; try{localStorage.setItem("hlCmView",cm.view);}catch(e){} cmMount(); });
+  root.querySelector("#cmSearch").onsubmit=e=>{ e.preventDefault(); const f=e.target; location.hash=cmListHref({...o,page:1,q:f.q.value.trim(),field:f.field.value}); };
+  root.querySelectorAll(".cmcard").forEach(cd=>cd.querySelectorAll(".cmvote button").forEach(bn=>bn.onclick=async()=>{
+    const r=await cmVote(+cd.dataset.id,+bn.dataset.v); if(!r) return;
+    cd.querySelector(".cmvote b").textContent=(r.n_likes||0)-(r.n_dislikes||0);
+    cd.querySelector(".up").classList.toggle("on",r.my===1||r.liked===true); cd.querySelector(".dn").classList.toggle("on",r.my===-1);
+  }));
 }
 
 async function cmPost(root, id, alive){
@@ -6980,113 +7208,147 @@ async function cmPost(root, id, alive){
   let seen=false; try{ seen=sessionStorage.getItem("hlCmSeen"+id)==="1"; sessionStorage.setItem("hlCmSeen"+id,"1"); }catch(e){}
   const j=await cmApi("GET",`/posts/${id}${seen?"":"?view=1"}`);
   if(!alive()) return;
-  const p=j.post;
-  const cmts=j.comments.map(c=>`<div class="cmcmt" data-id="${c.id}">
-      <div class="who"><b>${cmName(c)}</b><span>${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</span>
-        <span class="ops">${c.mine?`<button class="cmlink" type="button" data-c="edit">${T.edit}</button>
-          <button class="cmlink" type="button" data-c="del">${T.del}</button>`:
-          (cm.me?`<button class="cmlink" type="button" data-c="report">${T.report}</button>`:"")}</span></div>
-      <div class="tx">${cmFmt(c.body)}</div></div>`).join("");
-  root.innerHTML=`${cmBar(p.board)}
-    <article class="cmbox cmpost">
+  const p=j.post, my=j.my!==undefined ? j.my : (j.liked?1:0);
+  let order=cm.cmtOrder||"old";
+  const tops=j.comments.filter(c=>!c.parent_id), kids=id=>j.comments.filter(c=>c.parent_id===id);
+  const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"")}
+      <div class="cb"><div class="who"><b>${cmName(c)}</b>${!c.gone&&!p.gone&&c.nickname===p.nickname?`<span class="op">${T.op}</span>`:""}<time title="${cmFull(c.created_at)}">${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</time></div>
+        <div class="tx">${cmFmt(c.body)}</div>
+        <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
+        <div class="rf"></div></div></div>`;
+  const thread=()=>{ const list=order==="new"?[...tops].reverse():tops; return list.map(c=>cmtHtml(c,false)+kids(c.id).map(k=>cmtHtml(k,true)).join("")).join(""); };
+  const bName=T.boards[p.board]||p.board;
+  root.innerHTML=`<div class="cmpanel">
+    <article class="cmpost">
+      <div class="cmcrumb"><a href="#/community/${p.board}"># ${bName}</a>${p.tag?" › "+cmTag(p.tag):""}</div>
       <h2>${esc(p.title)}</h2>
-      <div class="cmmeta"><a class="bd" href="#/community/${p.board}">${T.boards[p.board]||p.board}</a>
-        <span>${cmName(p)}</span><span>${cmTime(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
-        <span>${T.views} ${p.views}</span></div>
+      <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"")}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
+        <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span>${T.comments} ${j.comments.length}</span></div>
       <div class="cmtext">${cmFmt(p.body)}</div>
+      <div class="cmrec">
+        <button class="up ${my===1?"on":""}" type="button" id="cmUp"><b>${p.n_likes||0}</b><span>▲ ${T.up}</span></button>
+        ${cm.v>=2?`<button class="dn ${my===-1?"on":""}" type="button" id="cmDn"><b>${p.n_dislikes||0}</b><span>▼ ${T.down}</span></button>`:""}
+      </div>
       <div class="cmacts">
-        <button class="btn ghost like ${j.liked?"on":""}" type="button" id="cmLike">♥ ${T.like} <span class="mono">${p.n_likes}</span></button>
+        <a class="cmbtn sm" href="#/community/${p.board}">☰ ${T.toList}</a>
+        <button class="cmbtn sm" type="button" id="cmShare">🔗 ${T.share}</button>
         <span class="sp"></span>
-        ${p.mine?`<a class="btn ghost" href="#/community/edit/${p.id}">${T.edit}</a>
-                  <button class="btn ghost" type="button" id="cmDel">${T.del}</button>`
-                :(cm.me?`<button class="btn ghost" type="button" id="cmRep">${T.report}</button>`:"")}
-        <a class="btn ghost" href="#/community/${p.board}">${T.toList}</a>
+        ${p.mine?`<a class="cmbtn sm" href="#/community/edit/${p.id}">${T.edit}</a><button class="cmbtn sm" type="button" id="cmDel">${T.del}</button>`
+                :(cm.me?`<button class="cmbtn sm" type="button" id="cmRep">🚩 ${T.report}</button>`:"")}
       </div>
     </article>
-    <section class="cmcmts" style="padding:0">
-      <h3>${T.comments} ${j.comments.length}</h3>
-      <div class="cmbox">${cmts||""}
-        <div class="cmcmt">${cm.me?`<form class="cmform" id="cmCmt">
-            <textarea name="body" maxlength="3000" placeholder="${T.cmtPh}" required></textarea>
-            <div class="row"><button class="btn" type="submit">${T.cmtSend}</button><span class="cmerr"></span></div></form>`
-          :`<button class="cmlink" type="button" data-cm="login">${T.cmtLogin}</button>`}</div>
-      </div>
-    </section>`;
+    <section class="cmcmts">
+      <div class="hd"><h3>${T.comments} <em>${j.comments.length}</em></h3><span style="flex:1"></span>
+        <div class="cmseg"><button type="button" data-o="old" class="${order==="old"?"on":""}">${T.oldest}</button><button type="button" data-o="new" class="${order==="new"?"on":""}">${T.newest}</button></div></div>
+      <div id="cmThread">${thread()}</div>
+      ${cm.me?`<form class="cmcf" id="cmCmt"><textarea name="body" maxlength="3000" placeholder="${T.cmtPh}" required></textarea>
+          <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${T.cmtSend}</button></div></form>`
+        :`<div class="cmcf"><button class="cmbtn" type="button" data-cm="login">${T.cmtLogin}</button></div>`}
+    </section>
+    <div id="cmMore"></div></div>`;
 
   const $=s=>root.querySelector(s);
-  $("#cmLike").onclick=async()=>{
-    if(!cm.me) return cmGoLogin();
-    try{ const r=await cmApi("POST",`/posts/${id}/like`);
-         $("#cmLike").classList.toggle("on",r.liked); $("#cmLike .mono").textContent=r.n_likes; }
-    catch(e){ alert(cmErr(e)); }
-  };
+  const setVotes=r=>{ $("#cmUp b").textContent=r.n_likes; $("#cmUp").classList.toggle("on",r.my===1||r.liked===true);
+    if($("#cmDn")){ $("#cmDn b").textContent=r.n_dislikes||0; $("#cmDn").classList.toggle("on",r.my===-1); } };
+  $("#cmUp").onclick=async()=>{ const r=await cmVote(id,1); if(r) setVotes(r); };
+  if($("#cmDn")) $("#cmDn").onclick=async()=>{ const r=await cmVote(id,-1); if(r) setVotes(r); };
+  $("#cmShare").onclick=async()=>{ const u=location.href.split("#")[0]+"#/community/post/"+id; try{ await navigator.clipboard.writeText(u); }catch(e){} cmToast(T.copied); };
   if($("#cmDel")) $("#cmDel").onclick=async()=>{
     if(!confirm(T.confirmDel)) return;
-    try{ await cmApi("DELETE",`/posts/${id}`); location.hash=`#/community/${p.board}`; }catch(e){ alert(cmErr(e)); }
+    try{ await cmApi("DELETE",`/posts/${id}`); cm.boards=null; location.hash=`#/community/${p.board}`; }catch(e){ cmToast(cmErr(e)); }
   };
   const report=async(kind,tid)=>{
     const why=prompt(T.reportAsk); if(!why||!why.trim()) return;
-    try{ await cmApi("POST","/report",{kind,id:tid,reason:why}); alert(T.reported); }catch(e){ alert(cmErr(e)); }
+    try{ await cmApi("POST","/report",{kind,id:tid,reason:why}); cmToast(T.reported); }catch(e){ cmToast(cmErr(e)); }
   };
   if($("#cmRep")) $("#cmRep").onclick=()=>report("post",id);
+  root.querySelectorAll("[data-o]").forEach(bn=>bn.onclick=()=>{ cm.cmtOrder=bn.dataset.o; cmMount(); });
   if($("#cmCmt")) $("#cmCmt").onsubmit=async e=>{
     e.preventDefault();
-    const f=e.target, btn=f.querySelector("button");
-    btn.disabled=true;
+    const f=e.target, btn=f.querySelector("button"); btn.disabled=true;
     try{ await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value}); cmMount(); }
     catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); btn.disabled=false; }
   };
-  root.querySelectorAll(".cmcmt[data-id]").forEach(box=>{
+  root.querySelectorAll(".cmc[data-id]").forEach(box=>{
     const cid=+box.dataset.id;
-    box.querySelectorAll("[data-c]").forEach(el=>el.onclick=async()=>{
-      const k=el.dataset.c;
+    box.querySelectorAll(":scope > .cb > .ops [data-c]").forEach(el=>el.onclick=async()=>{
+      const k=el.dataset.c, c=j.comments.find(x=>x.id===cid);
       if(k==="report") return report("comment",cid);
       if(k==="del"){
         if(!confirm(T.confirmDel)) return;
-        try{ await cmApi("DELETE",`/comments/${cid}`); cmMount(); }catch(e){ alert(cmErr(e)); }
+        try{ await cmApi("DELETE",`/comments/${cid}`); cmMount(); }catch(e){ cmToast(cmErr(e)); }
+      }
+      if(k==="reply"){
+        const rf=box.querySelector(".rf"); if(rf.firstChild){ rf.innerHTML=""; return; }
+        rf.innerHTML=`<form class="cmcf"><textarea name="body" maxlength="3000" placeholder="@${esc(c.gone?T.gone:c.nickname)}" required></textarea>
+          <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn" type="button">${T.cancel}</button><button class="cmbtn pri" type="submit">${T.reply}</button></div></form>`;
+        const f=rf.querySelector("form"); f.body.focus();
+        f.querySelector("button[type=button]").onclick=()=>{ rf.innerHTML=""; };
+        f.onsubmit=async e=>{ e.preventDefault();
+          try{ await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value,parent_id:cid}); cmMount(); }
+          catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); } };
       }
       if(k==="edit"){
-        const old=j.comments.find(c=>c.id===cid).body, tx=box.querySelector(".tx");
-        tx.innerHTML=`<form class="cmform"><textarea name="body" maxlength="3000" required>${esc(old)}</textarea>
-          <div class="row"><button class="btn" type="submit">${T.save}</button>
-          <button class="btn ghost" type="button">${T.cancel}</button><span class="cmerr"></span></div></form>`;
+        const tx=box.querySelector(".tx");
+        tx.innerHTML=`<form class="cmcf"><textarea name="body" maxlength="3000" required>${esc(c.body)}</textarea>
+          <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn" type="button">${T.cancel}</button><button class="cmbtn pri" type="submit">${T.save}</button></div></form>`;
         const f=tx.querySelector("form");
-        f.querySelector("button.ghost").onclick=()=>{ tx.innerHTML=cmFmt(old); };
-        f.onsubmit=async e=>{
-          e.preventDefault();
+        f.querySelector("button[type=button]").onclick=()=>{ tx.innerHTML=cmFmt(c.body); };
+        f.onsubmit=async e=>{ e.preventDefault();
           try{ await cmApi("PATCH",`/comments/${cid}`,{body:f.body.value}); cmMount(); }
-          catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); }
-        };
+          catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); } };
       }
     });
   });
+  /* the board's list under the post, as on DC Inside */
+  try{
+    const l=await cmApi("GET",`/posts?board=${p.board}&page=1`); if(!alive()) return;
+    const more=document.getElementById("cmMore"); if(!more) return;
+    more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${bName} — ${T.boardList}</h2></div>
+      <table class="cmtbl"><tbody>${l.posts.slice(0,10).map(x=>`<tr${x.id===p.id?' style="font-weight:700"':""}><td class="c-tag">${cmTag(x.tag)}</td>
+        <td class="t"><a href="#/community/post/${x.id}">${esc(x.title)}</a>${x.n_comments?`<span class="cc">[${x.n_comments}]</span>`:""}</td>
+        <td class="c-au">${cmName(x)}</td><td class="c-dt">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>`;
+  }catch(e){}
 }
 
 function cmWrite(root, post, board){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
   const key=post?"e"+post.id:"new";
-  const d=cm.draft[key]||(post?{board:post.board,title:post.title,body:post.body}:{board,title:"",body:""});
-  root.innerHTML=`${cmBar(d.board)}
-    <div class="cmsplit"><form class="cmbox cmform cmpost" id="cmW">
-      <h2>${post?T.editPost:T.newPost}</h2>
-      <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
-      <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}"></label>
-      <label>${T.body}<textarea class="big" name="body" maxlength="20000" required>${esc(d.body)}</textarea></label>
-      <div class="row"><button class="btn" type="submit">${post?T.save:T.post}</button>
-        <a class="btn ghost" href="${post?"#/community/post/"+post.id:"#/community/"+d.board}">${T.cancel}</a>
-        <span class="cmerr"></span></div>
-    </form>${cmSide()}</div>`;
-  const f=root.querySelector("#cmW");
+  const d=cm.draft[key]||(post?{board:post.board,tag:post.tag||"gen",title:post.title,body:post.body}:{board,tag:"gen",title:"",body:""});
+  const tags=CM_TAGS.filter(t=>t!=="notice"||(cm.me&&cm.me.role==="admin"));
+  root.innerHTML=`<div class="cmpanel">
+    <div class="cmbh"><h2>✎ ${post?T.editPost:T.newPost}</h2></div>
+    <form class="cmform" id="cmW">
+      <div class="two">
+        <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
+        <label>${T.tag}<select name="tag">${tags.map(t=>`<option value="${t}" ${t===d.tag?"selected":""}>${T.tags[t]}</option>`).join("")}</select></label>
+      </div>
+      <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}" placeholder="${T.titlePh}"></label>
+      <div class="row"><div class="cmseg"><button type="button" data-tab="w" class="on">${T.editTab}</button><button type="button" data-tab="p">${T.preview}</button></div>
+        <span class="sp"></span><span class="cnt" id="cmCnt"></span></div>
+      <textarea class="big" name="body" maxlength="20000" required placeholder="${T.bodyPh}">${esc(d.body)}</textarea>
+      <div class="cmprev" hidden></div>
+      <div class="row"><span class="cmerr"></span><span class="sp"></span>
+        <a class="cmbtn" href="${post?"#/community/post/"+post.id:"#/community/"+d.board}">${T.cancel}</a>
+        <button class="cmbtn pri" type="submit">${post?T.save:T.post}</button></div>
+    </form></div>`;
+  const f=root.querySelector("#cmW"), cnt=root.querySelector("#cmCnt"), prev=root.querySelector(".cmprev");
+  const count=()=>{ cnt.textContent=`${f.body.value.length.toLocaleString()} / 20,000`; };
+  count();
   /* a language switch redraws the page — keep what was typed */
-  f.oninput=()=>{ cm.draft[key]={board:f.board.value,title:f.title.value,body:f.body.value}; };
+  f.oninput=()=>{ cm.draft[key]={board:f.board.value,tag:f.tag.value,title:f.title.value,body:f.body.value}; count(); };
+  root.querySelectorAll("[data-tab]").forEach(bn=>bn.onclick=()=>{
+    const p=bn.dataset.tab==="p"; root.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===bn));
+    f.body.hidden=p; prev.hidden=!p; if(p) prev.innerHTML=cmFmt(f.body.value)||"&nbsp;";
+  });
   f.onsubmit=async e=>{
     e.preventDefault();
     const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
-    const data={board:f.board.value,title:f.title.value,body:f.body.value};
+    const data={board:f.board.value,tag:f.tag.value,title:f.title.value,body:f.body.value};
     try{
       if(post){ await cmApi("PATCH",`/posts/${post.id}`,data); delete cm.draft[key]; location.hash=`#/community/post/${post.id}`; }
-      else{ const r=await cmApi("POST","/posts",data); delete cm.draft[key]; location.hash=`#/community/post/${r.id}`; }
+      else{ const r=await cmApi("POST","/posts",data); delete cm.draft[key]; cm.boards=null; location.hash=`#/community/post/${r.id}`; }
     }catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); btn.disabled=false; }
   };
 }
@@ -7094,7 +7356,7 @@ async function cmEdit(root, id, alive){
   const j=await cmApi("GET",`/posts/${id}`);
   if(!alive()) return;
   if(!j.post.mine) throw {code:"forbidden"};
-  cmWrite(root, {id, board:j.post.board, title:j.post.title, body:j.post.body});
+  cmWrite(root, {id, board:j.post.board, tag:j.post.tag, title:j.post.title, body:j.post.body});
 }
 
 function cmAuthDone(r){
@@ -7104,14 +7366,15 @@ function cmAuthDone(r){
 function cmLogin(root){
   const T=CMT[lang];
   if(cm.me){ location.hash="#/community"; return; }
-  root.innerHTML=`${cmBar("")}
-    <form class="cmbox cmform narrow cmpost" id="cmL">
-      <h2>${T.login}</h2>
+  root.innerHTML=`<div class="cmauth"><div class="card">
+    <h2>${T.welcome}</h2><p class="lead">${T.welcomeSub}</p>
+    <form id="cmL">
       <label>${T.username}<input type="text" name="username" autocomplete="username" required></label>
       <label>${T.password}<input type="password" name="password" autocomplete="current-password" required></label>
-      <div class="row"><button class="btn" type="submit">${T.login}</button><span class="cmerr"></span></div>
-      <p style="margin:0;font-size:13px;color:var(--graphite)">${T.noAcc} <a class="cmlink" href="#/community/signup">${T.signup}</a></p>
-    </form>`;
+      <span class="cmerr"></span>
+      <button class="cmbtn pri" type="submit">${T.login}</button>
+    </form>
+    <p class="alt">${T.noAcc} <a href="#/community/signup">${T.signup}</a></p></div></div>`;
   const f=root.querySelector("#cmL");
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -7122,18 +7385,19 @@ function cmLogin(root){
 function cmSignup(root){
   const T=CMT[lang];
   if(cm.me){ location.hash="#/community"; return; }
-  root.innerHTML=`${cmBar("")}
-    <form class="cmbox cmform narrow cmpost" id="cmS">
-      <h2>${T.signup}</h2>
+  root.innerHTML=`<div class="cmauth"><div class="card">
+    <h2>${T.create}</h2><p class="lead">${T.createSub}</p>
+    <form id="cmS">
       <label>${T.username}<input type="text" name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${T.usernameHelp}</small></label>
       <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small></label>
       <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
-      <ol class="cmrules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
+      <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
       <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
-      <div class="row"><button class="btn" type="submit">${T.signup}</button><span class="cmerr"></span></div>
-      <p style="margin:0;font-size:13px;color:var(--graphite)">${T.haveAcc} <a class="cmlink" href="#/community/login">${T.login}</a></p>
-    </form>`;
+      <span class="cmerr"></span>
+      <button class="cmbtn pri" type="submit">${T.signup}</button>
+    </form>
+    <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr");
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -7143,27 +7407,25 @@ function cmSignup(root){
     catch(er){ err.textContent=cmErr(er); }
   };
 }
-function cmAccount(root){
+async function cmAccount(root, alive){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
-  const D=new Date(cm.me.created_at*1000);
-  root.innerHTML=`${cmBar("")}
-    <div class="cmbox cmpost" style="max-width:520px">
-      <h2>${esc(cm.me.nickname)}</h2>
-      <div class="cmmeta"><span>${T.username} ${esc(cm.me.username)}</span>
-        <span>${T.joined} ${D.getFullYear()}.${String(D.getMonth()+1).padStart(2,"0")}.${String(D.getDate()).padStart(2,"0")}</span></div>
-      <form class="cmform" id="cmPw" style="margin-top:22px">
-        <h3 style="font-size:15px">${T.changePw}</h3>
-        <label>${T.oldPw}<input type="password" name="old" autocomplete="current-password" required></label>
-        <label>${T.newPw}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
-        <div class="row"><button class="btn" type="submit">${T.save}</button><span class="cmerr"></span></div>
-      </form>
-      <div style="margin-top:26px;padding-top:18px;border-top:1px dashed var(--grid-bold)">
-        <h3 style="font-size:15px">${T.delAcc}</h3>
-        <p style="font-size:13px;color:var(--graphite);margin:6px 0 10px">${T.delAccHelp}</p>
-        <button class="btn ghost" type="button" id="cmDelAcc">${T.delAcc}</button>
-      </div>
-    </div>`;
+  root.innerHTML=`<div class="cmpanel">
+    <div class="cmpost" style="display:flex;gap:16px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--cm-line)">
+      ${cmAv(cm.me.nickname,"l")}<div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
+      <div class="cmpm" style="border:0;padding:4px 0 0">@${esc(cm.me.username)} · ${T.joined} ${cmFull(cm.me.created_at).slice(0,10)}${cm.me.role==="admin"?' · <span class="cmtag notice">admin</span>':""}</div></div></div>
+    <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
+    <form class="cmform" id="cmPw" style="border-top:8px solid var(--cm-soft)">
+      <h3 style="font-size:15px">${T.changePw}</h3>
+      <div class="two"><label>${T.oldPw}<input type="password" name="old" autocomplete="current-password" required></label>
+      <label>${T.newPw}<input type="password" name="password" autocomplete="new-password" required minlength="8"></label></div>
+      <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${T.save}</button></div>
+    </form>
+    <div class="cmform" style="border-top:8px solid var(--cm-soft)">
+      <h3 style="font-size:15px">${T.delAcc}</h3>
+      <p style="font-size:13px;color:var(--graphite);margin:0">${T.delAccHelp}</p>
+      <div class="row"><span class="sp"></span><button class="cmbtn" type="button" id="cmDelAcc" style="color:#e03131;border-color:#ffc9c9">${T.delAcc}</button></div>
+    </div></div>`;
   const f=root.querySelector("#cmPw");
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -7174,8 +7436,14 @@ function cmAccount(root){
   };
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
-    try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ alert(cmErr(e)); }
+    try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }
   };
+  try{
+    const l=await cmApi("GET","/posts?field=author&q="+encodeURIComponent(cm.me.nickname)); if(!alive()) return;
+    const box=document.getElementById("cmMine"); if(!box) return;
+    const mine=l.posts.filter(x=>x.nickname===cm.me.nickname);
+    box.innerHTML=mine.length?`<table class="cmtbl"><tbody>${mine.map(x=>`<tr><td class="c-tag">${cmTag(x.tag)}</td><td class="t"><a href="#/community/post/${x.id}">${esc(x.title)}</a>${x.n_comments?`<span class="cc">[${x.n_comments}]</span>`:""}</td><td class="c-dt">${cmShort(x.created_at)}</td><td class="c-r">${cmScore(x)}</td></tr>`).join("")}</tbody></table>`:`<p class="cmempty">${T.empty}</p>`;
+  }catch(e){}
 }
 
 /* ══════════════════════════════════════════════════════════════
