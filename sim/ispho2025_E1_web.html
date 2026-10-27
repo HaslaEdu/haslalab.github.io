@@ -760,7 +760,7 @@ function gl3Init(){
   if(GL3.ok!==null) return GL3.ok;
   try{
     const c=document.createElement("canvas");
-    const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
     if(!gl){ GL3.ok=false; return false; }
     c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
     const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
@@ -769,10 +769,10 @@ function gl3Init(){
     const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
                   "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
     const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
-                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){gl_FragColor=texture2D(s,u)*a;}");
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
     Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
       ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
-      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0});
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
   }catch(e){ GL3.ok=false; }
   return GL3.ok;
 }
@@ -831,18 +831,49 @@ function _textTex(str,o){
   x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
   const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
-  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v);
-  t={tex,F,w,cw:c.width,ch:c.height};
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
   if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
   GL3.txt.set(key,t); return t;
 }
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
 function _srcTex(src){
   const gl=GL3.gl; let t=GL3.src.get(src);
-  if(!t){ t={tex:gl.createTexture(),frame:-1}; GL3.src.set(src,t); gl.bindTexture(gl.TEXTURE_2D,t.tex);
-    for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v); }
-  if(t.frame!==GL3.frame&&!(src._static&&t.frame>=0)){ t.frame=GL3.frame; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
-    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){} }
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
   return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
 }
 function render3(ctx){
   if(!gl3Init()) return render3_2d(ctx);
@@ -877,14 +908,9 @@ function render3(ctx){
       G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
       if(o.id) HITS.push([o.id,q]);
     }else if(it.t==="sp"){
-      const p=L3(...it.c), R=it.r*CAM.k, base=rgba01(it.col), hi=rgba01(o.hi||"#ffffff"), lo=rgba01(o.lo||"#5d646b");
-      const L=[-0.38,0.45,0.81], col=(fx,fy)=>{ const fz=Math.sqrt(Math.max(0,1-fx*fx-fy*fy)), l=fx*L[0]+fy*L[1]+fz*L[2];
-        const m=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t); const c=l>0.75?m(base,hi,(l-0.75)/0.25):m(lo,base,Math.max(0,(l+0.2)/0.95)); return "rgb("+c.slice(0,3).map(v=>Math.round(v*255)).join(",")+")"; };
-      const N=18, rings=[0,0.45,0.8,1];
-      for(let k=1;k<rings.length;k++) for(let i=0;i<N;i++){
-        const A=i/N*6.2832, B=(i+1)/N*6.2832, pt=(f,a)=>[p[0]+R*f*Math.cos(a),p[1]+R*f*Math.sin(a),p[2]+e+it.r*Math.sqrt(Math.max(0,1-f*f))];
-        const f0=rings[k-1], f1=rings[k], fm=(f0+f1)/2, am=(A+B)/2;
-        _gtri(G,[pt(f0,A),pt(f1,A),pt(f1,B),pt(f0,B)],col(fm*Math.cos(am),-fm*Math.sin(am))); }
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
       if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
     }else if(it.t==="c"){
       const r=L3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
@@ -1205,22 +1231,72 @@ function drawPsu(){ const [x,y]=POS.psu, id="psu";
   const a=-2.4+4.8*ST.psuV/PSU_MAX; ocyl([x-2,y+7,5.5],[0,1,0],1.2,1.5,"#8e9297",{id:"psuKnob",seg:20,cap:"#a2a6ab"}); L([x-2,y+8.25,5.5],[x-2+1.2*Math.sin(a),y+8.25,5.5+1.2*Math.cos(a)],"#2a2c30",2);
   for(let i=0;i<=10;i++){ const b=-2.4+0.48*i; L([x-2+1.8*Math.sin(b),y+7.04,5.5+1.8*Math.cos(b)],[x-2+2.1*Math.sin(b),y+7.04,5.5+2.1*Math.cos(b)],"#333",1); }
   ocyl([x-6.4,y+7,5.5],[0,1,0],1.0,1.1,"#8e9297",{id,seg:18,cap:"#a2a6ab"}); TX([x-7.4,y+7.05,3.6],[1,0,0],[0,0,1],"CURRENT",0.4,"#444",{weight:"700"});
-  TX([x-3.4,y+7.05,8.4],[1,0,0],[0,0,1],"0 — 15 V",0.55,"#333",{weight:"700"});
+  TX([x-3.3,y+7.05,3.0],[1,0,0],[0,0,1],"0 — 15 V",0.5,"#333",{weight:"700"});
   for(const [dx,c,t] of [[4,"#d0352b","t:PSU.+"],[6.5,"#1b1d20","t:PSU.-"],[1.6,"#e3c21f",id]]){ ocyl([x+dx,y+7,2.2],[0,1,0],0.55,0.55,c,{id:t,seg:12,cap:WSEL&&t==="t:"+WSEL?"#ff9a3a":undefined}); ocyl([x+dx,y+7.55,2.2],[0,1,0],0.05,0.2,"#777",{seg:8,id:t}); }
-  ocyl([x+5.2,y+7,7.2],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); obox([x+7,y+7.1,7.2],[0.7,0,0],[0,0.2,0],[0,0,0.5],ST.psuOn?"#e8e8e4":"#9a9a96",{id:"psuSw"}); }
-/* a Mastech MAS830: dark face in a green rubber holster, the LCD, the dial and three sockets */
+  ocyl([x+5.2,y+7,7.2],[0,1,0],0.3,0.45,ST.psuOn?"#3fdf5f":"#2a4a32",{id,seg:12}); obox([x+7,y+7.1,7.2],[0.7,0,0],[0,0.2,0],[0,0,0.5],ST.psuOn?"#e8e8e4":"#9a9a96",{id:"psuSw"});
+  /* the two meters on the panel (volts and amps), the case's vents, its feet and its carrying handle */
+  for (const [dx, v, col, u] of [[-5.2, ST.psuOn ? ST.psuV.toFixed(1) : "", "#ff5040", "V"], [1.0, ST.psuOn ? ST.psuI.toFixed(2) : "", "#5dff7a", "A"]]){
+    F([[x+dx-1.9,y+7.03,7.6],[x+dx+1.9,y+7.03,7.6],[x+dx+1.9,y+7.03,9.2],[x+dx-1.9,y+7.03,9.2]],"#151618",{id,n:[0,1,0]});
+    if (v) TX([x+dx+1.4,y+7.05,8.0],[1,0,0],[0,0,1],v,1.05,col,{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
+    TX([x+dx+1.95,y+7.05,7.75],[1,0,0],[0,0,1],u,0.4,"#555",{weight:"700"}); }
+  for (let i = 0; i < 9; i++){ const xx = x - 6 + i * 1.5; L([xx, y - 5, 10.01], [xx, y + 1, 10.01], "#9fa29e", 1.4); }
+  for (const sx of [-1, 1]) for (let i = 0; i < 6; i++){ const zz = 3 + i * 0.9; L([x + sx * 9.01, y - 5, zz], [x + sx * 9.01, y + 1, zz], "#a6a9a5", 1.2); }
+  for (const [fx, fy] of [[-7.5,-5.5],[7.5,-5.5],[-7.5,5.5],[7.5,5.5]]) obox([x+fx,y+fy,0.15],[0.9,0,0],[0,0.9,0],[0,0,0.15],"#1d1e20");
+  for (const sx of [-1, 1]) obox([x+sx*6.5,y-1,10.5],[0.35,0,0],[0,0.35,0],[0,0,0.5],"#2a2c30"); obox([x,y-1,11.1],[6.85,0,0],[0,0.4,0],[0,0,0.22],"#2a2c30"); }
+/* a Mastech MAS830L (photo, item 2): the dark grey meter in its green rubber holster, rounded and standing proud of the
+   face all round; the face printed as on the meter (the big LCD, the green and yellow keys, the ranges round the switch,
+   MASTECH and the model, the jack legends); the switch knob with its bar and pointer, the three jacks */
+const MFACE = {}, rrect2d = (cx, cy, hw, hd, r, n) => { const P = []; n = n || 5;
+  for (const [sx, sy, a0] of [[1,1,0],[-1,1,90],[-1,-1,180],[1,-1,270]]) for (let i = 0; i <= n; i++){ const a = (a0 + 90 * i / n) * Math.PI / 180;
+    P.push([cx + sx * (hw - r) + r * Math.cos(a), cy + sy * (hd - r) + r * Math.sin(a)]); } return P; };
+function meterFaceTex(k, m){ const sig = (m.shown || "") + "|" + dialIdx(m); let c = MFACE[k];
+  if (!c){ c = document.createElement("canvas"); c.width = 560; c.height = 1080; c._ver = 0; MFACE[k] = c; }
+  if (c._sig === sig) return c; c._sig = sig; c._ver++;
+  const g = c.getContext("2d"), W = c.width, H = c.height, px = W / 7.2, X = v => v * px, F = (sz, wt) => (wt || "600") + " " + Math.round(sz * px) + "px Arial, sans-serif";
+  g.clearRect(0, 0, W, H); g.fillStyle = "#33363b"; g.beginPath(); g.roundRect(0, 0, W, H, X(0.7)); g.fill();
+  /* the LCD in its black window */
+  g.fillStyle = "#16171a"; g.beginPath(); g.roundRect(X(0.45), X(0.5), X(6.3), X(3.4), X(0.25)); g.fill();
+  const lg = g.createLinearGradient(0, X(0.8), 0, X(3.6)); lg.addColorStop(0, "#c3cbb2"); lg.addColorStop(1, "#aeb79c"); g.fillStyle = lg; g.fillRect(X(0.75), X(0.8), X(5.7), X(2.8));
+  g.fillStyle = "#1c2117"; g.textAlign = "right"; g.textBaseline = "middle"; g.font = "700 " + Math.round(1.65 * px) + "px 'Consolas', monospace"; g.fillText(m.shown || "", X(6.2), X(2.3));
+  g.font = F(0.32, "700"); g.textAlign = "left"; g.fillText(m.mode === "OFF" ? "" : m.mode === "OHM" ? "Ω" : m.mode === "ADC" ? "DC  A" : "DC  V", X(0.95), X(1.1));
+  /* the two keys' legends and the brand */
+  g.fillStyle = "#e9e9e6"; g.font = F(0.26); g.textAlign = "center"; g.fillText("HOLD", X(1.1), X(4.35)); g.fillText("☀", X(6.1), X(4.35));
+  /* the ranges round the switch */
+  const cu = 3.6, cv = 7.0, R = 2.15;
+  DIAL.forEach((t, i) => { const b = i * 2 * Math.PI / DIAL.length, r = R + 0.55, md = t.split(":")[0];
+    g.fillStyle = md === "ADC" ? "#f2c230" : t === "OFF" ? "#ffffff" : "#e9e9e6"; g.font = F(0.27, "700");
+    g.fillText(dialLab(t), X(cu + r * Math.sin(b)), X(cv - r * Math.cos(b)));
+    g.strokeStyle = "#8f959b"; g.lineWidth = X(0.03); g.beginPath(); g.moveTo(X(cu + (R + 0.1) * Math.sin(b)), X(cv - (R + 0.1) * Math.cos(b))); g.lineTo(X(cu + (R + 0.28) * Math.sin(b)), X(cv - (R + 0.28) * Math.cos(b))); g.stroke(); });
+  g.font = F(0.38, "800"); g.fillStyle = "#e9e9e6";
+  for (const [t, n] of [["V⎓", 3], ["A⎓", 7.5], ["Ω", 12]]){ const b = n * 2 * Math.PI / DIAL.length, r = R + 1.15; g.fillText(t, X(cu + r * Math.sin(b)), X(cv - r * Math.cos(b))); }
+  /* the jack legends, MASTECH and the model, the warning */
+  g.font = F(0.26, "700"); g.fillStyle = "#f2c230"; g.fillText("10A", X(1.2), X(10.35)); g.fillStyle = "#e9e9e6"; g.fillText("COM", X(3.6), X(10.35)); g.fillText("VΩmA", X(6.0), X(10.35));
+  g.fillStyle = "#e3342f"; g.font = "italic " + F(0.42, "800"); g.textAlign = "left"; g.fillText("MASTECH", X(0.5), X(11.7));
+  g.fillStyle = "#e9e9e6"; g.font = F(0.3, "700"); g.textAlign = "right"; g.fillText("MAS830L", X(6.7), X(11.7));
+  return c; }
 function drawMeter(k){ const [x,y]=POS["m"+k], m=ST.meters[k-1], id="m"+k;
-  obox([x,y,1.3],[4.4,0,0],[0,7.6,0],[0,0,1.3],"#2f8a4f",{id,faceCol:n=>n[2]>0.5?"#35975a":null});
-  obox([x,y,2.62],[3.8,0,0],[0,7.0,0],[0,0,0.04],"#3a3d42",{id});
-  F([[x-3.2,y-6.6,2.67],[x+3.2,y-6.6,2.67],[x+3.2,y-3.5,2.67],[x-3.2,y-3.5,2.67]],"#25272b",{id,n:Z3});
-  F([[x-2.9,y-6.3,2.69],[x+2.9,y-6.3,2.69],[x+2.9,y-3.8,2.69],[x-2.9,y-3.8,2.69]],"#bec8ad",{id,n:Z3});
-  TX([x+2.7,y-4.6,2.7],[1,0,0],[0,-1,0],m.shown||"",1.15,"#1b1d20",{align:"right",weight:"700",font:"ui-monospace,Consolas,monospace"});
-  TX([x-3.2,y-2.8,2.68],[1,0,0],[0,-1,0],"MASTECH  MAS830",0.42,"#e6e6e6",{weight:"700"});
-  /* the rotary switch: positions printed round it, the pointer on the knob shows the one chosen */
-  ocyl([x,y+0.8,2.66],Z3,0.45,2.2,"#1b1d20",{id:"dial"+k,seg:24}); const a=dialAng(m); L([x,y+0.8,3.13],[x+2.0*Math.sin(a),y+0.8-2.0*Math.cos(a),3.13],"#f2f2f0",2.2);
-  DIAL.forEach((_,i)=>{ const b=i*2*Math.PI/DIAL.length; L([x+2.35*Math.sin(b),y+0.8-2.35*Math.cos(b),2.67],[x+2.75*Math.sin(b),y+0.8-2.75*Math.cos(b),2.67],i===dialIdx(m)?"#ffd77a":"#9aa0a6",1); });
-  for(const [dx,c,t] of [[-2.4,"#1b1d20","t:M"+k+".LO"],[0,"#d0352b",id],[2.4,"#d0352b","t:M"+k+".HI"]]){ const sel=WSEL&&t==="t:"+WSEL; ocyl([x+dx,y+5.8,2.66],Z3,0.3,0.48,sel?"#ff9a3a":"#2a2c30",{id:t,seg:12}); ocyl([x+dx,y+5.8,2.7],Z3,0.28,0.3,c,{id:t,seg:12}); }
-  TX([x-3.6,y+7.2,2.68],[1,0,0],[0,-1,0],"V"+k,0.8,"#f0f0f0",{weight:"800"}); }
+  /* the holster: a rounded green slab, its rim standing above the face */
+  const out = rrect2d(x, y, 4.4, 7.6, 1.5, 5), inn = rrect2d(x, y, 3.65, 6.85, 0.95, 5), Z = 2.6, ZR = 3.05;
+  prism([0,0,0], Z3, [1,0,0], [0,1,0], out, Z, "#2c8a4c", {id, top:"#33975a"});
+  for (let i = 0; i < out.length; i++){ const j = (i + 1) % out.length, A = out[i], B = out[j], a = inn[i], b2 = inn[j];
+    F([[A[0],A[1],ZR],[B[0],B[1],ZR],[b2[0],b2[1],ZR],[a[0],a[1],ZR]], "#37a061", {id, n:Z3});
+    const mx = (a[0] + b2[0]) / 2 - (A[0] + B[0]) / 2, my = (a[1] + b2[1]) / 2 - (A[1] + B[1]) / 2;
+    F([[a[0],a[1],Z],[b2[0],b2[1],Z],[b2[0],b2[1],ZR],[a[0],a[1],ZR]], "#246f3e", {id, n:[mx,my,0]});
+    F([[A[0],A[1],Z],[B[0],B[1],Z],[B[0],B[1],ZR],[A[0],A[1],ZR]], "#2c8a4c", {id, n:[-mx,-my,0]}); }
+  /* the printed face */
+  { const tx = meterFaceTex(k, m), O = M([x - 3.6, y - 6.0, Z + 0.02]), U = vsub(M([x + 3.6, y - 6.0, Z + 0.02]), O), V = vsub(M([x - 3.6, y + 6.0, Z + 0.02]), O);
+    tex3(tx, 0, 0, tx.width, tx.height, O, U, V, {id}); }
+  /* the green and the yellow key */
+  ocyl([x - 2.5, y - 1.45, Z], Z3, 0.25, 0.45, "#2fae5a", {id, seg:14, cap:"#37c066"}); ocyl([x + 2.5, y - 1.45, Z], Z3, 0.25, 0.45, "#f1c430", {id, seg:14, cap:"#f7d34c"});
+  /* the rotary switch: a black disc, the raised bar with its white pointer on the range chosen */
+  const cx = x, cy = y + 1.0, a = dialAng(m), sa = Math.sin(a), ca = -Math.cos(a);
+  ocyl([cx, cy, Z], Z3, 0.3, 2.05, "#141517", {id:"dial"+k, seg:32, cap:"#1c1d20"});
+  prism([cx, cy, Z + 0.3], Z3, [-ca, sa, 0], [sa, ca, 0], [[-0.38,-1.85],[0.38,-1.85],[0.38,1.85],[-0.38,1.85]], 0.6, "#26282c", {id:"dial"+k});
+  L([cx + 1.0 * sa, cy + 1.0 * ca, Z + 0.92], [cx + 1.75 * sa, cy + 1.75 * ca, Z + 0.92], "#f2f2f0", 2.4);
+  /* the jacks */
+  for(const [dx,c,t] of [[-2.4,"#f2c230",id],[0,"#1b1d20","t:M"+k+".LO"],[2.4,"#d0352b","t:M"+k+".HI"]]){ const sel=WSEL&&t==="t:"+WSEL;
+    ocyl([x+dx,y+5.0,Z],Z3,0.18,0.6,sel?"#ff9a3a":c,{id:t,seg:16}); ocyl([x+dx,y+5.0,Z-0.3],Z3,0.49,0.32,"#060606",{id:t,seg:12}); }
+  TX([x-3.9,y+7.0,ZR+0.01],[1,0,0],[0,-1,0],"V"+k,0.7,"#f0f0f0",{weight:"800"}); }
 /* R0: a white ceramic resistor on a black card hung from a lanyard */
 function drawR0(){ const [x,y]=POS.r0, id="r0"; obox([x,y,0.06],[3.4,0,0],[0,2.3,0],[0,0,0.06],"#141518",{id});
   obox([x-0.2,y,0.4],[1.5,0,0],[0,0.42,0],[0,0,0.3],"#efede6",{id}); for(const s of [-1,1]) L([x-0.2+s*1.5,y,0.4],[x+s*2.6,y+1.4,0.14],"#c9cdd2",1.3);
@@ -1239,7 +1315,7 @@ function drawRibbons(){ if(!has("rib2")) return; const [x,y]=POS.adapter, a=[x-1
 /* the cables on the bench, between the terminals' 3D anchors */
 function anchor(t){ const [a,b]=t.split(".");
   if(a==="PSU") return [POS.psu[0]+(b==="+"?4:6.5),POS.psu[1]+7.6,2.2];
-  if(a[0]==="M"){ const p=POS["m"+a[1]]; return [p[0]+(b==="HI"?2.4:-2.4),p[1]+5.8,3.0]; }
+  if(a[0]==="M"){ const p=POS["m"+a[1]]; return [p[0]+(b==="HI"?2.4:0),p[1]+5.0,3.0]; }
   if(a==="R0"){ const p=POS.r0; return [p[0]+(b==="A"?-2.8:2.8),p[1]+1.6,0.35]; }
   if(a==="AD"){ const p=POS.adapter; return [p[0]+(b==="R"?-1.2:0.2),p[1]+0.6,1.5]; } return null; }
 const WCOL3=["#c0392b","#1b1d20","#2f6fd0","#e8c22a","#2e9e57","#8e44ad","#e67e22","#7f8c8d"];

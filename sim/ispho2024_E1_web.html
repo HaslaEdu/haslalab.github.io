@@ -684,7 +684,7 @@ function gl3Init(){
   if(GL3.ok!==null) return GL3.ok;
   try{
     const c=document.createElement("canvas");
-    const gl=c.getContext("webgl",{antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true});
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
     if(!gl){ GL3.ok=false; return false; }
     c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
     const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
@@ -693,10 +693,10 @@ function gl3Init(){
     const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
                   "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
     const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
-                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){gl_FragColor=texture2D(s,u)*a;}");
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
     Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
       ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
-      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0});
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
   }catch(e){ GL3.ok=false; }
   return GL3.ok;
 }
@@ -755,18 +755,49 @@ function _textTex(str,o){
   x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
   const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
-  for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v);
-  t={tex,F,w,cw:c.width,ch:c.height};
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
   if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
   GL3.txt.set(key,t); return t;
 }
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
 function _srcTex(src){
   const gl=GL3.gl; let t=GL3.src.get(src);
-  if(!t){ t={tex:gl.createTexture(),frame:-1}; GL3.src.set(src,t); gl.bindTexture(gl.TEXTURE_2D,t.tex);
-    for(const [k,v] of [[gl.TEXTURE_MIN_FILTER,gl.LINEAR],[gl.TEXTURE_MAG_FILTER,gl.LINEAR],[gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE],[gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D,k,v); }
-  if(t.frame!==GL3.frame&&!(src._static&&t.frame>=0)){ t.frame=GL3.frame; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
-    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); }catch(e){} }
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
   return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
 }
 function render3(ctx){
   if(!gl3Init()) return render3_2d(ctx);
@@ -801,14 +832,9 @@ function render3(ctx){
       G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
       if(o.id) HITS.push([o.id,q]);
     }else if(it.t==="sp"){
-      const p=L3(...it.c), R=it.r*CAM.k, base=rgba01(it.col), hi=rgba01(o.hi||"#ffffff"), lo=rgba01(o.lo||"#5d646b");
-      const L=[-0.38,0.45,0.81], col=(fx,fy)=>{ const fz=Math.sqrt(Math.max(0,1-fx*fx-fy*fy)), l=fx*L[0]+fy*L[1]+fz*L[2];
-        const m=(A,B,t)=>A.map((v,i)=>v+(B[i]-v)*t); const c=l>0.75?m(base,hi,(l-0.75)/0.25):m(lo,base,Math.max(0,(l+0.2)/0.95)); return "rgb("+c.slice(0,3).map(v=>Math.round(v*255)).join(",")+")"; };
-      const N=18, rings=[0,0.45,0.8,1];
-      for(let k=1;k<rings.length;k++) for(let i=0;i<N;i++){
-        const A=i/N*6.2832, B=(i+1)/N*6.2832, pt=(f,a)=>[p[0]+R*f*Math.cos(a),p[1]+R*f*Math.sin(a),p[2]+e+it.r*Math.sqrt(Math.max(0,1-f*f))];
-        const f0=rings[k-1], f1=rings[k], fm=(f0+f1)/2, am=(A+B)/2;
-        _gtri(G,[pt(f0,A),pt(f1,A),pt(f1,B),pt(f0,B)],col(fm*Math.cos(am),-fm*Math.sin(am))); }
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
       if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
     }else if(it.t==="c"){
       const r=L3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
@@ -1117,7 +1143,11 @@ function tube(x,y,h,r,liq,lcol,capCol,id,lab,cone){ const zb=cone?r*1.6:0;
   ocyl([x,y,h],Z3,0.6,r*1.12,capCol,{id,seg:16,cap:capCol}); if(lab) TX([x-r,y+r+0.02,h*0.55],[1,0,0],[0,0,1],lab,0.45,"#1b1d20",{weight:"700"}); }
 function drawChem3(k){ const p=POS[k];
   if(k==="wash"){ frustum([p[0],p[1],0],Z3,11,3.4,3.6,"rgba(242,244,246,0.82)",{id:k,seg:24}); frustum([p[0],p[1],11],Z3,1.4,3.6,1.5,"rgba(242,244,246,0.82)",{id:k,seg:24});
-    ocyl([p[0],p[1],12.4],Z3,1.2,1.5,"#f0f0ec",{id:k,seg:16,cap:"#f4f4f0"}); ocyl([p[0],p[1],13.6],[0.6,0,0.8],4,0.18,"#f0f0ec",{id:k,seg:8}); }
+    ocyl([p[0],p[1],12.4],Z3,1.2,1.5,"#f0f0ec",{id:k,seg:16,cap:"#f4f4f0"});
+    for (let i = 0; i < 6; i++) L([p[0] + 1.5 * Math.cos(i * 1.047), p[1] + 1.5 * Math.sin(i * 1.047), 12.5], [p[0] + 1.5 * Math.cos(i * 1.047), p[1] + 1.5 * Math.sin(i * 1.047), 13.5], "#d8d8d4", 1);
+    /* the delivery tube: up out of the cap, round a bend, out over the side and turned down at its tip */
+    const tp = t => { const a = t * Math.PI * 0.62; return t < 0.25 ? [p[0], p[1], 13.6 + t * 8] : [p[0] + 2.6 * (1 - Math.cos(a)), p[1], 15.6 + 1.2 * Math.sin(a) - (t > 0.8 ? (t - 0.8) * 10 : 0)]; };
+    for (let i = 0; i < 12; i++) ocyl(tp(i / 12), vnrm(vsub(tp((i + 1) / 12), tp(i / 12))), vlen(vsub(tp((i + 1) / 12), tp(i / 12))) + 0.02, 0.2, "rgba(240,240,236,0.92)", {id:k, seg:8}); }
   else if(k==="naoh") tube(p[0],p[1],3.2,0.45,0.25,"#f4f4f0","#f2f2ee",k,"NaOH",true);
   else if(k==="ic") tube(p[0],p[1],3.2,0.45,0.6,"rgba(40,60,190,0.85)","#f2f2ee",k,"IC",true);
   else if(k==="ind") tube(p[0],p[1],3.2,0.45,0.6,"rgba(240,240,236,0.7)","#f2f2ee",k,"In",true);
@@ -1133,8 +1163,20 @@ function drawChem3(k){ const p=POS[k];
   else if(k==="cuvettes"){ obox([p[0],p[1],0.8],[8.2,0,0],[0,3.0,0],[0,0,0.8],"rgba(240,242,242,0.92)",{id:k,faceCol:n=>n[2]>0.5?"rgba(246,247,247,0.95)":null});
     for(let r=0;r<2;r++) for(let i=0;i<6;i++) F([[p[0]-7.5+i*3-0.7,p[1]-1.5+r*3-0.7,1.61],[p[0]-7.5+i*3+0.7,p[1]-1.5+r*3-0.7,1.61],[p[0]-7.5+i*3+0.7,p[1]-1.5+r*3+0.7,1.61],[p[0]-7.5+i*3-0.7,p[1]-1.5+r*3+0.7,1.61]],"#d6dadc",{id:k,n:Z3});
     for(let i=0;i<10;i++) if(ST.inHolder!==i) drawCuvette(i,[p[0]-7.5+(i%5)*3,p[1]-1.5+Math.floor(i/5)*3,1.6],false); }
-  else if(k==="waste"){ frustum([p[0],p[1],0],Z3,5,3.2,4.4,"#f08a2a",{id:k,seg:24}); F(ring3([p[0],p[1],0.3],[1,0,0],[0,1,0],3.3,24),"#c76a18",{id:k,n:Z3}); }
-  else if(k==="gloves"){ obox([p[0],p[1],0.3],[3.5,0,0],[0,2,0],[0,0,0.3],"#2a3fb5",{id:k}); for(let i=0;i<4;i++) obox([p[0]+3.5+0.9,p[1]-1.2+i*0.8,0.25],[0.9,0,0],[0,0.3,0],[0,0,0.25],"#2a3fb5",{id:k}); } }
+  else if(k==="waste"){ frustum([p[0],p[1],0],Z3,5,3.2,3.6,"rgba(236,240,242,0.75)",{id:k,seg:24}); frustum([p[0],p[1],5],Z3,1.4,4.4,4.6,"#f08a2a",{id:k,seg:28});
+    frustum([p[0],p[1],3.8],Z3,2.6,0.9,4.2,"#e57d22",{id:k,seg:28}); F(ring3([p[0],p[1],3.85],[1,0,0],[0,1,0],0.8,16),"#2a2a2a",{id:k,n:Z3}); }
+  else if(k==="gloves"){ /* a pair of blue nitrile gloves lying flat, one over the other: cuff, palm, four fingers and the thumb */
+    const glove = (cx, cy, z, ang, col) => { const ca = Math.cos(ang), sa = Math.sin(ang), e1 = [ca, sa, 0], e2 = [-sa, ca, 0], o = {id:k};
+      const part = (u, v, hw, hd, r, rot) => { const pts = rr2(0, 0, hw, hd, r).map(([a, b2]) => { const c2 = Math.cos(rot || 0), s2 = Math.sin(rot || 0); return [u + a * c2 - b2 * s2, v + a * s2 + b2 * c2]; });
+        prism([cx, cy, z], Z3, e1, e2, pts, 0.28, col, o); };
+      part(-4.4, 0, 1.9, 2.05, 0.35); part(-0.7, 0, 2.1, 2.3, 1.0);
+      for (const [v, L] of [[-1.5, 3.3], [-0.5, 4.0], [0.5, 3.8], [1.5, 3.0]]) part(1.2 + L / 2, v, L / 2, 0.44, 0.42);
+      part(1.0, 2.7, 1.6, 0.5, 0.48, 0.6); };
+    glove(p[0], p[1], 0, 0.15, "#4a6ae6"); glove(p[0] + 1.5, p[1] + 2.4, 0.29, 2.9, "#3f5ddc"); } }
+/* a rounded rectangle (centre u, v; half sizes; corner radius), counter-clockwise */
+function rr2(cu, cv, hw, hd, r, n){ const P = []; n = n || 4; r = Math.min(r, hw, hd);
+  for (const [sx, sy, a0] of [[1,1,0],[-1,1,90],[-1,-1,180],[1,-1,270]]) for (let i = 0; i <= n; i++){ const a = (a0 + 90 * i / n) * Math.PI / 180;
+    P.push([cu + sx * (hw - r) + r * Math.cos(a), cv + sy * (hd - r) + r * Math.sin(a)]); } return P; }
 const WCOL3=["#c0392b","#1b1d20"];
 /* the lab: a light wall, a white bench on grey legs, a grey floor */
 function drawRoom(){
