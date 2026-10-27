@@ -638,6 +638,12 @@ const papers = (base, list, ...docs) => list.map((p,i)=>{
 });
 /* 이론 문제이지만 주최측이 시뮬레이터를 함께 배포한 것들 */
 const thy = (n,t) => ({id:"T"+n, en:t, ko:KO_TITLE[t]||t, state:"wip", theory:true});
+/* 물리 밖의 대회는 [번호, 영문 제목, 한글 제목, 문제지, 해답] 줄로 적는다.
+   같은 라운드의 문제들은 한 문제지를 같이 쓴다 */
+const lst = rows => rows.map(([id,en,ko,q,s])=>{
+  const f={}; if(q) f.pdf={en:"pdf/"+q}; if(s) f.sol="pdf/"+s;
+  return {id, en, ko, state:"wip", files:f};
+});
 
 const DATA={
  ipho:{
@@ -2261,6 +2267,452 @@ const DATA={
    {y:2011,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:papers("IZhO_2011", wip("Deformation, Hysteresis, and Bistability"), ["E_EN", "S"])},
    {y:2010,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:papers("IZhO_2010", wip("Slow Motion"), ["E_EN", "S"])},
    {y:2005,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:wip("Thermo-EMF of a Thermocouple", "Wavelength of Monochromatic Light").map((p,i)=>({...p, files:{pdf:{ru:["https://pho.rs/p/171","https://pho.rs/p/172"][i]}}}))}
+  ]},
+
+/* ── 화학 · 천문 · 통합과학 대회: 실험(관측 · 자료 분석) 문제지와 해답만 ── */
+ ijso:{
+  abbr:"IJSO", since:2004,
+  full:{ko:"국제청소년과학올림피아드",en:"International Junior Science Olympiad"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"물리 · 화학 · 생명과학을 함께 다루는 만 15세 이하 대회입니다. 실험 시험만 실었고, 한 해의 과제는 대개 한 문제지에 함께 묶여 있습니다. 문제지와 해답은 olimpicos에 공개된 것입니다. 2004–2006, 2012, 2015, 2020년과 2024년 이후는 자료가 없어 뺐습니다.",
+        en:"A science olympiad for students aged 15 and under, covering physics, chemistry and biology together. Only the experimental test is listed, and a year's tasks usually share one booklet. The sheets and solutions are the ones published on olimpicos; 2004–2006, 2012, 2015, 2020 and 2024 onward are left out for lack of papers."},
+  soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
+  years:[
+   {y:2023,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:lst([
+    ["E1","Making a Colorimeter and Measuring Absorbance","비색계 만들기와 흡광도 측정","IJSO_2023_E1_EN.pdf","IJSO_2023_S1.pdf"],
+    ["E2","Chemistry with Thai Jasmine Rice","태국 재스민 쌀의 화학","IJSO_2023_E1_EN.pdf","IJSO_2023_S1.pdf"],
+    ["E3","Plant Anatomy under the Microscope","현미경으로 본 식물의 구조","IJSO_2023_E1_EN.pdf","IJSO_2023_S1.pdf"]])},
+   {y:2022,host:{ko:"콜롬비아 · 보고타",en:"Bogotá, Colombia"},cc:"co",problems:lst([
+    ["E1","Electronic Model of Olfactory Sensory Neurons","후각 감각 뉴런의 전자 모형","IJSO_2022_E1_EN.pdf","IJSO_2022_S1.pdf"],
+    ["E2","Measuring Resistivity","비저항 측정","IJSO_2022_E1_EN.pdf","IJSO_2022_S1.pdf"],
+    ["E3","Molar Mass and Viscosity of Polymer Solutions","고분자 용액의 몰질량과 점도","IJSO_2022_E1_EN.pdf","IJSO_2022_S1.pdf"],
+    ["E4","Investigating pH with Anthocyanins","안토시아닌으로 알아보는 pH","IJSO_2022_E1_EN.pdf","IJSO_2022_S1.pdf"],
+    ["E5","Determining the Species of Coffee","커피 품종 가려내기","IJSO_2022_E1_EN.pdf","IJSO_2022_S1.pdf"]])},
+   {y:2021,host:{ko:"온라인 · 아랍에미리트 주관",en:"Online, hosted by the UAE"},cc:"ae",problems:lst([
+    ["E1","Refractive Index of Concentrated Solutions by Total Internal Reflection","전반사로 재는 진한 용액의 굴절률","IJSO_2021_E1_EN.pdf","IJSO_2021_S1.pdf"]])},
+   {y:2019,host:{ko:"카타르 · 도하",en:"Doha, Qatar"},cc:"qa",problems:lst([
+    ["E1","Contaminated Water Samples by Biological Methods","생물학적 방법으로 오염된 물 시료 찾기","IJSO_2019_E1_EN.pdf","IJSO_2019_S1.pdf"],
+    ["E2","Salinity of Water Samples by Physics","물리적 방법으로 확인하는 염도","IJSO_2019_E1_EN.pdf","IJSO_2019_S1.pdf"],
+    ["E3","Determination of Water Hardness","물의 경도 측정","IJSO_2019_E1_EN.pdf","IJSO_2019_S1.pdf"]])},
+   {y:2018,host:{ko:"보츠와나 · 하보로네",en:"Gaborone, Botswana"},cc:"bw",problems:lst([
+    ["E1","Thin-Layer Chromatography of Plant Compounds","식물 성분의 박층 크로마토그래피","IJSO_2018_E1_EN.pdf","IJSO_2018_S1.pdf"],
+    ["E2","Acid Content of a Fruit Acid Solution","과일산 용액의 산 함량","IJSO_2018_E1_EN.pdf","IJSO_2018_S1.pdf"],
+    ["E3","Coefficient of Viscosity of Oil","기름의 점성 계수","IJSO_2018_E1_EN.pdf","IJSO_2018_S1.pdf"]])},
+   {y:2017,host:{ko:"네덜란드 · 네이메헌",en:"Nijmegen, Netherlands"},cc:"nl",problems:lst([
+    ["E1","Paramecium","짚신벌레","IJSO_2017_E1_EN.pdf","IJSO_2017_S1.pdf"],
+    ["E2","Fajans Titration","파얀스 적정","IJSO_2017_E1_EN.pdf","IJSO_2017_S1.pdf"],
+    ["E3","Blue Energy","블루 에너지","IJSO_2017_E1_EN.pdf","IJSO_2017_S1.pdf"]])},
+   {y:2016,host:{ko:"인도네시아 · 발리",en:"Bali, Indonesia"},cc:"id",problems:lst([
+    ["E1","Energy Absorption by Water","물의 에너지 흡수 효율","IJSO_2016_E_EN.pdf","IJSO_2016_S1.pdf"],
+    ["E2","Characteristics of Nutmeg","육두구의 특성","IJSO_2016_E_EN.pdf","IJSO_2016_S2.pdf"],
+    ["E3","Nutmeg Oil Distillation","육두구 기름 증류","IJSO_2016_E_EN.pdf","IJSO_2016_S3.pdf"]])},
+   {y:2014,host:{ko:"아르헨티나 · 멘도사",en:"Mendoza, Argentina"},cc:"ar",problems:lst([
+    ["E1","Alcoholic Fermentation of Glucose","포도당의 알코올 발효","IJSO_2014_E1_EN.pdf","IJSO_2014_S1.pdf"],
+    ["E2","Refractometric Determination of Sucrose","굴절계로 재는 자당 농도","IJSO_2014_E1_EN.pdf","IJSO_2014_S1.pdf"]])},
+   {y:2013,host:{ko:"인도 · 푸네",en:"Pune, India"},cc:"in",problems:lst([
+    ["E1","Pendulum","진자","IJSO_2013_E1_EN.pdf","IJSO_2013_S1.pdf"],
+    ["E2","Milk","우유","IJSO_2013_E2_EN.pdf","IJSO_2013_S2.pdf"],
+    ["E3","Tomato","토마토","IJSO_2013_E3_EN.pdf","IJSO_2013_S3.pdf"]])},
+   {y:2011,host:{ko:"남아프리카공화국 · 더반",en:"Durban, South Africa"},cc:"za",problems:lst([
+    ["E1","Biology: Membranes, Chemicals and Temperature","생명 — 화학물질과 온도가 세포막에 미치는 영향","IJSO_2011_E1_EN.pdf","IJSO_2011_S1.pdf"],
+    ["E2","Chemistry: Ethanol and Biodiesel","화학 — 에탄올과 바이오디젤","IJSO_2011_E2_EN.pdf","IJSO_2011_S2.pdf"],
+    ["E3","Physics: Solar Photovoltaic Cells","물리 — 태양광 전지","IJSO_2011_E3_EN.pdf",null]])},
+   {y:2010,host:{ko:"나이지리아 · 아부자",en:"Abuja, Nigeria"},cc:"ng",problems:lst([
+    ["E1","Glucose in Extracts of Local Fruits","지역 과일 추출물의 포도당 농도","IJSO_2010_E1_EN.pdf","IJSO_2010_S1.pdf"],
+    ["E2","Renewable Energy Sources","재생 에너지원","IJSO_2010_E1_EN.pdf","IJSO_2010_S1.pdf"],
+    ["E3","Viscosity of Castor Oil","피마자유의 점성","IJSO_2010_E1_EN.pdf","IJSO_2010_S1.pdf"]])},
+   {y:2009,host:{ko:"아제르바이잔 · 바쿠",en:"Baku, Azerbaijan"},cc:"az",problems:lst([
+    ["E1","Peroxidase in Plant Samples","식물 시료의 퍼옥시데이스","IJSO_2009_E1_EN.pdf","IJSO_2009_S1.pdf"],
+    ["E2","Vitamin C in Cabbage","양배추의 비타민 C","IJSO_2009_E1_EN.pdf","IJSO_2009_S1.pdf"],
+    ["E3","Physical Properties of Fruit Juices","과일 주스의 물리적 성질","IJSO_2009_E1_EN.pdf","IJSO_2009_S1.pdf"]])},
+   {y:2008,host:{ko:"대한민국 · 창원",en:"Changwon, Korea"},cc:"kr",problems:lst([
+    ["E1","Anatomy of a Squid","오징어 해부","IJSO_2008_E1_EN.pdf",null],
+    ["E2","Chromatography of Black Inks","검은 잉크의 크로마토그래피","IJSO_2008_E1_EN.pdf",null],
+    ["E3","The Eye: Object Distance and the Lens","눈 — 물체 거리와 렌즈","IJSO_2008_E1_EN.pdf",null]])},
+   {y:2007,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:lst([
+    ["E1","Fruit Battery","과일 전지","IJSO_2007_E1_EN.pdf",null],
+    ["E2","Starch Granules","녹말 알갱이","IJSO_2007_E1_EN.pdf",null],
+    ["E3","Conductivity of an Electrolyte Solution","전해질 용액의 전기전도도","IJSO_2007_E1_EN.pdf",null],
+    ["E4","Energy Transfer in an Incandescent Lamp","백열전구의 에너지 전달","IJSO_2007_E1_EN.pdf",null]])}
+  ]},
+ icho:{
+  abbr:"IChO", since:1968,
+  full:{ko:"국제화학올림피아드",en:"International Chemistry Olympiad"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"실험(practical) 문제만 실었습니다. 1968–2014년은 IChO 정보 센터가 펴낸 『The Competition Problems from the International Chemistry Olympiads』 1–4권에서 해당 연도의 실험 부분만 잘라 왔고, 문제 뒤에 해답이 함께 들어 있습니다. 2015년부터는 olimpicos에 공개된 영어 문제지와 해답입니다. 1971년에는 대회가 열리지 않았고, 2020–2022년은 온라인으로 이론 시험만 치렀습니다.",
+        en:"Practical problems only. For 1968–2014 each year's practical section is cut from volumes 1–4 of The Competition Problems from the International Chemistry Olympiads (IChO Information Centre), with the solutions following the problems. From 2015 the English sheets and solutions are the ones published on olimpicos. There was no IChO in 1971, and 2020–2022 were online, theory-only competitions."},
+  soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
+  years:[
+   {y:2026,host:{ko:"우즈베키스탄",en:"Uzbekistan"},cc:"uz",problems:lst([
+    ["P1","Synthesise and Analyse (A New Complex Problem)","합성하고 분석하라 — 새 착물 문제","IChO_2026_P1_EN.pdf","IChO_2026_P1_S.pdf"],
+    ["P2","Atlas of Enzymes","효소 아틀라스","IChO_2026_P2_EN.pdf","IChO_2026_P2_S.pdf"],
+    ["P3","The Adventures of Hodja Nasreddin","호자 나스레딘의 모험","IChO_2026_P3_EN.pdf","IChO_2026_P3_S.pdf"]])},
+   {y:2025,host:{ko:"아랍에미리트 · 두바이",en:"Dubai, UAE"},cc:"ae",problems:lst([
+    ["P1","A Complex Problem","착물 문제","IChO_2025_P_EN.pdf","IChO_2025_P_S.pdf"],
+    ["P2","Exploring the AminOasis","아미노 오아시스 탐험","IChO_2025_P_EN.pdf","IChO_2025_P_S.pdf"],
+    ["P3","Rf You Ready to Spot the Answers?","Rf로 답을 찾을 준비 됐나요?","IChO_2025_P_EN.pdf","IChO_2025_P_S.pdf"]])},
+   {y:2024,host:{ko:"사우디아라비아 · 리야드",en:"Riyadh, Saudi Arabia"},cc:"sa",problems:lst([
+    ["P1","Indicators","지시약","IChO_2024_P_EN.pdf","IChO_2024_P_S.pdf"],
+    ["P2","Titration on a Balance","저울 위의 적정","IChO_2024_P_EN.pdf","IChO_2024_P_S.pdf"]])},
+   {y:2023,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",problems:lst([
+    ["P1","Organic Synthesis: Bleach, a Chameleonic Reagent","유기 합성 — 카멜레온 같은 시약, 표백제","IChO_2023_P_EN.pdf","IChO_2023_P_S.pdf"],
+    ["P2","Titration Tango","적정 탱고","IChO_2023_P_EN.pdf","IChO_2023_P_S.pdf"],
+    ["P3","Beauty in Simplicity","단순함의 아름다움","IChO_2023_P_EN.pdf","IChO_2023_P_S.pdf"]])},
+   {y:2019,host:{ko:"프랑스 · 파리",en:"Paris, France"},cc:"fr",problems:lst([
+    ["P1","Greening the Oxidation of Nitrobenzaldehyde","나이트로벤즈알데하이드 산화를 친환경적으로","IChO_2019_P_EN.pdf","IChO_2019_P_S.pdf"],
+    ["P2","The Iron Age of Wine","와인의 철기 시대","IChO_2019_P_EN.pdf","IChO_2019_P_S.pdf"],
+    ["P3","Wine for Keeping","오래 두는 와인","IChO_2019_P_EN.pdf","IChO_2019_P_S.pdf"]])},
+   {y:2018,host:{ko:"슬로바키아 · 체코 (브라티슬라바 · 프라하)",en:"Bratislava & Prague, Slovakia & Czech Republic"},cc:"sk",problems:lst([
+    ["P1","Haloform Reaction with Bleach","표백제를 이용한 할로폼 반응","IChO_2018_P_EN.pdf","IChO_2018_P_S.pdf"],
+    ["P2","A Glowing Clock Reaction","빛나는 시계 반응","IChO_2018_P_EN.pdf","IChO_2018_P_S.pdf"],
+    ["P3","Mineral Water Identification","광천수 판별","IChO_2018_P_EN.pdf","IChO_2018_P_S.pdf"]])},
+   {y:2017,host:{ko:"태국 · 나콘빠톰",en:"Nakhon Pathom, Thailand"},cc:"th",problems:lst([
+    ["P1","Acid–Base Indicator and pH Measurement","산염기 지시약과 pH 측정","IChO_2017_P_EN.pdf","IChO_2017_P_S.pdf"],
+    ["P2","Calcium Iodate","아이오딘산칼슘","IChO_2017_P_EN.pdf","IChO_2017_P_S.pdf"],
+    ["P3","Elaborating Carbon Framework","탄소 골격 만들기","IChO_2017_P_EN.pdf","IChO_2017_P_S.pdf"]])},
+   {y:2016,host:{ko:"조지아 · 트빌리시",en:"Tbilisi, Georgia"},cc:"ge",problems:lst([
+    ["P1","Identification of Compounds","화합물 확인","IChO_2016_P_EN.pdf","IChO_2016_P_S.pdf"],
+    ["P2","Fluoride and Chloride in Mineral Water","광천수 속 플루오린화 · 염화 이온","IChO_2016_P_EN.pdf","IChO_2016_P_S.pdf"],
+    ["P3","Identifying Flavors and Fragrances","향료 확인","IChO_2016_P_EN.pdf","IChO_2016_P_S.pdf"]])},
+   {y:2015,host:{ko:"아제르바이잔 · 바쿠",en:"Baku, Azerbaijan"},cc:"az",problems:lst([
+    ["P1","Tuning Bromination Selectivity by Catalysis","촉매로 조절하는 브로민화 선택성","IChO_2015_P_EN.pdf","IChO_2015_P_S.pdf"],
+    ["P2","Analysis of a Chromium–Vanadium Alloy Solution","크로뮴–바나듐 합금 용액 분석","IChO_2015_P_EN.pdf","IChO_2015_P_S.pdf"],
+    ["P3","Kinetic Determination of Diclofenac","다이클로페낙의 속도론적 정량","IChO_2015_P_EN.pdf","IChO_2015_P_S.pdf"]])},
+   {y:2014,host:{ko:"베트남 · 하노이",en:"Hanoi, Vietnam"},cc:"vn",problems:lst([
+    ["P1","Oxidation of Iodide by Iron(III): a Clock-Reaction Kinetic Study","철(III)에 의한 아이오딘화 이온의 산화 — 시계 반응 속도론","IChO_2014_P.pdf","IChO_2014_P.pdf"],
+    ["P2","Synthesis of an Artemisinin Derivative","아르테미시닌 유도체 합성","IChO_2014_P.pdf","IChO_2014_P.pdf"],
+    ["P3","Analysis of a Zinc Iron(II) Oxalate Double Salt","아연 · 철(II) 옥살산 복염 분석","IChO_2014_P.pdf","IChO_2014_P.pdf"]])},
+   {y:2013,host:{ko:"러시아 · 모스크바",en:"Moscow, Russia"},cc:"ru",problems:lst([
+    ["P1","Synthesis of 2,4-Dinitrophenylhydrazones","2,4-다이나이트로페닐하이드라존 합성","IChO_2013_P.pdf","IChO_2013_P.pdf"],
+    ["P2","Langelier Saturation Index of Pool Water","수영장 물의 랑겔리에 포화 지수","IChO_2013_P.pdf","IChO_2013_P.pdf"],
+    ["P3","Molecular Mass by Viscometry","점도법으로 분자량 구하기","IChO_2013_P.pdf","IChO_2013_P.pdf"]])},
+   {y:2012,host:{ko:"미국 · 워싱턴 D.C.",en:"Washington, D.C., USA"},cc:"us",problems:lst([
+    ["P1","Kinetics, Isotope Effect and Mechanism of the Iodination of Acetone","아세톤 아이오딘화의 반응 속도 · 동위원소 효과 · 메커니즘","IChO_2012_P.pdf","IChO_2012_P.pdf"],
+    ["P2","Synthesis of a Salen Manganese Complex","살렌 망가니즈 착물 합성","IChO_2012_P.pdf","IChO_2012_P.pdf"]])},
+   {y:2011,host:{ko:"튀르키예 · 앙카라",en:"Ankara, Türkiye"},cc:"tr",problems:lst([
+    ["P1","Analysis of Chloride Mixtures","염화물 혼합물 분석","IChO_2011_P.pdf","IChO_2011_P.pdf"],
+    ["P2","Hydrogen Generation from Ammonia Borane","암모니아 보레인에서 수소 얻기","IChO_2011_P.pdf","IChO_2011_P.pdf"],
+    ["P3","Synthesis and Separation of a Diastereomeric Mixture","부분입체이성질체 혼합물의 합성과 분리","IChO_2011_P.pdf","IChO_2011_P.pdf"]])},
+   {y:2010,host:{ko:"일본 · 도쿄",en:"Tokyo, Japan"},cc:"jp",problems:lst([
+    ["P1","Hantzsch Ester with Urea Hydrogen Peroxide","한치 에스터와 요소 과산화수소의 반응","IChO_2010_P.pdf","IChO_2010_P.pdf"],
+    ["P2","Fe(II) and Fe(III) by Visual Colorimetry","눈 비색법으로 Fe(II) · Fe(III) 정량","IChO_2010_P.pdf","IChO_2010_P.pdf"],
+    ["P3","Polymers in Analysis","분석에 쓰이는 고분자","IChO_2010_P.pdf","IChO_2010_P.pdf"]])},
+   {y:2009,host:{ko:"영국 · 케임브리지",en:"Cambridge, UK"},cc:"gb",problems:lst([
+    ["P1","An Environmentally Friendly Aldol Condensation","친환경 알돌 축합","IChO_2009_P.pdf","IChO_2009_P.pdf"],
+    ["P2","Analysis of a Copper(II) Complex","구리(II) 착물 분석","IChO_2009_P.pdf","IChO_2009_P.pdf"],
+    ["P3","Critical Micelle Concentration of a Surfactant","계면활성제의 임계 미셀 농도","IChO_2009_P.pdf","IChO_2009_P.pdf"]])},
+   {y:2008,host:{ko:"헝가리 · 부다페스트",en:"Budapest, Hungary"},cc:"hu",problems:lst([
+    ["P1","Synthesis of α-D-Glucopyranose Pentaacetate","α-D-글루코피라노스 펜타아세테이트 합성","IChO_2008_P.pdf","IChO_2008_P.pdf"],
+    ["P2","Composition of a Zinc Hexacyanoferrate(II) Precipitate","헥사사이아노철(II)산 아연 침전의 조성","IChO_2008_P.pdf","IChO_2008_P.pdf"],
+    ["P3","Identification of Unknown Solutions","미지 용액 판별","IChO_2008_P.pdf","IChO_2008_P.pdf"]])},
+   {y:2007,host:{ko:"러시아 · 모스크바",en:"Moscow, Russia"},cc:"ru",problems:lst([
+    ["P1","Ion-Exchange Chromatography of Amino Acids","아미노산의 이온 교환 크로마토그래피","IChO_2007_P.pdf","IChO_2007_P.pdf"],
+    ["P2","Carbonate and Hydrogen Phosphate in an Abrasive","연마제 속 탄산염과 인산수소염","IChO_2007_P.pdf","IChO_2007_P.pdf"]])},
+   {y:2006,host:{ko:"대한민국 · 경산",en:"Gyeongsan, Korea"},cc:"kr",problems:lst([
+    ["P1","Reverse-Phase Chromatography: Spectrophotometric Analysis","역상 크로마토그래피 — 분광 분석","IChO_2006_P.pdf","IChO_2006_P.pdf"],
+    ["P2","Reverse-Phase Chromatography: Acid–Base Titration","역상 크로마토그래피 — 산염기 적정","IChO_2006_P.pdf","IChO_2006_P.pdf"],
+    ["P3","Qualitative Analysis of Organic Compounds","유기 화합물 정성 분석","IChO_2006_P.pdf","IChO_2006_P.pdf"]])},
+   {y:2005,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:lst([
+    ["P1","Synthesis and Resolution of D,L-Phenylglycine","D,L-페닐글리신 합성과 광학 분할","IChO_2005_P.pdf","IChO_2005_P.pdf"],
+    ["P2","Identification of Unknown Inorganic Samples","미지 무기 시료 판별","IChO_2005_P.pdf","IChO_2005_P.pdf"]])},
+   {y:2004,host:{ko:"독일 · 킬",en:"Kiel, Germany"},cc:"de",problems:lst([
+    ["P1","Two-Step Organic Synthesis","두 단계 유기 합성","IChO_2004_P.pdf","IChO_2004_P.pdf"],
+    ["P2","Analysis of a Superconductor","초전도체의 정성 · 정량 분석","IChO_2004_P.pdf","IChO_2004_P.pdf"]])},
+   {y:2003,host:{ko:"그리스 · 아테네",en:"Athens, Greece"},cc:"gr",problems:lst([
+    ["P1","Synthesis of a Dipeptide","다이펩타이드 합성","IChO_2003_P.pdf","IChO_2003_P.pdf"]])},
+   {y:2002,host:{ko:"네덜란드 · 흐로닝언",en:"Groningen, Netherlands"},cc:"nl",problems:lst([
+    ["P1","Enzymatic Hydrolysis of Methyl N-Acetylphenylalaninate","N-아세틸페닐알라닌 메틸 에스터의 효소 가수분해","IChO_2002_P.pdf","IChO_2002_P.pdf"],
+    ["P2","Synthesis of Benzylhydantoin","벤질하이단토인 합성","IChO_2002_P.pdf","IChO_2002_P.pdf"],
+    ["P3","Iron in Iron Pills","철분제 속 철 정량","IChO_2002_P.pdf","IChO_2002_P.pdf"]])},
+   {y:2001,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:lst([
+    ["P1","Preparation of 2-Iodobenzoic Acid","2-아이오도벤조산 합성","IChO_2001_P.pdf","IChO_2001_P.pdf"],
+    ["P2","Mn(II) and Mg(II) in a Sample","Mn(II)와 Mg(II) 정량","IChO_2001_P.pdf","IChO_2001_P.pdf"],
+    ["P3","Rate Constant of a Redox Reaction","산화환원 반응의 속도 상수","IChO_2001_P.pdf","IChO_2001_P.pdf"]])},
+   {y:2000,host:{ko:"덴마크 · 코펜하겐",en:"Copenhagen, Denmark"},cc:"dk",problems:lst([
+    ["P1","Preparation of a Metal Complex Salt","금속 착염 합성","IChO_2000_P.pdf",null],
+    ["P2","Synthesis of an Amino Acid Methyl Ester Hydrochloride","아미노산 메틸 에스터 염산염 합성","IChO_2000_P.pdf",null]])},
+   {y:1999,host:{ko:"태국 · 방콕",en:"Bangkok, Thailand"},cc:"th",problems:lst([
+    ["P1","Kinetics of the Acid-Catalysed Iodination of Acetone","아세톤 아이오딘화의 산 촉매 반응 속도","IChO_1999_P.pdf","IChO_1999_P.pdf"],
+    ["P2","Isolation and Identification of an Essential Oil","정유의 분리와 확인","IChO_1999_P.pdf","IChO_1999_P.pdf"]])},
+   {y:1998,host:{ko:"호주 · 멜버른",en:"Melbourne, Australia"},cc:"au",problems:lst([
+    ["P1","Calcium by Oxalate Precipitation","옥살산염 침전으로 칼슘 정량","IChO_1998_P.pdf","IChO_1998_P.pdf"],
+    ["P2","Analysis of a Mixture of Cobalt(III) Complexes","코발트(III) 착물 혼합물 분석","IChO_1998_P.pdf","IChO_1998_P.pdf"]])},
+   {y:1997,host:{ko:"캐나다 · 몬트리올",en:"Montreal, Canada"},cc:"ca",problems:lst([
+    ["P1","Mg²⁺ and Ca²⁺ in Bottled Water","생수 속 Mg²⁺와 Ca²⁺","IChO_1997_P.pdf",null],
+    ["P2","Organic Qualitative Analysis","유기 정성 분석","IChO_1997_P.pdf",null],
+    ["P3","Synthesis of a Dihydro-1,3-benzoxazine","다이하이드로-1,3-벤즈옥사진 합성","IChO_1997_P.pdf",null]])},
+   {y:1996,host:{ko:"러시아 · 모스크바",en:"Moscow, Russia"},cc:"ru",problems:lst([
+    ["P1","Iodometric Determination of Copper(II) and Iron(III)","아이오딘 적정으로 구리(II) · 철(III) 정량","IChO_1996_P.pdf","IChO_1996_P.pdf"],
+    ["P2","Paracetamol in an Unknown Drug","미지 약품 속 파라세타몰 확인","IChO_1996_P.pdf","IChO_1996_P.pdf"]])},
+   {y:1995,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
+    ["P1","Identification of Unknown Solutions","미지 용액 판별","IChO_1995_P.pdf","IChO_1995_P.pdf"],
+    ["P2","Preparation of cis-Copper Bis(glycinate) Hydrate","cis-구리 비스(글리시네이트) 수화물 합성","IChO_1995_P.pdf","IChO_1995_P.pdf"],
+    ["P3","Copper(II) Content of Cu(gly)₂·xH₂O","Cu(gly)₂·xH₂O의 구리(II) 함량","IChO_1995_P.pdf","IChO_1995_P.pdf"]])},
+   {y:1994,host:{ko:"노르웨이 · 오슬로",en:"Oslo, Norway"},cc:"no",problems:lst([
+    ["P1","Determination of Fatty Acids","지방산 정량","IChO_1994_P.pdf","IChO_1994_P.pdf"],
+    ["P2","Bromide by Back-Titration with Thiocyanate","싸이오사이안산 역적정으로 브로민화 이온 정량","IChO_1994_P.pdf","IChO_1994_P.pdf"]])},
+   {y:1993,host:{ko:"이탈리아 · 페루자",en:"Perugia, Italy"},cc:"it",problems:lst([
+    ["P1","Synthesis from Cholesterol","콜레스테롤 유도체 합성","IChO_1993_P.pdf","IChO_1993_P.pdf"],
+    ["P2","Analysis of Citric Acid","시트르산 분석","IChO_1993_P.pdf","IChO_1993_P.pdf"]])},
+   {y:1992,host:{ko:"미국 · 워싱턴 D.C. · 피츠버그",en:"Washington, D.C. & Pittsburgh, USA"},cc:"us",problems:lst([
+    ["P1","Effects of CO₂ on Solubility","CO₂가 용해도에 미치는 영향","IChO_1992_P.pdf","IChO_1992_P.pdf"]])},
+   {y:1991,host:{ko:"폴란드 · 우치",en:"Łódź, Poland"},cc:"pl",problems:lst([
+    ["P1","Acid Dissociation Constant","산 해리 상수","IChO_1991_P.pdf","IChO_1991_P.pdf"],
+    ["P2","Formation Constants of Complexes","착물의 형성 상수","IChO_1991_P.pdf","IChO_1991_P.pdf"]])},
+   {y:1990,host:{ko:"프랑스 · 파리",en:"Paris, France"},cc:"fr",problems:lst([
+    ["P1","Chalcone Synthesis via Carbanions","카바니온을 이용한 칼콘 합성","IChO_1990_P.pdf","IChO_1990_P.pdf"],
+    ["P2","Qualitative Analysis","정성 분석","IChO_1990_P.pdf","IChO_1990_P.pdf"],
+    ["P3","Dissolved Oxygen by Winkler's Method","윙클러법으로 재는 용존 산소","IChO_1990_P.pdf","IChO_1990_P.pdf"],
+    ["P4","Kinetics of an SN1 Reaction","SN1 반응 속도론","IChO_1990_P.pdf","IChO_1990_P.pdf"]])},
+   {y:1989,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([
+    ["P1","Synthesis of Acetylsalicylic Acid","아세틸살리실산 합성","IChO_1989_P.pdf","IChO_1989_P.pdf"],
+    ["P2","Analysis of Acetylsalicylic Acid","아세틸살리실산 정량","IChO_1989_P.pdf","IChO_1989_P.pdf"]])},
+   {y:1988,host:{ko:"핀란드 · 에스포",en:"Espoo, Finland"},cc:"fi",problems:lst([
+    ["P1","Synthesis of an Organic Acid Salt Derivative","유기산 염 유도체 합성","IChO_1988_P.pdf","IChO_1988_P.pdf"],
+    ["P2","Spectrophotometric Concentration and Acid Constant","분광광도법으로 농도와 산 해리 상수 구하기","IChO_1988_P.pdf","IChO_1988_P.pdf"]])},
+   {y:1987,host:{ko:"헝가리 · 베스프렘 · 부다페스트",en:"Veszprém & Budapest, Hungary"},cc:"hu",problems:lst([
+    ["P1","Seven Inorganic Compounds","무기 화합물 일곱 가지","IChO_1987_P.pdf","IChO_1987_P.pdf"],
+    ["P2","Enthalpy of Mixing of Liquids","액체 혼합 엔탈피","IChO_1987_P.pdf","IChO_1987_P.pdf"],
+    ["P3","Hydrochloric Acid and Potassium Iodate","염산과 아이오딘산칼륨","IChO_1987_P.pdf","IChO_1987_P.pdf"]])},
+   {y:1986,host:{ko:"네덜란드 · 레이던",en:"Leiden, Netherlands"},cc:"nl",problems:lst([
+    ["P1","Synthesis of a Nickel(II) Salt","니켈(II) 염 합성","IChO_1986_P.pdf","IChO_1986_P.pdf"],
+    ["P2","Analysis of the Nickel Salt","니켈 염 분석","IChO_1986_P.pdf","IChO_1986_P.pdf"]])},
+   {y:1985,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"sk",problems:lst([
+    ["P1","Molar Mass of a Weak Acid by Titration","적정으로 약산의 몰질량 구하기","IChO_1985_P.pdf","IChO_1985_P.pdf"]])},
+   {y:1984,host:{ko:"서독 · 프랑크푸르트",en:"Frankfurt am Main, West Germany"},cc:"de",problems:lst([
+    ["P1","Nitration of Phenacetin","페나세틴의 나이트로화","IChO_1984_P.pdf","IChO_1984_P.pdf"],
+    ["P2","Phosphoric Acid in a Cola Drink","콜라 속 인산","IChO_1984_P.pdf","IChO_1984_P.pdf"]])},
+   {y:1983,host:{ko:"루마니아 · 티미쇼아라",en:"Timișoara, Romania"},cc:"ro",problems:lst([
+    ["P1","Functional Groups of Benzene Derivatives","벤젠 유도체의 작용기","IChO_1983_P.pdf","IChO_1983_P.pdf"],
+    ["P2","Oxalic Acid and Ammonium Oxalate","옥살산과 옥살산암모늄","IChO_1983_P.pdf","IChO_1983_P.pdf"],
+    ["P3","Six Solutions without Extra Reagents","다른 시약 없이 여섯 용액 판별","IChO_1983_P.pdf","IChO_1983_P.pdf"]])},
+   {y:1982,host:{ko:"스웨덴 · 스톡홀름",en:"Stockholm, Sweden"},cc:"se",problems:lst([
+    ["P1","Buffer Capacity","완충 용량","IChO_1982_P.pdf","IChO_1982_P.pdf"],
+    ["P2","Identification of Eight Salt Solutions","염 용액 여덟 가지 판별","IChO_1982_P.pdf","IChO_1982_P.pdf"],
+    ["P3","Solubility Product of Lead(II) Chloride","염화납(II)의 용해도곱","IChO_1982_P.pdf","IChO_1982_P.pdf"]])},
+   {y:1981,host:{ko:"불가리아 · 부르가스",en:"Burgas, Bulgaria"},cc:"bg",problems:lst([
+    ["P1","Fourteen Inorganic Solutions","무기 용액 열네 가지","IChO_1981_P.pdf","IChO_1981_P.pdf"],
+    ["P2","Organic Unknowns","유기 미지 시료","IChO_1981_P.pdf","IChO_1981_P.pdf"],
+    ["P3","Sodium Carbonate and Hydrogen Carbonate Together","탄산나트륨 · 탄산수소나트륨 동시 정량","IChO_1981_P.pdf","IChO_1981_P.pdf"]])},
+   {y:1980,host:{ko:"오스트리아 · 린츠",en:"Linz, Austria"},cc:"at",problems:lst([
+    ["P1","Qualitative Organic Analysis","유기 정성 분석","IChO_1980_P.pdf","IChO_1980_P.pdf"],
+    ["P2","Identification of Metals","금속 시료 판별","IChO_1980_P.pdf","IChO_1980_P.pdf"],
+    ["P3","Titration of Potassium Peroxodisulfate","퍼옥소이황산칼륨 적정","IChO_1980_P.pdf","IChO_1980_P.pdf"]])},
+   {y:1979,host:{ko:"소련 · 레닌그라드",en:"Leningrad, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([
+    ["P1","Identification of Ten Solutions","용액 열 가지 판별","IChO_1979_P.pdf","IChO_1979_P.pdf"],
+    ["P2","Mass of Potassium Permanganate","과망가니즈산칼륨 질량 정량","IChO_1979_P.pdf","IChO_1979_P.pdf"]])},
+   {y:1978,host:{ko:"폴란드 · 토룬",en:"Toruń, Poland"},cc:"pl",problems:lst([
+    ["P1","Identification of Four Acid and Base Solutions","산 · 염기 용액 네 가지 판별","IChO_1978_P.pdf","IChO_1978_P.pdf"],
+    ["P2","Redox Titrations","산화환원 적정","IChO_1978_P.pdf","IChO_1978_P.pdf"]])},
+   {y:1977,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"sk",problems:lst([
+    ["P1","Reaction Kinetics by Visual Colorimetry","눈 비색법으로 본 반응 속도","IChO_1977_P.pdf","IChO_1977_P.pdf"],
+    ["P2","Thermometric Titration of Hypochlorite","차아염소산염의 온도 적정","IChO_1977_P.pdf","IChO_1977_P.pdf"],
+    ["P3","Ammonium Salt by Back-Titration","역적정으로 암모늄염 정량","IChO_1977_P.pdf","IChO_1977_P.pdf"]])},
+   {y:1976,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([
+    ["P1","Cations and Anions in a Sample","시료 속 양이온과 음이온","IChO_1976_P.pdf","IChO_1976_P.pdf"],
+    ["P2","Sodium Oxalate and Oxalic Acid","옥살산나트륨과 옥살산 정량","IChO_1976_P.pdf","IChO_1976_P.pdf"],
+    ["P3","Aliphatic Compounds A–CH₂–B","A–CH₂–B형 지방족 화합물","IChO_1976_P.pdf","IChO_1976_P.pdf"]])},
+   {y:1975,host:{ko:"헝가리 · 베스프렘",en:"Veszprém, Hungary"},cc:"hu",problems:lst([
+    ["P1","Mutual Reactions of Six Solutions","여섯 용액의 상호 반응","IChO_1975_P.pdf","IChO_1975_P.pdf"],
+    ["P2","Identification of Solid Compounds","고체 화합물 판별","IChO_1975_P.pdf","IChO_1975_P.pdf"],
+    ["P3","Aromatic Hydrocarbon, Phenol and Aldehyde","방향족 탄화수소 · 페놀 · 알데하이드","IChO_1975_P.pdf","IChO_1975_P.pdf"],
+    ["P4","Water Content of Crystalline Sodium Carbonate","결정 탄산나트륨의 결정수","IChO_1975_P.pdf","IChO_1975_P.pdf"]])},
+   {y:1974,host:{ko:"루마니아 · 부쿠레슈티",en:"Bucharest, Romania"},cc:"ro",problems:lst([
+    ["P1","Organic Unknowns","유기 미지 시료","IChO_1974_P.pdf","IChO_1974_P.pdf"],
+    ["P2","Cations, and Acid or Base?","양이온, 그리고 산인가 염기인가","IChO_1974_P.pdf","IChO_1974_P.pdf"],
+    ["P3","Two Cations and Two Anions","두 양이온과 두 음이온","IChO_1974_P.pdf","IChO_1974_P.pdf"]])},
+   {y:1973,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg",problems:lst([
+    ["P1","Identification of Twelve Salt Solutions","염 용액 열두 가지 판별","IChO_1973_P.pdf",null],
+    ["P2","Six Test Tubes, Pairwise","여섯 시험관 — 짝 구별","IChO_1973_P.pdf",null],
+    ["P3","Identification of Three Compounds","세 화합물 판별","IChO_1973_P.pdf",null]])},
+   {y:1972,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([
+    ["P1","Identification of Ten Unknown Samples","미지 시료 열 가지 판별","IChO_1972_P.pdf",null],
+    ["P2","Composition of a Formic Acid–Ethanol Mixture","포름산–에탄올 혼합물의 조성","IChO_1972_P.pdf",null]])},
+   {y:1970,host:{ko:"헝가리 · 부다페스트",en:"Budapest, Hungary"},cc:"hu",problems:lst([
+    ["P1","Sulfuric and Hydrochloric Acid in a Mixture","혼합물 속 황산과 염산 정량","IChO_1970_P.pdf",null],
+    ["P2","Qualitative Analysis","정성 분석","IChO_1970_P.pdf",null]])},
+   {y:1969,host:{ko:"폴란드 · 카토비체",en:"Katowice, Poland"},cc:"pl",problems:lst([
+    ["P1","Identification of Salt Mixtures","염 혼합물 판별","IChO_1969_P.pdf",null],
+    ["P2","Metal Mass from Hydrogen Evolution","수소 발생으로 금속 질량 구하기","IChO_1969_P.pdf",null]])},
+   {y:1968,host:{ko:"체코슬로바키아 · 프라하",en:"Prague, Czechoslovakia"},cc:"cz",problems:lst([
+    ["P1","Identification of Ten Salt Solutions","염 용액 열 가지 판별","IChO_1968_P.pdf","IChO_1968_P.pdf"],
+    ["P2","Identification of Organic Acids and Glucose","유기산과 포도당 판별","IChO_1968_P.pdf","IChO_1968_P.pdf"]])}
+  ]},
+ imcho:{
+  abbr:"IMChO", since:1967,
+  full:{ko:"국제 멘델레예프 화학올림피아드",en:"International Mendeleev Chemistry Olympiad"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"멘델레예프 올림피아드의 실험 라운드만 실었습니다. 모스크바 국립대학교 화학과(chem.msu.ru)가 영어 실험 문제지를 공개한 2015–2018년만 있으며, 공식 해답은 공개되지 않았습니다.",
+        en:"Only the experimental round of the Mendeleev Olympiad. Moscow State University's chemistry faculty (chem.msu.ru) has the English experimental papers for 2015–2018 only, and no official solutions were released."},
+  soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
+  years:[
+   {y:2018,host:{ko:"벨라루스 · 민스크",en:"Minsk, Belarus"},cc:"by",problems:lst([
+    ["E1","Identification of Antacids","제산제 판별","IMChO_2018_E_EN.pdf",null],
+    ["E2","Neutralizing Capacity of an Antacid","제산제의 중화 능력","IMChO_2018_E_EN.pdf",null],
+    ["E3","Aluminium and Magnesium in an Antacid","제산제 속 알루미늄과 마그네슘","IMChO_2018_E_EN.pdf",null]])},
+   {y:2017,host:{ko:"카자흐스탄 · 아스타나",en:"Astana, Kazakhstan"},cc:"kz",problems:lst([
+    ["E1","Preparation and Identification of Phthalazol","프탈라졸 합성과 확인","IMChO_2017_E_EN.pdf",null],
+    ["E2","Diazometric Determination of Phthalazol","다이아조화 적정으로 프탈라졸 정량","IMChO_2017_E_EN.pdf",null]])},
+   {y:2016,host:{ko:"러시아 · 모스크바",en:"Moscow, Russia"},cc:"ru",problems:lst([
+    ["E1","Synthesis of a Copper–Ethylenediamine Iodide Complex","구리–에틸렌다이아민 아이오딘화 착물 합성","IMChO_2016_E_EN.pdf",null],
+    ["E2","Copper(I) and Copper(II) in the Complex","착물 속 구리(I)와 구리(II) 정량","IMChO_2016_E_EN.pdf",null]])},
+   {y:2015,host:{ko:"아르메니아 · 예레반",en:"Yerevan, Armenia"},cc:"am",problems:lst([
+    ["E1","Quantitative Analysis of a Mixed Fertilizer","복합 비료의 정량 분석","IMChO_2015_E_EN.pdf",null],
+    ["E2","Qualitative Analysis of Mineral Fertilizers","무기질 비료의 정성 분석","IMChO_2015_E_EN.pdf",null]])}
+  ]},
+ ioaa:{
+  abbr:"IOAA", since:2007,
+  full:{ko:"국제천문및천체물리올림피아드",en:"International Olympiad on Astronomy and Astrophysics"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"이론 시험과 팀 경기는 빼고 자료 분석(D)과 관측(O) 시험만 실었습니다. 같은 라운드의 문제들은 한 문제지에 묶여 있습니다. 문제지와 해답은 olimpicos에 공개된 것입니다.",
+        en:"Theory and the team competition are left out; only the data analysis (D) and observation (O) rounds are listed. Problems of one round share a booklet. The sheets and solutions are the ones published on olimpicos."},
+  soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
+  years:[
+   {y:2025,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:lst([
+    ["D1","30 Years of Exoplanets","외계행성 30년","IOAA_2025_D1_EN.pdf","IOAA_2025_D1_S.pdf"],
+    ["D2","Predicting Arrival Times of Coronal Mass Ejections","코로나 질량 방출의 도착 시각 예측","IOAA_2025_D1_EN.pdf","IOAA_2025_D1_S.pdf"],
+    ["O1","Hypothesized Planet in the Solar System","태양계의 가상 행성","IOAA_2025_O1_EN.pdf","IOAA_2025_O1_S.pdf"],
+    ["O2","Observer on a Ringed Planet","고리 행성 위의 관측자","IOAA_2025_O1_EN.pdf","IOAA_2025_O1_S.pdf"],
+    ["O3","Know Your Sky","하늘 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
+    ["O4","Know Your Grid","좌표 격자 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
+    ["O5","Know Your Time","시각 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
+    ["O6","Discovery of 'Z'","'Z'의 발견","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"],
+    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]])},
+   {y:2024,host:{ko:"브라질 · 바소우라스",en:"Vassouras, Brazil"},cc:"br",problems:lst([
+    ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
+    ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
+    ["O1","Observation","관측","IOAA_2024_O1_EN.pdf","IOAA_2024_O1_S.pdf"],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2024_O2_EN.pdf","IOAA_2024_O2_S.pdf"]])},
+   {y:2023,host:{ko:"폴란드 · 호주프",en:"Chorzów, Poland"},cc:"pl",problems:lst([
+    ["D1","Distance to the Large Magellanic Cloud","대마젤란은하까지의 거리","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
+    ["D2","Isolated Black Hole","고립된 블랙홀","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
+    ["O1","Asteroid Occultation","소행성 엄폐","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
+    ["O2","Starlink","스타링크","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
+    ["O3","Planetary Moons","행성의 위성","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
+    ["O4","Supernova","초신성","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
+    ["O5","Knowledge of the Sky","하늘에 대한 지식","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"],
+    ["O6","Retrograde Mars","화성의 역행","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"],
+    ["O7","TRAPPIST-1","TRAPPIST-1","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"]])},
+   {y:2022,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",problems:lst([
+    ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
+    ["D2","Galactic Surveys","은하 서베이","IOAA_2022_D1_EN.pdf","IOAA_2022_D2i_S.pdf"],
+    ["O1","Observation (Night)","관측 (야간)","IOAA_2022_O1_EN.pdf","IOAA_2022_O1_S.pdf"],
+    ["O2","Observation (Day)","관측 (주간)","IOAA_2022_O2_EN.pdf","IOAA_2022_O1_S.pdf"]])},
+   {y:2021,host:{ko:"온라인 · 콜롬비아 주관",en:"Online, hosted by Colombia"},cc:"co",problems:lst([
+    ["D1","Scaling Relations","스케일링 관계","IOAA_2021_D1_EN.pdf","IOAA_2021_D1_S.pdf"],
+    ["D2","Stars and Exoplanets","별과 외계행성","IOAA_2021_D2_EN.pdf","IOAA_2021_D2_S.pdf"],
+    ["O1","The Solar Slap (Solar Physics)","솔라 슬랩 (태양 물리)","IOAA_2021_O1_EN.pdf","IOAA_2021_O1_S.pdf"],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2021_O2_EN.pdf","IOAA_2021_O2_S.pdf"]])},
+   {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:lst([
+    ["D1","AGN","활동은하핵","IOAA_2020_D1_EN.pdf",null],
+    ["D2","Minor Planet","소행성","IOAA_2020_D1_EN.pdf",null],
+    ["D3","Hypervelocity Stars","초고속 별","IOAA_2020_D1_EN.pdf",null],
+    ["O1","Observation","관측","IOAA_2020_O1i_EN.pdf",null]])},
+   {y:2019,host:{ko:"헝가리 · 케스트헤이",en:"Keszthely, Hungary"},cc:"hu",problems:lst([
+    ["D1","Photometry and Spectroscopy of Nova Del 2013","Nova Del 2013의 측광과 분광","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"],
+    ["D2","Triply Eclipsing Hierarchical Triple Star","세 번 가려지는 계층적 삼중성","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"],
+    ["O1","Finderscope Alignment","파인더 정렬","IOAA_2019_O1_EN.pdf","IOAA_2019_O1_S.pdf"],
+    ["O2","Observation of Saturn","토성 관측","IOAA_2019_O1_EN.pdf","IOAA_2019_O1_S.pdf"],
+    ["O3","M57 – Field of View","M57 — 시야","IOAA_2019_O1_EN.pdf","IOAA_2019_O1_S.pdf"],
+    ["O4","Variable Star AF Cygni","변광성 백조자리 AF","IOAA_2019_O1_EN.pdf","IOAA_2019_O1_S.pdf"],
+    ["O5","Naked-Eye Brightness Estimation","맨눈 밝기 추정","IOAA_2019_O1_EN.pdf","IOAA_2019_O1_S.pdf"],
+    ["O6","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2019_O2_EN.pdf","IOAA_2019_O2_S.pdf"]])},
+   {y:2018,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
+    ["D1","Dust and Young Stars in Star-forming Galaxies","별 생성 은하의 먼지와 어린 별","IOAA_2018_D1_EN.pdf","IOAA_2018_D1_S.pdf"],
+    ["D2","Compact Object in a Binary System","쌍성계 속의 밀집 천체","IOAA_2018_D1_EN.pdf","IOAA_2018_D1_S.pdf"],
+    ["O1","Observation (Day)","관측 (주간)","IOAA_2018_O1_EN.pdf","IOAA_2018_O1_S.pdf"],
+    ["O2","Observation (Night)","관측 (야간)","IOAA_2018_O2_EN.pdf","IOAA_2018_O2_S.pdf"]])},
+   {y:2017,host:{ko:"태국 · 푸껫",en:"Phuket, Thailand"},cc:"th",problems:lst([
+    ["D1","Calibrating the Distance Ladder to the LMC","대마젤란은하까지 거리 사다리 보정","IOAA_2017_D1_EN.pdf","IOAA_2017_D1_S.pdf"],
+    ["D2","The Search for Dark Matter","암흑물질 탐색","IOAA_2017_D1_EN.pdf","IOAA_2017_D1_S.pdf"],
+    ["O1","Naked-Eye Observation of the Real Sky","실제 하늘 맨눈 관측","IOAA_2017_O1_EN.pdf",null],
+    ["O2","Planets in a Panoramic 360° Sky Image","360° 파노라마 하늘 사진 속 행성","IOAA_2017_O1_EN.pdf",null],
+    ["O3","Analemma on Another Planet","다른 행성의 아날렘마","IOAA_2017_O1_EN.pdf",null],
+    ["O4","Exposure Time from a Photograph","사진으로 노출 시간 구하기","IOAA_2017_O1_EN.pdf",null],
+    ["O5","True North from the Moon's Shadow","달 그림자로 진북 찾기","IOAA_2017_O1_EN.pdf",null],
+    ["O6","Latitude from an Equatorial Mount","적도의로 위도 구하기","IOAA_2017_O1_EN.pdf",null],
+    ["O7","Precise Polar Alignment of an Equatorial Mount","적도의 정밀 극축 맞추기","IOAA_2017_O1_EN.pdf",null],
+    ["O8","Observation with an Equatorial-Mount Telescope","적도의 망원경 관측","IOAA_2017_O2_EN.pdf",null],
+    ["O9","Observation with a Dobsonian Telescope","돕소니언 망원경 관측","IOAA_2017_O2_EN.pdf",null]])},
+   {y:2016,host:{ko:"인도 · 부바네스와르",en:"Bhubaneswar, India"},cc:"in",problems:lst([
+    ["D1","Binary Pulsar","쌍성 펄서","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
+    ["D2","Distance to the Moon","달까지의 거리","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
+    ["D3","Type Ia Supernovae","Ia형 초신성","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
+    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2016_O1_EN.pdf",null],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2016_O1_EN.pdf",null]])},
+   {y:2015,host:{ko:"인도네시아 · 마겔랑",en:"Magelang, Indonesia"},cc:"id",problems:lst([
+    ["D1","Data Analysis","자료 분석","IOAA_2015_D1_EN.pdf","IOAA_2015_D1_S.pdf"],
+    ["O1","Observation (Naked Eye)","관측 (맨눈)","IOAA_2015_O1_EN.pdf","IOAA_2015_O1_S.pdf"],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2015_O2_EN.pdf","IOAA_2015_O2_S.pdf"],
+    ["O3","Observation (Main Telescope)","관측 (주 망원경)","IOAA_2015_O3_EN.pdf","IOAA_2015_O3_S.pdf"],
+    ["O4","Observation (Small Telescope)","관측 (소형 망원경)","IOAA_2015_O4_EN.pdf","IOAA_2015_O4_S.pdf"]])},
+   {y:2014,host:{ko:"루마니아 · 수체아바",en:"Suceava, Romania"},cc:"ro",problems:lst([
+    ["D1","Black Hole in the Milky Way","우리은하의 블랙홀","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
+    ["D2","Thermodynamic Test","열역학 시험","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
+    ["D3","IOAA Observer on an Extrasolar Planet","외계행성 위의 IOAA 관측자","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
+    ["O1","Observation (Outdoor)","관측 (야외)","IOAA_2014_O1_EN.pdf",null],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2014_O2_EN.pdf","IOAA_2014_O2_S.pdf"]])},
+   {y:2013,host:{ko:"그리스 · 볼로스",en:"Volos, Greece"},cc:"gr",problems:lst([
+    ["D1","Data Analysis","자료 분석","IOAA_2013_D1_EN.pdf","IOAA_2013_D1_S.pdf"],
+    ["O1","Observation (Night)","관측 (야간)","IOAA_2013_O1_EN.pdf","IOAA_2013_O1_S.pdf"],
+    ["O2","Observation (Day, Indoors)","관측 (주간 · 실내)","IOAA_2013_O2_EN.pdf",null]])},
+   {y:2012,host:{ko:"브라질 · 바소우라스",en:"Vassouras, Brazil"},cc:"br",problems:lst([
+    ["D1","Data Analysis","자료 분석","IOAA_2012_D1_EN.pdf","IOAA_2012_D1_S.pdf"],
+    ["O1","Observation","관측","IOAA_2012_O1_EN.pdf","IOAA_2012_O1_S.pdf"]])},
+   {y:2011,host:{ko:"폴란드 · 카토비체",en:"Katowice, Poland"},cc:"pl",problems:lst([
+    ["D1","Analysis of Times of Minima","극소 시각 분석","IOAA_2011_D1_EN.pdf","IOAA_2011_D1_S.pdf"],
+    ["D2","Weighing a Galaxy","은하의 질량 재기","IOAA_2011_D1_EN.pdf","IOAA_2011_D1_S.pdf"],
+    ["O1","The Little Dolphin","돌고래자리","IOAA_2011_O1_EN.pdf","IOAA_2011_O1_S.pdf"],
+    ["O2","Determining Declination","적위 구하기","IOAA_2011_O1_EN.pdf","IOAA_2011_O1_S.pdf"],
+    ["O3","Planetarium: Earth","플라네타륨 — 지구","IOAA_2011_O2_EN.pdf","IOAA_2011_O2_S.pdf"],
+    ["O4","Planetarium: Mars","플라네타륨 — 화성","IOAA_2011_O2_EN.pdf","IOAA_2011_O2_S.pdf"]])},
+   {y:2010,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
+    ["D1","CCD Image","CCD 영상","IOAA_2010_D1_EN.pdf","IOAA_2010_D1_S.pdf"],
+    ["D2","Light Curves of Stars","별의 광도 곡선","IOAA_2010_D1_EN.pdf","IOAA_2010_D1_S.pdf"],
+    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2010_O1_EN.pdf","IOAA_2010_O1_S.pdf"],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2010_O1_EN.pdf","IOAA_2010_O1_S.pdf"]])},
+   {y:2009,host:{ko:"이란 · 테헤란",en:"Tehran, Iran"},cc:"ir",problems:lst([
+    ["D1","CCD Image Processing","CCD 영상 처리","IOAA_2009_D1_EN.pdf","IOAA_2009_D1_S.pdf"],
+    ["D2","Venus","금성","IOAA_2009_D1_EN.pdf","IOAA_2009_D1_S.pdf"],
+    ["O1","Observation","관측","IOAA_2009_O1_EN.pdf","IOAA_2009_O1_S.pdf"]])},
+   {y:2008,host:{ko:"인도네시아 · 반둥",en:"Bandung, Indonesia"},cc:"id",problems:lst([
+    ["D1","Virgo Cluster","처녀자리 은하단","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
+    ["D2","Alpha Centauri","알파 센타우리","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
+    ["D3","Age of Meteorites","운석의 나이","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
+    ["O1","Observation I: Naked Eye","관측 I — 맨눈","IOAA_2008_O1_EN.pdf","IOAA_2008_O1i_S.pdf"],
+    ["O2","Observation II: Telescope and CCD","관측 II — 망원경과 CCD","IOAA_2008_O1_EN.pdf","IOAA_2008_O2i_S.pdf"]])},
+   {y:2007,host:{ko:"태국 · 치앙마이",en:"Chiang Mai, Thailand"},cc:"th",problems:lst([
+    ["D1","Galilean Moons","갈릴레이 위성","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
+    ["D2","The Moon's Age","월령","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
+    ["D3","Solar System Objects","태양계 천체","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
+    ["O1","Observation I: Celestial Object Pointer","관측 I — 천체 가리키기","IOAA_2007_O1_EN.pdf","IOAA_2007_O1_S.pdf"],
+    ["O2","Observation II: Binoculars","관측 II — 쌍안경","IOAA_2007_O1_EN.pdf","IOAA_2007_O1_S.pdf"]])}
+  ]},
+ ioaajr:{
+  abbr:"IOAA Jr", since:2022,
+  full:{ko:"국제 주니어 천문및천체물리올림피아드",en:"International Olympiad on Astronomy and Astrophysics Junior"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"IOAA의 주니어 대회입니다. 관측 시험만 실었으며, 문제지는 olimpicos에 공개된 것입니다.",
+        en:"The junior edition of the IOAA. Only the observation round is listed; the sheets are the ones published on olimpicos."},
+  soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
+  years:[
+   {y:2025,host:{ko:"루마니아",en:"Romania"},cc:"ro",problems:lst([
+    ["O1","Know Your Sky","하늘 알기","IOAAJr_2025_O1_EN.pdf",null],
+    ["O2","Chart and Time","성도와 시각","IOAAJr_2025_O1_EN.pdf",null],
+    ["O3","Missing Stars","사라진 별","IOAAJr_2025_O1_EN.pdf",null],
+    ["O4","Observation (Telescope)","관측 (망원경)","IOAAJr_2025_O2_EN.pdf",null]])},
+   {y:2024,host:{ko:"네팔",en:"Nepal"},cc:"np",problems:lst([
+    ["O1","Observation (Sky Chart)","관측 (성도)","IOAAJr_2024_O1_EN.pdf",null],
+    ["O2","Observation (Telescope)","관측 (망원경)","IOAAJr_2024_O2_EN.pdf",null]])},
+   {y:2023,host:{ko:"그리스",en:"Greece"},cc:"gr",problems:lst([
+    ["O1","Navigating the Night Sky I","밤하늘 길잡이 I","IOAAJr_2023_O1i_EN.pdf",null],
+    ["O2","Navigating the Night Sky II","밤하늘 길잡이 II","IOAAJr_2023_O2i_EN.pdf",null],
+    ["O3","Sun Observations","태양 관측","IOAAJr_2023_O2_EN.pdf",null],
+    ["O4","Cloudy-Sky Observation","흐린 날 관측","IOAAJr_2023_O2_EN.pdf",null]])},
+   {y:2022,host:{ko:"루마니아",en:"Romania"},cc:"ro",problems:lst([
+    ["O1","Sky Map","성도","IOAAJr_2022_O1i_EN.pdf","IOAAJr_2022_O1i_S.pdf"],
+    ["O2","Naked-Eye Observations","맨눈 관측","IOAAJr_2022_O2_EN.pdf",null],
+    ["O3","Observations with an Astronomical Telescope","천체 망원경 관측","IOAAJr_2022_O2_EN.pdf",null]])}
   ]}
 
 };
@@ -2310,13 +2762,14 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 5;
+const LOGO_V = 6;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
-                   ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30};
+                   ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
+                   ijso:0.42, ioaa:0.50};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -2544,7 +2997,7 @@ function viewYear(key,year){
         const mode = held ? "wip" : (f.sim ? "live" : (f.exe ? "dl" : (f.src ? "src" : "wip")));
         const tags=(lang==="ko"?p.tags:p.tagsEn)||[];
         const heading = p.title ? p.title[lang] : ((lang==="ko"?p.ko:p.en)||p.en||d.soonTitle);
-        const body    = p.desc ? p.desc[lang] : d.soonDesc;
+        const body    = p.desc ? p.desc[lang] : (c.soon ? c.soon[lang] : d.soonDesc);
         const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : d.wip;
         /* every card has the same layout as IPhO 2017: the note on the unsigned
            Windows build, then [run][Windows], then [sheet][solution][source];
@@ -2556,7 +3009,10 @@ function viewYear(key,year){
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
         const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${pick(v)}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
         const docs=[doc(f.pdf,d.actPdf,true), doc(f.sol,d.actSol,true), doc(f.src,d.actSrc,false)];
-        const note = `<p class="exenote">${d.exeNote}</p>`;
+        if(c.soon) docs.pop();
+        /* 시뮬레이터를 만들지 않는 대회(화학 · 천문 · 통합과학)는 문제지 줄만 둔다 */
+        const docsOnly = !!c.soon;
+        const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         return `<article class="prob ${mode==="wip"?"soon":""}">
           <div class="top">
             <span class="code">${p.id}</span>
@@ -2567,7 +3023,7 @@ function viewYear(key,year){
           <p>${body}</p>
           <div class="tags">${tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${note}
-          <div class="acts"><div class="main">${b.join("\n")}</div><div class="docs n3">${docs.join("\n")}</div></div>
+          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}<div class="docs n${docs.length}">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
     </div>
   </div>
