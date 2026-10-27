@@ -18,7 +18,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 3. **Settings → Bindings → Add → D1 database**에서 변수 이름은 `DB`, 데이터베이스는 `haslalab-community`를 고릅니다.
 4. **Settings → Variables and Secrets → Add**에서 이름은 `ALLOWED_ORIGINS`, 값은 아래로 넣습니다.
    `https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io`
-5. 화면 위에 보이는 `https://haslalab-community.<계정>.workers.dev` 주소를 `index.html`의 `COMMUNITY_API`에 넣습니다.
+5. **Settings → Domains & Routes**에서 workers.dev를 켜고, 그 주소를 `index.html`의 `COMMUNITY_API`에 넣습니다. (지금: `https://haslalab-community.mgsnew88.workers.dev`)
 
 ## 처음 배포하기 (명령줄)
 
