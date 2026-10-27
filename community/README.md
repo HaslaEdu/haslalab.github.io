@@ -28,6 +28,28 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 글마다 `lang`(`ko`/`en`)이 붙고, 목록·게시판 통계·인기글은 사이트 언어의 서버 것만 보여 줍니다. `migrations/0003_lang.sql`은 원격 D1에 적용해 두었습니다(기존 글은 모두 한국어 서버). `src/index.js`를 다시 붙여 넣고 Deploy하면 됩니다.
 
+## v4: 사이트 로그인 · 주간 문제 · 채점 · 랭킹
+
+커뮤니티 계정이 그대로 사이트 계정이 됩니다. 사이트 오른쪽 위에 로그인 버튼이 생기고, 「주간 문제」(`#/weekly`), 랭킹(`#/rank`), 내 기록(`#/me`) 화면이 열립니다.
+
+- **단답형** 문제는 서버가 숫자를 정답과 비교해 바로 채점합니다(허용 오차는 문제마다 `rel` 또는 `abs`). AI 키가 없어도 동작합니다.
+- **서술형** 문제는 하슬라논술 채점기(`grade-v2`)와 같은 방식으로 채점합니다. 문제의 채점 기준(루브릭)마다 점수를 매기고, 학생 답안에서 그대로 인용한 근거를 붙입니다. 답안에 없는 근거로 준 점수는 0점으로 바꿉니다. Gemini 키가 있으면 Gemini를, 없고 OpenAI 키가 있으면 OpenAI를 씁니다. 둘 다 없으면 답안은 「채점 대기」로 저장되고, 관리자가 `#/weekly/admin`에서 점수를 줍니다.
+- **사진 답안**은 하슬라논술처럼 Upstage OCR로 읽습니다. 수식이 많으면 Document Parse로 LaTeX를 살려 읽습니다. 읽은 글은 학생이 확인하고 고친 뒤에 제출합니다. 이미지는 JPEG·PNG·WebP 한 장, 8 MB까지 받고, 한 사람이 하루 30번까지 쓸 수 있습니다.
+- **랭킹**은 문제마다 가장 높은 점수를 더해 매깁니다. 같은 점수면 그 점수에 먼저 닿은 사람이 앞섭니다. 주가 열려 있는 동안 낸 답만 셉니다. 주가 끝나면 풀이가 공개되므로, 그 뒤에 낸 답은 연습으로만 채점합니다. 티어는 총점 기준으로 브론즈(0), 실버(300), 골드(800), 플래티넘(1600), 다이아몬드(3000), 루비(5000)입니다.
+- 새 주는 월요일 0시(한국 시각)에 열립니다. 문제는 관리자 화면에서 추가합니다(`week`, `opens_at`/`closes_at`은 유닉스 초).
+
+### 올리는 순서
+
+1. **표 만들기**: `migrations/0004_arena.sql`을 원격 D1에 적용합니다. `npm run db:remote`를 실행하거나, 대시보드에서 **D1 → haslalab-community → Console**에 파일 내용을 붙여 넣고 실행합니다. 첫 주(2026-W44) 문제 세 개가 함께 들어갑니다.
+2. **코드 올리기**: `src/index.js`를 대시보드에 다시 붙여 넣고 **Deploy**를 누릅니다. `/api/health`가 `v: 4`를 돌려주면 사이트가 새 화면을 엽니다.
+3. **키 넣기**: **Settings → Variables and Secrets**에서 *Secret*으로 넣습니다. 키는 서버에만 있고 사이트에는 들어가지 않습니다.
+   - `UPSTAGE_API_KEY`: 사진 읽기(OCR)
+   - `GEMINI_API_KEY`: 서술형 채점. 모델은 `GEMINI_MODEL`로 바꿀 수 있고, 기본값은 `gemini-flash-latest`입니다.
+   - 또는 `OPENAI_API_KEY`: 모델은 `OPENAI_MODEL`로 정하고, 기본값은 `gpt-5.4`입니다.
+4. **관리자 지정**: 아래 「관리」의 명령으로 관리자를 정하면 `#/weekly/admin`이 열립니다.
+
+로컬 시험: `.dev.vars`에 키 대신 시험용 값과 `GEMINI_BASE`·`UPSTAGE_BASE`(가짜 서버 주소)를 넣고 `node test-arena.mjs`를 실행합니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
@@ -106,3 +128,12 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/posts/:id/comments` | `{body}` |
 | PATCH / DELETE | `/api/comments/:id` | 댓글 수정 / 삭제 |
 | POST | `/api/report` | `{kind: "post"\|"comment", id, reason}` |
+| GET | `/api/weekly?lang=&week=` | 이번 주(또는 그 주) 문제 목록, 내 최고 점수, 주 목록 |
+| GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
+| POST | `/api/problems/:id/submit` | `{answer, via_ocr}` → `{status, score, detail}` |
+| POST | `/api/ocr?mode=text\|math` | multipart `image` → `{text, confidence}` |
+| GET | `/api/rank?scope=week\|all&week=` | 랭킹 100위까지 |
+| GET | `/api/me/stats` | 내 순위, 총점, 최근 제출 |
+| GET/POST | `/api/admin/problems` | 문제 목록 / 추가·수정 (관리자) |
+| GET | `/api/admin/queue` | 채점 대기 답안 (관리자) |
+| POST | `/api/admin/submissions/:id` | `{score, note}` 또는 `{regrade: true}` (관리자) |
