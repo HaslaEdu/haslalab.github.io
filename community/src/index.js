@@ -8,7 +8,10 @@
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
 const TAGS = ["gen", "q", "info", "review", "bug", "notice"];
-const BEST = 3;                      // net votes that make a post a 개념글 / best post
+const BEST = 3;
+// two servers, one account: the Korean and the English community keep their own posts
+const LANGS = ["ko", "en"];
+const pickLang = l => LANGS.includes(l) ? l : "ko";                      // net votes that make a post a 개념글 / best post
 const PAGE = 20;
 const SESSION_DAYS = 30;
 const PBKDF2_ITER = 100000;          // Workers' WebCrypto ceiling for PBKDF2
@@ -142,11 +145,11 @@ async function handle(req, env, url) {
   const me = await currentUser(req, env);
   let r;
 
-  if (p === "/api/health") return { ok: true, v: 2, boards: BOARDS, tags: TAGS, best: BEST };
+  if (p === "/api/health") return { ok: true, v: 3, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS };
   if (p === "/api/boards" && m === "GET") {
-    const day = now() - 86400;
+    const day = now() - 86400, lang = pickLang(url.searchParams.get("lang"));
     const rows = (await env.DB.prepare(
-      `SELECT board, COUNT(*) n, SUM(created_at > ?) today FROM posts GROUP BY board`).bind(day).all()).results;
+      `SELECT board, COUNT(*) n, SUM(created_at > ?) today FROM posts WHERE lang=? GROUP BY board`).bind(day, lang).all()).results;
     return { boards: rows };
   }
 
@@ -211,7 +214,8 @@ async function handle(req, env, url) {
     const sort = sp.get("sort") || "new", best = sp.get("best") === "1";
     const page = Math.max(1, Math.min(500, parseInt(sp.get("page")) || 1));
     if (board && !BOARDS.includes(board)) bad("bad_board");
-    const where = ["p.tag<>'notice'"], args = [];
+    const lang = pickLang(sp.get("lang"));
+    const where = ["p.tag<>'notice'", "p.lang=?"], args = [lang];
     if (board) { where.push("p.board=?"); args.push(board); }
     if (tag && TAGS.includes(tag)) { where.push("p.tag=?"); args.push(tag); }
     if (best) where.push(`(p.n_likes-p.n_dislikes)>=${BEST}`);
@@ -232,8 +236,8 @@ async function handle(req, env, url) {
       .bind(...args, PAGE, (page - 1) * PAGE).all()).results;
     // notices sit on top of the first page, as on every Korean board
     const notices = page === 1 && !q ? (await env.DB.prepare(
-      `SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.tag='notice' ${board ? "AND (p.board=? OR p.board='free')" : ""} ORDER BY p.id DESC LIMIT 5`)
-      .bind(...(board ? [board] : [])).all()).results : [];
+      `SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.tag='notice' AND p.lang=? ${board ? "AND (p.board=? OR p.board='free')" : ""} ORDER BY p.id DESC LIMIT 5`)
+      .bind(lang, ...(board ? [board] : [])).all()).results : [];
     return { posts: rows, notices, total, page, per: PAGE };
   }
   if (p === "/api/posts" && m === "POST") {
@@ -243,8 +247,8 @@ async function handle(req, env, url) {
     const tag = pickTag(body.tag, me);
     const title = text(body.title, LIMITS.title, "bad_title");
     const content = text(body.body, LIMITS.body, "bad_body");
-    const res = await env.DB.prepare("INSERT INTO posts(board,tag,user_id,title,body,created_at) VALUES(?,?,?,?,?,?)")
-      .bind(board, tag, me.id, title, content, now()).run();
+    const res = await env.DB.prepare("INSERT INTO posts(board,tag,lang,user_id,title,body,created_at) VALUES(?,?,?,?,?,?,?)")
+      .bind(board, tag, pickLang(body.lang), me.id, title, content, now()).run();
     return { id: res.meta.last_row_id };
   }
   if ((r = /^\/api\/posts\/(\d+)$/.exec(p))) {

@@ -758,18 +758,29 @@ function toolboxClick(px, py, drag){ const W = APPC.width, H = APPC.height; if (
 const DR = {scr:"toolbox", prev:null, recent:["toolbox"], calc:"0", calcE:"", sw:{run:false, acc:0, t0:0, laps:[]}};
 const dk = (en, ko) => LANG === "ko" ? ko : en;
 const DAPPS = {toolbox:{n:() => "Physics Toolbox", col:"#1e88e5", gl:"∿"}, calc:{n:() => dk("Calculator", "계산기"), col:"#455a64", gl:"±"},
-  clock:{n:() => dk("Clock", "시계"), col:"#3949ab", gl:"⏱"}, settings:{n:() => dk("Settings", "설정"), col:"#607d8b", gl:"⚙"}, chrome:{n:() => "Chrome", col:"#fff", gl:""}};
+  clock:{n:() => dk("Clock", "시계"), col:"#3949ab", gl:"⏱"}, settings:{n:() => dk("Settings", "설정"), col:"#607d8b", gl:"⚙"}, chrome:{n:() => "Chrome", col:"#fff", gl:""}, youtube:{n:() => "YouTube", col:"#fff", gl:""}};
+/* home-screen grid: five icons a row, the last row just above the search bar */
+const homePos = i => { const n = Object.keys(DAPPS).length, rows = Math.ceil(n / 5); return [33 + 66 * (i % 5), 500 - 84 * (rows - 1 - Math.floor(i / 5))]; };
 /* Chrome: the real web in a mobile browser (vbrowser.js), laid over the phone's screen in the phone view */
 let BRP = null;
 function brpGet(){ if (!BRP && window.VBrowser){ BRP = VBrowser({kind:"chrome", mobile:true, lang:() => LANG,
     links:[{t:{ko:"문제지", en:"Problem"}, url:"../pdf/NBPhO_2020_E_EN.pdf", ic:"📄", col:"#c0392b"}, {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"},
       {t:{ko:"위키백과", en:"Wikipedia"}, url:LANG === "ko" ? "https://ko.m.wikipedia.org/" : "https://en.m.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://m.youtube.com/", ic:"▶", col:"#e62117"}]});
     BRP.el.style.display = "none"; document.body.appendChild(BRP.el); } return BRP; }
+/* the YouTube app: the same library and player, without the address bar */
+let BRY = null;
+function bryGet(){ if (!BRY && window.VBrowser){ BRY = VBrowser({kind:"chrome", app:"youtube", mobile:true, lang:() => LANG}); BRY.el.style.display = "none"; document.body.appendChild(BRY.el); } return BRY; }
+const appGet = k => k === "chrome" ? brpGet() : k === "youtube" ? bryGet() : null;
+const appBr = () => DR.scr === "chrome" ? BRP : DR.scr === "youtube" ? BRY : null;
 const DKEYS = ["C", "(", ")", "÷", "7", "8", "9", "×", "4", "5", "6", "−", "1", "2", "3", "+", "0", ".", "⌫", "="];
 const pad2 = n => String(n).padStart(2, "0");
 const swNow = () => DR.sw.acc + (DR.sw.run ? ST.t - DR.sw.t0 : 0);
 const swFmt = t => pad2(Math.floor(t / 60)) + ":" + pad2(Math.floor(t % 60)) + "." + pad2(Math.floor(t * 100 % 100));
 function dIcon(g, k, cx, cy, r){
+  /* the real Chrome and YouTube logos (sim/icons via vbrowser.js) once loaded */
+  const im = (k === "chrome" || k === "youtube") && window.VBrowser && VBrowser.icon(k);
+  if (im && im.complete && im.naturalWidth){ if (k === "youtube"){ g.fillStyle = "#fff"; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.drawImage(im, cx - r * 0.62, cy - r * 0.434, r * 1.24, r * 0.868); } else g.drawImage(im, cx - r, cy - r, 2 * r, 2 * r); return; }
+  if (k === "youtube"){ g.fillStyle = "#fff"; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = "#f00"; g.fillRect(cx - r * 0.6, cy - r * 0.42, r * 1.2, r * 0.84); g.fillStyle = "#fff"; g.beginPath(); g.moveTo(cx - r * 0.18, cy - r * 0.24); g.lineTo(cx + r * 0.26, cy); g.lineTo(cx - r * 0.18, cy + r * 0.24); g.fill(); return; }
   if (k === "chrome"){ for (const [c0, a0] of [["#db4437", -Math.PI * 5 / 6], ["#f4c20d", -Math.PI / 6], ["#0f9d58", Math.PI / 2]]){ g.fillStyle = c0; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, r, a0, a0 + Math.PI * 2 / 3); g.closePath(); g.fill(); }
     g.fillStyle = "#fff"; g.beginPath(); g.arc(cx, cy, r * 0.46, 0, 7); g.fill(); g.fillStyle = "#4285f4"; g.beginPath(); g.arc(cx, cy, r * 0.36, 0, 7); g.fill(); return; }
   g.fillStyle = DAPPS[k].col; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = "#fff"; g.font = "bold " + Math.round(r) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(DAPPS[k].gl, cx, cy + 1); }
@@ -778,7 +789,7 @@ function droidHome(g, W, H){ const gr = g.createLinearGradient(0, 0, W * 0.4, H)
   const d = new Date(); g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = "300 64px Arial"; g.fillText(pad2(d.getHours()) + ":" + pad2(d.getMinutes()), W / 2, 120);
   g.font = "15px Arial"; g.fillText(d.toLocaleDateString(LANG === "ko" ? "ko-KR" : "en-GB", {weekday:"long", month:"long", day:"numeric"}), W / 2, 168);
   g.fillStyle = "rgba(255,255,255,0.92)"; g.beginPath(); g.roundRect ? g.roundRect(24, 600, W - 48, 44, 22) : g.rect(24, 600, W - 48, 44); g.fill(); g.fillStyle = "#6b7680"; g.font = "14px Arial"; g.textAlign = "left"; g.fillText("🔍  " + dk("Search", "검색"), 44, 622);
-  Object.keys(DAPPS).forEach((k, i) => { const cx = 33 + 66 * i; dIcon(g, k, cx, 500, 24); g.fillStyle = "#fff"; g.font = "11px Arial"; g.textAlign = "center"; g.fillText(DAPPS[k].n(), cx, 540, 64); }); }
+  Object.keys(DAPPS).forEach((k, i) => { const [cx, cy] = homePos(i); dIcon(g, k, cx, cy, 24); g.fillStyle = "#fff"; g.font = "11px Arial"; g.textAlign = "center"; g.fillText(DAPPS[k].n(), cx, cy + 40, 64); }); }
 function droidCalc(g, W, H){ g.fillStyle = "#121417"; g.fillRect(0, 0, W, H); g.textAlign = "right"; g.textBaseline = "middle"; g.fillStyle = "#8a949e"; g.font = "18px Arial"; g.fillText(DR.calcE, W - 20, 110);
   g.fillStyle = "#fff"; g.font = (DR.calc.length > 11 ? "30px" : "44px") + " Arial"; g.fillText(DR.calc, W - 20, 170);
   DKEYS.forEach((k, i) => { const cx = 41 + 82.5 * (i % 4), cy = 270 + 94 * Math.floor(i / 4); g.fillStyle = k === "=" ? "#1e88e5" : /[÷×−+()C⌫]/.test(k) ? "#2d3640" : "#22272d";
@@ -807,7 +818,8 @@ function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, CH = A
   g.save(); g.translate(0, SBH); g.beginPath(); g.rect(0, 0, W, CH); g.clip();
   if (DR.scr === "toolbox") g.drawImage(toolboxTex(), 0, 0); else if (DR.scr === "home") droidHome(g, W, CH); else if (DR.scr === "calc") droidCalc(g, W, CH);
   else if (DR.scr === "clock") droidClock(g, W, CH); else if (DR.scr === "settings") droidSettings(g, W, CH);
-  else if (DR.scr === "chrome"){ if (window.VBrowser) VBrowser.sketch(g, 0, 0, W, CH, "chrome", BRP ? BRP.title() : ""); } else droidRecents(g, W, CH);
+  else if (DR.scr === "chrome"){ if (window.VBrowser) VBrowser.sketch(g, 0, 0, W, CH, "chrome", BRP ? BRP.title() : ""); }
+  else if (DR.scr === "youtube"){ if (window.VBrowser) VBrowser.sketch(g, 0, 0, W, CH, "youtube", BRY ? BRY.title() : ""); } else droidRecents(g, W, CH);
   g.restore();
   /* status bar */
   const d = new Date(); g.fillStyle = DR.scr === "settings" ? "#e3e7eb" : "#0b0d10"; g.fillRect(0, 0, W, SBH); const fg = DR.scr === "settings" ? "#1d232a" : "#e8eef2";
@@ -822,16 +834,16 @@ function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, CH = A
   g.beginPath(); g.arc(W / 2, cy, 8.5, 0, 7); g.stroke(); g.strokeRect(5 * W / 6 - 7.5, cy - 7.5, 15, 15); g.lineWidth = 1;
   return PHONEC; }
 function phoneClick(px, py, drag){ const W = PHONEC.width, CH = APPC.height; if (py < SBH) return;
-  if (py >= SBH + CH){ if (drag) return; if (px < W / 3 && DR.scr === "chrome" && BRP && BRP.back()) return; if (px < W / 3){ if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else if (DR.scr !== "home") DR.scr = "home"; }
+  if (py >= SBH + CH){ if (drag) return; if (px < W / 3 && appBr() && appBr().back()) return; if (px < W / 3){ if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else if (DR.scr !== "home") DR.scr = "home"; }
     else if (px < 2 * W / 3) DR.scr = "home"; else if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else { DR.prev = DR.scr; DR.scr = "recents"; } return; }
   const y = py - SBH; if (DR.scr === "toolbox") return toolboxClick(px, y, drag); if (drag) return;
-  if (DR.scr === "home"){ Object.keys(DAPPS).forEach((k, i) => { if (Math.hypot(px - (33 + 66 * i), y - 500) < 30){ if (k === "chrome") brpGet(); droidOpen(k); } }); return; }
+  if (DR.scr === "home"){ Object.keys(DAPPS).forEach((k, i) => { const [cx, cy] = homePos(i); if (Math.hypot(px - cx, y - cy) < 30){ appGet(k); droidOpen(k); } }); return; }
   if (DR.scr === "calc"){ DKEYS.forEach((k, i) => { if (Math.hypot(px - (41 + 82.5 * (i % 4)), y - (270 + 94 * Math.floor(i / 4))) < 38) calcKey(k); }); return; }
   if (DR.scr === "clock"){ const S = DR.sw; if (Math.hypot(px - 240, y - 620) < 44){ if (S.run){ S.acc += ST.t - S.t0; S.run = false; } else { S.t0 = ST.t; S.run = true; } }
     else if (Math.hypot(px - 90, y - 620) < 44){ if (S.run) S.laps.push(swNow()); else { S.acc = 0; S.laps = []; } } return; }
   if (DR.scr === "settings"){ if (y > 100 && y < 162){ ST.sound = !ST.sound; if (ST.sound) audioInit(); } return; }
   if (DR.scr === "recents"){ if (y > CH - 50){ DR.recent = []; DR.scr = "home"; return; }
-    DR.recent.slice(0, 4).forEach((k, i) => { const y0 = 30 + 150 * i; if (y < y0 || y > y0 + 136 || px < 30 || px > W - 30) return; if (y < y0 + 34 && px > W - 66) DR.recent = DR.recent.filter(x => x !== k); else { if (k === "chrome") brpGet(); droidOpen(k); } }); } }
+    DR.recent.slice(0, 4).forEach((k, i) => { const y0 = 30 + 150 * i; if (y < y0 || y > y0 + 136 || px < 30 || px > W - 30) return; if (y < y0 + 34 && px > W - 66) DR.recent = DR.recent.filter(x => x !== k); else { appGet(k); droidOpen(k); } }); } }
 /* ---- the sound you hear (WebAudio) --------------------------------------- */
 let AC = null, AU = null;
 function audioInit(){ if (AC || !ST.sound) return; try { AC = new (window.AudioContext || window.webkitAudioContext)();
@@ -874,9 +886,9 @@ function pipDown(p){ const R = PIP.R; if (!R) return false;
   if (R.pill){ if (inRect(p, R.pill)){ PIP.on = true; return true; } return false; }
   if (!inRect(p, R.box)) return false; if (inRect(p, R.close)){ PIP.on = false; return true; }
   const q = [(p[0] - R.x) / R.s, (p[1] - R.y) / R.s]; phoneClick(q[0], q[1], false); down3 = {p, moved:false, phone:true, R}; return true; }
-function brpSync(){ if (!BRP) return; const vis = view3 === "phone" && DR.scr === "chrome" && PHONE_RECT;
-  if (!vis){ BRP.place(0, 0, 0, 0, false); return; } const r = cv3.getBoundingClientRect(), s = PHONE_RECT.s;
-  BRP.place(r.left + scrollX + PHONE_RECT.x, r.top + scrollY + PHONE_RECT.y + SBH * s, PHONEC.width * s, APPC.height * s, true); }
+function brpSync(){ for (const [B, k] of [[BRP, "chrome"], [BRY, "youtube"]]){ if (!B) continue; const vis = view3 === "phone" && DR.scr === k && PHONE_RECT;
+  if (!vis){ B.place(0, 0, 0, 0, false); continue; } const r = cv3.getBoundingClientRect(), s = PHONE_RECT.s;
+  B.place(r.left + scrollX + PHONE_RECT.x, r.top + scrollY + PHONE_RECT.y + SBH * s, PHONEC.width * s, APPC.height * s, true); } }
 function drawCupView(c, W, H){ c.fillStyle = "#3a3d42"; c.fillRect(0, 0, W, H); const k = Math.min((H - 60) / 8, W / 12), cx = W / 2, by = H - 30, r = CUP_R * k, hh = CUP_H * k, ri = (CUP_R - 0.1) * k;
   c.fillStyle = "#c8a87e"; c.fillRect(0, by, W, H - by);
   const lv = (0.25 + ST.cup / (Math.PI * (CUP_R - 0.1) * (CUP_R - 0.1))) * k; if (ST.cup > 0.3){ c.fillStyle = "rgba(120,170,215,0.6)"; c.fillRect(cx - ri, by - lv, 2 * ri, lv - 0.25 * k); c.fillStyle = "rgba(160,200,235,0.9)"; c.fillRect(cx - ri, by - lv - 1, 2 * ri, 3); }

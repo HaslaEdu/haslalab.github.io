@@ -1186,12 +1186,19 @@ function brGet(k){ if (!BR[k] && window.VBrowser) BR[k] = VBrowser({kind:k, embe
     links:[{t:{ko:"IOAA 2025 문제지", en:"IOAA 2025 problem"}, url:LANG === "ko" ? "../pdf/IOAA_2025_G1_KO.pdf" : "../pdf/IOAA_2025_G1_EN.pdf", ic:"📄", col:"#c0392b"},
       {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"}, {t:{ko:"위키백과", en:"Wikipedia"}, url:"https://ko.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://www.youtube.com/", ic:"▶", col:"#e62117"}]});
   return BR[k]; }
+/* the real Edge, Chrome, YouTube and Windows logos (sim/icons, carried by vbrowser.js) */
+function osLogos(){ if (osLogos.done || !window.VBrowser || !VBrowser.ICONS) return; osLogos.done = true; const I = VBrowser.ICONS, st = document.createElement("style"),
+    u = n => `url("${I[n]}") center/contain no-repeat`;
+  st.textContent = `#lap .gl.ed{background:${u("edge")};border-radius:0} #lap .gl.cr{background:${u("chrome")};border-radius:0} #lap .gl.yt{background:${u("youtube")};border-radius:0}
+    #lap .wlogo{width:15px;height:15px;background:${u("windows")}} #lap .wlogo i{visibility:hidden}`;
+  document.head.appendChild(st); }
 function osBuild(){
+  osLogos();
   if (lapEl.querySelector(".os")) return;
   lapEl.innerHTML = `<div class="scr os"><div class="desk" id="osDesk"></div><div id="osWins"></div><div class="startm" id="osStart" hidden></div><div class="task" id="osTask"></div></div>`;
   const desk = document.getElementById("osDesk");
-  desk.innerHTML = [["suite", lt("icon"), 0], ["explorer", ol("explorer"), 1], ["notepad", ol("notepad"), 2], ["calc", ol("calc"), 3], ["edge", "Microsoft Edge", 4], ["chrome", "Google Chrome", 5]].map(([k, nm, i]) =>
-    `<div class="dic" data-a="${k}" style="left:${16 + Math.floor(i / 4) * 96}px;top:${14 + (i % 4) * 92}px"><span class="gl ${APPS[k].gl}">${APPS[k].ch}</span>${nm}</div>`).join("");
+  desk.innerHTML = [["suite", lt("icon"), 0], ["explorer", ol("explorer"), 1], ["notepad", ol("notepad"), 2], ["calc", ol("calc"), 3], ["edge", "Microsoft Edge", 4], ["chrome", "Google Chrome", 5], ["youtube", "YouTube", 6]].map(([k, nm, i]) =>
+    `<div class="dic" data-a="${k}" style="left:${16 + Math.floor(i / 4) * 96}px;top:${14 + (i % 4) * 92}px"><span class="gl ${APPS[k] ? APPS[k].gl : "yt"}">${APPS[k] ? APPS[k].ch : ""}</span>${nm}</div>`).join("");
   desk.querySelectorAll(".dic").forEach(d => { d.onclick = e => { e.stopPropagation(); desk.querySelectorAll(".dic").forEach(x => x.classList.toggle("sel", x === d)); }; d.ondblclick = () => osOpen(d.dataset.a); });
   desk.onclick = () => { desk.querySelectorAll(".dic").forEach(x => x.classList.remove("sel")); osStart(false); };
   osTaskbar();
@@ -1208,7 +1215,8 @@ function osStart(on){ OS.start = on; const m = document.getElementById("osStart"
   m.innerHTML = `<h5>${ol("recent")}</h5>` + Object.keys(APPS).map(k => `<div class="ap" data-a="${k}"><span class="gl ${APPS[k].gl}">${APPS[k].ch}</span>${k === "suite" ? lt("icon") : APPS[k].title().replace(/^.* - /, "")}</div>`).join("") +
     `<div class="ft"><span>👤 ${ol("user")}</span><span>⏻ ${ol("power")}</span></div>`;
   m.querySelectorAll(".ap").forEach(a => a.onclick = () => { osStart(false); osOpen(a.dataset.a); }); }
-function osOpen(k){ osBuild(); if (OS.open[k]){ OS.open[k].min = false; OS.open[k].el.style.display = ""; osFocus(k); osTaskbar(); return; }
+function osOpen(k){ if (k === "youtube"){ osOpen("chrome"); const b = brGet("chrome"); if (b) b.go("https://www.youtube.com/"); return; }
+  osBuild(); if (OS.open[k]){ OS.open[k].min = false; OS.open[k].el.style.display = ""; osFocus(k); osTaskbar(); return; }
   OS.open[k] = {max:!!APPS[k].max, min:false}; osMakeWin(k); osTaskbar(); }
 function osMakeWin(k){ const A = APPS[k], st = OS.open[k], el = document.createElement("div"); el.className = "w" + (st.max ? " max" : ""); const [x, y, w, h] = st.pos || A.pos;
   el.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${h}px;z-index:${++OS.z}`;
