@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<meta name="theme-color" content="#1c2027">
+<title>GPhO 2016 E2 — 텅스텐 필라멘트 · Tungsten Filament · HaslaLab</title>
+<meta name="description" content="GPhO 2016 실험 문제 E2를 브라우저에서 실행합니다. 레이저 회절로 텅스텐 필라멘트의 지름을, 가변저항과 멀티미터로 저항과 전류-전압 곡선을, 47 mF 축전기 방전으로 비열을 측정합니다.">
+<link rel="canonical" href="https://haslalab.org/sim/gpho2016_E2_web.html">
+<link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/gpho2016_E2_web.html?lang=ko">
+<link rel="alternate" hreflang="en" href="https://haslalab.org/sim/gpho2016_E2_web.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://haslalab.org/sim/gpho2016_E2_web.html">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPhO 2016 E2 — 텅스텐 필라멘트 · Tungsten Filament">
+<meta property="og:description" content="GPhO 2016 실험 문제 E2를 브라우저에서 실행합니다. 레이저 회절로 텅스텐 필라멘트의 지름을, 가변저항과 멀티미터로 저항과 전류-전압 곡선을, 47 mF 축전기 방전으로 비열을 측정합니다.">
+<meta property="og:url" content="https://haslalab.org/sim/gpho2016_E2_web.html">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haslalab.org/og.png">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px 12px max(160px,24vh);display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .page{display:none}.page.on{display:block}
+  #bench,#ctrl,#screen,#wire{display:block;max-width:100%;height:auto!important;margin:0 auto;border-radius:6px}
+  .pair{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px}
+  .serial{color:#69717a;font-size:11px}
+  #wwarn{color:#f0a79f}#wwarn:empty{display:none}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  #screen{cursor:default}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #vtabs{margin-bottom:6px}
+  #wwarn{color:var(--accent)} #wwarn .w{color:#f0a79f}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="h1"></h1>
+    <p id="sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtcircuit"></button><button id="vtmeter"></button><button id="vtscreen"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="lgCtl"></h2>
+    <button id="bMains" style="width:100%"></button>
+    <button id="bLaser" style="width:100%"></button>
+    <button id="bClear" style="width:100%"></button>
+    <h2 id="lgNotes"></h2>
+    <p class="hint" id="txNotes"></p>
+    <div class="status"><div id="wwarn"></div></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* ====================================================================
+   GPhO 2016 (Riyadh) - Experimental Problem E2
+   TUNGSTEN FILAMENT
+
+   Three incandescent bulbs, one broken bulb whose straightened filament
+   is bare, a ~12 V adapter, a 2 x 1.5 V battery pack that also feeds a
+   red laser, a rheostat, one multimeter, a 47 mF electrolytic
+   capacitor, a stand, a screen (a box with white paper), a measuring
+   tape and seven leads.
+
+   Nothing is computed for you.  The meter reads what a meter reads; the
+   diffraction fringes are read off the paper with the tape.
+
+   The model follows the official solution: d ~ 46.3 um, l ~ 23 mm,
+   R(25 C) ~ 0.77 Ohm, resistivity -> temperature by the sheet's
+   formula, the filament losing A k sigma T^4 (k ~ 0.38) plus a
+   conduction/convection term that dominates below ~1300 K, breaking
+   above ~3150 K; heat capacity from rho_W = 19.25 g/cm^3, c ~ 190 J/kgK.
+   The 10 A socket is joined to COM through a resistor of a few ohm.
+   ==================================================================== */
+const I18N = {
+  title: ["GPhO 2016 — Problem E2 — Tungsten filament", "GPhO 2016 — 실험 문제 E2 — 텅스텐 필라멘트"],
+  sub: ["Virtual laboratory · measure the bare filament's diameter by laser diffraction, the bulbs' resistance and current-voltage curve with the rheostat and the one multimeter, and the heat it takes to break a filament with the 47 mF capacitor. Everything is read off the meter and the tape.",
+        "가상 실험실 · 레이저 회절로 드러난 필라멘트의 지름을, 가변저항과 멀티미터 한 대로 전구의 저항과 전류-전압 곡선을, 47 mF 축전기로 필라멘트를 끊는 데 드는 열을 잽니다. 모든 값은 계기와 줄자로 직접 읽습니다."],
+  tray: ["Parts box", "부품함"],
+  vt3d: ["3D bench", "3D 실험대"], vtcircuit: ["circuit, from above", "회로 (위에서)"], vtmeter: ["multimeter", "멀티미터"], vtscreen: ["screen", "스크린"],
+  cap_3d: ["the bench in 3D — drag to turn, right-drag to pan, wheel to zoom · click a terminal, then another, to run a lead · the rheostat's slider: drag it · the laser's cap: wheel over it to focus · the screen: drag it along the beam · R-click: back / pull a lead out",
+           "3D 실험대 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 단자를 차례로 클릭해 리드 연결 · 가변저항 슬라이더: 끌기 · 레이저 캡: 휠로 초점 · 스크린: 빔을 따라 끌기 · 우클릭: 돌아가기 / 리드 뽑기"],
+  cap_circuit: ["the circuit from above — click terminals to wire, drag the slider · R-click a plug to pull its lead out", "회로를 위에서 — 단자를 클릭해 배선, 슬라이더 끌기 · 플러그 우클릭: 리드 뽑기"],
+  cap_meter: ["the multimeter — click the left or right half of the dial (or wheel over it) to turn it", "멀티미터 — 다이얼 왼/오른쪽 절반 클릭(또는 휠)으로 돌리기"],
+  cap_screen: ["the paper on the screen — lay the tape across the fringes, wheel over it to tilt it, wheel elsewhere zooms · R-click: back to 3D", "스크린의 종이 — 줄자를 무늬에 대고 읽기, 줄자 위 휠로 기울이기, 다른 곳 휠은 확대 · 우클릭: 3D로"],
+  itLead: ["leads", "리드"], itTape: ["measuring tape", "줄자"], itBulb: ["spare bulb (ask an organiser)", "예비 전구 (진행요원에게 요청)"], itGoggles: ["safety goggles", "보안경"],
+  leadKinds: [["tester lead (banana–probe)", "banana–crocodile", "crocodile–crocodile"], ["테스터 리드 (바나나–탐침)", "바나나–악어", "악어–악어"]],
+  take: ["click, then click where it goes", "클릭한 뒤 놓을 곳을 클릭"], back: ["click to take it back", "클릭하면 회수"],
+  trayHelp: ["click an item; R-click to cancel", "항목 클릭; 우클릭으로 취소"],
+  lgCtl: ["Controls", "조작"], lgNotes: ["Notes", "안내"],
+  mains: ["Adapter in the wall socket", "어댑터 콘센트에 꽂힘"], mainsOff: ["Adapter unplugged", "어댑터 빠짐"],
+  laserSw: ["Battery pack switch: ON", "배터리 팩 스위치: ON"], laserSwOff: ["Battery pack switch: OFF", "배터리 팩 스위치: OFF"],
+  clear: ["Pull out all leads", "리드 모두 뽑기"],
+  notes: ["• λ = 650 nm, D(W) = 19.25 g/cm³, ρ25 = 5.65×10⁻⁸ Ω·m, C = 47 mF, σ = 5.67×10⁻⁸ W/(m²K⁴).\n• T(ρ/ρ25) = 104 K + 216 K·(ρ/ρ25) − 2.46 K·(ρ/ρ25)² for 400 K … 3695 K.\n• The 10 A and COM sockets stay joined inside through a resistor of a few ohm, whatever the dial says.\n• Never reverse the capacitor (grey band = minus), never short it through the ammeter; wear the goggles when it is in the circuit.\n• Do not look into the laser.",
+          "• λ = 650 nm, D(W) = 19.25 g/cm³, ρ25 = 5.65×10⁻⁸ Ω·m, C = 47 mF, σ = 5.67×10⁻⁸ W/(m²K⁴).\n• T(ρ/ρ25) = 104 K + 216 K·(ρ/ρ25) − 2.46 K·(ρ/ρ25)² (400 K … 3695 K).\n• 10 A 단자와 COM은 다이얼과 상관없이 내부에서 수 Ω의 저항으로 이어져 있습니다.\n• 축전기를 거꾸로 연결하지 마세요(회색 띠 = −). 전류계로 단락시키지 마세요. 회로에 넣을 때는 보안경을 쓰세요.\n• 레이저를 들여다보지 마세요."],
+  noLead: ["no lead of that kind left", "그 종류의 리드가 남아 있지 않습니다"],
+  noBanana: ["only a banana plug goes into the meter's sockets", "멀티미터 단자에는 바나나 플러그만 들어갑니다"],
+  broke: ["the filament has broken", "필라멘트가 끊어졌습니다"],
+  burnt: ["the bare filament glowed and burnt through in the air", "드러난 필라멘트가 공기 중에서 달아오르다 타서 끊어졌습니다"],
+  pop: ["the capacitor was reversed: it bulged and spat hot electrolyte — it is ruined", "축전기가 거꾸로 연결되어 부풀며 뜨거운 전해액을 뿜었습니다 — 못 쓰게 되었습니다"],
+  goggles: ["put on the safety goggles before you use the capacitor", "축전기를 쓰기 전에 보안경을 쓰세요"],
+  fuse: ["the meter's mA fuse has blown", "멀티미터의 mA 퓨즈가 끊어졌습니다"],
+  shortC: ["you shorted the charged capacitor through the ammeter", "충전된 축전기를 전류계로 단락시켰습니다"],
+  holdLead: ["a lead in your hand: click a terminal for its other end (R-click / Esc: put it away)", "리드를 들고 있음: 다른 끝을 꽂을 단자 클릭 (우클릭 / Esc: 내려놓기)"],
+  holdTape: ["the tape in your hand: click the desk to lay it down, or the screen's paper to hold it there", "줄자를 들고 있음: 책상을 클릭해 놓거나 스크린 종이를 클릭해 대기"],
+  newBulb: ["a new bulb is put in its holder", "새 전구를 홀더에 끼웠습니다"],
+};
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+const tr = k => { const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k; };
+function mulberry(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const RNG = mulberry((Math.random() * 1e9) | 0);
+const gauss = () => { let u = 0, v = 0; while (!u) u = RNG(); while (!v) v = RNG(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+/* ------------------------- the filaments -------------------------- */
+const SIG = 5.67e-8, RHO25 = 5.65e-8, DW = 19250, T0 = 298.15;
+const FIL = { d: 46.3e-6 * (1 + 0.025 * gauss()), l: 0.023 * (1 + 0.04 * gauss()), k: 0.38 + 0.02 * gauss(), Gc: 0.8e-4 * (1 + 0.1 * gauss()), c: 190 * (1 + 0.04 * gauss()) };
+FIL.A = Math.PI * FIL.d * FIL.l; FIL.R25 = RHO25 * FIL.l / (Math.PI * FIL.d * FIL.d / 4); FIL.Cth = DW * Math.PI * FIL.d * FIL.d / 4 * FIL.l * FIL.c;
+/* resistivity ratio at T: the sheet's formula inverted above 400 K, a straight line from room temperature below */
+const R400 = (216 - Math.sqrt(216 * 216 - 4 * 2.46 * (400 - 104))) / (2 * 2.46);
+function rRatio(T){ if (T <= 400) return 1 + (R400 - 1) * (T - T0) / (400 - T0); return (216 - Math.sqrt(Math.max(0, 216 * 216 - 4 * 2.46 * (T - 104)))) / (2 * 2.46); }
+/* a bulb (or the bare filament): its temperature, whether it is whole, the temperature it breaks at */
+function mkFil(bare){ return {T:T0, broken:false, Tb: bare ? 1150 + 80 * gauss() : 3010 + 50 * gauss(), bare, glow:0}; }
+const BULBS = [mkFil(false), mkFil(false), mkFil(false)];                    /* bulbs 1-3; the bare filament (1b) is already broken: it is only for the laser */
+const filR = f => FIL.R25 * rRatio(f.T) * (f.bare ? 1.0 : 1.0);
+const filLoss = f => FIL.A * FIL.k * SIG * (Math.pow(f.T, 4) - Math.pow(T0, 4)) + (f.bare ? 6 : 1) * FIL.Gc * (f.T - T0);
+
+/* ------------------------- the circuit ----------------------------- */
+const RHEO = 25.3 * (1 + 0.025 * gauss()), C_CAP = 0.047, ESR = 0.04, R_LEAD = 0.03, R_10A = 2.4 * (1 + 0.05 * gauss()), R_MA = 1.2;
+const ST = { leads: [], held: null, slider: 0.5, mains: true, laserOn: false, goggles: false, Vc: 0, capDead: false, fuse: false, spares: 3, t: 0,
+  tape: {where:"box", x:20, y:0, z:-14, ang:0}, screenX: 95, focus: 0.7, dial: 0, msgs: [] };
+const DIAL = ["OFF", "DCV 200m", "DCV 2", "DCV 20", "DCV 200", "DCA 200m", "DCA 10", "Ω 200", "Ω 2k", "Ω 20k"];
+const TERMS = ["PSP", "PSN", "BT0", "BT1", "BT2", "RA", "RB", "RC", "CP", "CN", "L0a", "L0b", "L1a", "L1b", "L2a", "L2b", "X10A", "XCOM", "XV"];
+function elements(){ const E = [];                              /* [a, b, kind, value] */
+  for (const l of ST.leads) if (l.b) E.push([l.a, l.b, "R", R_LEAD]);
+  E.push(["RA", "RC", "R", Math.max(0.05, ST.slider * RHEO)], ["RC", "RB", "R", Math.max(0.05, (1 - ST.slider) * RHEO)]);
+  for (let i = 0; i < 3; i++){ const f = BULBS[i]; if (!f.broken) E.push(["L" + i + "a", "L" + i + "b", "F", i]); }
+  if (ST.mains) E.push(["PSP", "PSN", "V", 12.3, 0.9]);              /* the adapter: ~12 V behind 0.9 Ohm */
+  E.push(["BT1", "BT0", "V", 1.55, 0.25], ["BT2", "BT1", "V", 1.55, 0.25]);
+  if (ST.laserOn) E.push(["BT2", "BT0", "R", 110]);                 /* the laser on the pack */
+  if (!ST.capDead) E.push(["CP", "CN", "C", C_CAP]);
+  const d = DIAL[ST.dial]; E.push(["X10A", "XCOM", "R", R_10A]);
+  if (d.startsWith("DCV")) E.push(["XV", "XCOM", "R", 10e6]);
+  if (d === "DCA 200m" && !ST.fuse) E.push(["XV", "XCOM", "R", R_MA]);
+  return E; }
+function gaussSolve(A, b){ const n = b.length, Mx = A.map((r, i) => { const x = Array.from(r); x.push(b[i]); return x; });
+  for (let c = 0; c < n; c++){ let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(Mx[r][c]) > Math.abs(Mx[p][c])) p = r; [Mx[c], Mx[p]] = [Mx[p], Mx[c]];
+    const piv = Mx[c][c] || 1e-30; for (let r = c + 1; r < n; r++){ const k = Mx[r][c] / piv; if (!k) continue; for (let j = c; j <= n; j++) Mx[r][j] -= k * Mx[c][j]; } }
+  const x = new Float64Array(n); for (let r = n - 1; r >= 0; r--){ let s = Mx[r][n]; for (let j = r + 1; j < n; j++) s -= Mx[r][j] * x[j]; x[r] = s / (Mx[r][r] || 1e-30); } return x; }
+/* one nodal solve with the capacitor as its backward-Euler companion (dt) and the filaments at their present resistance */
+function solveAt(dt, extra){ const E = elements(); if (extra) E.push(extra);
+  const nodes = [...new Set(TERMS.concat(ST.leads.flatMap(l => [l.a, l.b]).filter(Boolean)))].filter(n => n !== "BT0"), idx = new Map(nodes.map((n, i) => [n, i])), Nn = nodes.length;
+  const Gm = Array.from({length:Nn}, () => new Float64Array(Nn)), I = new Float64Array(Nn);
+  const st = (a, b, g) => { const ia = idx.get(a), ib = idx.get(b); if (ia !== undefined) Gm[ia][ia] += g; if (ib !== undefined) Gm[ib][ib] += g; if (ia !== undefined && ib !== undefined){ Gm[ia][ib] -= g; Gm[ib][ia] -= g; } };
+  const inj = (a, i) => { const ia = idx.get(a); if (ia !== undefined) I[ia] += i; };
+  for (const [a, b, k, v, r] of E){
+    if (k === "R") st(a, b, 1 / v);
+    else if (k === "F") st(a, b, 1 / filR(BULBS[v]));
+    else if (k === "V"){ st(a, b, 1 / r); inj(a, v / r); inj(b, -v / r); }
+    else if (k === "C"){ const g = 1 / (ESR + dt / v); st(a, b, g); inj(a, ST.Vc * g); inj(b, -ST.Vc * g); }
+    else if (k === "I"){ inj(a, -v); inj(b, v); } }
+  for (let i = 0; i < Nn; i++) Gm[i][i] += 1e-10;
+  const V = gaussSolve(Gm, I), volt = t => t === "BT0" ? 0 : (V[idx.get(t)] || 0);
+  return {volt, E}; }
+/* the circuit stepped on by dt: capacitor charge, filament temperatures; adaptive inside */
+let SOL = null;
+function step(dtTotal){ let left = dtTotal, n = 0;
+  while (left > 1e-9 && n < 3000){ n++;
+    let dt = Math.min(left, 0.004); SOL = solveAt(dt);
+    /* how fast are the filaments heating? keep each step to ~15 K */
+    let rate = 0; const P = [];
+    for (let i = 0; i < 3; i++){ const f = BULBS[i]; if (f.broken){ P.push(0); continue; } const u = SOL.volt("L" + i + "a") - SOL.volt("L" + i + "b"), p = u * u / filR(f); P.push(p); rate = Math.max(rate, Math.abs(p - filLoss(f)) / FIL.Cth); }
+    if (rate * dt > 15){ dt = Math.max(2e-7, 15 / rate); SOL = solveAt(dt); for (let i = 0; i < 3; i++){ const f = BULBS[i]; if (f.broken) continue; const u = SOL.volt("L" + i + "a") - SOL.volt("L" + i + "b"); P[i] = u * u / filR(f); } }
+    for (let i = 0; i < 3; i++){ const f = BULBS[i]; if (f.broken) continue; f.T = Math.max(T0, f.T + (P[i] - filLoss(f)) / FIL.Cth * dt);
+      if (f.T > f.Tb){ f.broken = true; f.T = T0; flash(tr(f.bare ? "burnt" : "broke")); } }
+    /* the capacitor */
+    if (!ST.capDead){ const v = SOL.volt("CP") - SOL.volt("CN"), g = 1 / (ESR + dt / C_CAP); ST.Vc += (v - ST.Vc) * g * dt / C_CAP;
+      if (ST.Vc < -0.8){ ST.capDead = true; ST.Vc = 0; flash(tr("pop")); } }
+    /* the meter's mA fuse */
+    if (DIAL[ST.dial] === "DCA 200m" && !ST.fuse){ const i = Math.abs(SOL.volt("XV") - SOL.volt("XCOM")) / R_MA; if (i > 0.4) { ST.fuse = true; flash(tr("fuse")); } }
+    left -= dt; }
+  if (!SOL) SOL = solveAt(0.004);
+}
+/* the reading: 3 1/2 digits, as the sheet gives the accuracy */
+const CAL = [gauss() * 0.15, gauss()];
+function meterReading(){ const d = DIAL[ST.dial]; if (d === "OFF") return ""; const [kind, rng] = d.split(" "), n = 1 + (CAL[0] + 0.1 * gauss()) / 100, dig = (dec, k) => (CAL[1] + k * gauss()) * Math.pow(10, -dec) * 0.5;
+  if (kind === "DCV"){ const full = {"200m":0.2, "2":2, "20":20, "200":200}[rng], dec = {"200m":1, "2":3, "20":2, "200":1}[rng], v = SOL.volt("XV") - SOL.volt("XCOM");
+    if (Math.abs(v) >= full * 0.9995) return "1"; return (v * n * (rng === "200m" ? 1000 : 1) + dig(dec, 0.6)).toFixed(dec); }
+  if (kind === "DCA"){ const i = rng === "10" ? (SOL.volt("X10A") - SOL.volt("XCOM")) / R_10A : ST.fuse ? 0 : (SOL.volt("XV") - SOL.volt("XCOM")) / R_MA, full = rng === "10" ? 10 : 0.2, dec = rng === "10" ? 2 : 1;
+    if (Math.abs(i) >= full * 0.9995) return "1"; return (i * n * (rng === "10" ? 1 : 1000) + dig(dec, 0.7)).toFixed(dec); }
+  if (kind === "Ω"){ const full = {"200":200, "2k":2000, "20k":20000}[rng], dec = {"200":1, "2k":3, "20k":2}[rng], div = rng === "200" ? 1 : 1000;
+    const s = solveAt(1e-3, ["XCOM", "XV", "I", 1e-3]), r = (s.volt("XV") - s.volt("XCOM")) / 1e-3 + 0.3;     /* + the meter's own leads */
+    if (!isFinite(r) || r >= full * 0.9995 || r > 1e8) return "1"; if (r < 0) return "-1"; return Math.max(0, r * n / div + dig(dec, 1.0)).toFixed(dec); }
+  return ""; }
+
+/* ------------------------- the diffraction ------------------------- */
+const LAMBDA = 650e-9, BEAM_Y = 12.0, OPT_Z = -12, X_LASER = 4, X_FIL = 14;
+/* intensity on the paper at horizontal offset y (cm) from the beam's axis, screen at distance L (cm) from the filament */
+function fringe(y, Lcm){ const th = (y / 100) / (Lcm / 100), b = Math.PI * FIL.d * th / LAMBDA, s = Math.abs(b) < 1e-6 ? 1 : Math.sin(b) / b; return s * s; }
+
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+const mkCv = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const FONT = '"Arial","Helvetica",sans-serif';
+/* seven segments: a b c d e f g */
+const SEG = {"0":"abcdef","1":"bc","2":"abdeg","3":"abcdg","4":"bcfg","5":"acdfg","6":"acdefg","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","O":"abcdef","L":"def"," ":""};
+/* one digit cell of width w, height h, top-left (x, y), slanted a little */
+function seg7(g, ch, x, y, w, h, col){ const s = SEG[ch] || "", t = h * 0.11, sl = h * 0.07, P = (u, v) => [x + u * w + (1 - v) * sl, y + v * h];
+  const H = (v, on) => { if (!on) return; const [a0, a1] = [P(0.1, v), P(0.9, v)]; g.beginPath(); g.moveTo(a0[0] + t * 0.5, a0[1]); g.lineTo(a0[0] + t, a0[1] - t / 2); g.lineTo(a1[0] - t, a1[1] - t / 2);
+    g.lineTo(a1[0] - t * 0.5, a1[1]); g.lineTo(a1[0] - t, a1[1] + t / 2); g.lineTo(a0[0] + t, a0[1] + t / 2); g.closePath(); g.fill(); };
+  const Vt = (u, v0, v1, on) => { if (!on) return; const a = P(u, v0), b = P(u, v1), d = [b[0] - a[0], b[1] - a[1]], L = Math.hypot(d[0], d[1]), n = [d[0] / L, d[1] / L];
+    g.beginPath(); g.moveTo(a[0] + n[0] * t * 0.5, a[1] + n[1] * t * 0.5); g.lineTo(a[0] + n[0] * t + t / 2, a[1] + n[1] * t); g.lineTo(b[0] - n[0] * t + t / 2, b[1] - n[1] * t);
+    g.lineTo(b[0] - n[0] * t * 0.5, b[1] - n[1] * t * 0.5); g.lineTo(b[0] - n[0] * t - t / 2, b[1] - n[1] * t); g.lineTo(a[0] + n[0] * t - t / 2, a[1] + n[1] * t); g.closePath(); g.fill(); };
+  g.fillStyle = col; H(0.04, s.includes("a")); H(0.5, s.includes("g")); H(0.96, s.includes("d"));
+  Vt(0.9, 0.04, 0.5, s.includes("b")); Vt(0.9, 0.5, 0.96, s.includes("c")); Vt(0.1, 0.5, 0.96, s.includes("e")); Vt(0.1, 0.04, 0.5, s.includes("f")); }
+/* a reading string ("12.34", "-0.5", "OL") into cells of digits with the decimal points beside them */
+function cells(str, n){ const out = []; for (const ch of str){ if (ch === "." && out.length){ out[out.length - 1].dp = true; continue; } out.push({ch, dp:false}); }
+  while (out.length < n) out.unshift({ch:" ", dp:false}); return out.slice(-n); }
+
+function rr(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+
+/* ==================================================================
+   THE BENCH IN 3D  (cm; the laser's beam runs along +x at z = OPT_Z,
+   the circuit lies in front, z > 8)
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+let view3 = "3d", hand = null;
+const HAND_Y = 9;
+const POS = { adapter:[-30, 20], block:[-18, 26], pack:[-15, 2], rheo:[2, 32], cap:[46, 24], bulbs:[[60, 34], [70, 34], [80, 34]], meter:[28, 50] };
+function desk3(){ face([[-45,0,-35],[-45,0,62],[165,0,62],[165,0,-35]], {fill:"#3a3d42", layer:-3, flat:true, id:"desk"});
+  for (let x = -40; x <= 160; x += 10) poly3([[x,0,-35],[x,0,62]], "#34373b", 1, {layer:-2}); }
+
+/* ---- the optics: stand with the laser, the bare filament, the screen ---- */
+function optics3(){ const z = OPT_Z;
+  /* the stand: base, rod, a boss clamp and an arm holding the laser */
+  box3(-9, 7, 0, 1.0, z - 7, z + 7, "#2b2e33", {top:"#33373d"}); cylSeg("y", 1, 42, -5, z - 4, 0.6, "#c9ced3", {seg:12}, 6);
+  box3(-6.2, -3.8, BEAM_Y - 1.4, BEAM_Y + 1.4, z - 5.2, z - 2.8, "#1d1f22"); cylAB([-5, BEAM_Y, z - 2.8], [-5, BEAM_Y, z - 0.9], 0.35, "#c9ced3", {seg:8});
+  /* the laser: a black body and a knurled brass cap that twists the focus */
+  cyl3("x", -4.5, X_LASER - 1.4, BEAM_Y, z, 0.62, "#1a1b1e", {seg:18, cap:"#222"});
+  cyl3("x", X_LASER - 1.4, X_LASER, BEAM_Y, z, 0.72, "#b8954a", {seg:18, id:"lcap", cap:"#9c7d3c"});
+  for (let i = 0; i < 18; i++){ const a = i / 18 * 2 * Math.PI + ST.focus * 6; line3([X_LASER - 1.35, BEAM_Y + 0.73 * Math.sin(a), z + 0.73 * Math.cos(a)], [X_LASER - 0.05, BEAM_Y + 0.73 * Math.sin(a), z + 0.73 * Math.cos(a)], "#7c6330", 0.8); }
+  cyl3("x", X_LASER, X_LASER + 0.02, BEAM_Y, z, 0.18, ST.laserOn ? "#ff2a1a" : "#2a0d0a", {seg:10});
+  poly3([[-4.5, BEAM_Y, z], [-7, BEAM_Y - 3, z + 2], [-12, 0.6, POS.pack[1] - 1]], "#b8241f", 1.3); poly3([[-4.5, BEAM_Y - 0.2, z], [-7.4, BEAM_Y - 3.4, z + 2.2], [-12.6, 0.6, POS.pack[1] - 1]], "#111", 1.3);
+  /* the bare filament (1b): the broken bulb's base on a little stand, its straightened filament between the two supports */
+  const xf = X_FIL; box3(xf - 1.6, xf + 1.6, 0, 2.5, z - 1.6, z + 1.6, "#2b2e33", {id:"bare"}); cylSeg("y", 2.5, BEAM_Y - 2.4, xf, z, 0.35, "#c9ced3", {seg:10, id:"bare"}, 3);
+  cyl3("y", BEAM_Y - 2.4, BEAM_Y - 1.6, xf, z, 0.75, "#c9a24a", {seg:16, id:"bare", cap:"#b38b3a"}); cyl3("y", BEAM_Y - 1.6, BEAM_Y - 1.4, xf, z, 0.55, "#f1efe8", {seg:16, id:"bare"});
+  for (const dz of [-0.35, 0.35]) cylAB([xf, BEAM_Y - 1.4, z + dz], [xf, BEAM_Y + 1.4, z + dz * 0.15], 0.04, "#9aa0a6", {seg:6});
+  line3([xf, BEAM_Y - 1.25, z], [xf, BEAM_Y + 1.3, z], "#3a3a3a", 1.1);
+  /* the beam: to the filament, then on to the paper */
+  if (ST.laserOn){ line3([X_LASER, BEAM_Y, z], [xf, BEAM_Y, z], "rgba(255,40,30,0.55)", 1.6); line3([xf, BEAM_Y, z], [ST.screenX, BEAM_Y, z], "rgba(255,40,30,0.35)", 1.2); }
+  screen3();
+}
+/* the screen: the meter's box standing on end, white paper on its face */
+function screen3(){ const X = ST.screenX, z = OPT_Z; box3(X, X + 7, 0, 22, z - 10, z + 10, "#c94a2a", {id:"screen", top:"#d4593a"});
+  tex3(scrTex(), 0, 0, SCR.width, SCR.height, [X - 0.02, 21, z - 9.5], [0, 0, 19], [0, -20, 0], {id:"paper"}); }
+/* the paper's picture: the fringes as they fall on it (40 px per cm, 19 x 20 cm) */
+const SCR = mkCv(760, 800); SCR._ver = 0; let scrKey = "";
+const FOCUS_BEST = 0.42 + 0.08 * gauss();
+function scrTex(){ const Lcm = ST.screenX - X_FIL, df = Math.abs(ST.focus - FOCUS_BEST), key = [Lcm.toFixed(1), df.toFixed(3), ST.laserOn].join("|");
+  if (key === scrKey) return SCR; scrKey = key; const g = SCR.getContext("2d"), W = SCR.width, H = SCR.height, k = 40;
+  g.fillStyle = "#f4f2ec"; g.fillRect(0, 0, W, H); for (let i = 0; i < 300; i++){ g.fillStyle = "rgba(0,0,0," + (0.015 * RNG()) + ")"; g.fillRect(RNG() * W, RNG() * H, 2, 2); }
+  if (ST.laserOn){ const cy = (21 - BEAM_Y) * k, cz = 9.5 * k, contrast = 1 / (1 + Math.pow(df / 0.07, 2)), sh = (0.18 + 1.6 * df) * k, img = g.getImageData(0, 0, W, H), D = img.data;
+    for (let px = 0; px < W; px++){ const y = (px - cz) / k, I = fringe(y, Lcm), spot = Math.exp(-Math.pow(y / (0.12 + 1.4 * df), 2));
+      const v = Math.min(1, Math.pow(2.5 * spot * (1 - 0.5 * contrast) + 14 * I * contrast, 0.6));
+      for (let py = Math.max(0, Math.floor(cy - 3 * sh)); py < Math.min(H, cy + 3 * sh); py++){ const a = v * Math.exp(-Math.pow((py - cy) / sh, 2)); if (a < 0.01) continue;
+        const o = (py * W + px) * 4; D[o] = Math.min(255, D[o] * (1 - a) + 255 * a); D[o + 1] = D[o + 1] * (1 - a * 0.92); D[o + 2] = D[o + 2] * (1 - a * 0.9); } }
+    g.putImageData(img, 0, 0); }
+  SCR._ver++; return SCR; }
+
+/* ---- the circuit parts ---------------------------------------------- */
+const TPOS = {};              /* terminal -> {p, n} filled as the parts are drawn */
+function post3(name, x, y, z, col){ cyl3("y", y, y + 0.35, x, z, 0.55, "#2a2b2e", {seg:6}); cylSeg("y", y + 0.35, y + 1.5, x, z, 0.42, col, {seg:14, id:"t:" + name, cap:shade(col, 1.1)}, 0.6);
+  cyl3("y", y + 1.49, y + 1.505, x, z, 0.18, "#0c0c0c", {seg:10, id:"t:" + name}); TPOS[name] = {p:[x, y + 1.5, z], n:[0, 1, 0]}; }
+function adapter3(){ const [x, z] = POS.adapter; box3(x - 4, x + 4, 0, 4.5, z - 3, z + 3, "#1b1c1f", {id:"adapter", top:"#222326"});
+  text3([x, 4.51, z], [1, 0, 0], [0, 0, -1], "12V ⎓ 1.5A", 0.7, "#9aa3ab", {align:"center"});
+  poly3([[x - 4, 2, z], [-45, 1, z - 4]], "#151515", 2.2);                                       /* the mains cord off the desk to the socket */
+  if (!ST.mains) poly3([[-45, 1, z - 4], [-42, 0.4, z - 10], [-38, 0.4, z - 12]], "#151515", 2.2);
+  const [bx, bz] = POS.block; poly3([[x + 4, 1.5, z], [bx - 3, 0.5, bz - 1], [bx - 2, 1, bz]], "#151515", 2);
+  box3(bx - 2.5, bx + 2.5, 0, 1.4, bz - 1.5, bz + 1.5, "#202226", {top:"#2a2c30"});
+  post3("PSP", bx - 1.2, 1.4, bz, "#c8262b"); post3("PSN", bx + 1.2, 1.4, bz, "#1d1d1f"); }
+function pack3(){ const [x, z] = POS.pack; box3(x - 3.5, x + 3.5, 0, 2.6, z - 1.6, z + 1.6, "#1a1b1e", {id:"pack", top:"#202124"});
+  box3(x - 0.8, x + 0.8, 2.6, 2.95, z - 0.5, z + 0.5, "#2a2c30"); box3(x + (ST.laserOn ? 0.0 : -0.6), x + (ST.laserOn ? 0.6 : 0.0), 2.95, 3.25, z - 0.3, z + 0.3, "#d9dde1", {id:"lsw"});
+  text3([x, 2.61, z + 1.1], [1, 0, 0], [0, 0, -1], "OFF   ON", 0.38, "#9aa3ab", {align:"center"});
+  post3("BT0", x - 2.5, 2.6, z + 2.5, "#1d1d1f"); post3("BT1", x, 2.6, z + 2.5, "#e9e6dc"); post3("BT2", x + 2.5, 2.6, z + 2.5, "#c8262b");
+  box3(x - 3.5, x + 3.5, 2.0, 2.6, z + 1.6, z + 3.4, "#1a1b1e", {top:"#202124"});
+  text3([x - 2.5, 2.61, z + 3.3], [1, 0, 0], [0, 0, -1], "−", 0.5, "#cfd3d6", {align:"center"}); text3([x, 2.61, z + 3.3], [1, 0, 0], [0, 0, -1], "1.5V", 0.4, "#cfd3d6", {align:"center"}); text3([x + 2.5, 2.61, z + 3.3], [1, 0, 0], [0, 0, -1], "+3V", 0.4, "#cfd3d6", {align:"center"}); }
+function rheo3(){ const [x0, z] = POS.rheo, x1 = x0 + 26, y = 4.2;
+  for (const xe of [x0, x1]){ box3(xe - 0.4, xe + 0.4, 0, 8, z - 3, z + 3, "#3a3d42", {top:"#45494f"}); }
+  cyl3("x", x0 + 0.4, x1 - 0.4, y, z, 2.0, "#e5dcc8", {seg:20, id:"rheo"});
+  for (let xx = x0 + 1; xx < x1 - 1; xx += 0.35) cyl3("x", xx, xx + 0.12, y, z, 2.03, "#a8865a", {seg:20, caps:false});
+  cyl3("x", x0 + 0.4, x1 - 0.4, 7.4, z, 0.45, "#c9ced3", {seg:10});
+  const xs = x0 + 1.5 + ST.slider * (x1 - x0 - 3); box3(xs - 1.0, xs + 1.0, 6.2, 8.4, z - 1.0, z + 1.0, "#1d1f22", {id:"slider", top:"#2a2c30"});
+  cylAB([xs, 6.2, z], [xs, y + 2.0, z], 0.25, "#c9a24a", {seg:8, id:"slider"});
+  post3("RA", x0 - 1.2, 0.0, z + 2.0, "#c8262b"); post3("RB", x1 + 1.2, 0.0, z + 2.0, "#c8262b"); post3("RC", x1 - 0.2, 8.0, z + 1.5, "#1d1d1f");
+  text3([x0 + 13, 0.01, z + 4.0], [1, 0, 0], [0, 0, -1], "25 Ω  2 A", 0.6, "#cfd3d6", {align:"center"}); }
+function cap3(){ const [x, z] = POS.cap; if (ST.capDead){ cyl3("y", 0, 8.2, x, z, 3.5, "#3b4f8a", {seg:24}); sphere3([x, 8.6, z], 2.2, "#3b4f8a"); }
+  else cylSeg("y", 0, 9, x, z, 3.5, "#2c3e78", {seg:28, id:"cap", cap:"#9aa0a6"}, 3);
+  /* the grey band marks the minus side */
+  for (let i = 0; i < 6; i++){ const a0 = -0.9 + i * 0.3, a1 = a0 + 0.3; face(orient([[x + 3.52 * Math.cos(a0), 0.3, z + 3.52 * Math.sin(a0)], [x + 3.52 * Math.cos(a1), 0.3, z + 3.52 * Math.sin(a1)], [x + 3.52 * Math.cos(a1), 8.7, z + 3.52 * Math.sin(a1)], [x + 3.52 * Math.cos(a0), 8.7, z + 3.52 * Math.sin(a0)]], [Math.cos(a0 + 0.15), 0, Math.sin(a0 + 0.15)]), {fill:"#b9bec4", cull:true}); }
+  text3([x - 3.55, 6, z], [0, 0, 1], [0, 1, 0], "47000µF 25V", 0.6, "#e8e8e4", {align:"center"});
+  if (!ST.capDead){ post3("CP", x - 1.4, 9, z, "#c8262b"); post3("CN", x + 1.4, 9, z, "#9aa0a6"); text3([x - 1.4, 9.01, z + 1.4], [1, 0, 0], [0, 0, -1], "+", 0.7, "#e8e8e4", {align:"center"}); } }
+function bulbs3(){ for (let i = 0; i < 3; i++){ const [x, z] = POS.bulbs[i], f = BULBS[i], id = "bulb" + i;
+  box3(x - 2.6, x + 2.6, 0, 2.2, z - 2.2, z + 2.2, "#2b2e33", {id, top:"#34383e"}); cyl3("y", 2.2, 3.4, x, z, 1.0, "#c9a24a", {seg:16, id});
+  const glow = f.broken ? 0 : Math.max(0, Math.min(1, (f.T - 900) / 1800)), col = glow > 0 ? "rgba(255," + Math.round(140 + 115 * glow) + "," + Math.round(60 + 180 * glow * glow) + "," + (0.25 + 0.6 * glow) + ")" : "rgba(230,236,240,0.28)";
+  sphere3([x, 5.0, z], 1.8, col, {id});
+  if (glow > 0.02) sphere3([x, 5.0, z], 2.6 + 3 * glow, "rgba(255,200,120," + (0.25 * glow) + ")");
+  line3([x - 0.5, 3.6, z], [x - 0.4, 4.9, z], "#9aa0a6", 1); line3([x + 0.5, 3.6, z], [x + 0.4, 4.9, z], "#9aa0a6", 1);
+  if (!f.broken) line3([x - 0.4, 4.9, z], [x + 0.4, 4.9, z], glow > 0.05 ? "#fff3c0" : "#555", 1.6); else { line3([x - 0.4, 4.9, z], [x - 0.15, 4.75, z], "#555", 1.2); line3([x + 0.4, 4.9, z], [x + 0.2, 4.6, z], "#555", 1.2); }
+  post3("L" + i + "a", x - 1.4, 0.4, z + 2.9, "#c9ced3"); post3("L" + i + "b", x + 1.4, 0.4, z + 2.9, "#c9ced3");
+  box3(x - 2.6, x + 2.6, 0, 0.4, z + 2.2, z + 3.7, "#2b2e33"); text3([x, 2.21, z], [1, 0, 0], [0, 0, -1], String(i + 1), 0.9, "#cfd3d6", {align:"center"}); } }
+
+/* ---- the multimeter: grey face in a yellow holster, lying flat -------- */
+const MW = 8.6, ML = 15, MH = 3.0, MFW = 7.6, MFL = 14, MPX = 48;
+const MTEX = mkCv(Math.round(MFW * MPX), Math.round(MFL * MPX)); MTEX._ver = 0;
+const MDIAL = [MFW / 2, 7.8], MDR = 2.0, MSOCK = [[1.3, 12.3], [3.8, 12.3], [6.3, 12.3]];
+const mAng = i => -Math.PI / 2 + i * 2 * Math.PI / DIAL.length;
+const MLBL = ["OFF", "200mV", "2V", "20V", "200V", "200mA", "10A", "200Ω", "2kΩ", "20kΩ"];
+let MSHOW = "";
+function drawMeter(){ const g = MTEX.getContext("2d"), k = MPX; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#4f5357"; g.fillRect(0, 0, MTEX.width, MTEX.height); g.scale(k, k);
+  g.fillStyle = "#f1f1ee"; g.font = "bold 0.42px " + FONT; g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillText("DIGITAL MULTIMETER", 0.55, 0.9);
+  g.fillStyle = "#33373a"; rr(g, 0.45, 1.25, MFW - 0.9, 3.3, 0.25); g.fill(); g.fillStyle = "#b9bfb3"; rr(g, 0.8, 1.55, MFW - 1.6, 2.75, 0.08); g.fill();
+  const t = MSHOW, ink = "#1b1e1c";
+  if (t){ let half = "", digs = "   ", dec = 0; const neg = t[0] === "-", u = t.replace("-", "");
+    if (u === "1") half = "1"; else { const i = u.indexOf("."); dec = i < 0 ? 0 : u.length - i - 1; let n = Math.round(parseFloat(u) * Math.pow(10, dec)); if (n >= 1000){ half = "1"; n -= 1000; } digs = String(n).padStart(3, "0"); }
+    const cw = 1.18, ch = 1.85, x0 = 1.75, y0 = 2.0; if (neg){ g.fillStyle = ink; g.fillRect(0.98, y0 + ch * 0.47, 0.42, 0.13); }
+    if (half) seg7(g, "1", x0 - cw * 0.55, y0, cw, ch, ink); for (let i = 0; i < 3; i++) seg7(g, digs[i], x0 + i * cw + 0.08, y0, cw, ch, ink);
+    if (dec && digs.trim()){ g.beginPath(); g.arc(x0 + (3 - dec) * cw + 0.08, y0 + ch * 0.98, 0.09, 0, 7); g.fillStyle = ink; g.fill(); } }
+  const [cx, cy] = MDIAL; g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = "#f2f2ee";
+  MLBL.forEach((s, i) => { const a = mAng(i), r = MDR + 0.75; g.font = "0.27px " + FONT; g.fillText(s, cx + r * Math.cos(a) * 1.08, cy + r * Math.sin(a));
+    g.strokeStyle = "#f2f2ee"; g.lineWidth = 0.035; g.beginPath(); g.moveTo(cx + (MDR + 0.08) * Math.cos(a), cy + (MDR + 0.08) * Math.sin(a)); g.lineTo(cx + (MDR + 0.28) * Math.cos(a), cy + (MDR + 0.28) * Math.sin(a)); g.stroke(); });
+  g.font = "bold 0.34px " + FONT; [["10A", 0], ["COM", 1], ["VΩmA", 2]].forEach(([s, j]) => g.fillText(s, MSOCK[j][0], MSOCK[j][1] - 0.8));
+  g.font = "0.17px " + FONT; g.fillText("10A MAX", 1.3, 13.2); g.fillText("UNFUSED", 1.3, 13.4); g.fillText("200mA MAX", 6.3, 13.2); g.fillText("FUSED", 6.3, 13.4);
+  MTEX._ver++; }
+const mW = (u, v, y) => [POS.meter[0] - MFW / 2 + u, y === undefined ? MH - 0.25 : y, POS.meter[1] - MFL / 2 + v];
+function rrect(cx, cz, hw, hd, r, N){ const P = []; N = N || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, Math.PI / 2], [-1, -1, Math.PI], [1, -1, 1.5 * Math.PI]]) for (let i = 0; i <= N; i++){ const a = a0 + i / N * Math.PI / 2; P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+function meter3(){ const [cx, cz] = POS.meter, yF = MH - 0.25;
+  prism3("y", 0, yF, rrect(cx, cz, MW / 2, ML / 2, 1.1, 6), "#e8b417", {id:"meter"});
+  poly3(rrect(cx, cz, MW / 2 - 0.05, ML / 2 - 0.05, 1.05, 6).map(p => [p[0], yF + 0.02, p[1]]).concat([[cx + MW / 2 - 0.05, yF + 0.02, cz]]), "#d4a514", 2.2);
+  face(orient(rrect(cx, cz, MFW / 2, MFL / 2, 0.75, 6).map(p => [p[0], yF + 0.002, p[1]]), [0, 1, 0]), {fill:"#4f5357", id:"meter"});
+  tex3(MTEX, 0, 0, MTEX.width, MTEX.height, mW(0, 0, yF + 0.006), [MFW, 0, 0], [0, 0, MFL], {id:"meter"});
+  const [dx, , dz] = mW(MDIAL[0], MDIAL[1]), a = mAng(ST.dial), c = Math.cos(a), s = Math.sin(a), R2 = (u, v) => [dx + u * c - v * s, dz + u * s + v * c];
+  cyl3("y", yF, yF + 0.25, dx, dz, MDR, "#2b2d2f", {seg:32, id:"mdial", cap:"#333537"});
+  prism3("y", yF + 0.25, yF + 0.95, [R2(-MDR + 0.15, -0.42), R2(MDR - 0.15, -0.42), R2(MDR - 0.05, 0), R2(MDR - 0.15, 0.42), R2(-MDR + 0.15, 0.42)], "#2f3133", {id:"mdial"});
+  const t0 = R2(MDR - 0.75, 0), t1 = R2(MDR - 0.15, 0); line3([t0[0], yF + 0.96, t0[1]], [t1[0], yF + 0.96, t1[1]], "#f2f2ee", 2.2);
+  ["X10A", "XCOM", "XV"].forEach((k, j) => { const [x, , z] = mW(MSOCK[j][0], MSOCK[j][1]); cyl3("y", yF, yF + 0.3, x, z, 0.5, "#8a3b1e", {seg:16, id:"t:" + k, cap:"#8f3f22"});
+    cyl3("y", yF + 0.3, yF + 0.305, x, z, 0.22, "#0b0b0b", {seg:12, id:"t:" + k}); TPOS[k] = {p:[x, yF + 0.3, z], n:[0, 1, 0]}; }); }
+
+/* ---- the tape: on the desk, or held against the paper ---------------- */
+const TPX = 100, TAPE_W = 1.3;
+const TAPETEX = Array.from({length:4}, (_, s) => { const c = mkCv(25 * TPX, Math.round(TAPE_W * TPX)), g = c.getContext("2d"), H = c.height;
+  g.fillStyle = "#f3cd2f"; g.fillRect(0, 0, c.width, H); g.fillStyle = "#151515";
+  for (let mm = 0; mm <= 250; mm++){ const x = mm * TPX / 10, cm = s * 25 + mm / 10, len = mm % 10 === 0 ? 0.42 : mm % 5 === 0 ? 0.3 : 0.2; g.fillRect(Math.max(0, x - 0.8), 0, mm % 10 === 0 ? 2.2 : 1.5, len * H);
+    if (mm % 10 === 0 && mm < 250){ const n = Math.round(cm); g.fillStyle = n % 10 === 0 ? "#c4161c" : "#151515"; g.font = "bold " + Math.round(H * 0.36) + "px " + FONT; g.fillText(String(n), x + 3, H * 0.9); g.fillStyle = "#151515"; } }
+  if (s === 0){ g.fillStyle = "#8d9398"; g.fillRect(0, 0, 9, H); } c._static = true; return c; });
+function tapeFrame(){ const T = ST.tape, c = Math.cos(T.ang), s = Math.sin(T.ang);
+  if (T.where === "screen") return {O:[ST.screenX - 0.06, T.y, T.z], U:[0, s, c], V:[0, -c, s]};
+  return {O:[T.x, 0.04, T.z], U:[c, 0, s], V:[-s, 0, c]}; }
+function tape3(){ if (ST.tape.where === "box") return; const {O, U, V} = tapeFrame(), at = (a, b) => [O[0] + U[0] * a + V[0] * b, O[1] + U[1] * a + V[1] * b, O[2] + U[2] * a + V[2] * b];
+  for (let s = 0; s < 4; s++) tex3(TAPETEX[s], 0, 0, TAPETEX[s].width, TAPETEX[s].height, at(s * 25, 0), U.map(v => v * 25), V.map(v => v * TAPE_W), {id:"tape"});
+  const e = at(100, TAPE_W / 2); if (ST.tape.where === "desk") box3(e[0] - 3.3, e[0] + 3.3, 0, 3.0, e[2] - 3.3, e[2] + 3.3, "#2b2e33", {id:"tape"}); }
+
+/* ---- the leads -------------------------------------------------------- */
+const LEADS = [{kind:0, col:"#c8262b"}, {kind:0, col:"#1d1d1f"}, {kind:1, col:"#c8262b"}, {kind:1, col:"#1d1d1f"}, {kind:1, col:"#e3b21a"}, {kind:2, col:"#2f8a3e"}, {kind:2, col:"#2b62c4"}];
+const isSock = t => t[0] === "X";
+function cableCurve(a, b){ const ea = [a[0], a[1] + 2.4, a[2]], eb = [b[0], b[1] + 2.4, b[2]], D = Math.hypot(eb[0] - ea[0], eb[2] - ea[2]), S = Math.min(16, 0.45 * D + 2), pts = [a, ea], N = Math.max(8, Math.round(D / 1.5));
+  for (let i = 1; i < N; i++){ const t = i / N; pts.push([ea[0] + (eb[0] - ea[0]) * t, Math.max(0.3, ea[1] + (eb[1] - ea[1]) * t - S * 4 * t * (1 - t)), ea[2] + (eb[2] - ea[2]) * t]); }
+  pts.push(eb, b); let P = pts; for (let r = 0; r < 2; r++){ const Q = [P[0]]; for (let i = 0; i + 1 < P.length; i++){ const p = P[i], q = P[i + 1]; Q.push(p.map((v, j) => 0.75 * v + 0.25 * q[j]), p.map((v, j) => 0.25 * v + 0.75 * q[j])); } Q.push(P[P.length - 1]); P = Q; } return P; }
+function endModel(kind, p, col, id){ const at = d => [p[0], p[1] + d, p[2]];
+  if (kind === "banana"){ cylAB(p, at(0.3), 0.16, "#c9ced3", {seg:8, id}); cylAB(at(0.3), at(2.4), 0.36, col, {seg:12, id, r1:0.3}); }
+  else if (kind === "probe"){ cylAB(p, at(1.2), 0.06, "#d8dce0", {seg:6, id}); cylAB(at(1.2), at(1.5), 0.45, col, {seg:12, id}); cylAB(at(1.5), at(5.5), 0.34, col, {seg:12, id}); }
+  else { cylAB(p, at(0.7), 0.16, "#c9ced3", {seg:6, id}); box3(p[0] - 0.25, p[0] + 0.25, p[1] + 0.2, p[1] + 0.9, p[2] - 0.12, p[2] + 0.12, "#c9ced3", {id}); cylAB(at(0.9), at(2.6), 0.36, col, {seg:12, id, r1:0.3}); } }
+const endKinds = l => [["banana", "probe"], ["banana", "croc"], ["croc", "croc"]][LEADS[l.n].kind];
+function leads3(){ ST.leads.forEach((l, i) => { const L = LEADS[l.n], ks = l.ka, A = TPOS[l.a], B = l.b ? TPOS[l.b] : null; if (!A) return;
+  const top = k => k === "probe" ? 5.5 : 2.4;
+  endModel(ks[0], A.p, L.col, "le:" + i + ":a");
+  if (B){ endModel(ks[1], B.p, L.col, "le:" + i + ":b"); poly3(cableCurve([A.p[0], A.p[1] + top(ks[0]), A.p[2]], [B.p[0], B.p[1] + top(ks[1]), B.p[2]]), L.col, 1.8); }
+  else { const H = onPlane(m3[0], m3[1], HAND_Y); endModel(ks[1], H, "#ff8a2a"); poly3(cableCurve([A.p[0], A.p[1] + top(ks[0]), A.p[2]], [H[0], H[1] + top(ks[1]), H[2]]), L.col, 1.8); } }); }
+function scene3(){ desk3(); optics3(); adapter3(); pack3(); rheo3(); cap3(); bulbs3(); meter3(); tape3(); leads3(); }
+
+
+/* ==================================================================
+   VIEWS, HANDS AND THE LOOP
+   ================================================================== */
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {k:w / 125, tx:45, ty:4, tz:14, yaw:-0.28, pitch:0.72, px:0, py:0}); camSave(); }
+}
+let freeCam = null;
+const VIEWS = ["3d", "circuit", "meter", "screen"];
+function viewCam(v){ const W = CAM.W, H = CAM.H;
+  if (v === "circuit") return {yaw:0, pitch:1.38, k:Math.min(W / 128, H / 52), tx:24, ty:0, tz:32, px:0, py:0};
+  if (v === "meter") return {yaw:0, pitch:1.32, k:Math.min(W / 24, H / 20), tx:POS.meter[0], ty:0, tz:POS.meter[1], px:0, py:0};
+  if (v === "screen") return {yaw:-Math.PI / 2, pitch:0.0, k:Math.min(W / 24, H / 25), tx:ST.screenX, ty:11, tz:OPT_Z, px:0, py:0};
+  return CAM0; }
+function showView(v){
+  if (v !== view3){ if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
+    Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v)); }
+  view3 = v; for (const k of VIEWS) document.getElementById("vt" + k).className = k === v ? "on" : "";
+  document.getElementById("t-cap3").textContent = tr("cap_" + v); }
+for (const k of VIEWS) document.getElementById("vt" + k).onclick = () => showView(k);
+function alongLine(p, a3, b3){ const a = P3(...a3), b = P3(...b3), dx = b[0] - a[0], dy = b[1] - a[1], Lq = dx * dx + dy * dy; return Lq > 1e-9 ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / Lq : 0; }
+
+/* ---- the tape ------------------------------------------------------- */
+let tapeGrab = null;
+const tapePoint = p => ST.tape.where === "screen" ? onPlaneX(p[0], p[1], ST.screenX - 0.06) : onPlane(p[0], p[1], 0.04);
+function tapeLocal(w){ const {O, U, V} = tapeFrame(), d = [w[0] - O[0], w[1] - O[1], w[2] - O[2]]; return [d[0] * U[0] + d[1] * U[1] + d[2] * U[2], d[0] * V[0] + d[1] * V[1] + d[2] * V[2]]; }
+
+/* ---- leads ------------------------------------------------------------- */
+function freeLead(kind){ for (let n = 0; n < LEADS.length; n++) if (LEADS[n].kind === kind && !ST.leads.some(l => l.n === n)) return n; return -1; }
+function endsFor(kind, a, b){ const sa = isSock(a), sb = b ? isSock(b) : false, other = ["probe", "croc", "croc"][kind];
+  if (kind === 2) return sa || sb ? null : ["croc", "croc"]; if (sa && sb) return null;
+  if (sb) return [other, "banana"]; return ["banana", other]; }
+function termClick(t){
+  if (ST.held !== null){ const l = ST.leads[ST.held]; if (t === l.a) return; const ka = endsFor(LEADS[l.n].kind, l.a, t);
+    if (!ka){ flash(tr("noBanana")); return; } l.b = t; l.ka = ka; ST.held = null; hand = null; drawTray(); return; }
+  if (hand && hand.lead !== undefined){ const n = freeLead(hand.lead); if (n < 0){ flash(tr("noLead")); return; }
+    if (LEADS[n].kind === 2 && isSock(t)){ flash(tr("noBanana")); return; }
+    ST.leads.push({n, a:t, b:null, ka:endsFor(LEADS[n].kind, t, null)}); ST.held = ST.leads.length - 1; drawTray(); } }
+function dropHeld(){ if (ST.held !== null){ ST.leads.splice(ST.held, 1); ST.held = null; } }
+
+/* ---- the parts box ------------------------------------------------------ */
+const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d"), TROW = 44, TR_ROWS = ["l0", "l1", "l2", "tape", "bulb", "goggles"];
+let TRW = 190;
+function trayLayout(){ const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
+  TRW = Math.max(150, Math.floor(r.width - 16)); const H = TROW * TR_ROWS.length + 30; trayCv.style.height = H + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(H * dpr); drawTray(); }
+function drawTray(){ const dpr = window.devicePixelRatio || 1, c = tctx, wd = TRW - 12, H = TROW * TR_ROWS.length + 30;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, H);
+  TR_ROWS.forEach((k, i) => { const y = 6 + i * TROW; let name, sub, av, sel = false;
+    if (k[0] === "l"){ const kind = +k[1], tot = LEADS.filter(L => L.kind === kind).length, used = ST.leads.filter(l => LEADS[l.n].kind === kind).length;
+      name = I18N.leadKinds[LANG === "ko" ? 1 : 0][kind]; sub = (tot - used) + " / " + tot; av = tot > used; sel = hand && hand.lead === kind; }
+    else if (k === "tape"){ name = tr("itTape"); av = true; sel = hand === "tape"; sub = ST.tape.where === "box" ? tr("take") : tr("back"); }
+    else if (k === "bulb"){ name = tr("itBulb"); av = ST.spares > 0; sel = hand === "bulb"; sub = "×" + ST.spares; }
+    else { name = tr("itGoggles"); av = true; sel = ST.goggles; sub = ST.goggles ? (LANG === "ko" ? "쓰고 있음" : "on") : (LANG === "ko" ? "클릭해 쓰기" : "click to put on"); }
+    c.fillStyle = av ? "#1f242b" : "#171a1e"; c.fillRect(6, y, wd, TROW - 4); c.strokeStyle = sel ? "#f2c14e" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
+    c.globalAlpha = av ? 1 : 0.4; const x = 12, yy = y + 8;
+    if (k[0] === "l"){ const cols = LEADS.filter(L => L.kind === +k[1]).map(L => L.col); cols.forEach((col, j) => { c.strokeStyle = col === "#1d1d1f" ? "#555" : col; c.lineWidth = 2.4; c.beginPath(); c.moveTo(x, yy + 4 + j * 6); c.bezierCurveTo(x + 14, yy + j * 6, x + 10, yy + 20, x + 28, yy + 14 + j * 4); c.stroke(); }); }
+    if (k === "tape"){ c.fillStyle = "#2b2e33"; c.fillRect(x, yy, 22, 22); c.fillStyle = "#f3cd2f"; c.fillRect(x + 18, yy + 15, 14, 5); }
+    if (k === "bulb"){ c.fillStyle = "rgba(230,236,240,.7)"; c.beginPath(); c.arc(x + 12, yy + 9, 8, 0, 7); c.fill(); c.fillStyle = "#c9a24a"; c.fillRect(x + 8, yy + 16, 8, 8); }
+    if (k === "goggles"){ c.strokeStyle = "#8fd3ff"; c.lineWidth = 3; c.beginPath(); c.ellipse(x + 7, yy + 12, 6, 5, 0, 0, 7); c.ellipse(x + 21, yy + 12, 6, 5, 0, 0, 7); c.stroke(); }
+    c.globalAlpha = 1; c.font = '11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle"; c.fillStyle = av ? "#e8eef2" : "#868e96";
+    c.fillText(name, 48, y + 13); c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = "#69717a"; c.fillText(sub, 48, y + 29); });
+  c.font = '10px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a"; c.fillText(tr("trayHelp"), TRW / 2, H - 20); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); dropHeld(); hand = null; drawTray(); });
+trayCv.addEventListener("mousedown", e => { if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top, k = TR_ROWS[Math.floor((y - 6) / TROW)]; if (!k) return; dropHeld();
+  if (k[0] === "l"){ const kind = +k[1]; hand = hand && hand.lead === kind ? null : (freeLead(kind) >= 0 ? {lead:kind} : null); }
+  else if (k === "tape"){ if (ST.tape.where !== "box"){ ST.tape.where = "box"; hand = null; } else hand = hand === "tape" ? null : "tape"; }
+  else if (k === "bulb"){ hand = hand === "bulb" || ST.spares <= 0 ? null : "bulb"; }
+  else ST.goggles = !ST.goggles;
+  drawTray(); });
+window.addEventListener("resize", () => { trayLayout(); layout3(); });
+
+/* ---- the pointer ------------------------------------------------------- */
+let down3 = null, m3 = [0, 0], FLASH = {msg:"", t:0};
+function flash(m){ FLASH = {msg:m, t:performance.now()}; }
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+function rclick3(e){ const p = p3e(e), id = pick3(p[0], p[1]);
+  if (ST.held !== null){ dropHeld(); drawTray(); return; } if (hand){ hand = null; drawTray(); return; }
+  if (id && id.startsWith("le:")){ ST.leads.splice(+id.split(":")[1], 1); drawTray(); return; }
+  if (id === "tape"){ ST.tape.where = "box"; drawTray(); return; }
+  if (view3 !== "3d") showView("3d"); }
+function leftClick(p, id){
+  if (hand === "tape"){ if (id === "paper"){ const w = onPlaneX(p[0], p[1], ST.screenX - 0.06); if (w) Object.assign(ST.tape, {where:"screen", y:w[1], z:w[2], ang:0}); }
+    else { const w = onPlane(p[0], p[1], 0.04); Object.assign(ST.tape, {where:"desk", x:w[0], z:w[2], ang:0}); } hand = null; drawTray(); return; }
+  if (hand === "bulb"){ if (id && id.startsWith("bulb")){ const i = +id.slice(4); if (BULBS[i].broken){ BULBS[i] = mkFil(false); ST.spares--; flash(tr("newBulb")); hand = null; drawTray(); } } return; }
+  if (id && id.startsWith("t:")){ termClick(id.slice(2)); return; }
+  /* a plug already in a post: another lead goes onto the same post */
+  if (id && id.startsWith("le:") && (ST.held !== null || (hand && hand.lead !== undefined))){ const [, i, e] = id.split(":"), l = ST.leads[+i]; if (+i !== ST.held) termClick(e === "a" ? l.a : l.b); return; }
+  if (ST.held !== null) return;
+  if (id && id.startsWith("le:")){ const [, i, e] = id.split(":"), l = ST.leads[+i]; if (e === "a"){ l.a = l.b; l.ka = [l.ka[1], l.ka[0]]; } l.b = null; ST.held = +i; return; }
+  if (id === "adapter"){ ST.mains = !ST.mains; return; }
+  if (id === "lsw" || id === "pack"){ ST.laserOn = !ST.laserOn; return; }
+  if (id === "mdial"){ const c = P3(...mW(MDIAL[0], MDIAL[1])); ST.dial = (ST.dial + (p[0] > c[0] ? 1 : -1) + DIAL.length) % DIAL.length; readNow(); return; }
+  if (view3 === "3d"){ if (id === "meter") showView("meter"); else if (id === "paper" || id === "screen") showView("screen"); }
+}
+cv3.addEventListener("pointerdown", e => { const p = p3e(e); m3 = p;
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); cv3.setPointerCapture(e.pointerId); down3 = {p, id:null, moved:false, shift:true, btn:e.button}; return; }
+  if (e.button) return; cv3.setPointerCapture(e.pointerId); const id = pick3(p[0], p[1]);
+  if (!hand && ST.held === null && id === "tape"){ const w = tapePoint(p); if (w){ tapeGrab = tapeLocal(w); down3 = {p, id:"tape", moved:true}; return; } }
+  if (!hand && ST.held === null && (id === "slider" || id === "screen")){ down3 = {p, id, moved:false, drag:true}; return; }
+  down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0] - down3.p[0], p[1] - down3.p[1]) > 3) down3.moved = true; if (!down3.moved) return;
+  if (down3.id === "tape"){ const w = tapePoint(p); if (w){ const {U, V} = tapeFrame(), [a, b] = tapeGrab, O = [w[0] - U[0] * a - V[0] * b, w[1] - U[1] * a - V[1] * b, w[2] - U[2] * a - V[2] * b];
+      if (ST.tape.where === "screen"){ ST.tape.y = O[1]; ST.tape.z = O[2]; } else { ST.tape.x = O[0]; ST.tape.z = O[2]; } } return; }
+  if (down3.id === "slider"){ const [x0, z] = POS.rheo, u = alongLine(p, [x0 + 1.5, 7.3, z], [x0 + 24.5, 7.3, z]); ST.slider = Math.max(0, Math.min(1, u)); return; }
+  if (down3.id === "screen"){ const u = alongLine(p, [0, 0, OPT_Z], [1, 0, OPT_Z]); ST.screenX = Math.max(X_FIL + 25, Math.min(158, u)); return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.02, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
+  if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; }
+  if (down3 && !down3.moved) leftClick(down3.p, down3.id); down3 = null; tapeGrab = null; });
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1, id = pick3(p[0], p[1]);
+  if (id === "lcap"){ ST.focus = Math.max(0, Math.min(1, ST.focus + s * (e.shiftKey ? 0.002 : 0.01))); return; }
+  if (id === "mdial"){ ST.dial = (ST.dial + s + DIAL.length) % DIAL.length; readNow(); return; }
+  if (id === "slider"){ ST.slider = Math.max(0, Math.min(1, ST.slider - s * (e.shiftKey ? 0.002 : 0.01))); return; }
+  if (id === "tape"){ ST.tape.ang += s * (e.shiftKey ? 0.1 : 0.5) * Math.PI / 180; return; }
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(260, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive:false});
+window.addEventListener("keydown", e => { if (e.key === "Escape"){ dropHeld(); hand = null; drawTray(); } });
+
+/* ---- panel ---------------------------------------------------------------- */
+document.getElementById("bMains").onclick = () => { ST.mains = !ST.mains; };
+document.getElementById("bLaser").onclick = () => { ST.laserOn = !ST.laserOn; };
+document.getElementById("bClear").onclick = () => { ST.leads = []; ST.held = null; drawTray(); };
+function panel(){ document.getElementById("bMains").textContent = ST.mains ? tr("mains") : tr("mainsOff"); document.getElementById("bMains").className = ST.mains ? "on" : "";
+  document.getElementById("bLaser").textContent = ST.laserOn ? tr("laserSw") : tr("laserSwOff"); document.getElementById("bLaser").className = ST.laserOn ? "on" : "";
+  const w = []; if (FLASH.msg && performance.now() - FLASH.t < 5000) w.push(FLASH.msg);
+  const capIn = ST.leads.some(l => l.b && [l.a, l.b].some(t => t === "CP" || t === "CN")); if (capIn && !ST.goggles) w.push(tr("goggles"));
+  if (ST.fuse) w.push(tr("fuse")); if (ST.capDead) w.push(tr("pop"));
+  const held = ST.held !== null || (hand && hand.lead !== undefined) ? tr("holdLead") : hand === "tape" ? tr("holdTape") : "";
+  const html = w.map(s => '<div class="w">' + s + "</div>").join("") + (held ? "<div>" + held + "</div>" : "");
+  const el = document.getElementById("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
+let lastT = performance.now(), lastRead = 0;
+function readNow(){ lastRead = 0; }
+function draw3(){ const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
+  begin3(); if (view3 === "screen"){ desk3(); screen3(); tape3(); } else scene3(); render3(ctx3); cv3.style.cursor = hand || ST.held !== null ? "copy" : ""; }
+(function loop(){ try { const now = performance.now(), dt = Math.min(0.05, (now - lastT) / 1000); lastT = now; ST.t += dt; step(dt);
+    if (now - lastRead > 333){ lastRead = now; const r = meterReading(); if (r !== MSHOW){ MSHOW = r; drawMeter(); } }
+    draw3(); panel(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
+function applyLang(){ document.documentElement.lang = LANG;
+  document.title = LANG === "ko" ? "GPhO 2016 E2 — 텅스텐 필라멘트 · HaslaLab" : "GPhO 2016 E2 — Tungsten Filament · HaslaLab";
+  document.getElementById("h1").textContent = tr("title"); document.getElementById("sub").textContent = tr("sub"); document.getElementById("t-tray").textContent = tr("tray");
+  for (const k of VIEWS) document.getElementById("vt" + k).textContent = tr("vt" + k); document.getElementById("t-cap3").textContent = tr("cap_" + view3);
+  document.getElementById("lgCtl").textContent = tr("lgCtl"); document.getElementById("lgNotes").textContent = tr("lgNotes"); document.getElementById("txNotes").textContent = tr("notes");
+  document.getElementById("bClear").textContent = tr("clear");
+  document.getElementById("btn-en").className = LANG === "en" ? "on" : ""; document.getElementById("btn-ko").className = LANG === "ko" ? "on" : ""; trayLayout(); }
+document.getElementById("btn-ko").addEventListener("click", () => { LANG = "ko"; applyLang(); });
+document.getElementById("btn-en").addEventListener("click", () => { LANG = "en"; applyLang(); });
+drawMeter(); layout3(); applyLang(); showView("3d");
+
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
