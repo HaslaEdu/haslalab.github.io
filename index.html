@@ -487,6 +487,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2022_E1_web.html">NBPhO 2022 P5 — 강자성 띠</a></li>
       <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
       <li><a href="sim/nbpho2021_E1_web.html">NBPhO 2021 P4 — 고무장갑 늘이기</a></li>
+      <li><a href="sim/nbpho2020_E1_web.html">NBPhO 2020 P5 — 병의 소리</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
@@ -1894,7 +1895,18 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2021_E_EN.pdf"},
               sol:"pdf/NBPhO_2021_S.pdf"}}
     ]},
-   {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:papers("NBPhO_2020", wip("Bottle's Sound"), ["E_EN", "S"])},
+   {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"병의 소리",en:"Bottle's Sound"},
+       desc:{ko:"빈 1리터 병의 입구를 가로질러 불어 휘파람 소리를 내고(실제 소리가 납니다), 휴대폰 Physics Toolbox의 음 검출기나 스펙트럼 분석기로 진동수를 읽습니다. 100 ml 계량컵으로 물을 더해 가며 진동수와 물의 부피의 관계를 찾고, f⁻²–V 그래프로 헬름홀츠 공명을 확인합니다 (문제 5).",
+             en:"Blow across the mouth of an empty 1-litre bottle to make it whistle (you hear it), read the frequency on the phone's Physics Toolbox tone detector or spectrum analyser, add water with the 100 ml measuring cup, and find how the frequency depends on the water volume — a Helmholtz resonance seen on an f⁻²–V plot (problem 5)."},
+       tags:["음향","헬름홀츠 공명","스펙트럼"], tagsEn:["Acoustics","Helmholtz resonance","Spectrum"],
+       files:{sim:"sim/nbpho2020_E1_web.html",
+              src:{ko:"src/nbpho2020_E1_bottle_sim_KO.py", en:"src/nbpho2020_E1_bottle_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2020_E_EN.pdf"},
+              sol:"pdf/NBPhO_2020_S.pdf"}}
+    ]},
    {y:2019,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2019", wip("Four Resistors"), ["E_EN", "S"])},
    {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2018", wip("Fresnel Prism", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2017,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2017", wip("Virtual Mass", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5431,6 +5443,14 @@ const SIG_S23T1={
   f:z=>-1.43-z/(4*1.15*5),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2); },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:85,y0:-6,y1:-1,f:this.f,xl:"z²"},t,this); }};
+const SIG_N20E1={
+  sim:"sim/nbpho2020_E1_web.html", tag:"NBPhO 2020 P5", span:24, rate:8,
+  capL:{ko:"병 속 물의 부피 · 휘파람 소리의 진동수",en:"Water in the bottle · the whistle's frequency"},
+  capR:{ko:"휴대폰 음 검출기",en:"phone tone detector"},
+  pts:[0,100,200,300,400,500,600,700,800,880], n:euN, jit:0.8,
+  f:v=>144/Math.sqrt(1-v/1000),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" Hz"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:-20,x1:920,y0:100,y1:450,f:this.f,xl:"V / ml"},t,this); }};
 const SIG_N26E1={
   sim:"sim/nbpho2026_E1_web.html", tag:"NBPhO 2026 P5", span:24, rate:8,
   capL:{ko:"주사기로 당긴 부피 · 공기 방울 길이",en:"Volume pulled by the syringe · air bubble length"},
@@ -5526,7 +5546,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_G19E1,SIG_G22E1,SIG_G16E1,SIG_G16E2,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_G19E1,SIG_G22E1,SIG_G16E1,SIG_G16E2,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2,SIG_N20E1];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
