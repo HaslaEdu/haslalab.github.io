@@ -3041,10 +3041,23 @@ const DATA={
   abbr:"IAO", since:1996, obs:true,
   full:{ko:"국제천문올림피아드",en:"International Astronomy Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다.",
-        en:"Run by the Euro-Asian Astronomical Society. The theoretical round is left out; only the practical (P) and observational (O) rounds are listed. The sheets are the English problem booklets still on the official IAO site (issp.ac.ru/iao), with the problems for both age groups (α and β) and the pictures and charts that go with them bound into one file per round. Only 2014 and 2015 still have their practical and observational problems on the official site, and no official solutions are published."},
+  note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다. 그 밖의 해(2005–2013, 2016, 2018, 2019, 2021, 2022)는 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐이며, 이 해들의 영문 공식 문제지는 공식 사이트에 없습니다. 2021년과 2022년은 원격 대회(IRAO)여서 관측 라운드가 없습니다.",
+        en:"Run by the Euro-Asian Astronomical Society. The theoretical round is left out; only the practical (P) and observational (O) rounds are listed. The sheets are the English problem booklets still on the official IAO site (issp.ac.ru/iao), with the problems for both age groups (α and β) and the pictures and charts that go with them bound into one file per round. Only 2014 and 2015 still have their practical and observational problems on the official site, and no official solutions are published. The other years (2005-2013, 2016, 2018, 2019, 2021, 2022) have only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept; their English official sheets are not on the official site. 2021 and 2022 were held remotely (IRAO) and had no observational round."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
+   {y:2022,host:{ko:"이탈리아 · 마테라, 온라인",en:"Matera, Italy, online"},cc:"it",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2022_P_KO.pdf",null]])},
+   {y:2021,host:{ko:"이탈리아 · 밀라노, 온라인",en:"Milan, Italy, online"},cc:"it",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2021_P_KO.pdf",null]])},
+   {y:2019,host:{ko:"루마니아 · 피아트라네암츠",en:"Piatra Neamț, Romania"},cc:"ro",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2019_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2019_O_KO.pdf",null]])},
+   {y:2018,host:{ko:"스리랑카 · 콜롬보",en:"Colombo, Sri Lanka"},cc:"lk",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2018_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2018_O_KO.pdf",null]])},
+   {y:2016,host:{ko:"불가리아 · 팜포로보 – 스몰랸",en:"Pamporovo – Smolyan, Bulgaria"},cc:"bg",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2016_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2016_O_KO.pdf",null]])},
    {y:2015,host:{ko:"러시아 · 카잔",en:"Kazan, Russia"},cc:"ru",problems:lst([
     ["P6","The Extinction in the Terrestrial Atmosphere","지구 대기의 소광","IAO_2015_P_EN.pdf",null],
     ["P7α","Variable Star (group α)","변광성 (α조)","IAO_2015_P_EN.pdf",null],
@@ -3056,16 +3069,49 @@ const DATA={
     ["P7","Jupiter","목성","IAO_2014_P_EN.pdf",null],
     ["P8α","Comet (group α)","혜성 (α조)","IAO_2014_P_EN.pdf",null],
     ["P8β","A New Variable Star (group β)","새 변광성 (β조)","IAO_2014_P_EN.pdf",null],
-    ["O","Observational Round: Naked Eye and Telescope","관측 라운드 — 맨눈과 망원경","IAO_2014_O_EN.pdf",null]])}
+    ["O","Observational Round: Naked Eye and Telescope","관측 라운드 — 맨눈과 망원경","IAO_2014_O_EN.pdf",null]])},
+   {y:2013,host:{ko:"리투아니아 · 빌뉴스",en:"Vilnius, Lithuania"},cc:"lt",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2013_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2013_O_KO.pdf",null]])},
+   {y:2012,host:{ko:"대한민국 · 광주",en:"Gwangju, South Korea"},cc:"kr",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2012_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2012_O_KO.pdf",null]])},
+   {y:2011,host:{ko:"카자흐스탄 · 알마티",en:"Almaty, Kazakhstan"},cc:"kz",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2011_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2011_O_KO.pdf",null]])},
+   {y:2010,host:{ko:"우크라이나 · 크림 수다크",en:"Sudak, Crimea, Ukraine"},cc:"ua",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2010_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2010_O_KO.pdf",null]])},
+   {y:2009,host:{ko:"중국 · 항저우",en:"Hangzhou, China"},cc:"cn",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2009_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2009_O_KO.pdf",null]])},
+   {y:2008,host:{ko:"이탈리아 · 트리에스테",en:"Trieste, Italy"},cc:"it",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2008_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2008_O_KO.pdf",null]])},
+   {y:2007,host:{ko:"우크라이나 · 크림 시메이즈",en:"Simeiz, Crimea, Ukraine"},cc:"ua",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2007_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2007_O_KO.pdf",null]])},
+   {y:2006,host:{ko:"인도 · 뭄바이",en:"Mumbai, India"},cc:"in",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2006_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2006_O_KO.pdf",null]])},
+   {y:2005,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
+    ["P","Practical round","실기 라운드","IAO_2005_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","IAO_2005_O_KO.pdf",null]])}
   ]},
  apao:{
   abbr:"APAO", since:2005, obs:true,
   full:{ko:"아시아태평양천문올림피아드",en:"Asian-Pacific Astronomy Olympiad"},
   scope:{ko:"아시아 · 태평양",en:"Asia-Pacific"},
-  note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다.",
-        en:"The Asia-Pacific competition run by the Euro-Asian Astronomical Society, which also runs the IAO. Only the practical (P), sky map (M) and observational (O) rounds are listed, from the 2012, 2014 and 2015 booklets still on the official site (issp.ac.ru/iao/apao). The 2014 practical round survives there only in Russian, and the data sheet for 2015 problem 9 is missing from the site. No official solutions are published."},
+  note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다. 2006–2008, 2010, 2011, 2013, 2016, 2018년은 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐입니다.",
+        en:"The Asia-Pacific competition run by the Euro-Asian Astronomical Society, which also runs the IAO. Only the practical (P), sky map (M) and observational (O) rounds are listed, from the 2012, 2014 and 2015 booklets still on the official site (issp.ac.ru/iao/apao). The 2014 practical round survives there only in Russian, and the data sheet for 2015 problem 9 is missing from the site. No official solutions are published. For 2006-2008, 2010, 2011, 2013, 2016 and 2018 there are only Korean sheets, taken from the problem book the Korean delegation compiled, with the practical and observational parts kept."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
+   {y:2018,host:{ko:"중국 · 리장",en:"Lijiang, China"},cc:"cn",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2018_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2018_O_KO.pdf",null]])},
+   {y:2016,host:{ko:"대한민국 · 고흥",en:"Goheung, South Korea"},cc:"kr",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2016_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2016_O_KO.pdf",null]])},
    {y:2015,host:{ko:"방글라데시 · 다카",en:"Dhaka, Bangladesh"},cc:"bd",problems:lst([
     ["P8","The Binary Star YY Gem","쌍성 쌍둥이자리 YY","APAO_2015_P_EN.pdf",null],
     ["P9","Mass and Surface Gravity of Exoplanets","외계행성의 질량과 표면 중력","APAO_2015_P_EN.pdf",null],
@@ -3079,6 +3125,9 @@ const DATA={
     ["P8","Analemma (Russian sheet)","아날렘마 (러시아어 문제지)","APAO_2014_P_RU.pdf",null],
     ["O9","Orion (cloudy sky)","오리온자리 (흐린 하늘)","APAO_2014_O_EN.pdf",null],
     ["O10","Diurnal Motion (cloudy sky)","일주 운동 (흐린 하늘)","APAO_2014_O_EN.pdf",null]])},
+   {y:2013,host:{ko:"인도네시아 · 토모혼",en:"Tomohon, Indonesia"},cc:"id",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2013_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2013_O_KO.pdf",null]])},
    {y:2012,host:{ko:"방글라데시 · 콕스바자르",en:"Cox's Bazar, Bangladesh"},cc:"bd",problems:lst([
     ["P7","Noon","정오","APAO_2012_P_EN.pdf",null],
     ["P8α","The Black Cloud (group α)","검은 구름 (α조)","APAO_2012_P_EN.pdf",null],
@@ -3086,7 +3135,22 @@ const DATA={
     ["O9","Area","넓이","APAO_2012_O_EN.pdf",null],
     ["O10","Pegasus","페가수스자리","APAO_2012_O_EN.pdf",null],
     ["O11","Cassiopeia","카시오페이아자리","APAO_2012_O_EN.pdf",null],
-    ["O12","Alnath","엘나스","APAO_2012_O_EN.pdf",null]])}
+    ["O12","Alnath","엘나스","APAO_2012_O_EN.pdf",null]])},
+   {y:2011,host:{ko:"카자흐스탄 · 악토베",en:"Aktobe, Kazakhstan"},cc:"kz",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2011_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2011_O_KO.pdf",null]])},
+   {y:2010,host:{ko:"인도네시아 · 카루바가",en:"Karubaga, Indonesia"},cc:"id",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2010_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2010_O_KO.pdf",null]])},
+   {y:2008,host:{ko:"키르기스스탄 · 비슈케크",en:"Bishkek, Kyrgyzstan"},cc:"kg",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2008_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2008_O_KO.pdf",null]])},
+   {y:2007,host:{ko:"중국 · 샤먼",en:"Xiamen, China"},cc:"cn",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2007_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2007_O_KO.pdf",null]])},
+   {y:2006,host:{ko:"러시아 · 블라디보스토크",en:"Vladivostok, Russia"},cc:"ru",problems:lst([
+    ["P","Practical round","실기 라운드","APAO_2006_P_KO.pdf",null],
+    ["O","Observational round","관측 라운드","APAO_2006_O_KO.pdf",null]])}
   ]},
  owao:{
   abbr:"OWAO", since:2022, obs:true,
