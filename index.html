@@ -3278,7 +3278,10 @@ const DATA={
     ["O11","Circumpolar Region (cloudy sky)","주극 영역 (흐린 하늘)","APAO_2015_O_EN.pdf",null],
     ["O12","Celestial Equator (cloudy sky)","천구 적도 (흐린 하늘)","APAO_2015_O_EN.pdf",null],
     ["O13","Directions and Objects (clear sky)","방향과 천체 (맑은 하늘)","APAO_2015_O_EN.pdf",null],
-    ["O14","The Moon (clear sky)","달 (맑은 하늘)","APAO_2015_O_EN.pdf",null]])},
+    ["O14","The Moon (clear sky)","달 (맑은 하늘)","APAO_2015_O_EN.pdf",null]]).map(p=>p.id!=="M10"?p:(delete p.state,Object.assign(p,{
+      desc:{ko:"30분짜리 성도 문제입니다. 시험지의 성도 그대로 위에 방위(N, S, E, W), 별자리 약어, 별자리 선, 노랑 · 파랑 쌍성 “B”, 메시에 천체 둘 “M”을 그리고 지도 중심의 적위를 어림합니다. 공식 해답이 공개되지 않아, 성도의 도법을 히파르코스 별 338개에 맞춰 푼 HaslaLab 해답(별자리 21개, 별자리 선, 알비레오, 메시에 천체, δ ≈ +32°)을 함께 실었습니다.",
+            en:"A 30-minute sky-map problem. On the examination's own chart mark the directions (N, S, E, W), the constellation abbreviations, stick figures, the yellow-and-blue binary “B” and two Messier objects “M”, and estimate the declination of the centre. No official solution was published, so HaslaLab's own is included, from the chart's projection solved against 338 Hipparcos stars (21 constellations, stick figures, Albireo, Messier objects, δ ≈ +32°)."},
+      tags:["별자리","메시에 천체","방위"],tagsEn:["Constellations","Messier objects","Directions"]}),Object.assign(p.files,{sim:"sim/apao2015_M_web.html",src:{ko:"src/apao2015_M_skymap_sim_KO.py",en:"src/apao2015_M_skymap_sim_EN.py"}}),p))},
    {y:2014,host:{ko:"러시아 · 이르쿠츠크 – 리스트뱐카",en:"Irkutsk – Listvyanka, Russia"},cc:"ru",problems:lst([
     ["P7","Solar Activity (Russian sheet)","태양 활동 (러시아어 문제지)","APAO_2014_P_RU.pdf",null],
     ["P8","Analemma (Russian sheet)","아날렘마 (러시아어 문제지)","APAO_2014_P_RU.pdf",null],
