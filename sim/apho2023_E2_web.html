@@ -1771,18 +1771,21 @@ const JBTEX = (() => { const px = 72, c = document.createElement("canvas"); c.wi
 /* the box itself (centre x, z): a black case with rounded corners, the lid, its four screws, the lamp, both toggles,
    the knob (a knurled black body, an aluminium cap with an index line that turns with it) */
 function jboxBody(x, z, H, L, ids, st){
-  const x0 = x - JB_W / 2, z0 = z - JB_L / 2;
-  prism3("y", 0, H, rrect2(x, z, 4.0, 8.0, 0.55, 4), "#16171a", {id:ids.body});
-  prism3("y", H, L, rrect2(x, z, JB_W / 2, JB_L / 2, 0.62, 4), "#2a92c8", {id:ids.body});
-  tex3(JBTEX, 0, 0, JBTEX.width, JBTEX.height, [x0, L + 0.006, z0], [JB_W, 0, 0], [0, 0, JB_L], {id:ids.body});
-  for (const [dx, dz] of [[0.42,0.42],[JB_W-0.42,0.42],[0.42,JB_L-0.42],[JB_W-0.42,JB_L-0.42]]) cyl3("y", L, L + 0.07, x0 + dx, z0 + dz, 0.2, "#c3c8cd", {seg:10, cap:"#d9dde1"});
+  /* the black case comes up round the lid: the printed acrylic sits inside its walls, a black rim all round it */
+  const RIM = 0.2, x0 = x - JB_W / 2 + RIM, z0 = z - JB_L / 2 + RIM, LW = JB_W - 2 * RIM, LL = JB_L - 2 * RIM;
+  const outer = rrect2(x, z, JB_W / 2, JB_L / 2, 0.7, 5), inner = rrect2(x, z, JB_W / 2 - RIM, JB_L / 2 - RIM, 0.55, 5);
+  prism3("y", 0, L - 0.04, outer, "#16171a", {id:ids.body});
+  rim3(outer, inner, L - 0.04, L + 0.14, L - 0.04, "#1c1d21", {id:ids.body});
+  tex3(JBTEX, 0, 0, JBTEX.width, JBTEX.height, [x0, L + 0.006, z0], [LW, 0, 0], [0, 0, LL], {id:ids.body});
+  const U = u => x0 + u * LW / JB_W, V = v => z0 + v * LL / JB_L;
+  for (const [u, v] of [[0.42,0.42],[JB_W-0.42,0.42],[0.42,JB_L-0.42],[JB_W-0.42,JB_L-0.42]]) cyl3("y", L, L + 0.07, U(u), V(v), 0.18, "#c3c8cd", {seg:10, cap:"#d9dde1"});
   /* the lamp: a red dome in a black bezel */
-  { const [u, v] = JB_AT.led; cyl3("y", L, L + 0.14, x0 + u, z0 + v, 0.42, "#141416", {seg:16, cap:"#1d1e21"});
+  { const u = U(JB_AT.led[0]) - x0, v = V(JB_AT.led[1]) - z0; cyl3("y", L, L + 0.14, x0 + u, z0 + v, 0.42, "#141416", {seg:16, cap:"#1d1e21"});
     sphere3([x0 + u, L + 0.22, z0 + v], 0.3, st.lit ? "#ff3b2e" : "#6e1712", {hi:st.lit ? "#ffe0d0" : "#d9918a"});
     if (st.lit) sphere3([x0 + u, L + 0.3, z0 + v], 0.75, "rgba(255,70,50,0.28)"); }
-  toggle3(x0 + JB_AT.sw1[0], L, z0 + JB_AT.sw1[1], st.on, ids.sw1);
-  toggle3(x0 + JB_AT.sw2[0], L, z0 + JB_AT.sw2[1], st.sel, ids.sw2);
-  { const [u, v] = JB_AT.knob, kx = x0 + u, kz = z0 + v;
+  toggle3(U(JB_AT.sw1[0]), L, V(JB_AT.sw1[1]), st.on, ids.sw1);
+  toggle3(U(JB_AT.sw2[0]), L, V(JB_AT.sw2[1]), st.sel, ids.sw2);
+  { const kx = U(JB_AT.knob[0]), kz = V(JB_AT.knob[1]);
     cyl3("y", L, L + 0.1, kx, kz, 0.72, "#c3c8cd", {seg:16, cap:"#d5d9dd"}); cyl3("y", L + 0.1, L + 0.38, kx, kz, 0.6, "#b4bac0", {seg:6, cap:"#c9ced3"});
     knurl3("y", L + 0.38, L + 1.65, kx, kz, 0.82, "#141518", {id:ids.knob});
     cyl3("y", L + 1.65, L + 1.75, kx, kz, 0.66, "#c9ced3", {seg:24, id:ids.knob, cap:"#e2e5e8"});
@@ -1840,7 +1843,7 @@ function handLead(A, n, B){
    under a thin sky-blue lid; the red lamp, the COIL / LASER toggle (the POWER here), the CURRENT ADJUST knob, the
    PHOTOGATE / BALL WIRES toggle (unused here); the jacks on its left side, the solder lugs on its right side ---- */
 const CB = [8, 0, 30], BX = 14, BZ = 38, BXH = 4.9, BXL = 5.2;
-const KNOB3 = [BX - JB_W / 2 + JB_AT.knob[0], BZ - JB_L / 2 + JB_AT.knob[1]];
+const KNOB3 = [BX - JB_W / 2 + 0.2 + JB_AT.knob[0] * (JB_W - 0.4) / JB_W, BZ - JB_L / 2 + 0.2 + JB_AT.knob[1] * (JB_L - 0.4) / JB_L];
 let boxSel = true;
 function jbox3(){ const lit = app.lit && app.cur > 2.0;
   jboxBody(BX, BZ, BXH, BXL, {body:"ctrl", sw1:"boxsw", sw2:"boxsw2", knob:"knob"}, {lit, on:app.on, sel:boxSel, knob:app.knob_a});
@@ -1857,11 +1860,19 @@ function jbox3(){ const lit = app.lit && app.cur > 2.0;
    with the keys, the switch and the jacks standing out of it ---- */
 const MC = [[30, 38], [41, 38]], MW = 3.85, ML = 6.7, MH = 4.1, MF = 3.4;
 const MI = {a:MW - 0.42, top:ML - 0.9, bot:ML - 0.65};            /* the face, inside the rim */
-function holsterPts(k, inner){ const [cx, cz] = MC[k], N = 56, P = [];
-  for (let i = 0; i < N; i++){ const t = i / N * 2 * Math.PI, c = Math.cos(t), s = Math.sin(t), up = s < 0, n = up ? 3.2 : 4.6;
-    const a = inner ? MI.a : MW, b = inner ? (up ? MI.top : MI.bot) : ML;
-    P.push([cx + a * Math.sign(c) * Math.pow(Math.abs(c), 2 / n), cz + b * Math.sign(s) * Math.pow(Math.abs(s), 2 / n)]); }
-  return P; }
+function holsterPts(k, inner){ const [cx, cz] = MC[k], N = 34, P = [];
+  /* half-width down the meter (t = 0 at the top, 1 at the bottom): broad shoulders round the display, a waist by the
+     keys and the top of the switch, fuller again round the jacks; the two ends rounded off */
+  const T = [0, 0.10, 0.32, 0.55, 0.82, 1.0], A = [3.85, 3.85, 3.70, 3.58, 3.80, 3.76];
+  const half = t => { let i = 0; while (i < T.length - 2 && t > T[i + 1]) i++; const u = (t - T[i]) / (T[i + 1] - T[i]), s2 = u * u * (3 - 2 * u); return A[i] + (A[i + 1] - A[i]) * s2; };
+  const zt = cz - (inner ? MI.top : ML), zb = cz + (inner ? MI.bot : ML), Rt = inner ? 1.15 : 1.6, Rb = inner ? 0.8 : 1.2, dw = inner ? 0.42 : 0;
+  const side = [];
+  for (let i = 0; i <= N; i++){ const t = i / N, z = zt + (zb - zt) * t; let a = half(t) - dw;
+    const dt = z - zt, db = zb - z; if (dt < Rt) a = a - Rt + Math.sqrt(Math.max(0, Rt * Rt - (Rt - dt) * (Rt - dt))); else if (db < Rb) a = a - Rb + Math.sqrt(Math.max(0, Rb * Rb - (Rb - db) * (Rb - db)));
+    side.push([a, z]); }
+  for (const [a, z] of side) P.push([cx + a, z]);
+  for (let i = side.length - 1; i >= 0; i--) P.push([cx - side[i][0], side[i][1]]);
+  return P.reverse(); }
 /* face coordinates: u across from the face's left edge, v down from its top (cm) */
 const MFW = 2 * MI.a, MFL = MI.top + MI.bot, MDIAL = [MI.a, 7.35], MDR = 1.8;
 const MRANGE = ["OFF","200","600","600","200","20","2000m","200m","10A","200m","20m","2000µ","200µ","°C","→|","200","2000","20k","200k","2M","20M"];

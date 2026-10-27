@@ -206,6 +206,9 @@ const I18N = {
              "진자 1은 항상 왼쪽 행어에 걸려 있습니다. 오른쪽 행어에 공을 걸면 진자 2가 들어갑니다 (Part C / D)."],
   itBig: ["Steel ball, big (d = 31.75 mm)", "강철 공 · 큰 것 (d = 31.75 mm)"],
   itSmall: ["Steel ball, small (d = 25.42 mm)", "강철 공 · 작은 것 (d = 25.42 mm)"],
+  itWire: ["Thin metal wire + toothpick (Part D)", "얇은 금속선 + 이쑤시개 (Part D)"],
+  hWire: ["the contact circuit runs through the balls: fit a thin metal wire to each ball (parts box, then click the ball) and hang the second pendulum.",
+          "접촉 회로는 공을 지나야 합니다. 부품함의 얇은 금속선을 각 공에 끼우고(부품함 클릭 후 공 클릭) 두 번째 진자도 거세요."],
   trayTake: ["click to pick up (reusable)", "클릭해서 집기 (여러 번)"],
   trayHelp: ["L-click pick up, R-click put back", "좌클릭 집기 / 우클릭 되돌리기"],
   bs1: ["pendulum 1", "진자 1"], bs2: ["pendulum 2", "진자 2"], bsNone: ["—", "없음"],
@@ -917,6 +920,7 @@ const S = {
   links: new Set(), pick: null, mouse: [0, 0],
   rng: mulberry(7),
   mains: true,        /* the 12 V adaptor is in the wall socket */
+  wire: [false, false], /* Part D: the thin metal wire fitted to each ball (the nylon V carries it) */
   srcGate: true       /* the box's second toggle: up = PHOTOGATE, down = BALL WIRES */
 };
 document.getElementById("serial").textContent = "bench " + S.bench.serial;
@@ -960,7 +964,7 @@ function syncCoil(){
 
 function circuit(){
   const gate = linked("photogate", "box_gate");
-  const balls = linked("box_ball", "ball1") && linked("box_ball", "ball2");
+  const balls = linked("box_ball", "ball1") && linked("box_ball", "ball2") && S.wire[0] && S.wire[1] && S.bench.two;
   const source = S.srcGate ? (gate ? "photogate" : null) : (balls ? "contact" : null);
   const ch = linked("box_ch", "ch1") ? "ch1"
            : (linked("box_ch", "ch2") ? "ch2" : null);
@@ -997,6 +1001,8 @@ function noSignalNow(){
 function wireHint(){
   const f = fault();
   if (f === "open"){ const g = linked("photogate", "box_gate"), bw = linked("box_ball", "ball1") && linked("box_ball", "ball2");
+    const plugged = linked("box_ball", "ball1") && linked("box_ball", "ball2");
+    if (!S.srcGate && plugged && !(S.wire[0] && S.wire[1] && S.bench.two)) return tr("hWire");
     if ((S.srcGate && !g && bw) || (!S.srcGate && g && !bw)) return tr("hSel"); return tr("hOpen"); }
   if (f === "wrongch") return tr("hWrongch");
   if (f === "trigsrc") return tr("hTrigsrc");
@@ -1160,138 +1166,6 @@ function rr(c, x, y, w, h, r){ c.beginPath();
   c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r);
   c.arcTo(x, y, x + w, y, r); c.closePath(); }
 
-function drawScope(){
-  const c = sx; c.clearRect(0, 0, IW, IH); scope._ver = (scope._ver || 0) + 1;
-  c.fillStyle = "#dcdcda"; rr(c, 4, 4, IW - 8, IH - 8, 8); c.fill();
-  c.strokeStyle = "#b6b6b3"; c.stroke();
-  /* branding */
-  c.fillStyle = "#1f4f9c"; c.font = "bold " + (0.024 * IW).toFixed(1) + "px Segoe UI";
-  c.fillText("SIGLENT", 0.052 * IW, 0.055 * IH + 10);
-  c.fillStyle = "#55565a"; c.font = (0.017 * IW).toFixed(1) + "px Segoe UI";
-  c.fillText("SDS 1202X-E", 0.20 * IW, 0.052 * IH + 10);
-  c.fillText("200 MHz   1 GSa/s", 0.42 * IW, 0.052 * IH + 10);
-  /* glass */
-  const [gx, gy, gw, gh] = grat();
-  c.fillStyle = "#000"; c.fillRect(SX0, SY0, SW, SH);
-  c.fillStyle = C_BAR;
-  c.fillRect(SX0, SY0, SW, SH * BAR_T);
-  c.fillRect(SX0 + gw, SY0, SW - gw, SH);
-  if (!S.power){
-    /* dark glass: no graticule, no readouts, just the black screen */
-    for (const k in KNOBS) drawKnob(c, k);
-    for (const b in BTNS) drawBtn(c, b);
-    drawPanel(c);
-    document.getElementById("mpos").textContent = tr("scopeoff");
-    return;
-  }
-  /* graticule 14 x 8 */
-  c.strokeStyle = "#39463a"; c.lineWidth = 0.6; c.setLineDash([1, 3]);
-  c.beginPath();
-  for (let i = 0; i <= NX; i++){ const x = gx + i * gw / NX;
-    c.moveTo(x, gy); c.lineTo(x, gy + gh); }
-  for (let j = 0; j <= NY; j++){ const y = gy + j * gh / NY;
-    c.moveTo(gx, y); c.lineTo(gx + gw, y); }
-  c.stroke(); c.setLineDash([]);
-  /* status bar */
-  c.fillStyle = "#fff"; c.fillRect(SX0 + 2, SY0 + 1, 0.070 * IW, SH * BAR_T - 2);
-  c.fillStyle = "#000"; c.font = "bold " + (0.0125 * IW).toFixed(1) + "px Segoe UI";
-  c.fillText("SIGLENT", SX0 + 5, SY0 + SH * BAR_T - 4);
-  const st = S.power ? scopeState() : ["", "#000"];
-  c.fillStyle = st[1]; c.font = "bold " + (0.0145 * IW).toFixed(1) + "px Consolas";
-  c.fillText(st[0], SX0 + 0.078 * IW, SY0 + SH * BAR_T - 4);
-  c.fillStyle = "#e6e6e6"; c.font = (0.0125 * IW).toFixed(1) + "px Consolas";
-  c.fillText("M " + tlab(S.tdiv) + "/   Delay:" + S.delay.toFixed(3) + "s",
-             SX0 + 0.155 * IW, SY0 + SH * BAR_T - 4);
-  /* sidebar */
-  c.fillStyle = "#e6e6e6"; c.font = (0.0115 * IW).toFixed(1) + "px Consolas";
-  const r = S.run;
-  c.fillText("Sa " + (r ? fslab(r.fs) : "----"), SX0 + gw + 3, gy + 0.030 * IH);
-  c.fillText("Curr " + mlab(MEM[S.memi]), SX0 + gw + 3, gy + 0.055 * IH);
-  c.fillStyle = "#e8c020";
-  c.fillText("CH1  " + S.vdiv + "V/", SX0 + gw + 3, gy + 0.090 * IH);
-  c.fillText("L " + S.trig.toFixed(2) + " V", SX0 + gw + 3, gy + 0.115 * IH);
-  /* trace, unless the instrument is switched off.  A floating input is
-     a mess whatever the sweep is doing, and an instrument that has not
-     been Auto Set since the leads changed is not locked to anything. */
-  if (S.power){
-    if (!S.frozen && (S.cont || S.armed) && floatNow())
-      drawFreeRun(c, gx, gy, gw, gh, true);
-    else if (!S.frozen && S.cont && (!S.autoDone || noSignalNow()))
-      drawFreeRun(c, gx, gy, gw, gh, false);
-    else drawTrace(c, gx, gy, gw, gh);
-  }
-  /* bottom bar */
-  c.fillStyle = C_TRACE; c.font = (0.013 * IW).toFixed(1) + "px Consolas";
-  c.fillText("M " + tlab(S.tdiv) + "   CH1 = " + S.vdiv + " V   M Pos = "
-             + S.delay.toFixed(6) + " s", SX0 + 4, SY0 + SH - 6);
-  drawPanel(c);
-}
-
-function drawPanel(c){
-  /* ---- the panel, laid out like the instrument ---------------- */
-  drawGroup(c, 0.6329, 0.7859, 0.3089, 0.7098, "Vertical");
-  drawGroup(c, 0.7859, 0.8993, 0.3089, 0.7098, "Horizontal");
-  drawGroup(c, 0.8993, 0.9726, 0.3089, 0.7098, "Trigger");
-  drawGroup(c, 0.6300, 0.8700, 0.1500, 0.3100, "");
-  drawGroup(c, 0.0490, 0.4880, 0.1710, 0.2780, "");
-  /* softkeys under the screen, Menu On/Off, USB and power */
-  for (let i = 0; i < 6; i++)
-    plate(c, 0.1230 + i * 0.0688, 0.2192, 0.0465, 0.0386);
-  ring(c, 0.0567, 0.2279, 0.0140, S.power ? "#7cc45c" : "#c2c2bf");
-  lab(c, 0.0567, 0.2279 + 0.045, "Power");
-  lab(c, 0.0567, 0.2279 - 0.045, "On/Off");
-  c.fillStyle = "#3b3f44";
-  c.fillRect(0.5330 * IW, (1 - 0.2430) * IH, 0.0400 * IW, 0.0420 * IH);
-  /* the three inputs */
-  for (const [fx, col, xy, num] of [[0.6418, "#f2c500", "X", "1"],
-                                    [0.7457, "#e86ab4", "Y", "2"],
-                                    [0.8496, "#9a9a97", "", "Ext"]]){
-    const x = fx * IW, y = (1 - 0.2341) * IH, r = 0.0191 * IW;
-    c.fillStyle = "#c2c2bf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill();
-    c.strokeStyle = "#8d8d8a"; c.lineWidth = 1.4; c.stroke();
-    c.fillStyle = "#4a4a48"; c.beginPath(); c.arc(x, y, r * 0.62, 0, 6.283);
-    c.fill();
-    c.fillStyle = "#d8d8d5"; c.beginPath(); c.arc(x, y, r * 0.22, 0, 6.283);
-    c.fill();
-    c.fillStyle = col === "#9a9a97" ? "#3a3b3e" : col;
-    c.font = "bold " + (0.013 * IW).toFixed(1) + "px Segoe UI";
-    c.textAlign = "center";
-    c.fillText(num, x + 0.012 * IW, y - r - 0.014 * IH);
-    if (xy){ c.fillStyle = "#3a3b3e";
-      c.fillText(xy, x - r - 0.008 * IW, y - r - 0.014 * IH); }
-    c.textAlign = "left";
-  }
-  lab(c, 0.7457, 0.1700, "All inputs : 1 M\u03a9 / 16 pF   400 Vpk", "#2f6fa8");
-  /* the knob legends, as printed on the case */
-  lab(c, 0.6431, 0.8170 - 0.050, "Intensity");
-  lab(c, 0.6431, 0.8170 - 0.078, "Adjust");
-  lab(c, 0.6431, 0.6339 - 0.048, "Variable");
-  lab(c, 0.6960, 0.3798, "Position");
-  lab(c, 0.8508, 0.6401 - 0.058, "Zoom");
-  lab(c, 0.8508, 0.4300, "Position");
-  lab(c, 0.9464, 0.4300, "Level");
-  for (const fx of [0.6431, 0.7476, 0.8508]) lab(c, fx, 0.3110, "Zero");
-  lab(c, 0.9464, 0.3110, "50%");
-  for (const k in KNOBS) drawKnob(c, k);
-  for (const b in BTNS) drawBtn(c, b);
-  warn(S.faultMsg || sampleWarn());
-  const rr2 = S.run;
-  document.getElementById("mpos").textContent =
-    "M Pos = " + S.delay.toFixed(7) + " s      " + tlab(S.tdiv) + "/div      "
-    + mlab(MEM[S.memi]) + "      " + (rr2 ? fslab(rr2.fs) : "");
-}
-function drawGroup(c, fx0, fx1, fy0, fy1, title){
-  const x = fx0 * IW, y = (1 - fy1) * IH;
-  const w = (fx1 - fx0) * IW, h = (fy1 - fy0) * IH;
-  c.strokeStyle = "#7ec8e8"; c.lineWidth = 1;
-  rr(c, x, y, w, h, 5); c.stroke();
-  if (!title) return;
-  c.fillStyle = "#3a3b3e";
-  c.font = "bold " + (0.0135 * IW).toFixed(1) + "px Segoe UI";
-  c.textAlign = "center";
-  c.fillText(title, x + w / 2, y - 0.012 * IH);
-  c.textAlign = "left";
-}
 function plate(c, fx, fy, fw, fh){
   const x = fx * IW - fw * IW / 2, y = (1 - fy) * IH - fh * IH / 2;
   c.fillStyle = "#e8e8e6"; rr(c, x, y, fw * IW, fh * IH, 3); c.fill();
@@ -1509,40 +1383,6 @@ function drawTrace(c, gx, gy, gw, gh){
   c.lineTo(gx + gw - 6, yl); c.fill();
   c.restore();
 }
-function drawKnob(c, k){
-  const [fx, fy, fr] = KNOBS[k];
-  const x = fx * IW, y = (1 - fy) * IH, r = fr * IW;
-  if (k === "vscale" || k === "vpos"){ c.strokeStyle = "#f2c500"; c.lineWidth = 2.4;
-    c.beginPath(); c.arc(x, y, r + 3, 0, 6.283); c.stroke(); }
-  if (k === "vscale2" || k === "vpos2"){ c.strokeStyle = "#e86ab4"; c.lineWidth = 2.4;
-    c.beginPath(); c.arc(x, y, r + 3, 0, 6.283); c.stroke(); }
-  c.fillStyle = "#d2d2cf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill();
-  c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.8; c.stroke();
-  c.fillStyle = "#eeeeec"; c.beginPath(); c.arc(x, y, r * 0.72, 0, 6.283); c.fill();
-  const a = knobAng[k];
-  c.strokeStyle = "#8d8d8a"; c.lineWidth = 2; c.beginPath();
-  c.moveTo(x + r * 0.2 * Math.sin(a), y - r * 0.2 * Math.cos(a));
-  c.lineTo(x + r * 0.62 * Math.sin(a), y - r * 0.62 * Math.cos(a)); c.stroke();
-  if (S.sel === k){ c.strokeStyle = "#e03030"; c.lineWidth = 2;
-    c.beginPath(); c.arc(x, y, r + 5, 0, 6.283); c.stroke(); }
-}
-function drawBtn(c, b){
-  const [fx, fy, fw, fh, lab, col] = BTNS[b];
-  const x = fx * IW - fw * IW / 2, y = (1 - fy) * IH - fh * IH / 2;
-  const w = fw * IW, h = fh * IH;
-  c.fillStyle = (b === "roll" && S.roll) || (b === "run" && S.cont)
-    ? "#9fd97a" : col;
-  rr(c, x, y, w, h, 3); c.fill();
-  c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.7; c.stroke();
-  c.fillStyle = (col === "#2f9fe0" || col === "#2b2c30") ? "#fff" : "#3a3b3e";
-  c.font = "bold " + (0.0105 * IW).toFixed(1) + "px Segoe UI";
-  c.textAlign = "center";
-  lab.split("\n").forEach((s, i, A) =>
-    c.fillText(s, x + w / 2, y + h / 2 + 0.004 * IH
-      + (i - (A.length - 1) / 2) * 0.013 * IH));
-  c.textAlign = "left";
-}
-
 /* ---- panel interaction ------------------------------------------ */
 scope.addEventListener("mousedown", ev => {
   const R = scope.getBoundingClientRect();
@@ -2084,7 +1924,7 @@ function frame(now){
   if (S.playing || (S.cont && S.power)) drawScope();
   requestAnimationFrame(frame);
 }
-drawBench(); drawScope(); drawWire();
+drawBench(); drawWire();          /* the scope is drawn once everything it uses exists (applyLang, at the end) */
 requestAnimationFrame(frame);
 
 
@@ -2133,134 +1973,9 @@ Object.assign(BTNS, {
   decode:[0.8711,0.8032,0.046,0.042,"Decode","#e8e8e6"],
   univbtn:[0.6367,0.9128,0.024,0.030,"","#d2d2cf"]
 });
-function drawScope(){
-  const c = sx; c.clearRect(0, 0, IW, IH); scope._ver = (scope._ver || 0) + 1;
-  /* the case, its two feet and the label band */
-  c.fillStyle = "#c2c2bf"; c.strokeStyle = "#a8a8a5"; c.lineWidth = 0.8;
-  for (const fx of [0.10, 0.78]){ c.fillRect(QX(fx), QY(0.055), QX(0.11), IH * 0.055); c.strokeRect(QX(fx), QY(0.055), QX(0.11), IH * 0.055); }
-  c.fillStyle = "#dcdcda"; rr(c, QX(0.004), QY(0.985), QX(0.992), IH * 0.955, 0.012 * IW); c.fill();
-  c.strokeStyle = "#b6b6b3"; c.lineWidth = 1.2; c.stroke();
-  /* the label band above the glass, as printed on the instrument: the SIGLENT plate, the model, the SPO mark, the ratings */
-  c.fillStyle = "#e4e4e1"; c.fillRect(QX(0.030), QY(0.985), QX(0.560), IH * 0.055);
-  c.textBaseline = "middle"; c.textAlign = "left";
-  { const x = QX(0.040), y = QY(0.981), w = QX(0.118), h = IH * 0.046, g = c.createLinearGradient(0, y, 0, y + h);
-    g.addColorStop(0, "#f3f4f5"); g.addColorStop(1, "#c9cdd2"); c.fillStyle = g; rr(c, x, y, w, h, 0.004 * IW); c.fill(); c.strokeStyle = "#a9adb2"; c.lineWidth = 0.8; c.stroke();
-    c.fillStyle = "#1f56b0"; c.font = "800 " + (0.0215 * IW).toFixed(1) + "px 'Segoe UI', Arial, sans-serif"; try { c.letterSpacing = (0.0022 * IW).toFixed(1) + "px"; } catch(e){}
-    c.fillText("SIGLENT", x + 0.009 * IW, y + h / 2 + 0.5); try { c.letterSpacing = "0px"; } catch(e){} }
-  c.fillStyle = "#55565a"; c.font = FPT(7.5); c.fillText("SDS 1202X-E", QX(0.172), QY(0.966));
-  c.fillStyle = "#8a8b8f"; c.font = FPT(4.8); c.fillText("Digital Storage Oscilloscope", QX(0.172), QY(0.945));
-  c.save(); c.translate(QX(0.352), QY(0.958)); c.transform(1, 0, -0.28, 1, 0, 0);
-  c.font = "900 " + (0.024 * IW).toFixed(1) + "px 'Segoe UI', Arial, sans-serif"; c.lineWidth = 1.4; c.strokeStyle = "#4a4b50"; c.fillStyle = "#e4e4e1";
-  c.strokeText("SPO", 0, 0); c.fillText("SPO", 0, 0); c.restore();
-  c.fillStyle = "#8a8b8f"; c.font = FPT(4.6); c.fillText("Super Phosphor Oscilloscope", QX(0.352), QY(0.938));
-  c.fillStyle = "#55565a"; c.font = FPT(6.5); c.fillText("200 MHz", QX(0.505), QY(0.966)); c.fillText("1 GSa/s", QX(0.505), QY(0.945));
-  c.textBaseline = "alphabetic";
-  /* the LCD in its bezel */
-  c.fillStyle = "#26262a"; c.fillRect(SX0 - QX(0.009), SY0 - IH * 0.016, SW + QX(0.018), SH + IH * 0.032);
-  c.strokeStyle = "#141417"; c.lineWidth = 1; c.strokeRect(SX0 - QX(0.009), SY0 - IH * 0.016, SW + QX(0.018), SH + IH * 0.032);
-  const [gx, gy, gw, gh] = grat();
-  c.fillStyle = "#000"; c.fillRect(SX0, SY0, SW, SH);
-  if (!S.power){
-    c.fillStyle = "#0a0b0c"; c.fillRect(SX0, SY0, SW, SH);
-    drawPanel(c);
-    document.getElementById("mpos").textContent = tr("scopeoff");
-    return;
-  }
-  c.fillStyle = C_BAR;
-  c.fillRect(SX0, SY0, SW, SH * BAR_T);
-  c.fillRect(SX0 + gw, SY0, SW - gw, SH);
-  /* graticule 14 x 8, with the dotted minor divisions */
-  c.lineWidth = 0.5; c.setLineDash([1, 4]); c.strokeStyle = "#1e2320"; c.beginPath();
-  for (let i = 0; i <= NX * 5; i++){ if (i % 5 === 0) continue; const x = gx + i * gw / (NX * 5); c.moveTo(x, gy); c.lineTo(x, gy + gh); }
-  for (let j = 0; j <= NY * 5; j++){ if (j % 5 === 0) continue; const y = gy + j * gh / (NY * 5); c.moveTo(gx, y); c.lineTo(gx + gw, y); }
-  c.stroke();
-  c.strokeStyle = "#39463a"; c.lineWidth = 0.6; c.setLineDash([1, 3]); c.beginPath();
-  for (let i = 0; i <= NX; i++){ const x = gx + i * gw / NX; c.moveTo(x, gy); c.lineTo(x, gy + gh); }
-  for (let j = 0; j <= NY; j++){ const y = gy + j * gh / NY; c.moveTo(gx, y); c.lineTo(gx + gw, y); }
-  c.stroke(); c.setLineDash([]);
-  /* status bar */
-  c.fillStyle = "#fff"; c.fillRect(SX0 + 2, SY0 + 1, 0.052 * IW, SH * BAR_T - 2);
-  c.fillStyle = "#000"; c.font = FPB(4.6); c.textAlign = "center";
-  c.fillText("SIGLENT", SX0 + 2 + 0.026 * IW, SY0 + SH * BAR_T - 4); c.textAlign = "left";
-  const st = scopeState();
-  c.fillStyle = st[1]; c.font = "bold " + (0.0145 * IW).toFixed(1) + "px Consolas";
-  c.fillText(st[0], SX0 + 0.062 * IW, SY0 + SH * BAR_T - 4);
-  c.fillStyle = "#e6e6e6"; c.font = (0.0125 * IW).toFixed(1) + "px Consolas";
-  c.fillText("M " + tlab(S.tdiv) + "/   Delay:" + S.delay.toFixed(3) + "s", SX0 + 0.140 * IW, SY0 + SH * BAR_T - 4);
-  c.fillStyle = "#e6e6e6"; c.font = (0.0115 * IW).toFixed(1) + "px Consolas";
-  const r = S.run;
-  c.fillText("Sa " + (r ? fslab(r.fs) : "----"), SX0 + gw + 3, gy + 0.030 * IH);
-  c.fillText("Curr " + mlab(MEM[S.memi]), SX0 + gw + 3, gy + 0.055 * IH);
-  for (const j of [0, 1]) if (S.chOn[j]){ c.fillStyle = CH_COL[j]; c.fillText("CH" + (j + 1) + " " + vlab(chVdiv(j)) + "/", SX0 + gw + 3, gy + (0.090 + j * 0.025) * IH); }
-  c.fillStyle = CH_COL[Math.min(1, S.trigSrc)]; c.fillText("L " + S.trig.toFixed(2) + " V", SX0 + gw + 3, gy + 0.145 * IH);
-  /* the trace of the channel the lead is in, if that channel is on; locked only if the trigger is taken from it */
-  const si = sigIx(); C_TRACE = CH_COL[Math.max(0, si)]; c.globalAlpha = S.intens;
-  if (si >= 0 && !S.chOn[si]) S.lastTrace = null;
-  else if (!S.frozen && (S.cont || S.armed) && floatNow()) drawFreeRun(c, gx, gy, gw, gh, true);
-  else if (!S.frozen && S.cont && (!S.autoDone || noSignalNow() || S.trigSrc !== si)){ if (S.chOn[Math.max(0, si)]) drawFreeRun(c, gx, gy, gw, gh, false); }
-  else drawTrace(c, gx, gy, gw, gh);
-  c.globalAlpha = 1;
-  drawOverlay(c, gx, gy, gw, gh); drawFoot(c);
-  drawPanel(c);
-}
 function panelText(c, t, fx, fy, pt, col, bold, align){
   c.fillStyle = col || "#55565a"; c.font = (bold ? FPB : FPT)(pt); c.textAlign = align || "center"; c.textBaseline = "middle";
   c.fillText(t, QX(fx), QY(fy)); c.textAlign = "left"; c.textBaseline = "alphabetic";
-}
-function drawGroup(c, fx0, fx1, fy0, fy1, title){
-  c.strokeStyle = "#7ec8e8"; c.lineWidth = 1;
-  rr(c, QX(fx0), QY(fy1), QX(fx1 - fx0), IH * (fy1 - fy0), 0.006 * IW); c.stroke();
-  if (title) panelText(c, title, (fx0 + fx1) / 2, fy1 + 0.018, 6.5, "#3a3b3e", true);
-}
-function drawPanel(c){
-  drawGroup(c, 0.6329, 0.7859, 0.3089, 0.7098, "Vertical");
-  drawGroup(c, 0.7859, 0.8993, 0.3089, 0.7098, "Horizontal");
-  drawGroup(c, 0.8993, 0.9726, 0.3089, 0.7098, "Trigger");
-  drawGroup(c, 0.6300, 0.8700, 0.1500, 0.3100, "");
-  drawGroup(c, 0.0490, 0.4880, 0.1710, 0.2780, "");
-  panelText(c, "Intensity", 0.6431, 0.8170 + 0.052, 4.6);
-  panelText(c, "Adjust", 0.6431, 0.8170 + 0.036, 5.2, "#3a3b3e", true);
-  panelText(c, "Variable", 0.6960, 0.5760, 4.6, "#3a3b3e");
-  panelText(c, "Position", 0.6960, 0.3798, 4.6, "#3a3b3e");
-  for (const fx of [0.6431, 0.7476, 0.8508]) panelText(c, "Zero", fx, 0.3110, 4.2);
-  panelText(c, "Zoom", 0.8508, 0.5560, 4.6, "#3a3b3e");
-  panelText(c, "Position", 0.8508, 0.4300, 4.6, "#3a3b3e");
-  panelText(c, "Level", 0.9464, 0.4300, 4.6, "#3a3b3e");
-  panelText(c, "50%", 0.9464, 0.3110, 4.2);
-  /* the analog inputs */
-  for (const [fx, lab, num] of [[0.6418, "X", "1"], [0.7457, "Y", "2"], [0.8496, "", "Ext"]]){
-    const x = QX(fx), y = QY(0.2341), r = 0.0191 * IW;
-    c.fillStyle = "#c2c2bf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#8d8d8a"; c.lineWidth = 1.4; c.stroke();
-    c.fillStyle = "#4a4a48"; c.beginPath(); c.arc(x, y, r * 0.62, 0, 6.283); c.fill(); c.strokeStyle = "#6e6e6b"; c.lineWidth = 0.8; c.stroke();
-    c.fillStyle = "#d8d8d5"; c.beginPath(); c.arc(x, y, r * 0.22, 0, 6.283); c.fill();
-    if (lab) panelText(c, lab, fx - 0.0191 - 0.008, 0.2341 + 0.0191 * IW / IH + 0.020, 5, "#3a3b3e");
-    panelText(c, num, fx + 0.012, 0.2341 + 0.0191 * IW / IH + 0.020, 6, "#3a3b3e", true);
-  }
-  panelText(c, "All inputs : 1 MΩ / 16 pF   400 Vpk", 0.7457, 0.1660, 4.4, "#2f6fa8");
-  /* probe compensation */
-  c.fillStyle = "#b9b9b6"; c.strokeStyle = "#8d8d8a"; c.lineWidth = 0.7;
-  c.fillRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900); c.strokeRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900);
-  c.fillRect(QX(0.9280), QY(0.3200), QX(0.0180), IH * 0.0300); c.strokeRect(QX(0.9280), QY(0.3200), QX(0.0180), IH * 0.0300);
-  panelText(c, "┐─ 1 kHz", 0.9640, 0.2700, 4.6, "#3a3b3e", false, "left");
-  c.strokeStyle = "#3a3b3e"; c.lineWidth = 1; c.beginPath(); c.moveTo(QX(0.9600), QY(0.2100)); c.lineTo(QX(0.9700), QY(0.2100));
-  c.moveTo(QX(0.9650), QY(0.2100)); c.lineTo(QX(0.9650), QY(0.2260)); c.stroke();
-  /* softkeys, Menu On/Off, USB, power */
-  for (let i = 0; i < 6; i++) plateBtn(c, 0.1230 + i * 0.0688, 0.2192, 0.0465, 0.0386, "", "#e8e8e6");
-  c.fillStyle = "#d2d2cf"; c.beginPath(); c.arc(QX(0.0567), QY(0.2279), 0.0140 * IW, 0, 6.283); c.fill(); c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.9; c.stroke();
-  panelText(c, "Menu", 0.0567, 0.2279 + 0.042, 4.6, "#3a3b3e"); panelText(c, "On/Off", 0.0567, 0.2279 - 0.042, 4.6, "#3a3b3e");
-  c.fillStyle = "#3b3f44"; rr(c, QX(0.5330), QY(0.2430), QX(0.0400), IH * 0.0420, 0.004 * IW); c.fill(); c.strokeStyle = "#8d8d8a"; c.lineWidth = 0.8; c.stroke();
-  { const px = QX(0.1103), py = QY(0.1270), pr = 0.0153 * IW;
-    c.fillStyle = S.power ? "#cfe9c4" : "#c2c2bf"; c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill(); c.strokeStyle = "#9a9a97"; c.lineWidth = 1.2; c.stroke();
-    c.strokeStyle = S.power ? "#3c8c2c" : "#55565a"; c.lineWidth = 1.4; c.beginPath(); c.arc(px, py, 0.0070 * IW, -Math.PI * 0.35, Math.PI * 1.35); c.stroke();
-    c.beginPath(); c.moveTo(px, py); c.lineTo(px, py - 0.011 * IH * 1.6); c.stroke();
-    panelText(c, "Power", 0.1103, 0.1270 - 0.052, 4.6, "#3a3b3e"); }
-  for (const k in KNOBS) drawKnob(c, k);
-  for (const b in BTNS) drawBtn(c, b);
-  panelText(c, tr("dialhint"), 0.985, 0.055, 5, "#a9a9a6", false, "right");
-  warn(S.faultMsg || sampleWarn());
-  const rr2 = S.run;
-  document.getElementById("mpos").textContent = S.power ?
-    "M Pos = " + S.delay.toFixed(7) + " s      " + tlab(S.tdiv) + "/div      " + mlab(MEM[S.memi]) + "      " + (rr2 ? fslab(rr2.fs) : "") : tr("scopeoff");
 }
 function plateBtn(c, fx, fy, fw, fh, label, col, fg, rad){
   const x = QX(fx) - QX(fw) / 2, y = QY(fy) - IH * fh / 2, w = QX(fw), h = IH * fh, r = (rad || 0.004) * IW;
@@ -2270,28 +1985,6 @@ function plateBtn(c, fx, fy, fw, fh, label, col, fg, rad){
     label.split("\n").forEach((s, i, A) => c.fillText(s, x + w / 2, y + h / 2 + (i - (A.length - 1) / 2) * 0.0175 * IH));
     c.textAlign = "left"; c.textBaseline = "alphabetic"; }
 }
-function drawBtn(c, b){
-  const [fx, fy, fw, fh, lab, col] = BTNS[b];
-  const on = (b === "roll" && S.roll) || (b === "run" && S.cont);
-  const fg = (col === "#2f9fe0" || col === "#2b2c30") ? "#ffffff" : "#3a3b3e";
-  plateBtn(c, fx, fy, fw, fh, lab, on ? "#9fd97a" : col, fg);
-}
-function drawKnob(c, k){
-  const [fx, fy, fr] = KNOBS[k], x = QX(fx), y = QY(fy), r = fr * IW;
-  const ring = {vscale:"#f2c500", vpos:"#f2c500", vscale2:"#e86ab4", vpos2:"#e86ab4"}[k];
-  if (ring){ c.strokeStyle = ring; c.lineWidth = 3.2; c.beginPath(); c.arc(x, y, r + 0.010 * IW, 0, 6.283); c.stroke(); }
-  c.fillStyle = "#b9b9b6"; c.beginPath(); c.arc(x + 0.0015 * IW, y + 0.004 * IH, r * 1.03, 0, 6.283); c.fill();
-  c.fillStyle = "#d2d2cf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#a9a9a6"; c.lineWidth = 0.9; c.stroke();
-  c.fillStyle = "#eeeeec"; c.beginPath(); c.arc(x, y - 0.003 * IH, r * 0.72, 0, 6.283); c.fill(); c.strokeStyle = "#c9c9c6"; c.lineWidth = 0.7; c.stroke();
-  c.strokeStyle = "#c4c4c1"; c.lineWidth = 0.6; c.beginPath();
-  for (let i = 0; i < 18; i++){ const a = i * Math.PI / 9; c.moveTo(x + r * 0.80 * Math.cos(a), y + r * 0.80 * Math.sin(a)); c.lineTo(x + r * 0.96 * Math.cos(a), y + r * 0.96 * Math.sin(a)); }
-  c.stroke();
-  const a = knobAng[k];
-  c.strokeStyle = "#8d8d8a"; c.lineWidth = 2.2; c.lineCap = "round"; c.beginPath();
-  c.moveTo(x + r * 0.2 * Math.sin(a), y - r * 0.2 * Math.cos(a)); c.lineTo(x + r * 0.62 * Math.sin(a), y - r * 0.62 * Math.cos(a)); c.stroke(); c.lineCap = "butt";
-  if (S.sel === k){ c.strokeStyle = "#e03030"; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r + 9, 0, 6.283); c.stroke(); }
-}
-
 /* ---- the instrument as the SDS1202X-E behaves: two channels each with its own scale, offset, coupling, probe
    factor and invert; the trigger source; the menus along the foot of the screen worked by the six soft keys under
    it (Menu On/Off hides them); cursors and automatic measurements; REF and Math; the Adjust knob ---- */
@@ -2416,40 +2109,8 @@ function drawOverlay(c, gx, gy, gw, gh){
     c.fillStyle = "#fff"; c.textAlign = "center"; c.fillText(S.toast.t, gx + gw / 2, gy + gh / 2 + 5); c.textAlign = "left"; }
 }
 /* the foot of the screen: the menu over the six soft keys, or the channel and timebase line */
-function drawFoot(c){
-  const y0 = SY0 + SH * (1 - BAR_B), h = SH * BAR_B, m = S.menuOn ? menuNow() : null;
-  c.fillStyle = "#101214"; c.fillRect(SX0, y0, SW, h);
-  if (!m){ let x = SX0 + 6; c.font = (0.0125 * IW).toFixed(1) + "px Consolas";
-    for (const j of [0, 1]) if (S.chOn[j]){ c.fillStyle = CH_COL[j]; c.fillRect(x, y0 + 4, 0.105 * IW, h - 8); c.fillStyle = "#000";
-      c.fillText((j + 1) + "  " + S.coup[j] + " " + vlab(chVdiv(j)) + (S.probe[j] > 1 ? " " + S.probe[j] + "X" : ""), x + 4, y0 + h / 2 + 4); x += 0.112 * IW; }
-    c.fillStyle = "#e6e6e6"; c.fillText("M " + tlab(S.tdiv) + "  Delay " + tfmt(S.delay), x + 6, y0 + h / 2 + 4);
-    c.fillStyle = CH_COL[Math.min(1, S.trigSrc)]; c.fillText(["CH1","CH2","EXT","Line"][S.trigSrc] + " " + (S.slope === "Rising" ? "↑" : S.slope === "Falling" ? "↓" : "↕") + " " + vlab(S.trig), SX0 + SW - 0.13 * IW, y0 + h / 2 + 4);
-    return; }
-  const kw = SW / 6;
-  c.font = "bold " + (0.0115 * IW).toFixed(1) + "px Segoe UI"; c.textAlign = "center";
-  m.items.forEach(([lab, val], k) => { const x = SX0 + k * kw;
-    c.fillStyle = "#24303c"; c.fillRect(x + 2, y0 + 2, kw - 4, h - 4); c.strokeStyle = "#4b6a86"; c.strokeRect(x + 2, y0 + 2, kw - 4, h - 4);
-    c.fillStyle = "#cfe3f5"; c.fillText(lab, x + kw / 2, y0 + h * 0.42); const v = val();
-    if (v){ c.fillStyle = "#ffd36a"; c.font = (0.0112 * IW).toFixed(1) + "px Segoe UI"; c.fillText(v, x + kw / 2, y0 + h * 0.82); c.font = "bold " + (0.0115 * IW).toFixed(1) + "px Segoe UI"; } });
-  c.textAlign = "left";
-}
 /* the keys light as the instrument's do: Run/Stop green running and red stopped, Single amber while armed,
    the channel keys in their channel's colour while that channel is on */
-function btnFill(b){ const col = BTNS[b][5]; if (!S.power) return col;
-  if (b === "run") return (S.frozen || (!S.cont && !S.armed)) ? "#f0625a" : "#86dc6e";
-  if (b === "single") return S.mode === "Single" && S.armed && !S.cont ? "#f6a93b" : col;
-  if (b === "ch1") return S.chOn[0] ? "#f2dc48" : col; if (b === "ch2") return S.chOn[1] ? "#f27cbb" : col;
-  if (b === "roll") return S.roll ? "#a6dd84" : col; if (b === "math") return S.mathOp !== "Off" ? "#c3acff" : col;
-  if (b === "ref") return S.ref.on ? "#ffffff" : col;
-  if (b === "tauto") return S.mode === "Auto" ? "#fde7a8" : col; if (b === "tnormal") return S.mode === "Normal" ? "#fde7a8" : col;
-  return col; }
-function drawBtn(c, b){ const [fx, fy, fw, fh, lab, col] = BTNS[b];
-  plateBtn(c, fx, fy, fw, fh, lab, btnFill(b), (col === "#2f9fe0" || col === "#2b2c30") ? "#ffffff" : "#3a3b3e"); }
-function drawGroup(c, fx0, fx1, fy0, fy1, title){
-  c.fillStyle = "#cbccc9"; rr(c, QX(fx0), QY(fy1), QX(fx1 - fx0), IH * (fy1 - fy0), 0.008 * IW); c.fill();
-  c.strokeStyle = "#b7b8b5"; c.lineWidth = 0.8; c.stroke();
-  if (title) panelText(c, title, (fx0 + fx1) / 2, fy1 + 0.018, 6.5, "#3a3b3e", true);
-}
 /* a click on the front panel at (x, y) in panel pixels */
 function scopeClick(x, y){
   const hit = (fx, fy, r) => Math.hypot(x - QX(fx), y - QY(fy)) < r;
@@ -2525,9 +2186,190 @@ function press(b){
     S.roll = true; S.cont = true; S.armed = true; S.mode = "Auto"; warn(wireHint()); }
 }
 
+/* ---- the front panel and the screen as the SDS1202X-E really looks (after Siglent's own photographs): a light grey
+   moulding, the right-hand panel in its own darker field with grooves between Vertical, Horizontal and Trigger, a
+   yellow and a pink band joining each channel's two knobs and its key, grey knurled knobs, rounded keys in the
+   instrument's colours (Default mint, Print blue, Auto Setup deep blue, trigger Setup black, the small round Math,
+   Ref and Roll keys), the round Menu On/Off key, the power key glowing green, the USB socket by the soft keys ---- */
+const KEY_ROUND = {math:1, ref:1, roll:1, tnormal:1, single:1, tauto:1, trigmenu:1, univbtn:1};
+Object.assign(BTNS, {deflt:[0.7075,0.7808,0.046,0.042,"Default","#93dbbb"], print:[0.8147,0.7808,0.046,0.042,"Print","#8dbbf0"],
+  trigmenu:[0.9356,0.6762,0.046,0.042,"Setup","#2b2c30"], math:[0.6960,0.5479,0.036,0.036,"Math","#dde2e8"], ref:[0.6960,0.4421,0.036,0.036,"Ref","#dde2e8"],
+  roll:[0.8508,0.4969,0.036,0.036,"Roll","#dde2e8"], tauto:[0.9356,0.5990,0.044,0.038,"Auto","#dde2e8"], tnormal:[0.9356,0.5268,0.044,0.038,"Normal","#dde2e8"],
+  single:[0.9356,0.4620,0.044,0.038,"Single","#dde2e8"], ch1:[0.6418,0.4969,0.040,0.044,"1","#e8e3b0"], ch2:[0.7476,0.4969,0.040,0.044,"2","#ecc6dc"]});
+const KNOB_BAND = {vscale:CH_COL[0], vpos:CH_COL[0], vscale2:CH_COL[1], vpos2:CH_COL[1]};
+function btnFill(b){ const col = BTNS[b][5]; if (!S.power) return col;
+  if (b === "run") return (S.frozen || (!S.cont && !S.armed)) ? "#f0625a" : "#8be07a";
+  if (b === "single") return S.mode === "Single" && S.armed && !S.cont ? "#f6b04a" : col;
+  if (b === "tauto") return S.mode === "Auto" ? "#8be07a" : col; if (b === "tnormal") return S.mode === "Normal" ? "#8be07a" : col;
+  if (b === "ch1") return S.chOn[0] ? "#f5dd3c" : col; if (b === "ch2") return S.chOn[1] ? "#f27cbb" : col;
+  if (b === "roll") return S.roll ? "#8be07a" : col; if (b === "math") return S.mathOp !== "Off" ? "#c3acff" : col;
+  if (b === "ref") return S.ref.on ? "#ffffff" : col; if (b === "cursors") return S.cur.mode !== "Off" ? "#a6e391" : col;
+  return col; }
+const btnText = b => { const col = BTNS[b][5]; return col === "#2b2c30" || col === "#2f9fe0" ? "#ffffff" : "#34363a"; };
+function drawBtn(c, b){ const [fx, fy, fw, fh, lab] = BTNS[b], x = QX(fx), y = QY(fy), w = QX(fw), h = IH * fh, round = KEY_ROUND[b];
+  const r = round ? Math.min(w, h) / 2 : 0.006 * IW;
+  c.fillStyle = "rgba(0,0,0,0.18)"; rr(c, x - w / 2 + 1, y - h / 2 + 2, w, h, r); c.fill();
+  c.fillStyle = btnFill(b); rr(c, x - w / 2, y - h / 2, w, h, r); c.fill(); c.strokeStyle = "rgba(60,64,70,0.35)"; c.lineWidth = 0.8; c.stroke();
+  if (lab){ c.fillStyle = btnText(b); c.font = FPB(lab.length > 7 ? 4.0 : 4.6); c.textAlign = "center"; c.textBaseline = "middle";
+    lab.split("\n").forEach((s, i, A) => c.fillText(s, x, y + (i - (A.length - 1) / 2) * 0.0175 * IH)); c.textAlign = "left"; c.textBaseline = "alphabetic"; } }
+function drawKnob(c, k){ const [fx, fy, fr] = KNOBS[k], x = QX(fx), y = QY(fy), r = fr * IW, band = KNOB_BAND[k];
+  if (band){ c.strokeStyle = band; c.lineWidth = r * 0.42; c.beginPath(); c.arc(x, y, r * 1.28, 0, 6.2832); c.stroke(); }
+  c.fillStyle = "#7c8187"; c.beginPath(); c.arc(x + 1, y + 2, r * 1.04, 0, 6.2832); c.fill();
+  const g = c.createRadialGradient(x - r * 0.3, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, "#e6e8ea"); g.addColorStop(1, "#a9aeb3");
+  c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 6.2832); c.fill();
+  c.strokeStyle = "#8d9297"; c.lineWidth = 0.8; c.beginPath(); const a = knobAng[k];
+  for (let i = 0; i < 24; i++){ const t = a + i * Math.PI / 12; c.moveTo(x + r * 0.84 * Math.sin(t), y - r * 0.84 * Math.cos(t)); c.lineTo(x + r * 0.98 * Math.sin(t), y - r * 0.98 * Math.cos(t)); } c.stroke();
+  c.fillStyle = "#d3d6d9"; c.beginPath(); c.arc(x, y, r * 0.74, 0, 6.2832); c.fill();
+  c.strokeStyle = "#5d6267"; c.lineWidth = 2; c.lineCap = "round"; c.beginPath(); c.moveTo(x + r * 0.2 * Math.sin(a), y - r * 0.2 * Math.cos(a)); c.lineTo(x + r * 0.66 * Math.sin(a), y - r * 0.66 * Math.cos(a)); c.stroke(); c.lineCap = "butt";
+  if (S.sel === k){ c.strokeStyle = "#e03030"; c.lineWidth = 1.6; c.setLineDash([3, 3]); c.beginPath(); c.arc(x, y, r * 1.55, 0, 6.2832); c.stroke(); c.setLineDash([]); } }
+function drawPanel(c){
+  /* the right-hand field and its sections */
+  c.fillStyle = "#cfd2d5"; rr(c, QX(0.618), QY(0.978), QX(0.360), IH * 0.835, 0.012 * IW); c.fill();
+  c.fillStyle = "#dadcde"; rr(c, QX(0.624), QY(0.972), QX(0.348), IH * 0.235, 0.010 * IW); c.fill();
+  for (const [x0, x1] of [[0.624, 0.7859], [0.7869, 0.8993], [0.9003, 0.972]]){ c.fillStyle = "#d7d9db"; rr(c, QX(x0), QY(0.728), QX(x1 - x0), IH * 0.425, 0.010 * IW); c.fill(); }
+  c.fillStyle = "#d3d6d9"; rr(c, QX(0.624), QY(0.296), QX(0.348), IH * 0.150, 0.010 * IW); c.fill();
+  for (const [t, x] of [["Vertical", 0.705], ["Horizontal", 0.843], ["Trigger", 0.936]]) panelText(c, t, x, 0.705, 6.6, "#2e3034", true);
+  /* the channel bands joining each channel's scale knob, its key and its position knob */
+  for (const [fx, col] of [[0.6431, CH_COL[0]], [0.7466, CH_COL[1]]]){ c.fillStyle = col; c.globalAlpha = 0.85; rr(c, QX(fx) - 0.010 * IW, QY(0.633), 0.020 * IW, IH * 0.26, 0.010 * IW); c.fill(); c.globalAlpha = 1; }
+  /* the printed legends */
+  panelText(c, "Intensity", 0.6431, 0.8170 + 0.052, 4.6); panelText(c, "Adjust", 0.6431, 0.8170 + 0.036, 5.2, "#3a3b3e", true);
+  panelText(c, "⊡ Select", 0.6431, 0.8170 - 0.045, 4.2, "#55565a");
+  panelText(c, "Variable", 0.6960, 0.6339, 4.6, "#3a3b3e"); panelText(c, "Position", 0.6960, 0.3798, 4.6, "#3a3b3e");
+  for (const fx of [0.6431, 0.7476, 0.8508]) panelText(c, "⊡ Zero", fx, 0.322, 4.2);
+  panelText(c, "⊡ Zoom", 0.8559, 0.5650, 4.4, "#3a3b3e"); panelText(c, "Position", 0.8508, 0.4300, 4.6, "#3a3b3e");
+  panelText(c, "Level", 0.9464, 0.4300, 4.6, "#3a3b3e"); panelText(c, "⊡ 50%", 0.9464, 0.322, 4.2);
+  /* the inputs */
+  for (const [fx, lab, num] of [[0.6418, "X", "1"], [0.7457, "Y", "2"], [0.8496, "", "Ext"]]){
+    const x = QX(fx), y = QY(0.2341), r = 0.0191 * IW;
+    c.fillStyle = "#b7bbbf"; c.beginPath(); c.arc(x, y, r * 1.12, 0, 6.283); c.fill();
+    c.fillStyle = "#d9dcdf"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#8d9297"; c.lineWidth = 1.2; c.stroke();
+    c.fillStyle = "#3d4044"; c.beginPath(); c.arc(x, y, r * 0.6, 0, 6.283); c.fill();
+    c.fillStyle = "#e3e5e7"; c.beginPath(); c.arc(x, y, r * 0.2, 0, 6.283); c.fill();
+    if (lab) panelText(c, lab, fx - 0.027, 0.2341 + 0.050, 5.4, "#2e3034", true);
+    panelText(c, num, fx + 0.014, 0.2341 + 0.050, 6, "#2e3034", true); }
+  c.fillStyle = "#f2c230"; c.beginPath(); c.moveTo(QX(0.794), QY(0.205)); c.lineTo(QX(0.806), QY(0.205)); c.lineTo(QX(0.800), QY(0.225)); c.closePath(); c.fill();
+  panelText(c, "All Inputs: 1MΩ||16pF  400Vpk", 0.7457, 0.165, 4.4, "#2e3034", true);
+  /* probe compensation */
+  c.fillStyle = "#b9bdc1"; c.strokeStyle = "#8d9297"; c.lineWidth = 0.7;
+  c.fillRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900); c.strokeRect(QX(0.9280), QY(0.2800), QX(0.0180), IH * 0.0900);
+  panelText(c, "┐┌ 1kHz", 0.9640, 0.2700, 4.4, "#2e3034", false, "left");
+  c.strokeStyle = "#2e3034"; c.lineWidth = 1; c.beginPath(); c.moveTo(QX(0.9600), QY(0.2100)); c.lineTo(QX(0.9700), QY(0.2100)); c.moveTo(QX(0.9650), QY(0.2100)); c.lineTo(QX(0.9650), QY(0.2260)); c.stroke();
+  /* soft keys, Menu On/Off, the USB socket, power */
+  for (let i = 0; i < 6; i++){ const x = QX(0.1230 + i * 0.0688), y = QY(0.2192), w = QX(0.0465), h = IH * 0.0386;
+    c.fillStyle = "rgba(0,0,0,0.15)"; rr(c, x - w / 2 + 1, y - h / 2 + 2, w, h, 0.008 * IW); c.fill();
+    c.fillStyle = "#f4f5f6"; rr(c, x - w / 2, y - h / 2, w, h, 0.008 * IW); c.fill(); c.strokeStyle = "#a9adb1"; c.lineWidth = 0.8; c.stroke(); }
+  { const x = QX(0.0567), y = QY(0.2279), r = 0.0140 * IW; c.fillStyle = "#e9ebed"; c.beginPath(); c.arc(x, y, r, 0, 6.283); c.fill(); c.strokeStyle = "#9da1a5"; c.lineWidth = 0.9; c.stroke(); }
+  panelText(c, "Menu", 0.0567, 0.2279 + 0.044, 4.8, "#2e3034"); panelText(c, "On/Off", 0.0567, 0.2279 - 0.044, 4.8, "#2e3034");
+  c.fillStyle = "#2b2e33"; rr(c, QX(0.5330), QY(0.2430), QX(0.0400), IH * 0.0420, 0.004 * IW); c.fill();
+  c.fillStyle = "#c9ccd0"; c.fillRect(QX(0.5380), QY(0.2335), QX(0.0300), IH * 0.012);
+  panelText(c, "⇋", 0.5530, 0.172, 5, "#55565a");
+  { const px = QX(0.1103), py = QY(0.1270), pr = 0.0153 * IW;
+    if (S.power){ const g = c.createRadialGradient(px, py, pr * 0.2, px, py, pr * 1.8); g.addColorStop(0, "rgba(120,255,120,0.75)"); g.addColorStop(1, "rgba(120,255,120,0)"); c.fillStyle = g; c.beginPath(); c.arc(px, py, pr * 1.8, 0, 6.283); c.fill(); }
+    c.fillStyle = S.power ? "#bff5b0" : "#d9dcdf"; c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill(); c.strokeStyle = S.power ? "#4fae3c" : "#9da1a5"; c.lineWidth = 1.4; c.stroke();
+    c.strokeStyle = S.power ? "#2f8c22" : "#55565a"; c.lineWidth = 1.5; c.beginPath(); c.arc(px, py, 0.0068 * IW, -Math.PI * 0.32, Math.PI * 1.32); c.stroke();
+    c.beginPath(); c.moveTo(px, py + 1); c.lineTo(px, py - 0.0085 * IW); c.stroke(); }
+  for (const k in KNOBS) drawKnob(c, k);
+  for (const b in BTNS) drawBtn(c, b);
+  panelText(c, tr("dialhint"), 0.985, 0.055, 5, "#a9a9a6", false, "right");
+  warn(S.faultMsg || sampleWarn());
+  const rr2 = S.run;
+  document.getElementById("mpos").textContent = S.power ?
+    "M Pos = " + S.delay.toFixed(7) + " s      " + tlab(S.tdiv) + "/div      " + mlab(MEM[S.memi]) + "      " + (rr2 ? fslab(rr2.fs) : "") : tr("scopeoff");
+}
+/* the SIGLENT mark: the blue swoosh disc and the word */
+function siglentLogo(c, x, y, h, col, word){
+  c.save(); c.fillStyle = col; c.beginPath(); c.arc(x + h * 0.45, y, h * 0.45, 0, 6.283); c.fill();
+  c.strokeStyle = word === "#fff" ? "#1d1f22" : "#fff"; c.lineWidth = h * 0.12; c.beginPath(); c.arc(x + h * 0.45, y + h * 0.42, h * 0.5, Math.PI * 1.15, Math.PI * 1.85); c.stroke();
+  c.beginPath(); c.arc(x + h * 0.45, y - h * 0.42, h * 0.5, Math.PI * 0.15, Math.PI * 0.85); c.stroke();
+  c.fillStyle = word; c.font = "800 " + (h * 0.95).toFixed(1) + "px 'Segoe UI', Arial, sans-serif"; c.textBaseline = "middle"; c.textAlign = "left";
+  try { c.letterSpacing = (h * 0.06).toFixed(1) + "px"; } catch(e){} c.fillText("SIGLENT", x + h * 1.05, y + h * 0.04); try { c.letterSpacing = "0px"; } catch(e){}
+  c.restore(); }
+function drawScope(){
+  const c = sx; c.clearRect(0, 0, IW, IH); scope._ver = (scope._ver || 0) + 1;
+  /* the moulding */
+  c.fillStyle = "#dcdedf"; rr(c, QX(0.004), QY(0.985), QX(0.992), IH * 0.955, 0.014 * IW); c.fill();
+  c.strokeStyle = "#b5b8bb"; c.lineWidth = 1.2; c.stroke();
+  /* the label band above the glass: the SIGLENT plate, the model, the SPO mark, the ratings */
+  c.textBaseline = "middle"; c.textAlign = "left";
+  { const x = QX(0.036), y = QY(0.982), w = QX(0.122), h = IH * 0.048, g = c.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, "#eef0f2"); g.addColorStop(1, "#c6cacf"); c.fillStyle = g; rr(c, x, y, w, h, 0.005 * IW); c.fill(); c.strokeStyle = "#a3a8ad"; c.lineWidth = 0.8; c.stroke();
+    siglentLogo(c, x + 0.006 * IW, y + h / 2, IH * 0.032, "#2a5fb5", "#2a5fb5"); }
+  c.fillStyle = "#3e4044"; c.font = FPT(7.6); c.fillText("SDS 1202X-E", QX(0.172), QY(0.967));
+  c.fillStyle = "#6f7276"; c.font = FPT(4.6); c.fillText("Digital Storage Oscilloscope", QX(0.172), QY(0.946));
+  c.save(); c.translate(QX(0.352), QY(0.960)); c.transform(1, 0, -0.32, 1, 0, 0);
+  c.font = "900 " + (0.026 * IW).toFixed(1) + "px 'Arial Black', 'Segoe UI', Arial, sans-serif"; c.lineWidth = 1.6; c.strokeStyle = "#3e4044"; c.fillStyle = "#dcdedf";
+  c.strokeText("SPO", 0, 0); c.fillText("SPO", 0, 0); c.restore();
+  c.fillStyle = "#6f7276"; c.font = FPT(4.4); c.fillText("Super Phosphor Oscilloscope", QX(0.336), QY(0.938));
+  c.fillStyle = "#3e4044"; c.font = FPT(6.4); c.fillText("200 MHz", QX(0.512), QY(0.967)); c.fillText("1 GSa/s", QX(0.512), QY(0.946));
+  c.textBaseline = "alphabetic";
+  /* the glass in its black frame */
+  c.fillStyle = "#16171a"; rr(c, SX0 - QX(0.012), SY0 - IH * 0.020, SW + QX(0.024), SH + IH * 0.040, 0.008 * IW); c.fill();
+  const [gx, gy, gw, gh] = grat();
+  c.fillStyle = "#000"; c.fillRect(SX0, SY0, SW, SH);
+  if (!S.power){ c.fillStyle = "#07080a"; c.fillRect(SX0, SY0, SW, SH); drawPanel(c); document.getElementById("mpos").textContent = tr("scopeoff"); return; }
+  /* the instrument's own screen: its title bar, the information column on the right, the graticule */
+  const tb = SH * BAR_T, fs = v => (v * IW).toFixed(1) + "px 'Segoe UI', Arial, sans-serif";
+  c.fillStyle = "#101114"; c.fillRect(SX0, SY0, SW, tb); c.fillRect(SX0 + gw, SY0, SW - gw, SH);
+  siglentLogo(c, SX0 + 4, SY0 + tb / 2, tb * 0.62, "#ffffff", "#ffffff");
+  const st = scopeState(), stBg = {"Trig'd":"#1f78d1", Auto:"#2b9a3c", Ready:"#2b9a3c", Stop:"#d23a32", Roll:"#d98a1c"}[st[0]] || "#555";
+  c.fillStyle = stBg; c.fillRect(SX0 + 0.072 * IW, SY0 + 2, 0.044 * IW, tb - 4);
+  c.fillStyle = "#fff"; c.font = "bold " + fs(0.0118); c.textAlign = "center"; c.fillText(st[0], SX0 + 0.094 * IW, SY0 + tb - 4); c.textAlign = "left";
+  c.fillStyle = "#e9e9e9"; c.font = fs(0.0118); c.fillText("M " + tlab(S.tdiv) + "/ Delay:" + tfmt(S.delay), SX0 + 0.124 * IW, SY0 + tb - 4);
+  c.fillStyle = "#4fb3ff"; c.beginPath(); const xd = gx + gw / 2; c.moveTo(xd - 5, SY0 + tb - 6); c.lineTo(xd + 5, SY0 + tb - 6); c.lineTo(xd, SY0 + tb); c.fill();
+  /* the right column: frequency counter, sampling, the trigger box, the channel boxes (small type, as on the glass) */
+  { const x = SX0 + gw + 2, w = SW - gw - 4, lh = 0.0215 * IH, f1 = fs(0.0084), fb = "bold " + fs(0.0084); let y = gy + 2;
+    const txt = (t, col, dy, bold) => { c.fillStyle = col || "#e6e6e6"; c.font = bold ? fb : f1; c.fillText(t, x + 2, y + (dy || 0) + lh * 0.78); };
+    const fq = S.run && S.run.pulses && S.run.pulses.length > 1 ? 1 / Math.max(1e-9, S.run.pulses[1][0] - S.run.pulses[0][0]) : NaN;
+    txt("f=" + (isFinite(fq) ? ffmt(fq) : "<10Hz"), "#ff9f40"); y += lh;
+    txt("Sa " + (S.run ? fslab(S.run.fs) : "----")); y += lh; txt("Curr " + mlab(MEM[S.memi])); y += lh + 3;
+    c.fillStyle = "#2a2d33"; c.fillRect(x, y, w, lh * 3.1);
+    txt("Edge"); c.fillStyle = CH_COL[Math.min(1, S.trigSrc)]; c.fillRect(x + w * 0.5, y + 2, w * 0.48, lh - 3);
+    c.fillStyle = "#000"; c.font = fb; c.fillText(["CH1","CH2","EXT","Line"][S.trigSrc], x + w * 0.53, y + lh * 0.72); y += lh;
+    txt((S.slope === "Rising" ? "↗ " : S.slope === "Falling" ? "↘ " : "↕ ") + S.trigCoup); y += lh; txt(S.trig.toFixed(2) + "V"); y += lh + 4;
+    for (const j of [0, 1]) if (S.chOn[j]){ c.fillStyle = "#2a2d33"; c.fillRect(x, y, w, lh * 3.1);
+      c.fillStyle = CH_COL[j]; c.fillRect(x + 1, y + 2, w * 0.22, lh - 3); c.fillRect(x + w * 0.27, y + 2, w * 0.71, lh - 3);
+      c.fillStyle = "#000"; c.font = fb; c.fillText(String(j + 1), x + 3, y + lh * 0.72); c.fillText(S.coup[j] + "1M", x + w * 0.31, y + lh * 0.72); y += lh;
+      txt(vlab(chVdiv(j) * S.probe[j]) + "/", CH_COL[j]); y += lh; txt(vlab(chVoff(j) * S.probe[j]), CH_COL[j]); y += lh + 4; } }
+  /* the graticule: dotted divisions, the centre axes with their fifth-division ticks */
+  c.lineWidth = 0.7; c.setLineDash([1, 3]); c.strokeStyle = "#4a4d52"; c.beginPath();
+  for (let i = 0; i <= NX; i++){ const x = gx + i * gw / NX; c.moveTo(x, gy); c.lineTo(x, gy + gh); }
+  for (let j = 0; j <= NY; j++){ const y = gy + j * gh / NY; c.moveTo(gx, y); c.lineTo(gx + gw, y); }
+  c.stroke(); c.setLineDash([]); c.strokeStyle = "#6a6e74"; c.lineWidth = 0.8; c.beginPath();
+  for (let i = 0; i <= NX * 5; i++){ const x = gx + i * gw / (NX * 5); c.moveTo(x, gy + gh / 2 - 3); c.lineTo(x, gy + gh / 2 + 3); }
+  for (let j = 0; j <= NY * 5; j++){ const y = gy + j * gh / (NY * 5); c.moveTo(gx + gw / 2 - 3, y); c.lineTo(gx + gw / 2 + 3, y); }
+  c.stroke(); c.strokeStyle = "#7a7e84"; c.strokeRect(gx, gy, gw, gh);
+  /* the trace of the channel the lead is in, if that channel is on; locked only if the trigger is taken from it */
+  const si = sigIx(); C_TRACE = CH_COL[Math.max(0, si)]; c.globalAlpha = S.intens;
+  if (si >= 0 && !S.chOn[si]) S.lastTrace = null;
+  else if (!S.frozen && (S.cont || S.armed) && floatNow()) drawFreeRun(c, gx, gy, gw, gh, true);
+  else if (!S.frozen && S.cont && (!S.autoDone || noSignalNow() || S.trigSrc !== si)){ if (S.chOn[Math.max(0, si)]) drawFreeRun(c, gx, gy, gw, gh, false); }
+  else drawTrace(c, gx, gy, gw, gh);
+  c.globalAlpha = 1;
+  drawOverlay(c, gx, gy, gw, gh); drawFoot(c);
+  drawPanel(c);
+}
+/* the foot of the screen: the menu over the six soft keys (its title above it), or the channel and timebase line */
+function drawFoot(c){
+  const y0 = SY0 + SH * (1 - BAR_B), h = SH * BAR_B, m = S.menuOn ? menuNow() : null, fs = v => (v * IW).toFixed(1) + "px 'Segoe UI', Arial, sans-serif";
+  c.fillStyle = "#0c0d10"; c.fillRect(SX0, y0, SW, h);
+  if (!m){ let x = SX0 + 6; c.font = fs(0.0118);
+    for (const j of [0, 1]) if (S.chOn[j]){ c.fillStyle = CH_COL[j]; c.fillRect(x, y0 + 5, 0.11 * IW, h - 10); c.fillStyle = "#000";
+      c.fillText((j + 1) + "  " + S.coup[j] + "1M  " + vlab(chVdiv(j) * S.probe[j]) + "/", x + 5, y0 + h / 2 + 4); x += 0.118 * IW; }
+    c.fillStyle = "#e6e6e6"; c.fillText("M " + tlab(S.tdiv) + "/", x + 8, y0 + h / 2 + 4);
+    return; }
+  const kw = SW / 6; c.fillStyle = "#fff"; c.font = "bold " + fs(0.0112); c.fillText(m.title.toUpperCase(), SX0 + 5, y0 - 3);
+  c.textAlign = "center";
+  m.items.forEach(([lab, val], k) => { const x = SX0 + k * kw, g = c.createLinearGradient(0, y0, 0, y0 + h);
+    g.addColorStop(0, "#3b4350"); g.addColorStop(1, "#1d222a"); c.fillStyle = lab ? g : "#121418"; c.fillRect(x + 2, y0 + 2, kw - 4, h - 4);
+    c.strokeStyle = "#5a6676"; c.lineWidth = 0.8; c.strokeRect(x + 2, y0 + 2, kw - 4, h - 4);
+    if (!lab) return; c.fillStyle = "#ffffff"; c.font = fs(0.0112); c.fillText(lab, x + kw / 2, y0 + h * 0.42); const v = val();
+    if (v){ c.fillStyle = "#7fd3ff"; c.fillText(v, x + kw / 2, y0 + h * 0.82); } });
+  c.textAlign = "left";
+}
+
 /* ---- the parts box: balls for the hangers ------------------------ */
 const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d");
-const TRAY = [["big", "itBig"], ["small", "itSmall"]], TROW = 44;
+const TRAY = [["big", "itBig"], ["small", "itSmall"], ["wire", "itWire"]], TROW = 44;
 let hand = null, TRW = 190, trayCells = [];
 function trayLayout(){
   const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
@@ -2548,7 +2390,9 @@ function drawTray(){
     const sel = hand === k;
     c.fillStyle = "#1f242b"; c.fillRect(6, y, wd, TROW - 4);
     c.strokeStyle = sel ? "#f2c14e" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
-    ballIcon(c, 26, y + (TROW - 4) / 2, k === "big" ? 12 : 9.6);
+    if (k === "wire"){ c.strokeStyle = "#c8732f"; c.lineWidth = 1.4; c.beginPath(); for (let t = 0; t <= 40; t++){ const a = t / 40 * 6.283 * 2.5; const px = 26 + 9 * Math.cos(a) + t * 0.15 - 3, py = y + (TROW - 4) / 2 + 7 * Math.sin(a); t ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke();
+      c.strokeStyle = "#e2c792"; c.lineWidth = 2; c.beginPath(); c.moveTo(14, y + 30); c.lineTo(36, y + 10); c.stroke(); }
+    else ballIcon(c, 26, y + (TROW - 4) / 2, k === "big" ? 12 : 9.6);
     c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
     c.fillStyle = "#e8eef2"; let nm = tr(lab); while (c.measureText(nm).width > wd - 52 && nm.length > 4) nm = nm.slice(0, -2) + "…";
     c.fillText(nm, 50, y + 13);
@@ -3059,28 +2903,33 @@ function base3(){
 /* the column: a 40 x 40 slotted profile, the crossbar on top and the two hanger units */
 function column3(){
   const zc0 = -8.6, zc1 = -4.6;
-  boxY(-2,2,RAILY+0.8,PIV+3.5,zc0,zc1,ALU,{id:"column",top:"#dfe3e7"},6);
-  for (const x of [-2.01, 2.01]) face(orient([[x,RAILY+0.8,-6.9],[x,PIV+3.5,-6.9],[x,PIV+3.5,-6.3],[x,RAILY+0.8,-6.3]],[Math.sign(x),0,0]),{fill:"#7d848b",flat:true,id:"column",bias:0.3});
-  face([[-0.3,RAILY+0.8,zc1+0.01],[0.3,RAILY+0.8,zc1+0.01],[0.3,PIV+3.5,zc1+0.01],[-0.3,PIV+3.5,zc1+0.01]],{fill:"#7d848b",flat:true,id:"column",bias:0.3});
-  /* the crossbar */
-  box3(-15,15,PIV+3.5,PIV+5.5,-9.2,-4.2,ALU2,{id:"column",top:"#d5dade"});
-  face([[-15,PIV+5.51,-6.9],[-15,PIV+5.51,-6.4],[15,PIV+5.51,-6.4],[15,PIV+5.51,-6.9]],{fill:"#6d747a",flat:true,id:"column",bias:0.3});
-  for (const s of [-1,1]){ knurl3("y",PIV+5.5,PIV+6.7,s*11,-6.7,1.0,"#7b8590",{id:"column"}); }
+  boxY(-2,2,RAILY+0.8,PIV+1.1,zc0,zc1,ALU,{id:"column",top:"#dfe3e7"},6);
+  for (const x of [-2.01, 2.01]) face(orient([[x,RAILY+0.8,-6.9],[x,PIV+1.1,-6.9],[x,PIV+1.1,-6.3],[x,RAILY+0.8,-6.3]],[Math.sign(x),0,0]),{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  face([[-0.3,RAILY+0.8,zc1+0.01],[0.3,RAILY+0.8,zc1+0.01],[0.3,PIV+1.1,zc1+0.01],[-0.3,PIV+1.1,zc1+0.01]],{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  /* the crossbar, the hangers lying across its top */
+  box3(-15,15,PIV+1.1,PIV+2.3,-9.2,-4.2,ALU2,{id:"column",top:"#d5dade"});
+  face([[-15,PIV+2.31,-6.9],[-15,PIV+2.31,-6.4],[15,PIV+2.31,-6.4],[15,PIV+2.31,-6.9]],{fill:"#6d747a",flat:true,id:"column",bias:0.3});
+  for (const s of [-1,1]){ knurl3("y",PIV+2.3,PIV+3.4,s*11,-6.7,1.0,"#7b8590",{id:"column"}); }
   const h = S.bench.hang();
-  for (let i = 0; i < 2; i++){ const x = h[i] * 100, id = "hang" + i;
-    /* the arm along the bench depth, a channel under its front end carrying the two wire rollers */
-    box3(x-1.45,x+1.45,PIV+2.3,PIV+3.5,-9.6,3.9,"#dfe2e6",{id,top:"#eceef0"});
-    face([[x-0.25,PIV+3.51,-9.2],[x+0.25,PIV+3.51,-9.2],[x+0.25,PIV+3.51,3.5],[x-0.25,PIV+3.51,3.5]],{fill:"#9ba2a8",flat:true,id,bias:0.3});
-    for (const s of [-1,1]) box3(x+s*1.45-(s>0?0.25:0),x+s*1.45+(s>0?0:0.25),PIV+0.3,PIV+2.3,-3.4,3.4,"#d3d7db",{id});
-    for (const z of [-2.6, 2.6]){ cyl3("x",x-1.2,x+1.2,PIV+0.9,z,0.32,"#b87333",{seg:10,cap:"#9aa0a6",id});
-      for (let k = -4; k <= 4; k++) cyl3("x",x+k*0.22-0.05,x+k*0.22+0.05,PIV+0.9,z,0.36,"#d0884a",{seg:8,caps:false}); }
-    /* the two string-tuning knobs, the clamp wing screw, the terminal */
-    for (const z of [-2.6, 2.6]){ cyl3("y",PIV+3.5,PIV+4.2,x,z,0.22,"#c8ccd1",{seg:8,id}); knurl3("y",PIV+4.2,PIV+5.3,x,z,0.75,"#8a939d",{id}); }
-    cyl3("y",PIV+3.5,PIV+5.6,x,-8.4,0.18,"#c8ccd1",{seg:8,id});
-    prism3("x",x-0.15,x+0.15,[[PIV+5.6,-9.4],[PIV+6.9,-9.6],[PIV+7.3,-8.4],[PIV+6.9,-7.2],[PIV+5.6,-7.4]].map(([y,z])=>[y,z]),"#f2efe6",{id});
-    cyl3("y",PIV+3.5,PIV+4.3,x,-0.4,0.42,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:i ? "#333" : "#d6493a"});
-    cyl3("y",PIV+4.3,PIV+5.4,x,-0.4,0.3,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:"#666"});
-    if (i === 1){ box3(x-1.2,x+1.2,PIV+3.5,PIV+4.4,1.0,3.4,"#2f86d8",{id,top:"#3d95e6"}); cyl3("y",PIV+4.4,PIV+4.5,x,2.2,0.55,"#e8f4fa",{seg:14,id}); sphere3([x,PIV+4.5,2.2],0.18,"#9be36b"); }
+  for (let i = 0; i < 2; i++){ const x = h[i] * 100, id = "hang" + i, AL = "#d9dde1", AL2 = "#c4c9ce", y0 = PIV + 2.3, y1 = PIV + 3.5;
+    /* the hanger (photo, items 2 and 3): an aluminium U-channel running front to back across the crossbar */
+    box3(x-1.45,x+1.45,y0,y0+0.22,-9.8,3.9,AL2,{id,top:"#cfd3d7"});
+    for (const sg of [-1, 1]) box3(x+sg*1.45-(sg>0?0.2:0),x+sg*1.45+(sg>0?0:0.2),y0,y1,-9.8,3.9,AL,{id,top:"#e6e9ec"});
+    /* the two rollers the threads come down over, one at the front end, one by the crossbar, and the pair hanging under them */
+    for (const z of [-2.6, 2.6]){ cyl3("x",x-1.25,x+1.25,y1-0.35,z,0.3,"#cdd2d7",{seg:12,cap:"#b5bbc1",id}); cyl3("x",x-1.25,x+1.25,PIV+0.9,z,0.26,"#cdd2d7",{seg:10,cap:"#b5bbc1",id}); }
+    for (const sg of [-1, 1]) box3(x+sg*1.45-(sg>0?0.2:0),x+sg*1.45+(sg>0?0:0.2),PIV+0.5,y0,-3.2,3.2,AL,{id});
+    /* the two string-tuning pegs at the back end: a brass gear on the side wall, a cream wing on its post */
+    for (const [z, up] of [[-9.0, 1.9], [-7.0, 1.4]]){ const xs = x + 1.45;
+      cyl3("x",xs,xs+0.5,y1-0.6,z,0.42,"#c9a24a",{seg:12,cap:"#d8b45a",id}); cyl3("y",y1-0.4,y1+up-0.5,xs+0.25,z,0.12,"#c8ccd1",{seg:8,id});
+      prism3("x",xs+0.12,xs+0.38,[[y1+up-0.6,z-0.55],[y1+up,z-0.62],[y1+up+0.75,z-0.35],[y1+up+0.75,z+0.35],[y1+up,z+0.62],[y1+up-0.6,z+0.55]],"#f0e9d8",{id}); }
+    /* the threads along the channel from the pegs to the top rollers */
+    for (const [z, zp] of [[-2.6, -9.0], [2.6, -7.0]]) line3([x + 0.3 * Math.sign(z), y1 - 0.05, z], [x + 1.4, y1 - 0.6, zp], "rgba(242,150,96,0.95)", Math.max(0.6, CAM.k * 0.03));
+    /* the clamp screw on the crossbar: a grey knurled knob */
+    cyl3("y",y1,y1+0.4,x,-6.7,0.22,"#c8ccd1",{seg:8,id}); knurl3("y",y1+0.4,y1+1.4,x,-6.7,0.85,"#7d8794",{id});
+    /* the terminal the ball's metal wire goes to: red on one hanger, black on the other */
+    cyl3("y",y0+0.2,y1+0.3,x,-0.4,0.42,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:i ? "#333" : "#d6493a"});
+    cyl3("y",y1+0.3,PIV+5.4,x,-0.4,0.3,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:"#666"});
+    if (i === 1){ box3(x-1.2,x+1.2,y0+0.2,y0+1.1,1.0,3.4,"#2f86d8",{id,top:"#3d95e6"}); cyl3("y",y0+1.1,y0+1.2,x,2.2,0.55,"#e8f4fa",{seg:14,id}); sphere3([x,y0+1.25,2.2],0.18,"#9be36b"); }
   }
 }
 /* the angle screens: two white boards with the printed degree scale, centred on the pivot */
@@ -3122,12 +2971,20 @@ function gate3(){ const x = S.bench.xGate / 10, y0 = RAIL_FL, {H, hz, sz, sd, t}
   const J = gateJack(); cyl3("z", hz, hz + 0.35, x, J[1], 0.42, "#c9ced3", {seg:14, cap:"#2a2c30"}); }
 const gateJack = () => [S.bench.xGate / 10, RAIL_FL + GATE.H - 2.4, GATE.hz + 0.35];
 function balls3(){
-  const st = state(), b = S.bench, h = b.hang();
+  const st = state(), b = S.bench, h = b.hang(), lw = Math.max(0.6, CAM.k * 0.03);
   for (let i = 0; i < (b.two ? 2 : 1); i++){
-    const c = W2(st.p[i]), R = b.R(i) * 100, top = [c[0], c[1] + R, 0];
-    for (const z of [-2.6, 2.6]) line3([h[i]*100, PIV + 0.9, z], top, "#c05a1e", 1.3);
-    cyl3("y",top[1]-0.15,top[1]+0.35,top[0],0,0.22,"#9aa0a6",{seg:8});
+    const c = W2(st.p[i]), R = b.R(i) * 100, ux = (c[0] - h[i] * 100), uy = (c[1] - PIV), n = Math.hypot(ux, uy) || 1, d = [-ux / n, -uy / n];
+    /* the hanger cap: a washer on the ball, a short slotted cylinder on it, turned with the swing */
+    const top = [c[0] + d[0] * R, c[1] + d[1] * R, 0], P = (s2, z) => [top[0] + d[0] * s2, top[1] + d[1] * s2, z];
+    cylAB(P(-0.05, 0), P(0.06, 0), 0.62, "#c3c8cd", {seg:18, cap:"#d5d9dd"});
+    cylAB(P(0.06, 0), P(0.5, 0), 0.34, "#aeb4ba", {seg:14, cap:"#c9ced3"});
+    /* the two nylon threads of the V, from the rollers to the cap */
+    for (const z of [-2.6, 2.6]) line3([h[i] * 100, PIV + 0.9, z], P(0.42, z > 0 ? 0.28 : -0.28), "rgba(242,150,96,0.95)", lw);
     sphere3(c, R, "#cfd4d9", {id: "ball" + i, metal: true});
+    if (S.wire[i]){ const hx = h[i] * 100;
+      /* the toothpick through the slot, and the thin metal wire up through the arm to the terminal post */
+      cylAB(P(0.3, -0.9), P(0.3, 0.9), 0.06, "#e2c792", {seg:6});
+      poly3([P(0.5, 0), [hx + 0.2, PIV + 0.3, 0.25], [hx + 1.65, PIV + 0.8, 0.25], [hx + 1.65, PIV + 3.9, -0.4], [hx + 0.3, PIV + 4.05, -0.4]], "#9c5a2a", Math.max(0.7, CAM.k * 0.035)); }
   }
 }
 /* the electromagnet stand: a heavy foot, a chrome rod, a boss head with two knurled screws and the black magnet */
@@ -3199,18 +3056,21 @@ const JBTEX = (() => { const px = 72, c = document.createElement("canvas"); c.wi
 /* the box itself (centre x, z): a black case with rounded corners, the lid, its four screws, the lamp, both toggles,
    the knob (a knurled black body, an aluminium cap with an index line that turns with it) */
 function jboxBody(x, z, H, L, ids, st){
-  const x0 = x - JB_W / 2, z0 = z - JB_L / 2;
-  prism3("y", 0, H, rrect2(x, z, 4.0, 8.0, 0.55, 4), "#16171a", {id:ids.body});
-  prism3("y", H, L, rrect2(x, z, JB_W / 2, JB_L / 2, 0.62, 4), "#2a92c8", {id:ids.body});
-  tex3(JBTEX, 0, 0, JBTEX.width, JBTEX.height, [x0, L + 0.006, z0], [JB_W, 0, 0], [0, 0, JB_L], {id:ids.body});
-  for (const [dx, dz] of [[0.42,0.42],[JB_W-0.42,0.42],[0.42,JB_L-0.42],[JB_W-0.42,JB_L-0.42]]) cyl3("y", L, L + 0.07, x0 + dx, z0 + dz, 0.2, "#c3c8cd", {seg:10, cap:"#d9dde1"});
+  /* the black case comes up round the lid: the printed acrylic sits inside its walls, a black rim all round it */
+  const RIM = 0.2, x0 = x - JB_W / 2 + RIM, z0 = z - JB_L / 2 + RIM, LW = JB_W - 2 * RIM, LL = JB_L - 2 * RIM;
+  const outer = rrect2(x, z, JB_W / 2, JB_L / 2, 0.7, 5), inner = rrect2(x, z, JB_W / 2 - RIM, JB_L / 2 - RIM, 0.55, 5);
+  prism3("y", 0, L - 0.04, outer, "#16171a", {id:ids.body});
+  rim3(outer, inner, L - 0.04, L + 0.14, L - 0.04, "#1c1d21", {id:ids.body});
+  tex3(JBTEX, 0, 0, JBTEX.width, JBTEX.height, [x0, L + 0.006, z0], [LW, 0, 0], [0, 0, LL], {id:ids.body});
+  const U = u => x0 + u * LW / JB_W, V = v => z0 + v * LL / JB_L;
+  for (const [u, v] of [[0.42,0.42],[JB_W-0.42,0.42],[0.42,JB_L-0.42],[JB_W-0.42,JB_L-0.42]]) cyl3("y", L, L + 0.07, U(u), V(v), 0.18, "#c3c8cd", {seg:10, cap:"#d9dde1"});
   /* the lamp: a red dome in a black bezel */
-  { const [u, v] = JB_AT.led; cyl3("y", L, L + 0.14, x0 + u, z0 + v, 0.42, "#141416", {seg:16, cap:"#1d1e21"});
+  { const u = U(JB_AT.led[0]) - x0, v = V(JB_AT.led[1]) - z0; cyl3("y", L, L + 0.14, x0 + u, z0 + v, 0.42, "#141416", {seg:16, cap:"#1d1e21"});
     sphere3([x0 + u, L + 0.22, z0 + v], 0.3, st.lit ? "#ff3b2e" : "#6e1712", {hi:st.lit ? "#ffe0d0" : "#d9918a"});
     if (st.lit) sphere3([x0 + u, L + 0.3, z0 + v], 0.75, "rgba(255,70,50,0.28)"); }
-  toggle3(x0 + JB_AT.sw1[0], L, z0 + JB_AT.sw1[1], st.on, ids.sw1);
-  toggle3(x0 + JB_AT.sw2[0], L, z0 + JB_AT.sw2[1], st.sel, ids.sw2);
-  { const [u, v] = JB_AT.knob, kx = x0 + u, kz = z0 + v;
+  toggle3(U(JB_AT.sw1[0]), L, V(JB_AT.sw1[1]), st.on, ids.sw1);
+  toggle3(U(JB_AT.sw2[0]), L, V(JB_AT.sw2[1]), st.sel, ids.sw2);
+  { const kx = U(JB_AT.knob[0]), kz = V(JB_AT.knob[1]);
     cyl3("y", L, L + 0.1, kx, kz, 0.72, "#c3c8cd", {seg:16, cap:"#d5d9dd"}); cyl3("y", L + 0.1, L + 0.38, kx, kz, 0.6, "#b4bac0", {seg:6, cap:"#c9ced3"});
     knurl3("y", L + 0.38, L + 1.65, kx, kz, 0.82, "#141518", {id:ids.knob});
     cyl3("y", L + 1.65, L + 1.75, kx, kz, 0.66, "#c9ced3", {seg:24, id:ids.knob, cap:"#e2e5e8"});
@@ -3296,23 +3156,25 @@ function scope3d(){
   tex3(scope, 0, 0, scope.width, scope.height, [x0+0.3, SCH-0.3, z1+0.01], [SCW-0.6,0,0], [0,-(SCH-0.6),0], {id:"scope"});
   /* feet: rubber pads at the back, fold-out legs at the front */
   for (const xx of [x0 + 2.5, x1 - 2.5]){ box3(xx-1,xx+1,0,0.9,z0-8.2,z0-6.4,"#1d1f22"); box3(xx-1,xx+1,0,0.6,zb-1.6,zb,"#2a2c30"); box3(xx-0.9,xx+0.9,0,0.5,zb-3.6,zb-1.6,"#3a3d42"); }
-  /* knobs as on the instrument: white caps with a ribbed grip, standing on a skirt in the channel's colour (yellow for
-     CH1, pink for CH2), grey for the others; the grip and the index line turn with the knob */
-  for (const k in KNOBS){ const [fx, fy, fr] = KNOBS[k], c = SCF(fx, fy), r = fr * (SCW - 0.6), h = r > 0.7 ? 1.25 : 1.0, a = knobAng[k];
-    const skirt = {vscale:"#e9c51c", vpos:"#e9c51c", vscale2:"#e2559f", vpos2:"#e2559f"}[k] || "#c2c4c1";
-    cyl3("z", z1, z1 + 0.22, c[0], c[1], r * 1.16, skirt, {seg:24, id:"scope", cap:shade(skirt, 1.05)});
-    cyl3("z", z1 + 0.22, z1 + h, c[0], c[1], r, "#ecebe6", {seg:24, id:"scope", cap:"#f6f5f1"});
-    for (let i = 0; i < 18; i++){ const t = a + i / 18 * 2 * Math.PI, cx = c[0] + r * 1.004 * Math.sin(t), cy = c[1] + r * 1.004 * Math.cos(t);
-      line3([cx, cy, z1 + 0.3], [cx, cy, z1 + h - 0.08], "#c9c8c2", 0.9); }
-    face(Array.from({length:20}, (_, i) => { const t = -i / 20 * 2 * Math.PI; return [c[0] + r * 0.72 * Math.cos(t), c[1] + r * 0.72 * Math.sin(t), z1 + h + 0.005]; }), {fill:"#e6e5df", flat:true});
-    line3([c[0] + r * 0.18 * Math.sin(a), c[1] + r * 0.18 * Math.cos(a), z1 + h + 0.01], [c[0] + r * 0.9 * Math.sin(a), c[1] + r * 0.9 * Math.cos(a), z1 + h + 0.01], "#8d8c86", 1.8); }
-  /* keys: raised rubber caps, lit as the instrument lights them, the label printed on top */
-  for (const b in BTNS){ const [fx, fy, fw, fh, lab, col] = BTNS[b], c = SCF(fx, fy), w = fw * (SCW - 0.6) / 2, hh = fh * (SCH - 0.6) / 2, fill = btnFill(b);
-    box3(c[0]-w*0.92, c[0]+w*0.92, c[1]-hh*0.88, c[1]+hh*0.88, z1, z1+0.32, fill, {id:"scope"});
-    if (lab) text3([c[0], c[1], z1 + 0.33], [1,0,0], [0,1,0], lab.replace("\n", " "), Math.min(0.3, hh * 0.62), col === "#2f9fe0" || col === "#2b2c30" ? "#fff" : "#2a2b2e", {align:"center", bias:2}); }
-  for (let i = 0; i < 6; i++){ const c = SCF(0.1230 + i * 0.0688, 0.2192); box3(c[0]-0.62,c[0]+0.62,c[1]-0.27,c[1]+0.27,z1,z1+0.25,"#ececea",{id:"scope"}); }
-  { const c = SCF(0.0567, 0.2279); cyl3("z", z1, z1 + 0.3, c[0], c[1], 0.42, "#d6d6d3", {seg:14, id:"scope"}); }
-  { const c = SCF(0.1103, 0.1270); cyl3("z", z1, z1 + 0.35, c[0], c[1], 0.46, S.power ? "#bfe3b1" : "#c6c6c3", {seg:16, id:"scope", cap:S.power ? "#cfeec4" : "#d2d2cf"}); }
+  /* knobs as on the instrument: grey knurled caps with a lighter top and a dark index line that turn with them; the
+     channel knobs stand in a yellow (CH1) or pink (CH2) collar */
+  for (const k in KNOBS){ const [fx, fy, fr] = KNOBS[k], c = SCF(fx, fy), r = fr * (SCW - 0.6), h = r > 0.7 ? 1.3 : 1.05, a = knobAng[k], band = KNOB_BAND[k];
+    if (band) cyl3("z", z1, z1 + 0.16, c[0], c[1], r * 1.42, band, {seg:28, id:"scope", cap:band});
+    cyl3("z", z1, z1 + 0.25, c[0], c[1], r * 1.08, "#8f949a", {seg:24, id:"scope", cap:"#9ea3a8"});
+    cyl3("z", z1 + 0.25, z1 + h, c[0], c[1], r, "#b7bcc1", {seg:24, id:"scope", cap:"#d2d5d8"});
+    for (let i = 0; i < 20; i++){ const t = a + i / 20 * 2 * Math.PI, cx = c[0] + r * 1.004 * Math.sin(t), cy = c[1] + r * 1.004 * Math.cos(t);
+      line3([cx, cy, z1 + 0.32], [cx, cy, z1 + h - 0.1], "#8a8f95", 0.9); }
+    face(Array.from({length:20}, (_, i) => { const t = -i / 20 * 2 * Math.PI; return [c[0] + r * 0.74 * Math.cos(t), c[1] + r * 0.74 * Math.sin(t), z1 + h + 0.005]; }), {fill:"#dcdfe2", flat:true});
+    line3([c[0] + r * 0.2 * Math.sin(a), c[1] + r * 0.2 * Math.cos(a), z1 + h + 0.01], [c[0] + r * 0.88 * Math.sin(a), c[1] + r * 0.88 * Math.cos(a), z1 + h + 0.01], "#4f5459", 1.8); }
+  /* keys: raised rubber caps with rounded corners (the small ones round), lit as the instrument lights them */
+  for (const b in BTNS){ const [fx, fy, fw, fh, lab, col] = BTNS[b], c = SCF(fx, fy), w = fw * (SCW - 0.6) / 2 * 0.92, hh = fh * (SCH - 0.6) / 2 * 0.88, fill = btnFill(b);
+    prism3("z", z1, z1 + 0.32, rrect2(c[0], c[1], w, hh, KEY_ROUND[b] ? Math.min(w, hh) * 0.98 : Math.min(w, hh) * 0.35, 4), fill, {id:"scope"});
+    if (lab) text3([c[0], c[1], z1 + 0.33], [1,0,0], [0,1,0], lab.replace("\n", " "), Math.min(0.28, hh * 0.6), btnText(b), {align:"center", bias:2}); }
+  for (let i = 0; i < 6; i++){ const c = SCF(0.1230 + i * 0.0688, 0.2192); prism3("z", z1, z1 + 0.25, rrect2(c[0], c[1], 0.66, 0.29, 0.14, 3), "#f3f4f5", {id:"scope"}); }
+  { const c = SCF(0.0567, 0.2279); cyl3("z", z1, z1 + 0.3, c[0], c[1], 0.42, "#e5e7e9", {seg:16, id:"scope"}); }
+  { const c = SCF(0.1103, 0.1270); cyl3("z", z1, z1 + 0.35, c[0], c[1], 0.46, S.power ? "#a9eb98" : "#cfd2d5", {seg:18, id:"scope", cap:S.power ? "#c6f7b8" : "#dadde0"});
+    if (S.power) sphere3([c[0], c[1], z1 + 0.4], 0.75, "rgba(120,255,110,0.25)"); }
+  { const c = SCF(0.5530, 0.2220); box3(c[0] - 0.6, c[0] + 0.6, c[1] - 0.3, c[1] + 0.3, z1 - 0.05, z1 + 0.05, "#2b2e33"); box3(c[0] - 0.45, c[0] + 0.45, c[1] - 0.08, c[1] + 0.06, z1 - 0.04, z1 + 0.06, "#c9ccd0"); }
   /* the BNC inputs: a nickel barrel with two bayonet studs */
   for (const fx of [0.6418, 0.7457, 0.8496]){ const c = SCF(fx, 0.2341);
     cyl3("z", z1, z1 + 0.25, c[0], c[1], 0.62, "#a9adb1", {seg:16}); cyl3("z", z1 + 0.25, z1 + 1.0, c[0], c[1], 0.42, "#cfd3d7", {seg:16, cap:"#2a2c2e"});
@@ -3468,12 +3330,17 @@ function rclick3(e){ if (hand){ setHand(null); return; }
   if (S.pick){ S.pick = null; drawWire(); return; }
   if (id && id.startsWith("t:")){ unplug(id.slice(2)); return; }
   if (view3 !== "3d"){ showView("3d"); return; }
-  if (id === "ball1" || id === "hang1"){ document.getElementById("two").checked = false; document.getElementById("two").oninput(); ballState(); } }
+  if ((id === "ball0" || id === "ball1") && S.wire[+id.slice(-1)]){ S.wire[+id.slice(-1)] = false; wiringChanged(); drawScope(); return; }
+  if (id === "ball1" || id === "hang1"){ S.wire[1] = false; document.getElementById("two").checked = false; document.getElementById("two").oninput(); ballState(); } }
 cv3.addEventListener("pointerdown", e => {
   if (e.button === 1 || e.button === 2){ e.preventDefault(); const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId); down3 = {p, id:null, moved:false, shift:true, btn:e.button}; return; }
   if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
   const id = pick3(p[0], p[1]);
+  if (hand === "wire"){ if (id === "ball0" || id === "hang0" || id === "ball1" || id === "hang1"){ const i = id.endsWith("1") ? 1 : 0;
+      if (i === 0 || S.bench.two){ S.wire[i] = true; wiringChanged(); setHand(S.wire[0] && S.wire[1] ? null : "wire"); drawScope(); } }
+    return; }
   if (hand){ if (id === "ball0" || id === "hang0" || id === "ball1" || id === "hang1"){ const right = id.endsWith("1");
+      S.wire[right ? 1 : 0] = false;                         /* a new pendulum comes with its nylon only */
       document.getElementById(right ? "b2" : "b1").value = hand === "big" ? "0" : "1";
       if (right) document.getElementById("two").checked = true;
       document.getElementById("b1").oninput(); ballState(); setHand(null); }
