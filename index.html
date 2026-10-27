@@ -489,6 +489,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2021_E1_web.html">NBPhO 2021 P4 — 고무장갑 늘이기</a></li>
       <li><a href="sim/nbpho2020_E1_web.html">NBPhO 2020 P5 — 병의 소리</a></li>
       <li><a href="sim/nbpho2019_E1_web.html">NBPhO 2019 P8 — 네 개의 저항</a></li>
+      <li><a href="sim/nbpho2018_E1_web.html">NBPhO 2018 P4 — 프레넬 프리즘</a></li>
+      <li><a href="sim/nbpho2018_E2_web.html">NBPhO 2018 P9 — 블랙박스</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
@@ -1926,7 +1928,27 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2019_E_EN.pdf"},
               sol:"pdf/NBPhO_2019_S.pdf"}}
     ]},
-   {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2018", wip("Fresnel Prism", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
+   {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"프레넬 프리즘",en:"Fresnel Prism"},
+       desc:{ko:"초록 레이저(532 nm)를 프레넬 프리즘 시트에 통과시켜 판지 스크린의 자 위에 늘어선 회절 점들의 간격과 줄자로 잰 거리로 피치 d를, 가장 밝은 점의 이동으로 프리즘 각 α를 구합니다. 시트를 줄무늬 종이 위에 들고 높이를 미터자로 재며, 프리즘 너머의 흰 선과 바깥의 흰 선을 맞추고 청록(495 nm)·자홍(630 nm) 줄무늬를 겹쳐 보아 색분산 dn/dλ를 구합니다 (문제 4).",
+             en:"Send the green laser (532 nm) through the Fresnel prism sheet: the spacing of the diffraction spots along the ruler on the cardboard screen and the distance read on the tape give the pitch d, the shift of the brightest spot the angle α. Hold the sheet over the striped sheet, read its height on the metre stick, line up a white line seen through it with one seen past its edge, and overlap a cyan (495 nm) and a magenta (630 nm) stripe to find the dispersion dn/dλ (problem 4)."},
+       tags:["광학","회절격자","분산"], tagsEn:["Optics","Diffraction grating","Dispersion"],
+       files:{sim:"sim/nbpho2018_E1_web.html",
+              src:{ko:"src/nbpho2018_E1_fresnel_sim_KO.py", en:"src/nbpho2018_E1_fresnel_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2018_E_EN.pdf"},
+              sol:"pdf/NBPhO_2018_S.pdf"}},
+      {id:"E2",
+       title:{ko:"블랙박스",en:"Black Box"},
+       desc:{ko:"흰색·파란색·검은색 전선이 나온 상자 안의 전지, 축전기, 다이오드와 직렬인 인덕터의 배치를 멀티미터(전압계 10 MΩ, 0.4초마다 갱신)로 찾습니다. 단락 전류로 인덕터 저항을, 전압계로 기전력을, 10 MΩ을 통한 지수 감쇠와 스톱워치로 전기용량을 재고, 세 선을 묶었다가 검은 선을 뗄 때 튀어 오르는 전압으로 인덕턴스를 어림합니다 — 전류가 흐르는 접점을 떼면 불꽃이 튑니다 (문제 9).",
+             en:"Find how the battery, the capacitor and the inductor in series with a diode are wired to the white, blue and black wires with the multimeter (10 MΩ as a voltmeter, a new reading every 0.4 s). The short-circuit current gives the inductor's resistance, the voltmeter the EMF, the exponential decay through 10 MΩ timed with the stopwatch the capacitance; tie the three wires together, take the black one off and the jump of the voltage estimates the inductance — a contact opened on a current sparks (problem 9)."},
+       tags:["전기회로","과도 현상","블랙박스"], tagsEn:["Circuits","Transients","Black box"],
+       files:{sim:"sim/nbpho2018_E2_web.html",
+              src:{ko:"src/nbpho2018_E2_blackbox_sim_KO.py", en:"src/nbpho2018_E2_blackbox_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2018_E_EN.pdf"},
+              sol:"pdf/NBPhO_2018_S.pdf"}}
+    ]},
    {y:2017,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2017", wip("Virtual Mass", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2016,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2016", wip("Candy Wrapper", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2015,host:{ko:"에스토니아 · 탈린 (에스토니아–핀란드 올림피아드)",en:"Tallinn, Estonia (Estonian-Finnish Olympiad)"},cc:"ee",problems:papers("NBPhO_2015", wip("Radiator", "Vapour Pressure"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5927,6 +5949,22 @@ const SIG_N19E1={
   f:u=>u*2.5e-4*1000,
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" mV"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:32,y0:-1,y1:9,f:this.f,xl:"U / V"},t,this); }};
+const SIG_N18E1={
+  sim:"sim/nbpho2018_E1_web.html", tag:"NBPhO 2018 P4", span:24, rate:8,
+  capL:{ko:"회절 차수 · 스크린 위 점의 위치",en:"Diffraction order · position of the spot on the screen"},
+  capR:{ko:"스크린의 자",en:"the screen's ruler"},
+  pts:[0,1,2,3,4,5,6,7,8,9], n:euN, jit:0.25,
+  f:j=>141.5+1.98*j,
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" mm"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:-0.5,x1:9.5,y0:139,y1:161,f:this.f,xl:"j"},t,this); }};
+const SIG_N18E2={
+  sim:"sim/nbpho2018_E2_web.html", tag:"NBPhO 2018 P9", span:24, rate:8,
+  capL:{ko:"검은 선을 뗀 뒤 시간 · 흰–검 사이 전압",en:"Time after taking the black wire off · white–black voltage"},
+  capR:{ko:"멀티미터 (40 V)",en:"multimeter (40 V)"},
+  pts:[0.4,0.8,1.2,2,3,4,6,8,10,12], n:euN, jit:0.05,
+  f:t=>30.7*Math.exp(-t/8.6),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" V"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:13,y0:0,y1:34,f:this.f,xl:"t / s"},t,this); }};
 const SIG_N26E1={
   sim:"sim/nbpho2026_E1_web.html", tag:"NBPhO 2026 P5", span:24, rate:8,
   capL:{ko:"주사기로 당긴 부피 · 공기 방울 길이",en:"Volume pulled by the syringe · air bubble length"},
@@ -6022,7 +6060,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_G19E1,SIG_G22E1,SIG_G16E1,SIG_G16E2,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2,SIG_N20E1,SIG_N19E1];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_G19E1,SIG_G22E1,SIG_G16E1,SIG_G16E2,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2,SIG_N20E1,SIG_N19E1,SIG_N18E1,SIG_N18E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
