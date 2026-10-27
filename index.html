@@ -628,6 +628,12 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
   box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
 /* ── accounts, problems of the week, rankings (arena.js) ── */
 .acct{margin-left:auto;display:flex;align-items:center}
+.oauth{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
+.oauth a,.oauth span{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:600;border:1px solid #dadce0;background:#fff;color:#1f1f1f}
+.oauth a:hover{filter:brightness(.97)}.oauth svg{width:20px;height:20px;flex:none}
+.oauth .discord{background:#5865F2;border-color:#5865F2;color:#fff}.oauth .naver{background:#03C75A;border-color:#03C75A;color:#fff}
+.oauth .off{opacity:.45;cursor:not-allowed}.oauth small{font-size:11.5px;color:var(--graphite);text-align:center}
+.oauth-or{display:flex;align-items:center;gap:10px;color:var(--graphite);font-size:12px;margin:0 0 12px}.oauth-or:before,.oauth-or:after{content:"";flex:1;height:1px;background:var(--cm-line)}
 .acct + .lang{margin-left:10px}
 .acct a{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink);padding:5px 10px;border:1px solid var(--grid-bold);border-radius:8px;background:#fff;white-space:nowrap}
 .acct a:hover{border-color:var(--ink)}
@@ -2589,8 +2595,8 @@ const DATA={
   abbr:"USAPhO", since:1986,
   full:{ko:"미국 물리올림피아드 · 대표 선발 시험",en:"USA Physics Olympiad · Team Selection Test"},
   scope:{ko:"국가 · 미국",en:"National \u00b7 USA"},
-  note:{ko:"USAPhO를 거쳐 뽑힌 학생들이 미국 대표팀 캠프에서 치르는 마지막 선발 시험(TST)입니다. 공개된 실험 문제는 2022년 하나뿐인데, 실험실에서 실험을 할 수 없던 해라 시뮬레이션 실험으로 치렀습니다. 시뮬레이터는 코치 Kevin Zhou와 Kye Shi의 공개 프로그램을 그대로 옮겼고, 원본처럼 터미널에 명령과 값을 직접 입력해 돌립니다. 한국어 문제지와 해설은 원본과 같은 판형으로 다시 짰습니다.",
-        en:"The final selection test (TST) taken at the U.S. Physics Team camp by students chosen through USAPhO. The only published experimental paper is 2022's, a simulation lab set in a year without physical labs; the simulator ports the coaches' (Kevin Zhou and Kye Shi) public program unchanged and, like the original, is driven by typing commands and values into a terminal. The Korean paper and solution are re-typeset in the originals' layout."},
+  note:{ko:"USAPhO를 거쳐 뽑힌 학생들이 미국 대표팀 캠프에서 치르는 마지막 선발 시험(TST)입니다. 공개된 실험 문제는 2022년 하나뿐인데, 실험실에서 실험을 할 수 없던 해라 시뮬레이션 실험으로 치렀습니다. 시뮬레이터는 코치 Kevin Zhou와 Kye Shi의 공개 프로그램 계산을 그대로 옮겼습니다. 터미널에서 하나씩 묻고 답하는 대신 값을 넣고 ‘발사’를 누르면 결과가 표에 쌓이는 실험대로 쓰고, 원하면 원본과 같은 터미널로도 돌릴 수 있습니다. 한국어 문제지와 해설은 원본과 같은 판형으로 다시 짰습니다.",
+        en:"The final selection test (TST) taken at the U.S. Physics Team camp by students chosen through USAPhO. The only published experimental paper is 2022's, a simulation lab set in a year without physical labs; the simulator carries over the computation of the coaches' (Kevin Zhou and Kye Shi) public program unchanged, on a lab bench where you enter values and press ‘Fire’ and the results pile up in a table; the original terminal is still there if you want it. The Korean paper and solution are re-typeset in the originals' layout."},
   years:[
    {y:2022,host:{ko:"미국",en:"United States"},cc:"us",
     problems:[
@@ -7518,6 +7524,7 @@ function cmLogin(root){
     try{ cmAuthDone(await cmApi("POST","/login",{username:f.username.value.trim(),password:f.password.value})); }
     catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); }
   };
+  arOauth(root);
 }
 function cmSignup(root){
   const T=CMT[lang];
@@ -7543,6 +7550,7 @@ function cmSignup(root){
     try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value})); }
     catch(er){ err.textContent=cmErr(er); }
   };
+  arOauth(root);
 }
 async function cmAccount(root, alive){
   const T=CMT[lang];
@@ -7630,7 +7638,7 @@ function mountHaslaAdFit(){
 function render(){
   if(animId){cancelAnimationFrame(animId);animId=null;}
   const d=UI[lang];
-  const parts=location.hash.replace(/^#\/?/,"").split("/").filter(Boolean);
+  const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
   const [first,second]=parts;
 
   let html, active;
@@ -7638,7 +7646,7 @@ function render(){
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps();  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(["weekly","rank","me","login","signup"].includes(first)){ html=viewArena(first); active="weekly"; }
+  else if(["weekly","rank","me","login","signup","oauth"].includes(first)){ html=viewArena(first); active="weekly"; }
   else if(first && DATA[first]){  html=second?viewYear(first,second):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.getElementById("view").innerHTML=html;

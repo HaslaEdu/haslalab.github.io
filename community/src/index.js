@@ -146,7 +146,7 @@ async function handle(req, env, url) {
   const me = await currentUser(req, env);
   let r;
 
-  if (p === "/api/health") return { ok: true, v: 4, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env) };
+  if (p === "/api/health") return { ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env) };
   if (p === "/api/boards" && m === "GET") {
     const day = now() - 86400, lang = pickLang(url.searchParams.get("lang"));
     const rows = (await env.DB.prepare(
@@ -189,7 +189,8 @@ async function handle(req, env, url) {
     needUser(me);
     await limit(env, "pw:" + me.id, 10, 900);
     const u = await env.DB.prepare("SELECT pw FROM users WHERE id=?").bind(me.id).first();
-    if (!(await checkPw(String(body.old || ""), u.pw))) throw new HttpError(401, "bad_credentials");
+    // an account made with Google, Discord or NAVER has no password yet and may set one
+    if (u.pw && !(await checkPw(String(body.old || ""), u.pw))) throw new HttpError(401, "bad_credentials");
     if (!pwOk(body.password)) bad("bad_password");
     await env.DB.batch([
       env.DB.prepare("UPDATE users SET pw=? WHERE id=?").bind(await hashPw(body.password), me.id),
@@ -204,8 +205,40 @@ async function handle(req, env, url) {
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM identities WHERE user_id=?").bind(me.id),
     ]);
     return { ok: true };
+  }
+  if (p === "/api/me" && m === "PATCH") {
+    needUser(me);
+    await limit(env, "nick:" + me.id, 5, 86400);
+    const nickname = String(body.nickname || "").trim();
+    if (!NICK_RE.test(nickname)) bad("bad_nickname");
+    if (await env.DB.prepare("SELECT 1 FROM users WHERE nickname=? AND id<>?").bind(nickname, me.id).first()) throw new HttpError(409, "nickname_taken");
+    await env.DB.prepare("UPDATE users SET nickname=? WHERE id=?").bind(nickname, me.id).run();
+    return { ok: true, nickname };
+  }
+  if (p === "/api/me/identities" && m === "GET") {
+    needUser(me);
+    const rows = (await env.DB.prepare("SELECT provider, created_at FROM identities WHERE user_id=?").bind(me.id).all()).results;
+    const u = await env.DB.prepare("SELECT pw IS NOT NULL AS has_pw FROM users WHERE id=?").bind(me.id).first();
+    return { identities: rows, has_pw: !!u.has_pw, providers: oauthProviders(env) };
+  }
+  if (p === "/api/oauth/ticket" && m === "POST") {          // lets a signed-in user add a provider to the account
+    needUser(me);
+    const t = b64u(crypto.getRandomValues(new Uint8Array(24)));
+    await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256("t:" + t), me.id, -1, now()).run();
+    return { ticket: t };
+  }
+  if (p === "/api/oauth/redeem" && m === "POST") {
+    await limit(env, "redeem:" + clientIp(req), 30, 600);
+    const h = await sha256(String(body.code || ""));
+    const row = await env.DB.prepare("SELECT * FROM oauth_codes WHERE code_hash=? AND fresh>=0").bind(h).first();
+    await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=? OR created_at<?").bind(h, now() - 600).run();
+    if (!row || row.created_at < now() - 60) throw new HttpError(400, "bad_code");
+    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at FROM users WHERE id=? AND deleted=0").bind(row.user_id).first();
+    if (!user) throw new HttpError(400, "bad_code");
+    return { token: await newSession(env, user.id), user: pubUser(user), fresh: !!row.fresh };
   }
 
   /* posts */
@@ -373,6 +406,10 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404, cors);
+    if (req.method === "GET" && /^\/api\/oauth\/(google|discord|naver)\/(start|callback)$/.test(url.pathname)) {
+      try { return await oauthRoute(req, env, url); }
+      catch (e) { console.error(e && e.stack || e); return new Response("Sign-in failed", { status: 500 }); }
+    }
     try {
       return json(await handle(req, env, url), 200, cors);
     } catch (e) {
@@ -668,4 +705,110 @@ async function arena(p, m, body, me, req, env, url) {
     }
   }
   return undefined;
+}
+
+
+/* ══ v5: sign in with Google, Discord or NAVER ═══════════════════════════
+ * Authorization-code flow.  /api/oauth/<p>/start sends the browser to the
+ * provider with a random state (and PKCE where the provider takes it); the
+ * provider sends it back to /api/oauth/<p>/callback, where the code is traded
+ * for the user's stable id.  The first time, a HaslaLab account is made with
+ * the provider's display name as nickname; no e-mail address is kept.  The
+ * browser then returns to the site with a one-time code (#/oauth?c=...) that
+ * the site trades for a session token, so no token ever sits in a URL.
+ * Worker secrets: GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, DISCORD_CLIENT_ID /
+ * DISCORD_CLIENT_SECRET, NAVER_CLIENT_ID / NAVER_CLIENT_SECRET.  The redirect
+ * URI to register with each is https://<worker>/api/oauth/<provider>/callback.
+ * (OAUTH_MOCK_BASE only points the tests at a stand-in provider.)
+ */
+const OAUTH = {
+  google: { auth: "https://accounts.google.com/o/oauth2/v2/auth", token: "https://oauth2.googleapis.com/token",
+            me: "https://openidconnect.googleapis.com/v1/userinfo", scope: "openid profile", pkce: true },
+  discord: { auth: "https://discord.com/oauth2/authorize", token: "https://discord.com/api/oauth2/token",
+             me: "https://discord.com/api/users/@me", scope: "identify", pkce: false },
+  naver: { auth: "https://nid.naver.com/oauth2.0/authorize", token: "https://nid.naver.com/oauth2.0/token",
+           me: "https://openapi.naver.com/v1/nid/me", scope: "", pkce: false },
+};
+const oauthKeys = (env, p) => ({ id: env[p.toUpperCase() + "_CLIENT_ID"], secret: env[p.toUpperCase() + "_CLIENT_SECRET"] });
+function oauthProviders(env) { return Object.keys(OAUTH).filter(p => { const k = oauthKeys(env, p); return k.id && k.secret; }); }
+const mockable = (env, u) => env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(u).pathname : u;
+function allowedReturn(env, raw) {
+  let u; try { u = new URL(raw); } catch (e) { return null; }
+  const ok = (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean).includes(u.origin);
+  return ok ? u.origin + u.pathname + u.search : null;                 // the fragment is set on the way back
+}
+function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
+/* a provider's display name, made into a free nickname */
+async function freeNick(env, raw) {
+  let base = String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(/\s+/g, " ").trim().slice(0, 12);
+  if (!NICK_RE.test(base)) base = "user";
+  for (let i = 0; i < 30; i++) {
+    const n = i ? (base.slice(0, 11) + Math.floor(1000 + Math.random() * 9000)) : base;
+    if (NICK_RE.test(n) && !(await env.DB.prepare("SELECT 1 FROM users WHERE nickname=?").bind(n).first())) return n;
+  }
+  return "user" + Date.now() % 1e9;
+}
+async function oauthRoute(req, env, url) {
+  const [, , , prov, step] = url.pathname.split("/"), P = OAUTH[prov], keys = oauthKeys(env, prov);
+  const redirectUri = url.origin + `/api/oauth/${prov}/callback`;
+  if (step === "start") {
+    const ret = allowedReturn(env, url.searchParams.get("return") || "");
+    if (!ret) return new Response("Bad return address", { status: 400 });
+    if (!keys.id || !keys.secret) return backTo(ret, "e=oauth_off");
+    await limit(env, "oauth:" + clientIp(req), 30, 600);
+    let linkUser = null;
+    const ticket = url.searchParams.get("ticket");
+    if (ticket) {
+      const h = await sha256("t:" + ticket), row = await env.DB.prepare("SELECT user_id,created_at FROM oauth_codes WHERE code_hash=? AND fresh=-1").bind(h).first();
+      await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=?").bind(h).run();
+      if (!row || row.created_at < now() - 120) return backTo(ret, "e=bad_code");
+      linkUser = row.user_id;
+    }
+    const state = b64u(crypto.getRandomValues(new Uint8Array(24)));
+    const verifier = P.pkce ? b64u(crypto.getRandomValues(new Uint8Array(32))) : null;
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM oauth_states WHERE created_at<?").bind(now() - 600),
+      env.DB.prepare("INSERT INTO oauth_states(state,provider,verifier,return_to,link_user,created_at) VALUES(?,?,?,?,?,?)").bind(state, prov, verifier, ret, linkUser, now()),
+    ]);
+    const q = new URLSearchParams({ client_id: keys.id, redirect_uri: redirectUri, response_type: "code", state });
+    if (P.scope) q.set("scope", P.scope);
+    if (P.pkce) { q.set("code_challenge", b64u(await crypto.subtle.digest("SHA-256", enc.encode(verifier)))); q.set("code_challenge_method", "S256"); }
+    if (prov === "google") q.set("prompt", "select_account");
+    return new Response(null, { status: 302, headers: { Location: (env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(P.auth).pathname : P.auth) + "?" + q, "Cache-Control": "no-store" } });
+  }
+  /* callback */
+  const st = await env.DB.prepare("SELECT * FROM oauth_states WHERE state=? AND provider=?").bind(url.searchParams.get("state") || "", prov).first();
+  if (st) await env.DB.prepare("DELETE FROM oauth_states WHERE state=?").bind(st.state).run();
+  if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
+  const code = url.searchParams.get("code");
+  if (!code) return backTo(st.return_to, "e=oauth_cancelled");
+  const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: keys.secret, redirect_uri: redirectUri });
+  if (st.verifier) form.set("code_verifier", st.verifier);
+  if (prov === "naver") form.set("state", st.state);
+  const tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" }, body: form });
+  const tj = await tr.json().catch(() => ({}));
+  if (!tr.ok || !tj.access_token) { console.error("oauth token", prov, tr.status); return backTo(st.return_to, "e=oauth_failed"); }
+  const mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json" } });
+  const mj = await mr.json().catch(() => ({}));
+  const prof = prov === "naver" ? (mj.response || {}) : mj;
+  const sub = String(prov === "google" ? prof.sub : prof.id || "");
+  if (!mr.ok || !sub) { console.error("oauth profile", prov, mr.status); return backTo(st.return_to, "e=oauth_failed"); }
+  const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username) : (prof.nickname || prof.name);
+  const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();
+  let userId, fresh = 0;
+  if (st.link_user) {
+    if (found && found.user_id !== st.link_user) return backTo(st.return_to, "e=oauth_in_use");
+    if (!found) await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, st.link_user, now()).run();
+    userId = st.link_user;
+  } else if (found) userId = found.user_id;
+  else {
+    await limit(env, "signup:" + clientIp(req), 20, 3600);
+    const uname = prov[0] + "_" + b64u(crypto.getRandomValues(new Uint8Array(9))).replace(/[^A-Za-z0-9]/g, "").slice(0, 10);
+    const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,NULL,?)").bind(uname, await freeNick(env, name), now()).run();
+    userId = res.meta.last_row_id; fresh = 1;
+    await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
+  }
+  const one = b64u(crypto.getRandomValues(new Uint8Array(24)));
+  await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256(one), userId, fresh, now()).run();
+  return backTo(st.return_to, "c=" + one + (st.link_user ? "&linked=" + prov : ""));
 }
