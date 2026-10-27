@@ -3294,10 +3294,10 @@ const DATA={
     ["P7","Noon","정오","APAO_2012_P_EN.pdf",null],
     ["P8α","The Black Cloud (group α)","검은 구름 (α조)","APAO_2012_P_EN.pdf",null],
     ["P8β","Variable Stars (group β)","변광성 (β조)","APAO_2012_P_EN.pdf",null],
-    ["O9","Area","넓이","APAO_2012_O_EN.pdf",null],
-    ["O10","Pegasus","페가수스자리","APAO_2012_O_EN.pdf",null],
-    ["O11","Cassiopeia","카시오페이아자리","APAO_2012_O_EN.pdf",null],
-    ["O12","Alnath","엘나스","APAO_2012_O_EN.pdf",null]])},
+    ["O9–O12","Area, Pegasus, Cassiopeia, Alnath (naked eye)","넓이 · 페가수스 · 카시오페이아 · 엘나스 (맨눈 관측)","APAO_2012_O_EN.pdf",null]]).map(p=>p.id!=="O9–O12"?p:(delete p.state,Object.assign(p,{
+      desc:{ko:"2012년 11월 29일 밤 콕스바자르 바닷가의 실제 하늘에서 맨눈과 손으로만 푸는 관측 라운드입니다. 보름 하루 뒤의 달빛 속에서 달 · 목성 · 알데바란 삼각형의 넓이를 손으로 재어 어림하고, 페가수스자리와 맞닿은 별자리를 고르고, 주어진 별과 견주어 α Cas의 등급을 어림한 뒤, 엘나스 · 카펠라 · 안드로메다 은하를 차례로 가리킵니다. 하늘 밝기는 달빛과 읍내 불빛으로 계산해 맨눈 한계 등급을 정합니다. 공식 해답이 없어 HaslaLab 해답(넓이 ≈ 19 °²)을 실었습니다.",
+            en:"An observational round worked with the eyes and hands only, under the real sky over the beach at Cox's Bazar on the night of 29 November 2012. In the light of a Moon one day past full, measure the triangle of the Moon, Jupiter and Aldebaran with your hand and estimate its area, pick the constellations that border Pegasus, estimate the magnitude of α Cas against the given stars, then point at Alnath, Capella and the Andromeda Galaxy in turn. The sky brightness comes from the moonlight and the town, and sets the naked-eye limit. No official solution was published, so HaslaLab's is included (area ≈ 19 deg²)."},
+      tags:["맨눈 관측","실제 하늘","달빛"],tagsEn:["Naked eye","Real sky","Moonlight"]}),Object.assign(p.files,{sim:"sim/apao2012_O_web.html",src:{ko:"src/apao2012_O_sky_sim_KO.py",en:"src/apao2012_O_sky_sim_EN.py"}}),p))},
    {y:2011,host:{ko:"카자흐스탄 · 악토베",en:"Aktobe, Kazakhstan"},cc:"kz",problems:lst([
     ["P","Practical round","실기 라운드","APAO_2011_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2011_O_KO.pdf",null]])},
