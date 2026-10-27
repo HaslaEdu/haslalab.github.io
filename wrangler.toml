@@ -1,0 +1,15 @@
+# Cloudflare Workers Builds deploys the community API from this repository.
+# The Worker itself lives in community/ (see community/README.md); this file lets the
+# build run from the repository root, where Workers Builds starts by default.
+name = "haslalab-community"
+main = "community/src/index.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "haslalab-community"
+database_id = "96761b6d-c194-4ee5-9836-7845b51a5f07"
+migrations_dir = "community/migrations"
