@@ -579,7 +579,8 @@ ko:{
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨",
   tallyNote:"실험 문제만 모읍니다.",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
-  expNObs:"관측 {n}문제", noPapersObs:"관측 자료 없음", problemsObs:"관측 문제", pickProbObs:"관측 문제를 고르세요",
+  expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
+  kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험"}, kindN:"{k} {n}",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
   pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
@@ -632,7 +633,8 @@ en:{
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published",
   tallyNote:"Experimental problems only.",
   expN:"{n} experimental", noPapers:"no experimental papers",
-  expNObs:"{n} observational", noPapersObs:"no observational papers", problemsObs:"Observational problems", pickProbObs:"Choose a problem",
+  expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
+  kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment"}, kindN:"{n} {k}",
   ebComps:"Covered competitions", hComps:"Choose a competition",
   pComps:"Pick a year, then open that year's experimental problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
@@ -1193,19 +1195,19 @@ const DATA={
    {y:1990,host:{ko:"네덜란드 · 흐로닝언",en:"Groningen, Netherlands"},cc:"nl",problems:lst([["E1","LED Efficiency","LED의 효율","IPhO_1990_E1_EN.pdf","IPhO_1990_S1.pdf"],["E2","Two Magnets","두 자석","IPhO_1990_E2_EN.pdf","IPhO_1990_S2.pdf"]])},
    {y:1989,host:{ko:"폴란드 · 바르샤바",en:"Warsaw, Poland"},cc:"pl",problems:lst([["E1","Piezoelectric Discs","압전 원판","IPhO_1989_E_EN.pdf","IPhO_1989_S.pdf"]])},
    {y:1988,host:{ko:"오스트리아 · 바트이슐",en:"Bad Ischl, Austria"},cc:"at",problems:lst([["E1","Polarized Light","편광","IPhO_1988_E1_EN.pdf","IPhO_1988_S1.pdf"],["E2","Electron Tube","전자관","IPhO_1988_E2_EN.pdf","IPhO_1988_S2.pdf"]])},
-   {y:1987,host:{ko:"동독 · 예나",en:"Jena, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([["E1","Refractive Indices","굴절률","IPhO_1987_E_EN.pdf","IPhO_1987_S.pdf"]])},
+   {y:1987,host:{ko:"동독 · 예나",en:"Jena, East Germany"},cc:"dd",problems:lst([["E1","Refractive Indices","굴절률","IPhO_1987_E_EN.pdf","IPhO_1987_S.pdf"]])},
    {y:1986,host:{ko:"영국 · 런던 (해로)",en:"London (Harrow), United Kingdom"},cc:"gb",problems:lst([["E1","Pendant Drop","매달린 물방울","IPhO_1986_E1_EN.pdf","IPhO_1986_S1.pdf"],["E2","Microcomputer","마이크로컴퓨터 실험","IPhO_1986_E2_EN.pdf","IPhO_1986_S2.pdf"]])},
-   {y:1985,host:{ko:"유고슬라비아 · 포르토로즈",en:"Portorož, Yugoslavia"},cc:"",org:{"abbr": "YU", "name": "Yugoslavia"},problems:lst([["E1","Brass Disk","황동 원판","IPhO_1985_E1_EN.pdf","IPhO_1985_S1.pdf"],["E2","Permanent Magnets","영구 자석","IPhO_1985_E2_EN.pdf","IPhO_1985_S2.pdf"]])},
+   {y:1985,host:{ko:"유고슬라비아 · 포르토로즈",en:"Portorož, Yugoslavia"},cc:"yu",problems:lst([["E1","Brass Disk","황동 원판","IPhO_1985_E1_EN.pdf","IPhO_1985_S1.pdf"],["E2","Permanent Magnets","영구 자석","IPhO_1985_E2_EN.pdf","IPhO_1985_S2.pdf"]])},
    {y:1984,host:{ko:"스웨덴 · 시그투나",en:"Sigtuna, Sweden"},cc:"se",problems:lst([["E1","Diode, Capacitor and Resistor","다이오드, 축전기, 저항","IPhO_1984_E1_EN.pdf","IPhO_1984_S1.pdf"],["E2","Glow Discharge Lamp","글로 방전등","IPhO_1984_E2_EN.pdf","IPhO_1984_S2.pdf"]])},
    {y:1982,host:{ko:"서독 · 말렌테",en:"Malente, West Germany"},cc:"de",problems:lst([["E1","Lens Experiment","렌즈 실험","IPhO_1982_E1_EN.pdf","IPhO_1982_S1.pdf"],["E2","Motion of a Rolling Cylinder","구르는 원통의 운동","IPhO_1982_E2_EN.pdf","IPhO_1982_S2.pdf"]])},
-   {y:1981,host:{ko:"불가리아 · 바르나",en:"Varna, Bulgaria"},cc:"bg",problems:lst([["E1","Elastic Rubber Cord","고무줄의 탄성","IPhO_1981_E_EN.pdf","IPhO_1981_S.pdf"]])},
-   {y:1979,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([["E1","Black Box","블랙박스","IPhO_1979_E_EN.pdf","IPhO_1979_S.pdf"]])},
+   {y:1981,host:{ko:"불가리아 · 바르나",en:"Varna, Bulgaria"},cc:"bg1971",problems:lst([["E1","Elastic Rubber Cord","고무줄의 탄성","IPhO_1981_E_EN.pdf","IPhO_1981_S.pdf"]])},
+   {y:1979,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"su",problems:lst([["E1","Black Box","블랙박스","IPhO_1979_E_EN.pdf","IPhO_1979_S.pdf"]])},
    {y:1976,host:{ko:"헝가리 · 부다페스트",en:"Budapest, Hungary"},cc:"hu",problems:lst([["E1","Thermal Properties of Material X","물질 X의 열적 성질","IPhO_1976_E_EN.pdf","IPhO_1976_S.pdf"]])},
-   {y:1975,host:{ko:"동독 · 귀스트로",en:"Güstrow, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([["E1","Semiconductor Element","반도체 소자","IPhO_1975_E_EN.pdf","IPhO_1975_S.pdf"]])},
+   {y:1975,host:{ko:"동독 · 귀스트로",en:"Güstrow, East Germany"},cc:"dd",problems:lst([["E1","Semiconductor Element","반도체 소자","IPhO_1975_E_EN.pdf","IPhO_1975_S.pdf"]])},
    {y:1974,host:{ko:"폴란드 · 바르샤바",en:"Warsaw, Poland"},cc:"pl",problems:lst([["E1","Diodes in a Black Box","블랙박스 속 다이오드","IPhO_1974_E_EN.pdf","IPhO_1974_S.pdf"]])},
-   {y:1972,host:{ko:"루마니아 · 부쿠레슈티",en:"Bucharest, Romania"},cc:"ro",problems:lst([["E1","Two Cylinders","두 원통","IPhO_1972_E_EN.pdf","IPhO_1972_S.pdf"]])},
-   {y:1971,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg",problems:lst([["E1","Rheostat Dissipation","가변 저항에서 소비되는 전력","IPhO_1971_E_EN.pdf","IPhO_1971_S.pdf"]])},
-   {y:1970,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([["E1","Three Lenses","세 렌즈","IPhO_1970_E_EN.pdf","IPhO_1970_S.pdf"]])},
+   {y:1972,host:{ko:"루마니아 · 부쿠레슈티",en:"Bucharest, Romania"},cc:"ro1965",problems:lst([["E1","Two Cylinders","두 원통","IPhO_1972_E_EN.pdf","IPhO_1972_S.pdf"]])},
+   {y:1971,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg1971",problems:lst([["E1","Rheostat Dissipation","가변 저항에서 소비되는 전력","IPhO_1971_E_EN.pdf","IPhO_1971_S.pdf"]])},
+   {y:1970,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"su",problems:lst([["E1","Three Lenses","세 렌즈","IPhO_1970_E_EN.pdf","IPhO_1970_S.pdf"]])},
    {y:1968,host:{ko:"헝가리 · 부다페스트",en:"Budapest, Hungary"},cc:"hu",problems:lst([["E1","Three Black Boxes","블랙박스 세 개","IPhO_1968_E_EN.pdf","IPhO_1968_S.pdf"]])},
    {y:1967,host:{ko:"폴란드 · 바르샤바",en:"Warsaw, Poland"},cc:"pl",problems:lst([["E1","Heating Petroleum","석유 가열","IPhO_1967_E_EN.pdf","IPhO_1967_S.pdf"]])}
   ]},
@@ -2552,7 +2554,7 @@ const DATA={
     ["P2","Qualitative Analysis","정성 분석","IChO_1990_P.pdf","IChO_1990_P.pdf"],
     ["P3","Dissolved Oxygen by Winkler's Method","윙클러법으로 재는 용존 산소","IChO_1990_P.pdf","IChO_1990_P.pdf"],
     ["P4","Kinetics of an SN1 Reaction","SN1 반응 속도론","IChO_1990_P.pdf","IChO_1990_P.pdf"]])},
-   {y:1989,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([
+   {y:1989,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"dd",problems:lst([
     ["P1","Synthesis of Acetylsalicylic Acid","아세틸살리실산 합성","IChO_1989_P.pdf","IChO_1989_P.pdf"],
     ["P2","Analysis of Acetylsalicylic Acid","아세틸살리실산 정량","IChO_1989_P.pdf","IChO_1989_P.pdf"]])},
    {y:1988,host:{ko:"핀란드 · 에스포",en:"Espoo, Finland"},cc:"fi",problems:lst([
@@ -2565,12 +2567,12 @@ const DATA={
    {y:1986,host:{ko:"네덜란드 · 레이던",en:"Leiden, Netherlands"},cc:"nl",problems:lst([
     ["P1","Synthesis of a Nickel(II) Salt","니켈(II) 염 합성","IChO_1986_P.pdf","IChO_1986_P.pdf"],
     ["P2","Analysis of the Nickel Salt","니켈 염 분석","IChO_1986_P.pdf","IChO_1986_P.pdf"]])},
-   {y:1985,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"sk",problems:lst([
+   {y:1985,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"cs",problems:lst([
     ["P1","Molar Mass of a Weak Acid by Titration","적정으로 약산의 몰질량 구하기","IChO_1985_P.pdf","IChO_1985_P.pdf"]])},
    {y:1984,host:{ko:"서독 · 프랑크푸르트",en:"Frankfurt am Main, West Germany"},cc:"de",problems:lst([
     ["P1","Nitration of Phenacetin","페나세틴의 나이트로화","IChO_1984_P.pdf","IChO_1984_P.pdf"],
     ["P2","Phosphoric Acid in a Cola Drink","콜라 속 인산","IChO_1984_P.pdf","IChO_1984_P.pdf"]])},
-   {y:1983,host:{ko:"루마니아 · 티미쇼아라",en:"Timișoara, Romania"},cc:"ro",problems:lst([
+   {y:1983,host:{ko:"루마니아 · 티미쇼아라",en:"Timișoara, Romania"},cc:"ro1965",problems:lst([
     ["P1","Functional Groups of Benzene Derivatives","벤젠 유도체의 작용기","IChO_1983_P.pdf","IChO_1983_P.pdf"],
     ["P2","Oxalic Acid and Ammonium Oxalate","옥살산과 옥살산암모늄","IChO_1983_P.pdf","IChO_1983_P.pdf"],
     ["P3","Six Solutions without Extra Reagents","다른 시약 없이 여섯 용액 판별","IChO_1983_P.pdf","IChO_1983_P.pdf"]])},
@@ -2578,7 +2580,7 @@ const DATA={
     ["P1","Buffer Capacity","완충 용량","IChO_1982_P.pdf","IChO_1982_P.pdf"],
     ["P2","Identification of Eight Salt Solutions","염 용액 여덟 가지 판별","IChO_1982_P.pdf","IChO_1982_P.pdf"],
     ["P3","Solubility Product of Lead(II) Chloride","염화납(II)의 용해도곱","IChO_1982_P.pdf","IChO_1982_P.pdf"]])},
-   {y:1981,host:{ko:"불가리아 · 부르가스",en:"Burgas, Bulgaria"},cc:"bg",problems:lst([
+   {y:1981,host:{ko:"불가리아 · 부르가스",en:"Burgas, Bulgaria"},cc:"bg1971",problems:lst([
     ["P1","Fourteen Inorganic Solutions","무기 용액 열네 가지","IChO_1981_P.pdf","IChO_1981_P.pdf"],
     ["P2","Organic Unknowns","유기 미지 시료","IChO_1981_P.pdf","IChO_1981_P.pdf"],
     ["P3","Sodium Carbonate and Hydrogen Carbonate Together","탄산나트륨 · 탄산수소나트륨 동시 정량","IChO_1981_P.pdf","IChO_1981_P.pdf"]])},
@@ -2586,17 +2588,17 @@ const DATA={
     ["P1","Qualitative Organic Analysis","유기 정성 분석","IChO_1980_P.pdf","IChO_1980_P.pdf"],
     ["P2","Identification of Metals","금속 시료 판별","IChO_1980_P.pdf","IChO_1980_P.pdf"],
     ["P3","Titration of Potassium Peroxodisulfate","퍼옥소이황산칼륨 적정","IChO_1980_P.pdf","IChO_1980_P.pdf"]])},
-   {y:1979,host:{ko:"소련 · 레닌그라드",en:"Leningrad, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([
+   {y:1979,host:{ko:"소련 · 레닌그라드",en:"Leningrad, USSR"},cc:"su",problems:lst([
     ["P1","Identification of Ten Solutions","용액 열 가지 판별","IChO_1979_P.pdf","IChO_1979_P.pdf"],
     ["P2","Mass of Potassium Permanganate","과망가니즈산칼륨 질량 정량","IChO_1979_P.pdf","IChO_1979_P.pdf"]])},
    {y:1978,host:{ko:"폴란드 · 토룬",en:"Toruń, Poland"},cc:"pl",problems:lst([
     ["P1","Identification of Four Acid and Base Solutions","산 · 염기 용액 네 가지 판별","IChO_1978_P.pdf","IChO_1978_P.pdf"],
     ["P2","Redox Titrations","산화환원 적정","IChO_1978_P.pdf","IChO_1978_P.pdf"]])},
-   {y:1977,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"sk",problems:lst([
+   {y:1977,host:{ko:"체코슬로바키아 · 브라티슬라바",en:"Bratislava, Czechoslovakia"},cc:"cs",problems:lst([
     ["P1","Reaction Kinetics by Visual Colorimetry","눈 비색법으로 본 반응 속도","IChO_1977_P.pdf","IChO_1977_P.pdf"],
     ["P2","Thermometric Titration of Hypochlorite","차아염소산염의 온도 적정","IChO_1977_P.pdf","IChO_1977_P.pdf"],
     ["P3","Ammonium Salt by Back-Titration","역적정으로 암모늄염 정량","IChO_1977_P.pdf","IChO_1977_P.pdf"]])},
-   {y:1976,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"",org:{"abbr": "GDR", "name": "German Democratic Republic"},problems:lst([
+   {y:1976,host:{ko:"동독 · 할레",en:"Halle, East Germany"},cc:"dd",problems:lst([
     ["P1","Cations and Anions in a Sample","시료 속 양이온과 음이온","IChO_1976_P.pdf","IChO_1976_P.pdf"],
     ["P2","Sodium Oxalate and Oxalic Acid","옥살산나트륨과 옥살산 정량","IChO_1976_P.pdf","IChO_1976_P.pdf"],
     ["P3","Aliphatic Compounds A–CH₂–B","A–CH₂–B형 지방족 화합물","IChO_1976_P.pdf","IChO_1976_P.pdf"]])},
@@ -2605,15 +2607,15 @@ const DATA={
     ["P2","Identification of Solid Compounds","고체 화합물 판별","IChO_1975_P.pdf","IChO_1975_P.pdf"],
     ["P3","Aromatic Hydrocarbon, Phenol and Aldehyde","방향족 탄화수소 · 페놀 · 알데하이드","IChO_1975_P.pdf","IChO_1975_P.pdf"],
     ["P4","Water Content of Crystalline Sodium Carbonate","결정 탄산나트륨의 결정수","IChO_1975_P.pdf","IChO_1975_P.pdf"]])},
-   {y:1974,host:{ko:"루마니아 · 부쿠레슈티",en:"Bucharest, Romania"},cc:"ro",problems:lst([
+   {y:1974,host:{ko:"루마니아 · 부쿠레슈티",en:"Bucharest, Romania"},cc:"ro1965",problems:lst([
     ["P1","Organic Unknowns","유기 미지 시료","IChO_1974_P.pdf","IChO_1974_P.pdf"],
     ["P2","Cations, and Acid or Base?","양이온, 그리고 산인가 염기인가","IChO_1974_P.pdf","IChO_1974_P.pdf"],
     ["P3","Two Cations and Two Anions","두 양이온과 두 음이온","IChO_1974_P.pdf","IChO_1974_P.pdf"]])},
-   {y:1973,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg",problems:lst([
+   {y:1973,host:{ko:"불가리아 · 소피아",en:"Sofia, Bulgaria"},cc:"bg1971",problems:lst([
     ["P1","Identification of Twelve Salt Solutions","염 용액 열두 가지 판별","IChO_1973_P.pdf",null],
     ["P2","Six Test Tubes, Pairwise","여섯 시험관 — 짝 구별","IChO_1973_P.pdf",null],
     ["P3","Identification of Three Compounds","세 화합물 판별","IChO_1973_P.pdf",null]])},
-   {y:1972,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"",org:{"abbr": "USSR", "name": "Soviet Union"},problems:lst([
+   {y:1972,host:{ko:"소련 · 모스크바",en:"Moscow, USSR"},cc:"su",problems:lst([
     ["P1","Identification of Ten Unknown Samples","미지 시료 열 가지 판별","IChO_1972_P.pdf",null],
     ["P2","Composition of a Formic Acid–Ethanol Mixture","포름산–에탄올 혼합물의 조성","IChO_1972_P.pdf",null]])},
    {y:1970,host:{ko:"헝가리 · 부다페스트",en:"Budapest, Hungary"},cc:"hu",problems:lst([
@@ -2622,7 +2624,7 @@ const DATA={
    {y:1969,host:{ko:"폴란드 · 카토비체",en:"Katowice, Poland"},cc:"pl",problems:lst([
     ["P1","Identification of Salt Mixtures","염 혼합물 판별","IChO_1969_P.pdf",null],
     ["P2","Metal Mass from Hydrogen Evolution","수소 발생으로 금속 질량 구하기","IChO_1969_P.pdf",null]])},
-   {y:1968,host:{ko:"체코슬로바키아 · 프라하",en:"Prague, Czechoslovakia"},cc:"cz",problems:lst([
+   {y:1968,host:{ko:"체코슬로바키아 · 프라하",en:"Prague, Czechoslovakia"},cc:"cs",problems:lst([
     ["P1","Identification of Ten Salt Solutions","염 용액 열 가지 판별","IChO_1968_P.pdf","IChO_1968_P.pdf"],
     ["P2","Identification of Organic Acids and Glucose","유기산과 포도당 판별","IChO_1968_P.pdf","IChO_1968_P.pdf"]])}
   ]},
@@ -2990,8 +2992,13 @@ document.getElementById("lang-en").onclick=()=>setLang("en");
 paintLang();
 
 /* a host country gets its flag; a year run by an institution gets its badge */
+/* states that no longer exist, and flags as they were in that year, are kept in flags/ */
+const OLD_FLAGS = {su:"Soviet Union", dd:"German Democratic Republic", yu:"SFR Yugoslavia",
+                   cs:"Czechoslovakia", bg1971:"People's Republic of Bulgaria", ro1965:"Socialist Republic of Romania"};
 const flagImg = (cc,cls="flag",org=null) =>
-  cc  ? `<img class="${cls}" loading="lazy" alt="" decoding="async"
+  cc && OLD_FLAGS[cc] ? `<img class="${cls}" loading="lazy" alt="" decoding="async"
+           src="flags/${cc}.png" title="${OLD_FLAGS[cc]}">`
+  : cc  ? `<img class="${cls}" loading="lazy" alt="" decoding="async"
            src="https://flagcdn.com/w80/${cc}.png"
            srcset="https://flagcdn.com/w160/${cc}.png 2x">`
   : org ? `<span class="${cls} orgbadge" title="${esc(org.name||org.abbr)}">${esc(org.abbr)}</span>`
@@ -3027,6 +3034,14 @@ const compLogo = key =>
 
 /* astronomy competitions count observation rounds, not experiments */
 const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
+/* astronomy rounds are not all observation: the problem code says which round it is
+   (O observation, D data analysis, P practical, M sky map) */
+const kindOf = (c,p) => c&&c.obs ? (UI[lang].kind[(p.id||"").charAt(0)]||null) : null;
+const countLabel = (c,ps) => {
+  if(!(c&&c.obs)) return LB(c,"expN").replace("{n}",ps.length);
+  const n={}; for(const p of ps){ const k=kindOf(c,p)||"?"; n[k]=(n[k]||0)+1; }
+  return Object.entries(n).map(([k,v])=>UI[lang].kindN.replace("{k}",k).replace("{n}",v)).join(" · ");
+};
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function adFitBanner(placement){
@@ -3310,7 +3325,7 @@ function viewComp(key){
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
           <div class="cnt">${r?'<i class="dot"></i>':""}${none?LB(c,"noPapers"):
-            LB(c,"expN").replace("{n}",y.problems.length)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+            countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -3385,7 +3400,7 @@ function viewYear(key,year){
           </div>
           <h3>${esc(heading)}</h3>
           <p>${body}</p>
-          <div class="tags">${tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
+          <div class="tags">${(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags).map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${note}
           <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}<div class="docs n${docs.length}">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
