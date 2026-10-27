@@ -1167,20 +1167,31 @@ const ol = k => OSL[LANG][k];
   #lap .ca .e{text-align:right;font-size:12px;color:#666;min-height:16px;padding:0 8px}
   #lap .ca .k{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;flex:1}
   #lap .ca .k button{margin:0;border:0;border-radius:4px;background:#fff;color:#111;font-size:16px}#lap .ca .k button:hover{background:#e9e9e9}
-  #lap .ca .k button.op{background:#f9f9f9} #lap .ca .k button.eq{background:#0067c0;color:#fff}`;
+  #lap .ca .k button.op{background:#f9f9f9} #lap .ca .k button.eq{background:#0067c0;color:#fff}
+  #lap .gl.ed{background:radial-gradient(circle at 42% 42%,#fff 0 18%,transparent 19%),conic-gradient(from 200deg,#0c59a4,#1e8be0 35%,#35c1f1 60%,#3fd27a 85%,#0c59a4);border-radius:50%}
+  #lap .gl.cr{background:radial-gradient(circle,#4285f4 0 24%,#fff 25% 33%,transparent 34%),conic-gradient(from -30deg,#db4437 0 33.3%,#0f9d58 0 66.6%,#f4c20d 0);border-radius:50%}`;
   document.head.appendChild(st); })();
 
 const APPS = {
   suite:{title:() => "Radio Astronomy Suite" + (LAP.group ? " — " + LAP.group : ""), gl:"rc", ch:"", pos:[40, 20, 760, 470], max:true},
   explorer:{title:() => ol("explorer"), gl:"fe", ch:"📁", pos:[90, 40, 560, 330]},
   notepad:{title:() => (OS.note.file || ol("untitled")) + " - " + ol("notepad"), gl:"np", ch:"✎", pos:[140, 60, 520, 320]},
-  calc:{title:() => ol("calc"), gl:"ca", ch:"±", pos:[380, 30, 260, 360]}};
+  calc:{title:() => ol("calc"), gl:"ca", ch:"±", pos:[380, 30, 260, 360]},
+  edge:{title:() => brTitle("edge") + " - Microsoft Edge", gl:"ed", ch:"", pos:[70, 14, 700, 440]},
+  chrome:{title:() => brTitle("chrome") + " - Google Chrome", gl:"cr", ch:"", pos:[100, 24, 700, 440]}};
+/* the browsers: Edge with Windows, Chrome installed; pages load live inside the window */
+const BR = {};
+const brTitle = k => BR[k] ? BR[k].title() : (LANG === "ko" ? "새 탭" : "New tab");
+function brGet(k){ if (!BR[k] && window.VBrowser) BR[k] = VBrowser({kind:k, embedded:true, lang:() => LANG, onchange:() => { osTitle(k); osTaskbar(); },
+    links:[{t:{ko:"IOAA 2025 문제지", en:"IOAA 2025 problem"}, url:LANG === "ko" ? "../pdf/IOAA_2025_G1_KO.pdf" : "../pdf/IOAA_2025_G1_EN.pdf", ic:"📄", col:"#c0392b"},
+      {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"}, {t:{ko:"위키백과", en:"Wikipedia"}, url:"https://ko.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://www.youtube.com/", ic:"▶", col:"#e62117"}]});
+  return BR[k]; }
 function osBuild(){
   if (lapEl.querySelector(".os")) return;
   lapEl.innerHTML = `<div class="scr os"><div class="desk" id="osDesk"></div><div id="osWins"></div><div class="startm" id="osStart" hidden></div><div class="task" id="osTask"></div></div>`;
   const desk = document.getElementById("osDesk");
-  desk.innerHTML = [["suite", lt("icon"), 0], ["explorer", ol("explorer"), 1], ["notepad", ol("notepad"), 2], ["calc", ol("calc"), 3]].map(([k, nm, i]) =>
-    `<div class="dic" data-a="${k}" style="left:16px;top:${14 + i * 92}px"><span class="gl ${APPS[k].gl}">${APPS[k].ch}</span>${nm}</div>`).join("");
+  desk.innerHTML = [["suite", lt("icon"), 0], ["explorer", ol("explorer"), 1], ["notepad", ol("notepad"), 2], ["calc", ol("calc"), 3], ["edge", "Microsoft Edge", 4], ["chrome", "Google Chrome", 5]].map(([k, nm, i]) =>
+    `<div class="dic" data-a="${k}" style="left:${16 + Math.floor(i / 4) * 96}px;top:${14 + (i % 4) * 92}px"><span class="gl ${APPS[k].gl}">${APPS[k].ch}</span>${nm}</div>`).join("");
   desk.querySelectorAll(".dic").forEach(d => { d.onclick = e => { e.stopPropagation(); desk.querySelectorAll(".dic").forEach(x => x.classList.toggle("sel", x === d)); }; d.ondblclick = () => osOpen(d.dataset.a); });
   desk.onclick = () => { desk.querySelectorAll(".dic").forEach(x => x.classList.remove("sel")); osStart(false); };
   osTaskbar();
@@ -1188,7 +1199,7 @@ function osBuild(){
 }
 function osTaskbar(){ const t = document.getElementById("osTask"); if (!t) return;
   t.innerHTML = `<button id="osSB" title="${ol("start")}"><span class="wlogo"><i></i><i></i><i></i><i></i></span></button><div class="srch">🔍 ${ol("search")}</div>` +
-    Object.keys(APPS).filter(k => OS.open[k]).map(k => `<button data-a="${k}" class="${OS.open[k] && !OS.open[k].min ? "on" : ""}"><span class="gl ${APPS[k].gl}" style="width:18px;height:18px;line-height:18px;font-size:11px;border-radius:3px;display:inline-block;text-align:center">${APPS[k].ch}</span>${k === "suite" ? "Radio Astronomy Suite" : APPS[k].title()}</button>`).join("") +
+    Object.keys(APPS).filter(k => OS.open[k]).map(k => `<button data-a="${k}" class="${OS.open[k] && !OS.open[k].min ? "on" : ""}"><span class="gl ${APPS[k].gl}" style="width:18px;height:18px;line-height:18px;font-size:11px;border-radius:${k === "edge" || k === "chrome" ? "50%" : "3px"};display:inline-block;text-align:center">${APPS[k].ch}</span>${k === "suite" ? "Radio Astronomy Suite" : APPS[k].title()}</button>`).join("") +
     `<div class="tray">▲ &nbsp;📶 🔋<br><span id="osClk"></span></div>`;
   document.getElementById("osSB").onclick = e => { e.stopPropagation(); osStart(!OS.start); };
   t.querySelectorAll("button[data-a]").forEach(b => b.onclick = () => { const w = OS.open[b.dataset.a]; if (!w) return; if (w.min || !w.el.classList.contains("act")){ w.min = false; w.el.style.display = ""; osFocus(b.dataset.a); } else { w.min = true; w.el.style.display = "none"; } osTaskbar(); });
@@ -1216,7 +1227,8 @@ function osFocus(k){ for (const j in OS.open){ const w = OS.open[j]; if (w.el) w
 const osBody = k => OS.open[k] && OS.open[k].el ? OS.open[k].el.querySelector(".wb") : null;
 function osTitle(k){ const w = OS.open[k]; if (w && w.el) w.el.querySelector(".tx").textContent = APPS[k].title(); }
 function osResized(k){ if (k === "suite") for (const p in PL) PL[p].draw && PL[p].draw(); }
-function osRender(k){ if (k === "suite") return lapBuild(); if (k === "explorer") return feRender(); if (k === "notepad") return npRender(); if (k === "calc") return caRender(); }
+function osRender(k){ if (k === "suite") return lapBuild();
+  if (k === "edge" || k === "chrome"){ const b = osBody(k), br = brGet(k); if (b && br){ b.innerHTML = ""; b.appendChild(br.el); } return; } if (k === "explorer") return feRender(); if (k === "notepad") return npRender(); if (k === "calc") return caRender(); }
 /* File Explorer: the group folder the suite saves into */
 function feRender(){ const b = osBody("explorer"); if (!b) return; const n = Object.keys(LAP.files);
   b.innerHTML = `<div class="fe"><div class="addr">← → ↑ <span>${ol("pc")} › ${ol("docs")} › ${LAP.group || "G07"}</span><button class="b" id="feOpen">${ol("openW")}</button><button class="b" id="feDl">${ol("down")}</button></div>
@@ -1345,6 +1357,7 @@ document.getElementById("btn-en").addEventListener("click", () => { LANG = "en";
 layout3(); applyLang(); showView("3d");
 
 </script>
+<script src="vbrowser.js"></script>
 <script src="adfit.js"></script>
 </body>
 </html>
