@@ -695,7 +695,9 @@ const KO_PAPERS = new Set([
   "IOAA_2025_O3_KO.pdf"]);
 const lst = rows => rows.map(([id,en,ko,q,s])=>{
   const at=x=>/^https?:/.test(x)?x:"pdf/"+x;
-  const f={}; if(q) f.pdf={en:at(q)}; if(s) f.sol=at(s);
+  /* 문제지는 이름 끝(_EN·_KO·_RU)이 말하는 언어 칸에 — 한국어만 있는 회차도 그대로 적는다 */
+  const lg=q&&(/_(KO|RU)\.pdf$/.exec(q)||[,"EN"])[1].toLowerCase();
+  const f={}; if(q) f.pdf={[lg]:at(q)}; if(s) f.sol=at(s);
   const k=q&&q.replace(/_EN\.pdf$/,"_KO.pdf");
   if(k&&k!==q&&KO_PAPERS.has(k)) f.pdf={ko:at(k), ...f.pdf};
   return {id, en, ko, state:"wip", files:f};
