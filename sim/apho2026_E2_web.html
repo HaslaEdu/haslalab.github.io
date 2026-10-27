@@ -970,6 +970,7 @@ function drawWires(){
 function drawLooseWire(key){
   const j=w.jump[key];
   if(!j.hdr&&!j.hole) return;
+  if(S.carry&&S.carry[0]==="wire"&&S.carry[1]===key) return;     /* in the hand: drawn to the pointer by drawCarry */
   const p0 = j.hdr ? S.hdrPos[j.hdr[0]+"|"+j.hdr[1]] : holePos(j.hole);
   if(!p0) return;
   const st=LOOSE_STUB[WIRES.indexOf(key)]||LOOSE_STUB[0];
@@ -992,15 +993,29 @@ function drawCarry(){
     RPX(px+42,py-3,px+47,py+3,"#b9b2a0","#8d8674",1);
     TXPX(px+8,py-14,d().carryCell,12,C_ACC,"w",true);
   }
-  if(S.carry&&S.carry[0]==="res")
+  const z=P*S.zoom, wdt=Math.max(2,Math.round(0.16*z));
+  /* a jumper in the hand: from the end already pushed in (if any) to the pointer, its Dupont housing in the fingers */
+  if(S.carry&&S.carry[0]==="wire"){
+    const key=S.carry[1], j=w.jump[key], p0=j.hdr?S.hdrPos[j.hdr[0]+"|"+j.hdr[1]]:j.hole?holePos(j.hole):null;
+    const a=p0?SC(p0[0],p0[1]):[px+0.9*z,py+2.6*z], c1=p0?[(a[0]+px)/2+0.6*z,Math.max(a[1],py)+1.4*z]:[px+0.2*z,py+1.8*z];
+    for(const [col,ww] of [[caseCol(key),wdt+3],[wireCol(key),wdt]]){
+      ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.quadraticCurveTo(c1[0],c1[1],px,py+0.55*z);
+      ctx.strokeStyle=col; ctx.lineWidth=ww; ctx.lineCap="round"; ctx.stroke(); ctx.lineCap="butt"; }
+    if(p0){ const r=0.24*z; OVAL(a[0]-r,a[1]-r,a[0]+r,a[1]+r,wireCol(key),"#0c1218",1); }
+    RPX(px-0.16*z,py-0.1*z,px+0.16*z,py+0.6*z,"#14171b","#000",1); RPX(px-0.05*z,py-0.38*z,px+0.05*z,py-0.1*z,"#c9cdd1",null,0);
+    TXPX(px+16,py-14,d().carryLead(d().lead[key]),13,C_ACC,"w",true);
+  }
+  /* a resistor in the hand: hanging from its first lead if that is in a hole, else held by its body */
+  if(S.carry&&S.carry[0]==="res"){
+    const [kind,col]=kindOf(S.carry[1]), bl=1.3*z, bw=0.34*z;
+    if(S.pending){ const hp=holePos(S.pending), a=SC(hp[0],hp[1]), m=[(a[0]+px)/2,(a[1]+py)/2], ang=Math.atan2(py-a[1],px-a[0]);
+      LN([a,[px,py]],"#b9bfc6",Math.max(1,Math.round(0.16*z)));
+      const pts=[[-bl/2,-bw/2],[bl/2,-bw/2],[bl/2,bw/2],[-bl/2,bw/2]].map(([dx,dy])=>[m[0]+dx*Math.cos(ang)-dy*Math.sin(ang),m[1]+dx*Math.sin(ang)+dy*Math.cos(ang)]);
+      POLY(pts,kind==="tube"?col:"#d9c39a","#5c5347",1); }
+    else { LN([[px-1.2*z,py],[px+1.2*z,py]],"#b9bfc6",Math.max(1,Math.round(0.16*z)));
+      RPX(px-bl/2,py-bw/2,px+bl/2,py+bw/2,kind==="tube"?col:"#d9c39a","#5c5347",1);
+      if(kind!=="tube") for(const f of [-0.28,-0.12,0.06,0.26]) LN([[px+f*bl,py-bw/2],[px+f*bl,py+bw/2]],"#3a3f46",Math.max(1,Math.round(0.09*z))); }
     TXPX(px+16,py-14,d().carryRes(S.carry[1]),13,C_ACC,"w",true);
-  else if(S.carry&&S.carry[0]==="wire")
-    TXPX(px+16,py-14,d().carryLead(d().lead[S.carry[1]]),13,C_ACC,"w",true);
-  if(S.pending){
-    const hp=holePos(S.pending), p=SC(hp[0],hp[1]);
-    ctx.setLineDash([4,3]);
-    LN([p,[px,py]],C_ACC,2);
-    ctx.setLineDash([]);
   }
 }
 

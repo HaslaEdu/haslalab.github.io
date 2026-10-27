@@ -1319,7 +1319,7 @@ function layout(){
   const tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
-  for(const c of [adCv,goCv,ruCv]){ if(c.parentElement.hidden) continue; const ww=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width)); c.style.height=Math.round(ww*0.62)+"px"; c.width=Math.round(ww*DPR); c.height=Math.round(ww*0.62*DPR); }
+  for(const c of [adCv,goCv,ruCv]){ if(c.parentElement.hidden) continue; const ww=Math.max(200,Math.floor(c.parentElement.getBoundingClientRect().width)); const hr=c===adCv?0.74:0.62; c.style.height=Math.round(ww*hr)+"px"; c.width=Math.round(ww*DPR); c.height=Math.round(ww*hr*DPR); }
   drawTray();
 }
 function drawTray(){
@@ -1344,6 +1344,11 @@ function drawAdPanel(){
   const c=adCv.getContext("2d"), W=adCv.width/DPR, H=adCv.height/DPR, s=W/260;
   c.setTransform(DPR*s,0,0,DPR*s,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,260,H/s);
   if(!has("adapter")) c.globalAlpha=0.35;
+  /* its two cords are part of it: the mains cord out of the left end, the DC lead out of the right, each through a moulded boot */
+  for(const [x,w,bw] of [[44,5.5,9],[216,3.2,7]]){ const yb=142, ye=H/s+4;
+    c.strokeStyle="#0c0c0d"; c.lineWidth=w; c.lineCap="round"; c.beginPath(); c.moveTo(x,yb+8); c.bezierCurveTo(x,yb+14,x+(x<130?-14:14),ye-6,x+(x<130?-18:18),ye); c.stroke();
+    c.fillStyle="#141518"; c.beginPath(); c.moveTo(x-bw,yb-1); c.lineTo(x+bw,yb-1); c.lineTo(x+bw*0.55,yb+10); c.lineTo(x-bw*0.55,yb+10); c.closePath(); c.fill();
+    for(let k=1;k<4;k++){ c.strokeStyle="#26282c"; c.lineWidth=0.8; c.beginPath(); c.moveTo(x-bw*(1-0.12*k),yb-1+k*2.6); c.lineTo(x+bw*(1-0.12*k),yb-1+k*2.6); c.stroke(); } }
   c.fillStyle="#101114"; c.beginPath(); c.roundRect(10,14,240,128,14); c.fill(); c.strokeStyle="#2c2f35"; c.lineWidth=2; c.stroke();
   c.fillStyle="#1a1c20"; c.beginPath(); c.roundRect(18,22,224,112,10); c.fill();
   c.fillStyle="#d9dde1"; c.font="bold 13px Arial"; c.textAlign="left"; c.fillText("ADAPTER POWER",28,46);
