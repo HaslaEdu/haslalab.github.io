@@ -189,8 +189,10 @@ const CLINES={"And":[[[30.97,42.33],[17.43,35.62],[9.83,30.86],[2.1,29.09]],[[14
    from 23:45 CEST: stars to 6th magnitude for the eye and to 12.5 in
    the target fields (Hipparcos/Tycho-2), the Sun's twilight, the Moon,
    the planets, Saturn with its rings and moons (Titan's phase fitted to
-   the official positions for both nights), extinction and a sky glow
-   that grows toward the town, and on hazy nights a low layer that hides
+   the official positions for both nights), extinction along the air mass,
+   the light domes of Keszthely and Heviz on a natural sky that sets the
+   eye's limiting magnitude (Schaefer), stars as points that twinkle near
+   the horizon, the eye's dark adaptation, and on hazy nights a low layer that hides
    Saturn - when the alternative tasks apply, exactly as on the night.
 
    The telescope is a 150/750 Newtonian on a polar-aligned equatorial
@@ -436,43 +438,75 @@ function milky(v){ const g = mv(MGAL, v), l = Math.atan2(g[1], g[0]) / DEG, b = 
   let I = Math.exp(-((b / w) ** 2)) * core; I *= 1 - 0.5 * Math.exp(-(((L - 55) / 32) ** 4) - (((b - 1.5) / 2.6) ** 2));     /* the Cygnus rift */
   I *= 1 + 0.4 * Math.exp(-((L / 12) ** 2) - (((b + 6) / 4) ** 2)) + 0.12 * Math.sin(L * 0.31 + b * 0.9) * Math.sin(L * 0.17 - b * 1.3);   /* the Sagittarius clouds, some mottling */
   return I; }
-function paintBG(B){ const d = BGI.data, W = 200, H = 130, sun = altaz(SUN_H), sAlt = sun[0];
-  const tw = Math.max(0, Math.min(1, (sAlt + 18) / 12)), dark = 1 - tw;
+function paintBG(B){ const d = BGI.data, W = 200, H = 130;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++){ const x = unproj(B, (i + 0.5) / W * V.W, (j + 0.5) / H * V.H), [alt, az] = altaz(x), o = (j * W + i) * 4;
-    const za = Math.max(0, 90 - alt), glowH = Math.exp(-Math.max(0, alt) / 14);
-    const town = Math.max(0, Math.cos((az - 5) * DEG)) ** 3 * Math.exp(-Math.max(0, alt) / 20) * 0.9 + Math.max(0, Math.cos((az - 70) * DEG)) ** 6 * Math.exp(-Math.max(0, alt) / 12) * 0.35;
-    const sunGlow = tw * Math.exp(-(((((az - sun[1] + 540) % 360) - 180) / 70) ** 2)) * Math.exp(-Math.max(0, alt) / 25);
-    const mw = alt > 0 ? milky(mvT(HMT, x)) * Math.min(1, alt / 25) * dark * (SKY.haze ? 0.7 : 1) : 0;
-    const haze = SKY.haze ? Math.exp(-Math.max(0, alt) / 9) * 0.6 : 0;
-    let r = 6 + 10 * glowH + 34 * town + 30 * sunGlow + 22 * mw + 18 * haze, g = 9 + 12 * glowH + 26 * town + 40 * sunGlow + 22 * mw + 16 * haze, b = 18 + 18 * glowH + 14 * town + 70 * sunGlow + 26 * mw + 14 * haze;
-    r += 18 * tw * (1 - za / 90 * 0.4); g += 26 * tw; b += 55 * tw;
-    d[o] = Math.min(255, r); d[o + 1] = Math.min(255, g); d[o + 2] = Math.min(255, b); d[o + 3] = 255; }
+    const L = skyLum(alt, az), q = sqmOf(L), mwv = Math.max(0, Math.min(1, (q - 19.8) / 1.6));
+    const mw = alt > 0 ? milky(mvT(HMT, x)) * Math.min(1, alt / 20) * Math.pow(10, -0.4 * SKY.k * (airmass(Math.max(1, alt)) - 1)) * mwv : 0;
+    const nat = L.nat + 1.7 * mw, tot = nat + L.lp + L.tw, v = 5 + 11 * Math.pow(tot, 0.55);       /* a compressive response, like the eye's */
+    const r = (0.5 * nat + 0.9 * L.lp + 0.45 * L.tw) / tot, g = (0.64 * nat + 0.78 * L.lp + 0.66 * L.tw) / tot, b = (1.0 * nat + 0.64 * L.lp + 1.0 * L.tw) / tot;
+    d[o] = Math.min(255, v * r); d[o + 1] = Math.min(255, v * g); d[o + 2] = Math.min(255, v * b); d[o + 3] = 255; }
   bgx.putImageData(BGI, 0, 0); }
 const mvT = (M, v) => [M[0][0] * v[0] + M[1][0] * v[1] + M[2][0] * v[2], M[0][1] * v[0] + M[1][1] * v[1] + M[2][1] * v[2], M[0][2] * v[0] + M[1][2] * v[1] + M[2][2] * v[2]];
-/* the limiting magnitude of the eye and the extinction */
-const limEye = alt => (SKY.haze ? 5.6 : 6.0) - 0.9 * Math.exp(-Math.max(0, alt) / 15) - (SKY.twilight || 0);
+/* ---- the night sky as an observer sees it ----------------------------------------------------
+   Sky brightness = the natural night sky (airglow, brighter toward the horizon) + the light domes of
+   Keszthely to the north, Hévíz to the north-west and the far shore, + twilight; in units of a natural
+   dark zenith (21.6 mag/arcsec²).  The eye's limiting magnitude follows from it (Schaefer 1990), stars
+   lose light along the air mass (extinction), and every star is a point whose brightness - not its
+   size - tells its magnitude; only the brightest carry the eye's glare and show their colour. */
+const SITE = {lpZen:0.75, domes:[[4, 2.6, 13], [32, 0.9, 10], [302, 0.8, 9], [140, 0.18, 6]]};   /* [azimuth, strength, height scale °] */
+let SUN_ALT = -30;
+function skyLum(alt, az){ const a = Math.max(0.5, alt), X = airmass(a), sz = Math.sin((90 - a) * DEG);
+  const nat = (0.45 + 0.55 / Math.sqrt(1 - 0.96 * sz * sz)) * Math.pow(10, -0.4 * 0.16 * (X - 1)) + 0.2 * (1 - Math.exp(-0.3 * (X - 1)));
+  let lp = SITE.lpZen * (0.7 + 0.3 * Math.pow(X, 0.6));
+  for (const [A, S, H] of SITE.domes){ const d = Math.abs(((az - A + 540) % 360) - 180); lp += S * Math.exp(-a / H) * Math.exp(-((d / 40) ** 2)); }
+  if (SKY.haze){ lp *= 1.8; } const sun = altaz(SUN_H), ds = Math.abs(((az - sun[1] + 540) % 360) - 180);
+  const tw = SUN_ALT > -18 ? 60 * Math.pow((SUN_ALT + 18) / 6, 3) * (0.35 + 0.65 * Math.exp(-((ds / 75) ** 2)) * Math.exp(-a / 30)) : 0;
+  return {nat:nat * (SKY.haze ? 1.15 : 1), lp, tw}; }
+const sqmOf = L => 21.6 - 2.5 * Math.log10(L.nat + L.lp + L.tw);
+const nelmOf = q => 7.93 - 5 * Math.log10(Math.pow(10, 4.316 - q / 5) + 1);           /* Schaefer: naked-eye limit for a sky of q mag/arcsec² */
+/* the eye adapts to the dark over the first minutes outside */
+const adaptPen = () => 1.0 * (1 - Math.min(1, 0.6 + SKY.t / 300));
+const limEye = (alt, az) => nelmOf(sqmOf(skyLum(alt, az))) - adaptPen();
+/* sprites of a point of light: a sharp core with the faint skirt the eye gives a bright star */
+function bvRGB(bv){ const t = Math.max(-0.4, Math.min(2, bv)); let r, g, b;
+  if (t < 0.4){ r = 0.72 + 0.7 * (t + 0.4); g = 0.8 + 0.4 * (t + 0.4); b = 1; } else { r = 1; g = 1.05 - 0.28 * (t - 0.4); b = 1 - 0.45 * (t - 0.4); }
+  return [Math.min(1, r), Math.min(1, g), Math.max(0.35, Math.min(1, b))]; }
+const SPRITES = {};
+function sprite(bv, sat){ const bi = Math.round((Math.max(-0.4, Math.min(2, bv)) + 0.4) * 4), si = Math.round(Math.max(0, Math.min(1, sat)) * 4), key = bi + ":" + si;
+  if (SPRITES[key]) return SPRITES[key]; const [r0, g0, b0] = bvRGB(bi / 4 - 0.4), f = si / 4, mixc = v => Math.round(255 * (0.86 + (v - 0.86) * f));
+  const cv0 = mkCv(32, 32), g = cv0.getContext("2d"), col = mixc(r0) + "," + mixc(g0) + "," + mixc(b0), gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+  gr.addColorStop(0, "rgba(" + col + ",1)"); gr.addColorStop(0.12, "rgba(" + col + ",0.9)"); gr.addColorStop(0.3, "rgba(" + col + ",0.3)"); gr.addColorStop(0.6, "rgba(" + col + ",0.05)"); gr.addColorStop(1, "rgba(" + col + ",0)");
+  g.fillStyle = gr; g.fillRect(0, 0, 32, 32); return SPRITES[key] = cv0; }
+/* d: magnitudes above the limit.  The faintest are barely there; brightness grows with d, the size hardly */
+function pointStar(c, x, y, d, bv, core){ if (d <= 0) return; core = core || 1;
+  const a = Math.min(1, 0.14 + 0.15 * d), sat = (d - 2.5) / 4, sp = sprite(bv, sat), s0 = 9 * core;
+  c.globalAlpha = a; c.drawImage(sp, x - s0 / 2, y - s0 / 2, s0, s0);
+  if (d > 3.2){ const s1 = Math.min(40, 10 + 4.5 * (d - 3.2)) * core; c.globalAlpha = Math.min(0.4, 0.06 + 0.05 * (d - 3.2)); c.drawImage(sp, x - s1 / 2, y - s1 / 2, s1, s1); }
+  c.globalAlpha = 1; }
+/* stars twinkle, more near the horizon (scintillation grows with the air mass) */
+const twinkle = (i, X, amp) => { const A = Math.min(0.55, amp * Math.pow(X, 1.5)), t = SKY.t; return 2.5 * Math.log10(Math.max(0.25, 1 + A * Math.sin(t * (9 + (i % 7)) + i * 1.7) * Math.sin(t * (5.3 + (i % 5) * 0.6) + i * 0.37))); };
 const hazeK = alt => SKY.haze ? 0.12 + 2.4 * Math.max(0, Math.min(1, (27 - alt) / 7)) : 0;      /* the low haze layer of the hazy night */
 const extinct = alt => (SKY.k + hazeK(alt)) * airmass(alt);
 let _bgKey = "";
 function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT = HM; const s0 = sunGeo(J), sn = Math.hypot(...s0); SUN_H = mv(HM, s0.map(v => v / sn));
-  SKY.twilight = Math.max(0, Math.min(3, (altaz(SUN_H)[0] + 18) / 4));
+  SUN_ALT = altaz(SUN_H)[0]; SKY.twilight = Math.max(0, Math.min(3, (SUN_ALT + 18) / 4));
   const key = LOOK.az.toFixed(1) + LOOK.alt.toFixed(1) + LOOK.fov.toFixed(1) + Math.floor(SKY.t / 20);
   if (key !== _bgKey){ paintBG(B); _bgKey = key; }
   c.imageSmoothingEnabled = true; c.drawImage(BG, 0, 0, V.W, V.H);
-  /* stars */
+  /* stars: points of light on the sky glow; zooming the screen does not make the eye see fainter */
   c.globalCompositeOperation = "lighter";
-  const scale = 90 / LOOK.fov;
-  for (let i = 0; i < CAT.n; i++){ const m = CAT.M[i]; if (m > 6.3) continue;
+  const LIM = new Float32Array(72 * 18);        /* the limit on a coarse alt-az grid, per frame */
+  for (let a = 0; a < 18; a++) for (let z = 0; z < 72; z++) LIM[a * 72 + z] = limEye(a * 5 + 2.5, z * 5 + 2.5);
+  const limAt = (alt, az) => LIM[Math.min(17, Math.max(0, Math.floor(alt / 5))) * 72 + (Math.floor(norm360(az) / 5) % 72)];
+  for (let i = 0; i < CAT.n; i++){ const m = CAT.M[i]; if (m > 7) continue;
     const x = [CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]], h = mv(HM, x); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
-    if (alt < skyline(az)) continue; const me = m + extinct(alt), lim = limEye(alt) + Math.log10(scale) * 1.2; if (me > lim) continue;
+    if (alt < skyline(az)) continue; const X = airmass(alt), dd = limAt(alt, az) - (m + extinct(alt)); if (dd < -0.6) continue;
     const p = proj(B, hvec(alt, az)); if (!p || p[0] < -5 || p[0] > V.W + 5 || p[1] < -5 || p[1] > V.H + 5) continue;
-    const f = Math.pow(10, -0.4 * (me - lim)), rad = 0.55 + Math.min(4.2, 0.55 * Math.sqrt(f) * Math.sqrt(scale)), al = Math.min(1, 0.25 + 0.12 * f);
-    c.fillStyle = bvColor(CAT.BV[i], al); c.beginPath(); c.arc(p[0], p[1], rad, 0, 7); c.fill(); }
-  /* planets */
+    pointStar(c, p[0], p[1], dd + twinkle(i, X, 0.06), CAT.BV[i]); }
+  /* planets: points too, steadier than the stars */
   for (const pl of ["jupiter", "saturn", "mars", "venus", "mercury"]){ const g = planetGeo(pl, J), u = g.map(v => v / Math.hypot(...g)); let [alt, az] = altaz(mv(HM, u)); alt += refr(alt);
-    if (alt < skyline(az)) continue; const mag0 = {jupiter:-2.4, saturn:0.2, mars:1.8, venus:-3.9, mercury:0}[pl], me = mag0 + extinct(alt), lim = limEye(alt);
-    if (me > lim) continue; const p = proj(B, hvec(alt, az)); if (!p) continue; const f = Math.pow(10, -0.4 * (me - lim)), rad = 0.8 + Math.min(4.5, 0.55 * Math.sqrt(f) * Math.sqrt(scale));
-    c.fillStyle = pl === "mars" ? "rgba(255,170,120,0.95)" : "rgba(255,245,220,0.95)"; c.beginPath(); c.arc(p[0], p[1], rad, 0, 7); c.fill(); }
+    if (alt < skyline(az)) continue; const mag0 = {jupiter:-2.4, saturn:0.2, mars:1.8, venus:-3.9, mercury:0}[pl], dd = limAt(alt, az) - (mag0 + extinct(alt));
+    const p = proj(B, hvec(alt, az)); if (!p) continue; pointStar(c, p[0], p[1], dd + twinkle(7, airmass(alt), 0.015), {jupiter:0.85, saturn:1.05, mars:1.5, venus:0.8, mercury:0.9}[pl]); }
   /* the Moon */
   const mo = moonGeo(J); let [ma, mz] = altaz(mv(HM, mo.v)); ma += refr(ma);
   if (ma > skyline(mz)){ const p = proj(B, hvec(ma, mz)); if (p){ const R = Math.max(3, 0.26 * DEG * 2 * B.s); c.fillStyle = "rgba(250,245,225,0.95)"; c.beginPath(); c.arc(p[0], p[1], R, 0, 7); c.fill(); } }
@@ -484,6 +518,9 @@ function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT 
   /* compass points on the horizon */
   c.fillStyle = "rgba(200,210,220,0.55)"; c.font = "12px " + FONT; c.textAlign = "center";
   for (const [lbl, az] of [["N", 0], ["NE", 45], ["E", 90], ["SE", 135], ["S", 180], ["SW", 225], ["W", 270], ["NW", 315]]){ const p = proj(B, hvec(-3, az)); if (p && p[0] > 0 && p[0] < V.W && p[1] < V.H) c.fillText(lbl, p[0], Math.min(V.H - 6, p[1])); }
+  /* how dark the sky is overhead and how far the eye has adapted */
+  { const q = sqmOf(skyLum(90, 0)), ad = Math.round(100 * Math.min(1, 0.6 + SKY.t / 300)); c.fillStyle = "rgba(170,180,190,0.55)"; c.font = "11px " + FONT; c.textAlign = "left";
+    c.fillText((LANG === "ko" ? "천정 하늘 밝기 " : "zenith sky ") + q.toFixed(1) + " mag/″²  ·  " + (LANG === "ko" ? "맨눈 한계등급 " : "naked-eye limit ") + limEye(90, 0).toFixed(1) + "  ·  " + (LANG === "ko" ? "암적응 " : "dark adaptation ") + ad + "%", 10, V.H - 10); }
   /* where the tube points, as one sights along it */
   const [ta, tz] = hadec2hor(MOUNT.ha, MOUNT.dec), tp = proj(B, hvec(ta, tz));
   if (tp){ c.strokeStyle = "rgba(255,120,90,0.45)"; c.lineWidth = 1; c.setLineDash([3, 4]); c.beginPath(); c.arc(tp[0], tp[1], 9, 0, 7); c.stroke(); c.setLineDash([]); } }
@@ -523,23 +560,31 @@ function drawScope(c, kind){ const J = jdNow(); if (!_PM || Math.abs(J - _PMJ) >
   c.save(); c.beginPath(); c.arc(cx, cy, R, 0, 7); c.clip();
   const blocked = palt < skyline(paz) || palt < 0;
   /* the sky in the field: darker at higher power, brighter low down and in haze */
-  const glow = Math.exp(-Math.max(0, palt) / 14) * 0.6 + (SKY.haze ? Math.exp(-Math.max(0, palt) / 8) : 0) + 0.15 * (SKY.twilight || 0), sb = Math.min(60, (8 + 30 * glow) * (isF ? 1 : 30 / M) ** 0.6);
-  c.fillStyle = blocked ? "#050505" : "rgb(" + (sb * 0.55 | 0) + "," + (sb * 0.62 | 0) + "," + (sb * 0.9 | 0) + ")"; c.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+  /* the sky in the field: the same sky brightness, darkened when the exit pupil is smaller than the eye's */
+  const D = isF ? 30 : SCOPE.D, xp = D / M, T = isF ? 0.85 : 0.75, Ls = skyLum(Math.max(0, palt), paz), q = sqmOf(Ls), dk = T * Math.min(1, (xp / 7) ** 2);
+  const glow = Math.max(0, (Ls.lp + Ls.tw) / (Ls.nat + Ls.lp + Ls.tw)), Lf = (Ls.nat + Ls.lp + Ls.tw) * dk, sv = 3 + 11 * Math.pow(Lf, 0.55);
+  c.fillStyle = blocked ? "#050505" : "rgb(" + (sv * (0.5 + 0.5 * glow) | 0) + "," + (sv * (0.64 + 0.16 * glow) | 0) + "," + (sv * (1 - 0.42 * glow) | 0) + ")"; c.fillRect(cx - R, cy - R, 2 * R, 2 * R);
   if (!blocked){
-    const ext = extinct(palt), lim = (isF ? 9.2 : 12.4 + 0.6 * Math.log10(M / 30)) - 1.5 * glow - ext * 0.6, defocus = isF ? 0 : Math.abs(EP.focus - focusZero()), blur = defocus * M / 30 * 6 * ez, seeHW = isF ? 0 : 0.7 * k / 3600;      /* half the seeing disc: about 0.7 arcsec tonight */
+    /* what the instrument reaches: the eye's limit here + the aperture's gain + a darker field */
+    const ext = extinct(palt), lim = nelmOf(q) - adaptPen() + 5 * Math.log10(D / 7) + 2.5 * Math.log10(T) + (xp < 7 ? 1.25 * Math.log10(7 / xp) : 0), defocus = isF ? 0 : Math.abs(EP.focus - focusZero()), blur = defocus * M / 30 * 6 * ez, seeHW = isF ? 0 : 0.7 * k / 3600;      /* half the seeing disc: about 0.7 arcsec tonight */
     const P = (v) => { const s = stdCoord(v, ra0, dec0, J); return s ? [cx + s[0] * k, cy + s[1] * k] : null; };     /* inverted: north down, east right */
     c.globalCompositeOperation = "lighter";
-    /* a star: s magnitudes above the limit; faint ones small and colourless, bright ones larger, with the seeing disc */
-    const star = (p, m, bv) => { const me = m + ext, s = lim - me; if (s < (blur > 2.2 ? 2 : 0)) return;
-      const bb = 0.55 + (bv - 0.55) * Math.min(1, s / 4), f = Math.pow(10, 0.4 * s);
-      if (blur > 2.2){ const rr = blur * 0.75 + 0.5; c.strokeStyle = bvColor(bb, Math.min(0.85, 0.06 * f / rr)); c.lineWidth = Math.max(1, rr * 0.4); c.beginPath(); c.arc(p[0], p[1], rr, 0, 7); c.stroke(); return; }
-      const tw = 1 + 0.08 * Math.sin(SKY.t * 9 + p[0] * 0.7 + p[1]), rad = (0.5 + 0.6 * seeHW * tw + (isF ? 0.3 : 0.12) * s) + blur * 0.4, a = Math.min(1, 0.16 + 0.15 * s), out = rad * (1.5 + 0.45 * Math.max(0, s - 5)), g = c.createRadialGradient(p[0], p[1], 0, p[0], p[1], out);
-      g.addColorStop(0, bvColor(bb, a)); g.addColorStop(0.75 * rad / out, bvColor(bb, a * 0.45)); g.addColorStop(Math.min(0.99, 1.5 * rad / out), bvColor(bb, Math.min(0.25, 0.03 * Math.max(0, s - 4)))); g.addColorStop(1, bvColor(bb, 0));
-      c.fillStyle = g; c.beginPath(); c.arc(p[0], p[1], out, 0, 7); c.fill();          /* bright ones carry a glare */
-      if (!isF && s > 6 && blur < 1){ const L = Math.min(R * 0.5, 2.2 * (s - 5.5) ** 1.5 * (1 + 0.3 * ez)); c.strokeStyle = bvColor(bb, 0.2); c.lineWidth = 0.8;     /* the spider's four vanes */
+    /* a star: s magnitudes above the limit.  In focus it is a point (the seeing disc is far below what the eye
+       resolves at these powers); out of focus its light spreads into the Newtonian's ring with the shadow of the
+       diagonal in the middle, and faint stars sink into the sky */
+    const sc = isF ? 0.025 : 0.06 * Math.pow(D / 30, -2 / 3);
+    const star = (p, m, bv, idx) => { const s = lim - (m + ext) + twinkle(idx || 3, airmass(Math.max(1, palt)), sc);
+      if (blur > 2.2){ const rr = blur * 0.75 + 0.5, sd = s - 2.5 * Math.log10(rr * rr / 0.6); if (sd < -0.3) return;
+        const [r0, g0, b0] = bvRGB(0.55 + (bv - 0.55) * Math.min(1, s / 6)), col = (255 * r0 | 0) + "," + (255 * g0 | 0) + "," + (255 * b0 | 0), a = Math.min(0.85, 0.1 + 0.13 * sd);
+        const g = c.createRadialGradient(p[0], p[1], 0, p[0], p[1], rr + 1); g.addColorStop(0, "rgba(" + col + "," + a * 0.15 + ")"); g.addColorStop(0.3, "rgba(" + col + "," + a * 0.2 + ")");
+        g.addColorStop(0.42, "rgba(" + col + "," + a + ")"); g.addColorStop(rr / (rr + 1) * 0.97, "rgba(" + col + "," + a * 0.9 + ")"); g.addColorStop(1, "rgba(" + col + ",0)");
+        c.fillStyle = g; c.beginPath(); c.arc(p[0], p[1], rr + 1, 0, 7); c.fill(); return; }
+      if (s <= 0) return;
+      pointStar(c, p[0], p[1], s, bv, 1 + Math.min(1.2, seeHW * 0.8) + blur * 0.25);
+      if (!isF && s > 7 && blur < 1){ const L = Math.min(R * 0.5, 2.2 * (s - 6.5) ** 1.5 * (1 + 0.3 * ez)), [r0, g0, b0] = bvRGB(bv); c.strokeStyle = "rgba(" + (255 * r0 | 0) + "," + (255 * g0 | 0) + "," + (255 * b0 | 0) + ",0.18)"; c.lineWidth = 0.8;     /* the spider's four vanes */
         c.beginPath(); c.moveTo(p[0] - L, p[1]); c.lineTo(p[0] + L, p[1]); c.moveTo(p[0], p[1] - L); c.lineTo(p[0], p[1] + L); c.stroke(); } };
     STARFN = star;
-    for (const i of candidates(ra0, dec0)){ const p = P([CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]]); if (p && Math.hypot(p[0] - cx, p[1] - cy) < R + 8) star(p, CAT.M[i], CAT.BV[i]); }
+    for (const i of candidates(ra0, dec0)){ const p = P([CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]]); if (p && Math.hypot(p[0] - cx, p[1] - cy) < R + 8) star(p, CAT.M[i], CAT.BV[i], i); }
     for (const e of EXTRA){ const p = P(e.v); if (p && Math.hypot(p[0] - cx, p[1] - cy) < R + 8) star(p, e.m, e.bv); }
     for (const e of PROC){ if (e.m + ext > lim) continue; const p = P(e.v); if (p && Math.abs(p[0] - cx) < R + 8 && Math.abs(p[1] - cy) < R + 8) star(p, e.m, e.bv); }
     /* M57: a faint grey-green oval ring, 86" x 62" */
