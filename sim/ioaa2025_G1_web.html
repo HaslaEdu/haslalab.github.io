@@ -1183,7 +1183,7 @@ const APPS = {
 const BR = {};
 const brTitle = k => BR[k] ? BR[k].title() : (LANG === "ko" ? "새 탭" : "New tab");
 function brGet(k){ if (!BR[k] && window.VBrowser) BR[k] = VBrowser({kind:k, embedded:true, lang:() => LANG, onchange:() => { osTitle(k); osTaskbar(); },
-    links:[{t:{ko:"IOAA 2025 문제지", en:"IOAA 2025 problem"}, url:LANG === "ko" ? "../pdf/IOAA_2025_G1_KO.pdf" : "../pdf/IOAA_2025_G1_EN.pdf", ic:"📄", col:"#c0392b"},
+    links:[{t:{ko:"IOAA 2025 문제지", en:"IOAA 2025 problem"}, url:LANG === "ko" ? "https://haslalab-pdf.mgsnew88.workers.dev/pdf/IOAA_2025_G1_KO.pdf" : "https://haslalab-pdf.mgsnew88.workers.dev/pdf/IOAA_2025_G1_EN.pdf", ic:"📄", col:"#c0392b"},
       {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"}, {t:{ko:"위키백과", en:"Wikipedia"}, url:"https://ko.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://www.youtube.com/", ic:"▶", col:"#e62117"}]});
   return BR[k]; }
 /* the real Edge, Chrome, YouTube and Windows logos (sim/icons, carried by vbrowser.js) */

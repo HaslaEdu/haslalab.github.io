@@ -850,6 +850,10 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 /* Windows builds live in GitHub Releases, not in the repository —
    a PyInstaller .exe is far past the 100 MB limit for repository files. */
 const REL = "https://github.com/haslalab/haslalab.github.io/releases/download/";
+/* 문제지와 해답 PDF 는 GitHub Releases(대회마다 pdf-<대회>)에 있고, pdf-worker 가 그것을
+   브라우저 안에서 열리는 PDF 로 내준다. DATA 에는 예전처럼 "pdf/<이름>" 으로 적는다 —
+   DATA 를 다 만든 뒤 아래 toPdfHost 가 한 번에 이 주소로 바꾼다. 올리기: tools/pdf_release.py */
+const PDF_BASE = "https://haslalab-pdf.mgsnew88.workers.dev/pdf/";
 
 /* ── copy ── */
 const UI={
@@ -1004,7 +1008,25 @@ const KO_PAPERS = new Set([
   "IOAA_2023_O2_KO.pdf", "IOAA_2024_D1_KO.pdf", "IOAA_2024_O1_KO.pdf", "IOAA_2024_O2_KO.pdf",
   "IOAA_2025_D1_KO.pdf", "IOAA_2025_G1_KO.pdf", "IOAA_2025_O1_KO.pdf", "IOAA_2025_O2_KO.pdf",
   "IOAA_2025_O3_KO.pdf", "APAO_2009_P_KO.pdf", "APAO_2009_O_KO.pdf",
-  "IAO_2015_P_A_KO.pdf", "IAO_2015_P_B_KO.pdf", "IAO_2014_P_A_KO.pdf", "IAO_2014_P_B_KO.pdf", "APAO_2012_P_A_KO.pdf", "APAO_2012_P_B_KO.pdf", "APAO_2009_P_A_KO.pdf", "APAO_2009_P_B_KO.pdf"]);
+  "IAO_2015_P_A_KO.pdf", "IAO_2015_P_B_KO.pdf", "IAO_2014_P_A_KO.pdf", "IAO_2014_P_B_KO.pdf", "APAO_2012_P_A_KO.pdf", "APAO_2012_P_B_KO.pdf", "APAO_2009_P_A_KO.pdf", "APAO_2009_P_B_KO.pdf",
+  /* IOAA 문항별 조각 */
+  "IOAA_2007_Q-D1_KO.pdf", "IOAA_2007_Q-D2_KO.pdf", "IOAA_2007_Q-D3_KO.pdf", "IOAA_2007_Q-O1_KO.pdf",
+  "IOAA_2007_Q-O2_KO.pdf", "IOAA_2008_Q-D1_KO.pdf", "IOAA_2008_Q-D2_KO.pdf", "IOAA_2008_Q-D3_KO.pdf",
+  "IOAA_2008_Q-O1_KO.pdf", "IOAA_2008_Q-O2_KO.pdf", "IOAA_2009_Q-D1_KO.pdf", "IOAA_2009_Q-D2_KO.pdf",
+  "IOAA_2010_Q-D1_KO.pdf", "IOAA_2010_Q-D2_KO.pdf", "IOAA_2010_Q-O1_KO.pdf", "IOAA_2010_Q-O2_KO.pdf",
+  "IOAA_2011_Q-D1_KO.pdf", "IOAA_2011_Q-D2_KO.pdf", "IOAA_2011_Q-O1_KO.pdf", "IOAA_2011_Q-O2_KO.pdf",
+  "IOAA_2011_Q-O3_KO.pdf", "IOAA_2011_Q-O4_KO.pdf", "IOAA_2016_Q-D1_KO.pdf", "IOAA_2016_Q-D2_KO.pdf",
+  "IOAA_2016_Q-D3_KO.pdf", "IOAA_2016_Q-O1_KO.pdf", "IOAA_2016_Q-O2_KO.pdf", "IOAA_2017_Q-D1_KO.pdf",
+  "IOAA_2017_Q-D2_KO.pdf", "IOAA_2017_Q-O1_KO.pdf", "IOAA_2017_Q-O2_KO.pdf", "IOAA_2017_Q-O3_KO.pdf",
+  "IOAA_2017_Q-O4_KO.pdf", "IOAA_2017_Q-O5_KO.pdf", "IOAA_2017_Q-O6_KO.pdf", "IOAA_2017_Q-O7_KO.pdf",
+  "IOAA_2018_Q-D1_KO.pdf", "IOAA_2018_Q-D2_KO.pdf", "IOAA_2019_Q-D1_KO.pdf", "IOAA_2019_Q-D2_KO.pdf",
+  "IOAA_2022_Q-D1_KO.pdf", "IOAA_2022_Q-D2_KO.pdf", "IOAA_2023_Q-D1_KO.pdf", "IOAA_2023_Q-D2_KO.pdf",
+  "IOAA_2023_Q-O1_KO.pdf", "IOAA_2023_Q-O2_KO.pdf", "IOAA_2023_Q-O3_KO.pdf", "IOAA_2023_Q-O4_KO.pdf",
+  "IOAA_2023_Q-O5_KO.pdf", "IOAA_2023_Q-O6_KO.pdf", "IOAA_2023_Q-O7_KO.pdf", "IOAA_2024_Q-D1_KO.pdf",
+  "IOAA_2024_Q-D2_KO.pdf", "IOAA_2025_Q-O1_KO.pdf", "IOAA_2025_Q-O2_KO.pdf", "IOAA_2025_Q-O6_KO.pdf",
+  "IOAA_2025_Q-O7_KO.pdf",
+  /* IESO 실기 한국어판 */
+  "IESO_2008_P_KO.pdf", "IESO_2010_P_KO.pdf", "IESO_2011_P_KO.pdf", "IESO_2012_P_KO.pdf", "IESO_2013_P_KO.pdf", "IESO_2015_P_KO.pdf"]);
 /* 한국어 해답: 영문 해답 이름에 _KO 를 붙인 것만 적는다 — lst 가 sol 을 {ko, en} 으로 만든다 */
 const KO_SOLS = new Set([
   "IOAA_2007_D1_S_KO.pdf", "IOAA_2007_O1_S_KO.pdf", "IOAA_2008_D1_S_KO.pdf", "IOAA_2008_O1i_S_KO.pdf",
@@ -1019,7 +1041,19 @@ const KO_SOLS = new Set([
   "IOAA_2022_D2i_S_KO.pdf", "IOAA_2022_O1_S_KO.pdf", "IOAA_2023_O1_S_KO.pdf", "IOAA_2023_O2_S_KO.pdf",
   "IOAA_2024_D1_S_KO.pdf", "IOAA_2024_O1_S_KO.pdf", "IOAA_2024_O2_S_KO.pdf", "IOAA_2025_D1_S_KO.pdf",
   "IOAA_2025_G1_S_KO.pdf", "IOAA_2025_O1_S_KO.pdf", "IOAA_2025_O2_S_KO.pdf", "IOAA_2025_O3_S_KO.pdf",
-  "IAO_2005_P_S_KO.pdf", "IAO_2009_P_S_KO.pdf", "IAO_2019_P_S_KO.pdf", "IAO_2019_O_S_KO.pdf"]);
+  "IAO_2005_P_S_KO.pdf", "IAO_2009_P_S_KO.pdf", "IAO_2019_P_S_KO.pdf", "IAO_2019_O_S_KO.pdf",
+  /* IOAA 문항별 조각 */
+  "IOAA_2007_Q-D1_S_KO.pdf", "IOAA_2007_Q-D2_S_KO.pdf", "IOAA_2007_Q-D3_S_KO.pdf", "IOAA_2007_Q-O2_S_KO.pdf",
+  "IOAA_2008_Q-D1_S_KO.pdf", "IOAA_2008_Q-D2_S_KO.pdf", "IOAA_2008_Q-D3_S_KO.pdf", "IOAA_2009_Q-D1_S_KO.pdf",
+  "IOAA_2009_Q-D2_S_KO.pdf", "IOAA_2010_Q-D1_S_KO.pdf", "IOAA_2010_Q-D2_S_KO.pdf", "IOAA_2010_Q-O1_S_KO.pdf",
+  "IOAA_2010_Q-O2_S_KO.pdf", "IOAA_2011_Q-D1_S_KO.pdf", "IOAA_2011_Q-D2_S_KO.pdf", "IOAA_2011_Q-O1_S_KO.pdf",
+  "IOAA_2011_Q-O2_S_KO.pdf", "IOAA_2011_Q-O3_S_KO.pdf", "IOAA_2011_Q-O4_S_KO.pdf", "IOAA_2014_Q-D1_S_KO.pdf",
+  "IOAA_2014_Q-D2_S_KO.pdf", "IOAA_2014_Q-D3_S_KO.pdf", "IOAA_2016_Q-D1_S_KO.pdf", "IOAA_2016_Q-D2_S_KO.pdf",
+  "IOAA_2016_Q-D3_S_KO.pdf", "IOAA_2017_Q-D1_S_KO.pdf", "IOAA_2017_Q-D2_S_KO.pdf", "IOAA_2018_Q-D1_S_KO.pdf",
+  "IOAA_2018_Q-D2_S_KO.pdf", "IOAA_2023_Q-O1_S_KO.pdf", "IOAA_2023_Q-O2_S_KO.pdf", "IOAA_2023_Q-O3_S_KO.pdf",
+  "IOAA_2023_Q-O4_S_KO.pdf", "IOAA_2023_Q-O5_S_KO.pdf", "IOAA_2023_Q-O6_S_KO.pdf", "IOAA_2023_Q-O7_S_KO.pdf",
+  "IOAA_2024_Q-D1_S_KO.pdf", "IOAA_2024_Q-D2_S_KO.pdf", "IOAA_2025_Q-O1_S_KO.pdf", "IOAA_2025_Q-O2_S_KO.pdf",
+  "IOAA_2025_Q-O6_S_KO.pdf", "IOAA_2025_Q-O7_S_KO.pdf"]);
 const lst = rows => rows.map(([id,en,ko,q,s,gr])=>{
   const at=x=>/^https?:/.test(x)?x:"pdf/"+x;
   /* 문제지는 이름 끝(_EN·_KO·_RU)이 말하는 언어 칸에 — 한국어만 있는 회차도 그대로 적는다 */
@@ -3090,8 +3124,8 @@ const DATA={
   abbr:"IESO", since:2007, obs:true,
   full:{ko:"국제지구과학올림피아드",en:"International Earth Science Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"지권 · 수권 · 기권 · 천문을 다루는 지구과학 올림피아드입니다. 필기 시험은 빼고 실험실 실기(P)와 야외 실기(F)만 실었고, 한 해의 과제는 대개 한 문제지에 묶여 있습니다. 2020년은 열리지 않았고, 2021–2023년은 온라인이었습니다. 문제지는 각 대회 조직위와 지구과학교육기구(IGEO)가 공개한 것이고, 아직 찾지 못한 해는 비워 두었습니다.",
-        en:"The earth-science olympiad: geosphere, hydrosphere, atmosphere and astronomy. Only the laboratory (P) and field (F) practicals are listed, not the written tests, and a year's tasks usually share one booklet. There was no IESO in 2020, and 2021–2023 were held online. The sheets are those published by the organisers and the International Geoscience Education Organisation (IGEO); years whose sheets have not been found yet are left empty."},
+  note:{ko:"지권 · 수권 · 기권 · 천문을 다루는 지구과학 올림피아드입니다. 필기 시험은 빼고 실험실 실기(P)와 야외 실기(F)만 실었고, 한 해의 과제는 대개 한 문제지에 묶여 있습니다. 2020년은 열리지 않았고, 2021–2023년은 온라인이었습니다. 문제지는 각 대회 조직위와 지구과학교육기구(IGEO)가 공개한 것이고, 아직 찾지 못한 해는 비워 두었습니다. 2007–2019년 실기는 한국어판도 함께 실었고, 2007 · 2009 · 2014 · 2016–2019년은 한국어판만 있습니다. 2014년은 시험지 5(막달레나 짐카나)만 들어 있습니다.",
+        en:"The earth-science olympiad: geosphere, hydrosphere, atmosphere and astronomy. Only the laboratory (P) and field (F) practicals are listed, not the written tests, and a year's tasks usually share one booklet. There was no IESO in 2020, and 2021–2023 were held online. The sheets are those published by the organisers and the International Geoscience Education Organisation (IGEO); years whose sheets have not been found yet are left empty. The 2007–2019 practicals also come in Korean, and 2007, 2009, 2014 and 2016–2019 are in Korean only; 2014 holds only Paper 5 (the Magdalena gymkhana)."},
   soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
   years:[
    {y:2025,host:{ko:"중국 · 지닝",en:"Jining, China"},cc:"cn",problems:lst([
@@ -3100,17 +3134,33 @@ const DATA={
    {y:2023,host:{ko:"온라인 · IGEO 주관",en:"Online, hosted by IGEO"},cc:"",org:{"abbr":"IGEO","name":"International Geoscience Education Organisation"},problems:[]},
    {y:2022,host:{ko:"이탈리아 · 아오스타, 온라인",en:"Aosta, Italy, online"},cc:"it",problems:[]},
    {y:2021,host:{ko:"러시아 · 튜멘, 온라인",en:"Tyumen, Russia, online"},cc:"ru",problems:[]},
-   {y:2019,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:[]},
-   {y:2018,host:{ko:"태국 · 깐짜나부리",en:"Kanchanaburi, Thailand"},cc:"th",problems:[]},
-   {y:2017,host:{ko:"프랑스 · 코트다쥐르",en:"Côte d'Azur, France"},cc:"fr",problems:[]},
-   {y:2016,host:{ko:"일본 · 미에",en:"Mie, Japan"},cc:"jp",problems:[]},
+   {y:2019,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:lst([
+    ["P1","Dew Point and Relative Humidity","이슬점 온도와 상대 습도","IESO_2019_P_KO.pdf",null],
+    ["P2","Water in the Earth System","지구 시스템의 물","IESO_2019_P_KO.pdf",null],
+    ["P3","Density of Rocks","암석의 밀도","IESO_2019_P_KO.pdf",null],
+    ["F4","Field Test on Mount Biseul","비슬산 야외 실기","IESO_2019_P_KO.pdf",null]])},
+   {y:2018,host:{ko:"태국 · 깐짜나부리",en:"Kanchanaburi, Thailand"},cc:"th",problems:lst([
+    ["P1","Rocks, Minerals and Fossils","암석 · 광물 · 화석","IESO_2018_P_KO.pdf",null],
+    ["F2","Field Geology Test","야외 지질 시험","IESO_2018_P_KO.pdf",null],
+    ["F3","Field Geology Practice","야외 지질 실습","IESO_2018_P_KO.pdf",null],
+    ["P4","Melting Ice and Chromium Pollution","녹는 얼음과 크롬 오염","IESO_2018_P_KO.pdf",null]])},
+   {y:2017,host:{ko:"프랑스 · 코트다쥐르",en:"Côte d'Azur, France"},cc:"fr",problems:lst([
+    ["P1","Rocks That Record the Formation of the Alps","알프스 형성의 증거가 되는 암석","IESO_2017_P_KO.pdf",null],
+    ["P2","The Sun, the Solar System's Only Energy Source","태양, 태양계의 유일한 에너지원","IESO_2017_P_KO.pdf",null],
+    ["F4","Along La Bouillide","라 부이드를 따라서","IESO_2017_P_KO.pdf",null]])},
+   {y:2016,host:{ko:"일본 · 미에",en:"Mie, Japan"},cc:"jp",problems:lst([
+    ["F1","Field Geology: Yanaidani, Katsurabata and Stop 3","야외 지질 평가: 야나이다니 · 가쓰라바타 · 지점 3","IESO_2016_P_KO.pdf",null],
+    ["P2","Weather Observation","기상 관측","IESO_2016_P_KO.pdf",null],
+    ["P3","Renewable Energy","재생 에너지","IESO_2016_P_KO.pdf",null],
+    ["P4","Astronomy: Body X in the Planetarium","천문: 천문관에서 본 천체 X","IESO_2016_P_KO.pdf",null]])},
    {y:2015,host:{ko:"브라질 · 포수스지칼다스",en:"Poços de Caldas, Brazil"},cc:"br",problems:lst([
     ["P1","Flow Rate of a Channel","수로의 유량","IESO_2015_P_EN.pdf",null],
     ["P2","Relative Humidity with a Psychrometer","건습구 습도계로 잰 상대 습도","IESO_2015_P_EN.pdf",null],
     ["P3","Plate Tectonics: The Dance of the Continents","판 구조론: 대륙의 춤","IESO_2015_P_EN.pdf",null],
     ["F4","Rocks at the Field Stops","야외 지점의 암석","IESO_2015_P_EN.pdf",null],
     ["P6","Angular Speed of the Earth's Rotation","지구 자전의 각속도","IESO_2015_P_EN.pdf",null]])},
-   {y:2014,host:{ko:"스페인 · 산탄데르",en:"Santander, Spain"},cc:"es",problems:[]},
+   {y:2014,host:{ko:"스페인 · 산탄데르",en:"Santander, Spain"},cc:"es",problems:lst([
+    ["P5","Magdalena Gymkhana (station practical, Paper 5)","막달레나 짐카나 (정거장식 실기, 시험지 5)","IESO_2014_P_KO.pdf",null]])},
    {y:2013,host:{ko:"인도 · 마이소르",en:"Mysore, India"},cc:"in",problems:lst([
     ["P1","Astronomy: Sundial, Star Trails and Constellations","천문: 해시계 · 별 궤적 · 별자리","IESO_2013_P_EN.pdf","IESO_2013_S.pdf"],
     ["F2","Atmosphere and Hydrosphere: Field Measurements","기권 · 수권: 야외 측정","IESO_2013_P_EN.pdf",null],
@@ -3128,7 +3178,11 @@ const DATA={
     ["P2","Atmosphere: Weather Observation and Wind Rose","기권: 기상 관측과 바람장미","IESO_2010_P_EN.pdf",null],
     ["F3","Geology Field Test at Dlingo","들링고 지질 야외 실기","IESO_2010_P_EN.pdf",null],
     ["P4","Laboratory: Minerals, Rocks, Fossils, Structures, Landforms","실험실: 광물 · 암석 · 화석 · 구조 · 지형","IESO_2010_P_EN.pdf",null]])},
-   {y:2009,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:[]},
+   {y:2009,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:lst([
+    ["F1","Geology Field Test: Six Stops","지질 야외 실기: 지점 여섯 곳","IESO_2009_P_KO.pdf",null],
+    ["P2","Atmosphere I: Wind from Satellite and Radar Images","대기 1부: 위성 · 레이더 영상으로 본 바람","IESO_2009_P_KO.pdf",null],
+    ["P3","Atmosphere II: Measuring Humidity","대기 2부: 대기 습도의 측정과 계산","IESO_2009_P_KO.pdf",null],
+    ["P4","Astronomy: Solar Rotation, the Telescope and Earth's Precession","천문: 태양의 자전 · 망원경 · 지구의 세차 운동","IESO_2009_P_KO.pdf",null]])},
    {y:2008,host:{ko:"필리핀 · 마닐라 · 비콜",en:"Manila & Bicol, Philippines"},cc:"ph",problems:lst([
     ["P1","Atmospheric CO₂ Record","대기 CO₂ 기록","IESO_2008_P_EN.pdf",null],
     ["P2","Cloud Types","구름의 종류","IESO_2008_P_EN.pdf",null],
@@ -3136,7 +3190,10 @@ const DATA={
     ["P4","Sea Surface Height and Currents","해수면 높이와 해류","IESO_2008_P_EN.pdf",null],
     ["P5","Kepler's Third Law from Uranus's Moons","천왕성 위성으로 보는 케플러 제3법칙","IESO_2008_P_EN.pdf",null],
     ["P6","Telescope Practical","망원경 실기","IESO_2008_P_EN.pdf",null]])},
-   {y:2007,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:[]}
+   {y:2007,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:lst([
+    ["P1","Geology: Geological Map and Cross-Section","지질: 지질도와 단면","IESO_2007_P_KO.pdf",null],
+    ["P2","Atmospheric Science: Pressure, Wind and Temperature Maps","대기과학: 기압 · 바람 · 기온 지도","IESO_2007_P_KO.pdf",null],
+    ["P3","Astronomy: Telescopes and CCD Cameras","천문: 망원경과 CCD 카메라","IESO_2007_P_KO.pdf",null]])}
   ]},
  ioaa:{
   abbr:"IOAA", since:2007, obs:true,
@@ -3151,16 +3208,16 @@ const DATA={
       desc:{ko:"자료 분석 시험의 두 문제입니다. SP 계의 시선속도 그래프에 곡선을 그려 주기와 반진폭을, 통과 광도 곡선에서 t_T · t_F · Δ를 읽어 행성의 최소 질량 · 반지름 · 궤도 경사각을 구하고, 태양의 주연 감광 자료와 두 파장의 감광 깊이로 Rₚ와 i를 그래프로 찾습니다(D01). CME 10개로 가속도의 경험식을 세우고 끌림만 있는 태양풍 모형으로 도착 시각을 예측합니다(D02). 시험지 그래프, 직접 축을 정하는 모눈종이, 공학용 계산기, 계산표가 있고 맞춤 · 회귀는 대신 해주지 않습니다.",
             en:"The two problems of the data-analysis round. Draw the curve through the SP system's radial-velocity data for its period and semi-amplitude, read t_T, t_F and Δ off the transit light curve for the planet's minimum mass, radius and inclination, and find Rₚ and i graphically from the Sun's limb darkening and the transit depths at two wavelengths (D01). Build an empirical acceleration law from 10 CMEs and predict arrival times with the drag-only solar-wind model (D02). The examination's graphs, graph paper with axes you choose, a scientific calculator and a worksheet; no fit or regression is done for you."},
       tags:["외계행성","우주 날씨","그래프 분석"],tagsEn:["Exoplanets","Space weather","Graphical analysis"]}),Object.assign(p.files,{sim:"sim/ioaa2025_D1_web.html",src:{ko:"src/ioaa2025_D1_data_sim_KO.py",en:"src/ioaa2025_D1_data_sim_EN.py"}}),p)).concat(lst([
-    ["O1","Hypothesized Planet in the Solar System","태양계의 가상 행성","IOAA_2025_O1_EN.pdf","IOAA_2025_O1_S.pdf"],
-    ["O2","Observer on a Ringed Planet","고리 행성 위의 관측자","IOAA_2025_O1_EN.pdf","IOAA_2025_O1_S.pdf"]]).concat([Object.assign(lst([["O3–O5","Know Your Sky, Grid and Time (sky maps)","하늘 · 좌표 격자 · 시각 알기 (성도)","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"]])[0],{state:undefined,
+    ["O1","Hypothesized Planet in the Solar System","태양계의 가상 행성","IOAA_2025_Q-O1_EN.pdf","IOAA_2025_Q-O1_S.pdf"],
+    ["O2","Observer on a Ringed Planet","고리 행성 위의 관측자","IOAA_2025_Q-O2_EN.pdf","IOAA_2025_Q-O2_S.pdf"]]).concat([Object.assign(lst([["O3–O5","Know Your Sky, Grid and Time (sky maps)","하늘 · 좌표 격자 · 시각 알기 (성도)","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"]])[0],{state:undefined,
       desc:{ko:"종이 성도로 푸는 세 문제입니다. 시험지의 세 지도를 별 목록에서 같은 투영으로 다시 그렸습니다 — 평사도법 성도(6.3등급까지)에 별 8개와 메시에 은하 6개를 표시하고 황도와 2008년 8월 1일 일식 때의 태양 · 7월 28일의 달을 그립니다(OM01). 두 천구극을 가로 중심선에 둔 횡축 메르카토르 온하늘 지도에서 처녀자리 · 까마귀자리와 격자의 정체, 극, 분점, 격자 값을 찾습니다(OM02). 메르카토르 고도 · 방위 격자의 오리온자리로 위도를 구하고, 남위 40°에서 2026년 1월 21일 18:00에 보일 오리온을 답안 격자에 그립니다(OM03). 상자 · 더하기 · 가위표 · 직선 · 곡선 · 기호 선 · 글자로 연필처럼 그리고, 요약 답안지를 채운 뒤 공식 해답과 비교합니다.",
             en:"The three problems solved on paper sky maps. The examination's three maps are drawn again from the star catalogue in the same projections: on a stereographic chart (to V 6.3) box eight stars and six Messier galaxies, draw the ecliptic, the Sun at the eclipse of 1 August 2008 and the Moon of 28 July (OM01); on a transverse-Mercator whole-sky map with both celestial poles on the centre line identify Virgo and Corvus, the grid, its poles, the equinoxes and the grid values (OM02); from Orion on a Mercator alt-az grid find the latitude, then draw Orion as seen from 40° S at 18:00 on 21 January 2026 on the answer grid (OM03). Draw with boxes, plus signs, crosses, lines, curves, symbol lines and text as with a pencil, fill in the summary answer sheet and compare with the official solution."},
       tags:["성도","좌표계","천구"],tagsEn:["Sky map","Coordinate systems","Celestial sphere"]})]).map(p=>p.id==="O3–O5"?(delete p.state,Object.assign(p.files,{sim:"sim/ioaa2025_O2_web.html",src:{ko:"src/ioaa2025_O2_skymap_sim_KO.py",en:"src/ioaa2025_O2_skymap_sim_EN.py"}}),p):p).concat(lst([
-    ["O6","Discovery of 'Z'","'Z'의 발견","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"],
-    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]]).concat([{id:"G1",title:{ko:"전파망원경으로 찾는 우리은하의 암흑물질 (그룹 경기)",en:"Uncovering Galactic Dark Matter Using a Radio Telescope (group)"},desc:{ko:"2025년 7월 24일 저녁 뭄바이(북위 19.10°, 동경 72.85°)에서 혼 전파망원경을 각도기와 디지털 경사계로 겨누어 은경 30°–70°의 21 cm HI 선을 60초씩 기록합니다. 땅(300 K)과 은하면에서 먼 하늘(5 K)로 이득과 수신기 온도를 보정하고, 가장 많이 적색이동한 진동수에서 회전 속도와 은하 중심 거리, 둘러싸인 질량과 암흑물질 질량을 구합니다. 실제로 측정하는 그룹 실험이었습니다.",en:"On the evening of 24 July 2025 in Mumbai (19.10° N, 72.85° E) point the horn radio telescope with its protractor and digital inclinometer and record 60 s of the 21-cm HI line at Galactic longitudes 30°–70°. Calibrate gain and receiver temperature on the ground (300 K) and on sky away from the plane (5 K); the most redshifted frequency gives the rotation speed and Galactocentric radius, then the enclosed and the dark mass. This was a hands-on group measurement."},tags:["전파천문학","21 cm 선","회전 곡선"],tagsEn:["Radio astronomy","21-cm line","Rotation curve"],files:{sim:"sim/ioaa2025_G1_web.html",src:{ko:"src/ioaa2025_G1_radio_sim_KO.py",en:"src/ioaa2025_G1_radio_sim_EN.py"},pdf:{ko:"pdf/IOAA_2025_G1_KO.pdf", en:"pdf/IOAA_2025_G1_EN.pdf"},sol:{ko:"pdf/IOAA_2025_G1_S_KO.pdf", en:"pdf/IOAA_2025_G1_S.pdf"}}}])))},
+    ["O6","Discovery of 'Z'","'Z'의 발견","IOAA_2025_Q-O6_EN.pdf","IOAA_2025_Q-O6_S.pdf"],
+    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_Q-O7_EN.pdf","IOAA_2025_Q-O7_S.pdf"]]).concat([{id:"G1",title:{ko:"전파망원경으로 찾는 우리은하의 암흑물질 (그룹 경기)",en:"Uncovering Galactic Dark Matter Using a Radio Telescope (group)"},desc:{ko:"2025년 7월 24일 저녁 뭄바이(북위 19.10°, 동경 72.85°)에서 혼 전파망원경을 각도기와 디지털 경사계로 겨누어 은경 30°–70°의 21 cm HI 선을 60초씩 기록합니다. 땅(300 K)과 은하면에서 먼 하늘(5 K)로 이득과 수신기 온도를 보정하고, 가장 많이 적색이동한 진동수에서 회전 속도와 은하 중심 거리, 둘러싸인 질량과 암흑물질 질량을 구합니다. 실제로 측정하는 그룹 실험이었습니다.",en:"On the evening of 24 July 2025 in Mumbai (19.10° N, 72.85° E) point the horn radio telescope with its protractor and digital inclinometer and record 60 s of the 21-cm HI line at Galactic longitudes 30°–70°. Calibrate gain and receiver temperature on the ground (300 K) and on sky away from the plane (5 K); the most redshifted frequency gives the rotation speed and Galactocentric radius, then the enclosed and the dark mass. This was a hands-on group measurement."},tags:["전파천문학","21 cm 선","회전 곡선"],tagsEn:["Radio astronomy","21-cm line","Rotation curve"],files:{sim:"sim/ioaa2025_G1_web.html",src:{ko:"src/ioaa2025_G1_radio_sim_KO.py",en:"src/ioaa2025_G1_radio_sim_EN.py"},pdf:{ko:"pdf/IOAA_2025_G1_KO.pdf", en:"pdf/IOAA_2025_G1_EN.pdf"},sol:{ko:"pdf/IOAA_2025_G1_S_KO.pdf", en:"pdf/IOAA_2025_G1_S.pdf"}}}])))},
    {y:2024,host:{ko:"브라질 · 바소우라스",en:"Vassouras, Brazil"},cc:"br",problems:lst([
-    ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
-    ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
+    ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_Q-D1_EN.pdf","IOAA_2024_Q-D1_S.pdf"],
+    ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_Q-D2_EN.pdf","IOAA_2024_Q-D2_S.pdf"],
     ["O1","Observation","관측","IOAA_2024_O1_EN.pdf","IOAA_2024_O1_S.pdf"],
     ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2024_O2_EN.pdf","IOAA_2024_O2_S.pdf"]]).map(p=>p.id!=="D1"&&p.id!=="D2"?p:(delete p.state,Object.assign(p,p.id==="D1"?{
       desc:{ko:"SDSS와 DES가 함께 찍은 스트라이프 82의 두 표가 어느 서베이 것인지 오차로 가려내고, 반로그 모눈종이에 err m_g 대 m_g를 그려 기울기와 절편, m_g = 21.5에서의 S/N을 구합니다. 1″ 안의 천체끼리 짝을 지어 두 서베이의 등급을 오차 막대와 함께 그리고 측광 보정에 쓸 별을 고릅니다.",
@@ -3173,18 +3230,18 @@ const DATA={
             en:"In the Vassouras planetarium, after 5 minutes of adaptation, two skies of 10 minutes each: the zodiacal constellations above the horizon, bright stars at given altitudes and azimuths, the alpha star and the nebula on the meridian, the Moon's constellation and the month, circumpolar stars, and bright stars beside a satellite's path. The projected dates, not on the sheet, are recovered from the star positions in the official solution (22 August 2024 19:52, 21 March 2024 19:34). Official solution and marking included."},
       tags:["플라네타륨","남반구 하늘","고도·방위각"],tagsEn:["Planetarium","Southern sky","Altitude and azimuth"]}),Object.assign(p.files,{sim:"sim/ioaa2024_O2_web.html",src:{ko:"src/ioaa2024_O2_planetarium_KO.py",en:"src/ioaa2024_O2_planetarium_EN.py"}}),p))},
    {y:2023,host:{ko:"폴란드 · 호주프",en:"Chorzów, Poland"},cc:"pl",problems:lst([
-    ["D1","Distance to the Large Magellanic Cloud","대마젤란은하까지의 거리","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
-    ["D2","Isolated Black Hole","고립된 블랙홀","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
-    ["O1","Asteroid Occultation","소행성 엄폐","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
-    ["O2","Starlink","스타링크","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
-    ["O3","Planetary Moons","행성의 위성","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
-    ["O4","Supernova","초신성","IOAA_2023_O1_EN.pdf","IOAA_2023_O1_S.pdf"],
-    ["O5","Knowledge of the Sky","하늘에 대한 지식","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"],
-    ["O6","Retrograde Mars","화성의 역행","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"],
-    ["O7","TRAPPIST-1","TRAPPIST-1","IOAA_2023_O2_EN.pdf","IOAA_2023_O2_S.pdf"]])},
+    ["D1","Distance to the Large Magellanic Cloud","대마젤란은하까지의 거리","IOAA_2023_Q-D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
+    ["D2","Isolated Black Hole","고립된 블랙홀","IOAA_2023_Q-D2_EN.pdf","IOAA_2023_D1_EN.pdf"],
+    ["O1","Asteroid Occultation","소행성 엄폐","IOAA_2023_Q-O1_EN.pdf","IOAA_2023_Q-O1_S.pdf"],
+    ["O2","Starlink","스타링크","IOAA_2023_Q-O2_EN.pdf","IOAA_2023_Q-O2_S.pdf"],
+    ["O3","Planetary Moons","행성의 위성","IOAA_2023_Q-O3_EN.pdf","IOAA_2023_Q-O3_S.pdf"],
+    ["O4","Supernova","초신성","IOAA_2023_Q-O4_EN.pdf","IOAA_2023_Q-O4_S.pdf"],
+    ["O5","Knowledge of the Sky","하늘에 대한 지식","IOAA_2023_Q-O5_EN.pdf","IOAA_2023_Q-O5_S.pdf"],
+    ["O6","Retrograde Mars","화성의 역행","IOAA_2023_Q-O6_EN.pdf","IOAA_2023_Q-O6_S.pdf"],
+    ["O7","TRAPPIST-1","TRAPPIST-1","IOAA_2023_Q-O7_EN.pdf","IOAA_2023_Q-O7_S.pdf"]])},
    {y:2022,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",problems:lst([
-    ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
-    ["D2","Galactic Surveys","은하 서베이","IOAA_2022_D1_EN.pdf","IOAA_2022_D2i_S.pdf"],
+    ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_Q-D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
+    ["D2","Galactic Surveys","은하 서베이","IOAA_2022_Q-D2_EN.pdf","IOAA_2022_D2i_S.pdf"],
     ["O1","Observation (Night)","관측 (야간)","IOAA_2022_O1_EN.pdf","IOAA_2022_O1_S.pdf"],
     ["O2","Observation (Day)","관측 (주간)","IOAA_2022_O2_EN.pdf","IOAA_2022_O1_S.pdf"]])},
    {y:2021,host:{ko:"온라인 · 콜롬비아 주관",en:"Online, hosted by Colombia"},cc:"co",problems:lst([
@@ -3193,37 +3250,38 @@ const DATA={
     ["O1","The Solar Slap (Solar Physics)","솔라 슬랩 (태양 물리)","IOAA_2021_O1_EN.pdf","IOAA_2021_O1_S.pdf"],
     ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2021_O2_EN.pdf","IOAA_2021_O2_S.pdf"]])},
    {y:2020,host:{ko:"온라인 · 에스토니아 주관",en:"Online, hosted by Estonia"},cc:"ee",problems:lst([
-    ["D1","AGN","활동은하핵","IOAA_2020_D1_EN.pdf",null],
-    ["D2","Minor Planet","소행성","IOAA_2020_D1_EN.pdf",null],
-    ["D3","Hypervelocity Stars","초고속 별","IOAA_2020_D1_EN.pdf",null],
+    ["D1","AGN","활동은하핵","IOAA_2020_Q-D1_EN.pdf",null],
+    ["D2","Minor Planet","소행성","IOAA_2020_Q-D2_EN.pdf",null],
+    ["D3","Hypervelocity Stars","초고속 별","IOAA_2020_Q-D3_EN.pdf",null],
     ["O1","Observation","관측","IOAA_2020_O1i_EN.pdf",null]])},
    {y:2019,host:{ko:"헝가리 · 케스트헤이",en:"Keszthely, Hungary"},cc:"hu",problems:lst([
-    ["D1","Photometry and Spectroscopy of Nova Del 2013","Nova Del 2013의 측광과 분광","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"],
-    ["D2","Triply Eclipsing Hierarchical Triple Star","세 번 가려지는 계층적 삼중성","IOAA_2019_D1_EN.pdf","IOAA_2019_D1_S.pdf"]]).concat([{id:"O1–O5",title:{ko:"야간 관측: 파인더 정렬 · 토성과 타이탄 · M57의 시야 · 변광성 AF Cyg · 맨눈 등급",en:"Night Observation: Finderscope Alignment, Saturn and Titan, M57 Field of View, AF Cygni, Naked-Eye Magnitudes"},desc:{ko:"2019년 8월 4·5일 밤 23:42(CEST)부터 케스트헤이(북위 46.76°, 동경 17.25°) 관측장의 실제 하늘에서, 구동 장치 없는 적도의에 얹은 150/750 뉴턴식 망원경과 정렬되지 않은 파인더로 다섯 과제를 제한 시간 안에 수행합니다. 별은 히파르코스·티코-2 목록, 토성의 고리 기울기와 타이탄 위치는 공식 해답(164″, 109° / 129″, 124°)에 맞췄고, 연무가 낀 밤에는 대체 과제(알타이르, 거문고자리 엡실론)로 바뀝니다. 과제가 끝날 때마다 조교가 망원경을 확인하고, 답안지는 공식 채점 기준으로 채점합니다.",en:"From 23:42 CEST on the night of 4 or 5 August 2019, under the real sky over the observing field at Keszthely (46.76° N, 17.25° E): a 150/750 Newtonian on an equatorial mount without a drive and a finder that is not aligned, five tasks against the clock. Stars from Hipparcos and Tycho-2; Saturn's ring tilt and Titan's position match the official solution (164″, 109° / 129″, 124°); on a hazy night the alternative tasks (Altair, epsilon Lyrae) apply. The assistant checks the telescope at the end of each task and the answer sheet is marked with the official scheme."},tags:["야간 관측","망원경","토성","변광성"],tagsEn:["Night observation","Telescope","Saturn","Variable star"],files:{sim:"sim/ioaa2019_O1_web.html",src:{ko:"src/ioaa2019_O1_sky_sim_KO.py",en:"src/ioaa2019_O1_sky_sim_EN.py"},pdf:{ko:"pdf/IOAA_2019_O1_KO.pdf", en:"pdf/IOAA_2019_O1_EN.pdf"},sol:{ko:"pdf/IOAA_2019_O1_S_KO.pdf", en:"pdf/IOAA_2019_O1_S.pdf"}}}]).concat(lst([
+    ["D1","Photometry and Spectroscopy of Nova Del 2013","Nova Del 2013의 측광과 분광","IOAA_2019_Q-D1_EN.pdf","IOAA_2019_D1_S.pdf"],
+    ["D2","Triply Eclipsing Hierarchical Triple Star","세 번 가려지는 계층적 삼중성","IOAA_2019_Q-D2_EN.pdf","IOAA_2019_D1_S.pdf"]]).concat([{id:"O1–O5",title:{ko:"야간 관측: 파인더 정렬 · 토성과 타이탄 · M57의 시야 · 변광성 AF Cyg · 맨눈 등급",en:"Night Observation: Finderscope Alignment, Saturn and Titan, M57 Field of View, AF Cygni, Naked-Eye Magnitudes"},desc:{ko:"2019년 8월 4·5일 밤 23:42(CEST)부터 케스트헤이(북위 46.76°, 동경 17.25°) 관측장의 실제 하늘에서, 구동 장치 없는 적도의에 얹은 150/750 뉴턴식 망원경과 정렬되지 않은 파인더로 다섯 과제를 제한 시간 안에 수행합니다. 별은 히파르코스·티코-2 목록, 토성의 고리 기울기와 타이탄 위치는 공식 해답(164″, 109° / 129″, 124°)에 맞췄고, 연무가 낀 밤에는 대체 과제(알타이르, 거문고자리 엡실론)로 바뀝니다. 과제가 끝날 때마다 조교가 망원경을 확인하고, 답안지는 공식 채점 기준으로 채점합니다.",en:"From 23:42 CEST on the night of 4 or 5 August 2019, under the real sky over the observing field at Keszthely (46.76° N, 17.25° E): a 150/750 Newtonian on an equatorial mount without a drive and a finder that is not aligned, five tasks against the clock. Stars from Hipparcos and Tycho-2; Saturn's ring tilt and Titan's position match the official solution (164″, 109° / 129″, 124°); on a hazy night the alternative tasks (Altair, epsilon Lyrae) apply. The assistant checks the telescope at the end of each task and the answer sheet is marked with the official scheme."},tags:["야간 관측","망원경","토성","변광성"],tagsEn:["Night observation","Telescope","Saturn","Variable star"],files:{sim:"sim/ioaa2019_O1_web.html",src:{ko:"src/ioaa2019_O1_sky_sim_KO.py",en:"src/ioaa2019_O1_sky_sim_EN.py"},pdf:{ko:"pdf/IOAA_2019_O1_KO.pdf", en:"pdf/IOAA_2019_O1_EN.pdf"},sol:{ko:"pdf/IOAA_2019_O1_S_KO.pdf", en:"pdf/IOAA_2019_O1_S.pdf"}}}]).concat(lst([
     ["O6","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2019_O2_EN.pdf","IOAA_2019_O2_S.pdf"]]))},
    {y:2018,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
-    ["D1","Dust and Young Stars in Star-forming Galaxies","별 생성 은하의 먼지와 어린 별","IOAA_2018_D1_EN.pdf","IOAA_2018_D1_S.pdf"],
-    ["D2","Compact Object in a Binary System","쌍성계 속의 밀집 천체","IOAA_2018_D1_EN.pdf","IOAA_2018_D1_S.pdf"],
+    ["D1","Dust and Young Stars in Star-forming Galaxies","별 생성 은하의 먼지와 어린 별","IOAA_2018_Q-D1_EN.pdf","IOAA_2018_Q-D1_S.pdf"],
+    ["D2","Compact Object in a Binary System","쌍성계 속의 밀집 천체","IOAA_2018_Q-D2_EN.pdf","IOAA_2018_Q-D2_S.pdf"],
     ["O1","Observation (Day)","관측 (주간)","IOAA_2018_O1_EN.pdf","IOAA_2018_O1_S.pdf"],
     ["O2","Observation (Night)","관측 (야간)","IOAA_2018_O2_EN.pdf","IOAA_2018_O2_S.pdf"]])},
    {y:2017,host:{ko:"태국 · 푸껫",en:"Phuket, Thailand"},cc:"th",problems:lst([
-    ["D1","Calibrating the Distance Ladder to the LMC","대마젤란은하까지 거리 사다리 보정","IOAA_2017_D1_EN.pdf","IOAA_2017_D1_S.pdf"],
-    ["D2","The Search for Dark Matter","암흑물질 탐색","IOAA_2017_D1_EN.pdf","IOAA_2017_D1_S.pdf"],
-    ["O1","Naked-Eye Observation of the Real Sky","실제 하늘 맨눈 관측","IOAA_2017_O1_EN.pdf",null],
-    ["O2","Planets in a Panoramic 360° Sky Image","360° 파노라마 하늘 사진 속 행성","IOAA_2017_O1_EN.pdf",null],
-    ["O3","Analemma on Another Planet","다른 행성의 아날렘마","IOAA_2017_O1_EN.pdf",null],
-    ["O4","Exposure Time from a Photograph","사진으로 노출 시간 구하기","IOAA_2017_O1_EN.pdf",null],
-    ["O5","True North from the Moon's Shadow","달 그림자로 진북 찾기","IOAA_2017_O1_EN.pdf",null],
-    ["O6","Latitude from an Equatorial Mount","적도의로 위도 구하기","IOAA_2017_O1_EN.pdf",null],
-    ["O7","Precise Polar Alignment of an Equatorial Mount","적도의 정밀 극축 맞추기","IOAA_2017_O1_EN.pdf",null],
-    ["O8","Observation with an Equatorial-Mount Telescope","적도의 망원경 관측","IOAA_2017_O2_EN.pdf",null],
-    ["O9","Observation with a Dobsonian Telescope","돕소니언 망원경 관측","IOAA_2017_O2_EN.pdf",null]])},
+    ["D1","Calibrating the Distance Ladder to the LMC","대마젤란은하까지 거리 사다리 보정","IOAA_2017_Q-D1_EN.pdf","IOAA_2017_Q-D1_S.pdf"],
+    ["D2","The Search for Dark Matter","암흑물질 탐색","IOAA_2017_Q-D2_EN.pdf","IOAA_2017_Q-D2_S.pdf"],
+    ["O1","Naked-Eye Observation of the Real Sky","실제 하늘 맨눈 관측","IOAA_2017_Q-O1_EN.pdf",null],
+    ["O2","Planets in a Panoramic 360° Sky Image","360° 파노라마 하늘 사진 속 행성","IOAA_2017_Q-O2_EN.pdf",null],
+    ["O3","Analemma on Another Planet","다른 행성의 아날렘마","IOAA_2017_Q-O3_EN.pdf",null],
+    ["O4","Exposure Time from a Photograph","사진으로 노출 시간 구하기","IOAA_2017_Q-O4_EN.pdf",null],
+    ["O5","True North from the Moon's Shadow","달 그림자로 진북 찾기","IOAA_2017_Q-O5_EN.pdf",null],
+    ["O6","Latitude from an Equatorial Mount","적도의로 위도 구하기","IOAA_2017_Q-O6_EN.pdf",null],
+    ["O7","Precise Polar Alignment of an Equatorial Mount","적도의 정밀 극축 맞추기","IOAA_2017_Q-O7_EN.pdf",null],
+    ["O8","Observation with an Equatorial-Mount Telescope","적도의 망원경 관측","IOAA_2017_Q-O8_EN.pdf",null],
+    ["O9","Observation with a Dobsonian Telescope","돕소니언 망원경 관측","IOAA_2017_Q-O9_EN.pdf",null]])},
    {y:2016,host:{ko:"인도 · 부바네스와르",en:"Bhubaneswar, India"},cc:"in",problems:lst([
-    ["D1","Binary Pulsar","쌍성 펄서","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
-    ["D2","Distance to the Moon","달까지의 거리","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
-    ["D3","Type Ia Supernovae","Ia형 초신성","IOAA_2016_D1_EN.pdf","IOAA_2016_D1_S.pdf"],
-    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2016_O1_EN.pdf",null],
-    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2016_O1_EN.pdf",null]])},
+    ["D1","Binary Pulsar","쌍성 펄서","IOAA_2016_Q-D1_EN.pdf","IOAA_2016_Q-D1_S.pdf"],
+    ["D2","Distance to the Moon","달까지의 거리","IOAA_2016_Q-D2_EN.pdf","IOAA_2016_Q-D2_S.pdf"],
+    ["D3","Type Ia Supernovae","Ia형 초신성","IOAA_2016_Q-D3_EN.pdf","IOAA_2016_Q-D3_S.pdf"],
+    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2016_Q-O1_EN.pdf",null],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2016_Q-O2_EN.pdf",null],
+    ["O3","Observation (Sky Map)","관측 (성도)","IOAA_2016_Q-O3_EN.pdf",null]])},
    {y:2015,host:{ko:"인도네시아 · 마겔랑",en:"Magelang, Indonesia"},cc:"id",problems:lst([
     ["D1","Data Analysis","자료 분석","IOAA_2015_D1_EN.pdf","IOAA_2015_D1_S.pdf"],
     ["O1","Observation (Naked Eye)","관측 (맨눈)","IOAA_2015_O1_EN.pdf","IOAA_2015_O1_S.pdf"],
@@ -3231,9 +3289,9 @@ const DATA={
     ["O3","Observation (Main Telescope)","관측 (주 망원경)","IOAA_2015_O3_EN.pdf","IOAA_2015_O3_S.pdf"],
     ["O4","Observation (Small Telescope)","관측 (소형 망원경)","IOAA_2015_O4_EN.pdf","IOAA_2015_O4_S.pdf"]])},
    {y:2014,host:{ko:"루마니아 · 수체아바",en:"Suceava, Romania"},cc:"ro",problems:lst([
-    ["D1","Black Hole in the Milky Way","우리은하의 블랙홀","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
-    ["D2","Thermodynamic Test","열역학 시험","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
-    ["D3","IOAA Observer on an Extrasolar Planet","외계행성 위의 IOAA 관측자","IOAA_2014_D1_EN.pdf","IOAA_2014_D1_S.pdf"],
+    ["D1","Black Hole in the Milky Way","우리은하의 블랙홀","IOAA_2014_Q-D1_EN.pdf","IOAA_2014_Q-D1_S.pdf"],
+    ["D2","Thermodynamic Test","열역학 시험","IOAA_2014_Q-D2_EN.pdf","IOAA_2014_Q-D2_S.pdf"],
+    ["D3","IOAA Observer on an Extrasolar Planet","외계행성 위의 IOAA 관측자","IOAA_2014_Q-D3_EN.pdf","IOAA_2014_Q-D3_S.pdf"],
     ["O1","Observation (Outdoor)","관측 (야외)","IOAA_2014_O1_EN.pdf",null],
     ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2014_O2_EN.pdf","IOAA_2014_O2_S.pdf"]])},
    {y:2013,host:{ko:"그리스 · 볼로스",en:"Volos, Greece"},cc:"gr",problems:lst([
@@ -3244,33 +3302,33 @@ const DATA={
     ["D1","Data Analysis","자료 분석","IOAA_2012_D1_EN.pdf","IOAA_2012_D1_S.pdf"],
     ["O1","Observation","관측","IOAA_2012_O1_EN.pdf","IOAA_2012_O1_S.pdf"]])},
    {y:2011,host:{ko:"폴란드 · 카토비체",en:"Katowice, Poland"},cc:"pl",problems:lst([
-    ["D1","Analysis of Times of Minima","극소 시각 분석","IOAA_2011_D1_EN.pdf","IOAA_2011_D1_S.pdf"],
-    ["D2","Weighing a Galaxy","은하의 질량 재기","IOAA_2011_D1_EN.pdf","IOAA_2011_D1_S.pdf"],
-    ["O1","The Little Dolphin","돌고래자리","IOAA_2011_O1_EN.pdf","IOAA_2011_O1_S.pdf"],
-    ["O2","Determining Declination","적위 구하기","IOAA_2011_O1_EN.pdf","IOAA_2011_O1_S.pdf"],
-    ["O3","Planetarium: Earth","플라네타륨 — 지구","IOAA_2011_O2_EN.pdf","IOAA_2011_O2_S.pdf"],
-    ["O4","Planetarium: Mars","플라네타륨 — 화성","IOAA_2011_O2_EN.pdf","IOAA_2011_O2_S.pdf"]])},
+    ["D1","Analysis of Times of Minima","극소 시각 분석","IOAA_2011_Q-D1_EN.pdf","IOAA_2011_Q-D1_S.pdf"],
+    ["D2","Weighing a Galaxy","은하의 질량 재기","IOAA_2011_Q-D2_EN.pdf","IOAA_2011_Q-D2_S.pdf"],
+    ["O1","The Little Dolphin","돌고래자리","IOAA_2011_Q-O1_EN.pdf","IOAA_2011_Q-O1_S.pdf"],
+    ["O2","Determining Declination","적위 구하기","IOAA_2011_Q-O2_EN.pdf","IOAA_2011_Q-O2_S.pdf"],
+    ["O3","Planetarium: Earth","플라네타륨 — 지구","IOAA_2011_Q-O3_EN.pdf","IOAA_2011_Q-O3_S.pdf"],
+    ["O4","Planetarium: Mars","플라네타륨 — 화성","IOAA_2011_Q-O4_EN.pdf","IOAA_2011_Q-O4_S.pdf"]])},
    {y:2010,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:lst([
-    ["D1","CCD Image","CCD 영상","IOAA_2010_D1_EN.pdf","IOAA_2010_D1_S.pdf"],
-    ["D2","Light Curves of Stars","별의 광도 곡선","IOAA_2010_D1_EN.pdf","IOAA_2010_D1_S.pdf"],
-    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2010_O1_EN.pdf","IOAA_2010_O1_S.pdf"],
-    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2010_O1_EN.pdf","IOAA_2010_O1_S.pdf"]])},
+    ["D1","CCD Image","CCD 영상","IOAA_2010_Q-D1_EN.pdf","IOAA_2010_Q-D1_S.pdf"],
+    ["D2","Light Curves of Stars","별의 광도 곡선","IOAA_2010_Q-D2_EN.pdf","IOAA_2010_Q-D2_S.pdf"],
+    ["O1","Observation (Telescope)","관측 (망원경)","IOAA_2010_Q-O1_EN.pdf","IOAA_2010_Q-O1_S.pdf"],
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2010_Q-O2_EN.pdf","IOAA_2010_Q-O2_S.pdf"]])},
    {y:2009,host:{ko:"이란 · 테헤란",en:"Tehran, Iran"},cc:"ir",problems:lst([
-    ["D1","CCD Image Processing","CCD 영상 처리","IOAA_2009_D1_EN.pdf","IOAA_2009_D1_S.pdf"],
-    ["D2","Venus","금성","IOAA_2009_D1_EN.pdf","IOAA_2009_D1_S.pdf"],
+    ["D1","CCD Image Processing","CCD 영상 처리","IOAA_2009_Q-D1_EN.pdf","IOAA_2009_Q-D1_S.pdf"],
+    ["D2","Venus","금성","IOAA_2009_Q-D2_EN.pdf","IOAA_2009_Q-D2_S.pdf"],
     ["O1","Observation","관측","IOAA_2009_O1_EN.pdf","IOAA_2009_O1_S.pdf"]])},
    {y:2008,host:{ko:"인도네시아 · 반둥",en:"Bandung, Indonesia"},cc:"id",problems:lst([
-    ["D1","Virgo Cluster","처녀자리 은하단","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
-    ["D2","Alpha Centauri","알파 센타우리","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
-    ["D3","Age of Meteorites","운석의 나이","IOAA_2008_D1_EN.pdf","IOAA_2008_D1_S.pdf"],
-    ["O1","Observation I: Naked Eye","관측 I — 맨눈","IOAA_2008_O1_EN.pdf","IOAA_2008_O1i_S.pdf"],
-    ["O2","Observation II: Telescope and CCD","관측 II — 망원경과 CCD","IOAA_2008_O1_EN.pdf","IOAA_2008_O2i_S.pdf"]])},
+    ["D1","Virgo Cluster","처녀자리 은하단","IOAA_2008_Q-D1_EN.pdf","IOAA_2008_Q-D1_S.pdf"],
+    ["D2","Alpha Centauri","알파 센타우리","IOAA_2008_Q-D2_EN.pdf","IOAA_2008_Q-D2_S.pdf"],
+    ["D3","Age of Meteorites","운석의 나이","IOAA_2008_Q-D3_EN.pdf","IOAA_2008_Q-D3_S.pdf"],
+    ["O1","Observation I: Naked Eye","관측 I — 맨눈","IOAA_2008_Q-O1_EN.pdf","IOAA_2008_O1i_S.pdf"],
+    ["O2","Observation II: Telescope and CCD","관측 II — 망원경과 CCD","IOAA_2008_Q-O2_EN.pdf","IOAA_2008_O2i_S.pdf"]])},
    {y:2007,host:{ko:"태국 · 치앙마이",en:"Chiang Mai, Thailand"},cc:"th",problems:lst([
-    ["D1","Galilean Moons","갈릴레이 위성","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
-    ["D2","The Moon's Age","월령","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
-    ["D3","Solar System Objects","태양계 천체","IOAA_2007_D1_EN.pdf","IOAA_2007_D1_S.pdf"],
-    ["O1","Observation I: Celestial Object Pointer","관측 I — 천체 가리키기","IOAA_2007_O1_EN.pdf","IOAA_2007_O1_S.pdf"],
-    ["O2","Observation II: Binoculars","관측 II — 쌍안경","IOAA_2007_O1_EN.pdf","IOAA_2007_O1_S.pdf"]])}
+    ["D1","Galilean Moons","갈릴레이 위성","IOAA_2007_Q-D1_EN.pdf","IOAA_2007_Q-D1_S.pdf"],
+    ["D2","The Moon's Age","월령","IOAA_2007_Q-D2_EN.pdf","IOAA_2007_Q-D2_S.pdf"],
+    ["D3","Solar System Objects","태양계 천체","IOAA_2007_Q-D3_EN.pdf","IOAA_2007_Q-D3_S.pdf"],
+    ["O1","Observation I: Celestial Object Pointer","관측 I — 천체 가리키기","IOAA_2007_Q-O1_EN.pdf",null],
+    ["O2","Observation II: Binoculars","관측 II — 쌍안경","IOAA_2007_Q-O2_EN.pdf","IOAA_2007_Q-O2_S.pdf"]])}
   ]},
  ioaajr:{
   abbr:"IOAA Jr", since:2022, obs:true,
@@ -3508,6 +3566,11 @@ const DATA={
   ]}
 
 };
+(function toPdfHost(o){
+  for(const k in o){ const v=o[k];
+    if(typeof v==="string"){ if(v.startsWith("pdf/")) o[k]=PDF_BASE+v.slice(4); }
+    else if(v&&typeof v==="object") toPdfHost(v); }
+})(DATA);
 
 /* ══════════════════════════════════════════════════════════════
    LANGUAGE

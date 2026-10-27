@@ -1,0 +1,46 @@
+/* haslalab-pdf: serves the problem sheets and solutions kept in GitHub Releases.
+ *
+ *   GET /pdf/IPhO_2025_E1_EN.pdf
+ *     -> github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-ipho/IPhO_2025_E1_EN.pdf
+ *
+ * GitHub sends release assets as downloads (attachment, octet-stream) and without
+ * CORS, so a link straight to them saves the file instead of opening it.  This
+ * passes the bytes through as an inline PDF, so the browser shows it as before.
+ * The release is named after the part of the file name before the first
+ * underscore, the same rule tools/pdf_release.py uploads by.
+ */
+const REPO = "HaslaEdu/haslalab.github.io";
+const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
+const DAY = 86400;
+
+export default {
+  async fetch(req, env, ctx) {
+    if (req.method !== "GET" && req.method !== "HEAD")
+      return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
+    const url = new URL(req.url);
+    const m = NAME.exec(url.pathname);
+    if (!m) return new Response("Not found", { status: 404 });
+    const [, name, prefix] = m;
+
+    /* one cached copy per file at each edge; the query string never matters */
+    const cache = caches.default;
+    const key = new Request(url.origin + url.pathname, { method: "GET" });
+    let res = await cache.match(key);
+    if (!res) {
+      const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}`,
+                             { redirect: "follow", cf: { cacheTtl: DAY, cacheEverything: true } });
+      if (!up.ok) return new Response("Not found", { status: up.status === 404 ? 404 : 502 });
+      res = new Response(up.body, { status: 200, headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${name}"`,
+        "Cache-Control": `public, max-age=${DAY}`,
+        "Access-Control-Allow-Origin": "*",
+        "X-Content-Type-Options": "nosniff",
+      }});
+      const len = up.headers.get("Content-Length");
+      if (len) res.headers.set("Content-Length", len);
+      ctx.waitUntil(cache.put(key, res.clone()));
+    }
+    return req.method === "HEAD" ? new Response(null, { status: res.status, headers: res.headers }) : res;
+  },
+};
