@@ -37,3 +37,30 @@ ok(s===429,"post rate limit "+s);
 [s,j]=await call("DELETE","/me",null,Bt);[s,j]=await call("GET",`/posts?board=free`);ok(j.posts.every(p=>p.gone===1),"account delete anonymises");
 [s,j]=await call("DELETE",`/posts/${P}`,null,(await call("POST","/login",{username:"alice",password:"password1"}))[1].token);ok(s===200,"del post");
 const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.example"}});ok(!r.headers.get("access-control-allow-origin"),"cors deny");
+
+/* v2: tags, votes, replies, sorting, best posts, notices */
+{
+  let [s0, h] = await call("GET", "/health"); ok(h.v === 2, "health v2");
+  let [s1, a] = await call("POST", "/signup", { username: "v2user", nickname: "브이투", password: "password1" }); const T = a.token;
+  let [s2, b] = await call("POST", "/signup", { username: "v2other", nickname: "다른이", password: "password1" }); const U = b.token;
+  let [s3, p1] = await call("POST", "/posts", { board: "qna", tag: "q", title: "태그 질문", body: "본문" }, T); ok(s3 === 200, "post with tag");
+  let [s4, p2] = await call("POST", "/posts", { board: "qna", tag: "notice", title: "공지 시도", body: "x" }, T);
+  let [, g2] = await call("GET", `/posts/${p2.id}`); ok(g2.post.tag === "gen", "notice tag needs admin");
+  let [, v1] = await call("POST", `/posts/${p1.id}/vote`, { v: 1 }, U); ok(v1.my === 1 && v1.n_likes === 1, "upvote");
+  let [, v2] = await call("POST", `/posts/${p1.id}/vote`, { v: -1 }, U); ok(v2.my === -1 && v2.n_likes === 0 && v2.n_dislikes === 1, "switch to downvote");
+  let [, v3] = await call("POST", `/posts/${p1.id}/vote`, { v: -1 }, U); ok(v3.my === 0 && v3.n_dislikes === 0, "take vote back");
+  let [, c1] = await call("POST", `/posts/${p1.id}/comments`, { body: "부모" }, U);
+  let [, c2] = await call("POST", `/posts/${p1.id}/comments`, { body: "답글", parent_id: c1.id }, T);
+  let [, c3] = await call("POST", `/posts/${p1.id}/comments`, { body: "답글의 답글", parent_id: c2.id }, U);
+  let [, g1] = await call("GET", `/posts/${p1.id}`, null, U);
+  ok(g1.comments.find(c => c.id === c3.id).parent_id === c1.id && g1.post.n_comments === 3, "replies one level deep");
+  let [sd] = await call("DELETE", `/comments/${c1.id}`, null, U); let [, g3] = await call("GET", `/posts/${p1.id}`);
+  ok(sd === 200 && g3.comments.length === 0 && g3.post.n_comments === 0, "deleting a comment takes its replies");
+  await call("POST", `/posts/${p1.id}/vote`, { v: 1 }, U); await call("POST", `/posts/${p1.id}/vote`, { v: 1 }, T);
+  let [, lt] = await call("GET", "/posts?board=qna&sort=top"); ok(lt.posts[0].id === p1.id && "snip" in lt.posts[0], "sort top + snippet");
+  let [, lh] = await call("GET", "/posts?sort=hot"); ok(Array.isArray(lh.posts), "sort hot");
+  let [, lb] = await call("GET", "/posts?best=1"); ok(lb.posts.every(p => p.n_likes - p.n_dislikes >= 3), "best filter");
+  let [, la] = await call("GET", "/posts?q=" + encodeURIComponent("브이") + "&field=author"); ok(la.total >= 2, "search by author");
+  let [, lq] = await call("GET", "/posts?tag=q"); ok(lq.posts.every(p => p.tag === "q"), "tag filter");
+  let [, bd] = await call("GET", "/boards"); ok(bd.boards.some(r => r.board === "qna" && r.n >= 2), "board counts");
+}

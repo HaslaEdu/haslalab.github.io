@@ -6,6 +6,9 @@
  */
 
 const BOARDS = ["free", "qna", "sim", "study"];
+// 말머리: general, question, info, review, bug report, notice (admins only)
+const TAGS = ["gen", "q", "info", "review", "bug", "notice"];
+const BEST = 3;                      // net votes that make a post a 개념글 / best post
 const PAGE = 20;
 const SESSION_DAYS = 30;
 const PBKDF2_ITER = 100000;          // Workers' WebCrypto ceiling for PBKDF2
@@ -129,6 +132,7 @@ async function currentUser(req, env) {
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); return u; }
 const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
+const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url) {
@@ -138,7 +142,13 @@ async function handle(req, env, url) {
   const me = await currentUser(req, env);
   let r;
 
-  if (p === "/api/health") return { ok: true, boards: BOARDS };
+  if (p === "/api/health") return { ok: true, v: 2, boards: BOARDS, tags: TAGS, best: BEST };
+  if (p === "/api/boards" && m === "GET") {
+    const day = now() - 86400;
+    const rows = (await env.DB.prepare(
+      `SELECT board, COUNT(*) n, SUM(created_at > ?) today FROM posts GROUP BY board`).bind(day).all()).results;
+    return { boards: rows };
+  }
 
   /* auth */
   if (p === "/api/signup" && m === "POST") {
@@ -196,30 +206,45 @@ async function handle(req, env, url) {
 
   /* posts */
   if (p === "/api/posts" && m === "GET") {
-    const board = url.searchParams.get("board") || "";
-    const q = (url.searchParams.get("q") || "").trim().slice(0, 60);
-    const page = Math.max(1, Math.min(500, parseInt(url.searchParams.get("page")) || 1));
+    const sp = url.searchParams, board = sp.get("board") || "", tag = sp.get("tag") || "";
+    const q = (sp.get("q") || "").trim().slice(0, 60), field = sp.get("field") || "all";
+    const sort = sp.get("sort") || "new", best = sp.get("best") === "1";
+    const page = Math.max(1, Math.min(500, parseInt(sp.get("page")) || 1));
     if (board && !BOARDS.includes(board)) bad("bad_board");
-    const where = [], args = [];
+    const where = ["p.tag<>'notice'"], args = [];
     if (board) { where.push("p.board=?"); args.push(board); }
-    if (q) { where.push("(p.title LIKE ? ESCAPE '\\' OR p.body LIKE ? ESCAPE '\\')"); const l = "%" + q.replace(/[\\%_]/g, "\\$&") + "%"; args.push(l, l); }
-    const w = where.length ? "WHERE " + where.join(" AND ") : "";
-    const total = (await env.DB.prepare(`SELECT COUNT(*) n FROM posts p ${w}`).bind(...args).first()).n;
-    const rows = (await env.DB.prepare(
-      `SELECT p.id,p.board,p.title,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,
-              u.nickname,u.deleted AS gone
-       FROM posts p JOIN users u ON u.id=p.user_id ${w}
-       ORDER BY p.id DESC LIMIT ? OFFSET ?`).bind(...args, PAGE, (page - 1) * PAGE).all()).results;
-    return { posts: rows, total, page, per: PAGE };
+    if (tag && TAGS.includes(tag)) { where.push("p.tag=?"); args.push(tag); }
+    if (best) where.push(`(p.n_likes-p.n_dislikes)>=${BEST}`);
+    if (q) {
+      const l = "%" + q.replace(/[\\%_]/g, "\\$&") + "%";
+      if (field === "title") { where.push("p.title LIKE ? ESCAPE '\\'"); args.push(l); }
+      else if (field === "author") { where.push("u.nickname LIKE ? ESCAPE '\\'"); args.push(l); }
+      else { where.push("(p.title LIKE ? ESCAPE '\\' OR p.body LIKE ? ESCAPE '\\')"); args.push(l, l); }
+    }
+    const w = "WHERE " + where.join(" AND ");
+    const order = sort === "top" ? "(p.n_likes-p.n_dislikes) DESC, p.id DESC"
+      : sort === "cmt" ? "p.n_comments DESC, p.id DESC"
+      : sort === "hot" ? `((p.n_likes-p.n_dislikes)*2+p.n_comments+p.views*0.05+1)*1.0/((${now()}-p.created_at)/3600.0+2) DESC, p.id DESC`
+      : "p.id DESC";
+    const cols = `p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.deleted AS gone`;
+    const total = (await env.DB.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${w}`).bind(...args).first()).n;
+    const rows = (await env.DB.prepare(`SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`)
+      .bind(...args, PAGE, (page - 1) * PAGE).all()).results;
+    // notices sit on top of the first page, as on every Korean board
+    const notices = page === 1 && !q ? (await env.DB.prepare(
+      `SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.tag='notice' ${board ? "AND (p.board=? OR p.board='free')" : ""} ORDER BY p.id DESC LIMIT 5`)
+      .bind(...(board ? [board] : [])).all()).results : [];
+    return { posts: rows, notices, total, page, per: PAGE };
   }
   if (p === "/api/posts" && m === "POST") {
     needUser(me);
     await limit(env, "post:" + me.id, 5, 600);
     const board = BOARDS.includes(body.board) ? body.board : bad("bad_board");
+    const tag = pickTag(body.tag, me);
     const title = text(body.title, LIMITS.title, "bad_title");
     const content = text(body.body, LIMITS.body, "bad_body");
-    const res = await env.DB.prepare("INSERT INTO posts(board,user_id,title,body,created_at) VALUES(?,?,?,?,?)")
-      .bind(board, me.id, title, content, now()).run();
+    const res = await env.DB.prepare("INSERT INTO posts(board,tag,user_id,title,body,created_at) VALUES(?,?,?,?,?,?)")
+      .bind(board, tag, me.id, title, content, now()).run();
     return { id: res.meta.last_row_id };
   }
   if ((r = /^\/api\/posts\/(\d+)$/.exec(p))) {
@@ -233,46 +258,51 @@ async function handle(req, env, url) {
         post.views++;
       }
       const comments = (await env.DB.prepare(
-        `SELECT c.id,c.user_id,c.body,c.created_at,c.updated_at,u.nickname,u.deleted AS gone
+        `SELECT c.id,c.parent_id,c.user_id,c.body,c.created_at,c.updated_at,u.nickname,u.deleted AS gone
          FROM comments c JOIN users u ON u.id=c.user_id WHERE c.post_id=? ORDER BY c.id`).bind(id).all()).results;
       const liked = me ? !!(await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
+      const disliked = me ? !!(await env.DB.prepare("SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
       for (const c of comments) { c.mine = canEdit(me, c.user_id); delete c.user_id; }
       post.mine = canEdit(me, post.user_id);
       delete post.user_id;
-      return { post, comments, liked };
+      return { post, comments, liked, my: liked ? 1 : disliked ? -1 : 0 };
     }
     if (!canEdit(needUser(me), post.user_id)) throw new HttpError(403, "forbidden");
     if (m === "PATCH") {
       const title = text(body.title, LIMITS.title, "bad_title");
       const content = text(body.body, LIMITS.body, "bad_body");
       const board = BOARDS.includes(body.board) ? body.board : post.board;
-      await env.DB.prepare("UPDATE posts SET title=?,body=?,board=?,updated_at=? WHERE id=?")
-        .bind(title, content, board, now(), id).run();
+      const tag = body.tag === undefined ? post.tag : pickTag(body.tag, me);
+      await env.DB.prepare("UPDATE posts SET title=?,body=?,board=?,tag=?,updated_at=? WHERE id=?")
+        .bind(title, content, board, tag, now(), id).run();
       return { ok: true };
     }
     if (m === "DELETE") {
       await env.DB.batch([
         env.DB.prepare("DELETE FROM comments WHERE post_id=?").bind(id),
         env.DB.prepare("DELETE FROM likes WHERE post_id=?").bind(id),
+        env.DB.prepare("DELETE FROM dislikes WHERE post_id=?").bind(id),
         env.DB.prepare("DELETE FROM posts WHERE id=?").bind(id),
       ]);
       return { ok: true };
     }
   }
-  if ((r = /^\/api\/posts\/(\d+)\/like$/.exec(p)) && m === "POST") {
+  if ((r = /^\/api\/posts\/(\d+)\/(like|vote)$/.exec(p)) && m === "POST") {
     needUser(me);
-    const id = +r[1];
+    await limit(env, "vote:" + me.id, 60, 600);
+    const id = +r[1], v = r[2] === "like" ? 1 : (body.v === -1 ? -1 : 1);
     if (!(await env.DB.prepare("SELECT 1 FROM posts WHERE id=?").bind(id).first())) throw new HttpError(404, "not_found");
-    const had = await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first();
-    await env.DB.batch(had ? [
-      env.DB.prepare("DELETE FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id),
-      env.DB.prepare("UPDATE posts SET n_likes=n_likes-1 WHERE id=?").bind(id),
-    ] : [
-      env.DB.prepare("INSERT INTO likes(post_id,user_id,created_at) VALUES(?,?,?)").bind(id, me.id, now()),
-      env.DB.prepare("UPDATE posts SET n_likes=n_likes+1 WHERE id=?").bind(id),
-    ]);
-    const n = (await env.DB.prepare("SELECT n_likes FROM posts WHERE id=?").bind(id).first()).n_likes;
-    return { liked: !had, n_likes: n };
+    const up = !!(await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first());
+    const down = !!(await env.DB.prepare("SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id).first());
+    const ops = [];
+    if (up) ops.push(env.DB.prepare("DELETE FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id), env.DB.prepare("UPDATE posts SET n_likes=n_likes-1 WHERE id=?").bind(id));
+    if (down) ops.push(env.DB.prepare("DELETE FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id), env.DB.prepare("UPDATE posts SET n_dislikes=n_dislikes-1 WHERE id=?").bind(id));
+    const my = (v === 1 && up) || (v === -1 && down) ? 0 : v;      // pressing the same button again takes the vote back
+    if (my === 1) ops.push(env.DB.prepare("INSERT INTO likes(post_id,user_id,created_at) VALUES(?,?,?)").bind(id, me.id, now()), env.DB.prepare("UPDATE posts SET n_likes=n_likes+1 WHERE id=?").bind(id));
+    if (my === -1) ops.push(env.DB.prepare("INSERT INTO dislikes(post_id,user_id,created_at) VALUES(?,?,?)").bind(id, me.id, now()), env.DB.prepare("UPDATE posts SET n_dislikes=n_dislikes+1 WHERE id=?").bind(id));
+    if (ops.length) await env.DB.batch(ops);
+    const c = await env.DB.prepare("SELECT n_likes,n_dislikes FROM posts WHERE id=?").bind(id).first();
+    return { my, liked: my === 1, n_likes: c.n_likes, n_dislikes: c.n_dislikes };
   }
 
   /* comments */
@@ -282,8 +312,15 @@ async function handle(req, env, url) {
     const id = +r[1];
     if (!(await env.DB.prepare("SELECT 1 FROM posts WHERE id=?").bind(id).first())) throw new HttpError(404, "not_found");
     const content = text(body.body, LIMITS.comment, "bad_body");
+    // replies are one level deep: answering a reply joins its thread
+    let parent = null;
+    if (body.parent_id) {
+      const pc = await env.DB.prepare("SELECT id,parent_id FROM comments WHERE id=? AND post_id=?").bind(parseInt(body.parent_id) || 0, id).first();
+      if (!pc) throw new HttpError(404, "not_found");
+      parent = pc.parent_id || pc.id;
+    }
     const [ins] = await env.DB.batch([
-      env.DB.prepare("INSERT INTO comments(post_id,user_id,body,created_at) VALUES(?,?,?,?)").bind(id, me.id, content, now()),
+      env.DB.prepare("INSERT INTO comments(post_id,parent_id,user_id,body,created_at) VALUES(?,?,?,?,?)").bind(id, parent, me.id, content, now()),
       env.DB.prepare("UPDATE posts SET n_comments=n_comments+1 WHERE id=?").bind(id),
     ]);
     return { id: ins.meta.last_row_id };
@@ -299,9 +336,10 @@ async function handle(req, env, url) {
       return { ok: true };
     }
     if (m === "DELETE") {
+      const n = 1 + (await env.DB.prepare("SELECT COUNT(*) n FROM comments WHERE parent_id=?").bind(id).first()).n;   // its replies go with it
       await env.DB.batch([
-        env.DB.prepare("DELETE FROM comments WHERE id=?").bind(id),
-        env.DB.prepare("UPDATE posts SET n_comments=n_comments-1 WHERE id=?").bind(c.post_id),
+        env.DB.prepare("DELETE FROM comments WHERE id=? OR parent_id=?").bind(id, id),
+        env.DB.prepare("UPDATE posts SET n_comments=n_comments-? WHERE id=?").bind(n, c.post_id),
       ]);
       return { ok: true };
     }
