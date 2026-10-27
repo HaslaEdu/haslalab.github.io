@@ -24,6 +24,10 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 `migrations/0002_v2.sql`은 이미 원격 D1에 적용해 두었습니다. 대시보드에서 **haslalab-community → Edit code**로 들어가 `src/index.js`의 새 내용을 다시 붙여 넣고 **Deploy**만 누르면 됩니다. 사이트는 서버 버전(`/api/health`의 `v`)을 보고 v1이면 비추천 버튼을 숨기는 식으로 알아서 맞춥니다.
 
+## v3: 한국어 서버와 영어 서버 (계정은 공유)
+
+글마다 `lang`(`ko`/`en`)이 붙고, 목록·게시판 통계·인기글은 사이트 언어의 서버 것만 보여 줍니다. `migrations/0003_lang.sql`은 원격 D1에 적용해 두었습니다(기존 글은 모두 한국어 서버). `src/index.js`를 다시 붙여 넣고 Deploy하면 됩니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.

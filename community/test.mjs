@@ -40,7 +40,7 @@ const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.
 
 /* v2: tags, votes, replies, sorting, best posts, notices */
 {
-  let [s0, h] = await call("GET", "/health"); ok(h.v === 2, "health v2");
+  let [s0, h] = await call("GET", "/health"); ok(h.v >= 2, "health v2+");
   let [s1, a] = await call("POST", "/signup", { username: "v2user", nickname: "브이투", password: "password1" }); const T = a.token;
   let [s2, b] = await call("POST", "/signup", { username: "v2other", nickname: "다른이", password: "password1" }); const U = b.token;
   let [s3, p1] = await call("POST", "/posts", { board: "qna", tag: "q", title: "태그 질문", body: "본문" }, T); ok(s3 === 200, "post with tag");
@@ -63,4 +63,16 @@ const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.
   let [, la] = await call("GET", "/posts?q=" + encodeURIComponent("브이") + "&field=author"); ok(la.total >= 2, "search by author");
   let [, lq] = await call("GET", "/posts?tag=q"); ok(lq.posts.every(p => p.tag === "q"), "tag filter");
   let [, bd] = await call("GET", "/boards"); ok(bd.boards.some(r => r.board === "qna" && r.n >= 2), "board counts");
+}
+
+/* v3: the Korean and the English server keep their own posts */
+{
+  let [, h] = await call("GET", "/health"); ok(h.v === 3, "health v3");
+  let [, a] = await call("POST", "/signup", { username: "v3user", nickname: "브이삼", password: "password1" });
+  let [, pk] = await call("POST", "/posts", { board: "free", lang: "ko", title: "한국어 글", body: "x" }, a.token);
+  let [, pe] = await call("POST", "/posts", { board: "free", lang: "en", title: "English post", body: "x" }, a.token);
+  let [, lk] = await call("GET", "/posts?lang=ko&board=free"); let [, le] = await call("GET", "/posts?lang=en&board=free");
+  ok(lk.posts.some(p => p.id === pk.id) && !lk.posts.some(p => p.id === pe.id), "ko server only");
+  ok(le.posts.some(p => p.id === pe.id) && !le.posts.some(p => p.id === pk.id), "en server only");
+  let [, be] = await call("GET", "/boards?lang=en"); ok(be.boards.find(r => r.board === "free").n === 1, "board counts per server");
 }

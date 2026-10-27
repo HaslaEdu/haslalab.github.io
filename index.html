@@ -401,7 +401,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .cm .cmtop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:20px 0 16px}
 .cm .cmtop h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.03em}
 .cm .cmtop p{margin:4px 0 0;color:var(--graphite);font-size:14px}
-.cmgrid{display:grid;grid-template-columns:220px minmax(0,1fr) 270px;gap:18px;align-items:start}
+.shell.cm{max-width:1680px}
+.cmgrid{display:grid;grid-template-columns:236px minmax(0,1fr) 300px;gap:20px;align-items:start}
 @media(max-width:1100px){.cmgrid{grid-template-columns:200px minmax(0,1fr)}.cmright{grid-column:1/-1}}
 @media(max-width:760px){.cmgrid{grid-template-columns:minmax(0,1fr)}}
 
@@ -410,6 +411,12 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .cmrail .srv{display:flex;align-items:center;gap:9px;padding:4px 8px 12px;border-bottom:1px solid #313a47;margin-bottom:8px}
 .cmrail .srv img{width:28px;height:28px;border-radius:8px;background:#fff}
 .cmrail .srv b{color:#fff;font-size:14.5px}
+.cmrail .servers{display:flex;flex-direction:column;gap:4px;padding:0 0 8px;margin-bottom:6px;border-bottom:1px solid #313a47}
+.cmrail .servers button{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;border:0;background:none;color:#aab4c0;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.cmrail .servers button span{width:26px;height:26px;border-radius:50%;background:#2a323e;display:inline-flex;align-items:center;justify-content:center;font-size:14px;transition:.15s}
+.cmrail .servers button:hover{background:var(--cm-rail2);color:#fff}
+.cmrail .servers button.on{color:#fff;font-weight:600}
+.cmrail .servers button.on span{border-radius:9px;background:var(--cm-acc)}
 .cmrail .sec{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8793a3;padding:10px 8px 4px}
 .cmrail a.ch{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;font-size:14px;color:#aab4c0;transition:.12s}
 .cmrail a.ch:hover{background:var(--cm-rail2);color:#fff}
@@ -430,6 +437,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 @media(max-width:760px){
   .cmrail{position:static;display:flex;gap:4px;overflow-x:auto;padding:8px;scrollbar-width:none;border-radius:10px}
   .cmrail .srv,.cmrail .sec,.cmrail .me,.cmrail .auth{display:none}
+  .cmrail .servers{flex-direction:row;border:0;padding:0;margin:0 4px 0 0}
+  .cmrail .servers button{white-space:nowrap;padding:6px}
   .cmrail a.ch{white-space:nowrap;flex:none}
 }
 .cmav{width:30px;height:30px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;
@@ -7058,6 +7067,7 @@ function cmRailHtml(active){
          <div class="ops"><a href="#/community/account" title="${T.account}">⚙</a><button type="button" data-cm="logout" title="${T.logout}">⎋</button></div></div>`
     : `<div class="auth"><a class="pri" href="#/community/login">${T.login}</a><a class="sec2" href="#/community/signup">${T.signup}</a></div>`;
   return `<div class="srv"><img src="${logo}" alt=""><b>HaslaLab</b></div>
+    <div class="servers">${[["ko","🇰🇷","한국어 서버"],["en","🇬🇧","English server"]].map(([l,f,n])=>`<button type="button" class="${lang===l?"on":""}" data-srv="${l}" title="${n}"><span>${f}</span>${n}</button>`).join("")}</div>
     <div class="sec">${T.secMore}</div>
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
@@ -7074,7 +7084,7 @@ async function cmRight(where){
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
   try{
-    const j=await cmApi("GET","/posts?sort=hot&page=1"+(isB?"&board="+where:""));
+    const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h) return;
     const top=j.posts.slice(0,6);
     h.innerHTML=top.length ? top.map(p=>`<a href="#/community/post/${p.id}"><em>${cmScore(p)}</em><span>${esc(p.title)}</span></a>`).join("") : `<span>${T.empty}</span>`;
@@ -7095,7 +7105,8 @@ async function cmMount(){
     const jobs=[];
     if(!cm.meChecked && cmTok()) jobs.push(cmApi("GET","/me").then(r=>{cm.me=r.user;}).catch(()=>{}));
     if(!cm.v) jobs.push(cmApi("GET","/health").then(r=>{cm.v=r.v||1;}).catch(()=>{cm.v=1;}));
-    if(!cm.boards) jobs.push(cmApi("GET","/boards").then(r=>{cm.boards={}; for(const x of r.boards) cm.boards[x.board]={n:x.n,today:x.today||0};}).catch(()=>{cm.boards={};}));
+    if(cm.boardsLang!==lang) cm.boards=null;
+    if(!cm.boards){ cm.boardsLang=lang; jobs.push(cmApi("GET","/boards?lang="+lang).then(r=>{cm.boards={}; for(const x of r.boards) cm.boards[x.board]={n:x.n,today:x.today||0};}).catch(()=>{cm.boards={};})); }
     await Promise.all(jobs); cm.meChecked=true;
   }catch(e){}
   if(!alive()) return;
@@ -7118,6 +7129,7 @@ async function cmMount(){
 }
 function cmWire(scope){
   if(!scope) return;
+  scope.querySelectorAll("[data-srv]").forEach(el=>el.onclick=()=>{ if(el.dataset.srv!==lang) setLang(el.dataset.srv); });
   scope.querySelectorAll("[data-cm]").forEach(el=>el.onclick=async()=>{
     const k=el.dataset.cm;
     if(k==="login") cmGoLogin();
@@ -7133,7 +7145,7 @@ async function cmVote(id, v){
 }
 
 async function cmList(root, o, alive){
-  const T=CMT[lang], qs=new URLSearchParams({page:o.page});
+  const T=CMT[lang], qs=new URLSearchParams({page:o.page, lang});
   if(CM_BOARDS.includes(o.where)) qs.set("board",o.where);
   if(o.where==="best") qs.set("best","1");
   const sort=o.sort||(o.where==="hot"?"hot":"new"); qs.set("sort",sort);
@@ -7302,7 +7314,7 @@ async function cmPost(root, id, alive){
   });
   /* the board's list under the post, as on DC Inside */
   try{
-    const l=await cmApi("GET",`/posts?board=${p.board}&page=1`); if(!alive()) return;
+    const l=await cmApi("GET",`/posts?board=${p.board}&page=1&lang=${p.lang||lang}`); if(!alive()) return;
     const more=document.getElementById("cmMore"); if(!more) return;
     more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${bName} — ${T.boardList}</h2></div>
       <table class="cmtbl"><tbody>${l.posts.slice(0,10).map(x=>`<tr${x.id===p.id?' style="font-weight:700"':""}><td class="c-tag">${cmTag(x.tag)}</td>
@@ -7345,7 +7357,7 @@ function cmWrite(root, post, board){
   f.onsubmit=async e=>{
     e.preventDefault();
     const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
-    const data={board:f.board.value,tag:f.tag.value,title:f.title.value,body:f.body.value};
+    const data={board:f.board.value,tag:f.tag.value,title:f.title.value,body:f.body.value,lang};   /* a post belongs to the server it is written on */
     try{
       if(post){ await cmApi("PATCH",`/posts/${post.id}`,data); delete cm.draft[key]; location.hash=`#/community/post/${post.id}`; }
       else{ const r=await cmApi("POST","/posts",data); delete cm.draft[key]; cm.boards=null; location.hash=`#/community/post/${r.id}`; }
@@ -7439,7 +7451,7 @@ async function cmAccount(root, alive){
     try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }
   };
   try{
-    const l=await cmApi("GET","/posts?field=author&q="+encodeURIComponent(cm.me.nickname)); if(!alive()) return;
+    const l=await cmApi("GET","/posts?field=author&lang="+lang+"&q="+encodeURIComponent(cm.me.nickname)); if(!alive()) return;
     const box=document.getElementById("cmMine"); if(!box) return;
     const mine=l.posts.filter(x=>x.nickname===cm.me.nickname);
     box.innerHTML=mine.length?`<table class="cmtbl"><tbody>${mine.map(x=>`<tr><td class="c-tag">${cmTag(x.tag)}</td><td class="t"><a href="#/community/post/${x.id}">${esc(x.title)}</a>${x.n_comments?`<span class="cc">[${x.n_comments}]</span>`:""}</td><td class="c-dt">${cmShort(x.created_at)}</td><td class="c-r">${cmScore(x)}</td></tr>`).join("")}</tbody></table>`:`<p class="cmempty">${T.empty}</p>`;
