@@ -12,6 +12,9 @@
 const REPO = "HaslaEdu/haslalab.github.io";
 const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
+/* Replacing assets in place keeps their download URLs, so cached copies would
+ * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
+const CACHE_V = 2;
 
 export default {
   async fetch(req, env, ctx) {
@@ -24,16 +27,16 @@ export default {
 
     /* one cached copy per file at each edge; the query string never matters */
     const cache = caches.default;
-    const key = new Request(url.origin + url.pathname, { method: "GET" });
+    const key = new Request(`${url.origin}${url.pathname}?v=${CACHE_V}`, { method: "GET" });
     let res = await cache.match(key);
     if (!res) {
-      const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}`,
+      const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}?v=${CACHE_V}`,
                              { redirect: "follow", cf: { cacheTtl: DAY, cacheEverything: true } });
       if (!up.ok) return new Response("Not found", { status: up.status === 404 ? 404 : 502 });
       res = new Response(up.body, { status: 200, headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${name}"`,
-        "Cache-Control": `public, max-age=${DAY}`,
+        "Cache-Control": "public, max-age=3600",
         "Access-Control-Allow-Origin": "*",
         "X-Content-Type-Options": "nosniff",
       }});
