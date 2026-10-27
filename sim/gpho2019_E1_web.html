@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="theme-color" content="#1c2027">
+<title>GPhO 2019 E1 — 물질의 자기적 성질 · Magnetic Properties of Matter · HaslaLab</title>
+<meta name="description" content="GPhO 2019 실험 문제 E1을 브라우저에서 실행합니다. 레이저 회절로 주사바늘의 지름을, 떨어지는 물방울로 물의 표면장력을, 자석에 밀려 뜬 흑연 조각으로 흑연의 자화율을, 자기장 센서와 멀티미터로 강자성 띠의 투자율을 측정합니다.">
+<link rel="canonical" href="https://haslalab.org/sim/gpho2019_E1_web.html">
+<link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/gpho2019_E1_web.html?lang=ko">
+<link rel="alternate" hreflang="en" href="https://haslalab.org/sim/gpho2019_E1_web.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://haslalab.org/sim/gpho2019_E1_web.html">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPhO 2019 E1 — 물질의 자기적 성질 · Magnetic Properties of Matter">
+<meta property="og:description" content="GPhO 2019 실험 문제 E1을 브라우저에서 실행합니다. 레이저 회절로 주사바늘의 지름을, 떨어지는 물방울로 물의 표면장력을, 자석에 밀려 뜬 흑연 조각으로 흑연의 자화율을, 자기장 센서와 멀티미터로 강자성 띠의 투자율을 측정합니다.">
+<meta property="og:url" content="https://haslalab.org/sim/gpho2019_E1_web.html">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haslalab.org/og.png">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px 12px max(160px,24vh);display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .page{display:none}.page.on{display:block}
+  #bench,#ctrl,#screen,#wire{display:block;max-width:100%;height:auto!important;margin:0 auto;border-radius:6px}
+  .pair{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px}
+  .serial{color:#69717a;font-size:11px}
+  #wwarn{color:#f0a79f}#wwarn:empty{display:none}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  #screen{cursor:default}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #vtabs{margin-bottom:6px}
+  #wwarn{color:var(--accent)} #wwarn .w{color:#f0a79f}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="h1"></h1>
+    <p id="sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtscreen"></button><button id="vtdish"></button><button id="vtdishtop"></button><button id="vtstrips"></button><button id="vtmeter"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="lgCtl"></h2>
+    <button id="bLaser" style="width:100%"></button>
+    <button id="bClear" style="width:100%"></button>
+    <h2 id="lgNotes"></h2>
+    <p class="hint" id="txNotes"></p>
+    <div class="status"><div id="wwarn"></div></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* ====================================================================
+   GPhO 2019 (Muscat) - Experimental Problem E1
+   MAGNETIC PROPERTIES OF MATTER
+
+   A: a green laser (532 nm) clipped to the upright syringe, a syringe
+      needle standing in foam, a foldable mirror at the far end of the
+      desk and the stand with graph paper as the screen.
+   B: the silicone tube with water clipped to the stand, the needle
+      punctured into its lowest point; water drips while the column
+      above the needle's flat end exceeds 4 sigma / (rho g d).
+   C: a Petri dish of water, a graphite chip floating on it and the
+      magnet taped to the syringe at 45 degrees; the chip rests where
+      the push of the magnet balances its slide down the meniscus.
+   D: two ferromagnetic strips with the magnet and a spacer between
+      them, a magnetoresistive sensor fed from the battery holder and
+      read on the multimeter's 200 mV range.
+
+   Nothing is computed for you: the fringes are read off the paper,
+   the heights and distances off the tape and the ruler, the field off
+   the meter.  The hidden values follow the official solution:
+   d = 0.31 / 0.24 mm, sigma ~ 65 mN/m, chi_g ~ -6.2e-8 m^3/kg,
+   mu ~ 57 000, gap ~ 7.7 mm; the meniscus slope and the magnet's
+   pressure gradient are the problem's Figs. 7 and 8 themselves.
+   ==================================================================== */
+const I18N = {
+  title: ["GPhO 2019 — Problem E1 — Magnetic properties of matter", "GPhO 2019 — 실험 문제 E1 — 물질의 자기적 성질"],
+  sub: ["Virtual laboratory · the needles' diameters by laser diffraction, the surface tension of water from the dripping needle, the susceptibility of graphite floating by a magnet, and the permeability of a ferromagnetic strip with a field sensor. Everything is read off the paper, the tape, the ruler and the meter.",
+        "가상 실험실 · 레이저 회절로 주사바늘의 지름을, 물방울이 떨어지는 바늘로 물의 표면장력을, 자석 옆에 뜬 흑연 조각으로 흑연의 자화율을, 자기장 센서로 강자성 띠의 투자율을 잽니다. 모든 값은 종이·줄자·자·멀티미터에서 직접 읽습니다."],
+  tray: ["Equipment", "실험 도구"],
+  vt3d: ["3D bench", "3D 실험대"], vtscreen: ["screen (A, B)", "스크린 (A, B)"], vtdish: ["dish, side (C)", "접시 옆 (C)"], vtdishtop: ["dish, top (C)", "접시 위 (C)"], vtstrips: ["strips (D)", "띠 (D)"], vtmeter: ["multimeter", "멀티미터"],
+  cap_3d: ["the bench in 3D — drag to turn, right-drag to pan, wheel to zoom · drag the mirror along the desk, the tape and the ruler where you need them · click the laser to press its button with the spiral fixator · click the screen, the dish, the strips or the meter for a close-up · R-click: back",
+           "3D 실험대 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 거울은 책상을 따라 끌기, 줄자·자는 필요한 곳으로 끌기 · 레이저 클릭: 나선 고정구로 버튼 누르기 · 스크린·접시·띠·멀티미터 클릭: 확대 · 우클릭: 돌아가기"],
+  cap_screen: ["the stand seen from the mirror — the fringes on the graph paper (1 mm squares); the tube: drag its middle up or down, wheel over it to add or draw off water · the tape: drag it, click it to turn it 90° · R-click: back",
+               "거울 쪽에서 본 스탠드 — 모눈종이(1 mm 칸) 위의 무늬; 관: 가운데를 위아래로 끌기, 관 위 휠로 물 더하기/빼기 · 줄자: 끌기, 클릭하면 90° 돌림 · 우클릭: 돌아가기"],
+  cap_dish: ["the Petri dish from the side, through its wall — drag the magnet (it stays at 45°); the chip settles where the forces balance · R-click: back",
+             "옆에서 벽 너머로 본 페트리 접시 — 자석 끌기(45°를 유지); 흑연 조각은 힘이 평형인 곳에 멈춥니다 · 우클릭: 돌아가기"],
+  cap_dishtop: ["the dish from above — lay the ruler across it (drag; wheel over it to turn it) and read the chip's distance from the wall · R-click: back",
+                "위에서 본 접시 — 자를 가로질러 놓고(끌기, 자 위 휠로 돌리기) 흑연 조각과 벽 사이 거리 읽기 · 우클릭: 돌아가기"],
+  cap_strips: ["the strips from above — drag the sensor between them; the tape on the upper strip gives z, the ruler across gives s · click the holder's leads, the sensor's wires to connect · R-click: back",
+               "위에서 본 띠 — 센서를 띠 사이로 끌기; 위 띠의 줄자로 z, 가로지른 자로 s 읽기 · 건전지 홀더 단자·센서 전선 클릭: 연결 · 우클릭: 돌아가기"],
+  cap_meter: ["the multimeter — click the left or right half of the dial (or wheel over it) to turn it · R-click: back", "멀티미터 — 다이얼 왼/오른쪽 절반 클릭(또는 휠)으로 돌리기 · 우클릭: 돌아가기"],
+  itTape: ["measuring tape", "줄자"], itRuler: ["ruler", "자"], itNW: ["white needle", "흰 바늘"], itNG: ["green needle", "초록 바늘"], itTube: ["silicone tube with water", "물을 채운 실리콘 관"],
+  itMag: ["magnet (wrapped in film)", "자석 (비닐로 감쌈)"], itGraph: ["graphite bar", "흑연 막대"], itCup: ["cup with water", "물컵"], itClamp: ["sensor clamp", "센서 고정 클램프"],
+  take: ["click, then click where it goes", "클릭한 뒤 놓을 곳을 클릭"], back: ["click to take it back", "클릭하면 회수"],
+  inFoam: ["in the foam", "스펀지에 꽂힘"], inTube: ["in the tube", "관에 꽂힘"], hung: ["hung on the stand", "스탠드에 걸림"], onDesk: ["on the desk", "책상 위"],
+  onSyr: ["on the syringe, over the dish", "주사기에 붙임, 접시 위"], inStrips: ["between the strips", "띠 사이"], clampOn: ["on the sensor's wires", "센서 전선에 끼움"], clampOff: ["off", "빼 놓음"],
+  breakOff: ["click the water to drop a chip", "물을 클릭해 조각 띄우기"], fillDish: ["click the dish to pour", "접시를 클릭해 붓기"],
+  trayHelp: ["click an item; R-click to cancel", "항목 클릭; 우클릭으로 취소"],
+  lgCtl: ["Controls", "조작"], lgNotes: ["Notes", "안내"],
+  laserOn: ["Laser: button held by the fixator", "레이저: 고정구로 버튼 누름"], laserOff: ["Laser: off", "레이저: 꺼짐"],
+  notes: ["• λ = 532 nm; ρw = 1000 kg/m³, g = 9.81 m/s²; χw = −9.05×10⁻⁹ m³/kg; δ = 0.27 mm.\n• With E = 3 V each millivolt of the sensor is 10 µT; the reading is proportional to E.\n• Figs. 7 and 8 of the problem give the meniscus slope and the magnet's pressure gradient.\n• The laser rides on the syringe: tape the magnet to the syringe and the laser comes off it.\n• Never look into the laser; the needles are sharp; do not short the battery holder.",
+          "• λ = 532 nm; ρw = 1000 kg/m³, g = 9.81 m/s²; χw = −9.05×10⁻⁹ m³/kg; δ = 0.27 mm.\n• E = 3 V일 때 센서 1 mV가 10 µT이며, 읽음은 E에 비례합니다.\n• 문제의 그림 7, 8에 메니스커스 기울기와 자석의 자기 압력 기울기가 있습니다.\n• 레이저는 주사기에 집게로 물려 있습니다: 자석을 주사기에 붙이면 레이저가 빠집니다.\n• 레이저를 들여다보지 마세요; 바늘이 날카롭습니다; 건전지 홀더를 단락시키지 마세요."],
+  holdTape: ["the tape in your hand: click the desk to lay it down, or the stand's paper to hold it there", "줄자를 들고 있음: 책상을 클릭해 놓거나 스탠드 종이를 클릭해 대기"],
+  holdRuler: ["the ruler in your hand: click where it goes (desk, dish, strips)", "자를 들고 있음: 놓을 곳 클릭 (책상, 접시, 띠)"],
+  holdNeedle: ["a needle in your hand: click the foam to stand it up, or the tube's lowest point to puncture it", "바늘을 들고 있음: 스펀지를 클릭해 세우거나 관의 가장 낮은 곳을 클릭해 꽂기"],
+  holdMag: ["the magnet in your hand: click the dish (taped to the syringe at 45°), the strips, or the desk", "자석을 들고 있음: 접시(주사기에 45°로 붙임), 띠, 또는 책상 클릭"],
+  holdGraph: ["break off a tiny chip: click the water in the dish", "작은 조각을 떼어 냄: 접시의 물을 클릭"],
+  holdCup: ["the cup: click the Petri dish to pour water to half its height", "물컵: 페트리 접시를 클릭해 높이 절반까지 붓기"],
+  noWater: ["pour water into the dish first", "먼저 접시에 물을 부으세요"],
+  needleBusy: ["take the other needle out of the foam first", "먼저 다른 바늘을 스펀지에서 빼세요"],
+  tubeBusy: ["a needle is already in the tube", "관에 이미 바늘이 꽂혀 있습니다"],
+  laserDown: ["the syringe is holding the magnet: the laser lies on the desk", "주사기가 자석을 들고 있어 레이저가 책상에 놓여 있습니다"],
+  noTube: ["hang the tube on the stand first", "먼저 관을 스탠드에 거세요"],
+  conHolder: ["meter leads on the battery holder's output", "멀티미터 리드: 건전지 홀더 출력"], conSensor: ["meter leads on the sensor's red and white wires", "멀티미터 리드: 센서의 빨강·흰 선"], conNone: ["meter leads free", "멀티미터 리드: 연결 안 됨"],
+  powOn: ["sensor's blue and black wires on the batteries", "센서 파랑·검정 선: 건전지에 연결"], powOff: ["sensor unpowered", "센서 전원 없음"],
+  clear: ["Disconnect all", "모두 분리"]
+};
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+const tr = k => { const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k; };
+function mulberry(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const RNG = mulberry((Math.random() * 1e9) | 0);
+const gauss = () => { let u = 0, v = 0; while (!u) u = RNG(); while (!v) v = RNG(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+/* ---- hidden values (SI) -------------------------------------------- */
+const LAM = 532e-9, RHO = 1000, G = 9.81, CHI_W = -9.05e-9, DELTA = 0.27e-3, MU0 = 4e-7 * Math.PI;
+const NEEDLE = { W:{d:0.31e-3 * (1 + 0.02 * gauss()), col:"#eef0f2"}, G:{d:0.24e-3 * (1 + 0.025 * gauss()), col:"#3fb35a"} };
+const SIGMA = 0.0652 * (1 + 0.03 * gauss());
+const LC = Math.sqrt(SIGMA / (RHO * G));                    /* the capillary length the sheet scales Fig. 7 by */
+const CHI_G = -6.2e-8 * (1 + 0.1 * gauss());
+const MAG_D = 1.0 + 0.015 * gauss(), GAP = 0.77 * (1 + 0.03 * gauss());     /* cm: magnet diameter, its height = the gap */
+const MU_N = 57000 * (1 + 0.08 * gauss()), BK = 1.05 * (1 + 0.04 * gauss()), B_END = 0.227e-3 * (1 + 0.06 * gauss());
+const E_BAT = 3.12 + 0.1 * RNG(), V0_MV = 2.0 + 1.0 * gauss(), S_OFF = 0.8 * gauss();
+
+/* Fig. 7: the slope of the water surface against x / sqrt(sigma / rho g), read off the sheet */
+const FIG7 = [[0, 1.32], [0.1, 0.973], [0.25, 0.708], [0.5, 0.471], [0.75, 0.322], [1, 0.223], [1.25, 0.156], [1.5, 0.109], [2, 0.0537], [2.5, 0.0265], [3, 0.0129], [3.5, 0.00638], [4, 0.00315], [4.5, 0.00156], [4.8, 0.00102]];
+/* Fig. 8: the magnetic pressure gradient (J/m^4) on the magnet's axis against the distance (mm) from its face */
+const FIG8 = [[0, 4.64e7], [0.5, 4.28e7], [1, 3.66e7], [1.5, 3.06e7], [2, 2.44e7], [3, 1.44e7], [4, 8.29e6], [5, 4.57e6], [6, 2.56e6], [7, 1.46e6], [8, 8.49e5], [9, 5.16e5], [10, 3.16e5], [11, 2.0e5], [12, 1.31e5], [13, 8.7e4], [14, 5.88e4], [16, 2.87e4], [18, 1.48e4], [20, 8.15e3]];
+function logInterp(T, x){ if (x <= T[0][0]) return T[0][1]; const n = T.length - 1;
+  if (x >= T[n][0]){ const s = Math.log(T[n][1] / T[n - 1][1]) / (T[n][0] - T[n - 1][0]); return T[n][1] * Math.exp(s * (x - T[n][0])); }
+  for (let i = 0; i < n; i++) if (x <= T[i + 1][0]){ const f = (x - T[i][0]) / (T[i + 1][0] - T[i][0]); return T[i][1] * Math.pow(T[i + 1][1] / T[i][1], f); } }
+const slopeAt = l_m => logInterp(FIG7, l_m / LC);           /* rad, l = distance from the wall in m */
+const gradAt = r_mm => logInterp(FIG8, r_mm);               /* J/m^4 */
+
+/* ---- Part D: the field in the gap, from the free end (z = 0) to the magnet ----
+   dPhi/dz = a_eff Bg, dBg/dz = 2 B_in / (h mu(B_in)), B_in = Phi / (a delta), mu falling off near BK */
+const STRIP_A = 0.030, STRIP_L = 60;                        /* m, cm */
+function sProfile(s_mm){ const q = Math.abs(s_mm - S_OFF), k = 1 + 0.008 * (s_mm - S_OFF);
+  return k * (q <= 12 ? 1 - 0.1 * (q / 12) * (q / 12) : 0.9 * Math.exp(-Math.pow((q - 12) / 5.5, 2))); }
+const A_EFF = (() => { let s = 0; for (let x = -40; x <= 40; x += 0.05) s += sProfile(x) * 0.05; return s / 1000; })();
+const BG = (() => { const a = STRIP_A, h = GAP / 100, mui = MU_N * A_EFF / a, out = [], dz = 1e-4;
+  const f = (Bg, Phi) => { const Bin = Phi / (a * DELTA), m = mui / (1 + Math.pow(Bin / BK, 5)); return [A_EFF * Bg, 2 * Bin / (h * m)]; };
+  let Bg = B_END, Phi = 0;
+  for (let i = 0; i <= STRIP_L * 100; i++){ if (i % 10 === 0) out.push(Bg);
+    const k1 = f(Bg, Phi), k2 = f(Bg + dz / 2 * k1[1], Phi + dz / 2 * k1[0]), k3 = f(Bg + dz / 2 * k2[1], Phi + dz / 2 * k2[0]), k4 = f(Bg + dz * k3[1], Phi + dz * k3[0]);
+    Phi += dz / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]); Bg = Math.min(0.012, Bg + dz / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])); }
+  return out; })();                                         /* one value per mm */
+function gapField(zf){ const n = BG.length - 1, L = n / 10;
+  if (zf < 0) return BG[0] * Math.exp(zf / 0.9); if (zf > L) return BG[n] * Math.exp(-(zf - L) / 0.9);
+  const i = Math.min(n - 1, Math.floor(zf * 10)), f = zf * 10 - i; return BG[i] * (1 - f) + BG[i + 1] * f; }
+
+/* ---- Part B: the tube (cm) ------------------------------------------ */
+const TUBE_HALF = 28, TUBE_A = 0.126;                        /* half length, inner cross-section cm^2 */
+const KQ = 1.2e-11;                                            /* m^3 / (Pa s) through the needle */
+const tate = d => 2 * Math.PI * (d / 2) * SIGMA * 0.62 / (RHO * G);
+
+/* ---- the state -------------------------------------------------------- */
+const ST = {
+  t:0, laserOn:false, mirX:121.5,
+  needle:{W:"box", G:"box"},                                 /* box | foam | tube */
+  tube:{hung:false, yb:14, Sw:38, drop:0, falling:[], puddle:0},
+  dishWater:false, pebble:null,                              /* {x} dish-local cm along +x */
+  mag:{loc:"desk", x:1.6, y:0.75},                           /* face centre over the dish, dish-local cm */
+  sensor:{x:100, z:31, clamp:false, tilt:0.7}, pow:false, meterTo:null, dial:0,
+  tape:{where:"box", x:4, z:2, y:0, ang:0}, ruler:{where:"desk", x:36, z:27, ang:0}
+};
+
+/* ---- where things are on the desk (cm; x along the desk, y up, z toward you) ---- */
+const OZ = -10, BY = 5.5, FX = 3, XS = 3, XP = XS + 0.45;    /* beam line, its height, needle, stand, paper face */
+const PAPER = {z0:-15, z1:-33, y0:13, y1:1}, SCZ = -24;      /* paper's left/right edge seen from the mirror, top/bottom */
+const CLIP_Y = 29.4, CLIP_DZ = 10, TUBE_X = XS + 1.3;
+const DX = 32, DZ = 12, R_IN = 4.4, R_OUT = 4.6, DISH_H = 1.5, WATER_Y = 0.75;
+const SX0 = 55, SX1 = SX0 + STRIP_L, SZC = 24, HOLD = [124, 7], METER = [137, 24];
+
+/* ---- Part B: the shape of the hanging tube and the water in it ---------------- */
+const tubeC = sg => [SCZ + sg * CLIP_DZ, CLIP_Y];
+function armAt(B, C, s, t){ return [B[0] + (C[0] - B[0]) * t, B[1] + (C[1] - B[1]) * t - 4 * s * t * (1 - t)]; }
+function armLen(B, C, s){ let L = 0, p = B; for (let i = 1; i <= 48; i++){ const q = armAt(B, C, s, i / 48); L += Math.hypot(q[0] - p[0], q[1] - p[1]); p = q; } return L; }
+function sagFor(B, C){ if (armLen(B, C, 0) >= TUBE_HALF) return 0; let a = 0, b = 40; for (let i = 0; i < 40; i++){ const m = (a + b) / 2; if (armLen(B, C, m) < TUBE_HALF) a = m; else b = m; } return (a + b) / 2; }
+const YB_MIN = CLIP_Y - Math.sqrt(TUBE_HALF * TUBE_HALF - CLIP_DZ * CLIP_DZ) + 0.05, YB_MAX = CLIP_Y - 1.5;
+const YB_FREE = (() => { const C = tubeC(1); let a = YB_MIN, b = YB_MAX;
+  for (let i = 0; i < 40; i++){ const m = (a + b) / 2, s = sagFor([SCZ, m], C); if ((C[1] - m) - 4 * s > 0) a = m; else b = m; } return (a + b) / 2; })();
+let _tubeKey = "", _tube = null;
+function tubeShape(){ const T = ST.tube, yb = T.yb === null ? YB_FREE : T.yb, key = yb.toFixed(3) + "|" + T.Sw.toFixed(3);
+  if (key === _tubeKey) return _tube; _tubeKey = key;
+  const B = [SCZ, yb], arms = [-1, 1].map(sg => { const C = tubeC(sg), s = sagFor(B, C), P = []; for (let i = 0; i <= 48; i++) P.push(armAt(B, C, s, i / 48)); return P; });
+  let level = CLIP_Y, wet = 48, acc = 0; const P = arms[1];
+  for (let i = 1; i <= 48; i++){ const d = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); if (acc + d >= T.Sw / 2){ const f = (T.Sw / 2 - acc) / d; level = P[i - 1][1] + (P[i][1] - P[i - 1][1]) * f; wet = i - 1 + f; break; } acc += d; }
+  _tube = {yb, arms, level, wet, tip:yb - 1.4}; return _tube; }
+const tubeNeedle = () => ST.needle.W === "tube" ? "W" : ST.needle.G === "tube" ? "G" : null;
+
+function stepTube(dt){ const T = ST.tube, k = tubeNeedle();
+  for (const f of T.falling){ f.vy += 981 * dt; f.y -= f.vy * dt; } const n0 = T.falling.length; T.falling = T.falling.filter(f => f.y > 0.15); T.puddle += n0 - T.falling.length;
+  if (!T.hung || !k || T.Sw <= 0){ T.drop = 0; return; }
+  const sh = tubeShape(), d = NEEDLE[k].d, h = (sh.level - sh.tip) / 100, Vh = 2 / 3 * Math.PI * Math.pow(d / 2, 3);
+  const R = T.drop > 0 ? Math.max(d / 2, Math.cbrt(3 * (Vh + T.drop) / (4 * Math.PI))) : d / 2, P = RHO * G * h - 2 * SIGMA / R;
+  if (T.drop > 0 || P > 0) T.drop = Math.max(0, T.drop + KQ * P * dt);
+  if (Vh + T.drop >= tate(d)){ T.falling.push({y:sh.tip - 0.1, vy:0}); T.drop = 0; T.Sw = Math.max(0, T.Sw - tate(d) * 1e6 / TUBE_A); } }
+
+/* ---- Part C: the graphite chip on the water ---------------------------------- */
+const MAGN = [Math.SQRT1_2, -Math.SQRT1_2];                  /* the magnet's axis, pointing down toward the +x wall */
+function chipAccel(px){ const am = -G * slopeAt((R_IN - px) / 100) + G * slopeAt((R_IN + px) / 100);
+  if (ST.mag.loc !== "syringe") return am;
+  const dx = px - ST.mag.x, dy = -ST.mag.y, r = Math.hypot(dx, dy), c = (dx * MAGN[0] + dy * MAGN[1]) / r;
+  return am + Math.abs(CHI_G - CHI_W) * gradAt(r * 10) * Math.max(0, c) * dx / r; }
+function stepChip(dt){ if (!ST.pebble || !ST.dishWater) return; let n = Math.ceil(dt / 0.001), h = dt / n;
+  while (n--){ const v = Math.max(-3, Math.min(3, 60 * chipAccel(ST.pebble.x))); ST.pebble.x = Math.max(-R_IN + 0.08, Math.min(R_IN - 0.08, ST.pebble.x + v * h)); } }
+function magClamp(){ const m = ST.mag; m.y = Math.max(0.5 * MAG_D * Math.SQRT1_2 - 0.03, Math.min(6, m.y));
+  m.x = Math.max(-R_IN + 1.2, Math.min(R_IN - 0.5 * MAG_D * Math.SQRT1_2 - 0.08, m.x)); }
+
+/* ---- Part D: the sensor and the meter ---------------------------------------- */
+function sensorB(){ if (ST.mag.loc !== "strips") return 0; const zf = ST.sensor.x - SX0, s = (ST.sensor.z - SZC) * 10;
+  return gapField(zf) * sProfile(s) * Math.cos(ST.sensor.clamp ? 0.02 : ST.sensor.tilt); }
+function meterVolts(){ if (ST.meterTo === "holder") return E_BAT;
+  if (ST.meterTo === "sensor") return ST.pow ? (V0_MV + sensorB() / 1e-5 * E_BAT / 3 + 0.08 * gauss()) / 1000 : 0.00004 * gauss();
+  return 0.00003 * gauss(); }
+const DIAL = ["OFF", "200mV", "2V", "20V", "200V", "200mA", "10A", "200Ω", "2kΩ", "20kΩ"];
+function meterReading(){ const r = DIAL[ST.dial]; if (r === "OFF") return "";
+  const V = meterVolts(), fmt = (x, full, dec) => Math.abs(x) >= full ? (x < 0 ? "-1" : "1") : x.toFixed(dec);
+  if (r === "200mV") return fmt(V * 1000, 199.95, 1); if (r === "2V") return fmt(V, 1.9995, 3); if (r === "20V") return fmt(V, 19.995, 2); if (r === "200V") return fmt(V, 199.95, 1);
+  if (r === "200mA") return ST.meterTo === "holder" ? "1" : "0.0"; if (r === "10A") return ST.meterTo === "holder" ? "1" : "0.00";
+  return ST.meterTo === "sensor" && ST.pow === false && r === "2kΩ" ? "1.004" : "1"; }
+function step(dt){ stepTube(dt); stepChip(dt); }
+
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+const mkCv = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const FONT = '"Arial","Helvetica",sans-serif';
+/* seven segments: a b c d e f g */
+const SEG = {"0":"abcdef","1":"bc","2":"abdeg","3":"abcdg","4":"bcfg","5":"acdfg","6":"acdefg","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","O":"abcdef","L":"def"," ":""};
+/* one digit cell of width w, height h, top-left (x, y), slanted a little */
+function seg7(g, ch, x, y, w, h, col){ const s = SEG[ch] || "", t = h * 0.11, sl = h * 0.07, P = (u, v) => [x + u * w + (1 - v) * sl, y + v * h];
+  const H = (v, on) => { if (!on) return; const [a0, a1] = [P(0.1, v), P(0.9, v)]; g.beginPath(); g.moveTo(a0[0] + t * 0.5, a0[1]); g.lineTo(a0[0] + t, a0[1] - t / 2); g.lineTo(a1[0] - t, a1[1] - t / 2);
+    g.lineTo(a1[0] - t * 0.5, a1[1]); g.lineTo(a1[0] - t, a1[1] + t / 2); g.lineTo(a0[0] + t, a0[1] + t / 2); g.closePath(); g.fill(); };
+  const Vt = (u, v0, v1, on) => { if (!on) return; const a = P(u, v0), b = P(u, v1), d = [b[0] - a[0], b[1] - a[1]], L = Math.hypot(d[0], d[1]), n = [d[0] / L, d[1] / L];
+    g.beginPath(); g.moveTo(a[0] + n[0] * t * 0.5, a[1] + n[1] * t * 0.5); g.lineTo(a[0] + n[0] * t + t / 2, a[1] + n[1] * t); g.lineTo(b[0] - n[0] * t + t / 2, b[1] - n[1] * t);
+    g.lineTo(b[0] - n[0] * t * 0.5, b[1] - n[1] * t * 0.5); g.lineTo(b[0] - n[0] * t - t / 2, b[1] - n[1] * t); g.lineTo(a[0] + n[0] * t - t / 2, a[1] + n[1] * t); g.closePath(); g.fill(); };
+  g.fillStyle = col; H(0.04, s.includes("a")); H(0.5, s.includes("g")); H(0.96, s.includes("d"));
+  Vt(0.9, 0.04, 0.5, s.includes("b")); Vt(0.9, 0.5, 0.96, s.includes("c")); Vt(0.1, 0.5, 0.96, s.includes("e")); Vt(0.1, 0.04, 0.5, s.includes("f")); }
+/* a reading string ("12.34", "-0.5", "OL") into cells of digits with the decimal points beside them */
+function cells(str, n){ const out = []; for (const ch of str){ if (ch === "." && out.length){ out[out.length - 1].dp = true; continue; } out.push({ch, dp:false}); }
+  while (out.length < n) out.unshift({ch:" ", dp:false}); return out.slice(-n); }
+
+function rr(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+
+/* ==================================================================
+   THE BENCH IN 3D  (cm; the beam runs along +x at z = OZ, the stand
+   with the paper faces the mirror; the dish and the strips in front)
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+let view3 = "3d", hand = null;
+function onPlaneZ(px, py, z0){ const c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw), cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch);
+  const xr = (px - CAM.W / 2 - CAM.px) / CAM.k, up = -(py - CAM.H / 2 - CAM.py) / CAM.k, dz = z0 - CAM.tz; if (Math.abs(c) < 1e-4) return null;
+  const dx = (xr + dz * s) / c, dy = (up + (dx * s + dz * c) * sp) / cp; return [CAM.tx + dx, CAM.ty + dy, z0]; }
+function desk3(){ face([[-38,0,-42],[-38,0,42],[152,0,42],[152,0,-42]], {fill:"#3a3d42", layer:-3, flat:true, id:"desk"});
+  for (let x = -30; x <= 150; x += 10) poly3([[x,0,-42],[x,0,42]], "#34373b", 1, {layer:-2}); }
+const syrOnPost = () => ST.mag.loc !== "syringe";
+const laserLive = () => ST.laserOn && syrOnPost();
+
+/* ---- the syringe: a barrel, a plunger and its cap ---------------------- */
+function syringe3(a, n, o){ const at = d => [a[0] + n[0] * d, a[1] + n[1] * d, a[2] + n[2] * d];  /* a: the nozzle tip, n: toward the plunger */
+  cylAB(a, at(0.9), 0.14, "rgba(235,240,245,0.85)", {seg:8, r1:0.32, id:o.id}); cylAB(at(0.9), at(1.3), 0.32, "rgba(235,240,245,0.85)", {seg:12, r1:0.72, id:o.id});
+  cylAB(at(1.3), at(10.5), 0.72, "rgba(232,238,243,0.55)", {seg:18, id:o.id});
+  for (let i = 1; i < 9; i++){ const p = at(1.6 + i), q = n[1] > 0.9 ? [0, 0, 0.73] : [0, 0.73, 0]; line3([p[0] + q[0], p[1] + q[1], p[2] + q[2]], [p[0] + q[0] + n[0] * 0.01 + (n[1] > 0.9 ? 0.25 : 0), p[1] + q[1], p[2] + q[2] + (n[1] > 0.9 ? 0 : 0.25)], "#3a3f45", 1); }
+  cylAB(at(10.5), at(10.75), 1.15, "#e8ecef", {seg:16, id:o.id}); cylAB(at(3.0), at(13.6), 0.22, "#f4f5f6", {seg:8, id:o.id}); cylAB(at(3.0), at(3.25), 0.66, "#2a2b2d", {seg:14});
+  cylAB(at(13.6), at(13.85), 0.9, "#f4f5f6", {seg:16, id:o.id}); }
+
+/* ---- Part A: the laser on the upright syringe, the needle in foam, the mirror ---- */
+const LZ = OZ, LX0 = -16, LX1 = -3;
+function laser3(){ const on = laserLive();
+  if (syrOnPost()){ const sx = -9, sz = OZ - 1.5;
+    cyl3("y", 0, 1.6, sx, sz, 0.9, "#f0f0ee", {seg:16, id:"laser"});                          /* the cap, standing on the desk */
+    syringe3([sx, 1.0, sz], [0, 1, 0], {id:"laser"});
+    pin3([sx, BY + 0.1, sz + 0.75], 0, "laser"); pin3([sx, BY - 1.6, sz + 0.75], 0, "laser");
+    laserBody([LX0, BY, LZ], [1, 0, 0], on); }
+  else { laserBody([LX0, 0.62, LZ + 2], [1, 0, 0], false); pin3([-9, 0.9, LZ + 2.8], 1, "laser"); pin3([-12.5, 0.9, LZ + 2.8], 1, "laser"); } }
+function pin3(p, lying, id){ const c = "#c42f76", c2 = "#a8235f";       /* a magenta clothespin */
+  if (!lying){ box3(p[0] - 0.45, p[0] + 0.45, p[1] - 0.15, p[1] + 0.15, p[2] - 0.3, p[2] + 2.6, c, {id, top:shade(c, 1.1)}); box3(p[0] - 0.45, p[0] + 0.45, p[1] - 0.6, p[1] - 0.25, p[2] - 0.3, p[2] + 2.6, c2, {id}); cylAB([p[0] - 0.5, p[1] - 0.2, p[2] + 1.3], [p[0] + 0.5, p[1] - 0.2, p[2] + 1.3], 0.18, "#b9bec4", {seg:8}); }
+  else { box3(p[0] - 1.4, p[0] + 1.4, 0, 0.35, p[2] - 0.45, p[2] + 0.45, c, {id}); box3(p[0] - 1.4, p[0] + 1.4, 0.35, 0.7, p[2] - 0.45, p[2] + 0.45, c2, {id}); } }
+function laserBody(a, n, on){ const b = [a[0] + 13 * n[0], a[1], a[2]], at = d => [a[0] + d * n[0], a[1], a[2]];
+  cylAB(a, at(0.6), 0.55, "#2b2d30", {seg:16, id:"laser"}); cylAB(at(0.6), b, 0.62, "#1d1f22", {seg:18, id:"laser", cap:"#111"});
+  for (let i = 0; i < 8; i++){ const x = 4.2 + i * 0.32; cylAB(at(x), at(x + 0.16), 0.66, i % 2 ? "#e9c21b" : "#1b1b1b", {seg:16, id:"laser", caps:false}); }   /* the spiral fixator */
+  cylAB([a[0] + 5.3 * n[0], a[1] + 0.6, a[2]], [a[0] + 5.3 * n[0], a[1] + (on ? 0.66 : 0.8), a[2]], 0.22, "#3a3d42", {seg:10, id:"laser"});
+  cylAB(b, [b[0] + 0.03, b[1], b[2]], 0.2, on ? "#7dff8a" : "#1c2a1e", {seg:12}); }
+function foam3(){ box3(FX - 1.3, FX + 1.3, 0, 3.0, OZ - 1.0, OZ + 1.0, "#5fc0dc", {id:"foam", top:"#79cfe6"});
+  for (const k of ["W", "G"]) if (ST.needle[k] === "foam") needle3([FX, 2.1, OZ], k, "nf"); }
+function needle3(p, k, id){ /* p: the bottom of the metal, standing up; a plastic sleeve near the top */
+  cylAB(p, [p[0], p[1] + 4.1, p[2]], 0.035, "#c6ccd2", {seg:6, id}); cylAB([p[0], p[1] + 4.1, p[2]], [p[0], p[1] + 4.9, p[2]], 0.17, NEEDLE[k].col, {seg:10, id, cap:shade(NEEDLE[k].col, 0.9)});
+  for (const [u, v] of [[[0.35, 0, 0], [0, 0, 0.35]], [[0, 0, 0.35], [0.35, 0, 0]]]){ const q = [[p[0] - u[0], p[1], p[2] - u[2]], [p[0] + u[0], p[1], p[2] + u[2]], [p[0] + u[0], p[1] + 4.9, p[2] + u[2]], [p[0] - u[0], p[1] + 4.9, p[2] - u[2]]];
+    face(q, {fill:"rgba(0,0,0,0)", id}); face(q.slice().reverse(), {fill:"rgba(0,0,0,0)", id}); } }
+function mirror3(){ const x = ST.mirX, z0 = OZ - 4.5, z1 = OZ + 4.5;
+  face([[x, 0, z0], [x, 10.5, z0], [x, 10.5, z1], [x, 0, z1]], {fill:"#c9d4da", id:"mirror"});
+  face([[x + 0.25, 0, z1], [x + 0.25, 10.5, z1], [x + 0.25, 10.5, z0], [x + 0.25, 0, z0]], {fill:"#7e2a8c", id:"mirror"});
+  box3(x, x + 0.25, 10.5, 10.6, z0, z1, "#6b2378", {id:"mirror"}); box3(x, x + 0.25, 0, 10.5, z0 - 0.1, z0, "#6b2378"); box3(x, x + 0.25, 0, 10.5, z1, z1 + 0.1, "#6b2378");
+  const b = [[x + 0.25, 10.5, z0], [x + 0.25, 10.5, z1], [x + 6.5, 0, z1], [x + 6.5, 0, z0]];
+  face(orient(b, [1, 0.6, 0]), {fill:"#7e2a8c", id:"mirror"}); face(orient(b.slice().reverse(), [-1, -0.6, 0]), {fill:"#5e1f69", id:"mirror"});
+  if (laserLive()) sphere3([x - 0.02, BY, OZ], 0.18, "rgba(150,255,160,0.9)"); }
+const beamL = () => (ST.mirX - FX) + Math.hypot(ST.mirX - XP, OZ - SCZ);
+function beam3(){ if (!laserLive()) return; const g = "rgba(90,255,120,0.55)";
+  line3([LX1, BY, LZ], [ST.mirX, BY, OZ], g, 1.6); line3([ST.mirX, BY, OZ], [XP + 0.02, BY, SCZ], view3 === "screen" ? "rgba(90,255,120,0.12)" : "rgba(90,255,120,0.4)", 1.3);
+  const k = ["W", "G"].find(k => ST.needle[k] === "foam"); if (k){ for (const s of [-1, 1]) line3([FX, BY, OZ], [ST.mirX, BY, OZ + s * 2.5], "rgba(90,255,120,0.12)", 1); } }
+
+/* ---- the stand: an acrylic sheet on a foot, graph paper on its face --------- */
+function stand3(){ const x = XS, z0 = -36, z1 = -12, Hs = 30;
+  box3(x - 9, x + 0.4, 0, 0.5, z0, z1, "rgba(205,225,235,0.55)", {id:"screen"});
+  face([[x + 0.4, 0, z0], [x + 0.4, Hs, z0], [x + 0.4, Hs, z1], [x + 0.4, 0, z1]], {fill:"rgba(215,232,240,0.28)", id:"screen"});
+  face([[x, 0, z1], [x, Hs, z1], [x, Hs, z0], [x, 0, z0]], {fill:"rgba(215,232,240,0.22)", id:"screen"});
+  for (const z of [z0, z1]){ box3(x, x + 0.4, 0, Hs, z - 0.02, z + 0.02, "rgba(180,205,215,0.7)"); prism3("z", z - 0.2, z + 0.2, [[x, 0.5], [x - 7, 0.5], [x, 12]], "rgba(205,225,235,0.6)"); }
+  box3(x, x + 0.4, Hs - 0.04, Hs, z0, z1, "rgba(180,205,215,0.7)");
+  tex3(paperTex(), 0, 0, PAPERC.width, PAPERC.height, [XP, PAPER.y0, PAPER.z0], [0, 0, PAPER.z1 - PAPER.z0], [0, PAPER.y1 - PAPER.y0, 0], {id:"paper"}); }
+/* the paper, 18 x 12 cm at 50 px per cm: the pink millimetre grid and, with the laser on, the fringes */
+const PPX = 50, PAPERC = mkCv(18 * PPX, 12 * PPX); let paperKey = "";
+const PAPERBG = (() => { const c = mkCv(PAPERC.width, PAPERC.height), g = c.getContext("2d"); g.fillStyle = "#fbf8f4"; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i <= 180; i++){ const w = i % 10 === 0 ? 1.6 : i % 5 === 0 ? 1.1 : 0.6; g.fillStyle = i % 10 === 0 ? "#d9708c" : i % 5 === 0 ? "#e7a0b3" : "#f2c9d4"; g.fillRect(i * 5 - w / 2, 0, w, c.height); }
+  for (let i = 0; i <= 120; i++){ const w = i % 10 === 0 ? 1.6 : i % 5 === 0 ? 1.1 : 0.6; g.fillStyle = i % 10 === 0 ? "#d9708c" : i % 5 === 0 ? "#e7a0b3" : "#f2c9d4"; g.fillRect(0, i * 5 - w / 2, c.width, w); }
+  return c; })();
+function paperTex(){ const k = ["W", "G"].find(k => ST.needle[k] === "foam"), on = laserLive(), L = beamL(), key = [on, k, L.toFixed(2)].join("|");
+  if (key === paperKey) return PAPERC; paperKey = key; const g = PAPERC.getContext("2d"), W = PAPERC.width, H = PAPERC.height; g.drawImage(PAPERBG, 0, 0);
+  if (on){ const img = g.getImageData(0, 0, W, H), D = img.data, uc = (PAPER.z0 - SCZ) * PPX, vc = (PAPER.y0 - BY) * PPX, sh = 0.11 * PPX, d = k ? NEEDLE[k].d : 0;
+    for (let px = 0; px < W; px++){ const w = (px - uc) / PPX, spot = Math.exp(-Math.pow(w / 0.13, 2));
+      let I = 0; if (d){ const a = Math.PI * d * (w / L) / LAM; I = a === 0 ? 1 : Math.pow(Math.sin(a) / a, 2); }
+      const v = Math.min(1, Math.pow(8 * spot + 300 * I * (d ? 1 : 0), 0.45));
+      for (let py = Math.max(0, Math.floor(vc - 3 * sh)); py < Math.min(H, vc + 3 * sh); py++){ const a = v * Math.exp(-Math.pow((py - vc) / sh, 2)); if (a < 0.01) continue;
+        const o = (py * W + px) * 4, wh = Math.max(0, a - 0.85) * 4; D[o] = Math.min(255, D[o] * (1 - a) + (60 + 190 * wh) * a); D[o + 1] = Math.min(255, D[o + 1] * (1 - a) + 255 * a); D[o + 2] = Math.min(255, D[o + 2] * (1 - a) + (90 + 160 * wh) * a); } }
+    g.putImageData(img, 0, 0); }
+  return PAPERC; }
+
+/* ---- Part B: the tube hung from the stand by two clothespins ---------------- */
+function tube3(){ if (!ST.tube.hung){ const c = [-24, 0, 24];                     /* coiled on the desk */
+    for (let r = 2.2; r <= 4.2; r += 0.5){ const P = []; for (let i = 0; i <= 24; i++){ const a = i / 24 * 2 * Math.PI; P.push([c[0] + r * Math.cos(a), 0.3, c[2] + r * 0.8 * Math.sin(a)]); } for (let i = 0; i < 24; i++) cylAB(P[i], P[i + 1], 0.3, "rgba(150,190,225,0.9)", {seg:6, id:"tubeD", caps:false}); }
+    return; }
+  const sh = tubeShape(), X = TUBE_X, W = (p) => [X, p[1], p[0]];
+  for (let a = 0; a < 2; a++){ const P = sh.arms[a];
+    for (let i = 0; i < 48; i++){ const wet = i + 1 <= sh.wet ? 1 : i < sh.wet ? sh.wet - i : 0, A = W(P[i]), B = W(P[i + 1]);
+      if (wet >= 1) cylAB(A, B, 0.3, "rgba(120,170,215,0.9)", {seg:8, id:"tube", caps:false});
+      else if (wet <= 0) cylAB(A, B, 0.3, "rgba(225,232,238,0.55)", {seg:8, id:"tube", caps:false});
+      else { const M = [A[0], A[1] + (B[1] - A[1]) * wet, A[2] + (B[2] - A[2]) * wet]; cylAB(A, M, 0.3, "rgba(120,170,215,0.9)", {seg:8, id:"tube", caps:false}); cylAB(M, B, 0.3, "rgba(225,232,238,0.55)", {seg:8, id:"tube", caps:false});
+        face([[X - 0.27, M[1], M[2] - 0.27], [X - 0.27, M[1], M[2] + 0.27], [X + 0.27, M[1], M[2] + 0.27], [X + 0.27, M[1], M[2] - 0.27]], {fill:"rgba(90,140,200,0.9)"}); } }
+    const C = W(P[48]); pin3([XS + 0.2, CLIP_Y + 0.15, C[2] - 0.45], 0, "tube"); }
+  face([[X + 0.32, sh.yb - 0.5, SCZ - 0.6], [X + 0.32, sh.yb + 0.5, SCZ - 0.6], [X + 0.32, sh.yb + 0.5, SCZ + 0.6], [X + 0.32, sh.yb - 0.5, SCZ + 0.6]], {fill:"rgba(0,0,0,0)", id:"tube"});
+  const k = tubeNeedle(); if (k){ cylAB([X, sh.tip, SCZ], [X, sh.yb + 0.15, SCZ], 0.035, "#c6ccd2", {seg:6, id:"nt"}); cylAB([X, sh.yb - 0.62, SCZ], [X, sh.yb - 0.3, SCZ], 0.12, NEEDLE[k].col, {seg:10, id:"nt"});
+    face([[X + 0.4, sh.tip, SCZ - 0.3], [X + 0.4, sh.tip, SCZ + 0.3], [X + 0.4, sh.yb - 0.3, SCZ + 0.3], [X + 0.4, sh.yb - 0.3, SCZ - 0.3]], {fill:"rgba(0,0,0,0)", id:"nt"});
+    const d = NEEDLE[k].d, Vh = 2 / 3 * Math.PI * Math.pow(d / 2, 3), R = ST.tube.drop > 0 ? Math.cbrt(3 * (Vh + ST.tube.drop) / (4 * Math.PI)) * 100 : 0;
+    if (R > 0.02) sphere3([X, sh.tip - R * 0.85, SCZ], R, "rgba(170,205,240,0.75)"); }
+  for (const f of ST.tube.falling) sphere3([X, f.y, SCZ], 0.09, "rgba(170,205,240,0.8)");
+  if (ST.tube.puddle){ const r = Math.min(2.2, 0.25 + 0.05 * Math.sqrt(ST.tube.puddle) * 3), P = []; for (let i = 0; i < 20; i++){ const a = i / 20 * 2 * Math.PI; P.push([X + r * 0.7 * Math.cos(a), 0.02, SCZ + r * Math.sin(a)]); } face(orient(P, [0, 1, 0]), {fill:"rgba(120,150,180,0.45)", flat:true}); } }
+
+/* ---- the measuring tape: on the desk, or held against the stand ------------- */
+const TPX = 100, TAPE_W = 1.3, TAPE_SEG = 6;
+const TAPETEX = Array.from({length:TAPE_SEG}, (_, s) => { const c = mkCv(25 * TPX, Math.round(TAPE_W * TPX)), g = c.getContext("2d"), H = c.height;
+  g.fillStyle = "#f3cd2f"; g.fillRect(0, 0, c.width, H); g.fillStyle = "#151515";
+  for (let mm = 0; mm <= 250; mm++){ const x = mm * TPX / 10, cm = s * 25 + mm / 10, len = mm % 10 === 0 ? 0.42 : mm % 5 === 0 ? 0.3 : 0.2; g.fillRect(Math.max(0, x - 0.8), 0, mm % 10 === 0 ? 2.2 : 1.5, len * H);
+    if (mm % 10 === 0 && mm < 250){ const n = Math.round(cm); g.fillStyle = n % 10 === 0 ? "#c4161c" : "#151515"; g.font = "bold " + Math.round(H * 0.36) + "px " + FONT; g.fillText(String(n), x + 3, H * 0.9); g.fillStyle = "#151515"; } }
+  if (s === 0){ g.fillStyle = "#8d9398"; g.fillRect(0, 0, 9, H); } c._static = true; return c; });
+function tapeFrame(){ const T = ST.tape, c = Math.cos(T.ang), s = Math.sin(T.ang);
+  if (T.where === "screen") return {O:[XP + 0.08, T.y, T.z], U:[0, s, -c], V:[0, -c, -s]};
+  return {O:[T.x, 0.04, T.z], U:[c, 0, s], V:[-s, 0, c]}; }
+function tape3(){ if (ST.tape.where === "box") return; const {O, U, V} = tapeFrame(), at = (a, b) => [O[0] + U[0] * a + V[0] * b, O[1] + U[1] * a + V[1] * b, O[2] + U[2] * a + V[2] * b];
+  for (let s = 0; s < TAPE_SEG; s++) tex3(TAPETEX[s], 0, 0, TAPETEX[s].width, TAPETEX[s].height, at(s * 25, 0), U.map(v => v * 25), V.map(v => v * TAPE_W), {id:"tape"});
+  const e = at(TAPE_SEG * 25, TAPE_W / 2); if (ST.tape.where === "desk") box3(e[0] - 3.3, e[0] + 3.3, 0, 3.0, e[2] - 3.3, e[2] + 3.3, "#2b2e33", {id:"tape"}); }
+
+/* ---- the ruler: 15 cm of white plastic, millimetres along one edge ---------- */
+const RPX = 80, RUL_L = 15, RUL_W = 2.6;
+const RULTEX = (() => { const c = mkCv(RUL_L * RPX, Math.round(RUL_W * RPX)), g = c.getContext("2d"), H = c.height;
+  g.fillStyle = "#f4f5f1"; g.fillRect(0, 0, c.width, H); g.fillStyle = "#1a1a1a"; const x0 = 0.5 * RPX;
+  for (let mm = 0; mm <= 140; mm++){ const x = x0 + mm * RPX / 10, len = mm % 10 === 0 ? 0.36 : mm % 5 === 0 ? 0.26 : 0.17; g.fillRect(x - 0.7, 0, 1.4, len * H);
+    if (mm % 10 === 0){ g.font = "bold " + Math.round(H * 0.13) + "px " + FONT; g.textAlign = "center"; g.fillText(String(mm / 10), x, H * 0.52); } }
+  g.font = Math.round(H * 0.12) + "px " + FONT; g.textAlign = "left"; g.fillStyle = "#555"; g.fillText("Best.Nr.52.30", c.width * 0.62, H * 0.86); return c; })();
+function rulerY(R){ const c = Math.cos(R.ang), s = Math.sin(R.ang); let y = 0.03;
+  for (let i = 0; i <= 10; i++){ const x = R.x + c * RUL_L * i / 10 - s * RUL_W / 2, z = R.z + s * RUL_L * i / 10 + c * RUL_W / 2;
+    if (Math.hypot(x - DX, z - DZ) < R_OUT + RUL_W / 2) y = Math.max(y, DISH_H + 0.03);
+    if (ST.mag.loc === "strips" && x > SX0 - 1 && x < SX1 + 1 && Math.abs(z - SZC) < 1.0 + RUL_W / 2) y = Math.max(y, GAP + 0.06 + 0.45 + 0.02); }
+  return y; }
+function rulerFrame(){ const R = ST.ruler, c = Math.cos(R.ang), s = Math.sin(R.ang), y = rulerY(R); return {O:[R.x, y, R.z], U:[c, 0, s], V:[-s, 0, c]}; }
+function ruler3(){ if (ST.ruler.where !== "desk") return; const {O, U, V} = rulerFrame(), q = (a, b) => [O[0] + U[0] * a + V[0] * b, O[1] - 0.01, O[2] + U[2] * a + V[2] * b];
+  face(orient([q(0, 0), q(RUL_L, 0), q(RUL_L, RUL_W), q(0, RUL_W)], [0, 1, 0]), {fill:"#f4f5f1", id:"ruler"});
+  tex3(RULTEX, 0, 0, RULTEX.width, RULTEX.height, O, U.map(v => v * RUL_L), V.map(v => v * RUL_W), {id:"ruler"}); }
+
+/* ---- Part C: the Petri dish, the chip, the magnet on the syringe ------------ */
+const RISE = (() => { const T = []; let acc = 0; for (let u = 6; u >= -0.0001; u -= 0.01){ acc += Math.tan(logInterp(FIG7, u)) * 0.01; T.push([u, acc]); } return T.reverse(); })();
+const riseAt = l_cm => { const u = Math.max(0, l_cm / 100 / LC), i = Math.min(RISE.length - 1, Math.round(u / 0.01)); return RISE[i] ? RISE[i][1] * LC * 100 : 0; };   /* cm */
+function surfY(px){ return WATER_Y + riseAt(R_IN - px) + riseAt(R_IN + px); }
+function dish3(){ cyl3("y", 0, 0.12, DX, DZ, R_OUT, "rgba(205,228,236,0.55)", {seg:40, id:"dish"});
+  cyl3("y", 0.12, DISH_H, DX, DZ, R_OUT, "rgba(200,225,235,0.22)", {seg:40, id:"dish", caps:false});
+  const rim = r => Array.from({length:49}, (_, i) => [DX + r * Math.cos(i / 48 * 2 * Math.PI), DISH_H, DZ + r * Math.sin(i / 48 * 2 * Math.PI)]);
+  poly3(rim(R_OUT), "rgba(225,240,245,0.9)", 1.4); poly3(rim(R_IN), "rgba(225,240,245,0.6)", 1);
+  if (ST.dishWater){ cyl3("y", 0.12, WATER_Y, DX, DZ, R_IN, "rgba(140,190,230,0.38)", {seg:40, id:"water"});
+    /* the meniscus where it climbs the wall, seen from the side */
+    if (view3 === "dish"){ const P = []; for (let i = -40; i <= 40; i++){ const px = i / 40 * (R_IN - 0.005); P.push([DX + px, surfY(px), DZ + R_IN + 0.01]); } poly3(P, "rgba(110,160,210,0.9)", 1.2);
+    const Q = []; for (let i = -40; i <= 40; i++){ const px = i / 40 * (R_IN - 0.005); Q.push([DX + px, surfY(px), DZ - R_IN]); } poly3(Q, "rgba(110,160,210,0.5)", 1); } }
+  if (ST.pebble && ST.dishWater){ const x = DX + ST.pebble.x, y = surfY(ST.pebble.x);
+    box3(x - 0.07, x + 0.07, y - 0.02, y + 0.025, DZ - 0.05, DZ + 0.06, "#2a2c30", {top:"#4d5156", id:"chip"}); } }
+function magnet3(){ const m = ST.mag;
+  if (m.loc === "desk"){ const p = [44, 0, 31]; cyl3("y", 0, GAP, p[0], p[2], MAG_D / 2, "#9ea4aa", {seg:24, id:"magD", cap:"#b9bec3"}); cyl3("y", 0, GAP + 0.03, p[0], p[2], MAG_D / 2 + 0.04, "rgba(240,244,246,0.3)", {seg:24, id:"magD"}); return; }
+  if (m.loc === "strips"){ const x = SX1 - 0.8; cyl3("y", 0.03, 0.03 + GAP, x, SZC, MAG_D / 2, "#9ea4aa", {seg:24, id:"magS", cap:"#b9bec3"}); return; }
+  const C = [DX + m.x, WATER_Y + m.y, DZ], n = [-MAGN[0], -MAGN[1], 0], at = d => [C[0] + n[0] * d, C[1] + n[1] * d, C[2]];
+  cylAB(C, at(GAP), MAG_D / 2, "#9ea4aa", {seg:24, id:"mag", cap:"#b9bec3"}); cylAB(at(-0.03), at(GAP + 0.9), MAG_D / 2 + 0.05, "rgba(240,244,246,0.32)", {seg:24, id:"mag"});
+  syringe3(at(GAP + 0.05), n, {id:"mag"}); }
+
+/* ---- Part D: the strips, the sensor, the holder and the multimeter ----------- */
+const TOPY = () => ST.mag.loc === "strips" ? 0.03 + GAP : 0;
+const STAPE = (() => { const c = mkCv(61 * 60, 70), g = c.getContext("2d"), H = c.height; g.fillStyle = "#f6f2df"; g.fillRect(0, 0, c.width, H); g.fillStyle = "#151515";
+  for (let mm = 0; mm <= 610; mm++){ const x = mm * 6, len = mm % 10 === 0 ? 0.45 : mm % 5 === 0 ? 0.3 : 0.18; g.fillRect(x - 0.6, 0, 1.2, len * H);
+    if (mm % 10 === 0 && mm < 610){ g.font = "bold 22px " + FONT; g.fillText(String(mm / 10), x + 3, H * 0.92); } } return c; })();
+function strips3(){ const zc = SZC, y1 = TOPY(), up = ST.mag.loc === "strips", zu = up ? zc : zc + 7;
+  box3(SX0, SX1, 0, 0.03, zc - 1.5, zc + 1.5, "#a3aab1", {id:"strip", top:"#b4bbc2"});
+  cyl3("y", 0.03, 0.03 + GAP, SX0 + 1.0, zc, 0.5, "#e9ecef", {seg:20, id:"strip"});
+  const yb = up ? y1 : 0; box3(SX0, SX1, yb, yb + 0.03, zu - 1.5, zu + 1.5, "#a3aab1", {id:"strip", top:"#b4bbc2"});
+  box3(SX0, SX1, yb + 0.03, yb + 0.48, zu - 1.0, zu + 1.0, "#c9cdd1", {id:"strip", top:"#d3d7da"});
+  tex3(STAPE, 0, 0, STAPE.width, STAPE.height, [SX0, yb + 0.485, zu - 0.6], [61, 0, 0], [0, 0, 1.2], {id:"strip"}); }
+function sensorPos(){ const s = ST.sensor, inGap = ST.mag.loc === "strips" && s.x > SX0 - 0.3 && s.x < SX1 + 0.3 && Math.abs(s.z - SZC) < 1.6; return [s.x, inGap ? 0.03 + GAP / 2 : 0.12, s.z]; }
+const JUNC = () => { const p = sensorPos(); return [p[0] + 3, 0.15, p[2] + 9]; };
+function sensor3(){ const p = sensorPos(); box3(p[0] - 0.2, p[0] + 0.2, p[1] - 0.06, p[1] + 0.06, p[2] - 0.15, p[2] + 0.25, "#18191b", {id:"sensor", top:"#26282b"});
+  const cols = ["#2b62c4", "#1d1d1f", "#c8262b", "#eeeeea"], J = JUNC();
+  cols.forEach((c, i) => { const o = (i - 1.5) * 0.06; poly3([[p[0] + o, p[1], p[2] + 0.25], [p[0] + o, p[1], p[2] + 3], [J[0] + o * 2, 0.15, J[2] - 2], [J[0] + o * 3, 0.15, J[2]]], c, 1.3); });
+  if (ST.sensor.clamp) box3(p[0] - 0.35, p[0] + 0.35, p[1] - 0.12, p[1] + 0.28, p[2] + 1.6, p[2] + 2.3, "rgba(235,238,240,0.85)", {id:"sensor"});
+  /* blue + black: to the batteries, or loose with their clips; red + white: the output */
+  if (ST.pow){ wire3([J[0] - 0.1, 0.15, J[2]], HOLDT.p, "#2b62c4"); wire3([J[0] + 0.0, 0.15, J[2]], HOLDT.n, "#1d1d1f"); }
+  else { croc3([J[0] - 0.6, 0.12, J[2] + 1.6], "#2b62c4", "wPow"); croc3([J[0] - 0.1, 0.12, J[2] + 1.8], "#1d1d1f", "wPow"); poly3([[J[0] - 0.1, 0.15, J[2]], [J[0] - 0.6, 0.15, J[2] + 1.3]], "#2b62c4", 1.3); poly3([[J[0], 0.15, J[2]], [J[0] - 0.1, 0.15, J[2] + 1.5]], "#1d1d1f", 1.3); }
+  croc3([J[0] + 0.6, 0.12, J[2] + 1.6], "#c8262b", "wOut"); croc3([J[0] + 1.1, 0.12, J[2] + 1.4], "#eeeeea", "wOut");
+  poly3([[J[0] + 0.1, 0.15, J[2]], [J[0] + 0.6, 0.15, J[2] + 1.3]], "#c8262b", 1.3); poly3([[J[0] + 0.2, 0.15, J[2]], [J[0] + 1.1, 0.15, J[2] + 1.1]], "#eeeeea", 1.3);
+  face([[J[0] - 1.2, 0.2, J[2] + 0.6], [J[0] - 1.2, 0.2, J[2] + 2.6], [J[0] + 0.25, 0.2, J[2] + 2.6], [J[0] + 0.25, 0.2, J[2] + 0.6]], {fill:"rgba(0,0,0,0)", id:"wPow"});
+  face([[J[0] + 0.3, 0.2, J[2] + 0.6], [J[0] + 0.3, 0.2, J[2] + 2.6], [J[0] + 1.8, 0.2, J[2] + 2.6], [J[0] + 1.8, 0.2, J[2] + 0.6]], {fill:"rgba(0,0,0,0)", id:"wOut"}); }
+function croc3(p, col, id){ box3(p[0] - 0.18, p[0] + 0.18, p[1] - 0.1, p[1] + 0.12, p[2] - 0.7, p[2] + 0.2, col === "#eeeeea" ? "#d9dbd6" : col, {id}); box3(p[0] - 0.12, p[0] + 0.12, p[1] - 0.06, p[1] + 0.06, p[2] + 0.2, p[2] + 0.75, "#c9ced3", {id}); }
+function wire3(a, b, col){ const m = [(a[0] + b[0]) / 2, 0.12, (a[2] + b[2]) / 2], P = []; for (let i = 0; i <= 16; i++){ const t = i / 16; P.push([a[0] + (b[0] - a[0]) * t, Math.max(0.1, (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * (m[1] + 0.6) + t * t * b[1]), a[2] + (b[2] - a[2]) * t]); } poly3(P, col, 1.4); }
+const HOLDT = {p:[HOLD[0] + 3.4, 0.3, HOLD[1] - 0.6], n:[HOLD[0] + 3.4, 0.3, HOLD[1] + 0.6]};
+function holder3(){ const [x, z] = HOLD; box3(x - 3, x + 3, 0, 0.35, z - 1.7, z + 1.7, "#151618", {id:"hold"});
+  for (const zz of [z - 1.6, z + 1.35]) box3(x - 3, x + 3, 0.35, 1.6, zz, zz + 0.25, "#151618", {id:"hold"}); for (const xx of [x - 3, x + 2.75]) box3(xx, xx + 0.25, 0.35, 1.6, z - 1.6, z + 1.6, "#151618", {id:"hold"});
+  for (const [zz, flip] of [[z - 0.72, 1], [z + 0.72, -1]]){ cyl3("x", x - 2.7, x + 2.4, 0.95, zz, 0.7, "#2a2b2e", {seg:16, id:"hold"}); cyl3("x", flip > 0 ? x + 0.4 : x - 2.7, flip > 0 ? x + 2.4 : x - 0.7, 0.95, zz, 0.71, "#d9a31e", {seg:16, caps:false, id:"hold"});
+    text3([x - 0.3, 1.66, zz], [1, 0, 0], [0, 0, -1], "AA 1.5V", 0.32, "#e8e8e4", {align:"center"}); }
+  wire3([x + 3, 0.4, z - 0.6], [HOLDT.p[0], 0.3, HOLDT.p[2]], "#c8262b"); wire3([x + 3, 0.4, z + 0.6], [HOLDT.n[0], 0.3, HOLDT.n[2]], "#1d1d1f");
+  box3(HOLDT.p[0], HOLDT.p[0] + 0.8, 0.15, 0.45, HOLDT.p[2] - 0.2, HOLDT.p[2] + 0.2, "#c9ced3", {id:"hold"}); box3(HOLDT.n[0], HOLDT.n[0] + 0.8, 0.15, 0.45, HOLDT.n[2] - 0.2, HOLDT.n[2] + 0.2, "#c9ced3", {id:"hold"});
+  text3([x + 3.6, 0.02, z - 1.4], [1, 0, 0], [0, 0, -1], "+", 0.7, "#e8e8e4", {align:"center"}); text3([x + 3.6, 0.02, z + 1.6], [1, 0, 0], [0, 0, -1], "−", 0.7, "#e8e8e4", {align:"center"}); }
+
+/* ---- the multimeter: grey face in a yellow holster, lying flat ------------ */
+const MW = 8.6, ML = 15, MH = 3.0, MFW = 7.6, MFL = 14, MPX = 48;
+const MTEX = mkCv(Math.round(MFW * MPX), Math.round(MFL * MPX)); MTEX._ver = 0;
+const MDIAL = [MFW / 2, 7.8], MDR = 2.0, MSOCK = [[1.3, 12.3], [3.8, 12.3], [6.3, 12.3]];
+const mAng = i => -Math.PI / 2 + i * 2 * Math.PI / DIAL.length;
+let MSHOW = "";
+function drawMeter(){ const g = MTEX.getContext("2d"), k = MPX; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#4f5357"; g.fillRect(0, 0, MTEX.width, MTEX.height); g.scale(k, k);
+  g.fillStyle = "#f1f1ee"; g.font = "bold 0.42px " + FONT; g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillText("DIGITAL MULTIMETER", 0.55, 0.9);
+  g.fillStyle = "#33373a"; rr(g, 0.45, 1.25, MFW - 0.9, 3.3, 0.25); g.fill(); g.fillStyle = "#b9bfb3"; rr(g, 0.8, 1.55, MFW - 1.6, 2.75, 0.08); g.fill();
+  const t = MSHOW, ink = "#1b1e1c";
+  if (t){ let half = "", digs = "   ", dec = 0; const neg = t[0] === "-", u = t.replace("-", "");
+    if (u === "1") half = "1"; else { const i = u.indexOf("."); dec = i < 0 ? 0 : u.length - i - 1; let n = Math.round(parseFloat(u) * Math.pow(10, dec)); if (n >= 1000){ half = "1"; n -= 1000; } digs = String(n).padStart(3, "0"); }
+    const cw = 1.18, ch = 1.85, x0 = 1.75, y0 = 2.0; if (neg){ g.fillStyle = ink; g.fillRect(0.98, y0 + ch * 0.47, 0.42, 0.13); }
+    if (half) seg7(g, "1", x0 - cw * 0.55, y0, cw, ch, ink); for (let i = 0; i < 3; i++) seg7(g, digs[i], x0 + i * cw + 0.08, y0, cw, ch, ink);
+    if (dec && digs.trim()){ g.beginPath(); g.arc(x0 + (3 - dec) * cw + 0.08, y0 + ch * 0.98, 0.09, 0, 7); g.fillStyle = ink; g.fill(); } }
+  const [cx, cy] = MDIAL; g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = "#f2f2ee";
+  DIAL.forEach((s, i) => { const a = mAng(i), r = MDR + 0.75; g.font = "0.27px " + FONT; g.fillText(s, cx + r * Math.cos(a) * 1.08, cy + r * Math.sin(a));
+    g.strokeStyle = "#f2f2ee"; g.lineWidth = 0.035; g.beginPath(); g.moveTo(cx + (MDR + 0.08) * Math.cos(a), cy + (MDR + 0.08) * Math.sin(a)); g.lineTo(cx + (MDR + 0.28) * Math.cos(a), cy + (MDR + 0.28) * Math.sin(a)); g.stroke(); });
+  g.font = "bold 0.34px " + FONT; [["10A", 0], ["COM", 1], ["VΩmA", 2]].forEach(([s, j]) => g.fillText(s, MSOCK[j][0], MSOCK[j][1] - 0.8));
+  g.font = "0.17px " + FONT; g.fillText("10A MAX", 1.3, 13.2); g.fillText("UNFUSED", 1.3, 13.4); g.fillText("200mA MAX", 6.3, 13.2); g.fillText("FUSED", 6.3, 13.4);
+  MTEX._ver++; }
+const mW = (u, v, y) => [METER[0] - MFW / 2 + u, y === undefined ? MH - 0.25 : y, METER[1] - MFL / 2 + v];
+function rrect(cx, cz, hw, hd, r, N){ const P = []; N = N || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, Math.PI / 2], [-1, -1, Math.PI], [1, -1, 1.5 * Math.PI]]) for (let i = 0; i <= N; i++){ const a = a0 + i / N * Math.PI / 2; P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+function meter3(){ const [cx, cz] = METER, yF = MH - 0.25;
+  prism3("y", 0, yF, rrect(cx, cz, MW / 2, ML / 2, 1.1, 6), "#e8b417", {id:"meter"});
+  poly3(rrect(cx, cz, MW / 2 - 0.05, ML / 2 - 0.05, 1.05, 6).map(p => [p[0], yF + 0.02, p[1]]).concat([[cx + MW / 2 - 0.05, yF + 0.02, cz]]), "#d4a514", 2.2);
+  face(orient(rrect(cx, cz, MFW / 2, MFL / 2, 0.75, 6).map(p => [p[0], yF + 0.002, p[1]]), [0, 1, 0]), {fill:"#4f5357", id:"meter"});
+  tex3(MTEX, 0, 0, MTEX.width, MTEX.height, mW(0, 0, yF + 0.006), [MFW, 0, 0], [0, 0, MFL], {id:"meter"});
+  const [dx, , dz] = mW(MDIAL[0], MDIAL[1]), a = mAng(ST.dial), c = Math.cos(a), s = Math.sin(a), R2 = (u, v) => [dx + u * c - v * s, dz + u * s + v * c];
+  cyl3("y", yF, yF + 0.25, dx, dz, MDR, "#2b2d2f", {seg:32, id:"mdial", cap:"#333537"});
+  prism3("y", yF + 0.25, yF + 0.95, [R2(-MDR + 0.15, -0.42), R2(MDR - 0.15, -0.42), R2(MDR - 0.05, 0), R2(MDR - 0.15, 0.42), R2(-MDR + 0.15, 0.42)], "#2f3133", {id:"mdial"});
+  const t0 = R2(MDR - 0.75, 0), t1 = R2(MDR - 0.15, 0); line3([t0[0], yF + 0.96, t0[1]], [t1[0], yF + 0.96, t1[1]], "#f2f2ee", 2.2);
+  [1, 2].forEach(j => { const [x, , z] = mW(MSOCK[j][0], MSOCK[j][1]); cyl3("y", yF, yF + 0.3, x, z, 0.5, "#8a3b1e", {seg:16, cap:"#8f3f22"}); });
+  /* its two leads: black from COM, red from VΩmA, crocodile clips at the far ends */
+  const ends = ST.meterTo === "holder" ? [HOLDT.n, HOLDT.p] : ST.meterTo === "sensor" ? (() => { const J = JUNC(); return [[J[0] + 1.1, 0.25, J[2] + 2.1], [J[0] + 0.6, 0.25, J[2] + 2.3]]; })() : [[cx - 6, 0.25, cz + 9], [cx - 3.5, 0.25, cz + 9.5]];
+  [[1, "#1d1d1f"], [2, "#c8262b"]].forEach(([j, col], i) => { const [x, , z] = mW(MSOCK[j][0], MSOCK[j][1]); cylAB([x, yF + 0.3, z], [x, yF + 2.2, z], 0.33, col, {seg:10, r1:0.28});
+    wire3([x, yF + 2.2, z], ends[i], col); croc3(ends[i], col, ST.meterTo ? "mlead" : "mlead"); }); }
+
+function cup3(){ const [x, z] = [16, 24]; cyl3("y", 0, 7, x, z, 3.0, "rgba(225,235,242,0.35)", {seg:28, id:"cup", r1:3.4, caps:false}); cyl3("y", 0, 0.1, x, z, 3.0, "rgba(225,235,242,0.5)", {seg:28, id:"cup"});
+  cyl3("y", 0.1, 4.6, x, z, 2.95, "rgba(150,195,230,0.45)", {seg:28, id:"cup", r1:3.2}); }
+function graphite3(){ box3(40, 46, 0, 0.5, 20.6, 21.1, "#34363a", {id:"graph", top:"#4b4e53"}); }
+function scene3(){ desk3(); stand3(); laser3(); foam3(); mirror3(); beam3(); tube3(); dish3(); magnet3(); cup3(); graphite3(); strips3(); sensor3(); holder3(); meter3(); ruler3(); tape3(); }
+
+
+/* ==================================================================
+   VIEWS, HANDS AND THE LOOP
+   ================================================================== */
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {k:w / 196, tx:56, ty:2, tz:0, yaw:-0.2, pitch:0.8, px:0, py:0}); camSave(); }
+  else if (view3 !== "3d") Object.assign(CAM, viewCam(view3));
+}
+let freeCam = null;
+const VIEWS = ["3d", "screen", "dish", "dishtop", "strips", "meter"];
+function viewCam(v){ const W = CAM.W, H = CAM.H;
+  if (v === "screen") return {yaw:Math.PI / 2, pitch:0.02, k:Math.min(W / 30, H / 33), tx:XP, ty:15, tz:SCZ, px:0, py:0};
+  if (v === "dish") return {yaw:0, pitch:0.03, k:Math.min(W / 12, H / 7), tx:DX, ty:2.2, tz:DZ, px:0, py:0};
+  if (v === "dishtop") return {yaw:0, pitch:1.5, k:Math.min(W / 13, H / 11.5), tx:DX, ty:DISH_H, tz:DZ + 0.8, px:0, py:0};
+  if (v === "strips") return {yaw:0, pitch:1.5, k:Math.min(W / 96, H / 34), tx:(SX0 + 145) / 2, ty:0, tz:SZC - 2, px:0, py:0};
+  if (v === "meter") return {yaw:0, pitch:1.32, k:Math.min(W / 24, H / 20), tx:METER[0], ty:0, tz:METER[1], px:0, py:0};
+  return CAM0; }
+function showView(v){
+  if (v !== view3){ if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
+    Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v)); }
+  view3 = v; for (const k of VIEWS) document.getElementById("vt" + k).className = k === v ? "on" : "";
+  document.getElementById("t-cap3").textContent = tr("cap_" + v); }
+for (const k of VIEWS) document.getElementById("vt" + k).onclick = () => showView(k);
+function alongLine(p, a3, b3){ const a = P3(...a3), b = P3(...b3), dx = b[0] - a[0], dy = b[1] - a[1], Lq = dx * dx + dy * dy; return Lq > 1e-9 ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / Lq : 0; }
+
+/* ---- grabbing things ------------------------------------------------- */
+let grab = null;
+const tapePoint = p => ST.tape.where === "screen" ? onPlaneX(p[0], p[1], XP + 0.08) : onPlane(p[0], p[1], 0.04);
+function local(w, F){ const {O, U, V} = F, d = [w[0] - O[0], w[1] - O[1], w[2] - O[2]]; return [d[0] * U[0] + d[1] * U[1] + d[2] * U[2], d[0] * V[0] + d[1] * V[1] + d[2] * V[2]]; }
+const rulerPoint = p => onPlane(p[0], p[1], rulerY(ST.ruler));
+function magPoint(p){ if (view3 === "dish"){ const w = onPlaneZ(p[0], p[1], DZ); return w ? [w[0] - DX, w[1] - WATER_Y] : null; }
+  const w = onPlane(p[0], p[1], WATER_Y + ST.mag.y); return [w[0] - DX, ST.mag.y]; }
+
+/* ---- the equipment tray ------------------------------------------------------ */
+const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d"), TROW = 44, TR_ROWS = ["tape", "ruler", "nW", "nG", "tube", "mag", "graph", "cup", "clamp"];
+let TRW = 190;
+function trayLayout(){ const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
+  TRW = Math.max(150, Math.floor(r.width - 16)); const H = TROW * TR_ROWS.length + 30; trayCv.style.height = H + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(H * dpr); drawTray(); }
+function rowInfo(k){ const N = {nW:"W", nG:"G"}[k];
+  if (k === "tape") return [tr("itTape"), ST.tape.where === "box" ? tr("take") : tr("back"), hand === "tape"];
+  if (k === "ruler") return [tr("itRuler"), hand === "ruler" ? tr("take") : tr("onDesk"), hand === "ruler"];
+  if (N) return [tr(k === "nW" ? "itNW" : "itNG"), ST.needle[N] === "box" ? tr("take") : ST.needle[N] === "foam" ? tr("inFoam") : tr("inTube"), hand === k];
+  if (k === "tube") return [tr("itTube"), ST.tube.hung ? tr("hung") : tr("onDesk"), false];
+  if (k === "mag") return [tr("itMag"), {desk:tr("onDesk"), syringe:tr("onSyr"), strips:tr("inStrips")}[ST.mag.loc], hand === "mag"];
+  if (k === "graph") return [tr("itGraph"), tr("breakOff"), hand === "graph"];
+  if (k === "cup") return [tr("itCup"), tr("fillDish"), hand === "cup"];
+  return [tr("itClamp"), ST.sensor.clamp ? tr("clampOn") : tr("clampOff"), ST.sensor.clamp]; }
+function drawTray(){ const dpr = window.devicePixelRatio || 1, c = tctx, wd = TRW - 12, H = TROW * TR_ROWS.length + 30;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, H);
+  TR_ROWS.forEach((k, i) => { const y = 6 + i * TROW, [name, sub, sel] = rowInfo(k);
+    c.fillStyle = "#1f242b"; c.fillRect(6, y, wd, TROW - 4); c.strokeStyle = sel ? "#f2c14e" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
+    const x = 12, yy = y + 8;
+    if (k === "tape"){ c.fillStyle = "#2b2e33"; c.fillRect(x, yy, 22, 22); c.fillStyle = "#f3cd2f"; c.fillRect(x + 18, yy + 15, 14, 5); }
+    if (k === "ruler"){ c.fillStyle = "#eef0ec"; c.fillRect(x - 2, yy + 6, 32, 9); c.fillStyle = "#222"; for (let j = 0; j < 15; j++) c.fillRect(x + j * 2, yy + 6, 0.8, j % 5 ? 2.5 : 4.5); }
+    if (k === "nW" || k === "nG"){ c.strokeStyle = "#c6ccd2"; c.lineWidth = 1.4; c.beginPath(); c.moveTo(x, yy + 20); c.lineTo(x + 26, yy + 4); c.stroke(); c.fillStyle = k === "nW" ? "#eef0f2" : "#3fb35a"; c.save(); c.translate(x + 22, yy + 6.5); c.rotate(-0.55); c.fillRect(-4, -2.2, 9, 4.4); c.restore(); }
+    if (k === "tube"){ c.strokeStyle = "#8fbfe2"; c.lineWidth = 3; c.beginPath(); c.moveTo(x, yy + 2); c.bezierCurveTo(x + 4, yy + 30, x + 24, yy + 30, x + 28, yy + 2); c.stroke(); }
+    if (k === "mag"){ c.fillStyle = "#9ea4aa"; c.fillRect(x + 6, yy + 6, 14, 10); c.strokeStyle = "rgba(240,244,246,.6)"; c.strokeRect(x + 5, yy + 5, 16, 12); }
+    if (k === "graph"){ c.fillStyle = "#3a3c40"; c.fillRect(x, yy + 9, 30, 5); }
+    if (k === "cup"){ c.fillStyle = "rgba(150,195,230,.6)"; c.fillRect(x + 5, yy + 9, 18, 13); c.strokeStyle = "#cfd8de"; c.strokeRect(x + 4, yy + 2, 20, 21); }
+    if (k === "clamp"){ c.fillStyle = "rgba(235,238,240,.85)"; c.fillRect(x + 8, yy + 5, 12, 14); c.fillStyle = "#18191b"; c.fillRect(x + 12, yy, 4, 24); }
+    c.font = '11px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle"; c.fillStyle = "#e8eef2";
+    c.fillText(name, 48, y + 13); c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = "#69717a"; c.fillText(sub, 48, y + 29); });
+  c.font = '10px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a"; c.fillText(tr("trayHelp"), TRW / 2, H - 20); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); hand = null; drawTray(); });
+trayCv.addEventListener("mousedown", e => { if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top, k = TR_ROWS[Math.floor((y - 6) / TROW)]; if (!k) return; const N = {nW:"W", nG:"G"}[k];
+  if (k === "tape"){ if (ST.tape.where !== "box"){ ST.tape.where = "box"; hand = null; } else hand = hand === "tape" ? null : "tape"; }
+  else if (k === "ruler") hand = hand === "ruler" ? null : "ruler";
+  else if (N){ if (ST.needle[N] !== "box"){ if (ST.needle[N] === "tube") ST.tube.drop = 0; ST.needle[N] = "box"; hand = null; } else hand = hand === k ? null : k; }
+  else if (k === "tube"){ ST.tube.hung = !ST.tube.hung; if (!ST.tube.hung){ for (const n of ["W", "G"]) if (ST.needle[n] === "tube") ST.needle[n] = "box"; } else if (view3 === "3d") showView("screen"); hand = null; }
+  else if (k === "mag") hand = hand === "mag" ? null : "mag";
+  else if (k === "graph") hand = hand === "graph" ? null : "graph";
+  else if (k === "cup") hand = hand === "cup" ? null : "cup";
+  else { ST.sensor.clamp = !ST.sensor.clamp; hand = null; }
+  drawTray(); });
+window.addEventListener("resize", () => { trayLayout(); layout3(); });
+
+/* ---- the pointer ------------------------------------------------------- */
+let down3 = null, m3 = [0, 0], FLASH = {msg:"", t:0};
+function flash(m){ FLASH = {msg:m, t:performance.now()}; }
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+function rclick3(e){ const p = p3e(e), id = pick3(p[0], p[1]);
+  if (hand){ hand = null; drawTray(); return; }
+  if (id === "tape"){ ST.tape.where = "box"; drawTray(); return; }
+  if (view3 !== "3d") showView("3d"); }
+function placeMag(dest){ ST.mag.loc = dest; if (dest === "syringe"){ ST.mag.x = -2.8; ST.mag.y = 1.0; magClamp(); ST.laserOn = false; } hand = null; drawTray(); }
+function leftClick(p, id){
+  if (hand === "tape"){ if (id === "paper" || id === "screen"){ const w = onPlaneX(p[0], p[1], XP + 0.08); if (w) Object.assign(ST.tape, {where:"screen", y:w[1], z:w[2], ang:0}); }
+    else { const w = onPlane(p[0], p[1], 0.04); Object.assign(ST.tape, {where:"desk", x:w[0], z:w[2], ang:0}); } hand = null; drawTray(); return; }
+  if (hand === "ruler"){ const w = onPlane(p[0], p[1], 0.03); Object.assign(ST.ruler, {where:"desk", x:w[0] - RUL_L / 2, z:w[2] - RUL_W / 2, ang:0}); hand = null; drawTray(); return; }
+  if (hand === "nW" || hand === "nG"){ const N = hand[1];
+    if (id === "foam" || id === "nf"){ if (["W", "G"].some(k => ST.needle[k] === "foam")){ flash(tr("needleBusy")); return; } ST.needle[N] = "foam"; hand = null; drawTray(); return; }
+    if (id === "tube" || id === "nt"){ if (!ST.tube.hung){ flash(tr("noTube")); return; } if (tubeNeedle()){ flash(tr("tubeBusy")); return; } ST.needle[N] = "tube"; ST.tube.drop = 0; hand = null; drawTray(); return; }
+    if (id === "tubeD"){ flash(tr("noTube")); return; } return; }
+  if (hand === "mag"){ if (["dish", "water", "chip", "mag"].includes(id) || view3 === "dish" || view3 === "dishtop") placeMag("syringe");
+    else if (id === "strip" || id === "sensor" || id === "magS" || view3 === "strips") placeMag("strips"); else placeMag("desk"); return; }
+  if (hand === "cup"){ if (["dish", "water", "chip"].includes(id)){ ST.dishWater = true; hand = null; drawTray(); } return; }
+  if (hand === "graph"){ if (["dish", "water", "chip"].includes(id)){ if (!ST.dishWater){ flash(tr("noWater")); return; }
+      let w = view3 === "dish" ? onPlaneZ(p[0], p[1], DZ) : onPlane(p[0], p[1], WATER_Y); const x = Math.max(-R_IN + 0.3, Math.min(R_IN - 0.3, w ? w[0] - DX : 0)); ST.pebble = {x}; hand = null; drawTray(); } return; }
+  if (id === "laser"){ if (!syrOnPost()){ flash(tr("laserDown")); return; } ST.laserOn = !ST.laserOn; return; }
+  if (id === "nf"){ const N = ST.needle.W === "foam" ? "W" : "G"; ST.needle[N] = "box"; hand = "n" + N; drawTray(); return; }
+  if (id === "nt"){ const N = tubeNeedle(); ST.needle[N] = "box"; ST.tube.drop = 0; hand = "n" + N; drawTray(); return; }
+  if (id === "hold"){ ST.meterTo = ST.meterTo === "holder" ? null : "holder"; return; }
+  if (id === "wOut"){ ST.meterTo = ST.meterTo === "sensor" ? null : "sensor"; return; }
+  if (id === "wPow"){ ST.pow = !ST.pow; return; }
+  if (id === "mlead"){ ST.meterTo = null; return; }
+  if (id === "tape" && ST.tape.where === "screen"){ ST.tape.ang = ST.tape.ang ? 0 : Math.PI / 2; return; }
+  if (id === "mdial"){ const c = P3(...mW(MDIAL[0], MDIAL[1])); ST.dial = (ST.dial + (p[0] > c[0] ? 1 : -1) + DIAL.length) % DIAL.length; readNow(); return; }
+  if (view3 === "3d"){ if (id === "meter") showView("meter"); else if (id === "paper" || id === "screen" || id === "tube") showView("screen");
+    else if (["dish", "water", "chip", "mag"].includes(id)) showView("dish"); else if (["strip", "magS", "sensor", "hold"].includes(id)) showView("strips"); }
+}
+const DRAGGABLE = ["tape", "ruler", "mirror", "sensor", "mag", "tube"];
+cv3.addEventListener("pointerdown", e => { const p = p3e(e); m3 = p;
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); cv3.setPointerCapture(e.pointerId); down3 = {p, id:null, moved:false, shift:true, btn:e.button}; return; }
+  if (e.button) return; cv3.setPointerCapture(e.pointerId); const id = pick3(p[0], p[1]);
+  if (!hand && DRAGGABLE.includes(id)){
+    if (id === "tape"){ const w = tapePoint(p); if (w) grab = local(w, tapeFrame()); }
+    if (id === "ruler"){ const w = rulerPoint(p); if (w) grab = local(w, rulerFrame()); }
+    if (id === "sensor"){ const w = onPlane(p[0], p[1], sensorPos()[1]); grab = [w[0] - ST.sensor.x, w[2] - ST.sensor.z]; if (!ST.sensor.clamp) ST.sensor.tilt = 0.5 + 0.6 * RNG(); }
+    if (id === "mag"){ const w = magPoint(p); if (w) grab = [w[0] - ST.mag.x, w[1] - ST.mag.y]; }
+    down3 = {p, id, moved:false, drag:true}; return; }
+  down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0] - down3.p[0], p[1] - down3.p[1]) > 3) down3.moved = true; if (!down3.moved) return;
+  if (down3.drag){ const id = down3.id;
+    if (id === "tape" && grab){ const w = tapePoint(p); if (w){ const {U, V} = tapeFrame(), [a, b] = grab, O = [w[0] - U[0] * a - V[0] * b, w[1] - U[1] * a - V[1] * b, w[2] - U[2] * a - V[2] * b];
+      if (ST.tape.where === "screen"){ ST.tape.y = O[1]; ST.tape.z = O[2]; } else { ST.tape.x = O[0]; ST.tape.z = O[2]; } } }
+    else if (id === "ruler" && grab){ const w = rulerPoint(p); if (w){ const {U, V} = rulerFrame(), [a, b] = grab; ST.ruler.x = w[0] - U[0] * a - V[0] * b; ST.ruler.z = w[2] - U[2] * a - V[2] * b; } }
+    else if (id === "mirror"){ ST.mirX = Math.max(70, Math.min(146, alongLine(p, [0, BY, OZ], [1, BY, OZ]))); }
+    else if (id === "sensor"){ const w = onPlane(p[0], p[1], sensorPos()[1]); ST.sensor.x = Math.max(-30, Math.min(148, w[0] - grab[0])); ST.sensor.z = Math.max(-38, Math.min(36, w[2] - grab[1])); }
+    else if (id === "mag" && grab){ const w = magPoint(p); if (w){ ST.mag.x = w[0] - grab[0]; if (view3 === "dish") ST.mag.y = w[1] - grab[1]; magClamp(); } }
+    else if (id === "tube"){ const w = onPlaneX(p[0], p[1], TUBE_X); if (w){ ST.tube.yb = Math.max(YB_MIN, Math.min(YB_MAX, w[1] + 1.4 * 0)); } }
+    return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.02, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
+  if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; }
+  if (down3 && !down3.moved) leftClick(down3.p, down3.id); down3 = null; grab = null; });
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1, id = pick3(p[0], p[1]);
+  if (id === "mdial"){ ST.dial = (ST.dial + s + DIAL.length) % DIAL.length; readNow(); return; }
+  if (id === "tape"){ ST.tape.ang += s * (e.shiftKey ? 0.1 : 0.5) * Math.PI / 180; return; }
+  if (id === "ruler"){ ST.ruler.ang += s * (e.shiftKey ? 0.2 : 2) * Math.PI / 180; return; }
+  if (id === "tube" && ST.tube.hung){ ST.tube.Sw = Math.max(0, Math.min(2 * TUBE_HALF - 6, ST.tube.Sw + s * (e.shiftKey ? 0.1 : 0.5))); return; }
+  if (id === "mag" && view3 !== "dish"){ ST.mag.y += s * (e.shiftKey ? 0.005 : 0.03); magClamp(); return; }
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(400, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive:false});
+window.addEventListener("keydown", e => { if (e.key === "Escape"){ hand = null; drawTray(); } });
+
+/* ---- panel ---------------------------------------------------------------- */
+document.getElementById("bLaser").onclick = () => { if (!syrOnPost()){ flash(tr("laserDown")); return; } ST.laserOn = !ST.laserOn; };
+document.getElementById("bClear").onclick = () => { ST.meterTo = null; ST.pow = false; };
+function panel(){ const b = document.getElementById("bLaser"); b.textContent = laserLive() ? tr("laserOn") : tr("laserOff"); b.className = laserLive() ? "on" : "";
+  const w = []; if (FLASH.msg && performance.now() - FLASH.t < 5000) w.push(FLASH.msg);
+  const held = hand === "tape" ? tr("holdTape") : hand === "ruler" ? tr("holdRuler") : hand === "nW" || hand === "nG" ? tr("holdNeedle") : hand === "mag" ? tr("holdMag") : hand === "graph" ? tr("holdGraph") : hand === "cup" ? tr("holdCup") : "";
+  const con = [ST.meterTo === "holder" ? tr("conHolder") : ST.meterTo === "sensor" ? tr("conSensor") : tr("conNone"), ST.pow ? tr("powOn") : tr("powOff")];
+  const html = w.map(s => '<div class="w">' + s + "</div>").join("") + (held ? "<div>" + held + "</div>" : "") + con.map(s => "<div>" + s + "</div>").join("");
+  const el = document.getElementById("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
+const VIEWSCENE = { screen:() => { stand3(); laser3(); foam3(); beam3(); tube3(); tape3(); }, dish:() => { dish3(); magnet3(); },
+  dishtop:() => { dish3(); magnet3(); ruler3(); tape3(); }, strips:() => { strips3(); sensor3(); holder3(); meter3(); magnet3(); ruler3(); tape3(); } };
+let lastT = performance.now(), lastRead = 0;
+function readNow(){ lastRead = 0; }
+function draw3(){ const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
+  begin3(); if (view3 === "3d" || view3 === "meter") scene3(); else { desk3(); VIEWSCENE[view3](); } render3(ctx3); cv3.style.cursor = hand ? "copy" : ""; }
+(function loop(){ try { const now = performance.now(), dt = Math.min(0.05, (now - lastT) / 1000); lastT = now; ST.t += dt; step(dt);
+    if (now - lastRead > 333){ lastRead = now; const r = meterReading(); if (r !== MSHOW){ MSHOW = r; drawMeter(); } }
+    draw3(); panel(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
+function applyLang(){ document.documentElement.lang = LANG;
+  document.title = LANG === "ko" ? "GPhO 2019 E1 — 물질의 자기적 성질 · HaslaLab" : "GPhO 2019 E1 — Magnetic Properties of Matter · HaslaLab";
+  document.getElementById("h1").textContent = tr("title"); document.getElementById("sub").textContent = tr("sub"); document.getElementById("t-tray").textContent = tr("tray");
+  for (const k of VIEWS) document.getElementById("vt" + k).textContent = tr("vt" + k); document.getElementById("t-cap3").textContent = tr("cap_" + view3);
+  document.getElementById("lgCtl").textContent = tr("lgCtl"); document.getElementById("lgNotes").textContent = tr("lgNotes"); document.getElementById("txNotes").textContent = tr("notes");
+  document.getElementById("bClear").textContent = tr("clear");
+  document.getElementById("btn-en").className = LANG === "en" ? "on" : ""; document.getElementById("btn-ko").className = LANG === "ko" ? "on" : ""; trayLayout(); }
+document.getElementById("btn-ko").addEventListener("click", () => { LANG = "ko"; applyLang(); });
+document.getElementById("btn-en").addEventListener("click", () => { LANG = "en"; applyLang(); });
+drawMeter(); layout3(); applyLang(); showView("3d");
+
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
