@@ -370,6 +370,19 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
   padding:2.5px 6px;border-radius:4px;background:rgba(44,111,155,.12);color:var(--accent);margin-left:6px}
 .prob .top{flex-wrap:wrap}
 .tag.exp{background:rgba(184,134,43,.13);color:var(--brass)}
+/* IAO · APAO 조 — 배지와 고르개 */
+.grptag{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;padding:2.5px 7px;border-radius:4px;
+  background:#F1F5F9;color:var(--graphite);white-space:nowrap}
+.grptag.jr{background:rgba(46,139,87,.13);color:#23704A}
+.grptag.sr{background:rgba(44,111,155,.13);color:#245E86}
+.grpsel{display:inline-flex;gap:2px;padding:3px;margin:-12px 0 22px;border:1px solid var(--grid-bold);
+  border-radius:8px;background:#fff;flex-wrap:wrap}
+.grpsel button{display:flex;align-items:center;gap:6px;padding:5px 11px;border:0;border-radius:6px;
+  background:transparent;cursor:pointer;font-size:12.5px;color:var(--graphite);transition:.15s}
+.grpsel button i{font-style:normal;font-family:var(--mono);font-size:10.5px;opacity:.7}
+.grpsel button:hover{background:#F1F5F9;color:var(--ink)}
+.grpsel button[aria-pressed="true"]{background:var(--rail);color:#fff}
+.probs[data-show="jr"] .prob[data-grp="sr"], .probs[data-show="sr"] .prob[data-grp="jr"]{display:none}
 
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
@@ -866,6 +879,8 @@ ko:{
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
   kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
+  grp:{jr:"주니어 α",sr:"시니어 β",both:"α · β 공통"}, grpAll:"전체",
+  grpHint:"α는 주니어 조, β는 시니어 조입니다. 공통 문제는 두 조에 모두 나옵니다.",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
   pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
@@ -920,6 +935,8 @@ en:{
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
   kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
+  grp:{jr:"Junior α",sr:"Senior β",both:"α · β both"}, grpAll:"All",
+  grpHint:"α is the junior group and β the senior group; shared problems are set to both.",
   ebComps:"Covered competitions", hComps:"Choose a competition",
   pComps:"Pick a year, then open that year's experimental problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
@@ -1002,7 +1019,9 @@ const lst = rows => rows.map(([id,en,ko,q,s])=>{
   if(s) f.sol=KO_SOLS.has(ks)?{ko:at(ks), en:at(s)}:at(s);
   const k=q&&q.replace(/_EN\.pdf$/,"_KO.pdf");
   if(k&&k!==q&&KO_PAPERS.has(k)) f.pdf={ko:at(k), ...f.pdf};
-  return {id, en, ko, state:"wip", files:f};
+  /* IAO · APAO 의 조: 번호 끝 α 는 주니어, β 는 시니어 — 글자가 없으면 두 조 모두 */
+  const g=(/[αβ]+$/.exec(id)||[""])[0];
+  return {id, en, ko, state:"wip", files:f, ...(g==="α"?{grp:"jr"}:g==="β"?{grp:"sr"}:{})};
 });
 
 const DATA={
@@ -3260,7 +3279,7 @@ const DATA={
     ["O3","Observations with an Astronomical Telescope","천체 망원경 관측","IOAAJr_2022_O2_EN.pdf",null]])}
   ]},
  iao:{
-  abbr:"IAO", since:1996, obs:true,
+  abbr:"IAO", since:1996, obs:true, groups:true,
   full:{ko:"국제천문올림피아드",en:"International Astronomy Olympiad"},
   scope:{ko:"국제",en:"International"},
   note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다. 그 밖의 해(2005–2013, 2016, 2018, 2019, 2021, 2022)는 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐이며, 이 해들의 영문 공식 문제지는 공식 사이트에 없습니다. 2021년과 2022년은 원격 대회(IRAO)여서 관측 라운드가 없습니다. 2005년 · 2009년 실기와 2019년 실기 · 관측은 해답을 영문판과 한국어판으로 함께 실었습니다. 2019년 6번 해답은 원본이 루마니아어여서 영문판 자리에 루마니아어가 그대로 남아 있습니다.",
@@ -3282,15 +3301,15 @@ const DATA={
     ["O","Observational round","관측 라운드","IAO_2016_O_KO.pdf",null]])},
    {y:2015,host:{ko:"러시아 · 카잔",en:"Kazan, Russia"},cc:"ru",problems:lst([
     ["P6","The Extinction in the Terrestrial Atmosphere","지구 대기의 소광","IAO_2015_P_EN.pdf",null],
-    ["P7α","Variable Star (group α)","변광성 (α조)","IAO_2015_P_EN.pdf",null],
-    ["P7β","Spectral Observations (group β)","분광 관측 (β조)","IAO_2015_P_EN.pdf",null],
+    ["P7α","Variable Star","변광성","IAO_2015_P_EN.pdf",null],
+    ["P7β","Spectral Observations","분광 관측","IAO_2015_P_EN.pdf",null],
     ["O8","The Moon (planetarium)","달 (플라네타륨)","IAO_2015_O_EN.pdf",null],
     ["O9","Motion of the Planets (planetarium)","행성의 운동 (플라네타륨)","IAO_2015_O_EN.pdf",null],
     ["O10","Outline (telescope, cloudy sky)","윤곽 (망원경 · 흐린 하늘)","IAO_2015_O_EN.pdf",null]])},
    {y:2014,host:{ko:"키르기스스탄 · 비슈케크 – 촐폰아타",en:"Bishkek – Cholpon-Ata, Kyrgyzstan"},cc:"kg",problems:lst([
     ["P7","Jupiter","목성","IAO_2014_P_EN.pdf",null],
-    ["P8α","Comet (group α)","혜성 (α조)","IAO_2014_P_EN.pdf",null],
-    ["P8β","A New Variable Star (group β)","새 변광성 (β조)","IAO_2014_P_EN.pdf",null],
+    ["P8α","Comet","혜성","IAO_2014_P_EN.pdf",null],
+    ["P8β","A New Variable Star","새 변광성","IAO_2014_P_EN.pdf",null],
     ["O","Observational Round: Naked Eye and Telescope","관측 라운드 — 맨눈과 망원경","IAO_2014_O_EN.pdf",null]])},
    {y:2013,host:{ko:"리투아니아 · 빌뉴스",en:"Vilnius, Lithuania"},cc:"lt",problems:lst([
     ["P","Practical round","실기 라운드","IAO_2013_P_KO.pdf",null],
@@ -3321,7 +3340,7 @@ const DATA={
     ["O","Observational round","관측 라운드","IAO_2005_O_KO.pdf",null]])}
   ]},
  apao:{
-  abbr:"APAO", since:2005, obs:true,
+  abbr:"APAO", since:2005, obs:true, groups:true,
   full:{ko:"아시아태평양천문올림피아드",en:"Asian-Pacific Astronomy Olympiad"},
   scope:{ko:"아시아 · 태평양",en:"Asia-Pacific"},
   note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다. 2006–2008, 2010, 2011, 2013, 2016, 2018년은 한국 대표단이 만든 국문 문제집에서 실기 · 관측 부분만 남긴 한국어판뿐입니다. 2009년은 영문 문제지와 한국어판이 함께 있습니다.",
@@ -3355,8 +3374,8 @@ const DATA={
     ["O","Observational round","관측 라운드","APAO_2013_O_KO.pdf",null]])},
    {y:2012,host:{ko:"방글라데시 · 콕스바자르",en:"Cox's Bazar, Bangladesh"},cc:"bd",problems:lst([
     ["P7","Noon","정오","APAO_2012_P_EN.pdf",null],
-    ["P8α","The Black Cloud (group α)","검은 구름 (α조)","APAO_2012_P_EN.pdf",null],
-    ["P8β","Variable Stars (group β)","변광성 (β조)","APAO_2012_P_EN.pdf",null],
+    ["P8α","The Black Cloud","검은 구름","APAO_2012_P_EN.pdf",null],
+    ["P8β","Variable Stars","변광성","APAO_2012_P_EN.pdf",null],
     ["O9–O12","Area, Pegasus, Cassiopeia, Alnath (naked eye)","넓이 · 페가수스 · 카시오페이아 · 엘나스 (맨눈 관측)","APAO_2012_O_EN.pdf",null]]).map(p=>p.id!=="O9–O12"?p:(delete p.state,Object.assign(p,{
       desc:{ko:"2012년 11월 29일 밤 콕스바자르 바닷가의 실제 하늘에서 맨눈과 손으로만 푸는 관측 라운드입니다. 보름 하루 뒤의 달빛 속에서 달 · 목성 · 알데바란 삼각형의 넓이를 손으로 재어 어림하고, 페가수스자리와 맞닿은 별자리를 고르고, 주어진 별과 견주어 α Cas의 등급을 어림한 뒤, 엘나스 · 카펠라 · 안드로메다 은하를 차례로 가리킵니다. 하늘 밝기는 달빛과 읍내 불빛으로 계산해 맨눈 한계 등급을 정합니다. 공식 해답이 없어 HaslaLab 해답(넓이 ≈ 19 °²)을 실었습니다.",
             en:"An observational round worked with the eyes and hands only, under the real sky over the beach at Cox's Bazar on the night of 29 November 2012. In the light of a Moon one day past full, measure the triangle of the Moon, Jupiter and Aldebaran with your hand and estimate its area, pick the constellations that border Pegasus, estimate the magnitude of α Cas against the given stars, then point at Alnath, Capella and the Andromeda Galaxy in turn. The sky brightness comes from the moonlight and the town, and sets the naked-eye limit. No official solution was published, so HaslaLab's is included (area ≈ 19 deg²)."},
@@ -3368,10 +3387,10 @@ const DATA={
     ["P","Practical round","실기 라운드","APAO_2010_P_KO.pdf",null],
     ["O","Observational round","관측 라운드","APAO_2010_O_KO.pdf",null]])},
    {y:2009,host:{ko:"대한민국 · 담양",en:"Damyang, South Korea"},cc:"kr",problems:lst([
-    ["P7α","Cepheid (group α)","세페이드 변광성 (α조)","APAO_2009_P_EN.pdf",null],
-    ["P8α","Venus (group α)","금성 (α조)","APAO_2009_P_EN.pdf",null],
-    ["P7β","Quasar (group β)","퀘이사 (β조)","APAO_2009_P_EN.pdf",null],
-    ["P8β","Open Cluster (group β)","산개성단 (β조)","APAO_2009_P_EN.pdf",null],
+    ["P7α","Cepheid","세페이드 변광성","APAO_2009_P_EN.pdf",null],
+    ["P8α","Venus","금성","APAO_2009_P_EN.pdf",null],
+    ["P7β","Quasar","퀘이사","APAO_2009_P_EN.pdf",null],
+    ["P8β","Open Cluster","산개성단","APAO_2009_P_EN.pdf",null],
     ["O9","Jupiter and its Four Galilean Satellites","목성과 네 갈릴레이 위성","APAO_2009_O_EN.pdf",null],
     ["O10","β Lyrae (a binary system)","거문고자리 베타 (쌍성)","APAO_2009_O_EN.pdf",null]])},
    {y:2008,host:{ko:"키르기스스탄 · 비슈케크",en:"Bishkek, Kyrgyzstan"},cc:"kg",problems:lst([
@@ -3462,7 +3481,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 10;
+const LOGO_V = 11;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
@@ -3470,7 +3489,7 @@ const LOGO_V = 10;
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.39};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -3487,6 +3506,14 @@ const compLogo = key =>
 const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
 /* astronomy rounds are not all observation: the problem code says which round it is
    (O observation, D data analysis, P practical, M sky map) */
+/* IAO · APAO 는 주니어(α)와 시니어(β) 조가 따로 푼다 — 고른 조는 페이지를 옮겨도 남는다 */
+let grpSel = "all";
+const grpOf = (c,p) => c&&c.groups ? (p.grp||"both") : null;
+function setGrp(g){
+  grpSel=g;
+  const box=document.querySelector(".probs"); if(box) box.dataset.show=g;
+  document.querySelectorAll(".grpsel button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.g===g));
+}
 const kindOf = (c,p) => c&&c.obs ? (UI[lang].kind[(p.id||"").charAt(0)]||null) : null;
 const countLabel = (c,ps) => {
   if(!(c&&c.obs)) return LB(c,"expN").replace("{n}",ps.length);
@@ -3834,7 +3861,10 @@ function viewYear(key,year){
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
          target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
     </div>
-    <div class="probs">
+    ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all","jr","sr"].map(g=>
+      `<button type="button" data-g="${g}" aria-pressed="${grpSel===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
+       <i>${yr.problems.filter(p=>g==="all"||[g,"both"].includes(grpOf(c,p))).length}</i></button>`).join("")}</div>`:""}
+    <div class="probs"${c.groups?` data-show="${grpSel}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
         /* 요청한 언어가 없으면 있는 것을 주되, 어느 언어인지 밝힌다 */
@@ -3867,10 +3897,11 @@ function viewYear(key,year){
         const docsOnly = !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
-        return `<article class="prob ${mode==="wip"?"soon":""}">
+        const grp = grpOf(c,p);
+        return `<article class="prob ${mode==="wip"?"soon":""}"${grp?` data-grp="${grp}"`:""}>
           <div class="top">
-            <span class="code">${p.id}</span>
-            <span class="tr"><span class="status ${mode}"><i></i>${chip}</span>
+            <span class="code">${grp?p.id.replace(/[αβ]+$/,""):p.id}</span>
+            <span class="tr">${grp?`<span class="grptag ${grp}">${d.grp[grp]}</span>`:""}<span class="status ${mode}"><i></i>${chip}</span>
             ${p.theory?`<span class="thytag">${d.theoryTag}</span>`:""}</span>
           </div>
           <h3>${esc(heading)}</h3>
