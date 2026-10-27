@@ -2458,12 +2458,19 @@ zCv.addEventListener("pointerdown",e=>{ const [a,b]=panelPos(zCv,e,ZS); zoyiPres
 /* ══════════════════════════════════════════════════════════════
    10.  CLOSE-UPS, SECTION, PANEL
    ══════════════════════════════════════════════════════════════ */
+/* a banana plug seen end-on in a socket of a close-up, its lead running off the panel (to: [x,y] of the lead's far end) */
+function plugFace(c,x,y,col,to){ const k=col==="r"?["#b71f17","#e0473c","#5e0e08"]:["#17181a","#3a3c40","#000"];
+  c.strokeStyle=k[2]; c.lineWidth=0.62; c.lineCap="round"; c.beginPath(); c.moveTo(x,y); c.bezierCurveTo(x+(to[0]-x)*0.15,y+1.2,to[0],to[1]-1.6,to[0],to[1]); c.stroke();
+  c.strokeStyle=k[0]; c.lineWidth=0.46; c.stroke();
+  circ(c,x,y,0.78,k[2]); circ(c,x,y,0.66,k[0]); circ(c,x-0.16,y-0.18,0.28,k[1]); circ(c,x,y,0.16,"#0b0b0c"); }
 function drawFgPanel(){
   const c=fgCtx;
   c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#191c21"; c.fillRect(0,0,fgCv.width,fgCv.height);
   c.setTransform(DPR*FGS,0,0,DPR*FGS,DPR*FGS*0.4,DPR*FGS*0.4);
   if(!S.on.fg) c.globalAlpha=0.35;
   drawFgFace(c); drawFgRear(c,9.6);
+  /* the leads plugged into the output sockets show in the close-up too */
+  for(const [id,y] of [["FGP",2.9],["FGN",6.3]]) plugsAt(id).forEach((cb,i)=>plugFace(c,21.2,y,cb.col,[24.6+i*0.4,y+2.6]));
   c.globalAlpha=1;
   const nums=[[1.35,0.15,"1"],[2.9,6.95,"2"],[6.6,6.95,"3"],[12.05,2.7,"4"],[12.05,6.5,"4"],[14.5,6.95,"5"],[17.2,5.0,"6"],[22.8,4.6,"7"]];
   for(const [x,y,n] of nums){ circ(c,x,y,0.32,"#1b1c1e"); FT(c,n,x,y+0.01,0.36,"#fff","center",true); }
@@ -2478,6 +2485,7 @@ function drawZoyiPanel(){
     if(here){ rr(c,u-0.4,-0.62,u+0.4,-0.24,0.06,"#a9aeb3","#5d6166",0.03); rr(c,u-0.28,-1.0,u+0.28,-0.6,0.05,"#1b1c1f"); }
     if(here) FT(c,lab,u-0.62,-0.3,0.3,"#9aa3ab","right",true); else FT(c,lab,u,-0.55,0.3,"#9aa3ab","center",true); }
   drawZoyiFace(c);
+  for(const [x,lab] of ZJ){ const id=lab==="COM"?"DCOM":lab==="VΩHz"?"DVO":null; if(id) plugsAt(id).forEach((cb,i)=>plugFace(c,x,ZJV,cb.col,[x+0.3+i*0.4,ZJV+2.2])); }
   c.globalAlpha=1;
 }
 function drawXsec(){

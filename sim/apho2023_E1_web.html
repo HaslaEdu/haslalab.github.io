@@ -2896,36 +2896,45 @@ function base3(){
       const a = P3(mm/10,RAILY-0.42,8.03), b = P3(mm/10,RAILY-0.42-L,8.03); c.lineWidth = mm % 10 === 0 ? 1 : 0.6; c.beginPath(); c.moveTo(a[0],a[1]); c.lineTo(b[0],b[1]); c.stroke(); }
   },{layer:-1,bias:1});
   /* the sand-blasted plate the column stands on, with its two gussets */
-  box3(-9,9,RAILY,RAILY+0.8,-9.5,3,"#c3c8cc",{id:"rail",top:"#cfd3d6"});
-  for (const s of [-1,1]) prism3("z",-8.6,-8.0,[[s*2.0,RAILY+0.8],[s*7.5,RAILY+0.8],[s*2.0,RAILY+6.5]],"#b9bfc4",{id:"column"});
-  for (const [x, z] of [[-6,-8.3],[6,-8.3],[-6,1.5],[6,1.5]]) cyl3("y",RAILY+0.8,RAILY+1.05,x,z,0.45,"#8e959b",{seg:10,cap:"#a9afb5"});
+  box3(-9,9,RAILY,RAILY+0.8,-11.6,3,"#c3c8cc",{id:"rail",top:"#cfd3d6"});
+  for (const s of [-1,1]) prism3("z",-9.1,-8.5,[[s*2.0,RAILY+0.8],[s*7.5,RAILY+0.8],[s*2.0,RAILY+6.5]],"#b9bfc4",{id:"column"});
+  for (const [x, z] of [[-6,-10.6],[6,-10.6],[-6,1.5],[6,1.5]]) cyl3("y",RAILY+0.8,RAILY+1.05,x,z,0.45,"#8e959b",{seg:10,cap:"#a9afb5"});
 }
-/* the column: a 40 x 40 slotted profile, the crossbar on top and the two hanger units */
+/* the column: a 40 x 40 slotted profile standing behind the gap between the two angle screens (Fig. 3, dashed),
+   the crossbar across its top behind the screens' upper edge (the screens are bolted to its face), and the two
+   hanger units lying on the crossbar and reaching forward over the screens to the pendulums */
+const COL_Z0 = -10.8, COL_Z1 = -6.8, XB_Z0 = -11.0, XB_Z1 = SCR_Z - 0.4;
 function column3(){
-  const zc0 = -8.6, zc1 = -4.6;
-  boxY(-2,2,RAILY+0.8,PIV+1.1,zc0,zc1,ALU,{id:"column",top:"#dfe3e7"},6);
-  for (const x of [-2.01, 2.01]) face(orient([[x,RAILY+0.8,-6.9],[x,PIV+1.1,-6.9],[x,PIV+1.1,-6.3],[x,RAILY+0.8,-6.3]],[Math.sign(x),0,0]),{fill:"#7d848b",flat:true,id:"column",bias:0.3});
-  face([[-0.3,RAILY+0.8,zc1+0.01],[0.3,RAILY+0.8,zc1+0.01],[0.3,PIV+1.1,zc1+0.01],[-0.3,PIV+1.1,zc1+0.01]],{fill:"#7d848b",flat:true,id:"column",bias:0.3});
-  /* the crossbar, the hangers lying across its top */
-  box3(-15,15,PIV+1.1,PIV+2.3,-9.2,-4.2,ALU2,{id:"column",top:"#d5dade"});
-  face([[-15,PIV+2.31,-6.9],[-15,PIV+2.31,-6.4],[15,PIV+2.31,-6.4],[15,PIV+2.31,-6.9]],{fill:"#6d747a",flat:true,id:"column",bias:0.3});
-  for (const s of [-1,1]){ knurl3("y",PIV+2.3,PIV+3.4,s*11,-6.7,1.0,"#7b8590",{id:"column"}); }
+  const zc0 = COL_Z0, zc1 = COL_Z1, zm = (zc0 + zc1) / 2;
+  boxY(-2,2,RAILY+0.8,PIV+1.0,zc0,zc1,ALU,{id:"column",top:"#dfe3e7"},6);
+  for (const x of [-2.01, 2.01]) face(orient([[x,RAILY+0.8,zm-0.3],[x,PIV+1.0,zm-0.3],[x,PIV+1.0,zm+0.3],[x,RAILY+0.8,zm+0.3]],[Math.sign(x),0,0]),{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  face([[-0.3,RAILY+0.8,zc1+0.01],[0.3,RAILY+0.8,zc1+0.01],[0.3,PIV+1.0,zc1+0.01],[-0.3,PIV+1.0,zc1+0.01]],{fill:"#7d848b",flat:true,id:"column",bias:0.3});
+  /* the corner bracket joining the crossbar to the column, behind */
+  for (const s of [-1,1]) prism3("z",zc0+0.6,zc0+1.0,[[s*2.0,PIV+1.0],[s*6.5,PIV+1.0],[s*2.0,PIV-3.5]],"#b9bfc4",{id:"column"});
+  /* the crossbar: behind the screens' top edge, its slotted top a little above it */
+  box3(-19,19,PIV+1.0,PIV+2.3,XB_Z0,XB_Z1,ALU2,{id:"column",top:"#d5dade"});
+  for (const z of [XB_Z0+1.2, XB_Z1-1.2]) face([[-19,PIV+2.31,z-0.25],[-19,PIV+2.31,z+0.25],[19,PIV+2.31,z+0.25],[19,PIV+2.31,z-0.25]],{fill:"#6d747a",flat:true,id:"column",bias:0.3});
+  for (const x of [-19.01, 19.01]) face(orient([[x,PIV+1.0,XB_Z0],[x,PIV+2.3,XB_Z0],[x,PIV+2.3,XB_Z1],[x,PIV+1.0,XB_Z1]],[Math.sign(x),0,0]),{fill:"#2d3035",flat:true});
+  /* the grey knobs that clamp the screens to it, and the screws through the screens' faces */
+  for (const x of [-15.5, 15.5]) knurl3("y",PIV+2.3,PIV+3.4,x,XB_Z1-1.2,1.0,"#7b8590",{id:"column"});
+  for (const x of [-15.5, -6.5, 6.5, 15.5]){ cyl3("z",SCR_Z,SCR_Z+0.18,x,PIV+1.55,0.38,"#b9bec3",{seg:12,cap:"#d0d4d8"}); line3([x-0.25,PIV+1.55,SCR_Z+0.19],[x+0.25,PIV+1.55,SCR_Z+0.19],"#6d747a",1); }
   const h = S.bench.hang();
   for (let i = 0; i < 2; i++){ const x = h[i] * 100, id = "hang" + i, AL = "#d9dde1", AL2 = "#c4c9ce", y0 = PIV + 2.3, y1 = PIV + 3.5;
     /* the hanger (photo, items 2 and 3): an aluminium U-channel running front to back across the crossbar */
-    box3(x-1.45,x+1.45,y0,y0+0.22,-9.8,3.9,AL2,{id,top:"#cfd3d7"});
-    for (const sg of [-1, 1]) box3(x+sg*1.45-(sg>0?0.2:0),x+sg*1.45+(sg>0?0:0.2),y0,y1,-9.8,3.9,AL,{id,top:"#e6e9ec"});
+    box3(x-1.45,x+1.45,y0,y0+0.22,XB_Z0-0.6,3.9,AL2,{id,top:"#cfd3d7"});
+    for (const sg of [-1, 1]) box3(x+sg*1.45-(sg>0?0.2:0),x+sg*1.45+(sg>0?0:0.2),y0,y1,XB_Z0-0.6,3.9,AL,{id,top:"#e6e9ec"});
+    box3(x-1.25,x+1.25,y0+0.22,y1,XB_Z0-0.6,XB_Z0-0.4,AL,{id});
     /* the two rollers the threads come down over, one at the front end, one by the crossbar, and the pair hanging under them */
     for (const z of [-2.6, 2.6]){ cyl3("x",x-1.25,x+1.25,y1-0.35,z,0.3,"#cdd2d7",{seg:12,cap:"#b5bbc1",id}); cyl3("x",x-1.25,x+1.25,PIV+0.9,z,0.26,"#cdd2d7",{seg:10,cap:"#b5bbc1",id}); }
     for (const sg of [-1, 1]) box3(x+sg*1.45-(sg>0?0.2:0),x+sg*1.45+(sg>0?0:0.2),PIV+0.5,y0,-3.2,3.2,AL,{id});
     /* the two string-tuning pegs at the back end: a brass gear on the side wall, a cream wing on its post */
-    for (const [z, up] of [[-9.0, 1.9], [-7.0, 1.4]]){ const xs = x + 1.45;
+    for (const [z, up] of [[-10.6, 1.9], [-8.6, 1.4]]){ const xs = x + 1.45;
       cyl3("x",xs,xs+0.5,y1-0.6,z,0.42,"#c9a24a",{seg:12,cap:"#d8b45a",id}); cyl3("y",y1-0.4,y1+up-0.5,xs+0.25,z,0.12,"#c8ccd1",{seg:8,id});
       prism3("x",xs+0.12,xs+0.38,[[y1+up-0.6,z-0.55],[y1+up,z-0.62],[y1+up+0.75,z-0.35],[y1+up+0.75,z+0.35],[y1+up,z+0.62],[y1+up-0.6,z+0.55]],"#f0e9d8",{id}); }
     /* the threads along the channel from the pegs to the top rollers */
-    for (const [z, zp] of [[-2.6, -9.0], [2.6, -7.0]]) line3([x + 0.3 * Math.sign(z), y1 - 0.05, z], [x + 1.4, y1 - 0.6, zp], "rgba(242,150,96,0.95)", Math.max(0.6, CAM.k * 0.03));
+    for (const [z, zp] of [[-2.6, -10.6], [2.6, -8.6]]) line3([x + 0.3 * Math.sign(z), y1 - 0.05, z], [x + 1.4, y1 - 0.6, zp], "rgba(242,150,96,0.95)", Math.max(0.6, CAM.k * 0.03));
     /* the clamp screw on the crossbar: a grey knurled knob */
-    cyl3("y",y1,y1+0.4,x,-6.7,0.22,"#c8ccd1",{seg:8,id}); knurl3("y",y1+0.4,y1+1.4,x,-6.7,0.85,"#7d8794",{id});
+    cyl3("y",y1,y1+0.4,x,-7.6,0.22,"#c8ccd1",{seg:8,id}); knurl3("y",y1+0.4,y1+1.4,x,-7.6,0.85,"#7d8794",{id});
     /* the terminal the ball's metal wire goes to: red on one hanger, black on the other */
     cyl3("y",y0+0.2,y1+0.3,x,-0.4,0.42,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:i ? "#333" : "#d6493a"});
     cyl3("y",y1+0.3,PIV+5.4,x,-0.4,0.3,i ? "#1b1d20" : "#c0392b",{seg:12,id,cap:"#666"});
@@ -2951,8 +2960,7 @@ function fans3(){
   for (const side of [-1, 1]){ const x0 = side > 0 ? 2.2 : -36.8, x1 = side > 0 ? 36.8 : -2.2;
     box3(x0, x1, yb, yt, SCR_Z - 0.35, SCR_Z, "#e9e9e5", {id:"fan", top:"#f1f1ec"});
     tex3(fanTex(side), 0, 0, fanTex(side).width, fanTex(side).height, [x0, yt, SCR_Z + 0.02], [x1 - x0, 0, 0], [0, -(yt - yb), 0], {id:"fan"});
-    /* the two little brackets that hold the board on the base */
-    for (const xb of [x0 + side * 4, x1 - side * 4]) box3(Math.min(xb, xb + 3) - 1.5, Math.min(xb, xb + 3) + 1.5, RAILY, RAILY + 3, SCR_Z, SCR_Z + 1.2, "#b9bfc4", {id:"fan"});
+    /* they hang from the crossbar behind their top edge (bolted to it); nothing holds them at the bottom */
   }
 }
 /* the photogate (Fig. 2, item 10): two white acrylic U plates either side of a black U core, four screws on each
