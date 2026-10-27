@@ -186,8 +186,8 @@ const I18N = {
         "가상 실험실 · 빈 1리터 병 입구를 가로질러 불어 휘파람 소리의 진동수를 휴대폰의 음 검출기나 스펙트럼 분석기로 읽고, 계량컵으로 물을 100 ml씩 더하며 진동수가 물의 부피에 따라 어떻게 변하는지 찾습니다."],
   tray: ["On the table", "탁자 위"],
   vt3d: ["3D table", "3D 탁자"], vtphone: ["phone", "휴대폰"], vtcup: ["measuring cup", "계량컵"],
-  cap_3d: ["the table in 3D — drag to turn, right-drag to pan, wheel to zoom · hold the mouse on the jug to fill the cup, click the cup to pour it into the bottle · hold the mouse on the bottle's mouth to blow · click the phone or the cup for a close-up",
-           "3D 탁자 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 물병 위에서 마우스를 누르고 있으면 컵이 참, 컵 클릭: 병에 붓기 · 병 입구에서 마우스를 누르고 있으면 불기 · 휴대폰·컵 클릭: 확대"],
+  cap_3d: ["the table in 3D — drag to turn, right-drag to pan, wheel to zoom · hold the mouse on the jug to fill the cup, click the cup to pour it into the bottle · hold the mouse on the bottle's mouth to blow · click the phone or the cup for a close-up · the phone's screen stays in the corner, live and touchable, so you can pour and blow while you watch the spectrum (✕ hides it)",
+           "3D 탁자 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 물병 위에서 마우스를 누르고 있으면 컵이 참, 컵 클릭: 병에 붓기 · 병 입구에서 마우스를 누르고 있으면 불기 · 휴대폰·컵 클릭: 확대 · 오른쪽 아래의 휴대폰 화면은 실시간이고 그대로 눌러 조작할 수 있어, 물을 붓고 불면서 스펙트럼을 같이 볼 수 있습니다 (✕로 숨기기)"],
   cap_phone: ["the Android phone with Physics Toolbox — switch between the tone detector and the spectrum analyser; on the spectrum, Hold freezes it and dragging moves the cursor · ◁ ○ □ at the bottom go back, home and to recent apps (calculator, stopwatch, settings) · hold the Blow button (or press Space) to blow",
               "안드로이드 휴대폰의 Physics Toolbox — 음 검출기와 스펙트럼 분석기 전환; 스펙트럼에서 Hold로 멈추고 끌어서 커서 옮기기 · 아래 ◁ ○ □로 뒤로 · 홈 · 최근 앱(계산기, 스톱워치, 설정) · Blow 버튼(또는 스페이스)을 누르고 있으면 불기"],
   cap_cup: ["the measuring cup from the side — read the water against its marks (10 ml); hold Fill to fill it from the jug, Pour to empty it into the bottle",
@@ -758,18 +758,27 @@ function toolboxClick(px, py, drag){ const W = APPC.width, H = APPC.height; if (
 const DR = {scr:"toolbox", prev:null, recent:["toolbox"], calc:"0", calcE:"", sw:{run:false, acc:0, t0:0, laps:[]}};
 const dk = (en, ko) => LANG === "ko" ? ko : en;
 const DAPPS = {toolbox:{n:() => "Physics Toolbox", col:"#1e88e5", gl:"∿"}, calc:{n:() => dk("Calculator", "계산기"), col:"#455a64", gl:"±"},
-  clock:{n:() => dk("Clock", "시계"), col:"#3949ab", gl:"⏱"}, settings:{n:() => dk("Settings", "설정"), col:"#607d8b", gl:"⚙"}};
+  clock:{n:() => dk("Clock", "시계"), col:"#3949ab", gl:"⏱"}, settings:{n:() => dk("Settings", "설정"), col:"#607d8b", gl:"⚙"}, chrome:{n:() => "Chrome", col:"#fff", gl:""}};
+/* Chrome: the real web in a mobile browser (vbrowser.js), laid over the phone's screen in the phone view */
+let BRP = null;
+function brpGet(){ if (!BRP && window.VBrowser){ BRP = VBrowser({kind:"chrome", mobile:true, lang:() => LANG,
+    links:[{t:{ko:"문제지", en:"Problem"}, url:"../pdf/NBPhO_2020_E_EN.pdf", ic:"📄", col:"#c0392b"}, {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"},
+      {t:{ko:"위키백과", en:"Wikipedia"}, url:LANG === "ko" ? "https://ko.m.wikipedia.org/" : "https://en.m.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://m.youtube.com/", ic:"▶", col:"#e62117"}]});
+    BRP.el.style.display = "none"; document.body.appendChild(BRP.el); } return BRP; }
 const DKEYS = ["C", "(", ")", "÷", "7", "8", "9", "×", "4", "5", "6", "−", "1", "2", "3", "+", "0", ".", "⌫", "="];
 const pad2 = n => String(n).padStart(2, "0");
 const swNow = () => DR.sw.acc + (DR.sw.run ? ST.t - DR.sw.t0 : 0);
 const swFmt = t => pad2(Math.floor(t / 60)) + ":" + pad2(Math.floor(t % 60)) + "." + pad2(Math.floor(t * 100 % 100));
-function dIcon(g, k, cx, cy, r){ g.fillStyle = DAPPS[k].col; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = "#fff"; g.font = "bold " + Math.round(r) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(DAPPS[k].gl, cx, cy + 1); }
+function dIcon(g, k, cx, cy, r){
+  if (k === "chrome"){ for (const [c0, a0] of [["#db4437", -Math.PI * 5 / 6], ["#f4c20d", -Math.PI / 6], ["#0f9d58", Math.PI / 2]]){ g.fillStyle = c0; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, r, a0, a0 + Math.PI * 2 / 3); g.closePath(); g.fill(); }
+    g.fillStyle = "#fff"; g.beginPath(); g.arc(cx, cy, r * 0.46, 0, 7); g.fill(); g.fillStyle = "#4285f4"; g.beginPath(); g.arc(cx, cy, r * 0.36, 0, 7); g.fill(); return; }
+  g.fillStyle = DAPPS[k].col; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = "#fff"; g.font = "bold " + Math.round(r) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(DAPPS[k].gl, cx, cy + 1); }
 function droidOpen(k){ DR.scr = k; DR.recent = [k].concat(DR.recent.filter(x => x !== k)); }
 function droidHome(g, W, H){ const gr = g.createLinearGradient(0, 0, W * 0.4, H); gr.addColorStop(0, "#1a3a5c"); gr.addColorStop(0.55, "#2c5f7c"); gr.addColorStop(1, "#7a5c8c"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
   const d = new Date(); g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = "300 64px Arial"; g.fillText(pad2(d.getHours()) + ":" + pad2(d.getMinutes()), W / 2, 120);
   g.font = "15px Arial"; g.fillText(d.toLocaleDateString(LANG === "ko" ? "ko-KR" : "en-GB", {weekday:"long", month:"long", day:"numeric"}), W / 2, 168);
   g.fillStyle = "rgba(255,255,255,0.92)"; g.beginPath(); g.roundRect ? g.roundRect(24, 600, W - 48, 44, 22) : g.rect(24, 600, W - 48, 44); g.fill(); g.fillStyle = "#6b7680"; g.font = "14px Arial"; g.textAlign = "left"; g.fillText("🔍  " + dk("Search", "검색"), 44, 622);
-  Object.keys(DAPPS).forEach((k, i) => { const cx = 41 + 82 * i; dIcon(g, k, cx, 500, 27); g.fillStyle = "#fff"; g.font = "12px Arial"; g.textAlign = "center"; g.fillText(DAPPS[k].n(), cx, 546, 78); }); }
+  Object.keys(DAPPS).forEach((k, i) => { const cx = 33 + 66 * i; dIcon(g, k, cx, 500, 24); g.fillStyle = "#fff"; g.font = "11px Arial"; g.textAlign = "center"; g.fillText(DAPPS[k].n(), cx, 540, 64); }); }
 function droidCalc(g, W, H){ g.fillStyle = "#121417"; g.fillRect(0, 0, W, H); g.textAlign = "right"; g.textBaseline = "middle"; g.fillStyle = "#8a949e"; g.font = "18px Arial"; g.fillText(DR.calcE, W - 20, 110);
   g.fillStyle = "#fff"; g.font = (DR.calc.length > 11 ? "30px" : "44px") + " Arial"; g.fillText(DR.calc, W - 20, 170);
   DKEYS.forEach((k, i) => { const cx = 41 + 82.5 * (i % 4), cy = 270 + 94 * Math.floor(i / 4); g.fillStyle = k === "=" ? "#1e88e5" : /[÷×−+()C⌫]/.test(k) ? "#2d3640" : "#22272d";
@@ -797,7 +806,8 @@ function droidRecents(g, W, H){ g.fillStyle = "#2b2f33"; g.fillRect(0, 0, W, H);
 function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, CH = APPC.height; g.setTransform(1, 0, 0, 1, 0, 0);
   g.save(); g.translate(0, SBH); g.beginPath(); g.rect(0, 0, W, CH); g.clip();
   if (DR.scr === "toolbox") g.drawImage(toolboxTex(), 0, 0); else if (DR.scr === "home") droidHome(g, W, CH); else if (DR.scr === "calc") droidCalc(g, W, CH);
-  else if (DR.scr === "clock") droidClock(g, W, CH); else if (DR.scr === "settings") droidSettings(g, W, CH); else droidRecents(g, W, CH);
+  else if (DR.scr === "clock") droidClock(g, W, CH); else if (DR.scr === "settings") droidSettings(g, W, CH);
+  else if (DR.scr === "chrome"){ if (window.VBrowser) VBrowser.sketch(g, 0, 0, W, CH, "chrome", BRP ? BRP.title() : ""); } else droidRecents(g, W, CH);
   g.restore();
   /* status bar */
   const d = new Date(); g.fillStyle = DR.scr === "settings" ? "#e3e7eb" : "#0b0d10"; g.fillRect(0, 0, W, SBH); const fg = DR.scr === "settings" ? "#1d232a" : "#e8eef2";
@@ -812,16 +822,16 @@ function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, CH = A
   g.beginPath(); g.arc(W / 2, cy, 8.5, 0, 7); g.stroke(); g.strokeRect(5 * W / 6 - 7.5, cy - 7.5, 15, 15); g.lineWidth = 1;
   return PHONEC; }
 function phoneClick(px, py, drag){ const W = PHONEC.width, CH = APPC.height; if (py < SBH) return;
-  if (py >= SBH + CH){ if (drag) return; if (px < W / 3){ if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else if (DR.scr !== "home") DR.scr = "home"; }
+  if (py >= SBH + CH){ if (drag) return; if (px < W / 3 && DR.scr === "chrome" && BRP && BRP.back()) return; if (px < W / 3){ if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else if (DR.scr !== "home") DR.scr = "home"; }
     else if (px < 2 * W / 3) DR.scr = "home"; else if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else { DR.prev = DR.scr; DR.scr = "recents"; } return; }
   const y = py - SBH; if (DR.scr === "toolbox") return toolboxClick(px, y, drag); if (drag) return;
-  if (DR.scr === "home"){ Object.keys(DAPPS).forEach((k, i) => { if (Math.hypot(px - (41 + 82 * i), y - 500) < 34) droidOpen(k); }); return; }
+  if (DR.scr === "home"){ Object.keys(DAPPS).forEach((k, i) => { if (Math.hypot(px - (33 + 66 * i), y - 500) < 30){ if (k === "chrome") brpGet(); droidOpen(k); } }); return; }
   if (DR.scr === "calc"){ DKEYS.forEach((k, i) => { if (Math.hypot(px - (41 + 82.5 * (i % 4)), y - (270 + 94 * Math.floor(i / 4))) < 38) calcKey(k); }); return; }
   if (DR.scr === "clock"){ const S = DR.sw; if (Math.hypot(px - 240, y - 620) < 44){ if (S.run){ S.acc += ST.t - S.t0; S.run = false; } else { S.t0 = ST.t; S.run = true; } }
     else if (Math.hypot(px - 90, y - 620) < 44){ if (S.run) S.laps.push(swNow()); else { S.acc = 0; S.laps = []; } } return; }
   if (DR.scr === "settings"){ if (y > 100 && y < 162){ ST.sound = !ST.sound; if (ST.sound) audioInit(); } return; }
   if (DR.scr === "recents"){ if (y > CH - 50){ DR.recent = []; DR.scr = "home"; return; }
-    DR.recent.slice(0, 4).forEach((k, i) => { const y0 = 30 + 150 * i; if (y < y0 || y > y0 + 136 || px < 30 || px > W - 30) return; if (y < y0 + 34 && px > W - 66) DR.recent = DR.recent.filter(x => x !== k); else droidOpen(k); }); } }
+    DR.recent.slice(0, 4).forEach((k, i) => { const y0 = 30 + 150 * i; if (y < y0 || y > y0 + 136 || px < 30 || px > W - 30) return; if (y < y0 + 34 && px > W - 66) DR.recent = DR.recent.filter(x => x !== k); else { if (k === "chrome") brpGet(); droidOpen(k); } }); } }
 /* ---- the sound you hear (WebAudio) --------------------------------------- */
 let AC = null, AU = null;
 function audioInit(){ if (AC || !ST.sound) return; try { AC = new (window.AudioContext || window.webkitAudioContext)();
@@ -849,6 +859,24 @@ for (const k of VIEWS) document.getElementById("vt" + k).onclick = () => showVie
 function drawPhone(c, W, H){ c.fillStyle = "#c8a87e"; c.fillRect(0, 0, W, H); const s = Math.min((H - 40) / (PHONEC.height + 60), (W - 40) / (PHONEC.width + 40)), pw = (PHONEC.width + 30) * s, ph = (PHONEC.height + 60) * s, x = W / 2 - pw / 2, y = H / 2 - ph / 2;
   c.fillStyle = "#1d1f22"; c.beginPath(); c.roundRect ? c.roundRect(x, y, pw, ph, 24 * s) : c.rect(x, y, pw, ph); c.fill();
   const sx = x + 15 * s, sy = y + 30 * s; c.drawImage(phoneTex(), sx, sy, PHONEC.width * s, PHONEC.height * s); PHONE_RECT = {x:sx, y:sy, s}; }
+/* the phone stays in sight while you pour and blow: a live, touchable copy in the corner of the 3D and cup views */
+const PIP = {on:true, R:null};
+function drawPip(c, W, H){ PIP.R = null; const ko = LANG === "ko";
+  if (!PIP.on){ const t = ko ? "📱 휴대폰 화면 보기" : "📱 show the phone", w = 150, x = W - w - 12, y = H - 40; c.fillStyle = "rgba(20,22,26,0.85)"; c.beginPath(); c.roundRect ? c.roundRect(x, y, w, 28, 14) : c.rect(x, y, w, 28); c.fill();
+    c.fillStyle = "#e8eef2"; c.font = "13px Arial"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(t, x + w / 2, y + 14); PIP.R = {pill:[x, y, w, 28]}; return; }
+  const ph = Math.min(H * 0.66, 420), s = ph / (PHONEC.height + 60), pw = (PHONEC.width + 30) * s, x = W - pw - 12, y = H - ph - 12;
+  c.save(); c.shadowColor = "rgba(0,0,0,0.5)"; c.shadowBlur = 14; c.fillStyle = "#1d1f22"; c.beginPath(); c.roundRect ? c.roundRect(x, y, pw, ph, 18 * s + 4) : c.rect(x, y, pw, ph); c.fill(); c.restore();
+  const sx = x + 15 * s, sy = y + 30 * s; c.drawImage(phoneTex(), sx, sy, PHONEC.width * s, PHONEC.height * s);
+  c.fillStyle = "rgba(255,255,255,0.75)"; c.font = "bold 13px Arial"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("✕", x + pw - 14, y + 14);
+  PIP.R = {x:sx, y:sy, s, box:[x, y, pw, ph], close:[x + pw - 26, y + 2, 24, 24]}; }
+const inRect = (p, r) => r && p[0] >= r[0] && p[0] <= r[0] + r[2] && p[1] >= r[1] && p[1] <= r[1] + r[3];
+function pipDown(p){ const R = PIP.R; if (!R) return false;
+  if (R.pill){ if (inRect(p, R.pill)){ PIP.on = true; return true; } return false; }
+  if (!inRect(p, R.box)) return false; if (inRect(p, R.close)){ PIP.on = false; return true; }
+  const q = [(p[0] - R.x) / R.s, (p[1] - R.y) / R.s]; phoneClick(q[0], q[1], false); down3 = {p, moved:false, phone:true, R}; return true; }
+function brpSync(){ if (!BRP) return; const vis = view3 === "phone" && DR.scr === "chrome" && PHONE_RECT;
+  if (!vis){ BRP.place(0, 0, 0, 0, false); return; } const r = cv3.getBoundingClientRect(), s = PHONE_RECT.s;
+  BRP.place(r.left + scrollX + PHONE_RECT.x, r.top + scrollY + PHONE_RECT.y + SBH * s, PHONEC.width * s, APPC.height * s, true); }
 function drawCupView(c, W, H){ c.fillStyle = "#3a3d42"; c.fillRect(0, 0, W, H); const k = Math.min((H - 60) / 8, W / 12), cx = W / 2, by = H - 30, r = CUP_R * k, hh = CUP_H * k, ri = (CUP_R - 0.1) * k;
   c.fillStyle = "#c8a87e"; c.fillRect(0, by, W, H - by);
   const lv = (0.25 + ST.cup / (Math.PI * (CUP_R - 0.1) * (CUP_R - 0.1))) * k; if (ST.cup > 0.3){ c.fillStyle = "rgba(120,170,215,0.6)"; c.fillRect(cx - ri, by - lv, 2 * ri, lv - 0.25 * k); c.fillStyle = "rgba(160,200,235,0.9)"; c.fillRect(cx - ri, by - lv - 1, 2 * ri, 3); }
@@ -865,6 +893,7 @@ cv3.addEventListener("pointerdown", e => { const p = p3e(e); m3 = p; audioInit()
   if (e.button === 2 || e.button === 1){ e.preventDefault(); cv3.setPointerCapture(e.pointerId); down3 = {p, moved:false, shift:true, btn:e.button}; return; }
   if (e.button) return; cv3.setPointerCapture(e.pointerId);
   if (view3 === "phone"){ if (PHONE_RECT){ const q = [(p[0] - PHONE_RECT.x) / PHONE_RECT.s, (p[1] - PHONE_RECT.y) / PHONE_RECT.s]; phoneClick(q[0], q[1], false); down3 = {p, moved:false, phone:true}; } return; }
+  if (pipDown(p)) return;
   if (view3 === "cup") return;
   const id = pick3(p[0], p[1]);
   if (id === "jug"){ ST.filling = true; down3 = {p, moved:false, hold:"fill"}; return; }
@@ -872,7 +901,7 @@ cv3.addEventListener("pointerdown", e => { const p = p3e(e); m3 = p; audioInit()
   down3 = {p, id, moved:false, shift:e.shiftKey}; });
 cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
   if (!down3) return; if (Math.hypot(p[0] - down3.p[0], p[1] - down3.p[1]) > 3) down3.moved = true; if (!down3.moved || down3.hold) return;
-  if (down3.phone){ const q = [(p[0] - PHONE_RECT.x) / PHONE_RECT.s, (p[1] - PHONE_RECT.y) / PHONE_RECT.s]; phoneClick(q[0], q[1], true); return; }
+  if (down3.phone){ const R = down3.R || PHONE_RECT, q = [(p[0] - R.x) / R.s, (p[1] - R.y) / R.s]; phoneClick(q[0], q[1], true); return; }
   if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.02, CAM.pitch + dy * 0.006)); } cv3.classList.add("grabbing"); });
 cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing"); ST.filling = false; ST.blowing = blowKey || blowBtn;
   if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2 && view3 !== "3d") showView("3d"); return; }
@@ -901,11 +930,11 @@ function panel(){ bBlow.className = ST.blowing ? "on" : ""; bSound.textContent =
   const html = w.map(s => '<div class="w">' + s + "</div>").join(""); const el = document.getElementById("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
 let lastT = performance.now(), lastTone = 0;
 function draw3(){ const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (view3 === "phone") return drawPhone(ctx3, CAM.W, CAM.H); if (view3 === "cup") return drawCupView(ctx3, CAM.W, CAM.H);
+  if (view3 === "phone") return drawPhone(ctx3, CAM.W, CAM.H); if (view3 === "cup"){ drawCupView(ctx3, CAM.W, CAM.H); drawPip(ctx3, CAM.W, CAM.H); return; }
   const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
-  begin3(); scene3(); render3(ctx3); }
+  begin3(); scene3(); render3(ctx3); drawPip(ctx3, CAM.W, CAM.H); }
 (function loop(){ try { const now = performance.now(), dt = Math.min(0.05, (now - lastT) / 1000); lastT = now; ST.t += dt; step(dt); updateSpectrum(dt);
-    if (now - lastTone > 150){ lastTone = now; updateTone(); } audioUpdate(); draw3(); panel(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
+    if (now - lastTone > 150){ lastTone = now; updateTone(); } audioUpdate(); draw3(); brpSync(); panel(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
 function applyLang(){ document.documentElement.lang = LANG;
   document.title = LANG === "ko" ? "NBPhO 2020 P5 — 병의 소리 · HaslaLab" : "NBPhO 2020 P5 — Bottle's Sound · HaslaLab";
   document.getElementById("h1").textContent = tr("title"); document.getElementById("sub").textContent = tr("sub");
@@ -921,6 +950,7 @@ window.addEventListener("resize", layout3);
 layout3(); applyLang(); showView("3d");
 
 </script>
+<script src="vbrowser.js"></script>
 <script src="adfit.js"></script>
 </body>
 </html>
