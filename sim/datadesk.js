@@ -3,7 +3,8 @@
    and plots points (with error bars) from the values they worked out, a scientific calculator, and a worksheet table.
    No fitting, no regression, no slope: lines are drawn with the ruler (the chart desk's line tool) and read back off
    the paper.  Built on ChartLab (chartlab.js).
-     DataDesk.paper(el, {key, lang, w_mm, h_mm})   graph-paper sheet with axes and a plotting form
+     DataDesk.paper(el, {key, lang, w_mm, h_mm, logy})   graph-paper sheet with axes and a plotting form;
+                                                   logy: semi-log paper with that many decades up the page
      DataDesk.calc(el, {lang})                     scientific calculator
      DataDesk.table(el, {key, lang, rows, cols})   worksheet table */
 (function () {
@@ -37,11 +38,11 @@
   const store = {get(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } },
                  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }};
   const T = {
-    ko: {axes: "축 그리기 — 원점 위치와 1 cm(큰 칸)당 값은 직접 정합니다", ox: "원점 x (mm)", oy: "원점 y (mm)", x0: "원점의 x 값", dx: "x: 1 cm당", y0: "원점의 y 값", dy: "y: 1 cm당",
+    ko: {axesLog: "축 그리기 (반로그 종이) — x는 1 cm당 값을, y는 맨 아래 선의 값을 정합니다(한 단마다 ×10)", y0log: "맨 아래 y 값", axes: "축 그리기 — 원점 위치와 1 cm(큰 칸)당 값은 직접 정합니다", ox: "원점 x (mm)", oy: "원점 y (mm)", x0: "원점의 x 값", dx: "x: 1 cm당", y0: "원점의 y 값", dy: "y: 1 cm당",
          xl: "x축 이름", yl: "y축 이름", draw: "축 그리기", erase: "축 지우기", plot: "점 찍기 — 계산한 값을 직접 넣습니다", x: "x", y: "y", sx: "±x (선택)", sy: "±y (선택)", sym: "모양",
          put: "찍기", syms: [["circle", "○"], ["dot", "•"], ["cross", "×"], ["plus", "+"]], noAxes: "먼저 축을 그리세요.", bad: "숫자를 넣으세요.", out: "그 점은 종이 밖입니다.",
          rdmm: "종이 위치", rdv: "축 눈금으로 읽은 값", deg: "DEG", rad: "RAD", err: "식 오류", addRow: "줄 추가", delRow: "마지막 줄 지우기", clear: "표 비우기", sure: "표를 모두 비울까요?"},
-    en: {axes: "Draw the axes — you choose where the origin is and what one centimetre (big square) is worth", ox: "origin x (mm)", oy: "origin y (mm)", x0: "x at origin", dx: "x per cm", y0: "y at origin", dy: "y per cm",
+    en: {axesLog: "Draw the axes (semi-log paper) — choose x per centimetre and the y value of the bottom line (×10 per decade)", y0log: "y at the bottom", axes: "Draw the axes — you choose where the origin is and what one centimetre (big square) is worth", ox: "origin x (mm)", oy: "origin y (mm)", x0: "x at origin", dx: "x per cm", y0: "y at origin", dy: "y per cm",
          xl: "x label", yl: "y label", draw: "Draw axes", erase: "Remove axes", plot: "Plot a point — type the value you worked out", x: "x", y: "y", sx: "±x (opt.)", sy: "±y (opt.)", sym: "symbol",
          put: "Plot", syms: [["circle", "○"], ["dot", "•"], ["cross", "×"], ["plus", "+"]], noAxes: "Draw the axes first.", bad: "Type numbers.", out: "That point is off the paper.",
          rdmm: "on the paper", rdv: "read on your axes", deg: "DEG", rad: "RAD", err: "error", addRow: "Add row", delRow: "Remove last row", clear: "Clear table", sure: "Clear the whole table?"}
@@ -51,14 +52,20 @@
 
   /* ---------------- graph paper ---------------- */
   function paper(el, o) {
-    css(); const PX = 4, Wmm = o.w_mm || 180, Hmm = o.h_mm || 250, W = Wmm * PX, H = Hmm * PX;
+    css(); const PX = 4, Wmm = o.w_mm || 180, Hmm = o.h_mm || 250, W = Wmm * PX, H = Hmm * PX, LOGY = o.logy || 0, DEC = LOGY ? Hmm / LOGY : 0;
+    /* on semi-log paper the printed decades fix the y scale: y0 is the value at the bottom edge, ×10 per decade */
+    const yAt = (ym) => LOGY ? ax.y0 * Math.pow(10, ym / DEC) : ax.y0 + (ym - ax.oy) / 10 * ax.dy;
+    const ymOf = (y) => LOGY ? Math.log10(y / ax.y0) * DEC : ax.oy + (y - ax.y0) / ax.dy * 10;
     const AK = o.key + "-axes"; let ax = store.get(AK);
     const mm = (u, v) => [u / PX, Hmm - v / PX];                 /* paper mm, y up from the bottom */
     const pxOf = (xm, ym) => [xm * PX, (Hmm - ym) * PX];
     function paint(g) {
       g.fillStyle = "#fffdf8"; g.fillRect(0, 0, W, H);
       for (let i = 0; i <= Wmm; i++) { const x = i * PX + 0.5; g.strokeStyle = i % 10 === 0 ? "#e2834a" : i % 5 === 0 ? "#efb08a" : "#f8d9c4"; g.lineWidth = i % 10 === 0 ? 1.1 : i % 5 === 0 ? 0.8 : 0.5; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
-      for (let j = 0; j <= Hmm; j++) { const y = H - j * PX + 0.5; g.strokeStyle = j % 10 === 0 ? "#e2834a" : j % 5 === 0 ? "#efb08a" : "#f8d9c4"; g.lineWidth = j % 10 === 0 ? 1.1 : j % 5 === 0 ? 0.8 : 0.5; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      if (!LOGY) for (let j = 0; j <= Hmm; j++) { const y = H - j * PX + 0.5; g.strokeStyle = j % 10 === 0 ? "#e2834a" : j % 5 === 0 ? "#efb08a" : "#f8d9c4"; g.lineWidth = j % 10 === 0 ? 1.1 : j % 5 === 0 ? 0.8 : 0.5; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      else for (let d = 0; d < LOGY; d++) for (let k = 10; k < 100; k++) { if (k >= 20 && k % 2 || k >= 50 && k % 5) continue;   /* 1–2 by 0.1, 2–5 by 0.2, 5–10 by 0.5 */
+        const y = H - (d + Math.log10(k / 10)) * DEC * PX + 0.5; g.strokeStyle = k === 10 ? "#e2834a" : k % 10 === 0 ? "#efb08a" : "#f8d9c4"; g.lineWidth = k === 10 ? 1.3 : k % 10 === 0 ? 0.8 : 0.5; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      if (LOGY) { g.strokeStyle = "#e2834a"; g.lineWidth = 1.3; g.beginPath(); g.moveTo(0, 0.5); g.lineTo(W, 0.5); g.stroke(); }
       if (o.title) { g.fillStyle = "#b85a2a"; g.font = "600 13px Arial"; g.textAlign = "right"; g.textBaseline = "top"; g.fillText(o.title, W - 6, 4); }
       if (!ax) return;
       const [X0, Y0] = pxOf(ax.ox, ax.oy); g.strokeStyle = "#1b1b1b"; g.lineWidth = 1.6;
@@ -67,36 +74,40 @@
       g.font = "12px 'Segoe Print','Comic Sans MS',cursive"; g.lineWidth = 1.2;
       for (let k = -40; k <= 40; k++) { const xm = ax.ox + 10 * k; if (xm < 2 || xm > Wmm - 6 || k === 0 && false) continue; const [x] = pxOf(xm, 0);
         g.beginPath(); g.moveTo(x, Y0 - 4); g.lineTo(x, Y0 + 4); g.stroke(); g.textAlign = "center"; g.textBaseline = "top"; g.fillText(fmt(ax.x0 + k * ax.dx), x, Y0 + 6); }
-      for (let k = -40; k <= 40; k++) { const ym = ax.oy + 10 * k; if (ym < 2 || ym > Hmm - 6 || k === 0) continue; const [, y] = pxOf(0, ym);
+      if (!LOGY) for (let k = -40; k <= 40; k++) { const ym = ax.oy + 10 * k; if (ym < 2 || ym > Hmm - 6 || k === 0) continue; const [, y] = pxOf(0, ym);
         g.beginPath(); g.moveTo(X0 - 4, y); g.lineTo(X0 + 4, y); g.stroke(); g.textAlign = "right"; g.textBaseline = "middle"; g.fillText(fmt(ax.y0 + k * ax.dy), X0 - 7, y); }
+      else for (let d = 0; d <= LOGY; d++) for (const m of [1, 2, 5]) { const ym = (d + Math.log10(m)) * DEC; if (ym > Hmm - 2 || d === LOGY && m > 1) continue; const [, y] = pxOf(0, ym);
+        g.beginPath(); g.moveTo(X0 - 4, y); g.lineTo(X0 + 4, y); g.stroke(); g.textAlign = "right"; g.textBaseline = "middle"; g.fillText(fmt(ax.y0 * m * Math.pow(10, d)), X0 - 7, Math.max(8, y)); }
       g.font = "600 14px 'Segoe Print','Comic Sans MS',cursive"; g.textAlign = "right"; g.textBaseline = "bottom"; if (ax.xl) g.fillText(ax.xl, W - 8, Y0 - 8);
       g.textAlign = "left"; g.textBaseline = "top"; if (ax.yl) g.fillText(ax.yl, X0 + 8, 6);
     }
     const lab = ChartLab.create({el, w: W, h: H, paint, key: o.key, lang: o.lang,
       readout: (u, v) => { const [xm, ym] = mm(u, v); let s = L(o).rdmm + "  " + xm.toFixed(1) + " mm, " + ym.toFixed(1) + " mm";
-        if (ax) s += "     " + L(o).rdv + "  x = " + fmt(ax.x0 + (xm - ax.ox) / 10 * ax.dx) + ",  y = " + fmt(ax.y0 + (ym - ax.oy) / 10 * ax.dy); return s; }});
+        if (ax) s += "     " + L(o).rdv + "  x = " + fmt(ax.x0 + (xm - ax.ox) / 10 * ax.dx) + ",  y = " + fmt(yAt(ym)); return s; }});
     /* the forms under the sheet */
     const f1 = document.createElement("div"), f2 = document.createElement("div"); f1.className = f2.className = "dd-form"; el.append(f1, f2);
     function build() {
       const t = L(o), a = ax || {ox: 20, oy: 20, x0: 0, dx: 1, y0: 0, dy: 1, xl: "", yl: ""};
       const inp = (k, lb, w) => '<label>' + lb + '<input data-k="' + k + '" value="' + String(a[k]).replace(/"/g, "&quot;") + '"' + (w ? ' class="w"' : "") + "></label>";
-      f1.innerHTML = '<div class="t">' + t.axes + "</div>" + inp("ox", t.ox) + inp("oy", t.oy) + inp("x0", t.x0) + inp("dx", t.dx) + inp("y0", t.y0) + inp("dy", t.dy) + inp("xl", t.xl, 1) + inp("yl", t.yl, 1) +
+      f1.innerHTML = '<div class="t">' + (LOGY ? t.axesLog : t.axes) + "</div>" + inp("ox", t.ox) + inp("oy", t.oy) + inp("x0", t.x0) + inp("dx", t.dx) + inp("y0", LOGY ? t.y0log : t.y0) + (LOGY ? "" : inp("dy", t.dy)) + inp("xl", t.xl, 1) + inp("yl", t.yl, 1) +
         '<button data-a="ax">' + t.draw + '</button><button data-a="rm">' + t.erase + "</button>";
       f2.innerHTML = '<div class="t">' + t.plot + '</div><label>' + t.x + '<input data-p="x"></label><label>' + t.y + '<input data-p="y"></label><label>' + t.sx + '<input data-p="sx"></label><label>' + t.sy + '<input data-p="sy"></label>' +
         '<label>' + t.sym + '<select data-p="sym">' + t.syms.map(([k, s]) => '<option value="' + k + '">' + s + "</option>").join("") + '</select></label><button data-a="pt">' + t.put + '</button><span data-msg style="color:#f0a79f;font-size:12px"></span>';
       f1.querySelector('[data-a=ax]').onclick = () => { const v = {}; for (const i of f1.querySelectorAll("input")) v[i.dataset.k] = i.value;
-        const n = (k) => parseFloat(String(v[k]).replace(",", ".")); const c = {ox: n("ox"), oy: n("oy"), x0: n("x0"), dx: n("dx"), y0: n("y0"), dy: n("dy"), xl: v.xl, yl: v.yl};
-        if (["ox", "oy", "x0", "dx", "y0", "dy"].some((k) => !isFinite(c[k])) || !c.dx || !c.dy) { msg(t.bad); return; }
+        const n = (k) => parseFloat(String(v[k]).replace(",", ".")); const c = {ox: n("ox"), oy: n("oy"), x0: n("x0"), dx: n("dx"), y0: n("y0"), dy: LOGY ? 1 : n("dy"), xl: v.xl, yl: v.yl};
+        if (["ox", "oy", "x0", "dx", "y0", "dy"].some((k) => !isFinite(c[k])) || !c.dx || !c.dy || LOGY && !(c.y0 > 0)) { msg(t.bad); return; }
         ax = c; store.set(AK, ax); lab.repaint(); msg(""); };
       f1.querySelector('[data-a=rm]').onclick = () => { ax = null; store.set(AK, null); lab.repaint(); };
       const msg = (s) => { f2.querySelector("[data-msg]").textContent = s; };
       const go = () => { if (!ax) { msg(t.noAxes); return; } const g = (k) => parseFloat(String(f2.querySelector('[data-p="' + k + '"]').value).replace(",", "."));
         const x = g("x"), y = g("y"), sx = g("sx"), sy = g("sy"); if (!isFinite(x) || !isFinite(y)) { msg(t.bad); return; }
-        const xm = ax.ox + (x - ax.x0) / ax.dx * 10, ym = ax.oy + (y - ax.y0) / ax.dy * 10;
+        if (LOGY && !(y > 0)) { msg(t.bad); return; }
+        const xm = ax.ox + (x - ax.x0) / ax.dx * 10, ym = ymOf(y);
         if (xm < 0 || xm > Wmm || ym < 0 || ym > Hmm) { msg(t.out); return; }
         const [u, v] = pxOf(xm, ym), sym = f2.querySelector('[data-p="sym"]').value, list = [{t: sym, x: u, y: v, r: sym === "circle" ? 7 : undefined, s: 10}];
         if (isFinite(sx) && sx > 0) { const d = sx / ax.dx * 10 * PX; list.push({t: "line", pts: [[u - d, v], [u + d, v]], s: 8}); }
-        if (isFinite(sy) && sy > 0) { const d = sy / ax.dy * 10 * PX; list.push({t: "line", pts: [[u, v - d], [u, v + d]], s: 8}); }
+        if (isFinite(sy) && sy > 0) { if (LOGY) { const lo = y - sy > 0 ? pxOf(0, ymOf(y - sy))[1] : H, hi = pxOf(0, ymOf(y + sy))[1]; list.push({t: "line", pts: [[u, hi], [u, lo]], s: 8}); }
+          else { const d = sy / ax.dy * 10 * PX; list.push({t: "line", pts: [[u, v - d], [u, v + d]], s: 8}); } }
         lab.add(list); msg(""); for (const k of ["x", "y", "sx", "sy"]) f2.querySelector('[data-p="' + k + '"]').value = ""; f2.querySelector('[data-p="x"]').focus(); };
       f2.querySelector('[data-a=pt]').onclick = go;
       for (const i of f2.querySelectorAll("input")) i.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") go(); };
