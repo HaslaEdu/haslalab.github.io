@@ -270,8 +270,51 @@ def extinct(alt):
     return (SKY["k"] + haze_k(alt)) * airmass(alt)
 
 
-def lim_eye(alt):
-    return (5.6 if SKY["haze"] else 6.0) - 0.9 * math.exp(-max(0, alt) / 15) - SKY["twilight"]
+# ---- the night sky as an observer sees it -------------------------------------------------
+#  Sky brightness = the natural night sky (airglow, brighter toward the horizon) + the light domes of
+#  Keszthely to the north, Heviz to the north-west and the far shore, + twilight; in units of a natural
+#  dark zenith (21.6 mag/arcsec^2).  The eye's limiting magnitude follows from it (Schaefer 1990), stars
+#  lose light along the air mass, and every star is a point whose brightness - not its size - tells its
+#  magnitude; only the brightest carry the eye's glare and show their colour.
+SITE = {"lp_zen": 0.75, "domes": ((4, 2.6, 13), (32, 0.9, 10), (302, 0.8, 9), (140, 0.18, 6))}
+SUN = [-30.0, 0.0]
+
+
+def sky_lum(alt, az):
+    a = max(0.5, alt)
+    X, sz = airmass(a), math.sin((90 - a) * DEG)
+    nat = (0.45 + 0.55 / math.sqrt(1 - 0.96 * sz * sz)) * 10 ** (-0.4 * 0.16 * (X - 1)) + 0.2 * (1 - math.exp(-0.3 * (X - 1)))
+    lp = SITE["lp_zen"] * (0.7 + 0.3 * X ** 0.6)
+    for A, S, Hs in SITE["domes"]:
+        d = abs(((az - A + 540) % 360) - 180)
+        lp += S * math.exp(-a / Hs) * math.exp(-((d / 40) ** 2))
+    if SKY["haze"]:
+        lp *= 1.8
+        nat *= 1.15
+    ds = abs(((az - SUN[1] + 540) % 360) - 180)
+    tw = 60 * ((SUN[0] + 18) / 6) ** 3 * (0.35 + 0.65 * math.exp(-((ds / 75) ** 2)) * math.exp(-a / 30)) if SUN[0] > -18 else 0.0
+    return nat, lp, tw
+
+
+def sqm_of(L):
+    return 21.6 - 2.5 * math.log10(sum(L))
+
+
+def nelm_of(q):                       # Schaefer: naked-eye limit for a sky of q mag/arcsec^2
+    return 7.93 - 5 * math.log10(10 ** (4.316 - q / 5) + 1)
+
+
+def adapt():                          # the eye adapts to the dark over the first minutes outside
+    return min(1.0, 0.6 + SKY["t"] / 300)
+
+
+def lim_eye(alt, az=180.0):
+    return nelm_of(sqm_of(sky_lum(alt, az))) - 1.0 * (1 - adapt())
+
+
+def twinkle(i, X, amp):               # stars twinkle, more near the horizon
+    A, t = min(0.55, amp * X ** 1.5), SKY["t"]
+    return 2.5 * math.log10(max(0.25, 1 + A * math.sin(t * (9 + i % 7) + i * 1.7) * math.sin(t * (5.3 + (i % 5) * 0.6) + i * 0.37)))
 
 
 # ======================================================================
@@ -954,72 +997,78 @@ class App:
         return tuple(a * r[i] + b * u[i] + c * f[i] for i in range(3))
 
     def paint_bg(self, B, HM, sun):
-        """the sky glow, the twilight and the Milky Way on a coarse grid"""
+        """the sky brightness - natural sky, the town's light, twilight - and the Milky Way on a coarse grid"""
         key = (round(self.look["az"], 1), round(self.look["alt"], 1), round(self.look["fov"], 1), int(SKY["t"] / 20), SKY["haze"])
         if key == self.bg_key:
             return
         self.bg_key, cells = key, []
-        s_alt, s_az = sun
-        tw = max(0, min(1, (s_alt + 18) / 12))
-        dark = 1 - tw
         nx, ny = 60, 40
         cw, ch = self.W / nx, self.H / ny
         for j in range(ny):
             for i in range(nx):
                 x = self.unproj((i + 0.5) * cw, (j + 0.5) * ch)
                 alt, az = altaz(x)
-                glowH = math.exp(-max(0, alt) / 14)
-                town = max(0, math.cos((az - 5) * DEG)) ** 3 * math.exp(-max(0, alt) / 20) * 0.9 + max(0, math.cos((az - 70) * DEG)) ** 6 * math.exp(-max(0, alt) / 12) * 0.35
-                sg = tw * math.exp(-((((az - s_az + 540) % 360) - 180) / 70) ** 2) * math.exp(-max(0, alt) / 25)
-                mw = milky(mvT(HM, x)) * min(1, alt / 25) * dark * (0.7 if SKY["haze"] else 1) if alt > 0 else 0
-                hz = math.exp(-max(0, alt) / 9) * 0.6 if SKY["haze"] else 0
-                r = 6 + 10 * glowH + 34 * town + 30 * sg + 22 * mw + 18 * hz + 18 * tw
-                g = 9 + 12 * glowH + 26 * town + 40 * sg + 22 * mw + 16 * hz + 26 * tw
-                b = 18 + 18 * glowH + 14 * town + 70 * sg + 26 * mw + 14 * hz + 55 * tw
+                nat, lp, tw = sky_lum(alt, az)
+                q = sqm_of((nat, lp, tw))
+                mwv = max(0, min(1, (q - 19.8) / 1.6))
+                mw = milky(mvT(HM, x)) * min(1, alt / 20) * 10 ** (-0.4 * SKY["k"] * (airmass(max(1, alt)) - 1)) * mwv if alt > 0 else 0
+                nat += 1.7 * mw
+                tot = nat + lp + tw
+                v = 5 + 11 * tot ** 0.55                 # a compressive response, like the eye's
+                r = v * (0.5 * nat + 0.9 * lp + 0.45 * tw) / tot
+                g = v * (0.64 * nat + 0.78 * lp + 0.66 * tw) / tot
+                b = v * (1.0 * nat + 0.64 * lp + 1.0 * tw) / tot
                 cells.append((i * cw, j * ch, "#%02x%02x%02x" % (int(min(255, r)), int(min(255, g)), int(min(255, b)))))
         self.bg_cells, self.bg_size = cells, (cw, ch)
+
+    def point_star(self, x, y, d, bv, bg, core=1.0):
+        """a point of light: d magnitudes above the limit sets its brightness; only bright ones get the eye's glare"""
+        if d <= 0:
+            return
+        c = self.cv
+        sat = max(0, min(1, (d - 2.5) / 4))
+        rgb = tuple(0.86 + (v - 0.86) * sat for v in bv_rgb(bv))
+        if d > 3.2:
+            g = min(10, 1.8 + 1.1 * (d - 3.2)) * core
+            c.create_oval(x - g, y - g, x + g, y + g, fill=mix(bg, rgb, min(0.22, 0.04 + 0.035 * (d - 3.2))), outline="")
+        r = (1.0 if d < 2 else 1.25) * core              # Tk draws a 2-3 px dot: the smallest point it can make round
+        c.create_oval(x - r, y - r, x + r, y + r, fill=mix(bg, rgb, min(1, 0.24 + 0.16 * d)), outline="")
 
     def draw_sky(self):
         c, J = self.cv, jd_now()
         B, HM = self.basis(), hor_matrix(J)
         sun = altaz(mv(HM, unit(sun_geo(J))))
         SKY["twilight"] = max(0, min(3, (sun[0] + 18) / 4))
+        SUN[0], SUN[1] = sun
         self.paint_bg(B, HM, sun)
         cw, ch = self.bg_size
         for x, y, col in self.bg_cells:
             c.create_rectangle(x, y, x + cw + 1, y + ch + 1, fill=col, outline="")
-        bg = (12, 16, 28)
-        scale = 90 / self.look["fov"]
-        for x, m, bv in NAKED:
+        bg = (14, 17, 26)
+        lim_grid = [[lim_eye(a * 5 + 2.5, z * 5 + 2.5) for z in range(72)] for a in range(18)]
+        lim_at = lambda alt, az: lim_grid[min(17, max(0, int(alt // 5)))][int((az % 360) // 5) % 72]
+        for i, (x, m, bv) in enumerate(NAKED):
             alt, az = altaz(mv(HM, x))
             if alt < -1:
                 continue
             alt += refr(alt)
             if alt < skyline(az):
                 continue
-            me = m + extinct(alt)
-            lim = lim_eye(alt) + math.log10(scale) * 1.2
-            if me > lim:
+            d = lim_at(alt, az) - (m + extinct(alt))
+            if d < -0.6:
                 continue
             p = self.proj(B, hvec(alt, az))
             if not p or not (-5 < p[0] < self.W + 5 and -5 < p[1] < self.H + 5):
                 continue
-            f = 10 ** (-0.4 * (me - lim))
-            rad = 0.6 + min(4.2, 0.55 * math.sqrt(f) * math.sqrt(scale))
-            c.create_oval(p[0] - rad, p[1] - rad, p[0] + rad, p[1] + rad, fill=mix(bg, bv_rgb(bv), min(1, 0.3 + 0.12 * f)), outline="")
-        for pl, m0, col in (("jupiter", -2.4, (1, 0.96, 0.86)), ("saturn", 0.2, (1, 0.96, 0.86)), ("mars", 1.8, (1, 0.67, 0.47)), ("venus", -3.9, (1, 1, 0.95))):
+            self.point_star(p[0], p[1], d + twinkle(i, airmass(alt), 0.06), bv, bg)
+        for pl, m0, bv in (("jupiter", -2.4, 0.85), ("saturn", 0.2, 1.05), ("mars", 1.8, 1.5), ("venus", -3.9, 0.8)):
             alt, az = altaz(mv(HM, unit(planet_geo(pl, J))))
             alt += refr(alt)
             if alt < skyline(az):
                 continue
-            me, lim = m0 + extinct(alt), lim_eye(alt)
-            if me > lim:
-                continue
             p = self.proj(B, hvec(alt, az))
             if p:
-                f = 10 ** (-0.4 * (me - lim))
-                rad = 0.8 + min(4.5, 0.55 * math.sqrt(f) * math.sqrt(scale))
-                c.create_oval(p[0] - rad, p[1] - rad, p[0] + rad, p[1] + rad, fill=mix(bg, col, 0.95), outline="")
+                self.point_star(p[0], p[1], lim_at(alt, az) - (m0 + extinct(alt)), bv, bg)
         ma, mz = altaz(mv(HM, moon_geo(J)))
         ma += refr(ma)
         if ma > skyline(mz):
@@ -1056,6 +1105,10 @@ class App:
             p = self.proj(B, hvec(-3, az))
             if p and 0 < p[0] < self.W and p[1] < self.H:
                 c.create_text(p[0], min(self.H - 8, p[1]), text=lbl, fill="#7d8790")
+        q0 = sqm_of(sky_lum(90, 0))
+        c.create_text(10, self.H - 10, anchor="w", fill="#7d8790",
+                      text=T("천정 하늘 밝기 %.1f mag/″²  ·  맨눈 한계등급 %.1f  ·  암적응 %d%%" % (q0, lim_eye(90, 0), round(100 * adapt())),
+                             "zenith sky %.1f mag/″²  ·  naked-eye limit %.1f  ·  dark adaptation %d%%" % (q0, lim_eye(90, 0), round(100 * adapt()))))
         ta, tz = hadec2hor(MOUNT["ha"], MOUNT["dec"])
         tp = self.proj(B, hvec(ta, tz))
         if tp:
@@ -1074,39 +1127,50 @@ class App:
         k = R / (fov / 2)
         c.create_rectangle(0, 0, W, H, fill="#000", outline="")
         blocked = palt < skyline(paz) or palt < 0
-        glow = math.exp(-max(0, palt) / 14) * 0.6 + (math.exp(-max(0, palt) / 8) if SKY["haze"] else 0) + 0.15 * SKY["twilight"]
-        sb = min(60, (8 + 30 * glow) * (1 if isF else (30 / M) ** 0.6))
-        bg = (5, 5, 5) if blocked else (int(sb * 0.55), int(sb * 0.62), int(sb * 0.9))
+        # the sky in the field: the same sky, darkened when the exit pupil is smaller than the eye's
+        D, T_ = (30, 0.85) if isF else (150, 0.75)
+        xp = D / M
+        Ls = sky_lum(max(0, palt), paz)
+        q = sqm_of(Ls)
+        glow = (Ls[1] + Ls[2]) / sum(Ls)
+        sv = 3 + 11 * (sum(Ls) * T_ * min(1, (xp / 7) ** 2)) ** 0.55
+        bg = (5, 5, 5) if blocked else (int(sv * (0.5 + 0.5 * glow)), int(sv * (0.64 + 0.16 * glow)), int(sv * (1 - 0.42 * glow)))
         if SKY["haze"] and palt < 30 and not blocked:
             a = min(0.97, (30 - palt) / 8)
             bg = tuple(int(bg[i] * (1 - a) + (20, 21, 25)[i] * a) for i in range(3))
         c.create_oval(cx - R, cy - R, cx + R, cy + R, fill="#%02x%02x%02x" % bg, outline="#1a1a1a", width=3)
         if not blocked:
             ext = extinct(palt)
-            lim = (9.2 if isF else 12.4 + 0.6 * math.log10(M / 30)) - 1.5 * glow - ext * 0.6
+            # what the instrument reaches: the eye's limit here + the aperture's gain + a darker field
+            lim = nelm_of(q) - (1 - adapt()) + 5 * math.log10(D / 7) + 2.5 * math.log10(T_) + (1.25 * math.log10(7 / xp) if xp < 7 else 0)
             if SKY["haze"] and palt < 30:
                 lim -= 6 * min(1, (30 - palt) / 8)
             blur = 0 if isF else abs(EP["focus"] - focus_zero()) * M / 30 * 6 * ez
             seeHW = 0 if isF else 0.7 * k / 3600
             inside = lambda p: (p[0] - cx) ** 2 + (p[1] - cy) ** 2 < (R - 2) ** 2 and -10 < p[0] < W + 10 and -10 < p[1] < H + 10
 
+            sc = 0.025 if isF else 0.06 * (D / 30) ** (-2 / 3)
+
             def star(p, m, bv):
-                s = lim - (m + ext)
-                if s < (2 if blur > 2.2 else 0) or not inside(p):
+                # in focus a point (the seeing disc is below what the eye resolves at these powers); out of focus
+                # the Newtonian's ring with the diagonal's shadow in the middle, and faint stars sink into the sky
+                s = lim - (m + ext) + twinkle(int(p[0] * 7 + p[1]), airmass(max(1, palt)), sc)
+                if not inside(p):
                     return
-                rgb = bv_rgb(0.55 + (bv - 0.55) * min(1, s / 4))
+                rgb = bv_rgb(0.55 + (bv - 0.55) * min(1, s / 6))
                 if blur > 2.2:
                     rr = blur * 0.75 + 0.5
-                    c.create_oval(p[0] - rr, p[1] - rr, p[0] + rr, p[1] + rr, outline=mix(bg, rgb, min(0.85, 0.06 * 10 ** (0.4 * s) / rr)), width=max(1, rr * 0.4))
+                    sd = s - 2.5 * math.log10(rr * rr / 0.6)
+                    if sd < -0.3:
+                        return
+                    c.create_oval(p[0] - rr * 0.7, p[1] - rr * 0.7, p[0] + rr * 0.7, p[1] + rr * 0.7, outline=mix(bg, rgb, min(0.85, 0.1 + 0.13 * sd)), width=max(1, rr * 0.55))
                     return
-                rad = 0.6 + 0.6 * seeHW + (0.3 if isF else 0.16) * s + blur * 0.4
-                if s > 5:                                        # bright ones carry a glare
-                    gl = rad * (1.5 + 0.45 * (s - 5))
-                    c.create_oval(p[0] - gl, p[1] - gl, p[0] + gl, p[1] + gl, fill=mix(bg, rgb, min(0.18, 0.03 * (s - 4))), outline="")
-                c.create_oval(p[0] - rad, p[1] - rad, p[0] + rad, p[1] + rad, fill=mix(bg, rgb, min(1, 0.16 + 0.15 * s)), outline="")
-                if not isF and s > 6 and blur < 1:
-                    L = min(R * 0.5, 2.2 * (s - 5.5) ** 1.5 * (1 + 0.3 * ez))
-                    col = mix(bg, rgb, 0.2)
+                if s <= 0:
+                    return
+                self.point_star(p[0], p[1], s, bv, bg, 1 + min(1.2, seeHW * 0.8) + blur * 0.25)
+                if not isF and s > 7 and blur < 1:
+                    L = min(R * 0.5, 2.2 * (s - 6.5) ** 1.5 * (1 + 0.3 * ez))
+                    col = mix(bg, rgb, 0.18)
                     c.create_line(p[0] - L, p[1], p[0] + L, p[1], fill=col)
                     c.create_line(p[0], p[1] - L, p[0], p[1] + L, fill=col)
 
