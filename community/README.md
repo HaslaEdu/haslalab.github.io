@@ -50,6 +50,26 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 로컬 시험: `.dev.vars`에 키 대신 시험용 값과 `GEMINI_BASE`·`UPSTAGE_BASE`(가짜 서버 주소)를 넣고 `node test-arena.mjs`를 실행합니다.
 
+## v5: Google · Discord · 네이버로 가입/로그인
+
+로그인·회원가입 화면 맨 위에 「Google로 계속하기」, 「Discord로 계속하기」, 「네이버로 계속하기」 버튼이 생깁니다. 처음 들어오면 그 계정의 표시 이름을 닉네임으로 삼아 HaslaLab 계정이 만들어지고, 다음부터는 같은 계정으로 들어옵니다. 이메일은 받지도 저장하지도 않고, 각 서비스의 고유 번호만 `identities` 표에 둡니다. 「내 기록」(`#/me`)에서 닉네임을 바꾸고, 다른 서비스를 같은 계정에 연결하고, 아이디 로그인용 비밀번호를 만들 수 있습니다.
+
+로그인이 끝나면 서버는 1분짜리 일회용 코드만 붙여 사이트로 돌려보내고, 사이트가 그 코드를 세션 토큰으로 바꿉니다. 토큰이 주소창이나 방문 기록에 남지 않습니다. 돌아갈 주소는 `ALLOWED_ORIGINS`에 있는 사이트만 허용합니다.
+
+### 올리는 순서
+
+1. `migrations/0005_oauth.sql`을 원격 D1에 적용합니다. 방법은 v4와 같습니다(Console에 붙여 넣기 또는 `npm run db:remote`).
+2. `src/index.js`를 다시 붙여 넣고 Deploy 합니다. `/api/health`가 `v: 5`와 `oauth: [...]`를 돌려줍니다.
+3. 각 서비스에 앱을 등록하고, 리디렉션 주소를 아래처럼 넣습니다. 받은 값은 Worker의 *Secret*으로 넣습니다.
+
+| 서비스 | 앱 만드는 곳 | 리디렉션(콜백) 주소 | Secret 이름 |
+|---|---|---|---|
+| Google | Google Cloud Console → API 및 서비스 → 사용자 인증 정보 → OAuth 클라이언트 ID(웹 애플리케이션). 동의 화면 범위는 `openid`, `profile` | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/google/callback` | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
+| Discord | discord.com/developers/applications → OAuth2 | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/discord/callback` | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET` |
+| 네이버 | developers.naver.com → 애플리케이션 등록 → 네이버 로그인(별명 또는 이름 제공 항목만 선택) | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/naver/callback` | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` |
+
+키를 넣은 서비스만 버튼이 켜지고, 넣지 않은 서비스는 흐리게 「관리자가 아직 연결하지 않았습니다」로 보입니다. 로컬 시험에서는 `.dev.vars`의 `OAUTH_MOCK_BASE`로 가짜 로그인 서버를 가리킵니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
@@ -128,6 +148,12 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/posts/:id/comments` | `{body}` |
 | PATCH / DELETE | `/api/comments/:id` | 댓글 수정 / 삭제 |
 | POST | `/api/report` | `{kind: "post"\|"comment", id, reason}` |
+| GET | `/api/oauth/:provider/start?return=` | Google · Discord · 네이버 로그인 시작 (브라우저 이동) |
+| GET | `/api/oauth/:provider/callback` | 서비스에서 돌아오는 곳 |
+| POST | `/api/oauth/redeem` | `{code}` → `{token, user, fresh}` |
+| POST | `/api/oauth/ticket` | 로그인한 계정에 서비스를 연결할 때 쓰는 일회용 표 |
+| GET | `/api/me/identities` | 연결된 서비스, 비밀번호 유무 |
+| PATCH | `/api/me` | `{nickname}` 닉네임 바꾸기 |
 | GET | `/api/weekly?lang=&week=` | 이번 주(또는 그 주) 문제 목록, 내 최고 점수, 주 목록 |
 | GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
 | POST | `/api/problems/:id/submit` | `{answer, via_ocr}` → `{status, score, detail}` |
