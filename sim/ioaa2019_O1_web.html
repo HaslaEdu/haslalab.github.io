@@ -109,6 +109,8 @@
   .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
   input[type=range]{width:100%;accent-color:var(--accent)}
   .cvwrap{position:relative}
+  .cvwrap:fullscreen{background:#000;display:flex;align-items:center;justify-content:center}
+  .cvwrap:fullscreen canvas{border-radius:0}
   #cv{background:#1b1f25;cursor:grab;touch-action:none}
   #cv.grabbing{cursor:grabbing}
   .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
@@ -142,7 +144,7 @@
 
   <div class="stage">
     <div class="card">
-      <div class="tabs" id="vtabs"><button id="vtsky" class="on"></button><button id="vtfinder"></button><button id="vteye"></button><button id="vtchart"></button></div>
+      <div class="tabs" id="vtabs"><button id="vtsky" class="on"></button><button id="vtfinder"></button><button id="vteye"></button><button id="vtchart"></button><button id="bFull" style="margin-left:auto"></button></div>
       <h3 id="t-cap3"></h3>
       <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
     </div>
@@ -150,7 +152,7 @@
 
   <aside class="panel">
     <h2 id="lgSes"></h2>
-    <p class="hint" id="sesInfo"></p>
+    <p class="hint" id="sesInfo" style="white-space:pre-line"></p>
     <button id="bNight" style="width:100%"></button>
     <h2 id="lgTasks"></h2>
     <div class="disp" id="tmr">--:--</div>
@@ -165,7 +167,6 @@
     <button id="bScrews" style="width:100%"></button>
     <button id="bTime" style="width:100%"></button>
     <button id="bHelp" style="width:100%"></button>
-    <label class="chk"><input type="checkbox" id="cLines"><span id="lbLines"></span></label>
     <h2 id="lgSheet"></h2>
     <div id="sheet"></div>
     <button id="bCheck" style="width:100%"></button>
@@ -186,7 +187,7 @@ const CLINES={"And":[[[30.97,42.33],[17.43,35.62],[9.83,30.86],[2.1,29.09]],[[14
 
    The real sky over the students' site at the southern edge of
    Keszthely (46.755 N, 17.245 E) on the nights of 4 and 5 August 2019,
-   from 23:45 CEST: stars to 6th magnitude for the eye and to 12.5 in
+   from 23:45 CEST, under the weather each night really had (ERA5): stars to 6th magnitude for the eye and to 12.5 in
    the target fields (Hipparcos/Tycho-2), the Sun's twilight, the Moon,
    the planets, Saturn with its rings and moons (Titan's phase fitted to
    the official positions for both nights), extinction along the air mass,
@@ -225,7 +226,7 @@ const I18N = {
   askTime: ["Ask the assistant for the time", "조교에게 시각 묻기"], helpPoint: ["Ask the assistant to point (loses the pointing marks)", "조교에게 겨누어 달라고 하기 (겨누기 점수 잃음)"],
   start: ["start", "시작"], running: ["running", "진행 중"], done: ["checked", "확인됨"],
   checkAns: ["Compare with the official solution", "공식 해답과 비교"],
-  night: ["Night", "밤"], weather: ["Sky", "하늘"],
+  night: ["Night", "밤"], weather: ["Sky", "하늘"], full: ["⛶ Full screen (F)", "⛶ 전체화면 (F)"], fullOff: ["Exit full screen (Esc)", "전체화면 끝내기 (Esc)"],
   notes: ["• The telescope is polar aligned but has no drive: the sky drifts west through the eyepiece; keep the object in the field with the RA slow motion.\n• The finder is NOT aligned at the start.\n• Use the 25 mm eyepiece for tasks 1, 3 and 4. For task 5 the telescope is not allowed.\n• The assistant checks the object only at the end of each task's time.\n• On a hazy night Saturn is lost in the low haze and tasks 1 and 2 are replaced by the alternatives.",
           "• 망원경은 극축이 맞춰져 있지만 구동 장치가 없습니다: 하늘이 접안렌즈 속에서 서쪽으로 흘러가므로 적경 미동으로 대상을 시야에 붙잡아 두세요.\n• 처음에는 파인더가 정렬되어 있지 않습니다.\n• 과제 1, 3, 4에는 25 mm 접안렌즈를 씁니다. 과제 5에서는 망원경을 쓸 수 없습니다.\n• 조교는 각 과제 시간이 끝날 때만 대상을 확인합니다.\n• 연무가 낀 밤에는 토성이 낮은 연무에 가려 과제 1, 2가 대체 과제로 바뀝니다."]
 };
@@ -478,7 +479,7 @@ let LIMG = null, LIX = null, _lKey = "";
 function paintLand(B){ for (let a = 0; a < 360; a++){ const c = skyRGB(skyLum(1.5, a)); HORC[a * 3] = c[0]; HORC[a * 3 + 1] = c[1]; HORC[a * 3 + 2] = c[2]; }
   const W = Math.round(V.W / 1.5), H = Math.round(V.H / 1.5);
   if (!LIMG || LIMG.width !== W || LIMG.height !== H){ LIMG = mkCv(W, H); LIX = LIMG.getContext("2d"); }
-  const im = LIX.createImageData(W, H), d = im.data, fm = SKY.haze ? 0.86 : 0.6, t = SKY.t;
+  const im = LIX.createImageData(W, H), d = im.data, fm = 0.6 + 0.26 * WXS.haze, t = SKY.t;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++){
     const x = unproj(B, (i + 0.5) / W * V.W, (j + 0.5) / H * V.H), alt = Math.asin(Math.max(-1, Math.min(1, x[2]))) / DEG; if (alt > 13) continue;
     const az = norm360(Math.atan2(x[0], x[1]) / DEG), k = Math.floor(az * 10) % 3600, far = LAND.far[k], mid = LAND.mid[k];
@@ -495,10 +496,10 @@ function paintLand(B){ for (let a = 0; a < 360; a++){ const c = skyRGB(skyLum(1.
   LIX.putImageData(im, 0, 0); }
 /* direction from the eye to a point on the lawn, metres east, north and up of the eye */
 const enuDir = (e, n, u) => { const r = Math.hypot(e, n, u); return [e / r, n / r, u / r]; };
-function drawField(c, B){ const EYE = 1.6;
+function drawField(c, B){ const EYE = 1.6, fw = v => v[0] * B.f[0] + v[1] * B.f[1] + v[2] * B.f[2] > 0.05, pf = v => fw(v) ? proj(B, v) : null;   /* only what lies ahead */
   /* the other teams' telescopes: Newtonians on equatorial tripods, as silhouettes */
   c.strokeStyle = "rgb(4,5,7)"; c.fillStyle = "rgb(4,5,7)"; c.lineCap = "round";
-  for (const s of SCOPES){ const se = Math.sin(s.az * DEG) * s.d, sn = Math.cos(s.az * DEG) * s.d, P = (de, dn, h) => proj(B, enuDir(se + de, sn + dn, h - EYE));
+  for (const s of SCOPES){ const se = Math.sin(s.az * DEG) * s.d, sn = Math.cos(s.az * DEG) * s.d, P = (de, dn, h) => pf(enuDir(se + de, sn + dn, h - EYE));
     const wpx = m => Math.max(0.8, m / s.d * B.s), apex = P(0, 0, 1.05); s.torch = null; if (!apex) continue;
     c.lineWidth = wpx(0.035); for (let q = 0; q < 3; q++){ const a = q * 2.094 + s.az, f = P(0.42 * Math.cos(a), 0.42 * Math.sin(a), 0); if (f){ c.beginPath(); c.moveTo(...apex); c.lineTo(...f); c.stroke(); } }
     const ta = s.tilt * DEG, tz = s.aim * DEG, ux = Math.sin(tz) * Math.cos(ta), uy = Math.cos(tz) * Math.cos(ta), uz = Math.sin(ta);
@@ -510,11 +511,11 @@ function drawField(c, B){ const EYE = 1.6;
   c.globalCompositeOperation = "lighter";
   const glow = (p, col, a, r) => { const g = c.createRadialGradient(p[0], p[1], 0, p[0], p[1], r); g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(0.25, `rgba(${col},${a * 0.35})`); g.addColorStop(1, `rgba(${col},0)`);
     c.fillStyle = g; c.fillRect(p[0] - r, p[1] - r, 2 * r, 2 * r); };
-  const fade = SKY.haze ? 0.45 : 1;
-  for (const l of LIGHTS){ const p = proj(B, hvec(l.alt, l.az)); if (!p || p[0] < -20 || p[0] > V.W + 20 || p[1] < -20 || p[1] > V.H + 20) continue;
+  const fade = 1 - 0.55 * WXS.haze;
+  for (const l of LIGHTS){ const p = pf(hvec(l.alt, l.az)); if (!p || p[0] < -20 || p[0] > V.W + 20 || p[1] < -20 || p[1] > V.H + 20) continue;
     const col = l.col.join(","), a = l.b * (l.kind === "win" ? 1 : fade);
     glow(p, col, a, 2 + l.r * 2.2); if (l.kind === "lamp") glow(p, col, 0.08 * a, 14);
-    if (l.kind === "shore" && landAt(LAND.lake, l.az) > 0.5){ const q = proj(B, hvec(-0.9 - 0.5 * l.b, l.az)); if (q){ const g = c.createLinearGradient(p[0], p[1], q[0], q[1]);
+    if (l.kind === "shore" && landAt(LAND.lake, l.az) > 0.5){ const q = pf(hvec(-0.9 - 0.5 * l.b, l.az)); if (q){ const g = c.createLinearGradient(p[0], p[1], q[0], q[1]);
       g.addColorStop(0, `rgba(${col},0)`); g.addColorStop(0.15, `rgba(${col},${0.35 * a})`); g.addColorStop(1, `rgba(${col},0)`); c.strokeStyle = g; c.lineWidth = 1.4; c.beginPath(); c.moveTo(p[0], p[1] + 2); c.lineTo(q[0], q[1]); c.stroke(); } } }
   for (const s of SCOPES) if (s.torch) glow(s.torch, "255,40,30", 0.45, 3.5 + 18 / s.d);
   c.globalCompositeOperation = "source-over"; }
@@ -544,12 +545,65 @@ function milky(v){ const g = mv(MGAL, v), l = Math.atan2(g[1], g[0]) / DEG, b = 
 function paintBG(B){ const d = BGI.data, W = 200, H = 130;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++){ const x = unproj(B, (i + 0.5) / W * V.W, (j + 0.5) / H * V.H), [alt, az] = altaz(x), o = (j * W + i) * 4;
     const L = skyLum(alt, az), q = sqmOf(L), mwv = Math.max(0, Math.min(1, (q - 19.8) / 1.6));
-    const mw = alt > 0 ? milky(mvT(HMT, x)) * Math.min(1, alt / 20) * Math.pow(10, -0.4 * SKY.k * (airmass(Math.max(1, alt)) - 1)) * mwv : 0;
+    const cl = cloudAt(alt, az), mw = alt > 0 ? milky(mvT(HMT, x)) * Math.min(1, alt / 20) * Math.pow(10, -0.4 * SKY.k * (airmass(Math.max(1, alt)) - 1)) * mwv * (1 - 0.7 * cl[0]) * (1 - 0.95 * cl[1]) : 0;
     const nat = L.nat + 1.4 * mw, tot = nat + L.lp + L.tw, v = 5 + 11 * Math.pow(tot, 0.55);       /* a compressive response, like the eye's */
     const r = (0.5 * nat + 0.9 * L.lp + 0.45 * L.tw) / tot, g = (0.64 * nat + 0.78 * L.lp + 0.66 * L.tw) / tot, b = (1.0 * nat + 0.64 * L.lp + 1.0 * L.tw) / tot;
     d[o] = Math.min(255, v * r); d[o + 1] = Math.min(255, v * g); d[o + 2] = Math.min(255, v * b); d[o + 3] = 255; }
   bgx.putImageData(BGI, 0, 0); }
 const mvT = (M, v) => [M[0][0] * v[0] + M[1][0] * v[1] + M[2][0] * v[2], M[0][1] * v[0] + M[1][1] * v[1] + M[2][1] * v[2], M[0][2] * v[0] + M[1][2] * v[1] + M[2][2] * v[2]];
+/* ---- the weather of the two nights, from the ERA5 reanalysis (Copernicus/ECMWF, via Open-Meteo) at
+   46.76 N 17.25 E, hour by hour (UT 20, 21, 22, 23, 00, 01, 02):
+   [temperature °C, relative humidity %, dew point °C, total / low / mid / high cloud %, wind km/h, from °]
+   4 August: a clear, still, very humid night - the dew point within a degree or two of the air
+   temperature, the kind of night a low haze lies over the lake and the marsh.
+   5 August: warmer and drier near the ground, but a veil of high cirrus over most of the sky until about
+   01 CEST, breaking up after that. */
+const WX = [
+  [[21.0, 76, 16.7, 1, 0, 1, 0, 6.1, 315], [19.3, 85, 16.7, 1, 0, 1, 0, 6.1, 270], [16.5, 92, 15.2, 1, 0, 1, 0, 9.4, 266], [16.1, 90, 14.4, 1, 0, 1, 0, 8.8, 279],
+   [18.2, 83, 15.2, 1, 0, 1, 0, 5.4, 278], [15.5, 90, 13.9, 1, 0, 1, 0, 8.5, 282], [15.4, 91, 14.0, 2, 0, 2, 0, 7.6, 278]],
+  [[21.3, 76, 17.0, 13, 0, 12, 1, 7.2, 186], [20.2, 81, 16.8, 81, 0, 29, 77, 7.2, 180], [20.5, 78, 16.5, 76, 0, 16, 72, 6.6, 189], [20.0, 78, 16.1, 9, 0, 8, 1, 6.0, 197],
+   [20.5, 75, 15.9, 24, 0, 26, 6, 6.4, 196], [19.1, 81, 15.8, 9, 0, 8, 0, 6.5, 199], [18.2, 86, 15.8, 7, 0, 7, 0, 7.0, 215]]];
+/* hours since 20 UT on the evening of the night */
+const wxHour = J => (((J - jdUT(2019, 8, 4 + SES.night, 20)) * 24) % 24 + 24) % 24;
+function wxNow(J){ const T = WX[SES.night], h = Math.max(0, Math.min(5.999, wxHour(J))), i = Math.floor(h), f = h - i;
+  return T[i].map((v, k) => k === 8 ? v + azd(T[i + 1][k], v) * f : v + (T[i + 1][k] - v) * f); }
+/* what the weather does to the sky:
+   - humidity thickens the air: the extinction coefficient grows with it;
+   - when the dew point is within ~3 °C of the air, a low haze builds over the lake and the marsh,
+     and it scatters the town's light;
+   - clouds dim what lies behind them and, lit from below by the town, brighten the sky. */
+function wxApply(J){ const w = wxNow(J), spread = w[0] - w[2];
+  WXS.w = w; WXS.haze = Math.max(0, Math.min(1, (3.2 - spread) / 2.0)); SKY.k = 0.18 + 0.0035 * Math.max(0, w[1] - 60);
+  WXS.mid = w[5] / 100; WXS.high = w[6] / 100; }
+const WXS = {w:null, haze:0, mid:0, high:0, grid:null, key:""};
+/* the cloud decks: value noise drifting with the wind aloft, thresholded to the reanalysis cover */
+const VN = (() => { const p = new Float32Array(512); for (let i = 0; i < 512; i++) p[i] = LRNG(); return p; })();
+const vn = (x, y) => { const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, h = (a, b) => VN[((a * 73 + b * 151) % 512 + 512) % 512];
+  const u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+  return (h(xi, yi) * (1 - u) + h(xi + 1, yi) * u) * (1 - v) + (h(xi, yi + 1) * (1 - u) + h(xi + 1, yi + 1) * u) * v; };
+const fbm = (x, y) => (vn(x, y) * 0.5 + vn(x * 2.03 + 17, y * 2.03 + 9) * 0.27 + vn(x * 4.1 + 41, y * 4.1 + 23) * 0.15 + vn(x * 8.3 + 5, y * 8.3 + 61) * 0.08) / 1.0;
+const qnorm = p => { p = Math.max(0.001, Math.min(0.999, p)); const t = Math.sqrt(-2 * Math.log(p < 0.5 ? p : 1 - p)), z = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) / (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t); return p < 0.5 ? -z : z; };
+function deck(alt, az, hKm, scale, stretch, wdir, wspd, secs, cover){ if (cover < 0.01 || alt < 0.5) return 0;
+  const r = hKm / Math.tan(Math.max(1.5, alt) * DEG), x0 = r * Math.sin(az * DEG), y0 = r * Math.cos(az * DEG);
+  const dx = -Math.sin(wdir * DEG) * wspd * secs / 3600, dy = -Math.cos(wdir * DEG) * wspd * secs / 3600;   /* blown toward wdir+180 */
+  const ca = Math.cos(wdir * DEG), sa = Math.sin(wdir * DEG), X = x0 - dx, Y = y0 - dy, U = (X * ca - Y * sa) / scale, W = (X * sa + Y * ca) / (scale * stretch);
+  const n = fbm(U, W), thr = 0.5 + 0.11 * qnorm(1 - cover);
+  return sstep(thr - 0.04, thr + 0.16, n); }
+/* cloud density on a 2.5° alt-az grid, refreshed every two seconds of the night */
+function cloudGrid(J){ const key = SES.night + ":" + Math.floor(SKY.t / 2); if (WXS.key === key && WXS.grid) return WXS.grid; WXS.key = key;
+  const g = WXS.grid || (WXS.grid = new Float32Array(37 * 145 * 2)), secs = wxHour(J) * 3600, w = WXS.w || wxNow(J);
+  for (let a = 0; a < 37; a++) for (let z = 0; z < 145; z++){ const alt = a * 2.5, az = z * 2.5, o = (a * 145 + z) * 2;
+    g[o] = deck(alt, az, 9, 7, 3.2, 245, 45, secs, WXS.high);              /* cirrus at ~9 km, streaked along a south-west wind aloft */
+    g[o + 1] = deck(alt, az, 3.5, 2.5, 1.3, (w[8] + 20) % 360, 25, secs, WXS.mid); }   /* altocumulus at ~3.5 km */
+  return g; }
+function cloudAt(alt, az){ const g = WXS.grid; if (!g || alt < 0) return [0, 0];
+  const A = Math.min(35.999, Math.max(0, alt / 2.5)), Z = norm360(az) / 2.5, a = Math.floor(A), z = Math.floor(Z) % 144, fa = A - a, fz = Z - Math.floor(Z), o = k => k * 2;
+  const i00 = (a * 145 + z), i01 = (a * 145 + z + 1), i10 = ((a + 1) * 145 + z), i11 = ((a + 1) * 145 + z + 1), r = [0, 0];
+  for (let L = 0; L < 2; L++) r[L] = (g[o(i00) + L] * (1 - fz) + g[o(i01) + L] * fz) * (1 - fa) + (g[o(i10) + L] * (1 - fz) + g[o(i11) + L] * fz) * fa;
+  return r; }
+/* magnitudes of light a star loses behind the clouds */
+const cloudExt = (alt, az) => { const [h, m] = cloudAt(alt, az); return 1.1 * h + 3.2 * m; };
+
 /* ---- the night sky as an observer sees it ----------------------------------------------------
    Sky brightness = the natural night sky (airglow, brighter toward the horizon) + the light domes of
    Keszthely to the north, Hévíz to the north-west and the far shore, + twilight; in units of a natural
@@ -562,9 +616,10 @@ function skyLum(alt, az){ const a = Math.max(0.5, alt), X = airmass(a), sz = Mat
   const nat = (0.45 + 0.55 / Math.sqrt(1 - 0.96 * sz * sz)) * Math.pow(10, -0.4 * 0.16 * (X - 1)) + 0.2 * (1 - Math.exp(-0.3 * (X - 1)));
   let lp = SITE.lpZen * (0.7 + 0.3 * Math.pow(X, 0.6));
   for (const [A, S, H] of SITE.domes){ const d = Math.abs(((az - A + 540) % 360) - 180); lp += S * Math.exp(-a / H) * Math.exp(-((d / 40) ** 2)); }
-  if (SKY.haze){ lp *= 1.8; } const sun = altaz(SUN_H), ds = Math.abs(((az - sun[1] + 540) % 360) - 180);
+  const [ch, cm] = cloudAt(a, az); lp = lp * (1 + 0.8 * WXS.haze) + (0.5 * ch + 0.8 * cm) * (0.25 + 1.2 * lp);   /* haze and clouds lit by the town */
+  const sun = altaz(SUN_H), ds = Math.abs(((az - sun[1] + 540) % 360) - 180);
   const tw = SUN_ALT > -18 ? 60 * Math.pow((SUN_ALT + 18) / 6, 3) * (0.35 + 0.65 * Math.exp(-((ds / 75) ** 2)) * Math.exp(-a / 30)) : 0;
-  return {nat:nat * (SKY.haze ? 1.15 : 1), lp, tw}; }
+  return {nat:nat * (1 + 0.15 * WXS.haze) * (1 - 0.25 * ch - 0.7 * cm), lp, tw}; }
 const sqmOf = L => 21.6 - 2.5 * Math.log10(L.nat + L.lp + L.tw);
 const nelmOf = q => 7.93 - 5 * Math.log10(Math.pow(10, 4.316 - q / 5) + 1);           /* Schaefer: naked-eye limit for a sky of q mag/arcsec² */
 /* the eye adapts to the dark over the first minutes outside */
@@ -590,12 +645,12 @@ function pointStar(c, x, y, d, bv, core){ if (d <= 0) return; core = core || 1;
   c.globalAlpha = 1; }
 /* stars twinkle, more near the horizon (scintillation grows with the air mass) */
 const twinkle = (i, X, amp) => { const A = Math.min(0.55, amp * Math.pow(X, 1.5)), t = SKY.t; return 2.5 * Math.log10(Math.max(0.25, 1 + A * Math.sin(t * (9 + (i % 7)) + i * 1.7) * Math.sin(t * (5.3 + (i % 5) * 0.6) + i * 0.37))); };
-const hazeK = alt => SKY.haze ? 0.12 + 2.4 * Math.max(0, Math.min(1, (27 - alt) / 7)) : 0;      /* the low haze layer of the hazy night */
+const hazeK = alt => WXS.haze * (0.12 + 2.4 * Math.max(0, Math.min(1, (27 - alt) / 7)));      /* the low haze over the lake and the marsh */
 const extinct = alt => (SKY.k + hazeK(alt)) * airmass(alt);
 let _bgKey = "";
 function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT = HM; const s0 = sunGeo(J), sn = Math.hypot(...s0); SUN_H = mv(HM, s0.map(v => v / sn));
   SUN_ALT = altaz(SUN_H)[0]; SKY.twilight = Math.max(0, Math.min(3, (SUN_ALT + 18) / 4));
-  const key = LOOK.az.toFixed(1) + LOOK.alt.toFixed(1) + LOOK.fov.toFixed(1) + Math.floor(SKY.t / 20);
+  const cloudy = WXS.high + WXS.mid > 0.03, key = LOOK.az.toFixed(1) + LOOK.alt.toFixed(1) + LOOK.fov.toFixed(1) + Math.floor(SKY.t / (cloudy ? 2 : 20)) + SES.night;
   if (key !== _bgKey){ paintBG(B); paintLand(B); _bgKey = key; }
   c.imageSmoothingEnabled = true; c.drawImage(BG, 0, 0, V.W, V.H);
   /* stars: points of light on the sky glow; zooming the screen does not make the eye see fainter */
@@ -605,7 +660,7 @@ function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT 
   const limAt = (alt, az) => LIM[Math.min(17, Math.max(0, Math.floor(alt / 5))) * 72 + (Math.floor(norm360(az) / 5) % 72)];
   for (let i = 0; i < CAT.n; i++){ const m = CAT.M[i]; if (m > 7) continue;
     const x = [CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]], h = mv(HM, x); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
-    if (alt < skyline(az)) continue; const X = airmass(alt), dd = limAt(alt, az) - (m + extinct(alt)); if (dd < -0.35) continue;
+    if (alt < skyline(az)) continue; const X = airmass(alt), dd = limAt(alt, az) - (m + extinct(alt) + cloudExt(alt, az)); if (dd < -0.35) continue;
     const p = proj(B, hvec(alt, az)); if (!p || p[0] < -5 || p[0] > V.W + 5 || p[1] < -5 || p[1] > V.H + 5) continue;
     let d = dd + twinkle(i, X, 0.06);
     /* at the threshold a star is only caught now and then, with averted vision */
@@ -613,7 +668,7 @@ function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT 
     pointStar(c, p[0], p[1], d, CAT.BV[i]); }
   /* planets: points too, steadier than the stars */
   for (const pl of ["jupiter", "saturn", "mars", "venus", "mercury"]){ const g = planetGeo(pl, J), u = g.map(v => v / Math.hypot(...g)); let [alt, az] = altaz(mv(HM, u)); alt += refr(alt);
-    if (alt < skyline(az)) continue; const mag0 = {jupiter:-2.4, saturn:0.2, mars:1.8, venus:-3.9, mercury:0}[pl], dd = limAt(alt, az) - (mag0 + extinct(alt));
+    if (alt < skyline(az)) continue; const mag0 = {jupiter:-2.4, saturn:0.2, mars:1.8, venus:-3.9, mercury:0}[pl], dd = limAt(alt, az) - (mag0 + extinct(alt) + cloudExt(alt, az));
     const p = proj(B, hvec(alt, az)); if (!p) continue; pointStar(c, p[0], p[1], dd + twinkle(7, airmass(alt), 0.015), {jupiter:0.85, saturn:1.05, mars:1.5, venus:0.8, mercury:0.9}[pl]); }
   /* the Moon */
   const mo = moonGeo(J); let [ma, mz] = altaz(mv(HM, mo.v)); ma += refr(ma);
@@ -621,15 +676,7 @@ function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT 
   c.globalCompositeOperation = "source-over";
   /* the land, the lake and the lawn with the other telescopes */
   c.drawImage(LIMG, 0, 0, V.W, V.H); drawField(c, B);
-  /* compass points on the horizon */
-  c.fillStyle = "rgba(200,210,220,0.55)"; c.font = "12px " + FONT; c.textAlign = "center";
-  for (const [lbl, az] of [["N", 0], ["NE", 45], ["E", 90], ["SE", 135], ["S", 180], ["SW", 225], ["W", 270], ["NW", 315]]){ const p = proj(B, hvec(-3, az)); if (p && p[0] > 0 && p[0] < V.W && p[1] < V.H) c.fillText(lbl, p[0], Math.min(V.H - 6, p[1])); }
-  /* how dark the sky is overhead and how far the eye has adapted */
-  { const q = sqmOf(skyLum(90, 0)), ad = Math.round(100 * Math.min(1, 0.6 + SKY.t / 300)); c.fillStyle = "rgba(170,180,190,0.55)"; c.font = "11px " + FONT; c.textAlign = "left";
-    c.fillText((LANG === "ko" ? "천정 하늘 밝기 " : "zenith sky ") + q.toFixed(1) + " mag/″²  ·  " + (LANG === "ko" ? "맨눈 한계등급 " : "naked-eye limit ") + limEye(90, 0).toFixed(1) + "  ·  " + (LANG === "ko" ? "암적응 " : "dark adaptation ") + ad + "%", 10, V.H - 10); }
-  /* where the tube points, as one sights along it */
-  const [ta, tz] = hadec2hor(MOUNT.ha, MOUNT.dec), tp = proj(B, hvec(ta, tz));
-  if (tp){ c.strokeStyle = "rgba(255,120,90,0.45)"; c.lineWidth = 1; c.setLineDash([3, 4]); c.beginPath(); c.arc(tp[0], tp[1], 9, 0, 7); c.stroke(); c.setLineDash([]); } }
+}
 
 /* ==================================================================
    THE TELESCOPE: an equatorial mount without a drive
@@ -672,7 +719,7 @@ function drawScope(c, kind){ const J = jdNow(); if (!_PM || Math.abs(J - _PMJ) >
   c.fillStyle = blocked ? "#050505" : "rgb(" + (sv * (0.5 + 0.5 * glow) | 0) + "," + (sv * (0.64 + 0.16 * glow) | 0) + "," + (sv * (1 - 0.42 * glow) | 0) + ")"; c.fillRect(cx - R, cy - R, 2 * R, 2 * R);
   if (!blocked){
     /* what the instrument reaches: the eye's limit here + the aperture's gain + a darker field */
-    const ext = extinct(palt), lim = nelmOf(q) - adaptPen() - OBSERVER + 5 * Math.log10(D / 7) + 2.5 * Math.log10(T) + (xp < 7 ? 1.25 * Math.log10(7 / xp) : 0), defocus = isF ? 0 : Math.abs(EP.focus - focusZero()), blur = defocus * M / 30 * 6 * ez, seeHW = isF ? 0 : 0.7 * k / 3600;      /* half the seeing disc: about 0.7 arcsec tonight */
+    const ext = extinct(palt) + cloudExt(palt, paz), lim = nelmOf(q) - adaptPen() - OBSERVER + 5 * Math.log10(D / 7) + 2.5 * Math.log10(T) + (xp < 7 ? 1.25 * Math.log10(7 / xp) : 0), defocus = isF ? 0 : Math.abs(EP.focus - focusZero()), blur = defocus * M / 30 * 6 * ez, seeHW = isF ? 0 : 0.7 * k / 3600;      /* half the seeing disc: about 0.7 arcsec tonight */
     const P = (v) => { const s = stdCoord(v, ra0, dec0, J); return s ? [cx + s[0] * k, cy + s[1] * k] : null; };     /* inverted: north down, east right */
     c.globalCompositeOperation = "lighter";
     /* a star: s magnitudes above the limit.  In focus it is a point (the seeing disc is far below what the eye
@@ -704,14 +751,14 @@ function drawScope(c, kind){ const J = jdNow(); if (!_PM || Math.abs(J - _PMJ) >
       else if (pl === "saturn") drawSaturn(c, p, k, J, ext, blur, isF); else if (22 / 3600 * k < 2) star(p, -2.4, 0.9); else { const r = 22 / 3600 * k; c.fillStyle = "rgba(240,225,200,0.95)"; c.beginPath(); c.ellipse(p[0], p[1], Math.max(1.5, r), Math.max(1.4, r * 0.94), 0, 0, 7); c.fill(); } }
     c.globalCompositeOperation = "source-over"; }
   /* clouds of the low haze drifting through */
-  if (SKY.haze && palt < 30 && !blocked){ c.fillStyle = "rgba(20,21,25," + Math.min(0.97, (30 - palt) / 8) + ")"; c.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
+  if (WXS.haze > 0.3 && palt < 30 && !blocked){ c.fillStyle = "rgba(20,21,25," + WXS.haze * Math.min(0.97, (30 - palt) / 8) + ")"; c.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
   c.restore();
   /* the field stop, crosshair in the finder */
   c.strokeStyle = "#1a1a1a"; c.lineWidth = 3; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke();
   if (isF){ c.strokeStyle = "rgba(200,40,30,0.75)"; c.lineWidth = 1; c.beginPath(); c.moveTo(cx - R, cy); c.lineTo(cx + R, cy); c.moveTo(cx, cy - R); c.lineTo(cx, cy + R); c.stroke(); }
   c.fillStyle = "#9aa3ab"; c.font = "12px " + FONT; c.textAlign = "left";
   c.fillText(isF ? "6×30 finder" : (EP.fl + " mm" + (EP.barlow ? " + 2× Barlow" : "") + "  ·  " + Math.round(M) + "×" + (ez > 1 ? "  ·  " + (LANG === "ko" ? "화면 " : "screen ") + ez + "×" : "")), 12, 20);
-  if (blocked){ c.fillStyle = "#6b7176"; c.textAlign = "center"; c.fillText(LANG === "ko" ? "경통이 나무·건물이나 땅을 향하고 있습니다" : "the tube points at trees, roofs or the ground", cx, cy); } }
+}
 /* Saturn at its true size and tilt, with the rings' back half behind the globe */
 function drawSaturn(c, p, k, J, ext, blur, isF){ const G = saturnGeom(J), s = k / 3600, req = G.req * s, rp = req * 0.902, B = G.B * DEG;
   const ang = -G.P * DEG;                                /* north is down in the inverted view: local +y is the pole */
@@ -738,7 +785,7 @@ Object.assign(I18N, {
   t2: ["Task 2 · Saturn and Titan", "과제 2 · 토성과 타이탄"], t2a: ["Task 2 alt. · Epsilon Lyrae", "대체 과제 2 · 거문고자리 엡실론"],
   t3: ["Task 3 · M57 — field of view", "과제 3 · M57 — 시야"], t4: ["Task 4 · Variable star AF Cyg", "과제 4 · 변광성 AF Cyg"],
   t5: ["Task 5 · Naked-eye brightness (UMi)", "과제 5 · 맨눈 밝기 추정 (작은곰자리)"],
-  lgSes: ["The night", "관측하는 밤"], newNight: ["Another night (new draw)", "다른 밤으로 (새로 뽑기)"],
+  lgSes: ["The night", "관측하는 밤"], newNight: ["Go to the other night (4 ↔ 5 August)", "다른 밤으로 (8월 4일 ↔ 5일)"],
   finish: ["Done — keep tracking until the check", "끝냄 — 확인 때까지 추적 유지"],
   e25: ["25 mm", "25 mm"], e10: ["10 mm", "10 mm"], fm: ["focus −", "초점 −"], fp: ["focus +", "초점 +"],
   lines: ["Constellation lines (practice only)", "별자리 선 (연습용)"], lbZ: ["Eyepiece view on the screen (bring the eye closer)", "화면에서 접안렌즈 상 확대 (눈을 가까이)"],
@@ -757,8 +804,9 @@ Object.assign(I18N, {
 });
 const VIEWS = ["sky", "finder", "eye", "chart"];
 let view = "sky", CHART = "lyra", SHOWLINES = false;
-function layout(){ const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv.parentElement.clientWidth || 900;
-  const h = Math.max(470, Math.min(Math.round(w * 0.64), Math.round(window.innerHeight * 0.8)));
+function layout(){ const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), full = document.fullscreenElement === cv.parentElement;
+  const w = full ? window.innerWidth : (cv.parentElement.clientWidth || 900);
+  const h = full ? window.innerHeight : Math.max(470, Math.min(Math.round(w * 0.64), Math.round(window.innerHeight * 0.8)));
   cv.style.width = w + "px"; cv.style.height = h + "px"; cv.style.background = "#000"; cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
   V.W = w; V.H = h; V.dpr = dpr; V.ez = V.ez || 1; _bgKey = ""; }
 function caption(){ return view === "chart" ? (CHART === "sat" ? tr("cap_sat") : CHART === "lyra" ? tr("cap_lyra") : tr("cap_chart")) : tr("cap_" + view); }
@@ -767,8 +815,9 @@ for (const k of VIEWS) document.getElementById("vt" + k).onclick = () => showVie
 
 /* ---- the night ----------------------------------------------------------------------- */
 const SES = {night:0, task:-1, tStart:0, tEnd:0, res:{}, help:{}, ans:{}, titan:null, ring:null, fov:null, score:""};
-const ALT = () => SKY.haze;                                                     /* on the hazy night tasks 1 and 2 are replaced */
-function newSession(night, haze){ SES.night = night; SKY.haze = haze; SKY.J0 = jdUT(2019, 8, 4 + night, 21 + 42 / 60); SKY.t = 0;
+const ALT = () => SES.alt;                                                      /* in the low haze tasks 1 and 2 are replaced */
+function newSession(night){ SES.night = night; SKY.J0 = jdUT(2019, 8, 4 + night, 21 + 42 / 60); SKY.t = 0; WXS.key = "";
+  wxApply(SKY.J0); SES.alt = WXS.haze >= 0.5;                                    /* the assistants decide at the start, from the sky they see */
   Object.assign(MOUNT, {ha:10 + 20 * RNG(), dec:35 + 15 * RNG(), clutch:false});
   Object.assign(FINDER, {dha:(RNG() < 0.5 ? -1 : 1) * (1.1 + 0.9 * RNG()), ddec:(RNG() < 0.5 ? -1 : 1) * (0.7 + 0.8 * RNG()), screws:false});
   Object.assign(EP, {fl:25, barlow:false, focus:(RNG() < 0.5 ? -1 : 1) * (2 + 1.5 * RNG())});
@@ -822,25 +871,24 @@ function buildSheet(){ const g = FIELDS(), head = [taskKey(1), "t3", "t4", "t5"]
     : fs.map(([k, l]) => `<label class="hint" style="display:flex;gap:6px;align-items:center">${tr(l)}<input data-a="${k}" value="${SES.ans[k] || ""}" style="width:76px;margin-left:auto;background:#12161b;color:#e8eef2;border:1px solid #33373e;border-radius:4px;padding:3px 5px;font:inherit"></label>`).join(""))).join("");
   document.querySelectorAll("#sheet input").forEach(e => e.oninput = () => { SES.ans[e.dataset.a] = e.value; }); }
 function panel(){ const ko = LANG === "ko", J = jdNow();
-  $("sesInfo").textContent = (ko ? "2019년 8월 " + (4 + SES.night) + "일 밤 · 케스트헤이 (북위 46.76°, 동경 17.25°) · " + (SKY.haze ? "남쪽 낮은 하늘에 연무 — 대체 과제" : "맑음")
-                                  : "Night of " + (4 + SES.night) + " August 2019 · Keszthely (46.76° N, 17.25° E) · " + (SKY.haze ? "low haze in the south — alternative tasks" : "clear"));
+  const wq = WXS.w || wxNow(J), dirs = ko ? ["북", "북동", "동", "남동", "남", "남서", "서", "북서"] : ["N", "NE", "E", "SE", "S", "SW", "W", "NW"], wd = dirs[Math.round(norm360(wq[8]) / 45) % 8];
+  $("sesInfo").textContent = (ko ? "2019년 8월 " + (4 + SES.night) + "일 밤 · 케스트헤이 (북위 46.76°, 동경 17.25°)\n" + wq[0].toFixed(1) + " °C · 습도 " + Math.round(wq[1]) + "% · " + wd + "풍 " + wq[7].toFixed(0) + " km/h · 구름 " + Math.round(wq[3]) + "% (ERA5 재분석)" + (ALT() ? "\n남쪽 낮은 하늘에 연무 — 대체 과제" : "")
+                                  : "Night of " + (4 + SES.night) + " August 2019 · Keszthely (46.76° N, 17.25° E)\n" + wq[0].toFixed(1) + " °C · humidity " + Math.round(wq[1]) + "% · wind " + wd + " " + wq[7].toFixed(0) + " km/h · cloud " + Math.round(wq[3]) + "% (ERA5 reanalysis)" + (ALT() ? "\nlow haze in the south — alternative tasks" : ""));
   const i = SES.task, rem = i >= 0 ? Math.max(0, SES.tEnd - SKY.t) : 0; $("tmr").textContent = i >= 0 ? String(Math.floor(rem / 60)).padStart(2, "0") + ":" + String(Math.floor(rem % 60)).padStart(2, "0") : "--:--";
   $("bFinish").disabled = i < 0; $("bHelp").disabled = !(i === 2 || (i === 1 && ALT()));
   $("bE25").className = EP.fl === 25 ? "on" : ""; $("bE10").className = EP.fl === 10 ? "on" : ""; $("bBar").className = EP.barlow ? "on" : "";
   $("bClutch").textContent = MOUNT.clutch ? tr("clutch") : tr("clutchOn"); $("bClutch").className = MOUNT.clutch ? "on" : "";
-  $("bScrews").className = FINDER.screws ? "on" : ""; for (const z of [1, 3, 8]) $("bZ" + z).className = V.ez === z ? "on" : ""; $("cLines").checked = SHOWLINES;
+  $("bScrews").className = FINDER.screws ? "on" : ""; for (const z of [1, 3, 8]) $("bZ" + z).className = V.ez === z ? "on" : "";
   const f = $("fovTx"); if (f) f.textContent = SES.fov ? tr("fovDrawn") + (2 * SES.fov).toFixed(2) + "°" : tr("fovNone");
   const w = []; if (performance.now() - MSG.t < 9000) w.push((MSG.warn ? '<div class="w">' : "<div>") + MSG.s + "</div>");
-  if (view === "eye" && Math.abs(EP.focus - focusZero()) > 0.6) w.push("<div>" + (ko ? "상이 흐립니다 — 휠이나 초점 버튼으로 초점을 맞추세요" : "the image is out of focus — use the wheel or the focus buttons") + "</div>");
   const html = w.join(""), el = $("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
-$("bNight").onclick = () => newSession(RNG() < 0.5 ? 0 : 1, RNG() < 0.3);
+$("bNight").onclick = () => newSession(1 - SES.night);
 $("bFinish").onclick = finishEarly; $("bHelp").onclick = askHelp;
 $("bTime").onclick = () => say((LANG === "ko" ? "조교: 지금은 " : "Assistant: it is ") + cestStr(jdNow()) + " CEST" + (LANG === "ko" ? "입니다." : "."));
 $("bE25").onclick = () => { EP.fl = 25; }; $("bE10").onclick = () => { EP.fl = 10; }; $("bBar").onclick = () => { EP.barlow = !EP.barlow; };
 $("bClutch").onclick = () => { MOUNT.clutch = !MOUNT.clutch; }; $("bScrews").onclick = () => { FINDER.screws = !FINDER.screws; if (FINDER.screws) showView("finder"); };
 for (const z of [1, 3, 8]) $("bZ" + z).onclick = () => { V.ez = z; if (view !== "eye") showView("eye"); };
 $("bFm").onclick = () => { EP.focus -= 0.15; }; $("bFp").onclick = () => { EP.focus += 0.15; };
-$("cLines").onchange = e => { SHOWLINES = e.target.checked; };
 $("bCheck").onclick = () => { $("score").textContent = grade(); };
 
 /* ---- hands on the sky, the tube and the paper ----------------------------------------- */
@@ -979,8 +1027,8 @@ function grade(){ const ko = LANG === "ko", L = [], J22 = jdUT(2019, 8, 4 + SES.
   L.unshift((ko ? "합계 " : "Total ") + tot + " / " + max + (ko ? "점" : " points")); return L.join("\n"); }
 
 /* ---- the loop ------------------------------------------------------------------------------ */
-function drawView(){ const c = ctx; c.setTransform(V.dpr, 0, 0, V.dpr, 0, 0);
-  if (view === "sky"){ drawSky(c); if (SHOWLINES) drawLines(c); }
+function drawView(){ const c = ctx; c.setTransform(V.dpr, 0, 0, V.dpr, 0, 0); const J = jdNow(); wxApply(J); cloudGrid(J);
+  if (view === "sky") drawSky(c);
   else if (view === "finder" || view === "eye") drawScope(c, view);
   else if (CHART === "sat") drawSat(c); else drawChart(c, CH[CHART]); }
 function drawLines(c){ const B = viewBasis(); c.strokeStyle = "rgba(120,160,220,0.35)"; c.lineWidth = 1;
@@ -991,12 +1039,18 @@ let lastT = performance.now();
     if (SES.task >= 0 && SKY.t >= SES.tEnd) check(SES.task);
     drawView(); panel(); } catch (err){ console.error(err); } requestAnimationFrame(loop); })();
 window.addEventListener("resize", layout);
+/* the whole monitor for the sky: the button, or F; Esc leaves */
+function toggleFull(){ const el = cv.parentElement; try { document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen(); } catch (e){} }
+$("bFull").onclick = toggleFull;
+document.addEventListener("fullscreenchange", () => { layout(); $("bFull").textContent = tr(document.fullscreenElement ? "fullOff" : "full"); });
+window.addEventListener("keydown", e => { if (/INPUT|SELECT|TEXTAREA/.test((e.target || {}).tagName || "")) return; if (e.key === "f" || e.key === "F"){ toggleFull(); e.preventDefault(); } });
 function applyLang(){ document.documentElement.lang = LANG;
   document.title = LANG === "ko" ? "IOAA 2019 야간 관측 — 케스트헤이의 실제 하늘 · HaslaLab" : "IOAA 2019 Night Observation — the Real Sky over Keszthely · HaslaLab";
   $("h1").textContent = tr("title"); $("sub").textContent = tr("sub"); $("t-tray").textContent = tr("tray");
   for (const k of VIEWS) $("vt" + k).textContent = tr("vt" + k); $("t-cap3").textContent = caption();
   for (const [id, k] of [["lgSes", "lgSes"], ["lgTasks", "lgTasks"], ["lgScope", "lgScope"], ["lgSheet", "lgSheet"], ["lgNotes", "lgNotes"], ["bNight", "newNight"], ["bFinish", "finish"], ["bE25", "e25"], ["bE10", "e10"], ["bBar", "barlow"],
-    ["bScrews", "screws"], ["bFm", "fm"], ["bFp", "fp"], ["bTime", "askTime"], ["bHelp", "helpPoint"], ["bCheck", "checkAns"], ["txNotes", "notes"], ["lbLines", "lines"], ["lbZ", "lbZ"]]) $(id).textContent = tr(k);
+    ["bScrews", "screws"], ["bFm", "fm"], ["bFp", "fp"], ["bTime", "askTime"], ["bHelp", "helpPoint"], ["bCheck", "checkAns"], ["txNotes", "notes"], ["lbZ", "lbZ"]]) $(id).textContent = tr(k);
+  $("bFull").textContent = tr(document.fullscreenElement ? "fullOff" : "full");
   $("items").innerHTML = [["q", "ch_q"], ["sat", "ch_sat"], ["lyra", "ch_lyra"], ["cygF", "ch_cygF"], ["cygT", "ch_cygT"], ["umi", "ch_umi"]]
     .map(([v, k]) => `<button data-v="${v}" style="width:100%;text-align:left">${tr(k)}</button>`).join("");
   document.querySelectorAll("#items button").forEach(b => b.onclick = () => { if (b.dataset.v === "q"){ window.open("../pdf/IOAA_2019_O1_EN.pdf", "_blank"); return; } CHART = b.dataset.v; showView("chart"); });
@@ -1004,7 +1058,7 @@ function applyLang(){ document.documentElement.lang = LANG;
   buildTasks(); buildSheet(); if ($("score").textContent) $("score").textContent = grade(); }
 $("btn-ko").addEventListener("click", () => { LANG = "ko"; applyLang(); });
 $("btn-en").addEventListener("click", () => { LANG = "en"; applyLang(); });
-layout(); applyLang(); newSession(RNG() < 0.5 ? 0 : 1, RNG() < 0.3); showView("sky");
+layout(); applyLang(); newSession(0); showView("sky");
 
 </script>
 <script src="adfit.js"></script>

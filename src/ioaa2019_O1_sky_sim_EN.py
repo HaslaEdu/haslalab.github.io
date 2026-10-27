@@ -19,9 +19,13 @@ Design rule (non-negotiable):
     are drawn from star counts.  The Sun, the Moon and the planets follow
     their orbits; Saturn shows its rings at the true tilt and its moons
     (Titan's phase fitted to the official positions for both nights).
-    Extinction, a sky glow towards the town and, on a hazy night, the
-    low haze that hid Saturn - then tasks 1 and 2 become the official
-    alternatives.  The eye sees only the stars above its limit, the
+    Extinction and a sky glow towards the town; the weather is each
+    night's own, from the ERA5 reanalysis hour by hour: on 4 August a
+    clear, very humid night whose low haze over the lake hides Saturn -
+    then tasks 1 and 2 become the official alternatives - and on 5 August
+    a veil of cirrus that breaks up after midnight.  No compass marks,
+    no pointer, no lines on the sky.  F (or the button) puts the sky on
+    the whole screen.  The eye sees only the stars above its limit, the
     faintest of them only now and then, and does not zoom.  Around the
     field stands the land as it is there: the town and its church spire
     to the north, the Keszthely Hills, Lake Balaton with Badacsony on the
@@ -266,8 +270,8 @@ def airmass(a):
     return 1 / (s + 0.025 * math.exp(-11 * s))
 
 
-def haze_k(alt):
-    return 0.12 + 2.4 * max(0, min(1, (27 - alt) / 7)) if SKY["haze"] else 0
+def haze_k(alt):                      # the low haze over the lake and the marsh
+    return WXS["haze"] * (0.12 + 2.4 * max(0, min(1, (27 - alt) / 7)))
 
 
 def extinct(alt):
@@ -292,9 +296,9 @@ def sky_lum(alt, az):
     for A, S, Hs in SITE["domes"]:
         d = abs(((az - A + 540) % 360) - 180)
         lp += S * math.exp(-a / Hs) * math.exp(-((d / 40) ** 2))
-    if SKY["haze"]:
-        lp *= 1.8
-        nat *= 1.15
+    ch, cm = cloud_at(a, az)                                      # haze and clouds, lit by the town
+    lp = lp * (1 + 0.8 * WXS["haze"]) + (0.5 * ch + 0.8 * cm) * (0.25 + 1.2 * lp)
+    nat *= (1 + 0.15 * WXS["haze"]) * (1 - 0.25 * ch - 0.7 * cm)
     ds = abs(((az - SUN[1] + 540) % 360) - 180)
     tw = 60 * ((SUN[0] + 18) / 6) ** 3 * (0.35 + 0.65 * math.exp(-((ds / 75) ** 2)) * math.exp(-a / 30)) if SUN[0] > -18 else 0.0
     return nat, lp, tw
@@ -589,6 +593,101 @@ def sky_rgb(L):
     return v * (0.5 * nat + 0.9 * lp + 0.45 * tw) / tot, v * (0.64 * nat + 0.78 * lp + 0.66 * tw) / tot, v * (1.0 * nat + 0.64 * lp + 1.0 * tw) / tot
 
 
+# ---- the weather of the two nights, from the ERA5 reanalysis (Copernicus/ECMWF, via Open-Meteo) at
+#  46.76 N 17.25 E, hour by hour (UT 20, 21, 22, 23, 00, 01, 02):
+#  [temperature C, relative humidity %, dew point C, total / low / mid / high cloud %, wind km/h, from deg]
+#  4 August: a clear, still, very humid night - the dew point within a degree or two of the air
+#  temperature, the kind of night a low haze lies over the lake and the marsh.
+#  5 August: warmer and drier near the ground, but a veil of high cirrus over most of the sky until about
+#  01 CEST, breaking up after that.
+WX = (
+    ((21.0, 76, 16.7, 1, 0, 1, 0, 6.1, 315), (19.3, 85, 16.7, 1, 0, 1, 0, 6.1, 270), (16.5, 92, 15.2, 1, 0, 1, 0, 9.4, 266), (16.1, 90, 14.4, 1, 0, 1, 0, 8.8, 279),
+     (18.2, 83, 15.2, 1, 0, 1, 0, 5.4, 278), (15.5, 90, 13.9, 1, 0, 1, 0, 8.5, 282), (15.4, 91, 14.0, 2, 0, 2, 0, 7.6, 278)),
+    ((21.3, 76, 17.0, 13, 0, 12, 1, 7.2, 186), (20.2, 81, 16.8, 81, 0, 29, 77, 7.2, 180), (20.5, 78, 16.5, 76, 0, 16, 72, 6.6, 189), (20.0, 78, 16.1, 9, 0, 8, 1, 6.0, 197),
+     (20.5, 75, 15.9, 24, 0, 26, 6, 6.4, 196), (19.1, 81, 15.8, 9, 0, 8, 0, 6.5, 199), (18.2, 86, 15.8, 7, 0, 7, 0, 7.0, 215)))
+WXS = {"w": None, "haze": 0.0, "mid": 0.0, "high": 0.0, "grid": None, "key": None}
+
+
+def wx_hour(J):
+    """hours since 20 UT on the evening of the night"""
+    return ((J - jd_ut(2019, 8, 4 + SES["night"], 20)) * 24) % 24
+
+
+def wx_now(J):
+    T_, h = WX[SES["night"]], max(0.0, min(5.999, wx_hour(J)))
+    i, f = int(h), h - int(h)
+    return [v + (azd(T_[i + 1][k], v) if k == 8 else T_[i + 1][k] - v) * f for k, v in enumerate(T_[i])]
+
+
+def wx_apply(J):
+    """humidity thickens the air; near the dew point a low haze builds over the lake and the marsh"""
+    w = wx_now(J)
+    WXS["w"], WXS["haze"] = w, max(0.0, min(1.0, (3.2 - (w[0] - w[2])) / 2.0))
+    SKY["k"] = 0.18 + 0.0035 * max(0, w[1] - 60)
+    WXS["mid"], WXS["high"] = w[5] / 100, w[6] / 100
+
+
+_VN = [LRNG.random() for _ in range(512)]
+
+
+def vn(x, y):
+    xi, yi = math.floor(x), math.floor(y)
+    fx, fy = x - xi, y - yi
+    h = lambda a, b: _VN[(a * 73 + b * 151) % 512]
+    u, v = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy)
+    return (h(xi, yi) * (1 - u) + h(xi + 1, yi) * u) * (1 - v) + (h(xi, yi + 1) * (1 - u) + h(xi + 1, yi + 1) * u) * v
+
+
+def fbm(x, y):
+    return vn(x, y) * 0.5 + vn(x * 2.03 + 17, y * 2.03 + 9) * 0.27 + vn(x * 4.1 + 41, y * 4.1 + 23) * 0.15 + vn(x * 8.3 + 5, y * 8.3 + 61) * 0.08
+
+
+def qnorm(p):
+    p = max(0.001, min(0.999, p))
+    t = math.sqrt(-2 * math.log(p if p < 0.5 else 1 - p))
+    z = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) / (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t ** 3)
+    return -z if p < 0.5 else z
+
+
+def deck(alt, az, h_km, scale, stretch, wdir, wspd, secs, cover):
+    """a cloud deck: value noise drifting with the wind aloft, thresholded to the reanalysis cover"""
+    if cover < 0.01 or alt < 0.5:
+        return 0.0
+    r = h_km / math.tan(max(1.5, alt) * DEG)
+    dx, dy = -math.sin(wdir * DEG) * wspd * secs / 3600, -math.cos(wdir * DEG) * wspd * secs / 3600
+    X, Y = r * math.sin(az * DEG) - dx, r * math.cos(az * DEG) - dy
+    ca, sa = math.cos(wdir * DEG), math.sin(wdir * DEG)
+    thr = 0.5 + 0.11 * qnorm(1 - cover)
+    return sstep(thr - 0.04, thr + 0.16, fbm((X * ca - Y * sa) / scale, (X * sa + Y * ca) / (scale * stretch)))
+
+
+def cloud_grid(J):
+    """cloud density on a 2.5 deg alt-az grid, refreshed every two seconds of the night"""
+    key = (SES["night"], int(SKY["t"] / 2))
+    if WXS["key"] == key and WXS["grid"]:
+        return
+    WXS["key"], secs, w = key, wx_hour(J) * 3600, WXS["w"] or wx_now(J)
+    WXS["grid"] = [[(deck(a * 2.5, z * 2.5, 9, 7, 3.2, 245, 45, secs, WXS["high"]),                   # cirrus at ~9 km
+                     deck(a * 2.5, z * 2.5, 3.5, 2.5, 1.3, (w[8] + 20) % 360, 25, secs, WXS["mid"]))     # altocumulus at ~3.5 km
+                    for z in range(145)] for a in range(37)]
+
+
+def cloud_at(alt, az):
+    g = WXS["grid"]
+    if not g or alt < 0:
+        return 0.0, 0.0
+    A, Z = min(35.999, max(0.0, alt / 2.5)), norm360(az) / 2.5
+    a, z = int(A), int(Z) % 144
+    fa, fz = A - a, Z - int(Z)
+    return tuple((g[a][z][L] * (1 - fz) + g[a][z + 1][L] * fz) * (1 - fa) + (g[a + 1][z][L] * (1 - fz) + g[a + 1][z + 1][L] * fz) * fa for L in (0, 1))
+
+
+def cloud_ext(alt, az):
+    """magnitudes of light a star loses behind the clouds"""
+    h, m = cloud_at(alt, az)
+    return 1.1 * h + 3.2 * m
+
+
 def bv_rgb(bv):
     t = max(-0.4, min(2, bv))
     if t < 0.4:
@@ -746,7 +845,7 @@ class App:
         self.last = time.time()
         self.ans = {}
         self._build()
-        self.new_session(RNG.random() < 0.5 and 1 or 0, RNG.random() < 0.3)
+        self.new_session(0)
         self.loop()
 
     # ---- layout -------------------------------------------------------
@@ -787,21 +886,19 @@ class App:
             self.tabb[k] = b
         self.cap = tk.Label(mid, text="", bg=PANEL, fg=MUTED, anchor="w", justify="left", wraplength=880)
         self.cap.pack(fill="x", padx=6)
-        self.cv = tk.Canvas(mid, width=self.W, height=self.H, bg="#000", highlightthickness=0)
+        self.full_b = self.btn(tabs, T("⛶ 전체화면 (F)", "⛶ Full screen (F)"), self.toggle_full)
+        self.full_b.pack(side="right", padx=2)
+        self.cv = self.cv_main = tk.Canvas(mid, width=self.W, height=self.H, bg="#000", highlightthickness=0)
         self.cv.pack(padx=6, pady=6)
-        self.cv.bind("<ButtonPress-1>", self.on_down)
-        self.cv.bind("<B1-Motion>", self.on_move)
-        self.cv.bind("<ButtonRelease-1>", self.on_up)
-        self.cv.bind("<MouseWheel>", lambda e: self.on_wheel(1 if e.delta > 0 else -1, e.state & 1))
-        self.cv.bind("<Button-4>", lambda e: self.on_wheel(1, e.state & 1))
-        self.cv.bind("<Button-5>", lambda e: self.on_wheel(-1, e.state & 1))
+        self.bind_canvas(self.cv)
+        self.fs = None
         self.root.bind("<Key>", self.on_key)
         # the panel
         H2 = lambda s: tk.Label(right, text=s, bg=PANEL, fg=ACC, font=("TkDefaultFont", 10, "bold"), anchor="w").pack(fill="x", padx=8, pady=(8, 2))
         H2(T("관측하는 밤", "The night"))
         self.ses_lb = tk.Label(right, text="", bg=PANEL, fg=MUTED, wraplength=270, justify="left", anchor="w")
         self.ses_lb.pack(fill="x", padx=8)
-        self.btn(right, T("다른 밤으로 (새로 뽑기)", "Another night (new draw)"), lambda: self.new_session(RNG.random() < 0.5 and 1 or 0, RNG.random() < 0.3)).pack(fill="x", padx=8, pady=2)
+        self.btn(right, T("다른 밤으로 (8월 4일 ↔ 5일)", "Go to the other night (4 ↔ 5 August)"), lambda: self.new_session(1 - SES["night"])).pack(fill="x", padx=8, pady=2)
         H2(T("과제", "Tasks"))
         self.tmr = tk.Label(right, text="--:--", bg="#12161b", fg=INK, font=("Courier", 20, "bold"))
         self.tmr.pack(fill="x", padx=8)
@@ -836,9 +933,6 @@ class App:
         self.btn(right, T("조교에게 시각 묻기", "Ask the assistant for the time"), self.ask_time).pack(fill="x", padx=8, pady=2)
         self.help_b = self.btn(right, T("조교에게 겨누어 달라고 하기 (겨누기 점수 잃음)", "Ask the assistant to point (loses the pointing marks)"), self.ask_help)
         self.help_b.pack(fill="x", padx=8, pady=2)
-        self.lines_v = tk.IntVar(value=0)
-        tk.Checkbutton(right, text=T("별자리 선 (연습용)", "Constellation lines (practice only)"), variable=self.lines_v, bg=PANEL, fg=INK, selectcolor="#12161b",
-                       activebackground=PANEL, activeforeground=INK, command=lambda: setattr(self, "lines", bool(self.lines_v.get()))).pack(anchor="w", padx=8)
         self.status = tk.Label(right, text="", bg="#12161b", fg=ACC, wraplength=270, justify="left", anchor="nw", height=6)
         self.status.pack(fill="x", padx=8, pady=8)
 
@@ -846,9 +940,11 @@ class App:
         self.msg, self.msg_t = s, time.time()
 
     # ---- the night ----------------------------------------------------
-    def new_session(self, night, haze):
+    def new_session(self, night):
         SES.update({"night": night, "task": -1, "res": {}, "help": {}, "titan": None, "ring": None, "fov": None})
-        SKY["haze"], SKY["J0"], SKY["t"] = haze, jd_ut(2019, 8, 4 + night, 21 + 42 / 60), 0.0
+        SKY["J0"], SKY["t"], WXS["key"] = jd_ut(2019, 8, 4 + night, 21 + 42 / 60), 0.0, None
+        wx_apply(SKY["J0"])
+        SKY["haze"] = WXS["haze"] >= 0.5          # the assistants decide at the start whether the alternative tasks apply
         MOUNT.update({"ha": 10 + 20 * RNG.random(), "dec": 35 + 15 * RNG.random(), "clutch": False})
         FINDER.update({"dha": RNG.choice((-1, 1)) * (1.1 + 0.9 * RNG.random()), "ddec": RNG.choice((-1, 1)) * (0.7 + 0.8 * RNG.random()), "screws": False})
         EP.update({"fl": 25, "barlow": False, "focus": RNG.choice((-1, 1)) * (2 + 1.5 * RNG.random())})
@@ -995,6 +1091,31 @@ class App:
         self.chart = k
         self.show("chart")
 
+    def bind_canvas(self, cv):
+        cv.bind("<ButtonPress-1>", self.on_down)
+        cv.bind("<B1-Motion>", self.on_move)
+        cv.bind("<ButtonRelease-1>", self.on_up)
+        cv.bind("<MouseWheel>", lambda e: self.on_wheel(1 if e.delta > 0 else -1, e.state & 1))
+        cv.bind("<Button-4>", lambda e: self.on_wheel(1, e.state & 1))
+        cv.bind("<Button-5>", lambda e: self.on_wheel(-1, e.state & 1))
+
+    def toggle_full(self, e=None):
+        """the sky on the whole monitor: a borderless window over everything, the same views inside"""
+        if self.fs is None:
+            self.fs = tk.Toplevel(self.root, bg="#000")
+            self.fs.attributes("-fullscreen", True)
+            self.W, self.H = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+            self.cv = tk.Canvas(self.fs, width=self.W, height=self.H, bg="#000", highlightthickness=0)
+            self.cv.pack(fill="both", expand=True)
+            self.bind_canvas(self.cv)
+            self.fs.bind("<Key>", self.on_key)
+            self.fs.bind("<Escape>", self.toggle_full)
+            self.fs.focus_set()
+        else:
+            self.fs.destroy()
+            self.fs, self.cv, (self.W, self.H) = None, self.cv_main, (900, 600)
+        self.bg_key = None
+
     def show(self, v):
         self.view = v
         for k, b in self.tabb.items():
@@ -1074,6 +1195,9 @@ class App:
             EP["focus"] += s * (0.02 if shift else 0.08)
 
     def on_key(self, e):
+        if e.keysym in ("f", "F") and not isinstance(e.widget, tk.Entry):
+            self.toggle_full()
+            return
         if isinstance(e.widget, tk.Entry) or self.view not in ("finder", "eye"):
             return
         st = (2 if e.state & 1 else 10) * (6 if MOUNT["clutch"] else 1)
@@ -1107,7 +1231,8 @@ class App:
 
     def paint_bg(self, B, HM, sun):
         """the sky brightness - natural sky, the town's light, twilight - and the Milky Way on a coarse grid"""
-        key = (round(self.look["az"], 1), round(self.look["alt"], 1), round(self.look["fov"], 1), int(SKY["t"] / 20), SKY["haze"])
+        cloudy = WXS["high"] + WXS["mid"] > 0.03
+        key = (round(self.look["az"], 1), round(self.look["alt"], 1), self.W, self.H, int(SKY["t"] / (2 if cloudy else 20)), SES["night"])
         if key == self.bg_key:
             return
         self.bg_key, cells = key, []
@@ -1120,7 +1245,8 @@ class App:
                 nat, lp, tw = sky_lum(alt, az)
                 q = sqm_of((nat, lp, tw))
                 mwv = max(0, min(1, (q - 19.8) / 1.6))
-                mw = milky(mvT(HM, x)) * min(1, alt / 20) * 10 ** (-0.4 * SKY["k"] * (airmass(max(1, alt)) - 1)) * mwv if alt > 0 else 0
+                ch, cm = cloud_at(alt, az)
+                mw = milky(mvT(HM, x)) * min(1, alt / 20) * 10 ** (-0.4 * SKY["k"] * (airmass(max(1, alt)) - 1)) * mwv * (1 - 0.7 * ch) * (1 - 0.95 * cm) if alt > 0 else 0
                 nat += 1.4 * mw
                 tot = nat + lp + tw
                 v = 5 + 11 * tot ** 0.55                 # a compressive response, like the eye's
@@ -1163,7 +1289,7 @@ class App:
             alt += refr(alt)
             if alt < skyline(az):
                 continue
-            d = lim_at(alt, az) - (m + extinct(alt))
+            d = lim_at(alt, az) - (m + extinct(alt) + cloud_ext(alt, az))
             if d < -0.35:
                 continue
             p = self.proj(B, hvec(alt, az))
@@ -1182,7 +1308,7 @@ class App:
                 continue
             p = self.proj(B, hvec(alt, az))
             if p:
-                self.point_star(p[0], p[1], lim_at(alt, az) - (m0 + extinct(alt)), bv, bg)
+                self.point_star(p[0], p[1], lim_at(alt, az) - (m0 + extinct(alt) + cloud_ext(alt, az)), bv, bg)
         ma, mz = altaz(mv(HM, moon_geo(J)))
         ma += refr(ma)
         if ma > skyline(mz):
@@ -1190,36 +1316,7 @@ class App:
             if p:
                 R = max(3, 0.26 * DEG * 2 * B[3])
                 c.create_oval(p[0] - R, p[1] - R, p[0] + R, p[1] + R, fill="#faf5e1", outline="")
-        if self.lines:
-            for ln in [l for v in CLINES.values() for l in v]:
-                pts, seg = [], []
-                for ra, de in ln:
-                    alt, az = altaz(mv(HM, vec(ra, de)))
-                    p = self.proj(B, hvec(alt + refr(alt), az)) if alt > -2 else None
-                    if p:
-                        seg += p
-                    elif len(seg) >= 4:
-                        pts.append(seg)
-                        seg = []
-                    else:
-                        seg = []
-                if len(seg) >= 4:
-                    pts.append(seg)
-                for s in pts:
-                    c.create_line(*s, fill="#3d5679")
         self.draw_land(B)
-        for lbl, az in (("N", 0), ("NE", 45), ("E", 90), ("SE", 135), ("S", 180), ("SW", 225), ("W", 270), ("NW", 315)):
-            p = self.proj(B, hvec(-3, az))
-            if p and 0 < p[0] < self.W and p[1] < self.H:
-                c.create_text(p[0], min(self.H - 8, p[1]), text=lbl, fill="#7d8790")
-        q0 = sqm_of(sky_lum(90, 0))
-        c.create_text(10, self.H - 10, anchor="w", fill="#7d8790",
-                      text=T("천정 하늘 밝기 %.1f mag/″²  ·  맨눈 한계등급 %.1f  ·  암적응 %d%%" % (q0, lim_eye(90, 0), round(100 * adapt())),
-                             "zenith sky %.1f mag/″²  ·  naked-eye limit %.1f  ·  dark adaptation %d%%" % (q0, lim_eye(90, 0), round(100 * adapt()))))
-        ta, tz = hadec2hor(MOUNT["ha"], MOUNT["dec"])
-        tp = self.proj(B, hvec(ta, tz))
-        if tp:
-            c.create_oval(tp[0] - 9, tp[1] - 9, tp[0] + 9, tp[1] + 9, outline="#a85a46", dash=(3, 4))
 
     def draw_land(self, B):
         """the land, the lake and the lawn with the other teams' telescopes: silhouettes lit by the sky"""
@@ -1228,10 +1325,13 @@ class App:
         hx = lambda k: "#%02x%02x%02x" % tuple(int(max(0, min(255, v * k))) for v in h0)
         azs = [a0 + i * 0.25 for i in range(-400, 401)]
 
+        fw = lambda v: dot(v, B[0]) > 0.05                       # only what lies ahead: the horizon behind would wrap round the screen
+        pf = lambda v: self.proj(B, v) if fw(v) else None
+
         def line(top):
             pts = []
             for az in azs:
-                p = self.proj(B, hvec(top(az), az))
+                p = pf(hvec(top(az), az))
                 if p:
                     pts += p
             return pts
@@ -1241,11 +1341,11 @@ class App:
             if len(pts) >= 4:
                 c.create_polygon(*pts, self.W + 50, self.H + 50, -50, self.H + 50, fill=col, outline="")
 
-        poly(lambda az: land_at(LAND_FAR, az), hx(0.86 if SKY["haze"] else 0.6))            # far hills, paled by the air
+        poly(lambda az: land_at(LAND_FAR, az), hx(0.6 + 0.26 * WXS["haze"]))            # far hills, paled by the air
         lk = [az for az in azs if land_at(LAND_LAKE, az) > 0.5]                             # the lake mirrors the sky
         if lk:
-            top = [q for az in lk for q in (self.proj(B, hvec(0, az)) or ())]
-            bot = [q for az in reversed(lk) for q in (self.proj(B, hvec(-2.4, az)) or ())]
+            top = [q for az in lk for q in (pf(hvec(0, az)) or ())]
+            bot = [q for az in reversed(lk) for q in (pf(hvec(-2.4, az)) or ())]
             if len(top) + len(bot) >= 6:
                 c.create_polygon(*top, *bot, fill=hx(0.72), outline="")
         poly(lambda az: land_at(LAND_MID, az) if land_at(LAND_MID, az) > 0.05 else -8, hx(0.16))   # trees and roofs
@@ -1253,7 +1353,7 @@ class App:
         eye = 1.6                                                                            # the other teams' telescopes
         for az, dist, tilt, aim in FIELD_SCOPES:
             se, sn = math.sin(az * DEG) * dist, math.cos(az * DEG) * dist
-            P = lambda de, dn, h: self.proj(B, unit((se + de, sn + dn, h - eye)))
+            P = lambda de, dn, h: pf(unit((se + de, sn + dn, h - eye)))
             wpx = lambda m: max(1, m / dist * B[3])
             apex = P(0, 0, 1.05)
             if not apex:
@@ -1270,9 +1370,9 @@ class App:
             torch = P(0.25, -0.1, 0.95)
             if torch:
                 c.create_oval(torch[0] - 2, torch[1] - 2, torch[0] + 2, torch[1] + 2, fill="#7a1810", outline="")
-        fade = 0.45 if SKY["haze"] else 1.0                                                  # lights, and their reflections on the lake
+        fade = 1 - 0.55 * WXS["haze"]                                                  # lights, and their reflections on the lake
         for az, alt, col, b, kind in LIGHTS:
-            p = self.proj(B, hvec(alt, az))
+            p = pf(hvec(alt, az))
             if not p or not (-10 < p[0] < self.W + 10 and -10 < p[1] < self.H + 10):
                 continue
             bgc = tuple(int(v * 0.16) for v in h0)
@@ -1280,7 +1380,7 @@ class App:
             rgb = tuple(v / 255 for v in col)
             r = 1.6 if kind == "lamp" else 1.1
             if kind == "shore" and land_at(LAND_LAKE, az) > 0.5:
-                q = self.proj(B, hvec(-0.9 - 0.5 * b, az))
+                q = pf(hvec(-0.9 - 0.5 * b, az))
                 if q:
                     c.create_line(p[0], p[1] + 2, q[0], q[1], fill=mix(tuple(int(v * 0.72) for v in h0), rgb, 0.25 * a))
             c.create_oval(p[0] - r, p[1] - r, p[0] + r, p[1] + r, fill=mix(bgc, rgb, min(1, 0.4 + a)), outline="")
@@ -1306,16 +1406,16 @@ class App:
         glow = (Ls[1] + Ls[2]) / sum(Ls)
         sv = 3 + 11 * (sum(Ls) * T_ * min(1, (xp / 7) ** 2)) ** 0.55
         bg = (5, 5, 5) if blocked else (int(sv * (0.5 + 0.5 * glow)), int(sv * (0.64 + 0.16 * glow)), int(sv * (1 - 0.42 * glow)))
-        if SKY["haze"] and palt < 30 and not blocked:
-            a = min(0.97, (30 - palt) / 8)
+        if WXS["haze"] > 0.3 and palt < 30 and not blocked:
+            a = WXS["haze"] * min(0.97, (30 - palt) / 8)
             bg = tuple(int(bg[i] * (1 - a) + (20, 21, 25)[i] * a) for i in range(3))
         c.create_oval(cx - R, cy - R, cx + R, cy + R, fill="#%02x%02x%02x" % bg, outline="#1a1a1a", width=3)
         if not blocked:
-            ext = extinct(palt)
+            ext = extinct(palt) + cloud_ext(palt, paz)
             # what the instrument reaches: the eye's limit here + the aperture's gain + a darker field
             lim = nelm_of(q) - (1 - adapt()) - OBSERVER + 5 * math.log10(D / 7) + 2.5 * math.log10(T_) + (1.25 * math.log10(7 / xp) if xp < 7 else 0)
-            if SKY["haze"] and palt < 30:
-                lim -= 6 * min(1, (30 - palt) / 8)
+            if WXS["haze"] > 0.3 and palt < 30:
+                lim -= 6 * WXS["haze"] * min(1, (30 - palt) / 8)
             blur = 0 if isF else abs(EP["focus"] - focus_zero()) * M / 30 * 6 * ez
             seeHW = 0 if isF else 0.7 * k / 3600
             inside = lambda p: (p[0] - cx) ** 2 + (p[1] - cy) ** 2 < (R - 2) ** 2 and -10 < p[0] < W + 10 and -10 < p[1] < H + 10
@@ -1375,15 +1475,13 @@ class App:
                 if pl == "saturn" and saturn_geom(J)["req"] * k / 3600 < 2:
                     star(p, 0.2, 1.0)                            # too small to show its shape: a bright point
                 elif pl == "saturn":
-                    if inside(p) and not (SKY["haze"] and palt < 26):
+                    if inside(p) and not (WXS["haze"] > 0.5 and palt < 26):
                         self.draw_saturn(p, k, J, star, bg, blur)
                 elif 22 / 3600 * k < 2:
                     star(p, -2.4, 0.9)
                 else:
                     r = max(1.5, 22 / 3600 * k)
                     c.create_oval(p[0] - r, p[1] - r * 0.94, p[0] + r, p[1] + r * 0.94, fill="#f0e1c8", outline="")
-        else:
-            c.create_text(cx, cy, text=T("경통이 나무·건물이나 땅을 향하고 있습니다", "the tube points at trees, roofs or the ground"), fill="#6b7176")
         if isF:
             c.create_line(cx - R, cy, cx + R, cy, fill="#b02a20")
             c.create_line(cx, cy - R, cx, cy + R, fill="#b02a20")
@@ -1693,8 +1791,10 @@ class App:
 
     # ---- the loop -----------------------------------------------------------------------
     def panel(self):
-        self.ses_lb.configure(text=T("2019년 8월 %d일 밤 · 케스트헤이 (북위 46.76°, 동경 17.25°) · " % (4 + SES["night"]) + ("남쪽 낮은 하늘에 연무 — 대체 과제" if SKY["haze"] else "맑음"),
-                                     "Night of %d August 2019 · Keszthely (46.76° N, 17.25° E) · " % (4 + SES["night"]) + ("low haze in the south — alternative tasks" if SKY["haze"] else "clear")))
+        w = WXS["w"] or wx_now(jd_now())
+        wd = (T("북 북동 동 남동 남 남서 서 북서", "N NE E SE S SW W NW").split())[round(norm360(w[8]) / 45) % 8]
+        self.ses_lb.configure(text=T("2019년 8월 %d일 밤 · 케스트헤이 (북위 46.76°, 동경 17.25°)\n%.1f °C · 습도 %d%% · %s풍 %d km/h · 구름 %d%% (ERA5 재분석)" % (4 + SES["night"], w[0], round(w[1]), wd, round(w[7]), round(w[3])) + ("\n남쪽 낮은 하늘에 연무 — 대체 과제" if SKY["haze"] else ""),
+                                     "Night of %d August 2019 · Keszthely (46.76° N, 17.25° E)\n%.1f °C · humidity %d%% · wind %s %d km/h · cloud %d%% (ERA5 reanalysis)" % (4 + SES["night"], w[0], round(w[1]), wd, round(w[7]), round(w[3])) + ("\nlow haze in the south — alternative tasks" if SKY["haze"] else "")))
         if SES["task"] >= 0:
             rem = max(0, SES["t1"] - SKY["t"])
             self.tmr.configure(text="%02d:%02d" % (rem // 60, rem % 60))
@@ -1715,11 +1815,12 @@ class App:
         w = []
         if time.time() - self.msg_t < 9:
             w.append(self.msg)
-        if self.view == "eye" and abs(EP["focus"] - focus_zero()) > 0.6:
-            w.append(T("상이 흐립니다 — 휠이나 초점 버튼으로 초점을 맞추세요", "the image is out of focus — use the wheel or the focus buttons"))
         self.status.configure(text="\n\n".join(w))
 
     def draw(self):
+        J = jd_now()
+        wx_apply(J)
+        cloud_grid(J)
         self.cv.delete("all")
         if self.view == "sky":
             self.draw_sky()
