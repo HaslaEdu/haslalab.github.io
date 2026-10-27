@@ -8,8 +8,8 @@
      key, assets,                       storage prefix, folder of the page's images
      title, sub, about: {ko, en},
      calc: true,                        show the scientific calculator
-     maps: {id: {w, h, name, note, paint(g, W, H) | img | paper: {w_mm, h_mm, title}}},
-     tasks: [{id, marks, name, lead, parts: [{id, mk, ko, en, table, eq} | {h, ko, en, img, eq}],
+     maps: {id: {w, h, name, note, paint(g, W, H) | img | paper: {w_mm, h_mm, title, logy}}},
+     tasks: [{id, marks, name, lead, parts: [{id, mk, ko, en, table, eq} | {h, ko, en, img, eq, table}],
               maps: [ids], fields: [[id, label, options]], table: {head, init},
               key: [[label, text | {ko, en}]], sol: [[image, caption] | {draw(g, W, H), w, h, cap}], solNote}]
    }) */
@@ -91,7 +91,7 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
     function sheetOf(id) {
       if (LABS[id]) return LABS[id]; const M = C.maps[id], host = document.createElement("div"); labs.appendChild(host);
       if (M.custom) LABS[id] = M.custom(host, () => lang);
-      else if (M.paper) LABS[id] = DataDesk.paper(host, {key: C.key + "-" + id, lang: () => lang, title: M.paper.title, w_mm: M.paper.w_mm, h_mm: M.paper.h_mm});
+      else if (M.paper) LABS[id] = DataDesk.paper(host, {key: C.key + "-" + id, lang: () => lang, title: M.paper.title, w_mm: M.paper.w_mm, h_mm: M.paper.h_mm, logy: M.paper.logy});
       else { const im = IMGS[id], paint = M.paint || ((g, W, H) => { g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); if (im.complete && im.naturalWidth) g.drawImage(im, 0, 0, W, H); });
         const lab = ChartLab.create({el: host, w: M.w, h: M.h, paint, key: C.key + "-" + id, lang: () => lang}); LABS[id] = {lang: lab.lang, show: lab.show};
         /* a tall sheet is kept within the window's height; the wheel zooms in on it */
@@ -109,10 +109,11 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
       tabs.hidden = C.tasks.length < 2;
       for (const b of tabs.querySelectorAll("button")) b.onclick = () => { cur = C.tasks.find((x) => x.id === b.dataset.t); solOn = false; renderTask(); };
       let h = "<h2><span>(" + cur.id + ") " + tx(cur.name, L) + "</span><span>" + (cur.marks ? "[" + cur.marks + " " + t.marks + "]" : "") + "</span></h2>" + (cur.lead ? '<p class="lead">' + tx(cur.lead, L) + "</p>" : "");
+      const tbl = (T) => T ? "<table>" + T.map((r, i) => "<tr>" + r.map((c) => (i ? "<td>" : "<th>") + c + (i ? "</td>" : "</th>")).join("") + "</tr>").join("") + "</table>" : "";
       for (const p of cur.parts) {
-        if (p.h) { h += "<h4>" + tx(p.h, L) + "</h4>" + (p.img ? '<img alt="" src="' + C.assets + p.img + '">' : "") + (p[L] ? '<p class="lead">' + p[L] + "</p>" : "") + (p.eq ? p.eq.map((e) => '<div class="eq">' + e + "</div>").join("") : ""); continue; }
+        if (p.h) { h += "<h4>" + tx(p.h, L) + "</h4>" + (p.img ? '<img alt="" src="' + C.assets + p.img + '">' : "") + (p[L] ? '<p class="lead">' + p[L] + "</p>" : "") + (p.eq ? p.eq.map((e) => '<div class="eq">' + e + "</div>").join("") : "") + tbl(p.table); continue; }
         h += '<div class="part">' + (p.mk ? '<span class="mk">' + p.mk + "</span>" : "") + "<b>(" + p.id + ")</b> " + p[L];
-        if (p.table) h += "<table>" + p.table.map((r, i) => "<tr>" + r.map((c) => (i ? "<td>" : "<th>") + c + (i ? "</td>" : "</th>")).join("") + "</tr>").join("") + "</table>";
+        h += tbl(p.table);
         if (p.eq) h += p.eq.map((e) => '<div class="eq">' + e + "</div>").join("");
         h += "</div>"; }
       qBox.innerHTML = h;
@@ -137,7 +138,7 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
     function renderSol() { const t = UI[lang]; solCard.hidden = !solOn; if (C.onSol) C.onSol(solOn); bSol.textContent = solOn ? t.bSolOff : t.bSol; bSol.className = "cr-btn" + (solOn ? " on" : ""); if (!solOn) return;
       solBox.innerHTML = (cur.solNote ? '<p class="note">' + tx(cur.solNote, lang) + "</p>" : "") + (cur.key && cur.key.length ? "<table>" + cur.key.map(([k, v]) => "<tr><td>" + k + "</td><td>" + (typeof v === "function" ? v(lang, ANS) : tx(v, lang)) + "</td></tr>").join("") + "</table>" : "");
       for (const s of cur.sol || []) {
-        if (Array.isArray(s)) { solBox.appendChild(el("p", "cap", s[1])); const im = el("img"); im.loading = "lazy"; im.alt = s[1]; im.src = C.assets + s[0]; solBox.appendChild(im); }
+        if (Array.isArray(s)) { solBox.appendChild(el("p", "cap", tx(s[1], lang))); const im = el("img"); im.loading = "lazy"; im.alt = tx(s[1], lang); im.src = C.assets + s[0]; solBox.appendChild(im); }
         else { solBox.appendChild(el("p", "cap", tx(s.cap, lang))); const c = el("canvas"); c.width = s.w * 2; c.height = s.h * 2; c.style.width = s.w + "px"; const g = c.getContext("2d"); g.scale(2, 2);
           const go = () => s.draw(g, s.w, s.h, lang); if (s.needs && !(s.needs.complete && s.needs.naturalWidth)) s.needs.addEventListener("load", go); else go(); solBox.appendChild(c); } } }
     bSol.onclick = () => { if (!solOn && !confirm(UI[lang].sure)) return; solOn = !solOn; renderSol(); if (solOn) solCard.scrollIntoView({behavior: "smooth", block: "start"}); };
