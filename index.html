@@ -468,6 +468,8 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/apho2023_E2_web.html">APhO 2023 E2 — 열변형된 표면에 의한 간섭</a></li>
       <li><a href="sim/ispho2025_E1_web.html">ISPhO 2025 E1 — LED의 색</a></li>
       <li><a href="sim/gpho2017_E1_web.html">GPhO 2017 E1 — 전기 기타</a></li>
+      <li><a href="sim/gpho2016_E1_web.html">GPhO 2016 E1 — 구르는 원통</a></li>
+      <li><a href="sim/gpho2016_E2_web.html">GPhO 2016 E2 — 텅스텐 필라멘트</a></li>
       <li><a href="sim/ispho2024_E1_web.html">ISPhO 2024 E1 — 흡수 분광과 화학 반응 속도</a></li>
       <li><a href="sim/ispho2025_T1_web.html">ISPhO 2025 T1 — 강자성 자구벽 동역학</a></li>
       <li><a href="sim/ispho2024_T1_web.html">ISPhO 2024 T1 — 열산화</a></li>
@@ -2164,7 +2166,27 @@ const DATA={
               pdf:{ko:"pdf/GPhO_2017_E_KO.pdf", en:"pdf/GPhO_2017_E_EN.pdf"},
               sol:{ko:"pdf/GPhO_2017_S_KO.pdf", en:"pdf/GPhO_2017_S.pdf"}}}
     ]},
-   {y:2016,host:{ko:"사우디아라비아 · 리야드",en:"Riyadh, Saudi Arabia"},cc:"sa",problems:papers("GPhO_2016", wip("Rolling Cylinder", "Tungsten Filament"), ["E_EN", "S", "E_KO", "S_KO"], ["E_EN", "S", "E_KO", "S_KO"])}
+   {y:2016,host:{ko:"사우디아라비아 · 리야드",en:"Riyadh, Saudi Arabia"},cc:"sa",
+    problems:[
+      {id:"E1",
+       title:{ko:"구르는 원통",en:"Rolling Cylinder"},
+       desc:{ko:"구멍 뚫린 판을 막대와 클램프로 기울이고, 점성 액체가 든 봉인된 병을 굴려 연필로 표시한 구간을 스톱워치로 잽니다. 임계 경사 α0·α1·α2, 저항력 F = kv + F0, 액체의 질량을 구합니다.",
+             en:"Tilt the board on its sticks and clamps, roll the sealed bottle with its viscous liquid down it and time it over pencil-marked segments: the critical slopes α0, α1, α2, the resistance F = kv + F0 and the mass of the liquid."},
+       tags:["역학","점성","경사면"], tagsEn:["Mechanics","Viscosity","Inclined plane"],
+       files:{sim:"sim/gpho2016_E1_web.html",
+              src:{ko:"src/gpho2016_E1_rolling_sim_KO.py", en:"src/gpho2016_E1_rolling_sim_EN.py"},
+              pdf:{ko:"pdf/GPhO_2016_E_KO.pdf", en:"pdf/GPhO_2016_E_EN.pdf"},
+              sol:{ko:"pdf/GPhO_2016_S_KO.pdf", en:"pdf/GPhO_2016_S.pdf"}}},
+      {id:"E2",
+       title:{ko:"텅스텐 필라멘트",en:"Tungsten Filament"},
+       desc:{ko:"레이저 회절로 드러난 필라멘트의 지름을, 가변저항과 멀티미터 한 대(10 A 단자는 COM과 수 Ω로 이어짐)로 저항과 끊어질 때까지의 전류-전압 곡선을, 47 mF 축전기 방전으로 끊는 데 드는 열과 비열을 잽니다.",
+             en:"Measure the bare filament's diameter by laser diffraction, its resistance and current-voltage curve up to breaking with a rheostat and one multimeter (its 10 A socket tied to COM through a few ohm), and the heat to break it with a 47 mF capacitor."},
+       tags:["열복사","회절","전기회로"], tagsEn:["Thermal radiation","Diffraction","Circuits"],
+       files:{sim:"sim/gpho2016_E2_web.html",
+              src:{ko:"src/gpho2016_E2_tungsten_sim_KO.py", en:"src/gpho2016_E2_tungsten_sim_EN.py"},
+              pdf:{ko:"pdf/GPhO_2016_E_KO.pdf", en:"pdf/GPhO_2016_E_EN.pdf"},
+              sol:{ko:"pdf/GPhO_2016_S_KO.pdf", en:"pdf/GPhO_2016_S.pdf"}}}
+    ]}
   ]},
  izho:{
   abbr:"IZhO", since:2005,
@@ -5313,6 +5335,22 @@ const SIG_E19E1={
   f:z=>-30-6.6*z,
   read(t){ const z=this.pts[this.n(t)-1]; return this.f(z).toFixed(1)+" dBm"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:11,y0:-105,y1:-25,f:this.f,xl:"z / cm"},t,this); }};
+const SIG_G16E1={
+  sim:"sim/gpho2016_E1_web.html", tag:"GPhO 2016 E1", span:24, rate:8,
+  capL:{ko:"판 위쪽 끝의 높이 · 10 cm를 구르는 시간",en:"Height of the board's upper end · time to roll 10 cm"},
+  capR:{ko:"스톱워치",en:"stopwatch"},
+  pts:[2.6,3,3.5,4,4.5,5,5.5,6,7,8], n:euN, jit:0.03,
+  f:h=>100/Math.max(1,(0.4905*h/65.5-0.0166)/0.39*1000),
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2)+" s"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:2,x1:9,y0:0,y1:30,f:this.f,xl:"h / cm"},t,this); }};
+const SIG_G16E2={
+  sim:"sim/gpho2016_E2_web.html", tag:"GPhO 2016 E2", span:24, rate:8,
+  capL:{ko:"전구 전압 · 전류",en:"Bulb voltage · current"},
+  capR:{ko:"멀티미터 (10 A)",en:"multimeter (10 A)"},
+  pts:[0.1,0.3,0.6,1,1.5,2,3,4,5.5,7], n:euN, jit:0.004,
+  f:u=>0.6*Math.pow(u/8.3,0.6)+0.02,
+  read(t){ const x=this.pts[this.n(t)-1]; return (this.f(x)*1000).toFixed(0)+" mA"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:8.5,y0:0,y1:0.7,f:this.f,xl:"U / V"},t,this); }};
 const SIG_G17E1={
   sim:"sim/gpho2017_E1_web.html", tag:"GPhO 2017 E1", span:24, rate:8,
   capL:{ko:"나사 회전 수 · 줄의 기본 진동수",en:"Turns of the screw · the string's fundamental frequency"},
@@ -5448,7 +5486,7 @@ const ALL_SIGS=[SIG_I17E1,SIG_I17E2,SIG_A23E1,SIG_A23E2,SIG_S25T1,SIG_S26E1,SIG_
                 SIG_A05E1,SIG_A05E2,SIG_A04E1,SIG_A04E2,SIG_A03E1,SIG_A03E2,
                 SIG_A02E1,SIG_A02E2,SIG_A01E1,SIG_A00E1,SIG_A00E2,
                 SIG_I09E1,SIG_I09E2,SIG_I08E1,SIG_I07E1,SIG_I06E1,SIG_I05E1,SIG_I04E1,SIG_I03E1,SIG_I02E1,SIG_I02E2,SIG_I01E1,SIG_I00E1,SIG_I00E2,
-                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2];
+                SIG_E22E1,SIG_E23E1,SIG_E23E2,SIG_E24E1,SIG_E25E1,SIG_E25E2,SIG_E26E1,SIG_E17E1,SIG_E18E1,SIG_E19E1,SIG_S25E1,SIG_S24E1,SIG_S24T1,SIG_G17E1,SIG_G16E1,SIG_G16E2,SIG_S23T1,SIG_N26E1,SIG_N26E2,SIG_N25E1,SIG_N25E2,SIG_N24E1,SIG_N24E2,SIG_N23E1,SIG_N23E2,SIG_N22E1,SIG_N22E2];
 
 /* only the ones the site actually publishes a browser build for */
 function liveSigs(){
