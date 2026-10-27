@@ -39,7 +39,10 @@
   .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
   .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#2a2620}
+  #cv.pan{cursor:grabbing}
+  .cbar{display:flex;align-items:center;gap:8px;margin:2px 0 7px}.cbar h3{flex:1;margin:0!important}
+  .cbar button{width:auto;margin:0;padding:5px 11px;font-size:12.5px;white-space:nowrap}
   .tabs{display:flex;gap:6px;flex-wrap:wrap}
   .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
   .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
@@ -174,12 +177,12 @@
   </aside>
 
   <div class="stage">
-    <div class="card">
-      <h3 id="t-cap"></h3>
+    <div class="card" id="benchCard">
+      <div class="cbar"><h3 id="t-cap"></h3><button id="fitBtn"></button></div>
       <canvas id="cv"></canvas>
     </div>
-    <div class="card">
-      <h3 id="t-closecap"></h3>
+    <div class="card" id="devCard" hidden>
+      <div class="cbar"><button id="devBack"></button><h3 id="t-closecap"></h3><button id="devSplit"></button></div>
       <div id="droidWrap">
         <div class="droid" id="droid">
           <div class="dscr" id="dscr">
@@ -231,6 +234,7 @@
     <h2 id="t-h-app"></h2>
     <p class="hint" id="t-apphint"></p>
     <p class="hint" id="t-linkmode"></p>
+    <button id="bTab" style="width:100%"></button>
     <button id="bLinkMode" style="width:100%"></button>
     <div class="status" id="status"></div>
   </aside>
@@ -244,7 +248,8 @@ const T={
     sub:"가상 실험실 · 한 장의 측정·시료 보드와 태블릿 앱으로 두 실험을 합니다 (실제 시험과 같습니다). 앱은 원시 전압·미분값·전류·시간만 보여 줍니다 — 전기용량·온도·열저항은 직접 계산하세요.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 점퍼선 끝을 집어 단자에 꽂기",
+    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 점퍼선 끝을 집어 단자에 꽂기 / 휠 확대·축소, 빈 책상을 끌어 이동 / 태블릿을 누르면 화면이 크게 열리고, 끌면 옮겨집니다",
+    view:{fit:"⤢ 전체 보기", back:"← 실험대", close:"✕ 태블릿 닫기", split:"⇵ 실험대와 함께 보기", big:"⛶ 태블릿만 크게", show:"태블릿 화면 보기", hide:"실험대로 돌아가기", need:"태블릿을 먼저 실험대에 놓으세요.", tap:"눌러서 화면 보기"},
     closeCap:"태블릿 — IPhO 2021 Experiments 앱",
     hTime:"시간 배속", timeHint:"충전·가열은 실제로 수 분이 걸립니다. 배속은 보드와 앱의 시간에 똑같이 적용됩니다.",
     hBoard:"1. 측정·시료 보드",
@@ -263,7 +268,7 @@ const T={
     ln:{ovH:"실험을 시작하기 전에 — IPhO 2021 Experiments 앱",
         ovP:"실제 시험에서는 보드에 연결할 안드로이드 태블릿에 이 앱이 미리 설치되어 있었습니다. 시뮬레이터에서는 앱이 따로 있는 웹앱입니다. 실험대의 가상 태블릿에서 쓸지, 내 태블릿 · 휴대폰 · 컴퓨터에서 열어 보드와 연결할지 고르세요. 실험 중에도 오른쪽 패널에서 바꿀 수 있습니다.",
         ovInfo:"원본 안드로이드 앱(com.smm.ipholab 1.01)의 코드를 그대로 옮긴 웹앱입니다 — 보드의 30바이트 프레임을 원본과 같은 방식으로 읽고, 표 · 그래프 · 함수 편집기 · 설정이 똑같습니다. 앱 화면은 원본처럼 영어입니다.", ovOpen:"앱 열기 ↗",
-        virtH:"가상 태블릿 사용", virtP:"실험대 아래의 시험용 태블릿(8형 1280×800, Android 9)에서 IPhO 앱을 엽니다. 홈 화면 · 계산기 · 설정과 ◀ ● ■ 버튼이 있고, 함수 편집기를 열면 원본처럼 태블릿이 세로로 돌아갑니다.",
+        virtH:"가상 태블릿 사용", virtP:"실험대 위의 시험용 태블릿(8형 1280×800, Android 9)을 누르면 화면이 크게 열리고, 거기서 IPhO 앱을 엽니다. 홈 화면 · 계산기 · 설정과 ◀ ● ■ 버튼이 있고, 함수 편집기를 열면 원본처럼 태블릿이 세로로 돌아갑니다.",
         remH:"내 태블릿 · 컴퓨터에서 앱 사용", remP:"QR 코드나 연결 코드로 내 기기(태블릿 · 휴대폰 · 다른 컴퓨터)나 이 컴퓨터의 새 창에서 앱을 열어 가상 보드와 연결합니다. 다른 기기는 인터넷을 거쳐 직접(WebRTC) 연결됩니다.",
         capVirtual:"태블릿 (안드로이드) — 앱 아이콘을 눌러 IPhO 2021 Experiments를 여세요",
         capRemote:"내 태블릿 · 컴퓨터 — 기기에서 앱을 열어 이 보드와 연결하세요",
@@ -278,14 +283,15 @@ const T={
     m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.", back:n=>n+" 을(를) 부품함에 넣었습니다.",
        noFit:"그곳에는 놓을 수 없습니다.", moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
        end:"점퍼선 끝을 집었습니다 — 꽂을 단자를 클릭하세요.", plugged:n=>"점퍼선 끝을 "+n+" 단자에 꽂았습니다.", busy:"그 단자는 이미 쓰고 있습니다.", dropped:"점퍼선 끝을 실험대에 내려놓았습니다.",
-       sw:s=>"S1: "+s, copied:"앱 주소를 복사했습니다.", reset:"RESET 버튼을 눌렀습니다 — 보드의 STM32가 다시 시작합니다 (히터 · LED 꺼짐, USB 재연결).", appCleared:"태블릿 설정에서 IPhO 앱의 저장공간을 지웠습니다.", insulOff:"단열재를 치웠습니다.", insulOn:"단열재를 항온조 위에 덮었습니다.", needBoard:"먼저 보드를 놓으세요."}
+       sw:s=>"S1: "+s, needTab:"태블릿을 먼저 부품함에서 꺼내 실험대에 놓으세요.", copied:"앱 주소를 복사했습니다.", reset:"RESET 버튼을 눌렀습니다 — 보드의 STM32가 다시 시작합니다 (히터 · LED 꺼짐, USB 재연결).", appCleared:"태블릿 설정에서 IPhO 앱의 저장공간을 지웠습니다.", insulOff:"단열재를 치웠습니다.", insulOn:"단열재를 항온조 위에 덮었습니다.", needBoard:"먼저 보드를 놓으세요."}
   },
   en:{
     title:"IPhO 2021 Experiments 1 & 2 — Non-ideal capacitors · Light emitting diodes",
     sub:"Virtual laboratory · one measurement and sample board and one tablet app serve both experiments (as in the real examination). The app shows raw voltages, derivatives, currents and time only — capacitances, temperatures and thermal resistances are yours to work out.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
     trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (seen from above) — L-click pick up / put down / plug / press, R-click return / unplug, pick up a jumper wire end and plug it into a socket",
+    cap:"the bench (seen from above) — L-click pick up / put down / plug / press, R-click return / unplug, pick up a jumper wire end and plug it into a socket / wheel zoom, drag the bare desk to pan / click the tablet to open its screen, drag it to move it",
+    view:{fit:"⤢ Fit", back:"← Bench", close:"✕ Close tablet", split:"⇵ With the bench", big:"⛶ Tablet only", show:"Show the tablet", hide:"Back to the bench", need:"Put the tablet on the bench first.", tap:"click to open"},
     closeCap:"tablet — the IPhO 2021 Experiments app",
     hTime:"Time scale", timeHint:"Charging and heating really take minutes. The scale applies to the board and the app alike.",
     hBoard:"1. Measurement and sample board",
@@ -304,7 +310,7 @@ const T={
     ln:{ovH:"Before the experiment — the IPhO 2021 Experiments app",
         ovP:"In the real examination this app came installed on the Android tablet that connects to the board. In the simulator it is a separate web app. Choose whether to use it on the virtual tablet at the bench, or to open it on your own tablet, phone or computer and link it to the board. You can switch from the right-hand panel at any time.",
         ovInfo:"A web port of the original Android app (com.smm.ipholab 1.01) made from its code: it reads the board's 30-byte frames as the original does, with the same table, chart, function editor and settings. Like the original, the app is in English.", ovOpen:"open the app ↗",
-        virtH:"Use the virtual tablet", virtP:"Open the IPhO app on the examination tablet below the bench (8-inch 1280×800, Android 9): home screen, calculator, settings and the ◀ ● ■ buttons; the tablet turns to portrait for the function editor, as the original app does.",
+        virtH:"Use the virtual tablet", virtP:"Click the examination tablet on the bench to bring its screen up and open the IPhO app there (8-inch 1280×800, Android 9): home screen, calculator, settings and the ◀ ● ■ buttons; the tablet turns to portrait for the function editor, as the original app does.",
         remH:"Use the app on my tablet or computer", remP:"Open the app on your own device (tablet, phone, another computer) or in a new window on this computer with the QR code or the pairing code, and link it to the virtual board. Other devices connect directly over the internet (WebRTC).",
         capVirtual:"tablet (Android) — tap the app icon to open IPhO 2021 Experiments",
         capRemote:"my tablet or computer — open the app on your device and link it to this board",
@@ -319,7 +325,7 @@ const T={
     m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.", back:n=>n+" put back in the box.",
        noFit:"It does not fit there.", moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
        end:"Wire end picked up — click the socket to plug it into.", plugged:n=>"Wire end plugged into "+n+".", busy:"That socket is in use.", dropped:"Wire end put down on the bench.",
-       sw:s=>"S1: "+s, copied:"App address copied.", reset:"RESET pressed — the board's STM32 restarts (heater and LED off, USB reconnects).", appCleared:"IPhO app storage cleared in the tablet's settings.", insulOff:"Insulating material taken off.", insulOn:"Insulating material put over the thermostat.", needBoard:"Put the board down first."}
+       sw:s=>"S1: "+s, needTab:"Take the tablet out of the box and put it on the bench first.", copied:"App address copied.", reset:"RESET pressed — the board's STM32 restarts (heater and LED off, USB reconnects).", appCleared:"IPhO app storage cleared in the tablet's settings.", insulOff:"Insulating material taken off.", insulOn:"Insulating material put over the thermostat.", needBoard:"Put the board down first."}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
@@ -398,7 +404,14 @@ function sample(){
    2.  THE BENCH  (seen from above, 1200 × 720)
    ══════════════════════════════════════════════════════════════ */
 const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
-const LW=1200, LH=720, FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
+/* the desk is wider than the window onto it: wheel zooms, dragging the bare desk pans (as in APhO 2025) */
+const LW=1200, LH=680, DW=1760, DH=940, VIEW={z:1,x:0,y:0,fit:true};
+function fitView(){ const z=Math.min(LW/(DW+40),LH/(DH+40)); Object.assign(VIEW,{z,x:-(LW/z-DW)/2,y:-(LH/z-DH)/2,fit:true}); }
+function clampView(){ const zf=Math.min(LW/(DW+40),LH/(DH+40)); VIEW.z=Math.max(zf,Math.min(3,VIEW.z));
+  const vw=LW/VIEW.z, vh=LH/VIEW.z, cl=(v,a,b)=>a>b?(a+b)/2:Math.max(a,Math.min(b,v)); VIEW.x=cl(VIEW.x,-60,DW+60-vw); VIEW.y=cl(VIEW.y,-60,DH+60-vh); }
+let DPR=1;
+function applyView(){ const k=DPR*S*VIEW.z; benchCtx.setTransform(k,0,0,k,-k*VIEW.x,-k*VIEW.y); }
+const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
 function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
   ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
@@ -409,7 +422,7 @@ function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fil
 const PLACE=["board","charger","cable","tablet","therm","W1","W2","insul"];
 const SZ={board:[620,330],charger:[70,46],cable:[60,30],tablet:[230,150],therm:[44,130],W1:[40,40],W2:[40,40]};
 const ST={ on:{board:false,charger:false,cable:false,tablet:false,therm:false,W1:false,W2:false,insul:true},
-  pos:{board:{x:40,y:40},charger:{x:820,y:560},cable:{x:820,y:470},tablet:{x:760,y:120},therm:{x:1080,y:80},W1:{x:780,y:380},W2:{x:780,y:420}},
+  pos:{board:{x:60,y:70},charger:{x:860,y:620},cable:{x:860,y:520},tablet:{x:880,y:150},therm:{x:1620,y:110},W1:{x:780,y:380},W2:{x:780,y:420}},
   ends:{W1:[[740,380],[820,380]],W2:[[740,420],[820,420]]} };
 let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1, simNow=0;
 function say(key,...args){ msg={key,args,t:performance.now()}; }
@@ -422,9 +435,11 @@ const USBP=()=>[bx()+140,by()+4], PIN6=()=>[bx()+330,by()+4], RESET=()=>[bx()+48
 const LEDP=()=>[bx()+186,by()+266], PAD=()=>[bx()+70,by()+216,210,96];
 function endXY(w,i){ const s=B.wires[w][i]; return s&&ST.on.board?sockXY(s):ST.ends[w][i]; }
 function bench(){
-  ctx.fillStyle="#cfc8bb"; ctx.fillRect(0,0,LW,LH);
+  ctx.fillStyle="#2a2620"; ctx.fillRect(VIEW.x-2,VIEW.y-2,LW/VIEW.z+4,LH/VIEW.z+4);
+  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(8,12,DW,DH); ctx.fillStyle="#8a7a62"; ctx.fillRect(-6,-6,DW+12,DH+12);
+  ctx.fillStyle="#cfc8bb"; ctx.fillRect(0,0,DW,DH);
   ctx.strokeStyle="rgba(120,100,70,.10)"; ctx.lineWidth=1;
-  for(let x=0;x<=LW;x+=60){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+  for(let x=0;x<=DW;x+=60){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,DH); ctx.stroke(); }
 }
 function drawBoard(){
   const x0=bx(), y0=by(), t=d();
@@ -471,7 +486,8 @@ function drawParts(){
   if(ST.on.cable){ const {x,y}=P.cable; fillR(x-30,y-15,60,30,4,"#888","#555"); text("6-pin",x,y,"#111",9,"center","700");
     if(ST.on.board) cableCurve([x-30,y],[PIN6()[0],PIN6()[1]+2],"#777"); if(ST.on.tablet) cableCurve([x+30,y],[P.tablet.x,P.tablet.y+75],"#777"); }
   if(ST.on.tablet){ const {x,y}=P.tablet; fillR(x-115,y-75,230,150,10,"#111","#000",3); const live=LINK.usb; fillR(x-105,y-65,210,130,4,live?"#ccaaaa":"#3a3a3a");
-    (LINK.mode==="remote"?t.ln.myDev+(LINK.remote>0?"\n"+t.ln.devOn:"\n"+t.ln.devOff):t.lab.app).split("\n").forEach((s,i)=>text(s,x,y-8+i*16,live?"#222":"#888",12,"center","700")); }
+    (LINK.mode==="remote"?t.ln.myDev+(LINK.remote>0?"\n"+t.ln.devOn:"\n"+t.ln.devOff):t.lab.app).split("\n").forEach((s,i)=>text(s,x,y-8+i*16,live?"#222":"#888",12,"center","700"));
+    if(!hand&&overBench&&inPart("tablet",mouse)){ fillR(x-105,y-65,210,130,4,null,"#f2c14e",2); text(t.view.tap,x,y+52,live?"#5a3a3a":"#aaa",10,"center"); } }
   if(ST.on.therm){ const {x,y}=P.therm; fillR(x-22,y-65,44,130,8,"#fff","#666"); text(B.roomT.toFixed(1),x,y-26,"#111",14,"center","700",MONO); text("°C",x,y-6,"#111",11,"center"); text(t.lab.roomT,x,y+30,"#555",9,"center"); }
   for(const w of ["W1","W2"]){ if(!ST.on[w]) continue;
     const a=hand&&hand.k==="end"&&hand.w===w&&hand.i===0?mouse:endXY(w,0), b=hand&&hand.k==="end"&&hand.w===w&&hand.i===1?mouse:endXY(w,1);
@@ -512,8 +528,8 @@ let TRW=190, TRH=500, trayCells=[];
 const trayAvail=k=>!ST.on[k]&&!(hand&&hand.k===k);
 function layout(){
   const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
-  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
-  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
+  S=w/LW; DPR=dpr; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
+  if(VIEW.fit) fitView(); applyView();
   const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
@@ -536,12 +552,12 @@ function drawTray(){
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
   t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
+function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S/VIEW.z+VIEW.x,(e.clientY-r.top)/S/VIEW.z+VIEW.y]; }
 function inPart(k,p){ if(!ST.on[k]) return false;
   if(k==="board") return p[0]>=bx()&&p[0]<=bx()+620&&p[1]>=by()&&p[1]<=by()+330;
   const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(p[0]-q.x)<=w/2&&Math.abs(p[1]-q.y)<=h/2; }
-function fits(k,x,y){ const [w,h]=SZ[k]; if(k==="board") return x>=4&&y>=4&&x+w<=LW-4&&y+h<=LH-4&&!["charger","cable","tablet","therm"].some(o=>ST.on[o]&&ST.pos[o].x+SZ[o][0]/2>x&&ST.pos[o].x-SZ[o][0]/2<x+w&&ST.pos[o].y+SZ[o][1]/2>y&&ST.pos[o].y-SZ[o][1]/2<y+h);
-  if(x-w/2<4||y-h/2<4||x+w/2>LW-4||y+h/2>LH-4) return false;
+function fits(k,x,y){ const [w,h]=SZ[k]; if(k==="board") return x>=4&&y>=4&&x+w<=DW-4&&y+h<=DH-4&&!["charger","cable","tablet","therm"].some(o=>ST.on[o]&&ST.pos[o].x+SZ[o][0]/2>x&&ST.pos[o].x-SZ[o][0]/2<x+w&&ST.pos[o].y+SZ[o][1]/2>y&&ST.pos[o].y-SZ[o][1]/2<y+h);
+  if(x-w/2<4||y-h/2<4||x+w/2>DW-4||y+h/2>DH-4) return false;
   if(ST.on.board&&x+w/2>bx()&&x-w/2<bx()+620&&y+h/2>by()&&y-h/2<by()+330) return false;
   for(const o of ["charger","cable","tablet","therm"]){ if(o===k||!ST.on[o]) continue; const q=ST.pos[o], [a,b]=SZ[o]; if(Math.abs(x-q.x)<(w+a)/2+4&&Math.abs(y-q.y)<(h+b)/2+4) return false; }
   return true; }
@@ -580,15 +596,40 @@ function benchClick(p,right){
   if(ST.on.board){
     if(near(p,RESET(),16)){ B.resetAt=simNow; firmwareReset(); say("reset"); return; }
     const [sx,sy]=SW1(); if(Math.abs(p[0]-sx)<18&&Math.abs(p[1]-sy)<46){ B.sw1={C1:"MID",MID:"C2",C2:"C1"}[B.sw1]; if(B.sw1!=="C2") B.vb=B.vb.map(()=>B.uC); say("sw",B.sw1==="MID"?"—":B.sw1); return; } }
-  for(const k of ["charger","cable","tablet","therm","board"]) if(inPart(k,p)){
-    const orig={...ST.pos[k]}; ST.on[k]=false; hand={k,move:true,orig}; syncLinks(); say("moveIt",itemName(k)); return; }
+  if(inPart("tablet",p)) return "tablet";
+  for(const k of ["charger","cable","therm","board"]) if(inPart(k,p)){ pickMove(k); return; }
+  return false;
 }
+function pickMove(k){ const orig={...ST.pos[k]}; ST.on[k]=false; hand={k,move:true,orig}; syncLinks(); say("moveIt",itemName(k)); }
 let trayDrag=false;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });
 cv.addEventListener("pointerleave",()=>{ overBench=false; });
-cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
-cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+let press=null;
+cv.addEventListener("pointermove",e=>{ mouse=lpos(e); if(!press) return; const moved=Math.hypot(e.clientX-press.cx,e.clientY-press.cy)>6;
+  if(press.k==="pan"){ VIEW.x=press.vx-(e.clientX-press.cx)/S/VIEW.z; VIEW.y=press.vy-(e.clientY-press.cy)/S/VIEW.z; VIEW.fit=false; clampView(); applyView(); }
+  else if(press.k==="tablet"&&moved){ press=null; pickMove("tablet"); drawTray(); } });
+cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; const r=benchClick(p,e.button===2); drawTray();
+  if(e.button!==0||(r!==false&&r!=="tablet")) return;
+  press={k:r===false?"pan":"tablet",cx:e.clientX,cy:e.clientY,vx:VIEW.x,vy:VIEW.y}; try{ cv.setPointerCapture(e.pointerId); }catch(er){} if(r===false) cv.classList.add("pan"); });
+cv.addEventListener("pointerup",()=>{ if(press&&press.k==="tablet") openTablet(); press=null; cv.classList.remove("pan"); });
+cv.addEventListener("pointercancel",()=>{ press=null; cv.classList.remove("pan"); });
+cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(!hand&&!["charger","cable","tablet","therm","board"].some(k=>inPart(k,p))){ fitView(); applyView(); } });
+cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), r=cv.getBoundingClientRect();
+  VIEW.z*=e.deltaY<0?1.15:1/1.15; VIEW.fit=false; clampView(); VIEW.x=p[0]-(e.clientX-r.left)/S/VIEW.z; VIEW.y=p[1]-(e.clientY-r.top)/S/VIEW.z; clampView(); applyView(); },{passive:false});
+$("fitBtn").onclick=()=>{ fitView(); applyView(); };
+/* the tablet's screen: in place of the bench when clicked, or under it beside the bench (for watching the graph while wiring) */
+let devMode="bench";
+/* the virtual tablet opens only when it lies on the bench; pairing your own device is shown beside the bench */
+function setDevMode(m){ if(m!=="bench"&&LINK.mode!=="remote"&&!ST.on.tablet){ say("needTab"); m="bench"; } devMode=m;
+  $("benchCard").hidden=m==="tablet"; $("devCard").hidden=m==="bench"; const v=d().view;
+  $("devBack").textContent=m==="split"?v.close:v.back; $("devSplit").textContent=m==="split"?v.big:v.split; $("bTab").textContent=m==="bench"?v.show:v.hide;
+  layout(); droidSize(); if(m!=="bench") $("devCard").scrollIntoView({block:"nearest"}); }
+function openTablet(){ if(!LINK.mode){ $("startOv").hidden=false; return; } setDevMode(devMode==="split"?"split":"tablet"); }
+$("devBack").onclick=()=>setDevMode("bench");
+$("devSplit").onclick=()=>setDevMode(devMode==="split"?"tablet":"split");
+$("bTab").onclick=()=>devMode==="bench"?openTablet():setDevMode("bench");
+addEventListener("keydown",e=>{ if(e.key==="Escape"&&devMode==="tablet"&&!/INPUT|TEXTAREA/.test(e.target.tagName)) setDevMode("bench"); });
 window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
 trayCv.addEventListener("mousedown",e=>{
@@ -711,7 +752,7 @@ $("rCopy").onclick=()=>{ const u=appUrl(LINK.code,true); (navigator.clipboard?na
 $("rWin").onclick=()=>{ window.open(appUrl(LINK.code,false),"hl21app","width=1100,height=680"); };
 function setMode(mode){ LINK.mode=mode; LINK.run=null; LINK.usb=false; $("startOv").hidden=true;
   if(mode==="virtual") droidHome(); else startRemote();
-  renderLinkUI(); drawTray(); }
+  renderLinkUI(); drawTray(); setDevMode(mode==="remote"?"split":"bench"); }
 $("ovVirt").onclick=()=>setMode("virtual"); $("ovRem").onclick=()=>setMode("remote");
 $("bLinkMode").onclick=()=>{ $("startOv").hidden=false; };
 /* the examination tablet: launcher, the IPhO app, a calculator, settings, ◀ ● ■ */
@@ -789,6 +830,7 @@ function applyLang(){
   $("dnCalc").textContent=ln.calc; $("dnSet").textContent=ln.settings; toApp({type:"lang",lang}); renderLinkUI(); if(LINK.mode==="remote") drawQR(); if(droidApp==="set") renderSettings();
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2021 E1·E2 — 비이상적 축전기 · LED · HaslaLab":"IPhO 2021 E1·E2 — Non-ideal Capacitors · LEDs · HaslaLab";
+  $("fitBtn").textContent=t.view.fit; setDevMode(devMode);
   renderSpeeds(); layout();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
@@ -798,8 +840,8 @@ function tick(bg){
   const now=performance.now()/1000, dt=Math.min(bg?1.5:0.1,Math.max(0,now-tPrev)); tPrev=now;
   let want=dt*speed; const n=Math.min(600,Math.max(1,Math.ceil(want/0.005))), h=want/n;
   for(let i=0;i<n;i++){ boardStep(h); simNow+=h; linkStep(); }
-  flushLink(); if(bg===true) return; if(frameN%15===0&&LINK.mode==='virtual') droidFrame();
-  ctx.clearRect(0,0,LW,LH); drawBench();
+  flushLink(); if(bg===true) return; if(devMode!=="bench"&&LINK.mode==="virtual"&&!ST.on.tablet) setDevMode("bench"); if(frameN%15===0&&LINK.mode==='virtual') droidFrame();
+  drawBench();
   if(++frameN%6===0){ renderStatus(); drawTray(); }
   requestAnimationFrame(tick);
 }
