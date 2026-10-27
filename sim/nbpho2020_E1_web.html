@@ -188,8 +188,8 @@ const I18N = {
   vt3d: ["3D table", "3D 탁자"], vtphone: ["phone", "휴대폰"], vtcup: ["measuring cup", "계량컵"],
   cap_3d: ["the table in 3D — drag to turn, right-drag to pan, wheel to zoom · hold the mouse on the jug to fill the cup, click the cup to pour it into the bottle · hold the mouse on the bottle's mouth to blow · click the phone or the cup for a close-up",
            "3D 탁자 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 물병 위에서 마우스를 누르고 있으면 컵이 참, 컵 클릭: 병에 붓기 · 병 입구에서 마우스를 누르고 있으면 불기 · 휴대폰·컵 클릭: 확대"],
-  cap_phone: ["Physics Toolbox on the phone — switch between the tone detector and the spectrum analyser; on the spectrum, Hold freezes it and dragging moves the cursor · hold the Blow button (or press Space) to blow",
-              "휴대폰의 Physics Toolbox — 음 검출기와 스펙트럼 분석기 전환; 스펙트럼에서 Hold로 멈추고 끌어서 커서 옮기기 · Blow 버튼(또는 스페이스)을 누르고 있으면 불기"],
+  cap_phone: ["the Android phone with Physics Toolbox — switch between the tone detector and the spectrum analyser; on the spectrum, Hold freezes it and dragging moves the cursor · ◁ ○ □ at the bottom go back, home and to recent apps (calculator, stopwatch, settings) · hold the Blow button (or press Space) to blow",
+              "안드로이드 휴대폰의 Physics Toolbox — 음 검출기와 스펙트럼 분석기 전환; 스펙트럼에서 Hold로 멈추고 끌어서 커서 옮기기 · 아래 ◁ ○ □로 뒤로 · 홈 · 최근 앱(계산기, 스톱워치, 설정) · Blow 버튼(또는 스페이스)을 누르고 있으면 불기"],
   cap_cup: ["the measuring cup from the side — read the water against its marks (10 ml); hold Fill to fill it from the jug, Pour to empty it into the bottle",
             "옆에서 본 계량컵 — 눈금(10 ml)에 맞춰 물을 읽기; Fill을 누르고 있으면 물병에서 채움, Pour로 병에 붓기"],
   itBottle: ["1-litre bottle", "1리터 병"], itCup: ["measuring cup 100 ml", "계량컵 100 ml"], itJug: ["jug of water", "물병"], itPhone: ["smartphone", "스마트폰"],
@@ -700,14 +700,16 @@ function jug3(){ const [x, z] = JUG; cyl3("y", 0, 18, x, z, 5.2, "rgba(225,235,2
   const h = [[x + 5, 15, z], [x + 8, 14, z], [x + 8.2, 6, z], [x + 5, 4, z]]; poly3(h, "rgba(225,235,242,0.8)", 5);
   if (ST.filling){ const [cx, cz] = CUPP; poly3([[x - 4.8, 17, z], [cx + 0.5, 12, cz], [cx, 0.3 + ST.cup / 20, cz]], "rgba(140,190,230,0.85)", 3); } }
 function phone3(){ const [x, z] = PHONE; box3(x - 3.6, x + 3.6, 0, 0.8, z - 7.5, z + 7.5, "#1d1f22", {id:"phone", top:"#121315"});
-  tex3(phoneTex(), 0, 0, PHONEC.width, PHONEC.height, [x - 3.3, 0.81, z - 7.1], [6.6, 0, 0], [0, 0, 14.2], {id:"phone"}); }
+  tex3(phoneTex(), 0, 0, PHONEC.width, PHONEC.height, [x - 3.15, 0.81, z - 7.3], [6.3, 0, 0], [0, 0, 14.6], {id:"phone"}); }
 function scene3(){ table3(); bottle3(); cup3(); jug3(); phone3(); }
 
 
 /* ==================================================================
    THE PHONE, THE SOUND, THE VIEWS AND THE LOOP
    ================================================================== */
-const PHONEC = document.createElement("canvas"); PHONEC.width = 330; PHONEC.height = 710;
+/* the phone's screen: an Android status bar, the app (APPC, 330×710) and the three-button navigation bar */
+const SBH = 22, NVH = 36, APPC = document.createElement("canvas"); APPC.width = 330; APPC.height = 710;
+const PHONEC = document.createElement("canvas"); PHONEC.width = 330; PHONEC.height = SBH + APPC.height + NVH;
 const BINW = 44100 / 8192, NB = Math.floor(2000 / BINW);
 let SPEC = new Float32Array(NB).fill(-95), toneHist = [];
 const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
@@ -721,7 +723,7 @@ function updateTone(){ const s = soundNow(); let best = null, ba = 0; for (const
   if (best && ba > 0.3) ST.toneShow = best * (1 + 0.0018 * gauss());
   else if (s.noise > 0.05) ST.toneShow = 250 + 1600 * RNG();
   if (ST.toneShow) toneHist.push(ST.toneShow); if (toneHist.length > 60) toneHist.shift(); }
-function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, H = PHONEC.height; g.setTransform(1, 0, 0, 1, 0, 0);
+function toolboxTex(){ const g = APPC.getContext("2d"), W = APPC.width, H = APPC.height; g.setTransform(1, 0, 0, 1, 0, 0);
   g.fillStyle = "#0e1013"; g.fillRect(0, 0, W, H); g.fillStyle = "#26323a"; g.fillRect(0, 0, W, 58); g.fillStyle = "#e8eef2"; g.font = "bold 17px Arial"; g.textAlign = "left"; g.textBaseline = "middle";
   g.fillText("☰  " + (ST.app === "tone" ? "Tone Detector" : "Spectrum Analyzer"), 14, 30); g.font = "11px Arial"; g.fillStyle = "#9aa3ab"; g.fillText("Physics Toolbox", W - 100, 30);
   /* the two tabs at the bottom */
@@ -743,14 +745,83 @@ function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, H = PH
     g.fillText((bi * BINW).toFixed(1) + " Hz   " + SPEC[bi].toFixed(1) + " dB", x0, y0 + h + 52);
     g.fillStyle = ST.hold ? "#c8262b" : "#20262c"; g.fillRect(W - 100, y0 + h + 66, 84, 34); g.fillStyle = "#e8eef2"; g.font = "bold 14px Arial"; g.textAlign = "center"; g.fillText(ST.hold ? "Live" : "Hold", W - 58, y0 + h + 84);
     g.fillStyle = "#26323a"; g.fillRect(16, y0 + h + 66, 34, 34); g.fillRect(56, y0 + h + 66, 34, 34); g.fillStyle = "#e8eef2"; g.fillText("◀", 33, y0 + h + 84); g.fillText("▶", 73, y0 + h + 84); g.fillStyle = "#26323a"; g.fillRect(W - 196, y0 + h + 66, 88, 34); g.fillStyle = "#e8eef2"; g.fillText("0–" + FM + " Hz", W - 152, y0 + h + 84); }
-  return PHONEC; }
+  return APPC; }
 /* where on the phone's screen a point is (for clicks in the phone view) */
 let PHONE_RECT = null;
-function phoneClick(px, py, drag){ const W = PHONEC.width, H = PHONEC.height; if (py > H - 52){ ST.app = px < W / 2 ? "tone" : "spec"; return; }
+function toolboxClick(px, py, drag){ const W = APPC.width, H = APPC.height; if (py > H - 52){ ST.app = px < W / 2 ? "tone" : "spec"; return; }
   if (ST.app === "spec"){ const x0 = 44, w = W - 60, y0 = 80, h = 470;
     if (!drag && py > y0 + h + 66 && py < y0 + h + 100){ if (px > W - 100) ST.hold = !ST.hold; else if (px > W - 196 && px < W - 108){ ST.fmax = ST.fmax === 2000 ? 1000 : ST.fmax === 1000 ? 500 : 2000; ST.cursor = Math.min(ST.cursor, ST.fmax); } else if (px > 16 && px < 50) ST.cursor = Math.max(0, ST.cursor - BINW); else if (px > 56 && px < 90) ST.cursor = Math.min(2000, ST.cursor + BINW); return; }
     if (py > y0 && py < y0 + h) ST.cursor = Math.max(0, Math.min(ST.fmax, (px - x0) / w * ST.fmax)); } }
 
+/* ---- the phone's Android: status bar, home screen, recent apps, back/home/recents, and
+   three more apps besides Physics Toolbox (calculator, stopwatch, settings) ------------- */
+const DR = {scr:"toolbox", prev:null, recent:["toolbox"], calc:"0", calcE:"", sw:{run:false, acc:0, t0:0, laps:[]}};
+const dk = (en, ko) => LANG === "ko" ? ko : en;
+const DAPPS = {toolbox:{n:() => "Physics Toolbox", col:"#1e88e5", gl:"∿"}, calc:{n:() => dk("Calculator", "계산기"), col:"#455a64", gl:"±"},
+  clock:{n:() => dk("Clock", "시계"), col:"#3949ab", gl:"⏱"}, settings:{n:() => dk("Settings", "설정"), col:"#607d8b", gl:"⚙"}};
+const DKEYS = ["C", "(", ")", "÷", "7", "8", "9", "×", "4", "5", "6", "−", "1", "2", "3", "+", "0", ".", "⌫", "="];
+const pad2 = n => String(n).padStart(2, "0");
+const swNow = () => DR.sw.acc + (DR.sw.run ? ST.t - DR.sw.t0 : 0);
+const swFmt = t => pad2(Math.floor(t / 60)) + ":" + pad2(Math.floor(t % 60)) + "." + pad2(Math.floor(t * 100 % 100));
+function dIcon(g, k, cx, cy, r){ g.fillStyle = DAPPS[k].col; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.fillStyle = "#fff"; g.font = "bold " + Math.round(r) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(DAPPS[k].gl, cx, cy + 1); }
+function droidOpen(k){ DR.scr = k; DR.recent = [k].concat(DR.recent.filter(x => x !== k)); }
+function droidHome(g, W, H){ const gr = g.createLinearGradient(0, 0, W * 0.4, H); gr.addColorStop(0, "#1a3a5c"); gr.addColorStop(0.55, "#2c5f7c"); gr.addColorStop(1, "#7a5c8c"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const d = new Date(); g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = "300 64px Arial"; g.fillText(pad2(d.getHours()) + ":" + pad2(d.getMinutes()), W / 2, 120);
+  g.font = "15px Arial"; g.fillText(d.toLocaleDateString(LANG === "ko" ? "ko-KR" : "en-GB", {weekday:"long", month:"long", day:"numeric"}), W / 2, 168);
+  g.fillStyle = "rgba(255,255,255,0.92)"; g.beginPath(); g.roundRect ? g.roundRect(24, 600, W - 48, 44, 22) : g.rect(24, 600, W - 48, 44); g.fill(); g.fillStyle = "#6b7680"; g.font = "14px Arial"; g.textAlign = "left"; g.fillText("🔍  " + dk("Search", "검색"), 44, 622);
+  Object.keys(DAPPS).forEach((k, i) => { const cx = 41 + 82 * i; dIcon(g, k, cx, 500, 27); g.fillStyle = "#fff"; g.font = "12px Arial"; g.textAlign = "center"; g.fillText(DAPPS[k].n(), cx, 546, 78); }); }
+function droidCalc(g, W, H){ g.fillStyle = "#121417"; g.fillRect(0, 0, W, H); g.textAlign = "right"; g.textBaseline = "middle"; g.fillStyle = "#8a949e"; g.font = "18px Arial"; g.fillText(DR.calcE, W - 20, 110);
+  g.fillStyle = "#fff"; g.font = (DR.calc.length > 11 ? "30px" : "44px") + " Arial"; g.fillText(DR.calc, W - 20, 170);
+  DKEYS.forEach((k, i) => { const cx = 41 + 82.5 * (i % 4), cy = 270 + 94 * Math.floor(i / 4); g.fillStyle = k === "=" ? "#1e88e5" : /[÷×−+()C⌫]/.test(k) ? "#2d3640" : "#22272d";
+    g.beginPath(); g.arc(cx, cy, 36, 0, 7); g.fill(); g.fillStyle = k === "C" ? "#ff8a80" : "#fff"; g.font = "26px Arial"; g.textAlign = "center"; g.fillText(k, cx, cy + 1); }); }
+function calcKey(k){ let s = DR.calc === "0" || DR.calc === "Error" ? "" : DR.calc;
+  if (k === "C"){ DR.calc = "0"; DR.calcE = ""; }
+  else if (k === "⌫") DR.calc = s.slice(0, -1) || "0";
+  else if (k === "="){ try { const js = s.replace(/×/g, "*").replace(/÷/g, "/").replace(/−/g, "-"); if (!/^[0-9+\-*/(). ]+$/.test(js)) throw 0; const v = Function("return (" + js + ")")(); if (!isFinite(v)) throw 0; DR.calcE = s + " ="; DR.calc = String(+v.toPrecision(12)); } catch (e) { DR.calc = "Error"; } }
+  else DR.calc = s + k; }
+function droidClock(g, W, H){ g.fillStyle = "#121417"; g.fillRect(0, 0, W, H); g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = "#8ab4f8"; g.font = "bold 15px Arial"; g.fillText(dk("Stopwatch", "스톱워치"), W / 2, 40);
+  g.fillStyle = "#fff"; g.font = "300 54px Arial"; g.fillText(swFmt(swNow()), W / 2, 190);
+  g.font = "15px Arial"; DR.sw.laps.slice(-7).reverse().forEach((t, i) => { const n = DR.sw.laps.length - i; g.fillStyle = "#8a949e"; g.textAlign = "left"; g.fillText("# " + n, 50, 280 + 34 * i); g.fillStyle = "#e8eef2"; g.textAlign = "right"; g.fillText(swFmt(t), W - 50, 280 + 34 * i); });
+  const btn = (cx, col, t) => { g.fillStyle = col; g.beginPath(); g.arc(cx, 620, 42, 0, 7); g.fill(); g.fillStyle = "#fff"; g.font = "bold 16px Arial"; g.textAlign = "center"; g.fillText(t, cx, 621); };
+  btn(90, "#2d3640", DR.sw.run ? dk("Lap", "랩") : dk("Reset", "초기화")); btn(240, DR.sw.run ? "#c62828" : "#1e88e5", DR.sw.run ? dk("Stop", "정지") : dk("Start", "시작")); }
+function droidSettings(g, W, H){ g.fillStyle = "#f3f5f7"; g.fillRect(0, 0, W, H); g.fillStyle = "#1d232a"; g.font = "bold 24px Arial"; g.textAlign = "left"; g.textBaseline = "middle"; g.fillText(dk("Settings", "설정"), 20, 52);
+  const rows = [[dk("Sound", "소리"), dk("Media sound from the speaker", "스피커로 소리 내기"), "sw"], [dk("Display", "디스플레이"), dk("Brightness 80 % · screen timeout off", "밝기 80 % · 화면 꺼짐 안 함")],
+    [dk("Battery", "배터리"), "78 %"], [dk("Microphone", "마이크"), dk("Allowed for Physics Toolbox", "Physics Toolbox에 허용됨")], [dk("About phone", "휴대전화 정보"), "Android 10"]];
+  rows.forEach(([a, b, t], i) => { const y = 100 + 70 * i; g.fillStyle = "#fff"; g.fillRect(12, y, W - 24, 62); g.fillStyle = "#1d232a"; g.font = "16px Arial"; g.fillText(a, 28, y + 22); g.fillStyle = "#6b7680"; g.font = "12.5px Arial"; g.fillText(b, 28, y + 44);
+    if (t === "sw"){ g.fillStyle = ST.sound ? "#90caf9" : "#c5ccd3"; g.beginPath(); g.roundRect ? g.roundRect(W - 76, y + 22, 40, 18, 9) : g.rect(W - 76, y + 22, 40, 18); g.fill(); g.fillStyle = ST.sound ? "#1e88e5" : "#f5f5f5"; g.beginPath(); g.arc(ST.sound ? W - 44 : W - 68, y + 31, 11, 0, 7); g.fill(); } }); }
+function droidRecents(g, W, H){ g.fillStyle = "#2b2f33"; g.fillRect(0, 0, W, H); g.textBaseline = "middle";
+  if (!DR.recent.length){ g.fillStyle = "#c8d0d8"; g.font = "15px Arial"; g.textAlign = "center"; g.fillText(dk("No recent items", "최근 항목 없음"), W / 2, H / 2); return; }
+  DR.recent.slice(0, 4).forEach((k, i) => { const y = 30 + 150 * i; g.fillStyle = "#444b52"; g.fillRect(30, y, W - 60, 136); dIcon(g, k, 50, y + 18, 11); g.fillStyle = "#fff"; g.font = "bold 13px Arial"; g.textAlign = "left"; g.fillText(DAPPS[k].n(), 68, y + 18); g.font = "16px Arial"; g.textAlign = "center"; g.fillText("✕", W - 48, y + 18);
+    g.fillStyle = "#121417"; g.fillRect(38, y + 34, W - 76, 94); if (k === "toolbox") g.drawImage(toolboxTex(), 0, 60, 330, 330 * 94 / (W - 76), 38, y + 34, W - 76, 94); });
+  g.fillStyle = "#e8eef2"; g.font = "bold 14px Arial"; g.textAlign = "center"; g.fillText(dk("Clear all", "모두 닫기"), W / 2, H - 30); }
+function phoneTex(){ const g = PHONEC.getContext("2d"), W = PHONEC.width, CH = APPC.height; g.setTransform(1, 0, 0, 1, 0, 0);
+  g.save(); g.translate(0, SBH); g.beginPath(); g.rect(0, 0, W, CH); g.clip();
+  if (DR.scr === "toolbox") g.drawImage(toolboxTex(), 0, 0); else if (DR.scr === "home") droidHome(g, W, CH); else if (DR.scr === "calc") droidCalc(g, W, CH);
+  else if (DR.scr === "clock") droidClock(g, W, CH); else if (DR.scr === "settings") droidSettings(g, W, CH); else droidRecents(g, W, CH);
+  g.restore();
+  /* status bar */
+  const d = new Date(); g.fillStyle = DR.scr === "settings" ? "#e3e7eb" : "#0b0d10"; g.fillRect(0, 0, W, SBH); const fg = DR.scr === "settings" ? "#1d232a" : "#e8eef2";
+  g.fillStyle = fg; g.strokeStyle = fg; g.font = "12px Arial"; g.textAlign = "left"; g.textBaseline = "middle"; g.fillText(pad2(d.getHours()) + ":" + pad2(d.getMinutes()), 12, SBH / 2 + 1);
+  if (DR.scr === "toolbox") { g.beginPath(); g.arc(56, SBH / 2, 3.5, 0, 7); g.fillStyle = "#66bb6a"; g.fill(); g.fillStyle = fg; }
+  for (let i = 0; i < 4; i++) g.fillRect(W - 82 + i * 5, SBH / 2 + 5 - (i + 1) * 2.4, 3.5, (i + 1) * 2.4);
+  g.beginPath(); g.moveTo(W - 56, SBH / 2 + 5); g.lineTo(W - 64, SBH / 2 - 4); g.arc(W - 56, SBH / 2 + 5, 11, -2.3, -0.84); g.closePath(); g.fill();
+  g.lineWidth = 1.2; g.strokeRect(W - 38, SBH / 2 - 5, 20, 10); g.fillRect(W - 18, SBH / 2 - 2, 2, 4); g.fillRect(W - 36.5, SBH / 2 - 3.5, 13, 7); g.lineWidth = 1;
+  /* navigation bar: back, home, recents */
+  const y = SBH + CH; g.fillStyle = "#000"; g.fillRect(0, y, W, NVH); g.strokeStyle = "#d8dde2"; g.fillStyle = "#d8dde2"; g.lineWidth = 2; const cy = y + NVH / 2;
+  g.beginPath(); g.moveTo(W / 6 + 7, cy - 8); g.lineTo(W / 6 - 7, cy); g.lineTo(W / 6 + 7, cy + 8); g.closePath(); g.stroke();
+  g.beginPath(); g.arc(W / 2, cy, 8.5, 0, 7); g.stroke(); g.strokeRect(5 * W / 6 - 7.5, cy - 7.5, 15, 15); g.lineWidth = 1;
+  return PHONEC; }
+function phoneClick(px, py, drag){ const W = PHONEC.width, CH = APPC.height; if (py < SBH) return;
+  if (py >= SBH + CH){ if (drag) return; if (px < W / 3){ if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else if (DR.scr !== "home") DR.scr = "home"; }
+    else if (px < 2 * W / 3) DR.scr = "home"; else if (DR.scr === "recents") DR.scr = DR.prev && DR.prev !== "recents" ? DR.prev : "home"; else { DR.prev = DR.scr; DR.scr = "recents"; } return; }
+  const y = py - SBH; if (DR.scr === "toolbox") return toolboxClick(px, y, drag); if (drag) return;
+  if (DR.scr === "home"){ Object.keys(DAPPS).forEach((k, i) => { if (Math.hypot(px - (41 + 82 * i), y - 500) < 34) droidOpen(k); }); return; }
+  if (DR.scr === "calc"){ DKEYS.forEach((k, i) => { if (Math.hypot(px - (41 + 82.5 * (i % 4)), y - (270 + 94 * Math.floor(i / 4))) < 38) calcKey(k); }); return; }
+  if (DR.scr === "clock"){ const S = DR.sw; if (Math.hypot(px - 240, y - 620) < 44){ if (S.run){ S.acc += ST.t - S.t0; S.run = false; } else { S.t0 = ST.t; S.run = true; } }
+    else if (Math.hypot(px - 90, y - 620) < 44){ if (S.run) S.laps.push(swNow()); else { S.acc = 0; S.laps = []; } } return; }
+  if (DR.scr === "settings"){ if (y > 100 && y < 162){ ST.sound = !ST.sound; if (ST.sound) audioInit(); } return; }
+  if (DR.scr === "recents"){ if (y > CH - 50){ DR.recent = []; DR.scr = "home"; return; }
+    DR.recent.slice(0, 4).forEach((k, i) => { const y0 = 30 + 150 * i; if (y < y0 || y > y0 + 136 || px < 30 || px > W - 30) return; if (y < y0 + 34 && px > W - 66) DR.recent = DR.recent.filter(x => x !== k); else droidOpen(k); }); } }
 /* ---- the sound you hear (WebAudio) --------------------------------------- */
 let AC = null, AU = null;
 function audioInit(){ if (AC || !ST.sound) return; try { AC = new (window.AudioContext || window.webkitAudioContext)();
