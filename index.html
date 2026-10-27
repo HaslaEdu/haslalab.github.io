@@ -548,22 +548,22 @@ const REL = "https://github.com/haslalab/haslalab.github.io/releases/download/";
 const UI={
 ko:{
   navHome:"홈", navComps:"대회", navLearn:"학습", navAbout:"소개",
-  ebLearn:"학습", hLearn:"실험과 관측을 공부하세요",
-  pLearn:"물리 · 화학 · 생물 · 천문 실험과 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
+  ebLearn:"학습", hLearn:"학습을 시작하세요",
+  pLearn:"물리 · 화학 · 생물 · 지구과학 · 천문 · 과학 실험과 실기, 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
   foundNote:"아래 자료는 각 기관과 저자가 인터넷에 무료로 공개한 것입니다. 링크는 원래 사이트로 연결되고, HaslaLab이 내용을 고치거나 다시 올리지 않았습니다.",
   kOfficial:"공식", kFree:"무료 교재", kGuide:"지침", kTool:"도구", kArchive:"기출", lOpen:"열기",
   eyebrow:"실험 라운드 · 가상 광학 벤치",
   headline:"레일 위에 놓고,<br>직접 재세요.",
-  lede:"IPhO · APhO · EuPhO 실험 문제를 실제 장비처럼 재현했습니다. "+
+  lede:"국제 올림피아드 실험 · 실기 문제를 실제처럼 재현했습니다. "+
        "<b>계산해 주지 않습니다</b> — 직접 하세요.",
   ctaRun:"실험 시작하기", ctaBrowse:"대회 고르기",
   figLeft:"모눈종이 30 × 30 cm · 편향도", figT:"경과",
   ebAbout:"만든 곳", hAbout:"HaslaEdu",
   aboutBody:[
     "HaslaEdu는 교육을 위해 일합니다.",
-    "실험은 물리 올림피아드에서 중요한 부분입니다. 그렇지만 국제 대회에 나가기 전이나 대비를 하기 위해 학생이 실제로 그 장비를 만져볼 기회는 많지 않고, 결과를 보는 것만으로는 눈금을 읽고 오차를 판단하는 감각이 생기지 않습니다.",
+    "실험과 실기는 국제 올림피아드에서 중요한 부분입니다. 그렇지만 국제 대회에 나가기 전이나 대비를 하기 위해 학생이 실제로 그 장비를 만져볼 기회는 많지 않고, 결과를 보는 것만으로는 눈금을 읽고 오차를 판단하는 감각이 생기지 않습니다.",
     "HaslaLab은 그 간극을 메우기 위해 만들어졌습니다. 각 실험 장비를 프로그램 하에서 그대로 재현해, 직접 조립하고 측정할 수 있게 합니다. 결과는 계산해 주지 않습니다 — 그건 당신이 할 일입니다."
   ],
   ebPerson:"만든 사람",
@@ -580,7 +580,7 @@ ko:{
   tallyNote:"실험 문제만 모읍니다.",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
-  kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험"}, kindN:"{k} {n}",
+  kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
   pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
@@ -601,22 +601,22 @@ ko:{
 },
 en:{
   navHome:"Home", navComps:"Competitions", navLearn:"Learn", navAbout:"About",
-  ebLearn:"Learn", hLearn:"Study experiments and observation",
-  pLearn:"Textbooks, study guides and basic experiments and observations for physics, chemistry, biology and astronomy. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
+  ebLearn:"Learn", hLearn:"Start learning",
+  pLearn:"Textbooks, study guides and basic experiments, practicals and observations for physics, chemistry, biology, earth science, astronomy and integrated science. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
   ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
   foundNote:"The material below is published free on the internet by its institutions and authors. The links go to the original sites; HaslaLab has not edited or re-hosted it.",
   kOfficial:"Official", kFree:"Free textbook", kGuide:"Guide", kTool:"Tool", kArchive:"Past papers", lOpen:"Open",
   eyebrow:"Experimental round · virtual optical bench",
   headline:"Set it on the rail.<br>Read it yourself.",
-  lede:"IPhO, APhO and EuPhO experimental problems, rebuilt as working apparatus. "+
+  lede:"Experimental and practical problems of the international olympiads, rebuilt as the real thing. "+
        "<b>Nothing is computed for you</b> — do it yourself.",
   ctaRun:"Run the experiment", ctaBrowse:"Choose a competition",
   figLeft:"Millimetre paper 30 × 30 cm · deflectogram", figT:"elapsed",
   ebAbout:"Who builds this", hAbout:"HaslaEdu",
   aboutBody:[
     "HaslaEdu works for education.",
-    "The experimental round is a serious part of a physics olympiad. Yet students preparing for an international competition rarely get to handle the apparatus, and reading the results alone never builds a feel for reading a scale or judging an error.",
+    "Experiments and practicals are a serious part of the international olympiads. Yet students preparing for an international competition rarely get to handle the apparatus, and reading the results alone never builds a feel for reading a scale or judging an error.",
     "HaslaLab was built to close that gap. Every piece of apparatus is reproduced in software exactly as it behaves, so you can assemble it and take the measurements yourself. The results are not computed for you — that part is your work."
   ],
   ebPerson:"The person",
@@ -634,7 +634,7 @@ en:{
   tallyNote:"Experimental problems only.",
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
-  kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment"}, kindN:"{n} {k}",
+  kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
   ebComps:"Covered competitions", hComps:"Choose a competition",
   pComps:"Pick a year, then open that year's experimental problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
@@ -2752,6 +2752,58 @@ const DATA={
    {y:1994,host:{ko:"불가리아 · 바르나",en:"Varna, Bulgaria"},cc:"bg",problems:lst([
     ["P","Practical Test: Biodiversity and Ecology","실험 시험: 생물다양성과 생태","IBO_1994_P_EN.pdf","IBO_1994_S.pdf"]])}
   ]},
+ ieso:{
+  abbr:"IESO", since:2007, obs:true,
+  full:{ko:"국제지구과학올림피아드",en:"International Earth Science Olympiad"},
+  scope:{ko:"국제",en:"International"},
+  note:{ko:"지권 · 수권 · 기권 · 천문을 다루는 지구과학 올림피아드입니다. 필기 시험은 빼고 실험실 실기(P)와 야외 실기(F)만 실었고, 한 해의 과제는 대개 한 문제지에 묶여 있습니다. 2020년은 열리지 않았고, 2021–2023년은 온라인이었습니다. 문제지는 각 대회 조직위와 지구과학교육기구(IGEO)가 공개한 것이고, 아직 찾지 못한 해는 비워 두었습니다.",
+        en:"The earth-science olympiad: geosphere, hydrosphere, atmosphere and astronomy. Only the laboratory (P) and field (F) practicals are listed, not the written tests, and a year's tasks usually share one booklet. There was no IESO in 2020, and 2021–2023 were held online. The sheets are those published by the organisers and the International Geoscience Education Organisation (IGEO); years whose sheets have not been found yet are left empty."},
+  soon:{ko:"문제지만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet only; there is no simulator yet."},
+  years:[
+   {y:2025,host:{ko:"중국 · 지닝",en:"Jining, China"},cc:"cn",problems:lst([
+    ["F1","Field Test at Mount Shimen (Part 1)","스먼산 야외 실기 (1부)","IESO_2025_F1_EN.pdf",null]])},
+   {y:2024,host:{ko:"중국 · 베이징",en:"Beijing, China"},cc:"cn",problems:[]},
+   {y:2023,host:{ko:"온라인 · IGEO 주관",en:"Online, hosted by IGEO"},cc:"",org:{"abbr":"IGEO","name":"International Geoscience Education Organisation"},problems:[]},
+   {y:2022,host:{ko:"이탈리아 · 아오스타, 온라인",en:"Aosta, Italy, online"},cc:"it",problems:[]},
+   {y:2021,host:{ko:"러시아 · 튜멘, 온라인",en:"Tyumen, Russia, online"},cc:"ru",problems:[]},
+   {y:2019,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:[]},
+   {y:2018,host:{ko:"태국 · 깐짜나부리",en:"Kanchanaburi, Thailand"},cc:"th",problems:[]},
+   {y:2017,host:{ko:"프랑스 · 코트다쥐르",en:"Côte d'Azur, France"},cc:"fr",problems:[]},
+   {y:2016,host:{ko:"일본 · 미에",en:"Mie, Japan"},cc:"jp",problems:[]},
+   {y:2015,host:{ko:"브라질 · 포수스지칼다스",en:"Poços de Caldas, Brazil"},cc:"br",problems:lst([
+    ["P1","Flow Rate of a Channel","수로의 유량","IESO_2015_P_EN.pdf",null],
+    ["P2","Relative Humidity with a Psychrometer","건습구 습도계로 잰 상대 습도","IESO_2015_P_EN.pdf",null],
+    ["P3","Plate Tectonics: The Dance of the Continents","판 구조론: 대륙의 춤","IESO_2015_P_EN.pdf",null],
+    ["F4","Rocks at the Field Stops","야외 지점의 암석","IESO_2015_P_EN.pdf",null],
+    ["P6","Angular Speed of the Earth's Rotation","지구 자전의 각속도","IESO_2015_P_EN.pdf",null]])},
+   {y:2014,host:{ko:"스페인 · 산탄데르",en:"Santander, Spain"},cc:"es",problems:[]},
+   {y:2013,host:{ko:"인도 · 마이소르",en:"Mysore, India"},cc:"in",problems:lst([
+    ["P1","Astronomy: Sundial, Star Trails and Constellations","천문: 해시계 · 별 궤적 · 별자리","IESO_2013_P_EN.pdf","IESO_2013_S.pdf"],
+    ["F2","Atmosphere and Hydrosphere: Field Measurements","기권 · 수권: 야외 측정","IESO_2013_P_EN.pdf",null],
+    ["P3","Geosphere: Rocks and Geological Processes","지권: 암석과 지질 과정","IESO_2013_P_EN.pdf",null],
+    ["P4","Oceanography: Temperature and Salinity Profiles","해양: 수온 · 염분 단면","IESO_2013_P_EN.pdf",null]])},
+   {y:2012,host:{ko:"아르헨티나 · 올라바리아",en:"Olavarría, Argentina"},cc:"ar",problems:lst([
+    ["P1","Atmosphere: Water Masses and the Zonda Wind on an Emagram","기권: 수괴와 에마그램 위의 존다 바람","IESO_2012_P_EN.pdf",null],
+    ["P2","Geosphere: Rocks, Fossils and Stratigraphic Order","지권: 암석 · 화석 · 지층의 순서","IESO_2012_P_EN.pdf",null]])},
+   {y:2011,host:{ko:"이탈리아 · 모데나",en:"Modena, Italy"},cc:"it",problems:lst([
+    ["F1","Geosphere: Ten Field Stops","지권: 야외 10개 지점","IESO_2011_P_EN.pdf",null],
+    ["P2","Atmosphere: Fog in a Jar","기권: 병 속의 안개","IESO_2011_P_EN.pdf",null],
+    ["P3","Oceanography: Stratification","해양: 성층","IESO_2011_P_EN.pdf",null]])},
+   {y:2010,host:{ko:"인도네시아 · 족자카르타",en:"Yogyakarta, Indonesia"},cc:"id",problems:lst([
+    ["P1","Astronomy: the Ecliptic, Mars and Jupiter","천문: 황도와 화성 · 목성","IESO_2010_P_EN.pdf",null],
+    ["P2","Atmosphere: Weather Observation and Wind Rose","기권: 기상 관측과 바람장미","IESO_2010_P_EN.pdf",null],
+    ["F3","Geology Field Test at Dlingo","들링고 지질 야외 실기","IESO_2010_P_EN.pdf",null],
+    ["P4","Laboratory: Minerals, Rocks, Fossils, Structures, Landforms","실험실: 광물 · 암석 · 화석 · 구조 · 지형","IESO_2010_P_EN.pdf",null]])},
+   {y:2009,host:{ko:"대만 · 타이베이",en:"Taipei, Taiwan"},cc:"tw",problems:[]},
+   {y:2008,host:{ko:"필리핀 · 마닐라 · 비콜",en:"Manila & Bicol, Philippines"},cc:"ph",problems:lst([
+    ["P1","Atmospheric CO₂ Record","대기 CO₂ 기록","IESO_2008_P_EN.pdf",null],
+    ["P2","Cloud Types","구름의 종류","IESO_2008_P_EN.pdf",null],
+    ["P3","Balanced Flow on a 500 hPa Chart","500 hPa 일기도의 균형 흐름","IESO_2008_P_EN.pdf",null],
+    ["P4","Sea Surface Height and Currents","해수면 높이와 해류","IESO_2008_P_EN.pdf",null],
+    ["P5","Kepler's Third Law from Uranus's Moons","천왕성 위성으로 보는 케플러 제3법칙","IESO_2008_P_EN.pdf",null],
+    ["P6","Telescope Practical","망원경 실기","IESO_2008_P_EN.pdf",null]])},
+   {y:2007,host:{ko:"대한민국 · 대구",en:"Daegu, Korea"},cc:"kr",problems:[]}
+  ]},
  ioaa:{
   abbr:"IOAA", since:2007, obs:true,
   full:{ko:"국제천문및천체물리올림피아드",en:"International Olympiad on Astronomy and Astrophysics"},
@@ -3183,7 +3235,7 @@ const LEARN={
     "연도별 IChO 문제지와 준비 문제를 모아 둔 아카이브입니다.","An archive of IChO papers and preparatory problems by year."),
   LR("b","free","https://chem.libretexts.org/Ancillary_Materials/Laboratory_Experiments","화학 실험 매뉴얼 모음","Chemistry laboratory experiments","LibreTexts","LibreTexts",
     "일반화학 · 분석화학 · 유기화학 실험 절차와 안전 수칙을 담은 공개 실험서 모음입니다.","Open lab manuals for general, analytical and organic chemistry, with procedures and safety notes.")]},
- biology:{name:{ko:"생물",en:"Biology"},abbr:"Bio",comps:"IBO · IJSO",items:[
+ biology:{name:{ko:"생물",en:"Biology"},abbr:"Bio",comps:"IBO",items:[
   LR("g","official","https://www.ibo-info.org/en/info/rules-guidelines.html?file=files/downloads/rules/IBO%20Operational%20Guidelines_v.7.pdf&cid=157","IBO 운영 지침 (부록 2: 실험 기능 목록)","IBO Operational Guidelines (Appendix 2: practical skills)","국제생물올림피아드","International Biology Olympiad",
     "실험 시험에서 요구하는 기능을 관찰 · 측정 · 분류 · 계산부터 현미경, 해부, 생화학 기법까지 정리한 공식 목록이 부록에 있습니다.","The appendix lists the skills the practical exams require, from observation, measurement, classification and calculation to microscopy, dissection and biochemical techniques."),
   LR("g","free","https://openstax.org/details/books/biology-2e","Biology 2e","Biology 2e","OpenStax","OpenStax",
@@ -3196,6 +3248,30 @@ const LEARN={
     "실험 시험장에서 지켜야 할 안전 규정입니다.","The safety rules that apply in the practical exam laboratories."),
   LR("b","free","https://bio.libretexts.org/Learning_Objects/Laboratory_Experiments","생물 실험 매뉴얼 모음","Biology laboratory experiments","LibreTexts","LibreTexts",
     "현미경 관찰, 세포, 유전, 생리 실험 절차를 담은 공개 실험서 모음입니다.","Open lab manuals for microscopy, cells, genetics and physiology.")]},
+ earth:{name:{ko:"지구과학",en:"Earth science"},abbr:"Earth",comps:"IESO",obs:true,items:[
+  LR("g","official","https://www.ieso.info/","IESO 공식 사이트","IESO official site","국제지구과학올림피아드","International Earth Science Olympiad",
+    "대회 규정, 출제 범위, 개최 일정이 올라오는 공식 사이트입니다.","The official site, with the rules, the syllabus and the schedule of coming olympiads."),
+  LR("g","archive","https://www.igeoscied.org/activities/ieso-2/past-ieso-exams/","역대 IESO 문제","Past IESO exams","지구과학교육기구 IGEO","International Geoscience Education Organisation",
+    "역대 필기 · 실험실 · 야외 실기 문제지를 연도별로 모아 둔 공개 아카이브입니다.","A public archive of past written, laboratory and field tests by year."),
+  LR("g","free","https://opentextbc.ca/physicalgeology2ed/","Physical Geology 2e","Physical Geology, 2nd edition","Steven Earle · BCcampus","Steven Earle · BCcampus",
+    "광물, 암석, 지질 구조, 판 구조론, 풍화와 퇴적을 다루는 무료 지질학 교재입니다. CC BY 라이선스입니다.","A free geology textbook: minerals, rocks, structures, plate tectonics, weathering and sedimentation. CC BY."),
+  LR("g","free","https://www.eoas.ubc.ca/books/Practical_Meteorology/","Practical Meteorology","Practical Meteorology","Roland Stull · 브리티시컬럼비아대학교","Roland Stull · University of British Columbia",
+    "열역학 선도, 구름, 바람, 일기도 해석까지 다루는 무료 기상학 교재입니다.","A free meteorology textbook, from thermodynamic diagrams and clouds to winds and weather-map analysis."),
+  LR("b","guide","https://www.globe.gov/do-globe/globe-teachers-guide","GLOBE 관측 지침","GLOBE Teacher's Guide and protocols","GLOBE 프로그램 · NASA","The GLOBE Program · NASA",
+    "기온, 습도, 구름, 강수, 수질, 토양을 학생이 직접 측정하는 표준 관측 절차입니다. 야외 실기의 측정 감각을 익히는 데 씁니다.","Standard student protocols for measuring air temperature, humidity, clouds, precipitation, water quality and soil — the hands-on side of the field practicals."),
+  LR("b","tool","https://weather.uwyo.edu/upperair/sounding.html","고층 기상 관측 자료","Upper-air soundings","와이오밍대학교","University of Wyoming",
+    "세계 각지의 라디오존데 관측값과 단열 선도를 보여 줍니다. 에마그램 · 단열선도 문제 연습에 씁니다.","Radiosonde soundings from around the world with their thermodynamic diagrams, for emagram and Skew-T practice.")]},
+ science:{name:{ko:"과학",en:"Science"},abbr:"Sci",comps:"IJSO",items:[
+  LR("g","official","https://www.ijsoweb.org/","IJSO 공식 사이트","IJSO official site","국제청소년과학올림피아드","International Junior Science Olympiad",
+    "대회 규정과 출제 범위가 올라오는 공식 사이트입니다. 물리 · 화학 · 생명과학을 함께 다룹니다.","The official site with the rules and syllabus; physics, chemistry and biology together."),
+  LR("g","archive","https://www.ijsoweb.org/downloads","IJSO 기출 문제","IJSO past papers","국제청소년과학올림피아드","International Junior Science Olympiad",
+    "역대 이론 · 실험 문제지와 해답을 받을 수 있습니다.","Past theory and experimental papers with solutions."),
+  LR("g","free","https://openstax.org/details/books/physics","Physics (고등학교)","Physics (high school)","OpenStax","OpenStax",
+    "고등학교 수준의 무료 물리 교재입니다. IJSO 범위의 물리를 다룹니다.","A free high-school physics textbook covering the physics in the IJSO syllabus."),
+  LR("g","free","https://openstax.org/details/books/chemistry-atoms-first-2e","Chemistry: Atoms First 2e","Chemistry: Atoms First 2e","OpenStax","OpenStax",
+    "원자 구조부터 시작하는 무료 화학 교재입니다.","A free chemistry textbook that starts from atomic structure."),
+  LR("b","free","https://phet.colorado.edu/","PhET 시뮬레이션","PhET Interactive Simulations","콜로라도대학교","University of Colorado Boulder",
+    "물리 · 화학 · 생물의 기본 실험을 브라우저에서 해 볼 수 있는 무료 시뮬레이션 모음입니다.","Free browser simulations of basic experiments in physics, chemistry and biology.")]},
  astronomy:{name:{ko:"천문",en:"Astronomy"},abbr:"Astro",comps:"IOAA · IOAA Jr · IAO · APAO · OWAO",obs:true,items:[
   LR("g","official","https://ioaastrophysics.org/resources/ioaa-syllabus","IOAA 출제 범위","IOAA Syllabus","국제천문및천체물리올림피아드","International Olympiad on Astronomy and Astrophysics",
     "이론 · 자료 분석 · 관측의 공식 출제 범위입니다. 맨눈 관측, 성도와 목록 사용, 등급 추정, 망원경 다루기가 들어 있습니다.","The official syllabus for theory, data analysis and observation, including naked-eye work, star maps and catalogues, magnitude estimation and telescopes."),
