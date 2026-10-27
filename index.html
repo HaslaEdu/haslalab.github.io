@@ -488,6 +488,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2022_E2_web.html">NBPhO 2022 P9 — 유리 속 자석</a></li>
       <li><a href="sim/nbpho2021_E1_web.html">NBPhO 2021 P4 — 고무장갑 늘이기</a></li>
       <li><a href="sim/nbpho2020_E1_web.html">NBPhO 2020 P5 — 병의 소리</a></li>
+      <li><a href="sim/nbpho2019_E1_web.html">NBPhO 2019 P8 — 네 개의 저항</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
@@ -1907,7 +1908,18 @@ const DATA={
               pdf:{en:"pdf/NBPhO_2020_E_EN.pdf"},
               sol:"pdf/NBPhO_2020_S.pdf"}}
     ]},
-   {y:2019,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2019", wip("Four Resistors"), ["E_EN", "S"])},
+   {y:2019,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",
+    problems:[
+      {id:"E1",
+       title:{ko:"네 개의 저항",en:"Four Resistors"},
+       desc:{ko:"몇 Ω밖에 다르지 않은 약 4.7 kΩ 저항 A–D를 악어 집게 전선으로 이어, 3999 카운트 멀티미터(오차가 범위마다 같은 계통 오차)로 직렬 연결 한 번에 평균을, 두 개씩 병렬로 정밀한 범위에서 조화 평균을 재고, 30 V 전원과 브리지에서 저항 쌍의 순서를 뒤집어 크기 순서와 각 저항과 평균의 차를 Ω 단위로 구합니다 (문제 8).",
+             en:"Wire the resistors A–D, about 4.7 kΩ and only a few ohm apart, with crocodile leads; with the 3999-count meter (whose errors are systematic within a range) get their average from one series reading and their harmonic average from pairs in parallel on the finer range, then rank them and find each one's difference from the average to an ohm with a 30 V bridge, swapping the order of a pair (problem 8)."},
+       tags:["전기회로","오차 분석","휘트스톤 브리지"], tagsEn:["Circuits","Error analysis","Wheatstone bridge"],
+       files:{sim:"sim/nbpho2019_E1_web.html",
+              src:{ko:"src/nbpho2019_E1_resistors_sim_KO.py", en:"src/nbpho2019_E1_resistors_sim_EN.py"},
+              pdf:{en:"pdf/NBPhO_2019_E_EN.pdf"},
+              sol:"pdf/NBPhO_2019_S.pdf"}}
+    ]},
    {y:2018,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2018", wip("Fresnel Prism", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2017,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2017", wip("Virtual Mass", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
    {y:2016,host:{ko:"에스토니아 · 탈린",en:"Tallinn, Estonia"},cc:"ee",problems:papers("NBPhO_2016", wip("Candy Wrapper", "Black Box"), ["E_EN", "S"], ["E_EN", "S"])},
@@ -5443,7 +5455,7 @@ const SIG_S23T1={
   f:z=>-1.43-z/(4*1.15*5),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(2); },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:85,y0:-6,y1:-1,f:this.f,xl:"z²"},t,this); }};
-const SIG_N20E1={
+const SIG_N20E1,SIG_N19E1={
   sim:"sim/nbpho2020_E1_web.html", tag:"NBPhO 2020 P5", span:24, rate:8,
   capL:{ko:"병 속 물의 부피 · 휘파람 소리의 진동수",en:"Water in the bottle · the whistle's frequency"},
   capR:{ko:"휴대폰 음 검출기",en:"phone tone detector"},
@@ -5451,6 +5463,14 @@ const SIG_N20E1={
   f:v=>144/Math.sqrt(1-v/1000),
   read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" Hz"; },
   paint(c,w,h,t){ euPlot(c,w,h,{x0:-20,x1:920,y0:100,y1:450,f:this.f,xl:"V / ml"},t,this); }};
+const SIG_N19E1={
+  sim:"sim/nbpho2019_E1_web.html", tag:"NBPhO 2019 P8", span:24, rate:8,
+  capL:{ko:"브리지 전원 전압 · P와 Q 사이 전압",en:"Bridge supply voltage · voltage between P and Q"},
+  capR:{ko:"멀티미터 (400 mV)",en:"multimeter (400 mV)"},
+  pts:[3,6,9,12,15,18,21,24,27,30], n:euN, jit:0.06,
+  f:u=>u*2.5e-4*1000,
+  read(t){ const x=this.pts[this.n(t)-1]; return this.f(x).toFixed(1)+" mV"; },
+  paint(c,w,h,t){ euPlot(c,w,h,{x0:0,x1:32,y0:-1,y1:9,f:this.f,xl:"U / V"},t,this); }};
 const SIG_N26E1={
   sim:"sim/nbpho2026_E1_web.html", tag:"NBPhO 2026 P5", span:24, rate:8,
   capL:{ko:"주사기로 당긴 부피 · 공기 방울 길이",en:"Volume pulled by the syringe · air bubble length"},
