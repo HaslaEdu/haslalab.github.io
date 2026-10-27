@@ -643,7 +643,8 @@ const thy = (n,t) => ({id:"T"+n, en:t, ko:KO_TITLE[t]||t, state:"wip", theory:tr
 /* 물리 밖의 대회는 [번호, 영문 제목, 한글 제목, 문제지, 해답] 줄로 적는다.
    같은 라운드의 문제들은 한 문제지를 같이 쓴다 */
 const lst = rows => rows.map(([id,en,ko,q,s])=>{
-  const f={}; if(q) f.pdf={en:"pdf/"+q}; if(s) f.sol="pdf/"+s;
+  const at=x=>/^https?:/.test(x)?x:"pdf/"+x;
+  const f={}; if(q) f.pdf={en:at(q)}; if(s) f.sol=at(s);
   return {id, en, ko, state:"wip", files:f};
 });
 
@@ -2564,10 +2565,23 @@ const DATA={
   abbr:"IMChO", since:1967,
   full:{ko:"국제 멘델레예프 화학올림피아드",en:"International Mendeleev Chemistry Olympiad"},
   scope:{ko:"국제",en:"International"},
-  note:{ko:"멘델레예프 올림피아드의 실험 라운드만 실었습니다. 모스크바 국립대학교 화학과(chem.msu.ru)가 영어 실험 문제지를 공개한 2015–2018년만 있으며, 공식 해답은 공개되지 않았습니다.",
-        en:"Only the experimental round of the Mendeleev Olympiad. Moscow State University's chemistry faculty (chem.msu.ru) has the English experimental papers for 2015–2018 only, and no official solutions were released."},
+  note:{ko:"멘델레예프 올림피아드의 실험 라운드만 실었습니다. 2015–2018년은 모스크바 국립대학교 화학과(chem.msu.ru), 2022–2025년은 공식 사이트 mendeleevolympiad.org의 문제 예시에서 받은 영어 문제지입니다. 2014년 이전과 2019년은 영어 실험 문제지가 공개되어 있지 않고, 2020–2021년은 원격으로 치렀습니다. 2024년 문제지는 공식 사이트의 Yandex 디스크로 연결됩니다.",
+        en:"Only the experimental round of the Mendeleev Olympiad. The English papers for 2015–2018 come from Moscow State University's chemistry faculty (chem.msu.ru), those for 2022–2025 from the task examples on mendeleevolympiad.org. No English experimental paper is published for 2014 and before or for 2019, and 2020–2021 were held remotely. The 2024 paper links to the official site's Yandex Disk."},
   soon:{ko:"문제지와 해답만 정리해 두었습니다. 시뮬레이터는 아직 없습니다.",en:"Problem sheet and solution only; there is no simulator yet."},
   years:[
+   {y:2025,host:{ko:"브라질 · 벨루오리존치",en:"Belo Horizonte, Brazil"},cc:"br",problems:lst([
+    ["E1","Hydrolysis of Starch and Colorimetric Determination of Glucose","녹말의 가수분해와 포도당의 비색 정량","IMChO_2025_E_EN.pdf",null],
+    ["E2","Titrimetric Determination of Glucose","포도당의 적정 정량","IMChO_2025_E_EN.pdf",null]])},
+   {y:2024,host:{ko:"중국 · 선전",en:"Shenzhen, China"},cc:"cn",problems:lst([
+    ["E1","Practical Exam","실험 시험","https://disk.yandex.ru/i/tELol5QB_E8sbg",null]])},
+   {y:2023,host:{ko:"카자흐스탄 · 아스타나",en:"Astana, Kazakhstan"},cc:"kz",problems:lst([
+    ["E1","Extraction of Caffeine from Black Tea","홍차에서 카페인 추출","IMChO_2023_E_EN.pdf",null],
+    ["E2","Murexide Test","무렉사이드 시험","IMChO_2023_E_EN.pdf",null],
+    ["E3","Calcium in Calcium Gluconate Tablets by Complexometry","글루콘산칼슘 정제 속 칼슘의 착화 적정","IMChO_2023_E_EN.pdf",null]])},
+   {y:2022,host:{ko:"우즈베키스탄 · 타슈켄트",en:"Tashkent, Uzbekistan"},cc:"uz",problems:lst([
+    ["E1","Solubility Product of Lead Iodide","아이오딘화납의 용해도곱","IMChO_2022_E_EN.pdf",null],
+    ["E2","Calcium Iodate","아이오딘산칼슘","IMChO_2022_E_EN.pdf",null],
+    ["E3","Solubility Product of Calcium Hydroxide at Three Temperatures","세 온도에서 잰 수산화칼슘의 용해도곱","IMChO_2022_E_EN.pdf",null]])},
    {y:2018,host:{ko:"벨라루스 · 민스크",en:"Minsk, Belarus"},cc:"by",problems:lst([
     ["E1","Identification of Antacids","제산제 판별","IMChO_2018_E_EN.pdf",null],
     ["E2","Neutralizing Capacity of an Antacid","제산제의 중화 능력","IMChO_2018_E_EN.pdf",null],
@@ -2784,14 +2798,14 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 6;
+const LOGO_V = 7;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
-                   ijso:0.42, ioaa:0.50};
+                   ijso:0.42, ioaa:0.50, icho:0.27, imcho:0.26, ioaajr:0.17};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
