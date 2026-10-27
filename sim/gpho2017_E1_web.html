@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="theme-color" content="#1c2027">
+<title>GPhO 2017 E1 — 전기 기타 · Electric Guitar · HaslaLab</title>
+<meta name="description" content="GPhO 2017 실험 문제 E1을 브라우저에서 실행합니다. 기타 줄을 나사로 조이고 퉁겨 진동수를 재고, 4단자 회로로 비저항을 구하며, 줄을 가열해 영률과 열팽창 계수를 측정합니다.">
+<link rel="canonical" href="https://haslalab.org/sim/gpho2017_E1_web.html">
+<link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/gpho2017_E1_web.html?lang=ko">
+<link rel="alternate" hreflang="en" href="https://haslalab.org/sim/gpho2017_E1_web.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://haslalab.org/sim/gpho2017_E1_web.html">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPhO 2017 E1 — 전기 기타 · Electric Guitar">
+<meta property="og:description" content="GPhO 2017 실험 문제 E1을 브라우저에서 실행합니다. 기타 줄을 나사로 조이고 퉁겨 진동수를 재고, 4단자 회로로 비저항을 구하며, 줄을 가열해 영률과 열팽창 계수를 측정합니다.">
+<meta property="og:url" content="https://haslalab.org/sim/gpho2017_E1_web.html">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haslalab.org/og.png">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px 12px max(160px,24vh);display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .page{display:none}.page.on{display:block}
+  #bench,#ctrl,#screen,#wire{display:block;max-width:100%;height:auto!important;margin:0 auto;border-radius:6px}
+  .pair{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px}
+  .serial{color:#69717a;font-size:11px}
+  #wwarn{color:#f0a79f}#wwarn:empty{display:none}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  #screen{cursor:default}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #vtabs{margin-bottom:6px}
+  #wwarn{color:var(--accent)} #wwarn .w{color:#f0a79f}
+</style>
+
+
+
+
+
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="h1"></h1>
+    <p id="sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <canvas id="tray"></canvas>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtstand"></button><button id="vtmeters"></button><button id="vtphoto"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="lg-ctl"></h2>
+    <button id="bPluck" style="width:100%"></button>
+    <button id="bUsb" style="width:100%"></button>
+    <div class="row"><button id="bClear"></button><button id="bSpare"></button></div>
+    <label class="chk"><input type="checkbox" id="cSound" checked><span id="l-sound"></span></label>
+    <h2 id="lg-notes"></h2>
+    <p class="hint" id="tx-notes"></p>
+    <div class="status"><div id="wwarn"></div></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* ====================================================================
+   GPhO 2017 (Riyadh) - Experimental Problem E1
+   ELECTRIC GUITAR
+
+   A steel guitar string on a stand: tensioned over two saddles (the
+   first glued to a piezo pickup, its signal amplified to S+ / S-), then
+   pushed up by a screw tensioner between two pins.  A 5 V USB supply
+   between A and the string, a set of resistors, an AX-100 and an
+   AX-MS811 multimeter, nine test leads and a measuring tape.
+
+   Nothing is computed for you.  The meters show what meters show; the
+   tape is read by eye; the turns of the tensioner are counted by eye.
+
+   The model is fitted to the official solution: l1 = 674 mm of string
+   under tension (b = 504 mm between the saddles), d = 0.195 mm,
+   rho = 1.89e-7 Ohm m, Lambda = 0.247 g/m, unstretched length about
+   672.75 mm, f from about 200 Hz untensioned to about 370 Hz after 16
+   turns, R between the saddles 3.20 Ohm at room temperature, the string
+   reaching about 200 C when A and B are joined straight.
+   ==================================================================== */
+
+/* ------------------------- language ------------------------------- */
+const I18N = {
+  title:  ["GPhO 2017 — Problem E1 — Electric guitar", "GPhO 2017 — 실험 문제 E1 — 전기 기타"],
+  sub:    ["Virtual laboratory · tension the steel string with the screw, pluck it and read its frequency off the small meter at S+ / S−, measure its resistance with a four-wire circuit and heat it with the 5 V supply. Count the turns and read the tape yourself.",
+           "가상 실험실 · 나사로 강철 줄을 조이고 퉁겨 S+ / S−에 물린 작은 멀티미터로 진동수를 읽고, 4단자 회로로 저항을 재며 5 V 전원으로 줄을 가열합니다. 회전 수와 줄자 눈금은 직접 읽으세요."],
+  tray:   ["Parts box", "부품함"],
+  vt3d:   ["3D bench", "3D 실험대"], vtstand: ["stand, front", "스탠드 정면"], vtmeters: ["meters", "멀티미터"], vtphoto: ["photo ×100", "사진 ×100"],
+  cap_3d: ["the bench in 3D — drag to turn, right-drag to pan, wheel to zoom · click the string between the saddles to pluck it · wheel (or drag) over the knob under the stand turns the screw · click a terminal, then another, to run a test lead (a lead can also be clipped onto the string or the bar) · click the stand, a meter or the photo to look close · R-click: back / let go",
+           "3D 실험대 — 끌기: 회전, 우클릭 끌기: 이동, 휠: 확대 · 안장 사이의 줄을 클릭하면 퉁김 · 스탠드 아래 손잡이 위에서 휠(또는 끌기)로 나사 돌리기 · 단자를 차례로 클릭해 시험 리드 연결 (줄이나 막대에 집게로 물릴 수도 있음) · 스탠드·멀티미터·사진을 클릭하면 가까이 보기 · 우클릭: 돌아가기 / 놓기"],
+  cap_stand: ["the stand from the front — drag the tape, wheel over it to tilt it (Shift: finely); wheel elsewhere zooms, drag pans · click the string to pluck it, the bar to clip a lead to the body · R-click: back to 3D",
+              "스탠드 정면 — 줄자는 끌어서 옮기고 줄자 위에서 휠로 기울이기 (Shift: 미세); 다른 곳에서 휠은 확대, 끌기는 이동 · 줄 클릭: 퉁김, 막대 클릭: 몸체에 리드 물리기 · 우클릭: 3D로"],
+  cap_meters: ["the meters and the resistors — click the left or right half of a dial (or wheel over it) to turn it; the AX-MS811's keys under its display; its probes: click one, then a terminal · R-click: back to 3D",
+               "멀티미터와 저항 — 다이얼의 왼쪽/오른쪽 절반을 클릭(또는 휠)해 돌리기; AX-MS811 화면 아래 버튼; 프로브는 클릭한 뒤 단자를 클릭 · 우클릭: 3D로"],
+  cap_photo: ["the photo of the string, magnified 100× — lay the tape across it, wheel over the tape to tilt it, wheel elsewhere to zoom · R-click: back to 3D",
+              "100배 확대한 줄 사진 — 줄자를 가로질러 놓고 읽기, 줄자 위 휠로 기울이기, 다른 곳 휠로 확대 · 우클릭: 3D로"],
+  itTape: ["measuring tape (1 m)", "줄자 (1 m)"], itLead: ["test lead", "시험 리드"], itNew: ["spare string", "예비 줄"],
+  tapeTake: ["click, then click where to lay it", "클릭한 뒤 놓을 곳을 클릭"], tapeOut: ["out on the bench — click to put it back", "실험대 위 — 클릭하면 부품함으로"],
+  leadsLeft: ["leads left: ", "남은 리드: "],
+  lgCtl: ["Controls", "조작"], lgNotes: ["Notes", "안내"],
+  pluck: ["Pluck the string", "줄 퉁기기"],
+  usbOn: ["5 V supply: the USB charger is plugged in", "5 V 전원: USB 충전기가 꽂혀 있음"], usbOff: ["5 V supply: the USB charger is unplugged", "5 V 전원: USB 충전기가 빠져 있음"],
+  usbPlug: ["Plug in the USB charger", "USB 충전기 꽂기"], usbPull: ["Unplug the USB charger", "USB 충전기 뽑기"],
+  trayHelp: ["click an item; R-click to cancel", "항목 클릭; 우클릭으로 취소"],
+  holdTape: ["the tape is in your hand: click the stand (or the front view) to hold it against the stand, or the desk / photo to lay it flat", "줄자를 들고 있음: 스탠드(또는 정면 보기)를 클릭하면 스탠드에 대고, 책상·사진을 클릭하면 바닥에 놓습니다"],
+  holdLead: ["a lead end is in your hand: click a terminal, the string or the bar (R-click / Esc: put it away)", "리드 끝을 들고 있음: 단자·줄·막대를 클릭 (우클릭 / Esc: 내려놓기)"],
+  holdProbe: ["a probe is in your hand: click a terminal, the string or the bar (R-click: back in its holder)", "프로브를 들고 있음: 단자·줄·막대를 클릭 (우클릭: 홀더로)"],
+  clear: ["Pull out all test leads", "시험 리드 모두 뽑기"], newString: ["Fit the spare string", "예비 줄로 교체"],
+  sound: ["sound", "소리"],
+  notes: ["• The tensioner screw rises 0.70 mm a turn; the white mark on its knob is there for counting turns.\n• The small meter reads frequency between S+ and S− only while the USB supply is plugged in; right after a pluck it may show a harmonic.\n• Do not tension the string past 400 Hz.\n• Over 200 mA, use the 10 A socket of the AX-100 (its mA socket is fused at 200 mA).\n• A lead can be clipped anywhere on the string: hold its end and click the string.",
+          "• 조임 나사는 한 바퀴에 0.70 mm 올라갑니다. 손잡이의 흰 표시로 회전 수를 세세요.\n• 작은 멀티미터는 USB 전원이 꽂혀 있을 때만 S+와 S− 사이의 진동수를 읽습니다. 퉁긴 직후에는 배음을 보일 수 있습니다.\n• 400 Hz가 넘도록 줄을 조이지 마세요.\n• 200 mA가 넘으면 AX-100의 10 A 단자를 쓰세요 (mA 단자는 200 mA 퓨즈).\n• 리드 끝을 든 채 줄을 클릭하면 줄의 아무 곳에나 집게를 물릴 수 있습니다."],
+  broke: ["the string snapped — it was tensioned past its limit. Fit the spare string.", "줄이 끊어졌습니다 — 한계를 넘어 조였습니다. 예비 줄로 교체하세요."],
+  fuse: ["the AX-100's mA fuse has blown: more than 200 mA went through the VΩmA socket.", "AX-100의 mA 퓨즈가 끊어졌습니다: VΩmA 단자로 200 mA 넘게 흘렀습니다."],
+  noLead: ["all nine test leads are in use", "시험 리드 아홉 개를 모두 쓰고 있습니다"],
+  hot: ["the string is hot", "줄이 뜨겁습니다"],
+};
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+const tr = k => { const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k; };
+
+/* ------------------------- randomness ----------------------------- */
+function mulberry(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const SEED = (Math.random() * 1e9) | 0, RNG = mulberry(SEED);
+const gauss = () => { let u = 0, v = 0; while (!u) u = RNG(); while (!v) v = RNG(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+/* ==================================================================
+   THE STRING  (cm in the 3D, SI in the physics)
+   The string runs from its 0 V end over saddle 1 (the piezo), saddle 2,
+   the first pin of the tensioner, the tensioner's rising post, the
+   second pin, down to its other end which is joined to the stand body
+   and to B.
+   ================================================================== */
+const BASE_Y = 4.0;                                   /* top of the stand's board */
+const GEO = {E0:[8.0, BASE_Y+0.9], S1:[11.0, BASE_Y+2.2], S2:[61.4, BASE_Y+2.2], P1:[63.3, BASE_Y+1.3], TP:[67.6, BASE_Y+1.3], P2:[71.5, BASE_Y+1.3], E1:[74.9, BASE_Y+0.5]};
+const TRUE = {
+  d: 0.195e-3 * (1 + 0.012 * gauss()),                /* m */
+  rho: 1.89e-7 * (1 + 0.02 * gauss()),                /* Ohm m at T0 */
+  beta: 0.0020, Lam: 0.247e-3,                        /* 1/K, kg/m */
+  E: 1.85e11 * (1 + 0.03 * gauss()),                  /* Pa */
+  alpha: 1.12e-5 * (1 + 0.04 * gauss()),              /* 1/K */
+  slackMM: 1.25 + 0.15 * gauss(),                     /* stretch already there with the screw right down (mm) */
+  T0: 20.0 + 0.4 * gauss(),                           /* the room, C */
+  g: 0.037,                                           /* heat lost per metre per kelvin, W/(m K) */
+  c: 460,                                             /* J/(kg K) */
+  Rint: 0.16,                                         /* the USB supply's own resistance */
+  Rnom: [0.1, 1, 3, 10, 30, 100, 1000],
+};
+TRUE.A = Math.PI * TRUE.d * TRUE.d / 4;
+TRUE.R = TRUE.Rnom.map(r => r * (1 + 0.025 * gauss()));
+const H1 = 0.70;                                      /* mm per turn */
+const ST = {turns: 0, T: TRUE.T0, broken: false, brokeAt: 0, usb: false, pluckT: -99, pluckAmp: 0, harm: 2, harmT: 0.5, leads: [], held: null,
+  probe: {YV: null, YCOM: null}, tape: {where: "box", x: 8, y: 7.5, z: 26, ang: 0}, fuse: false, sound: true, t: 0, spare: 1};
+/* the string's path, cm: [x, y] points from the 0 V end to the body end */
+function pathPts(){ const dh = ST.turns * H1 / 10; return dh > 0 ? [GEO.E0, GEO.S1, GEO.S2, GEO.P1, [GEO.TP[0], GEO.TP[1] + dh], GEO.P2, GEO.E1] : [GEO.E0, GEO.S1, GEO.S2, GEO.P1, GEO.P2, GEO.E1]; }
+function pathLen(pts){ let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i-1][0], pts[i][1] - pts[i-1][1]); return s; }
+/* the length of path at the room temperature with the screw right down (the 674 mm of the solution) */
+const L_PATH0 = (() => { const t = ST.turns; ST.turns = 0; const L = pathLen(pathPts()); ST.turns = t; return L; })();
+/* the vibrating length: saddle to saddle */
+const B_VIB = (GEO.S2[0] - GEO.S1[0]) / 100;
+/* the unstretched length of the string at temperature T (m); the whole string carries the current, so it all warms */
+const Lu = T => (L_PATH0 * 10 - TRUE.slackMM) / 1000 * (1 + TRUE.alpha * (T - TRUE.T0));
+function tension(){ const L = pathLen(pathPts()) / 100, lu = Lu(ST.T); return Math.max(0, TRUE.E * TRUE.A * (L - lu) / lu); }
+function fundamental(){ const F = tension(); return F <= 0 ? 0 : Math.sqrt(F / TRUE.Lam) / (2 * B_VIB); }
+const F_BREAK = TRUE.Lam * Math.pow(2 * B_VIB * 432, 2);      /* about 430 Hz */
+/* resistance of the whole string and of a stretch of it (path cm), at its temperature */
+const rhoT = () => TRUE.rho * (1 + TRUE.beta * (ST.T - TRUE.T0));
+const Rlen = cm => rhoT() * (cm / 100) / TRUE.A;
+/* where along the string (path cm from the 0 V end) a point of a segment lies */
+function pathAt(seg, u){ const p = pathPts(); let s = 0; for (let i = 1; i <= seg; i++) s += Math.hypot(p[i][0] - p[i-1][0], p[i][1] - p[i-1][1]);
+  return s + u * Math.hypot(p[seg+1][0] - p[seg][0], p[seg+1][1] - p[seg][1]); }
+function pointAt(s){ const p = pathPts(); for (let i = 1; i < p.length; i++){ const L = Math.hypot(p[i][0] - p[i-1][0], p[i][1] - p[i-1][1]);
+    if (s <= L || i === p.length - 1){ const u = Math.min(1, s / L); return [p[i-1][0] + (p[i][0] - p[i-1][0]) * u, p[i-1][1] + (p[i][1] - p[i-1][1]) * u]; } s -= L; } return p[p.length - 1]; }
+
+/* ==================================================================
+   THE CIRCUIT
+   Terminals: A (+5 V of the USB supply), B (= the stand body = the
+   string's far end), S+ / S- (the pickup amplifier; S- is 0 V), the
+   resistor posts R0a.. R6b, the meters' sockets, and clips put on the
+   string anywhere ("c:<path cm>").  Leads join terminals.  The network is
+   solved by nodal analysis every frame.
+   ================================================================== */
+const AX100_DIAL = ["OFF", "DCV 200m", "DCV 2", "DCV 20", "DCV 200", "DCV 600", "ACV 600", "ACV 200", "DCA 20µ", "DCA 200µ", "DCA 2m", "DCA 20m", "DCA 200m", "DCA 10", "→|", "Ω 200", "Ω 2k", "Ω 20k", "Ω 200k", "Ω 20M"];
+const MS_DIAL = ["V⎓", "V~", "OFF", "Hz", "Ω"];          /* left to right over the top of its dial */
+const METER = {ax100: {dial: 0}, ms811: {dial: 2, hold: false, held: null, rel: null, sel: 0, duty: false}};
+const R_LEAD = 0.035, R_CLIP = 0.05, R_PROBE = 0.08;
+const termIsClip = t => t.startsWith("c:");
+const elec = t => t && t.startsWith("b:") ? "body" : t;          /* a clip on the stand's bar is the body */
+const clipped = t => t.startsWith("c:") || t.startsWith("b:");
+/* every terminal a lead can go to */
+function termList(){ const L = ["A", "B", "Sp", "Sm", "body"]; for (let i = 0; i < 7; i++) L.push("R" + i + "a", "R" + i + "b");
+  L.push("X10A", "XCOM", "XV", "YCOM", "YV"); for (const l of ST.leads) for (const e of [l.a, l.b]) if (e && termIsClip(e) && !L.includes(e)) L.push(e);
+  for (const k of ["YV", "YCOM"]){ const e = ST.probe[k]; if (e && termIsClip(e) && !L.includes(e)) L.push(e); } return L; }
+/* which terminals are joined by wire at all (for the meter's "is it across S+ / S-" test) */
+function connect(){ const par = {}, f = x => { if (!(x in par)) par[x] = x; while (par[x] !== x){ par[x] = par[par[x]]; x = par[x]; } return x; };
+  const join = (a, b) => { par[f(a)] = f(b); }; join("B", "body"); join("Sm", "GND");
+  for (const l of ST.leads) if (l.b) join(elec(l.a), elec(l.b)); for (const k of ["YV", "YCOM"]) if (ST.probe[k]) join(k, elec(ST.probe[k])); return f; }
+/* solve: node voltages, the power in the string, what each meter sees */
+function solve(){
+  const terms = termList(), f = x => x === "Sm" ? "GND" : x === "body" ? "B" : x;
+  const R = [], sR = [];                                  /* [nodeA, nodeB, ohms]; sR: the string's own stretches */
+  for (const l of ST.leads) if (l.b) R.push([elec(l.a), elec(l.b), R_LEAD + (clipped(l.a) ? R_CLIP : 0) + (clipped(l.b) ? R_CLIP : 0)]);
+  for (const k of ["YV", "YCOM"]) if (ST.probe[k]) R.push([k, elec(ST.probe[k]), R_PROBE + (clipped(ST.probe[k]) ? R_CLIP : 0)]);
+  /* the string as a chain of resistances between the 0 V end, the clips (sorted) and the body end */
+  const clips = [...new Set(terms.filter(termIsClip))].map(t => [t, +t.slice(2)]).sort((a, b) => a[1] - b[1]);
+  const Ltot = pathLen(pathPts()), chain = [["GND", 0]].concat(clips).concat([["B", Ltot]]);
+  if (!ST.broken) for (let i = 1; i < chain.length; i++){ const r = [chain[i-1][0], chain[i][0], Math.max(1e-5, Rlen(chain[i][1] - chain[i-1][1]))]; R.push(r); sR.push(r); }
+  else { const cut = ST.brokeAt; for (let i = 1; i < chain.length; i++){ const a = chain[i-1][1], b = chain[i][1]; if (a < cut && b > cut) continue;
+      R.push([chain[i-1][0], chain[i][0], Math.max(1e-5, Rlen(b - a))]); } }
+  for (let i = 0; i < 7; i++) R.push(["R" + i + "a", "R" + i + "b", TRUE.R[i]]);
+  R.push(["Sp", "GND", 1000]);                          /* the amplifier's output resistance (no DC on S+) */
+  /* the meters as loads: the 10 A shunt is always there; the mA shunt only on the current ranges */
+  const ax = AX100_DIAL[METER.ax100.dial];
+  R.push(["X10A", "XCOM", 0.012]);
+  if (ax.startsWith("DCV") || ax.startsWith("ACV")) R.push(["XV", "XCOM", 1e6]);
+  if (ax.startsWith("DCA") && ax !== "DCA 10" && !ST.fuse) R.push(["XV", "XCOM", SHUNT[ax.split(" ")[1]]]);
+  const ms = MS_DIAL[METER.ms811.dial]; if (ms !== "OFF" && ms !== "Ω") R.push(["YV", "YCOM", 11e6]);
+  const nodes = [...new Set(terms.concat(["GND"]).map(f))].filter(n => n !== "GND"), idx = new Map(nodes.map((n, i) => [n, i])), N = nodes.length;
+  const G = Array.from({length:N}, () => new Float64Array(N)), Ivec = new Float64Array(N);
+  const stamp = (a, b, r) => { const g = 1 / r, ia = idx.get(f(a)), ib = idx.get(f(b));
+    if (ia !== undefined) G[ia][ia] += g; if (ib !== undefined) G[ib][ib] += g; if (ia !== undefined && ib !== undefined){ G[ia][ib] -= g; G[ib][ia] -= g; } };
+  for (const [a, b, r] of R) stamp(a, b, r);
+  /* the supply: A held at 5 V behind its own resistance (a Norton source into node A) */
+  if (ST.usb){ stamp("A", "GND", TRUE.Rint); Ivec[idx.get("A")] += 5.0 / TRUE.Rint; }
+  for (let i = 0; i < N; i++) G[i][i] += 1e-12;           /* floating nodes sit at 0 V */
+  const V = gaussSolve(G, Ivec), volt = t => { const n = f(t); return n === "GND" ? 0 : V[idx.get(n)] || 0; };
+  const out = {volt, f: connect()};
+  out.Pstr = sR.reduce((s, [a, b, r]) => s + Math.pow(volt(a) - volt(b), 2) / r, 0);
+  out.axV = volt("XV") - volt("XCOM"); out.ax10 = volt("X10A") - volt("XCOM");
+  out.Ima = ax.startsWith("DCA") && ax !== "DCA 10" && !ST.fuse ? out.axV / SHUNT[ax.split(" ")[1]] : 0;
+  out.axI = ax === "DCA 10" ? out.ax10 / 0.012 : out.Ima;
+  out.msV = volt("YV") - volt("YCOM");
+  /* an ohmmeter: the resistance between its sockets from its own test current (wrong if the circuit is live) */
+  out.ohmBetween = (a, b) => { const ia = idx.get(f(a)), ib = idx.get(f(b)); if (f(a) === f(b)) return 0;
+    const I2 = Float64Array.from(Ivec), itest = 1e-3; if (ia !== undefined) I2[ia] += itest; if (ib !== undefined) I2[ib] -= itest;
+    const V2 = gaussSolve(G, I2), va = ia !== undefined ? V2[ia] : 0, vb = ib !== undefined ? V2[ib] : 0;
+    const r = (va - vb) / itest; return r > 1e9 ? Infinity : r; };
+  return out;
+}
+const SHUNT = {"20µ": 1e4, "200µ": 1e3, "2m": 100, "20m": 10, "200m": 1.0};
+function gaussSolve(A, b){ const n = b.length, M = A.map((r, i) => { const x = Array.from(r); x.push(b[i]); return x; });
+  for (let c = 0; c < n; c++){ let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]];
+    const piv = M[c][c] || 1e-30; for (let r = c + 1; r < n; r++){ const k = M[r][c] / piv; if (!k) continue; for (let j = c; j <= n; j++) M[r][j] -= k * M[c][j]; } }
+  const x = new Float64Array(n); for (let r = n - 1; r >= 0; r--){ let s = M[r][n]; for (let j = r + 1; j < n; j++) s -= M[r][j] * x[j]; x[r] = s / (M[r][r] || 1e-30); } return x; }
+
+/* ==================================================================
+   THE METERS' DISPLAYS
+   AX-100: 3 1/2 digits, manual ranges, accuracy as the problem lists.
+   AX-MS811: 4000 counts, autoranging, frequency between its sockets.
+   ================================================================== */
+const CAL = {ax: [gauss() * 0.15, gauss() * 1.0], ms: [gauss() * 0.2, gauss() * 1.0]};    /* each meter's own error, in % and digits */
+let SOL = null;
+function fmtDigits(v, dec){ const s = Math.abs(v).toFixed(dec); return (v < 0 ? "-" : "") + s; }
+/* AX-100: 3 1/2 digits (1999), manual ranges; "1" alone when over range */
+function axReading(){ const ax = AX100_DIAL[METER.ax100.dial]; if (ax === "OFF") return ["", ""];
+  const [kind, rng] = ax.split(" "), n = () => 1 + (CAL.ax[0] + 0.08 * gauss()) / 100, dig = (dec, k) => (CAL.ax[1] + k * gauss()) * Math.pow(10, -dec) * 0.5;
+  if (kind === "DCV"){ const full = {"200m":0.2,"2":2,"20":20,"200":200,"600":600}[rng], dec = {"200m":1,"2":3,"20":2,"200":1,"600":0}[rng];
+    if (Math.abs(SOL.axV) >= full * 0.9995) return ["1", rng === "200m" ? "mV" : "V"];
+    return [fmtDigits(SOL.axV * n() * (rng === "200m" ? 1000 : 1) + dig(dec, 0.6), dec), rng === "200m" ? "mV" : "V"]; }
+  if (kind === "ACV") return [rng === "200" ? fmtDigits(Math.abs(ampV()) * 0.71 + 0.0, 1) : fmtDigits(Math.abs(ampV()) * 0.71, 0), "V~"];
+  if (kind === "DCA"){ const full = {"20µ":20e-6,"200µ":200e-6,"2m":2e-3,"20m":20e-3,"200m":0.2,"10":10}[rng], mult = {"20µ":1e6,"200µ":1e6,"2m":1e3,"20m":1e3,"200m":1e3,"10":1}[rng], dec = {"20µ":2,"200µ":1,"2m":3,"20m":2,"200m":1,"10":2}[rng];
+    const u = rng === "10" ? "A" : rng.endsWith("µ") ? "µA" : "mA"; if (Math.abs(SOL.axI) >= full * 0.9995) return ["1", u];
+    return [fmtDigits(SOL.axI * mult * n() + dig(dec, 0.6), dec), u]; }
+  if (kind === "Ω"){ const full = {"200":200,"2k":2e3,"20k":2e4,"200k":2e5,"20M":2e7}[rng], dec = {"200":1,"2k":3,"20k":2,"200k":1,"20M":2}[rng], div = {"200":1,"2k":1e3,"20k":1e3,"200k":1e3,"20M":1e6}[rng];
+    const u = rng === "200" ? "Ω" : rng === "20M" ? "MΩ" : "kΩ"; let r = SOL.ohmBetween("XV", "XCOM") + 0.12;
+    if (!isFinite(r) || r >= full * 0.9995) return ["1", u]; if (r < 0) return ["-" + "1", u];
+    return [fmtDigits(Math.max(0, r * n() / div + dig(dec, 0.8)), dec), u]; }
+  if (kind === "→|"){ const r = SOL.ohmBetween("XV", "XCOM"); if (!isFinite(r) || r > 2000) return ["1", ""]; return [String(Math.round(r * 1.0)).padStart(3, "0"), "mV"]; }
+  return ["1", ""]; }
+/* the amplifier's output while the string rings (V, peak) - what an AC voltmeter across S+ / S- would see */
+function ampV(){ const f = SOL.f, on = ST.usb && !ST.broken; if (!on) return 0; const age = ST.t - ST.pluckT, amp = ST.pluckAmp * Math.exp(-age / 2.6);
+  return age < 0 ? 0 : 1.6 * amp; }
+function acrossS(a, b){ const f = SOL.f; return (f(a) === f("Sp") && f(b) === f("GND")) || (f(a) === f("GND") && f(b) === f("Sp")); }
+/* AX-MS811: 4000 counts, autoranging */
+function msReading(){ const M = METER.ms811, mode = MS_DIAL[M.dial]; if (mode === "OFF") return ["", "", []];
+  if (M.hold && M.held) return M.held;
+  const n = () => 1 + (CAL.ms[0] + 0.1 * gauss()) / 100;
+  const auto = (v, units, ann) => { const a = Math.abs(v); for (const [lim, div, dec, u] of units) if (a < lim) return [fmtDigits(v / div * n() + (CAL.ms[1] + 0.5 * gauss()) * Math.pow(10, -dec) * 0.5, dec), u, ann]; return ["OL", units[units.length - 1][3], ann]; };
+  let r;
+  if (mode === "V⎓") r = auto(SOL.msV - (M.rel || 0), [[0.4, 1e-3, 1, "mV"], [4, 1, 3, "V"], [40, 1, 2, "V"], [400, 1, 1, "V"], [500, 1, 0, "V"]], ["AUTO", "DC"]);
+  else if (mode === "V~") r = auto(acrossS("YV", "YCOM") ? ampV() * 0.71 : 0, [[4, 1, 3, "V"], [40, 1, 2, "V"]], ["AUTO", "AC"]);
+  else if (mode === "Hz"){ const fr = freqReading();
+    r = M.duty ? [fr > 0 ? (49 + 2 * RNG()).toFixed(1) : "0.0", "%", []] : fr <= 0 ? ["0.000", "Hz", ["AUTO"]] : auto(fr, [[5, 1, 3, "Hz"], [50, 1, 2, "Hz"], [500, 1, 1, "Hz"], [5000, 1e3, 3, "kHz"], [5e4, 1e3, 2, "kHz"]], ["AUTO"]); }
+  else { const rr = SOL.ohmBetween("YV", "YCOM") + 0.1 - (M.rel || 0);
+    if (M.sel === 1){ r = !isFinite(rr) || rr > 3000 ? ["OL", "V", ["→|"]] : [(rr * 1e-3 * 1.0).toFixed(3), "V", ["→|"]]; }
+    else if (M.sel === 2){ r = !isFinite(rr) || rr > 4e7 ? ["OL", "Ω", ["•))"]] : auto(rr, [[400, 1, 1, "Ω"], [4e3, 1e3, 3, "kΩ"]], ["•))"]); if (rr < 60) beep(); }
+    else if (M.sel === 3) r = ["0.012", "nF", ["AUTO"]];
+    else r = !isFinite(rr) || rr > 4e7 ? ["OL", "MΩ", ["AUTO"]] : auto(rr, [[400, 1, 1, "Ω"], [4e3, 1e3, 3, "kΩ"], [4e4, 1e3, 2, "kΩ"], [4e5, 1e3, 1, "kΩ"], [4e6, 1e6, 3, "MΩ"], [4e7, 1e6, 2, "MΩ"]], ["AUTO"]); }
+  if (M.rel !== null && r) r[2] = (r[2] || []).concat(["REL"]);
+  return r; }
+/* the frequency the small meter shows: only across S+ / S- with the amplifier powered; a harmonic first, then the
+   fundamental while the string still rings loudly enough, then rubbish and nothing */
+function freqReading(){ if (!ST.usb || ST.broken || !acrossS("YV", "YCOM")) return 0;
+  const age = ST.t - ST.pluckT, amp = ST.pluckAmp * Math.exp(-age / 2.6);
+  if (age < 0 || amp < 0.03) return 0;
+  const f0 = fundamental() * (1 + 0.0006 * gauss() + 0.0012 * Math.sin(ST.t * 1.3) * Math.min(1, (ST.T - TRUE.T0) / 60));
+  let v; if (age < 0.45 + 0.4 * ST.harmT) v = f0 * ST.harm; else if (amp > 0.11) v = f0; else v = 20 + RNG() * 1400;
+  return v * (1 + CAL.ms[0] / 100 * 0.5); }
+
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+
+/* ==================================================================
+   TEXTURES: the meters' faces (after the makers' photos), the photo
+   of the string, the measuring tape
+   ================================================================== */
+const mkCv = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const FONT = '"Arial","Helvetica",sans-serif';
+/* seven segments: a b c d e f g */
+const SEG = {"0":"abcdef","1":"bc","2":"abdeg","3":"abcdg","4":"bcfg","5":"acdfg","6":"acdefg","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","O":"abcdef","L":"def"," ":""};
+/* one digit cell of width w, height h, top-left (x, y), slanted a little */
+function seg7(g, ch, x, y, w, h, col){ const s = SEG[ch] || "", t = h * 0.11, sl = h * 0.07, P = (u, v) => [x + u * w + (1 - v) * sl, y + v * h];
+  const H = (v, on) => { if (!on) return; const [a0, a1] = [P(0.1, v), P(0.9, v)]; g.beginPath(); g.moveTo(a0[0] + t * 0.5, a0[1]); g.lineTo(a0[0] + t, a0[1] - t / 2); g.lineTo(a1[0] - t, a1[1] - t / 2);
+    g.lineTo(a1[0] - t * 0.5, a1[1]); g.lineTo(a1[0] - t, a1[1] + t / 2); g.lineTo(a0[0] + t, a0[1] + t / 2); g.closePath(); g.fill(); };
+  const Vt = (u, v0, v1, on) => { if (!on) return; const a = P(u, v0), b = P(u, v1), d = [b[0] - a[0], b[1] - a[1]], L = Math.hypot(d[0], d[1]), n = [d[0] / L, d[1] / L];
+    g.beginPath(); g.moveTo(a[0] + n[0] * t * 0.5, a[1] + n[1] * t * 0.5); g.lineTo(a[0] + n[0] * t + t / 2, a[1] + n[1] * t); g.lineTo(b[0] - n[0] * t + t / 2, b[1] - n[1] * t);
+    g.lineTo(b[0] - n[0] * t * 0.5, b[1] - n[1] * t * 0.5); g.lineTo(b[0] - n[0] * t - t / 2, b[1] - n[1] * t); g.lineTo(a[0] + n[0] * t - t / 2, a[1] + n[1] * t); g.closePath(); g.fill(); };
+  g.fillStyle = col; H(0.04, s.includes("a")); H(0.5, s.includes("g")); H(0.96, s.includes("d"));
+  Vt(0.9, 0.04, 0.5, s.includes("b")); Vt(0.9, 0.5, 0.96, s.includes("c")); Vt(0.1, 0.5, 0.96, s.includes("e")); Vt(0.1, 0.04, 0.5, s.includes("f")); }
+/* a reading string ("12.34", "-0.5", "OL") into cells of digits with the decimal points beside them */
+function cells(str, n){ const out = []; for (const ch of str){ if (ch === "." && out.length){ out[out.length - 1].dp = true; continue; } out.push({ch, dp:false}); }
+  while (out.length < n) out.unshift({ch:" ", dp:false}); return out.slice(-n); }
+
+/* ---- AX-100: grey face in a yellow bumper ------------------------ */
+const AXW = 8.6, AXL = 15.0, AXH = 3.2, AXF = {w:7.6, l:14.0};                 /* outside, and the face inside the bumper */
+const AXC = [23, 23];                                                       /* where it lies on the desk (centre x, z) */
+const AX_DIALC = [AXF.w / 2, 7.55], AX_DR = 1.95, AX_SOCK = [[1.3, 12.25], [3.8, 12.25], [6.3, 12.25]];
+const PXC = 48;                                                             /* texture px per cm */
+const AXTEX = mkCv(Math.round(AXF.w * PXC), Math.round(AXF.l * PXC)); AXTEX._ver = 0;
+const AXLBL = [["OFF",0],["200mV",1],["2V",2],["20V",3],["200V",4],["600V",5],["600V",6],["200V",7],["20µA",8],["200µA",9],["2mA",10],["20mA",11],["200mA",12],["10A",13],["→|•)))",14],["200",15],["2k",16],["20k",17],["200k",18],["20M",19]];
+const axAng = i => -Math.PI / 2 + i * 2 * Math.PI / 20;                      /* on the face, image y down: clockwise from the top */
+let AXSHOW = ["", ""];
+function drawAX(){ const g = AXTEX.getContext("2d"), k = PXC, W = AXTEX.width, H = AXTEX.height;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#5c5f61"; g.fillRect(0, 0, W, H);
+  const gr = g.createLinearGradient(0, 0, W, H); gr.addColorStop(0, "rgba(255,255,255,.06)"); gr.addColorStop(1, "rgba(0,0,0,.08)"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.scale(k, k); g.lineJoin = "round";
+  /* the badge: AXIO over MET, then the model */
+  g.fillStyle = "#f4f4f2"; g.font = "bold 0.42px " + FONT; g.textBaseline = "alphabetic"; g.textAlign = "left";
+  g.fillText("AXIO", 0.55, 0.78); g.fillRect(0.55, 0.84, 1.02, 0.05); g.font = "bold 0.3px " + FONT; g.fillText("MET", 1.0, 1.15);
+  g.font = "bold 0.44px " + FONT; g.fillText("AX-100", 1.95, 0.95); g.font = "italic 0.2px " + FONT; g.fillText("DIGITAL MULTIMETER", 3.75, 0.93);
+  /* the LCD in its dark bezel */
+  g.fillStyle = "#3d4042"; rr(g, 0.45, 1.3, AXF.w - 0.9, 3.25, 0.25); g.fill();
+  g.fillStyle = "#b9bfb3"; rr(g, 0.8, 1.55, AXF.w - 1.6, 2.75, 0.08); g.fill();
+  const lg = g.createLinearGradient(0, 1.55, 0, 4.3); lg.addColorStop(0, "rgba(255,255,255,.18)"); lg.addColorStop(1, "rgba(0,0,0,.06)"); g.fillStyle = lg; g.fillRect(0.8, 1.55, AXF.w - 1.6, 2.75);
+  const [txt, unit] = AXSHOW;
+  if (txt){ const ink = "#1b1e1c"; let half = "", digs, dec = 0, neg = txt[0] === "-";
+    if (txt.replace("-", "") === "1"){ half = "1"; digs = "   "; }
+    else { const t = txt.replace("-", ""), i = t.indexOf("."); dec = i < 0 ? 0 : t.length - i - 1; let n = Math.round(parseFloat(t) * Math.pow(10, dec)); if (n >= 1000){ half = "1"; n -= 1000; } digs = String(n).padStart(3, "0"); }
+    const cw = 1.18, ch = 1.85, x0 = 1.75, y0 = 2.0;
+    if (neg){ g.fillStyle = ink; g.fillRect(0.98, y0 + ch * 0.47, 0.42, 0.13); }
+    if (half) seg7(g, "1", x0 - cw * 0.55, y0, cw, ch, ink);
+    for (let i = 0; i < 3; i++) seg7(g, digs[i], x0 + i * cw + 0.08, y0, cw, ch, ink);
+    if (dec && digs.trim()){ g.beginPath(); g.arc(x0 + (3 - dec) * cw + 0.08, y0 + ch * 0.98, 0.09, 0, 7); g.fillStyle = ink; g.fill(); }
+  }
+  /* the range ring, printed */
+  const [cx, cy] = AX_DIALC; g.textAlign = "center"; g.textBaseline = "middle";
+  for (const [s, i] of AXLBL){ const a = axAng(i), r = AX_DR + 0.62; g.fillStyle = "#f2f2ee"; g.font = (s.length > 4 ? 0.22 : 0.25) + "px " + FONT;
+    g.fillText(s, cx + r * Math.cos(a) * (Math.abs(Math.cos(a)) > 0.5 ? 1.07 : 1), cy + r * Math.sin(a));
+    g.strokeStyle = "#f2f2ee"; g.lineWidth = 0.035; g.beginPath(); g.moveTo(cx + (AX_DR + 0.08) * Math.cos(a), cy + (AX_DR + 0.08) * Math.sin(a)); g.lineTo(cx + (AX_DR + 0.25) * Math.cos(a), cy + (AX_DR + 0.25) * Math.sin(a)); g.stroke(); }
+  g.font = "bold 0.4px " + FONT; g.fillStyle = "#f2f2ee";
+  g.fillText("V⎓", AXF.w - 0.55, cy - 2.05); g.fillText("V~", AXF.w - 0.45, cy + 1.25); g.fillText("Ω", 0.55, cy - 2.05); g.fillText("A⎓", 0.75, cy + 2.15);
+  /* the sockets' names and the warnings */
+  g.font = "bold 0.34px " + FONT; for (const [s, j] of [["10A", 0], ["COM", 1], ["mAVΩ", 2]]) g.fillText(s, AX_SOCK[j][0], AX_SOCK[j][1] - 0.78);
+  for (const x of [2.55, 5.05]){ g.fillStyle = "#f0c419"; g.beginPath(); g.moveTo(x, 11.95); g.lineTo(x + 0.3, 12.5); g.lineTo(x - 0.3, 12.5); g.closePath(); g.fill(); g.fillStyle = "#222"; g.font = "bold 0.3px " + FONT; g.fillText("!", x, 12.3); }
+  g.fillStyle = "#e8e8e4"; g.font = "0.16px " + FONT; g.fillText("10sec MAX", 1.3, 13.0); g.fillText("10A", 1.3, 13.18); g.fillText("FUSED", 1.3, 13.36);
+  g.fillText("MAX 600V", 6.3, 13.0); g.fillText("200mA", 6.3, 13.18); g.fillText("FUSED", 6.3, 13.36); g.fillText("CAT III", 3.8, 13.5);
+  g.strokeStyle = "#e8e8e4"; g.lineWidth = 0.02; g.beginPath(); g.moveTo(0.85, 12.95); g.lineTo(0.85, 13.25); g.lineTo(3.55, 13.25); g.moveTo(4.05, 13.25); g.lineTo(6.75, 13.25); g.lineTo(6.75, 12.95); g.stroke();
+  g.strokeRect(7.0, 13.1, 0.25, 0.25); g.strokeRect(7.06, 13.16, 0.13, 0.13);
+  AXTEX._ver++; }
+function rr(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+/* ---- AX-MS811: pocket meter with a flip cover and fixed probes --- */
+const MSW = 6.6, MSL = 11.6, MSH = 2.3, MSF = {w:5.8, l:10.6}, MSC = [39, 24];
+const MS_DIALC = [MSF.w / 2, 8.1], MS_DR = 1.55, MS_BTN = [[0.95, 5.25], [2.3, 5.25], [3.55, 5.25], [4.85, 5.25]];
+const MS_BTNS = ["SELECT", "RELATIVE", "DATA HOLD", "Hz/DUTY"];
+const msAng = i => -Math.PI / 2 + (i - 2) * Math.PI / 5.2;
+const MSTEX = mkCv(Math.round(MSF.w * PXC), Math.round(MSF.l * PXC)); MSTEX._ver = 0;
+let MSSHOW = ["", "", []];
+function drawMS(){ const g = MSTEX.getContext("2d"), k = PXC, W = MSTEX.width, H = MSTEX.height;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#4a4e52"; g.fillRect(0, 0, W, H); g.scale(k, k);
+  g.fillStyle = "#2e3134"; rr(g, 0.3, 0.3, MSF.w - 0.6, 4.0, 0.3); g.fill();
+  g.fillStyle = "#b8bfb2"; rr(g, 0.55, 0.6, MSF.w - 1.1, 3.35, 0.1); g.fill();
+  const [txt, unit, ann] = MSSHOW, ink = "#1c1f1d";
+  if (txt){ g.font = "bold 0.26px " + FONT; g.fillStyle = ink; g.textAlign = "left"; g.textBaseline = "middle";
+    const A = ann || []; let x = 0.75; for (const a of ["AUTO", "DC", "AC", "→|", "•))", "HOLD", "REL"]){ if (A.includes(a) || (a === "HOLD" && METER.ms811.hold)) g.fillText(a, x, 0.92); x += a.length * 0.17 + 0.2; }
+    const cs = cells(txt === "OL" ? " 0L " : txt, 4), cw = 1.0, ch = 1.75, x0 = 0.95, y0 = 1.3;
+    if (txt[0] === "-"){ g.fillRect(0.62, y0 + ch * 0.47, 0.3, 0.12); cs.forEach(c => { if (c.ch === "-") c.ch = " "; }); }
+    cs.forEach((c, i) => { seg7(g, c.ch, x0 + i * cw, y0, cw * 0.95, ch, ink); if (c.dp){ g.beginPath(); g.arc(x0 + (i + 1) * cw - 0.02, y0 + ch * 0.98, 0.08, 0, 7); g.fill(); } });
+    g.font = "bold 0.3px " + FONT; g.textAlign = "right"; g.fillText(unit, MSF.w - 0.7, 3.65); }
+  g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = "#f2f2ee"; g.font = "bold 0.19px " + FONT;
+  MS_BTN.forEach(([x, y], i) => g.fillText(MS_BTNS[i], x, y + 0.48));
+  /* the dial's printing: the function fields */
+  const [cx, cy] = MS_DIALC, L = ["DCV", "ACV", "OFF", "Hz\nDUTY", "Ω →|\n•)) F"];
+  for (let i = 0; i < 5; i++){ const a = msAng(i), r = MS_DR + 0.62, x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+    if (i !== 2){ g.fillStyle = i === 4 ? "#d23b2f" : "#f0c419"; g.save(); g.translate(x, y); g.rotate(a + Math.PI / 2); rr(g, -0.48, -0.28, 0.96, 0.56, 0.08); g.fill(); g.restore(); }
+    g.fillStyle = i === 2 ? "#f2f2ee" : "#1a1a1a"; g.font = "bold " + (i > 2 ? 0.18 : 0.24) + "px " + FONT; const ls = L[i].split("\n"); ls.forEach((s, j) => g.fillText(s, x, y + (j - (ls.length - 1) / 2) * 0.2)); }
+  g.fillStyle = "#e8e8e4"; g.font = "bold 0.3px " + FONT; g.fillText("AX-MS811", MSF.w / 2, 10.25);
+  g.font = "0.15px " + FONT; g.fillText("POCKET AUTORANGING DMM", MSF.w / 2, 9.98);
+  MSTEX._ver++; }
+
+/* ---- the 100x photo of the string -------------------------------- */
+const PH = {x0:76, z0:15.5, w:14, h:5.2}, PHPX = 70;
+const PHTEX = mkCv(PH.w * PHPX, Math.round(PH.h * PHPX));
+(function drawPhoto(){ const g = PHTEX.getContext("2d"), k = PHPX, W = PHTEX.width, Hh = PHTEX.height;
+  const bg = g.createLinearGradient(0, 0, 0, Hh); bg.addColorStop(0, "#9da1a3"); bg.addColorStop(0.5, "#aeb2b2"); bg.addColorStop(1, "#8f9497"); g.fillStyle = bg; g.fillRect(0, 0, W, Hh);
+  const band = 100 * TRUE.d * 100 * k, cy = Hh / 2 + 3, y0 = cy - band / 2;     /* 100 x d, in cm on the photo */
+  const sg = g.createLinearGradient(0, y0 - 2, 0, y0 + band + 2);
+  [[0, "rgba(120,110,100,0)"], [0.03, "#6d5a49"], [0.12, "#a9784f"], [0.28, "#e6ded2"], [0.36, "#fbfaf6"], [0.47, "#c5c2bc"], [0.62, "#8c6b4f"], [0.8, "#b0743f"], [0.95, "#5b3e2a"], [1, "rgba(80,70,60,0)"]].forEach(([t, c]) => sg.addColorStop(t, c));
+  g.fillStyle = sg; g.fillRect(0, y0 - 2, W, band + 4);
+  for (let i = 0; i < 260; i++){ const x = RNG() * W, y = y0 + RNG() * band; g.fillStyle = "rgba(255,255,255," + (0.04 + 0.08 * RNG()) + ")"; g.fillRect(x, y, 6 + 30 * RNG(), 1); }
+  g.filter = "blur(0.6px)"; g.drawImage(PHTEX, 0, 0); g.filter = "none";
+  g.fillStyle = "#000"; g.font = "bold " + Math.round(band * 0.72) + "px " + FONT; g.textAlign = "left"; g.textBaseline = "middle"; g.fillText("string", W * 0.2, cy + band * 0.02);
+  const ax = W * 0.42; g.strokeStyle = "#000"; g.lineWidth = 3;
+  for (const [yy, d] of [[y0, -1], [y0 + band, 1]]){ g.beginPath(); g.moveTo(ax, yy + d * 46); g.lineTo(ax, yy); g.stroke();
+    g.beginPath(); g.moveTo(ax, yy); g.lineTo(ax - 36, yy + d * 16); g.lineTo(ax, yy + d * 7); g.lineTo(ax + 36, yy + d * 16); g.closePath(); g.fill(); }
+  g.fillStyle = "#fff"; g.fillRect(0, Hh - 26, W, 26); g.fillStyle = "#333"; g.font = "15px " + FONT; g.textAlign = "left"; g.fillText("GPhO 2017 · E1 · the string, magnified 100×", 10, Hh - 13);
+  PHTEX._static = true; })();
+
+/* ---- the measuring tape: four 25 cm pieces of yellow steel ------- */
+const TPX = 100, TAPE_W = 1.3, TAPE_N = 4, TAPE_SEG = 25;
+const TAPETEX = Array.from({length:TAPE_N}, (_, s) => { const c = mkCv(TAPE_SEG * TPX, Math.round(TAPE_W * TPX)), g = c.getContext("2d"), H = c.height;
+  g.fillStyle = "#f3cd2f"; g.fillRect(0, 0, c.width, H); g.fillStyle = "rgba(255,255,255,.18)"; g.fillRect(0, 0, c.width, H * 0.18);
+  g.fillStyle = "#151515";
+  for (let mm = 0; mm <= TAPE_SEG * 10; mm++){ const x = mm * TPX / 10, cm = s * TAPE_SEG + mm / 10; if (cm > 100) break;
+    const len = mm % 10 === 0 ? 0.42 : mm % 5 === 0 ? 0.3 : 0.2; g.fillRect(Math.max(0, x - 0.8), 0, mm % 10 === 0 ? 2.2 : 1.5, len * H);
+    if (mm % 10 === 0 && mm < TAPE_SEG * 10){ const n = Math.round(cm); g.fillStyle = n % 10 === 0 ? "#c4161c" : "#151515"; g.font = "bold " + Math.round(H * 0.36) + "px " + FONT;
+      g.textAlign = "left"; g.textBaseline = "alphabetic"; g.fillText(String(n), x + 3, H * 0.9); g.fillStyle = "#151515"; } }
+  if (s === 0){ g.fillStyle = "#8d9398"; g.fillRect(0, 0, 9, H); }
+  c._static = true; return c; });
+
+
+/* ==================================================================
+   THE BENCH IN 3D  (cm; x along the stand, y up, z towards you)
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+let view3 = "3d";
+const BAR = {x0:0, x1:78, z0:-3.5, z1:3.5, y0:3.0};
+const TERM_X = {A:1.5, B:3.6, Sp:5.7, Sm:7.8}, TERM_Z = 2.05, TERM_TOP = 6.0, TERM_COL = {A:"#c8262b", B:"#1d1d1f", Sp:"#e3b21a", Sm:"#2f7d3a"};
+const TERM_LBL = {A:"A", B:"B", Sp:"S+", Sm:"S−"};
+const RB = {x0:43, x1:63, z0:17.6, z1:25.8, y1:1.1}, RB_X = i => 44.5 + i * 2.85, RB_ZA = 19.2, RB_ZB = 24.0, RB_TOP = 2.55;
+const KNOB_R = 1.5, KNOB_Y0 = 0.35, KNOB_H = 1.0;
+const ZT = 1.0;                                     /* the plane in front of the string where the tape is held */
+const HAND_Y = 7.5;
+const STRIP = {x0:-27, x1:-11, z0:-14, z1:-10.2, h:2.6};
+const USBSOCK = [0.45, 1.7, -5.35];
+
+function desk3(){
+  face([[-34,0,-22],[-34,0,42],[102,0,42],[102,0,-22]], {fill:"#3a3d42", layer:-3, flat:true, id:"desk"});
+  for (let x = -30; x <= 100; x += 10) poly3([[x,0,-22],[x,0,42]], "#34373b", 1, {layer:-2});
+}
+/* a rounded rectangle in the x-z plane, N points per corner */
+function rrect(cx, cz, hw, hd, r, N){ const P = []; N = N || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, Math.PI / 2], [-1, -1, Math.PI], [1, -1, 1.5 * Math.PI]])
+    for (let i = 0; i <= N; i++){ const a = a0 + i / N * Math.PI / 2; P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+/* a ring between two outlines of the same count: its top and both walls */
+function ring3(outer, inner, y0, y1, col, o){ const n = outer.length, f = Object.assign({fill:col}, o || {});
+  for (let i = 0; i < n; i++){ const j = (i + 1) % n, a = outer[i], b = outer[j], c = inner[j], d = inner[i];
+    face(orient([[a[0], y1, a[1]], [b[0], y1, b[1]], [c[0], y1, c[1]], [d[0], y1, d[1]]], [0, 1, 0]), f);
+    const mo = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], mi = [(c[0] + d[0]) / 2, (c[1] + d[1]) / 2], ox = mo[0] - mi[0], oz = mo[1] - mi[1];
+    face(orient([[a[0], y0, a[1]], [b[0], y0, b[1]], [b[0], y1, b[1]], [a[0], y1, a[1]]], [ox, 0, oz]), Object.assign({cull:true}, f));
+    face(orient([[d[0], y0, d[1]], [c[0], y0, c[1]], [c[0], y1, c[1]], [d[0], y1, d[1]]], [-ox, 0, -oz]), Object.assign({cull:true}, f)); } }
+
+/* ---- the stand -------------------------------------------------- */
+function stand3(){
+  for (const x of [1.6, 76.4]) for (const z of [-2.4, 2.4]) box3(x - 0.9, x + 0.9, 0, BAR.y0, z - 0.9, z + 0.9, "#202124");
+  /* the aluminium bar: the stand body, joined to B and the string's far end */
+  box3(BAR.x0, BAR.x1, BAR.y0, BASE_Y, BAR.z0, BAR.z1, "#7a8188", {top:"#868d94", id:"bar"});
+  for (const z of [BAR.z0 + 0.25, BAR.z1 - 0.25]) poly3([[BAR.x0, BASE_Y + 0.002, z], [BAR.x1, BASE_Y + 0.002, z]], "rgba(255,255,255,.25)", 1);
+  /* the terminal plate (insulating) and its four binding posts */
+  box3(0.35, 9.4, BASE_Y, BASE_Y + 0.3, 0.95, 3.35, "#18191b", {top:"#232427"});
+  for (const k of ["A", "B", "Sp", "Sm"]){ const x = TERM_X[k];
+    cyl3("y", BASE_Y + 0.3, BASE_Y + 0.55, x, TERM_Z, 0.55, "#2a2b2e", {seg:6});
+    cylSeg("y", BASE_Y + 0.55, BASE_Y + 1.55, x, TERM_Z, 0.42, TERM_COL[k], {seg:16, id:"t:" + k}, 0.5);
+    cyl3("y", BASE_Y + 1.55, TERM_TOP, x, TERM_Z, 0.5, shade(TERM_COL[k], 1.08), {seg:16, id:"t:" + k, cap:shade(TERM_COL[k], 0.9)});
+    cyl3("y", TERM_TOP - 0.01, TERM_TOP + 0.005, x, TERM_Z, 0.2, "#0c0c0c", {seg:10, id:"t:" + k});
+    text3([x, BASE_Y + 0.31, 3.05], [1, 0, 0], [0, 0, -1], TERM_LBL[k], 0.55, "#f2f2ee", {align:"center"}); }
+  /* the 0 V end of the string: an insulated anchor */
+  box3(7.4, 9.3, BASE_Y, BASE_Y + 0.55, -0.85, 0.85, "#e7e3d8");
+  cyl3("y", BASE_Y + 0.55, GEO.E0[1] + 0.05, GEO.E0[0], 0, 0.28, "#c7b37a", {seg:10});
+  /* the amplifier and filter in its box behind, with the USB socket on its end */
+  box3(0.5, 11.2, 0, 3.4, -7.4, BAR.z0, "#1b1c1f", {top:"#232428"});
+  text3([5.85, 3.41, -5.4], [1, 0, 0], [0, 0, -1], LANG === "ko" ? "증폭기 + 필터" : "amplifier + filter", 0.5, "#cfd3d6", {align:"center"});
+  box3(0.38, 0.5, 1.5, 1.9, -5.8, -4.9, "#c9ced3"); box3(0.36, 0.42, 1.6, 1.8, -5.65, -5.05, "#111");
+  /* saddle 1 on the piezo disc, its wires to the amplifier */
+  cyl3("y", BASE_Y, BASE_Y + 0.08, GEO.S1[0], 0, 1.25, "#c9a24a", {seg:22, cap:"#d7b25a"});
+  cyl3("y", BASE_Y + 0.08, BASE_Y + 0.14, GEO.S1[0], 0, 0.85, "#e9e6dc", {seg:20});
+  poly3([[GEO.S1[0] - 0.9, BASE_Y + 0.1, -0.7], [GEO.S1[0] - 1.5, BASE_Y + 0.05, -2.8], [9.5, 3.0, -3.6], [9.2, 2.6, -4.2]], "#b8241f", 1.4);
+  poly3([[GEO.S1[0] - 0.6, BASE_Y + 0.1, -0.9], [GEO.S1[0] - 1.1, BASE_Y + 0.05, -3.0], [10.0, 3.0, -3.6], [9.8, 2.6, -4.2]], "#111", 1.4);
+  prism3("z", -0.7, 0.7, [[GEO.S1[0] - 0.95, BASE_Y + 0.14], [GEO.S1[0] + 0.95, BASE_Y + 0.14], [GEO.S1[0], GEO.S1[1] - 0.02]], "#ece6d6", {id:"bar"});
+  prism3("z", -0.7, 0.7, [[GEO.S2[0] - 0.95, BASE_Y], [GEO.S2[0] + 0.95, BASE_Y], [GEO.S2[0], GEO.S2[1] - 0.02]], "#ece6d6", {id:"bar"});
+  tensioner3();
+}
+/* the tensioner: two steel pins on the body's cheek, the screw rising between them, its knob under the bar */
+function tensioner3(){ const dh = Math.max(0, ST.turns) * H1 / 10, x = GEO.TP[0], top = GEO.TP[1] + dh;
+  box3(62.6, 76.2, BASE_Y, BASE_Y + 2.3, -1.95, -1.6, "#7a8188", {id:"bar"});
+  cyl3("z", -1.6, 0.9, GEO.P1[0], GEO.P1[1] + 0.22, 0.22, "#d5d9dd", {seg:12});
+  cyl3("z", -1.6, 0.9, GEO.P2[0], GEO.P2[1] - 0.22, 0.22, "#d5d9dd", {seg:12});
+  cyl3("z", -1.6, 0.25, GEO.E1[0], GEO.E1[1], 0.24, "#bfa66a", {seg:10}); sphere3([GEO.E1[0], GEO.E1[1], 0.1], 0.16, "#c9a24a", {metal:true});
+  /* the threaded bush in the bar, the screw, its small triangular top */
+  cyl3("y", BASE_Y, BASE_Y + 0.35, x, 0, 0.6, "#8f959b", {seg:6});
+  const yb = top - 0.5;
+  cylSeg("y", KNOB_Y0 + KNOB_H + dh, yb, x, 0, 0.27, "#b9bec2", {seg:12, caps:false}, 0.6);
+  for (let y = BASE_Y + 0.4; y < yb - 0.05; y += 0.14) cyl3("y", y, y + 0.05, x, 0, 0.3, "#9aa0a6", {seg:12, caps:false});
+  prism3("z", -0.5, 0.5, [[x - 0.45, yb], [x + 0.45, yb], [x, top - 0.02]], "#dcdfe2");
+  /* the knob: knurled, with a white mark to count the turns by */
+  const y0 = KNOB_Y0 + dh, y1 = y0 + KNOB_H, ang = ST.turns * 2 * Math.PI;
+  cyl3("y", y0, y1, x, 0, KNOB_R, "#232427", {seg:28, id:"knob", cap:"#2c2d31"});
+  for (let i = 0; i < 28; i++){ const a = i / 28 * 2 * Math.PI; line3([x + 1.505 * Math.cos(a), y0 + 0.08, 1.505 * Math.sin(a)], [x + 1.505 * Math.cos(a), y1 - 0.08, 1.505 * Math.sin(a)], "#121214", 1); }
+  const mx = Math.cos(ang), mz = Math.sin(ang);
+  quad([x + 1.512 * Math.cos(ang - 0.06), y0 + 0.05, 1.512 * Math.sin(ang - 0.06)], [x + 1.512 * Math.cos(ang + 0.06), y0 + 0.05, 1.512 * Math.sin(ang + 0.06)],
+       [x + 1.512 * Math.cos(ang + 0.06), y1 - 0.05, 1.512 * Math.sin(ang + 0.06)], [x + 1.512 * Math.cos(ang - 0.06), y1 - 0.05, 1.512 * Math.sin(ang - 0.06)], {fill:"#f4f4f0", flat:true, id:"knob", cull:true});
+  face(orient([[x + 0.4 * mx - 0.12 * mz, y0 - 0.002, 0.4 * mz + 0.12 * mx], [x + 1.4 * mx - 0.12 * mz, y0 - 0.002, 1.4 * mz + 0.12 * mx], [x + 1.4 * mx + 0.12 * mz, y0 - 0.002, 1.4 * mz - 0.12 * mx], [x + 0.4 * mx + 0.12 * mz, y0 - 0.002, 0.4 * mz - 0.12 * mx]], [0, -1, 0]), {fill:"#f4f4f0", flat:true});
+}
+/* ---- the string -------------------------------------------------- */
+function stringAmp(){ const age = ST.t - ST.pluckT; return age < 0 || ST.broken ? 0 : ST.pluckAmp * Math.exp(-age / 2.6); }
+function string3(){ const P = pathPts().map(p => [p[0], p[1], 0]), col = ST.T > 200 ? "#f0c6b0" : "#eceff2", lw = 1.4;
+  if (ST.broken){ const cut = ST.brokeAt, Ltot = pathLen(pathPts());
+    const L = [GEO.E0, GEO.S1, [14, BASE_Y + 0.05], [GEO.S2[0] - 3, BASE_Y + 0.05], GEO.S2, [GEO.S2[0] + 1.6, BASE_Y + 1.2], [GEO.S2[0] + 2.2, BASE_Y + 0.05]].map(p => [p[0], p[1], 0]);
+    poly3(L, col, lw); poly3([[GEO.P1[0] - 0.3, GEO.P1[1], 0], [GEO.P1[0] - 1.2, GEO.P1[1] + 1.4, 0.4], [GEO.P1[0] - 0.4, GEO.P1[1] + 2.4, 0.6]], col, lw);
+    poly3(P.slice(3).map((p, i) => i === 0 ? [GEO.P1[0], GEO.P1[1], 0] : p), col, lw); return; }
+  const A = 0.2 * stringAmp(), ph = Math.cos(performance.now() * 0.0377 * 2 * Math.PI);
+  for (let i = 1; i < P.length; i++){
+    if (i === 2 && A > 0.004){ const a = P[1], b = P[2], pts = [], e1 = [], e2 = [];
+      for (let j = 0; j <= 24; j++){ const u = j / 24, s = Math.sin(Math.PI * u), x = a[0] + (b[0] - a[0]) * u, y = a[1] + (b[1] - a[1]) * u;
+        pts.push([x, y + A * s * ph, 0]); e1.push([x, y + A * s, 0]); e2.push([x, y - A * s, 0]); }
+      poly3(e1, "rgba(214,217,220,.35)", 1); poly3(e2, "rgba(214,217,220,.35)", 1); poly3(pts, col, lw); }
+    else line3(P[i - 1], P[i], col, lw);
+    /* invisible strips to click on: one upright, one flat */
+    const a = P[i - 1], b = P[i], h = 0.35;
+    face([[a[0], a[1] - h, 0], [b[0], b[1] - h, 0], [b[0], b[1] + h, 0], [a[0], a[1] + h, 0]], {id:"str:" + (i - 1)});
+    face([[a[0], a[1], -h], [b[0], b[1], -h], [b[0], b[1], h], [a[0], a[1], h]], {id:"str:" + (i - 1)}); }
+}
+
+/* ---- AX-100 ------------------------------------------------------ */
+const axW = (u, v, y) => [AXC[0] - AXF.w / 2 + u, y === undefined ? AXH - 0.25 : y, AXC[1] - AXF.l / 2 + v];      /* face cm -> world */
+function ax3(){ const [cx, cz] = AXC, out = rrect(cx, cz, AXW / 2, AXL / 2, 1.1, 6), inn = rrect(cx, cz, AXF.w / 2, AXF.l / 2, 0.75, 6), yF = AXH - 0.25;
+  prism3("y", 0, yF - 0.01, out, "#e8b417", {id:"axbody"});
+  ring3(out, inn, yF - 0.02, AXH, "#f0bd1c", {id:"axbody"});
+  face(orient(inn.map(p => [p[0], yF, p[1]]), [0, 1, 0]), {fill:"#5c5f61", id:"axbody"});
+  tex3(AXTEX, 0, 0, AXTEX.width, AXTEX.height, axW(0, 0, yF + 0.004), [AXF.w, 0, 0], [0, 0, AXF.l], {id:"axbody"});
+  /* the rotary switch: a raised disc and its bar, pointing at the range */
+  const [dx, , dz] = axW(AX_DIALC[0], AX_DIALC[1]), a = axAng(METER.ax100.dial);
+  cyl3("y", yF, yF + 0.25, dx, dz, AX_DR, "#2b2d2f", {seg:32, id:"axdial", cap:"#333537"});
+  const c = Math.cos(a), s = Math.sin(a), R2 = (u, v) => [dx + u * c - v * s, dz + u * s + v * c];
+  prism3("y", yF + 0.25, yF + 0.95, [R2(-AX_DR + 0.15, -0.42), R2(AX_DR - 0.15, -0.42), R2(AX_DR - 0.05, 0), R2(AX_DR - 0.15, 0.42), R2(-AX_DR + 0.15, 0.42)], "#2f3133", {id:"axdial"});
+  const t0 = R2(AX_DR - 0.75, 0), t1 = R2(AX_DR - 0.15, 0); line3([t0[0], yF + 0.96, t0[1]], [t1[0], yF + 0.96, t1[1]], "#f2f2ee", 2.2);
+  /* the three sockets */
+  ["X10A", "XCOM", "XV"].forEach((k, j) => { const [x, , z] = axW(AX_SOCK[j][0], AX_SOCK[j][1]);
+    cyl3("y", yF, yF + 0.3, x, z, 0.5, "#8a3b1e", {seg:16, id:"t:" + k, cap:"#8f3f22"}); cyl3("y", yF + 0.3, yF + 0.305, x, z, 0.22, "#0b0b0b", {seg:12, id:"t:" + k}); });
+}
+/* ---- AX-MS811 ---------------------------------------------------- */
+const msW = (u, v, y) => [MSC[0] - MSF.w / 2 + u, y === undefined ? MSH - 0.15 : y, MSC[1] - MSF.l / 2 + v];
+const PROBE_REST = {YV:[MSC[0] + MSW / 2 + 0.75, 0.4, MSC[1] - 4.6], YCOM:[MSC[0] + MSW / 2 + 1.75, 0.4, MSC[1] - 4.6]};
+function ms3(){ const [cx, cz] = MSC, out = rrect(cx, cz, MSW / 2, MSL / 2, 0.9, 6), inn = rrect(cx, cz, MSF.w / 2, MSF.l / 2, 0.6, 6), yF = MSH - 0.15;
+  prism3("y", 0, yF - 0.01, out, "#2f3236", {id:"msbody"});
+  ring3(out, inn, yF - 0.02, MSH, "#3a3e43", {id:"msbody"});
+  tex3(MSTEX, 0, 0, MSTEX.width, MSTEX.height, msW(0, 0, yF + 0.004), [MSF.w, 0, 0], [0, 0, MSF.l], {id:"msbody"});
+  /* the flip cover, opened back flat */
+  const z1 = cz - MSL / 2 - 0.15, z0 = z1 - 5.0; prism3("y", 0, 0.75, rrect(cx, (z0 + z1) / 2, MSW / 2 - 0.1, 2.5, 0.6, 5), "#2a2d31");
+  face(orient(rrect(cx, (z0 + z1) / 2, MSW / 2 - 0.5, 2.1, 0.4, 4).map(p => [p[0], 0.752, p[1]]), [0, 1, 0]), {fill:"#24272a", flat:true});
+  box3(cx - 2.2, cx + 2.2, 0.15, 0.85, z1 - 0.1, z1 + 0.35, "#25282b");
+  /* the keys */
+  MS_BTN.forEach(([u, v], i) => { const [x, , z] = msW(u, v); const pts = rrect(x, z, 0.52, 0.2, 0.19, 4); prism3("y", yF, yF + 0.16, pts, METER.ms811.press === i ? "#8d939a" : "#b4bac0", {id:"msb:" + i}); });
+  /* the dial: ribbed, with a pointer */
+  const [dx, , dz] = msW(MS_DIALC[0], MS_DIALC[1]), a = msAng(METER.ms811.dial);
+  cyl3("y", yF, yF + 0.35, dx, dz, MS_DR, "#5a5f65", {seg:32, id:"msdial", cap:"#686d73"});
+  for (let i = 0; i < 16; i++){ const b = i / 16 * 2 * Math.PI; line3([dx + MS_DR * 0.62 * Math.cos(b), yF + 0.36, dz + MS_DR * 0.62 * Math.sin(b)], [dx + MS_DR * 0.95 * Math.cos(b), yF + 0.36, dz + MS_DR * 0.95 * Math.sin(b)], "#45494e", 1.4); }
+  cyl3("y", yF + 0.35, yF + 0.6, dx, dz, 0.75, "#62676d", {seg:20, id:"msdial"});
+  line3([dx + 0.2 * Math.cos(a), yF + 0.61, dz + 0.2 * Math.sin(a)], [dx + 1.45 * Math.cos(a), yF + 0.61, dz + 1.45 * Math.sin(a)], "#f2f2ee", 2.4);
+  /* the probe holder clipped on its right side */
+  box3(cx + MSW / 2, cx + MSW / 2 + 2.4, 0, 0.35, cz - 4.2, cz + 3.6, "#2a2d31");
+  for (const k of ["YV", "YCOM"]) probe3(k);
+}
+function probeLine(k){ const p = ST.probe[k];
+  if (ST.held === "pr:" + k){ const H = onPlane(m3[0], m3[1], HAND_Y); return {tip:H, d:[0, 1, 0.25]}; }
+  if (!p) return {tip:PROBE_REST[k], d:[0, 0, 1], rest:true};
+  const T = termPos(p); return {tip:T.p, d:[0.22, 1, 0.42]}; }
+function probe3(k){ const {tip, d, rest} = probeLine(k), n = Math.hypot(...d), u = d.map(v => v / n), at = s => [tip[0] + u[0] * s, tip[1] + u[1] * s, tip[2] + u[2] * s];
+  const col = k === "YV" ? "#c52a25" : "#18191b", id = "pr:" + k;
+  cylAB(tip, at(1.5), 0.07, "#d8dce0", {seg:8, id}); cylAB(at(1.5), at(1.75), 0.36, col, {seg:12, id}); cylAB(at(1.75), at(2.0), 0.5, col, {seg:14, id});
+  cylAB(at(2.0), at(7.2), 0.36, col, {seg:12, id}); cylAB(at(7.2), at(8.2), 0.36, col, {seg:12, r1:0.18, id});
+  /* its cable back to the meter */
+  const start = [MSC[0] + (k === "YV" ? 1.2 : -1.2), 0.5, MSC[1] + MSL / 2]; wire3(cableCurve(at(8.2), u, start, [0, 0, 1]), col, 1.7);
+}
+
+/* ---- the resistors ------------------------------------------------ */
+const RCOL = [[], [], [], ["#8b4a1c", "#111", "#111", "#c8a24a"], ["#e57e22", "#111", "#111", "#c8a24a"], ["#8b4a1c", "#111", "#8b4a1c", "#c8a24a"], ["#8b4a1c", "#111", "#c4241f", "#c8a24a"]];
+function resistors3(){ box3(RB.x0, RB.x1, 0, RB.y1, RB.z0, RB.z1, "#e9e5da", {id:"rboard", top:"#f1ede3"});
+  for (let i = 0; i < 7; i++){ const x = RB_X(i);
+    for (const [z, e] of [[RB_ZA, "a"], [RB_ZB, "b"]]){ cyl3("y", RB.y1, RB.y1 + 0.3, x, z, 0.5, "#2a2b2e", {seg:6});
+      cylSeg("y", RB.y1 + 0.3, RB_TOP, x, z, 0.4, e === "a" ? "#c8262b" : "#1d1d1f", {seg:14, id:"t:R" + i + e, cap:"#333"}, 0.6); cyl3("y", RB_TOP - 0.01, RB_TOP + 0.004, x, z, 0.18, "#0c0c0c", {seg:10, id:"t:R" + i + e}); }
+    const y = RB.y1 + 0.75; line3([x, RB.y1 + 0.5, RB_ZA + 0.4], [x, y, RB_ZA + 1.1], "#c9ced3", 1.3); line3([x, RB.y1 + 0.5, RB_ZB - 0.4], [x, y, RB_ZB - 1.1], "#c9ced3", 1.3);
+    line3([x, y, RB_ZA + 1.1], [x, y, RB_ZB - 1.1], "#c9ced3", 1.3);
+    if (i < 3){ box3(x - 0.55, x + 0.55, RB.y1 + 0.25, RB.y1 + 1.25, 20.3, 22.9, "#f3f1ea"); text3([x, RB.y1 + 1.26, 21.6], [0, 0, -1], [-1, 0, 0], ["0.1Ω", "1Ω", "3Ω"][i] + " 5W", 0.32, "#222", {align:"center"}); }
+    else { cyl3("z", 20.7, 22.5, x, y, 0.3, "#d6c49a", {seg:12, cap:"#c9b78c"}); RCOL[i].forEach((c, j) => cyl3("z", 20.95 + j * 0.3 + (j === 3 ? 0.25 : 0), 21.1 + j * 0.3 + (j === 3 ? 0.25 : 0), x, y, 0.31, c, {seg:12, caps:false})); }
+    text3([x, RB.y1 + 0.005, 25.2], [1, 0, 0], [0, 0, -1], ["0.1Ω", "1Ω", "3Ω", "10Ω", "30Ω", "100Ω", "1kΩ"][i], 0.42, "#2a2a2a", {align:"center"}); }
+}
+/* ---- the 5 V supply: a USB charger in a power strip --------------- */
+function supply3(){ const s = STRIP; box3(s.x0, s.x1, 0, s.h, s.z0, s.z1, "#ecebe6", {id:"strip"});
+  for (let i = 0; i < 4; i++){ const x = s.x0 + 2.4 + i * 3.6; cyl3("y", s.h, s.h + 0.04, x, (s.z0 + s.z1) / 2, 1.2, "#dcdad3", {seg:18}); for (const dz of [-0.45, 0.45]) cyl3("y", s.h + 0.04, s.h + 0.05, x, (s.z0 + s.z1) / 2 + dz, 0.16, "#222", {seg:8}); }
+  box3(s.x1 - 0.1, s.x1 + 0.6, 0.6, 2.0, -12.9, -11.3, "#d23b2f"); poly3([[s.x0, 1, -12.1], [-30, 0.4, -12.6], [-33, 0.3, -18]], "#e9e8e3", 3);
+  const ch = ST.usb ? [s.x0 + 2.4 + 3.6, s.h + 1.6, (s.z0 + s.z1) / 2] : [-14, 1.4, -5.5];
+  box3(ch[0] - 1.6, ch[0] + 1.6, ch[1] - 1.4, ch[1] + 1.4, ch[2] - 1.5, ch[2] + 1.5, "#f6f6f3", {id:"usb", top:"#ffffff"});
+  text3([ch[0], ch[1] + 1.41, ch[2]], [1, 0, 0], [0, 0, -1], "5V ⎓ 1A", 0.5, "#6d7176", {align:"center"});
+  if (!ST.usb) for (const dz of [-0.45, 0.45]) cyl3("x", ch[0] - 1.6, ch[0] - 2.5, ch[1] - 0.3, ch[2] + dz, 0.12, "#c9ced3", {seg:6});
+  const out = [ch[0] + 1.6, ch[1] - 0.2, ch[2]]; box3(out[0], out[0] + 0.9, out[1] - 0.35, out[1] + 0.35, out[2] - 0.6, out[2] + 0.6, "#2a2b2e");
+  const plug = [USBSOCK[0] - 1.2, USBSOCK[1], USBSOCK[2]]; box3(plug[0] - 0.8, plug[0] + 0.8, plug[1] - 0.4, plug[1] + 0.4, plug[2] - 0.55, plug[2] + 0.55, "#1f2023");
+  poly3(cableCurve([out[0] + 0.9, out[1], out[2]], [1, 0, 0], [plug[0] - 0.8, plug[1], plug[2]], [-1, 0, 0]), "#1a1b1d", 2.2);
+}
+/* ---- the photo and the tape -------------------------------------- */
+function photo3(){ box3(PH.x0 - 0.1, PH.x0 + PH.w + 0.1, 0, 0.04, PH.z0 - 0.1, PH.z0 + PH.h + 0.1, "#f7f7f4", {id:"photo"});
+  tex3(PHTEX, 0, 0, PHTEX.width, PHTEX.height, [PH.x0, 0.045, PH.z0], [PH.w, 0, 0], [0, 0, PH.h], {id:"photo"}); }
+function tapeFrame(){ const T = ST.tape, c = Math.cos(T.ang), s = Math.sin(T.ang);
+  if (T.where === "stand") return {O:[T.x, T.y, ZT], U:[c, s, 0], V:[s, -c, 0]};
+  const y = T.x > PH.x0 - 1 && T.x < PH.x0 + PH.w + 1 && T.z > PH.z0 - 2 && T.z < PH.z0 + PH.h + 1 ? 0.075 : 0.03;
+  return {O:[T.x, y, T.z], U:[c, 0, s], V:[-s, 0, c]}; }
+function tape3(){ if (ST.tape.where === "box") return; const {O, U, V} = tapeFrame(), at = (a, b) => [O[0] + U[0] * a + V[0] * b, O[1] + U[1] * a + V[1] * b, O[2] + U[2] * a + V[2] * b];
+  for (let s = 0; s < TAPE_N; s++) tex3(TAPETEX[s], 0, 0, TAPETEX[s].width, TAPETEX[s].height, at(s * TAPE_SEG, 0), U.map(v => v * TAPE_SEG), V.map(v => v * TAPE_W), {id:"tape"});
+  const n = ST.tape.where === "stand" ? [0, 0, -1] : [0, -1, 0];
+  face(orient([at(0, 0), at(100, 0), at(100, TAPE_W), at(0, TAPE_W)], n), {fill:"#c9a51f", cull:true});
+  /* the case at the far end */
+  const e = at(100, TAPE_W / 2); if (ST.tape.where === "stand") box3(e[0] - 0.1, e[0] + 3.4, e[1] - 3.3, e[1] + 3.3, ZT - 2.2, ZT + 0.1, "#2b2e33", {id:"tape"});
+  else box3(e[0] - 0.1 + 0 * U[0], e[0] + 3.4, 0, 3.0, e[2] - 3.3, e[2] + 3.3, "#2b2e33", {id:"tape"});
+}
+/* ---- test leads --------------------------------------------------- */
+const LEAD_COL = ["#c8262b", "#1d1d1f", "#2b62c4", "#e3b21a", "#2f8a3e", "#c8262b", "#1d1d1f", "#2b62c4", "#e3b21a"];
+const AXSOCK3 = k => { const j = ["X10A", "XCOM", "XV"].indexOf(k); return axW(AX_SOCK[j][0], AX_SOCK[j][1], AXH - 0.25 + 0.3); };
+/* where a terminal is, and which way a plug leaves it */
+function termPos(t){
+  if (TERM_X[t] !== undefined) return {p:[TERM_X[t], TERM_TOP, TERM_Z], n:[0, 1, 0], kind:"post"};
+  if (t[0] === "R" && t.length === 3) return {p:[RB_X(+t[1]), RB_TOP, t[2] === "a" ? RB_ZA : RB_ZB], n:[0, 1, 0], kind:"post"};
+  if (t[0] === "X") return {p:AXSOCK3(t), n:[0, 1, 0], kind:"sock"};
+  if (t.startsWith("c:")){ const q = pointAt(+t.slice(2)); return {p:[q[0], q[1], 0], n:[0, 0.8, 0.6], kind:"clip"}; }
+  if (t.startsWith("b:")) return {p:[+t.slice(2), 3.55, BAR.z1], n:[0, 0, 1], kind:"clip"};
+  if (t === "body") return {p:[70, 3.55, BAR.z1], n:[0, 0, 1], kind:"clip"};
+  return {p:[0, 0, 0], n:[0, 1, 0], kind:"post"}; }
+const OBST = () => [[BAR.x0 - 0.5, BAR.x1 + 0.5, BAR.z0 - 0.5, BAR.z1 + 0.5, BASE_Y + 0.3], [0.3, 11.4, -7.6, -3.3, 3.6],
+  [AXC[0] - AXW / 2 - 0.3, AXC[0] + AXW / 2 + 0.3, AXC[1] - AXL / 2 - 0.3, AXC[1] + AXL / 2 + 0.3, AXH + 0.2], [MSC[0] - MSW / 2 - 0.3, MSC[0] + MSW / 2 + 2.6, MSC[1] - MSL / 2 - 5.4, MSC[1] + MSL / 2 + 0.3, MSH + 0.2],
+  [RB.x0 - 0.3, RB.x1 + 0.3, RB.z0 - 0.3, RB.z1 + 0.3, RB.y1 + 0.3]];
+/* a flexible lead from a (leaving along na) to b (arriving along -nb): it sags onto the desk and over whatever is in the way */
+function cableCurve(a, na, b, nb){ const ea = [a[0] + na[0] * 1.8, a[1] + na[1] * 1.8, a[2] + na[2] * 1.8], eb = [b[0] + nb[0] * 1.8, b[1] + nb[1] * 1.8, b[2] + nb[2] * 1.8];
+  const D = Math.hypot(eb[0] - ea[0], eb[2] - ea[2]), S = Math.min(14, 0.45 * D + 1.5), pts = [a, ea], O = OBST(), N = Math.max(10, Math.round(D / 1.2));
+  for (let i = 1; i < N; i++){ const t = i / N, x = ea[0] + (eb[0] - ea[0]) * t, z = ea[2] + (eb[2] - ea[2]) * t; let y = ea[1] + (eb[1] - ea[1]) * t - S * 4 * t * (1 - t);
+    let floor = 0.25; for (const [x0, x1, z0, z1, top] of O) if (x > x0 && x < x1 && z > z0 && z < z1) floor = Math.max(floor, top);
+    pts.push([x, Math.max(floor, y), z]); }
+  pts.push(eb, b);
+  let P = pts; for (let r = 0; r < 2; r++){ const Q = [P[0]]; for (let i = 0; i + 1 < P.length; i++){ const p = P[i], q = P[i + 1]; Q.push(p.map((v, j) => 0.75 * v + 0.25 * q[j]), p.map((v, j) => 0.25 * v + 0.75 * q[j])); } Q.push(P[P.length - 1]); P = Q; }
+  return P; }
+/* in the front view of the stand, what lies well in front of it is only a ghost */
+const NEARZ = 6.5;
+function wire3(P, col, w){ if (view3 !== "stand") return poly3(P, col, w);
+  const rgb = hex2rgb(col), ghost = "rgba(" + rgb.join(",") + ",0.22)"; let run = [P[0]], near = P[0][2] <= NEARZ;
+  for (let i = 1; i < P.length; i++){ const nz = P[i][2] <= NEARZ; run.push(P[i]); if (nz !== near){ poly3(run, near ? col : ghost, w); run = [P[i]]; near = nz; } }
+  if (run.length > 1) poly3(run, near ? col : ghost, w); }
+function plug3(T, col, id){ if (view3 === "stand" && T.p[2] > NEARZ) return; const {p, n, kind} = T, at = d => [p[0] + n[0] * d, p[1] + n[1] * d, p[2] + n[2] * d];
+  if (kind === "clip"){ cylAB(p, at(0.5), 0.14, "#c9ced3", {seg:8, id}); cylAB(at(0.5), at(1.0), 0.2, "#b8bdc2", {seg:8, id}); cylAB(at(1.0), at(2.6), 0.36, col, {seg:12, id, r1:0.3}); }
+  else { cylAB(p, at(0.25), 0.16, "#c9ced3", {seg:8, id}); cylAB(at(0.25), at(1.9), 0.33, col, {seg:12, id}); cylAB(at(1.9), at(2.6), 0.33, col, {seg:12, r1:0.18, id}); } }
+function leads3(){ ST.leads.forEach((l, i) => { const col = LEAD_COL[i % 9];
+  const A = termPos(l.a), B = l.b ? termPos(l.b) : null;
+  if (B){ plug3(A, col, "le:" + i + ":a"); plug3(B, col, "le:" + i + ":b"); const ea = A.p.map((v, j) => v + A.n[j] * 2.6), eb = B.p.map((v, j) => v + B.n[j] * 2.6); wire3(cableCurve(ea, A.n, eb, B.n), col, 1.9); return; }
+  /* the other end is in the hand: it hangs under the pointer */
+  const H = onPlane(m3[0], m3[1], HAND_Y), hand = {p:H, n:[0, 1, 0], kind:"post"}; plug3(A, col, "le:" + i + ":a"); plug3(hand, col);
+  const ea = A.p.map((v, j) => v + A.n[j] * 2.6); wire3(cableCurve(ea, A.n, [H[0], H[1] + 2.6, H[2]], [0, 1, 0]), col, 1.9);
+  face(Array.from({length:14}, (_, k) => { const t = -k / 14 * 6.2832; return [H[0] + 0.7 * Math.cos(t), 0.02, H[2] + 0.5 * Math.sin(t)]; }), {fill:"rgba(0,0,0,0.25)", flat:true, layer:-1}); }); }
+
+function scene3(){ desk3(); stand3(); string3(); ax3(); ms3(); resistors3(); supply3(); photo3(); tape3(); leads3(); }
+function sceneView(v){
+  if (v === "stand"){ desk3(); stand3(); string3(); tape3(); leads3(); for (const k of ["YV", "YCOM"]) if (ST.probe[k] || ST.held === "pr:" + k) probe3(k); return; }
+  if (v === "photo"){ desk3(); photo3(); tape3(); return; }
+  scene3(); }
+
+
+/* ==================================================================
+   VIEWS, HANDS AND THE LOOP
+   ================================================================== */
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {k:w / 100, tx:38, ty:2, tz:10, yaw:-0.3, pitch:0.66, px:0, py:0}); camSave(); }
+}
+let freeCam = null;
+function viewCam(v){ const W = CAM.W, H = CAM.H;
+  if (v === "stand") return {yaw:0, pitch:0.02, k:Math.min(W / 84, H / 16), tx:39, ty:3.6, tz:0, px:0, py:0};
+  if (v === "meters") return {yaw:0, pitch:1.22, k:Math.min(W / 54, H / 24), tx:42, ty:0, tz:21.5, px:0, py:0};
+  if (v === "photo") return {yaw:0, pitch:1.5, k:Math.min(W / 17, H / 7.5), tx:PH.x0 + PH.w / 2, ty:0, tz:PH.z0 + PH.h / 2, px:0, py:0};
+  return CAM0; }
+function showView(v){
+  if (v !== view3){ if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
+    Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v)); }
+  view3 = v;
+  for (const k of ["3d", "stand", "meters", "photo"]) document.getElementById("vt" + k).className = k === v ? "on" : "";
+  document.getElementById("t-cap3").textContent = tr("cap_" + v); }
+for (const k of ["3d", "stand", "meters", "photo"]) document.getElementById("vt" + k).onclick = () => showView(k);
+
+/* screen point -> world point on the vertical plane z = z0 (where the tape is held against the stand) */
+function onPlaneZ(px, py, z0){ const c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw), cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch);
+  const xr = (px - CAM.W / 2 - CAM.px) / CAM.k, up = -(py - CAM.H / 2 - CAM.py) / CAM.k, dz = z0 - CAM.tz; if (Math.abs(c) < 1e-4 || Math.abs(cp) < 1e-4) return null;
+  const dx = (xr + dz * s) / c, dy = (up + (dx * s + dz * c) * sp) / cp; return [CAM.tx + dx, CAM.ty + dy, z0]; }
+/* the parameter of a screen point along the line a + t (b - a) */
+function alongLine(p, a3, b3){ const a = P3(...a3), b = P3(...b3), dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy; return L > 1e-9 ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L : 0; }
+/* the string under a screen point: path cm from the 0 V end */
+function stringAt(p, seg){ const P = pathPts(), a = [P[seg][0], P[seg][1], 0], b = [P[seg + 1][0], P[seg + 1][1], 0], u = Math.max(0, Math.min(1, alongLine(p, a, b))); return {cm:pathAt(seg, u), u}; }
+
+/* ---- the tape in the hand / on the stand / on the desk ----------- */
+let tapeGrab = null;
+function tapePoint(p){ return ST.tape.where === "stand" ? onPlaneZ(p[0], p[1], ZT) : onPlane(p[0], p[1], tapeFrame().O[1]); }
+function tapeLocal(w){ const {O, U, V} = tapeFrame(), d = [w[0] - O[0], w[1] - O[1], w[2] - O[2]]; return [d[0] * U[0] + d[1] * U[1] + d[2] * U[2], d[0] * V[0] + d[1] * V[1] + d[2] * V[2]]; }
+function placeTape(where, w){ ST.tape.where = where; ST.tape.ang = 0; if (where === "stand"){ ST.tape.x = w[0]; ST.tape.y = w[1]; } else { ST.tape.x = w[0]; ST.tape.z = w[2]; } hand = null; drawTray(); }
+function tapeTurn(s, fine){ ST.tape.ang += s * (fine ? 0.1 : 0.5) * Math.PI / 180; }
+
+/* ---- leads, probes ------------------------------------------------ */
+let hand = null;                                    /* "tape" while it is carried from the parts box */
+function heldLead(){ return typeof ST.held === "number" ? ST.leads[ST.held] : null; }
+function attach(t){ /* the thing in the hand goes onto terminal t */
+  if (typeof ST.held === "number"){ const l = ST.leads[ST.held]; if (l.a === t) return; l.b = t; ST.held = null; return; }
+  if (ST.held && ST.held.startsWith("pr:")){ ST.probe[ST.held.slice(3)] = t; ST.held = null; return; } }
+function startLead(t){ if (ST.leads.length >= 9){ flash(tr("noLead")); return; } ST.leads.push({a:t, b:null}); ST.held = ST.leads.length - 1; }
+function dropHeld(){ if (typeof ST.held === "number"){ ST.leads.splice(ST.held, 1); } ST.held = null; }
+function termClick(t){ if (ST.held !== null) attach(t); else startLead(t); }
+
+/* ---- turning the screw, plucking, breaking ------------------------ */
+function turnKnob(d){ ST.turns = Math.max(-2, Math.min(21.5, ST.turns + d));
+  if (!ST.broken && tension() > F_BREAK) snap(); }
+function snap(){ ST.broken = true; ST.brokeAt = pathAt(2, 0.6); ST.pluckAmp = 0; stopTone(); snapSound(); flash(tr("broke")); }
+function pluck(){ if (ST.broken) return; ST.pluckT = ST.t; ST.pluckAmp = 0.85 + 0.15 * RNG(); ST.harm = RNG() < 0.6 ? 2 : 3; ST.harmT = RNG(); tone(); }
+function fitSpare(){ if (ST.spare <= 0 || !ST.broken) return; ST.spare--; ST.broken = false; ST.turns = 0; ST.T = TRUE.T0; TRUE.slackMM = 1.25 + 0.15 * gauss();
+  ST.leads = ST.leads.filter(l => !termIsClip(l.a) && !(l.b && termIsClip(l.b))); for (const k of ["YV", "YCOM"]) if (ST.probe[k] && termIsClip(ST.probe[k])) ST.probe[k] = null; ST.held = null; drawTray(); }
+
+/* ---- sound ------------------------------------------------------- */
+let AC = null, TONE = null, lastBeep = 0;
+function audio(){ if (!AC){ try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } } if (AC && AC.state === "suspended") AC.resume(); return AC; }
+function stopTone(){ if (TONE){ try { TONE.osc.forEach(o => o.stop()); } catch (e) {} TONE = null; } }
+function tone(){ stopTone(); if (!ST.sound || !audio()) return; const t = AC.currentTime, f0 = fundamental(), out = AC.createGain(); out.gain.value = 0.16; out.connect(AC.destination);
+  const osc = []; for (let n = 1; n <= 6; n++){ const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f0 * n;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.9 / Math.pow(n, 1.2), t + 0.004); g.gain.setTargetAtTime(0, t + 0.004, 2.6 / Math.sqrt(n) / 2);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t + 9); osc.push(o); }
+  TONE = {osc, t0:ST.t}; }
+function snapSound(){ if (!ST.sound || !audio()) return; const t = AC.currentTime, n = AC.createBufferSource(), b = AC.createBuffer(1, AC.sampleRate * 0.25, AC.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (AC.sampleRate * 0.03)); n.buffer = b; const g = AC.createGain(); g.gain.value = 0.5; n.connect(g); g.connect(AC.destination); n.start(t); }
+function beep(){ const now = performance.now(); if (!ST.sound || now - lastBeep < 380 || !audio()) return; lastBeep = now;
+  const o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = 2700; g.gain.value = 0.05; o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + 0.3); }
+
+/* ---- the parts box ------------------------------------------------ */
+const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d"), TROW = 46;
+let TRW = 190;
+function trayLayout(){ const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
+  TRW = Math.max(150, Math.floor(r.width - 16)); trayCv.style.height = (TROW * 3 + 30) + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round((TROW * 3 + 30) * dpr); drawTray(); }
+function drawTray(){ const dpr = window.devicePixelRatio || 1, c = tctx, wd = TRW - 12;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, TROW * 3 + 30);
+  const row = (i, av, sel, icon, name, sub) => { const y = 6 + i * TROW; c.fillStyle = av ? "#1f242b" : "#171a1e"; c.fillRect(6, y, wd, TROW - 4);
+    c.strokeStyle = sel ? "#f2c14e" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5); c.globalAlpha = av ? 1 : 0.4; icon(12, y + 8); c.globalAlpha = 1;
+    c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle"; c.fillStyle = av ? "#e8eef2" : "#868e96"; c.fillText(name, 52, y + 13);
+    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = "#69717a"; c.fillText(sub, 52, y + 29); };
+  row(0, ST.tape.where === "box" || hand === "tape", hand === "tape", (x, y) => { c.fillStyle = "#2b2e33"; c.fillRect(x, y, 26, 26); c.fillStyle = "#f3cd2f"; c.fillRect(x + 20, y + 16, 14, 6); c.fillStyle = "#c4161c"; c.beginPath(); c.arc(x + 13, y + 13, 5, 0, 7); c.fill(); },
+    tr("itTape"), hand === "tape" ? tr("tapeTake") : ST.tape.where === "box" ? tr("tapeTake") : tr("tapeOut"));
+  const left = 9 - ST.leads.length;
+  row(1, left > 0, false, (x, y) => { c.strokeStyle = "#c8262b"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(x, y + 4); c.bezierCurveTo(x + 30, y, x - 4, y + 26, x + 30, y + 24); c.stroke(); c.fillStyle = "#c9ced3"; c.fillRect(x - 2, y + 1, 5, 6); },
+    tr("itLead"), tr("leadsLeft") + left + " / 9");
+  row(2, ST.spare > 0, false, (x, y) => { c.strokeStyle = "#d6d9dc"; c.lineWidth = 1.2; for (let r = 4; r < 13; r += 2.2){ c.beginPath(); c.arc(x + 14, y + 13, r, 0, 7); c.stroke(); } },
+    tr("itNew"), ST.spare > 0 ? (ST.broken ? tr("newString") : "×1") : "—");
+  c.font = '10px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a"; c.fillText(tr("trayHelp"), TRW / 2, TROW * 3 + 10); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); hand = null; drawTray(); });
+trayCv.addEventListener("mousedown", e => { if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top, i = Math.floor((y - 6) / TROW);
+  if (i === 0){ if (hand === "tape") hand = null; else if (ST.tape.where === "box") hand = "tape"; else { ST.tape.where = "box"; } }
+  if (i === 2) fitSpare();
+  drawTray(); });
+window.addEventListener("resize", () => { trayLayout(); layout3(); });
+
+/* ---- pointer on the bench ---------------------------------------- */
+let down3 = null, m3 = [0, 0], FLASH = {msg:"", t:0};
+const flash = m => { FLASH = {msg:m, t:performance.now()}; };
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+function rclick3(e){ const p = p3e(e), id = pick3(p[0], p[1]);
+  if (hand){ hand = null; drawTray(); return; }
+  if (ST.held !== null){ if (typeof ST.held === "string"){ ST.probe[ST.held.slice(3)] = null; } dropHeld(); drawTray(); return; }
+  if (id && id.startsWith("le:")){ ST.leads.splice(+id.split(":")[1], 1); drawTray(); return; }
+  if (id && id.startsWith("pr:")){ ST.probe[id.slice(3)] = null; return; }
+  if (id === "tape"){ ST.tape.where = "box"; drawTray(); return; }
+  if (view3 !== "3d") showView("3d"); }
+function leftClick(p, id){
+  /* the tape from the parts box goes where it is put down */
+  if (hand === "tape"){ if (view3 === "stand"){ const w = onPlaneZ(p[0], p[1], ZT); if (w) placeTape("stand", w); }
+    else if (id && (id === "bar" || id.startsWith("str:") || id.startsWith("t:") || id === "knob")){ const w = onPlaneZ(p[0], p[1], ZT); if (w) placeTape("stand", [w[0], BASE_Y + 1.85, ZT]); }
+    else { const w = onPlane(p[0], p[1], 0.03); placeTape("desk", w); } return; }
+  if (!id){ if (ST.held !== null){ dropHeld(); drawTray(); } return; }
+  if (id.startsWith("t:")){ termClick(id.slice(2)); drawTray(); return; }
+  if (id.startsWith("str:")){ const seg = +id.slice(4), s = stringAt(p, seg);
+    if (ST.held !== null){ attach("c:" + s.cm.toFixed(2)); drawTray(); return; }
+    if (seg === 1 && !ST.broken) pluck(); else startLead("c:" + s.cm.toFixed(2)); drawTray(); return; }
+  if (id === "bar"){ const x = Math.max(0.5, Math.min(77.5, alongLine(p, [0, 3.55, BAR.z1], [1, 3.55, BAR.z1])));
+    if (ST.held !== null){ attach("b:" + x.toFixed(1)); drawTray(); return; } if (view3 === "3d"){ showView("stand"); return; } startLead("b:" + x.toFixed(1)); drawTray(); return; }
+  if (id.startsWith("le:")){ const [, i, e] = id.split(":"), l = ST.leads[+i]; if (ST.held !== null) return;
+    /* pick that end up again */ if (e === "a"){ l.a = l.b; } l.b = null; ST.held = +i; return; }
+  if (id.startsWith("pr:")){ if (ST.held !== null) return; ST.held = id; ST.probe[id.slice(3)] = null; return; }
+  if (ST.held !== null){ return; }
+  if (id === "usb"){ ST.usb = !ST.usb; return; }
+  if (id === "axdial"){ const c = P3(...axW(AX_DIALC[0], AX_DIALC[1])); METER.ax100.dial = (METER.ax100.dial + (p[0] > c[0] ? 1 : -1) + 20) % 20; readNow(); return; }
+  if (id === "msdial"){ const c = P3(...msW(MS_DIALC[0], MS_DIALC[1])); msTurn(p[0] > c[0] ? 1 : -1); return; }
+  if (id.startsWith("msb:")){ msKey(+id.slice(4)); return; }
+  if (view3 === "3d"){ if (id === "axbody" || id === "msbody" || id === "rboard") showView("meters"); else if (id === "photo") showView("photo"); }
+}
+function msTurn(d){ const M = METER.ms811; M.dial = Math.max(0, Math.min(4, M.dial + d)); M.hold = false; M.rel = null; M.sel = 0; M.duty = false; readNow(); }
+function msKey(i){ const M = METER.ms811; if (MS_DIAL[M.dial] === "OFF") return; M.press = i; setTimeout(() => { M.press = -1; }, 160);
+  if (i === 0 && MS_DIAL[M.dial] === "Ω"){ M.sel = (M.sel + 1) % 4; M.rel = null; }
+  if (i === 1){ if (M.rel === null){ const v = MS_DIAL[M.dial] === "V⎓" ? SOL.msV : MS_DIAL[M.dial] === "Ω" ? SOL.ohmBetween("YV", "YCOM") + 0.1 : null; M.rel = v !== null && isFinite(v) ? v : null; } else M.rel = null; }
+  if (i === 2){ M.hold = !M.hold; M.held = M.hold ? MSSHOW.slice() : null; }
+  if (i === 3 && MS_DIAL[M.dial] === "Hz") M.duty = !M.duty;
+  readNow(); }
+cv3.addEventListener("pointerdown", e => { audio();
+  const p = p3e(e); m3 = p;
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); cv3.setPointerCapture(e.pointerId); down3 = {p, id:null, moved:false, shift:true, btn:e.button}; return; }
+  if (e.button) return; cv3.setPointerCapture(e.pointerId);
+  const id = pick3(p[0], p[1]);
+  if (id === "tape" && !hand && ST.held === null){ const w = tapePoint(p); if (w){ tapeGrab = tapeLocal(w); down3 = {p, id:"tape", moved:true}; return; } }
+  if (id === "knob" && !hand && ST.held === null){ down3 = {p, id:"knob", moved:false, last:p}; return; }
+  down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0] - down3.p[0], p[1] - down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
+  if (down3.id === "tape"){ const w = tapePoint(p); if (w){ const {U, V} = tapeFrame(), [a, b] = tapeGrab;
+      const O = [w[0] - U[0] * a - V[0] * b, w[1] - U[1] * a - V[1] * b, w[2] - U[2] * a - V[2] * b]; ST.tape.x = O[0]; if (ST.tape.where === "stand") ST.tape.y = O[1]; else ST.tape.z = O[2]; } return; }
+  if (down3.id === "knob"){ turnKnob(dx / 160); return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.02, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
+  if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; }
+  if (down3 && !down3.moved) leftClick(down3.p, down3.id);
+  down3 = null; tapeGrab = null; });
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1, id = pick3(p[0], p[1]);
+  if (id === "knob"){ turnKnob(s / 24); return; }
+  if (id === "tape"){ tapeTurn(s, e.shiftKey); return; }
+  if (id === "axdial"){ METER.ax100.dial = (METER.ax100.dial + s + 20) % 20; readNow(); return; }
+  if (id === "msdial"){ msTurn(s); return; }
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(view3 === "photo" ? 400 : 160, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive:false});
+window.addEventListener("keydown", e => { if (e.key === "Escape"){ hand = null; if (ST.held !== null){ if (typeof ST.held === "string") ST.probe[ST.held.slice(3)] = null; dropHeld(); } drawTray(); } });
+
+/* ---- the panel ---------------------------------------------------- */
+document.getElementById("bPluck").onclick = () => { audio(); pluck(); };
+document.getElementById("bUsb").onclick = () => { ST.usb = !ST.usb; };
+document.getElementById("bClear").onclick = () => { ST.leads = []; ST.held = null; ST.probe = {YV:null, YCOM:null}; drawTray(); };
+document.getElementById("bSpare").onclick = () => fitSpare();
+document.getElementById("cSound").onchange = e => { ST.sound = e.target.checked; if (!ST.sound) stopTone(); };
+function panel(){ document.getElementById("bUsb").textContent = ST.usb ? tr("usbPull") : tr("usbPlug");
+  document.getElementById("bUsb").className = ST.usb ? "on" : "";
+  document.getElementById("bSpare").disabled = !(ST.broken && ST.spare > 0); document.getElementById("bPluck").disabled = ST.broken;
+  const w = []; if (ST.broken) w.push(tr("broke")); if (ST.fuse) w.push(tr("fuse")); if (ST.T > 60) w.push(tr("hot"));
+  if (FLASH.msg && performance.now() - FLASH.t < 4000 && !w.includes(FLASH.msg)) w.push(FLASH.msg);
+  const held = hand === "tape" ? tr("holdTape") : typeof ST.held === "number" ? tr("holdLead") : ST.held ? tr("holdProbe") : "";
+  const html = w.map(s => '<div class="w">' + s + "</div>").join("") + (held ? "<div>" + held + "</div>" : "") + "<div>" + (ST.usb ? tr("usbOn") : tr("usbOff")) + "</div>";
+  const el = document.getElementById("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
+
+/* ---- the loop ----------------------------------------------------- */
+let lastT = performance.now(), lastAX = 0, lastMS = 0, fuseT = 0;
+function readNow(){ lastAX = 0; lastMS = 0; }
+function step(){ const now = performance.now(), dt = Math.min(0.1, (now - lastT) / 1000); lastT = now; ST.t += dt;
+  SOL = solve();
+  /* the string warms by its own Joule heat and cools to the room */
+  const L = pathLen(pathPts()) / 100, C = TRUE.Lam * TRUE.c * L, gL = TRUE.g * L;
+  for (let i = 0; i < 5; i++) ST.T += (SOL.Pstr - gL * (ST.T - TRUE.T0)) / C * dt / 5;
+  if (!ST.broken && tension() > F_BREAK) snap();
+  /* the mA fuse */
+  if (Math.abs(SOL.Ima) > 0.2){ fuseT += dt * (Math.abs(SOL.Ima) > 0.3 ? 10 : 1); if (fuseT > 1.5){ ST.fuse = true; flash(tr("fuse")); } } else fuseT = Math.max(0, fuseT - dt);
+  /* the tone follows the tension while it rings */
+  if (TONE && AC){ const f0 = fundamental(); TONE.osc.forEach((o, n) => o.frequency.setTargetAtTime(f0 * (n + 1), AC.currentTime, 0.05)); }
+  if (now - lastAX > 333){ lastAX = now; const r = axReading(); if (r[0] !== AXSHOW[0] || r[1] !== AXSHOW[1]){ AXSHOW = r; drawAX(); } }
+  if (now - lastMS > 400){ lastMS = now; const r = msReading() || ["", "", []]; if (r.join("|") !== MSSHOW.join("|")){ MSSHOW = r; drawMS(); } }
+}
+function draw3(){ const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25"); ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
+  begin3(); if (view3 === "3d" || view3 === "meters") scene3(); else sceneView(view3); render3(ctx3);
+  cv3.style.cursor = hand || ST.held !== null ? "copy" : ""; }
+(function loop(){ try { step(); draw3(); panel(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
+
+/* ---- language ----------------------------------------------------- */
+function applyLang(){ document.documentElement.lang = LANG;
+  document.title = LANG === "ko" ? "GPhO 2017 E1 — 전기 기타 · HaslaLab" : "GPhO 2017 E1 — Electric Guitar · HaslaLab";
+  document.getElementById("h1").textContent = tr("title"); document.getElementById("sub").textContent = tr("sub");
+  document.getElementById("t-tray").textContent = tr("tray");
+  for (const k of ["3d", "stand", "meters", "photo"]) document.getElementById("vt" + k).textContent = tr("vt" + k);
+  document.getElementById("t-cap3").textContent = tr("cap_" + view3);
+  document.getElementById("lg-ctl").textContent = tr("lgCtl"); document.getElementById("lg-notes").textContent = tr("lgNotes");
+  document.getElementById("tx-notes").textContent = tr("notes");
+  document.getElementById("bPluck").textContent = tr("pluck"); document.getElementById("bClear").textContent = tr("clear"); document.getElementById("bSpare").textContent = tr("newString");
+  document.getElementById("l-sound").textContent = tr("sound");
+  document.getElementById("btn-en").className = LANG === "en" ? "on" : ""; document.getElementById("btn-ko").className = LANG === "ko" ? "on" : "";
+  trayLayout(); }
+function setLang(l){ LANG = l; applyLang(); }
+document.getElementById("btn-ko").addEventListener("click", () => setLang("ko"));
+document.getElementById("btn-en").addEventListener("click", () => setLang("en"));
+
+drawAX(); drawMS(); layout3(); applyLang(); showView("3d");
+
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
