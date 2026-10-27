@@ -1715,7 +1715,7 @@ const OSL={ko:{notepad:"메모장",untitled:"제목 없음",calc:"계산기",exp
     wd:["Su","Mo","Tu","We","Th","Fr","Sa"],month:(y,m)=>new Date(y,m,1).toLocaleDateString("en-US",{month:"long",year:"numeric"}),desk1:"Desktop 1",std:"Standard",justNow:"Just now",bad:"A file name can't contain any of these characters: \\ / : * ? \" < > |",
     loc:"en-US"}};
 const ot=()=>OSL[lang];
-const appName=a=>({spec:ot().spec,files:ot().explorer,note:ot().notepad,calc:ot().calc,edge:"Microsoft Edge",chrome:"Google Chrome"})[a];
+const appName=a=>({spec:ot().spec,files:ot().explorer,note:ot().notepad,calc:ot().calc,edge:"Microsoft Edge",chrome:"Google Chrome",youtube:"YouTube"})[a];
 /* the browsers: Edge comes with Windows, Chrome is installed; the live page sits over the canvas */
 const BR={}, isBr=a=>a==="edge"||a==="chrome";
 const BR_LINKS=[{t:{ko:"ISPhO 2025 문제지",en:"ISPhO 2025 problem"},url:lang==="ko"?"../pdf/ISPhO_2025_E1_KO.pdf":"../pdf/ISPhO_2025_E1_EN.pdf",ic:"📄",col:"#c0392b"},
@@ -1742,7 +1742,7 @@ const F_DESK=fsNode("Desktop","dir",F_ME,{sys:"desk"}), F_DOCS=fsNode("Documents
   F_PICS=fsNode("Pictures","dir",F_ME,{sys:"pics"}), F_MUSIC=fsNode("Music","dir",F_ME,{sys:"music"}), F_VIDS=fsNode("Videos","dir",F_ME,{sys:"vids"});
 const USERDIRS=[F_DESK,F_DOWN,F_DOCS,F_PICS,F_MUSIC,F_VIDS];
 const F_BIN=fsNode("$Recycle.Bin","bin",F_DESK,{sys:"bin"});
-for(const a of ["edge","chrome","spec","files","note","calc"]) fsNode(a,"lnk",F_DESK,{app:a});
+for(const a of ["edge","chrome","youtube","spec","files","note","calc"]) fsNode(a,"lnk",F_DESK,{app:a});
 F_DESK.kids.forEach((n,i)=>n.pos=[0,i]);
 const V_HOME={virt:"home",kids:[]}, V_PC={virt:"pc",kids:[]}, V_GAL={virt:"gallery",kids:[]}, V_NET={virt:"net",kids:[]};
 const isDir=n=>n&&(n.type==="dir"||n.type==="bin"||!!n.virt);
@@ -1801,7 +1801,9 @@ function noteSave(as){ const N=OS.note, txt=N.text.replace(/\n/g,"\r\n");
 /* names shown under icons may be renamed shortcuts */
 const label=n=>n.type==="lnk"&&n.label?n.label:nm(n);
 /* ── windows ── */
-function osOpen(a){ if(isBr(a)) brGet(a); let w=OS.wins.find(w=>w.a===a);
+/* the YouTube shortcut is a Chrome web-app link: it opens Chrome at youtube.com */
+function osOpen(a){ if(a==="youtube"){ const w=osOpen("chrome"), b=brGet("chrome"); if(b) b.go("https://www.youtube.com/"); return w; }
+  if(isBr(a)) brGet(a); let w=OS.wins.find(w=>w.a===a);
   if(!w) return osOpenNew(a);
   w.min=false; w.z=++OS.z; OS.start=null; OS.fly=null; OS.focus=w; return w; }
 function osOpenNew(a){ const n=OS.wins.length; const w={a,x:110+n*30,y:36+n*26,w:APPS[a].w,h:APPS[a].h,min:false,max:false,z:++OS.z};
@@ -1825,8 +1827,13 @@ const WALL=(()=>{ const c=document.createElement("canvas"); c.width=VW; c.height
   const gl=g.createRadialGradient(cx,cy-60,10,cx,cy-60,300); gl.addColorStop(0,"rgba(220,240,255,0.55)"); gl.addColorStop(1,"rgba(220,240,255,0)"); g.fillStyle=gl; g.fillRect(0,0,VW,VH);
   return c; })();
 /* ── icons (drawn in a 32 px box, scaled to s) ── */
+/* Edge, Chrome, YouTube and the Windows button use the real logos (sim/icons) once they have loaded */
+const REAL_IC={edge:"edge",chrome:"chrome",youtube:"youtube",win:"windows"};
 function appIcon(a,x,y,s){ ctx.save(); ctx.translate(x,y); ctx.scale(s/32,s/32);
-  if(a==="spec"){ fillR(0,2,32,28,4,"#1f2f4f"); ctx.strokeStyle="#5fd0ff"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(3,24); for(let i=0;i<=26;i++){ const t=i/26; ctx.lineTo(3+t*26,24-16*Math.exp(-Math.pow((t-0.55)/0.12,2))-2*Math.sin(t*20)*0.2); } ctx.stroke(); }
+  const im=REAL_IC[a]&&window.VBrowser&&VBrowser.icon(REAL_IC[a]);
+  if(im&&im.complete&&im.naturalWidth){ if(a==="youtube") ctx.drawImage(im,1,5.5,30,21); else ctx.drawImage(im,a==="win"?3:1,a==="win"?3:1,a==="win"?26:30,a==="win"?26:30); ctx.restore(); return; }
+  if(a==="youtube"){ fillR(1,6,30,21,6,"#ff0000"); poly([[13,11],[21,16.5],[13,22]],"#ffffff"); }
+  else if(a==="spec"){ fillR(0,2,32,28,4,"#1f2f4f"); ctx.strokeStyle="#5fd0ff"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(3,24); for(let i=0;i<=26;i++){ const t=i/26; ctx.lineTo(3+t*26,24-16*Math.exp(-Math.pow((t-0.55)/0.12,2))-2*Math.sin(t*20)*0.2); } ctx.stroke(); }
   else if(a==="note"){ fillR(5,1,22,30,3,"#ffffff","#7a8ea6",1.4); fillR(5,1,22,6,2,"#3c8ce7"); for(let i=0;i<4;i++) fillR(9,11+i*5,14,1.6,0,"#8aa0b8"); }
   else if(a==="calc"){ fillR(4,1,24,30,4,"#3a3f47"); fillR(7,4,18,7,1.5,"#d6e8f2"); for(let r=0;r<3;r++) for(let c=0;c<3;c++) fillR(7+c*6.4,14+r*5.6,4.8,4,1,c===2&&r===2?"#4ca3ff":"#8b929c"); }
   else if(a==="files"||a==="dir"||a==="dirOpen"){ fillR(1,6,30,24,3,"#e3a21a"); fillR(1,4,12,6,2,"#e3a21a"); const g=vgrad(10,20,[[0,"#ffd96a"],[1,"#f8b425"]]); fillR(1,10,30,20,3,g);
@@ -2131,7 +2138,7 @@ function osDrawTaskbar(small){ const y=VH-TBH, t=ot();
   if(!small) osHit("tb:cal",cx,y+6,124,36);
   fillR(VW-6,y+8,1,32,0,"rgba(0,0,0,0.15)"); if(!small) osHit("tb:desk",VW-6,y,6,TBH); }
 function flyBox(x,y,w,h){ ctx.save(); ctx.shadowColor="rgba(0,0,0,0.3)"; ctx.shadowBlur=30; ctx.shadowOffsetY=8; fillR(x,y,w,h,8,"rgba(243,246,250,0.98)"); ctx.restore(); fillR(x+0.5,y+0.5,w-1,h-1,8,null,"rgba(0,0,0,0.1)",1); }
-const START_APPS=["edge","chrome","spec","files","note","calc"];
+const START_APPS=["edge","chrome","youtube","spec","files","note","calc"];
 function osDrawStart(small){ const S0=OS.start; if(!S0) return; const t=ot(), w=640, h=650, x=VW/2-w/2, y=VH-TBH-h-12;
   flyBox(x,y,w,h); if(!small) osHit("startmenu",x,y,w,h);
   fillR(x+32,y+28,w-64,36,18,"#ffffff",S0.search?ACC:"#d6dbe2",S0.search?1.6:1); appIcon("search",x+48,y+39,14);

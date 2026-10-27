@@ -106,7 +106,8 @@
   .dapp img,.dapp .ic{width:calc(56*var(--dp));height:calc(56*var(--dp));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:calc(26*var(--dp));font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.35)}
   .ic.calc{background:#3c4043;color:#8ab4f8}.ic.set{background:#e8eaed;color:#455a64}
   .ic.web{background:radial-gradient(circle,#4285f4 0 24%,#fff 25% 33%,transparent 34%),conic-gradient(from -30deg,#db4437 0 33.3%,#0f9d58 0 66.6%,#f4c20d 0)}
-  #dWeb{overflow:hidden}
+  .ic.yt{background:#fff}
+  #dWeb,#dYt{overflow:hidden}
   .dwin{position:absolute;left:0;top:0;width:100%;height:calc(100% - 48*var(--dp));border:0;background:#fff;display:block}
   .calc{background:#202124;color:#fff;display:flex;flex-direction:column;padding:calc(16*var(--dp));gap:calc(10*var(--dp));top:calc(24*var(--dp));height:calc(100% - 72*var(--dp))}
   .calc .cd{font:300 calc(40*var(--dp)) Roboto,sans-serif;text-align:right;padding:calc(10*var(--dp));min-height:calc(64*var(--dp));word-break:break-all}
@@ -191,12 +192,14 @@
                 <button class="dapp" data-app="calc"><span class="ic calc">±</span><span id="dnCalc">Calculator</span></button>
                 <button class="dapp" data-app="set"><span class="ic set">⚙</span><span id="dnSet">Settings</span></button>
                 <button class="dapp" data-app="web"><span class="ic web"></span><span>Chrome</span></button>
+                <button class="dapp" data-app="yt"><span class="ic yt"></span><span>YouTube</span></button>
               </div>
             </div>
             <iframe id="dApp" class="dwin" title="IPhO" hidden></iframe>
             <div id="dCalc" class="dwin calc" hidden><div class="cd" id="cDisp">0</div><div class="ck" id="cKeys"></div></div>
             <div id="dSet" class="dwin setw" hidden></div>
             <div id="dWeb" class="dwin" hidden></div>
+            <div id="dYt" class="dwin" hidden></div>
             <div id="dRec" class="dwin rec" hidden></div>
             <div id="dOff" class="doff" hidden></div>
             <div class="dnav"><button id="nBack" title="Back"><svg viewBox="0 0 20 20"><path d="M15 3v14L4 10z" fill="#fff"/></svg></button><button id="nHome" title="Home"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="#fff"/></svg></button><button id="nRec" title="Recents"><svg viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="1.5" fill="#fff"/></svg></button></div>
@@ -723,17 +726,25 @@ function webGet(){ if(!BRW&&window.VBrowser){ BRW=VBrowser({kind:"chrome",mobile
     links:[{t:{ko:"실험 1 문제지",en:"Problem E1"},url:lang==="ko"?"../pdf/IPhO_2021_E1_KO.pdf":"../pdf/IPhO_2021_E1_EN.pdf",ic:"📄",col:"#c0392b"},{t:{ko:"실험 2 문제지",en:"Problem E2"},url:lang==="ko"?"../pdf/IPhO_2021_E2_KO.pdf":"../pdf/IPhO_2021_E2_EN.pdf",ic:"📄",col:"#c0392b"},
       {t:"HaslaLab",url:"../index.html",ic:"H",col:"#2f6fbf"},{t:{ko:"위키백과",en:"Wikipedia"},url:"https://ko.m.wikipedia.org/",ic:"W"},{t:"YouTube",url:"https://m.youtube.com/",ic:"▶",col:"#e62117"}]});
     $("dWeb").appendChild(BRW.el); } return BRW; }
-function droidShow(app){ droidApp=app; for(const [k,id] of [["exp","dApp"],["calc","dCalc"],["set","dSet"],["rec","dRec"],["web","dWeb"]]) $(id).hidden=k!==app;
+/* the YouTube app: the same library and player as YouTube in Chrome, without the address bar */
+let BRY=null;
+function ytGet(){ if(!BRY&&window.VBrowser){ BRY=VBrowser({kind:"chrome",app:"youtube",mobile:true,embedded:true,lang:()=>lang}); $("dYt").appendChild(BRY.el); } return BRY; }
+/* real Chrome and YouTube logos on the home screen once vbrowser.js has loaded */
+function droidLogos(){ if(!window.VBrowser||!VBrowser.ICONS) return; const I=VBrowser.ICONS, st=document.createElement("style");
+  st.textContent='.dapp .ic.web{background:url("'+I.chrome+'") center/100% no-repeat;box-shadow:0 2px 6px rgba(0,0,0,.35)}.dapp .ic.yt,.rec .ic.yt{background:#fff url("'+I.youtube+'") center/62% no-repeat}'; document.head.appendChild(st); }
+addEventListener("load",droidLogos);
+function droidShow(app){ droidApp=app; for(const [k,id] of [["exp","dApp"],["calc","dCalc"],["set","dSet"],["rec","dRec"],["web","dWeb"],["yt","dYt"]]) $(id).hidden=k!==app;
   $("dStat").hidden=app==="exp"; if(app!=="exp") setPortrait(false); }
 function droidHome(){ if(droidApp==="exp"&&LINK.appOpen) frame.contentWindow.postMessage({hl21board:{type:"os",cmd:"pause"}},"*"); droidShow(null); }
 function droidOpen(app){ if(app==="exp"&&!LINK.appOpen){ LINK.appOpen=false; frame.src="ipho2021_app.html?embed=1&lang="+lang+"&r="+Date.now(); }
-  if(!droidStack.includes(app)) droidStack.push(app); if(app==="set") renderSettings(); if(app==="web") webGet(); droidShow(app); }
+  if(!droidStack.includes(app)) droidStack.push(app); if(app==="set") renderSettings(); if(app==="web") webGet(); if(app==="yt") ytGet(); droidShow(app); }
 function droidCloseApp(){ LINK.appOpen=false; LINK.run=null; frame.src="about:blank"; droidStack=droidStack.filter(x=>x!=="exp"); droidShow(null); }
 for(const b of document.querySelectorAll(".dapp")) b.onclick=()=>droidOpen(b.dataset.app);
 $("nHome").onclick=droidHome;
-$("nBack").onclick=()=>{ if(droidApp==="web"&&BRW&&BRW.back()) return; if(droidApp==="exp"&&LINK.appOpen){ frame.contentWindow.postMessage({hl21board:{type:"os",cmd:"back"}},"*"); return; } if(droidApp) droidShow(null); };
+$("nBack").onclick=()=>{ if(droidApp==="web"&&BRW&&BRW.back()) return; if(droidApp==="yt"&&BRY&&BRY.back()) return; if(droidApp==="exp"&&LINK.appOpen){ frame.contentWindow.postMessage({hl21board:{type:"os",cmd:"back"}},"*"); return; } if(droidApp) droidShow(null); };
 $("nRec").onclick=()=>{ if(droidApp==="rec"){ droidShow(null); return; } if(droidApp==="exp"&&LINK.appOpen) frame.contentWindow.postMessage({hl21board:{type:"os",cmd:"pause"}},"*");
-  const t=d().ln, names={exp:["IPhO",'<img src="ipho2021_app_icon.png" alt="">',""],calc:[t.calc,"±"," c"],set:[t.settings,"⚙"," s"],web:["Chrome",'<span class="ic web" style="width:28px;height:28px;border-radius:50%;display:inline-block"></span>'," s"]};
+  const t=d().ln, names={exp:["IPhO",'<img src="ipho2021_app_icon.png" alt="">',""],calc:[t.calc,"±"," c"],set:[t.settings,"⚙"," s"],web:["Chrome",'<span class="ic web" style="width:28px;height:28px;border-radius:50%;display:inline-block"></span>'," s"],
+    yt:["YouTube",'<span class="ic yt" style="width:28px;height:28px;border-radius:50%;display:inline-block"></span>'," s"]};
   $("dRec").innerHTML=droidStack.length?droidStack.map(k=>'<div class="card2'+names[k][2]+'" data-app="'+k+'">'+names[k][1]+"<span>"+names[k][0]+"</span></div>").join(""):'<span class="none">'+t.noRecent+"</span>";
   for(const c of $("dRec").querySelectorAll(".card2")) c.onclick=()=>droidOpen(c.dataset.app); droidShow("rec"); };
 function renderSettings(){ const t=d().ln; $("dSet").innerHTML="<h4>"+t.settings+"</h4>"+t.about.map(([k,v])=>'<div class="it"><b>'+k+"</b><span>"+v+"</span></div>").join("")+'<div class="it"><b>'+t.boardId+"</b><span>"+B.id+"</span></div>"+
