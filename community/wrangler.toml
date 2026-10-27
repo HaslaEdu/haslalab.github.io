@@ -1,0 +1,14 @@
+name = "haslalab-community"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Sites allowed to call the API from the browser (comma-separated).
+[vars]
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "haslalab-community"
+# paste the id printed by `npx wrangler d1 create haslalab-community`
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
