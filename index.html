@@ -491,6 +491,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
       <li><a href="sim/nbpho2019_E1_web.html">NBPhO 2019 P8 — 네 개의 저항</a></li>
       <li><a href="sim/nbpho2018_E1_web.html">NBPhO 2018 P4 — 프레넬 프리즘</a></li>
       <li><a href="sim/nbpho2018_E2_web.html">NBPhO 2018 P9 — 블랙박스</a></li>
+      <li><a href="sim/ioaa2025_G1_web.html">IOAA 2025 그룹 경기 — 전파망원경으로 찾는 암흑물질</a></li>
       <li><a href="sim/ispho2026_E1_web.html">ISPhO 2026 E1 — 광섬유 브래그 격자</a></li>
       <li><a href="sim/opho2026_23_web.html">OPhO 2026 #23 — 스핀, 스핀, 스핀</a></li>
       <li><a href="sim/opho2025_E_web.html">OPhO 2025 — 공 감각</a></li>
@@ -555,6 +556,7 @@ ko:{
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨",
   tallyNote:"실험 문제만 모읍니다.",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
+  expNObs:"관측 {n}문제", noPapersObs:"관측 자료 없음", problemsObs:"관측 문제", pickProbObs:"관측 문제를 고르세요",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
   pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
@@ -601,6 +603,7 @@ en:{
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published",
   tallyNote:"Experimental problems only.",
   expN:"{n} experimental", noPapers:"no experimental papers",
+  expNObs:"{n} observational", noPapersObs:"no observational papers", problemsObs:"Observational problems", pickProbObs:"Choose a problem",
   ebComps:"Covered competitions", hComps:"Choose a competition",
   pComps:"Pick a year, then open that year's experimental problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
@@ -2626,7 +2629,7 @@ const DATA={
     ["E2","Qualitative Analysis of Mineral Fertilizers","무기질 비료의 정성 분석","IMChO_2015_E_EN.pdf",null]])}
   ]},
  ioaa:{
-  abbr:"IOAA", since:2007,
+  abbr:"IOAA", since:2007, obs:true,
   full:{ko:"국제천문및천체물리올림피아드",en:"International Olympiad on Astronomy and Astrophysics"},
   scope:{ko:"국제",en:"International"},
   note:{ko:"이론 시험과 팀 경기는 빼고 자료 분석(D)과 관측(O) 시험만 실었습니다. 같은 라운드의 문제들은 한 문제지에 묶여 있습니다. 문제지와 해답은 olimpicos에 공개된 것입니다.",
@@ -2642,7 +2645,7 @@ const DATA={
     ["O4","Know Your Grid","좌표 격자 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
     ["O5","Know Your Time","시각 알기","IOAA_2025_O2_EN.pdf","IOAA_2025_O2_S.pdf"],
     ["O6","Discovery of 'Z'","'Z'의 발견","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"],
-    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]])},
+    ["O7","Lensing Time Delay","중력렌즈 시간 지연","IOAA_2025_O3_EN.pdf","IOAA_2025_O3_S.pdf"]]).concat([{id:"G1",title:{ko:"전파망원경으로 찾는 우리은하의 암흑물질 (그룹 경기)",en:"Uncovering Galactic Dark Matter Using a Radio Telescope (group)"},desc:{ko:"2025년 7월 24일 저녁 뭄바이(북위 19.10°, 동경 72.85°)에서 혼 전파망원경을 각도기와 디지털 경사계로 겨누어 은경 30°–70°의 21 cm HI 선을 60초씩 기록합니다. 땅(300 K)과 은하면에서 먼 하늘(5 K)로 이득과 수신기 온도를 보정하고, 가장 많이 적색이동한 진동수에서 회전 속도와 은하 중심 거리, 둘러싸인 질량과 암흑물질 질량을 구합니다. 실제로 측정하는 그룹 실험이었습니다.",en:"On the evening of 24 July 2025 in Mumbai (19.10° N, 72.85° E) point the horn radio telescope with its protractor and digital inclinometer and record 60 s of the 21-cm HI line at Galactic longitudes 30°–70°. Calibrate gain and receiver temperature on the ground (300 K) and on sky away from the plane (5 K); the most redshifted frequency gives the rotation speed and Galactocentric radius, then the enclosed and the dark mass. This was a hands-on group measurement."},tags:["전파천문학","21 cm 선","회전 곡선"],tagsEn:["Radio astronomy","21-cm line","Rotation curve"],files:{sim:"sim/ioaa2025_G1_web.html",src:{ko:"src/ioaa2025_G1_radio_sim_KO.py",en:"src/ioaa2025_G1_radio_sim_EN.py"},pdf:{en:"pdf/IOAA_2025_G1_EN.pdf"},sol:"pdf/IOAA_2025_G1_S.pdf"}}])},
    {y:2024,host:{ko:"브라질 · 바소우라스",en:"Vassouras, Brazil"},cc:"br",problems:lst([
     ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
     ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
@@ -2754,7 +2757,7 @@ const DATA={
     ["O2","Observation II: Binoculars","관측 II — 쌍안경","IOAA_2007_O1_EN.pdf","IOAA_2007_O1_S.pdf"]])}
   ]},
  ioaajr:{
-  abbr:"IOAA Jr", since:2022,
+  abbr:"IOAA Jr", since:2022, obs:true,
   full:{ko:"국제 주니어 천문및천체물리올림피아드",en:"International Olympiad on Astronomy and Astrophysics Junior"},
   scope:{ko:"국제",en:"International"},
   note:{ko:"IOAA의 주니어 대회입니다. 관측 시험만 실었으며, 문제지는 olimpicos에 공개된 것입니다.",
@@ -2780,7 +2783,7 @@ const DATA={
     ["O3","Observations with an Astronomical Telescope","천체 망원경 관측","IOAAJr_2022_O2_EN.pdf",null]])}
   ]},
  iao:{
-  abbr:"IAO", since:1996,
+  abbr:"IAO", since:1996, obs:true,
   full:{ko:"국제천문올림피아드",en:"International Astronomy Olympiad"},
   scope:{ko:"국제",en:"International"},
   note:{ko:"유라시아 천문학회가 여는 대회입니다. 이론 라운드는 빼고 실기(P)와 관측(O) 라운드만 실었습니다. 문제지는 IAO 공식 사이트(issp.ac.ru/iao)에 남아 있는 영어 문제 부클릿이며, α · β 두 연령 조의 문제와 그림 · 성도 같은 부속 자료를 라운드별로 한 파일에 묶었습니다. 공식 사이트에 실기 · 관측 문제가 남아 있는 해는 2014년과 2015년뿐이고, 공식 해답은 공개되어 있지 않습니다.",
@@ -2801,7 +2804,7 @@ const DATA={
     ["O","Observational Round: Naked Eye and Telescope","관측 라운드 — 맨눈과 망원경","IAO_2014_O_EN.pdf",null]])}
   ]},
  apao:{
-  abbr:"APAO", since:2005,
+  abbr:"APAO", since:2005, obs:true,
   full:{ko:"아시아태평양천문올림피아드",en:"Asian-Pacific Astronomy Olympiad"},
   scope:{ko:"아시아 · 태평양",en:"Asia-Pacific"},
   note:{ko:"IAO와 같은 유라시아 천문학회가 여는 아시아 · 태평양 지역 대회입니다. 실기(P), 성도(M), 관측(O) 라운드만 실었고, 문제지는 공식 사이트(issp.ac.ru/iao/apao)에 남아 있는 2012, 2014, 2015년 부클릿입니다. 2014년 실기 문제는 공식 사이트에 러시아어판만 남아 있고, 2015년 9번 문제의 자료표는 사이트에서 빠져 있습니다. 공식 해답은 공개되어 있지 않습니다.",
@@ -2831,7 +2834,7 @@ const DATA={
     ["O12","Alnath","엘나스","APAO_2012_O_EN.pdf",null]])}
   ]},
  owao:{
-  abbr:"OWAO", since:2022,
+  abbr:"OWAO", since:2022, obs:true,
   full:{ko:"오픈 월드 천문올림피아드",en:"Open World Astronomy Olympiad"},
   scope:{ko:"국제 · 러시아",en:"International · Russia"},
   note:{ko:"러시아 시리우스 교육센터가 여는 국제 천문 올림피아드입니다. 실기 라운드(Practical Round)의 문제와 해답만 실었습니다. 관측 라운드와 익스프레스 라운드는 온라인 퀴즈로 치러 문제지가 따로 없습니다. 파일은 공식 사이트(owao.siriusolymp.ru)가 올려 둔 my.sirius.online의 PDF로 바로 연결되며, 이 서버는 브라우저 확인을 거친 뒤 파일을 내려줍니다.",
@@ -2895,15 +2898,15 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 8;
+const LOGO_V = 9;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
 const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
-                   ijso:0.42, ioaa:0.50, icho:0.27, imcho:0.26, ioaajr:0.17,
-                   iao:0.30, owao:0.35};
+                   ijso:0.42, ioaa:0.50, icho:0.16, imcho:0.26, ioaajr:0.42,
+                   iao:0.30, owao:0.35, apao:0.30};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -2916,6 +2919,8 @@ const compLogo = key =>
      style="height:calc(var(--lcap)/${LOGO_TEXT[key]||0.5})"
      src="logo/${key}.png?v=${LOGO_V}" onerror="logoFallback(this)">`;
 
+/* astronomy competitions count observation rounds, not experiments */
+const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function adFitBanner(placement){
@@ -2996,7 +3001,7 @@ function viewComps(){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${d.problems}</dt><dd>${probs}</dd></div>
+            <div><dt>${LB(c,"problems")}</dt><dd>${probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -3062,7 +3067,7 @@ function viewComp(key){
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-        <div><dt>${d.problems}</dt><dd>${total}</dd></div>
+        <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
         <div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>
       </dl>
     </div>
@@ -3079,8 +3084,8 @@ function viewComp(key){
             ${flagImg(y.cc,"flag card",y.org)}
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
-          <div class="cnt">${r?'<i class="dot"></i>':""}${none?d.noPapers:
-            d.expN.replace("{n}",y.problems.length)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+          <div class="cnt">${r?'<i class="dot"></i>':""}${none?LB(c,"noPapers"):
+            LB(c,"expN").replace("{n}",y.problems.length)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -3105,12 +3110,12 @@ function viewYear(key,year){
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>
-        <div><dt>${d.problems}</dt><dd>${yr.problems.length}</dd></div>
+        <div><dt>${LB(c,"problems")}</dt><dd>${yr.problems.length}</dd></div>
       </dl>
     </div>
     ${adFitBanner("secondary")}
     <div class="shead">
-      <h2 style="font-size:1.15rem">${d.pickProb}</h2>
+      <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
          target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
     </div>
@@ -3143,9 +3148,9 @@ function viewYear(key,year){
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
         const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${pick(v)}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
         const docs=[doc(f.pdf,d.actPdf,true), doc(f.sol,d.actSol,true), doc(f.src,d.actSrc,false)];
-        if(c.soon) docs.pop();
-        /* 시뮬레이터를 만들지 않는 대회(화학 · 천문 · 통합과학)는 문제지 줄만 둔다 */
-        const docsOnly = !!c.soon;
+        /* 시뮬레이터를 만들지 않는 대회(화학 · 천문 · 통합과학)는 문제지 줄만 둔다 — 시뮬레이터가 생긴 문제만 빼고 */
+        const docsOnly = !!c.soon && !f.sim;
+        if(docsOnly) docs.pop();
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         return `<article class="prob ${mode==="wip"?"soon":""}">
           <div class="top">

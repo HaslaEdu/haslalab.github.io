@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="theme-color" content="#1c2027">
+<title>IOAA 2025 그룹 경기 — 전파망원경으로 찾는 암흑물질 · Galactic Dark Matter with a Radio Telescope · HaslaLab</title>
+<meta name="description" content="IOAA 2025 그룹 경기를 브라우저에서 실행합니다. 2025년 7월 24일 저녁 뭄바이의 하늘을 혼 전파망원경으로 겨누어 은하면의 21 cm HI 선을 직접 기록하고, 땅과 하늘로 이득과 수신기 온도를 보정한 뒤 회전 곡선과 암흑물질 질량을 구합니다.">
+<link rel="canonical" href="https://haslalab.org/sim/ioaa2025_G1_web.html">
+<link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/ioaa2025_G1_web.html?lang=ko">
+<link rel="alternate" hreflang="en" href="https://haslalab.org/sim/ioaa2025_G1_web.html?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://haslalab.org/sim/ioaa2025_G1_web.html">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOAA 2025 그룹 경기 — 전파망원경으로 찾는 우리은하의 암흑물질">
+<meta property="og:description" content="IOAA 2025 그룹 경기를 브라우저에서 실행합니다. 2025년 7월 24일 저녁 뭄바이의 하늘을 혼 전파망원경으로 겨누어 은하면의 21 cm HI 선을 직접 기록하고, 땅과 하늘로 이득과 수신기 온도를 보정한 뒤 회전 곡선과 암흑물질 질량을 구합니다.">
+<meta property="og:url" content="https://haslalab.org/sim/ioaa2025_G1_web.html">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://haslalab.org/og.png">
+<style>
+  :root{
+    --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
+    --line:#33373e; --accent:#f2c14e; --accent-soft:#2b2f36; --deep:#12161b;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  .wrap{max-width:1680px;margin:0 auto;padding:12px 12px max(160px,24vh);display:flex;gap:12px;align-items:flex-start}
+  @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
+  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+        border-radius:10px;padding:8px;position:sticky;top:12px}
+  .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+           color:var(--accent);text-align:center}
+  #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
+  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray{flex:1 1 100%} }
+
+  /* ── stage ── */
+  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
+        font-size:13.5px;line-height:1.7;color:#d6dde2}
+  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
+  .info h4:first-child{margin-top:0}
+  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info .warn{color:#f0a79f;font-weight:600}
+
+  /* ── control panel ── */
+  .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
+         border-radius:10px;padding:12px;position:sticky;top:12px}
+  @media (max-width:1180px){ .panel{position:static} }
+  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+            margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
+  .panel h2:first-of-type{margin-top:0}
+  .row{display:flex;gap:5px;flex-wrap:wrap}
+  .row button{flex:1;text-align:center;min-width:0}
+  button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
+         border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
+         color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
+  button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+  button:disabled{opacity:.45;cursor:default}
+  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
+  #redBtn:hover{background:#a3322b}
+  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
+          background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
+          margin-top:12px;min-height:120px}
+  .status div + div{margin-top:8px}
+  .status .w{color:#f0a79f}
+
+  /* ── header ── */
+  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+         display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
+  header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
+  .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
+               font-weight:600;color:var(--muted);text-align:center;background:transparent}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
+  .page{display:none}.page.on{display:block}
+  #bench,#ctrl,#screen,#wire{display:block;max-width:100%;height:auto!important;margin:0 auto;border-radius:6px}
+  .pair{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px}
+  .serial{color:#69717a;font-size:11px}
+  #wwarn{color:#f0a79f}#wwarn:empty{display:none}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
+  #screen{cursor:default}
+  .lbl{display:block;margin:8px 0 2px;color:var(--muted);font-size:12.5px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .cvwrap{position:relative}
+  #cv{background:#1b1f25;cursor:grab;touch-action:none}
+  #cv.grabbing{cursor:grabbing}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  .vw{background:#15181d;border-radius:6px;padding:6px}
+  #vtabs{margin-bottom:6px}
+  #wwarn{color:var(--accent)} #wwarn .w{color:#f0a79f}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 id="h1"></h1>
+    <p id="sub"></p>
+  </div>
+  <div class="lang">
+    <button id="btn-ko" class="on">한국어</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="tray">
+    <h3 id="t-tray"></h3>
+    <div id="items"></div>
+  </aside>
+
+  <div class="stage">
+    <div class="card">
+      <div class="tabs" id="vtabs"><button id="vt3d" class="on"></button><button id="vtdial"></button><button id="vtincl"></button><button id="vtmouth"></button><button id="vtlaptop"></button></div>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap" id="v-3d"><canvas id="cv"></canvas></div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <h2 id="lgClock"></h2>
+    <div class="disp" id="clk">20:50:00</div>
+    <h2 id="lgCtl"></h2>
+    <button id="bTurn" style="width:100%"></button>
+    <button id="bTape" style="width:100%"></button>
+    <h2 id="lgNotes"></h2>
+    <p class="hint" id="txNotes"></p>
+    <div class="status"><div id="wwarn"></div></div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+/* ====================================================================
+   IOAA 2025 (Mumbai) - Group Competition G01
+   UNCOVERING GALACTIC DARK MATTER USING A RADIO TELESCOPE
+
+   A pyramidal horn on an alt-azimuth mount, pointed by a protractor
+   (azimuth, 1 deg) and a digital inclinometer (altitude, 0.01 deg),
+   feeding an amplifier/filter/SDR chain and a laptop running the
+   "Radio Astronomy Suite" (Quick look, Pointing and velocity correction,
+   Data acquisition, Calibration, HI line analysis).
+
+   The sky is computed, not stored: the site is the venue fitted to the
+   official pointing table (19.10 N, 72.85 E, IST = UTC+5.5) and the
+   clock starts on the evening of 24 July 2025.  Each spectrum is the
+   21-cm emission of a model Milky Way (exponential, flaring HI disc
+   with two spiral arms, rotation curve rising to 220 km/s) seen through
+   the horn's beam (21.4 x 29.2 deg), Doppler shifted by the Earth's
+   rotation and orbit and the Sun's motion, plus continuum, ground
+   spill-over, a receiver with its own bandpass and noise temperature,
+   radiometer noise and the mobile tower the write-up warns about.
+   ==================================================================== */
+const I18N = {
+  title: ["IOAA 2025 — Group Competition — Galactic dark matter with a radio telescope", "IOAA 2025 — 그룹 경기 — 전파망원경으로 찾는 우리은하의 암흑물질"],
+  sub: ["Virtual laboratory · a horn radio telescope on an alt-azimuth mount (protractor for azimuth, digital inclinometer for altitude) and a laptop with the Radio Astronomy Suite, on the evening of 24 July 2025 in Mumbai. Measure the 21-cm HI line along the Galactic plane, calibrate on the ground and the sky, and build the Milky Way's rotation curve.",
+        "가상 실험실 · 고도-방위 가대에 올린 혼 전파망원경(방위각은 각도기, 고도는 디지털 경사계)과 Radio Astronomy Suite가 깔린 노트북. 2025년 7월 24일 저녁 뭄바이에서 은하면을 따라 21 cm HI 선을 재고, 땅과 하늘로 보정한 뒤 우리은하의 회전 곡선을 구합니다."],
+  tray: ["On the table", "탁자 위"],
+  vt3d: ["3D terrace", "3D 옥상"], vtdial: ["azimuth dial", "방위각 눈금판"], vtincl: ["inclinometer", "경사계"], vtmouth: ["horn aperture", "혼 입구"], vtlaptop: ["laptop", "노트북"],
+  cap_3d: ["the telescope in 3D — drag the horn: left/right turns it in azimuth, up/down tilts it · wheel over the horn: fine altitude (Shift: fine azimuth) · drag elsewhere to turn the view, right-drag to pan, wheel to zoom",
+           "3D 망원경 — 혼 끌기: 좌우로 방위각, 위아래로 고도 · 혼 위에서 휠: 고도 미세 조정 (Shift: 방위각 미세 조정) · 다른 곳 끌기: 시점 회전, 우클릭 끌기: 이동, 휠: 확대"],
+  cap_dial: ["the protractor at the base, from above — drag the pointer round, wheel for small steps · the 0 mark sits on the table's N", "받침의 각도기를 위에서 — 바늘을 끌어 돌리기, 휠로 조금씩 · 0 눈금은 탁자의 N 표시에 맞춰져 있습니다"],
+  cap_incl: ["the digital inclinometer on the horn — drag up/down to tilt the horn, wheel for 0.05° steps", "혼 위의 디지털 경사계 — 위아래로 끌어 혼 기울이기, 휠: 0.05° 씩"],
+  cap_mouth: ["the horn's mouth, face on — drag the tape's hook and its case to measure; the button turns the tape", "혼 입구 정면 — 줄자의 고리와 몸통을 끌어 재기; 단추로 줄자를 돌립니다"],
+  cap_laptop: ["the laptop — Radio Astronomy Suite", "노트북 — Radio Astronomy Suite"],
+  lgCtl: ["Controls", "조작"], lgNotes: ["Notes", "안내"], lgClock: ["Time (IST)", "시각 (IST)"],
+  turnTape: ["Turn the tape (across / up)", "줄자 돌리기 (가로 / 세로)"], resetTape: ["Put the tape back", "줄자 제자리에"],
+  notes: ["• The mount is already aligned with North: the dial's 0° sits on the table's N mark.\n• Azimuth is read on the protractor (1°), altitude on the inclinometer (0.01°).\n• Do not point between azimuth 0° and 40° or between 240° and 360° below 40° altitude: a mobile tower near the venue interferes.\n• Recording integrates for 60 s at wherever the horn points; the sky keeps turning meanwhile.",
+          "• 가대는 이미 북쪽에 맞춰져 있어 눈금판의 0°가 탁자의 N 표시에 있습니다.\n• 방위각은 각도기(1°)로, 고도는 경사계(0.01°)로 읽습니다.\n• 고도 40° 아래에서 방위각 0°–40°나 240°–360° 쪽을 겨누지 마세요: 근처 이동통신 기지국이 간섭합니다.\n• 기록은 혼이 겨누는 곳을 60초 동안 적분하며, 그동안에도 하늘은 돕니다."],
+  ledOn: ["white LED on: receiver powered", "흰색 LED 켜짐: 수신기 전원 들어옴"]
+};
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+const tr = k => { const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k; };
+function mulberry(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const RNG = mulberry((Math.random() * 1e9) | 0);
+const gauss = () => { let u = 0, v = 0; while (!u) u = RNG(); while (!v) v = RNG(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+/* ==================================================================
+   TIME AND THE SKY
+   ================================================================== */
+const D2R = Math.PI / 180, SITE = {lat:19.10, lon:72.85, tz:5.5};
+/* the clock: Julian date (UTC) of 24 July 2025, 20:50:00 IST, then real seconds */
+const JD0 = (() => { let y = 2025, m = 7; const d = 24, H = 20 + 50 / 60 - SITE.tz; if (m <= 2){ y--; m += 12; }
+  const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5 + H / 24; })();
+const CLOCK = {t:0};                                            /* seconds since 20:50:00 IST */
+const jdNow = () => JD0 + CLOCK.t / 86400;
+function istString(t){ const s = Math.floor(t) + 20 * 3600 + 50 * 60, h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60, ss = s % 60;
+  return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(ss).padStart(2, "0"); }
+const gmst = J => { const T = (J - 2451545) / 36525; return ((280.46061837 + 360.98564736629 * (J - 2451545) + 0.000387933 * T * T) % 360 + 360) % 360; };
+/* galactic -> ICRS rotation (rows: x, y, z of the equatorial frame in galactic coordinates) */
+const MG = [[-0.0548755604, 0.4941094279, -0.8676661490], [-0.8734370902, -0.4448296300, -0.1980763734], [-0.4838350155, 0.7469822445, 0.4559837762]];
+const mul = (M, v) => [M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2], M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2], M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2]];
+const mulT = (M, v) => [M[0][0] * v[0] + M[1][0] * v[1] + M[2][0] * v[2], M[0][1] * v[0] + M[1][1] * v[1] + M[2][1] * v[2], M[0][2] * v[0] + M[1][2] * v[1] + M[2][2] * v[2]];
+const sph = (lon, lat) => [Math.cos(lat * D2R) * Math.cos(lon * D2R), Math.cos(lat * D2R) * Math.sin(lon * D2R), Math.sin(lat * D2R)];
+const unsph = v => [((Math.atan2(v[1], v[0]) / D2R) % 360 + 360) % 360, Math.asin(Math.max(-1, Math.min(1, v[2]))) / D2R];
+/* precession J2000 -> date, as a matrix (IAU 1976) */
+function precMat(J){ const T = (J - 2451545) / 36525, as = D2R / 3600;
+  const z = (2306.2181 * T + 1.09468 * T * T) * as, ze = (2306.2181 * T + 0.30188 * T * T) * as, th = (2004.3109 * T - 0.42665 * T * T) * as;
+  const cz = Math.cos(z), sz = Math.sin(z), ce = Math.cos(ze), se = Math.sin(ze), ct = Math.cos(th), st = Math.sin(th);
+  return [[cz * ct * ce - sz * se, -cz * ct * se - sz * ce, -cz * st], [sz * ct * ce + cz * se, -sz * ct * se + cz * ce, -sz * st], [st * ce, -st * se, ct]]; }
+/* (l, b) -> (alt, az) at the site, now */
+function gal2hor(l, b, J){ const eq = mul(precMat(J), mul(MG, sph(l, b))), [ra, dec] = unsph(eq);
+  const H = (gmst(J) + SITE.lon - ra) * D2R, d = dec * D2R, p = SITE.lat * D2R;
+  const alt = Math.asin(Math.sin(p) * Math.sin(d) + Math.cos(p) * Math.cos(d) * Math.cos(H));
+  const az = Math.atan2(-Math.cos(d) * Math.sin(H), Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.sin(p) * Math.cos(H));
+  return [alt / D2R, ((az / D2R) % 360 + 360) % 360]; }
+/* (alt, az) -> (l, b), now */
+function hor2gal(alt, az, J){ const p = SITE.lat * D2R, a = alt * D2R, A = az * D2R;
+  const d = Math.asin(Math.sin(p) * Math.sin(a) + Math.cos(p) * Math.cos(a) * Math.cos(A));
+  const H = Math.atan2(-Math.sin(A) * Math.cos(a), Math.sin(a) * Math.cos(p) - Math.cos(a) * Math.sin(p) * Math.cos(A));
+  const ra = gmst(J) + SITE.lon - H / D2R, eqd = sph(ra, d / D2R), eq0 = mulT(precMat(J), eqd);
+  return unsph(mulT(MG, eq0)); }
+/* the Earth's heliocentric velocity (km/s, equatorial J2000), from the Sun's apparent longitude */
+function earthVel(J){ const pos = J => { const n = J - 2451545, L = 280.460 + 0.9856474 * n, g = (357.528 + 0.9856003 * n) * D2R;
+    const lam = (L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g) + 180) * D2R, R = 1.00014 - 0.01671 * Math.cos(g) - 0.00014 * Math.cos(2 * g), e = 23.439 * D2R;
+    return [R * Math.cos(lam), R * Math.sin(lam) * Math.cos(e), R * Math.sin(lam) * Math.sin(e)]; };
+  const a = pos(J + 0.01), b = pos(J - 0.01), k = 1.495978707e8 / 86400 / 0.02; return [(a[0] - b[0]) * k, (a[1] - b[1]) * k, (a[2] - b[2]) * k]; }
+const SUN_APEX = sph(270.96, 29.99);                                /* 20 km/s, RA 18h Dec +30 (B1900) */
+/* v_corr such that v_LSR = v_obs(Earth) + v_corr */
+function vcorr(l, b, J){ const n = mul(MG, sph(l, b)), ve = earthVel(J), lst = (gmst(J) + SITE.lon) * D2R, vr = 0.4651 * Math.cos(SITE.lat * D2R);
+  const V = [ve[0] - vr * Math.sin(lst) + 20 * SUN_APEX[0], ve[1] + vr * Math.cos(lst) + 20 * SUN_APEX[1], ve[2] + 20 * SUN_APEX[2]];
+  return -(n[0] * V[0] + n[1] * V[1] + n[2] * V[2]); }
+
+/* ==================================================================
+   THE MODEL GALAXY: HI in a flaring disc with two arms
+   ================================================================== */
+const GAL = {R0:8.5, v0:220, Ts:120, sig:4.5};
+const vrot = R => 232.3 * (1 - Math.exp(-R / 2.9));
+function nHI(R, z, x, y){ if (R > 22) return 0;
+  const th = Math.atan2(y, x), inner = R < 3 ? Math.pow(R / 3, 3) : 1, outer = Math.exp(-Math.max(0, R - 13) / 3);
+  const arm = 1 + 0.55 * Math.cos(2 * (th - Math.log(R + 0.1) / Math.tan(13 * D2R)));
+  const h = 0.11 * Math.exp((R - 8.5) / 8), base = 0.62 * inner * outer * arm;
+  return base * 0.12 / h * Math.exp(-z * z / (2 * h * h)); }
+/* the line along (l, b): brightness temperature on a v_LSR grid (-200..+200 km/s, 1 km/s) */
+const VG = {v0:-200, dv:1, n:401};
+const KERN = (() => { const w = []; for (let i = -24; i <= 24; i++) w.push(Math.exp(-0.5 * (i / GAL.sig) ** 2) / (GAL.sig * Math.sqrt(2 * Math.PI))); return w; })();
+function hiLine(l, b){ const tau = new Float64Array(VG.n), cl = Math.cos(l * D2R), sl = Math.sin(l * D2R), cb = Math.cos(b * D2R), sb = Math.sin(b * D2R);
+  const ds = 0.05, kpc = 3.086e21;
+  for (let s = ds / 2; s < 30; s += ds){ const dp = s * cb, z = s * sb + 0.015;
+    if (Math.abs(z) > 3) break;
+    const x = GAL.R0 - dp * cl, y = dp * sl, R = Math.hypot(x, y), n = nHI(R, z, x, y); if (n < 1e-5) continue;
+    const v = vrot(R) * (GAL.R0 / R) * sl * cb - GAL.v0 * sl * cb;           /* v_LSR of gas at (x, y) */
+    const N = n * ds * kpc / (1.823e18 * GAL.Ts);                              /* tau * (km/s) */
+    const c = (v - VG.v0) / VG.dv, ci = Math.round(c);
+    for (let k = -24; k <= 24; k++){ const j = ci + k; if (j >= 0 && j < VG.n) tau[j] += N * KERN[k + 24]; } }
+  const T = new Float64Array(VG.n); for (let i = 0; i < VG.n; i++) T[i] = GAL.Ts * (1 - Math.exp(-tau[i])); return T; }
+/* continuum at 1.4 GHz: CMB + synchrotron, brighter along the plane and towards the centre */
+const contT = (l, b) => { const L = ((l + 180) % 360 + 360) % 360 - 180; return 3.3 + 1.2 * Math.exp(-Math.abs(b) / 15) + 9 * Math.exp(-b * b / 8) * Math.exp(-Math.abs(L) / 35); };
+
+/* ==================================================================
+   THE TELESCOPE
+   ================================================================== */
+const HORN = {a:56.5, b:41.5, len:62, tA:21.4, tB:29.2};                /* cm; HPBW (deg) along a and b */
+const BAND = {fc:1420.0, n:512, df:0.004};                              /* MHz: 512 bins of 4 kHz */
+const F0 = 1420.40575, C_KMS = 299792.458;
+const fbin = i => BAND.fc - BAND.n * BAND.df / 2 + (i + 0.5) * BAND.df;
+/* the receiver: gain ripple and roll-off, a noise temperature with a slope, a DC spike */
+const RX = (() => { const G = new Float64Array(BAND.n), Tr = new Float64Array(BAND.n), ph = RNG() * 6, ph2 = RNG() * 6;
+  for (let i = 0; i < BAND.n; i++){ const x = fbin(i) - BAND.fc;
+    const roll = 1 / (1 + Math.exp((Math.abs(x) - 0.93) / 0.025));
+    G[i] = 2.4e-3 * (0.86 + 0.10 * Math.cos(2 * Math.PI * x / 1.37 + ph) + 0.04 * Math.cos(2 * Math.PI * x / 0.31 + ph2)) * (0.15 + 0.85 * roll);
+    Tr[i] = 107 + 5 * x + 2.5 * Math.sin(2 * Math.PI * x / 1.9 + ph2) + 25 * (1 - roll); }
+  return {G, Tr}; })();
+/* where the horn points: az (deg from N through E), alt (deg) */
+const TEL = {az:180, alt:60, azErr:0.3 * gauss(), altErr:0.05 * gauss()};
+/* local horn frame -> horizon: offsets x (along a, horizontal) and y (along b) */
+function offsetDir(alt, az, x, y){ const a = alt * D2R, A = az * D2R;
+  const f = [Math.sin(A) * Math.cos(a), Math.cos(A) * Math.cos(a), Math.sin(a)];            /* E, N, Up */
+  const r = [Math.cos(A), -Math.sin(A), 0], u = [-Math.sin(A) * Math.sin(a), -Math.cos(A) * Math.sin(a), Math.cos(a)];
+  const tx = Math.tan(x * D2R), ty = Math.tan(y * D2R), v = [f[0] + tx * r[0] + ty * u[0], f[1] + tx * r[1] + ty * u[1], f[2] + tx * r[2] + ty * u[2]], n = Math.hypot(...v);
+  const e = v.map(c => c / n); return [Math.asin(e[2]) / D2R, ((Math.atan2(e[0], e[1]) / D2R) % 360 + 360) % 360]; }
+/* the beam: samples and weights (Gaussian of the two HPBWs) */
+const BEAM = (() => { const S = [], sa = HORN.tA / 2.355, sb = HORN.tB / 2.355; let W = 0;
+  for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++){ const x = i * sa * 0.75, y = j * sb * 0.75, w = Math.exp(-0.5 * ((x / sa) ** 2 + (y / sb) ** 2)); S.push([x, y, w]); W += w; }
+  for (const s of S) s[2] /= W; return S; })();
+/* the mobile tower: low in the north and north-west */
+const towerHit = (alt, az) => alt < 40 && (az < 40 || az > 240) ? Math.min(1, (40 - alt) / 15) : 0;
+const RFI_LINES = [[1419.384, 9, 0.010], [1420.912, 14, 0.006], [1420.536, 4, 0.014]];
+/* the antenna temperature spectrum for the true pointing, at Julian date J (cached per pointing/minute) */
+let _antKey = "", _antT = null;
+function antennaT(alt, az, J){ const key = alt.toFixed(1) + "," + az.toFixed(1) + "," + Math.round(J * 1440);
+  if (key === _antKey) return _antT;
+  const T = new Float64Array(BAND.n), line = new Float64Array(VG.n); let cont = 0, ground = 0;
+  for (const [x, y, w] of BEAM){ const [sa, sz] = offsetDir(alt, az, x, y);
+    if (sa < 0){ ground += w; continue; }
+    const [l, b] = hor2gal(sa, sz, J); cont += w * (contT(l, b) + 2.2 / Math.max(0.15, Math.sin(sa * D2R)) * 0.6);
+    const H = hiLine(l, b); for (let i = 0; i < VG.n; i++) line[i] += w * H[i]; }
+  const [l0, b0] = hor2gal(alt, az, J), vc = vcorr(l0, b0, J);
+  for (let i = 0; i < BAND.n; i++){ const vobs = C_KMS * (F0 - fbin(i)) / F0, vl = vobs + vc, c = (vl - VG.v0) / VG.dv, k = Math.floor(c);
+    const hv = k >= 0 && k < VG.n - 1 ? line[k] * (k + 1 - c) + line[k + 1] * (c - k) : 0;
+    T[i] = cont + hv + ground * 290 + 0.03 * 300; }
+  const rfi = towerHit(alt, az); if (rfi > 0) for (let i = 0; i < BAND.n; i++){ let r = 18 * rfi; for (const [f, A, w] of RFI_LINES) r += A * 8 * rfi * Math.exp(-0.5 * ((fbin(i) - f) / w) ** 2); T[i] += r; }
+  _antKey = key; _antT = T; return T; }
+/* one integration of t seconds: relative power per bin */
+function integrate(t){ const J = jdNow(), alt = TEL.alt + TEL.altErr, az = TEL.az + TEL.azErr, Ta = antennaT(alt, az, J), P = new Float64Array(BAND.n);
+  for (let i = 0; i < BAND.n; i++){ const Ts = Ta[i] + RX.Tr[i], s = Ts / Math.sqrt(BAND.df * 1e6 * t);
+    P[i] = RX.G[i] * (Ts + s * gauss()) * (i === BAND.n / 2 ? 1.6 : 1); }
+  return P; }
+
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+const mkCv = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const FONT = '"Arial","Helvetica",sans-serif';
+/* seven segments: a b c d e f g */
+const SEG = {"0":"abcdef","1":"bc","2":"abdeg","3":"abcdg","4":"bcfg","5":"acdfg","6":"acdefg","7":"abc","8":"abcdefg","9":"abcdfg","-":"g","O":"abcdef","L":"def"," ":""};
+/* one digit cell of width w, height h, top-left (x, y), slanted a little */
+function seg7(g, ch, x, y, w, h, col){ const s = SEG[ch] || "", t = h * 0.11, sl = h * 0.07, P = (u, v) => [x + u * w + (1 - v) * sl, y + v * h];
+  const H = (v, on) => { if (!on) return; const [a0, a1] = [P(0.1, v), P(0.9, v)]; g.beginPath(); g.moveTo(a0[0] + t * 0.5, a0[1]); g.lineTo(a0[0] + t, a0[1] - t / 2); g.lineTo(a1[0] - t, a1[1] - t / 2);
+    g.lineTo(a1[0] - t * 0.5, a1[1]); g.lineTo(a1[0] - t, a1[1] + t / 2); g.lineTo(a0[0] + t, a0[1] + t / 2); g.closePath(); g.fill(); };
+  const Vt = (u, v0, v1, on) => { if (!on) return; const a = P(u, v0), b = P(u, v1), d = [b[0] - a[0], b[1] - a[1]], L = Math.hypot(d[0], d[1]), n = [d[0] / L, d[1] / L];
+    g.beginPath(); g.moveTo(a[0] + n[0] * t * 0.5, a[1] + n[1] * t * 0.5); g.lineTo(a[0] + n[0] * t + t / 2, a[1] + n[1] * t); g.lineTo(b[0] - n[0] * t + t / 2, b[1] - n[1] * t);
+    g.lineTo(b[0] - n[0] * t * 0.5, b[1] - n[1] * t * 0.5); g.lineTo(b[0] - n[0] * t - t / 2, b[1] - n[1] * t); g.lineTo(a[0] + n[0] * t - t / 2, a[1] + n[1] * t); g.closePath(); g.fill(); };
+  g.fillStyle = col; H(0.04, s.includes("a")); H(0.5, s.includes("g")); H(0.96, s.includes("d"));
+  Vt(0.9, 0.04, 0.5, s.includes("b")); Vt(0.9, 0.5, 0.96, s.includes("c")); Vt(0.1, 0.5, 0.96, s.includes("e")); Vt(0.1, 0.04, 0.5, s.includes("f")); }
+/* a reading string ("12.34", "-0.5", "OL") into cells of digits with the decimal points beside them */
+function cells(str, n){ const out = []; for (const ch of str){ if (ch === "." && out.length){ out[out.length - 1].dp = true; continue; } out.push({ch, dp:false}); }
+  while (out.length < n) out.unshift({ch:" ", dp:false}); return out.slice(-n); }
+
+function rr(g, x, y, w, h, r){ g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+
+/* ==================================================================
+   THE TERRACE IN 3D  (cm; x east, y up, z south — north is -z)
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+let view3 = "3d";
+const PIV = [0, 52, 0];                                            /* the altitude axis */
+const DIAL_R = 27;
+const hornDir = (alt, az) => { const a = alt * D2R, A = az * D2R; return [Math.sin(A) * Math.cos(a), Math.sin(a), -Math.cos(A) * Math.cos(a)]; };
+const add = (p, ...vs) => { const r = p.slice(); for (const [v, k] of vs){ r[0] += v[0] * k; r[1] += v[1] * k; r[2] += v[2] * k; } return r; };
+/* the horn's frame: f along the axis, r across the long side a (horizontal), u across b */
+function hornFrame(){ const f = hornDir(TEL.alt, TEL.az), A = TEL.az * D2R, r = [Math.cos(A), 0, Math.sin(A)], u = _cross(r, f); return {f, r, u}; }
+/* an oriented box: centre c, axes (a, b, c) with half sizes */
+function obox(c, A, B, C, ha, hb, hc, col, o){ const P = (i, j, k) => add(c, [A, i * ha], [B, j * hb], [C, k * hc]);
+  const F = (q, n) => face(orient(q, n), Object.assign({cull:true, fill:col}, o || {}));
+  F([P(-1, -1, 1), P(1, -1, 1), P(1, 1, 1), P(-1, 1, 1)], C); F([P(-1, -1, -1), P(1, -1, -1), P(1, 1, -1), P(-1, 1, -1)], C.map(v => -v));
+  F([P(1, -1, -1), P(1, 1, -1), P(1, 1, 1), P(1, -1, 1)], A); F([P(-1, -1, -1), P(-1, 1, -1), P(-1, 1, 1), P(-1, -1, 1)], A.map(v => -v));
+  F([P(-1, 1, -1), P(1, 1, -1), P(1, 1, 1), P(-1, 1, 1)], B); F([P(-1, -1, -1), P(1, -1, -1), P(1, -1, 1), P(-1, -1, 1)], B.map(v => -v)); }
+
+/* ---- the protractor printed on a disc ------------------------------------- */
+const DPX = 18, DIALTEX = (() => { const R = DIAL_R, N = Math.round(2 * R * DPX), c = mkCv(N, N), g = c.getContext("2d"), cx = N / 2;
+  g.fillStyle = "#f3f0e4"; g.beginPath(); g.arc(cx, cx, R * DPX, 0, 7); g.fill();
+  g.strokeStyle = "#1d1d1d"; g.fillStyle = "#1d1d1d"; g.textAlign = "center"; g.textBaseline = "middle";
+  for (let d = 0; d < 360; d++){ const t = d * D2R, L = d % 10 ? (d % 5 ? 1.1 : 1.8) : 2.6, r0 = (R - 0.4) * DPX, r1 = (R - 0.4 - L) * DPX;
+    g.lineWidth = d % 10 ? 1.2 : 2.2; g.beginPath(); g.moveTo(cx + r0 * Math.sin(t), cx - r0 * Math.cos(t)); g.lineTo(cx + r1 * Math.sin(t), cx - r1 * Math.cos(t)); g.stroke();
+    if (d % 10 === 0){ const rt = (R - 4.4) * DPX; g.save(); g.translate(cx + rt * Math.sin(t), cx - rt * Math.cos(t)); g.rotate(t); g.font = "bold " + (d % 30 ? 26 : 32) + "px " + FONT; g.fillText(String(d), 0, 0); g.restore(); } }
+  g.lineWidth = 2; g.beginPath(); g.arc(cx, cx, (R - 0.4) * DPX, 0, 7); g.stroke(); return c; })();
+
+/* ---- the laptop screen, a small copy of what the suite shows --------------- */
+const LAPTEX = mkCv(320, 200);
+function paintLapTex(){ const g = LAPTEX.getContext("2d"); g.fillStyle = LAP.on ? "#e9edf2" : "#1f5f99"; g.fillRect(0, 0, 320, 200);
+  if (!LAP.on){ g.fillStyle = "#fff"; g.fillRect(20, 20, 26, 26); g.font = "10px " + FONT; g.fillText("Galactic", 14, 60); return; }
+  g.fillStyle = "#2c3e50"; g.fillRect(0, 0, 320, 18); g.fillStyle = "#fff"; g.font = "11px " + FONT; g.fillText("Radio Astronomy Suite", 8, 13);
+  g.fillStyle = "#fff"; g.fillRect(14, 36, 292, 140); g.strokeStyle = "#1f77b4"; g.lineWidth = 1.5; g.beginPath();
+  const P = LAP.lastP; if (P){ let mx = 0, mn = 1e9; for (const v of P){ mx = Math.max(mx, v); mn = Math.min(mn, v); } for (let i = 0; i < P.length; i += 2){ const x = 14 + i / P.length * 292, y = 170 - (P[i] - mn) / (mx - mn + 1e-12) * 120; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); } }
+
+/* ---- the scene --------------------------------------------------------------- */
+function terrace3(){ face([[-300, -76, -300], [-300, -76, 300], [300, -76, 300], [300, -76, -300]], {fill:"#3b3e44", flat:true, layer:-3});
+  for (let x = -280; x <= 280; x += 40) line3([x, -75.9, -300], [x, -75.9, 300], "#34373c", 1, {layer:-2});
+  for (let z = -280; z <= 280; z += 40) line3([-300, -75.9, z], [300, -75.9, z], "#34373c", 1, {layer:-2});
+  box3(-300, 300, -76, -30, -306, -300, "#4a4d52", {top:"#55585d"}); }
+function table3(x0, x1, z0, z1, id){ box3(x0, x1, -3, 0, z0, z1, "#7a5a3a", {top:"#8a6a48", id});
+  for (const [x, z] of [[x0 + 3, z0 + 3], [x1 - 3, z0 + 3], [x0 + 3, z1 - 3], [x1 - 3, z1 - 3]]) box3(x - 1.8, x + 1.8, -76, -3, z - 1.8, z + 1.8, "#5c4128"); }
+function telescope3(){ const {f, r, u} = hornFrame(), A = TEL.az * D2R, fh = [Math.sin(A), 0, -Math.cos(A)];
+  /* the dial, the N mark and the turntable with its pointer */
+  tex3(DIALTEX, 0, 0, DIALTEX.width, DIALTEX.height, [-DIAL_R, 0.06, -DIAL_R], [2 * DIAL_R, 0, 0], [0, 0, 2 * DIAL_R], {id:"dial"});
+  text3([0, 0.07, -DIAL_R - 6], [1, 0, 0], [0, 0, -1], "N", 5, "#b22222", {align:"center", weight:"800"});
+  face([[-1.4, 0.07, -DIAL_R - 2], [1.4, 0.07, -DIAL_R - 2], [0, 0.07, -DIAL_R - 0.4]], {fill:"#b22222", flat:true});
+  cyl3("y", 0.1, 4.5, 0, 0, 19, "#2b2e33", {seg:36, cap:"#34383e", id:"dial"});
+  obox(add([0, 2.6, 0], [fh, 22]), fh, [0, 1, 0], r, 3.4, 0.5, 0.9, "#c62828", {id:"dial"});
+  line3(add([0, 3.15, 0], [fh, 19.4]), add([0, 3.15, 0], [fh, 25.6]), "#111", 1.6);
+  /* the fork */
+  for (const s of [-1, 1]){ const c = add([0, 28, 0], [r, s * 33]); obox(c, r, [0, 1, 0], fh, 1.6, 23.5, 4, "#9aa0a6", {id:"horn"});
+    cylAB(add(PIV, [r, s * 31.4]), add(PIV, [r, s * 21]), 1.6, "#7b8187", {seg:14, id:"horn"}); }
+  box3(-35, 35, 4.5, 6.5, -5, 5, "#8a9097", {id:"horn"}); obox([0, 5.5, 0], r, [0, 1, 0], fh, 35, 1, 5, "#8a9097", {id:"horn"});
+  /* the horn: throat 16.5 x 8.3, mouth a x b, a waveguide box behind */
+  const th = add(PIV, [f, -30]), mo = add(PIV, [f, HORN.len - 30]), ha = HORN.a / 2, hb = HORN.b / 2;
+  const T = (i, j) => add(th, [r, i * 8.25], [u, j * 4.15]), M = (i, j) => add(mo, [r, i * ha], [u, j * hb]);
+  const sides = [[[-1, -1], [1, -1], u.map(v => -v)], [[1, -1], [1, 1], r], [[1, 1], [-1, 1], u], [[-1, 1], [-1, -1], r.map(v => -v)]];
+  for (const [p, q, n] of sides){ const quadO = [T(...p), T(...q), M(...q), M(...p)];
+    face(orient(quadO, n), {cull:true, fill:"#c3c8cd", id:"horn"});
+    face(orient(quadO, n.map(v => -v)), {cull:true, fill:"#6f757b", id:"horn"}); }
+  /* the rim of the mouth */
+  for (const [p, q] of [[[-1, -1], [1, -1]], [[1, -1], [1, 1]], [[1, 1], [-1, 1]], [[-1, 1], [-1, -1]]]) line3(M(...p), M(...q), "#e3e7ea", 2.2);
+  obox(add(th, [f, -7]), f, r, u, 7, 8.6, 4.5, "#aeb4ba", {id:"horn"});
+  cylAB(add(th, [f, -14]), add(th, [f, -16.5]), 1.1, "#c9a227", {seg:10});
+  /* the inclinometer on the top face, its display to the east side of the horn */
+  const ic = add(PIV, [u, 15.2], [f, 2]); obox(ic, f, u, r, 3.6, 1.6, 3.6, "#f2c14e", {id:"incl"});
+  const scr = add(ic, [r, 3.62], [f, -2.6], [u, 1.0]); text3(scr, f, u, (TEL.alt).toFixed(2) + "°", 1.5, "#0d0d0d", {weight:"700", font:"ui-monospace,Consolas,monospace"});
+  /* the cable to the receiver */
+  const cb = add(th, [f, -16.5]); poly3([cb, [cb[0] * 0.5 + 20, Math.max(8, cb[1] * 0.4), cb[2] * 0.5 + 18], [30, 6, 26], [34, 4.5, 30]], "#202226", 2.2); }
+function receiver3(){ box3(28, 50, 0, 9, 24, 40, "#2f343a", {top:"#3a4047", id:"rx"});
+  text3([39, 9.05, 32], [1, 0, 0], [0, 0, -1], "LNA · BPF · SDR", 1.6, "#cfd6dc", {align:"center"});
+  sphere3([46, 6, 40.2], 0.7, LAP.on ? "#ffffff" : "#5a5f66", {id:"rx"});
+  if (LAP.on) sphere3([46, 6, 40.4], 1.6, "rgba(255,255,255,0.18)");
+  poly3([[50, 4, 34], [62, 2, 40], [72, 0.4, 44], [84, 0.4, 40]], "#202226", 1.8); }
+function laptop3(){ const x = 100, z = 30; box3(x - 17, x + 17, 0, 1.6, z - 12, z + 12, "#3c4148", {top:"#4a5058", id:"laptop"});
+  paintLapTex(); const O = [x - 16, 1.6 + 22 * Math.cos(0.32), z - 12 - 22 * Math.sin(0.32)];
+  tex3(LAPTEX, 0, 0, 320, 200, O, [32, 0, 0], [0, -22 * Math.cos(0.32) + 0.5, 22 * Math.sin(0.32)], {id:"laptop"});
+  face([[x - 17, 1.6, z - 12], [x + 17, 1.6, z - 12], [x + 17, 1.6 + 23 * Math.cos(0.32), z - 12 - 23 * Math.sin(0.32) - 0.6], [x - 17, 1.6 + 23 * Math.cos(0.32), z - 12 - 23 * Math.sin(0.32) - 0.6]], {fill:"#2b2f35", id:"laptop"}); }
+function scene3(){ terrace3(); table3(-60, 60, -55, 55, "table"); table3(70, 130, 5, 55, "table2");
+  text3([0, 0.05, -50], [1, 0, 0], [0, 0, -1], "", 1, "#fff"); telescope3(); receiver3(); laptop3(); }
+
+
+/* ==================================================================
+   THE CLOSE-UPS (drawn flat)
+   ================================================================== */
+const VZ = {};
+function vz(v){ return VZ[v] || (VZ[v] = {z:1, px:0, py:0}); }
+function vmap(v){ const W = CAM.W, H = CAM.H, Z = vz(v); let k, ox, oy;
+  if (v === "dial"){ k = Math.min(W, H) * 0.44 / DIAL_R; ox = W / 2; oy = H / 2; }          /* cm from the dial's centre; y up = north */
+  else if (v === "mouth"){ k = Math.min(W / 78, H / 60); ox = W / 2; oy = H / 2; }         /* cm from the mouth's centre */
+  else { k = Math.min(W / 190, H / 150); ox = W * 0.42; oy = H * 0.5; }                     /* incl: cm, side view */
+  k *= Z.z; ox += Z.px; oy += Z.py;
+  return {k, ox, oy, S:(x, y) => [ox + x * k, oy - y * k], M:(sx, sy) => [(sx - ox) / k, (oy - sy) / k]}; }
+
+/* ---- the dial from above ------------------------------------------------------ */
+function drawDial(c, W, H){ const m = vmap("dial"), k = m.k, [cx, cy] = m.S(0, 0);
+  c.fillStyle = "#6e5236"; c.fillRect(0, 0, W, H);
+  c.save(); c.translate(cx, cy); c.drawImage(DIALTEX, -DIAL_R * k, -DIAL_R * k, 2 * DIAL_R * k, 2 * DIAL_R * k); c.restore();
+  /* the N mark on the table */
+  c.fillStyle = "#b22222"; c.beginPath(); c.moveTo(cx - 0.9 * k, cy - (DIAL_R + 1.6) * k); c.lineTo(cx + 0.9 * k, cy - (DIAL_R + 1.6) * k); c.lineTo(cx, cy - (DIAL_R + 0.2) * k); c.fill();
+  c.font = "bold " + Math.max(12, 3.2 * k) + "px " + FONT; c.textAlign = "center"; c.fillText("N", cx, cy - (DIAL_R + 3.6) * k);
+  /* the turntable and the pointer at the azimuth */
+  const A = TEL.az * D2R, s = Math.sin(A), co = Math.cos(A);
+  c.fillStyle = "#2b2e33"; c.beginPath(); c.arc(cx, cy, 19 * k, 0, 7); c.fill(); c.strokeStyle = "#454a51"; c.lineWidth = 2; c.stroke();
+  c.save(); c.translate(cx, cy); c.rotate(A);
+  c.fillStyle = "rgba(198,40,40,0.92)"; c.fillRect(-0.9 * k, -25.4 * k, 1.8 * k, 7 * k);
+  c.strokeStyle = "#111"; c.lineWidth = Math.max(1, 0.12 * k); c.beginPath(); c.moveTo(0, -19 * k); c.lineTo(0, -(DIAL_R - 0.4) * k); c.stroke();
+  /* the horn seen from above, foreshortened by its altitude */
+  const cosA = Math.cos(TEL.alt * D2R); c.fillStyle = "rgba(200,205,210,0.10)"; c.strokeStyle = "rgba(220,225,230,0.35)"; c.lineWidth = 1.5;
+  c.beginPath(); c.moveTo(-8.25 * k, 30 * cosA * k); c.lineTo(8.25 * k, 30 * cosA * k); c.lineTo(HORN.a / 2 * k, -32 * cosA * k); c.lineTo(-HORN.a / 2 * k, -32 * cosA * k); c.closePath(); c.fill(); c.stroke();
+  c.restore();
+  c.fillStyle = "#e8eef2"; c.font = "12px " + FONT; c.textAlign = "left"; c.fillText(tr("cap_dial").split(" — ")[0], 12, 18); }
+
+/* ---- the horn from the side with the inclinometer ------------------------------ */
+function drawIncl(c, W, H){ const m = vmap("incl"), k = m.k;
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#0b1424"); g.addColorStop(1, "#1d2533"); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  const [px, py] = m.S(0, 0), t = -TEL.alt * D2R;
+  /* the fork arm and the table */
+  c.fillStyle = "#7a5a3a"; const tb = m.S(-70, -52); c.fillRect(0, tb[1], W, H - tb[1]);
+  c.fillStyle = "#9aa0a6"; const a0 = m.S(-2, 0), a1 = m.S(2, -52); c.fillRect(a0[0], a0[1], a1[0] - a0[0], a1[1] - a0[1]);
+  c.save(); c.translate(px, py); c.rotate(t);
+  /* side view of the horn: b opens from 8.3 to b over its length */
+  c.fillStyle = "#b9bfc5"; c.strokeStyle = "#e3e7ea"; c.lineWidth = 1.5; c.beginPath();
+  c.moveTo(-30 * k, -4.15 * k); c.lineTo((HORN.len - 30) * k, -HORN.b / 2 * k); c.lineTo((HORN.len - 30) * k, HORN.b / 2 * k); c.lineTo(-30 * k, 4.15 * k); c.closePath(); c.fill(); c.stroke();
+  c.fillStyle = "#aeb4ba"; c.fillRect(-44 * k, -4.5 * k, 14 * k, 9 * k);
+  c.fillStyle = "#7b8187"; c.beginPath(); c.arc(0, 0, 1.6 * k, 0, 7); c.fill();
+  /* the inclinometer on the top face */
+  c.translate(2 * k, -15.2 * k); c.fillStyle = "#f2c14e"; c.fillRect(-3.6 * k, -1.6 * k, 7.2 * k, 3.2 * k); c.restore();
+  /* the instrument's own display, large */
+  const bw = Math.min(330, W * 0.42), bh = bw * 0.48, bx = W - bw - 24, by = 24;
+  rr(c, bx, by, bw, bh, 14); c.fillStyle = "#f2c14e"; c.fill(); c.strokeStyle = "#9a7a1d"; c.lineWidth = 2; c.stroke();
+  rr(c, bx + 18, by + 16, bw - 36, bh - 46, 6); c.fillStyle = "#b9c7a3"; c.fill();
+  c.fillStyle = "#1b2014"; c.font = "bold " + Math.round(bh * 0.36) + "px ui-monospace,Consolas,monospace"; c.textAlign = "right"; c.textBaseline = "middle";
+  c.fillText(TEL.alt.toFixed(2) + "°", bx + bw - 30, by + 16 + (bh - 46) / 2 + 2);
+  c.font = "bold 11px " + FONT; c.fillStyle = "#3b3214"; c.textAlign = "center"; c.fillText("DIGITAL LEVEL · ANGLE", bx + bw / 2, by + bh - 15);
+  c.textBaseline = "alphabetic"; c.textAlign = "left"; c.fillStyle = "#e8eef2"; c.font = "12px " + FONT; c.fillText(tr("cap_incl").split(" — ")[0], 12, 18); }
+
+/* ---- the horn's mouth face on, with a tape measure ------------------------------- */
+const TAPE = {x0:-36, y0:-26, len:20, ang:0};                         /* hook at (x0, y0) cm, blade along ang */
+function drawMouth(c, W, H){ const m = vmap("mouth"), k = m.k; HITS2 = [];
+  c.fillStyle = "#0e1522"; c.fillRect(0, 0, W, H);
+  /* the flange, the mouth and the throat seen through it */
+  const ha = HORN.a / 2, hb = HORN.b / 2, fl = 0.6, o0 = m.S(-ha - fl, hb + fl), o1 = m.S(ha + fl, -hb - fl);
+  c.fillStyle = "#d9dde1"; c.fillRect(o0[0], o0[1], o1[0] - o0[0], o1[1] - o0[1]);
+  const i0 = m.S(-ha, hb), i1 = m.S(ha, -hb); c.fillStyle = "#59606a"; c.fillRect(i0[0], i0[1], i1[0] - i0[0], i1[1] - i0[1]);
+  const t0 = m.S(-8.25, 4.15), t1 = m.S(8.25, -4.15); c.fillStyle = "#23272d"; c.fillRect(t0[0], t0[1], t1[0] - t0[0], t1[1] - t0[1]);
+  c.strokeStyle = "rgba(160,168,176,0.7)"; c.lineWidth = 1; for (const [a, b] of [[i0, t0], [[i1[0], i0[1]], [t1[0], t0[1]]], [i1, t1], [[i0[0], i1[1]], [t0[0], t1[1]]]]){ c.beginPath(); c.moveTo(...a); c.lineTo(...b); c.stroke(); }
+  /* the tape */
+  const ca = Math.cos(TAPE.ang), sa = Math.sin(TAPE.ang), P = s => m.S(TAPE.x0 + ca * s, TAPE.y0 + sa * s), w = 1.9;
+  c.save(); const h0 = P(0); c.translate(h0[0], h0[1]); c.rotate(-TAPE.ang);
+  c.fillStyle = "#f2cf2e"; c.fillRect(0, -w / 2 * k, TAPE.len * k, w * k); c.strokeStyle = "#a88a12"; c.lineWidth = 1; c.strokeRect(0, -w / 2 * k, TAPE.len * k, w * k);
+  c.strokeStyle = "#1b1b1b"; c.fillStyle = "#1b1b1b"; c.textAlign = "center"; c.textBaseline = "middle"; c.font = "bold " + Math.max(8, Math.min(16, 0.75 * k)) + "px " + FONT;
+  for (let mm = 0; mm <= TAPE.len * 10; mm++){ const x = mm / 10 * k; if (k < 6 && mm % 5) continue; const L = mm % 10 ? (mm % 5 ? 0.3 : 0.5) : 0.75;
+    c.lineWidth = mm % 10 ? 0.7 : 1.3; c.beginPath(); c.moveTo(x, -w / 2 * k); c.lineTo(x, (-w / 2 + L) * k); c.stroke();
+    if (mm % 10 === 0 && mm && (k > 9 || mm % 50 === 0)) c.fillText(String(mm / 10), x, 0.35 * k); }
+  c.fillStyle = "#8d949b"; c.fillRect(-0.25 * k, -w / 2 * k - 0.4 * k, 0.25 * k, (w + 0.8) * k);                       /* the hook */
+  c.fillStyle = "#c62828"; rr(c, TAPE.len * k, -3.5 * k, 7 * k, 7 * k, 1.2 * k); c.fill(); c.fillStyle = "#3a3d42"; c.beginPath(); c.arc((TAPE.len + 3.5) * k, 0, 1.6 * k, 0, 7); c.fill();
+  c.restore();
+  const hk = P(0), cs = P(TAPE.len + 3.5); HITS2.push(["hook", hk[0] - 14, hk[1] - 14, 28, 28], ["case", cs[0] - 4 * k, cs[1] - 4 * k, 8 * k, 8 * k]);
+  c.fillStyle = "#e8eef2"; c.font = "12px " + FONT; c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillText(tr("cap_mouth").split(" — ")[0], 12, 18); }
+let HITS2 = [];
+const hit2 = p => { for (let i = HITS2.length - 1; i >= 0; i--){ const [id, x, y, w, h] = HITS2[i]; if (p[0] >= x && p[0] <= x + w && p[1] >= y && p[1] <= y + h) return id; } return null; };
+
+
+/* ==================================================================
+   THE LAPTOP: a desktop, then the Radio Astronomy Suite (HTML on top
+   of the canvas while the laptop view is open)
+   ================================================================== */
+const LAP = {on:false, group:"", tab:1, files:{}, cal:null, quick:null, rec:null, lastP:null, lineFile:null};
+const LT = {
+  ko:{icon:"Galactic Rotation Curve", code:"그룹 코드를 입력하세요", ok:"확인", folder:"폴더", t1:"1 · Quick Look", t2:"2 · 지향과 속도 보정", t3:"3 · 데이터 수집", t4:"4 · 보정", t5:"5 · HI 선 분석", t6:"HI Line Temperature",
+      start:"시작 (60 s)", stop:"멈춤", quickHelp:"망원경을 하늘로, 그다음 땅으로 돌려 신호 크기가 바뀌는지 보세요. 데이터는 저장되지 않습니다.",
+      lon:"은경 ℓ (°)", lat:"은위 b (°)", calc:"계산", date:"날짜", time:"시각 (IST)", alt:"고도", az:"방위각", vc:"v_corr",
+      rec:"Record Data", stopRec:"Stop Recording", clear:"Clear Plot", integ:"적분 중", saveAs:"다른 이름으로 저장", fname:"파일 이름", save:"저장", cancel:"취소",
+      loadG:"Load ground", loadS:"Load sky", calib:"Calibrate gain and obtain T_recv", maskHelp:"오른쪽 그림에서 섞여 든 HI 선의 양쪽을 차례로 클릭해 가릴 구간을 정하세요.",
+      pick:"파일 고르기", load:"불러오기", lineBtn:"Line temperature profile", needCal:"먼저 4번 탭에서 보정하세요.", reset:"확대 초기화", dl:"CSV 내려받기",
+      freq:"진동수 (MHz)", pow:"상대 출력", temp:"온도 (K)", noFiles:"(파일 없음)", saved:"저장됨", calDone:"보정 완료", empty:"폴더가 비어 있습니다"},
+  en:{icon:"Galactic Rotation Curve", code:"Enter your group code", ok:"OK", folder:"Folder", t1:"1 · Quick Look", t2:"2 · Pointing & velocity correction", t3:"3 · Data acquisition", t4:"4 · Calibration", t5:"5 · HI line analysis", t6:"HI Line Temperature",
+      start:"Start (60 s)", stop:"Stop", quickHelp:"Point the telescope at the sky, then at the ground, and watch the signal change. Nothing is saved.",
+      lon:"Galactic longitude ℓ (°)", lat:"Galactic latitude b (°)", calc:"Calculate", date:"Date", time:"Time (IST)", alt:"Altitude", az:"Azimuth", vc:"v_corr",
+      rec:"Record Data", stopRec:"Stop Recording", clear:"Clear Plot", integ:"integrating", saveAs:"Save as", fname:"File name", save:"Save", cancel:"Cancel",
+      loadG:"Load ground", loadS:"Load sky", calib:"Calibrate gain and obtain T_recv", maskHelp:"On the right-hand plot click on either side of the contaminating HI line to mask it.",
+      pick:"choose a file", load:"Load", lineBtn:"Line temperature profile", needCal:"Calibrate in Tab 4 first.", reset:"Reset zoom", dl:"Download CSV",
+      freq:"Frequency (MHz)", pow:"Relative power", temp:"Temperature (K)", noFiles:"(no files)", saved:"saved", calDone:"calibration done", empty:"the folder is empty"}};
+const lt = k => LT[LANG][k];
+(() => { const st = document.createElement("style"); st.textContent = `
+  #lap{position:absolute;inset:0;display:none;background:#0f1216;border-radius:6px;padding:14px;font:13px/1.45 "Segoe UI",Arial,sans-serif;color:#1d232a}
+  #lap.on{display:block} .cvwrap{position:relative}
+  #lap .scr{position:absolute;inset:14px;border-radius:6px;overflow:hidden;background:#1f5f99 linear-gradient(160deg,#2a76b8,#173f66)}
+  #lap .icon{position:absolute;left:22px;top:22px;width:92px;text-align:center;color:#fff;cursor:pointer;user-select:none;font-size:12px}
+  #lap .icon i{display:block;width:52px;height:52px;margin:0 auto 4px;border-radius:10px;background:radial-gradient(circle at 50% 50%,#ffe9a6 0 9%,#c8a2ff 10% 22%,#3c2a7a 23% 60%,#151a3a 61%)}
+  #lap .dlg{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);background:#f3f4f6;border:1px solid #9aa3ab;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:16px 18px;min-width:280px}
+  #lap .dlg input{width:100%;padding:6px;margin:8px 0;font:inherit;border:1px solid #9aa3ab;border-radius:4px}
+  #lap .win{position:absolute;inset:0;background:#e9edf2;display:flex;flex-direction:column}
+  #lap .bar{background:#2c3e50;color:#fff;padding:5px 10px;display:flex;justify-content:space-between;font-size:12px}
+  #lap .tb{display:flex;gap:2px;background:#cfd6de;padding:4px 6px 0}
+  #lap .tb button{margin:0;border-radius:6px 6px 0 0;background:#dfe4ea;color:#1d232a;border:1px solid #b7c0c9;border-bottom:0;padding:5px 10px;font-size:12px}
+  #lap .tb button.on{background:#fff;font-weight:600}
+  #lap .pg{flex:1;background:#fff;padding:10px;overflow:auto;display:none} #lap .pg.on{display:block}
+  #lap button.b{background:#e7ebf0;color:#1d232a;border:1px solid #9aa3ab;margin:2px 4px 2px 0;font-size:12.5px} #lap button.b:hover{background:#d6e4f5;border-color:#1f77b4}
+  #lap canvas{display:block;width:100%;background:#fff;border:1px solid #cfd6de;border-radius:4px;margin-top:6px}
+  #lap .two{display:flex;gap:8px} #lap .two>div{flex:1;min-width:0}
+  #lap table{border-collapse:collapse;margin-top:8px} #lap td{padding:3px 10px;border-bottom:1px solid #e3e7eb} #lap td:first-child{color:#55606b}
+  #lap input.n{width:90px;padding:4px;font:inherit;border:1px solid #9aa3ab;border-radius:4px}
+  #lap select{font:inherit;padding:3px;border:1px solid #9aa3ab;border-radius:4px}
+  #lap .msg{color:#55606b;font-size:12px;margin:4px 0} #lap .bad{color:#b3372f}
+  #lap .stat{background:#2c3e50;color:#cfd6de;padding:3px 10px;font-size:11.5px;display:flex;justify-content:space-between}
+  #lap .prog{height:6px;background:#dfe4ea;border-radius:3px;margin-top:6px;overflow:hidden} #lap .prog i{display:block;height:100%;background:#1f77b4;width:0}`;
+  document.head.appendChild(st); })();
+const lapEl = document.createElement("div"); lapEl.id = "lap"; document.getElementById("v-3d").appendChild(lapEl);
+
+/* ---- a small plotting helper: line series, a mask band, a crosshair, x zoom ------------- */
+function mkPlot(cv, o){ const P = {cv, o, series:[], xr:null, yr:null, mask:null, cross:null, onClick:null, zoom:null};
+  const fit = () => { const w = cv.clientWidth || 600, h = o.h || 260, d = Math.min(2, window.devicePixelRatio || 1); if (cv.width !== Math.round(w * d)){ cv.width = Math.round(w * d); cv.height = Math.round(h * d); cv.style.height = h + "px"; } return [w, h, d]; };
+  const box = (w, h) => ({x0:58, x1:w - 12, y0:12, y1:h - 38});
+  P.draw = () => { const [w, h, d] = fit(), g = cv.getContext("2d"); g.setTransform(d, 0, 0, d, 0, 0); g.clearRect(0, 0, w, h);
+    const B = box(w, h); let xa = Infinity, xb = -Infinity, ya = Infinity, yb = -Infinity;
+    for (const s of P.series) for (let i = 0; i < s.x.length; i++){ const y = s.y[i]; if (!isFinite(y)) continue; xa = Math.min(xa, s.x[i]); xb = Math.max(xb, s.x[i]); }
+    if (!isFinite(xa)){ g.fillStyle = "#9aa3ab"; g.font = "12px Arial"; g.fillText(o.empty || "", B.x0 + 10, B.y0 + 20); return; }
+    if (P.zoom){ xa = P.zoom[0]; xb = P.zoom[1]; }
+    for (const s of P.series) for (let i = 0; i < s.x.length; i++){ if (s.x[i] < xa || s.x[i] > xb || !isFinite(s.y[i])) continue; ya = Math.min(ya, s.y[i]); yb = Math.max(yb, s.y[i]); }
+    if (o.yfix){ ya = o.yfix[0]; yb = Math.max(o.yfix[1], yb); } const pad = (yb - ya) * 0.06 || 1; ya -= pad; yb += pad;
+    P.xr = [xa, xb]; P.yr = [ya, yb]; const X = x => B.x0 + (x - xa) / (xb - xa) * (B.x1 - B.x0), Y = y => B.y1 - (y - ya) / (yb - ya) * (B.y1 - B.y0); P.X = X; P.Y = Y; P.B = B;
+    /* grid and ticks */
+    const nice = (a, b, n) => { const r = (b - a) / n, p = Math.pow(10, Math.floor(Math.log10(r))), m = r / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; };
+    g.font = "11px Arial"; g.strokeStyle = "#e6eaee"; g.fillStyle = "#55606b"; g.lineWidth = 1;
+    const sx = nice(xa, xb, 6), sy = nice(ya, yb, 5);
+    for (let x = Math.ceil(xa / sx) * sx; x <= xb + 1e-9; x += sx){ g.beginPath(); g.moveTo(X(x), B.y0); g.lineTo(X(x), B.y1); g.stroke(); g.textAlign = "center"; g.fillText(x.toFixed(sx < 0.01 ? 3 : sx < 0.1 ? 2 : sx < 1 ? 1 : 0), X(x), B.y1 + 14); }
+    for (let y = Math.ceil(ya / sy) * sy; y <= yb + 1e-9; y += sy){ g.beginPath(); g.moveTo(B.x0, Y(y)); g.lineTo(B.x1, Y(y)); g.stroke(); g.textAlign = "right"; g.fillText(Math.abs(y) < 1e-12 ? "0" : Math.abs(sy) < 0.01 ? y.toExponential(1) : y.toFixed(sy < 1 ? (sy < 0.1 ? 2 : 1) : 0), B.x0 - 5, Y(y) + 4); }
+    g.strokeStyle = "#55606b"; g.strokeRect(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0);
+    g.textAlign = "center"; g.fillText(o.xl || "", (B.x0 + B.x1) / 2, h - 6); g.save(); g.translate(13, (B.y0 + B.y1) / 2); g.rotate(-Math.PI / 2); g.fillText(o.yl || "", 0, 0); g.restore();
+    if (P.mask){ const a = X(Math.min(...P.mask)), b = X(Math.max(...P.mask)); g.fillStyle = "rgba(120,120,120,0.28)"; g.fillRect(a, B.y0, b - a, B.y1 - B.y0); }
+    else if (P.maskA !== undefined && P.maskA !== null){ g.strokeStyle = "#888"; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(X(P.maskA), B.y0); g.lineTo(X(P.maskA), B.y1); g.stroke(); g.setLineDash([]); }
+    g.save(); g.beginPath(); g.rect(B.x0, B.y0, B.x1 - B.x0, B.y1 - B.y0); g.clip();
+    for (const s of P.series){ g.strokeStyle = s.col; g.lineWidth = s.lw || 1.2; g.setLineDash(s.dash || []); g.beginPath(); let st = false;
+      for (let i = 0; i < s.x.length; i++){ if (!isFinite(s.y[i])){ st = false; continue; } const x = X(s.x[i]), y = Y(s.y[i]); st ? g.lineTo(x, y) : g.moveTo(x, y); st = true; } g.stroke(); }
+    g.setLineDash([]); g.restore();
+    let lx = B.x1 - 8; g.textAlign = "right"; for (const s of P.series.slice().reverse()) if (s.name){ g.fillStyle = s.col; g.fillText(s.name, lx, B.y0 + 14); lx -= g.measureText(s.name).width + 16; }
+    if (P.cross){ const [cx, cy] = P.cross; if (cx >= B.x0 && cx <= B.x1 && cy >= B.y0 && cy <= B.y1){ g.strokeStyle = "rgba(200,30,30,0.7)"; g.beginPath(); g.moveTo(cx, B.y0); g.lineTo(cx, B.y1); g.moveTo(B.x0, cy); g.lineTo(B.x1, cy); g.stroke();
+      const fx = xa + (cx - B.x0) / (B.x1 - B.x0) * (xb - xa), fy = ya + (B.y1 - cy) / (B.y1 - B.y0) * (yb - ya), txt = o.fmt ? o.fmt(fx, fy) : fx.toFixed(4) + ", " + fy.toFixed(2);
+      g.font = "12px Consolas,monospace"; const tw = g.measureText(txt).width; g.fillStyle = "rgba(255,255,255,0.92)"; g.fillRect(B.x0 + 4, B.y0 + 4, tw + 10, 18); g.fillStyle = "#b3372f"; g.textAlign = "left"; g.fillText(txt, B.x0 + 9, B.y0 + 17); } } };
+  const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener("mousemove", e => { if (o.cross){ P.cross = pos(e); P.draw(); } if (P.drag && P.xr){ const dx = pos(e)[0] - P.drag[0], s = (P.drag[2][1] - P.drag[2][0]) / (P.B.x1 - P.B.x0); P.zoom = [P.drag[2][0] - dx * s, P.drag[2][1] - dx * s]; P.draw(); } });
+  cv.addEventListener("mouseleave", () => { P.cross = null; P.drag = null; P.draw(); });
+  cv.addEventListener("mousedown", e => { if (o.zoomable && e.button === 0 && P.xr && !P.onClick){ P.drag = [pos(e)[0], 0, P.xr.slice()]; } });
+  window.addEventListener("mouseup", () => { P.drag = null; });
+  cv.addEventListener("click", e => { if (P.onClick && P.xr){ const [x] = pos(e); P.onClick(P.xr[0] + (x - P.B.x0) / (P.B.x1 - P.B.x0) * (P.xr[1] - P.xr[0])); } });
+  if (o.zoomable) cv.addEventListener("wheel", e => { if (!P.xr) return; e.preventDefault(); const [x] = pos(e), f = e.deltaY < 0 ? 0.8 : 1.25, xm = P.xr[0] + (x - P.B.x0) / (P.B.x1 - P.B.x0) * (P.xr[1] - P.xr[0]);
+    P.zoom = [xm - (xm - P.xr[0]) * f, xm + (P.xr[1] - xm) * f]; P.draw(); }, {passive:false});
+  return P; }
+const FREQ = Array.from({length:BAND.n}, (_, i) => fbin(i));
+const toCSV = (name, F) => "# Radio Astronomy Suite — " + name + "\n# group " + LAP.group + ", recorded 2025-07-24 " + istString(F.t) + " IST, integration " + F.tint.toFixed(0) + " s\nfreq_MHz,relative_power\n" + FREQ.map((f, i) => f.toFixed(4) + "," + F.P[i].toExponential(6)).join("\n") + "\n";
+function download(name, text){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], {type:"text/csv"})); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
+/* a smooth fit (Legendre-like polynomial, least squares) through the unmasked bins */
+function polyFit(x, y, use, deg){ const n = deg + 1, A = Array.from({length:n}, () => new Float64Array(n)), b = new Float64Array(n), xm = (x[0] + x[x.length - 1]) / 2, xs = (x[x.length - 1] - x[0]) / 2;
+  for (let i = 0; i < x.length; i++){ if (!use(i) || !isFinite(y[i])) continue; const t = (x[i] - xm) / xs, p = [1]; for (let k = 1; k < n; k++) p.push(p[k - 1] * t);
+    for (let r = 0; r < n; r++){ b[r] += p[r] * y[i]; for (let c = 0; c < n; c++) A[r][c] += p[r] * p[c]; } }
+  for (let c = 0; c < n; c++){ let pv = c; for (let r = c + 1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[pv][c])) pv = r; [A[c], A[pv]] = [A[pv], A[c]]; [b[c], b[pv]] = [b[pv], b[c]];
+    for (let r = 0; r < n; r++){ if (r === c) continue; const f = A[r][c] / A[c][c]; for (let k = c; k < n; k++) A[r][k] -= f * A[c][k]; b[r] -= f * b[c]; } }
+  const co = Array.from({length:n}, (_, i) => b[i] / A[i][i]); return x.map(xx => { const t = (xx - xm) / xs; let s = 0, p = 1; for (let k = 0; k < n; k++){ s += co[k] * p; p *= t; } return s; }); }
+
+/* ---- building the screens -------------------------------------------------------------- */
+let PL = {};
+function lapBuild(){ LAP.quick = null; if (!LAP.on){ lapEl.innerHTML = `<div class="scr"><div class="icon" id="lpIcon"><i></i>${lt("icon")}</div>${LAP.dlg ? `<div class="dlg"><div>${lt("code")}</div><input id="lpCode" value="G07" maxlength="12"><button class="b" id="lpOk">${lt("ok")}</button></div>` : ""}</div>`;
+    document.getElementById("lpIcon").ondblclick = () => { LAP.dlg = true; lapBuild(); };
+    if (LAP.dlg){ const ok = () => { LAP.group = (document.getElementById("lpCode").value || "G07").trim(); LAP.on = true; LAP.dlg = false; lapBuild(); }; document.getElementById("lpOk").onclick = ok; document.getElementById("lpCode").onkeydown = e => { if (e.key === "Enter") ok(); }; }
+    return; }
+  const tabs = [1, 2, 3, 4, 5].concat(LAP.lineFile ? [6] : []);
+  lapEl.innerHTML = `<div class="scr"><div class="win"><div class="bar"><span>Radio Astronomy Suite — ${LAP.group}</span><span id="lpClk"></span></div>
+    <div class="tb">${tabs.map(t => `<button data-t="${t}" class="${LAP.tab === t ? "on" : ""}">${lt("t" + t)}</button>`).join("")}</div>
+    <div class="pg ${LAP.tab === 1 ? "on" : ""}" id="pg1"><div class="msg">${lt("quickHelp")}</div><button class="b" id="q1">${lt("start")}</button><button class="b" id="q2">${lt("stop")}</button><span class="msg" id="qT"></span><canvas id="cq"></canvas></div>
+    <div class="pg ${LAP.tab === 2 ? "on" : ""}" id="pg2">${lt("lon")} <input class="n" id="pl" value="30"> &nbsp; ${lt("lat")} <input class="n" id="pb" value="0"> <button class="b" id="pc">${lt("calc")}</button>
+      <table id="pt"></table></div>
+    <div class="pg ${LAP.tab === 3 ? "on" : ""}" id="pg3"><button class="b" id="r1">${lt("rec")}</button><button class="b" id="r2">${lt("stopRec")}</button><button class="b" id="r3">${lt("clear")}</button>
+      <span class="msg" id="rT"></span><div class="prog"><i id="rP"></i></div><canvas id="cr"></canvas><div id="rSave"></div></div>
+    <div class="pg ${LAP.tab === 4 ? "on" : ""}" id="pg4"><div><button class="b" id="c1">${lt("loadG")}</button> <select id="cg"></select> &nbsp; <button class="b" id="c2">${lt("loadS")}</button> <select id="cs"></select> &nbsp; <button class="b" id="c3">${lt("calib")}</button></div>
+      <div class="msg">${lt("maskHelp")}</div><div class="two"><div><canvas id="cc1"></canvas></div><div><canvas id="cc2"></canvas></div></div><div class="msg" id="cT"></div></div>
+    <div class="pg ${LAP.tab === 5 ? "on" : ""}" id="pg5"><select id="ls"></select> <button class="b" id="l1">${lt("load")}</button> <button class="b" id="l2">${lt("lineBtn")}</button><span class="msg" id="lT"></span><canvas id="cl"></canvas></div>
+    <div class="pg ${LAP.tab === 6 ? "on" : ""}" id="pg6"><span class="msg" id="hT"></span> <button class="b" id="h1">${lt("reset")}</button><canvas id="ch"></canvas></div>
+    <div class="stat"><span id="lpFolder"></span><span>Windows · ${LAP.group}</span></div></div></div>`;
+  lapEl.querySelectorAll(".tb button").forEach(b => b.onclick = () => { LAP.tab = +b.dataset.t; lapBuild(); });
+  PL.q = mkPlot(document.getElementById("cq"), {xl:lt("freq"), yl:lt("pow"), h:300});
+  PL.r = mkPlot(document.getElementById("cr"), {xl:lt("freq"), yl:lt("pow"), h:300});
+  PL.c1 = mkPlot(document.getElementById("cc1"), {xl:lt("freq"), yl:lt("pow"), h:270});
+  PL.c2 = mkPlot(document.getElementById("cc2"), {xl:lt("freq"), yl:"T_recv (K)", h:270});
+  PL.l = mkPlot(document.getElementById("cl"), {xl:lt("freq"), yl:lt("pow"), h:300});
+  PL.h = mkPlot(document.getElementById("ch"), {xl:lt("freq"), yl:lt("temp"), h:330, cross:true, zoomable:true, fmt:(f, T) => "f = " + f.toFixed(4) + " MHz   T = " + T.toFixed(2) + " K"});
+  /* tab 1 */
+  document.getElementById("q1").onclick = () => { LAP.quick = {t0:CLOCK.t, last:-1}; };
+  document.getElementById("q2").onclick = () => { LAP.quick = null; };
+  /* tab 2 */
+  document.getElementById("pc").onclick = () => { const l = parseFloat(document.getElementById("pl").value), b = parseFloat(document.getElementById("pb").value); if (!isFinite(l) || !isFinite(b)) return;
+    const J = jdNow(), [alt, az] = gal2hor(l, b, J), v = vcorr(l, b, J);
+    document.getElementById("pt").innerHTML = `<tr><td>${lt("date")}</td><td>2025-07-24</td></tr><tr><td>${lt("time")}</td><td>${istString(CLOCK.t)}</td></tr><tr><td>ℓ, b</td><td>${l.toFixed(2)}°, ${b.toFixed(2)}°</td></tr><tr><td>${lt("alt")}</td><td>${alt.toFixed(2)}°</td></tr><tr><td>${lt("az")}</td><td>${az.toFixed(2)}°</td></tr><tr><td>${lt("vc")}</td><td>${v.toFixed(3)} km/s</td></tr>`; };
+  /* tab 3 */
+  document.getElementById("r1").onclick = () => { if (LAP.rec && LAP.rec.run) return; LAP.rec = {run:true, t0:CLOCK.t, n:0, acc:new Float64Array(BAND.n), last:Math.floor(CLOCK.t)}; document.getElementById("rSave").innerHTML = ""; };
+  document.getElementById("r2").onclick = () => { if (LAP.rec) LAP.rec.run = false; LAP.rec = null; PL.r.series = []; PL.r.draw(); document.getElementById("rT").textContent = ""; };
+  document.getElementById("r3").onclick = () => { if (LAP.rec && LAP.rec.run) return; LAP.rec = null; PL.r.series = []; PL.r.draw(); document.getElementById("rT").textContent = ""; document.getElementById("rSave").innerHTML = ""; };
+  /* tab 4 */
+  const fill = id => { const s = document.getElementById(id), names = Object.keys(LAP.files); s.innerHTML = names.length ? names.map(n => `<option>${n}</option>`).join("") : `<option value="">${lt("noFiles")}</option>`; };
+  fill("cg"); fill("cs"); fill("ls"); const gs = Object.keys(LAP.files); if (gs.includes("ground.csv")) document.getElementById("cg").value = "ground.csv"; if (gs.includes("sky.csv")) document.getElementById("cs").value = "sky.csv";
+  if (LAP.lineFile && gs.includes(LAP.lineFile)) document.getElementById("ls").value = LAP.lineFile;
+  const C = LAP.calIn || (LAP.calIn = {});
+  document.getElementById("c1").onclick = () => { const n = document.getElementById("cg").value; if (LAP.files[n]){ C.g = n; C.Tr = null; C.mask = null; drawCal(); } };
+  document.getElementById("c2").onclick = () => { const n = document.getElementById("cs").value; if (LAP.files[n]){ C.s = n; C.Tr = null; C.mask = null; drawCal(); } };
+  document.getElementById("c3").onclick = () => { if (!C.g || !C.s) return; const G = LAP.files[C.g].P, S = LAP.files[C.s].P;
+    C.gain = G.map((g, i) => (g - S[i]) / (300 - 5)); C.Tr = S.map((s, i) => s / C.gain[i] - 5); C.mask = null; C.maskA = null; LAP.cal = null; drawCal(); };
+  PL.c2.onClick = f => { if (!C.Tr) return; if (C.maskA === null || C.maskA === undefined || C.mask){ C.maskA = f; C.mask = null; LAP.cal = null; } else { C.mask = [C.maskA, f]; C.maskA = null; fitCal(); } drawCal(); };
+  /* tab 5 */
+  document.getElementById("l1").onclick = () => { const n = document.getElementById("ls").value; if (!LAP.files[n]) return; LAP.loaded = n; PL.l.series = [{x:FREQ, y:Array.from(LAP.files[n].P), col:"#1f77b4", name:n}]; PL.l.draw(); document.getElementById("lT").textContent = ""; };
+  document.getElementById("l2").onclick = () => { const T = document.getElementById("lT"); if (!LAP.loaded){ T.textContent = ""; return; } if (!LAP.cal){ T.innerHTML = `<span class="bad">${lt("needCal")}</span>`; return; }
+    LAP.lineFile = LAP.loaded; LAP.tab = 6; LAP.zoom6 = null; lapBuild(); };
+  document.getElementById("h1").onclick = () => { PL.h.zoom = null; PL.h.draw(); };
+  if (LAP.loaded && LAP.files[LAP.loaded]) PL.l.series = [{x:FREQ, y:Array.from(LAP.files[LAP.loaded].P), col:"#1f77b4", name:LAP.loaded}];
+  if (LAP.lineFile && LAP.cal){ const F = LAP.files[LAP.lineFile], K = LAP.cal, T = F.P.map((p, i) => Math.abs(FREQ[i] - BAND.fc) > 0.93 ? NaN : p / K.gain[i] - K.Trf[i] - 5);
+    PL.h.series = [{x:FREQ, y:T, col:"#1f77b4", name:LAP.lineFile}, {x:[FREQ[0], FREQ[BAND.n - 1]], y:[0, 0], col:"#888", dash:[4, 4]}]; document.getElementById("hT").textContent = LAP.lineFile + " — " + lt("t6"); }
+  if (LAP.rec && LAP.rec.n) PL.r.series = [{x:FREQ, y:Array.from(LAP.rec.acc, v => v / LAP.rec.n), col:"#1f77b4"}];
+  folderLine(); drawCal(); for (const k in PL) PL[k].draw(); }
+function folderLine(){ const el = document.getElementById("lpFolder"); if (!el) return; const n = Object.keys(LAP.files);
+  el.innerHTML = "📁 " + LAP.group + ": " + (n.length ? n.map(x => `<a href="#" data-f="${x}" style="color:#9fd0ff">${x}</a>`).join(", ") : lt("empty"));
+  el.querySelectorAll("a").forEach(a => a.onclick = e => { e.preventDefault(); download(a.dataset.f, toCSV(a.dataset.f, LAP.files[a.dataset.f])); }); }
+function fitCal(){ const C = LAP.calIn, lo = Math.min(...C.mask), hi = Math.max(...C.mask);
+  const use = i => Math.abs(FREQ[i] - BAND.fc) < 0.9 && (FREQ[i] < lo || FREQ[i] > hi) && i !== BAND.n / 2;
+  C.Trf = polyFit(FREQ, Array.from(C.Tr), use, 8);
+  LAP.cal = {gain:C.gain, Trf:C.Trf}; }
+function drawCal(){ const C = LAP.calIn || {}, T = document.getElementById("cT"); if (!PL.c1) return;
+  PL.c1.series = []; if (C.g) PL.c1.series.push({x:FREQ, y:Array.from(LAP.files[C.g].P), col:"#8c564b", name:"ground: " + C.g}); if (C.s) PL.c1.series.push({x:FREQ, y:Array.from(LAP.files[C.s].P), col:"#1f77b4", name:"sky: " + C.s});
+  PL.c2.series = []; PL.c2.mask = C.mask || null; PL.c2.maskA = C.maskA;
+  if (C.Tr){ PL.c2.series.push({x:FREQ, y:Array.from(C.Tr, (v, i) => Math.abs(FREQ[i] - BAND.fc) > 0.97 ? NaN : v), col:"#1f77b4", lw:1}); if (C.Trf) PL.c2.series.push({x:FREQ, y:C.Trf.map((v, i) => Math.abs(FREQ[i] - BAND.fc) > 0.93 ? NaN : v), col:"#2ca02c", dash:[6, 4], lw:2}); }
+  if (T){ if (LAP.cal){ const mid = LAP.cal.Trf.slice(100, 412).sort((a, b) => a - b)[156]; T.textContent = lt("calDone") + " — T_recv ≈ " + mid.toFixed(1) + " K (median), T_sys = T_recv + 5 K ≈ " + (mid + 5).toFixed(1) + " K"; } else T.textContent = ""; }
+  PL.c1.draw(); PL.c2.draw(); }
+/* the suite's own clock: called every frame */
+function lapTick(){ if (!LAP.on) return; const clk = document.getElementById("lpClk"); if (clk) clk.textContent = "2025-07-24  " + istString(CLOCK.t) + " IST";
+  if (LAP.quick){ const s = Math.floor(CLOCK.t - LAP.quick.t0); if (s !== LAP.quick.last){ LAP.quick.last = s; const P = integrate(1); LAP.lastP = P;
+      if (PL.q){ PL.q.series = [{x:FREQ, y:Array.from(P), col:"#1f77b4"}]; PL.q.draw(); } const qt = document.getElementById("qT"); if (qt) qt.textContent = (60 - s) + " s"; }
+    if (s >= 60) LAP.quick = null; }
+  const R = LAP.rec; if (R && R.run){ const s = Math.floor(CLOCK.t); while (R.last < s && R.n < 60){ R.last++; const P = integrate(1); for (let i = 0; i < BAND.n; i++) R.acc[i] += P[i]; R.n++; LAP.lastP = P;
+      if (PL.r){ PL.r.series = [{x:FREQ, y:Array.from(R.acc, v => v / R.n), col:"#1f77b4"}]; PL.r.draw(); } }
+    const rt = document.getElementById("rT"), rp = document.getElementById("rP"); if (rt) rt.textContent = lt("integ") + " " + R.n + " / 60 s"; if (rp) rp.style.width = (R.n / 60 * 100) + "%";
+    if (R.n >= 60){ R.run = false; R.done = {P:R.acc.map(v => v / 60), t:R.t0 + 30, tint:60}; saveDlg(); } } }
+function saveDlg(){ const box = document.getElementById("rSave"); if (!box) return;
+  box.innerHTML = `<div class="msg">${lt("saveAs")}: ${lt("fname")} <input class="n" id="rn" style="width:160px" value=""> <button class="b" id="rs">${lt("save")}</button> <button class="b" id="rc">${lt("cancel")}</button></div>`;
+  const nm = document.getElementById("rn"); nm.focus();
+  const go = () => { let n = nm.value.trim(); if (!n) return; if (!/\.csv$/i.test(n)) n += ".csv"; LAP.files[n] = LAP.rec.done; box.innerHTML = `<div class="msg">${n} — ${lt("saved")}</div>`; LAP.rec = null; folderLine();
+    for (const id of ["cg", "cs", "ls"]){ const s = document.getElementById(id); if (s){ const v = s.value; s.innerHTML = Object.keys(LAP.files).map(x => `<option>${x}</option>`).join(""); if (v && LAP.files[v]) s.value = v; } } };
+  document.getElementById("rs").onclick = go; nm.onkeydown = e => { if (e.key === "Enter") go(); };
+  document.getElementById("rc").onclick = () => { LAP.rec = null; box.innerHTML = ""; }; }
+
+
+/* ==================================================================
+   VIEWS, HANDS AND THE LOOP
+   ================================================================== */
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(470, Math.min(Math.round(w * 0.64), Math.round(window.innerHeight * 0.8)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {k:w / 260, tx:30, ty:20, tz:10, yaw:-0.55, pitch:0.42, px:0, py:0}); camSave(); }
+  if (view3 === "laptop") lapBuild(); }
+const VIEWS = ["3d", "dial", "incl", "mouth", "laptop"], FLAT = ["dial", "incl", "mouth"];
+function showView(v){ view3 = v; for (const k of VIEWS) document.getElementById("vt" + k).className = k === v ? "on" : "";
+  document.getElementById("t-cap3").textContent = tr("cap_" + v); lapEl.className = v === "laptop" ? "on" : ""; if (v === "laptop") lapBuild(); panel(); }
+for (const k of VIEWS) document.getElementById("vt" + k).onclick = () => showView(k);
+
+/* ---- pointing ------------------------------------------------------------------- */
+const setAz = a => { TEL.az = ((a % 360) + 360) % 360; };
+const setAlt = a => { TEL.alt = Math.max(-90, Math.min(90, a)); };
+/* the tower: a polite reminder when the horn sits in the forbidden sector */
+let FLASH = {msg:"", t:0};
+function flash(m){ FLASH = {msg:m, t:performance.now()}; }
+
+/* ---- the pointer -------------------------------------------------------------------- */
+let down3 = null, m3 = [0, 0];
+const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+cv3.addEventListener("pointerdown", e => { if (view3 === "laptop") return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); down3 = {p, moved:false, btn:e.button, flat:FLAT.includes(view3)}; return; }
+  if (e.button) return;
+  if (view3 === "dial"){ down3 = {p, moved:false, flat:true, id:"dial", a0:TEL.az, ang0:dialAng(p)}; return; }
+  if (view3 === "incl"){ down3 = {p, moved:false, flat:true, id:"incl", a0:TEL.alt}; return; }
+  if (view3 === "mouth"){ const id = hit2(p), m = vmap("mouth"); down3 = {p, moved:false, flat:true, id, w:m.M(...p), t0:Object.assign({}, TAPE), c0:Object.assign({}, vz("mouth"))}; return; }
+  const id = pick3(p[0], p[1]); down3 = {p, id, moved:false, shift:e.shiftKey, az0:TEL.az, alt0:TEL.alt}; });
+const dialAng = p => { const m = vmap("dial"), [x, y] = m.M(...p); return Math.atan2(x, y) / D2R; };
+cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
+  if (!down3) return; if (Math.hypot(p[0] - down3.p[0], p[1] - down3.p[1]) > 3) down3.moved = true; if (!down3.moved) return;
+  if (down3.btn){ if (down3.flat){ const Z = vz(view3); Z.px += dx; Z.py += dy; } else { CAM.px += dx; CAM.py += dy; } return; }
+  if (down3.id === "dial" && view3 === "dial"){ let d = dialAng(p) - down3.ang0; setAz(down3.a0 + d); return; }
+  if (down3.id === "incl"){ setAlt(down3.a0 - (p[1] - down3.p[1]) * 0.12 * (e.shiftKey ? 0.1 : 1)); return; }
+  if (view3 === "mouth"){ const m = vmap("mouth"), w = m.M(...p), d = [w[0] - down3.w[0], w[1] - down3.w[1]], t0 = down3.t0;
+    if (down3.id === "hook"){ TAPE.x0 = t0.x0 + d[0]; TAPE.y0 = t0.y0 + d[1]; }
+    else if (down3.id === "case"){ const ca = Math.cos(TAPE.ang), sa = Math.sin(TAPE.ang); TAPE.len = Math.max(3, Math.min(150, t0.len + d[0] * ca + d[1] * sa)); }
+    else { const Z = vz("mouth"); Z.px = down3.c0.px + p[0] - down3.p[0]; Z.py = down3.c0.py + p[1] - down3.p[1]; }
+    return; }
+  if (down3.id === "horn"){ const f = e.shiftKey ? 0.1 : 1; setAz(down3.az0 + (p[0] - down3.p[0]) * 0.35 * f); setAlt(down3.alt0 - (p[1] - down3.p[1]) * 0.3 * f); cv3.classList.add("grabbing"); return; }
+  if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.02, CAM.pitch + dy * 0.006)); }
+  cv3.classList.add("grabbing"); });
+cv3.addEventListener("pointerup", () => { cv3.classList.remove("grabbing");
+  if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2 && view3 !== "3d") showView("3d"); return; }
+  if (down3 && !down3.moved && !down3.flat){ const id = down3.id;
+    if (id === "dial") showView("dial"); else if (id === "incl") showView("incl"); else if (id === "laptop") showView("laptop"); }
+  down3 = null; });
+cv3.addEventListener("wheel", e => { if (view3 === "laptop") return; e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
+  if (view3 === "dial"){ setAz(TEL.az + s * (e.shiftKey ? 1 : 0.2)); return; }
+  if (view3 === "incl"){ setAlt(TEL.alt + s * (e.shiftKey ? 0.01 : 0.05)); return; }
+  if (view3 === "mouth"){ const Z = vz("mouth"), f = s > 0 ? 1.15 : 1 / 1.15, nz = Math.max(0.6, Math.min(30, Z.z * f)), r = nz / Z.z, m = vmap("mouth"), ox = m.ox - Z.px, oy = m.oy - Z.py;
+    Z.px = (p[0] - ox) - (p[0] - ox - Z.px) * r; Z.py = (p[1] - oy) - (p[1] - oy - Z.py) * r; Z.z = nz; return; }
+  if (pick3(p[0], p[1]) === "horn"){ if (e.shiftKey) setAz(TEL.az + s * 0.2); else setAlt(TEL.alt + s * 0.05); return; }
+  const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(60, Math.max(1, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive:false});
+window.addEventListener("keydown", e => { if (view3 === "laptop" || /INPUT|SELECT|TEXTAREA/.test((e.target || {}).tagName || "")) return;
+  const f = e.shiftKey ? 0.2 : 1; if (e.key === "ArrowLeft"){ setAz(TEL.az - f); e.preventDefault(); } else if (e.key === "ArrowRight"){ setAz(TEL.az + f); e.preventDefault(); }
+  else if (e.key === "ArrowUp"){ setAlt(TEL.alt + 0.1 * f); e.preventDefault(); } else if (e.key === "ArrowDown"){ setAlt(TEL.alt - 0.1 * f); e.preventDefault(); } });
+
+/* ---- the panel ---------------------------------------------------------------------- */
+document.getElementById("bTurn").onclick = () => { TAPE.ang = TAPE.ang ? 0 : Math.PI / 2; if (view3 !== "mouth") showView("mouth"); };
+document.getElementById("bTape").onclick = () => { Object.assign(TAPE, {x0:-36, y0:-26, len:20, ang:0}); };
+function panel(){ document.getElementById("clk").textContent = istString(CLOCK.t);
+  const w = []; if (FLASH.msg && performance.now() - FLASH.t < 5000) w.push(FLASH.msg); if (LAP.on) w.push(tr("ledOn"));
+  const html = w.map(s => '<div class="w">' + s + "</div>").join(""), el = document.getElementById("wwarn"); if (el._h !== html){ el.innerHTML = html; el._h = html; } }
+let lastT = performance.now();
+function sky2d(c, W, H){ const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#050a16"); g.addColorStop(0.7, "#121b2c"); g.addColorStop(1, "#2a3140"); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.fillStyle = "rgba(255,255,255,0.75)"; for (const [x, y, r] of STARS2D){ c.beginPath(); c.arc(x * W, y * H * 0.55, r, 0, 7); c.fill(); }
+  c.fillStyle = "rgba(255,190,120,0.10)"; c.fillRect(0, H * 0.5, W, H * 0.06); }
+const STARS2D = Array.from({length:140}, () => [RNG(), RNG(), 0.4 + RNG() * 1.1]);
+function draw3(){ const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (view3 === "laptop"){ ctx3.fillStyle = "#0f1216"; ctx3.fillRect(0, 0, CAM.W, CAM.H); return; }
+  if (FLAT.includes(view3)){ const W = CAM.W, H = CAM.H; ctx3.save(); ctx3.beginPath(); ctx3.rect(0, 0, W, H); ctx3.clip();
+    ({dial:drawDial, incl:drawIncl, mouth:drawMouth})[view3](ctx3, W, H); ctx3.restore(); return; }
+  sky2d(ctx3, CAM.W, CAM.H); begin3(); scene3(); render3(ctx3); }
+(function loop(){ try { const now = performance.now(), dt = Math.min(0.25, (now - lastT) / 1000); lastT = now; CLOCK.t += dt;
+    if (towerHit(TEL.alt, TEL.az) > 0 && (!FLASH.msg || performance.now() - FLASH.t > 6000)) flash(LANG === "ko" ? "기지국 방향(고도 40° 아래, 방위각 0°–40° 또는 240°–360°)을 겨누고 있습니다" : "the horn points towards the mobile tower (below 40°, azimuth 0°–40° or 240°–360°)");
+    draw3(); panel(); lapTick(); } catch (err) { console.error(err); } requestAnimationFrame(loop); })();
+window.addEventListener("resize", layout3);
+function applyLang(){ document.documentElement.lang = LANG;
+  document.title = LANG === "ko" ? "IOAA 2025 그룹 경기 — 전파망원경으로 찾는 암흑물질 · HaslaLab" : "IOAA 2025 Group Competition — Dark Matter with a Radio Telescope · HaslaLab";
+  document.getElementById("h1").textContent = tr("title"); document.getElementById("sub").textContent = tr("sub"); document.getElementById("t-tray").textContent = tr("tray");
+  for (const k of VIEWS) document.getElementById("vt" + k).textContent = tr("vt" + k); document.getElementById("t-cap3").textContent = tr("cap_" + view3);
+  document.getElementById("lgCtl").textContent = tr("lgCtl"); document.getElementById("lgClock").textContent = tr("lgClock"); document.getElementById("lgNotes").textContent = tr("lgNotes"); document.getElementById("txNotes").textContent = tr("notes");
+  document.getElementById("bTurn").textContent = tr("turnTape"); document.getElementById("bTape").textContent = tr("resetTape");
+  document.getElementById("items").innerHTML = [["laptop", LANG === "ko" ? "노트북 (Radio Astronomy Suite)" : "Laptop (Radio Astronomy Suite)"], ["mouth", LANG === "ko" ? "줄자 (혼 입구 재기)" : "Tape measure (horn aperture)"], ["dial", LANG === "ko" ? "방위각 각도기" : "Azimuth protractor"], ["incl", LANG === "ko" ? "디지털 경사계" : "Digital inclinometer"]]
+    .map(([v, s]) => `<button data-v="${v}" style="width:100%;text-align:left">${s}</button>`).join("");
+  document.querySelectorAll("#items button").forEach(b => b.onclick = () => showView(b.dataset.v));
+  document.getElementById("btn-en").className = LANG === "en" ? "on" : ""; document.getElementById("btn-ko").className = LANG === "ko" ? "on" : "";
+  if (view3 === "laptop") lapBuild(); }
+document.getElementById("btn-ko").addEventListener("click", () => { LANG = "ko"; applyLang(); });
+document.getElementById("btn-en").addEventListener("click", () => { LANG = "en"; applyLang(); });
+layout3(); applyLang(); showView("3d");
+
+</script>
+<script src="adfit.js"></script>
+</body>
+</html>
