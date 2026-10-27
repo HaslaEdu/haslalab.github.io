@@ -19,6 +19,7 @@
 .cl-wrap canvas{display:block;width:100%}
 .cl-txt{position:absolute;z-index:3;font:600 15px "Segoe UI","Malgun Gothic",sans-serif;padding:1px 4px;border:1px solid #f2c14e;background:#fffef6;color:#111;outline:none;min-width:40px}
 .cl-hint{font-size:11.5px;color:#9aa3ab}
+.cl-rd{font:12.5px ui-monospace,Consolas,monospace;color:#f3d58a;min-height:18px}
 `;
   const T = {
     ko: {sel: "옮기기", box: "□ 상자", plus: "+ 더하기", cross: "× 가위표", oplus: "⊗", circle: "○ 원", dot: "• 점", text: "가 글자", line: "／ 직선", pen: "∿ 곡선", arrow: "→ 화살표",
@@ -42,7 +43,8 @@
     const wrap = document.createElement("div"); wrap.className = "cl-wrap";
     const cv = document.createElement("canvas"); wrap.appendChild(cv);
     const hint = document.createElement("div"); hint.className = "cl-hint";
-    root.append(bar, wrap, hint); o.el.appendChild(root);
+    const rd = document.createElement("div"); rd.className = "cl-rd"; rd.hidden = !o.readout;
+    root.append(bar, wrap, rd, hint); o.el.appendChild(root);
     /* the printed map, painted once at twice its size */
     const base = document.createElement("canvas"); base.width = W * 2; base.height = H * 2;
     const bg = base.getContext("2d"); bg.scale(2, 2); o.paint(bg, W, H);
@@ -135,6 +137,7 @@
       commit(() => items.push({t: tool, x: p[0], y: p[1], c: col, s: size()}));
     });
     cv.addEventListener("pointermove", (e) => {
+      if (o.readout) { const q = toMap(e); rd.textContent = o.readout(q[0], q[1]) || ""; }
       if (!drag) return; const p = toMap(e);
       if (drag.pan) { const k = k0() * view.z; view.x = drag.vx - (e.clientX - drag.cx) / k; view.y = drag.vy - (e.clientY - drag.cy) / k; clampView(); draw(); return; }
       if (drag.erase) { const i = nearItem(p); if (i >= 0) commit(() => items.splice(i, 1)); return; }
@@ -182,7 +185,9 @@
       hint.textContent = t.hint; }
     addEventListener("resize", layout);
     buildBar(); requestAnimationFrame(layout);
-    return {el: root, layout, draw, lang: buildBar, exportPNG, items: () => items, show(v) { root.style.display = v ? "" : "none"; if (v) layout(); }};
+    return {el: root, layout, draw, lang: buildBar, exportPNG, items: () => items, show(v) { root.style.display = v ? "" : "none"; if (v) layout(); },
+      add(list) { commit(() => { for (const it of [].concat(list)) items.push(Object.assign({c: col, s: size()}, it)); }); },
+      repaint() { bg.setTransform(2, 0, 0, 2, 0, 0); bg.clearRect(0, 0, W, H); o.paint(bg, W, H); draw(); }};
   }
   /* the star list in skydata.js: [{ra, de (degrees), m (V), bv}], brightest first */
   let STARS = null;
