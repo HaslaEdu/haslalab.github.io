@@ -3162,7 +3162,10 @@ const DATA={
     ["D1","Photometric Comparison of Surveys","서베이 간 측광 비교","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
     ["D2","The Shapley Hypothesis","섀플리 가설","IOAA_2024_D1_EN.pdf","IOAA_2024_D1_S.pdf"],
     ["O1","Observation","관측","IOAA_2024_O1_EN.pdf","IOAA_2024_O1_S.pdf"],
-    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2024_O2_EN.pdf","IOAA_2024_O2_S.pdf"]])},
+    ["O2","Observation (Planetarium)","관측 (플라네타륨)","IOAA_2024_O2_EN.pdf","IOAA_2024_O2_S.pdf"]]).map(p=>p.id!=="O2"?p:(delete p.state,Object.assign(p,{
+      desc:{ko:"바소우라스 플라네타륨에서 암적응 5분 뒤 두 하늘을 10분씩 보고 답합니다. 지평선 위의 황도 별자리, 고도·방위각으로 주어진 밝은 별, 자오선 위의 알파 별과 성운, 달이 있는 별자리와 몇 월인지, 주극성, 인공위성 경로 옆의 밝은 별을 찾습니다. 문제지에 없는 투영 날짜는 공식 해답의 별 좌표로 되살렸습니다(2024년 8월 22일 19:52, 2024년 3월 21일 19:34). 공식 해답과 채점 포함.",
+            en:"In the Vassouras planetarium, after 5 minutes of adaptation, two skies of 10 minutes each: the zodiacal constellations above the horizon, bright stars at given altitudes and azimuths, the alpha star and the nebula on the meridian, the Moon's constellation and the month, circumpolar stars, and bright stars beside a satellite's path. The projected dates, not on the sheet, are recovered from the star positions in the official solution (22 August 2024 19:52, 21 March 2024 19:34). Official solution and marking included."},
+      tags:["플라네타륨","남반구 하늘","고도·방위각"],tagsEn:["Planetarium","Southern sky","Altitude and azimuth"]}),Object.assign(p.files,{sim:"sim/ioaa2024_O2_web.html",src:{ko:"src/ioaa2024_O2_planetarium_KO.py",en:"src/ioaa2024_O2_planetarium_EN.py"}}),p))},
    {y:2023,host:{ko:"폴란드 · 호주프",en:"Chorzów, Poland"},cc:"pl",problems:lst([
     ["D1","Distance to the Large Magellanic Cloud","대마젤란은하까지의 거리","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
     ["D2","Isolated Black Hole","고립된 블랙홀","IOAA_2023_D1_EN.pdf","IOAA_2023_D1_EN.pdf"],
