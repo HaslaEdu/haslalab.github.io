@@ -8,7 +8,7 @@
      key, assets,                       storage prefix, folder of the page's images
      title, sub, about: {ko, en},
      calc: true,                        show the scientific calculator
-     maps: {id: {w, h, name, note, paint(g, W, H) | img | paper: {w_mm, h_mm, title, logy}}},
+     maps: {id: {w, h, name, note, readout(x, y, lang), paint(g, W, H) | img | paper: {w_mm, h_mm, title, logy}}},
      tasks: [{id, marks, name, lead, parts: [{id, mk, ko, en, table, eq} | {h, ko, en, img, eq, table}],
               maps: [ids], fields: [[id, label, options]], table: {head, init},
               key: [[label, text | {ko, en}]], sol: [[image, caption] | {draw(g, W, H), w, h, cap}], solNote}]
@@ -93,7 +93,7 @@ body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacS
       if (M.custom) LABS[id] = M.custom(host, () => lang);
       else if (M.paper) LABS[id] = DataDesk.paper(host, {key: C.key + "-" + id, lang: () => lang, title: M.paper.title, w_mm: M.paper.w_mm, h_mm: M.paper.h_mm, logy: M.paper.logy});
       else { const im = IMGS[id], paint = M.paint || ((g, W, H) => { g.fillStyle = "#fff"; g.fillRect(0, 0, W, H); if (im.complete && im.naturalWidth) g.drawImage(im, 0, 0, W, H); });
-        const lab = ChartLab.create({el: host, w: M.w, h: M.h, paint, key: C.key + "-" + id, lang: () => lang}); LABS[id] = {lang: lab.lang, show: lab.show};
+        const lab = ChartLab.create({el: host, w: M.w, h: M.h, paint, key: C.key + "-" + id, lang: () => lang, readout: M.readout && ((x, y) => M.readout(x, y, lang))}); LABS[id] = {lang: lab.lang, show: lab.show};
         /* a tall sheet is kept within the window's height; the wheel zooms in on it */
         if (M.h > M.w * 1.15) { const w = host.querySelector(".cl-wrap"); w.style.maxWidth = "max(340px, calc((100vh - 120px) * " + (M.w / M.h).toFixed(4) + "))"; w.style.margin = "0 auto"; w.style.width = "100%"; lab.layout(); } }
       return LABS[id]; }
