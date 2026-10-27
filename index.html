@@ -3241,7 +3241,13 @@ const DATA={
     ["O4","Supernova","초신성","IOAA_2023_Q-O4_EN.pdf","IOAA_2023_Q-O4_S.pdf"],
     ["O5","Knowledge of the Sky","하늘에 대한 지식","IOAA_2023_Q-O5_EN.pdf","IOAA_2023_Q-O5_S.pdf"],
     ["O6","Retrograde Mars","화성의 역행","IOAA_2023_Q-O6_EN.pdf","IOAA_2023_Q-O6_S.pdf"],
-    ["O7","TRAPPIST-1","TRAPPIST-1","IOAA_2023_Q-O7_EN.pdf","IOAA_2023_Q-O7_S.pdf"]])},
+    ["O7","TRAPPIST-1","TRAPPIST-1","IOAA_2023_Q-O7_EN.pdf","IOAA_2023_Q-O7_S.pdf"]]).map(p=>p.id!=="D1"&&p.id!=="D2"?p:(delete p.state,Object.assign(p,p.id==="D1"?{
+      desc:{ko:"LMC의 분리 식쌍성 세 개에서 두 별의 V·K 등급을 나누고, 시험지의 표면 밝기–색 그래프에 직선을 그어 S_V를 읽어 각지름과 거리를 구한 뒤, 통계·계통 오차와 함께 대마젤란은하까지의 거리를 냅니다.",
+            en:"Split the V and K magnitudes of the components of three detached eclipsing binaries in the LMC, rule a line on the sheet's surface brightness–colour plot to read S_V, get angular diameters and distances, and give the distance to the LMC with its statistical and systematic errors."},
+      tags:["식쌍성","표면 밝기","거리 사다리"],tagsEn:["Eclipsing binaries","Surface brightness","Distance ladder"]}:{
+      desc:{ko:"미시중력렌즈 OGLE-2011-BLG-0462의 허블 위치 측정을 시간에 대해 그려 고유 운동을 빼고, 상 중심의 휨을 u에 대해 그려 아인슈타인 반지름을 맞춘 뒤, 미시중력렌즈 시차로 고립된 블랙홀의 질량을 구합니다.",
+            en:"Plot the HST astrometry of the microlensing event OGLE-2011-BLG-0462 against time, remove the proper motion, fit the centroid deflection against u for the Einstein radius, and with the microlensing parallax weigh the isolated black hole."},
+      tags:["미시중력렌즈","위치 천문학","블랙홀"],tagsEn:["Microlensing","Astrometry","Black holes"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2023_D_web.html":"sim/ioaa2023_D_web.html?task=D2",src:{ko:"src/ioaa2023_D_data_sim_KO.py",en:"src/ioaa2023_D_data_sim_EN.py"}}),p))},
    {y:2022,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",problems:lst([
     ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_Q-D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
     ["D2","Galactic Surveys","은하 서베이","IOAA_2022_Q-D2_EN.pdf","IOAA_2022_D2i_S.pdf"],
