@@ -37,7 +37,15 @@ function loadData() {
 }
 
 const DATA = loadData();
-const exists = p => fs.existsSync(path.join(ROOT, p));
+/* The PDFs are in GitHub Releases, not in pdf/ (tools/pdf_release.py); DATA still
+   names them "pdf/<name>", and pdf-assets.json lists what has been uploaded.
+   They are served from the PDF Worker's own host, so they are linked from the
+   problem pages but cannot go in this site's sitemap. */
+const PDF_BASE = /const PDF_BASE = "([^"]+)"/.exec(fs.readFileSync(path.join(ROOT, "index.html"), "utf8"))[1];
+const ASSETS = new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, "pdf-assets.json"), "utf8"))));
+const isPdf = p => p.startsWith("pdf/");
+const exists = p => isPdf(p) ? ASSETS.has(p.slice(4)) : fs.existsSync(path.join(ROOT, p));
+const href = p => isPdf(p) ? PDF_BASE + p.slice(4) : p;
 
 /* ── walk the catalogue once ── */
 const rows = [];          // one per problem
@@ -86,7 +94,7 @@ const urls = [
   { loc: "/problems.html", pri: "0.8", freq: "weekly" },
   { loc: "/problems-en.html", pri: "0.8", freq: "weekly" },
   ...[...simPages].sort().map(s => ({ loc: "/" + s, pri: "0.9", freq: "monthly" })),
-  ...[...docs].sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
+  ...[...docs].filter(d => !isPdf(d)).sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
 ];
 
 const enc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -180,8 +188,8 @@ function page(L) {
         const name = esc(L === "ko" ? (r.ko || r.en) : (r.en || r.ko));
         const links = [];
         if (r.sim) links.push(`<a href="${esc(r.sim)}${r.sim.includes("?") ? "&amp;" : "?"}lang=${L}">${t.run}</a>`);
-        if (r.pdf) links.push(`<a href="${esc(r.pdf[L])}">${t.sheet}</a>`);
-        if (r.sol) links.push(`<a href="${esc(r.sol[L])}">${t.sol}</a>`);
+        if (r.pdf) links.push(`<a href="${esc(href(r.pdf[L]))}">${t.sheet}</a>`);
+        if (r.sol) links.push(`<a href="${esc(href(r.sol[L]))}">${t.sol}</a>`);
         const tag = r.theory ? ` <span class="tag">${t.theory}</span>` : "";
         const state = links.length ? links.join(" · ") : `<span class="soon">${t.soon}</span>`;
         return `      <li><b>${esc(r.id)}</b> ${name}${tag} <span class="lk">${state}</span></li>`;
@@ -271,6 +279,6 @@ ${sections}
 fs.writeFileSync(path.join(ROOT, "problems.html"), page("ko"));
 fs.writeFileSync(path.join(ROOT, "problems-en.html"), page("en"));
 
-console.log(`sitemap.xml   ${urls.length} URLs (${simPages.size} simulators, ${docs.size} documents)`);
+console.log(`sitemap.xml   ${urls.length} URLs (${simPages.size} simulators); ${docs.size} documents linked from the problem pages`);
 console.log(`robots.txt    written`);
 console.log(`problems.html / problems-en.html   ${rows.length} problems across ${new Set(rows.map(r => r.key + r.year)).size} years`);

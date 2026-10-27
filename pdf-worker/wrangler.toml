@@ -1,0 +1,6 @@
+# The PDF Worker — separate from the community server so either can be deployed alone.
+# Deploy:  npx wrangler deploy --config pdf-worker/wrangler.toml
+name = "haslalab-pdf"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true

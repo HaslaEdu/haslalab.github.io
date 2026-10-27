@@ -1614,7 +1614,7 @@ const ot=()=>OSL[lang];
 const appName=a=>({spec:ot().spec,files:ot().explorer,note:ot().notepad,calc:ot().calc,edge:"Microsoft Edge",chrome:"Google Chrome",youtube:"YouTube"})[a];
 /* the browsers: Edge comes with Windows, Chrome is installed; the live page sits over the canvas */
 const BR={}, isBr=a=>a==="edge"||a==="chrome";
-const BR_LINKS=[{t:{ko:"ISPhO 2024 문제지",en:"ISPhO 2024 problem"},url:lang==="ko"?"../pdf/ISPhO_2024_E1_KO.pdf":"../pdf/ISPhO_2024_E1_EN.pdf",ic:"📄",col:"#c0392b"},
+const BR_LINKS=[{t:{ko:"ISPhO 2024 문제지",en:"ISPhO 2024 problem"},url:lang==="ko"?"https://haslalab-pdf.mgsnew88.workers.dev/pdf/ISPhO_2024_E1_KO.pdf":"https://haslalab-pdf.mgsnew88.workers.dev/pdf/ISPhO_2024_E1_EN.pdf",ic:"📄",col:"#c0392b"},
   {t:"HaslaLab",url:"../index.html",ic:"H",col:"#2f6fbf"},{t:{ko:"위키백과",en:"Wikipedia"},url:"https://ko.wikipedia.org/",ic:"W"},{t:"YouTube",url:"https://www.youtube.com/",ic:"▶",col:"#e62117"}];
 function brGet(a){ if(!BR[a]&&window.VBrowser){ BR[a]=VBrowser({kind:a,lang:()=>lang,online:()=>OS.qs[0]&&!OS.qs[2],links:BR_LINKS}); BR[a].el.style.display="none"; document.body.appendChild(BR[a].el); } return BR[a]; }
 const brTitle=a=>BR[a]?BR[a].title():(lang==="ko"?"새 탭":"New tab");

@@ -764,7 +764,7 @@ const homePos = i => { const n = Object.keys(DAPPS).length, rows = Math.ceil(n /
 /* Chrome: the real web in a mobile browser (vbrowser.js), laid over the phone's screen in the phone view */
 let BRP = null;
 function brpGet(){ if (!BRP && window.VBrowser){ BRP = VBrowser({kind:"chrome", mobile:true, lang:() => LANG,
-    links:[{t:{ko:"문제지", en:"Problem"}, url:"../pdf/NBPhO_2020_E_EN.pdf", ic:"📄", col:"#c0392b"}, {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"},
+    links:[{t:{ko:"문제지", en:"Problem"}, url:"https://haslalab-pdf.mgsnew88.workers.dev/pdf/NBPhO_2020_E_EN.pdf", ic:"📄", col:"#c0392b"}, {t:"HaslaLab", url:"../index.html", ic:"H", col:"#2f6fbf"},
       {t:{ko:"위키백과", en:"Wikipedia"}, url:LANG === "ko" ? "https://ko.m.wikipedia.org/" : "https://en.m.wikipedia.org/", ic:"W"}, {t:"YouTube", url:"https://m.youtube.com/", ic:"▶", col:"#e62117"}]});
     BRP.el.style.display = "none"; document.body.appendChild(BRP.el); } return BRP; }
 /* the YouTube app: the same library and player, without the address bar */
