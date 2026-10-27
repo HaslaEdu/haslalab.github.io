@@ -391,6 +391,88 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .frow a:hover{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   html{scroll-behavior:auto}}
+
+/* ═══════ community ═══════ */
+.cmbar{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;margin-bottom:18px}
+.cmtabs{display:flex;gap:6px;flex-wrap:wrap}
+.cmtabs a{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:6px 12px;border-radius:7px;white-space:nowrap;
+  border:1px solid var(--grid-bold);background:#fff;color:var(--graphite);transition:.14s}
+.cmtabs a:hover{color:var(--ink);border-color:var(--rail)}
+.cmtabs a.on{background:var(--rail);border-color:var(--rail);color:#fff}
+.cmuser{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--graphite)}
+.cmuser b{color:var(--ink);font-weight:600}
+.cmuser .btn{padding:7px 13px;font-size:13px}
+.cmlink{background:none;border:0;padding:0;font:inherit;color:var(--graphite);cursor:pointer;
+  border-bottom:1px solid var(--grid-bold)}
+.cmlink:hover{color:var(--laser);border-color:var(--laser)}
+.cmsearch{display:flex;gap:8px;margin:0 0 14px}
+.cmsearch input{flex:1;max-width:340px}
+.cmbox{background:#fff;border:1px solid var(--grid-bold);border-radius:10px}
+.cmlist{list-style:none;margin:0;padding:0}
+.cmlist li{border-top:1px solid var(--grid-fine)}
+.cmlist li:first-child{border-top:0}
+.cmlist a{display:grid;grid-template-columns:96px 1fr auto;gap:4px 14px;align-items:baseline;padding:13px 16px;transition:.12s}
+.cmlist a:hover{background:#F6F9FB}
+.cmlist .bd{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--brass);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.cmlist .tt{font-weight:550;font-size:14.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmlist .tt em{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--laser);margin-left:6px}
+.cmlist .mt{font-family:var(--mono);font-size:11px;color:var(--graphite);white-space:nowrap}
+@media(max-width:640px){
+  .cmlist a{grid-template-columns:1fr}
+  .cmtabs{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px;scrollbar-width:none}
+}
+.cmempty{padding:42px 16px;text-align:center;color:var(--graphite);font-size:14px}
+.cmpager{display:flex;gap:6px;justify-content:center;margin:18px 0 0;flex-wrap:wrap}
+.cmpager a,.cmpager span{font-family:var(--mono);font-size:12px;min-width:32px;text-align:center;
+  padding:6px 8px;border-radius:6px;border:1px solid var(--grid-bold);background:#fff}
+.cmpager span{background:var(--rail);border-color:var(--rail);color:#fff}
+.cmnote{padding:16px 18px;background:#fff;border:1px solid var(--grid-bold);border-left:3px solid var(--brass);
+  border-radius:8px;font-size:14px;color:var(--graphite)}
+.cmnote b{color:var(--ink)}
+.cmerr{color:var(--laser);font-size:13px;min-height:1.4em;margin:8px 0 0}
+.cmpost{padding:22px 24px}
+.cmpost h2{font-size:1.45rem;letter-spacing:-.025em;word-break:break-word}
+.cmmeta{display:flex;gap:6px 14px;flex-wrap:wrap;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--graphite)}
+.cmmeta .bd{color:var(--brass)}
+.cmtext{margin-top:18px;padding-top:18px;border-top:1px dashed var(--grid-bold);font-size:15px;line-height:1.75;
+  white-space:pre-wrap;word-break:break-word}
+.cmtext a{color:#1D5FB8;border-bottom:1px solid rgba(29,95,184,.3)}
+.cmacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.cmacts .btn{padding:7px 13px;font-size:13px}
+.btn.like.on{background:var(--laser);border-color:var(--laser);color:#fff}
+.cmacts .sp{flex:1}
+.cmcmts{margin-top:18px}
+.cmcmts h3{font-size:15px;margin:0 0 10px}
+.cmcmt{padding:13px 16px;border-top:1px solid var(--grid-fine)}
+.cmcmt:first-child{border-top:0}
+.cmcmt .who{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:13px}
+.cmcmt .who b{font-weight:600}
+.cmcmt .who span{font-family:var(--mono);font-size:11px;color:var(--graphite)}
+.cmcmt .who .ops{margin-left:auto;display:flex;gap:10px;font-size:12px}
+.cmcmt .tx{margin-top:5px;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.cmform{display:flex;flex-direction:column;gap:12px}
+.cmform.narrow{max-width:420px}
+.cmform label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:550}
+.cmform label small{font-weight:400;color:var(--graphite);font-size:12px}
+.cmform .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
+  font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--grid-bold);
+  border-radius:7px;padding:9px 11px;width:100%;transition:border-color .14s}
+.cm textarea{resize:vertical;min-height:110px;line-height:1.6}
+.cm textarea.big{min-height:300px}
+.cm input:focus,.cm select:focus,.cm textarea:focus{outline:none;border-color:var(--rail);
+  box-shadow:0 0 0 3px rgba(46,57,69,.1)}
+.cm .chk{flex-direction:row;align-items:flex-start;gap:8px;font-weight:400;color:var(--graphite)}
+.cm .chk input{margin-top:4px}
+.cmrules{margin:0;padding:12px 14px 12px 30px;background:#F6F9FB;border:1px solid var(--grid-fine);
+  border-radius:8px;font-size:13px;color:var(--graphite)}
+.cmrules li{margin:2px 0}
+.cmsplit{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:26px;align-items:start}
+@media(max-width:860px){.cmsplit{grid-template-columns:1fr}}
+.cmside{padding:16px 18px;font-size:13px;color:var(--graphite)}
+.cmside h3{font-size:13.5px;color:var(--ink);margin:0 0 8px}
+.cmside ul{margin:0;padding-left:18px}
 </style>
 </head>
 <body>
@@ -547,7 +629,7 @@ const REL = "https://github.com/haslalab/haslalab.github.io/releases/download/";
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"대회", navLearn:"학습", navAbout:"소개",
+  navHome:"홈", navComps:"대회", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티",
   ebLearn:"학습", hLearn:"학습을 시작하세요",
   pLearn:"물리 · 화학 · 생물 · 지구과학 · 천문 · 과학 실험과 실기, 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
@@ -600,7 +682,7 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Competitions", navLearn:"Learn", navAbout:"About",
+  navHome:"Home", navComps:"Competitions", navLearn:"Learn", navAbout:"About", navComm:"Community",
   ebLearn:"Learn", hLearn:"Start learning",
   pLearn:"Textbooks, study guides and basic experiments, practicals and observations for physics, chemistry, biology, earth science, astronomy and integrated science. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
@@ -6564,6 +6646,475 @@ function startHero(){
 }
 
 /* ══════════════════════════════════════════════════════════════
+   COMMUNITY — talks to the Cloudflare Worker in /community
+   (Workers + D1). Until COMMUNITY_API is filled in, the page says
+   the server is not connected instead of failing.
+   ══════════════════════════════════════════════════════════════ */
+const COMMUNITY_API = "";   // e.g. "https://haslalab-community.<account>.workers.dev"
+const CM_BOARDS = ["free","qna","sim","study"];
+const CMT = {
+  ko:{
+    eb:"커뮤니티", h:"커뮤니티",
+    sub:"실험 문제와 시뮬레이터, 대회 준비에 대해 묻고 답하는 곳입니다.",
+    all:"전체", boards:{free:"자유게시판", qna:"질문 · 답변", sim:"시뮬레이터 제보", study:"스터디 · 자료"},
+    boardDesc:{free:"무엇이든 이야기하세요.", qna:"실험 문제, 측정, 오차 분석에 대한 질문.",
+               sim:"시뮬레이터의 오류나 실제 장비와 다른 점을 알려 주세요.", study:"스터디 모집, 공부 자료 공유."},
+    login:"로그인", signup:"회원가입", logout:"로그아웃", account:"내 계정", write:"글쓰기",
+    search:"검색", searchPh:"제목 · 내용 검색", loading:"불러오는 중…", empty:"아직 글이 없습니다.",
+    noResult:"검색 결과가 없습니다.",
+    off:"<b>커뮤니티 서버가 아직 연결되지 않았습니다.</b> 서버를 연결하면 이곳에서 글을 쓰고 댓글을 달 수 있습니다.",
+    views:"조회", likes:"좋아요", comments:"댓글", edited:"수정됨", gone:"탈퇴한 사용자",
+    like:"좋아요", edit:"수정", del:"삭제", report:"신고", toList:"목록",
+    cmtPh:"댓글을 입력하세요", cmtSend:"댓글 달기", cmtLogin:"로그인하면 댓글을 달 수 있습니다.",
+    save:"저장", cancel:"취소", post:"올리기", board:"게시판", title:"제목", body:"내용",
+    newPost:"새 글", editPost:"글 수정",
+    username:"아이디", usernameHelp:"영문 · 숫자 · _ 3–20자. 로그인에만 쓰입니다.",
+    nickname:"닉네임", nicknameHelp:"2–16자. 글과 댓글에 표시됩니다.",
+    password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
+    agree:"아래 커뮤니티 규칙을 읽었고 지키겠습니다.",
+    rulesH:"커뮤니티 규칙",
+    rules:["서로 존중해 주세요. 욕설, 비하, 괴롭힘은 삭제됩니다.",
+           "대회 기간 중 공개되지 않은 문제나 답을 올리지 마세요.",
+           "광고, 도배, 개인정보(전화번호, 주소 등) 게시는 금지입니다.",
+           "실명이나 학교를 밝힐 필요는 없습니다."],
+    haveAcc:"이미 계정이 있나요?", noAcc:"계정이 없나요?",
+    joined:"가입일", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
+    pwDone:"비밀번호를 바꿨습니다. 다른 기기의 로그인은 모두 풀렸습니다.",
+    delAcc:"계정 삭제", delAccHelp:"계정을 지우면 다시 로그인할 수 없습니다. 쓴 글과 댓글은 남고 이름은 ‘탈퇴한 사용자’로 바뀝니다.",
+    confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.",
+    confirmDel:"삭제할까요?", reportAsk:"신고 사유를 적어 주세요.", reported:"신고를 접수했습니다.",
+    pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
+    justNow:"방금", minAgo:"분 전", hrAgo:"시간 전",
+    err:{bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
+         bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
+         bad_password:"비밀번호는 8자 이상이어야 합니다.",
+         username_taken:"이미 쓰고 있는 아이디입니다.", nickname_taken:"이미 쓰고 있는 닉네임입니다.",
+         bad_credentials:"아이디 또는 비밀번호가 맞지 않습니다.",
+         rate_limited:"요청이 너무 많습니다. 잠시 뒤에 다시 해 주세요.",
+         login_required:"로그인이 필요합니다.", forbidden:"권한이 없습니다.",
+         not_found:"글을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+         bad_title:"제목을 입력하세요. (120자 이내)", bad_body:"내용을 입력하세요.",
+         bad_reason:"사유를 입력하세요.", network:"서버에 연결하지 못했습니다. 잠시 뒤에 다시 해 주세요.",
+         server_error:"서버 오류가 났습니다."}
+  },
+  en:{
+    eb:"Community", h:"Community",
+    sub:"Ask and answer about the problems, the simulators and getting ready for the olympiads.",
+    all:"All", boards:{free:"General", qna:"Q&A", sim:"Simulator reports", study:"Study & resources"},
+    boardDesc:{free:"Talk about anything.", qna:"Questions on problems, measurement and error analysis.",
+               sim:"Bugs, or places where a simulator differs from the real apparatus.", study:"Study groups and shared material."},
+    login:"Log in", signup:"Sign up", logout:"Log out", account:"Account", write:"New post",
+    search:"Search", searchPh:"Search titles and text", loading:"Loading…", empty:"No posts yet.",
+    noResult:"Nothing matched.",
+    off:"<b>The community server is not connected yet.</b> Once it is, you can post and comment here.",
+    views:"views", likes:"likes", comments:"comments", edited:"edited", gone:"Deleted user",
+    like:"Like", edit:"Edit", del:"Delete", report:"Report", toList:"Back to list",
+    cmtPh:"Write a comment", cmtSend:"Comment", cmtLogin:"Log in to comment.",
+    save:"Save", cancel:"Cancel", post:"Post", board:"Board", title:"Title", body:"Text",
+    newPost:"New post", editPost:"Edit post",
+    username:"Username", usernameHelp:"3–20 letters, digits or _. Used only to log in.",
+    nickname:"Display name", nicknameHelp:"2–16 characters. Shown on posts and comments.",
+    password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
+    agree:"I have read the community rules below and will follow them.",
+    rulesH:"Community rules",
+    rules:["Be respectful. Abuse, slurs and harassment are removed.",
+           "Do not post problems or answers that are still embargoed during a competition.",
+           "No advertising, flooding, or personal details (phone numbers, addresses…).",
+           "You don't need to give your real name or school."],
+    haveAcc:"Already have an account?", noAcc:"No account yet?",
+    joined:"Joined", changePw:"Change password", oldPw:"Current password", newPw:"New password",
+    pwDone:"Password changed. Every other device has been signed out.",
+    delAcc:"Delete account", delAccHelp:"A deleted account can't sign in again. Your posts and comments stay, under the name ‘Deleted user’.",
+    confirmDelAcc:"Delete your account? This can't be undone.",
+    confirmDel:"Delete this?", reportAsk:"Why are you reporting this?", reported:"Thanks — the report was sent.",
+    pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
+    justNow:"just now", minAgo:" min ago", hrAgo:" h ago",
+    err:{bad_username:"Usernames are 3–20 letters, digits or _.",
+         bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
+         bad_password:"Passwords need at least 8 characters.",
+         username_taken:"That username is taken.", nickname_taken:"That display name is taken.",
+         bad_credentials:"Wrong username or password.",
+         rate_limited:"Too many requests. Please try again in a little while.",
+         login_required:"Please log in first.", forbidden:"You can't do that.",
+         not_found:"Post not found. It may have been deleted.",
+         bad_title:"Enter a title (up to 120 characters).", bad_body:"Enter some text.",
+         bad_reason:"Enter a reason.", network:"Couldn't reach the server. Please try again shortly.",
+         server_error:"The server hit an error."}
+  }
+};
+
+const cm = { me:null, meChecked:false, seq:0, draft:{} };
+
+function cmBase(){
+  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
+  return (o||COMMUNITY_API).replace(/\/+$/,"");
+}
+function cmTok(v){
+  try{
+    if(v===undefined) return localStorage.getItem("hlCmTok")||"";
+    if(v) localStorage.setItem("hlCmTok",v); else localStorage.removeItem("hlCmTok");
+  }catch(e){ return ""; }
+}
+async function cmApi(method, path, body){
+  const h={};
+  if(body) h["Content-Type"]="application/json";
+  const t=cmTok(); if(t) h.Authorization="Bearer "+t;
+  let r;
+  try{ r=await fetch(cmBase()+"/api"+path,{method,headers:h,body:body?JSON.stringify(body):undefined}); }
+  catch(e){ throw {code:"network"}; }
+  const j=await r.json().catch(()=>({error:"server_error"}));
+  if(!r.ok){
+    if(r.status===401 && j.error==="login_required" && t){ cmTok(null); cm.me=null; }
+    throw {code:j.error||"server_error", status:r.status};
+  }
+  return j;
+}
+const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
+
+function cmTime(s){
+  const T=CMT[lang], d=Math.floor(Date.now()/1000)-s;
+  if(d<60) return T.justNow;
+  if(d<3600) return Math.floor(d/60)+T.minAgo;
+  if(d<86400) return Math.floor(d/3600)+T.hrAgo;
+  const D=new Date(s*1000);
+  return `${D.getFullYear()}.${String(D.getMonth()+1).padStart(2,"0")}.${String(D.getDate()).padStart(2,"0")}`;
+}
+/* escape first, then turn bare URLs into links — the text itself is never HTML */
+function cmFmt(s){
+  return esc(s).replace(/https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]'’]/g,
+    u=>`<a href="${u}" target="_blank" rel="noopener nofollow ugc">${u}</a>`);
+}
+const cmName = o => o.gone ? CMT[lang].gone : esc(o.nickname);
+
+function cmHash(){
+  const raw=location.hash.replace(/^#\/?/,"");
+  const i=raw.indexOf("?");
+  const parts=(i<0?raw:raw.slice(0,i)).split("/").filter(Boolean).slice(1);
+  const q=new URLSearchParams(i<0?"":raw.slice(i+1));
+  return {parts,q};
+}
+function cmGoLogin(){
+  try{ sessionStorage.setItem("hlCmBack",location.hash); }catch(e){}
+  location.hash="#/community/login";
+}
+function cmBack(){
+  let b=""; try{ b=sessionStorage.getItem("hlCmBack")||""; sessionStorage.removeItem("hlCmBack"); }catch(e){}
+  location.hash = (b && !/\/(login|signup)\b/.test(b)) ? b : "#/community";
+}
+
+function viewCommunity(){
+  const T=CMT[lang];
+  return `
+  <div class="shell cm">
+    <div class="phead">
+      <p class="eyebrow">${T.eb}</p>
+      <h1>${T.h}</h1>
+      <div class="sub">${T.sub}</div>
+    </div>
+    <div id="cmRoot"><p class="cmempty">${T.loading}</p></div>
+  </div>
+  ${adFitBanner("primary")}`;
+}
+
+function cmBar(active){
+  const T=CMT[lang];
+  const tabs=[["all",T.all],...CM_BOARDS.map(b=>[b,T.boards[b]])]
+    .map(([k,n])=>`<a href="#/community/${k}" class="${active===k?"on":""}">${n}</a>`).join("");
+  const user = cm.me
+    ? `<span><b>${esc(cm.me.nickname)}</b></span>
+       <a class="cmlink" href="#/community/account">${T.account}</a>
+       <button class="cmlink" type="button" data-cm="logout">${T.logout}</button>
+       <a class="btn" href="#/community/write${CM_BOARDS.includes(active)?"/"+active:""}">${T.write}</a>`
+    : `<button class="cmlink" type="button" data-cm="login">${T.login}</button>
+       <a class="btn ghost" href="#/community/signup">${T.signup}</a>`;
+  return `<div class="cmbar"><nav class="cmtabs" aria-label="${T.board}">${tabs}</nav><div class="cmuser">${user}</div></div>`;
+}
+function cmSide(){
+  const T=CMT[lang];
+  return `<aside class="cmbox cmside">
+    <h3>${T.rulesH}</h3><ul>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ul>
+    <h3 style="margin-top:14px">${T.board}</h3>
+    <ul>${CM_BOARDS.map(b=>`<li><b>${T.boards[b]}</b> — ${T.boardDesc[b]}</li>`).join("")}</ul>
+  </aside>`;
+}
+
+async function cmMount(){
+  const root=document.getElementById("cmRoot");
+  if(!root) return;
+  const T=CMT[lang], my=++cm.seq;
+  const alive=()=>my===cm.seq && document.getElementById("cmRoot")===root;
+  if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
+
+  if(!cm.meChecked && cmTok()){
+    try{ cm.me=(await cmApi("GET","/me")).user; }catch(e){}
+    cm.meChecked=true;
+    if(!alive()) return;
+  }
+  const {parts,q}=cmHash();
+  const [a,b]=parts;
+  try{
+    if(a==="post" && b)                 await cmPost(root,+b,alive);
+    else if(a==="write")                cmWrite(root,null,CM_BOARDS.includes(b)?b:"free");
+    else if(a==="edit" && b)            await cmEdit(root,+b,alive);
+    else if(a==="login")                cmLogin(root);
+    else if(a==="signup")               cmSignup(root);
+    else if(a==="account")              cmAccount(root);
+    else                                await cmList(root,CM_BOARDS.includes(a)?a:"all",Math.max(1,parseInt(b)||1),q.get("q")||"",alive);
+  }catch(e){
+    if(alive()) root.innerHTML=`${cmBar("")}<div class="cmnote">${esc(cmErr(e))}</div>`;
+  }
+  if(alive()) cmWire(root);
+}
+
+/* buttons shared by every screen */
+function cmWire(root){
+  root.querySelectorAll("[data-cm]").forEach(el=>el.onclick=async()=>{
+    const k=el.dataset.cm;
+    if(k==="login") cmGoLogin();
+    if(k==="logout"){ try{ await cmApi("POST","/logout"); }catch(e){} cmTok(null); cm.me=null; cmMount(); }
+  });
+}
+
+async function cmList(root, board, page, q, alive){
+  const T=CMT[lang];
+  const qs=new URLSearchParams({page}); if(board!=="all") qs.set("board",board); if(q) qs.set("q",q);
+  const j=await cmApi("GET","/posts?"+qs);
+  if(!alive()) return;
+  const rows=j.posts.map(p=>`<li><a href="#/community/post/${p.id}">
+      <span class="bd">${T.boards[p.board]||p.board}</span>
+      <span class="tt">${esc(p.title)}${p.n_comments?`<em>[${p.n_comments}]</em>`:""}</span>
+      <span class="mt">${cmName(p)} · ${cmTime(p.created_at)} · ♥ ${p.n_likes} · ${T.views} ${p.views}</span>
+    </a></li>`).join("");
+  const pages=Math.max(1,Math.ceil(j.total/j.per));
+  const href=n=>`#/community/${board}/${n}${q?"?q="+encodeURIComponent(q):""}`;
+  let pager="";
+  if(pages>1){
+    const lo=Math.max(1,page-4), hi=Math.min(pages,lo+9);
+    for(let n=lo;n<=hi;n++) pager+= n===page?`<span>${n}</span>`:`<a href="${href(n)}">${n}</a>`;
+    if(page>1) pager=`<a href="${href(page-1)}">‹</a>`+pager;
+    if(page<pages) pager+=`<a href="${href(page+1)}">›</a>`;
+  }
+  root.innerHTML=`${cmBar(board)}
+    <div class="cmsplit"><div>
+      <form class="cmsearch" id="cmSearch" role="search">
+        <input type="search" name="q" value="${esc(q)}" placeholder="${T.searchPh}" aria-label="${T.search}">
+        <button class="btn ghost" type="submit">${T.search}</button>
+      </form>
+      <div class="cmbox">${rows?`<ul class="cmlist">${rows}</ul>`:`<p class="cmempty">${q?T.noResult:T.empty}</p>`}</div>
+      ${pager?`<nav class="cmpager">${pager}</nav>`:""}
+    </div>${cmSide()}</div>`;
+  root.querySelector("#cmSearch").onsubmit=e=>{
+    e.preventDefault();
+    const v=e.target.q.value.trim();
+    location.hash=`#/community/${board}/1${v?"?q="+encodeURIComponent(v):""}`;
+  };
+}
+
+async function cmPost(root, id, alive){
+  const T=CMT[lang];
+  /* count a view once per tab, not on every redraw */
+  let seen=false; try{ seen=sessionStorage.getItem("hlCmSeen"+id)==="1"; sessionStorage.setItem("hlCmSeen"+id,"1"); }catch(e){}
+  const j=await cmApi("GET",`/posts/${id}${seen?"":"?view=1"}`);
+  if(!alive()) return;
+  const p=j.post;
+  const cmts=j.comments.map(c=>`<div class="cmcmt" data-id="${c.id}">
+      <div class="who"><b>${cmName(c)}</b><span>${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</span>
+        <span class="ops">${c.mine?`<button class="cmlink" type="button" data-c="edit">${T.edit}</button>
+          <button class="cmlink" type="button" data-c="del">${T.del}</button>`:
+          (cm.me?`<button class="cmlink" type="button" data-c="report">${T.report}</button>`:"")}</span></div>
+      <div class="tx">${cmFmt(c.body)}</div></div>`).join("");
+  root.innerHTML=`${cmBar(p.board)}
+    <article class="cmbox cmpost">
+      <h2>${esc(p.title)}</h2>
+      <div class="cmmeta"><a class="bd" href="#/community/${p.board}">${T.boards[p.board]||p.board}</a>
+        <span>${cmName(p)}</span><span>${cmTime(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
+        <span>${T.views} ${p.views}</span></div>
+      <div class="cmtext">${cmFmt(p.body)}</div>
+      <div class="cmacts">
+        <button class="btn ghost like ${j.liked?"on":""}" type="button" id="cmLike">♥ ${T.like} <span class="mono">${p.n_likes}</span></button>
+        <span class="sp"></span>
+        ${p.mine?`<a class="btn ghost" href="#/community/edit/${p.id}">${T.edit}</a>
+                  <button class="btn ghost" type="button" id="cmDel">${T.del}</button>`
+                :(cm.me?`<button class="btn ghost" type="button" id="cmRep">${T.report}</button>`:"")}
+        <a class="btn ghost" href="#/community/${p.board}">${T.toList}</a>
+      </div>
+    </article>
+    <section class="cmcmts" style="padding:0">
+      <h3>${T.comments} ${j.comments.length}</h3>
+      <div class="cmbox">${cmts||""}
+        <div class="cmcmt">${cm.me?`<form class="cmform" id="cmCmt">
+            <textarea name="body" maxlength="3000" placeholder="${T.cmtPh}" required></textarea>
+            <div class="row"><button class="btn" type="submit">${T.cmtSend}</button><span class="cmerr"></span></div></form>`
+          :`<button class="cmlink" type="button" data-cm="login">${T.cmtLogin}</button>`}</div>
+      </div>
+    </section>`;
+
+  const $=s=>root.querySelector(s);
+  $("#cmLike").onclick=async()=>{
+    if(!cm.me) return cmGoLogin();
+    try{ const r=await cmApi("POST",`/posts/${id}/like`);
+         $("#cmLike").classList.toggle("on",r.liked); $("#cmLike .mono").textContent=r.n_likes; }
+    catch(e){ alert(cmErr(e)); }
+  };
+  if($("#cmDel")) $("#cmDel").onclick=async()=>{
+    if(!confirm(T.confirmDel)) return;
+    try{ await cmApi("DELETE",`/posts/${id}`); location.hash=`#/community/${p.board}`; }catch(e){ alert(cmErr(e)); }
+  };
+  const report=async(kind,tid)=>{
+    const why=prompt(T.reportAsk); if(!why||!why.trim()) return;
+    try{ await cmApi("POST","/report",{kind,id:tid,reason:why}); alert(T.reported); }catch(e){ alert(cmErr(e)); }
+  };
+  if($("#cmRep")) $("#cmRep").onclick=()=>report("post",id);
+  if($("#cmCmt")) $("#cmCmt").onsubmit=async e=>{
+    e.preventDefault();
+    const f=e.target, btn=f.querySelector("button");
+    btn.disabled=true;
+    try{ await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value}); cmMount(); }
+    catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); btn.disabled=false; }
+  };
+  root.querySelectorAll(".cmcmt[data-id]").forEach(box=>{
+    const cid=+box.dataset.id;
+    box.querySelectorAll("[data-c]").forEach(el=>el.onclick=async()=>{
+      const k=el.dataset.c;
+      if(k==="report") return report("comment",cid);
+      if(k==="del"){
+        if(!confirm(T.confirmDel)) return;
+        try{ await cmApi("DELETE",`/comments/${cid}`); cmMount(); }catch(e){ alert(cmErr(e)); }
+      }
+      if(k==="edit"){
+        const old=j.comments.find(c=>c.id===cid).body, tx=box.querySelector(".tx");
+        tx.innerHTML=`<form class="cmform"><textarea name="body" maxlength="3000" required>${esc(old)}</textarea>
+          <div class="row"><button class="btn" type="submit">${T.save}</button>
+          <button class="btn ghost" type="button">${T.cancel}</button><span class="cmerr"></span></div></form>`;
+        const f=tx.querySelector("form");
+        f.querySelector("button.ghost").onclick=()=>{ tx.innerHTML=cmFmt(old); };
+        f.onsubmit=async e=>{
+          e.preventDefault();
+          try{ await cmApi("PATCH",`/comments/${cid}`,{body:f.body.value}); cmMount(); }
+          catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); }
+        };
+      }
+    });
+  });
+}
+
+function cmWrite(root, post, board){
+  const T=CMT[lang];
+  if(!cm.me){ cmGoLogin(); return; }
+  const key=post?"e"+post.id:"new";
+  const d=cm.draft[key]||(post?{board:post.board,title:post.title,body:post.body}:{board,title:"",body:""});
+  root.innerHTML=`${cmBar(d.board)}
+    <div class="cmsplit"><form class="cmbox cmform cmpost" id="cmW">
+      <h2>${post?T.editPost:T.newPost}</h2>
+      <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
+      <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}"></label>
+      <label>${T.body}<textarea class="big" name="body" maxlength="20000" required>${esc(d.body)}</textarea></label>
+      <div class="row"><button class="btn" type="submit">${post?T.save:T.post}</button>
+        <a class="btn ghost" href="${post?"#/community/post/"+post.id:"#/community/"+d.board}">${T.cancel}</a>
+        <span class="cmerr"></span></div>
+    </form>${cmSide()}</div>`;
+  const f=root.querySelector("#cmW");
+  /* a language switch redraws the page — keep what was typed */
+  f.oninput=()=>{ cm.draft[key]={board:f.board.value,title:f.title.value,body:f.body.value}; };
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
+    const data={board:f.board.value,title:f.title.value,body:f.body.value};
+    try{
+      if(post){ await cmApi("PATCH",`/posts/${post.id}`,data); delete cm.draft[key]; location.hash=`#/community/post/${post.id}`; }
+      else{ const r=await cmApi("POST","/posts",data); delete cm.draft[key]; location.hash=`#/community/post/${r.id}`; }
+    }catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); btn.disabled=false; }
+  };
+}
+async function cmEdit(root, id, alive){
+  const j=await cmApi("GET",`/posts/${id}`);
+  if(!alive()) return;
+  if(!j.post.mine) throw {code:"forbidden"};
+  cmWrite(root, {id, board:j.post.board, title:j.post.title, body:j.post.body});
+}
+
+function cmAuthDone(r){
+  cmTok(r.token); cm.me=r.user; cm.meChecked=true;
+  cmBack();
+}
+function cmLogin(root){
+  const T=CMT[lang];
+  if(cm.me){ location.hash="#/community"; return; }
+  root.innerHTML=`${cmBar("")}
+    <form class="cmbox cmform narrow cmpost" id="cmL">
+      <h2>${T.login}</h2>
+      <label>${T.username}<input type="text" name="username" autocomplete="username" required></label>
+      <label>${T.password}<input type="password" name="password" autocomplete="current-password" required></label>
+      <div class="row"><button class="btn" type="submit">${T.login}</button><span class="cmerr"></span></div>
+      <p style="margin:0;font-size:13px;color:var(--graphite)">${T.noAcc} <a class="cmlink" href="#/community/signup">${T.signup}</a></p>
+    </form>`;
+  const f=root.querySelector("#cmL");
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    try{ cmAuthDone(await cmApi("POST","/login",{username:f.username.value.trim(),password:f.password.value})); }
+    catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); }
+  };
+}
+function cmSignup(root){
+  const T=CMT[lang];
+  if(cm.me){ location.hash="#/community"; return; }
+  root.innerHTML=`${cmBar("")}
+    <form class="cmbox cmform narrow cmpost" id="cmS">
+      <h2>${T.signup}</h2>
+      <label>${T.username}<input type="text" name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${T.usernameHelp}</small></label>
+      <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small></label>
+      <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
+      <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
+      <ol class="cmrules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
+      <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
+      <div class="row"><button class="btn" type="submit">${T.signup}</button><span class="cmerr"></span></div>
+      <p style="margin:0;font-size:13px;color:var(--graphite)">${T.haveAcc} <a class="cmlink" href="#/community/login">${T.login}</a></p>
+    </form>`;
+  const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr");
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
+    if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
+    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value})); }
+    catch(er){ err.textContent=cmErr(er); }
+  };
+}
+function cmAccount(root){
+  const T=CMT[lang];
+  if(!cm.me){ cmGoLogin(); return; }
+  const D=new Date(cm.me.created_at*1000);
+  root.innerHTML=`${cmBar("")}
+    <div class="cmbox cmpost" style="max-width:520px">
+      <h2>${esc(cm.me.nickname)}</h2>
+      <div class="cmmeta"><span>${T.username} ${esc(cm.me.username)}</span>
+        <span>${T.joined} ${D.getFullYear()}.${String(D.getMonth()+1).padStart(2,"0")}.${String(D.getDate()).padStart(2,"0")}</span></div>
+      <form class="cmform" id="cmPw" style="margin-top:22px">
+        <h3 style="font-size:15px">${T.changePw}</h3>
+        <label>${T.oldPw}<input type="password" name="old" autocomplete="current-password" required></label>
+        <label>${T.newPw}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
+        <div class="row"><button class="btn" type="submit">${T.save}</button><span class="cmerr"></span></div>
+      </form>
+      <div style="margin-top:26px;padding-top:18px;border-top:1px dashed var(--grid-bold)">
+        <h3 style="font-size:15px">${T.delAcc}</h3>
+        <p style="font-size:13px;color:var(--graphite);margin:6px 0 10px">${T.delAccHelp}</p>
+        <button class="btn ghost" type="button" id="cmDelAcc">${T.delAcc}</button>
+      </div>
+    </div>`;
+  const f=root.querySelector("#cmPw");
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    const out=f.querySelector(".cmerr");
+    try{ await cmApi("POST","/me/password",{old:f.old.value,password:f.password.value});
+         f.reset(); out.style.color="var(--graphite)"; out.textContent=T.pwDone; }
+    catch(er){ out.style.color=""; out.textContent=cmErr(er); }
+  };
+  root.querySelector("#cmDelAcc").onclick=async()=>{
+    if(!confirm(T.confirmDelAcc)) return;
+    try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ alert(cmErr(e)); }
+  };
+}
+
+/* ══════════════════════════════════════════════════════════════
    ROUTER
    ══════════════════════════════════════════════════════════════ */
 const SITE = "HaslaLab";
@@ -6571,6 +7122,7 @@ function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
   else if(first==="comps")       parts.push(d.hComps);
+  else if(first==="community")   parts.push(d.navComm);
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=DATA[first];
@@ -6615,6 +7167,7 @@ function render(){
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps();  active="comps"; }
+  else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(first && DATA[first]){  html=second?viewYear(first,second):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.getElementById("view").innerHTML=html;
@@ -6625,13 +7178,15 @@ function render(){
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
      <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
+     <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>
+     <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>`;
   document.getElementById("footL").textContent=d.footL;
   document.getElementById("footTop").textContent=d.footTop;
   mountHaslaAdFit();
 
   buildRails();
   if(active==="home") startHero();
+  if(active==="community") cmMount();
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
