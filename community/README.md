@@ -9,7 +9,18 @@ haslalab.org의 `#/community` 화면이 쓰는 API입니다. GitHub를 쓰지 �
 - 가입, 로그인, 글쓰기, 댓글, 신고에는 요청 횟수 제한을 둡니다.
 - 계정은 삭제할 수 있습니다. 삭제하면 글은 남고 이름만 "탈퇴한 사용자"로 바뀝니다.
 
-## 처음 배포하기
+## 대시보드에서 배포하기 (명령줄 없이)
+
+D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5f07`)는 이미 만들었고, 표도 모두 들어 있습니다. Worker만 올리면 됩니다.
+
+1. Cloudflare 대시보드 → **Workers & Pages** → **Create** → **Create Worker**로 가서 이름을 `haslalab-community`로 정하고 **Deploy**를 누릅니다.
+2. **Edit code**를 눌러 기존 코드를 지우고 이 폴더의 `src/index.js` 내용을 그대로 붙여 넣은 뒤 **Deploy**를 누릅니다.
+3. **Settings → Bindings → Add → D1 database**에서 변수 이름은 `DB`, 데이터베이스는 `haslalab-community`를 고릅니다.
+4. **Settings → Variables and Secrets → Add**에서 이름은 `ALLOWED_ORIGINS`, 값은 아래로 넣습니다.
+   `https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io`
+5. 화면 위에 보이는 `https://haslalab-community.<계정>.workers.dev` 주소를 `index.html`의 `COMMUNITY_API`에 넣습니다.
+
+## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
 
