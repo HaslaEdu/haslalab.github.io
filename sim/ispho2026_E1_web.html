@@ -24,6 +24,18 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#e8ebee}
   body{font:13px/1.45 "Segoe UI",-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:#000}
+  .modes{max-width:1640px;margin:8px auto 0;padding:0 16px;display:flex;gap:6px}
+  .modes button{font:600 12.5px "Segoe UI","Malgun Gothic",sans-serif;padding:6px 14px;border:1px solid #9aa6b2;border-radius:5px;background:#f5f7f9;cursor:pointer}
+  .modes button.on{background:#2E3945;color:#fff;border-color:#2E3945}
+  #labwrap{max-width:1640px;margin:10px auto;padding:0 16px}
+  #labwrap .lgrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+  @media (max-width:1100px){#labwrap .lgrid{grid-template-columns:1fr}}
+  #labwrap .lcard{background:#1b1f25;border:1px solid #2c333b;border-radius:8px;padding:12px;color:#d6dde4}
+  #labwrap .lside{display:flex;flex-direction:column;gap:14px}
+  #labwrap h3{margin:0 0 8px;font-size:13px;color:#eef2f5}
+  #labwrap .lcap{margin:8px 0 0;font-size:12.5px;line-height:1.55;color:#9aa6b2}
+  #labwrap ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.6}
+  #labwrap button{background:#2d2d2d;color:#ddd;border:1px solid #444;border-radius:4px;font:12px inherit;cursor:pointer}
   .bar{max-width:1640px;margin:0 auto;padding:14px 16px 0;display:flex;justify-content:space-between;
        align-items:flex-end;gap:10px;flex-wrap:wrap}
   .bar h1{margin:0;font-size:16px;font-weight:650}
@@ -112,6 +124,9 @@
   <div><h1 id="t-h1"></h1><p id="t-h2"></p></div>
   <div class="lang"><button id="lang-ko" class="on">한국어</button><button id="lang-en">English</button></div>
 </div>
+<div class="modes" id="modes"><button id="m-app" class="on"></button><button id="m-lab"></button></div>
+<div id="labwrap" hidden><div class="lgrid"><section class="lcard"><div id="lbench"></div><p class="lcap" id="lintro"></p></section>
+  <div class="lside"><section class="lcard"><h3 id="lhowH"></h3><ul id="lhow"></ul></section><section class="lcard"><h3 id="lnoteH"></h3><div id="lnote"></div><p class="lcap" id="lnoteN"></p></section></div></div></div>
 <div class="winwrap">
   <div class="win" id="win">
     <div class="cap">
@@ -834,6 +849,225 @@ $("lang-ko").onclick=()=>{lang="ko";applyLang();};
 $("lang-en").onclick=()=>{lang="en";applyLang();};
 applyLang();
 </script>
+<script src="handlab.js"></script>
+<script>
+"use strict";
+/* ══ Experiment mode: the FBG bench ══════════════════════════════════════════════════════════
+   The same spectra as the program (spectrumDb, the same κ(dY), the same thermal, strain and
+   birefringence formulas, the same LDPE cooling curve), but behind hardware: a writing stage under
+   the femtosecond laser driven from a controller, a fibre switch, an optical spectrum analyser read
+   with its marker, a water bath with a reference thermometer, the LDPE cell with a clock, a spring
+   dynamometer, a micrometer on the spring, a rotating polariser.  The session's own errors: the
+   piezo's zero, the stage's speed and length calibration, the bath thermometer's offset, the
+   dynamometer's zero, the micrometer's zero, the polariser scale's zero. */
+const FB={ dY:0, v:0.5, L:50, writing:null, A:null, inp:0, cen:1550, span:20, ref:5, divI:2, mkr:1550, trace:null, sweep:null,
+  Tset:25, Tbath:25, cool:null, Fscrew:0, x:0, th:0, msg:"", sw:null };
+const INPUTS=["A","C","D","E.I","E.II","F"], DBDIV=[1,2,5,10];
+const kappaOf=dY=>8.699999999999998e-08*Math.exp(-((dY-Y_OPT)**2)/8);
+function fbSpectrum(a,b){
+  const wl=linspace(a,b,N), k0=kappaOf(0.0), v=0.536, L_nm=50e6;
+  switch(INPUTS[FB.inp]){
+    case "A": { if(!FB.A) return Array.from(wl,()=>Math.log10((random.rand(1)[0]*0.2+0.9)**2+1e-6)*10);
+      const A=FB.A, k=kappaOf(A.dY); return spectrumDb(wl,A.v/FREQ*1000.0,w=>k*(1550/w),A.L*1e6,random.rand(N)); }
+    case "C": return spectrumDb(wl,v/FREQ*1000.0*(1+(FB.Tbath-25)*A_temp_exp),w=>k0*(1550/w),L_nm,random.rand(N));
+    case "D": { const T=fbCoolT(); random.seed(0);
+      return spectrumDb(wl,v/FREQ*1000.0*(1+(T-25)*A_temp_exp),w=>k0*(1550/w)*(1-(T-25)/5000),L_nm,random.rand(N)); }
+    case "E.I": return spectrumDb(wl,v/FREQ*1000.0*(1+fbForce()*2.7e-05),w=>k0*(1550/w),L_nm,random.rand(N));
+    case "E.II": { const x=FB.x+FB.xz, F=x<7?2.5*x:0.5*x**2-4.5*x+24.5; return spectrumDb(wl,v/FREQ*1000.0*(1+F*2.7e-05),w=>k0*(1550/w),L_nm,random.rand(N)); }
+    case "F": { const Lambda=v/FREQ*1000.0, dn=1e-05, k1=8.699999999999998e-08, k2=6.089999999999998e-08, th=((FB.th+FB.thz)-THETA_OPT)/180*Math.PI,
+        c2=Math.cos(th)**2, s2=Math.sin(th)**2, r1=random.rand(N), r2=random.rand(N), Tv=new Float64Array(N);
+      for(let i=0;i<N;i++){ const K1=k1*(1550/wl[i]), K2=k2*(1550/wl[i]), d1=n_c*2*Math.PI/wl[i]-Math.PI/Lambda, d2=(1-dn)*n_c*2*Math.PI/wl[i]-Math.PI/Lambda;
+        const t1=tCoef(K1,d1,L_nm), t2=tCoef(K2,d2,L_nm), a1=r1[i]*0.2+0.9, a2=r2[i]*0.2+0.9;
+        Tv[i]=((t1[0]*a1)**2+(t1[1]*a1)**2)*c2+((t2[0]*a2)**2+(t2[1]*a2)**2)*s2+1e-06; }
+      return dB(Tv); }
+  }
+}
+function fbForce(){ return Math.max(0,FB.Fscrew); }                         /* mN, what the fibre really feels */
+function fbCoolT(){ if(!FB.cool) return 150; const m=FB.cool.t/60, H=app.T_history_cut, i=Math.min(H.length-1,Math.floor(m)), f=Math.min(1,m-i);
+  return i>=H.length-1?H[H.length-1]:H[i]+(H[i+1]-H[i])*f; }
+function micrometer(ui,id,x,y,val,zero,zoom){                              /* 0–10 mm, 0.5 mm sleeve, 50-division thimble */
+  const g=ui.g, k=16, shown=val+zero;
+  HL.rr(g,x,y-10,180,20,3,"#c9ced3","#666",0.8);
+  for(let mm=0;mm<=10;mm+=0.5){ const xx=x+8+mm*k; g.strokeStyle="#1b1b1b"; g.lineWidth=0.7; g.beginPath(); g.moveTo(xx,y); g.lineTo(xx,Number.isInteger(mm)?y-8:y+8); g.stroke();
+    if(Number.isInteger(mm)&&mm%5===0) HL.text(g,String(mm),xx,y-14,"#1b1b1b",8,"center","700"); }
+  g.strokeStyle="#1b1b1b"; g.lineWidth=0.6; g.beginPath(); g.moveTo(x+8,y); g.lineTo(x+176,y); g.stroke();
+  const tx=x+8+Math.max(0,Math.min(10,shown))*k;
+  const end=x+8+10*k+34;                                                /* the thimble covers the sleeve beyond the reading */
+  HL.rr(g,tx,y-22,end-tx,44,4,"#b7bdc3","#555",1);
+  const rot=(shown%0.5)/0.5*50;                                         /* the thimble's 0–50 */
+  for(let d=-4;d<=4;d++){ const v=Math.round(rot)+d, yy=y-(v-rot)*4.2; if(yy<y-21||yy>y+21) continue;
+    const vv=((v%50)+50)%50; g.strokeStyle="#1b1b1b"; g.lineWidth=0.6; g.beginPath(); g.moveTo(tx,yy); g.lineTo(tx+(vv%5===0?12:7),yy); g.stroke();
+    if(vv%5===0) HL.text(g,String(vv),tx+20,yy,"#1b1b1b",7,"center","600"); }
+  const e=ui.hit(id,{x:tx,y:y-22,w:end+26-tx,h:44},{wheel:true,cursor:"ns-resize",zoom});
+  HL.rr(g,end,y-16,26,32,3,"#8d949b","#444",1);
+  if(e.down) val-=e.rawdy*0.01; if(e.wheel) val+=e.wheel*(e.shift?0.001:0.01);
+  return Math.max(-zero,Math.min(10-zero,val));
+}
+function oscScreen(ui,x,y,w,h){
+  const g=ui.g; HL.rr(g,x,y,w,h,4,"#06100c","#2d3a33",1.5);
+  const div=DBDIV[FB.divI], a=Math.max(LAMBDA_MIN,FB.cen-FB.span/2), b=Math.min(LAMBDA_MAX,FB.cen+FB.span/2);
+  for(let i=0;i<=10;i++){ const xx=x+w*i/10; g.strokeStyle=i===5?"rgba(120,255,160,.3)":"rgba(120,255,160,.13)"; g.lineWidth=0.7; g.beginPath(); g.moveTo(xx,y); g.lineTo(xx,y+h); g.stroke(); }
+  for(let i=0;i<=8;i++){ const yy=y+h*i/8; g.strokeStyle="rgba(120,255,160,.13)"; g.beginPath(); g.moveTo(x,yy); g.lineTo(x+w,yy); g.stroke(); }
+  const tr=FB.trace;
+  if(tr){ const reveal=FB.sweep?Math.min(1,FB.sweep.p):1; g.strokeStyle="#a6ffbf"; g.lineWidth=1.1; g.beginPath(); let pen=false;
+    for(let px=0;px<w*reveal;px++){ const lam=a+(b-a)*px/w; if(lam<tr.a||lam>tr.b){ pen=false; continue; }
+      const i0=Math.floor((lam-tr.a)/(tr.b-tr.a)*(tr.y.length-1)), i1=Math.min(tr.y.length-1,Math.floor((lam+(b-a)/w-tr.a)/(tr.b-tr.a)*(tr.y.length-1)));
+      let mn=Infinity,mx=-Infinity; for(let i=i0;i<=Math.max(i0,i1);i++){ const v=tr.y[i]; if(v<mn)mn=v; if(v>mx)mx=v; }
+      const Y=v=>y+h*Math.min(1.02,Math.max(-0.02,(FB.ref-v)/(div*8)));
+      if(!pen){ g.moveTo(x+px,Y(mx)); pen=true; } g.lineTo(x+px,Y(mx)); g.lineTo(x+px,Y(mn)); }
+    g.stroke(); }
+  /* the marker */
+  const mx=x+w*(FB.mkr-a)/(b-a);
+  if(mx>=x&&mx<=x+w){ g.strokeStyle="#ffd479"; g.lineWidth=0.8; g.setLineDash([3,3]); g.beginPath(); g.moveTo(mx,y); g.lineTo(mx,y+h); g.stroke(); g.setLineDash([]); }
+  let mv="—"; if(tr&&!FB.sweep&&FB.mkr>=tr.a&&FB.mkr<=tr.b){ const f=(FB.mkr-tr.a)/(tr.b-tr.a)*(tr.y.length-1), i=Math.floor(f); mv=(tr.y[i]+(tr.y[Math.min(tr.y.length-1,i+1)]-tr.y[i])*(f-i)).toFixed(2)+" dB"; }
+  HL.text(g,"REF "+FB.ref.toFixed(0)+" dB   "+div+" dB/div",x+6,y+10,"#a6ffbf",10,"left","600",HL.MONO);
+  HL.text(g,"CTR "+FB.cen.toFixed(3)+" nm  SPAN "+FB.span.toFixed(2)+" nm",x+w-6,y+h-9,"#a6ffbf",10,"right","600",HL.MONO);
+  HL.text(g,"MKR "+FB.mkr.toFixed(3)+" nm  "+mv,x+w-6,y+10,"#ffd479",10,"right","700",HL.MONO);
+  HL.text(g,"IN: "+INPUTS[FB.inp],x+6,y+h-9,"#a6ffbf",10,"left","600",HL.MONO);
+}
+function fbFrame(ui){
+  const g=ui.g, W=ui.W, H=ui.H, dt=ui.dt;
+  /* the world goes on */
+  FB.Tbath+=(FB.Tset-FB.Tbath)*(1-Math.exp(-dt/120));
+  if(FB.cool) FB.cool.t+=dt;
+  if(FB.writing){ FB.writing.x+=FB.writing.v*dt; if(FB.writing.x>=FB.writing.L){ FB.A={dY:FB.writing.dY,v:FB.writing.v,L:FB.writing.L}; FB.writing=null; FB.msg="격자를 다 썼습니다. 스위치를 A에 두고 측정하세요."; } }
+  if(FB.sweep){ FB.sweep.p+=dt/1.6; if(FB.sweep.p>=1) FB.sweep=null; }
+  if(ui.keys.indexOf(" ")>=0) FB.sw.startStop(ui.t);
+  g.fillStyle="#1c2026"; g.fillRect(0,0,W,H);
+  /* ---- the writing station ---- */
+  const wz={x:10,y:10,w:480,h:285,title:"격자 쓰기 장치"};
+  ui.hit("wst",{x:10,y:10,w:480,h:285},{cursor:"default",zoom:wz});
+  HL.rr(g,10,10,480,285,8,"#2b3036","#111",1.5);
+  HL.text(g,"FBG WRITING STATION — fs laser, f = 1.00 kHz",20,24,"#dfe5ea",11,"left","700");
+  /* the laser head and its focused beam, the fibre clamped on the stage */
+  HL.rr(g,210,40,80,46,4,"#3e4650","#111",1); HL.text(g,"fs LASER",250,63,"#cfd6dc",9.5,"center","700");
+  const on=!!FB.writing, pulse=on&&Math.floor(ui.t*30)%2===0;
+  g.strokeStyle=on?(pulse?"rgba(190,120,255,.95)":"rgba(170,110,255,.6)"):"rgba(170,110,255,.08)"; g.lineWidth=on?3:1; g.beginPath(); g.moveTo(250,86); g.lineTo(250,128); g.stroke();
+  const stx=40+(FB.writing?FB.writing.x/1000*400:0);
+  HL.rr(g,30,150,440,14,3,"#4b535c","#111",1);
+  HL.rr(g,stx-10,132,120,20,3,"#6c7680","#222",1); HL.text(g,"STAGE",stx+50,142,"#1b1d20",8,"center","700");
+  g.strokeStyle="#e8d9a8"; g.lineWidth=1.2; g.beginPath(); g.moveTo(20,130); g.lineTo(480,130); g.stroke();
+  if(FB.A||FB.writing){ const x0=250-(FB.writing?FB.writing.x:FB.A.L)/1000*400; g.strokeStyle="rgba(200,160,255,.75)"; g.lineWidth=2.5; g.setLineDash([1.5,1.5]);
+    g.beginPath(); g.moveTo(Math.max(20,x0),130); g.lineTo(250,130); g.stroke(); g.setLineDash([]); }
+  /* the controller: piezo dY, speed, length, WRITE */
+  const k1=HL.knob(ui,"dY",60,192,22,FB.dY,{min:-3,max:3,sens:6/600,wheelStep:0.01,label:"dY (piezo)",zoom:wz});
+  const k2=HL.knob(ui,"v",190,192,22,FB.v,{min:0.4,max:0.7,sens:0.3/600,wheelStep:0.001,label:"v",zoom:wz});
+  const k3=HL.knob(ui,"L",320,192,22,FB.L,{min:0,max:1000,sens:1000/800,wheelStep:1,label:"L",zoom:wz});
+  if(!FB.writing){ FB.dY=Math.round(k1*100)/100; FB.v=Math.round(k2*1000)/1000; FB.L=Math.round(k3*10)/10; }
+  HL.lcd(g,20,248,82,26,FB.dY.toFixed(2)+" μm",{size:0.55}); HL.lcd(g,150,248,82,26,FB.v.toFixed(3),{size:0.55}); HL.lcd(g,280,248,82,26,FB.L.toFixed(1),{size:0.55});
+  HL.text(g,"mm/s",240,261,"#9aa3ab",8.5); HL.text(g,"mm",370,261,"#9aa3ab",8.5);
+  const wr=HL.button(ui,"write",392,196,88,34,{label:"WRITE",col:"#7a3fb5",size:12,zoom:wz});
+  if(wr.click){ if(FB.writing) FB.msg="쓰는 중입니다."; else if(FB.L<=0) FB.msg="L을 정하세요.";
+    else { FB.writing={x:0, dY:FB.dY+FB.dYz, v:FB.v*(1+FB.vG), L:FB.L+FB.LG, }; FB.A=null; FB.msg="새 광섬유를 물리고 쓰기 시작 — 길이 "+FB.L.toFixed(1)+" mm."; } }
+  HL.text(g,FB.writing?"쓰는 중 "+(FB.writing.x).toFixed(1)+" mm":"",436,250,"#c9a6ff",10,"center","600");
+  /* ---- the sample stations: the one on the switch is shown ---- */
+  const sx=10, sy=305, sw=480, sh=305, sz={x:sx,y:sy,w:sw,h:sh,title:"시료"};
+  ui.hit("st",{x:sx,y:sy,w:sw,h:sh},{cursor:"default",zoom:sz});
+  HL.rr(g,sx,sy,sw,sh,8,"#2b3036","#111",1.5);
+  const inp=INPUTS[FB.inp];
+  if(inp==="A"){ HL.text(g,"A — 쓰기 장치의 광섬유가 분석기에 연결되어 있습니다.",sx+16,sy+24,"#dfe5ea",11.5,"left","700"); HL.text(g,FB.A?"격자: 기록됨":"격자: 없음",sx+16,sy+50,"#9aa3ab",11); }
+  else if(inp==="C"){
+    HL.text(g,"C — 수조 (25 ~ 100 °C), 고정된 격자",sx+16,sy+22,"#dfe5ea",11.5,"left","700");
+    HL.rr(g,sx+30,sy+60,220,150,8,"#1e3a52","#5b7c96",2);
+    const lvl=sy+90; g.fillStyle="rgba(120,180,230,.45)"; g.fillRect(sx+32,lvl,216,118);
+    g.strokeStyle="#e8d9a8"; g.lineWidth=1.2; g.beginPath(); g.moveTo(sx+20,sy+150); g.lineTo(sx+260,sy+150); g.stroke();
+    FB.Tset=HL.knob(ui,"tset",sx+320,sy+110,26,FB.Tset,{min:25,max:100,sens:75/500,wheelStep:0.5,label:"SET °C",zoom:sz,marks:[[25,"25"],[50,"50"],[75,"75"],[100,"100"]]});
+    HL.lcd(g,sx+280,sy+190,170,34,"SET "+FB.Tset.toFixed(1),{size:0.55});
+    HL.text(g,"기준 온도계",sx+300,sy+244,"#9aa3ab",10,"left","600");
+    HL.lcd(g,sx+280,sy+252,170,40,(FB.Tbath+FB.Tz+HL.gauss(0.02)).toFixed(1)+" °C",{col:"#ffcf7a",glow:"rgba(255,190,90,.35)"});
+  } else if(inp==="D"){
+    HL.text(g,"D — 녹은 LDPE 속의 격자 (공기 중에서 식음)",sx+16,sy+22,"#dfe5ea",11.5,"left","700");
+    HL.rr(g,sx+40,sy+70,170,150,10,"#8b8676","#3d3a32",2); g.fillStyle=FB.cool&&fbCoolT()<112?"#e7e3d6":"#cfc9a8"; g.fillRect(sx+50,sy+90,150,120);
+    g.strokeStyle="#c9a6ff"; g.lineWidth=1.2; g.beginPath(); g.moveTo(sx+20,sy+150); g.lineTo(sx+230,sy+150); g.stroke();
+    const go=HL.button(ui,"cool",sx+260,sy+80,190,40,{label:FB.cool?"다시 녹이기 (RESET)":"냉각 시작 (START)",col:FB.cool?"#555b62":"#3b7a57",size:12,zoom:sz});
+    if(go.click) FB.cool=FB.cool?null:{t:0};
+    const tt=FB.cool?FB.cool.t:0, mm=Math.floor(tt/60), ss=tt-mm*60;
+    HL.text(g,"경과 시간 (시작부터)",sx+260,sy+148,"#9aa3ab",10,"left","600");
+    HL.lcd(g,sx+260,sy+158,190,42,(mm<10?"0":"")+mm+":"+(ss<10?"0":"")+ss.toFixed(1),{col:"#7fd3ff",bg:"#0c141b",frame:"#22323f",glow:"rgba(120,200,255,.3)"});
+    HL.text(g,"1분마다 분석기로 스펙트럼을 재세요 (배속 사용 가능).",sx+16,sy+sh-16,"#9aa3ab",10);
+  } else if(inp==="E.I"){
+    HL.text(g,"E.I — 용수철 동력계 (0 ~ 20 mN)로 광섬유 당기기",sx+16,sy+22,"#dfe5ea",11.5,"left","700");
+    const F=fbForce(), shown=F+FB.Fz, sx0=sx+60, sx1=sx+420, sy0=sy+120, P=v=>sx0+(v/20)*(sx1-sx0);
+    HL.rr(g,sx0-20,sy0-26,sx1-sx0+40,52,6,"#d9d4c2","#666",1);
+    for(let i=0;i<=40;i++){ const x=P(i/2); g.strokeStyle="#222"; g.lineWidth=i%2?0.6:1; g.beginPath(); g.moveTo(x,sy0-26); g.lineTo(x,sy0-26+(i%10===0?16:i%2===0?11:7)); g.stroke();
+      if(i%4===0) HL.text(g,String(i/2),x,sy0-2,"#222",8.5,"center","700"); }
+    HL.text(g,"mN",sx1+4,sy0-2,"#222",8.5,"left","700");
+    const px=P(Math.max(-0.5,Math.min(20.5,shown))); g.fillStyle="#c0392b"; g.beginPath(); g.moveTo(px,sy0-26); g.lineTo(px-5,sy0-38); g.lineTo(px+5,sy0-38); g.fill();
+    g.strokeStyle="#c0392b"; g.lineWidth=1; g.beginPath(); g.moveTo(px,sy0-26); g.lineTo(px,sy0+8); g.stroke();
+    g.strokeStyle="#e8d9a8"; g.lineWidth=1.2; g.beginPath(); g.moveTo(sx+20,sy+210); g.lineTo(sx+260,sy+210); g.stroke();
+    FB.Fscrew=HL.knob(ui,"fscrew",sx+330,sy+215,28,FB.Fscrew,{min:0,max:20,sens:20/700,wheelStep:0.1,label:"당김 나사",zoom:sz});
+  } else if(inp==="E.II"){
+    HL.text(g,"E.II — 강성을 모르는 용수철 + 마이크로미터 (0 ~ 10 mm)",sx+16,sy+22,"#dfe5ea",11.5,"left","700");
+    g.strokeStyle="#c9ced3"; g.lineWidth=2; g.beginPath(); for(let i=0;i<=10;i++){ const x=sx+20+i*7; g.lineTo(x,sy+150+(i%2?-10:10)); } g.stroke();
+    g.strokeStyle="#e8d9a8"; g.lineWidth=1.2; g.beginPath(); g.moveTo(sx+90,sy+150); g.lineTo(sx+115,sy+150); g.stroke();
+    g.save(); g.translate(sx+115,sy+150); g.scale(1.45,1.45);              /* drawn larger; its regions follow the transform */
+    FB.x=micrometer(ui,"mic",0,0,FB.x,FB.xz,{x:sx+100,y:sy+95,w:370,h:110,title:"마이크로미터 눈금"});
+    g.restore();
+    HL.text(g,"슬리브: 0.5 mm 눈금 · 딤블: 50칸 (0.01 mm)",sx+16,sy+sh-16,"#9aa3ab",10);
+  } else if(inp==="F"){
+    HL.text(g,"F — 복굴절 격자, 편광 회전기",sx+16,sy+22,"#dfe5ea",11.5,"left","700");
+    const cx=sx+170, cy=sy+165, R=95, shown=FB.th;
+    HL.circle(g,cx,cy,R+12,"#3a4048","#111",1.5); HL.circle(g,cx,cy,R,"#d9dde1");
+    for(let d=0;d<360;d++){ const a=(d-shown-90)*Math.PI/180, L=d%10===0?12:d%5===0?8:4; g.strokeStyle="#222"; g.lineWidth=d%10===0?0.9:0.4;
+      g.beginPath(); g.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R); g.lineTo(cx+Math.cos(a)*(R-L),cy+Math.sin(a)*(R-L)); g.stroke();
+      if(d%30===0) HL.text(g,String(d),cx+Math.cos(a)*(R-22),cy+Math.sin(a)*(R-22),"#222",9,"center","700"); }
+    g.fillStyle="#c0392b"; g.beginPath(); g.moveTo(cx,cy-R-12); g.lineTo(cx-6,cy-R-24); g.lineTo(cx+6,cy-R-24); g.fill();
+    HL.circle(g,cx,cy,22,"#2b2f35");
+    const e=ui.hit("rot",{cx,cy,r:R+12},{wheel:true,cursor:"ns-resize",zoom:{x:cx-130,y:cy-130,w:260,h:260,title:"편광 회전기 눈금"}});
+    if(e.down) FB.th+= -e.rawdy*0.3; if(e.wheel) FB.th+=e.wheel*(e.shift?0.1:1); FB.th=((FB.th%360)+360)%360;
+    HL.text(g,"끌거나 휠로 돌리기 (Shift+휠: 0.1°)",sx+300,sy+sh-16,"#9aa3ab",10);
+  }
+  /* ---- the optical spectrum analyser ---- */
+  const ox=500, oy=10, ow=490, oh=440, oz={x:ox,y:oy,w:ow,h:oh,title:"광스펙트럼분석기 (OSA)"};
+  ui.hit("osa",{x:ox,y:oy,w:ow,h:oh},{cursor:"default",zoom:oz});
+  HL.rr(g,ox,oy,ow,oh,8,"#c9cdd1","#7b8187",2);
+  HL.text(g,"OPTICAL SPECTRUM ANALYZER  1540–1560 nm",ox+12,oy+15,"#2a2d31",11,"left","700");
+  oscScreen(ui,ox+14,oy+28,ow-28,260);
+  const kc="#2a2d31";
+  FB.cen=HL.knob(ui,"cen",ox+50,oy+340,22,FB.cen,{min:LAMBDA_MIN,max:LAMBDA_MAX,sens:20/1000,wheelStep:0.01,label:"CENTER",labelCol:kc,zoom:oz});
+  FB.span=HL.knob(ui,"span",ox+125,oy+340,22,FB.span,{min:0.1,max:20,sens:20/600,wheelStep:0.05,label:"SPAN",labelCol:kc,zoom:oz});
+  FB.ref=HL.knob(ui,"ref",ox+200,oy+340,22,FB.ref,{min:-40,max:10,detents:[-40,-35,-30,-25,-20,-15,-10,-5,0,5,10],sens:50/300,label:"REF",labelCol:kc,zoom:oz});
+  const dv=HL.button(ui,"div",ox+250,oy+322,62,34,{label:DBDIV[FB.divI]+" dB/div",col:"#555b62",size:10,zoom:oz}); if(dv.click) FB.divI=(FB.divI+1)%DBDIV.length;
+  const a0=Math.max(LAMBDA_MIN,FB.cen-FB.span/2), b0=Math.min(LAMBDA_MAX,FB.cen+FB.span/2);
+  FB.mkr=HL.knob(ui,"mkr",ox+355,oy+340,22,FB.mkr,{min:LAMBDA_MIN,max:LAMBDA_MAX,sens:Math.max(0.0005,(b0-a0)/800),wheelStep:Math.max(0.001,(b0-a0)/500),label:"MARKER",labelCol:kc,zoom:oz,col:"#5a4a1a"});
+  const swp=HL.button(ui,"sweep",ox+400,oy+318,76,44,{label:"SWEEP",col:"#3b7a57",size:12,zoom:oz});
+  if(swp.click&&!FB.sweep){ FB.trace={a:a0,b:b0,y:fbSpectrum(a0,b0)}; FB.sweep={p:0}; }
+  HL.text(g,FB.msg,ox+12,oy+oh-14,"#2a2d31",10.5);
+  /* ---- the fibre switch and the stopwatch ---- */
+  HL.rr(g,500,460,300,150,8,"#2b3036","#111",1.5);
+  HL.text(g,"광섬유 스위치 → 분석기 입력",512,475,"#dfe5ea",11,"left","700");
+  const det=INPUTS.map((_,i)=>i);
+  FB.inp=HL.knob(ui,"sel",570,550,30,FB.inp,{min:0,max:5,detents:det,sweep:250,sens:5/200,marks:INPUTS.map((n,i)=>[i,n]),label:""});
+  HL.text(g,"지금: "+INPUTS[FB.inp],660,540,"#e8e8e8",14,"left","700");
+  HL.drawStopwatch(ui,"sw",FB.sw,900,540,0.95);
+}
+let fbBench=null;
+function fbMode(m){ $("labwrap").hidden=m!=="lab"; document.querySelector(".winwrap").hidden=m==="lab"; $("t-note").hidden=m==="lab";
+  $("m-app").className=m==="app"?"on":""; $("m-lab").className=m==="lab"?"on":"";
+  try{ localStorage.setItem("hl-mode:"+location.pathname,m); }catch(e){}
+  if(m==="lab"){ if(!fbBench){ const S=HL.session(location.pathname);
+      FB.dYz=S.sys("piezo0",0.06); FB.vG=S.sys("stageV",0.0015); FB.LG=S.sys("stageL",0.1); FB.Tz=S.sys("bathT",0.15); FB.Fz=S.sys("dyn0",0.15);
+      FB.xz=S.sys("mic0",0.008); FB.thz=S.sys("pol0",0.6); FB.sw=new HL.Stopwatch(0.03+S.uni("lat",0,0.04));
+      run_cooling_simulation();
+      fbBench=HL.lab($("lbench"),{aspect:0.62,speeds:[1,10,60],keys:[" "],frame:fbFrame,hint:"두 번 클릭: 확대"});
+      HL.notebook($("lnote"),location.pathname,"예) dY = 0.40 μm, v = 0.536 mm/s, L = 50.0 mm → λB = 1549.98 nm, Tmin = −21.3 dB"); }
+    fbBench.layout(); } }
+const LT={ko:{app:"FBG Writer (원본 프로그램)",lab:"실험 모드",
+  intro:"실제 장비로 하는 FBG 실험입니다. 위 왼쪽은 펨토초 레이저 아래로 광섬유를 이송해 격자를 쓰는 장치(dY는 압전 스테이지, v와 L은 이송 컨트롤러), 아래 왼쪽은 스위치가 가리키는 시료(C 수조, D LDPE, E.I 동력계, E.II 용수철과 마이크로미터, F 편광 회전기), 오른쪽은 광스펙트럼분석기입니다. 분석기는 SWEEP으로 한 번 쓸고, 마커를 손으로 옮겨 그 자리의 파장과 투과율을 읽습니다. 딥의 바닥을 찾는 것은 사람의 몫입니다.",
+  how:["격자 쓰기: <b>dY</b>·<b>v</b>·<b>L</b> 손잡이 → <b>WRITE</b> (배속 ×10·×60으로 기다리기)","스위치 손잡이로 분석기 입력(A, C, D, E.I, E.II, F) 고르기 — 아래 시료 판이 그 장치로 바뀝니다","분석기: <b>CENTER</b>·<b>SPAN</b>·<b>REF</b>·<b>dB/div</b> → <b>SWEEP</b> → <b>MARKER</b>로 딥 바닥 맞추기","수조는 설정 온도로 천천히 갑니다 — 기준 온도계가 멈출 때 재기","두 번 클릭: 화면·눈금 확대 · 스페이스바: 스톱워치"],
+  noteH:"실험 노트", noteN:"값은 장비에서 직접 읽어 여기에 적습니다. 이 브라우저에 저장됩니다."},
+ en:{app:"FBG Writer (original program)",lab:"Experiment mode",
+  intro:"The FBG experiment on hardware. Top left, the station that draws the fibre under the femtosecond laser (dY on a piezo stage, v and L on the stage controller); bottom left, the sample on the fibre switch (C water bath, D LDPE, E.I dynamometer, E.II spring and micrometer, F polarisation rotator); right, the optical spectrum analyser. SWEEP takes one trace; move the marker by hand and read the wavelength and transmission where it sits. Finding the bottom of the dip is up to you.",
+  how:["Writing: <b>dY</b>, <b>v</b>, <b>L</b> knobs → <b>WRITE</b> (wait at ×10 or ×60)","Turn the switch knob to pick the analyser input (A, C, D, E.I, E.II, F); the sample panel shows that apparatus","Analyser: <b>CENTER</b>, <b>SPAN</b>, <b>REF</b>, <b>dB/div</b> → <b>SWEEP</b> → put the <b>MARKER</b> on the bottom of the dip","The bath creeps to its set point; measure once the reference thermometer settles","Double-click: magnify a screen or a scale · Space: stopwatch"],
+  noteH:"Lab notebook", noteN:"Read the values off the instruments and write them here. Saved in this browser."}};
+function fbLang(){ const d=LT[lang]; $("m-app").textContent=d.app; $("m-lab").textContent=d.lab; $("lintro").textContent=d.intro;
+  $("lhowH").textContent=lang==="ko"?"조작":"How to"; $("lhow").innerHTML=d.how.map(h=>"<li>"+h+"</li>").join(""); $("lnoteH").textContent=d.noteH; $("lnoteN").textContent=d.noteN; }
+$("m-app").onclick=()=>fbMode("app"); $("m-lab").onclick=()=>fbMode("lab");
+$("lang-ko").addEventListener("click",fbLang); $("lang-en").addEventListener("click",fbLang);
+fbLang();
+{ let m0=new URLSearchParams(location.search).get("mode"); if(!m0){ try{ m0=localStorage.getItem("hl-mode:"+location.pathname); }catch(e){} } fbMode(m0==="lab"?"lab":"app"); }
+</script>
   <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
 </body>
 </html>

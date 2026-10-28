@@ -47,6 +47,8 @@
   .imhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;font-size:12.5px;color:#9aa3ab}
   .imhead button{flex:0 0 auto}
   #imBody canvas{display:block;width:100%;height:auto;background:#191c21;border-radius:6px}
+  #imBody.pair{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+  #imBody .zbig canvas{background:#030405;border:6px solid #16181b;border-radius:8px}
   .instr{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
   .instr .ibox{flex:1 1 520px;min-width:280px}
   .instr .zbox{flex:0 0 270px}
@@ -128,6 +130,7 @@
     <div class="instrHold" hidden>
       <div class="ibox" id="fgBox"><div class="ilbl" id="t-fglbl"></div><canvas id="fgCv"></canvas></div>
       <div class="zbox" id="zBox"><div class="ilbl" id="t-zlbl"></div><canvas id="zoyiCv"></canvas></div>
+      <div class="zbig" id="zBigBox"><canvas id="zBig"></canvas></div>
     </div>
   </div>
 
@@ -152,10 +155,6 @@
     <div class="hint" id="secTxt"></div>
     <button id="flipBtn" style="width:100%;margin-top:6px"></button>
 
-    <h2 id="t-h-view"></h2>
-    <button id="fitBtn" style="width:100%"></button>
-    <div class="row" style="margin-top:6px"><button id="zFgBtn"></button><button id="zZBtn"></button></div>
-
     <div class="status" id="status"></div>
   </aside>
 </div>
@@ -170,13 +169,13 @@ const T = {
   ko:{
     title:"APhO 2025 실험 1 — 유도가열 조리기의 물리",
     sub:"가상 실험실 · 부품을 실험대에 놓고 케이블로 직접 연결한 뒤 계기를 읽으세요. 아무것도 대신 계산해 주지 않습니다.",
-    benchcap:"실험대 — 좌클릭 집기·놓기·꽂기 / 우클릭 되돌리기·뽑기 / 휠 확대·축소 / 빈 곳 드래그 이동 / 함수 발생기·오실로스코프 더블클릭: 확대",
+    benchcap:"실험대 — 좌클릭 집기·놓기·꽂기 / 우클릭 되돌리기·뽑기 / 휠 확대·축소 / 빈 곳 드래그 이동 / 함수 발생기·오실로스코프 더블클릭: 확대 · 빈 곳 더블클릭: 처음 화면",
     instrcap:"실험대 위의 바로 그 장비입니다. 노브는 위아래로 끌거나 휠, 버튼은 클릭",
     fglbl:"1. 함수 발생기 — 앞면 / 뒷면", zlbl:"2. ZOYI ZT-703S 디지털 오실로스코프·멀티미터",
     tray:"부품함",
-    hSw:"4. 스톱워치", hSpeed:"시간 배속", hSec:"3. 코일 조립체 — 단면", hView:"보기",
+    hSw:"4. 스톱워치", hSpeed:"시간 배속", hSec:"3. 코일 조립체 — 단면",
     speedHint:"가열·냉각은 실제로 수 분이 걸립니다. 배속은 스톱워치에도 똑같이 적용됩니다.",
-    fitBtn:"화면에 맞추기", zFg:"함수 발생기 확대", zZ:"오실로스코프 확대", imClose:"닫기 (Esc)",
+    imClose:"닫기 (Esc)",
     start:"시작", stop:"정지", lap:"랩", reset:"리셋",
     trayItems:{fg:"1. 함수 발생기", scope:"2. 오실로스코프", probe:"2. 스코프 프로브 (×1/×10)", fgcord:"함수 발생기 전원코드", charger:"스코프 충전기 (USB-C)", sw:"4. 스톱워치", base:"3. 코일 받침판 + 코일 #2",
       c1:"3. 코일 #1 하우징", c2:"3. 코일 #2 하우징",
@@ -290,13 +289,13 @@ const T = {
   en:{
     title:"APhO 2025 Experiment 1 — Physics of Induction Cooking",
     sub:"Virtual laboratory · put the parts on the bench, wire them with the cables and read the instruments. Nothing is computed for you.",
-    benchcap:"the bench — L-click pick/place/plug, R-click return/unplug / wheel zoom / drag bare bench to pan / double-click the generator or the scope: close up",
+    benchcap:"the bench — L-click pick/place/plug, R-click return/unplug / wheel zoom / drag bare bench to pan / double-click the generator or the scope: close up, a bare spot: back to the whole bench",
     instrcap:"the very instrument on the bench. Drag a knob up/down or roll the wheel; click the keys",
     fglbl:"1. Function generator — front / rear", zlbl:"2. ZOYI ZT-703S digital oscilloscope multimeter",
     tray:"Parts box",
-    hSw:"4. Stopwatch", hSpeed:"Time scale", hSec:"3. Coil assembly — cross-section", hView:"View",
+    hSw:"4. Stopwatch", hSpeed:"Time scale", hSec:"3. Coil assembly — cross-section",
     speedHint:"Heating and cooling really take minutes. The scale applies to the stopwatch too.",
-    fitBtn:"Fit to window", zFg:"Function generator close up", zZ:"Oscilloscope close up", imClose:"Close (Esc)",
+    imClose:"Close (Esc)",
     start:"START", stop:"STOP", lap:"LAP", reset:"RESET",
     trayItems:{fg:"1. Function generator", scope:"2. Oscilloscope", probe:"2. Scope probe (×1/×10)", fgcord:"Function generator mains cord", charger:"Scope charger (USB-C)", sw:"4. Stopwatch", base:"3. Base plate + coil #2",
       c1:"3. Coil #1 housing", c2:"3. Coil #2 housing",
@@ -919,11 +918,12 @@ const FG_CTRL={amp:{x:2.9,y:4.9,r:1.15,cont:true},
                fine:{x:10.6,y:6.5,r:0.8,cont:true},
                wave:{x:14.5,y:4.9,r:1.0,n:3}};
 const FG_REAR={rocker:[3.2,10.6,5.0,12.9]};
+const FG_STOPS={range:[-120,-40,40,120],wave:[-50,0,50]};   /* the detents of the two rotary switches */
 function knobAngle(key){
   const c=FG_CTRL[key];
   if(c.cont) return (-135+270*S.fg[key])*Math.PI/180;
-  if(key==="range") return [-120,-40,40,120][S.fg.range]*Math.PI/180;
-  return [-50,0,50][S.fg.wave]*Math.PI/180;
+  if(S.fgTurn&&S.fgTurn.key===key&&S.knob===S.fgTurn.h) return S.fgTurn.ang*Math.PI/180;
+  return FG_STOPS[key][S.fg[key]]*Math.PI/180;
 }
 function drawKnob(c,x,y,r,ang){
   circ(c,x,y+0.06,r*1.02,"#0a0b0c");
@@ -1069,11 +1069,13 @@ const ZK={F1:[1.3,7.3,2.6,7.98],F2:[2.95,7.3,4.25,7.98],F3:[4.65,7.3,5.95,7.98],
 const ZPAD={u:4.45,v:11.55,rx:2.35,ry:1.72,mx:1.0,my:0.58};
 const ZJ=[[1.5,"10A","#b8241a"],[3.4,"mA","#b8241a"],[5.3,"COM","#1a1a1a"],[7.4,"VΩHz","#b8241a"]], ZJV=14.66;
 const ZKEYLAB={F1:["F1"],F2:["F2"],F3:["F3"],F4:["F4"],POWER:["REL ⏻"],AUTO:["AUTO","RANGE"],HOLD:["HOLD","SAVE"],MODE:["MODE"]};
-function zKeyFace(c,id){ const [x0,y0,x1,y1]=ZK[id], red=id==="POWER";
-  rr(c,x0,y0,x1,y1,0.12,red?"#c3261c":"#3b3e43","#0a0a0a",0.03);
-  rr(c,x0+0.05,y0+0.04,x1-0.05,y0+0.2,0.08,"rgba(255,255,255,0.10)");
+function zKeyFace(c,id){ const dn=zDown(id), q=dn?0.05:0, [x0,y0,x1,y1]=ZK[id].map((v,i)=>v+(i<2?q:-q)+(i%2?q*0.6:0)), red=id==="POWER";
+  if(dn){ const [a0,b0,a1,b1]=ZK[id]; rr(c,a0,b0,a1,b1,0.12,"#060607"); }                 /* the well the key sinks into */
+  rr(c,x0,y0,x1,y1,0.12,red?(dn?"#9a1d15":"#c3261c"):(dn?"#2b2d31":"#3b3e43"),"#0a0a0a",dn?0.06:0.03);
+  if(dn) rr(c,x0+0.05,y0+0.04,x1-0.05,y0+0.16,0.08,"rgba(0,0,0,0.35)");                  /* pushed in: the top lip falls into shadow */
+  else rr(c,x0+0.05,y0+0.04,x1-0.05,y0+0.2,0.08,"rgba(255,255,255,0.10)");
   const L=ZKEYLAB[id], cx=(x0+x1)/2, cy=(y0+y1)/2;
-  if(L.length===1) FT(c,L[0],cx,cy+0.02,red?0.24:0.3,"#f2f2f2","center",true);
+  if(L.length===1) FT(c,L[0],cx,cy+0.02,red?0.24:0.3,dn?"#c9c9c9":"#f2f2f2","center",true);
   else { FT(c,L[0],cx,cy-0.15,0.2,"#f2f2f2","center",true); FT(c,L[1],cx,cy+0.17,0.2,"#f2f2f2","center",true); } }
 function dpadFace(c){
   const P=ZPAD;
@@ -1083,8 +1085,10 @@ function dpadFace(c){
     c.moveTo(P.u+Math.cos(q)*P.mx*1.05,P.v+Math.sin(q)*P.my*1.05); c.lineTo(P.u+Math.cos(q)*P.rx,P.v+Math.sin(q)*P.ry); c.stroke(); }
   FT(c,"▲",P.u,P.v-1.2,0.36,"#e8e8e8"); FT(c,"▼",P.u,P.v+1.2,0.36,"#e8e8e8");
   FT(c,"◀",P.u-1.7,P.v,0.36,"#e8e8e8"); FT(c,"▶",P.u+1.7,P.v,0.36,"#e8e8e8");
+  for(const [id,du,dv] of [["UP",0,-1.2],["DOWN",0,1.2],["LEFT",-1.7,0],["RIGHT",1.7,0]]) if(zDown(id)){
+    c.save(); c.translate(P.u+du,P.v+dv); c.scale(1.4,1); circ(c,0,0,0.5,"rgba(0,0,0,0.42)"); c.restore(); }
 }
-function menuFace(c){ const P=ZPAD; c.save(); c.translate(P.u,P.v); c.scale(P.mx,P.my); circ(c,0,0,1,"#2a2d31","#0b0b0b",0.05); c.restore(); FT(c,"MENU",P.u,P.v+0.02,0.3,"#e8e8e8","center",true); }
+function menuFace(c){ const P=ZPAD; c.save(); c.translate(P.u,P.v); c.scale(P.mx,P.my); circ(c,0,0,1,zDown("MENU")?"#1d1f22":"#2a2d31","#0b0b0b",0.05); c.restore(); FT(c,"MENU",P.u,P.v+0.02,0.3,"#e8e8e8","center",true); }
 function jackFace(c,x,col){ circ(c,x,ZJV,0.55,"#111","#4a4a4a",0.04); circ(c,x,ZJV,0.42,col); circ(c,x,ZJV,0.2,"#050505"); }
 /* the screen picture is laid out on a 7.78 × 5.56 field; the 3.5" LCD (7.2 × 5.26 cm) shows it scaled */
 function zoyiLCD(c){ const [x0,y0,x1,y1]=ZLCD; c.save(); c.beginPath(); c.rect(x0,y0,x1-x0,y1-y0); c.clip();
@@ -1101,14 +1105,15 @@ function drawZoyiFront3D(){
   POLY([FP3(F,l0,t1,0),FP3(F,l1,t1,0),FP3(F,l1,t1,-sh),FP3(F,l0,t1,-sh)],"#1a1c1f",null);
   ctx.restore();
   POLY([FP3(F,l0,t0,0),FP3(F,l0+2.2,t0,0),FP3(F,l0+0.7,t1,0),FP3(F,l0,t1,0)],"rgba(255,255,255,0.05)",null);   /* glass glare */
-  for(const id of ["F1","F2","F3","F4","POWER","AUTO","HOLD","MODE"]){ const [x0,y0,x1,y1]=ZK[id], h=0.2;
+  for(const id of ["F1","F2","F3","F4","POWER","AUTO","HOLD","MODE"]){ const [x0,y0,x1,y1]=ZK[id], h=zDown(id)?0.05:0.2;
     EXTR(F,rrUV(x0,y0,x1,y1,0.12),0,h,id==="POWER"?"#7c150e":"#25272b");
     withFace(atDepth(F,h),c=>zKeyFace(c,id)); }
   const P=ZPAD, ell=(rx,ry)=>Array.from({length:30},(_,i)=>{ const a=i/30*2*Math.PI; return [P.u+rx*Math.cos(a),P.v+ry*Math.sin(a)]; });
   EXTR(F,ell(P.rx,P.ry),0,0.3,"#202326");
   withFace(atDepth(F,0.3),dpadFace);
-  EXTR(F,ell(P.mx,P.my),0.3,0.45,"#141618");
-  withFace(atDepth(F,0.45),menuFace);
+  const mh=zDown("MENU")?0.33:0.45;
+  EXTR(F,ell(P.mx,P.my),0.3,mh,"#141618");
+  withFace(atDepth(F,mh),menuFace);
   for(const [x,,col] of ZJ){ EXTR(F,circUV(x,ZJV,0.55,16),0,0.2,"#0a0a0a"); withFace(atDepth(F,0.2),c=>jackFace(c,x,col)); }
   /* the lip: inside walls, the red ring, the black foot at the bottom */
   const i=[0.4,0.4,ZW-0.4,ZH-0.4], L=Z_LIP;
@@ -2371,9 +2376,14 @@ function fgPress(a,b,where){
     const c=FG_CTRL[key];
     if(where==="bench"?!knobHit(a,b,c,KNOB_H[key]):Math.hypot(a-c.x,b-c.y)>c.r+0.25) continue;
     if(!c.cont){
-      if(key==="range") S.fg.range=(S.fg.range+1)%4;
-      else { S.fg.wave=(S.fg.wave+1)%3; if(S.fg.wave!==0) say(d().m.wave,true); }
-      solve(); return ()=>{};
+      /* a rotary switch: it turns with the drag like the other knobs and clicks into the nearest detent */
+      const st=FG_STOPS[key], a0=st[S.fg[key]], lo=st[0]-12, hi=st[st.length-1]+12; let y0=null;
+      const h=(py)=>{ if(y0===null){ y0=py; return; }
+        const ang=Math.max(lo,Math.min(hi,a0+(y0-py)*0.7));
+        let i=0; st.forEach((v,j)=>{ if(Math.abs(v-ang)<Math.abs(st[i]-ang)) i=j; });
+        S.fgTurn={key,ang:st[i]+(ang-st[i])*0.3,h};       /* held by the detent spring, so it only leans toward the hand */
+        if(i!==S.fg[key]){ S.fg[key]=i; if(key==="wave"&&i!==0) say(d().m.wave,true); solve(); } };
+      return h;
     }
     const v0=S.fg[key]; let y0=null;
     return (py)=>{ if(y0===null){ y0=py; return; }
@@ -2402,10 +2412,13 @@ function zoyiPress(a,b){
   for(const id in ZK){
     const [x0,y0,x1,y1]=ZK[id];
     if(a<x0-0.05||a>x1+0.05||b<y0-0.05||b>y1+0.05) continue;
-    zoyiKey(id); return true;
+    S.zDown={id,t:performance.now(),up:false}; zoyiKey(id); return true;
   }
   return false;
 }
+/* a key stays pressed in while the button is held, and for a moment after a quick click */
+function zDown(id){ const k=S.zDown; return !!k&&k.id===id&&(!k.up||performance.now()-k.t<140); }
+addEventListener("pointerup",()=>{ if(S.zDown) S.zDown.up=true; });
 function zoyiKey(id){
   const z=S.z, t=d();
   if(!S.on.scope) return;
@@ -2475,6 +2488,10 @@ function drawFgPanel(){
   const nums=[[1.35,0.15,"1"],[2.9,6.95,"2"],[6.6,6.95,"3"],[12.05,2.7,"4"],[12.05,6.5,"4"],[14.5,6.95,"5"],[17.2,5.0,"6"],[22.8,4.6,"7"]];
   for(const [x,y,n] of nums){ circ(c,x,y,0.32,"#1b1c1e"); FT(c,n,x,y+0.01,0.36,"#fff","center",true); }
 }
+const zBig=$("zBig");
+function drawZoyiBig(){ if(imOpen!=="scope"||!$("imBody").classList.contains("pair")) return;
+  const c=zBig.getContext("2d"), s=zBig.width/7.78; c.setTransform(s,0,0,s,0,0); c.fillStyle="#030405"; c.fillRect(0,0,7.78,5.56);
+  drawZoyiScreen(c,0,0,7.78,5.56); }
 function drawZoyiPanel(){
   const c=zCtx;
   c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle="#191c21"; c.fillRect(0,0,zCv.width,zCv.height);
@@ -2565,20 +2582,25 @@ function renderLaps(){ const box=$("laps"); box.innerHTML="";
 function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of SPEEDS){ const b=document.createElement("button"); b.textContent=s+"×"; if(s===S.speed) b.className="on";
     b.onclick=()=>{ S.speed=s; renderSpeeds(); }; box.appendChild(b); } }
-$("fitBtn").onclick=()=>{ S.zoom=1; S.touched=false; fit(); };
 /* the close-up window: the instrument's own canvas is moved into it, so it is the very same instrument */
 let imOpen=null;
 function openInstr(which){
   closeInstr(); const box=$(which==="fg"?"fgBox":"zBox"), vw=window.innerWidth, vh=window.innerHeight;
-  const w=which==="fg"?Math.min(1000,vw*0.92):Math.max(240,Math.min(480,vw*0.92,(vh*0.92-70)*9.9/19.6));
-  box.style.width=Math.floor(w)+"px"; $("imBody").appendChild(box); $("imodal").hidden=false; imOpen=which; layout(); }
-function closeInstr(){ if(!imOpen) return; const box=$(imOpen==="fg"?"fgBox":"zBox"); box.style.width=""; document.querySelector(".instrHold").appendChild(box); $("imodal").hidden=true; imOpen=null; S.knob=null; layout(); }
+  const w=which==="fg"?Math.min(1000,vw*0.92):Math.max(240,Math.min(480,vw*0.92,(vh*0.94-80)*9.9/19.6));
+  box.style.width=Math.floor(w)+"px"; $("imBody").appendChild(box);
+  /* the scope also shows its LCD large beside it, as if leaning in to read it */
+  if(which==="scope"){ const bw=Math.floor(Math.min(980,vw*0.94-w-60,(vh*0.9-80)*7.78/5.56));
+    if(bw>=240){ $("imBody").classList.add("pair"); zBig.style.width=bw+"px"; zBig.style.height=Math.round(bw*5.56/7.78)+"px";
+      zBig.width=Math.round(bw*DPR); zBig.height=Math.round(bw*5.56/7.78*DPR); $("imBody").appendChild($("zBigBox")); } }
+  $("imodal").hidden=false; imOpen=which; layout(); }
+function closeInstr(){ if(!imOpen) return; const box=$(imOpen==="fg"?"fgBox":"zBox"); box.style.width=""; document.querySelector(".instrHold").appendChild(box);
+  $("imBody").classList.remove("pair"); document.querySelector(".instrHold").appendChild($("zBigBox")); $("imodal").hidden=true; imOpen=null; S.knob=null; layout(); }
 $("imClose").onclick=closeInstr;
 $("imodal").addEventListener("mousedown",e=>{ if(e.target===$("imodal")) closeInstr(); });
 window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&imOpen) closeInstr(); });
-$("zFgBtn").onclick=()=>openInstr("fg"); $("zZBtn").onclick=()=>openInstr("scope");
 cv.addEventListener("dblclick",e=>{ const [x,y]=mousePos(e);
-  const which=S.on.fg&&inRect(S.zones.fg,x,y)?"fg":S.on.scope&&inRect(S.zones.scope,x,y)?"scope":null; if(!which) return;
+  const which=S.on.fg&&inRect(S.zones.fg,x,y)?"fg":S.on.scope&&inRect(S.zones.scope,x,y)?"scope":null;
+  if(!which){ if(!S.carry){ S.zoom=1; S.touched=false; fit(); } return; }                  /* a bare spot: back to the whole bench */
   /* the two clicks of a double-click must not leave the part moved or picked up */
   const m=S.lastMove; if(m&&performance.now()-m.t<700&&m.id===which){ if(m.at) S.at[which]=m.at; }
   if(S.carry&&S.carry.move) S.carry=null;
@@ -2617,8 +2639,8 @@ function applyLang(){
   $("t-benchcap").textContent=t.benchcap; $("t-instrcap").textContent=t.instrcap;
   $("t-fglbl").textContent=t.fglbl; $("t-zlbl").textContent=t.zlbl;
   $("t-tray").textContent=t.tray;
-  $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("flipBtn").textContent=t.flipBtn; $("t-h-view").textContent=t.hView;
-  $("t-speedhint").textContent=t.speedHint; $("fitBtn").textContent=t.fitBtn; $("zFgBtn").textContent=t.zFg; $("zZBtn").textContent=t.zZ; $("imClose").textContent=t.imClose;
+  $("t-h-sw").textContent=t.hSw; $("t-h-speed").textContent=t.hSpeed; $("t-h-sec").textContent=t.hSec; $("flipBtn").textContent=t.flipBtn;
+  $("t-speedhint").textContent=t.speedHint; $("imClose").textContent=t.imClose;
   $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"APhO 2025 E1 — 유도가열 조리기의 물리 · HaslaLab":"APhO 2025 E1 — Physics of Induction Cooking · HaslaLab";
@@ -2644,7 +2666,7 @@ function tick(){
   batStep(dt);
   updateReadings();
   if(CW>10) draw();
-  drawFgPanel(); drawZoyiPanel();
+  drawFgPanel(); drawZoyiPanel(); drawZoyiBig();
   $("swLbl").textContent=S.on.sw?fmtTime(swValue()):"-:--.--"; $("swLbl").style.opacity=S.on.sw?1:0.35;
   if(ui%6===0) $("swHint").textContent=S.on.sw?d().swOk:d().swHint;
   if(++ui%6===0){ drawXsec(); renderStatus(); }
@@ -2654,5 +2676,6 @@ window.addEventListener("resize",layout);
 layout(); applyLang(); solve(); requestAnimationFrame(tick);
 </script>
   <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
 </body>
 </html>

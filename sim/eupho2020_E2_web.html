@@ -268,151 +268,142 @@ function describe(seq, current) {
   return out.join('\n');
 }
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Experiment mode: the box on a linear drive in a 3 m room.  The same masses, springs, damping, force
+   noise, integrator (0.1 ms) and stop conditions as the program; but the drive is worked from a pulse
+   generator or a hand lever, and the force is read from a digital display and from a pen chart
+   recorder whose paper you measure.  The session's errors: the force sensor's zero is a little off,
+   the chart's sensitivity and paper speed are a little off, the pen's zero is where you set it. */
+var BX = { sim: null, status: 0, ms: 0, prog: null, lever: 0, brake: false, amp: 2, width: 0.30, cyc: 3, shape: 0,
+           feed: true, paper: 0, speedI: 2, sensI: 2, zero: -60, trace: [], disp: 0, dispT: -1, msg: '' };
+var PAPER_SPEEDS = [5, 10, 25, 50, 100], SENSES = [0.5, 1, 2, 5];       /* mm/s, N per 10 mm division */
+function bxReset() { BX.sim = makeSim(); BX.status = 0; BX.prog = null; BX.msg = '상자를 방 가운데에 다시 매달았습니다.'; }
+function bxAccel() {
+  var s = BX.sim;
+  if (BX.prog) { var P = BX.prog, t = (BX.ms - P.t0) / 1000, per = 2 * P.width, k = Math.floor(t / per);
+    if (k >= P.cyc) { BX.prog = null; return 0; }
+    var ph = t - k * per, sgn = ph < P.width ? 1 : -1; return (P.shape ? -sgn : sgn) * P.amp; }
+  if (BX.brake) return Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, -8 * s.v1 - 4 * (s.y1 - Y1_INIT)));
+  return BX.lever;
+}
+PROGRAM.lab = {
+  intro: '높이 3 m 방 가운데에 상자(한 변 0.6 m, 안에 용수철 두 개와 추 두 개)가 힘 센서를 통해 리니어 구동기에 매달려 있습니다. ' +
+         '펄스 발생기로 +a를 τ 동안, −a를 τ 동안 주는 펄스를 원하는 횟수만큼 보내거나, 레버로 직접 가속도를 줄 수 있습니다. ' +
+         '구동기가 상자를 그 가속도로 움직이는 데 필요한 힘 F를 힘 센서가 재고, 디지털 표시와 기록계 용지에 나옵니다. ' +
+         '용지의 눈금(1 mm, 굵은 선 10 mm)과 용지 속도·감도로 시간과 힘을 읽으세요. 상자가 천장·바닥에 닿거나 안에서 부딪히면 멈춥니다.',
+  howto: ['펄스 발생기: <b>AMPL</b>(m/s²), <b>WIDTH</b> τ(s), <b>CYCLES</b> 손잡이 → <b>START</b> · <b>↑↓/↓↑</b>로 순서 바꾸기',
+          '레버: 끌어서 직접 가속도 주기 (놓으면 0) · <b>HOLD</b>: 상자를 천천히 세워 가운데로',
+          '기록계: <b>SPEED</b>(용지 속도)·<b>SENS</b>(감도) 선택, <b>ZERO</b> 손잡이로 펜 영점, <b>FEED</b>로 용지 멈춤/진행',
+          '<b>RESET</b>: 멈춘 뒤 상자를 다시 매달기 · 두 번 클릭: 기록지·표시 확대'],
+  aspect: 0.62,
+  notePlaceholder: '예) 정지 상태 F = 14.97 N → 전체 질량 …\n펄스 a = 2 m/s², τ = 0.30 s: 용지에서 주기 … mm (25 mm/s) → …',
+  init: function (S) {
+    BX.fz = S.sys('fZero', 0.03); BX.sensG = S.sys('sensGain', 0.01); BX.speedG = S.sys('paperGain', 0.006);
+    bxReset(); BX.msg = '';
+  },
+  frame: function (ui) {
+    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
+    /* ---- physics, 1 ms at a time, ten 0.1 ms steps each, as the program ---- */
+    var n = Math.min(120, Math.round(dt * 1000)), sim = BX.sim;
+    for (var i = 0; i < n && !BX.status; i++) {
+      sim.a1 = bxAccel();
+      var F = force(sim) + BX.fz;
+      if (BX.feed) BX.paper += PAPER_SPEEDS[BX.speedI] * (1 + BX.speedG) / 1000;
+      if (i % 2 === 0) { BX.trace.push([BX.paper, F]); if (BX.trace.length > 60000) BX.trace.splice(0, 20000); }
+      BX.lastF = F;
+      for (var k = 0; k < 10; k++) { BX.status = step(sim, 1e-4); if (BX.status) break; }
+      BX.ms++;
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
+    if (BX.status && !BX.msg.startsWith('■')) BX.msg = '■ ' + STATUS[BX.status];
+    if (ui.t - BX.dispT > 0.1) { BX.dispT = ui.t; BX.disp = BX.lastF !== undefined ? BX.lastF : 0; }
+    g.fillStyle = '#1d2127'; g.fillRect(0, 0, W, H);
+    /* ---- the room and the drive ---- */
+    var rx = 14, rw = 230, top = 22, bot = 600, my = (bot - top) / (Y_CEIL - Y_FLOOR), Y = function (y) { return bot - (y - Y_FLOOR) * my; }, cx = rx + rw / 2;
+    g.fillStyle = '#272c33'; g.fillRect(rx, top, rw, bot - top);
+    g.fillStyle = '#4a4f57'; g.fillRect(rx - 4, top - 10, rw + 8, 10); g.fillRect(rx - 4, bot, rw + 8, 10);
+    for (var m = 0.5; m < 3; m += 0.5) { g.strokeStyle = 'rgba(255,255,255,.06)'; g.beginPath(); g.moveTo(rx, Y(m)); g.lineTo(rx + rw, Y(m)); g.stroke(); }
+    g.fillStyle = '#5b636c'; g.fillRect(cx - 34, top, 10, bot - top);                        /* the rail */
+    var y1 = sim.y1;
+    HL.rr(g, cx - 40, Y(y1) - 70, 26, 40, 3, '#3b6e9e', '#1b2c3d', 1);                    /* the carriage */
+    g.fillStyle = '#9aa3ad'; g.fillRect(cx - 4, Y(y1) - 46, 8, 30); g.fillRect(cx - 27, Y(y1) - 52, 31, 6);
+    HL.rr(g, cx - 13, Y(y1) - 18, 26, 16, 2, '#c9a227', '#5b4610', 1); HL.text(g, 'F', cx, Y(y1) - 10, '#1b1b1b', 9, 'center', '700');
+    var bw = 0.6 * my;
+    HL.rr(g, cx - bw / 2, Y(y1), bw, BOX * my, 2, '#0b0b0d', '#3c4048', 1.5);
+    HL.text(g, 'BLACK BOX', cx, Y(y1) + BOX * my / 2, '#4f5560', 11, 'center', '700');
+    /* ---- the pulse generator ---- */
+    var px = 256, py = 12, pw = 300, ph = 250, zp = { x: px, y: py, w: pw, h: ph, title: '펄스 발생기 · 레버' };
+    ui.hit('pg', { x: px, y: py, w: pw, h: ph }, { cursor: 'default', zoom: zp });
+    HL.rr(g, px, py, pw, ph, 8, '#d7dadd', '#8d9399', 2);
+    HL.text(g, 'DRIVE — PULSE GENERATOR', px + 12, py + 15, '#2a2d31', 11, 'left', '700');
+    var aDet = []; for (var q = 0; q <= 300; q++) aDet.push(q / 10);
+    BX.amp = HL.knob(ui, 'amp', px + 50, py + 70, 26, BX.amp, { min: 0, max: 30, detents: aDet, sens: 30 / 500, label: 'AMPL', labelCol: '#2a2d31', zoom: zp });
+    var wDet = []; for (q = 1; q <= 200; q++) wDet.push(q / 100);
+    BX.width = HL.knob(ui, 'wid', px + 135, py + 70, 26, BX.width, { min: 0.01, max: 2, detents: wDet, sens: 2 / 600, label: 'WIDTH τ', labelCol: '#2a2d31', zoom: zp });
+    var cDet = []; for (q = 1; q <= 50; q++) cDet.push(q);
+    BX.cyc = HL.knob(ui, 'cyc', px + 220, py + 70, 26, BX.cyc, { min: 1, max: 50, detents: cDet, sens: 50 / 400, label: 'CYCLES', labelCol: '#2a2d31', zoom: zp });
+    HL.lcd(g, px + 14, py + 118, 86, 26, BX.amp.toFixed(1), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
+    HL.lcd(g, px + 106, py + 118, 86, 26, BX.width.toFixed(2), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
+    HL.lcd(g, px + 198, py + 118, 86, 26, String(BX.cyc), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
+    HL.text(g, 'm/s²', px + 57, py + 152, '#2a2d31', 9, 'center'); HL.text(g, 's', px + 149, py + 152, '#2a2d31', 9, 'center');
+    var shp = HL.button(ui, 'shape', px + 14, py + 166, 70, 30, { label: BX.shape ? '↓↑' : '↑↓', col: '#555b62', size: 15, zoom: zp });
+    if (shp.click) BX.shape = 1 - BX.shape;
+    var st = HL.button(ui, 'start', px + 94, py + 166, 90, 30, { label: 'START', col: '#3b7a57', size: 12, zoom: zp });
+    if (st.click) { if (BX.status) BX.msg = 'RESET 먼저 하세요.'; else { BX.prog = { t0: BX.ms, amp: BX.amp, width: BX.width, cyc: BX.cyc, shape: BX.shape }; BX.brake = false; BX.msg = '펄스를 보냅니다.'; } }
+    var hold = HL.button(ui, 'hold', px + 194, py + 166, 90, 30, { label: 'HOLD', col: '#8a5a2b', size: 12, zoom: zp, held: BX.brake });
+    if (hold.click) { BX.brake = !BX.brake; BX.prog = null; }
+    var rs = HL.button(ui, 'reset', px + 194, py + 206, 90, 30, { label: 'RESET', col: '#555b62', size: 12, zoom: zp });
+    if (rs.click) bxReset();
+    /* the hand lever: drag up or down; springs back to 0 */
+    var lx = px + 50, ly = py + 220, le = ui.hit('lever', { x: lx - 30, y: ly - 26, w: 100, h: 46 }, { cursor: 'ns-resize', zoom: zp });
+    if (le.down) { BX.lever = Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, BX.lever - le.rawdy * 0.15)); BX.prog = null; BX.brake = false; } else BX.lever *= 0.6;
+    if (Math.abs(BX.lever) < 0.05) BX.lever = 0;
+    HL.rr(g, lx - 30, ly - 4, 100, 8, 3, '#333');
+    var kpos = lx + 20 - BX.lever / MAX_ACCEL * 0;
+    g.strokeStyle = '#222'; g.lineWidth = 4; g.beginPath(); g.moveTo(lx + 20, ly); g.lineTo(lx + 20, ly - 18 * (BX.lever / MAX_ACCEL) - 0.01); g.stroke();
+    HL.circle(g, kpos, ly - 18 * (BX.lever / MAX_ACCEL), 7, '#b8433a', '#4a1a14', 1);
+    HL.text(g, 'LEVER', lx + 76, ly, '#2a2d31', 10, 'left', '700');
+    HL.text(g, BX.msg, px + 6, py + ph + 14, BX.status ? '#ff9b8b' : '#cfd6dc', 10.5);
+    /* ---- the force display ---- */
+    var fx = 570, fy = 12, fw = 418, fh = 70, zf = { x: fx, y: fy, w: fw, h: fh, title: '힘 센서 표시' };
+    ui.hit('fdisp', { x: fx, y: fy, w: fw, h: fh }, { cursor: 'default', zoom: zf });
+    HL.rr(g, fx, fy, fw, fh, 8, '#2b2f35', '#111', 2);
+    HL.text(g, 'FORCE SENSOR', fx + 12, fy + 14, '#cfd6dc', 11, 'left', '700');
+    HL.lcd(g, fx + 150, fy + 12, fw - 166, 46, BX.disp.toFixed(2) + ' N');
+    /* ---- the chart recorder ---- */
+    var cx2 = 570, cy2 = 92, cw2 = 418, ch2 = 518, zc = { x: cx2, y: cy2 + 70, w: cw2, h: 380, title: '기록계 용지 (1 mm 눈금)' };
+    ui.hit('chart', { x: cx2, y: cy2, w: cw2, h: ch2 }, { cursor: 'default' });
+    HL.rr(g, cx2, cy2, cw2, ch2, 8, '#3a3f46', '#15181c', 1.5);
+    HL.text(g, 'CHART RECORDER', cx2 + 12, cy2 + 15, '#dfe5ea', 11, 'left', '700');
+    var spB = HL.button(ui, 'spd', cx2 + 12, cy2 + 28, 110, 28, { label: 'SPEED ' + PAPER_SPEEDS[BX.speedI] + ' mm/s', col: '#555b62', size: 10.5 });
+    if (spB.click) BX.speedI = (BX.speedI + 1) % PAPER_SPEEDS.length;
+    var seB = HL.button(ui, 'sens', cx2 + 130, cy2 + 28, 110, 28, { label: 'SENS ' + SENSES[BX.sensI] + ' N/div', col: '#555b62', size: 10.5 });
+    if (seB.click) BX.sensI = (BX.sensI + 1) % SENSES.length;
+    BX.feed = HL.toggle(ui, 'feed', cx2 + 252, cy2 + 26, 24, 34, BX.feed, { label: 'FEED', labelCol: '#dfe5ea', onCol: '#3b7a57' });
+    BX.zero = HL.knob(ui, 'zero', cx2 + 370, cy2 + 44, 18, BX.zero, { min: -150, max: 150, sens: 300 / 500, wheelStep: 1, label: 'ZERO' });
+    /* the paper: 1 mm grid, the pen fixed at the right, the paper running left */
+    var X0 = cx2 + 12, X1 = cx2 + cw2 - 40, Yt = cy2 + 90, Yb = cy2 + ch2 - 14, mmPx = 2.2, ymid = (Yt + Yb) / 2;
+    g.save(); g.beginPath(); g.rect(X0, Yt, X1 - X0 + 24, Yb - Yt); g.clip();
+    g.fillStyle = '#f7f3e6'; g.fillRect(X0, Yt, X1 - X0 + 24, Yb - Yt);
+    var pp = BX.paper, first = Math.ceil(pp - (X1 - X0) / mmPx);
+    for (var mm = first; mm <= pp + 12; mm++) { var x = X1 - (pp - mm) * mmPx;
+      g.strokeStyle = mm % 10 === 0 ? 'rgba(220,90,70,.55)' : 'rgba(220,120,100,.18)'; g.lineWidth = mm % 10 === 0 ? 0.8 : 0.4; g.beginPath(); g.moveTo(x, Yt); g.lineTo(x, Yb); g.stroke(); }
+    for (var ym = -100; ym <= 100; ym++) { var yy = ymid - ym * mmPx; if (yy < Yt || yy > Yb) continue;
+      g.strokeStyle = ym % 10 === 0 ? 'rgba(220,90,70,.55)' : 'rgba(220,120,100,.18)'; g.lineWidth = ym % 10 === 0 ? 0.8 : 0.4; g.beginPath(); g.moveTo(X0, yy); g.lineTo(X1 + 24, yy); g.stroke(); }
+    var sens = SENSES[BX.sensI] * (1 + BX.sensG), penY = function (Fv) { return ymid - (Fv / sens * 10 + BX.zero) * mmPx; };
+    g.strokeStyle = '#1d3f8a'; g.lineWidth = 1; g.beginPath(); var started = false;
+    for (var j = BX.trace.length - 1; j >= 0; j--) { var tp = BX.trace[j], xx = X1 - (pp - tp[0]) * mmPx; if (xx < X0 - 2) break;
+      var yv = Math.max(Yt, Math.min(Yb, penY(tp[1]))); if (!started) { g.moveTo(xx, yv); started = true; } else g.lineTo(xx, yv); }
+    g.stroke(); g.restore();
+    var pyN = Math.max(Yt, Math.min(Yb, penY(BX.lastF || 0)));
+    g.fillStyle = '#333'; g.beginPath(); g.moveTo(X1, pyN); g.lineTo(X1 + 16, pyN - 5); g.lineTo(X1 + 16, pyN + 5); g.fill();
+    g.fillStyle = '#555'; g.fillRect(X1 + 16, Yt, 6, Yb - Yt);
+    ui.hit('paper', { x: X0, y: Yt, w: X1 - X0, h: Yb - Yt }, { cursor: 'zoom-in', zoom: { x: X0, y: Yt, w: X1 - X0 + 24, h: Yb - Yt, title: '기록계 용지 (1 mm 눈금, 굵은 선 10 mm) — FEED를 꺼 두면 그대로 읽을 수 있습니다' } });
   }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
-    }
-    start();
-  });
-})();
-
+};
 </script>
+<script src="handlab.js"></script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
 </body>
 </html>

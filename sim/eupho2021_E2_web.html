@@ -204,151 +204,144 @@ var PROGRAM = {
 
 function pad(s, n) { s = String(s); while (s.length < n) s = ' ' + s; return s; }
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Experiment mode: the rod on the bench.  The same heat equation (the same grid, step and constants
+   as simulate()) runs in step with the bench clock; the heater is a coil driven from a DC supply
+   whose voltage you set, and you work out the power from its two meters; five thermocouples clip
+   onto the rod wherever you slide them and you read their positions off the steel rule under the
+   rod; the five-channel thermometer scans once a second.  Nothing records itself: you start the
+   stopwatch, switch the heater, and note readings when you choose.  The instruments' own errors are
+   in the session: each junction reads a little off and sits a little off its clip mark, the rule's
+   zero is a little off the rod's end, and the supply's meters are a little off. */
+var R_HEATER = 4.0;                                           /* ohm, the coil */
+var ROD = { x0: 70, x1: 910, y: 150 };                        /* 28 px per cm */
+var LB = { T: null, V: 0, on: false, clips: [3, 8, 13, 18, 25], scan: [], scanT: -1, sw: null, tSim: 0 };
+function rodX(cm) { return ROD.x0 + (ROD.x1 - ROD.x0) * cm / 30; }
+function stepRod(dtTotal, power) {
+  var nx = NX, dx = DX, t0k = T0_K, t04 = T04, rhoC = RHO * C_SPEC, k = K_COND, alpha = ALPHA, bs = BETA * SIGMA;
+  var perimOverArea = PERIM / AREA, invDx2 = 1 / (dx * dx), invHalfDx = 1 / (0.5 * dx);
+  var dtMax = Math.min(0.4 * dx * dx / (k / rhoC), 0.05), T = LB.T, Tn = LB.Tn;
+  var nHeat = 0; while (nHeat < nx && nHeat * dx <= L_HEAT + 1e-12) nHeat++;
+  var qVol = nHeat ? power / (AREA * (nHeat - 0.5) * dx) / rhoC : 0;
+  var left = dtTotal;
+  while (left > 1e-12) {
+    var step = Math.min(dtMax, left); left -= step;
+    for (var i = 0; i < nx; i++) {
+      var Ti = T[i], lap;
+      if (i === 0) lap = 2 * (T[1] - Ti) * invDx2; else if (i === nx - 1) lap = 2 * (T[nx - 2] - Ti) * invDx2;
+      else lap = (T[i + 1] - 2 * Ti + T[i - 1]) * invDx2;
+      var flux = alpha * (Ti - t0k) + bs * (Ti * Ti * Ti * Ti - t04);
+      var d = (k * lap - perimOverArea * flux) / rhoC;
+      if (power > 0 && i < nHeat) d += qVol;
+      if (i === 0 || i === nx - 1) d -= flux * invHalfDx / rhoC;
+      Tn[i] = Ti + d * step;
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
+    var sw = T; T = Tn; Tn = sw;
   }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
+  LB.T = T; LB.Tn = Tn;
+}
+function rodTempAt(xm) { var f = Math.max(0, Math.min(NX - 1, xm / DX)), i = Math.min(NX - 2, Math.floor(f)), u = f - i;
+  return LB.T[i] * (1 - u) + LB.T[i + 1] * u - T0_K + T0_C; }
+var CLIP_COL = ['#4ec9b0', '#ffd479', '#6fb3ff', '#ff8fb1', '#c3a6ff'];
+PROGRAM.lab = {
+  intro: '길이 30 cm, 반지름 1 cm, 질량 460 g의 금속 막대가 세라믹 받침 위에 놓여 있고, 왼쪽 끝 3 cm에 히터 코일이 감겨 있습니다. ' +
+         '전원 전압을 정하고 HEATER 스위치를 켜면 가열이 시작됩니다. 히터 전력은 전원의 전압계·전류계를 읽어 P = VI로 구하세요. ' +
+         '열전대 다섯 개를 막대 위 원하는 자리로 끌어 놓고, 그 위치는 막대 아래 강철자에서 읽습니다. 온도계는 1초마다 다섯 채널을 갱신합니다. ' +
+         '시간은 직접 스톱워치로 잽니다. 배속을 올리면 스톱워치도 같은 실험 시간으로 갑니다.',
+  howto: ['전원: <b>VOLTAGE</b> 손잡이를 위아래로 끌거나 휠, <b>HEATER</b> 스위치로 켜고 끄기',
+          '열전대: 막대 위의 색 집게를 좌우로 끌기 (위치는 아래 자로 읽기)',
+          '스톱워치: 빨간 버튼 시작·정지, 회색 버튼 랩·리셋 (스페이스바 = 시작·정지)',
+          '두 번 클릭: 자, 온도계, 계기, 스톱워치를 확대해서 읽기',
+          '처음부터 다시 하려면 막대가 식기를 기다리거나 페이지를 새로 고치세요.'],
+  aspect: 0.62,
+  speeds: [1, 10, 60],
+  keys: [' '],
+  notePlaceholder: '예) V = 20.0 V, I = 5.00 A (P = 100 W), 켠 시각 0.0 s\n t(s)   T1   T2   T3   T4   T5\n 60.0  ...',
+  init: function (S) {
+    LB.T = new Float64Array(NX).fill(T0_K); LB.Tn = new Float64Array(NX);
+    LB.junc = [0, 1, 2, 3, 4].map(function (i) { return S.sys('tcOff' + i, 0.35); });          /* °C */
+    LB.jpos = [0, 1, 2, 3, 4].map(function (i) { return S.sys('tcPos' + i, 0.5); });           /* mm off the mark */
+    LB.rule0 = S.sys('rule0', 0.7);                                                              /* mm */
+    LB.vg = S.sys('vGain', 0.008); LB.ig = S.sys('iGain', 0.008);
+    LB.sw = new HL.Stopwatch(0.025 + S.uni('lat', 0, 0.05));
+  },
+  frame: function (ui) {
+    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
+    /* physics in step with the bench clock */
+    var Vtrue = LB.on ? LB.V : 0, P = Vtrue * Vtrue / R_HEATER;
+    if (dt > 0) stepRod(dt, P);
+    LB.tSim += dt;
+    if (Math.floor(LB.tSim) !== LB.scanT) { LB.scanT = Math.floor(LB.tSim);
+      LB.scan = LB.clips.map(function (c, i) { return rodTempAt(c / 100 + LB.jpos[i] / 1000) + LB.junc[i] + HL.gauss(TEMP_SIGMA); }); }
+    if (ui.keys.indexOf(' ') >= 0) LB.sw.startStop(ui.t);
+    g.fillStyle = '#23272d'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#4a3b2c'; g.fillRect(0, 250, W, H - 250);
+    /* supports and the rod, coloured by its temperature, glowing when hot */
+    [rodX(4), rodX(26)].forEach(function (x) { HL.rr(g, x - 16, ROD.y + 12, 32, 48, 4, '#e7e2d6', '#9f988a', 1); });
+    var rh = 24;
+    for (var i = 0; i < NX - 1; i++) {
+      var x0 = rodX(i * DX * 100), x1 = rodX((i + 1) * DX * 100), T = (LB.T[i] + LB.T[i + 1]) / 2 - T0_K + T0_C;
+      var hot = Math.max(0, Math.min(1, (T - 450) / 450)), base = 150 + Math.min(40, T / 20);
+      g.fillStyle = 'rgb(' + Math.round(base + 105 * hot) + ',' + Math.round(base - 20 + 70 * hot * hot) + ',' + Math.round(base - 10 - 120 * hot) + ')';
+      g.fillRect(x0, ROD.y - rh / 2, x1 - x0 + 0.6, rh);
+      if (hot > 0) { g.fillStyle = 'rgba(255,90,20,' + (0.35 * hot) + ')'; g.fillRect(x0, ROD.y - rh / 2 - 6, x1 - x0 + 0.6, rh + 12); }
     }
-    start();
-  });
-})();
-
+    var hl = g.createLinearGradient(0, ROD.y - rh / 2, 0, ROD.y + rh / 2); hl.addColorStop(0, 'rgba(255,255,255,.35)'); hl.addColorStop(0.45, 'rgba(255,255,255,0)'); hl.addColorStop(1, 'rgba(0,0,0,.35)');
+    g.fillStyle = hl; g.fillRect(ROD.x0, ROD.y - rh / 2, ROD.x1 - ROD.x0, rh);
+    /* the heater coil */
+    g.strokeStyle = LB.on && P > 0 ? '#e0a24a' : '#9a7a4a'; g.lineWidth = 2.2;
+    for (var k = 0; k <= 14; k++) { var xx = rodX(k * 3 / 14); g.beginPath(); g.moveTo(xx - 3, ROD.y - rh / 2 - 4); g.lineTo(xx + 3, ROD.y + rh / 2 + 4); g.stroke(); }
+    g.strokeStyle = '#b33'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(rodX(0.2), ROD.y + rh / 2 + 4); g.bezierCurveTo(rodX(0.2), 300, 160, 330, 160, 360); g.stroke();
+    g.strokeStyle = '#222'; g.beginPath(); g.moveTo(rodX(2.8), ROD.y + rh / 2 + 4); g.bezierCurveTo(rodX(2.8), 310, 200, 330, 200, 360); g.stroke();
+    /* the steel rule under the rod */
+    var ry = ROD.y + 64, off = LB.rule0 * (ROD.x1 - ROD.x0) / 300;
+    HL.rr(g, ROD.x0 - 30, ry, ROD.x1 - ROD.x0 + 60, 34, 2, '#cfd4d9', '#8b9298', 1);
+    for (var mm = -10; mm <= 310; mm++) { var x = ROD.x0 + off + (ROD.x1 - ROD.x0) * mm / 300; if (x < ROD.x0 - 28 || x > ROD.x1 + 28) continue;
+      var L = mm % 10 === 0 ? 14 : mm % 5 === 0 ? 9 : 5; g.strokeStyle = '#1b1d20'; g.lineWidth = mm % 10 === 0 ? 0.9 : 0.5;
+      g.beginPath(); g.moveTo(x, ry); g.lineTo(x, ry + L); g.stroke();
+      if (mm % 10 === 0 && mm >= 0 && mm <= 300) HL.text(g, String(mm / 10), x, ry + 24, '#1b1d20', 8.5, 'center', '600'); }
+    HL.text(g, 'cm', ROD.x1 + 18, ry + 24, '#1b1d20', 8, 'center');
+    ui.hit('rule', { x: ROD.x0 - 30, y: ry, w: ROD.x1 - ROD.x0 + 60, h: 34 }, { cursor: 'default', zoom: { x: ROD.x0 - 30, y: ROD.y - 60, w: 340, h: 140, title: '막대와 자' } });
+    /* the thermocouple clips: slide them along */
+    LB.clips.forEach(function (c, n) {
+      var x = rodX(c), z = { x: x - 70, y: ROD.y - 70, w: 140, h: 150, title: '열전대 T' + (n + 1) + ' 위치' };
+      var e = ui.hit('clip' + n, { x: x - 9, y: ROD.y - 56, w: 18, h: 44 }, { cursor: 'ew-resize', zoom: z });
+      if (e.down && e.dx) LB.clips[n] = Math.max(0, Math.min(30, c + e.dx * 30 / (ROD.x1 - ROD.x0)));
+      g.strokeStyle = CLIP_COL[n]; g.lineWidth = 2; g.beginPath(); g.moveTo(x, ROD.y - 50); g.bezierCurveTo(x, ROD.y - 90, 470 + n * 26, 280, 470 + n * 26, 380); g.stroke();
+      HL.rr(g, x - 7, ROD.y - 56, 14, 30, 3, CLIP_COL[n], '#111', 1);
+      g.strokeStyle = '#ddd'; g.lineWidth = 1; g.beginPath(); g.moveTo(x, ROD.y - 26); g.lineTo(x, ROD.y - rh / 2); g.stroke();
+      HL.text(g, 'T' + (n + 1), x, ROD.y - 64, CLIP_COL[n], 10, 'center', '700');
+      if (e.hover || e.down) HL.rr(g, x - 10, ROD.y - 59, 20, 36, 4, null, 'rgba(255,255,255,.6)', 1);
+    });
+    /* the DC supply */
+    var px = 30, py = 360, pw = 330, ph = 230, zp = { x: px - 8, y: py - 8, w: pw + 16, h: ph + 16, title: '히터 전원' };
+    ui.hit('psu', { x: px, y: py, w: pw, h: ph }, { cursor: 'default', zoom: zp });
+    HL.rr(g, px, py, pw, ph, 8, '#d7dadd', '#8d9399', 2);
+    HL.text(g, 'DC POWER SUPPLY 0–35 V', px + 14, py + 18, '#2a2d31', 12, 'left', '700');
+    var Vs = Vtrue * (1 + LB.vg), Is = (Vtrue / R_HEATER) * (1 + LB.ig);
+    HL.lcd(g, px + 16, py + 34, 140, 44, Vs.toFixed(1) + ' V', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
+    HL.lcd(g, px + 172, py + 34, 140, 44, Is.toFixed(2) + ' A', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
+    LB.V = HL.knob(ui, 'volt', px + 90, py + 145, 36, LB.V, { min: 0, max: Math.sqrt(300 * R_HEATER), sens: 34.6 / 400, wheelStep: 0.2, label: 'VOLTAGE', zoom: zp,
+      marks: [[0, '0'], [10, '10'], [20, '20'], [30, '30']], markCol: '#2a2d31', labelCol: '#2a2d31' });
+    LB.on = HL.toggle(ui, 'heat', px + 236, py + 112, 38, 56, LB.on, { label: 'HEATER', labelCol: '#2a2d31', zoom: zp });
+    HL.circle(g, px + 210, py + 140, 7, LB.on ? '#ff5a3c' : '#5a2a22', '#222', 1);
+    /* the five-channel thermometer */
+    var tx = 400, ty = 360, tw = 300, th = 230, zt = { x: tx - 8, y: ty - 8, w: tw + 16, h: th + 16, title: '5채널 온도계' };
+    ui.hit('thermo', { x: tx, y: ty, w: tw, h: th }, { cursor: 'default', zoom: zt });
+    HL.rr(g, tx, ty, tw, th, 8, '#2b2f35', '#111', 2);
+    HL.text(g, 'THERMOCOUPLE THERMOMETER  °C', tx + 14, ty + 18, '#cfd6dc', 11.5, 'left', '700');
+    LB.scan.forEach(function (v, n) {
+      HL.text(g, 'T' + (n + 1), tx + 22, ty + 50 + n * 36, CLIP_COL[n], 13, 'left', '700');
+      HL.lcd(g, tx + 60, ty + 34 + n * 36, 220, 30, v.toFixed(1), { col: '#8dffad' });
+    });
+    /* the stopwatch */
+    HL.drawStopwatch(ui, 'sw', LB.sw, 850, 470, 1.25);
+  }
+};
 </script>
+<script src="handlab.js"></script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
 </body>
 </html>

@@ -134,151 +134,111 @@ var PROGRAM = {
   }
 };
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Experiment mode: the gun on a cross slide, the HV supply and the phosphor screen.  The same solve()
+   (with the program's own 0.5 mm beam scatter) decides where each electron lands; the user sets the
+   slides and reads their verniers, sets the voltage, fires, and reads the glowing spot against the
+   screen's grid before it fades.  The session's own errors: each slide's scale is a little off its
+   true zero, the grid is printed a little off the screen's true axes, the supply reads a little off. */
+var E1L = { x: 50, y: 0, kv: 1000, out: false, spots: [], msg: '' };
+function slide(ui, id, horiz, x0, y0, len, val, zoom) {           /* a slide with a mm scale and a 0.1 mm vernier */
+  var g = ui.g, k = len / 400, pos = function (mm) { return horiz ? [x0 + (mm + 200) * k, y0] : [x0, y0 + (200 - mm) * k]; };
+  HL.rr(g, horiz ? x0 - 8 : x0 - 12, horiz ? y0 - 12 : y0 - 8, horiz ? len + 16 : 24, horiz ? 24 : len + 16, 3, '#c9ced3', '#6c737a', 1);
+  for (var mm = -200; mm <= 200; mm++) { var q = pos(mm), L = mm % 10 === 0 ? 9 : mm % 5 === 0 ? 6 : 3.5;
+    g.strokeStyle = '#1b1b1b'; g.lineWidth = mm % 10 === 0 ? 0.25 : 0.1; g.beginPath();
+    if (horiz) { g.moveTo(q[0], y0 - 12); g.lineTo(q[0], y0 - 12 + L); } else { g.moveTo(x0 - 12, q[1]); g.lineTo(x0 - 12 + L, q[1]); } g.stroke();
+    if (mm % 50 === 0) HL.text(g, String(mm / 10), horiz ? q[0] : x0 + 1, horiz ? y0 + 3 : q[1], '#1b1b1b', 3.2, 'center', '700'); }
+  var c = pos(val + (horiz ? E1L.zx : E1L.zy));                  /* the carriage sits at the true position; its scale is off */
+  var e = ui.hit(id, horiz ? { x: c[0] - 10, y: y0 - 22, w: 40, h: 44 } : { x: x0 - 22, y: c[1] - 10, w: 44, h: 40 }, { cursor: horiz ? 'ew-resize' : 'ns-resize', zoom: zoom });
+  if (e.down) val = Math.max(-200, Math.min(200, val + (horiz ? e.dx : -e.dy) / k));
+  c = pos(val + (horiz ? E1L.zx : E1L.zy));
+  HL.rr(g, horiz ? c[0] - 3 : x0 - 20, horiz ? y0 - 20 : c[1] - 3, horiz ? 34 : 40, horiz ? 40 : 34, 3, 'rgba(70,90,110,.85)', '#223', 1);
+  for (var v = 0; v <= 10; v++) {                                 /* vernier: 10 divisions over 9 mm */
+    var d = v * 0.9 * k; g.strokeStyle = '#ffe9a8'; g.lineWidth = 0.1; g.beginPath();
+    if (horiz) { g.moveTo(c[0] + d, y0 - 12); g.lineTo(c[0] + d, y0 - 12 + (v % 5 === 0 ? 5 : 3)); } else { g.moveTo(x0 - 12, c[1] - d); g.lineTo(x0 - 12 + (v % 5 === 0 ? 5 : 3), c[1] - d); }
+    g.stroke(); }
+  g.strokeStyle = '#ff6b5a'; g.lineWidth = 0.2; g.beginPath();
+  if (horiz) { g.moveTo(c[0], y0 - 14); g.lineTo(c[0], y0 + 14); } else { g.moveTo(x0 - 14, c[1]); g.lineTo(x0 + 14, c[1]); } g.stroke();
+  return val;
+}
+PROGRAM.lab = {
+  intro: '진공관 한쪽 끝의 전자총은 x·y 십자 슬라이드 위에 있고, 다른 쪽 끝 z = 0에 40 cm × 40 cm 형광 검출판이 있습니다. 그 사이 어딘가에 점전하가 숨어 있습니다. ' +
+         '슬라이드를 끌어 빔 위치를 정하고(위치는 슬라이드 눈금과 0.1 mm 버니어로 읽기), 가속 전압을 맞춘 뒤 FIRE를 누르면 전자가 검출판에 빛나는 점을 남깁니다. ' +
+         '점은 몇 초 뒤 사라지니 그 사이에 격자 눈금으로 위치를 읽으세요. 검출판 밖으로 나가면 아무것도 보이지 않습니다.',
+  howto: ['x·y 슬라이드: 파란 캐리지를 끌기 (두 번 클릭해 눈금·버니어 읽기)',
+          '전원: <b>kV</b> 10회전 손잡이(끌기/휠), <b>HV</b> 스위치',
+          '<b>FIRE</b>: 전자 한 번 쏘기 — 검출판의 빛점을 두 번 클릭해 확대해서 읽기'],
+  aspect: 0.62,
+  notePlaceholder: '예) V = 1000 V, 빔 (x, y) = (5.00, 0.00) cm → 검출 (4.9, 0.3) cm',
+  init: function (S) {
+    E1L.zx = S.sys('slideX', 0.3); E1L.zy = S.sys('slideY', 0.3);       /* mm */
+    E1L.gx = S.sys('gridX', 0.5); E1L.gy = S.sys('gridY', 0.5);         /* mm */
+    E1L.vg = S.sys('hvGain', 0.004);
+  },
+  frame: function (ui) {
+    var g = ui.g, W = ui.W, H = ui.H;
+    g.fillStyle = '#1c2026'; g.fillRect(0, 0, W, H);
+    /* ---- the cross slide carrying the gun ---- */
+    var zs = { x: 8, y: 8, w: 372, h: 410, title: 'x·y 슬라이드 (전자총)' };
+    ui.hit('stage', { x: 8, y: 8, w: 372, h: 410 }, { cursor: 'default', zoom: zs });
+    HL.rr(g, 8, 8, 372, 410, 6, '#2b3036', '#111', 1.5);
+    HL.text(g, 'x·y 슬라이드  (눈금 cm, 버니어 0.1 mm)', 18, 22, '#dfe5ea', 11, 'left', '700');
+    E1L.x = slide(ui, 'sx', true, 40, 390, 320, E1L.x, zs);
+    E1L.y = slide(ui, 'sy', false, 360, 50, 320, E1L.y, zs);
+    /* the gun itself, top view, sitting where the slides put it */
+    var gx = 40 + (E1L.x + E1L.zx + 200) * 0.8, gy = 50 + (200 - E1L.y - E1L.zy) * 0.8;
+    g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 1; g.strokeRect(40, 50, 320, 320);
+    g.strokeStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.moveTo(gx, 50); g.lineTo(gx, 370); g.moveTo(40, gy); g.lineTo(360, gy); g.stroke();
+    HL.circle(g, gx, gy, 12, '#4c535b', '#16191c', 1.5); HL.circle(g, gx, gy, 4, '#1a1d21'); HL.circle(g, gx, gy, 1.2, '#9cdcfe');
+    /* ---- the tube between gun and screen ---- */
+    HL.rr(g, 392, 120, 190, 70, 34, 'rgba(160,190,220,.10)', '#56606b', 1.5);
+    HL.text(g, '진공관 (전하는 이 안 어딘가)', 487, 155, '#6f7a85', 10, 'center');
+    /* ---- the HV supply and the fire button ---- */
+    var hx = 392, hy = 210, hw = 190, hh = 400, zh = { x: hx, y: hy, w: hw, h: hh, title: '고전압 전원' };
+    ui.hit('hv', { x: hx, y: hy, w: hw, h: hh }, { cursor: 'default', zoom: zh });
+    HL.rr(g, hx, hy, hw, hh, 8, '#d7dadd', '#8d9399', 2);
+    HL.text(g, 'HV 0–10 kV', hx + 12, hy + 16, '#2a2d31', 11.5, 'left', '700');
+    HL.lcd(g, hx + 14, hy + 32, hw - 28, 42, (E1L.out ? E1L.kv * (1 + E1L.vg) : 0).toFixed(0) + ' V', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
+    E1L.kv = HL.knob(ui, 'kv', hx + hw / 2, hy + 140, 38, E1L.kv, { min: 0, max: V_MAX, turns: 10, sens: V_MAX / 3000, wheelStep: 10, label: 'kV (10-turn)', labelCol: '#2a2d31', zoom: zh });
+    HL.rr(g, hx + hw / 2 - 30, hy + 210, 60, 20, 3, '#222'); HL.text(g, (E1L.kv / 1000).toFixed(2), hx + hw / 2, hy + 220, '#eee', 11, 'center', '700', HL.MONO);
+    E1L.out = HL.toggle(ui, 'hvsw', hx + 30, hy + 252, 32, 46, E1L.out, { label: 'HV', labelCol: '#2a2d31', zoom: zh });
+    HL.circle(g, hx + 90, hy + 275, 7, E1L.out ? '#ff5a3c' : '#5a2a22', '#222', 1);
+    var fire = HL.button(ui, 'fire', hx + 40, hy + 320, hw - 80, 56, { label: 'FIRE', col: '#b8433a', size: 16, zoom: zh });
+    if (fire.click) {
+      if (!E1L.out || E1L.kv < 1) E1L.msg = 'HV를 켜세요.';
+      else { var res = solve((E1L.x / 10 + E1L.zx / 10) / 100 + gauss(RADIAL_ERROR), (E1L.y / 10 + E1L.zy / 10) / 100 + gauss(RADIAL_ERROR), Math.sqrt(2 * E1L.kv * E_0 / M_E));
+        if (res[0]) E1L.spots.push({ x: res[1] * 1000, y: res[2] * 1000, t: ui.t }); E1L.msg = res[0] ? '' : '검출판에 아무것도 보이지 않습니다.'; }
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
+    HL.text(g, E1L.msg, hx + hw / 2, hy + 390, '#2a2d31', 10, 'center');
+    /* ---- the phosphor screen, 40 cm square, with its printed grid ---- */
+    var sx = 596, sy = 12, side = 396, k = side / 400, zsc = { x: sx - 4, y: sy - 4, w: side + 8, h: side + 8, title: '형광 검출판 (격자 1 cm, 가는 선 5 mm)' };
+    ui.hit('screen', { x: sx, y: sy, w: side, h: side }, { cursor: 'zoom-in', zoom: zsc });
+    HL.rr(g, sx - 6, sy - 6, side + 12, side + 12, 4, '#30353b', '#111', 1.5);
+    g.fillStyle = '#0b1a10'; g.fillRect(sx, sy, side, side);
+    var P = function (xmm, ymm) { return [sx + (xmm + 200) * k, sy + (200 - ymm) * k]; };
+    g.save(); g.translate(E1L.gx * k, -E1L.gy * k);
+    for (var mm = -200; mm <= 200; mm += 5) { var a1 = P(mm, -200), b1 = P(mm, 200), c1 = P(-200, mm), d1 = P(200, mm);
+      g.strokeStyle = mm === 0 ? 'rgba(140,230,160,.55)' : mm % 10 === 0 ? 'rgba(140,230,160,.28)' : 'rgba(140,230,160,.12)';
+      g.lineWidth = mm % 10 === 0 ? 0.6 : 0.35; g.beginPath(); g.moveTo(a1[0], a1[1]); g.lineTo(b1[0], b1[1]); g.moveTo(c1[0], c1[1]); g.lineTo(d1[0], d1[1]); g.stroke();
+      if (mm % 50 === 0) { HL.text(g, String(mm / 10), a1[0], sy + side - 6, 'rgba(160,240,180,.6)', 7, 'center'); HL.text(g, String(mm / 10), sx + 6, c1[1], 'rgba(160,240,180,.6)', 7, 'left'); } }
+    g.restore();
+    /* the spots: a little blurred, fading over a few seconds */
+    E1L.spots = E1L.spots.filter(function (sp) { return ui.t - sp.t < 9; });
+    E1L.spots.forEach(function (sp) { var q = P(sp.x, sp.y), f = Math.exp(-(ui.t - sp.t) / 3), gl = g.createRadialGradient(q[0], q[1], 0, q[0], q[1], 3.2);
+      gl.addColorStop(0, 'rgba(200,255,210,' + f + ')'); gl.addColorStop(0.45, 'rgba(120,255,150,' + 0.7 * f + ')'); gl.addColorStop(1, 'rgba(80,255,120,0)');
+      HL.circle(g, q[0], q[1], 3.2, gl); });
+    HL.text(g, 'x (cm) →', sx + side, sy + side + 12, '#9aa3ab', 9.5, 'right'); HL.text(g, '↑ y', sx - 2, sy - 2, '#9aa3ab', 9.5, 'right');
+    /* a sketch of the whole line-up, side view */
+    HL.text(g, '옆에서: 전자총 → (숨은 전하) → 검출판, z 방향', 600, 440, '#9aa3ab', 10.5);
+    g.strokeStyle = '#56606b'; g.lineWidth = 1.5; g.strokeRect(600, 455, 390, 60);
+    HL.rr(g, 606, 475, 28, 20, 3, '#4c535b'); g.fillStyle = '#2e5b3a'; g.fillRect(972, 460, 8, 50);
+    g.setLineDash([3, 3]); g.strokeStyle = 'rgba(156,220,254,.35)'; g.beginPath(); g.moveTo(634, 485); g.lineTo(972, 485); g.stroke(); g.setLineDash([]);
   }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
-    }
-    start();
-  });
-})();
-
+};
 </script>
+<script src="handlab.js"></script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
 </body>
 </html>
