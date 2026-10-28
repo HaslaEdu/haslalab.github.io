@@ -248,8 +248,8 @@ const T={
     sub:"가상 실험실 · 한 장의 측정·시료 보드와 태블릿 앱으로 두 실험을 합니다 (실제 시험과 같습니다). 앱은 원시 전압·미분값·전류·시간만 보여 줍니다 — 전기용량·온도·열저항은 직접 계산하세요.",
     trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
     trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 점퍼선 끝을 집어 단자에 꽂기 / 휠 확대·축소, 빈 책상을 끌어 이동 / 태블릿을 누르면 화면이 크게 열리고, 끌면 옮겨집니다",
-    view:{fit:"⤢ 전체 보기", back:"← 실험대", close:"✕ 태블릿 닫기", split:"⇵ 실험대와 함께 보기", big:"⛶ 태블릿만 크게", show:"태블릿 화면 보기", hide:"실험대로 돌아가기", need:"태블릿을 먼저 실험대에 놓으세요.", tap:"눌러서 화면 보기"},
+    cap:"실험대 (위에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 점퍼선 끝을 집어 단자에 꽂기 / 휠 확대·축소, 빈 책상을 끌어 이동, 보드를 두 번 클릭하면 크게, 빈 책상을 두 번 클릭하면 책상 전체 / 모든 장비는 실제 크기 비율(보드 60 × 53 mm, 8인치 태블릿 210 × 124 mm) / 태블릿을 누르면 화면이 크게 열리고, 끌면 옮겨집니다",
+    view:{fit:"⤢ 작업 영역", back:"← 실험대", close:"✕ 태블릿 닫기", split:"⇵ 실험대와 함께 보기", big:"⛶ 태블릿만 크게", show:"태블릿 화면 보기", hide:"실험대로 돌아가기", need:"태블릿을 먼저 실험대에 놓으세요.", tap:"눌러서 화면 보기"},
     closeCap:"태블릿 — IPhO 2021 Experiments 앱",
     hTime:"시간 배속", timeHint:"충전·가열은 실제로 수 분이 걸립니다. 배속은 보드와 앱의 시간에 똑같이 적용됩니다.",
     hBoard:"1. 측정·시료 보드",
@@ -290,8 +290,8 @@ const T={
     sub:"Virtual laboratory · one measurement and sample board and one tablet app serve both experiments (as in the real examination). The app shows raw voltages, derivatives, currents and time only — capacitances, temperatures and thermal resistances are yours to work out.",
     trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
     trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (seen from above) — L-click pick up / put down / plug / press, R-click return / unplug, pick up a jumper wire end and plug it into a socket / wheel zoom, drag the bare desk to pan / click the tablet to open its screen, drag it to move it",
-    view:{fit:"⤢ Fit", back:"← Bench", close:"✕ Close tablet", split:"⇵ With the bench", big:"⛶ Tablet only", show:"Show the tablet", hide:"Back to the bench", need:"Put the tablet on the bench first.", tap:"click to open"},
+    cap:"the bench (seen from above) — L-click pick up / put down / plug / press, R-click return / unplug, pick up a jumper wire end and plug it into a socket / wheel zoom, drag the bare desk to pan, double-click the board to look closely, the bare desk to see all of it / everything is to scale (board 60 × 53 mm, 8-inch tablet 210 × 124 mm) / click the tablet to open its screen, drag it to move it",
+    view:{fit:"⤢ Work area", back:"← Bench", close:"✕ Close tablet", split:"⇵ With the bench", big:"⛶ Tablet only", show:"Show the tablet", hide:"Back to the bench", need:"Put the tablet on the bench first.", tap:"click to open"},
     closeCap:"tablet — the IPhO 2021 Experiments app",
     hTime:"Time scale", timeHint:"Charging and heating really take minutes. The scale applies to the board and the app alike.",
     hBoard:"1. Measurement and sample board",
@@ -405,9 +405,13 @@ function sample(){
    ══════════════════════════════════════════════════════════════ */
 const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
 /* the desk is wider than the window onto it: wheel zooms, dragging the bare desk pans (as in APhO 2025) */
-const LW=1200, LH=680, DW=1760, DH=940, VIEW={z:1,x:0,y:0,fit:true};
+const LW=1200, LH=680, DW=8000, DH=4500, VIEW={z:1,x:0,y:0,fit:true};
 function fitView(){ const z=Math.min(LW/(DW+40),LH/(DH+40)); Object.assign(VIEW,{z,x:-(LW/z-DW)/2,y:-(LH/z-DH)/2,fit:true}); }
-function clampView(){ const zf=Math.min(LW/(DW+40),LH/(DH+40)); VIEW.z=Math.max(zf,Math.min(3,VIEW.z));
+/* the working corner of the desk: the board, its leads and the tablet */
+function workView(){ const r=[ST.pos.board.x-1300,ST.pos.board.y-900,ST.pos.tablet.x+1150,ST.pos.board.y+1500];
+  const z=Math.min(LW/(r[2]-r[0]),LH/(r[3]-r[1])); Object.assign(VIEW,{z,x:(r[0]+r[2])/2-LW/z/2,y:(r[1]+r[3])/2-LH/z/2,fit:false}); clampView(); }
+function boardView(){ const z=Math.min(LW/(BW_+420),LH/(BH_+260)); Object.assign(VIEW,{z,x:bx()+BW_/2-LW/z/2,y:by()+BH_/2+40-LH/z/2,fit:false}); clampView(); }
+function clampView(){ const zf=Math.min(LW/(DW+40),LH/(DH+40)); VIEW.z=Math.max(zf,Math.min(4,VIEW.z));
   const vw=LW/VIEW.z, vh=LH/VIEW.z, cl=(v,a,b)=>a>b?(a+b)/2:Math.max(a,Math.min(b,v)); VIEW.x=cl(VIEW.x,-60,DW+60-vw); VIEW.y=cl(VIEW.y,-60,DH+60-vh); }
 let DPR=1;
 function applyView(){ const k=DPR*S*VIEW.z; benchCtx.setTransform(k,0,0,k,-k*VIEW.x,-k*VIEW.y); }
@@ -420,90 +424,117 @@ function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(we
   ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
 function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
 const PLACE=["board","charger","cable","tablet","therm","W1","W2","insul"];
-const SZ={board:[620,330],charger:[70,46],cable:[60,30],tablet:[230,150],therm:[44,130],W1:[40,40],W2:[40,40]};
+/* everything on the desk at one scale: 10 units = 1 mm.  The board is the 60 × 53 mm PCB of
+   G1 Fig. 1 (measured from its 2.54 mm socket strip); the tablet an 8-inch 1280 × 800 one,
+   210 × 124 mm; the USB power source lies on its side; the jumper wires are 20 cm Dupont leads */
+const MM=10, BW_=600, BH_=530;
+const SZ={board:[BW_,BH_],charger:[640,360],cable:[900,560],tablet:[2100,1244],therm:[640,1000],W1:[40,40],W2:[40,40]};
 const ST={ on:{board:false,charger:false,cable:false,tablet:false,therm:false,W1:false,W2:false,insul:true},
-  pos:{board:{x:60,y:70},charger:{x:860,y:620},cable:{x:860,y:520},tablet:{x:880,y:150},therm:{x:1620,y:110},W1:{x:780,y:380},W2:{x:780,y:420}},
-  ends:{W1:[[740,380],[820,380]],W2:[[740,420],[820,420]]} };
+  pos:{board:{x:2500,y:1750},charger:{x:2150,y:1150},cable:{x:3700,y:2950},tablet:{x:4800,y:1950},therm:{x:1700,y:2000},W1:{x:2500,y:2700},W2:{x:2500,y:2900}},
+  ends:{W1:[[2300,2700],[2700,2700]],W2:[[2300,2900],[2700,2900]]} };
 let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1, simNow=0;
 function say(key,...args){ msg={key,args,t:performance.now()}; }
 const itemName=k=>k==="tablet"&&LINK.mode==="remote"?d().ln.myDevItem:(d().items[k]||k);
 const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
 const bx=()=>ST.pos.board.x, by=()=>ST.pos.board.y;
 const SOCK_NAMES=[["N9A","-9V"],["N9B","-9V"],["GNDA","GND"],["GNDB","GND"],["P9A","+9V"],["P9B","+9V"],["INA","IN"],["INB","IN"]];
-const sockXY=n=>{ const i=SOCK_NAMES.findIndex(s=>s[0]===n); return [bx()+566,by()+52+30*i]; };
-const USBP=()=>[bx()+140,by()+4], PIN6=()=>[bx()+330,by()+4], RESET=()=>[bx()+486,by()+30], SW1=()=>[bx()+462,by()+150];
-const LEDP=()=>[bx()+186,by()+266], PAD=()=>[bx()+70,by()+216,210,96];
+/* the 8-way female header on the right edge, 2.54 mm pitch */
+const sockXY=n=>{ const i=SOCK_NAMES.findIndex(s=>s[0]===n); return [bx()+578,by()+340+25.4*i]; };
+const USBP=()=>[bx()+322,by()+8], PIN6=()=>[bx()+436,by()+8], RESET=()=>[bx()+530,by()+80], SW1=()=>[bx()+452,by()+430];
+const LEDP=()=>[bx()+214,by()+446], PAD=()=>[bx()+40,by()+300,330,220];
 function endXY(w,i){ const s=B.wires[w][i]; return s&&ST.on.board?sockXY(s):ST.ends[w][i]; }
 function bench(){
   ctx.fillStyle="#2a2620"; ctx.fillRect(VIEW.x-2,VIEW.y-2,LW/VIEW.z+4,LH/VIEW.z+4);
-  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(8,12,DW,DH); ctx.fillStyle="#8a7a62"; ctx.fillRect(-6,-6,DW+12,DH+12);
+  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(40,60,DW,DH); ctx.fillStyle="#8a7a62"; ctx.fillRect(-30,-30,DW+60,DH+60);
   ctx.fillStyle="#cfc8bb"; ctx.fillRect(0,0,DW,DH);
-  ctx.strokeStyle="rgba(120,100,70,.10)"; ctx.lineWidth=1;
-  for(let x=0;x<=DW;x+=60){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,DH); ctx.stroke(); }
+  ctx.strokeStyle="rgba(120,100,70,.10)"; ctx.lineWidth=4;
+  for(let x=0;x<=DW;x+=300){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,DH); ctx.stroke(); }
 }
+/* the board as photographed in G1 Fig. 1: connectors j and k on the top edge, RST at the top right,
+   the T-shaped thermostat PCB under its black foam with two white wing nuts, S1 and the socket strip
+   at the bottom right */
 function drawBoard(){
   const x0=bx(), y0=by(), t=d();
-  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(x0+5,y0+6,620,330);
-  fillR(x0,y0,620,330,8,"#1f6b3a","#12401f",3); ctx.strokeStyle="#2f8b4a"; ctx.strokeRect(x0+7,y0+7,606,316);
-  ctx.strokeStyle="#2a7d45"; for(let x=x0+24;x<x0+540;x+=34){ ctx.beginPath(); ctx.moveTo(x,y0+40); ctx.lineTo(x,y0+190); ctx.stroke(); }
-  fillR(x0+24,y0+46,80,70,4,"#123","#345"); circ(x0+56,y0+80,24,"#1a1a2a","#889"); text("1000µF",x0+56,y0+76,"#dde",7,"center"); text("6.3V",x0+56,y0+86,"#dde",7,"center");
-  fillR(x0+180,y0+50,120,56,4,"#0d1a2a","#345"); text("MCU",x0+240,y0+78,"#8ab",10,"center","700");
-  fillR(USBP()[0]-24,y0-2,48,22,3,"#b0b0b8","#666"); text(t.lab.usb,USBP()[0],y0+32,"#dfe",9,"center");
-  fillR(PIN6()[0]-28,y0-2,56,22,3,"#e8e8e0","#666"); text(t.lab.pin6,PIN6()[0],y0+32,"#dfe",9,"center");
-  circ(...RESET(),13,"#333","#999",2); text(t.lab.reset,RESET()[0],RESET()[1]+24,"#dfe",9,"center");
-  circ(x0+60,y0+138,6,B.powered?"#3f6":"#252","#062"); text(B.powered?t.lab.pw:t.lab.nopw,x0+74,y0+138,"#dfe",9.5);
-  /* terminal strip */
-  fillR(x0+540,y0+30,72,262,4,"#0e4a29","#0a3a20");
-  for(const [n,lab] of SOCK_NAMES){ const [x,y]=sockXY(n), used=Object.values(B.wires).some(w=>w.includes(n));
-    circ(x,y,9,used?"#f2e2a0":"#d8b24a","#7a5a10",2); circ(x,y,3.5,"#3a2a08"); text(lab,x+14,y,"#eafbea",10,"left","700"); }
-  /* S1 */
-  const [sx,sy]=SW1(); fillR(sx-15,sy-44,30,88,4,"#222","#888",1.5);
-  const off={C1:-28,MID:0,C2:28}[B.sw1]; fillR(sx-11,sy+off-11,22,22,3,"#ddd","#333");
-  text("C1",sx,sy-58,"#dfe",10,"center","700"); text("C2",sx,sy+58,"#dfe",10,"center","700"); text("S1",sx+26,sy,"#dfe",9,"left","700");
-  /* thermostat block with the components */
-  fillR(x0+24,y0+196,290,124,4,"#2b2b2b","#111"); text(t.lab.thermo,x0+169,y0+206,"#bbb",9,"center");
-  for(const xx of [x0+44,x0+294]){ circ(xx,y0+232,11,"#f2f2ee","#bbb"); ctx.strokeStyle="#999"; ctx.beginPath(); ctx.moveTo(xx-6,y0+232); ctx.lineTo(xx+6,y0+232); ctx.stroke(); }
-  fillR(x0+120,y0+252,46,28,3,"#8a5a20","#5a3a10"); text("C1 C2",x0+143,y0+266,"#fff",8,"center");
-  fillR(x0+204,y0+256,24,20,2,"#111","#666"); text("NTC",x0+216,y0+266,"#ddd",7,"center");
-  fillR(x0+92,y0+290,46,16,2,"#d8d8d8","#666"); text("Rheat",x0+115,y0+298,"#333",7,"center");
-  const [lx,ly]=LEDP(); circ(lx,ly,9,"#c8c8c8","#777");
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(x0+10,y0+14,BW_,BH_);
+  fillR(x0,y0,BW_,BH_,12,"#1d6a39","#103d1f",3);
+  ctx.strokeStyle="#2f8b4a"; ctx.lineWidth=1.5; for(let x=x0+40;x<x0+500;x+=28){ ctx.beginPath(); ctx.moveTo(x,y0+130); ctx.lineTo(x+40,y0+250); ctx.stroke(); }
+  for(const [hx,hy] of [[16,16],[584,16],[16,286],[584,286]]) { circ(x0+hx,y0+hy,13,"#c9ced3","#8a9097",2); ctx.strokeStyle="#6a7077"; ctx.beginPath(); ctx.moveTo(x0+hx-7,y0+hy); ctx.lineTo(x0+hx+7,y0+hy); ctx.moveTo(x0+hx,y0+hy-7); ctx.lineTo(x0+hx,y0+hy+7); ctx.stroke(); }
+  /* top edge: a spare white connector, USB micro-B (j), the 6-pin data port (k) */
+  fillR(x0+150,y0-2,120,38,3,"#f2f2ec","#999",1.5);
+  fillR(USBP()[0]-38,y0-6,76,32,4,"#c8ccd2","#6b7076",1.5); fillR(USBP()[0]-24,y0+2,48,10,2,"#2a2d31");
+  text(t.lab.usb,USBP()[0],y0+46,"#e6f4e8",14,"center","700");
+  fillR(PIN6()[0]-82,y0-2,164,38,3,"#f2f2ec","#999",1.5); for(let i=0;i<6;i++) fillR(PIN6()[0]-62+i*25,y0+8,10,14,1,"#d9d1a8");
+  text(t.lab.pin6,PIN6()[0],y0+56,"#e6f4e8",14,"center","700");
+  /* power parts and the MCU */
+  fillR(x0+30,y0+60,70,70,6,"#2b2b2b","#555"); circ(x0+65,y0+95,24,"#3a3a3a","#222");
+  circ(x0+152,y0+92,34,"#c9ccd0","#888",2); text("1000",x0+152,y0+84,"#222",13,"center","700"); text("6.3",x0+152,y0+102,"#222",11,"center");
+  circ(x0+70,y0+178,26,"#c0392b","#7a1f15",2); circ(x0+70,y0+258,20,"#c0392b","#7a1f15",2);
+  fillR(x0+230,y0+170,70,70,4,"#15181b","#444"); for(let i=0;i<10;i++){ ctx.fillStyle="#bbb"; ctx.fillRect(x0+234+i*6.6,y0+164,3,6); ctx.fillRect(x0+234+i*6.6,y0+240,3,6); }
+  fillR(x0+330,y0+110,90,40,3,"#15181b","#444"); fillR(x0+430,y0+150,90,40,3,"#15181b","#444");
+  circ(x0+60,y0+138,7,B.powered?"#3f6":"#252","#062"); text(B.powered?t.lab.pw:t.lab.nopw,x0+76,y0+138,"#e6f4e8",12);
+  /* RST */
+  fillR(RESET()[0]-28,RESET()[1]-28,56,56,4,"#c8ccd2","#6b7076",1.5); circ(...RESET(),17,"#1a1a1a","#555",2);
+  text("RST",RESET()[0]+40,RESET()[1],"#e6f4e8",13,"left","700"); text(t.lab.reset,RESET()[0],RESET()[1]+44,"#e6f4e8",12,"center","700");
+  /* thermostat: black foam block, the T-shaped sensor PCB, two white wing nuts */
+  fillR(x0,y0+300,395,230,2,"#1b1b1b","#000"); text(t.lab.thermo,x0+200,y0+316,"#9a9a9a",12,"center");
+  fillR(x0+150,y0+262,90,58,4,"#1f7a3f","#0f3d20"); fillR(x0+181,y0+318,28,80,2,"#1f7a3f","#0f3d20"); fillR(x0+150,y0+396,90,90,6,"#1f7a3f","#0f3d20");
+  fillR(x0+160,y0+410,26,14,2,"#8a5a20","#5a3a10"); fillR(x0+204,y0+410,26,14,2,"#8a5a20","#5a3a10"); text("C1   C2",x0+195,y0+436,"#fff",10,"center");
+  fillR(x0+168,y0+458,22,14,2,"#111","#666"); text("NTC",x0+179,y0+478,"#ddd",8,"center");
+  const [lx,ly]=LEDP(); fillR(lx-6,ly+4,12,10,1,"#dcdcdc","#777");
   const glow=B.powered?Math.min(1,B.iL/30)*(B.tL>0?0.35:1):0;
-  if(glow>0.02){ const g=ctx.createRadialGradient(lx,ly,0,lx,ly,12+18*glow); g.addColorStop(0,"rgba(255,246,208,1)"); g.addColorStop(0.4,"rgba(255,120,80,"+(0.6+0.4*glow)+")"); g.addColorStop(1,"rgba(255,80,60,0)"); ctx.fillStyle=g; circ(lx,ly,12+18*glow,g); }
-  if(ST.on.insul){ const [px,py,pw,ph]=PAD(); fillR(px,py,pw,ph,3,"rgba(251,251,247,.96)","#ddd"); text(t.lab.insul,px+pw/2,py+ph/2,"#999",10,"center");
-    fillR(x0+34,y0+212,270,8,2,"#e8f0f8","#b8c8d8");
-    if(glow>0.02){ const g=ctx.createRadialGradient(lx,ly,0,lx,ly,14+16*glow); g.addColorStop(0,"rgba(255,170,150,"+(0.5*glow)+")"); g.addColorStop(1,"rgba(255,170,150,0)"); circ(lx,ly,14+16*glow,g); } }
-  /* board ID */
-  fillR(x0+392,y0+236,100,74,3,"#f4f4ee","#999"); text(t.lab.id,x0+442,y0+250,"#333",9,"center");
-  text(B.id,x0+442,y0+272,"#111",14,"center","700",MONO);
-  for(let i=0;i<5;i++) for(let j=0;j<8;j++) if((i*7+j*3+(+B.id[i%6]))%3===0){ ctx.fillStyle="#111"; ctx.fillRect(x0+402+j*10,y0+286+i*4,8,3); }
-  if(B.short) text(t.lab.short,x0+310,y0+350,"#c0392b",14,"center","700");
+  if(glow>0.02){ const g=ctx.createRadialGradient(lx,ly+9,0,lx,ly+9,14+30*glow); g.addColorStop(0,"rgba(255,246,208,1)"); g.addColorStop(0.4,"rgba(255,120,80,"+(0.6+0.4*glow)+")"); g.addColorStop(1,"rgba(255,80,60,0)"); circ(lx,ly+9,14+30*glow,g); }
+  if(ST.on.insul){ const [px,py,pw,ph]=PAD(); fillR(px,py,pw,ph,6,"rgba(251,251,247,.96)","#ddd"); text(t.lab.insul,px+pw/2,py+ph/2,"#999",16,"center");
+    fillR(px+20,py+40,pw-40,22,4,"rgba(232,240,248,.9)","#b8c8d8"); }
+  for(const wx of [71,330]){ const cx=x0+wx, cy=y0+433; circ(cx,cy,26,"#f4f4ef","#bbb",2); fillR(cx-12,cy-62,24,124,10,"#f4f4ef","#bbb",2); circ(cx,cy,10,"#d6d8da","#999"); }
+  /* S1 and the socket strip */
+  const [sx,sy]=SW1(); fillR(sx-16,sy-40,32,80,3,"#2a2a2a","#888",1.5);
+  const off={C1:-22,MID:0,C2:22}[B.sw1]; fillR(sx-10,sy+off-10,20,20,2,"#d8d8d8","#333");
+  text("C1",sx,sy-56,"#e6f4e8",16,"center","700"); text("C2",sx,sy+56,"#e6f4e8",16,"center","700"); text("SW1",sx,sy+78,"#e6f4e8",13,"center","700");
+  ctx.strokeStyle="#e6f4e8"; ctx.lineWidth=2; ctx.strokeRect(x0+505,y0+326,58,206);
+  fillR(x0+565,y0+326,28,206,2,"#111","#000");
+  for(const [n,lab] of SOCK_NAMES){ const [x,y]=sockXY(n), used=Object.values(B.wires).some(w=>w.includes(n));
+    fillR(x-9,y-9,18,18,2,used?"#3a3a3a":"#050505","#333"); circ(x,y,3.6,"#c9a227"); text(lab,x0+534,y,"#eafbea",13,"center","700"); }
+  /* board ID: on the back of the real board; the sim shows it on a sticker by the top-left screw */
+  fillR(x0+300,y0+212,110,62,3,"#f4f4ee","#999"); text(t.lab.id,x0+355,y0+226,"#333",11,"center");
+  text(B.id,x0+355,y0+252,"#111",16,"center","700",MONO);
+  if(B.short) text(t.lab.short,x0+300,y0+BH_+40,"#c0392b",22,"center","700");
 }
-function cableCurve(a,b,col,w){ ctx.strokeStyle=col; ctx.lineWidth=w||3; ctx.beginPath(); ctx.moveTo(...a);
-  const m=[(a[0]+b[0])/2,Math.max(a[1],b[1])+50]; ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke(); }
+function cableCurve(a,b,col,w){ ctx.strokeStyle=col; ctx.lineWidth=w||30; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(...a);
+  const m=[(a[0]+b[0])/2,Math.max(a[1],b[1])+260]; ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke(); }
 function drawParts(){
   const P=ST.pos, t=d();
-  if(ST.on.charger){ const {x,y}=P.charger; fillR(x-35,y-23,70,46,6,"#222","#000"); text("5V",x,y,"#fff",11,"center","700"); if(ST.on.board) cableCurve([x-35,y],[USBP()[0],USBP()[1]+2],"#333"); }
-  if(ST.on.cable){ const {x,y}=P.cable; fillR(x-30,y-15,60,30,4,"#888","#555"); text("6-pin",x,y,"#111",9,"center","700");
-    if(ST.on.board) cableCurve([x-30,y],[PIN6()[0],PIN6()[1]+2],"#777"); if(ST.on.tablet) cableCurve([x+30,y],[P.tablet.x,P.tablet.y+75],"#777"); }
-  if(ST.on.tablet){ const {x,y}=P.tablet; fillR(x-115,y-75,230,150,10,"#111","#000",3); const live=LINK.usb; fillR(x-105,y-65,210,130,4,live?"#ccaaaa":"#3a3a3a");
-    (LINK.mode==="remote"?t.ln.myDev+(LINK.remote>0?"\n"+t.ln.devOn:"\n"+t.ln.devOff):t.lab.app).split("\n").forEach((s,i)=>text(s,x,y-8+i*16,live?"#222":"#888",12,"center","700"));
-    if(!hand&&overBench&&inPart("tablet",mouse)){ fillR(x-105,y-65,210,130,4,null,"#f2c14e",2); text(t.view.tap,x,y+52,live?"#5a3a3a":"#aaa",10,"center"); } }
-  if(ST.on.therm){ const {x,y}=P.therm; fillR(x-22,y-65,44,130,8,"#fff","#666"); text(B.roomT.toFixed(1),x,y-26,"#111",14,"center","700",MONO); text("°C",x,y-6,"#111",11,"center"); text(t.lab.roomT,x,y+30,"#555",9,"center"); }
+  if(ST.on.charger){ const {x,y}=P.charger;
+    fillR(x-320,y-180,460,360,40,"#1d1f22","#000",4); fillR(x+140,y-60,30,120,6,"#24272b"); for(const dy of [-50,50]) fillR(x+170,y+dy-10,150,20,10,"#b7bcc2","#777",2);
+    fillR(x-330,y-40,40,80,6,"#2a2d31"); text("5V ⎓ 2A",x-90,y,"#d8dde2",44,"center","700");
+    if(ST.on.board) cableCurve([x-330,y],[USBP()[0],USBP()[1]-20],"#2b2b2b",34); }
+  if(ST.on.cable){ const {x,y}=P.cable;
+    ctx.strokeStyle="#d9dbd6"; ctx.lineWidth=30; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.ellipse(x,y,380-i*40,220-i*28,0,0,7); ctx.stroke(); }
+    fillR(x-430,y-30,80,60,6,"#e6e6dc","#999"); text("6-pin",x-390,y,"#333",20,"center","700");
+    fillR(x+340,y-24,90,48,6,"#555","#333"); text("µUSB",x+385,y,"#ddd",18,"center","700");
+    if(ST.on.board) cableCurve([x-430,y],[PIN6()[0],PIN6()[1]-20],"#d9dbd6",30); if(ST.on.tablet) cableCurve([x+430,y],[P.tablet.x-1050,P.tablet.y+200],"#d9dbd6",30); }
+  if(ST.on.tablet){ const {x,y}=P.tablet, [W,H]=SZ.tablet; fillR(x-W/2,y-H/2,W,H,90,"#1a1a1c","#000",8);
+    const sw=1724, sh=1078, live=LINK.usb; fillR(x-sw/2,y-sh/2,sw,sh,8,live?"#ccaaaa":"#2e2e30");
+    circ(x,y-H/2+56,12,"#2b2d31");
+    (LINK.mode==="remote"?t.ln.myDev+(LINK.remote>0?"\n"+t.ln.devOn:"\n"+t.ln.devOff):t.lab.app).split("\n").forEach((s,i)=>text(s,x,y-40+i*90,live?"#222":"#888",72,"center","700"));
+    if(!hand&&overBench&&inPart("tablet",mouse)){ fillR(x-sw/2,y-sh/2,sw,sh,8,null,"#f2c14e",10); text(t.view.tap,x,y+400,live?"#5a3a3a":"#aaa",54,"center"); } }
+  if(ST.on.therm){ const {x,y}=P.therm, [W,H]=SZ.therm; fillR(x-W/2,y-H/2,W,H,60,"#f6f6f2","#888",4);
+    fillR(x-W/2+60,y-H/2+90,W-120,360,20,"#c8d2c0","#555",3); text(B.roomT.toFixed(1),x,y-H/2+250,"#111",170,"center","700",MONO); text("°C",x+190,y-H/2+380,"#111",60,"center");
+    text(t.lab.roomT,x,y+260,"#555",56,"center"); }
   for(const w of ["W1","W2"]){ if(!ST.on[w]) continue;
     const a=hand&&hand.k==="end"&&hand.w===w&&hand.i===0?mouse:endXY(w,0), b=hand&&hand.k==="end"&&hand.w===w&&hand.i===1?mouse:endXY(w,1);
-    const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.max(1e-6,Math.hypot(dx,dy)), m=[(a[0]+b[0])/2-dy/L*Math.min(90,24+0.4*L),(a[1]+b[1])/2+dx/L*Math.min(90,24+0.4*L)];
-    ctx.strokeStyle="#2a6fd6"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(...a); ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke();
+    const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.max(1e-6,Math.hypot(dx,dy)), m=[(a[0]+b[0])/2-dy/L*Math.min(500,120+0.4*L),(a[1]+b[1])/2+dx/L*Math.min(500,120+0.4*L)];
+    ctx.strokeStyle="#2a6fd6"; ctx.lineWidth=15; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(...a); ctx.quadraticCurveTo(m[0],m[1],b[0],b[1]); ctx.stroke();
     const mid=[(a[0]+2*m[0]+b[0])/4,(a[1]+2*m[1]+b[1])/4];
-    if(w==="W1"){ fillR(mid[0]-20,mid[1]-8,40,16,3,"#e8e0c0","#444"); text("100 MΩ",mid[0],mid[1],"#222",8,"center","700"); } else text("W2 (0 Ω)",mid[0],mid[1]-12,"#1d3d78",9,"center","700");
-    for(const e of [a,b]){ circ(e[0],e[1],7,"#c0c0c8","#333",2); } }
+    if(w==="W1"){ fillR(mid[0]-90,mid[1]-28,180,56,10,"#e8e0c0","#444",3); text("100 MΩ",mid[0],mid[1],"#222",30,"center","700"); } else text("W2 (0 Ω)",mid[0],mid[1]-50,"#1d3d78",34,"center","700");
+    for(const e of [a,b]){ fillR(e[0]-13,e[1]-13,26,26,3,"#151515","#555",2); } }
 }
 function drawBench(){
   bench();
   if(ST.on.board) drawBoard();
   drawParts();
-  if(hand&&PLACE.includes(hand.k)&&hand.k!=="insul"){ ctx.save(); ctx.globalAlpha=0.5; ctx.strokeStyle="#f2c14e"; ctx.setLineDash([6,4]); ctx.lineWidth=2;
+  if(hand&&PLACE.includes(hand.k)&&hand.k!=="insul"){ ctx.save(); ctx.globalAlpha=0.5; ctx.strokeStyle="#f2c14e"; ctx.setLineDash([60,40]); ctx.lineWidth=12;
     const [w,h]=SZ[hand.k]; if(hand.k==="board") ctx.strokeRect(mouse[0],mouse[1],w,h); else ctx.strokeRect(mouse[0]-w/2,mouse[1]-h/2,w,h); ctx.restore(); }
-  if(hand&&hand.k==="insul"){ ctx.save(); ctx.globalAlpha=0.6; fillR(mouse[0]-60,mouse[1]-30,120,60,3,"#fbfbf7","#ccc"); ctx.restore(); }
+  if(hand&&hand.k==="insul"){ ctx.save(); ctx.globalAlpha=0.6; fillR(mouse[0]-165,mouse[1]-110,330,220,6,"#fbfbf7","#ccc"); ctx.restore(); }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -529,7 +560,7 @@ const trayAvail=k=>!ST.on[k]&&!(hand&&hand.k===k);
 function layout(){
   const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
   S=w/LW; DPR=dpr; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
-  if(VIEW.fit) fitView(); applyView();
+  if(!VIEW.init){ VIEW.init=true; workView(); } else if(VIEW.fit) fitView(); applyView();
   const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
   TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
@@ -554,14 +585,14 @@ function drawTray(){
 }
 function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S/VIEW.z+VIEW.x,(e.clientY-r.top)/S/VIEW.z+VIEW.y]; }
 function inPart(k,p){ if(!ST.on[k]) return false;
-  if(k==="board") return p[0]>=bx()&&p[0]<=bx()+620&&p[1]>=by()&&p[1]<=by()+330;
+  if(k==="board") return p[0]>=bx()&&p[0]<=bx()+BW_&&p[1]>=by()&&p[1]<=by()+BH_;
   const q=ST.pos[k], [w,h]=SZ[k]; return Math.abs(p[0]-q.x)<=w/2&&Math.abs(p[1]-q.y)<=h/2; }
 function fits(k,x,y){ const [w,h]=SZ[k]; if(k==="board") return x>=4&&y>=4&&x+w<=DW-4&&y+h<=DH-4&&!["charger","cable","tablet","therm"].some(o=>ST.on[o]&&ST.pos[o].x+SZ[o][0]/2>x&&ST.pos[o].x-SZ[o][0]/2<x+w&&ST.pos[o].y+SZ[o][1]/2>y&&ST.pos[o].y-SZ[o][1]/2<y+h);
   if(x-w/2<4||y-h/2<4||x+w/2>DW-4||y+h/2>DH-4) return false;
-  if(ST.on.board&&x+w/2>bx()&&x-w/2<bx()+620&&y+h/2>by()&&y-h/2<by()+330) return false;
-  for(const o of ["charger","cable","tablet","therm"]){ if(o===k||!ST.on[o]) continue; const q=ST.pos[o], [a,b]=SZ[o]; if(Math.abs(x-q.x)<(w+a)/2+4&&Math.abs(y-q.y)<(h+b)/2+4) return false; }
+  if(ST.on.board&&x+w/2>bx()&&x-w/2<bx()+BW_&&y+h/2>by()&&y-h/2<by()+BH_) return false;
+  for(const o of ["charger","cable","tablet","therm"]){ if(o===k||!ST.on[o]) continue; const q=ST.pos[o], [a,b]=SZ[o]; if(Math.abs(x-q.x)<(w+a)/2+20&&Math.abs(y-q.y)<(h+b)/2+20) return false; }
   return true; }
-function sockAt(p){ if(!ST.on.board) return null; for(const [n] of SOCK_NAMES) if(near(p,sockXY(n),12)) return n; return null; }
+function sockAt(p){ if(!ST.on.board) return null; for(const [n] of SOCK_NAMES) if(near(p,sockXY(n),13)) return n; return null; }
 function returnItem(k){
   if(k==="board"){ for(const w of ["W1","W2"]) for(const i of [0,1]) if(B.wires[w][i]){ ST.ends[w][i]=sockXY(B.wires[w][i]); B.wires[w][i]=null; } }
   if(k==="W1"||k==="W2") B.wires[k]=[null,null];
@@ -580,22 +611,22 @@ function benchClick(p,right){
       if(s){ if(Object.values(B.wires).some(w=>w.includes(s))){ say("busy"); return; } B.wires[hand.w][hand.i]=s; say("plugged",SOCK_NAMES.find(x=>x[0]===s)[1]); hand=null; return; }
       ST.ends[hand.w][hand.i]=p.slice(); hand=null; say("dropped"); return; }
     if(k==="insul"){ if(!ST.on.board){ say("needBoard"); return; } const [px,py,pw,ph]=PAD();
-      if(p[0]>bx()+20&&p[0]<bx()+320&&p[1]>by()+190&&p[1]<by()+325){ ST.on.insul=true; B.insulation=true; hand=null; say("insulOn"); return; } say("noFit"); return; }
-    if(k==="W1"||k==="W2"){ ST.on[k]=true; ST.ends[k]=[[p[0]-40,p[1]],[p[0]+40,p[1]]]; hand=null; say("placed",itemName(k)); return; }
+      if(p[0]>bx()&&p[0]<bx()+395&&p[1]>by()+280&&p[1]<by()+BH_){ ST.on.insul=true; B.insulation=true; hand=null; say("insulOn"); return; } say("noFit"); return; }
+    if(k==="W1"||k==="W2"){ ST.on[k]=true; ST.ends[k]=[[p[0]-200,p[1]],[p[0]+200,p[1]]]; hand=null; say("placed",itemName(k)); return; }
     const x=k==="board"?p[0]:p[0], y=p[1];
     if(!fits(k,x,y)){ say("noFit"); return; }
     ST.pos[k]={x,y}; ST.on[k]=true; hand=null; syncLinks(); say("placed",itemName(k)); return;
   }
   if(right){
-    for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),10)){ if(B.wires[w][i]){ ST.ends[w][i]=[endXY(w,i)[0]+30,endXY(w,i)[1]+20]; B.wires[w][i]=null; say("dropped"); } else returnItem(w); return; }
+    for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),16)){ if(B.wires[w][i]){ ST.ends[w][i]=[endXY(w,i)[0]+160,endXY(w,i)[1]+80]; B.wires[w][i]=null; say("dropped"); } else returnItem(w); return; }
     if(ST.on.insul&&ST.on.board){ const [px,py,pw,ph]=PAD(); if(p[0]>px&&p[0]<px+pw&&p[1]>py&&p[1]<py+ph){ ST.on.insul=false; B.insulation=false; say("insulOff"); return; } }
     for(const k of ["charger","cable","tablet","therm","board"]) if(inPart(k,p)){ returnItem(k); return; }
     return;
   }
-  for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),10)){ const was=endXY(w,i); B.wires[w][i]=null; hand={k:"end",w,i,orig:was}; say("end"); return; }
+  for(const w of ["W1","W2"]) for(const i of [0,1]) if(ST.on[w]&&near(p,endXY(w,i),16)){ const was=endXY(w,i); B.wires[w][i]=null; hand={k:"end",w,i,orig:was}; say("end"); return; }
   if(ST.on.board){
-    if(near(p,RESET(),16)){ B.resetAt=simNow; firmwareReset(); say("reset"); return; }
-    const [sx,sy]=SW1(); if(Math.abs(p[0]-sx)<18&&Math.abs(p[1]-sy)<46){ B.sw1={C1:"MID",MID:"C2",C2:"C1"}[B.sw1]; if(B.sw1!=="C2") B.vb=B.vb.map(()=>B.uC); say("sw",B.sw1==="MID"?"—":B.sw1); return; } }
+    if(near(p,RESET(),26)){ B.resetAt=simNow; firmwareReset(); say("reset"); return; }
+    const [sx,sy]=SW1(); if(Math.abs(p[0]-sx)<20&&Math.abs(p[1]-sy)<44){ B.sw1={C1:"MID",MID:"C2",C2:"C1"}[B.sw1]; if(B.sw1!=="C2") B.vb=B.vb.map(()=>B.uC); say("sw",B.sw1==="MID"?"—":B.sw1); return; } }
   if(inPart("tablet",p)) return "tablet";
   for(const k of ["charger","cable","therm","board"]) if(inPart(k,p)){ pickMove(k); return; }
   return false;
@@ -614,10 +645,12 @@ cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; const r=benchCl
   press={k:r===false?"pan":"tablet",cx:e.clientX,cy:e.clientY,vx:VIEW.x,vy:VIEW.y}; try{ cv.setPointerCapture(e.pointerId); }catch(er){} if(r===false) cv.classList.add("pan"); });
 cv.addEventListener("pointerup",()=>{ if(press&&press.k==="tablet") openTablet(); press=null; cv.classList.remove("pan"); });
 cv.addEventListener("pointercancel",()=>{ press=null; cv.classList.remove("pan"); });
-cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(!hand&&!["charger","cable","tablet","therm","board"].some(k=>inPart(k,p))){ fitView(); applyView(); } });
+/* double-click: on the board, look at it closely; on the bare desk, see the whole desk */
+cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(hand) return; if(inPart("board",p)){ boardView(); applyView(); return; }
+  if(!["charger","cable","tablet","therm"].some(k=>inPart(k,p))){ fitView(); applyView(); } });
 cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), r=cv.getBoundingClientRect();
   VIEW.z*=e.deltaY<0?1.15:1/1.15; VIEW.fit=false; clampView(); VIEW.x=p[0]-(e.clientX-r.left)/S/VIEW.z; VIEW.y=p[1]-(e.clientY-r.top)/S/VIEW.z; clampView(); applyView(); },{passive:false});
-$("fitBtn").onclick=()=>{ fitView(); applyView(); };
+$("fitBtn").onclick=()=>{ workView(); applyView(); };
 /* the tablet's screen: in place of the bench when clicked, or under it beside the bench (for watching the graph while wiring) */
 let devMode="bench";
 /* the virtual tablet opens only when it lies on the bench; pairing your own device is shown beside the bench */

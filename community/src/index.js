@@ -419,6 +419,52 @@ async function handle(req, env, url) {
   throw new HttpError(404, "not_found");
 }
 
+/* ── YouTube for the tablets, phones and laptops in the simulators ──────────
+   Searches and video details through the YouTube Data API v3; the key is the
+   Worker secret YT_API_KEY.  Answers are kept at the edge for six hours, and
+   searches are limited per visitor, to stay inside the daily quota (a search
+   costs 101 units of the free 10 000). */
+const YT_API = "https://www.googleapis.com/youtube/v3/";
+function isoDur(s) {
+  const m = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(s || ""); if (!m) return "";
+  const h = (+m[1] || 0) * 24 + (+m[2] || 0), mi = +m[3] || 0, se = +m[4] || 0;
+  return (h ? h + ":" + String(mi).padStart(2, "0") : mi) + ":" + String(se).padStart(2, "0");
+}
+async function ytRoute(req, env, url, cors) {
+  if (!env.YT_API_KEY) return json({ error: "yt_off" }, 503, cors);
+  const lang = url.searchParams.get("hl") === "en" ? "en" : "ko";
+  let ids = [], q = "";
+  if (url.pathname === "/api/yt/search") { q = (url.searchParams.get("q") || "").trim().slice(0, 100); if (!q) bad("bad_query"); }
+  else if (url.pathname === "/api/yt/videos") {
+    ids = (url.searchParams.get("ids") || "").split(",").filter(x => /^[A-Za-z0-9_-]{11}$/.test(x)).slice(0, 50); if (!ids.length) bad("bad_ids");
+  } else return json({ error: "not_found" }, 404, cors);
+  const key = new Request("https://yt.cache/" + (q ? "s/" + lang + "/" + encodeURIComponent(q.toLowerCase()) : "v/" + lang + "/" + ids.join(",")));
+  const cache = caches.default, hit = await cache.match(key);
+  const reply = body => new Response(body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=3600", ...cors } });
+  if (hit) return reply(await hit.text());
+  const call = async (path, params) => {
+    const u = new URL(YT_API + path); for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v); u.searchParams.set("key", env.YT_API_KEY);
+    const r = await fetch(u); if (!r.ok) throw new HttpError(502, "yt_upstream"); return r.json();
+  };
+  if (q) {
+    await limit(env, "yt:" + (req.headers.get("CF-Connecting-IP") || "?"), 30, 3600);
+    const s = await call("search", { part: "snippet", type: "video", maxResults: "24", q, safeSearch: "moderate", videoEmbeddable: "true",
+      regionCode: lang === "ko" ? "KR" : "US", relevanceLanguage: lang });
+    ids = (s.items || []).map(i => i.id && i.id.videoId).filter(Boolean);
+  }
+  let items = [];
+  if (ids.length) {
+    const v = await call("videos", { part: "snippet,contentDetails,statistics,status", id: ids.join(","), hl: lang });
+    const by = new Map((v.items || []).map(x => [x.id, x]));
+    items = ids.map(id => by.get(id)).filter(x => x && !(x.status && x.status.embeddable === false)).map(x => ({
+      id: x.id, t: (x.snippet.localized || x.snippet).title, ch: x.snippet.channelTitle, len: isoDur(x.contentDetails && x.contentDetails.duration),
+      views: +((x.statistics && x.statistics.viewCount) || 0), at: x.snippet.publishedAt }));
+  }
+  const body = JSON.stringify({ items });
+  await cache.put(key, new Response(body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=21600" } }));
+  return reply(body);
+}
+
 export default {
   async fetch(req, env) {
     const cors = corsHeaders(req, env);
@@ -436,6 +482,10 @@ export default {
       // a key is never reused, so the picture behind it can be cached for good
       return new Response(new Uint8Array(row.data), { headers: { "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable",
         "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
+    }
+    if (req.method === "GET" && url.pathname.startsWith("/api/yt/")) {
+      try { return await ytRoute(req, env, url, cors); }
+      catch (e) { if (e instanceof HttpError) return json({ error: e.code }, e.status, cors); console.error(e && e.stack || e); return json({ error: "server_error" }, 500, cors); }
     }
     try {
       const res = json(await handle(req, env, url), 200, cors);
