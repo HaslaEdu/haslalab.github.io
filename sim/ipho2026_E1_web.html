@@ -56,6 +56,8 @@
          color:#7dffb0;font:700 22px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.04em}
   #cards{display:block;width:100%;height:auto;background:var(--deep);border-radius:6px}
   .benchwrap{position:relative}
+  .viewback{position:absolute;left:10px;top:10px;z-index:5;padding:6px 12px;border-radius:7px;border:1px solid #3a414a;background:rgba(20,24,29,.86);color:#e8eef2;font:600 12.5px inherit;cursor:pointer}
+  .viewback:hover{border-color:#4ec9b0;color:#4ec9b0}
   .zoom{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,12,15,0.55);border-radius:6px}
   .zbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
   .zbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 6px;font-size:13px;color:var(--muted)}
@@ -103,7 +105,7 @@
   <div class="stage">
     <div class="card">
       <h3 id="t-benchcap"></h3>
-      <div class="benchwrap"><canvas id="bench"></canvas>
+      <div class="benchwrap"><canvas id="bench"></canvas><button id="viewBack" class="viewback" hidden></button>
         <div class="zoom" id="zoom" hidden><div class="zbox"><div class="zbar"><span id="zcap"></span><button id="zx">✕</button></div><canvas id="zcv"></canvas></div></div></div>
     </div>
   </div>
@@ -136,9 +138,9 @@ const T={
     benchcap:"실험대 — 좌클릭: 조작·집기·놓기 / 우클릭: 되돌리기 / 빈 곳 드래그: 돌려 보기, 우클릭·Shift 드래그: 옮겨 보기 / 휠: 확대 (주사기 위: 피스톤 1 mL, Shift 5 mL) / 빈 곳 더블클릭: 처음 시점",
     tray:"부품함",
     hTime:"시간 배속 · 되감기", timeHint:"가열·냉각은 실제로 수십 분이 걸립니다. 스페이스 = 일시정지 · Ctrl+Z = 직전 조작 취소 · 아래 막대를 끌면 지나간 시점의 상태로 돌아갑니다 (그 뒤의 기록은 지워집니다).",
-    hHow:"조작", zScreen:"전자 모듈 화면 — 버튼을 누를 수 있습니다 (바깥 클릭·Esc: 닫기)", zSection:"실린더 단면 (Fig. 17) · 기호 (Fig. 18) · 밸브 (Fig. 15)", rw:[["⟲ 10초",10],["⟲ 1분",60],["⟲ 10분",600]], undo:"↶ 직전 조작 취소",
+    hHow:"조작", backAll:"← 실험대 전체", zScreen:"전자 모듈 화면 — 버튼을 누를 수 있습니다 (바깥 클릭·Esc: 닫기)", zSection:"실린더 단면 (Fig. 17) · 기호 (Fig. 18) · 밸브 (Fig. 15)", rw:[["⟲ 10초",10],["⟲ 1분",60],["⟲ 10분",600]], undo:"↶ 직전 조작 취소",
     rewound:s=>s+" 시점으로 되돌렸습니다.", undone:"직전 조작을 취소했습니다.", noHist:"되돌릴 기록이 없습니다.",
-    howto:"· 전원: 벽 콘센트의 코드 끝을 클릭해 모듈 뒷면에 꽂고 POWER 켜기\n· 모듈 화면을 클릭하면 화면이 크게 열립니다 (버튼 1 타이머 시작·정지, 2 리셋, 3 그래프/숫자, 4 히터)\n· 실린더를 클릭하면 단면 치수(Fig. 17·18)가 열립니다\n· 밸브 손잡이 클릭: 관과 나란하면 열림(I), 가로지르면 닫힘(II)\n· 호스 A·C 끝: 집어서 용기에 넣기, 다시 클릭하면 클립 고정\n· 주사기: 용기·주사기 연결관 끝·호스 D 끝·거치대에 놓기, 휠이나 손잡이 드래그로 피스톤\n· 용기를 집어 다른 용기에 놓으면 따릅니다 · 파란 고리 클릭: 호스 뽑기/꽂기\n· 빈 곳 드래그: 돌려 보기 · 휠: 확대 · 빈 곳 더블클릭: 처음 시점으로",
+    howto:"· 전원: 벽 콘센트의 코드 끝을 클릭해 모듈 뒷면에 꽂고 POWER 켜기\n· 장비를 클릭하면 카메라가 그 3D 모델 앞으로 다가갑니다 (Esc·빈 곳 더블클릭·「← 실험대 전체」: 돌아가기)\n· 모듈 화면(위): 버튼 1 타이머 시작·정지, 2 리셋, 3 그래프/숫자, 4 히터 · 모듈 앞·뒤·옆면도 클릭하면 정면으로\n· 실린더를 클릭하면 IC 눈금을 정면으로, 덮개를 클릭하면 위에서 본 단면(Fig. 17), 밸브 보드는 위에서(Fig. 15)\n· 밸브 손잡이 클릭: 관과 나란하면 열림(I), 가로지르면 닫힘(II)\n· 호스 A·C 끝: 집어서 용기에 넣기, 다시 클릭하면 클립 고정\n· 주사기: 용기·주사기 연결관 끝·호스 D 끝·거치대에 놓기, 휠이나 손잡이 드래그로 피스톤\n· 용기를 집어 다른 용기에 놓으면 따릅니다 · 파란 고리 클릭: 호스 뽑기/꽂기\n· 빈 곳 드래그: 돌려 보기 · 휠: 확대 · 빈 곳 더블클릭: 처음 시점으로",
     pause:"일시정지", run:"진행",
     session:s=>"세션 "+String(s).padStart(6,"0"),
     trayItems:{syrW:"7. 주사기 100 mL (물)",syrP:"7. 주사기 100 mL (PG)",pg:"9. PG 100 mL",cold:"10. 찬물 보온병",
@@ -193,9 +195,9 @@ const T={
     benchcap:"the bench — L-click: operate, pick up, put down / R-click: return / drag a bare spot: turn the view, R- or Shift-drag: move it / wheel: zoom (on a syringe: plunger 1 mL, Shift 5 mL) / double-click a bare spot: back to the start view",
     tray:"Parts box",
     hTime:"Time scale · rewind", timeHint:"Heating and cooling really take tens of minutes. Space = pause · Ctrl+Z = undo the last action · drag the bar below to go back to an earlier moment (what came after it is dropped).",
-    hHow:"How to", zScreen:"Electronic module screen — the buttons work (click outside or Esc to close)", zSection:"Cylinder section (Fig. 17) · notation (Fig. 18) · valves (Fig. 15)", rw:[["⟲ 10 s",10],["⟲ 1 min",60],["⟲ 10 min",600]], undo:"↶ Undo last action",
+    hHow:"How to", backAll:"← Whole bench", zScreen:"Electronic module screen — the buttons work (click outside or Esc to close)", zSection:"Cylinder section (Fig. 17) · notation (Fig. 18) · valves (Fig. 15)", rw:[["⟲ 10 s",10],["⟲ 1 min",60],["⟲ 10 min",600]], undo:"↶ Undo last action",
     rewound:s=>"Back to "+s+".", undone:"Last action undone.", noHist:"Nothing to go back to.",
-    howto:"· Power: click the end of the cord from the wall outlet to plug it into the back of the module, then switch POWER on\n· Click the module screen to open it large (button 1 timer start/stop, 2 reset, 3 graph/numbers, 4 heater)\n· Click the cylinders for their section (Fig. 17, 18)\n· Click a valve handle: along the tube = open (I), across it = closed (II)\n· Hose A / C end: pick it up and put it in a container, click again to clip it\n· Syringe: put it on a container, the end of the syringe-connection tube, the end of hose D or the rack; wheel or drag the plunger head\n· Put a container on another to pour · click a blue collar: pull a hose out / push it in\n· Drag a bare spot: turn the view · wheel: zoom · double-click a bare spot: back to the first view",
+    howto:"· Power: click the end of the cord from the wall outlet to plug it into the back of the module, then switch POWER on\n· Click a piece of apparatus and the camera moves in on its 3-D model (Esc, a double click on a bare spot or “← Whole bench”: back)\n· Module screen (top): button 1 timer start/stop, 2 reset, 3 graph/numbers, 4 heater · click its front, back or side to face it\n· Click the cylinders to face the IC scale, the cover to look down on the section (Fig. 17), the valve board to look down on it (Fig. 15)\n· Click a valve handle: along the tube = open (I), across it = closed (II)\n· Hose A / C end: pick it up and put it in a container, click again to clip it\n· Syringe: put it on a container, the end of the syringe-connection tube, the end of hose D or the rack; wheel or drag the plunger head\n· Put a container on another to pour · click a blue collar: pull a hose out / push it in\n· Drag a bare spot: turn the view · wheel: zoom · double-click a bare spot: back to the first view",
     pause:"pause", run:"run",
     session:s=>"session "+String(s).padStart(6,"0"),
     trayItems:{syrW:"7. 100 mL syringe (water)",syrP:"7. 100 mL syringe (PG)",pg:"9. PG 100 mL",cold:"10. Cold-water flask",
@@ -1177,8 +1179,8 @@ function glassTube(r,y0,y1,col,alpha,o){
     line3(a,b,"#f2fbff",Math.max(1,0.09*CAM.k),{alpha:0.55}); }
   ring3([CXW,y1,CZW],r,"#e8f6ff",Math.max(1,0.06*CAM.k),{alpha:0.6});
 }
-function disc(y0,y1,r,col,alpha){
-  cyl3("y",y0,y1,CXW,CZW,r,col,{alpha,seg:44});
+function disc(y0,y1,r,col,alpha,id){
+  cyl3("y",y0,y1,CXW,CZW,r,col,{alpha,seg:44,id});
   ring3([CXW,y1,CZW],r,"#f0faff",Math.max(1,0.07*CAM.k),{alpha:0.75}); ring3([CXW,y0,CZW],r,"#cfe6f3",Math.max(1,0.05*CAM.k),{alpha:0.55});
 }
 /* a lit rocker: the cap rocks to the "–" side when on, and glows only when it has power */
@@ -1236,19 +1238,19 @@ function desk3(){
 function module3(){
   box3(MX0,MX1,0,MH,MZ0,MZ1,"#16181b",{id:"module"});
   box3(MX0-0.25,MX1+0.25,MH,MH+0.4,MZ0-0.25,MZ1+0.25,"#24282d",{id:"module",top:"#0c0e10"});
-  tex3(TOPC,0,0,TOPC.width,TOPC.height,[MX0-0.25,MH+0.402,MZ0-0.25],[MX1-MX0+0.5,0,0],[0,0,MZ1-MZ0+0.5],{id:"module"});
+  tex3(TOPC,0,0,TOPC.width,TOPC.height,[MX0-0.25,MH+0.402,MZ0-0.25],[MX1-MX0+0.5,0,0],[0,0,MZ1-MZ0+0.5],{id:"modT"});
   tex3(SCRC,0,0,SCRW,SCRH,scrW(0,0,MH+0.41),[SCRW/100,0,0],[0,0,SCRH/100],{id:"scr"});
   for(const [x,z] of [[MX0+0.6,MZ0+0.6],[MX1-0.6,MZ0+0.6],[MX0+0.6,MZ1-0.6],[MX1-0.6,MZ1-0.6]]) cyl3("y",MH+0.4,MH+0.52,x,z,0.33,"#cdd3d8",{seg:10});
   KEYS.forEach(([u,v],i)=>{ const c=scrW(u,v,0), h=0.46;
     box3(c[0]-h,c[0]+h,MH+0.41,MH+0.68,c[2]-h,c[2]+h,"#22b6e6",{id:"btn"+(i+1),top:"#3fd0f7"});
     text3([c[0],MH+0.69,c[2]],[1,0,0],[0,0,-1],String(i+1),0.5,"#f2fbff",{align:"center",weight:"500"}); });
   /* front: PUMP rocker, OUT and IN (Fig. 8) */
-  tex3(FRONTC,0,0,400,484,[MX0+1.0,7.3,MZ1+0.006],[4,0,0],[0,-4.84,0],{id:"module"});
+  tex3(FRONTC,0,0,400,484,[MX0+1.0,7.3,MZ1+0.006],[4,0,0],[0,-4.84,0],{id:"modF"});
   rocker3(front(0.26,0.43),[0,0,1],[1,0,0],lab.pump,"pump");
   pushfit3(front(0.26,0.66),[0,0,1],"modport"); pushfit3(front(0.26,0.87),[0,0,1],"modport");
   for(let i=0;i<9;i++){ const x=MX0+8+i*1.3; line3([x,2.2,MZ1+0.01],[x,6.2,MZ1+0.01],"#050607",Math.max(1,0.25*CAM.k)); }
   /* back: SOURCE AC inlet and the POWER switch (Fig. 4) */
-  tex3(REARC,0,0,900,425,[MX1-1.2,6.6,MZ0-0.006],[-9,0,0],[0,-4.25,0],{id:"module"});
+  tex3(REARC,0,0,900,425,[MX1-1.2,6.6,MZ0-0.006],[-9,0,0],[0,-4.25,0],{id:"modB"});
   const ac=rear(0.22,0.33);
   /* the IEC C14 inlet: a recessed socket with its three pins (the cord plugs in here) */
   box3(ac[0]-1.3,ac[0]+1.3,ac[1]-0.85,ac[1]+0.85,MZ0-0.25,MZ0,"#1f2327",{id:lab.mains?"module":"inlet"});
@@ -1256,7 +1258,7 @@ function module3(){
     for(const dx of [-0.45,0,0.45]) cylAB([ac[0]+dx,ac[1]+(dx?-0.1:0.3),MZ0-0.26],[ac[0]+dx,ac[1]+(dx?-0.1:0.3),MZ0-0.7],0.1,"#b8bdc2",{seg:6}); }
   rocker3(rear(0.59,0.30),[0,0,-1],[-1,0,0],lab.power,"power",lab.sw);
   /* right side: the sensor and heater sockets and the pressure port (Fig. 5) */
-  tex3(SIDEC,0,0,1300,470,[MX1+0.006,6.9,MZ1-1.0],[0,0,-13],[0,-4.7,0],{id:"module"});
+  tex3(SIDEC,0,0,1300,470,[MX1+0.006,6.9,MZ1-1.0],[0,0,-13],[0,-4.7,0],{id:"modS"});
 }
 /* where the leads leave the module's side */
 function leadStarts(){ return {
@@ -1362,9 +1364,9 @@ function cylinder3(){
   /* acrylic: the OC and IC tubes, flange, gasket and cover */
   glassTube(R_OCO,YB,YT,"#d6ecf8",0.09,{id:"cyl"}); glassTube(R_OCI,YB,YT,"#d6ecf8",0.05);
   glassTube(R_ICO,YB,YT,"#d6ecf8",0.08); glassTube(R_ICI,YB,YT,"#d6ecf8",0.05);
-  disc(YT,Y_FL1,R_FLANGE,"#cfe8f4",0.26);
+  disc(YT,Y_FL1,R_FLANGE,"#cfe8f4",0.26,"cyltop");
   cyl3("y",Y_FL1,Y_GK,CXW,CZW,R_FLANGE-0.15,"#0e1012",{seg:44});
-  disc(Y_GK,Y_CV1,R_COVER,"#cfe8f4",0.26);
+  disc(Y_GK,Y_CV1,R_COVER,"#cfe8f4",0.26,"cyltop");
   icScale();
 }
 /* the two centimetre scales printed on the IC (Fig. 2, item 1) */
@@ -1544,15 +1546,35 @@ function layout(){
   trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
   drawTray(); if(ZOOM) openZoom(ZOOM);
 }
-function setView(v,user){
-  const W=CAM.W, H=CAM.H; CAM.touched=!!user&&v!=="all";
-  const V={ all:{yaw:0.26,pitch:0.62,k:Math.min(W/92,H/56),tx:-10,ty:8,tz:-4,px:0,py:16},
+/* the views a click flies to: the whole bench, the module from above (its screen and keys), its front,
+   back and side, the board with the valves (Fig. 15), the cylinders square on at the IC scale, and the
+   cylinders from above through the cover (the rings of Fig. 17) */
+function viewOf(v){
+  const W=CAM.W, H=CAM.H;
+  return { all:{yaw:0.26,pitch:0.62,k:Math.min(W/92,H/56),tx:-10,ty:8,tz:-4,px:0,py:16},
     screen:{yaw:0,pitch:1.18,k:Math.min(W/13,H/10),tx:SCR0[0]+3,ty:MH,tz:SCR0[1]+3.4,px:0,py:0},
+    front:{yaw:0,pitch:0.14,k:Math.min(W/25,H/13),tx:(MX0+MX1)/2,ty:4.4,tz:MZ1,px:0,py:0},
     back:{yaw:Math.PI,pitch:0.16,k:Math.min(W/30,H/16),tx:(MX0+MX1)/2,ty:4.5,tz:MZ0,px:0,py:0},
+    side:{yaw:1.25,pitch:0.3,k:Math.min(W/20,H/13),tx:MX1,ty:4.6,tz:(MZ0+MZ1)/2,px:0,py:0},
     board:{yaw:0,pitch:1.1,k:Math.min(W/30,H/24),tx:(BX0+BX1)/2,ty:1,tz:(BZ0+BZ1)/2+2.5,px:0,py:0},
-    cyl:{yaw:0.18,pitch:0.2,k:Math.min(H/40,W/34),tx:CXW,ty:17,tz:CZW,px:0,py:0} }[v];
-  Object.assign(CAM,V);
+    cyl:{yaw:0.24,pitch:0.04,k:Math.min(H/16.8,W/11),tx:CXW+0.45,ty:YB+7.4,tz:CZW+R_ICO,px:0,py:0},
+    cyltop:{yaw:0,pitch:1.45,k:Math.min(W,H)/(2*R_FLANGE+3),tx:CXW,ty:Y_CV1,tz:CZW,px:0,py:0} }[v];
 }
+let VIEW="all", CAMTW=null;
+function setView(v,user){ CAM.touched=!!user&&v!=="all"; VIEW=v; CAMTW=null; Object.assign(CAM,viewOf(v)); renderViewBtn(); }
+/* fly there, the way a player's camera moves in on what was clicked */
+function goTo(v){
+  if(v===VIEW&&!CAMTW) return false;
+  const to=Object.assign({},viewOf(v)), from={};
+  for(const k of ["yaw","pitch","k","tx","ty","tz","px","py"]) from[k]=CAM[k];
+  to.yaw=from.yaw+((((to.yaw-from.yaw)+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI);
+  CAMTW={from,to,t0:performance.now(),dur:v==="all"?650:800}; VIEW=v; CAM.touched=v!=="all"; renderViewBtn();
+  return true;
+}
+function stepCam(){ if(!CAMTW) return; const s=Math.min(1,(performance.now()-CAMTW.t0)/CAMTW.dur), e=s<0.5?4*s*s*s:1-Math.pow(-2*s+2,3)/2;
+  for(const k in CAMTW.to) CAM[k]=CAMTW.from[k]+(CAMTW.to[k]-CAMTW.from[k])*e;
+  if(s>=1){ CAMTW=null; if(VIEW==="all") camSave(); } }
+function renderViewBtn(){ const b=$("viewBack"); if(!b) return; b.hidden=VIEW==="all"; b.textContent=d().backAll; }
 function deskPt(p){ const w=onPlane(p[0],p[1],0);
   return [Math.max(DESK[0]+2,Math.min(DESK[1]-2,w[0])),0,Math.max(DESK[2]+2,Math.min(DESK[3]-2,w[2]))]; }
 function hudText(p,s,col,size){ B.hudT.push({p,s,col:col||"#e8eef2",size:size||12}); }
@@ -1561,7 +1583,7 @@ function draw(){
   ctxM.setTransform(DPR,0,0,DPR,0,0);
   const g=ctxM.createLinearGradient(0,0,0,CH); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1a1e24"); ctxM.fillStyle=g; ctxM.fillRect(0,0,CW,CH);
   B.hudT=[];
-  begin3(); scene3(); render3(ctxM);
+  stepCam(); begin3(); scene3(); render3(ctxM);
   drawHud();
 }
 /* names over the movable things, and the plunger button of an attached syringe */
@@ -1715,7 +1737,7 @@ function drawCards(c,W){
    ══════════════════════════════════════════════════════════════ */
 function say(s,warn){ B.note={s,warn:!!warn,t:performance.now(),lt:lab.msg?lab.msgT:-1}; renderStatus(); }
 function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
-const LIVE=/^(btn\d|power|pump|port[ACD]|valve[A-E]|syr_|plg_|cont_|hose[AC]|rack|sport|dend|scr|cyl|mains|inlet)/;
+const LIVE=/^(btn\d|power|pump|port[ACD]|valve[A-E]|syr_|plg_|cont_|hose[AC]|rack|sport|dend|scr|cyl|mains|inlet|mod[TFBS]|module|board)/;
 /* the container whose footprint holds a desk point */
 function contAt(w,except){
   for(const k of CONT_ORDER){ if(!B.contOn[k]||k===except) continue; const [x,z]=B.pos[k], f=FOOT[k];
@@ -1821,8 +1843,13 @@ function clickAction(t){
   else if(t.startsWith("valve")){ act("valve"); lab.toggleValve(t[5]); }
   else if(t.startsWith("plgtoggle_")){ act("plunger"); lab.removePlunger(t[10]); }
   else if(t==="mains"||t==="inlet"){ act("mains"); lab.plugMains(); }
-  else if(t==="scr"){ openZoom("screen"); return true; }
-  else if(t==="cyl"){ openZoom("section"); return true; }
+  else if(t==="scr"||t==="modT") return goTo("screen");
+  else if(t==="modF"||t==="module") return goTo("front");
+  else if(t==="modB") return goTo("back");
+  else if(t==="modS") return goTo("side");
+  else if(t==="board") return goTo("board");
+  else if(t==="cyl") return goTo("cyl");
+  else if(t==="cyltop") return goTo("cyltop");
   else return false;
   scrSig=""; renderStatus(); return true;
 }
@@ -1851,7 +1878,7 @@ cv.addEventListener("pointermove",e=>{
   if(!dn.moved) return;
   if(dn.t){ startCarry(dn.t,true); B.down=null; return; }
   const dx=p[0]-dn.last[0], dy=p[1]-dn.last[1]; dn.last=p;
-  CAM.touched=true;
+  CAM.touched=true; CAMTW=null;
   if(dn.pan){ CAM.px+=dx; CAM.py+=dy; } else { CAM.yaw+=dx*0.008; CAM.pitch=Math.min(1.45,Math.max(0.08,CAM.pitch+dy*0.006)); }
   cv.classList.add("dragging");
 });
@@ -1866,7 +1893,8 @@ cv.addEventListener("pointerup",e=>{
   if(B.carry&&B.carry.drag){ B.carry.drag=false; placeCarry(p); }
 });
 /* a double click on a bare spot puts the view back where it started */
-cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(B.carry||(t&&LIVE.test(t))) return; setView("all"); CAM.touched=false; });
+$("viewBack").onclick=()=>goTo("all");
+cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(B.carry||(t&&LIVE.test(t))) return; goTo("all"); });
 function rclick(p){
   if(B.carry){ if(B.carry.k==="cont"){ B.carry=null; return; } cancelCarry(false); return; }
   const t=pick3(p[0],p[1]);
@@ -1882,7 +1910,7 @@ cv.addEventListener("wheel",e=>{
   const p=mousePos(e), t=B.carry?null:pick3(p[0],p[1]), dir=e.deltaY<0?1:-1;
   if(t&&(t.startsWith("syr_")||t.startsWith("plg_"))){ act("pull"); lab.syringePull(t.split("_")[1],dir*(e.shiftKey?5:1)); return; }
   if(t&&t.startsWith("valve")){ const v=t[5]; if(lab.valve[v]!==(dir>0)){ act("valve"); lab.toggleValve(v); } return; }
-  CAM.touched=true;
+  CAM.touched=true; CAMTW=null;
   const f=dir>0?1.12:1/1.12, nk=Math.min(90,Math.max(3,CAM.k*f)), r=nk/CAM.k;
   CAM.px=(p[0]-CAM.W/2)-(p[0]-CAM.W/2-CAM.px)*r; CAM.py=(p[1]-CAM.H/2)-(p[1]-CAM.H/2-CAM.py)*r; CAM.k=nk;
 },{passive:false});
@@ -1902,7 +1930,7 @@ zcv.addEventListener("pointerdown",e=>{ if(ZOOM!=="screen") return;
 addEventListener("pointerup",()=>{ if(ZKEY>=0){ ZKEY=-1; drawZoom(); } });
 $("zoom").addEventListener("pointerdown",e=>{ if(e.target===$("zoom")) closeZoom(); });
 $("zx").onclick=closeZoom;
-addEventListener("keydown",e=>{ if(e.key==="Escape"&&ZOOM) closeZoom(); });
+addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(ZOOM) closeZoom(); else if(VIEW!=="all"&&!B.carry) goTo("all"); } });
 document.addEventListener("keydown",e=>{
   if((e.ctrlKey||e.metaKey)&&e.code==="KeyZ"){ e.preventDefault(); undo(); return; }
   if(e.code==="Space"&&e.target.tagName!=="INPUT"&&e.target.tagName!=="BUTTON"){ e.preventDefault(); running=!running; renderSpeeds(); } });
@@ -1951,7 +1979,7 @@ function applyLang(){
   $("t-howto").textContent=t.howto; $("session").textContent=t.session(lab.seed);
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2026 E — 이상 기체, 증기압, 열전도 · HaslaLab":"IPhO 2026 E — Ideal Gas, Vapor Pressure and Heat Conduction · HaslaLab";
-  drawTray(); renderSpeeds(); renderRewind(); renderStatus(); if(ZOOM) openZoom(ZOOM);
+  drawTray(); renderSpeeds(); renderRewind(); renderStatus(); renderViewBtn(); if(ZOOM) openZoom(ZOOM);
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
