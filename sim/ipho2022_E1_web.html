@@ -148,104 +148,185 @@ var PROGRAM = {
   }
 };
 
-/* Simulation mode: the same drop() and the same noise, drawn.  Left: the tower from the side
-   (the fall is real, the drift is far too small to see at this scale); right: the foot of the
-   tower from above, where every landing spot is marked. */
-PROGRAM.sim = {
-  intro: '행성의 2000 m 탑에서 공을 떨어뜨립니다. 왼쪽은 탑의 옆모습(낙하 시간은 빨리 감아 보여 줍니다), ' +
-         '오른쪽은 탑 아래를 위에서 내려다본 확대 그림으로, 공이 떨어진 자리가 점으로 남습니다. ' +
-         '표시창의 t와 s는 콘솔 프로그램이 출력하는 값과 같습니다(측정 오차 포함).',
-  fields: [
-    { id: 'h', label: '높이 h', unit: 'm', lo: 0, hi: H_TOWER, step: 1, quant: 1, value: 1000 },
-    { id: 'r', label: '반지름 r', unit: 'cm', lo: R_MIN, hi: R_MAX, step: 1, quant: 1, value: 10 },
-    { id: 'rho', label: '밀도 ρ', unit: 'g/cm³', lo: RHO_MIN, hi: RHO_MAX, step: 0.01, quant: 0.01, value: 1 }
-  ],
-  columns: ['#', 'h (m)', 'r (cm)', 'ρ (g/cm³)', 't (s)', 's (m)'],
+/* Experiment mode: the tower, its lift and a ball workshop.  The same equations as drop() (same
+   drag, wind, Coriolis terms, same RK4 step) move the ball, but nothing is measured for you: you
+   time the fall on a handheld stopwatch, and you pull a tape from the plumb mark under the release
+   point to the crater the ball leaves.  The instruments' own errors are in the session: the lift's
+   laser range finder reads a little off, the workshop makes balls a little off what its dials say,
+   the tape is stretched a little and its hook is a little off zero. */
+var L1 = { lift: 0, liftV: 0, r: 10, rho: 1.0, ball: null, fall: null, craters: [], msg: '', n: 0,
+           view: { cx: 0, cy: 0, s: 2.2 }, tape: { x: 6, y: -4 }, sw: null };
+function l1Deriv(s, kd) {
+  var ra = airDensity(s[1]), rx = s[2] - WIND, rz = s[3], vr = Math.sqrt(rx * rx + rz * rz);
+  return [s[2], s[3], -kd * ra * vr * rx - 2 * OMEGA * s[3], -kd * ra * vr * rz - G_ACC + 2 * OMEGA * s[2]];
+}
+function l1Step(F, dtTotal) {                                    /* drop()'s RK4, advanced in the bench's time */
+  while (dtTotal > 1e-12 && F.st[1] > 0) {
+    var step = Math.min(2e-3, dtTotal);
+    if (F.st[3] < 0 && F.st[1] / (-F.st[3]) < step) step = Math.max(F.st[1] / (-F.st[3]) * 0.5, 1e-6);
+    var st = F.st, k1 = l1Deriv(st, F.kd), i, s2 = [], s3 = [], s4 = [];
+    for (i = 0; i < 4; i++) s2.push(st[i] + 0.5 * step * k1[i]); var k2 = l1Deriv(s2, F.kd);
+    for (i = 0; i < 4; i++) s3.push(st[i] + 0.5 * step * k2[i]); var k3 = l1Deriv(s3, F.kd);
+    for (i = 0; i < 4; i++) s4.push(st[i] + step * k3[i]); var k4 = l1Deriv(s4, F.kd);
+    F.st = st.map(function (v, j) { return v + step / 6 * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j]); });
+    F.t += step; dtTotal -= step;
+  }
+}
+var TOWER = { x: 150, gy: 585, top: 30 };
+function towerY(h) { return TOWER.gy - (TOWER.gy - TOWER.top) * h / 2100; }
+PROGRAM.lab = {
+  intro: '행성 위 높이 2000 m의 탑입니다. 공방에서 반지름과 밀도를 맞춰 공을 만들어 바닥에 내려온 엘리베이터에 싣고, 원하는 높이까지 올립니다. ' +
+         '높이 h(공 아래쪽에서 땅까지)는 엘리베이터의 레이저 거리계가 보여 줍니다. RELEASE로 공을 놓고 착지할 때까지의 시간은 스톱워치로 직접 재고, ' +
+         '떨어진 자리는 오른쪽 아래 지면(위에서 본 모습)에서 낙하 기준점(+)부터 줄자를 끌어 재세요.',
+  howto: ['공방: <b>RADIUS</b>·<b>DENSITY</b> 손잡이 (끌기/휠, Shift+휠은 곱게) → 엘리베이터가 바닥에 있을 때 <b>LOAD</b>',
+          '엘리베이터: ▲ ▼ 버튼을 누르고 있는 동안 움직임 (가운데 버튼을 같이 누르면 천천히)',
+          '<b>RELEASE</b>: 공을 놓기 · 스톱워치는 직접 (스페이스바 = 시작·정지)',
+          '지면: 휠로 확대·축소, 빈 곳 끌기로 이동, 줄자 끝(노란 손잡이)을 끌어 자국 가운데에 맞추고 눈금 읽기',
+          '<b>CLEAR</b>: 지면의 자국 지우기'],
   aspect: 0.62,
-  goLabel: '떨어뜨리기',
-  n: 0,
-  measure: function (v) {
-    var path = [], res = drop(v.h, v.r, v.rho, path);
-    var t = res[0] + gauss(SIGMA_T), s = res[1] + gauss(SIGMA_S);
-    this.n++;
-    return { st: { path: path, T: res[0], x: path[path.length - 1][1], t: t.toFixed(1), s: s.toFixed(1) },
-             rows: [[this.n, v.h, v.r, v.rho.toFixed(2), t.toFixed(1), s.toFixed(1)]],
-             ms: Math.min(7000, Math.max(1500, res[0] * 220)) };
+  speeds: [1, 2, 5],
+  keys: [' '],
+  notePlaceholder: '예) r = 10 cm, ρ = 1.00 g/cm³, h = 1200.0 m → t = 17.3 s, s = 12.45 m',
+  init: function (S) {
+    L1.rfOff = S.sys('rfOff', 0.3); L1.rfGain = S.sys('rfGain', 0.0004);
+    L1.rErr = S.sys('ballR', 0.08); L1.rhoErr = S.sys('ballRho', 0.004);
+    L1.tapeK = S.sys('tapeK', 0.0012); L1.hook = S.sys('hook', 0.008);
+    L1.sw = new HL.Stopwatch(0.02 + S.uni('lat', 0, 0.05));
   },
-  draw: function (g, W, H, S) {
-    var D = SIMDRAW, v = S.vals, st = S.st, run = st && !S.done;
-    var split = Math.round(W * 0.6), gy = H - 34, top = 26, zMax = 2150;
-    var Y = function (z) { return gy - (gy - top) * z / zMax; };
-    /* sky: the air thins with height, as rho_a(z) does */
-    for (var i = 0; i < 40; i++) {
-      var z0 = zMax * i / 40, dens = airDensity(z0) / RHO_A0;
-      g.fillStyle = 'rgb(' + Math.round(14 + 40 * dens) + ',' + Math.round(22 + 60 * dens) + ',' + Math.round(40 + 90 * dens) + ')';
-      g.fillRect(0, Y(zMax * (i + 1) / 40), split, Y(z0) - Y(zMax * (i + 1) / 40) + 1);
+  frame: function (ui) {
+    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
+    if (ui.keys.indexOf(' ') >= 0) L1.sw.startStop(ui.t);
+    /* ---------- physics ---------- */
+    L1.lift = Math.max(0, Math.min(H_TOWER, L1.lift + L1.liftV * dt));
+    if (L1.fall && !L1.fall.done && dt > 0) {
+      l1Step(L1.fall, dt);
+      if (L1.fall.st[1] <= 0) { L1.fall.done = true; L1.fall.tLand = ui.t;
+        L1.craters.push({ x: L1.fall.st[0], y: HL.gauss(0.01), r: L1.fall.rcm / 100, n: ++L1.n }); L1.msg = '쿵! 공이 땅에 닿았습니다.'; }
     }
-    g.fillStyle = '#3d3326'; g.fillRect(0, gy, split, H - gy);
-    g.fillStyle = '#574a36'; g.fillRect(0, gy, split, 3);
-    /* the tower: a tapering lattice mast */
-    var tx = Math.round(split * 0.42), wb = 34, wt = 8;
-    var X = function (z, side) { var w = wb + (wt - wb) * z / H_TOWER; return tx + side * w / 2; };
-    g.strokeStyle = '#8e99a6'; g.lineWidth = 1.6;
-    g.beginPath(); g.moveTo(X(0, -1), Y(0)); g.lineTo(X(H_TOWER, -1), Y(H_TOWER)); g.moveTo(X(0, 1), Y(0)); g.lineTo(X(H_TOWER, 1), Y(H_TOWER)); g.stroke();
-    g.lineWidth = 0.8; g.strokeStyle = 'rgba(142,153,166,.75)'; g.beginPath();
-    for (var k = 0; k < 20; k++) { var za = H_TOWER * k / 20, zb = H_TOWER * (k + 1) / 20;
-      g.moveTo(X(za, -1), Y(za)); g.lineTo(X(zb, 1), Y(zb)); g.moveTo(X(za, 1), Y(za)); g.lineTo(X(zb, -1), Y(zb));
-      g.moveTo(X(zb, -1), Y(zb)); g.lineTo(X(zb, 1), Y(zb)); }
+    /* ---------- the tower, side view ---------- */
+    var sky = g.createLinearGradient(0, TOWER.top, 0, TOWER.gy);
+    sky.addColorStop(0, '#1d2a44'); sky.addColorStop(1, '#6c88a8');
+    g.fillStyle = sky; g.fillRect(0, 0, 300, H);
+    g.fillStyle = '#6b5a3d'; g.fillRect(0, TOWER.gy, 300, H - TOWER.gy);
+    var tw = function (h, sd) { var w = 30 + (10 - 30) * h / H_TOWER; return TOWER.x + sd * w / 2; };
+    g.strokeStyle = '#9aa4b0'; g.lineWidth = 1.5; g.beginPath();
+    g.moveTo(tw(0, -1), towerY(0)); g.lineTo(tw(H_TOWER, -1), towerY(H_TOWER)); g.moveTo(tw(0, 1), towerY(0)); g.lineTo(tw(H_TOWER, 1), towerY(H_TOWER)); g.stroke();
+    g.lineWidth = 0.6; g.strokeStyle = 'rgba(154,164,176,.7)'; g.beginPath();
+    for (var k = 0; k < 40; k++) { var za = H_TOWER * k / 40, zb = H_TOWER * (k + 1) / 40;
+      g.moveTo(tw(za, -1), towerY(za)); g.lineTo(tw(zb, 1), towerY(zb)); g.moveTo(tw(za, 1), towerY(za)); g.lineTo(tw(zb, -1), towerY(zb)); }
     g.stroke();
-    g.fillStyle = '#c33'; g.beginPath(); g.arc(tx, Y(H_TOWER) - 4, 3, 0, 7); g.fill();
-    /* height marks every 500 m */
-    for (var m = 0; m <= 2000; m += 500) { g.strokeStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.moveTo(8, Y(m)); g.lineTo(26, Y(m)); g.stroke();
-      D.text(g, m + ' m', 30, Y(m), 'rgba(230,236,240,.75)', 11); }
-    /* the release arm at the chosen height */
-    var hz = run ? S.vals.h : v.h, arm = X(hz, 1);
-    g.strokeStyle = '#d8dee4'; g.lineWidth = 3; g.beginPath(); g.moveTo(X(hz, 1) - 2, Y(hz)); g.lineTo(arm + 30, Y(hz)); g.stroke();
-    var rr = 3 + (run ? S.vals.r : v.r) / 50 * 6, rho = run ? S.vals.rho : v.rho;
-    var shade = Math.round(225 - 150 * Math.log(rho / 0.1) / Math.log(100));
-    var ballCol = 'rgb(' + shade + ',' + Math.round(shade * 0.85) + ',' + Math.round(shade * 0.62) + ')';
-    var bz = hz, tt = 0, bx = 0;
-    if (st) {
-      if (run) { tt = S.p * st.T; var P = st.path, j = 0; while (j < P.length - 1 && P[j + 1][0] < tt) j++;
-        var a = P[j], b = P[Math.min(j + 1, P.length - 1)], f = b[0] > a[0] ? (tt - a[0]) / (b[0] - a[0]) : 0;
-        bz = a[2] + (b[2] - a[2]) * f; bx = a[1] + (b[1] - a[1]) * f; }
-      else { bz = 0; tt = st.T; bx = st.x; }
+    /* the windsock on top */
+    var wy = towerY(H_TOWER) - 6; g.strokeStyle = '#ccc'; g.lineWidth = 1; g.beginPath(); g.moveTo(TOWER.x, wy); g.lineTo(TOWER.x, wy - 14); g.stroke();
+    var flap = Math.sin(ui.t * 3) * 1.5; g.fillStyle = '#e8743b'; g.beginPath(); g.moveTo(TOWER.x, wy - 14); g.lineTo(TOWER.x + 16, wy - 12 + flap); g.lineTo(TOWER.x + 16, wy - 7 + flap); g.lineTo(TOWER.x, wy - 9); g.fill();
+    /* the lift and its arm, the ball in the clamp */
+    var ly = towerY(L1.lift), armX = tw(L1.lift, 1) + 26;
+    HL.rr(g, tw(L1.lift, -1) - 3, ly - 8, tw(L1.lift, 1) - tw(L1.lift, -1) + 6, 8, 1, '#d7c46a', '#5a4f1f', 1);
+    g.strokeStyle = '#d7dde3'; g.lineWidth = 2; g.beginPath(); g.moveTo(tw(L1.lift, 1), ly - 4); g.lineTo(armX, ly - 4); g.stroke();
+    var bpx = function (rcm) { return Math.max(2.5, 2 + rcm / 50 * 4); };
+    if (L1.ball) HL.circle(g, armX, ly + bpx(L1.ball.rcm) - 2, bpx(L1.ball.rcm), L1.ball.col, '#222', 0.6);
+    if (L1.fall) {
+      var F = L1.fall, fy = F.done ? TOWER.gy - bpx(F.rcm) : towerY(F.st[1]) - bpx(F.rcm);
+      HL.circle(g, F.x0px, fy, bpx(F.rcm), F.col, '#222', 0.6);
+      if (F.done && ui.t - F.tLand < 1.5) { var q = (ui.t - F.tLand) / 1.5; g.fillStyle = 'rgba(200,180,140,' + (0.6 * (1 - q)) + ')';
+        g.beginPath(); g.ellipse(F.x0px, TOWER.gy, 6 + 22 * q, 3 + 8 * q, 0, 0, 7); g.fill(); }
     }
-    if (!st || run) { g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(arm + 26, Y(hz)); g.lineTo(arm + 26, Y(bz) - rr); g.stroke(); }
-    if (!st) { g.fillStyle = ballCol; g.beginPath(); g.arc(arm + 26, Y(hz) + rr + 2, rr, 0, 7); g.fill(); }
-    else { g.fillStyle = ballCol; g.beginPath(); g.arc(arm + 26, Math.min(Y(bz) - rr, gy - rr), rr, 0, 7); g.fill();
-      if (!run) { g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(arm + 26, gy + 2, rr + 3, 2.5, 0, 0, 7); g.fill(); } }
-    D.text(g, 'h = ' + hz + ' m', arm + 40, Y(hz) - 10, '#e8e8e8', 12);
-    /* stopwatch and range finder, as printed by the program */
-    D.lcd(g, 10, 8, 128, 26, run ? (tt.toFixed(1) + ' s') : st ? ('t = ' + st.t + ' s') : '0.0 s');
-    if (st && !run) D.lcd(g, 146, 8, 128, 26, 's = ' + st.s + ' m', '#ffd479');
-    /* right: the foot of the tower from above */
-    var ox = split + 14, ow = W - ox - 12, oy = 34, oh = H - oy - 40;
-    g.fillStyle = '#2f2a20'; g.fillRect(ox, oy, ow, oh);
-    D.text(g, '탑 아래 — 위에서 본 모습', ox, 18, '#e8e8e8', 12.5, 'left', true);
-    var xs = S.hist.map(function (q) { return Math.abs(q.st.x); }); if (st) xs.push(Math.abs(st.x));
-    var maxX = Math.max(2, Math.max.apply(null, xs.concat([0])) * 1.25), nice = [2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
-    var span = nice.find(function (q) { return q >= maxX; }) || maxX;
-    var cx = ox + ow / 2, cy = oy + oh / 2, sc = (Math.min(ow, oh) / 2 - 18) / span;
-    g.strokeStyle = 'rgba(255,255,255,.08)'; g.lineWidth = 1;
-    for (var q = -span; q <= span + 1e-9; q += span / 4) { g.beginPath(); g.moveTo(cx + q * sc, oy); g.lineTo(cx + q * sc, oy + oh); g.stroke();
-      g.beginPath(); g.moveTo(ox, cy + q * sc); g.lineTo(ox + ow, cy + q * sc); g.stroke(); }
-    /* the point straight below the release arm, and the mast's foot beside it (not to scale) */
-    g.fillStyle = '#6b7480'; g.fillRect(cx - 46, cy - 12, 22, 24);
-    D.text(g, '탑', cx - 35, cy + 22, '#aab3bd', 11, 'center');
-    g.strokeStyle = '#e8e8e8'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(cx - 8, cy); g.lineTo(cx + 8, cy); g.moveTo(cx, cy - 8); g.lineTo(cx, cy + 8); g.stroke();
-    D.text(g, '놓은 곳 바로 아래', cx, cy + 22, '#aab3bd', 11, 'center');
-    S.hist.forEach(function (q, i) { var px = cx + q.st.x * sc;
-      g.fillStyle = 'rgba(255,212,121,.55)'; g.beginPath(); g.arc(px, cy, 4, 0, 7); g.fill();
-      D.text(g, String(i + 1), px, cy - 11, 'rgba(255,212,121,.8)', 10, 'center'); });
-    if (st) { var px2 = cx + bx * sc; g.fillStyle = run ? 'rgba(255,255,255,.35)' : '#ffd479';
-      g.beginPath(); g.arc(px2, cy, run ? 3 : 5, 0, 7); g.fill(); }
-    g.strokeStyle = '#e8e8e8'; g.lineWidth = 2; g.beginPath(); g.moveTo(ox + 12, oy + oh + 18); g.lineTo(ox + 12 + span / 2 * sc, oy + oh + 18); g.stroke();
-    D.text(g, span / 2 + ' m', ox + 18 + span / 2 * sc, oy + oh + 18, '#e8e8e8', 11.5);
+    for (var m = 0; m <= 2000; m += 500) HL.text(g, m + ' m', 8, towerY(m), 'rgba(235,240,245,.65)', 9.5);
+    /* ---------- the lift's control panel ---------- */
+    var cx = 315, cy = 15, cw = 245, ch = 270, zc = { x: cx - 6, y: cy - 6, w: cw + 12, h: ch + 12, title: '엘리베이터 조작반' };
+    ui.hit('ctl', { x: cx, y: cy, w: cw, h: ch }, { cursor: 'default', zoom: zc });
+    HL.rr(g, cx, cy, cw, ch, 8, '#c9cdd1', '#7c8287', 1.5);
+    HL.text(g, 'LIFT · LASER RANGE FINDER', cx + 12, cy + 16, '#2a2d31', 11, 'left', '700');
+    var shownH = L1.lift * (1 + L1.rfGain) + L1.rfOff;
+    HL.lcd(g, cx + 14, cy + 30, cw - 28, 40, 'h ' + Math.max(0, shownH).toFixed(1) + ' m');
+    var up = HL.button(ui, 'up', cx + 20, cy + 88, 58, 40, { label: '▲', col: '#3b6e9e', zoom: zc });
+    var slow = HL.button(ui, 'slow', cx + 94, cy + 88, 58, 40, { label: 'SLOW', col: '#555b62', size: 11, zoom: zc });
+    var dn = HL.button(ui, 'dn', cx + 168, cy + 88, 58, 40, { label: '▼', col: '#3b6e9e', zoom: zc });
+    var spd = slow.down ? 0.5 : 40;
+    L1.liftV = up.down ? spd : dn.down ? -spd : 0;
+    var rel = HL.button(ui, 'rel', cx + 20, cy + 146, 100, 46, { label: 'RELEASE', col: '#b8433a', size: 13, zoom: zc });
+    var clr = HL.button(ui, 'clr', cx + 134, cy + 146, 92, 46, { label: 'CLEAR', col: '#555b62', size: 12, zoom: zc });
+    if (rel.click) {
+      if (!L1.ball) L1.msg = '클램프에 공이 없습니다.';
+      else { var B = L1.ball, rm = B.rcm * 1e-2, rho = B.rho * 1e3, area = Math.PI * rm * rm, mass = 4 / 3 * Math.PI * rm * rm * rm * rho;
+        L1.fall = { st: [0, L1.lift, 0, 0], t: 0, kd: CD * area / mass, rcm: B.rcm, col: B.col, x0px: armX, done: L1.lift <= 0 };
+        L1.ball = null; L1.msg = L1.lift <= 0 ? '땅 위에서 놓았습니다.' : '공을 놓았습니다.'; }
+    }
+    if (clr.click) { L1.craters = []; L1.n = 0; L1.msg = '지면의 자국을 지웠습니다.'; }
+    HL.text(g, L1.msg, cx + 12, cy + 214, '#2a2d31', 11);
+    HL.text(g, L1.ball ? '클램프: 공 장착됨' : '클램프: 비어 있음', cx + 12, cy + 236, '#2a2d31', 11, 'left', '600');
+    /* ---------- the ball workshop ---------- */
+    var wx = 575, wyy = 15, ww = 410, wh = 225, zw = { x: wx - 6, y: wyy - 6, w: ww + 12, h: wh + 12, title: '공방' };
+    ui.hit('shop', { x: wx, y: wyy, w: ww, h: wh }, { cursor: 'default', zoom: zw });
+    HL.rr(g, wx, wyy, ww, wh, 8, '#3a3f46', '#15181c', 1.5);
+    HL.text(g, 'BALL WORKSHOP', wx + 12, wyy + 16, '#dfe5ea', 11, 'left', '700');
+    var det = []; for (var rr = 5; rr <= 50; rr++) det.push(rr);
+    L1.r = HL.knob(ui, 'rad', wx + 70, wyy + 105, 34, L1.r, { min: 5, max: 50, detents: det, sens: 45 / 260, label: 'RADIUS', zoom: zw,
+      marks: [[5, '5'], [20, '20'], [35, '35'], [50, '50']] });
+    L1.rho = HL.knob(ui, 'rho', wx + 200, wyy + 105, 34, L1.rho, { min: RHO_MIN, max: RHO_MAX, sens: 9.9 / 900, wheelStep: 0.1, label: 'DENSITY', zoom: zw,
+      marks: [[0.1, '0.1'], [5, '5'], [10, '10']] });
+    L1.rho = Math.round(L1.rho * 100) / 100;
+    HL.lcd(g, wx + 285, wyy + 42, 112, 34, L1.r + ' cm');
+    HL.lcd(g, wx + 285, wyy + 86, 112, 34, L1.rho.toFixed(2));
+    HL.text(g, 'g/cm³', wx + 395, wyy + 130, '#aab3bd', 10, 'right');
+    var load = HL.button(ui, 'load', wx + 285, wyy + 150, 112, 40, { label: 'LOAD', col: '#3b7a57', size: 13, zoom: zw });
+    if (load.click) {
+      if (L1.lift > 1) L1.msg = '엘리베이터를 바닥으로 내려야 싣습니다.';
+      else if (L1.ball) L1.msg = '이미 공이 실려 있습니다.';
+      else { var shade = Math.round(225 - 150 * Math.log(L1.rho / 0.1) / Math.log(100));
+        L1.ball = { rcm: L1.r + L1.rErr, rho: L1.rho * (1 + L1.rhoErr), col: 'rgb(' + shade + ',' + Math.round(shade * 0.85) + ',' + Math.round(shade * 0.62) + ')' };
+        L1.msg = '공을 실었습니다 (' + L1.r + ' cm, ' + L1.rho.toFixed(2) + ' g/cm³).'; }
+    }
+    /* ---------- the ground, from above ---------- */
+    var gx = 575, gy = 255, gw = 410, gh = 345, V = L1.view;
+    var zg = { x: gx, y: gy, w: gw, h: gh, title: '지면 (위에서)' };
+    var bgE = ui.hit('ground', { x: gx, y: gy, w: gw, h: gh }, { wheel: true, cursor: 'grab', zoom: zg });
+    if (bgE.wheel) { var f = bgE.wheel > 0 ? 1.25 : 0.8, mx = (bgE.x !== undefined ? bgE.x : gx + gw / 2);
+      var wxm = V.cx + (mx - gx - gw / 2) / V.s; V.s = Math.max(0.3, Math.min(3000, V.s * f)); V.cx = wxm - (mx - gx - gw / 2) / V.s; }
+    if (bgE.down) { V.cx -= bgE.dx / V.s; V.cy += bgE.dy / V.s; }
+    g.save(); g.beginPath(); g.rect(gx, gy, gw, gh); g.clip();
+    g.fillStyle = '#b39b72'; g.fillRect(gx, gy, gw, gh);
+    var G = function (x, y) { return [gx + gw / 2 + (x - V.cx) * V.s, gy + gh / 2 - (y - V.cy) * V.s]; };
+    /* the ground's grain, so it is clear when you zoom */
+    var step = Math.pow(10, Math.floor(Math.log10(40 / V.s)));
+    g.fillStyle = 'rgba(90,70,40,.12)';
+    for (var ix = Math.floor((V.cx - gw / 2 / V.s) / step); ix <= (V.cx + gw / 2 / V.s) / step; ix++)
+      for (var iy = Math.floor((V.cy - gh / 2 / V.s) / step); iy <= (V.cy + gh / 2 / V.s) / step; iy++) {
+        var h1 = Math.sin(ix * 12.9898 + iy * 78.233) * 43758.5453; h1 -= Math.floor(h1); var p = G(ix * step + h1 * step, iy * step + (h1 * 7 % 1) * step);
+        g.fillRect(p[0], p[1], 2, 2); }
+    /* the tower's foot, north of the plumb mark (the release arm reaches out south) */
+    var t0 = G(-10, 32), t1 = G(10, 12); g.fillStyle = '#6b737d'; g.fillRect(t0[0], t0[1], t1[0] - t0[0], t1[1] - t0[1]);
+    var tl = G(0, 22); HL.text(g, '탑', tl[0], tl[1], '#e8e8e8', 11, 'center', '600');
+    /* craters */
+    L1.craters.forEach(function (c) { var q = G(c.x, c.y), R = Math.max(2, c.r * V.s);
+      HL.circle(g, q[0], q[1], R * 1.25, 'rgba(90,70,45,.35)'); HL.circle(g, q[0], q[1], R, '#7d6644'); HL.circle(g, q[0], q[1], R * 0.6, '#6a5538');
+      HL.text(g, String(c.n), q[0] + R + 6, q[1] - R - 6, '#2a2215', 11, 'left', '700'); });
+    /* the plumb mark */
+    var o = G(0, 0); g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(o[0] - 8, o[1]); g.lineTo(o[0] + 8, o[1]); g.moveTo(o[0], o[1] - 8); g.lineTo(o[0], o[1] + 8); g.stroke();
+    /* the tape: hooked on the plumb mark, its case dragged out */
+    var T = L1.tape, te = G(T.x, T.y), len = Math.hypot(T.x, T.y), ux = T.x / (len || 1), uy = T.y / (len || 1);
+    g.strokeStyle = '#e6c63a'; g.lineWidth = Math.max(3, 0.013 * V.s); g.beginPath(); g.moveTo(o[0], o[1]); g.lineTo(te[0], te[1]); g.stroke();
+    /* its marks, printed every cm; what is drawn depends on how close you look */
+    var minor = V.s * 0.01 >= 4 ? 0.01 : V.s * 0.1 >= 4 ? 0.1 : V.s >= 4 ? 1 : 10;
+    for (var v = 0; v <= len / (1 + L1.tapeK) + 1e-9; v += minor) {
+      var dpos = v * (1 + L1.tapeK) + L1.hook, pt = G(ux * dpos, uy * dpos), major = Math.abs(v / (minor * 10) - Math.round(v / (minor * 10))) < 1e-6;
+      var tick = (major ? 0.6 : 0.35) * Math.max(3, 0.013 * V.s);
+      g.strokeStyle = '#1a1a1a'; g.lineWidth = major ? 1 : 0.6; g.beginPath(); g.moveTo(pt[0] - uy * tick, pt[1] - ux * tick); g.lineTo(pt[0] + uy * tick, pt[1] + ux * tick); g.stroke();
+      if (major && Math.max(3, 0.013 * V.s) >= 8) HL.text(g, minor >= 1 ? String(Math.round(v)) : minor >= 0.1 ? v.toFixed(1) : v.toFixed(2), pt[0], pt[1] - Math.max(3, 0.013 * V.s) * 0.9, '#1a1a1a', 9, 'center', '600');
+    }
+    var he = ui.hit('tapeEnd', { cx: te[0], cy: te[1], r: 9 }, { cursor: 'move' });
+    if (he.down) { T.x += he.dx / V.s; T.y -= he.dy / V.s; }
+    HL.rr(g, te[0] - 9, te[1] - 9, 18, 18, 4, '#f2c531', '#5a4a10', 1.2);
+    g.restore();
+    HL.rr(g, gx, gy, gw, gh, 4, null, '#1d1f22', 1.5);
+    HL.text(g, '지면 — 위에서 본 모습 (휠: 확대, 끌기: 이동)', gx + 8, gy + 12, '#2a2215', 10.5, 'left', '700');
+    var sb = Math.pow(10, Math.floor(Math.log10(120 / V.s))); g.strokeStyle = '#2a2215'; g.lineWidth = 2; g.beginPath(); g.moveTo(gx + 12, gy + gh - 12); g.lineTo(gx + 12 + sb * V.s, gy + gh - 12); g.stroke();
+    HL.text(g, sb >= 1 ? sb + ' m' : Math.round(sb * 100) + ' cm', gx + 18 + sb * V.s, gy + gh - 12, '#2a2215', 10, 'left', '600');
+    /* ---------- the stopwatch ---------- */
+    HL.drawStopwatch(ui, 'sw', L1.sw, 437, 440, 1.2);
   }
 };
-
 </script>
+<script src="handlab.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
