@@ -406,7 +406,7 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404, cors);
-    if (req.method === "GET" && /^\/api\/oauth\/(google|discord|naver)\/(start|callback)$/.test(url.pathname)) {
+    if (req.method === "GET" && /^\/api\/oauth\/(google|discord|naver|github|kakao)\/(start|callback)$/.test(url.pathname)) {
       try { return await oauthRoute(req, env, url); }
       catch (e) { console.error(e && e.stack || e); return new Response("Sign-in failed", { status: 500 }); }
     }
@@ -716,8 +716,10 @@ async function arena(p, m, body, me, req, env, url) {
  * the provider's display name as nickname; no e-mail address is kept.  The
  * browser then returns to the site with a one-time code (#/oauth?c=...) that
  * the site trades for a session token, so no token ever sits in a URL.
- * Worker secrets: GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, DISCORD_CLIENT_ID /
- * DISCORD_CLIENT_SECRET, NAVER_CLIENT_ID / NAVER_CLIENT_SECRET.  The redirect
+ * Worker secrets: <PROVIDER>_CLIENT_ID / <PROVIDER>_CLIENT_SECRET for GOOGLE,
+ * DISCORD, NAVER, GITHUB and KAKAO (Kakao: the REST API key and the Client
+ * Secret from Security).  The site offers Google, Kakao and NAVER on the
+ * Korean pages and Google, GitHub and Discord on the English ones.  The redirect
  * URI to register with each is https://<worker>/api/oauth/<provider>/callback.
  * (OAUTH_MOCK_BASE only points the tests at a stand-in provider.)
  */
@@ -728,6 +730,10 @@ const OAUTH = {
              me: "https://discord.com/api/users/@me", scope: "identify", pkce: false },
   naver: { auth: "https://nid.naver.com/oauth2.0/authorize", token: "https://nid.naver.com/oauth2.0/token",
            me: "https://openapi.naver.com/v1/nid/me", scope: "", pkce: false },
+  github: { auth: "https://github.com/login/oauth/authorize", token: "https://github.com/login/oauth/access_token",
+            me: "https://api.github.com/user", scope: "", pkce: false },
+  kakao: { auth: "https://kauth.kakao.com/oauth/authorize", token: "https://kauth.kakao.com/oauth/token",
+           me: "https://kapi.kakao.com/v2/user/me", scope: "profile_nickname", pkce: false },
 };
 const oauthKeys = (env, p) => ({ id: env[p.toUpperCase() + "_CLIENT_ID"], secret: env[p.toUpperCase() + "_CLIENT_SECRET"] });
 function oauthProviders(env) { return Object.keys(OAUTH).filter(p => { const k = oauthKeys(env, p); return k.id && k.secret; }); }
@@ -788,12 +794,13 @@ async function oauthRoute(req, env, url) {
   const tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" }, body: form });
   const tj = await tr.json().catch(() => ({}));
   if (!tr.ok || !tj.access_token) { console.error("oauth token", prov, tr.status); return backTo(st.return_to, "e=oauth_failed"); }
-  const mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json" } });
+  const mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json", "User-Agent": "HaslaLab" } });   // GitHub refuses requests without a User-Agent
   const mj = await mr.json().catch(() => ({}));
   const prof = prov === "naver" ? (mj.response || {}) : mj;
   const sub = String(prov === "google" ? prof.sub : prof.id || "");
   if (!mr.ok || !sub) { console.error("oauth profile", prov, mr.status); return backTo(st.return_to, "e=oauth_failed"); }
-  const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username) : (prof.nickname || prof.name);
+  const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
+    : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
   const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();
   let userId, fresh = 0;
   if (st.link_user) {

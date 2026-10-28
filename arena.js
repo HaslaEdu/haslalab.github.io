@@ -28,7 +28,7 @@ const AT = {
        oldServer: "주간 문제 서버가 아직 업데이트되지 않았습니다. 잠시 후 다시 와 주세요.", ocrOff: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다. 답을 직접 입력해 주세요.",
        myH: "내 기록", myRank: "전체 순위", myTotal: "총점", mySolved: "만점 문제", recent: "최근 제출", settings: "계정 설정(비밀번호 · 탈퇴)",
        admin: "관리", addP: "문제 추가 / 고치기", queue: "채점 대기열", save: "저장", saved: "저장했습니다", giveScore: "점수 주기", regrade: "AI로 다시 채점",
-       oauthWith: {google: "Google로 계속하기", discord: "Discord로 계속하기", naver: "네이버로 계속하기"}, oauthOr: "또는 아이디로", oauthOff: "관리자가 아직 연결하지 않았습니다",
+       oauthWith: {google: "Google로 계속하기", kakao: "카카오로 계속하기", naver: "네이버로 계속하기", github: "GitHub로 계속하기", discord: "Discord로 계속하기"}, oauthOr: "또는 아이디로", oauthOff: "관리자가 아직 연결하지 않았습니다",
        oauthNew: "가입했습니다. 닉네임은 계정 이름에서 가져왔으니, 원하면 아래에서 바꾸세요.", linked: "연결했습니다", linkH: "연결된 로그인", link: "연결하기", connected: "연결됨",
        nickH: "닉네임 바꾸기", change: "바꾸기", pwSet: "비밀번호 만들기 (아이디로도 로그인)", pwNew: "새 비밀번호 (8자 이상)", done: "바꿨습니다",
        tiers: {bronze: "브론즈", silver: "실버", gold: "골드", platinum: "플래티넘", diamond: "다이아몬드", ruby: "루비"},
@@ -56,7 +56,7 @@ const AT = {
        oldServer: "The weekly-problem server has not been updated yet. Please come back shortly.", ocrOff: "Photo reading (OCR) is not connected yet. Please type your answer.",
        myH: "My record", myRank: "Overall rank", myTotal: "Total", mySolved: "Full marks", recent: "Recent submissions", settings: "Account settings (password, delete)",
        admin: "Admin", addP: "Add / edit a problem", queue: "Grading queue", save: "Save", saved: "Saved", giveScore: "Give score", regrade: "Regrade with AI",
-       oauthWith: {google: "Continue with Google", discord: "Continue with Discord", naver: "Continue with NAVER"}, oauthOr: "or with a username", oauthOff: "not connected by the admin yet",
+       oauthWith: {google: "Continue with Google", github: "Continue with GitHub", discord: "Continue with Discord", kakao: "Continue with Kakao", naver: "Continue with NAVER"}, oauthOr: "or with a username", oauthOff: "not connected by the admin yet",
        oauthNew: "Welcome! Your nickname was taken from that account; change it below if you like.", linked: "Connected", linkH: "Sign-in methods", link: "Connect", connected: "connected",
        nickH: "Change nickname", change: "Change", pwSet: "Create a password (to sign in with your username too)", pwNew: "New password (8+ characters)", done: "Changed",
        tiers: {bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", diamond: "Diamond", ruby: "Ruby"},
@@ -126,11 +126,15 @@ function arAuth(root, which) {
   for (const l of root.querySelectorAll("a[href='#/community/signup'],a[href='#/community/login']")) l.setAttribute("href", l.getAttribute("href").replace("/community", ""));
 }
 
-/* ── sign in with Google, Discord or NAVER ── */
+/* ── sign in with Google plus Kakao and NAVER (Korean pages) or GitHub and Discord (English pages) ── */
+const OAUTH_BY_LANG = {ko: ["google", "kakao", "naver"], en: ["google", "github", "discord"]};
+const arProvs = () => OAUTH_BY_LANG[lang === "en" ? "en" : "ko"];
 const OAUTH_ICON = {
   google: '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>',
   discord: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.7 3a19.7 19.7 0 0 0-4.9 1.5C.7 9.1-.2 13.6.3 18.1a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.1 0l.5.4c-.6.4-1.3.7-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.6-5.2-.8-9.7-3.7-13.7zM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>',
-  naver: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M15.6 12.8 8.2 2H2v20h6.4V11.2L15.8 22H22V2h-6.4z"/></svg>'};
+  naver: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M15.6 12.8 8.2 2H2v20h6.4V11.2L15.8 22H22V2h-6.4z"/></svg>',
+  github: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>',
+  kakao: '<svg viewBox="0 0 24 24"><path fill="#191919" d="M12 3C6.5 3 2 6.5 2 10.8c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.9S17.5 3 12 3z"/></svg>'};
 async function arHealth() { if (!ar.health || !ar.health.v) { try { ar.health = await cmApi("GET", "/health"); } catch (e) { ar.health = {v: 0}; } } return ar.health; }
 function arOauthStart(p, ticket) {
   try { if (!sessionStorage.getItem("hlCmBack")) sessionStorage.setItem("hlCmBack", "#/"); } catch (e) {}
@@ -141,8 +145,8 @@ async function arOauth(root) {
   const card = root.querySelector(".cmauth .card"), form = card && card.querySelector("form"); if (!form) return;
   const h = await arHealth(), on = h.oauth || [], T = arT();
   const box = document.createElement("div"); box.className = "oauth";
-  box.innerHTML = ["google", "discord", "naver"].map((p) => on.includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${T.oauthWith[p]}</a>`
-    : `<span class="${p} off" title="${T.oauthOff}">${OAUTH_ICON[p]}${T.oauthWith[p]}</span>`).join("") + (on.length ? "" : `<small>${T.oauthOff}</small>`);
+  box.innerHTML = arProvs().map((p) => on.includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${T.oauthWith[p]}</a>`
+    : `<span class="${p} off" title="${T.oauthOff}">${OAUTH_ICON[p]}${T.oauthWith[p]}</span>`).join("") + (arProvs().some((p) => on.includes(p)) ? "" : `<small>${T.oauthOff}</small>`);
   const or = document.createElement("div"); or.className = "oauth-or"; or.textContent = T.oauthOr;
   form.before(box, or);
   for (const a of box.querySelectorAll("a[data-p]")) a.onclick = (e) => { e.preventDefault(); arOauthStart(a.dataset.p); };
@@ -309,8 +313,8 @@ async function arMe(root, alive) {
   nf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.querySelector(".arinfo").textContent = T.done; arChip(); } catch (er) { nf.querySelector(".arinfo").textContent = arErr(er); } };
   try {
     const idj = await cmApi("GET", "/me/identities"), have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
-    box.innerHTML = `<div class="oauth">${["google", "discord", "naver"].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${T.oauthWith[p].replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
-      : idj.providers.includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${T.oauthWith[p].replace(/로 계속하기|Continue with /g, "")} · ${T.link}</a>` : "").join("")}</div>
+    box.innerHTML = `<div class="oauth">${[...new Set(arProvs().concat(have))].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
+      : idj.providers.includes(p) && arProvs().includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.link}</a>` : "").join("")}</div>
       ${idj.has_pw ? "" : `<form id="arPw" class="arq"><span>${T.pwSet}</span><input type="password" name="pw" placeholder="${T.pwNew}" minlength="8"><button class="cmbtn sm">${T.save}</button><span class="arinfo"></span></form>`}`;
     for (const a of box.querySelectorAll("a[data-p]")) a.onclick = async (e) => { e.preventDefault(); try { const t = await cmApi("POST", "/oauth/ticket"); sessionStorage.setItem("hlCmBack", "#/me"); arOauthStart(a.dataset.p, t.ticket); } catch (er) { cmToast(arErr(er)); } };
     const pf = box.querySelector("#arPw"); if (pf) pf.onsubmit = async (e) => { e.preventDefault(); try { await cmApi("POST", "/me/password", {password: pf.pw.value}); pf.querySelector(".arinfo").textContent = T.done; } catch (er) { pf.querySelector(".arinfo").textContent = arErr(er); } };
