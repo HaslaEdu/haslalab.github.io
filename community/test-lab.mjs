@@ -112,12 +112,12 @@ ok(s === 200, "admin saves the E1 scheme");
 [s, j] = await call("GET", `/lab/sessions/${SID}`, null, A);
 const txt = j.session.pages.find(p => p.id === P1).text;
 [s, j] = await call("PATCH", `/lab/sessions/${SID}/pages/${P1}`, { text: txt + "\nA.3 h = 12 W/(m2 K)" }, A);
-ok(s === 200, "edit the read text");
+ok(s === 400 && j.error === "read_only", "what was read cannot be edited (a strict invigilator)");
 [s, j] = await call("POST", `/lab/sessions/${SID}/submit`, { pages: [] }, A);
 const ses = j.session;
-ok(s === 200 && ses.status === "pending" && ses.detail.tasks.E1.status === "graded" && ses.detail.tasks.E1.score === 5 && ses.detail.tasks.E2.why === "no_scheme",
+ok(s === 200 && ses.status === "pending" && ses.detail.tasks.E1.status === "graded" && ses.detail.tasks.E1.score === 5 && ses.detail.tasks.E2.why === "no_solution",
   "E1 graded 5/10 from the scheme, E2 waits for one " + JSON.stringify(ses.detail && Object.values(ses.detail.tasks).map(x => [x.status, x.score])));
-ok(ses.pages.find(p => p.id === P1).edited === 1, "the edit is recorded");
+ok(ses.pages.find(p => p.id === P1).text === txt && ses.detail.tasks.E1.grader.startsWith("gemini"), "the text stayed as read; graded by Gemini from the images");
 [s, j] = await call("POST", `/lab/sessions/${SID}/submit`, { pages: [] }, A);
 ok(s === 200 && j.session.status === "pending", "a second submit grades nothing again");
 [s, j] = await up(SID, KEY, "E1", "answer", png);

@@ -366,24 +366,28 @@ const LBT = {
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
        start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
        st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음"},
-       why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다."},
+       why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
        del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "토큰은 관리자가 나누어 줍니다. 더 필요하면 커뮤니티에 문의하세요.",
        admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
        queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점",
        reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
-       retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록"},
+       retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
+       item: "채점 항목", evid: "근거", rulesH: "적용 규정", by: {code: "범위·검증", model: "AI 판단"}, sheetA: "답안지", sheetW: "연습지", page: "쪽",
+       regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
   en: {h: "Exam mode", sub: "Five hours of experiments as on the day, then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
        start: "start", grant: "received", revoke: "taken back", refund: "refunded", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
        st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent"},
-       why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it."},
+       why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
        del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Tokens are handed out by the admins. Ask in the community if you need more.",
        admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
        queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks",
        reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
-       retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list"}};
+       retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
+       item: "Item", evid: "Evidence", rulesH: "Rules", by: {code: "interval / check", model: "AI judgement"}, sheetA: "answer sheet", sheetW: "working sheet", page: "p.",
+       regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn."}};
 const lbt = () => LBT[lang === "en" ? "en" : "ko"];
 /* the catalogue's solution sheet for an exam's experiment, when the site has one */
 function arLabSol(s, task) {
@@ -408,6 +412,17 @@ async function arLabList(root, alive) {
       <td style="width:80px"><b style="color:${x.delta < 0 ? "#c0392b" : "#1e8449"}">${x.delta > 0 ? "+" : ""}${x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note ? " · " + esc(x.note) : ""}</td>
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
 }
+/* one experiment graded from the images: per item the mark, how it was decided, where its evidence is and the rules that cost marks */
+function arLabItems(x, reg) {
+  const L = lbt(), T = arT(), rule = (id) => { const r = reg && reg.rules.find((y) => y.id === id); return `<span class="arrule" title="${esc(r ? (lang === "en" ? r.en : r.ko) : id)}">${esc(id)}</span>`; };
+  return `<div class="arres ${x.score >= x.points ? "ok" : ""}"><b>${T.score}</b><span>${x.score} / ${x.points}${T.pts}</span>${x.grader ? `<small>${T.grader}: ${esc(x.grader)}${x.regulation ? " · " + esc(x.regulation) : ""}</small>` : ""}</div>
+    <table class="cmtbl artbl"><thead><tr><th style="width:40%">${L.item}</th><th style="width:96px">${T.score}</th><th>${L.evid}</th><th style="width:90px">${L.rulesH}</th></tr></thead><tbody>
+    ${x.items.map((i) => `<tr><td class="t"><b>${esc(i.id)}</b> ${esc(i.what || "")}${i.note ? `<div class="arnote">${esc(i.note)}</div>` : ""}</td>
+      <td><b>${i.got}</b>/${i.points}<div class="ardec ${i.decision}">${T[i.decision] || ""}</div><div class="arby">${L.by[i.by] || ""}</div></td>
+      <td class="t">${i.page ? `${L.page === "p." ? "p." + i.page : i.page + L.page} · ${i.sheet === "answer" ? L.sheetA : L.sheetW}` : "—"}${i.value != null ? ` · <q>${esc(i.value)}</q>` : ""}</td>
+      <td>${(i.rules || []).map(rule).join(" ")}</td></tr>`).join("")}</tbody></table>
+    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}`;
+}
 async function arLabOne(root, alive, id) {
   const L = lbt(), T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
@@ -424,10 +439,13 @@ async function arLabOne(root, alive, id) {
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
         ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}</div>
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
-      const body = x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
+      const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation)
+        : x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
         : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
         : x.status === "empty" ? `<div class="cmnote">${L.empty}</div>` : `<div class="cmnote">${L.st[s.status] || ""}</div>`;
       return `<div class="arpanel"><h3>${esc(t)} ${x.status ? "· " + (L.st[x.status] || "") : ""} ${sol ? `<a style="float:right;font-weight:500;font-size:13px" href="${esc(sol)}" target="_blank" rel="noopener">${L.sol} ↗</a>` : ""}</h3>${body}</div>`; }).join("")}
+    ${s.regulation ? `<div class="arpanel"><details><summary style="cursor:pointer;font-weight:700">${L.regH} <span style="font-weight:400;color:var(--graphite)">${esc(s.regulation.version)}</span></summary>
+      <p class="arempty" style="margin:8px 0">${L.regNote}</p><ol class="arreg">${s.regulation.rules.map((r) => `<li><b>${esc(r.id)}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details></div>` : ""}
     <div class="arpanel"><h3>${L.pages} · ${s.pages.length}</h3>${s.pages.map((p) => `<details class="arsub"><summary><b>${esc(p.task)}</b> ${p.kind === "answer" ? L.answer : L.working} #${p.no}${p.edited ? " ✎" : ""}</summary>
       <div style="display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:12px;margin-top:8px"><div data-img="${p.id}" style="background:#f3f4f6;border-radius:8px;min-height:120px"></div><pre class="aranswer">${esc(p.text)}</pre></div></details>`).join("") || `<p class="arempty">${T.empty}</p>`}
       ${open ? "" : `<p style="margin:12px 0 0"><button class="cmbtn sm" id="arLabDel">${L.del}</button></p>`}</div>`;

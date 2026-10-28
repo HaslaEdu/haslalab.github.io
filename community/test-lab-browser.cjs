@@ -160,15 +160,16 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   /* 7. the computer sees the pages, the text is checked and submitted */
   await pg.waitForFunction(() => document.querySelectorAll("#pages .pg").length === 2, null, { timeout: 15000 });
   await pg.waitForSelector("#pages .th img", { timeout: 10000 });
-  const kinds = await pg.$$eval("#pages .pg", ps => ps.map(p => [p.querySelector('[data-f="task"]').value, p.querySelector('[data-f="kind"]').value, p.querySelector("textarea").value.slice(0, 12)]));
-  ok(kinds[0][0] === "E1" && kinds[0][1] === "answer" && kinds[1][0] === "E2" && kinds[1][1] === "working" && /R0/.test(kinds[0][2]), "pages arrive with task, kind and OCR text " + JSON.stringify(kinds));
-  await pg.fill("#pages textarea >> nth=0", "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nchecked by me");
+  const kinds = await pg.$$eval("#pages .pg", ps => ps.map(p => [p.querySelector('[data-f="task"]').value, p.querySelector('[data-f="kind"]').value, p.querySelector(".rd").textContent, (p.querySelector(".leg") || {}).textContent]));
+  ok(kinds[0][0] === "E1" && kinds[0][1] === "answer" && kinds[1][0] === "E2" && kinds[1][1] === "working" && /A\.1\s*108\.2 ohm/.test(kinds[0][2]) && /잘 읽힘/.test(kinds[0][3]),
+    "pages arrive with task, kind, what was read and how legible " + JSON.stringify(kinds.map(k => k.map(x => String(x).slice(0, 30)))));
+  ok(await pg.$("#pages textarea") === null && /고칠 수 없습니다/.test(await pg.textContent("#pages")), "nothing to type in: what was read is final");
   await pg.screenshot({ path: OUT + "6-pc-pages.png" });
   await pg.click("#sub"); await pg.click(".modal button.red");
   await pg.waitForSelector(".result", { timeout: 60000 });
   const res = await pg.textContent("main");
-  ok(/답안 제출 확인증/.test(res) && /HL-IPHO2024-\d{6}/.test(res) && /\b5\s*\/\s*10\b/.test(res) && /채점 대기/.test(res) && /답안지 1쪽/.test(res),
-    "receipt: candidate number, pages, E1 graded 5 / 10, E2 waits for its scheme");
+  ok(/답안 제출 확인증/.test(res) && /HL-IPHO2024-\d{6}/.test(res) && /\b5\s*\/\s*10\b/.test(res) && /0\.5\s*\/\s*3\.5/.test(res) && /답안지 1쪽/.test(res),
+    "receipt: candidate number, pages, E1 5 / 10 (admin rubric), E2 0.5 / 3.5 (scheme drawn from the solution; only a working sheet)");
   await pg.screenshot({ path: OUT + "7-result.png" });
   [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.active === null && act.tokens === 0, "nothing open, 0 tokens");
@@ -185,10 +186,12 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.goto(SITE + "/#/lab/" + sid); await pg.waitForSelector(".arpanel"); await sleep(700);
   ok(/E1/.test(await pg.textContent("#arRoot")) && (await pg.$$(".arpanel")).length >= 3, "#/lab/<id> shows each experiment and the pages");
   ok(/성적표/.test(await pg.textContent("#arRoot")) && /HL-IPHO2024-/.test(await pg.textContent("#arRoot")), "#/lab/<id> is a score report with the candidate number");
+  const r1 = await pg.$$eval(".arrule", xs => xs.map(x => [x.textContent, x.title]));
+  ok(r1.some(([id, ttl]) => id === "R1" && /답안지/.test(ttl)) && /채점 규정/.test(await pg.textContent("#arRoot")), "report: R1 marks on the E2 items, with the rule on hover, and the regulation " + JSON.stringify(r1.slice(0, 2)));
   /* the portal now shows this candidate's status on the exam */
-  await pg.goto(SITE + "/#/ipho/exam"); await pg.waitForFunction(() => /채점 대기/.test((document.querySelector("#xmRoot") || {}).textContent || ""), null, { timeout: 8000 });
+  await pg.goto(SITE + "/#/ipho/exam"); await pg.waitForFunction(() => /채점 완료/.test((document.querySelector("#xmRoot") || {}).textContent || ""), null, { timeout: 8000 });
   const r24 = await pg.$$eval("#xmRoot tbody tr", trs => trs.map(t => t.textContent).find(x => /^2024/.test(x.trim())));
-  ok(/채점 대기/.test(r24) && /성적표/.test(r24) && /다시 응시/.test(r24) && /\d+명 응시/.test(r24), "portal row: my status, report, sit again, the number of candidates");
+  ok(/채점 완료/.test(r24) && /성적표/.test(r24) && /다시 응시/.test(r24) && /\d+명 응시/.test(r24), "portal row: my status, report, sit again, the number of candidates");
   await pg.screenshot({ path: OUT + "8-lab.png", fullPage: true });
   /* 10. the community's Discord channel */
   await pg.goto(SITE + "/#/community/discord"); await pg.waitForSelector(".dcban", { timeout: 15000 });

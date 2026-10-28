@@ -111,6 +111,16 @@
   .pg .meta select{font:inherit;font-size:12.5px;background:#2b2f36;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
   .pg .meta .st2{margin-left:auto;color:var(--muted)}
   .pg .meta .st2.bad{color:#ffb4a9}
+  .pg .rd{list-style:none;margin:0;padding:8px 10px;background:#0b0e12;border:1px solid var(--line);border-radius:6px;font:12.5px/1.6 ui-monospace,Consolas,monospace;max-height:220px;overflow:auto}
+  .pg .rd.none{color:var(--muted)}
+  .pg .rd li.x{opacity:.5;text-decoration:line-through}
+  .pg .rd b{color:var(--accent);margin-right:6px}
+  .pg .leg{font-size:12px;padding:2px 8px;border-radius:999px;background:#2b2f36;color:var(--muted)}
+  .pg .leg.good{background:#1f3b26;color:#8fd19e}.pg .leg.partial{background:#3d3220;color:#f2c14e}.pg .leg.poor{background:#4a2321;color:#ffb4a9}
+  .pg .rm{margin-left:auto;padding:4px 10px;font-size:12px}
+  details.reg{margin-top:12px;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px}
+  details.reg summary{cursor:pointer;font-weight:700}details.reg summary span{font-weight:400;color:var(--muted)}
+  details.reg ol{margin:8px 0 0 4px;padding:0;list-style:none}details.reg li{margin:5px 0;line-height:1.55}details.reg li b{color:var(--accent);margin-right:6px}
   .pg textarea{width:100%;min-height:150px;resize:vertical;background:#0b0e12;color:var(--ink);border:1px solid var(--line);border-radius:6px;
                padding:8px 9px;font:12.5px/1.55 ui-monospace,Consolas,monospace}
   .pg .ok{font-size:12px;color:var(--muted);margin-top:4px}
@@ -169,9 +179,10 @@ const T = {
     rules: [
       "<b>5시간</b> 동안 이 해의 실험을 모두 풉니다. 실험이 둘이면 <b>한 책상</b>에 나란히 놓이고, 두 실험을 오가며 원하는 순서로 하면 됩니다.",
       "부품은 왼쪽 <b>공용 부품함 하나</b>에서 꺼냅니다. 부품을 누르면 손에 들리고, 그 실험의 책상을 누르면 놓입니다(우클릭은 되돌리기). 이미 책상에 놓여 있는 장치는 그대로 두고, 책상만 넓혔습니다.",
-      "답은 종이에 씁니다. 문제지 PDF의 <b>Answer sheet</b>와 <b>Working sheet</b>를 인쇄하거나, 빈 종이에 문항 번호를 붙여 쓰세요.",
+      "답은 종이에 씁니다. 문제지 PDF에 있는 <b>공식 Answer sheet</b>와 <b>Working sheet</b>를 인쇄해 쓰세요. 최종 답은 Answer sheet의 해당 칸에 쓴 것만 인정합니다.",
       "시간이 끝나면(또는 «시험 끝내기»를 누르면) 실험 화면이 꺼지고 <b>30분</b> 타이머가 돕니다. 화면의 QR 코드를 휴대폰으로 찍으면 답안지 · working sheet를 스캔해 보낼 수 있습니다.",
-      "보낸 쪽은 글자로 읽혀(OCR) 이 화면에 나타납니다. 읽은 글을 확인하고 고친 뒤 제출하면, 하슬라논술과 같은 방식으로 채점 기준마다 점수와 근거, 첨삭을 받습니다. 30분이 지나면 그때까지 보낸 쪽이 그대로 제출됩니다.",
+      "보낸 쪽은 AI가 바로 읽어 이 화면에 보여 줍니다. <b>읽힌 내용은 고칠 수 없습니다</b>. 잘못 읽혔으면 그 쪽을 빼고 다시 찍어 보내세요. 제출하면 공식 솔루션의 채점 기준표와 아래 채점 규정으로 채점합니다. 30분이 지나면 그때까지 보낸 쪽이 그대로 제출됩니다.",
+      "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다. 사람이 다시 읽어 주지 않습니다.",
       "시작하면 <b>실전 토큰 1개</b>를 씁니다. 시험 중에 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다. 다시 들어올 때는 토큰을 쓰지 않습니다. (시뮬레이터 안의 장치 상태는 다시 들어오면 처음으로 돌아갑니다.)",
     ],
     tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
@@ -196,10 +207,12 @@ const T = {
     warn30: "30분 남았습니다.", warn5: "5분 남았습니다. 측정을 마무리하세요.",
     darkH: "실험 시간이 끝났습니다", darkB: "실험 화면을 껐습니다.",
     scanH: "답안 스캔",
-    steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "실험(E1/E2)과 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타나면, 읽은 글자를 확인하고 고칩니다.", "«제출하고 채점받기»를 누릅니다."],
+    steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "실험(E1/E2)과 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타납니다. 읽힌 값을 확인하고, 잘못 읽혔으면 «빼기» 후 다시 찍습니다.", "«제출하고 채점받기»를 누릅니다."],
     openHere: "이 기기에서 열기", newQr: "QR 새로 만들기", pagesH: "받은 쪽", none: "아직 받은 쪽이 없습니다. 휴대폰에서 첫 쪽을 보내면 여기에 나타납니다.",
-    answer: "답안지", working: "Working sheet", ocrDone: "읽음", ocrFailed: "읽지 못함 — 직접 입력하세요", ocrOff: "OCR 꺼짐 — 직접 입력하세요",
-    textPh: "이 쪽에 쓴 내용 (수식은 $...$ 또는 글로)", edited: "고침", saved: "저장됨",
+    answer: "답안지", working: "Working sheet", ocrFailed: "읽지 못함 — 다시 찍으세요", ocrOff: "자동 읽기 꺼짐",
+    leg: { good: "잘 읽힘", partial: "일부만 읽힘 — 다시 찍기 권장", poor: "거의 못 읽음 — 이대로면 0점, 다시 찍으세요" }, remove: "빼기", removeQ: "이 쪽을 뺄까요? 휴대폰으로 다시 찍어 보낼 수 있습니다.",
+    readH: "읽힌 내용", nothing: "읽힌 답이 없습니다.", crossed: "지운 것", noEdit: "읽힌 내용은 고칠 수 없습니다. 잘못 읽혔으면 빼고 다시 찍어 보내세요. 읽을 수 없는 부분은 0점입니다.",
+    regH: "채점 규정", regV: v => `규정 ${v}`, graph: (n, f) => `그래프 · 점 ${n}개${f ? " · 맞춤선" : ""}`, table: (c, r) => `표 · ${c}열 × ${r}행`,
     submit: "제출하고 채점받기", submitting: "채점하는 중… (실험마다 30초~1분)", submitQ: "제출할까요? 제출하면 더 보낼 수 없습니다.",
     noServer: "채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.",
     resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중"},
@@ -216,9 +229,10 @@ const T = {
     rules: [
       "You have <b>five hours</b> for all of this year's experiments. With two experiments they stand side by side on <b>one bench</b>; move between them in any order.",
       "Parts come out of <b>one shared kit</b> on the left. Click a part to pick it up, then click on that experiment's bench to put it down (right-click puts it back). Set-ups that already sit on the bench stay as they are; the bench is simply wider.",
-      "Write your answers on paper: print the <b>Answer sheets</b> and <b>Working sheets</b> from the problem PDF, or number your answers on blank paper.",
+      "Write your answers on paper: print the <b>official Answer sheets</b> and <b>Working sheets</b> from the problem PDF. A final answer counts only in its box on an Answer sheet.",
       "When time is up (or you press «Finish exam») the experiments switch off and a <b>30-minute</b> timer starts. Scan the QR code on the screen with your phone to photograph the answer sheets and working sheets.",
-      "Each page is read into text (OCR) and appears here. Check and correct the text, then submit: every marking criterion is scored with quoted evidence and comments, the way the HaslaLab essay grader works. After 30 minutes the pages that arrived are submitted as they are.",
+      "Each page is read by the AI at once and shown here. <b>What was read cannot be edited</b>: if a page was misread, take it out and photograph it again. On submission it is graded against the marking scheme of the official solution under the grading regulation below. After 30 minutes the pages that arrived are submitted as they are.",
+      "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing. Nobody re-reads it.",
       "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock. Coming back costs no token. (The apparatus inside the simulators starts afresh when you come back.)",
     ],
     tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
@@ -243,10 +257,12 @@ const T = {
     warn30: "30 minutes left.", warn5: "5 minutes left. Finish your measurements.",
     darkH: "Time is up", darkB: "The experiments have been switched off.",
     scanH: "Scan your answers",
-    steps: ["Point your phone's camera at the QR code.", "Choose the experiment (E1/E2) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "When a page appears on the right, check and correct the text that was read.", "Press «Submit and grade»."],
+    steps: ["Point your phone's camera at the QR code.", "Choose the experiment (E1/E2) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "Each page appears on the right. Check what was read; if it is wrong, «Remove» it and photograph it again.", "Press «Submit and grade»."],
     openHere: "Open on this device", newQr: "New QR code", pagesH: "Pages received", none: "No pages yet. They appear here as soon as your phone sends them.",
-    answer: "Answer sheet", working: "Working sheet", ocrDone: "read", ocrFailed: "could not be read — type it in", ocrOff: "OCR is off — type it in",
-    textPh: "What is written on this page ($...$ for formulas, or plain words)", edited: "edited", saved: "saved",
+    answer: "Answer sheet", working: "Working sheet", ocrFailed: "not read — photograph it again", ocrOff: "reading is off",
+    leg: { good: "read well", partial: "partly read — better photograph it again", poor: "mostly unreadable — scores 0 as it is, photograph it again" }, remove: "Remove", removeQ: "Take this page out? You can photograph it again with your phone.",
+    readH: "What was read", nothing: "No answers were read.", crossed: "crossed out", noEdit: "What was read cannot be edited. If it is wrong, take the page out and photograph it again. Whatever cannot be read scores 0.",
+    regH: "Grading regulation", regV: v => `regulation ${v}`, graph: (n, f) => `graph · ${n} points${f ? " · fitted line" : ""}`, table: (c, r) => `table · ${c} columns × ${r} rows`,
     submit: "Submit and grade", submitting: "Grading… (30 s to a minute per experiment)", submitQ: "Submit now? No more pages can be sent afterwards.",
     noServer: "The grading server does not support exam mode yet. Please come back shortly.",
     resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress"},
@@ -302,7 +318,7 @@ const errMsg = e => (t().err[e && e.code]) || (e && e.code) || "error";
 
 /* ── the session, as the server has it.  The server keeps the clock; this page only shows it.
       SES: the session; SKEW: server time minus this computer's time, so a wrong local clock does not matter. ── */
-let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null;
+let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null;
 const srvNow = () => Math.floor(Date.now() / 1000) + SKEW;
 function setSession(s) { SES = s; if (s && s.now) SKEW = s.now - Math.floor(Date.now() / 1000); }
 /* the phone's upload token is shown once by the server; this computer keeps it per session.  Another computer
@@ -362,7 +378,7 @@ function render() {
 /* ask the server where things stand (on load, every half minute while running, and when the tab comes back) */
 async function sync() {
   /* does the server have exam mode yet (its database migrated)? */
-  if (LABOK !== true) { try { LABOK = !!(await api("GET", "/health")).lab; } catch (e) { LABOK = null; } }
+  if (LABOK !== true) { try { const h = await api("GET", "/health"); LABOK = !!h.lab; REG = h.lab_reg || null; } catch (e) { LABOK = null; } }
   if (LABOK === false) { SES = null; return render(); }
   if (!tok()) { ME = null; SES = null; return render(); }
   let a;
@@ -408,6 +424,7 @@ async function introView() {
     </tbody></table>
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${t().rules.map(r => `<li>${r}</li>`).join("")}</ol>
+    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
     ${gate}
     <div class="row"><a href="${back}">${t().back}</a></div>
   </div></div>`;
@@ -423,7 +440,9 @@ async function startExam() {
   if (BUSY) return; BUSY = true;
   const go = $("go"); if (go) go.disabled = true;
   try {
-    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY });
+    /* each experiment's official solution: the marking scheme is drawn from it */
+    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: (EX.sols[i] || "").replace(PDF_BASE, "").replace(/^pdf\//, "") }]).filter(([, v]) => v.sol));
+    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
     if (r.resumed) toast(t().resume, 6000);
@@ -604,32 +623,39 @@ async function poll() {
 }
 function paintPages(s) {
   const box = $("pages"); if (!box) return;
-  const sig = JSON.stringify(s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status]));
-  if (sig === pagesSeen) return;                                         // nothing new: leave what the student is typing alone
+  const sig = JSON.stringify(s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible]));
+  if (sig === pagesSeen) return;
   pagesSeen = sig;
   const opt = (v, cur, txt) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`;
-  const old = new Map([...box.querySelectorAll("textarea")].map(x => [x.dataset.id, x.value]));
-  box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div><button class="pri" id="sub">${t().submit}</button></div>` +
+  /* what was read, as a list: the candidate checks it but cannot change it */
+  const readList = p => {
+    const items = (p.read && p.read.items) || [];
+    if (!p.read) return `<div class="rd none">${esc(p.text || "") || t().nothing}</div>`;
+    if (!items.length) return `<div class="rd none">${t().nothing}</div>`;
+    return `<ul class="rd">${items.map(i => `<li class="${i.crossed_out ? "x" : ""}"><b>${esc(i.label)}</b> ${
+      i.kind === "value" && i.value != null ? esc(i.value + (i.uncertainty != null ? " ± " + i.uncertainty : "") + (i.unit ? " " + i.unit : ""))
+      : i.kind === "graph" && i.graph ? t().graph(i.graph.n_points || 0, i.graph.fit_line)
+      : i.kind === "table" ? t().table((i.columns || []).length, i.rows || 0) + (i.columns && i.columns.length ? " (" + esc(i.columns.join(", ")) + ")" : "")
+      : esc(i.text)}${i.crossed_out ? ` <i>${t().crossed}</i>` : ""}</li>`).join("")}</ul>`;
+  };
+  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : "";
+  box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div><button class="pri" id="sub">${t().submit}</button></div>
+    <div class="note">${t().noEdit}</div>` +
     (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
       <div class="th" data-img="${p.id}"></div>
       <div><div class="meta">#${p.no}
         <select data-f="task">${s.tasks.map(x => opt(x, p.task, x)).join("")}</select>
         <select data-f="kind">${opt("answer", p.kind, t().answer)}${opt("working", p.kind, t().working)}</select>
-        <span class="st2 ${p.ocr_status === "done" ? "" : "bad"}">${p.ocr_status === "done" ? t().ocrDone + (p.ocr_conf != null ? ` · ${Math.round(p.ocr_conf * 100)}%` : "") : p.ocr_status === "off" ? t().ocrOff : t().ocrFailed}</span></div>
-        <textarea data-id="${p.id}" placeholder="${esc(t().textPh)}">${esc(old.has(String(p.id)) ? old.get(String(p.id)) : p.text)}</textarea>
-        <div class="ok" data-ok="${p.id}">${p.edited ? t().edited : ""}</div></div></div>`).join("") : `<div class="empty">${t().none}</div>`);
+        ${legBadge(p)}<button class="rm" data-rm="${p.id}">${t().remove}</button></div>
+        <div style="font-size:12px;color:var(--muted);margin:2px 0 4px">${t().readH}</div>${readList(p)}</div></div>`).join("") : `<div class="empty">${t().none}</div>`);
   box.querySelectorAll("[data-img]").forEach(el => thumb(el, +el.dataset.img));
   box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
     const id = sel.closest(".pg").dataset.id;
     api("PATCH", `/lab/sessions/${SES.id}/pages/${id}`, { [sel.dataset.f]: sel.value }).then(() => { pagesSeen = ""; }).catch(e => toast(errMsg(e)));
   });
-  box.querySelectorAll("textarea").forEach(ta => ta.onchange = () => saveText(ta));
+  box.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => confirmBox(t().remove, t().removeQ, t().remove, async () => {
+    try { await api("DELETE", `/lab/sessions/${SES.id}/pages/${b.dataset.rm}`); pagesSeen = ""; poll(); } catch (e) { toast(errMsg(e)); } }));
   $("sub").onclick = () => confirmBox(t().submit, t().submitQ, t().submit, submitNow);
-}
-async function saveText(ta) {
-  const id = ta.dataset.id;
-  try { await api("PATCH", `/lab/sessions/${SES.id}/pages/${id}`, { text: ta.value }); const ok = document.querySelector(`[data-ok="${id}"]`); if (ok) ok.textContent = t().saved; }
-  catch (e) { toast(errMsg(e)); }
 }
 async function thumb(el, id) {
   let url = imgCache.get(id);
@@ -647,8 +673,7 @@ async function submitNow() {
   if (BUSY) return; BUSY = true;
   const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
   clearInterval(poller);
-  const pages = [...document.querySelectorAll("#pages textarea")].map(x => ({ id: +x.dataset.id, text: x.value }));
-  try { setSession((await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { pages, lang })).session); render(); }
+  try { setSession((await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang })).session); render(); }
   catch (e) { toast(errMsg(e)); if (sub) { sub.disabled = false; sub.textContent = t().submit; } poller = setInterval(poll, 4000); }
   finally { BUSY = false; }
 }

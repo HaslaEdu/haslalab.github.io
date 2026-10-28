@@ -49,6 +49,7 @@
   .sent li:last-child{border-bottom:0}
   .sent b{font:700 12px/1 ui-monospace,monospace;background:#0b0e12;color:var(--accent);border-radius:5px;padding:4px 6px}
   .sent .s{margin-left:auto;color:var(--muted);font-size:12.5px}
+  .sent .s.partial{color:#f2c14e}.sent .s.poor{color:#ffb4a9;font-weight:700}.sent .s.good{color:#8fd19e}
   .sent .x{padding:5px 9px;font-size:12px}
   /* corner editor */
   .ce{position:fixed;inset:0;background:#000;z-index:30;display:flex;flex-direction:column}
@@ -87,9 +88,10 @@ const T = {
     working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     blurry: "사진이 흐립니다. 다시 찍으면 글자를 더 잘 읽습니다.",
-    send: "보내기", retake: "다시 찍기", sending: "보내는 중… (글자 읽기 포함, 10초쯤)", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽은 글을 확인하세요.`,
+    send: "보내기", retake: "다시 찍기", sending: "보내고 읽는 중… (10초쯤)", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽힌 내용을 확인하세요.`,
+    moved: (k, w) => `답안지 머리글을 보고 ${k} · ${w}(으)로 분류했습니다.`, legH: { good: "잘 읽혔습니다.", partial: "일부만 읽혔습니다. 다시 찍는 것이 좋습니다.", poor: "거의 읽히지 않았습니다. 이대로면 0점입니다 — 빼고 다시 찍으세요." },
     sentH: "보낸 쪽", none: "아직 보낸 쪽이 없습니다.", del: "빼기",
-    ocr: { done: "읽음", failed: "읽지 못함", off: "OCR 꺼짐", none: "" },
+    ocr: { done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
     ceTop: "네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "이대로 펴기", ceCancel: "취소",
@@ -102,9 +104,10 @@ const T = {
     working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     blurry: "The photo is blurry. A sharper one reads better.",
-    send: "Send", retake: "Retake", sending: "Sending… (with text reading, about 10 s)", sentOk: n => `Page ${n} sent. Check the text it read on the computer.`,
+    send: "Send", retake: "Retake", sending: "Sending and reading… (about 10 s)", sentOk: n => `Page ${n} sent. Check what was read on the computer.`,
+    moved: (k, w) => `Filed under ${k} · ${w} from the sheet's printed header.`, legH: { good: "Read well.", partial: "Only partly read. Better photograph it again.", poor: "Mostly unreadable — it scores 0 as it is. Remove it and photograph it again." },
     sentH: "Pages sent", none: "No pages sent yet.", del: "Remove",
-    ocr: { done: "read", failed: "not read", off: "OCR off", none: "" },
+    ocr: { done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
     ceTop: "Put the four points on the four corners of the paper.", ceOk: "Straighten", ceCancel: "Cancel",
@@ -159,7 +162,7 @@ function paint() {
 function sentList() {
   const ps = INFO.pages || [];
   return `<div class="card"><h2>${t().sentH} · ${ps.length}</h2>${ps.length ? `<ul class="sent">${ps.map(p =>
-    `<li><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s">${t().ocr[p.ocr_status] || ""}</span>
+    `<li><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s ${p.legible || ""}">${p.legible ? t().legS[p.legible] : t().ocr[p.ocr_status] || ""}</span>
       ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
 }
 function wireSent() {
@@ -224,7 +227,10 @@ async function send() {
   try {
     const body = await asJpeg(shot.blob);
     const r = await api("PUT", `/lab/up/${SID}/pages?task=${encodeURIComponent(shot.task)}&kind=${shot.kind}`, body, "image/jpeg");
-    toast(t().sentOk(r.no), 4500);
+    const msg = [t().sentOk(r.no)];
+    if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
+    if (r.legible) msg.push(t().legH[r.legible]);
+    toast(msg.join(" "), r.legible === "poor" ? 9000 : 5500);
     shot = null; await refresh();
   } catch (e) {
     toast(t().err[e.code] || e.code, 5000); b.disabled = false; b.textContent = t().send;
