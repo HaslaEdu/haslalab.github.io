@@ -11,7 +11,16 @@
 
    The host puts .el where the browser window's client area is: inside a
    window element (HTML desktops) or, over a canvas desktop, with
-   place(x, y, w, h, visible) in page coordinates.
+   place(x, y, w, h, visible, scale) in page coordinates.  With a scale the
+   browser lays its pages out at the device's own resolution and is shrunk
+   onto the screen, as a virtual machine's display is.
+
+   YouTube: the home feed starts from the hand-picked library below and then
+   leans towards what this viewer has watched (kept in this browser only).
+   Searches go to the real YouTube through the HaslaLab server (YouTube Data
+   API v3); without it they search the library.  Videos play in YouTube's own
+   embedded player (IFrame Player API), and one that may not be embedded
+   says so and offers YouTube itself.
    ========================================================================== */
 (function () {
   const CSS = `
@@ -135,6 +144,9 @@
 .vb .yt-acts button.on{background:#0f0f0f;color:#fff}
 .vb .yt-desc{margin-top:12px;background:#f2f2f2;border-radius:12px;padding:12px;font-size:14px;line-height:20px}
 .vb .yt-ext{color:#065fd4;text-decoration:none;font-weight:500}
+.vb .yt-player iframe,.vb .yt-player>div{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vb .yt-err{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;color:#fff;background:#0f0f0f;font-size:15px}
+.vb .yt-err .yt-ext{color:#3ea6ff}
 .vb .yt-side .yt-card{display:flex;gap:8px;margin-bottom:8px}
 .vb .yt-side .yt-th{width:168px;flex:none;border-radius:8px}
 .vb .yt-side .yt-meta{margin:0}
@@ -174,7 +186,49 @@
       if (x.pathname === "/results") return {t: "yt", q: x.searchParams.get("search_query") || ""};
       return {t: "yt"}; } catch (e) { return null; } }
   const ytUrl = (c) => c.v ? "https://www.youtube.com/watch?v=" + c.v : c.q ? "https://www.youtube.com/results?search_query=" + encodeURIComponent(c.q).replace(/%20/g, "+") : "https://www.youtube.com/";
-  const ytFind = (id) => YT.find((v) => v[0] === id);
+  /* videos met through a real search, in the library's row format */
+  const META = new Map();
+  const ytFind = (id) => YT.find((v) => v[0] === id) || META.get(id);
+  YT_CAT.web = ["YouTube 검색", "From search"];
+  const YT_API = () => (window.HL_COMMUNITY_API || "https://haslalab-community.haslalab.workers.dev") + "/api/yt/";
+  const fmtViews = (n, k) => { n = +n || 0;
+    if (k) return "조회수 " + (n >= 1e8 ? (n / 1e8).toFixed(n < 1e9 ? 1 : 0) + "억" : n >= 1e4 ? (n / 1e4).toFixed(n < 1e5 ? 1 : 0) + "만" : n >= 1e3 ? (n / 1e3).toFixed(1) + "천" : n) + "회";
+    return (n >= 1e9 ? (n / 1e9).toFixed(1) + "B" : n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(n < 1e4 ? 1 : 0) + "K" : n) + " views"; };
+  const fmtAgo = (iso, k) => { const d = (Date.now() - Date.parse(iso)) / 864e5; if (!(d >= 0)) return "";
+    const [n, u] = d < 1 ? [Math.max(1, Math.round(d * 24)), k ? "시간" : "hour"] : d < 30 ? [Math.round(d), k ? "일" : "day"] : d < 365 ? [Math.round(d / 30), k ? "개월" : "month"] : [Math.round(d / 365), k ? "년" : "year"];
+    return k ? n + u + " 전" : n + " " + u + (n > 1 ? "s" : "") + " ago"; };
+  /* a real search: null when the server has no YouTube key or cannot be reached */
+  const SEARCHES = new Map();
+  function ytRemote(q, k) { const key = (k ? "ko:" : "en:") + q.toLowerCase();
+    if (SEARCHES.has(key)) return SEARCHES.get(key);
+    const ctl = typeof AbortController !== "undefined" ? new AbortController() : null; if (ctl) setTimeout(() => ctl.abort(), 8000);
+    const pr = fetch(YT_API() + "search?hl=" + (k ? "ko" : "en") + "&q=" + encodeURIComponent(q), ctl ? {signal: ctl.signal} : {})
+      .then((r) => r.ok ? r.json() : null).then((j) => { if (!j || !Array.isArray(j.items)) return null;
+        return j.items.map((x) => { const row = [x.id, x.t, x.ch, x.len || "", fmtViews(x.views, k), fmtAgo(x.at, k), k ? "ko" : "en", "web"]; if (!YT.some((v) => v[0] === x.id)) META.set(x.id, row); return row; }); })
+      .catch(() => null);
+    SEARCHES.set(key, pr); pr.then((r) => { if (!r) SEARCHES.delete(key); }); return pr; }
+  /* what this viewer watched and searched, for the home feed (this browser only) */
+  const HKEY = "hl_yt_hist";
+  function hist() { try { const h = JSON.parse(localStorage.getItem(HKEY) || "{}"); return {w: h.w || [], q: h.q || []}; } catch (e) { return {w: [], q: []}; } }
+  function histSave(h) { try { localStorage.setItem(HKEY, JSON.stringify({w: h.w.slice(-60), q: h.q.slice(-12)})); } catch (e) {} }
+  function noteWatch(v) { const h = hist(); h.w = h.w.filter((x) => x.id !== v[0]); h.w.push({id: v[0], c: v[7], row: META.has(v[0]) ? v : null}); histSave(h); }
+  function noteSearch(q) { const h = hist(); h.q = h.q.filter((x) => x !== q); h.q.push(q); histSave(h); }
+  /* the home feed: the library in its hand-picked order to begin with, then topics watched first,
+     videos found through searches mixed in, and what was just watched moved down */
+  function feed(lib) { const h = hist(); if (!h.w.length) return lib;
+    const wc = {}, seen = new Set(h.w.map((x) => x.id)); h.w.forEach((x, i) => { wc[x.c] = (wc[x.c] || 0) + 1 + i / h.w.length; });
+    const extra = []; for (const x of h.w.slice().reverse()) if (x.row && !extra.some((r) => r[0] === x.row[0])) { extra.push(x.row); if (!ytFind(x.row[0])) META.set(x.row[0], x.row); }
+    for (const r of META.values()) if (extra.length < 12 && !extra.some((e) => e[0] === r[0])) extra.push(r);
+    const score = (v, i) => (wc[v[7]] || 0) * 3 - i * 0.08 - (seen.has(v[0]) ? 6 : 0);
+    const all = lib.concat(extra.filter((r) => !lib.some((v) => v[0] === r[0])));
+    return all.map((v, i) => [score(v, i), v]).sort((a, b) => b[0] - a[0]).map((x) => x[1]); }
+  /* the official IFrame Player API, loaded once */
+  let ytApiP = null;
+  function ytApi() { if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
+    if (!ytApiP) ytApiP = new Promise((res, rej) => { const prev = window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady = () => { if (prev) try { prev(); } catch (e) {} res(window.YT); };
+      const sc = document.createElement("script"); sc.src = "https://www.youtube.com/iframe_api"; sc.async = true; sc.onerror = () => { ytApiP = null; rej(new Error("iframe_api")); }; document.head.appendChild(sc);
+      setTimeout(() => rej(new Error("timeout")), 9000); });
+    return ytApiP; }
   /* search the library the way a viewer would: every word should appear in the title, channel or topic */
   function ytSearch(q) { const w = String(q).toLowerCase().split(/\s+/).filter(Boolean); if (!w.length) return [];
     return YT.map((v) => { const hay = (v[1] + " " + v[2] + " " + YT_CAT[v[7]].join(" ")).toLowerCase(); let s = 0; for (const t of w) if (hay.includes(t)) s += t.length; return [s, v]; })
@@ -216,7 +270,21 @@
       if (c.t === "web") { const same = new URL(c.url, location.href).origin === location.origin; newFrame(!same); frame.hidden = false; page.hidden = true; frame.src = c.url;
         info.hidden = same || !st.info; if (!info.hidden) { info.querySelector("span").textContent = L().info; info.querySelector('[data-k="real"]').textContent = L().real; } }
       else { frame.hidden = true; frame.src = "about:blank"; info.hidden = true; page.hidden = false; page.innerHTML = c.t === "yt" ? ytPage(c) : c.t === "ntp" ? ntp() : offline(); page.scrollTop = 0; wirePage(); }
+      if (c.t === "yt" && c.q && c.res === undefined && online()) ytRemote(c.q, ko()).then((r) => { c.res = r; if (st.cur === c) { page.innerHTML = ytPage(c); wirePage(); } });
+      if (c.t === "yt" && c.v) { const v = ytFind(c.v); if (v) noteWatch(v); mountPlayer(); }
       changed(); }
+    /* the watch page's player: YouTube's IFrame Player API, or a plain embed if the API script cannot load */
+    function mountPlayer() { const box = page.querySelector("[data-player]"); if (!box) return; const id = box.dataset.player, k = ko(), slot = box.firstChild;
+      const plain = () => { if (!slot.isConnected) return; const f = document.createElement("iframe");
+        f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0&playsinline=1&hl=" + (k ? "ko" : "en") + (/^https?:/.test(location.origin) ? "&origin=" + encodeURIComponent(location.origin) : "");
+        f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture; fullscreen"); f.setAttribute("allowfullscreen", ""); f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin"); slot.replaceWith(f); };
+      const fail = (code) => { if (!box.isConnected) return; box.innerHTML = '<div class="yt-err"><b>' + esc(code === 101 || code === 150 || code === 153 ? (k ? "이 동영상은 다른 사이트에서 재생할 수 없게 설정되어 있습니다." : "The owner does not allow this video to play on other sites.")
+          : code === 100 ? (k ? "동영상을 찾을 수 없습니다 (삭제되었거나 비공개)." : "Video unavailable (removed or private).") : (k ? "동영상을 재생할 수 없습니다." : "This video cannot be played.")) +
+        '</b><a class="yt-ext" href="https://www.youtube.com/watch?v=' + encodeURIComponent(id) + '" target="_blank" rel="noopener">' + (k ? "YouTube에서 보기 ↗" : "Watch on YouTube ↗") + "</a></div>"; };
+      if (!/^https?:/.test(location.protocol)) { plain(); return; }
+      ytApi().then((YTN) => { if (!slot.isConnected) return;
+        new YTN.Player(slot, {host: "https://www.youtube-nocookie.com", videoId: id, width: "100%", height: "100%",
+          playerVars: {autoplay: 1, rel: 0, playsinline: 1, hl: k ? "ko" : "en", origin: location.origin}, events: {onError: (e) => fail(e.data)}}); }).catch(plain); }
     function nav(c) { st.hist = st.hist.slice(0, st.i + 1); st.hist.push(c); st.i = st.hist.length - 1; show(c); }
     function go(s) { s = String(s || "").trim(); if (!s) return;
       if (isUrl(s)) { const y = ytParse(abs(s)); if (y) { nav(y); return; } const u = abs(s), nm = decodeURIComponent(u.split("?")[0].split("/").filter(Boolean).pop() || u); nav({t: "web", url: u, title: /^https?:/.test(u) && !/\.pdf$/i.test(u) ? new URL(u).hostname : nm}); return; }
@@ -239,24 +307,27 @@
       const lib = YT.filter(mine).concat(YT.filter((v) => !mine(v)));
       if (c.v) { const v = ytFind(c.v) || [c.v, "YouTube", "YouTube", "", "", "", "en", "olym"], h = ytHue(v[2]);
         const next = lib.filter((x) => x[0] !== v[0] && x[7] === v[7]).concat(lib.filter((x) => x[0] !== v[0] && x[7] !== v[7])).slice(0, 14);
-        return '<div class="yt">' + top + '<div class="yt-watch"><div><div class="yt-player"><iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v[0]) + "?autoplay=1&rel=0&playsinline=1&hl=" + (k ? "ko" : "en") + (/^https?:/.test(location.origin) ? "&origin=" + encodeURIComponent(location.origin) : "") +
-          '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="yt-info"><div class="yt-wt">' + esc(v[1]) + "</div>" +
+        return '<div class="yt">' + top + '<div class="yt-watch"><div><div class="yt-player" data-player="' + esc(v[0]) + '"><div></div></div><div class="yt-info"><div class="yt-wt">' + esc(v[1]) + "</div>" +
           '<div class="yt-own"><span class="yt-ch" style="background:hsl(' + h + ' 50% 45%)">' + esc([...v[2]][0] || "?") + "</span><div><b>" + esc(v[2]) + "</b><i>" + (k ? "구독자" : "subscribers") + '</i></div><button class="yt-sub" data-yt="sub">' + (k ? "구독" : "Subscribe") + "</button>" +
           '<div class="yt-acts"><button data-yt="like">👍 ' + (k ? "좋아요" : "Like") + "</button><button>↗ " + (k ? "공유" : "Share") + "</button></div></div>" +
           '<div class="yt-desc"><b>' + esc(v[4]) + (v[5] ? " · " + esc(v[5]) : "") + "</b><br>" + esc((k ? "주제: " : "Topic: ") + YT_CAT[v[7]][k ? 0 : 1]) + '<br><a class="yt-ext" href="https://www.youtube.com/watch?v=' + encodeURIComponent(v[0]) + '" target="_blank" rel="noopener">' + (k ? "재생이 안 되면 YouTube에서 열기 ↗" : "Won’t play? Open on YouTube ↗") + "</a></div></div></div>" +
           '<div class="yt-side">' + next.map(ytCard).join("") + "</div></div></div>"; }
-      if (c.q) { const r = ytSearch(c.q);
-        return '<div class="yt">' + top + (r.length ? "" : '<div class="yt-note">' + esc(k ? "‘" + c.q + "’에 대한 결과가 없습니다. 이런 동영상은 어떠세요?" : "No results for “" + c.q + "”. Try these:") + "</div>") +
-          '<div class="yt-row">' + (r.length ? r : lib.slice(0, 12)).map(ytCard).join("") + "</div></div>"; }
+      if (c.q) { const local = ytSearch(c.q), remote = c.res || [], r = remote.concat(local.filter((v) => !remote.some((x) => x[0] === v[0])));
+        const ext = '<a class="yt-ext" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(c.q) + '" target="_blank" rel="noopener">' + (k ? "YouTube에서 검색 ↗" : "Search on YouTube ↗") + "</a>";
+        const note = c.res === undefined ? (k ? "YouTube에서 찾는 중…" : "Searching YouTube…") : c.res === null ? (r.length ? (k ? "추천 목록에서 찾은 결과입니다 · " : "From the picks · ") + ext
+          : (k ? "‘" + c.q + "’에 대한 결과가 없습니다 · " : "No results for “" + c.q + "” · ") + ext) : "";
+        return '<div class="yt">' + top + (note ? '<div class="yt-note">' + (c.res === undefined ? esc(note) : note) + "</div>" : "") +
+          '<div class="yt-row">' + (r.length ? r : c.res === undefined ? [] : lib.slice(0, 12)).map(ytCard).join("") + "</div></div>"; }
       const cat = c.cat || "", chips = '<div class="yt-chips"><button data-cat="" class="' + (cat ? "" : "on") + '">' + (k ? "전체" : "All") + "</button>" +
         Object.keys(YT_CAT).map((x) => '<button data-cat="' + x + '" class="' + (cat === x ? "on" : "") + '">' + YT_CAT[x][k ? 0 : 1] + "</button>").join("") + "</div>";
-      return '<div class="yt">' + top + chips + '<div class="yt-grid">' + (cat ? lib.filter((v) => v[7] === cat) : lib).map(ytCard).join("") + "</div></div>"; }
+      const home = feed(lib);
+      return '<div class="yt">' + top + chips + '<div class="yt-grid">' + (cat ? home.filter((v) => v[7] === cat) : home).map(ytCard).join("") + "</div></div>"; }
     function offline() { const t = L();
       return '<div class="vb-off">' + (kind === "edge" ? '<div style="font-size:40px">🏄</div>' : DINO) + "<h1>" + esc(t.offT(kind)) + "</h1>" + (kind === "edge" ? "" : "<div>" + esc(t.offH) + "</div>") +
         "<ul>" + t.offL.slice(0, kind === "edge" ? 3 : 2).map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul>" + (kind === "edge" ? "" : "<code>ERR_INTERNET_DISCONNECTED</code>") + "</div>"; }
     function wirePage() { const q = page.querySelector(".vb-q input"); if (q) q.onkeydown = (e) => { e.stopPropagation(); if (e.key === "Enter") go(q.value); };
       const yf = page.querySelector(".yt-s"); if (yf) { const yi = yf.querySelector("input"); yi.onkeydown = (e) => e.stopPropagation();
-        yf.onsubmit = (e) => { e.preventDefault(); const v = yi.value.trim(); nav(v ? {t: "yt", q: v} : {t: "yt"}); }; }
+        yf.onsubmit = (e) => { e.preventDefault(); const v = yi.value.trim(); if (v) noteSearch(v); nav(v ? {t: "yt", q: v} : {t: "yt"}); }; }
       page.querySelectorAll("[data-v]").forEach((d) => d.onclick = () => nav({t: "yt", v: d.dataset.v}));
       page.querySelectorAll("[data-cat]").forEach((d) => d.onclick = () => { st.cur.cat = d.dataset.cat; show(st.cur); });
       page.querySelectorAll("[data-yt]").forEach((d) => d.onclick = () => { const k = d.dataset.yt; if (k === "home") nav({t: "yt"}); else if (k === "retry") show(st.cur);
@@ -283,8 +354,10 @@
     return {el, go, back, reload, title, kind,
       canBack: () => st.i > 0,
       /* over a canvas: page coordinates of the client area */
-      place(x, y, w, h, vis) { const key = vis ? [x, y, w, h].map(Math.round).join(",") : "off"; if (key === shown) return; shown = key;
-        if (!vis || w < 40 || h < 40) { el.style.display = "none"; return; } el.style.display = ""; el.style.left = Math.round(x) + "px"; el.style.top = Math.round(y) + "px"; el.style.width = Math.round(w) + "px"; el.style.height = Math.round(h) + "px"; },
+      place(x, y, w, h, vis, scale) { const sc = scale > 0 && scale < 4 ? scale : 1, key = vis ? [x, y, w, h, sc.toFixed(4)].map((v) => typeof v === "number" ? Math.round(v) : v).join(",") : "off"; if (key === shown) return; shown = key;
+        if (!vis || w < 40 || h < 40) { el.style.display = "none"; return; } el.style.display = ""; el.style.left = Math.round(x) + "px"; el.style.top = Math.round(y) + "px";
+        /* laid out at the device's own pixels, then shrunk onto its screen */
+        el.style.width = Math.round(w / sc) + "px"; el.style.height = Math.round(h / sc) + "px"; el.style.transformOrigin = "0 0"; el.style.transform = sc === 1 ? "" : "scale(" + sc + ")"; },
       refresh() { if (st.cur && st.cur.t !== "web") show(st.cur); else changed(); },
       home() { nav(app === "youtube" ? {t: "yt"} : {t: "ntp"}); },
       netChanged() { if (st.cur && ((st.cur.t === "off" && online()) || (st.cur.t === "web" && !online()))) show(st.cur.t === "off" ? {t: "web", url: st.cur.url, title: st.cur.url} : st.cur); }};

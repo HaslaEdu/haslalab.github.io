@@ -85,6 +85,16 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 2. `src/index.js`(와 `wrangler.toml`)로 Worker를 다시 배포합니다. `npx wrangler deploy`
 3. 사이트(`index.html`, `arena.js`)는 GitHub Pages가 알아서 올립니다.
 
+## v7: 시뮬레이터 속 태블릿·노트북의 YouTube 검색
+
+시뮬레이터의 태블릿·휴대폰·노트북에서 YouTube를 검색하면 이 Worker의 `/api/yt/search`가 YouTube Data API v3로 실제 결과를 가져옵니다(퍼가기가 허용된 동영상만). 키가 없으면 503(`yt_off`)을 돌려주고, 기기 안의 YouTube는 미리 고른 동영상 목록에서만 찾습니다.
+
+1. Google Cloud 콘솔에서 프로젝트를 만들고 **YouTube Data API v3**를 사용 설정한 뒤 API 키를 만듭니다. 키 제한은 "API 제한 → YouTube Data API v3"로 걸어 두세요.
+2. 키를 Worker 비밀값으로 넣습니다(채팅이나 저장소에는 붙여 넣지 마세요): `npx wrangler secret put YT_API_KEY`
+3. `npx wrangler deploy`
+
+무료 할당량은 하루 10,000 단위이고 검색 한 번이 101 단위입니다. 같은 검색어는 6시간 동안 엣지 캐시에서 답하고, 방문자(IP)마다 한 시간에 30번으로 제한합니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
