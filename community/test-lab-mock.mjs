@@ -1,4 +1,4 @@
-// stand-in for Upstage OCR, Gemini and the PDF Worker (GET /seen: how many page readings got Upstage's transcript), for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
+// stand-in for Upstage OCR, Gemini, Toss Payments (/toss) and the PDF Worker (GET /seen: how many page readings got Upstage's transcript), for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
 // .dev.vars: UPSTAGE_API_KEY=test UPSTAGE_BASE=http://127.0.0.1:8799/upstage GEMINI_API_KEY=test GEMINI_BASE=http://127.0.0.1:8799/gemini
 //            LAB_PDF_BASE=http://127.0.0.1:8799/pdf/
 // Gemini answers by the task tag at the head of the prompt:
@@ -9,7 +9,7 @@
 //                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
 //   anything else                 the old text grader: half marks with a quote from the answer
 import http from "node:http";
-const flaky = new Set(), seen = { ocrIntoRead: 0 };
+const flaky = new Set(), seen = { ocrIntoRead: 0 }, orders = new Map();
 const OCR_TEXT = "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nE1 A.2 lambda = 395 W/(m K)";
 const SCHEME = { points: 3.5, unit_rule: "a missing unit loses the mark", items: [
   { id: "A.1", points: 0.4, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 105, full_max: 111, partial: [{ min: 100, max: 115, points: 0.2 }] },
@@ -38,6 +38,24 @@ const reply = (res, o) => { res.setHeader("Content-Type", "application/json"); r
   usageMetadata: { promptTokenCount: 1000, cachedContentTokenCount: 400, candidatesTokenCount: 200, thoughtsTokenCount: 50 } })); };
 http.createServer(async (req, res) => {
   let b = []; for await (const c of req) b.push(c); b = Buffer.concat(b);
+  /* Toss Payments: confirm (paymentKey "fail…" is refused, "dup…" was confirmed already), look up, cancel; the secret key must be test_sk_mock */
+  if (req.url.startsWith("/toss/")) {
+    res.setHeader("Content-Type", "application/json");
+    if (req.headers.authorization !== "Basic " + Buffer.from("test_sk_mock:").toString("base64")) { res.statusCode = 401; return res.end(JSON.stringify({ code: "UNAUTHORIZED_KEY", message: "bad key" })); }
+    const body = b.length ? JSON.parse(b) : {}, path = req.url.slice(5);
+    const done = (key, orderId, amount) => ({ paymentKey: key, orderId, totalAmount: amount, status: "DONE", method: "카드", approvedAt: new Date().toISOString(), receipt: { url: "https://receipt.example/" + key } });
+    if (path === "/v1/payments/confirm") {
+      seen.confirms = (seen.confirms || 0) + 1;
+      if (/^fail/.test(body.paymentKey)) { res.statusCode = 400; return res.end(JSON.stringify({ code: "REJECT_CARD_PAYMENT", message: "한도초과 혹은 잔액부족으로 결제에 실패했습니다." })); }
+      if (/^dup/.test(body.paymentKey)) { orders.set(body.paymentKey, body); res.statusCode = 400; return res.end(JSON.stringify({ code: "ALREADY_PROCESSED_PAYMENT", message: "이미 처리된 결제 입니다." })); }
+      orders.set(body.paymentKey, body);
+      return res.end(JSON.stringify(done(body.paymentKey, body.orderId, body.amount)));
+    }
+    const mm = /^\/v1\/payments\/([^/]+)(\/cancel)?$/.exec(path), o = mm && orders.get(decodeURIComponent(mm[1]));
+    if (!o) { res.statusCode = 404; return res.end(JSON.stringify({ code: "NOT_FOUND_PAYMENT", message: "no payment" })); }
+    if (mm[2]) return res.end(JSON.stringify({ ...done(o.paymentKey, o.orderId, o.amount), status: "CANCELED" }));
+    return res.end(JSON.stringify(done(o.paymentKey, o.orderId, o.amount)));
+  }
   if (req.url === "/seen") { res.setHeader("Content-Type", "application/json"); return res.end(JSON.stringify(seen)); }
   if (req.url.startsWith("/upstage")) {
     /* an image of 500–599 bytes (a test PNG with padding) is one Upstage is unsure of */

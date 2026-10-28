@@ -86,7 +86,7 @@ ok(par.every(([st]) => st === 200) && new Set(nos).size === 5 && nos.join() === 
 /* the solution could not be fetched this time: an error, graded again by itself later */
 [s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, M);
 ok(j.session.status === "error" && j.session.detail.tasks.E1.why === "scheme_failed", "solution fetch failed → error (not «no solution») " + j.session.status);
-await sleep(2500);
+await sleep(3500);                                                  // the retry waits more than LAB_TEST_RETRY_SEC (2) whole seconds
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, M);
 ok(j.session.status === "graded" && j.session.detail.tasks.E1.status === "graded" && j.session.detail.tries === 1, "…and graded by itself on the next look " + JSON.stringify([j.session.status, j.session.detail.tries]));
 /* R11: measured tables and graphs need enough measurements — the scheme's number, else 3 / 5 / 7 for an experiment

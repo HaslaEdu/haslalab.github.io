@@ -445,6 +445,8 @@ async function handle(req, env, url) {
   if (ar !== undefined) return ar;
   const lb = await lab(p, m, body, me, req, env, url);
   if (lb !== undefined) return lb;
+  const sh = await shop(p, m, body, me, req, env, url);
+  if (sh !== undefined) return sh;
 
   throw new HttpError(404, "not_found");
 }
@@ -514,7 +516,7 @@ export default {
   async fetch(req, env, ctx) {
     const q = { n: 0, ms: 0 }, t0 = Date.now();
     const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q) } : env, ctx);
-    if (env.LAB_KEEP_HOURS && ctx && Math.random() < 0.02) ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message)));
+    if (keepHours(env) != null && ctx && Math.random() < 0.1) ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message)));
     try { res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}`); res.headers.set("Timing-Allow-Origin", "*"); }
     catch (e) { /* a response passed straight through keeps its own headers */ }
     return res;
@@ -1309,11 +1311,12 @@ async function labR2Drop(env, where, ...args) {
     for (let i = 0; i < keys.length; i += 900) await env.LAB_PAGES.delete(keys.slice(i, i + 900)); }
   catch (e) { console.error("lab r2 drop", e && e.message); }
 }
-/* the keeping time: with LAB_KEEP_HOURS set, the photos of a graded sitting are removed that many hours after grading
-   (what was read on each page, the marks and the report stay).  Unset — the test period — keeps everything.
+/* the keeping time: the photos of a graded sitting are removed LAB_KEEP_HOURS after grading — 2 hours unless set,
+   "off" keeps them (what was read on each page, the marks and the report stay either way).
    Run by the Worker's cron trigger and, now and then, on an ordinary request. */
+const keepHours = env => env.LAB_KEEP_HOURS == null || env.LAB_KEEP_HOURS === "" ? 2 : env.LAB_KEEP_HOURS === "off" ? null : parseFloat(env.LAB_KEEP_HOURS);
 async function labPurge(env) {
-  const h = parseFloat(env.LAB_KEEP_HOURS);
+  const h = keepHours(env);
   if (!(h >= 0)) return 0;
   const rows = (await env.DB.prepare(`SELECT p.id, p.r2_key FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id
     WHERE p.purged_at IS NULL AND s.status='graded' AND s.graded_at<? LIMIT 400`).bind(now() - h * 3600).all()).results;
@@ -1457,6 +1460,134 @@ async function labImage(req, env, pid, cors) {
     "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'", ...cors } });
 }
 
+/* ── getting exam tokens: buying them (Toss Payments) or watching rewarded video ads (a third of a token each) ──
+   Buying: the server writes the order (pack, amount) first; the browser opens Toss's payment window with that order;
+   Toss sends the buyer back to pay.html with paymentKey, orderId and amount; the server checks the amount against
+   its own order and confirms the payment with the secret key, then adds the tokens — once, in one transaction.
+   Ads: the server hands out a one-time number when an ad starts; when the ad network says the reward was earned
+   the page claims it with that number, at least ADS_MIN_SEC later, at most ADS_DAILY a day (Korean day); three
+   thirds make a token.  Environment: TOSS_CLIENT_KEY, TOSS_SECRET_KEY (secret), PAY_PACKS (JSON, optional),
+   ADS_REWARDED_UNIT (a Google Ad Manager rewarded ad unit path; "test" = Google's sample unit), ADS_DAILY, ADS_MIN_SEC. */
+const PACKS = [{ id: "t1", tokens: 1, krw: 1900 }, { id: "t5", tokens: 5, krw: 7900 }, { id: "t12", tokens: 12, krw: 15900 }];
+const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length) return x; } catch (e) {} return PACKS; };
+const adsOf = env => ({ unit: env.ADS_REWARDED_UNIT === "test" ? "/22639388115/rewarded_web_example" : env.ADS_REWARDED_UNIT || null,
+  daily: Math.max(1, parseInt(env.ADS_DAILY) || 3), min_sec: Math.max(0, parseInt(env.ADS_MIN_SEC ?? "10")), parts: 3 });
+const kstDay = t => Math.floor((t + 9 * 3600) / 86400) * 86400 - 9 * 3600;      // the start of today in Korea
+async function toss(env, method, path, body) {
+  const r = await fetch((env.TOSS_BASE || "https://api.tosspayments.com") + path, { method,
+    headers: { Authorization: "Basic " + btoa(env.TOSS_SECRET_KEY + ":"), "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(30000) });
+  return { ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) };
+}
+/* the tokens of a paid order, added once: the order is marked credited in the same transaction */
+async function payCredit(env, o, t) {
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,created_at) SELECT user_id,tokens,'purchase',order_id,? FROM pay_orders WHERE order_id=? AND status='done' AND credited=0").bind(t, o.order_id),
+    env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens+? WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done' AND credited=0)").bind(o.tokens, o.user_id, o.order_id),
+    env.DB.prepare("UPDATE pay_orders SET credited=1 WHERE order_id=? AND status='done' AND credited=0").bind(o.order_id),
+  ]);
+}
+async function shop(p, m, body, me, req, env, url) {
+  const t = now();
+  if (p === "/api/pay/config" && m === "GET") {
+    const ads = adsOf(env);
+    return { pay: env.TOSS_CLIENT_KEY && env.TOSS_SECRET_KEY ? { client_key: env.TOSS_CLIENT_KEY, packs: packsOf(env) } : null,
+      ads: ads.unit ? { unit: ads.unit, daily: ads.daily, parts: ads.parts } : null };
+  }
+  if (p === "/api/pay/order" && m === "POST") {
+    needUser(me);
+    if (!env.TOSS_SECRET_KEY) throw new HttpError(503, "pay_off");
+    const pk = packsOf(env).find(x => x.id === body.pack);
+    if (!pk) bad("bad_pack");
+    await limit(env, "payorder:" + me.id, 30, 3600);
+    const id = "HL" + labScanCode().slice(0, 30);
+    await env.DB.prepare("INSERT INTO pay_orders(order_id,user_id,pack,tokens,amount,created_at) VALUES(?,?,?,?,?,?)").bind(id, me.id, pk.id, pk.tokens, pk.krw, t).run();
+    return { order_id: id, amount: pk.krw, tokens: pk.tokens, order_name: `HaslaLab 실전 토큰 ${pk.tokens}개` };
+  }
+  if (p === "/api/pay/confirm" && m === "POST") {
+    needUser(me);
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(String(body.orderId || "")).first();
+    if (!o || o.user_id !== me.id) throw new HttpError(404, "no_order");
+    if (o.status === "done") { await payCredit(env, o, t); return { ok: true, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens, amount: o.amount } }; }   // a reload of pay.html
+    if (o.status !== "ready") throw new HttpError(409, "order_" + o.status);
+    const key = String(body.paymentKey || "");
+    if (!/^[A-Za-z0-9_-]{1,200}$/.test(key)) bad("bad_payment_key");
+    if (+body.amount !== o.amount) {                                                     // changed before the payment window: refuse
+      await env.DB.prepare("UPDATE pay_orders SET status='failed',error='amount_mismatch' WHERE order_id=? AND status='ready'").bind(o.order_id).run();
+      throw new HttpError(400, "amount_mismatch");
+    }
+    let r = await toss(env, "POST", "/v1/payments/confirm", { paymentKey: key, orderId: o.order_id, amount: o.amount });
+    if (!r.ok && r.j.code === "ALREADY_PROCESSED_PAYMENT") r = await toss(env, "GET", "/v1/payments/" + encodeURIComponent(key));   // confirmed by an earlier request
+    const pay = r.j;
+    if (!r.ok || pay.status !== "DONE" || pay.orderId !== o.order_id || +pay.totalAmount !== o.amount) {
+      await env.DB.prepare("UPDATE pay_orders SET status='failed',payment_key=?,error=? WHERE order_id=? AND status='ready'").bind(key, String(pay.code || pay.status || r.status).slice(0, 100), o.order_id).run();
+      throw new HttpError(402, "pay_failed", { message: pay.message ? String(pay.message).slice(0, 200) : null });
+    }
+    await env.DB.prepare("UPDATE pay_orders SET status='done',payment_key=?,method=?,receipt_url=?,approved_at=? WHERE order_id=? AND status='ready'")
+      .bind(key, pay.method || null, (pay.receipt && pay.receipt.url) || null, t, o.order_id).run();
+    await payCredit(env, o, t);
+    return { ok: true, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens, amount: o.amount } };
+  }
+  if (p === "/api/pay/orders" && m === "GET") {
+    needUser(me);
+    return { orders: (await env.DB.prepare("SELECT order_id,pack,tokens,amount,status,method,receipt_url,created_at,approved_at,canceled_at FROM pay_orders WHERE user_id=? AND status<>'ready' ORDER BY created_at DESC LIMIT 50").bind(me.id).all()).results };
+  }
+  /* a refund (an admin, e.g. a minor's purchase without consent): Toss cancels the payment, the tokens not yet spent go back */
+  if ((m === "POST") && /^\/api\/admin\/pay\/[A-Za-z0-9_-]+\/cancel$/.test(p)) {
+    if (!isAdmin(me)) throw new HttpError(403, "forbidden");
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(p.split("/")[4]).first();
+    if (!o || o.status !== "done") throw new HttpError(409, "not_paid");
+    const r = await toss(env, "POST", `/v1/payments/${encodeURIComponent(o.payment_key)}/cancel`, { cancelReason: String(body.reason || "환불").slice(0, 200) });
+    if (!r.ok) throw new HttpError(502, "cancel_failed", { message: r.j.message || null });
+    await env.DB.batch([
+      env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
+      env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT id,-MIN(exam_tokens,?),'cancel',?,?,? FROM users WHERE id=?").bind(o.tokens, o.order_id, me.id, t, o.user_id),
+      env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=?").bind(o.tokens, o.user_id),
+    ]);
+    return { ok: true };
+  }
+  if (p === "/api/admin/pay/orders" && m === "GET") {
+    if (!isAdmin(me)) throw new HttpError(403, "forbidden");
+    return { orders: (await env.DB.prepare(`SELECT o.*, u.username, u.nickname FROM pay_orders o JOIN users u ON u.id=o.user_id WHERE o.status<>'ready' ORDER BY o.created_at DESC LIMIT 100`).all()).results };
+  }
+
+  /* rewarded ads */
+  if (p === "/api/ads/start" && m === "POST") {
+    needUser(me);
+    const ads = adsOf(env);
+    if (!ads.unit) throw new HttpError(503, "ads_off");
+    await limit(env, "adstart:" + me.id, 30, 86400);
+    const today = (await env.DB.prepare("SELECT COUNT(*) n FROM ad_views WHERE user_id=? AND granted_at>=?").bind(me.id, kstDay(t)).first()).n;
+    if (today >= ads.daily) throw new HttpError(429, "ads_daily", { daily: ads.daily });
+    const nonce = b64u(crypto.getRandomValues(new Uint8Array(24)));
+    await env.DB.prepare("INSERT INTO ad_views(user_id,nonce_hash,started_at) VALUES(?,?,?)").bind(me.id, await sha256(nonce), t).run();
+    return { nonce, left: ads.daily - today };
+  }
+  if (p === "/api/ads/claim" && m === "POST") {
+    needUser(me);
+    const ads = adsOf(env);
+    const v = await env.DB.prepare("SELECT * FROM ad_views WHERE nonce_hash=? AND user_id=?").bind(await sha256(String(body.nonce || "")), me.id).first();
+    if (!v) throw new HttpError(404, "no_ad");
+    if (v.granted_at) throw new HttpError(409, "already_granted");
+    if (t - v.started_at < ads.min_sec) throw new HttpError(409, "too_soon");
+    if (t - v.started_at > 3600) throw new HttpError(409, "expired");
+    /* one transaction: granted once (this request's mark), within today's limit, a third added, three thirds → a token */
+    const claim = b64u(crypto.getRandomValues(new Uint8Array(12)));
+    await env.DB.batch([
+      env.DB.prepare("UPDATE ad_views SET granted_at=?,claim=? WHERE id=? AND granted_at IS NULL AND (SELECT COUNT(*) FROM ad_views WHERE user_id=? AND granted_at>=?) < ?")
+        .bind(t, claim, v.id, me.id, kstDay(t), ads.daily),
+      env.DB.prepare("UPDATE users SET token_parts=token_parts+1 WHERE id=? AND EXISTS(SELECT 1 FROM ad_views WHERE id=? AND claim=?)").bind(me.id, v.id, claim),
+      env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,created_at) SELECT id,1,'ad','3 ads',? FROM users WHERE id=? AND token_parts>=3").bind(t, me.id),
+      env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens+1,token_parts=token_parts-3 WHERE id=? AND token_parts>=3").bind(me.id),
+    ]);
+    const after = await env.DB.prepare("SELECT v.claim, u.exam_tokens, u.token_parts FROM ad_views v JOIN users u ON u.id=v.user_id WHERE v.id=?").bind(v.id).first();
+    if (after.claim !== claim) throw after.claim ? new HttpError(409, "already_granted") : new HttpError(429, "ads_daily", { daily: ads.daily });
+    const today = (await env.DB.prepare("SELECT COUNT(*) n FROM ad_views WHERE user_id=? AND granted_at>=?").bind(me.id, kstDay(t)).first()).n;
+    return { ok: true, tokens: after.exam_tokens, parts: after.token_parts, left: Math.max(0, ads.daily - today) };
+  }
+  return undefined;
+}
+
 async function lab(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
@@ -1589,7 +1720,8 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if (p === "/api/lab/tokens" && m === "GET") {
     needUser(me);
-    return { tokens: await labTokens(env, me.id),
+    const u = await env.DB.prepare("SELECT * FROM users WHERE id=?").bind(me.id).first();
+    return { tokens: await labTokens(env, me.id), parts: (u && u.token_parts) || 0,
       ledger: (await env.DB.prepare("SELECT l.delta,l.reason,l.session_id,l.note,l.created_at,s.exam_key FROM lab_ledger l LEFT JOIN lab_sessions s ON s.id=l.session_id WHERE l.user_id=? ORDER BY l.id DESC LIMIT 50").bind(me.id).all()).results };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/finish$/.exec(p)) && m === "POST") {     // finish early: the bench goes dark now
@@ -1701,7 +1833,7 @@ async function lab(p, m, body, me, req, env, url) {
       const items = revs.filter(r => r.ai_points != null), diff = items.map(r => Math.abs(r.ai_points - r.ref_points));
       const byTask = {}; for (const r of items) { const k = r.session_id + ":" + r.task; (byTask[k] = byTask[k] || { ai: 0, ref: 0, max: 0 }); byTask[k].ai += r.ai_points; byTask[k].ref += r.ref_points; byTask[k].max += r.max_points || 0; }
       const tasksAcc = Object.entries(byTask).map(([k, v]) => ({ key: k, ai: +v.ai.toFixed(2), ref: +v.ref.toFixed(2), max: +v.max.toFixed(2), diff_pct: v.max ? +(100 * Math.abs(v.ai - v.ref) / v.max).toFixed(1) : null }));
-      return { days, prices: PRICES, keep_hours: env.LAB_KEEP_HOURS ?? null, r2: !!env.LAB_PAGES, purged_now: purged, storage: store,
+      return { days, prices: PRICES, keep_hours: keepHours(env), r2: !!env.LAB_PAGES, purged_now: purged, storage: store,
         per_exam: { n: graded.length, avg_usd: avg("usd"), avg_in_tok: avg("in_tok"), avg_out_tok: avg("out_tok"), avg_calls: avg("calls"), avg_grade_ms: avg("grade_ms"), avg_wait_s: avg("wait_s"), avg_pages: avg("pages") },
         steps, sessions,
         accuracy: { items: items.length, mae: diff.length ? +(diff.reduce((a, b) => a + b, 0) / diff.length).toFixed(3) : null,
