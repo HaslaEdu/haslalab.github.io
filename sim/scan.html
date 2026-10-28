@@ -8,7 +8,8 @@
 <meta name="referrer" content="no-referrer">
 <title>답안 스캔 · Answer scan · HaslaLab</title>
 <!-- The phone side of exam mode.  Opened from the QR code on the exam screen: the address after # carries the
-     session id and its upload token (s=, k=), so nothing secret reaches a server log and no sign-in is needed.
+     one scan code (c=: the time in base 36 and 128 random bits in base 62, unique to this sitting and destroyed by the
+     server when scanning ends), so nothing secret reaches a server log and no sign-in is needed.
      Each photo is straightened to an A4 page in the browser (labscan/scanner.js, the 하슬라논술 scan engine:
      page corners → perspective → shadow removal), shown for a check, then sent to the community Worker, which
      reads it with OCR.  The text is checked on the computer. -->
@@ -85,10 +86,11 @@ const MAX_BYTES = 1850000;
    tab only, so a reload still works */
 let H = new URLSearchParams(location.hash.slice(1));
 try {
-  if (H.get("k")) { sessionStorage.setItem("hlScan", H.toString()); history.replaceState(null, "", location.pathname); }
+  if (H.get("c") || H.get("k")) { sessionStorage.setItem("hlScan", H.toString()); history.replaceState(null, "", location.pathname); }
   else H = new URLSearchParams(sessionStorage.getItem("hlScan") || "");
 } catch (e) {}
-const SID = +H.get("s") || 0, KEY = H.get("k") || "";
+/* the link holds one code (c=), made of the time and random digits; older links named the session (s=) beside it (k=) */
+const SID = +H.get("s") || 0, KEY = H.get("c") || H.get("k") || "", UP = SID ? `/lab/up/${SID}` : "/lab/up";
 const API = (H.get("a") || COMMUNITY_API).replace(/\/+$/, "");
 let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.language || "").startsWith("ko") ? "ko" : "en";
 
@@ -107,6 +109,7 @@ const T = {
     ocr: { done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
+    over: "스캔 시간이 끝났습니다. 이 링크는 파기되어 더 이상 쓸 수 없습니다.",
     ceTop: "네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "이대로 펴기", ceCancel: "취소",
     noCanvas: "이 브라우저에서는 사진을 다듬을 수 없어 원본 그대로 보냅니다.",
     err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "사진이 너무 큽니다.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "사진 파일이 아닙니다.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
@@ -125,6 +128,7 @@ const T = {
     ocr: { done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
+    over: "Scanning has ended. This link has been destroyed and can no longer be used.",
     ceTop: "Put the four points on the four corners of the paper.", ceOk: "Straighten", ceCancel: "Cancel",
     noCanvas: "This browser cannot straighten photos, so they are sent as taken.",
     err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "The photo is too large.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "That is not a photo.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
@@ -148,8 +152,10 @@ let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clea
 const srvNow = () => Date.now() / 1000 + SKEW;
 
 async function refresh() {
-  try { INFO = await api("GET", `/lab/up/${SID}`); SKEW = INFO.now - Date.now() / 1000; }
-  catch (e) { INFO = null; $("app").innerHTML = `<div class="note w">${esc(e.code === "bad_token" || e.status === 403 ? t().badLink : t().err[e.code] || e.code)}</div>`; return; }
+  try { INFO = await api("GET", UP); SKEW = INFO.now - Date.now() / 1000; }
+  catch (e) { INFO = null;
+    if (e.code === "scan_over") { try { sessionStorage.removeItem("hlScan"); } catch (x) {} $("clock").textContent = "--:--"; }
+    $("app").innerHTML = `<div class="note w">${esc(e.code === "scan_over" ? t().over : e.code === "bad_token" || e.status === 403 ? t().badLink : t().err[e.code] || e.code)}</div>`; return; }
   if (!task || !INFO.tasks.includes(task)) task = INFO.tasks[0];
   paint();
 }
@@ -185,7 +191,7 @@ function sentList() {
 function wireSent() {
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
     b.disabled = true;
-    try { await api("DELETE", `/lab/up/${SID}/pages/${b.dataset.del}`); await refresh(); } catch (e) { toast(t().err[e.code] || e.code); b.disabled = false; }
+    try { await api("DELETE", `${UP}/pages/${b.dataset.del}`); await refresh(); } catch (e) { toast(t().err[e.code] || e.code); b.disabled = false; }
   });
 }
 
@@ -243,7 +249,7 @@ async function send() {
   const b = $("send"); b.disabled = true; b.textContent = t().sending;
   try {
     const body = await asJpeg(shot.blob);
-    const r = await api("PUT", `/lab/up/${SID}/pages?task=${encodeURIComponent(shot.task)}&kind=${shot.kind}`, body, "image/jpeg");
+    const r = await api("PUT", `${UP}/pages?task=${encodeURIComponent(shot.task)}&kind=${shot.kind}`, body, "image/jpeg");
     const msg = [t().sentOk(r.no)];
     if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
     if (r.legible) msg.push(t().legH[r.legible]);
@@ -369,7 +375,7 @@ setInterval(() => {
   if (left <= -2 && INFO.open) { INFO.open = false; paint(); }
 }, 500);
 setInterval(() => { if (!shot) refresh(); }, 20000);
-if (!SID || !KEY) $("app").innerHTML = `<div class="note w">${t().badLink}</div>`; else refresh();
+if (!KEY) $("app").innerHTML = `<div class="note w">${t().badLink}</div>`; else refresh();
 </script>
 </body>
 </html>

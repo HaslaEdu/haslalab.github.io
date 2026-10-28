@@ -679,7 +679,7 @@ async function scanView() {
   poll(); poller = setInterval(poll, 4000);
 }
 function scanUrl(k) {
-  const u = new URL("scan.html", location.href), h = new URLSearchParams({ s: SES.id, k, l: lang });
+  const u = new URL("scan.html", location.href), h = new URLSearchParams({ c: k, l: lang });   // the code alone: no session number in the link
   if (apiBase() !== COMMUNITY_API) h.set("a", apiBase());
   return u.origin + u.pathname + "#" + h.toString();
 }

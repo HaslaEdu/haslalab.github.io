@@ -215,6 +215,7 @@ async function handle(req, env, url) {
   if (p === "/api/me" && m === "DELETE") {
     needUser(me);
     // posts and comments stay so threads keep making sense; the name goes
+    await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
     await env.DB.batch([
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
@@ -513,10 +514,13 @@ export default {
   async fetch(req, env, ctx) {
     const q = { n: 0, ms: 0 }, t0 = Date.now();
     const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q) } : env, ctx);
+    if (env.LAB_KEEP_HOURS && ctx && Math.random() < 0.02) ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message)));
     try { res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}`); res.headers.set("Timing-Allow-Origin", "*"); }
     catch (e) { /* a response passed straight through keeps its own headers */ }
     return res;
   },
+  /* a cron trigger (optional): remove the answer photos whose keeping time is over */
+  async scheduled(event, env, ctx) { ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message))); },
 };
 const worker = {
   async fetch(req, env) {
@@ -718,16 +722,18 @@ function imageType(b) {
   if (b.length >= 12 && String.fromCharCode(...b.slice(0, 4)) === "RIFF" && String.fromCharCode(...b.slice(8, 12)) === "WEBP") return "image/webp";
   return null;
 }
-async function ocr(env, file, mode) {
+async function ocr(env, file, mode, m) {
   const head = new Uint8Array(await file.slice(0, 16).arrayBuffer()), type = imageType(head);
   if (!type) throw new HttpError(415, "bad_image");
   const out = new FormData();
   out.append("document", new File([await file.arrayBuffer()], "answer." + type.split("/")[1], { type }));
   if (mode === "math") { out.append("model", "document-parse"); out.append("ocr", "force"); out.append("output_formats", JSON.stringify(["markdown"])); }
   else out.append("model", "ocr");
+  const t0 = Date.now(), model = mode === "math" ? "document-parse" : "ocr";
   const r = await fetch(env.UPSTAGE_BASE || AR.upstage, { method: "POST", headers: { Authorization: "Bearer " + env.UPSTAGE_API_KEY }, body: out, signal: AbortSignal.timeout(70000) });
-  if (!r.ok) { console.error("upstage", r.status, (await r.text()).slice(0, 200)); throw new HttpError(502, "ocr_failed"); }
+  if (!r.ok) { meterAdd(env, m, { step: "ocr", provider: "upstage", model, ms: Date.now() - t0, ok: 0, error: "http " + r.status }); console.error("upstage", r.status, (await r.text()).slice(0, 200)); throw new HttpError(502, "ocr_failed"); }
   const j = await r.json();
+  meterAdd(env, m, { step: "ocr", provider: "upstage", model, price_key: "upstage:" + model, pages: (j.usage && j.usage.pages) || 1, ms: Date.now() - t0, ok: 1 });
   const text = mode === "math" ? (j.content && j.content.markdown) || (j.elements || []).map(e => e.content && e.content.markdown || "").join("\n") || j.text : j.text || "";
   const conf = typeof j.confidence === "number" ? j.confidence : null;
   return { text: String(text || "").slice(0, AR.maxAnswer), confidence: conf };
@@ -969,11 +975,25 @@ async function labOwned(env, id, me) {
   if (!s || (s.user_id !== me.id && !isAdmin(me))) throw new HttpError(404, "not_found");
   return s;
 }
+/* the phone's scan link carries one code and nothing else (not the session's number): the time it was made in base 36
+   and 128 random bits in base 62.  Only its SHA-256 is kept, unique across all sessions (migration 0009), so two
+   candidates can never share a link; when scanning ends the hash is struck out ('void:' + hash) and the link is dead. */
+const B62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+function labScanCode() {
+  let n = BigInt("0x" + [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, "0")).join("")), r = "";
+  for (let i = 0; i < 22; i++) { r = B62[Number(n % 62n)] + r; n /= 62n; }
+  return Date.now().toString(36) + r;
+}
 async function labByToken(req, env, id) {
   const tok = req.headers.get("X-Lab-Token") || "";
-  const s = /^[A-Za-z0-9_-]{20,64}$/.test(tok) ? await env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first() : null;
-  if (!s || await sha256(tok) !== s.upload_hash) throw new HttpError(403, "bad_token");
-  return s;
+  if (!/^[A-Za-z0-9_-]{20,64}$/.test(tok)) throw new HttpError(403, "bad_token");
+  const h = await sha256(tok);
+  const s = id ? await env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first()        // the older links name the session
+    : await env.DB.prepare("SELECT * FROM lab_sessions WHERE upload_hash=?").bind(h).first();
+  if (s && s.upload_hash === h) return s;
+  if (s ? s.upload_hash === "void:" + h : await env.DB.prepare("SELECT 1 FROM lab_sessions WHERE upload_hash=?").bind("void:" + h).first())
+    throw new HttpError(410, "scan_over");                                                        // scanning ended: the link was destroyed
+  throw new HttpError(403, "bad_token");
 }
 const labOpen = (s, t) => s.status === "scanning" && t <= s.scan_until + LAB.graceSec;
 const labGet = (env, id) => env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first();
@@ -1047,7 +1067,7 @@ function labPrompt(s, task, rb, rubric, answer, lang) {
    account by its workers.dev address, so the PDF Worker cannot be asked); the release is named after the file's prefix */
 const solUrl = (env, name) => env.LAB_PDF_BASE ? env.LAB_PDF_BASE + name
   : `https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-${name.split("_")[0].toLowerCase()}/${name}`;
-const LAB_REG = { version: "2026-10-28", rules: [
+const LAB_REG = { version: "2026-10-29", rules: [
   { id: "R1", en: "A final answer counts only if it is written in its box on an official answer sheet. A value that appears only on a working sheet earns at most the method marks the scheme gives for it.", ko: "최종 답은 공식 답안지의 해당 칸에 쓴 것만 인정합니다. 연습지에만 있는 값은 기준표가 정한 풀이 점수까지만 받습니다." },
   { id: "R2", en: "When the answer sheet and a working sheet disagree, the answer sheet governs.", ko: "답안지와 연습지가 다르면 답안지를 따릅니다." },
   { id: "R3", en: "Units follow the marking scheme. Where it says nothing, a value with a missing or wrong unit earns no marks.", ko: "단위는 기준표를 따르고, 기준표에 말이 없으면 단위가 없거나 틀린 값은 점수를 받지 못합니다." },
@@ -1057,9 +1077,12 @@ const LAB_REG = { version: "2026-10-28", rules: [
   { id: "R7", en: "A graph earns only the checks the scheme lists (axes and units, scale, plotted points, fitted line, slope read off) that can be seen on it.", ko: "그래프는 기준표의 확인 항목(축과 단위, 눈금, 찍은 점, 맞춤선, 기울기 읽기) 가운데 그래프에서 보이는 것만 점수를 받습니다." },
   { id: "R8", en: "A table earns marks only for the columns, units and number of measurements the scheme asks for that can be seen on it.", ko: "표는 기준표가 요구하는 열, 단위, 측정 횟수 가운데 표에서 보이는 것만 점수를 받습니다." },
   { id: "R9", en: "Every mark must point to the page and the answer it comes from. A mark without that evidence is 0.", ko: "모든 점수는 그 근거가 되는 쪽과 답을 가리켜야 하며, 근거가 없는 점수는 0점입니다." },
+  { id: "R11", en: "Every measured table and graph must hold at least the number of measurements the marking scheme asks for. Where the scheme gives no number, the minimum follows the experiment: 3 for a measurement that needs few points, 5 for a medium one and 7 for one that needs many. A table or graph below its minimum earns nothing for its number of measurements.", ko: "측정표와 그래프에는 채점 기준표가 요구하는 수 이상의 측정값이 있어야 합니다. 기준표에 수가 없으면 실험에 따라 정합니다: 측정이 적은 실험 3개, 중간 5개, 많은 실험 7개. 최소 개수에 못 미치는 표나 그래프는 측정 개수에 대한 점수를 받지 못합니다." },
   { id: "R10", en: "Whatever cannot be read — illegible writing, a blurred, cut-off or missing page — is the candidate's responsibility and earns no marks. There is no benefit of the doubt and no re-reading.", ko: "알아볼 수 없는 글씨, 흐리거나 잘리거나 빠진 쪽처럼 읽을 수 없는 것은 응시자 책임이며 점수를 받지 못합니다. 유리하게 해석하거나 다시 읽어 주지 않습니다." },
 ] };
-const LAB_CHECKS = ["axes_labeled", "axes_units", "scale_ok", "points_min", "fit_line", "slope_read", "error_bars", "title"];
+const LAB_CHECKS = ["axes_labeled", "axes_units", "scale_ok", "points_min", "fit_line", "slope_read", "error_bars", "title", "rows_min", "columns_units"];
+/* how many measurements an experiment's table or graph needs when the scheme gives no number (R11) */
+const N_MIN = { few: 3, medium: 5, many: 7 };
 const N = (o) => ({ ...o, nullable: true });
 const SCHEME_SCHEMA = { type: "object", properties: {
   points: { type: "number" }, unit_rule: { type: "string" }, notes: { type: "string" },
@@ -1069,6 +1092,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
     full_min: N({ type: "number" }), full_max: N({ type: "number" }),
     partial: { type: "array", items: { type: "object", properties: { min: { type: "number" }, max: { type: "number" }, points: { type: "number" } }, required: ["min", "max", "points"] } },
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
+    n_min: N({ type: "integer" }), n_class: N({ type: "string", enum: ["few", "medium", "many"] }),
   }, required: ["id", "points", "type", "sheet", "what"] } } }, required: ["points", "items"] };
 const PAGE_SCHEMA = { type: "object", properties: {
   header: { type: "object", properties: { task: N({ type: "string" }), sheet: N({ type: "string", enum: ["answer", "working", "other"] }), page: N({ type: "integer" }) } },
@@ -1091,21 +1115,53 @@ const GRADE_SCHEMA = { type: "object", properties: {
 }, required: ["items", "feedback"] };
 
 function b64(buf) { let s = ""; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000)); return btoa(s); }
-async function gemini(env, parts, schema, max) {
+/* ── what each AI call of an exam costs: tokens, an estimated price and time, one row of lab_calls per call ──
+   USD per million tokens [input, output] (thinking is billed as output; cached input at a quarter), or per page for
+   Upstage.  LAB_PRICES (JSON, same shape) overrides or adds models; a model with no price is recorded without one. */
+const PRICES = { "gemini-flash-latest": [0.30, 2.50], "gemini-2.5-flash": [0.30, 2.50], "gemini-flash-lite-latest": [0.10, 0.40], "gemini-2.5-flash-lite": [0.10, 0.40],
+  "gemini-3-flash-preview": [0.50, 3.00], "upstage:document-parse": { page: 0.01 }, "upstage:ocr": { page: 0.0015 } };
+function priceOf(env, model, c) {
+  let t = PRICES; try { if (env.LAB_PRICES) t = { ...PRICES, ...JSON.parse(env.LAB_PRICES) }; } catch (e) {}
+  const p = t[model]; if (!p) return null;
+  if (p.page != null) return +(p.page * (c.pages || 0)).toFixed(6);
+  return +((((c.in || 0) - 0.75 * (c.cached || 0)) * p[0] + (c.out || 0) * p[1]) / 1e6).toFixed(6);
+}
+const meter = () => ({ calls: [] });
+function meterAdd(env, m, call) { if (m) m.calls.push({ ...call, usd: call.ok ? priceOf(env, call.price_key || call.model, call) : null }); }
+const meterSum = m => m && m.calls.reduce((a, c) => ({ calls: a.calls + 1, in: a.in + (c.in || 0), out: a.out + (c.out || 0), cached: a.cached + (c.cached || 0),
+  usd: +(a.usd + (c.usd || 0)).toFixed(6), ms: a.ms + c.ms, failed: a.failed + (c.ok ? 0 : 1) }), { calls: 0, in: 0, out: 0, cached: 0, usd: 0, ms: 0, failed: 0 });
+async function meterSave(env, sid, task, pageId, m) {
+  if (!m || !m.calls.length) return;
+  try {
+    await env.DB.batch(m.calls.map(c => env.DB.prepare(`INSERT INTO lab_calls(session_id,task,page_id,step,provider,model,in_tok,out_tok,cached_tok,pages,usd,ms,ok,error,created_at)
+      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(sid, task || null, pageId || null, c.step, c.provider, c.model || null, c.in ?? null, c.out ?? null, c.cached ?? null,
+      c.pages ?? null, c.usd ?? null, c.ms, c.ok ? 1 : 0, c.error || null, now())));
+    m.calls = [];
+  } catch (e) { console.error("lab meter", e && e.message); }        // before migration 0009 there is nowhere to keep it; grading goes on
+}
+
+async function gemini(env, parts, schema, max, m, step) {
   const model = env.GEMINI_MODEL || "gemini-flash-latest";
-  const r = await fetch(`${env.GEMINI_BASE || AR.gemini}/${model}:generateContent`, {
-    method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
-    body: JSON.stringify({ contents: [{ role: "user", parts }],
-      generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0, maxOutputTokens: max || 8192 } }),
-    signal: AbortSignal.timeout(110000) });
-  if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 200));
-  const j = await r.json();
-  return { raw: parseJsonText((j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("")), model: "gemini:" + model };
+  const t0 = Date.now(); let metered = false;
+  try {
+    const r = await fetch(`${env.GEMINI_BASE || AR.gemini}/${model}:generateContent`, {
+      method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+      body: JSON.stringify({ contents: [{ role: "user", parts }],
+        generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0, maxOutputTokens: max || 8192 } }),
+      signal: AbortSignal.timeout(110000) });
+    if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 200));
+    const j = await r.json(), u = j.usageMetadata || {};
+    meterAdd(env, m, { step, provider: "gemini", model, in: u.promptTokenCount, out: (u.candidatesTokenCount || 0) + (u.thoughtsTokenCount || 0), cached: u.cachedContentTokenCount || 0, ms: Date.now() - t0, ok: 1 }); metered = true;
+    return { raw: parseJsonText((j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("")), model: "gemini:" + model };
+  } catch (e) {
+    if (!metered) meterAdd(env, m, { step, provider: "gemini", model, ms: Date.now() - t0, ok: 0, error: String(e && e.message || e).slice(0, 200) });
+    throw e;
+  }
 }
 const SOL_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/;
 
 /* 1. the marking scheme of one experiment, from its official solution (the English original when there is one) */
-async function labScheme(env, s, task) {
+async function labScheme(env, s, task, m) {
   const src = ((s.sources ? JSON.parse(s.sources) : {})[task] || {}).sol;
   if (!src || !SOL_RE.test(src)) return null;
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, src).first();
@@ -1125,10 +1181,11 @@ async function labScheme(env, s, task) {
       `If the document holds several problems, use only ${task} (it may be called Problem ${task.replace(/\D/g, "") || task}, Experiment ${task.replace(/\D/g, "")} or ${task}).`,
       "List every marked item of the marking scheme exactly as printed: its id (e.g. A.1), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
-      "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min: n = the number of points required).",
+      "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
+      "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
       "unit_rule: what the scheme says about units, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
-  ], SCHEME_SCHEMA, 16384);
+  ], SCHEME_SCHEMA, 16384, m, "scheme");
   const sc = out.raw;
   if (!sc || !Array.isArray(sc.items) || !sc.items.length) throw new Error("empty scheme");
   sc.items = sc.items.filter(i => i && i.id && i.points > 0).map(i => ({ ...i, id: String(i.id).slice(0, 20) }));
@@ -1144,14 +1201,14 @@ const schemeFromRubric = rb => { const items = JSON.parse(rb.rubric).map(c => ({
 /* 2. what is on one page */
 /* Upstage reads the handwriting first (Document Parse, built for documents: digits, symbols, tables); Gemini then
    lays out what is on the page, with that transcript beside the image.  Its confidence also caps the legibility. */
-async function labUpstage(env, buf, mime) {
+async function labUpstage(env, buf, mime, m) {
   if (!env.UPSTAGE_API_KEY) return null;
-  try { return await ocr(env, new Blob([buf], { type: mime }), "math"); }
+  try { return await ocr(env, new Blob([buf], { type: mime }), "math", m); }
   catch (e) { console.error("lab upstage", e && (e.code || e.message)); return null; }
 }
 const LEG = ["good", "partial", "poor"];
 const capLegible = (leg, conf) => conf == null ? leg : LEG[Math.max(LEG.indexOf(leg), conf < 0.3 ? 2 : conf < 0.6 ? 1 : 0)];
-async function labReadPage(env, s, buf, mime, up) {
+async function labReadPage(env, s, buf, mime, up, m) {
   const out = await gemini(env, [
     { text: [`[TASK: read page] A photographed page of the official answer sheets or working sheets of ${s.comp.toUpperCase()} ${s.year}, experiments ${JSON.parse(s.tasks).join(", ")}.`,
       "Read the printed header: which experiment (task, e.g. E1), whether it is an answer sheet (Answer Sheet / Answer Form) or a working sheet (Working Sheet / Writing Sheet), and the page number. Use null when it is not printed or cannot be read.",
@@ -1163,7 +1220,7 @@ async function labReadPage(env, s, buf, mime, up) {
     { inline_data: { mime_type: mime, data: b64(buf) } },
     ...(up && up.text ? [{ text: "A document OCR engine (Upstage) transcribed this page as below. Use it to check digits, signs, units and symbols, " +
       "but the image governs: keep only what you can see written there.\n<<OCR>>\n" + up.text.slice(0, 12000) + "\n<<END>>" }] : []),
-  ], PAGE_SCHEMA, 8192);
+  ], PAGE_SCHEMA, 8192, m, "read");
   const r = out.raw || {};
   r.items = Array.isArray(r.items) ? r.items.slice(0, 80) : [];
   r.legible = capLegible(LEG.includes(r.legible) ? r.legible : "poor", up ? up.confidence : null);
@@ -1186,6 +1243,9 @@ function labScore(scheme, raw, pages) {
     if (!pg) return zero("R9");                                                   // no page to point to
     res.page = pg.no; res.sheet = pg.kind;
     const read = pg.read ? JSON.parse(pg.read) : { items: [] }, live = (read.items || []).filter(i => !i.crossed_out);
+    /* the table or graph of this item as read (by its label, else the first of its kind), and how many measurements it needs (R11) */
+    const pick = kind => live.find(i => i.kind === kind && (kind !== "graph" || i.graph) && i.label === it.id) || live.find(i => i.kind === kind && (kind !== "graph" || i.graph));
+    const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
     if (it.sheet === "answer" && pg.kind !== "answer") return zero("R1");          // a final answer off the answer sheet
     if (it.type === "value" && it.full_min != null && it.full_max != null) {
       const v = Number(g.value);
@@ -1197,15 +1257,35 @@ function labScore(scheme, raw, pages) {
       else for (const p of it.partial || []) if (v >= Math.min(p.min, p.max) && v <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
       res.got = pts;
     } else if (it.type === "graph" && Array.isArray(it.checks) && it.checks.length) {
-      const gr = live.find(i => i.kind === "graph" && i.graph);
+      const gr = pick("graph");
       if (!gr) return zero("R9");
       const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), seen = gr.graph;
-      res.got = it.checks.reduce((a, c) => a + (met.has(c.check) && (c.check === "points_min" ? (seen.n_points || 0) >= (c.n || 1) : !!seen[c.check]) ? c.points : 0), 0);
+      res.got = it.checks.reduce((a, c) => a + (c.check === "points_min" ? ((seen.n_points || 0) >= (c.n || nmin || 1) ? c.points : 0)    // counted from what was read (R11)
+        : met.has(c.check) && !!seen[c.check] ? c.points : 0), 0);
       if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R7");
+    } else if (it.type === "table" && Array.isArray(it.checks) && it.checks.length) {
+      const tb = pick("table");
+      if (!tb) return zero("R9");
+      const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = tb.rows || 0;
+      res.got = it.checks.reduce((a, c) => a + (c.check === "rows_min" ? (rows >= (c.n || nmin || 1) ? c.points : 0)
+        : c.check === "columns_units" ? (met.has(c.check) && (tb.columns || []).length ? c.points : 0) : met.has(c.check) ? c.points : 0), 0);
+      if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R8");
     } else {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
     }
+    /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
+    if (nmin && (it.type === "graph" || it.type === "table") && !(it.checks || []).some(c => c.check === "points_min" || c.check === "rows_min")) {
+      const m = it.type === "graph" ? pick("graph") : pick("table"), n = m ? (it.type === "graph" ? m.graph.n_points : m.rows) || 0 : 0;
+      if (m && n < nmin) { res.got = res.got / 2; rules.add("R11"); }
+    }
+    const counts = (it.checks || []).filter(c => c.check === "points_min" || c.check === "rows_min");
+    if (counts.length) {
+      const m = it.type === "graph" ? pick("graph") : pick("table"), n = m ? (it.type === "graph" ? (m.graph || {}).n_points : m.rows) || 0 : 0;
+      const need = Math.max(...counts.map(c => c.n || nmin || 0));
+      if (m && n < need) rules.add("R11");
+    }
+    if (nmin) res.n_min = nmin;
     res.got = +Math.min(it.points, res.got).toFixed(2);
     res.decision = res.got >= it.points ? "met" : res.got > 0 ? "partial" : "not_met";
     res.rules = [...rules];
@@ -1215,11 +1295,40 @@ function labScore(scheme, raw, pages) {
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
   return { items, feedback, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
 }
-async function labGradeVision(env, s, task, mine, scheme, lang) {
+/* a page's photo: in R2 when the Worker has the LAB_PAGES bucket, otherwise in the row; null once removed after its keeping time */
+async function labPageBytes(env, row) {
+  if (!row) return null;
+  if (row.r2_key) { const o = env.LAB_PAGES && await env.LAB_PAGES.get(row.r2_key); return o ? new Uint8Array(await o.arrayBuffer()) : null; }
+  const d = row.data, n = d ? (d.byteLength ?? d.length) : 0;          // D1 hands a BLOB back as an ArrayBuffer or as an array of bytes
+  return n ? new Uint8Array(d) : null;
+}
+/* the R2 photos of the pages a statement is about to delete */
+async function labR2Drop(env, where, ...args) {
+  if (!env.LAB_PAGES) return;
+  try { const keys = (await env.DB.prepare(`SELECT r2_key FROM lab_pages WHERE r2_key IS NOT NULL AND ${where}`).bind(...args).all()).results.map(r => r.r2_key);
+    for (let i = 0; i < keys.length; i += 900) await env.LAB_PAGES.delete(keys.slice(i, i + 900)); }
+  catch (e) { console.error("lab r2 drop", e && e.message); }
+}
+/* the keeping time: with LAB_KEEP_HOURS set, the photos of a graded sitting are removed that many hours after grading
+   (what was read on each page, the marks and the report stay).  Unset — the test period — keeps everything.
+   Run by the Worker's cron trigger and, now and then, on an ordinary request. */
+async function labPurge(env) {
+  const h = parseFloat(env.LAB_KEEP_HOURS);
+  if (!(h >= 0)) return 0;
+  const rows = (await env.DB.prepare(`SELECT p.id, p.r2_key FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id
+    WHERE p.purged_at IS NULL AND s.status='graded' AND s.graded_at<? LIMIT 400`).bind(now() - h * 3600).all()).results;
+  if (!rows.length) return 0;
+  const keys = rows.map(r => r.r2_key).filter(Boolean);
+  if (keys.length && env.LAB_PAGES) await env.LAB_PAGES.delete(keys);
+  await env.DB.batch(rows.map(r => env.DB.prepare("UPDATE lab_pages SET data=X'',purged_at=? WHERE id=?").bind(now(), r.id)));
+  return rows.length;
+}
+async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   /* pages read earlier carry what was read; a page whose reading failed on arrival is read now */
   for (const p of mine) if (!p.read) {
-    try { const row = await env.DB.prepare("SELECT mime,data FROM lab_pages WHERE id=?").bind(p.id).first();
-      const img = new Uint8Array(row.data), rd = await labReadPage(env, s, img, row.mime, p.ocr ? { text: p.ocr, confidence: p.ocr_conf } : await labUpstage(env, img, row.mime));
+    try { const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
+      if (!img) continue;
+      const rd = await labReadPage(env, s, img, row.mime, p.ocr ? { text: p.ocr, confidence: p.ocr_conf } : await labUpstage(env, img, row.mime, m), m);
       p.read = JSON.stringify(rd); p.legible = rd.legible;
       await env.DB.prepare("UPDATE lab_pages SET read=?,legible=?,text=?,ocr_status='done' WHERE id=?").bind(p.read, rd.legible, readText(rd), p.id).run();
     } catch (e) { console.error("lab read", e && e.message); }
@@ -1236,25 +1345,32 @@ async function labGradeVision(env, s, task, mine, scheme, lang) {
   const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
   for (const p of order) {
     parts.push({ text: `[p${p.no} · ${p.kind === "answer" ? "Answer sheet" : "Working sheet"} · ${p.task}${p.legible ? " · legible: " + p.legible : ""}] read: ${p.read || "(could not be read)"}` });
-    const row = await env.DB.prepare("SELECT mime,data FROM lab_pages WHERE id=?").bind(p.id).first();
-    const size = row.data.byteLength * 4 / 3;
-    if (size < budget) { parts.push({ inline_data: { mime_type: row.mime, data: b64(new Uint8Array(row.data)) } }); budget -= size; }
+    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
+    const size = img ? img.byteLength * 4 / 3 : Infinity;
+    if (size < budget) { parts.push({ inline_data: { mime_type: row.mime, data: b64(img) } }); budget -= size; }
   }
-  const out = await gemini(env, parts, GRADE_SCHEMA, 16384);
+  const out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");
   const sc = labScore(scheme, out.raw, mine);
   return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
 async function labGradeTask(env, s, task, pages, rb, lang) {
+  const m = meter(), t0 = Date.now();
+  const res = await labGradeTask1(env, s, task, pages, rb, lang, m);
+  const usage = { ...meterSum(m), wall_ms: Date.now() - t0 };
+  await meterSave(env, s.id, task, null, m);
+  return usage.calls ? { ...res, usage } : res;
+}
+async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   const mine = pages.filter(p => p.task === task);
   if (env.GEMINI_API_KEY) {
     let scheme;
-    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task); }
+    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task, m); }
     catch (e) { console.error("lab scheme", e && e.message); return { status: "error", why: "scheme_failed", points: null, pages: mine.length }; }
     if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, pages: 0 };
     if (!scheme) return { status: "pending", why: "no_solution", points: null, pages: mine.length };
-    try { return await labGradeVision(env, s, task, mine, scheme, lang); }
+    try { return await labGradeVision(env, s, task, mine, scheme, lang, m); }
     catch (e) { console.error("lab grade", e && e.message); return { status: "error", points: scheme.points, pages: mine.length }; }
   }
   return labGradeText(env, s, task, mine, rb, lang);
@@ -1291,13 +1407,14 @@ async function labGradeAll(env, s, lang, only, list) {
   }
   const rbs = (await env.DB.prepare("SELECT * FROM lab_rubrics WHERE exam_key=?").bind(s.exam_key).all()).results;
   const prev = s.detail ? JSON.parse(s.detail) : {}, per = prev.tasks || {};
+  const t0 = Date.now();
   await Promise.all(tasks.filter(t => list ? list.includes(t) : !only || only === t).map(async t => { per[t] = await labGradeTask(env, s, t, pages, rbs.find(r => r.task === t), lang); }));
-  return labSave(env, s, tasks, per, prev.tries);
+  return labSave(env, s, tasks, per, prev.tries, Date.now() - t0);
 }
-async function labSave(env, s, tasks, per, tries) {
+async function labSave(env, s, tasks, per, tries, ms) {
   const tot = labTotal(tasks, per), t = now();
   const retry = tot.status === "error" || Object.values(per).some(x => x && x.status === "pending" && x.why === "no_solution");
-  const detail = { tasks: per, at: t, tries: retry ? (tries || 0) + 1 : tries || 0 };
+  const detail = { tasks: per, at: t, tries: retry ? (tries || 0) + 1 : tries || 0, ...(ms != null ? { grade_ms: ms } : {}) };
   await env.DB.prepare("UPDATE lab_sessions SET status=?,score=?,points=?,detail=?,graded_at=? WHERE id=?")
     .bind(tot.status, tot.status === "graded" ? tot.score : null, tot.points, JSON.stringify(detail), tot.status === "graded" ? t : null, s.id).run();
   return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
@@ -1306,7 +1423,8 @@ async function labSave(env, s, tasks, per, tries) {
    poll after the deadline cannot grade it twice; a grading that died half-way is retried after five minutes */
 async function labFinalize(env, s, lang) {
   const t = now();
-  const r = await env.DB.prepare("UPDATE lab_sessions SET status='grading',submitted_at=? WHERE id=? AND (status='scanning' OR (status='grading' AND submitted_at<?))")
+  const r = await env.DB.prepare(`UPDATE lab_sessions SET status='grading',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
+    WHERE id=? AND (status='scanning' OR (status='grading' AND submitted_at<?))`)
     .bind(t, s.id, t - LAB.staleSec).run();
   if (!r.meta.changes) return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
   return labGradeAll(env, { ...s, status: "grading" }, lang);
@@ -1331,9 +1449,11 @@ async function labStanding(env, s) {
 async function labImage(req, env, pid, cors) {
   const me = await currentUser(req, env);
   if (!me) return json({ error: "login_required" }, 401, cors);
-  const row = await env.DB.prepare("SELECT p.mime,p.data,s.user_id FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id WHERE p.id=?").bind(pid).first();
+  const row = await env.DB.prepare("SELECT p.*,s.user_id FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id WHERE p.id=?").bind(pid).first();
   if (!row || (row.user_id !== me.id && !isAdmin(me))) return json({ error: "not_found" }, 404, cors);
-  return new Response(new Uint8Array(row.data), { headers: { "Content-Type": row.mime, "Cache-Control": "private, no-store",
+  const img = await labPageBytes(env, row);
+  if (!img) return json({ error: "purged" }, 410, cors);                            // removed after its keeping time
+  return new Response(img, { headers: { "Content-Type": row.mime, "Cache-Control": "private, no-store",
     "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'", ...cors } });
 }
 
@@ -1343,15 +1463,15 @@ async function lab(p, m, body, me, req, env, url) {
   const t = now();
 
   /* the phone: holds the upload token from the QR code, not a sign-in */
-  if ((r = /^\/api\/lab\/up\/(\d+)$/.exec(p)) && m === "GET") {
-    const s = await labAdvance(env, await labByToken(req, env, +r[1]));
+  if ((r = /^\/api\/lab\/up(?:\/(\d+))?$/.exec(p)) && m === "GET") {
+    const s = await labAdvance(env, await labByToken(req, env, r[1] ? +r[1] : null));
     const pages = await labPagesOf(env, s.id);
     return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, status: s.status,
       open: labOpen(s, t), ended_at: s.ended_at, scan_until: s.scan_until, now: t, max_pages: LAB.maxPages,
       pages: pages.map(x => ({ id: x.id, no: x.no, task: x.task, kind: x.kind, ocr_status: x.ocr_status, legible: x.legible || null })) };
   }
-  if ((r = /^\/api\/lab\/up\/(\d+)\/pages$/.exec(p)) && m === "PUT") {
-    const s = await labAdvance(env, await labByToken(req, env, +r[1]));
+  if ((r = /^\/api\/lab\/up(?:\/(\d+))?\/pages$/.exec(p)) && m === "PUT") {
+    const s = await labAdvance(env, await labByToken(req, env, r[1] ? +r[1] : null));
     if (!labOpen(s, t)) throw new HttpError(409, "closed");
     const task = url.searchParams.get("task") || "", kind = url.searchParams.get("kind") || "";
     if (!JSON.parse(s.tasks).includes(task)) bad("bad_task");
@@ -1364,12 +1484,13 @@ async function lab(p, m, body, me, req, env, url) {
     if (cnt.n >= LAB.maxPages) throw new HttpError(413, "too_many_pages");
     let text = null, conf = null, status = "off", read = null, legible = null, ocrText = null;
     let tk = task, kd = kind;
+    const mt = meter();
     if (env.GEMINI_API_KEY) {
       try {
         await limit(env, "labocr:" + s.user_id, LAB.ocrPerDay, 86400);
-        const up = await labUpstage(env, buf, mime);
+        const up = await labUpstage(env, buf, mime, mt);
         if (up) { conf = up.confidence; }
-        const rd = await labReadPage(env, s, buf, mime, up), h = rd.header || {};
+        const rd = await labReadPage(env, s, buf, mime, up, mt), h = rd.header || {};
         /* the printed header of the official sheet decides which experiment and which sheet; the phone's choice is the fallback */
         let ht = typeof h.task === "string" ? h.task.trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, "") : "";
         const code = /^([AW])(\d)(?:-\d+)?$/.exec(ht);               // an official sheet's code: A1-3, W2-1
@@ -1383,22 +1504,27 @@ async function lab(p, m, body, me, req, env, url) {
     } else if (env.UPSTAGE_API_KEY) {
       try {
         await limit(env, "labocr:" + s.user_id, LAB.ocrPerDay, 86400);
-        const o = await ocr(env, new Blob([buf], { type: mime }), "math");
+        const o = await ocr(env, new Blob([buf], { type: mime }), "math", mt);
         text = o.text; conf = o.confidence; status = "done";
       } catch (e) { console.error("lab ocr", e && (e.code || e.message)); status = "failed"; }
     }
     /* the page number is given in the same statement that stores the page: pages read at the same time
        (a phone sending several, two phones) cannot get the same number */
-    const res = await env.DB.prepare(`INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_conf,ocr_status,text,read,legible,created_at)
-      SELECT ?,COALESCE(MAX(no),0)+1,?,?,?,?,?,?,?,?,?,?,? FROM lab_pages WHERE session_id=?`)
-      .bind(s.id, tk, kd, mime, buf, ocrText ?? text, conf, status, text, read, legible, t, s.id).run();
+    /* the photo itself: in R2 when the Worker has the LAB_PAGES bucket (needs migration 0009), otherwise in the row */
+    let r2 = null;
+    if (env.LAB_PAGES) { r2 = `lab/${s.id}/${crypto.randomUUID()}.${mime.split("/")[1]}`; await env.LAB_PAGES.put(r2, buf, { httpMetadata: { contentType: mime } }); }
+    const res = await env.DB.prepare(`INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_conf,ocr_status,text,read,legible,created_at${r2 ? ",r2_key" : ""})
+      SELECT ?,COALESCE(MAX(no),0)+1,?,?,?,?,?,?,?,?,?,?,?${r2 ? ",?" : ""} FROM lab_pages WHERE session_id=?`)
+      .bind(s.id, tk, kd, mime, r2 ? new Uint8Array(0) : buf, ocrText ?? text, conf, status, text, read, legible, t, ...(r2 ? [r2] : []), s.id).run();
     const no = (await env.DB.prepare("SELECT no FROM lab_pages WHERE id=?").bind(res.meta.last_row_id).first()).no;
+    await meterSave(env, s.id, tk, res.meta.last_row_id, mt);
     return { id: res.meta.last_row_id, no, task: tk, kind: kd, ocr_status: status, legible, items: read ? JSON.parse(read).items.length : 0,
       chars: text ? text.length : 0, moved: tk !== task || kd !== kind };
   }
-  if ((r = /^\/api\/lab\/up\/(\d+)\/pages\/(\d+)$/.exec(p)) && m === "DELETE") {
-    const s = await labByToken(req, env, +r[1]);
+  if ((r = /^\/api\/lab\/up(?:\/(\d+))?\/pages\/(\d+)$/.exec(p)) && m === "DELETE") {
+    const s = await labByToken(req, env, r[1] ? +r[1] : null);
     if (!labOpen(s, t)) throw new HttpError(409, "closed");
+    await labR2Drop(env, "id=? AND session_id=?", +r[2], s.id);
     await env.DB.prepare("DELETE FROM lab_pages WHERE id=? AND session_id=?").bind(+r[2], s.id).run();
     return { ok: true };
   }
@@ -1438,7 +1564,7 @@ async function lab(p, m, body, me, req, env, url) {
       if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
-    const token = b64u(crypto.getRandomValues(new Uint8Array(24)));
+    const token = labScanCode();
     /* one transaction: the session is written only if a token is left, the token is taken only for a session
        written by this very call (charged=0), and the unique index on open sessions makes a second start at
        the same moment fail as a whole, spending nothing */
@@ -1478,7 +1604,7 @@ async function lab(p, m, body, me, req, env, url) {
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/qr$/.exec(p)) && m === "POST") {         // a new upload token, for a computer that lost the old one
     const s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status !== "running" && s.status !== "scanning") throw new HttpError(409, "closed");
-    const token = b64u(crypto.getRandomValues(new Uint8Array(24)));
+    const token = labScanCode();
     await env.DB.prepare("UPDATE lab_sessions SET upload_hash=? WHERE id=?").bind(await sha256(token), s.id).run();
     return { token };
   }
@@ -1491,11 +1617,13 @@ async function lab(p, m, body, me, req, env, url) {
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "GET") {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
     const owner = s.user_id === me.id ? me : await env.DB.prepare("SELECT nickname FROM users WHERE id=?").bind(s.user_id).first();
-    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s) }, health: arenaHealth(env) };
+    const reviews = isAdmin(me) ? await env.DB.prepare("SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?").bind(s.id).all().then(x => x.results).catch(() => []) : undefined;
+    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s), ...(reviews ? { reviews } : {}) }, health: arenaHealth(env) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);
     if (s.status === "running" || s.status === "scanning") throw new HttpError(409, "active");   // an open exam is finished, not deleted
+    await labR2Drop(env, "session_id=?", s.id);
     await env.DB.batch([
       env.DB.prepare("DELETE FROM lab_pages WHERE session_id=?").bind(s.id),
       env.DB.prepare("DELETE FROM lab_sessions WHERE id=?").bind(s.id),
@@ -1517,6 +1645,7 @@ async function lab(p, m, body, me, req, env, url) {
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/pages\/(\d+)$/.exec(p)) && m === "DELETE") {   // a bad shot is taken out (and photographed again) before submitting
     const s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status !== "scanning") throw new HttpError(409, "closed");
+    await labR2Drop(env, "id=? AND session_id=?", +r[2], s.id);
     await env.DB.prepare("DELETE FROM lab_pages WHERE id=? AND session_id=?").bind(+r[2], s.id).run();
     return { ok: true };
   }
@@ -1546,6 +1675,52 @@ async function lab(p, m, body, me, req, env, url) {
       if (!Array.isArray(gt) || gt.length !== 4 || gt.some(q => !Array.isArray(q) || q.length !== 2 || q.some(v => !(v >= -50 && v <= 1050)))) bad("bad_corners");
       await env.DB.prepare("UPDATE scan_bench SET gt=? WHERE id=?").bind(JSON.stringify(gt), +r[1]).run();
       return { ok: true };
+    }
+    /* what grading costs, how long it takes and how right it is */
+    if (p === "/api/admin/lab/metrics" && m === "GET") {
+      const days = Math.max(1, Math.min(365, parseInt(url.searchParams.get("days")) || 30)), since = t - days * 86400;
+      const purged = await labPurge(env).catch(() => 0);
+      const [steps, sess, revs, store] = await Promise.all([
+        env.DB.prepare(`SELECT step, provider, model, COUNT(*) n, SUM(ok=0) failed, SUM(in_tok) in_tok, SUM(out_tok) out_tok, SUM(cached_tok) cached_tok, SUM(pages) pages,
+          SUM(usd) usd, AVG(ms) avg_ms, MAX(ms) max_ms FROM lab_calls WHERE created_at>? GROUP BY step, provider, model ORDER BY step`).bind(since).all().then(r => r.results),
+        env.DB.prepare(`SELECT s.id, s.exam_key, s.tasks, s.status, s.score, s.points, s.submitted_at, s.graded_at, s.detail,
+          (SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages,
+          (SELECT SUM(usd) FROM lab_calls c WHERE c.session_id=s.id) usd, (SELECT SUM(in_tok) FROM lab_calls c WHERE c.session_id=s.id) in_tok,
+          (SELECT SUM(out_tok) FROM lab_calls c WHERE c.session_id=s.id) out_tok, (SELECT COUNT(*) FROM lab_calls c WHERE c.session_id=s.id) calls
+          FROM lab_sessions s WHERE s.submitted_at>? ORDER BY s.id DESC LIMIT 100`).bind(since).all().then(r => r.results),
+        env.DB.prepare("SELECT * FROM lab_reviews WHERE created_at>? ORDER BY session_id, task").bind(since).all().then(r => r.results),
+        env.DB.prepare("SELECT COUNT(*) pages, SUM(length(data)) d1_bytes, SUM(r2_key IS NOT NULL) in_r2, SUM(purged_at IS NOT NULL) purged FROM lab_pages").first(),
+      ]);
+      const sessions = sess.map(x => { const d = x.detail ? JSON.parse(x.detail) : {};
+        return { id: x.id, exam_key: x.exam_key, tasks: JSON.parse(x.tasks), status: x.status, score: x.score, points: x.points, pages: x.n_pages, calls: x.calls,
+          in_tok: x.in_tok, out_tok: x.out_tok, usd: x.usd != null ? +x.usd.toFixed(5) : null, grade_ms: d.grade_ms ?? null,
+          wait_s: x.graded_at && x.submitted_at ? x.graded_at - x.submitted_at : null }; });
+      const graded = sessions.filter(x => x.status === "graded" && x.calls);
+      const avg = k => { const v = graded.map(x => x[k]).filter(x => x != null); return v.length ? +(v.reduce((a, b) => a + b, 0) / v.length).toFixed(5) : null; };
+      /* accuracy: per item |AI − reference|, and per experiment the totals */
+      const items = revs.filter(r => r.ai_points != null), diff = items.map(r => Math.abs(r.ai_points - r.ref_points));
+      const byTask = {}; for (const r of items) { const k = r.session_id + ":" + r.task; (byTask[k] = byTask[k] || { ai: 0, ref: 0, max: 0 }); byTask[k].ai += r.ai_points; byTask[k].ref += r.ref_points; byTask[k].max += r.max_points || 0; }
+      const tasksAcc = Object.entries(byTask).map(([k, v]) => ({ key: k, ai: +v.ai.toFixed(2), ref: +v.ref.toFixed(2), max: +v.max.toFixed(2), diff_pct: v.max ? +(100 * Math.abs(v.ai - v.ref) / v.max).toFixed(1) : null }));
+      return { days, prices: PRICES, keep_hours: env.LAB_KEEP_HOURS ?? null, r2: !!env.LAB_PAGES, purged_now: purged, storage: store,
+        per_exam: { n: graded.length, avg_usd: avg("usd"), avg_in_tok: avg("in_tok"), avg_out_tok: avg("out_tok"), avg_calls: avg("calls"), avg_grade_ms: avg("grade_ms"), avg_wait_s: avg("wait_s"), avg_pages: avg("pages") },
+        steps, sessions,
+        accuracy: { items: items.length, mae: diff.length ? +(diff.reduce((a, b) => a + b, 0) / diff.length).toFixed(3) : null,
+          exact: diff.length ? +(100 * diff.filter(x => x < 0.05).length / diff.length).toFixed(1) : null,
+          task_diff_pct: tasksAcc.length ? +(tasksAcc.reduce((a, x) => a + (x.diff_pct || 0), 0) / tasksAcc.length).toFixed(1) : null, tasks: tasksAcc } };
+    }
+    /* an admin's own mark per item of a graded experiment: the reference the AI is measured against */
+    if ((r = /^\/api\/admin\/lab\/(\d+)\/review$/.exec(p)) && m === "POST") {
+      const s = await env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(+r[1]).first();
+      if (!s) throw new HttpError(404, "not_found");
+      const task = String(body.task || ""), x = ((s.detail ? JSON.parse(s.detail) : {}).tasks || {})[task];
+      if (!x || !Array.isArray(x.items)) bad("not_graded");
+      const its = Array.isArray(body.items) ? body.items : [];
+      const rows = its.map(i => ({ i, it: x.items.find(y => y.id === String(i.id)) })).filter(({ i, it }) => it && Number.isFinite(+i.ref) && +i.ref >= 0 && +i.ref <= it.points + 1e-9);
+      if (!rows.length) bad("bad_items");
+      await env.DB.batch(rows.map(({ i, it }) => env.DB.prepare(`INSERT INTO lab_reviews(session_id,task,item_id,ref_points,ai_points,max_points,note,reviewer_id,created_at) VALUES(?,?,?,?,?,?,?,?,?)
+        ON CONFLICT(session_id,task,item_id) DO UPDATE SET ref_points=excluded.ref_points,ai_points=excluded.ai_points,max_points=excluded.max_points,note=excluded.note,reviewer_id=excluded.reviewer_id,created_at=excluded.created_at`)
+        .bind(s.id, task, it.id, +(+i.ref).toFixed(2), it.got, it.points, i.note ? String(i.note).slice(0, 500) : null, me.id, t)));
+      return { ok: true, saved: rows.length };
     }
     if (p === "/api/admin/lab/scanbench" && m === "GET") {
       await env.DB.prepare(SCANBENCH_TABLE).run();

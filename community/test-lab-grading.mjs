@@ -38,14 +38,14 @@ await call("DELETE", `/lab/sessions/${sid}/pages/${j.id}`, null, G);
 [s, j] = await call("GET", `/lab/up/${sid}`, null, null, { "X-Lab-Token": key });
 ok(j.pages.map(p => p.legible).join() === "good,good,poor", "the phone sees how each page was read");
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, G);
-ok(j.session.pages[0].read && j.session.pages[0].read.items.length === 4 && j.session.regulation.rules.length === 10, "the computer sees what was read on each page and the regulation");
+ok(j.session.pages[0].read && j.session.pages[0].read.items.length === 4 && j.session.regulation.rules.length === 11, "the computer sees what was read on each page and the regulation");
 [s, j] = await call("PATCH", `/lab/sessions/${sid}/pages/${j.session.pages[0].id}`, { text: "A.3 h = 11 W/(m2 K)" }, G);
 ok(s === 400 && j.error === "read_only", "the candidate cannot type answers in after the exam");
 
 /* submit: E1 from the scheme of the official solution; E2's solution does not exist */
 [s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, G);
 const e1 = j.session.detail.tasks.E1, e2 = j.session.detail.tasks.E2, it = id => e1.items.find(x => x.id === id);
-ok(e1.status === "graded" && e1.points === 3.5 && e1.regulation === "2026-10-28", "E1 graded against the 3.5-point scheme, regulation version recorded");
+ok(e1.status === "graded" && e1.points === 3.5 && e1.regulation === "2026-10-29", "E1 graded against the 3.5-point scheme, regulation version recorded");
 ok(it("A.1").got === 0.4 && it("A.1").by === "code" && it("A.1").value === 108.2, "A.1: 108.2 in [105, 111] → full 0.4, decided by the code (the model said half)");
 ok(it("A.2").got === 0.6, "A.2: 395 in [380, 410] → full 0.6");
 ok(it("A.3").got === 0 && it("A.3").rules.includes("R9"), "A.3: the model claims 11, which was read on no page → 0 (R9)");
@@ -89,5 +89,17 @@ ok(j.session.status === "error" && j.session.detail.tasks.E1.why === "scheme_fai
 await sleep(2500);
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, M);
 ok(j.session.status === "graded" && j.session.detail.tasks.E1.status === "graded" && j.session.detail.tries === 1, "…and graded by itself on the next look " + JSON.stringify([j.session.status, j.session.detail.tries]));
+/* R11: measured tables and graphs need enough measurements — the scheme's number, else 3 / 5 / 7 for an experiment
+   that needs few, a medium number or many points.  The page read has 4 rows in each table and 6 points on the graph */
+const Q = await sign("grE");
+({ sid, key } = await toScan(Q, { ...X, tasks: ["E1"], sources: { E1: { sol: "IPhO_2024_table" + rnd + ".pdf" } } }));
+[s, j] = await up(sid, key, "E1", "answer", pad(120));
+ok(s === 200 && j.items === 7, "a page with two tables and a graph read " + JSON.stringify(j));
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, Q);
+const tq = j.session.detail.tasks.E1, iq = id => tq.items.find(x => x.id === id);
+ok(iq("D.1").got === 0.2 && iq("D.1").rules.includes("R11") && iq("D.1").rules.includes("R8"), "D.1 table: 4 rows < the 5 the scheme asks → no marks for the count, columns kept (R8, R11) " + JSON.stringify(iq("D.1")));
+ok(iq("D.2").got === 0.3 && iq("D.2").n_min === 7 && iq("D.2").rules.includes("R11"), "D.2 graph of a many-point measurement: 6 points < 7 → no marks for the count (R11) " + JSON.stringify(iq("D.2")));
+ok(iq("D.3").got === 0.25 && iq("D.3").n_min === 5 && iq("D.3").rules.includes("R11"), "D.3 table with no count check, medium → 5: 4 rows halve its mark 0.5 → 0.25 (R11) " + JSON.stringify(iq("D.3")));
+ok(j.session.regulation ? j.session.regulation.rules.some(r => r.id === "R11") : true, "R11 is part of the regulation");
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

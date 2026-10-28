@@ -165,6 +165,21 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 로컬 시험: `node test-lab-mock.mjs`(가짜 Upstage · Gemini · PDF)를 띄우고 `.dev.vars`에 `LAB_PDF_BASE=http://127.0.0.1:8799/pdf/`를 더한 뒤 `node test-lab-grading.mjs`.
 
+## v10: 채점 비용 · 시간 · 정확도 기록, 답안 사진 보관, 일회용 스캔 링크, 측정 개수 규정(R11)
+
+- **비용 · 시간**: 실전 시험에서 AI를 부를 때마다(쪽 읽기의 Upstage · Gemini, 채점 기준표, 채점) `lab_calls`에 한 줄씩 남깁니다 — 토큰(입력 · 출력 · 캐시), Upstage 쪽 수, 걸린 시간, 추정 가격. 가격은 코드의 `PRICES`(USD / 100만 토큰, Upstage는 쪽당)로 매기고, `LAB_PRICES`(JSON, 같은 모양)로 바꾸거나 더할 수 있습니다. 실험마다 `detail.tasks.E1.usage`, 시험마다 `detail.grade_ms`도 남습니다.
+- **정확도**: 관리자는 성적표(`#/lab/<id>`)에서 문항마다 «기준» 점수를 넣고 저장합니다(`lab_reviews`). `#/weekly/admin`의 실전 모드 관리에 «채점 비용 · 시간 · 정확도»가 나옵니다: 시험 1회당 평균 비용 · 토큰 · 호출 수 · 채점 시간, 단계별 표, 문항당 평균 차이, 일치율, 실험 총점 차이. API: `GET /api/admin/lab/metrics?days=30`, `POST /api/admin/lab/:id/review {task, items:[{id, ref}]}`.
+- **답안 사진**: Worker에 R2 버킷을 `LAB_PAGES`로 연결하면 사진은 R2에, 아니면 예전처럼 D1(`lab_pages.data`)에 둡니다. D1 무료 한도(데이터베이스당 500MB)를 생각하면 R2가 낫습니다. `LAB_KEEP_HOURS`를 정하면(예: `24`) 채점이 끝나고 그만큼 지난 시험의 사진을 지웁니다 — 읽힌 내용과 점수, 성적표는 남고 사진만 410(`purged`)이 됩니다. 정하지 않으면(테스트 기간) 모두 보관합니다. 지우기는 요청 50번에 한 번꼴로 저절로, Cron Trigger(`0 * * * *` 등)를 걸면 매 시간 돕니다.
+- **스캔 링크**: QR 링크에는 시험 번호 없이 코드 하나(`#c=` — 만든 시각을 36진수로 + 128비트 난수를 62진수로)만 들어갑니다. 해시만 저장하고 모든 시험에 걸쳐 유일합니다(고유 인덱스). 스캔이 끝나면(제출 또는 마감) 서버가 링크를 파기하고(`void:…`), 휴대폰은 410 `scan_over`를 받습니다. 예전 링크(`#s=…&k=…`)도 그대로 됩니다.
+- **R11 측정 개수**(규정 `2026-10-29`): 측정표와 그래프는 채점 기준표가 정한 수 이상의 측정값이 있어야 합니다. 기준표에 수가 없으면 실험에 따라 적음 3 · 중간 5 · 많음 7개(기준표를 뽑을 때 `n_min`, `n_class`). 표의 행 수와 그래프의 점 수는 읽힌 내용으로 코드가 셉니다: 개수 확인 항목(`rows_min`, `points_min`)은 모자라면 0점, 그런 항목이 없는 표 · 그래프는 모자라면 절반.
+
+### 올리는 순서
+
+1. `migrations/0009_lab_metrics.sql`을 원격 D1에 적용합니다(0008 다음). 적용 전에도 채점은 되지만 기록 · 기준 점수 · R2는 쓰이지 않습니다.
+2. Worker를 배포합니다. 필요하면 R2 버킷을 만들어 `LAB_PAGES`로 연결하고, 파기를 시작할 때 `LAB_KEEP_HOURS`를 넣습니다.
+
+로컬 시험: `node test-lab-metrics.mjs`, R2와 파기는 `npx wrangler dev --config wrangler.test-r2.toml --port 8789` 뒤 `R2=1 API=http://127.0.0.1:8789 node test-lab-metrics.mjs`.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
