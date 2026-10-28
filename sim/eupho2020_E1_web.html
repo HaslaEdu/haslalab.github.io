@@ -93,14 +93,19 @@ function g(x) {
 
 var PROGRAM = {
   title: 'EuPhO 2020 Experiment 1 — Hidden Charge',
-  subtitle: '주최측이 배포한 것은 콘솔 실행 파일입니다. 이 페이지는 공개된 C++ 원본 소스를 그대로 옮긴 브라우저 판입니다.',
-  notes: [
+  subtitle: { ko: '주최측이 배포한 것은 콘솔 실행 파일입니다. CMD 모드는 공개된 C++ 원본 소스를 그대로 옮긴 프로그램이고, 실험 모드는 같은 계산을 3D 실험대의 실제 장비(10 m 빔라인, 형광판, 고전압 전원)로 해 봅니다.',
+              en: 'The organisers handed out a console executable. CMD mode is a line-by-line port of the published C++ source; experiment mode runs the same calculation behind real apparatus on a 3-D bench (a 10 m beam line, a phosphor screen, a high-voltage supply).' },
+  notes: { ko: [
     '공식 바이너리는 <code>EuPhO-2020/official/official_binaries/</code>에 Windows·Linux·macOS 빌드로 있습니다.',
     'EuPhO는 <b>C++ 전체 소스도 공개했습니다</b> (<code>official/official_sources/Experiment_1/</code>). 이 페이지는 그 소스를 한 줄씩 옮긴 것이라 숨은 전하값·적분기·난수 오차·출력 문구가 원본과 같습니다.',
-    '전자 가속 전압 1–10000 V, 빔 좌표 &minus;20–20 cm. 스크린은 z = 0에 놓인 40 cm &times; 40 cm 정사각형입니다.',
+    '전자 가속 전압 1–10000 V, 빔 좌표 &minus;20–20 cm. 스크린은 z = 0에 놓인 40 cm &times; 40 cm 정사각형이고, 전자는 z = &minus;10 m에서 출발합니다.',
     '빔을 놓는 위치에는 표준편차 0.5 mm의 가우스 오차가 있습니다.',
-    '과제: 고정 점전하의 위치 (x<sub>Q</sub>, y<sub>Q</sub>, z<sub>Q</sub>)와 전하량 Q의 크기·부호를 구하고 크기 정도의 오차를 추정하세요.'
-  ],
+    '과제: 고정 점전하의 위치 (x<sub>Q</sub>, y<sub>Q</sub>, z<sub>Q</sub>)와 전하량 Q의 크기·부호를 구하고 크기 정도의 오차를 추정하세요.'], en: [
+    'The official binaries are in <code>EuPhO-2020/official/official_binaries/</code> for Windows, Linux and macOS.',
+    'EuPhO also <b>published the full C++ source</b> (<code>official/official_sources/Experiment_1/</code>). This page is a line-by-line port of it, so the hidden charge, the integrator, the random error and the printed wording are the original ones.',
+    'Accelerating voltage 1–10000 V, beam coordinates &minus;20–20 cm. The screen is a 40 cm &times; 40 cm square at z = 0, and the electrons start at z = &minus;10 m.',
+    'Where the beam is put has a Gaussian error of 0.5 mm.',
+    'Task: find the position (x<sub>Q</sub>, y<sub>Q</sub>, z<sub>Q</sub>) of the fixed point charge and the size and sign of its charge Q, with an order-of-magnitude error estimate.'] },
   run: async function (term) {
     for (;;) {
       var v;
@@ -135,108 +140,175 @@ var PROGRAM = {
 };
 
 
-/* Experiment mode: the gun on a cross slide, the HV supply and the phosphor screen.  The same solve()
-   (with the program's own 0.5 mm beam scatter) decides where each electron lands; the user sets the
-   slides and reads their verniers, sets the voltage, fires, and reads the glowing spot against the
-   screen's grid before it fades.  The session's own errors: each slide's scale is a little off its
-   true zero, the grid is printed a little off the screen's true axes, the supply reads a little off. */
-var E1L = { x: 50, y: 0, kv: 1000, out: false, spots: [], msg: '' };
-function slide(ui, id, horiz, x0, y0, len, val, zoom) {           /* a slide with a mm scale and a 0.1 mm vernier */
-  var g = ui.g, k = len / 400, pos = function (mm) { return horiz ? [x0 + (mm + 200) * k, y0] : [x0, y0 + (200 - mm) * k]; };
-  HL.rr(g, horiz ? x0 - 8 : x0 - 12, horiz ? y0 - 12 : y0 - 8, horiz ? len + 16 : 24, horiz ? 24 : len + 16, 3, '#c9ced3', '#6c737a', 1);
-  for (var mm = -200; mm <= 200; mm++) { var q = pos(mm), L = mm % 10 === 0 ? 9 : mm % 5 === 0 ? 6 : 3.5;
-    g.strokeStyle = '#1b1b1b'; g.lineWidth = mm % 10 === 0 ? 0.25 : 0.1; g.beginPath();
-    if (horiz) { g.moveTo(q[0], y0 - 12); g.lineTo(q[0], y0 - 12 + L); } else { g.moveTo(x0 - 12, q[1]); g.lineTo(x0 - 12 + L, q[1]); } g.stroke();
-    if (mm % 50 === 0) HL.text(g, String(mm / 10), horiz ? q[0] : x0 + 1, horiz ? y0 + 3 : q[1], '#1b1b1b', 3.2, 'center', '700'); }
-  var c = pos(val + (horiz ? E1L.zx : E1L.zy));                  /* the carriage sits at the true position; its scale is off */
-  var e = ui.hit(id, horiz ? { x: c[0] - 10, y: y0 - 22, w: 40, h: 44 } : { x: x0 - 22, y: c[1] - 10, w: 44, h: 40 }, { cursor: horiz ? 'ew-resize' : 'ns-resize', zoom: zoom });
-  if (e.down) val = Math.max(-200, Math.min(200, val + (horiz ? e.dx : -e.dy) / k));
-  c = pos(val + (horiz ? E1L.zx : E1L.zy));
-  HL.rr(g, horiz ? c[0] - 3 : x0 - 20, horiz ? y0 - 20 : c[1] - 3, horiz ? 34 : 40, horiz ? 40 : 34, 3, 'rgba(70,90,110,.85)', '#223', 1);
-  for (var v = 0; v <= 10; v++) {                                 /* vernier: 10 divisions over 9 mm */
-    var d = v * 0.9 * k; g.strokeStyle = '#ffe9a8'; g.lineWidth = 0.1; g.beginPath();
-    if (horiz) { g.moveTo(c[0] + d, y0 - 12); g.lineTo(c[0] + d, y0 - 12 + (v % 5 === 0 ? 5 : 3)); } else { g.moveTo(x0 - 12, c[1] - d); g.lineTo(x0 - 12 + (v % 5 === 0 ? 5 : 3), c[1] - d); }
-    g.stroke(); }
-  g.strokeStyle = '#ff6b5a'; g.lineWidth = 0.2; g.beginPath();
-  if (horiz) { g.moveTo(c[0], y0 - 14); g.lineTo(c[0], y0 + 14); } else { g.moveTo(x0 - 14, c[1]); g.lineTo(x0 + 14, c[1]); } g.stroke();
-  return val;
-}
+/* Experiment mode, on the 3-D bench.  The program's electrons start 10 m from the screen, so the bench
+   is a real beam line: the phosphor screen at the end of a square vacuum duct on the desk, the duct
+   running back 10 m to the gun, which sits on an x–y stage with mm scales and 0.1 mm verniers; the
+   high-voltage supply (after the 3B Scientific 10 kV supply) has a ten-turn potentiometer with a
+   turns-counting dial, a key switch and a FIRE button.  The same solve() (with the program's own 0.5 mm
+   beam scatter) decides where each electron lands.  The session's errors: each scale's zero is a little
+   off, the screen's grid is printed a little off its true axes, the supply's display reads a little off. */
+var E1L = { x: 50, y: 0, pot: 1000, key: false, spots: [], hv: {} };
 PROGRAM.lab = {
-  intro: '진공관 한쪽 끝의 전자총은 x·y 십자 슬라이드 위에 있고, 다른 쪽 끝 z = 0에 40 cm × 40 cm 형광 검출판이 있습니다. 그 사이 어딘가에 점전하가 숨어 있습니다. ' +
-         '슬라이드를 끌어 빔 위치를 정하고(위치는 슬라이드 눈금과 0.1 mm 버니어로 읽기), 가속 전압을 맞춘 뒤 FIRE를 누르면 전자가 검출판에 빛나는 점을 남깁니다. ' +
-         '점은 몇 초 뒤 사라지니 그 사이에 격자 눈금으로 위치를 읽으세요. 검출판 밖으로 나가면 아무것도 보이지 않습니다.',
-  howto: ['x·y 슬라이드: 파란 캐리지를 끌기 (두 번 클릭해 눈금·버니어 읽기)',
-          '전원: <b>kV</b> 10회전 손잡이(끌기/휠), <b>HV</b> 스위치',
-          '<b>FIRE</b>: 전자 한 번 쏘기 — 검출판의 빛점을 두 번 클릭해 확대해서 읽기'],
-  aspect: 0.62,
-  notePlaceholder: '예) V = 1000 V, 빔 (x, y) = (5.00, 0.00) cm → 검출 (4.9, 0.3) cm',
-  init: function (S) {
-    E1L.zx = S.sys('slideX', 0.3); E1L.zy = S.sys('slideY', 0.3);       /* mm */
-    E1L.gx = S.sys('gridX', 0.5); E1L.gy = S.sys('gridY', 0.5);         /* mm */
+  intro: { ko: '책상 위에는 형광 검출판(40 cm × 40 cm, 1 cm 격자)이 붙은 진공 덕트 끝과 고전압 전원이 있고, 덕트는 10 m 뒤의 전자총까지 이어집니다. 점전하는 검출판 앞 덕트 속 어딘가에 숨어 있습니다. ' +
+               '전자총 쪽으로 가서 x·y 스테이지를 옮기고(위치는 mm 눈금과 0.1 mm 버니어로 읽기), 전원의 10회전 손잡이로 전압을 맞춘 뒤 키를 켜고 FIRE를 누르면, 검출판에 빛나는 점이 몇 초 동안 남습니다.',
+           en: 'On the desk: the end of the vacuum duct with the phosphor screen (40 cm × 40 cm, 1 cm grid) and the high-voltage supply; the duct runs back 10 m to the electron gun. The point charge hides somewhere in the duct in front of the screen. ' +
+               'Go to the gun and move its x–y stage (read the position on the mm scales and the 0.1 mm verniers), set the voltage with the supply\'s ten-turn knob, turn the key and press FIRE: a glowing spot stays on the screen for a few seconds.' },
+  howto: { ko: ['덕트 끝의 <b>“전자총으로”</b> 표지판 클릭: 10 m 뒤 전자총 스테이지로 이동 (Esc: 돌아오기)',
+                '스테이지: 캐리지를 끌어 옮기기, 캐리지 위에서 휠 = 0.1 mm (Shift+휠 = 0.01 mm)',
+                '전원: 10회전 손잡이(끌기/휠), 다이얼 창 = 회전수, 눈금 = 1/100 회전; <b>KEY</b>를 켜고 <b>FIRE</b>',
+                '검출판 클릭: 정면에서 보고 휠로 확대해 빛점의 격자 좌표 읽기'],
+           en: ['Click the <b>“to the gun”</b> sign at the end of the duct to go 10 m back to the gun stage (Esc: come back)',
+                'Stage: drag a carriage to move it; the wheel on a carriage moves 0.1 mm (Shift+wheel 0.01 mm)',
+                'Supply: the ten-turn knob (drag or wheel); the dial window counts turns, the scale 1/100 turn; turn the <b>KEY</b> on and press <b>FIRE</b>',
+                'Click the screen to face it, zoom with the wheel and read the spot against the grid'] },
+  notePlaceholder: { ko: '예) V = 1000 V, 빔 (x, y) = (5.00, 0.00) cm → 검출 (4.9, 0.3) cm', en: 'e.g. V = 1000 V, beam (x, y) = (5.00, 0.00) cm → spot at (4.9, 0.3) cm' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    E1L.zx = S.sys('slideX', 0.3); E1L.zy = S.sys('slideY', 0.3);       /* mm: the scales' zeros */
+    E1L.gx = S.sys('gridX', 0.5); E1L.gy = S.sys('gridY', 0.5);         /* mm: the grid on the screen */
     E1L.vg = S.sys('hvGain', 0.004);
-  },
-  frame: function (ui) {
-    var g = ui.g, W = ui.W, H = ui.H;
-    g.fillStyle = '#1c2026'; g.fillRect(0, 0, W, H);
-    /* ---- the cross slide carrying the gun ---- */
-    var zs = { x: 8, y: 8, w: 372, h: 410, title: 'x·y 슬라이드 (전자총)' };
-    ui.hit('stage', { x: 8, y: 8, w: 372, h: 410 }, { cursor: 'default', zoom: zs });
-    HL.rr(g, 8, 8, 372, 410, 6, '#2b3036', '#111', 1.5);
-    HL.text(g, 'x·y 슬라이드  (눈금 cm, 버니어 0.1 mm)', 18, 22, '#dfe5ea', 11, 'left', '700');
-    E1L.x = slide(ui, 'sx', true, 40, 390, 320, E1L.x, zs);
-    E1L.y = slide(ui, 'sy', false, 360, 50, 320, E1L.y, zs);
-    /* the gun itself, top view, sitting where the slides put it */
-    var gx = 40 + (E1L.x + E1L.zx + 200) * 0.8, gy = 50 + (200 - E1L.y - E1L.zy) * 0.8;
-    g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 1; g.strokeRect(40, 50, 320, 320);
-    g.strokeStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.moveTo(gx, 50); g.lineTo(gx, 370); g.moveTo(40, gy); g.lineTo(360, gy); g.stroke();
-    HL.circle(g, gx, gy, 12, '#4c535b', '#16191c', 1.5); HL.circle(g, gx, gy, 4, '#1a1d21'); HL.circle(g, gx, gy, 1.2, '#9cdcfe');
-    /* ---- the tube between gun and screen ---- */
-    HL.rr(g, 392, 120, 190, 70, 34, 'rgba(160,190,220,.10)', '#56606b', 1.5);
-    HL.text(g, '진공관 (전하는 이 안 어딘가)', 487, 155, '#6f7a85', 10, 'center');
-    /* ---- the HV supply and the fire button ---- */
-    var hx = 392, hy = 210, hw = 190, hh = 400, zh = { x: hx, y: hy, w: hw, h: hh, title: '고전압 전원' };
-    ui.hit('hv', { x: hx, y: hy, w: hw, h: hh }, { cursor: 'default', zoom: zh });
-    HL.rr(g, hx, hy, hw, hh, 8, '#d7dadd', '#8d9399', 2);
-    HL.text(g, 'HV 0–10 kV', hx + 12, hy + 16, '#2a2d31', 11.5, 'left', '700');
-    HL.lcd(g, hx + 14, hy + 32, hw - 28, 42, (E1L.out ? E1L.kv * (1 + E1L.vg) : 0).toFixed(0) + ' V', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
-    E1L.kv = HL.knob(ui, 'kv', hx + hw / 2, hy + 140, 38, E1L.kv, { min: 0, max: V_MAX, turns: 10, sens: V_MAX / 3000, wheelStep: 10, label: 'kV (10-turn)', labelCol: '#2a2d31', zoom: zh });
-    HL.rr(g, hx + hw / 2 - 30, hy + 210, 60, 20, 3, '#222'); HL.text(g, (E1L.kv / 1000).toFixed(2), hx + hw / 2, hy + 220, '#eee', 11, 'center', '700', HL.MONO);
-    E1L.out = HL.toggle(ui, 'hvsw', hx + 30, hy + 252, 32, 46, E1L.out, { label: 'HV', labelCol: '#2a2d31', zoom: zh });
-    HL.circle(g, hx + 90, hy + 275, 7, E1L.out ? '#ff5a3c' : '#5a2a22', '#222', 1);
-    var fire = HL.button(ui, 'fire', hx + 40, hy + 320, hw - 80, 56, { label: 'FIRE', col: '#b8433a', size: 16, zoom: zh });
-    if (fire.click) {
-      if (!E1L.out || E1L.kv < 1) E1L.msg = 'HV를 켜세요.';
-      else { var res = solve((E1L.x / 10 + E1L.zx / 10) / 100 + gauss(RADIAL_ERROR), (E1L.y / 10 + E1L.zy / 10) / 100 + gauss(RADIAL_ERROR), Math.sqrt(2 * E1L.kv * E_0 / M_E));
-        if (res[0]) E1L.spots.push({ x: res[1] * 1000, y: res[2] * 1000, t: ui.t }); E1L.msg = res[0] ? '' : '검출판에 아무것도 보이지 않습니다.'; }
+    var CX = 40, CY = 30, GZ = -1000;                                   /* the screen centre; the gun's z */
+    /* the main scales (20 px per mm, 420 mm long), printed for a reader standing behind the gun */
+    function scaleCanvas(vertical) {
+      var c = document.createElement('canvas'), k = 16, Lp = 420 * k; c._static = true;
+      if (vertical) { c.width = 300; c.height = Lp; } else { c.width = Lp; c.height = 300; }
+      var g = c.getContext('2d'); g.fillStyle = '#e9ecef'; g.fillRect(0, 0, c.width, c.height); g.fillStyle = '#111'; g.strokeStyle = '#111';
+      for (var m = -210; m <= 210; m++) {
+        var t = (vertical ? (210 - m) : (210 - m)) * k, L = m % 10 === 0 ? 150 : m % 5 === 0 ? 105 : 70;
+        g.lineWidth = m % 10 === 0 ? 5 : 3;
+        if (vertical) { g.beginPath(); g.moveTo(300, t); g.lineTo(300 - L, t); g.stroke(); }
+        else { g.beginPath(); g.moveTo(t, 300); g.lineTo(t, 300 - L); g.stroke(); }
+        if (m % 10 === 0 && Math.abs(m) <= 200) { g.font = '700 70px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+          if (vertical) g.fillText(String(m / 10), 85, t); else g.fillText(String(m / 10), t, 85); }
+      }
+      return c;
     }
-    HL.text(g, E1L.msg, hx + hw / 2, hy + 390, '#2a2d31', 10, 'center');
-    /* ---- the phosphor screen, 40 cm square, with its printed grid ---- */
-    var sx = 596, sy = 12, side = 396, k = side / 400, zsc = { x: sx - 4, y: sy - 4, w: side + 8, h: side + 8, title: '형광 검출판 (격자 1 cm, 가는 선 5 mm)' };
-    ui.hit('screen', { x: sx, y: sy, w: side, h: side }, { cursor: 'zoom-in', zoom: zsc });
-    HL.rr(g, sx - 6, sy - 6, side + 12, side + 12, 4, '#30353b', '#111', 1.5);
-    g.fillStyle = '#0b1a10'; g.fillRect(sx, sy, side, side);
-    var P = function (xmm, ymm) { return [sx + (xmm + 200) * k, sy + (200 - ymm) * k]; };
-    g.save(); g.translate(E1L.gx * k, -E1L.gy * k);
-    for (var mm = -200; mm <= 200; mm += 5) { var a1 = P(mm, -200), b1 = P(mm, 200), c1 = P(-200, mm), d1 = P(200, mm);
-      g.strokeStyle = mm === 0 ? 'rgba(140,230,160,.55)' : mm % 10 === 0 ? 'rgba(140,230,160,.28)' : 'rgba(140,230,160,.12)';
-      g.lineWidth = mm % 10 === 0 ? 0.6 : 0.35; g.beginPath(); g.moveTo(a1[0], a1[1]); g.lineTo(b1[0], b1[1]); g.moveTo(c1[0], c1[1]); g.lineTo(d1[0], d1[1]); g.stroke();
-      if (mm % 50 === 0) { HL.text(g, String(mm / 10), a1[0], sy + side - 6, 'rgba(160,240,180,.6)', 7, 'center'); HL.text(g, String(mm / 10), sx + 6, c1[1], 'rgba(160,240,180,.6)', 7, 'left'); } }
-    g.restore();
-    /* the spots: a little blurred, fading over a few seconds */
-    E1L.spots = E1L.spots.filter(function (sp) { return ui.t - sp.t < 9; });
-    E1L.spots.forEach(function (sp) { var q = P(sp.x, sp.y), f = Math.exp(-(ui.t - sp.t) / 3), gl = g.createRadialGradient(q[0], q[1], 0, q[0], q[1], 3.2);
-      gl.addColorStop(0, 'rgba(200,255,210,' + f + ')'); gl.addColorStop(0.45, 'rgba(120,255,150,' + 0.7 * f + ')'); gl.addColorStop(1, 'rgba(80,255,120,0)');
-      HL.circle(g, q[0], q[1], 3.2, gl); });
-    HL.text(g, 'x (cm) →', sx + side, sy + side + 12, '#9aa3ab', 9.5, 'right'); HL.text(g, '↑ y', sx - 2, sy - 2, '#9aa3ab', 9.5, 'right');
-    /* a sketch of the whole line-up, side view */
-    HL.text(g, '옆에서: 전자총 → (숨은 전하) → 검출판, z 방향', 600, 440, '#9aa3ab', 10.5);
-    g.strokeStyle = '#56606b'; g.lineWidth = 1.5; g.strokeRect(600, 455, 390, 60);
-    HL.rr(g, 606, 475, 28, 20, 3, '#4c535b'); g.fillStyle = '#2e5b3a'; g.fillRect(972, 460, 8, 50);
-    g.setLineDash([3, 3]); g.strokeStyle = 'rgba(156,220,254,.35)'; g.beginPath(); g.moveTo(634, 485); g.lineTo(972, 485); g.stroke(); g.setLineDash([]);
+    var scX = scaleCanvas(false), scY = scaleCanvas(true);
+    /* a vernier plate: 10 divisions over 9 mm, zero at the index */
+    function vernierCanvas(vertical) {
+      var c = document.createElement('canvas'), k = 20; c._static = true;
+      if (vertical) { c.width = 260; c.height = 360; } else { c.width = 360; c.height = 260; }
+      var g = c.getContext('2d'); g.fillStyle = '#d6dbe0'; g.fillRect(0, 0, c.width, c.height); g.strokeStyle = '#111'; g.fillStyle = '#111';
+      for (var v = 0; v <= 10; v++) { var t = 90 + v * 0.9 * k * (vertical ? -1 : 1), L = v % 5 === 0 ? 120 : 80;
+        if (vertical) t = 270 - v * 0.9 * k; g.lineWidth = 4;
+        if (vertical) { g.beginPath(); g.moveTo(0, t); g.lineTo(L, t); g.stroke(); if (v % 5 === 0) { g.font = '700 50px sans-serif'; g.fillText(String(v), 150, t + 18); } }
+        else { g.beginPath(); g.moveTo(t, 0); g.lineTo(t, L); g.stroke(); if (v % 5 === 0) { g.font = '700 50px sans-serif'; g.textAlign = 'center'; g.fillText(String(v), t, 190); } } }
+      return c;
+    }
+    var vnX = vernierCanvas(false), vnY = vernierCanvas(true);
+    var bench = B3.bench(host, {
+      aspect: 0.6, lang: ctx.lang, wheelIds: ['sx', 'sy'],
+      home: { yaw: -0.62, pitch: 0.42, k: 4.6, tx: 55, ty: 24, tz: -15 },
+      views: {
+        screen: { yaw: 0, pitch: 0.02, k: 15, tx: CX, ty: CY, tz: 0, title: { ko: '형광 검출판 (격자 1 cm, 가는 선 5 mm)', en: 'Phosphor screen (1 cm grid, fine lines 5 mm)' },
+                  hint: { ko: '휠로 확대해 빛점의 좌표 읽기 · Esc: 돌아가기', en: 'Zoom with the wheel and read the spot · Esc: back' } },
+        hv: { yaw: 0, pitch: 0.12, k: 42, tx: 92, ty: 8.5, tz: 18, title: { ko: '고전압 전원 0–10 kV', en: 'High-voltage supply 0–10 kV' } },
+        gun: { yaw: Math.PI + 0.25, pitch: 0.18, k: 11, tx: CX, ty: 28, tz: GZ - 14, title: { ko: '전자총 x·y 스테이지 (검출판에서 10 m 뒤)', en: 'Electron gun x–y stage (10 m behind the screen)' },
+               hint: { ko: '캐리지를 끌어 옮기기 · 캐리지 위에서 휠 = 0.1 mm · 휠로 확대해 버니어 읽기 · Esc: 책상으로', en: 'Drag a carriage · wheel on a carriage = 0.1 mm · zoom to read the verniers · Esc: back to the desk' } }
+      },
+      frame: function (b) {
+        B3.desk(-20, 110, -45, 40);
+        /* the duct on its stands, the screen in its window frame at z = 0 */
+        [-30, -8].forEach(function (z) { B3.box3(CX - 20, CX + 20, 0, 2, z - 3, z + 3, '#5d6670'); });
+        for (var z = -45; z > GZ + 30; z -= 60) {
+          var z0 = Math.max(GZ + 30, z - 60);
+          B3.box3(CX - 28, CX + 28, 2, 58, z0, z, '#a6adb4', { id: z > -50 ? 'm:screen' : undefined, cull: true });
+        }
+        B3.box3(CX - 30, CX + 30, 1, 59, -45, -1, '#b9c0c6', { id: 'm:screen', top: '#c5cbd0' });
+        B3.box3(CX - 30, CX + 30, 1, 59, -1, 0, '#40464d', { id: 'm:screen' });
+        /* the phosphor: the grid as printed, the spots fading */
+        E1L.spots = E1L.spots.filter(function (sp) { return b.t - sp.t < 10; });
+        var scv = b.panel('screen', 420, 420, function (ui) {
+          var g = ui.g, k = 1, P = function (xmm, ymm) { return [210 + xmm, 210 - ymm]; };
+          g.fillStyle = '#0b1a10'; g.fillRect(0, 0, 420, 420);
+          g.save(); g.translate(E1L.gx, -E1L.gy);
+          for (var mm = -200; mm <= 200; mm += 5) { var a1 = P(mm, -200), b1 = P(mm, 200), c1 = P(-200, mm), d1 = P(200, mm);
+            g.strokeStyle = mm === 0 ? 'rgba(150,240,170,.75)' : mm % 10 === 0 ? 'rgba(150,240,170,.42)' : 'rgba(150,240,170,.2)';
+            g.lineWidth = mm % 10 === 0 ? 0.55 : 0.3; g.beginPath(); g.moveTo(a1[0], a1[1]); g.lineTo(b1[0], b1[1]); g.moveTo(c1[0], c1[1]); g.lineTo(d1[0], d1[1]); g.stroke();
+            if (mm % 50 === 0) { HL.text(g, String(mm / 10), a1[0], 413, 'rgba(170,250,190,.75)', 7, 'center'); HL.text(g, String(mm / 10), 4, c1[1], 'rgba(170,250,190,.75)', 7, 'left'); } }
+          g.restore();
+          E1L.spots.forEach(function (sp) { var q = P(sp.x, sp.y), f = Math.exp(-(b.t - sp.t) / 3), gl = g.createRadialGradient(q[0], q[1], 0, q[0], q[1], 3.4);
+            gl.addColorStop(0, 'rgba(215,255,220,' + f + ')'); gl.addColorStop(0.45, 'rgba(120,255,150,' + 0.75 * f + ')'); gl.addColorStop(1, 'rgba(80,255,120,0)'); HL.circle(g, q[0], q[1], 3.4, gl); });
+          HL.text(g, 'x (cm) →', 414, 8, '#9aa3ab', 7, 'right'); HL.text(g, '↑ y', 6, 8, '#9aa3ab', 7, 'left');
+        });
+        B3.tex3(scv, 0, 0, scv.width, scv.height, [CX - 21, CY + 21, 0.02], [42, 0, 0], [0, -42, 0], { id: 'p:screen' });
+        /* the sign to the gun */
+        B3.box3(CX - 31, CX - 30, 38, 54, -44, -16, '#2e7d5b', { id: 'c:goGun' });
+        B3.text3([CX - 31.05, 48.5, -42], [0, 0, 1], [0, 1, 0], ctx.lang() === 'en' ? '← to the gun' : '← 전자총으로', 2.6, '#ffffff', { weight: '800' });
+        B3.text3([CX - 31.05, 43, -42], [0, 0, 1], [0, 1, 0], ctx.lang() === 'en' ? '10 m, click' : '10 m · 클릭', 2.2, '#d6f5e6', { weight: '700' });
+        if (b.clicked('c:goGun')) b.go('gun');
+        /* the high-voltage supply */
+        var hx = 92, hz = 10, hw = 24, hh = 15, hd = 22;
+        B3.box3(hx - hw / 2, hx + hw / 2, 0, hh, hz - hd / 2, hz + hd / 2 - 0.4, '#d5d9dd', { id: 'm:hv', top: '#e1e5e8' });
+        var hcv = b.panel('hv', 480, 300, function (ui) {
+          var g = ui.g, st = E1L.hv;
+          HL.rr(g, 0, 0, 480, 300, 6, '#2f5d8c'); HL.rr(g, 8, 8, 464, 284, 4, '#3a6ea5');
+          HL.text(g, '3B SCIENTIFIC® PHYSICS', 20, 26, '#ffffff', 13, 'left', '800'); HL.text(g, 'High Voltage Power Supply  0 … 10 kV', 20, 46, '#dbe7f3', 11, 'left', '600');
+          var V = E1L.key ? E1L.pot : 0;
+          HL.lcd(g, 300, 18, 160, 48, (V * (1 + E1L.vg) / 1000).toFixed(3), { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#123' });
+          HL.text(g, 'kV', 466, 76, '#dbe7f3', 11, 'right', '700');
+          /* the ten-turn potentiometer and its turns-counting dial */
+          var e = ui.hit('pot', { cx: 120, cy: 170, r: 64 }, { wheel: true, cursor: 'ns-resize' });
+          if (e.down) E1L.pot -= e.rawdy * 4; if (e.wheel) E1L.pot += e.wheel * (e.shift ? 1 : 10);
+          E1L.pot = Math.max(0, Math.min(V_MAX, E1L.pot));
+          var turns = E1L.pot / 1000, frac = turns - Math.floor(turns);
+          HL.circle(g, 124, 174, 66, 'rgba(0,0,0,.35)'); HL.circle(g, 120, 170, 64, '#1d1f22', '#000', 1.5);
+          for (var i = 0; i < 100; i++) { var a = -Math.PI / 2 + (i / 100 - frac) * 2 * Math.PI, L = i % 10 === 0 ? 12 : i % 5 === 0 ? 8 : 5;
+            g.strokeStyle = '#e8e8e8'; g.lineWidth = i % 10 === 0 ? 1.6 : 0.8; g.beginPath(); g.moveTo(120 + Math.cos(a) * 60, 170 + Math.sin(a) * 60); g.lineTo(120 + Math.cos(a) * (60 - L), 170 + Math.sin(a) * (60 - L)); g.stroke();
+            if (i % 10 === 0) HL.text(g, String(i), 120 + Math.cos(a) * 40, 170 + Math.sin(a) * 40, '#e8e8e8', 9, 'center', '700'); }
+          g.fillStyle = '#ffd479'; g.beginPath(); g.moveTo(120, 100); g.lineTo(114, 92); g.lineTo(126, 92); g.fill();
+          HL.rr(g, 104, 158, 32, 24, 3, '#0d0d0d', '#555', 1); HL.text(g, String(Math.min(9, Math.floor(turns))), 120, 171, '#ffffff', 17, 'center', '800', HL.MONO);
+          if (e.down) HL.circle(g, 120, 170, 68, null, 'rgba(78,201,176,.6)', 1.5);
+          HL.text(g, ctx.lang() === 'en' ? '10-TURN  (1 turn = 1 kV)' : '10회전  (1회전 = 1 kV)', 120, 254, '#dbe7f3', 10.5, 'center', '700');
+          /* the key switch, the lamp, FIRE */
+          var k = ui.hit('key', { cx: 270, cy: 170, r: 26 }); if (k.click) E1L.key = !E1L.key;
+          HL.circle(g, 270, 170, 26, '#b9bec4', '#444', 1.5); g.save(); g.translate(270, 170); g.rotate(E1L.key ? 0.9 : 0); HL.rr(g, -5, -18, 10, 36, 3, '#5a5f66'); g.restore();
+          HL.text(g, 'OFF', 238, 136, '#dbe7f3', 9, 'center', '700'); HL.text(g, 'HV ON', 304, 136, '#dbe7f3', 9, 'center', '700');
+          HL.circle(g, 270, 222, 8, E1L.key ? '#ff4a2e' : '#4a2a24', '#111', 1);
+          var f = HL.button(ui, 'fire', 340, 140, 116, 70, { col: '#b8433a', label: 'FIRE', size: 18 });
+          if (f.click) {
+            if (!E1L.key || E1L.pot < 1) b.say('KEY를 켜고 전압을 올리세요.', 'Turn the key on and raise the voltage.');
+            else { var res = solve((E1L.x + E1L.zx) / 1000 + gauss(RADIAL_ERROR), (E1L.y + E1L.zy) / 1000 + gauss(RADIAL_ERROR), Math.sqrt(2 * E1L.pot * E_0 / M_E));
+              if (res[0]) E1L.spots.push({ x: res[1] * 1000, y: res[2] * 1000, t: b.t }); else b.say('검출판에 아무것도 보이지 않습니다.', 'Nothing shows on the screen.'); }
+          }
+          HL.text(g, 'HV OUT', 400, 262, '#dbe7f3', 10, 'center', '700'); HL.circle(g, 400, 240, 10, '#c0392b', '#222', 1);
+        });
+        B3.tex3(hcv, 0, 0, hcv.width, hcv.height, [hx - hw / 2 + 0.3, hh - 0.3, hz + hd / 2 - 0.39], [hw - 0.6, 0, 0], [0, -(hh - 0.6), 0], { id: 'p:hv' });
+        B3.cable([hx - 4, 3, hz + hd / 2 - 0.3], [CX + 26, 4, -20], '#b23a2e', 4, 2.6);
+        /* ---- 10 m back: the gun on its x-y stage ---- */
+        B3.box3(CX - 40, CX + 40, -2, 0, GZ - 40, GZ + 20, '#8f9aa4', { top: '#9aa5ae' });
+        B3.box3(CX - 30, CX + 30, 1, 59, GZ + 30, GZ + 40, '#b9c0c6');             /* the duct's end flange */
+        B3.cylSeg('z', GZ + 2, GZ + 30, CX + (E1L.x + E1L.zx) / 10, CY + (E1L.y + E1L.zy) / 10, 2.4, '#8d939a', { seg: 16 }, 4);   /* bellows */
+        var m = b.moved('sx'), sm = b.screenMoved('sx'); if (sm[0]) E1L.x = Math.max(-200, Math.min(200, E1L.x - sm[0] * 10));
+        E1L.x = Math.max(-200, Math.min(200, E1L.x - b.wheel('sx') * 0.1));
+        sm = b.screenMoved('sy'); if (sm[1]) E1L.y = Math.max(-200, Math.min(200, E1L.y - sm[1] * 10));
+        E1L.y = Math.max(-200, Math.min(200, E1L.y + b.wheel('sy') * 0.1));
+        var gx = CX + (E1L.x + E1L.zx) / 10, gy = CY + (E1L.y + E1L.zy) / 10, FZ = GZ - 6;
+        /* the X rail with its scale (faces the reader behind the gun, −z) */
+        B3.box3(CX - 23, CX + 23, 4, 7, FZ - 1, FZ + 3, '#6f7880');
+        B3.tex3(scX, 0, 0, scX.width, scX.height, [CX + 21, 6.8, FZ - 1.02], [-42, 0, 0], [0, -3, 0]);
+        /* the X carriage, its vernier and the vertical Y rail it carries */
+        B3.box3(gx - 2.5, gx + 2.5, 7, 9, FZ - 1, FZ + 3, '#4a6d8f', { id: 'm:sx' });
+        B3.tex3(vnX, 0, 0, vnX.width, vnX.height, [gx + 0.45, 7.0, FZ - 1.03], [-1.8, 0, 0], [0, 1.3, 0], { id: 'm:sx' });
+        B3.box3(gx - 1.5, gx + 1.5, 9, 53, FZ, FZ + 3, '#6f7880', { id: 'm:sx' });
+        B3.tex3(scY, 0, 0, scY.width, scY.height, [gx + 1.5, CY + 21, FZ - 0.02], [-1.08, 0, 0], [0, -42, 0]);
+        /* the Y carriage with its vernier, and the gun on it pointing at the screen */
+        B3.box3(gx - 2.4, gx + 2.4, gy - 2, gy + 2, FZ - 1.2, FZ + 3, '#4a6d8f', { id: 'm:sy' });
+        B3.tex3(vnY, 0, 0, vnY.width, vnY.height, [gx - 1.5, gy + 0.45, FZ - 1.23], [-0.95, 0, 0], [0, -1.8, 0], { id: 'm:sy' });
+        B3.cyl3('z', FZ + 3, GZ + 2, gx, gy, 1.6, '#2b3036', { id: 'm:sy', seg: 16 });
+        B3.cyl3('z', GZ + 2, GZ + 3, gx, gy, 0.6, '#c8b26a', { seg: 12 });
+        B3.cable([gx - 1, gy - 1.5, FZ + 2], [CX + 35, 0.5, GZ + 15], '#b23a2e', 6, 2.2);
+        B3.text3([CX + 26, 5.5, FZ - 1.05], [-1, 0, 0], [0, 1, 0], 'x (cm)', 1.6, '#e8eef3', { weight: '700' });
+        B3.text3([gx - 2.0, 55, FZ - 0.05], [-1, 0, 0], [0, 1, 0], 'y (cm)', 1.6, '#e8eef3', { weight: '700' });
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
   }
 };
 </script>
 <script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
