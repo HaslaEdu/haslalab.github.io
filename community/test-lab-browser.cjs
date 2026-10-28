@@ -62,11 +62,15 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   ok(await pg.$("main a[href*='.pdf']") === null, "the problem sheet is not offered before the exam");
   const sheetsUrl = await pg.$eval("main a[href^='sheets.html']", a => a.href);
   ok(/c=ipho/.test(sheetsUrl) && /e=E1%2CE2/.test(sheetsUrl), "…the answer and working sheets are, to print beforehand");
-  const sp = await ctx.newPage(); await sp.goto(sheetsUrl); await sp.waitForSelector(".pg .mk.d");
+  const sp = await ctx.newPage(); await sp.goto(sheetsUrl); await sp.waitForSelector("#off .o");
+  const offs = await sp.$$eval("#off a", as => as.map(a => a.getAttribute("href")));
+  ok(offs.includes("sheets/IPhO_2024_E1_AS.pdf") && offs.includes("sheets/IPhO_2024_E2_AS.pdf"), "sheets page: the official IPhO 2024 answer sheets " + JSON.stringify(offs));
+  ok((await fetch(SITE + "/sim/sheets/IPhO_2024_E1_AS.pdf")).headers.get("content-type") === "application/pdf", "…which are there to open");
   const sh = await sp.$$eval(".pg", ps => ps.map(p => p.querySelector(".k").textContent));
-  ok(sh.some(x => /E1 · ANSWER SHEET/.test(x)) && sh.some(x => /E2 · WORKING SHEET/.test(x)) && !(await sp.textContent("body")).includes(".pdf"),
-    "sheets page: E1/E2 answer and working sheets with corner markers, no problem text " + sh.length);
-  ok(await sp.$$eval(".bx .id", xs => xs.some(x => /^A\.1/.test(x.textContent.trim()))), "the IPhO 2024 answer boxes are labelled from the problem (A.1 …)");
+  ok(!sh.some(x => /ANSWER SHEET/.test(x)) && sh.some(x => /E2 · WORKING SHEET/.test(x)) && await sp.$(".pg .mk.d") !== null && !(await sp.textContent("body")).includes("_E1_EN.pdf"),
+    "no official working sheet that year: HaslaLab's, with corner markers; no problem text " + sh.length);
+  await sp.goto(sheetsUrl.replace("y=2024", "y=2015")); await sp.waitForSelector(".pg .bx");
+  ok(await sp.$$("#off a") .then(x => x.length === 0) && await sp.$$eval(".pg .k", ks => ks.some(k => /E1 · ANSWER SHEET/.test(k.textContent))), "a year without official sheets: HaslaLab's answer sheets");
   await sp.close();
   for (const c of await pg.$$("[data-ag]")) await c.check();
   ok(!(await pg.$eval("#go", b => b.disabled)), "…and opens when every line is ticked");

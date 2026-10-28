@@ -41,6 +41,7 @@ http.createServer(async (req, res) => {
   }
   if (req.url.includes(":generateContent")) {
     const parts = JSON.parse(b).contents[0].parts, prompt = parts.map(p => p.text || "").join("\n");
+    if (prompt.includes("Find the four corners of the sheet of paper")) return reply(res, { tl: [100, 80], tr: [900, 90], br: [880, 950], bl: [110, 940] });
     if (prompt.startsWith("[TASK: build marking scheme]")) return reply(res, SCHEME);
     if (prompt.startsWith("[TASK: read page]")) {
       if (prompt.includes("<<OCR>>") && prompt.includes("R0 = 108.2 ohm")) seen.ocrIntoRead++;

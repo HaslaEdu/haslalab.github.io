@@ -496,7 +496,29 @@ async function ytRoute(req, env, url, cors) {
 
 const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
 
+/* every database round trip, counted and timed, sent back as Server-Timing (the browser's network panel shows it):
+   the time a page waits on the server is mostly these round trips, one after another */
+function timedDB(db, q) {
+  const time = async (f) => { const t = Date.now(); try { return await f(); } finally { q.n++; q.ms += Date.now() - t; } };
+  const wrap = (st) => new Proxy(st, { get(o, k) {
+    if (k === "bind") return (...a) => wrap(o.bind(...a));
+    if (k === "first" || k === "all" || k === "run" || k === "raw") return (...a) => time(() => o[k](...a));
+    const v = o[k]; return typeof v === "function" ? v.bind(o) : v; } });
+  return new Proxy(db, { get(o, k) {
+    if (k === "prepare") return (sql) => wrap(o.prepare(sql));
+    if (k === "batch") return (sts) => time(() => o.batch(sts));
+    const v = o[k]; return typeof v === "function" ? v.bind(o) : v; } });
+}
 export default {
+  async fetch(req, env, ctx) {
+    const q = { n: 0, ms: 0 }, t0 = Date.now();
+    const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q) } : env, ctx);
+    try { res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}`); res.headers.set("Timing-Allow-Origin", "*"); }
+    catch (e) { /* a response passed straight through keeps its own headers */ }
+    return res;
+  },
+};
+const worker = {
   async fetch(req, env) {
     // tests only: a short exam clock (the deployed Worker never sets these)
     if (env.LAB_TEST_EXAM_SEC) { LAB.examSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; LAB.retrySec = +env.LAB_TEST_RETRY_SEC || LAB.retrySec; }
@@ -878,6 +900,63 @@ LAB_SCHEMA.properties.scores.items.properties.got = { type: "number" };         
 const LAB_TASK_RE = /^[A-Z][A-Za-z0-9]{0,3}$/;
 /* exam mode is offered once migrations/0007_lab.sql is in the database (the code may be deployed first) */
 let LAB_READY = false;
+/* ── the scan bench: four providers asked for the corners of the same photo ── */
+const SCANBENCH_TABLE = "CREATE TABLE IF NOT EXISTS scan_bench(id INTEGER PRIMARY KEY, created_at INTEGER, w INTEGER, h INTEGER, image BLOB, results TEXT, local TEXT, gt TEXT)";
+const CORNER_PROMPT = "This photo shows a sheet of A4 paper. Find the four corners of the sheet of paper itself (its physical edges, not the printed content and not a table or the background). " +
+  "Answer with JSON only: {\"tl\":[x,y],\"tr\":[x,y],\"br\":[x,y],\"bl\":[x,y]} — top-left, top-right, bottom-right, bottom-left as the page reads, x and y normalised to 0–1000 of the image width and height.";
+function scanProviders(env) {
+  const out = [];
+  if (env.GEMINI_API_KEY) out.push({ name: "gemini", model: env.BENCH_GEMINI_MODEL || "gemini-flash-lite-latest" });
+  if (env.OPENAI_API_KEY) out.push({ name: "openai", model: env.BENCH_OPENAI_MODEL || "gpt-5-nano" });
+  const ak = env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY;
+  if (ak) out.push({ name: "claude", model: env.BENCH_CLAUDE_MODEL || "claude-haiku-5-5", key: ak });
+  if (env.UPSTAGE_API_KEY) out.push({ name: "upstage", model: "ocr (text extent)" });
+  return out;
+}
+const quadOf = j => j && ["tl", "tr", "br", "bl"].every(k => Array.isArray(j[k]) && j[k].length === 2 && j[k].every(Number.isFinite)) ? ["tl", "tr", "br", "bl"].map(k => j[k].map(v => +(+v).toFixed(1))) : null;
+async function scanOne(env, pv, img) {
+  const t0 = Date.now(), tm = AbortSignal.timeout(60000);
+  try {
+    let quad = null, usage = null, raw = "";
+    if (pv.name === "gemini") {
+      const r = await fetch(`${env.GEMINI_BASE || AR.gemini}/${pv.model}:generateContent`, { method: "POST", signal: tm,
+        headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+        body: JSON.stringify({ contents: [{ role: "user", parts: [{ inline_data: { mime_type: "image/jpeg", data: img } }, { text: CORNER_PROMPT }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0, maxOutputTokens: 400 } }) });
+      const j = await r.json(); if (!r.ok) throw new Error("http " + r.status + " " + JSON.stringify(j).slice(0, 160));
+      raw = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join(""); usage = j.usageMetadata ? { in: j.usageMetadata.promptTokenCount, out: j.usageMetadata.candidatesTokenCount } : null;
+    } else if (pv.name === "openai") {
+      const r = await fetch("https://api.openai.com/v1/chat/completions", { method: "POST", signal: tm,
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + env.OPENAI_API_KEY },
+        body: JSON.stringify({ model: pv.model, response_format: { type: "json_object" }, ...(/^gpt-5|^o\d/.test(pv.model) ? { reasoning_effort: "minimal" } : { temperature: 0 }),
+          messages: [{ role: "user", content: [{ type: "text", text: CORNER_PROMPT }, { type: "image_url", image_url: { url: "data:image/jpeg;base64," + img, detail: "high" } }] }] }) });
+      const j = await r.json(); if (!r.ok) throw new Error("http " + r.status + " " + JSON.stringify(j).slice(0, 160));
+      raw = j.choices?.[0]?.message?.content || ""; usage = j.usage ? { in: j.usage.prompt_tokens, out: j.usage.completion_tokens } : null;
+    } else if (pv.name === "claude") {
+      const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", signal: tm,
+        headers: { "Content-Type": "application/json", "x-api-key": pv.key, "anthropic-version": "2023-06-01" },
+        body: JSON.stringify({ model: pv.model, max_tokens: 300, temperature: 0,
+          messages: [{ role: "user", content: [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img } }, { type: "text", text: CORNER_PROMPT }] }] }) });
+      const j = await r.json(); if (!r.ok) throw new Error("http " + r.status + " " + JSON.stringify(j).slice(0, 160));
+      raw = (j.content || []).map(c => c.text || "").join(""); usage = j.usage ? { in: j.usage.input_tokens, out: j.usage.output_tokens } : null;
+    } else if (pv.name === "upstage") {
+      /* Upstage reads documents; it has no page finder.  The extent of the words it finds is the nearest it comes */
+      const fd = new FormData(); fd.append("document", new File([Uint8Array.from(atob(img), c => c.charCodeAt(0))], "p.jpg", { type: "image/jpeg" })); fd.append("model", "ocr");
+      const r = await fetch(env.UPSTAGE_BASE || AR.upstage, { method: "POST", signal: tm, headers: { Authorization: "Bearer " + env.UPSTAGE_API_KEY }, body: fd });
+      const j = await r.json(); if (!r.ok) throw new Error("http " + r.status + " " + JSON.stringify(j).slice(0, 160));
+      const pg = (j.pages || [])[0] || {}, W = pg.width || 1, H = pg.height || 1;
+      const pts = (pg.words || []).flatMap(w => (w.boundingBox && w.boundingBox.vertices) || []).map(v => [v.x / W * 1000, v.y / H * 1000]);
+      if (pts.length) { const by = f => pts.reduce((a, q) => f(q) > f(a) ? q : a);
+        quad = [by(q => -q[0] - q[1]), by(q => q[0] - q[1]), by(q => q[0] + q[1]), by(q => q[1] - q[0])].map(q => q.map(v => +v.toFixed(1))); }
+      return { name: pv.name, model: pv.model, ms: Date.now() - t0, quad, usage: { pages: 1 } };
+    }
+    let jj = null; try { jj = parseJsonText(raw); } catch (e) { const mm = /\{[\s\S]*\}/.exec(raw); try { jj = mm && JSON.parse(mm[0]); } catch (e2) {} }
+    quad = quadOf(jj);
+    return { name: pv.name, model: pv.model, ms: Date.now() - t0, quad, usage, ...(quad ? {} : { error: "unparsed: " + String(raw).slice(0, 120) }) };
+  } catch (e) { return { name: pv.name, model: pv.model, ms: Date.now() - t0, quad: null, error: String(e && e.message || e).slice(0, 200) }; }
+}
+const scanBench = (env, img) => Promise.all(scanProviders(env).map(pv => scanOne(env, pv, img)));
+
 async function labReady(env) {
   if (!LAB_READY) { try { await env.DB.prepare("SELECT exam_tokens FROM users LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_sessions LIMIT 0").all();
     await env.DB.prepare("SELECT read FROM lab_pages LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_schemes LIMIT 0").all(); LAB_READY = true; } catch (e) {} }
@@ -1076,6 +1155,7 @@ async function labReadPage(env, s, buf, mime, up) {
   const out = await gemini(env, [
     { text: [`[TASK: read page] A photographed page of the official answer sheets or working sheets of ${s.comp.toUpperCase()} ${s.year}, experiments ${JSON.parse(s.tasks).join(", ")}.`,
       "Read the printed header: which experiment (task, e.g. E1), whether it is an answer sheet (Answer Sheet / Answer Form) or a working sheet (Working Sheet / Writing Sheet), and the page number. Use null when it is not printed or cannot be read.",
+      "On official IPhO/APhO sheets the header code tells it: A1-3 is the answer sheet of experiment 1, page 3 (task E1, sheet answer); W2-1 is a working sheet of experiment 2.",
       "Then transcribe every answer exactly as written, item by item, with its label as printed or written (e.g. A.2). Do not correct, complete or grade anything; what cannot be read is left out.",
       "value: a number answer with its unit and uncertainty as written. table: its column headings and the number of filled rows. graph: what can be seen (axes labelled, units on the axes, a scale that uses most of the grid, the number of plotted points, a fitted line, a slope read off, error bars, a title).",
       "crossed_out: true for struck-out work. box: [ymin,xmin,ymax,xmax] on a 0–1000 grid. legible: good, partial (some parts unreadable) or poor (mostly unreadable, blurred, cut off or not a sheet).",
@@ -1291,7 +1371,9 @@ async function lab(p, m, body, me, req, env, url) {
         if (up) { conf = up.confidence; }
         const rd = await labReadPage(env, s, buf, mime, up), h = rd.header || {};
         /* the printed header of the official sheet decides which experiment and which sheet; the phone's choice is the fallback */
-        const ht = typeof h.task === "string" ? h.task.trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, "") : "";
+        let ht = typeof h.task === "string" ? h.task.trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, "") : "";
+        const code = /^([AW])(\d)(?:-\d+)?$/.exec(ht);               // an official sheet's code: A1-3, W2-1
+        if (code) { ht = "E" + code[2]; if (!h.sheet) h.sheet = code[1] === "A" ? "answer" : "working"; }
         const hit = JSON.parse(s.tasks).find(x => x.toUpperCase() === ht || x.toUpperCase() === "E" + ht);
         if (hit) tk = hit;
         if (h.sheet === "answer" || h.sheet === "working") kd = h.sheet;
@@ -1448,6 +1530,28 @@ async function lab(p, m, body, me, req, env, url) {
   /* admins: marking schemes and the sessions that wait for a person (arena() has already refused anyone else) */
   if (p.startsWith("/api/admin/lab/")) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
+    /* which AI finds the corners of a photographed A4 page best (sim/scanbench.html): every connected provider, with
+       its cheapest vision model, gets the same photo; the admin then marks the true corners on it */
+    if (p === "/api/admin/lab/scanbench" && m === "POST") {
+      const img = String(body.image || "");
+      if (!/^[A-Za-z0-9+/=]{1000,2400000}$/.test(img)) bad("bad_image");
+      await env.DB.prepare(SCANBENCH_TABLE).run();
+      const results = await scanBench(env, img);
+      const res = await env.DB.prepare("INSERT INTO scan_bench(created_at,w,h,image,results,local) VALUES(?,?,?,?,?,?)")
+        .bind(t, +body.w || 0, +body.h || 0, Uint8Array.from(atob(img), c => c.charCodeAt(0)), JSON.stringify(results), JSON.stringify(body.local || null)).run();
+      return { id: res.meta.last_row_id, results };
+    }
+    if ((r = /^\/api\/admin\/lab\/scanbench\/(\d+)$/.exec(p)) && m === "PATCH") {
+      const gt = body.gt;
+      if (!Array.isArray(gt) || gt.length !== 4 || gt.some(q => !Array.isArray(q) || q.length !== 2 || q.some(v => !(v >= -50 && v <= 1050)))) bad("bad_corners");
+      await env.DB.prepare("UPDATE scan_bench SET gt=? WHERE id=?").bind(JSON.stringify(gt), +r[1]).run();
+      return { ok: true };
+    }
+    if (p === "/api/admin/lab/scanbench" && m === "GET") {
+      await env.DB.prepare(SCANBENCH_TABLE).run();
+      const rows = (await env.DB.prepare("SELECT id,created_at,w,h,results,local,gt FROM scan_bench ORDER BY id DESC LIMIT 200").all()).results;
+      return { providers: scanProviders(env).map(x => ({ name: x.name, model: x.model })), rows: rows.map(x => ({ ...x, results: JSON.parse(x.results), local: JSON.parse(x.local || "null"), gt: JSON.parse(x.gt || "null") })) };
+    }
     if (p === "/api/admin/lab/rubrics" && m === "GET") {
       const key = url.searchParams.get("key");
       if (key) return { rubrics: (await env.DB.prepare("SELECT * FROM lab_rubrics WHERE exam_key=? ORDER BY task").bind(key).all()).results };
