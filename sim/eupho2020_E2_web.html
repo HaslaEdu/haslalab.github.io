@@ -49,7 +49,7 @@ button:hover{border-color:var(--accent);color:var(--accent)}
 var G = 9.81, Y1_INIT = 1.8, Y_CEIL = 3.0, Y_FLOOR = 0.0, BOX = 0.6;
 var M1 = 0.857, M2 = 0.236, M3 = 0.413;
 var K1L = 32.06, K1S = 20.0, K2L = 16.37, K2S = 15.0;
-var B1 = 0.22, B2 = 0.08, B3 = 0.08;
+var BD1 = 0.22, BD2 = 0.08, BD3 = 0.08;
 var DT = 0.0001, FORCE_ERR = 0.005;
 var MAX_REPEAT = 1000, MIN_SAMPLING = 10, MAX_SAMPLING = 1000000;
 var MIN_DURATION = 10, MAX_DURATION = 10000000, MAX_ACCEL = 30;
@@ -77,7 +77,7 @@ function makeSim() {
 }
 
 function force(s) {
-  return M1 * s.a1 + B1 * s.v1 * Math.abs(s.v1) +
+  return M1 * s.a1 + BD1 * s.v1 * Math.abs(s.v1) +
          k1of(s.y1 - s.y2) * (s.y1 - s.y2) + M1 * G + gauss(FORCE_ERR);
 }
 
@@ -85,13 +85,13 @@ function step(s, dt) {
   var v1 = s.v1, y1 = s.y1, v2 = s.v2, y2 = s.y2, v3 = s.v3, y3 = s.y3;
   var v1n = v1 + s.a1 * dt, y1n = y1 + 0.5 * (v1 + v1n) * dt;
   var k1 = k1of(y1 - y2), k2 = k2of(y2 - y3);
-  var v2d0 = -B2 / M2 * (v2 - v1) + k1 / M2 * (y1 - y2) - k2 / M2 * (y2 - y3) - G;
-  var v3d0 = -B3 / M3 * (v3 - v1) + k2 / M3 * (y2 - y3) - G;
+  var v2d0 = -BD2 / M2 * (v2 - v1) + k1 / M2 * (y1 - y2) - k2 / M2 * (y2 - y3) - G;
+  var v3d0 = -BD3 / M3 * (v3 - v1) + k2 / M3 * (y2 - y3) - G;
   var v2g = v2 + v2d0 * dt, y2g = y2 + v2 * dt;
   var v3g = v3 + v3d0 * dt, y3g = y3 + v3 * dt;
   k1 = k1of(y1n - y2g); k2 = k2of(y2g - y3g);
-  var v2d1 = -B2 / M2 * (v2g - v1n) + k1 / M2 * (y1n - y2g) - k2 / M2 * (y2g - y3g) - G;
-  var v3d1 = -B3 / M3 * (v3g - v1n) + k2 / M3 * (y2g - y3g) - G;
+  var v2d1 = -BD2 / M2 * (v2g - v1n) + k1 / M2 * (y1n - y2g) - k2 / M2 * (y2g - y3g) - G;
+  var v3d1 = -BD3 / M3 * (v3g - v1n) + k2 / M3 * (y2g - y3g) - G;
   s.v1 = v1n; s.y1 = y1n;
   s.v2 = v2 + 0.5 * (v2d0 + v2d1) * dt; s.y2 = y2 + 0.5 * (v2 + v2g) * dt;
   s.v3 = v3 + 0.5 * (v3d0 + v3d1) * dt; s.y3 = y3 + 0.5 * (v3 + v3g) * dt;
@@ -109,14 +109,19 @@ function fmt(t, f, a) {
 
 var PROGRAM = {
   title: 'EuPhO 2020 Experiment 2 — Black Box',
-  subtitle: '주최측이 배포한 것은 콘솔 실행 파일입니다. 이 페이지는 공개된 C++ 원본 소스를 그대로 옮긴 브라우저 판입니다.',
-  notes: [
+  subtitle: { ko: '주최측이 배포한 것은 콘솔 실행 파일입니다. CMD 모드는 공개된 C++ 원본 소스를 그대로 옮긴 프로그램이고, 실험 모드는 같은 계산을 3D 실험대의 실제 장비(리니어 구동기, 로드셀, 함수 발생기, 오실로스코프)로 해 봅니다.',
+              en: 'The organisers handed out a console executable. CMD mode is a line-by-line port of the published C++ source; experiment mode runs the same calculation behind real apparatus on a 3-D bench (a linear drive, a load cell, a function generator, an oscilloscope).' },
+  notes: { ko: [
     '공식 바이너리는 <code>EuPhO-2020/official/official_binaries/</code>에 Windows·Linux·macOS 빌드로 있습니다.',
     'EuPhO는 <b>C++ 전체 소스도 공개했습니다</b> (<code>official/official_sources/Experiment_2/</code>). 숨은 질량·용수철 상수, 비선형 용수철, 두 가지 감쇠, dt = 0.1 ms 적분기, 5 mN 힘 오차, 명령 문법, 중단 조건, 출력 형식이 모두 원본과 같습니다.',
     '명령: <code>지속시간 가속도</code> 쌍(예 <code>1.5 -0.4</code>), <code>repeat N</code> … <code>endrepeat</code>, <code>sample t</code>, <code>begin</code>, <code>quit</code>. 한 줄에 여러 개를 써도 됩니다.',
     '|a| &le; 30 m/s&sup2;, 지속시간과 샘플링은 0.01 s의 배수. 상자는 높이 0.6 m이고 3 m 방 한가운데서 시작하며, 상자나 내부 질량이 부딪히면 실험이 끝납니다.',
-    '과제: m&#8321;, m&#8322;, m&#8323;, k&#8321;, k&#8322;를 모두 구하세요.'
-  ],
+    '과제: m&#8321;, m&#8322;, m&#8323;, k&#8321;, k&#8322;를 모두 구하세요.'], en: [
+    'The official binaries are in <code>EuPhO-2020/official/official_binaries/</code> for Windows, Linux and macOS.',
+    'EuPhO also <b>published the full C++ source</b> (<code>official/official_sources/Experiment_2/</code>). The hidden masses and spring constants, the non-linear springs, the two kinds of damping, the 0.1 ms integrator, the 5 mN force error, the command syntax, the stop conditions and the output format are all the original ones.',
+    'Commands: <code>duration acceleration</code> pairs (e.g. <code>1.5 -0.4</code>), <code>repeat N</code> … <code>endrepeat</code>, <code>sample t</code>, <code>begin</code>, <code>quit</code>; several on one line are fine.',
+    '|a| &le; 30 m/s&sup2;; durations and sampling are multiples of 0.01 s. The box is 0.6 m high and starts in the middle of a 3 m room; the experiment ends if the box or a mass inside it hits something.',
+    'Task: find all of m&#8321;, m&#8322;, m&#8323;, k&#8321;, k&#8322;.'] },
   run: async function (term) {
     term.writeln('EuPhO 2020 - Experiment 2');
     term.writeln('');
@@ -269,139 +274,111 @@ function describe(seq, current) {
 }
 
 
-/* Experiment mode: the box on a linear drive in a 3 m room.  The same masses, springs, damping, force
-   noise, integrator (0.1 ms) and stop conditions as the program; but the drive is worked from a pulse
-   generator or a hand lever, and the force is read from a digital display and from a pen chart
-   recorder whose paper you measure.  The session's errors: the force sensor's zero is a little off,
-   the chart's sensitivity and paper speed are a little off, the pen's zero is where you set it. */
-var BX = { sim: null, status: 0, ms: 0, prog: null, lever: 0, brake: false, amp: 2, width: 0.30, cyc: 3, shape: 0,
-           feed: true, paper: 0, speedI: 2, sensI: 2, zero: -60, trace: [], disp: 0, dispT: -1, msg: '' };
-var PAPER_SPEEDS = [5, 10, 25, 50, 100], SENSES = [0.5, 1, 2, 5];       /* mm/s, N per 10 mm division */
-function bxReset() { BX.sim = makeSim(); BX.status = 0; BX.prog = null; BX.msg = '상자를 방 가운데에 다시 매달았습니다.'; }
-function bxAccel() {
-  var s = BX.sim;
-  if (BX.prog) { var P = BX.prog, t = (BX.ms - P.t0) / 1000, per = 2 * P.width, k = Math.floor(t / per);
-    if (k >= P.cyc) { BX.prog = null; return 0; }
-    var ph = t - k * per, sgn = ph < P.width ? 1 : -1; return (P.shape ? -sgn : sgn) * P.amp; }
-  if (BX.brake) return Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, -8 * s.v1 - 4 * (s.y1 - Y1_INIT)));
-  return BX.lever;
-}
+/* Experiment mode, on the 3-D bench.  The box hangs from an S-beam load cell on the carriage of a 3 m
+   vertical linear motor.  The motor's servo drive moves it with the acceleration its analogue input asks
+   for (1 m/s² per volt); that input comes from a Siglent SDG1032X making square-wave bursts.  The load
+   cell's indicator shows the force and gives it out at 0.2 V/N to a Siglent SDS1202X-E, whose second
+   channel watches the generator.  The same masses, springs, damping, force noise, 0.1 ms integrator and
+   stop conditions as the program.  The session's errors: the indicator's zero and the analogue output's
+   gain are a little off. */
+var BX = { sim: null, status: 0, hold: false, ind: 0, indT: -1, sc: null, fg: null, acc: 0 };
+function bxReset() { BX.sim = makeSim(); BX.status = 0; BX.hold = false; }
 PROGRAM.lab = {
-  intro: '높이 3 m 방 가운데에 상자(한 변 0.6 m, 안에 용수철 두 개와 추 두 개)가 힘 센서를 통해 리니어 구동기에 매달려 있습니다. ' +
-         '펄스 발생기로 +a를 τ 동안, −a를 τ 동안 주는 펄스를 원하는 횟수만큼 보내거나, 레버로 직접 가속도를 줄 수 있습니다. ' +
-         '구동기가 상자를 그 가속도로 움직이는 데 필요한 힘 F를 힘 센서가 재고, 디지털 표시와 기록계 용지에 나옵니다. ' +
-         '용지의 눈금(1 mm, 굵은 선 10 mm)과 용지 속도·감도로 시간과 힘을 읽으세요. 상자가 천장·바닥에 닿거나 안에서 부딪히면 멈춥니다.',
-  howto: ['펄스 발생기: <b>AMPL</b>(m/s²), <b>WIDTH</b> τ(s), <b>CYCLES</b> 손잡이 → <b>START</b> · <b>↑↓/↓↑</b>로 순서 바꾸기',
-          '레버: 끌어서 직접 가속도 주기 (놓으면 0) · <b>HOLD</b>: 상자를 천천히 세워 가운데로',
-          '기록계: <b>SPEED</b>(용지 속도)·<b>SENS</b>(감도) 선택, <b>ZERO</b> 손잡이로 펜 영점, <b>FEED</b>로 용지 멈춤/진행',
-          '<b>RESET</b>: 멈춘 뒤 상자를 다시 매달기 · 두 번 클릭: 기록지·표시 확대'],
-  aspect: 0.62,
-  notePlaceholder: '예) 정지 상태 F = 14.97 N → 전체 질량 …\n펄스 a = 2 m/s², τ = 0.30 s: 용지에서 주기 … mm (25 mm/s) → …',
-  init: function (S) {
-    BX.fz = S.sys('fZero', 0.03); BX.sensG = S.sys('sensGain', 0.01); BX.speedG = S.sys('paperGain', 0.006);
-    bxReset(); BX.msg = '';
-  },
-  frame: function (ui) {
-    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
-    /* ---- physics, 1 ms at a time, ten 0.1 ms steps each, as the program ---- */
-    var n = Math.min(120, Math.round(dt * 1000)), sim = BX.sim;
-    for (var i = 0; i < n && !BX.status; i++) {
-      sim.a1 = bxAccel();
-      var F = force(sim) + BX.fz;
-      if (BX.feed) BX.paper += PAPER_SPEEDS[BX.speedI] * (1 + BX.speedG) / 1000;
-      if (i % 2 === 0) { BX.trace.push([BX.paper, F]); if (BX.trace.length > 60000) BX.trace.splice(0, 20000); }
-      BX.lastF = F;
-      for (var k = 0; k < 10; k++) { BX.status = step(sim, 1e-4); if (BX.status) break; }
-      BX.ms++;
-    }
-    if (BX.status && !BX.msg.startsWith('■')) BX.msg = '■ ' + STATUS[BX.status];
-    if (ui.t - BX.dispT > 0.1) { BX.dispT = ui.t; BX.disp = BX.lastF !== undefined ? BX.lastF : 0; }
-    g.fillStyle = '#1d2127'; g.fillRect(0, 0, W, H);
-    /* ---- the room and the drive ---- */
-    var rx = 14, rw = 230, top = 22, bot = 600, my = (bot - top) / (Y_CEIL - Y_FLOOR), Y = function (y) { return bot - (y - Y_FLOOR) * my; }, cx = rx + rw / 2;
-    g.fillStyle = '#272c33'; g.fillRect(rx, top, rw, bot - top);
-    g.fillStyle = '#4a4f57'; g.fillRect(rx - 4, top - 10, rw + 8, 10); g.fillRect(rx - 4, bot, rw + 8, 10);
-    for (var m = 0.5; m < 3; m += 0.5) { g.strokeStyle = 'rgba(255,255,255,.06)'; g.beginPath(); g.moveTo(rx, Y(m)); g.lineTo(rx + rw, Y(m)); g.stroke(); }
-    g.fillStyle = '#5b636c'; g.fillRect(cx - 34, top, 10, bot - top);                        /* the rail */
-    var y1 = sim.y1;
-    HL.rr(g, cx - 40, Y(y1) - 70, 26, 40, 3, '#3b6e9e', '#1b2c3d', 1);                    /* the carriage */
-    g.fillStyle = '#9aa3ad'; g.fillRect(cx - 4, Y(y1) - 46, 8, 30); g.fillRect(cx - 27, Y(y1) - 52, 31, 6);
-    HL.rr(g, cx - 13, Y(y1) - 18, 26, 16, 2, '#c9a227', '#5b4610', 1); HL.text(g, 'F', cx, Y(y1) - 10, '#1b1b1b', 9, 'center', '700');
-    var bw = 0.6 * my;
-    HL.rr(g, cx - bw / 2, Y(y1), bw, BOX * my, 2, '#0b0b0d', '#3c4048', 1.5);
-    HL.text(g, 'BLACK BOX', cx, Y(y1) + BOX * my / 2, '#4f5560', 11, 'center', '700');
-    /* ---- the pulse generator ---- */
-    var px = 256, py = 12, pw = 300, ph = 250, zp = { x: px, y: py, w: pw, h: ph, title: '펄스 발생기 · 레버' };
-    ui.hit('pg', { x: px, y: py, w: pw, h: ph }, { cursor: 'default', zoom: zp });
-    HL.rr(g, px, py, pw, ph, 8, '#d7dadd', '#8d9399', 2);
-    HL.text(g, 'DRIVE — PULSE GENERATOR', px + 12, py + 15, '#2a2d31', 11, 'left', '700');
-    var aDet = []; for (var q = 0; q <= 300; q++) aDet.push(q / 10);
-    BX.amp = HL.knob(ui, 'amp', px + 50, py + 70, 26, BX.amp, { min: 0, max: 30, detents: aDet, sens: 30 / 500, label: 'AMPL', labelCol: '#2a2d31', zoom: zp });
-    var wDet = []; for (q = 1; q <= 200; q++) wDet.push(q / 100);
-    BX.width = HL.knob(ui, 'wid', px + 135, py + 70, 26, BX.width, { min: 0.01, max: 2, detents: wDet, sens: 2 / 600, label: 'WIDTH τ', labelCol: '#2a2d31', zoom: zp });
-    var cDet = []; for (q = 1; q <= 50; q++) cDet.push(q);
-    BX.cyc = HL.knob(ui, 'cyc', px + 220, py + 70, 26, BX.cyc, { min: 1, max: 50, detents: cDet, sens: 50 / 400, label: 'CYCLES', labelCol: '#2a2d31', zoom: zp });
-    HL.lcd(g, px + 14, py + 118, 86, 26, BX.amp.toFixed(1), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
-    HL.lcd(g, px + 106, py + 118, 86, 26, BX.width.toFixed(2), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
-    HL.lcd(g, px + 198, py + 118, 86, 26, String(BX.cyc), { col: '#7fd3ff', bg: '#0c141b', frame: '#22323f', glow: 'rgba(120,200,255,.3)' });
-    HL.text(g, 'm/s²', px + 57, py + 152, '#2a2d31', 9, 'center'); HL.text(g, 's', px + 149, py + 152, '#2a2d31', 9, 'center');
-    var shp = HL.button(ui, 'shape', px + 14, py + 166, 70, 30, { label: BX.shape ? '↓↑' : '↑↓', col: '#555b62', size: 15, zoom: zp });
-    if (shp.click) BX.shape = 1 - BX.shape;
-    var st = HL.button(ui, 'start', px + 94, py + 166, 90, 30, { label: 'START', col: '#3b7a57', size: 12, zoom: zp });
-    if (st.click) { if (BX.status) BX.msg = 'RESET 먼저 하세요.'; else { BX.prog = { t0: BX.ms, amp: BX.amp, width: BX.width, cyc: BX.cyc, shape: BX.shape }; BX.brake = false; BX.msg = '펄스를 보냅니다.'; } }
-    var hold = HL.button(ui, 'hold', px + 194, py + 166, 90, 30, { label: 'HOLD', col: '#8a5a2b', size: 12, zoom: zp, held: BX.brake });
-    if (hold.click) { BX.brake = !BX.brake; BX.prog = null; }
-    var rs = HL.button(ui, 'reset', px + 194, py + 206, 90, 30, { label: 'RESET', col: '#555b62', size: 12, zoom: zp });
-    if (rs.click) bxReset();
-    /* the hand lever: drag up or down; springs back to 0 */
-    var lx = px + 50, ly = py + 220, le = ui.hit('lever', { x: lx - 30, y: ly - 26, w: 100, h: 46 }, { cursor: 'ns-resize', zoom: zp });
-    if (le.down) { BX.lever = Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, BX.lever - le.rawdy * 0.15)); BX.prog = null; BX.brake = false; } else BX.lever *= 0.6;
-    if (Math.abs(BX.lever) < 0.05) BX.lever = 0;
-    HL.rr(g, lx - 30, ly - 4, 100, 8, 3, '#333');
-    var kpos = lx + 20 - BX.lever / MAX_ACCEL * 0;
-    g.strokeStyle = '#222'; g.lineWidth = 4; g.beginPath(); g.moveTo(lx + 20, ly); g.lineTo(lx + 20, ly - 18 * (BX.lever / MAX_ACCEL) - 0.01); g.stroke();
-    HL.circle(g, kpos, ly - 18 * (BX.lever / MAX_ACCEL), 7, '#b8433a', '#4a1a14', 1);
-    HL.text(g, 'LEVER', lx + 76, ly, '#2a2d31', 10, 'left', '700');
-    HL.text(g, BX.msg, px + 6, py + ph + 14, BX.status ? '#ff9b8b' : '#cfd6dc', 10.5);
-    /* ---- the force display ---- */
-    var fx = 570, fy = 12, fw = 418, fh = 70, zf = { x: fx, y: fy, w: fw, h: fh, title: '힘 센서 표시' };
-    ui.hit('fdisp', { x: fx, y: fy, w: fw, h: fh }, { cursor: 'default', zoom: zf });
-    HL.rr(g, fx, fy, fw, fh, 8, '#2b2f35', '#111', 2);
-    HL.text(g, 'FORCE SENSOR', fx + 12, fy + 14, '#cfd6dc', 11, 'left', '700');
-    HL.lcd(g, fx + 150, fy + 12, fw - 166, 46, BX.disp.toFixed(2) + ' N');
-    /* ---- the chart recorder ---- */
-    var cx2 = 570, cy2 = 92, cw2 = 418, ch2 = 518, zc = { x: cx2, y: cy2 + 70, w: cw2, h: 380, title: '기록계 용지 (1 mm 눈금)' };
-    ui.hit('chart', { x: cx2, y: cy2, w: cw2, h: ch2 }, { cursor: 'default' });
-    HL.rr(g, cx2, cy2, cw2, ch2, 8, '#3a3f46', '#15181c', 1.5);
-    HL.text(g, 'CHART RECORDER', cx2 + 12, cy2 + 15, '#dfe5ea', 11, 'left', '700');
-    var spB = HL.button(ui, 'spd', cx2 + 12, cy2 + 28, 110, 28, { label: 'SPEED ' + PAPER_SPEEDS[BX.speedI] + ' mm/s', col: '#555b62', size: 10.5 });
-    if (spB.click) BX.speedI = (BX.speedI + 1) % PAPER_SPEEDS.length;
-    var seB = HL.button(ui, 'sens', cx2 + 130, cy2 + 28, 110, 28, { label: 'SENS ' + SENSES[BX.sensI] + ' N/div', col: '#555b62', size: 10.5 });
-    if (seB.click) BX.sensI = (BX.sensI + 1) % SENSES.length;
-    BX.feed = HL.toggle(ui, 'feed', cx2 + 252, cy2 + 26, 24, 34, BX.feed, { label: 'FEED', labelCol: '#dfe5ea', onCol: '#3b7a57' });
-    BX.zero = HL.knob(ui, 'zero', cx2 + 370, cy2 + 44, 18, BX.zero, { min: -150, max: 150, sens: 300 / 500, wheelStep: 1, label: 'ZERO' });
-    /* the paper: 1 mm grid, the pen fixed at the right, the paper running left */
-    var X0 = cx2 + 12, X1 = cx2 + cw2 - 40, Yt = cy2 + 90, Yb = cy2 + ch2 - 14, mmPx = 2.2, ymid = (Yt + Yb) / 2;
-    g.save(); g.beginPath(); g.rect(X0, Yt, X1 - X0 + 24, Yb - Yt); g.clip();
-    g.fillStyle = '#f7f3e6'; g.fillRect(X0, Yt, X1 - X0 + 24, Yb - Yt);
-    var pp = BX.paper, first = Math.ceil(pp - (X1 - X0) / mmPx);
-    for (var mm = first; mm <= pp + 12; mm++) { var x = X1 - (pp - mm) * mmPx;
-      g.strokeStyle = mm % 10 === 0 ? 'rgba(220,90,70,.55)' : 'rgba(220,120,100,.18)'; g.lineWidth = mm % 10 === 0 ? 0.8 : 0.4; g.beginPath(); g.moveTo(x, Yt); g.lineTo(x, Yb); g.stroke(); }
-    for (var ym = -100; ym <= 100; ym++) { var yy = ymid - ym * mmPx; if (yy < Yt || yy > Yb) continue;
-      g.strokeStyle = ym % 10 === 0 ? 'rgba(220,90,70,.55)' : 'rgba(220,120,100,.18)'; g.lineWidth = ym % 10 === 0 ? 0.8 : 0.4; g.beginPath(); g.moveTo(X0, yy); g.lineTo(X1 + 24, yy); g.stroke(); }
-    var sens = SENSES[BX.sensI] * (1 + BX.sensG), penY = function (Fv) { return ymid - (Fv / sens * 10 + BX.zero) * mmPx; };
-    g.strokeStyle = '#1d3f8a'; g.lineWidth = 1; g.beginPath(); var started = false;
-    for (var j = BX.trace.length - 1; j >= 0; j--) { var tp = BX.trace[j], xx = X1 - (pp - tp[0]) * mmPx; if (xx < X0 - 2) break;
-      var yv = Math.max(Yt, Math.min(Yb, penY(tp[1]))); if (!started) { g.moveTo(xx, yv); started = true; } else g.lineTo(xx, yv); }
-    g.stroke(); g.restore();
-    var pyN = Math.max(Yt, Math.min(Yb, penY(BX.lastF || 0)));
-    g.fillStyle = '#333'; g.beginPath(); g.moveTo(X1, pyN); g.lineTo(X1 + 16, pyN - 5); g.lineTo(X1 + 16, pyN + 5); g.fill();
-    g.fillStyle = '#555'; g.fillRect(X1 + 16, Yt, 6, Yb - Yt);
-    ui.hit('paper', { x: X0, y: Yt, w: X1 - X0, h: Yb - Yt }, { cursor: 'zoom-in', zoom: { x: X0, y: Yt, w: X1 - X0 + 24, h: Yb - Yt, title: '기록계 용지 (1 mm 눈금, 굵은 선 10 mm) — FEED를 꺼 두면 그대로 읽을 수 있습니다' } });
+  intro: { ko: '왼쪽에 높이 3 m의 수직 리니어 모터가 서 있고, 그 캐리지에 S형 로드셀을 거쳐 검은 상자(0.6 m)가 매달려 있습니다. 서보 드라이브는 입력 전압 1 V마다 1 m/s²의 가속도로 캐리지를 움직이고, 그 입력은 함수 발생기 SDG1032X의 사각파 버스트입니다. ' +
+               '로드셀 표시기는 힘을 보여 주고 0.2 V/N으로 오실로스코프 SDS1202X-E의 CH1에 보내며, CH2는 발생기 출력을 봅니다. 화면에서 커서로 주기·진폭을 읽으세요. 상자나 안의 추가 부딪히면 드라이브가 멈춥니다(HOME으로 다시 매달기).',
+           en: 'On the left stands a 3 m vertical linear motor; the black box (0.6 m) hangs from its carriage through an S-beam load cell. The servo drive moves the carriage with 1 m/s² of acceleration per volt at its input, and that input is a square-wave burst from an SDG1032X function generator. ' +
+               'The load-cell indicator shows the force and sends it at 0.2 V/N to CH1 of an SDS1202X-E oscilloscope; CH2 watches the generator. Read periods and amplitudes off the screen with the cursors. If the box or a mass inside it hits something the drive stops (HOME hangs it up again).' },
+  howto: { ko: ['장비를 클릭하면 가까이 보기, 빈 곳을 끌면 책상 돌려 보기 (Esc: 돌아가기)',
+                '발생기: <b>Freq</b>(τ = 1/(2f)), <b>Ampl</b>(Vpp, 가속도 = Vpp/2 × 1 m/s²/V), <b>Phase</b>(0° = 위로 먼저, 180° = 아래로 먼저), <b>N Cycle</b>을 골라 손잡이로 바꾸기, ◀▶ 자릿수 → <b>CH1</b> 출력 켜기 → <b>Trigger</b>로 버스트 한 번',
+                '오실로스코프: Volts/div·S/div 손잡이, <b>Run/Stop</b>, <b>Single</b>, <b>Cursors</b>(X/Y, Adjust 손잡이로 이동), <b>Measure</b>',
+                '드라이브: <b>HOLD</b>는 제자리 유지, <b>HOME</b>은 상자를 방 가운데에 다시 매달기',
+                '느린 재생(×0.25, ×0.1)으로 움직임을 볼 수 있습니다'],
+           en: ['Click an instrument to look closely, drag empty space to turn the desk (Esc: back)',
+                'Generator: pick <b>Freq</b> (τ = 1/(2f)), <b>Ampl</b> (Vpp; acceleration = Vpp/2 × 1 m/s² per V), <b>Phase</b> (0° = up first, 180° = down first), <b>N Cycle</b> and turn the knob, ◀▶ for the digit → switch <b>CH1</b> on → <b>Trigger</b> fires one burst',
+                'Oscilloscope: the Volts/div and S/div knobs, <b>Run/Stop</b>, <b>Single</b>, <b>Cursors</b> (X/Y, moved with the Adjust knob), <b>Measure</b>',
+                'Drive: <b>HOLD</b> keeps the carriage where it is, <b>HOME</b> hangs the box in the middle of the room again',
+                'Slow motion (×0.25, ×0.1) lets you watch the movement'] },
+  notePlaceholder: { ko: '예) 정지 상태 F = 14.97 N → 전체 질량 …\n버스트 2 Vpp, 1.667 Hz, 3 cycle: 이후 진동 주기 … s (커서)', en: 'e.g. at rest F = 14.97 N → total mass …\nburst 2 Vpp, 1.667 Hz, 3 cycles: then period … s (cursors)' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    BX.fz = S.sys('fZero', 0.03); BX.sg = S.sys('outGain', 0.01);
+    bxReset(); BX.sc = new B3.Scope(); BX.fg = new B3.Sdg();
+    BX.sc.ch[0].vi = 9; BX.sc.ch[0].pos = -3; BX.sc.ch[1].on = true; BX.sc.ch[1].vi = 9; BX.sc.ch[1].pos = 2; BX.sc.ti = 8; BX.sc.trig.src = 1; BX.sc.trig.level = 0.5;
+    var RX = -55, RZ = -12, FLOOR = -76, simT = 0, nextPush = 0;
+    var bench = B3.bench(host, {
+      aspect: 0.6, lang: ctx.lang, speeds: [1, 0.25, 0.1],
+      home: { yaw: -0.35, pitch: 0.3, k: 3.6, tx: 15, ty: 40, tz: 0 },
+      views: {
+        rig: { yaw: -0.2, pitch: 0.12, k: 2.6, tx: RX, ty: 75, tz: RZ, title: { ko: '리니어 모터와 상자 (방 높이 3 m)', en: 'The linear motor and the box (room 3 m high)' } },
+        sc: { yaw: 0, pitch: 0.12, k: 30, tx: 78, ty: 8, tz: 0, title: { ko: 'SIGLENT SDS1202X-E 오실로스코프', en: 'SIGLENT SDS1202X-E oscilloscope' } },
+        fg: { yaw: 0, pitch: 0.12, k: 34, tx: 30, ty: 5.6, tz: 6, title: { ko: 'SIGLENT SDG1032X 함수 발생기', en: 'SIGLENT SDG1032X function generator' } },
+        drive: { yaw: 0, pitch: 0.12, k: 40, tx: 112, ty: 6, tz: 2, title: { ko: '서보 드라이브 · 로드셀 표시기', en: 'Servo drive · load-cell indicator' } }
+      },
+      frame: function (b) {
+        var dt = b.dt, s = BX.sim;
+        /* the physics: 0.1 ms steps; the scope sees CH1 and CH2 once a millisecond */
+        var n = Math.round(dt / 1e-4);
+        for (var i = 0; i < n; i++) {
+          simT += 1e-4;
+          var a = BX.status ? 0 : BX.hold ? Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, -8 * s.v1 - 4 * (s.y1 - Y1_INIT))) : Math.max(-MAX_ACCEL, Math.min(MAX_ACCEL, BX.fg.value(b.t - dt + i * 1e-4) * 1.0));
+          if (!BX.status) { s.a1 = a; BX.status = step(s, 1e-4); if (BX.status) { s.a1 = 0; s.v1 = 0; b.say('충돌: ' + STATUS[BX.status], 'Stopped: ' + STATUS[BX.status]); } }
+          if (simT >= nextPush) { nextPush = simT + 1e-3; var F = force(s) + BX.fz;
+            BX.sc.push(b.t - dt + i * 1e-4, F * 0.2 * (1 + BX.sg), BX.fg.value(b.t - dt + i * 1e-4)); BX.lastF = F; }
+        }
+        if (Math.floor(b.t * 4) !== BX.indT) { BX.indT = Math.floor(b.t * 4); BX.ind = BX.lastF || (force(s) + BX.fz); }
+        B3.desk(-10, 135, -40, 32);
+        /* the floor and the rig standing on it beside the desk */
+        B3.box3(-110, 0, FLOOR - 1, FLOOR, -60, 40, '#8b939b', { top: '#9aa2a9' });
+        B3.boxY(RX - 4, RX + 4, FLOOR, FLOOR + 300, RZ - 22, RZ - 14, '#b7bdc2', {}, 25);
+        B3.box3(RX - 20, RX + 20, FLOOR, FLOOR + 3, RZ - 30, RZ + 10, '#5b6168');
+        B3.box3(RX - 4, RX + 4, FLOOR + 300, FLOOR + 304, RZ - 24, RZ - 12, '#5b6168');
+        for (var mk = 0; mk <= 300; mk += 50) B3.text3([RX + 4.05, FLOOR + mk, RZ - 15], [0, 0, 1], [0, 1, 0], '— ' + (mk / 100).toFixed(1) + ' m', 3, '#22272c', { weight: '800' });
+        var yTop = FLOOR + s.y1 * 100, ybot = yTop - BOX * 100;
+        /* the carriage on the rail, its arm, the load cell, the box */
+        B3.box3(RX - 6, RX + 6, yTop + 10, yTop + 26, RZ - 14, RZ - 8, '#3e5f86', { id: 'm:rig' });
+        B3.box3(RX - 2, RX + 2, yTop + 14, yTop + 18, RZ - 8, RZ + 4, '#7b848c', { id: 'm:rig' });
+        B3.box3(RX - 2.5, RX + 2.5, yTop + 2, yTop + 14, RZ + 1, RZ + 7, '#2f6fb3', { id: 'm:rig' });
+        B3.text3([RX - 2.4, yTop + 9, RZ + 7.05], [1, 0, 0], [0, 1, 0], 'S-BEAM', 1.1, '#e8eef3', { weight: '800' });
+        B3.box3(RX - 30, RX + 30, ybot, yTop, RZ - 26, RZ + 34, '#15171a', { id: 'm:rig', top: '#1e2125' });
+        B3.text3([RX - 28, yTop - 6, RZ + 34.1], [1, 0, 0], [0, 1, 0], 'BLACK BOX', 4, '#5a6068', { weight: '800' });
+        /* the instruments */
+        var gen = B3.sdg(b, 'fg', [30, -6], BX.fg);
+        var sc = B3.scope(b, 'sc', [78, -6], BX.sc);
+        /* the servo drive and the load-cell indicator, stacked */
+        var dx = 112, dz = -4;
+        B3.box3(dx - 11, dx + 11, 0, 7, dz - 10, dz + 9.6, '#2b2f34', { id: 'm:drive', top: '#363b41' });
+        B3.box3(dx - 9, dx + 9, 7, 13, dz - 8, dz + 7.6, '#d9dcdf', { id: 'm:drive', top: '#e4e7e9' });
+        var dcv = b.panel('drive', 440, 320, function (ui) {
+          var g = ui.g;
+          /* the indicator (top) */
+          HL.rr(g, 40, 6, 360, 136, 8, '#d9dcdf'); HL.text(g, 'LOAD CELL INDICATOR', 60, 24, '#333', 11, 'left', '800'); HL.text(g, 'ANALOG OUT 0.2 V/N', 380, 24, '#555', 9, 'right', '700');
+          HL.lcd(g, 60, 36, 250, 70, (BX.ind >= 0 ? ' ' : '−') + Math.abs(BX.ind).toFixed(2), { col: '#ff5a3c', glow: 'rgba(255,80,50,.4)', bg: '#140b09', frame: '#333' });
+          HL.text(g, 'N', 330, 72, '#333', 20, 'left', '800'); HL.circle(g, 360, 120, 8, '#c8b26a', '#555', 1); HL.text(g, 'OUT', 340, 120, '#333', 8.5, 'right', '700');
+          /* the servo drive (bottom) */
+          HL.rr(g, 0, 160, 440, 160, 6, '#2b2f34'); HL.text(g, 'LINEAR SERVO DRIVE', 16, 180, '#e8eef3', 12, 'left', '800'); HL.text(g, 'ACC CMD  1 (m/s²)/V   ±30 m/s²', 16, 198, '#9aa3ab', 9.5, 'left', '700');
+          var lamp = function (xx, lab, on, col) { HL.circle(g, xx, 230, 7, on ? col : '#3a3030', '#000', 1); HL.text(g, lab, xx, 248, '#c8ced6', 9, 'center', '700'); };
+          lamp(40, 'READY', !BX.status, '#4cff6a'); lamp(90, 'HOLD', BX.hold, '#ffcf3a'); lamp(140, 'FAULT', !!BX.status, '#ff4a3c');
+          var h = HL.button(ui, 'hold', 190, 214, 90, 38, { col: BX.hold ? '#8a6a1a' : '#4a4e54', label: 'HOLD', size: 13 });
+          if (h.click && !BX.status) BX.hold = !BX.hold;
+          var hm = HL.button(ui, 'home', 296, 214, 90, 38, { col: '#4a4e54', label: 'HOME', size: 13 });
+          if (hm.click) { bxReset(); b.say('상자를 방 가운데에 다시 매달았습니다.', 'The box hangs in the middle of the room again.'); }
+          HL.circle(g, 410, 290, 10, '#c8b26a', '#555', 1); HL.text(g, 'CMD IN', 380, 290, '#c8ced6', 8.5, 'right', '700');
+          if (BX.status) HL.text(g, STATUS[BX.status], 16, 296, '#ff8a7a', 10, 'left', '700');
+        });
+        B3.tex3(dcv, 0, 0, dcv.width, dcv.height, [dx - 11, 13, dz + 9.62], [22, 0, 0], [0, -13, 0], { id: 'p:drive' });
+        /* the cables: generator → drive and scope CH2; indicator → scope CH1; drive → motor */
+        B3.cableDesk(gen.ch1, [dx + 9.6, 1, dz + 9.8], '#1b1b1b', 1.8); B3.cableDesk(gen.ch1, sc.ch2, '#1b1b1b', 1.8);
+        B3.cableDesk([dx + 5.5, 9.2, dz + 9.8], sc.ch1, '#1b1b1b', 1.8);
+        B3.cable([dx - 10, 3, dz - 9], [RX, FLOOR + 40, RZ - 18], '#e08a1c', 30, 2.6);
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
   }
 };
 </script>
 <script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
