@@ -917,6 +917,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 </div></footer>
 
 <script src="sim/labmedal.js"></script>
+<script src="examdur.js"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -988,9 +989,9 @@ ko:{
   live:"브라우저 실행", dlOnly:"다운로드", srcOnly:"파이썬 소스", wip:"준비 중", theoryTag:"이론 · 시뮬레이터 필요",
   soonTitle:"준비 중", soonDesc:"문제지 정리와 물리 모델 보정을 진행하고 있습니다.",
   actRun:"브라우저에서 실행", actExe:"Windows 내려받기", actPdf:"문제지",
-  modePrac:"연습 모드", modePracSub:"실험마다 자유롭게 · 시간 제한 없음 · 풀이 열람", modeExam:"실전 모드", modeExamSub:"대회처럼 5시간 · 답안 스캔 제출 · 채점과 성적표",
-  xmNotice:"실전 모드는 대회 실험 시험을 그대로 치르는 모의고사입니다.", xmSteps:["응시하기 (실전 토큰 1개)","5시간 실험 — 한 책상 · 한 부품함","30분 안에 답안지 · Working sheet 스캔 제출","채점 · 성적표 (순위 · 백분위 · 첨삭)"],
-  xmListH:"시험 목록", xmYear:"연도", xmName:"시험", xmTime:"시간", xmSat:"응시 현황", xmMine:"내 상태", xmTimeV:"5:00 + 0:30",
+  modePrac:"연습 모드", modePracSub:"실험마다 자유롭게 · 시간 제한 없음 · 풀이 열람", modeExam:"실전 모드", modeExamSub:"대회 실험 시간 그대로 · 답안 스캔 제출 · 채점과 성적표",
+  xmNotice:"실전 모드는 대회 실험 시험을 그대로 치르는 모의고사입니다.", xmSteps:["응시하기 (실전 토큰 1개)","대회 실험 시간만큼 실험 — 한 책상 · 한 부품함 (시간은 시험 목록에)","30분 안에 답안지 · Working sheet 스캔 제출","채점 · 성적표 (순위 · 백분위 · 첨삭)"],
+  xmListH:"시험 목록", xmYear:"연도", xmName:"시험", xmTime:"시간", xmSat:"응시 현황", xmMine:"내 상태",
   xmSatV:(n,a)=>`${n}명 응시${a!=null?` · 평균 ${a}%`:""}`, xmNone:"아직 없음", xmGo:"응시하기", xmResume:"이어하기", xmReport:"성적표", xmRetry:"다시 응시",
   xmMeH:"응시자 정보", xmLoginNote:"실전 모드는 로그인한 사람만 응시할 수 있습니다.", xmTokens:"보유 실전 토큰", xmActive:"진행 중인 시험", xmAll:"내 응시 기록 전체 보기",
   xmSt:{running:"실험 중",scanning:"답안 스캔 중",grading:"채점 중",graded:"채점 완료",pending:"채점 대기",error:"채점 오류"}, xmNoExam:"이 대회에는 실전으로 칠 수 있는 시험이 아직 없습니다.",
@@ -1051,9 +1052,9 @@ en:{
   live:"Runs in browser", dlOnly:"Download", srcOnly:"Python source", wip:"In preparation", theoryTag:"theory · needs a simulator",
   soonTitle:"In preparation", soonDesc:"Paper transcription and model calibration under way.",
   actRun:"Run in browser", actExe:"Download for Windows", actPdf:"Problem sheet",
-  modePrac:"Practice", modePracSub:"Each experiment on its own · no time limit · solutions open", modeExam:"Exam", modeExamSub:"Five hours as on the day · scan and submit · marks and a score report",
-  xmNotice:"Exam mode is a mock exam: the competition's experimental exam, sat as on the day.", xmSteps:["Sit the exam (1 exam token)","Five hours of experiments — one bench, one kit","Scan and submit the answer and working sheets within 30 minutes","Marks and a score report (rank, percentile, comments)"],
-  xmListH:"Exams", xmYear:"Year", xmName:"Exam", xmTime:"Time", xmSat:"Candidates", xmMine:"My status", xmTimeV:"5:00 + 0:30",
+  modePrac:"Practice", modePracSub:"Each experiment on its own · no time limit · solutions open", modeExam:"Exam", modeExamSub:"The time of the day's experiments · scan and submit · marks and a score report",
+  xmNotice:"Exam mode is a mock exam: the competition's experimental exam, sat as on the day.", xmSteps:["Sit the exam (1 exam token)","Experiments for as long as on the day — one bench, one kit (times in the exam list)","Scan and submit the answer and working sheets within 30 minutes","Marks and a score report (rank, percentile, comments)"],
+  xmListH:"Exams", xmYear:"Year", xmName:"Exam", xmTime:"Time", xmSat:"Candidates", xmMine:"My status",
   xmSatV:(n,a)=>`${n} sat${a!=null?` · average ${a}%`:""}`, xmNone:"none yet", xmGo:"Sit", xmResume:"Resume", xmReport:"Score report", xmRetry:"Sit again",
   xmMeH:"Candidate", xmLoginNote:"Exam mode is for signed-in users only.", xmTokens:"Exam tokens", xmActive:"In progress", xmAll:"All my exams",
   xmSt:{running:"experiments running",scanning:"scanning answers",grading:"grading",graded:"graded",pending:"waiting for a grader",error:"grading error"}, xmNoExam:"This competition has no exam to sit yet.",
@@ -3710,10 +3711,10 @@ const LOGO_V = 11;
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
    bring its own lettering to --lcap instead.  Measured from the artwork. */
-const LOGO_TEXT = {ipho:0.297, apho:0.640, eupho:0.686, nbpho:0.435,
+const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.39};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -4083,7 +4084,7 @@ function xmPortalHtml(key,x){
     const href=examHref(key,y,g);
     rows.push(`<tr><td class="y">${y.y}</td>
       <td><div class="t">${c.abbr} ${y.y} ${d.xmExamLabel} · ${tasks.join(" + ")}</div><div class="s">${g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · ")}</div></td>
-      <td class="hs">${d.xmTimeV}</td>
+      <td class="hs">${HLexam.clock(HLexam.sec(key,y.y,g.length))} + 0:30</td>
       <td class="hs">${x?(st&&st.sat?d.xmSatV(st.sat,st.avg):`<span style="color:var(--graphite)">${d.xmNone}</span>`):"…"}</td>
       <td>${my?`<span class="st ${my.status}">${d.xmSt[my.status]||my.status}${my.status==="graded"&&my.points?` · ${my.score}/${my.points}`:""}</span>`:""}</td>
       <td><div class="acts3">${open?`<a class="go" href="${href}">${d.xmResume}</a>`
