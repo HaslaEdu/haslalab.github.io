@@ -310,7 +310,7 @@ async function arRank(root, alive, which) {
     <div class="arpanel">${j.rows.length ? `<table class="cmtbl artbl"><thead><tr><th style="width:56px">#</th><th>${T.nick}</th><th style="width:150px">${T.tier}</th>
       <th style="width:90px">${scope === "all" ? T.rating : T.total}</th><th style="width:80px">${T.solved}</th></tr></thead>
       <tbody>${j.rows.map((r) => `<tr class="${cm.me && r.nickname === cm.me.nickname ? "armine" : ""}"><td><b>${r.rank}</b></td><td class="t">${cmAv(r.nickname, "s", r.av)} ${esc(r.nickname)}</td>
-        <td>${arTier(r.lv)}</td><td><b style="color:${TIER_COL[tierKey(r.lv)]}">${scope === "all" ? r.rating : r.total}</b></td><td>${r.solved}</td></tr>`).join("")}</tbody></table>`
+        <td>${arTier(r.lv)}</td><td><b style="color:${TIER_COL[tierKey(r.lv)]}">${scope === "all" ? (r.rating ?? r.total) : r.total}</b></td><td>${r.solved}</td></tr>`).join("")}</tbody></table>`
       : `<p class="arempty">${T.empty}</p>`}</div>
     <p class="arfoot">${T.ratingHelp}</p>`;
 }
@@ -320,6 +320,7 @@ async function arMe(root, alive) {
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/me"); } catch (e) {} location.hash = "#/login"; return; }
   const j = await cmApi("GET", "/me/stats"); if (!alive()) return;
+  j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `
     <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/community/account">${T.settings}</a><button class="cmbtn sm" id="arLogout">${T.logout}</button></div></div>
