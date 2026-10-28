@@ -619,7 +619,7 @@ B3.bench = function (host, o){
       if (anim.s >= 1) anim = null; }
     if (msgT && now > msgT){ msg.classList.remove('on'); msgT = 0; }
     ctx.setTransform(CAM.dpr, 0, 0, CAM.dpr, 0, 0); ctx.clearRect(0, 0, CAM.W, CAM.H);
-    const bgr = ctx.createLinearGradient(0, 0, 0, CAM.H); bgr.addColorStop(0, '#2c3138'); bgr.addColorStop(1, '#1a1d22');
+    const bgr = ctx.createLinearGradient(0, 0, 0, CAM.H); bgr.addColorStop(0, o.bg ? o.bg[0] : '#2c3138'); bgr.addColorStop(1, o.bg ? o.bg[1] : '#1a1d22');
     ctx.fillStyle = bgr; ctx.fillRect(0, 0, CAM.W, CAM.H);
     begin3();
     try { o.frame(api); } catch (err){ console.error(err); }

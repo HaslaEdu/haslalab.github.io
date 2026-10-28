@@ -116,7 +116,7 @@
       var full = document.getElementById('hl-full'); if (full && full.parentNode !== document.body) head.querySelector('.lang').appendChild(full);
     }
     function setLang(l) {
-      lang = l; var u = new URL(location.href); u.searchParams.set('lang', l); history.replaceState(null, '', u);
+      lang = l; var u = new URL(location.href); u.searchParams.set('lang', l); window.history.replaceState(null, '', u);
       renderHead(); renderTools(); renderLabText(); langCbs.forEach(function (f) { f(lang); });
     }
     window.HLlang = function () { return lang; };
