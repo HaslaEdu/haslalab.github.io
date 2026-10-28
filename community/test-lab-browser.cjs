@@ -217,6 +217,10 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   const res = await pg.textContent("main");
   ok(/답안 제출 확인증/.test(res) && /HL-IPHO2024-\d{6}/.test(res) && /\b5\s*\/\s*10\b/.test(res) && /0\.5\s*\/\s*3\.5/.test(res) && /답안지 1쪽/.test(res),
     "receipt: candidate number, pages, E1 5 / 10 (admin rubric), E2 0.5 / 3.5 (scheme drawn from the solution; only a working sheet)");
+  await pg.waitForSelector("#medal .lbmedal", { timeout: 8000 }).catch(() => {});
+  const md = await pg.$eval("#medal", e => [e.textContent, (e.querySelector(".lbmedal") || {}).dataset]).catch(() => ["", {}]);
+  ok(/실험만으로 본 메달권/.test(md[0]) && /IPHO 2024/.test(md[0]) && /135개/.test(md[0]) && md[1] && md[1].medal,
+    "receipt: the medal the experiment alone would have earned in 2024 " + JSON.stringify(md[0].slice(0, 120)));
   await pg.screenshot({ path: OUT + "7-result.png" });
   [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.active === null && act.tokens === 0, "nothing open, 0 tokens");
@@ -233,6 +237,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.goto(SITE + "/#/lab/" + sid); await pg.waitForSelector(".arpanel"); await sleep(700);
   ok(/E1/.test(await pg.textContent("#arRoot")) && (await pg.$$(".arpanel")).length >= 3, "#/lab/<id> shows each experiment and the pages");
   ok(/성적표/.test(await pg.textContent("#arRoot")) && /HL-IPHO2024-/.test(await pg.textContent("#arRoot")), "#/lab/<id> is a score report with the candidate number");
+  ok(await pg.$("#arRoot .lbmedal") !== null, "…with the experiment-only medal estimate");
   const r1 = await pg.$$eval(".arrule", xs => xs.map(x => [x.textContent, x.title]));
   ok(r1.some(([id, ttl]) => id === "R1" && /답안지/.test(ttl)) && /채점 규정/.test(await pg.textContent("#arRoot")), "report: R1 marks on the E2 items, with the rule on hover, and the regulation " + JSON.stringify(r1.slice(0, 2)));
   /* the portal now shows this candidate's status on the exam */

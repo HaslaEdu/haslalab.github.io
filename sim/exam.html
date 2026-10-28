@@ -180,6 +180,7 @@
 <div id="layer"></div>
 
 <script src="../vendor/qrcode/qrcode.js"></script>
+<script src="labmedal.js"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
@@ -780,9 +781,14 @@ function doneView() {
       <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" ? ` · <b>${s.score} / ${s.points ?? "?"}</b>` : ""}</td></tr>
     </tbody></table>
     <div class="result"><table><tbody>${rows}</tbody></table></div>
+    <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
+  /* which medal the experiment alone would have earned that year, where the year's scores are published */
+  if (s.status === "graded" && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
+    const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");
+    if (box && SES === s) box.innerHTML = window.labMedal.html(e, lang); });
   $("again").onclick = () => { SES = null; shown = ""; sync(); };
   if (s.status === "grading") { poller = setInterval(async () => { try { setSession((await api("GET", `/lab/sessions/${s.id}`)).session); if (SES.status !== "grading") { shown = ""; render(); } } catch (e) {} }, 5000); }
 }

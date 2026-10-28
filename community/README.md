@@ -144,7 +144,15 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 4. **채점 규정**(`LAB_REG`, 버전 `2026-10-28`, R1–R10)은 Worker 코드에 있고 `/api/health`의 `lab_reg`로도 나갑니다. 성적표는 항목마다 점수, 판정, 근거(쪽 · 시트 · 값), 계산 방식(범위·검증 / AI 판단), 적용 규정을 보여 줍니다.
 5. 채점 모델이 응답하지 않아 실패하면 2분 간격으로 세 번까지 저절로 다시 채점합니다. 솔루션 파일이 없는 실험은 「채점 대기」(`no_solution`)로 남습니다.
 
-모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`)이고, 솔루션 PDF는 `LAB_PDF_BASE`(기본 PDF Worker)에서 가져옵니다. Gemini 키가 없으면 예전처럼 Upstage OCR 글자로 채점합니다.
+모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`)이고, 솔루션 PDF는 GitHub Release(`pdf-<접두어>`)에서 바로 가져옵니다(`LAB_PDF_BASE`로 바꿀 수 있음 — Worker는 같은 계정의 다른 workers.dev 주소를 부를 수 없습니다). Gemini 키가 없으면 예전처럼 Upstage OCR 글자로 채점합니다.
+
+**Upstage + Gemini 읽기**: `UPSTAGE_API_KEY`도 있으면 쪽마다 Upstage Document Parse가 먼저 손글씨를 받아 적고, Gemini는 그 전사문을 이미지 옆에 두고 문항 · 값 · 표 · 그래프를 정리합니다(숫자 · 기호는 전사문으로 확인, 판단은 이미지 기준). Upstage 신뢰도가 0.6 아래면 판독 상태가 「일부」를 넘지 못하고, 0.3 아래면 「거의 못 읽음」입니다.
+
+**시험 전 · 중 · 후 (사이트 쪽)**
+- `sim/sheets.html`: 시작 전에 인쇄하는 Answer sheet(문항 칸 · 측정표 · 그래프 용지)와 Working sheet. 네 귀퉁이에 스캐너용 검은 사각형이 있습니다. 문항 번호와 배점은 `sim/labsheets.json`(`tools/labsheets.py`로 문제 PDF에서 뽑음)에서 옵니다. 문제지는 여기 없습니다.
+- `sim/exam.html`: 문제지는 시험 중에만 «문제지 열기»로 책상 옆에 pdf.js로 그려 보여 줍니다(내려받기 · 인쇄 버튼 없음, 시험 창 인쇄는 빈 쪽).
+- `sim/scan.html`: 실시간 카메라가 종이를 찾아 테두리를 그리고, 네 사각형이 1초쯤 멈추면 저절로 찍습니다(`labscan/scanner.js`의 `findSheetMarkersGray`).
+- 성적표와 확인증: 실험 점수를 그해 공개된 실험 점수(`sim/labmedals.json`, `tools/labmedals.py` — IPhO 비공식 기록과 APhO 공식 결과, 이름 없이 점수와 메달 수만)에 넣어 «실험만으로 본 메달권»을 추정합니다(`sim/labmedal.js`).
 
 ### 올리는 순서
 
