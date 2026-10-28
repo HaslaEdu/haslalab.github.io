@@ -68,14 +68,19 @@ function phiDeg(I, xmm, ymm) {
 
 var PROGRAM = {
   title: 'EuPhO 2021 E1 — Hidden wire',
-  subtitle: '주최측이 배포한 것은 콘솔 실행 파일뿐입니다. 이 페이지는 그 프로그램을 브라우저에서 그대로 돌리는 판입니다.',
-  notes: [
+  subtitle: { ko: '주최측이 배포한 것은 콘솔 실행 파일뿐입니다. CMD 모드는 그 프로그램을 브라우저에서 그대로 돌리고, 실험 모드는 같은 물리를 3D 실험대 위의 실제 장비로 해 봅니다.',
+              en: 'The organisers handed out a console executable only. CMD mode runs that program as it is in the browser; experiment mode does the same physics with real apparatus on a 3-D bench.' },
+  notes: { ko: [
     '공식 바이너리는 <code>EuPhO-2021/official/official_binaries/{Windows,Linux,OSX}/</code>에 있습니다. 이 페이지는 그것과 같은 프롬프트·범위·반올림·출력 형식을 씁니다.',
     '2021년은 소스가 공개되지 않아 물리는 문제지에서 다시 썼고, 숨은 값은 공식 해답이 "시뮬레이션에 설정된 값과 두 자리까지 일치한다"고 밝힌 h = 5.0 mm, B<sub>E</sub> = 4.0&times;10<sup>-5</sup> T, 도선 y = &minus;0.58x + 75.3 mm를 씁니다.',
     '공식 해답의 데이터 표와 대조했습니다 — I = +5 A일 때 (0, 75)에서 &phi; = &minus;143&deg;, (20, 75)에서 &minus;79&deg;로 일치합니다.',
     'I는 0.1 A, x·y는 1 mm로 반올림되고, 나침반을 놓을 때마다 약 0.5 mm의 오차가 생깁니다. &phi;는 1&deg; 단위로 출력됩니다.',
-    '과제: (a) 도선의 식 y = ax + b와 그 불확도, 양의 전류 방향 (b) 깊이 h와 지구자기 수평성분 B<sub>E</sub>.'
-  ],
+    '과제: (a) 도선의 식 y = ax + b와 그 불확도, 양의 전류 방향 (b) 깊이 h와 지구자기 수평성분 B<sub>E</sub>.'], en: [
+    'The official binaries are in <code>EuPhO-2021/official/official_binaries/{Windows,Linux,OSX}/</code>. This page uses the same prompts, ranges, rounding and output format.',
+    'The 2021 source was not published, so the physics is rewritten from the problem sheet; the hidden values are the ones the official solution says agree "to two digits with the values set in the simulation": h = 5.0 mm, B<sub>E</sub> = 4.0&times;10<sup>-5</sup> T, the wire y = &minus;0.58x + 75.3 mm.',
+    'Checked against the official solution\'s data table: at I = +5 A, &phi; = &minus;143&deg; at (0, 75) and &minus;79&deg; at (20, 75).',
+    'I is rounded to 0.1 A and x, y to 1 mm, and every placing of the compass is off by about 0.5 mm. &phi; is printed to 1&deg;.',
+    'Tasks: (a) the wire\'s line y = ax + b with uncertainties and the direction of positive current; (b) the depth h and the Earth\'s horizontal field B<sub>E</sub>.'] },
   run: async function (term) {
     async function ask(prompt, lo, hi) {
       for (;;) {
@@ -101,112 +106,122 @@ var PROGRAM = {
 };
 
 
-/* Experiment mode: the 10 cm board, a real compass and the DC source.  The compass is put down by
-   hand and read by eye, the current is set with the knobs and read off the source's meter.  What a
-   person brings to it is in the session's instrument errors: the grid paper sits a little off the
-   true axes, the compass card's 0 is a little off its lubber line, the meter reads a little off,
-   and the needle's pivot has friction, so it stops a fraction of a degree short. */
-var BOARD = { x: 40, y: 40, s: 5 };                   /* 5 px per mm */
-var LAB = { I: 0, mag: 0, fine: 0, pol: 1, on: false, cx: 70, cy: 25, drag: null, ang: 0, w: 0, rot: 0, settle: 0 };
-function boardPx(xmm, ymm) { return [BOARD.x + xmm * BOARD.s, BOARD.y + (100 - ymm) * BOARD.s]; }
+/* Experiment mode, on the 3-D bench: a 10 cm board with mm graph paper over the hidden wire, a
+   plotting compass put down by hand, a KORAD KA3005D supply and a reversing knife switch.  What a
+   person brings to it is in the session's errors: the paper sits a little off the true axes, the card's
+   0 is a little off the lubber line, the supply's meter reads a little off, the compass is set down a
+   little crooked each time, and the pivot's friction stops the needle a fraction of a degree short. */
+var LAB = { cx: 70, cy: 25, ang: 0, w: 0, rot: 0, settle: 0, lastT: 0, psu: {}, sw: { pos: 0 }, was: false };
 PROGRAM.lab = {
-  intro: '10 cm × 10 cm 판(남서쪽 모서리가 원점, x는 동쪽, y는 북쪽) 아래 어딘가에 도선이 묻혀 있습니다. 나침반을 판 위 원하는 자리에 끌어다 놓고, ' +
-         '직류 전원으로 전류를 흘린 뒤 바늘이 북쪽(y)에서 얼마나 돌았는지 눈금으로 읽습니다. 동쪽으로 돌면 +, 서쪽이면 −입니다. ' +
-         '좌표는 나침반 가운데 축이 놓인 자리를 방안지 눈금으로 읽습니다. 두 번 클릭하면 확대해서 볼 수 있습니다.',
-  howto: ['나침반: 끌어서 판 위에 놓기 (가운데 축이 측정 위치)',
-          '전원: <b>CURRENT</b> 손잡이(굵게)·<b>FINE</b>(곱게)를 위아래로 끌거나 휠, <b>POLARITY</b>로 방향 바꾸기, <b>OUTPUT</b>으로 켜고 끄기',
-          '바늘은 흔들리다 멈춥니다. 멈춘 뒤 나침반을 두 번 클릭해 눈금을 읽으세요.',
-          '전류계는 전원 앞면의 표시값을 그대로 적습니다.'],
-  aspect: 0.62,
-  notePlaceholder: '예) I = +3.00 A, (x, y) = (20, 75) mm → φ = −34°',
-  init: function (S) {
+  intro: { ko: '책상 위에 있는 것: 아래에 도선이 묻힌 10 cm × 10 cm 판(방안지, 남서쪽 모서리가 원점, x는 동쪽, y는 북쪽), 나침반, KORAD KA3005D 직류 전원, 극성을 바꾸는 나이프 스위치. ' +
+               '나침반을 판 위에 끌어다 놓고, 전원으로 전류를 흘린 뒤 바늘이 북쪽(y)에서 돈 각도를 눈금으로 읽습니다. 동쪽으로 돌면 +, 서쪽이면 −입니다. 좌표는 나침반 가운데 축이 놓인 자리를 방안지 눈금으로 읽습니다.',
+           en: 'On the desk: the 10 cm × 10 cm board with the wire buried under it (mm graph paper, origin at the south-west corner, x east, y north), a compass, a KORAD KA3005D DC supply and a knife switch that reverses the current. ' +
+               'Drag the compass onto the board, let a current flow and read on the card how far the needle turned from north (y): east is +, west is −. The position is where the compass\'s pivot sits on the paper.' },
+  howto: { ko: ['장비를 클릭하면 가까이 보기, 끌면 옮기기, 빈 곳을 끌면 책상 돌려 보기 (Esc: 돌아가기)',
+                '전원: <b>I-SET</b>을 누르고 엔코더를 돌려 전류 한계 설정(엔코더를 누르면 자릿수 이동), <b>V-SET</b>은 5 V 정도로, <b>OUTPUT</b>으로 출력',
+                '나이프 스위치: 손잡이를 클릭할 때마다 ▲(+) → ▼(−) → 끊김',
+                '나침반: 판 위로 끌어 놓기 → 클릭해 위에서 내려다보며 바늘이 멈춘 눈금과 가운데 축의 방안지 좌표 읽기',
+                '전류는 전원의 A 표시를 그대로 읽습니다'],
+           en: ['Click an instrument to look closely, drag it to move it, drag empty space to turn the desk (Esc: back)',
+                'Supply: press <b>I-SET</b> and turn the encoder for the current limit (push the encoder to step the digit), <b>V-SET</b> to about 5 V, then <b>OUTPUT</b>',
+                'Knife switch: each click on the handle goes ▲(+) → ▼(−) → open',
+                'Compass: drag it onto the board → click it to look down and read where the needle stops and where its pivot sits on the paper',
+                'Read the current off the supply\'s A display'] },
+  notePlaceholder: { ko: '예) I = +3.000 A, (x, y) = (20, 75) mm → φ = −34°', en: 'e.g. I = +3.000 A, (x, y) = (20, 75) mm → φ = −34°' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
     LAB.gx = S.sys('gridX', 0.35); LAB.gy = S.sys('gridY', 0.35);          /* mm: the paper against the true axes */
-    LAB.card = S.sys('card', 0.8);                                          /* deg: the card's 0 against the case */
-    LAB.gain = S.sys('ammGain', 0.006); LAB.off = S.sys('ammOff', 0.006);   /* the source's meter */
+    LAB.card = S.sys('card', 0.8);                                          /* deg: the card's 0 against the lubber line */
+    LAB.psu.gI = S.sys('ammGain', 0.004); LAB.psu.oI = S.sys('ammOff', 0.003); LAB.psu.gV = S.sys('vGain', 0.004);
     LAB.fric = 0.15 + S.uni('fric', 0, 0.3);                                /* deg: where the pivot lets go */
-  },
-  frame: function (ui) {
-    var g = ui.g, H = ui.H, dt = ui.dt;
-    g.fillStyle = '#2b2620'; g.fillRect(0, 0, ui.W, H);
-    /* ---- the board: wood frame, mm paper ---- */
-    var B = BOARD, side = 100 * B.s;
-    HL.rr(g, B.x - 18, B.y - 18, side + 36, side + 36, 6, '#7b5a39', '#4d3622', 2);
-    g.fillStyle = '#f4f2e9'; g.fillRect(B.x, B.y, side, side);
-    g.save(); g.translate(LAB.gx * B.s, -LAB.gy * B.s);                     /* the grid as printed */
-    for (var m = 0; m <= 100; m++) { var a = boardPx(m, 0), b = boardPx(m, 100), c = boardPx(0, m), d = boardPx(100, m);
-      g.strokeStyle = m % 10 === 0 ? 'rgba(205,85,60,.75)' : m % 5 === 0 ? 'rgba(215,110,85,.45)' : 'rgba(225,140,120,.25)';
-      g.lineWidth = m % 10 === 0 ? 0.9 : m % 5 === 0 ? 0.6 : 0.35;
-      g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.moveTo(c[0], c[1]); g.lineTo(d[0], d[1]); g.stroke(); }
-    for (m = 0; m <= 100; m += 10) { var q = boardPx(m, 0); HL.text(g, String(m), q[0], B.y + side + 9, '#e8dccb', 9, 'center');
-      q = boardPx(0, m); HL.text(g, String(m), B.x - 9, q[1], '#e8dccb', 9, 'right'); }
-    g.restore();
-    HL.text(g, 'x (mm) → 동', B.x + side, B.y + side + 24, '#e8dccb', 10.5, 'right');
-    HL.text(g, '↑ y (mm) 북', B.x - 14, B.y - 26, '#e8dccb', 10.5, 'left');
-    /* the source's cable goes into the board from underneath, at the back */
-    g.strokeStyle = '#1d1d1d'; g.lineWidth = 5; g.beginPath(); g.moveTo(B.x + side + 18, B.y + 40); g.bezierCurveTo(B.x + side + 70, B.y + 40, 610, 300, 640, 330); g.stroke();
-    g.strokeStyle = '#a33'; g.lineWidth = 2; g.beginPath(); g.moveTo(B.x + side + 18, B.y + 44); g.bezierCurveTo(B.x + side + 72, B.y + 46, 612, 306, 642, 336); g.stroke();
-    /* ---- the DC source ---- */
-    var px = 640, py = 60, pw = 330, ph = 330;
-    HL.rr(g, px, py, pw, ph, 10, '#d9dcdf', '#8d9399', 2);
-    HL.rr(g, px + 10, py + 10, pw - 20, 34, 5, '#2d3136');
-    HL.text(g, 'DC CURRENT SOURCE  ±5 A', px + 22, py + 27, '#e9edf1', 12.5, 'left', '700');
-    var Iset = LAB.pol * Math.min(5, LAB.mag + LAB.fine), Itrue = LAB.on ? Iset : 0;
-    var shownI = Itrue * (1 + LAB.gain) + (LAB.on ? LAB.off : 0);
-    HL.lcd(g, px + 30, py + 60, pw - 60, 56, LAB.on ? (shownI < 0 ? '−' : ' ') + Math.abs(shownI).toFixed(2) + ' A' : ' 0.00 A', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
-    var zp = { x: px - 10, y: py - 10, w: pw + 20, h: ph + 20, title: '직류 전원' };
-    ui.hit('psu', { x: px, y: py, w: pw, h: ph }, { zoom: zp, cursor: 'default' });     /* the case first: the controls sit on top */
-    LAB.mag = HL.knob(ui, 'mag', px + 85, py + 185, 34, LAB.mag, { min: 0, max: 5, sens: 5 / 300, wheelStep: 0.1, label: 'CURRENT', zoom: zp,
-      marks: [[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4'], [5, '5']], markCol: '#2a2d31', labelCol: '#2a2d31' });
-    LAB.fine = HL.knob(ui, 'fine', px + 190, py + 185, 22, LAB.fine, { min: -0.1, max: 0.1, sens: 0.2 / 300, wheelStep: 0.005, label: 'FINE', zoom: zp, markCol: '#2a2d31', labelCol: '#2a2d31',
-      marks: [[-0.1, '−'], [0], [0.1, '+']] });
-    var pol = HL.toggle(ui, 'pol', px + 262, py + 140, 30, 50, LAB.pol < 0, { label: 'POLARITY', labelCol: '#2a2d31', onCol: '#3a6ea5', zoom: zp });
-    LAB.pol = pol ? -1 : 1;
-    HL.text(g, '+', px + 300, py + 148, '#2a2d31', 11, 'left', '700'); HL.text(g, '−', px + 300, py + 182, '#2a2d31', 11, 'left', '700');
-    LAB.on = HL.toggle(ui, 'out', px + 260, py + 240, 34, 46, LAB.on, { label: 'OUTPUT', labelCol: '#2a2d31', zoom: zp });
-    HL.circle(g, px + 236, py + 263, 7, LAB.on ? '#ff5a3c' : '#5a2a22', '#222', 1);
-    /* ---- the compass: drag it about; the pivot is the measuring point ---- */
-    var c = boardPx(LAB.cx, LAB.cy), R = 40;
-    var zc = { x: c[0] - 70, y: c[1] - 70, w: 140, h: 140, title: '나침반 (가운데 축이 측정 위치)' };
-    var e = ui.hit('compass', { cx: c[0], cy: c[1], r: R + 6 }, { cursor: LAB.drag ? 'grabbing' : 'grab', zoom: zc });
-    if (e.down && (e.dx || e.dy)) {
-      LAB.cx = Math.max(0, Math.min(100, LAB.cx + e.dx / B.s)); LAB.cy = Math.max(0, Math.min(100, LAB.cy - e.dy / B.s));
-      LAB.rot = HL.gauss(0.35);                                             /* how square it was set down this time */
-      LAB.w += (Math.random() - 0.5) * 30; LAB.settle = 0; }
-    /* the needle: a damped swing towards the field, held back by the pivot's friction */
-    if (dt > 0) {
-      var target = phiDeg(Itrue, LAB.cx, LAB.cy), err = LAB.ang - target;
-      if (LAB.settle && Math.abs(err) < LAB.fric * 2.5 && Math.abs(LAB.w) < 2) { LAB.w = 0; }
-      else { var acc = -((2 * Math.PI / 1.3) ** 2) * err - 1.6 * LAB.w; LAB.w += acc * dt; LAB.ang += LAB.w * dt;
-        if (Math.abs(LAB.w) < 1.5 && Math.abs(err) < LAB.fric) { LAB.settle = 1; LAB.w = 0; } else LAB.settle = 0; }
-      if (Math.abs(target - LAB.lastT) > 0.05) LAB.settle = 0; LAB.lastT = target;
-    }
-    g.save(); g.translate(c[0], c[1]);
-    HL.circle(g, 3, 4, R + 6, 'rgba(0,0,0,.25)');
-    HL.circle(g, 0, 0, R + 6, '#b9bec4', '#6b7178', 1.5);
-    g.rotate(LAB.rot * Math.PI / 180);
-    HL.circle(g, 0, 0, R, 'rgba(250,250,246,.18)');                      /* clear acrylic: the grid shows through */
-    for (var k = 0; k < 360; k++) {                                         /* the card, 1° marks */
-      var t = (k + LAB.card) * Math.PI / 180, L = k % 10 === 0 ? 7 : k % 5 === 0 ? 5 : 3;
-      g.strokeStyle = '#222'; g.lineWidth = k % 10 === 0 ? 0.7 : 0.35;
-      g.beginPath(); g.moveTo(Math.sin(t) * R, -Math.cos(t) * R); g.lineTo(Math.sin(t) * (R - L), -Math.cos(t) * (R - L)); g.stroke();
-      if (k % 30 === 0) { g.save(); g.translate(Math.sin(t) * (R - 12), -Math.cos(t) * (R - 12)); g.rotate(t);
-        HL.text(g, k === 0 ? 'N' : k === 90 ? 'E' : k === 180 ? 'S' : k === 270 ? 'W' : String(k), 0, 0, k === 0 ? '#c0392b' : '#222', 5.5, 'center', '700'); g.restore(); }
-    }
-    g.strokeStyle = '#c0392b'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(0, -R - 5); g.lineTo(0, -R + 1); g.stroke();   /* lubber line */
-    g.rotate(-LAB.rot * Math.PI / 180);
-    var A = LAB.ang * Math.PI / 180;
-    g.rotate(A);
-    g.fillStyle = '#c0392b'; g.beginPath(); g.moveTo(0, -R + 9); g.lineTo(2.2, 0); g.lineTo(-2.2, 0); g.fill();
-    g.fillStyle = '#2b3442'; g.beginPath(); g.moveTo(0, R - 9); g.lineTo(2.2, 0); g.lineTo(-2.2, 0); g.fill();
-    g.rotate(-A);
-    HL.circle(g, 0, 0, 2.2, '#9aa0a6', '#555', 0.5); HL.circle(g, 0, 0, 0.5, '#111');
-    g.fillStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.ellipse(-12, -16, 18, 9, -0.6, 0, 7); g.fill();
-    g.restore();
-    if (e.hover || e.down) HL.circle(g, c[0], c[1], R + 9, null, 'rgba(78,201,176,.6)', 1.2);
+    LAB.psu.loadR = function () { return LAB.sw.pos === 0 ? Infinity : 0.62; };   /* the buried wire and its leads */
+    var BX = 23, BZ = 5, TOP = 1.8;                                         /* paper: x 23..33 cm, z -5..5, top of the board */
+    var W = function (xmm, ymm) { return [BX + xmm / 10, TOP, BZ - ymm / 10]; };
+    /* the graph paper, printed once: 16 px per mm, the grid a little off the true axes */
+    var paper = document.createElement('canvas'); paper.width = paper.height = 1760; paper._static = true;
+    (function () { var g = paper.getContext('2d'), k = 16, o = 80; g.fillStyle = '#f6f4ec'; g.fillRect(0, 0, 1760, 1760);
+      g.save(); g.translate(o + LAB.gx * k, o - LAB.gy * k);
+      for (var m = 0; m <= 100; m++) { g.strokeStyle = m % 10 === 0 ? 'rgba(205,85,60,.85)' : m % 5 === 0 ? 'rgba(215,110,85,.55)' : 'rgba(225,140,120,.35)';
+        g.lineWidth = m % 10 === 0 ? 2.2 : m % 5 === 0 ? 1.4 : 0.8;
+        g.beginPath(); g.moveTo(m * k, 0); g.lineTo(m * k, 1600); g.moveTo(0, m * k); g.lineTo(1600, m * k); g.stroke(); }
+      g.fillStyle = '#7a3a2a'; g.font = '700 30px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      for (m = 0; m <= 100; m += 10) { g.fillText(String(m), m * k, 1600 + 34); g.textAlign = 'right'; g.fillText(String(m), -14, 1600 - m * k); g.textAlign = 'center'; }
+      g.restore(); g.fillStyle = '#7a3a2a'; g.font = '700 30px sans-serif'; g.textAlign = 'right'; g.fillText('x (mm) → E', 1740, 1740); g.textAlign = 'left'; g.fillText('↑ y (mm) N', 6, 40); })();
+    /* the compass card: 1° marks round the rim, clear in the middle so the paper shows through */
+    var card = document.createElement('canvas'); card.width = card.height = 900; card._static = true;
+    (function () { var g = card.getContext('2d'), c = 450, R = 400; g.translate(c, c);
+      g.fillStyle = 'rgba(248,248,244,.9)'; g.beginPath(); g.arc(0, 0, R + 30, 0, 2 * Math.PI); g.arc(0, 0, R - 92, 2 * Math.PI, 0, true); g.fill('evenodd');
+      for (var k = 0; k < 360; k++) { var t = (k + LAB.card) * Math.PI / 180, L = k % 10 === 0 ? 46 : k % 5 === 0 ? 32 : 20;
+        g.strokeStyle = '#1a1a1a'; g.lineWidth = k % 10 === 0 ? 3.2 : 1.6; g.beginPath(); g.moveTo(Math.sin(t) * R, -Math.cos(t) * R); g.lineTo(Math.sin(t) * (R - L), -Math.cos(t) * (R - L)); g.stroke();
+        if (k % 10 === 0) { g.save(); g.translate(Math.sin(t) * (R - 70), -Math.cos(t) * (R - 70)); g.rotate(t); g.fillStyle = k === 0 ? '#c0392b' : '#1a1a1a';
+          g.font = '700 ' + (k % 30 === 0 ? 34 : 24) + 'px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+          g.fillText(k === 0 ? 'N' : k === 90 ? 'E' : k === 180 ? 'S' : k === 270 ? 'W' : String(k), 0, 0); g.restore(); } }
+      g.strokeStyle = 'rgba(30,30,30,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(-40, 0); g.lineTo(40, 0); g.moveTo(0, -40); g.lineTo(0, 40); g.stroke(); })();
+    var R = 2.0;                                                            /* compass card radius, cm */
+    var bench = B3.bench(host, {
+      aspect: 0.6, lang: ctx.lang, keys: [],
+      home: { yaw: -0.42, pitch: 0.78, k: 9.5, tx: 44, ty: 3, tz: 0 },
+      views: {
+        board: { yaw: 0, pitch: 1.45, k: 62, tx: 28, ty: TOP, tz: 0, title: { ko: '판 (방안지 1 mm)', en: 'The board (1 mm graph paper)' } },
+        compass: { yaw: 0, pitch: 1.5, k: 170, tx: 28, ty: TOP, tz: 0, title: { ko: '나침반 (위에서)', en: 'Compass (from above)' },
+                   hint: { ko: '바늘 끝의 눈금과 가운데 축의 방안지 좌표를 읽기 · 끌어서 옮기기 · Esc: 돌아가기', en: 'Read the card under the needle and the pivot\'s position on the paper · drag to move · Esc: back' } },
+        psu: { yaw: 0, pitch: 0.1, k: 52, tx: 62, ty: 6, tz: 3, title: { ko: 'KORAD KA3005D 직류 전원', en: 'KORAD KA3005D DC supply' } },
+        knife: { yaw: 0.2, pitch: 0.75, k: 70, tx: 46, ty: 1.5, tz: 6, title: { ko: '극성 바꾸는 나이프 스위치', en: 'Reversing knife switch' } }
+      },
+      frame: function (b) {
+        var dt = b.dt;
+        B3.desk(-5, 95, -30, 30);
+        /* the board: a wooden block with the paper on it; the wire's leads come out at the back */
+        B3.box3(BX - 3, BX + 13, 0, TOP - 0.02, -BZ - 3, BZ + 3, '#8a6440', { id: 'm:board', top: '#9a7149' });
+        B3.tex3(paper, 0, 0, 1760, 1760, [BX - 0.5, TOP, -BZ - 0.5], [11, 0, 0], [0, 0, 11], { id: 'm:board' });
+        B3.post(BX + 11.2, TOP - 0.02, -BZ - 2, '#c0392b'); B3.post(BX + 12.2, TOP - 0.02, -BZ - 2, '#1b1b1b');
+        /* the compass: moved by hand on the board; set down a little crooked each time */
+        var m = b.moved('compass');
+        if (m[0] || m[1]) { LAB.cx = Math.max(0, Math.min(100, LAB.cx + m[0] * 10)); LAB.cy = Math.max(0, Math.min(100, LAB.cy - m[1] * 10)); LAB.w += (Math.random() - 0.5) * 40; LAB.settle = 0; }
+        var dragging = b.dragging('compass');
+        if (LAB.was && !dragging) { LAB.rot = HL.gauss(0.35); LAB.settle = 0; }
+        LAB.was = dragging;
+        var c = W(LAB.cx, LAB.cy), lift = dragging ? 0.6 : 0;
+        /* the circuit */
+        var I = (LAB.psu.I || 0) * LAB.sw.pos;
+        if (dt > 0) {
+          var target = phiDeg(I, LAB.cx, LAB.cy), err = LAB.ang - target;
+          if (LAB.settle && Math.abs(err) < LAB.fric * 2.5 && Math.abs(LAB.w) < 2) LAB.w = 0;
+          else { var acc = -Math.pow(2 * Math.PI / 1.3, 2) * err - 1.6 * LAB.w; LAB.w += acc * dt; LAB.ang += LAB.w * dt;
+            if (Math.abs(LAB.w) < 1.5 && Math.abs(err) < LAB.fric) { LAB.settle = 1; LAB.w = 0; } else LAB.settle = 0; }
+          if (Math.abs(target - LAB.lastT) > 0.05) LAB.settle = 0; LAB.lastT = target;
+        }
+        var y0 = TOP + lift, rr = LAB.rot * Math.PI / 180;
+        B3.cyl3('y', y0, y0 + 0.25, c[0], c[2], R + 0.45, 'rgba(200,214,224,.22)', { id: 'm:compass', seg: 36, cap: 'rgba(225,235,240,.18)' });
+        B3.cyl3('y', y0 + 0.25, y0 + 0.9, c[0], c[2], R + 0.45, 'rgba(210,225,235,.35)', { id: 'm:compass', seg: 36, caps: false });
+        var U = [Math.cos(rr) * 2 * (R + 0.25), 0, Math.sin(rr) * 2 * (R + 0.25)], V = [-Math.sin(rr) * 2 * (R + 0.25), 0, Math.cos(rr) * 2 * (R + 0.25)];
+        var O = [c[0] - U[0] / 2 - V[0] / 2, y0 + 0.27, c[2] - U[2] / 2 - V[2] / 2];
+        B3.tex3(card, 0, 0, 900, 900, O, U, V, { id: 'm:compass' });
+        /* the needle: north end red; angle from north (−z), positive towards east (+x) */
+        var A = LAB.ang * Math.PI / 180, nx = Math.sin(A), nz = -Math.cos(A), px = Math.cos(A), pz = Math.sin(A), ny = y0 + 0.5, L = R - 0.55, wd = 0.13;
+        B3.face([[c[0] + nx * L, ny, c[2] + nz * L], [c[0] + px * wd, ny, c[2] + pz * wd], [c[0] - px * wd, ny, c[2] - pz * wd]], { fill: '#c0392b', flat: true, id: 'm:compass' });
+        B3.face([[c[0] - nx * L, ny, c[2] - nz * L], [c[0] - px * wd, ny, c[2] - pz * wd], [c[0] + px * wd, ny, c[2] + pz * wd]], { fill: '#2b3442', flat: true, id: 'm:compass' });
+        B3.face([[c[0] + px * wd, ny, c[2] + pz * wd], [c[0] + nx * L, ny, c[2] + nz * L], [c[0] - px * wd, ny, c[2] - pz * wd]], { fill: '#c0392b', flat: true });
+        B3.face([[c[0] - px * wd, ny, c[2] - pz * wd], [c[0] - nx * L, ny, c[2] - nz * L], [c[0] + px * wd, ny, c[2] + pz * wd]], { fill: '#2b3442', flat: true });
+        B3.cyl3('y', ny - 0.2, ny + 0.08, c[0], c[2], 0.12, '#888', { seg: 10 });
+        /* the lubber line on the housing */
+        B3.box3(c[0] - 0.04 + Math.sin(rr) * 0, c[0] + 0.04, y0 + 0.26, y0 + 0.3, c[2] - R - 0.4, c[2] - R + 0.05, '#c0392b');
+        /* the supply, the switch, the leads */
+        var j = B3.korad(b, 'psu', [62, -10], LAB.psu);
+        var k = B3.knife(b, 'knife', [46, 6], LAB.sw);
+        B3.cable(j.plus, k.in1, '#c0392b', 3, 2.4); B3.cable(j.minus, k.in2, '#1b1b1b', 3, 2.4);
+        B3.cable(k.out1, [BX + 11.2, TOP + 1.3, -BZ - 2], '#c0392b', 4, 2.4); B3.cable(k.out2, [BX + 12.2, TOP + 1.3, -BZ - 2], '#1b1b1b', 4, 2.4);
+        /* keep the compass close-up over the compass */
+        b.views.compass.tx = c[0]; b.views.compass.tz = c[2];
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
   }
 };
 </script>
 <script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>

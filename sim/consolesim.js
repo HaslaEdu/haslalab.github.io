@@ -11,11 +11,12 @@
    Experiment mode puts the same engine behind apparatus the user works by hand (sim/handlab.js):
 
      lab: {
-       intro: 'what is on the bench', howto: ['...'],     // shown beside the bench
-       aspect: 0.62, speeds: [1, 10],                      // the bench's shape, the time speeds
-       init: function (S) {},                              // S = HL.session(...) for the instrument errors
-       frame: function (ui) {}                             // draw and work the bench every frame
-     }
+       intro: {ko, en}, howto: {ko: ['...'], en: ['...']},  // shown beside the bench
+       mount: function (host, ctx) {}                       // build the 3-D bench (sim/bench3d.js) in host;
+     }                                                      // ctx.lang() is 'ko' or 'en', ctx.S the session errors
+
+   Every text may be a string or {ko, en}; the page follows ?lang=en and the 한국어/English buttons.
+   The program itself prints what the original executable prints, in English.
 */
 (function () {
   var out, inp, screen, pending = null, history = [], hpos = 0, live = null;
@@ -78,9 +79,19 @@
     '#labpane .lside{display:flex;flex-direction:column;gap:14px;min-width:0}' +
     '#labpane h3{margin:0 0 8px;font-size:13px;color:#e8e8e8;font-weight:600}' +
     '#labpane .lcap{margin-top:7px;color:var(--dim);font-size:12.5px;line-height:1.55}' +
-    '#labpane .lhow{margin:0;padding-left:18px;color:#c8c8c8;font-size:12.5px;line-height:1.6}';
+    '#labpane .lhow{margin:0;padding-left:18px;color:#c8c8c8;font-size:12.5px;line-height:1.6}' +
+    'header{position:relative}header>.lang{position:absolute;top:10px;right:14px;display:flex;align-items:center}' +
+    'header>.lang .lb{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}' +
+    'header>.lang .lb button{border:0;border-radius:0;padding:6px 13px}header>.lang .lb button.on{background:var(--accent);color:#0c0c0c;font-weight:600}' +
+    'header h1,header>p{padding-right:220px}@media (max-width:700px){header h1,header>p{padding-right:0}header>.lang{position:static;margin-top:8px}}';
 
-  var mode = 'cmd', lab = null, bench = null;
+  var mode = 'cmd', lab = null, mounted = false, lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ko';
+  var langCbs = [];
+  function tx(v) { return v && typeof v === 'object' && !Array.isArray(v) ? (v[lang] !== undefined ? v[lang] : v.ko) : v; }
+  var UI = { ko: { about: '이 프로그램에 대하여', cmd: 'CMD 모드', lab: '실험 모드', restart: '다시 시작 (Ctrl+C)', copy: '화면 복사', copied: '복사됨',
+                   save: '.txt로 저장', how: '조작', note: '실험 노트', noteN: '값은 장비에서 직접 읽어 여기에 적습니다. 이 브라우저에 저장됩니다.' },
+             en: { about: 'About this program', cmd: 'CMD mode', lab: 'Experiment mode', restart: 'Restart (Ctrl+C)', copy: 'Copy screen', copied: 'Copied',
+                   save: 'Save as .txt', how: 'How to', note: 'Lab notebook', noteN: 'Read the values off the instruments and write them here. Saved in this browser.' } };
 
   window.addEventListener('DOMContentLoaded', function () {
     document.title = PROGRAM.title;
@@ -88,15 +99,28 @@
     var style = document.createElement('style'); style.textContent = CSS; document.head.appendChild(style);
 
     var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') + '</ul></details>'
-        : '') +
-      (lab ? '<nav class="modes"><button data-m="cmd">CMD 모드</button><button data-m="lab">실험 모드</button></nav>' : '');
     document.body.appendChild(head);
+    function renderHead() {
+      document.title = tx(PROGRAM.title); document.documentElement.lang = lang;
+      var notes = tx(PROGRAM.notes);
+      head.innerHTML =
+        '<div class="lang"><div class="lb"><button data-l="ko">한국어</button><button data-l="en">English</button></div></div>' +
+        '<h1>' + esc(tx(PROGRAM.title)) + '</h1>' +
+        (PROGRAM.subtitle ? '<p>' + esc(tx(PROGRAM.subtitle)) + '</p>' : '') +
+        (notes && notes.length
+          ? '<details><summary>' + UI[lang].about + '</summary><ul>' + notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') + '</ul></details>'
+          : '') +
+        (lab ? '<nav class="modes"><button data-m="cmd">' + UI[lang].cmd + '</button><button data-m="lab">' + UI[lang].lab + '</button></nav>' : '');
+      head.querySelectorAll('.lb button').forEach(function (b) { b.classList.toggle('on', b.dataset.l === lang); b.onclick = function () { setLang(b.dataset.l); }; });
+      head.querySelectorAll('.modes button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === mode); b.onclick = function () { setMode(b.dataset.m); }; });
+      var full = document.getElementById('hl-full'); if (full && full.parentNode !== document.body) head.querySelector('.lang').appendChild(full);
+    }
+    function setLang(l) {
+      lang = l; var u = new URL(location.href); u.searchParams.set('lang', l); history.replaceState(null, '', u);
+      renderHead(); renderTools(); renderLabText(); langCbs.forEach(function (f) { f(lang); });
+    }
+    window.HLlang = function () { return lang; };
+    renderHead();
 
     /* ---- CMD mode ---- */
     var cmd = document.createElement('div'); cmd.id = 'cmdpane';
@@ -106,7 +130,9 @@
     screen.appendChild(out); screen.appendChild(inp);
     cmd.appendChild(screen);
     var tools = document.createElement('div'); tools.id = 'tools';
-    var bRestart = button('다시 시작 (Ctrl+C)'), bCopy = button('화면 복사'), bSave = button('.txt로 저장');
+    var bRestart = button(''), bCopy = button(''), bSave = button('');
+    function renderTools() { bRestart.textContent = UI[lang].restart; bCopy.textContent = UI[lang].copy; bSave.textContent = UI[lang].save; }
+    renderTools();
     tools.appendChild(bRestart); tools.appendChild(bCopy); tools.appendChild(bSave);
     cmd.appendChild(tools);
     document.body.appendChild(cmd);
@@ -130,10 +156,10 @@
     bRestart.addEventListener('click', start);
     bCopy.addEventListener('click', function () {
       navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨'; setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
+        bCopy.textContent = UI[lang].copied; setTimeout(function () { bCopy.textContent = UI[lang].copy; }, 1200);
       }, function () {});
     });
-    bSave.addEventListener('click', function () { download(PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt', out.textContent); });
+    bSave.addEventListener('click', function () { download(tx(PROGRAM.title).replace(/[^\w.-]+/g, '_') + '.txt', out.textContent); });
 
     function start() {
       if (live) live.alive = false;
@@ -150,7 +176,6 @@
       var want = new URLSearchParams(location.search).get('mode');
       if (!want) { try { want = localStorage.getItem('hl-mode:' + location.pathname); } catch (e) {} }
       setMode(want === 'lab' || want === 'sim' ? 'lab' : 'cmd');
-      head.querySelectorAll('.modes button').forEach(function (b) { b.onclick = function () { setMode(b.dataset.m); }; });
     }
   });
 
@@ -167,25 +192,36 @@
     document.getElementById('labpane').hidden = m !== 'lab';
     document.querySelectorAll('header .modes button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === m); });
     try { localStorage.setItem('hl-mode:' + location.pathname, m); } catch (e) {}
-    if (m === 'lab') { if (bench) bench.layout(); } else focusInp();
+    if (m === 'lab') { if (!mounted) mountLab(); dispatchEvent(new Event('resize')); } else focusInp();
   }
 
   function buildLab() {
     var pane = document.createElement('div'); pane.id = 'labpane'; pane.hidden = true;
     pane.innerHTML =
       '<div class="lgrid">' +
-        '<section class="card"><div id="lbench"></div><div class="lcap">' + (lab.intro || '') + '</div></section>' +
+        '<section class="card"><div id="lbench"></div><div class="lcap" id="lintro"></div></section>' +
         '<div class="lside">' +
-          (lab.howto ? '<section class="card"><h3>조작</h3><ul class="lhow">' + lab.howto.map(function (h) { return '<li>' + h + '</li>'; }).join('') + '</ul></section>' : '') +
-          '<section class="card"><h3>실험 노트</h3><div id="lnote"></div>' +
-            '<div class="lcap">값은 장비에서 직접 읽어 여기에 적습니다. 이 브라우저에 저장됩니다.</div></section>' +
+          '<section class="card"><h3 id="lhowH"></h3><ul class="lhow" id="lhow"></ul></section>' +
+          '<section class="card"><h3 id="lnoteH"></h3><div id="lnote"></div><div class="lcap" id="lnoteN"></div></section>' +
         '</div>' +
       '</div>';
     document.body.insertBefore(pane, document.getElementById('cmdpane').nextSibling);
+    renderLabText();
+  }
+  function renderLabText() {
+    if (!lab || !document.getElementById('lintro')) return;
+    document.getElementById('lintro').innerHTML = tx(lab.intro) || '';
+    var how = tx(lab.howto) || [];
+    document.getElementById('lhowH').textContent = UI[lang].how;
+    document.getElementById('lhow').innerHTML = how.map(function (h) { return '<li>' + h + '</li>'; }).join('');
+    document.getElementById('lnoteH').textContent = UI[lang].note;
+    document.getElementById('lnoteN').textContent = UI[lang].noteN;
+    var ta = document.querySelector('#lnote textarea'); if (ta && lab.notePlaceholder) ta.placeholder = tx(lab.notePlaceholder);
+  }
+  function mountLab() {
+    mounted = true;
     var S = HL.session(location.pathname);
-    if (lab.init) lab.init(S);
-    bench = HL.lab(document.getElementById('lbench'), { aspect: lab.aspect, speeds: lab.speeds, keys: lab.keys, wheelFree: lab.wheelFree,
-      hint: '두 번 클릭: 확대해서 보기', frame: function (ui) { if (mode === 'lab') lab.frame(ui); } });
-    HL.notebook(document.getElementById('lnote'), location.pathname, lab.notePlaceholder || '예) h = 1200 m, r = 10 cm, ρ = 1.00 g/cm³ → t = …, s = …');
+    lab.mount(document.getElementById('lbench'), { lang: function () { return lang; }, S: S, onLang: function (f) { langCbs.push(f); } });
+    HL.notebook(document.getElementById('lnote'), location.pathname, tx(lab.notePlaceholder) || '');
   }
 })();
