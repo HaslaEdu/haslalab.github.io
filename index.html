@@ -853,7 +853,7 @@ const REL = "https://github.com/haslalab/haslalab.github.io/releases/download/";
 /* 문제지와 해답 PDF 는 GitHub Releases(대회마다 pdf-<대회>)에 있고, pdf-worker 가 그것을
    브라우저 안에서 열리는 PDF 로 내준다. DATA 에는 예전처럼 "pdf/<이름>" 으로 적는다 —
    DATA 를 다 만든 뒤 아래 toPdfHost 가 한 번에 이 주소로 바꾼다. 올리기: tools/pdf_release.py */
-const PDF_BASE = "https://haslalab-pdf.mgsnew88.workers.dev/pdf/";
+const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 
 /* ── copy ── */
 const UI={
@@ -7147,7 +7147,7 @@ function startHero(){
    개념글 (DC Inside, Arca), a card view with up/down votes and threaded
    replies (Reddit).
    ══════════════════════════════════════════════════════════════ */
-const COMMUNITY_API = "https://haslalab-community.mgsnew88.workers.dev";   // Cloudflare Worker in /community
+const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";   // Cloudflare Worker in /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 const CMT = {

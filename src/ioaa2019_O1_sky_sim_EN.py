@@ -1086,7 +1086,7 @@ class App:
 
     def open_chart(self, k):
         if k == "q":
-            webbrowser.open("https://haslalab-pdf.mgsnew88.workers.dev/pdf/IOAA_2019_O1_EN.pdf")
+            webbrowser.open("https://haslalab-pdf.haslalab.workers.dev/pdf/IOAA_2019_O1_EN.pdf")
             return
         self.chart = k
         self.show("chart")
