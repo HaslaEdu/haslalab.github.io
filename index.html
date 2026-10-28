@@ -3247,7 +3247,16 @@ const DATA={
       tags:["식쌍성","표면 밝기","거리 사다리"],tagsEn:["Eclipsing binaries","Surface brightness","Distance ladder"]}:{
       desc:{ko:"미시중력렌즈 OGLE-2011-BLG-0462의 허블 위치 측정을 시간에 대해 그려 고유 운동을 빼고, 상 중심의 휨을 u에 대해 그려 아인슈타인 반지름을 맞춘 뒤, 미시중력렌즈 시차로 고립된 블랙홀의 질량을 구합니다.",
             en:"Plot the HST astrometry of the microlensing event OGLE-2011-BLG-0462 against time, remove the proper motion, fit the centroid deflection against u for the Einstein radius, and with the microlensing parallax weigh the isolated black hole."},
-      tags:["미시중력렌즈","위치 천문학","블랙홀"],tagsEn:["Microlensing","Astrometry","Black holes"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2023_D_web.html":"sim/ioaa2023_D_web.html?task=D2",src:{ko:"src/ioaa2023_D_data_sim_KO.py",en:"src/ioaa2023_D_data_sim_EN.py"}}),p))},
+      tags:["미시중력렌즈","위치 천문학","블랙홀"],tagsEn:["Microlensing","Astrometry","Black holes"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2023_D_web.html":"sim/ioaa2023_D_web.html?task=D2",src:{ko:"src/ioaa2023_D_data_sim_KO.py",en:"src/ioaa2023_D_data_sim_EN.py"}}),p)).map(p=>!["O5","O6","O7"].includes(p.id)?p:(delete p.state,Object.assign(p,p.id==="O5"?{
+      desc:{ko:"적도(북위 0°, 동경 19°)의 하늘을 2분 멈춘 동안 유성의 자취를 거꾸로 이어 복사점의 별자리와 적경·적위를 어림하고, 하늘이 한 바퀴 도는 8분 동안 변광성 여덟 개가 어두운 상태인지 밝은 상태인지 이웃 별과 견주며, 붉은 경계로 표시된 여덟 별자리의 IAU 약호를 씁니다.",
+            en:"With the sky over the equator (0° N, 19° E) held still for 2 minutes, trace the meteor trails back to the radiant for its constellation, RA and Dec; then, as the sky turns once in 8 minutes, judge eight variable stars DIM or BRIGHT against their neighbours and name the eight constellations whose borders are marked in red."},
+      tags:["유성우","변광성","별자리 경계"],tagsEn:["Meteor showers","Variable stars","Constellation borders"]}:p.id==="O6"?{
+      desc:{ko:"1915년 3월 1일부터 548일 동안 별 사이를 움직이는 화성을, 태양의 날짜 눈금이 붙은 황도와 오늘 날짜를 보며 따라가 구·정류·충의 날짜, 충의 황위, 역행 고리의 폭을 기록하고, 원 궤도로 보아 화성 궤도의 반지름과 경사각을 기하학적으로 구합니다.",
+            en:"Follow Mars among the stars for 548 days from 1 March 1915 against an ecliptic marked with the Sun's dates and today's date; record the dates of quadrature, the stationary points and opposition, the latitude at opposition and the width of the loop, then get the radius and inclination of a circular Martian orbit geometrically."},
+      tags:["역행 운동","화성","회합 주기"],tagsEn:["Retrograde motion","Mars","Synodic period"]}:{
+      desc:{ko:"조석 고정된 TRAPPIST-1f의 표면에서 520시간(1초 = 1시간)을 보며 항성일·공전 주기·태양일·자전축 기울기를 판단하고, 안쪽 행성 b–e의 통과와 최대 이각을 시계와 손으로 재어 회합 주기, 공전 주기, 긴반지름과 궤도 공명을 구합니다.",
+            en:"Watch 520 hours (1 s = 1 h) from the surface of the tidally locked TRAPPIST-1f to judge its sidereal day, orbital period, solar day and tilt; time the transits and measure the greatest elongations of planets b–e by clock and hand for their synodic and orbital periods, semi-major axes and resonances."},
+      tags:["외계행성","회합 주기","궤도 공명"],tagsEn:["Exoplanets","Synodic period","Orbital resonance"]}),Object.assign(p.files,{sim:"sim/ioaa2023_O5_web.html"+(p.id==="O5"?"":"?task="+p.id),src:{ko:"src/ioaa2023_O5_planetarium_KO.py",en:"src/ioaa2023_O5_planetarium_EN.py"}}),p))},
    {y:2022,host:{ko:"조지아 · 쿠타이시",en:"Kutaisi, Georgia"},cc:"ge",problems:lst([
     ["D1","Gravitational Wave Astronomy","중력파 천문학","IOAA_2022_Q-D1_EN.pdf","IOAA_2022_D1i_S.pdf"],
     ["D2","Galactic Surveys","은하 서베이","IOAA_2022_Q-D2_EN.pdf","IOAA_2022_D2i_S.pdf"],
