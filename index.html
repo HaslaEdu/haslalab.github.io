@@ -3247,7 +3247,19 @@ const DATA={
       tags:["식쌍성","표면 밝기","거리 사다리"],tagsEn:["Eclipsing binaries","Surface brightness","Distance ladder"]}:{
       desc:{ko:"미시중력렌즈 OGLE-2011-BLG-0462의 허블 위치 측정을 시간에 대해 그려 고유 운동을 빼고, 상 중심의 휨을 u에 대해 그려 아인슈타인 반지름을 맞춘 뒤, 미시중력렌즈 시차로 고립된 블랙홀의 질량을 구합니다.",
             en:"Plot the HST astrometry of the microlensing event OGLE-2011-BLG-0462 against time, remove the proper motion, fit the centroid deflection against u for the Einstein radius, and with the microlensing parallax weigh the isolated black hole."},
-      tags:["미시중력렌즈","위치 천문학","블랙홀"],tagsEn:["Microlensing","Astrometry","Black holes"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2023_D_web.html":"sim/ioaa2023_D_web.html?task=D2",src:{ko:"src/ioaa2023_D_data_sim_KO.py",en:"src/ioaa2023_D_data_sim_EN.py"}}),p)).map(p=>!["O5","O6","O7"].includes(p.id)?p:(delete p.state,Object.assign(p,p.id==="O5"?{
+      tags:["미시중력렌즈","위치 천문학","블랙홀"],tagsEn:["Microlensing","Astrometry","Black holes"]}),Object.assign(p.files,{sim:p.id==="D1"?"sim/ioaa2023_D_web.html":"sim/ioaa2023_D_web.html?task=D2",src:{ko:"src/ioaa2023_D_data_sim_KO.py",en:"src/ioaa2023_D_data_sim_EN.py"}}),p)).map(p=>!["O1","O2","O3","O4"].includes(p.id)?p:(delete p.state,Object.assign(p,{
+      O1:{desc:{ko:"추락한 비행접시 격납고의 화면을 망원경으로 보며, 처음 3분만 나오는 시계로 스톱워치를 맞추고 한 번만 재생되는 영상에서 HD 163390이 소행성에 가려지는 시작과 끝을 재어 엄폐 중심 시각과 지속 시간을 오차와 함께 구합니다.",
+            en:"Watch the screens in a crashed flying saucer's hold through a telescope, set a stopwatch by the clock shown only for the first 3 minutes, and time when HD 163390 disappears behind an asteroid and returns in a video played once, for the mid-time and duration with their errors."},
+          tags:["엄폐","시각 측정","망원경"],tagsEn:["Occultation","Timing","Telescope"]},
+      O2:{desc:{ko:"같은 영상에서 17h59m 자오선을 지나는 스타링크 위성 열차를 성도 1의 별 간격과 스톱워치로 재어 각속도와 통과 간격을 구하고 경로를 성도에 그린 뒤, 고도 20°·높이 400 km에서 지구 곡률을 넣은 이론 각속도와 위성 사이 거리를 계산합니다.",
+            en:"In the same video, time the Starlink train crossing the 17h59m meridian against star spacings on Map 1 for its angular velocity and interval, draw its path on the map, then compute the expected angular velocity at 20° altitude and 400 km height with the Earth's curvature, and the spacing in km."},
+          tags:["인공위성","각속도","궤도 역학"],tagsEn:["Satellites","Angular velocity","Orbital mechanics"]},
+      O3:{desc:{ko:"정지 화면 속 2023년 8월 15일의 토성을 망원경으로 보고, 위성 위치 차트와 밝기 표로 위성 다섯 개를 가려내 답안지 그림에 점과 번호로 표시합니다.",
+            en:"Through the telescope, look at the still of Saturn on 15 August 2023 and use the moon position chart and the brightness table to identify five moons, marking them with dots and numbers on the answer-sheet image."},
+          tags:["토성","위성","성도 읽기"],tagsEn:["Saturn","Moons","Chart reading"]},
+      O4:{desc:{ko:"바깥 화면의 M81에 새로 나타난 초신성을 망원경으로 찾아 성도 2와 별 목록의 좌표·등급에 견주어 적경, 적위, 등급을 어림합니다.",
+            en:"Find the supernova that has appeared in M81 on the outer screens and, comparing with Map 2 and the listed stars' coordinates and magnitudes, estimate its right ascension, declination and magnitude."},
+          tags:["초신성","위치 천문학","측광"],tagsEn:["Supernova","Astrometry","Photometry"]}}[p.id]),Object.assign(p.files,{sim:"sim/ioaa2023_O1_web.html"+(p.id==="O1"?"":"?task="+p.id),src:{ko:"src/ioaa2023_O1_observation_sim_KO.py",en:"src/ioaa2023_O1_observation_sim_EN.py"}}),p)).map(p=>!["O5","O6","O7"].includes(p.id)?p:(delete p.state,Object.assign(p,p.id==="O5"?{
       desc:{ko:"적도(북위 0°, 동경 19°)의 하늘을 2분 멈춘 동안 유성의 자취를 거꾸로 이어 복사점의 별자리와 적경·적위를 어림하고, 하늘이 한 바퀴 도는 8분 동안 변광성 여덟 개가 어두운 상태인지 밝은 상태인지 이웃 별과 견주며, 붉은 경계로 표시된 여덟 별자리의 IAU 약호를 씁니다.",
             en:"With the sky over the equator (0° N, 19° E) held still for 2 minutes, trace the meteor trails back to the radiant for its constellation, RA and Dec; then, as the sky turns once in 8 minutes, judge eight variable stars DIM or BRIGHT against their neighbours and name the eight constellations whose borders are marked in red."},
       tags:["유성우","변광성","별자리 경계"],tagsEn:["Meteor showers","Variable stars","Constellation borders"]}:p.id==="O6"?{
