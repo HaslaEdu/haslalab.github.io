@@ -12,8 +12,10 @@ const AT = {
        weekH: "이번 주 문제", weekSub: "매주 월요일 0시(한국 시각)에 새 문제가 열립니다. 주가 끝나기 전에 낸 답만 랭킹에 들어가고, 주가 끝나면 풀이가 공개됩니다.",
        closesIn: "마감까지", closed: "마감", opens: "열림", short: "단답", essay: "서술", pts: "점", level: "난이도", users: "명 도전", solvers: "명 만점",
        best: "내 최고", pending: "채점 대기", solve: "풀기", archive: "지난 주", rank: "랭킹", rankWeek: "이번 주", rankAll: "전체", rankH: "랭킹",
-       rankSub: "문제마다 가장 높은 점수를 더합니다. 같은 점수라면 그 점수에 먼저 닿은 사람이 앞섭니다. 주가 열려 있는 동안 낸 답만 셉니다.",
-       nick: "닉네임", total: "점수", solved: "만점", tier: "티어", empty: "아직 기록이 없습니다.", top: "이번 주 상위",
+       rankSub: "주간 랭킹은 그 주에 낸 답의 문제별 최고 점수를 더합니다(같으면 먼저 닿은 사람이 앞). 전체 랭킹은 레이팅 순입니다.",
+       ratingHelp: "레이팅 = 푼 문제 중 어려운 100문제의 난이도 점수 합 + 푼 문제 수 보너스. 단답은 정답, 서술형은 80% 이상이면 푼 문제로 칩니다. 지난 주 문제도 풀면 레이팅에 들어갑니다.",
+       rating: "레이팅", nextTier: "다음 티어까지", solvedN: "푼 문제",
+       nick: "닉네임", total: "점수", solved: "푼 문제", tier: "티어", empty: "아직 기록이 없습니다.", top: "이번 주 상위",
        answer: "답", answerPh: "숫자만 쓰세요 (예: 1.79)", essayPh: "풀이를 쓰세요. 수식은 $...$ 안에 LaTeX로 쓰거나 그냥 글로 써도 됩니다.",
        photo: "답안 사진 올리기", photoHint: "종이에 쓴 풀이를 찍어 올리면 글자로 읽어 줍니다(OCR). 읽은 글을 꼭 확인하고 고친 뒤 제출하세요.",
        mathMode: "수식이 많은 답안 (수식을 LaTeX로 읽기)", reading: "사진을 읽는 중…", readDone: "사진을 읽었습니다. 아래 글이 답안과 같은지 확인하고 고친 뒤 제출하세요.",
@@ -31,7 +33,7 @@ const AT = {
        oauthWith: {google: "Google로 계속하기", kakao: "카카오로 계속하기", naver: "네이버로 계속하기", github: "GitHub로 계속하기", discord: "Discord로 계속하기"}, oauthOr: "또는 아이디로", oauthOff: "관리자가 아직 연결하지 않았습니다",
        oauthNew: "가입했습니다. 닉네임은 계정 이름에서 가져왔으니, 원하면 아래에서 바꾸세요.", linked: "연결했습니다", linkH: "연결된 로그인", link: "연결하기", connected: "연결됨",
        nickH: "닉네임 바꾸기", change: "바꾸기", pwSet: "비밀번호 만들기 (아이디로도 로그인)", pwNew: "새 비밀번호 (8자 이상)", done: "바꿨습니다",
-       tiers: {bronze: "브론즈", silver: "실버", gold: "골드", platinum: "플래티넘", diamond: "다이아몬드", ruby: "루비"},
+       tiers: {bronze: "브론즈", silver: "실버", gold: "골드", platinum: "플래티넘", diamond: "다이아몬드", ruby: "루비", master: "마스터", unrated: "Unrated"},
        err: {bad_answer: "답을 입력하세요.", bad_image: "JPEG, PNG, WebP 사진 한 장만 올릴 수 있습니다.", image_too_big: "사진이 너무 큽니다(8 MB까지).",
              ocr_off: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다.", ocr_failed: "사진을 읽지 못했습니다. 더 밝고 반듯하게 찍어 보세요.", rate_limited: "요청이 너무 많습니다. 내일 다시 시도해 주세요.",
              forbidden: "관리자만 할 수 있습니다.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
@@ -40,8 +42,10 @@ const AT = {
        weekH: "Problems of the week", weekSub: "New problems open every Monday 00:00 KST. Only answers sent while the week is open count for the rankings; the solutions are published when it closes.",
        closesIn: "Closes in", closed: "Closed", opens: "Opened", short: "Short answer", essay: "Written", pts: "pts", level: "Level", users: "tried", solvers: "full marks",
        best: "My best", pending: "Waiting", solve: "Solve", archive: "Past weeks", rank: "Rankings", rankWeek: "This week", rankAll: "All time", rankH: "Rankings",
-       rankSub: "Your best score on each problem is added up. On equal scores, whoever reached it first is ahead. Only answers sent while a week is open count.",
-       nick: "Name", total: "Score", solved: "Full", tier: "Tier", empty: "No results yet.", top: "Top this week",
+       rankSub: "The weekly ranking adds your best score on each problem sent while the week was open (ties go to whoever got there first). All time ranks by rating.",
+       ratingHelp: "Rating = the difficulty points of your 100 hardest solved problems plus a bonus for the number solved. A short answer counts when right, a written one at 80 % or more. Past weeks' problems count too.",
+       rating: "Rating", nextTier: "to the next tier", solvedN: "Solved",
+       nick: "Name", total: "Score", solved: "Solved", tier: "Tier", empty: "No results yet.", top: "Top this week",
        answer: "Answer", answerPh: "A number only (e.g. 1.79)", essayPh: "Write your solution. Put formulas in $...$ as LaTeX, or just write them out.",
        photo: "Upload a photo of your answer", photoHint: "Photograph your written solution and it is read into text (OCR). Check and correct the text before you submit.",
        mathMode: "Answer with many formulas (read them as LaTeX)", reading: "Reading the photo…", readDone: "The photo has been read. Check that the text below matches your answer, correct it, then submit.",
@@ -59,20 +63,36 @@ const AT = {
        oauthWith: {google: "Continue with Google", github: "Continue with GitHub", discord: "Continue with Discord", kakao: "Continue with Kakao", naver: "Continue with NAVER"}, oauthOr: "or with a username", oauthOff: "not connected by the admin yet",
        oauthNew: "Welcome! Your nickname was taken from that account; change it below if you like.", linked: "Connected", linkH: "Sign-in methods", link: "Connect", connected: "connected",
        nickH: "Change nickname", change: "Change", pwSet: "Create a password (to sign in with your username too)", pwNew: "New password (8+ characters)", done: "Changed",
-       tiers: {bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", diamond: "Diamond", ruby: "Ruby"},
+       tiers: {bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", diamond: "Diamond", ruby: "Ruby", master: "Master", unrated: "Unrated"},
        err: {bad_answer: "Enter an answer.", bad_image: "Only one JPEG, PNG or WebP photo.", image_too_big: "The photo is too large (8 MB max).",
              ocr_off: "Photo reading (OCR) is not connected yet.", ocr_failed: "The photo could not be read. Try a brighter, straighter shot.", rate_limited: "Too many requests. Try again tomorrow.",
              forbidden: "Admins only.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
              oauth_failed: "The outside sign-in failed. Please try again.", oauth_cancelled: "Sign-in was cancelled.", oauth_in_use: "That account is already connected to another HaslaLab account.", bad_week: "Write the week as 2026-W45.", bad_rubric: "Check the rubric JSON.", bad_kind: "Choose a kind."}}};
-const TIER_COL = {bronze: "#ad5600", silver: "#435f7a", gold: "#ec9a00", platinum: "#27e2a4", diamond: "#00b4fc", ruby: "#ff0062"};
+/* tiers after solved.ac: level 1–30 is Bronze V … Ruby I, 31 Master, 0 unrated */
+const TIER_KEYS = ["bronze", "silver", "gold", "platinum", "diamond", "ruby"];
+const TIER_COL = {bronze: "#ad5600", silver: "#435f7a", gold: "#ec9a00", platinum: "#27e2a4", diamond: "#00b4fc", ruby: "#ff0062", master: "#b300e0", unrated: "#2d2d2d"};
+const ROMAN = ["V", "IV", "III", "II", "I"];
+function tierKey(lv) { return lv >= 31 ? "master" : lv >= 1 ? TIER_KEYS[Math.floor((lv - 1) / 5)] : "unrated"; }
+function tierName(lv, short) {
+  const k = tierKey(lv), T = arT();
+  if (k === "master" || k === "unrated") return short ? (k === "master" ? "M" : "–") : T.tiers[k];
+  const r = ROMAN[(lv - 1) % 5];
+  return short ? k[0].toUpperCase() + (5 - (lv - 1) % 5) : T.tiers[k] + " " + r;
+}
+/* the little shield solved.ac draws, in the tier's colour, with the step number inside */
+function tierIcon(lv, size) {
+  const c = TIER_COL[tierKey(lv)], n = lv >= 1 && lv <= 30 ? 5 - (lv - 1) % 5 : lv >= 31 ? "M" : "?";
+  return `<svg class="artico" width="${size || 18}" height="${(size || 18) * 1.15}" viewBox="0 0 20 23" aria-hidden="true"><path d="M10 .8 19 5.2v6.9c0 5-3.7 8.6-9 10.1C4.7 20.7 1 17.1 1 12.1V5.2z" fill="${c}"/>
+    <path d="M10 2.6 17.3 6.2v5.9c0 4.1-3 7.1-7.3 8.4-4.3-1.3-7.3-4.3-7.3-8.4V6.2z" fill="#fff" opacity=".18"/><text x="10" y="15.4" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">${n}</text></svg>`;
+}
 const ar = {seq: 0, health: null};
 const arT = () => AT[lang];
 const arErr = (e) => (arT().err[e && e.code]) || cmErr(e);
-function arTier(t) { return `<span class="artier" style="--c:${TIER_COL[t] || "#888"}">${esc(arT().tiers[t] || t)}</span>`; }
+function arTier(lv) { return `<span class="artier" style="--c:${TIER_COL[tierKey(lv)]}">${tierIcon(lv, 14)}${esc(tierName(lv))}</span>`; }
+function arLevel(lv) { return `<span class="arlvl" title="${esc(tierName(lv))}">${tierIcon(lv, 15)}</span>`; }
 function arLeft(sec) { if (sec <= 0) return arT().closed; const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
   return lang === "ko" ? (d ? d + "일 " : "") + h + "시간 " + m + "분" : (d ? d + "d " : "") + h + "h " + m + "m"; }
 function arDate(s) { const D = new Date(s * 1000); return (D.getMonth() + 1) + "." + D.getDate(); }
-function arStars(n) { return "★".repeat(n) + "<span style=\"opacity:.25\">" + "★".repeat(Math.max(0, 5 - n)) + "</span>"; }
 /* text with $...$ formulas: escaped, line breaks kept; KaTeX renders it afterwards */
 function arText(s) { return esc(s || "").replace(/\n/g, "<br>"); }
 let arKatex = null;
@@ -91,10 +111,10 @@ function arMath(el) {
 async function arChip() {
   let box = document.getElementById("acct");
   if (!box) { const l = document.querySelector("header .lang"); if (!l) return; box = document.createElement("div"); box.id = "acct"; box.className = "acct"; l.before(box); }
-  if (!cm.meChecked && cmTok()) { try { cm.me = (await cmApi("GET", "/me")).user; } catch (e) {} cm.meChecked = true; }
+  await cmLoadMe();
   const T = arT();
   box.innerHTML = cm.me
-    ? `<a href="#/me" class="acct-me" title="${esc(T.me)}">${cmAv(cm.me.nickname, "s")}<span>${esc(cm.me.nickname)}</span></a>`
+    ? `<a href="#/me" class="acct-me" title="${esc(T.me)}">${cmAv(cm.me.nickname, "s", cm.me.avatar)}<span>${esc(cm.me.nickname)}</span></a>`
     : `<a href="#/login" class="acct-in" data-ar="login">${T.login}</a>`;
   const a = box.querySelector("[data-ar=login]"); if (a) a.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
 }
@@ -104,8 +124,7 @@ async function arMount() {
   const root = document.getElementById("arRoot"); if (!root) return;
   const my = ++ar.seq, alive = () => my === ar.seq && document.getElementById("arRoot") === root;
   const parts = location.hash.replace(/^#\/?/, "").split("?")[0].split("/").filter(Boolean), [a, b, c] = parts;
-  if (!cm.meChecked && cmTok()) { try { cm.me = (await cmApi("GET", "/me")).user; } catch (e) {} cm.meChecked = true; }
-  if (!ar.health) { try { const h = await cmApi("GET", "/health"); ar.health = h; } catch (e) { ar.health = {v: 0}; } }
+  const [, h] = await Promise.all([cmLoadMe(), ar.health ? ar.health : cmHealth()]); ar.health = h;
   if (!alive()) return;
   try {
     if (a === "login" || a === "signup") return arAuth(root, a);
@@ -135,7 +154,7 @@ const OAUTH_ICON = {
   naver: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M15.6 12.8 8.2 2H2v20h6.4V11.2L15.8 22H22V2h-6.4z"/></svg>',
   github: '<svg viewBox="0 0 24 24"><path fill="#fff" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>',
   kakao: '<svg viewBox="0 0 24 24"><path fill="#191919" d="M12 3C6.5 3 2 6.5 2 10.8c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.5 10-7.9S17.5 3 12 3z"/></svg>'};
-async function arHealth() { if (!ar.health || !ar.health.v) { try { ar.health = await cmApi("GET", "/health"); } catch (e) { ar.health = {v: 0}; } } return ar.health; }
+async function arHealth() { if (!ar.health || !ar.health.v) ar.health = await cmHealth(); return ar.health; }
 function arOauthStart(p, ticket) {
   try { if (!sessionStorage.getItem("hlCmBack")) sessionStorage.setItem("hlCmBack", "#/"); } catch (e) {}
   location.href = cmBase() + "/api/oauth/" + p + "/start?return=" + encodeURIComponent(location.origin + location.pathname) + (ticket ? "&ticket=" + encodeURIComponent(ticket) : "");
@@ -169,8 +188,8 @@ async function arOauthBack(root) {
 async function arWeekly(root, alive, week) {
   const T = arT(), q = week && /^\d{4}-W\d{2}$/.test(week) ? "&week=" + week : "";
   const j = await cmApi("GET", "/weekly?lang=" + lang + q); if (!alive()) return;
-  let top = null; try { top = await cmApi("GET", "/rank?scope=week&week=" + j.week); } catch (e) {}
-  if (!alive()) return;
+  let top = j.top ? {rows: j.top} : null;     // older servers leave the week's leaders out
+  if (!top) { try { top = await cmApi("GET", "/rank?scope=week&week=" + j.week); } catch (e) {} if (!alive()) return; }
   const P = j.problems, open = P.length && P[0].open, ends = P.length ? P[0].closes_at : 0, starts = P.length ? P[0].opens_at : 0;
   root.innerHTML = `
     <div class="cmtop"><div><h1>${T.weekH} <span class="arwk">${esc(j.week)}</span></h1><p>${T.weekSub}</p></div>
@@ -181,13 +200,13 @@ async function arWeekly(root, alive, week) {
           <div class="arno">${p.no}</div>
           <div class="arbody"><h3>${esc(p.title)}</h3>
             <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>
-              <span class="arlv" title="${T.level}">${arStars(p.level)}</span><span>${p.points}${T.pts}</span>
+              ${arLevel(p.level)}<span>${p.points}${T.pts}</span>
               <span>${p.users} ${T.users} · ${p.solvers} ${T.solvers}</span></div></div>
           <div class="army">${p.best != null ? `<b>${p.best}</b><small>${T.best}</small>` : p.pending ? `<small>${T.pending}</small>` : `<span class="cmbtn sm pri">${T.solve}</span>`}</div>
         </a>`).join("") : `<div class="cmnote">${T.noProblems}</div>`}
       ${j.weeks && j.weeks.length > 1 ? `<h3 class="arh3">${T.archive}</h3><div class="arweeks">${j.weeks.map((w) => `<a href="#/weekly/${w.week}" class="${w.week === j.week ? "on" : ""}">${esc(w.week)}<small>${arDate(w.o)}–${arDate(w.c - 1)}</small></a>`).join("")}</div>` : ""}
     </div><aside class="arside">
-      <div class="arpanel"><h3>${T.top}</h3>${top && top.rows.length ? `<ol class="artop">${top.rows.slice(0, 8).map((r) => `<li><span>${esc(r.nickname)}</span>${arTier(r.tier)}<b>${r.total}</b></li>`).join("")}</ol>` : `<p class="arempty">${T.empty}</p>`}
+      <div class="arpanel"><h3>${T.top}</h3>${top && top.rows.length ? `<ol class="artop">${top.rows.slice(0, 8).map((r) => `<li><span class="arwho">${cmAv(r.nickname, "s", r.av)}<i>${esc(r.nickname)}</i></span>${tierIcon(r.lv, 14)}<b>${r.total}</b></li>`).join("")}</ol>` : `<p class="arempty">${T.empty}</p>`}
         <a class="cmbtn sm" href="#/rank/week">${T.rank} →</a></div>
       ${cm.me && cm.me.role === "admin" ? `<a class="cmbtn sm" href="#/weekly/admin">⚙ ${T.admin}</a>` : ""}
     </aside></div>`;
@@ -215,7 +234,7 @@ async function arProblem(root, alive, id) {
     <div class="arcrumb"><a href="#/weekly/${esc(p.week)}">← ${T.weekH} ${esc(p.week)}</a></div>
     <div class="arprob">
       <div class="arph"><span class="arno">${p.no}</span><div><h1>${esc(p.title)}</h1>
-        <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span><span class="arlv">${arStars(p.level)}</span>
+        <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       <div class="arstmt" id="arStmt">${arText(p.body)}</div>
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(c.id)}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
@@ -288,10 +307,12 @@ async function arRank(root, alive, which) {
   root.innerHTML = `
     <div class="cmtop"><div><h1>${T.rankH}${j.week ? ` <span class="arwk">${esc(j.week)}</span>` : ""}</h1><p>${T.rankSub}</p></div>
       <div class="cmseg"><a href="#/rank/week" class="${scope === "week" ? "on" : ""}">${T.rankWeek}</a><a href="#/rank/all" class="${scope === "all" ? "on" : ""}">${T.rankAll}</a></div></div>
-    <div class="arpanel">${j.rows.length ? `<table class="cmtbl artbl"><thead><tr><th style="width:56px">#</th><th>${T.nick}</th><th style="width:110px">${T.tier}</th><th style="width:90px">${T.total}</th><th style="width:70px">${T.solved}</th></tr></thead>
-      <tbody>${j.rows.map((r) => `<tr class="${cm.me && r.nickname === cm.me.nickname ? "armine" : ""}"><td><b>${r.rank}</b></td><td class="t">${cmAv(r.nickname, "s")} ${esc(r.nickname)}</td><td>${arTier(r.tier)}</td><td><b>${r.total}</b></td><td>${r.solved}</td></tr>`).join("")}</tbody></table>`
+    <div class="arpanel">${j.rows.length ? `<table class="cmtbl artbl"><thead><tr><th style="width:56px">#</th><th>${T.nick}</th><th style="width:150px">${T.tier}</th>
+      <th style="width:90px">${scope === "all" ? T.rating : T.total}</th><th style="width:80px">${T.solved}</th></tr></thead>
+      <tbody>${j.rows.map((r) => `<tr class="${cm.me && r.nickname === cm.me.nickname ? "armine" : ""}"><td><b>${r.rank}</b></td><td class="t">${cmAv(r.nickname, "s", r.av)} ${esc(r.nickname)}</td>
+        <td>${arTier(r.lv)}</td><td><b style="color:${TIER_COL[tierKey(r.lv)]}">${scope === "all" ? (r.rating ?? r.total) : r.total}</b></td><td>${r.solved}</td></tr>`).join("")}</tbody></table>`
       : `<p class="arempty">${T.empty}</p>`}</div>
-    <p class="arfoot">${j.tiers.map(([m, n]) => `${arTier(n)} ${m}+`).join(" · ")}</p>`;
+    <p class="arfoot">${T.ratingHelp}</p>`;
 }
 
 /* ── my record ── */
@@ -299,16 +320,23 @@ async function arMe(root, alive) {
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/me"); } catch (e) {} location.hash = "#/login"; return; }
   const j = await cmApi("GET", "/me/stats"); if (!alive()) return;
+  j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `
-    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname)} ${esc(cm.me.nickname)} ${arTier(j.tier)}</h1><p>@${esc(cm.me.username)}</p></div>
+    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/community/account">${T.settings}</a><button class="cmbtn sm" id="arLogout">${T.logout}</button></div></div>
-    <div class="arstats"><div><small>${T.myRank}</small><b>${j.rank || "–"}</b></div><div><small>${T.myTotal}</small><b>${j.total}</b></div><div><small>${T.mySolved}</small><b>${j.solved}</b></div></div>
+    <div class="arstats"><div><small>${T.rating}</small><b style="color:${TIER_COL[tierKey(j.lv)]}">${j.rating}</b></div><div><small>${T.myRank}</small><b>${j.rank || "–"}</b></div><div><small>${T.solvedN}</small><b>${j.solved}</b></div><div><small>${T.myTotal}</small><b>${j.total}</b></div></div>
+    ${(() => { const at = j.tierAt || [], lo = j.lv >= 1 ? at[j.lv - 1] : 0, hi = at[j.lv]; if (hi == null) return "";
+      const f = Math.max(0, Math.min(1, (j.rating - lo) / (hi - lo)));
+      return `<div class="arprog"><div class="arprogh">${arTier(j.lv)}<span>${lang === "en" ? `<b>${hi - j.rating}</b> to ${tierName(j.lv + 1)}` : `${tierName(j.lv + 1)}까지 <b>${hi - j.rating}</b>`}</span></div><div class="arbar"><i style="width:${(f * 100).toFixed(1)}%;background:${TIER_COL[tierKey(j.lv + 1)]}"></i></div></div>`; })()}
     ${(() => { let n = false; try { n = sessionStorage.getItem("hlArNew") === "1"; sessionStorage.removeItem("hlArNew"); } catch (e) {} return n ? `<div class="cmnote" style="margin-bottom:14px">${T.oauthNew}</div>` : ""; })()}
     <div class="arpanel armeset"><h3>${T.nickH}</h3><form id="arNick" class="arq"><input name="n" value="${esc(cm.me.nickname)}" maxlength="16"><button class="cmbtn sm pri">${T.change}</button><span class="arinfo"></span></form>
+      <h3 style="margin-top:14px">${CMT[lang].avatarH}</h3><div id="arAv"><div class="arq"><label class="cmbtn sm">${CMT[lang].avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
+        <button class="cmbtn sm" type="button" data-del ${cm.me.avatar ? "" : "hidden"}>${CMT[lang].avatarDel}</button><span class="arinfo cmerr"></span></div></div>
       <h3 style="margin-top:14px">${T.linkH}</h3><div id="arIds" class="arids"></div></div>
     <div class="arpanel"><h3>${T.recent}</h3>${j.subs.length ? `<table class="cmtbl artbl"><tbody>${j.subs.map((s) => `<tr><td style="width:96px">${esc(s.week)}</td>
       <td class="t"><a href="#/weekly/p/${s.problem_id}">${s.no}. ${esc(lang === "en" ? s.title_en : s.title_ko)}</a></td>
       <td style="width:110px"><b>${s.status === "graded" ? s.score + " / " + s.points : T[s.status] || s.status}</b></td><td style="width:130px">${cmShort(s.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${T.empty}</p>`}</div>`;
+  cmAvatarForm(root.querySelector("#arAv"), () => { const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; });
   const nf = root.querySelector("#arNick");
   nf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.querySelector(".arinfo").textContent = T.done; arChip(); } catch (er) { nf.querySelector(".arinfo").textContent = arErr(er); } };
   try {
@@ -337,7 +365,7 @@ async function arAdmin(root, alive) {
     <div class="arpanel"><h3>${T.addP}</h3>
       <select id="arPick" class="cmsel"><option value="">— new —</option>${pj.problems.map((x) => `<option value="${x.id}">${esc(x.week)} #${x.no} ${esc(x.title_ko)}</option>`).join("")}</select>
       <form id="arPF" class="arpf">${F.map((k) => big.includes(k) ? `<label>${k}<textarea name="${k}" rows="4"></textarea></label>` : `<label>${k}<input name="${k}"></label>`).join("")}
-        <p class="arempty">answer (short): {"value":1.79,"rel":0.005} or {"value":5.19,"abs":0.02} · rubric (essay): [{"id":"A","name":"…","max":25,"requirement":"…","partial":"…"}] · opens_at/closes_at: unix seconds</p>
+        <p class="arempty">answer (short): {"value":1.79,"rel":0.005} or {"value":5.19,"abs":0.02} · rubric (essay): [{"id":"A","name":"…","max":25,"requirement":"…","partial":"…"}] · level: 1–30 (Bronze V = 1 … Bronze I = 5, Silver V = 6 … Ruby I = 30) · opens_at/closes_at: unix seconds</p>
         <button class="cmbtn pri" type="submit">${T.save}</button><span class="arinfo"></span></form></div>`;
   const pf = root.querySelector("#arPF");
   root.querySelector("#arPick").onchange = (e) => { const x = pj.problems.find((y) => y.id == e.target.value) || {}; for (const k of F) pf[k].value = x[k] == null ? "" : x[k]; };

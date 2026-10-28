@@ -477,7 +477,7 @@ function skyRGB(L){ const tot = L.nat + L.lp + L.tw, v = 5 + 11 * Math.pow(tot, 
   return [v * (0.5 * L.nat + 0.9 * L.lp + 0.45 * L.tw) / tot, v * (0.64 * L.nat + 0.78 * L.lp + 0.66 * L.tw) / tot, v * (1.0 * L.nat + 0.64 * L.lp + 1.0 * L.tw) / tot]; }
 let LIMG = null, LIX = null, _lKey = "";
 function paintLand(B){ for (let a = 0; a < 360; a++){ const c = skyRGB(skyLum(1.5, a)); HORC[a * 3] = c[0]; HORC[a * 3 + 1] = c[1]; HORC[a * 3 + 2] = c[2]; }
-  const W = Math.round(V.W / 1.5), H = Math.round(V.H / 1.5);
+  const q = down ? 3 : 1.5, W = Math.round(V.W / q), H = Math.round(V.H / q);     /* coarser while the view is being dragged */
   if (!LIMG || LIMG.width !== W || LIMG.height !== H){ LIMG = mkCv(W, H); LIX = LIMG.getContext("2d"); }
   const im = LIX.createImageData(W, H), d = im.data, fm = 0.6 + 0.26 * WXS.haze, t = SKY.t;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++){
@@ -534,7 +534,8 @@ function bvColor(bv, a){ const t = Math.max(-0.4, Math.min(2, bv)); let r, g, b;
   if (t < 0.4){ r = 0.72 + 0.7 * (t + 0.4); g = 0.8 + 0.4 * (t + 0.4); b = 1; } else { r = 1; g = 1.05 - 0.28 * (t - 0.4); b = 1 - 0.45 * (t - 0.4); }
   return "rgba(" + Math.round(255 * Math.min(1, r)) + "," + Math.round(255 * Math.min(1, g)) + "," + Math.round(255 * Math.max(0.35, Math.min(1, b))) + "," + a.toFixed(3) + ")"; }
 /* the sky glow, twilight and the Milky Way on a coarse grid */
-const BG = mkCv(200, 130), bgx = BG.getContext("2d"), BGI = bgx.createImageData(200, 130);
+const BG = mkCv(200, 130), bgx = BG.getContext("2d"), BGF = bgx.createImageData(200, 130), BGH = bgx.createImageData(100, 65);
+let BGI = BGF;                       /* the sky glow at 200 × 130, or at half that while the view is being dragged */
 const MGAL = [[-0.0548755604, -0.8734370902, -0.4838350155], [0.4941094279, -0.4448296300, 0.7469822445], [-0.8676661490, -0.1980763734, 0.4559837762]];
 let SUN_H = [0, 0, -1], HM = null, HMT = null;
 function milky(v){ const g = mv(MGAL, v), l = Math.atan2(g[1], g[0]) / DEG, b = Math.asin(g[2]) / DEG, L = ((l + 540) % 360) - 180;
@@ -542,7 +543,7 @@ function milky(v){ const g = mv(MGAL, v), l = Math.atan2(g[1], g[0]) / DEG, b = 
   let I = Math.exp(-((b / w) ** 2)) * core; I *= 1 - 0.5 * Math.exp(-(((L - 55) / 32) ** 4) - (((b - 1.5) / 2.6) ** 2));     /* the Cygnus rift */
   I *= 1 + 0.4 * Math.exp(-((L / 12) ** 2) - (((b + 6) / 4) ** 2)) + 0.12 * Math.sin(L * 0.31 + b * 0.9) * Math.sin(L * 0.17 - b * 1.3);   /* the Sagittarius clouds, some mottling */
   return I; }
-function paintBG(B){ const d = BGI.data, W = 200, H = 130;
+function paintBG(B){ BGI = down ? BGH : BGF; const d = BGI.data, W = BGI.width, H = BGI.height;
   for (let j = 0; j < H; j++) for (let i = 0; i < W; i++){ const x = unproj(B, (i + 0.5) / W * V.W, (j + 0.5) / H * V.H), [alt, az] = altaz(x), o = (j * W + i) * 4;
     const L = skyLum(alt, az), q = sqmOf(L), mwv = Math.max(0, Math.min(1, (q - 19.8) / 1.6));
     const cl = cloudAt(alt, az), mw = alt > 0 ? milky(mvT(HMT, x)) * Math.min(1, alt / 20) * Math.pow(10, -0.4 * SKY.k * (airmass(Math.max(1, alt)) - 1)) * mwv * (1 - 0.7 * cl[0]) * (1 - 0.95 * cl[1]) : 0;
@@ -648,20 +649,29 @@ const twinkle = (i, X, amp) => { const A = Math.min(0.55, amp * Math.pow(X, 1.5)
 const hazeK = alt => WXS.haze * (0.12 + 2.4 * Math.max(0, Math.min(1, (27 - alt) / 7)));      /* the low haze over the lake and the marsh */
 const extinct = alt => (SKY.k + hazeK(alt)) * airmass(alt);
 let _bgKey = "";
+let _limKey = "", _starKey = "", _LIM = new Float32Array(72 * 18), _VIS = [];
 function drawSky(c){ const J = jdNow(), B = viewBasis(); HM = horMatrix(J); HMT = HM; const s0 = sunGeo(J), sn = Math.hypot(...s0); SUN_H = mv(HM, s0.map(v => v / sn));
   SUN_ALT = altaz(SUN_H)[0]; SKY.twilight = Math.max(0, Math.min(3, (SUN_ALT + 18) / 4));
-  const cloudy = WXS.high + WXS.mid > 0.03, key = LOOK.az.toFixed(1) + LOOK.alt.toFixed(1) + LOOK.fov.toFixed(1) + Math.floor(SKY.t / (cloudy ? 2 : 20)) + SES.night;
+  const cloudy = WXS.high + WXS.mid > 0.03, key = LOOK.az.toFixed(1) + LOOK.alt.toFixed(1) + LOOK.fov.toFixed(1) + Math.floor(SKY.t / (cloudy ? 2 : 20)) + SES.night + (down ? "d" : "");
   if (key !== _bgKey){ paintBG(B); paintLand(B); _bgKey = key; }
-  c.imageSmoothingEnabled = true; c.drawImage(BG, 0, 0, V.W, V.H);
+  c.imageSmoothingEnabled = true; c.drawImage(BG, 0, 0, BGI.width, BGI.height, 0, 0, V.W, V.H);
   /* stars: points of light on the sky glow; zooming the screen does not make the eye see fainter */
   c.globalCompositeOperation = "lighter";
-  const LIM = new Float32Array(72 * 18);        /* the limit on a coarse alt-az grid, per frame */
-  for (let a = 0; a < 18; a++) for (let z = 0; z < 72; z++) LIM[a * 72 + z] = limEye(a * 5 + 2.5, z * 5 + 2.5);
-  const limAt = (alt, az) => LIM[Math.min(17, Math.max(0, Math.floor(alt / 5))) * 72 + (Math.floor(norm360(az) / 5) % 72)];
-  for (let i = 0; i < CAT.n; i++){ const m = CAT.M[i]; if (m > 7) continue;
-    const x = [CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]], h = mv(HM, x); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
-    if (alt < skyline(az)) continue; const X = airmass(alt), dd = limAt(alt, az) - (m + extinct(alt) + cloudExt(alt, az)); if (dd < -0.35) continue;
-    const p = proj(B, hvec(alt, az)); if (!p || p[0] < -5 || p[0] > V.W + 5 || p[1] < -5 || p[1] > V.H + 5) continue;
+  /* the limit on a coarse alt-az grid; the sky and the clouds change it only every couple of seconds */
+  const tk = SES.night + ":" + Math.floor(SKY.t / 2);
+  if (_limKey !== tk){ for (let a = 0; a < 18; a++) for (let z = 0; z < 72; z++) _LIM[a * 72 + z] = limEye(a * 5 + 2.5, z * 5 + 2.5); _limKey = tk; _starKey = ""; }
+  const LIM = _LIM, limAt = (alt, az) => LIM[Math.min(17, Math.max(0, Math.floor(alt / 5))) * 72 + (Math.floor(norm360(az) / 5) % 72)];
+  /* where each visible star lands on the screen changes only with the view and that same clock; only the twinkle is per frame */
+  const sk = tk + ":" + LOOK.az.toFixed(2) + "," + LOOK.alt.toFixed(2) + "," + LOOK.fov.toFixed(2) + "," + V.W + "," + V.H;
+  if (_starKey !== sk){ _VIS = [];
+    for (let i = 0; i < CAT.n; i++){ const m = CAT.M[i]; if (m > 7) continue;
+      const x = [CAT.X[i * 3], CAT.X[i * 3 + 1], CAT.X[i * 3 + 2]], h = mv(HM, x); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
+      if (alt < skyline(az)) continue; const X = airmass(alt), dd = limAt(alt, az) - (m + extinct(alt) + cloudExt(alt, az)); if (dd < -0.35) continue;
+      const p = proj(B, hvec(alt, az)); if (!p || p[0] < -5 || p[0] > V.W + 5 || p[1] < -5 || p[1] > V.H + 5) continue;
+      _VIS.push([p[0], p[1], dd, X, i]); }
+    _starKey = sk; }
+  for (const [px, py, dd, X, i] of _VIS){
+    const p = [px, py];
     let d = dd + twinkle(i, X, 0.06);
     /* at the threshold a star is only caught now and then, with averted vision */
     if (d < 0.25){ if (Math.sin(SKY.t * 0.9 + i * 2.71) * Math.sin(SKY.t * 0.37 + i * 1.13) < 0.3) continue; d = 0.25; }
@@ -1034,10 +1044,10 @@ function drawView(){ const c = ctx; c.setTransform(V.dpr, 0, 0, V.dpr, 0, 0); co
 function drawLines(c){ const B = viewBasis(); c.strokeStyle = "rgba(120,160,220,0.35)"; c.lineWidth = 1;
   for (const key in CLINES) for (const ln of CLINES[key]){ c.beginPath(); let f = true;
     for (const [ra, de] of ln){ const [alt, az] = altaz(mv(HM, vec(ra, de))), p = alt > -2 ? proj(B, hvec(alt + refr(alt), az)) : null; if (!p){ f = true; continue; } f ? c.moveTo(...p) : c.lineTo(...p); f = false; } c.stroke(); } }
-let lastT = performance.now();
+let lastT = performance.now(), _panelAt = 0;          /* the side panel's text is refreshed five times a second, not every frame */
 (function loop(){ try { const now = performance.now(), dt = Math.min(0.5, (now - lastT) / 1000); lastT = now; SKY.t += dt;
     if (SES.task >= 0 && SKY.t >= SES.tEnd) check(SES.task);
-    drawView(); panel(); } catch (err){ console.error(err); } requestAnimationFrame(loop); })();
+    drawView(); if (now - _panelAt > 200){ panel(); _panelAt = now; } } catch (err){ console.error(err); } requestAnimationFrame(loop); })();
 window.addEventListener("resize", layout);
 /* the whole monitor for the sky: the button, or F; Esc leaves */
 function toggleFull(){ const el = cv.parentElement; try { document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen(); } catch (e){} }

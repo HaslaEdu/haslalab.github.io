@@ -72,6 +72,19 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 키를 넣은 서비스만 버튼이 켜지고, 넣지 않은 서비스는 흐리게 「관리자가 아직 연결하지 않았습니다」로 보입니다. 로컬 시험에서는 `.dev.vars`의 `OAUTH_MOCK_BASE`로 가짜 로그인 서버를 가리킵니다.
 
+## v6: 프로필 사진 · 백준(solved.ac)식 난이도와 레이팅 · 빨라진 응답
+
+- **프로필 사진**: 「내 기록」이나 계정 설정에서 사진을 고르면, 브라우저가 정사각형으로 잘라 256px로 줄여(60KB 이하) `PUT /api/me/avatar`로 올립니다. 사진은 D1의 `avatars` 표에 무작위 키로 저장되고 `GET /api/avatar/<키>`로 1년 캐시되어 나갑니다. 주소에 계정 번호가 드러나지 않고, 새로 올리면 키가 바뀝니다.
+- **난이도**: 문제의 `level`은 1–30입니다(브론즈 V = 1 … 브론즈 I = 5, 실버 V = 6 … 루비 I = 30). 예전 별 1–5개는 마이그레이션에서 각 티어의 가운데(3, 8, 13, 18, 23)로 바뀝니다.
+- **레이팅과 티어**: 푼 문제(단답은 정답, 서술형은 80% 이상) 중 어려운 100문제의 난이도 점수 합에 푼 문제 수 보너스를 더한 값이 레이팅이고, 레이팅으로 브론즈 V … 루비 I, 마스터 티어가 정해집니다. 주간 랭킹은 그대로 그 주의 점수 합, 전체 랭킹은 레이팅 순입니다. 지난 주 문제를 풀어도 레이팅에 들어갑니다.
+- **속도**: `wrangler.toml`의 `[placement] mode = "smart"`가 Worker를 데이터베이스 가까이에서 돌립니다(대시보드에서 붙여 넣어 배포한다면 Settings → Runtime → Placement를 Smart로). 주간 문제 화면은 요청 하나로 그 주 상위권까지 받고, 서버 쪽 질의는 한꺼번에 보냅니다. `/api/health`는 브라우저가 5분 동안 캐시합니다.
+
+### 올리는 순서
+
+1. `migrations/0006_avatar_levels.sql`을 원격 D1에 적용합니다.
+2. `src/index.js`(와 `wrangler.toml`)로 Worker를 다시 배포합니다. `npx wrangler deploy`
+3. 사이트(`index.html`, `arena.js`)는 GitHub Pages가 알아서 올립니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
@@ -150,6 +163,8 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/posts/:id/comments` | `{body}` |
 | PATCH / DELETE | `/api/comments/:id` | 댓글 수정 / 삭제 |
 | POST | `/api/report` | `{kind: "post"\|"comment", id, reason}` |
+| PUT · DELETE | `/api/me/avatar` | 프로필 사진 올리기(본문은 JPG · PNG · WebP, 64KB 이하) · 지우기 |
+| GET | `/api/avatar/:key` | 프로필 사진 |
 | GET | `/api/oauth/:provider/start?return=` | Google · 카카오 · 네이버 · GitHub · Discord 로그인 시작 (브라우저 이동) |
 | GET | `/api/oauth/:provider/callback` | 서비스에서 돌아오는 곳 |
 | POST | `/api/oauth/redeem` | `{code}` → `{token, user, fresh}` |
