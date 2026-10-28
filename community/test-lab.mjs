@@ -173,6 +173,7 @@ ok(s === 409, "an open exam cannot be deleted (no way to dodge the clock)");
 /* B is untouched by all of this */
 ok(await tokens(Bt) === 5, "another account still has its own five tokens");
 /* a year with separate rounds (IOAA D1, D2): another round is another exam, not a resume */
+const io0 = (await call("GET", "/lab/stats?comp=ioaa", null, Bt))[1].exams["ioaa2024:D1"] || { sat: 0, graded: 0 };   // earlier runs leave theirs; signed in, so not an edge copy
 [s, j] = await call("POST", "/lab/start", { comp: "ioaa", year: 2024, tasks: ["D1"] }, Bt);
 ok(s === 200 && !j.resumed && j.session.tasks.join() === "D1", "B starts IOAA 2024 D1");
 [s, j] = await call("POST", "/lab/start", { comp: "ioaa", year: 2024, tasks: ["D2"] }, Bt);
@@ -184,8 +185,8 @@ ok(s === 200 && j.resumed && await tokens(Bt) === 4, "D1 again → resumed, one 
 const st = j.exams && j.exams["ipho2024:E1+E2"];
 ok(s === 200 && st && st.sat >= 1 && st.graded >= 1 && typeof st.avg === "number", "stats: IPhO 2024 E1+E2 has candidates and an average " + JSON.stringify(st));
 ok(j.exams && !j.exams["ioaa2024:D1"], "stats are per competition");
-[s, j] = await call("GET", "/lab/stats?comp=ioaa");
-ok(j.exams["ioaa2024:D1"] && j.exams["ioaa2024:D1"].sat === 1 && j.exams["ioaa2024:D1"].graded === 0, "stats: an ungraded sitting counts as a candidate, not in the average");
+[s, j] = await call("GET", "/lab/stats?comp=ioaa", null, Bt);        // signed in: not the few-second edge copy
+ok(j.exams["ioaa2024:D1"] && j.exams["ioaa2024:D1"].sat === io0.sat + 1 && j.exams["ioaa2024:D1"].graded === io0.graded, "stats: an ungraded sitting counts as a candidate, not in the average " + JSON.stringify([io0, j.exams["ioaa2024:D1"]]));
 [s, j] = await call("GET", `/lab/sessions/${SID}`, null, A);
 ok(j.session.standing && j.session.standing.rank >= 1 && j.session.standing.n >= 1 && j.session.standing.first === true && j.session.nickname === "labA" + rnd,
   "score report: rank among first sittings, first sitting, candidate name " + JSON.stringify(j.session.standing));

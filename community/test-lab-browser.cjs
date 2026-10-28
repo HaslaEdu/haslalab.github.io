@@ -1,7 +1,7 @@
 // Exam mode in a browser (Playwright): catalogue → login gate → token start → shared kit and bench → reloads, leaving
 // and a second computer (timer not reset, no second token) → time up → QR → phone scan upload → check text → submit
 // → result → #/lab, and the Discord page.  Needs `npm run dev` with .dev.vars
-//   LAB_TEST_EXAM_SEC=45  LAB_TEST_SCAN_SEC=60  LAB_TEST_GRACE_SEC=1  (+ the stand-in OCR/grader of test-lab.mjs)
+//   LAB_TEST_EXAM_SEC=90  LAB_TEST_SCAN_SEC=120  LAB_TEST_GRACE_SEC=1  (+ the stand-in OCR/grader of test-lab.mjs)
 // the site served at http://localhost:8765 (python3 -m http.server 8765 in the repository root), then:
 //   node test-lab-browser.cjs     (Playwright with Chromium must be installed)
 const { chromium } = require("playwright");
@@ -59,6 +59,15 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   ok(/보유 1개/.test(await pg.textContent("main")) && /수험 안내/.test(await pg.textContent("main")), "instructions page shows 1 token");
   ok(await pg.$eval("#go", b => b.disabled), "start is locked until the declaration is ticked");
   await pg.screenshot({ path: OUT + "2-instructions.png", fullPage: true });
+  ok(await pg.$("main a[href*='.pdf']") === null, "the problem sheet is not offered before the exam");
+  const sheetsUrl = await pg.$eval("main a[href^='sheets.html']", a => a.href);
+  ok(/c=ipho/.test(sheetsUrl) && /e=E1%2CE2/.test(sheetsUrl), "…the answer and working sheets are, to print beforehand");
+  const sp = await ctx.newPage(); await sp.goto(sheetsUrl); await sp.waitForSelector(".pg .mk.d");
+  const sh = await sp.$$eval(".pg", ps => ps.map(p => p.querySelector(".k").textContent));
+  ok(sh.some(x => /E1 · ANSWER SHEET/.test(x)) && sh.some(x => /E2 · WORKING SHEET/.test(x)) && !(await sp.textContent("body")).includes(".pdf"),
+    "sheets page: E1/E2 answer and working sheets with corner markers, no problem text " + sh.length);
+  ok(await sp.$$eval(".bx .id", xs => xs.some(x => /^A\.1/.test(x.textContent.trim()))), "the IPhO 2024 answer boxes are labelled from the problem (A.1 …)");
+  await sp.close();
   for (const c of await pg.$$("[data-ag]")) await c.check();
   ok(!(await pg.$eval("#go", b => b.disabled)), "…and opens when every line is ticked");
   await pg.click("#go"); await pg.waitForSelector(".modal");
@@ -68,7 +77,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.waitForFunction(() => document.querySelectorAll("#kit canvas").length === 2, null, { timeout: 15000 });
   await sleep(1500);
   const c1 = clockSec(await pg.textContent("#clock"));
-  ok(c1 > 30 && c1 <= 45, "the clock runs from the server's 45 s: " + c1);
+  ok(c1 > 70 && c1 <= 90, "the clock runs from the server's 90 s: " + c1);
   /* the kit mirrors both simulators' parts boxes */
   const inked = await pg.$$eval("#kit canvas", cs => cs.map(c => { const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] + d[i + 1] + d[i + 2] > 200) n++; return [c.width, c.height, n]; }));
   ok(inked.every(([w, h, n]) => w > 50 && h > 50 && n > 100), "both kits drawn in the shared kit " + JSON.stringify(inked));
@@ -90,6 +99,19 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   const after = await pg.$eval(".desk iframe", f => f.contentWindow.eval("typeof hand!=='undefined'&&hand?'holding':'placed'"));
   ok(after === "placed", "…and clicking the E1 bench puts it down: " + after);
   ok(await pg.$$eval(".desk iframe", fs => fs.every(f => { const b = f.contentDocument.getElementById("haslalab-adfit-banner"); return !b || f.contentWindow.getComputedStyle(b).display === "none"; })), "no ad slots on the exam bench");
+  /* the problem sheet: only here, drawn by pdf.js beside the bench, and not printable */
+  ok(!(await pg.$eval("#bPaper", b => b.hidden)), "«문제지 열기» on the exam bar");
+  await pg.click("#bPaper");
+  await pg.waitForSelector("#ps .pv canvas", { timeout: 30000 }).catch(() => {});
+  const pcs = await pg.$$eval("#ps .pv canvas", cs => cs.map(c => c.width));
+  ok(pcs.length >= 1 && pcs[0] > 200, "the problem sheet opens beside the bench as drawn pages " + JSON.stringify(pcs.slice(0, 3)));
+  ok(await pg.$("#ps a[href], #ps iframe, #ps embed") === null, "…with no link, frame or viewer toolbar to download it from");
+  await pg.screenshot({ path: OUT + "2-paper.png" });
+  await pg.emulateMedia({ media: "print" });
+  ok(await pg.$eval("main", m => getComputedStyle(m).display) === "none", "printing the exam window prints nothing");
+  await pg.emulateMedia({ media: "screen" });
+  await pg.click("#bPaper");
+  ok(await pg.$eval("#ps", e => e.hidden), "…and closes again");
   await pg.screenshot({ path: OUT + "2-bench.png" });
 
   /* 4. leaving and coming back: reload, other page, second computer — same exam, timer not reset, no spend */
@@ -156,6 +178,31 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await ph.waitForFunction(() => /보낸 쪽 · 2/.test(document.body.textContent), null, { timeout: 20000 });
   await ph.screenshot({ path: OUT + "5-phone-sent.png" });
   ok(true, "phone sent page 2 (E2 working sheet)");
+  /* the live camera: a printed sheet with its four corner squares in view is outlined and taken by itself */
+  await ph.click('#kinds [data-k="answer"]'); await ph.click('#tasks [data-t="E1"]');
+  await ph.evaluate(() => {
+    const c = document.createElement("canvas"); c.width = 1080; c.height = 1440; const g = c.getContext("2d");
+    const draw = () => { g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = "#4a3a2c"; g.fillRect(0, 0, 1080, 1440);
+      g.translate(540, 720); g.rotate(0.06); const W = 760, H = W * 297 / 210; g.fillStyle = "#f6f4ef"; g.fillRect(-W / 2, -H / 2, W, H);
+      const m = W / 210 * 7; g.fillStyle = "#111"; [[0.045, 0.035], [0.955, 0.035], [0.045, 0.965], [0.955, 0.965]].forEach(([u, v]) => g.fillRect(-W / 2 + u * W - m / 2, -H / 2 + v * H - m / 2, m, m));
+      g.font = "30px sans-serif"; g.fillText("E1 · ANSWER SHEET", -W / 2 + 60, -H / 2 + 70); g.fillText("A.1  R0 = 108.2 ohm", -W / 2 + 60, -H / 2 + 200); };
+    draw(); setInterval(draw, 100);
+    navigator.mediaDevices.getUserMedia = async () => c.captureStream(15);
+  });
+  await ph.click("#live");
+  await ph.waitForSelector(".lv video");
+  await ph.waitForFunction(() => /멈추세요|찍는 중/.test((document.querySelector(".lv .msg") || {}).textContent || "") || !document.querySelector(".lv"), null, { timeout: 15000 });
+  await ph.screenshot({ path: OUT + "5b-phone-live.png" });
+  await ph.waitForSelector("#send", { timeout: 25000 });
+  ok(await ph.$(".lv") === null, "live camera: the page was found by its corner squares and taken by itself");
+  ok(!/모서리를 확실히 찾지 못했습니다/.test(await ph.textContent("#shot")), "…straightened from the squares, no corner warning");
+  await ph.click("#send");
+  await ph.waitForFunction(() => /보낸 쪽 · 3/.test(document.body.textContent), null, { timeout: 20000 });
+  if (await ph.$(".lv")) await ph.click('.lv [data-x="close"]');                // it opens again for the next page
+  const lastId = (await call("GET", "/lab/sessions/" + /s=(\d+)/.exec(scanLink)[1], null, TOK))[1].session.pages.slice(-1)[0].id;
+  await ph.click(`[data-del="${lastId}"]`);
+  await ph.waitForFunction(() => /보낸 쪽 · 2/.test(document.body.textContent), null, { timeout: 10000 });
+  ok(true, "…sent, and taken out again from the phone");
 
   /* 7. the computer sees the pages, the text is checked and submitted */
   await pg.waitForFunction(() => document.querySelectorAll("#pages .pg").length === 2, null, { timeout: 15000 });

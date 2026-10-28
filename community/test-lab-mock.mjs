@@ -1,4 +1,4 @@
-// stand-in for Upstage OCR, Gemini and the PDF Worker, for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
+// stand-in for Upstage OCR, Gemini and the PDF Worker (GET /seen: how many page readings got Upstage's transcript), for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
 // .dev.vars: UPSTAGE_API_KEY=test UPSTAGE_BASE=http://127.0.0.1:8799/upstage GEMINI_API_KEY=test GEMINI_BASE=http://127.0.0.1:8799/gemini
 //            LAB_PDF_BASE=http://127.0.0.1:8799/pdf/
 // Gemini answers by the task tag at the head of the prompt:
@@ -9,7 +9,7 @@
 //                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
 //   anything else                 the old text grader: half marks with a quote from the answer
 import http from "node:http";
-const flaky = new Set();
+const flaky = new Set(), seen = { ocrIntoRead: 0 };
 const OCR_TEXT = "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nE1 A.2 lambda = 395 W/(m K)";
 const SCHEME = { points: 3.5, unit_rule: "a missing unit loses the mark", items: [
   { id: "A.1", points: 0.4, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 105, full_max: 111, partial: [{ min: 100, max: 115, points: 0.2 }] },
@@ -26,9 +26,12 @@ const page = big => ({ header: big ? { task: "E2", sheet: "working", page: 2 } :
 const reply = (res, o) => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify(o) }] } }] })); };
 http.createServer(async (req, res) => {
   let b = []; for await (const c of req) b.push(c); b = Buffer.concat(b);
+  if (req.url === "/seen") { res.setHeader("Content-Type", "application/json"); return res.end(JSON.stringify(seen)); }
   if (req.url.startsWith("/upstage")) {
+    /* an image of 500–599 bytes (a test PNG with padding) is one Upstage is unsure of */
+    const i = b.indexOf(Buffer.from([0x89, 0x50, 0x4e, 0x47])), e = i < 0 ? -1 : b.indexOf("\r\n--", i), unsure = e - i >= 500 && e - i < 600;
     res.setHeader("Content-Type", "application/json");
-    return res.end(JSON.stringify({ text: OCR_TEXT, content: { markdown: OCR_TEXT }, confidence: 0.91 }));
+    return res.end(JSON.stringify({ text: OCR_TEXT, content: { markdown: OCR_TEXT }, confidence: unsure ? 0.5 : 0.91 }));
   }
   if (req.url.startsWith("/pdf/")) {
     const name = decodeURIComponent(req.url.slice(5));
@@ -40,6 +43,7 @@ http.createServer(async (req, res) => {
     const parts = JSON.parse(b).contents[0].parts, prompt = parts.map(p => p.text || "").join("\n");
     if (prompt.startsWith("[TASK: build marking scheme]")) return reply(res, SCHEME);
     if (prompt.startsWith("[TASK: read page]")) {
+      if (prompt.includes("<<OCR>>") && prompt.includes("R0 = 108.2 ohm")) seen.ocrIntoRead++;
       /* only the tests' PNGs choose a header or a poor page by their length; a phone's JPEG is an ordinary, legible page */
       const img = parts.find(p => p.inline_data), n = img && img.inline_data.mime_type === "image/png" ? Buffer.from(img.inline_data.data, "base64").length : 0;
       return reply(res, page(n > 600 ? 2 : n > 300 ? 1 : 0));

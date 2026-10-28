@@ -31,6 +31,10 @@ ok(s === 200 && j.task === "E2" && j.kind === "working" && j.moved, "page 2: the
 [s, j] = await up(sid, key, "E1", "working", pad(800));
 ok(s === 200 && j.legible === "poor", "page 3: a poor page is marked poor");
 const P3 = j.id;
+ok((await (await fetch("http://127.0.0.1:8799/seen")).json()).ocrIntoRead >= 3, "each page went through Upstage first, its transcript beside the image for Gemini");
+[s, j] = await up(sid, key, "E1", "answer", pad(450));
+ok(s === 200 && j.legible === "partial", "Upstage unsure of a page (confidence 0.5) → at best «partial», although Gemini called it good " + JSON.stringify(j));
+await call("DELETE", `/lab/sessions/${sid}/pages/${j.id}`, null, G);
 [s, j] = await call("GET", `/lab/up/${sid}`, null, null, { "X-Lab-Token": key });
 ok(j.pages.map(p => p.legible).join() === "good,good,poor", "the phone sees how each page was read");
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, G);
@@ -75,7 +79,7 @@ ok(s === 200 && j.session.pages.length === 0, "a bad shot taken out from the com
 ok(j.session.pages.length === 3, "…but not someone else's page");
 /* pages sent at the same moment get different numbers */
 const M = await sign("grD");
-({ sid, key } = await toScan(M, { ...X, tasks: ["E1"], sources: { E1: { sol: "IPhO_2024_flaky.pdf" } } }));
+({ sid, key } = await toScan(M, { ...X, tasks: ["E1"], sources: { E1: { sol: "IPhO_2024_flaky" + rnd + ".pdf" } } }));
 const par = await Promise.all([1, 2, 3, 4, 5].map(() => up(sid, key, "E1", "answer", png)));
 const nos = par.map(([, x]) => x.no).sort();
 ok(par.every(([st]) => st === 200) && new Set(nos).size === 5 && nos.join() === "1,2,3,4,5", "5 pages sent at once are numbered 1–5 " + JSON.stringify(nos));
