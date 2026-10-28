@@ -627,6 +627,20 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmcf .row{display:flex;align-items:center;gap:8px}
 .cmcf .row .sp{flex:1}
 .cmerr{color:#e03131;font-size:12.5px;min-height:1.2em}
+/* the live nickname check under the field */
+.cmnick{display:block;font-size:12px;font-weight:600;min-height:1.2em;text-transform:none;letter-spacing:0;color:var(--graphite)}
+.cmnick.ok{color:#2b8a3e}.cmnick.no{color:#e03131}
+/* cropping the profile picture */
+.cmcrop{position:fixed;inset:0;z-index:120;background:rgba(15,20,28,.72);display:grid;place-items:center;padding:16px}
+.cmcrop .box{background:#fff;border-radius:14px;padding:18px;width:min(420px,100%);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.cmcrop h3{margin:0 0 4px;font-size:16px}
+.cmcrop p{margin:0 0 12px;font-size:12.5px;color:var(--graphite);line-height:1.5}
+.cmcrop canvas{display:block;width:100%;aspect-ratio:1;border-radius:10px;background:#111;touch-action:none;cursor:grab}
+.cmcrop canvas:active{cursor:grabbing}
+.cmcrop .ctl{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;color:#4b5563}
+.cmcrop .ctl input[type=range]{flex:1}
+.cmcrop .meta{font:12px var(--mono);color:var(--graphite);margin-top:8px}
+.cmcrop .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 
 /* forms */
 .cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
@@ -7240,6 +7254,9 @@ const CMT = {
     bodyPh:"내용을 입력하세요.\n링크는 그대로 붙여 넣으면 됩니다.",
     username:"아이디", usernameHelp:"영문 · 숫자 · _ 3–20자. 로그인에만 쓰입니다.",
     nickname:"닉네임", nicknameHelp:"2–16자. 글과 댓글에 표시됩니다.",
+    nickFree:"✓ 쓸 수 있는 닉네임입니다.", nickChecking:"확인하는 중…", nickSame:"지금 쓰는 닉네임입니다.", nickH:"닉네임 바꾸기", nickChange:"바꾸기", nickDone:"닉네임을 바꿨습니다.",
+    cropH:"프로필 사진 자르기", cropHint:"끌어서 위치를 옮기고, 휠 · 두 손가락 · 막대로 크기를 조절하세요. 동그라미 안이 프로필에 보입니다.", cropZoom:"크기", cropRotate:"↻ 90° 돌리기",
+    cropApply:"이대로 올리기", cropCancel:"취소", cropSrc:"원본", cropOut:"올라가는 크기", cropReset:"처음대로",
     password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
     welcome:"다시 오신 걸 환영해요!", welcomeSub:"HaslaLab 커뮤니티에 로그인하세요.",
     create:"계정 만들기", createSub:"가입하고 질문하고, 답하고, 추천하세요.",
@@ -7249,7 +7266,7 @@ const CMT = {
            "광고, 도배, 개인정보(전화번호, 주소 등) 게시는 금지입니다.",
            "실명이나 학교를 밝힐 필요는 없습니다."],
     haveAcc:"이미 계정이 있나요?", noAcc:"계정이 필요한가요?",
-    joined:"가입일", avatarH:"프로필 사진", avatarPick:"사진 바꾸기", avatarDel:"기본 아이콘으로", avatarHelp:"정사각형으로 잘라 256px로 줄여 올립니다.", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
+    joined:"가입일", avatarH:"프로필 사진", avatarPick:"사진 바꾸기", avatarDel:"기본 아이콘으로", avatarHelp:"고른 사진에서 보일 부분을 직접 잘라, 256×256px로 줄여 올립니다.", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
     pwDone:"비밀번호를 바꿨습니다. 다른 기기의 로그인은 모두 풀렸습니다.",
     delAcc:"계정 삭제", delAccHelp:"계정을 지우면 다시 로그인할 수 없습니다. 쓴 글과 댓글은 남고 이름은 ‘탈퇴한 사용자’로 바뀝니다.",
     confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.", myPosts:"내가 쓴 글",
@@ -7291,6 +7308,9 @@ const CMT = {
     bodyPh:"Text.\nPaste links as they are.",
     username:"Username", usernameHelp:"3–20 letters, digits or _. Used only to log in.",
     nickname:"Display name", nicknameHelp:"2–16 characters. Shown on posts and comments.",
+    nickFree:"✓ That display name is free.", nickChecking:"Checking…", nickSame:"That is your current display name.", nickH:"Change display name", nickChange:"Change", nickDone:"Display name changed.",
+    cropH:"Crop your profile picture", cropHint:"Drag to move it; zoom with the wheel, two fingers or the slider. What is inside the circle shows on your profile.", cropZoom:"Zoom", cropRotate:"↻ Rotate 90°",
+    cropApply:"Upload this", cropCancel:"Cancel", cropSrc:"Original", cropOut:"Uploaded as", cropReset:"Reset",
     password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
     welcome:"Welcome back!", welcomeSub:"Log in to the HaslaLab community.",
     create:"Create an account", createSub:"Join to ask, answer and vote.",
@@ -7300,7 +7320,7 @@ const CMT = {
            "No advertising, flooding, or personal details (phone numbers, addresses…).",
            "You don't need to give your real name or school."],
     haveAcc:"Already have an account?", noAcc:"Need an account?",
-    joined:"Joined", avatarH:"Profile picture", avatarPick:"Change picture", avatarDel:"Use the letter icon", avatarHelp:"It is cropped square and shrunk to 256 px before upload.", changePw:"Change password", oldPw:"Current password", newPw:"New password",
+    joined:"Joined", avatarH:"Profile picture", avatarPick:"Change picture", avatarDel:"Use the letter icon", avatarHelp:"You choose the part of the photo to keep; it is uploaded at 256×256 px.", changePw:"Change password", oldPw:"Current password", newPw:"New password",
     pwDone:"Password changed. Every other device has been signed out.",
     delAcc:"Delete account", delAccHelp:"A deleted account can't sign in again. Your posts and comments stay, under the name ‘Deleted user’.",
     confirmDelAcc:"Delete your account? This can't be undone.", myPosts:"My posts",
@@ -7363,6 +7383,27 @@ function cmHealth(){
   return cmHealthP=cmApi("GET","/health").then(h=>{ try{ sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base:cmBase(),h})); }catch(e){} return h; },()=>{ cmHealthP=null; return {v:0}; });
 }
 const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
+/* a nickname field that asks the server, while it is typed, whether the name is free (the rule the server
+   applies on submit: compatibility forms folded, case ignored).  Returns a function that resolves to
+   true/false/null (null: the check could not be made, e.g. an older server — submitting decides then). */
+function cmNickCheck(input, out, current){
+  let seq=0, timer=null;
+  const say=(cls,msg)=>{ out.className="cmnick"+(cls?" "+cls:""); out.textContent=msg||""; };
+  const run=async()=>{
+    const T=CMT[lang], v=input.value.trim(), my=++seq;
+    if(!v){ say("",""); return null; }
+    if(current && v===current){ say("",T.nickSame); return true; }
+    say("",T.nickChecking);
+    try{
+      const r=await cmApi("GET","/nick-check?n="+encodeURIComponent(v));
+      if(my===seq){ if(r.ok) say("ok",r.same?T.nickSame:T.nickFree); else say("no",cmErr({code:r.error})); }
+      return !!r.ok;
+    }catch(e){ if(my===seq) say("",""); return null; }
+  };
+  input.addEventListener("input",()=>{ clearTimeout(timer); timer=setTimeout(run,350); });
+  input.addEventListener("blur",()=>{ clearTimeout(timer); run(); });
+  return ()=>{ clearTimeout(timer); return run(); };
+}
 function cmToast(msg){ const d=document.createElement("div"); d.className="cmtoast"; d.textContent=msg; document.body.append(d); setTimeout(()=>d.remove(),2200); }
 
 const p2 = n => String(n).padStart(2,"0");
@@ -7782,7 +7823,7 @@ function cmSignup(root){
     <h2>${T.create}</h2><p class="lead">${T.createSub}</p>
     <form id="cmS">
       <label>${T.username}<input type="text" name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${T.usernameHelp}</small></label>
-      <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small></label>
+      <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small><span class="cmnick" id="cmSnick"></span></label>
       <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
@@ -7792,20 +7833,88 @@ function cmSignup(root){
     </form>
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr");
+  const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
   f.onsubmit=async e=>{
     e.preventDefault();
+    if(await nickFree()===false){ err.textContent=cmErr({code:"nickname_taken"}); f.nickname.focus(); return; }
     if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
     if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
     try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value})); }
-    catch(er){ err.textContent=cmErr(er); }
+    catch(er){ err.textContent=cmErr(er); if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); } }
   };
   arOauth(root);
 }
-/* a picked photo, cropped to a square and shrunk to 256 px, kept under 60 KB */
-async function cmAvatarBlob(file){
-  const bmp=await createImageBitmap(file), s=Math.min(bmp.width,bmp.height), c=document.createElement("canvas");
-  c.width=c.height=256;
-  c.getContext("2d").drawImage(bmp,(bmp.width-s)/2,(bmp.height-s)/2,s,s,0,0,256,256);
+/* the profile picture: the person picks the square to keep (drag, zoom, rotate), it is drawn at 256×256 and
+   kept under 60 KB.  Resolves to the picture, or null when cancelled. */
+async function cmCropAvatar(file){
+  let img;
+  try{ img=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+  catch(e){ try{ img=await createImageBitmap(file); }catch(e2){ throw {code:"bad_image"}; } }
+  const T=CMT[lang], OUT=256, srcW=img.width, srcH=img.height;
+  let src=img;                                                 // the (possibly rotated) picture being cropped
+  let k, cx, cy, zoom=1;                                       // k: screen px per picture px at zoom 1 (cover); cx,cy: picture point in the middle
+  const ov=document.createElement("div"); ov.className="cmcrop";
+  ov.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h3>${T.cropH}</h3><p>${T.cropHint}</p><canvas></canvas>
+    <div class="ctl"><span>${T.cropZoom}</span><input type="range" min="1" max="5" step="0.01" value="1" aria-label="${T.cropZoom}"></div>
+    <div class="meta"></div>
+    <div class="btns"><button type="button" class="cmbtn" data-rot>${T.cropRotate}</button><button type="button" class="cmbtn" data-reset>${T.cropReset}</button>
+      <span style="flex:1"></span><button type="button" class="cmbtn" data-no>${T.cropCancel}</button><button type="button" class="cmbtn pri" data-ok>${T.cropApply}</button></div></div>`;
+  document.body.append(ov);
+  const cv=ov.querySelector("canvas"), g=cv.getContext("2d"), rng=ov.querySelector("input[type=range]"), meta=ov.querySelector(".meta");
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const V=()=>cv.width;                                        // the square on screen, in canvas pixels
+  const scale=()=>k*zoom;
+  const fit=()=>{ k=V()/Math.min(src.width,src.height); };
+  const clamp=()=>{ const h=V()/2/scale(); cx=Math.min(src.width-h,Math.max(h,cx)); cy=Math.min(src.height-h,Math.max(h,cy)); };
+  const reset=()=>{ zoom=1; rng.value="1"; fit(); cx=src.width/2; cy=src.height/2; draw(); };
+  function draw(){
+    clamp();
+    const s=scale(), n=V();
+    g.setTransform(1,0,0,1,0,0); g.fillStyle="#111"; g.fillRect(0,0,n,n);
+    g.imageSmoothingQuality="high";
+    g.drawImage(src, n/2-cx*s, n/2-cy*s, src.width*s, src.height*s);
+    /* what the round avatar hides, dimmed; the square that is saved, outlined */
+    g.fillStyle="rgba(0,0,0,.5)"; g.beginPath(); g.rect(0,0,n,n); g.arc(n/2,n/2,n/2-1,0,Math.PI*2,true); g.fill("evenodd");
+    g.strokeStyle="rgba(255,255,255,.85)"; g.lineWidth=2*dpr; g.beginPath(); g.arc(n/2,n/2,n/2-dpr,0,Math.PI*2); g.stroke();
+    const side=Math.round(n/s);
+    meta.textContent=`${T.cropSrc} ${srcW}×${srcH}px · ${side}×${side}px → ${T.cropOut} ${OUT}×${OUT}px`;
+  }
+  const size=()=>{ const w=Math.round(cv.getBoundingClientRect().width*dpr)||300; if(cv.width!==w){ cv.width=cv.height=w; fit(); draw(); } };
+  cv.width=cv.height=Math.round((cv.getBoundingClientRect().width||300)*dpr); reset();
+  /* drag to move, wheel or two fingers to zoom (about the point under them) */
+  const pts=new Map(); let pinch=null;
+  const zoomTo=(z,px,py)=>{ z=Math.max(1,Math.min(5,z)); const n=V(), s0=scale();
+    const ix=cx+(px-n/2)/s0, iy=cy+(py-n/2)/s0; zoom=z; const s1=scale(); cx=ix-(px-n/2)/s1; cy=iy-(py-n/2)/s1; rng.value=String(z); draw(); };
+  const local=e=>{ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*dpr,(e.clientY-r.top)*dpr]; };
+  cv.addEventListener("pointerdown",e=>{ cv.setPointerCapture(e.pointerId); pts.set(e.pointerId,local(e)); if(pts.size===2){ const [a,b]=[...pts.values()]; pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),z:zoom}; } });
+  cv.addEventListener("pointermove",e=>{ if(!pts.has(e.pointerId)) return; const p=local(e), q=pts.get(e.pointerId); pts.set(e.pointerId,p);
+    if(pts.size===2&&pinch){ const [a,b]=[...pts.values()]; zoomTo(pinch.z*Math.hypot(a[0]-b[0],a[1]-b[1])/pinch.d,(a[0]+b[0])/2,(a[1]+b[1])/2); }
+    else if(pts.size===1){ cx-=(p[0]-q[0])/scale(); cy-=(p[1]-q[1])/scale(); draw(); } });
+  const up=e=>{ pts.delete(e.pointerId); if(pts.size<2) pinch=null; };
+  cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
+  cv.addEventListener("wheel",e=>{ e.preventDefault(); const [x,y]=local(e); zoomTo(zoom*Math.exp(-e.deltaY*0.0015),x,y); },{passive:false});
+  rng.oninput=()=>{ const n=V(); zoomTo(+rng.value,n/2,n/2); };
+  ov.querySelector("[data-reset]").onclick=reset;
+  ov.querySelector("[data-rot]").onclick=()=>{                // turn the picture itself a quarter, keeping the same middle
+    const r=document.createElement("canvas"); r.width=src.height; r.height=src.width;
+    const rg=r.getContext("2d"); rg.translate(r.width,0); rg.rotate(Math.PI/2); rg.drawImage(src,0,0);
+    const ncx=src.height-cy, ncy=cx; src=r; fit(); cx=ncx; cy=ncy; draw(); };
+  addEventListener("resize",size);
+  const done=v=>{ removeEventListener("resize",size); removeEventListener("keydown",key); ov.remove(); return v; };
+  const key=e=>{ if(e.key==="Escape") finish(null); };
+  addEventListener("keydown",key);
+  let finish;
+  const picked=await new Promise(res=>{
+    finish=res;
+    ov.querySelector("[data-no]").onclick=()=>res(null);
+    ov.addEventListener("click",e=>{ if(e.target===ov) res(null); });
+    ov.querySelector("[data-ok]").onclick=()=>{ const h=V()/2/scale(); res({x:cx-h,y:cy-h,side:2*h}); };
+  });
+  if(!picked){ done(); return null; }
+  const c=document.createElement("canvas"); c.width=c.height=OUT;
+  const cg=c.getContext("2d"); cg.imageSmoothingQuality="high"; cg.fillStyle="#fff"; cg.fillRect(0,0,OUT,OUT);
+  cg.drawImage(src,picked.x,picked.y,picked.side,picked.side,0,0,OUT,OUT);
+  done();
   for(const [type,q] of [["image/webp",.9],["image/webp",.8],["image/jpeg",.88],["image/jpeg",.75],["image/jpeg",.6]]){
     const b=await new Promise(r=>c.toBlob(r,type,q));
     if(b && b.type===type && b.size<=60000) return b;
@@ -7818,7 +7927,7 @@ function cmAvatarForm(box, done){
   const set=k=>{ cm.me.avatar=k; del.hidden=!k; done(); if(typeof arChip==="function") arChip(); };
   inp.onchange=async()=>{
     const file=inp.files[0]; inp.value=""; if(!file) return; err.textContent="";
-    try{ const r=await cmApi("PUT","/me/avatar",await cmAvatarBlob(file)); set(r.avatar); }
+    try{ const b=await cmCropAvatar(file); if(!b) return; const r=await cmApi("PUT","/me/avatar",b); set(r.avatar); }
     catch(e){ err.textContent=cmErr(e); }
   };
   del.onclick=async()=>{ err.textContent=""; try{ await cmApi("DELETE","/me/avatar"); set(null); }catch(e){ err.textContent=cmErr(e); } };
@@ -7834,6 +7943,9 @@ async function cmAccount(root, alive){
       <div class="row"><label class="cmbtn">${T.avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
       <button class="cmbtn" type="button" data-del ${cm.me.avatar?"":"hidden"}>${T.avatarDel}</button><span class="cmerr"></span><span class="sp"></span></div>
       <small style="color:var(--graphite)">${T.avatarHelp}</small></div>
+    <form class="cmform" id="cmNick" style="border-top:8px solid var(--cm-soft)"><h3 style="font-size:15px">${T.nickH}</h3>
+      <label>${T.nickname}<input type="text" name="nickname" value="${esc(cm.me.nickname)}" required minlength="2" maxlength="16" autocomplete="nickname"><small>${T.nicknameHelp}</small><span class="cmnick"></span></label>
+      <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${T.nickChange}</button></div></form>
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <form class="cmform" id="cmPw" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.changePw}</h3>
@@ -7847,6 +7959,15 @@ async function cmAccount(root, alive){
       <div class="row"><span class="sp"></span><button class="cmbtn" type="button" id="cmDelAcc" style="color:#e03131;border-color:#ffc9c9">${T.delAcc}</button></div>
     </div></div>`;
   cmAvatarForm(root.querySelector("#cmAvatar"), ()=>{ const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); });
+  const nf=root.querySelector("#cmNick"), nOut=nf.querySelector(".cmerr"), nickFree=cmNickCheck(nf.nickname, nf.querySelector(".cmnick"), cm.me.nickname);
+  nf.onsubmit=async e=>{
+    e.preventDefault(); nOut.style.color="";
+    if(await nickFree()===false){ nOut.textContent=cmErr({code:"nickname_taken"}); return; }
+    try{ const r=await cmApi("PATCH","/me",{nickname:nf.nickname.value.trim()}); cm.me.nickname=r.nickname; nf.nickname.value=r.nickname;
+         nOut.style.color="var(--graphite)"; nOut.textContent=T.nickDone; if(typeof arChip==="function") arChip();
+         const h=root.querySelector(".cmpost h2"); if(h) h.textContent=r.nickname; const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); }
+    catch(er){ nOut.textContent=cmErr(er); }
+  };
   const f=root.querySelector("#cmPw");
   f.onsubmit=async e=>{
     e.preventDefault();

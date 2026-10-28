@@ -104,6 +104,14 @@ const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
 
+/* one nickname rule for sign-up, renaming and the live check.  Full-width and other compatibility forms are
+   folded (NFKC) so «Ａlice» is «Alice», runs of spaces become one, and the Hangul filler characters, which are
+   letters that print as nothing, are refused.  The column is UNIQUE COLLATE NOCASE, so «alice» is taken too. */
+const NICK_BLANK = /[\u115F\u1160\u3164\uFFA0]/;
+const cleanNick = v => String(v ?? "").normalize("NFKC").replace(/\s+/g, " ").trim();
+const nickOk = n => NICK_RE.test(n) && [...n].length >= 2 && !NICK_BLANK.test(n) && !/^deleted_\d+$/i.test(n);   // 2–16, as the forms say
+const nickTaken = async (env, n, selfId) => !!(await env.DB.prepare("SELECT 1 FROM users WHERE nickname=? AND id IS NOT ?").bind(n, selfId ?? null).first());
+const isUnique = e => /UNIQUE constraint/i.test(String(e && e.message));
 function text(v, max, code) {
   if (typeof v !== "string") bad(code);
   v = v.replace(/\r\n?/g, "\n").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim();
@@ -157,17 +165,23 @@ async function handle(req, env, url) {
   /* auth */
   if (p === "/api/signup" && m === "POST") {
     const username = String(body.username || "").trim();
-    const nickname = String(body.nickname || "").trim();
+    const nickname = cleanNick(body.nickname);
     if (!USERNAME_RE.test(username)) bad("bad_username");
-    if (!NICK_RE.test(nickname)) bad("bad_nickname");
+    if (!nickOk(nickname)) bad("bad_nickname");
     if (!pwOk(body.password)) bad("bad_password");
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
     // a whole classroom often shares one address, so this is per hour, not per day
     await limit(env, "signup:" + clientIp(req), 20, 3600);
-    const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,?,?)")
-      .bind(username, nickname, await hashPw(body.password), now()).run();
+    let res;
+    try {
+      res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,?,?)")
+        .bind(username, nickname, await hashPw(body.password), now()).run();
+    } catch (e) {                                       // someone took the name between the check and here
+      if (!isUnique(e)) throw e;
+      throw new HttpError(409, /nickname/.test(String(e.message)) || await nickTaken(env, nickname) ? "nickname_taken" : "username_taken");
+    }
     const id = res.meta.last_row_id;
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
     return { token: await newSession(env, id), user: pubUser(user) };
@@ -216,12 +230,21 @@ async function handle(req, env, url) {
   }
   if (p === "/api/me" && m === "PATCH") {
     needUser(me);
-    await limit(env, "nick:" + me.id, 5, 86400);
-    const nickname = String(body.nickname || "").trim();
-    if (!NICK_RE.test(nickname)) bad("bad_nickname");
-    if (await env.DB.prepare("SELECT 1 FROM users WHERE nickname=? AND id<>?").bind(nickname, me.id).first()) throw new HttpError(409, "nickname_taken");
-    await env.DB.prepare("UPDATE users SET nickname=? WHERE id=?").bind(nickname, me.id).run();
+    const nickname = cleanNick(body.nickname);
+    if (!nickOk(nickname)) bad("bad_nickname");
+    if (nickname === me.nickname) return { ok: true, nickname };
+    if (await nickTaken(env, nickname, me.id)) throw new HttpError(409, "nickname_taken");
+    await limit(env, "nick:" + me.id, 5, 86400);        // only real changes count against the five a day
+    try { await env.DB.prepare("UPDATE users SET nickname=? WHERE id=?").bind(nickname, me.id).run(); }
+    catch (e) { if (isUnique(e)) throw new HttpError(409, "nickname_taken"); throw e; }
     return { ok: true, nickname };
+  }
+  if (p === "/api/nick-check" && m === "GET") {         // is this nickname free?  (sign-up and rename forms ask while it is typed)
+    await limit(env, "nickchk:" + clientIp(req), 120, 600);
+    const nickname = cleanNick(url.searchParams.get("n"));
+    if (!nickOk(nickname)) return { ok: false, error: "bad_nickname", nickname };
+    if (me && nickname === me.nickname) return { ok: true, same: true, nickname };
+    return (await nickTaken(env, nickname, me && me.id)) ? { ok: false, error: "nickname_taken", nickname } : { ok: true, nickname };
   }
   if (p === "/api/me/avatar" && (m === "PUT" || m === "DELETE")) {
     needUser(me);
@@ -1223,11 +1246,11 @@ function allowedReturn(env, raw) {
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
 /* a provider's display name, made into a free nickname */
 async function freeNick(env, raw) {
-  let base = String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(/\s+/g, " ").trim().slice(0, 12);
-  if (!NICK_RE.test(base)) base = "user";
+  let base = cleanNick(String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(NICK_BLANK, "")).slice(0, 12).trim();
+  if (!nickOk(base)) base = "user";
   for (let i = 0; i < 30; i++) {
     const n = i ? (base.slice(0, 11) + Math.floor(1000 + Math.random() * 9000)) : base;
-    if (NICK_RE.test(n) && !(await env.DB.prepare("SELECT 1 FROM users WHERE nickname=?").bind(n).first())) return n;
+    if (nickOk(n) && !(await nickTaken(env, n))) return n;
   }
   return "user" + Date.now() % 1e9;
 }

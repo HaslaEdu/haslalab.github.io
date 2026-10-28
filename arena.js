@@ -331,7 +331,7 @@ async function arMe(root, alive) {
       const f = Math.max(0, Math.min(1, (j.rating - lo) / (hi - lo)));
       return `<div class="arprog"><div class="arprogh">${arTier(j.lv)}<span>${lang === "en" ? `<b>${hi - j.rating}</b> to ${tierName(j.lv + 1)}` : `${tierName(j.lv + 1)}까지 <b>${hi - j.rating}</b>`}</span></div><div class="arbar"><i style="width:${(f * 100).toFixed(1)}%;background:${TIER_COL[tierKey(j.lv + 1)]}"></i></div></div>`; })()}
     ${(() => { let n = false; try { n = sessionStorage.getItem("hlArNew") === "1"; sessionStorage.removeItem("hlArNew"); } catch (e) {} return n ? `<div class="cmnote" style="margin-bottom:14px">${T.oauthNew}</div>` : ""; })()}
-    <div class="arpanel armeset"><h3>${T.nickH}</h3><form id="arNick" class="arq"><input name="n" value="${esc(cm.me.nickname)}" maxlength="16"><button class="cmbtn sm pri">${T.change}</button><span class="arinfo"></span></form>
+    <div class="arpanel armeset"><h3>${T.nickH}</h3><form id="arNick" class="arq"><input name="n" value="${esc(cm.me.nickname)}" maxlength="16"><button class="cmbtn sm pri">${T.change}</button><span class="arinfo"></span><span class="cmnick" style="flex-basis:100%"></span></form>
       <h3 style="margin-top:14px">${CMT[lang].avatarH}</h3><div id="arAv"><div class="arq"><label class="cmbtn sm">${CMT[lang].avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
         <button class="cmbtn sm" type="button" data-del ${cm.me.avatar ? "" : "hidden"}>${CMT[lang].avatarDel}</button><span class="arinfo cmerr"></span></div></div>
       <h3 style="margin-top:14px">${T.linkH}</h3><div id="arIds" class="arids"></div></div>
@@ -341,7 +341,11 @@ async function arMe(root, alive) {
       <td style="width:110px"><b>${s.status === "graded" ? s.score + " / " + s.points : T[s.status] || s.status}</b></td><td style="width:130px">${cmShort(s.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${T.empty}</p>`}</div>`;
   cmAvatarForm(root.querySelector("#arAv"), () => { const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; });
   const nf = root.querySelector("#arNick");
-  nf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.querySelector(".arinfo").textContent = T.done; arChip(); } catch (er) { nf.querySelector(".arinfo").textContent = arErr(er); } };
+  const nickFree = cmNickCheck(nf.n, nf.querySelector(".cmnick"), cm.me.nickname);
+  nf.onsubmit = async (e) => { e.preventDefault(); const info = nf.querySelector(".arinfo"); info.textContent = "";
+    if (await nickFree() === false) { info.textContent = cmErr({code: "nickname_taken"}); return; }
+    try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.n.value = r.nickname; info.textContent = T.done; arChip();
+      const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; } catch (er) { info.textContent = arErr(er); } };
   try {
     const idj = await cmApi("GET", "/me/identities"), have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
     box.innerHTML = `<div class="oauth">${[...new Set(arProvs().concat(have))].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
