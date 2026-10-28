@@ -764,7 +764,7 @@ function setPortrait(p){ p=p&&droidApp==="exp"; if(p===portrait) return; portrai
 /* Chrome on the tablet: the real web in a mobile browser (vbrowser.js) */
 let BRW=null;
 function webGet(){ if(!BRW&&window.VBrowser){ BRW=VBrowser({kind:"chrome",mobile:true,embedded:true,lang:()=>lang,
-    links:[{t:{ko:"실험 1 문제지",en:"Problem E1"},url:lang==="ko"?"https://haslalab-pdf.mgsnew88.workers.dev/pdf/IPhO_2021_E1_KO.pdf":"https://haslalab-pdf.mgsnew88.workers.dev/pdf/IPhO_2021_E1_EN.pdf",ic:"📄",col:"#c0392b"},{t:{ko:"실험 2 문제지",en:"Problem E2"},url:lang==="ko"?"https://haslalab-pdf.mgsnew88.workers.dev/pdf/IPhO_2021_E2_KO.pdf":"https://haslalab-pdf.mgsnew88.workers.dev/pdf/IPhO_2021_E2_EN.pdf",ic:"📄",col:"#c0392b"},
+    links:[{t:{ko:"실험 1 문제지",en:"Problem E1"},url:lang==="ko"?"https://haslalab-pdf.haslalab.workers.dev/pdf/IPhO_2021_E1_KO.pdf":"https://haslalab-pdf.haslalab.workers.dev/pdf/IPhO_2021_E1_EN.pdf",ic:"📄",col:"#c0392b"},{t:{ko:"실험 2 문제지",en:"Problem E2"},url:lang==="ko"?"https://haslalab-pdf.haslalab.workers.dev/pdf/IPhO_2021_E2_KO.pdf":"https://haslalab-pdf.haslalab.workers.dev/pdf/IPhO_2021_E2_EN.pdf",ic:"📄",col:"#c0392b"},
       {t:"HaslaLab",url:"../index.html",ic:"H",col:"#2f6fbf"},{t:{ko:"위키백과",en:"Wikipedia"},url:"https://ko.m.wikipedia.org/",ic:"W"},{t:"YouTube",url:"https://m.youtube.com/",ic:"▶",col:"#e62117"}]});
     $("dWeb").appendChild(BRW.el); } return BRW; }
 /* the YouTube app: the same library and player as YouTube in Chrome, without the address bar */

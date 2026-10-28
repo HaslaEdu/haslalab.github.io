@@ -18,7 +18,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 3. **Settings → Bindings → Add → D1 database**에서 변수 이름은 `DB`, 데이터베이스는 `haslalab-community`를 고릅니다.
 4. **Settings → Variables and Secrets → Add**에서 이름은 `ALLOWED_ORIGINS`, 값은 아래로 넣습니다.
    `https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io`
-5. **Settings → Domains & Routes**에서 workers.dev를 켜고, 그 주소를 `index.html`의 `COMMUNITY_API`에 넣습니다. (지금: `https://haslalab-community.mgsnew88.workers.dev`)
+5. **Settings → Domains & Routes**에서 workers.dev를 켜고, 그 주소를 `index.html`의 `COMMUNITY_API`에 넣습니다. (지금: `https://haslalab-community.haslalab.workers.dev`)
 
 ## v2로 올리기 (말머리 · 추천/비추천 · 답글 · 정렬 · 개념글)
 
@@ -64,9 +64,9 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 | 서비스 | 앱 만드는 곳 | 리디렉션(콜백) 주소 | Secret 이름 |
 |---|---|---|---|
-| Google | Google Cloud Console → API 및 서비스 → 사용자 인증 정보 → OAuth 클라이언트 ID(웹 애플리케이션). 동의 화면 범위는 `openid`, `profile` | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/google/callback` | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
-| Discord | discord.com/developers/applications → OAuth2 | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/discord/callback` | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET` |
-| 네이버 | developers.naver.com → 애플리케이션 등록 → 네이버 로그인(별명 또는 이름 제공 항목만 선택) | `https://haslalab-community.mgsnew88.workers.dev/api/oauth/naver/callback` | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` |
+| Google | Google Cloud Console → API 및 서비스 → 사용자 인증 정보 → OAuth 클라이언트 ID(웹 애플리케이션). 동의 화면 범위는 `openid`, `profile` | `https://haslalab-community.haslalab.workers.dev/api/oauth/google/callback` | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
+| Discord | discord.com/developers/applications → OAuth2 | `https://haslalab-community.haslalab.workers.dev/api/oauth/discord/callback` | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET` |
+| 네이버 | developers.naver.com → 애플리케이션 등록 → 네이버 로그인(별명 또는 이름 제공 항목만 선택) | `https://haslalab-community.haslalab.workers.dev/api/oauth/naver/callback` | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` |
 
 키를 넣은 서비스만 버튼이 켜지고, 넣지 않은 서비스는 흐리게 「관리자가 아직 연결하지 않았습니다」로 보입니다. 로컬 시험에서는 `.dev.vars`의 `OAUTH_MOCK_BASE`로 가짜 로그인 서버를 가리킵니다.
 

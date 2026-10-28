@@ -1053,7 +1053,7 @@ function applyLang(){ document.documentElement.lang = LANG;
   $("bFull").textContent = tr(document.fullscreenElement ? "fullOff" : "full");
   $("items").innerHTML = [["q", "ch_q"], ["sat", "ch_sat"], ["lyra", "ch_lyra"], ["cygF", "ch_cygF"], ["cygT", "ch_cygT"], ["umi", "ch_umi"]]
     .map(([v, k]) => `<button data-v="${v}" style="width:100%;text-align:left">${tr(k)}</button>`).join("");
-  document.querySelectorAll("#items button").forEach(b => b.onclick = () => { if (b.dataset.v === "q"){ window.open("https://haslalab-pdf.mgsnew88.workers.dev/pdf/IOAA_2019_O1_EN.pdf", "_blank"); return; } CHART = b.dataset.v; showView("chart"); });
+  document.querySelectorAll("#items button").forEach(b => b.onclick = () => { if (b.dataset.v === "q"){ window.open("https://haslalab-pdf.haslalab.workers.dev/pdf/IOAA_2019_O1_EN.pdf", "_blank"); return; } CHART = b.dataset.v; showView("chart"); });
   $("btn-en").className = LANG === "en" ? "on" : ""; $("btn-ko").className = LANG === "ko" ? "on" : "";
   buildTasks(); buildSheet(); if ($("score").textContent) $("score").textContent = grade(); }
 $("btn-ko").addEventListener("click", () => { LANG = "ko"; applyLang(); });
