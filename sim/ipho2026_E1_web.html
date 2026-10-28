@@ -185,7 +185,7 @@ const T={
       syrRack:s=>s+"를 거치대에 꽂았습니다.",
       contTake:s=>s+"를 들었습니다 — 다른 용기를 클릭하면 따르고, 빈 곳을 클릭하면 그 자리로 옮깁니다.",
       hoseTake:k=>"호스 "+k+" 끝을 들었습니다 — 용기를 클릭해 넣으세요. (우클릭: 내려놓기)",
-      hoseDown:k=>"호스 "+k+" 끝을 실험대에 내려놓았습니다.",
+      hoseDown:k=>"호스 "+k+" 끝을 실험대에 내려놓았습니다.", hoseShort:k=>"호스 "+k+"가 거기까지 닿지 않습니다 (길이 60 cm).",
       busy:"용기에 호스나 주사기가 들어 있어 들 수 없습니다."
     }
   },
@@ -242,7 +242,7 @@ const T={
       syrRack:s=>s+" set in the rack.",
       contTake:s=>"Holding the "+s+" — click another container to pour, or a bare spot to move it there.",
       hoseTake:k=>"Holding the end of hose "+k+" — click a container to put it in. (R-click: put it down)",
-      hoseDown:k=>"Hose "+k+" end put down on the bench.",
+      hoseDown:k=>"Hose "+k+" end put down on the bench.", hoseShort:k=>"Hose "+k+" does not reach that far (it is 60 cm long).",
       busy:"A hose or a syringe is in that container, so it cannot be lifted."
     }
   }
@@ -1140,14 +1140,24 @@ const onDesk=(pts,r)=>pts.map(p=>[p[0],Math.max(p[1],r+0.04),p[2]]);
 /* hoses and cables keep out of the things on the bench: over the module and the board, under the
    cylinders' base plate, clear of the cylinders and the wall, never into the desk */
 function avoid(pts,r){
-  return pts.map(([x,y,z])=>{
+  /* in short steps, so no straight piece can cut a corner of anything */
+  const fine=[pts[0]];
+  for(let i=1;i<pts.length;i++){ const a=pts[i-1], b=pts[i], n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2])/0.6));
+    for(let j=1;j<=n;j++) fine.push([a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n,a[2]+(b[2]-a[2])*j/n]); }
+  const lift=([x,y,z])=>{
     y=Math.max(y,r+0.04); z=Math.max(z,WALL_Z+r+0.1);
     if(x>MX0-0.3-r&&x<MX1+0.3+r&&z>MZ0-0.3-r&&z<MZ1+0.3+r) y=Math.max(y,MH+0.45+r);
     if(x>BX0-0.7-r&&x<BX1+0.7+r&&z>BZ0-0.7-r&&z<BZ1+0.7+r) y=Math.max(y,BY+r);
+    if(x>RACK.x-6.5-r&&x<RACK.x+6.5+r&&z>RACK.z-3.5-r&&z<RACK.z+2.5+r) y=Math.max(y,0.8+r);
+    if(x>RACK.x-6-r&&x<RACK.x+6+r&&z>RACK.z-3.6-r&&z<RACK.z-1.6+r&&y<RACK.y+0.6+r) y=Math.max(y,RACK.y+0.6+r);
     const rc=Math.hypot(x-CXW,z-CZW);
     if(rc<R_BASE+r&&y>YB-1.2-r&&y<YB+r) y=YB-1.2-r;
     else if(rc<R_FLANGE+r&&y>=YB+r&&y<Y_CV1+0.5) y=Y_CV1+0.5+r;
-    return [x,y,z]; });
+    return [x,y,z]; };
+  let out=fine.map(lift);
+  /* a tube lies over an edge in a curve, never a step: points only rise towards their neighbours */
+  for(let k=0;k<10;k++) for(let i=1;i<out.length-1;i++){ const m=0.5*(out[i-1][1]+out[i+1][1])-0.06; if(m>out[i][1]) out[i]=[out[i][0],m,out[i][2]]; }
+  return out;
 }
 /* a hose or a cable: a ribbon as wide as the tube is on screen, with a lit stripe along it */
 /* a tube lying across a container's footprint drapes over its rim, easing down on either side (its ends stay put) */
@@ -1480,9 +1490,14 @@ function syringes3(){
   }
 }
 /* ---- hoses A and C (from the board's left edge to a container or the desk) ---- */
+/* hoses A and C are 60 cm long: their ends reach this far (on the desk, in a straight line) from where they leave the board */
+const HOSE_REACH=50;
+function hoseStart(k){ const port=add3(PORT_AT[k],[-1,0,0],-0.9+0.72); let s=add3(port,[-1,0,0],0.2); if(!lab.hconn[k]) s=add3(s,[-2.6,0,2.8]); return s; }
+function hoseReach(k,x,z){ const s=hoseStart(k), dx=x-s[0], dz=z-s[2], d=Math.hypot(dx,dz); if(d<=HOSE_REACH) return [x,z,true];
+  return [s[0]+dx/d*HOSE_REACH, s[2]+dz/d*HOSE_REACH, false]; }
 function hoseEnd(k){
   const cr=B.carry;
-  if(cr&&cr.k==="hose"&&cr.key===k){ const w=B.mouseW; return {p:[w[0],w[1]+3,w[2]],inside:null}; }
+  if(cr&&cr.k==="hose"&&cr.key===k){ const w=B.mouseW, q=hoseReach(k,w[0],w[2]); return {p:[q[0],w[1]+3,q[1]],inside:null}; }
   const inside=k==="A"?lab.hoseAin:lab.hoseCin;
   if(inside&&B.contOn[inside]&&B.pos[inside]){ const [cx,cz]=B.pos[inside]; return {p:[cx+(k==="A"?-0.8:0.8),1.2,cz+0.6],inside,rim:RIM[inside],c:[cx,cz]}; }
   const h=B.hose[k]; return {p:[h[0],0.36,h[1]],inside:null};
@@ -1493,8 +1508,7 @@ function overConts(pts,r){ return pts.map(([x,y,z])=>{ for(const k of CONT_ORDER
     if(inside&&y<RIM[k]+r) y=RIM[k]+r+0.2; } return [x,y,z]; }); }
 function hoses3(){
   for(const [k,col] of [["A",BLUE],["C",ORANGE]]){
-    const conn=lab.hconn[k], port=add3(PORT_AT[k],[-1,0,0],-0.9+0.72);
-    let s=add3(port,[-1,0,0],0.2); if(!conn) s=add3(s,[-2.6,0,2.8]);
+    const conn=lab.hconn[k], s=hoseStart(k);
     if(!conn) cylAB(s,add3(s,[-1,0,0],0.5),0.36,"#d0d6da",{seg:10});
     const e=hoseEnd(k); let pts;
     if(e.inside){ const top=[e.p[0],e.rim+1.2,e.p[2]];
@@ -1784,11 +1798,15 @@ function placeCarry(p){
     if(tgt){ B.carry=null; act("pour"); lab.pour(cr.key,tgt); return; }
     const old=B.pos[cr.key]; B.pos[cr.key]=[1e4,1e4]; const r=contSpot(cr.key,w); B.pos[cr.key]=old;
     if(!r){ if(cr.drag) B.carry=null; else say(t.noFit,true); return; }
+    /* a hose in it has to reach the new spot */
+    for(const hk of ["A","C"]) if((hk==="A"?lab.hoseAin:lab.hoseCin)===cr.key&&!hoseReach(hk,r[0],r[1])[2]){ if(cr.drag) B.carry=null; say(t.hoseShort(hk),true); return; }
     B.pos[cr.key]=r; B.carry=null; say(t.placed(d().contName[cr.key]));
     return;
   }
   if(cr.k==="hose"){
     const found=idCont||contAt(w,null), k=cr.key;
+    if(found&&!hoseReach(k,B.pos[found][0],B.pos[found][1])[2]){ say(t.hoseShort(k),true); return; }
+    if(!found){ const q=hoseReach(k,w[0],w[2]); w[0]=q[0]; w[2]=q[1]; }
     if(k==="A") lab.hoseAin=found; else lab.hoseCin=found;
     lab.clip[k]=false; B.hose[k]=[w[0],w[2]]; B.carry=null;
     if(found) lab.say("hoseTo",k,found,true); else say(t.hoseDown(k));
