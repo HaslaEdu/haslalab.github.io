@@ -618,6 +618,7 @@ B3.bench = function (host, o){
     clicked: id => clicks.has(id), held: id => !!(down && down.id === id && down.kind !== 'cam' && down.kind !== 'pan'),
     say: (ko, en) => { msg.textContent = L(ko, en); msg.classList.add('on'); msgT = performance.now() + 2600; },
     get view(){ return view; }, get speed(){ return paused ? 0 : speed; },
+    pointer: () => ptr, mouseOn: y => ptr ? onPlane(ptr[0], ptr[1], y || 0) : null,      /* where the pointer is, on the plane at height y */
     setHome: v => { o.home = v; } };
 
   function frame(now){
@@ -632,7 +633,7 @@ B3.bench = function (host, o){
     ctx.fillStyle = bgr; ctx.fillRect(0, 0, CAM.W, CAM.H);
     begin3();
     try { o.frame(api); } catch (err){ console.error(err); }
-    render3(ctx);
+    try { render3(ctx); } catch (err){ console.error(err); }
     if (o.overlay) o.overlay(ctx, api);
     /* cursor */
     let cur = 'grab';
