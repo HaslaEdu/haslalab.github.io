@@ -23,7 +23,7 @@ ok(j.score===55&&j.detail.evidenceIssue&&j.detail.scores.find(x=>x.id==="C").got
 ok(j.detail.feedback.length===1,"invented feedback quote dropped");
 [s,j]=await call("GET",`/problems/${P3}`,null,A);ok(j.problem.mine.length===1&&j.problem.mine[0].via_ocr===1,"my submissions");
 [s,j]=await call("GET","/rank?scope=week");ok(j.rows[0].nickname==="아레나B"&&j.rows[0].total===200&&j.rows[1].total===155,"weekly ranking "+JSON.stringify(j.rows.map(r=>[r.nickname,r.total])));
-[s,j]=await call("GET","/rank?scope=all",null,A);ok(j.mine&&j.mine.rank===2&&j.rows[0].tier==="bronze","all-time + mine");
+[s,j]=await call("GET","/rank?scope=all",null,A);ok(j.mine&&j.mine.rank===2&&j.rows[0].lv>=1&&j.rows[0].rating>j.mine.rating,"all-time by rating + mine");
 [s,j]=await call("GET","/me/stats",null,A);ok(j.rank===2&&j.total===155&&j.solved===1&&j.subs.length===3,"my stats");
 // OCR
 const png=Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082","hex");

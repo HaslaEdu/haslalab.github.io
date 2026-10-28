@@ -67,7 +67,7 @@ const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.
 
 /* v3: the Korean and the English server keep their own posts */
 {
-  let [, h] = await call("GET", "/health"); ok(h.v === 3, "health v3");
+  let [, h] = await call("GET", "/health"); ok(h.v >= 3, "health v3+");
   let [, a] = await call("POST", "/signup", { username: "v3user", nickname: "브이삼", password: "password1" });
   let [, pk] = await call("POST", "/posts", { board: "free", lang: "ko", title: "한국어 글", body: "x" }, a.token);
   let [, pe] = await call("POST", "/posts", { board: "free", lang: "en", title: "English post", body: "x" }, a.token);

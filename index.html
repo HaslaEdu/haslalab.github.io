@@ -461,6 +461,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
   color:#fff;font-weight:700;font-size:13px;line-height:1}
 .cmav.s{width:22px;height:22px;font-size:10.5px}
 .cmav.l{width:56px;height:56px;font-size:22px}
+img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 /* the board */
 .cmpanel{background:#fff;border:1px solid var(--cm-line);border-radius:12px;overflow:hidden}
@@ -664,7 +665,12 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .ar .arpanel{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
 .ar .arpanel h3{font-size:14.5px;margin:0 0 10px}
 .ar .artop{margin:0 0 10px;padding-left:22px;font-size:13.5px}.ar .artop li{display:flex;align-items:center;gap:8px;padding:3px 0}.ar .artop li span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ar .artier{display:inline-block;font-size:11px;font-weight:800;padding:1px 7px;border-radius:999px;color:var(--c);border:1.5px solid var(--c);background:#fff;vertical-align:middle}
+.ar .artier{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:var(--c);vertical-align:middle;white-space:nowrap}
+.ar .artico{flex:none;vertical-align:middle;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}.ar .arlvl{display:inline-flex;align-items:center}
+.ar .arprog{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.ar .arprogh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;color:var(--graphite);margin-bottom:8px}
+.ar .arbar{height:8px;border-radius:99px;background:var(--cm-soft,#eef1f5);overflow:hidden}.ar .arbar i{display:block;height:100%;border-radius:99px}
+.ar .artop li .arwho{display:flex;align-items:center;gap:6px;min-width:0;flex:1}.ar .artop li .arwho .cmav{flex:none}.ar .artop li .arwho i{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ar .arempty{color:var(--graphite);font-size:13.5px;margin:4px 0 10px}
 .ar .arcrumb{padding:18px 0 8px;font-size:13px}.ar .arcrumb a{color:var(--cm-acc)}
 .ar .arprob{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:20px 22px;margin-bottom:14px}
@@ -692,7 +698,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .ar .aranswer{white-space:pre-wrap;word-break:break-word;font:13px/1.6 var(--mono);background:var(--cm-soft);padding:10px;border-radius:8px;max-height:260px;overflow:auto}.ar .aranswer.small{font-size:11px;max-height:120px}
 .ar .armine td{background:#eef2ff!important}
 .ar .arfoot{font-size:12px;color:var(--graphite);padding-bottom:40px}
-.ar .arstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.ar .arstats div{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:14px 16px}
+.ar .arstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}.ar .arstats div{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:14px 16px}
 .ar .arstats small{display:block;font-size:12px;color:var(--graphite)}.ar .arstats b{font:700 24px var(--mono)}
 .ar .arpf{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:10px}.ar .arpf label{display:flex;flex-direction:column;font:600 11.5px var(--mono);gap:3px}
 .ar .arpf label:has(textarea){grid-column:1/-1}.ar .arpf input,.ar .arpf textarea{font:13px var(--mono);padding:6px 8px;border:1px solid var(--cm-line);border-radius:6px}
@@ -7144,7 +7150,7 @@ const CMT = {
            "광고, 도배, 개인정보(전화번호, 주소 등) 게시는 금지입니다.",
            "실명이나 학교를 밝힐 필요는 없습니다."],
     haveAcc:"이미 계정이 있나요?", noAcc:"계정이 필요한가요?",
-    joined:"가입일", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
+    joined:"가입일", avatarH:"프로필 사진", avatarPick:"사진 바꾸기", avatarDel:"기본 아이콘으로", avatarHelp:"정사각형으로 잘라 256px로 줄여 올립니다.", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
     pwDone:"비밀번호를 바꿨습니다. 다른 기기의 로그인은 모두 풀렸습니다.",
     delAcc:"계정 삭제", delAccHelp:"계정을 지우면 다시 로그인할 수 없습니다. 쓴 글과 댓글은 남고 이름은 ‘탈퇴한 사용자’로 바뀝니다.",
     confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.", myPosts:"내가 쓴 글",
@@ -7152,7 +7158,7 @@ const CMT = {
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
     justNow:"방금", minAgo:"분 전", hrAgo:"시간 전", dayAgo:"일 전",
     stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
-    err:{bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
+    err:{bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
          bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
          username_taken:"이미 쓰고 있는 아이디입니다.", nickname_taken:"이미 쓰고 있는 닉네임입니다.",
@@ -7195,7 +7201,7 @@ const CMT = {
            "No advertising, flooding, or personal details (phone numbers, addresses…).",
            "You don't need to give your real name or school."],
     haveAcc:"Already have an account?", noAcc:"Need an account?",
-    joined:"Joined", changePw:"Change password", oldPw:"Current password", newPw:"New password",
+    joined:"Joined", avatarH:"Profile picture", avatarPick:"Change picture", avatarDel:"Use the letter icon", avatarHelp:"It is cropped square and shrunk to 256 px before upload.", changePw:"Change password", oldPw:"Current password", newPw:"New password",
     pwDone:"Password changed. Every other device has been signed out.",
     delAcc:"Delete account", delAccHelp:"A deleted account can't sign in again. Your posts and comments stay, under the name ‘Deleted user’.",
     confirmDelAcc:"Delete your account? This can't be undone.", myPosts:"My posts",
@@ -7203,7 +7209,7 @@ const CMT = {
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
     justNow:"just now", minAgo:"m ago", hrAgo:"h ago", dayAgo:"d ago",
     stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
-    err:{bad_username:"Usernames are 3–20 letters, digits or _.",
+    err:{bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
          bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
          bad_password:"Passwords need at least 8 characters.",
          username_taken:"That username is taken.", nickname_taken:"That display name is taken.",
@@ -7232,10 +7238,11 @@ function cmTok(v){
 }
 async function cmApi(method, path, body){
   const h={};
-  if(body) h["Content-Type"]="application/json";
+  const raw=body instanceof Blob;
+  if(body) h["Content-Type"]=raw?body.type:"application/json";
   const t=cmTok(); if(t) h.Authorization="Bearer "+t;
   let r;
-  try{ r=await fetch(cmBase()+"/api"+path,{method,headers:h,body:body?JSON.stringify(body):undefined}); }
+  try{ r=await fetch(cmBase()+"/api"+path,{method,headers:h,body:body?(raw?body:JSON.stringify(body)):undefined}); }
   catch(e){ throw {code:"network"}; }
   const j=await r.json().catch(()=>({error:"server_error"}));
   if(!r.ok){
@@ -7243,6 +7250,18 @@ async function cmApi(method, path, body){
     throw {code:j.error||"server_error", status:r.status};
   }
   return j;
+}
+/* who is signed in and the server's settings: asked for once and shared by every view that needs them
+   (the settings are also kept for ten minutes, so a reload skips that request) */
+let cmMeP=null, cmHealthP=null;
+function cmLoadMe(){
+  if(cm.meChecked||!cmTok()) return Promise.resolve(cm.me);
+  return cmMeP||(cmMeP=cmApi("GET","/me").then(r=>{cm.me=r.user;},()=>{}).then(()=>{cm.meChecked=true; cmMeP=null; return cm.me;}));
+}
+function cmHealth(){
+  if(cmHealthP) return cmHealthP;
+  try{ const c=JSON.parse(sessionStorage.getItem("hlCmHealth")||"null"); if(c && Date.now()-c.t<600000 && c.base===cmBase()) return cmHealthP=Promise.resolve(c.h); }catch(e){}
+  return cmHealthP=cmApi("GET","/health").then(h=>{ try{ sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base:cmBase(),h})); }catch(e){} return h; },()=>{ cmHealthP=null; return {v:0}; });
 }
 const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
 function cmToast(msg){ const d=document.createElement("div"); d.className="cmtoast"; d.textContent=msg; document.body.append(d); setTimeout(()=>d.remove(),2200); }
@@ -7267,7 +7286,8 @@ function cmFmt(s){
     u=>`<a href="${u}" target="_blank" rel="noopener nofollow ugc">${u}</a>`);
 }
 const cmName = o => o.gone ? CMT[lang].gone : esc(o.nickname);
-function cmAv(name, cls){                      /* a letter avatar, its colour fixed by the name */
+function cmAv(name, cls, av){                  /* the profile picture, or a letter avatar coloured by the name */
+  if(av && /^[A-Za-z0-9_-]{8,32}$/.test(av)) return `<img class="cmav ${cls||""}" src="${cmBase()}/api/avatar/${av}" alt="" loading="lazy" decoding="async">`;
   const n=String(name||"?"); let h=0; for(const ch of n) h=(h*31+ch.codePointAt(0))>>>0;
   const hue=h%360; return `<span class="cmav ${cls||""}" style="background:hsl(${hue} 55% 46%)">${esc([...n][0]||"?").toUpperCase()}</span>`;
 }
@@ -7316,7 +7336,7 @@ function cmRailHtml(active){
   const ch=(k,label,icon,extra)=>`<a class="ch ${active===k?"on":""}" href="#/community/${k}"><span class="hash">${icon}</span>${label}${extra||""}</a>`;
   const cnt=k=>{ const b=B[k]; if(!b) return ""; return b.today>0 ? `<span class="new">${b.today}</span>` : `<span class="cnt">${b.n}</span>`; };
   const me = cm.me
-    ? `<div class="me">${cmAv(cm.me.nickname,"")}<div style="min-width:0"><div class="nm">${esc(cm.me.nickname)}</div><div class="sub">@${esc(cm.me.username)}</div></div>
+    ? `<div class="me">${cmAv(cm.me.nickname,"",cm.me.avatar)}<div style="min-width:0"><div class="nm">${esc(cm.me.nickname)}</div><div class="sub">@${esc(cm.me.username)}</div></div>
          <div class="ops"><a href="#/community/account" title="${T.account}">⚙</a><button type="button" data-cm="logout" title="${T.logout}">⎋</button></div></div>`
     : `<div class="auth"><a class="pri" href="#/community/login">${T.login}</a><a class="sec2" href="#/community/signup">${T.signup}</a></div>`;
   return `<div class="srv"><img src="${logo}" alt=""><b>HaslaLab</b></div>
@@ -7356,8 +7376,8 @@ async function cmMount(){
   /* who is signed in, the server's version and the board counts — once, then from memory */
   try{
     const jobs=[];
-    if(!cm.meChecked && cmTok()) jobs.push(cmApi("GET","/me").then(r=>{cm.me=r.user;}).catch(()=>{}));
-    if(!cm.v) jobs.push(cmApi("GET","/health").then(r=>{cm.v=r.v||1;}).catch(()=>{cm.v=1;}));
+    jobs.push(cmLoadMe());
+    if(!cm.v) jobs.push(cmHealth().then(r=>{cm.v=r.v||1;}));
     if(cm.boardsLang!==lang) cm.boards=null;
     if(!cm.boards){ cm.boardsLang=lang; jobs.push(cmApi("GET","/boards?lang="+lang).then(r=>{cm.boards={}; for(const x of r.boards) cm.boards[x.board]={n:x.n,today:x.today||0};}).catch(()=>{cm.boards={};})); }
     await Promise.all(jobs); cm.meChecked=true;
@@ -7416,7 +7436,7 @@ async function cmList(root, o, alive){
   else if(cm.view==="card"){
     const card=p=>`<div class="cmcard" data-id="${p.id}">
         <div class="cmvote"><button class="up" type="button" data-v="1" aria-label="${T.up}">▲</button><b>${cmScore(p)}</b><button class="dn" type="button" data-v="-1" aria-label="${T.down}">▼</button></div>
-        <div class="bd"><div class="mt">${cmTag(p.tag)}<b>${T.boards[p.board]||p.board}</b> · ${cmAv(p.gone?"?":p.nickname,"s")} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
+        <div class="bd"><div class="mt">${cmTag(p.tag)}<b>${T.boards[p.board]||p.board}</b> · ${cmAv(p.gone?"?":p.nickname,"s",p.gone?null:p.av)} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
           <h3><a href="#/community/post/${p.id}">${esc(p.title)}</a></h3>
           ${p.snip?`<div class="sn">${esc(p.snip)}</div>`:""}
           <div class="ft"><span>💬 ${p.n_comments} ${T.comments}</span><span>👁 ${p.views}</span></div></div></div>`;
@@ -7439,7 +7459,7 @@ async function cmList(root, o, alive){
   const writeTo = CM_BOARDS.includes(o.where) ? "/"+o.where : "";
   root.innerHTML=`<div class="cmpanel">
     <div class="cmbh"><div><h2><span>${icon}</span> ${name}</h2><p>${T.boardDesc[o.where]||""}</p></div><span class="sp"></span>
-      ${cm.me?`<a class="cmbtn cmm" href="#/community/account">${cmAv(cm.me.nickname,"s")}</a>`:`<a class="cmbtn cmm" href="#/community/login">${T.login}</a>`}
+      ${cm.me?`<a class="cmbtn cmm" href="#/community/account">${cmAv(cm.me.nickname,"s",cm.me.avatar)}</a>`:`<a class="cmbtn cmm" href="#/community/login">${T.login}</a>`}
       <a class="cmbtn pri" href="#/community/write${writeTo}">✎ ${T.write}</a></div>
     <div class="cmbar2">
       <div class="cmseg"><a href="${cmListHref({...o,where:CM_BOARDS.includes(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
@@ -7476,7 +7496,7 @@ async function cmPost(root, id, alive){
   const p=j.post, my=j.my!==undefined ? j.my : (j.liked?1:0);
   let order=cm.cmtOrder||"old";
   const tops=j.comments.filter(c=>!c.parent_id), kids=id=>j.comments.filter(c=>c.parent_id===id);
-  const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"")}
+  const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"",c.gone?null:c.av)}
       <div class="cb"><div class="who"><b>${cmName(c)}</b>${!c.gone&&!p.gone&&c.nickname===p.nickname?`<span class="op">${T.op}</span>`:""}<time title="${cmFull(c.created_at)}">${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</time></div>
         <div class="tx">${cmFmt(c.body)}</div>
         <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
@@ -7487,7 +7507,7 @@ async function cmPost(root, id, alive){
     <article class="cmpost">
       <div class="cmcrumb"><a href="#/community/${p.board}"># ${bName}</a>${p.tag?" › "+cmTag(p.tag):""}</div>
       <h2>${esc(p.title)}</h2>
-      <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"")}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
+      <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"",p.gone?null:p.av)}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
         <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span>${T.comments} ${j.comments.length}</span></div>
       <div class="cmtext">${cmFmt(p.body)}</div>
       <div class="cmrec">
@@ -7674,13 +7694,39 @@ function cmSignup(root){
   };
   arOauth(root);
 }
+/* a picked photo, cropped to a square and shrunk to 256 px, kept under 60 KB */
+async function cmAvatarBlob(file){
+  const bmp=await createImageBitmap(file), s=Math.min(bmp.width,bmp.height), c=document.createElement("canvas");
+  c.width=c.height=256;
+  c.getContext("2d").drawImage(bmp,(bmp.width-s)/2,(bmp.height-s)/2,s,s,0,0,256,256);
+  for(const [type,q] of [["image/webp",.9],["image/webp",.8],["image/jpeg",.88],["image/jpeg",.75],["image/jpeg",.6]]){
+    const b=await new Promise(r=>c.toBlob(r,type,q));
+    if(b && b.type===type && b.size<=60000) return b;
+  }
+  throw {code:"bad_image"};
+}
+function cmAvatarForm(box, done){
+  if(!box) return;
+  const inp=box.querySelector("input[type=file]"), del=box.querySelector("[data-del]"), err=box.querySelector(".cmerr");
+  const set=k=>{ cm.me.avatar=k; del.hidden=!k; done(); if(typeof arChip==="function") arChip(); };
+  inp.onchange=async()=>{
+    const file=inp.files[0]; inp.value=""; if(!file) return; err.textContent="";
+    try{ const r=await cmApi("PUT","/me/avatar",await cmAvatarBlob(file)); set(r.avatar); }
+    catch(e){ err.textContent=cmErr(e); }
+  };
+  del.onclick=async()=>{ err.textContent=""; try{ await cmApi("DELETE","/me/avatar"); set(null); }catch(e){ err.textContent=cmErr(e); } };
+}
 async function cmAccount(root, alive){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
   root.innerHTML=`<div class="cmpanel">
     <div class="cmpost" style="display:flex;gap:16px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--cm-line)">
-      ${cmAv(cm.me.nickname,"l")}<div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
+      <span id="cmAvBox">${cmAv(cm.me.nickname,"l",cm.me.avatar)}</span><div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
       <div class="cmpm" style="border:0;padding:4px 0 0">@${esc(cm.me.username)} · ${T.joined} ${cmFull(cm.me.created_at).slice(0,10)}${cm.me.role==="admin"?' · <span class="cmtag notice">admin</span>':""}</div></div></div>
+    <div class="cmform" id="cmAvatar"><h3 style="font-size:15px">${T.avatarH}</h3>
+      <div class="row"><label class="cmbtn">${T.avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
+      <button class="cmbtn" type="button" data-del ${cm.me.avatar?"":"hidden"}>${T.avatarDel}</button><span class="cmerr"></span><span class="sp"></span></div>
+      <small style="color:var(--graphite)">${T.avatarHelp}</small></div>
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <form class="cmform" id="cmPw" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.changePw}</h3>
@@ -7693,6 +7739,7 @@ async function cmAccount(root, alive){
       <p style="font-size:13px;color:var(--graphite);margin:0">${T.delAccHelp}</p>
       <div class="row"><span class="sp"></span><button class="cmbtn" type="button" id="cmDelAcc" style="color:#e03131;border-color:#ffc9c9">${T.delAcc}</button></div>
     </div></div>`;
+  cmAvatarForm(root.querySelector("#cmAvatar"), ()=>{ const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); });
   const f=root.querySelector("#cmPw");
   f.onsubmit=async e=>{
     e.preventDefault();

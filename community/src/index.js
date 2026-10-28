@@ -70,7 +70,7 @@ function corsHeaders(req, env) {
   const origin = req.headers.get("Origin") || "";
   const allowed = (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
   const h = {
-    "Access-Control-Allow-Methods": "GET,POST,PATCH,DELETE,OPTIONS",
+    "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     "Access-Control-Allow-Headers": "Authorization,Content-Type",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
@@ -127,13 +127,13 @@ async function currentUser(req, env) {
   if (!m) return null;
   const th = await sha256(m[1]);
   const u = await env.DB.prepare(
-    `SELECT u.id,u.username,u.nickname,u.role,u.created_at FROM sessions s JOIN users u ON u.id=s.user_id
+    `SELECT u.id,u.username,u.nickname,u.role,u.created_at,u.avatar FROM sessions s JOIN users u ON u.id=s.user_id
      WHERE s.token_hash=? AND s.expires_at>? AND u.deleted=0`).bind(th, now()).first();
   if (u) u.tokenHash = th;
   return u || null;
 }
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); return u; }
-const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at });
+const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 
@@ -169,7 +169,7 @@ async function handle(req, env, url) {
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,?,?)")
       .bind(username, nickname, await hashPw(body.password), now()).run();
     const id = res.meta.last_row_id;
-    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at FROM users WHERE id=?").bind(id).first();
+    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
     return { token: await newSession(env, id), user: pubUser(user) };
   }
   if (p === "/api/login" && m === "POST") {
@@ -206,6 +206,8 @@ async function handle(req, env, url) {
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM identities WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM avatars WHERE user_id=?").bind(me.id),
+      env.DB.prepare("UPDATE users SET avatar=NULL WHERE id=?").bind(me.id),
     ]);
     return { ok: true };
   }
@@ -217,6 +219,23 @@ async function handle(req, env, url) {
     if (await env.DB.prepare("SELECT 1 FROM users WHERE nickname=? AND id<>?").bind(nickname, me.id).first()) throw new HttpError(409, "nickname_taken");
     await env.DB.prepare("UPDATE users SET nickname=? WHERE id=?").bind(nickname, me.id).run();
     return { ok: true, nickname };
+  }
+  if (p === "/api/me/avatar" && (m === "PUT" || m === "DELETE")) {
+    needUser(me);
+    let k = null;
+    if (m === "PUT") {
+      await limit(env, "avatar:" + me.id, 20, 86400);
+      const buf = new Uint8Array(await req.arrayBuffer());
+      const mime = imageType(buf);
+      if (!mime || buf.length > 65536) bad("bad_image");
+      k = b64u(crypto.getRandomValues(new Uint8Array(12)));
+      await env.DB.prepare("INSERT INTO avatars(k,user_id,mime,data,created_at) VALUES(?,?,?,?,?)").bind(k, me.id, mime, buf, now()).run();
+    }
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM avatars WHERE user_id=? AND k IS NOT ?").bind(me.id, k),
+      env.DB.prepare("UPDATE users SET avatar=? WHERE id=?").bind(k, me.id),
+    ]);
+    return { ok: true, avatar: k };
   }
   if (p === "/api/me/identities" && m === "GET") {
     needUser(me);
@@ -236,7 +255,7 @@ async function handle(req, env, url) {
     const row = await env.DB.prepare("SELECT * FROM oauth_codes WHERE code_hash=? AND fresh>=0").bind(h).first();
     await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=? OR created_at<?").bind(h, now() - 600).run();
     if (!row || row.created_at < now() - 60) throw new HttpError(400, "bad_code");
-    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at FROM users WHERE id=? AND deleted=0").bind(row.user_id).first();
+    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0").bind(row.user_id).first();
     if (!user) throw new HttpError(400, "bad_code");
     return { token: await newSession(env, user.id), user: pubUser(user), fresh: !!row.fresh };
   }
@@ -264,7 +283,7 @@ async function handle(req, env, url) {
       : sort === "cmt" ? "p.n_comments DESC, p.id DESC"
       : sort === "hot" ? `((p.n_likes-p.n_dislikes)*2+p.n_comments+p.views*0.05+1)*1.0/((${now()}-p.created_at)/3600.0+2) DESC, p.id DESC`
       : "p.id DESC";
-    const cols = `p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.deleted AS gone`;
+    const cols = `p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.avatar AS av,u.deleted AS gone`;
     const total = (await env.DB.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${w}`).bind(...args).first()).n;
     const rows = (await env.DB.prepare(`SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`)
       .bind(...args, PAGE, (page - 1) * PAGE).all()).results;
@@ -288,7 +307,7 @@ async function handle(req, env, url) {
   if ((r = /^\/api\/posts\/(\d+)$/.exec(p))) {
     const id = +r[1];
     const post = await env.DB.prepare(
-      `SELECT p.*,u.nickname,u.deleted AS gone FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id=?`).bind(id).first();
+      `SELECT p.*,u.nickname,u.avatar AS av,u.deleted AS gone FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id=?`).bind(id).first();
     if (!post) throw new HttpError(404, "not_found");
     if (m === "GET") {
       if (url.searchParams.get("view") === "1") {
@@ -296,7 +315,7 @@ async function handle(req, env, url) {
         post.views++;
       }
       const comments = (await env.DB.prepare(
-        `SELECT c.id,c.parent_id,c.user_id,c.body,c.created_at,c.updated_at,u.nickname,u.deleted AS gone
+        `SELECT c.id,c.parent_id,c.user_id,c.body,c.created_at,c.updated_at,u.nickname,u.avatar AS av,u.deleted AS gone
          FROM comments c JOIN users u ON u.id=c.user_id WHERE c.post_id=? ORDER BY c.id`).bind(id).all()).results;
       const liked = me ? !!(await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
       const disliked = me ? !!(await env.DB.prepare("SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
@@ -410,8 +429,19 @@ export default {
       try { return await oauthRoute(req, env, url); }
       catch (e) { console.error(e && e.stack || e); return new Response("Sign-in failed", { status: 500 }); }
     }
+    let av;
+    if (req.method === "GET" && (av = /^\/api\/avatar\/([A-Za-z0-9_-]{8,32})$/.exec(url.pathname))) {
+      const row = await env.DB.prepare("SELECT mime,data FROM avatars WHERE k=?").bind(av[1]).first();
+      if (!row) return new Response(null, { status: 404, headers: { "Cache-Control": "public, max-age=300" } });
+      // a key is never reused, so the picture behind it can be cached for good
+      return new Response(new Uint8Array(row.data), { headers: { "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
+    }
     try {
-      return json(await handle(req, env, url), 200, cors);
+      const res = json(await handle(req, env, url), 200, cors);
+      // the server's settings change only on a deploy: let browsers keep them for five minutes
+      if (url.pathname === "/api/health") res.headers.set("Cache-Control", "public, max-age=300");
+      return res;
     } catch (e) {
       if (e instanceof HttpError) return json({ error: e.code }, e.status, cors);
       console.error(e && e.stack || e);
@@ -438,8 +468,19 @@ const AR = {
   gemini: "https://generativelanguage.googleapis.com/v1beta/models",
   openai: "https://api.openai.com/v1/responses",
 };
-const TIERS = [[0, "bronze"], [300, "silver"], [800, "gold"], [1600, "platinum"], [3000, "diamond"], [5000, "ruby"]];
-const tierOf = s => { let t = TIERS[0][1]; for (const [min, n] of TIERS) if (s >= min) t = n; return t; };
+/* Levels and rating, after solved.ac.  A problem's level runs 1–30: Bronze V … I, Silver, Gold, Platinum,
+ * Diamond, Ruby.  A solved problem (full marks on a short answer, 80 % on a written one) is worth PROBLEM_RATING
+ * of its level; a user's rating is the sum over their 100 hardest solved problems plus a bonus that grows with
+ * the number solved.  The rating sets the user's tier (TIER_AT: the lowest rating of each level, then Master). */
+const PROBLEM_RATING = [0, 1, 2, 3, 4, 5, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 35, 38, 41, 44, 47, 50, 53, 56, 59, 62, 65, 68];
+const TIER_AT = [1, 30, 60, 90, 120, 150, 200, 300, 400, 500, 650, 800, 950, 1100, 1250, 1400, 1600, 1750, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2850, 2900, 3000];
+const SOLVED_AT = 0.8;
+const tierOf = rating => { let t = 0; TIER_AT.forEach((min, i) => { if (rating >= min) t = i + 1; }); return t; };   // 0 unrated, 1–30, 31 Master
+function rateUser(solvedLevels) {
+  const top = solvedLevels.slice().sort((a, b) => b - a).slice(0, 100);
+  const n = solvedLevels.length;
+  return Math.round(top.reduce((a, l) => a + (PROBLEM_RATING[l] || 0), 0) + 175 * (1 - Math.pow(0.995, n)));
+}
 
 function arenaHealth(env) {
   return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.OPENAI_API_KEY ? "openai" : null };
@@ -579,19 +620,24 @@ async function ocr(env, file, mode) {
 
 /* ── rankings: each user's best score per problem, counting only what was sent while the problem's week
       was open (the worked solution is published when it closes); ties go to whoever reached it first ── */
+/* the leaderboard: a week ranks by points scored while the week was open; all time ranks by rating, which
+ * counts every problem solved, whenever */
 async function ranking(env, weekFilter) {
-  const w = "AND x.in_week=1" + (weekFilter ? " AND p.week=?" : "");
-  const args = weekFilter ? [weekFilter, weekFilter] : [];
-  const sql = `
-    WITH b AS (SELECT x.user_id, x.problem_id, MAX(x.score) s FROM submissions x JOIN problems p ON p.id=x.problem_id
-               WHERE x.status='graded' ${w} GROUP BY x.user_id, x.problem_id),
-         t AS (SELECT b.user_id, b.problem_id, b.s, p.points, MIN(x.created_at) at FROM b
-               JOIN submissions x ON x.user_id=b.user_id AND x.problem_id=b.problem_id AND x.score=b.s AND x.status='graded'
-               JOIN problems p ON p.id=b.problem_id WHERE 1=1 ${w} GROUP BY b.user_id, b.problem_id)
-    SELECT u.nickname, SUM(t.s) total, SUM(t.s>=t.points) solved, COUNT(*) tried, MAX(t.at) last
-    FROM t JOIN users u ON u.id=t.user_id WHERE u.deleted=0
-    GROUP BY t.user_id ORDER BY total DESC, last ASC LIMIT 100`;
-  return (await env.DB.prepare(sql).bind(...args).all()).results;
+  const w = weekFilter ? "AND x.in_week=1 AND p.week=?" : "";
+  const rows = (await env.DB.prepare(`
+    SELECT x.user_id, x.problem_id, MAX(x.score) s, MIN(x.created_at) at, p.points, p.level, u.nickname, u.avatar AS av
+    FROM submissions x JOIN problems p ON p.id=x.problem_id JOIN users u ON u.id=x.user_id
+    WHERE x.status='graded' AND u.deleted=0 ${w} GROUP BY x.user_id, x.problem_id`).bind(...(weekFilter ? [weekFilter] : [])).all()).results;
+  const by = new Map();
+  for (const r of rows) {
+    let u = by.get(r.user_id);
+    if (!u) by.set(r.user_id, u = { nickname: r.nickname, av: r.av, total: 0, solved: 0, tried: 0, last: 0, levels: [] });
+    u.total += r.s; u.tried++; u.last = Math.max(u.last, r.at);
+    if (r.s >= r.points * SOLVED_AT) { u.solved++; u.levels.push(r.level); }
+  }
+  const out = [...by.values()].map(u => { const rating = rateUser(u.levels); const { levels, ...rest } = u; return { ...rest, rating, lv: tierOf(rating) }; });
+  out.sort(weekFilter ? (a, b) => b.total - a.total || a.last - b.last : (a, b) => b.rating - a.rating || b.solved - a.solved || a.last - b.last);
+  return out.slice(0, 200);
 }
 
 async function arena(p, m, body, me, req, env, url) {
@@ -599,21 +645,24 @@ async function arena(p, m, body, me, req, env, url) {
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   if (p === "/api/weekly" && m === "GET") {
     const t = now(), week = url.searchParams.get("week") || "";
-    const rows = (await env.DB.prepare(week
-      ? "SELECT * FROM problems WHERE week=? AND opens_at<=? ORDER BY no"
-      : "SELECT * FROM problems WHERE opens_at<=? AND closes_at>? ORDER BY no").bind(...(week ? [week, t] : [t, t])).all()).results;
-    const weeks = (await env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t).all()).results;
-    const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false));
-    if (me && problems.length) {
-      const mine = (await env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (${problems.map(() => "?").join(",")}) GROUP BY problem_id`)
-        .bind(me.id, ...problems.map(x => x.id)).all()).results;
-      for (const x of problems) { const q = mine.find(y => y.problem_id === x.id); if (q) { x.best = q.best; x.pending = q.pend; } }
+    // independent queries go out together: each one is a round trip to the database
+    const [rowsR, weeksR] = await env.DB.batch([
+      env.DB.prepare(week ? "SELECT * FROM problems WHERE week=? AND opens_at<=? ORDER BY no" : "SELECT * FROM problems WHERE opens_at<=? AND closes_at>? ORDER BY no").bind(...(week ? [week, t] : [t, t])),
+      env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
+    ]);
+    const rows = rowsR.results, weeks = weeksR.results, wk = week || (rows[0] && rows[0].week) || isoWeek(t);
+    const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false)), ids = problems.map(x => x.id), qs = ids.map(() => "?").join(",");
+    const [mine, stats, top] = await Promise.all([
+      me && ids.length ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (${qs}) GROUP BY problem_id`).bind(me.id, ...ids).all().then(r => r.results) : [],
+      ids.length ? env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
+        FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${qs}) GROUP BY s.problem_id`).bind(...ids).all().then(r => r.results) : [],
+      ranking(env, wk),
+    ]);
+    for (const x of problems) {
+      const q = mine.find(y => y.problem_id === x.id); if (q) { x.best = q.best; x.pending = q.pend; }
+      const s = stats.find(y => y.problem_id === x.id); x.users = s ? s.users : 0; x.solvers = s ? s.solved : 0;
     }
-    const stats = problems.length ? (await env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
-      FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${problems.map(() => "?").join(",")}) GROUP BY s.problem_id`)
-      .bind(...problems.map(x => x.id)).all()).results : [];
-    for (const x of problems) { const s = stats.find(y => y.problem_id === x.id); x.users = s ? s.users : 0; x.solvers = s ? s.solved : 0; }
-    return { week: week || (rows[0] && rows[0].week) || isoWeek(t), problems, weeks, now: t, health: arenaHealth(env) };
+    return { week: wk, problems, weeks, now: t, health: arenaHealth(env), top: top.slice(0, 8) };
   }
   if ((r = /^\/api\/problems\/(\d+)$/.exec(p)) && m === "GET") {
     const x = await env.DB.prepare("SELECT * FROM problems WHERE id=?").bind(+r[1]).first();
@@ -654,17 +703,17 @@ async function arena(p, m, body, me, req, env, url) {
     const scope = url.searchParams.get("scope") === "week" ? "week" : "all";
     const week = scope === "week" ? (url.searchParams.get("week") || isoWeek(now())) : null;
     const rows = await ranking(env, week);
-    rows.forEach((x, i) => { x.rank = i + 1; x.tier = tierOf(x.total); });
+    rows.forEach((x, i) => { x.rank = i + 1; });
     let mine = null;
     if (me) { const i = rows.findIndex(x => x.nickname === me.nickname); if (i >= 0) mine = rows[i]; }
-    return { scope, week, rows, mine, tiers: TIERS };
+    return { scope, week, rows: rows.slice(0, 100), mine, tierAt: TIER_AT };
   }
   if (p === "/api/me/stats" && m === "GET") {
     needUser(me);
-    const all = await ranking(env, null), i = all.findIndex(x => x.nickname === me.nickname);
-    const subs = (await env.DB.prepare(`SELECT s.id,s.problem_id,s.status,s.score,s.created_at,p.week,p.no,p.points,p.title_ko,p.title_en FROM submissions s JOIN problems p ON p.id=s.problem_id
-      WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id).all()).results;
-    return { rank: i >= 0 ? i + 1 : null, total: i >= 0 ? all[i].total : 0, solved: i >= 0 ? all[i].solved : 0, tier: tierOf(i >= 0 ? all[i].total : 0), subs };
+    const [all, subs] = await Promise.all([ranking(env, null), env.DB.prepare(`SELECT s.id,s.problem_id,s.status,s.score,s.created_at,p.week,p.no,p.points,p.title_ko,p.title_en FROM submissions s JOIN problems p ON p.id=s.problem_id
+      WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id).all().then(r => r.results)]);
+    const i = all.findIndex(x => x.nickname === me.nickname), u = i >= 0 ? all[i] : null;
+    return { rank: u ? i + 1 : null, total: u ? u.total : 0, solved: u ? u.solved : 0, rating: u ? u.rating : 0, lv: u ? u.lv : 0, tierAt: TIER_AT, subs };
   }
 
   /* admin: problems and the grading queue */
@@ -676,6 +725,7 @@ async function arena(p, m, body, me, req, env, url) {
       const f = ["week", "no", "kind", "subject", "level", "points", "title_ko", "title_en", "body_ko", "body_en", "unit", "answer", "rubric", "model_ko", "model_en", "source", "opens_at", "closes_at"];
       if (!/^\d{4}-W\d{2}$/.test(body.week || "")) bad("bad_week");
       if (!["short", "essay"].includes(body.kind)) bad("bad_kind");
+      if (body.level !== undefined && !(Number.isInteger(+body.level) && +body.level >= 1 && +body.level <= 30)) bad("bad_level");
       if (body.kind === "short") { const a = JSON.parse(body.answer || "null"); if (!a || typeof a.value !== "number") bad("bad_answer"); }
       else { const rb = JSON.parse(body.rubric || "null"); if (!Array.isArray(rb) || !rb.length || rb.some(c => !c.id || !(c.max > 0))) bad("bad_rubric"); }
       const vals = f.map(k => body[k] === undefined || body[k] === "" ? null : body[k]);
