@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<meta name="robots" content="noindex">
+<title>실전 모드 · Exam mode · HaslaLab</title>
+<!-- Exam mode.  A year's experiments run side by side on one long bench for five hours (the real exam gives E1
+     and E2 one table and one box of parts); the parts boxes of the simulators are folded into one shared kit on
+     the left, while set-ups that already sit on the bench stay as they are and get the room.  When the time is
+     up the bench goes dark and thirty minutes start for scanning the paper answer sheets and working sheets
+     with a phone: a QR code opens scan.html with this exam's upload token, the pages arrive here read by OCR,
+     the student checks the text and submits it for grading (the community Worker, /api/lab/...).
+     Only signed-in users sit it; a start costs one exam token, kept on the server.  The server also keeps the
+     clock and the state (running → scanning → graded), so a reload, a closed tab or another computer comes
+     back to the same exam with the time still running and spends nothing.
+     URL: exam.html?c=ipho&y=2024&e=E1,E2&f=ipho2024_E1_web.html,ipho2024_E2_web.html&t=title|title&p=pdf|pdf&lang=ko -->
+<style>
+  :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e;--deep:#12161b;
+        --red:#e5534b;--ok:#57ab5a;--desk:#3a3128;--bar:52px}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:var(--accent)}
+  button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:#2b2f36;color:var(--ink);padding:7px 13px}
+  button:hover:not(:disabled){border-color:var(--accent)}
+  button:disabled{opacity:.45;cursor:default}
+  button.pri{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:700}
+  button.red{background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
+
+  /* ── top bar ── */
+  .bar{position:fixed;inset:0 0 auto 0;height:var(--bar);display:flex;align-items:center;gap:12px;padding:0 14px;
+       background:var(--deep);border-bottom:1px solid var(--line);z-index:20}
+  .bar .who{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+  .bar .who b{color:var(--accent);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .who span{font-size:11.5px;color:var(--muted)}
+  .bar .sp{flex:1}
+  .clock{font:700 24px/1 ui-monospace,Consolas,monospace;letter-spacing:.04em;padding:6px 12px;border-radius:8px;
+         background:#0b0e12;border:1px solid var(--line);min-width:128px;text-align:center}
+  .clock.warn{color:#ffb4a9;border-color:#b3372f}
+  .clock small{display:block;font:500 10px/1.2 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--muted);letter-spacing:0;margin-top:3px}
+  .views{display:flex;gap:4px}
+  .views button{padding:6px 10px;font-size:12.5px}
+  .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+  .lang button{border:0;border-radius:0;padding:6px 11px;font-size:12.5px;background:transparent;color:var(--muted)}
+  .lang button.on{background:var(--accent);color:#1c2027}
+  @media (max-width:900px){ .views,.bar .hide-s{display:none} }
+
+  main{position:fixed;inset:var(--bar) 0 0 0}
+
+  /* ── the bench: one shared kit, the experiments side by side ── */
+  .hall{display:flex;height:100%}
+  .kit{flex:0 0 236px;background:var(--panel);border-right:1px solid var(--line);overflow:auto;padding:10px 10px 18px}
+  .kit h2{margin:2px 0 2px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);text-align:center}
+  .kit .sub{font-size:11.5px;color:var(--muted);text-align:center;margin:0 0 10px;line-height:1.45}
+  .kit .grp{margin-top:12px}
+  .kit .grp h3{display:flex;align-items:center;gap:6px;margin:0 0 5px;font-size:12px;color:#d6dde2}
+  .kit .grp h3 i{font-style:normal;font:700 11px/1 ui-monospace,monospace;background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:3px 5px;color:var(--accent)}
+  .kit canvas{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
+  .kit .placed{font-size:12px;color:var(--muted);background:#15181d;border:1px dashed var(--line);border-radius:6px;padding:9px 10px;line-height:1.55}
+  .kit .hand{margin-top:12px;font-size:12px;color:var(--accent);background:#0b0e12;border:1px solid var(--line);border-radius:6px;padding:8px 9px;min-height:36px}
+  .desk{flex:1;min-width:0;display:flex;gap:0;overflow-x:auto;overflow-y:hidden;background:var(--desk);
+        background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 160px)}
+  .st{flex:1 1 0;min-width:560px;display:flex;flex-direction:column;border-right:6px solid #2a231c;transition:flex-grow .25s}
+  .st.wide{flex-grow:1.35}
+  .st.big{flex-grow:3}
+  .st.small{flex-grow:.6;min-width:420px}
+  .st:last-child{border-right:0}
+  .st .lbl{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:5px 10px;background:#2a231c;color:#e9dcc6;font-size:12.5px}
+  .st .lbl b{font:700 12px/1 ui-monospace,monospace;background:#1c2027;color:var(--accent);border-radius:5px;padding:4px 6px}
+  .st .lbl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .st .lbl .pdf{margin-left:auto;font-size:12px;white-space:nowrap}
+  .st iframe{flex:1;width:100%;border:0;background:var(--bg)}
+  @media (max-width:760px){ .kit{flex-basis:170px} .st{min-width:92vw} }
+
+  /* ── cards: before, after, scanning ── */
+  .page{height:100%;overflow:auto;padding:28px 16px 40px}
+  .card{max-width:860px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .card h1{margin:0 0 4px;font-size:22px;color:var(--accent)}
+  .card .lead{margin:0 0 14px;color:var(--muted)}
+  .card ol,.card ul{margin:8px 0 8px 20px;padding:0;line-height:1.75}
+  .card .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .note{background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px;color:#d6dde2;margin-top:12px}
+  .note.w{border-color:#6b3b37;color:#ffcfc9}
+  .tasks{display:grid;gap:8px;margin:12px 0}
+  .tasks div{display:flex;gap:10px;align-items:center;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+  .tasks b{font:700 13px/1 ui-monospace,monospace;color:var(--accent)}
+  .tasks a{margin-left:auto;font-size:12.5px}
+
+  .scan{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:18px;max-width:1380px;margin:0 auto}
+  @media (max-width:900px){ .scan{grid-template-columns:minmax(0,1fr)} }
+  .qrbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;position:sticky;top:0;align-self:start;text-align:center}
+  .qrbox h2{margin:0 0 4px;font-size:18px}
+  .qrbox .big{font:700 46px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.03em;margin:6px 0 2px}
+  .qrbox .big.warn{color:#ffb4a9}
+  .qr{background:#fff;border-radius:10px;padding:12px;display:inline-block;margin:12px 0 8px;line-height:0}
+  .qr svg,.qr img{width:240px;height:240px;display:block}
+  .qrbox .url{font:11px/1.4 ui-monospace,monospace;color:var(--muted);word-break:break-all;margin:4px 0 10px}
+  .qrbox ol{text-align:left;font-size:13px;line-height:1.7;margin:8px 0 0 18px;padding:0}
+  .pages{display:flex;flex-direction:column;gap:12px}
+  .pages .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .pages .head h2{margin:0;font-size:17px}
+  .pages .head .sp{flex:1}
+  .pg{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .pg .th{width:150px;aspect-ratio:210/297;background:#0b0e12;border-radius:6px;overflow:hidden;cursor:zoom-in}
+  .pg .th img{width:100%;height:100%;object-fit:contain;display:block}
+  .pg .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;font-size:12.5px}
+  .pg .meta select{font:inherit;font-size:12.5px;background:#2b2f36;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+  .pg .meta .st2{margin-left:auto;color:var(--muted)}
+  .pg .meta .st2.bad{color:#ffb4a9}
+  .pg .rd{list-style:none;margin:0;padding:8px 10px;background:#0b0e12;border:1px solid var(--line);border-radius:6px;font:12.5px/1.6 ui-monospace,Consolas,monospace;max-height:220px;overflow:auto}
+  .pg .rd.none{color:var(--muted)}
+  .pg .rd li.x{opacity:.5;text-decoration:line-through}
+  .pg .rd b{color:var(--accent);margin-right:6px}
+  .pg .leg{font-size:12px;padding:2px 8px;border-radius:999px;background:#2b2f36;color:var(--muted)}
+  .pg .leg.good{background:#1f3b26;color:#8fd19e}.pg .leg.partial{background:#3d3220;color:#f2c14e}.pg .leg.poor{background:#4a2321;color:#ffb4a9}
+  .pg .rm{margin-left:auto;padding:4px 10px;font-size:12px}
+  details.reg{margin-top:12px;background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px}
+  details.reg summary{cursor:pointer;font-weight:700}details.reg summary span{font-weight:400;color:var(--muted)}
+  details.reg ol{margin:8px 0 0 4px;padding:0;list-style:none}details.reg li{margin:5px 0;line-height:1.55}details.reg li b{color:var(--accent);margin-right:6px}
+  .pg textarea{width:100%;min-height:150px;resize:vertical;background:#0b0e12;color:var(--ink);border:1px solid var(--line);border-radius:6px;
+               padding:8px 9px;font:12.5px/1.55 ui-monospace,Consolas,monospace}
+  .pg .ok{font-size:12px;color:var(--muted);margin-top:4px}
+  .empty{background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--muted)}
+  .result{margin-top:12px}
+  .result .tot{font:700 30px/1.2 ui-monospace,monospace;color:var(--accent)}
+  .result table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  .result td,.result th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+  .zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:50;display:grid;place-items:center;cursor:zoom-out}
+  .zoom img{max-width:96vw;max-height:96vh;background:#fff}
+
+  /* the candidate's documents: instructions and receipt */
+  .doc{max-width:860px}
+  .doc .badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#1c2027;background:var(--accent);border-radius:5px;padding:3px 8px}
+  .doc h1{margin:10px 0 2px}
+  .info{width:100%;border-collapse:collapse;margin:14px 0 6px;font-size:13.5px}
+  .info th{width:120px;text-align:left;color:var(--muted);font-weight:600;background:var(--deep)}
+  .info th,.info td{border:1px solid var(--line);padding:9px 11px;vertical-align:top}
+  .info td a{margin-left:8px;font-size:12.5px}
+  .agree{background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px}
+  .agree label{display:flex;gap:9px;align-items:flex-start;padding:5px 0;font-size:13.5px;cursor:pointer}
+  .agree input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px}
+  @media print{ .bar,.lang,.noprint{display:none!important} main{position:static} body{background:#fff;color:#000} .card{border:0} .info th{background:#eee;color:#000} }
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:grid;place-items:center;padding:16px}
+  .modal .card{max-width:460px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0b0e12;border:1px solid var(--accent);color:var(--ink);
+         padding:10px 16px;border-radius:9px;z-index:60;font-size:13.5px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+  .dark{position:fixed;inset:var(--bar) 0 0 0;background:#000;z-index:30;display:grid;place-items:center;color:#777;font-size:15px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="who"><b id="bTitle">HaslaLab</b><span id="bSub"></span></div>
+  <div class="sp"></div>
+  <div class="views" id="views"></div>
+  <div class="clock" id="clock" hidden>5:00:00<small></small></div>
+  <button id="bEnd" class="red" hidden></button>
+  <button id="bFull" class="hide-s" title="F11" hidden>⛶</button>
+  <div class="lang"><button data-l="ko">한국어</button><button data-l="en">English</button></div>
+</div>
+
+<main id="main"></main>
+<div id="layer"></div>
+
+<script src="../vendor/qrcode/qrcode.js"></script>
+<script>
+"use strict";
+const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
+const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
+
+const T = {
+  ko: {
+    exam: "실전 모드", practice: "연습 모드", left: "남은 시간", scanLeft: "스캔 마감까지",
+    introLead: "실제 대회처럼 실험 시험을 한 번에 치릅니다.",
+    rules: [
+      "<b>5시간</b> 동안 이 해의 실험을 모두 풉니다. 실험이 둘이면 <b>한 책상</b>에 나란히 놓이고, 두 실험을 오가며 원하는 순서로 하면 됩니다.",
+      "부품은 왼쪽 <b>공용 부품함 하나</b>에서 꺼냅니다. 부품을 누르면 손에 들리고, 그 실험의 책상을 누르면 놓입니다(우클릭은 되돌리기). 이미 책상에 놓여 있는 장치는 그대로 두고, 책상만 넓혔습니다.",
+      "답은 종이에 씁니다. 문제지 PDF에 있는 <b>공식 Answer sheet</b>와 <b>Working sheet</b>를 인쇄해 쓰세요. 최종 답은 Answer sheet의 해당 칸에 쓴 것만 인정합니다.",
+      "시간이 끝나면(또는 «시험 끝내기»를 누르면) 실험 화면이 꺼지고 <b>30분</b> 타이머가 돕니다. 화면의 QR 코드를 휴대폰으로 찍으면 답안지 · working sheet를 스캔해 보낼 수 있습니다.",
+      "보낸 쪽은 AI가 바로 읽어 이 화면에 보여 줍니다. <b>읽힌 내용은 고칠 수 없습니다</b>. 잘못 읽혔으면 그 쪽을 빼고 다시 찍어 보내세요. 제출하면 공식 솔루션의 채점 기준표와 아래 채점 규정으로 채점합니다. 30분이 지나면 그때까지 보낸 쪽이 그대로 제출됩니다.",
+      "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다. 사람이 다시 읽어 주지 않습니다.",
+      "시작하면 <b>실전 토큰 1개</b>를 씁니다. 시험 중에 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다. 다시 들어올 때는 토큰을 쓰지 않습니다. (시뮬레이터 안의 장치 상태는 다시 들어오면 처음으로 돌아갑니다.)",
+    ],
+    tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
+    docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: "실험 5시간 + 답안 스캔 30분",
+    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `실전 토큰 1개 (보유 ${n}개)`,
+    infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
+    agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
+    agreeAll: "응시 동의에 모두 체크해야 시작할 수 있습니다.", examNo: "수험번호", applicant: "응시자",
+    receiptH: "답안 제출 확인증", rcName: "시험명", rcStart: "시험 시작", rcEnd: "실험 종료", rcSubmit: "답안 제출", rcPages: "제출한 쪽", rcStatus: "채점 상태", print: "인쇄",
+    pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
+    loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
+    tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: "토큰 1개 쓰고 시작 (5:00:00)", startQ: "실전 토큰 1개를 씁니다",
+    startBody: n => `시작하면 5시간 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다. 남은 토큰 ${n}개 → ${n - 1}개.`,
+    noTokens: "실전 토큰이 없습니다. 토큰은 관리자가 나누어 줍니다 — 커뮤니티에 문의해 주세요.",
+    otherActive: (x, y) => `진행 중인 다른 실전 시험(${x})이 있습니다. 한 번에 하나만 칠 수 있으니, 그 시험을 먼저 끝내세요.`, goOther: "그 시험으로 가기",
+    resume: "진행 중인 시험으로 돌아왔습니다. 타이머는 그동안에도 흘렀습니다 (토큰은 쓰지 않았습니다).",
+    end: "시험 끝내기", endQ: "시험을 끝낼까요?", endBody: "끝내면 실험 화면이 꺼지고 다시 켤 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.",
+    endYes: "끝내고 스캔하기", cancel: "취소", leave: "나가도 시험 시간은 계속 흐릅니다.",
+    kitH: "부품함", kitSub: "두 실험이 함께 쓰는 부품함입니다.\n누르면 집고, 그 실험의 책상에 놓습니다.", kitSub1: "누르면 집고, 책상에 놓습니다.",
+    placed: "장치가 이미 책상에 놓여 있습니다.", handIn: "손에 든 것 →", placeOn: "책상에 놓으세요", handNone: "손에 든 부품이 없습니다.",
+    viewAll: "나란히",
+    warn30: "30분 남았습니다.", warn5: "5분 남았습니다. 측정을 마무리하세요.",
+    darkH: "실험 시간이 끝났습니다", darkB: "실험 화면을 껐습니다.",
+    scanH: "답안 스캔",
+    steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "실험(E1/E2)과 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타납니다. 읽힌 값을 확인하고, 잘못 읽혔으면 «빼기» 후 다시 찍습니다.", "«제출하고 채점받기»를 누릅니다."],
+    openHere: "이 기기에서 열기", newQr: "QR 새로 만들기", pagesH: "받은 쪽", none: "아직 받은 쪽이 없습니다. 휴대폰에서 첫 쪽을 보내면 여기에 나타납니다.",
+    answer: "답안지", working: "Working sheet", ocrFailed: "읽지 못함 — 다시 찍으세요", ocrOff: "자동 읽기 꺼짐",
+    leg: { good: "잘 읽힘", partial: "일부만 읽힘 — 다시 찍기 권장", poor: "거의 못 읽음 — 이대로면 0점, 다시 찍으세요" }, remove: "빼기", removeQ: "이 쪽을 뺄까요? 휴대폰으로 다시 찍어 보낼 수 있습니다.",
+    readH: "읽힌 내용", nothing: "읽힌 답이 없습니다.", crossed: "지운 것", noEdit: "읽힌 내용은 고칠 수 없습니다. 잘못 읽혔으면 빼고 다시 찍어 보내세요. 읽을 수 없는 부분은 0점입니다.",
+    regH: "채점 규정", regV: v => `규정 ${v}`, graph: (n, f) => `그래프 · 점 ${n}개${f ? " · 맞춤선" : ""}`, table: (c, r) => `표 · ${c}열 × ${r}행`,
+    submit: "제출하고 채점받기", submitting: "채점하는 중… (실험마다 30초~1분)", submitQ: "제출할까요? 제출하면 더 보낼 수 없습니다.",
+    noServer: "채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.",
+    resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중"},
+    pendingWhy: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 아직 연결되지 않아 관리자가 채점합니다."},
+    errorNote: "채점 서버가 응답하지 않았습니다. 답안은 저장되었고 관리자가 다시 채점합니다.",
+    detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기 (토큰 1개)",
+    closed: "스캔 시간이 끝났습니다. 보낸 쪽으로 채점합니다.",
+    bad: "주소가 올바르지 않습니다. 대회 목록에서 실전 모드를 다시 여세요.",
+    err: {network: "서버에 연결하지 못했습니다.", closed: "스캔 시간이 끝났습니다.", login_required: "로그인이 필요합니다.", no_tokens: "실전 토큰이 없습니다.", running: "먼저 시험을 끝내세요."},
+  },
+  en: {
+    exam: "Exam mode", practice: "Practice mode", left: "Time left", scanLeft: "Scanning closes in",
+    introLead: "Sit the whole experimental exam at once, as on the day.",
+    rules: [
+      "You have <b>five hours</b> for all of this year's experiments. With two experiments they stand side by side on <b>one bench</b>; move between them in any order.",
+      "Parts come out of <b>one shared kit</b> on the left. Click a part to pick it up, then click on that experiment's bench to put it down (right-click puts it back). Set-ups that already sit on the bench stay as they are; the bench is simply wider.",
+      "Write your answers on paper: print the <b>official Answer sheets</b> and <b>Working sheets</b> from the problem PDF. A final answer counts only in its box on an Answer sheet.",
+      "When time is up (or you press «Finish exam») the experiments switch off and a <b>30-minute</b> timer starts. Scan the QR code on the screen with your phone to photograph the answer sheets and working sheets.",
+      "Each page is read by the AI at once and shown here. <b>What was read cannot be edited</b>: if a page was misread, take it out and photograph it again. On submission it is graded against the marking scheme of the official solution under the grading regulation below. After 30 minutes the pages that arrived are submitted as they are.",
+      "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing. Nobody re-reads it.",
+      "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock. Coming back costs no token. (The apparatus inside the simulators starts afresh when you come back.)",
+    ],
+    tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
+    docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: "5 hours of experiments + 30 minutes to scan",
+    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `1 exam token (you have ${n})`,
+    infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
+    agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
+    agreeAll: "Tick every line of the declaration to start.", examNo: "Candidate no.", applicant: "Candidate",
+    receiptH: "Receipt of submission", rcName: "Exam", rcStart: "Started", rcEnd: "Experiments ended", rcSubmit: "Answers submitted", rcPages: "Pages", rcStatus: "Grading", print: "Print",
+    pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
+    loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
+    tokens: n => `Exam tokens left: <b>${n}</b>`, start: "Use 1 token and start (5:00:00)", startQ: "Use one exam token",
+    startBody: n => `The five-hour timer starts on the server and cannot be paused or undone. Tokens: ${n} → ${n - 1}.`,
+    noTokens: "You have no exam tokens. Tokens are handed out by the admins — please ask in the community.",
+    otherActive: (x, y) => `Another exam (${x}) is in progress. Only one can be open at a time, so finish that one first.`, goOther: "Go to that exam",
+    resume: "Back in the exam in progress. The timer kept running meanwhile (no token was used).",
+    end: "Finish exam", endQ: "Finish the exam?", endBody: "The experiments will switch off and cannot be turned back on. The 30 minutes for scanning start at once.",
+    endYes: "Finish and scan", cancel: "Cancel", leave: "The exam clock keeps running if you leave.",
+    kitH: "Kit", kitSub: "One kit for both experiments.\nClick to pick up, then put it on that experiment's bench.", kitSub1: "Click to pick up, then put it on the bench.",
+    placed: "The apparatus is already set out on the bench.", handIn: "In your hand →", placeOn: "put it on the bench", handNone: "Nothing in your hand.",
+    viewAll: "Side by side",
+    warn30: "30 minutes left.", warn5: "5 minutes left. Finish your measurements.",
+    darkH: "Time is up", darkB: "The experiments have been switched off.",
+    scanH: "Scan your answers",
+    steps: ["Point your phone's camera at the QR code.", "Choose the experiment (E1/E2) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "Each page appears on the right. Check what was read; if it is wrong, «Remove» it and photograph it again.", "Press «Submit and grade»."],
+    openHere: "Open on this device", newQr: "New QR code", pagesH: "Pages received", none: "No pages yet. They appear here as soon as your phone sends them.",
+    answer: "Answer sheet", working: "Working sheet", ocrFailed: "not read — photograph it again", ocrOff: "reading is off",
+    leg: { good: "read well", partial: "partly read — better photograph it again", poor: "mostly unreadable — scores 0 as it is, photograph it again" }, remove: "Remove", removeQ: "Take this page out? You can photograph it again with your phone.",
+    readH: "What was read", nothing: "No answers were read.", crossed: "crossed out", noEdit: "What was read cannot be edited. If it is wrong, take the page out and photograph it again. Whatever cannot be read scores 0.",
+    regH: "Grading regulation", regV: v => `regulation ${v}`, graph: (n, f) => `graph · ${n} points${f ? " · fitted line" : ""}`, table: (c, r) => `table · ${c} columns × ${r} rows`,
+    submit: "Submit and grade", submitting: "Grading… (30 s to a minute per experiment)", submitQ: "Submit now? No more pages can be sent afterwards.",
+    noServer: "The grading server does not support exam mode yet. Please come back shortly.",
+    resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress"},
+    pendingWhy: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected yet, so an admin will grade it."},
+    errorNote: "The grading server did not answer. Your pages are saved and an admin will grade them.",
+    detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again (1 token)",
+    closed: "Scanning has closed. The pages that arrived are being graded.",
+    bad: "This address is not complete. Open exam mode again from the competition list.",
+    err: {network: "Could not reach the server.", closed: "Scanning has closed.", login_required: "Please sign in.", no_tokens: "You have no exam tokens.", running: "Finish the exam first."},
+  },
+};
+
+/* ── what this exam is ── */
+const Q = new URLSearchParams(location.search);
+let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? "en" : "ko";
+const t = () => T[lang];
+const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
+const EX = {
+  c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
+  tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
+};
+const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.y > 1990 && EX.tasks.length > 0 && EX.tasks.length <= 4 &&
+  EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) && EX.files.length === EX.tasks.length && EX.files.every(f => /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f));
+const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
+const KEY = EX.c + EX.y;
+const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : PDF_BASE + s.replace(/^pdf\//, "");
+const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
+const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
+const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
+/* the address to come back to (kept on the server with the session), without the language */
+const ENTRY = (() => { const q = new URLSearchParams(location.search); q.delete("lang"); return "?" + q.toString(); })();
+
+/* ── small helpers ── */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const hms = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
+function toast(msg, ms) { const d = document.createElement("div"); d.className = "toast"; d.textContent = msg; document.body.append(d); setTimeout(() => d.remove(), ms || 3500); }
+
+/* the community server: the same account and token as the site (same origin, same localStorage) */
+function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} return (o || COMMUNITY_API).replace(/\/+$/, ""); }
+function tok() { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } }
+async function api(method, path, body) {
+  const h = {}; if (body) h["Content-Type"] = "application/json";
+  if (tok()) h.Authorization = "Bearer " + tok();
+  let r;
+  try { r = await fetch(apiBase() + "/api" + path, { method, headers: h, body: body ? JSON.stringify(body) : undefined }); }
+  catch (e) { throw { code: "network" }; }
+  const j = await r.json().catch(() => ({ error: "server_error" }));
+  if (!r.ok) throw { ...j, code: j.error || "server_error", status: r.status };
+  return j;
+}
+const errMsg = e => (t().err[e && e.code]) || (e && e.code) || "error";
+
+/* ── the session, as the server has it.  The server keeps the clock; this page only shows it.
+      SES: the session; SKEW: server time minus this computer's time, so a wrong local clock does not matter. ── */
+let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null;
+const srvNow = () => Math.floor(Date.now() / 1000) + SKEW;
+function setSession(s) { SES = s; if (s && s.now) SKEW = s.now - Math.floor(Date.now() / 1000); }
+/* the phone's upload token is shown once by the server; this computer keeps it per session.  Another computer
+   (or a cleared browser) asks for a new one, which retires the old QR code. */
+const upKey = id => "hlExamUp:" + id;
+function upTok(id, v) { try { if (v) localStorage.setItem(upKey(id), v); return localStorage.getItem(upKey(id)) || ""; } catch (e) { return v || ""; } }
+
+/* ── top bar ── */
+function paintBar() {
+  document.documentElement.lang = lang;
+  document.title = `${t().exam} · ${label()} · HaslaLab`;
+  $("bTitle").textContent = `${label()} · ${t().exam}`;
+  $("bSub").textContent = SES && (SES.status === "running" || SES.status === "scanning")
+    ? `${t().examNo} ${examNo(SES.id)}  ·  ${t().applicant} ${(ME && ME.nickname) || ""}`
+    : EX.tasks.map((id, i) => id + (EX.titles[i] ? " " + EX.titles[i] : "")).join("  ·  ");
+  $("bEnd").textContent = t().end;
+  document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.l === lang));
+  const running = SES && SES.status === "running";
+  $("clock").hidden = !running; $("bEnd").hidden = $("bFull").hidden = !running;
+  $("views").innerHTML = running && EX.tasks.length > 1 ? [`<button data-v="" class="${!VIEW ? "on" : ""}">${t().viewAll}</button>`]
+    .concat(EX.tasks.map(x => `<button data-v="${x}" class="${VIEW === x ? "on" : ""}">${x}</button>`)).join("") : "";
+}
+let VIEW = "";
+document.querySelectorAll(".lang button").forEach(b => b.onclick = () => {
+  lang = b.dataset.l; try { localStorage.setItem("hlLang", lang); } catch (e) {}
+  paintBar();
+  if (SES && SES.status === "running" && stations.length) { stations.forEach(st => { try { st.win.document.getElementById("btn-" + lang)?.click(); } catch (e) {} }); paintKit(); }
+  else render();
+});
+$("views").onclick = e => { const b = e.target.closest("button"); if (!b) return; VIEW = b.dataset.v || ""; layoutView(); paintBar(); };
+$("bEnd").onclick = () => confirmBox(t().endQ, t().endBody, t().endYes, () => finishExam());
+$("bFull").onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.().catch(() => {}); };
+addEventListener("beforeunload", e => { if (SES && SES.status === "running") { e.preventDefault(); e.returnValue = t().leave; } });
+
+function confirmBox(h, body, yes, go) {
+  const m = document.createElement("div"); m.className = "modal";
+  m.innerHTML = `<div class="card"><h1 style="font-size:18px">${esc(h)}</h1><p class="lead">${esc(body)}</p>
+    <div class="row" style="justify-content:flex-end"><button data-x="0">${esc(t().cancel)}</button><button class="red" data-x="1">${esc(yes)}</button></div></div>`;
+  m.onclick = e => { const b = e.target.closest("button"); if (e.target === m || (b && b.dataset.x === "0")) m.remove(); else if (b) { m.remove(); go(); } };
+  $("layer").append(m);
+}
+
+/* ══ which screen: decided by the server's session — running → bench, scanning → QR, anything else → result ══ */
+let tick = null, poller = null, shown = "";
+function stopTimers() { clearInterval(tick); clearInterval(poller); clearInterval(mirror); tick = poller = mirror = null; }
+function render() {
+  paintBar();
+  if (!OK_EXAM) { stopTimers(); shown = "bad"; $("main").innerHTML = `<div class="page"><div class="card"><h1>${t().exam}</h1><p class="lead">${t().bad}</p><a href="../#/comps">${lang === "ko" ? "대회 목록으로" : "Competitions"}</a></div></div>`; return; }
+  const want = !SES ? "intro" : SES.status === "running" ? "run" : SES.status === "scanning" ? "scan" : "done";
+  if (want === shown && want !== "intro" && want !== "done") return;            // the bench and the scan screen are not rebuilt by a refresh
+  stopTimers(); shown = want;
+  if (want === "run") return runView();
+  if (want === "scan") return scanView();
+  if (want === "done") return doneView();
+  return introView();
+}
+/* ask the server where things stand (on load, every half minute while running, and when the tab comes back) */
+async function sync() {
+  /* does the server have exam mode yet (its database migrated)? */
+  if (LABOK !== true) { try { const h = await api("GET", "/health"); LABOK = !!h.lab; REG = h.lab_reg || null; } catch (e) { LABOK = null; } }
+  if (LABOK === false) { SES = null; return render(); }
+  if (!tok()) { ME = null; SES = null; return render(); }
+  let a;
+  try { a = await api("GET", "/lab/active"); }
+  catch (e) { if (e.status === 401) { ME = null; SES = null; } return render(); }
+  ME = ME || {}; ME.tokens = a.tokens; ME.other = null;
+  if (!ME.nickname) { try { ME.nickname = ((await api("GET", "/me")).user || {}).nickname; } catch (e) {} }
+  if (a.active && a.active.exam_key === KEY && a.active.tasks.join(",") === EX.tasks.join(",")) setSession(a.active);
+  else {
+    if (a.active) ME.other = a.active;
+    /* this exam closed meanwhile (time ran out elsewhere, or it was submitted on another computer): show its result */
+    if (SES && (SES.status === "running" || SES.status === "scanning")) { try { setSession((await api("GET", `/lab/sessions/${SES.id}`)).session); } catch (e) {} }
+    else if (SES && !["graded", "pending", "error", "grading"].includes(SES.status)) SES = null;
+  }
+  render();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && OK_EXAM) sync(); });
+addEventListener("storage", e => { if (e.key === "hlCmTok") sync(); });
+
+async function introView() {
+  const back = `../#/${esc(EX.c)}/exam`;
+  let gate;
+  if (LABOK === false) gate = `<div class="note w">${t().noServer}</div>`;
+  else if (LABOK === null && tok()) gate = `<div class="note w">${t().err.network}</div>`;
+  else if (!tok() || !ME) gate = `<div class="note w">${t().loginReq}</div>
+      <div class="row"><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><span style="font-size:12.5px;color:var(--muted)">${t().loginWait}</span></div>`;
+  else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
+      <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
+  else if (!(ME.tokens > 0)) gate = `<div class="note w">${t().noTokens}</div>`;
+  else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}</div>
+      <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
+  const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? `<a href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${t().sheet} ↗</a>` : ""}</div>`).join("");
+  $("main").innerHTML = `<div class="page"><div class="card doc">
+    <span class="badge">${t().docBadge}</span>
+    <h1>${esc(label())} · ${EX.tasks.length > 1 ? EX.tasks.join(" + ") : EX.tasks[0]}</h1><p class="lead">${t().docH} — ${t().introLead}</p>
+    <table class="info"><tbody>
+      <tr><th>${t().infoName}</th><td>${esc(label())} ${lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().infoTasks}</th><td>${tasks}</td></tr>
+      <tr><th>${t().infoTime}</th><td>${t().infoTimeV}</td></tr>
+      <tr><th>${t().infoBring}</th><td>${t().infoBringV}</td></tr>
+      <tr><th>${t().infoFee}</th><td>${ME && ME.tokens != null ? t().infoFeeV(ME.tokens) : t().infoFeeV("–")}</td></tr>
+      <tr><th>${t().infoWho}</th><td>${ME && ME.nickname ? esc(ME.nickname) : "—"}</td></tr>
+    </tbody></table>
+    <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
+    <ol>${t().rules.map(r => `<li>${r}</li>`).join("")}</ol>
+    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
+    ${gate}
+    <div class="row"><a href="${back}">${t().back}</a></div>
+  </div></div>`;
+  const go = $("go");
+  if (go) {
+    const boxes = [...document.querySelectorAll("[data-ag]")];
+    const upd = () => { const all = boxes.every(b => b.checked); go.disabled = !all; $("agHint").hidden = all; };
+    boxes.forEach(b => b.onchange = upd);
+    go.onclick = () => { if (!go.disabled) confirmBox(t().startQ, t().startBody(ME.tokens), t().startQ, startExam); };
+  }
+}
+async function startExam() {
+  if (BUSY) return; BUSY = true;
+  const go = $("go"); if (go) go.disabled = true;
+  try {
+    /* each experiment's official solution: the marking scheme is drawn from it */
+    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: (EX.sols[i] || "").replace(PDF_BASE, "").replace(/^pdf\//, "") }]).filter(([, v]) => v.sol));
+    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
+    if (r.token) upTok(r.session.id, r.token);
+    ME.tokens = r.tokens; setSession(r.session);
+    if (r.resumed) toast(t().resume, 6000);
+  } catch (e) {
+    if (e.code === "other_active") { ME.other = e.other; ME.tokens = e.tokens; }
+    else toast(errMsg(e));
+  } finally { BUSY = false; }
+  shown = ""; render();
+}
+
+/* ── the bench ── */
+let stations = [], mirror = null;
+function runView() {
+  $("main").innerHTML = `<div class="hall"><aside class="kit" id="kit"></aside><div class="desk" id="desk"></div></div>`;
+  stations = EX.tasks.map((id, i) => {
+    const el = document.createElement("section"); el.className = "st"; el.dataset.task = id;
+    el.innerHTML = `<div class="lbl"><b>${esc(id)}</b><span>${esc(EX.titles[i] || "")}</span>
+      ${EX.pdfs[i] ? `<a class="pdf" href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${t().sheet} ↗</a>` : ""}</div>`;
+    const f = document.createElement("iframe");
+    f.src = simUrl(EX.files[i], "&exam=1"); f.title = id;
+    el.append(f); $("desk").append(el);
+    const st = { id, i, el, frame: f, win: null, tray: null };
+    f.addEventListener("load", () => hookStation(st));
+    return st;
+  });
+  paintKit(); layoutView(); paintBar();
+  tick = setInterval(clockTick, 250); clockTick();
+  mirror = setInterval(copyTrays, 100);
+  poller = setInterval(sync, 30000);
+}
+let warned = {};
+function clockTick() {
+  if (!SES || SES.status !== "running") return;
+  const left = SES.ended_at - srvNow(), c = $("clock");
+  c.firstChild.nodeValue = hms(left); c.lastChild.textContent = t().left; c.classList.toggle("warn", left <= 600);
+  const w = k => { const id = SES.id + k; if (warned[id]) return false; warned[id] = 1; return true; };
+  if (left <= 1800 && left > 1500 && w("30")) toast(t().warn30, 6000);
+  if (left <= 300 && left > 0 && w("5")) toast(t().warn5, 8000);
+  if (left <= 0) finishExam();
+}
+function layoutView() {
+  stations.forEach(st => { st.el.classList.toggle("big", !!VIEW && VIEW === st.id); st.el.classList.toggle("small", !!VIEW && VIEW !== st.id); });
+  const f = stations.find(st => st.id === VIEW); if (f) f.el.scrollIntoView({ behavior: "smooth", inline: "nearest", block: "nearest" });
+}
+
+/* inside each simulator (same origin): fold its parts box into the shared kit and let its bench take the room */
+function hookStation(st) {
+  let d;
+  try { st.win = st.frame.contentWindow; d = st.frame.contentDocument; } catch (e) { return; }
+  if (!d || !d.body || d.location.href === "about:blank") return;
+  const tray = d.getElementById("tray");
+  st.tray = tray && tray.tagName === "CANVAS" ? tray : null;
+  const css = d.createElement("style");
+  css.textContent = st.tray ? `
+    /* the parts box lives in the shared kit now; it stays laid out off screen so its clicks still land */
+    #hlExamTray{position:fixed!important;left:-10000px!important;top:0!important;width:206px!important;flex:none!important;visibility:visible!important}
+    .wrap{max-width:none!important}#haslalab-adfit-banner{display:none!important}` : `.wrap{max-width:none!important}#haslalab-adfit-banner{display:none!important}`;
+  d.head.append(css);
+  if (st.tray) st.tray.parentElement.id = "hlExamTray";
+  /* the page header only repeats the title and the language buttons the exam bar already has */
+  const hd = d.querySelector("body > header");
+  if (hd && hd.querySelector(".lang") && hd.children.length <= 2) hd.style.display = "none";
+  /* widen the bench: whatever caps the width of the page's outer blocks is lifted */
+  [d.body, ...d.body.children].forEach(el => {
+    try { const mw = st.win.getComputedStyle(el).maxWidth; if (mw && mw !== "none" && el.tagName !== "SCRIPT") el.style.maxWidth = "none"; } catch (e) {}
+  });
+  st.el.classList.toggle("wide", !st.tray);
+  try { st.win.dispatchEvent(new st.win.Event("resize")); } catch (e) {}
+  paintKit();
+}
+function paintKit() {
+  const k = $("kit"); if (!k) return;
+  const trays = stations.filter(st => st.tray);
+  k.innerHTML = `<h2>${t().kitH}</h2><p class="sub" style="white-space:pre-line">${trays.length > 1 ? t().kitSub : trays.length ? t().kitSub1 : ""}</p>` +
+    stations.map(st => `<div class="grp"><h3><i>${esc(st.id)}</i>${esc(EX.titles[st.i] || "")}</h3>${st.tray ? `<canvas data-k="${st.i}"></canvas>` : `<div class="placed">${t().placed}</div>`}</div>`).join("") +
+    `<div class="hand" id="hand">${t().handNone}</div>`;
+  k.querySelectorAll("canvas").forEach(c => wireMirror(c, stations[+c.dataset.k]));
+  copyTrays();
+}
+function copyTrays() {
+  stations.forEach(st => {
+    if (!st.tray) return;
+    const c = document.querySelector(`#kit canvas[data-k="${st.i}"]`); if (!c) return;
+    if (c.width !== st.tray.width || c.height !== st.tray.height) { c.width = st.tray.width; c.height = st.tray.height; }
+    if (!c.width || !c.height) return;
+    const g = c.getContext("2d"); g.clearRect(0, 0, c.width, c.height);
+    try { g.drawImage(st.tray, 0, 0); } catch (e) {}
+  });
+}
+/* a click on the shared kit is the same click on that simulator's own parts box */
+function forward(st, type, e, c) {
+  const r = c.getBoundingClientRect(), tr = st.tray.getBoundingClientRect();
+  const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+  const init = { bubbles: true, cancelable: true, view: st.win, button: e.button, buttons: e.buttons, detail: 1,
+    clientX: tr.left + fx * tr.width, clientY: tr.top + fy * tr.height, screenX: e.screenX, screenY: e.screenY };
+  const Ev = /^pointer/.test(type) ? st.win.PointerEvent : st.win.MouseEvent;
+  st.tray.dispatchEvent(new Ev(type, /^pointer/.test(type) ? { ...init, pointerId: 1, pointerType: "mouse", isPrimary: true } : init));
+}
+function wireMirror(c, st) {
+  c.addEventListener("mousedown", e => { if (!st.tray) return; e.preventDefault(); forward(st, "pointerdown", e, c); forward(st, "mousedown", e, c); });
+  c.addEventListener("mouseup", e => { if (!st.tray) return; forward(st, "pointerup", e, c); forward(st, "mouseup", e, c); afterPick(st); });
+  c.addEventListener("click", e => { if (st.tray) forward(st, "click", e, c); });
+  c.addEventListener("contextmenu", e => { e.preventDefault(); if (st.tray) forward(st, "contextmenu", e, c); setTimeout(() => afterPick(st), 30); });
+}
+function afterPick(st) {
+  setTimeout(() => {
+    let held = null;
+    try { held = st.win.eval("typeof hand!=='undefined' && hand ? (hand.k||hand.id||hand.key||hand.name||true) : null"); } catch (e) {}
+    const h = $("hand"); if (!h) return;
+    h.innerHTML = held ? `${t().handIn} <b>${esc(st.id)}</b> ${t().placeOn}` : t().handNone;
+    if (held) { st.el.scrollIntoView({ behavior: "smooth", inline: "nearest", block: "nearest" }); st.frame.focus(); }
+  }, 40);
+}
+
+/* ── the end of the five hours (or «Finish exam»): the server moves the session to scanning ── */
+let finishing = false;
+async function finishExam() {
+  if (finishing || !SES || SES.status !== "running") return;
+  finishing = true; clearInterval(tick);
+  /* switch the experiments off: the frames go blank and are removed, nothing keeps running */
+  stations.forEach(st => { try { st.frame.src = "about:blank"; } catch (e) {} st.frame.remove(); });
+  stations = []; clearInterval(mirror);
+  const dark = document.createElement("div"); dark.className = "dark";
+  dark.innerHTML = `<div><div style="font-size:22px;color:#bbb;margin-bottom:6px">${t().darkH}</div>${t().darkB}</div>`;
+  document.body.append(dark);
+  let tries = 0;
+  for (;;) {
+    try { setSession((await api("POST", `/lab/sessions/${SES.id}/finish`)).session); break; }
+    catch (e) { if (++tries > 20 || e.status === 404) break; await new Promise(r => setTimeout(r, 3000)); }   // offline: keep trying, the server ends it on time anyway
+  }
+  finishing = false;
+  setTimeout(() => { dark.remove(); shown = ""; render(); }, 1800);
+}
+
+/* ── thirty minutes to scan ── */
+let pagesSeen = "", imgCache = new Map();
+async function scanView() {
+  $("main").innerHTML = `<div class="page"><div class="scan">
+    <div class="qrbox"><h2>${t().scanH}</h2><div style="color:var(--muted);font-size:12.5px">${t().scanLeft}</div>
+      <div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>
+      <div id="qrArea"><div class="note">…</div></div></div>
+    <div class="pages" id="pages"></div></div></div>`;
+  pagesSeen = "";
+  let closedShown = false;
+  tick = setInterval(() => {
+    const left = SES.scan_until - srvNow(), c = $("sClock"); if (!c) return;
+    c.textContent = hms(left); c.classList.toggle("warn", left <= 300);
+    if (left <= 0 && !closedShown) { closedShown = true; toast(t().closed, 6000); }
+  }, 500);
+  let k = upTok(SES.id);
+  if (!k) { try { k = upTok(SES.id, (await api("POST", `/lab/sessions/${SES.id}/qr`)).token); } catch (e) {} }
+  paintQr(k);
+  poll(); poller = setInterval(poll, 4000);
+}
+function scanUrl(k) {
+  const u = new URL("scan.html", location.href), h = new URLSearchParams({ s: SES.id, k, l: lang });
+  if (apiBase() !== COMMUNITY_API) h.set("a", apiBase());
+  return u.origin + u.pathname + "#" + h.toString();
+}
+function paintQr(k) {
+  const area = $("qrArea"); if (!area) return;
+  if (!k) { area.innerHTML = `<div class="note w">${t().err.network}</div>`; return; }
+  const url = scanUrl(k);
+  let svg = "";
+  try { const q = qrcode(0, "M"); q.addData(url); q.make(); svg = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); } catch (e) {}
+  area.innerHTML = `<div class="qr" id="qr">${svg}</div><div class="url">${esc(url.replace(/#.*/, "#…"))}</div>
+    <a href="${esc(url)}" target="_blank" rel="noopener" style="font-size:12.5px">${t().openHere} ↗</a> ·
+    <a href="#" id="newQr" style="font-size:12.5px">${t().newQr}</a>
+    <ol>${t().steps.map(x => `<li>${x}</li>`).join("")}</ol>`;
+  $("newQr").onclick = async e => { e.preventDefault(); try { paintQr(upTok(SES.id, (await api("POST", `/lab/sessions/${SES.id}/qr`)).token)); } catch (er) { toast(errMsg(er)); } };
+}
+async function poll() {
+  if (!SES) return;
+  let r; try { r = await api("GET", `/lab/sessions/${SES.id}`); } catch (e) { return; }
+  setSession(r.session);
+  if (SES.status !== "scanning") return render();
+  paintPages(SES);
+}
+function paintPages(s) {
+  const box = $("pages"); if (!box) return;
+  const sig = JSON.stringify(s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible]));
+  if (sig === pagesSeen) return;
+  pagesSeen = sig;
+  const opt = (v, cur, txt) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`;
+  /* what was read, as a list: the candidate checks it but cannot change it */
+  const readList = p => {
+    const items = (p.read && p.read.items) || [];
+    if (!p.read) return `<div class="rd none">${esc(p.text || "") || t().nothing}</div>`;
+    if (!items.length) return `<div class="rd none">${t().nothing}</div>`;
+    return `<ul class="rd">${items.map(i => `<li class="${i.crossed_out ? "x" : ""}"><b>${esc(i.label)}</b> ${
+      i.kind === "value" && i.value != null ? esc(i.value + (i.uncertainty != null ? " ± " + i.uncertainty : "") + (i.unit ? " " + i.unit : ""))
+      : i.kind === "graph" && i.graph ? t().graph(i.graph.n_points || 0, i.graph.fit_line)
+      : i.kind === "table" ? t().table((i.columns || []).length, i.rows || 0) + (i.columns && i.columns.length ? " (" + esc(i.columns.join(", ")) + ")" : "")
+      : esc(i.text)}${i.crossed_out ? ` <i>${t().crossed}</i>` : ""}</li>`).join("")}</ul>`;
+  };
+  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : "";
+  box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div><button class="pri" id="sub">${t().submit}</button></div>
+    <div class="note">${t().noEdit}</div>` +
+    (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
+      <div class="th" data-img="${p.id}"></div>
+      <div><div class="meta">#${p.no}
+        <select data-f="task">${s.tasks.map(x => opt(x, p.task, x)).join("")}</select>
+        <select data-f="kind">${opt("answer", p.kind, t().answer)}${opt("working", p.kind, t().working)}</select>
+        ${legBadge(p)}<button class="rm" data-rm="${p.id}">${t().remove}</button></div>
+        <div style="font-size:12px;color:var(--muted);margin:2px 0 4px">${t().readH}</div>${readList(p)}</div></div>`).join("") : `<div class="empty">${t().none}</div>`);
+  box.querySelectorAll("[data-img]").forEach(el => thumb(el, +el.dataset.img));
+  box.querySelectorAll("select").forEach(sel => sel.onchange = () => {
+    const id = sel.closest(".pg").dataset.id;
+    api("PATCH", `/lab/sessions/${SES.id}/pages/${id}`, { [sel.dataset.f]: sel.value }).then(() => { pagesSeen = ""; }).catch(e => toast(errMsg(e)));
+  });
+  box.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => confirmBox(t().remove, t().removeQ, t().remove, async () => {
+    try { await api("DELETE", `/lab/sessions/${SES.id}/pages/${b.dataset.rm}`); pagesSeen = ""; poll(); } catch (e) { toast(errMsg(e)); } }));
+  $("sub").onclick = () => confirmBox(t().submit, t().submitQ, t().submit, submitNow);
+}
+async function thumb(el, id) {
+  let url = imgCache.get(id);
+  if (!url) {
+    try {
+      const r = await fetch(apiBase() + `/api/lab/pages/${id}/img`, { headers: { Authorization: "Bearer " + tok() } });
+      if (!r.ok) return;
+      url = URL.createObjectURL(await r.blob()); imgCache.set(id, url);
+    } catch (e) { return; }
+  }
+  el.innerHTML = `<img alt="" src="${url}">`;
+  el.onclick = () => { const z = document.createElement("div"); z.className = "zoom"; z.innerHTML = `<img alt="" src="${url}">`; z.onclick = () => z.remove(); document.body.append(z); };
+}
+async function submitNow() {
+  if (BUSY) return; BUSY = true;
+  const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
+  clearInterval(poller);
+  try { setSession((await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang })).session); render(); }
+  catch (e) { toast(errMsg(e)); if (sub) { sub.disabled = false; sub.textContent = t().submit; } poller = setInterval(poll, 4000); }
+  finally { BUSY = false; }
+}
+
+/* ── the result ── */
+function doneView() {
+  const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
+  const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
+    const sc = x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
+    const why = x.status === "pending" ? (t().pendingWhy[x.why] || "") : x.status === "error" ? t().errorNote : "";
+    return `<tr><td><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</td><td>${t().statusOf[x.status] || "—"}${why ? `<div style="font-size:12px;color:var(--muted)">${why}</div>` : ""}</td><td>${sc}</td>
+      <td class="noprint">${EX.sols[i] ? `<a href="${esc(pdfUrl(EX.sols[i]))}" target="_blank" rel="noopener">${t().solution} ↗</a>` : ""}</td></tr>`; }).join("");
+  const pagesOf = id => { const m = pg.filter(p => p.task === id); return m.length ? t().pagesFmt(m.filter(p => p.kind === "answer").length, m.filter(p => p.kind === "working").length) : t().noPages; };
+  $("main").innerHTML = `<div class="page"><div class="card doc">
+    <span class="badge">${t().docBadge}</span><h1>${t().receiptH}</h1><p class="lead">${esc(label())}</p>
+    <table class="info"><tbody>
+      <tr><th>${t().examNo}</th><td><b>${examNo(s.id)}</b></td></tr>
+      <tr><th>${t().applicant}</th><td>${esc((ME && ME.nickname) || s.nickname || "")}</td></tr>
+      <tr><th>${t().rcName}</th><td>${esc(label())} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().rcStart}</th><td>${when(s.started_at)}</td></tr>
+      <tr><th>${t().rcEnd}</th><td>${when(s.ended_at)}</td></tr>
+      <tr><th>${t().rcSubmit}</th><td>${s.submitted_at ? when(s.submitted_at) : "—"}</td></tr>
+      <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
+      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" ? ` · <b>${s.score} / ${s.points ?? "?"}</b>` : ""}</td></tr>
+    </tbody></table>
+    <div class="result"><table><tbody>${rows}</tbody></table></div>
+    <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
+      <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
+  $("prn").onclick = () => print();
+  $("again").onclick = () => { SES = null; shown = ""; sync(); };
+  if (s.status === "grading") { poller = setInterval(async () => { try { setSession((await api("GET", `/lab/sessions/${s.id}`)).session); if (SES.status !== "grading") { shown = ""; render(); } } catch (e) {} }, 5000); }
+}
+
+try { const l = localStorage.getItem("hlLang"); if (!Q.get("lang") && (l === "ko" || l === "en")) lang = l; } catch (e) {}
+if (!OK_EXAM) render(); else { paintBar(); $("main").innerHTML = `<div class="page"><div class="card"><p class="lead">…</p></div></div>`; }
+if (OK_EXAM) (async () => {
+  /* resuming: the server says this exam is open, so the screen goes straight to it */
+  await sync();
+  if (SES && (SES.status === "running" || SES.status === "scanning")) toast(t().resume, 6000);
+})();
+</script>
+</body>
+</html>

@@ -4,7 +4,8 @@
      #/weekly[/<week>]                this week's problems, or an earlier week's
      #/weekly/p/<id>                  one problem: type the answer or photograph it (OCR), get it graded
      #/rank[/<week|all>]              rankings
-     #/weekly/admin                   admins: add problems, grade what waits
+     #/weekly/admin                   admins: add problems, grade what waits; exam tokens and marking schemes
+     #/lab  #/lab/<id>                exam mode (sim/exam.html): my tokens and exams, one exam's marks and pages
    Uses cmApi, cmTok, cm, esc, lang and CMT from index.html. */
 "use strict";
 const AT = {
@@ -134,6 +135,7 @@ async function arMount() {
     else if (a === "rank") await arRank(root, alive, b);
     else if (a === "weekly" && b === "p" && c) await arProblem(root, alive, +c);
     else if (a === "weekly" && b === "admin") await arAdmin(root, alive);
+    else if (a === "lab") await (b ? arLabOne(root, alive, +b) : arLabList(root, alive));
     else await arWeekly(root, alive, b);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
 }
@@ -329,16 +331,21 @@ async function arMe(root, alive) {
       const f = Math.max(0, Math.min(1, (j.rating - lo) / (hi - lo)));
       return `<div class="arprog"><div class="arprogh">${arTier(j.lv)}<span>${lang === "en" ? `<b>${hi - j.rating}</b> to ${tierName(j.lv + 1)}` : `${tierName(j.lv + 1)}까지 <b>${hi - j.rating}</b>`}</span></div><div class="arbar"><i style="width:${(f * 100).toFixed(1)}%;background:${TIER_COL[tierKey(j.lv + 1)]}"></i></div></div>`; })()}
     ${(() => { let n = false; try { n = sessionStorage.getItem("hlArNew") === "1"; sessionStorage.removeItem("hlArNew"); } catch (e) {} return n ? `<div class="cmnote" style="margin-bottom:14px">${T.oauthNew}</div>` : ""; })()}
-    <div class="arpanel armeset"><h3>${T.nickH}</h3><form id="arNick" class="arq"><input name="n" value="${esc(cm.me.nickname)}" maxlength="16"><button class="cmbtn sm pri">${T.change}</button><span class="arinfo"></span></form>
+    <div class="arpanel armeset"><h3>${T.nickH}</h3><form id="arNick" class="arq"><input name="n" value="${esc(cm.me.nickname)}" maxlength="16"><button class="cmbtn sm pri">${T.change}</button><span class="arinfo"></span><span class="cmnick" style="flex-basis:100%"></span></form>
       <h3 style="margin-top:14px">${CMT[lang].avatarH}</h3><div id="arAv"><div class="arq"><label class="cmbtn sm">${CMT[lang].avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
         <button class="cmbtn sm" type="button" data-del ${cm.me.avatar ? "" : "hidden"}>${CMT[lang].avatarDel}</button><span class="arinfo cmerr"></span></div></div>
       <h3 style="margin-top:14px">${T.linkH}</h3><div id="arIds" class="arids"></div></div>
+    <div class="arpanel" id="arLabMe"></div>
     <div class="arpanel"><h3>${T.recent}</h3>${j.subs.length ? `<table class="cmtbl artbl"><tbody>${j.subs.map((s) => `<tr><td style="width:96px">${esc(s.week)}</td>
       <td class="t"><a href="#/weekly/p/${s.problem_id}">${s.no}. ${esc(lang === "en" ? s.title_en : s.title_ko)}</a></td>
       <td style="width:110px"><b>${s.status === "graded" ? s.score + " / " + s.points : T[s.status] || s.status}</b></td><td style="width:130px">${cmShort(s.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${T.empty}</p>`}</div>`;
   cmAvatarForm(root.querySelector("#arAv"), () => { const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; });
   const nf = root.querySelector("#arNick");
-  nf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.querySelector(".arinfo").textContent = T.done; arChip(); } catch (er) { nf.querySelector(".arinfo").textContent = arErr(er); } };
+  const nickFree = cmNickCheck(nf.n, nf.querySelector(".cmnick"), cm.me.nickname);
+  nf.onsubmit = async (e) => { e.preventDefault(); const info = nf.querySelector(".arinfo"); info.textContent = "";
+    if (await nickFree() === false) { info.textContent = cmErr({code: "nickname_taken"}); return; }
+    try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.n.value = r.nickname; info.textContent = T.done; arChip();
+      const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; } catch (er) { info.textContent = arErr(er); } };
   try {
     const idj = await cmApi("GET", "/me/identities"), have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
     box.innerHTML = `<div class="oauth">${[...new Set(arProvs().concat(have))].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
@@ -347,7 +354,140 @@ async function arMe(root, alive) {
     for (const a of box.querySelectorAll("a[data-p]")) a.onclick = async (e) => { e.preventDefault(); try { const t = await cmApi("POST", "/oauth/ticket"); sessionStorage.setItem("hlCmBack", "#/me"); arOauthStart(a.dataset.p, t.ticket); } catch (er) { cmToast(arErr(er)); } };
     const pf = box.querySelector("#arPw"); if (pf) pf.onsubmit = async (e) => { e.preventDefault(); try { await cmApi("POST", "/me/password", {password: pf.pw.value}); pf.querySelector(".arinfo").textContent = T.done; } catch (er) { pf.querySelector(".arinfo").textContent = arErr(er); } };
   } catch (e) {}
+  if ((ar.health || {}).lab) cmApi("GET", "/lab/active").then((x) => { const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
+    el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }, () => {});
+  else { const el = root.querySelector("#arLabMe"); if (el) el.remove(); }
   root.querySelector("#arLogout").onclick = async () => { try { await cmApi("POST", "/logout"); } catch (e) {} cmTok(null); cm.me = null; location.hash = "#/weekly"; arChip(); };
+}
+
+/* ── exam mode: tokens, exams, marks ── */
+const LBT = {
+  ko: {h: "실전 모드", sub: "대회처럼 5시간 실험 + 30분 답안 스캔. 시작할 때마다 실전 토큰 1개를 씁니다. 진행 중인 시험으로 돌아갈 때는 쓰지 않습니다.",
+       tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
+       start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
+       st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음"},
+       why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
+       err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
+       del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "토큰은 관리자가 나누어 줍니다. 더 필요하면 커뮤니티에 문의하세요.",
+       admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
+       queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점",
+       reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
+       retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
+       item: "채점 항목", evid: "근거", rulesH: "적용 규정", by: {code: "범위·검증", model: "AI 판단"}, sheetA: "답안지", sheetW: "연습지", page: "쪽",
+       regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
+  en: {h: "Exam mode", sub: "Five hours of experiments as on the day, then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
+       tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
+       start: "start", grant: "received", revoke: "taken back", refund: "refunded", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
+       st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent"},
+       why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
+       err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
+       del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Tokens are handed out by the admins. Ask in the community if you need more.",
+       admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
+       queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks",
+       reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
+       retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
+       item: "Item", evid: "Evidence", rulesH: "Rules", by: {code: "interval / check", model: "AI judgement"}, sheetA: "answer sheet", sheetW: "working sheet", page: "p.",
+       regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn."}};
+const lbt = () => LBT[lang === "en" ? "en" : "ko"];
+/* the catalogue's solution sheet for an exam's experiment, when the site has one */
+function arLabSol(s, task) {
+  const c = DATA[s.comp], y = c && c.years.find((x) => x.y === s.year), p = y && y.problems.find((x) => x.id === task || (typeof examTask === "function" && examTask(x) === task)), v = p && p.files && p.files.sol;
+  return typeof v === "string" ? v : v ? (v[lang] || v.ko || v.en) : "";
+}
+async function arLabList(root, alive) {
+  const L = lbt();
+  if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab"); } catch (e) {} location.hash = "#/login"; return; }
+  const [a, tk, ls] = await Promise.all([cmApi("GET", "/lab/active"), cmApi("GET", "/lab/tokens"), cmApi("GET", "/lab/sessions")]); if (!alive()) return;
+  const act = a.active;
+  root.innerHTML = `
+    <div class="cmtop"><div><h1>⏱ ${L.h}</h1><p>${L.sub}</p></div></div>
+    <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b>${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
+    ${act ? `<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>
+      ${act.entry ? `<a class="cmbtn pri" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div>` : ""}
+    <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length ? `<table class="cmtbl artbl"><tbody>${ls.sessions.map((x) => `<tr>
+      <td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(" + "))}</a></td>
+      <td style="width:150px">${L.st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${x.status === "graded" ? x.score + (x.points ? " / " + x.points : "") : "–"}</b></td>
+      <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+    <div class="arpanel"><h3>${L.ledger}</h3><p class="arempty" style="margin-top:0">${L.howGet}</p>${tk.ledger.length ? `<table class="cmtbl artbl"><tbody>${tk.ledger.map((x) => `<tr>
+      <td style="width:80px"><b style="color:${x.delta < 0 ? "#c0392b" : "#1e8449"}">${x.delta > 0 ? "+" : ""}${x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note ? " · " + esc(x.note) : ""}</td>
+      <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
+}
+/* one experiment graded from the images: per item the mark, how it was decided, where its evidence is and the rules that cost marks */
+function arLabItems(x, reg) {
+  const L = lbt(), T = arT(), rule = (id) => { const r = reg && reg.rules.find((y) => y.id === id); return `<span class="arrule" title="${esc(r ? (lang === "en" ? r.en : r.ko) : id)}">${esc(id)}</span>`; };
+  return `<div class="arres ${x.score >= x.points ? "ok" : ""}"><b>${T.score}</b><span>${x.score} / ${x.points}${T.pts}</span>${x.grader ? `<small>${T.grader}: ${esc(x.grader)}${x.regulation ? " · " + esc(x.regulation) : ""}</small>` : ""}</div>
+    <table class="cmtbl artbl"><thead><tr><th style="width:40%">${L.item}</th><th style="width:96px">${T.score}</th><th>${L.evid}</th><th style="width:90px">${L.rulesH}</th></tr></thead><tbody>
+    ${x.items.map((i) => `<tr><td class="t"><b>${esc(i.id)}</b> ${esc(i.what || "")}${i.note ? `<div class="arnote">${esc(i.note)}</div>` : ""}</td>
+      <td><b>${i.got}</b>/${i.points}<div class="ardec ${i.decision}">${T[i.decision] || ""}</div><div class="arby">${L.by[i.by] || ""}</div></td>
+      <td class="t">${i.page ? `${L.page === "p." ? "p." + i.page : i.page + L.page} · ${i.sheet === "answer" ? L.sheetA : L.sheetW}` : "—"}${i.value != null ? ` · <q>${esc(i.value)}</q>` : ""}</td>
+      <td>${(i.rules || []).map(rule).join(" ")}</td></tr>`).join("")}</tbody></table>
+    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}`;
+}
+async function arLabOne(root, alive, id) {
+  const L = lbt(), T = arT();
+  if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
+  const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
+  const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
+  root.innerHTML = `
+    <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
+      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${open && s.entry ? `<a class="cmbtn sm pri" href="sim/exam.html${esc(s.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div></div>
+    <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl"><tbody>
+      <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
+      <tr><th>${L.exam}</th><td>${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</td><th>${L.date}</th><td>${cmFull(s.started_at).slice(0, 16)}</td></tr></tbody></table>
+      ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${L.total}</small><b>${s.score} / ${s.points ?? "?"}</b></div>
+        ${s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
+        <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
+        ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}</div>
+    ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
+      const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation)
+        : x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
+        : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
+        : x.status === "empty" ? `<div class="cmnote">${L.empty}</div>` : `<div class="cmnote">${L.st[s.status] || ""}</div>`;
+      return `<div class="arpanel"><h3>${esc(t)} ${x.status ? "· " + (L.st[x.status] || "") : ""} ${sol ? `<a style="float:right;font-weight:500;font-size:13px" href="${esc(sol)}" target="_blank" rel="noopener">${L.sol} ↗</a>` : ""}</h3>${body}</div>`; }).join("")}
+    ${s.regulation ? `<div class="arpanel"><details><summary style="cursor:pointer;font-weight:700">${L.regH} <span style="font-weight:400;color:var(--graphite)">${esc(s.regulation.version)}</span></summary>
+      <p class="arempty" style="margin:8px 0">${L.regNote}</p><ol class="arreg">${s.regulation.rules.map((r) => `<li><b>${esc(r.id)}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details></div>` : ""}
+    <div class="arpanel"><h3>${L.pages} · ${s.pages.length}</h3>${s.pages.map((p) => `<details class="arsub"><summary><b>${esc(p.task)}</b> ${p.kind === "answer" ? L.answer : L.working} #${p.no}${p.edited ? " ✎" : ""}</summary>
+      <div style="display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:12px;margin-top:8px"><div data-img="${p.id}" style="background:#f3f4f6;border-radius:8px;min-height:120px"></div><pre class="aranswer">${esc(p.text)}</pre></div></details>`).join("") || `<p class="arempty">${T.empty}</p>`}
+      ${open ? "" : `<p style="margin:12px 0 0"><button class="cmbtn sm" id="arLabDel">${L.del}</button></p>`}</div>`;
+  arMath(root);
+  root.querySelectorAll("details.arsub").forEach((d) => d.addEventListener("toggle", async () => {
+    const box = d.querySelector("[data-img]"); if (!d.open || !box || box.firstChild) return;
+    try { const r = await fetch(cmBase() + `/api/lab/pages/${box.dataset.img}/img`, {headers: {Authorization: "Bearer " + cmTok()}}); if (r.ok) box.innerHTML = `<img alt="" style="width:100%;border-radius:8px" src="${URL.createObjectURL(await r.blob())}">`; } catch (e) {}
+  }));
+  const del = root.querySelector("#arLabDel");
+  if (del) del.onclick = async () => { if (!confirm(L.delQ)) return; try { await cmApi("DELETE", `/lab/sessions/${id}`); location.hash = "#/lab"; } catch (e) { cmToast(arErr(e)); } };
+}
+async function arLabAdmin(box) {
+  const L = lbt();
+  let q; try { q = await cmApi("GET", "/admin/lab/queue"); } catch (e) { box.remove(); return; }
+  box.innerHTML = `<h3>⏱ ${L.admin}</h3>
+    <h4 class="arh4">${L.grantH}</h4>
+    <form class="arq" id="lbTok"><input name="u" placeholder="${L.user}"><input name="d" type="number" placeholder="${L.delta}" style="width:120px"><input name="n" placeholder="note">
+      <button class="cmbtn sm pri">${T0(L.grantH)}</button><button class="cmbtn sm" type="button" data-look>${L.look}</button><span class="arinfo"></span></form>
+    <h4 class="arh4">${L.rubH}</h4>
+    <form id="lbRub" class="arpf"><label>exam_key<input name="exam_key" placeholder="ipho2024"></label><label>task<input name="task" placeholder="E1"></label><label>${L.points}<input name="points" type="number" step="0.1" placeholder="10"></label>
+      <label>rubric<textarea name="rubric" rows="5" placeholder='[{"id":"A.1","name":"R0","max":0.5,"requirement":"R0 = 108 ± 2 Ω","partial":"…"}]'></textarea></label>
+      <label>reference<textarea name="reference" rows="4" placeholder="official answers, tolerances"></textarea></label>
+      <button class="cmbtn sm" type="button" data-load>${L.load}</button> <button class="cmbtn pri" type="submit">${arT().save}</button><span class="arinfo"></span></form>
+    <h4 class="arh4">${L.queue} (${q.sessions.length})</h4>${q.sessions.map((x) => `<details class="arsub"><summary><b>#${x.id}</b> ${esc(x.exam_key.toUpperCase())} · ${esc(x.nickname)} · ${esc(x.status)} · ${x.n_pages}p</summary>
+      <p><a href="#/lab/${x.id}">#/lab/${x.id}</a></p>${x.tasks.map((t) => { const d = (x.detail && x.detail.tasks || {})[t] || {};
+        return `<form class="arq" data-lab="${x.id}" data-task="${esc(t)}"><b>${esc(t)}</b> <span>${esc(d.status || "")}${d.why ? " (" + esc(d.why) + ")" : ""}</span>
+          <input name="score" type="number" step="0.1" min="0" placeholder="score" style="width:90px"><input name="points" type="number" step="0.1" value="${d.points || 10}" style="width:80px" title="${L.points}"><input name="note" placeholder="note">
+          <button class="cmbtn sm pri" type="submit">${L.give}</button><button class="cmbtn sm" type="button" data-re>${L.regrade}</button></form>`; }).join("")}</details>`).join("") || `<p class="arempty">${arT().empty}</p>`}`;
+  function T0(x) { return lang === "en" ? "Apply" : "적용"; }
+  const tf = box.querySelector("#lbTok"), info = tf.querySelector(".arinfo");
+  tf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("POST", "/admin/lab/tokens", {user: tf.u.value.trim(), delta: +tf.d.value, note: tf.n.value}); info.textContent = "→ " + r.tokens; } catch (er) { info.textContent = arErr(er); } };
+  tf.querySelector("[data-look]").onclick = async () => { try { const r = await cmApi("GET", "/admin/lab/tokens?user=" + encodeURIComponent(tf.u.value.trim())); info.textContent = `${r.user.nickname} (@${r.user.username}): ${r.user.exam_tokens} · ` + r.ledger.slice(0, 5).map((l) => (l.delta > 0 ? "+" : "") + l.delta + " " + l.reason).join(", "); } catch (er) { info.textContent = arErr(er); } };
+  const rf = box.querySelector("#lbRub"), ri = rf.querySelector(".arinfo");
+  rf.querySelector("[data-load]").onclick = async () => { try { const r = await cmApi("GET", "/admin/lab/rubrics?key=" + encodeURIComponent(rf.exam_key.value.trim()));
+    const x = r.rubrics.find((y) => y.task === rf.task.value.trim()) || r.rubrics[0]; if (!x) { ri.textContent = "—"; return; }
+    rf.task.value = x.task; rf.points.value = x.points; rf.rubric.value = JSON.stringify(JSON.parse(x.rubric), null, 1); rf.reference.value = x.reference || ""; ri.textContent = r.rubrics.map((y) => y.task).join(", "); } catch (er) { ri.textContent = arErr(er); } };
+  rf.onsubmit = async (e) => { e.preventDefault(); try { await cmApi("POST", "/admin/lab/rubrics", {exam_key: rf.exam_key.value.trim(), task: rf.task.value.trim(), points: +rf.points.value, rubric: rf.rubric.value, reference: rf.reference.value}); ri.textContent = arT().saved; } catch (er) { ri.textContent = arErr(er); } };
+  for (const f of box.querySelectorAll("[data-lab]")) {
+    const send = async (b) => { try { await cmApi("POST", `/admin/lab/${f.dataset.lab}`, {task: f.dataset.task, ...b}); arLabAdmin(box); } catch (er) { cmToast(arErr(er)); } };
+    f.onsubmit = (e) => { e.preventDefault(); send({score: +f.score.value, points: +f.points.value, note: f.note.value}); };
+    f.querySelector("[data-re]").onclick = () => send({regrade: true});
+  }
 }
 
 /* ── admin ── */
@@ -366,7 +506,9 @@ async function arAdmin(root, alive) {
       <select id="arPick" class="cmsel"><option value="">— new —</option>${pj.problems.map((x) => `<option value="${x.id}">${esc(x.week)} #${x.no} ${esc(x.title_ko)}</option>`).join("")}</select>
       <form id="arPF" class="arpf">${F.map((k) => big.includes(k) ? `<label>${k}<textarea name="${k}" rows="4"></textarea></label>` : `<label>${k}<input name="${k}"></label>`).join("")}
         <p class="arempty">answer (short): {"value":1.79,"rel":0.005} or {"value":5.19,"abs":0.02} · rubric (essay): [{"id":"A","name":"…","max":25,"requirement":"…","partial":"…"}] · level: 1–30 (Bronze V = 1 … Bronze I = 5, Silver V = 6 … Ruby I = 30) · opens_at/closes_at: unix seconds</p>
-        <button class="cmbtn pri" type="submit">${T.save}</button><span class="arinfo"></span></form></div>`;
+        <button class="cmbtn pri" type="submit">${T.save}</button><span class="arinfo"></span></form></div>
+    <div class="arpanel" id="arLabAdm"></div>`;
+  if ((ar.health || {}).lab) arLabAdmin(root.querySelector("#arLabAdm")); else root.querySelector("#arLabAdm").remove();
   const pf = root.querySelector("#arPF");
   root.querySelector("#arPick").onchange = (e) => { const x = pj.problems.find((y) => y.id == e.target.value) || {}; for (const k of F) pf[k].value = x[k] == null ? "" : x[k]; };
   pf.onsubmit = async (e) => { e.preventDefault(); const d = {}; for (const k of F) d[k] = pf[k].value;

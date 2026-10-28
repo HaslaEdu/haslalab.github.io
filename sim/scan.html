@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c2027">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>답안 스캔 · Answer scan · HaslaLab</title>
+<!-- The phone side of exam mode.  Opened from the QR code on the exam screen: the address after # carries the
+     session id and its upload token (s=, k=), so nothing secret reaches a server log and no sign-in is needed.
+     Each photo is straightened to an A4 page in the browser (labscan/scanner.js, the 하슬라논술 scan engine:
+     page corners → perspective → shadow removal), shown for a check, then sent to the community Worker, which
+     reads it with OCR.  The text is checked on the computer. -->
+<style>
+  :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e;--deep:#12161b}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  .wrap{max-width:560px;margin:0 auto;padding:14px 16px max(28px,env(safe-area-inset-bottom))}
+  header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  header b{color:var(--accent);font-size:16px}
+  header .sp{flex:1}
+  .clock{font:700 20px/1 ui-monospace,Consolas,monospace;background:#0b0e12;border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+  .clock.warn{color:#ffb4a9;border-color:#b3372f}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+  .card h2{margin:0 0 8px;font-size:14px;color:var(--muted);font-weight:600}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{flex:1;min-width:0}
+  button{font:inherit;cursor:pointer;border-radius:9px;border:1px solid var(--line);background:#2b2f36;color:var(--ink);padding:11px 12px}
+  button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:700}
+  button.pri{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:700}
+  button:disabled{opacity:.45}
+  .shoot{display:flex;gap:8px;margin-top:12px}
+  .shoot label{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 10px;border-radius:11px;font-weight:700;cursor:pointer}
+  .shoot .cam{background:var(--accent);color:#1c2027;font-size:17px}
+  .shoot .gal{flex:.6;background:#2b2f36;border:1px solid var(--line);font-size:13.5px}
+  .shoot input{display:none}
+  .note{background:var(--deep);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+  .note.w{border-color:#6b3b37;color:#ffcfc9}
+  .prev{margin-top:12px}
+  .prev img{width:100%;border-radius:8px;background:#fff;display:block}
+  .bar{height:6px;background:#0b0e12;border-radius:4px;overflow:hidden;margin-top:8px}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+  .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .row button{flex:1}
+  .sent{list-style:none;margin:0;padding:0}
+  .sent li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .sent li:last-child{border-bottom:0}
+  .sent b{font:700 12px/1 ui-monospace,monospace;background:#0b0e12;color:var(--accent);border-radius:5px;padding:4px 6px}
+  .sent .s{margin-left:auto;color:var(--muted);font-size:12.5px}
+  .sent .s.partial{color:#f2c14e}.sent .s.poor{color:#ffb4a9;font-weight:700}.sent .s.good{color:#8fd19e}
+  .sent .x{padding:5px 9px;font-size:12px}
+  /* corner editor */
+  .ce{position:fixed;inset:0;background:#000;z-index:30;display:flex;flex-direction:column}
+  .ce .top{padding:10px 14px;color:#ddd;font-size:13.5px}
+  .ce canvas{flex:1;width:100%;min-height:0;touch-action:none}
+  .ce .row{padding:10px 14px max(14px,env(safe-area-inset-bottom));margin:0}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0b0e12;border:1px solid var(--accent);padding:10px 16px;border-radius:9px;z-index:60;font-size:14px;max-width:92vw}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><b id="hTitle">HaslaLab</b><div class="sp"></div><div class="clock" id="clock">--:--</div></header>
+  <div id="app"><div class="note">…</div></div>
+</div>
+
+<script type="module">
+import { processShot, reprocess, canProcess } from "./labscan/scanner.js";
+
+const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
+const MAX_BYTES = 1850000;
+/* the token is taken out of the address bar (and of anything that copies it) once read, and kept for this
+   tab only, so a reload still works */
+let H = new URLSearchParams(location.hash.slice(1));
+try {
+  if (H.get("k")) { sessionStorage.setItem("hlScan", H.toString()); history.replaceState(null, "", location.pathname); }
+  else H = new URLSearchParams(sessionStorage.getItem("hlScan") || "");
+} catch (e) {}
+const SID = +H.get("s") || 0, KEY = H.get("k") || "";
+const API = (H.get("a") || COMMUNITY_API).replace(/\/+$/, "");
+let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.language || "").startsWith("ko") ? "ko" : "en";
+
+const T = {
+  ko: {
+    title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
+    shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 어두운 바탕에 놓고, 네 모서리가 다 보이게 위에서 찍으세요. 한 번에 한 쪽씩 찍습니다.",
+    working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
+    weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
+    blurry: "사진이 흐립니다. 다시 찍으면 글자를 더 잘 읽습니다.",
+    send: "보내기", retake: "다시 찍기", sending: "보내고 읽는 중… (10초쯤)", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽힌 내용을 확인하세요.`,
+    moved: (k, w) => `답안지 머리글을 보고 ${k} · ${w}(으)로 분류했습니다.`, legH: { good: "잘 읽혔습니다.", partial: "일부만 읽혔습니다. 다시 찍는 것이 좋습니다.", poor: "거의 읽히지 않았습니다. 이대로면 0점입니다 — 빼고 다시 찍으세요." },
+    sentH: "보낸 쪽", none: "아직 보낸 쪽이 없습니다.", del: "빼기",
+    ocr: { done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
+    left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
+    badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
+    ceTop: "네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "이대로 펴기", ceCancel: "취소",
+    noCanvas: "이 브라우저에서는 사진을 다듬을 수 없어 원본 그대로 보냅니다.",
+    err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "사진이 너무 큽니다.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "사진 파일이 아닙니다.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
+  },
+  en: {
+    title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
+    shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a darker surface and shoot from above with all four corners in view. One page per photo.",
+    working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
+    weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
+    blurry: "The photo is blurry. A sharper one reads better.",
+    send: "Send", retake: "Retake", sending: "Sending and reading… (about 10 s)", sentOk: n => `Page ${n} sent. Check what was read on the computer.`,
+    moved: (k, w) => `Filed under ${k} · ${w} from the sheet's printed header.`, legH: { good: "Read well.", partial: "Only partly read. Better photograph it again.", poor: "Mostly unreadable — it scores 0 as it is. Remove it and photograph it again." },
+    sentH: "Pages sent", none: "No pages sent yet.", del: "Remove",
+    ocr: { done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
+    left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
+    badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
+    ceTop: "Put the four points on the four corners of the paper.", ceOk: "Straighten", ceCancel: "Cancel",
+    noCanvas: "This browser cannot straighten photos, so they are sent as taken.",
+    err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "The photo is too large.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "That is not a photo.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
+  },
+};
+const t = () => T[lang];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ms = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+function toast(m, d) { const x = document.createElement("div"); x.className = "toast"; x.textContent = m; document.body.append(x); setTimeout(() => x.remove(), d || 3500); }
+async function api(method, path, body, type) {
+  let r;
+  try { r = await fetch(API + "/api" + path, { method, headers: { "X-Lab-Token": KEY, ...(type ? { "Content-Type": type } : {}) }, body }); }
+  catch (e) { throw { code: "network" }; }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw { code: j.error || "server_error", status: r.status };
+  return j;
+}
+
+let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
+const srvNow = () => Date.now() / 1000 + SKEW;
+
+async function refresh() {
+  try { INFO = await api("GET", `/lab/up/${SID}`); SKEW = INFO.now - Date.now() / 1000; }
+  catch (e) { INFO = null; $("app").innerHTML = `<div class="note w">${esc(e.code === "bad_token" || e.status === 403 ? t().badLink : t().err[e.code] || e.code)}</div>`; return; }
+  if (!task || !INFO.tasks.includes(task)) task = INFO.tasks[0];
+  paint();
+}
+function paint() {
+  document.documentElement.lang = lang;
+  $("hTitle").textContent = `${INFO.comp.toUpperCase()} ${INFO.year} · ${t().title}`;
+  if (INFO.status === "running") { $("app").innerHTML = `<div class="note">${t().notYet}</div>`; return; }
+  if (!INFO.open) { $("app").innerHTML = `<div class="note w">${t().closed}</div>${sentList()}`; return; }
+  $("app").innerHTML = `
+    <div class="card"><h2>${t().task}</h2><div class="chips" id="tasks">${INFO.tasks.map(x => `<button data-t="${x}" class="${x === task ? "on" : ""}">${x}</button>`).join("")}</div>
+      <h2 style="margin-top:12px">${t().kind}</h2><div class="chips" id="kinds">${["answer", "working"].map(x => `<button data-k="${x}" class="${x === kind ? "on" : ""}">${t()[x]}</button>`).join("")}</div>
+      <div class="shoot"><label class="cam">${t().shoot}<input id="cam" type="file" accept="image/*" capture="environment"></label>
+        <label class="gal">${t().gallery}<input id="gal" type="file" accept="image/*"></label></div>
+      <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">${t().help}</p>
+      ${canProcess() ? "" : `<div class="note w">${t().noCanvas}</div>`}</div>
+    <div id="shot"></div>
+    ${sentList()}`;
+  $("tasks").onclick = e => { const b = e.target.closest("button"); if (b) { task = b.dataset.t; paint(); } };
+  $("kinds").onclick = e => { const b = e.target.closest("button"); if (b) { kind = b.dataset.k; paint(); } };
+  $("cam").onchange = e => take(e.target.files[0]);
+  $("gal").onchange = e => take(e.target.files[0]);
+  wireSent();
+  if (shot) paintShot();
+}
+function sentList() {
+  const ps = INFO.pages || [];
+  return `<div class="card"><h2>${t().sentH} · ${ps.length}</h2>${ps.length ? `<ul class="sent">${ps.map(p =>
+    `<li><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s ${p.legible || ""}">${p.legible ? t().legS[p.legible] : t().ocr[p.ocr_status] || ""}</span>
+      ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
+}
+function wireSent() {
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try { await api("DELETE", `/lab/up/${SID}/pages/${b.dataset.del}`); await refresh(); } catch (e) { toast(t().err[e.code] || e.code); b.disabled = false; }
+  });
+}
+
+/* ── one photo: straighten, check, send ── */
+async function take(file) {
+  if (!file) return;
+  shot = { file, busy: true, pct: 0, task, kind };
+  mode = "clean"; paintShot();
+  if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: URL.createObjectURL(file), autoScore: 1, quality: null }; return paintShot(); }
+  try {
+    const r = await processShot(file, { mode, onProgress: p => { shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
+    shot = { ...shot, ...r, busy: false };
+  } catch (e) { shot = { ...shot, busy: false, blob: file, previewUrl: URL.createObjectURL(file), autoScore: 1, quality: null }; }
+  paintShot();
+}
+function paintShot() {
+  const box = $("shot"); if (!box) return;
+  if (!shot) { box.innerHTML = ""; return; }
+  if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
+  const q = shot.quality || {}, warn = [];
+  if (shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
+  if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
+  box.innerHTML = `<div class="card prev"><h2>${esc(shot.task)} · ${shot.kind === "answer" ? t().answer : t().working}</h2>
+    <img alt="" src="${shot.previewUrl}">
+    ${warn.map(w => `<div class="note w">${w}</div>`).join("")}
+    ${shot.baseUrl ? `<div class="chips" style="margin-top:10px">${Object.entries(t().modes).map(([k, v]) => `<button data-m="${k}" class="${k === mode ? "on" : ""}">${v}</button>`).join("")}</div>` : ""}
+    <div class="row">${shot.baseUrl ? `<button id="fix">${t().corners}</button>` : ""}<button id="again">${t().retake}</button></div>
+    <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
+  box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
+  if ($("fix")) $("fix").onclick = () => cornerEditor();
+  $("again").onclick = () => { shot = null; paintShot(); $("cam").click(); };
+  $("send").onclick = send;
+}
+async function redo(corners, m) {
+  mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
+  try { const r = await reprocess(keep.baseUrl, corners, mode); shot = { ...keep, ...r, corners, busy: false }; }
+  catch (e) { shot = { ...keep, busy: false }; }
+  paintShot();
+}
+/* a JPEG under the server's limit, whatever the scanner produced (B&W comes out as PNG) */
+async function asJpeg(blob) {
+  if (blob.type === "image/jpeg" && blob.size <= MAX_BYTES) return blob;
+  const bmp = await createImageBitmap(blob);
+  let w = bmp.width, h = bmp.height, q = 0.88;
+  for (let i = 0; i < 6; i++) {
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, w, h); g.drawImage(bmp, 0, 0, w, h);
+    const out = await new Promise(r => c.toBlob(r, "image/jpeg", q));
+    if (out && out.size <= MAX_BYTES) return out;
+    w = Math.round(w * 0.85); h = Math.round(h * 0.85); q = Math.max(0.7, q - 0.04);
+  }
+  throw { code: "image_too_big" };
+}
+async function send() {
+  const b = $("send"); b.disabled = true; b.textContent = t().sending;
+  try {
+    const body = await asJpeg(shot.blob);
+    const r = await api("PUT", `/lab/up/${SID}/pages?task=${encodeURIComponent(shot.task)}&kind=${shot.kind}`, body, "image/jpeg");
+    const msg = [t().sentOk(r.no)];
+    if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
+    if (r.legible) msg.push(t().legH[r.legible]);
+    toast(msg.join(" "), r.legible === "poor" ? 9000 : 5500);
+    shot = null; await refresh();
+  } catch (e) {
+    toast(t().err[e.code] || e.code, 5000); b.disabled = false; b.textContent = t().send;
+    if (e.code === "closed") refresh();
+  }
+}
+
+/* ── put the four corners by hand; the spot under the finger is shown magnified in the far corner ── */
+async function cornerEditor() {
+  const img = new Image(); img.src = shot.baseUrl; await img.decode().catch(() => {});
+  const ov = document.createElement("div"); ov.className = "ce";
+  ov.innerHTML = `<div class="top">${t().ceTop}</div><canvas></canvas><div class="row"><button id="ceNo">${t().ceCancel}</button><button class="pri" id="ceOk">${t().ceOk}</button></div>`;
+  document.body.append(ov);
+  const cv = ov.querySelector("canvas"), g = cv.getContext("2d");
+  let pts = (shot.corners || [{ x: 0, y: 0 }, { x: img.width, y: 0 }, { x: 0, y: img.height }, { x: img.width, y: img.height }]).map(p => ({ ...p }));
+  let sc = 1, ox = 0, oy = 0, drag = -1, dpr = devicePixelRatio || 1;
+  function fit() {
+    const r = cv.getBoundingClientRect(); cv.width = r.width * dpr; cv.height = r.height * dpr;
+    sc = Math.min(cv.width / img.width, cv.height / img.height) * 0.94; ox = (cv.width - img.width * sc) / 2; oy = (cv.height - img.height * sc) / 2; draw();
+  }
+  const scr = p => ({ x: ox + p.x * sc, y: oy + p.y * sc });
+  function draw() {
+    g.clearRect(0, 0, cv.width, cv.height); g.drawImage(img, ox, oy, img.width * sc, img.height * sc);
+    const q = [0, 1, 3, 2].map(i => scr(pts[i]));
+    g.strokeStyle = "#f2c14e"; g.lineWidth = 2 * dpr; g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.stroke();
+    pts.forEach((p, i) => { const s = scr(p); g.fillStyle = i === drag ? "#fff" : "rgba(242,193,78,.85)"; g.beginPath(); g.arc(s.x, s.y, 13 * dpr, 0, 7); g.fill(); });
+    if (drag >= 0) {                                               // magnifier
+      const p = pts[drag], R = 60 * dpr, z = 3, mx = pts[drag].x < img.width / 2 ? cv.width - R - 10 : R + 10, my = R + 10;
+      g.save(); g.beginPath(); g.arc(mx, my, R, 0, 7); g.clip();
+      g.drawImage(img, p.x - R / (sc * z), p.y - R / (sc * z), 2 * R / (sc * z), 2 * R / (sc * z), mx - R, my - R, 2 * R, 2 * R);
+      g.strokeStyle = "#f2c14e"; g.lineWidth = 1.5 * dpr; g.beginPath(); g.moveTo(mx - 10 * dpr, my); g.lineTo(mx + 10 * dpr, my); g.moveTo(mx, my - 10 * dpr); g.lineTo(mx, my + 10 * dpr); g.stroke();
+      g.restore(); g.strokeStyle = "#fff"; g.beginPath(); g.arc(mx, my, R, 0, 7); g.stroke();
+    }
+  }
+  const at = e => { const r = cv.getBoundingClientRect(); return { x: ((e.clientX - r.left) * dpr - ox) / sc, y: ((e.clientY - r.top) * dpr - oy) / sc }; };
+  cv.onpointerdown = e => { const p = at(e); let best = -1, bd = 1e9; pts.forEach((q, i) => { const d = Math.hypot(q.x - p.x, q.y - p.y); if (d < bd) { bd = d; best = i; } });
+    if (bd * sc < 60 * dpr) { drag = best; cv.setPointerCapture(e.pointerId); draw(); } };
+  cv.onpointermove = e => { if (drag < 0) return; const p = at(e); pts[drag] = { x: Math.max(0, Math.min(img.width, p.x)), y: Math.max(0, Math.min(img.height, p.y)) }; draw(); };
+  cv.onpointerup = () => { drag = -1; draw(); };
+  addEventListener("resize", fit, { once: true }); fit();
+  ov.querySelector("#ceNo").onclick = () => ov.remove();
+  ov.querySelector("#ceOk").onclick = () => { ov.remove(); shot.autoScore = 1; redo(pts, mode); };
+}
+
+/* the deadline, on the server's clock */
+setInterval(() => {
+  if (!INFO) return;
+  const c = $("clock");
+  if (INFO.status === "running") { c.textContent = "--:--"; return; }
+  const left = INFO.scan_until - srvNow(); c.textContent = ms(left); c.classList.toggle("warn", left <= 300);
+  if (left <= -2 && INFO.open) { INFO.open = false; paint(); }
+}, 500);
+setInterval(() => { if (!shot) refresh(); }, 20000);
+if (!SID || !KEY) $("app").innerHTML = `<div class="note w">${t().badLink}</div>`; else refresh();
+</script>
+</body>
+</html>

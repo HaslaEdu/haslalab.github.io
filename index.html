@@ -348,6 +348,41 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .prob .acts{display:flex;flex-direction:column;gap:8px;margin-top:3px}
 .prob .acts .main{display:flex;gap:8px}
 .prob .acts .main .btn{flex:1;justify-content:center;text-align:center}
+/* practice | exam, on the competition page */
+.modesw{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 22px}
+.modesw a{display:block;border:1.5px solid var(--grid-bold);border-radius:12px;padding:13px 16px;background:#fff;transition:.12s}
+.modesw a b{display:block;font-size:15.5px;color:var(--ink)}
+.modesw a span{display:block;font-size:12.5px;color:var(--graphite);margin-top:3px}
+.modesw a:hover{border-color:var(--rail)}
+.modesw a.on{border-color:#16212e;background:#16212e}
+.modesw a.on b{color:#fff}.modesw a.on span{color:#c4ccd6}
+.modesw a.ex.on{border-color:#7a2e1f;background:#7a2e1f}
+@media(max-width:560px){.modesw a{padding:10px 12px}.modesw a span{display:none}}
+.yrexam{margin:-6px 0 16px;font-size:13.5px}.yrexam a{color:#7a2e1f;font-weight:600}
+/* the exam portal: a notice, the exam table, the candidate card */
+.xm .xmnote{border:1px solid #e3c9bf;background:#fbf3ef;border-radius:12px;padding:14px 18px;margin-bottom:18px}
+.xm .xmnote b{color:#7a2e1f}
+.xm .xmnote ol{display:flex;gap:8px 22px;flex-wrap:wrap;margin:8px 0 0;padding:0;list-style:none;counter-reset:s;font-size:13px;color:#4b5563}
+.xm .xmnote li{counter-increment:s}.xm .xmnote li::before{content:counter(s);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#7a2e1f;color:#fff;font:700 11px var(--mono);margin-right:6px}
+.xm .xmgrid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}
+@media(max-width:960px){.xm .xmgrid{grid-template-columns:1fr}.xm .xmme{order:-1}}
+.xm .xmbox{background:#fff;border:1px solid var(--grid-bold);border-radius:12px;overflow:hidden}
+.xm .xmbox h2{font-size:14.5px;margin:0;padding:12px 16px;background:#16212e;color:#fff}
+.xm table{width:100%;border-collapse:collapse;font-size:13.5px}
+.xm th{white-space:nowrap;font-size:11.5px;letter-spacing:.04em;color:var(--graphite);text-align:left;font-weight:700;background:#f6f8fb;padding:9px 12px;border-bottom:1px solid var(--grid-bold)}
+.xm td{padding:11px 12px;border-bottom:1px solid #edf0f4;vertical-align:middle}
+.xm td.y{font:700 15px var(--mono)}
+.xm td .t{font-weight:600;color:var(--ink)}.xm td .s{font-size:12px;color:var(--graphite);margin-top:2px}
+.xm .st{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;background:#eef2ff;color:#3b5bdb;white-space:nowrap}
+.xm .st.graded{background:#ebfbee;color:#2b8a3e}.xm .st.running,.xm .st.scanning{background:#fff4e6;color:#d9480f}
+.xm .go{display:inline-block;padding:7px 13px;border-radius:7px;background:#7a2e1f;color:#fff;font-weight:700;font-size:12.5px;white-space:nowrap}
+.xm .go.sec{background:#fff;color:#16212e;border:1px solid var(--grid-bold)}
+.xm .acts3{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.xm td.hs{white-space:nowrap}
+@media(max-width:720px){.xm th.hs,.xm td.hs{display:none}}
+.xm .xmme .in{padding:14px 16px;font-size:13.5px}
+.xm .xmme .tk{font:700 28px var(--mono);color:#7a2e1f}
+.xm .xmme a.lnk{color:#3b5bdb;font-weight:600}
 .prob .acts .docs{display:grid;gap:8px}
 .prob .acts .docs.n1{grid-template-columns:1fr} .prob .acts .docs.n2{grid-template-columns:1fr 1fr} .prob .acts .docs.n3{grid-template-columns:1fr 1fr 1fr}
 .prob .acts .btn{padding:8px 13px;font-size:12.5px}
@@ -457,6 +492,28 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
   .cmrail .servers button{white-space:nowrap;padding:6px}
   .cmrail a.ch{white-space:nowrap;flex:none}
 }
+/* the Physics Olympiads Discord server */
+.cmrail a.ch.dc .hash svg{width:14px;height:14px;fill:#8ea1ff;vertical-align:-2px}
+.cmrail a.ch.dc .on{margin-left:auto;font-size:11px;font-family:var(--mono);color:#57d38c}
+.dcban{display:flex;gap:16px;align-items:center;padding:22px 22px 18px;background:linear-gradient(135deg,#5865f2,#3b45b8);color:#fff}
+.dcban img{width:72px;height:72px;border-radius:20px;background:#fff2;flex:none}
+.dcban h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.dcban p{margin:4px 0 0;font-size:13.5px;opacity:.9}
+.dcban .ct{display:flex;gap:14px;margin-top:8px;font-size:12.5px}
+.dcban .ct i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:#57d38c}
+.dcban .ct i.m{background:#c8ccd3}
+.dcbody{padding:18px 22px 22px;font-size:14px;color:#374151;line-height:1.7}
+.dcbody .acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.dcbody .acts a,.dcbody .acts button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid var(--cm-line);background:#fff;color:#1f2937;cursor:pointer;font-family:inherit}
+.dcbody .acts .join{background:#5865f2;border-color:#5865f2;color:#fff}
+.dcbody .acts .join:hover{background:#4752c4}
+.dcbody iframe{width:100%;height:620px;border:0;border-radius:10px;margin-top:6px;background:#313338}
+.dcbody ul{margin:6px 0 0 18px;padding:0}
+.dcside .in{display:flex;gap:10px;align-items:center}
+.dcside img{width:40px;height:40px;border-radius:12px;flex:none;background:#5865f2}
+.dcside .nm{font-weight:700;color:#111827;font-size:13.5px}
+.dcside .ct{font-size:12px;color:#6b7280}
+.dcside a.j{margin-left:auto;background:#5865f2;color:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .cmav{width:30px;height:30px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;
   color:#fff;font-weight:700;font-size:13px;line-height:1}
 .cmav.s{width:22px;height:22px;font-size:10.5px}
@@ -596,6 +653,20 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmcf .row{display:flex;align-items:center;gap:8px}
 .cmcf .row .sp{flex:1}
 .cmerr{color:#e03131;font-size:12.5px;min-height:1.2em}
+/* the live nickname check under the field */
+.cmnick{display:block;font-size:12px;font-weight:600;min-height:1.2em;text-transform:none;letter-spacing:0;color:var(--graphite)}
+.cmnick.ok{color:#2b8a3e}.cmnick.no{color:#e03131}
+/* cropping the profile picture */
+.cmcrop{position:fixed;inset:0;z-index:120;background:rgba(15,20,28,.72);display:grid;place-items:center;padding:16px}
+.cmcrop .box{background:#fff;border-radius:14px;padding:18px;width:min(420px,100%);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.cmcrop h3{margin:0 0 4px;font-size:16px}
+.cmcrop p{margin:0 0 12px;font-size:12.5px;color:var(--graphite);line-height:1.5}
+.cmcrop canvas{display:block;width:100%;aspect-ratio:1;border-radius:10px;background:#111;touch-action:none;cursor:grab}
+.cmcrop canvas:active{cursor:grabbing}
+.cmcrop .ctl{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;color:#4b5563}
+.cmcrop .ctl input[type=range]{flex:1}
+.cmcrop .meta{font:12px var(--mono);color:var(--graphite);margin-top:8px}
+.cmcrop .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 
 /* forms */
 .cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
@@ -664,6 +735,11 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arside{display:flex;flex-direction:column;gap:10px}
 .ar .arpanel{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
 .ar .arpanel h3{font-size:14.5px;margin:0 0 10px}
+.ar .arrep th{width:96px;font-size:12px;color:var(--graphite);text-align:left;font-weight:700;background:#f6f8fb}
+.ar .arrep td,.ar .arrep th{padding:8px 10px}
+.ar .arrule{display:inline-block;font:700 11px var(--mono);padding:2px 6px;border-radius:5px;background:#fff0f0;color:#c92a2a;cursor:help}
+.ar .arby{font-size:11px;color:var(--graphite);margin-top:2px}
+.ar .arreg{margin:0;padding:0 0 0 2px;list-style:none;font-size:13px;line-height:1.6}.ar .arreg li{margin:4px 0}.ar .arreg b{font-family:var(--mono);color:#c92a2a;margin-right:6px}
 .ar .artop{margin:0 0 10px;padding-left:22px;font-size:13.5px}.ar .artop li{display:flex;align-items:center;gap:8px;padding:3px 0}.ar .artop li span:first-child{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ar .artier{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;color:var(--c);vertical-align:middle;white-space:nowrap}
 .ar .artico{flex:none;vertical-align:middle;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}.ar .arlvl{display:inline-flex;align-items:center}
@@ -911,6 +987,13 @@ ko:{
   live:"브라우저 실행", dlOnly:"다운로드", srcOnly:"파이썬 소스", wip:"준비 중", theoryTag:"이론 · 시뮬레이터 필요",
   soonTitle:"준비 중", soonDesc:"문제지 정리와 물리 모델 보정을 진행하고 있습니다.",
   actRun:"브라우저에서 실행", actExe:"Windows 내려받기", actPdf:"문제지",
+  modePrac:"연습 모드", modePracSub:"실험마다 자유롭게 · 시간 제한 없음 · 풀이 열람", modeExam:"실전 모드", modeExamSub:"대회처럼 5시간 · 답안 스캔 제출 · 채점과 성적표",
+  xmNotice:"실전 모드는 대회 실험 시험을 그대로 치르는 모의고사입니다.", xmSteps:["응시하기 (실전 토큰 1개)","5시간 실험 — 한 책상 · 한 부품함","30분 안에 답안지 · Working sheet 스캔 제출","채점 · 성적표 (순위 · 백분위 · 첨삭)"],
+  xmListH:"시험 목록", xmYear:"연도", xmName:"시험", xmTime:"시간", xmSat:"응시 현황", xmMine:"내 상태", xmTimeV:"5:00 + 0:30",
+  xmSatV:(n,a)=>`${n}명 응시${a!=null?` · 평균 ${a}%`:""}`, xmNone:"아직 없음", xmGo:"응시하기", xmResume:"이어하기", xmReport:"성적표", xmRetry:"다시 응시",
+  xmMeH:"응시자 정보", xmLoginNote:"실전 모드는 로그인한 사람만 응시할 수 있습니다.", xmTokens:"보유 실전 토큰", xmActive:"진행 중인 시험", xmAll:"내 응시 기록 전체 보기",
+  xmSt:{running:"실험 중",scanning:"답안 스캔 중",grading:"채점 중",graded:"채점 완료",pending:"채점 대기",error:"채점 오류"}, xmNoExam:"이 대회에는 실전으로 칠 수 있는 시험이 아직 없습니다.",
+  xmOff:"채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.", xmToExam:"이 해를 실전 모드로 응시하기 →", xmExamLabel:"실험 시험",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   actSol:"해설 · 채점기준", actSrc:"파이썬 소스",
   exeNote:"Windows 빌드는 서명하지 않아서 «PC를 보호했습니다» 경고가 뜰 수 있습니다. "+
@@ -967,6 +1050,13 @@ en:{
   live:"Runs in browser", dlOnly:"Download", srcOnly:"Python source", wip:"In preparation", theoryTag:"theory · needs a simulator",
   soonTitle:"In preparation", soonDesc:"Paper transcription and model calibration under way.",
   actRun:"Run in browser", actExe:"Download for Windows", actPdf:"Problem sheet",
+  modePrac:"Practice", modePracSub:"Each experiment on its own · no time limit · solutions open", modeExam:"Exam", modeExamSub:"Five hours as on the day · scan and submit · marks and a score report",
+  xmNotice:"Exam mode is a mock exam: the competition's experimental exam, sat as on the day.", xmSteps:["Sit the exam (1 exam token)","Five hours of experiments — one bench, one kit","Scan and submit the answer and working sheets within 30 minutes","Marks and a score report (rank, percentile, comments)"],
+  xmListH:"Exams", xmYear:"Year", xmName:"Exam", xmTime:"Time", xmSat:"Candidates", xmMine:"My status", xmTimeV:"5:00 + 0:30",
+  xmSatV:(n,a)=>`${n} sat${a!=null?` · average ${a}%`:""}`, xmNone:"none yet", xmGo:"Sit", xmResume:"Resume", xmReport:"Score report", xmRetry:"Sit again",
+  xmMeH:"Candidate", xmLoginNote:"Exam mode is for signed-in users only.", xmTokens:"Exam tokens", xmActive:"In progress", xmAll:"All my exams",
+  xmSt:{running:"experiments running",scanning:"scanning answers",grading:"grading",graded:"graded",pending:"waiting for a grader",error:"grading error"}, xmNoExam:"This competition has no exam to sit yet.",
+  xmOff:"The grading server does not support exam mode yet. Please come back shortly.", xmToExam:"Sit this year in exam mode →", xmExamLabel:"experimental exam",
   actSol:"Solution & marking scheme", actSrc:"Python source",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   exeNote:"The Windows build is unsigned, so Windows may warn that it “protected your PC” — "+
@@ -3925,9 +4015,18 @@ function viewAbout(){
   ${adFitBanner("about")}`;
 }
 
-function viewComp(key){
+/* the practice | exam switch: practice is the year grid below, exam the exam portal (#/<comp>/exam) */
+function modeSwitch(key,mode){
+  const d=UI[lang];
+  return `<div class="modesw" role="navigation" aria-label="${d.modePrac} / ${d.modeExam}">
+    <a href="#/${key}" class="${mode!=="exam"?"on":""}" aria-current="${mode!=="exam"}"><b>📘 ${d.modePrac}</b><span>${d.modePracSub}</span></a>
+    <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${d.modeExamSub}</span></a></div>`;
+}
+const hasExam=c=>c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim));
+function viewComp(key,mode){
   const d=UI[lang], c=DATA[key];
   if(!c) return viewHome();
+  if(mode==="exam"&&!hasExam(c)) mode="";
   const ready = c.years.reduce((n,y)=>n+y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length,0);
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
   return `
@@ -3948,6 +4047,8 @@ function viewComp(key){
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
+    ${hasExam(c)?modeSwitch(key,mode):""}
+    ${mode==="exam"?`<div class="xm" id="xmRoot" data-key="${key}">${xmPortalHtml(key,null)}</div></div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
     <div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>
     <div class="years">
@@ -3967,9 +4068,73 @@ function viewComp(key){
       }).join("")}
     </div>
   </div>
-  ${adFitBanner("primary")}`;
+  ${adFitBanner("primary")}`}`;
+}
+/* the exam portal, as a university mock-exam site has it: the exams of every year in one table with how
+   many sat and the average, the candidate's own status on each, and a card with their tokens.  `x` holds
+   what came from the server (null while it loads): {stats, mine, tokens, active, me, off} */
+function xmPortalHtml(key,x){
+  const d=UI[lang], c=DATA[key], rows=[];
+  for(const y of c.years) for(const g of examGroups(key,y)){
+    const tasks=g.map(examTask), k=key+y.y+":"+tasks.join("+");
+    const st=x&&x.stats&&x.stats[k], my=x&&x.mine&&x.mine.find(s=>s.exam_key===key+y.y&&s.tasks.join("+")===tasks.join("+"));
+    const open=my&&(my.status==="running"||my.status==="scanning");
+    const href=examHref(key,y,g);
+    rows.push(`<tr><td class="y">${y.y}</td>
+      <td><div class="t">${c.abbr} ${y.y} ${d.xmExamLabel} · ${tasks.join(" + ")}</div><div class="s">${g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · ")}</div></td>
+      <td class="hs">${d.xmTimeV}</td>
+      <td class="hs">${x?(st&&st.sat?d.xmSatV(st.sat,st.avg):`<span style="color:var(--graphite)">${d.xmNone}</span>`):"…"}</td>
+      <td>${my?`<span class="st ${my.status}">${d.xmSt[my.status]||my.status}${my.status==="graded"&&my.points?` · ${my.score}/${my.points}`:""}</span>`:""}</td>
+      <td><div class="acts3">${open?`<a class="go" href="${href}">${d.xmResume}</a>`
+        :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
+        :`<a class="go" href="${href}">${d.xmGo}</a>`}</div></td></tr>`);
+  }
+  const me=x&&x.me, act=x&&x.active;
+  const card=!x?`<div class="in">…</div>`
+    :!me?`<div class="in"><p style="margin:0 0 10px">${d.xmLoginNote}</p><a class="go" href="#/login" onclick="try{sessionStorage.setItem('hlCmBack',location.hash)}catch(e){}">${CMT[lang].login}</a></div>`
+    :`<div class="in"><div style="font-weight:700">${esc(me.nickname)}</div><div style="color:var(--graphite);font-size:12px">@${esc(me.username)}</div>
+       <div style="margin-top:12px;font-size:12px;color:var(--graphite)">${d.xmTokens}</div><div class="tk">${x.tokens??"–"}</div>
+       ${act?`<div style="margin-top:10px;font-size:12px;color:var(--graphite)">${d.xmActive}</div><div><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${d.xmSt[act.status]||""}</div>
+         ${act.entry?`<a class="go" style="margin-top:8px" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${d.xmResume}</a>`:""}`:""}
+       <p style="margin:12px 0 0"><a class="lnk" href="#/lab">${d.xmAll}</a></p></div>`;
+  return `${x&&x.off?`<div class="cmnote" style="margin-bottom:14px">${d.xmOff}</div>`:""}
+    <div class="xmnote"><b>${d.xmNotice}</b><ol>${d.xmSteps.map(t=>`<li>${t}</li>`).join("")}</ol></div>
+    <div class="xmgrid"><div class="xmbox"><h2>${d.xmListH}</h2>${rows.length?`<table><thead><tr><th>${d.xmYear}</th><th>${d.xmName}</th><th class="hs">${d.xmTime}</th><th class="hs">${d.xmSat}</th><th>${d.xmMine}</th><th></th></tr></thead>
+      <tbody>${rows.join("")}</tbody></table>`:`<p style="padding:16px">${d.xmNoExam}</p>`}</div>
+    <aside class="xmbox xmme"><h2>${d.xmMeH}</h2>${card}</aside></div>`;
+}
+async function xmMount(key){
+  const root=document.getElementById("xmRoot"); if(!root||root.dataset.key!==key) return;
+  const x={stats:{},mine:[],tokens:null,active:null,me:null,off:false};
+  const h=await cmHealth().catch(()=>({}));
+  if(!h.lab){ x.off=true; }
+  else{
+    await cmLoadMe(); x.me=cm.me;
+    const jobs=[cmApi("GET","/lab/stats?comp="+key).then(r=>{x.stats=r.exams;},()=>{})];
+    if(cm.me) jobs.push(cmApi("GET","/lab/sessions").then(r=>{x.mine=r.sessions;},()=>{}), cmApi("GET","/lab/active").then(r=>{x.tokens=r.tokens;x.active=r.active;},()=>{}));
+    await Promise.all(jobs);
+  }
+  const now=document.getElementById("xmRoot"); if(now===root) root.innerHTML=xmPortalHtml(key,x);
 }
 
+/* exam mode (sim/exam.html): the experiments that are sat together — every E1, E2, … of a year with a
+   browser simulator on one bench; any other round (an observation, a data analysis) on its own */
+/* the exam's name for a round: its id, or a short code for ids like «O9–O13» or «23» */
+const examTask=p=>/^[A-Z][A-Za-z0-9]{0,3}$/.test(p.id)?p.id:/^[A-Z]/.test(p.id)?p.id[0]+((p.id.match(/^[A-Z](\d{1,2})/)||[])[1]||""):"P"+String(p.id).replace(/\D/g,"").slice(0,3);
+function examGroups(key,yr){
+  const live=yr.problems.filter(p=>!p.hold&&p.files&&p.files.sim&&/^sim\/[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(p.files.sim));
+  const exp=live.filter(p=>/^E\d*$/.test(p.id)), out=exp.length?[exp]:[];
+  live.filter(p=>!exp.includes(p)).forEach(p=>out.push([p]));
+  return out;
+}
+function examHref(key,yr,group){
+  const pick=v=>typeof v==="string"?v:(v&&(v[lang]||v.ko||v.en))||"";
+  const short=u=>u.startsWith(PDF_BASE)?u.slice(PDF_BASE.length):u;
+  const q=new URLSearchParams({c:key,y:yr.y,n:DATA[key].abbr,e:group.map(examTask).join(","),
+    f:group.map(p=>p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
+    p:group.map(p=>short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
+  return "sim/exam.html?"+q.toString();
+}
 function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
   const yr = c && c.years.find(y=>String(y.y)===String(year));
@@ -4001,6 +4166,7 @@ function viewYear(key,year){
     ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
       `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
        <i>${yr.problems.filter(p=>g==="all"||grpOf(c,p).includes(g)).length}</i></button>`).join("")}</div>`:""}
+    ${examGroups(key,yr).length?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.xmToExam}</a></p>`:""}
     <div class="probs"${c.groups?` data-show="${grpShow}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
@@ -4045,7 +4211,8 @@ function viewYear(key,year){
           <p>${body}</p>
           <div class="tags">${(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags).map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${note}
-          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}<div class="docs n${docs.length}">${docs.join("\n")}</div></div>
+          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}
+            <div class="docs n${docs.length}">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
     </div>
   </div>
@@ -7119,6 +7286,47 @@ function startHero(){
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";   // Cloudflare Worker in /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
+/* The community's live chat is the real «Physics Olympiads» Discord server (olympiad students from everywhere).
+   The first server was hacked on 2 March 2026; this invite is to the new one and does not expire.  Its widget is
+   off, so the site shows the server card with live member/online counts (Discord's public invite API) and sends
+   people in with the invite.  If the server's admins ever add the WidgetBot bot, put a channel id in `embed`
+   and the chat itself is shown here. */
+const DISCORD = {name:"Physics Olympiads", invite:"SNBDY5nsgf", guild:"1477813246051356842", embed:""};
+const DC_SVG='<svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.7 3a19.7 19.7 0 0 0-4.9 1.5C.7 9.1-.2 13.6.3 18.1a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.1 0l.5.4c-.6.4-1.3.7-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.6-5.2-.8-9.7-3.7-13.7zM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>';
+const DCT={
+  ko:{sec:"실시간 채팅", h:"Physics Olympiads 디스코드", members:"명", online:"명 접속 중", join:"디스코드에서 참여하기", copy:"초대 링크 복사",
+      about:"게시판과 함께, 전 세계 물리 · 천문 올림피아드 준비생이 모인 <b>Physics Olympiads</b> 디스코드 서버에서 실시간으로 묻고 답할 수 있습니다.",
+      tips:["문제 풀이, 실험 측정, 오차 분석을 실시간으로 이야기합니다. 대화는 주로 영어입니다.","처음 들어가면 <b>#rules</b> 채널의 규칙을 읽어 주세요.","HaslaLab 시뮬레이터에 대한 제보는 이 커뮤니티의 «시뮬레이터 제보» 게시판에 남겨 주시면 바로 고칩니다.","HaslaLab 계정에 Discord 로그인을 연결해 두면 같은 계정으로 들어올 수 있습니다."],
+      note:"이 서버는 HaslaLab이 운영하지 않습니다. 원래 서버가 2026년 3월 2일 해킹된 뒤 옮겨 간 새 서버입니다.", side:"실시간 채팅"},
+  en:{sec:"Live chat", h:"Physics Olympiads Discord", members:"members", online:"online", join:"Join on Discord", copy:"Copy invite link",
+      about:"Next to the boards, talk in real time with olympiad students from all over the world on the <b>Physics Olympiads</b> Discord server.",
+      tips:["Problem solving, lab measurements and error analysis, live. Most of the talk is in English.","Read the rules in <b>#rules</b> when you first join.","Reports about HaslaLab simulators are best left on the «Simulator reports» board here, so they get fixed.","Link Discord sign-in to your HaslaLab account to use the same account on both."],
+      note:"HaslaLab does not run this server. It is the new server the community moved to after the original one was hacked on 2 March 2026.", side:"Live chat"}};
+let dcInfo=null, dcP=null;
+/* the server's icon, description and member/online counts, from Discord's public invite endpoint (CORS-open) */
+function dcLoad(){
+  return dcP||(dcP=fetch("https://discord.com/api/v10/invites/"+DISCORD.invite+"?with_counts=true")
+    .then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.guild) dcInfo={members:j.approximate_member_count, online:j.approximate_presence_count, icon:j.guild.icon, desc:j.guild.description}; return dcInfo; })
+    .catch(()=>null));
+}
+const dcIcon=()=>dcInfo&&dcInfo.icon?`https://cdn.discordapp.com/icons/${DISCORD.guild}/${dcInfo.icon}.${dcInfo.icon.startsWith("a_")?"gif":"webp"}?size=128`:"";
+const dcUrl="https://discord.gg/"+DISCORD.invite;
+const dcNum=n=>n==null?"…":Number(n).toLocaleString(lang==="ko"?"ko-KR":"en-US");
+function cmDiscord(root){
+  const D=DCT[lang];
+  const paint=()=>{
+    root.innerHTML=`<div class="cmpanel"><div class="dcban">${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="" style="display:grid">`}
+      <div><h2>${DISCORD.name}</h2><p>${esc(dcInfo&&dcInfo.desc||"")}</p>
+      <div class="ct"><span><i></i>${dcNum(dcInfo&&dcInfo.online)} ${D.online}</span><span><i class="m"></i>${dcNum(dcInfo&&dcInfo.members)} ${D.members}</span></div></div></div>
+      <div class="dcbody"><p style="margin-top:0">${D.about}</p>
+        <div class="acts"><a class="join" href="${dcUrl}" target="_blank" rel="noopener">${DC_SVG.replace("<svg","<svg width=\"18\" height=\"18\" fill=\"#fff\"")} ${D.join}</a><button type="button" id="dcCopy">${D.copy}</button></div>
+        ${DISCORD.embed?`<iframe src="https://e.widgetbot.io/channels/${DISCORD.guild}/${DISCORD.embed}" title="${DISCORD.name}" allow="clipboard-write; fullscreen"></iframe>`:""}
+        <ul>${D.tips.map(x=>`<li>${x}</li>`).join("")}</ul>
+        <p style="font-size:12.5px;color:#6b7280;margin-bottom:0">${D.note}</p></div></div>`;
+    const c=document.getElementById("dcCopy"); if(c) c.onclick=async()=>{ try{ await navigator.clipboard.writeText(dcUrl); }catch(e){} cmToast(CMT[lang].copied); };
+  };
+  paint(); if(!dcInfo) dcLoad().then(()=>{ if(document.body.contains(root)&&location.hash.includes("/discord")) paint(); });
+}
 const CMT = {
   ko:{
     h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
@@ -7142,6 +7350,9 @@ const CMT = {
     bodyPh:"내용을 입력하세요.\n링크는 그대로 붙여 넣으면 됩니다.",
     username:"아이디", usernameHelp:"영문 · 숫자 · _ 3–20자. 로그인에만 쓰입니다.",
     nickname:"닉네임", nicknameHelp:"2–16자. 글과 댓글에 표시됩니다.",
+    nickFree:"✓ 쓸 수 있는 닉네임입니다.", nickChecking:"확인하는 중…", nickSame:"지금 쓰는 닉네임입니다.", nickH:"닉네임 바꾸기", nickChange:"바꾸기", nickDone:"닉네임을 바꿨습니다.",
+    cropH:"프로필 사진 자르기", cropHint:"끌어서 위치를 옮기고, 휠 · 두 손가락 · 막대로 크기를 조절하세요. 동그라미 안이 프로필에 보입니다.", cropZoom:"크기", cropRotate:"↻ 90° 돌리기",
+    cropApply:"이대로 올리기", cropCancel:"취소", cropSrc:"원본", cropOut:"올라가는 크기", cropReset:"처음대로",
     password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
     welcome:"다시 오신 걸 환영해요!", welcomeSub:"HaslaLab 커뮤니티에 로그인하세요.",
     create:"계정 만들기", createSub:"가입하고 질문하고, 답하고, 추천하세요.",
@@ -7151,7 +7362,7 @@ const CMT = {
            "광고, 도배, 개인정보(전화번호, 주소 등) 게시는 금지입니다.",
            "실명이나 학교를 밝힐 필요는 없습니다."],
     haveAcc:"이미 계정이 있나요?", noAcc:"계정이 필요한가요?",
-    joined:"가입일", avatarH:"프로필 사진", avatarPick:"사진 바꾸기", avatarDel:"기본 아이콘으로", avatarHelp:"정사각형으로 잘라 256px로 줄여 올립니다.", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
+    joined:"가입일", avatarH:"프로필 사진", avatarPick:"사진 바꾸기", avatarDel:"기본 아이콘으로", avatarHelp:"고른 사진에서 보일 부분을 직접 잘라, 256×256px로 줄여 올립니다.", changePw:"비밀번호 바꾸기", oldPw:"현재 비밀번호", newPw:"새 비밀번호",
     pwDone:"비밀번호를 바꿨습니다. 다른 기기의 로그인은 모두 풀렸습니다.",
     delAcc:"계정 삭제", delAccHelp:"계정을 지우면 다시 로그인할 수 없습니다. 쓴 글과 댓글은 남고 이름은 ‘탈퇴한 사용자’로 바뀝니다.",
     confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.", myPosts:"내가 쓴 글",
@@ -7193,6 +7404,9 @@ const CMT = {
     bodyPh:"Text.\nPaste links as they are.",
     username:"Username", usernameHelp:"3–20 letters, digits or _. Used only to log in.",
     nickname:"Display name", nicknameHelp:"2–16 characters. Shown on posts and comments.",
+    nickFree:"✓ That display name is free.", nickChecking:"Checking…", nickSame:"That is your current display name.", nickH:"Change display name", nickChange:"Change", nickDone:"Display name changed.",
+    cropH:"Crop your profile picture", cropHint:"Drag to move it; zoom with the wheel, two fingers or the slider. What is inside the circle shows on your profile.", cropZoom:"Zoom", cropRotate:"↻ Rotate 90°",
+    cropApply:"Upload this", cropCancel:"Cancel", cropSrc:"Original", cropOut:"Uploaded as", cropReset:"Reset",
     password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
     welcome:"Welcome back!", welcomeSub:"Log in to the HaslaLab community.",
     create:"Create an account", createSub:"Join to ask, answer and vote.",
@@ -7202,7 +7416,7 @@ const CMT = {
            "No advertising, flooding, or personal details (phone numbers, addresses…).",
            "You don't need to give your real name or school."],
     haveAcc:"Already have an account?", noAcc:"Need an account?",
-    joined:"Joined", avatarH:"Profile picture", avatarPick:"Change picture", avatarDel:"Use the letter icon", avatarHelp:"It is cropped square and shrunk to 256 px before upload.", changePw:"Change password", oldPw:"Current password", newPw:"New password",
+    joined:"Joined", avatarH:"Profile picture", avatarPick:"Change picture", avatarDel:"Use the letter icon", avatarHelp:"You choose the part of the photo to keep; it is uploaded at 256×256 px.", changePw:"Change password", oldPw:"Current password", newPw:"New password",
     pwDone:"Password changed. Every other device has been signed out.",
     delAcc:"Delete account", delAccHelp:"A deleted account can't sign in again. Your posts and comments stay, under the name ‘Deleted user’.",
     confirmDelAcc:"Delete your account? This can't be undone.", myPosts:"My posts",
@@ -7265,6 +7479,27 @@ function cmHealth(){
   return cmHealthP=cmApi("GET","/health").then(h=>{ try{ sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base:cmBase(),h})); }catch(e){} return h; },()=>{ cmHealthP=null; return {v:0}; });
 }
 const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
+/* a nickname field that asks the server, while it is typed, whether the name is free (the rule the server
+   applies on submit: compatibility forms folded, case ignored).  Returns a function that resolves to
+   true/false/null (null: the check could not be made, e.g. an older server — submitting decides then). */
+function cmNickCheck(input, out, current){
+  let seq=0, timer=null;
+  const say=(cls,msg)=>{ out.className="cmnick"+(cls?" "+cls:""); out.textContent=msg||""; };
+  const run=async()=>{
+    const T=CMT[lang], v=input.value.trim(), my=++seq;
+    if(!v){ say("",""); return null; }
+    if(current && v===current){ say("",T.nickSame); return true; }
+    say("",T.nickChecking);
+    try{
+      const r=await cmApi("GET","/nick-check?n="+encodeURIComponent(v));
+      if(my===seq){ if(r.ok) say("ok",r.same?T.nickSame:T.nickFree); else say("no",cmErr({code:r.error})); }
+      return !!r.ok;
+    }catch(e){ if(my===seq) say("",""); return null; }
+  };
+  input.addEventListener("input",()=>{ clearTimeout(timer); timer=setTimeout(run,350); });
+  input.addEventListener("blur",()=>{ clearTimeout(timer); run(); });
+  return ()=>{ clearTimeout(timer); return run(); };
+}
 function cmToast(msg){ const d=document.createElement("div"); d.className="cmtoast"; d.textContent=msg; document.body.append(d); setTimeout(()=>d.remove(),2200); }
 
 const p2 = n => String(n).padStart(2,"0");
@@ -7346,6 +7581,8 @@ function cmRailHtml(active){
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
     ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
+    <div class="sec">${DCT[lang].sec}</div>
+    <a class="ch dc ${active==="discord"?"on":""}" href="#/community/discord"><span class="hash">${DC_SVG}</span>${DISCORD.name}<span class="on" id="dcOn">${dcInfo?"● "+dcNum(dcInfo.online):""}</span></a>
     ${me}`;
 }
 async function cmRight(where){
@@ -7355,8 +7592,13 @@ async function cmRight(where){
   el.innerHTML=`
     <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
+    <div class="cmside dcside"><h3>💬 ${DCT[lang].side}</h3><div class="in" id="dcSide"></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+  const dcSide=()=>{ const x=document.getElementById("dcSide"); if(x) x.innerHTML=`${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="">`}<div style="min-width:0"><div class="nm">${DISCORD.name}</div>
+      <div class="ct">● ${dcNum(dcInfo&&dcInfo.online)} ${DCT[lang].online}</div></div><a class="j" href="#/community/discord">${lang==="ko"?"열기":"Open"}</a>`;
+    const on=document.getElementById("dcOn"); if(on&&dcInfo) on.textContent="● "+dcNum(dcInfo.online); };
+  dcSide(); dcLoad().then(dcSide);
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h) return;
@@ -7373,7 +7615,7 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
   /* who is signed in, the server's version and the board counts — once, then from memory */
   try{
     const jobs=[];
@@ -7392,6 +7634,7 @@ async function cmMount(){
     else if(a==="login")                cmLogin(root);
     else if(a==="signup")               cmSignup(root);
     else if(a==="account")              await cmAccount(root,alive);
+    else if(a==="discord")              cmDiscord(root);
     else                                await cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
   }catch(e){
     if(alive()) root.innerHTML=`<div class="cmnote">${esc(cmErr(e))}</div>`;
@@ -7676,7 +7919,7 @@ function cmSignup(root){
     <h2>${T.create}</h2><p class="lead">${T.createSub}</p>
     <form id="cmS">
       <label>${T.username}<input type="text" name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${T.usernameHelp}</small></label>
-      <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small></label>
+      <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small><span class="cmnick" id="cmSnick"></span></label>
       <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
@@ -7686,20 +7929,88 @@ function cmSignup(root){
     </form>
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr");
+  const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
   f.onsubmit=async e=>{
     e.preventDefault();
+    if(await nickFree()===false){ err.textContent=cmErr({code:"nickname_taken"}); f.nickname.focus(); return; }
     if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
     if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
     try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value})); }
-    catch(er){ err.textContent=cmErr(er); }
+    catch(er){ err.textContent=cmErr(er); if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); } }
   };
   arOauth(root);
 }
-/* a picked photo, cropped to a square and shrunk to 256 px, kept under 60 KB */
-async function cmAvatarBlob(file){
-  const bmp=await createImageBitmap(file), s=Math.min(bmp.width,bmp.height), c=document.createElement("canvas");
-  c.width=c.height=256;
-  c.getContext("2d").drawImage(bmp,(bmp.width-s)/2,(bmp.height-s)/2,s,s,0,0,256,256);
+/* the profile picture: the person picks the square to keep (drag, zoom, rotate), it is drawn at 256×256 and
+   kept under 60 KB.  Resolves to the picture, or null when cancelled. */
+async function cmCropAvatar(file){
+  let img;
+  try{ img=await createImageBitmap(file,{imageOrientation:"from-image"}); }
+  catch(e){ try{ img=await createImageBitmap(file); }catch(e2){ throw {code:"bad_image"}; } }
+  const T=CMT[lang], OUT=256, srcW=img.width, srcH=img.height;
+  let src=img;                                                 // the (possibly rotated) picture being cropped
+  let k, cx, cy, zoom=1;                                       // k: screen px per picture px at zoom 1 (cover); cx,cy: picture point in the middle
+  const ov=document.createElement("div"); ov.className="cmcrop";
+  ov.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h3>${T.cropH}</h3><p>${T.cropHint}</p><canvas></canvas>
+    <div class="ctl"><span>${T.cropZoom}</span><input type="range" min="1" max="5" step="0.01" value="1" aria-label="${T.cropZoom}"></div>
+    <div class="meta"></div>
+    <div class="btns"><button type="button" class="cmbtn" data-rot>${T.cropRotate}</button><button type="button" class="cmbtn" data-reset>${T.cropReset}</button>
+      <span style="flex:1"></span><button type="button" class="cmbtn" data-no>${T.cropCancel}</button><button type="button" class="cmbtn pri" data-ok>${T.cropApply}</button></div></div>`;
+  document.body.append(ov);
+  const cv=ov.querySelector("canvas"), g=cv.getContext("2d"), rng=ov.querySelector("input[type=range]"), meta=ov.querySelector(".meta");
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const V=()=>cv.width;                                        // the square on screen, in canvas pixels
+  const scale=()=>k*zoom;
+  const fit=()=>{ k=V()/Math.min(src.width,src.height); };
+  const clamp=()=>{ const h=V()/2/scale(); cx=Math.min(src.width-h,Math.max(h,cx)); cy=Math.min(src.height-h,Math.max(h,cy)); };
+  const reset=()=>{ zoom=1; rng.value="1"; fit(); cx=src.width/2; cy=src.height/2; draw(); };
+  function draw(){
+    clamp();
+    const s=scale(), n=V();
+    g.setTransform(1,0,0,1,0,0); g.fillStyle="#111"; g.fillRect(0,0,n,n);
+    g.imageSmoothingQuality="high";
+    g.drawImage(src, n/2-cx*s, n/2-cy*s, src.width*s, src.height*s);
+    /* what the round avatar hides, dimmed; the square that is saved, outlined */
+    g.fillStyle="rgba(0,0,0,.5)"; g.beginPath(); g.rect(0,0,n,n); g.arc(n/2,n/2,n/2-1,0,Math.PI*2,true); g.fill("evenodd");
+    g.strokeStyle="rgba(255,255,255,.85)"; g.lineWidth=2*dpr; g.beginPath(); g.arc(n/2,n/2,n/2-dpr,0,Math.PI*2); g.stroke();
+    const side=Math.round(n/s);
+    meta.textContent=`${T.cropSrc} ${srcW}×${srcH}px · ${side}×${side}px → ${T.cropOut} ${OUT}×${OUT}px`;
+  }
+  const size=()=>{ const w=Math.round(cv.getBoundingClientRect().width*dpr)||300; if(cv.width!==w){ cv.width=cv.height=w; fit(); draw(); } };
+  cv.width=cv.height=Math.round((cv.getBoundingClientRect().width||300)*dpr); reset();
+  /* drag to move, wheel or two fingers to zoom (about the point under them) */
+  const pts=new Map(); let pinch=null;
+  const zoomTo=(z,px,py)=>{ z=Math.max(1,Math.min(5,z)); const n=V(), s0=scale();
+    const ix=cx+(px-n/2)/s0, iy=cy+(py-n/2)/s0; zoom=z; const s1=scale(); cx=ix-(px-n/2)/s1; cy=iy-(py-n/2)/s1; rng.value=String(z); draw(); };
+  const local=e=>{ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*dpr,(e.clientY-r.top)*dpr]; };
+  cv.addEventListener("pointerdown",e=>{ cv.setPointerCapture(e.pointerId); pts.set(e.pointerId,local(e)); if(pts.size===2){ const [a,b]=[...pts.values()]; pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1]),z:zoom}; } });
+  cv.addEventListener("pointermove",e=>{ if(!pts.has(e.pointerId)) return; const p=local(e), q=pts.get(e.pointerId); pts.set(e.pointerId,p);
+    if(pts.size===2&&pinch){ const [a,b]=[...pts.values()]; zoomTo(pinch.z*Math.hypot(a[0]-b[0],a[1]-b[1])/pinch.d,(a[0]+b[0])/2,(a[1]+b[1])/2); }
+    else if(pts.size===1){ cx-=(p[0]-q[0])/scale(); cy-=(p[1]-q[1])/scale(); draw(); } });
+  const up=e=>{ pts.delete(e.pointerId); if(pts.size<2) pinch=null; };
+  cv.addEventListener("pointerup",up); cv.addEventListener("pointercancel",up);
+  cv.addEventListener("wheel",e=>{ e.preventDefault(); const [x,y]=local(e); zoomTo(zoom*Math.exp(-e.deltaY*0.0015),x,y); },{passive:false});
+  rng.oninput=()=>{ const n=V(); zoomTo(+rng.value,n/2,n/2); };
+  ov.querySelector("[data-reset]").onclick=reset;
+  ov.querySelector("[data-rot]").onclick=()=>{                // turn the picture itself a quarter, keeping the same middle
+    const r=document.createElement("canvas"); r.width=src.height; r.height=src.width;
+    const rg=r.getContext("2d"); rg.translate(r.width,0); rg.rotate(Math.PI/2); rg.drawImage(src,0,0);
+    const ncx=src.height-cy, ncy=cx; src=r; fit(); cx=ncx; cy=ncy; draw(); };
+  addEventListener("resize",size);
+  const done=v=>{ removeEventListener("resize",size); removeEventListener("keydown",key); ov.remove(); return v; };
+  const key=e=>{ if(e.key==="Escape") finish(null); };
+  addEventListener("keydown",key);
+  let finish;
+  const picked=await new Promise(res=>{
+    finish=res;
+    ov.querySelector("[data-no]").onclick=()=>res(null);
+    ov.addEventListener("click",e=>{ if(e.target===ov) res(null); });
+    ov.querySelector("[data-ok]").onclick=()=>{ const h=V()/2/scale(); res({x:cx-h,y:cy-h,side:2*h}); };
+  });
+  if(!picked){ done(); return null; }
+  const c=document.createElement("canvas"); c.width=c.height=OUT;
+  const cg=c.getContext("2d"); cg.imageSmoothingQuality="high"; cg.fillStyle="#fff"; cg.fillRect(0,0,OUT,OUT);
+  cg.drawImage(src,picked.x,picked.y,picked.side,picked.side,0,0,OUT,OUT);
+  done();
   for(const [type,q] of [["image/webp",.9],["image/webp",.8],["image/jpeg",.88],["image/jpeg",.75],["image/jpeg",.6]]){
     const b=await new Promise(r=>c.toBlob(r,type,q));
     if(b && b.type===type && b.size<=60000) return b;
@@ -7712,7 +8023,7 @@ function cmAvatarForm(box, done){
   const set=k=>{ cm.me.avatar=k; del.hidden=!k; done(); if(typeof arChip==="function") arChip(); };
   inp.onchange=async()=>{
     const file=inp.files[0]; inp.value=""; if(!file) return; err.textContent="";
-    try{ const r=await cmApi("PUT","/me/avatar",await cmAvatarBlob(file)); set(r.avatar); }
+    try{ const b=await cmCropAvatar(file); if(!b) return; const r=await cmApi("PUT","/me/avatar",b); set(r.avatar); }
     catch(e){ err.textContent=cmErr(e); }
   };
   del.onclick=async()=>{ err.textContent=""; try{ await cmApi("DELETE","/me/avatar"); set(null); }catch(e){ err.textContent=cmErr(e); } };
@@ -7728,6 +8039,9 @@ async function cmAccount(root, alive){
       <div class="row"><label class="cmbtn">${T.avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
       <button class="cmbtn" type="button" data-del ${cm.me.avatar?"":"hidden"}>${T.avatarDel}</button><span class="cmerr"></span><span class="sp"></span></div>
       <small style="color:var(--graphite)">${T.avatarHelp}</small></div>
+    <form class="cmform" id="cmNick" style="border-top:8px solid var(--cm-soft)"><h3 style="font-size:15px">${T.nickH}</h3>
+      <label>${T.nickname}<input type="text" name="nickname" value="${esc(cm.me.nickname)}" required minlength="2" maxlength="16" autocomplete="nickname"><small>${T.nicknameHelp}</small><span class="cmnick"></span></label>
+      <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${T.nickChange}</button></div></form>
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <form class="cmform" id="cmPw" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.changePw}</h3>
@@ -7741,6 +8055,15 @@ async function cmAccount(root, alive){
       <div class="row"><span class="sp"></span><button class="cmbtn" type="button" id="cmDelAcc" style="color:#e03131;border-color:#ffc9c9">${T.delAcc}</button></div>
     </div></div>`;
   cmAvatarForm(root.querySelector("#cmAvatar"), ()=>{ const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); });
+  const nf=root.querySelector("#cmNick"), nOut=nf.querySelector(".cmerr"), nickFree=cmNickCheck(nf.nickname, nf.querySelector(".cmnick"), cm.me.nickname);
+  nf.onsubmit=async e=>{
+    e.preventDefault(); nOut.style.color="";
+    if(await nickFree()===false){ nOut.textContent=cmErr({code:"nickname_taken"}); return; }
+    try{ const r=await cmApi("PATCH","/me",{nickname:nf.nickname.value.trim()}); cm.me.nickname=r.nickname; nf.nickname.value=r.nickname;
+         nOut.style.color="var(--graphite)"; nOut.textContent=T.nickDone; if(typeof arChip==="function") arChip();
+         const h=root.querySelector(".cmpost h2"); if(h) h.textContent=r.nickname; const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); }
+    catch(er){ nOut.textContent=cmErr(er); }
+  };
   const f=root.querySelector("#cmPw");
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -7771,10 +8094,11 @@ function setDocTitle(first, second){
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
   else if(["weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
+  else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=DATA[first];
-    parts.push(second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
+    parts.push(second==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
   }
   const tail = lang==="ko" ? "물리올림피아드 실험 시뮬레이터"
                            : "Physics Olympiad Experimental Simulations";
@@ -7816,8 +8140,8 @@ function render(){
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps();  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(["weekly","rank","me","login","signup","oauth"].includes(first)){ html=viewArena(first); active="weekly"; }
-  else if(first && DATA[first]){  html=second?viewYear(first,second):viewComp(first); active="comps"; }
+  else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
+  else if(first && DATA[first]){  html=second==="exam"?viewComp(first,"exam"):second?viewYear(first,second):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.getElementById("view").innerHTML=html;
   document.documentElement.lang = lang;
@@ -7837,7 +8161,8 @@ function render(){
   buildRails();
   if(active==="home") startHero();
   if(active==="community") cmMount();
-  if(active==="weekly") arMount();
+  if(active==="comps" && second==="exam") xmMount(first);
+  if(active==="weekly"||first==="lab") arMount();
   arChip();
 }
 

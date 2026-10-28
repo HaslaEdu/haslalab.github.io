@@ -7,7 +7,7 @@ const A=j.token;
 [s,j]=await call("POST","/signup",{username:"ALICE",nickname:"x1",password:"password1"});ok(s===409&&j.error==="username_taken","dup username "+j.error);
 [s,j]=await call("POST","/signup",{username:"bob",nickname:"앨리스",password:"password1"});ok(s===409&&j.error==="nickname_taken","dup nick");
 [s,j]=await call("POST","/signup",{username:"bo",nickname:"bob",password:"password1"});ok(s===400,"short username");
-[s,j]=await call("POST","/signup",{username:"bob",nickname:"밥",password:"short"});ok(s===400&&j.error==="bad_password","short pw");
+[s,j]=await call("POST","/signup",{username:"bob",nickname:"밥이",password:"short"});ok(s===400&&j.error==="bad_password","short pw");
 [s,j]=await call("POST","/signup",{username:"bob",nickname:"밥 Kim",password:"password2"});ok(s===200,"signup bob");const Bt=j.token;
 [s,j]=await call("POST","/login",{username:"alice",password:"wrong"});ok(s===401,"bad login");
 [s,j]=await call("POST","/login",{username:"Alice",password:"password1"});ok(s===200&&j.user.nickname==="앨리스","login case-insens");

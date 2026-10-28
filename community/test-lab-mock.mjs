@@ -1,0 +1,60 @@
+// stand-in for Upstage OCR, Gemini and the PDF Worker, for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
+// .dev.vars: UPSTAGE_API_KEY=test UPSTAGE_BASE=http://127.0.0.1:8799/upstage GEMINI_API_KEY=test GEMINI_BASE=http://127.0.0.1:8799/gemini
+//            LAB_PDF_BASE=http://127.0.0.1:8799/pdf/
+// Gemini answers by the task tag at the head of the prompt:
+//   [TASK: build marking scheme]  a fixed scheme (A.1, A.2, A.3 values, B.1 graph, C.1 derivation; 3.5 points)
+//   [TASK: read page]             a fixed reading (A.1 108.2 ohm, A.2 395, a graph with 6 points, C.1 text); a page image
+//                                 longer than 300 bytes carries the header «E2, working sheet», one longer than 600 is «poor»
+//   [TASK: grade]                 every item found on the first answer page of the task (else the first page), half marks,
+//                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
+//   anything else                 the old text grader: half marks with a quote from the answer
+import http from "node:http";
+const OCR_TEXT = "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nE1 A.2 lambda = 395 W/(m K)";
+const SCHEME = { points: 3.5, unit_rule: "a missing unit loses the mark", items: [
+  { id: "A.1", points: 0.4, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 105, full_max: 111, partial: [{ min: 100, max: 115, points: 0.2 }] },
+  { id: "A.2", points: 0.6, type: "value", sheet: "answer", what: "lambda", unit: "W/(m K)", full_min: 380, full_max: 410, partial: [{ min: 360, max: 430, points: 0.3 }] },
+  { id: "A.3", points: 0.5, type: "value", sheet: "answer", what: "h", unit: "W/(m2 K)", full_min: 10, full_max: 12, partial: [] },
+  { id: "B.1", points: 1.0, type: "graph", sheet: "answer", what: "graph of ln(T) against t", checks: [
+    { check: "axes_labeled", points: 0.2 }, { check: "points_min", n: 8, points: 0.3 }, { check: "fit_line", points: 0.2 }, { check: "slope_read", points: 0.3 }] },
+  { id: "C.1", points: 1.0, type: "derivation", sheet: "any", what: "lambda = P L / (A dT)" }] };
+const page = big => ({ header: big ? { task: "E2", sheet: "working", page: 2 } : { task: null, sheet: null, page: null }, legible: big === 2 ? "poor" : "good", items: [
+  { label: "A.1", kind: "value", text: "R0 = 108.2 ohm", value: 108.2, unit: "ohm", crossed_out: false, box: [100, 100, 150, 400] },
+  { label: "A.2", kind: "value", text: "lambda = 395 W/(m K)", value: 395, unit: "W/(m K)", crossed_out: false, box: [200, 100, 250, 400] },
+  { label: "B.1", kind: "graph", text: "graph", crossed_out: false, graph: { axes_labeled: true, axes_units: true, scale_ok: true, n_points: 6, fit_line: true, slope_read: false, error_bars: false, title: false, slope: null } },
+  { label: "C.1", kind: "text", text: "lambda = P L/(A dT)", crossed_out: false }] });
+const reply = (res, o) => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify(o) }] } }] })); };
+http.createServer(async (req, res) => {
+  let b = []; for await (const c of req) b.push(c); b = Buffer.concat(b);
+  if (req.url.startsWith("/upstage")) {
+    res.setHeader("Content-Type", "application/json");
+    return res.end(JSON.stringify({ text: OCR_TEXT, content: { markdown: OCR_TEXT }, confidence: 0.91 }));
+  }
+  if (req.url.startsWith("/pdf/")) {
+    const name = decodeURIComponent(req.url.slice(5));
+    if (/missing|_KO\.pdf$/.test(name)) { res.statusCode = 404; return res.end("nope"); }   // only the English originals exist here
+    res.setHeader("Content-Type", "application/pdf"); return res.end("%PDF-1.4 fake solution " + name);
+  }
+  if (req.url.includes(":generateContent")) {
+    const parts = JSON.parse(b).contents[0].parts, prompt = parts.map(p => p.text || "").join("\n");
+    if (prompt.startsWith("[TASK: build marking scheme]")) return reply(res, SCHEME);
+    if (prompt.startsWith("[TASK: read page]")) {
+      /* only the tests' PNGs choose a header or a poor page by their length; a phone's JPEG is an ordinary, legible page */
+      const img = parts.find(p => p.inline_data), n = img && img.inline_data.mime_type === "image/png" ? Buffer.from(img.inline_data.data, "base64").length : 0;
+      return reply(res, page(n > 600 ? 2 : n > 300 ? 1 : 0));
+    }
+    if (prompt.startsWith("[TASK: grade]")) {
+      const sc = JSON.parse(prompt.split("<<SCHEME>>")[1].split("<<END>>")[0]), pages = JSON.parse(prompt.split("<<PAGES>>")[1].split("<<END>>")[0]);
+      const pg = (pages.find(p => p.kind === "answer") || pages[0] || {}).no ?? null;
+      const val = { "A.1": 108.2, "A.2": 395, "A.3": 11 };
+      return reply(res, { items: sc.items.map(it => ({ id: it.id, found: true, page: pg, label: it.id, value: val[it.id] ?? null, unit_ok: true,
+        checks_met: ["axes_labeled", "points_min", "fit_line", "slope_read"], score: it.points / 2, decision: "partial", rules: [], note: "ok" })),
+        feedback: [{ page: pg, label: "A.1", note: "units ok", kind: "good" }, { page: 999, label: "X", note: "a page that does not exist", kind: "fix" }] });
+    }
+    const ids = [...prompt.matchAll(/^- (\S+) \(.*?\): 0~([\d.]+)/gm)].map(m => [m[1], +m[2]]);
+    const ans = prompt.split("[Student answer and working sheets]")[1] || "";
+    const quote = (ans.match(/R0 = 108\.2 ohm/) || [""])[0];
+    return reply(res, { scores: ids.map(([id, max]) => ({ id, got: max / 2, note: "ok", decision: "partial", evidence: quote ? [quote] : [] })),
+      feedback: quote ? [{ quote, note: "units ok", kind: "good" }] : [], confidence: 0.8 });
+  }
+  res.statusCode = 404; res.end("{}");
+}).listen(8799, () => console.log("mock on 8799"));
