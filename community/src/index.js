@@ -494,7 +494,7 @@ async function ytRoute(req, env, url, cors) {
   return reply(body);
 }
 
-const SHARED_GET = /^\/api\/(boards|posts|weekly|rank)$/, EDGE_TTL = 15;
+const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
 
 export default {
   async fetch(req, env) {
@@ -982,6 +982,22 @@ async function labFinalize(env, s, lang) {
   return labGradeAll(env, { ...s, status: "grading" }, lang);
 }
 
+/* how everyone did on an exam: each person's first graded sitting counts (as on the day), as a percentage of full marks */
+async function labFirsts(env, where, args) {
+  return (await env.DB.prepare(`SELECT s.id, s.exam_key, s.tasks, s.user_id, s.score, s.points FROM lab_sessions s
+    JOIN (SELECT user_id, exam_key, tasks, MIN(id) id FROM lab_sessions WHERE status='graded' AND points>0 ${where} GROUP BY user_id, exam_key, tasks) f ON f.id=s.id`).bind(...args).all()).results
+    .map(r => ({ ...r, pct: 100 * r.score / r.points }));
+}
+const pct1 = x => Math.round(x * 10) / 10;
+async function labStanding(env, s) {
+  if (s.status !== "graded" || !(s.points > 0)) return null;
+  const rows = await labFirsts(env, "AND exam_key=? AND tasks=?", [s.exam_key, s.tasks]), mine = 100 * s.score / s.points;
+  const others = rows.filter(r => r.user_id !== s.user_id), all = others.map(r => r.pct).concat(mine);
+  const above = others.filter(r => r.pct > mine).length;
+  return { n: all.length, rank: above + 1, top_pct: pct1(100 * (above + 1) / all.length), avg: pct1(all.reduce((a, x) => a + x, 0) / all.length),
+    max: pct1(Math.max(...all)), mine: pct1(mine), first: rows.some(r => r.id === s.id) };   // a later sitting is ranked against the others' first ones
+}
+
 async function labImage(req, env, pid, cors) {
   const me = await currentUser(req, env);
   if (!me) return json({ error: "login_required" }, 401, cors);
@@ -1036,6 +1052,20 @@ async function lab(p, m, body, me, req, env, url) {
   }
 
   /* the computer: the signed-in student */
+  if (p === "/api/lab/stats" && m === "GET") {                       // the exam list: how many sat each exam, and how they did
+    const comp = String(url.searchParams.get("comp") || "");
+    if (!/^[a-z]{3,8}$/.test(comp)) bad("bad_exam");
+    const [firsts, sitting] = await Promise.all([
+      labFirsts(env, "AND comp=?", [comp]),
+      env.DB.prepare("SELECT exam_key, tasks, COUNT(DISTINCT user_id) n FROM lab_sessions WHERE comp=? GROUP BY exam_key, tasks").bind(comp).all().then(r => r.results),
+    ]);
+    /* keyed «ipho2024:E1+E2», since a year can hold separate rounds (IOAA D1, D2) */
+    const out = {}, k = r => r.exam_key + ":" + JSON.parse(r.tasks).join("+");
+    for (const r of sitting) out[k(r)] = { sat: r.n, graded: 0, avg: null, max: null };
+    for (const r of firsts) { const o = out[k(r)] || (out[k(r)] = { sat: 0, graded: 0, avg: null, max: null }); o.graded++; o.sum = (o.sum || 0) + r.pct; o.max = Math.max(o.max ?? 0, r.pct); }
+    for (const o of Object.values(out)) { if (o.graded) { o.avg = pct1(o.sum / o.graded); o.max = pct1(o.max); } delete o.sum; }
+    return { exams: out };
+  }
   if (p === "/api/lab/active" && m === "GET") {                      // the exam this user has open, if any, and the token balance
     needUser(me);
     const s = await labActive(env, me.id);
@@ -1051,7 +1081,7 @@ async function lab(p, m, body, me, req, env, url) {
     /* coming back: the open exam is returned as it is, nothing is spent */
     let open = await labActive(env, me.id);
     if (open && (open.status === "running" || open.status === "scanning")) {
-      if (open.exam_key !== key) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
+      if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
     const token = b64u(crypto.getRandomValues(new Uint8Array(24)));
@@ -1072,7 +1102,7 @@ async function lab(p, m, body, me, req, env, url) {
     }
     open = await labActive(env, me.id);
     if (!open) throw new HttpError(402, "no_tokens");
-    if (open.exam_key !== key) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
+    if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
     /* the session that won is this call's only if it was written with this call's upload token */
     const mine = open.upload_hash === await sha256(token);
     return { session: pubLab(open, null), resumed: !mine, token: mine ? token : undefined, tokens: await labTokens(env, me.id) };
@@ -1106,7 +1136,8 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "GET") {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
-    return { session: pubLab(s, await labPagesOf(env, s.id)), health: arenaHealth(env) };
+    const owner = s.user_id === me.id ? me : await env.DB.prepare("SELECT nickname FROM users WHERE id=?").bind(s.user_id).first();
+    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s) }, health: arenaHealth(env) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);

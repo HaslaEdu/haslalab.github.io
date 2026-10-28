@@ -26,15 +26,15 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   };
   /* the catalogue's exam links */
   let ctx = await mk(), pg = await ctx.newPage(); pg.on("pageerror", e => errs.push(e.message));
-  await pg.goto(SITE + "/#/ipho/2024"); await pg.waitForSelector("a.btn.exam");
-  const A = SITE + "/" + await pg.getAttribute("a.btn.exam", "href");
-  await pg.goto(SITE + "/#/apho/2025"); await pg.waitForSelector("a.btn.exam");
-  const Bx = SITE + "/" + await pg.getAttribute("a.btn.exam", "href");
+  const portal = async (comp, year) => { await pg.goto(SITE + "/#/" + comp + "/exam"); await pg.waitForSelector("#xmRoot tbody tr");
+    return SITE + "/" + await pg.$$eval("#xmRoot tbody tr", (trs, y) => trs.find(t => t.querySelector(".y").textContent === y).querySelector("a.go").getAttribute("href"), String(year)); };
+  const A = await portal("ipho", 2024), Bx = await portal("apho", 2025);
   await ctx.close();
 
   /* 1. a computer whose clock is an hour fast: the timer still shows the server's time */
   ctx = await mk(3600); pg = await ctx.newPage(); pg.on("pageerror", e => errs.push(e.message)); pg.on("dialog", d => d.accept());
   await pg.goto(A); await pg.waitForSelector("#go");
+  for (const c of await pg.$$("[data-ag]")) await c.check();
   /* double click on start, then confirm twice as fast as possible */
   await pg.click("#go"); await pg.click(".modal button.red");
   await pg.waitForSelector(".desk iframe", { timeout: 15000 }); await sleep(1500);

@@ -31,14 +31,19 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
 
   /* 1. the catalogue */
   let ctx = await mk(), pg = await ctx.newPage(); watch(pg);
+  /* practice (the competition page as before) and exam (the portal) */
+  await pg.goto(SITE + "/#/ipho"); await pg.waitForSelector(".modesw");
+  ok(await pg.$(".modesw a.on[href='#/ipho']") !== null && await pg.$(".years") !== null, "competition page: practice is chosen, the year grid shows");
   await pg.goto(SITE + "/#/ipho/2024"); await pg.waitForSelector(".prob");
   const runBtns = await pg.$$eval(".prob .acts .main .btn", a => a.map(x => x.textContent.trim()));
-  ok(runBtns.filter(x => x === "연습 모드").length === 2, "two cards with «연습 모드» " + JSON.stringify(runBtns));
-  const examLinks = await pg.$$eval("a.btn.exam", a => a.map(x => x.getAttribute("href")));
-  ok(examLinks.length === 2 && examLinks[0] === examLinks[1] && /e=E1%2CE2/.test(examLinks[0]), "both cards open the same E1+E2 exam");
-  ok(await pg.$(".exambar") !== null, "year page shows the exam bar");
-  await pg.screenshot({ path: OUT + "1-catalogue.png" });
-  const EXAM_URL = SITE + "/" + examLinks[0];
+  ok(runBtns.filter(x => x === "브라우저에서 실행").length === 2 && await pg.$("a.btn.exam") === null, "practice cards: run in the browser, no exam buttons " + JSON.stringify(runBtns));
+  ok(await pg.$(".yrexam a[href='#/ipho/exam']") !== null, "the year page points to the exam portal");
+  await pg.click(".yrexam a"); await pg.waitForSelector("#xmRoot table");
+  ok(await pg.$(".modesw a.ex.on") !== null && await pg.$(".years") === null, "exam portal: exam chosen, no year grid");
+  const row = await pg.$$eval("#xmRoot tbody tr", trs => trs.map(t => [t.querySelector(".y").textContent, t.querySelector(".t").textContent, (t.querySelector("a.go") || {}).getAttribute && t.querySelector("a.go").getAttribute("href")]).find(r => r[0] === "2024"));
+  ok(row && /E1 \+ E2/.test(row[1]) && /e=E1%2CE2/.test(row[2]), "portal row: IPhO 2024 · E1 + E2 → the exam " + JSON.stringify(row && row.slice(0, 2)));
+  await pg.screenshot({ path: OUT + "1-portal.png", fullPage: true });
+  const EXAM_URL = SITE + "/" + row[2];
   await ctx.close();
 
   /* 2. not signed in: no way to start */
@@ -51,7 +56,11 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   /* 3. signed in with one token: start */
   ctx = await mk(); pg = await ctx.newPage(); watch(pg);
   await pg.goto(EXAM_URL); await pg.waitForSelector("#go");
-  ok(/남은 실전 토큰 1개/.test(await pg.textContent("main")), "shows 1 token");
+  ok(/보유 1개/.test(await pg.textContent("main")) && /수험 안내/.test(await pg.textContent("main")), "instructions page shows 1 token");
+  ok(await pg.$eval("#go", b => b.disabled), "start is locked until the declaration is ticked");
+  await pg.screenshot({ path: OUT + "2-instructions.png", fullPage: true });
+  for (const c of await pg.$$("[data-ag]")) await c.check();
+  ok(!(await pg.$eval("#go", b => b.disabled)), "…and opens when every line is ticked");
   await pg.click("#go"); await pg.waitForSelector(".modal");
   await pg.click(".modal button.red");
   await pg.waitForSelector(".desk iframe");
@@ -158,7 +167,8 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.click("#sub"); await pg.click(".modal button.red");
   await pg.waitForSelector(".result", { timeout: 60000 });
   const res = await pg.textContent("main");
-  ok(/채점 결과/.test(res) && /\b5\s*\/\s*10\b/.test(res) && /채점 대기/.test(res), "result: E1 graded 5 / 10, E2 waits for its scheme");
+  ok(/답안 제출 확인증/.test(res) && /HL-IPHO2024-\d{6}/.test(res) && /\b5\s*\/\s*10\b/.test(res) && /채점 대기/.test(res) && /답안지 1쪽/.test(res),
+    "receipt: candidate number, pages, E1 graded 5 / 10, E2 waits for its scheme");
   await pg.screenshot({ path: OUT + "7-result.png" });
   [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.active === null && act.tokens === 0, "nothing open, 0 tokens");
@@ -174,6 +184,11 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   const sid = act && (await call("GET", "/lab/sessions", null, TOK))[1].sessions[0].id;
   await pg.goto(SITE + "/#/lab/" + sid); await pg.waitForSelector(".arpanel"); await sleep(700);
   ok(/E1/.test(await pg.textContent("#arRoot")) && (await pg.$$(".arpanel")).length >= 3, "#/lab/<id> shows each experiment and the pages");
+  ok(/성적표/.test(await pg.textContent("#arRoot")) && /HL-IPHO2024-/.test(await pg.textContent("#arRoot")), "#/lab/<id> is a score report with the candidate number");
+  /* the portal now shows this candidate's status on the exam */
+  await pg.goto(SITE + "/#/ipho/exam"); await pg.waitForFunction(() => /채점 대기/.test((document.querySelector("#xmRoot") || {}).textContent || ""), null, { timeout: 8000 });
+  const r24 = await pg.$$eval("#xmRoot tbody tr", trs => trs.map(t => t.textContent).find(x => /^2024/.test(x.trim())));
+  ok(/채점 대기/.test(r24) && /성적표/.test(r24) && /다시 응시/.test(r24) && /\d+명 응시/.test(r24), "portal row: my status, report, sit again, the number of candidates");
   await pg.screenshot({ path: OUT + "8-lab.png", fullPage: true });
   /* 10. the community's Discord channel */
   await pg.goto(SITE + "/#/community/discord"); await pg.waitForSelector(".dcban", { timeout: 15000 });

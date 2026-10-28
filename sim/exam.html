@@ -122,6 +122,18 @@
   .zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:50;display:grid;place-items:center;cursor:zoom-out}
   .zoom img{max-width:96vw;max-height:96vh;background:#fff}
 
+  /* the candidate's documents: instructions and receipt */
+  .doc{max-width:860px}
+  .doc .badge{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#1c2027;background:var(--accent);border-radius:5px;padding:3px 8px}
+  .doc h1{margin:10px 0 2px}
+  .info{width:100%;border-collapse:collapse;margin:14px 0 6px;font-size:13.5px}
+  .info th{width:120px;text-align:left;color:var(--muted);font-weight:600;background:var(--deep)}
+  .info th,.info td{border:1px solid var(--line);padding:9px 11px;vertical-align:top}
+  .info td a{margin-left:8px;font-size:12.5px}
+  .agree{background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px}
+  .agree label{display:flex;gap:9px;align-items:flex-start;padding:5px 0;font-size:13.5px;cursor:pointer}
+  .agree input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px}
+  @media print{ .bar,.lang,.noprint{display:none!important} main{position:static} body{background:#fff;color:#000} .card{border:0} .info th{background:#eee;color:#000} }
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:grid;place-items:center;padding:16px}
   .modal .card{max-width:460px}
   .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0b0e12;border:1px solid var(--accent);color:var(--ink);
@@ -162,7 +174,14 @@ const T = {
       "보낸 쪽은 글자로 읽혀(OCR) 이 화면에 나타납니다. 읽은 글을 확인하고 고친 뒤 제출하면, 하슬라논술과 같은 방식으로 채점 기준마다 점수와 근거, 첨삭을 받습니다. 30분이 지나면 그때까지 보낸 쪽이 그대로 제출됩니다.",
       "시작하면 <b>실전 토큰 1개</b>를 씁니다. 시험 중에 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다. 다시 들어올 때는 토큰을 쓰지 않습니다. (시뮬레이터 안의 장치 상태는 다시 들어오면 처음으로 돌아갑니다.)",
     ],
-    tasksH: "이번 시험", sheet: "문제지", back: "목록으로",
+    tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
+    docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: "실험 5시간 + 답안 스캔 30분",
+    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `실전 토큰 1개 (보유 ${n}개)`,
+    infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
+    agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
+    agreeAll: "응시 동의에 모두 체크해야 시작할 수 있습니다.", examNo: "수험번호", applicant: "응시자",
+    receiptH: "답안 제출 확인증", rcName: "시험명", rcStart: "시험 시작", rcEnd: "실험 종료", rcSubmit: "답안 제출", rcPages: "제출한 쪽", rcStatus: "채점 상태", print: "인쇄",
+    pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
     loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
     tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: "토큰 1개 쓰고 시작 (5:00:00)", startQ: "실전 토큰 1개를 씁니다",
     startBody: n => `시작하면 5시간 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다. 남은 토큰 ${n}개 → ${n - 1}개.`,
@@ -202,7 +221,14 @@ const T = {
       "Each page is read into text (OCR) and appears here. Check and correct the text, then submit: every marking criterion is scored with quoted evidence and comments, the way the HaslaLab essay grader works. After 30 minutes the pages that arrived are submitted as they are.",
       "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock. Coming back costs no token. (The apparatus inside the simulators starts afresh when you come back.)",
     ],
-    tasksH: "This exam", sheet: "Problem sheet", back: "Back to the list",
+    tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
+    docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: "5 hours of experiments + 30 minutes to scan",
+    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `1 exam token (you have ${n})`,
+    infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
+    agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
+    agreeAll: "Tick every line of the declaration to start.", examNo: "Candidate no.", applicant: "Candidate",
+    receiptH: "Receipt of submission", rcName: "Exam", rcStart: "Started", rcEnd: "Experiments ended", rcSubmit: "Answers submitted", rcPages: "Pages", rcStatus: "Grading", print: "Print",
+    pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
     loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
     tokens: n => `Exam tokens left: <b>${n}</b>`, start: "Use 1 token and start (5:00:00)", startQ: "Use one exam token",
     startBody: n => `The five-hour timer starts on the server and cannot be paused or undone. Tokens: ${n} → ${n - 1}.`,
@@ -248,6 +274,8 @@ const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang 
 const KEY = EX.c + EX.y;
 const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : PDF_BASE + s.replace(/^pdf\//, "");
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
+const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
+const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
 /* the address to come back to (kept on the server with the session), without the language */
 const ENTRY = (() => { const q = new URLSearchParams(location.search); q.delete("lang"); return "?" + q.toString(); })();
 
@@ -287,7 +315,9 @@ function paintBar() {
   document.documentElement.lang = lang;
   document.title = `${t().exam} · ${label()} · HaslaLab`;
   $("bTitle").textContent = `${label()} · ${t().exam}`;
-  $("bSub").textContent = EX.tasks.map((id, i) => id + (EX.titles[i] ? " " + EX.titles[i] : "")).join("  ·  ");
+  $("bSub").textContent = SES && (SES.status === "running" || SES.status === "scanning")
+    ? `${t().examNo} ${examNo(SES.id)}  ·  ${t().applicant} ${(ME && ME.nickname) || ""}`
+    : EX.tasks.map((id, i) => id + (EX.titles[i] ? " " + EX.titles[i] : "")).join("  ·  ");
   $("bEnd").textContent = t().end;
   document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.l === lang));
   const running = SES && SES.status === "running";
@@ -320,7 +350,7 @@ let tick = null, poller = null, shown = "";
 function stopTimers() { clearInterval(tick); clearInterval(poller); clearInterval(mirror); tick = poller = mirror = null; }
 function render() {
   paintBar();
-  if (!OK_EXAM) { stopTimers(); shown = "bad"; $("main").innerHTML = `<div class="page"><div class="card"><h1>${t().exam}</h1><p class="lead">${t().bad}</p><a href="../#/comps">${t().back}</a></div></div>`; return; }
+  if (!OK_EXAM) { stopTimers(); shown = "bad"; $("main").innerHTML = `<div class="page"><div class="card"><h1>${t().exam}</h1><p class="lead">${t().bad}</p><a href="../#/comps">${lang === "ko" ? "대회 목록으로" : "Competitions"}</a></div></div>`; return; }
   const want = !SES ? "intro" : SES.status === "running" ? "run" : SES.status === "scanning" ? "scan" : "done";
   if (want === shown && want !== "intro" && want !== "done") return;            // the bench and the scan screen are not rebuilt by a refresh
   stopTimers(); shown = want;
@@ -339,7 +369,8 @@ async function sync() {
   try { a = await api("GET", "/lab/active"); }
   catch (e) { if (e.status === 401) { ME = null; SES = null; } return render(); }
   ME = ME || {}; ME.tokens = a.tokens; ME.other = null;
-  if (a.active && a.active.exam_key === KEY) setSession(a.active);
+  if (!ME.nickname) { try { ME.nickname = ((await api("GET", "/me")).user || {}).nickname; } catch (e) {} }
+  if (a.active && a.active.exam_key === KEY && a.active.tasks.join(",") === EX.tasks.join(",")) setSession(a.active);
   else {
     if (a.active) ME.other = a.active;
     /* this exam closed meanwhile (time ran out elsewhere, or it was submitted on another computer): show its result */
@@ -352,9 +383,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && OK
 addEventListener("storage", e => { if (e.key === "hlCmTok") sync(); });
 
 async function introView() {
-  const rows = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b><span>${esc(EX.titles[i] || "")}</span>
-      ${EX.pdfs[i] ? `<a href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${t().sheet} ↗</a>` : ""}
-      <a href="${esc(simUrl(EX.files[i]))}" style="${EX.pdfs[i] ? "margin-left:10px" : ""}">${t().practice}</a></div>`).join("");
+  const back = `../#/${esc(EX.c)}/exam`;
   let gate;
   if (LABOK === false) gate = `<div class="note w">${t().noServer}</div>`;
   else if (LABOK === null && tok()) gate = `<div class="note w">${t().err.network}</div>`;
@@ -362,18 +391,33 @@ async function introView() {
       <div class="row"><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><span style="font-size:12.5px;color:var(--muted)">${t().loginWait}</span></div>`;
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
       <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
-  else gate = `<div class="note">${t().tokens(ME.tokens)}</div>
-      ${ME.tokens > 0 ? `<div class="row"><button class="pri" id="go">${t().start}</button></div>` : `<div class="note w">${t().noTokens}</div>`}`;
-  $("main").innerHTML = `<div class="page"><div class="card">
-    <h1>${esc(label())} · ${t().exam}</h1><p class="lead">${t().introLead}</p>
+  else if (!(ME.tokens > 0)) gate = `<div class="note w">${t().noTokens}</div>`;
+  else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}</div>
+      <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
+  const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? `<a href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${t().sheet} ↗</a>` : ""}</div>`).join("");
+  $("main").innerHTML = `<div class="page"><div class="card doc">
+    <span class="badge">${t().docBadge}</span>
+    <h1>${esc(label())} · ${EX.tasks.length > 1 ? EX.tasks.join(" + ") : EX.tasks[0]}</h1><p class="lead">${t().docH} — ${t().introLead}</p>
+    <table class="info"><tbody>
+      <tr><th>${t().infoName}</th><td>${esc(label())} ${lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().infoTasks}</th><td>${tasks}</td></tr>
+      <tr><th>${t().infoTime}</th><td>${t().infoTimeV}</td></tr>
+      <tr><th>${t().infoBring}</th><td>${t().infoBringV}</td></tr>
+      <tr><th>${t().infoFee}</th><td>${ME && ME.tokens != null ? t().infoFeeV(ME.tokens) : t().infoFeeV("–")}</td></tr>
+      <tr><th>${t().infoWho}</th><td>${ME && ME.nickname ? esc(ME.nickname) : "—"}</td></tr>
+    </tbody></table>
+    <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${t().rules.map(r => `<li>${r}</li>`).join("")}</ol>
-    <h3 style="margin:18px 0 0;font-size:14px;color:var(--muted)">${t().tasksH}</h3>
-    <div class="tasks">${rows}</div>
     ${gate}
-    <div class="row"><a href="../#/${esc(EX.c)}/${EX.y}">${t().back}</a></div>
+    <div class="row"><a href="${back}">${t().back}</a></div>
   </div></div>`;
   const go = $("go");
-  if (go) go.onclick = () => confirmBox(t().startQ, t().startBody(ME.tokens), t().startQ, startExam);
+  if (go) {
+    const boxes = [...document.querySelectorAll("[data-ag]")];
+    const upd = () => { const all = boxes.every(b => b.checked); go.disabled = !all; $("agHint").hidden = all; };
+    boxes.forEach(b => b.onchange = upd);
+    go.onclick = () => { if (!go.disabled) confirmBox(t().startQ, t().startBody(ME.tokens), t().startQ, startExam); };
+  }
 }
 async function startExam() {
   if (BUSY) return; BUSY = true;
@@ -611,17 +655,29 @@ async function submitNow() {
 
 /* ── the result ── */
 function doneView() {
-  const s = SES, per = (s.detail && s.detail.tasks) || {};
+  const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
   const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
     const sc = x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
     const why = x.status === "pending" ? (t().pendingWhy[x.why] || "") : x.status === "error" ? t().errorNote : "";
     return `<tr><td><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</td><td>${t().statusOf[x.status] || "—"}${why ? `<div style="font-size:12px;color:var(--muted)">${why}</div>` : ""}</td><td>${sc}</td>
-      <td>${EX.sols[i] ? `<a href="${esc(pdfUrl(EX.sols[i]))}" target="_blank" rel="noopener">${t().solution} ↗</a>` : ""}</td></tr>`; }).join("");
-  $("main").innerHTML = `<div class="page"><div class="card"><h1>${t().resultH}</h1><p class="lead">${esc(label())} · ${t().statusOf[s.status] || esc(s.status)}</p>
-    ${s.status === "graded" ? `<div class="result"><div class="tot">${s.score} / ${s.points ?? "?"}</div></div>` : ""}
+      <td class="noprint">${EX.sols[i] ? `<a href="${esc(pdfUrl(EX.sols[i]))}" target="_blank" rel="noopener">${t().solution} ↗</a>` : ""}</td></tr>`; }).join("");
+  const pagesOf = id => { const m = pg.filter(p => p.task === id); return m.length ? t().pagesFmt(m.filter(p => p.kind === "answer").length, m.filter(p => p.kind === "working").length) : t().noPages; };
+  $("main").innerHTML = `<div class="page"><div class="card doc">
+    <span class="badge">${t().docBadge}</span><h1>${t().receiptH}</h1><p class="lead">${esc(label())}</p>
+    <table class="info"><tbody>
+      <tr><th>${t().examNo}</th><td><b>${examNo(s.id)}</b></td></tr>
+      <tr><th>${t().applicant}</th><td>${esc((ME && ME.nickname) || s.nickname || "")}</td></tr>
+      <tr><th>${t().rcName}</th><td>${esc(label())} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().rcStart}</th><td>${when(s.started_at)}</td></tr>
+      <tr><th>${t().rcEnd}</th><td>${when(s.ended_at)}</td></tr>
+      <tr><th>${t().rcSubmit}</th><td>${s.submitted_at ? when(s.submitted_at) : "—"}</td></tr>
+      <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
+      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" ? ` · <b>${s.score} / ${s.points ?? "?"}</b>` : ""}</td></tr>
+    </tbody></table>
     <div class="result"><table><tbody>${rows}</tbody></table></div>
-    <div class="row"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a>
-      <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${EX.y}">${t().back}</a></div></div></div>`;
+    <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
+      <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
+  $("prn").onclick = () => print();
   $("again").onclick = () => { SES = null; shown = ""; sync(); };
   if (s.status === "grading") { poller = setInterval(async () => { try { setSession((await api("GET", `/lab/sessions/${s.id}`)).session); if (SES.status !== "grading") { shown = ""; render(); } } catch (e) {} }, 5000); }
 }

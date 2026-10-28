@@ -370,7 +370,9 @@ const LBT = {
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
        del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "토큰은 관리자가 나누어 줍니다. 더 필요하면 커뮤니티에 문의하세요.",
        admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
-       queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점"},
+       queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점",
+       reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
+       retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록"},
   en: {h: "Exam mode", sub: "Five hours of experiments as on the day, then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
        start: "start", grant: "received", revoke: "taken back", refund: "refunded", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
@@ -379,7 +381,9 @@ const LBT = {
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
        del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Tokens are handed out by the admins. Ask in the community if you need more.",
        admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
-       queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks"}};
+       queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks",
+       reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
+       retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list"}};
 const lbt = () => LBT[lang === "en" ? "en" : "ko"];
 /* the catalogue's solution sheet for an exam's experiment, when the site has one */
 function arLabSol(s, task) {
@@ -410,9 +414,15 @@ async function arLabOne(root, alive, id) {
   const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
   root.innerHTML = `
-    <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmShort(s.started_at)} · ${L.st[s.status] || esc(s.status)}</p></div>
-      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/lab">${L.all}</a>${open && s.entry ? `<a class="cmbtn sm pri" href="sim/exam.html${esc(s.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div></div>
-    ${s.status === "graded" ? `<div class="arres ok"><b>${L.total}</b><span>${s.score} / ${s.points ?? "?"}</span></div>` : ""}
+    <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
+      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${open && s.entry ? `<a class="cmbtn sm pri" href="sim/exam.html${esc(s.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div></div>
+    <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl"><tbody>
+      <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
+      <tr><th>${L.exam}</th><td>${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</td><th>${L.date}</th><td>${cmFull(s.started_at).slice(0, 16)}</td></tr></tbody></table>
+      ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${L.total}</small><b>${s.score} / ${s.points ?? "?"}</b></div>
+        ${s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
+        <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
+        ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}</div>
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
         : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
