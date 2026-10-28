@@ -33,7 +33,7 @@ CREATE INDEX lab_sessions_status ON lab_sessions(status, id);
 -- one exam at a time: a second start (a double click, another tab) cannot open a second session, so it cannot spend twice
 CREATE UNIQUE INDEX lab_sessions_active ON lab_sessions(user_id) WHERE status IN ('running','scanning');
 
-ALTER TABLE users ADD COLUMN exam_tokens INTEGER NOT NULL DEFAULT 1;   -- every account starts with one exam
+ALTER TABLE users ADD COLUMN exam_tokens INTEGER NOT NULL DEFAULT 5;   -- every account starts with five exams
 CREATE TABLE lab_ledger (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id     INTEGER NOT NULL,

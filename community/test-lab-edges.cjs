@@ -12,6 +12,8 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
 (async () => {
   const rnd = Math.random().toString(36).slice(2, 7);
   const TOK = (await call("POST", "/signup", { username: "edg" + rnd, nickname: "edg" + rnd, password: "password1" }))[1].token;
+  /* this run is about the last token: the account starts with one instead of the five every account gets */
+  require("child_process").execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET exam_tokens=1 WHERE username='edg${rnd}'"`, { cwd: __dirname, stdio: "ignore" });
   const browser = await chromium.launch();
   const errs = [];
   const mk = async (skewSec, tok = TOK) => {

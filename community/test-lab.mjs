@@ -24,13 +24,17 @@ const png = Buffer.from("89504E470D0A1A0A0000000D4948445200000001000000010806000
 const X = { comp: "ipho", year: 2024, tasks: ["E1", "E2"], lang: "ko" };
 
 const A = await sign("labA"), Bt = await sign("labB"), ADM = await sign("labAdm");
-execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET role='admin' WHERE username='labAdm${rnd}'"`, { stdio: "ignore" });
+execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET role='admin' WHERE username='labAdm${rnd}'; DELETE FROM lab_rubrics WHERE exam_key='ipho2024'"`, { stdio: "ignore" });
 
 /* login and the first token */
 let [s, j] = await call("POST", "/lab/start", X);
 ok(s === 401, "start needs login " + s);
 [s, j] = await call("GET", "/lab/active", null, A);
-ok(s === 200 && j.tokens === 1 && j.active === null, "a new account has one token, nothing open");
+ok(s === 200 && j.tokens === 5 && j.active === null, "a new account has five tokens, nothing open");
+ok(await tokens(Bt) === 5, "so does another");
+/* the rest of the run starts A from one token: an admin takes four back */
+[s, j] = await call("POST", "/admin/lab/tokens", { user: "labA" + rnd, delta: -4, note: "test" }, ADM);
+ok(s === 200 && j.tokens === 1, "admin takes back 4 → 1");
 
 /* eight starts at once (double clicks, two tabs): one session, one token spent */
 const many = await Promise.all(Array.from({ length: 8 }, () => call("POST", "/lab/start", X, A)));
@@ -40,7 +44,7 @@ ok(many.filter(([, x]) => x.token).length === 1, "exactly one start got the uplo
 const first = many.find(([, x]) => x.token)[1], SID = first.session.id, T0 = first.session.started_at;
 let KEY = first.token;
 ok(await tokens(A) === 0, "one token spent, not eight");
-let L = await ledger(A);
+let L = (await ledger(A)).filter(x => x.reason === "start");
 ok(L.length === 1 && L[0].delta === -1 && L[0].reason === "start" && L[0].session_id === SID, "ledger: one -1 for this session");
 ok(first.session.status === "running" && first.session.ended_at === T0 + EXAM && first.session.exam_sec === EXAM, "running, the clock ends at start + exam");
 
@@ -53,7 +57,7 @@ ok(j.session.now - j.session.started_at >= 1, "the clock kept running while away
 ok(j.active && j.active.id === SID && j.active.started_at === T0 && j.tokens === 0, "active: same session, started_at unchanged, still 0 tokens");
 [s, j] = await call("POST", "/lab/start", { ...X, year: 2023 }, A);
 ok(s === 409 && j.error === "other_active", "another exam while one is open → 409");
-ok(await tokens(A) === 0 && (await ledger(A)).length === 1, "…and nothing spent");
+ok(await tokens(A) === 0 && (await ledger(A)).length === 2, "…and nothing spent");
 
 /* the phone cannot send while the experiments run */
 [s, j] = await up(SID, KEY, "E1", "answer", png);
@@ -124,7 +128,7 @@ ok(j.active === null && j.tokens === 0, "nothing open after submitting");
 /* no tokens left: no new exam, the balance never goes negative */
 const tries = await Promise.all(Array.from({ length: 5 }, () => call("POST", "/lab/start", X, A)));
 ok(tries.every(([st, x]) => st === 402 && x.error === "no_tokens"), "0 tokens → 402 every time " + JSON.stringify(tries.map(x => x[0])));
-ok(await tokens(A) === 0 && (await ledger(A)).length === 1, "balance 0, ledger unchanged");
+ok(await tokens(A) === 0 && (await ledger(A)).length === 2, "balance 0, ledger unchanged");
 [s, j] = await call("GET", "/lab/sessions", null, A);
 ok(j.sessions.length === 1, "no session was created by the refused starts");
 
@@ -162,11 +166,13 @@ ok(await tokens(A) === 1, "…which gives no token back");
 [s, j] = await call("POST", "/lab/start", { comp: "apho", year: 2025, tasks: ["E1"] }, A);
 ok(s === 200 && !j.resumed && await tokens(A) === 0, "the last token starts APhO 2025");
 L = await ledger(A);
-ok(L.reduce((a, x) => a + x.delta, 0) === -1 && L.filter(x => x.reason === "start").length === 3, "ledger: 1 (default) + 2 (grant) - 3 (starts) = 0 " + JSON.stringify(L.map(x => x.delta)));
+ok(5 + L.reduce((a, x) => a + x.delta, 0) === 0 && L.filter(x => x.reason === "start").length === 3, "ledger: 5 (default) - 4 (revoke) + 2 (grant) - 3 (starts) = 0 " + JSON.stringify(L.map(x => x.delta)));
 [s, j] = await call("DELETE", `/lab/sessions/${j.session.id}`, null, A);
 ok(s === 409, "an open exam cannot be deleted (no way to dodge the clock)");
 
 /* B is untouched by all of this */
-ok(await tokens(Bt) === 1, "another account still has its own token");
+ok(await tokens(Bt) === 5, "another account still has its own five tokens");
+[s, j] = await call("POST", "/admin/lab/tokens", { user: "labB" + rnd, delta: -9 }, ADM);
+ok(s === 200 && j.tokens === 0, "taking back more than the balance stops at 0");
 console.log(fails ? `${fails} FAILED` : "all passed");
 process.exit(fails ? 1 : 0);
