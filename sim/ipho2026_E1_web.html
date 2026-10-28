@@ -112,7 +112,6 @@
 
   <aside class="panel">
     <h2 id="t-h-time"></h2>
-    <div class="clock" id="clock">00:00:00</div>
     <div class="row" id="speeds"></div>
     <div class="row" id="rewind"></div>
     <input type="range" id="scrub" min="0" max="1" step="1" value="1">
@@ -139,8 +138,8 @@ const T={
     tray:"부품함",
     hTime:"시간 배속 · 되감기", timeHint:"가열·냉각은 실제로 수십 분이 걸립니다. 스페이스 = 일시정지 · Ctrl+Z = 직전 조작 취소 · 아래 막대를 끌면 지나간 시점의 상태로 돌아갑니다 (그 뒤의 기록은 지워집니다).",
     hHow:"조작", backAll:"← 실험대 전체", zScreen:"전자 모듈 화면 — 버튼을 누를 수 있습니다 (바깥 클릭·Esc: 닫기)", zSection:"실린더 단면 (Fig. 17) · 기호 (Fig. 18) · 밸브 (Fig. 15)", rw:[["⟲ 10초",10],["⟲ 1분",60],["⟲ 10분",600]], undo:"↶ 직전 조작 취소",
-    rewound:s=>s+" 시점으로 되돌렸습니다.", undone:"직전 조작을 취소했습니다.", noHist:"되돌릴 기록이 없습니다.",
-    howto:"· 전원: 벽 콘센트의 코드 끝을 클릭해 모듈 뒷면에 꽂고 POWER 켜기\n· 장비를 클릭하면 카메라가 그 3D 모델 앞으로 다가갑니다 (Esc·빈 곳 더블클릭·「← 실험대 전체」: 돌아가기)\n· 모듈 화면(위): 버튼 1 타이머 시작·정지, 2 리셋, 3 그래프/숫자, 4 히터 · 모듈 앞·뒤·옆면도 클릭하면 정면으로\n· 실린더를 클릭하면 IC 눈금을 정면으로, 덮개를 클릭하면 위에서 본 단면(Fig. 17), 밸브 보드는 위에서(Fig. 15)\n· 밸브 손잡이 클릭: 관과 나란하면 열림(I), 가로지르면 닫힘(II)\n· 호스 A·C 끝: 집어서 용기에 넣기, 다시 클릭하면 클립 고정\n· 주사기: 용기·주사기 연결관 끝·호스 D 끝·거치대에 놓기, 휠이나 손잡이 드래그로 피스톤\n· 용기를 집어 다른 용기에 놓으면 따릅니다 · 파란 고리 클릭: 호스 뽑기/꽂기\n· 빈 곳 드래그: 돌려 보기 · 휠: 확대 · 빈 곳 더블클릭: 처음 시점으로",
+    rewound:()=>"되돌렸습니다.", undone:"직전 조작을 취소했습니다.", noHist:"되돌릴 기록이 없습니다.",
+    howto:"· 전원: 벽 콘센트의 코드 끝을 클릭해 모듈 뒷면에 꽂고 POWER 켜기\n· 장비를 클릭하면 카메라가 그 3D 모델 앞으로 다가갑니다 (Esc·빈 곳 더블클릭·「← 실험대 전체」: 돌아가기)\n· 모듈 화면(위): 버튼 1 타이머 시작·정지, 2 리셋 (타이머는 숫자 화면에서만), 3 그래프/숫자 화면, 4 히터 (65 C에서 꺼짐, 표시등이 빨간색이 아닐 때 다시 켜기) · 모듈 앞·뒤·옆면도 클릭하면 정면으로\n· 실린더를 클릭하면 IC 눈금을 정면으로, 덮개를 클릭하면 위에서 본 단면(Fig. 17), 밸브 보드는 위에서(Fig. 15)\n· 밸브 손잡이 클릭: 관과 나란하면 열림(I), 가로지르면 닫힘(II)\n· 호스 A·C 끝: 집어서 용기에 넣기, 다시 클릭하면 클립 고정\n· 주사기: 용기·주사기 연결관 끝·호스 D 끝·거치대에 놓기, 휠이나 손잡이 드래그로 피스톤\n· 용기를 집어 다른 용기에 놓으면 따릅니다 · 파란 고리 클릭: 호스 뽑기/꽂기\n· 빈 곳 드래그: 돌려 보기 · 휠: 확대 · 빈 곳 더블클릭: 처음 시점으로",
     pause:"일시정지", run:"진행",
     session:s=>"세션 "+String(s).padStart(6,"0"),
     trayItems:{syrW:"7. 주사기 100 mL (물)",syrP:"7. 주사기 100 mL (PG)",pg:"9. PG 100 mL",cold:"10. 찬물 보온병",
@@ -158,7 +157,7 @@ const T={
         paused:"⏸ 일시정지 중"},
     m:{
       powerOn:"전원 켜짐", powerOff:"전원 꺼짐", noMains:"! 전원 코드가 꽂혀 있지 않습니다 — 벽 콘센트에서 내려온 코드 끝을 모듈 뒷면 SOURCE AC에 꽂으세요.", mainsIn:"전원 코드를 모듈 뒷면 SOURCE AC에 꽂았습니다.", mainsOut:"전원 코드를 뽑았습니다.", noPower:"전자 모듈에 전원이 들어와 있지 않습니다.",
-      graph:"그래프 화면은 이 실험에서 쓰지 않습니다.", heaterWet:"! 히터가 물에 완전히 잠겨 있어야 합니다.",
+      graph:"그래프 화면은 이 실험에서 쓰지 않습니다. 타이머는 숫자 화면에만 나옵니다 (버튼 3으로 돌아가기).", timerNumeric:"! 타이머(버튼 1·2)는 숫자 화면에서만 씁니다 — 버튼 3으로 숫자 화면으로 돌아가세요.", heaterWet:"! 히터가 물에 완전히 잠겨 있어야 합니다.",
       indicatorRed:"! 표시등이 아직 빨간색입니다 - 60 C 아래로 내려갈 때까지 기다리세요.",
       primed:"펌프 공기빼기 완료 - 이제 물을 제대로 끌어올립니다.",
       hoseIn:k=>"호스 "+k+"를 포트에 꽂았습니다", hoseOut:k=>"호스 "+k+"를 포트에서 빼냈습니다",
@@ -196,8 +195,8 @@ const T={
     tray:"Parts box",
     hTime:"Time scale · rewind", timeHint:"Heating and cooling really take tens of minutes. Space = pause · Ctrl+Z = undo the last action · drag the bar below to go back to an earlier moment (what came after it is dropped).",
     hHow:"How to", backAll:"← Whole bench", zScreen:"Electronic module screen — the buttons work (click outside or Esc to close)", zSection:"Cylinder section (Fig. 17) · notation (Fig. 18) · valves (Fig. 15)", rw:[["⟲ 10 s",10],["⟲ 1 min",60],["⟲ 10 min",600]], undo:"↶ Undo last action",
-    rewound:s=>"Back to "+s+".", undone:"Last action undone.", noHist:"Nothing to go back to.",
-    howto:"· Power: click the end of the cord from the wall outlet to plug it into the back of the module, then switch POWER on\n· Click a piece of apparatus and the camera moves in on its 3-D model (Esc, a double click on a bare spot or “← Whole bench”: back)\n· Module screen (top): button 1 timer start/stop, 2 reset, 3 graph/numbers, 4 heater · click its front, back or side to face it\n· Click the cylinders to face the IC scale, the cover to look down on the section (Fig. 17), the valve board to look down on it (Fig. 15)\n· Click a valve handle: along the tube = open (I), across it = closed (II)\n· Hose A / C end: pick it up and put it in a container, click again to clip it\n· Syringe: put it on a container, the end of the syringe-connection tube, the end of hose D or the rack; wheel or drag the plunger head\n· Put a container on another to pour · click a blue collar: pull a hose out / push it in\n· Drag a bare spot: turn the view · wheel: zoom · double-click a bare spot: back to the first view",
+    rewound:()=>"Gone back.", undone:"Last action undone.", noHist:"Nothing to go back to.",
+    howto:"· Power: click the end of the cord from the wall outlet to plug it into the back of the module, then switch POWER on\n· Click a piece of apparatus and the camera moves in on its 3-D model (Esc, a double click on a bare spot or “← Whole bench”: back)\n· Module screen (top): button 1 timer start/stop, 2 reset (the timer works on the numerical display only), 3 graph/numerical display, 4 heater (cuts out at 65 C; on again once the indicator is no longer red) · click its front, back or side to face it\n· Click the cylinders to face the IC scale, the cover to look down on the section (Fig. 17), the valve board to look down on it (Fig. 15)\n· Click a valve handle: along the tube = open (I), across it = closed (II)\n· Hose A / C end: pick it up and put it in a container, click again to clip it\n· Syringe: put it on a container, the end of the syringe-connection tube, the end of hose D or the rack; wheel or drag the plunger head\n· Put a container on another to pour · click a blue collar: pull a hose out / push it in\n· Drag a bare spot: turn the view · wheel: zoom · double-click a bare spot: back to the first view",
     pause:"pause", run:"run",
     session:s=>"session "+String(s).padStart(6,"0"),
     trayItems:{syrW:"7. 100 mL syringe (water)",syrP:"7. 100 mL syringe (PG)",pg:"9. PG 100 mL",cold:"10. Cold-water flask",
@@ -215,7 +214,7 @@ const T={
         paused:"⏸ paused"},
     m:{
       powerOn:"Power on", powerOff:"Power off", noMains:"! The mains cord is not plugged in: plug the end hanging from the wall outlet into SOURCE AC on the back of the module.", mainsIn:"Mains cord plugged into SOURCE AC on the back of the module.", mainsOut:"Mains cord unplugged.", noPower:"The electronic module has no power.",
-      graph:"Graph display is not used in the experiments.", heaterWet:"! The heater must be fully under water.",
+      graph:"Graph display is not used in the experiments. The timer shows on the numerical display only (button 3 to go back).", timerNumeric:"! The timer (buttons 1 and 2) works on the numerical display only: press button 3 to go back to it.", heaterWet:"! The heater must be fully under water.",
       indicatorRed:"! The indicator is still red - wait until it drops below 60 C.",
       primed:"Pump primed - it now draws water properly.",
       hoseIn:k=>"Hose "+k+" pushed into its port", hoseOut:k=>"Hose "+k+" pulled out of its port",
@@ -369,9 +368,10 @@ class Lab{
   plugMains(){ this.mains=!this.mains; this.say(this.mains?"mainsIn":"mainsOut"); if(this.setPower()&&this.power) this.say("powerOn"); }
   pressButton(n){
     if(!this.power){ this.say("noPower"); return; }
+    if((n===1||n===2)&&this.graphMode){ this.say("timerNumeric"); return; }
     if(n===1) this.timerRun=!this.timerRun;
     else if(n===2) this.timer=0;
-    else if(n===3) this.graphMode=!this.graphMode;
+    else if(n===3){ this.graphMode=!this.graphMode; if(this.graphMode) this.say("graph"); }
     else if(n===4){
       if(this.h_oc<0.04){ this.say("heaterWet"); return; }
       if(this.heaterHot&&!this.heater){ this.say("indicatorRed"); return; }
@@ -1073,7 +1073,7 @@ let LR=[0,0,0,0], LRt=-1e9;
 function readings(){ const now=performance.now(); if(lab.power&&now-LRt>400){ LRt=now; LR=[lab.rPint(),lab.rPatm(),lab.rTint(),lab.rText()]; } return LR; }
 function heaterLamp(){ if(lab.heater) return Math.floor(lab.t*2)%2?"#d94a34":"#4ad07a"; return lab.heaterHot?"#d94a34":null; }
 function screenSig(){ if(!lab.power) return "off"; const r=readings();
-  return [r.join(","),lab.graphMode,lab.graphMode?lab.gh.length:0,Math.floor(lab.timer*10),heaterLamp()].join("|"); }
+  return [r.join(","),lab.graphMode,lab.graphMode?lab.gh.length:0,lab.graphMode?0:Math.floor(lab.timer*10),heaterLamp()].join("|"); }
 function paintScreen(withKeys,down){
   const [x0,y0,x1,y1]=SCR_BOX, w=x1-x0;
   if(withKeys) R(0,0,SCRW,SCRH,"#0d0f12"); else ctx.clearRect(0,0,SCRW,SCRH);
@@ -1111,9 +1111,6 @@ function paintScreen(withKeys,down){
       X(th.toFixed(1),gx1+6,gy0+8,"#f0a63a",15,"w"); X(tl.toFixed(1),gx1+6,gy1-8,"#f0a63a",15,"w");
       X(Math.max(1,Math.round((t1-t0)/60))+" min",gx1,gy1+16,"#79cfe6",15,"e"); }
     [["INT. P","#42d08a"],["INT. T","#f0a63a"],["EXT. T","#e8d34a"]].forEach(([nm,col],i)=>{ R(gx0+i*130,y0+16,gx0+i*130+16,y0+28,col); X(nm,gx0+i*130+22,y0+22,"#cfe8f2",16,"w"); });
-    RR(x0+18,y1-62,w-36,46,8,"#0e2840","#2a5a80",2);
-    const mn=Math.floor(lab.timer/60), s2=lab.timer%60;
-    X("TIMER: "+String(mn).padStart(2,"0")+":"+s2.toFixed(1).padStart(4,"0"),x0+40,y1-39,"#eef6fb",28,"w",true,MONO);
     const lamp=heaterLamp(); R(x1-70,y1-55,x1-40,y1-25,lamp||"#13212b","#3a5560",2);
   } else {
     const g=ctx.createLinearGradient(x0,y0,x1,y1); g.addColorStop(0,"rgba(255,255,255,0.07)"); g.addColorStop(0.5,"rgba(255,255,255,0)"); g.addColorStop(1,"rgba(255,255,255,0.03)");
@@ -1670,7 +1667,7 @@ function undo(){
 let scrubbing=false;
 function syncScrub(){ if(scrubbing) return; const s=$("scrub"); s.max=Math.max(1,HIST.length); s.value=HIST.length; }
 $("scrub").addEventListener("input",e=>{ scrubbing=true; const i=Math.min(HIST.length-1,+e.target.value);
-  const h=HIST[i]; if(h) $("clock").textContent="⟲ "+fmtT(h.t); });
+  });
 $("scrub").addEventListener("change",e=>{ scrubbing=false; const i=+e.target.value;
   if(i<HIST.length){ const sn=HIST[i]; restore(sn); say(d().rewound(fmtT(sn.t))); } syncScrub(); });
 
@@ -2013,7 +2010,6 @@ function tick(){
     while(acc>0){ const dt=acc>1?1:acc; lab.step(dt); acc-=dt; record(); if(performance.now()>budget){ acc=0; break; } }
   }
   if(CW>10) draw();
-  if(!scrubbing) $("clock").textContent=fmtT(lab.t);
   if(++ui%8===0){ renderStatus(); syncScrub(); }
   requestAnimationFrame(tick);
 }
