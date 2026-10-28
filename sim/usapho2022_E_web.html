@@ -40,8 +40,8 @@ header code{color:#d7ba7d}
 #screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
         font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;word-break:break-word}
 #screen .in{color:#9cdcfe}
-#screen .g{color:#6a9955}#screen .c{color:#4ec9b0}#screen .y{color:#dcdcaa}#screen .r{color:#f48771}#screen .b{font-weight:700}#screen .dim{color:var(--dim)}
-#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);padding:6px 16px 10px}
+#screen .g{color:#0dbc79}#screen .bg{color:#23d18b}#screen .c{color:#11a8cd}#screen .bc{color:#29b8db}#screen .y{color:#e5e510}#screen .r{color:#cd3131}#screen .br{color:#f14c4c}#screen .b{font-weight:700}#screen .dim{color:var(--dim)}#screen .dim2{opacity:.6}
+#bar{display:flex;align-items:baseline;gap:0;background:transparent;border:0;padding:0}
 #ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre;flex:none}
 #ps .g{color:#6a9955}#ps .c{color:#569cd6}
 #inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
@@ -84,9 +84,9 @@ button:hover{border-color:var(--accent);color:var(--accent)}
   <div id="lang"><a id="lang-ko">한국어</a><a id="lang-en">English</a></div>
   <h1 id="h1"></h1><p id="sub"></p>
   <details><summary id="about"></summary><ul id="notes"></ul></details>
-  <div id="modes"><button id="m-lab" class="on"></button><button id="m-term"></button></div>
+  <div id="modes"><button id="m-term" class="on"></button><button id="m-lab"></button></div>
 </header>
-<main id="lab">
+<main id="lab" hidden>
   <section class="lp">
     <div id="parts"><button data-p="wall" class="on"></button><button data-p="disk"></button></div>
     <p id="partNote" class="pn"></p>
@@ -101,9 +101,8 @@ button:hover{border-color:var(--accent);color:var(--accent)}
     <p id="resNote" class="pn"></p>
   </section>
 </main>
-<div id="term" hidden>
-<div id="screen"></div>
-<div id="bar"><span id="ps"></span><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+<div id="term">
+<div id="screen"><div id="bar"><span id="ps"></span><input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false"></div></div>
 <div id="tools"><button id="b-restart"></button><button id="b-copy"></button><button id="b-save"></button></div>
 </div>
 <script>
@@ -115,9 +114,20 @@ const DISK={R_M:0.145,R_M_ERR:0.002,M_M:1.4142,R_P:0.250,R_P_ERR:0.001,M:[1,5],M
   TH:[-90,90],TH_ERR:0.1,DIST:2,X:0.696,Y:-1.230,POS_ERR:0.003,PROC:4.0,V:[0.5,10],V_ABS:0.05,V_REL:0.01,S:[-2,2],S_ERR:0.002};
 function normal(m,s){ let u=0,v=0; while(u===0) u=Math.random(); while(v===0) v=Math.random(); return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 const perturb=(f,abs,rel)=>f*(1+normal(0,rel))+normal(0,abs);
-const sgn=(x,w,d)=>((x<0?"-":"+")+Math.abs(x).toFixed(d)).padStart(w," ");   /* Rust {:+w.d} */
+const sgn=(x,w,d)=>(isNaN(x)?"NaN":(x<0?"-":"+")+Math.abs(x).toFixed(d)).padStart(w," ");   /* Rust {:+w.d}; NaN carries no sign */
+const rmax=(a,b)=>isNaN(a)?b:isNaN(b)?a:Math.max(a,b);                                          /* f64::max ignores NaN */
+/* Rust's <f64 as Display>: never an exponent, -0 keeps its sign, inf and NaN spelled as Rust does */
+function rsF(v){ if(isNaN(v)) return "NaN"; if(!isFinite(v)) return v<0?"-inf":"inf"; if(Object.is(v,-0)) return "-0";
+  const s=String(v), m=s.match(/^(-?)(\d)(?:\.(\d+))?e([+-]\d+)$/); if(!m) return s;
+  const dig=m[2]+(m[3]||""), e=+m[4];
+  return m[1]+(e>=0?dig.padEnd(e+1,"0"):"0."+"0".repeat(-e-1)+dig); }
+/* str::parse::<f64>: no trimming; decimals, exponents, inf/infinity/nan in any case */
+function rsParse(t){ if(t==="") return {err:"cannot parse float from empty string"};
+  const m=t.match(/^([+-]?)(inf|infinity|nan)$/i); if(m) return {v:/nan/i.test(m[2])?NaN:(m[1]==="-"?-Infinity:Infinity)};
+  if(!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(t)) return {err:"invalid float literal"};
+  return {v:Number(t)}; }
 function wallTrial(vIn,wIn,thIn){
-  const v=Math.max(perturb(vIn,WALL.V_ABS,WALL.V_REL),WALL.V[0]/2), w=perturb(wIn,WALL.W_ABS,WALL.W_REL);
+  const v=rmax(perturb(vIn,WALL.V_ABS,WALL.V_REL),WALL.V[0]/2), w=perturb(wIn,WALL.W_ABS,WALL.W_REL);
   const th=Math.min(90,Math.max(0,perturb(thIn,WALL.TH_ERR,0)))*Math.PI/180;
   const r=normal(WALL.R,WALL.R_ERR), c=normal(WALL.C,WALL.C_ERR), mu=normal(WALL.MU,WALL.MU_ERR), b=normal(WALL.BETA,WALL.BETA_ERR);
   const vy=v*Math.cos(th), vx=v*Math.sin(th), dmax=mu*vy*(1+c), dns=(w*r-vx)/(1+1/b), dvx=Math.max(-dmax,Math.min(dmax,dns));
@@ -125,7 +135,7 @@ function wallTrial(vIn,wIn,thIn){
   return {wait:WALL.DIST*(1/vy+1/vyN)+WALL.PROC, speed:Math.hypot(vxN,vyN), angle:Math.atan(vxN/vyN)*180/Math.PI, omega:wN};
 }
 function diskTrial(mIn,sIn,vIn,thIn){
-  const m=perturb(mIn,DISK.M_ABS,DISK.M_REL), s=perturb(sIn,DISK.S_ERR,0), v=Math.max(perturb(vIn,DISK.V_ABS,DISK.V_REL),DISK.V[0]/2);
+  const m=perturb(mIn,DISK.M_ABS,DISK.M_REL), s=perturb(sIn,DISK.S_ERR,0), v=rmax(perturb(vIn,DISK.V_ABS,DISK.V_REL),DISK.V[0]/2);
   const th=perturb(thIn,DISK.TH_ERR,0)*Math.PI/180;
   const rp=normal(DISK.R_P,DISK.R_P_ERR), rm=normal(DISK.R_M,DISK.R_M_ERR), c=normal(DISK.C,DISK.C_ERR);
   const xp=[0,s], xm=[normal(DISK.X,DISK.POS_ERR),normal(DISK.Y,DISK.POS_ERR)], mt=m+DISK.M_M, rt=rp+rm;
@@ -140,7 +150,7 @@ function diskTrial(mIn,sIn,vIn,thIn){
 
 const T={
  ko:{h1:"USAPhO 2022 TST 실험 — 미래 원형 충돌기 (collision-black-box)",
-   sub:"주최측이 배포한 명령줄 프로그램 collision-black-box의 계산을 그대로 옮기고, 터미널에 하나씩 묻고 답하는 대신 값을 넣고 ‘발사’를 누르는 실험대로 만들었습니다. 원본처럼 터미널로 하고 싶으면 ‘원본 터미널’을 누르세요.",
+   sub:"주최측이 배포한 명령줄 프로그램 collision-black-box를 Rust 원본 소스 그대로 옮겼습니다. CMD 모드는 원본처럼 터미널에서 실행하고, 시뮬레이션 모드는 같은 계산을 값 입력·발사 버튼·충돌 그림·결과 표로 보여 줍니다.",
    about:"이 프로그램에 대하여",
    notes:["문제지처럼 터미널에 <code>./collision-black-box-macos wall</code> 또는 <code>collision-black-box-windows.exe disk</code>(이름은 <code>collision-black-box</code>만 쳐도 됨)를 입력하면 실험이 시작되고, 프로그램이 묻는 값을 한 줄씩 입력합니다. 끝내려면 <b>Ctrl+C</b>(또는 Ctrl+D).",
      "<b>wall</b> — 발사 속력 0.5–10 m/s, 각속도 −50–50 rad/s(반시계 +), 입사각 0–75°(법선과의 각). 결과: 반사 속력, 반사각, 각속도.",
@@ -148,7 +158,7 @@ const T={
      "발사 장치가 완벽하지 않아 넣은 값에 문제지에 적힌 오차가 붙고, 원판의 성질도 시행마다 조금씩 흔들립니다. 원판이 충돌하고 돌아오는 시간만큼 기다려야 결과가 나옵니다.",
      "계산은 U.S. Physics Team 코치 Kevin Zhou와 Kye Shi의 Rust 소스(github.com/USPhysicsTeam/2022-future-circular-collider)를 그대로 옮겼습니다. 숨겨진 값, 오차, 대기 시간도 같습니다.",
      "셸 명령: <code>ls</code>, <code>cd</code>, <code>clear</code>, <code>help</code>. ↑↓로 이전 입력을 다시 불러옵니다. 화면 내용은 아래 버튼으로 복사하거나 .txt로 저장할 수 있습니다."],
-   mLab:"실험대", mTerm:"원본 터미널(명령줄)", pWall:"4.1 벽 충돌 (wall)", pDisk:"4.2 원판 충돌 (disk)",
+   mLab:"시뮬레이션 모드", mTerm:"CMD 모드", pWall:"4.1 벽 충돌 (wall)", pDisk:"4.2 원판 충돌 (disk)",
    wallNote:"마찰 없는 탁자 위에서 원판을 벽에 던집니다. 값을 넣고 ‘발사’를 누르면 원판이 벽에 부딪쳐 돌아올 때까지 기다린 뒤 결과가 표에 쌓입니다. 원본 프로그램과 같은 계산 · 오차 · 대기 시간입니다.",
    diskNote:"탐사 원판(반지름 0.250 ± 0.001 m)을 숨겨진 원판 쪽으로 쏩니다. 탁자는 가려져 있어 숨겨진 원판은 보이지 않고, 맞으면 탐사 원판이 튕겨 나간 속력과 방향만 알려 줍니다.",
    f:{v:["발사 속력","m/s"],w:["각속도 (반시계 +)","rad/s"],th:["입사각 (법선과의 각)","°"],m:["탐사 원판 질량","kg"],s:["발사 위치 s","m"],dv:["발사 속력","m/s"],dth:["발사각 (수평과의 각)","°"]},
@@ -163,7 +173,7 @@ const T={
    motd:"HaslaLab 터미널 — collision-black-box가 있는 폴더(~/Downloads)입니다. help를 입력하면 쓸 수 있는 명령이 나옵니다.\n",
    help:"  ./collision-black-box wall    벽 충돌 실험 (4.1)\n  ./collision-black-box disk    원판 충돌 실험 (4.2)\n  ls, cd, clear, help\n  프로그램 안에서는 묻는 값을 입력하고 Enter, 끝낼 때 Ctrl+C"},
  en:{h1:"USAPhO 2022 TST experiment — The Future Circular Collider (collision-black-box)",
-   sub:"The computation of the organisers' command-line program collision-black-box, unchanged, on a lab bench: enter the values and press ‘Fire’ instead of answering prompts one by one. Press ‘Original terminal’ to use it as a terminal, like the original.",
+   sub:"The organisers' command-line program collision-black-box, ported unchanged from its Rust source. CMD mode runs it in a terminal like the original; simulation mode drives the same computation from a form with a fire button, a drawing of the collision and a results table.",
    about:"About this program",
    notes:["As in the paper, type <code>./collision-black-box-macos wall</code> or <code>collision-black-box-windows.exe disk</code> (plain <code>collision-black-box</code> works too) to start a part, then answer the program's prompts one line at a time. <b>Ctrl+C</b> (or Ctrl+D) quits.",
      "<b>wall</b> — launch speed 0.5–10 m/s, angular speed −50–50 rad/s (ccw +), angle 0–75° to the normal. Returns the rebound speed, rebound angle and angular speed.",
@@ -171,7 +181,7 @@ const T={
      "The launcher is imperfect, so your values pick up the errors stated in the paper, and the disks' properties wobble a little from trial to trial. Each result appears only after the disks have had time to collide.",
      "The computation is the Rust source by U.S. Physics Team coaches Kevin Zhou and Kye Shi (github.com/USPhysicsTeam/2022-future-circular-collider), carried over unchanged, hidden values, errors and waiting times included.",
      "Shell commands: <code>ls</code>, <code>cd</code>, <code>clear</code>, <code>help</code>. ↑↓ recall earlier lines. The buttons below copy the screen or save it as .txt."],
-   mLab:"Lab bench", mTerm:"Original terminal (command line)", pWall:"4.1 Wall collision (wall)", pDisk:"4.2 Disk collision (disk)",
+   mLab:"Simulation mode", mTerm:"CMD mode", pWall:"4.1 Wall collision (wall)", pDisk:"4.2 Disk collision (disk)",
    wallNote:"Throw a disk at a wall on a frictionless table. Enter the values and press ‘Fire’; once the disk has hit the wall and come back, the result is added to the table. Same computation, errors and waiting time as the original program.",
    diskNote:"Fire the probe disk (radius 0.250 ± 0.001 m) towards the hidden disk. The table is covered, so the hidden disk is never seen; on a hit you only learn the probe's speed and direction afterwards.",
    f:{v:["Launch speed","m/s"],w:["Angular speed (ccw +)","rad/s"],th:["Angle to the normal","°"],m:["Probe mass","kg"],s:["Launch position s","m"],dv:["Launch speed","m/s"],dth:["Angle to the horizontal","°"]},
@@ -202,22 +212,50 @@ const PROMPTS={
 let prog=null, field=0, vals=[], trial={wall:0,disk:0}, busy=false, hist=[], hpos=0, cwd="~/Downloads", timer=null;
 const screen=$("screen"), inp=$("inp");
 const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
-function say(html){ screen.insertAdjacentHTML("beforeend",html+"\n"); screen.scrollTop=screen.scrollHeight; }
+function say(html){ $("bar").insertAdjacentHTML("beforebegin",html+"\n"); screen.scrollTop=screen.scrollHeight; }
+function clearScreen(){ while(screen.firstChild&&screen.firstChild!==$("bar")) screen.removeChild(screen.firstChild); }
 function shellPS(){ return '<span class="g">user@lab</span>:<span class="c">'+esc(cwd)+'</span>$ '; }
 function setPS(){ $("ps").innerHTML=busy?"":prog?esc(PROMPTS[prog][field][0]):shellPS(); inp.disabled=busy; if(!busy) inp.focus({preventScroll:true}); }
-function trialHead(){ say('<span class="c">&gt;&gt;&gt;</span> <span class="b">trial #'+(trial[prog]+1)+'…</span> <span class="c">(press <span class="b">ctrl+C</span> or <span class="b">ctrl+D</span> to exit)</span>'); }
-function start(m){ prog=m; field=0; vals=[]; trialHead(); }
-function quitProg(sig){ say($("ps").innerHTML+esc(inp.value)+'<span class="dim">'+sig+'</span>'); inp.value=""; if(timer){clearTimeout(timer);timer=null;busy=false;} prog=null; setPS(); }
+/* colored::Colorize as the program uses it: ">>>" cyan dimmed, the trial number bright cyan bold,
+   "running…" green, "you got a hit!" bright green, a miss yellow, read_float's errors bright red */
+function trialHead(){ say('<span class="c dim2">&gt;&gt;&gt;</span> <span class="bc b">trial #'+(trial[prog]+1)+'…</span> <span class="c">(press <span class="b">ctrl+C</span> or <span class="b">ctrl+D</span> to exit)</span>'); }
+function start(m){ prog=m; field=0; vals=[]; trial[m]=0; trialHead(); }
+/* rustyline hands Ctrl+C / Ctrl+D (on an empty line) back as an error, and main() returns it */
+function quitProg(sig){
+  say($("ps").innerHTML+esc(inp.value)+'<span class="dim">'+sig+'</span>'); inp.value="";
+  if(timer){ clearTimeout(timer); timer=null; busy=false; }               /* killed while sleeping: no message */
+  else say("Error: "+(sig==="^C"?"Interrupted":"Eof"));
+  prog=null; setPS(); }
+/* structopt / clap 2: the binary's own name in USAGE, help, version, the errors */
+function clapHelp(bin){ return "collision-black-box 0.1.0\nU.S. Physics Team Training Camp collision black box simulator\n\nUSAGE:\n    "+esc(bin)+" &lt;SUBCOMMAND&gt;\n\nFLAGS:\n    -h, --help       Prints help information\n    -V, --version    Prints version information\n\nSUBCOMMANDS:\n    disk    collision with unknown disk\n    help    Prints this message or the help of the given subcommand(s)\n    wall    collision with wall"; }
+function clapSubHelp(bin,sub){ return esc(bin)+"-"+sub+" \n"+(sub==="wall"?"collision with wall":"collision with unknown disk")+"\n\nUSAGE:\n    "+esc(bin)+" "+sub+"\n\nFLAGS:\n    -h, --help       Prints help information\n    -V, --version    Prints version information"; }
+function clapErr(bin,msg,usage){ return '<span class="br b">error:</span> '+msg+"\n\nUSAGE:\n    "+(usage?esc(usage):esc(bin)+" &lt;SUBCOMMAND&gt;")+"\n\nFor more information try <span class=\"g\">--help</span>"; }
+function lev(a,b){ const d=Array.from({length:a.length+1},(_,i)=>[i]); for(let j=1;j<=b.length;j++) d[0][j]=j;
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[a.length][b.length]; }
+function runBin(w){
+  const bin=w[0].split(/[\\/]/).pop(), a=w.slice(1);
+  if(!a.length||a[0]==="-h"||a[0]==="--help"||(a[0]==="help"&&a.length===1)){ say(clapHelp(bin)); return; }
+  if(a[0]==="-V"||a[0]==="--version"){ say("collision-black-box 0.1.0"); return; }
+  if(a[0]==="help"&&(a[1]==="wall"||a[1]==="disk")){ say(clapSubHelp(bin,a[1])); return; }
+  if(a[0]==="help"){ say(clapErr(bin,"The subcommand '<span class=\"y\">"+esc(a[1])+"</span>' wasn't recognized")); return; }
+  if(a[0]==="wall"||a[0]==="disk"){
+    if(a[1]==="-h"||a[1]==="--help"){ say(clapSubHelp(bin,a[0])); return; }
+    if(a.length>1){ say(clapErr(bin,"Found argument '<span class=\"y\">"+esc(a[1])+"</span>' which wasn't expected, or isn't valid in this context",bin+" "+a[0])); return; }
+    return start(a[0]); }
+  if(a[0].startsWith("-")){ say(clapErr(bin,"Found argument '<span class=\"y\">"+esc(a[0])+"</span>' which wasn't expected, or isn't valid in this context")); return; }
+  const near=["disk","help","wall"].find(c=>lev(c,a[0])<=Math.max(1,Math.floor(c.length/3)));
+  if(near){ say('<span class="br b">error:</span> The subcommand \'<span class="y">'+esc(a[0])+'</span>\' wasn\'t recognized\n\tDid you mean \'<span class="g">'+near+'</span>\'?\n\nIf you believe you received this message in error, try re-running with \''+
+    '<span class="g">'+esc(bin)+' -- '+esc(a[0])+'</span>\'\n\nUSAGE:\n    '+esc(bin)+' &lt;SUBCOMMAND&gt;\n\nFor more information try <span class="g">--help</span>'); return; }
+  say(clapErr(bin,"Found argument '<span class=\"y\">"+esc(a[0])+"</span>' which wasn't expected, or isn't valid in this context"));
+}
 function shell(line){
   const w=line.trim().split(/\s+/).filter(Boolean);
   if(!w.length) return;
   const bin=w[0].replace(/^\.[\\/]/,"");
   if(/^collision-black-box(-(windows|macos|linux)(\.exe)?)?$/.test(bin)){
     if(cwd!=="~/Downloads"){ say(esc(w[0])+": No such file or directory"); return; }
-    if(w[1]==="wall"||w[1]==="disk") return start(w[1]);
-    say("collision-black-box 0.1.0\nU.S. Physics Team Training Camp collision black box simulator\n\nUSAGE:\n    collision-black-box &lt;SUBCOMMAND&gt;\n\nFLAGS:\n    -h, --help       Prints help information\n    -V, --version    Prints version information\n\nSUBCOMMANDS:\n    disk    collision with unknown disk\n    help    Prints this message or the help of the given subcommand(s)\n    wall    collision with wall");
-    return; }
-  if(w[0]==="clear"||w[0]==="cls"){ screen.innerHTML=""; return; }
+    return runBin(w); }
+  if(w[0]==="clear"||w[0]==="cls"){ clearScreen(); return; }
   if(w[0]==="ls"||w[0]==="dir"){ if(cwd==="~/Downloads") say("collision-black-box-linux  collision-black-box-macos  collision-black-box-windows.exe"); else say("Downloads"); return; }
   if(w[0]==="cd"){ const t=w[1]||"~"; if(t==="~"||t===".."&&cwd==="~/Downloads") cwd="~";
     else if(/^(~\/)?Downloads\/?$/.test(t)||(t==="Downloads"&&cwd==="~")) cwd="~/Downloads";
@@ -227,19 +265,23 @@ function shell(line){
   if(w[0]==="help"){ say(T[lang].help); return; }
   say(esc(w[0])+": command not found");
 }
-function rangeErr(v,lo,hi){ if(v<lo) return "value outside range: got <span class=\"b\">"+v+"</span>, must be ≥ <span class=\"b\">"+lo+"</span>"; if(v>hi) return "value outside range: got <span class=\"b\">"+v+"</span>, must be ≤ <span class=\"b\">"+hi+"</span>"; return null; }
+/* util::read_float: parse the line as typed, then check the range, printing f64's Display */
+function rangeErr(v,lo,hi){ const B=x=>'<span class="b">'+esc(rsF(x))+'</span>';
+  if(v<lo) return "value outside range: got "+B(v)+", must be ≥ "+B(lo); if(v>hi) return "value outside range: got "+B(v)+", must be ≤ "+B(hi); return null; }
 function answer(raw){
-  const rg=PROMPTS[prog][field][1], t=raw.trim(), v=Number(t);
-  if(t===""){ say('  <span class="r">cannot parse float from empty string</span>'); return; }   /* Rust's ParseFloatError */
-  if(!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(t)&&!/^[+-]?(inf|infinity|nan)$/i.test(t)){ say('  <span class="r">invalid float literal</span>'); return; }
-  const e=rangeErr(v,rg[0],rg[1]); if(e){ say('  <span class="r">'+e+'</span>'); return; }
-  vals.push(v); field++;
+  const rg=PROMPTS[prog][field][1], r=rsParse(raw);
+  if(r.err){ say('  <span class="br">'+r.err+'</span>'); return; }
+  const e=rangeErr(r.v,rg[0],rg[1]); if(e){ say('  <span class="br">'+e+'</span>'); return; }
+  vals.push(r.v); field++;
   if(field<PROMPTS[prog].length) return;
   const m=prog, res=m==="wall"?wallTrial(...vals):diskTrial(...vals);
-  trial[m]++; say('<span class="g">  running…</span>'); busy=true; setPS();
+  trial[m]++; say('<span class="g">  running…</span>');
+  /* Duration::from_secs_f64 panics on a NaN wait (a "nan" typed in): the program dies there */
+  if(!isFinite(res.wait)){ say("thread 'main' panicked at 'can not convert float seconds to Duration: value is not finite', library/core/src/time.rs\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace"); prog=null; field=0; vals=[]; return; }
+  busy=true; setPS();
   timer=setTimeout(()=>{ timer=null;
     if(m==="wall") say("  rebound speed: <span class=\"b\">"+sgn(res.speed,7,3)+" m/s</span>\n  rebound angle: <span class=\"b\">"+sgn(res.angle,7,3)+" ° to normal</span>\n  angular speed: <span class=\"b\">"+sgn(res.omega,7,3)+" rad/s</span>\n");
-    else if(res.hit) say('  <span class="g b">you got a hit!</span>\n  probe speed: <span class="b">'+sgn(res.speed,8,3)+' m/s</span>\n  probe angle: <span class="b">'+sgn(res.angle,8,3)+' ° to horizontal</span>\n');
+    else if(res.hit) say('  <span class="bg">you got a hit!</span>\n  probe speed: <span class="b">'+sgn(res.speed,8,3)+' m/s</span>\n  probe angle: <span class="b">'+sgn(res.angle,8,3)+' ° to horizontal</span>\n');
     else say('<span class="y">  swing and a miss!</span>\n');
     busy=false; field=0; vals=[]; if(prog) trialHead(); setPS(); }, res.wait*1000);
 }
@@ -250,18 +292,19 @@ function enter(line){
   if(!busy) setPS();
 }
 inp.addEventListener("keydown",e=>{
-  if(e.ctrlKey&&(e.key==="c"||e.key==="C")){ if(prog||busy) quitProg("^C"); else { say($("ps").innerHTML+esc(inp.value)+'<span class="dim">^C</span>'); inp.value=""; } e.preventDefault(); return; }
-  if(e.ctrlKey&&(e.key==="d"||e.key==="D")){ if(prog||busy) quitProg("^D"); e.preventDefault(); return; }
-  if(e.ctrlKey&&(e.key==="l"||e.key==="L")){ screen.innerHTML=""; e.preventDefault(); return; }
+  if(e.ctrlKey&&(e.key==="c"||e.key==="C")){ if(getSelection().toString()) return;
+    if(prog||busy) quitProg("^C"); else { say($("ps").innerHTML+esc(inp.value)+'<span class="dim">^C</span>'); inp.value=""; } e.preventDefault(); return; }
+  if(e.ctrlKey&&(e.key==="d"||e.key==="D")){ if(prog&&!busy&&inp.value==="") quitProg("^D"); e.preventDefault(); return; }
+  if(e.ctrlKey&&(e.key==="l"||e.key==="L")){ clearScreen(); e.preventDefault(); return; }
   if(busy){ e.preventDefault(); return; }
   if(e.key==="Enter"){ const v=inp.value; inp.value=""; enter(v); e.preventDefault(); }
   else if(e.key==="ArrowUp"){ if(hpos>0){ hpos--; inp.value=hist[hpos]; } e.preventDefault(); }
   else if(e.key==="ArrowDown"){ if(hpos<hist.length){ hpos++; inp.value=hist[hpos]||""; } e.preventDefault(); }
 });
-/* while a trial runs the input is disabled, so Ctrl+C has to be caught on the page */
-document.addEventListener("keydown",e=>{ if(busy&&e.ctrlKey&&(e.key==="c"||e.key==="C"||e.key==="d"||e.key==="D")){ quitProg(e.key.toLowerCase()==="c"?"^C":"^D"); e.preventDefault(); } });
+/* while a trial sleeps the input is disabled, so Ctrl+C (SIGINT) has to be caught on the page */
+document.addEventListener("keydown",e=>{ if(busy&&e.ctrlKey&&(e.key==="c"||e.key==="C")){ quitProg("^C"); e.preventDefault(); } });
 screen.addEventListener("mouseup",()=>{ if(!getSelection().toString()) inp.focus({preventScroll:true}); });
-function restart(){ if(timer){clearTimeout(timer);timer=null;} busy=false; prog=null; field=0; vals=[]; cwd="~/Downloads"; screen.innerHTML=""; say('<span class="dim">'+esc(T[lang].motd)+'</span>'); setPS(); }
+function restart(){ if(timer){clearTimeout(timer);timer=null;} busy=false; prog=null; field=0; vals=[]; cwd="~/Downloads"; clearScreen(); say('<span class="dim">'+esc(T[lang].motd)+'</span>'); setPS(); }
 $("b-restart").onclick=restart;
 $("b-copy").onclick=()=>navigator.clipboard.writeText(screen.textContent).then(()=>{ $("b-copy").textContent=T[lang].copied; setTimeout(()=>$("b-copy").textContent=T[lang].copy,1200); },()=>{});
 $("b-save").onclick=()=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([screen.textContent],{type:"text/plain;charset=utf-8"})); a.download="collision-black-box.txt"; a.click(); URL.revokeObjectURL(a.href); };
@@ -275,7 +318,8 @@ try{ const o=JSON.parse(localStorage.getItem(LS)||"null"); if(o&&o.wall) rows=o;
 const saveRows=()=>{ try{ localStorage.setItem(LS,JSON.stringify(rows)); }catch(e){} };
 const vin={wall:{v:2,w:0,th:30},disk:{m:2,s:0,dv:2,dth:0}};
 const f3=x=>(x<0?"−":"")+Math.abs(x).toFixed(3);
-function setMode(m){ $("lab").hidden=m!=="lab"; $("term").hidden=m!=="term"; $("m-lab").className=m==="lab"?"on":""; $("m-term").className=m==="term"?"on":""; if(m==="term") setPS(); }
+function setMode(m){ $("lab").hidden=m!=="lab"; $("term").hidden=m!=="term"; $("m-lab").className=m==="lab"?"on":""; $("m-term").className=m==="term"?"on":"";
+  try{ localStorage.setItem("hl-mode:"+location.pathname,m==="lab"?"sim":"cmd"); }catch(e){} if(m==="term") setPS(); else drawDiagram(); }
 $("m-lab").onclick=()=>setMode("lab"); $("m-term").onclick=()=>setMode("term");
 for(const b of document.querySelectorAll("#parts button")) b.onclick=()=>{ if(labBusy) return; part=b.dataset.p; labLang(); };
 function buildForm(){ const d=T[lang], f=$("lf");
@@ -352,6 +396,9 @@ $("r-copy").onclick=()=>navigator.clipboard.writeText(tableText("\t")).then(()=>
 $("r-clear").onclick=()=>{ if(!rows[part].length||!confirm(T[lang].sure)) return; rows[part]=[]; lastNew=-1; saveRows(); buildTable(); };
 
 applyLang(); restart();
+/* CMD mode first, as the original; ?mode=sim or the last choice opens the simulation */
+{ let m0=new URLSearchParams(location.search).get("mode"); if(!m0){ try{ m0=localStorage.getItem("hl-mode:"+location.pathname); }catch(e){} }
+  setMode(m0==="sim"?"lab":"term"); }
 </script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>

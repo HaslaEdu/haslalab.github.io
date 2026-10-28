@@ -268,151 +268,101 @@ function describe(seq, current) {
   return out.join('\n');
 }
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
-    }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
-  }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
+/* Simulation mode: the same sequence grammar, integrator, noise and abort conditions as the program.
+   The box (its masses and springs hidden inside) hangs from the force sensor on the actuator and is
+   driven up and down; the force and the commanded acceleration are plotted as they come. */
+PROGRAM.sim = {
+  intro: '천장의 구동 장치가 힘 센서를 통해 블랙박스(높이 60 cm, 안에 질량과 용수철이 숨어 있음)를 잡고 정해진 가속도로 위아래로 움직입니다. ' +
+         '순서는 콘솔과 같은 문법으로 적습니다 — "지속시간(s) 가속도(m/s²)" 쌍, "repeat n … endrepeat", "sample 초". ' +
+         '오른쪽 그래프는 힘 센서 값 F와 가속도 a이고, 표는 콘솔 프로그램이 파일에 쓰는 값과 같습니다. 상자가 천장·바닥에 닿거나 안에서 부딪히면 실험이 멈춥니다.',
+  fields: [
+    { id: 'seq', label: '실험 순서', type: 'text', value: '1 0 repeat 3 0.4 1 0.4 -1 endrepeat 2 0', hint: '예: 1.5 -0.4 repeat 10 1.5 0.4 endrepeat · sample 0.05' }
+  ],
+  columns: ['t (s)', 'F (N)', 'a (m/s²)'],
+  replace: true,
+  aspect: 0.6,
+  goLabel: '실험 시작 (begin)',
+  check: function (v) {
+    var seq = [], inrep = false;
+    try { parseLine(seq, v.seq.replace(/\b(begin|quit)\b/g, ' '), function (x) { inrep = x; }, function () { return inrep; }); }
+    catch (e) { return e.message; }
+    if (!seq.some(function (a) { return a[0] === 'acc'; })) return 'Enter "(duration in s) (acceleration in m/s^2)" pairs.';
+    var tot = unpack(seq).reduce(function (t, a) { return t + (a[0] === 'acc' ? a[1][1] : 0); }, 0);
+    if (tot > 300000) return '시뮬레이션 모드는 300초까지 그립니다. 더 긴 실험은 CMD 모드에서 하세요.';
+    return null;
+  },
+  measure: function (v) {
+    var seq = [], inrep = false;
+    parseLine(seq, v.seq.replace(/\b(begin|quit)\b/g, ' '), function (x) { inrep = x; }, function () { return inrep; });
+    var sim = makeSim(), flat = unpack(seq), rows = [], track = [], timeMs = 0, lastSample = -1e9, sampling = 10, status = 0;
+    var substeps = Math.round(1 / (1000 * DT));
+    outer:
+    for (var q = 0; q < flat.length; q++) {
+      if (flat[q][0] === 'sam') { sampling = flat[q][1]; continue; }
+      var a = flat[q][1][0], dur = flat[q][1][1], t0 = timeMs;
+      sim.a1 = a;
+      while (timeMs - t0 < dur) {
+        if (timeMs - lastSample >= sampling) {
+          var f = force(sim); rows.push([(timeMs / 1000).toFixed(2), f.toFixed(2), (sim.a1 >= 0 ? '+' : '') + sim.a1.toFixed(2)]);
+          lastSample = timeMs; }
+        if (timeMs % 10 === 0) track.push([timeMs / 1000, sim.y1, +rows[rows.length - 1][1], sim.a1]);
+        for (var k = 0; k < substeps; k++) { status = step(sim, 1 / 1000 / substeps); if (status !== 0) break; }
+        if (status !== 0) break outer;
+        timeMs++;
       }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
     }
-    start();
-  });
-})();
-
+    track.push([timeMs / 1000, sim.y1, track.length ? track[track.length - 1][2] : 0, sim.a1]);
+    return { st: { track: track, status: status, T: timeMs / 1000 }, rows: rows, ms: Math.min(8000, Math.max(1500, timeMs * 0.6)) };
+  },
+  draw: function (g, W, H, S) {
+    var D = SIMDRAW, st = S.st, run = st && !S.done;
+    g.fillStyle = '#0f1115'; g.fillRect(0, 0, W, H);
+    var tNow = st ? (run ? S.p * st.T : st.T) : 0, y1 = Y1_INIT, k = 0;
+    if (st) { var tr = st.track; while (k < tr.length - 1 && tr[k + 1][0] <= tNow) k++; y1 = tr[k][1]; }
+    /* the room: floor at 0, ceiling at 3 m */
+    var sx = 20, sw = Math.min(W * 0.3, 260), top = 24, bot = H - 26, my = (bot - top) / (Y_CEIL - Y_FLOOR);
+    var Y = function (y) { return bot - (y - Y_FLOOR) * my; }, cx = sx + sw / 2;
+    g.fillStyle = '#20242b'; g.fillRect(sx, top, sw, bot - top);
+    g.fillStyle = '#4a4f57'; g.fillRect(sx, top - 8, sw, 8); g.fillRect(sx, bot, sw, 8);
+    D.text(g, '천장 3 m', sx + sw + 6, top, '#9aa3ab', 10.5); D.text(g, '바닥 0 m', sx + sw + 6, bot, '#9aa3ab', 10.5);
+    for (var m = 0.5; m < 3; m += 0.5) { g.strokeStyle = 'rgba(255,255,255,.07)'; g.beginPath(); g.moveTo(sx, Y(m)); g.lineTo(sx + sw, Y(m)); g.stroke();
+      D.text(g, m.toFixed(1), sx + 4, Y(m) - 6, '#6b737d', 9.5); }
+    /* actuator rod, force sensor, box */
+    g.fillStyle = '#9aa3ad'; g.fillRect(cx - 4, top, 8, Y(y1) - top - 16);
+    g.fillStyle = '#c9a227'; g.fillRect(cx - 12, Y(y1) - 16, 24, 14); D.text(g, 'F', cx, Y(y1) - 9, '#1b1b1b', 10, 'center', true);
+    var bw = sw * 0.55;
+    g.fillStyle = '#0b0b0d'; g.fillRect(cx - bw / 2, Y(y1), bw, BOX * my);
+    g.strokeStyle = '#3c4048'; g.lineWidth = 1.5; g.strokeRect(cx - bw / 2, Y(y1), bw, BOX * my);
+    D.text(g, 'BLACK BOX', cx, Y(y1) + BOX * my / 2, '#5b616b', 11, 'center', true);
+    /* the plots */
+    var gx = sx + sw + 70, gw = W - gx - 16, h1 = (H - 70) * 0.55, h2 = (H - 70) * 0.45, g1 = 20, g2 = g1 + h1 + 30;
+    var T = st ? st.T : 1, fMin = 0, fMax = 20, aMax = 5;
+    if (st) st.track.forEach(function (r) { fMin = Math.min(fMin, r[2]); fMax = Math.max(fMax, r[2]); aMax = Math.max(aMax, Math.abs(r[3])); });
+    fMax = Math.ceil(fMax / 5) * 5; fMin = Math.floor(fMin / 5) * 5; aMax = Math.ceil(aMax);
+    function frame(y0, hh, lo, hi, lab) {
+      g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 1; g.strokeRect(gx, y0, gw, hh);
+      for (var i = 0; i <= 4; i++) { var val = lo + (hi - lo) * i / 4, py = y0 + hh - hh * i / 4;
+        g.strokeStyle = 'rgba(255,255,255,.05)'; g.beginPath(); g.moveTo(gx, py); g.lineTo(gx + gw, py); g.stroke();
+        D.text(g, (Math.abs(val) < 1e-9 ? 0 : val).toFixed(hi - lo <= 10 ? 1 : 0), gx - 6, py, '#9aa3ab', 10, 'right'); }
+      D.text(g, lab, gx + 6, y0 + 10, '#e8e8e8', 11.5, 'left', true);
+    }
+    frame(g1, h1, fMin, fMax, 'F (N) — 힘 센서');
+    frame(g2, h2, -aMax, aMax, 'a (m/s²) — 구동 가속도');
+    for (var i = 0; i <= 5; i++) D.text(g, (T * i / 5).toFixed(T < 10 ? 1 : 0), gx + gw * i / 5, g2 + h2 + 12, '#9aa3ab', 10, 'center');
+    D.text(g, 't (s)', gx + gw, g2 + h2 + 24, '#9aa3ab', 10, 'right');
+    if (st) {
+      g.strokeStyle = '#ffd479'; g.lineWidth = 1.2; g.beginPath();
+      st.track.forEach(function (r, i) { if (r[0] > tNow) return; var px = gx + gw * r[0] / T, py = g1 + h1 - h1 * (r[2] - fMin) / (fMax - fMin); i ? g.lineTo(px, py) : g.moveTo(px, py); }); g.stroke();
+      g.strokeStyle = '#4ec9b0'; g.beginPath();
+      st.track.forEach(function (r, i) { if (r[0] > tNow) return; var px = gx + gw * r[0] / T, py = g2 + h2 / 2 - h2 / 2 * r[3] / aMax; i ? g.lineTo(px, py) : g.moveTo(px, py); }); g.stroke();
+      D.lcd(g, sx, H - 22 - 0, 120, 20, tNow.toFixed(2) + ' s', '#9cdcfe');
+      if (!run) D.text(g, STATUS[st.status], gx + gw - 6, g1 + 10, st.status ? '#ff9b8b' : '#9dffb0', 12, 'right', true);
+    }
+  }
+};
 </script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>

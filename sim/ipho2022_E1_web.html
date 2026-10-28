@@ -59,7 +59,7 @@ function airDensity(z) {
   return RHO_A0 * Math.pow(1 - z / H_ATM, 1 / (GAMMA - 1));
 }
 
-function drop(h, rcm, rhoG) {
+function drop(h, rcm, rhoG, path) {
   var r = rcm * 1e-2, rho = rhoG * 1e3;
   var area = Math.PI * r * r, mass = 4 / 3 * Math.PI * r * r * r * rho;
   var kd = CD * area / mass;
@@ -90,7 +90,9 @@ function drop(h, rcm, rhoG) {
     }
     st = nx;
     t += step;
+    if (path && (path.length === 0 || t - path[path.length - 1][0] >= 0.05)) path.push([t, st[0], st[1]]);
   }
+  if (path) path.push([t, st[0], Math.max(0, st[1])]);
   return [t, Math.abs(st[0])];
 }
 
@@ -146,151 +148,105 @@ var PROGRAM = {
   }
 };
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
-
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Simulation mode: the same drop() and the same noise, drawn.  Left: the tower from the side
+   (the fall is real, the drift is far too small to see at this scale); right: the foot of the
+   tower from above, where every landing spot is marked. */
+PROGRAM.sim = {
+  intro: '행성의 2000 m 탑에서 공을 떨어뜨립니다. 왼쪽은 탑의 옆모습(낙하 시간은 빨리 감아 보여 줍니다), ' +
+         '오른쪽은 탑 아래를 위에서 내려다본 확대 그림으로, 공이 떨어진 자리가 점으로 남습니다. ' +
+         '표시창의 t와 s는 콘솔 프로그램이 출력하는 값과 같습니다(측정 오차 포함).',
+  fields: [
+    { id: 'h', label: '높이 h', unit: 'm', lo: 0, hi: H_TOWER, step: 1, quant: 1, value: 1000 },
+    { id: 'r', label: '반지름 r', unit: 'cm', lo: R_MIN, hi: R_MAX, step: 1, quant: 1, value: 10 },
+    { id: 'rho', label: '밀도 ρ', unit: 'g/cm³', lo: RHO_MIN, hi: RHO_MAX, step: 0.01, quant: 0.01, value: 1 }
+  ],
+  columns: ['#', 'h (m)', 'r (cm)', 'ρ (g/cm³)', 't (s)', 's (m)'],
+  aspect: 0.62,
+  goLabel: '떨어뜨리기',
+  n: 0,
+  measure: function (v) {
+    var path = [], res = drop(v.h, v.r, v.rho, path);
+    var t = res[0] + gauss(SIGMA_T), s = res[1] + gauss(SIGMA_S);
+    this.n++;
+    return { st: { path: path, T: res[0], x: path[path.length - 1][1], t: t.toFixed(1), s: s.toFixed(1) },
+             rows: [[this.n, v.h, v.r, v.rho.toFixed(2), t.toFixed(1), s.toFixed(1)]],
+             ms: Math.min(7000, Math.max(1500, res[0] * 220)) };
+  },
+  draw: function (g, W, H, S) {
+    var D = SIMDRAW, v = S.vals, st = S.st, run = st && !S.done;
+    var split = Math.round(W * 0.6), gy = H - 34, top = 26, zMax = 2150;
+    var Y = function (z) { return gy - (gy - top) * z / zMax; };
+    /* sky: the air thins with height, as rho_a(z) does */
+    for (var i = 0; i < 40; i++) {
+      var z0 = zMax * i / 40, dens = airDensity(z0) / RHO_A0;
+      g.fillStyle = 'rgb(' + Math.round(14 + 40 * dens) + ',' + Math.round(22 + 60 * dens) + ',' + Math.round(40 + 90 * dens) + ')';
+      g.fillRect(0, Y(zMax * (i + 1) / 40), split, Y(z0) - Y(zMax * (i + 1) / 40) + 1);
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
-  }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
+    g.fillStyle = '#3d3326'; g.fillRect(0, gy, split, H - gy);
+    g.fillStyle = '#574a36'; g.fillRect(0, gy, split, 3);
+    /* the tower: a tapering lattice mast */
+    var tx = Math.round(split * 0.42), wb = 34, wt = 8;
+    var X = function (z, side) { var w = wb + (wt - wb) * z / H_TOWER; return tx + side * w / 2; };
+    g.strokeStyle = '#8e99a6'; g.lineWidth = 1.6;
+    g.beginPath(); g.moveTo(X(0, -1), Y(0)); g.lineTo(X(H_TOWER, -1), Y(H_TOWER)); g.moveTo(X(0, 1), Y(0)); g.lineTo(X(H_TOWER, 1), Y(H_TOWER)); g.stroke();
+    g.lineWidth = 0.8; g.strokeStyle = 'rgba(142,153,166,.75)'; g.beginPath();
+    for (var k = 0; k < 20; k++) { var za = H_TOWER * k / 20, zb = H_TOWER * (k + 1) / 20;
+      g.moveTo(X(za, -1), Y(za)); g.lineTo(X(zb, 1), Y(zb)); g.moveTo(X(za, 1), Y(za)); g.lineTo(X(zb, -1), Y(zb));
+      g.moveTo(X(zb, -1), Y(zb)); g.lineTo(X(zb, 1), Y(zb)); }
+    g.stroke();
+    g.fillStyle = '#c33'; g.beginPath(); g.arc(tx, Y(H_TOWER) - 4, 3, 0, 7); g.fill();
+    /* height marks every 500 m */
+    for (var m = 0; m <= 2000; m += 500) { g.strokeStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.moveTo(8, Y(m)); g.lineTo(26, Y(m)); g.stroke();
+      D.text(g, m + ' m', 30, Y(m), 'rgba(230,236,240,.75)', 11); }
+    /* the release arm at the chosen height */
+    var hz = run ? S.vals.h : v.h, arm = X(hz, 1);
+    g.strokeStyle = '#d8dee4'; g.lineWidth = 3; g.beginPath(); g.moveTo(X(hz, 1) - 2, Y(hz)); g.lineTo(arm + 30, Y(hz)); g.stroke();
+    var rr = 3 + (run ? S.vals.r : v.r) / 50 * 6, rho = run ? S.vals.rho : v.rho;
+    var shade = Math.round(225 - 150 * Math.log(rho / 0.1) / Math.log(100));
+    var ballCol = 'rgb(' + shade + ',' + Math.round(shade * 0.85) + ',' + Math.round(shade * 0.62) + ')';
+    var bz = hz, tt = 0, bx = 0;
+    if (st) {
+      if (run) { tt = S.p * st.T; var P = st.path, j = 0; while (j < P.length - 1 && P[j + 1][0] < tt) j++;
+        var a = P[j], b = P[Math.min(j + 1, P.length - 1)], f = b[0] > a[0] ? (tt - a[0]) / (b[0] - a[0]) : 0;
+        bz = a[2] + (b[2] - a[2]) * f; bx = a[1] + (b[1] - a[1]) * f; }
+      else { bz = 0; tt = st.T; bx = st.x; }
     }
-    start();
-  });
-})();
+    if (!st || run) { g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(arm + 26, Y(hz)); g.lineTo(arm + 26, Y(bz) - rr); g.stroke(); }
+    if (!st) { g.fillStyle = ballCol; g.beginPath(); g.arc(arm + 26, Y(hz) + rr + 2, rr, 0, 7); g.fill(); }
+    else { g.fillStyle = ballCol; g.beginPath(); g.arc(arm + 26, Math.min(Y(bz) - rr, gy - rr), rr, 0, 7); g.fill();
+      if (!run) { g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.ellipse(arm + 26, gy + 2, rr + 3, 2.5, 0, 0, 7); g.fill(); } }
+    D.text(g, 'h = ' + hz + ' m', arm + 40, Y(hz) - 10, '#e8e8e8', 12);
+    /* stopwatch and range finder, as printed by the program */
+    D.lcd(g, 10, 8, 128, 26, run ? (tt.toFixed(1) + ' s') : st ? ('t = ' + st.t + ' s') : '0.0 s');
+    if (st && !run) D.lcd(g, 146, 8, 128, 26, 's = ' + st.s + ' m', '#ffd479');
+    /* right: the foot of the tower from above */
+    var ox = split + 14, ow = W - ox - 12, oy = 34, oh = H - oy - 40;
+    g.fillStyle = '#2f2a20'; g.fillRect(ox, oy, ow, oh);
+    D.text(g, '탑 아래 — 위에서 본 모습', ox, 18, '#e8e8e8', 12.5, 'left', true);
+    var xs = S.hist.map(function (q) { return Math.abs(q.st.x); }); if (st) xs.push(Math.abs(st.x));
+    var maxX = Math.max(2, Math.max.apply(null, xs.concat([0])) * 1.25), nice = [2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000];
+    var span = nice.find(function (q) { return q >= maxX; }) || maxX;
+    var cx = ox + ow / 2, cy = oy + oh / 2, sc = (Math.min(ow, oh) / 2 - 18) / span;
+    g.strokeStyle = 'rgba(255,255,255,.08)'; g.lineWidth = 1;
+    for (var q = -span; q <= span + 1e-9; q += span / 4) { g.beginPath(); g.moveTo(cx + q * sc, oy); g.lineTo(cx + q * sc, oy + oh); g.stroke();
+      g.beginPath(); g.moveTo(ox, cy + q * sc); g.lineTo(ox + ow, cy + q * sc); g.stroke(); }
+    /* the point straight below the release arm, and the mast's foot beside it (not to scale) */
+    g.fillStyle = '#6b7480'; g.fillRect(cx - 46, cy - 12, 22, 24);
+    D.text(g, '탑', cx - 35, cy + 22, '#aab3bd', 11, 'center');
+    g.strokeStyle = '#e8e8e8'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(cx - 8, cy); g.lineTo(cx + 8, cy); g.moveTo(cx, cy - 8); g.lineTo(cx, cy + 8); g.stroke();
+    D.text(g, '놓은 곳 바로 아래', cx, cy + 22, '#aab3bd', 11, 'center');
+    S.hist.forEach(function (q, i) { var px = cx + q.st.x * sc;
+      g.fillStyle = 'rgba(255,212,121,.55)'; g.beginPath(); g.arc(px, cy, 4, 0, 7); g.fill();
+      D.text(g, String(i + 1), px, cy - 11, 'rgba(255,212,121,.8)', 10, 'center'); });
+    if (st) { var px2 = cx + bx * sc; g.fillStyle = run ? 'rgba(255,255,255,.35)' : '#ffd479';
+      g.beginPath(); g.arc(px2, cy, run ? 3 : 5, 0, 7); g.fill(); }
+    g.strokeStyle = '#e8e8e8'; g.lineWidth = 2; g.beginPath(); g.moveTo(ox + 12, oy + oh + 18); g.lineTo(ox + 12 + span / 2 * sc, oy + oh + 18); g.stroke();
+    D.text(g, span / 2 + ' m', ox + 18 + span / 2 * sc, oy + oh + 18, '#e8e8e8', 11.5);
+  }
+};
 
 </script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>
