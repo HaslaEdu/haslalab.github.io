@@ -488,6 +488,21 @@
     tex3(c, 0, 0, c.width, c.height, [x - w / 2, base + len + 1, z + t / 2 + 0.01], [w, 0, 0], [0, -(len + 2), 0], { id });
     return r => base + r;
   };
+  /* a box turned in space: centre c, unit axes u and v (w = u × v), half sizes a, bb, cc along them */
+  B3.obox = function (c, u, v, a, bb, cc, col, o){
+    o = Object.assign({ cull: true }, o || {}); const w = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const ax = [[u, a], [v, bb], [w, cc]];
+    for (let i = 0; i < 3; i++) for (const sg of [1, -1]){
+      const N = ax[i][0], e = ax[i][1] * sg, T1 = ax[(i + 1) % 3], T2 = ax[(i + 2) % 3];
+      const P = (s, t) => [0, 1, 2].map(k => c[k] + N[k] * e + T1[0][k] * T1[1] * s + T2[0][k] * T2[1] * t);
+      let pts = [P(-1, -1), P(1, -1), P(1, 1), P(-1, 1)];
+      const d1 = [0, 1, 2].map(k => pts[1][k] - pts[0][k]), d2 = [0, 1, 2].map(k => pts[2][k] - pts[0][k]);
+      const nx = [d1[1] * d2[2] - d1[2] * d2[1], d1[2] * d2[0] - d1[0] * d2[2], d1[0] * d2[1] - d1[1] * d2[0]];
+      if (nx[0] * N[0] * sg + nx[1] * N[1] * sg + nx[2] * N[2] * sg < 0) pts = pts.reverse();
+      const up = N[1] * sg > 0.7 && o.top;
+      B3.face(pts, Object.assign({}, o, { fill: up ? o.top : col }));
+    }
+  };
   /* a retort stand: heavy base, rod; returns {rod:[x, z], top} */
   B3.stand = function (x, z, H, o){
     o = o || {}; const id = o.id;
@@ -652,7 +667,7 @@
     return {
       jacks: J,
       stamp(c){
-        if (mode === 'V' || mode === 'OFF' || mode === 'A') c.R(J.V, J.COM, 1e7);
+        if (mode === 'V' || mode === 'OFF' || mode === 'A') c.R(J.V, J.COM, mode === 'V' && o.rV ? o.rV : 1e7);
         if (mode === 'Ω'){ this.ohm = c.V(J.V, J.COM, 1.0, rng); }                     /* a 1 V source behind the range resistor */
         if (mode === 'A' && st.fuse) this.sh = c.R(J.mA, J.COM, shunt(rng)); else this.sh = null;
       },
