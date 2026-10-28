@@ -284,14 +284,15 @@ async function handle(req, env, url) {
       : sort === "hot" ? `((p.n_likes-p.n_dislikes)*2+p.n_comments+p.views*0.05+1)*1.0/((${now()}-p.created_at)/3600.0+2) DESC, p.id DESC`
       : "p.id DESC";
     const cols = `p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.avatar AS av,u.deleted AS gone`;
-    const total = (await env.DB.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${w}`).bind(...args).first()).n;
-    const rows = (await env.DB.prepare(`SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`)
-      .bind(...args, PAGE, (page - 1) * PAGE).all()).results;
+    // the count, the page and (first page only) the notices go to the database in one round trip
+    const stmts = [env.DB.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${w}`).bind(...args),
+      env.DB.prepare(`SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...args, PAGE, (page - 1) * PAGE)];
     // notices sit on top of the first page, as on every Korean board
-    const notices = page === 1 && !q ? (await env.DB.prepare(
+    if (page === 1 && !q) stmts.push(env.DB.prepare(
       `SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.tag='notice' AND p.lang=? ${board ? "AND (p.board=? OR p.board='free')" : ""} ORDER BY p.id DESC LIMIT 5`)
-      .bind(lang, ...(board ? [board] : [])).all()).results : [];
-    return { posts: rows, notices, total, page, per: PAGE };
+      .bind(lang, ...(board ? [board] : [])));
+    const [c, r, nt] = await env.DB.batch(stmts);
+    return { posts: r.results, notices: nt ? nt.results : [], total: c.results[0].n, page, per: PAGE };
   }
   if (p === "/api/posts" && m === "POST") {
     needUser(me);
@@ -421,7 +422,7 @@ async function handle(req, env, url) {
 
 /* ── YouTube for the tablets, phones and laptops in the simulators ──────────
    Searches and video details through the YouTube Data API v3; the key is the
-   Worker secret YT_API_KEY.  Answers are kept at the edge for six hours, and
+   Worker secret YT_API_KEY.  Answers are kept at the edge for a day, and
    searches are limited per visitor, to stay inside the daily quota (a search
    costs 101 units of the free 10 000). */
 const YT_API = "https://www.googleapis.com/youtube/v3/";
@@ -461,9 +462,11 @@ async function ytRoute(req, env, url, cors) {
       views: +((x.statistics && x.statistics.viewCount) || 0), at: x.snippet.publishedAt }));
   }
   const body = JSON.stringify({ items });
-  await cache.put(key, new Response(body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=21600" } }));
+  await cache.put(key, new Response(body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=86400" } }));
   return reply(body);
 }
+
+const SHARED_GET = /^\/api\/(boards|posts|weekly|rank)$/, EDGE_TTL = 15;
 
 export default {
   async fetch(req, env) {
@@ -487,8 +490,16 @@ export default {
       try { return await ytRoute(req, env, url, cors); }
       catch (e) { if (e instanceof HttpError) return json({ error: e.code }, e.status, cors); console.error(e && e.stack || e); return json({ error: "server_error" }, 500, cors); }
     }
+    /* lists that look the same to every visitor who is not signed in are kept at the edge for a
+       few seconds, so a busy board is served without touching the database; signed-in users
+       (who see their own votes and posts at once) always get a fresh answer */
+    const shared = req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
+    const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
+    if (shared) { const hit = await caches.default.match(ckey);
+      if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Edge-Cache": "hit", ...cors } }); }
     try {
-      const res = json(await handle(req, env, url), 200, cors);
+      const data = await handle(req, env, url), res = json(data, 200, cors);
+      if (shared) await caches.default.put(ckey, new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=" + EDGE_TTL } }));
       // the server's settings change only on a deploy: let browsers keep them for five minutes
       if (url.pathname === "/api/health") res.headers.set("Cache-Control", "public, max-age=300");
       return res;
