@@ -103,7 +103,9 @@
     const cv = document.createElement("canvas"); wrap.appendChild(cv);
     const hint = document.createElement("div"); hint.className = "ns-hint";
     root.append(bar, wrap, hint); o.el.appendChild(root);
-    const g = cv.getContext("2d"), BG = document.createElement("canvas"); BG.width = 240; BG.height = 150; const bgx = BG.getContext("2d"), BGI = bgx.createImageData(240, 150);
+    const g = cv.getContext("2d"), BG = document.createElement("canvas"); BG.width = 240; BG.height = 150; const bgx = BG.getContext("2d", {willReadFrequently: false});
+    /* the sky background is computed on a coarse grid and scaled up: 240 × 150 at rest, half that while the view is being dragged */
+    const BGF = bgx.createImageData(240, 150), BGH = bgx.createImageData(120, 75); let BGI = BGF;
     const view = {W: 900, H: 560, dpr: 1, az: o.look ? o.look.az : 90, alt: o.look ? o.look.alt : 30, fov: o.look ? o.look.fov : 90};
     const clock = {J0: jdUT(o.start[0], o.start[1], o.start[2], o.start[3] - site.tz), t0: performance.now(), off: 0, run: true};
     let tool = "look", hand = "fist", mouse = null, drag = null, raf = 0, solved = false;
@@ -135,14 +137,14 @@
     /* an overcast sky: the cloud deck lit from below by the town, a little texture, no stars */
     const vn = (x, y) => { const h = (a, b) => { const n = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return n - Math.floor(n); }, X = Math.floor(x), Y = Math.floor(y), fx = x - X, fy = y - Y, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
       return h(X, Y) * (1 - u) * (1 - v) + h(X + 1, Y) * u * (1 - v) + h(X, Y + 1) * (1 - u) * v + h(X + 1, Y + 1) * u * v; };
-    function paintCloud(B) { const d = BGI.data, W = 240, H = 150, t = performance.now() / 60000;
+    function paintCloud(B) { const d = BGI.data, W = BGI.width, H = BGI.height, t = performance.now() / 60000;
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = unproj(B, (x + 0.5) * view.W / W, (y + 0.5) * view.H / H), [alt, az] = altaz(v), i = (y * W + x) * 4;
         let glow = 0.18; for (const [A, str, hs] of (o.ground && o.ground.domes) || []) { const dd = Math.abs(((az - A + 540) % 360) - 180); glow += 0.5 * str * Math.exp(-Math.max(0.3, alt) / (hs * 2.5)) * Math.exp(-((dd / 60) ** 2)); }
         const r = 1 / Math.max(0.12, Math.sin(Math.max(1, alt) * DEG)), px = v[0] * r * 3 + t, py = v[1] * r * 3, tex = 0.55 * vn(px, py) + 0.3 * vn(px * 2.3, py * 2.3) + 0.15 * vn(px * 5, py * 5);
         const L = Math.min(1, glow * (0.75 + 0.5 * tex));
         d[i] = 14 + 70 * L; d[i + 1] = 13 + 58 * L; d[i + 2] = 16 + 50 * L; d[i + 3] = 255; }
       bgx.putImageData(BGI, 0, 0); }
-    function paintBG(B, s) { if (o.overcast) return paintCloud(B); const d = BGI.data, W = 240, H = 150;
+    function paintBG(B, s) { if (o.overcast) return paintCloud(B); const d = BGI.data, W = BGI.width, H = BGI.height;
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = unproj(B, (x + 0.5) * view.W / W, (y + 0.5) * view.H / H), [alt, az] = altaz(v); const i = (y * W + x) * 4;
         const q = magOf(skyB(Math.max(0.3, alt), az, s)), b = Math.max(0, Math.min(1, (22 - q) / 6.5)), lum = Math.pow(b, 1.6);
         const moonish = s.moon.alt > 0 ? Math.min(1, s.moon.phase < 90 ? 1 : 1.6 - s.moon.phase / 150) : 0;
@@ -159,22 +161,28 @@
       g.globalAlpha = a; g.drawImage(sp, x - s0 / 2, y - s0 / 2, s0, s0);
       if (d > 3) { const s1 = Math.min(38, 10 + 4.5 * (d - 3)); g.globalAlpha = Math.min(0.4, 0.06 + 0.05 * (d - 3)); g.drawImage(sp, x - s1 / 2, y - s1 / 2, s1, s1); } g.globalAlpha = 1; }
     const tw = (i, X, t) => 2.5 * Math.log10(Math.max(0.3, 1 + Math.min(0.5, 0.05 * Math.pow(X, 1.5)) * Math.sin(t * (9 + (i % 7)) + i * 1.7) * Math.sin(t * (5.3 + (i % 5) * 0.6) + i * 0.37)));
-    let bgKey = "";
+    let bgKey = "", bgLow = false, LIMS = null, LIM = null, starKey = "", VIS = [];
     function draw() {
       const j = J(), s = state(j), B = basis(), t = performance.now() / 1000, W = view.W, H = view.H;
       g.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
-      const key = view.az.toFixed(2) + view.alt.toFixed(2) + view.fov.toFixed(2) + W + Math.floor(j * 1440);
-      if (key !== bgKey) { paintBG(B, s); bgKey = key; }
-      g.imageSmoothingEnabled = true; g.drawImage(BG, 0, 0, W, H);
+      const vkey = view.az.toFixed(2) + "," + view.alt.toFixed(2) + "," + view.fov.toFixed(2) + "," + W + "," + H, key = vkey + "," + Math.floor(j * 1440), low = !!drag;
+      if (key !== bgKey || low !== bgLow) { BGI = low ? BGH : BGF; paintBG(B, s); bgKey = key; bgLow = low; }
+      g.imageSmoothingEnabled = true; g.drawImage(BG, 0, 0, BGI.width, BGI.height, 0, 0, W, H);
       if (!o.overcast) {
       g.globalCompositeOperation = "lighter";
-      const LIM = new Float32Array(36 * 18); for (let a = 0; a < 18; a++) for (let z = 0; z < 36; z++) LIM[a * 36 + z] = limAt(a * 5 + 2.5, z * 10 + 5, s);
+      /* the naked-eye limit over the sky, on a 5° × 10° grid; it changes only with the sky's state (every few seconds) */
+      if (LIMS !== s) { LIM = new Float32Array(36 * 18); for (let a = 0; a < 18; a++) for (let z = 0; z < 36; z++) LIM[a * 36 + z] = limAt(a * 5 + 2.5, z * 10 + 5, s); LIMS = s; starKey = ""; }
       /* under a bright sky the eye still sees a bright star as bright: the steps above the limit count for more */
       const bk = (alt, az) => Math.max(1, Math.min(2.4, 6.6 / Math.max(1, lim(alt, az))));
       const lim = (alt, az) => LIM[Math.min(17, Math.max(0, Math.floor(alt / 5))) * 36 + (Math.floor(norm360(az) / 10) % 36)];
-      for (let i = 0; i < S.n; i++) { const m = S.M[i]; if (m > 6.6) continue; const h = mv(s.HM, [S.X[i * 3], S.X[i * 3 + 1], S.X[i * 3 + 2]]); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
-        if (alt < skyline(az)) continue; const X = airmass(alt), dd = lim(alt, az) - (m + K * X); if (dd < -0.3) continue; const p = proj(B, hvec(alt, az)); if (!p || p[0] < -6 || p[0] > W + 6 || p[1] < -6 || p[1] > H + 6) continue;
-        let d = (dd + tw(i, X, t)) * bk(alt, az); if (d < 0.25) { if (Math.sin(t * 0.9 + i * 2.71) * Math.sin(t * 0.37 + i * 1.13) < 0.3) continue; d = 0.25; } point(p[0], p[1], d, S.BV[i]); }
+      /* where each visible star lands on the screen changes only with the view and the sky's state; only the twinkle is per frame */
+      const sk = vkey + "," + s.J;
+      if (sk !== starKey) { VIS = [];
+        for (let i = 0; i < S.n; i++) { const m = S.M[i]; if (m > 6.6) continue; const h = mv(s.HM, [S.X[i * 3], S.X[i * 3 + 1], S.X[i * 3 + 2]]); let [alt, az] = altaz(h); if (alt < -1) continue; alt += refr(alt);
+          if (alt < skyline(az)) continue; const X = airmass(alt), dd = lim(alt, az) - (m + K * X); if (dd < -0.3) continue; const p = proj(B, hvec(alt, az)); if (!p || p[0] < -6 || p[0] > W + 6 || p[1] < -6 || p[1] > H + 6) continue;
+          VIS.push([p[0], p[1], dd, X, bk(alt, az), i]); }
+        starKey = sk; }
+      for (const [x, y, dd, X, b, i] of VIS) { let d = (dd + tw(i, X, t)) * b; if (d < 0.25) { if (Math.sin(t * 0.9 + i * 2.71) * Math.sin(t * 0.37 + i * 1.13) < 0.3) continue; d = 0.25; } point(x, y, d, S.BV[i]); }
       for (const P of s.planets) { let [alt, az] = altaz(P.h); alt += refr(alt); if (alt < skyline(az)) continue; const p = proj(B, hvec(alt, az)); if (!p) continue;
         const m0 = {jupiter: -2.8, saturn: 0.6, mars: 1.2, venus: -4.0, mercury: 0}[P.p]; point(p[0], p[1], (lim(alt, az) - (m0 + K * airmass(alt))) * bk(alt, az), {jupiter: 0.85, saturn: 1.05, mars: 1.5, venus: 0.8, mercury: 0.9}[P.p]); }
       g.globalCompositeOperation = "source-over";
@@ -193,9 +201,13 @@
       if (tool === "hand" && mouse) drawHand(B, mouse);
       clk.textContent = L().local + " " + timeStr(j); }
     function timeStr(j) { const h = ((j + 0.5 + site.tz / 24) % 1) * 24, hh = Math.floor(h), mm = Math.floor((h - hh) * 60), ss = Math.floor(((h - hh) * 60 - mm) * 60); return (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss; }
-    function drawGround(B, s) { const W = view.W, H = view.H, top = [], N = 180;
-      for (let i = 0; i <= N; i++) { const x = i * W / N, v = unproj(B, x, H / 2), [, az] = altaz(v); let best = null;
-        for (let y = -H; y < H * 2; y += 6) { const [a2, z2] = altaz(unproj(B, x, y)); if (a2 < skyline(z2)) { best = y; break; } } top.push([x, best == null ? H * 2 : best, az]); }
+    /* the horizon's outline on screen, found by walking down each column until the ground; it depends only on the view */
+    let groundKey = "", groundTop = [];
+    function drawGround(B, s) { const W = view.W, H = view.H, N = 180, gk = view.az.toFixed(2) + "," + view.alt.toFixed(2) + "," + view.fov.toFixed(2) + "," + W + "," + H;
+      if (gk !== groundKey) { groundTop = []; groundKey = gk;
+        for (let i = 0; i <= N; i++) { const x = i * W / N, v = unproj(B, x, H / 2), [, az] = altaz(v); let best = null;
+          for (let y = -H; y < H * 2; y += 6) { const [a2, z2] = altaz(unproj(B, x, y)); if (a2 < skyline(z2)) { best = y; break; } } groundTop.push([x, best == null ? H * 2 : best, az]); } }
+      const top = groundTop;
       const sea = o.ground && o.ground.sea, inSea = (az) => sea && ((sea[0] < sea[1]) ? az > sea[0] && az < sea[1] : az > sea[0] || az < sea[1]);
       g.beginPath(); g.moveTo(0, H * 3); for (const [x, y] of top) g.lineTo(x, Math.min(H * 3, y)); g.lineTo(W, H * 3); g.closePath();
       const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "#07090c"); gr.addColorStop(1, "#020203"); g.fillStyle = gr; g.fill();
@@ -225,7 +237,7 @@
         if (acc > 70 && l > 0.5) { acc = 0; const ux = (b[0] - a[0]) / l, uy = (b[1] - a[1]) / l; g.beginPath(); g.moveTo(b[0] + ux * 6, b[1] + uy * 6); g.lineTo(b[0] - ux * 6 - uy * 6, b[1] - uy * 6 + ux * 6); g.lineTo(b[0] - ux * 6 + uy * 6, b[1] - uy * 6 - ux * 6); g.closePath(); g.fill(); } }
       if (tr.label && P.length && P[0]) { g.font = "bold 13px 'Segoe UI',sans-serif"; g.fillText(tr.label, P[0][0] + 8, P[0][1] - 8); } }
     function layout() { const w = wrap.clientWidth || 900; view.dpr = Math.min(window.devicePixelRatio || 1, 2); view.W = w; view.H = Math.round(Math.min(w * 0.62, Math.max(380, innerHeight - 220)));
-      cv.width = Math.round(view.W * view.dpr); cv.height = Math.round(view.H * view.dpr); cv.style.height = view.H + "px"; bgKey = ""; }
+      cv.width = Math.round(view.W * view.dpr); cv.height = Math.round(view.H * view.dpr); cv.style.height = view.H + "px"; bgKey = ""; starKey = ""; groundKey = ""; }
     function buildBar() { const t = L(); bar.innerHTML = "";
       const mk = (lab, on, fn) => { const b = document.createElement("button"); b.textContent = lab; if (on) b.className = "on"; b.onclick = fn; bar.appendChild(b); return b; };
       for (const k of o.tools || ["look", "point", "hand"]) mk(t[k], tool === k, () => setTool(k));
