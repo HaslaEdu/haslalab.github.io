@@ -546,7 +546,8 @@ const worker = {
     /* lists that look the same to every visitor who is not signed in are kept at the edge for a
        few seconds, so a busy board is served without touching the database; signed-in users
        (who see their own votes and posts at once) always get a fresh answer */
-    const shared = req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
+    /* /api/health is the same for everyone, signed in or not */
+    const shared = req.method === "GET" && ((!req.headers.get("Authorization") && SHARED_GET.test(url.pathname)) || url.pathname === "/api/health");
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
     if (shared) { const hit = await caches.default.match(ckey);
       if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Edge-Cache": "hit", ...cors } }); }
@@ -958,8 +959,9 @@ async function scanOne(env, pv, img) {
 const scanBench = (env, img) => Promise.all(scanProviders(env).map(pv => scanOne(env, pv, img)));
 
 async function labReady(env) {
-  if (!LAB_READY) { try { await env.DB.prepare("SELECT exam_tokens FROM users LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_sessions LIMIT 0").all();
-    await env.DB.prepare("SELECT read FROM lab_pages LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_schemes LIMIT 0").all(); LAB_READY = true; } catch (e) {} }
+  /* one round trip: every table and column exam mode needs (a failing statement fails the batch) */
+  if (!LAB_READY) { try { await env.DB.batch(["SELECT exam_tokens FROM users LIMIT 0", "SELECT 1 FROM lab_sessions LIMIT 0",
+    "SELECT read FROM lab_pages LIMIT 0", "SELECT 1 FROM lab_schemes LIMIT 0"].map(q => env.DB.prepare(q))); LAB_READY = true; } catch (e) {} }
   return LAB_READY;
 }
 
