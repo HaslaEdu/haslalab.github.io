@@ -1342,8 +1342,8 @@ function wipe(p){
   if(n&&!S.puddles.length) say("wiped");
   if(carry.wet>=CAP-1e-6) say("sheetWet");
 }
-function openView(v){ view=v; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
-function closeView(){ view=null; $("btnBack").hidden=true; renderCap(); }
+function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
+function closeView(){ if(view&&window.HLzoom) HLzoom(cv,{out:true}); view=null; $("btnBack").hidden=true; renderCap(); }
 $("btnBack").onclick=closeView;
 let trayDrag=false;
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; drawTray(); });

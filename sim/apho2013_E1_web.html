@@ -644,7 +644,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["meters","side"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 function drawMeters(){
   const t=d(); CL={}; const H=CLH-20;
   /* top row: power supply and hotwire box; bottom row: three meters */

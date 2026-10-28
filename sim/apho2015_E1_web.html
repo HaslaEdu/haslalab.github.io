@@ -703,7 +703,7 @@ const TABS=["meters","plate","box","caliper","tape"];
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
     b.onclick=()=>setTab(k); box.appendChild(b); } }
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 
 /* ── instrument faces, drawn in their own units ── */
 const SG_HIT={power:[8,26,22,38],left:[46,72,16,10],right:[70,72,16,10],ampl:[190,30,12],offs:[222,30,12],adj:[256,30,12]};

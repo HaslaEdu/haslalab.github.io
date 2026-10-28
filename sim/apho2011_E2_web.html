@@ -713,7 +713,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["eye","screen","bench"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 /* close up 1: through the sample */
 const EYE={a:0, span:26*DEG}; let eyeDrag=null, eyeCache={key:"",cols:null};
 function eyeGeom(){

@@ -498,7 +498,7 @@ function drawTray(){
 const TABS=["board","holder","disk","box","rheed"];
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 
 /* ── the observation board: x from −11 to 11 cm, y from −1.5 to 24 cm ── */
 const BV={zoom:0,px:0,py:0}; let hoverXY=null;

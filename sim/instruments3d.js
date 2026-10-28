@@ -356,7 +356,7 @@
 
   /* ---------- a reversing switch: DPDT knife switch on porcelain ---------- */
   B3.knife = function (b, name, p, st){
-    const [x, z] = p, w = 6, d = 9, y0 = 0;
+    const [x, z] = p, w = 7, d = 10.4, y0 = 0;
     if (st.pos === undefined) st.pos = 0;
     box3(x - w / 2, x + w / 2, y0, 1.2, z - d / 2, z + d / 2, '#efece4', { id: 'm:' + name, top: '#f6f4ee' });
     /* the clips: two at the hinge (middle), two at each end */
@@ -364,6 +364,13 @@
     for (const cx of [x - 1.4, x + 1.4]) for (const cz of [z - 3.2, z, z + 3.2]) clip(cx, cz);
     /* the cross wires that make it reverse */
     line3([x - 1.4, 1.22, z - 3.2], [x + 1.4, 1.22, z + 3.2], '#b87333', 1.6); line3([x + 1.4, 1.22, z - 3.2], [x - 1.4, 1.22, z + 3.2], '#b87333', 1.6);
+    /* the binding posts the leads go to, on the edges, with copper strips under to their clips:
+       the supply on the right-hand edge to the hinge clips, the load on the back end to one pair of end clips */
+    const T = { in1: [x + w / 2 - 0.75, z - 1.1], in2: [x + w / 2 - 0.75, z + 1.1], out1: [x - 1.4, z - d / 2 + 0.75], out2: [x + 1.4, z - d / 2 + 0.75] };
+    line3([T.in1[0], 1.22, T.in1[1]], [x - 1.4, 1.22, z], '#b87333', 2.2); line3([T.in2[0], 1.22, T.in2[1]], [x + 1.4, 1.22, z], '#b87333', 2.2);
+    line3([T.out1[0], 1.22, T.out1[1]], [x - 1.4, 1.22, z - 3.2], '#b87333', 2.2); line3([T.out2[0], 1.22, T.out2[1]], [x + 1.4, 1.22, z - 3.2], '#b87333', 2.2);
+    B3.post(T.in1[0], 1.2, T.in1[1], '#c0392b'); B3.post(T.in2[0], 1.2, T.in2[1], '#1b1b1b');
+    B3.post(T.out1[0], 1.2, T.out1[1], '#c0392b'); B3.post(T.out2[0], 1.2, T.out2[1], '#1b1b1b');
     /* the blades and the handle bar, turned about the hinge at z */
     const a = st.pos === 0 ? 0 : st.pos > 0 ? -1.38 : 1.38, L = 3.6;
     const tip = [0, 2.0 + Math.cos(a) * L, z + Math.sin(a) * L];
@@ -372,6 +379,7 @@
     B3.cylAB([x, tip[1], tip[2]], [x, tip[1] + Math.cos(a) * 1.8, tip[2] + Math.sin(a) * 1.8], 0.55, '#1a1a1a', { id: 'c:' + name });
     if (b.clicked('c:' + name)) st.pos = st.pos === 0 ? 1 : st.pos > 0 ? -1 : 0;
     text3([x - w / 2 + 0.3, 1.21, z + d / 2 - 0.4], [1, 0, 0], [0, 0, -1], st.pos > 0 ? '▲ +' : st.pos < 0 ? '▼ −' : 'OFF', 0.9, '#555', { weight: '800' });
-    return { in1: [x - 1.4, 2.4, z], in2: [x + 1.4, 2.4, z], out1: [x - 1.4, 2.4, z - 3.2], out2: [x + 1.4, 2.4, z - 3.2] };
+    const top = 1.2 + 1.35;
+    return { in1: [T.in1[0], top, T.in1[1]], in2: [T.in2[0], top, T.in2[1]], out1: [T.out1[0], top, T.out1[1]], out2: [T.out2[0], top, T.out2[1]] };
   };
 })();

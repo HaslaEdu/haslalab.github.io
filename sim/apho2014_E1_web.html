@@ -734,7 +734,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["screen","cell","heights","tools"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 
 /* ── the screen: the answer sheet on the board, in board cm (u across, z up from the table) ── */
 const SV={zoom:0,px:0,py:0};

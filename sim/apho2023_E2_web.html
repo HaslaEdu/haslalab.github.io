@@ -2058,6 +2058,7 @@ function draw3(){
 }
 function showView(v){
   if (v !== view3){
+    if (window.HLzoom) HLzoom(cv3, {out: v === "3d"});
     if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
     Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v));
   }
