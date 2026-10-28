@@ -1,4 +1,6 @@
 (() => {
+  /* exam mode (exam.html loads the simulators with exam=1): the bench stays clear */
+  if (new URLSearchParams(location.search).get("exam") === "1") return;
   let mounted = false;
   let requestedEnglish = new URLSearchParams(location.search).get("lang") === "en";
 

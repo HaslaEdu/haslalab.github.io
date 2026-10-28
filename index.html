@@ -348,6 +348,15 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .prob .acts{display:flex;flex-direction:column;gap:8px;margin-top:3px}
 .prob .acts .main{display:flex;gap:8px}
 .prob .acts .main .btn{flex:1;justify-content:center;text-align:center}
+.prob .acts .btn.exam{justify-content:center;text-align:center;background:#7a2e1f;border-color:#7a2e1f}
+.prob .acts .btn.exam:hover{background:#94381f}
+.prob .acts .btn.exam small{font-weight:500;opacity:.8;margin-left:4px}
+.exambar{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:6px 0 18px;padding:14px 18px;
+  border:1px solid #e3c9bf;background:#fbf3ef;border-radius:12px}
+.exambar h3{margin:0 0 3px;font-size:15px;color:#7a2e1f}
+.exambar p{margin:0;font-size:13px;color:var(--graphite);max-width:760px}
+.exambar .acts2{display:flex;gap:8px;flex-wrap:wrap}
+.exambar .btn{background:#7a2e1f;border-color:#7a2e1f;padding:9px 16px;font-size:13px}
 .prob .acts .docs{display:grid;gap:8px}
 .prob .acts .docs.n1{grid-template-columns:1fr} .prob .acts .docs.n2{grid-template-columns:1fr 1fr} .prob .acts .docs.n3{grid-template-columns:1fr 1fr 1fr}
 .prob .acts .btn{padding:8px 13px;font-size:12.5px}
@@ -457,6 +466,28 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
   .cmrail .servers button{white-space:nowrap;padding:6px}
   .cmrail a.ch{white-space:nowrap;flex:none}
 }
+/* the Physics Olympiads Discord server */
+.cmrail a.ch.dc .hash svg{width:14px;height:14px;fill:#8ea1ff;vertical-align:-2px}
+.cmrail a.ch.dc .on{margin-left:auto;font-size:11px;font-family:var(--mono);color:#57d38c}
+.dcban{display:flex;gap:16px;align-items:center;padding:22px 22px 18px;background:linear-gradient(135deg,#5865f2,#3b45b8);color:#fff}
+.dcban img{width:72px;height:72px;border-radius:20px;background:#fff2;flex:none}
+.dcban h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.dcban p{margin:4px 0 0;font-size:13.5px;opacity:.9}
+.dcban .ct{display:flex;gap:14px;margin-top:8px;font-size:12.5px}
+.dcban .ct i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:#57d38c}
+.dcban .ct i.m{background:#c8ccd3}
+.dcbody{padding:18px 22px 22px;font-size:14px;color:#374151;line-height:1.7}
+.dcbody .acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.dcbody .acts a,.dcbody .acts button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid var(--cm-line);background:#fff;color:#1f2937;cursor:pointer;font-family:inherit}
+.dcbody .acts .join{background:#5865f2;border-color:#5865f2;color:#fff}
+.dcbody .acts .join:hover{background:#4752c4}
+.dcbody iframe{width:100%;height:620px;border:0;border-radius:10px;margin-top:6px;background:#313338}
+.dcbody ul{margin:6px 0 0 18px;padding:0}
+.dcside .in{display:flex;gap:10px;align-items:center}
+.dcside img{width:40px;height:40px;border-radius:12px;flex:none;background:#5865f2}
+.dcside .nm{font-weight:700;color:#111827;font-size:13.5px}
+.dcside .ct{font-size:12px;color:#6b7280}
+.dcside a.j{margin-left:auto;background:#5865f2;color:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .cmav{width:30px;height:30px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;
   color:#fff;font-weight:700;font-size:13px;line-height:1}
 .cmav.s{width:22px;height:22px;font-size:10.5px}
@@ -910,7 +941,9 @@ ko:{
   host:"개최", noHost:"확인 필요",
   live:"브라우저 실행", dlOnly:"다운로드", srcOnly:"파이썬 소스", wip:"준비 중", theoryTag:"이론 · 시뮬레이터 필요",
   soonTitle:"준비 중", soonDesc:"문제지 정리와 물리 모델 보정을 진행하고 있습니다.",
-  actRun:"브라우저에서 실행", actExe:"Windows 내려받기", actPdf:"문제지",
+  actRun:"연습 모드", actExe:"Windows 내려받기", actPdf:"문제지",
+  actExam:"⏱ 실전 모드", examWith:"와 함께", examHint:"실전 모드: 로그인 · 토큰 1개 · 5시간 · 30분 답안 스캔",
+  examBarH:"실전 모드", examBarP:"이 해의 실험을 대회처럼 한 번에 칩니다 — 한 책상 · 한 부품함 · 5시간, 끝나면 30분 동안 휴대폰으로 답안지를 스캔해 채점받습니다. 로그인하고 실전 토큰 1개를 씁니다.",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   actSol:"해설 · 채점기준", actSrc:"파이썬 소스",
   exeNote:"Windows 빌드는 서명하지 않아서 «PC를 보호했습니다» 경고가 뜰 수 있습니다. "+
@@ -966,7 +999,9 @@ en:{
   host:"Host", noHost:"to be confirmed",
   live:"Runs in browser", dlOnly:"Download", srcOnly:"Python source", wip:"In preparation", theoryTag:"theory · needs a simulator",
   soonTitle:"In preparation", soonDesc:"Paper transcription and model calibration under way.",
-  actRun:"Run in browser", actExe:"Download for Windows", actPdf:"Problem sheet",
+  actRun:"Practice mode", actExe:"Download for Windows", actPdf:"Problem sheet",
+  actExam:"⏱ Exam mode", examWith:"with", examHint:"Exam mode: signed in · 1 token · 5 hours · 30 min to scan",
+  examBarH:"Exam mode", examBarP:"Sit this year's experiments at once, as on the day — one bench, one kit, five hours; then 30 minutes to scan your answer sheets with a phone and have them graded. Needs a sign-in and one exam token.",
   actSol:"Solution & marking scheme", actSrc:"Python source",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   exeNote:"The Windows build is unsigned, so Windows may warn that it “protected your PC” — "+
@@ -3969,6 +4004,24 @@ function viewComp(key){
   ${adFitBanner("primary")}`;
 }
 
+/* exam mode (sim/exam.html): the experiments that are sat together — every E1, E2, … of a year with a
+   browser simulator on one bench; any other round (an observation, a data analysis) on its own */
+/* the exam's name for a round: its id, or a short code for ids like «O9–O13» or «23» */
+const examTask=p=>/^[A-Z][A-Za-z0-9]{0,3}$/.test(p.id)?p.id:/^[A-Z]/.test(p.id)?p.id[0]+((p.id.match(/^[A-Z](\d{1,2})/)||[])[1]||""):"P"+String(p.id).replace(/\D/g,"").slice(0,3);
+function examGroups(key,yr){
+  const live=yr.problems.filter(p=>!p.hold&&p.files&&p.files.sim&&/^sim\/[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(p.files.sim));
+  const exp=live.filter(p=>/^E\d*$/.test(p.id)), out=exp.length?[exp]:[];
+  live.filter(p=>!exp.includes(p)).forEach(p=>out.push([p]));
+  return out;
+}
+function examHref(key,yr,group){
+  const pick=v=>typeof v==="string"?v:(v&&(v[lang]||v.ko||v.en))||"";
+  const short=u=>u.startsWith(PDF_BASE)?u.slice(PDF_BASE.length):u;
+  const q=new URLSearchParams({c:key,y:yr.y,n:DATA[key].abbr,e:group.map(examTask).join(","),
+    f:group.map(p=>p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
+    p:group.map(p=>short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
+  return "sim/exam.html?"+q.toString();
+}
 function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
   const yr = c && c.years.find(y=>String(y.y)===String(year));
@@ -4000,6 +4053,8 @@ function viewYear(key,year){
     ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
       `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
        <i>${yr.problems.filter(p=>g==="all"||grpOf(c,p).includes(g)).length}</i></button>`).join("")}</div>`:""}
+    ${(()=>{ const g=examGroups(key,yr).filter(x=>x.length>1); return g.length?`<div class="exambar"><div><h3>⏱ ${d.examBarH} · ${g[0].map(p=>p.id).join(" + ")}</h3><p>${d.examBarP}</p></div>
+      <div class="acts2">${g.map(x=>`<a class="btn" href="${examHref(key,yr,x)}">${d.actExam} · ${x.map(p=>p.id).join(" + ")}</a>`).join("")}</div></div>`:""; })()}
     <div class="probs"${c.groups?` data-show="${grpShow}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
@@ -4024,6 +4079,7 @@ function viewYear(key,year){
            whatever is not there (or not released yet) stays as a greyed button */
         const live=!held;
         const off=(lbl,g)=>`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`;
+        const eg=live&&f.sim ? examGroups(key,yr).find(x=>x.includes(p)) : null;
         const b=[
           (live&&f.sim) ? `<a class="btn" href="${f.sim}${f.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
@@ -4044,7 +4100,9 @@ function viewYear(key,year){
           <p>${body}</p>
           <div class="tags">${(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags).map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${note}
-          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}<div class="docs n${docs.length}">${docs.join("\n")}</div></div>
+          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}
+            ${eg?`<a class="btn exam" href="${examHref(key,yr,eg)}" title="${d.examHint}">${d.actExam}${eg.length>1?`<small>· ${eg.map(x=>x.id).join(" + ")}</small>`:""}</a>`:""}
+            <div class="docs n${docs.length}">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
     </div>
   </div>
@@ -7118,6 +7176,47 @@ function startHero(){
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";   // Cloudflare Worker in /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
+/* The community's live chat is the real «Physics Olympiads» Discord server (olympiad students from everywhere).
+   The first server was hacked on 2 March 2026; this invite is to the new one and does not expire.  Its widget is
+   off, so the site shows the server card with live member/online counts (Discord's public invite API) and sends
+   people in with the invite.  If the server's admins ever add the WidgetBot bot, put a channel id in `embed`
+   and the chat itself is shown here. */
+const DISCORD = {name:"Physics Olympiads", invite:"SNBDY5nsgf", guild:"1477813246051356842", embed:""};
+const DC_SVG='<svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.7 3a19.7 19.7 0 0 0-4.9 1.5C.7 9.1-.2 13.6.3 18.1a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.1 0l.5.4c-.6.4-1.3.7-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.6-5.2-.8-9.7-3.7-13.7zM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>';
+const DCT={
+  ko:{sec:"실시간 채팅", h:"Physics Olympiads 디스코드", members:"명", online:"명 접속 중", join:"디스코드에서 참여하기", copy:"초대 링크 복사",
+      about:"게시판과 함께, 전 세계 물리 · 천문 올림피아드 준비생이 모인 <b>Physics Olympiads</b> 디스코드 서버에서 실시간으로 묻고 답할 수 있습니다.",
+      tips:["문제 풀이, 실험 측정, 오차 분석을 실시간으로 이야기합니다. 대화는 주로 영어입니다.","처음 들어가면 <b>#rules</b> 채널의 규칙을 읽어 주세요.","HaslaLab 시뮬레이터에 대한 제보는 이 커뮤니티의 «시뮬레이터 제보» 게시판에 남겨 주시면 바로 고칩니다.","HaslaLab 계정에 Discord 로그인을 연결해 두면 같은 계정으로 들어올 수 있습니다."],
+      note:"이 서버는 HaslaLab이 운영하지 않습니다. 원래 서버가 2026년 3월 2일 해킹된 뒤 옮겨 간 새 서버입니다.", side:"실시간 채팅"},
+  en:{sec:"Live chat", h:"Physics Olympiads Discord", members:"members", online:"online", join:"Join on Discord", copy:"Copy invite link",
+      about:"Next to the boards, talk in real time with olympiad students from all over the world on the <b>Physics Olympiads</b> Discord server.",
+      tips:["Problem solving, lab measurements and error analysis, live. Most of the talk is in English.","Read the rules in <b>#rules</b> when you first join.","Reports about HaslaLab simulators are best left on the «Simulator reports» board here, so they get fixed.","Link Discord sign-in to your HaslaLab account to use the same account on both."],
+      note:"HaslaLab does not run this server. It is the new server the community moved to after the original one was hacked on 2 March 2026.", side:"Live chat"}};
+let dcInfo=null, dcP=null;
+/* the server's icon, description and member/online counts, from Discord's public invite endpoint (CORS-open) */
+function dcLoad(){
+  return dcP||(dcP=fetch("https://discord.com/api/v10/invites/"+DISCORD.invite+"?with_counts=true")
+    .then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.guild) dcInfo={members:j.approximate_member_count, online:j.approximate_presence_count, icon:j.guild.icon, desc:j.guild.description}; return dcInfo; })
+    .catch(()=>null));
+}
+const dcIcon=()=>dcInfo&&dcInfo.icon?`https://cdn.discordapp.com/icons/${DISCORD.guild}/${dcInfo.icon}.${dcInfo.icon.startsWith("a_")?"gif":"webp"}?size=128`:"";
+const dcUrl="https://discord.gg/"+DISCORD.invite;
+const dcNum=n=>n==null?"…":Number(n).toLocaleString(lang==="ko"?"ko-KR":"en-US");
+function cmDiscord(root){
+  const D=DCT[lang];
+  const paint=()=>{
+    root.innerHTML=`<div class="cmpanel"><div class="dcban">${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="" style="display:grid">`}
+      <div><h2>${DISCORD.name}</h2><p>${esc(dcInfo&&dcInfo.desc||"")}</p>
+      <div class="ct"><span><i></i>${dcNum(dcInfo&&dcInfo.online)} ${D.online}</span><span><i class="m"></i>${dcNum(dcInfo&&dcInfo.members)} ${D.members}</span></div></div></div>
+      <div class="dcbody"><p style="margin-top:0">${D.about}</p>
+        <div class="acts"><a class="join" href="${dcUrl}" target="_blank" rel="noopener">${DC_SVG.replace("<svg","<svg width=\"18\" height=\"18\" fill=\"#fff\"")} ${D.join}</a><button type="button" id="dcCopy">${D.copy}</button></div>
+        ${DISCORD.embed?`<iframe src="https://e.widgetbot.io/channels/${DISCORD.guild}/${DISCORD.embed}" title="${DISCORD.name}" allow="clipboard-write; fullscreen"></iframe>`:""}
+        <ul>${D.tips.map(x=>`<li>${x}</li>`).join("")}</ul>
+        <p style="font-size:12.5px;color:#6b7280;margin-bottom:0">${D.note}</p></div></div>`;
+    const c=document.getElementById("dcCopy"); if(c) c.onclick=async()=>{ try{ await navigator.clipboard.writeText(dcUrl); }catch(e){} cmToast(CMT[lang].copied); };
+  };
+  paint(); if(!dcInfo) dcLoad().then(()=>{ if(document.body.contains(root)&&location.hash.includes("/discord")) paint(); });
+}
 const CMT = {
   ko:{
     h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
@@ -7345,6 +7444,8 @@ function cmRailHtml(active){
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
     ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
+    <div class="sec">${DCT[lang].sec}</div>
+    <a class="ch dc ${active==="discord"?"on":""}" href="#/community/discord"><span class="hash">${DC_SVG}</span>${DISCORD.name}<span class="on" id="dcOn">${dcInfo?"● "+dcNum(dcInfo.online):""}</span></a>
     ${me}`;
 }
 async function cmRight(where){
@@ -7354,8 +7455,13 @@ async function cmRight(where){
   el.innerHTML=`
     <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
+    <div class="cmside dcside"><h3>💬 ${DCT[lang].side}</h3><div class="in" id="dcSide"></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+  const dcSide=()=>{ const x=document.getElementById("dcSide"); if(x) x.innerHTML=`${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="">`}<div style="min-width:0"><div class="nm">${DISCORD.name}</div>
+      <div class="ct">● ${dcNum(dcInfo&&dcInfo.online)} ${DCT[lang].online}</div></div><a class="j" href="#/community/discord">${lang==="ko"?"열기":"Open"}</a>`;
+    const on=document.getElementById("dcOn"); if(on&&dcInfo) on.textContent="● "+dcNum(dcInfo.online); };
+  dcSide(); dcLoad().then(dcSide);
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h) return;
@@ -7372,7 +7478,7 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
   /* who is signed in, the server's version and the board counts — once, then from memory */
   try{
     const jobs=[];
@@ -7391,6 +7497,7 @@ async function cmMount(){
     else if(a==="login")                cmLogin(root);
     else if(a==="signup")               cmSignup(root);
     else if(a==="account")              await cmAccount(root,alive);
+    else if(a==="discord")              cmDiscord(root);
     else                                await cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
   }catch(e){
     if(alive()) root.innerHTML=`<div class="cmnote">${esc(cmErr(e))}</div>`;
@@ -7770,6 +7877,7 @@ function setDocTitle(first, second){
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
   else if(["weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
+  else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=DATA[first];
@@ -7815,7 +7923,7 @@ function render(){
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps();  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(["weekly","rank","me","login","signup","oauth"].includes(first)){ html=viewArena(first); active="weekly"; }
+  else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active="weekly"; }
   else if(first && DATA[first]){  html=second?viewYear(first,second):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.getElementById("view").innerHTML=html;
