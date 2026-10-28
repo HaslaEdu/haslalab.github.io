@@ -142,83 +142,188 @@ var PROGRAM = {
 };
 
 
-/* Simulation mode: the same current() with the same length and voltage errors, drawn as the tube
-   from the end and from the side, wired to the high-voltage supply and the ammeter. */
-PROGRAM.sim = {
-  intro: '원통형 다이오드: 가운데 가열된 방출 전극(반지름 R<sub>E</sub>)에서 나온 전자가 바깥 수집 전극(반지름 R<sub>C</sub>, 길이 L<sub>E</sub>)으로 갑니다. ' +
-         '왼쪽은 끝에서 본 단면, 가운데는 옆모습, 오른쪽은 고전압 전원과 전류계입니다. 전류계는 콘솔 프로그램과 같이 유효숫자 세 자리로 읽히고 40 A를 넘으면 타 버립니다.',
-  fields: [
-    { id: 'rc', label: '수집 전극 반지름 Rc', unit: 'cm', lo: 0.1, hi: 20.0, step: 0.1, quant: 0.1, value: 5.0 },
-    { id: 're', label: '방출 전극 반지름 Re', unit: 'cm', lo: 0.1, hi: 20.0, step: 0.1, quant: 0.1, value: 0.5 },
-    { id: 'le', label: '길이 Le', unit: 'cm', lo: 1.0, hi: 99.0, step: 0.1, quant: 0.1, value: 20.0 },
-    { id: 'v', label: '전압 V', unit: 'V', lo: 0, hi: 2000, step: 1, quant: 1, value: 500 }
-  ],
-  columns: ['#', 'Rc (cm)', 'Re (cm)', 'Le (cm)', 'V (V)', 'I'],
-  aspect: 0.55,
-  goLabel: '전압 걸기',
-  n: 0,
-  check: function (v) { return v.re >= v.rc ? 'The emitter must fit inside the collector. (방출 전극이 수집 전극 안에 들어가야 합니다)' : null; },
-  measure: function (v) {
-    var amp = current(v.rc * 1e-2 + gauss(LEN_SIGMA), v.re * 1e-2 + gauss(LEN_SIGMA),
-                      v.le * 1e-2 + gauss(LEN_SIGMA), Math.max(0, v.v + gauss(V_SIGMA)));
-    var burnt = amp > I_MAX, shown = burnt ? '타 버림' : displayCurrent(amp);
-    this.n++;
-    return { st: { amp: amp, burnt: burnt, shown: shown },
-             rows: [[this.n, v.rc.toFixed(1), v.re.toFixed(1), v.le.toFixed(1), v.v, shown]], ms: 1800 };
+/* Experiment mode: the diode is built and run by hand.  Collector tubes and emitter rods come off a
+   rack; an emitter is cut to length on a jig with a stop slid along a 1 m rule; any part can be put
+   in the vernier caliper; the chamber has to be pumped down and the emitter heated before the high
+   voltage is any use.  The same current() gives the current, from the true sizes of the parts.  The
+   errors a real bench brings are in the session: every tube and rod is a little off its nominal size
+   (the tag is nominal, the caliper tells the truth to within its own zero error), the jig's stop cuts
+   a little long, the supply's display reads a little off and the ammeter's last digit wanders. */
+var RACK_C = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20];                       /* collector radii, cm (nominal) */
+var RACK_E = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0];
+var L2 = { hand: null, coll: null, emit: null, jig: null, stop: 300, cal: null, calX: 120, pump: false, p: 1e5, fil: false, heat: 0,
+           hv: 0, hvFine: 0, out: false, burnt: false, msg: '선반에서 부품을 고르세요.', flick: 0, flickT: 0 };
+function partSize(kind, nom) { var k = kind + nom; if (!(k in L2.true)) L2.true[k] = nom * (1 + L2.S.sys('size' + k, 0.004)); return L2.true[k]; }
+PROGRAM.lab = {
+  intro: '선반의 수집 전극 관(바깥 원통)과 방출 전극 막대(안쪽 원통)로 원통형 다이오드를 만듭니다. 방출 전극은 절단 지그에서 원하는 길이로 잘라 씁니다. ' +
+         '부품에 붙은 이름표는 공칭 반지름이고 실제 크기는 조금씩 다르므로, 버니어 캘리퍼스로 지름을 재세요. 진공 용기에 두 전극을 넣고 배기한 뒤 ' +
+         '필라멘트로 방출 전극을 달구고 고전압을 걸면 전류계에 최대 전류가 나옵니다. 40 A를 넘기면 전류계 퓨즈가 끊어집니다.',
+  howto: ['선반의 관·막대를 클릭해 집기 → 용기의 자리 클릭해 넣기 (용기가 대기압일 때만)',
+          '막대는 먼저 절단 지그로: 막대를 든 채 지그 클릭 → 멈춤쇠를 끌어 길이 맞추기 → <b>CUT</b>',
+          '캘리퍼스: 부품을 든 채 캘리퍼스 클릭 → 슬라이더를 끌어 물리고 눈금 읽기 · 다시 클릭하면 빼기',
+          '<b>PUMP</b>로 배기(진공계 확인), <b>FILAMENT</b>로 가열, 고전압은 <b>COARSE</b>(10회전)·<b>FINE</b> 손잡이와 <b>HV ON</b>',
+          '전극을 바꾸려면 <b>PUMP</b>를 꺼서 공기를 넣고 바꾸세요.'],
+  aspect: 0.62,
+  speeds: [1, 5],
+  notePlaceholder: '예) Rc: 지름 100.32 mm, Re: 지름 10.05 mm, Le = 30.0 cm, V = 1000 V → I = 2.31 A',
+  init: function (S) {
+    L2.S = S; L2.true = {};
+    L2.calZero = S.sys('calZero', 0.02);                          /* mm */
+    L2.kerf = 0.3 + S.sys('kerf', 0.3);                           /* mm the jig cuts long */
+    L2.vGain = S.sys('hvGain', 0.004); L2.aGain = S.sys('ammGain', 0.004);
   },
-  draw: function (g, W, H, S) {
-    var D = SIMDRAW, v = S.vals, st = S.st, run = st && !S.done, p = S.p;
-    if (st && S.done && S.last) v = S.last;
-    g.fillStyle = '#101317'; g.fillRect(0, 0, W, H);
-    var vac = 'rgba(120,150,190,.10)';
-    /* end view */
-    var ew = Math.min(W * 0.34, H - 60), ecx = 16 + ew / 2, ecy = 30 + ew / 2, sc = (ew / 2 - 8) / 20;
-    D.text(g, '끝에서 본 단면', 16, 16, '#e8e8e8', 12.5, 'left', true);
-    g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 1;
-    for (var q = 5; q <= 20; q += 5) { g.beginPath(); g.arc(ecx, ecy, q * sc, 0, 7); g.stroke(); }
-    var RC = v.rc * sc, RE = Math.max(1.5, v.re * sc), on = st ? (run ? Math.min(1, p * 3) : 1) : 0;
-    g.fillStyle = vac; g.beginPath(); g.arc(ecx, ecy, RC, 0, 7); g.fill();
-    g.strokeStyle = '#b9c3cc'; g.lineWidth = 4; g.beginPath(); g.arc(ecx, ecy, RC, 0, 7); g.stroke();
-    g.fillStyle = 'rgb(' + Math.round(120 + 135 * on) + ',' + Math.round(110 + 60 * on) + ',' + Math.round(100 - 40 * on) + ')';
-    g.beginPath(); g.arc(ecx, ecy, RE, 0, 7); g.fill();
-    if (on) { var gr = g.createRadialGradient(ecx, ecy, RE, ecx, ecy, RE + 14); gr.addColorStop(0, 'rgba(255,170,60,.45)'); gr.addColorStop(1, 'rgba(255,170,60,0)');
-      g.fillStyle = gr; g.beginPath(); g.arc(ecx, ecy, RE + 14, 0, 7); g.fill(); }
-    /* electrons: how many cross at once grows with the current */
-    if (st && st.amp > 0 && RC > RE + 2) {
-      var n = Math.min(160, Math.round(8 + 22 * Math.log10(1 + st.amp * 1e4))), t = performance.now() / 1000;
-      g.fillStyle = 'rgba(140,210,255,.9)';
-      for (var i = 0; i < n; i++) { var a = i * 2.39996, f = ((t * 0.7 + i * 0.137) % 1);
-        if (run && f > p * 2.2) continue; var rr = RE + (RC - RE) * f;
-        g.beginPath(); g.arc(ecx + rr * Math.cos(a), ecy + rr * Math.sin(a), 1.6, 0, 7); g.fill(); }
-      if (S.done) SIMDRAW.live();
+  frame: function (ui) {
+    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
+    /* ---- the state of the chamber ---- */
+    if (L2.pump) L2.p = Math.max(2e-5, L2.p * Math.exp(-dt / 0.9)); else L2.p = Math.min(1e5, L2.p + (1e5 - L2.p) * (1 - Math.exp(-dt / 0.4)) + dt * 50);
+    var vac = L2.p < 1e-3, built = L2.coll && L2.emit;
+    L2.heat += ((L2.fil && built ? 1 : 0) - L2.heat) * (1 - Math.exp(-dt / 2.5));
+    var Vtrue = L2.out ? Math.max(0, L2.hv + L2.hvFine) : 0;
+    var I = 0;
+    if (built && vac && L2.heat > 0.97 && Vtrue > 0)
+      I = current(L2.coll.r / 100, L2.emit.r / 100, L2.emit.len / 1000, Vtrue);
+    else if (built && vac && L2.heat > 0.3 && Vtrue > 0)
+      I = current(L2.coll.r / 100, L2.emit.r / 100, L2.emit.len / 1000, Vtrue) * Math.pow((L2.heat - 0.3) / 0.67, 3);
+    if (I > I_MAX && !L2.burnt) { L2.burnt = true; L2.msg = '퍽! 전류계 퓨즈가 끊어졌습니다.'; }
+    if (ui.t - L2.flickT > 0.6) { L2.flickT = ui.t; L2.flick = Math.random() - 0.5; }
+    g.fillStyle = '#20242a'; g.fillRect(0, 0, W, H);
+    /* ---- the rack ---- */
+    var rx = 10, ry = 10, rw = 380, rh = 238, zr = { x: rx, y: ry, w: rw, h: rh, title: '부품 선반' };
+    ui.hit('rack', { x: rx, y: ry, w: rw, h: rh }, { cursor: 'default', zoom: zr });
+    HL.rr(g, rx, ry, rw, rh, 6, '#3a3027', '#16120e', 1.5);
+    HL.text(g, '수집 전극 관 (공칭 반지름 cm)', rx + 10, ry + 14, '#e8dccb', 11, 'left', '700');
+    RACK_C.forEach(function (c, i) { var x = rx + 22 + i * 33, y = ry + 64, R = 4 + c * 0.75;
+      var e = ui.hit('c' + c, { cx: x, cy: y, r: Math.max(13, R) }, { zoom: zr });
+      HL.circle(g, x, y, R, null, '#b8bfc6', 2.4); HL.circle(g, x, y, R - 1.2, null, '#6d747b', 0.8);
+      HL.rr(g, x - 13, ry + 104, 26, 14, 2, '#efe7d3'); HL.text(g, String(c), x, ry + 111, '#222', 9, 'center', '700');
+      if (e.hover) HL.circle(g, x, y, Math.max(13, R) + 3, null, 'rgba(78,201,176,.7)', 1.2);
+      if (e.click) { L2.hand = { kind: 'C', nom: c, r: partSize('C', c) }; L2.msg = '수집 전극 관 ' + c + ' cm을 들었습니다.'; } });
+    HL.text(g, '방출 전극 막대 (공칭 반지름 cm, 길이 99 cm)', rx + 10, ry + 136, '#e8dccb', 11, 'left', '700');
+    RACK_E.forEach(function (e0, i) { var x = rx + 20 + i * 27.5, y = ry + 150, w = Math.max(2, e0 * 3);
+      var e = ui.hit('e' + e0, { x: x - 10, y: y, w: 20, h: 70 }, { zoom: zr });
+      HL.rr(g, x - w / 2, y, w, 62, 1, '#9da4ab', '#5b6167', 0.6);
+      HL.rr(g, x - 11, y + 64, 22, 13, 2, '#efe7d3'); HL.text(g, String(e0), x, y + 70.5, '#222', 8, 'center', '700');
+      if (e.hover) HL.rr(g, x - 11, y - 3, 22, 82, 3, null, 'rgba(78,201,176,.7)', 1.2);
+      if (e.click) { L2.hand = { kind: 'E', nom: e0, r: partSize('E', e0), len: 990 }; L2.msg = '방출 전극 막대 ' + e0 + ' cm을 들었습니다 (아직 99 cm).'; } });
+    /* ---- the cutting jig ---- */
+    var jx = 10, jy = 258, jw = 380, jh = 120, zj = { x: jx, y: jy, w: jw, h: jh, title: '절단 지그 (1 m 자)' };
+    var je = ui.hit('jig', { x: jx, y: jy, w: jw, h: jh }, { cursor: L2.hand && L2.hand.kind === 'E' ? 'pointer' : 'default', zoom: zj });
+    HL.rr(g, jx, jy, jw, jh, 6, '#2d3238', '#111', 1.5);
+    HL.text(g, '절단 지그', jx + 10, jy + 13, '#dfe5ea', 11, 'left', '700');
+    var r0 = jx + 15, r1 = jx + jw - 15, mmPx = (r1 - r0) / 1000, ly = jy + 60;
+    HL.rr(g, r0 - 4, ly, r1 - r0 + 8, 26, 2, '#d8dde2', '#888', 0.8);
+    for (var mm = 0; mm <= 1000; mm++) { var x = r0 + mm * mmPx, L = mm % 100 === 0 ? 14 : mm % 10 === 0 ? 9 : mm % 5 === 0 ? 6 : 3.5;
+      g.strokeStyle = '#1c1c1c'; g.lineWidth = mm % 10 === 0 ? 0.35 : 0.12; g.beginPath(); g.moveTo(x, ly); g.lineTo(x, ly + L); g.stroke();
+      if (mm % 100 === 0) HL.text(g, String(mm / 10), x, ly + 20, '#1c1c1c', 6.5, 'center', '700');
+      else if (mm % 10 === 0) HL.text(g, String(mm / 10), x, ly + 17, '#444', 1.6, 'center'); }
+    if (L2.jig) { var rw2 = Math.max(1.5, L2.jig.nom * 2.2); HL.rr(g, r0, ly - 10 - rw2 / 2, 990 * mmPx, rw2, 1, '#a3a9b0', '#5b6167', 0.5);
+      HL.text(g, '막대 ' + L2.jig.nom + ' cm', jx + 80, jy + 13, '#cfd6dc', 10.5); }
+    var sx = r0 + L2.stop * mmPx, se = ui.hit('stop', { x: sx - 5, y: ly - 24, w: 10, h: 24 }, { cursor: 'ew-resize', zoom: zj });
+    if (se.down && se.dx) L2.stop = Math.max(10, Math.min(990, L2.stop + se.dx / mmPx));
+    HL.rr(g, sx - 3, ly - 24, 6, 50, 1, '#d24a3c', '#5a1a14', 0.8);
+    g.strokeStyle = '#ff6b5a'; g.lineWidth = 0.25; g.beginPath(); g.moveTo(sx, ly - 2); g.lineTo(sx, ly + 26); g.stroke();
+    var cut = HL.button(ui, 'cut', jx + jw - 80, jy + 92, 64, 22, { label: 'CUT', col: '#8a5a2b', size: 11, zoom: zj });
+    if (je.click && L2.hand && L2.hand.kind === 'E' && !L2.jig) { L2.jig = L2.hand; L2.hand = null; L2.msg = '막대를 지그에 놓았습니다. 멈춤쇠를 맞추고 CUT.'; }
+    if (cut.click) { if (!L2.jig) L2.msg = '지그에 막대가 없습니다.';
+      else { L2.hand = { kind: 'E', nom: L2.jig.nom, r: L2.jig.r, len: L2.stop + L2.kerf }; L2.jig = null; L2.msg = '잘랐습니다. 잘린 막대를 들었습니다.'; } }
+    /* ---- the vernier caliper: 0–450 mm, 0.05 mm vernier ---- */
+    var cx = 10, cy = 388, cw = 380, ch = 222, zc = { x: cx, y: cy, w: cw, h: ch, title: '버니어 캘리퍼스 (0.05 mm)' };
+    var ce = ui.hit('cal', { x: cx, y: cy, w: cw, h: ch }, { cursor: 'default', zoom: zc });
+    HL.rr(g, cx, cy, cw, ch, 6, '#2d3238', '#111', 1.5);
+    HL.text(g, '버니어 캘리퍼스', cx + 10, cy + 13, '#dfe5ea', 11, 'left', '700');
+    var b0 = cx + 30, k = 0.72, by = cy + 120;                             /* 0.72 px per mm */
+    var D = L2.cal ? (L2.cal.kind === 'C' ? L2.cal.r * 20 : L2.cal.r * 20) : 0;   /* mm: the diameter in the jaws */
+    var openMin = D + L2.calZero;
+    HL.rr(g, b0 - 22, by - 10, 470 * k + 30, 20, 1, '#cdd3d8', '#7b8288', 0.8);
+    for (mm = 0; mm <= 460; mm++) { x = b0 + mm * k; L = mm % 10 === 0 ? 8 : mm % 5 === 0 ? 6 : 4;
+      g.strokeStyle = '#1b1b1b'; g.lineWidth = 0.12; g.beginPath(); g.moveTo(x, by - 10); g.lineTo(x, by - 10 + L); g.stroke();
+      if (mm % 10 === 0) HL.text(g, String(mm / 10), x, by + 3, '#1b1b1b', 2.6, 'center', '700'); }
+    /* the fixed jaw at 0, the slider wherever it was pushed (it cannot close past the part) */
+    var se2 = ui.hit('slider', { x: b0 + L2.calX * k - 6, y: by - 40, w: 60, h: 80 }, { cursor: 'ew-resize', zoom: zc });
+    if (se2.down && se2.dx) L2.calX = Math.max(openMin, Math.min(450, L2.calX + se2.dx / k));
+    if (L2.calX < openMin) L2.calX = openMin;
+    HL.rr(g, b0 - 22, by - 60, 22, 70, 2, '#b9c0c6', '#666', 0.8);
+    var sxp = b0 + L2.calX * k;
+    HL.rr(g, sxp, by - 60, 16, 50, 2, '#b9c0c6', '#666', 0.8);
+    HL.rr(g, sxp - 2, by + 10, 52, 22, 2, '#c7cdd2', '#666', 0.8);
+    for (var vv = 0; vv <= 20; vv++) { x = sxp + vv * 0.95 * k; L = vv % 10 === 0 ? 6 : vv % 2 === 0 ? 4.5 : 3;
+      g.strokeStyle = '#1b1b1b'; g.lineWidth = 0.1; g.beginPath(); g.moveTo(x, by + 10); g.lineTo(x, by + 10 + L); g.stroke();
+      if (vv % 2 === 0) HL.text(g, String(vv * 5 / 10 === Math.round(vv * 5 / 10) ? vv * 5 / 10 : (vv * 5 / 10).toFixed(1)), x, by + 19, '#1b1b1b', 1.6, 'center'); }
+    if (L2.cal) { var dpx = D * k; HL.rr(g, b0, by - 60, dpx, 40, 2, L2.cal.kind === 'C' ? 'rgba(170,178,186,.85)' : '#8f969d', '#555', 0.6);
+      HL.text(g, (L2.cal.kind === 'C' ? '관 ' : '막대 ') + L2.cal.nom + ' cm', cx + 120, cy + 13, '#cfd6dc', 10.5); }
+    if (ce.click && !se2.down) {
+      if (L2.hand && !L2.cal) { L2.cal = L2.hand; L2.hand = null; L2.calX = Math.max(L2.calX, L2.cal.r * 20 + L2.calZero + 5); L2.msg = '부품을 캘리퍼스에 끼웠습니다. 슬라이더를 끌어 물리세요.'; }
+      else if (!L2.hand && L2.cal) { L2.hand = L2.cal; L2.cal = null; L2.msg = '캘리퍼스에서 부품을 뺐습니다.'; } }
+    /* ---- the vacuum chamber ---- */
+    var vx = 400, vy = 10, vw = 300, vh = 420, zv = { x: vx, y: vy, w: vw, h: vh, title: '진공 용기' };
+    ui.hit('chamber', { x: vx, y: vy, w: vw, h: vh }, { cursor: 'default', zoom: zv });
+    HL.rr(g, vx, vy, vw, vh, 8, '#3b4047', '#15181c', 1.5);
+    HL.text(g, 'VACUUM CHAMBER', vx + 12, vy + 15, '#dfe5ea', 11, 'left', '700');
+    HL.rr(g, vx + 30, vy + 34, vw - 60, 230, 10, '#0d1014', '#788089', 3);
+    var mx = vx + vw / 2, my = vy + 150;
+    var slotC = ui.hit('slotC', { cx: mx, cy: my, r: 100 }, { zoom: zv });
+    if (L2.coll) { var Rc = Math.min(98, 6 + L2.coll.nom * 4.6); HL.circle(g, mx, my, Rc, null, '#c0c7ce', 4); }
+    else HL.circle(g, mx, my, 96, null, 'rgba(255,255,255,.12)', 1);
+    var slotE = ui.hit('slotE', { cx: mx, cy: my, r: 16 }, { zoom: zv });
+    if (L2.emit) { var Re = Math.max(1.5, Math.min(30, 2 + L2.emit.nom * 4.6)), hot = L2.heat;
+      if (hot > 0.2) { var gl = g.createRadialGradient(mx, my, Re, mx, my, Re + 18); gl.addColorStop(0, 'rgba(255,150,50,' + 0.5 * hot + ')'); gl.addColorStop(1, 'rgba(255,150,50,0)');
+        HL.circle(g, mx, my, Re + 18, gl); }
+      HL.circle(g, mx, my, Re, 'rgb(' + Math.round(130 + 125 * hot) + ',' + Math.round(120 + 40 * hot) + ',' + Math.round(110 - 60 * hot) + ')'); }
+    else HL.circle(g, mx, my, 6, null, 'rgba(255,255,255,.2)', 1);
+    if (I > 0 && !L2.burnt && L2.coll && L2.emit) {                   /* the space charge, faintly */
+      var n = Math.min(120, 10 + 30 * Math.log10(1 + I * 1e3)), tt = ui.t;
+      g.fillStyle = 'rgba(150,210,255,.6)';
+      for (var q = 0; q < n; q++) { var aa = q * 2.4, f = (tt * 0.8 + q * 0.13) % 1, rr2 = (Re || 3) + ((Rc || 50) - (Re || 3)) * f;
+        g.fillRect(mx + rr2 * Math.cos(aa), my + rr2 * Math.sin(aa), 1.4, 1.4); }
     }
-    D.text(g, 'Rc = ' + v.rc.toFixed(1) + ' cm', ecx, ecy + ew / 2 + 6, '#cfd6dc', 12, 'center');
-    D.text(g, 'Re = ' + v.re.toFixed(1) + ' cm', ecx, ecy + ew / 2 + 22, '#ffb35c', 12, 'center');
-    /* side view */
-    var sx = ew + 44, sw = W * 0.36, sy = 40, sh = H - 110;
-    D.text(g, '옆모습', sx, 16, '#e8e8e8', 12.5, 'left', true);
-    var Lpx = sw * v.le / 99, Rpx = Math.min(sh / 2, sh / 2 * v.rc / 20), cy = sy + sh / 2;
-    g.fillStyle = vac; g.fillRect(sx, cy - Rpx, Lpx, 2 * Rpx);
-    g.strokeStyle = '#b9c3cc'; g.lineWidth = 3; g.strokeRect(sx, cy - Rpx, Lpx, 2 * Rpx);
-    var rpx = Math.max(1.5, sh / 2 * v.re / 20);
-    g.fillStyle = on ? '#ffb35c' : '#8a7a68'; g.fillRect(sx - 14, cy - rpx, Lpx + 28, 2 * rpx);
-    g.strokeStyle = '#e8e8e8'; g.lineWidth = 1; g.beginPath(); g.moveTo(sx, sy + sh + 14); g.lineTo(sx + Lpx, sy + sh + 14); g.stroke();
-    D.text(g, 'Le = ' + v.le.toFixed(1) + ' cm', sx + Lpx / 2, sy + sh + 28, '#cfd6dc', 12, 'center');
-    /* supply and ammeter */
-    var bx = sx + sw + 30, bw = W - bx - 14;
-    D.text(g, '고전압 전원', bx, 40, '#e8e8e8', 12, 'left', true);
-    g.fillStyle = '#23272c'; g.fillRect(bx, 50, bw, 64); D.lcd(g, bx + 8, 60, bw - 16, 30, (st ? (run ? Math.round(v.v * Math.min(1, p * 3)) : v.v) : 0) + ' V', '#ff9b6b');
-    D.text(g, '전류계', bx, 142, '#e8e8e8', 12, 'left', true);
-    g.fillStyle = '#23272c'; g.fillRect(bx, 152, bw, 64);
-    var rd = !st ? '0.00 mA' : run && p < 0.6 ? '-- --' : st.burnt ? 'OL' : st.shown;
-    D.lcd(g, bx + 8, 162, bw - 16, 30, rd, st && st.burnt ? '#ff6b6b' : '#7dff9b');
-    if (st && st.burnt && (!run || p > 0.6)) { D.text(g, '전류계가 타 버렸습니다!', bx, 232, '#ff8f8f', 12, 'left', true); D.text(g, '다음 측정을 위해 교체됨', bx, 250, '#d9a0a0', 11.5); }
-    /* wires: supply + to the collector, the meter in the return from the emitter */
-    g.strokeStyle = '#c94a4a'; g.lineWidth = 2; g.beginPath(); g.moveTo(bx, 82); g.lineTo(sx + Lpx / 2, 82); g.lineTo(sx + Lpx / 2, cy - Rpx); g.stroke();
-    g.strokeStyle = '#3d6fb8'; g.beginPath(); g.moveTo(sx + Lpx + 14, cy); g.lineTo(bx - 10, cy); g.lineTo(bx - 10, 184); g.lineTo(bx, 184); g.stroke();
+    if ((slotC.click || slotE.click) && L2.hand) {
+      if (L2.p < 5e4) L2.msg = '용기가 진공입니다. PUMP를 끄고 공기를 넣은 뒤 바꾸세요.';
+      else if (L2.hand.kind === 'C') { if (L2.emit && L2.emit.r >= L2.hand.r) L2.msg = '방출 전극이 들어가지 않습니다.'; else { L2.coll = L2.hand; L2.hand = null; L2.msg = '수집 전극을 넣었습니다.'; } }
+      else if (L2.hand.len > 989) L2.msg = '막대를 먼저 원하는 길이로 자르세요.';
+      else if (L2.coll && L2.hand.r >= L2.coll.r) L2.msg = '방출 전극이 수집 전극 안에 들어가지 않습니다.';
+      else { L2.emit = L2.hand; L2.hand = null; L2.msg = '방출 전극을 넣었습니다.'; }
+    } else if ((slotC.click || slotE.click) && !L2.hand && L2.p > 5e4) {
+      if (slotE.click && L2.emit) { L2.hand = L2.emit; L2.emit = null; L2.msg = '방출 전극을 꺼냈습니다.'; }
+      else if (L2.coll) { L2.hand = L2.coll; L2.coll = null; L2.msg = '수집 전극을 꺼냈습니다.'; } }
+    /* side window: the length */
+    HL.text(g, L2.coll ? 'C ' + L2.coll.nom + ' cm' : 'C —', vx + 40, vy + 280, '#cfd6dc', 11);
+    HL.text(g, L2.emit ? 'E ' + L2.emit.nom + ' cm' : 'E —', vx + 150, vy + 280, '#cfd6dc', 11);
+    /* pump and gauge, filament */
+    L2.pump = HL.toggle(ui, 'pump', vx + 30, vy + 302, 30, 46, L2.pump, { label: 'PUMP', zoom: zv });
+    HL.lcd(g, vx + 80, vy + 306, 120, 34, L2.p >= 100 ? (L2.p / 1000).toFixed(0) + ' kPa' : L2.p.toExponential(1) + ' Pa', { col: '#7fd3ff', glow: 'rgba(120,200,255,.35)', bg: '#0c141b', frame: '#22323f' });
+    L2.fil = HL.toggle(ui, 'fil', vx + 226, vy + 302, 30, 46, L2.fil, { label: 'FILAMENT', zoom: zv, onCol: '#d98a2b' });
+    HL.text(g, L2.msg, vx + 12, vy + 392, '#e8e8e8', 10.5);
+    HL.text(g, L2.hand ? '손: ' + (L2.hand.kind === 'C' ? '관 ' : '막대 ') + L2.hand.nom + ' cm' + (L2.hand.kind === 'E' && L2.hand.len < 989 ? ' (잘림)' : '') : '손: 비어 있음', vx + 12, vy + 410, '#9aa3ab', 10.5);
+    /* ---- the HV supply ---- */
+    var hx = 710, hy = 10, hw = 280, hh = 300, zh = { x: hx, y: hy, w: hw, h: hh, title: '고전압 전원' };
+    ui.hit('hvbox', { x: hx, y: hy, w: hw, h: hh }, { cursor: 'default', zoom: zh });
+    HL.rr(g, hx, hy, hw, hh, 8, '#d7dadd', '#8d9399', 2);
+    HL.text(g, 'HIGH VOLTAGE 0–2000 V', hx + 12, hy + 16, '#2a2d31', 11.5, 'left', '700');
+    HL.lcd(g, hx + 20, hy + 32, hw - 40, 46, (Vtrue * (1 + L2.vGain)).toFixed(0) + ' V', { col: '#ff9d5c', glow: 'rgba(255,140,60,.35)', bg: '#1a120c', frame: '#3a2a1e' });
+    L2.hv = HL.knob(ui, 'hv', hx + 80, hy + 150, 36, L2.hv, { min: 0, max: 2000, turns: 10, sens: 2000 / 2400, wheelStep: 10, label: 'COARSE', labelCol: '#2a2d31', zoom: zh });
+    HL.rr(g, hx + 50, hy + 222, 60, 20, 3, '#222'); HL.text(g, (L2.hv / 200).toFixed(2), hx + 80, hy + 232, '#eee', 11, 'center', '700', HL.MONO);
+    HL.text(g, '회전 다이얼', hx + 80, hy + 252, '#2a2d31', 9, 'center');
+    L2.hvFine = HL.knob(ui, 'hvf', hx + 190, hy + 150, 24, L2.hvFine, { min: -10, max: 10, sens: 20 / 300, wheelStep: 0.5, label: 'FINE', labelCol: '#2a2d31', zoom: zh, marks: [[-10, '−'], [0], [10, '+']], markCol: '#2a2d31' });
+    L2.out = HL.toggle(ui, 'hvon', hx + 222, hy + 222, 32, 46, L2.out, { label: 'HV ON', labelCol: '#2a2d31', zoom: zh });
+    HL.circle(g, hx + 196, hy + 245, 7, L2.out ? '#ff5a3c' : '#5a2a22', '#222', 1);
+    /* ---- the ammeter ---- */
+    var ax = 710, ay = 320, aw = 280, ah = 200, za = { x: ax, y: ay, w: aw, h: ah, title: '전류계' };
+    ui.hit('amm', { x: ax, y: ay, w: aw, h: ah }, { cursor: 'default', zoom: za });
+    HL.rr(g, ax, ay, aw, ah, 8, '#2b2f35', '#111', 2);
+    HL.text(g, 'AMMETER  auto-range  40 A max', ax + 12, ay + 16, '#cfd6dc', 11, 'left', '700');
+    var shownA;
+    if (L2.burnt) shownA = '----';
+    else { var Ia = I * (1 + L2.aGain); var str = displayCurrent(Ia).split(' '), num = parseFloat(str[0]);
+      var dig = str[0].indexOf('.') >= 0 ? str[0].length - str[0].indexOf('.') - 1 : 0, q1 = Math.pow(10, -dig);
+      num = Math.max(0, num + (Math.abs(L2.flick) > 0.35 ? Math.sign(L2.flick) * q1 : 0)); shownA = (Ia === 0 ? '0.00' : num.toFixed(dig)) + ' ' + str[1]; }
+    HL.lcd(g, ax + 20, ay + 34, aw - 40, 56, shownA, L2.burnt ? { col: '#ff6b5a', glow: 'rgba(255,80,60,.35)' } : {});
+    var fuse = HL.button(ui, 'fuse', ax + 20, ay + 110, 120, 32, { label: 'FUSE 교체', col: '#555b62', size: 11, zoom: za });
+    if (fuse.click) { if (L2.out) L2.msg = 'HV를 끄고 퓨즈를 바꾸세요.'; else if (L2.burnt) { L2.burnt = false; L2.msg = '퓨즈를 바꿨습니다.'; } }
+    if (L2.burnt) HL.text(g, '퓨즈 끊어짐', ax + 160, ay + 126, '#ff8b7b', 11, 'left', '700');
   }
 };
 </script>
+<script src="handlab.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
