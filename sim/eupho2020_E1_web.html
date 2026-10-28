@@ -134,151 +134,77 @@ var PROGRAM = {
   }
 };
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Simulation mode: the same solve() with the same 0.5 mm beam error.  The gun fires along z through
+   a closed box (the hidden charge is somewhere inside, so the path inside is not drawn) onto the
+   40 cm x 40 cm fluorescent detector, seen from the side and face on. */
+PROGRAM.sim = {
+  intro: '전자총이 z 방향으로 전자를 쏩니다. 전자는 닫힌 상자(이 안 어딘가에 전하가 숨어 있음)를 지나 40 cm × 40 cm 형광 검출판에 닿습니다. ' +
+         '왼쪽은 옆모습, 오른쪽은 검출판을 정면에서 본 모습으로, 쏜 자리(+)와 맞은 자리(●)가 번호와 함께 남습니다. 검출판 밖으로 나가면 검출되지 않습니다.',
+  fields: [
+    { id: 'v', label: '가속 전압 V', unit: 'V', lo: 0, hi: V_MAX, step: 1, value: 1000 },
+    { id: 'x', label: '빔 x', unit: 'cm', lo: -20, hi: 20, step: 0.1, value: 5 },
+    { id: 'y', label: '빔 y', unit: 'cm', lo: -20, hi: 20, step: 0.1, value: 0 }
+  ],
+  columns: ['#', 'V (V)', 'x (cm)', 'y (cm)', '검출 x (cm)', '검출 y (cm)'],
+  aspect: 0.56,
+  goLabel: '전자 쏘기',
+  n: 0,
+  measure: function (v) {
+    var res = solve(v.x / 100 + gauss(RADIAL_ERROR), v.y / 100 + gauss(RADIAL_ERROR), Math.sqrt(2 * v.v * E_0 / M_E));
+    this.n++;
+    var hit = res[0], dx = (res[1] * 100).toFixed(1), dy = (res[2] * 100).toFixed(1);
+    return { st: { hit: hit, dx: +dx, dy: +dy },
+             rows: [[this.n, g(v.v), g(v.x), g(v.y), hit ? dx : '검출 안 됨', hit ? dy : '—']], ms: 1300 };
+  },
+  draw: function (gc, W, H, S) {
+    var D = SIMDRAW, st = S.st, run = st && !S.done, v = run || !S.last ? S.vals : S.last, p = S.p;
+    gc.fillStyle = '#0d0f13'; gc.fillRect(0, 0, W, H);
+    /* side view: z to the right, y up */
+    var sw = W * 0.56, mid = H / 2, ys = (H * 0.36) / 20;
+    D.text(gc, '옆에서 본 모습 (y–z)', 14, 18, '#e8e8e8', 12.5, 'left', true);
+    var gunX = 24, boxX0 = sw * 0.52, boxX1 = sw * 0.8, detX = sw * 0.86;
+    gc.fillStyle = '#4a4f57'; gc.fillRect(gunX, mid - v.y * ys - 9, 46, 18); gc.fillStyle = '#2d3036'; gc.fillRect(gunX + 46, mid - v.y * ys - 5, 14, 10);
+    D.text(gc, '전자총 ' + v.v + ' V', gunX, mid - v.y * ys - 18, '#cfd6dc', 11);
+    gc.fillStyle = '#1a1c21'; gc.fillRect(boxX0, mid - 21 * ys, boxX1 - boxX0, 42 * ys);
+    gc.strokeStyle = '#3a3f47'; gc.lineWidth = 1.5; gc.strokeRect(boxX0, mid - 21 * ys, boxX1 - boxX0, 42 * ys);
+    D.text(gc, '가려진 상자', (boxX0 + boxX1) / 2, mid, '#5f6670', 12, 'center');
+    gc.fillStyle = '#2e5b3a'; gc.fillRect(detX, mid - 20 * ys, 6, 40 * ys);
+    D.text(gc, '검출판', detX + 3, mid + 20 * ys + 14, '#8fd19e', 11, 'center');
+    var by = mid - v.y * ys;
+    if (st) {
+      var f = run ? Math.min(1, p / 0.7) : 1;
+      gc.strokeStyle = 'rgba(120,200,255,.55)'; gc.lineWidth = 1.5; gc.beginPath(); gc.moveTo(gunX + 60, by); gc.lineTo(gunX + 60 + (boxX0 - gunX - 60) * f, by); gc.stroke();
+      if (run && f < 1) { gc.fillStyle = '#bfe6ff'; gc.beginPath(); gc.arc(gunX + 60 + (boxX0 - gunX - 60) * f, by, 3, 0, 7); gc.fill(); }
+      if (st.hit && (!run || p > 0.8)) { var hy = mid - st.dy * ys;
+        gc.strokeStyle = 'rgba(120,200,255,.55)'; gc.beginPath(); gc.moveTo(boxX1, hy); gc.lineTo(detX, hy); gc.stroke();
+        gc.fillStyle = '#9dffb0'; gc.beginPath(); gc.arc(detX + 3, hy, 4, 0, 7); gc.fill(); }
+    } else { gc.setLineDash([4, 4]); gc.strokeStyle = 'rgba(255,255,255,.25)'; gc.beginPath(); gc.moveTo(gunX + 60, by); gc.lineTo(boxX0, by); gc.stroke(); gc.setLineDash([]); }
+    D.text(gc, 'z →', sw - 20, H - 14, '#9aa3ab', 11, 'right');
+    /* the detector face on */
+    var dx0 = sw + 20, dside = Math.min(W - dx0 - 16, H - 50), dy0 = 30, sc = dside / 40;
+    var P = function (x, y) { return [dx0 + (x + 20) * sc, dy0 + (20 - y) * sc]; };
+    D.text(gc, '검출판 정면 (x–y, cm)', dx0, 16, '#e8e8e8', 12.5, 'left', true);
+    gc.fillStyle = '#0f2416'; gc.fillRect(dx0, dy0, dside, dside);
+    for (var q = -20; q <= 20; q += 5) { var a = P(q, -20), b = P(q, 20); gc.strokeStyle = q ? 'rgba(120,220,150,.12)' : 'rgba(120,220,150,.35)'; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(a[0], a[1]); gc.lineTo(b[0], b[1]); gc.stroke(); a = P(-20, q); b = P(20, q); gc.beginPath(); gc.moveTo(a[0], a[1]); gc.lineTo(b[0], b[1]); gc.stroke(); }
+    gc.strokeStyle = '#3d6b4a'; gc.lineWidth = 2; gc.strokeRect(dx0, dy0, dside, dside);
+    S.hist.forEach(function (h, i) { var ai = P(h.vals.x, h.vals.y); gc.strokeStyle = 'rgba(255,255,255,.35)'; gc.lineWidth = 1;
+      gc.beginPath(); gc.moveTo(ai[0] - 4, ai[1]); gc.lineTo(ai[0] + 4, ai[1]); gc.moveTo(ai[0], ai[1] - 4); gc.lineTo(ai[0], ai[1] + 4); gc.stroke();
+      if (h.st.hit) { var hi = P(h.st.dx, h.st.dy); gc.strokeStyle = 'rgba(157,255,176,.25)'; gc.beginPath(); gc.moveTo(ai[0], ai[1]); gc.lineTo(hi[0], hi[1]); gc.stroke();
+        gc.fillStyle = 'rgba(157,255,176,.7)'; gc.beginPath(); gc.arc(hi[0], hi[1], 3, 0, 7); gc.fill(); D.text(gc, String(i + 1), hi[0] + 6, hi[1] - 6, 'rgba(157,255,176,.8)', 10); } });
+    var aim = P(v.x, v.y); gc.strokeStyle = '#ffd479'; gc.lineWidth = 1.5;
+    gc.beginPath(); gc.moveTo(aim[0] - 6, aim[1]); gc.lineTo(aim[0] + 6, aim[1]); gc.moveTo(aim[0], aim[1] - 6); gc.lineTo(aim[0], aim[1] + 6); gc.stroke();
+    if (st && (!run || p > 0.8)) {
+      if (st.hit) { var h2 = P(st.dx, st.dy), gl = gc.createRadialGradient(h2[0], h2[1], 0, h2[0], h2[1], 14);
+        gl.addColorStop(0, 'rgba(190,255,200,1)'); gl.addColorStop(1, 'rgba(120,255,150,0)'); gc.fillStyle = gl; gc.beginPath(); gc.arc(h2[0], h2[1], 14, 0, 7); gc.fill();
+        D.text(gc, '(' + st.dx.toFixed(1) + ', ' + st.dy.toFixed(1) + ') cm', dx0 + dside, dy0 + dside + 14, '#9dffb0', 12, 'right'); }
+      else D.text(gc, 'Electron not detected... (검출판 밖)', dx0 + dside, dy0 + dside + 14, '#ffb4a8', 12, 'right');
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
   }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
-    }
-    start();
-  });
-})();
-
+};
 </script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>

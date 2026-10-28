@@ -100,151 +100,72 @@ var PROGRAM = {
   }
 };
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* Simulation mode: the same phiDeg() with the same placing error, drawn as the 10 cm board seen
+   from above with the compass where it was put.  The wire stays hidden under the board. */
+PROGRAM.sim = {
+  intro: '10 cm × 10 cm 판을 위에서 본 모습입니다. 판 아래 5 mm 깊이에 도선이 숨어 있습니다. 전류 I를 흘리고 나침반을 (x, y)에 놓으면 ' +
+         '바늘이 지구 자기장과 도선의 자기장의 합 방향을 가리킵니다. 각 φ는 +x 축에서 시계 반대 방향으로 잽니다(전류가 없으면 0°). 앞서 잰 자리에는 바늘 방향이 흐리게 남습니다.',
+  fields: [
+    { id: 'I', label: '전류 I', unit: 'A', lo: -I_MAX, hi: I_MAX, step: 0.1, quant: 0.1, value: 5 },
+    { id: 'x', label: '나침반 x', unit: 'mm', lo: 0, hi: L_SIDE, step: 1, quant: 1, value: 50 },
+    { id: 'y', label: '나침반 y', unit: 'mm', lo: 0, hi: L_SIDE, step: 1, quant: 1, value: 50 }
+  ],
+  columns: ['#', 'I (A)', 'x (mm)', 'y (mm)', 'φ (°)'],
+  aspect: 0.62,
+  goLabel: '나침반 놓고 읽기',
+  n: 0, prev: 0,
+  measure: function (v) {
+    var phi = Math.round(phiDeg(v.I, v.x + gauss(POS_SIGMA), v.y + gauss(POS_SIGMA)));
+    this.n++;
+    var from = this.prev; this.prev = phi;
+    return { st: { phi: phi, from: from }, rows: [[this.n, v.I.toFixed(1), v.x, v.y, phi]], ms: 1600 };
+  },
+  draw: function (g, W, H, S) {
+    var D = SIMDRAW, st = S.st, run = st && !S.done, v = run || !S.last ? S.vals : S.last;
+    g.fillStyle = '#16130f'; g.fillRect(0, 0, W, H);
+    var side = H - 56, bx = 46, by = 22, sc = side / L_SIDE;
+    var P = function (x, y) { return [bx + x * sc, by + side - y * sc]; };
+    /* the board: a sheet of mm paper on wood */
+    g.fillStyle = '#7a5a3a'; g.fillRect(bx - 12, by - 12, side + 24, side + 24);
+    g.fillStyle = '#f3f1e8'; g.fillRect(bx, by, side, side);
+    for (var m = 0; m <= 100; m += 2) { g.strokeStyle = m % 10 ? 'rgba(220,120,90,.18)' : 'rgba(200,90,60,.5)'; g.lineWidth = m % 10 ? 0.5 : 1;
+      var a = P(m, 0), b = P(m, 100); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+      a = P(0, m); b = P(100, m); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+    for (m = 0; m <= 100; m += 20) { var q = P(m, 0); D.text(g, String(m), q[0], by + side + 14, '#cbbca8', 11, 'center');
+      q = P(0, m); D.text(g, String(m), bx - 16, q[1], '#cbbca8', 11, 'right'); }
+    D.text(g, 'x (mm)', bx + side, by + side + 30, '#cbbca8', 11, 'right');
+    D.text(g, 'y (mm)', bx - 40, by - 6, '#cbbca8', 11);
+    /* earlier readings */
+    S.hist.forEach(function (h) { var c = P(h.vals.x, h.vals.y), a = -h.st.phi * Math.PI / 180;
+      D.arrow(g, c[0] - 7 * Math.cos(a), c[1] - 7 * Math.sin(a), c[0] + 7 * Math.cos(a), c[1] + 7 * Math.sin(a), 'rgba(60,60,160,.45)', 1.2); });
+    /* the compass: 14 mm across, the needle swinging into place */
+    var c = P(v.x, v.y), R = Math.max(14, 7 * sc), ang;
+    if (!st) ang = 0;
+    else if (run) { var e = S.p, d = st.phi - st.from; ang = st.from + d * (1 - Math.exp(-5 * e) * Math.cos(9 * e)); }
+    else ang = st.phi;
+    g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.arc(c[0] + 2, c[1] + 3, R + 3, 0, 7); g.fill();
+    g.fillStyle = '#c9ccd0'; g.beginPath(); g.arc(c[0], c[1], R + 3, 0, 7); g.fill();
+    g.fillStyle = '#fbfbf7'; g.beginPath(); g.arc(c[0], c[1], R, 0, 7); g.fill();
+    for (var k = 0; k < 36; k++) { var t = k * Math.PI / 18; g.strokeStyle = '#555'; g.lineWidth = k % 9 ? 0.6 : 1.3;
+      g.beginPath(); g.moveTo(c[0] + R * Math.cos(t), c[1] + R * Math.sin(t)); g.lineTo(c[0] + R * (k % 9 ? 0.9 : 0.8) * Math.cos(t), c[1] + R * (k % 9 ? 0.9 : 0.8) * Math.sin(t)); g.stroke(); }
+    var A = -ang * Math.PI / 180, ux = Math.cos(A), uy = Math.sin(A), nx = -uy, ny = ux, L = R * 0.78, w = R * 0.14;
+    g.fillStyle = '#d23a2e'; g.beginPath(); g.moveTo(c[0] + ux * L, c[1] + uy * L); g.lineTo(c[0] + nx * w, c[1] + ny * w); g.lineTo(c[0] - nx * w, c[1] - ny * w); g.fill();
+    g.fillStyle = '#2f3b4a'; g.beginPath(); g.moveTo(c[0] - ux * L, c[1] - uy * L); g.lineTo(c[0] + nx * w, c[1] + ny * w); g.lineTo(c[0] - nx * w, c[1] - ny * w); g.fill();
+    g.fillStyle = '#888'; g.beginPath(); g.arc(c[0], c[1], 2.2, 0, 7); g.fill();
+    if (run && S.p > 0.15) D.arrow(g, c[0], c[1], c[0], c[1], '#000', 1);
+    /* side panel: the supply, the reading, north */
+    var px = bx + side + 40, pw = W - px - 16;
+    D.text(g, '직류 전원', px, 36, '#e8e8e8', 12, 'left', true);
+    D.lcd(g, px, 46, Math.min(200, pw), 32, (st ? (run ? v.I : v.I) : v.I).toFixed(1) + ' A', '#ff9b6b');
+    D.text(g, '나침반 눈금', px, 108, '#e8e8e8', 12, 'left', true);
+    D.lcd(g, px, 118, Math.min(200, pw), 32, st && !run ? 'φ = ' + st.phi + '°' : '— °');
+    D.arrow(g, px + 20, 210, px + 70, 210, '#e8e8e8', 2); D.text(g, '+x 방향 = φ 0°', px + 78, 210, '#cfd6dc', 12);
+    D.text(g, '(' + v.x + ', ' + v.y + ') mm', px, 250, '#cfd6dc', 12);
   }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
-    }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
-  }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
-    }
-    start();
-  });
-})();
-
+};
 </script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>

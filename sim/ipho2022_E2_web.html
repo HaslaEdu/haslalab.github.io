@@ -141,151 +141,85 @@ var PROGRAM = {
   }
 };
 
-</script>
-<script>
-/* Console emulator for the olympiad programs whose originals are command-line
-   executables.  A program module defines a global PROGRAM:
 
-     PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...} }
-
-   and drives the screen through term.write / term.writeln / term.ask, so the
-   prompts and the streamed output land on screen exactly as the original
-   executable prints them. */
-(function () {
-  var screen, ps, inp, pending = null, history = [], hpos = 0;
-
-  function esc(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  var term = {
-    write: function (s) {
-      screen.insertAdjacentHTML('beforeend', esc(s));
-      screen.scrollTop = screen.scrollHeight;
-    },
-    writeln: function (s) { term.write((s === undefined ? '' : s) + '\n'); },
-    echo: function (s) {
-      screen.insertAdjacentHTML('beforeend', '<span class="in">' + esc(s) + '</span>\n');
-      screen.scrollTop = screen.scrollHeight;
-    },
-    clear: function () { screen.innerHTML = ''; },
-    /* write the prompt, then wait for a line; the typed text is echoed after it,
-       which is what a terminal shows */
-    ask: function (prompt) {
-      term.write(prompt === undefined ? '' : prompt);
-      ps.textContent = prompt === undefined ? '' : prompt;
-      inp.focus();
-      return new Promise(function (resolve) { pending = resolve; });
-    },
-    /* let the browser paint between long computations */
-    yieldFrame: function () {
-      return new Promise(function (r) { setTimeout(r, 0); });
+/* Simulation mode: the same current() with the same length and voltage errors, drawn as the tube
+   from the end and from the side, wired to the high-voltage supply and the ammeter. */
+PROGRAM.sim = {
+  intro: '원통형 다이오드: 가운데 가열된 방출 전극(반지름 R<sub>E</sub>)에서 나온 전자가 바깥 수집 전극(반지름 R<sub>C</sub>, 길이 L<sub>E</sub>)으로 갑니다. ' +
+         '왼쪽은 끝에서 본 단면, 가운데는 옆모습, 오른쪽은 고전압 전원과 전류계입니다. 전류계는 콘솔 프로그램과 같이 유효숫자 세 자리로 읽히고 40 A를 넘으면 타 버립니다.',
+  fields: [
+    { id: 'rc', label: '수집 전극 반지름 Rc', unit: 'cm', lo: 0.1, hi: 20.0, step: 0.1, quant: 0.1, value: 5.0 },
+    { id: 're', label: '방출 전극 반지름 Re', unit: 'cm', lo: 0.1, hi: 20.0, step: 0.1, quant: 0.1, value: 0.5 },
+    { id: 'le', label: '길이 Le', unit: 'cm', lo: 1.0, hi: 99.0, step: 0.1, quant: 0.1, value: 20.0 },
+    { id: 'v', label: '전압 V', unit: 'V', lo: 0, hi: 2000, step: 1, quant: 1, value: 500 }
+  ],
+  columns: ['#', 'Rc (cm)', 'Re (cm)', 'Le (cm)', 'V (V)', 'I'],
+  aspect: 0.55,
+  goLabel: '전압 걸기',
+  n: 0,
+  check: function (v) { return v.re >= v.rc ? 'The emitter must fit inside the collector. (방출 전극이 수집 전극 안에 들어가야 합니다)' : null; },
+  measure: function (v) {
+    var amp = current(v.rc * 1e-2 + gauss(LEN_SIGMA), v.re * 1e-2 + gauss(LEN_SIGMA),
+                      v.le * 1e-2 + gauss(LEN_SIGMA), Math.max(0, v.v + gauss(V_SIGMA)));
+    var burnt = amp > I_MAX, shown = burnt ? '타 버림' : displayCurrent(amp);
+    this.n++;
+    return { st: { amp: amp, burnt: burnt, shown: shown },
+             rows: [[this.n, v.rc.toFixed(1), v.re.toFixed(1), v.le.toFixed(1), v.v, shown]], ms: 1800 };
+  },
+  draw: function (g, W, H, S) {
+    var D = SIMDRAW, v = S.vals, st = S.st, run = st && !S.done, p = S.p;
+    if (st && S.done && S.last) v = S.last;
+    g.fillStyle = '#101317'; g.fillRect(0, 0, W, H);
+    var vac = 'rgba(120,150,190,.10)';
+    /* end view */
+    var ew = Math.min(W * 0.34, H - 60), ecx = 16 + ew / 2, ecy = 30 + ew / 2, sc = (ew / 2 - 8) / 20;
+    D.text(g, '끝에서 본 단면', 16, 16, '#e8e8e8', 12.5, 'left', true);
+    g.strokeStyle = 'rgba(255,255,255,.07)'; g.lineWidth = 1;
+    for (var q = 5; q <= 20; q += 5) { g.beginPath(); g.arc(ecx, ecy, q * sc, 0, 7); g.stroke(); }
+    var RC = v.rc * sc, RE = Math.max(1.5, v.re * sc), on = st ? (run ? Math.min(1, p * 3) : 1) : 0;
+    g.fillStyle = vac; g.beginPath(); g.arc(ecx, ecy, RC, 0, 7); g.fill();
+    g.strokeStyle = '#b9c3cc'; g.lineWidth = 4; g.beginPath(); g.arc(ecx, ecy, RC, 0, 7); g.stroke();
+    g.fillStyle = 'rgb(' + Math.round(120 + 135 * on) + ',' + Math.round(110 + 60 * on) + ',' + Math.round(100 - 40 * on) + ')';
+    g.beginPath(); g.arc(ecx, ecy, RE, 0, 7); g.fill();
+    if (on) { var gr = g.createRadialGradient(ecx, ecy, RE, ecx, ecy, RE + 14); gr.addColorStop(0, 'rgba(255,170,60,.45)'); gr.addColorStop(1, 'rgba(255,170,60,0)');
+      g.fillStyle = gr; g.beginPath(); g.arc(ecx, ecy, RE + 14, 0, 7); g.fill(); }
+    /* electrons: how many cross at once grows with the current */
+    if (st && st.amp > 0 && RC > RE + 2) {
+      var n = Math.min(160, Math.round(8 + 22 * Math.log10(1 + st.amp * 1e4))), t = performance.now() / 1000;
+      g.fillStyle = 'rgba(140,210,255,.9)';
+      for (var i = 0; i < n; i++) { var a = i * 2.39996, f = ((t * 0.7 + i * 0.137) % 1);
+        if (run && f > p * 2.2) continue; var rr = RE + (RC - RE) * f;
+        g.beginPath(); g.arc(ecx + rr * Math.cos(a), ecy + rr * Math.sin(a), 1.6, 0, 7); g.fill(); }
+      if (S.done) SIMDRAW.live();
     }
-  };
-
-  function submit() {
-    if (!pending) return;
-    var v = inp.value;
-    inp.value = '';
-    if (v !== '') { history.push(v); hpos = history.length; }
-    term.echo(v);
-    ps.textContent = '';
-    var done = pending;
-    pending = null;
-    done(v);
+    D.text(g, 'Rc = ' + v.rc.toFixed(1) + ' cm', ecx, ecy + ew / 2 + 6, '#cfd6dc', 12, 'center');
+    D.text(g, 'Re = ' + v.re.toFixed(1) + ' cm', ecx, ecy + ew / 2 + 22, '#ffb35c', 12, 'center');
+    /* side view */
+    var sx = ew + 44, sw = W * 0.36, sy = 40, sh = H - 110;
+    D.text(g, '옆모습', sx, 16, '#e8e8e8', 12.5, 'left', true);
+    var Lpx = sw * v.le / 99, Rpx = Math.min(sh / 2, sh / 2 * v.rc / 20), cy = sy + sh / 2;
+    g.fillStyle = vac; g.fillRect(sx, cy - Rpx, Lpx, 2 * Rpx);
+    g.strokeStyle = '#b9c3cc'; g.lineWidth = 3; g.strokeRect(sx, cy - Rpx, Lpx, 2 * Rpx);
+    var rpx = Math.max(1.5, sh / 2 * v.re / 20);
+    g.fillStyle = on ? '#ffb35c' : '#8a7a68'; g.fillRect(sx - 14, cy - rpx, Lpx + 28, 2 * rpx);
+    g.strokeStyle = '#e8e8e8'; g.lineWidth = 1; g.beginPath(); g.moveTo(sx, sy + sh + 14); g.lineTo(sx + Lpx, sy + sh + 14); g.stroke();
+    D.text(g, 'Le = ' + v.le.toFixed(1) + ' cm', sx + Lpx / 2, sy + sh + 28, '#cfd6dc', 12, 'center');
+    /* supply and ammeter */
+    var bx = sx + sw + 30, bw = W - bx - 14;
+    D.text(g, '고전압 전원', bx, 40, '#e8e8e8', 12, 'left', true);
+    g.fillStyle = '#23272c'; g.fillRect(bx, 50, bw, 64); D.lcd(g, bx + 8, 60, bw - 16, 30, (st ? (run ? Math.round(v.v * Math.min(1, p * 3)) : v.v) : 0) + ' V', '#ff9b6b');
+    D.text(g, '전류계', bx, 142, '#e8e8e8', 12, 'left', true);
+    g.fillStyle = '#23272c'; g.fillRect(bx, 152, bw, 64);
+    var rd = !st ? '0.00 mA' : run && p < 0.6 ? '-- --' : st.burnt ? 'OL' : st.shown;
+    D.lcd(g, bx + 8, 162, bw - 16, 30, rd, st && st.burnt ? '#ff6b6b' : '#7dff9b');
+    if (st && st.burnt && (!run || p > 0.6)) { D.text(g, '전류계가 타 버렸습니다!', bx, 232, '#ff8f8f', 12, 'left', true); D.text(g, '다음 측정을 위해 교체됨', bx, 250, '#d9a0a0', 11.5); }
+    /* wires: supply + to the collector, the meter in the return from the emitter */
+    g.strokeStyle = '#c94a4a'; g.lineWidth = 2; g.beginPath(); g.moveTo(bx, 82); g.lineTo(sx + Lpx / 2, 82); g.lineTo(sx + Lpx / 2, cy - Rpx); g.stroke();
+    g.strokeStyle = '#3d6fb8'; g.beginPath(); g.moveTo(sx + Lpx + 14, cy); g.lineTo(bx - 10, cy); g.lineTo(bx - 10, 184); g.lineTo(bx, 184); g.stroke();
   }
-
-  window.addEventListener('DOMContentLoaded', function () {
-    document.title = PROGRAM.title;
-
-    var head = document.createElement('header');
-    head.innerHTML =
-      '<h1>' + esc(PROGRAM.title) + '</h1>' +
-      (PROGRAM.subtitle ? '<p>' + esc(PROGRAM.subtitle) + '</p>' : '') +
-      (PROGRAM.notes && PROGRAM.notes.length
-        ? '<details><summary>이 프로그램에 대하여</summary><ul>' +
-          PROGRAM.notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') +
-          '</ul></details>'
-        : '');
-    document.body.appendChild(head);
-
-    screen = document.createElement('div');
-    screen.id = 'screen';
-    document.body.appendChild(screen);
-
-    var bar = document.createElement('div');
-    bar.id = 'bar';
-    ps = document.createElement('span');
-    ps.id = 'ps';
-    inp = document.createElement('input');
-    inp.id = 'inp';
-    inp.autocomplete = 'off';
-    inp.spellcheck = false;
-    bar.appendChild(ps);
-    bar.appendChild(inp);
-    document.body.appendChild(bar);
-
-    var tools = document.createElement('div');
-    tools.id = 'tools';
-    var bRestart = document.createElement('button');
-    bRestart.textContent = '다시 시작 (Ctrl+C)';
-    var bCopy = document.createElement('button');
-    bCopy.textContent = '화면 복사';
-    var bSave = document.createElement('button');
-    bSave.textContent = '.txt로 저장';
-    tools.appendChild(bRestart);
-    tools.appendChild(bCopy);
-    tools.appendChild(bSave);
-    document.body.appendChild(tools);
-
-    inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { submit(); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') {
-        if (hpos > 0) { hpos--; inp.value = history[hpos]; }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (hpos < history.length - 1) { hpos++; inp.value = history[hpos]; }
-        else { hpos = history.length; inp.value = ''; }
-        e.preventDefault();
-      } else if (e.key === 'c' && e.ctrlKey) {
-        start();
-      }
-    });
-    screen.addEventListener('click', function () {
-      if (!window.getSelection().toString()) inp.focus();
-    });
-
-    bRestart.addEventListener('click', start);
-    bCopy.addEventListener('click', function () {
-      navigator.clipboard.writeText(screen.textContent).then(function () {
-        bCopy.textContent = '복사됨';
-        setTimeout(function () { bCopy.textContent = '화면 복사'; }, 1200);
-      }, function () {});
-    });
-    bSave.addEventListener('click', function () {
-      var blob = new Blob([screen.textContent], { type: 'text/plain;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = PROGRAM.title.replace(/[^\w.-]+/g, '_') + '.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    function start() {
-      pending = null;
-      ps.textContent = '';
-      inp.value = '';
-      term.clear();
-      inp.focus();
-      Promise.resolve(PROGRAM.run(term)).catch(function (err) {
-        term.writeln('\n[' + err.message + ']');
-      });
-    }
-    start();
-  });
-})();
-
+};
 </script>
+<script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>
