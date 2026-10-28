@@ -923,7 +923,7 @@ function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
     c.fillText(itemName(k),44,y+12); c.font='9px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a"; c.fillText(av?t.trayTake:t.trayOut,44,y+25);
     trayCells.push([k,y,y+TROW-3]); y+=TROW; }
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of ["wire","table","cal"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
 /* ── the wiring: every instrument's terminals; click two terminals to join them ── */

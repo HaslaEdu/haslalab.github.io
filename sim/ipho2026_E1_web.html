@@ -1890,7 +1890,7 @@ cv.addEventListener("wheel",e=>{
 /* close-ups that open over the bench: the module's screen (its keys work) and the cylinders' section */
 function openZoom(kind){ ZOOM=kind; const box=$("zoom"); box.hidden=false; $("zcap").textContent=kind==="screen"?d().zScreen:d().zSection;
   const W=Math.max(260,Math.min(CW-60,(CH-70)*(kind==="screen"?SCRW/SCRH:1/0.94),kind==="screen"?620:560)), H=Math.round(W*(kind==="screen"?SCRH/SCRW:0.94));
-  zcv.style.width=W+"px"; zcv.style.height=H+"px"; zcv.width=Math.round(W*DPR); zcv.height=Math.round(H*DPR); zcv._W=W; drawZoom(); }
+  zcv.style.width=W+"px"; zcv.style.height=H+"px"; zcv.width=Math.round(W*DPR); zcv.height=Math.round(H*DPR); zcv._W=W; drawZoom(); if(window.HLpop) HLpop(zcv.parentElement); }
 function closeZoom(){ ZOOM=null; $("zoom").hidden=true; }
 function drawZoom(){ if(!ZOOM) return; const W=zcv._W;
   if(ZOOM==="screen"){ const s=W/SCRW; zctx.setTransform(DPR*s,0,0,DPR*s,0,0); const old=ctx; ctx=zctx; paintScreen(true,ZKEY); ctx=old; }

@@ -871,7 +871,7 @@ function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
     trayCells.push([k,y,y+TROW-3]); y+=TROW; }
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
 const TABS=["box","meter"];
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h,extra)=>HIT.push(Object.assign({k,x,y,w,h},extra||{}));
 

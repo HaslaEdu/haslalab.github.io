@@ -45,8 +45,16 @@ function shade(col,f){
   _shadeCache.set(key,v); return v;
 }
 const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
-let ITEMS=[], HITS=[], _REC=null;
-function begin3(){ ITEMS=[]; }
+let ITEMS=[], HITS=[], _REC=null, OBST=[];
+function begin3(){ ITEMS=[]; OBST=[]; }
+/* every solid drawn this frame, as a box, so a cable laid afterwards can go over it rather than through it */
+function _obst(x0,x1,y0,y1,z0,z1,o){ if(!(o&&o.noObst)) OBST.push([Math.min(x0,x1),Math.max(x0,x1),Math.min(y0,y1),Math.max(y0,y1),Math.min(z0,z1),Math.max(z0,z1)]); }
+function _lift(pt,clear){ let y=pt[1];
+  for(let pass=0;pass<3;pass++){ let up=false;
+    for(const b of OBST){ if(pt[0]<b[0]-clear||pt[0]>b[1]+clear||pt[2]<b[4]-clear||pt[2]>b[5]+clear) continue;
+      if(y>=b[2]-clear&&y<b[3]+clear){ y=b[3]+clear; up=true; } }
+    if(!up) break; }
+  return [pt[0],y,pt[2]]; }
 function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
 function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
 /* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
@@ -60,7 +68,7 @@ function face(pts,o){
 function quad(a,b,c,d,o){ face([a,b,c,d],o); }
 /* axis-aligned box, outward faces culled when they point away */
 function box3(x0,x1,y0,y1,z0,z1,col,o){
-  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  _obst(x0,x1,y0,y1,z0,z1,o); o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
   const t=o.top?Object.assign({},f,{fill:o.top}):f;
   if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
   if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
@@ -76,6 +84,7 @@ function orient(pts,want){
 }
 /* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
 function cyl3(axis,a0,a1,u,v,r,col,o){
+  { const R=Math.max(r,(o&&o.r1!==undefined)?o.r1:r); if(axis==="y") _obst(u-R,u+R,a0,a1,v-R,v+R,o); else if(axis==="x") _obst(a0,a1,u-R,u+R,v-R,v+R,o); else _obst(u-R,u+R,v-R,v+R,a0,a1,o); }
   o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
   const r1=o.r1===undefined?r:o.r1;
   const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
@@ -614,7 +623,7 @@ B3.bench = function (host, o){
   function frame(now){
     const real = Math.min(0.1, (now - last) / 1000); last = now;
     const dt = paused ? 0 : real * speed; t += dt; api.t = t; api.dt = dt; api.real = real;
-    if (anim){ anim.s = Math.min(1, anim.s + real / 0.45); const s = anim.s * anim.s * (3 - 2 * anim.s);
+    if (anim){ anim.s = Math.min(1, anim.s + real / 0.55); const s = anim.s * anim.s * (3 - 2 * anim.s);
       for (const k of ['yaw', 'pitch', 'k', 'tx', 'ty', 'tz', 'px', 'py']) CAM[k] = anim.from[k] + (anim.to[k] - anim.from[k]) * s;
       if (anim.s >= 1) anim = null; }
     if (msgT && now > msgT){ msg.classList.remove('on'); msgT = 0; }
@@ -652,20 +661,32 @@ B3.desk = function (x0, x1, z0, z1, o){
   for (let i = 1; i < n; i++){ const x = x0 + (x1 - x0) * i / n + (i % 3) * 1.3; line3([x, 0.01, z0], [x + 0.8, 0.01, z1], 'rgba(120,80,45,.18)', 0.8); }
   if (o.mat){ const [mx0, mx1, mz0, mz1] = o.mat; box3(mx0, mx1, 0, 0.25, mz0, mz1, '#2f6b4f', { id: 'desk', top: '#3a7d5d' }); }
 };
-/* a cable hanging between two points (sag in cm), drawn as a thick polyline */
+/* a cable hanging between two points (sag in cm), drawn as a thick polyline; where it would pass
+   through something already drawn this frame it is laid over it instead */
+function _drape(pts, a, b){
+  for (let i = 1; i < pts.length - 1; i++){ const p = pts[i];
+    if (Math.hypot(p[0] - a[0], p[1] - a[1], p[2] - a[2]) < 1.4 || Math.hypot(p[0] - b[0], p[1] - b[1], p[2] - b[2]) < 1.4) continue;
+    pts[i] = _lift(p, 0.35); }
+  /* a lead lies over an edge in a curve, not a step: points only ever rise towards their neighbours */
+  for (let k = 0; k < 8; k++) for (let i = 1; i < pts.length - 1; i++){
+    const m = 0.5 * (pts[i - 1][1] + pts[i + 1][1]) - 0.08; if (m > pts[i][1]) pts[i] = [pts[i][0], m, pts[i][2]]; }
+  return pts;
+}
 B3.cable = function (a, b, col, sag, lw, n){
-  n = n || 18; sag = sag === undefined ? 6 : sag;
+  sag = sag === undefined ? 6 : sag;
+  n = n || Math.max(18, Math.min(90, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 0.8)));
   const pts = [];
   for (let i = 0; i <= n; i++){ const s = i / n, y = a[1] + (b[1] - a[1]) * s - sag * 4 * s * (1 - s);
     pts.push([a[0] + (b[0] - a[0]) * s, Math.max(0.35, y), a[2] + (b[2] - a[2]) * s]); }
-  poly3(pts, col, lw || 2.2);
+  poly3(_drape(pts, a, b), col, lw || 2.2);
 };
 /* a cable lying on the desk from a to b with a soft bend */
 B3.cableDesk = function (a, b, col, lw){
   const mid = [(a[0] + b[0]) / 2, 0.4, (a[2] + b[2]) / 2 + 6];
-  const pts = []; for (let i = 0; i <= 20; i++){ const s = i / 20, u = 1 - s;
+  const n = Math.max(20, Math.min(90, Math.ceil(Math.hypot(b[0] - a[0], b[2] - a[2]) / 0.8)));
+  const pts = []; for (let i = 0; i <= n; i++){ const s = i / n, u = 1 - s;
     pts.push([u * u * a[0] + 2 * u * s * mid[0] + s * s * b[0], Math.max(0.4, u * u * a[1] + 2 * u * s * mid[1] + s * s * b[1]), u * u * a[2] + 2 * u * s * mid[2] + s * s * b[2]]); }
-  poly3(pts, col, lw || 2.2);
+  poly3(_drape(pts, a, b), col, lw || 2.2);
 };
 /* a banana jack on a vertical panel facing +z, centre (x, y, z) */
 B3.jack = function (x, y, z, col, o){

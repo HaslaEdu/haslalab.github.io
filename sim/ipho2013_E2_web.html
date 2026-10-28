@@ -529,7 +529,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["box","wire","dmm","vessel"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
 
 /* ── 1. inside the box, from above (mm along the box; slot i at 18 + 5.5 i) ── */
@@ -661,7 +661,7 @@ function returnItem(k){
 function benchClick(p,right){
   if(hand){ if(right){ if(hand.move){ ST.on.add(hand.item); ST.pos[hand.item]=hand.orig; say("placed",itemName(hand.item)); } else say("back",itemName(hand.item)); hand=null; return; }
     const k=hand.item;
-    if(IN_BOX.includes(k)&&has("box")&&inB(p,bbox("box"),10)){ if(["lamp","hold1","hold2"].includes(k)){ say("inBox"); tab="box"; renderTabs(); return; } if(intoBox(k)){ delete ST.pos[k]; hand=null; } return; }
+    if(IN_BOX.includes(k)&&has("box")&&inB(p,bbox("box"),10)){ if(["lamp","hold1","hold2"].includes(k)){ say("inBox"); if(tab!=="box"&&window.HLzoom) HLzoom(closeCv); tab="box"; renderTabs(); return; } if(intoBox(k)){ delete ST.pos[k]; hand=null; } return; }
     const [x,y]=unP(p[0],p[1],0); if(!fits(k,x,y)){ say("noFit"); return; } ST.pos[k]={x,y}; ST.on.add(k); say("placed",itemName(k)); hand=null; return; }
   const k=["dmmK","dmmL","psu","leads","water","tapem",...LOOSE,"box"].find(o=>onBench(o)&&inB(p,bbox(o),2)); if(!k) return;
   if(right){ returnItem(k); delete ST.pos[k]; return; }
@@ -679,7 +679,7 @@ trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand&&!hand.mo
 trayCv.addEventListener("mousedown",e=>{
   if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
   for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; if(hand&&hand.move) return; const same=hand&&hand.item===k; hand=null;
-    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); if(["lamp","hold1","hold2","cellA","cellB","aper","shield","vessel"].includes(k)&&has("box")){ tab="box"; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; } } drawTray(); return; } });
+    if(!same&&trayAvail(k)){ hand={item:k}; say("picked",itemName(k)); if(["lamp","hold1","hold2","cellA","cellB","aper","shield","vessel"].includes(k)&&has("box")){ if(tab!=="box"&&window.HLzoom) HLzoom(closeCv); tab="box"; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; } } drawTray(); return; } });
 
 /* the close ups */
 function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }

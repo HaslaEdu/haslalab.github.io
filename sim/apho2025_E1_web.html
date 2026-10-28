@@ -2592,7 +2592,7 @@ function openInstr(which){
   if(which==="scope"){ const bw=Math.floor(Math.min(980,vw*0.94-w-60,(vh*0.9-80)*7.78/5.56));
     if(bw>=240){ $("imBody").classList.add("pair"); zBig.style.width=bw+"px"; zBig.style.height=Math.round(bw*5.56/7.78)+"px";
       zBig.width=Math.round(bw*DPR); zBig.height=Math.round(bw*5.56/7.78*DPR); $("imBody").appendChild($("zBigBox")); } }
-  $("imodal").hidden=false; imOpen=which; layout(); }
+  $("imodal").hidden=false; imOpen=which; layout(); if(window.HLpop) HLpop($("imBody").parentElement); }
 function closeInstr(){ if(!imOpen) return; const box=$(imOpen==="fg"?"fgBox":"zBox"); box.style.width=""; document.querySelector(".instrHold").appendChild(box);
   $("imBody").classList.remove("pair"); document.querySelector(".instrHold").appendChild($("zBigBox")); $("imodal").hidden=true; imOpen=null; S.knob=null; layout(); }
 $("imClose").onclick=closeInstr;
@@ -2600,7 +2600,7 @@ $("imodal").addEventListener("mousedown",e=>{ if(e.target===$("imodal")) closeIn
 window.addEventListener("keydown",e=>{ if(e.key==="Escape"&&imOpen) closeInstr(); });
 cv.addEventListener("dblclick",e=>{ const [x,y]=mousePos(e);
   const which=S.on.fg&&inRect(S.zones.fg,x,y)?"fg":S.on.scope&&inRect(S.zones.scope,x,y)?"scope":null;
-  if(!which){ if(!S.carry){ S.zoom=1; S.touched=false; fit(); } return; }                  /* a bare spot: back to the whole bench */
+  if(!which){ if(!S.carry){ if(window.HLzoom) HLzoom(cv,{out:true}); S.zoom=1; S.touched=false; fit(); } return; }                  /* a bare spot: back to the whole bench */
   /* the two clicks of a double-click must not leave the part moved or picked up */
   const m=S.lastMove; if(m&&performance.now()-m.t<700&&m.id===which){ if(m.at) S.at[which]=m.at; }
   if(S.carry&&S.carry.move) S.carry=null;

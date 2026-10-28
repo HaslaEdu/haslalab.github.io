@@ -1322,7 +1322,7 @@ document.addEventListener("keyup",e=>{
 $("unwire").onclick=()=>{ lab.circ.wires=[]; selTerm=null; lab.res=lab.circ.solve(); say("unwired"); };
 
 function setView(v){
-  if(v!==view){ if(hand) returnHand(); selTerm=null; }
+  if(v!==view){ if(hand) returnHand(); selTerm=null; if(window.HLzoom) HLzoom(cv,{out:v==="bench"}); }
   view=v;
   for(const k of ["bench","tubes"]) $("tab-"+k).className=(k===v)?"on":"";
   layout();
