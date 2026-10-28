@@ -428,6 +428,9 @@ async function arLabOne(root, alive, id) {
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
   const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
+  /* the experiment alone, against the year's real contestants (sim/labmedal.js) */
+  const medal = s.status === "graded" && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
+  if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${open && s.entry ? `<a class="cmbtn sm pri" href="sim/exam.html${esc(s.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div></div>
@@ -437,7 +440,7 @@ async function arLabOne(root, alive, id) {
       ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${L.total}</small><b>${s.score} / ${s.points ?? "?"}</b></div>
         ${s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
-        ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}</div>
+        ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation)
         : x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})

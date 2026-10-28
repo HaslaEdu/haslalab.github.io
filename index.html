@@ -916,6 +916,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
         &nbsp;·&nbsp; <a href="#/" id="footTop"></a></span>
 </div></footer>
 
+<script src="sim/labmedal.js"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -7296,12 +7297,12 @@ const DC_SVG='<svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3
 const DCT={
   ko:{sec:"실시간 채팅", h:"Physics Olympiads 디스코드", members:"명", online:"명 접속 중", join:"디스코드에서 참여하기", copy:"초대 링크 복사",
       about:"게시판과 함께, 전 세계 물리 · 천문 올림피아드 준비생이 모인 <b>Physics Olympiads</b> 디스코드 서버에서 실시간으로 묻고 답할 수 있습니다.",
-      tips:["문제 풀이, 실험 측정, 오차 분석을 실시간으로 이야기합니다. 대화는 주로 영어입니다.","처음 들어가면 <b>#rules</b> 채널의 규칙을 읽어 주세요.","HaslaLab 시뮬레이터에 대한 제보는 이 커뮤니티의 «시뮬레이터 제보» 게시판에 남겨 주시면 바로 고칩니다.","HaslaLab 계정에 Discord 로그인을 연결해 두면 같은 계정으로 들어올 수 있습니다."],
-      note:"이 서버는 HaslaLab이 운영하지 않습니다. 원래 서버가 2026년 3월 2일 해킹된 뒤 옮겨 간 새 서버입니다.", side:"실시간 채팅"},
+      tips:["물리와 올림피아드를 주제로 이야기하는 곳이며, 대화는 모두 영어로 합니다.","처음 들어가면 <b>#rules</b> 채널의 규칙부터 읽어 주세요.","HaslaLab 계정에 Discord 로그인을 연결해 두면 같은 계정으로 들어올 수 있습니다."],
+      note:"이 서버는 HaslaLab이 운영하지 않습니다.", side:"실시간 채팅"},
   en:{sec:"Live chat", h:"Physics Olympiads Discord", members:"members", online:"online", join:"Join on Discord", copy:"Copy invite link",
       about:"Next to the boards, talk in real time with olympiad students from all over the world on the <b>Physics Olympiads</b> Discord server.",
-      tips:["Problem solving, lab measurements and error analysis, live. Most of the talk is in English.","Read the rules in <b>#rules</b> when you first join.","Reports about HaslaLab simulators are best left on the «Simulator reports» board here, so they get fixed.","Link Discord sign-in to your HaslaLab account to use the same account on both."],
-      note:"HaslaLab does not run this server. It is the new server the community moved to after the original one was hacked on 2 March 2026.", side:"Live chat"}};
+      tips:["A place to talk about physics and the olympiads. All conversation is in English.","Please read <b>#rules</b> first when you join.","Link Discord sign-in to your HaslaLab account to use the same account on both."],
+      note:"HaslaLab does not run this server.", side:"Live chat"}};
 let dcInfo=null, dcP=null;
 /* the server's icon, description and member/online counts, from Discord's public invite endpoint (CORS-open) */
 function dcLoad(){

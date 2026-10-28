@@ -56,6 +56,17 @@
   .ce .top{padding:10px 14px;color:#ddd;font-size:13.5px}
   .ce canvas{flex:1;width:100%;min-height:0;touch-action:none}
   .ce .row{padding:10px 14px max(14px,env(safe-area-inset-bottom));margin:0}
+  /* live camera: the page found in the picture is outlined as you aim; held still, it is taken by itself */
+  .lv{position:fixed;inset:0;background:#000;z-index:40;display:flex;flex-direction:column}
+  .lv .vw{position:relative;flex:1;min-height:0}
+  .lv video,.lv canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+  .lv .msg{padding:10px 14px;color:#eee;font-size:14px;text-align:center;min-height:44px}
+  .lv .msg.ok{color:#8fd19e;font-weight:700}
+  .lv .ctl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 18px max(18px,env(safe-area-inset-bottom))}
+  .lv .sh{width:72px;height:72px;border-radius:50%;border:4px solid #fff;background:rgba(255,255,255,.25);padding:0}
+  .lv .sh:active{background:#fff}
+  .lv .ctl button:not(.sh){min-width:84px;font-size:13.5px;padding:9px 10px}
+  .shoot .live{background:var(--accent);color:#1c2027;font-size:17px;border:0}
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0b0e12;border:1px solid var(--accent);padding:10px 16px;border-radius:9px;z-index:60;font-size:14px;max-width:92vw}
 </style>
 </head>
@@ -66,7 +77,7 @@
 </div>
 
 <script type="module">
-import { processShot, reprocess, canProcess } from "./labscan/scanner.js";
+import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET } from "./labscan/scanner.js";
 
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const MAX_BYTES = 1850000;
@@ -84,7 +95,9 @@ let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.
 const T = {
   ko: {
     title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
-    shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 어두운 바탕에 놓고, 네 모서리가 다 보이게 위에서 찍으세요. 한 번에 한 쪽씩 찍습니다.",
+    shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 어두운 바탕에 놓고, 네 귀퉁이의 검은 사각형이 다 보이게 위에서 찍으세요. 한 번에 한 쪽씩 찍습니다.",
+    live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이 네 귀퉁이의 검은 사각형이 모두 화면에 들어오게 하세요.", lvPage: "종이를 찾았습니다. 귀퉁이 사각형이 보이면 더 정확합니다.",
+    lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
     working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     blurry: "사진이 흐립니다. 다시 찍으면 글자를 더 잘 읽습니다.",
@@ -100,7 +113,9 @@ const T = {
   },
   en: {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
-    shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a darker surface and shoot from above with all four corners in view. One page per photo.",
+    shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a darker surface and shoot from above with the four black corner squares in view. One page per photo.",
+    live: "📷 Scan", camApp: "Camera app", lvAim: "Get all four black corner squares of the page into the picture.", lvPage: "Page found. It is more exact with the corner squares in view.",
+    lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
     working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     blurry: "The photo is blurry. A sharper one reads better.",
@@ -146,7 +161,8 @@ function paint() {
   $("app").innerHTML = `
     <div class="card"><h2>${t().task}</h2><div class="chips" id="tasks">${INFO.tasks.map(x => `<button data-t="${x}" class="${x === task ? "on" : ""}">${x}</button>`).join("")}</div>
       <h2 style="margin-top:12px">${t().kind}</h2><div class="chips" id="kinds">${["answer", "working"].map(x => `<button data-k="${x}" class="${x === kind ? "on" : ""}">${t()[x]}</button>`).join("")}</div>
-      <div class="shoot"><label class="cam">${t().shoot}<input id="cam" type="file" accept="image/*" capture="environment"></label>
+      <div class="shoot">${LIVE_OK ? `<button class="live" id="live">${t().live}</button>` : ""}
+        <label class="${LIVE_OK ? "gal" : "cam"}">${LIVE_OK ? t().camApp : t().shoot}<input id="cam" type="file" accept="image/*" capture="environment"></label>
         <label class="gal">${t().gallery}<input id="gal" type="file" accept="image/*"></label></div>
       <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">${t().help}</p>
       ${canProcess() ? "" : `<div class="note w">${t().noCanvas}</div>`}</div>
@@ -156,6 +172,7 @@ function paint() {
   $("kinds").onclick = e => { const b = e.target.closest("button"); if (b) { kind = b.dataset.k; paint(); } };
   $("cam").onchange = e => take(e.target.files[0]);
   $("gal").onchange = e => take(e.target.files[0]);
+  if ($("live")) $("live").onclick = () => liveCamera();
   wireSent();
   if (shot) paintShot();
 }
@@ -173,9 +190,9 @@ function wireSent() {
 }
 
 /* ── one photo: straighten, check, send ── */
-async function take(file) {
+async function take(file, live) {
   if (!file) return;
-  shot = { file, busy: true, pct: 0, task, kind };
+  shot = { file, busy: true, pct: 0, task, kind, live: !!live };
   mode = "clean"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: URL.createObjectURL(file), autoScore: 1, quality: null }; return paintShot(); }
   try {
@@ -199,12 +216,12 @@ function paintShot() {
     <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
   box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
   if ($("fix")) $("fix").onclick = () => cornerEditor();
-  $("again").onclick = () => { shot = null; paintShot(); $("cam").click(); };
+  $("again").onclick = () => { const lv = shot.live; shot = null; paintShot(); if (lv) liveCamera(); else $("cam").click(); };
   $("send").onclick = send;
 }
 async function redo(corners, m) {
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, mode); shot = { ...keep, ...r, corners, busy: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, mode, undefined, keep.method === "marker" ? MARKER_INSET : null); shot = { ...keep, ...r, corners, busy: false }; }
   catch (e) { shot = { ...keep, busy: false }; }
   paintShot();
 }
@@ -231,7 +248,8 @@ async function send() {
     if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
     if (r.legible) msg.push(t().legH[r.legible]);
     toast(msg.join(" "), r.legible === "poor" ? 9000 : 5500);
-    shot = null; await refresh();
+    const lv = shot.live; shot = null; await refresh();
+    if (lv && INFO && INFO.open) liveCamera();                      // the next page, straight away
   } catch (e) {
     toast(t().err[e.code] || e.code, 5000); b.disabled = false; b.textContent = t().send;
     if (e.code === "closed") refresh();
@@ -246,7 +264,7 @@ async function cornerEditor() {
   document.body.append(ov);
   const cv = ov.querySelector("canvas"), g = cv.getContext("2d");
   let pts = (shot.corners || [{ x: 0, y: 0 }, { x: img.width, y: 0 }, { x: 0, y: img.height }, { x: img.width, y: img.height }]).map(p => ({ ...p }));
-  let sc = 1, ox = 0, oy = 0, drag = -1, dpr = devicePixelRatio || 1;
+  let sc = 1, ox = 0, oy = 0, drag = -1, dpr = devicePixelRatio || 1, moved = false;
   function fit() {
     const r = cv.getBoundingClientRect(); cv.width = r.width * dpr; cv.height = r.height * dpr;
     sc = Math.min(cv.width / img.width, cv.height / img.height) * 0.94; ox = (cv.width - img.width * sc) / 2; oy = (cv.height - img.height * sc) / 2; draw();
@@ -268,11 +286,78 @@ async function cornerEditor() {
   const at = e => { const r = cv.getBoundingClientRect(); return { x: ((e.clientX - r.left) * dpr - ox) / sc, y: ((e.clientY - r.top) * dpr - oy) / sc }; };
   cv.onpointerdown = e => { const p = at(e); let best = -1, bd = 1e9; pts.forEach((q, i) => { const d = Math.hypot(q.x - p.x, q.y - p.y); if (d < bd) { bd = d; best = i; } });
     if (bd * sc < 60 * dpr) { drag = best; cv.setPointerCapture(e.pointerId); draw(); } };
-  cv.onpointermove = e => { if (drag < 0) return; const p = at(e); pts[drag] = { x: Math.max(0, Math.min(img.width, p.x)), y: Math.max(0, Math.min(img.height, p.y)) }; draw(); };
+  cv.onpointermove = e => { if (drag < 0) return; moved = true; const p = at(e); pts[drag] = { x: Math.max(0, Math.min(img.width, p.x)), y: Math.max(0, Math.min(img.height, p.y)) }; draw(); };
   cv.onpointerup = () => { drag = -1; draw(); };
   addEventListener("resize", fit, { once: true }); fit();
   ov.querySelector("#ceNo").onclick = () => ov.remove();
-  ov.querySelector("#ceOk").onclick = () => { ov.remove(); shot.autoScore = 1; redo(pts, mode); };
+  ov.querySelector("#ceOk").onclick = () => { ov.remove(); shot.autoScore = 1; if (moved) shot.method = "manual"; redo(pts, mode); };
+}
+
+/* ── live camera, as scanning apps do it: the page is looked for in the moving picture a few times a second and
+      outlined (green: the four printed corner squares, yellow: only the paper's edge); once the squares hold still
+      for about a second the photo is taken by itself.  The photo then goes through the same straightening. ── */
+const LIVE_OK = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && canProcess();
+let AUTO = true;
+try { AUTO = localStorage.getItem("hlScanAuto") !== "0"; } catch (e) {}
+async function liveCamera() {
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 3840 }, height: { ideal: 2160 } } }); }
+  catch (e) { toast(t().lvNoCam, 5000); return; }
+  const ov = document.createElement("div"); ov.className = "lv";
+  ov.innerHTML = `<div class="vw"><video playsinline muted autoplay></video><canvas></canvas></div><div class="msg"></div>
+    <div class="ctl"><button data-x="close">${t().lvClose}</button><button class="sh" data-x="shoot" aria-label="shutter"></button><button data-x="auto" class="${AUTO ? "on" : ""}">${t().lvAuto}</button></div>`;
+  document.body.append(ov);
+  const v = ov.querySelector("video"), cv = ov.querySelector("canvas"), g = cv.getContext("2d"), msg = ov.querySelector(".msg");
+  v.srcObject = stream; await v.play().catch(() => {});
+  const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
+  let alive = true, busy = false, hist = [], last = null, timer = null;
+  const close = () => { alive = false; clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
+  const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
+  say(t().lvAim);
+  async function capture() {
+    if (busy || !alive) return; busy = true; say(t().lvTake, true);
+    let blob = null;
+    try { if (window.ImageCapture) blob = await new ImageCapture(stream.getVideoTracks()[0]).takePhoto(); } catch (e) { blob = null; }
+    if (!blob) {
+      const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+      blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.95));
+    }
+    close(); if (blob) take(blob, true);
+  }
+  function frame() {
+    if (!alive) return;
+    if (v.videoWidth) {
+      const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * k), h = Math.round(v.videoHeight * k);
+      if (small.width !== w) { small.width = w; small.height = h; }
+      sg.drawImage(v, 0, 0, w, h);
+      const gray = toGray(sg.getImageData(0, 0, w, h).data, w, h);
+      let d = findSheetMarkersGray(gray, w, h), how = "marker";
+      if (!d || d.score < 0.5) { const p = findPageQuadGray(gray, w, h); d = p && p.corners && p.score > 0.45 ? p : null; how = "page"; }
+      /* the overlay, where the video is drawn (object-fit: contain) */
+      const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+      if (cv.width !== Math.round(r.width * dpr)) { cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); }
+      g.clearRect(0, 0, cv.width, cv.height);
+      if (d) {
+        const s = Math.min(cv.width / w, cv.height / h), ox = (cv.width - w * s) / 2, oy = (cv.height - h * s) / 2;
+        const q = [0, 1, 3, 2].map(i => ({ x: ox + d.corners[i].x * s, y: oy + d.corners[i].y * s }));
+        g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : "#f2c14e"; g.lineWidth = 3 * dpr;
+        g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
+      }
+      /* steady: the four squares moved less than 1.2 % of the picture over the last six looks */
+      if (d && how === "marker") {
+        hist.push(d.corners); if (hist.length > 6) hist.shift();
+        const span = Math.max(w, h), still = hist.length === 6 && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * 0.012));
+        say(t().lvHold, true);
+        if (still && AUTO) return capture();
+      } else { hist = []; say(d ? t().lvPage : t().lvAim); }
+    }
+    timer = setTimeout(frame, 140);
+  }
+  ov.onclick = e => { const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.x === "close") close();
+    else if (b.dataset.x === "shoot") capture();
+    else if (b.dataset.x === "auto") { AUTO = !AUTO; b.classList.toggle("on", AUTO); hist = []; try { localStorage.setItem("hlScanAuto", AUTO ? "1" : "0"); } catch (e) {} } };
+  frame();
 }
 
 /* the deadline, on the server's clock */

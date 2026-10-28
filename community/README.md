@@ -144,7 +144,19 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 4. **채점 규정**(`LAB_REG`, 버전 `2026-10-28`, R1–R10)은 Worker 코드에 있고 `/api/health`의 `lab_reg`로도 나갑니다. 성적표는 항목마다 점수, 판정, 근거(쪽 · 시트 · 값), 계산 방식(범위·검증 / AI 판단), 적용 규정을 보여 줍니다.
 5. 채점 모델이 응답하지 않아 실패하면 2분 간격으로 세 번까지 저절로 다시 채점합니다. 솔루션 파일이 없는 실험은 「채점 대기」(`no_solution`)로 남습니다.
 
-모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`)이고, 솔루션 PDF는 `LAB_PDF_BASE`(기본 PDF Worker)에서 가져옵니다. Gemini 키가 없으면 예전처럼 Upstage OCR 글자로 채점합니다.
+모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`)이고, 솔루션 PDF는 GitHub Release(`pdf-<접두어>`)에서 바로 가져옵니다(`LAB_PDF_BASE`로 바꿀 수 있음 — Worker는 같은 계정의 다른 workers.dev 주소를 부를 수 없습니다). Gemini 키가 없으면 예전처럼 Upstage OCR 글자로 채점합니다.
+
+**Upstage + Gemini 읽기**: `UPSTAGE_API_KEY`도 있으면 쪽마다 Upstage Document Parse가 먼저 손글씨를 받아 적고, Gemini는 그 전사문을 이미지 옆에 두고 문항 · 값 · 표 · 그래프를 정리합니다(숫자 · 기호는 전사문으로 확인, 판단은 이미지 기준). Upstage 신뢰도가 0.6 아래면 판독 상태가 「일부」를 넘지 못하고, 0.3 아래면 「거의 못 읽음」입니다.
+
+**시험 전 · 중 · 후 (사이트 쪽)**
+- `sim/sheets.html`: 시작 전에 인쇄하는 답안지. 대회가 공개한 **공식 Answer sheet · Working sheet**가 있으면 그것을 그대로 엽니다(`sim/sheets/`, `tools/labofficial.py` — 비어 있는 귀퉁이에만 스캐너용 검은 사각형을 덧찍음, 목록은 `sim/sheets/index.json`). 공개되지 않은 것만 HaslaLab 양식(문항 칸 · 측정표 · 그래프 용지, 문항 번호와 배점은 `sim/labsheets.json` / `tools/labsheets.py`)으로 인쇄합니다. 문제지는 여기 없습니다. 공식 시트의 머리글 코드(A1-3 = 실험 1 답안지 3쪽, W2-1 = 실험 2 연습지)는 읽을 때 실험 · 시트로 옮겨집니다.
+- `sim/exam.html`: 문제지는 시험 중에만 «문제지 열기»로 책상 옆에 pdf.js로 그려 보여 줍니다(내려받기 · 인쇄 버튼 없음, 시험 창 인쇄는 빈 쪽).
+- `sim/scan.html`: 실시간 카메라가 종이를 찾아 테두리를 그리고, 네 사각형이 1초쯤 멈추면 저절로 찍습니다(`labscan/scanner.js`의 `findSheetMarkersGray`).
+- 성적표와 확인증: 실험 점수를 그해 공개된 실험 점수(`sim/labmedals.json`, `tools/labmedals.py` — IPhO 비공식 기록과 APhO 공식 결과, 이름 없이 점수와 메달 수만)에 넣어 «실험만으로 본 메달권»을 추정합니다(`sim/labmedal.js`).
+
+**스캔 AI 비교** (`sim/scanbench.html`, 관리자만): 휴대폰으로 찍은 A4 사진을 연결된 AI마다 가장 싼 비전 모델(Gemini `gemini-flash-lite-latest`, OpenAI `gpt-5-nano`, Claude `claude-haiku-5-5` — `BENCH_*_MODEL`로 바꿈, Claude 키는 `ANTHROPIC_API_KEY` 또는 `CLAUDE_API_KEY`)과 Upstage(페이지 탐지가 없어 글자 범위로 대신)에 보내 종이 네 귀퉁이를 찾게 하고, HaslaLab 기기 안 탐지와 함께 관리자가 표시한 정답 귀퉁이와의 오차로 순위를 매깁니다. 사진과 결과는 `scan_bench` 표(처음 쓸 때 저절로 만들어짐)에 남습니다. API: `POST/GET /api/admin/lab/scanbench`, `PATCH /api/admin/lab/scanbench/:id {gt}`.
+
+**응답 시간 보기**: 모든 응답에 `Server-Timing: db;desc="n queries";dur=…, total;dur=…`가 붙습니다(브라우저 개발자 도구 → Network → Timing). 서버 안에서 걸린 시간과 데이터베이스 왕복 횟수가 보이므로, 느릴 때 서버 탓인지 네트워크 탓인지 가를 수 있습니다.
 
 ### 올리는 순서
 

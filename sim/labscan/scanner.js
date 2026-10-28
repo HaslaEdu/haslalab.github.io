@@ -305,6 +305,103 @@ export function findMarkersGray(gray, W, H) {
   return { corners: ordered, score: s, method: 'marker' };
 }
 
+/* ---------- ①′ 인쇄 마커 찾기 v3: 조명에 따라 바뀌는 문턱 + 네 마커의 기하 검증 ---------- */
+
+/** 마커 네 중심이 이루는 사각형의 짧은 변 · 긴 변 (mm) 과 마커 한 변 (mm) — sheets.html 의 조판 */
+export const MARKER_GEOM = { short: 191.1, long: 276.2, side: 7 };
+
+/**
+ * v2 는 사진 전체에 문턱 하나를 쓰고 사분면마다 가장 그럴듯한 덩어리를 따로 골랐습니다. 그래서 한쪽이 어두운
+ * 사진이나 원근이 센 사진에서는 엉뚱한 덩어리를 마커로 집었습니다. v3 는
+ *  - 둘레 평균보다 확실히 어두운 곳을 어둡다고 봅니다 (그늘 · 조명 기울기에 강함).
+ *  - 정사각에 가깝고 꽉 찬 덩어리를 후보로 모은 뒤, 네 개 묶음마다 «마커 크기가 그 자리의 종이 크기에 맞는가»,
+ *    «네 점이 A4 마커 사각형처럼 볼록하고 비율이 맞는가»를 따져 가장 잘 맞는 묶음을 고릅니다.
+ *  - 고른 마커의 중심은 원본 해상도에서 다시 잽니다.
+ * @returns {{corners:{x,y}[], score:number, method:'marker'}|null}
+ */
+export function findSheetMarkersGray(gray, W, H) {
+  /* 1. 작업 크기로 줄이기 (평균 풀링) */
+  const f = Math.max(1, Math.ceil(Math.max(W, H) / 900));
+  const w = Math.floor(W / f), h = Math.floor(H / f);
+  const g = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let a = 0;
+    for (let j = 0; j < f; j++) { const row = (y * f + j) * W + x * f; for (let i = 0; i < f; i++) a += gray[row + i]; }
+    g[y * w + x] = a / (f * f);
+  }
+  /* 2. 둘레보다 어두운 곳 */
+  const mean = boxMean(g, w, h, Math.max(8, Math.round(Math.min(w, h) / 16)));
+  const dark = new Uint8Array(w * h);
+  for (let i = 0; i < w * h; i++) dark[i] = g[i] < mean[i] * 0.62 && g[i] < mean[i] - 18 ? 1 : 0;
+  /* 3. 덩어리 → 후보 */
+  const minSide = Math.min(w, h), maxArea = (minSide * 0.12) ** 2, seen = new Uint8Array(w * h), stack = new Int32Array(w * h);
+  const cands = [];
+  for (let s0 = 0; s0 < w * h; s0++) {
+    if (!dark[s0] || seen[s0]) continue;
+    let sp = 0, n = 0, sx = 0, sy = 0, x0 = w, y0 = h, x1 = 0, y1 = 0;
+    stack[sp++] = s0; seen[s0] = 1;
+    while (sp) {
+      const c = stack[--sp], cy = (c / w) | 0, cx = c - cy * w;
+      n++; sx += cx; sy += cy;
+      if (cx < x0) x0 = cx; if (cx > x1) x1 = cx; if (cy < y0) y0 = cy; if (cy > y1) y1 = cy;
+      if (cx > 0 && dark[c - 1] && !seen[c - 1]) { seen[c - 1] = 1; stack[sp++] = c - 1; }
+      if (cx < w - 1 && dark[c + 1] && !seen[c + 1]) { seen[c + 1] = 1; stack[sp++] = c + 1; }
+      if (cy > 0 && dark[c - w] && !seen[c - w]) { seen[c - w] = 1; stack[sp++] = c - w; }
+      if (cy < h - 1 && dark[c + w] && !seen[c + w]) { seen[c + w] = 1; stack[sp++] = c + w; }
+    }
+    if (n < 20 || n > maxArea) continue;
+    const bw = x1 - x0 + 1, bh = y1 - y0 + 1, square = Math.min(bw, bh) / Math.max(bw, bh), fill = n / (bw * bh);
+    if (square < 0.55 || fill < 0.62) continue;
+    cands.push({ x: sx / n, y: sy / n, side: Math.sqrt(n), q: square * fill, x0, y0, x1, y1 });
+  }
+  if (cands.length < 4) return null;
+  cands.sort((a, b) => b.q * b.side - a.q * a.side);
+  const C = cands.slice(0, 16);
+  /* 4. 네 개 묶음마다 기하 점수 */
+  const { short: S, long: L, side: M } = MARKER_GEOM;
+  let best = null;
+  for (let a = 0; a < C.length; a++) for (let b = a + 1; b < C.length; b++) for (let c = b + 1; c < C.length; c++) for (let d = c + 1; d < C.length; d++) {
+    const set = [C[a], C[b], C[c], C[d]];
+    const o = orderCorners(set);
+    const pick = o.map((p) => set.find((q) => q.x === p.x && q.y === p.y));
+    if (pick.some((q) => !q)) continue;
+    const qs = quadScore(o, w, h);
+    if (qs <= 0) continue;
+    const [tl, tr, bl, br] = o, len = (p, q) => Math.hypot(p.x - q.x, p.y - q.y);
+    const top = len(tl, tr), bot = len(bl, br), lef = len(tl, bl), rig = len(tr, br);
+    const hor = (top + bot) / 2, ver = (lef + rig) / 2;
+    const ratio = Math.max(hor, ver) / Math.min(hor, ver);
+    if (ratio < 1.05 || ratio > 2.3) continue;                         // A4 마커 사각형은 1.45
+    /* 그 모서리에서 종이 1mm 가 몇 픽셀인가 → 마커가 있어야 할 크기 */
+    const adj = [[top, lef], [top, rig], [bot, lef], [bot, rig]];
+    let off = 0;
+    for (let i = 0; i < 4; i++) {
+      const [ha, va] = adj[i], mm = Math.sqrt((Math.max(ha, va) / L) * (Math.min(ha, va) / S));
+      const r = pick[i].side / (M * mm);
+      if (r < 0.55 || r > 1.8) { off = Infinity; break; }
+      off += Math.abs(Math.log(r));
+    }
+    if (!isFinite(off)) continue;
+    const sides = pick.map((q) => q.side), even = Math.min(...sides) / Math.max(...sides);
+    const score = qs * Math.exp(-off / 2) * (0.5 + 0.5 * even) * Math.exp(-Math.abs(Math.log(ratio / (L / S))));
+    if (!best || score > best.score) best = { score, pick };
+  }
+  if (!best) return null;
+  /* 5. 원본 해상도에서 중심 다시 재기 */
+  const corners = best.pick.map((q) => {
+    const pad = Math.max(2, (q.x1 - q.x0) * 0.3);
+    const X0 = Math.max(0, Math.floor((q.x0 - pad) * f)), X1 = Math.min(W - 1, Math.ceil((q.x1 + 1 + pad) * f));
+    const Y0 = Math.max(0, Math.floor((q.y0 - pad) * f)), Y1 = Math.min(H - 1, Math.ceil((q.y1 + 1 + pad) * f));
+    let lo = 255, hi = 0;
+    for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const v = gray[y * W + x]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    const thr = (lo + hi) / 2;
+    let n = 0, sx = 0, sy = 0;
+    for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) { const v = thr - gray[y * W + x]; if (v > 0) { n += v; sx += v * x; sy += v * y; } }
+    return n ? { x: sx / n + 0.5, y: sy / n + 0.5 } : { x: (q.x + 0.5) * f, y: (q.y + 0.5) * f };
+  });
+  return { corners: orderCorners(corners), score: Math.min(1, 0.35 + best.score), method: 'marker' };
+}
+
 /* ---------- ② 종이 테두리 찾기 (마커 없는 사진) ---------- */
 
 /**
@@ -710,6 +807,8 @@ export function detectQuad(canvas) {
   const W = canvas.width, H = canvas.height;
   const g = toGray(img.data, W, H);
 
+  const v3 = findSheetMarkersGray(g, W, H);
+  if (v3 && v3.score >= 0.5) return v3;
   const m = findMarkersGray(g, W, H);
   if (m.score >= 0.62) return m;
 

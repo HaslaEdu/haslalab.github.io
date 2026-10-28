@@ -39,7 +39,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.click("#go"); await pg.click(".modal button.red");
   await pg.waitForSelector(".desk iframe", { timeout: 15000 }); await sleep(1500);
   const c = clockSec(await pg.textContent("#clock"));
-  ok(c > 38 && c <= 45, "clock right on a computer an hour fast: " + c);
+  ok(c > 80 && c <= 90, "clock right on a computer an hour fast: " + c);
   ok(await pg.$(".dark") === null, "…and the exam was not ended by the wrong local clock");
   let [, a] = await call("GET", "/lab/active", null, TOK);
   ok(a.tokens === 0 && a.active.status === "running", "one token spent, running");
@@ -47,7 +47,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   /* 2. another exam opened while this one runs: no start, a link back */
   await pg.goto(Bx); await sleep(1800);
   ok(await pg.$("#go") === null && /진행 중인 다른 실전 시험/.test(await pg.textContent("main")), "APhO page: «another exam in progress», no start");
-  await pg.click("main a button.pri"); await pg.waitForSelector(".desk iframe", { timeout: 15000 }); await sleep(1200);
+  await pg.click("main a[href^=\"exam.html\"] button.pri"); await pg.waitForSelector(".desk iframe", { timeout: 15000 }); await sleep(1200);
   const c2 = clockSec(await pg.textContent("#clock"));
   ok(c2 < c && c2 > 0 && /IPhO 2024/.test(await pg.textContent("#bTitle")), `«go to that exam» resumes IPhO 2024 (${c} → ${c2})`);
   ok((await call("GET", "/lab/active", null, TOK))[1].tokens === 0, "still 0 tokens");
