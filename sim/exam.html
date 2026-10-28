@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1c2027">
 <meta name="robots" content="noindex">
 <title>실전 모드 · Exam mode · HaslaLab</title>
-<!-- Exam mode.  A year's experiments run side by side on one long bench for five hours (the real exam gives E1
+<!-- Exam mode.  A year's experiments run side by side on one long bench for the exam's time (examdur.js) (the real exam gives E1
      and E2 one table and one box of parts); the parts boxes of the simulators are folded into one shared kit on
      the left, while set-ups that already sit on the bench stay as they are and get the room.  When the time is
      up the bench goes dark and thirty minutes start for scanning the paper answer sheets and working sheets
@@ -169,7 +169,7 @@
   <div class="who"><b id="bTitle">HaslaLab</b><span id="bSub"></span></div>
   <div class="sp"></div>
   <div class="views" id="views"></div>
-  <div class="clock" id="clock" hidden>5:00:00<small></small></div>
+  <div class="clock" id="clock" hidden>0:00:00<small></small></div>
   <button id="bPaper" hidden></button>
   <button id="bEnd" class="red" hidden></button>
   <button id="bFull" class="hide-s" title="F11" hidden>⛶</button>
@@ -180,18 +180,22 @@
 <div id="layer"></div>
 
 <script src="../vendor/qrcode/qrcode.js"></script>
+<script src="../examdur.js"></script>
 <script src="labmedal.js"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
+/* the exam's length (examdur.js; the server's clock has the last word) */
+const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length); })();
+const DK = HLexam.text(DUR, "ko"), DE = HLexam.text(DUR, "en"), DC = HLexam.clock(DUR) + ":00";
 
 const T = {
   ko: {
     exam: "실전 모드", practice: "연습 모드", left: "남은 시간", scanLeft: "스캔 마감까지",
     introLead: "실제 대회처럼 실험 시험을 한 번에 치릅니다.",
     rules: [
-      "<b>5시간</b> 동안 이 해의 실험을 모두 풉니다. 실험이 둘이면 <b>한 책상</b>에 나란히 놓이고, 두 실험을 오가며 원하는 순서로 하면 됩니다.",
+      `<b>${DK}</b> 동안 이 해의 실험을 모두 풉니다. 실험이 둘이면 <b>한 책상</b>에 나란히 놓이고, 두 실험을 오가며 원하는 순서로 하면 됩니다.`,
       "부품은 왼쪽 <b>공용 부품함 하나</b>에서 꺼냅니다. 부품을 누르면 손에 들리고, 그 실험의 책상을 누르면 놓입니다(우클릭은 되돌리기). 이미 책상에 놓여 있는 장치는 그대로 두고, 책상만 넓혔습니다.",
       "답은 종이에 씁니다. 시작하기 전에 아래 «답안지 인쇄»로 <b>Answer sheet</b>와 <b>Working sheet</b>를 인쇄해 두세요. 최종 답은 Answer sheet의 해당 칸에 쓴 것만 인정합니다. 그래프와 측정표도 Answer sheet에 그립니다.",
       "<b>문제지는 시험이 시작된 뒤에만</b> 시험 화면의 «문제지 열기»로 볼 수 있고, 내려받거나 인쇄할 수 없습니다.",
@@ -203,7 +207,7 @@ const T = {
     tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
     sheetsH: "답안지 인쇄", sheetsB: "Answer sheet · Working sheet 인쇄 ↗", sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.",
     paper: "문제지 열기", paperClose: "문제지 닫기", paperLoading: "문제지를 불러오는 중…", paperFail: "문제지를 불러오지 못했습니다. 다시 열어 보세요.", paperNone: "이 실험은 문제지 파일이 없습니다.",
-    docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: "실험 5시간 + 답안 스캔 30분",
+    docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: `실험 ${DK} + 답안 스캔 30분`,
     infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `실전 토큰 1개 (보유 ${n}개)`,
     infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
     agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
@@ -211,8 +215,8 @@ const T = {
     receiptH: "답안 제출 확인증", rcName: "시험명", rcStart: "시험 시작", rcEnd: "실험 종료", rcSubmit: "답안 제출", rcPages: "제출한 쪽", rcStatus: "채점 상태", print: "인쇄",
     pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
     loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
-    tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: "토큰 1개 쓰고 시작 (5:00:00)", startQ: "실전 토큰 1개를 씁니다",
-    startBody: n => `시작하면 5시간 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다. 남은 토큰 ${n}개 → ${n - 1}개.`,
+    tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `토큰 1개 쓰고 시작 (${DC})`, startQ: "실전 토큰 1개를 씁니다",
+    startBody: n => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다. 남은 토큰 ${n}개 → ${n - 1}개.`,
     noTokens: "실전 토큰이 없습니다. 토큰은 관리자가 나누어 줍니다 — 커뮤니티에 문의해 주세요.",
     otherActive: (x, y) => `진행 중인 다른 실전 시험(${x})이 있습니다. 한 번에 하나만 칠 수 있으니, 그 시험을 먼저 끝내세요.`, goOther: "그 시험으로 가기",
     resume: "진행 중인 시험으로 돌아왔습니다. 타이머는 그동안에도 흘렀습니다 (토큰은 쓰지 않았습니다).",
@@ -244,7 +248,7 @@ const T = {
     exam: "Exam mode", practice: "Practice mode", left: "Time left", scanLeft: "Scanning closes in",
     introLead: "Sit the whole experimental exam at once, as on the day.",
     rules: [
-      "You have <b>five hours</b> for all of this year's experiments. With two experiments they stand side by side on <b>one bench</b>; move between them in any order.",
+      `You have <b>${DE}</b> for all of this year's experiments. With two experiments they stand side by side on <b>one bench</b>; move between them in any order.`,
       "Parts come out of <b>one shared kit</b> on the left. Click a part to pick it up, then click on that experiment's bench to put it down (right-click puts it back). Set-ups that already sit on the bench stay as they are; the bench is simply wider.",
       "Write your answers on paper. Before you start, print the <b>Answer sheets</b> and <b>Working sheets</b> with «Print answer sheets» below. A final answer counts only in its box on an Answer sheet; graphs and data tables go on the Answer sheets too.",
       "<b>The problem sheet opens only once the exam has started</b>, with «Open problem sheet» on the exam screen; it cannot be downloaded or printed.",
@@ -256,7 +260,7 @@ const T = {
     tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
     sheetsH: "Answer sheets", sheetsB: "Print the Answer and Working sheets ↗", sheetsNote: "Print them before you start. The problem sheet opens only on the exam screen.",
     paper: "Open problem sheet", paperClose: "Close problem sheet", paperLoading: "Loading the problem sheet…", paperFail: "The problem sheet could not be loaded. Try opening it again.", paperNone: "This experiment has no problem sheet file.",
-    docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: "5 hours of experiments + 30 minutes to scan",
+    docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: `${DE} of experiments + 30 minutes to scan`,
     infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `1 exam token (you have ${n})`,
     infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
     agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
@@ -264,8 +268,8 @@ const T = {
     receiptH: "Receipt of submission", rcName: "Exam", rcStart: "Started", rcEnd: "Experiments ended", rcSubmit: "Answers submitted", rcPages: "Pages", rcStatus: "Grading", print: "Print",
     pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
     loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
-    tokens: n => `Exam tokens left: <b>${n}</b>`, start: "Use 1 token and start (5:00:00)", startQ: "Use one exam token",
-    startBody: n => `The five-hour timer starts on the server and cannot be paused or undone. Tokens: ${n} → ${n - 1}.`,
+    tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Use 1 token and start (${DC})`, startQ: "Use one exam token",
+    startBody: n => `The ${DE} timer starts on the server and cannot be paused or undone. Tokens: ${n} → ${n - 1}.`,
     noTokens: "You have no exam tokens. Tokens are handed out by the admins — please ask in the community.",
     otherActive: (x, y) => `Another exam (${x}) is in progress. Only one can be open at a time, so finish that one first.`, goOther: "Go to that exam",
     resume: "Back in the exam in progress. The timer kept running meanwhile (no token was used).",
@@ -638,7 +642,7 @@ function afterPick(st) {
   }, 40);
 }
 
-/* ── the end of the five hours (or «Finish exam»): the server moves the session to scanning ── */
+/* ── the end of the exam time (or «Finish exam»): the server moves the session to scanning ── */
 let finishing = false;
 async function finishExam() {
   if (finishing || !SES || SES.status !== "running") return;
