@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RMPh 2017 실험 — 편광과 광다이오드 · Polarization and Photodiodes · HaslaLab</title>
+<meta name="description" content="RMPh 2017 실험 문제를 브라우저에서 해 봅니다. 광다이오드의 I–U 특성(광전지 영역, 순방향, 역방향)을 재고, 편광자–검광자로 말뤼스 법칙에 맞춰 보정한 뒤 설탕물의 선광으로 미지 농도를 구합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RMPh 2017 실험 — 편광과 광다이오드 · Polarization and Photodiodes · HaslaLab">
+<meta property="og:description" content="RMPh 2017 실험: 광다이오드·편광 필터·설탕물로 선광 재기.">
+<style>
+:root{--bg:#0c0c0c;--fg:#cccccc;--dim:#7d7d7d;--accent:#4ec9b0;--line:#2a2a2a;--panel:#141414}
+*{box-sizing:border-box}
+body{margin:0;background:#1e1e1e;color:var(--fg);
+     font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0 0 3px;font-size:15px;color:#e8e8e8}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+header details{margin-top:7px}
+header summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+header ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:12.5px}
+header li{margin:2px 0}
+#screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
+        font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;
+        word-break:break-word}
+#screen .in{color:#9cdcfe}
+#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);
+     padding:6px 16px 10px}
+#ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;
+    white-space:pre;flex:none}
+#inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
+     font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;padding:0}
+#tools{display:flex;gap:8px;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line)}
+button{background:#2d2d2d;color:var(--fg);border:1px solid var(--line);border-radius:4px;
+       padding:5px 12px;font:12.5px inherit;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+
+</style>
+</head>
+<body>
+<script>
+/* RMPh 2017 experimental problem on the 3-D bench.  The board: photodiode between 1 (cathode, −) and 2 (anode,
+   +), the 100 Ω load between 3 and 4, 2 and 3 joined inside.  The photodiode is a current source I_L in parallel
+   with a diode (factor 3.3, the official fit) and a 9 kΩ shunt, behind a 20 Ω series resistance — which gives
+   the solution's U_CD ≈ 667 mV, I_SC ≈ 14.6 mA and fill factor ≈ 0.27.  Light: the laser is partly polarized;
+   the polarizer and the analyzer each pass a quarter of it at best and the rest follows Malus's law
+   (≈ 0.9 mA at parallel, as in table 4); sugar turns the plane by β = k·c·d, with 36° for c₁ = 50 at 25 cm. */
+var PROGRAM = {
+  title: { ko: 'RMPh 2017 실험 — 편광과 광다이오드', en: 'RMPh 2017 Problem — Polarization and photodiodes' },
+  subtitle: { ko: '빛의 편광을 재는 장치(광다이오드 + 편광자·검광자)를 조사하고 보정한 뒤, 그 장치로 설탕물의 미지 농도를 구합니다. 장비: 멀티미터, 3 V 전지, 22 kΩ 가변 저항, 광다이오드와 100 Ω 부하 저항이 있는 회로판(단자 1–4), 레이저 포인터, 세로 받침(각도기), 원통 큐벳, 주사기와 호스, 농도별 설탕물 비커, 검광자, 편광자, 자, 도선. 오차 계산은 하지 않습니다.',
+              en: 'Study and calibrate a device for measuring polarization (a photodiode with a polarizer and an analyzer), then use it to find the unknown concentration of a sugar solution. Equipment: a multimeter, a 3 V battery, a 22 kΩ potentiometer, a board with the photodiode and a 100 Ω load (terminals 1–4), a laser pointer, a vertical holder with a protractor, a cylindrical cuvette, a syringe and hose, beakers of sugar solutions, the analyzer, the polarizer, a ruler and wires. No error analysis is required.' },
+  notes: { ko: [
+    '과제: 4.1 광다이오드 — 개방 전압 U_CD 와 단락 전류 I_SC, 광전지 영역(4사분면)의 I–U 와 출력, 채움률 FFF; 레이저를 끄고 순방향 I–U 로 다이오드 계수 η; 역방향(3 V 까지) I–U. 4.2 검광자를 5° 씩 돌려 I = a·cos²θ + b. 4.3 설탕물 기둥 길이 d 와 농도 c 에 따른 회전각 β, 미지 농도.',
+    '공식 해답: U_CD ≈ 667 mV, I_SC ≈ 14.6 mA, P_max ≈ 2.9 mW, FFF ≈ 0.27, 다이오드 계수 ≈ 3.3 (2–3.5 인정), 역전류 ≈ 8.3–8.6 mA, 평행일 때 ≈ 0.92 mA. d = 25 cm 에서 c = 50, 25, 12.5 → β ≈ 36°, 17°, 7°; 미지 용액 ≈ 23° → c_x ≈ 35.',
+    '전류는 100 Ω 부하의 전압으로 잽니다(1 mV = 10 µA). 회로판 속에서 2 와 3 이 이어져 있습니다. 값은 방문할 때마다 조금 다릅니다.'], en: [
+    'Tasks: 4.1 the photodiode — open-circuit voltage U_CD and short-circuit current I_SC, the I–U and power in photoelement mode (4th quadrant), the fill factor FFF; with the laser off, forward I–U for the diode factor η; reverse I–U up to 3 V. 4.2 turn the analyzer in 5° steps: I = a·cos²θ + b. 4.3 the rotation β against the sugar column length d and the concentration c, and the unknown one.',
+    'Official solution: U_CD ≈ 667 mV, I_SC ≈ 14.6 mA, P_max ≈ 2.9 mW, FFF ≈ 0.27, diode factor ≈ 3.3 (2–3.5 accepted), reverse current ≈ 8.3–8.6 mA, ≈ 0.92 mA at parallel filters. At d = 25 cm, c = 50, 25, 12.5 → β ≈ 36°, 17°, 7°; the unknown ≈ 23° → c_x ≈ 35.',
+    'Current is read as the voltage on the 100 Ω load (1 mV = 10 µA). Inside the board 2 and 3 are joined. The values differ a little from visit to visit.'] }
+};
+
+var LAB = { dmm: {}, leads: null, c: null, laser: false, pol: false, an: false, cuv: false, phiP: 30, thA: 90, x: 0.5, sol: 0, d: 0 };
+PROGRAM.lab = {
+  intro: { ko: '책상 위: 세로 받침(위에서부터 레이저, 편광자, 큐벳, 각도기 위 검광자, 광다이오드 회로판), 3 V 전지, 22 kΩ 가변 저항, 멀티미터, 설탕물 비커(c₁ = 50, c₂ = 25, c₃ = 12.5, cₓ), 주사기, 버리는 비커, 도선.',
+           en: 'On the desk: the vertical holder (from the top: laser, polarizer, cuvette, analyzer over a protractor, the photodiode board), a 3 V battery, a 22 kΩ potentiometer, the multimeter, sugar solution beakers (c₁ = 50, c₂ = 25, c₃ = 12.5, cₓ), the syringe, a waste beaker and wires.' },
+  howto: { ko: ['도선: 단자를 클릭하면 도선이 들리고, 다른 단자를 클릭하면 이어집니다. 꽂힌 끝을 클릭하면 뽑아 다시 들고, 책상을 클릭하면 내려놓습니다',
+                '레이저 클릭: 켜기/끄기 · 편광자·큐벳·검광자: 옆에 놓인 것을 클릭하면 받침에 끼우기 / 다시 클릭하면 빼기',
+                '편광자 위에서 휠: 돌리기 · 검광자 바늘 좌우로 끌기(또는 휠): 각도기 위에서 돌리기 · 가변 저항 손잡이 휠/끌기: 저항 바꾸기',
+                '비커 클릭: 주사기에 그 용액 담기 · 주사기 클릭: 큐벳에 1 cm 더 · 버리는 비커 클릭: 큐벳 비우기 · 큐벳 클릭: 액체 기둥 눈금 가까이'],
+           en: ['Wires: click a terminal to take up a wire, click another to plug it in. Click a plugged end to pull it out; click the desk to put it down',
+                'Click the laser: on/off · polarizer, cuvette, analyzer: click the one lying beside to fit it on the holder / again to take it off',
+                'Wheel over the polarizer: turn it · drag the analyzer\'s needle left/right (or wheel): turn it over the protractor · potentiometer knob, wheel/drag: change its resistance',
+                'Click a beaker: fill the syringe with it · click the syringe: 1 cm more in the cuvette · click the waste beaker: empty the cuvette · click the cuvette: read the column\'s scale'] },
+  notePlaceholder: { ko: '예) U_CD = 664 mV; 부하 전압 1452 mV → I_SC = 14.5 mA … θ = 90° 0.09 mV, 95° 1.9 mV …', en: 'e.g. U_CD = 664 mV; load 1452 mV → I_SC = 14.5 mA … θ = 90° 0.09 mV, 95° 1.9 mV …' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    var IL0 = 14.6e-3 * (1 + S.sys('IL', 0.03)), nD = 3.3 * (1 + S.sys('n', 0.04)), Is = IL0 / (Math.exp(0.667 / (nD * 0.02585)) - 1), psiL = 25 + S.uni('psi', -15, 15), offA = S.uni('offA', -4, 4);
+    var kRot = 36 / (50 * 25) * (1 + S.sys('k', 0.03)), SOL = [{ c: 50, n: 'c₁ = 50' }, { c: 25, n: 'c₂ = 25' }, { c: 12.5, n: 'c₃ = 12.5' }, { c: 33 * (1 + S.sys('cx', 0.05)), n: 'cₓ' }];
+    var dm = LAB.dmm; dm.err = { V: S.sys('mV', 0.003), A: S.sys('mA', 0.006), R: 0 };
+    var leads = LAB.leads = new B3.Leads({ max: 8 }), c = LAB.c = new B3.Circuit();
+    var RANGES = [['OFF'], ['V', 0.2], ['V', 2], ['V', 20], ['A', 2e-3], ['A', 0.02], ['A', 0.2]];
+    var prot = (function () { var cv = document.createElement('canvas'); cv.width = cv.height = 300; cv._static = true; var g = cv.getContext('2d');
+      g.fillStyle = '#eef0f2'; g.beginPath(); g.arc(150, 150, 148, Math.PI, 2 * Math.PI); g.lineTo(298, 150); g.fill(); g.strokeStyle = '#222'; g.fillStyle = '#222'; g.font = '700 14px sans-serif'; g.textAlign = 'center';
+      for (var i = 0; i <= 180; i++) { var a = Math.PI + i * Math.PI / 180, r1 = i % 10 === 0 ? 118 : i % 5 === 0 ? 128 : 136; g.lineWidth = i % 10 === 0 ? 2 : 1;
+        g.beginPath(); g.moveTo(150 + Math.cos(a) * r1, 150 + Math.sin(a) * r1); g.lineTo(150 + Math.cos(a) * 146, 150 + Math.sin(a) * 146); g.stroke();
+        if (i % 10 === 0) g.fillText(String(i), 150 + Math.cos(a) * 104, 155 + Math.sin(a) * 104); }
+      return cv; })();
+    var colScale = B3.scaleTex(30, { width: 0.9, bg: '#f4f4ee', step: 0.1 });
+    var HX = -14, HZ = -4;                                     /* the vertical holder's axis */
+    var bench = B3.bench(host, {
+      aspect: 0.62, lang: ctx.lang, wheelIds: ['pol', 'an', 'pot'],
+      home: { yaw: -0.3, pitch: 0.55, k: 8.5, tx: 4, ty: 14, tz: 0 },
+      views: { prot: { yaw: 0, pitch: 1.4, k: 45, tx: HX, ty: 6, tz: HZ, title: { ko: '검광자와 각도기 (위에서)', en: 'The analyzer and protractor (from above)' } },
+               cuv: { yaw: 0, pitch: 0.05, k: 22, tx: HX, ty: 22, tz: HZ, title: { ko: '큐벳의 액체 기둥', en: 'The cuvette\'s column' } },
+               dmm: { yaw: 0, pitch: 1.35, k: 50, tx: 14, ty: 3.4, tz: 2, title: { ko: '멀티미터', en: 'Multimeter' } } },
+      frame: function (b) {
+        if (b.clicked('m:laser')) LAB.laser = !LAB.laser;
+        if (b.clicked('m:pol')) LAB.pol = !LAB.pol;
+        if (b.clicked('m:an')) LAB.an = !LAB.an;
+        if (b.clicked('m:cuv')) { if (b.view === 'cuv') {} else if (LAB.cuv && LAB.d > 0) b.go('cuv'); else LAB.cuv = !LAB.cuv; }
+        var wp = b.wheel('pol'); if (wp && LAB.pol) LAB.phiP = (LAB.phiP + wp + 360) % 180;
+        var ma = b.screenMoved('an'), wa = b.wheel('an'); if ((ma[0] || wa) && LAB.an) LAB.thA = Math.max(0, Math.min(180, LAB.thA + ma[0] * 0.5 + wa * 0.5));
+        var mp = b.screenMoved('pot'), wpt = b.wheel('pot'); if (mp[0] || wpt) LAB.x = Math.max(0, Math.min(1, LAB.x + mp[0] * 0.004 + wpt * 0.005));
+        for (var s = 0; s < 4; s++) if (b.clicked('m:sol' + s)) { LAB.syr = s; b.say('주사기에 ' + SOL[s].n, 'Syringe: ' + SOL[s].n); }
+        if (b.clicked('m:syr')) { if (!LAB.cuv) b.say('큐벳을 먼저 끼우세요.', 'Fit the cuvette first.'); else if (LAB.syr === undefined) b.say('비커를 먼저 고르세요.', 'Choose a beaker first.');
+          else { if (LAB.d > 0 && LAB.sol !== LAB.syr) b.say('다른 용액이 섞입니다 — 먼저 비우세요.', 'A different solution would mix — empty it first.'); else { LAB.sol = LAB.syr; LAB.d = Math.min(28, LAB.d + 1); } } }
+        if (b.clicked('m:waste')) LAB.d = 0;
+        /* light on the photodiode */
+        var I_L = 0;
+        if (LAB.laser) { var pol = LAB.pol ? 0.25 * (0.25 + 0.75 * Math.pow(Math.cos((LAB.phiP - psiL) * Math.PI / 180), 2)) : 1, ang = LAB.pol ? LAB.phiP : psiL;
+          var beta = LAB.cuv && LAB.d > 0 ? kRot * SOL[LAB.sol].c * LAB.d : 0, cuvT = LAB.cuv ? 0.92 : 1;
+          var an = 1; if (LAB.an) { var axA = LAB.thA + offA + 90, dth = (ang + beta - axA) * Math.PI / 180; an = LAB.pol ? 0.25 * (0.002 + Math.pow(Math.cos(dth), 2)) : 0.25 * (0.25 + 0.75 * Math.pow(Math.cos(dth), 2)); }
+          I_L = IL0 * pol * an * cuvT; }
+        B3.desk(-34, 40, -18, 20);
+        /* the vertical holder and what sits on it */
+        B3.box3(HX - 7, HX + 7, 0, 1, HZ - 7, HZ + 5, '#c9a878', { top: '#d8b888' });
+        B3.box3(HX - 0.6, HX + 0.6, 1, 40, HZ - 6, HZ - 4.8, '#c9a878');
+        B3.tex3(prot, 0, 0, 300, 150, [HX - 6, 5.2, HZ - 3], [12, 0, 0], [0, 0, 6], { id: 'c:prot' });
+        if (b.clicked('c:prot')) b.go('prot');
+        /* the board with the photodiode under the analyzer, its four terminals */
+        B3.box3(HX - 5, HX + 5, 1, 1.6, HZ + 0.5, HZ + 4.5, '#1f5a3a', { top: '#246b44' });
+        B3.cyl3('y', 1.6, 2.1, HX, HZ, 0.9, '#2a2d3a', { seg: 18, cap: I_L > 1e-4 ? '#5a4d8a' : '#3a3d4a' });
+        B3.box3(HX - 1.5, HX + 1.5, 1.0, 1.6, HZ - 1.4, HZ + 0.5, '#1f5a3a', { top: '#246b44' });
+        ['1', '2', '3', '4'].forEach(function (t, i) { leads.term(b, 'bd.' + t, [HX - 3.6 + i * 2.4, 1.6, HZ + 3.2], { col: i === 0 ? '#1b1b1b' : i === 1 ? '#c0392b' : '#d8d8d8', label: t, lc: '#e8e8e8' }); });
+        if (LAB.an) { B3.cyl3('y', 4.6, 5.6, HX, HZ, 1.3, 'rgba(60,60,70,.75)', { seg: 22, cap: 'rgba(40,40,50,.8)', id: 'm:an' });
+          var na = (LAB.thA) * Math.PI / 180; B3.cylAB([HX, 5.3, HZ], [HX - Math.cos(na) * 5.5, 5.3, HZ - Math.sin(na) * 5.5], 0.08, '#e3c48a', { seg: 6, id: 'm:an' }); }
+        else B3.cyl3('y', 0, 1, -24, 10, 1.3, 'rgba(60,60,70,.75)', { seg: 22, cap: 'rgba(40,40,50,.8)', id: 'm:an' });
+        if (LAB.cuv) { B3.cyl3('y', 10, 40 - 9, HX, HZ, 1.0, 'rgba(220,235,245,.35)', { seg: 18, caps: false, id: 'm:cuv' });
+          if (LAB.d > 0) B3.cyl3('y', 10.2, 10.2 + LAB.d * 0.6, HX, HZ, 0.95, 'rgba(225,215,170,.55)', { seg: 18, cap: 'rgba(235,225,180,.6)' });
+          B3.tex3(colScale, 0, 0, colScale.width, colScale.height, [HX + 1.05, 10.2 - 0.6 + 19.2, HZ - 0.45], [0, 0, 0.9], [0, -19.2, 0], { id: 'm:cuv' }); }
+        else B3.cyl3('y', 0, 12, -20, 13, 1.0, 'rgba(220,235,245,.4)', { seg: 18, caps: false, id: 'm:cuv' });
+        if (LAB.pol) { B3.cyl3('y', 32, 33, HX, HZ, 1.3, 'rgba(60,60,70,.75)', { seg: 22, cap: 'rgba(40,40,50,.8)', id: 'm:pol' });
+          var pa = LAB.phiP * Math.PI / 180; B3.line3([HX - Math.cos(pa) * 1.2, 33.02, HZ - Math.sin(pa) * 1.2], [HX + Math.cos(pa) * 1.2, 33.02, HZ + Math.sin(pa) * 1.2], '#e8e8e8', 1.5); }
+        else B3.cyl3('y', 0, 1, -28, 10, 1.3, 'rgba(60,60,70,.75)', { seg: 22, cap: 'rgba(40,40,50,.8)', id: 'm:pol' });
+        B3.cyl3('y', 34, 41, HX, HZ, 0.8, '#2b2f35', { seg: 16, cap: LAB.laser ? '#c0392b' : '#3b3f45', id: 'm:laser' });
+        if (LAB.laser) B3.line3([HX, 34, HZ], [HX, 2.1, HZ], 'rgba(255,40,40,.7)', 2);
+        /* battery, potentiometer, multimeter, beakers, syringe */
+        var cell = B3.cells(b, leads, 'bat', [0, 14], { n: 2, e: 1.5, r: 0.3 });
+        B3.box3(-4, 4, 0, 2, -14, -8, '#3a3f46', { top: '#474c55' });
+        B3.cyl3('y', 2, 3.6, 0, -11, 1.5, '#2b2f35', { seg: 20, cap: '#3a3f46', id: 'm:pot' });
+        var pa2 = (LAB.x - 0.5) * 4.5; B3.line3([0, 3.62, -11], [Math.sin(pa2) * 1.4, 3.62, -11 - Math.cos(pa2) * 1.4], '#f2f2f2', 2.5);
+        ['L', 'C', 'R'].forEach(function (t, i) { leads.term(b, 'pot.' + t, [-2.5 + i * 2.5, 2, -8.5], { col: '#b8b8b8', label: { L: 'P_left', C: 'P_center', R: 'P_right' }[t].replace('P_', ''), lc: '#e8e8e8', ls: 0.5 }); });
+        var m = B3.dmm(b, 'dmm', [14, 2], dm, leads, { ranges: RANGES });
+        SOL.forEach(function (so, i) { B3.cyl3('y', 0, 4, 22 + i * 3.6, 14, 1.4, 'rgba(225,215,170,.6)', { seg: 18, cap: 'rgba(235,225,180,.7)', id: 'm:sol' + i });
+          B3.text3([20.9 + i * 3.6, 4.02, 14.5], [1, 0, 0], [0, 0, -1], i < 3 ? String(so.c) : 'x', 0.7, '#333', { weight: '800' }); });
+        B3.cyl3('y', 0, 4, 36, 6, 1.6, 'rgba(200,205,210,.5)', { seg: 18, cap: 'rgba(210,215,220,.5)', id: 'm:waste' });
+        B3.cylAB([24, 1.0, 6], [31, 1.0, 6], 0.9, 'rgba(230,236,240,.85)', { seg: 14, id: 'm:syr' });
+        if (LAB.syr !== undefined) B3.cylAB([24.2, 1.0, 6], [28, 1.0, 6], 0.8, 'rgba(225,215,170,.8)', { seg: 14 });
+        /* the circuit */
+        c.reset();
+        c.R('bd.2', 'pd.j', 20); c.D('pd.j', 'bd.1', { Is: Is, n: nD, Gl: 1e-11, Rs: 0.5 }); c.I('pd.j', 'bd.1', I_L); c.R('pd.j', 'bd.1', 9e3);
+        c.join('bd.2', 'bd.3'); c.R('bd.3', 'bd.4', 100);
+        c.R('pot.L', 'pot.C', Math.max(1, LAB.x * 22e3)); c.R('pot.C', 'pot.R', Math.max(1, (1 - LAB.x) * 22e3));
+        cell.stamp(c); m.stamp(c); leads.wire(c); c.solve(0.05); m.read(c);
+        leads.draw(b);
+        b.views.cuv.ty = 10 + LAB.d * 0.3 + 2;
+        LAB.state = { IL: I_L, Ud: c.V_('bd.2') - c.V_('bd.1'), Ur: c.V_('bd.3') - c.V_('bd.4'), read: dm.now };
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
+  }
+};
+</script>
+<script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
+<script src="consolesim.js"></script>
+  <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
+</body>
+</html>
