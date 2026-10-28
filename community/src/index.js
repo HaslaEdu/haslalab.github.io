@@ -499,7 +499,7 @@ const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 
 export default {
   async fetch(req, env) {
     // tests only: a short exam clock (the deployed Worker never sets these)
-    if (env.LAB_TEST_EXAM_SEC) { LAB.examSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; }
+    if (env.LAB_TEST_EXAM_SEC) { LAB.examSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; LAB.retrySec = +env.LAB_TEST_RETRY_SEC || LAB.retrySec; }
     const cors = corsHeaders(req, env);
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
@@ -872,7 +872,7 @@ async function arena(p, m, body, me, req, env, url) {
  * the same session and spends nothing; a user has at most one exam open
  * (a unique index), so two starts at once cannot spend twice.
  */
-const LAB = { examSec: 5 * 3600, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, ocrPerDay: 150, staleSec: 300 };
+const LAB = { examSec: 5 * 3600, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, ocrPerDay: 150, staleSec: 300, retrySec: 120 };
 const LAB_SCHEMA = JSON.parse(JSON.stringify(SCORE_SCHEMA));
 LAB_SCHEMA.properties.scores.items.properties.got = { type: "number" };          // olympiad marks come in tenths
 const LAB_TASK_RE = /^[A-Z][A-Za-z0-9]{0,3}$/;
@@ -910,12 +910,14 @@ async function labAdvance(env, s) {
   if (s && ((s.status === "scanning" && t > s.scan_until + LAB.graceSec) || (s.status === "grading" && s.submitted_at < t - LAB.staleSec)))
     s = await labFinalize(env, s, s.lang);
   /* a grading that failed (the model did not answer) is tried again by itself: three times, two minutes apart */
-  const d = s && s.status === "error" && s.detail ? JSON.parse(s.detail) : null;
-  if (d && (d.tries || 0) < 3 && t - (d.at || 0) > 120) {
-    const r = await env.DB.prepare("UPDATE lab_sessions SET status='grading' WHERE id=? AND status='error'").bind(s.id).run();
+  /* also an experiment left waiting because its solution could not be fetched then */
+  const d = s && (s.status === "error" || s.status === "pending") && s.detail ? JSON.parse(s.detail) : null;
+  const again = x => x && (x.status === "error" || (x.status === "pending" && x.why === "no_solution") || (x.status === "empty" && x.points == null));
+  if (d && (d.tries || 0) < 3 && t - (d.at || 0) > LAB.retrySec && Object.values(d.tasks || {}).some(x => x.status === "error" || (x.status === "pending" && x.why === "no_solution"))) {
+    const r = await env.DB.prepare("UPDATE lab_sessions SET status='grading' WHERE id=? AND status IN ('error','pending')").bind(s.id).run();
     if (r.meta.changes) {
       const tasks = JSON.parse(s.tasks), per = d.tasks || {};
-      for (const k of tasks) if (per[k] && per[k].status === "error") delete per[k];
+      for (const k of tasks) if (again(per[k])) delete per[k];
       s = await labGradeAll(env, { ...s, status: "grading", detail: JSON.stringify({ ...d, tasks: per }) }, s.lang, null, tasks.filter(k => !per[k]));
     }
   }
@@ -962,7 +964,10 @@ function labPrompt(s, task, rb, rubric, answer, lang) {
  * whose page or value is not among what was read is 0 (R9).  The model's own mark is used only for derivations
  * and other items.  A strict invigilator: what cannot be read scores nothing (R10), and nobody re-reads it.
  */
-const LAB_PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
+/* the solution PDFs, straight from the GitHub release they live in (a Worker may not fetch another Worker of the same
+   account by its workers.dev address, so the PDF Worker cannot be asked); the release is named after the file's prefix */
+const solUrl = (env, name) => env.LAB_PDF_BASE ? env.LAB_PDF_BASE + name
+  : `https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-${name.split("_")[0].toLowerCase()}/${name}`;
 const LAB_REG = { version: "2026-10-28", rules: [
   { id: "R1", en: "A final answer counts only if it is written in its box on an official answer sheet. A value that appears only on a working sheet earns at most the method marks the scheme gives for it.", ko: "최종 답은 공식 답안지의 해당 칸에 쓴 것만 인정합니다. 연습지에만 있는 값은 기준표가 정한 풀이 점수까지만 받습니다." },
   { id: "R2", en: "When the answer sheet and a working sheet disagree, the answer sheet governs.", ko: "답안지와 연습지가 다르면 답안지를 따릅니다." },
@@ -1026,13 +1031,15 @@ async function labScheme(env, s, task) {
   if (!src || !SOL_RE.test(src)) return null;
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, src).first();
   if (kept) return JSON.parse(kept.scheme);
-  const base = env.LAB_PDF_BASE || LAB_PDF_BASE;
-  let res = null;
-  for (const name of [...new Set([src.replace(/_KO\.pdf$/, ".pdf"), src])]) {
-    const r = await fetch(base + name, { signal: AbortSignal.timeout(30000) });
+  let res = null, missing = 0;
+  const names = [...new Set([src.replace(/_KO\.pdf$/, ".pdf"), src])];
+  for (const name of names) {
+    const r = await fetch(solUrl(env, name), { redirect: "follow", signal: AbortSignal.timeout(30000) });
     if (r.ok) { res = new Uint8Array(await r.arrayBuffer()); break; }
+    if (r.status === 404) missing++; else console.error("lab solution", name, r.status);
   }
-  if (!res) return null;
+  if (!res && missing === names.length) return null;                 // there is no such solution
+  if (!res) throw new Error("solution not fetched");                  // a passing failure: graded again later
   if (res.length > 15e6) throw new Error("solution too large");
   const out = await gemini(env, [
     { text: [`[TASK: build marking scheme] This is the official solution of experimental problem ${task} of ${s.comp.toUpperCase()} ${s.year}; it contains the official marking scheme.`,
@@ -1182,7 +1189,13 @@ function labTotal(tasks, per) {
   return { status, score: +score.toFixed(2), points: points || null };
 }
 async function labGradeAll(env, s, lang, only, list) {
-  const tasks = JSON.parse(s.tasks), pages = await labPagesOf(env, s.id);
+  const tasks = JSON.parse(s.tasks);
+  let pages = await labPagesOf(env, s.id);
+  if (new Set(pages.map(p => p.no)).size !== pages.length) {          // pages stored before numbers were given atomically: number them by arrival
+    const byId = [...pages].sort((a, b) => a.id - b.id);
+    await env.DB.batch(byId.map((p, i) => env.DB.prepare("UPDATE lab_pages SET no=? WHERE id=?").bind(i + 1, p.id)));
+    pages = await labPagesOf(env, s.id);
+  }
   const rbs = (await env.DB.prepare("SELECT * FROM lab_rubrics WHERE exam_key=?").bind(s.exam_key).all()).results;
   const prev = s.detail ? JSON.parse(s.detail) : {}, per = prev.tasks || {};
   await Promise.all(tasks.filter(t => list ? list.includes(t) : !only || only === t).map(async t => { per[t] = await labGradeTask(env, s, t, pages, rbs.find(r => r.task === t), lang); }));
@@ -1190,7 +1203,8 @@ async function labGradeAll(env, s, lang, only, list) {
 }
 async function labSave(env, s, tasks, per, tries) {
   const tot = labTotal(tasks, per), t = now();
-  const detail = { tasks: per, at: t, tries: tot.status === "error" ? (tries || 0) + 1 : tries || 0 };
+  const retry = tot.status === "error" || Object.values(per).some(x => x && x.status === "pending" && x.why === "no_solution");
+  const detail = { tasks: per, at: t, tries: retry ? (tries || 0) + 1 : tries || 0 };
   await env.DB.prepare("UPDATE lab_sessions SET status=?,score=?,points=?,detail=?,graded_at=? WHERE id=?")
     .bind(tot.status, tot.status === "graded" ? tot.score : null, tot.points, JSON.stringify(detail), tot.status === "graded" ? t : null, s.id).run();
   return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
@@ -1275,9 +1289,13 @@ async function lab(p, m, body, me, req, env, url) {
         text = o.text; conf = o.confidence; status = "done";
       } catch (e) { console.error("lab ocr", e && (e.code || e.message)); status = "failed"; }
     }
-    const res = await env.DB.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_conf,ocr_status,text,read,legible,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)")
-      .bind(s.id, cnt.last + 1, tk, kd, mime, buf, text, conf, status, text, read, legible, t).run();
-    return { id: res.meta.last_row_id, no: cnt.last + 1, task: tk, kind: kd, ocr_status: status, legible, items: read ? JSON.parse(read).items.length : 0,
+    /* the page number is given in the same statement that stores the page: pages read at the same time
+       (a phone sending several, two phones) cannot get the same number */
+    const res = await env.DB.prepare(`INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_conf,ocr_status,text,read,legible,created_at)
+      SELECT ?,COALESCE(MAX(no),0)+1,?,?,?,?,?,?,?,?,?,?,? FROM lab_pages WHERE session_id=?`)
+      .bind(s.id, tk, kd, mime, buf, text, conf, status, text, read, legible, t, s.id).run();
+    const no = (await env.DB.prepare("SELECT no FROM lab_pages WHERE id=?").bind(res.meta.last_row_id).first()).no;
+    return { id: res.meta.last_row_id, no, task: tk, kind: kd, ocr_status: status, legible, items: read ? JSON.parse(read).items.length : 0,
       chars: text ? text.length : 0, moved: tk !== task || kd !== kind };
   }
   if ((r = /^\/api\/lab\/up\/(\d+)\/pages\/(\d+)$/.exec(p)) && m === "DELETE") {

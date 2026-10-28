@@ -9,6 +9,7 @@
 //                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
 //   anything else                 the old text grader: half marks with a quote from the answer
 import http from "node:http";
+const flaky = new Set();
 const OCR_TEXT = "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nE1 A.2 lambda = 395 W/(m K)";
 const SCHEME = { points: 3.5, unit_rule: "a missing unit loses the mark", items: [
   { id: "A.1", points: 0.4, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 105, full_max: 111, partial: [{ min: 100, max: 115, points: 0.2 }] },
@@ -32,6 +33,7 @@ http.createServer(async (req, res) => {
   if (req.url.startsWith("/pdf/")) {
     const name = decodeURIComponent(req.url.slice(5));
     if (/missing|_KO\.pdf$/.test(name)) { res.statusCode = 404; return res.end("nope"); }   // only the English originals exist here
+    if (/flaky/.test(name) && !flaky.has(name)) { flaky.add(name); res.statusCode = 502; return res.end("bad gateway"); }   // fails once, then works
     res.setHeader("Content-Type", "application/pdf"); return res.end("%PDF-1.4 fake solution " + name);
   }
   if (req.url.includes(":generateContent")) {
