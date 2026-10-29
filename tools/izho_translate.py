@@ -44,9 +44,11 @@ def resolve_source(data):
     return source
 
 
-def extract(source: Path, folder: Path):
+def extract(source: Path, folder: Path, pages=None):
     folder.mkdir(parents=True, exist_ok=True)
     doc = fitz.open(source)
+    if pages is not None:
+        doc.select(pages)
     entries = []
     for pi, page in enumerate(doc):
         for bi, block in enumerate(page.get_text("dict")["blocks"]):
@@ -96,6 +98,8 @@ def extract(source: Path, folder: Path):
                             "size": base, "source": text, "math": maths,
                             "ko": ""})
     out = {"source": str(source.resolve()), "entries": entries}
+    if pages is not None:
+        out["source_pages"] = pages
     (folder / "translation.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf8")
     print(f"Extracted {len(entries)} prose regions into {folder}")
 
@@ -108,6 +112,9 @@ def build(folder: Path, target: Path):
     source = resolve_source(data)
     doc = fitz.open(source)
     original = fitz.open(source)
+    if data.get("source_pages") is not None:
+        doc.select(data["source_pages"])
+        original.select(data["source_pages"])
     # Stored crop rectangles allow a clean checkout to recreate absent inline-math PNGs.
     for e in data["entries"]:
         for math in e.get("math", []):
@@ -158,6 +165,18 @@ def build(folder: Path, target: Path):
             rect = fitz.Rect(keep["rect"])
             page.draw_rect(rect, color=None, fill=(1, 1, 1))
             page.show_pdf_page(rect, original, pi, clip=rect)
+        if data.get("preserve_all_math"):
+            for block in original[pi].get_text("dict")["blocks"]:
+                if block["type"] != 0:
+                    continue
+                spans = [s for line in block["lines"] for s in line["spans"]]
+                words = re.findall(r"[A-Za-z]{2,}", " ".join(s["text"] for s in spans))
+                if any(s["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")) for s in spans) and all(
+                    w.lower() in {"sin", "cos", "tan", "exp", "ln", "log", "const", "max", "min", "mol", "mole", "dpt", "pa", "kg", "cm", "mm", "km"} for w in words
+                ):
+                    rect = fitz.Rect(block["bbox"])
+                    page.draw_rect(rect, color=None, fill=(1, 1, 1))
+                    page.show_pdf_page(rect, original, pi, clip=rect)
         # Preserve the rule beneath the original competition header.
         if data.get("header_rule"):
             page.draw_line((36, 49.5), (562.4, 49.5), color=(0, 0, 0), width=.5)
@@ -174,7 +193,13 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest="command", required=True)
     ex = sub.add_parser("extract"); ex.add_argument("source", type=Path); ex.add_argument("folder", type=Path)
+    ex.add_argument("--pages", help="Inclusive one-based page range, e.g. 1-6 for an English section")
     bu = sub.add_parser("build"); bu.add_argument("folder", type=Path); bu.add_argument("target", type=Path)
     a = p.parse_args()
-    if a.command == "extract": extract(a.source, a.folder)
+    if a.command == "extract":
+        pages = None
+        if a.pages:
+            first, last = map(int, a.pages.split("-"))
+            pages = list(range(first-1, last))
+        extract(a.source, a.folder, pages)
     else: build(a.folder, a.target)

@@ -170,6 +170,11 @@ def korean(out, bad):
                 if part == rev_at and rev:
                     ko['rev'] = rev
                 if part in t['f']:
+                    # A diagram/layout edition can accompany the Korean
+                    # translation while the source manifest keeps the original.
+                    if en:
+                        t['f'][part].update({k: v for k, v in en.items()
+                                             if k in ('paper', 'sol', 'mark', 'answer') and v})
                     t['f'][part]['ko'] = ko
                 elif part == 'T':
                     t['w'] = ko           # the whole paper in Korean, where the site lists only its problems

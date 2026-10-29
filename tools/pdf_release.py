@@ -8,10 +8,11 @@ name before the first underscore in lower case (IPhO_2025_E1_EN.pdf -> pdf-ipho)
 A release holds at most about 1,000 assets; the largest competition has 244.
 The Worker in pdf-worker/ serves them back as https://.../pdf/<name>.
 
-Safe to run again: a file already uploaded with the same size is skipped, and
-one whose size changed (a slimmed copy, a fixed translation) is replaced.
+Safe to run again: a file already uploaded with the same SHA-256 digest is
+skipped. Changed translations are replaced even if their byte count is equal.
 The GitHub token is the one git already uses to push (git credential fill).
 """
+import hashlib
 import json
 import os
 import re
@@ -93,7 +94,8 @@ def main(folders):
         rel, assets = release(tag)
         size = os.path.getsize(path)
         old = assets.get(name)
-        if old and old['size'] == size and old['state'] == 'uploaded':
+        digest = 'sha256:' + hashlib.sha256(open(path, 'rb').read()).hexdigest()
+        if old and old['size'] == size and old['state'] == 'uploaded' and old.get('digest') == digest:
             same += 1
             continue
         if old:
