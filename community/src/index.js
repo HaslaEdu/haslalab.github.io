@@ -527,7 +527,7 @@ export default {
 const worker = {
   async fetch(req, env) {
     // tests only: a short exam clock (the deployed Worker never sets these)
-    if (env.LAB_TEST_EXAM_SEC) { LAB.examSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; LAB.retrySec = +env.LAB_TEST_RETRY_SEC || LAB.retrySec; }
+    if (env.LAB_TEST_EXAM_SEC) { LAB.testSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; LAB.retrySec = +env.LAB_TEST_RETRY_SEC || LAB.retrySec; }
     const cors = corsHeaders(req, env);
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
@@ -552,7 +552,8 @@ const worker = {
     /* lists that look the same to every visitor who is not signed in are kept at the edge for a
        few seconds, so a busy board is served without touching the database; signed-in users
        (who see their own votes and posts at once) always get a fresh answer */
-    const shared = req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
+    /* /api/health is the same for everyone, signed in or not */
+    const shared = req.method === "GET" && ((!req.headers.get("Authorization") && SHARED_GET.test(url.pathname)) || url.pathname === "/api/health");
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
     if (shared) { const hit = await caches.default.match(ckey);
       if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Edge-Cache": "hit", ...cors } }); }
@@ -883,7 +884,7 @@ async function arena(p, m, body, me, req, env, url) {
 
 /* ══ v8: exam mode for the experiments ═══════════════════════════════════
  * The site runs a year's experiments (E1 and E2 on one long bench, out of one
- * kit) for five hours, then switches them off and gives thirty minutes to
+ * kit) for the exam's time (labExamSec), then switches them off and gives thirty minutes to
  * photograph the answer sheets and working sheets.  The computer opens a
  * session here and shows a QR code holding the session id and a one-off
  * upload token; the phone sends each straightened page with that token (no
@@ -896,13 +897,13 @@ async function arena(p, m, body, me, req, env, url) {
  * arrived are submitted as they stand.
  * Only signed-in users sit it, and a start costs one exam token
  * (users.exam_tokens, every change in lab_ledger).  The server keeps the
- * clock: a session is 'running' from started_at for five hours, then
+ * clock: a session is 'running' from started_at for labExamSec, then
  * 'scanning' for thirty minutes, whoever looks at it and whenever.  Coming
  * back to a running exam (another tab, a reload, another computer) returns
  * the same session and spends nothing; a user has at most one exam open
  * (a unique index), so two starts at once cannot spend twice.
  */
-const LAB = { examSec: 5 * 3600, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, ocrPerDay: 150, staleSec: 300, retrySec: 120 };
+const LAB = { testSec: 0, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, ocrPerDay: 150, staleSec: 300, retrySec: 120 };
 const LAB_SCHEMA = JSON.parse(JSON.stringify(SCORE_SCHEMA));
 LAB_SCHEMA.properties.scores.items.properties.got = { type: "number" };          // olympiad marks come in tenths
 const LAB_TASK_RE = /^[A-Z][A-Za-z0-9]{0,3}$/;
@@ -966,8 +967,9 @@ async function scanOne(env, pv, img) {
 const scanBench = (env, img) => Promise.all(scanProviders(env).map(pv => scanOne(env, pv, img)));
 
 async function labReady(env) {
-  if (!LAB_READY) { try { await env.DB.prepare("SELECT exam_tokens FROM users LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_sessions LIMIT 0").all();
-    await env.DB.prepare("SELECT read FROM lab_pages LIMIT 0").all(); await env.DB.prepare("SELECT 1 FROM lab_schemes LIMIT 0").all(); LAB_READY = true; } catch (e) {} }
+  /* one round trip: every table and column exam mode needs (a failing statement fails the batch) */
+  if (!LAB_READY) { try { await env.DB.batch(["SELECT exam_tokens FROM users LIMIT 0", "SELECT 1 FROM lab_sessions LIMIT 0",
+    "SELECT read FROM lab_pages LIMIT 0", "SELECT 1 FROM lab_schemes LIMIT 0"].map(q => env.DB.prepare(q))); LAB_READY = true; } catch (e) {} }
   return LAB_READY;
 }
 
@@ -997,14 +999,32 @@ async function labByToken(req, env, id) {
     throw new HttpError(410, "scan_over");                                                        // scanning ended: the link was destroyed
   throw new HttpError(403, "bad_token");
 }
+/* how long an exam lasts — the same table as examdur.js on the site (keep the two alike): five hours as
+   at IPhO; OPhO and the USAPhO 2022 selection test three hours; RMPh 4 h 30 min (its contest day); NBPhO the
+   year's competition time shared over its problems, times the experiments sat (no time is published for
+   the experiments alone; one 5-hour round in 2003–2005 and online in 2020–2021, two rounds otherwise) */
+const NBPHO_TIME = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600, 8], 2007: [600, 8], 2008: [600, 10],
+  2009: [600, 10], 2010: [600, 11], 2011: [600, 9], 2012: [600, 10], 2013: [600, 10], 2014: [600, 10], 2015: [600, 10],
+  2016: [600, 10], 2017: [600, 10], 2018: [600, 9], 2019: [600, 8], 2020: [300, 5], 2021: [300, 4], 2022: [600, 9],
+  2023: [600, 9], 2024: [600, 10], 2025: [600, 9], 2026: [600, 10] };
+function labExamSec(comp, year, n) {
+  if (LAB.testSec) return LAB.testSec;
+  n = Math.max(1, n || 1);
+  if (comp === "opho") return 3 * 3600;
+  if (comp === "usapho" && +year === 2022) return 3 * 3600;
+  if (comp === "rmph") return 4.5 * 3600;
+  if (comp === "nbpho" && NBPHO_TIME[year]) return Math.round(NBPHO_TIME[year][0] / NBPHO_TIME[year][1] * n) * 60;
+  return 5 * 3600;
+}
+const labDur = s => labExamSec(s.comp, s.year, JSON.parse(s.tasks).length);
 const labOpen = (s, t) => s.status === "scanning" && t <= s.scan_until + LAB.graceSec;
 const labGet = (env, id) => env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first();
-/* move a session along the clock: five hours after the start the bench goes dark, thirty minutes later what
+/* move a session along the clock: when the exam's time is up the bench goes dark, thirty minutes later what
    arrived is submitted.  Every step is a conditional UPDATE, so callers racing each other agree. */
 async function labAdvance(env, s) {
   const t = now();
-  if (s && s.status === "running" && t >= s.started_at + LAB.examSec) {
-    const end = s.started_at + LAB.examSec;
+  if (s && s.status === "running" && t >= s.started_at + labDur(s)) {
+    const end = s.started_at + labDur(s);
     await env.DB.prepare("UPDATE lab_sessions SET status='scanning',ended_at=?,scan_until=? WHERE id=? AND status='running'").bind(end, end + LAB.scanSec, s.id).run();
     s = await labGet(env, s.id);
   }
@@ -1030,7 +1050,7 @@ const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,ocr,ocr_c
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
-    exam_sec: LAB.examSec, scan_sec: LAB.scanSec, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
+    exam_sec: labDur(s), scan_sec: LAB.scanSec, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     regulation: LAB_REG,
     pages: pages && pages.map(p => ({ id: p.id, no: p.no, task: p.task, kind: p.kind, ocr_status: p.ocr_status, ocr_conf: p.ocr_conf,
       text: p.text ?? p.ocr ?? "", edited: p.edited, legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
@@ -1695,7 +1715,7 @@ async function lab(p, m, body, me, req, env, url) {
       if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
-    const token = labScanCode();
+    const token = labScanCode(), dur = labExamSec(comp, year, tasks.length);
     /* one transaction: the session is written only if a token is left, the token is taken only for a session
        written by this very call (charged=0), and the unique index on open sessions makes a second start at
        the same moment fail as a whole, spending nothing */
@@ -1703,7 +1723,7 @@ async function lab(p, m, body, me, req, env, url) {
       await env.DB.batch([
         env.DB.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,lang,entry,sources,started_at,ended_at,scan_until,upload_hash,status,charged,created_at)
           SELECT ?,?,?,?,?,?,?,?,?,?,?,?,'running',0,? WHERE (SELECT exam_tokens FROM users WHERE id=?) > 0`)
-          .bind(me.id, key, comp, year, JSON.stringify(tasks), lang, entry, JSON.stringify(sources), t, t + LAB.examSec, t + LAB.examSec + LAB.scanSec, await sha256(token), t, me.id),
+          .bind(me.id, key, comp, year, JSON.stringify(tasks), lang, entry, JSON.stringify(sources), t, t + dur, t + dur + LAB.scanSec, await sha256(token), t, me.id),
         env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,session_id,created_at) SELECT user_id,-1,'start',id,? FROM lab_sessions WHERE user_id=? AND status='running' AND charged=0").bind(t, me.id),
         env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens-1 WHERE id=? AND exam_tokens>0 AND EXISTS(SELECT 1 FROM lab_sessions WHERE user_id=? AND status='running' AND charged=0)").bind(me.id, me.id),
         env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE user_id=? AND status='running' AND charged=0").bind(me.id),
@@ -1727,7 +1747,7 @@ async function lab(p, m, body, me, req, env, url) {
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/finish$/.exec(p)) && m === "POST") {     // finish early: the bench goes dark now
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status === "running") {
-      const end = Math.min(t, s.started_at + LAB.examSec);
+      const end = Math.min(t, s.started_at + labDur(s));
       await env.DB.prepare("UPDATE lab_sessions SET status='scanning',ended_at=?,scan_until=? WHERE id=? AND status='running'").bind(end, end + LAB.scanSec, s.id).run();
       s = await labGet(env, s.id);
     }

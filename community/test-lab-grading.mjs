@@ -88,7 +88,7 @@ ok(par.every(([st]) => st === 200) && new Set(nos).size === 5 && nos.join() === 
 ok(j.session.status === "error" && j.session.detail.tasks.E1.why === "scheme_failed", "solution fetch failed → error (not «no solution») " + j.session.status);
 await sleep(3500);                                                  // the retry waits more than LAB_TEST_RETRY_SEC (2) whole seconds
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, M);
-ok(j.session.status === "graded" && j.session.detail.tasks.E1.status === "graded" && j.session.detail.tries === 1, "…and graded by itself on the next look " + JSON.stringify([j.session.status, j.session.detail.tries]));
+ok(j.session.status === "graded" && j.session.detail.tasks.E1.status === "graded" && j.session.detail.tries === 1, "…and graded by itself on the next look " + JSON.stringify([j.session.status, j.session.detail.tries, j.session.detail.tasks.E1]));
 /* R11: measured tables and graphs need enough measurements — the scheme's number, else 3 / 5 / 7 for an experiment
    that needs few, a medium number or many points.  The page read has 4 rows in each table and 6 points on the graph */
 const Q = await sign("grE");

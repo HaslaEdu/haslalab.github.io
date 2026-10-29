@@ -3,6 +3,7 @@
 
      PROGRAM = { title, subtitle, notes: [...], run: async function (term) {...},
                  lab: { ... } }            // optional, see below
+   A page with no run (no original program) is experiment mode only: the bench, without the CMD tab.
 
    CMD mode drives the screen through term.write / term.writeln / term.ask, so the prompts and the
    streamed output land on screen exactly as the original executable prints them; what is typed
@@ -110,7 +111,7 @@
         (notes && notes.length
           ? '<details><summary>' + UI[lang].about + '</summary><ul>' + notes.map(function (n) { return '<li>' + n + '</li>'; }).join('') + '</ul></details>'
           : '') +
-        (lab ? '<nav class="modes"><button data-m="cmd">' + UI[lang].cmd + '</button><button data-m="lab">' + UI[lang].lab + '</button></nav>' : '');
+        (lab && PROGRAM.run ? '<nav class="modes"><button data-m="cmd">' + UI[lang].cmd + '</button><button data-m="lab">' + UI[lang].lab + '</button></nav>' : '');
       head.querySelectorAll('.lb button').forEach(function (b) { b.classList.toggle('on', b.dataset.l === lang); b.onclick = function () { setLang(b.dataset.l); }; });
       head.querySelectorAll('.modes button').forEach(function (b) { b.classList.toggle('on', b.dataset.m === mode); b.onclick = function () { setMode(b.dataset.m); }; });
       var full = document.getElementById('hl-full'); if (full && full.parentNode !== document.body) head.querySelector('.lang').appendChild(full);
@@ -168,14 +169,14 @@
       var t = live;
       Promise.resolve(PROGRAM.run(t)).catch(function (err) { t.writeln('\n[' + err.message + ']'); });
     }
-    start();
+    if (PROGRAM.run) start(); else cmd.hidden = true;
 
     /* ---- experiment mode ---- */
     if (lab) {
       buildLab();
       var want = new URLSearchParams(location.search).get('mode');
       if (!want) { try { want = localStorage.getItem('hl-mode:' + location.pathname); } catch (e) {} }
-      setMode(want === 'lab' || want === 'sim' ? 'lab' : 'cmd');
+      setMode(!PROGRAM.run || want === 'lab' || want === 'sim' ? 'lab' : 'cmd');
     }
   });
 

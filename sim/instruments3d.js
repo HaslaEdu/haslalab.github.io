@@ -382,4 +382,312 @@
     const top = 1.2 + 1.35;
     return { in1: [T.in1[0], top, T.in1[1]], in2: [T.in2[0], top, T.in2[1]], out1: [T.out1[0], top, T.out1[1]], out2: [T.out2[0], top, T.out2[1]] };
   };
+
+  /* ---------- circuits: what the leads join, solved by nodal analysis every frame ----------
+     c = new B3.Circuit(); c.R(a, b, ohm); c.C(a, b, farad, key); c.V(a, b, emf, rint)  (a is +);
+     c.D(a, b, {Is, n, Vz, Rz, Gl, Rs})  (a is the anode; Vz for a Zener's reverse breakdown, Gl its leakage);
+     c.I(a, b, amp)  (driven from b to a inside).  Terminal names are strings; c.join(x, y) shorts two of them.
+     c.solve(dt) → node voltages; c.V_(t) the voltage of a terminal, c.cur(el) the current through an element (a→b inside).
+     Capacitors keep their charge between frames under their key. */
+  B3.Circuit = function (){ this.mem = {}; this.reset(); };
+  B3.Circuit.prototype.reset = function (){ this.els = []; this.joins = []; };
+  B3.Circuit.prototype.R = function (a, b, R){ const e = { k: 'R', a, b, R }; this.els.push(e); return e; };
+  B3.Circuit.prototype.C = function (a, b, C, key){ const e = { k: 'C', a, b, C, key: key || a + '|' + b }; this.els.push(e); return e; };
+  B3.Circuit.prototype.V = function (a, b, E, R){ const e = { k: 'V', a, b, E, R: R || 1e-3 }; this.els.push(e); return e; };
+  /* a diode a → b; its bulk resistance Rs sits in series on an inner node of its own */
+  B3.Circuit.prototype.D = function (a, b, o){
+    const e = Object.assign({ k: 'D', a, b, Is: 1e-12, n: 1.8, Gl: 1e-9, Rs: 1 }, o || {});
+    if (e.Rs > 0){ const mid = '_d' + this.els.length; e.rs = this.R(a, mid, e.Rs); e.j = mid; }
+    this.els.push(e); return e; };
+  B3.Circuit.prototype.I = function (a, b, I){ const e = { k: 'I', a, b, I }; this.els.push(e); return e; };
+  B3.Circuit.prototype.join = function (a, b){ this.joins.push([a, b]); };
+  B3.Circuit.prototype.solve = function (dt){
+    dt = Math.max(1e-6, dt || 0.02);
+    const par = {}, find = x => { while (par[x] !== undefined && par[x] !== x) x = par[x]; return x; };
+    const add = x => { if (par[x] === undefined) par[x] = x; };
+    for (const e of this.els){ add(e.a); add(e.b); }
+    for (const [a, b] of this.joins){ add(a); add(b); const ra = find(a), rb = find(b); if (ra !== rb) par[ra] = rb; }
+    const idx = {}; let n = 0; for (const k in par){ const r = find(k); if (idx[r] === undefined) idx[r] = n++; }
+    this.node = t => par[t] === undefined ? -1 : idx[find(t)];
+    const VT = 0.02585, mem = this.mem;
+    /* the separate circuits (what the elements and leads connect), each needs one reference node */
+    const cp = Array.from({ length: n }, (_, i) => i), cf = x => { while (cp[x] !== x) x = cp[x] = cp[cp[x]]; return x; };
+    for (const e of this.els){ const a = this.node(e.a), b = this.node(e.b); if (a >= 0 && b >= 0) cp[cf(a)] = cf(b); }
+    const refs = [...new Set(Array.from({ length: n }, (_, i) => cf(i)))];
+    let v = new Float64Array(n); if (this.vlast && this.vlast.length === n) v.set(this.vlast);
+    for (let it = 0; it < 40; it++){
+      const G = Array.from({ length: n }, () => new Float64Array(n)), I = new Float64Array(n);
+      for (let i = 0; i < n; i++) G[i][i] += 1e-12;
+      for (const r of refs) G[r][r] += 1;                                 /* one node of each separate circuit held at 0 V */
+      const st = (a, b, g) => { if (a >= 0) G[a][a] += g; if (b >= 0) G[b][b] += g; if (a >= 0 && b >= 0){ G[a][b] -= g; G[b][a] -= g; } };
+      const src = (a, b, i) => { if (a >= 0) I[a] += i; if (b >= 0) I[b] -= i; };          /* i pushed into a, out of b */
+      for (const e of this.els){
+        const a = this.node(e.a), b = this.node(e.b);
+        if (e.k === 'R') st(a, b, 1 / Math.max(1e-9, e.R));
+        else if (e.k === 'V'){ const g = 1 / e.R; st(a, b, g); src(a, b, e.E * g); }
+        else if (e.k === 'I') src(a, b, e.I);
+        else if (e.k === 'C'){ const g = e.C / dt, v0 = mem[e.key] || 0; st(a, b, g); src(a, b, g * v0); }
+        else if (e.k === 'D'){
+          const ja = e.j ? this.node(e.j) : a;                          /* the junction, behind its series resistance */
+          let vd = (ja >= 0 ? v[ja] : 0) - (b >= 0 ? v[b] : 0); const nv = e.n * VT, vmax = nv * Math.log(10 / e.Is + 1); vd = Math.min(vd, vmax);
+          let id = e.Is * (Math.exp(vd / nv) - 1), gd = e.Is / nv * Math.exp(vd / nv);
+          if (e.Vz && vd < -e.Vz){ id += (vd + e.Vz) / (e.Rz || 5); gd += 1 / (e.Rz || 5); }
+          id += e.Gl * vd; gd += e.Gl;
+          st(ja, b, gd); src(ja, b, -(id - gd * vd));
+        }
+      }
+      const x = gaussSolve(G, I); if (!x) break;
+      let dv = 0; for (let i = 0; i < n; i++){ const d = x[i] - v[i]; dv = Math.max(dv, Math.abs(d)); v[i] = v[i] + Math.max(-0.5, Math.min(0.5, d)); }
+      if (dv < 1e-7) break;
+    }
+    this.vlast = v; this.v = v;
+    for (const e of this.els) if (e.k === 'C') mem[e.key] = this.vd(e);
+    return v;
+  };
+  B3.Circuit.prototype.V_ = function (t){ const i = this.node ? this.node(t) : -1; return i >= 0 && this.v ? this.v[i] : 0; };
+  B3.Circuit.prototype.vd = function (e){ return this.V_(e.a) - this.V_(e.b); };
+  B3.Circuit.prototype.cur = function (e){ const v = this.vd(e);
+    if (e.k === 'R') return v / e.R; if (e.k === 'V') return (v - e.E) / e.R; if (e.k === 'I') return -e.I;
+    if (e.k === 'D'){ if (e.rs) return this.cur(e.rs);
+      const nv = e.n * 0.02585; let id = e.Is * (Math.exp(Math.min(v, nv * Math.log(10 / e.Is + 1)) / nv) - 1); if (e.Vz && v < -e.Vz) id += (v + e.Vz) / (e.Rz || 5); return id + e.Gl * v; }
+    return 0; };
+  B3.Circuit.prototype.charge = function (key){ return this.mem[key] || 0; };
+  function gaussSolve(A, b){ const n = b.length, M = A.map((r, i) => { const x = Array.from(r); x.push(b[i]); return x; });
+    for (let c = 0; c < n; c++){ let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      if (Math.abs(M[p][c]) < 1e-30) return null; [M[c], M[p]] = [M[p], M[c]];
+      for (let r = 0; r < n; r++){ if (r === c) continue; const f = M[r][c] / M[c][c]; if (!f) continue; for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; } }
+    return M.map((r, i) => r[n] / r[i]); }
+
+  /* ---------- generic laboratory parts ---------- */
+  /* a printed scale as a texture: len cm long, mm marks, cm numbers every o.every cm; o.from the first number;
+     vertical (numbers grow upwards) unless o.horiz.  Cached by its options. */
+  const _scales = {};
+  B3.scaleTex = function (len, o){
+    o = o || {}; const key = JSON.stringify([len, o]); if (_scales[key]) return _scales[key];
+    const k = o.px || 40, W = Math.round((o.width || 3) * k), Lp = Math.round(len * k), c = document.createElement('canvas');
+    if (o.horiz){ c.width = Lp + 2 * k; c.height = W; } else { c.width = W; c.height = Lp + 2 * k; }
+    c._static = true; const g = c.getContext('2d'); g.fillStyle = o.bg || '#f1e2b8'; g.fillRect(0, 0, c.width, c.height);
+    g.strokeStyle = o.ink || '#1a1a1a'; g.fillStyle = o.ink || '#1a1a1a';
+    const step = o.step || 0.1, n = Math.round(len / step), from = o.from || 0, every = o.every || 1;
+    for (let i = 0; i <= n; i++){ const v = i * step, pos = k + v * k, cm = Math.abs(v - Math.round(v)) < 1e-6, half = Math.abs(v * 2 - Math.round(v * 2)) < 1e-6;
+      const L = (cm ? 0.45 : half ? 0.32 : 0.2) * W; g.lineWidth = cm ? 2 : 1.2; g.beginPath();
+      if (o.horiz){ g.moveTo(pos, 0); g.lineTo(pos, L); if (o.both){ g.moveTo(pos, W); g.lineTo(pos, W - L); } }
+      else { const y = c.height - pos; g.moveTo(0, y); g.lineTo(L, y); if (o.both){ g.moveTo(W, y); g.lineTo(W - L, y); } }
+      g.stroke();
+      if (cm && Math.round(v) % every === 0){ g.font = '700 ' + Math.round(k * 0.55) + 'px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        if (o.horiz) g.fillText(String(Math.round(v) + from), pos, W * 0.68); else { g.save(); g.translate(W * 0.7, c.height - pos); g.rotate(-Math.PI / 2); g.fillText(String(Math.round(v) + from), 0, 0); g.restore(); } } }
+    if (o.label){ g.font = '600 ' + Math.round(k * 0.4) + 'px sans-serif'; g.fillText(o.label, o.horiz ? k * 0.6 : W * 0.7, o.horiz ? W * 0.68 : c.height - k * 0.5); }
+    _scales[key] = c; return c;
+  };
+  /* a metre stick standing upright on a little foot, scale on the +z face; returns the y of a reading r (cm) */
+  B3.meterStick = function (x, z, len, id, o){
+    o = o || {}; const w = 2.8, t = 0.6, base = 0.8;
+    box3(x - 3, x + 3, 0, base, z - 3, z + 3, '#5d4630', { id, top: '#6b5238' });
+    box3(x - w / 2, x + w / 2, base, base + len + 1, z - t / 2, z + t / 2, '#d9c48f', { id });
+    const c = B3.scaleTex(len, { width: w, both: true });
+    tex3(c, 0, 0, c.width, c.height, [x - w / 2, base + len + 1, z + t / 2 + 0.01], [w, 0, 0], [0, -(len + 2), 0], { id });
+    return r => base + r;
+  };
+  /* a box turned in space: centre c, unit axes u and v (w = u × v), half sizes a, bb, cc along them */
+  B3.obox = function (c, u, v, a, bb, cc, col, o){
+    o = Object.assign({ cull: true }, o || {}); const w = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const ax = [[u, a], [v, bb], [w, cc]];
+    for (let i = 0; i < 3; i++) for (const sg of [1, -1]){
+      const N = ax[i][0], e = ax[i][1] * sg, T1 = ax[(i + 1) % 3], T2 = ax[(i + 2) % 3];
+      const P = (s, t) => [0, 1, 2].map(k => c[k] + N[k] * e + T1[0][k] * T1[1] * s + T2[0][k] * T2[1] * t);
+      let pts = [P(-1, -1), P(1, -1), P(1, 1), P(-1, 1)];
+      const d1 = [0, 1, 2].map(k => pts[1][k] - pts[0][k]), d2 = [0, 1, 2].map(k => pts[2][k] - pts[0][k]);
+      const nx = [d1[1] * d2[2] - d1[2] * d2[1], d1[2] * d2[0] - d1[0] * d2[2], d1[0] * d2[1] - d1[1] * d2[0]];
+      if (nx[0] * N[0] * sg + nx[1] * N[1] * sg + nx[2] * N[2] * sg < 0) pts = pts.reverse();
+      const up = N[1] * sg > 0.7 && o.top;
+      B3.face(pts, Object.assign({}, o, { fill: up ? o.top : col }));
+    }
+  };
+  /* a retort stand: heavy base, rod; returns {rod:[x, z], top} */
+  B3.stand = function (x, z, H, o){
+    o = o || {}; const id = o.id;
+    box3(x - (o.bw || 10), x + (o.bw || 10), 0, 1.6, z - (o.bd || 14), z + 4, '#3b4048', { id, top: '#474c55' });
+    cyl3('y', 1.6, H, x, z, 0.6, '#c3c8cd', { id, seg: 14, cap: '#dde1e4' });
+    return { rod: [x, z], top: H };
+  };
+  /* a boss-head clamp on a rod at height y with an arm of length len pointing along +z (or o.dir 'x') */
+  B3.clampArm = function (x, z, y, len, o){
+    o = o || {}; const id = o.id, dir = o.dir || 'z';
+    box3(x - 1.3, x + 1.3, y - 1.3, y + 1.3, z - 1.3, z + 1.3, '#3a3f46', { id, top: '#474c55' });
+    cyl3('x', x + 1.3, x + 3.0, y, z, 0.35, '#9aa0a6', { id, seg: 8 }); box3(x + 3, x + 3.6, y - 0.9, y + 0.9, z - 0.9, z + 0.9, '#25282c', { id });
+    if (dir === 'z') cyl3('z', z + 1.3, z + len, x, y, 0.5, '#c3c8cd', { id, seg: 12, cap: '#dde1e4' });
+    else cyl3('x', x - len, x - 1.3, y, z, 0.5, '#c3c8cd', { id, seg: 12, cap: '#dde1e4' });
+    return dir === 'z' ? [x, y - 0.5, z + len - 0.6] : [x - len + 0.6, y - 0.5, z];
+  };
+  /* a coil spring from point a (top) down to b, with n turns of radius r */
+  B3.spring = function (a, b, n, r, col, lw, o){
+    const pts = [], N = Math.max(24, Math.round(n * 14)), d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], L = Math.hypot(...d);
+    const u = d.map(v => v / L), e1 = Math.abs(u[1]) > 0.9 ? [1, 0, 0] : [0, 1, 0];
+    let p1 = [u[1] * e1[2] - u[2] * e1[1], u[2] * e1[0] - u[0] * e1[2], u[0] * e1[1] - u[1] * e1[0]]; const m1 = Math.hypot(...p1); p1 = p1.map(v => v / m1);
+    const p2 = [u[1] * p1[2] - u[2] * p1[1], u[2] * p1[0] - u[0] * p1[2], u[0] * p1[1] - u[1] * p1[0]];
+    const end = Math.min(1.2, L * 0.08);
+    pts.push(a); for (let i = 0; i <= N; i++){ const s = i / N, th = s * n * 2 * Math.PI, along = end + s * (L - 2 * end);
+      pts.push([a[0] + u[0] * along + r * (Math.cos(th) * p1[0] + Math.sin(th) * p2[0]), a[1] + u[1] * along + r * (Math.cos(th) * p1[1] + Math.sin(th) * p2[1]), a[2] + u[2] * along + r * (Math.cos(th) * p1[2] + Math.sin(th) * p2[2])]); }
+    pts.push(b); poly3(pts, col || '#9aa3ab', lw || 1.6, o);
+  };
+  /* a glass vessel (beaker / jar) standing at (x, z): outer radius r, height h, liquid up to level (cm above
+     the inside bottom, 0 = empty); o.liq the liquid colour, o.id */
+  B3.vessel = function (x, z, r, h, level, o){
+    o = o || {}; const id = o.id, wall = o.wall || 0.3, base = o.base || 0.6, seg = o.seg || 40;
+    cyl3('y', 0, base, x, z, r, 'rgba(200,225,235,.5)', { id, seg, cap: 'rgba(210,235,245,.35)' });
+    if (level > 0) cyl3('y', base, base + level, x, z, r - wall, o.liq || 'rgba(110,170,220,.38)', { id, seg, cap: o.liqTop || 'rgba(140,195,235,.45)', noObst: true });
+    cyl3('y', base, h, x, z, r, o.glass || 'rgba(205,228,238,.16)', { id, seg, caps: false, noObst: true });
+    if (o.marks) for (const [yy, lab] of o.marks){ line3([x - r * 0.5, base + yy, z + r + 0.01], [x - r * 0.15, base + yy, z + r + 0.01], 'rgba(255,255,255,.8)', 1);
+      if (lab) text3([x - r * 0.1, base + yy + 0.25, z + r + 0.02], [0.6, 0, 0], [0, -0.6, 0], lab, 0.7, 'rgba(255,255,255,.85)'); }
+    return base;
+  };
+
+  /* a black box on the desk: a closed case with its terminals (4 mm sockets) along the top front.
+     terms: [{ name, col, label }]; returns the terminal ids (name → 'box.<name>' unless given) */
+  B3.blackBox = function (b, leads, name, p, terms, o){
+    o = o || {}; const [x, z] = p, w = o.w || Math.max(10, terms.length * 4 + 2), d = o.d || 8, h = o.h || 4.5;
+    box3(x - w / 2, x + w / 2, 0, h, z - d / 2, z + d / 2, o.col || '#1d1f22', { id: 'm:' + name, top: o.top || '#26292d' });
+    if (o.label) text3([x - w / 2 + 0.8, h + 0.02, z + d / 2 - 0.8], [1, 0, 0], [0, 0, -1], o.label, 0.7, '#8a9096', { weight: '700' });
+    const ids = {};
+    terms.forEach((t, i) => { const tx = x - (terms.length - 1) * 2 + i * 4, id = t.id || name + '.' + t.name; ids[t.name] = id;
+      leads.term(b, id, [tx, h, z - 0.8], { col: t.col, label: t.label || '', lc: '#d8d8d8', ls: 0.9 }); });
+    return ids;
+  };
+  /* cells in a holder (n in series, EMF each e, internal resistance r each), its leads ending in sockets:
+     returns { plus, minus } terminal ids and stamps itself with .stamp(c) */
+  B3.cells = function (b, leads, name, p, o){
+    o = o || {}; const [x, z] = p, n = o.n || 1, L = 5.2, D = 1.45, w = n * (D + 0.2) + 0.6;
+    box3(x - w / 2, x + w / 2, 0, 1.0, z - L / 2 - 0.6, z + L / 2 + 0.6, '#1b1b1b', { id: 'm:' + name, top: '#242424' });
+    for (let i = 0; i < n; i++){ const cx = x - w / 2 + 0.3 + D / 2 + 0.1 + i * (D + 0.2);
+      cyl3('z', z - L / 2, z + L / 2, cx, 1.0 + D / 2 - 0.25, D / 2, o.cellCol || '#c9a227', { seg: 16, id: 'm:' + name, cap: '#b8b8b8' });
+      cyl3('z', z - L / 2 + 0.3, z + L / 2 - 1.2, cx, 1.0 + D / 2 - 0.25, D / 2 + 0.01, o.wrap || '#2b2b2b', { seg: 16, caps: false, id: 'm:' + name }); }
+    const P = name + '.plus', M = name + '.minus';
+    leads.term(b, P, [x - w / 2 - 1.4, 0.6, z + L / 2], { col: '#c0392b', label: '+', lc: '#e8e8e8' });
+    leads.term(b, M, [x + w / 2 + 1.4, 0.6, z + L / 2], { col: '#1b1b1b', label: '−', lc: '#e8e8e8' });
+    B3.cable([x - w / 2 + 0.2, 0.7, z + L / 2 + 0.4], [x - w / 2 - 1.4, 0.8, z + L / 2], '#c0392b', 0.2, 2);
+    B3.cable([x + w / 2 - 0.2, 0.7, z + L / 2 + 0.4], [x + w / 2 + 1.4, 0.8, z + L / 2], '#1b1b1b', 0.2, 2);
+    return { plus: P, minus: M, stamp: c => c.V(P, M, (o.e || 1.55) * n, Math.max(1e-3, (o.r || 0.3) * n)) };
+  };
+
+  /* ---------- test leads: click a terminal, then another; click a terminal with a plug in it to pull
+     that plug out (the lead then follows the pointer until it goes into another terminal or is dropped
+     on the desk).  Terminals are registered every frame with B3.Leads.term; their ids are 'c:t:<name>'. */
+  const LEADCOL = ['#c0392b', '#1b1b1b', '#2f6ea6', '#e0a526', '#3f8f4f', '#7d4fa0'];
+  B3.Leads = function (o){ o = o || {}; this.list = o.list || []; this.held = null; this.T = {}; this.n = 0; this.max = o.max || 12; };
+  /* a terminal: a 4 mm socket (or a post, o.post) at p; o.col its ring colour, o.label printed beside it */
+  B3.Leads.prototype.term = function (b, name, p, o){
+    o = o || {}; this.T[name] = { p, up: o.up || [0, 1, 0] };
+    const id = 'c:t:' + name, col = o.col || '#1b1b1b';
+    if (o.post) B3.post(p[0], p[1], p[2], col, id);
+    else if (o.face === 'z'){ cyl3('z', p[2], p[2] + 0.35, p[0], p[1], 0.62, col, { seg: 14, id, cap: B3.shade(col, 0.7) }); cyl3('z', p[2] + 0.35, p[2] + 0.37, p[0], p[1], 0.24, '#0a0a0a', { seg: 10, id }); }
+    else { cyl3('y', p[1] - 0.05, p[1] + 0.3, p[0], p[2], 0.62, col, { seg: 14, id, cap: B3.shade(col, 0.7) }); cyl3('y', p[1] + 0.3, p[1] + 0.32, p[0], p[2], 0.24, '#0a0a0a', { seg: 10, id }); }
+    if (o.label) text3([p[0] + (o.lx || 0.9), p[1] + 0.33, p[2] + (o.lz || 0.3)], [1, 0, 0], [0, 0, -1], o.label, o.ls || 0.7, o.lc || '#e8e8e8', { weight: '800' });
+    if (b.clicked(id)) this.click(b, name);
+  };
+  B3.Leads.prototype.click = function (b, name){
+    if (this.held){ const h = this.held; this.held = null;
+      if (h.from === name) return;
+      if (this.list.length >= this.max){ b.say('선이 더 없습니다.', 'No leads left.'); return; }
+      this.list.push({ a: h.from, b: name, col: h.col }); return; }
+    const i = this.list.map((l, k) => [l, k]).reverse().find(([l]) => l.a === name || l.b === name);
+    if (i){ const [l, k] = i; this.list.splice(k, 1); this.held = { from: l.a === name ? l.b : l.a, col: l.col }; return; }
+    this.held = { from: name, col: LEADCOL[this.n++ % LEADCOL.length] };
+  };
+  B3.Leads.prototype.joined = function (a, b){ return this.list.some(l => (l.a === a && l.b === b) || (l.a === b && l.b === a)); };
+  B3.Leads.prototype.wire = function (c){ for (const l of this.list) c.join(l.a, l.b); };
+  /* the leads themselves, drawn last so they lie over everything; a click on the bare desk drops a held one */
+  B3.Leads.prototype.draw = function (b){
+    const plug = (p, up, col) => { const top = [p[0] + up[0] * 2.2, p[1] + up[1] * 2.2, p[2] + up[2] * 2.2];
+      B3.cylAB([p[0] + up[0] * 0.3, p[1] + up[1] * 0.3, p[2] + up[2] * 0.3], top, 0.42, col, { seg: 10 });
+      B3.cylAB([p[0], p[1], p[2]], [p[0] + up[0] * 0.35, p[1] + up[1] * 0.35, p[2] + up[2] * 0.35], 0.22, '#c8b26a', { seg: 8 }); return top; };
+    for (const l of this.list){ const A = this.T[l.a], Bt = this.T[l.b]; if (!A || !Bt) continue;
+      const col = l.col || '#c0392b', a = plug(A.p, A.up, col), c = plug(Bt.p, Bt.up, col);
+      B3.cable(a, c, col, Math.min(14, 2 + Math.hypot(c[0] - a[0], c[2] - a[2]) * 0.18), 2.4); }
+    if (this.held){ const A = this.T[this.held.from]; const m = b.mouseOn ? b.mouseOn(0.6) : null;
+      if (A && m){ const a = plug(A.p, A.up, this.held.col), end = [m[0], 3.2, m[2]];
+        B3.cylAB(end, [end[0], end[1] + 2, end[2]], 0.42, this.held.col, { seg: 10 }); B3.cable(a, end, this.held.col, 2, 2.4); }
+      if (b.clicked('desk')) this.held = null; }
+  };
+
+  /* ---------- a handheld digital multimeter lying on the desk (after a UNI-T UT33-class meter) ----------
+     B3.dmm(b, name, [x, z], st, leads, o) draws it, registers its jacks (COM, VΩ, mA) with the leads and
+     returns the meter as circuit elements to add: m.stamp(c) before c.solve, m.read(c) after.
+     o.ranges lists the dial by full scale: [['OFF'], ['V', 0.2], ['V', 2], ['A', 2e-4], ['Ω', 2000], …]; o.counts 2000 or 4000 (the resolution);
+     o.rA {range: Ω} the shunt of each current range; st.err {V, A, R} the meter's gain errors. */
+  B3.dmm = function (b, name, p, st, leads, o){
+    o = o || {}; const counts = o.counts || 2000;
+    const R = o.ranges || [['OFF'], ['V', 0.2], ['V', 2], ['V', 20], ['V', 200], ['A', 2e-4], ['A', 2e-3], ['A', 2e-2], ['A', 0.2], ['Ω', 200], ['Ω', 2e3], ['Ω', 2e4], ['Ω', 2e5], ['Ω', 2e6]];
+    if (st.dial === undefined) st.dial = 0; if (st.fuse === undefined) st.fuse = true; if (!st.err) st.err = { V: 0, A: 0, R: 0 };
+    const [x, z] = p, w = 8.6, d = 16.5, h = 3.4, J = { COM: name + '.COM', V: name + '.V', mA: name + '.mA' };
+    box3(x - w / 2, x + w / 2, 0, h, z - d / 2, z + d / 2, '#e5a400', { id: 'm:' + name, top: '#3a3d42' });
+    box3(x - w / 2 + 0.25, x + w / 2 - 0.25, h, h + 0.12, z - d / 2 + 0.25, z + d / 2 - 0.25, '#2b2e33', { id: 'm:' + name });
+    const pos = st.dial, sel = R[pos] || ['OFF'], mode = sel[0], rng = sel[1];
+    const fmt = () => {
+      if (mode === 'OFF') return '';
+      const m = st.meas; if (m === undefined || m === null) return '';
+      const fs = rng;
+      if (Math.abs(m) > fs * 1.0) return mode === 'Ω' ? 'OL' : (m < 0 ? '-OL' : 'OL');
+      const unit = mode === 'V' ? (rng < 1 ? 1e-3 : 1) : mode === 'A' ? (rng < 1e-3 ? 1e-6 : rng < 1 ? 1e-3 : 1) : (rng < 1e3 ? 1 : rng < 1e6 ? 1e3 : 1e6);
+      const val = m / unit, fsU = fs / unit, dp = Math.max(0, 3 - Math.floor(Math.log10(fsU * 1.0001)));
+      return (val < 0 ? '-' : '') + Math.abs(val).toFixed(Math.min(3, dp));
+    };
+    const unitTxt = () => mode === 'V' ? (rng < 1 ? 'mV' : 'V') : mode === 'A' ? (rng < 1e-3 ? 'µA' : rng < 1 ? 'mA' : 'A') : mode === 'Ω' ? (rng < 1e3 ? 'Ω' : rng < 1e6 ? 'kΩ' : 'MΩ') : '';
+    const cv = b.panel(name, 300, 560, ui => {
+      const g = ui.g; HL.rr(g, 0, 0, 300, 560, 22, '#2b2e33');
+      HL.text(g, o.brand || 'UNI-T', 24, 26, '#e5a400', 15, 'left', '800'); HL.text(g, o.model || 'UT33C+', 276, 26, '#c8ced6', 12, 'right', '700');
+      HL.rr(g, 24, 44, 252, 116, 10, '#11161a'); HL.rr(g, 32, 52, 236, 100, 6, '#aab89a');
+      const s = st.fuse ? fmt() : (mode === 'A' ? 'FUSE' : fmt());
+      HL.text(g, s, 244, 104, '#1b2318', 50, 'right', '700', HL.MONO);
+      HL.text(g, unitTxt(), 250, 136, '#1b2318', 14, 'right', '800');
+      if (mode !== 'OFF') HL.text(g, mode === 'V' ? 'DC' : mode === 'A' ? 'DC' : '', 44, 66, '#1b2318', 12, 'left', '800');
+      /* the dial: positions round the knob, click one to turn to it, or roll the wheel on the knob */
+      const cx = 150, cy = 330, Rr = 118;
+      HL.circle(g, cx, cy, Rr + 14, '#33373d');
+      const ang = i => -Math.PI / 2 + (i - 0) * 2 * Math.PI / R.length;
+      R.forEach((r, i) => { const a = ang(i), lx = cx + Math.cos(a) * Rr, ly = cy + Math.sin(a) * Rr;
+        const lab = r[0] === 'OFF' ? 'OFF' : r[0] === 'V' ? (r[1] < 1 ? r[1] * 1e3 + 'm' : String(r[1])) : r[0] === 'A' ? (r[1] < 1e-3 || r[1] === 4e-3 ? Math.round(r[1] * 1e6) + 'µ' : r[1] < 1 ? Math.round(r[1] * 1e3) + 'm' : r[1] + 'A') : (r[1] < 1e3 ? String(r[1]) : r[1] < 1e6 ? r[1] / 1e3 + 'k' : r[1] / 1e6 + 'M');
+        const col = r[0] === 'V' ? '#ffd27a' : r[0] === 'A' ? '#ff9a8a' : r[0] === 'Ω' ? '#9ad0ff' : '#e8e8e8';
+        const e = ui.hit('d' + i, { cx: lx, cy: ly, r: 17 }); if (e.click) st.dial = i;
+        HL.text(g, lab, lx, ly, i === pos ? '#ffffff' : col, i === pos ? 15 : 13, 'center', i === pos ? '800' : '600'); });
+      HL.text(g, 'V⎓', cx - 92, cy - 4, '#ffd27a', 14, 'center', '800'); HL.text(g, 'A⎓', cx + 92, cy + 30, '#ff9a8a', 14, 'center', '800'); HL.text(g, 'Ω', cx - 70, cy + 92, '#9ad0ff', 16, 'center', '800');
+      const k = ui.hit('knob', { cx, cy, r: 62 }, { wheel: true, cursor: 'pointer' });
+      if (k.wheel) st.dial = (st.dial - k.wheel + R.length * 9) % R.length; else if (k.click) st.dial = (st.dial + 1) % R.length;
+      HL.circle(g, cx, cy, 62, '#1d2024', '#0b0c0e', 2); HL.rr(g, cx - 12, cy - 60, 24, 120, 10, '#3a3f46');
+      const a = ang(pos); g.strokeStyle = '#ffffff'; g.lineWidth = 5; g.beginPath(); g.moveTo(cx + Math.cos(a) * 20, cy + Math.sin(a) * 20); g.lineTo(cx + Math.cos(a) * 56, cy + Math.sin(a) * 56); g.stroke();
+      [[o.aJack || 'mA', 66], ['COM', 150], ['VΩ', 234]].forEach(([t, jx]) => { HL.text(g, t, jx, 545, t === 'COM' ? '#e8e8e8' : '#ff9a8a', 12, 'center', '800'); });
+      if (!st.fuse) HL.text(g, o.fuseTxt || 'FUSE ✕', 66, 470, '#ff6b5a', 11, 'center', '800');
+    });
+    B3.tex3(cv, 0, 0, cv.width, cv.height, [x - w / 2 + 0.3, h + 0.13, z - d / 2 + 0.3], [w - 0.6, 0, 0], [0, 0, d - 0.6], { id: 'p:' + name });
+    const jy = h + 0.13, jz = z - d / 2 + 0.3 + (d - 0.6) * 505 / 560;
+    leads.term(b, J.mA, [x - w / 2 + 0.3 + (w - 0.6) * 66 / 300, jy, jz], { col: '#c0392b' });
+    leads.term(b, J.COM, [x - w / 2 + 0.3 + (w - 0.6) * 150 / 300, jy, jz], { col: '#1b1b1b' });
+    leads.term(b, J.V, [x - w / 2 + 0.3 + (w - 0.6) * 234 / 300, jy, jz], { col: '#c0392b' });
+    const rA = o.rA || {}, shunt = r => rA[r] !== undefined ? rA[r] : r <= 2e-4 ? 1000 : r <= 2e-3 ? 100 : r <= 2e-2 ? 10 : 1;
+    const fuseI = o.fuseI || 0.4;
+    return {
+      jacks: J,
+      stamp(c){
+        if (mode === 'V' || mode === 'OFF' || mode === 'A') c.R(J.V, J.COM, mode === 'V' && o.rV ? o.rV : 1e7);
+        if (mode === 'Ω'){ this.ohm = c.V(J.V, J.COM, 1.0, rng); }                     /* a 1 V source behind the range resistor */
+        if (mode === 'A' && st.fuse) this.sh = c.R(J.mA, J.COM, shunt(rng)); else this.sh = null;
+      },
+      /* the true value now (st.now) and what the display shows, which takes a new reading about three times
+         a second (o.rate) with a little noise in the last digit */
+      read(c){
+        let m;
+        if (mode === 'V') m = (c.V_(J.V) - c.V_(J.COM)) * (1 + st.err.V);
+        else if (mode === 'A'){ const i = this.sh ? c.cur(this.sh) : 0; if (Math.abs(i) > fuseI){ st.fuse = false; b.say('퍽! 전류계 퓨즈가 끊어졌습니다.', 'Pop! The ammeter fuse has blown.'); } m = i * (1 + st.err.A); }
+        else if (mode === 'Ω'){ const v = c.V_(J.V) - c.V_(J.COM), i = (1.0 - v) / rng; m = i > 1e-12 ? Math.max(0, v / i) * (1 + st.err.R) : Infinity; }
+        else m = null;
+        st.now = m;
+        const key = mode + rng, per = 1 / (o.rate || 3);
+        if (key !== st.key || st.tUpd === undefined || b.t - st.tUpd >= per || b.t < st.tUpd){
+          st.key = key; st.tUpd = b.t;
+          st.meas = m === null || !isFinite(m) ? m : m + HL.gauss(rng / counts * 0.4);
+        }
+        return st.meas;
+      },
+      mode, range: rng
+    };
+  };
 })();
