@@ -212,6 +212,14 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 성적표(`#/lab/<id>`)의 실험별 피드백 아래 «📝 총평» 칸에 나옵니다. 저장 위치: `detail.tasks.E1.review`.
 
+## 자동 배포 (GitHub Actions)
+
+`main`에서 `community/src`나 `wrangler.toml`이 바뀌면 `.github/workflows/deploy-worker.yml`이 `wrangler deploy`로 Worker를 올립니다 — 대시보드에 붙여 넣을 필요가 없습니다. Actions 탭의 «Deploy community Worker» › Run workflow로 손으로 돌릴 수도 있습니다.
+- 필요한 것: 저장소 Settings › Secrets and variables › Actions에 `CLOUDFLARE_API_TOKEN`(Cloudflare › My Profile › API Tokens › «Edit Cloudflare Workers» 템플릿).
+- 대시보드에서 넣은 변수와 Secret은 그대로 남습니다(`keep_vars = true`). `wrangler.toml`에 적힌 `ALLOWED_ORIGINS`만 그 값으로 덮어씁니다.
+- Cron Trigger `*/15 * * * *`(답안 사진 제때 지우기)도 함께 걸립니다.
+- D1 마이그레이션은 돌리지 않습니다 — 지금처럼 콘솔에서 적용합니다.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.
