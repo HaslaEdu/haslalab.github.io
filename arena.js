@@ -382,6 +382,7 @@ const LBT = {
        retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
        item: "채점 항목", evid: "근거", rulesH: "적용 규정", by: {code: "범위·검증", model: "AI 판단"}, sheetA: "답안지", sheetW: "연습지", page: "쪽",
        regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다.",
+       rvH: "총평", rvGood: "잘한 점", rvHabits: "고쳐야 할 습관", rvHand: "글씨", rvPres: "답안 구성", rvRate: {clear: "또렷함", readable: "읽을 만함", hard: "알아보기 어려움"}, rvPages: "쪽",
        ref: "기준", refSave: "기준 점수 저장", refNote: "관리자만 보입니다: 사람이 매긴 기준 점수 — AI 채점 정확도 측정에 씁니다.", purged: "보관 기간이 지나 사진을 지웠습니다.",
        mH: "채점 비용 · 시간 · 정확도", mDays: "최근 30일", mExam: "시험 1회당", mUsd: "비용", mTok: "토큰 (입력 / 출력)", mCalls: "AI 호출", mTime: "채점 시간", mWait: "제출→채점 완료",
        mStep: "단계별", mAcc: "정확도 (관리자 기준 점수와 비교)", mMae: "문항당 평균 차이", mExact: "일치한 문항", mTaskDiff: "실험 총점 차이 (만점 대비)", mItems: "비교한 문항",
@@ -406,6 +407,7 @@ const LBT = {
        retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
        item: "Item", evid: "Evidence", rulesH: "Rules", by: {code: "interval / check", model: "AI judgement"}, sheetA: "answer sheet", sheetW: "working sheet", page: "p.",
        regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn.",
+       rvH: "Review", rvGood: "Done well", rvHabits: "Habits to fix", rvHand: "Handwriting", rvPres: "Presentation", rvRate: {clear: "clear", readable: "readable", hard: "hard to read"}, rvPages: "p.",
        ref: "Ref.", refSave: "Save reference marks", refNote: "Admins only: marks given by a person — used to measure how accurate the AI grading is.", purged: "The photo was removed after its keeping time.",
        mH: "Grading cost · time · accuracy", mDays: "last 30 days", mExam: "Per exam", mUsd: "Cost", mTok: "Tokens (in / out)", mCalls: "AI calls", mTime: "Grading time", mWait: "Submitted → graded",
        mStep: "By step", mAcc: "Accuracy (against the admins' reference marks)", mMae: "Mean difference per item", mExact: "Items that agree", mTaskDiff: "Experiment total difference (of full marks)", mItems: "Items compared",
@@ -534,7 +536,18 @@ function arLabItems(x, reg, rev) {
       <td class="t">${i.page ? `${L.page === "p." ? "p." + i.page : i.page + L.page} · ${i.sheet === "answer" ? L.sheetA : L.sheetW}` : "—"}${i.value != null ? ` · <q>${esc(i.value)}</q>` : ""}</td>
       <td>${(i.rules || []).map(rule).join(" ")}</td>${rev ? `<td><input data-ref="${esc(i.id)}" type="number" step="0.1" min="0" max="${i.points}" value="${ref(i.id)}" style="width:64px"></td>` : ""}</tr>`).join("")}</tbody></table>
     ${rev ? `<p class="arempty" style="margin:6px 0">${L.refNote} <button class="cmbtn sm" data-rev="${esc(rev.task)}">${L.refSave}</button></p>` : ""}
-    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}`;
+    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}
+    ${arLabReview(x.review)}`;
+}
+/* the coach's review of one experiment: overall, what went well, habits to fix, handwriting, presentation */
+function arLabReview(r) {
+  if (!r || !r.summary) return "";
+  const L = lbt();
+  return `<div class="arpanel" data-review style="margin:12px 0 0;background:var(--paper,rgba(127,127,127,.05))"><h4 class="arh4" style="margin-top:0">📝 ${L.rvH}</h4><p style="margin:0 0 8px">${esc(r.summary)}</p>
+    ${(r.strengths || []).length ? `<b>${L.rvGood}</b><ul class="arfb">${r.strengths.map((x) => `<li class="good">${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${(r.habits || []).length ? `<b>${L.rvHabits}</b><ul class="arfb">${r.habits.map((h) => `<li class="fix"><em>${esc(h.habit)}</em> → ${esc(h.fix)}${(h.pages || []).length ? ` <small>(${h.pages.map((n) => L.rvPages === "p." ? "p." + n : n + L.rvPages).join(", ")})</small>` : ""}</li>`).join("")}</ul>` : ""}
+    ${r.handwriting ? `<p style="margin:6px 0 0"><b>${L.rvHand}</b> · ${L.rvRate[r.handwriting.rating] || ""} — ${esc(r.handwriting.notes)}</p>` : ""}
+    ${r.presentation ? `<p style="margin:6px 0 0"><b>${L.rvPres}</b> — ${esc(r.presentation)}</p>` : ""}</div>`;
 }
 async function arLabOne(root, alive, id) {
   const L = lbt(), T = arT();

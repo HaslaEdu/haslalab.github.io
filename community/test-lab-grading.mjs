@@ -53,6 +53,8 @@ ok(it("B.1").got === 0.4 && it("B.1").rules.includes("R7"), "B.1 graph: axes 0.2
 ok(it("C.1").got === 0.5 && it("C.1").by === "model", "C.1 derivation: the model's half mark");
 ok(e1.score === 1.9, "E1 total 0.4 + 0.6 + 0 + 0.4 + 0.5 = 1.9 (got " + e1.score + ")");
 ok(e1.feedback.length === 1 && e1.feedback[0].page === 1, "feedback pointing at a page that does not exist is dropped");
+ok(e1.review && /graph/.test(e1.review.summary) && e1.review.habits.length === 1 && e1.review.habits[0].pages.join() === "1" && e1.review.handwriting.rating === "readable" && /7 and 1/.test(e1.review.handwriting.notes),
+  "the coach's review: summary, a habit to fix (on pages that exist), handwriting " + JSON.stringify(e1.review));
 ok(e2.status === "pending" && e2.why === "no_solution", "E2: no official solution file → waits (no_solution)");
 const kept = sql("SELECT source FROM lab_schemes");
 ok(/IPhO_2024_S1_KO\.pdf/.test(kept) && (kept.match(/"source"/g) || []).length === 1, "the scheme drawn from the English original is kept under the solution the exam named");

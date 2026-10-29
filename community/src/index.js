@@ -1135,7 +1135,14 @@ const GRADE_SCHEMA = { type: "object", properties: {
     rules: { type: "array", items: { type: "string" } }, note: { type: "string" },
   }, required: ["id", "found", "score", "decision", "rules", "note"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
-}, required: ["items", "feedback"] };
+  review: { type: "object", properties: {
+    summary: { type: "string" },
+    strengths: { type: "array", items: { type: "string" } },
+    habits: { type: "array", items: { type: "object", properties: { habit: { type: "string" }, fix: { type: "string" }, pages: { type: "array", items: { type: "integer" } } }, required: ["habit", "fix"] } },
+    handwriting: { type: "object", properties: { rating: { type: "string", enum: ["clear", "readable", "hard"] }, notes: { type: "string" } }, required: ["rating", "notes"] },
+    presentation: { type: "string" },
+  }, required: ["summary", "habits", "handwriting"] },
+}, required: ["items", "feedback", "review"] };
 
 function b64(buf) { let s = ""; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000)); return btoa(s); }
 /* ── what each AI call of an exam costs: tokens, an estimated price and time, one row of lab_calls per call ──
@@ -1316,7 +1323,13 @@ function labScore(scheme, raw, pages) {
   });
   const feedback = (Array.isArray(raw && raw.feedback) ? raw.feedback : []).filter(f => f && f.note && (f.page == null || byNo.has(f.page))).slice(0, 8)
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
-  return { items, feedback, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
+  /* the coach's review, as written: trimmed and bounded, page references kept only to pages that exist */
+  const rv = raw && raw.review && typeof raw.review === "object" ? raw.review : null, str = (x, n) => String(x || "").slice(0, n);
+  const review = rv && rv.summary ? { summary: str(rv.summary, 1200), strengths: (Array.isArray(rv.strengths) ? rv.strengths : []).slice(0, 3).map(x => str(x, 300)).filter(Boolean),
+    habits: (Array.isArray(rv.habits) ? rv.habits : []).filter(h => h && h.habit).slice(0, 5).map(h => ({ habit: str(h.habit, 300), fix: str(h.fix, 400), pages: (Array.isArray(h.pages) ? h.pages : []).filter(n => byNo.has(n)).slice(0, 8) })),
+    handwriting: rv.handwriting && ["clear", "readable", "hard"].includes(rv.handwriting.rating) ? { rating: rv.handwriting.rating, notes: str(rv.handwriting.notes, 600) } : null,
+    presentation: rv.presentation ? str(rv.presentation, 500) : null } : null;
+  return { items, feedback, review, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
 }
 /* a page's photo: in R2 when the Worker has the LAB_PAGES bucket, otherwise in the row; null once removed after its keeping time */
 async function labPageBytes(env, row) {
@@ -1362,7 +1375,13 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     "", `[Grading regulation ${LAB_REG.version} — it overrides everything else]`, LAB_REG.rules.map(r => `${r.id}. ${r.en}`).join("\n"),
     "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(scheme) + "<<END>>",
     "", "For every scheme item give exactly one result: found (the candidate answered it), page (the page number p of the label below where the evidence is), label, value (for a value item: the number as written on that page), unit_ok, checks_met (for a graph or table: the scheme checks that can be seen), score (0 to its points, in steps of 0.1), decision, rules (the regulation ids that cost marks) and a short note.",
-    "Apply the regulation strictly: no benefit of the doubt (R10), an item that cannot be read is not found. Add up to 6 feedback notes on what was done well or must be fixed."].join("\n") };
+    "Apply the regulation strictly: no benefit of the doubt (R10), an item that cannot be read is not found. Add up to 6 feedback notes on what was done well or must be fixed.",
+    "", "[Review — what a coach writes back on the papers; it never changes a mark]",
+    "summary: 2–4 sentences — how the candidate did on this experiment overall and what decided the mark.",
+    "strengths: up to 3 things done well, concrete (an item, a graph, a method).",
+    "habits: up to 5 recurring habits that cost marks here or would at the real olympiad, each with a concrete fix and the pages where it shows — e.g. units or uncertainties left out, fewer measurements than needed, a graph that uses a corner of the grid or has no fitted line, slopes read without the triangle, results only on the working sheet, too many significant figures, answers squeezed or crossed out until unclear.",
+    "handwriting: rating — clear, readable or hard — and notes on what a grader could misread (1/7, 0/6, 4/9, u/μ, decimal points and minus signs, exponents, subscripts), on crowding and layout, and on what would make the pages quicker to mark.",
+    "presentation: one or two sentences on tables, graphs, units and the order of the answer sheet."].join("\n") };
   const pagesNote = { text: "<<PAGES>>" + JSON.stringify(mine.map(p => ({ no: p.no, task: p.task, kind: p.kind, legible: p.legible || null }))) + "<<END>>" };
   const parts = [head, pagesNote];
   let budget = 14e6;                                                               // inline images, answer sheets first
@@ -1375,7 +1394,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   }
   const out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");
   const sc = labScore(scheme, out.raw, mine);
-  return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback };
+  return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -1493,13 +1512,20 @@ async function labImage(req, env, pid, cors) {
    checkout with the pack's price and the order id in custom_data; Paddle's signed webhook (transaction.completed or
    .paid) adds the tokens, and pay.html asks the server to look the transaction up meanwhile, in case the webhook is
    late.  PADDLE_CLIENT_TOKEN (public; test_… = sandbox), PADDLE_API_KEY and PADDLE_WEBHOOK_SECRET (secrets),
-   PADDLE_PACKS (JSON [{id, tokens, price_id, usd}] — the prices made in Paddle's catalogue). */
+   PADDLE_PRICES (the price ids of 1, 5 and 10 tokens — $1.49, $5.99, $9.99 — made in Paddle's catalogue, comma-separated)
+   or PADDLE_PACKS (JSON [{id, tokens, price_id, usd}]).  The API key needs transaction.read and adjustment.write. */
 const PACKS = [{ id: "t1", tokens: 1, krw: 1900 }, { id: "t5", tokens: 5, krw: 7900 }, { id: "t12", tokens: 12, krw: 15900 }];
 const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length) return x; } catch (e) {} return PACKS; };
 const adsOf = env => ({ unit: env.ADS_REWARDED_UNIT === "test" ? "/22639388115/rewarded_web_example" : env.ADS_REWARDED_UNIT || null,
   daily: Math.max(1, parseInt(env.ADS_DAILY) || 3), min_sec: Math.max(0, parseInt(env.ADS_MIN_SEC ?? "10")), parts: 3 });
 const kstDay = t => Math.floor((t + 9 * 3600) / 86400) * 86400 - 9 * 3600;      // the start of today in Korea
-const paddlePacks = env => { try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.every(p => p.id && p.tokens > 0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {} return null; };
+/* the packs: PADDLE_PRICES = the three price ids (made in Paddle's catalogue) of 1, 5 and 10 tokens, or PADDLE_PACKS for others */
+const PADDLE_DEFAULT = [{ id: "p1", tokens: 1, usd: 1.49 }, { id: "p5", tokens: 5, usd: 5.99 }, { id: "p10", tokens: 10, usd: 9.99 }];
+const paddlePacks = env => {
+  try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.length && x.every(p => p.id && p.tokens > 0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {}
+  const ids = String(env.PADDLE_PRICES || "").split(",").map(x => x.trim()).filter(Boolean);
+  return ids.length === PADDLE_DEFAULT.length && ids.every(x => /^pri_\w+$/.test(x)) ? PADDLE_DEFAULT.map((p, i) => ({ ...p, price_id: ids[i] })) : null;
+};
 const paddleOn = env => !!(env.PADDLE_CLIENT_TOKEN && env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET && paddlePacks(env));
 const paddleEnv = env => /^test_/.test(env.PADDLE_CLIENT_TOKEN || "") ? "sandbox" : "production";
 async function paddle(env, method, path, body) {

@@ -182,10 +182,10 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 ## v11: 실전 토큰 구매(Paddle · 토스페이먼츠)와 영상 광고 충전
 
-- **Paddle (해외 · USD, 먼저 여는 쪽)**: Paddle이 판매자 대행(merchant of record)이라 나라별 세금 · 영수증 · 환불 처리를 맡습니다. Paddle 카탈로그에 상품(실전 토큰)과 묶음별 가격(일회성)을 만들고, 그 가격 ID를 `PADDLE_PACKS`에 넣습니다 — 예: `[{"id":"p1","tokens":1,"price_id":"pri_…","usd":1.49},{"id":"p5","tokens":5,"price_id":"pri_…","usd":5.99}]` (`usd`는 버튼에 보이는 값, 실제 금액 · 통화는 Paddle 결제창이 정함).
+- **Paddle (해외 · USD, 먼저 여는 쪽)**: Paddle이 판매자 대행(merchant of record)이라 나라별 세금 · 영수증 · 환불 처리를 맡습니다. Paddle 카탈로그에 상품(실전 토큰)과 묶음별 일회성 가격 3개 — **1개 $1.49 · 5개 $5.99 · 10개 $9.99** — 를 만들고, 그 가격 ID를 이 순서대로 `PADDLE_PRICES=pri_…,pri_…,pri_…`에 넣습니다. 묶음을 바꾸려면 `PADDLE_PACKS`(JSON, 있으면 우선)에 직접 적습니다 — 예: `[{"id":"p1","tokens":1,"price_id":"pri_…","usd":1.49},{"id":"p5","tokens":5,"price_id":"pri_…","usd":5.99}]` (`usd`는 버튼에 보이는 값, 실제 금액 · 통화는 Paddle 결제창이 정함).
   - 흐름: 서버가 주문을 먼저 저장 → Paddle.js v2 오버레이 결제창(`custom_data.order_id`에 주문번호) → Paddle이 보내는 **서명된 웹훅** `transaction.completed`/`transaction.paid`(`POST /api/pay/paddle/webhook`, `Paddle-Signature`를 HMAC-SHA256 `ts:원문`으로 검증, 5분 넘은 것은 거절)으로 토큰을 한 번만 더함. 결제가 끝나 `pay.html`로 오면 서버가 거래를 Paddle API로 조회해 웹훅보다 먼저 끝낼 수도 있음(주문번호 · 가격이 맞을 때만).
   - 환불: 관리자 `POST /api/admin/pay/<주문>/cancel` → Paddle 환불 조정(`/adjustments`, full) + 토큰 회수. Paddle 대시보드에서 승인한 환불도 웹훅(`adjustment.*`, refund · approved)으로 받아 토큰을 회수합니다.
-  - 환경 변수: `PADDLE_CLIENT_TOKEN`(공개 — `test_…`면 샌드박스, `live_…`면 실제), `PADDLE_API_KEY`(Secret), `PADDLE_WEBHOOK_SECRET`(Secret — Paddle › Developer tools › Notifications에서 이 주소로 대상 만들 때 나오는 비밀 키), `PADDLE_PACKS`. 웹훅 대상: `https://haslalab-community.haslalab.workers.dev/api/pay/paddle/webhook`, 이벤트 `transaction.completed`, `transaction.paid`, `adjustment.created`, `adjustment.updated`.
+  - 환경 변수: `PADDLE_CLIENT_TOKEN`(공개 — `test_…`면 샌드박스, `live_…`면 실제), `PADDLE_API_KEY`(Secret — 새 API 키를 만들 때 권한은 **Transactions: Read**(`transaction.read`)와 **Adjustments: Write**(`adjustment.write`) 두 개만), `PADDLE_WEBHOOK_SECRET`(Secret — Paddle › Developer tools › Notifications에서 이 주소로 대상 만들 때 나오는 비밀 키), `PADDLE_PRICES`(또는 `PADDLE_PACKS`). 웹훅 대상: `https://haslalab-community.haslalab.workers.dev/api/pay/paddle/webhook`, 이벤트 `transaction.completed`, `transaction.paid`, `adjustment.created`, `adjustment.updated`.
   - 로컬 시험: `node test-paddle.mjs`(mock의 `/paddle`).
 
 - **구매**: `#/lab`의 «토큰 충전»에서 묶음(기본 1개 1,900원 · 5개 7,900원 · 12개 15,900원 — `PAY_PACKS` JSON으로 바꿈)을 고르고, 구매 안내(만 19세 미만은 보호자 동의) 확인 후 토스페이먼츠 결제창(v2 SDK, 카드 · 간편결제)이 열립니다. 서버가 먼저 주문(`pay_orders`, 주문번호 = 시각 + 난수)을 저장하고, 결제가 끝나면 토스가 `pay.html`로 돌려보내며, 서버가 **금액을 자기 주문과 비교한 뒤** 시크릿 키로 결제를 승인하고 토큰을 한 번만 더합니다(같은 트랜잭션에서 `credited` 표시 — 새로고침이나 동시 요청에도 한 번). 이미 승인된 결제(`ALREADY_PROCESSED_PAYMENT`)는 조회해서 확인합니다.
@@ -200,6 +200,17 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 2. Worker를 배포하고 위 환경 변수를 넣습니다(테스트 키 `test_ck_…` / `test_sk_…`로 먼저 시험).
 
 로컬 시험: `.dev.vars`에 `TOSS_CLIENT_KEY=test_ck_mock TOSS_SECRET_KEY=test_sk_mock TOSS_BASE=http://127.0.0.1:8799/toss ADS_REWARDED_UNIT=test ADS_MIN_SEC=1 ADS_DAILY=3`, `node test-lab-mock.mjs` 후 `node test-shop.mjs`.
+
+## v12: 실험 채점의 총평 · 첨삭
+
+실험 채점(Gemini, `GRADE_SCHEMA`)이 점수와 별도로 코치처럼 `review`를 씁니다 — 점수는 바꾸지 않습니다.
+- `summary`: 답안 전체에 대한 총평 2–4문장(무엇이 점수를 지켰고 무엇이 깎였는지).
+- `strengths`: 잘한 점(최대 3).
+- `habits`: 고쳐야 할 습관과 고치는 방법, 그 습관이 보인 쪽(최대 5) — 예: 단위 · 유효숫자 누락, 그래프 점 부족 · 축 눈금, 불확도 생략, 표의 머리말 누락, 계산 과정 없이 답만.
+- `handwriting`: 글씨 평가 `clear | readable | hard`와 메모 — 헷갈리는 숫자(1/7, 0/6, 4/9, u/μ), 소수점 · 음수 부호 · 지수, 붙은 글씨, 칸 밖으로 나간 답.
+- `presentation`: 답을 정해진 칸에 썼는지, 표 · 그래프 배치, 페이지 번호.
+
+성적표(`#/lab/<id>`)의 실험별 피드백 아래 «📝 총평» 칸에 나옵니다. 저장 위치: `detail.tasks.E1.review`.
 
 ## 처음 배포하기 (명령줄)
 

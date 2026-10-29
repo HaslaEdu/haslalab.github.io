@@ -100,7 +100,9 @@ http.createServer(async (req, res) => {
       const val = { "A.1": 108.2, "A.2": 395, "A.3": 11 };
       return reply(res, { items: sc.items.map(it => ({ id: it.id, found: true, page: pg, label: it.id, value: val[it.id] ?? null, unit_ok: true,
         checks_met: ["axes_labeled", "points_min", "fit_line", "slope_read", "rows_min", "columns_units"], score: it.points / 2, decision: "partial", rules: [], note: "ok" })),
-        feedback: [{ page: pg, label: "A.1", note: "units ok", kind: "good" }, { page: 999, label: "X", note: "a page that does not exist", kind: "fix" }] });
+        feedback: [{ page: pg, label: "A.1", note: "units ok", kind: "good" }, { page: 999, label: "X", note: "a page that does not exist", kind: "fix" }],
+        review: { summary: "Careful measurements, but the graph lost marks.", strengths: ["R0 read with its unit"], habits: [{ habit: "too few points on the graph", fix: "take at least 8, spread over the range", pages: [pg, 999] }],
+          handwriting: { rating: "readable", notes: "7 and 1 look alike" }, presentation: "answers in their boxes" } });
     }
     const ids = [...prompt.matchAll(/^- (\S+) \(.*?\): 0~([\d.]+)/gm)].map(m => [m[1], +m[2]]);
     const ans = prompt.split("[Student answer and working sheets]")[1] || "";
