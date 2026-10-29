@@ -66,7 +66,7 @@ const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
 const Q = new URLSearchParams(location.search);
 let lang = Q.get("lang") === "en" ? "en" : "ko";
-const C = (Q.get("c") || "").toLowerCase(), Y = parseInt(Q.get("y")) || 0, PART = Q.get("e") || "";
+const C = (Q.get("c") || "").toLowerCase(), Y = /^\d{4}(-\d)?$/.test(Q.get("y") || "") ? Q.get("y") : "", PART = Q.get("e") || "";   // "2026-2": the year's second sitting
 const T = ((window.THEORY || {})[C] || {})[String(Y)] || null;
 const F = T && T.f && T.f[PART] || null, KEY = T && T.k && T.k[PART] || null;
 const META = (window.THEORY_META || {})[C] || {};

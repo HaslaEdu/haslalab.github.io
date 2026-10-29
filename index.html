@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=43c14503a9"></script>
+<script src="theory.js?v=ddc6703d98"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4269,15 +4269,16 @@ if(window.USACO) DATA.usaco={
     return {y:e.y, host:{ko:"온라인",en:"Online"}, problems:ps}; })};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
+const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "2026-2" → 2026.2: the order of the year list */
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k]&&THEORY[k])
   DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[]};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
-    if(!yr){ c.years.push({y:+y,host:t.h||null,cc:t.cc,problems:[]}); continue; }
+    if(!yr){ c.years.push({y:/^\d+$/.test(y)?+y:y,host:t.h||null,cc:t.cc,problems:[]}); continue; }   /* "2026-1": a year's first sitting (KPhE) */
     if(!yr.host&&t.h) yr.host=t.h;                    /* the manifest knows where a year was held when DATA does not */
     if(!yr.cc&&t.cc) yr.cc=t.cc; }
-  c.years.sort((a,b)=>b.y-a.y); }
+  c.years.sort((a,b)=>yNum(b.y)-yNum(a.y)); }
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
 const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
@@ -4480,7 +4481,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","kphe","kphc"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","kphe"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},

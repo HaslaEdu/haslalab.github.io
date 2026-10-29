@@ -44,9 +44,10 @@ def load():
         if m.get('full'):
             meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds')), 'omr': bool(m.get('omr'))}
         for y in m.get('years', []):
+            # a year is "2026", or "2026-1" / "2026-2" for a competition sat twice a year (KPhE); file names keep the 4 digits
             year, files, gt = str(y['y']), {}, None
             for f in y.get('files', []):
-                if f.get('kind') == 'general' and re.match(r'^%s_%s_G[TE]\d*\.pdf$' % (prefix, year), f.get('file', '')) \
+                if f.get('kind') == 'general' and re.match(r'^%s_%s_G[TE]\d*\.pdf$' % (prefix, year[:4]), f.get('file', '')) \
                         and re.match(r'^https?://', f.get('url', '')):
                     if f.get('for') == 'theory':
                         gt = f['file']
@@ -56,7 +57,7 @@ def load():
                 g = FILE.match(f.get('file', ''))
                 kind = KINDS.get(f.get('kind'))
                 # a file comes from its source (url, copied into a release) or is kept on the site (local: pdfx/…)
-                if not g or g.group(1) != prefix or g.group(2) != year or not kind or not (re.match(r'^https?://', f.get('url', '')) or re.match(r'^pdfx/[a-z]+/', f.get('local', ''))):
+                if not g or g.group(1) != prefix or g.group(2) != year[:4] or not kind or not (re.match(r'^https?://', f.get('url', '')) or re.match(r'^pdfx/[a-z]+/', f.get('local', ''))):
                     bad.append((path, f.get('file')))
                     continue
                 part = g.group(3)

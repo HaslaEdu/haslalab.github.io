@@ -2,20 +2,20 @@
  "comp": "kphe",
  "prefix": "KPhE",
  "full": {
-  "ko": "물리대회 (The Physics League)",
-  "en": "The Physics League (KPS)"
+  "ko": "물리대회 (The Physics League · 구 한국 중학생 물리대회)",
+  "en": "The Physics League (KPS) · formerly the Korean Middle-School Physics Competition"
  },
- "since": 2023,
+ "since": 2015,
  "scope": {
   "ko": "대한민국",
   "en": "South Korea"
  },
  "rounds": true,
  "omr": true,
- "about": "Korean Physical Society's twice-yearly multiple-choice physics competition (beginner, intermediate, advanced, expert levels).",
+ "about": "Korean Physical Society: the Korean Middle-School Physics Competition (KPhC, 2015-2022, papers only, manifest kphc.json) and its successor the Physics League (two sittings a year since 2024, listed as 2024-1, 2024-2 …; only the advanced and expert levels).",
  "years": [
   {
-   "y": 2026,
+   "y": "2026-2",
    "host": {
     "ko": "대한민국",
     "en": "South Korea"
@@ -23,129 +23,15 @@
    "cc": "kr",
    "problems": [
     {
-     "id": "T1a",
-     "title": "제1회 (2026. 2. 28) · 초급과정"
-    },
-    {
-     "id": "T1b",
-     "title": "제1회 (2026. 2. 28) · 중급과정"
-    },
-    {
-     "id": "T1c",
-     "title": "제1회 (2026. 2. 28) · 고급과정"
-    },
-    {
-     "id": "T1d",
-     "title": "제1회 (2026. 2. 28) · 전문가과정"
-    },
-    {
-     "id": "T2a",
-     "title": "제2회 (2026. 9. 5) · 초급과정"
-    },
-    {
-     "id": "T2b",
-     "title": "제2회 (2026. 9. 5) · 중급과정"
-    },
-    {
      "id": "T2c",
-     "title": "제2회 (2026. 9. 5) · 고급과정"
+     "title": "고급과정"
     },
     {
      "id": "T2d",
-     "title": "제2회 (2026. 9. 5) · 전문가과정"
+     "title": "전문가과정"
     }
    ],
    "files": [
-    {
-     "file": "KPhE_2026_T1a_KO.pdf",
-     "part": "T1a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/fe63c928-7044-4deb-83e2-2bf48fe2affe",
-     "bytes": 217482
-    },
-    {
-     "file": "KPhE_2026_T1aS.pdf",
-     "part": "T1a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/7a702cfc-be40-462b-9832-373a2c5c2750",
-     "bytes": 27740
-    },
-    {
-     "file": "KPhE_2026_T1b_KO.pdf",
-     "part": "T1b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/2f2a49ab-d234-412d-856d-6c4ca48b96dd",
-     "bytes": 386154
-    },
-    {
-     "file": "KPhE_2026_T1bS.pdf",
-     "part": "T1b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/df5f849c-9a29-466a-97e0-6eedbc8c3353",
-     "bytes": 27602
-    },
-    {
-     "file": "KPhE_2026_T1c_KO.pdf",
-     "part": "T1c",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/345544a4-ed9f-4eef-be8a-88f301cf6b3c",
-     "bytes": 473137
-    },
-    {
-     "file": "KPhE_2026_T1cS.pdf",
-     "part": "T1c",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/476aff83-8005-4568-b7db-72828904c538",
-     "bytes": 27398
-    },
-    {
-     "file": "KPhE_2026_T1d_KO.pdf",
-     "part": "T1d",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/f721bdf8-894a-4be4-98dc-9ffd94042b8a",
-     "bytes": 149868
-    },
-    {
-     "file": "KPhE_2026_T1dS.pdf",
-     "part": "T1d",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/153e538c-9ab4-472a-bfc8-16260f9f3e46",
-     "bytes": 27256
-    },
-    {
-     "file": "KPhE_2026_T2a_KO.pdf",
-     "part": "T2a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/73b05c6e-d7e9-4cba-9bcf-23e687470e43",
-     "bytes": 308915
-    },
-    {
-     "file": "KPhE_2026_T2aS.pdf",
-     "part": "T2a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/57c8d22e-15f1-4b2b-9f2e-bb6adc922c40",
-     "bytes": 24698
-    },
-    {
-     "file": "KPhE_2026_T2b_KO.pdf",
-     "part": "T2b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/06524c2e-7756-461c-b280-6361d2c63738",
-     "bytes": 610170
-    },
-    {
-     "file": "KPhE_2026_T2bS.pdf",
-     "part": "T2b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/8546488e-959f-45cf-83a6-cc92a16f628f",
-     "bytes": 24479
-    },
     {
      "file": "KPhE_2026_T2c_KO.pdf",
      "part": "T2c",
@@ -178,134 +64,6 @@
     }
    ],
    "keys": {
-    "T1a": [
-     2,
-     1,
-     5,
-     3,
-     3,
-     4,
-     2,
-     1,
-     5,
-     3,
-     3,
-     4,
-     5,
-     5,
-     4,
-     3,
-     2,
-     1,
-     4,
-     4,
-     3,
-     1,
-     3,
-     2,
-     2
-    ],
-    "T1b": [
-     4,
-     5,
-     4,
-     3,
-     2,
-     4,
-     3,
-     3,
-     3,
-     4,
-     1,
-     3,
-     2,
-     1,
-     4,
-     3,
-     5,
-     1
-    ],
-    "T1c": [
-     2,
-     1,
-     4,
-     1,
-     4,
-     3,
-     3,
-     3,
-     5,
-     1,
-     4,
-     4,
-     1,
-     2,
-     2,
-     1,
-     3,
-     5
-    ],
-    "T1d": [
-     4,
-     4,
-     3,
-     4,
-     3,
-     2,
-     2,
-     1,
-     2,
-     2,
-     1,
-     1
-    ],
-    "T2a": [
-     2,
-     3,
-     2,
-     1,
-     3,
-     3,
-     3,
-     2,
-     3,
-     4,
-     1,
-     4,
-     3,
-     4,
-     1,
-     1,
-     3,
-     2,
-     3,
-     3,
-     4,
-     5,
-     2,
-     5,
-     5
-    ],
-    "T2b": [
-     2,
-     5,
-     3,
-     5,
-     2,
-     5,
-     3,
-     4,
-     2,
-     4,
-     5,
-     2,
-     3,
-     3,
-     3,
-     4,
-     5,
-     5
-    ],
     "T2c": [
      4,
      1,
@@ -341,10 +99,10 @@
      5
     ]
    },
-   "note": "한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "제2회 물리대회 (2026. 9. 5). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
   },
   {
-   "y": 2025,
+   "y": "2026-1",
    "host": {
     "ko": "대한민국",
     "en": "South Korea"
@@ -352,129 +110,102 @@
    "cc": "kr",
    "problems": [
     {
-     "id": "T1a",
-     "title": "제1회 (2025. 2. 22) · 초급과정"
-    },
-    {
-     "id": "T1b",
-     "title": "제1회 (2025. 2. 22) · 중급과정"
-    },
-    {
      "id": "T1c",
-     "title": "제1회 (2025. 2. 22) · 고급과정"
+     "title": "고급과정"
     },
     {
      "id": "T1d",
-     "title": "제1회 (2025. 2. 22) · 전문가과정"
-    },
-    {
-     "id": "T2a",
-     "title": "제2회 (2025. 8. 30) · 초급과정"
-    },
-    {
-     "id": "T2b",
-     "title": "제2회 (2025. 8. 30) · 중급과정"
-    },
-    {
-     "id": "T2c",
-     "title": "제2회 (2025. 8. 30) · 고급과정"
-    },
-    {
-     "id": "T2d",
-     "title": "제2회 (2025. 8. 30) · 전문가과정"
+     "title": "전문가과정"
     }
    ],
    "files": [
     {
-     "file": "KPhE_2025_T1a_KO.pdf",
-     "part": "T1a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/cc4c0676-7ecf-4359-8948-a9b06e7db48c",
-     "bytes": 180723
-    },
-    {
-     "file": "KPhE_2025_T1aS.pdf",
-     "part": "T1a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/69c3097c-f250-4598-a62e-7cb79e7e84c3",
-     "bytes": 28145
-    },
-    {
-     "file": "KPhE_2025_T1b_KO.pdf",
-     "part": "T1b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/749a9742-1a03-47e6-8be2-61b240a85d41",
-     "bytes": 434635
-    },
-    {
-     "file": "KPhE_2025_T1bS.pdf",
-     "part": "T1b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/36f04a2a-56fc-4bd7-ab3d-46777400de80",
-     "bytes": 28000
-    },
-    {
-     "file": "KPhE_2025_T1c_KO.pdf",
+     "file": "KPhE_2026_T1c_KO.pdf",
      "part": "T1c",
      "kind": "paper",
      "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/ab594063-8352-48ca-99b7-d642aec63dc6",
-     "bytes": 599998
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/345544a4-ed9f-4eef-be8a-88f301cf6b3c",
+     "bytes": 473137
     },
     {
-     "file": "KPhE_2025_T1cS.pdf",
+     "file": "KPhE_2026_T1cS.pdf",
      "part": "T1c",
      "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/5665ced4-11ee-4369-9a2b-d5bf3c74aadc",
-     "bytes": 27992
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/476aff83-8005-4568-b7db-72828904c538",
+     "bytes": 27398
     },
     {
-     "file": "KPhE_2025_T1d_KO.pdf",
+     "file": "KPhE_2026_T1d_KO.pdf",
      "part": "T1d",
      "kind": "paper",
      "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/ef0da2c2-1f75-4f9f-87af-f03e0d0d1fe3",
-     "bytes": 313692
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/f721bdf8-894a-4be4-98dc-9ffd94042b8a",
+     "bytes": 149868
     },
     {
-     "file": "KPhE_2025_T1dS.pdf",
+     "file": "KPhE_2026_T1dS.pdf",
      "part": "T1d",
      "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/69f07da6-de0b-4984-9c09-9305b4790755",
-     "bytes": 28184
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/153e538c-9ab4-472a-bfc8-16260f9f3e46",
+     "bytes": 27256
+    }
+   ],
+   "keys": {
+    "T1c": [
+     2,
+     1,
+     4,
+     1,
+     4,
+     3,
+     3,
+     3,
+     5,
+     1,
+     4,
+     4,
+     1,
+     2,
+     2,
+     1,
+     3,
+     5
+    ],
+    "T1d": [
+     4,
+     4,
+     3,
+     4,
+     3,
+     2,
+     2,
+     1,
+     2,
+     2,
+     1,
+     1
+    ]
+   },
+   "note": "제1회 물리대회 (2026. 2. 28). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+  },
+  {
+   "y": "2025-2",
+   "host": {
+    "ko": "대한민국",
+    "en": "South Korea"
+   },
+   "cc": "kr",
+   "problems": [
+    {
+     "id": "T2c",
+     "title": "고급과정"
     },
     {
-     "file": "KPhE_2025_T2a_KO.pdf",
-     "part": "T2a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/55392a4f-26ac-4994-85fe-e6523db4b079",
-     "bytes": 307912
-    },
-    {
-     "file": "KPhE_2025_T2aS.pdf",
-     "part": "T2a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/cdee5ae5-ff69-4934-8ab7-4c19cca1b07c",
-     "bytes": 27790
-    },
-    {
-     "file": "KPhE_2025_T2b_KO.pdf",
-     "part": "T2b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/710ece63-7436-4278-a6ea-67688ed7a6f2",
-     "bytes": 397989
-    },
-    {
-     "file": "KPhE_2025_T2bS.pdf",
-     "part": "T2b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/d893ea50-286b-47f3-b2bb-f25a74cae0cc",
-     "bytes": 27652
-    },
+     "id": "T2d",
+     "title": "전문가과정"
+    }
+   ],
+   "files": [
     {
      "file": "KPhE_2025_T2c_KO.pdf",
      "part": "T2c",
@@ -507,140 +238,6 @@
     }
    ],
    "keys": {
-    "T1a": [
-     3,
-     4,
-     4,
-     5,
-     4,
-     3,
-     5,
-     5,
-     1,
-     4,
-     4,
-     3,
-     2,
-     5,
-     3,
-     1,
-     5,
-     3,
-     4,
-     4,
-     2,
-     3,
-     1,
-     2,
-     1
-    ],
-    "T1b": [
-     2,
-     5,
-     3,
-     3,
-     5,
-     1,
-     3,
-     3,
-     4,
-     5,
-     4,
-     1,
-     1,
-     3,
-     2,
-     4,
-     3,
-     5
-    ],
-    "T1c": [
-     1,
-     5,
-     1,
-     3,
-     2,
-     2,
-     2,
-     3,
-     2,
-     1,
-     1,
-     4,
-     1,
-     1,
-     3,
-     1,
-     4,
-     1
-    ],
-    "T1d": [
-     5,
-     1,
-     4,
-     2,
-     4,
-     1,
-     4,
-     2,
-     1,
-     3,
-     2,
-     1,
-     5,
-     2,
-     1,
-     4,
-     2,
-     3
-    ],
-    "T2a": [
-     3,
-     2,
-     1,
-     4,
-     2,
-     3,
-     2,
-     1,
-     4,
-     2,
-     5,
-     4,
-     4,
-     5,
-     5,
-     4,
-     1,
-     1,
-     3,
-     5,
-     4,
-     1,
-     1,
-     5,
-     4
-    ],
-    "T2b": [
-     2,
-     5,
-     5,
-     4,
-     3,
-     1,
-     4,
-     2,
-     5,
-     5,
-     3,
-     2,
-     1,
-     4,
-     1,
-     2,
-     5,
-     1
-    ],
     "T2c": [
      2,
      5,
@@ -682,10 +279,10 @@
      3
     ]
    },
-   "note": "한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "제2회 물리대회 (2025. 8. 30). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
   },
   {
-   "y": 2024,
+   "y": "2025-1",
    "host": {
     "ko": "대한민국",
     "en": "South Korea"
@@ -693,129 +290,108 @@
    "cc": "kr",
    "problems": [
     {
-     "id": "T1a",
-     "title": "제1회 (2024. 2. 24) · 초급과정"
-    },
-    {
-     "id": "T1b",
-     "title": "제1회 (2024. 2. 24) · 중급과정"
-    },
-    {
      "id": "T1c",
-     "title": "제1회 (2024. 2. 24) · 고급과정"
+     "title": "고급과정"
     },
     {
      "id": "T1d",
-     "title": "제1회 (2024. 2. 24) · 전문가과정"
-    },
-    {
-     "id": "T2a",
-     "title": "제2회 (2024. 8. 31) · 초급과정"
-    },
-    {
-     "id": "T2b",
-     "title": "제2회 (2024. 8. 31) · 중급과정"
-    },
-    {
-     "id": "T2c",
-     "title": "제2회 (2024. 8. 31) · 고급과정"
-    },
-    {
-     "id": "T2d",
-     "title": "제2회 (2024. 8. 31) · 전문가과정"
+     "title": "전문가과정"
     }
    ],
    "files": [
     {
-     "file": "KPhE_2024_T1a_KO.pdf",
-     "part": "T1a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/6e6a4178-50e4-406c-aa79-ab735ee98ecd",
-     "bytes": 372630
-    },
-    {
-     "file": "KPhE_2024_T1aS.pdf",
-     "part": "T1a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/55dcd77f-b769-4343-9c96-4517c1ded00f",
-     "bytes": 44519
-    },
-    {
-     "file": "KPhE_2024_T1b_KO.pdf",
-     "part": "T1b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/7b1fbec0-02d9-4333-9341-1555a4279858",
-     "bytes": 690298
-    },
-    {
-     "file": "KPhE_2024_T1bS.pdf",
-     "part": "T1b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/4f65d6f0-b573-400e-9c16-a8a2217e6360",
-     "bytes": 39345
-    },
-    {
-     "file": "KPhE_2024_T1c_KO.pdf",
+     "file": "KPhE_2025_T1c_KO.pdf",
      "part": "T1c",
      "kind": "paper",
      "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/9248f076-b0de-45ed-a833-f9afefd927ba",
-     "bytes": 544511
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/ab594063-8352-48ca-99b7-d642aec63dc6",
+     "bytes": 599998
     },
     {
-     "file": "KPhE_2024_T1cS.pdf",
+     "file": "KPhE_2025_T1cS.pdf",
      "part": "T1c",
      "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/48f48a54-b739-4644-8dd0-8652856cfdfa",
-     "bytes": 40828
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/5665ced4-11ee-4369-9a2b-d5bf3c74aadc",
+     "bytes": 27992
     },
     {
-     "file": "KPhE_2024_T1d_KO.pdf",
+     "file": "KPhE_2025_T1d_KO.pdf",
      "part": "T1d",
      "kind": "paper",
      "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/391e0370-13fa-495d-a33f-8c6b9c4f3c7a",
-     "bytes": 362227
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/ef0da2c2-1f75-4f9f-87af-f03e0d0d1fe3",
+     "bytes": 313692
     },
     {
-     "file": "KPhE_2024_T1dS.pdf",
+     "file": "KPhE_2025_T1dS.pdf",
      "part": "T1d",
      "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/4b8933fe-d85b-46b1-9366-82f4ae727eef",
-     "bytes": 41262
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/69f07da6-de0b-4984-9c09-9305b4790755",
+     "bytes": 28184
+    }
+   ],
+   "keys": {
+    "T1c": [
+     1,
+     5,
+     1,
+     3,
+     2,
+     2,
+     2,
+     3,
+     2,
+     1,
+     1,
+     4,
+     1,
+     1,
+     3,
+     1,
+     4,
+     1
+    ],
+    "T1d": [
+     5,
+     1,
+     4,
+     2,
+     4,
+     1,
+     4,
+     2,
+     1,
+     3,
+     2,
+     1,
+     5,
+     2,
+     1,
+     4,
+     2,
+     3
+    ]
+   },
+   "note": "제1회 물리대회 (2025. 2. 22). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+  },
+  {
+   "y": "2024-2",
+   "host": {
+    "ko": "대한민국",
+    "en": "South Korea"
+   },
+   "cc": "kr",
+   "problems": [
+    {
+     "id": "T2c",
+     "title": "고급과정"
     },
     {
-     "file": "KPhE_2024_T2a_KO.pdf",
-     "part": "T2a",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/22ebba6d-e08c-4744-bb71-c3bc27b3f6d8",
-     "bytes": 307909
-    },
-    {
-     "file": "KPhE_2024_T2aS.pdf",
-     "part": "T2a",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/31e720fc-9894-4532-a990-a1292535317d",
-     "bytes": 39452
-    },
-    {
-     "file": "KPhE_2024_T2b_KO.pdf",
-     "part": "T2b",
-     "kind": "paper",
-     "lang": "KO",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/48a2246c-ac85-4f50-a961-46d0ef67412c",
-     "bytes": 629751
-    },
-    {
-     "file": "KPhE_2024_T2bS.pdf",
-     "part": "T2b",
-     "kind": "solution",
-     "url": "https://kphadmin.kps.or.kr/uploads/pds/42b2a92b-0067-4c77-8384-0745b0b525b0",
-     "bytes": 39170
-    },
+     "id": "T2d",
+     "title": "전문가과정"
+    }
+   ],
+   "files": [
     {
      "file": "KPhE_2024_T2c_KO.pdf",
      "part": "T2c",
@@ -848,140 +424,6 @@
     }
    ],
    "keys": {
-    "T1a": [
-     3,
-     4,
-     4,
-     3,
-     1,
-     3,
-     3,
-     2,
-     3,
-     3,
-     4,
-     4,
-     4,
-     5,
-     5,
-     4,
-     2,
-     2,
-     5,
-     4,
-     5,
-     4,
-     3,
-     3,
-     3
-    ],
-    "T1b": [
-     1,
-     4,
-     2,
-     1,
-     2,
-     5,
-     3,
-     4,
-     3,
-     3,
-     2,
-     4,
-     3,
-     3,
-     3,
-     2,
-     1,
-     5
-    ],
-    "T1c": [
-     4,
-     2,
-     5,
-     5,
-     2,
-     3,
-     4,
-     4,
-     5,
-     4,
-     3,
-     2,
-     2,
-     4,
-     5,
-     3,
-     2,
-     5
-    ],
-    "T1d": [
-     2,
-     1,
-     5,
-     1,
-     4,
-     3,
-     5,
-     5,
-     1,
-     5,
-     4,
-     3,
-     3,
-     2,
-     2,
-     4,
-     1,
-     4
-    ],
-    "T2a": [
-     5,
-     4,
-     5,
-     2,
-     4,
-     4,
-     2,
-     3,
-     1,
-     1,
-     3,
-     3,
-     4,
-     5,
-     4,
-     1,
-     2,
-     4,
-     2,
-     5,
-     2,
-     1,
-     5,
-     4,
-     3
-    ],
-    "T2b": [
-     3,
-     2,
-     5,
-     5,
-     3,
-     5,
-     2,
-     5,
-     2,
-     5,
-     1,
-     2,
-     5,
-     2,
-     2,
-     5,
-     5,
-     5
-    ],
     "T2c": [
      2,
      4,
@@ -1023,7 +465,100 @@
      3
     ]
    },
-   "note": "한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "제2회 물리대회 (2024. 8. 31). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+  },
+  {
+   "y": "2024-1",
+   "host": {
+    "ko": "대한민국",
+    "en": "South Korea"
+   },
+   "cc": "kr",
+   "problems": [
+    {
+     "id": "T1c",
+     "title": "고급과정"
+    },
+    {
+     "id": "T1d",
+     "title": "전문가과정"
+    }
+   ],
+   "files": [
+    {
+     "file": "KPhE_2024_T1c_KO.pdf",
+     "part": "T1c",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/9248f076-b0de-45ed-a833-f9afefd927ba",
+     "bytes": 544511
+    },
+    {
+     "file": "KPhE_2024_T1cS.pdf",
+     "part": "T1c",
+     "kind": "solution",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/48f48a54-b739-4644-8dd0-8652856cfdfa",
+     "bytes": 40828
+    },
+    {
+     "file": "KPhE_2024_T1d_KO.pdf",
+     "part": "T1d",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/391e0370-13fa-495d-a33f-8c6b9c4f3c7a",
+     "bytes": 362227
+    },
+    {
+     "file": "KPhE_2024_T1dS.pdf",
+     "part": "T1d",
+     "kind": "solution",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/4b8933fe-d85b-46b1-9366-82f4ae727eef",
+     "bytes": 41262
+    }
+   ],
+   "keys": {
+    "T1c": [
+     4,
+     2,
+     5,
+     5,
+     2,
+     3,
+     4,
+     4,
+     5,
+     4,
+     3,
+     2,
+     2,
+     4,
+     5,
+     3,
+     2,
+     5
+    ],
+    "T1d": [
+     2,
+     1,
+     5,
+     1,
+     4,
+     3,
+     5,
+     5,
+     1,
+     5,
+     4,
+     3,
+     3,
+     2,
+     2,
+     4,
+     1,
+     4
+    ]
+   },
+   "note": "제1회 물리대회 (2024. 2. 24). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
   }
  ],
  "missing": [
@@ -1031,5 +566,6 @@
    "y": 2023,
    "why": "the board lists papers from 2024 제1회 on"
   }
- ]
+ ],
+ "plain": true
 }
