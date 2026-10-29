@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<meta name="robots" content="noindex">
+<title>모니터 채점 · On-screen exam · HaslaLab</title>
+<!-- On-screen exam for a multiple-choice paper (KPhE, the Korean Physical Society's Physics League).  The paper fills
+     the left of the screen, drawn page by page with pdf.js (no download, no print); the answer sheet is a column of
+     ①–⑤ bubbles on the right.  The clock runs in this browser; at the end (or on «제출») the marks are checked
+     against the official answer key (theory.js: THEORY[c][y].k[part]) at once — no AI, no token, no sign-in.
+     An open sitting survives a reload (localStorage), and every finished one is kept in the browser's history.
+     URL: omr.html?c=kphe&y=2026&e=T2a&lang=ko -->
+<style>
+  :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e;--deep:#12161b;
+        --red:#e5534b;--ok:#57ab5a;--bar:52px}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:var(--accent)}
+  button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:#2b2f36;color:var(--ink);padding:7px 13px}
+  button:hover:not(:disabled){border-color:var(--accent)}
+  button:disabled{opacity:.45;cursor:default}
+  button.pri{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:700}
+  .bar{position:fixed;inset:0 0 auto 0;height:var(--bar);display:flex;align-items:center;gap:12px;padding:0 14px;
+       background:var(--deep);border-bottom:1px solid var(--line);z-index:20}
+  .bar .ttl{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .sp{flex:1}
+  .clock{font:600 20px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.04em}
+  .clock.low{color:var(--red)}
+  main{position:fixed;inset:var(--bar) 0 0 0;display:flex}
+  .pv{flex:1;overflow:auto;background:#2a2e35;padding:12px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .pv canvas{background:#fff;box-shadow:0 2px 10px #0006;max-width:100%}
+  .pv .msg{margin:auto;color:var(--muted)}
+  .omr{width:280px;flex:none;overflow:auto;background:var(--panel);border-left:1px solid var(--line);padding:12px 12px 20px}
+  .omr h2{font-size:13px;margin:0 0 10px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+  .q{display:flex;align-items:center;gap:6px;padding:4px 2px;border-bottom:1px dashed #333a42}
+  .q .n{width:24px;text-align:right;font:600 13px ui-monospace,Menlo,monospace;color:var(--muted)}
+  .q .bs{display:flex;gap:5px}
+  .q .b{width:30px;height:30px;padding:0;border-radius:50%;font-size:13px;display:grid;place-items:center}
+  .q .b.on{background:var(--ink);color:#1c2027;border-color:var(--ink);font-weight:700}
+  .q .b:disabled{opacity:1;cursor:default}
+  .q.ok .n{color:var(--ok)} .q.no .n{color:var(--red)}
+  .q .b.key{box-shadow:0 0 0 2px var(--ok)}
+  .q .b.on.wrong{background:var(--red);border-color:var(--red);color:#fff}
+  .q .mk{margin-left:auto;font-weight:700}
+  .page{max-width:760px;margin:0 auto;padding:calc(var(--bar) + 28px) 18px 40px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+  .card h1{margin:0 0 6px;font-size:22px}
+  .card p{color:var(--muted)}
+  .card ul{padding-left:20px;color:var(--ink)} .card li{margin:4px 0}
+  table.hist{width:100%;border-collapse:collapse;font-size:13px} table.hist td,table.hist th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+  .score{font:700 44px/1.1 ui-monospace,Menlo,monospace;margin:6px 0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  @media (max-width:760px){main{flex-direction:column}.omr{width:auto;border-left:0;border-top:1px solid var(--line);max-height:42vh}}
+</style>
+</head>
+<body>
+<div class="bar"><span class="ttl" id="ttl"></span><span class="sp"></span><span class="clock" id="clock" hidden></span><span id="act"></span></div>
+<div id="root"></div>
+<script src="../theory.js"></script>
+<script>
+const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+const Q = new URLSearchParams(location.search);
+let lang = Q.get("lang") === "en" ? "en" : "ko";
+const C = (Q.get("c") || "").toLowerCase(), Y = parseInt(Q.get("y")) || 0, PART = Q.get("e") || "";
+const T = ((window.THEORY || {})[C] || {})[String(Y)] || null;
+const F = T && T.f && T.f[PART] || null, KEY = T && T.k && T.k[PART] || null;
+const META = (window.THEORY_META || {})[C] || {};
+const TITLE = ((T && T.p || []).find(p => p[0] === PART) || [])[1] || PART;
+const MIN = 90;                                    // the organisers publish no time per paper: ninety minutes for each
+const NAME = `${META.abbr || C.toUpperCase()} ${Y} · ${TITLE}`;
+const SKEY = "hlOmr:" + C + Y + ":" + PART, HKEY = "hlOmrHist";
+const S = {
+  ko: { start: "시작하기", startQ: "시작하면 타이머가 돌고, 시간이 끝나면 자동으로 제출됩니다.", submit: "제출", submitQ: "제출하고 채점할까요? 표시하지 않은 문항은 0점입니다.",
+        intro: "모니터 채점 실전 모의", rules: [
+          `시간: <b>${MIN}분</b>. 시간이 끝나면 그때까지 표시한 답으로 자동 제출됩니다.`,
+          "문제지는 왼쪽 화면에만 뜹니다 (내려받기 · 인쇄 없음).",
+          "오른쪽 답안지에서 ①~⑤를 눌러 답을 표시하세요. 다시 누르면 지워집니다.",
+          "제출하면 공식 정답과 바로 대조해 점수와 문항별 정오를 보여 줍니다. <b>AI 채점이 아니고 토큰도 쓰지 않습니다</b>.",
+          "새로 고침하거나 창을 닫았다 열어도 이 브라우저에서는 같은 시험이 이어집니다." ],
+        sheet: "답안지", left: "남은 시간", done: "채점 결과", correct: (a, n) => `${n}문항 중 ${a}문항 정답`, again: "다시 풀기", back: "대회 페이지로",
+        ans: "공식 정답 PDF", hist: "이 브라우저의 기록", when: "날짜", got: "점수", none: "기록 없음", bad: "이 시험을 찾지 못했습니다.", noKey: "이 문제지는 정답표가 없어 모니터 채점을 할 수 없습니다.",
+        loading: "문제지를 불러오는 중…", fail: "문제지를 불러오지 못했습니다. 잠시 후 다시 열어 보세요.", resume: "진행 중인 시험으로 돌아왔습니다. 타이머는 그동안에도 흘렀습니다.",
+        unmarked: n => `표시하지 않은 문항 ${n}개`, lang: "English" },
+  en: { start: "Start", startQ: "The timer starts and the sheet is submitted by itself when the time is up.", submit: "Submit", submitQ: "Submit and grade now? Unmarked questions score nothing.",
+        intro: "On-screen mock exam", rules: [
+          `Time: <b>${MIN} minutes</b>. When it runs out, what you have marked is submitted.`,
+          "The paper shows on the left of the screen only (no download, no print).",
+          "Mark ①–⑤ on the answer sheet on the right; click again to clear.",
+          "On submitting, the marks are checked against the official answer key at once: <b>no AI grading, no token</b>.",
+          "A reload or a closed window comes back to the same exam in this browser." ],
+        sheet: "Answer sheet", left: "Time left", done: "Result", correct: (a, n) => `${a} of ${n} correct`, again: "Try again", back: "Back to the competition",
+        ans: "Official answer key (PDF)", hist: "Your attempts in this browser", when: "Date", got: "Score", none: "No attempts yet", bad: "This exam was not found.", noKey: "This paper has no answer key, so it cannot be graded on screen.",
+        loading: "Loading the paper…", fail: "The paper could not be loaded. Try again shortly.", resume: "Back to the exam in progress. The timer kept running meanwhile.",
+        unmarked: n => `${n} unmarked`, lang: "한국어" } };
+const t = () => S[lang];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }, del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
+const ok = (q, a) => Array.isArray(KEY[q]) ? KEY[q].includes(a) : KEY[q] === a;
+const pdfUrl = f => /^https?:/.test(f) ? f : /^pdfx\//.test(f) ? "../" + f : PDF_BASE + f;
+const backHref = () => `../#/${C}/${Y}`;
+let RUN = store.get(SKEY, null), tick = null;
+
+function bar(right) {
+  $("ttl").textContent = NAME;
+  $("act").innerHTML = right || `<button id="lg">${t().lang}</button>`;
+  if ($("lg")) $("lg").onclick = () => { lang = lang === "ko" ? "en" : "ko"; render(); };
+}
+function render() {
+  document.documentElement.lang = lang;
+  clearInterval(tick); $("clock").hidden = true;
+  if (!T || !F || !F.paper) { bar(); $("root").innerHTML = `<div class="page"><div class="card"><h1>${t().bad}</h1><a href="../#/comps">←</a></div></div>`; return; }
+  if (!KEY) { bar(); $("root").innerHTML = `<div class="page"><div class="card"><h1>${esc(NAME)}</h1><p>${t().noKey}</p><a href="${backHref()}">${t().back}</a></div></div>`; return; }
+  if (RUN && RUN.done) return result();
+  if (RUN) return exam();
+  intro();
+}
+function intro() {
+  bar();
+  const hist = store.get(HKEY, []).filter(h => h.k === SKEY);
+  $("root").innerHTML = `<div class="page"><div class="card"><div style="color:var(--muted);font-size:12px">${t().intro}</div><h1>${esc(NAME)}</h1>
+    <p>${KEY.length} · ①–⑤</p><ul>${t().rules.map(r => `<li>${r}</li>`).join("")}</ul>
+    <div class="row"><button class="pri" id="go">${t().start}</button><a href="${backHref()}">${t().back}</a></div></div>
+    <div class="card"><h2 style="margin:0 0 8px;font-size:15px">${t().hist}</h2>${hist.length ? `<table class="hist"><tr><th>${t().when}</th><th>${t().got}</th></tr>${hist.slice(-10).reverse().map(h => `<tr><td>${new Date(h.at).toLocaleString()}</td><td>${h.got} / ${h.n}</td></tr>`).join("")}</table>` : `<p>${t().none}</p>`}</div></div>`;
+  $("go").onclick = () => { if (!confirm(t().startQ)) return; RUN = { at: Date.now(), marks: {} }; store.set(SKEY, RUN); exam(); };
+}
+function sheet(review) {
+  return `<h2>${t().sheet}</h2>${KEY.map((_, i) => { const q = i + 1, m = RUN.marks[q], good = review && m && ok(i, m);
+    return `<div class="q${review ? (good ? " ok" : " no") : ""}"><span class="n">${q}</span><span class="bs">${[1, 2, 3, 4, 5].map(b => {
+      const key = review && ok(i, b), on = m === b;
+      return `<button class="b${on ? " on" : ""}${review && key ? " key" : ""}${review && on && !key ? " wrong" : ""}" data-q="${q}" data-b="${b}"${review ? " disabled" : ""}>${"①②③④⑤"[b - 1]}</button>`; }).join("")}</span>
+      ${review ? `<span class="mk" style="color:${good ? "var(--ok)" : "var(--red)"}">${good ? "○" : "✕"}</span>` : ""}</div>`; }).join("")}`;
+}
+function exam() {
+  const end = RUN.at + MIN * 60e3;
+  if (Date.now() >= end) return finish();
+  bar(`<button class="pri" id="sub">${t().submit}</button>`);
+  $("root").innerHTML = `<main><div class="pv" id="pv"><div class="msg">${t().loading}</div></div><aside class="omr" id="omr">${sheet(false)}</aside></main>`;
+  $("omr").onclick = e => { const b = e.target.closest("button.b"); if (!b) return;
+    const q = +b.dataset.q, v = +b.dataset.b; if (RUN.marks[q] === v) delete RUN.marks[q]; else RUN.marks[q] = v;
+    store.set(SKEY, RUN); $("omr").innerHTML = sheet(false); };
+  $("sub").onclick = () => { const un = KEY.length - Object.keys(RUN.marks).length; if (confirm(t().submitQ + (un ? "\n" + t().unmarked(un) : ""))) finish(); };
+  const cl = $("clock"); cl.hidden = false;
+  const draw = () => { const s = Math.max(0, Math.round((end - Date.now()) / 1000)); cl.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+    cl.classList.toggle("low", s < 300); if (s <= 0) finish(); };
+  draw(); tick = setInterval(draw, 1000);
+  drawPaper();
+}
+function finish() {
+  clearInterval(tick);
+  const got = KEY.reduce((n, _, i) => n + (RUN.marks[i + 1] && ok(i, RUN.marks[i + 1]) ? 1 : 0), 0);
+  RUN.done = { at: Date.now(), got }; store.set(SKEY, RUN);
+  const h = store.get(HKEY, []); h.push({ k: SKEY, at: RUN.done.at, got, n: KEY.length }); store.set(HKEY, h.slice(-200));
+  result();
+}
+function result() {
+  bar(); $("clock").hidden = true;
+  $("root").innerHTML = `<main><div class="pv" id="pv" style="display:block;padding:24px"><div class="card" style="max-width:640px;margin:0 auto">
+      <div style="color:var(--muted);font-size:12px">${t().done}</div><h1>${esc(NAME)}</h1>
+      <div class="score">${RUN.done.got} / ${KEY.length}</div><p>${t().correct(RUN.done.got, KEY.length)}</p>
+      <div class="row">${F.sol ? `<a href="${pdfUrl(F.sol)}" target="_blank" rel="noopener">${t().ans} ↗</a>` : ""}
+        <button class="pri" id="again">${t().again}</button><a href="${backHref()}">${t().back}</a></div></div></div>
+    <aside class="omr">${sheet(true)}</aside></main>`;
+  $("again").onclick = () => { store.del(SKEY); RUN = null; intro(); };
+}
+/* the paper, drawn page by page (pdf.js): no viewer toolbar, nothing to download or print it with */
+let pdfjsP = null, DOC = null;
+function pdfjs() {
+  return pdfjsP || (pdfjsP = new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = PDFJS + "pdf.min.js";
+    sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; res(window.pdfjsLib); };
+    sc.onerror = () => { pdfjsP = null; rej(new Error("pdfjs")); }; document.head.append(sc); }));
+}
+async function drawPaper() {
+  const pv = $("pv"); if (!pv) return; pv.oncontextmenu = e => e.preventDefault();
+  try {
+    const lib = await pdfjs(); DOC = DOC || await lib.getDocument({ url: pdfUrl(F.paper) }).promise;
+    const width = Math.max(260, Math.min(980, pv.clientWidth - 24)), dpr = Math.min(2, devicePixelRatio || 1);
+    pv.innerHTML = "";
+    for (let n = 1; n <= DOC.numPages; n++) {
+      if (!$("pv")) return;
+      const pg = await DOC.getPage(n), vp0 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: width / vp0.width * dpr });
+      const c = document.createElement("canvas"); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      c.style.width = Math.round(vp.width / dpr) + "px"; c.style.height = Math.round(vp.height / dpr) + "px";
+      await pg.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise; pv.append(c);
+    }
+  } catch (e) { if ($("pv")) $("pv").innerHTML = `<div class="msg">${t().fail}</div>`; }
+}
+if (RUN && !RUN.done && Date.now() < RUN.at + MIN * 60e3) setTimeout(() => { const m = document.createElement("div"); m.textContent = t().resume;
+  Object.assign(m.style, { position: "fixed", bottom: "16px", left: "50%", transform: "translateX(-50%)", background: "#000c", padding: "8px 14px", borderRadius: "8px", zIndex: 30 });
+  document.body.append(m); setTimeout(() => m.remove(), 5000); }, 300);
+render();
+</script>
+</body>
+</html>
