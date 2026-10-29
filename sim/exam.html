@@ -375,7 +375,7 @@ const EX = {
 };
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
-  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(f))
+  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(f))
        : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.some(f => f !== "-") && EX.files.every(f => f === "-" || /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;

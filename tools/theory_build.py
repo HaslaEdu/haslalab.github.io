@@ -32,7 +32,8 @@ def load():
             for f in y.get('files', []):
                 g = FILE.match(f.get('file', ''))
                 kind = KINDS.get(f.get('kind'))
-                if not g or g.group(1) != prefix or g.group(2) != year or not kind or not re.match(r'^https?://', f.get('url', '')):
+                # a file comes from its source (url, copied into a release) or is kept on the site (local: pdfx/…)
+                if not g or g.group(1) != prefix or g.group(2) != year or not kind or not (re.match(r'^https?://', f.get('url', '')) or re.match(r'^pdfx/[a-z]+/', f.get('local', ''))):
                     bad.append((path, f.get('file')))
                     continue
                 part = g.group(3)
@@ -40,7 +41,7 @@ def load():
                 # one paper per part: English first, then whatever was published
                 if kind == 'paper' and 'paper' in slot and not (g.group(4) == 'EN' and not slot['paper'].endswith('_EN.pdf')):
                     continue
-                slot[kind] = f['file']
+                slot[kind] = f['local'] if f.get('local') else f['file']
             # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
             # gets what the whole paper has, so it can be read, sat and graded on its own
             for part, slot in files.items():
