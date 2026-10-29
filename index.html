@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=127832bb9c"></script>
+<script src="theory.js?v=27ca182b36"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -1035,7 +1035,7 @@ ko:{
       {y:"2025", n:"ESF",   sub:"동아시아 고교생 지구과학 페스티벌", medal:"bronze", label:"동메달"}
     ]},
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
-  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
+  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyData:"데이터 (엑셀)", thySim:x=>`${x}은 대회가 준 프로그램(시뮬레이터)으로 푸는 문제라 실험 탭에 있습니다. 시뮬레이터로 연습하고 실전 모드로 볼 수 있습니다.`, thyAns:"답안지",
   thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyInv:"초청 라운드", thyPick:"이론 문제를 고르세요", thyPickPlain:"문제를 고르세요", thyPapersPlain:"문제지", thyCntPlain:n=>`${n}문제`, trkThyPlain:"문제지", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
@@ -1105,7 +1105,7 @@ en:{
       {y:"2025", n:"ESF",   sub:"East Asia High School Earth Science Festival", medal:"bronze", label:"Bronze"}
     ]},
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
-  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
+  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyData:"Data (Excel)", thySim:x=>`${x} is solved with the organisers’ program (a simulator), so it is in the experiment track, where you can practise it and sit it in exam mode.`, thyAns:"Answer sheets",
   thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyInv:"Invitational", thyPick:"Choose a theory problem", thyPickPlain:"Choose a paper", thyPapersPlain:"papers", thyCntPlain:n=>`${n} paper${n>1?"s":""}`, trkThyPlain:"Paper", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
@@ -1785,7 +1785,7 @@ const DATA={
        files:{sim:"sim/apho2026_E1_web.html",
               exe:{ko:REL+"v1.0/APhO2026_E1_WaterClock_KO.exe", en:REL+"v1.0/APhO2026_E1_WaterClock_EN.exe"},
               src:{ko:"src/apho2026_E1_sim_KO.py", en:"src/apho2026_E1_sim_EN.py"},
-              pdf:{ko:"pdf/APhO_2026_E1_KO.pdf", en:"pdf/APhO_2026_E1_EN.pdf"},
+              pdf:{ko:"pdfx/apho/APhO_2026_E1_KO.pdf", en:"pdf/APhO_2026_E1_EN.pdf"},
               sol:{ko:"pdf/APhO_2026_S1_KO.pdf", en:"pdf/APhO_2026_S1.pdf"}}},
       {id:"E2",
        title:{ko:"미지 저항의 추정",en:"Estimation of Unknown Resistance"},
@@ -1795,7 +1795,7 @@ const DATA={
        files:{sim:"sim/apho2026_E2_web.html",
               exe:{ko:REL+"v1.0/APhO2026_E2_MicrobitADC_KO.exe", en:REL+"v1.0/APhO2026_E2_MicrobitADC_EN.exe"},
               src:{ko:"src/apho2026_E2_sim_KO.py", en:"src/apho2026_E2_sim_EN.py"},
-              pdf:{ko:"pdf/APhO_2026_E2_KO.pdf", en:"pdf/APhO_2026_E2_EN.pdf"},
+              pdf:{ko:"pdfx/apho/APhO_2026_E2_KO.pdf", en:"pdf/APhO_2026_E2_EN.pdf"},
               sol:{ko:"pdf/APhO_2026_S2_KO.pdf", en:"pdf/APhO_2026_S2.pdf"}}}
     ]},
    {y:2025,host:{ko:"사우디아라비아 · 다란",en:"Dhahran, Saudi Arabia"},cc:"sa",
@@ -2850,7 +2850,7 @@ const DATA={
        files:{sim:"sim/ispho2026_E1_web.html",
               exe:{ko:REL+"v1.0/ISPhO2026_E1_sim_EN.exe", en:REL+"v1.0/ISPhO2026_E1_sim_EN.exe"},
               src:{ko:"src/ispho2026_E1_fbg_sim_KO.py", en:"src/ispho2026_E1_fbg_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2026_E1_KO.pdf", en:"pdf/ISPhO_2026_E1_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2026_E1_KO.pdf", en:"pdf/ISPhO_2026_E1_EN.pdf"},
               sol:{ko:"pdf/ISPhO_2026_S_E_KO.pdf", en:"pdf/ISPhO_2026_S_E_EN.pdf"}}}
     ]},
    {y:2025,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
@@ -2862,7 +2862,7 @@ const DATA={
        tags:["반도체","분광","열"], tagsEn:["Semiconductors","Spectroscopy","Heat"],
        files:{sim:"sim/ispho2025_E1_web.html",
               src:{ko:"src/ispho2025_E1_led_sim_KO.py", en:"src/ispho2025_E1_led_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2025_E1_KO.pdf", en:"pdf/ISPhO_2025_E1_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2025_E1_KO.pdf", en:"pdf/ISPhO_2025_E1_EN.pdf"},
               sol:{ko:"pdf/ISPhO_2025_S_E_KO.pdf", en:"pdf/ISPhO_2025_S_E.pdf"}}},
       {id:"T1", theory:true,
        title:{ko:"강자성 자구벽 동역학",en:"Ferromagnetic Domain Wall Dynamics"},
@@ -2871,7 +2871,7 @@ const DATA={
        tags:["자성","자구벽","수치적분"], tagsEn:["Magnetism","Domain wall","Numerics"],
        files:{sim:"sim/ispho2025_T1_web.html",
               src:{ko:"src/ispho2025_T1_ferro_sim_KO.py", en:"src/ispho2025_T1_ferro_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2025_T_KO.pdf", en:"pdf/ISPhO_2025_T_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2025_T1_KO.pdf", en:"pdfx/ispho/ISPhO_2025_T1_EN.pdf"},
               sol:{ko:"pdf/ISPhO_2025_S_T_KO.pdf", en:"pdf/ISPhO_2025_S_T.pdf"}}}
     ]},
    {y:2024,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
@@ -2883,7 +2883,7 @@ const DATA={
        tags:["분광","흡수","반응 속도"], tagsEn:["Spectroscopy","Absorption","Kinetics"],
        files:{sim:"sim/ispho2024_E1_web.html",
               src:{ko:"src/ispho2024_E1_spectro_sim_KO.py", en:"src/ispho2024_E1_spectro_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
               sol:"pdf/ISPhO_2024_S_E.pdf"}},
       {id:"T1", theory:true,
        title:{ko:"열산화",en:"Thermal Oxidation"},
@@ -2892,7 +2892,7 @@ const DATA={
        tags:["타원편광","박막","산화"], tagsEn:["Ellipsometry","Thin film","Oxidation"],
        files:{sim:"sim/ispho2024_T1_web.html",
               src:{ko:"src/ispho2024_T1_oxide_sim_KO.py", en:"src/ispho2024_T1_oxide_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2024_T_KO.pdf", en:"pdf/ISPhO_2024_T_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2024_T1_KO.pdf", en:"pdfx/ispho/ISPhO_2024_T1_EN.pdf"},
               sol:"pdf/ISPhO_2024_S_T.pdf"}}
     ]},
    {y:2023,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
@@ -2904,7 +2904,7 @@ const DATA={
        tags:["확산","무작위 걸음","다결정"], tagsEn:["Diffusion","Random walk","Polycrystal"],
        files:{sim:"sim/ispho2023_T1_web.html",
               src:{ko:"src/ispho2023_T1_diffusion_sim_KO.py", en:"src/ispho2023_T1_diffusion_sim_EN.py"},
-              pdf:{ko:"pdf/ISPhO_2023_T_KO.pdf", en:"pdf/ISPhO_2023_T_EN.pdf"},
+              pdf:{ko:"pdfx/ispho/ISPhO_2023_T1_KO.pdf", en:"pdfx/ispho/ISPhO_2023_T1_EN.pdf"},
               sol:{ko:"pdf/ISPhO_2023_S_T_KO.pdf", en:"pdf/ISPhO_2023_S_T.pdf"}}}
     ]}
   ]},
@@ -4309,10 +4309,15 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
 /* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
 const THY_WHOLE=new Set(["ispho"]);
+/* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): it is
+   practised and sat in the experiment track, with its simulator, so the theory track leaves it out */
+const simThy=(key,yr)=>new Set(((DATA[key]||{}).years||[]).filter(y=>String(y.y)===String(yr.y))
+  .flatMap(y=>y.problems).filter(p=>p.theory&&p.files&&p.files.sim).map(p=>p.id));
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
+  const sim=simThy(key,yr);
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!/^https?:/.test(t.f[x].paper)), by={};
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!sim.has(x)&&!/^https?:/.test(t.f[x].paper)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
   if(key==="ioi"||(DATA[key]&&DATA[key].omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(DATA[key]&&DATA[key].rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
@@ -4320,7 +4325,8 @@ function theoryGroups(key,yr){
   const out=[];
   for(const g of Object.values(by)){
     const num=g.filter(q=>q.n).sort((a,b)=>a.n-b.n), whole=g.find(q=>!q.n);
-    const pick=whole&&(THY_WHOLE.has(key)||!num.length||num.length>4)?[whole]:num;
+    /* the whole paper would hold the simulator problem too: then its other problems, each on its own paper */
+    const pick=whole&&(THY_WHOLE.has(key)&&!sim.size||!num.length||num.length>4)?[whole]:num;
     for(let i=0;i<pick.length;i+=4) out.push(pick.slice(i,i+4).map(q=>q.x));
   }
   return out;
@@ -4390,7 +4396,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 12;
+const LOGO_V = 13;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
@@ -4929,9 +4935,10 @@ function theoryHtml(key,yr){
       main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],omr?d.omrKey:d.thySol,false,S[1])],
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-      docs:(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+      docs:(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
-  const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
+  const sim=simThy(key,yr);
+  const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)&&!sim.has(x)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   /* the problems of a part: its own; for a whole paper T every problem but the invitational round's (Ti1, Ti2, …),
      which belong to Ti */
   const probsOf=x=>(t.p||[]).filter(q=>x==="T"&&!t.f.T1?!/^Ti/.test(q[0]):x==="Ti"?/^Ti/.test(q[0]):q[0]===x);
@@ -4952,6 +4959,7 @@ function theoryHtml(key,yr){
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(DATA[key],"thyExam")}</a></p>`:""}
+    ${sim.size?`<p class="cnote">${d.thySim([...sim].join(", "))}</p>`:""}
     <div class="probs">${cards}</div></div>`;
 }
 /* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,

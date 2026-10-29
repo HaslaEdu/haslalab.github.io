@@ -5,7 +5,7 @@
 
 <h2>Part A. 확산 계수의 온도 의존성 (2.6점)</h2>
 <p>이 부분에서는 물질의 결정 격자(crystal lattice) 내부에서 일어나는 불순물 입자의 확산을 다룬다.</p>
-<figure><img src="T1_fig1.png" style="width:45mm"><figcaption><b>그림 1.</b> 불순물 원자의 격자간(inter‑nodal) 확산</figcaption></figure>
+<figure><img src="T1_fig1.jpg" style="width:45mm"><figcaption><b>그림 1.</b> 불순물 원자의 격자간(inter‑nodal) 확산</figcaption></figure>
 <p>대부분의 “일반적인” 물질에서 결정 격자 내 확산 과정은 확산하는 불순물 원자가 이웃한 격자 칸 사이를 도약(jump)함으로써 일어난다. 불순물 입자는 대부분의 시간을, 불순물 입자와 격자 원자 사이의 상호작용 퍼텐셜 에너지가 최소가 되는 지점 부근에서 보낸다. 이러한 지점의 부근을 <b>격자간 자리</b>(inter‑nodes)라 한다. 보통 불순물 입자의 에너지는 작으므로, 이들은 이웃한 격자간 자리 사이로만 도약할 수 있다. 이를 위해서는 최소한 $E_g$ 만큼의 에너지 장벽을 넘어야 한다. 이 에너지 $E_g$를 <b>활성화 에너지</b>(activation energy)라 한다. 통계물리학으로부터 이러한 전이가 일어날 확률이 $\exp(-E_g/kT)$에 비례함이 알려져 있다. 또한 이웃한 격자간 자리 사이의 도약 시간은 특성 입자 속력에 반비례해야 한다. 따라서</p>
 \[D \propto v\,\exp(-E_g/kT),\]
 <p>여기서 $v$는 불순물 입자의 열운동에 관련된 제곱평균제곱근(rms) 속력이다.</p>
@@ -24,8 +24,8 @@
 <p>만약 모든 고체가 미시적 수준에서 완전히 균질한 물체였다면, 그 내부의 확산 문제는 자명할 것이다. 그러나 대부분의 물질은 그 구조상 많은 수의 작은 단결정(single crystal)—낟알(grain)—으로 이루어져 있으며, 그 사이의 경계에서는 물질의 원자들이 무질서하게 배열되어 있다. 이 상태가 최소 에너지를 가지는 것은 아니지만, 통상적인 온도에서는 열역학적 관점에서 여전히 가장 확률이 높은 상태이다. 특히 거의 모든 금속은 본질적으로 다결정이다 (예를 들어, 이 메커니즘이 금속의 소성(plasticity)을 보장하는데, 이는 결정 격자의 일부가 서로에 대해 움직일 수 있게 하기 때문이다).</p>
 <p>낟알 경계의 원자들은 무질서하게 배열되어 있고 훨씬 더 “느슨하게” 배열되어 있으므로, 낟알 경계 사이에서의 불순물 원자 이동은 단결정 격자 내부에서의 이동만큼 큰 에너지를 필요로 하지 않는다. 이 때문에 낟알 경계에서의 확산 계수는 그 내부에서보다 훨씬 크며, 이는 다결정 내 확산 과정에 눈에 띄는 영향을 줄 수 있다. 이 문제의 Part B와 C의 목적은 다결정 확산 시 일어나는 현상을 탐구하는 것이다.</p>
 <div style="display:flex;gap:6mm;justify-content:center;align-items:flex-start">
-<figure style="margin:2mm 0"><img src="T1_fig2.png" style="width:48mm"><figcaption><b>그림 2.</b> 다결정의 특징적 구조</figcaption></figure>
-<figure style="margin:2mm 0"><img src="T1_fig3.png" style="width:48mm"><figcaption style="max-width:52mm"><b>그림 3.</b> 원자력 현미경(atomic force microscope)으로 촬영한 다결정의 영상</figcaption></figure>
+<figure style="margin:2mm 0"><img src="T1_fig2.jpg" style="width:48mm"><figcaption><b>그림 2.</b> 다결정의 특징적 구조</figcaption></figure>
+<figure style="margin:2mm 0"><img src="T1_fig3.jpg" style="width:48mm"><figcaption style="max-width:52mm"><b>그림 3.</b> 원자력 현미경(atomic force microscope)으로 촬영한 다결정의 영상</figcaption></figure>
 </div>
 <p>다결정 내 확산 과정에는 세 가지 서로 다른 영역(regime)이 있다. 이들은 각각 A, B, C형 운동학 모드(kinetic mode)라 불린다. A형 운동학 영역은 가장 큰 시간 규모에서, C형 영역은 가장 작은 규모에서 관찰된다. B형 모드는 그 사이의 중간이다. 이 문제에서는 A형과 B형 모드만 다룬다. 특성 확산 규모 $\sim\sqrt{Dt}$가 다결정의 낟알 크기를 초과하면, “삽입된” 물질의 각 원자가 많은 수의 낟알을 통과한다. 이로 인해 확산은 하나의 “전선”(front)을 이루며 진행하며, 낟알 내부의 확산 계수 $D$, 낟알 경계에서의 확산 계수 $D_{gb}$, 그리고 경계가 차지하는 상대 부피 $\delta$에 의존하는 유효 확산 계수 $D_{eff}$로 특성화할 수 있다.</p>
 <p>만약 다결정 내 낟알 경계가 오직 확산 방향을 따라서만 배향되어 있다면, 유효 확산 계수는 단순히 $D$와 $D_{gb}$의 가중 평균과 같을 것이다:</p>
@@ -47,7 +47,7 @@
 
 <h2>Part C. B형 운동학 (5점)</h2>
 <p>문제의 앞부분에서는, 확산의 특성 규모가 다결정 내 불균질성의 크기보다 훨씬 큰 확산 유형을 다루었다. 그러나 이것이 다결정에서 관찰될 수 있는 유일한 확산 모드는 아니다. 만약 확산 규모가 다결정의 낟알 경계 너비보다는 훨씬 크고 낟알 자체의 크기보다는 훨씬 작다면, B형 운동학 확산이 일어난다.</p>
-<figure><img src="T1_fig4.png" style="width:60mm"><figcaption style="max-width:110mm;margin-left:auto;margin-right:auto"><b>그림 4.</b> 서로 다른 경계 조건에서의 B형 운동학 영역의 확산 농도 분포 (a – 경계에서 농도 일정, б – 계 내 입자 수 일정). 두 경우 모두에서 $\ln\bar c(z^{6/5})$의 선형 의존성이 관찰된다.</figcaption></figure>
+<figure><img src="T1_fig4.jpg" style="width:60mm"><figcaption style="max-width:110mm;margin-left:auto;margin-right:auto"><b>그림 4.</b> 서로 다른 경계 조건에서의 B형 운동학 영역의 확산 농도 분포 (a – 경계에서 농도 일정, б – 계 내 입자 수 일정). 두 경우 모두에서 $\ln\bar c(z^{6/5})$의 선형 의존성이 관찰된다.</figcaption></figure>
 <p>이 확산 유형의 주된 특징은, 평균 농도의 로그 $\bar c$가 깊이 $z$에 대해 2차가 아니라 $6/5$ 거듭제곱으로 의존한다는 점이다. 이 값은 해석적으로 유도된 것은 아니지만, 실험에서 매우 잘 관찰되어 그러한 의존성의 존재가 실험의 품질 지표로 사용될 정도이다! 이러한 “비해석성”에도 불구하고, 의존성 $\ln\bar c(z^{6/5})$의 매개변수들은 상당히 정밀하게 알려진 매개변수들과 함께 경험식에 포함된다. 문제의 나머지 부분은 B형 확산과 그로부터 생기는 관계식들의 연구에 할애된다.</p>
 <p>$\ln\bar c(z^{6/5})$의 선형 의존성을 해석적으로 얻을 수는 없지만, 이 의존성의 매개변수들은 (물리적 이유로 — 무차원 변수 $\delta$, $D_{gb}/D$, $Dt/a^2$로부터, 여기서 $a^3$은 다결정 낟알 하나의 부피이다) 문제의 입력 매개변수들로 명확하게 표현된다. 다음과 같이 쓸 수 있다:</p>
 \[\frac{d\ln c}{dz^{6/5}} = -C\,\delta^{\xi}\,a^{\psi}\left[\frac{D_{gb}}{D}\right]^{\eta}\left[\frac{Dt}{a^2}\right]^{\zeta}.\]
@@ -91,13 +91,13 @@
 <p>코드 셀의 아무 곳이나 클릭하고 Shift+Enter를 누르라. 이는 셀의 코드를 실행한다. 새로운 셀이 아래쪽에 나타나며 다음과 같이 보일 것이다:</p>
 <figure><img src="T1_app2.png" style="width:150mm"></figure>
 <p>이것이 문제를 풀 때 사용할 수 있는 대화형 버퍼(interactive buffer)이다. 대화형 입력 필드에 $x$와 $y$ 좌표를 입력할 수 있다. 그런 다음 Add point 버튼을 누르면, 이 값들이 버퍼에 추가된다:</p>
-<figure><img src="T1_app3.png" style="width:140mm"></figure>
+<figure><img src="T1_app3.jpg" style="width:140mm"></figure>
 <p>버퍼에 잘못된 점을 추가한 경우, 프로그램은 버퍼의 마지막 점을 제거할 수 있는 기능을 제공한다. 이를 위해서는 Remove last point 버튼을 클릭하라:</p>
-<figure><img src="T1_app4.png" style="width:140mm"></figure>
+<figure><img src="T1_app4.jpg" style="width:140mm"></figure>
 <p>버퍼를 완전히 비우려면 Clear data를 클릭하라:</p>
-<figure><img src="T1_app5.png" style="width:140mm"></figure>
+<figure><img src="T1_app5.jpg" style="width:140mm"></figure>
 <p>버퍼를 필요한 점들로 채운 후, 두 번째 섹션의 셀을 실행하라. 결과는 다음과 같이 보일 것이다:</p>
 <figure><img src="T1_app6.png" style="width:140mm"></figure>
 <p>Plot fit 버튼을 누르면, 프로그램은 버퍼의 점들을 그리고 그에 대한 선형 회귀 계수를 계산한다. 버퍼 내용과 그에 대응하는 적합 결과의 예시:</p>
-<figure><img src="T1_app7.png" style="width:140mm"></figure>
+<figure><img src="T1_app7.jpg" style="width:140mm"></figure>
 <p>나머지 <code>.nb</code> 파일들도 주석과 직관적인 인터페이스를 갖추고 유사한 방식으로 보이고 동작한다.</p>
