@@ -976,7 +976,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=33722eac44"></script>
+<script src="theory.js?v=1480ac40b4"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4282,11 +4282,13 @@ const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
 /* NBPhO: one booklet holds every problem; each experiment card gets its own problem and solution, cut out of it
    (tools/nbpho_split.py), and its number in the booklet (no) for the combined exam */
-for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!t||!t.x||!t.c) continue;
+for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!t||!t.x) continue;
   const ex=y.problems.filter(p=>/^E\d+$/.test(p.id)).sort((a,b)=>a.id.localeCompare(b.id,"en",{numeric:true}));
   if(ex.length!==t.x.length) continue;
-  ex.forEach((p,i)=>{ const c=t.c[String(t.x[i])]; p.no=t.x[i]; if(!c) return;
-    p.files={...p.files,pdf:{en:c.paper},...(c.sol?{sol:c.sol}:{})}; }); }
+  /* xk: the experiment's Korean problem, cut from the translated booklet (theory_ko.json) */
+  ex.forEach((p,i)=>{ const c=(t.c||{})[String(t.x[i])], k=(t.xk||{})[String(t.x[i])]; p.no=t.x[i];
+    const en=c?c.paper:(p.files.pdf||{}).en;
+    if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(c&&c.sol?{sol:c.sol}:{})}; }); }
 /* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
 function theoryGroups(key,yr){

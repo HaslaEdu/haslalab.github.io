@@ -13,7 +13,8 @@ theory.js keeps only what the site needs:
 
 Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_release.py, not mirrored): a part's own
 go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
-under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk.
+under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk; NBPhO's experiments
+in Korean (the booklet numbers in x) under xk.
 
 A file marked "direct": true (USABO, USNCO) is not mirrored: the site links its url as it is, and its part is not
 offered in exam mode (the exam reads the papers from the releases).
@@ -118,6 +119,11 @@ def korean(out, bad):
                     continue
                 ko = dict(ko)
                 title, en = ko.pop('title', None), ko.pop('en', None)
+                # NBPhO: a booklet number that is an experiment — its Korean problem goes to the experiment card (xk)
+                if re.match(r'^T\d+$', part) and int(part[1:]) in t.get('x', []):
+                    if ko.get('paper'):
+                        t.setdefault('xk', {})[part[1:]] = ko['paper']
+                    continue
                 if part == rev_at and rev:
                     ko['rev'] = rev
                 if part in t['f']:
