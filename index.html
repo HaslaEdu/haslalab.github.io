@@ -550,6 +550,20 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .cmav.s{width:22px;height:22px;font-size:10.5px}
 .cmav.l{width:56px;height:56px;font-size:22px}
 img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
+.cmuser{color:inherit;border-radius:3px}.cmuser:hover{text-decoration:underline;color:var(--cm-acc)}
+.cmuser:focus-visible{outline:2px solid var(--cm-acc);outline-offset:3px}
+.cmprofile{display:flex;gap:16px;align-items:center;padding:24px 20px;border-bottom:1px solid var(--cm-line)}
+.cmprofile h2{font-size:1.4rem;overflow-wrap:anywhere}.cmprofile p{margin:5px 0 0;font-size:12.5px;color:var(--graphite)}
+.cmprofile .cmtag{margin-left:8px}.cmactivitytabs{display:flex;gap:8px;padding:14px 16px;border-bottom:1px solid var(--cm-line)}
+.cmactivitytabs a{padding:8px 14px;border-radius:7px;font-size:14px;color:var(--graphite)}
+.cmactivitytabs a[aria-current]{background:var(--cm-acc);color:#fff;font-weight:600}
+.cmactivity{padding:0 20px}.cmactivity article{padding:17px 0;border-bottom:1px solid var(--cm-line)}
+.cmactivity h3{font-size:15px;line-height:1.6;overflow-wrap:anywhere}.cmactivity h3 a:hover{text-decoration:underline}
+.cmactivity .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--graphite);margin-bottom:6px}
+.cmactivity .meta time{margin-left:auto}.cmactivity .snippet{font-size:13px;color:var(--graphite);margin-top:6px;white-space:pre-wrap;overflow-wrap:anywhere}
+.cmactivity .comment{font-size:14px;line-height:1.7;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.cmactivity .source{font-size:12.5px;color:var(--cm-acc)}.cmc{scroll-margin-top:90px}.cmc.cmfocus{background:var(--cm-soft);outline:2px solid var(--cm-acc);outline-offset:3px;border-radius:4px}
+@media(max-width:520px){.cmprofile{padding:20px 16px}.cmactivity{padding:0 16px}.cmactivity .meta time{margin-left:0}}
 
 /* the board */
 .cmpanel{background:#fff;border:1px solid var(--cm-line);border-radius:12px;overflow:hidden}
@@ -8201,6 +8215,7 @@ const CMT = {
     empty:"아직 글이 없습니다. 첫 글을 써 보세요!", noResult:"검색 결과가 없습니다.",
     off:"<b>커뮤니티 서버에 연결하지 못했습니다.</b> 잠시 뒤에 다시 와 주세요.",
     views:"조회", up:"추천", down:"비추", comments:"댓글", edited:"수정됨", gone:"탈퇴한 사용자", op:"글쓴이",
+    publicProfile:"공개 프로필", profileNote:"닉네임과 공개된 커뮤니티 활동만 표시합니다.", activityPosts:"작성 글", activityComments:"작성 댓글", activityEmptyPosts:"아직 작성한 공개 글이 없습니다.", activityEmptyComments:"아직 작성한 공개 댓글이 없습니다.", profileMissing:"사용자를 찾을 수 없습니다. 탈퇴했거나 닉네임이 바뀌었을 수 있습니다.", parentPost:"원문과 댓글 보기", previous:"이전", next:"다음", pageLabel:"페이지", replyActivity:"답글",
     edit:"수정", del:"삭제", report:"신고", toList:"목록", share:"링크 복사", copied:"링크를 복사했습니다.",
     reply:"답글", cmtPh:"댓글을 남겨 보세요. 서로 존중하는 말로 써 주세요.", cmtSend:"등록", cmtLogin:"로그인하면 댓글을 쓸 수 있습니다.",
     oldest:"등록순", newest:"최신순", save:"저장", cancel:"취소", post:"등록", board:"게시판", tag:"말머리", title:"제목", body:"내용",
@@ -8255,6 +8270,7 @@ const CMT = {
     empty:"No posts yet. Be the first!", noResult:"Nothing matched.",
     off:"<b>Couldn't reach the community server.</b> Please come back in a little while.",
     views:"views", up:"Upvote", down:"Downvote", comments:"comments", edited:"edited", gone:"Deleted user", op:"OP",
+    publicProfile:"Public profile", profileNote:"Only the display name and public community activity are shown.", activityPosts:"Posts", activityComments:"Comments", activityEmptyPosts:"No public posts yet.", activityEmptyComments:"No public comments yet.", profileMissing:"User not found. The account may have been deleted or renamed.", parentPost:"View post and comment", previous:"Previous", next:"Next", pageLabel:"Page", replyActivity:"Reply",
     edit:"Edit", del:"Delete", report:"Report", toList:"Back to list", share:"Copy link", copied:"Link copied.",
     reply:"Reply", cmtPh:"Add a comment. Keep it kind.", cmtSend:"Comment", cmtLogin:"Log in to comment.",
     oldest:"Oldest", newest:"Newest", save:"Save", cancel:"Cancel", post:"Post", board:"Board", tag:"Tag", title:"Title", body:"Text",
@@ -8379,7 +8395,10 @@ function cmFmt(s){
   return esc(s).replace(/https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]'’]/g,
     u=>`<a href="${u}" target="_blank" rel="noopener nofollow ugc">${u}</a>`);
 }
-const cmName = o => o.gone ? CMT[lang].gone : esc(o.nickname);
+function cmProfileHref(nickname,tab="posts",page=1){
+  return `#/community/user/${encodeURIComponent(nickname)}?tab=${tab==="comments"?"comments":"posts"}&page=${page}`;
+}
+const cmName = o => o.gone ? CMT[lang].gone : `<a class="cmuser" href="${esc(cmProfileHref(o.nickname))}" title="${CMT[lang].publicProfile}">${esc(o.nickname)}</a>`;
 function cmAv(name, cls, av){                  /* the profile picture, or a letter avatar coloured by the name */
   if(av && /^[A-Za-z0-9_-]{8,32}$/.test(av)) return `<img class="cmav ${cls||""}" src="${cmBase()}/api/avatar/${av}" alt="" loading="lazy" decoding="async">`;
   const n=String(name||"?"); let h=0; for(const ch of n) h=(h*31+ch.codePointAt(0))>>>0;
@@ -8430,7 +8449,7 @@ function cmRailHtml(active){
   const ch=(k,label,icon,extra)=>`<a class="ch ${active===k?"on":""}" href="#/community/${k}"><span class="hash">${icon}</span>${label}${extra||""}</a>`;
   const cnt=k=>{ const b=B[k]; if(!b) return ""; return b.today>0 ? `<span class="new">${b.today}</span>` : `<span class="cnt">${b.n}</span>`; };
   const me = cm.me
-    ? `<div class="me">${cmAv(cm.me.nickname,"",cm.me.avatar)}<div style="min-width:0"><div class="nm">${esc(cm.me.nickname)}</div><div class="sub">@${esc(cm.me.username)}</div></div>
+    ? `<div class="me">${cmAv(cm.me.nickname,"",cm.me.avatar)}<div style="min-width:0"><div class="nm">${cmName(cm.me)}</div><div class="sub">@${esc(cm.me.username)}</div></div>
          <div class="ops"><a href="#/community/account" title="${T.account}">⚙</a><button type="button" data-cm="logout" title="${T.logout}">⎋</button></div></div>`
     : `<div class="auth"><a class="pri" href="#/community/login">${T.login}</a><a class="sec2" href="#/community/signup">${T.signup}</a></div>`;
   return `<div class="srv"><img src="${logo}" alt=""><b>HaslaLab</b></div>
@@ -8473,7 +8492,7 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
   /* who is signed in, the server's version and the board counts — once, then from memory */
   try{
     const jobs=[];
@@ -8487,6 +8506,7 @@ async function cmMount(){
   const rail=document.getElementById("cmRail"); if(rail) rail.innerHTML=cmRailHtml(where||a);
   try{
     if(a==="post" && b)                 await cmPost(root,+b,alive);
+    else if(a==="user")                 await cmProfile(root,b,q,alive);
     else if(a==="write")                cmWrite(root,null,CM_BOARDS.includes(b)?b:"free");
     else if(a==="edit" && b)            await cmEdit(root,+b,alive);
     else if(a==="login")                cmLogin(root);
@@ -8589,6 +8609,43 @@ async function cmList(root, o, alive){
   }));
 }
 
+async function cmProfile(root, encodedName, q, alive){
+  const T=CMT[lang];
+  let nickname;
+  try{ nickname=decodeURIComponent(encodedName||""); }catch(e){}
+  const missing=()=>{ root.innerHTML=`<div class="cmpanel"><p class="cmempty">${T.profileMissing}</p><div class="cmfoot"><a class="cmbtn" href="#/community">${T.toList}</a></div></div>`; };
+  if(!nickname){ missing(); return; }
+  const tab=q.get("tab")==="comments"?"comments":"posts";
+  const requested=q.get("page")||"1", page=/^[1-9]\d*$/.test(requested)?Math.min(500,Number(requested)):1;
+  root.innerHTML=`<div class="cmpanel"><p class="cmempty" role="status">${T.loading}</p></div>`;
+  let j;
+  try{ j=await cmApi("GET",`/users?nickname=${encodeURIComponent(nickname)}&tab=${tab}&page=${page}`); }
+  catch(e){ if(!alive()) return; if(e.status===404||e.code==="bad_nickname"){ missing(); return; } throw e; }
+  if(!alive()) return;
+  const profile=j.profile, pages=Math.min(500,Math.max(1,Math.ceil(j.total/j.per)));
+  const href=(targetTab=tab,targetPage=1)=>esc(cmProfileHref(profile.nickname,targetTab,targetPage));
+  if(page>pages){ location.hash=cmProfileHref(profile.nickname,tab,pages); return; }
+  const items=tab==="comments"?j.comments:j.posts;
+  const body=items.length?items.map(item=>{
+    const meta=`<div class="meta"><span>${esc(T.boards[item.board]||item.board)}</span>${cmTag(item.tag)}<time title="${cmFull(item.created_at)}">${cmFull(item.created_at)}</time></div>`;
+    if(tab==="comments") return `<article>${meta}${item.parent_id?`<span class="cmtag">${T.replyActivity}</span>`:""}<div class="comment">${cmFmt(item.body)}</div><a class="source" href="#/community/post/${item.post_id}?comment=${item.id}">${T.parentPost} · ${esc(item.post_title)}</a></article>`;
+    return `<article>${meta}<h3><a href="#/community/post/${item.id}">${esc(item.title)}</a>${item.n_comments?` <span class="cc">[${item.n_comments}]</span>`:""}</h3>${item.snip?`<p class="snippet">${esc(item.snip)}</p>`:""}<p class="snippet">${T.views} ${item.views} · ${T.cols.r} ${cmScore(item)} · ${T.comments} ${item.n_comments}</p></article>`;
+  }).join(""):`<p class="cmempty">${tab==="comments"?T.activityEmptyComments:T.activityEmptyPosts}</p>`;
+  let pagination="";
+  if(pages>1){
+    if(page>1) pagination+=`<a href="${href(tab,page-1)}" aria-label="${T.previous}">‹</a>`;
+    const lo=Math.max(1,Math.min(page-2,pages-4)),hi=Math.min(pages,lo+4);
+    for(let n=lo;n<=hi;n++) pagination+=n===page?`<span aria-current="page">${n}</span>`:`<a href="${href(tab,n)}">${n}</a>`;
+    if(page<pages) pagination+=`<a href="${href(tab,page+1)}" aria-label="${T.next}">›</a>`;
+  }
+  root.innerHTML=`<div class="cmpanel">
+    <div class="cmprofile">${cmAv(profile.nickname,"l",profile.avatar)}<div><p>${T.publicProfile}</p><h2>${esc(profile.nickname)}${profile.role==="admin"?'<span class="cmtag notice">admin</span>':""}</h2><p>${T.profileNote}</p></div></div>
+    <nav class="cmactivitytabs" aria-label="${T.publicProfile}"><a href="${href("posts")}" ${tab==="posts"?'aria-current="page"':""}>${T.activityPosts} ${j.counts.posts}</a><a href="${href("comments")}" ${tab==="comments"?'aria-current="page"':""}>${T.activityComments} ${j.counts.comments}</a></nav>
+    <section class="cmactivity" aria-label="${tab==="comments"?T.activityComments:T.activityPosts}">${body}</section>
+    <div class="cmfoot">${pagination?`<nav class="cmpg" aria-label="${T.pageLabel}">${pagination}</nav>`:""}<a class="cmbtn sm" href="#/community">${T.toList}</a></div></div>`;
+  document.title=`${profile.nickname} · ${T.publicProfile} | HaslaLab`;
+}
+
 async function cmPost(root, id, alive){
   const T=CMT[lang];
   /* count a view once per tab, not on every redraw */
@@ -8598,7 +8655,7 @@ async function cmPost(root, id, alive){
   const p=j.post, my=j.my!==undefined ? j.my : (j.liked?1:0);
   let order=cm.cmtOrder||"old";
   const tops=j.comments.filter(c=>!c.parent_id), kids=id=>j.comments.filter(c=>c.parent_id===id);
-  const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"",c.gone?null:c.av)}
+  const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" id="cmComment${c.id}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"",c.gone?null:c.av)}
       <div class="cb"><div class="who"><b>${cmName(c)}</b>${!c.gone&&!p.gone&&c.nickname===p.nickname?`<span class="op">${T.op}</span>`:""}<time title="${cmFull(c.created_at)}">${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</time></div>
         <div class="tx">${cmFmt(c.body)}</div>
         <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
@@ -8687,6 +8744,11 @@ async function cmPost(root, id, alive){
       }
     });
   });
+  const commentId=cmHash().q.get("comment");
+  if(commentId && /^\d+$/.test(commentId)){
+    const target=document.getElementById("cmComment"+commentId);
+    if(target) requestAnimationFrame(()=>{ if(alive()){ target.classList.add("cmfocus"); target.scrollIntoView({block:"center",behavior:"instant"}); } });
+  }
   /* the board's list under the post, as on DC Inside */
   try{
     const l=await cmApi("GET",`/posts?board=${p.board}&page=1&lang=${p.lang||lang}`); if(!alive()) return;

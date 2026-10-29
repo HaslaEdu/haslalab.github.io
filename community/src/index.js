@@ -287,6 +287,40 @@ async function handle(req, env, url) {
     return { token: await newSession(env, user.id), user: pubUser(user), fresh: !!row.fresh };
   }
 
+  /* Public author activity uses display names only. Keep login/account fields out of this response. */
+  if (m === "GET" && ((r = /^\/api\/users\/([^/]+)$/.exec(p)) || p === "/api/users")) {
+    let nickname;
+    // The query form also supports the valid nickname "..", which URL paths normalize away.
+    try { nickname = cleanNick(r ? decodeURIComponent(r[1]) : url.searchParams.get("nickname")); }
+    catch { bad("bad_nickname"); }
+    if (!nickOk(nickname)) bad("bad_nickname");
+    const sp = url.searchParams, tab = sp.get("tab") || "posts", pageText = sp.get("page") || "1";
+    const lang = sp.get("lang");
+    if (tab !== "posts" && tab !== "comments") bad("bad_tab");
+    if (!/^[1-9]\d{0,2}$/.test(pageText) || +pageText > 500) bad("bad_page");
+    if (lang !== null && !LANGS.includes(lang)) bad("bad_lang");
+    const page = +pageText;
+    const user = await env.DB.prepare("SELECT id,nickname,avatar,role FROM users WHERE nickname=? AND deleted=0").bind(nickname).first();
+    if (!user) throw new HttpError(404, "not_found");
+    // Omitted language means the author's entire public history, including both community servers.
+    const filter = lang === null ? "" : " AND p.lang=?", args = [user.id, ...(lang === null ? [] : [lang])];
+    const postWhere = "WHERE p.user_id=?" + filter;
+    const commentWhere = "FROM comments c JOIN posts p ON p.id=c.post_id WHERE c.user_id=?" + filter;
+    const postsSQL = `SELECT p.id,p.board,p.tag,p.lang,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes FROM posts p ${postWhere} ORDER BY p.id DESC LIMIT ? OFFSET ?`;
+    const commentsSQL = `SELECT c.id,c.parent_id,c.post_id,c.body,c.created_at,c.updated_at,p.title AS post_title,p.board,p.tag,p.lang ${commentWhere} ORDER BY c.id DESC LIMIT ? OFFSET ?`;
+    const [postCount, commentCount, activity] = await env.DB.batch([
+      env.DB.prepare(`SELECT COUNT(*) n FROM posts p ${postWhere}`).bind(...args),
+      env.DB.prepare(`SELECT COUNT(*) n ${commentWhere}`).bind(...args),
+      env.DB.prepare(tab === "posts" ? postsSQL : commentsSQL).bind(...args, PAGE, (page - 1) * PAGE),
+    ]);
+    const counts = { posts: postCount.results[0].n, comments: commentCount.results[0].n };
+    return {
+      profile: { nickname: user.nickname, avatar: user.avatar || null, role: user.role === "admin" ? "admin" : "user" },
+      counts, tab, posts: tab === "posts" ? activity.results : [], comments: tab === "comments" ? activity.results : [],
+      total: counts[tab], page, per: PAGE,
+    };
+  }
+
   /* posts */
   if (p === "/api/posts" && m === "GET") {
     const sp = url.searchParams, board = sp.get("board") || "", tag = sp.get("tag") || "";
