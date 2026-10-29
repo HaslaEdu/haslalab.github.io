@@ -175,6 +175,10 @@ nav a:hover,nav a.on{color:var(--ink);border-color:var(--laser)}
 /* ═══════ generic section ═══════ */
 section{padding:58px 0}
 .shead{margin-bottom:26px}
+.genlink{display:inline-flex;align-items:center;gap:6px;margin:10px 8px 0 0;padding:6px 12px;border:1px solid var(--grid-bold);
+  border-radius:8px;background:#fff;font-size:13px;color:var(--ink);text-decoration:none;transition:border-color .12s}
+.genlink::after{content:"↗";font-family:var(--mono);font-size:12px;color:var(--graphite)}
+.genlink:hover{border-color:var(--ink)}
 .shead h2{font-size:1.5rem}
 .shead p{margin:5px 0 0;color:var(--graphite);font-size:14px;max-width:60ch}
 
@@ -972,7 +976,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=1ef7dce712"></script>
+<script src="theory.js?v=5c1f567ac3"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
@@ -1029,8 +1033,8 @@ ko:{
       {y:"2025", n:"ESF",   sub:"동아시아 고교생 지구과학 페스티벌", medal:"bronze", label:"동메달"}
     ]},
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
-  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다).", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
-  thyNoteKo:"한국어 번역이 있는 것은 한국어판이 열립니다. 대회가 공개한 문제지는 「원문」에 있습니다.", thyOrig:"원문", thyKo:"한국어",
+  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
+  thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
@@ -1063,7 +1067,7 @@ ko:{
   actSol:"해설 · 채점기준", actSrc:"파이썬 소스",
   exeNote:"Windows 빌드는 서명하지 않아서 «PC를 보호했습니다» 경고가 뜰 수 있습니다. "+
           "«추가 정보» → «실행»을 누르면 됩니다. 내용이 궁금하면 파이썬 원본을 열어 보세요.",
-  actGeneral:"일반 지시사항 (G0)",
+  actGeneral:"일반 지시사항",
   cntReady:"공개", cntTotal:"문제",
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
@@ -1099,8 +1103,8 @@ en:{
       {y:"2025", n:"ESF",   sub:"East Asia High School Earth Science Festival", medal:"bronze", label:"Bronze"}
     ]},
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
-  thyH:"Theory", thyNote:"As the olympiad published them, in the original language.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
-  thyNoteKo:"As the olympiad published them, in the original language; the Korean buttons open our translations.", thyOrig:"Original", thyKo:"Korean",
+  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
+  thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
@@ -1133,7 +1137,7 @@ en:{
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   exeNote:"The Windows build is unsigned, so Windows may warn that it “protected your PC” — "+
           "click “More info”, then “Run anyway”. The Python source is there if you want to check it.",
-  actGeneral:"General instructions (G0)",
+  actGeneral:"General instructions",
   cntReady:"published", cntTotal:"problems",
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"Back to top ↑"
 }};
@@ -4785,22 +4789,20 @@ function theoryHtml(key,yr){
   const ko=lang==="ko", kt=Object.fromEntries(t.pk||[]);
   const a=(f,lbl,tag)=>f?`<a class="btn ghost" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}${tag?` <span class="lgtag">${tag}</span>`:""}</a>`
                         :`<button class="btn ghost" disabled>${lbl}</button>`;
-  /* Korean: [problems][solutions][answer sheets] / [original problems][original solutions][marking scheme];
-     English: the originals first, then the Korean problems and solutions */
-  const btns=(f,k)=>ko
-    ? [a(k.paper||f.paper,d.thyPaper,!k.paper&&f.paper?d.thyOrig:""), a(k.sol||f.sol,d.thySol,!k.sol&&f.sol?d.thyOrig:""),
-       a(k.answer||f.answer,d.thyAns,!k.answer&&f.answer?d.thyOrig:""),
-       a(k.paper?f.paper:null,d.thyPaperO), a(k.sol?f.sol:null,d.thySolO),
-       a(k.mark||f.mark,d.thyMark,!k.mark&&f.mark?d.thyOrig:"")]
-    : [a(f.paper,d.thyPaper), a(f.sol,d.thySol), a(f.answer,d.thyAns), a(f.mark,d.thyMark), a(k.paper,d.thyPaperO), a(k.sol,d.thySolO)];
+  /* the problem, its solution and (where it was published apart) its marking scheme, each in the reader's language:
+     Korean opens our translation where there is one, else the original; the answer and working sheets are the
+     exam mode's, so they are not listed here */
+  const btns=(f,k)=>{ const kc=!!(k.paper||k.sol);    /* on a card with a translation, an original stands out as such */
+    const one=(kv,ov,lbl)=>ko?a(kv||ov,lbl,!kv&&ov&&kc?d.thyOrig:""):a(ov||kv,lbl,!ov&&kv?d.thyKo:"");
+    return [one(k.paper,f.paper,d.thyPaper), one(k.sol,f.sol,d.thySol)].concat(f.mark||k.mark?[one(k.mark,f.mark,d.thyMark)]:[]); };
   const card=(code,probs,f,k,extra)=>{
-    const has=!!(k.paper||k.sol), chip=has?d.thyKoChip:d.thyOrigChip;
+    const has=ko&&!!(k.paper||k.sol), chip=has?d.thyKoChip:d.thyOrigChip;
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]);
     return `<article class="prob">
       <div class="top"><span class="code">${esc(code)}</span>
         <span class="tr"><span class="status ${has?"live":"dl"}"><i></i>${chip}</span></span></div>
       <h3>${titles.length?titles.map(esc).join(" · "):code==="T"?d.thyAll:esc(code)}</h3>
-      <div class="acts"><div class="docs n3">${btns(f,k).join("")}</div>${extra||""}</div>
+      <div class="acts">${(b=>`<div class="docs n${b.length}">${b.join("")}</div>`)(btns(f,k))}${extra||""}</div>
     </article>`; };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
@@ -4812,11 +4814,21 @@ function theoryHtml(key,yr){
   return `<div class="thycards">
     <div class="shead">
       <h2 style="font-size:1.15rem">${d.thyPick}</h2>
-      ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.thyGuide}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
+      ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
     <p class="tn" style="margin:-14px 0 18px;font-size:12.5px;color:var(--graphite)">${(t.w||t.g||order.some(x=>t.f[x].ko))?d.thyNoteKo:d.thyNote}</p>
     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}
     <div class="probs">${cards}</div></div>`;
+}
+/* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,
+   with a translation the year names (yr.general) laid over the unlabelled one */
+const GENERAL = window.GENERAL || {};
+function genLinks(key,yr){
+  const d=UI[lang], es=(GENERAL[key]&&GENERAL[key][yr.y]||[]).map(([lab,f])=>({lab, en:thyUrl(f)}));
+  if(yr.general){ const e=es.find(x=>!x.lab);
+    if(e) Object.assign(e,{ko:yr.general.ko, en:yr.general.en||e.en}); else es.unshift({lab:"", ko:yr.general.ko, en:yr.general.en}); }
+  return es.map(e=>{ const u=lang==="ko"?(e.ko||e.en):(e.en||e.ko);
+    return `<a class="genlink" href="${u}" target="_blank" rel="noopener">${d.actGeneral}${e.lab?` · ${esc(e.lab)}`:""}${lang!=="ko"&&!e.en?` <span class="lgtag">KO</span>`:""}</a>`; }).join("");
 }
 function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
@@ -4848,8 +4860,7 @@ function viewYear(key,year){
     <div${thyY?" hidden":""}>
     <div class="shead"${yr.problems.length?"":" hidden"}>
       <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
-      ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
-         target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
+      ${genLinks(key,yr)}
     </div>
     ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
       `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}

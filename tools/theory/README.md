@@ -16,6 +16,8 @@
 | `IPhO_2024_TM.pdf` | 따로 공개된 채점 기준표 |
 | `IPhO_2024_TA.pdf` | 공식 답안지 |
 | `IJSO_2024_MC_EN.pdf` | 객관식 문제지 (MC) |
+| `IPhO_2017_GT.pdf` | 이론 일반 지시사항 (`kind: general`, `for: theory`) |
+| `IPhO_2017_GE.pdf`, `IOAA_2025_GE2.pdf` | 실험 · 관측 라운드 일반 지시사항 (`kind: general`, `for: exp`, 라운드가 여럿이면 `label`) |
 | `IAO_2024_Ta_EN.pdf` | 연령 조가 나뉜 경우 (a: α, b: β), OPhO 초청 라운드는 `Ti` |
 
 ## JSON 모양
@@ -26,7 +28,9 @@
             {"file":"IPhO_2024_T1S.pdf","part":"T1","kind":"solution","url":"https://…","bytes":…}]}],
  "missing":[{"y":1999,"why":"…"}]}
 ```
-`kind`: paper · solution · marking · answer.
+`kind`: paper · solution · marking · answer · general.
+
+일반 지시사항은 연도 페이지 «문제를 고르세요» 아래에 버튼으로 나옵니다: 이론은 `THEORY[대회][연도].g`, 실험은 `window.GENERAL[대회][연도]`(theory.js). 이론 문제지가 없는 해(예: IPhO 2020)도 실험 지시사항만 적을 수 있습니다.
 
 ## NBPhO: 문제별로 자른 책자
 NBPhO는 문제지 · 해설이 각각 한 권이라, 연습 모드용으로 문제별 PDF를 `pdfx/nbpho/NBPhO_<연도>_P<번호>_EN.pdf` / `…_P<번호>S.pdf`로 잘라 둡니다(`python tools/nbpho_split.py <책자 폴더>`, 결과 목록 `pdfx/nbpho/index.json`). `theory_build.py`가 이를 읽어 이론 문제마다 T<번호>로, 실험 문제는 실험 카드에 연결합니다. 책자 전체(T)는 실전 모드(실험 + 이론)에 씁니다.
