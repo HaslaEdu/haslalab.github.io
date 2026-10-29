@@ -776,6 +776,34 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arfoot{font-size:12px;color:var(--graphite);padding-bottom:40px}
 .ar .arstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}.ar .arstats div{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:14px 16px}
 .ar .arstats small{display:block;font-size:12px;color:var(--graphite)}.ar .arstats b{font:700 24px var(--mono)}
+/* token shop: pick a pack, one total, one pay button */
+.ar .arshop h3{margin-bottom:12px}
+.ar .arseg{display:inline-flex;gap:2px;padding:3px;margin:0 0 12px;border:1px solid var(--cm-line);border-radius:9px;background:var(--cm-soft)}
+.ar .arseg button{border:0;background:none;padding:6px 12px;border-radius:7px;font:inherit;font-size:13px;color:var(--graphite);cursor:pointer}
+.ar .arseg button[aria-selected="true"]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(22,33,46,.1)}
+.ar .arpks{display:grid;gap:8px}.ar .arpks[hidden]{display:none}
+.ar .arpk{display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:12px;width:100%;padding:13px 16px;text-align:left;
+  border:1px solid var(--cm-line);border-radius:10px;background:#fff;font:inherit;color:var(--ink);cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.ar .arpk:hover{border-color:var(--grid-bold)}
+.ar .arpk[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.ar .arpk-n{font-size:13px;color:var(--graphite)}.ar .arpk-n b{font:600 21px var(--mono);color:var(--ink);margin-right:5px}
+.ar .arpk-u{font-size:12.5px;color:var(--graphite);font-variant-numeric:tabular-nums}
+.ar .arpk-u em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--brass);border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:8px;white-space:nowrap}
+.ar .arpk-v{font:600 15.5px var(--mono)}
+.ar .arpay{margin-top:14px;padding-top:14px;border-top:1px dashed var(--cm-line)}
+.ar .arpay-sum{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 10px}
+.ar .arpay-sum span{font-size:13px;color:var(--graphite)}.ar .arpay-sum b{font:700 22px var(--mono)}
+.ar .arpay-ok{display:flex;gap:8px;align-items:flex-start;margin:0 0 10px;font-size:12.5px;color:var(--graphite);cursor:pointer}
+.ar .arpay-ok input{margin-top:3px}
+.ar .arpay-go{width:100%;padding:12px;font-size:15px}
+.ar .arpay-go:disabled{opacity:.55;cursor:default}
+.ar .arpay-fine{margin:10px 0 0;font-size:12px;line-height:1.55;color:var(--graphite)}
+.ar .arad{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:12px 14px;border-radius:10px;background:var(--cm-soft)}
+.ar .arad b{font-size:13.5px}.ar .arad small{font-size:12px;color:var(--graphite)}
+.ar .arad-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.ar .arad-bar{display:inline-flex;gap:3px;flex:none}
+.ar .arad-bar i{width:18px;height:6px;border-radius:3px;background:var(--cm-line)}.ar .arad-bar i.on{background:var(--brass)}
+@media (max-width:520px){.ar .arpk{grid-template-columns:1fr auto;row-gap:2px}.ar .arpk-v{grid-column:2;grid-row:1/3}}
 .ar .arpf{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:10px}.ar .arpf label{display:flex;flex-direction:column;font:600 11.5px var(--mono);gap:3px}
 .ar .arpf label:has(textarea){grid-column:1/-1}.ar .arpf input,.ar .arpf textarea{font:13px var(--mono);padding:6px 8px;border:1px solid var(--cm-line);border-radius:6px}
 .ar .arpf p,.ar .arpf button,.ar .arpf .arinfo{grid-column:1/-1}
