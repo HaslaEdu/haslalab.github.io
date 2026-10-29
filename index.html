@@ -4200,7 +4200,7 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol), by={};
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx), by={};
   for(const x of parts){ const m=/^(T|MC)(\d*)([a-z]?)$/.exec(x); (by[m[1]+m[3]]=by[m[1]+m[3]]||[]).push({x,n:m[2]}); }
   const out=[];
   for(const g of Object.values(by)){
@@ -4216,7 +4216,9 @@ let track=(()=>{ try{ return localStorage.getItem("hlTrack")==="thy"?"thy":"exp"
 function setTrack(t){ track=t==="thy"?"thy":"exp"; try{ localStorage.setItem("hlTrack",track); }catch(e){} render(); }
 const hasExpC=c=>c.years.some(y=>y.problems.length>0);
 const trackOf=key=>{ const c=DATA[key], e=c&&hasExpC(c), t=!!THEORY[key]; return e&&t?track:t?"thy":"exp"; };
-const thyCount=t=>t?((t.p||[]).length||Object.keys(t.f).length):0;
+/* kx: a problem cut out of a Korean translation of a paper published whole — the original counts once */
+const thyParts=t=>Object.keys(t.f).filter(x=>!t.f[x].kx);
+const thyCount=t=>t?((t.p||[]).length||thyParts(t).length):0;
 function trackSwitch(key){
   const d=UI[lang], c=DATA[key]; if(!(c&&hasExpC(c)&&THEORY[key])) return "";
   return `<div class="lang trk" role="group" aria-label="${d.trkLabel}">${[["exp",d.trkExp],["thy",d.trkThy]].map(([k,l])=>
@@ -4333,7 +4335,7 @@ function viewHome(){
   pickHero();
   const d=UI[lang];
   let years=0, probs=0, live=0, thy=0;
-  for(const k in THEORY) for(const y in THEORY[k]) thy+=Object.keys(THEORY[k][y].f).length;
+  for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
     for(const y of c.years){ probs+=y.problems.length;
@@ -4614,7 +4616,7 @@ function viewComp(key,mode){
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
         <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
         <div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>
-        ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+Object.keys(t.f).length,0)}</dd></div>`:""}
+        ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
@@ -4753,7 +4755,8 @@ function theoryHtml(key,yr){
       <h3>${titles.length?titles.map(esc).join(" · "):code==="T"?d.thyAll:esc(code)}</h3>
       <div class="acts"><div class="docs n3">${btns(f,k).join("")}</div>${extra||""}</div>
     </article>`; };
-  const order=Object.keys(t.f).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
+  /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
+  const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   const cards=order.map(x=>{ const f=t.f[x], k=f.ko||{};
       return card(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),f,k,
         k.rev?`<div class="docs n1" style="margin-top:8px">${a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")}</div>`:""); }).join("")

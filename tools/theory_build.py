@@ -79,6 +79,8 @@ def korean(out, bad):
                 bad.append((path, '%s %s: no originals for this year' % (comp, year)))
                 continue
             rev = parts.get('rev')
+            rev_at = 'T2' if 'T2' in parts else 'T'
+            whole = t['f'].get('T')
             for part, ko in parts.items():
                 if part == 'guide':
                     t['g'] = ko
@@ -87,12 +89,16 @@ def korean(out, bad):
                     continue
                 ko = dict(ko)
                 title, en = ko.pop('title', None), ko.pop('en', None)
-                if part == 'T' and rev:
+                if part == rev_at and rev:
                     ko['rev'] = rev
                 if part in t['f']:
                     t['f'][part]['ko'] = ko
                 elif part == 'T':
                     t['w'] = ko           # the whole paper in Korean, where the site lists only its problems
+                elif whole and re.match(r'^T\d+$', part) and ko.get('paper'):
+                    # the original was published whole, the translation cut per problem: the problem's card opens the
+                    # Korean problem and the whole original; kx keeps it out of the theory exam, which sits the whole T
+                    t['f'][part] = dict({k: v for k, v in whole.items() if k != 'ko'}, ko=ko, kx=1)
                 elif en:                  # a part the originals' list does not have (IPhO 2025's backup problem)
                     t['f'][part] = {k: v for k, v in en.items() if k != 'title'}
                     t['f'][part]['ko'] = ko
