@@ -132,6 +132,11 @@ nav a:hover,nav a.on{color:var(--ink);border-color:var(--laser)}
   letter-spacing:.07em;color:var(--graphite);transition:.15s}
 .lang button:hover{background:#F1F5F9;color:var(--ink)}
 .lang button[aria-pressed="true"]{background:var(--rail);color:#fff}
+/* experiment | theory, on a competition's pages: the same control as the language one */
+.crumbrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.crumbrow .crumb{flex:1;min-width:0;margin-bottom:0}
+.crumbrow+.phead{margin-top:18px}
+.trk button{font-family:var(--sans);font-size:12.5px;letter-spacing:0;padding:5px 14px}
+.trknote{margin:0 0 18px;font-size:13.5px;color:var(--graphite)}.trknote button{margin-left:6px;font:inherit;font-weight:600;color:#7a2e1f;background:none;border:0;cursor:pointer;padding:0;text-decoration:underline}
 /* the two switcher flags have different proportions — 3:2 and 2:1 —
    so they share a height, not a width */
 .lflag{height:13px;flex:none;border-radius:1.5px;display:block;
@@ -1014,6 +1019,8 @@ ko:{
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
   thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다).", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
+  trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
+  onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", seeThy:"이론 보기", seeExp:"실험 보기",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
   kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
@@ -1078,6 +1085,8 @@ en:{
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
   thyH:"Theory", thyNote:"As the olympiad published them, in the original language.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
+  trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
+  onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", seeThy:"See the theory", seeExp:"See the experiments",
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
   kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
@@ -4196,6 +4205,17 @@ function theoryGroups(key,yr){
   return out;
 }
 const thyTitle=(t,x)=>{ const p=(t.p||[]).find(q=>q[0]===x); return p?p[1]:""; };
+/* experiment | theory: which of a competition's two collections its pages show (kept in this browser) */
+let track=(()=>{ try{ return localStorage.getItem("hlTrack")==="thy"?"thy":"exp"; }catch(e){ return "exp"; } })();
+function setTrack(t){ track=t==="thy"?"thy":"exp"; try{ localStorage.setItem("hlTrack",track); }catch(e){} render(); }
+const hasExpC=c=>c.years.some(y=>y.problems.length>0);
+const trackOf=key=>{ const c=DATA[key], e=c&&hasExpC(c), t=!!THEORY[key]; return e&&t?track:t?"thy":"exp"; };
+const thyCount=t=>t?((t.p||[]).length||Object.keys(t.f).length):0;
+function trackSwitch(key){
+  const d=UI[lang], c=DATA[key]; if(!(c&&hasExpC(c)&&THEORY[key])) return "";
+  return `<div class="lang trk" role="group" aria-label="${d.trkLabel}">${[["exp",d.trkExp],["thy",d.trkThy]].map(([k,l])=>
+    `<button type="button" aria-pressed="${track===k}" onclick="setTrack('${k}')">${l}</button>`).join("")}</div>`;
+}
 
 /* ══════════════════════════════════════════════════════════════
    LANGUAGE
@@ -4566,7 +4586,7 @@ function modeSwitch(key,mode){
     <a href="#/${key}" class="${mode!=="exam"?"on":""}" aria-current="${mode!=="exam"}"><b>📘 ${d.modePrac}</b><span>${d.modePracSub}</span></a>
     <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${d.modeExamSub}</span></a></div>`;
 }
-const hasExam=(c,key)=>c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim)||(key&&theoryGroups(key,y).length));
+const hasExam=(c,key)=>key&&trackOf(key)==="thy"?c.years.some(y=>theoryGroups(key,y).length):c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim));
 function viewComp(key,mode){
   const d=UI[lang], c=DATA[key];
   if(!c) return viewHome();
@@ -4575,10 +4595,10 @@ function viewComp(key,mode){
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
   return `
   <div class="shell">
-    <div class="crumb">
+    <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
       <a href="#/comps">${d.navComps}</a><span>/</span><b>${c.abbr}</b>
-    </div>
+    </div>${trackSwitch(key)}</div>
     <div class="phead">
       <h1>${c.abbr}</h1>
       <div class="sub">${c.full[lang]}</div>
@@ -4599,15 +4619,15 @@ function viewComp(key,mode){
     <div class="years">
       ${c.years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
-        const th=thyOf(key,y.y), none=y.problems.length===0&&!th;
+        const th=thyOf(key,y.y), thy=trackOf(key)==="thy", none=thy?!th:y.problems.length===0;
         const inner=`
           <div class="yrow">
             <div class="y">${y.y}</div>
             ${flagImg(y.cc,"flag card",y.org)}
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
-          <div class="cnt">${r?'<i class="dot"></i>':""}${none?LB(c,"noPapers"):
-            [y.problems.length?countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:""):"",th?d.thyN:""].filter(Boolean).join(" · ")}</div>`;
+          <div class="cnt">${!thy&&r?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
+            thy?d.thyCnt(thyCount(th)):countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -4633,11 +4653,12 @@ function xmPortalHtml(key,x){
         :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
         :`<a class="go" href="${href}">${d.xmGo}</a>`}</div></td></tr>`);
   };
+  const thyT=trackOf(key)==="thy";
   for(const y of c.years){
-    for(const g of examGroups(key,y)){ const mix=g.some(p=>p.thy);
+    if(!thyT) for(const g of examGroups(key,y)){ const mix=g.some(p=>p.thy);
       row(y,g.map(examTask),mix?d.xmMixLabel:d.xmExamLabel,g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · "),HLexam.sec(key,y.y,g.length,mix?"mixed":false),examHref(key,y,g)); }
     const t=thyOf(key,y.y);
-    for(const g of theoryGroups(key,y))
+    if(thyT) for(const g of theoryGroups(key,y))
       row(y,g,d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · "),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
   }
   const me=x&&x.me, act=x&&x.active;
@@ -4719,24 +4740,27 @@ function viewYear(key,year){
   if(!yr) return viewComp(key);
   /* 이 해에 있는 조만 고르개에 — 다른 해에서 고른 조가 없으면 전체를 보인다 */
   const yrGroups = c.groups ? ["a","b","c"].filter(g=>yr.problems.some(p=>grpOf(c,p).includes(g))) : [];
+  const thyY = trackOf(key)==="thy";
   const grpShow = yrGroups.includes(grpSel) ? grpSel : "all";
   return `
   <div class="shell">
-    <div class="crumb">
+    <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
       <a href="#/comps">${d.navComps}</a><span>/</span>
       <a href="#/${key}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
-    </div>
+    </div>${trackSwitch(key)}</div>
     <div class="phead">
       <h1>${c.abbr} ${yr.y}</h1>
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>
-        <div><dt>${LB(c,"problems")}</dt><dd>${yr.problems.length}</dd></div>
+        <div><dt>${thyY?d.thyPapers:LB(c,"problems")}</dt><dd>${thyY?thyCount(thyOf(key,yr.y)):yr.problems.length}</dd></div>
       </dl>
     </div>
     ${adFitBanner("secondary")}
-    ${theoryHtml(key,yr)}
+    ${thyY?(thyOf(key,yr.y)?theoryHtml(key,yr):`<p class="trknote">${d.onlyExp}${yr.problems.length?`<button type="button" onclick="setTrack('exp')">${d.seeExp}</button>`:""}</p>`)
+      :!yr.problems.length&&thyOf(key,yr.y)?`<p class="trknote">${d.onlyThy}<button type="button" onclick="setTrack('thy')">${d.seeThy}</button></p>`:""}
+    <div${thyY?" hidden":""}>
     <div class="shead"${yr.problems.length?"":" hidden"}>
       <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
@@ -4793,6 +4817,7 @@ function viewYear(key,year){
           <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}
             <div class="docs n${docs.length}">${docs.join("\n")}</div></div>
         </article>`;}).join("")}
+    </div>
     </div>
   </div>
   ${adFitBanner("primary")}`;
