@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=178e4b1fe4"></script>
+<script src="theory.js?v=49d1c320ae"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4301,6 +4301,8 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
     if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(c&&c.sol?{sol:c.sol}:{})}; }); }
 /* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
+/* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
+const THY_WHOLE=new Set(["ispho"]);
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
@@ -4312,7 +4314,7 @@ function theoryGroups(key,yr){
   const out=[];
   for(const g of Object.values(by)){
     const num=g.filter(q=>q.n).sort((a,b)=>a.n-b.n), whole=g.find(q=>!q.n);
-    const pick=num.length&&(!whole||num.length<=4)?num:whole?[whole]:num;
+    const pick=whole&&(THY_WHOLE.has(key)||!num.length||num.length>4)?[whole]:num;
     for(let i=0;i<pick.length;i+=4) out.push(pick.slice(i,i+4).map(q=>q.x));
   }
   return out;
