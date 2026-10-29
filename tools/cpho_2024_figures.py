@@ -2,6 +2,7 @@
 from pathlib import Path
 import math
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 from cpho_2025_figures import HEAD, line, text, arrow_head
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -121,6 +122,7 @@ def replace(path,lang):
         if n in (5,6,7):
             boxes={5:'90 25 420 375',6:'140 25 320 375',7:'180 25 240 375'}
             svg=svg.replace('viewBox="0 0 600 400"',f'viewBox="{boxes[n]}"')
+        svg=explicit_strokes(svg)
         FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         image=fitz.open(stream=svg.encode(),filetype='svg');vector=fitz.open(stream=image.convert_to_pdf(),filetype='pdf')
         p.show_pdf_page(rect,vector,0,keep_proportion=True)

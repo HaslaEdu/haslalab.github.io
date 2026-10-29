@@ -243,7 +243,16 @@ def build(folder: Path, target: Path):
             rect.y1 += 2
             if rect.width < 180 and e["size"] > 12:
                 rect.x0, rect.x1 = 68, page.rect.width - 68
-            spare, scale = page.insert_htmlbox(rect, f'<p style="font-size:{e["size"]}pt">{content}</p>',
+            style = f'font-size:{e["size"]}pt;'
+            if e.get("align"):
+                style += f'text-align:{e["align"]};'
+            if e.get("line_height"):
+                style += f'line-height:{e["line_height"]}pt;'
+            elif data.get("math_line_height"):
+                heights = [m["height"] for mi, m in enumerate(e.get("math", [])) if str(mi) in actual]
+                height = max([e["size"]*1.18] + [h+1 for h in heights])
+                style += f'line-height:{height}pt;'
+            spare, scale = page.insert_htmlbox(rect, f'<p style="{style}">{content}</p>',
                 css=css, archive=archive, scale_low=.72)
             report.append({"id": e["id"], "scale": scale, "spare": spare})
             if spare < 0:
@@ -272,6 +281,27 @@ def build(folder: Path, target: Path):
         # Preserve the rule beneath the original competition header.
         if data.get("header_rule"):
             page.draw_line((36, 49.5), (562.4, 49.5), color=(0, 0, 0), width=.5)
+        # Optional translations inside retained raster/vector figures, after figure restoration.
+        # Each patch uses absolute PDF coordinates and a Korean font over a white background.
+        for oi, patch in enumerate(data.get("post_overlays", [])):
+            if patch["page"] != pi:
+                continue
+            patch_rect = fitz.Rect(patch["rect"])
+            page.draw_rect(patch_rect, color=None, fill=(1, 1, 1), overlay=True)
+            label = html.escape(patch["text"])
+            align = patch.get("align", "center")
+            label_html = f'<p style="font-size:{patch.get("size", 10)}pt;text-align:{align};">{label}</p>'
+            spare, scale = page.insert_htmlbox(patch_rect, label_html, css=css,
+                archive=archive, scale_low=patch.get("scale_low", .72))
+            key = f"post-{pi+1}-{oi}"
+            report.append({"id": key, "scale": scale, "spare": spare})
+            if spare < 0:
+                failures.append(key)
+        # Restore explicitly reviewed source glyphs that were blank transparent images.
+        for repair in data.get("native_text_overlays", []):
+            if repair["page"] == pi:
+                page.insert_text(tuple(repair["point"]), repair["text"],
+                    fontsize=repair.get("size", 12), fontname=repair.get("font", "tiro"), overlay=True)
         page.wrap_contents()
     if failures:
         raise ValueError("Text does not fit: " + ", ".join(failures))

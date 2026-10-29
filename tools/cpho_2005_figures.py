@@ -1,6 +1,7 @@
 """Vector redraws of the six original CPhO 2005 problem illustrations."""
 from pathlib import Path
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 from cpho_2025_figures import HEAD,line,text,arrow_head
 ROOT=Path(__file__).resolve().parents[1]
 FIG=ROOT/'tools/ko/cpho/2005/figures'
@@ -77,7 +78,7 @@ def replace(path,lang):
     doc=fitz.open(path);source=fitz.open(ROOT/'tmp/source-audit/CPhO_2005_T_EN.pdf')
     for n,pi in enumerate(range(1,7)):
         rect=source[pi].get_image_rects(source[pi].get_images(full=True)[0][0])[0]
-        svg=figure(n,lang);FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
+        svg=explicit_strokes(figure(n,lang));FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         image=fitz.open(stream=svg.encode(),filetype='svg');vector=fitz.open(stream=image.convert_to_pdf(),filetype='pdf')
         doc[pi].draw_rect(rect,color=None,fill=(1,1,1));doc[pi].show_pdf_page(rect,vector,0)
     out=path.with_suffix('.redrawn.pdf');doc.save(out,garbage=4,deflate=True);doc.close();out.replace(path)

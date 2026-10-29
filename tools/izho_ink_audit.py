@@ -39,7 +39,7 @@ for pi,page in enumerate(out):
   r=f.Rect(b['bbox']);x0,y0,x1,y1=[round(v*4) for v in r]
   if x1<=x0 or y1<=y0:continue
   im=Image.open(io.BytesIO(b['image'])).convert('RGBA')
-  if b.get('mask'):im.putalpha(Image.open(io.BytesIO(b['mask'])).convert('L'))
+  if b.get('mask'):im.putalpha(Image.open(io.BytesIO(b['mask'])).convert('L').resize(im.size, Image.Resampling.LANCZOS))
   bg=Image.new('RGBA',im.size,'white');bg.alpha_composite(im);im=bg.convert('L').resize((x1-x0,y1-y0))
   if 0<=x0<x1<=pix.width and 0<=y0<y1<=pix.height:mathink[y0:y1,x0:x1] |= np.asarray(im)<80
  overlap=mathink&kink

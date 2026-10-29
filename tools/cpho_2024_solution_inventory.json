@@ -20,14 +20,14 @@
     {
       "path": "pdfx/cpho/CPhO_2024_TS_KO.pdf",
       "pages": 30,
-      "bytes": 10522386,
-      "sha256": "dfd3214328f6aefbe9900c5578c26d18a58fe26448d22e25d4b93aedecd78df5"
+      "bytes": 10528794,
+      "sha256": "c12edef394dd3da05cfb1545c7a66e128228c82bae6d10fe2b67aebb927d24c5"
     },
     {
       "path": "pdfx/cpho/CPhO_2024_TS_BAUPC_EN.pdf",
       "pages": 30,
-      "bytes": 613919,
-      "sha256": "2785f071a165c81f42025e90053863dc8bed2f174d9a94d69dc642a71bba110f"
+      "bytes": 620611,
+      "sha256": "9617991a5ff04002354526ffd92f711e6c033bd36c673084d04955eae07b1ec4"
     }
   ],
   "rebuild": "python tools/cpho_2024_solution_build.py",
@@ -52,5 +52,7 @@
     "Seven bilingual vector figures use explicit arrowheads and bounded cone hatching.",
     "533 Korean mapping rows have exact mathematical placeholder coverage.",
     "Generated source extraction PNGs and translation.json in tools/ko/cpho/2024/solution are staging artifacts; rebuilding does not require publishing them."
-  ]
+  ],
+  "dash_validation": "tools/cpho_dash_validation.json",
+  "font_validation": "tools/translation_font_validation.json"
 }

@@ -2,6 +2,7 @@
 from pathlib import Path
 import math
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 from cpho_2025_figures import HEAD,line,text
 ROOT=Path(__file__).resolve().parents[1]
 FIG=ROOT/'tools/ko/cpho/2006/figures'
@@ -55,7 +56,7 @@ def stamp(doc,source,lang):
     for n,pi in [(0,0),(1,1),(2,3)]:
         if n==1:rect=fitz.Rect(258.9,570.9,536.9,818)
         else:rect=source[pi].get_image_rects(source[pi].get_images(full=True)[0][0])[0]
-        svg=figure(n,lang);FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
+        svg=explicit_strokes(figure(n,lang));FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         image=fitz.open(stream=svg.encode(),filetype='svg');vector=fitz.open(stream=image.convert_to_pdf(),filetype='pdf')
         doc[pi].draw_rect(rect,color=None,fill=(1,1,1))
         # The source's fragmented page-2 picture covers its own red footer.

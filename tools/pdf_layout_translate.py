@@ -10,11 +10,33 @@ from collections import Counter
 import html
 import json
 import re
+import unicodedata
 from pathlib import Path
 import pymupdf as fitz
 
 ROOT = Path(__file__).resolve().parents[1]
 FONT = ROOT / "tools/ko/fonts/NotoSansKR-Regular.ttf"
+
+
+def script_markup(value):
+    """Typeset Unicode superscripts/subscripts with supported normal glyphs.
+
+    The bundled Hangul font lacks most superscript digits and every subscript
+    digit. HTML script positioning preserves these mathematical values instead
+    of embedding a missing-glyph box in small annotations.
+    """
+    result=[];kind=None;pending=[]
+    def flush():
+        nonlocal pending
+        if pending:result.append(f'<{kind}>'+html.escape(''.join(pending))+f'</{kind}>');pending=[]
+    for char in value:
+        decomposition=unicodedata.decomposition(char)
+        tag='sup' if decomposition.startswith('<super>') else 'sub' if decomposition.startswith('<sub>') else None
+        if tag!=kind:flush();kind=tag
+        if tag:pending.append(unicodedata.normalize('NFKD',char))
+        else:result.append(html.escape(char))
+    flush()
+    return ''.join(result)
 
 
 def outlined_copy(original):
@@ -102,6 +124,12 @@ def build(folder: Path, target: Path):
     missing = [e["id"] for e in data["entries"] if not e["ko"].strip()]
     if missing:
         raise ValueError("Untranslated regions: " + ", ".join(missing))
+    font=fitz.Font(fontfile=str(FONT))
+    for entry in data['entries']:
+        unsupported=sorted({char for char in entry['ko'] if not char.isspace() and
+            not font.has_glyph(ord(char)) and
+            not unicodedata.decomposition(char).startswith(('<super>','<sub>'))})
+        if unsupported:raise ValueError(f'Unsupported text glyphs at {entry["id"]}: {unsupported}')
     original = fitz.open(data["source"])
     doc = outlined_copy(original) if data.get("outline_source") else fitz.open(data["source"])
     archive = fitz.Archive(str(folder.resolve()))
@@ -133,7 +161,7 @@ def build(folder: Path, target: Path):
             actual = Counter(re.findall(r"\[\[(\d+)\]\]", e["ko"]))
             if actual != expected:
                 raise ValueError(f"Formula placeholders differ at {e['id']}: {expected} != {actual}")
-            content = html.escape(e["ko"])
+            content = script_markup(e["ko"])
             for mi, math in enumerate(e["math"]):
                 image = f'<img src="{math["file"]}" width="{math["width"]}" height="{math["height"]}">'
                 content = content.replace(f"[[{mi}]]", image)
@@ -156,6 +184,13 @@ def build(folder: Path, target: Path):
         page.wrap_contents()
     if failures:
         raise ValueError("Text does not fit: " + ", ".join(failures))
+    for pi,page in enumerate(doc):
+        for block in page.get_text('dict')['blocks']:
+            if block['type']!=0:continue
+            for line in block['lines']:
+                for span in line['spans']:
+                    if 'NotoSansKR' in span['font'] and '\x00' in span['text']:
+                        raise ValueError(f'Missing rendered text glyph on page {pi+1}')
     target.parent.mkdir(parents=True, exist_ok=True)
     doc.save(target, garbage=4, deflate=True)
     target.with_suffix(".qa.json").write_text(json.dumps(report, indent=2), encoding="utf8")

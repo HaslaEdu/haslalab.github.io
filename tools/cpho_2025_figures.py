@@ -8,6 +8,7 @@ from pathlib import Path
 import math
 import re
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 
 ROOT = Path(__file__).resolve().parents[1]
 FIG = ROOT / "tools/ko/cpho/2025/figures"
@@ -92,7 +93,7 @@ def replace(path,lang):
         original=source[pi];xref=original.get_images(full=True)[ii][0]
         rect=original.get_image_rects(xref)[0]
         page.draw_rect(rect,color=None,fill=(1,1,1),overlay=True)
-        svg=figure(n,lang)
+        svg=explicit_strokes(figure(n,lang))
         FIG.mkdir(parents=True,exist_ok=True)
         (FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         vector=fitz.open(stream=svg.encode(),filetype='svg')

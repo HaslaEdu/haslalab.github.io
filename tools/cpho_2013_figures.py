@@ -1,6 +1,7 @@
 """Recreate the four 2013 figures as bilingual BAUPC-style vector line art."""
 from pathlib import Path
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 from cpho_2025_figures import HEAD, line, text, arrow_head
 from cpho_2024_figures import mirror, splitter, circle, label
 
@@ -85,7 +86,7 @@ def replace(path,lang):
     for pi,n in ([(2,4),(10,5)] if solutions else [(0,0),(1,1),(2,2),(3,3)]):
         p=doc[pi];sp=source[pi];rect=sp.get_image_rects(sp.get_images(full=True)[0][0])[0]
         p.draw_rect(rect,color=None,fill=(1,1,1))
-        svg=figure(n,lang);FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
+        svg=explicit_strokes(figure(n,lang));FIG.mkdir(parents=True,exist_ok=True);(FIG/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         image=fitz.open(stream=svg.encode(),filetype='svg');pdf=fitz.open(stream=image.convert_to_pdf(),filetype='pdf');p.show_pdf_page(rect,pdf,0)
     out=path.with_name(path.stem+'.redrawn.pdf');doc.save(out,garbage=4,deflate=True);doc.close();out.replace(path)
 

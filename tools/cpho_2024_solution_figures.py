@@ -2,6 +2,7 @@
 from pathlib import Path
 import math
 import pymupdf as fitz
+from svg_pdf import explicit_strokes
 from cpho_2025_figures import HEAD,text
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -122,7 +123,7 @@ def replace(path,lang):
     OUT.mkdir(parents=True,exist_ok=True)
     for n,pi in enumerate(PAGES):
         sp=original[pi];rect=sp.get_image_rects(sp.get_images(full=True)[0][0])[0]
-        svg=figure(n,lang);(OUT/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
+        svg=explicit_strokes(figure(n,lang));(OUT/f'figure-{n+1}-{lang}.svg').write_text(svg,encoding='utf8')
         drawing=fitz.open(stream=svg.encode(),filetype='svg')
         vector=fitz.open(stream=drawing.convert_to_pdf(),filetype='pdf')
         doc[pi].draw_rect(rect,color=None,fill=(1,1,1))

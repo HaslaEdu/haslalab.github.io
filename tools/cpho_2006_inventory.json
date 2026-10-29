@@ -20,15 +20,15 @@
       "file": "CPhO_2006_T_BAUPC_EN.pdf",
       "pages": 4,
       "geometry_matches_source": true,
-      "bytes": 1908337,
-      "sha256": "fe131ef0fe4bf338c0c3bc5ad583dabd7081a9405747b907276fbf525f025e5c"
+      "bytes": 1909328,
+      "sha256": "973331e1c384c79edcf67f13fd6d2b5f150af8e073a2fadbaf76ca54fc0be2c3"
     },
     {
       "file": "CPhO_2006_T_KO.pdf",
       "pages": 4,
       "geometry_matches_source": true,
-      "bytes": 5317632,
-      "sha256": "5337d60bf592035182752e5d218c27204acd07db86b1f6fcfa8142c74fe30d6c"
+      "bytes": 5318622,
+      "sha256": "c5ce0a0326f1a7def47a53dee4dfe750e55e2c9ce86ecd130b561d20580e2487"
     }
   ],
   "original_region_map": [
@@ -503,5 +503,7 @@
         "font_points": 9.0
       }
     ]
-  }
+  },
+  "dash_validation": "tools/cpho_dash_validation.json",
+  "font_validation": "tools/translation_font_validation.json"
 }

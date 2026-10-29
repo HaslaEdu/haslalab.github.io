@@ -69,6 +69,9 @@ for (const year of ['2024', '2025', '2026']) {
     assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
   }
 }
+for (const year of ['2010', '2023']) {
+  assert.ok(assets[window.THEORY.izho[year].f.T.ko.paper] > 0);
+}
 let usapho = 0;
 for (let year = 1997; year <= 2026; year++) {
   const file = window.THEORY.usapho[String(year)].f.T;
@@ -90,4 +93,4 @@ for (const year of ['2005', '2006', '2013', '2024', '2025']) {
   const source = JSON.parse(read('tools/theory/cpho.json')).years.find(y => String(y.y) === year);
   if (Number(year) >= 2013) assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 6, usapho, cphoBilingualYears: 5}));
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 8, usapho, cphoBilingualYears: 5}));

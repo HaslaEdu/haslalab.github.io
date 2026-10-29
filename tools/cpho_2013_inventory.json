@@ -11,26 +11,26 @@
     {
       "file": "CPhO_2013_T_BAUPC_EN.pdf",
       "pages": 5,
-      "bytes": 569423,
-      "sha256": "79e4e4930406ea768250b9991e414bd2edb4aabb21341d7c03905dc2fb9a62ed"
+      "bytes": 569661,
+      "sha256": "c17893c3f1666671262d23db17a21205902f4439f0db4a1b50e00741d79d1c15"
     },
     {
       "file": "CPhO_2013_T_KO.pdf",
       "pages": 5,
-      "bytes": 5403547,
-      "sha256": "a85920493cd233f2c05d407ebe474f5399e1cb2a44ae60fee1be0261e05f62d5"
+      "bytes": 5403789,
+      "sha256": "50e61352255a7921bdf133f0e3a56c05f00734017ccc7446c3b2445555f7e132"
     },
     {
       "file": "CPhO_2013_TS_BAUPC_EN.pdf",
       "pages": 15,
-      "bytes": 565314,
-      "sha256": "0a1453c1f28526d57e07aa056d7d127ac9106ef5cb2878cada7a72dfdfaa0d95"
+      "bytes": 565812,
+      "sha256": "7bbe4ab5f86bef6c95c4540a44ba3acf18c4ba484539470cc62fe79d7fcda2c2"
     },
     {
       "file": "CPhO_2013_TS_KO.pdf",
       "pages": 15,
-      "bytes": 6121442,
-      "sha256": "09b92b67cbeda9e6afc8d324d81ce68b77a0092e337459e4c48497f14d080df5"
+      "bytes": 6121877,
+      "sha256": "e3a239e60d300bb08435ebf0b5753d50b734840a245735256d587b8c790c5912"
     }
   ],
   "problems": {
@@ -40,5 +40,7 @@
   "solutions": {
     "translated_regions": 184,
     "minimum_scale": 0.7377521613832855
-  }
+  },
+  "dash_validation": "tools/cpho_dash_validation.json",
+  "font_validation": "tools/translation_font_validation.json"
 }
