@@ -15,6 +15,9 @@ Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_rele
 go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
 under w, Korean titles under pk, the general instructions under g ({ko, en}).
 
+A file marked "direct": true (USABO, USNCO) is not mirrored: the site links its url as it is, and its part is not
+offered in exam mode (the exam reads the papers from the releases).
+
 The general instructions (kind "general", files <Prefix>_<year>_GT.pdf for the theory, _GE.pdf, _GE2.pdf … for the
 experiments or the observation rounds, with an optional label) go to the theory's g.en and to
 window.GENERAL = {ipho: {"2017": [["", "IPhO_2017_GE.pdf"]], ioaa: {"2025": [["Telescope", "IOAA_2025_GE.pdf"], ...]}}.
@@ -60,7 +63,8 @@ def load():
                 # one paper per part: English first, then whatever was published
                 if kind == 'paper' and 'paper' in slot and not (g.group(4) == 'EN' and not slot['paper'].endswith('_EN.pdf')):
                     continue
-                slot[kind] = f['local'] if f.get('local') else f['file']
+                # direct: linked where it is published, never copied (the organiser does not allow redistribution)
+                slot[kind] = f['local'] if f.get('local') else f['url'] if f.get('direct') else f['file']
             # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
             # gets what the whole paper has, so it can be read, sat and graded on its own
             for part, slot in files.items():

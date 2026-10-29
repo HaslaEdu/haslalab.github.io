@@ -4224,7 +4224,7 @@ for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   c.years.sort((a,b)=>b.y-a.y); }
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
-const thyUrl=f=>/^pdfx\//.test(f)?f:PDF_BASE+f;
+const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
 /* NBPhO: one booklet holds every problem; each experiment card gets its own problem and solution, cut out of it
    (tools/nbpho_split.py), and its number in the booklet (no) for the combined exam */
 for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!t||!t.x||!t.c) continue;
@@ -4237,7 +4237,7 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx), by={};
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!/^https?:/.test(t.f[x].paper)), by={};
   for(const x of parts){ const m=/^(T|MC)(\d*)([a-z]?)$/.exec(x); (by[m[1]+m[3]]=by[m[1]+m[3]]||[]).push({x,n:m[2]}); }
   const out=[];
   for(const g of Object.values(by)){
