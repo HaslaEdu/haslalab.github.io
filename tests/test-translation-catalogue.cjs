@@ -77,7 +77,7 @@ for (let year = 1997; year <= 2026; year++) {
   assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
-for (const year of ['2005', '2013', '2024', '2025']) {
+for (const year of ['2005', '2006', '2013', '2024', '2025']) {
   const file = window.THEORY.cpho[year].f.T;
   assert.equal(file.paper, `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
@@ -88,6 +88,6 @@ for (const year of ['2005', '2013', '2024', '2025']) {
     assert.ok(assets[file.ko.sol] > 0);
   }
   const source = JSON.parse(read('tools/theory/cpho.json')).years.find(y => String(y.y) === year);
-  if (year !== '2005') assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
+  if (Number(year) >= 2013) assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 6, usapho, cphoBilingualYears: 4}));
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 6, usapho, cphoBilingualYears: 5}));
