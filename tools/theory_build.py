@@ -54,6 +54,11 @@ def load():
                     else:
                         gen.setdefault(comp, {}).setdefault(year, []).append([f.get('label', ''), f['file']])
                     continue
+                # data a problem hands out (ISPhO 2026 T2's detector table): kept on the site, linked from its card
+                if f.get('kind') == 'data' and re.match(r'^pdfx/[a-z]+/[\w.-]+\.(xlsx|csv|txt|zip)$', f.get('local', '')) \
+                        and f.get('part'):
+                    files.setdefault(f['part'], {})['data'] = f['local']
+                    continue
                 g = FILE.match(f.get('file', ''))
                 kind = KINDS.get(f.get('kind'))
                 # a file comes from its source (url, copied into a release) or is kept on the site (local: pdfx/…)

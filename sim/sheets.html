@@ -109,8 +109,10 @@ const KEY = C + Y, THY = Q.get("m") === "t";
 const TT = new Set((Q.get("tt") || "").split(",").filter(Boolean)), thy = task => THY || TT.has(task);
 const ANS = (Q.get("a") || "").split("|").map(s => s.trim());
 /* a theory exam's working sheet (one for the whole paper), where there is one — the Korean ones the translators made */
-const WS = /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(Q.get("w") || "") ? Q.get("w") : "";
+const SHEET = /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/;   // a release name, or a sheet kept on the site
+const WS = SHEET.test(Q.get("w") || "") ? Q.get("w") : "";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
+const sheetUrl = f => /^pdfx\//.test(f) ? "../" + f : PDF_BASE + f;
 const T = {
   ko: { h: "답안지 · Working sheet 인쇄", ans: "Answer sheet", work: "Working sheet", per: "실험마다 Working sheet", pages: "쪽", print: "인쇄 / PDF로 저장",
     hint: "A4, 배율 100%(«실제 크기»), 여백 없음으로 인쇄하세요. 네 귀퉁이의 검은 사각형은 휴대폰 스캔이 종이를 반듯하게 펴는 기준이니 가리거나 접지 마세요. 문제지는 시험이 시작된 뒤 시험 화면의 «문제지 열기»로만 볼 수 있습니다.",
@@ -167,12 +169,12 @@ const graphPage = () => `<p class="note">${T.graph}</p><div class="gq"><span>${T
 function official() {
   const rows = [];
   if (THY) {                                                     // theory: the official answer sheets travel with the exam's address
-    TASKS.forEach((task, i) => rows.push(ANS[i] && /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(ANS[i])
+    TASKS.forEach((task, i) => rows.push(ANS[i] && SHEET.test(ANS[i])
       ? `<div class="o"><b>${esc(task)}</b><div>${/_KO\.pdf$/.test(ANS[i]) ? T.koA : T.offA}<small>${esc(/_KO\.pdf$/.test(ANS[i]) ? T.thyKo : T.thyOff)}</small></div>
-         <a href="${PDF_BASE + esc(ANS[i])}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`
+         <a href="${esc(sheetUrl(ANS[i]))}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`
       : `<div class="o"><b>${esc(task)}</b><div><small>${T.ownA}</small></div></div>`));
     if (WS) rows.push(`<div class="o"><b>${esc(TASKS.join(" + "))}</b><div>${/_KO\.pdf$/.test(WS) ? T.koW : T.offW}<small>${esc(/_KO\.pdf$/.test(WS) ? T.thyKo : "")}</small></div>
-         <a href="${PDF_BASE + esc(WS)}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`);
+         <a href="${esc(sheetUrl(WS))}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`);
     document.getElementById("off").innerHTML = rows.join("");
     return;
   }

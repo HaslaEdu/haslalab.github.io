@@ -23,7 +23,7 @@
 <p>Part A, B, C에서는 분극이 전기장 세기에 선형으로 의존한다고 가정한다: $\vec P = \varepsilon_0(\varepsilon(\omega) - 1)\vec E$, 여기서 $\varepsilon(\omega)$는 매질의 유전율(dielectric permittivity)로, 보통 매질 내 전자기파의 주파수에 의존한다. 진공의 유전율은 1과 같다.</p>
 <p>따라서 전자기파 전파 방정식은 다음 형태로 쓸 수 있다:</p>
 \[\Delta\vec E = \mu_0\varepsilon\varepsilon_0\frac{\partial^2\vec E}{\partial t^2},\qquad \Delta\vec H = \mu_0\varepsilon\varepsilon_0\frac{\partial^2\vec H}{\partial t^2}.\]
-<figure><img src="T3_fig1.png" style="width:110mm"></figure>
+<figure><img src="T3_fig1.svg" style="width:110mm"></figure>
 <p>주파수 $\omega$의 평면 단색 전자기파가 $z$축을 따라 유전체 도파관(waveguide)(그림 1)을 따라 전파한다. 이 도파관은 유전 상수 $\varepsilon(\omega)$를 가진 물질로 된 직육면체이며 변의 길이는 $a$, $L_1$, $L_2$이다. $L_1, L_2 \to \infty$이고 이 문제의 어떤 특성 길이보다도 훨씬 크다.</p>
 <p>데카르트 좌표계 $Oxyz$를 도입하자. $O$는 직육면체의 중심과 일치한다. 길이 $L_1$의 모서리는 $z$축에, 길이 $a$는 $x$축에, 길이 $L_2$는 $y$축에 평행하다. $(\hat x, \hat y, \hat z)$는 오른손 삼중쌍이다.</p>
 <p>$y$축에 평행하게 편광된 파동을 생각하자: $\vec E \parallel \hat y$. 도파관 내 장 $\vec E$에 대한 해를 다음 형태로 찾는다:</p>
@@ -56,14 +56,14 @@
 <div class="task"><b>A8</b><div>A2에서 얻은 값 $k_{in}, k_{out}$을 A7의 방정식에 대입하라. $\beta$를 결정할 수 있는 방정식을 얻으라 (이 방정식은 수치적으로만 풀린다). 이 방정식은 $\beta, \omega, \varepsilon, c, a$를 포함할 수 있다.</div><i>0.2pt</i></div>
 
 <h2>Part B. 광섬유 공진기 투과율 (3.0점)</h2>
-<figure><img src="T3_fig2.png" style="width:110mm"></figure>
+<figure><img src="T3_fig2.svg" style="width:110mm"></figure>
 <p>외부 레이저의 복사가 사극자 빔 분배기(quadrupole beam splitter)로 들어간다. 이는 두 쌍의 결합된 채널 $(P_1, P_2)$와 $(Q_1, Q_2)$을 가진 광학계이다.</p>
 <p>복소 진폭 $A_{in}(t)$를 가지고 분배기로 들어가는 단색파는 같은 방향으로 전파하는 더 작은 진폭의 두 출력파로 분할된다. 그중 첫 번째는 입사파와 같은 쌍 채널을 따라 전파하며, 그 복소 진폭은 $A_{out}(t) = -r_sA_{in}(t)$이다. 두 번째 파동은 다른 쌍의 채널을 통해 전파하며 그 진폭은 $B_{out}(t) = it_sA_{in}(t)$이다. $Q_1$로 입사하는 파동은 $P_1$로 입사하는 파동과 유사하게 분할된다. $r_s$와 $t_s$는 양의 실수이고 $t_s \ll 1$이라고 하자.</p>
 
 <div class="task"><b>B1</b><div>분배기에서 에너지 손실이 없다고 가정하고, $r_s$와 $t_s$ 사이의 관계를 구하라.</div><i>0.2pt</i></div>
 
 <p>이 분배기로 광섬유 공진기를 조립할 수 있다. 이를 위해서는 채널 $Q_1$과 $Q_2$를 길이 $L$의 단일 모드 광섬유 고리(loop)(이 부분에서 고려하는 주파수에 대해 $\beta(\omega)$에 대한 방정식이 유일한 해를 가진다)로 연결해야 한다. 주파수 $\omega$의 빛이 고리를 통과하는 시간은 $\tau(\omega)$이다. 또한 물질 흡수로 인해 고리 내 파동의 진폭은 고리를 한 바퀴 돌 때마다 $1/\kappa$배만큼 감소한다($1 - \kappa \ll 1$). Part B와 C의 모든 문제에서 후방 산란(backscattering)은 무시한다.</p>
-<figure><img src="T3_fig3.png" style="width:110mm"></figure>
+<figure><img src="T3_fig3.svg" style="width:110mm"></figure>
 <p>외부 레이저로부터 단색파 $A_{in}(t) = A_0e^{i\omega t}$가 채널 $P_1$의 입력에 입사한다고 하자.</p>
 
 <div class="task"><b>B2</b><div>분배기 $Q_1$의 입력에서의 장 진폭 $B_{in}(t)$를, $\kappa$와 시각 $(t - \tau(\omega))$에서의 $Q_2$ 출력 장 진폭 $B_{out}(t - \tau(\omega))$로 표현하라.</div><i>0.3pt</i></div>
@@ -90,7 +90,7 @@ $\omega\tau$가 어떤 값일 때 비 $N_2/N_1$이 최소가 되는가?</div><i>
 <p>그림 1에 나타낸 간섭계 보정 장치를 생각하자. 이제 레이저 주파수가 시간에 따라 부드럽게 변하고($\dot\omega\tau$가 공진기에서 정상 모드가 확립되는 데 걸리는 시간의 역수보다 훨씬 작다), 그 출력은 일정하다.</p>
 \[\omega(t) = \omega_0 + \alpha t\]
 <p>레이저로부터의 복사 다발이 Part B의 분배기와 유사한 또 다른 빔 분배기에 의해 두 갈래로 나뉜다. 광학 회로의 첫 번째 갈래에는 마흐‑젠더 보정 간섭계와 그로부터 나오는 출력을 측정하는 광검출기가 있고, 두 번째 갈래에는 공진기와 유사한 광검출기가 있다. 광검출기로부터의 신호는 오실로스코프로 보내진다. 광검출기의 신호는 복사 출력에 비례한다. <b>오실로스코프는 광검출기 전압의 시간 의존성을 보여 준다 (XY 모드가 아니다!).</b></p>
-<figure><img src="T3_fig4.png" style="width:115mm"></figure>
+<figure><img src="T3_fig4.svg" style="width:115mm"></figure>
 <p><b>레이저 매개변수:</b></p>
 <ul>
 <li>$\omega_0 = 1.26\cdot 10^{15}\ \mathrm{s^{-1}}$</li>
@@ -121,7 +121,7 @@ $\omega\tau$가 어떤 값일 때 비 $N_2/N_1$이 최소가 되는가?</div><i>
 <h2>Part D. 3차 비선형성과 솔리톤 (2.5점)</h2>
 <p>정밀 측정과 고주파 통신을 위해서는, 시간에 따라 그 모양이 변하지 않는 매우 짧은 광 펄스(이러한 펄스를 솔리톤(soliton)이라 한다)를 얻는 것이 필요하다. 이는 선형 광학에서는 불가능한데, 유전 상수와 분산 상수가 주파수에 의존하여 펄스가 분산으로 인해 “번지기” 때문이다.</p>
 <p>다행히도 선형 광학의 근사는 모든 물질에 대해 성립하는 것은 아니며, 그로부터 생기는 비선형성이 분산과 관련된 바람직하지 않은 효과를 상쇄할 수 있다.</p>
-<figure><img src="T3_fig5.png" style="width:52mm"><figcaption>위에서부터: 자기 집속(Self‑Focusing), 회절(Diffraction), 자기 포획 솔리톤(Self‑Trapped Soliton)</figcaption></figure>
+<figure><img src="T3_fig5.jpg" style="width:52mm"><figcaption>위에서부터: 자기 집속(Self‑Focusing), 회절(Diffraction), 자기 포획 솔리톤(Self‑Trapped Soliton)</figcaption></figure>
 <p>Part D에서는, 분극 벡터의 임의의 축 $i$에의 사영 $P_i(\vec r, t)$이 같은 점, 같은 순간의 전기장 세기 사영 $E_i(\vec r, t)$에 다음과 같이 의존한다고 가정한다:</p>
 \[P_i(\vec r, t) = \varepsilon_0\left((\varepsilon(\omega) - 1)E_i(\vec r, t) + \chi E_i^3(\vec r, t)\right).\]
 <p>펄스는 반송 주파수(carrier frequency)에 매우 가까운 주파수($\omega \approx \omega_0$)와, 반송파의 전파 상수에 매우 가까운 전파 상수 $\beta \approx \beta_0 = \beta(\omega_0)$를 가진 전자기파들의 합이다:</p>
