@@ -419,8 +419,14 @@ const LBT = {
        mStep: "By step", mAcc: "Accuracy (against the admins' reference marks)", mMae: "Mean difference per item", mExact: "Items that agree", mTaskDiff: "Experiment total difference (of full marks)", mItems: "Items compared",
        mStore: "Answer photos", mKeep: (h) => h == null ? "kept (removal off)" : `removed ${h} h after grading`, mNone: "Nothing recorded yet.", mRecent: "Recent gradings"}};
 const lbt = () => LBT[lang === "en" ? "en" : "ko"];
+const arIsContest = s => s && s.comp === "kmo" && s.purpose === "review" && typeof s.examId === "string";
+function arLabHref(s) {
+  if (arIsContest(s)) return `sim/contest-exam.html?id=${encodeURIComponent(s.examId)}&review=${encodeURIComponent(s.id)}&lang=${lang === "en" ? "en" : "ko"}`;
+  return s && s.entry ? `sim/exam.html${s.entry}&lang=${lang}` : "";
+}
 /* the catalogue's solution sheet for an exam's experiment, when the site has one */
 function arLabSol(s, task) {
+  if (arIsContest(s)) return "";
   const c = DATA[s.comp], y = c && c.years.find((x) => x.y === s.year), p = y && y.problems.find((x) => x.id === task || (typeof examTask === "function" && examTask(x) === task)), v = p && p.files && p.files.sol;
   return typeof v === "string" ? v : v ? (v[lang] || v.ko || v.en) : "";
 }
@@ -434,7 +440,7 @@ async function arLabList(root, alive) {
     <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
     ${arShopHtml(shop, tk.parts || 0)}
     ${act ? `<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>
-      ${act.entry ? `<a class="cmbtn pri" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div>` : ""}
+      ${arLabHref(act) ? `<a class="cmbtn pri" href="${esc(arLabHref(act))}">${L.resume}</a>` : ""}</div>` : ""}
     <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length ? `<table class="cmtbl artbl"><tbody>${ls.sessions.map((x) => `<tr>
       <td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(" + "))}</a></td>
       <td style="width:150px">${L.st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${x.status === "graded" ? x.score + (x.points ? " / " + x.points : "") : "–"}</b></td>
@@ -604,24 +610,34 @@ function arLabReview(r) {
     ${r.presentation ? `<p style="margin:6px 0 0"><b>${L.rvPres}</b> — ${esc(r.presentation)}</p>` : ""}</div>`;
 }
 async function arLabOne(root, alive, id) {
-  const L = lbt(), T = arT();
+  const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
   const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
+  const isContest = arIsContest(s), english = lang === "en", L = isContest ? {...lbt(),
+    resume: english ? "Open answer submission / review" : "답안 제출·검토 화면 열기",
+    reportH: english ? "Written-proof learning review" : "서술형 학습용 검토 기록", total: english ? "Reference score" : "학습용 참고점수",
+    date: english ? "Review received" : "채점 접수 시각", empty: english ? "No proof was submitted for this question." : "이 문항에 제출된 풀이가 없습니다.",
+    regH: english ? "HaslaLab learning-review rules" : "HaslaLab 학습용 검토 규칙",
+    regNote: english ? "AI reference scores are not official KMO marking. Uncertain scans or arguments await manual review; compare OCR with the original before submitting." : "AI 참고점수는 공식 KMO 채점이 아닙니다. 판독·논증이 불확실하면 관리자 검토를 기다리며, OCR은 원본과 대조해 제출합니다.",
+    st: {...lbt().st, scanning: english ? "preparing answers" : "답안 제출 준비", grading: english ? "under review" : "검토 중", graded: english ? "review complete" : "검토 완료", pending: english ? "awaiting manual review" : "관리자 검토 대기", ended: english ? "review not requested" : "검토 미신청"},
+    why: Object.fromEntries(["needs_confirmation", "no_grader", "problem_unavailable", "uncertain_proof", "review_disagreement", "grader_unavailable", "answer_too_long", "scan_unavailable", "scan_too_large"].map(key => [key, english ? "The proof or review evidence needs manual checking. No score is final yet." : "답안 또는 검토 근거를 확인할 필요가 있어 관리자 검토를 기다립니다. 아직 확정된 점수는 없습니다."]))
+  } : lbt();
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
   /* the experiment alone, against the year's real contestants (sim/labmedal.js) */
   const medal = s.status === "graded" && (!s.kind || s.kind === "lab") && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
   if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
-      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${open && s.entry ? `<a class="cmbtn sm pri" href="sim/exam.html${esc(s.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div></div>
+      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}</div></div>
+    ${isContest ? `<div class="cmnote">${L.regNote}</div>` : ""}
     <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl"><tbody>
       <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
       <tr><th>${L.exam}</th><td>${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</td><th>${L.date}</th><td>${cmFull(s.started_at).slice(0, 16)}</td></tr></tbody></table>
       ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${L.total}</small><b>${s.score} / ${s.points ?? "?"}</b></div>
-        ${s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
+        ${!isContest && s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
-        ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
-    ${s.status === "ended" ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${s.cost === 0.5 ? L.payNote.replace("토큰 1개", "토큰 0.5개").replace("one exam token", "half an exam token") : L.payNote}</p>
+        ${!isContest && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
+    ${s.status === "ended" && !isContest ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${s.cost === 0.5 ? L.payNote.replace("토큰 1개", "토큰 0.5개").replace("one exam token", "half an exam token") : L.payNote}</p>
       <button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)

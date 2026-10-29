@@ -5,6 +5,9 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
+import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
+import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
+
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
 const TAGS = ["gen", "q", "info", "review", "bug", "notice"];
@@ -1063,7 +1066,7 @@ const labSrc = s => { try { return s.sources ? JSON.parse(s.sources) : {}; } cat
 const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[task] && src[task].kind === "theory") : Object.values(src).some(v => v && v.kind === "theory"); };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
-const labDur = s => { const k = labKind(s); return labExamSec(s.comp, s.year, JSON.parse(s.tasks).length, k === "mixed" ? "mixed" : k === "theory"); };
+const labDur = s => { if (contestMeta(s)) return 0; const k = labKind(s); return labExamSec(s.comp, s.year, JSON.parse(s.tasks).length, k === "mixed" ? "mixed" : k === "theory"); };
 const labOpen = (s, t) => s.status === "scanning" && t <= s.scan_until + LAB.graceSec;
 const labGet = (env, id) => env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first();
 /* move a session along the clock: when the exam's time is up the bench goes dark, thirty minutes later what
@@ -1107,15 +1110,15 @@ const labTokens = async (env, userId) => {
 };
 /* what grading this sitting costs, in half tokens: 1 for the experiments or the theory of a year that has both (the start
    said so: sources._half), 2 for anything else — a combined sitting (NBPhO) included */
-const labCost = s => labSrc(s)._half && labKind(s) !== "mixed" ? 1 : 2;
-const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
+const labCost = s => !contestMeta(s) && labSrc(s)._half && labKind(s) !== "mixed" ? 1 : 2;
+const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,mime,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
     exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), cost: labCost(s) / 2, paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
-    regulation: LAB_REG,
+    ...contestPublic(s), regulation: contestMeta(s) ? CONTEST_REG : LAB_REG,
     pages: pages && pages.map(p => ({ id: p.id, no: p.no, task: p.task, kind: p.kind, ocr_status: p.ocr_status, ocr_conf: p.ocr_conf,
-      text: p.text ?? p.ocr ?? "", edited: p.edited, legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
+      text: p.text ?? p.ocr ?? "", edited: p.edited, ...(contestMeta(s) ? { confirmed: !!p.edited, source: p.mime === "text/plain" ? "typed" : "scan" } : {}), legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
 }
 
 function labPrompt(s, task, rb, rubric, answer, lang) {
@@ -1513,6 +1516,7 @@ async function labGradeTask(env, s, task, pages, rb, lang) {
 }
 async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   const mine = pages.filter(p => p.task === task);
+  if (contestMeta(s)) return contestGradeTask(env, s, task, mine, rb, lang, m, { gemini, b64, labPageBytes });
   if (env.GEMINI_API_KEY) {
     let scheme;
     try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task, m); }
@@ -1626,6 +1630,7 @@ async function labFirsts(env, where, args) {
 }
 const pct1 = x => Math.round(x * 10) / 10;
 async function labStanding(env, s) {
+  if (contestMeta(s)) return null; // a study review does not claim an invigilated exam ranking
   if (s.status !== "graded" || !(s.points > 0)) return null;
   const rows = await labFirsts(env, "AND exam_key=? AND tasks=?", [s.exam_key, s.tasks]), mine = 100 * s.score / s.points;
   const others = rows.filter(r => r.user_id !== s.user_id), all = others.map(r => r.pct).concat(mine);
@@ -1864,6 +1869,9 @@ async function lab(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   const t = now();
+  const contest = await contestRoute({ p, m, body, me, env, lang, t }, { HttpError, needUser, labReady, labActive, labAdvance, labOwned,
+    labGet, pubLab, labPagesOf, labTokens, labScanCode, sha256, labOpen, LAB, meter, meterSave, limit, labPageBytes, labUpstage, labReadPage, readText });
+  if (contest !== undefined) return contest;
 
   /* the phone: holds the upload token from the QR code, not a sign-in */
   if ((r = /^\/api\/lab\/up(?:\/(\d+))?$/.exec(p)) && m === "GET") {
@@ -2029,7 +2037,7 @@ async function lab(p, m, body, me, req, env, url) {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
     const owner = s.user_id === me.id ? me : await env.DB.prepare("SELECT nickname FROM users WHERE id=?").bind(s.user_id).first();
     const reviews = isAdmin(me) ? await env.DB.prepare("SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?").bind(s.id).all().then(x => x.results).catch(() => []) : undefined;
-    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s), ...(reviews ? { reviews } : {}) }, health: arenaHealth(env) };
+    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s), ...(reviews ? { reviews } : {}) }, health: arenaHealth(env), ...(contestMeta(s) ? { tokens: await labTokens(env, s.user_id) } : {}) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);
@@ -2065,7 +2073,14 @@ async function lab(p, m, body, me, req, env, url) {
     if (s.status === "running") throw new HttpError(409, "running");                         // finish the exam first
     /* grade: false ends the sitting ungraded and spends nothing; otherwise grading is paid for (once) and runs */
     if (body.grade === false) s = s.charged ? s : await labEnd(env, s);
-    else if (s.status === "scanning" || s.status === "ended") { s = await labCharge(env, s); s = await labFinalize(env, s, lang); }
+    else if (s.status === "scanning" || s.status === "ended") {
+      if (contestMeta(s)) {
+        const pages = await labPagesOf(env, s.id);
+        if (!pages.some(p => String(p.text ?? p.ocr ?? "").trim() || p.mime !== "text/plain")) bad("no_answers");
+        if (pages.some(p => !p.edited)) throw new HttpError(409, "needs_confirmation");
+      }
+      s = await labCharge(env, s); s = await labFinalize(env, s, lang);
+    }
     return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
   }
   /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
@@ -2156,8 +2171,10 @@ async function lab(p, m, body, me, req, env, url) {
     }
     if (p === "/api/admin/lab/rubrics" && m === "POST") {
       const key = String(body.exam_key || ""), task = String(body.task || ""), points = Number(body.points);
-      if (!/^[a-z]{3,8}\d{4}$/.test(key)) bad("bad_exam");
+      const cx = key.startsWith("contest:") && Object.hasOwn(CONTEST_PROOF_EXAMS, key.slice(8)) && CONTEST_PROOF_EXAMS[key.slice(8)];
+      if (!/^[a-z]{3,8}\d{4}$/.test(key) && !cx) bad("bad_exam");
       if (!LAB_TASK_RE.test(task)) bad("bad_task");
+      if (cx && (!Array.from({ length: cx.questions }, (_, i) => "Q" + (i + 1 + (cx.questionOffset || 0))).includes(task) || points !== 7)) bad("bad_task");
       let rb; try { rb = JSON.parse(body.rubric || "null"); } catch (e) { bad("bad_rubric"); }
       if (!Array.isArray(rb) || !rb.length || rb.some(c => !c.id || !(c.max > 0) || !c.requirement)) bad("bad_rubric");
       if (!(points > 0)) bad("bad_points");
@@ -2199,8 +2216,9 @@ async function lab(p, m, body, me, req, env, url) {
       }
       const pts = Number(body.points), score = Number(body.score);
       if (!(pts > 0) || !(score >= 0 && score <= pts)) bad("bad_score");
+      if (contestMeta(s) && (pts !== 7 || !Number.isInteger(score))) bad("bad_score");
       const per = (s.detail && JSON.parse(s.detail).tasks) || {};
-      per[task] = { ...(per[task] || {}), status: "graded", score: +score.toFixed(2), points: pts, grader: "admin:" + me.nickname, note: String(body.note || "").slice(0, 4000) };
+      per[task] = { ...(per[task] || {}), status: "graded", score: +score.toFixed(2), points: pts, grader: "admin:" + me.nickname, ...(contestMeta(s) ? { why: null, official: false, grading_mode: "proof_review", provisional: false, manual_review: false, reviewed_by_admin: true } : {}), note: String(body.note || "").slice(0, 4000) };
       return { session: pubLab(await labSave(env, s, tasks, per), null) };
     }
   }

@@ -64,3 +64,23 @@ test('normalization limits saved answers to the configured sheet and deduplicate
   const normalized=core.normalize(r,e);assert.deepEqual(normalized.marks,{1:'Proof'});assert.equal(normalized.q,3);
   assert.equal(core.appendHistory(core.appendHistory([],r),r).length,1);
 });
+
+test('paper mode remains paper after reload while pre-existing attempts keep online entry',()=>{
+  const r=core.create(base,1000,'paper');
+  assert.equal(core.normalize(r,base).mode,'paper');
+  const old={...r};delete old.mode;assert.equal(core.normalize(old,base).mode,'online');
+  assert.equal(core.setAnswer(r,base,1,2,2000),false);
+});
+
+test('paper scans are reviewed once after working time, without extending the original clock',()=>{
+  const r=core.create(base,1000,'paper'),deadline=r.deadline;
+  assert.equal(core.submitPaper(r,base,{1:2},2000,{complete:true}),false);
+  core.finish(r,deadline,'timeout');
+  assert.equal(core.submitPaper(r,base,{1:2},deadline+3000,{complete:false}),false);
+  assert.equal(core.submitPaper(r,base,{1:9},deadline+3000,{complete:true}),false);
+  assert.equal(core.submitPaper(r,base,{1:2},deadline+4000,{complete:true,pages:2}),true);
+  assert.equal(core.submitPaper(r,base,{1:3},deadline+5000,{complete:true}),false);
+  assert.equal(r.deadline,deadline);assert.deepEqual(r.marks,{1:2});
+  const loaded=core.normalize(r,base);assert.deepEqual(loaded.paperSubmission,{at:deadline+4000,reviewed:true,pages:2});
+  assert.equal(core.submitPaper(loaded,base,{1:1},deadline+6000,{complete:true}),false);
+});

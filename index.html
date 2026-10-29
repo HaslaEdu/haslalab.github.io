@@ -4754,7 +4754,7 @@ function modeSwitch(key,mode){
   const local=contestEntries(key).length>0;
   return `<div class="modesw" role="navigation" aria-label="${d.modePrac} / ${d.modeExam}">
     <a href="#/${key}" class="${mode!=="exam"?"on":""}" aria-current="${mode!=="exam"}"><b>📘 ${d.modePrac}</b><span>${local?(lang==="ko"?"공식 문제지 · 정답 · 회차별 규정":"Official papers · answers · session rules"):d.modePracSub}</span></a>
-    <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${local?(lang==="ko"?"회차별 시험 시간 · 무료 · 답안 자동 저장":"Session-specific timing · free · saved answers"):d.modeExamSub}</span></a></div>`;
+    <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${local?(lang==="ko"?"종이 스캔 또는 화면 입력 · 서술형 토큰 채점":"Paper scan or on-screen entry · tokens for proofs"):d.modeExamSub}</span></a></div>`;
 }
 const contestEntries=(key,year,part)=>(window.CONTEST_EXAMS?.entries||[]).filter(e=>e.comp===key&&(year===undefined||String(e.year)===String(year))&&(!part||e.part===part));
 const contestHref=e=>`sim/contest-exam.html?${new URLSearchParams({id:e.id,lang})}`;
@@ -4772,13 +4772,13 @@ const hasExam=(c,key)=>contestEntries(key).length>0||(key&&trackOf(key)==="thy"?
 function contestNote(key){
   const c=window.CONTEST_EXAMS?.competitions?.[key]; if(!c) return "";
   const ko=lang==="ko", rules=ko?c.rules:c.rulesEn||c.rules;
-  return `<details class="cnote"><summary>${ko?"공식 기출 수록 범위 · 시험 방법과 규정":"Archive coverage · exam format and rules"}</summary><p>${esc(ko?c.coverage:c.coverageEn||c.coverage)}</p><ul>${rules.map(s=>`<li>${esc(s)}</li>`).join("")}</ul><p>${(c.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join(" · ")}</p><p>${ko?"원문은 주최 측 사이트에서 열립니다. 회차별 원문 지침이 우선하며, 공식 감독 시험을 재현한 무료 개인 연습입니다. 답안과 기록은 이 브라우저에 저장됩니다.":"Original documents open on the organisers' sites. Each paper's instructions take precedence. This is free personal practice; answers and history are saved in this browser."}</p></details>`;
+  return `<details class="cnote"><summary>${ko?"공식 기출 수록 범위 · 시험 방법과 규정":"Archive coverage · exam format and rules"}</summary><p>${esc(ko?c.coverage:c.coverageEn||c.coverage)}</p><ul>${rules.map(s=>`<li>${esc(s)}</li>`).join("")}</ul><p>${(c.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join(" · ")}</p><p>${ko?"원문은 주최 측 사이트에서 열립니다. 회차별 원문 지침이 우선하며, 응시는 무료인 개인 연습입니다. 객관식·단답형은 무료로 채점하며 KMO 서술형 채점·첨삭은 교시당 실전 토큰 1개입니다. 화면 답안은 이 브라우저에 저장되며, 서술형 채점을 요청할 때 제출한 답안만 서버로 전송됩니다.":"Original documents open on the organisers' sites. Each paper's instructions take precedence. Sitting is free; objective answers are graded free, while KMO proof feedback uses one exam token per session. Screen answers stay in this browser until you submit them for proof review."}</p></details>`;
 }
 function contestPortalHtml(key){
   const ko=lang==="ko", entries=contestEntries(key);
-  return `<div class="xmnote"><b>${ko?"회차별 무료 실전 연습":"Free timed practice by session"}</b><p>${ko?"공식 문제지를 준비한 뒤 시작하세요. 새로고침과 창 전환 중에도 시간이 흐르며, 제한 시간이 끝나면 자동 제출됩니다. 객관식·단답형은 검증한 공식 정답이 있는 시험만 자동 채점합니다. 서술형은 답안을 저장하고 스스로 검토합니다.":"Prepare the official paper before starting. The clock continues across reloads and background tabs; answers submit at the deadline. Verified official keys enable automatic grading; proof answers are saved for self-review."}</p></div>
+  return `<div class="xmnote"><b>${ko?"회차별 무료 실전 연습":"Free timed practice by session"}</b><p>${ko?"대면 필기 시험처럼 A4 답안지를 출력해 풀이한 뒤 스캔하거나, 화면 양식에 직접 답을 입력할 수 있습니다. 객관식·단답형은 공식 정답으로 무료 채점하며, KMO 서술형은 종이·화면 답안 모두 교시당 실전 토큰 1개로 학습용 채점·첨삭을 요청할 수 있습니다.":"Print A4 answer sheets and scan your work, or enter answers on screen. Verified multiple-choice and short-answer keys are graded free. KMO proofs, on paper or typed, can receive practice grading and feedback for one exam token per session."}</p></div>
     <p><label>${ko?"시험 찾기":"Find an exam"} <input type="search" aria-label="${ko?"시험 찾기":"Find an exam"}" placeholder="${ko?"예: 2025 중등 2차":"e.g. 2025 middle"}" oninput="filterContest(this.value)" style="padding:9px 12px;border:1px solid var(--line);border-radius:8px;max-width:100%"></label></p>
-    <div class="xmbox" style="overflow:auto"><table><thead><tr><th>${ko?"연도":"Year"}</th><th>${ko?"시험":"Exam"}</th><th>${ko?"시간 / 문항":"Time / questions"}</th><th>${ko?"답안 방식":"Answer format"}</th><th></th></tr></thead><tbody>${entries.map(e=>`<tr class="contestrow"><td>${esc(e.year)}</td><td><b>${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)}</b>${e.formatNote?`<details class="s"><summary>${ko?"회차 안내":"Session notes"}</summary>${esc(e.formatNote)}</details>`:""}</td><td>${e.minutes?`${e.minutes}${ko?"분":" min"}`:"—"} / ${e.questions||"—"}</td><td>${({choice:ko?"객관식":"Multiple choice",integer:ko?"단답형":"Short answer",proof:ko?"서술형":"Proof"})[e.kind]||"—"}<div class="s">${e.answersVerified?(ko?"공식 정답 자동 채점":"Official-key grading"):(ko?"답안 저장 · 자가 검토":"Save and self-review")}</div></td><td><a class="go" href="${contestHref(e)}">${e.practice===false?(ko?"원문 · 규격 확인 중":"Paper · format pending"):(ko?"시험 준비":"Prepare")}</a></td></tr>`).join("")}</tbody></table></div>`;
+    <div class="xmbox" style="overflow:auto"><table><thead><tr><th>${ko?"연도":"Year"}</th><th>${ko?"시험":"Exam"}</th><th>${ko?"시간 / 문항":"Time / questions"}</th><th>${ko?"답안 방식":"Answer format"}</th><th></th></tr></thead><tbody>${entries.map(e=>`<tr class="contestrow"><td>${esc(e.year)}</td><td><b>${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)}</b>${e.formatNote?`<details class="s"><summary>${ko?"회차 안내":"Session notes"}</summary>${esc(e.formatNote)}</details>`:""}</td><td>${e.minutes?`${e.minutes}${ko?"분":" min"}`:"—"} / ${e.questions||"—"}</td><td>${({choice:ko?"객관식":"Multiple choice",integer:ko?"단답형":"Short answer",proof:ko?"서술형":"Proof"})[e.kind]||"—"}<div class="s">${e.kind==="proof"?(ko?"종이·화면 · 채점 1토큰":"Paper or typed · 1 token to grade"):e.answersVerified?(ko?"종이 스캔·화면 · 무료 채점":"Scan or on-screen · free grading"):(ko?"정답 미확보 · 답안 저장":"No verified key · answer record")}</div></td><td><a class="go" href="${contestHref(e)}">${e.practice===false?(ko?"원문 · 규격 확인 중":"Paper · format pending"):(ko?"시험 준비":"Prepare")}</a></td></tr>`).join("")}</tbody></table></div>`;
 }
 function viewComp(key,mode){
   const d=UI[lang], c=DATA[key];
@@ -8431,6 +8431,16 @@ function cmGoLogin(){
   location.hash="#/community/login";
 }
 function cmBack(){
+  let contestBack=""; try{ contestBack=sessionStorage.getItem("hlContestReviewBack")||""; sessionStorage.removeItem("hlContestReviewBack"); }catch(e){}
+  if(contestBack){
+    try{
+      const target=new URL(contestBack,location.href);
+      if(target.origin===location.origin && target.pathname==="/sim/contest-exam.html"){
+        try{sessionStorage.removeItem("hlCmBack");}catch(e){}
+        location.href=target.href; return;
+      }
+    }catch(e){}
+  }
   let b=""; try{ b=sessionStorage.getItem("hlCmBack")||""; sessionStorage.removeItem("hlCmBack"); }catch(e){}
   location.hash = (b && !/\/(login|signup)\b/.test(b)) ? b : "#/community";
 }

@@ -12,6 +12,17 @@ const data = JSON.parse(JSON.stringify(scope.window.CONTEST_EXAMS));
 const entries = data.entries;
 const find = id => entries.find(e=>e.id===id);
 
+test('every enabled written session reaches the same authoritative server paper, question numbers and points',async()=>{
+  const {CONTEST_PROOF_EXAMS}=await import('../community/src/contest-catalog.js');
+  const written=entries.filter(e=>e.comp==='kmo'&&e.kind==='proof'&&e.practice!==false);
+  assert.deepEqual(Object.keys(CONTEST_PROOF_EXAMS).sort(),written.map(e=>e.id).sort());
+  for(const e of written){
+    const server=CONTEST_PROOF_EXAMS[e.id];
+    for(const k of ['paper','minutes','questions','questionOffset','points'])assert.deepEqual(server[k],e[k],e.id+' '+k);
+    assert.ok(server.points.every(p=>p===7),e.id);
+  }
+});
+
 test('every public chemistry paper and every KMO source part has an official link and practice entry',()=>{
   const chem = require('../data/research/kmchc-research.json');
   const kmo = require('../tools/theory/kmo.json');
