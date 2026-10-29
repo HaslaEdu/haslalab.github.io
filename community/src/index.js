@@ -545,6 +545,7 @@ const worker = {
         "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
     }
     if (req.method === "GET" && (av = /^\/api\/lab\/pages\/(\d+)\/img$/.exec(url.pathname))) return labImage(req, env, +av[1], cors);
+    if (req.method === "POST" && url.pathname === "/api/pay/paddle/webhook") return paddleWebhook(req, env, cors);   // signed over the raw body
     if (req.method === "GET" && url.pathname.startsWith("/api/yt/")) {
       try { return await ytRoute(req, env, url, cors); }
       catch (e) { if (e instanceof HttpError) return json({ error: e.code }, e.status, cors); console.error(e && e.stack || e); return json({ error: "server_error" }, 500, cors); }
@@ -1487,12 +1488,69 @@ async function labImage(req, env, pid, cors) {
    Ads: the server hands out a one-time number when an ad starts; when the ad network says the reward was earned
    the page claims it with that number, at least ADS_MIN_SEC later, at most ADS_DAILY a day (Korean day); three
    thirds make a token.  Environment: TOSS_CLIENT_KEY, TOSS_SECRET_KEY (secret), PAY_PACKS (JSON, optional),
-   ADS_REWARDED_UNIT (a Google Ad Manager rewarded ad unit path; "test" = Google's sample unit), ADS_DAILY, ADS_MIN_SEC. */
+   ADS_REWARDED_UNIT (a Google Ad Manager rewarded ad unit path; "test" = Google's sample unit), ADS_DAILY, ADS_MIN_SEC.
+   Paddle (in USD, Paddle being the merchant of record): the server writes the order, Paddle.js opens Paddle's overlay
+   checkout with the pack's price and the order id in custom_data; Paddle's signed webhook (transaction.completed or
+   .paid) adds the tokens, and pay.html asks the server to look the transaction up meanwhile, in case the webhook is
+   late.  PADDLE_CLIENT_TOKEN (public; test_… = sandbox), PADDLE_API_KEY and PADDLE_WEBHOOK_SECRET (secrets),
+   PADDLE_PACKS (JSON [{id, tokens, price_id, usd}] — the prices made in Paddle's catalogue). */
 const PACKS = [{ id: "t1", tokens: 1, krw: 1900 }, { id: "t5", tokens: 5, krw: 7900 }, { id: "t12", tokens: 12, krw: 15900 }];
 const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length) return x; } catch (e) {} return PACKS; };
 const adsOf = env => ({ unit: env.ADS_REWARDED_UNIT === "test" ? "/22639388115/rewarded_web_example" : env.ADS_REWARDED_UNIT || null,
   daily: Math.max(1, parseInt(env.ADS_DAILY) || 3), min_sec: Math.max(0, parseInt(env.ADS_MIN_SEC ?? "10")), parts: 3 });
 const kstDay = t => Math.floor((t + 9 * 3600) / 86400) * 86400 - 9 * 3600;      // the start of today in Korea
+const paddlePacks = env => { try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.every(p => p.id && p.tokens > 0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {} return null; };
+const paddleOn = env => !!(env.PADDLE_CLIENT_TOKEN && env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET && paddlePacks(env));
+const paddleEnv = env => /^test_/.test(env.PADDLE_CLIENT_TOKEN || "") ? "sandbox" : "production";
+async function paddle(env, method, path, body) {
+  const base = env.PADDLE_BASE || (paddleEnv(env) === "sandbox" ? "https://sandbox-api.paddle.com" : "https://api.paddle.com");
+  const r = await fetch(base + path, { method, headers: { Authorization: "Bearer " + env.PADDLE_API_KEY, "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(30000) });
+  return { ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) };
+}
+/* a Paddle transaction pays an order when it is completed (or paid), names the order and holds the order's price */
+async function paddleFulfil(env, o, txn, t) {
+  const good = txn && (txn.status === "completed" || txn.status === "paid") && txn.custom_data && txn.custom_data.order_id === o.order_id
+    && (txn.items || []).some(i => i.price && i.price.id === o.price_id);
+  if (!good) return false;
+  await env.DB.prepare("UPDATE pay_orders SET status='done',payment_key=?,method='paddle',approved_at=? WHERE order_id=? AND status='ready'").bind(txn.id, t, o.order_id).run();
+  const now2 = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(o.order_id).first();
+  if (now2.status !== "done" || now2.payment_key !== txn.id) return false;
+  await payCredit(env, now2, t);
+  return true;
+}
+/* Paddle's webhook: the raw body is signed — HMAC-SHA256 over "ts:body" with the destination's secret key */
+async function paddleWebhook(req, env, cors) {
+  const raw = await req.text(), sig = req.headers.get("Paddle-Signature") || "";
+  const parts = Object.fromEntries(sig.split(";").map(x => x.split("=")).filter(x => x.length === 2));
+  const ts = parseInt(parts.ts), h1s = sig.split(";").filter(x => x.startsWith("h1=")).map(x => x.slice(3));
+  if (!env.PADDLE_WEBHOOK_SECRET || !ts || !h1s.length || Math.abs(now() - ts) > 300) return json({ error: "bad_signature" }, 401, cors);
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.PADDLE_WEBHOOK_SECRET), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const mac = [...new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(ts + ":" + raw)))].map(b => b.toString(16).padStart(2, "0")).join("");
+  if (!h1s.some(h => h.length === mac.length && h.split("").reduce((a, c, i) => a | (c.charCodeAt(0) ^ mac.charCodeAt(i)), 0) === 0)) return json({ error: "bad_signature" }, 401, cors);
+  let ev; try { ev = JSON.parse(raw); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
+  const d = ev.data || {}, t = now();
+  if (ev.event_type === "transaction.completed" || ev.event_type === "transaction.paid") {
+    const oid = d.custom_data && d.custom_data.order_id;
+    const o = oid && await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='paddle'").bind(String(oid)).first();
+    if (o && o.status === "done") await payCredit(env, o, t);
+    else if (o && o.status === "ready") await paddleFulfil(env, o, d, t);
+  }
+  /* a refund approved in Paddle (from its dashboard or ours): the order is cancelled and its tokens taken back */
+  if ((ev.event_type === "adjustment.created" || ev.event_type === "adjustment.updated") && d.action === "refund" && d.status === "approved") {
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE payment_key=? AND provider='paddle' AND status='done'").bind(String(d.transaction_id || "")).first();
+    if (o) await payCancelTokens(env, o, null, t);
+  }
+  return json({ ok: true }, 200, cors);
+}
+async function payCancelTokens(env, o, by, t) {
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT u.id,-MIN(u.exam_tokens,?),'cancel',?,?,? FROM users u WHERE u.id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')")
+      .bind(o.tokens, o.order_id, by, t, o.user_id, o.order_id),
+    env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')").bind(o.tokens, o.user_id, o.order_id),
+    env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
+  ]);
+}
 async function toss(env, method, path, body) {
   const r = await fetch((env.TOSS_BASE || "https://api.tosspayments.com") + path, { method,
     headers: { Authorization: "Basic " + btoa(env.TOSS_SECRET_KEY + ":"), "Content-Type": "application/json" },
@@ -1512,7 +1570,32 @@ async function shop(p, m, body, me, req, env, url) {
   if (p === "/api/pay/config" && m === "GET") {
     const ads = adsOf(env);
     return { pay: env.TOSS_CLIENT_KEY && env.TOSS_SECRET_KEY ? { client_key: env.TOSS_CLIENT_KEY, packs: packsOf(env) } : null,
+      paddle: paddleOn(env) ? { token: env.PADDLE_CLIENT_TOKEN, env: paddleEnv(env), packs: paddlePacks(env).map(p => ({ id: p.id, tokens: p.tokens, price_id: p.price_id, usd: p.usd ?? null })) } : null,
       ads: ads.unit ? { unit: ads.unit, daily: ads.daily, parts: ads.parts } : null };
+  }
+  if (p === "/api/pay/order" && m === "POST" && body.provider === "paddle") {
+    needUser(me);
+    if (!paddleOn(env)) throw new HttpError(503, "pay_off");
+    const pk = paddlePacks(env).find(x => x.id === body.pack);
+    if (!pk) bad("bad_pack");
+    await limit(env, "payorder:" + me.id, 30, 3600);
+    const id = "HL" + labScanCode().slice(0, 30);
+    await env.DB.prepare("INSERT INTO pay_orders(order_id,user_id,provider,currency,price_id,pack,tokens,amount,created_at) VALUES(?,?,'paddle','USD',?,?,?,?,?)")
+      .bind(id, me.id, pk.price_id, pk.id, pk.tokens, Math.round((+pk.usd || 0) * 100), t).run();
+    return { order_id: id, price_id: pk.price_id, tokens: pk.tokens };
+  }
+  /* pay.html after Paddle's checkout: done already (the webhook came), or looked up with Paddle now */
+  if (p === "/api/pay/paddle/check" && m === "POST") {
+    needUser(me);
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='paddle'").bind(String(body.orderId || "")).first();
+    if (!o || o.user_id !== me.id) throw new HttpError(404, "no_order");
+    const txnId = String(body.txn || "");
+    if (o.status === "ready" && /^txn_\w{10,60}$/.test(txnId)) {
+      const r = await paddle(env, "GET", "/transactions/" + txnId);
+      if (r.ok) await paddleFulfil(env, o, r.j.data, t);
+    }
+    const x = await env.DB.prepare("SELECT status,tokens FROM pay_orders WHERE order_id=?").bind(o.order_id).first();
+    return { status: x.status, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens } };
   }
   if (p === "/api/pay/order" && m === "POST") {
     needUser(me);
@@ -1526,7 +1609,7 @@ async function shop(p, m, body, me, req, env, url) {
   }
   if (p === "/api/pay/confirm" && m === "POST") {
     needUser(me);
-    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(String(body.orderId || "")).first();
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='toss'").bind(String(body.orderId || "")).first();
     if (!o || o.user_id !== me.id) throw new HttpError(404, "no_order");
     if (o.status === "done") { await payCredit(env, o, t); return { ok: true, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens, amount: o.amount } }; }   // a reload of pay.html
     if (o.status !== "ready") throw new HttpError(409, "order_" + o.status);
@@ -1550,20 +1633,18 @@ async function shop(p, m, body, me, req, env, url) {
   }
   if (p === "/api/pay/orders" && m === "GET") {
     needUser(me);
-    return { orders: (await env.DB.prepare("SELECT order_id,pack,tokens,amount,status,method,receipt_url,created_at,approved_at,canceled_at FROM pay_orders WHERE user_id=? AND status<>'ready' ORDER BY created_at DESC LIMIT 50").bind(me.id).all()).results };
+    return { orders: (await env.DB.prepare("SELECT order_id,provider,currency,pack,tokens,amount,status,method,receipt_url,created_at,approved_at,canceled_at FROM pay_orders WHERE user_id=? AND status<>'ready' ORDER BY created_at DESC LIMIT 50").bind(me.id).all()).results };
   }
   /* a refund (an admin, e.g. a minor's purchase without consent): Toss cancels the payment, the tokens not yet spent go back */
   if ((m === "POST") && /^\/api\/admin\/pay\/[A-Za-z0-9_-]+\/cancel$/.test(p)) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(p.split("/")[4]).first();
     if (!o || o.status !== "done") throw new HttpError(409, "not_paid");
-    const r = await toss(env, "POST", `/v1/payments/${encodeURIComponent(o.payment_key)}/cancel`, { cancelReason: String(body.reason || "환불").slice(0, 200) });
-    if (!r.ok) throw new HttpError(502, "cancel_failed", { message: r.j.message || null });
-    await env.DB.batch([
-      env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
-      env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT id,-MIN(exam_tokens,?),'cancel',?,?,? FROM users WHERE id=?").bind(o.tokens, o.order_id, me.id, t, o.user_id),
-      env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=?").bind(o.tokens, o.user_id),
-    ]);
+    const reason = String(body.reason || "refund").slice(0, 200);
+    const r = o.provider === "paddle" ? await paddle(env, "POST", "/adjustments", { action: "refund", type: "full", transaction_id: o.payment_key, reason })
+      : await toss(env, "POST", `/v1/payments/${encodeURIComponent(o.payment_key)}/cancel`, { cancelReason: reason });
+    if (!r.ok) throw new HttpError(502, "cancel_failed", { message: (r.j.error && r.j.error.detail) || r.j.message || null });
+    await payCancelTokens(env, o, me.id, t);
     return { ok: true };
   }
   if (p === "/api/admin/pay/orders" && m === "GET") {

@@ -366,6 +366,7 @@ const LBT = {
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
        start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
        shopH: "토큰 충전", buyH: "구매", buy: (n, w) => `토큰 ${n}개 · ${w.toLocaleString()}원`, consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
+       buyP: (n, u) => `토큰 ${n}개${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "카드 · PayPal · Apple Pay 등(Paddle, 판매자 대행). 결제창에서 현지 통화와 세금이 함께 표시됩니다. 쓰지 않은 토큰은 구매 후 14일 안에 환불을 요청할 수 있습니다.", buyPH: "구매 (해외 결제 · USD)", buyTH: "구매 (국내 결제 · 원)",
        buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
        payOff: "결제는 준비 중입니다.", consentNeed: "구매 안내에 동의해 주세요.", adH: "광고 보고 충전", adWatch: "광고 보기", adParts: (k) => `광고 1편 = 토큰 1/3 · 지금 ${k}/3`,
        adNote: (d) => `휴대폰에서만 볼 수 있습니다. 하루 ${d}편까지(토큰 ${Math.floor(d / 3) || "1/3"}개분).`, adLoading: "광고를 불러오는 중…", adNone: "지금은 보여 줄 광고가 없습니다. 잠시 뒤 다시 시도해 주세요.",
@@ -389,6 +390,7 @@ const LBT = {
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
        start: "start", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
        shopH: "Get tokens", buyH: "Buy", buy: (n, w) => `${n} token${n > 1 ? "s" : ""} · ₩${w.toLocaleString()}`, consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
+       buyP: (n, u) => `${n} token${n > 1 ? "s" : ""}${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "Card, PayPal, Apple Pay and more (Paddle, merchant of record). The checkout shows your local currency and tax. Unused tokens can be refunded within 14 days of purchase.", buyPH: "Buy (international · USD)", buyTH: "Buy (Korea · KRW)",
        buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
        payOff: "Payments are not open yet.", consentNeed: "Please agree to the purchase terms.", adH: "Watch ads", adWatch: "Watch an ad", adParts: (k) => `1 ad = 1/3 token · now ${k}/3`,
        adNote: (d) => `Phones only. Up to ${d} ads a day.`, adLoading: "Loading the ad…", adNone: "No ad is available right now. Please try again later.",
@@ -437,11 +439,13 @@ async function arLabList(root, alive) {
 /* ── getting tokens: buying (Toss Payments) and rewarded video ads (a third each) ── */
 function arShopHtml(c, parts) {
   const L = lbt();
-  if (!c || (!c.pay && !c.ads)) return "";
+  if (!c || (!c.pay && !c.paddle && !c.ads)) return "";
   return `<div class="arpanel" id="lbShop"><h3>🎟 ${L.shopH}</h3>
-    ${c.pay ? `<h4 class="arh4">${L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
-      <label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>
-      <p class="arempty" style="margin:0">${L.buyNote}</p>` : `<p class="arempty">${L.payOff}</p>`}
+    ${c.paddle ? `<h4 class="arh4">${c.pay ? L.buyPH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.paddle.packs.map((p) => `<button class="cmbtn pri" data-ppack="${esc(p.id)}">${L.buyP(p.tokens, p.usd)}</button>`).join("")}</div>
+      <p class="arempty" style="margin:6px 0 0">${L.buyPNote}</p>` : ""}
+    ${c.pay ? `<h4 class="arh4">${c.paddle ? L.buyTH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
+      <p class="arempty" style="margin:6px 0 0">${L.buyNote}</p>` : ""}
+    ${c.pay || c.paddle ? `<label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>` : `<p class="arempty">${L.payOff}</p>`}
     ${c.ads ? `<h4 class="arh4">${L.adH}</h4><p style="margin:0 0 6px"><b id="lbParts">${L.adParts(parts)}</b></p>
       <button class="cmbtn" id="lbAd">▶ ${L.adWatch}</button><p class="arempty" style="margin:6px 0 0">${L.adNote(c.ads.daily)}</p>` : ""}
     <p id="lbShopMsg" class="arinfo" style="margin:8px 0 0"></p></div>`;
@@ -449,7 +453,7 @@ function arShopHtml(c, parts) {
 function arLoad(src, test) {
   return new Promise((ok, no) => { if (test()) return ok(); const sc = document.createElement("script"); sc.src = src; sc.async = true; sc.onload = () => ok(); sc.onerror = () => no(new Error("load")); document.head.append(sc); });
 }
-let arAd = null;                                                                  // the rewarded ad being shown: {slot, nonce, granted}
+let arAd = null, arPaddle = {ready: false, order: null};                                                                  // the rewarded ad being shown: {slot, nonce, granted}
 function arShopWire(root, c) {
   const L = lbt(), msg = (t) => { const m = document.querySelector("#lbShopMsg"); if (m) m.textContent = t; };
   root.querySelectorAll("[data-pack]").forEach((b) => b.onclick = async () => {
@@ -461,6 +465,28 @@ function arShopWire(root, c) {
       const payment = window.TossPayments(c.pay.client_key).payment({customerKey: window.TossPayments.ANONYMOUS});
       const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
       await payment.requestPayment({method: "CARD", amount: {currency: "KRW", value: o.amount}, orderId: o.order_id, orderName: o.order_name, successUrl: back, failUrl: back});
+    } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
+  });
+  /* Paddle: Paddle.js once per page, the overlay checkout with the pack's price and our order id; after payment
+     pay.html is told the transaction, and the server checks it with Paddle (the signed webhook adds the tokens too) */
+  const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
+  root.querySelectorAll("[data-ppack]").forEach((b) => b.onclick = async () => {
+    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
+    b.disabled = true;
+    try {
+      const o = await cmApi("POST", "/pay/order", {pack: b.dataset.ppack, provider: "paddle"});
+      await arLoad("https://cdn.paddle.com/paddle/v2/paddle.js", () => !!window.Paddle);
+      arPaddle.order = o.order_id;
+      if (!arPaddle.ready) {
+        if (c.paddle.env === "sandbox") window.Paddle.Environment.set("sandbox");
+        window.Paddle.Initialize({token: c.paddle.token, eventCallback: (ev) => {
+          if (ev && ev.name === "checkout.completed" && arPaddle.order) location.href = `${back}?paddle=1&order=${encodeURIComponent(arPaddle.order)}&txn=${encodeURIComponent((ev.data && ev.data.transaction_id) || "")}`;
+          if (ev && ev.name === "checkout.closed") document.querySelectorAll("[data-ppack]").forEach((x) => x.disabled = false);
+        }});
+        arPaddle.ready = true;
+      }
+      window.Paddle.Checkout.open({items: [{priceId: o.price_id, quantity: 1}], customData: {order_id: o.order_id},
+        settings: {displayMode: "overlay", locale: lang === "en" ? "en" : "ko", successUrl: `${back}?paddle=1&order=${encodeURIComponent(o.order_id)}`}});
     } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
   });
   const ad = root.querySelector("#lbAd");
