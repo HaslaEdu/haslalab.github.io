@@ -1,0 +1,83 @@
+<style>h2,h3{break-after:avoid}</style>
+<h1>문제 3. 일반 상대성 이론의 기초 (Fundaments of General Relativity) — 해설</h1>
+<p class="note">원문: Romanian Master of Physics 2012, PROBLEM No. 3 해설. 배점은 원문대로 pt로 표기한다.</p>
+
+<h3>a. <span class="pt">0.5 pt</span></h3>
+<p>로런츠 변환(Lorentz transformation)을 두 번 미분하면 다음을 얻는다.</p>
+\[a_x = a'_x\left(\frac{\sqrt{1-\dfrac{u^2}{c^2}}}{1+\dfrac{u}{c^2}v'_x}\right)^3\]
+<p>우리의 경우 $u = v_x$이고 $v'_x = 0$이다.</p>
+\[\frac{\mathrm{d}v_x}{\mathrm{d}t} = a'\left(1-\frac{v_x^2}{c^2}\right)^{\frac32}\]
+\[F_x = \frac{ma_x}{1-\dfrac{v_x^2}{c^2}} = m_0a' = \text{constant}\]
+
+<h3>b. <span class="pt">0.5 pt</span></h3>
+\[v_x = c\sin\alpha \Rightarrow \frac{\mathrm{d}\left(c\sin\alpha\right)}{\left(1-\sin^2\alpha\right)^{\frac32}} = a'\mathrm{d}t \Rightarrow c\tan\alpha = a't+C\]
+<p>$t = 0$에서 $v_x = 0$이므로 $\alpha = 0$이고 $C = 0$이다.</p>
+\[\frac{\dfrac{v_x}{c}}{\sqrt{1-\dfrac{v_x^2}{c^2}}} = \frac{a't}{c} \Rightarrow v = c\,\frac{\dfrac{a't}{c}}{\sqrt{1+\left(\dfrac{a't}{c}\right)^2}}\]
+
+<h3>c. <span class="pt">0.5 pt</span></h3>
+\[\mathrm{d}t' = \mathrm{d}t\sqrt{1-\frac{v^2}{c^2}} = \frac{\mathrm{d}t}{\sqrt{1+\left(\dfrac{a't}{c}\right)^2}}\,;\quad \frac{a't}{c} = \sinh\tau \Rightarrow \mathrm{d}t' = \frac{c}{a'}\,\mathrm{d}\tau \Rightarrow t' = \frac{c}{a'}\tau+C\]
+<p>다시 $C = 0$이므로</p>
+\[t' = \frac{c}{a'}\operatorname{arcsinh}\left(\frac{a't}{c}\right)\]
+
+<h3>d. <span class="pt">1 pt</span></h3>
+\[\left.\begin{aligned}&-c^2\left(\mathrm{d}t'\right)^2 = -c^2\left(\mathrm{d}t\right)^2+\left(\mathrm{d}x\right)^2\\ &\frac{a't}{c} = \sinh\tau \Rightarrow \mathrm{d}t = \frac{c}{a'}\cosh\tau\,\mathrm{d}\tau\end{aligned}\right\} \Rightarrow \left(\mathrm{d}x\right)^2 = \frac{c^4}{a'^2}\left(\cosh^2\tau-1\right)\left(\mathrm{d}\tau\right)^2 \Rightarrow dx = \frac{c^2}{a'}\sinh\tau\,\mathrm{d}\tau \Rightarrow\]
+\[x = \frac{c^2}{a'}\cosh\tau+C\]
+<p>$t = t' = 0$에서 $x_0 = c^2/a'$이므로 다시 $C = 0$이다.</p>
+
+<h3>e. <span class="pt">1 pt</span></h3>
+\[ct = \frac{c^2}{a'}\sinh\tau \Rightarrow x^2-\left(ct\right)^2 = \left(\frac{c^2}{a'}\right)^2 \Rightarrow \frac{x^2}{\left(\dfrac{c^2}{a'}\right)^2}-\frac{\left(ct\right)^2}{\left(\dfrac{c^2}{a'}\right)^2} = 1\]
+<figure><img src="T3_fig1.png" style="width:72mm"></figure>
+
+<h3>f. <span class="pt">0.5 pt</span></h3>
+\[\rho_0 = \frac{c^2}{a'} \Rightarrow \begin{cases}x = \rho_0\cosh\tau\\ ct = \rho_0\sinh\tau\end{cases}\]
+
+<h3>g. <span class="pt">0.5 pt</span></h3>
+\[\begin{cases}x = \rho\cosh\tau\\ ct = \rho\sinh\tau\end{cases};\qquad \begin{cases}\rho = \sqrt{x^2-\left(ct\right)^2}\\ \tau = \operatorname{arctanh}\left(\dfrac{ct}{x}\right)\end{cases}\]
+<p>이 방정식들은 $x &gt; 0$이고 $\rho &gt; 0$일 것을 요구하므로, 이 새로운 매개변수들로는 $x &gt; |ct|$로 특징지어지는 시공간의 사분면만을 덮을 수 있다.</p>
+
+<h3>h. <span class="pt">1 pt</span></h3>
+\[\left.\begin{aligned}\mathrm{d}x &= \mathrm{d}\rho\cosh\tau+\rho\sinh\tau\,\mathrm{d}\tau\\ \mathrm{d}(ct) &= c\,\mathrm{d}t = \mathrm{d}\rho\sinh\tau+\rho\cosh\tau\,\mathrm{d}\tau\end{aligned}\right\}\Rightarrow\]
+\[ds^2 = -c^2\left(\mathrm{d}t\right)^2+\left(\mathrm{d}x\right)^2 = \left(\mathrm{d}\rho\right)^2-\rho^2\left(\mathrm{d}\tau\right)^2 = -c^2\frac{\rho^2}{c^2}\left(\mathrm{d}\tau\right)^2+\left(\mathrm{d}\rho\right)^2\,;\quad f = \frac{\rho^2}{c^2}\,;\quad g = 1\]
+
+<h3>i. <span class="pt">0.5 pt</span></h3>
+\[\rho = \frac{x_1}{\cosh\tau} \Leftrightarrow \tau = \operatorname{arccosh}\left(\frac{x_1}{\rho}\right)\]
+\[\Delta\rho = \frac{c^2}{a'}\]
+<figure><img src="T3_fig2.png" style="width:46mm"></figure>
+
+<h3>j. <span class="pt">0.5 pt</span></h3>
+<p>관측자는 신호기(beacon)가 린들러 계량(Rindler metric)으로 기술되는 시공간 사분면을 벗어나기 전에 방출된 신호만을 받는다.</p>
+\[ct \le x = x_0 \Rightarrow t_\text{lim} = \frac{x_0}{c} \Rightarrow N = \left[\frac{t_\text{lim}}{T_0}\right]+1 = \left[\frac{x_0}{cT_0}\right]+1\]
+<p>빛의 경우,</p>
+\[ds^2 = 0 \Rightarrow \left(\mathrm{d}\rho\right)^2 = \rho^2\left(\mathrm{d}\tau\right)^2 \Rightarrow \frac{\mathrm{d}\rho}{\rho} = \mathrm{d}\tau\]
+<p>$\tau = 0$에서 $\rho_0 = x_0$이므로</p>
+\[\ln\frac{\rho}{\rho_0} = \tau \Rightarrow \rho = x_0\,\mathrm{e}^\tau\]
+<figure><img src="T3_fig3.png" style="width:46mm"></figure>
+
+<h3>k. <span class="pt">1.5 pt</span></h3>
+<p>펄스가 방출되는 시공간 좌표를 $\rho_\mathrm{e}$, $\tau_\mathrm{e}$라 하자.</p>
+\[\rho_\mathrm{e} = \sqrt{x_0^2-c^2t^2}\,;\quad \tau_\mathrm{e} = \operatorname{arctanh}\left(\frac{ct}{x_0}\right)\]
+\[\tanh\tau_\mathrm{e} = \frac{\mathrm{e}^{\tau_\mathrm{e}}-\mathrm{e}^{-\tau_\mathrm{e}}}{\mathrm{e}^{\tau_\mathrm{e}}+\mathrm{e}^{-\tau_\mathrm{e}}} = \frac{ct}{x_0} \Rightarrow \mathrm{e}^{2\tau_\mathrm{e}}-1 = \frac{ct}{x_0}\left(\mathrm{e}^{2\tau_\mathrm{e}}+1\right) \Rightarrow \mathrm{e}^{2\tau_\mathrm{e}} = \frac{1+\dfrac{ct}{x_0}}{1-\dfrac{ct}{x_0}} \Rightarrow \mathrm{e}^{\tau_\mathrm{e}} = \sqrt{\frac{x_0+ct}{x_0-ct}}\]
+\[\rho = \frac{\rho_\mathrm{e}}{\mathrm{e}^{\tau_\mathrm{e}}}\,\mathrm{e}^\tau = \left(x_0-ct\right)\mathrm{e}^\tau = \rho_0 \Rightarrow \mathrm{e}^\tau = \frac{x_0}{x_0-ct} \Rightarrow \tau = \ln\left(\frac{x_0}{x_0-ct}\right)\]
+<p>관측자가 마지막 신호를 받는 순간을 $t^*$라 하자.</p>
+\[v(t^*) = c\,\frac{\dfrac{a't^*}{c}}{\sqrt{1+\left(\dfrac{a't^*}{c}\right)^2}}\]
+<p>수신되는 진동수는 다음과 같다.</p>
+\[\begin{aligned}\nu &= \nu_0\sqrt{\frac{1-\dfrac vc}{1+\dfrac vc}} = \nu_0\sqrt{\frac{1-\dfrac{\dfrac{a't^*}{c}}{\sqrt{1+\left(\dfrac{a't^*}{c}\right)^2}}}{1+\dfrac{\dfrac{a't^*}{c}}{\sqrt{1+\left(\dfrac{a't^*}{c}\right)^2}}}} = \nu_0\sqrt{\frac{\sqrt{1+\left(\dfrac{a't^*}{c}\right)^2}-\dfrac{a't^*}{c}}{\sqrt{1+\left(\dfrac{a't^*}{c}\right)^2}+\dfrac{a't^*}{c}}}\\ &= \nu_0\left[\sqrt{1+\left(\frac{a't^*}{c}\right)^2}-\frac{a't^*}{c}\right]\end{aligned}\]
+<p>그런데</p>
+\[ct^* = \frac{c^2}{a'}\sinh\tau \Rightarrow \frac{a't^*}{c} = \sinh\tau \Rightarrow \nu = \nu_0\left(\cosh\tau-\sinh\tau\right) = \nu_0\,\mathrm{e}^{-\tau} = \nu_0\left(1-\frac{ct}{x_0}\right)\]
+\[t = NT_0 \Rightarrow \nu = \nu_0\left\{1-\frac{cT_0}{x_0}\left(\left\lfloor\frac{x_0}{cT_0}\right\rfloor+1\right)\right\}\]
+
+<h3>l. <span class="pt">0.5 pt</span></h3>
+\[\frac{\mathrm{d}\rho}{\mathrm{d}t'} = \frac{\mathrm{d}\rho}{\mathrm{d}\tau}\,\frac{\mathrm{d}\tau}{\mathrm{d}t'} = \left(x_0-ct\right)\mathrm{e}^\tau\,\frac{a'}{c} = \frac{a'}{c}\rho\]
+<p>수신 시점에서는</p>
+\[\mathrm{e}^\tau = \frac{x_0}{x_0-ct} \Rightarrow \frac{d\rho}{dt'} = \left(x_0-ct\right)\frac{x_0}{x_0-ct}\,\frac{a'}{c} = \frac{c^2}{a'}\,\frac{a'}{c} = c\]
+<figure><img src="T3_fig4.png" style="width:50mm"></figure>
+
+<h3>m. <span class="pt">1 pt</span></h3>
+\[\tanh\tau = \frac{ct}{x_0} \Rightarrow \frac{1}{\cosh^2\tau}\,\mathrm{d}\tau = \frac{c}{x_0}\,\mathrm{d}t \Rightarrow \mathrm{d}t = \frac{x_0}{c}\left(1-\tanh^2\tau\right)\mathrm{d}\tau = \frac{x_0}{c}\left(1-\frac{c^2t^2}{x_0^2}\right)\mathrm{d}\tau\]
+\[\frac{\mathrm{d}\left(\mathrm{d}t\right)}{\mathrm{d}x_0} = \frac{\mathrm{d}\tau}{c}\,\frac{\mathrm{d}\left(\dfrac{x_0^2-c^2t^2}{x_0}\right)}{\mathrm{d}x_0} = \frac{\mathrm{d}\tau}{c}\,\frac{x_0^2+c^2t^2}{x_0^2}\]
+\[\varepsilon = \frac{\dfrac{\mathrm{d}\tau}{c}\,\dfrac{x_0^2+c^2t^2}{x_0^2}\,\Delta x_0}{\dfrac{\mathrm{d}\tau}{c}\,\dfrac{x_0^2-c^2t^2}{x_0}} = \frac{x_0^2+c^2t^2}{x_0^2-c^2t^2}\,\frac{\Delta x_0}{x_0}\]
+
+<h3>n. <span class="pt">0.5 pt</span></h3>
+\[\varepsilon = \frac{\Delta x_0}{x_0} = \frac{h}{\dfrac{c^2}{a'}} = \frac{gh}{c^2} \approx \frac{10\,\mathrm{m/s^2}\cdot360\cdot10^3\,\mathrm{km}}{9\cdot10^{16}\,\mathrm{m^2/s^2}} = 4\cdot10^{-11}\]
+\[\Delta t = 4\cdot10^{-11}\cdot365\cdot24\cdot3600 \approx 1.26\cdot10^{-3}\,\mathrm{s}\]
+<p class="note">역자 주: 원문에는 $360\cdot10^3\,\mathrm{km}$로 적혀 있으나, 결과 $4\cdot10^{-11}$은 $h = 360\cdot10^3\,\mathrm{m}$ (= 360 km)일 때의 값이다.</p>
