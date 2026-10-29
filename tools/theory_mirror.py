@@ -63,7 +63,7 @@ def main():
         for y in m.get('years', []):
             for f in y.get('files', []):
                 name = f['file']
-                if not f.get('url'):                 # kept on the site (pdfx/…), not in a release
+                if not f.get('url') or f.get('direct'):   # kept on the site (pdfx/…), or only linked
                     continue
                 if name in assets(tag):
                     skipped += 1
