@@ -40,6 +40,15 @@ def load():
                 if kind == 'paper' and 'paper' in slot and not (g.group(4) == 'EN' and not slot['paper'].endswith('_EN.pdf')):
                     continue
                 slot[kind] = f['file']
+            # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
+            # gets what the whole paper has, so it can be read, sat and graded on its own
+            for part, slot in files.items():
+                g = re.match(r'^(T|MC)(\d+)([a-z]?)$', part)
+                whole = files.get(g.group(1) + g.group(3)) if g else None
+                if whole:
+                    for k in ('paper', 'sol', 'mark', 'answer'):
+                        if k not in slot and k in whole:
+                            slot[k] = whole[k]
             files = {k: v for k, v in files.items() if 'paper' in v}
             if not files:
                 continue
