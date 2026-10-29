@@ -976,7 +976,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=5c1f567ac3"></script>
+<script src="theory.js?v=b126ef0da5"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
@@ -1379,7 +1379,7 @@ const DATA={
               src:{ko:"src/ipho2021_sim_KO.py", en:"src/ipho2021_sim_EN.py"},
               pdf:{ko:"pdf/IPhO_2021_E2_KO.pdf", en:"pdf/IPhO_2021_E2_EN.pdf"},
               sol:{ko:"pdf/IPhO_2021_S2_KO.pdf", en:"pdf/IPhO_2021_S2.pdf"}}}]},
-   {y:2020,host:{ko:"IdPhO · MIPT 주관, 온라인",en:"IdPhO · organised by MIPT, online"},
+   {y:2020,host:{ko:"IdPhO · MIPT 주관, 온라인",en:"IdPhO · organised by MIPT, online"},cc:"ru",
     org:{abbr:"MIPT",name:"Moscow Institute of Physics and Technology"},
     problems:[
       {id:"E1",
@@ -4214,7 +4214,10 @@ if(window.IYPT) DATA.iypt={
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
-  for(const y in THEORY[k]) if(!c.years.some(x=>String(x.y)===y)) c.years.push({y:+y,host:null,problems:[]});
+  for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
+    if(!yr){ c.years.push({y:+y,host:t.h||null,cc:t.cc,problems:[]}); continue; }
+    if(!yr.host&&t.h) yr.host=t.h;                    /* the manifest knows where a year was held when DATA does not */
+    if(!yr.cc&&t.cc) yr.cc=t.cc; }
   c.years.sort((a,b)=>b.y-a.y); }
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */

@@ -74,6 +74,11 @@ def load():
             probs = [[str(p.get('id', ''))[:8], str(p.get('title', '')).strip()[:160]] for p in y.get('problems', [])
                      if p.get('title') and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
+            # where it was held, for a year the site knows only from its theory papers (h: {ko, en}, cc: flag code)
+            if y.get('host'):
+                out[comp][year]['h'] = y['host']
+            if y.get('cc'):
+                out[comp][year]['cc'] = y['cc']
             if gt:
                 out[comp][year]['g'] = {'en': gt}
     split(out)
