@@ -4679,14 +4679,16 @@ function viewComp(key,mode){
       ${c.years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
         const th=thyOf(key,y.y), thy=trackOf(key)==="thy", none=thy?!th:y.problems.length===0;
+        /* theory: a problem is out when its card opens a paper (original or Korean) */
+        const rt=th?Object.keys(th.f).filter(x=>!(x==="T"&&th.f.T1)&&(th.f[x].paper||(th.f[x].ko||{}).paper)).length+(th.w?1:0):0;
         const inner=`
           <div class="yrow">
             <div class="y">${y.y}</div>
             ${flagImg(y.cc,"flag card",y.org)}
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
-          <div class="cnt">${!thy&&r?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
-            thy?d.thyCnt(thyCount(th)):countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+          <div class="cnt">${(thy?rt:r)&&!none?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
+            thy?d.thyCnt(thyCount(th))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -4780,35 +4782,50 @@ function theoryHref(key,yr,parts){
     p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),a:parts.map(x=>f(x).answer||"").join("|"),lang});
   return "sim/exam.html?"+q.toString();
 }
-/* the year's theory papers, laid out like the experiments: a card per problem (T1, T2, …; T for a paper published
-   whole) with the same six buttons on every card, greyed where there is no file.  In Korean the translation comes
-   first where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g; w a
-   Korean whole paper where the originals are per problem), with the original beside it */
+/* a problem card on a year page — the experiments and the theory problems both: code, status, title, text, tags,
+   then a row of two main buttons and a row of documents; a button with no file stays, greyed */
+function probCard(o){
+  return `<article class="prob ${o.soon?"soon":""}"${o.grp?` data-grp="${o.grp}"`:""}>
+          <div class="top">
+            <span class="code">${esc(o.code)}</span>
+            <span class="tr">${o.tr||""}<span class="status ${o.mode}"><i></i>${o.chip}</span>
+            ${o.after||""}</span>
+          </div>
+          <h3>${esc(o.heading)}</h3>
+          ${o.body?`<p>${o.body}</p>`:""}
+          <div class="tags">${o.tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
+          ${o.note||""}
+          <div class="acts">${o.main?`<div class="main">${o.main.join("\n")}</div>`:""}
+            ${o.docs.length?`<div class="docs n${o.docs.length}">${o.docs.join("\n")}</div>`:""}</div>
+        </article>`;
+}
+/* the year's theory problems, as the experiments: «choose a problem» and a card per problem (T1, T2, …; T for a paper
+   published whole), made by probCard.  The two main buttons are the problems and the solutions — in Korean the
+   translation where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g;
+   w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
+   marking scheme where it was published apart */
 function theoryHtml(key,yr){
   const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
   const ko=lang==="ko", kt=Object.fromEntries(t.pk||[]);
-  const a=(f,lbl,tag)=>f?`<a class="btn ghost" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}${tag?` <span class="lgtag">${tag}</span>`:""}</a>`
-                        :`<button class="btn ghost" disabled>${lbl}</button>`;
-  /* the problem, its solution and (where it was published apart) its marking scheme, each in the reader's language:
-     Korean opens our translation where there is one, else the original; the answer and working sheets are the
-     exam mode's, so they are not listed here */
-  const btns=(f,k)=>{ const kc=!!(k.paper||k.sol);    /* on a card with a translation, an original stands out as such */
-    const one=(kv,ov,lbl)=>ko?a(kv||ov,lbl,!kv&&ov&&kc?d.thyOrig:""):a(ov||kv,lbl,!ov&&kv?d.thyKo:"");
-    return [one(k.paper,f.paper,d.thyPaper), one(k.sol,f.sol,d.thySol)].concat(f.mark||k.mark?[one(k.mark,f.mark,d.thyMark)]:[]); };
-  const card=(code,probs,f,k,extra)=>{
-    const has=ko&&!!(k.paper||k.sol), chip=has?d.thyKoChip:d.thyOrigChip;
-    const titles=probs.map(q=>ko&&kt[q[0]]||q[1]);
-    return `<article class="prob">
-      <div class="top"><span class="code">${esc(code)}</span>
-        <span class="tr"><span class="status ${has?"live":"dl"}"><i></i>${chip}</span></span></div>
-      <h3>${titles.length?titles.map(esc).join(" · "):code==="T"?d.thyAll:esc(code)}</h3>
-      <div class="acts">${(b=>`<div class="docs n${b.length}">${b.join("")}</div>`)(btns(f,k))}${extra||""}</div>
-    </article>`; };
+  const a=(f,lbl,main,tag)=>f?`<a class="btn${main?"":" ghost"}" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}${tag?` <span class="lgtag">${tag}</span>`:""}</a>`
+                             :`<button class="btn${main?"":" ghost"}" disabled>${lbl}</button>`;
+  /* only the problem, its solution and (where it was published apart) its marking scheme, each in the reader's
+     language — Korean opens the translation where there is one, else the original, tagged; the answer and working
+     sheets are the exam mode's */
+  const card=(code,probs,f,k)=>{
+    const has=ko&&!!(k.paper||k.sol);
+    const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
+    const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
+    const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
+    return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
+      heading:titles.length?titles.join(" · "):code==="T"?d.thyAll:code, body:alt.map(esc).join(" · "),
+      tags:[d.trkThy].concat(has?[d.thyKo]:[]),
+      main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],d.thySol,false,S[1])],
+      /* RMPh 2012: the revised problem 2 */
+      docs:(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[])}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
-  const cards=order.map(x=>{ const f=t.f[x], k=f.ko||{};
-      return card(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),f,k,
-        k.rev?`<div class="docs n1" style="margin-top:8px">${a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")}</div>`:""); }).join("")
+  const cards=order.map(x=>card(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),t.f[x],t.f[x].ko||{})).join("")
     +(t.w?card("T",[],{},t.w):"");
   const guide=t.g?(ko?t.g.ko||t.g.en:t.g.en||t.g.ko):"";
   return `<div class="thycards">
@@ -4816,7 +4833,6 @@ function theoryHtml(key,yr){
       <h2 style="font-size:1.15rem">${d.thyPick}</h2>
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
-    <p class="tn" style="margin:-14px 0 18px;font-size:12.5px;color:var(--graphite)">${(t.w||t.g||order.some(x=>t.f[x].ko))?d.thyNoteKo:d.thyNote}</p>
     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}
     <div class="probs">${cards}</div></div>`;
 }
@@ -4901,19 +4917,9 @@ function viewYear(key,year){
         if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         const grp = grpOf(c,p);
-        return `<article class="prob ${mode==="wip"&&!c.chip?"soon":""}"${grp?` data-grp="${grp}"`:""}>
-          <div class="top">
-            <span class="code">${grp?p.id.replace(/[αβγ]+$/,""):p.id}</span>
-            <span class="tr">${grp?grpTag(d,grp):""}<span class="status ${mode}"><i></i>${chip}</span>
-            ${p.theory?`<span class="thytag">${d.theoryTag}</span>`:""}</span>
-          </div>
-          <h3>${esc(heading)}</h3>
-          <p>${body}</p>
-          <div class="tags">${(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags).map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
-          ${note}
-          <div class="acts">${docsOnly?"":`<div class="main">${b.join("\n")}</div>`}
-            <div class="docs n${docs.length}">${docs.join("\n")}</div></div>
-        </article>`;}).join("")}
+        return probCard({soon:mode==="wip"&&!c.chip, grp, code:grp?p.id.replace(/[αβγ]+$/,""):p.id, tr:grp?grpTag(d,grp):"", mode, chip,
+          after:p.theory?`<span class="thytag">${d.theoryTag}</span>`:"", heading, body,
+          tags:(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags), note, main:docsOnly?null:b, docs});}).join("")}
     </div>
     </div>
   </div>
