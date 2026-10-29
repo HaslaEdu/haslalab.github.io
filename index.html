@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=c3e913625c"></script>
+<script src="theory.js?v=081c99ee62"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4870,7 +4870,8 @@ function examHref(key,yr,group){
 function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
   const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:DATA[key].abbr,e:parts.join(","),t:all.join("|"),
-    p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
+    /* ISPhO: in Korean the whole translated paper, typeset as the original */
+    p:parts.map(x=>THY_WHOLE.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
     /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
     a:parts.map(x=>lang==="ko"&&(f(x).ko||{}).answer||f(x).answer||"").join("|"),...(lang==="ko"&&t.wk?{w:t.wk}:{}),lang});
   if(yearPair(key,yr)) q.set("h","1");              /* the year has experiments too: grading the theory costs half a token */
