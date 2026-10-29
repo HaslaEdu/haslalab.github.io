@@ -4741,6 +4741,12 @@ function modeSwitch(key,mode){
 }
 const contestEntries=(key,year,part)=>(window.CONTEST_EXAMS?.entries||[]).filter(e=>e.comp===key&&(year===undefined||String(e.year)===String(year))&&(!part||e.part===part));
 const contestHref=e=>`sim/contest-exam.html?${new URLSearchParams({id:e.id,lang})}`;
+function contestResources(key){
+  const items=(window.CONTEST_EXAMS?.resources||[]).filter(e=>e.comp===key),ko=lang==="ko";
+  if(!items.length)return "";
+  const labels=ko?{preview:"공개 미리보기",login:"다운로드에 로그인 필요",notice:"안내만 확인"}:{preview:"Public preview",login:"Login required to download",notice:"Information only"};
+  return `<details class="cnote"><summary>${ko?"추가 자료실 · 미리보기와 접근 상태":"Additional sources · previews and access"}</summary><ul>${items.map(e=>`<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a> — ${labels[e.access]||esc(e.access)}<p>${esc(e.note)}</p></li>`).join("")}</ul></details>`;
+}
 function filterContest(text){
   const terms=text.toLowerCase().trim().split(/\s+/).filter(Boolean);
   document.querySelectorAll('.contestrow').forEach(row=>row.hidden=!terms.every(t=>row.textContent.toLowerCase().includes(t)));
@@ -4783,6 +4789,7 @@ function viewComp(key,mode){
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
     ${contestNote(key)}
+    ${contestResources(key)}
     ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가와 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 물리인증제 시절 자료는 비공식 복기·재수록본을 별도로 표시합니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes all four levels from six TPL sittings in 2024–2026 and available Korean Middle-School Physics Competition papers from 2015–2022. Historical Physics Certification recollections and reprints are labelled separately. Papers without an official key do not receive automatic grading."}</p>`:""}
     ${hasExam(c,key)?modeSwitch(key,mode):""}
     ${mode==="exam"?`<div class="xm" ${contestEntries(key).length?"":`id="xmRoot" data-key="${key}"`}>${contestEntries(key).length?contestPortalHtml(key):xmPortalHtml(key,null)}</div></div>${adFitBanner("primary")}`:`
@@ -4944,6 +4951,8 @@ function theoryHtml(key,yr){
   const clip=ts=>{ const s=ts.join(" · "); return esc(s.length>280?s.slice(0,277).replace(/ · [^·]*$/,"")+" …":s); };
   const omr=!!(DATA[key]&&DATA[key].omr);
   const card=(code,probs,f,k,head,docs)=>{
+    const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};
+    const paperLabel=archive?.type==="publisher"?(ko?"문제·풀이 (부분)":"Problems and solutions (excerpt)"):d.thyPaper;
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
@@ -4951,14 +4960,14 @@ function theoryHtml(key,yr){
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
     const many=titles.length>1;
-    return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
-      heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:many?clip(titles):alt.map(esc).join(" · "),
-      tags:[TL(DATA[key],"trkThy")].concat(many?[TL(DATA[key],"thyCnt")(titles.length)]:[], has?[d.thyKo]:[]),
-       main:[a(P[0],d.thyPaper,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
+    return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:d.thyOrigChip,
+      heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:(many?clip(titles):alt.map(esc).join(" · "))+(archive?`<p><b>${archiveLabels[archive.type]||esc(archive.type)}</b> · ${esc(archive.note)}</p>`:""),
+      tags:[TL(DATA[key],"trkThy")].concat(many?[TL(DATA[key],"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
+       main:[a(P[0],paperLabel,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
          (K[0]?[a(K[0],d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-       docs:contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const sim=simThy(key,yr);
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)&&!sim.has(x)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
