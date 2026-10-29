@@ -1,13 +1,13 @@
 # Deploys the community Worker (community/) and the PDF Worker (pdf-worker/) to Cloudflare whenever main changes them, instead of pasting
 # src/index.js into the dashboard.  Needs one repository secret: CLOUDFLARE_API_TOKEN (a token made from
 # Cloudflare's "Edit Cloudflare Workers" template).  Variables and secrets set in the dashboard stay
-# (keep_vars in wrangler.toml); database migrations are not run here — they are still applied by hand.
+# (keep_vars in wrangler.toml). OMR initializes its additive table through the existing D1 binding.
 name: Deploy community Worker
 
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/wrangler.toml", "community/package*.json", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/migrations/0012_omr.sql", "community/wrangler.toml", "community/package*.json", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -30,6 +30,7 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
+      - run: node --test test-omr.mjs
       - run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

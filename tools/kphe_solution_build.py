@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 
 import pymupdf as fitz
-from kphe_print_build import A4, FONT, INPUT, OUTPUT, frame, text, identity, measure
+from kphe_print_build import identity
+from kphe_template import A4, FONT, INPUT, OUTPUT, text, measure, ColumnFlow, readable_formula
 
 ROOT = Path(__file__).resolve().parents[1]
 INK = (0.05, 0.05, 0.05)
@@ -72,62 +73,57 @@ def build(year, part, items, manifest):
     for q, expected in zip(items, key):
         answers = q.get('accepted_answers', [q['answer']])
         official = expected if isinstance(expected, list) else [expected]
-        if set(answers) != set(official) or q.get('status') != 'verified' or not q.get('explanation'):
+        status_ok = q.get('status') == 'verified' or (q.get('status') == 'needs_review' and (q.get('caveat') or q.get('review_note')))
+        if set(answers) != set(official) or not status_ok or not q.get('explanation'):
             raise ValueError(f'Unverified explanation: {year} {part} {q["number"]}')
     title, level = identity(manifest, entry, part)
     doc = fitz.open()
     source = fitz.open(INPUT / f'KPhE_{year[:4]}_{part}_KO.pdf')
-    column = 2
+    preserve = int(year[:4]) >= 2024
+    flow = ColumnFlow(doc, title, level, '자체 작성 풀이 해설 · 한국물리학회 공식 배포 해설이 아님',
+                      INPUT / f'KPhE_{year[:4]}_{part}_KO.pdf' if preserve else None, preserve)
     for i, q in enumerate(items):
-        def paragraph_height(values, size):
-            return sum(len(wrap(value, 246, size)) * size * 1.6 + 8 for value in values)
-        estimated = 31 + paragraph_height(q['explanation'], 9)
-        if q.get('caveat'):
-            estimated += paragraph_height(['[원문·정답 유의사항] ' + q['caveat']], 8)
-        if q.get('formula'):
-            estimated += 6 + paragraph_height(q['formula'], 8)
-        if q.get('figure'):
-            r = fitz.Rect(q['figure']['rect'])
-            estimated += min(155, 246 * r.height / r.width) + 12
-        if q.get('diagram', {}).get('type') == 'pv_cycle':
-            estimated += 165
-        wide = estimated > 690
-        if wide or column >= 2:
-            page = doc.new_page(width=A4.width, height=A4.height)
-            column = 0
-            if not wide:
-                page.draw_line((297.6, 76), (297.6, 782), color=(.7, .7, .7), width=.4)
-        page = doc[-1]
-        x, y, width = (38 if column == 0 else 310), 82, (519 if wide else 246)
         answers = q.get('accepted_answers', [q['answer']])
         label = ' / '.join('①②③④⑤'[a - 1] for a in answers)
-        text(page, (x, y, x + width, y + 23), f'{q["number"]}. 정답 {label}', 11)
-        y += 31
+        keep = 25 + 9.8 * 1.45 * 2
+        if q.get('figure'):
+            r = fitz.Rect(q['figure']['rect'])
+            keep += min(172, flow.width * r.height / r.width) + 12
+        elif q.get('diagram'):
+            keep += 165
+        answer_label = '제공 정답' if q.get('status') == 'needs_review' else '정답'
+        flow.heading(q['number'], f'{answer_label} {label}', min(keep, 680))
+        if q.get('status') == 'needs_review':
+            flow.review_notice()
         figure = q.get('figure')
         if figure:
             fig_source = source if Path(figure['source']).name == f'KPhE_{year[:4]}_{part}_KO.pdf' else fitz.open(INPUT / figure['source'])
             clip = fitz.Rect(figure['rect'])
             if not (0 < figure['page'] <= len(fig_source)) or clip.is_empty:
                 raise ValueError('Invalid figure rectangle')
-            h = min(155, width * clip.height / clip.width)
-            page.show_pdf_page(fitz.Rect(x, y, x + width, y + h), fig_source, figure['page'] - 1, clip=clip)
-            y += h + 12
+            flow.figure(fig_source, figure['page'], clip)
         if q.get('diagram'):
-            y += diagram(page, x, y, width, q['diagram'])
-        if q.get('caveat'):
-            y = paragraphs(page, x, y, width, ['[원문·정답 유의사항] ' + q['caveat']], 8)
-        y = paragraphs(page, x, y, width, q['explanation'])
+            flow.reserve(165)
+            flow.y += diagram(flow.page, flow.x, flow.y, flow.width, q['diagram'])
+        caveat = q.get('caveat') or q.get('review_note')
+        if caveat:
+            prefix = '[원문·정답 검토 필요] ' if q.get('status') == 'needs_review' else '[원문·정답 유의사항] '
+            flow.paragraph(prefix + caveat, 8.5)
+        for value in q['explanation']:
+            flow.paragraph(value)
         if q.get('formula'):
-            page.draw_line((x, y), (x + width, y), color=(.7, .7, .7), width=.4)
-            y = paragraphs(page, x, y + 6, width, q['formula'], 8)
-        if y > 778:
-            raise ValueError(f'Solution overflow {year} {part} #{q["number"]}: {y}')
-        column = 2 if wide else column + 1
-    for i in range(len(doc)):
-        frame(doc[i], title, level + ' · 풀이 해설', i + 1, len(doc), False)
-        text(doc[i], (34, 793, 561, 810), 'HaslaLab 자체 작성 해설 · 공식 해설 아님 · 정답은 한국물리학회 정답표와 대조', 6.5)
+            formulas = [readable_formula(value) for value in q['formula']]
+            group_height = 6 + sum(flow.paragraph_height(value, 8.5) for value in formulas)
+            flow.reserve(min(group_height, 680))
+            flow.reserve(min(6 + sum(flow.paragraph_height(value, 8.5) for value in formulas), 680))
+            flow.page.draw_line((flow.x, flow.y), (flow.x + flow.width, flow.y), color=(.7, .7, .7), width=.4)
+            flow.y += 6
+            for value in formulas:
+                flow.paragraph(value, 8.5)
+        flow.y += 12
+    flow.finish()
     target = OUTPUT / f'KPhE_{year[:4]}_{part}S.pdf'
-    doc.set_metadata({'title': f'{title} {level} 풀이 해설', 'author': 'HaslaLab 자체 작성',
+    doc.set_metadata({'title': f'{title} {level} 풀이 해설', 'author': '자체 작성 해설',
                       'subject': 'Independent worked explanations checked against the official answer key'})
     doc.subset_fonts()
     doc.save(target, garbage=4, deflate=True)
@@ -151,11 +147,19 @@ def main():
                 collection[year][part] = items
     count = 0
     for year, parts in collection.items():
+        if '--modern-only' in sys.argv[1:] and int(year[:4]) < 2024:
+            continue
+        years = [arg.split('=', 1)[1] for arg in sys.argv[1:] if arg.startswith('--year=')]
+        selected_parts = [arg.split('=', 1)[1] for arg in sys.argv[1:] if arg.startswith('--part=')]
+        if years and year not in years:
+            continue
         for part, items in parts.items():
+            if selected_parts and part not in selected_parts:
+                continue
             if sys.argv[1:] == ['ab'] and part[-1] not in 'ab':
                 continue
             filename = build(year, part, items, manifest)
-            overlay['kphe'][year]['f'][part]['sol'] = filename
+            overlay.setdefault('kphe', {}).setdefault(year, {}).setdefault('f', {}).setdefault(part, {})['sol'] = filename
             count += 1
     overlay_path.write_text(json.dumps(overlay, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     print(f'Checked A4 solution sets: {count}')

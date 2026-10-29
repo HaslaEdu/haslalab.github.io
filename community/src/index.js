@@ -7,6 +7,7 @@
 
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
+import { createOmrRouter, ensureOmrSchema } from './omr.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -147,6 +148,7 @@ function needUser(u) { if (!u) throw new HttpError(401, "login_required"); retur
 const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
+const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url) {
@@ -217,6 +219,7 @@ async function handle(req, env, url) {
   }
   if (p === "/api/me" && m === "DELETE") {
     needUser(me);
+    await ensureOmrSchema(env);
     // posts and comments stay so threads keep making sense; the name goes
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
     await env.DB.batch([
@@ -228,6 +231,7 @@ async function handle(req, env, url) {
       env.DB.prepare("UPDATE users SET avatar=NULL WHERE id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_pages WHERE session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)").bind(me.id),
       env.DB.prepare("DELETE FROM lab_sessions WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM omr_attempts WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_ledger WHERE user_id=?").bind(me.id),
     ]);
     return { ok: true };
@@ -478,6 +482,8 @@ async function handle(req, env, url) {
     return { ok: true };
   }
 
+  const omr = await omrRouter(p, m, body, me, req, env, url);
+  if (omr !== undefined) return omr;
   const ar = await arena(p, m, body, me, req, env, url);
   if (ar !== undefined) return ar;
   const lb = await lab(p, m, body, me, req, env, url);

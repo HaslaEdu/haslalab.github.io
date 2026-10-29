@@ -341,3 +341,13 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | GET/POST | `/api/admin/problems` | 문제 목록 / 추가·수정 (관리자) |
 | GET | `/api/admin/queue` | 채점 대기 답안 (관리자) |
 | POST | `/api/admin/submissions/:id` | `{score, note}` 또는 `{regrade: true}` (관리자) |
+| GET | `/api/omr/catalog` | 실전모드 시험 목록·문항 수·채점 기준 버전 |
+| POST | `/api/omr/attempts` | 로그인 필요. `{exam_key, client_id, answers}` → 서버 재채점 결과와 비교군 |
+
+## 물리대회 실전 점수
+
+`python tools/kphe_scoring_build.py`는 검증한 정답표와 `tools/kphe_scoring_policy.json`을 Worker에 묶습니다. 클라이언트가 보내는 점수는 받지 않고 답안을 다시 채점합니다. 같은 계정의 `client_id`는 다시 전송해도 기존 답안을 덮어쓰지 않습니다. 저장 테이블은 기존 D1 바인딩에서 멱등적인 `0012_omr.sql`을 최초 요청 시 실행해 준비합니다. 계정 삭제 시 답안 기록도 삭제됩니다.
+
+현재 공개 자료로 확인한 규정은 오답 문항 배점의 25% 감점입니다. 공식 문항별 배점·분야별 비중·최종 환산식은 미확보 상태여서 `officialScore`는 `null`입니다. `correct − wrong × 0.25`는 공식 점수와 구분한 연습 지표입니다. 향후 `exams[회차][과정]`에 `verified: true`를 넣으려면 문항별 최종 배점(`points`, 분야 가중치가 있다면 반영한 값), 분야 대응(`fields`), 미응답 처리, 최저점·반올림·환산 규칙과 근거까지 확인하고 채점 코드를 함께 검증해야 합니다. 문항 수로 배점을 균등 분배하지 않습니다.
+
+비교군은 같은 시험·과정·채점 버전에서 다른 계정의 첫 응시만 집계하고, 본인은 현재 응시 점수 하나로 비교합니다. 삭제 계정은 제외합니다. 5명 미만이면 백분위를 표시하지 않으며, 동점자는 모두 포함한 상위 비율을 사용합니다. 실제 대회 전체 참가자의 백분위가 아닙니다.

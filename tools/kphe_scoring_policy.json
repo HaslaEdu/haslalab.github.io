@@ -1,0 +1,881 @@
+{
+  "verified_on": "2026-10-30",
+  "competition": "Korean Physical Society The Physics League (물리대회)",
+  "scope": [
+    "2023-1",
+    "2023-2",
+    "2024-1",
+    "2024-2",
+    "2025-1",
+    "2025-2",
+    "2026-1",
+    "2026-2"
+  ],
+  "conclusion": {
+    "penalty_rate": 0.25,
+    "penalty_applies_to": "오답으로 입력한 문항의 개별 배점",
+    "item_weights_status": "not_publicly_verified",
+    "domain_weights_status": "not_publicly_verified",
+    "question_domain_mapping_status": "not_publicly_verified",
+    "official_final_score_computable": false,
+    "reason": "공식 시행 공지 8회와 응시 매뉴얼 24개(96쪽), 공개 출제범위와 결과 안내에서 개별 배점/분야별 배점 비중/분야별 문항 대응/정규화·반올림을 포함한 최종점수 상세 산식을 확인하지 못했다. 공개되지 않았다고 단정하는 것이 아니라 조사한 공개 자료에서 미확보한 상태이다.",
+    "forbidden_assumptions": [
+      "모든 문항 1점",
+      "배점을 100/문항 수로 균등 분배",
+      "분야별 문항 수를 분야별 점수 비중으로 간주",
+      "문제 주제의 자체 분류를 공식 분야 mapping으로 간주",
+      "0점 하한 또는 100점 만점/반올림 규칙 임의 적용"
+    ]
+  },
+  "verified_rules": [
+    {
+      "rule": "wrong_answer_penalty",
+      "value": 0.25,
+      "unit": "fraction_of_that_item_score",
+      "source_sessions": "all_eight_sessions",
+      "evidence": "각 회차 응시자 매뉴얼 4쪽 및 2023-1 공지37, 2023-2 공지111, 2024-1 공지143, 2024-2 공지213, 2025-1 공지247, 2026-1 공지341, 2026-2 공지386의 시험 방법"
+    },
+    {
+      "rule": "award_and_promotion_score",
+      "value": "final_score",
+      "evidence": "각 회차 결과 안내에 원점수/감점/최종점수를 개별 공개하며 최종점수로 시상·승급을 정한다고 명시"
+    }
+  ],
+  "formula": {
+    "official_published_complete_formula": null,
+    "conditional_raw_interpretation": "known_weights인 경우 Σ(correct_i × w_i) − 0.25 × Σ(wrong_i × w_i)",
+    "conditional_raw_interpretation_status": "오답 감점 규칙을 구현하기 위한 조건부 해석이며, 공식 최종 점수 산식으로 확인된 것이 아니다.",
+    "required_inputs": [
+      "각 문항의 공식 배점 w_i",
+      "최종 인정 답안/취소 문항",
+      "미응답 처리",
+      "추가 분야 가중치/정규화 여부",
+      "소수점/반올림 규칙",
+      "최저점 제한 여부"
+    ],
+    "unknown": {
+      "unanswered_item_score": null,
+      "total_maximum": null,
+      "domain_weighting": null,
+      "normalization": null,
+      "rounding": null,
+      "score_floor": null
+    },
+    "server_recommendation": "공식 배점을 확보할 때까지 정오/미응답 개수는 계산 가능하나 officialScore는 null로 유지한다. 별도의 연습용 지표가 필요하면 공식점수와 구분하고 사용한 가정을 명시한다."
+  },
+  "domains": {
+    "source": "https://kphe.kps.or.kr/introduction",
+    "source_type": "출제범위 안내; 배점표가 아니다",
+    "a": {
+      "scope": "한국물리학회 물리학백과 중 기초적인 내용을 이해하는 수준",
+      "weights": null
+    },
+    "b": {
+      "scope": "중학교 과학, 고등학교 통합과학 중 물리 부분을 심도 있게 이해하는 수준",
+      "weights": null
+    },
+    "c": {
+      "scope": "고등학교 물리, 대학 일반물리학을 심도 있게 이해하는 수준",
+      "weights": null
+    },
+    "d": {
+      "scope": [
+        "고전역학",
+        "전자기학",
+        "양자역학",
+        "열 및 통계물리학"
+      ],
+      "weights": null
+    },
+    "warning": "전문가과정의 네 분야 나열 순서나 문항 개수에서 25%씩의 균등 배점을 추론할 수 없다."
+  },
+  "sessions": {
+    "2023-1": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/37",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/47",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/e186cefa-f67c-4eed-b8cb-4d20d3c28a6f"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2023-2": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/111",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/119",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/95649322-b603-4c79-a85b-07401aa26fd5"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2024-1": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/143",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/155",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/7b94181c-944f-49e3-80cb-aa6ae09d5b91",
+        "https://kphadmin.kps.or.kr/uploads/notice/191383b5-5b7b-4597-bf4c-0b9027e0ac8c"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2024-2": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/213",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/224",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/72139634-c290-4f72-83b9-fc12e18a28f8",
+        "https://kphadmin.kps.or.kr/uploads/notice/f1f429b6-b7d9-4bce-9416-dcddec72b589",
+        "https://kphadmin.kps.or.kr/uploads/notice/6b104da9-107d-4e85-89b9-929795dc300a",
+        "https://kphadmin.kps.or.kr/uploads/notice/38d5be88-0f55-46f0-9fc0-90ab911f99b4"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2025-1": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/247",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/261",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/8cd522dd-fea3-4f45-ad32-eed0885f4ba1",
+        "https://kphadmin.kps.or.kr/uploads/notice/4b88144f-7589-4baa-8555-b03c3b2c598c",
+        "https://kphadmin.kps.or.kr/uploads/notice/fd9877a4-2ea0-4c2b-aefe-b4d7991961c9",
+        "https://kphadmin.kps.or.kr/uploads/notice/27be5dd2-996b-48b2-9637-63eb8cafd8f5"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2025-2": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/305",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/317",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/863ee3a5-c063-4921-9ebb-12f8745c514e",
+        "https://kphadmin.kps.or.kr/uploads/notice/6da24f7b-1adf-417c-b237-1008fbcdce4f",
+        "https://kphadmin.kps.or.kr/uploads/notice/9371b28c-3064-4434-8ebd-a98ee0486abf",
+        "https://kphadmin.kps.or.kr/uploads/notice/ec66e597-bddb-4990-a770-31ae88e2e599"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2026-1": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/341",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/353",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/af69a72e-2ee5-44f2-b319-4e4353847124",
+        "https://kphadmin.kps.or.kr/uploads/notice/52adca84-b28e-426f-9cf8-7a54963a7c94",
+        "https://kphadmin.kps.or.kr/uploads/notice/d413d60a-e976-4ce0-8509-a9325b0a3a32",
+        "https://kphadmin.kps.or.kr/uploads/notice/3fd56611-0735-4bc7-94b8-2eb1ad33fe1e"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    },
+    "2026-2": {
+      "official_notice": "https://kphe.kps.or.kr/notice/notice_detail/386",
+      "result_notice": "https://kphe.kps.or.kr/notice/notice_detail/404",
+      "wrong_answer_penalty_rate": 0.25,
+      "penalty_rate_verified": true,
+      "courses": {
+        "a": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "b": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "c": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        },
+        "d": {
+          "item_weights": null,
+          "question_domain_mapping": null,
+          "domain_weight_percentages": null,
+          "official_maximum_score": null,
+          "official_final_score_computable": false
+        }
+      },
+      "manual_urls": [
+        "https://kphadmin.kps.or.kr/uploads/notice/6fa05fa7-dc6d-4174-9590-54b0f9372ee1",
+        "https://kphadmin.kps.or.kr/uploads/notice/50cdff8a-26d4-472a-9444-093b6fbdbfee",
+        "https://kphadmin.kps.or.kr/uploads/notice/a9e1e209-7f25-40eb-9850-944ff1db767c",
+        "https://kphadmin.kps.or.kr/uploads/notice/f2e27b7e-aad6-4548-9dec-a4da8c4324af"
+      ],
+      "result_disclosure": "원점수·감점·최종점수는 로그인 후 개인 공개, 시상·승급은 최종점수 기준; 커트라인 비공개"
+    }
+  },
+  "corrections_relevant_to_scoring": [
+    {
+      "session": "2026-1",
+      "part": "T1d",
+      "number": 5,
+      "accepted_answers": [
+        2,
+        3
+      ],
+      "source": "https://kphe.kps.or.kr/notice/notice_detail/355",
+      "date": "2026-03-30",
+      "note": "2번 및 3번 복수 정답 인정"
+    },
+    {
+      "session": "2025-2",
+      "part": "T2c",
+      "number": 3,
+      "accepted_answers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "full_credit": true,
+      "includes_unanswered": true,
+      "source": "https://kphe.kps.or.kr/notice/notice_detail/319",
+      "date": "2025-09-30",
+      "note": "문항 취소로 미응답을 포함한 전원 정답 처리"
+    }
+  ],
+  "audit": {
+    "manuals_read": 24,
+    "manual_pages_text_checked": 96,
+    "unique_embedded_images_visually_checked": 42,
+    "notice_body_images_visually_checked": 1,
+    "image_findings": "로고/QR/아이콘/화상감독 예시/PC 요구사양 표/신분증 선택 화면이며 배점비중 표가 아니다. 2026-2 공지 본문 그림도 감독용 카메라 배치 예시다.",
+    "representative_full_page_visual_checks": [
+      "tmp/kphe_archive/scoring/2023-1-p4.png",
+      "tmp/kphe_archive/scoring/2026-2-p4.png"
+    ],
+    "visual_contact_sheet": "tmp/kphe_archive/scoring/unique-manual-images.png",
+    "public_problem_pdfs_text_checked": 24,
+    "problem_pdf_scope": "2024-1~2026-2, 각 회차 네 과정. 개별 배점 표기/분야별 배점표를 찾지 못했다. 2023 문제 PDF는 별도 수집 담당자가 조사 중이며 이 개수에 포함하지 않는다.",
+    "manual_sources": [
+      {
+        "session": "2023-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/37",
+        "title": "2023년 제 1회 물리대회_응시생매뉴얼(수정-02.13).pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/e186cefa-f67c-4eed-b8cb-4d20d3c28a6f",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2023-1-0.pdf",
+        "sha256": "1028c701b612193545599c48ecf1dfad702464a217e56b0cca0980b6695c366d",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2023-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/111",
+        "title": "제2회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/95649322-b603-4c79-a85b-07401aa26fd5",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2023-2-0.pdf",
+        "sha256": "6cedd2eb33c4fca2c29ffdfc1f97f9c6aa75d6175e8e37dd7ba317fc50219093",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/143",
+        "title": "(중급_전문가과정) 2024년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/7b94181c-944f-49e3-80cb-aa6ae09d5b91",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-1-0.pdf",
+        "sha256": "64b1d2e221b1fefebdaca4042205a8e47eb5a4c66ddc901030666bf3a48487ac",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/143",
+        "title": "(초급_고급과정) 2024년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/191383b5-5b7b-4597-bf4c-0b9027e0ac8c",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-1-1.pdf",
+        "sha256": "e769c17ec0f3889d9c01d20ba99dc9d8c3221f76f6150a4f3a83e2fcef7f7d12",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/213",
+        "title": "(초급과정) 2024년 제2회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/72139634-c290-4f72-83b9-fc12e18a28f8",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-2-0.pdf",
+        "sha256": "cdb85ccfde86fc710662c32b6b2370b42cd166907166ba6614f394acc0cbbad0",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/213",
+        "title": "(중급과정) 2024년 제2회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/f1f429b6-b7d9-4bce-9416-dcddec72b589",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-2-1.pdf",
+        "sha256": "de6798177357ce3d277a25191fe2c55adb75a393c6344cc77b34649731b119bd",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/213",
+        "title": "(고급과정) 2024년 제2회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/6b104da9-107d-4e85-89b9-929795dc300a",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-2-2.pdf",
+        "sha256": "217756cbb9ebf655d49accf63aa6594b56fee89ae871c10fdd6ff122f72ec523",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2024-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/213",
+        "title": "(전문가과정) 2024년 제2회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/38d5be88-0f55-46f0-9fc0-90ab911f99b4",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2024-2-3.pdf",
+        "sha256": "58c0b2bf8f86c99f5cf3697f3f171cd4b92aaa9b98bc1425869df67a62737582",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/247",
+        "title": "(초급과정) 2025년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/8cd522dd-fea3-4f45-ad32-eed0885f4ba1",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-1-0.pdf",
+        "sha256": "6895a3058a3af9648af46d2d9044218d562092382109d0d37d49c268fd327c54",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/247",
+        "title": "(중급과정) 2025년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/4b88144f-7589-4baa-8555-b03c3b2c598c",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-1-1.pdf",
+        "sha256": "cc83fc6c7b5826cbdcd8a08aabd494a1ca8c191c089b20cfeb6d84614c4bc1ac",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/247",
+        "title": "(고급과정) 2025년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/fd9877a4-2ea0-4c2b-aefe-b4d7991961c9",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-1-2.pdf",
+        "sha256": "47fe34c2b520be68f654b75fd0e46215143fa294e42d2a63d78afb6dc5552868",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/247",
+        "title": "(전문가과정) 2025년 제1회 물리대회_응시생매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/27be5dd2-996b-48b2-9637-63eb8cafd8f5",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-1-3.pdf",
+        "sha256": "aa89e33c62ebf4774090f77dba7aca3b93bc15d4db7825b5c8f401358ea4db8d",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/305",
+        "title": "(초급과정) 2025년 제2회 물리대회_응시자 매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/863ee3a5-c063-4921-9ebb-12f8745c514e",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-2-0.pdf",
+        "sha256": "27d8652574be2e14b6ea79d4cdbafc60069f4a7ab1946fdb62850547003600f6",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/305",
+        "title": "(중급과정) 2025년 제2회 물리대회_응시자 매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/6da24f7b-1adf-417c-b237-1008fbcdce4f",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-2-1.pdf",
+        "sha256": "9aa44420fcc4a2f5573aee9c64fcfa1139c0e3a415f49c79cb637358bde154a8",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/305",
+        "title": "(고급과정) 2025년 제2회 물리대회_응시자 매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/9371b28c-3064-4434-8ebd-a98ee0486abf",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-2-2.pdf",
+        "sha256": "5a580c10decc67c7ee467114c5ee01711f522b8251bf8224379e500acd999dc7",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2025-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/305",
+        "title": "(전문가과정) 2025년 제2회 물리대회_응시자 매뉴얼.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/ec66e597-bddb-4990-a770-31ae88e2e599",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2025-2-3.pdf",
+        "sha256": "8160b813bc48af6670b63da6a4c0f1ff1b06fa21f1a80f77bf8dff94b1f16b35",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/341",
+        "title": "★(초급과정) 2026년 제1회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/af69a72e-2ee5-44f2-b319-4e4353847124",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-1-0.pdf",
+        "sha256": "19d8172c9aa28f91a44d5ab750580a118b654e0e50ba1ab57ffefaa4cbb4076f",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/341",
+        "title": "★(중급과정) 2026년 제1회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/52adca84-b28e-426f-9cf8-7a54963a7c94",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-1-1.pdf",
+        "sha256": "1ff7649c02e2c7fae54930508a10cf97da30d764dd91c75e84c10813bdf674a4",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/341",
+        "title": "★(고급과정) 2026년 제1회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/d413d60a-e976-4ce0-8509-a9325b0a3a32",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-1-2.pdf",
+        "sha256": "821de04436ecb11f593616d31672e669c4749d4976f2285c9f1203007a9fd150",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-1",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/341",
+        "title": "★(전문가과정) 2026년 제1회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/3fd56611-0735-4bc7-94b8-2eb1ad33fe1e",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-1-3.pdf",
+        "sha256": "a0200be52377476f00296c714e5c6ad881ece1e944c2c618f432fe3a3c969b8f",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/386",
+        "title": "★(초급과정) 2026년 제2회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/6fa05fa7-dc6d-4174-9590-54b0f9372ee1",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-2-0.pdf",
+        "sha256": "298e7d2f164ceb1bea3aed16f1e64f72c2ba3c9cdb3bcec5bfa67c614e3c7439",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/386",
+        "title": "★(중급과정) 2026년 제2회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/50cdff8a-26d4-472a-9444-093b6fbdbfee",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-2-1.pdf",
+        "sha256": "028969781f82cab481bf2589813ee85857cb9d723903d33852f60e0c2bd65774",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/386",
+        "title": "★(고급과정) 2026년 제2회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/a9e1e209-7f25-40eb-9850-944ff1db767c",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-2-2.pdf",
+        "sha256": "e98a9f35c321e185012da066a019932be257dd36b6c908992a6f9929274fe8b9",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      },
+      {
+        "session": "2026-2",
+        "notice_url": "https://kphe.kps.or.kr/notice/notice_detail/386",
+        "title": "★(전문가과정) 2026년 제2회 물리대회_응시자 매뉴얼★.pdf",
+        "url": "https://kphadmin.kps.or.kr/uploads/notice/f2e27b7e-aad6-4548-9dec-a4da8c4324af",
+        "pages": 4,
+        "local": "tmp/kphe_archive/scoring/2026-2-3.pdf",
+        "sha256": "c7ea12d8dfb520218838c57a80c57d8cc4984e4f0da70519f16b4f21253ae09a",
+        "penalty_rule_page": 4,
+        "penalty_rule": "오답 입력 시 해당 문항 배점의 25% 감점 적용",
+        "item_weight_table_found": false,
+        "domain_weight_table_found": false
+      }
+    ],
+    "not_claimed": "전체 사이트의 비공개 로그인 성적표나 내부 채점 데이터는 확인하지 않았다. 이 파일은 공식 배점의 부재를 증명하는 것이 아니라 공개 근거의 확인 범위를 기록한다.",
+    "additional_regulations_search": {
+      "requested_terms": [
+        "규정",
+        "규칙",
+        "배점",
+        "채점",
+        "점수",
+        "분야",
+        "가중치"
+      ],
+      "official_notice_list": "https://kphe.kps.or.kr/notice/notice",
+      "notice_list_pages_checked": 18,
+      "notice_titles_checked": 171,
+      "notice_bodies_text_checked": 171,
+      "notice_index_cache": "tmp/kphe_archive/scoring/notice-index.json",
+      "notice_body_scan_cache": "tmp/kphe_archive/scoring/notice-body-scan.json",
+      "relevant_title_matches": [
+        {
+          "url": "https://kphe.kps.or.kr/notice/notice_detail/134",
+          "title": "물리대회 환불 규정",
+          "finding": "시험 취소/환불 규정으로 채점/배점 규정이 아니다. 본문 그림도 환불 사유별 환불액 표이다."
+        },
+        {
+          "url": "https://kphe.kps.or.kr/notice/notice_detail/355",
+          "title": "2026년 제1회 물리대회 전문가과정 5번 문항 성적 처리 안내",
+          "finding": "해당 문항 복수 정답 인정; 전체 배점 비중은 제시하지 않는다."
+        },
+        {
+          "url": "https://kphe.kps.or.kr/notice/notice_detail/102",
+          "title": "물리대회 초급/전문가과정 샘플 문항",
+          "finding": "초급/전문가 도입 당시의 샘플 공지로 배점 규칙 글이 아니다."
+        }
+      ],
+      "event_announcement_posters_visually_checked": [
+        {
+          "session": "2023-1",
+          "notice_id": 24,
+          "image_id": 1198
+        },
+        {
+          "session": "2023-2",
+          "notice_id": 79,
+          "image_id": 1286
+        },
+        {
+          "session": "2024-1",
+          "notice_id": 131,
+          "image_id": 1363
+        },
+        {
+          "session": "2024-2",
+          "notice_id": 192,
+          "image_id": 1515
+        },
+        {
+          "session": "2025-1",
+          "notice_id": 236,
+          "image_id": 1697
+        },
+        {
+          "session": "2025-2",
+          "notice_id": 285,
+          "image_id": 1867
+        },
+        {
+          "session": "2026-1",
+          "notice_id": 329,
+          "image_id": 1998
+        },
+        {
+          "session": "2026-2",
+          "notice_id": 375,
+          "image_id": 2132
+        }
+      ],
+      "poster_findings": "각 개최 안내의 표는 응시 일정, 응시 자격, 출제범위, 시험 유형, 상대평가 시상/절대평가 승급, 접수/환불 및 준비물 표다. 문항별 배점이나 분야별 점수 비중 표를 확인하지 못했다.",
+      "poster_contact_sheet": "tmp/kphe_archive/scoring/poster-tables.png",
+      "resource_board": "https://kphe.kps.or.kr/board",
+      "resource_board_pages_checked": 2,
+      "resource_board_entries_checked": 6,
+      "resource_board_finding": "2024-1~2026-2의 문제/정답 게시글 6개이며 별도의 채점 규정 항목이 없다.",
+      "formal_kps_regulations": {
+        "url": "https://www.kps.or.kr/content/def/view.php?ft=66",
+        "sections_checked": [
+          "물리학력평가위원회 규정 (현재 HTML에서 주석 처리된 옛 항목 포함)",
+          "한국물리교육진흥원 규정"
+        ],
+        "former_committee_finding": "옛 위원회 규정은 목적, 경시대회/인증 업무, 위원 구성, 회의 등 조직 운영 규정이다. 점수/채점/배점 조항을 확인하지 못했다. 현재 사이트에서 주석 처리된 과거 항목이므로 현행 시험 규칙으로 간주하지 않는다.",
+        "promotion_institute_finding": "2023-08-14 부칙이 있는 진흥원 규정은 조직의 목적·직무·구성·직위와 운영회의·운영세칙을 규정하며 시험별 배점표가 아니다.",
+        "scoring_terms_in_fetched_regulations": {
+          "배점": 0,
+          "채점": 0,
+          "점수": 0,
+          "가중치": 0
+        }
+      },
+      "additional_pages_checked": [
+        "https://kphe.kps.or.kr/introduction",
+        "https://kphe.kps.or.kr/main/siteMap",
+        "https://kphe.kps.or.kr/account/sign_up",
+        "https://www.kps.or.kr/content/def/view.php?ft=52",
+        "https://www.kps.or.kr/content/def/view.php?ft=53"
+      ],
+      "search_finding": "공개 규정/규칙 글 및 조직 규정으로 검색 범위를 추가했으나 분야별 배점 비중 또는 개별 문항 배점의 검증 가능한 공식 근거는 미확보이다."
+    }
+  }
+}
