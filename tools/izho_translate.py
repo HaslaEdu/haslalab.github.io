@@ -157,7 +157,7 @@ def build(folder: Path, target: Path):
                     for span in line["spans"]:
                         words = re.findall(r"[A-Za-z]{2,}", span["text"])
                         if not words or span["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")): continue
-                        if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years"} for w in words): continue
+                        if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years","ma","wb","hz","hn"} for w in words): continue
                         box = fitz.Rect(span["bbox"]) & rect
                         if box.is_empty: continue
                         draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
@@ -208,7 +208,7 @@ def build(folder: Path, target: Path):
                         math_rects.append(fitz.Rect(block["bbox"]))
             merged = []
             for rect in math_rects:
-                while data.get("preserve_all_math"):
+                while data.get("preserve_all_math") or data.get("merge_math_rects"):
                     overlap = next((j for j,r in enumerate(merged) if (rect & r).get_area() > 0
                         or (min(rect.y1, r.y1) > max(rect.y0, r.y0)
                             and max(rect.x0, r.x0)-min(rect.x1, r.x1) < 4)), None)

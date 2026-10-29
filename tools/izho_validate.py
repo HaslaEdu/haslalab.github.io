@@ -58,17 +58,21 @@ for year in a.years:
         critical_math = [hit for hit in math_hits
                          if hit["overlap"][3]-hit["overlap"][1] > 8
                          and hit["overlap"][2]-hit["overlap"][0] > 12]
-        if hits or critical_math or missing:
+        sha = hashlib.sha256(target.read_bytes()).hexdigest()
+        ink_path = ROOT / "tmp" / "izho-qa" / f"{year}_{kind}_ink.json"
+        ink = json.loads(ink_path.read_text(encoding="utf8")) if ink_path.exists() else {}
+        ink_reviewed = isinstance(ink, dict) and ink.get("sha256") == sha and ink.get("flagged_components") == 0
+        if hits or (critical_math and not ink_reviewed) or missing:
             failures.append(f"{year}/{kind}: {len(hits)} figure overlaps; {len(critical_math)} large equation intersections; {len(missing)} untranslated regions")
-        item = {"file": target.name, "pages": len(output), "translated_regions": len(data["entries"]),
+        item = {"file": target.name, "pages": len(output), "translated_regions": sum(not e.get("passthrough", False) for e in data["entries"]),
                 "Korean_spans": korean, "image_overlaps": hits, "equation_bbox_candidates": math_hits,
-                "large_equation_intersections": critical_math, "untranslated": missing,
+                "large_equation_intersections": critical_math, "equation_ink_review_passed": ink_reviewed, "untranslated": missing,
                 "sha256": hashlib.sha256(target.read_bytes()).hexdigest()}
         report.append(item)
         print(json.dumps({"file": item["file"], "pages": item["pages"],
                           "translated_regions": item["translated_regions"],
                           "figure_overlaps": len(hits), "equation_bbox_candidates": len(math_hits),
-                          "large_equation_intersections": len(critical_math),
+                          "large_equation_intersections": len(critical_math), "equation_ink_review_passed": ink_reviewed,
                           "untranslated": len(missing), "sha256": item["sha256"]}, ensure_ascii=False))
 audit = ROOT / "tmp" / "izho-qa" / "overlap-audit.json"
 audit.parent.mkdir(parents=True, exist_ok=True)
