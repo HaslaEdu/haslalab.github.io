@@ -282,7 +282,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
    a grid every card breaks in the same place, and the figures line up across
    the row as a bonus.  English needs the last label on a line of its own,
    since "Experimental problems" is wider than a quarter of the card. */
-.comp dl{display:grid;gap:14px 16px;margin:15px 0 0;padding-top:13px;
+.comp dl{display:grid;gap:14px 16px;margin:15px 0 0;padding:13px 20px 0 0;
   border-top:1px dashed var(--grid-bold);
   grid-template-columns:max-content minmax(0,1fr) max-content max-content}
 /* the scope is the only figure with a long value, so it takes what is left
@@ -973,6 +973,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
 <script src="theory.js?v=1ef7dce712"></script>
+<script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -4193,6 +4194,19 @@ const DATA={
     if(typeof v==="string"){ if(v.startsWith("pdf/")) o[k]=PDF_BASE+v.slice(4); }
     else if(v&&typeof v==="object") toPdfHost(v); }
 })(DATA);
+/* IYPT (iypt.js, tools/iypt_build.py): a research tournament — no exam paper and no solution, only the seventeen
+   open problems of each year, their statements shown as iypt.org gives them, with the official problem sheet */
+if(window.IYPT) DATA.iypt={
+  abbr:"IYPT", since:1988, open:true,
+  full:{ko:"국제청소년물리토너먼트",en:"International Young Physicists' Tournament"},
+  scope:{ko:"국제",en:"International"},
+  get note(){ return this.soon; },
+  soon:{ko:"연구형 토너먼트라 시험지와 해답이 없습니다. 해마다 공개되는 17개 연구 과제와 공식 문제지를 모았습니다.",
+        en:"A research tournament: there is no exam paper and no solution. These are each year's seventeen published problems and the official problem sheet."},
+  chip:{ko:"연구 과제",en:"Open problem"},
+  years:window.IYPT.map(e=>({y:e.y, host:e.host||null, cc:e.cc, problems:e.p.map(([t,x],i)=>{
+    const body=x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/\n/g,"<br>");
+    return {id:String(i+1), title:{ko:t,en:t}, desc:{ko:body,en:body}, files:{pdf:e.pdf||e.src}}; })}))};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
@@ -4288,7 +4302,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 11;
+const LOGO_V = 12;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
@@ -4296,7 +4310,7 @@ const LOGO_V = 11;
 const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -4310,7 +4324,7 @@ const compLogo = key =>
      src="logo/${key}.png?v=${LOGO_V}" onerror="logoFallback(this)">`;
 
 /* astronomy competitions count observation rounds, not experiments */
-const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
+const LB = (c,k) => (c&&(c.obs||c.open)&&UI[lang][k+"Obs"]) || UI[lang][k];
 /* astronomy rounds are not all observation: the problem code says which round it is
    (O observation, D data analysis, P practical, M sky map) */
 /* IAO · APAO 는 주니어(α)와 시니어(β) 조가 따로 푼다 — 고른 조는 페이지를 옮겨도 남는다 */
@@ -4351,7 +4365,7 @@ function viewHome(){
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
-    for(const y of c.years){ probs+=y.problems.length;
+    for(const y of c.years){ if(!c.open) probs+=y.problems.length;   /* IYPT's research problems are not experiments */
       live+=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length; }
   }
   return `
@@ -4393,7 +4407,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso"]},
@@ -4648,7 +4662,7 @@ function viewComp(key,mode){
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
         <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
-        <div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>
+        ${c.open?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
         ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
@@ -4859,7 +4873,7 @@ function viewYear(key,year){
         const tags=(lang==="ko"?p.tags:p.tagsEn)||[];
         const heading = p.title ? p.title[lang] : ((lang==="ko"?p.ko:p.en)||p.en||d.soonTitle);
         const body    = p.desc ? p.desc[lang] : (c.soon ? c.soon[lang] : d.soonDesc);
-        const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : d.wip;
+        const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : c.chip&&!held ? c.chip[lang] : d.wip;
         /* every card has the same layout as IPhO 2017: the note on the unsigned
            Windows build, then [run][Windows], then [sheet][solution][source];
            whatever is not there (or not released yet) stays as a greyed button */
@@ -4873,9 +4887,10 @@ function viewYear(key,year){
         /* 시뮬레이터를 만들지 않는 대회(화학 · 천문 · 통합과학)는 문제지 줄만 둔다 — 시뮬레이터가 생긴 문제만 빼고 */
         const docsOnly = !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
+        if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         const grp = grpOf(c,p);
-        return `<article class="prob ${mode==="wip"?"soon":""}"${grp?` data-grp="${grp}"`:""}>
+        return `<article class="prob ${mode==="wip"&&!c.chip?"soon":""}"${grp?` data-grp="${grp}"`:""}>
           <div class="top">
             <span class="code">${grp?p.id.replace(/[αβγ]+$/,""):p.id}</span>
             <span class="tr">${grp?grpTag(d,grp):""}<span class="status ${mode}"><i></i>${chip}</span>
