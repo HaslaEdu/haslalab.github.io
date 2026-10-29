@@ -2,8 +2,8 @@
  "comp": "kphe",
  "prefix": "KPhE",
  "full": {
-  "ko": "물리대회 (The Physics League · 구 한국 중학생 물리대회)",
-  "en": "The Physics League (KPS) · formerly the Korean Middle-School Physics Competition"
+  "ko": "물리대회 (물리인증제·한국 중학생 물리대회 기출 포함)",
+  "en": "The Physics League · Physics Certification and Korean Middle-School archives"
  },
  "since": 2015,
  "scope": {
@@ -12,7 +12,7 @@
  },
  "rounds": true,
  "omr": true,
- "about": "Korean Physical Society: the Korean Middle-School Physics Competition (KPhC, 2015-2022, papers only, manifest kphc.json) and its successor the Physics League (two sittings a year since 2024, listed as 2024-1, 2024-2 …; only the advanced and expert levels).",
+ "about": "The Physics League public papers for all four levels from 2024-1 through 2026-2. Earlier Korean Middle-School Physics Competition papers and clearly labelled Physics Certification recollections are included in separate manifests.",
  "years": [
   {
    "y": "2026-2",
@@ -23,6 +23,14 @@
    "cc": "kr",
    "problems": [
     {
+     "id": "T2a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T2b",
+     "title": "중급과정"
+    },
+    {
      "id": "T2c",
      "title": "고급과정"
     },
@@ -33,19 +41,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2026_T2a_KO.pdf",
+     "part": "T2a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/73b05c6e-d7e9-4cba-9bcf-23e687470e43",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 초급과정-문제지.pdf",
+     "bytes": 308915,
+     "sha256": "e54c5e71d69dda1b2201e463b7cad1bf122f1aaf6040fd511f359380c2ed2159"
+    },
+    {
+     "file": "KPhE_2026_T2aK.pdf",
+     "part": "T2a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/57c8d22e-15f1-4b2b-9f2e-bb6adc922c40",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 초급과정-답지.pdf",
+     "bytes": 24698,
+     "sha256": "8309e352787f6e3d00f45b42b87898f5b1db987e4de4b327a95cb078f9f063f5"
+    },
+    {
+     "file": "KPhE_2026_T2b_KO.pdf",
+     "part": "T2b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/06524c2e-7756-461c-b280-6361d2c63738",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 중급과정-문제지.pdf",
+     "bytes": 610170,
+     "sha256": "1b966576b6b508c40f16fe2bfde3851097e36ed8b80271bfa29b0b44892dc6f5"
+    },
+    {
+     "file": "KPhE_2026_T2bK.pdf",
+     "part": "T2b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/8546488e-959f-45cf-83a6-cc92a16f628f",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 중급과정-답지.pdf",
+     "bytes": 24479,
+     "sha256": "5a8ee0662bba49ed5862139f5486f032aee43c7ed32686c9189aad39622475dd"
+    },
+    {
      "file": "KPhE_2026_T2c_KO.pdf",
      "part": "T2c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/d14f6ad0-0071-4f1f-b18c-ac158d341902",
-     "bytes": 556701
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 고급과정-문제지.pdf",
+     "bytes": 556701,
+     "sha256": "b9f90115f8c49952ccfe9199c042fdd1d7d76199279590513ed1ce57fc060ee5"
     },
     {
-     "file": "KPhE_2026_T2cS.pdf",
+     "file": "KPhE_2026_T2cK.pdf",
      "part": "T2c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/f1362150-2b81-479c-a21c-5a16341339ac",
-     "bytes": 24502
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 고급과정-답지.pdf",
+     "bytes": 24502,
+     "sha256": "3147ef2a945b6e8d9e3367ba195fb33d4fb54a3b423c5ba6d3a79e66cc810d59"
     },
     {
      "file": "KPhE_2026_T2d_KO.pdf",
@@ -53,17 +112,71 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/694195d7-bd80-4d3b-84b2-9a5197840c2e",
-     "bytes": 360212
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 전문가과정-문제지.pdf",
+     "bytes": 360212,
+     "sha256": "f018f3b98c1b5b3b276f7d48fd7c2d3c4aa697a19bc81c5f0fb647fd82e3fdbd"
     },
     {
-     "file": "KPhE_2026_T2dS.pdf",
+     "file": "KPhE_2026_T2dK.pdf",
      "part": "T2d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/06051386-b027-458f-88b3-fe5ffe1057bb",
-     "bytes": 24412
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/43",
+     "source_title": "[2026년 제2회 물리대회] 전문가과정-답지.pdf",
+     "bytes": 24412,
+     "sha256": "87b8381f5194d439f40c715682c96285022af2ad774975d8f68de3d97c9cdddf"
     }
    ],
    "keys": {
+    "T2a": [
+     2,
+     3,
+     2,
+     1,
+     3,
+     3,
+     3,
+     2,
+     3,
+     4,
+     1,
+     4,
+     3,
+     4,
+     1,
+     1,
+     3,
+     2,
+     3,
+     3,
+     4,
+     5,
+     2,
+     5,
+     5
+    ],
+    "T2b": [
+     2,
+     5,
+     3,
+     5,
+     2,
+     5,
+     3,
+     4,
+     2,
+     4,
+     5,
+     2,
+     3,
+     3,
+     3,
+     4,
+     5,
+     5
+    ],
     "T2c": [
      4,
      1,
@@ -99,7 +212,8 @@
      5
     ]
    },
-   "note": "제2회 물리대회 (2026. 9. 5). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/43"
   },
   {
    "y": "2026-1",
@@ -110,6 +224,14 @@
    "cc": "kr",
    "problems": [
     {
+     "id": "T1a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T1b",
+     "title": "중급과정"
+    },
+    {
      "id": "T1c",
      "title": "고급과정"
     },
@@ -120,19 +242,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2026_T1a_KO.pdf",
+     "part": "T1a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/fe63c928-7044-4deb-83e2-2bf48fe2affe",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 초급과정.pdf",
+     "bytes": 217482,
+     "sha256": "fdadf495f9cb0db4a5bceb9fcd622ad559896a706e559f83a05a51155c0093f8"
+    },
+    {
+     "file": "KPhE_2026_T1aK.pdf",
+     "part": "T1a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/7a702cfc-be40-462b-9832-373a2c5c2750",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 초급과정 정답.pdf",
+     "bytes": 27740,
+     "sha256": "f50f0b29875980e22490daea2d4756bb2147fbec5b9545c3c2480dd3f6826e27"
+    },
+    {
+     "file": "KPhE_2026_T1b_KO.pdf",
+     "part": "T1b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/2f2a49ab-d234-412d-856d-6c4ca48b96dd",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 중급과정.pdf",
+     "bytes": 386154,
+     "sha256": "d1066c95c69642f5743501d2985590d1c50c43bc5234df8071121edae0eecb43"
+    },
+    {
+     "file": "KPhE_2026_T1bK.pdf",
+     "part": "T1b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/df5f849c-9a29-466a-97e0-6eedbc8c3353",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 중급과정 정답.pdf",
+     "bytes": 27602,
+     "sha256": "ac327515cc193595835ebfa4f9a34bc37666362f71fe315fcfdb6107f493a4d3"
+    },
+    {
      "file": "KPhE_2026_T1c_KO.pdf",
      "part": "T1c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/345544a4-ed9f-4eef-be8a-88f301cf6b3c",
-     "bytes": 473137
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 고급과정.pdf",
+     "bytes": 473137,
+     "sha256": "ea643a1c3e3b10fcdfe9e0c0536307c80fffd20625ab0ff80fe735f260025110"
     },
     {
-     "file": "KPhE_2026_T1cS.pdf",
+     "file": "KPhE_2026_T1cK.pdf",
      "part": "T1c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/476aff83-8005-4568-b7db-72828904c538",
-     "bytes": 27398
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 고급과정 정답.pdf",
+     "bytes": 27398,
+     "sha256": "0a3bcae7391e84f40e25efcadaffdf23ae7d52a415b7872d5011f41908d08ad3"
     },
     {
      "file": "KPhE_2026_T1d_KO.pdf",
@@ -140,17 +313,71 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/f721bdf8-894a-4be4-98dc-9ffd94042b8a",
-     "bytes": 149868
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 전문가과정.pdf",
+     "bytes": 149868,
+     "sha256": "2e3e16cf346cf6f9a8d5e6dff20f401b2f83dae89466d7bf799589eecc669ccd"
     },
     {
-     "file": "KPhE_2026_T1dS.pdf",
+     "file": "KPhE_2026_T1dK.pdf",
      "part": "T1d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/153e538c-9ab4-472a-bfc8-16260f9f3e46",
-     "bytes": 27256
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+     "source_title": "[2026년 제1회 물리대회] 전문가과정 정답.pdf",
+     "bytes": 27256,
+     "sha256": "48945e74903c80ed1db35ad8f2d28f38d675ec8971283776506c17fef7d8ac95"
     }
    ],
    "keys": {
+    "T1a": [
+     2,
+     1,
+     5,
+     3,
+     3,
+     4,
+     2,
+     1,
+     5,
+     3,
+     3,
+     4,
+     5,
+     5,
+     4,
+     3,
+     2,
+     1,
+     4,
+     4,
+     3,
+     1,
+     3,
+     2,
+     2
+    ],
+    "T1b": [
+     4,
+     5,
+     4,
+     3,
+     2,
+     4,
+     3,
+     3,
+     3,
+     4,
+     1,
+     3,
+     2,
+     1,
+     4,
+     3,
+     5,
+     1
+    ],
     "T1c": [
      2,
      1,
@@ -176,7 +403,10 @@
      4,
      3,
      4,
-     3,
+     [
+      2,
+      3
+     ],
      2,
      2,
      1,
@@ -186,7 +416,21 @@
      1
     ]
    },
-   "note": "제1회 물리대회 (2026. 2. 28). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/12",
+   "corrections": [
+    {
+     "part": "T1d",
+     "number": 5,
+     "accepted_answers": [
+      2,
+      3
+     ],
+     "date": "2026-03-30",
+     "source": "https://kphe.kps.or.kr/notice/notice_detail/355",
+     "note": "Official post-exam correction: question 5 accepts choices 2 and 3. The field observation angle is unspecified."
+    }
+   ]
   },
   {
    "y": "2025-2",
@@ -196,6 +440,14 @@
    },
    "cc": "kr",
    "problems": [
+    {
+     "id": "T2a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T2b",
+     "title": "중급과정"
+    },
     {
      "id": "T2c",
      "title": "고급과정"
@@ -207,19 +459,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2025_T2a_KO.pdf",
+     "part": "T2a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/55392a4f-26ac-4994-85fe-e6523db4b079",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 초급과정.pdf",
+     "bytes": 307912,
+     "sha256": "0c9b39f4a90ad7da4018b81e10d3eebef787b41adfd8aef21771ed960569eb82"
+    },
+    {
+     "file": "KPhE_2025_T2aK.pdf",
+     "part": "T2a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/cdee5ae5-ff69-4934-8ab7-4c19cca1b07c",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 초급과정_정답.pdf",
+     "bytes": 27790,
+     "sha256": "e7ba479d920a3522cfad5611a451cd7f6414b7e7aafafaee526bebc13d9a57ef"
+    },
+    {
+     "file": "KPhE_2025_T2b_KO.pdf",
+     "part": "T2b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/710ece63-7436-4278-a6ea-67688ed7a6f2",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 중급과정.pdf",
+     "bytes": 397989,
+     "sha256": "6a8873861aacb3765161a56d1001c4dcdcb202136dc6437383f3357cb981d3a8"
+    },
+    {
+     "file": "KPhE_2025_T2bK.pdf",
+     "part": "T2b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/d893ea50-286b-47f3-b2bb-f25a74cae0cc",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 중급과정_정답.pdf",
+     "bytes": 27652,
+     "sha256": "e398b553c1b2a146328ff78e0a9472e676458c59aa9a89628b78733446fbfb44"
+    },
+    {
      "file": "KPhE_2025_T2c_KO.pdf",
      "part": "T2c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/88d194c1-d6d0-4444-bf92-97e80887ec23",
-     "bytes": 447292
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 고급과정.pdf",
+     "bytes": 447292,
+     "sha256": "ce54da20bcc5de559034c4e53cfdedc3e54e6177c8754d610a64e13f756a33bf"
     },
     {
-     "file": "KPhE_2025_T2cS.pdf",
+     "file": "KPhE_2025_T2cK.pdf",
      "part": "T2c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/d787419d-8198-47f0-91a9-f89bff86f3ad",
-     "bytes": 27458
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 고급과정-정답.pdf",
+     "bytes": 27458,
+     "sha256": "e407bc3f2501e538609c45d0873d8db3bc9ad0720ace0f7b60956e8299b0bd11"
     },
     {
      "file": "KPhE_2025_T2d_KO.pdf",
@@ -227,21 +530,81 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/b6279a4c-606c-46ee-a9d0-22197d9c8893",
-     "bytes": 202697
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 전문가과정.pdf",
+     "bytes": 202697,
+     "sha256": "68b618e33e07c57f8fa4cd0fdd3065f2354305accf890bc8e8175201e28db27f"
     },
     {
-     "file": "KPhE_2025_T2dS.pdf",
+     "file": "KPhE_2025_T2dK.pdf",
      "part": "T2d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/23833b6c-073e-43b2-83f5-dc9af8a9d189",
-     "bytes": 27677
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+     "source_title": "[2025년 제2회 물리대회] 전문가과정_정답.pdf",
+     "bytes": 27677,
+     "sha256": "6b2159d6922d2aa69f504f332b1c9f91e3b2e08690cff5538440fe8532b9086e"
     }
    ],
    "keys": {
+    "T2a": [
+     3,
+     2,
+     1,
+     4,
+     2,
+     3,
+     2,
+     1,
+     4,
+     2,
+     5,
+     4,
+     4,
+     5,
+     5,
+     4,
+     1,
+     1,
+     3,
+     5,
+     4,
+     1,
+     1,
+     5,
+     4
+    ],
+    "T2b": [
+     2,
+     5,
+     5,
+     4,
+     3,
+     1,
+     4,
+     2,
+     5,
+     5,
+     3,
+     2,
+     1,
+     4,
+     1,
+     2,
+     5,
+     1
+    ],
     "T2c": [
      2,
      5,
-     2,
+     [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
      4,
      2,
      4,
@@ -279,7 +642,25 @@
      3
     ]
    },
-   "note": "제2회 물리대회 (2025. 8. 30). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/11",
+   "corrections": [
+    {
+     "part": "T2c",
+     "number": 3,
+     "accepted_answers": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "full_credit": true,
+     "date": "2025-09-30",
+     "source": "https://kphe.kps.or.kr/notice/notice_detail/319",
+     "note": "Official post-exam correction: question 3 receives full credit for every candidate, including no answer."
+    }
+   ]
   },
   {
    "y": "2025-1",
@@ -289,6 +670,14 @@
    },
    "cc": "kr",
    "problems": [
+    {
+     "id": "T1a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T1b",
+     "title": "중급과정"
+    },
     {
      "id": "T1c",
      "title": "고급과정"
@@ -300,19 +689,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2025_T1a_KO.pdf",
+     "part": "T1a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/cc4c0676-7ecf-4359-8948-a9b06e7db48c",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 초급과정.pdf",
+     "bytes": 180723,
+     "sha256": "b423f7ce610360d3eebae1c62653e8332656c0807910f0e4157589e72aedb12b"
+    },
+    {
+     "file": "KPhE_2025_T1aK.pdf",
+     "part": "T1a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/69c3097c-f250-4598-a62e-7cb79e7e84c3",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 초급과정_정답.pdf",
+     "bytes": 28145,
+     "sha256": "6ac5cf80d35433585561462b2bd4991c94bef4be7d453c30353ef43502d3d3de"
+    },
+    {
+     "file": "KPhE_2025_T1b_KO.pdf",
+     "part": "T1b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/749a9742-1a03-47e6-8be2-61b240a85d41",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 중급과정.pdf",
+     "bytes": 434635,
+     "sha256": "da74ea38627ed4e0bc0c83323d622bfdd86f2da52345d16a4277d7b4f98fb26c"
+    },
+    {
+     "file": "KPhE_2025_T1bK.pdf",
+     "part": "T1b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/36f04a2a-56fc-4bd7-ab3d-46777400de80",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 중급과정_정답.pdf",
+     "bytes": 28000,
+     "sha256": "7387cb2f3002f4728d6839be7fb0c3601a68814e14f9641a57fded910276fb42"
+    },
+    {
      "file": "KPhE_2025_T1c_KO.pdf",
      "part": "T1c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/ab594063-8352-48ca-99b7-d642aec63dc6",
-     "bytes": 599998
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 고급과정.pdf",
+     "bytes": 599998,
+     "sha256": "2a4f54849727ca95999d2f64e53192cbb34c6669747c79b5d821ee7a4e1ae96c"
     },
     {
-     "file": "KPhE_2025_T1cS.pdf",
+     "file": "KPhE_2025_T1cK.pdf",
      "part": "T1c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/5665ced4-11ee-4369-9a2b-d5bf3c74aadc",
-     "bytes": 27992
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 고급과정_정답_수정(2025. 3. 26).pdf",
+     "bytes": 27992,
+     "sha256": "637b07a712920cb47f418c130a65aa3987b0d7a5609ab9b5d370de059225e151"
     },
     {
      "file": "KPhE_2025_T1d_KO.pdf",
@@ -320,17 +760,71 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/ef0da2c2-1f75-4f9f-87af-f03e0d0d1fe3",
-     "bytes": 313692
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 전문가과정.pdf",
+     "bytes": 313692,
+     "sha256": "d03a18bf200f7b40efd5ccf1c8bb4bb9ea0c22c57025a292e613f4dea5a3d74f"
     },
     {
-     "file": "KPhE_2025_T1dS.pdf",
+     "file": "KPhE_2025_T1dK.pdf",
      "part": "T1d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/69f07da6-de0b-4984-9c09-9305b4790755",
-     "bytes": 28184
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "source_title": "[2025년 제1회 물리대회] 전문가과정_정답.pdf",
+     "bytes": 28184,
+     "sha256": "3555776f55455db6da8d60df47196555b5c55d9c6f361b5f2d71fdd6843b02f4"
     }
    ],
    "keys": {
+    "T1a": [
+     3,
+     4,
+     4,
+     5,
+     4,
+     3,
+     5,
+     5,
+     1,
+     4,
+     4,
+     3,
+     2,
+     5,
+     3,
+     1,
+     5,
+     3,
+     4,
+     4,
+     2,
+     3,
+     1,
+     2,
+     1
+    ],
+    "T1b": [
+     2,
+     5,
+     3,
+     3,
+     5,
+     1,
+     3,
+     3,
+     4,
+     5,
+     4,
+     1,
+     1,
+     3,
+     2,
+     4,
+     3,
+     5
+    ],
     "T1c": [
      1,
      5,
@@ -372,7 +866,20 @@
      3
     ]
    },
-   "note": "제1회 물리대회 (2025. 2. 22). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+   "corrections": [
+    {
+     "part": "T1c",
+     "number": 7,
+     "accepted_answers": [
+      2
+     ],
+     "source": "https://kphadmin.kps.or.kr/uploads/pds/5665ced4-11ee-4369-9a2b-d5bf3c74aadc",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/10",
+     "note": "Official answer PDF explicitly replaces choice 4 with choice 2 for question 7 (arrow correction)."
+    }
+   ]
   },
   {
    "y": "2024-2",
@@ -382,6 +889,14 @@
    },
    "cc": "kr",
    "problems": [
+    {
+     "id": "T2a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T2b",
+     "title": "중급과정"
+    },
     {
      "id": "T2c",
      "title": "고급과정"
@@ -393,19 +908,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2024_T2a_KO.pdf",
+     "part": "T2a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/22ebba6d-e08c-4744-bb71-c3bc27b3f6d8",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 초급과정 문제.pdf",
+     "bytes": 307909,
+     "sha256": "bbf28fbec114ea9eaf03d18d095ddc86cc0cd5348b4aefa13cb5a5cdf515c6ad"
+    },
+    {
+     "file": "KPhE_2024_T2aK.pdf",
+     "part": "T2a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/31e720fc-9894-4532-a990-a1292535317d",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 초급과정 정답.pdf",
+     "bytes": 39452,
+     "sha256": "4d76b73ced2f719c6a820a5b2bc521fe06888e4761f5957a87caf88e840ec289"
+    },
+    {
+     "file": "KPhE_2024_T2b_KO.pdf",
+     "part": "T2b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/48a2246c-ac85-4f50-a961-46d0ef67412c",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 중급과정 문제.pdf",
+     "bytes": 629751,
+     "sha256": "6dbdd504f7beb07f70c4c45f5b806c271da6ec1b6467a1ed7af07da22bc5ec50"
+    },
+    {
+     "file": "KPhE_2024_T2bK.pdf",
+     "part": "T2b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/42b2a92b-0067-4c77-8384-0745b0b525b0",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 중급과정 정답.pdf",
+     "bytes": 39170,
+     "sha256": "cc5161584aba31704cbb267473fb519226e0e39e0e1a71e5094d3af1a079bb5c"
+    },
+    {
      "file": "KPhE_2024_T2c_KO.pdf",
      "part": "T2c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/bfcc8ec5-863a-4eca-bf46-8becb6e63194",
-     "bytes": 408248
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 고급과정 문제.pdf",
+     "bytes": 408248,
+     "sha256": "6ca6bbd1cae94826be783a915eeaf3dfa12e7dd43626e05760d2b928fa9cdd56"
     },
     {
-     "file": "KPhE_2024_T2cS.pdf",
+     "file": "KPhE_2024_T2cK.pdf",
      "part": "T2c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/7a7436d9-26e2-47a8-ab36-96f5856d4bba",
-     "bytes": 39079
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 고급과정 정답.pdf",
+     "bytes": 39079,
+     "sha256": "cb3501fd52af6eb562ab8e99b5cd7d242a74879449d8e9d95f52d2ac1e1803af"
     },
     {
      "file": "KPhE_2024_T2d_KO.pdf",
@@ -413,17 +979,71 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/91c37e36-4bcb-4462-95b8-a409c7af3892",
-     "bytes": 235599
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 전문가과정 문제.pdf",
+     "bytes": 235599,
+     "sha256": "4193cf68afe524ae920bc3c4c96ee257c204097b0a29365eedeb219a8cf959a9"
     },
     {
-     "file": "KPhE_2024_T2dS.pdf",
+     "file": "KPhE_2024_T2dK.pdf",
      "part": "T2d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/bd7979d3-74a2-4ac1-9245-cb7fb48b52c2",
-     "bytes": 39498
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/9",
+     "source_title": "[2024년 제2회 물리대회] 전문가과정 정답.pdf",
+     "bytes": 39498,
+     "sha256": "18f930638f19e93e2971367d111ef5c91d6503df2477ebab23ca636f07c50e52"
     }
    ],
    "keys": {
+    "T2a": [
+     5,
+     4,
+     5,
+     2,
+     4,
+     4,
+     2,
+     3,
+     1,
+     1,
+     3,
+     3,
+     4,
+     5,
+     4,
+     1,
+     2,
+     4,
+     2,
+     5,
+     2,
+     1,
+     5,
+     4,
+     3
+    ],
+    "T2b": [
+     3,
+     2,
+     5,
+     5,
+     3,
+     5,
+     2,
+     5,
+     2,
+     5,
+     1,
+     2,
+     5,
+     2,
+     2,
+     5,
+     5,
+     5
+    ],
     "T2c": [
      2,
      4,
@@ -465,7 +1085,8 @@
      3
     ]
    },
-   "note": "제2회 물리대회 (2024. 8. 31). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/9"
   },
   {
    "y": "2024-1",
@@ -475,6 +1096,14 @@
    },
    "cc": "kr",
    "problems": [
+    {
+     "id": "T1a",
+     "title": "초급과정"
+    },
+    {
+     "id": "T1b",
+     "title": "중급과정"
+    },
     {
      "id": "T1c",
      "title": "고급과정"
@@ -486,19 +1115,70 @@
    ],
    "files": [
     {
+     "file": "KPhE_2024_T1a_KO.pdf",
+     "part": "T1a",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/6e6a4178-50e4-406c-aa79-ab735ee98ecd",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_초급과정 시험문제.pdf",
+     "bytes": 372630,
+     "sha256": "5796df4a37fd71ce22dfc8deb01ff8d1a2ae450ce3dd5db6f7da41a284b01f53"
+    },
+    {
+     "file": "KPhE_2024_T1aK.pdf",
+     "part": "T1a",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/55dcd77f-b769-4343-9c96-4517c1ded00f",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_초급과정 정답.pdf",
+     "bytes": 44519,
+     "sha256": "5d1c5b6d29535df30ec5d2bf9d5e9475469c8243b4645ce79556cd0c131c23ae"
+    },
+    {
+     "file": "KPhE_2024_T1b_KO.pdf",
+     "part": "T1b",
+     "kind": "paper",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/7b1fbec0-02d9-4333-9341-1555a4279858",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_중급과정 시험문제.pdf",
+     "bytes": 690298,
+     "sha256": "a07c12c690b2f0773d8cdce6d70e92de43887ede33e3bd5b9b9073c8b0b4fbae"
+    },
+    {
+     "file": "KPhE_2024_T1bK.pdf",
+     "part": "T1b",
+     "kind": "key",
+     "lang": "KO",
+     "url": "https://kphadmin.kps.or.kr/uploads/pds/4f65d6f0-b573-400e-9c16-a8a2217e6360",
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_중급과정 정답_수정(24.03.21).pdf",
+     "bytes": 39345,
+     "sha256": "1eb41de616c50082c9e46333cbe12f5d09fad11edb04f7cc45c807d688300a65"
+    },
+    {
      "file": "KPhE_2024_T1c_KO.pdf",
      "part": "T1c",
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/9248f076-b0de-45ed-a833-f9afefd927ba",
-     "bytes": 544511
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_고급과정 시험문제.pdf",
+     "bytes": 544511,
+     "sha256": "a71901e371a99b11a82d2e11ba872b46a76d95a1e447fa7ff7afd44a0cad4967"
     },
     {
-     "file": "KPhE_2024_T1cS.pdf",
+     "file": "KPhE_2024_T1cK.pdf",
      "part": "T1c",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/48f48a54-b739-4644-8dd0-8652856cfdfa",
-     "bytes": 40828
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_고급과정 정답.pdf",
+     "bytes": 40828,
+     "sha256": "cdc8941060746c5d9e6005b019a0f3b2f6d85dbbf1a2c78ec504e5458e419c66"
     },
     {
      "file": "KPhE_2024_T1d_KO.pdf",
@@ -506,17 +1186,71 @@
      "kind": "paper",
      "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/391e0370-13fa-495d-a33f-8c6b9c4f3c7a",
-     "bytes": 362227
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_전문가과정 시험문제.pdf",
+     "bytes": 362227,
+     "sha256": "dcbc3e85492d872895e3257aa9048c08ae28706182b5443ccea1c219826a465b"
     },
     {
-     "file": "KPhE_2024_T1dS.pdf",
+     "file": "KPhE_2024_T1dK.pdf",
      "part": "T1d",
-     "kind": "solution",
+     "kind": "key",
+     "lang": "KO",
      "url": "https://kphadmin.kps.or.kr/uploads/pds/4b8933fe-d85b-46b1-9366-82f4ae727eef",
-     "bytes": 41262
+     "source_page": "https://kphe.kps.or.kr/board/board_detail/8",
+     "source_title": "2024년 제1회 물리대회_전문가과정 정답.pdf",
+     "bytes": 41262,
+     "sha256": "736b1e36052c71f2b9e2b6716478a57778655eb38aa5df148349f241f0109b3a"
     }
    ],
    "keys": {
+    "T1a": [
+     3,
+     4,
+     4,
+     3,
+     1,
+     3,
+     3,
+     2,
+     3,
+     3,
+     4,
+     4,
+     4,
+     5,
+     5,
+     4,
+     2,
+     2,
+     5,
+     4,
+     5,
+     4,
+     3,
+     3,
+     3
+    ],
+    "T1b": [
+     1,
+     4,
+     2,
+     1,
+     2,
+     5,
+     3,
+     4,
+     3,
+     3,
+     2,
+     4,
+     3,
+     3,
+     3,
+     2,
+     1,
+     5
+    ],
     "T1c": [
      4,
      2,
@@ -558,13 +1292,14 @@
      4
     ]
    },
-   "note": "제1회 물리대회 (2024. 2. 24). 한국물리학회 물리대회 (The Physics League, 구 한국 중학생 물리대회 · 물리인증제), 연 2회; 기출문제 & 정답 from kphe.kps.or.kr 자료실. All multiple choice: keys parsed from the official 정답 PDFs (a corrected answer '③ → ②' counts as the last)."
+   "note": "한국물리학회 공식 공개 기출문제 및 정답표. 초급·중급·고급·전문가 전 과정. 정답표는 풀이 해설이 아닙니다. 정정된 정답은 최종 공지를 기준으로 합니다.",
+   "source_page": "https://kphe.kps.or.kr/board/board_detail/8"
   }
  ],
  "missing": [
   {
    "y": 2023,
-   "why": "the board lists papers from 2024 제1회 on"
+   "why": "Official public 자료실 currently lists 2024-1 onwards only; no original public PDF found."
   }
  ],
  "plain": true

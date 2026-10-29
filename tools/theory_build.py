@@ -30,9 +30,9 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FILE = re.compile(r'^([A-Za-z]+)_(\d{4})_((?:T|MC)\d*[a-z]?)(?:_([A-Z]{2})|([SMA]))\.pdf$')
+FILE = re.compile(r'^([A-Za-z]+)_(\d{4})_((?:T|MC)\d*[a-z]?)(?:_([A-Z]{2})|([SMAK]))\.pdf$')
 GENERIC = re.compile(r'^(?:problem|question|task|theory|theoretical problem|part)\s*[A-Za-z]?\d*[a-z]?\.?$', re.I)
-KINDS = {'paper': 'paper', 'solution': 'sol', 'marking': 'mark', 'answer': 'answer'}
+KINDS = {'paper': 'paper', 'solution': 'sol', 'marking': 'mark', 'answer': 'answer', 'key': 'key'}
 
 
 def load():
@@ -96,10 +96,37 @@ def load():
             # the answer key of a multiple-choice paper, per part (KPhE): exam mode grades it on the screen, not by AI
             if y.get('keys'):
                 out[comp][year]['k'] = {k: v for k, v in y['keys'].items() if k in files}
+            if y.get('corrections'):
+                out[comp][year]['corrections'] = y['corrections']
+            if comp == 'kphe' and y.get('note'):
+                out[comp][year]['note'] = y['note']
+            if y.get('source_type'):
+                out[comp][year]['sourceType'] = y['source_type']
+            if y.get('source_page'):
+                out[comp][year]['sourcePage'] = y['source_page']
             if gt:
                 out[comp][year]['g'] = {'en': gt}
     split(out)
     korean(out, bad)
+    # Print editions are local, checked PDFs; the source manifests retain the
+    # official downloads. A key is distinct from a worked solution or blank sheet.
+    print_path = os.path.join(ROOT, 'tools', 'kphe_print.json')
+    if os.path.exists(print_path):
+        for comp, years in json.load(open(print_path, encoding='utf-8')).items():
+            for year, edition in years.items():
+                target = out.get(comp, {}).get(year)
+                if not target:
+                    raise ValueError('A4 edition has no source: %s %s' % (comp, year))
+                for part, files in edition.get('f', {}).items():
+                    if part not in target['f']:
+                        raise ValueError('A4 edition has no source part: %s %s %s' % (comp, year, part))
+                    for kind, filename in files.items():
+                        if not os.path.isfile(os.path.join(ROOT, filename)):
+                            raise ValueError('Missing A4 edition: ' + filename)
+                        target['f'][part][kind] = filename
+                for prop in ('exam', 'questionRegions', 'questionPages', 'points'):
+                    if prop in edition:
+                        target[prop] = edition[prop]
     return out, bad, gen, meta
 
 
@@ -187,6 +214,15 @@ def main():
     stamped = re.sub(r'src="theory\.js(?:\?v=[0-9a-f]+)?"', 'src="theory.js?v=%s"' % hashlib.sha1(js.encode('utf-8')).hexdigest()[:10], html)
     if stamped != html:
         open(page, 'w', encoding='utf-8', newline='').write(stamped)
+    # The standalone mock exam must receive the same corrected key immediately.
+    omr_path = os.path.join(ROOT, 'sim', 'omr.html')
+    omr = open(omr_path, encoding='utf-8').read()
+    for filename in ('../theory.js', 'omr-core.js', 'omr-app.js', 'omr.css'):
+        asset = os.path.normpath(os.path.join(ROOT, 'sim', filename))
+        digest = hashlib.sha1(open(asset, 'rb').read()).hexdigest()[:10]
+        omr = re.sub(r'((?:src|href)=")' + re.escape(filename) + r'(?:\?v=[0-9a-f]+)?"',
+                     lambda m: m[1] + filename + '?v=' + digest + '"', omr)
+    open(omr_path, 'w', encoding='utf-8', newline='').write(omr)
     n = sum(len(v['f']) for c in data.values() for v in c.values())
     print('theory.js: %d competitions, %d years, %d papers, %.0f kB' % (len(data), sum(len(c) for c in data.values()), n, len(js) / 1024))
     for path, f in bad:

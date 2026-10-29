@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=27ca182b36"></script>
+<script src="theory.js?v=50f2ee6922"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4763,6 +4763,7 @@ function viewComp(key,mode){
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
+    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가와 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 물리인증제 시절 자료는 비공식 복기·재수록본을 별도로 표시합니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes all four levels from six TPL sittings in 2024–2026 and available Korean Middle-School Physics Competition papers from 2015–2022. Historical Physics Certification recollections and reprints are labelled separately. Papers without an official key do not receive automatic grading."}</p>`:""}
     ${hasExam(c,key)?modeSwitch(key,mode):""}
     ${mode==="exam"?`<div class="xm" id="xmRoot" data-key="${key}">${xmPortalHtml(key,null)}</div></div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
@@ -4925,17 +4926,19 @@ function theoryHtml(key,yr){
   const card=(code,probs,f,k,head,docs)=>{
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
-    const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
+     const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
+     const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
     const many=titles.length>1;
     return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
       heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:many?clip(titles):alt.map(esc).join(" · "),
       tags:[TL(DATA[key],"trkThy")].concat(many?[TL(DATA[key],"thyCnt")(titles.length)]:[], has?[d.thyKo]:[]),
-      main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],omr?d.omrKey:d.thySol,false,S[1])],
+       main:[a(P[0],d.thyPaper,true,P[1])].concat(omr?
+         (K[0]?[a(K[0],d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-      docs:(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const sim=simThy(key,yr);
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)&&!sim.has(x)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
@@ -4958,7 +4961,9 @@ function theoryHtml(key,yr){
       <h2 style="font-size:1.15rem">${TL(DATA[key],"thyPick")}</h2>
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
-    ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(DATA[key],"thyExam")}</a></p>`:""}
+     ${key==="kphe"&&t.sourceType!=="recall"?`<p class="trknote">${ko?(String(yr.y).includes("-")?"초급 · 중급 · 고급 · 전문가 전 과정. 본 시험 60분, 추가 답안 작성 시간 없음. 정답표와 풀이 해설은 별도로 표시합니다.":"한국 중학생 물리대회 원문을 보존한 A4 학습용 편집본입니다. 당시 교시·시험 안내는 원문 기준입니다."):(String(yr.y).includes("-")?"All four levels. 60 minutes of exam time, with no extra answer-entry period. Answer keys and worked solutions are listed separately.":"A4 study edition of the Korean Middle-School Physics Competition. Original sessions and instructions are preserved.")} <a href="https://kphe.kps.or.kr/" target="_blank" rel="noopener">${ko?"공식 안내":"Official information"}</a></p>`:""}
+     ${t.sourceType==="recall"?`<p class="trknote"><b>${ko?"비공식 복기·재수록 자료":"Unofficial recollection / reprint"}</b><br>${esc(t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"작성자 원문·출처":"Author and source"}</a>`:""}</p>`:""}
+     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(DATA[key],"thyExam")}</a></p>`:""}
     ${sim.size?`<p class="cnote">${d.thySim([...sim].join(", "))}</p>`:""}
     <div class="probs">${cards}</div></div>`;
 }

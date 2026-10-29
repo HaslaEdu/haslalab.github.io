@@ -1,0 +1,273 @@
+{
+  "_meta": {
+    "updated_at": "2026-10-30",
+    "researcher": "HaslaLab 자료 조사",
+    "scope": "구 물리인증제의 공식 공개 원문, 응시자 복기, 출처가 명시된 재수록 단편을 검색하였다. 공식 원문과 비공식 복기/재수록을 구분하며 접근 제한을 우회하지 않았다.",
+    "download_policy": "일반 공개 링크에서 정상적으로 내려받을 수 있는 PDF만 확보하였다. Scribd는 공개 열람 텍스트만 확인하였으며 다운로드 제한을 우회하지 않았다.",
+    "coordinate_system": "PDF 원본 포인트, 좌측 상단 원점, rect=[x0, top, x1, bottom], page는 1부터 시작한다.",
+    "new_usable_fragments": 1,
+    "new_complete_exam_papers": 0,
+    "excluded_from_parallel_scope": [
+      "2019년 1차 대학과정 Orbi 복기본은 parent가 확보/편집 중이다.",
+      "swpark.me의 2015년 전문가 양자역학 복기본은 parent가 조사 중이다."
+    ]
+  },
+  "candidates": [
+    {
+      "id": "2021-level1-hydrogen-Suzume",
+      "status": "usable_fragment_with_attribution",
+      "exam": {
+        "name": "물리인증제",
+        "year": 2021,
+        "session": null,
+        "session_label": "회차 미상",
+        "course": "일반과정 1급",
+        "course_basis": "재수록본 풀이에 [2021 물리인증 1급 기출]이라고 명시됨",
+        "manifest_year_suggestion": "2021-r",
+        "question_count_available": 1,
+        "full_exam": false
+      },
+      "provenance": {
+        "kind": "author_compiled_reprint_fragment",
+        "official_original": false,
+        "first_person_recall_confirmed": false,
+        "title": "정적분 100題",
+        "author": "雀 (Suzume)",
+        "author_name_basis": "PDF 표지의 著 : 雀 및 ver. 20220629",
+        "version_date": "2022-06-29",
+        "publication_date": null,
+        "source_page_url": "https://orbi.kr/00057373007",
+        "public_pdf_url": "https://orbi.kr/download/united/57373007/1",
+        "mirror_urls": [
+          "https://www.scribd.com/document/1005314514/%EC%A0%95%EC%A0%81%EB%B6%84-100%E9%A1%8C",
+          "https://www.scribd.com/document/972424592/%EC%A0%95%EC%A0%81%EB%B6%84-100%E9%A1%8C-250410-235335"
+        ],
+        "scribd_uploader": "tcxo1236 (문서 1005314514)",
+        "scribd_observation": "로그인하지 않은 공개 열람 텍스트에 같은 표지/버전과 [2021 물리인증 1급 기출] 표기가 확인된다. PDF는 Scribd가 아니라 저자의 Orbi 공개 첨부 링크에서 받았다.",
+        "license_observation": "Scribd 표시: © All Rights Reserved. 별도의 재배포 허락은 확인되지 않았다.",
+        "reliability": "medium",
+        "reliability_note": "2021년과 1급은 저자의 명시적 기출 표기에 근거한다. 공식 원문과 독립 대조하지 못했으며 원래 회차, 문항 번호, 선택지, 문장 그대로의 원문은 확인되지 않는다. 재수록된 적분식 및 풀이만 사용 가능한 단편이다.",
+        "display_label": "2021 물리인증제 1급 기출 재수록 단편 · 회차 미상 · 비공식"
+      },
+      "acquisition": {
+        "method": "normal_public_download",
+        "http_status": 200,
+        "content_type": "application/pdf",
+        "local_file": "tmp/kphe_archive/legacy/2021_level1_hydrogen_fragment_Suzume_integrals_20220629.pdf",
+        "bytes": 571317,
+        "sha256": "34252b52b86768e955e9e46ecd9e26ee00d3595666605cd2d6ab00b2afcf0534",
+        "pages": 67,
+        "page_size_points": [
+          595,
+          841
+        ],
+        "checked_date": "2026-10-30",
+        "full_book_should_be_published": false
+      },
+      "parts": [
+        {
+          "local_number": 1,
+          "source_question_number": 16,
+          "source_number_note": "16은 정적분 자료집의 문항 번호이며 원래 시험 문항 번호가 아니다.",
+          "topic": "수소 원자의 바닥상태 파동함수와 반지름 확률",
+          "question": {
+            "page": 16,
+            "rect": [
+              80,
+              135,
+              294,
+              176
+            ],
+            "statement_form": "수소 원자의 바닥상태 파동함수 ψ(r)=(πa₀³)^(-1/2) exp(-r/a₀)에 대해 ∫[a₀/2,∞] 4πr²|ψ(r)|² dr을 계산한다.",
+            "figures": [],
+            "original_multiple_choice_options_available": false
+          },
+          "solution": {
+            "page": 26,
+            "rect": [
+              80,
+              199,
+              515,
+              440
+            ],
+            "includes_provenance_label": true,
+            "answer": "5/(2e) ≈ 0.9196986",
+            "answer_source": "재수록 자료집의 풀이와 직접 적분으로 확인",
+            "derivation": [
+              "확률 밀도에 구면 껍질의 부피 요소를 곱하면 (4/a₀³) r² exp(-2r/a₀) dr이다.",
+              "u=2r/a₀로 치환하면 원하는 확률은 (1/2) ∫[1,∞] u²e^(-u) du이다.",
+              "∫[1,∞] u²e^(-u) du = [-e^(-u)(u²+2u+2)]₁^∞ = 5/e이므로 확률은 5/(2e), 약 91.97%이다."
+            ]
+          },
+          "visual_verification": {
+            "question_page_rendered": true,
+            "solution_page_rendered": true,
+            "rect_verified": true,
+            "note": "문제 rect는 자료집 16번만 포함한다. 풀이 rect는 16번 계산과 2021/1급 출처 문구를 포함하며 앞 문항 및 17번은 제외한다."
+          }
+        }
+      ]
+    }
+  ],
+  "leads_not_ready_for_exam_publication": [
+    {
+      "id": "2021-2-classical-Saycorn",
+      "status": "context_only",
+      "url": "https://saycorn.tistory.com/19",
+      "title": "2021 2차 물리인증제 고전역학 간단한 후기",
+      "author": "Saycorn",
+      "published_at": "2021-08-01T01:40:00+09:00",
+      "year": 2021,
+      "session": 2,
+      "course": "전문가과정 고전역학",
+      "provenance_kind": "first_person_exam_report",
+      "reported_question_count": 4,
+      "reported_duration_minutes": 105,
+      "parts": [
+        {
+          "number": 1,
+          "topic": "보존력장에서 속도 구하기",
+          "reconstructable": false
+        },
+        {
+          "number": 2,
+          "topic": "위치에너지와 보존력장",
+          "reconstructable": false
+        },
+        {
+          "number": 3,
+          "topic": "중력 위치에너지, 조화 법칙, 속도와 이동 시간",
+          "reconstructable": false
+        },
+        {
+          "number": 4,
+          "topic": "진동과 라그랑주 역학",
+          "reconstructable": false
+        }
+      ],
+      "reliability": "high_for_first_person_context_only",
+      "reason_not_usable": "저자가 문제를 쓰지 않고 유형만 기록했다고 명시하였다. 정확한 조건/상수/그림이 없으므로 문제를 새로 만들어 기출로 수록할 수 없다.",
+      "downloaded": false
+    },
+    {
+      "id": "2015-classical-hedgehog",
+      "status": "context_only",
+      "url": "https://gall.dcinside.com/board/view/?id=physicalscience&no=62051",
+      "title": "물리인증제 고전역학 expert 후기 (역학 전문가 익스퍼트)",
+      "author": "고슴토치",
+      "published_at": "2015-05-10T10:51:56+09:00",
+      "year": 2015,
+      "year_basis": "당시 직접 응시 후기의 게시일에 근거한 추정이며 본문에 연도/회차가 명시되지는 않는다.",
+      "session": null,
+      "course": "전문가과정 고전역학",
+      "provenance_kind": "first_person_exam_report",
+      "reported_question_count": 4,
+      "parts": [
+        {
+          "number": 1,
+          "topic": "이차함수 형태 경사면에 도달하는 포사체의 시간/거리/발사각",
+          "reconstructable": false
+        },
+        {
+          "number": 2,
+          "topic": "수직 원형 롤러코스터 최고점과 최저점의 수직항력",
+          "reconstructable": false
+        },
+        {
+          "number": 3,
+          "topic": "두 용수철과 두 물체의 진동",
+          "reconstructable": false
+        },
+        {
+          "number": 4,
+          "topic": "주어진 라그랑지안의 운동방정식",
+          "reconstructable": false
+        }
+      ],
+      "reliability": "medium_for_context_only",
+      "reason_not_usable": "주제와 시험 형식은 직접 후기로 확인되지만 함수/상수/도형/세부 질문이 없다. 정확한 문항으로 재구성할 근거가 부족하다.",
+      "downloaded": false
+    },
+    {
+      "id": "2021-explosion-Orbi",
+      "status": "needs_verification",
+      "url": "https://orbi.kr/00036485156",
+      "title": "물리 문제 하나만 풀어주실 분?",
+      "author": "서리질러",
+      "published_at": "2021-02-27T16:14:12+09:00",
+      "year": 2021,
+      "session": null,
+      "course": null,
+      "provenance_kind": "second_hand_question_recall",
+      "reported_question_count": 1,
+      "topic": "수직으로 던진 물체가 최고점에서 같은 질량 두 조각으로 분열할 때 도달 시간 차이",
+      "reliability": "low",
+      "reason_not_usable": "이번 물리인증제 문제라고 전달받았다는 표현이며 과정/회차가 없고 분열 전후 운동에너지 조건의 의미가 불분명하다. 검색 결과의 공개 텍스트는 확인했지만 본문 열람은 403이었다.",
+      "downloaded": false
+    },
+    {
+      "id": "iteach4u-electromagnetism-6939",
+      "status": "login_required",
+      "url": "https://www.iteach4u.kr/2014/exammaterials/?no=6939",
+      "title": "물리인증제 전자기학 기출",
+      "author": "이루미 (현재 탈퇴회원 표기)",
+      "published_at": "2021-02-28T01:32:13+09:00",
+      "year": null,
+      "course": "전자기학이라고 제목에 표시되나 실제 파일 미확인",
+      "attachment_name": "물리 인증제 전자기학.hwp",
+      "attachment_size_display": "7.72 MB",
+      "normal_download_url": "https://www.iteach4u.kr/2014/exammaterials/download_server2.php?fileno=1&no=6939",
+      "access_observation": "정상 다운로드 링크는 회원 전용/로그인 안내 HTML을 반환했다. 파일 확보를 시도하며 제한을 우회하지 않았다.",
+      "reliability": "unverified_attachment",
+      "reason_not_usable": "파일을 확인하지 못해 실제 시험 연도/회차/문항/공식 여부를 판단할 수 없다. 목록의 (2020)은 분류 메타데이터일 수 있으므로 시험 연도로 확정하지 않는다. 사이트 AI 요약도 원문 근거로 채택하지 않는다.",
+      "downloaded": false
+    },
+    {
+      "id": "old-official-sample-withexam-6354",
+      "status": "unavailable_official_lead",
+      "url": "http://kphc.kps.or.kr/bbs/index.asp?bbs_code=withexam&page=1&number=6354&mode=view",
+      "title": "물리인증제 일반과정 예시 문제로 연결되던 공식 게시판",
+      "author": "한국물리학회 (연결된 공식 사이트)",
+      "secondary_source_url": "https://sciense.tistory.com/31",
+      "secondary_source_author": "베르나르단테",
+      "secondary_source_published_at": "2021-05-25",
+      "year": null,
+      "session": null,
+      "course": "일반과정 예시",
+      "access_observation": "기존 공식 도메인의 원문을 읽을 수 없었고, 공개 웹 아카이브 CDX 조회도 시간 초과였다. 첨부 파일 URL은 확보하지 못했다.",
+      "reason_not_usable": "예시 문제의 존재를 가리키는 링크만 있고 실제 문항을 확보하지 못했다. 기출 시험 원문인지도 확인할 수 없다.",
+      "downloaded": false
+    },
+    {
+      "id": "2022-Rasch-2021-grade12-study",
+      "status": "academic_lead_not_question_source",
+      "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002889793",
+      "title": "Rasch 모형을 적용한 문항분석 및 차별기능문항 탐색 - 2021학년도 물리인증제 1-2급을 바탕으로 -",
+      "author": "안선영",
+      "publication": "문화와융합 44(10), 147-159, 2022",
+      "exam_year": 2021,
+      "exam_month": 2,
+      "course": "일반과정 1-2급",
+      "reason_not_usable": "초록에서 2021년 2월 597명의 응답 분석을 확인했다. 공개 상세 페이지에서는 실제 문항을 확인하지 못했고 정상 공개 원문 PDF URL도 확보하지 못했다.",
+      "downloaded": false
+    }
+  ],
+  "rejected_false_positive_sources": [
+    {
+      "url": "https://www.npsm-kps.org/journal/view.html?volume=68&number=6&spage=599&year=2018",
+      "normal_pdf_url": "https://www.npsm-kps.org/journal/download_pdf.php?doi=10.3938/NPSM.68.599",
+      "title": "물리인증제의 합리적 합격 준거 설정 방법에 대한 Modified Angoff, Bookmark, IDM 방법 비교 연구",
+      "author": "안선영, 최수봉",
+      "publication": "새물리 68(6), 599-610, 2018",
+      "reason": "공개 PDF 12쪽을 확인했다. 2017년 2급의 비공개 25문항을 분석하는 통계 연구이며 실제 시험 문항을 수록하지 않는다. 2018년은 출판 연도이며 시험 연도로 오인하지 않는다."
+    },
+    {
+      "url": "https://www.scribd.com/document/885300449/2009%25E1%2584%2586%25E1%2585%25AE%25E1%2586%25AF%25E1%2584%258E%25E1%2585%25A5%25E1%2586%25B7",
+      "reason": "제목의 숫자 때문에 오래된 시험 PDF처럼 검색되지만 한국물리학회 2020년 9월 잡지다. 인증제 관련 기사/운영 소식이며 기출 문항이 아니다."
+    },
+    {
+      "url": "https://www.scribd.com/document/936977311/202209%25E1%2584%2586%25E1%2585%25AE%25E1%2586%25AF%25E1%2584%258E%25E1%2585%25A5%25E1%2586%25B7",
+      "reason": "한국물리학회 2022년 9월 잡지이며 물리인증제 시험지 원문이 아니다."
+    }
+  ]
+}
