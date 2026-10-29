@@ -108,6 +108,8 @@ const KEY = C + Y, THY = Q.get("m") === "t";
 /* a combined exam (NBPhO): these tasks are the theory of the booklet and get theory sheets */
 const TT = new Set((Q.get("tt") || "").split(",").filter(Boolean)), thy = task => THY || TT.has(task);
 const ANS = (Q.get("a") || "").split("|").map(s => s.trim());
+/* a theory exam's working sheet (one for the whole paper), where there is one — the Korean ones the translators made */
+const WS = /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(Q.get("w") || "") ? Q.get("w") : "";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 const T = {
   ko: { h: "답안지 · Working sheet 인쇄", ans: "Answer sheet", work: "Working sheet", per: "실험마다 Working sheet", pages: "쪽", print: "인쇄 / PDF로 저장",
@@ -167,6 +169,8 @@ function official() {
       ? `<div class="o"><b>${esc(task)}</b><div>${T.offA}<small>${esc(T.thyOff)}</small></div>
          <a href="${PDF_BASE + esc(ANS[i])}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`
       : `<div class="o"><b>${esc(task)}</b><div><small>${T.ownA}</small></div></div>`));
+    if (WS) rows.push(`<div class="o"><b>${esc(TASKS.join(" + "))}</b><div>${T.offW}</div>
+         <a href="${PDF_BASE + esc(WS)}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`);
     document.getElementById("off").innerHTML = rows.join("");
     return;
   }
@@ -178,7 +182,7 @@ function official() {
   }
   document.getElementById("off").innerHTML = (Object.keys(OFF).length ? `<p class="hint" style="margin:0;padding:0">${T.offHint}</p>` : "") + rows.join("");
 }
-const hasOff = (task, kind) => THY ? kind === "answer" && !!ANS[TASKS.indexOf(task)] : !!((OFF[task] || {})[kind] || []).length;
+const hasOff = (task, kind) => THY ? (kind === "answer" ? !!ANS[TASKS.indexOf(task)] : !!WS) : !!((OFF[task] || {})[kind] || []).length;
 function build() {
   const out = [];
   official();

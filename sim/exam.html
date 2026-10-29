@@ -381,6 +381,7 @@ const EX = {
   c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
   marks: split("k", "|"), answers: split("a", "|"), nos: split("o", "|"), skip: Q.get("x") || "",
+  working: Q.get("w") || "",                                                     // a theory exam's working sheet, where there is one
 };
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
@@ -392,7 +393,7 @@ const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : /^pdfx\//.test(s) ? ".
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
 /* the printable answer and working sheets (sheets.html) — the problem sheet is not among them */
 const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y, n: EX.name || EX.c.toUpperCase(), e: EX.tasks.join(","), t: EX.titles.join("|"), lang,
-  ...(THY ? { m: "t", a: EX.answers.join("|") } : MIX ? { tt: EX.tasks.filter((x, i) => isThy(i)).join(",") } : {}) }).toString();
+  ...(THY ? { m: "t", a: EX.answers.join("|"), ...(EX.working ? { w: EX.working } : {}) } : MIX ? { tt: EX.tasks.filter((x, i) => isThy(i)).join(",") } : {}) }).toString();
 const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
 const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
 /* the address to come back to (kept on the server with the session), without the language */
