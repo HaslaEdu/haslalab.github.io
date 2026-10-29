@@ -8,6 +8,8 @@
      competition time shared out evenly over its problems, times the experiments sat:
      total / problems × experiments.  The competition was one five-hour round in 2003–2005 and online
      in 2020–2021, and two five-hour rounds in the other years (each round ends with its experiment).
+   - IZhO: the experimental round's own length on its paper — 3 hours, 4 hours in 2022, 2023 and 2026
+     (2021, a computer experiment done by hand, states none: 3 hours).
    - A theory exam (the year's written paper, sat at once): five hours as at IPhO, APhO, IChO, IOAA and most others;
      three hours for USAPhO, IJSO, IBO, IESO and OPhO, whose theory papers are shorter.
    - NBPhO's combined exam (its experiments and the rest of its booklet, as on the day): the year's whole competition time. */
@@ -25,6 +27,7 @@
     if (comp === 'usapho' && +year === 2022) return 3 * 3600;
     if (comp === 'rmph') return 4.5 * 3600;
     if (comp === 'nbpho' && NBPHO[year]) return Math.round(NBPHO[year][0] / NBPHO[year][1] * n) * 60;
+    if (comp === 'izho') return ([2022, 2023, 2026].indexOf(+year) >= 0 ? 4 : 3) * 3600;
     return 5 * 3600;
   }
   /* «5시간», «2시간 13분» / «5 hours», «2 h 13 min» */

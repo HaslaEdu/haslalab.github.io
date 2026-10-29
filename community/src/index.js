@@ -1003,7 +1003,8 @@ async function labByToken(req, env, id) {
 /* how long an exam lasts — the same table as examdur.js on the site (keep the two alike): five hours as
    at IPhO; OPhO and the USAPhO 2022 selection test three hours; RMPh 4 h 30 min (its contest day); NBPhO the
    year's competition time shared over its problems, times the experiments sat (no time is published for
-   the experiments alone; one 5-hour round in 2003–2005 and online in 2020–2021, two rounds otherwise) */
+   the experiments alone; one 5-hour round in 2003–2005 and online in 2020–2021, two rounds otherwise); IZhO
+   its experimental round's length on the paper, 3 hours, 4 in 2022, 2023 and 2026 */
 const NBPHO_TIME = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600, 8], 2007: [600, 8], 2008: [600, 10],
   2009: [600, 10], 2010: [600, 11], 2011: [600, 9], 2012: [600, 10], 2013: [600, 10], 2014: [600, 10], 2015: [600, 10],
   2016: [600, 10], 2017: [600, 10], 2018: [600, 9], 2019: [600, 8], 2020: [300, 5], 2021: [300, 4], 2022: [600, 9],
@@ -1020,6 +1021,7 @@ function labExamSec(comp, year, n, theory) {
   if (comp === "usapho" && +year === 2022) return 3 * 3600;
   if (comp === "rmph") return 4.5 * 3600;
   if (comp === "nbpho" && NBPHO_TIME[year]) return Math.round(NBPHO_TIME[year][0] / NBPHO_TIME[year][1] * n) * 60;
+  if (comp === "izho") return ([2022, 2023, 2026].indexOf(+year) >= 0 ? 4 : 3) * 3600;
   return 5 * 3600;
 }
 /* which kind of exam a session is: a theory paper's tasks are marked kind "theory" in its sources when it starts */
