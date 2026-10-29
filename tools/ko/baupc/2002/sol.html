@@ -1,0 +1,110 @@
+<style>h2,h3{break-after:avoid;page-break-after:avoid}</style>
+<h1>BAUPC 2002 해설</h1>
+<p class="note">제8회 Boston Area Undergraduate Physics Competition, 2002년 4월 27일 — 풀이(Solutions)</p>
+
+<h2>문제 1</h2>
+<h3>(a)</h3>
+<p>$A$를 가열하면 물은 $B$에서 $A$로 흐른다. 그 이유는 다음과 같이 알 수 있다. 깊이 $h$에서의 압력은 $P=\rho gh$로 주어진다. $A$의 물이 팽창하면 높이 $h$는 증가하지만 밀도 $\rho$는 감소한다. 곱 $\rho h$는 어떻게 되는가? 밀도는 $1/A$에 비례하는데, 여기서 $A$는 사다리꼴 단면의 넓이이다. 그런데 $A=wh$이며, 여기서 $w$는 높이의 절반에서의 폭이다. 따라서 $P=\rho gh\propto h/A=1/w$이다. 그리고 수위가 올라갈수록 $w$가 증가하므로 $A$ 안의 압력은 감소하고, 물은 $B$에서 $A$로 흐른다.</p>
+<h3>(b)</h3>
+<p>$B$를 가열해도 물은 역시 $B$에서 $A$로 흐른다. 위와 같은 논리가 여기서도 통하는데, 다만 이번에는 용기 $B$의 $w$가 <i>감소</i>하므로 $B$ 안의 압력이 <i>증가</i>하고, 따라서 물은 역시 $B$에서 $A$로 흐른다.</p>
+
+<h2>문제 2</h2>
+<p>줄의 장력(tension)을 $F$라 하자. (질량이 있는 곳에서) 줄과 점선 원의 반지름 사이의 각은 $\theta=\sin^{-1}(r/R)$이다. $\theta$로 나타내면, 지름 방향과 접선 방향의 $F=ma$ 방정식은</p>
+\[\begin{aligned}F\cos\theta&=mv^2/R,\qquad\text{그리고}\\F\sin\theta&=m\dot v.\end{aligned}\tag{1}\]
+<p>두 번째 식을 $F$에 대해 풀어 첫 번째 식에 대입하면</p>
+\[\frac{m\dot v\cos\theta}{\sin\theta}=\frac{mv^2}{R}.\tag{2}\]
+<p>변수를 분리하여 적분하면</p>
+\[\begin{aligned}\int_{v_0}^v\frac{dv}{v^2}&=\frac{\tan\theta}{R}\int_0^tdt\\\Longrightarrow\quad\frac1{v_0}-\frac1v&=\frac{\tan\theta}{R}t\\\Longrightarrow\quad v&=\left(\frac1{v_0}-\frac{\tan\theta}{R}t\right)^{-1}.\end{aligned}\tag{3}\]
+<p>$v$는 다음일 때 무한대가 된다는 것에 유의하라.</p>
+\[t=T\equiv\frac{R}{v_0\tan\theta}.\tag{4}\]
+<p>다시 말해, 질량이 원하는 원을 따라 계속 움직이게 할 수 있는 것은 시각 $T$까지뿐이다. 그 뒤로는 불가능하다. (물론 실제로는 $v$가 무한대가 되기 훨씬 전에 불가능해질 것이다.)</p>
+<p>전체 거리 $d=\int v\,dt$는 무한대이다. $t$가 $T$에 다가갈 때 이 적분이 (로그처럼) (간신히) 발산하기 때문이다.</p>
+
+<h2>문제 3</h2>
+<p>처음 속력을 $V$라 하자. 그러면 수평 속력과 처음 수직 속력은 각각 $V\cos\theta$와 $V\sin\theta$이다. 공중에서 이동한 거리가 다음과 같은 표준적인 결과임은 쉽게 보일 수 있다.</p>
+\[d_{\rm air}=\frac{2V^2\sin\theta\cos\theta}{g}.\tag{5}\]
+<p>땅 위에서 이동한 거리를 구하려면 충돌 직후의 수평 속력을 구해야 한다. 충돌하는 동안 수직 속력을 $V\sin\theta$에서 0으로 줄이는 것은 땅이 가하는 수직항력(normal force) $N$이다. 따라서</p>
+\[\int N\,dt=mV\sin\theta,\tag{6}\]
+<p>이며, 여기서 적분은 충돌 시간에 걸쳐 취한다. 그런데 이 수직항력은 ($\mu$를 곱하여 수평 마찰력이 될 때) 충돌하는 동안 수평 속력도 갑자기 감소시킨다. 따라서</p>
+\[m\Delta v_x=-\int(\mu N)\,dt=-\mu mV\sin\theta\qquad\Longrightarrow\qquad\Delta v_x=-\mu V\sin\theta.\tag{7}\]
+<p>(충돌의 짧은 시간 동안 중력 $mg$의 효과는 충격력 $N$보다 훨씬 작으므로 무시하였다.) 따라서 벽돌은 다음 속력으로 미끄러지는 운동을 시작한다.</p>
+\[v=V\cos\theta-\mu V\sin\theta.\tag{8}\]
+<p>이것은 $\tan\theta\le1/\mu$일 때에만 성립한다는 것에 유의하라. $\theta$가 이보다 크면 수평 속력은 그냥 0이 되고 벽돌은 더 이상 움직이지 않는다. (식 (8)은 $v$에 음수 값을 줄 것이다.)</p>
+<p>이 시점부터 마찰력은 $\mu mg$이므로 가속도는 $a=-\mu g$이다. 땅 위에서 이동한 거리는 쉽게 다음과 같음을 보일 수 있다.</p>
+\[d_{\rm ground}=\frac{(V\cos\theta-\mu V\sin\theta)^2}{2\mu g}.\tag{9}\]
+<p>전체 거리 $d_{\rm total}=d_{\rm air}+d_{\rm ground}$를 최대로 하는 각을 구하려 한다. 식 (5)와 (9)로부터</p>
+\[\begin{aligned}d_{\rm total}&=\frac{V^2}{2\mu g}\Big(4\mu\sin\theta\cos\theta+(\cos\theta-\mu\sin\theta)^2\Big)\\&=\frac{V^2}{2\mu g}(\cos\theta+\mu\sin\theta)^2.\end{aligned}\tag{10}\]
+<p>$\theta$에 대해 미분하면, 전체 거리가 최대가 되는 것은 다음일 때임을 알 수 있다.</p>
+\[\tan\theta=\mu.\tag{11}\]
+<p>그러나 위의 분석은 (식 (8) 뒤의 언급에 따라) $\tan\theta\le1/\mu$일 때에만 유효하다는 것에 유의하라. 따라서 다음을 알 수 있다.</p>
+<ul>
+<li>$\mu&lt;1$이면 최적의 각은 $\tan\theta=\mu$로 주어진다. (벽돌은 충돌 뒤에도 계속 미끄러진다.)</li>
+<li>$\mu\ge1$이면 최적의 각은 $\theta=45^\circ$이다. (벽돌은 충돌 뒤에 멈추며, $\theta=45^\circ$가 식 (5)의 $d_{\rm air}$ 표현에 최댓값을 준다.)</li>
+</ul>
+
+<h2>문제 4</h2>
+<p>이 문제의 핵심은, 판이 어떤 정지점을 중심으로 팽창하지만 수축할 때는 다른 점을 중심으로 수축한다는 것이다(그래서 결국 자벌레(inchworm)처럼 지붕을 따라 내려간다). 이 두 점의 위치를 구해야 한다.</p>
+<p>먼저 팽창을 생각하자. 정지점이 위끝으로부터 거리 $a$, 아래끝으로부터 거리 $b$에 있다고 하자(따라서 $a+b=\ell$). 질량이 $m(b/\ell)$인 판의 아랫부분은 지붕을 따라 아래로 움직일 것이다. 따라서 이 부분은 크기가 $\mu N=\mu m(b/\ell)g\cos\theta$인 위 방향 마찰력을 받는다. 마찬가지로 질량이 $m(a/\ell)$인 윗부분은 크기가 $\mu m(a/\ell)g\cos\theta$인 아래 방향 마찰력을 받는다.</p>
+<p>판은 가속되지 않으므로, 이 두 마찰력의 차는 지붕을 따라 아래로 향하는 중력, 즉 $mg\sin\theta$와 같아야 한다. 따라서</p>
+\[\begin{aligned}\mu m\left(\frac{b-a}{\ell}\right)g\cos\theta&=mg\sin\theta\\\Longrightarrow\quad b-a&=\frac{\ell\tan\theta}{\mu}.\end{aligned}\tag{12}\]
+<p>이것은 $b&gt;a$임을 뜻한다는 것에 유의하라. 또한 $b-a$는 당연히 $\ell$보다 클 수 없다는 것에 유의하라. 따라서 $\tan\theta&gt;\mu$이면 $a$와 $b$의 해가 없으므로 힘들이 균형을 이룰 수 없고, 판은 지붕을 따라 가속되어 내려간다. (이 $\tan\theta&gt;\mu$ 결과는 물론 경사면 위 물체의 평형에 대한 일반적인 결과이다.)</p>
+<p>물체가 수축할 때도 위의 분석은 모두 성립하지만, 이번에는 $a$와 $b$의 역할이 뒤바뀐다. 이제 정지점은 아래끝에 더 가깝다. $a$와 $b$를 위와 같은 방식으로 정의하면, (직접 확인할 수 있듯이) 다음을 얻는다.</p>
+\[a-b=\frac{\ell\tan\theta}{\mu}.\tag{13}\]
+<p>식 (12)와 (13)을 함께 놓으면, 팽창의 정지점($P_{\rm e}$)과 수축의 정지점($P_{\rm c}$)은 다음 거리만큼 떨어져 있다.</p>
+\[d=\frac{\ell\tan\theta}{\mu}.\tag{14}\]
+<p>팽창하는 동안 점 $P_{\rm c}$는 다음 거리만큼 아래로 움직이고</p>
+\[\epsilon=\alpha d\,\Delta T=\frac{\alpha\ell\tan\theta\Delta T}{\mu}.\tag{15}\]
+<p>수축하는 동안에는 고정되어 있다. (동등하게 말하면, 판의 중심은 팽창과 수축 각각에서 이 거리의 절반만큼 아래로 움직인다.) 따라서 한 번의 완전한 순환(즉 24시간) 동안 판은 위에서 구한 거리 $\epsilon$만큼 아래로 움직인다.</p>
+<p>주어진 수치를 대입하면, 판이 1년 동안 움직이는 거리는 다음과 같다.</p>
+\[(365)\epsilon=\frac{(365)(17\cdot10^{-6}\,({\rm C}^\circ)^{-1})(1\,{\rm m})(\tan30^\circ)(10^\circ{\rm C})}{1}\approx0.036\,{\rm m}=3.6\,{\rm cm}.\tag{16}\]
+
+<h2>문제 5</h2>
+<h3>(a)</h3>
+<p>영상 전하(image charge)는 주어진 전하보다 거리 $v\tau$만큼 뒤처진다. 따라서 피타고라스 정리(Pythagorean theorem)에 의해 두 전하 사이의 거리는 $d=\sqrt{(2r)^2+(v\tau)^2}$이다. (판에 평행한) 등속 운동을 유지하는 데 필요한 힘은 두 전하 사이의 쿨롱 힘(Coulomb force)의 음수이다. 따라서 구하는 힘은</p>
+\[F=\frac{kq^2}{d^2}=\frac{kq^2}{4r^2+v^2\tau^2}.\tag{17}\]
+<p>이 힘은 판의 법선에 대해 각 $\theta$를 이루는 방향을 향하며, $\theta$는 다음으로 주어진다.</p>
+\[\tan\theta=\frac{v\tau}{2r}.\tag{18}\]
+<h3>(b)</h3>
+<p>위 힘의 $\mathbf v$ 방향 성분은</p>
+\[F_v\equiv F\sin\theta=\frac{kq^2}{4r^2+v^2\tau^2}\left(\frac{v\tau}{\sqrt{4r^2+v^2\tau^2}}\right).\tag{19}\]
+<p>작은 양 $v\tau$의 1차까지는 분모의 $v\tau$ 항을 무시할 수 있다. 따라서</p>
+\[F_v\approx\frac{kq^2v\tau}{8r^3}.\tag{20}\]
+<p>이것이 감쇠력(damping force) $\mathbf F=-\gamma\mathbf v$를 이겨 내는 데 필요한 힘이다. 따라서</p>
+\[\gamma=\frac{kq^2\tau}{8r^3}.\tag{21}\]
+<h3>(c)</h3>
+<p>판에 수직인 운동에서는, 영상 전하가 뒤처져 움직이므로 두 전하 사이의 거리는 $2r+v\tau$가 된다. 따라서 두 전하 사이의 힘은</p>
+\[F=\frac{kq^2}{(2r+v\tau)^2}\approx\frac{kq^2}{4(r^2+rv\tau)}\approx\frac{kq^2(r^2-rv\tau)}{4r^4}=\frac{kq^2}{4r^2}-\frac{kq^2v\tau}{4r^3}.\tag{22}\]
+<p>인력이 $v$가 0일 때보다 약간 작다는 것을 알 수 있다. 이것은 감쇠력 $\mathbf F=-\gamma\mathbf v$ 때문이며, 여기서</p>
+\[\gamma=\frac{kq^2\tau}{4r^3}.\tag{23}\]
+
+<h2>문제 6</h2>
+<p>시간의 함수로서 줄의 길이와 줄이 기둥과 이루는 각을 각각 $\ell$과 $\theta$라 하자.</p>
+<p>이 문제를 푸는 데 필요한 두 가지 사실은 (1) 지름 방향의 $F=ma$ 방정식과 (2) 에너지 보존 진술이다.</p>
+<p>어느 순간의 운동이든 (반지름 $\ell\sin\theta$인) 수평 원으로 근사하면, 줄이 가하는 수직 방향 힘은 $mg$이고 따라서 수평 방향 힘은 $mg\tan\theta$이다. 따라서 지름 방향의 $F=ma$ 방정식은</p>
+\[\frac{mv^2}{\ell\sin\theta}=mg\tan\theta.\tag{24}\]
+<p>에너지 보존에 따르면 운동 에너지(KE)의 변화와 퍼텐셜 에너지(PE)의 변화의 합은 0이다. 지금은 KE의 변화를 간단히 $d(mv^2/2)$로 쓰자. PE의 변화가 $mg\ell\sin\theta\,d\theta$로 주어진다고 주장한다. 이는 다음과 같이 알 수 있다.</p>
+<p>접점으로부터 줄을 따라 작은 거리 $d\ell$만큼 아래에 표시를 해 두자. 짧은 시간 뒤에 이 표시가 접점이 된다. 이 과정 동안 이 표시의 높이는 (적어도 1차까지는) 변하지 <i>않는다</i>. 그 이유는, 처음에 표시는 처음 접점보다 높이 $\ell\cos\theta$만큼 아래에 있기 때문이다. 그리고 표시가 접점이 될 때에도 각은 여전히 $\theta$에 매우 가까우므로 표시는 (1차까지) 여전히 처음 접점보다 그만큼 아래에 있으며, 따라서 오차는 $d\ell\,d\theta$ 차수가 된다.</p>
+<p>(높이가 실질적으로 일정한) 이 표시에 대한 공의 높이 변화는, 공중에 있는 길이 $\ell-d\ell$의 줄이 각 $d\theta$만큼 위로 “휘둘려” 올라가기 때문에 생긴다. 이 호의 수직 성분을 얻기 위해 $\sin\theta$를 곱하면, 높이 변화는 $((\ell-d\ell)d\theta)\sin\theta$이다. 이는 1차까지 $\ell\sin\theta\,d\theta$와 같으며, 이것이 보이려던 것이다.</p>
+<p>따라서 에너지 보존으로부터</p>
+\[\frac12d(mv^2)+mg\ell\sin\theta\,d\theta=0.\tag{25}\]
+<p>이제 식 (24)와 (25)를 이용해 $\ell$을 $\theta$의 함수로 구하자. 식 (24)의 $v^2$을 식 (25)에 대입하면</p>
+\[\begin{aligned}&d(\ell\sin\theta\tan\theta)+2\ell\sin\theta\,d\theta=0\\\Longrightarrow\quad&(d\ell\sin\theta\tan\theta+\ell\cos\theta\tan\theta\,d\theta+\ell\sin\theta\sec^2\theta)+2\ell\sin\theta\,d\theta=0\\\Longrightarrow\quad&d\ell\frac{\sin^2\theta}{\cos\theta}+3\ell\sin\theta\,d\theta+\ell\frac{\sin\theta}{\cos^2\theta}=0\\\Longrightarrow\quad&\int\frac{d\ell}{\ell}=-\int\frac{3\cos\theta\,d\theta}{\sin\theta}-\int\frac{d\theta}{\sin\theta\cos\theta}\\\Longrightarrow\quad&\ln\ell=-3\ln(\sin\theta)+\ln\left(\frac{\cos\theta}{\sin\theta}\right)+C\\\Longrightarrow\quad&\ell=A\frac{\cos\theta}{\sin^4\theta},\qquad\text{여기서}\quad A=L\left(\frac{\sin^4\theta_0}{\cos\theta_0}\right)\end{aligned}\tag{26}\]
+<p>는 초기 조건, 즉 $\theta=\theta_0$일 때 $\ell=L$로부터 정해진다. 이 결과는 공이 기둥에 부딪힐 때(즉 $\ell=0$일 때) $\theta=\pi/2$임을 뜻한다는 것에 유의하라. 위의 넷째 줄의 마지막 적분은 여러 방법으로 구할 수 있다. 한 가지는 $\cos\theta/\cos\theta$를 곱한 다음, $d\theta/\cos^2\theta=d(\tan\theta)$임에 주목하는 것이다.</p>
+<p class="note">(역주: 원문 식 (26)의 둘째 줄과 셋째 줄의 마지막 항($\ell\sin\theta\sec^2\theta$, $\ell\sin\theta/\cos^2\theta$)에는 $d\theta$가 빠져 있으며, 여기서는 원문 그대로 옮겼다.)</p>
+<p>이제 공이 기둥에 부딪히는 위치를 구하자. 줄의 작은 조각이 덮는 수직 거리는 $dy=d\ell\cos\theta$이다. 따라서 공은 (꼭대기에 대해) 다음 $y$ 값에서 기둥에 부딪힌다.</p>
+\[y=\int d\ell\cos\theta=A\int d\left(\frac{\cos\theta}{\sin^4\theta}\right)\cos\theta,\tag{27}\]
+<p>여기서 적분은 $\theta_0$부터 $\pi/2$까지 취하고, $A$는 식 (26)에 주어져 있다. 이제 부분 적분(integration by parts)을 하면</p>
+\[\begin{aligned}\frac yA&=\left(\frac{\cos\theta}{\sin^4\theta}\right)\cos\theta-\int\left(\frac{\cos\theta}{\sin^4\theta}\right)(-\sin\theta)\,d\theta\\&=\frac{\cos^2\theta}{\sin^4\theta}+\int\frac{\cos\theta}{\sin^3\theta}\,d\theta\\&=\left(\frac{\cos^2\theta}{\sin^4\theta}-\frac{1}{2\sin^2\theta}\right)\Bigg|_{\theta_0}^{\pi/2}.\end{aligned}\tag{28}\]
+<p>식 (26)에 주어진 $A$의 값을 쓰면</p>
+\[\begin{aligned}y&=L\left(\frac{\sin^4\theta_0}{\cos\theta_0}\right)\left(-\frac12-\left(\frac{\cos^2\theta_0}{\sin^4\theta_0}-\frac{1}{2\sin^2\theta_0}\right)\right)\\&=L\left(\frac{\sin^4\theta_0}{\cos\theta_0}\right)\left(-\frac{\cos^2\theta_0}{\sin^4\theta_0}+\frac{\cos^2\theta_0}{2\sin^2\theta_0}\right)\\&=-L\cos\theta_0\left(1-\frac{\sin^2\theta_0}{2}\right).\end{aligned}\tag{29}\]
+<p>공은 위치 $y=-L\cos\theta_0$에서 출발하므로, 운동하는 동안 거리 $\Delta y=(1/2)L\cos\theta_0\sin^2\theta_0$만큼 올라간다는 것을 알 수 있다. (이 높이 변화는 공교롭게도 $\tan\theta_0=\sqrt2$일 때 최대이며, 이때 $\Delta y=L/3\sqrt3$이다.)</p>
+<p>에너지 보존에 의해, 나중 속력은 다음으로부터 구할 수 있다.</p>
+\[\frac12mv_f^2=\frac12mv_i^2-mg\left(\frac12L\cos\theta_0\sin^2\theta_0\right)\tag{30}\]
+<p>식 (24)로부터</p>
+\[v_i^2=gL\frac{\sin^2\theta_0}{\cos\theta_0}.\tag{31}\]
+<p>따라서</p>
+\[\begin{aligned}\frac12mv_f^2&=\frac12mgL\frac{\sin^2\theta_0}{\cos\theta_0}-\frac12mgL\cos\theta_0\sin^2\theta_0\\&=\frac12mgL\sin^2\theta_0\left(\frac1{\cos\theta_0}-\cos\theta_0\right)\\&=\frac12mgL\frac{\sin^4\theta_0}{\cos\theta_0}.\end{aligned}\tag{32}\]
+<p>그러므로</p>
+\[v_f^2=gL\frac{\sin^4\theta_0}{\cos\theta_0}.\tag{33}\]
+<p>식 (31)과 (33)을 결합하면, 마침내</p>
+\[\frac{v_f}{v_i}=\sin\theta_0.\tag{34}\]

@@ -1,0 +1,121 @@
+<h1>문제 II. 자전거 펌프 (Bicycle pump)</h1>
+<p style="text-align:center"><i>채점 기준(Marking scheme)</i><br><i>올바른 풀이라면 어떤 방법이든 점수를 준다.</i></p>
+
+<h2>과제 1</h2>
+
+<h3>1.a. <span class="pt">0.80 pt</span></h3>
+<p>대기압 $p_0$, 온도 $T_0$에서 처음에 타이어 안에 들어 있는 공기의 몰수에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\nu_{initial}=\frac{p_0\cdot V_r}{R\cdot T_0}\]
+<p>펌프질 한 번(한 주기)마다 타이어 안으로 넣어지는 공기의 몰수에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}\nu_0=\dfrac{p_0\cdot V_p}{R\cdot T_0}\\[2mm] \nu_0=\dfrac{p_0\cdot V_r}{R\cdot T_0\cdot N}\end{cases}\]
+<p>학생이 손으로 움직이는 피스톤이 달린 펌프로 공기를 $k$번 넣은 뒤 타이어 안에 있는 공기의 몰수 $\nu_k$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\nu_k=\nu_{initial}+k\cdot\nu_0\]
+<div><span class="pt">0.20 pt</span>\[\nu_k=\frac{p_0\cdot V_r}{R\cdot T_0}\cdot\left(1+\frac{k}{N}\right)\]</div>
+
+<h3>1.b. <span class="pt">0.40 pt</span></h3>
+<p>학생이 공기를 $k$번 넣은 뒤 타이어 안 공기의 압력 $p_k$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[p_k\cdot V_r=\nu_k\cdot R\cdot T_0\]
+<div><span class="pt">0.20 pt</span>\[p_k=p_0\cdot\frac{N+k}{N}\]</div>
+
+<h3>1.c. <span class="pt">0.40 pt</span></h3>
+<p>자전거 펌프 안에 있는 공기에 등온 변화(isothermal transformation) 법칙을 적용 <span class="pt">0.20 pt</span></p>
+\[p_0\cdot\frac{V_r}{N}=p_k\cdot S\cdot\left(\ell-x_{k+1}\right)\]
+<div><span class="pt">0.20 pt</span>\[x_{k+1}=\ell\cdot\frac{k}{N+k}\]</div>
+
+<h3>1.d. <span class="pt">0.60 pt</span></h3>
+<div><span class="pt">0.20 pt</span>\[p_0\cdot\frac{V_r}{N}=p(x)\cdot\frac{V_r}{N\cdot\ell}\cdot(\ell-x),\quad 0\le x\le\frac{k\cdot\ell}{N+k}\ \text{일 때}\]</div>
+<div><span class="pt">0.20 pt</span>\[p(x)\cdot\left[V_r+(\ell-x)\cdot\frac{V_r}{N\cdot\ell}\right]=p_{k+1}\cdot V_r,\quad \frac{k\cdot\ell}{N+k}&lt;x\le\ell\ \text{일 때}\]</div>
+<div><span class="pt">0.20 pt</span>\[p(x)=\begin{cases}\dfrac{p_0}{\left(1-\dfrac{x}{\ell}\right)}, &amp; 0\le x\le\dfrac{k\cdot\ell}{N+k}\\[5mm] \dfrac{p_0\cdot(N+k+1)}{(N+1)-\dfrac{x}{\ell}}, &amp; \dfrac{k\cdot\ell}{N+k}&lt;x\le\ell\end{cases}\]</div>
+
+<h3>1.e. <span class="pt">0.80 pt</span></h3>
+<div><span class="pt">0.20 pt</span>\[p'(x)=\begin{cases}\dfrac{p_0/\ell}{\left(1-\dfrac{x}{\ell}\right)^2}, &amp; 0\le x&lt;\dfrac{k\cdot\ell}{N+k}\\[5mm] \dfrac{p_0\cdot(N+k+1)/\ell}{\left[(N+1)-\dfrac{x}{\ell}\right]^2}, &amp; \dfrac{k\cdot\ell}{N+k}&lt;x\le\ell\end{cases}\]</div>
+<p><i>관찰: 함수 $p(x)$의 1계 도함수는 정의역 전체에서 양수이다.</i></p>
+<div><span class="pt">0.20 pt</span>\[\begin{cases}p_s'(x_k)=\dfrac{p_0/\ell}{\left(1-\dfrac{k}{N+k}\right)^2}=\dfrac{p_0\cdot(N+k)^2}{\ell\cdot N^2}\\[5mm] p_d'(x_k)=\dfrac{p_0\cdot(N+k+1)/\ell}{\left[(N+1)-\dfrac{x}{\ell}\right]^2}=\dfrac{p_0\cdot(N+k)^2}{\ell\cdot N^2\cdot(N+k+1)}\end{cases}\]</div>
+<p><i>관찰: 밸브가 열리는 점의 왼쪽과 오른쪽에서 압력은 꺾인 점(angular point)을 보인다.</i></p>
+<div><span class="pt">0.20 pt</span>\[p''(x)=\begin{cases}\dfrac{2p_0/\ell^2}{\left(1-\dfrac{x}{\ell}\right)^3}, &amp; 0\le x&lt;\dfrac{k\cdot\ell}{N+k}\\[5mm] \dfrac{2p_0\cdot(N+k+1)/\ell^2}{\left[(N+1)-\dfrac{x}{\ell}\right]^3}, &amp; \dfrac{k\cdot\ell}{N+k}&lt;x\le\ell\end{cases}\]</div>
+<p><i>관찰: 2계 도함수 역시 정의역 전체에서 양수이다.</i></p>
+<div><span class="pt">0.20 pt</span>
+<figure><img src="T2_fig1.png" style="width:55%"><figcaption><i>관찰: 그래프는 $N=20$일 때 11번째 펌프질 주기에 대한 것이다.</i></figcaption></figure></div>
+
+<h2>과제 2</h2>
+
+<h3>2.a. <span class="pt">1.20 pt</span></h3>
+<div><span class="pt">0.20 pt</span>\[p_{k_0-1}&lt;n\cdot p_0\le p_{k_0}\]</div>
+<div><span class="pt">0.20 pt</span>\[p_{k_0}=p_0\cdot\frac{N+k_0}{N}\]</div>
+<p>$k_0\ge N\cdot(n-1)$이며, 펌프질 주기의 횟수 $k_0$는 자연수이다. <span class="pt">0.20 pt</span></p>
+<p>$N\cdot(n-1)$이 자연수이면 $k_0=N\cdot(n-1)$, <span class="pt">0.60 pt</span><br>
+또는 $N\cdot(n-1)$이 자연수가 아니면 $k_0=\left[N\cdot(n-1)\right]+1$.</p>
+
+<h3>2.b. <span class="pt">1.20 pt</span></h3>
+<p>압력 $p_0$에서 압력 $p_{k-1}$까지 등온적으로 변하는 $\nu_1$ 몰의 공기에 대해 학생이 해야 하는 일을 구한다. <span class="pt">0.20 pt</span></p>
+\[L_{K,I}=\nu_1\cdot R\cdot T_0\cdot\ln\frac{p_{k-1}}{p_0}\]
+<div><span class="pt">0.20 pt</span>\[L_{K,I}=\frac{p_0\cdot V_r}{N}\cdot\ln\frac{N+k-1}{N}\]</div>
+<p>압력 $p_{k-1}$에서 압력 $p_k$까지 등온적으로 변하는 $\nu_k$ 몰의 공기에 대해 학생이 해야 하는 일에 대한 식 <span class="pt">0.20 pt</span></p>
+\[L_{K,II}=\nu_k\cdot R\cdot T_0\cdot\ln\frac{p_k}{p_{k-1}}\]
+<div><span class="pt">0.20 pt</span>\[L_{K,II}=\frac{p_0\cdot V_r\cdot(N+k)}{N}\cdot\ln\frac{N+k}{N+k-1}\]</div>
+<p>$k$번째 펌프질 주기 동안 학생이 해야 하는 전체 일에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}L_{K,total}=L_{K,I}+L_{K,II}\\[1mm] L_{K,total}=\dfrac{p_0\cdot V_r}{N}\cdot\ln\dfrac{N+k-1}{N}+\dfrac{p_0\cdot V_r\cdot(N+k)}{N}\cdot\ln\dfrac{N+k}{N+k-1}\\[3mm] L_{K,total}=\dfrac{p_0\cdot V_r}{N}\cdot\left[\ln\dfrac{N+k-1}{N}+(N+k)\cdot\ln\dfrac{N+k}{N+k-1}\right]\end{cases}\]
+<p>학생이 펌프질을 시작한 순간부터 타이어 안의 압력이 $n\cdot p_0$가 되는 순간까지 하는 전체 일에 대한 식 <span class="pt">0.20 pt</span></p>
+\[L_{total}=\frac{p_0\cdot V_r}{N}\cdot\sum_{k=1}^{N\cdot(n-1)}\left[\ln\frac{N+k-1}{N}+(N+k)\cdot\ln\frac{N+k}{N+k-1}\right]\]
+
+<h2>과제 3</h2>
+
+<h3>3.a. <span class="pt">0.20 pt</span></h3>
+<p>$k=10$번의 펌프질 주기 뒤 타이어 안 공기의 몰수 <span class="pt">0.20 pt</span></p>
+\[\nu_{10}=0{,}43\ \text{mol}\]
+
+<h3>3.b. <span class="pt">0.20 pt</span></h3>
+<p>10번의 펌프질 주기 뒤 타이어 안 공기의 압력 값 <span class="pt">0.20 pt</span></p>
+\[p_{10}=1{,}52\cdot10^5\ \frac{\text{N}}{\text{m}^2}\]
+
+<h3>3.c. <span class="pt">0.20 pt</span></h3>
+<p>타이어 안 공기의 압력이 $n\cdot p_0$에 도달하는 데 필요한 주기 수 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}k_0=\left[20\cdot(2{,}51-1)\right]+1\\ k_0=31\end{cases}\]
+
+<h3>3.d. <span class="pt">0.20 pt</span></h3>
+<p>10번째 펌프질 주기 동안 학생이 해야 하는 일의 값 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}L_{10,total}=\dfrac{\left(1{,}01\cdot10^5\ \dfrac{\text{N}}{\text{m}^2}\right)\cdot\left(7{,}00\cdot10^{-3}\ \text{m}^3\right)}{20}\cdot\left[\ln\dfrac{29}{20}+30\cdot\ln\dfrac{30}{29}\right]\\[5mm] L_{10,total}\cong 49{,}1\ \text{J}\end{cases}\]
+
+<h2>과제 4</h2>
+
+<h3>4.a. <span class="pt">0.80 pt</span></h3>
+<p>타이어 안 공기의 부분 압력(partial pressure) $p_{aer}(T_0)$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}p_{aer}(T_0)=p-p_{s,0}\\ p_{aer}(T_0)=2{,}477\cdot p_0\end{cases}\]
+<div><span class="pt">0.20 pt</span>\[\begin{cases}p_{aer}(T_1)=p_{aer}(T_0)\cdot\dfrac{T_1}{T_0}\\[3mm] p_{aer}(T_1)=2{,}229\cdot p_0\end{cases}\]</div>
+<div><span class="pt">0.20 pt</span>\[\begin{cases}p_1=p_{aer}(T_1)+p_{s,1}\\ p_1=2{,}235\cdot p_0\end{cases}\]</div>
+<p>주어진 사용 조건에서 타이어 안 압력의 값 <span class="pt">0.20 pt</span></p>
+\[p_1=2{,}257\times10^5\ \text{N}\cdot\text{m}^{-2}\]
+
+<h3>4.b. <span class="pt">1.20 pt</span></h3>
+<p>타이어가 보관된 방 안에서 질소 분자의 농도(concentration) $n_e^*$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}n_e^*=\dfrac{p_0}{T_0}\cdot\dfrac{1}{k_B}\\[3mm] n_e^*=\dfrac{p_0}{T_0}\cdot\dfrac{N_A}{R}\end{cases}\]
+<p>타이어 안에서 질소 분자의 농도 $n_i^*$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}n_i^*=2{,}51\cdot\dfrac{p_0}{T_0}\cdot\dfrac{N_A}{R}\\[3mm] n_i^*=2{,}51\cdot\dfrac{p_0}{T_0}\cdot\dfrac{1}{k_B}\end{cases}\]
+<p>타이어 바깥에서 모든 방향으로부터 오는 분자 선속 밀도(density of the flux of molecules) $N_e^*$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}N_e^*=\dfrac14\cdot n_e^*\cdot\bar v\\[3mm] N_e^*=\dfrac14\cdot\dfrac{p_0}{T_0}\cdot\dfrac{N_A}{R}\cdot\sqrt{\dfrac{8R\cdot T_0}{\pi\cdot\mu_{azot}}}\end{cases}\]
+<p>타이어 안쪽에서 모든 방향으로부터 오는 분자 선속 밀도 $N_i^*$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}N_i^*=2{,}51\cdot\dfrac14\cdot n_i^*\cdot\bar v\\[3mm] N_i^*=2{,}51\cdot\dfrac14\cdot\dfrac{p_0}{T_0}\cdot\dfrac{N_A}{R}\cdot\sqrt{\dfrac{8R\cdot T_0}{\pi\cdot\mu_{azot}}}\end{cases}\]
+<p>타이어 안쪽에서 모든 방향으로부터 와서 단위 시간에 바늘구멍(pinhole)의 면에 부딪히는 질소 분자의 수 $N_i$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[N_i=2{,}51\cdot\frac14\cdot\frac{p_0}{T_0}\cdot\frac{N_A}{R}\cdot S\cdot\sqrt{\frac{8R\cdot T_0}{\pi\cdot\mu_{azot}}}\qquad N_i=2{,}51\cdot p_0\cdot N_A\cdot S\cdot\sqrt{\frac{1}{2\pi\cdot\mu_{azot}\cdot R\cdot T_0}}\]
+<p>타이어 바깥에서 모든 방향으로부터 와서 단위 시간에 바늘구멍의 면에 부딪히는 질소 분자의 수 $N_e$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[N_e=\frac14\cdot\frac{p_0}{T_0}\cdot\frac{N_A}{R}\cdot S\cdot\sqrt{\frac{8R\cdot T_0}{\pi\cdot\mu_{azot}}}\qquad N_e=p_0\cdot N_A\cdot S\cdot\sqrt{\frac{1}{2\pi\cdot\mu_{azot}\cdot R\cdot T_0}}\]
+<p class="note">($\mu_{azot}$: 질소(루마니아어 azot)의 몰 질량)</p>
+
+<h3>4.c. <span class="pt">1.80 pt</span></h3>
+<p>시간 $dt$ 동안 타이어 바깥에서 와서 작은 구멍의 면 $S$에 부딪히는 질소 분자의 수에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}\aleph_e=S\cdot N_e^*\cdot dt\\[1mm] \aleph_e=\dfrac14\cdot\dfrac{p_0}{T_0}\cdot\dfrac{N_A}{R}\cdot\bar v\cdot S\cdot dt\end{cases}\]
+<p>시간 $dt$ 동안 타이어 안쪽에서 와서 작은 구멍의 면 $S$에 부딪히는 질소 분자의 수에 대한 식(압력에 의존한다) <span class="pt">0.20 pt</span></p>
+\[\begin{cases}\aleph_i=\dfrac14\cdot n^*(p)\cdot\bar v\cdot S\cdot dt\\[3mm] \aleph_i=\dfrac14\cdot\dfrac{p}{T_0}\cdot\dfrac{N_A}{R}\cdot\bar v\cdot S\cdot dt\end{cases}\]
+<p>타이어 안의 분자 수 <span class="pt">0.20 pt</span></p>
+\[\aleph=\frac{p\cdot V_r}{R\cdot T_0}\cdot N_A\]
+<p>타이어 안 분자 수의 변화에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}d\aleph=\aleph(t+dt)-\aleph(t)\\[1mm] d\aleph=\dfrac{V_r\cdot N_A}{R\cdot T_0}\cdot\left(p(t+dt)-p(t)\right)\\[3mm] d\aleph=\dfrac{V_r\cdot N_A}{R\cdot T_0}\cdot dp\end{cases}\]
+<div><span class="pt">0.20 pt</span>\[d\aleph=\aleph_e-\aleph_i\]</div>
+<div><span class="pt">0.20 pt</span>\[\frac{V_r\cdot N_A}{R\cdot T_0}\cdot dp=\frac14\cdot\frac{p_0}{T_0}\cdot\frac{N_A}{R}\cdot\bar v\cdot S\cdot dt-\frac14\cdot\frac{p}{T_0}\cdot\frac{N_A}{R}\cdot\bar v\cdot S\cdot dt\]</div>
+<div><span class="pt">0.20 pt</span>\[\frac{dp}{(p-p_0)}=-\frac14\cdot\frac{\bar v\cdot S}{V_r}\cdot dt\]</div>
+<div><span class="pt">0.20 pt</span>\[\int_{2{,}51\cdot p_0}^{1{,}10\cdot p_0}\frac{dp}{(p-p_0)}=-\frac14\cdot\frac{\bar v\cdot S}{V_r}\cdot\int_0^{t_f}dt\qquad t_f=\frac{4\cdot V_r}{\bar v\cdot S}\cdot\ln 15{,}1\]</div>
+<div><span class="pt">0.20 pt</span>\[\begin{cases}t_f=1{,}59\times10^4\ \text{s}\\ t_f\cong 4{,}4\ \text{시간 (ore)}\end{cases}\]</div>
+
+<h2>문제 II 총점 <span class="pt">10 pt</span></h2>
+
+<p style="margin-top:6mm"><i>© 채점 기준 작성:</i><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>Prof. dr. Delia DAVIDESCU</i><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>Conf. univ. dr. Adrian DAFINEI</i></p>
