@@ -42,7 +42,7 @@ def load():
         comp, prefix = m['comp'], m['prefix']
         # a competition the site lists only for its papers names itself here (full, since, scope): window.THEORY_META
         if m.get('full'):
-            meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain'))}
+            meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds'))}
         for y in m.get('years', []):
             year, files, gt = str(y['y']), {}, None
             for f in y.get('files', []):

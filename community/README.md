@@ -229,6 +229,13 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - 스캔 시간이 끝났는데 신청하지 않았으면 채점 없이 `ended`가 되고, 사진은 7일(`LAB_KEEP_ENDED_HOURS`) 보관한 뒤 지웁니다. 그 안에 성적표에서 채점을 신청할 수 있습니다.
 - 이전 응시(시작할 때 토큰을 쓴 것)는 이미 `charged=1`이라 그대로 채점됩니다. DB 변경은 없습니다.
 
+## v15: 실험 + 이론 세트, 0.5토큰
+- 실험과 이론이 둘 다 있는 해는 **세트**로 봅니다. 실험과 이론을 따로(이어서 볼 필요 없이) 응시하고, 채점은 한쪽에 **0.5토큰**, 둘 다 하면 1토큰입니다. NBPhO처럼 실험과 이론을 한 번에 치르는 시험은 그대로 1토큰입니다.
+- 시험 주소의 `h=1`(대회 포털이 붙임)이 시작 요청의 `pair: true`가 되고, 서버는 `sources._half`로 기억합니다(`labCost`).
+- 0.5토큰은 `users.exam_half`(0/1)로 셉니다. 남은 0.5가 있으면 그것을 쓰고(원장 0), 없으면 토큰 1개에서 쓰고 나머지 0.5를 적립합니다(원장 −1). 원장의 `note='half'`가 0.5 채점 표시입니다. 토큰 수는 `exam_tokens + exam_half/2`로 보입니다(예: 2.5).
+- **운영 DB에 `migrations/0011_half_tokens.sql`을 적용해야 켜집니다.** 적용 전에는 0.5 채점도 토큰 1개를 씁니다(이전과 같음).
+- 시험: `node test-half.mjs` (6초 시계).
+
 ## 자동 배포 (GitHub Actions)
 
 `main`에서 `community/src`나 `wrangler.toml`이 바뀌면 `.github/workflows/deploy-worker.yml`이 `wrangler deploy`로 Worker를 올립니다 — 대시보드에 붙여 넣을 필요가 없습니다. Actions 탭의 «Deploy community Worker» › Run workflow로 손으로 돌릴 수도 있습니다.

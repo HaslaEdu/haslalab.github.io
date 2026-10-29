@@ -585,15 +585,73 @@
   },
   {
    "y": 2020,
-   "problems": [],
+   "host": {
+    "ko": "러시아 · 모스크바 (온라인)",
+    "en": "Moscow, Russia (online)"
+   },
+   "cc": "ru",
+   "problems": [
+    {
+     "id": "T1",
+     "title": "Problem mix"
+    },
+    {
+     "id": "T2",
+     "title": "Anisotropic friction"
+    },
+    {
+     "id": "T3",
+     "title": "Laser technologies"
+    }
+   ],
    "files": [
     {
-     "file": "IPhO_2020_GE.pdf",
-     "kind": "general",
-     "for": "exp",
-     "url": "https://olimpicos.net/files/ipho/IPhO_2020_Q4_Instructions.pdf"
+     "file": "IPhO_2020_T1_EN.pdf",
+     "part": "T1",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://i20.mipt.ru/wp-content/uploads/2020/12/T1-EN.pdf",
+     "bytes": 49475
+    },
+    {
+     "file": "IPhO_2020_T1S.pdf",
+     "part": "T1",
+     "kind": "solution",
+     "url": "https://olimpicos.net/files/ipho/IPhO_2020_S1_tex.pdf",
+     "bytes": 154006
+    },
+    {
+     "file": "IPhO_2020_T2_EN.pdf",
+     "part": "T2",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://i20.mipt.ru/wp-content/uploads/2020/12/T2-EN.pdf",
+     "bytes": 31261
+    },
+    {
+     "file": "IPhO_2020_T2S.pdf",
+     "part": "T2",
+     "kind": "solution",
+     "url": "https://olimpicos.net/files/ipho/IPhO_2020_S2_tex.pdf",
+     "bytes": 210437
+    },
+    {
+     "file": "IPhO_2020_T3_EN.pdf",
+     "part": "T3",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://i20.mipt.ru/wp-content/uploads/2020/12/T3-EN.pdf",
+     "bytes": 84356
+    },
+    {
+     "file": "IPhO_2020_T3S.pdf",
+     "part": "T3",
+     "kind": "solution",
+     "url": "https://olimpicos.net/files/ipho/IPhO_2020_S3_tex.pdf",
+     "bytes": 68401
     }
-   ]
+   ],
+   "note": "IdPhO 2020 (Online International distributed Physics Olympiad, Dec 2020), the substitute for the cancelled IPhO 2020, organised by MIPT. Papers from the official site i20.mipt.ru. Official solutions were published only as HTML on pho.rs (linked from i20.mipt.ru); solution files are olimpicos.net's typeset transcriptions of them (olimpicos' browser printouts IPhO_2020_S1..S3.pdf were not used: S1 covers only Part A of Problem mix). Experimental problem E1 (Crystallography) skipped."
   },
   {
    "y": 2019,
@@ -4225,10 +4283,5 @@
    ]
   }
  ],
- "missing": [
-  {
-   "y": 2020,
-   "why": "IPhO 2020 (Lithuania) cancelled due to COVID-19; the unofficial substitute IdPhO 2020 is not an IPhO"
-  }
- ]
+ "missing": []
 }

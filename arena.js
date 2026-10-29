@@ -362,9 +362,9 @@ async function arMe(root, alive) {
 
 /* ── exam mode: tokens, exams, marks ── */
 const LBT = {
-  ko: {h: "실전 모드", sub: "대회 실험 시간만큼 실험(IPhO 5시간, OPhO 3시간 …) + 30분 답안 스캔. 시작할 때마다 실전 토큰 1개를 씁니다. 진행 중인 시험으로 돌아갈 때는 쓰지 않습니다.",
+  ko: {h: "실전 모드", sub: "대회 실험 시간만큼 실험(IPhO 5시간, OPhO 3시간 …) + 30분 답안 스캔. 응시는 무료이고, 채점 · 첨삭을 받을 때 실전 토큰 1개를 씁니다(실험 · 이론이 다 있는 해는 한쪽 0.5개, 세트로 둘 다 1개).",
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
-       start: "시작", grade: "채점 · 첨삭", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
+       start: "시작", grade: "채점 · 첨삭", half: "실험·이론 중 한쪽 (0.5)", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
        shopH: "토큰 충전", consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
        buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
        payOff: "결제는 준비 중입니다.", tabP: "해외 카드 · USD", tabT: "국내 결제 · 원", tokU: () => "토큰", per: (x) => `개당 ${x}`, save: (p) => `${p}% 절약`,
@@ -390,9 +390,9 @@ const LBT = {
        mH: "채점 비용 · 시간 · 정확도", mDays: "최근 30일", mExam: "시험 1회당", mUsd: "비용", mTok: "토큰 (입력 / 출력)", mCalls: "AI 호출", mTime: "채점 시간", mWait: "제출→채점 완료",
        mStep: "단계별", mAcc: "정확도 (관리자 기준 점수와 비교)", mMae: "문항당 평균 차이", mExact: "일치한 문항", mTaskDiff: "실험 총점 차이 (만점 대비)", mItems: "비교한 문항",
        mStore: "답안 사진", mKeep: (h) => h == null ? "보관 중 (파기 꺼짐)" : `채점 ${h}시간 뒤 파기`, mNone: "아직 기록이 없습니다.", mRecent: "최근 채점"},
-  en: {h: "Exam mode", sub: "Experiments for as long as on the day (IPhO five hours, OPhO three …), then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
+  en: {h: "Exam mode", sub: "Experiments for as long as on the day (IPhO five hours, OPhO three …), then 30 minutes to scan your answers. Sitting is free; grading and the review use one exam token (half a token for one part of a year with experiments and theory, one for the set).",
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
-       start: "start", grade: "grading and review", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
+       start: "start", grade: "grading and review", half: "one half of a year (0.5)", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
        shopH: "Get tokens", consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
        buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
        payOff: "Payments are not open yet.", tabP: "International · USD", tabT: "Korea · KRW", tokU: (n) => n > 1 ? "tokens" : "token", per: (x) => `${x} each`, save: (p) => `save ${p}%`,
@@ -440,7 +440,7 @@ async function arLabList(root, alive) {
       <td style="width:150px">${L.st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${x.status === "graded" ? x.score + (x.points ? " / " + x.points : "") : "–"}</b></td>
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
     <div class="arpanel"><h3>${L.ledger}</h3><p class="arempty" style="margin-top:0">${L.howGet}</p>${tk.ledger.length ? `<table class="cmtbl artbl"><tbody>${tk.ledger.map((x) => `<tr>
-      <td style="width:80px"><b style="color:${x.delta < 0 ? "#c0392b" : "#1e8449"}">${x.delta > 0 ? "+" : ""}${x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note ? " · " + esc(x.note) : ""}</td>
+      <td style="width:80px"><b style="color:${x.delta < 0 || x.note === "half" ? "#c0392b" : "#1e8449"}">${x.note === "half" ? "−0.5" : (x.delta > 0 ? "+" : "") + x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note && x.note !== "half" ? " · " + esc(x.note) : x.note === "half" ? " · " + L.half : ""}</td>
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
   arShopWire(root, shop);
 }
@@ -621,7 +621,7 @@ async function arLabOne(root, alive, id) {
         ${s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
         ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
-    ${s.status === "ended" ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${L.payNote}</p>
+    ${s.status === "ended" ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${s.cost === 0.5 ? L.payNote.replace("토큰 1개", "토큰 0.5개").replace("one exam token", "half an exam token") : L.payNote}</p>
       <button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)

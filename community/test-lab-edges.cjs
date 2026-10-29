@@ -27,7 +27,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   /* the catalogue's exam links */
   let ctx = await mk(), pg = await ctx.newPage(); pg.on("pageerror", e => errs.push(e.message));
   const portal = async (comp, year) => { await pg.goto(SITE + "/#/" + comp + "/exam"); await pg.waitForSelector("#xmRoot tbody tr");
-    return SITE + "/" + await pg.$$eval("#xmRoot tbody tr", (trs, y) => trs.find(t => t.querySelector(".y").textContent === y).querySelector("a.go").getAttribute("href"), String(year)); };
+    return SITE + "/" + (await pg.$$eval("#xmRoot tbody tr:not(.xmset)", (trs, y) => trs.find(t => t.querySelector(".y").textContent === y).querySelector("a.go").getAttribute("href"), String(year))).replace(/&h=1\b/, ""); };   // whole-token path (halves: test-half.mjs)
   const A = await portal("ipho", 2024), Bx = await portal("apho", 2025);
   await ctx.close();
 
