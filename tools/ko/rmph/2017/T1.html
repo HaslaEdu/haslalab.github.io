@@ -2,7 +2,7 @@
 h2,h3{break-after:avoid}
 table.task{width:100%;margin:2mm 0} table.task td{vertical-align:middle} table.task td.k{font-weight:700;width:12mm;text-align:center} table.task td.m{white-space:nowrap;width:16mm;text-align:center}
 .sol{background:#f3f4f6;padding:1mm 3mm;margin:1mm 0 3mm} .sol .katex-display{margin:1.6mm 0}
-.mk{float:right;font-weight:700;font-size:9pt}
+.mk{float:right;font-family:KaTeX_Main,serif;font-size:1.1em}
 </style>
 <h1>이론 문제 1: 두 가지 역설 (Two paradoxes) — 해설</h1>
 <p class="note">원문: Romanian Master of Physics 2017, Theoretical problem 1: Two paradoxes (문제와 해설). 배점은 원문의 p를 pt로 표기하였다. 회색 상자가 풀이이며, 각 식 오른쪽의 괄호 안 숫자는 그 단계의 배점이다.</p>
@@ -53,7 +53,7 @@ table.task{width:100%;margin:2mm 0} table.task td{vertical-align:middle} table.t
 <p>따라서</p>
 \[dL_{2N} = -v_0dp_x\,.\tag*{(0.10 pt)}\]
 <p>연결 부분 전체에 대해서는</p>
-\[L_{2N} = -v_0\Delta p_x = -v_0m\left(v_0-v_0\cos\alpha\right) = -mv_0^2\left(1-\cos\alpha\right) = -2mgh\left(1-\cos\alpha\right).\tag*{(0.50 pt)}\]
+\[\begin{aligned}L_{2N} &= -v_0\Delta p_x = -v_0m\left(v_0-v_0\cos\alpha\right)\\ &= -mv_0^2\left(1-\cos\alpha\right) = -2mgh\left(1-\cos\alpha\right).\end{aligned}\tag*{(0.50 pt)}\]
 <p>결론적으로</p>
 \[L_N = L_{1N}+L_{2N} = -2mgh\,,\tag*{(0.20 pt)}\]
 <p>이므로, 운동 에너지 변화에 관한 정리는 움직이는 관성계에서도 성립한다. <span class="mk">(0.20 pt)</span></p>
@@ -147,7 +147,7 @@ table.task{width:100%;margin:2mm 0} table.task td{vertical-align:middle} table.t
 \[\vec B = \begin{cases}\mu_0ni\hat z\,, &amp; \text{for } a &lt; r &lt; R\\ \vec 0\,, &amp; \text{for } r &gt; R\end{cases}\]
 <p>는 솔레노이드가 만드는 자기장이다.</p>
 <p>막대에 작용하는 돌림힘은</p>
-\[\vec\tau = \int_a^b\vec r\times d\vec F = -\mu_0nii_1\left(\int_a^Rrdr\right)\hat r\times\hat\phi = -\frac12\mu_0nii_1\left(R^2-a^2\right)\hat z\,.\tag*{(0.30 pt)}\]
+\[\begin{aligned}\vec\tau &= \int_a^b\vec r\times d\vec F = -\mu_0nii_1\left(\int_a^Rrdr\right)\hat r\times\hat\phi\\ &= -\frac12\mu_0nii_1\left(R^2-a^2\right)\hat z\,.\end{aligned}\tag*{(0.30 pt)}\]
 <p>다음이 성립하므로</p>
 \[\vec\tau = \frac{d\vec L}{dt}\,,\tag*{(0.10 pt)}\]
 <p>다음을 얻는다.</p>
