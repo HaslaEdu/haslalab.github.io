@@ -545,6 +545,7 @@ const worker = {
         "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
     }
     if (req.method === "GET" && (av = /^\/api\/lab\/pages\/(\d+)\/img$/.exec(url.pathname))) return labImage(req, env, +av[1], cors);
+    if (req.method === "POST" && url.pathname === "/api/pay/paddle/webhook") return paddleWebhook(req, env, cors);   // signed over the raw body
     if (req.method === "GET" && url.pathname.startsWith("/api/yt/")) {
       try { return await ytRoute(req, env, url, cors); }
       catch (e) { if (e instanceof HttpError) return json({ error: e.code }, e.status, cors); console.error(e && e.stack || e); return json({ error: "server_error" }, 500, cors); }
@@ -1134,7 +1135,14 @@ const GRADE_SCHEMA = { type: "object", properties: {
     rules: { type: "array", items: { type: "string" } }, note: { type: "string" },
   }, required: ["id", "found", "score", "decision", "rules", "note"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
-}, required: ["items", "feedback"] };
+  review: { type: "object", properties: {
+    summary: { type: "string" },
+    strengths: { type: "array", items: { type: "string" } },
+    habits: { type: "array", items: { type: "object", properties: { habit: { type: "string" }, fix: { type: "string" }, pages: { type: "array", items: { type: "integer" } } }, required: ["habit", "fix"] } },
+    handwriting: { type: "object", properties: { rating: { type: "string", enum: ["clear", "readable", "hard"] }, notes: { type: "string" } }, required: ["rating", "notes"] },
+    presentation: { type: "string" },
+  }, required: ["summary", "habits", "handwriting"] },
+}, required: ["items", "feedback", "review"] };
 
 function b64(buf) { let s = ""; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000)); return btoa(s); }
 /* ── what each AI call of an exam costs: tokens, an estimated price and time, one row of lab_calls per call ──
@@ -1315,7 +1323,13 @@ function labScore(scheme, raw, pages) {
   });
   const feedback = (Array.isArray(raw && raw.feedback) ? raw.feedback : []).filter(f => f && f.note && (f.page == null || byNo.has(f.page))).slice(0, 8)
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
-  return { items, feedback, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
+  /* the coach's review, as written: trimmed and bounded, page references kept only to pages that exist */
+  const rv = raw && raw.review && typeof raw.review === "object" ? raw.review : null, str = (x, n) => String(x || "").slice(0, n);
+  const review = rv && rv.summary ? { summary: str(rv.summary, 1200), strengths: (Array.isArray(rv.strengths) ? rv.strengths : []).slice(0, 3).map(x => str(x, 300)).filter(Boolean),
+    habits: (Array.isArray(rv.habits) ? rv.habits : []).filter(h => h && h.habit).slice(0, 5).map(h => ({ habit: str(h.habit, 300), fix: str(h.fix, 400), pages: (Array.isArray(h.pages) ? h.pages : []).filter(n => byNo.has(n)).slice(0, 8) })),
+    handwriting: rv.handwriting && ["clear", "readable", "hard"].includes(rv.handwriting.rating) ? { rating: rv.handwriting.rating, notes: str(rv.handwriting.notes, 600) } : null,
+    presentation: rv.presentation ? str(rv.presentation, 500) : null } : null;
+  return { items, feedback, review, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
 }
 /* a page's photo: in R2 when the Worker has the LAB_PAGES bucket, otherwise in the row; null once removed after its keeping time */
 async function labPageBytes(env, row) {
@@ -1361,7 +1375,13 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     "", `[Grading regulation ${LAB_REG.version} — it overrides everything else]`, LAB_REG.rules.map(r => `${r.id}. ${r.en}`).join("\n"),
     "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(scheme) + "<<END>>",
     "", "For every scheme item give exactly one result: found (the candidate answered it), page (the page number p of the label below where the evidence is), label, value (for a value item: the number as written on that page), unit_ok, checks_met (for a graph or table: the scheme checks that can be seen), score (0 to its points, in steps of 0.1), decision, rules (the regulation ids that cost marks) and a short note.",
-    "Apply the regulation strictly: no benefit of the doubt (R10), an item that cannot be read is not found. Add up to 6 feedback notes on what was done well or must be fixed."].join("\n") };
+    "Apply the regulation strictly: no benefit of the doubt (R10), an item that cannot be read is not found. Add up to 6 feedback notes on what was done well or must be fixed.",
+    "", "[Review — what a coach writes back on the papers; it never changes a mark]",
+    "summary: 2–4 sentences — how the candidate did on this experiment overall and what decided the mark.",
+    "strengths: up to 3 things done well, concrete (an item, a graph, a method).",
+    "habits: up to 5 recurring habits that cost marks here or would at the real olympiad, each with a concrete fix and the pages where it shows — e.g. units or uncertainties left out, fewer measurements than needed, a graph that uses a corner of the grid or has no fitted line, slopes read without the triangle, results only on the working sheet, too many significant figures, answers squeezed or crossed out until unclear.",
+    "handwriting: rating — clear, readable or hard — and notes on what a grader could misread (1/7, 0/6, 4/9, u/μ, decimal points and minus signs, exponents, subscripts), on crowding and layout, and on what would make the pages quicker to mark.",
+    "presentation: one or two sentences on tables, graphs, units and the order of the answer sheet."].join("\n") };
   const pagesNote = { text: "<<PAGES>>" + JSON.stringify(mine.map(p => ({ no: p.no, task: p.task, kind: p.kind, legible: p.legible || null }))) + "<<END>>" };
   const parts = [head, pagesNote];
   let budget = 14e6;                                                               // inline images, answer sheets first
@@ -1374,7 +1394,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   }
   const out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");
   const sc = labScore(scheme, out.raw, mine);
-  return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback };
+  return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -1487,12 +1507,76 @@ async function labImage(req, env, pid, cors) {
    Ads: the server hands out a one-time number when an ad starts; when the ad network says the reward was earned
    the page claims it with that number, at least ADS_MIN_SEC later, at most ADS_DAILY a day (Korean day); three
    thirds make a token.  Environment: TOSS_CLIENT_KEY, TOSS_SECRET_KEY (secret), PAY_PACKS (JSON, optional),
-   ADS_REWARDED_UNIT (a Google Ad Manager rewarded ad unit path; "test" = Google's sample unit), ADS_DAILY, ADS_MIN_SEC. */
+   ADS_REWARDED_UNIT (a Google Ad Manager rewarded ad unit path; "test" = Google's sample unit), ADS_DAILY, ADS_MIN_SEC.
+   Paddle (in USD, Paddle being the merchant of record): the server writes the order, Paddle.js opens Paddle's overlay
+   checkout with the pack's price and the order id in custom_data; Paddle's signed webhook (transaction.completed or
+   .paid) adds the tokens, and pay.html asks the server to look the transaction up meanwhile, in case the webhook is
+   late.  PADDLE_CLIENT_TOKEN (public; test_… = sandbox), PADDLE_API_KEY and PADDLE_WEBHOOK_SECRET (secrets),
+   PADDLE_PRICES (the price ids of 1, 5 and 10 tokens — $1.49, $5.99, $9.99 — made in Paddle's catalogue, comma-separated)
+   or PADDLE_PACKS (JSON [{id, tokens, price_id, usd}]).  The API key needs transaction.read and adjustment.write. */
 const PACKS = [{ id: "t1", tokens: 1, krw: 1900 }, { id: "t5", tokens: 5, krw: 7900 }, { id: "t12", tokens: 12, krw: 15900 }];
 const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length) return x; } catch (e) {} return PACKS; };
 const adsOf = env => ({ unit: env.ADS_REWARDED_UNIT === "test" ? "/22639388115/rewarded_web_example" : env.ADS_REWARDED_UNIT || null,
   daily: Math.max(1, parseInt(env.ADS_DAILY) || 3), min_sec: Math.max(0, parseInt(env.ADS_MIN_SEC ?? "10")), parts: 3 });
 const kstDay = t => Math.floor((t + 9 * 3600) / 86400) * 86400 - 9 * 3600;      // the start of today in Korea
+/* the packs: PADDLE_PRICES = the three price ids (made in Paddle's catalogue) of 1, 5 and 10 tokens, or PADDLE_PACKS for others */
+const PADDLE_DEFAULT = [{ id: "p1", tokens: 1, usd: 1.49 }, { id: "p5", tokens: 5, usd: 5.99 }, { id: "p10", tokens: 10, usd: 9.99 }];
+const paddlePacks = env => {
+  try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.length && x.every(p => p.id && p.tokens > 0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {}
+  const ids = String(env.PADDLE_PRICES || "").split(",").map(x => x.trim()).filter(Boolean);
+  return ids.length === PADDLE_DEFAULT.length && ids.every(x => /^pri_\w+$/.test(x)) ? PADDLE_DEFAULT.map((p, i) => ({ ...p, price_id: ids[i] })) : null;
+};
+const paddleOn = env => !!(env.PADDLE_CLIENT_TOKEN && env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET && paddlePacks(env));
+const paddleEnv = env => /^test_/.test(env.PADDLE_CLIENT_TOKEN || "") ? "sandbox" : "production";
+async function paddle(env, method, path, body) {
+  const base = env.PADDLE_BASE || (paddleEnv(env) === "sandbox" ? "https://sandbox-api.paddle.com" : "https://api.paddle.com");
+  const r = await fetch(base + path, { method, headers: { Authorization: "Bearer " + env.PADDLE_API_KEY, "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(30000) });
+  return { ok: r.ok, status: r.status, j: await r.json().catch(() => ({})) };
+}
+/* a Paddle transaction pays an order when it is completed (or paid), names the order and holds the order's price */
+async function paddleFulfil(env, o, txn, t) {
+  const good = txn && (txn.status === "completed" || txn.status === "paid") && txn.custom_data && txn.custom_data.order_id === o.order_id
+    && (txn.items || []).some(i => i.price && i.price.id === o.price_id);
+  if (!good) return false;
+  await env.DB.prepare("UPDATE pay_orders SET status='done',payment_key=?,method='paddle',approved_at=? WHERE order_id=? AND status='ready'").bind(txn.id, t, o.order_id).run();
+  const now2 = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(o.order_id).first();
+  if (now2.status !== "done" || now2.payment_key !== txn.id) return false;
+  await payCredit(env, now2, t);
+  return true;
+}
+/* Paddle's webhook: the raw body is signed — HMAC-SHA256 over "ts:body" with the destination's secret key */
+async function paddleWebhook(req, env, cors) {
+  const raw = await req.text(), sig = req.headers.get("Paddle-Signature") || "";
+  const parts = Object.fromEntries(sig.split(";").map(x => x.split("=")).filter(x => x.length === 2));
+  const ts = parseInt(parts.ts), h1s = sig.split(";").filter(x => x.startsWith("h1=")).map(x => x.slice(3));
+  if (!env.PADDLE_WEBHOOK_SECRET || !ts || !h1s.length || Math.abs(now() - ts) > 300) return json({ error: "bad_signature" }, 401, cors);
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.PADDLE_WEBHOOK_SECRET), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const mac = [...new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(ts + ":" + raw)))].map(b => b.toString(16).padStart(2, "0")).join("");
+  if (!h1s.some(h => h.length === mac.length && h.split("").reduce((a, c, i) => a | (c.charCodeAt(0) ^ mac.charCodeAt(i)), 0) === 0)) return json({ error: "bad_signature" }, 401, cors);
+  let ev; try { ev = JSON.parse(raw); } catch (e) { return json({ error: "bad_json" }, 400, cors); }
+  const d = ev.data || {}, t = now();
+  if (ev.event_type === "transaction.completed" || ev.event_type === "transaction.paid") {
+    const oid = d.custom_data && d.custom_data.order_id;
+    const o = oid && await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='paddle'").bind(String(oid)).first();
+    if (o && o.status === "done") await payCredit(env, o, t);
+    else if (o && o.status === "ready") await paddleFulfil(env, o, d, t);
+  }
+  /* a refund approved in Paddle (from its dashboard or ours): the order is cancelled and its tokens taken back */
+  if ((ev.event_type === "adjustment.created" || ev.event_type === "adjustment.updated") && d.action === "refund" && d.status === "approved") {
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE payment_key=? AND provider='paddle' AND status='done'").bind(String(d.transaction_id || "")).first();
+    if (o) await payCancelTokens(env, o, null, t);
+  }
+  return json({ ok: true }, 200, cors);
+}
+async function payCancelTokens(env, o, by, t) {
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT u.id,-MIN(u.exam_tokens,?),'cancel',?,?,? FROM users u WHERE u.id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')")
+      .bind(o.tokens, o.order_id, by, t, o.user_id, o.order_id),
+    env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')").bind(o.tokens, o.user_id, o.order_id),
+    env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
+  ]);
+}
 async function toss(env, method, path, body) {
   const r = await fetch((env.TOSS_BASE || "https://api.tosspayments.com") + path, { method,
     headers: { Authorization: "Basic " + btoa(env.TOSS_SECRET_KEY + ":"), "Content-Type": "application/json" },
@@ -1512,7 +1596,32 @@ async function shop(p, m, body, me, req, env, url) {
   if (p === "/api/pay/config" && m === "GET") {
     const ads = adsOf(env);
     return { pay: env.TOSS_CLIENT_KEY && env.TOSS_SECRET_KEY ? { client_key: env.TOSS_CLIENT_KEY, packs: packsOf(env) } : null,
+      paddle: paddleOn(env) ? { token: env.PADDLE_CLIENT_TOKEN, env: paddleEnv(env), packs: paddlePacks(env).map(p => ({ id: p.id, tokens: p.tokens, price_id: p.price_id, usd: p.usd ?? null })) } : null,
       ads: ads.unit ? { unit: ads.unit, daily: ads.daily, parts: ads.parts } : null };
+  }
+  if (p === "/api/pay/order" && m === "POST" && body.provider === "paddle") {
+    needUser(me);
+    if (!paddleOn(env)) throw new HttpError(503, "pay_off");
+    const pk = paddlePacks(env).find(x => x.id === body.pack);
+    if (!pk) bad("bad_pack");
+    await limit(env, "payorder:" + me.id, 30, 3600);
+    const id = "HL" + labScanCode().slice(0, 30);
+    await env.DB.prepare("INSERT INTO pay_orders(order_id,user_id,provider,currency,price_id,pack,tokens,amount,created_at) VALUES(?,?,'paddle','USD',?,?,?,?,?)")
+      .bind(id, me.id, pk.price_id, pk.id, pk.tokens, Math.round((+pk.usd || 0) * 100), t).run();
+    return { order_id: id, price_id: pk.price_id, tokens: pk.tokens };
+  }
+  /* pay.html after Paddle's checkout: done already (the webhook came), or looked up with Paddle now */
+  if (p === "/api/pay/paddle/check" && m === "POST") {
+    needUser(me);
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='paddle'").bind(String(body.orderId || "")).first();
+    if (!o || o.user_id !== me.id) throw new HttpError(404, "no_order");
+    const txnId = String(body.txn || "");
+    if (o.status === "ready" && /^txn_\w{10,60}$/.test(txnId)) {
+      const r = await paddle(env, "GET", "/transactions/" + txnId);
+      if (r.ok) await paddleFulfil(env, o, r.j.data, t);
+    }
+    const x = await env.DB.prepare("SELECT status,tokens FROM pay_orders WHERE order_id=?").bind(o.order_id).first();
+    return { status: x.status, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens } };
   }
   if (p === "/api/pay/order" && m === "POST") {
     needUser(me);
@@ -1526,7 +1635,7 @@ async function shop(p, m, body, me, req, env, url) {
   }
   if (p === "/api/pay/confirm" && m === "POST") {
     needUser(me);
-    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(String(body.orderId || "")).first();
+    const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=? AND provider='toss'").bind(String(body.orderId || "")).first();
     if (!o || o.user_id !== me.id) throw new HttpError(404, "no_order");
     if (o.status === "done") { await payCredit(env, o, t); return { ok: true, tokens: await labTokens(env, me.id), order: { id: o.order_id, tokens: o.tokens, amount: o.amount } }; }   // a reload of pay.html
     if (o.status !== "ready") throw new HttpError(409, "order_" + o.status);
@@ -1550,20 +1659,18 @@ async function shop(p, m, body, me, req, env, url) {
   }
   if (p === "/api/pay/orders" && m === "GET") {
     needUser(me);
-    return { orders: (await env.DB.prepare("SELECT order_id,pack,tokens,amount,status,method,receipt_url,created_at,approved_at,canceled_at FROM pay_orders WHERE user_id=? AND status<>'ready' ORDER BY created_at DESC LIMIT 50").bind(me.id).all()).results };
+    return { orders: (await env.DB.prepare("SELECT order_id,provider,currency,pack,tokens,amount,status,method,receipt_url,created_at,approved_at,canceled_at FROM pay_orders WHERE user_id=? AND status<>'ready' ORDER BY created_at DESC LIMIT 50").bind(me.id).all()).results };
   }
   /* a refund (an admin, e.g. a minor's purchase without consent): Toss cancels the payment, the tokens not yet spent go back */
   if ((m === "POST") && /^\/api\/admin\/pay\/[A-Za-z0-9_-]+\/cancel$/.test(p)) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     const o = await env.DB.prepare("SELECT * FROM pay_orders WHERE order_id=?").bind(p.split("/")[4]).first();
     if (!o || o.status !== "done") throw new HttpError(409, "not_paid");
-    const r = await toss(env, "POST", `/v1/payments/${encodeURIComponent(o.payment_key)}/cancel`, { cancelReason: String(body.reason || "환불").slice(0, 200) });
-    if (!r.ok) throw new HttpError(502, "cancel_failed", { message: r.j.message || null });
-    await env.DB.batch([
-      env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
-      env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT id,-MIN(exam_tokens,?),'cancel',?,?,? FROM users WHERE id=?").bind(o.tokens, o.order_id, me.id, t, o.user_id),
-      env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=?").bind(o.tokens, o.user_id),
-    ]);
+    const reason = String(body.reason || "refund").slice(0, 200);
+    const r = o.provider === "paddle" ? await paddle(env, "POST", "/adjustments", { action: "refund", type: "full", transaction_id: o.payment_key, reason })
+      : await toss(env, "POST", `/v1/payments/${encodeURIComponent(o.payment_key)}/cancel`, { cancelReason: reason });
+    if (!r.ok) throw new HttpError(502, "cancel_failed", { message: (r.j.error && r.j.error.detail) || r.j.message || null });
+    await payCancelTokens(env, o, me.id, t);
     return { ok: true };
   }
   if (p === "/api/admin/pay/orders" && m === "GET") {

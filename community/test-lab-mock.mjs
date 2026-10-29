@@ -1,4 +1,4 @@
-// stand-in for Upstage OCR, Gemini, Toss Payments (/toss) and the PDF Worker (GET /seen: how many page readings got Upstage's transcript), for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
+// stand-in for Upstage OCR, Gemini, Toss Payments (/toss), Paddle's API (/paddle) and the PDF Worker (GET /seen: how many page readings got Upstage's transcript), for the exam-mode tests.  node test-lab-mock.mjs  (port 8799), and in
 // .dev.vars: UPSTAGE_API_KEY=test UPSTAGE_BASE=http://127.0.0.1:8799/upstage GEMINI_API_KEY=test GEMINI_BASE=http://127.0.0.1:8799/gemini
 //            LAB_PDF_BASE=http://127.0.0.1:8799/pdf/
 // Gemini answers by the task tag at the head of the prompt:
@@ -9,7 +9,7 @@
 //                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
 //   anything else                 the old text grader: half marks with a quote from the answer
 import http from "node:http";
-const flaky = new Set(), seen = { ocrIntoRead: 0 }, orders = new Map();
+const flaky = new Set(), seen = { ocrIntoRead: 0 }, orders = new Map(), paddleTx = new Map();
 const OCR_TEXT = "E1 A.1 R0 = 108.2 ohm, slope k = 0.385 ohm/K\nE1 A.2 lambda = 395 W/(m K)";
 const SCHEME = { points: 3.5, unit_rule: "a missing unit loses the mark", items: [
   { id: "A.1", points: 0.4, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 105, full_max: 111, partial: [{ min: 100, max: 115, points: 0.2 }] },
@@ -56,6 +56,18 @@ http.createServer(async (req, res) => {
     if (mm[2]) return res.end(JSON.stringify({ ...done(o.paymentKey, o.orderId, o.amount), status: "CANCELED" }));
     return res.end(JSON.stringify(done(o.paymentKey, o.orderId, o.amount)));
   }
+  /* Paddle's API: GET /transactions/:id (txn_ok… completed for the order named in its id's tail, txn_open… not yet
+     paid), POST /adjustments (a refund); the API key must be pdl_mock.  POST /paddle/txn registers a transaction */
+  if (req.url.startsWith("/paddle/")) {
+    res.setHeader("Content-Type", "application/json");
+    const path = req.url.slice(7), body = b.length ? JSON.parse(b) : {};
+    if (path === "/txn") { paddleTx.set(body.id, body); return res.end("{}"); }
+    if (req.headers.authorization !== "Bearer pdl_mock") { res.statusCode = 403; return res.end(JSON.stringify({ error: { code: "forbidden", detail: "bad key" } })); }
+    const mm = /^\/transactions\/(txn_\w+)$/.exec(path);
+    if (mm) { const tx = paddleTx.get(mm[1]); if (!tx) { res.statusCode = 404; return res.end(JSON.stringify({ error: { code: "not_found" } })); } return res.end(JSON.stringify({ data: tx })); }
+    if (path === "/adjustments") { seen.refunds = (seen.refunds || 0) + 1; res.statusCode = 201; return res.end(JSON.stringify({ data: { id: "adj_1", action: body.action, status: "pending_approval", transaction_id: body.transaction_id } })); }
+    res.statusCode = 404; return res.end("{}");
+  }
   if (req.url === "/seen") { res.setHeader("Content-Type", "application/json"); return res.end(JSON.stringify(seen)); }
   if (req.url.startsWith("/upstage")) {
     /* an image of 500–599 bytes (a test PNG with padding) is one Upstage is unsure of */
@@ -88,7 +100,9 @@ http.createServer(async (req, res) => {
       const val = { "A.1": 108.2, "A.2": 395, "A.3": 11 };
       return reply(res, { items: sc.items.map(it => ({ id: it.id, found: true, page: pg, label: it.id, value: val[it.id] ?? null, unit_ok: true,
         checks_met: ["axes_labeled", "points_min", "fit_line", "slope_read", "rows_min", "columns_units"], score: it.points / 2, decision: "partial", rules: [], note: "ok" })),
-        feedback: [{ page: pg, label: "A.1", note: "units ok", kind: "good" }, { page: 999, label: "X", note: "a page that does not exist", kind: "fix" }] });
+        feedback: [{ page: pg, label: "A.1", note: "units ok", kind: "good" }, { page: 999, label: "X", note: "a page that does not exist", kind: "fix" }],
+        review: { summary: "Careful measurements, but the graph lost marks.", strengths: ["R0 read with its unit"], habits: [{ habit: "too few points on the graph", fix: "take at least 8, spread over the range", pages: [pg, 999] }],
+          handwriting: { rating: "readable", notes: "7 and 1 look alike" }, presentation: "answers in their boxes" } });
     }
     const ids = [...prompt.matchAll(/^- (\S+) \(.*?\): 0~([\d.]+)/gm)].map(m => [m[1], +m[2]]);
     const ans = prompt.split("[Student answer and working sheets]")[1] || "";

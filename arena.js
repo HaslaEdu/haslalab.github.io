@@ -366,6 +366,7 @@ const LBT = {
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
        start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
        shopH: "토큰 충전", buyH: "구매", buy: (n, w) => `토큰 ${n}개 · ${w.toLocaleString()}원`, consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
+       buyP: (n, u) => `토큰 ${n}개${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "카드 · PayPal · Apple Pay 등(Paddle, 판매자 대행). 결제창에서 현지 통화와 세금이 함께 표시됩니다. 쓰지 않은 토큰은 구매 후 14일 안에 환불을 요청할 수 있습니다.", buyPH: "구매 (해외 결제 · USD)", buyTH: "구매 (국내 결제 · 원)",
        buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
        payOff: "결제는 준비 중입니다.", consentNeed: "구매 안내에 동의해 주세요.", adH: "광고 보고 충전", adWatch: "광고 보기", adParts: (k) => `광고 1편 = 토큰 1/3 · 지금 ${k}/3`,
        adNote: (d) => `휴대폰에서만 볼 수 있습니다. 하루 ${d}편까지(토큰 ${Math.floor(d / 3) || "1/3"}개분).`, adLoading: "광고를 불러오는 중…", adNone: "지금은 보여 줄 광고가 없습니다. 잠시 뒤 다시 시도해 주세요.",
@@ -381,6 +382,7 @@ const LBT = {
        retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
        item: "채점 항목", evid: "근거", rulesH: "적용 규정", by: {code: "범위·검증", model: "AI 판단"}, sheetA: "답안지", sheetW: "연습지", page: "쪽",
        regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다.",
+       rvH: "총평", rvGood: "잘한 점", rvHabits: "고쳐야 할 습관", rvHand: "글씨", rvPres: "답안 구성", rvRate: {clear: "또렷함", readable: "읽을 만함", hard: "알아보기 어려움"}, rvPages: "쪽",
        ref: "기준", refSave: "기준 점수 저장", refNote: "관리자만 보입니다: 사람이 매긴 기준 점수 — AI 채점 정확도 측정에 씁니다.", purged: "보관 기간이 지나 사진을 지웠습니다.",
        mH: "채점 비용 · 시간 · 정확도", mDays: "최근 30일", mExam: "시험 1회당", mUsd: "비용", mTok: "토큰 (입력 / 출력)", mCalls: "AI 호출", mTime: "채점 시간", mWait: "제출→채점 완료",
        mStep: "단계별", mAcc: "정확도 (관리자 기준 점수와 비교)", mMae: "문항당 평균 차이", mExact: "일치한 문항", mTaskDiff: "실험 총점 차이 (만점 대비)", mItems: "비교한 문항",
@@ -389,6 +391,7 @@ const LBT = {
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
        start: "start", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
        shopH: "Get tokens", buyH: "Buy", buy: (n, w) => `${n} token${n > 1 ? "s" : ""} · ₩${w.toLocaleString()}`, consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
+       buyP: (n, u) => `${n} token${n > 1 ? "s" : ""}${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "Card, PayPal, Apple Pay and more (Paddle, merchant of record). The checkout shows your local currency and tax. Unused tokens can be refunded within 14 days of purchase.", buyPH: "Buy (international · USD)", buyTH: "Buy (Korea · KRW)",
        buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
        payOff: "Payments are not open yet.", consentNeed: "Please agree to the purchase terms.", adH: "Watch ads", adWatch: "Watch an ad", adParts: (k) => `1 ad = 1/3 token · now ${k}/3`,
        adNote: (d) => `Phones only. Up to ${d} ads a day.`, adLoading: "Loading the ad…", adNone: "No ad is available right now. Please try again later.",
@@ -404,6 +407,7 @@ const LBT = {
        retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
        item: "Item", evid: "Evidence", rulesH: "Rules", by: {code: "interval / check", model: "AI judgement"}, sheetA: "answer sheet", sheetW: "working sheet", page: "p.",
        regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn.",
+       rvH: "Review", rvGood: "Done well", rvHabits: "Habits to fix", rvHand: "Handwriting", rvPres: "Presentation", rvRate: {clear: "clear", readable: "readable", hard: "hard to read"}, rvPages: "p.",
        ref: "Ref.", refSave: "Save reference marks", refNote: "Admins only: marks given by a person — used to measure how accurate the AI grading is.", purged: "The photo was removed after its keeping time.",
        mH: "Grading cost · time · accuracy", mDays: "last 30 days", mExam: "Per exam", mUsd: "Cost", mTok: "Tokens (in / out)", mCalls: "AI calls", mTime: "Grading time", mWait: "Submitted → graded",
        mStep: "By step", mAcc: "Accuracy (against the admins' reference marks)", mMae: "Mean difference per item", mExact: "Items that agree", mTaskDiff: "Experiment total difference (of full marks)", mItems: "Items compared",
@@ -437,11 +441,13 @@ async function arLabList(root, alive) {
 /* ── getting tokens: buying (Toss Payments) and rewarded video ads (a third each) ── */
 function arShopHtml(c, parts) {
   const L = lbt();
-  if (!c || (!c.pay && !c.ads)) return "";
+  if (!c || (!c.pay && !c.paddle && !c.ads)) return "";
   return `<div class="arpanel" id="lbShop"><h3>🎟 ${L.shopH}</h3>
-    ${c.pay ? `<h4 class="arh4">${L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
-      <label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>
-      <p class="arempty" style="margin:0">${L.buyNote}</p>` : `<p class="arempty">${L.payOff}</p>`}
+    ${c.paddle ? `<h4 class="arh4">${c.pay ? L.buyPH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.paddle.packs.map((p) => `<button class="cmbtn pri" data-ppack="${esc(p.id)}">${L.buyP(p.tokens, p.usd)}</button>`).join("")}</div>
+      <p class="arempty" style="margin:6px 0 0">${L.buyPNote}</p>` : ""}
+    ${c.pay ? `<h4 class="arh4">${c.paddle ? L.buyTH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
+      <p class="arempty" style="margin:6px 0 0">${L.buyNote}</p>` : ""}
+    ${c.pay || c.paddle ? `<label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>` : `<p class="arempty">${L.payOff}</p>`}
     ${c.ads ? `<h4 class="arh4">${L.adH}</h4><p style="margin:0 0 6px"><b id="lbParts">${L.adParts(parts)}</b></p>
       <button class="cmbtn" id="lbAd">▶ ${L.adWatch}</button><p class="arempty" style="margin:6px 0 0">${L.adNote(c.ads.daily)}</p>` : ""}
     <p id="lbShopMsg" class="arinfo" style="margin:8px 0 0"></p></div>`;
@@ -449,7 +455,7 @@ function arShopHtml(c, parts) {
 function arLoad(src, test) {
   return new Promise((ok, no) => { if (test()) return ok(); const sc = document.createElement("script"); sc.src = src; sc.async = true; sc.onload = () => ok(); sc.onerror = () => no(new Error("load")); document.head.append(sc); });
 }
-let arAd = null;                                                                  // the rewarded ad being shown: {slot, nonce, granted}
+let arAd = null, arPaddle = {ready: false, order: null};                                                                  // the rewarded ad being shown: {slot, nonce, granted}
 function arShopWire(root, c) {
   const L = lbt(), msg = (t) => { const m = document.querySelector("#lbShopMsg"); if (m) m.textContent = t; };
   root.querySelectorAll("[data-pack]").forEach((b) => b.onclick = async () => {
@@ -461,6 +467,28 @@ function arShopWire(root, c) {
       const payment = window.TossPayments(c.pay.client_key).payment({customerKey: window.TossPayments.ANONYMOUS});
       const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
       await payment.requestPayment({method: "CARD", amount: {currency: "KRW", value: o.amount}, orderId: o.order_id, orderName: o.order_name, successUrl: back, failUrl: back});
+    } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
+  });
+  /* Paddle: Paddle.js once per page, the overlay checkout with the pack's price and our order id; after payment
+     pay.html is told the transaction, and the server checks it with Paddle (the signed webhook adds the tokens too) */
+  const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
+  root.querySelectorAll("[data-ppack]").forEach((b) => b.onclick = async () => {
+    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
+    b.disabled = true;
+    try {
+      const o = await cmApi("POST", "/pay/order", {pack: b.dataset.ppack, provider: "paddle"});
+      await arLoad("https://cdn.paddle.com/paddle/v2/paddle.js", () => !!window.Paddle);
+      arPaddle.order = o.order_id;
+      if (!arPaddle.ready) {
+        if (c.paddle.env === "sandbox") window.Paddle.Environment.set("sandbox");
+        window.Paddle.Initialize({token: c.paddle.token, eventCallback: (ev) => {
+          if (ev && ev.name === "checkout.completed" && arPaddle.order) location.href = `${back}?paddle=1&order=${encodeURIComponent(arPaddle.order)}&txn=${encodeURIComponent((ev.data && ev.data.transaction_id) || "")}`;
+          if (ev && ev.name === "checkout.closed") document.querySelectorAll("[data-ppack]").forEach((x) => x.disabled = false);
+        }});
+        arPaddle.ready = true;
+      }
+      window.Paddle.Checkout.open({items: [{priceId: o.price_id, quantity: 1}], customData: {order_id: o.order_id},
+        settings: {displayMode: "overlay", locale: lang === "en" ? "en" : "ko", successUrl: `${back}?paddle=1&order=${encodeURIComponent(o.order_id)}`}});
     } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
   });
   const ad = root.querySelector("#lbAd");
@@ -508,7 +536,18 @@ function arLabItems(x, reg, rev) {
       <td class="t">${i.page ? `${L.page === "p." ? "p." + i.page : i.page + L.page} · ${i.sheet === "answer" ? L.sheetA : L.sheetW}` : "—"}${i.value != null ? ` · <q>${esc(i.value)}</q>` : ""}</td>
       <td>${(i.rules || []).map(rule).join(" ")}</td>${rev ? `<td><input data-ref="${esc(i.id)}" type="number" step="0.1" min="0" max="${i.points}" value="${ref(i.id)}" style="width:64px"></td>` : ""}</tr>`).join("")}</tbody></table>
     ${rev ? `<p class="arempty" style="margin:6px 0">${L.refNote} <button class="cmbtn sm" data-rev="${esc(rev.task)}">${L.refSave}</button></p>` : ""}
-    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}`;
+    ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}
+    ${arLabReview(x.review)}`;
+}
+/* the coach's review of one experiment: overall, what went well, habits to fix, handwriting, presentation */
+function arLabReview(r) {
+  if (!r || !r.summary) return "";
+  const L = lbt();
+  return `<div class="arpanel" data-review style="margin:12px 0 0;background:var(--paper,rgba(127,127,127,.05))"><h4 class="arh4" style="margin-top:0">📝 ${L.rvH}</h4><p style="margin:0 0 8px">${esc(r.summary)}</p>
+    ${(r.strengths || []).length ? `<b>${L.rvGood}</b><ul class="arfb">${r.strengths.map((x) => `<li class="good">${esc(x)}</li>`).join("")}</ul>` : ""}
+    ${(r.habits || []).length ? `<b>${L.rvHabits}</b><ul class="arfb">${r.habits.map((h) => `<li class="fix"><em>${esc(h.habit)}</em> → ${esc(h.fix)}${(h.pages || []).length ? ` <small>(${h.pages.map((n) => L.rvPages === "p." ? "p." + n : n + L.rvPages).join(", ")})</small>` : ""}</li>`).join("")}</ul>` : ""}
+    ${r.handwriting ? `<p style="margin:6px 0 0"><b>${L.rvHand}</b> · ${L.rvRate[r.handwriting.rating] || ""} — ${esc(r.handwriting.notes)}</p>` : ""}
+    ${r.presentation ? `<p style="margin:6px 0 0"><b>${L.rvPres}</b> — ${esc(r.presentation)}</p>` : ""}</div>`;
 }
 async function arLabOne(root, alive, id) {
   const L = lbt(), T = arT();
