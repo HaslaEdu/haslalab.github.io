@@ -165,6 +165,36 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 로컬 시험: `node test-lab-mock.mjs`(가짜 Upstage · Gemini · PDF)를 띄우고 `.dev.vars`에 `LAB_PDF_BASE=http://127.0.0.1:8799/pdf/`를 더한 뒤 `node test-lab-grading.mjs`.
 
+## v10: 채점 비용 · 시간 · 정확도 기록, 답안 사진 보관, 일회용 스캔 링크, 측정 개수 규정(R11)
+
+- **비용 · 시간**: 실전 시험에서 AI를 부를 때마다(쪽 읽기의 Upstage · Gemini, 채점 기준표, 채점) `lab_calls`에 한 줄씩 남깁니다 — 토큰(입력 · 출력 · 캐시), Upstage 쪽 수, 걸린 시간, 추정 가격. 가격은 코드의 `PRICES`(USD / 100만 토큰, Upstage는 쪽당)로 매기고, `LAB_PRICES`(JSON, 같은 모양)로 바꾸거나 더할 수 있습니다. 실험마다 `detail.tasks.E1.usage`, 시험마다 `detail.grade_ms`도 남습니다.
+- **정확도**: 관리자는 성적표(`#/lab/<id>`)에서 문항마다 «기준» 점수를 넣고 저장합니다(`lab_reviews`). `#/weekly/admin`의 실전 모드 관리에 «채점 비용 · 시간 · 정확도»가 나옵니다: 시험 1회당 평균 비용 · 토큰 · 호출 수 · 채점 시간, 단계별 표, 문항당 평균 차이, 일치율, 실험 총점 차이. API: `GET /api/admin/lab/metrics?days=30`, `POST /api/admin/lab/:id/review {task, items:[{id, ref}]}`.
+- **답안 사진**: Worker에 R2 버킷을 `LAB_PAGES`로 연결하면 사진은 R2에, 아니면 예전처럼 D1(`lab_pages.data`)에 둡니다. D1 무료 한도(데이터베이스당 500MB)를 생각하면 R2가 낫습니다. 채점이 끝나고 **2시간** 지난 시험의 사진을 지웁니다 — 읽힌 내용과 점수, 성적표는 남고 사진만 410(`purged`)이 됩니다. `LAB_KEEP_HOURS`로 시간을 바꾸고(예: `24`), `off`면 지우지 않습니다. 관리자의 기준 점수(정확도)는 사진이 있는 2시간 안에 넣는 것이 좋습니다. 지우기는 요청 10번에 한 번꼴로 저절로 돌고, Cron Trigger(`*/15 * * * *` 등)를 걸면 제때 돕니다.
+- **스캔 링크**: QR 링크에는 시험 번호 없이 코드 하나(`#c=` — 만든 시각을 36진수로 + 128비트 난수를 62진수로)만 들어갑니다. 해시만 저장하고 모든 시험에 걸쳐 유일합니다(고유 인덱스). 스캔이 끝나면(제출 또는 마감) 서버가 링크를 파기하고(`void:…`), 휴대폰은 410 `scan_over`를 받습니다. 예전 링크(`#s=…&k=…`)도 그대로 됩니다.
+- **R11 측정 개수**(규정 `2026-10-29`): 측정표와 그래프는 채점 기준표가 정한 수 이상의 측정값이 있어야 합니다. 기준표에 수가 없으면 실험에 따라 적음 3 · 중간 5 · 많음 7개(기준표를 뽑을 때 `n_min`, `n_class`). 표의 행 수와 그래프의 점 수는 읽힌 내용으로 코드가 셉니다: 개수 확인 항목(`rows_min`, `points_min`)은 모자라면 0점, 그런 항목이 없는 표 · 그래프는 모자라면 절반.
+
+### 올리는 순서
+
+1. `migrations/0009_lab_metrics.sql`을 원격 D1에 적용합니다(0008 다음). 적용 전에도 채점은 되지만 기록 · 기준 점수 · R2는 쓰이지 않습니다.
+2. Worker를 배포합니다. 필요하면 R2 버킷을 만들어 `LAB_PAGES`로 연결합니다. 사진 보관 시간을 2시간에서 바꿀 때만 `LAB_KEEP_HOURS`를 넣습니다.
+
+로컬 시험: `node test-lab-metrics.mjs`, R2와 파기는 `npx wrangler dev --config wrangler.test-r2.toml --port 8789` 뒤 `R2=1 API=http://127.0.0.1:8789 node test-lab-metrics.mjs`.
+
+## v11: 실전 토큰 구매(토스페이먼츠)와 영상 광고 충전
+
+- **구매**: `#/lab`의 «토큰 충전»에서 묶음(기본 1개 1,900원 · 5개 7,900원 · 12개 15,900원 — `PAY_PACKS` JSON으로 바꿈)을 고르고, 구매 안내(만 19세 미만은 보호자 동의) 확인 후 토스페이먼츠 결제창(v2 SDK, 카드 · 간편결제)이 열립니다. 서버가 먼저 주문(`pay_orders`, 주문번호 = 시각 + 난수)을 저장하고, 결제가 끝나면 토스가 `pay.html`로 돌려보내며, 서버가 **금액을 자기 주문과 비교한 뒤** 시크릿 키로 결제를 승인하고 토큰을 한 번만 더합니다(같은 트랜잭션에서 `credited` 표시 — 새로고침이나 동시 요청에도 한 번). 이미 승인된 결제(`ALREADY_PROCESSED_PAYMENT`)는 조회해서 확인합니다.
+- **환불**: 관리자가 `POST /api/admin/pay/<주문번호>/cancel {reason}` — 토스에서 결제를 취소하고, 남은 토큰에서 그만큼 회수합니다. 결제 목록: `GET /api/admin/pay/orders`.
+- **영상 광고**: Google Ad Manager의 **보상형 광고(rewarded)** 만 씁니다(일반 광고를 보상과 묶는 것은 정책 위반). 1편 = 토큰 1/3(`users.token_parts`), 3편이면 토큰 1개. 광고를 시작할 때 서버가 일회용 번호를 주고, 광고가 «보상 획득»을 알리면 그 번호로 받습니다 — 시작 후 `ADS_MIN_SEC`(기본 10초) 이상 지나야 하고, 하루(한국 날짜) `ADS_DAILY`(기본 3)편까지, 같은 번호는 한 번만. 웹 보상형 광고는 **휴대폰 화면에서만** 나옵니다(Google 제약).
+- 환경 변수: `TOSS_CLIENT_KEY`, `TOSS_SECRET_KEY`(Secret), `PAY_PACKS`(선택), `ADS_REWARDED_UNIT`(Ad Manager 보상형 광고 단위 경로, `test`면 Google 샘플 단위), `ADS_DAILY`, `ADS_MIN_SEC`. 키가 없으면 해당 칸은 «준비 중»으로 나옵니다.
+- 실제 판매 전에: 사업자등록 · 통신판매업 신고, 사이트 하단의 사업자 정보와 환불 규정, 토스페이먼츠 가맹 심사(라이브 키). Ad Manager 계정과 보상형 광고 단위.
+
+### 올리는 순서
+
+1. `migrations/0010_tokens.sql`을 원격 D1에 적용합니다(0009 다음).
+2. Worker를 배포하고 위 환경 변수를 넣습니다(테스트 키 `test_ck_…` / `test_sk_…`로 먼저 시험).
+
+로컬 시험: `.dev.vars`에 `TOSS_CLIENT_KEY=test_ck_mock TOSS_SECRET_KEY=test_sk_mock TOSS_BASE=http://127.0.0.1:8799/toss ADS_REWARDED_UNIT=test ADS_MIN_SEC=1 ADS_DAILY=3`, `node test-lab-mock.mjs` 후 `node test-shop.mjs`.
+
 ## 처음 배포하기 (명령줄)
 
 Node.js 18 이상이 필요합니다.

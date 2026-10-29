@@ -147,7 +147,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await pg.waitForSelector("#qr svg", { timeout: 20000 });
   ok(await pg.$(".desk iframe") === null, "the experiments are switched off");
   const scanLink = await pg.$eval('#qrArea a[target="_blank"]', a => a.href);
-  ok(/scan\.html#s=\d+&k=[\w-]+/.test(scanLink), "QR / link carries session and upload token");
+  ok(/scan\.html#c=[0-9a-z]{8,9}[0-9A-Za-z]{22}&/.test(scanLink) && !/[#&]s=/.test(scanLink), "QR / link carries one scan code (time + random digits), no session number " + scanLink.split("#")[1]);
   await pg.screenshot({ path: OUT + "3-scan.png" });
   [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.active && act.active.status === "scanning", "server: scanning");
@@ -203,7 +203,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await ph.click("#send");
   await ph.waitForFunction(() => /보낸 쪽 · 3/.test(document.body.textContent), null, { timeout: 20000 });
   if (await ph.$(".lv")) await ph.click('.lv [data-x="close"]');                // it opens again for the next page
-  const lastId = (await call("GET", "/lab/sessions/" + /s=(\d+)/.exec(scanLink)[1], null, TOK))[1].session.pages.slice(-1)[0].id;
+  const lastId = (await call("GET", "/lab/sessions/" + (await call("GET", "/lab/active", null, TOK))[1].active.id, null, TOK))[1].session.pages.slice(-1)[0].id;
   await ph.click(`[data-del="${lastId}"]`);
   await ph.waitForFunction(() => /보낸 쪽 · 2/.test(document.body.textContent), null, { timeout: 10000 });
   ok(true, "…sent, and taken out again from the phone");
@@ -229,7 +229,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.active === null && act.tokens === 0, "nothing open, 0 tokens");
   await ph.reload(); await sleep(1500);
-  ok(/끝났습니다|더 보낼 수 없습니다/.test(await ph.textContent("body")), "the phone says scanning is closed");
+  ok(/파기/.test(await ph.textContent("body")), "the phone says scanning is over and its link destroyed");
 
   /* 8. coming back to the exam page now: the intro, no tokens, no start */
   await pg.goto(SITE + "/#/"); await pg.goto(EXAM_URL); await sleep(1500);

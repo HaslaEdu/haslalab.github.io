@@ -1,0 +1,19 @@
+# Tests only (test-lab-metrics.mjs with R2=1): the Worker with an R2 bucket for the answer photos and a keeping time of
+# zero hours, so a graded sitting's photos are removed at once.  Run: npx wrangler dev --config wrangler.test-r2.toml --port 8789
+name = "haslalab-community"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+ALLOWED_ORIGINS = "http://localhost:8765"
+LAB_KEEP_HOURS = "0"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "haslalab-community"
+database_id = "96761b6d-c194-4ee5-9836-7845b51a5f07"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "LAB_PAGES"
+bucket_name = "haslalab-lab-pages"

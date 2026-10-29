@@ -364,7 +364,13 @@ async function arMe(root, alive) {
 const LBT = {
   ko: {h: "실전 모드", sub: "대회 실험 시간만큼 실험(IPhO 5시간, OPhO 3시간 …) + 30분 답안 스캔. 시작할 때마다 실전 토큰 1개를 씁니다. 진행 중인 시험으로 돌아갈 때는 쓰지 않습니다.",
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
-       start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
+       start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
+       shopH: "토큰 충전", buyH: "구매", buy: (n, w) => `토큰 ${n}개 · ${w.toLocaleString()}원`, consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
+       buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
+       payOff: "결제는 준비 중입니다.", consentNeed: "구매 안내에 동의해 주세요.", adH: "광고 보고 충전", adWatch: "광고 보기", adParts: (k) => `광고 1편 = 토큰 1/3 · 지금 ${k}/3`,
+       adNote: (d) => `휴대폰에서만 볼 수 있습니다. 하루 ${d}편까지(토큰 ${Math.floor(d / 3) || "1/3"}개분).`, adLoading: "광고를 불러오는 중…", adNone: "지금은 보여 줄 광고가 없습니다. 잠시 뒤 다시 시도해 주세요.",
+       adMobile: "보상형 광고는 휴대폰 화면에서만 지원됩니다. 휴대폰으로 이 페이지를 열어 주세요.", adGot: (k, n) => `토큰 1/3을 받았습니다 (${k}/3)${n ? ` · 토큰 ${n}개` : ""}`, adToken: "광고 3편을 다 봐서 토큰 1개를 받았습니다!",
+       adClosed: "광고를 끝까지 보지 않아 보상이 없습니다.", adDaily: (d) => `오늘은 광고를 ${d}편 다 보셨습니다. 내일 다시 오세요.`, adOff: "광고 충전은 준비 중입니다.", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
        st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음"},
        why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
@@ -374,10 +380,20 @@ const LBT = {
        reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
        retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
        item: "채점 항목", evid: "근거", rulesH: "적용 규정", by: {code: "범위·검증", model: "AI 판단"}, sheetA: "답안지", sheetW: "연습지", page: "쪽",
-       regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
+       regH: "채점 규정", regNote: "엄격 채점: 읽을 수 없는 것은 응시자 책임이며 다시 읽어 주지 않습니다.", noSol: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다.",
+       ref: "기준", refSave: "기준 점수 저장", refNote: "관리자만 보입니다: 사람이 매긴 기준 점수 — AI 채점 정확도 측정에 씁니다.", purged: "보관 기간이 지나 사진을 지웠습니다.",
+       mH: "채점 비용 · 시간 · 정확도", mDays: "최근 30일", mExam: "시험 1회당", mUsd: "비용", mTok: "토큰 (입력 / 출력)", mCalls: "AI 호출", mTime: "채점 시간", mWait: "제출→채점 완료",
+       mStep: "단계별", mAcc: "정확도 (관리자 기준 점수와 비교)", mMae: "문항당 평균 차이", mExact: "일치한 문항", mTaskDiff: "실험 총점 차이 (만점 대비)", mItems: "비교한 문항",
+       mStore: "답안 사진", mKeep: (h) => h == null ? "보관 중 (파기 꺼짐)" : `채점 ${h}시간 뒤 파기`, mNone: "아직 기록이 없습니다.", mRecent: "최근 채점"},
   en: {h: "Exam mode", sub: "Experiments for as long as on the day (IPhO five hours, OPhO three …), then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
-       start: "start", grant: "received", revoke: "taken back", refund: "refunded", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
+       start: "start", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
+       shopH: "Get tokens", buyH: "Buy", buy: (n, w) => `${n} token${n > 1 ? "s" : ""} · ₩${w.toLocaleString()}`, consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
+       buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
+       payOff: "Payments are not open yet.", consentNeed: "Please agree to the purchase terms.", adH: "Watch ads", adWatch: "Watch an ad", adParts: (k) => `1 ad = 1/3 token · now ${k}/3`,
+       adNote: (d) => `Phones only. Up to ${d} ads a day.`, adLoading: "Loading the ad…", adNone: "No ad is available right now. Please try again later.",
+       adMobile: "Rewarded ads only run on a phone screen. Open this page on your phone.", adGot: (k, n) => `You got 1/3 of a token (${k}/3)${n ? ` · ${n} tokens` : ""}`, adToken: "Three ads watched: you got a token!",
+       adClosed: "The ad was closed before the end, so there is no reward.", adDaily: (d) => `You have watched today's ${d} ads. Come back tomorrow.`, adOff: "Ads are not open yet.", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
        st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent"},
        why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
@@ -387,7 +403,11 @@ const LBT = {
        reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
        retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
        item: "Item", evid: "Evidence", rulesH: "Rules", by: {code: "interval / check", model: "AI judgement"}, sheetA: "answer sheet", sheetW: "working sheet", page: "p.",
-       regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn."}};
+       regH: "Grading regulation", regNote: "Strict marking: whatever cannot be read is the candidate's responsibility and is not re-read.", noSol: "This experiment has no official solution file, so no marking scheme could be drawn.",
+       ref: "Ref.", refSave: "Save reference marks", refNote: "Admins only: marks given by a person — used to measure how accurate the AI grading is.", purged: "The photo was removed after its keeping time.",
+       mH: "Grading cost · time · accuracy", mDays: "last 30 days", mExam: "Per exam", mUsd: "Cost", mTok: "Tokens (in / out)", mCalls: "AI calls", mTime: "Grading time", mWait: "Submitted → graded",
+       mStep: "By step", mAcc: "Accuracy (against the admins' reference marks)", mMae: "Mean difference per item", mExact: "Items that agree", mTaskDiff: "Experiment total difference (of full marks)", mItems: "Items compared",
+       mStore: "Answer photos", mKeep: (h) => h == null ? "kept (removal off)" : `removed ${h} h after grading`, mNone: "Nothing recorded yet.", mRecent: "Recent gradings"}};
 const lbt = () => LBT[lang === "en" ? "en" : "ko"];
 /* the catalogue's solution sheet for an exam's experiment, when the site has one */
 function arLabSol(s, task) {
@@ -397,11 +417,12 @@ function arLabSol(s, task) {
 async function arLabList(root, alive) {
   const L = lbt();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab"); } catch (e) {} location.hash = "#/login"; return; }
-  const [a, tk, ls] = await Promise.all([cmApi("GET", "/lab/active"), cmApi("GET", "/lab/tokens"), cmApi("GET", "/lab/sessions")]); if (!alive()) return;
+  const [a, tk, ls, shop] = await Promise.all([cmApi("GET", "/lab/active"), cmApi("GET", "/lab/tokens"), cmApi("GET", "/lab/sessions"), cmApi("GET", "/pay/config").catch(() => ({}))]); if (!alive()) return;
   const act = a.active;
   root.innerHTML = `
     <div class="cmtop"><div><h1>⏱ ${L.h}</h1><p>${L.sub}</p></div></div>
-    <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b>${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
+    <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
+    ${arShopHtml(shop, tk.parts || 0)}
     ${act ? `<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>
       ${act.entry ? `<a class="cmbtn pri" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${L.resume}</a>` : ""}</div>` : ""}
     <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length ? `<table class="cmtbl artbl"><tbody>${ls.sessions.map((x) => `<tr>
@@ -411,16 +432,82 @@ async function arLabList(root, alive) {
     <div class="arpanel"><h3>${L.ledger}</h3><p class="arempty" style="margin-top:0">${L.howGet}</p>${tk.ledger.length ? `<table class="cmtbl artbl"><tbody>${tk.ledger.map((x) => `<tr>
       <td style="width:80px"><b style="color:${x.delta < 0 ? "#c0392b" : "#1e8449"}">${x.delta > 0 ? "+" : ""}${x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note ? " · " + esc(x.note) : ""}</td>
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
+  arShopWire(root, shop);
+}
+/* ── getting tokens: buying (Toss Payments) and rewarded video ads (a third each) ── */
+function arShopHtml(c, parts) {
+  const L = lbt();
+  if (!c || (!c.pay && !c.ads)) return "";
+  return `<div class="arpanel" id="lbShop"><h3>🎟 ${L.shopH}</h3>
+    ${c.pay ? `<h4 class="arh4">${L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
+      <label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>
+      <p class="arempty" style="margin:0">${L.buyNote}</p>` : `<p class="arempty">${L.payOff}</p>`}
+    ${c.ads ? `<h4 class="arh4">${L.adH}</h4><p style="margin:0 0 6px"><b id="lbParts">${L.adParts(parts)}</b></p>
+      <button class="cmbtn" id="lbAd">▶ ${L.adWatch}</button><p class="arempty" style="margin:6px 0 0">${L.adNote(c.ads.daily)}</p>` : ""}
+    <p id="lbShopMsg" class="arinfo" style="margin:8px 0 0"></p></div>`;
+}
+function arLoad(src, test) {
+  return new Promise((ok, no) => { if (test()) return ok(); const sc = document.createElement("script"); sc.src = src; sc.async = true; sc.onload = () => ok(); sc.onerror = () => no(new Error("load")); document.head.append(sc); });
+}
+let arAd = null;                                                                  // the rewarded ad being shown: {slot, nonce, granted}
+function arShopWire(root, c) {
+  const L = lbt(), msg = (t) => { const m = document.querySelector("#lbShopMsg"); if (m) m.textContent = t; };
+  root.querySelectorAll("[data-pack]").forEach((b) => b.onclick = async () => {
+    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
+    b.disabled = true;
+    try {
+      const o = await cmApi("POST", "/pay/order", {pack: b.dataset.pack});
+      await arLoad("https://js.tosspayments.com/v2/standard", () => !!window.TossPayments);
+      const payment = window.TossPayments(c.pay.client_key).payment({customerKey: window.TossPayments.ANONYMOUS});
+      const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
+      await payment.requestPayment({method: "CARD", amount: {currency: "KRW", value: o.amount}, orderId: o.order_id, orderName: o.order_name, successUrl: back, failUrl: back});
+    } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
+  });
+  const ad = root.querySelector("#lbAd");
+  if (ad) ad.onclick = async () => {
+    ad.disabled = true; msg(L.adLoading);
+    let st;
+    try { st = await cmApi("POST", "/ads/start"); }
+    catch (e) { msg(e.code === "ads_daily" ? L.adDaily(c.ads.daily) : e.code === "ads_off" ? L.adOff : arErr(e)); ad.disabled = false; return; }
+    try { await arLoad("https://securepubads.g.doubleclick.net/tag/js/gpt.js", () => !!(window.googletag && window.googletag.apiReady)); } catch (e) { msg(L.adNone); ad.disabled = false; return; }
+    const gt = window.googletag;
+    gt.cmd.push(() => {
+      const slot = gt.defineOutOfPageSlot(c.ads.unit, gt.enums.OutOfPageFormat.REWARDED);
+      if (!slot) { msg(L.adMobile); ad.disabled = false; return; }                 // not a phone screen
+      arAd = {slot, nonce: st.nonce, granted: false, end: arAdEnd, claim: arAdClaim};     // the listeners below call this page's own handlers
+      slot.addService(gt.pubads());
+      if (!arShopWire.hooked) {
+        arShopWire.hooked = true;
+        gt.pubads().addEventListener("rewardedSlotReady", (e) => { if (arAd && e.slot === arAd.slot) e.makeRewardedVisible(); });
+        gt.pubads().addEventListener("slotRenderEnded", (e) => { if (arAd && e.slot === arAd.slot && e.isEmpty) arAd.end(lbt().adNone); });
+        gt.pubads().addEventListener("rewardedSlotGranted", (e) => { if (arAd && e.slot === arAd.slot) { arAd.granted = true; arAd.claim(arAd.nonce); } });
+        gt.pubads().addEventListener("rewardedSlotClosed", (e) => { if (arAd && e.slot === arAd.slot) arAd.end(arAd.granted ? null : lbt().adClosed); });
+      }
+      gt.enableServices(); gt.display(slot);
+    });
+  };
+  function arAdEnd(text) { if (arAd) { try { window.googletag.destroySlots([arAd.slot]); } catch (e) {} } arAd = null; if (text) msg(text); if (ad) ad.disabled = false; }
+  async function arAdClaim(nonce, again) {
+    try {
+      const r = await cmApi("POST", "/ads/claim", {nonce});
+      const n = root.querySelector("#lbTokN"), pp = root.querySelector("#lbParts"); if (n) n.textContent = r.tokens; if (pp) pp.textContent = L.adParts(r.parts);
+      msg(r.parts === 0 ? L.adToken : L.adGot(r.parts, 0));
+    } catch (e) {
+      if (e.code === "too_soon" && !again) { setTimeout(() => arAdClaim(nonce, true), 6000); return; }
+      msg(e.code === "ads_daily" ? L.adDaily(c.ads.daily) : arErr(e));
+    }
+  }
 }
 /* one experiment graded from the images: per item the mark, how it was decided, where its evidence is and the rules that cost marks */
-function arLabItems(x, reg) {
-  const L = lbt(), T = arT(), rule = (id) => { const r = reg && reg.rules.find((y) => y.id === id); return `<span class="arrule" title="${esc(r ? (lang === "en" ? r.en : r.ko) : id)}">${esc(id)}</span>`; };
+function arLabItems(x, reg, rev) {
+  const L = lbt(), T = arT(), ref = (id) => { const r = rev && rev.list.find((y) => y.task === rev.task && y.item_id === id); return r ? r.ref_points : ""; }, rule = (id) => { const r = reg && reg.rules.find((y) => y.id === id); return `<span class="arrule" title="${esc(r ? (lang === "en" ? r.en : r.ko) : id)}">${esc(id)}</span>`; };
   return `<div class="arres ${x.score >= x.points ? "ok" : ""}"><b>${T.score}</b><span>${x.score} / ${x.points}${T.pts}</span>${x.grader ? `<small>${T.grader}: ${esc(x.grader)}${x.regulation ? " · " + esc(x.regulation) : ""}</small>` : ""}</div>
-    <table class="cmtbl artbl"><thead><tr><th style="width:40%">${L.item}</th><th style="width:96px">${T.score}</th><th>${L.evid}</th><th style="width:90px">${L.rulesH}</th></tr></thead><tbody>
+    <table class="cmtbl artbl"><thead><tr><th style="width:40%">${L.item}</th><th style="width:96px">${T.score}</th><th>${L.evid}</th><th style="width:90px">${L.rulesH}</th>${rev ? `<th style="width:76px">${L.ref}</th>` : ""}</tr></thead><tbody>
     ${x.items.map((i) => `<tr><td class="t"><b>${esc(i.id)}</b> ${esc(i.what || "")}${i.note ? `<div class="arnote">${esc(i.note)}</div>` : ""}</td>
       <td><b>${i.got}</b>/${i.points}<div class="ardec ${i.decision}">${T[i.decision] || ""}</div><div class="arby">${L.by[i.by] || ""}</div></td>
       <td class="t">${i.page ? `${L.page === "p." ? "p." + i.page : i.page + L.page} · ${i.sheet === "answer" ? L.sheetA : L.sheetW}` : "—"}${i.value != null ? ` · <q>${esc(i.value)}</q>` : ""}</td>
-      <td>${(i.rules || []).map(rule).join(" ")}</td></tr>`).join("")}</tbody></table>
+      <td>${(i.rules || []).map(rule).join(" ")}</td>${rev ? `<td><input data-ref="${esc(i.id)}" type="number" step="0.1" min="0" max="${i.points}" value="${ref(i.id)}" style="width:64px"></td>` : ""}</tr>`).join("")}</tbody></table>
+    ${rev ? `<p class="arempty" style="margin:6px 0">${L.refNote} <button class="cmbtn sm" data-rev="${esc(rev.task)}">${L.refSave}</button></p>` : ""}
     ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}`;
 }
 async function arLabOne(root, alive, id) {
@@ -442,7 +529,7 @@ async function arLabOne(root, alive, id) {
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
         ${s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
-      const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation)
+      const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)
         : x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
         : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
         : x.status === "empty" ? `<div class="cmnote">${L.empty}</div>` : `<div class="cmnote">${L.st[s.status] || ""}</div>`;
@@ -455,15 +542,36 @@ async function arLabOne(root, alive, id) {
   arMath(root);
   root.querySelectorAll("details.arsub").forEach((d) => d.addEventListener("toggle", async () => {
     const box = d.querySelector("[data-img]"); if (!d.open || !box || box.firstChild) return;
-    try { const r = await fetch(cmBase() + `/api/lab/pages/${box.dataset.img}/img`, {headers: {Authorization: "Bearer " + cmTok()}}); if (r.ok) box.innerHTML = `<img alt="" style="width:100%;border-radius:8px" src="${URL.createObjectURL(await r.blob())}">`; } catch (e) {}
+    try { const r = await fetch(cmBase() + `/api/lab/pages/${box.dataset.img}/img`, {headers: {Authorization: "Bearer " + cmTok()}});
+      if (r.ok) box.innerHTML = `<img alt="" style="width:100%;border-radius:8px" src="${URL.createObjectURL(await r.blob())}">`;
+      else if (r.status === 410) box.innerHTML = `<p class="arempty" style="padding:10px">${L.purged}</p>`; } catch (e) {}
   }));
+  /* admins: the reference marks for this experiment */
+  root.querySelectorAll("[data-rev]").forEach((b) => b.onclick = async () => {
+    const panel = b.closest(".arpanel"), items = [...panel.querySelectorAll("[data-ref]")].filter((x) => x.value !== "").map((x) => ({id: x.dataset.ref, ref: +x.value}));
+    try { const r = await cmApi("POST", `/admin/lab/${id}/review`, {task: b.dataset.rev, items}); cmToast(T.saved + " · " + r.saved); } catch (e) { cmToast(arErr(e)); }
+  });
   const del = root.querySelector("#arLabDel");
   if (del) del.onclick = async () => { if (!confirm(L.delQ)) return; try { await cmApi("DELETE", `/lab/sessions/${id}`); location.hash = "#/lab"; } catch (e) { cmToast(arErr(e)); } };
+}
+/* what grading costs, how long it takes and how right it is (admins) */
+function arLabMetrics(m) {
+  const L = lbt(), e = m.per_exam, n = (v, d) => v == null ? "—" : (+v).toLocaleString(undefined, {maximumFractionDigits: d ?? 0}), usd = (v) => v == null ? "—" : "$" + (+v).toFixed(4);
+  const a = m.accuracy, st = m.storage || {};
+  return `<h4 class="arh4">${L.mH} <small style="font-weight:400;color:var(--graphite)">${L.mDays}</small></h4>
+    ${e.n ? `<div class="arstats"><div><small>${L.mExam} · ${L.mUsd}</small><b>${usd(e.avg_usd)}</b></div><div><small>${L.mTok}</small><b>${n(e.avg_in_tok)} / ${n(e.avg_out_tok)}</b></div>
+      <div><small>${L.mCalls}</small><b>${n(e.avg_calls, 1)}</b></div><div><small>${L.mTime}</small><b>${e.avg_grade_ms == null ? "—" : n(e.avg_grade_ms / 1000, 1) + " s"}</b></div><div><small>${L.mWait}</small><b>${e.avg_wait_s == null ? "—" : n(e.avg_wait_s) + " s"}</b></div></div>` : `<p class="arempty">${L.mNone}</p>`}
+    ${m.steps.length ? `<details class="arsub"><summary>${L.mStep}</summary><table class="cmtbl artbl"><thead><tr><th>step</th><th>model</th><th>n</th><th>in / out / cached</th><th>${L.mUsd}</th><th>ms</th></tr></thead><tbody>
+      ${m.steps.map((x) => `<tr><td>${esc(x.step)}</td><td>${esc(x.provider)}:${esc(x.model || "")}</td><td>${x.n}${x.failed ? ` <span style="color:#c0392b">(${x.failed}✗)</span>` : ""}</td><td>${n(x.in_tok)} / ${n(x.out_tok)} / ${n(x.cached_tok)}${x.pages ? ` · ${x.pages}p` : ""}</td><td>${usd(x.usd)}</td><td>${n(x.avg_ms)}</td></tr>`).join("")}</tbody></table></details>` : ""}
+    ${m.sessions.length ? `<details class="arsub"><summary>${L.mRecent} (${m.sessions.length})</summary><table class="cmtbl artbl"><tbody>${m.sessions.slice(0, 30).map((x) => `<tr><td><a href="#/lab/${x.id}">#${x.id}</a> ${esc(x.exam_key)}</td><td>${esc(x.status)}${x.score != null ? ` · ${x.score}/${x.points}` : ""}</td><td>${x.pages}p · ${x.calls || 0} calls</td><td>${usd(x.usd)}</td><td>${x.grade_ms == null ? "—" : n(x.grade_ms / 1000, 1) + " s"}</td></tr>`).join("")}</tbody></table></details>` : ""}
+    <p style="margin:8px 0 0"><b>${L.mAcc}</b> — ${a.items ? `${L.mItems} ${a.items} · ${L.mMae} ${a.mae} · ${L.mExact} ${a.exact}% · ${L.mTaskDiff} ${a.task_diff_pct ?? "—"}%` : L.mNone}</p>
+    <p style="margin:4px 0 0"><b>${L.mStore}</b> — ${n(st.pages)} · D1 ${n((st.d1_bytes || 0) / 1048576, 1)} MB${m.r2 ? ` · R2 ${n(st.in_r2)}` : ""} · ${L.mKeep(m.keep_hours)}${st.purged ? ` · −${n(st.purged)}` : ""}</p>`;
 }
 async function arLabAdmin(box) {
   const L = lbt();
   let q; try { q = await cmApi("GET", "/admin/lab/queue"); } catch (e) { box.remove(); return; }
-  box.innerHTML = `<h3>⏱ ${L.admin}</h3>
+  const mx = await cmApi("GET", "/admin/lab/metrics?days=30").catch(() => null);
+  box.innerHTML = `<h3>⏱ ${L.admin}</h3>${mx ? arLabMetrics(mx) : ""}
     <h4 class="arh4">${L.grantH}</h4>
     <form class="arq" id="lbTok"><input name="u" placeholder="${L.user}"><input name="d" type="number" placeholder="${L.delta}" style="width:120px"><input name="n" placeholder="note">
       <button class="cmbtn sm pri">${T0(L.grantH)}</button><button class="cmbtn sm" type="button" data-look>${L.look}</button><span class="arinfo"></span></form>

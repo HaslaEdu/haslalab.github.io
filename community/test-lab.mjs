@@ -79,7 +79,11 @@ ok(j.active && j.active.status === "scanning" && j.active.ended_at === T0 + EXAM
 ok(s === 200 && j.resumed && j.session.id === SID && j.session.status === "scanning", "re-entering while scanning resumes the scan, no spend");
 ok(await tokens(A) === 0, "still 0 tokens");
 
-/* the phone */
+/* the phone: its link holds one code — the time in base 36 and 128 random bits in base 62 — and no session number */
+const born = /^([0-9a-z]{8,9})([0-9A-Za-z]{22})$/.exec(KEY);
+ok(born && Math.abs(parseInt(born[1], 36) - Date.now()) < 120000, "scan code = time (base 36) + 22 random base-62 digits " + KEY);
+[s, j] = await call("GET", "/lab/up", null, null, { "X-Lab-Token": KEY });
+ok(s === 200 && j.id === SID, "the code alone finds this sitting");
 [s, j] = await call("GET", `/lab/up/${SID}`, null, null, { "X-Lab-Token": "x".repeat(32) });
 ok(s === 403, "wrong upload token → 403");
 [s, j] = await call("GET", `/lab/up/${SID}`, null, null, { "X-Lab-Token": KEY });
@@ -121,7 +125,9 @@ ok(ses.pages.find(p => p.id === P1).text === txt && ses.detail.tasks.E1.grader.s
 [s, j] = await call("POST", `/lab/sessions/${SID}/submit`, { pages: [] }, A);
 ok(s === 200 && j.session.status === "pending", "a second submit grades nothing again");
 [s, j] = await up(SID, KEY, "E1", "answer", png);
-ok(s === 409, "no uploads after submitting");
+ok(s === 410 && j.error === "scan_over", "after submitting the link is destroyed: uploads → 410 scan_over");
+[s, j] = await call("GET", "/lab/up", null, null, { "X-Lab-Token": KEY });
+ok(s === 410 && j.error === "scan_over", "…and the phone is told scanning is over");
 [s, j] = await call("GET", "/lab/active", null, A);
 ok(j.active === null && j.tokens === 0, "nothing open after submitting");
 
