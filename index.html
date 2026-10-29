@@ -370,6 +370,10 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .prob .acts .main{display:flex;gap:8px}
 .prob .acts .main .btn{flex:1;justify-content:center;text-align:center}
 /* practice | exam, on the competition page */
+.rupho-stages{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 22px}
+.rupho-stages a{padding:10px 14px;border:1px solid var(--grid-bold);border-radius:8px;background:#fff;font-size:13px;color:var(--ink)}
+.rupho-stages a:hover{border-color:var(--rail)}
+.rupho-stages a[aria-current="page"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
 .modesw{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 22px}
 .modesw a{display:block;border:1.5px solid var(--grid-bold);border-radius:12px;padding:13px 16px;background:#fff;transition:.12s}
 .modesw a b{display:block;font-size:15.5px;color:var(--ink)}
@@ -991,11 +995,12 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=93ae5b621c"></script>
+<script src="theory.js?v=8f0dd05ff2"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="rupho-selection.js"></script>
+<script src="rupho-archive.js"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -4311,6 +4316,11 @@ for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
     if(!yr.host&&t.h) yr.host=t.h;                    /* the manifest knows where a year was held when DATA does not */
     if(!yr.cc&&t.cc) yr.cc=t.cc; }
   c.years.sort((a,b)=>yNum(b.y)-yNum(a.y)); }
+/* Stage catalogues share one public competition; source paper keys stay unchanged. */
+const RUPHO_ARCHIVE=window.RUPHO_ARCHIVE;
+if(RUPHO_ARCHIVE) RUPHO_ARCHIVE.initialize(DATA,THEORY);
+const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
+const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
 const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
@@ -4329,7 +4339,7 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
 const THY_WHOLE=new Set(["ispho"]);
 /* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): it is
    practised and sat in the experiment track, with its simulator, so the theory track leaves it out */
-const simThy=(key,yr)=>new Set(((DATA[key]||{}).years||[]).filter(y=>String(y.y)===String(yr.y))
+const simThy=(key,yr)=>new Set(((compOf(key)||{}).years||[]).filter(y=>String(y.y)===String(yr.y))
   .flatMap(y=>y.problems).filter(p=>p.theory&&p.files&&p.files.sim).map(p=>p.id));
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
@@ -4337,8 +4347,8 @@ function theoryGroups(key,yr){
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
   const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!sim.has(x)&&!/^https?:/.test(t.f[x].paper)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
-  if(key==="ioi"||(DATA[key]&&DATA[key].omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
-  if(DATA[key]&&DATA[key].rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
+  if(key==="ioi"||(compOf(key)&&compOf(key).omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
+  if(compOf(key)&&compOf(key).rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
   for(const x of parts){ const m=/^(T|MC)(\d*)([a-z]?)$/.exec(x); (by[m[1]+m[3]]=by[m[1]+m[3]]||[]).push({x,n:m[2]}); }
   const out=[];
   for(const g of Object.values(by)){
@@ -4354,12 +4364,12 @@ const thyTitle=(t,x)=>{ const p=(t.p||[]).find(q=>q[0]===x); return p?p[1]:""; }
 let track=(()=>{ try{ return localStorage.getItem("hlTrack")==="thy"?"thy":"exp"; }catch(e){ return "exp"; } })();
 function setTrack(t){ track=t==="thy"?"thy":"exp"; try{ localStorage.setItem("hlTrack",track); }catch(e){} render(); }
 const hasExpC=c=>c.years.some(y=>y.problems.length>0);
-const trackOf=key=>{ const c=DATA[key], e=c&&hasExpC(c), t=!!THEORY[key]; return e&&t?track:t?"thy":"exp"; };
+const trackOf=key=>{ const c=compOf(key), e=c&&hasExpC(c), t=!!THEORY[key]; return e&&t?track:t?"thy":"exp"; };
 /* kx: a problem cut out of a Korean translation of a paper published whole — the original counts once */
 const thyParts=t=>Object.keys(t.f).filter(x=>!t.f[x].kx);
 const thyCount=t=>t?((t.p||[]).length||thyParts(t).length):0;
 function trackSwitch(key){
-  const d=UI[lang], c=DATA[key]; if(!(c&&hasExpC(c)&&THEORY[key])) return "";
+  const d=UI[lang], c=compOf(key); if(!(c&&hasExpC(c)&&THEORY[key])) return "";
   return `<div class="lang trk" role="group" aria-label="${d.trkLabel}">${[["exp",d.trkExp],["thy",d.trkThy]].map(([k,l])=>
     `<button type="button" aria-pressed="${track===k}" onclick="setTrack('${k}')">${l}</button>`).join("")}</div>`;
 }
@@ -4521,7 +4531,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","baupc","cpho","rupho","ruphow","ruphox","ruphoy","kphe"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","baupc","cpho","rupho","kphe"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -4531,7 +4541,7 @@ const SUBJ=[
   {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:["ioi","usaco"], soon:"IOI"},
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
-const subjOf=key=>(SUBJ.find(x=>x.comps.includes(key))||SUBJ[0]).k;
+const subjOf=key=>(SUBJ.find(x=>x.comps.includes(RUPHO_ARCHIVE?.isStage(key)?"rupho":key))||SUBJ[0]).k;
 function viewComps(sub){
   const d=UI[lang];
   let cur=SUBJ.find(x=>x.k===sub);
@@ -4551,7 +4561,7 @@ function viewComps(sub){
     ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
       ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
-        const probs=hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
+        const probs=c.theoryCount?c.theoryCount+c.years.reduce((n,y)=>n+y.problems.length,0):hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
         return `<a class="comp" href="#/${key}">
           <div class="chead"><div class="abbr">${c.abbr}</div>${compLogo(key)}</div>
           <div class="full">${c.full[lang]}</div>
@@ -4559,7 +4569,7 @@ function viewComps(sub){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${probs}</dd></div>
+            <div><dt>${c.theoryCount?(lang==="ko"?"문제 · 시험지":"Problems / papers"):hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4781,12 +4791,13 @@ function contestPortalHtml(key){
     <div class="xmbox" style="overflow:auto"><table><thead><tr><th>${ko?"연도":"Year"}</th><th>${ko?"시험":"Exam"}</th><th>${ko?"시간 / 문항":"Time / questions"}</th><th>${ko?"답안 방식":"Answer format"}</th><th></th></tr></thead><tbody>${entries.map(e=>`<tr class="contestrow"><td>${esc(e.year)}</td><td><b>${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)}</b>${e.formatNote?`<details class="s"><summary>${ko?"회차 안내":"Session notes"}</summary>${esc(e.formatNote)}</details>`:""}</td><td>${e.minutes?`${e.minutes}${ko?"분":" min"}`:"—"} / ${e.questions||"—"}</td><td>${({choice:ko?"객관식":"Multiple choice",integer:ko?"단답형":"Short answer",proof:ko?"서술형":"Proof"})[e.kind]||"—"}<div class="s">${e.kind==="proof"?(ko?"종이·화면 · 채점 1토큰":"Paper or typed · 1 token to grade"):e.answersVerified?(ko?"종이 스캔·화면 · 무료 채점":"Scan or on-screen · free grading"):(ko?"정답 미확보 · 답안 저장":"No verified key · answer record")}</div></td><td><a class="go" href="${contestHref(e)}">${e.practice===false?(ko?"원문 · 규격 확인 중":"Paper · format pending"):(ko?"시험 준비":"Prepare")}</a></td></tr>`).join("")}</tbody></table></div>`;
 }
 function viewComp(key,mode){
-  const d=UI[lang], c=DATA[key];
+  if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
+  const d=UI[lang], c=compOf(key);
   if(!c) return viewHome();
   if(mode==="exam"&&!hasExam(c,key)) mode="";
   const ready = c.years.reduce((n,y)=>n+y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length,0);
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
-  return `
+  return ruphoPage(key,`
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
@@ -4832,13 +4843,13 @@ function viewComp(key,mode){
       }).join("")}
     </div>
   </div>
-  ${adFitBanner("primary")}`}`;
+  ${adFitBanner("primary")}`}`,mode==="exam"?"exam":"");
 }
 /* the exam portal, as a university mock-exam site has it: the exams of every year in one table with how
    many sat and the average, the candidate's own status on each, and a card with their tokens.  `x` holds
    what came from the server (null while it loads): {stats, mine, tokens, active, me, off} */
 function xmPortalHtml(key,x){
-  const d=UI[lang], c=DATA[key], rows=[];
+  const d=UI[lang], c=compOf(key), rows=[];
   const row=(y,tasks,label,sub,sec,href)=>{
     const k=key+y.y+":"+tasks.join("+");
     const st=x&&x.stats&&x.stats[k], my=x&&x.mine&&x.mine.find(s=>s.exam_key===key+y.y&&s.tasks.join("+")===tasks.join("+"));
@@ -4914,7 +4925,7 @@ const yearPair=(key,yr)=>examGroups(key,yr).some(g=>!g.some(p=>p.thy))&&theoryGr
 function examHref(key,yr,group){
   const pick=v=>typeof v==="string"?v:(v&&(v[lang]||v.ko||v.en))||"";
   const short=u=>u.startsWith(PDF_BASE)?u.slice(PDF_BASE.length):u;
-  const q=new URLSearchParams({c:key,y:yr.y,n:DATA[key].abbr,e:group.map(examTask).join(","),
+  const q=new URLSearchParams({c:key,y:yr.y,n:compOf(key).abbr,e:group.map(examTask).join(","),
     f:group.map(p=>p.thy?"-":p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
     p:group.map(p=>short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
   /* a combined exam (NBPhO): the booklet number of each experiment, and the problems the theory part leaves out */
@@ -4926,7 +4937,7 @@ function examHref(key,yr,group){
    answer sheets travel with it (the server draws the marking scheme from the solution and the scheme together) */
 function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
-  const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:DATA[key].abbr,e:parts.join(","),t:all.join("|"),
+  const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:compOf(key).abbr,e:parts.join(","),t:all.join("|"),
     /* ISPhO: in Korean the whole translated paper, typeset as the original */
     p:parts.map(x=>THY_WHOLE.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
     /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
@@ -4972,7 +4983,7 @@ function theoryHtml(key,yr){
      language — Korean opens the translation where there is one, else the original, tagged; the answer and working
      sheets are the exam mode's */
   const clip=ts=>{ const s=ts.join(" · "); return esc(s.length>280?s.slice(0,277).replace(/ · [^·]*$/,"")+" …":s); };
-  const omr=!!(DATA[key]&&DATA[key].omr);
+  const omr=!!(compOf(key)&&compOf(key).omr);
   const card=(code,probs,f,k,head,docs)=>{
     const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};
     const paperLabel=archive?.type==="publisher"?(ko?"문제·풀이 (부분)":"Problems and solutions (excerpt)"):d.thyPaper;
@@ -4985,7 +4996,7 @@ function theoryHtml(key,yr){
     const many=titles.length>1;
     return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:d.thyOrigChip,
       heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:(many?clip(titles):alt.map(esc).join(" · "))+(archive?`<p><b>${archiveLabels[archive.type]||esc(archive.type)}</b> · ${esc(archive.note)}</p>`:""),
-      tags:[TL(DATA[key],"trkThy")].concat(many?[TL(DATA[key],"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
+      tags:[TL(compOf(key),"trkThy")].concat(many?[TL(compOf(key),"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
        main:[a(P[0],paperLabel,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
          (K[0]?[a(K[0],t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
@@ -5005,17 +5016,17 @@ function theoryHtml(key,yr){
     inv.forEach((x,i)=>{ const lbl=d.thyInv+(inv.length>1?" "+(i+1):"");
       if(t.f[x].paper) docs.push(a(t.f[x].paper,lbl)); if(t.f[x].sol) docs.push(a(t.f[x].sol,lbl+" "+d.thySol)); });
     cards=card("T",(t.p||[]).filter(q=>!/^Ti/.test(q[0])).concat(inv.length?(t.p||[]).filter(q=>/^Ti/.test(q[0])):[]),f,k,
-               `${DATA[key].abbr} ${yr.y}`,docs);
+               `${compOf(key).abbr} ${yr.y}`,docs);
   } else cards=order.map(x=>card(x,probsOf(x),t.f[x],t.f[x].ko||{})).join("")+(t.w?card("T",[],{},t.w):"");
   const guide=t.g?(ko?t.g.ko||t.g.en:t.g.en||t.g.ko):"";
   return `<div class="thycards">
     <div class="shead">
-      <h2 style="font-size:1.15rem">${TL(DATA[key],"thyPick")}</h2>
+      <h2 style="font-size:1.15rem">${TL(compOf(key),"thyPick")}</h2>
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
      ${key==="kphe"&&t.sourceType!=="recall"?`<p class="trknote">${kpheEditionNote(t,yr.y,ko)} <a href="https://kphe.kps.or.kr/" target="_blank" rel="noopener">${ko?"공식 안내":"Official information"}</a></p>`:""}
      ${t.sourceType==="recall"?`<p class="trknote"><b>${ko?"비공식 복기·재수록 자료":"Unofficial recollection / reprint"}</b><br>${esc(t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"작성자 원문·출처":"Author and source"}</a>`:""}</p>`:""}
-     ${contestEntries(key,yr.y).length||theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(DATA[key],"thyExam")}</a></p>`:""}
+     ${contestEntries(key,yr.y).length||theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(compOf(key),"thyExam")}</a></p>`:""}
     ${sim.size?`<p class="cnote">${d.thySim([...sim].join(", "))}</p>`:""}
     <div class="probs">${cards}</div></div>`;
 }
@@ -5030,14 +5041,15 @@ function genLinks(key,yr){
     return `<a class="genlink" href="${u}" target="_blank" rel="noopener">${d.actGeneral}${e.lab?` · ${esc(e.lab)}`:""}${lang!=="ko"&&!e.en?` <span class="lgtag">KO</span>`:""}</a>`; }).join("");
 }
 function viewYear(key,year){
-  const d=UI[lang], c=DATA[key];
+  if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
+  const d=UI[lang], c=compOf(key);
   const yr = c && c.years.find(y=>String(y.y)===String(year));
   if(!yr) return viewComp(key);
   /* 이 해에 있는 조만 고르개에 — 다른 해에서 고른 조가 없으면 전체를 보인다 */
   const yrGroups = c.groups ? ["a","b","c"].filter(g=>yr.problems.some(p=>grpOf(c,p).includes(g))) : [];
   const thyY = trackOf(key)==="thy";
   const grpShow = yrGroups.includes(grpSel) ? grpSel : "all";
-  return `
+  return ruphoPage(key,`
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
@@ -5106,7 +5118,7 @@ function viewYear(key,year){
     </div>
     </div>
   </div>
-  ${adFitBanner("primary")}`;
+  ${adFitBanner("primary")}`,String(year));
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -9045,7 +9057,7 @@ function setDocTitle(first, second){
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
-    const c=DATA[first];
+    const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
     parts.push(second==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
   }
   const tail = lang==="ko" ? "물리올림피아드 실험 시뮬레이터"
@@ -9078,6 +9090,8 @@ function mountHaslaAdFit(){
 }
 
 function render(){
+  const legacyRuPhO=RUPHO_ARCHIVE?.canonical(location.hash);
+  if(legacyRuPhO){ history.replaceState(null,"",legacyRuPhO); }
   if(animId){cancelAnimationFrame(animId);animId=null;}
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
@@ -9109,7 +9123,7 @@ function render(){
   buildRails();
   if(active==="home") startHero();
   if(active==="community") cmMount();
-  if(active==="comps" && second==="exam") xmMount(first);
+  if(active==="comps" && second==="exam") xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if(active==="weekly"||first==="lab") arMount();
   arChip();
   if(first==="comps"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }

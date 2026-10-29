@@ -33,7 +33,9 @@ for year in a.years:
         math_hits = []
         korean = 0
         for pi, page in enumerate(output):
-            pictures = [fitz.Rect(b["bbox"]) for b in source[pi].get_text("dict")["blocks"] if b["type"] == 1]
+            ignored = [fitz.Rect(r["rect"]) for r in data.get("ignored_picture_rects", []) if r["page"] == pi]
+            pictures = [fitz.Rect(b["bbox"]) for b in source[pi].get_text("dict")["blocks"] if b["type"] == 1
+                        and not any(fitz.Rect(b["bbox"]) == r for r in ignored)]
             restored_math = [fitz.Rect(r["rect"]) for r in data.get("preserve_rects", [])
                              if r["page"] == pi and not any(fitz.Rect(r["rect"]) == q for q in pictures)]
             for block in page.get_text("dict")["blocks"]:
@@ -62,11 +64,12 @@ for year in a.years:
         ink_path = ROOT / "tmp" / "izho-qa" / f"{year}_{kind}_ink.json"
         ink = json.loads(ink_path.read_text(encoding="utf8")) if ink_path.exists() else {}
         ink_reviewed = isinstance(ink, dict) and ink.get("sha256") == sha and ink.get("flagged_components") == 0
-        if hits or (critical_math and not ink_reviewed) or missing:
+        if ((hits or critical_math) and not ink_reviewed) or missing:
             failures.append(f"{year}/{kind}: {len(hits)} figure overlaps; {len(critical_math)} large equation intersections; {len(missing)} untranslated regions")
         item = {"file": target.name, "pages": len(output), "translated_regions": sum(not e.get("passthrough", False) for e in data["entries"]),
                 "Korean_spans": korean, "image_overlaps": hits, "equation_bbox_candidates": math_hits,
-                "large_equation_intersections": critical_math, "equation_ink_review_passed": ink_reviewed, "untranslated": missing,
+                "large_equation_intersections": critical_math, "equation_ink_review_passed": ink_reviewed,
+                "figure_ink_review_passed": ink_reviewed, "untranslated": missing,
                 "sha256": hashlib.sha256(target.read_bytes()).hexdigest()}
         report.append(item)
         print(json.dumps({"file": item["file"], "pages": item["pages"],

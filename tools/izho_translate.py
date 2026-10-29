@@ -143,6 +143,13 @@ def build(folder: Path, target: Path):
             # Exclude original prose spans before restoring equation ink.
             bitmap = Image.frombytes("RGB", (pix.width, pix.height), rgb)
             draw = ImageDraw.Draw(bitmap)
+            for suppression in data.get("math_erase_rects", []):
+                if suppression["page"] != pi:
+                    continue
+                box = fitz.Rect(suppression["rect"]) & rect
+                if not box.is_empty:
+                    draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
+                                    box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
             for entry in data["entries"]:
                 if entry["page"] != pi or entry.get("passthrough"): continue
                 for mi, math in enumerate(entry.get("math", [])):
@@ -156,8 +163,18 @@ def build(folder: Path, target: Path):
                 for line in block["lines"]:
                     for span in line["spans"]:
                         words = re.findall(r"[A-Za-z]{2,}", span["text"])
+                        if data.get("word_math_preserve"):
+                            from izho_extract_word import mathword
+                            if words and all(mathword(w) for w in words):
+                                continue
+                            if re.search(r"[А-Яа-яЁё]{2,}", span["text"]):
+                                box = fitz.Rect(span["bbox"]) & rect
+                                if not box.is_empty:
+                                    draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
+                                                    box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
+                                continue
                         if not words or span["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")): continue
-                        if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years","ma","wb","hz","hn"} for w in words): continue
+                        if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years","ma","wb","hz","hn","year","arcsin","arccos","arctan","asin","acos","atan","sinh","cosh","tanh","coth","abs","sign","floor","ceil"} or re.fullmatch(r"[A-Za-z]*d[A-Z][A-Za-z]*", w) or w.lower() in {"dx","dy","dz","dt","dr","du","da","dq","dv"} for w in words): continue
                         box = fitz.Rect(span["bbox"]) & rect
                         if box.is_empty: continue
                         draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
@@ -186,6 +203,8 @@ def build(folder: Path, target: Path):
     css = """@font-face { font-family: Korean; src: url(NotoSansKR-Regular.ttf); }
       * {font-family: Korean; color: #000;} body {margin:0;padding:0;}
       p {margin:0; padding:0; line-height:1.18;} img {vertical-align:middle;}"""
+    if data.get("math_bottom_align"):
+        css += " img {vertical-align:bottom;}"
     failures, report = [], []
     for pi, page in enumerate(doc):
         entries = [e for e in data["entries"] if e["page"] == pi and not e.get("passthrough")]
@@ -278,6 +297,20 @@ def build(folder: Path, target: Path):
                     restore_math(page, pi, rect)
         for rect in math_rects:
             restore_math(page, pi, rect)
+        if data.get("restore_table_rules"):
+            table_rects = [fitz.Rect(t["rect"]) for t in data.get("tables", []) if t["page"] == pi]
+            for path in original[pi].get_drawings():
+                # Word draws grid lines as thin filled rectangles rather than strokes.
+                for item in path["items"]:
+                    if item[0] == "re" and path.get("fill") is not None:
+                        r = item[1]
+                        if min(r.width, r.height) < 2 and any((t+(-2,-2,2,2)).contains(r) for t in table_rects):
+                            page.draw_rect(r, color=None, fill=path["fill"], overlay=True)
+                if path.get("color") is None:
+                    continue
+                for item in path["items"]:
+                    if item[0] == "l" and any(r.contains(item[1]) and r.contains(item[2]) for r in table_rects):
+                        page.draw_line(item[1], item[2], color=path["color"], width=path.get("width", .5), overlay=True)
         # Preserve the rule beneath the original competition header.
         if data.get("header_rule"):
             page.draw_line((36, 49.5), (562.4, 49.5), color=(0, 0, 0), width=.5)
