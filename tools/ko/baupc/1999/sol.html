@@ -1,0 +1,186 @@
+<style>h2,h3{break-after:avoid;page-break-after:avoid}</style>
+<h1>BAUPC 1999 해설</h1>
+
+<h2>문제 1</h2>
+<h3>(a)</h3>
+<p>구의 반지름을 $R$, 전하를 $Q$라 하자. 그러면 표면에서의 퍼텐셜은</p>
+\[V(R) = \frac QR \tag{1}\]
+<p>이다. 구 내부 반지름 $r$에서의 전기장의 크기는 (가우스 법칙(Gauss' law)으로부터)</p>
+\[E(r) = \frac{Q(r^3/R^3)}{r^2} = \frac{Qr}{R^3} \tag{2}\]
+<p>이다. 이를 $r = R$에서 $r = 0$까지 적분하면 퍼텐셜 변화 $\Delta V = Q/2R$을 얻는다. 따라서 중심에서의 퍼텐셜은</p>
+\[V(0) = \frac QR+\frac{Q}{2R} = \frac{3Q}{2R} \tag{3}\]
+<p>이고, 구하는 비는</p>
+\[\frac{V(R)}{V(0)} = \frac23 \tag{4}\]
+<p>이다.</p>
+
+<h3>(b)</h3>
+<p>정육면체의 전하 밀도를 $\rho$라 하자. 한 변이 $\ell$인 정육면체의 꼭짓점에서의 퍼텐셜을 $V_\ell^{\rm cor}$, 한 변이 $\ell$인 정육면체의 중심에서의 퍼텐셜을 $V_\ell^{\rm cen}$이라 하자. 차원 분석(dimensional analysis)에 의해</p>
+\[V_\ell^{\rm cor}\propto\frac Q\ell = \rho\ell^2 \tag{5}\]
+<p>이다. 따라서<sup>1</sup></p>
+\[V_\ell^{\rm cor} = 4V_{\ell/2}^{\rm cor} \tag{6}\]
+<p>이다. 그런데 중첩(superposition)에 의해</p>
+\[V_\ell^{\rm cen} = 8V_{\ell/2}^{\rm cor} \tag{7}\]
+<p>이다. 큰 정육면체의 중심은 그것을 이루는 여덟 개의 작은 정육면체의 꼭짓점에 놓이기 때문이다. 따라서</p>
+\[\frac{V_\ell^{\rm cor}}{V_\ell^{\rm cen}} = \frac{4V_{\ell/2}^{\rm cor}}{8V_{\ell/2}^{\rm cor}} = \frac12 \tag{8}\]
+<p>이다.</p>
+<p class="note"><sup>1</sup> 다시 말해, 한 변이 $\ell/2$인 정육면체를 한 변이 $\ell$인 정육면체로 확대한다고 상상하자. 두 정육면체의 서로 대응하는 조각을 생각하면, 큰 조각은 작은 조각보다 $2^3 = 8$배의 전하를 가진다. 그러나 대응하는 거리는 큰 정육면체에서 작은 정육면체에서보다 두 배 크다. 따라서 큰 조각이 $V_\ell^{\rm cor}$에 기여하는 양은 작은 조각이 $V_{\ell/2}^{\rm cor}$에 기여하는 양의 $8/2 = 4$배이다.</p>
+
+<h2>문제 2</h2>
+<p>바닥과의 접촉점은 순간적으로 정지해 있으므로 흐릿하게 보이지 않는다. 그러나 이것이 바퀴 위에서 정지해 있는 유일한 점이기는 하지만, 사진에는 살(spoke)이 흐릿하게 보이지 않는 다른 위치들도 있다.</p>
+<p>사진에서 살이 흐릿하게 보이지 않는 점의 특징은, 그 점이 카메라의 노출 시간 내내 살 위에 놓여 있다는 것이다. (그러나 그 점이 살 위의 같은 점에 대응할 필요는 없다.) 어떤 시각에 바퀴 아래쪽 절반에 있는 살 하나를 생각하자. 잠시 후 그 살은 움직였겠지만, 원래 위치와 교차할 것이다. 이 교차점에서는 살이 흐릿하게 보이지 않는다. 따라서 우리는 이러한 교차점들의 자취를 구해야 한다.</p>
+<p>바퀴의 반지름을 $R$이라 하자. 연직선과 각 $\theta$를 이루는 살을 생각하자. 바퀴가 각 $d\theta$만큼 구르면 중심은 거리 $R\,d\theta$만큼 움직인다. 살의 운동은 거리 $R\,d\theta$만큼의 병진 운동과 (위쪽 끝을 중심으로 한) 각 $d\theta$만큼의 회전 운동의 결합이다.</p>
+<p>살의 처음 위치와 나중 위치의 교차점의 지름 방향 위치를 $r$이라 하자. 그러면 그림으로부터</p>
+\[(R\,d\theta)\cos\theta = r\,d\theta \tag{9}\]
+<p>이다. 따라서 $r = R\cos\theta$이다. 이것이 바퀴의 (아래쪽) 연직 반지름을 지름으로 하는 원을 나타낸다는 것은 쉽게 알 수 있다.</p>
+<p class="note">[역주: 원문은 &ldquo;그림으로부터&rdquo;라고 하지만, 원본 해설 PDF에는 이 그림이 실려 있지 않다.]</p>
+
+<h2>문제 3</h2>
+<p><b>첫 번째 풀이 (간결한 방법):</b></p>
+<p>힘 벡터가 접선 방향과 이루는 각을 $\beta$라 하자. 마찰력의 가능한 최대 크기를 $F$라 하자(이는 $F = \mu mg$이지만, 이 사실은 필요하지 않다). 최소 거리 상황은 $F\sin\beta$가 지름 방향 가속도를 감당하고, 나머지 $F\cos\beta$가 접선 방향 가속도를 감당할 때 얻어진다. 다시 말해</p>
+\[F\sin\beta = \frac{mv^2}{R},\qquad\text{그리고}\qquad F\cos\beta = m\dot v \tag{10}\]
+<p>이다. 첫 번째 식을 미분하면 $F\cos\beta\,\dot\beta = 2mv\dot v/R$이다. 이를 두 번째 식으로 나누면 $\dot\beta = 2v/R$이다. 그런데 $v = R\dot\theta$이며, 여기서 $\theta$는 원을 따라 이동한 각거리이다. 따라서 $\dot\beta = 2\dot\theta$이고, 적분하면</p>
+\[\beta = 2\theta \tag{11}\]
+<p>이다. 최대 속력에 도달했을 때 $\beta$의 값은 $\pi/2$여야 한다. 이 값은</p>
+\[\theta = \frac\pi4 \tag{12}\]
+<p>에 해당한다. 따라서 오토바이는 거리 $\pi R/4$, 즉 원 둘레의 8분의 1을 달려야 한다.</p>
+
+<p><b>두 번째 풀이 (직접적인 방법):</b></p>
+<p>최소 거리 상황에서 전체 힘의 크기는 가능한 최댓값, 즉 $\mu mg$여야 한다(이것의 정확한 꼴은 중요하지 않다). 지름 방향 힘은 $F_r = mv^2/R$이므로, 접선 방향의 $F = ma$ 식은</p>
+\[F_t = \sqrt{(\mu mg)^2-\left(\frac{mv^2}{R}\right)^2} = m\frac{dv}{dt} \tag{13}\]
+<p>이다. 양변에 $dx$를 곱한 다음 $dx/dt$를 $v$로 다시 쓰면(여기서 $dx = R\,d\theta$는 원을 따라간 거리이다)<sup>2</sup></p>
+\[dx = \frac{v\,dv}{\sqrt{(\mu g)^2-\left(\frac{v^2}{R}\right)^2}} \tag{14}\]
+<p>를 얻는다.</p>
+<p class="note"><sup>2</sup> 이는 단순히 일-에너지 결과이다. 일은 $F_t\,dx$이고, 운동 에너지의 변화는 $d(mv^2/2) = mv\,dv$이기 때문이다.</p>
+<p>$z\equiv v^2/\mu gR$로 두면</p>
+\[dx = \frac{R\,dz}{2\sqrt{1-z^2}} \tag{15}\]
+<p>이다. 허용되는 최대 속력 $V$는 $\mu mg = mV^2/R$로부터 얻는다. 따라서 $V^2 = \mu gR$이고, 이에 해당하는 $z$의 값은 1이다. 그러면 구하는 거리 $X$는</p>
+\[\begin{aligned}X = \int_0^X dx &= \int_0^1\frac{R\,dz}{2\sqrt{1-z^2}}\\ &= \frac R2\int_0^{\pi/2}d\theta\qquad(z = \sin\theta\text{로 두면})\\ &= \frac{\pi R}{4}\end{aligned} \tag{16}\]
+<p>이다.</p>
+
+<h2>문제 4</h2>
+<h3>(a)</h3>
+<p>여우와 토끼를 잇는 직선을 따른 둘의 상대 속력은 항상 $v_{\rm rel} = v-v\cos\alpha$이다. 따라서 둘 사이의 거리를 $\ell$에서 0으로 줄이는 데 필요한 전체 시간은</p>
+\[T = \frac{\ell}{v(1-\cos\alpha)} \tag{17}\]
+<p>이다. 이는 $\alpha = 0$인 경우를 제외하면 성립하며, $\alpha = 0$이면 여우는 결코 토끼를 잡지 못한다.</p>
+<p>둘이 만나는 위치를 구하는 것은 조금 더 까다롭다. 두 가지 방법을 제시한다.</p>
+<p><b>첫 번째 풀이 (간결한 방법):</b></p>
+<p>토끼가 또 다른 토끼를 쫓고, 그 토끼가 또 다른 토끼를 쫓는 식으로 계속된다고 상상하자. 각 동물은 자신을 쫓는 동물로부터 곧장 멀어지는 방향에 대해 각 $\alpha$로 달린다. 모든 동물의 처음 위치는 한 원 위에 놓이며, 그 원의 반지름은</p>
+\[R = \frac{\ell/2}{\sin(\alpha/2)} \tag{18}\]
+<p>임을 쉽게 알 수 있다. 원의 중심은 꼭지각이 $\alpha$이고 여우와 토끼의 처음 위치를 나머지 두 꼭짓점으로 하는 이등변삼각형의 꼭짓점 $P$이다. 대칭성에 의해 모든 시각에 동물들의 위치는 중심이 $P$인 원 위에 놓여야 한다. 따라서 $P$가 둘이 만나는 구하는 점이다. 가상의 동물들은 단순히 나선을 그리며 $P$로 모여든다.</p>
+<p class="note"><span style="font-variant:small-caps">참고</span>: 동등한 풀이는 다음과 같다. 모든 시각에 토끼의 속도 벡터는 여우의 속도 벡터를 $\alpha$만큼 회전시켜 얻어진다. 이를 적분한 꼴로 말하면, 토끼의 알짜 변위 벡터는 여우의 알짜 변위 벡터를 $\alpha$만큼 회전시켜 얻어진다. 따라서 만나는 점 $P$는 위에서 말한 이등변삼각형의 꼭짓점이다.</p>
+<p><b>두 번째 풀이 (더 번거로운 방법):</b></p>
+<p>이 풀이는 조금 번거롭고 그다지 깨달음을 주지도 않으므로 모든 세부 사항을 다 싣지는 않겠다.</p>
+<p>두 동물을 잇는 직선에 수직인 방향으로 토끼의 속력은 $v\sin\alpha$이다. 따라서 시간 $dt$ 동안 여우의 운동 방향은 각 $d\theta = v\sin\alpha\,dt/\ell_t$만큼 바뀐다. 여기서 $\ell_t$는 시각 $t$에서 둘 사이의 거리이다. 따라서 여우 속도의 변화의 크기는 $|d\mathbf v| = v\,d\theta = v(v\sin\alpha\,dt/\ell_t)$이다. 벡터 $d\mathbf v$는 $\mathbf v$에 수직이다. 그러므로 $d\mathbf v$의 $x$ 성분을 얻으려면 $|d\mathbf v|$에 $v_y/v$를 곱해야 한다. $d\mathbf v$의 $y$ 성분에 대해서도 비슷한 논리가 성립하므로, 다음 두 식에 이른다.</p>
+\[\begin{aligned}\dot v_x &= \frac{vv_y\sin\alpha}{\ell_t},\\ \dot v_y &= -\frac{vv_x\sin\alpha}{\ell_t}\end{aligned} \tag{19}\]
+<p>이제 $\ell_t = (\ell-v(1-\cos\alpha)t)$임을 안다. 위의 두 식에 $\ell_t$를 곱하고 처음 시각부터 나중 시각까지 적분하면(좌변은 부분 적분이 필요하다)</p>
+\[\begin{aligned}v_{x,0}\ell+v(1-\cos\alpha)X &= v\sin\alpha Y,\\ v_{y,0}\ell+v(1-\cos\alpha)Y &= -v\sin\alpha X\end{aligned} \tag{20}\]
+<p>를 얻는다. 여기서 $(X, Y)$는 전체 변위 벡터이고, $(v_{x,0}, v_{x,0})$은 처음 속도 벡터이다. <span class="note">[역주: 원문 그대로이며, $(v_{x,0}, v_{y,0})$의 오식이다.]</span> $X$와 $Y$ 항을 모두 우변으로 옮기고 두 식을 제곱하여 더하면</p>
+\[\ell^2v^2 = (X^2+Y^2)(v^2\sin^2\alpha+v^2(1-\cos\alpha)^2) \tag{21}\]
+<p>이다. 따라서 알짜 변위는</p>
+\[R = \sqrt{X^2+Y^2} = \frac{\ell}{\sqrt{2(1-\cos\alpha)}} = \frac{\ell/2}{\sin(\alpha/2)} \tag{22}\]
+<p>이다.</p>
+<p>정확한 위치를 구하려면, 일반성을 잃지 않고 $v_{x,0} = 0$으로 둘 수 있다. 이 경우 $Y/X = (1-\cos\alpha)/\sin\alpha = \tan(\alpha/2)$를 얻는다. 이는 첫 번째 풀이의 결과와 일치한다.</p>
+
+<h3>(b)</h3>
+<p><b>첫 번째 풀이 (간결한 방법):</b></p>
+<p>여우와 토끼의 위치를 각각 $A(t)$와 $B(t)$라 하자. $A$에서 토끼의 경로를 나타내는 직선에 내린 수선의 발을 $C(t)$라 하자. 토끼가 여우로부터 곧장 멀어지는 방향에 대해 달리는 각을 시간의 함수로서 $\alpha_t$라 하자(따라서 $\alpha_0\equiv\alpha$, $\alpha_\infty = 0$이다).</p>
+<p>거리 $AB$가 줄어드는 속력은 $v-v\cos\alpha_t$와 같다. 그리고 거리 $CB$가 늘어나는 속력은 $v-v\cos\alpha_t$와 같다. 따라서 거리 $AB$와 $CB$의 합은 변하지 않는다. 처음에 그 합은 $\ell+\ell\cos\alpha$이다. 마지막에는 그 합이 $2d$이며, 여기서 $d$는 구하는 최종 거리이다. 따라서</p>
+\[d = \frac{\ell(1+\cos\alpha)}{2} \tag{23}\]
+<p>이다.</p>
+<p><b>두 번째 풀이 (직접적인 방법):</b></p>
+<p>$\alpha_t$를 첫 번째 풀이에서와 같이 정의하고, 시각 $t$에서 둘 사이의 거리를 $\ell_t$라 하자. 두 동물을 잇는 직선에 수직인 방향으로 토끼의 속력은 $v\sin\alpha_t$이다. 둘 사이의 거리가 $\ell_t$이므로, 각 $\alpha_t$는</p>
+\[\dot\alpha_t = -\frac{v\sin\alpha_t}{\ell_t} \tag{24}\]
+<p>의 비율로 변한다. 그리고 $\ell_t$는</p>
+\[\dot\ell_t = -v(1-\cos\alpha_t) \tag{25}\]
+<p>의 비율로 변한다. 위의 두 식의 비를 취하고 변수를 분리하면</p>
+\[\frac{\dot\ell_t}{\ell_t} = \frac{\dot\alpha_t(1-\cos\alpha_t)}{\sin\alpha_t} \tag{26}\]
+<p>이다. 우변은 $\dot\alpha_t\sin\alpha_t/(1+\cos\alpha_t)$로 다시 쓸 수 있으므로, 적분하면</p>
+\[\ln(\ell_t) = -\ln(1+\cos\alpha_t)+C \tag{27}\]
+<p>이다. 여기서 $C$는 적분 상수이다. 지수를 취하면 $\ell_t(1+\cos\alpha_t) = B$이다. 초기 조건에 의해 $B = \ell_0(1+\cos\alpha_0)\equiv\ell(1+\cos\alpha)$이어야 한다. 따라서</p>
+\[\ell_t = \frac{\ell(1+\cos\alpha)}{(1+\cos\alpha_t)} \tag{28}\]
+<p>이다. $t = \infty$로 두고 $\alpha_\infty = 0$을 쓰면 최종 결과</p>
+\[\ell_\infty = \frac{\ell(1+\cos\alpha)}{2} \tag{29}\]
+<p>를 얻는다.</p>
+<p class="note"><span style="font-variant:small-caps">참고</span>: (b)의 풀이는 $\alpha = \pi$를 제외한 모든 $\alpha$에 대해 성립한다. $\alpha = \pi$이면 토끼는 여우를 향해 곧장 달려가므로, 둘은 시간 $\ell/2v$에 실제로 중간 지점에서 만난다.</p>
+
+<h2>문제 5</h2>
+<p>빗방울의 질량 밀도를 $\rho$, 공간에 퍼져 있는 작은 물방울들의 평균 질량 밀도를 $\lambda$라 하자. 빗방울의 반지름, 질량, 속력을 각각 $r(t)$, $M(t)$, $v(t)$라 하자.</p>
+<p>빗방울의 질량은 $M = (4/3)\pi r^3\rho$이다. 따라서</p>
+\[\dot M = 4\pi r^2\dot r\rho = 3M\frac{\dot r}{r} \tag{30}\]
+<p>이다. $\dot M$에 대한 또 다른 식은 $M$의 변화가 작은 물방울들을 흡수하기 때문에 생긴다는 데 주목하면 얻을 수 있다. 빗방울이 휩쓸고 지나가는 부피의 비율은 단면적과 속도의 곱으로 주어진다. 따라서</p>
+\[\dot M = \pi r^2v\lambda \tag{31}\]
+<p>이다. 물방울에 작용하는 힘 $Mg$는 운동량의 변화율, 즉 $dp/dt = d(Mv)/dt = \dot Mv+M\dot v$와 같다. 따라서</p>
+\[Mg = \dot Mv+M\dot v \tag{32}\]
+<p>이다.</p>
+<p>이제 세 미지수 $r$, $M$, $v$를 포함하는 세 식을 얻었다.</p>
+<p>(<b>주의:</b> 역학적 에너지는 보존되지 <em>않으므로</em>, 순진한 에너지 보존 식을 쓸 수는 <em>없다</em>. 빗방울과 작은 물방울들 사이의 충돌은 완전 비탄성 충돌이다. 실제로 빗방울은 뜨거워진다. 풀이 끝의 참고를 보라.)</p>
+<p>목표는 큰 $t$에서 $\dot v$를 구하는 것이다. 이를 위해 먼저 큰 $t$에서 $\ddot r$을 구하겠다. 식 (30)과 (31)로부터</p>
+\[v = \frac{4\rho}{\lambda}\dot r\qquad\Longrightarrow\qquad\dot v = \frac{4\rho}{\lambda}\ddot r \tag{33}\]
+<p>이다. 식 (30)과 (33)을 식 (32)에 넣으면</p>
+\[Mg = \left(3M\frac{\dot r}{r}\right)\left(\frac{4\rho}{\lambda}\dot r\right)+M\left(\frac{4\rho}{\lambda}\ddot r\right) \tag{34}\]
+<p>이다. 따라서</p>
+\[\frac{g\lambda}{\rho}r = 12\dot r^2+4r\ddot r \tag{35}\]
+<p>이다. 큰 시각에서 빗방울이 일정한 가속도로 떨어진다는 것을 고려하면<sup>3</sup>, 큰 $t$에 대해</p>
+\[\ddot r\approx bg,\qquad\dot r\approx bgt,\qquad\text{그리고}\qquad r\approx\frac12 bgt^2 \tag{36}\]
+<p>으로 쓸 수 있다. 여기서 $b$는 앞으로 정할 수치 인자이다. 식 (36)을 식 (35)에 넣으면</p>
+\[\left(\frac{g\lambda}{\rho}\right)\left(\frac12 bgt^2\right) = 12(bgt)^2+4\left(\frac12 bgt^2\right)bg \tag{37}\]
+<p>이다. 따라서 $b = \lambda/28\rho$이다. 그러므로 $\ddot r = g\lambda/28\rho$이고, 식 (33)으로부터 큰 $t$에서 빗방울의 가속도는</p>
+\[\dot v = \frac g7 \tag{38}\]
+<p>이며, 이는 $\rho$와 $\lambda$에 무관하다.</p>
+<p class="note"><sup>3</sup> 일정 가속도라는 주장은 다음과 같이 정당화할 수 있다. 큰 $t$에서 $r$이 $t^\alpha$에 비례한다고 하자. 그러면 식 (35)의 좌변은 $t^\alpha$처럼, 우변은 $t^{2\alpha-2}$처럼 행동한다. 이들이 같으려면 $\alpha = 2$여야 한다. 따라서 (큰 $t$에서) $r\propto t^2$이고 $\ddot r$은 상수이다.</p>
+<p><span style="font-variant:small-caps">참고</span>: 떨어진 높이의 함수로서 역학적 에너지가 얼마나 손실되는지(따라서 빗방울이 얼마나 뜨거워지는지)를 계산할 수 있다.</p>
+<p>(식 (33)에서 보인 것처럼) $v$가 $\dot r$에 비례한다는 사실은 빗방울이 휩쓸고 지나간 부피가 원뿔이라는 것을 뜻한다. 원뿔의 질량 중심은 밑면에서 꼭짓점까지의 $1/4$ 지점에 있다. 따라서 빗방울이 높이 $h$만큼 떨어진 뒤의 질량을 $M$이라 하면, 역학적 에너지의 손실은</p>
+\[E_{\rm lost} = Mg\frac h4-\frac12 Mv^2 \tag{39}\]
+<p>이다. $v^2 = 2(g/7)h$를 쓰면 이는</p>
+\[\Delta E_{\rm int} = E_{\rm lost} = \frac{3}{28}Mgh \tag{40}\]
+<p>가 된다. 여기서 $\Delta E_{\rm int}$는 내부 열에너지의 증가량이다. 물 1 g을 1도 데우는 데 필요한 에너지는 1 칼로리($= 4.18$ 줄)이다. 따라서 물 1 kg을 1도 데우는 데 필요한 에너지는 $\approx4200$ J이다. 다시 말해</p>
+\[\Delta E_{\rm int} = 4200\,M\,\Delta T \tag{41}\]
+<p>이다. 여기서 mks 단위를 쓰고 $T$는 섭씨로 잰다. (내부 에너지가 빗방울 전체에 고르게 분포한다고 가정했다.) 식 (40)과 (41)로부터 $h$의 함수로서의 온도 증가량은</p>
+\[4200\,\Delta T = \frac{3}{28}gh \tag{42}\]
+<p>이다.</p>
+<p>빗방울이 끓기 시작하려면 얼마나 떨어져야 하는가? 작은 물방울들의 온도가 어는점 근처라고 가정하면, $\Delta T = 100\,{}^\circ\mathrm{C}$가 되기 위해 빗방울이 떨어져야 하는 높이는</p>
+\[h = 400\,\mathrm{km} \tag{43}\]
+<p>이다.</p>
+<p class="note">물론 우리는 문제를 이상화했다. 그러나 말할 필요도 없이, 비에 데일까 걱정할 필요는 없다.</p>
+<p class="note">$h$의 전형적인 값은 10 km이며, 이는 온도를 2~3도 올린다. 물론 이 효과는 다른 많은 요인들에 의해 묻혀 버린다.</p>
+
+<h2>문제 6</h2>
+<p>용수철이 움직인 각을 $\theta(t)$라 하자. 용수철 중 감기지 않은 부분의 길이를 $x(t)$라 하자. 질량의 속력을 $v(t)$라 하자. 그리고 용수철 중 감기지 않은 부분의 용수철 상수(spring constant)를 $k(t)$라 하자. ($k$가 변하는 방식은 아래에서 유도한다.)</p>
+<p>근사 $a\ll L$을 쓰면, 질량은 근사적으로 원운동을 한다고 말할 수 있다. (이 근사는 $x$가 $a$ 정도가 되면 깨지지만, 그런 시간은 전체 시간에 비해 무시할 수 있다.) 원의 순간 중심은 용수철이 기둥에 닿는 점이다. 순간적인 지름 방향으로 $F = ma$를 쓰면</p>
+\[\frac{mv^2}{x} = kx \tag{44}\]
+<p>이다. 이 $v$ 값을 쓰면 원운동의 진동수는</p>
+\[\omega\equiv\frac{d\theta}{dt} = \frac vx = \sqrt{\frac km} \tag{45}\]
+<p>로 주어진다.</p>
+<p>용수철 중 감기지 않은 부분의 용수철 상수 $k(t)$는 그 부분의 평형 길이에 반비례한다. (예를 들어 용수철을 반으로 자르면, 얻어지는 용수철들의 용수철 상수는 원래의 두 배이다.) 이 문제의 모든 평형 길이는 ($L$에 비해) 무한히 작지만, $k$와 평형 길이 사이의 반비례 관계는 여전히 성립한다. (원한다면 평형 길이를 감기지 않은 부분에 남아 있는 용수철 원자의 총수의 척도로 생각해도 된다.)</p>
+<p>기둥 위 접촉점의 각 변화는 기둥 둘레에서 질량의 각 변화(즉 $\theta$)와 같다는 점에 주목하라. 감기지 않은 용수철 부분이 조금 늘어나면서 각 $d\theta$만큼 움직이는 짧은 시간 간격을 생각하자. 그러면 길이 $a\,d\theta$가 기둥에 감긴다. 따라서 감기지 않은 부분의 평형 길이의 상대적 감소는 ($d\theta$의 1차까지) $(a\,d\theta)/x$와 같다. 그러므로 앞 문단으로부터 새 용수철 상수는</p>
+\[k_{\rm new} = \frac{k_{\rm old}}{1-\frac{a\,d\theta}{x}}\approx k_{\rm old}\left(1+\frac{a\,d\theta}{x}\right) \tag{46}\]
+<p>이다. 따라서 $dk = ka\,d\theta/x$이다. $dt$로 나누면</p>
+\[\dot k = \frac{ka\omega}{x} \tag{47}\]
+<p>이다.</p>
+<p>마지막으로 필요한 식은 에너지 보존 식이다. 어떤 순간에 질량의 운동 에너지와 감기지 않은 용수철 부분의 퍼텐셜 에너지의 합을 생각하자. 시간 $dt$ 뒤에 이 에너지 가운데 아주 적은 부분은 새로 감긴 작은 조각에 저장된다. 이 나중 시각의 양들을 프라임으로 나타내면, 에너지 보존으로부터</p>
+\[\frac12 kx^2+\frac12 mv^2 = \frac12 k'x'^2+\frac12 m'v'^2+\left(\frac12 kx^2\right)\left(\frac{a\,d\theta}{x}\right) \tag{48}\]
+<p>이다. 마지막 항은 ($d\theta$의 최저차까지) 새로 감긴 부분에 저장된 에너지이다. $a\,d\theta$가 그 부분의 길이이기 때문이다. 식 (44)를 써서 $v$들을 $x$들로 나타내면 이는</p>
+\[kx^2 = k'x'^2+\frac12 kxa\,d\theta \tag{49}\]
+<p>가 된다. 다시 말해 $-(1/2)kxa\,d\theta = d(kx^2)$이다. $dt$로 나누면</p>
+\[\begin{aligned}-\frac12 kxa\omega &= \frac{d(kx^2)}{dt}\\ &= \dot kx^2+2kx\dot x\\ &= \left(\frac{ka\omega}{x}\right)x^2+2kx\dot x\end{aligned} \tag{50}\]
+<p>이다. 여기서 식 (47)을 썼다. 따라서</p>
+\[\dot x = -\frac34 a\omega \tag{51}\]
+<p>이다.</p>
+<p>이제 연립 미분 방정식인 식 (47)과 (51)을 풀어야 한다. 후자를 전자로 나누면</p>
+\[\frac{\dot x}{x} = -\frac34\frac{\dot k}{k} \tag{52}\]
+<p>이다. 적분하고 지수를 취하면</p>
+\[k = \frac{KL^{4/3}}{x^{4/3}} \tag{53}\]
+<p>이다. 여기서 분자는 초기 조건 $k = K$, $x = L$로부터 얻었다. 식 (53)을 식 (51)에 넣고 $\omega = \sqrt{k/m}$을 쓰면</p>
+\[x^{2/3}\dot x = -\frac{3aK^{1/2}L^{2/3}}{4m^{1/2}} \tag{54}\]
+<p>이다. 적분하고 초기 조건 $x = L$을 쓰면</p>
+\[x^{5/3} = L^{5/3}-\left(\frac{5aK^{1/2}L^{2/3}}{4m^{1/2}}\right)t \tag{55}\]
+<p>이다. 따라서 최종적으로</p>
+\[x(t) = L\left(1-\frac tT\right)^{3/5} \tag{56}\]
+<p>이며, 여기서</p>
+\[T = \frac45\frac La\sqrt{\frac mK} \tag{57}\]
+<p>는 $x(t) = 0$이 되어 질량이 기둥에 부딪히는 시간이다.</p>
+<p><span style="font-variant:small-caps">참고</span>:</p>
+<ol type="a">
+<li>이 문제에서 기둥의 중심에 대한 질량의 각운동량(angular momentum)은 보존되지 <em>않는다</em>는 점에 주목하라. 힘이 중심력(central force)이 아니기 때문이다.</li>
+<li>질량이 기둥에 부딪히는 순간까지 식 (51)을 적분하면 $-L = -(3/4)a\theta$이다. 그런데 $a\theta$는 기둥에 감긴 전체 길이이며, 이는 $4L/3$과 같다는 것을 알 수 있다.</li>
+</ol>

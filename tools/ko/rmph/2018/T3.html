@@ -1,0 +1,92 @@
+<style>h2,h3{break-after:avoid}</style>
+<h1>문제 III. 고리와 띠 (Rings and strips)</h1>
+<p style="text-align:center"><i>채점 기준(Marking scheme)</i><br><i>올바른 풀이라면 어떤 방법이든 점수를 준다.</i></p>
+
+<h2>과제 1 – 회전하는 고리</h2>
+
+<h3>1.a. <span class="pt">2.60 pt</span></h3>
+<p><span class="pt">0.20 pt</span>$\vec B_{Earth}=B_h\cdot\hat e_x+B_v\cdot\hat e_z$<br>
+$B_h$ – 지구 자기장의 수평 성분(horizontal component)<br>
+$B_v$ – 지구 자기장의 수직 성분(vertical component)</p>
+<p>고리의 면 벡터(surface vector) $\vec S$에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\vec S=\pi\cdot R^2\cdot\left(\cos(\omega\cdot t)\cdot\hat e_x+\sin(\omega\cdot t)\cdot\hat e_y\right)\]
+<p>고리 면을 지나는 지구 자기장의 자기 선속(magnetic flux) $\phi$에 대한 식 <span class="pt">0.40 pt</span></p>
+\[\begin{cases}\phi=\vec B_{Earth}\bullet\vec S=\left(B_h\cdot\hat e_x+B_v\cdot\hat e_z\right)\bullet\left(\pi\cdot R^2\cdot\left(\cos(\omega\cdot t)\cdot\hat e_x+\sin(\omega\cdot t)\cdot\hat e_y\right)\right)\\ \phi=B_h\cdot\pi\cdot R^2\cdot\cos(\omega\cdot t)\end{cases}\]
+<p>고리에 유도되는 기전력(electromotive force)에 대한 식 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}E=-\dfrac{d\phi}{dt}\\[3mm] E(t)=B_h\cdot\pi\cdot R^2\cdot\omega\cdot\sin(\omega\cdot t)\end{cases}\]
+<p>고리를 흐르는 전류의 세기 <span class="pt">0.20 pt</span></p>
+\[i(t)=\frac{B_h\cdot s\cdot R\cdot\omega}{2\cdot\rho}\cdot\sin(\omega\cdot t)\]
+<p>고리 중심에서 유도 자기장의 크기 <span class="pt">0.20 pt</span></p>
+\[B_i(t)=\frac{\mu_0\cdot B_h\cdot s\cdot R\cdot\omega}{4R\cdot\rho}\cdot\sin(\omega\cdot t)\]
+<div><span class="pt">0.60 pt</span>\[\begin{cases}\vec B_i=B_i\cdot\left(\hat e_x\cdot\cos(\omega\cdot t)+\hat e_y\cdot\sin(\omega\cdot t)\right)\\[1mm] \vec B_i=\dfrac{\mu_0\cdot B_h\cdot s\cdot\omega}{4\cdot\rho}\cdot\left[\hat e_x\cdot\dfrac12\cdot\sin(2\omega\cdot t)+\hat e_y\cdot\dfrac12\cdot\left(1-\cos(2\omega\cdot t)\right)\right]\end{cases}\]</div>
+<p>유도 자기장의 시간 평균값 <span class="pt">0.20 pt</span></p>
+\[\left\langle\vec B_i\right\rangle=\frac{\mu_0\cdot B_h\cdot s\cdot R\cdot\omega}{8R\cdot\rho}\cdot\hat e_y\]
+<div><span class="pt">0.20 pt</span>\[\mathrm{tg}\,\alpha=\frac{\left|\left\langle\vec B_i\right\rangle\right|}{B_h}\]</div>
+<div><span class="pt">0.20 pt</span>\[\alpha=\mathrm{arctg}\,\frac{\mu_0\cdot s\cdot\omega}{8\cdot\rho}\]</div>
+
+<h2>과제 2 – 초전도 고리</h2>
+
+<h3>2.a. <span class="pt">4.00 pt</span></h3>
+<p>고리 면을 지나는 자기 선속에 대한 식 $\Phi=B_z\cdot\pi\cdot r_0^2+L\cdot I$ <span class="pt">0.40 pt</span></p>
+<div><span class="pt">0.20 pt</span>\[0=R\cdot I=\frac{d\Phi}{dt}\]</div>
+<p>– 초전도 고리에서 전압 강하는 0이다.<br>– 고리 안의 자기 선속은 일정하다.</p>
+<div><span class="pt">0.40 pt</span>\[\Phi=B_0\cdot(1-\alpha\cdot z)\cdot\pi\cdot r_0^2+L\cdot I=constant\]</div>
+<p>초기 조건 $\begin{cases}z(t=0)=0\\ I(t=0)=0\end{cases}$ &nbsp;&nbsp; $constant=B_0\cdot\pi\cdot r_0^2$</p>
+<p>고리를 흐르는 전류의 세기에 대한 식 <span class="pt">0.40 pt</span></p>
+\[I=\frac{B_0}{L}\cdot\alpha\cdot\pi\cdot r_0^2\cdot z\]
+<p>대칭성 때문에 상호작용 힘의 지름 방향 성분은 0이다. 상호작용 힘의 수직 성분은 <span class="pt">0.60 pt</span></p>
+\[F_z=-\frac{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}{L}\cdot z\]
+<p>탄성 상수(elastic constant) <span class="pt">0.20 pt</span></p>
+\[k=\frac{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}{L}\]
+<p>고리의 운동 방정식 <span class="pt">0.60 pt</span></p>
+\[m\cdot\frac{d^2z}{dt^2}+k\cdot z=-m\cdot g\]
+<p>고리의 운동 방정식의 일반해 <span class="pt">0.40 pt</span></p>
+\[z(t)=A\cdot\cos(\omega\cdot t+\psi)-\frac{m\cdot g}{k}\]
+<p>초기 조건 <span class="pt">0.20 pt</span></p>
+\[\begin{cases}z(0)=0\\ \dot z(0)=v_z(0)=0\end{cases}\]
+<div><span class="pt">0.60 pt</span>\[\begin{cases}z(t)=\dfrac{m\cdot g\cdot L}{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}\cdot\cos\left[\sqrt{\dfrac{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}{L\cdot m}}\cdot t-1\right]\\[6mm] z(t)=\dfrac{m\cdot g\cdot L}{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}\cdot\cos\left[\pi\cdot B_0\cdot r_0^2\cdot\sqrt{\dfrac{2\cdot\alpha\cdot\beta}{L\cdot m}}\cdot t-1\right]\end{cases}\]</div>
+<p class="note">(번역 주: 원문의 괄호 배치는 위와 같으나, 초기 조건 $z(0)=0$, $\dot z(0)=0$을 만족하는 해는 $z(t)=\dfrac{mg}{k}\left[\cos\left(\sqrt{k/m}\,t\right)-1\right]$이다. 즉 $-1$은 코사인 바깥에 있는 것으로 읽어야 한다. 2.b의 식도 마찬가지이다.)</p>
+<p><i>관찰:</i><br>
+1. 수직 좌표는 $z\le0$이다.<br>
+2. 전류는 항상 같은 방향으로 고리를 흐르며, 진동의 가장 높은 점$(z=0)$에서 최솟값$(I=0)$을 가진다.<br>
+3. 전자기력은 항상 위쪽을 향하며, 진동의 가장 높은 점에서 최솟값$(F_m=0)$을 가진다.</p>
+
+<h3>2.b. <span class="pt">0.40 pt</span></h3>
+<p>전류의 시간 의존성에 대한 식 <span class="pt">0.40 pt</span></p>
+\[\begin{cases}I(t)=\dfrac{g\cdot m}{2\pi\cdot\beta\cdot B_0\cdot r_0^2}\cdot\left(\cos\sqrt{\dfrac{2\pi^2\cdot\alpha\cdot\beta\cdot B_0^2\cdot r_0^4}{L\cdot m}}\cdot t-1\right)\\[6mm] I(t)=\dfrac{g\cdot m}{2\pi\cdot\beta\cdot B_0\cdot r_0^2}\cdot\left(\cos\left[\pi\cdot B_0\cdot r_0^2\cdot\sqrt{\dfrac{2\cdot\alpha\cdot\beta}{L\cdot m}}\cdot t-1\right]\right)\end{cases}\]
+
+<h2>과제 3 – 전도성 띠</h2>
+
+<h3>3.a. <span class="pt">0.50 pt</span></h3>
+<figure><img src="T3_fig1.png" style="width:34%"></figure>
+<p>앙페르 법칙(Ampère's law) <span class="pt">0.30 pt</span></p>
+\[\oint_\Gamma\vec B\cdot d\vec r=\mu_0\cdot\frac{I\cdot\ell}{b}\]
+\[\begin{cases}B_1\cdot\ell+B_2\cdot\ell=\mu_0\cdot\dfrac{I\cdot\ell}{b}\\[3mm] B_1+B_2=\mu_0\cdot\dfrac{I}{b}\end{cases}\]
+<div><span class="pt">0.20 pt</span>\[B_1=B_2=\mu_0\cdot\frac{I}{2b}\]</div>
+
+<h3>3.b. <span class="pt">0.50 pt</span></h3>
+<div><span class="pt">0.50 pt</span><figure><img src="T3_fig2.png" style="width:40%"></figure></div>
+\[\begin{cases}B=B_1+B_2\\[1mm] B=\mu_0\cdot\dfrac{I}{b}\end{cases}\]
+
+<h3>3.c. <span class="pt">0.50 pt</span></h3>
+<div><span class="pt">0.30 pt</span>\[\begin{cases}U=-\dfrac{d\varphi}{dt}\\[3mm] U=-L\cdot\dfrac{dI}{dt}\end{cases}\qquad\text{또는}\qquad\varphi=L\cdot I\]</div>
+<div><span class="pt">0.20 pt</span>\[L=\frac{\mu_0\cdot D\cdot a}{b}\]</div>
+
+<h3>3.d. <span class="pt">0.50 pt</span></h3>
+<p>키르히호프 제2법칙(Kirchhoff's second law) $V=L\cdot\dfrac{dI}{dt}$ &nbsp;&nbsp;$(R=0,\ C=0)$ <span class="pt">0.30 pt</span></p>
+<div><span class="pt">0.20 pt</span>\[I(t)=\frac{V\cdot b}{\mu_0\cdot D\cdot a}\cdot t\]</div>
+
+<h3>3.e. <span class="pt">0.50 pt</span></h3>
+<figure><img src="T3_fig3.png" style="width:40%"></figure>
+<p>두 띠 위에서 서로 마주 보는 두 점 사이의 전압 차 $U_{AA'}$는 위치 $x$에서 띠 조립체의 끝까지의 부분에 해당하는 자기 유도 전압(self-induced voltage) 때문에 생긴다. <span class="pt">0.30 pt</span></p>
+\[U_{AA'}=L(x)\cdot\frac{dI}{dt}\]
+<p>$L(x)$ – 띠 조립체의 끝부분(길이 $x$)을 지나는 자기 선속과 연관된 인덕턴스(inductance)</p>
+\[\begin{cases}L(x)=\dfrac{\Phi(x)}{I}\\[3mm] L(x)=\dfrac{B\cdot x\cdot a}{I}\end{cases}\qquad L(x)=\frac{\mu_0\cdot x\cdot a}{b}\]
+<div><span class="pt">0.20 pt</span>\[U_{AA'}=V\cdot\frac{x}{D}\]</div>
+
+<h3>3.f. <span class="pt">0.50 pt</span></h3>
+<div><span class="pt">0.50 pt</span>\[\begin{cases}\dfrac{dW}{dt}=I\cdot U_{AA'}\\[3mm] \dfrac{dW}{dt}=\dfrac{V^2\cdot b\cdot x}{\mu_0\cdot D^2\cdot a}\cdot t\end{cases}\]</div>
+
+<h2>문제 III 총점 <span class="pt">10 pt</span></h2>
+
+<p style="margin-top:6mm"><i>© 채점 기준 작성:</i><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>Prof. dr. Delia DAVIDESCU</i><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>Conf. univ. dr. Adrian DAFINEI</i></p>
