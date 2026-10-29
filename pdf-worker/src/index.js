@@ -14,7 +14,7 @@ const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 4;
+const CACHE_V = 5;          // 5: drops the «not found» answers kept for a day before the 2026 papers were uploaded
 
 export default {
   async fetch(req, env, ctx) {
@@ -31,7 +31,8 @@ export default {
     let res = await cache.match(key);
     if (!res) {
       const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}?v=${CACHE_V}`,
-                             { redirect: "follow", cf: { cacheTtl: DAY, cacheEverything: true } });
+                             { redirect: "follow", cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": DAY, "404": 30, "500-599": 0 } } });
+      /* a file asked for before it was uploaded is «not found» for half a minute only, not for a day */
       if (!up.ok) return new Response("Not found", { status: up.status === 404 ? 404 : 502 });
       res = new Response(up.body, { status: 200, headers: {
         "Content-Type": "application/pdf",

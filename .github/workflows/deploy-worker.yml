@@ -1,4 +1,4 @@
-# Deploys the community Worker (community/) to Cloudflare whenever main changes it, instead of pasting
+# Deploys the community Worker (community/) and the PDF Worker (pdf-worker/) to Cloudflare whenever main changes them, instead of pasting
 # src/index.js into the dashboard.  Needs one repository secret: CLOUDFLARE_API_TOKEN (a token made from
 # Cloudflare's "Edit Cloudflare Workers" template).  Variables and secrets set in the dashboard stay
 # (keep_vars in wrangler.toml); database migrations are not run here — they are still applied by hand.
@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/wrangler.toml", "community/package*.json", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/wrangler.toml", "community/package*.json", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -31,5 +31,9 @@ jobs:
       - run: npm ci
       - run: node --check src/index.js
       - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # the PDF Worker (problem sheets and solutions from the releases), with the same wrangler
+      - run: node --check ../pdf-worker/src/index.js && npx wrangler deploy --config ../pdf-worker/wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
