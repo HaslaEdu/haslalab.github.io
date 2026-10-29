@@ -607,7 +607,7 @@ async function arLabOne(root, alive, id) {
   const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
   /* the experiment alone, against the year's real contestants (sim/labmedal.js) */
-  const medal = s.status === "graded" && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
+  const medal = s.status === "graded" && s.kind !== "theory" && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
   if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>

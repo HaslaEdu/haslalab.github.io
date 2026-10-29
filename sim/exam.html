@@ -15,7 +15,10 @@
      Only signed-in users sit it; a start costs one exam token, kept on the server.  The server also keeps the
      clock and the state (running → scanning → graded), so a reload, a closed tab or another computer comes
      back to the same exam with the time still running and spends nothing.
-     URL: exam.html?c=ipho&y=2024&e=E1,E2&f=ipho2024_E1_web.html,ipho2024_E2_web.html&t=title|title&p=pdf|pdf&lang=ko -->
+     URL: exam.html?c=ipho&y=2024&e=E1,E2&f=ipho2024_E1_web.html,ipho2024_E2_web.html&t=title|title&p=pdf|pdf&lang=ko
+     A theory exam (m=t): the same screens, with the year's theory paper filling the screen in place of the bench —
+     drawn page by page, never offered for download or print — and its solution (s), separate marking scheme (k) and
+     official answer sheets (a) beside it:  exam.html?m=t&c=ipho&y=2024&e=T1,T2,T3&t=…&p=paper|…&s=sol|…&k=…&a=… -->
 <style>
   :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e;--deep:#12161b;
         --red:#e5534b;--ok:#57ab5a;--desk:#3a3128;--bar:52px}
@@ -85,6 +88,8 @@
   .ps .pv canvas{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.4);max-width:none}
   .ps .pv .msg{color:#eee;padding:30px 10px;text-align:center}
   .ps .grip{position:absolute;left:-4px;top:0;bottom:0;width:8px;cursor:col-resize;z-index:2}
+  .ps.full{flex:1 1 auto;max-width:none;border-left:0}
+  .ps .ph .on{background:var(--accent);border-color:var(--accent);color:#1c2027}
   #bPaper.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
 
   /* ── cards: before, after, scanning ── */
@@ -187,7 +192,8 @@
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* the exam's length (examdur.js; the server's clock has the last word) */
-const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length); })();
+const THY = new URLSearchParams(location.search).get("m") === "t";        // a theory exam
+const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length, THY); })();
 const DK = HLexam.text(DUR, "ko"), DE = HLexam.text(DUR, "en"), DC = HLexam.clock(DUR) + ":00";
 
 const T = {
@@ -299,23 +305,68 @@ const T = {
   },
 };
 
+/* a theory exam: what differs from the experimental one */
+const TH = {
+  ko: {
+    introLead: "실제 대회처럼 이론 시험을 한 번에 치릅니다.",
+    rules: [
+      `<b>${DK}</b> 동안 이 해의 이론 문제를 모두 풉니다. 문제지는 대회가 공개한 <b>원문 그대로</b>이며, 시험이 시작되면 화면 가득 열립니다.`,
+      "<b>문제지는 시험 화면에서만</b> 볼 수 있고, 내려받거나 인쇄할 수 없습니다. 문제가 여럿이면 위쪽 버튼으로 오갑니다.",
+      "답은 종이에 씁니다. 시작하기 전에 아래 «답안지 인쇄»로 Answer sheet와 Working sheet를 인쇄해 두세요(대회가 공식 답안지를 공개한 해는 그것을 씁니다). 최종 답은 Answer sheet의 해당 칸에 쓴 것만 인정합니다.",
+      "시간이 끝나면(또는 «시험 끝내기»를 누르면) 문제지가 닫히고 <b>30분</b> 타이머가 돕니다. 화면의 QR 코드를 휴대폰으로 찍어 답안지 · working sheet를 스캔해 보냅니다.",
+      "보낸 쪽은 AI가 바로 읽어 이 화면에 보여 줍니다. <b>읽힌 내용은 고칠 수 없습니다</b>. 제출하면 공식 해설과 채점 기준표를 함께 보고 문항별로 채점하며, 총평 · 고칠 습관 · 글씨까지 첨삭해 줍니다.",
+      "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다.",
+      "시작하면 <b>실전 토큰 1개</b>를 씁니다. 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다.",
+    ],
+    infoTimeV: `이론 ${DK} + 답안 스캔 30분`, infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰",
+    sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.", kind: "이론 시험",
+    agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
+    endBody: "끝내면 문제지가 닫히고 다시 열 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.", warn5: "5분 남았습니다. 답을 답안지 칸에 옮겨 쓰세요.",
+    darkH: "시험 시간이 끝났습니다", darkB: "문제지를 닫았습니다.", rcEnd: "시험 종료",
+    steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "문제(T1/T2 …)와 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타납니다. 읽힌 내용을 확인하고, 잘못 읽혔으면 «빼기» 후 다시 찍습니다.", "«제출하고 채점받기»를 누릅니다."],
+    submitting: "채점하는 중… (문제마다 30초~2분)", pendingWhy: { no_solution: "이 문제의 해설 파일을 아직 받지 못해 잠시 뒤 다시 채점합니다." },
+  },
+  en: {
+    introLead: "Sit the whole theory exam at once, as on the day.",
+    rules: [
+      `You have <b>${DE}</b> for all of this year's theory problems. The paper is the olympiad's <b>original</b>, and it fills the screen once the exam starts.`,
+      "<b>The paper opens only on the exam screen</b>; it cannot be downloaded or printed. With several problems, switch between them with the buttons at the top.",
+      "Write your answers on paper. Before you start, print the Answer sheets and Working sheets with «Print answer sheets» below (the official ones where the olympiad published them). A final answer counts only in its box on an Answer sheet.",
+      "When time is up (or you press «Finish exam») the paper closes and a <b>30-minute</b> timer starts. Scan the QR code on the screen with your phone to photograph your sheets.",
+      "Each page is read by the AI at once and shown here. <b>What was read cannot be edited</b>. On submission it is graded item by item against the official solution and marking scheme together, with a review: what decided the mark, habits to fix and your handwriting.",
+      "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing.",
+      "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock.",
+    ],
+    infoTimeV: `${DE} of theory + 30 minutes to scan`, infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with",
+    sheetsNote: "Print them before you start. The paper opens only on the exam screen.", kind: "theory exam",
+    agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
+    endBody: "The paper will close and cannot be opened again. The 30 minutes for scanning start at once.", warn5: "5 minutes left. Copy your answers into their boxes.",
+    darkH: "Time is up", darkB: "The paper has been closed.", rcEnd: "Exam ended",
+    steps: ["Point your phone's camera at the QR code.", "Choose the problem (T1/T2 …) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "Each page appears on the right. Check what was read; if it is wrong, «Remove» it and photograph it again.", "Press «Submit and grade»."],
+    submitting: "Grading… (30 s to 2 minutes per problem)", pendingWhy: { no_solution: "This problem's solution could not be fetched yet; it is graded again shortly." },
+  },
+};
+
 /* ── what this exam is ── */
 const Q = new URLSearchParams(location.search);
 let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? "en" : "ko";
-const t = () => T[lang];
+const t = () => THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang];
 const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
   c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
+  marks: split("k", "|"), answers: split("a", "|"),
 };
-const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.y > 1990 && EX.tasks.length > 0 && EX.tasks.length <= 4 &&
-  EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) && EX.files.length === EX.tasks.length && EX.files.every(f => /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f));
+const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
+  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(f))
+       : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.every(f => /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
 const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : PDF_BASE + s.replace(/^pdf\//, "");
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
 /* the printable answer and working sheets (sheets.html) — the problem sheet is not among them */
-const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y, n: EX.name || EX.c.toUpperCase(), e: EX.tasks.join(","), t: EX.titles.join("|"), lang }).toString();
+const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y, n: EX.name || EX.c.toUpperCase(), e: EX.tasks.join(","), t: EX.titles.join("|"), lang,
+  ...(THY ? { m: "t", a: EX.answers.join("|") } : {}) }).toString();
 const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
 const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
 /* the address to come back to (kept on the server with the session), without the language */
@@ -365,8 +416,8 @@ function paintBar() {
   const running = SES && SES.status === "running";
   $("clock").hidden = !running; $("bEnd").hidden = $("bFull").hidden = !running;
   document.body.classList.toggle("running", !!running);
-  $("bPaper").hidden = !running || !EX.pdfs.some(Boolean); $("bPaper").textContent = PAPER.open ? t().paperClose : t().paper; $("bPaper").classList.toggle("on", PAPER.open);
-  $("views").innerHTML = running && EX.tasks.length > 1 ? [`<button data-v="" class="${!VIEW ? "on" : ""}">${t().viewAll}</button>`]
+  $("bPaper").hidden = !running || THY || !EX.pdfs.some(Boolean); $("bPaper").textContent = PAPER.open ? t().paperClose : t().paper; $("bPaper").classList.toggle("on", PAPER.open);
+  $("views").innerHTML = running && !THY && EX.tasks.length > 1 ? [`<button data-v="" class="${!VIEW ? "on" : ""}">${t().viewAll}</button>`]
     .concat(EX.tasks.map(x => `<button data-v="${x}" class="${VIEW === x ? "on" : ""}">${x}</button>`)).join("") : "";
 }
 let VIEW = "";
@@ -445,7 +496,7 @@ async function introView() {
     <span class="badge">${t().docBadge}</span>
     <h1>${esc(label())} · ${EX.tasks.length > 1 ? EX.tasks.join(" + ") : EX.tasks[0]}</h1><p class="lead">${t().docH} — ${t().introLead}</p>
     <table class="info"><tbody>
-      <tr><th>${t().infoName}</th><td>${esc(label())} ${lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().infoName}</th><td>${esc(label())} ${THY ? t().kind : lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
       <tr><th>${t().infoTasks}</th><td>${tasks}</td></tr>
       <tr><th>${t().infoTime}</th><td>${t().infoTimeV}</td></tr>
       <tr><th>${t().infoBring}</th><td>${t().infoBringV}</td></tr>
@@ -473,7 +524,8 @@ async function startExam() {
   const go = $("go"); if (go) go.disabled = true;
   try {
     /* each experiment's official solution: the marking scheme is drawn from it */
-    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: (EX.sols[i] || "").replace(PDF_BASE, "").replace(/^pdf\//, "") }]).filter(([, v]) => v.sol));
+    const clean = v => (v || "").replace(PDF_BASE, "").replace(/^pdf\//, "");
+    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]), ...(THY ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}) } : {}) }]).filter(([, v]) => v.sol || v.kind));
     const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
@@ -488,6 +540,14 @@ async function startExam() {
 /* ── the bench ── */
 let stations = [], mirror = null;
 function runView() {
+  if (THY) {
+    $("main").innerHTML = `<div class="hall"><aside class="ps full" id="ps" hidden></aside></div>`;
+    PAPER.open = false; PAPER.docs = {}; stations = [];
+    paintBar(); openPaper(0);
+    tick = setInterval(clockTick, 250); clockTick();
+    poller = setInterval(sync, 30000);
+    return;
+  }
   $("main").innerHTML = `<div class="hall"><aside class="kit" id="kit"></aside><div class="desk" id="desk"></div><aside class="ps" id="ps" hidden></aside></div>`;
   $("desk").addEventListener("click", e => { const a = e.target.closest("[data-paper]"); if (a) { e.preventDefault(); openPaper(+a.dataset.paper); } });
   PAPER.open = false; PAPER.docs = {};
@@ -537,15 +597,15 @@ function openPaper(i) {
   const ps = $("ps"); if (!ps || !SES || SES.status !== "running") return;
   PAPER.open = true; PAPER.i = EX.pdfs[i] ? i : Math.max(0, EX.pdfs.findIndex(Boolean));
   ps.hidden = false;
-  ps.innerHTML = `<div class="grip" id="psGrip"></div><div class="ph">${EX.tasks.map((x, k) => EX.pdfs[k] ? `<button data-pi="${k}" class="${k === PAPER.i ? "on" : ""}">${esc(x)}</button>` : "").join("")}
-    <span class="sp"></span><button data-z="-1">−</button><button data-z="1">+</button><button data-z="0">✕</button></div><div class="pv" id="pv"></div>`;
+  ps.innerHTML = `${THY ? "" : `<div class="grip" id="psGrip"></div>`}<div class="ph">${EX.tasks.map((x, k) => EX.pdfs[k] ? `<button data-pi="${k}" class="${k === PAPER.i ? "on" : ""}">${esc(x)}${THY && EX.titles[k] ? " · " + esc(EX.titles[k].slice(0, 40)) : ""}</button>` : "").join("")}
+    <span class="sp"></span><button data-z="-1">−</button><button data-z="1">+</button>${THY ? "" : `<button data-z="0">✕</button>`}</div><div class="pv" id="pv"></div>`;
   ps.querySelector(".ph").onclick = e => { const b = e.target.closest("button"); if (!b) return;
     if (b.dataset.pi != null) openPaper(+b.dataset.pi);
     else if (b.dataset.z === "0") closePaper();
     else { PAPER.zoom = Math.max(0.5, Math.min(3, PAPER.zoom * (b.dataset.z === "1" ? 1.2 : 1 / 1.2))); drawPaper(); } };
   const pv = $("pv"); pv.oncontextmenu = e => e.preventDefault();
   const grip = $("psGrip");
-  grip.onpointerdown = e => { grip.setPointerCapture(e.pointerId); const hall = ps.parentElement.getBoundingClientRect();
+  if (grip) grip.onpointerdown = e => { grip.setPointerCapture(e.pointerId); const hall = ps.parentElement.getBoundingClientRect();
     grip.onpointermove = m => { const w = Math.max(300, Math.min(hall.width * 0.75, hall.right - m.clientX)); ps.style.setProperty("--psw", w + "px"); };
     grip.onpointerup = () => { grip.onpointermove = null; clearTimeout(PAPER.rd); PAPER.rd = setTimeout(drawPaper, 120); }; };
   paintBar(); drawPaper();
@@ -560,7 +620,7 @@ async function drawPaper() {
     const lib = await pdfjs();
     const doc = await (PAPER.docs[i] || (PAPER.docs[i] = lib.getDocument({ url: pdfUrl(EX.pdfs[i]) }).promise.catch(e => { delete PAPER.docs[i]; throw e; })));
     if (ticket !== PAPER.ticket) return;
-    const width = Math.max(260, pv.clientWidth - 24), dpr = Math.min(2, devicePixelRatio || 1), out = [];
+    const width = Math.max(260, Math.min(THY ? 980 : 1e9, pv.clientWidth - 24)), dpr = Math.min(2, devicePixelRatio || 1), out = [];
     for (let n = 1; n <= doc.numPages; n++) {
       const pg = await doc.getPage(n), vp0 = pg.getViewport({ scale: 1 }), scale = width / vp0.width * PAPER.zoom, vp = pg.getViewport({ scale: scale * dpr });
       const c = document.createElement("canvas"); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
@@ -790,7 +850,7 @@ function doneView() {
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
   /* which medal the experiment alone would have earned that year, where the year's scores are published */
-  if (s.status === "graded" && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
+  if (s.status === "graded" && !THY && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
     const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");
     if (box && SES === s) box.innerHTML = window.labMedal.html(e, lang); });
   $("again").onclick = () => { SES = null; shown = ""; sync(); };

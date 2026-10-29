@@ -7,13 +7,17 @@
    - NBPhO: the organisers publish no time for the experiments alone, so the exam gets the year's
      competition time shared out evenly over its problems, times the experiments sat:
      total / problems × experiments.  The competition was one five-hour round in 2003–2005 and online
-     in 2020–2021, and two five-hour rounds in the other years (each round ends with its experiment). */
+     in 2020–2021, and two five-hour rounds in the other years (each round ends with its experiment).
+   - A theory exam (the year's written paper, sat at once): five hours as at IPhO, APhO, IChO, IOAA and most others;
+     three hours for USAPhO, IJSO, IBO, IESO and OPhO, whose theory papers are shorter. */
 (function () {
   var NBPHO = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600, 8], 2007: [600, 8], 2008: [600, 10],
     2009: [600, 10], 2010: [600, 11], 2011: [600, 9], 2012: [600, 10], 2013: [600, 10], 2014: [600, 10], 2015: [600, 10],
     2016: [600, 10], 2017: [600, 10], 2018: [600, 9], 2019: [600, 8], 2020: [300, 5], 2021: [300, 4], 2022: [600, 9],
     2023: [600, 9], 2024: [600, 10], 2025: [600, 9], 2026: [600, 10] };
-  function sec(comp, year, n) {
+  var THEORY = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600 };
+  function sec(comp, year, n, theory) {
+    if (theory) return THEORY[comp] || 5 * 3600;
     n = Math.max(1, n || 1);
     if (comp === 'opho') return 3 * 3600;
     if (comp === 'usapho' && +year === 2022) return 3 * 3600;
