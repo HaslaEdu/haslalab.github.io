@@ -1023,7 +1023,7 @@ ko:{
   thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
-  onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", seeThy:"이론 보기", seeExp:"실험 보기",
+  onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", alsoThy:n=>`이 해에는 이론 문제 ${n}개도 있습니다.`, seeThy:"이론 보기", seeExp:"실험 보기",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
   kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
@@ -1092,7 +1092,7 @@ en:{
   thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
-  onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", seeThy:"See the theory", seeExp:"See the experiments",
+  onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", alsoThy:n=>`This year also has ${n} theory problem${n>1?"s":""}.`, seeThy:"See the theory", seeExp:"See the experiments",
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
   kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
@@ -4793,7 +4793,8 @@ function viewYear(key,year){
     </div>
     ${adFitBanner("secondary")}
     ${thyY?(thyOf(key,yr.y)?theoryHtml(key,yr):`<p class="trknote">${d.onlyExp}${yr.problems.length?`<button type="button" onclick="setTrack('exp')">${d.seeExp}</button>`:""}</p>`)
-      :!yr.problems.length&&thyOf(key,yr.y)?`<p class="trknote">${d.onlyThy}<button type="button" onclick="setTrack('thy')">${d.seeThy}</button></p>`:""}
+      :!yr.problems.length&&thyOf(key,yr.y)?`<p class="trknote">${d.onlyThy}<button type="button" onclick="setTrack('thy')">${d.seeThy}</button></p>`
+      :thyOf(key,yr.y)?`<p class="trknote">${d.alsoThy(thyCount(thyOf(key,yr.y)))}<button type="button" onclick="setTrack('thy')">${d.seeThy} →</button></p>`:""}
     <div${thyY?" hidden":""}>
     <div class="shead"${yr.problems.length?"":" hidden"}>
       <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
