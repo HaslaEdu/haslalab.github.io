@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=8611ec6e6e"></script>
+<script src="theory.js?v=c3e913625c"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4301,6 +4301,8 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
     if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(c&&c.sol?{sol:c.sol}:{})}; }); }
 /* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
+/* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
+const THY_WHOLE=new Set(["ispho"]);
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
@@ -4312,7 +4314,7 @@ function theoryGroups(key,yr){
   const out=[];
   for(const g of Object.values(by)){
     const num=g.filter(q=>q.n).sort((a,b)=>a.n-b.n), whole=g.find(q=>!q.n);
-    const pick=num.length&&(!whole||num.length<=4)?num:whole?[whole]:num;
+    const pick=whole&&(THY_WHOLE.has(key)||!num.length||num.length>4)?[whole]:num;
     for(let i=0;i<pick.length;i+=4) out.push(pick.slice(i,i+4).map(q=>q.x));
   }
   return out;
@@ -4390,10 +4392,7 @@ const LOGO_V = 12;
 const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31,
-                   /* WoPhO: the old site's wordmark; Physics Cup and KPhE: their own logos; CPhO, RuPhO and BAUPC (which
-                      has none) show their country's flag */
-                   wopho:0.55, physcup:0.42, kphe:0.5, cpho:0.5, rupho:0.5, baupc:0.5};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -4848,9 +4847,7 @@ function examGroups(key,yr){
   /* NBPhO: the year's experiments and the rest of its booklet (the theory) are one exam, as on the day */
   const t=key==="nbpho"&&exp.length?thyOf(key,yr.y):null;
   if(t&&t.f.T&&t.f.T.sol&&exp.length<4) out[0]=exp.concat([{id:"T",thy:true,skip:(t.x||[]).join(","),
-    title:{ko:"이론 (실험 문제를 뺀 나머지)",en:"Theory (every problem but the experiments)"},
-    /* the booklet as the candidates had it — in Korean the translated booklet (theory_ko.json) where there is one */
-    files:{pdf:PDF_BASE+(lang==="ko"&&(t.f.T.ko||{}).paper||t.f.T.paper),sol:PDF_BASE+t.f.T.sol}}]);
+    title:{ko:"이론 (실험 문제를 뺀 나머지)",en:"Theory (every problem but the experiments)"},files:{pdf:PDF_BASE+t.f.T.paper,sol:PDF_BASE+t.f.T.sol}}]);
   live.filter(p=>!exp.includes(p)).forEach(p=>out.push([p]));
   return out;
 }
@@ -4862,8 +4859,7 @@ function examHref(key,yr,group){
   const short=u=>u.startsWith(PDF_BASE)?u.slice(PDF_BASE.length):u;
   const q=new URLSearchParams({c:key,y:yr.y,n:DATA[key].abbr,e:group.map(examTask).join(","),
     f:group.map(p=>p.thy?"-":p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
-    /* a combined exam (NBPhO) hands out the whole booklet only: the experiments get no sheet of their own */
-    p:group.map(p=>group.some(q=>q.thy)&&!p.thy?"":short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
+    p:group.map(p=>short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
   /* a combined exam (NBPhO): the booklet number of each experiment, and the problems the theory part leaves out */
   if(group.some(p=>p.thy)){ q.set("o",group.map(p=>p.no||"").join("|")); q.set("x",(group.find(p=>p.thy)||{}).skip||""); }
   else if(yearPair(key,yr)) q.set("h","1");        /* the year has theory too: grading the experiments costs half a token */
