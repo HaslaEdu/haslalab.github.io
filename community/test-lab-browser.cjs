@@ -40,10 +40,14 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   ok(await pg.$(".yrexam a[href='#/ipho/exam']") !== null, "the year page points to the exam portal");
   await pg.click(".yrexam a"); await pg.waitForSelector("#xmRoot table");
   ok(await pg.$(".modesw a.ex.on") !== null && await pg.$(".years") === null, "exam portal: exam chosen, no year grid");
-  const row = await pg.$$eval("#xmRoot tbody tr", trs => trs.map(t => [t.querySelector(".y").textContent, t.querySelector(".t").textContent, (t.querySelector("a.go") || {}).getAttribute && t.querySelector("a.go").getAttribute("href")]).find(r => r[0] === "2024"));
+  const row = await pg.$$eval("#xmRoot tbody tr:not(.xmset)", trs => trs.map(t => [t.querySelector(".y").textContent, t.querySelector(".t").textContent, (t.querySelector("a.go") || {}).getAttribute && t.querySelector("a.go").getAttribute("href")]).find(r => r[0] === "2024"));
   ok(row && /E1 \+ E2/.test(row[1]) && /e=E1%2CE2/.test(row[2]), "portal row: IPhO 2024 · E1 + E2 → the exam " + JSON.stringify(row && row.slice(0, 2)));
   await pg.screenshot({ path: OUT + "1-portal.png", fullPage: true });
-  const EXAM_URL = SITE + "/" + row[2];
+  /* v15: IPhO 2024 has theory too, so the portal offers a set row and its experiments cost half a token (h=1); this
+     test follows the whole-token path, so the link is taken without h (test-half.mjs covers the halves) */
+  const set = await pg.$$eval("#xmRoot tbody tr.xmset", trs => trs.map(t => [t.querySelector(".y").textContent, [...t.querySelectorAll("a.go")].map(a => a.getAttribute("href"))]).find(r => r[0] === "2024"));
+  ok(set && set[1].length === 2 && set[1].every(h => /[?&]h=1\b/.test(h)) && /h=1/.test(row[2]), "2024: a set row (experiments + theory), both links and the exam row at half a token (h=1)");
+  const EXAM_URL = SITE + "/" + row[2].replace(/&h=1\b/, "");
   await ctx.close();
 
   /* 2. not signed in: no way to start */
@@ -248,7 +252,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   ok(r1.some(([id, ttl]) => id === "R1" && /답안지/.test(ttl)) && /채점 규정/.test(await pg.textContent("#arRoot")), "report: R1 marks on the E2 items, with the rule on hover, and the regulation " + JSON.stringify(r1.slice(0, 2)));
   /* the portal now shows this candidate's status on the exam */
   await pg.goto(SITE + "/#/ipho/exam"); await pg.waitForFunction(() => /채점 완료/.test((document.querySelector("#xmRoot") || {}).textContent || ""), null, { timeout: 8000 });
-  const r24 = await pg.$$eval("#xmRoot tbody tr", trs => trs.map(t => t.textContent).find(x => /^2024/.test(x.trim())));
+  const r24 = await pg.$$eval("#xmRoot tbody tr:not(.xmset)", trs => trs.map(t => t.textContent).find(x => /^2024/.test(x.trim())));
   ok(/채점 완료/.test(r24) && /성적표/.test(r24) && /다시 응시/.test(r24) && /\d+명 응시/.test(r24), "portal row: my status, report, sit again, the number of candidates");
   await pg.screenshot({ path: OUT + "8-lab.png", fullPage: true });
   /* 10. the community's Discord channel */

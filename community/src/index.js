@@ -1011,7 +1011,7 @@ const NBPHO_TIME = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600,
   2023: [600, 9], 2024: [600, 10], 2025: [600, 9], 2026: [600, 10] };
 /* a theory exam (v13): the whole written paper of the year, sat at once — five hours as at IPhO, APhO, IChO, IOAA and
    most others; three hours where the competition's own theory paper is shorter */
-const THEORY_SEC = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600 };
+const THEORY_SEC = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600, cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600 };
 function labExamSec(comp, year, n, theory) {
   if (LAB.testSec) return LAB.testSec;
   if (theory === "mixed") return comp === "nbpho" && NBPHO_TIME[year] ? NBPHO_TIME[year][0] * 60 : 5 * 3600;   // NBPhO: everything, the whole competition time
@@ -1058,12 +1058,27 @@ async function labAdvance(env, s) {
   return s;
 }
 const labActive = async (env, userId) => labAdvance(env, await env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(userId).first());
-const labTokens = async (env, userId) => ((await env.DB.prepare("SELECT exam_tokens FROM users WHERE id=?").bind(userId).first()) || {}).exam_tokens || 0;
+/* v15: half tokens.  The experiments or the theory of a year that has both cost half a token each (the two together, a
+   set, one token); a half taken from a whole token leaves the other half in users.exam_half.  Before migration 0011 the
+   column is missing and every grading costs a whole token, as before. */
+let HALF_READY = false;
+async function halfReady(env) {
+  if (!HALF_READY) { try { await env.DB.prepare("SELECT exam_half FROM users LIMIT 0").all(); HALF_READY = true; } catch (e) {} }
+  return HALF_READY;
+}
+const labTokens = async (env, userId) => {
+  const half = await halfReady(env);
+  const u = await env.DB.prepare(`SELECT exam_tokens${half ? ",exam_half" : ""} FROM users WHERE id=?`).bind(userId).first() || {};
+  return (u.exam_tokens || 0) + (u.exam_half ? 0.5 : 0);
+};
+/* what grading this sitting costs, in half tokens: 1 for the experiments or the theory of a year that has both (the start
+   said so: sources._half), 2 for anything else — a combined sitting (NBPhO) included */
+const labCost = s => labSrc(s)._half && labKind(s) !== "mixed" ? 1 : 2;
 const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
-    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
+    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), cost: labCost(s) / 2, paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     regulation: LAB_REG,
     pages: pages && pages.map(p => ({ id: p.id, no: p.no, task: p.task, kind: p.kind, ocr_status: p.ocr_status, ocr_conf: p.ocr_conf,
       text: p.text ?? p.ocr ?? "", edited: p.edited, legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
@@ -1526,6 +1541,20 @@ async function labSave(env, s, tasks, per, tries, ms) {
 async function labCharge(env, s) {
   if (s.charged) return s;
   const t = now();
+  if (labCost(s) === 1 && await halfReady(env)) {
+    /* half a token: the half put aside by an earlier half if there is one (the ledger row is 0), else a whole token of
+       which the other half is put aside (the row is -1).  The note 'half' marks either as half a token. */
+    await env.DB.batch([
+      env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,note,session_id,created_at) SELECT s.user_id,CASE WHEN u.exam_half=1 THEN 0 ELSE -1 END,'grade','half',s.id,?
+        FROM lab_sessions s JOIN users u ON u.id=s.user_id WHERE s.id=? AND s.charged=0 AND (u.exam_half=1 OR u.exam_tokens>0)`).bind(t, s.id),
+      env.DB.prepare(`UPDATE users SET exam_tokens=exam_tokens-CASE WHEN exam_half=1 THEN 0 ELSE 1 END, exam_half=1-exam_half
+        WHERE id=? AND (exam_half=1 OR exam_tokens>0) AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND charged=0) AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')`).bind(s.user_id, s.id, s.id),
+      env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE id=? AND charged=0 AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.id, s.id),
+    ]);
+    const now_ = await labGet(env, s.id);
+    if (!now_.charged) throw new HttpError(402, "no_tokens", { tokens: await labTokens(env, s.user_id) });
+    return now_;
+  }
   await env.DB.batch([
     env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,session_id,created_at) SELECT user_id,-1,'grade',id,? FROM lab_sessions
       WHERE id=? AND charged=0 AND (SELECT exam_tokens FROM users WHERE id=lab_sessions.user_id) > 0`).bind(t, s.id),
@@ -1909,6 +1938,7 @@ async function lab(p, m, body, me, req, env, url) {
       if (typeof x.skip === "string" && /^\d{1,2}(,\d{1,2}){0,9}$/.test(x.skip)) o.skip = x.skip;  // problems of the booklet graded elsewhere
       if (Object.keys(o).length) sources[k] = o;
     }
+    if (body.pair === true) sources._half = 1;                 // the year has experiments and theory: each half a token
     /* coming back: the open exam is returned as it is, nothing is spent */
     let open = await labActive(env, me.id);
     if (open && (open.status === "running" || open.status === "scanning")) {

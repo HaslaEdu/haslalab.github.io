@@ -239,8 +239,9 @@ const T = {
     pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
     loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
     tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `시작하기 (${DC})`, startQ: "시험을 시작합니다",
-    startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청해 토큰 1개를 씁니다 (${n}개 → ${n - 1}개).` : " 토큰은 쓰지 않습니다."),
+    startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청해 토큰 1개를 씁니다 (${n}개 → ${n - COST()}개).` : " 토큰은 쓰지 않습니다."),
     noTokens: "실전 토큰이 없습니다. 실전 모드 페이지(#/lab)에서 충전할 수 있습니다.",
+    halfNote: "이 해는 실험과 이론이 함께 있어 한쪽 채점은 0.5토큰입니다(세트로 둘 다 채점하면 1토큰). 토큰 1개에서 쓰고 남은 0.5는 적립되어 다른 쪽 채점에 쓰입니다.",
     payAsk: n => `채점 · 첨삭도 신청 (토큰 1개 · 보유 ${n}개) — 신청하면 보낸 답안을 바로 읽어 확인할 수 있습니다`,
     payBtn: "채점 · 첨삭 받기 (토큰 1개)", payNote: "아직 채점을 신청하지 않았습니다. 신청 전에는 보낸 쪽을 읽지 않고, 신청하지 않고 끝내면 채점 없이 저장됩니다(나중에 성적표에서 신청 가능).",
     paid: "채점 신청됨", endNoGrade: "채점 없이 끝내기", endNoGradeQ: "채점 없이 끝낼까요? 답안은 저장되고, 7일 안에 성적표에서 채점을 신청할 수 있습니다.",
@@ -296,8 +297,9 @@ const T = {
     pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
     loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
     tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Start (${DC})`, startQ: "Start the exam",
-    startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and the review use one token (${n} → ${n - 1}).` : " No token is used."),
+    startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and the review use one token (${n} → ${n - COST()}).` : " No token is used."),
     noTokens: "You have no exam tokens. Get some on the exam mode page (#/lab).",
+    halfNote: "This year has experiments and theory, so grading one of them costs half a token (both, as a set, one token). The other half of a token is kept and pays for the other part.",
     payAsk: n => `Also ask for grading and the review (1 token · you have ${n}) — your pages are then read as they arrive, so you can check them`,
     payBtn: "Get it graded and reviewed (1 token)", payNote: "Grading has not been asked for yet. Until then your pages are not read; finishing without it keeps them ungraded (you can still ask from the score report).",
     paid: "grading asked for", endNoGrade: "Finish without grading", endNoGradeQ: "Finish without grading? Your pages are kept, and you can ask for grading from the score report within 7 days.",
@@ -375,13 +377,20 @@ const TH = {
 /* ── what this exam is ── */
 const Q = new URLSearchParams(location.search);
 let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? "en" : "ko";
-const t = () => THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang];
+/* what grading costs here (v15): half a token for the experiments or the theory of a year that has both (h=1 — the
+   other half pays the other part, so the set is one token), a whole token for anything else and for a combined sitting */
+const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && s.cost != null ? s.cost : Q.get("h") === "1" && !MIX ? 0.5 : 1; };
+const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one token|1 token)\b/g, `${COST()} token`)
+  : typeof v === "function" ? (...a) => costify(v(...a)) : Array.isArray(v) ? v.map(costify) : v;
+const t0 = () => THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang];
+const t = () => { const o = t0(); if (COST() === 1) return o; const c = {}; for (const k in o) c[k] = costify(o[k]); return c; };
 const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
   c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
   marks: split("k", "|"), answers: split("a", "|"), nos: split("o", "|"), skip: Q.get("x") || "",
   working: Q.get("w") || "",                                                     // a theory exam's working sheet, where there is one
+  pair: Q.get("h") === "1",                                                      // the year has experiments and theory: half a token each
 };
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
@@ -516,8 +525,9 @@ async function introView() {
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
       <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
   else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}
-      <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens > 0 ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
-      ${ME.tokens > 0 ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}</div>
+      <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens >= COST() ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
+      ${ME.tokens >= COST() ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}
+      ${COST() < 1 ? `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().halfNote}</div>` : ""}</div>
       <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
   const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</div>`).join("");
   $("main").innerHTML = `<div class="page"><div class="card doc">
@@ -557,7 +567,7 @@ async function startExam(pay) {
     const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]),
       ...(isThy(i) ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}), ...(MIX && EX.skip ? { skip: EX.skip } : {}) } : {}),
       ...(EX.nos[i] ? { no: EX.nos[i] } : {}) }]).filter(([, v]) => v.sol || v.kind));
-    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
+    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources, ...(EX.pair && !MIX ? { pair: true } : {}) });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
     if (pay && !r.session.paid) await payNow(true);
