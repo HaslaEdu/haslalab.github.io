@@ -1042,7 +1042,7 @@ async function labAdvance(env, s) {
     s = await labGet(env, s.id);
   }
   if (s && ((s.status === "scanning" && t > s.scan_until + LAB.graceSec) || (s.status === "grading" && s.submitted_at < t - LAB.staleSec)))
-    s = await labFinalize(env, s, s.lang);
+    s = s.charged ? await labFinalize(env, s, s.lang) : await labEnd(env, s);             // graded only when paid for
   /* a grading that failed (the model did not answer) is tried again by itself: three times, two minutes apart */
   /* also an experiment left waiting because its solution could not be fetched then */
   const d = s && (s.status === "error" || s.status === "pending") && s.detail ? JSON.parse(s.detail) : null;
@@ -1063,7 +1063,7 @@ const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,ocr,ocr_c
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
-    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
+    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     regulation: LAB_REG,
     pages: pages && pages.map(p => ({ id: p.id, no: p.no, task: p.task, kind: p.kind, ocr_status: p.ocr_status, ocr_conf: p.ocr_conf,
       text: p.text ?? p.ocr ?? "", edited: p.edited, legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
@@ -1403,8 +1403,10 @@ const keepHours = env => env.LAB_KEEP_HOURS == null || env.LAB_KEEP_HOURS === ""
 async function labPurge(env) {
   const h = keepHours(env);
   if (!(h >= 0)) return 0;
+  /* an ungraded sitting keeps its photos for a week (LAB_KEEP_ENDED_HOURS), so grading can still be asked for */
+  const he = Number(env.LAB_KEEP_ENDED_HOURS) >= 0 && env.LAB_KEEP_ENDED_HOURS !== "" ? Number(env.LAB_KEEP_ENDED_HOURS) : 168;
   const rows = (await env.DB.prepare(`SELECT p.id, p.r2_key FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id
-    WHERE p.purged_at IS NULL AND s.status='graded' AND s.graded_at<? LIMIT 400`).bind(now() - h * 3600).all()).results;
+    WHERE p.purged_at IS NULL AND ((s.status='graded' AND s.graded_at<?) OR (s.status='ended' AND s.submitted_at<?)) LIMIT 400`).bind(now() - h * 3600, now() - he * 3600).all()).results;
   if (!rows.length) return 0;
   const keys = rows.map(r => r.r2_key).filter(Boolean);
   if (keys.length && env.LAB_PAGES) await env.LAB_PAGES.delete(keys);
@@ -1517,12 +1519,37 @@ async function labSave(env, s, tasks, per, tries, ms) {
     .bind(tot.status, tot.status === "graded" ? tot.score : null, tot.points, JSON.stringify(detail), tot.status === "graded" ? t : null, s.id).run();
   return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
 }
+/* grading and the review cost one exam token, taken once per sitting (charged), in one transaction: the ledger line
+   is written only while the token is there and the sitting unpaid, the balance drops only for an unpaid sitting, and the
+   sitting is marked paid only once its line is written — so two requests at once, or none left, never spend twice or
+   go below zero.  Sittings started before v14 paid at the start and are already charged. */
+async function labCharge(env, s) {
+  if (s.charged) return s;
+  const t = now();
+  await env.DB.batch([
+    env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,session_id,created_at) SELECT user_id,-1,'grade',id,? FROM lab_sessions
+      WHERE id=? AND charged=0 AND (SELECT exam_tokens FROM users WHERE id=lab_sessions.user_id) > 0`).bind(t, s.id),
+    env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens-1 WHERE id=? AND exam_tokens>0 AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND charged=0) AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.user_id, s.id, s.id),
+    env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE id=? AND charged=0 AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.id, s.id),
+  ]);
+  const now_ = await labGet(env, s.id);
+  if (!now_.charged) throw new HttpError(402, "no_tokens", { tokens: await labTokens(env, s.user_id) });
+  return now_;
+}
+/* scanning over (or «finish without grading») and nothing paid: the sitting is kept as it stands, ungraded ('ended');
+   grading can still be asked for later from the score report */
+async function labEnd(env, s) {
+  const t = now();
+  await env.DB.prepare(`UPDATE lab_sessions SET status='ended',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
+    WHERE id=? AND status='scanning' AND charged=0`).bind(t, s.id).run();
+  return labGet(env, s.id);
+}
 /* submit once: the session moves from 'scanning' to 'grading' in one statement, so a second click or a
    poll after the deadline cannot grade it twice; a grading that died half-way is retried after five minutes */
 async function labFinalize(env, s, lang) {
   const t = now();
   const r = await env.DB.prepare(`UPDATE lab_sessions SET status='grading',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
-    WHERE id=? AND (status='scanning' OR (status='grading' AND submitted_at<?))`)
+    WHERE id=? AND charged=1 AND (status IN ('scanning','ended') OR (status='grading' AND submitted_at<?))`)
     .bind(t, s.id, t - LAB.staleSec).run();
   if (!r.meta.changes) return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
   return labGradeAll(env, { ...s, status: "grading" }, lang);
@@ -1798,7 +1825,8 @@ async function lab(p, m, body, me, req, env, url) {
     let text = null, conf = null, status = "off", read = null, legible = null, ocrText = null;
     let tk = task, kd = kind;
     const mt = meter();
-    if (env.GEMINI_API_KEY) {
+    if (!s.charged) status = "unpaid";                                  // read only once grading is paid for (then, or at grading)
+    else if (env.GEMINI_API_KEY) {
       try {
         await limit(env, "labocr:" + s.user_id, LAB.ocrPerDay, 86400);
         const up = await labUpstage(env, buf, mime, mt);
@@ -1889,23 +1917,17 @@ async function lab(p, m, body, me, req, env, url) {
     }
     const nth = tasks.filter(k => sources[k] && sources[k].kind === "theory").length;
     const token = labScanCode(), dur = labExamSec(comp, year, tasks.length, nth && nth < tasks.length ? "mixed" : nth > 0);
-    /* one transaction: the session is written only if a token is left, the token is taken only for a session
-       written by this very call (charged=0), and the unique index on open sessions makes a second start at
-       the same moment fail as a whole, spending nothing */
+    /* sitting an exam is free (v14): a token is spent only for grading and the review (labCharge).  The unique index on
+       open sessions makes a second start at the same moment fail, so parallel starts open one exam */
     try {
-      await env.DB.batch([
-        env.DB.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,lang,entry,sources,started_at,ended_at,scan_until,upload_hash,status,charged,created_at)
-          SELECT ?,?,?,?,?,?,?,?,?,?,?,?,'running',0,? WHERE (SELECT exam_tokens FROM users WHERE id=?) > 0`)
-          .bind(me.id, key, comp, year, JSON.stringify(tasks), lang, entry, JSON.stringify(sources), t, t + dur, t + dur + LAB.scanSec, await sha256(token), t, me.id),
-        env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,session_id,created_at) SELECT user_id,-1,'start',id,? FROM lab_sessions WHERE user_id=? AND status='running' AND charged=0").bind(t, me.id),
-        env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens-1 WHERE id=? AND exam_tokens>0 AND EXISTS(SELECT 1 FROM lab_sessions WHERE user_id=? AND status='running' AND charged=0)").bind(me.id, me.id),
-        env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE user_id=? AND status='running' AND charged=0").bind(me.id),
-      ]);
+      await env.DB.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,lang,entry,sources,started_at,ended_at,scan_until,upload_hash,status,charged,created_at)
+          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'running',0,?)`)
+        .bind(me.id, key, comp, year, JSON.stringify(tasks), lang, entry, JSON.stringify(sources), t, t + dur, t + dur + LAB.scanSec, await sha256(token), t).run();
     } catch (e) {
       if (!/UNIQUE|constraint/i.test(String(e && e.message))) throw e;
     }
     open = await labActive(env, me.id);
-    if (!open) throw new HttpError(402, "no_tokens");
+    if (!open) throw new HttpError(500, "not_started");
     if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
     /* the session that won is this call's only if it was written with this call's upload token */
     const mine = open.upload_hash === await sha256(token);
@@ -1977,8 +1999,19 @@ async function lab(p, m, body, me, req, env, url) {
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/submit$/.exec(p)) && m === "POST") {
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status === "running") throw new HttpError(409, "running");                         // finish the exam first
-    s = await labFinalize(env, s, lang);
-    return { session: pubLab(s, await labPagesOf(env, s.id)) };
+    /* grade: false ends the sitting ungraded and spends nothing; otherwise grading is paid for (once) and runs */
+    if (body.grade === false) s = s.charged ? s : await labEnd(env, s);
+    else if (s.status === "scanning" || s.status === "ended") { s = await labCharge(env, s); s = await labFinalize(env, s, lang); }
+    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
+  }
+  /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
+     arrive), while scanning, or later for a sitting that ended ungraded (graded at once) */
+  if ((r = /^\/api\/lab\/sessions\/(\d+)\/pay$/.exec(p)) && m === "POST") {
+    let s = await labAdvance(env, await labOwned(env, +r[1], me));
+    if (!["running", "scanning", "ended"].includes(s.status) && !s.charged) throw new HttpError(409, "closed");
+    s = await labCharge(env, s);
+    if (s.status === "ended") s = await labFinalize(env, s, lang);
+    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
   }
 
   /* admins: marking schemes and the sessions that wait for a person (arena() has already refused anyone else) */

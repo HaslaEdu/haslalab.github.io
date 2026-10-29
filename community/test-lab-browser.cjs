@@ -74,10 +74,12 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   await sp.close();
   for (const c of await pg.$$("[data-ag]")) await c.check();
   ok(!(await pg.$eval("#go", b => b.disabled)), "…and opens when every line is ticked");
+  await pg.check("#payNow");                                                          // grading asked for at the start: the token goes now
   await pg.click("#go"); await pg.waitForSelector(".modal");
   await pg.click(".modal button.red");
   await pg.waitForSelector(".desk iframe");
-  ok((await call("GET", "/lab/active", null, TOK))[1].tokens === 0, "token spent on start (server: 0)");
+  await pg.waitForFunction(() => window.SES === undefined || true); await pg.waitForTimeout(1500);
+  ok((await call("GET", "/lab/active", null, TOK))[1].tokens === 0, "grading asked for at the start: token spent (server: 0)");
   await pg.waitForFunction(() => document.querySelectorAll("#kit canvas").length === 2, null, { timeout: 15000 });
   await sleep(1500);
   const c1 = clockSec(await pg.textContent("#clock"));
@@ -135,7 +137,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   let [, act] = await call("GET", "/lab/active", null, TOK);
   ok(act.tokens === 0, "still 0 tokens after reload, leaving, second computer");
   const [, tk] = await call("GET", "/lab/tokens", null, TOK);
-  ok(tk.ledger.length === 1, "ledger has the one start only");
+  ok(tk.ledger.length === 1 && tk.ledger[0].reason === "grade", "ledger has the one grading only");
   /* the second computer starts nothing new even if its script asks */
   const again = await pg2.evaluate(async () => { const r = await fetch(localStorage.getItem("hlCmApi") + "/api/lab/start", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("hlCmTok") }, body: JSON.stringify({ comp: "ipho", year: 2024, tasks: ["E1", "E2"] }) }); return r.json(); });
   ok(again.resumed === true && (await call("GET", "/lab/active", null, TOK))[1].tokens === 0, "start called again → resumed, no spend");
@@ -233,7 +235,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
 
   /* 8. coming back to the exam page now: the intro, no tokens, no start */
   await pg.goto(SITE + "/#/"); await pg.goto(EXAM_URL); await sleep(1500);
-  ok(await pg.$("#go") === null && /토큰이 없습니다/.test(await pg.textContent("main")), "after the exam: 0 tokens, cannot start");
+  ok(await pg.$("#go") !== null && await pg.$eval("#payNow", b => b.disabled) && /토큰이 없습니다/.test(await pg.textContent("main")), "after the exam: 0 tokens — sitting is still free, grading cannot be asked for");
   /* 9. the record on the site */
   await pg.goto(SITE + "/#/lab"); await pg.waitForSelector(".arpanel"); await sleep(500);
   ok(/IPHO 2024/.test(await pg.textContent("#arRoot")), "#/lab lists the exam");

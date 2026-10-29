@@ -249,6 +249,17 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 
 /* ═══════ competition cards ═══════ */
 .comps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* the subjects, each under the logo of its leading olympiad */
+.subjs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin:0 0 24px}
+.subjs a{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 10px;border:1px solid var(--grid-bold);border-radius:10px;background:#fff;text-align:center;transition:border-color .12s,box-shadow .12s}
+.subjs a:hover{border-color:var(--rail)}
+.subjs a[aria-current="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.subjs img{height:34px;width:auto;max-width:72px;object-fit:contain}
+.subjs b{font-size:13.5px;color:var(--ink)}.subjs small{font-family:var(--mono);font-size:11px;color:var(--graphite)}
+.subjs a.none{opacity:.55}
+.subjempty{padding:28px 20px;border:1px dashed var(--grid-bold);border-radius:10px;color:var(--graphite);font-size:14px;text-align:center}
+@media(max-width:900px){.subjs{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:480px){.subjs{display:flex;overflow-x:auto;scrollbar-width:none}.subjs a{flex:0 0 92px}}
 /* three columns get too cramped for the figures before the single-column
    breakpoint arrives, so drop to two on the way down */
 @media(max-width:1100px){.comps{grid-template-columns:repeat(2,1fr)}}
@@ -1030,7 +1041,8 @@ ko:{
   grp:{a:"주니어 α",b:"시니어 β",c:"γ조"}, grpShared:"공통", grpAll:"전체",
   grpHint:"α는 주니어 조, β는 시니어 조입니다(2021 · 2022년 IAO에는 γ조도 있었습니다). 공통 문제는 여러 조에 함께 나옵니다.",
   ebComps:"수록 대회", hComps:"대회를 고르세요",
-  pComps:"연도를 고르고, 그 해의 실험 문제를 여세요.",
+  subjLabel:"분야", subjN:n=>`${n}개 대회`, subjSoon:"준비 중", subjEmpty:(s,o)=>`${s} 올림피아드(${o} 등)는 준비 중입니다.`,
+  pComps:"분야와 대회를 고르고, 연도별 실험·이론 문제를 여세요.",
   lSince:"창설", lScope:"범위", lYears:"수록 연도",
   crumbHome:"홈",
   years:"연도", problems:"실험 문제", pickYear:"연도를 고르세요",
@@ -1039,12 +1051,12 @@ ko:{
   live:"브라우저 실행", dlOnly:"다운로드", srcOnly:"파이썬 소스", wip:"준비 중", theoryTag:"이론 · 시뮬레이터 필요",
   soonTitle:"준비 중", soonDesc:"문제지 정리와 물리 모델 보정을 진행하고 있습니다.",
   actRun:"브라우저에서 실행", actExe:"Windows 내려받기", actPdf:"문제지",
-  modePrac:"연습 모드", modePracSub:"실험마다 자유롭게 · 시간 제한 없음 · 풀이 열람", modeExam:"실전 모드", modeExamSub:"대회 실험 시간 그대로 · 답안 스캔 제출 · 채점과 성적표",
-  xmNotice:"실전 모드는 대회 실험 시험을 그대로 치르는 모의고사입니다.", xmSteps:["응시하기 (실전 토큰 1개)","대회 실험 시간만큼 실험 — 한 책상 · 한 부품함 (시간은 시험 목록에)","30분 안에 답안지 · Working sheet 스캔 제출","채점 · 성적표 (순위 · 백분위 · 첨삭)"],
+  modePrac:"연습 모드", modePracSub:"실험마다 자유롭게 · 시간 제한 없음 · 풀이 열람", modeExam:"실전 모드", modeExamSub:"대회 시간 그대로 · 응시 무료 · 채점과 첨삭은 토큰 1개",
+  xmNotice:"실전 모드는 대회 실험 시험을 그대로 치르는 모의고사입니다.", xmSteps:["응시하기 (무료)","대회 시간만큼 풀기 — 실험은 한 책상 · 한 부품함, 이론은 화면의 문제지 (시간은 시험 목록에)","30분 안에 답안지 · Working sheet 스캔 제출","채점 · 첨삭을 원하면 실전 토큰 1개 — 성적표 (순위 · 백분위 · 총평 · 고칠 습관)"],
   xmListH:"시험 목록", xmYear:"연도", xmName:"시험", xmTime:"시간", xmSat:"응시 현황", xmMine:"내 상태",
   xmSatV:(n,a)=>`${n}명 응시${a!=null?` · 평균 ${a}%`:""}`, xmNone:"아직 없음", xmGo:"응시하기", xmResume:"이어하기", xmReport:"성적표", xmRetry:"다시 응시",
   xmMeH:"응시자 정보", xmLoginNote:"실전 모드는 로그인한 사람만 응시할 수 있습니다.", xmTokens:"보유 실전 토큰", xmActive:"진행 중인 시험", xmAll:"내 응시 기록 전체 보기",
-  xmSt:{running:"실험 중",scanning:"답안 스캔 중",grading:"채점 중",graded:"채점 완료",pending:"채점 대기",error:"채점 오류"}, xmNoExam:"이 대회에는 실전으로 칠 수 있는 시험이 아직 없습니다.",
+  xmSt:{running:"실험 중",scanning:"답안 스캔 중",grading:"채점 중",graded:"채점 완료",pending:"채점 대기",error:"채점 오류",ended:"채점 안 함"}, xmNoExam:"이 대회에는 실전으로 칠 수 있는 시험이 아직 없습니다.",
   xmOff:"채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.", xmToExam:"이 해를 실전 모드로 응시하기 →", xmExamLabel:"실험 시험",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   actSol:"해설 · 채점기준", actSrc:"파이썬 소스",
@@ -1099,7 +1111,8 @@ en:{
   grp:{a:"Junior α",b:"Senior β",c:"Group γ"}, grpShared:"shared", grpAll:"All",
   grpHint:"α is the junior group and β the senior group (the 2021 and 2022 IAO also had a γ group); shared problems are set to more than one.",
   ebComps:"Covered competitions", hComps:"Choose a competition",
-  pComps:"Pick a year, then open that year's experimental problems.",
+  subjLabel:"Subjects", subjN:n=>`${n} competition${n>1?"s":""}`, subjSoon:"coming", subjEmpty:(s,o)=>`${s} olympiads (${o} and others) are coming.`,
+  pComps:"Pick a field and a competition, then open a year's experimental and theory problems.",
   lSince:"Since", lScope:"Scope", lYears:"Years",
   crumbHome:"Home",
   years:"years", problems:"Experimental problems", pickYear:"Choose a year",
@@ -1108,12 +1121,12 @@ en:{
   live:"Runs in browser", dlOnly:"Download", srcOnly:"Python source", wip:"In preparation", theoryTag:"theory · needs a simulator",
   soonTitle:"In preparation", soonDesc:"Paper transcription and model calibration under way.",
   actRun:"Run in browser", actExe:"Download for Windows", actPdf:"Problem sheet",
-  modePrac:"Practice", modePracSub:"Each experiment on its own · no time limit · solutions open", modeExam:"Exam", modeExamSub:"The time of the day's experiments · scan and submit · marks and a score report",
-  xmNotice:"Exam mode is a mock exam: the competition's experimental exam, sat as on the day.", xmSteps:["Sit the exam (1 exam token)","Experiments for as long as on the day — one bench, one kit (times in the exam list)","Scan and submit the answer and working sheets within 30 minutes","Marks and a score report (rank, percentile, comments)"],
+  modePrac:"Practice", modePracSub:"Each experiment on its own · no time limit · solutions open", modeExam:"Exam", modeExamSub:"The day's time · free to sit · grading and review for 1 token",
+  xmNotice:"Exam mode is a mock exam: the competition's experimental exam, sat as on the day.", xmSteps:["Sit the exam (free)","Work for as long as on the day — experiments on one bench with one kit, theory with the paper on screen (times in the exam list)","Scan and submit the answer and working sheets within 30 minutes","Grading and review for 1 exam token if you want them — a score report (rank, percentile, summary, habits to fix)"],
   xmListH:"Exams", xmYear:"Year", xmName:"Exam", xmTime:"Time", xmSat:"Candidates", xmMine:"My status",
   xmSatV:(n,a)=>`${n} sat${a!=null?` · average ${a}%`:""}`, xmNone:"none yet", xmGo:"Sit", xmResume:"Resume", xmReport:"Score report", xmRetry:"Sit again",
   xmMeH:"Candidate", xmLoginNote:"Exam mode is for signed-in users only.", xmTokens:"Exam tokens", xmActive:"In progress", xmAll:"All my exams",
-  xmSt:{running:"experiments running",scanning:"scanning answers",grading:"grading",graded:"graded",pending:"waiting for a grader",error:"grading error"}, xmNoExam:"This competition has no exam to sit yet.",
+  xmSt:{running:"experiments running",scanning:"scanning answers",grading:"grading",graded:"graded",pending:"waiting for a grader",error:"grading error",ended:"not graded"}, xmNoExam:"This competition has no exam to sit yet.",
   xmOff:"The grading server does not support exam mode yet. Please come back shortly.", xmToExam:"Sit this year in exam mode →", xmExamLabel:"experimental exam",
   actSol:"Solution & marking scheme", actSrc:"Python source",
   langTag:{ko:"KO",en:"EN",ru:"RU"},
@@ -4378,8 +4391,25 @@ function viewHome(){
   ${adFitBanner("home")}`;
 }
 
-function viewComps(){
+/* the competitions by subject; each subject shows the logo of its leading olympiad */
+const SUBJ=[
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho"]},
+  {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho"]},
+  {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo"]},
+  {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso"]},
+  {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao"]},
+  {k:"sci", ko:"통합과학", en:"Integrated science", logo:"ijso", comps:["ijso"]},
+  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:[], soon:"IMO"},
+  {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:[], soon:"IOI"},
+];
+for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
+const subjOf=key=>(SUBJ.find(x=>x.comps.includes(key))||SUBJ[0]).k;
+function viewComps(sub){
   const d=UI[lang];
+  let cur=SUBJ.find(x=>x.k===sub);
+  if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
+  try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
+  const list=cur.comps.filter(k=>DATA[k]);
   return `
   <div class="shell">
     <div class="phead">
@@ -4387,9 +4417,12 @@ function viewComps(){
       <h1>${d.hComps}</h1>
       <div class="sub">${d.pComps}</div>
     </div>
+    <nav class="subjs" aria-label="${d.subjLabel}">${SUBJ.map(x=>{ const n=x.comps.filter(k=>DATA[k]).length;
+      return `<a href="#/comps/${x.k}"${x===cur?' aria-current="true"':""} class="${n?"":"none"}"><img src="logo/${x.logo}.png?v=${LOGO_V}" alt="" loading="lazy" decoding="async"><b>${x[lang]}</b><small>${n?d.subjN(n):d.subjSoon}</small></a>`; }).join("")}</nav>
     ${adFitBanner("secondary")}
+    ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
-      ${Object.entries(DATA).map(([key,c])=>{
+      ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
         const probs=c.years.reduce((n,y)=>n+y.problems.length,0);
         return `<a class="comp" href="#/${key}">
           <div class="chead"><div class="abbr">${c.abbr}</div>${compLogo(key)}</div>
@@ -4605,7 +4638,7 @@ function viewComp(key,mode){
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
-      <a href="#/comps">${d.navComps}</a><span>/</span><b>${c.abbr}</b>
+      <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span><b>${c.abbr}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
       <h1>${c.abbr}</h1>
@@ -4783,7 +4816,7 @@ function viewYear(key,year){
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
-      <a href="#/comps">${d.navComps}</a><span>/</span>
+      <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span>
       <a href="#/${key}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
@@ -8780,7 +8813,7 @@ function render(){
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
-  else if(first==="comps"){       html=viewComps();  active="comps"; }
+  else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first]){  html=second==="exam"?viewComp(first,"exam"):second?viewYear(first,second):viewComp(first); active="comps"; }
@@ -8806,6 +8839,7 @@ function render(){
   if(active==="comps" && second==="exam") xmMount(first);
   if(active==="weekly"||first==="lab") arMount();
   arChip();
+  if(first==="comps"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });

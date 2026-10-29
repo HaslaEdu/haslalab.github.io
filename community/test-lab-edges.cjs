@@ -35,6 +35,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   ctx = await mk(3600); pg = await ctx.newPage(); pg.on("pageerror", e => errs.push(e.message)); pg.on("dialog", d => d.accept());
   await pg.goto(A); await pg.waitForSelector("#go");
   for (const c of await pg.$$("[data-ag]")) await c.check();
+  await pg.check("#payNow");
   /* double click on start, then confirm twice as fast as possible */
   await pg.click("#go"); await pg.click(".modal button.red");
   await pg.waitForSelector(".desk iframe", { timeout: 15000 }); await sleep(1500);
@@ -81,7 +82,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   const list = (await call("GET", "/lab/sessions", null, TOK))[1].sessions;
   ok(a.active === null && !["running", "scanning"].includes(list[0].status), "after the scan time with no page open: submitted as it stood (" + list[0].status + ")");
   await pg.goto(A); await sleep(1500);
-  ok(await pg.$("#go") === null && /토큰이 없습니다/.test(await pg.textContent("main")), "and no new start without a token");
+  ok(await pg.$("#go") !== null && await pg.$eval("#payNow", b => b.disabled), "without a token: a start is free, grading cannot be asked for");
   await ctx.close();
   ok(errs.length === 0, "no page errors " + JSON.stringify(errs.slice(0, 4)));
   await browser.close();

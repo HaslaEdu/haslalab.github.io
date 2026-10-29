@@ -17,6 +17,7 @@ sql("DELETE FROM lab_schemes; DELETE FROM lab_rubrics; DELETE FROM ratelimits");
 const X = { comp: "ipho", year: 2024, tasks: ["E1", "E2"], lang: "ko", sources: { E1: { sol: "IPhO_2024_S1_KO.pdf" }, E2: { sol: "IPhO_2099_missing.pdf" } } };
 const toScan = async (tok, x) => {
   const [, j] = await call("POST", "/lab/start", x, tok);
+  await call("POST", `/lab/sessions/${j.session.id}/pay`, {}, tok);                       // grading asked for: pages are read on arrival
   await call("POST", `/lab/sessions/${j.session.id}/finish`, null, tok);
   return { sid: j.session.id, key: j.token };
 };

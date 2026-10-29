@@ -23,6 +23,7 @@ ok(s === 200 && j.session.kind === "theory" && j.token, "a theory exam of 1995 s
 sid = j.session.id; const key = j.token;
 [s, j] = await call("POST", "/lab/start", { comp: "ipho", year: 1995, tasks: ["T1", "T2"], lang: "ko", sources: {} }, U);
 ok(s === 200 && j.resumed && j.session.id === sid, "coming back resumes the same theory exam");
+await call("POST", `/lab/sessions/${sid}/pay`, {}, U);
 await call("POST", `/lab/sessions/${sid}/finish`, null, U);
 ok((await up(key, "T1", "answer", png))[0] === 200 && (await up(key, "T2", "answer", png))[0] === 200, "answer pages of T1 and T2 sent");
 ok(((await seen()).theoryReads || 0) >= 2, "the pages were read as theory answer sheets");
@@ -43,6 +44,7 @@ sql(`DELETE FROM ratelimits; UPDATE users SET exam_tokens=5 WHERE username='thU$
   sources: { E1: { sol: `NBPhO_2024_P5S${rnd}.pdf`, no: "5" }, E2: { sol: `NBPhO_2024_P10S_missing${rnd}.pdf`, no: "10" }, T: { sol: `NBPhO_2024_TS${rnd}.pdf`, kind: "theory", skip: "5,10" } } }, U);
 ok(s === 200 && j.session.kind === "mixed", "NBPhO: experiments and theory start as one exam (mixed) " + JSON.stringify([s, j.error, j.session && j.session.kind]));
 sid = j.session.id; const key2 = j.token;
+await call("POST", `/lab/sessions/${sid}/pay`, {}, U);
 await call("POST", `/lab/sessions/${sid}/finish`, null, U);
 for (const k of ["E1", "E2", "T"]) await up(key2, k, "answer", png);
 ok(((await seen()).mixedReads || 0) >= 3, "pages read with the booklet's numbers: Problem 5 is E1");
