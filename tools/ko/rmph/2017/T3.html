@@ -1,0 +1,78 @@
+<style>h2,h3{break-after:avoid}</style>
+<h1>이론 문제 3. 중력파의 전파와 발생에 관하여 (On the propagation and generation of gravitational waves) — 해설</h1>
+<p class="note">원문: Romanian Master of Physics 2017, “Problem 1. On the propagation and generation of gravitational waves — Solutions” (원문 파일 TheoreticalProblem3.pdf의 제목에는 “Problem 1”로 적혀 있다). 배점은 원문의 pts.를 pt로 표기하였다. 식 번호는 원문 그대로이다.</p>
+
+<p>이 문제의 목적은 최근 2017년 노벨 물리학상으로 그 발견이 보상받은 중력파(gravitational wave)의 성질을 이해하도록 돕는 것이다. 문제의 Part I에서는 전자기파와의 긴밀한 유사성에 기대어 중력파의 전파를 분석하고, Part II에서는 두 블랙홀의 병합에서 중력파가 실어 나르는 에너지의 양을 추정한다.</p>
+
+<h2>Part I. <span class="pt">6 pt</span></h2>
+<p>중력파를 연구할 때 나타나는 수많은 현상은 전자기학의 세계에서 나타나는 현상과 아주 비슷하다. 이는 진공에서의 맥스웰 방정식(Maxwell equations)</p>
+\[\vec\nabla\cdot\vec{\mathbf E} = \frac{\partial\vec{\mathbf E}_x}{\partial x}+\frac{\partial\vec{\mathbf E}_y}{\partial y}+\frac{\partial\vec{\mathbf E}_z}{\partial z} = 0\,,\tag{1}\]
+\[\vec\nabla\cdot\vec{\mathbf B} = \frac{\partial\vec{\mathbf B}_x}{\partial x}+\frac{\partial\vec{\mathbf B}_y}{\partial y}+\frac{\partial\vec{\mathbf B}_z}{\partial z} = 0\,,\tag{2}\]
+\[\vec\nabla\times\vec{\mathbf E} = \left(\frac{\partial\vec{\mathbf E}_z}{\partial y}-\frac{\partial\vec{\mathbf E}_y}{\partial z}\right)\hat x+\left(\frac{\partial\vec{\mathbf E}_x}{\partial z}-\frac{\partial\vec{\mathbf E}_z}{\partial x}\right)\hat y+\left(\frac{\partial\vec{\mathbf E}_y}{\partial x}-\frac{\partial\vec{\mathbf E}_x}{\partial y}\right)\hat z = -\frac{\partial\vec{\mathbf B}}{\partial t}\,,\tag{3}\]
+\[\vec\nabla\times\vec{\mathbf B} = \left(\frac{\partial\vec{\mathbf B}_z}{\partial y}-\frac{\partial\vec{\mathbf B}_y}{\partial z}\right)\hat x+\left(\frac{\partial\vec{\mathbf B}_x}{\partial z}-\frac{\partial\vec{\mathbf B}_z}{\partial x}\right)\hat y+\left(\frac{\partial\vec{\mathbf B}_y}{\partial x}-\frac{\partial\vec{\mathbf B}_x}{\partial y}\right)\hat z = \frac{1}{c^2}\frac{\partial\vec{\mathbf E}}{\partial t}\,,\tag{4}\]
+<p>의 해들이 자유롭게 전파하는 전자기파를 기술하고, 진공에서 전파하는 중력파에 대한 방정식</p>
+\[-\frac{1}{c^2}\frac{\partial^2}{\partial t^2}\mathbf h_{ij}+\nabla^2\mathbf h_{ij} = -\frac{1}{c^2}\frac{\partial^2}{\partial t^2}\mathbf h_{ij}+\left(\frac{\partial^2\mathbf h_{ij}}{\partial x^2}+\frac{\partial^2\mathbf h_{ij}}{\partial y^2}+\frac{\partial^2\mathbf h_{ij}}{\partial z^2}\right) = 0\tag{5}\]
+<p>의 해들과 서로 비슷하기 때문이다.</p>
+<p>위에서 $c$는 빛의 속력이고, $\vec{\mathbf E}$와 $\vec{\mathbf B}$는 각각 전기장과 자기장이다. $\mathbf h$는 성분들이 공간의 “직물(fabric)”의 섭동을 나타내는 $3\times3$ 행렬로 이해할 수 있다. 이 행렬은 대칭이어야 하며($\mathbf h_{ij} = \mathbf h_{ji}$), 각 행과 열은 공간의 한 방향을 나타낸다. 구체적으로 $i, j = \overline{1,3}$이고 1은 $x$, 2는 $y$, 3은 $z$에 대응한다. 따라서 예를 들어 성분 $\mathbf h_{11}$은 파동의 $xx$ 성분에, $\mathbf h_{12}$는 파동의 $xy$ 성분에 대응하며, 나머지도 마찬가지이다. 따라서 중력파 방정식 (8)은 행렬 $\mathbf h$의 모든 성분에 독립적으로 적용된다. <span class="note">(원문 그대로; 문맥상 식 (5)를 가리킨다.)</span></p>
+
+<h3>a) <span class="pt">2 pt</span></h3>
+<p>$z$ 방향으로 전파하는 전자기파에 대해 $\vec{\mathbf E}(\vec r,t) = E_0e^{i(\omega t-kz)}\hat x$가 진공에서의 맥스웰 방정식 (1–4)의 해임을 보이고(여기서 $\hat x$는 $x$ 방향의 단위 벡터이다), 이에 대응하는 자기장 $\vec{\mathbf B}(\vec r,t)$를 구하라. 그 과정에서 $\vec{\mathbf B}(\vec r,t)$가 $y$ 방향을 가리켜야 함을 증명하라. 또한 $\vec k\times\vec{\mathbf E}(\vec r,t) = \omega\vec{\mathbf B}(\vec r,t)$인 해들이 존재함을 보여라.</p>
+<p><i>풀이:</i> $\vec{\mathbf E}(\vec r,t) = E_0e^{i(\omega t-kz)}\hat x$를 맥스웰의 첫째 방정식에 대입하면, 0이 아닌 유일한 공간 도함수가 전기장의 방향과 직교하는 $z$ 방향의 도함수이므로 이 방정식은 자명하게 만족된다. 이 해를 셋째 방정식에 대입하면 다음을 얻는다.</p>
+\[-\frac{\partial\vec{\mathbf B}}{\partial t} = -ikE_0e^{i(\omega t-kz)}\hat y\tag{6}\]
+<p>그 해는 다음과 같다.</p>
+\[\vec{\mathbf B}(\vec r,t) = \left(\frac k\omega E_0e^{i(\omega t-kz)}\right)\hat y+\vec C(\vec r)\tag{7}\]
+<p>여기서 $\vec C(\vec r)$는 임의의 함수이다. 이로써 $\vec{\mathbf B}(\vec r,t)$가 $\vec y$ 방향을 가리킴을 증명하였다. 이 해를 둘째와 넷째 맥스웰 방정식에 대입하면, $C(\vec r) = \vec C$이고 $k^2/\omega^2 = 1/c^2$이면 두 방정식이 모두 만족됨을 알 수 있다. $|\vec C| = 0$인 경우(이는 전류에 대해 무한대에서 적절한 경계 조건을 선택하면 주어진다), $\vec k = k\hat x$에 대해 실제로 $\vec k\times\vec{\mathbf E}(\vec r,t) = \omega\vec{\mathbf B}(\vec r,t)$임을 알 수 있다.</p>
+<p>중력파를 다룰 준비로, 맥스웰의 셋째와 넷째 방정식에 회전(curl)을 취하면 전기장과 자기장이 모두 중력파의 전파 방정식과 매우 비슷한 방정식을 따라야 함을 알 수 있다.</p>
+\[-\frac{1}{c^2}\frac{\partial^2}{\partial t^2}\vec{\mathbf E}+\nabla^2\vec{\mathbf E} = 0\,,\qquad -\frac{1}{c^2}\frac{\partial^2}{\partial t^2}\vec{\mathbf B}+\nabla^2\vec{\mathbf B} = 0\,,\tag{8}\]
+
+<h3>b) <span class="pt">1 pt</span></h3>
+<p>중력파 방정식도 $z$ 방향으로 전파하는 비슷한 진동 해 $\mathbf h = \mathbf h_0e^{i(\omega t-kz)}$를 가짐을 증명하라. 여기서 $\mathbf h_0$은 상수로 이루어진 $3\times3$ 행렬이다.</p>
+<p><i>풀이:</i> 제안된 해를 중력파 방정식에 대입하면, 행렬 $\mathbf h$의 각 성분에 대해</p>
+\[\nabla^2\mathbf h_{ij} = -k^2(\mathbf h_0)_{ij}e^{i(\omega t-kz)}\tag{9}\]
+<p>그리고</p>
+\[\frac{1}{c^2}\frac{\partial^2}{\partial t^2}\mathbf h_{ij} = -\frac{\omega^2}{c^2}(\mathbf h_0)_{ij}e^{i(\omega t-kz)}\tag{10}\]
+<p>을 얻는다. 이 둘을 함께 보면, $\omega/k = c$이면 이 가정한 해(ansatz)가 실제로 전파하는 파동 해임이 증명된다.</p>
+
+<h3>c) <span class="pt">0.5 pt</span></h3>
+<p>진공에서 전자기파와 중력파가 모두 빛의 속력으로 전파함을 보여라.</p>
+<p><i>풀이:</i> 문항 a와 문항 b의 해는 모두 파동의 속도가 $\omega/k = c$일 것을 요구한다. 따라서 두 종류의 파동 모두 빛의 속력으로 전파해야 한다.</p>
+
+<h3>d) <span class="pt">1 pt</span></h3>
+<p>맥스웰 방정식이 전기장 $\vec{\mathbf E}$와 자기장 $\vec{\mathbf B}$를 관계 짓는 제약을 부과하는 것과 비슷하게, 행렬 $\mathbf h$에도 추가적인 제약을 부과할 수 있다. 구체적으로, $z$ 방향으로 전파하는 파동에 대해서는 $z$ 방향과 관련된 행렬의 모든 성분이 0이어야 하고($i = \overline{1,3}$에 대해 $\mathbf h_{i3} = \mathbf h_{3i} = 0$), 행렬의 대각합(trace)이 0이어야 한다($\mathbf h_{11}+\mathbf h_{22}+\mathbf h_{33} = 0$)는 조건을 부과할 수 있다. 이 성질들과 행렬이 대칭이라는 사실을 함께 이용하여 $\mathbf h_0$이 독립적인 성분을 두 개만 가짐을 보여라. $\mathbf h_0$을 다음과 같이 나타낼 수 있음을 보여라.</p>
+\[\mathbf h_0 = h_+\epsilon_++h_\times\epsilon_\times\,,\tag{11}\]
+<p>여기서 $h_+$와 $h_\times$는 두 개의 독립적인 상수이고, $\epsilon_+$와 $\epsilon_\times$는 다음과 같다.</p>
+\[\epsilon_+ = \begin{pmatrix}1&amp;0&amp;0\\0&amp;-1&amp;0\\0&amp;0&amp;0\end{pmatrix},\qquad \epsilon_\times = \begin{pmatrix}0&amp;1&amp;0\\1&amp;0&amp;0\\0&amp;0&amp;0\end{pmatrix}.\tag{12}\]
+<p><i>풀이:</i> 일반적인 대칭 행렬은 독립적인 성분을 6개 갖는다. $z$ 방향과 관련된 행렬의 모든 성분이 0이라는 조건은 독립 성분의 수를 3개로 줄인다. 대각합 조건은 성분의 수를 다시 3개에서 2개로 줄인다. 더 나아가 행렬은 대칭성에 의해 $\mathbf h_{12} = \mathbf h_{21}$을, 대각합 조건에 의해 $\mathbf h_{11} = -\mathbf h_{22}$를 만족해야 한다. $\mathbf h_{12} = \mathbf h_{21} = h_+$, $\mathbf h_{11} = -\mathbf h_{22} = h_\times$로 놓으면 요구된 표현을 얻는다. <span class="note">(원문 그대로이다. 식 (11)–(12)와 맞추려면 $\mathbf h_{11} = -\mathbf h_{22} = h_+$, $\mathbf h_{12} = \mathbf h_{21} = h_\times$이어야 한다.)</span></p>
+
+<h3>e) <span class="pt">1.5 pt</span></h3>
+<p>양자역학에서 입자의 스핀(spin)은 그 입자의 전파와 관련된 파동 해의 대칭성을 기술하는 수 $s$로 주어진다. 구체적으로, 스핀은 전파 방향을 축으로 $360^0/s$만큼 회전했을 때 파동 해가 불변이 되는 가장 큰 수 $s$이다. $z$축을 중심으로 각 $\theta$만큼 회전시키는 3차원 회전 행렬은 다음과 같으며,</p>
+\[\mathbf U = \begin{pmatrix}\cos\theta&amp;-\sin\theta&amp;0\\ \sin\theta&amp;\cos\theta&amp;0\\ 0&amp;0&amp;1\end{pmatrix},\tag{13}\]
+<p>전기장과 자기장을 각각 $\vec{\mathbf E}\to\mathbf U\cdot\vec{\mathbf E}$, $\vec{\mathbf B}\to\mathbf U\cdot\vec{\mathbf B}$로 변환한다.<sup>1</sup> 행렬 $\mathbf h$는 $\mathbf h\to\mathbf U\,\mathbf h\,\mathbf U^T$로 변환되며, 여기서 $\mathbf U^T$는 $\mathbf U$의 전치 행렬이다.<sup>2</sup> 광자(전자기파와 관련된 입자)와 중력자(graviton, 중력파와 관련된 입자)의 스핀을 구하라.</p>
+<p><i>풀이:</i> 벡터 $\vec{\mathbf E}$를 변환하면 다음을 얻는다.</p>
+\[\mathbf U\vec{\mathbf E} = E_0e^{i(\omega t-kz)}(\cos\theta\vec x+\sin\theta\vec y)\tag{14}\]
+<p>벡터 $\vec E$가 같은 위치로 돌아오는 유일한 방법은 $\theta = 2\pi$로 잡는 것이다. 이는 광자의 스핀이 1임을 보여 준다.</p>
+<p>행렬 $\mathbf h$를 (??) 꼴을 이용하여 변환하면 다음을 얻는다. <span class="note">(원문의 깨진 참조 “(??)” 그대로; 식 (11)을 가리킨다.)</span></p>
+\[\mathbf U\mathbf h\mathbf U^T = \begin{pmatrix}h_+\cos(2\theta)-h_\times\sin(2\theta)&amp;h_+\cos(2\theta)+h_\times\sin(2\theta)&amp;0\\ h_+\cos(2\theta)+h_\times\sin(2\theta)&amp;-h_+\cos(2\theta)+h_\times\sin(2\theta)&amp;0\\ 0&amp;0&amp;0\end{pmatrix}e^{i(\omega t-kz)}\,.\tag{15}\]
+<p>따라서 $\theta = \pi$이면 $\mathbf U\mathbf h\mathbf U^T = \mathbf h$이고, 이는 중력자의 스핀이 2임을 뜻한다.</p>
+<p class="note"><sup>1</sup> 행렬 $\mathbf U$와 벡터 $\vec{\mathbf E}$의 곱을 취할 때, 결과 벡터 $\vec{\mathbf E}'$의 각 성분은 $(\vec{\mathbf E}')_i = \sum_{j=1}^3\mathbf U_{ij}(\vec{\mathbf E})_j$로 주어진다.<br>
+<sup>2</sup> 전치 행렬을 취할 때 모든 $i, j = \overline{1,3}$에 대해 $(U^T)_{ij} = U_{ji}$이다. 두 $3\times3$ 행렬 $\mathbf A$와 $\mathbf B$의 곱을 취할 때, 모든 $i, j = \overline{1,3}$에 대해 $(\mathbf A\mathbf B)_{ij} = \sum_{l=1}^3\mathbf A_{il}\mathbf B_{lj}$이다.</p>
+
+<h2>Part II. <span class="pt">4 pt</span></h2>
+<p>2017년 노벨 물리학상 수상자들이 최근 그 병합을 검출한 블랙홀은 기묘한 물리적 성질을 지닌 극도로 무거운 천체이다. 중력파의 첫 검출은 지구로부터 $d = 1.3\times10^9$ 광년 떨어진 곳에 있는, 각각 질량이 태양 질량의 $M = 30$배인 두 블랙홀의 병합에서 왔다(태양 질량 1은 $1.98\times10^{30}$ kg이고, 1광년은 $9.46\times10^{15}$ m이다).</p>
+
+<h3>a) <span class="pt">1.5 pt</span></h3>
+<p>두 블랙홀의 병합이 블랙홀들이 거의 정지해 있는 동안 일어나고 오직 중력파만을 발생시킨다고 가정하고, 질량-에너지 관계를 이용하여 그 중력파로부터 지구에서 검출되는 에너지 선속(energy flux)을 나타내라. 답을 해석적으로(각 블랙홀의 질량 $M$, 거리 $d$, 빛의 속력 $c$로)와 수치로 모두 나타내라.</p>
+<p><i>풀이:</i> 중력파로 전달되는 에너지는 $E = 2Mc^2$일 것이다. 따라서 선속은 $\Phi = 2Mc^2/d^2$이 된다. 수치로 답은 $\Phi = 0.07\,J/m^2$이다.</p>
+<p class="note">(원문 그대로이다. 구면으로 퍼지는 에너지라면 $\Phi = 2Mc^2/(4\pi d^2)$이 되어야 하며, 원문의 수치 $0.07\,J/m^2$은 $4\pi$ 없이 계산한 값이다.)</p>
+
+<h3>b) <span class="pt">2.5 pt</span></h3>
+<p>병합에서 나온 모든 에너지가 오직 중력파로만 바뀐다는 가정은 열역학 법칙들을 이용하여 쉽게 다듬을 수 있다. 중력파는 무시할 만한 엔트로피만을 지니지만, 블랙홀은 엄청난 양의 엔트로피를 지닌다. 질량 M인 블랙홀 하나의 엔트로피는 $S_{BH} = sM^2$으로 주어지며, 여기서 $s$는 기본 상수들과 관련된 값이다. 두 블랙홀이 격렬하게 충돌하여 더 큰 블랙홀 하나를 만든다면, 처음 정지 에너지의 최대 29%만이 중력파로 복사될 수 있음을 논증하라. 그런 다음, 충돌하는 동안 두 블랙홀이 거의 정지해 있다고 가정하고, 블랙홀 충돌로부터 지구에서 측정되는 에너지 선속의 수치적 상한을 제시하라. 두 블랙홀이 정지해 있다는 가정은 수치 결과에만 적용하고 문제의 나머지 부분에는 적용하지 않음에 유의하라.</p>
+<p><i>풀이:</i> 이 추정에는 단지 열역학 제2법칙(계 전체의 엔트로피가 시간에 따라 증가한다는 법칙)을 사용하면 된다. 처음 엔트로피는 다음과 같다.</p>
+\[S_\text{before} = 2sM^2\tag{16}\]
+<p>충돌 후 계의 엔트로피 $S_\text{after}$가 증가하고($S_\text{after} &gt; S_\text{before}$) 중력파의 엔트로피가 무시할 만하다는 것을 요구하면</p>
+\[S_\text{after} = sM_\text{after}^2 \ge 2sM^2\tag{17}\]
+<p>이고, 이는 $M_\text{after} \ge \sqrt2M$임을 뜻한다. 따라서 중력파로 전달되는 에너지와 블랙홀의 처음 에너지 사이의 최대 비는 다음과 같다.</p>
+\[f \ge \frac{2-\sqrt2}{2} \approx 0.29\,,\tag{18}\]
+<p>따라서 두 블랙홀이 거의 정지해 있을 때 충돌이 일어난다고 가정한 에너지 선속의 상한은 다음과 같다.</p>
+\[\Phi \ge 0.2\,J/m^2\tag{19}\]
+<p class="note">(식 (18), (19)의 부등호와 수치는 원문 그대로이다. 원문 식 (18)에는 “0.29]”처럼 짝이 없는 괄호가 붙어 있다. 상한이라면 $f \le 0.29$, $\Phi \le 0.29\times0.07 \approx 0.02\,J/m^2$으로 읽는 것이 자연스럽다.)</p>
