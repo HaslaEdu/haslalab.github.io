@@ -175,6 +175,10 @@ nav a:hover,nav a.on{color:var(--ink);border-color:var(--laser)}
 /* ═══════ generic section ═══════ */
 section{padding:58px 0}
 .shead{margin-bottom:26px}
+.genlink{display:inline-flex;align-items:center;gap:6px;margin:10px 8px 0 0;padding:6px 12px;border:1px solid var(--grid-bold);
+  border-radius:8px;background:#fff;font-size:13px;color:var(--ink);text-decoration:none;transition:border-color .12s}
+.genlink::after{content:"↗";font-family:var(--mono);font-size:12px;color:var(--graphite)}
+.genlink:hover{border-color:var(--ink)}
 .shead h2{font-size:1.5rem}
 .shead p{margin:5px 0 0;color:var(--graphite);font-size:14px;max-width:60ch}
 
@@ -282,7 +286,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
    a grid every card breaks in the same place, and the figures line up across
    the row as a bonus.  English needs the last label on a line of its own,
    since "Experimental problems" is wider than a quarter of the card. */
-.comp dl{display:grid;gap:14px 16px;margin:15px 0 0;padding-top:13px;
+.comp dl{display:grid;gap:14px 16px;margin:15px 0 0;padding:13px 20px 0 0;
   border-top:1px dashed var(--grid-bold);
   grid-template-columns:max-content minmax(0,1fr) max-content max-content}
 /* the scope is the only figure with a long value, so it takes what is left
@@ -972,7 +976,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=1ef7dce712"></script>
+<script src="theory.js?v=5c1f567ac3"></script>
+<script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -1028,8 +1033,8 @@ ko:{
       {y:"2025", n:"ESF",   sub:"동아시아 고교생 지구과학 페스티벌", medal:"bronze", label:"동메달"}
     ]},
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
-  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다).", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
-  thyNoteKo:"한국어 번역이 있는 것은 한국어판이 열립니다. 대회가 공개한 문제지는 「원문」에 있습니다.", thyOrig:"원문", thyKo:"한국어",
+  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
+  thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
@@ -1062,7 +1067,7 @@ ko:{
   actSol:"해설 · 채점기준", actSrc:"파이썬 소스",
   exeNote:"Windows 빌드는 서명하지 않아서 «PC를 보호했습니다» 경고가 뜰 수 있습니다. "+
           "«추가 정보» → «실행»을 누르면 됩니다. 내용이 궁금하면 파이썬 원본을 열어 보세요.",
-  actGeneral:"일반 지시사항 (G0)",
+  actGeneral:"일반 지시사항",
   cntReady:"공개", cntTotal:"문제",
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
@@ -1098,8 +1103,8 @@ en:{
       {y:"2025", n:"ESF",   sub:"East Asia High School Earth Science Festival", medal:"bronze", label:"Bronze"}
     ]},
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
-  thyH:"Theory", thyNote:"As the olympiad published them, in the original language.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
-  thyNoteKo:"As the olympiad published them, in the original language; the Korean buttons open our translations.", thyOrig:"Original", thyKo:"Korean",
+  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
+  thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
@@ -1132,7 +1137,7 @@ en:{
   langTag:{ko:"KO",en:"EN",ru:"RU"},
   exeNote:"The Windows build is unsigned, so Windows may warn that it “protected your PC” — "+
           "click “More info”, then “Run anyway”. The Python source is there if you want to check it.",
-  actGeneral:"General instructions (G0)",
+  actGeneral:"General instructions",
   cntReady:"published", cntTotal:"problems",
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"Back to top ↑"
 }};
@@ -4193,6 +4198,19 @@ const DATA={
     if(typeof v==="string"){ if(v.startsWith("pdf/")) o[k]=PDF_BASE+v.slice(4); }
     else if(v&&typeof v==="object") toPdfHost(v); }
 })(DATA);
+/* IYPT (iypt.js, tools/iypt_build.py): a research tournament — no exam paper and no solution, only the seventeen
+   open problems of each year, their statements shown as iypt.org gives them, with the official problem sheet */
+if(window.IYPT) DATA.iypt={
+  abbr:"IYPT", since:1988, open:true,
+  full:{ko:"국제청소년물리토너먼트",en:"International Young Physicists' Tournament"},
+  scope:{ko:"국제",en:"International"},
+  get note(){ return this.soon; },
+  soon:{ko:"연구형 토너먼트라 시험지와 해답이 없습니다. 해마다 공개되는 17개 연구 과제와 공식 문제지를 모았습니다.",
+        en:"A research tournament: there is no exam paper and no solution. These are each year's seventeen published problems and the official problem sheet."},
+  chip:{ko:"연구 과제",en:"Open problem"},
+  years:window.IYPT.map(e=>({y:e.y, host:e.host||null, cc:e.cc, problems:e.p.map(([t,x],i)=>{
+    const body=x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/\n/g,"<br>");
+    return {id:String(i+1), title:{ko:t,en:t}, desc:{ko:body,en:body}, files:{pdf:e.pdf||e.src}}; })}))};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
@@ -4288,7 +4306,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 11;
+const LOGO_V = 12;
 /* Every lockup gives a different share of its box to the lettering — IPhO
    spends 30% of its height on "PhO", RMPh 76% on "PMΦ" — so scaling them all
    to one height makes the words wildly different sizes.  Each is scaled to
@@ -4296,7 +4314,7 @@ const LOGO_V = 11;
 const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31};
 function logoFallback(img){
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -4310,7 +4328,7 @@ const compLogo = key =>
      src="logo/${key}.png?v=${LOGO_V}" onerror="logoFallback(this)">`;
 
 /* astronomy competitions count observation rounds, not experiments */
-const LB = (c,k) => (c&&c.obs&&UI[lang][k+"Obs"]) || UI[lang][k];
+const LB = (c,k) => (c&&(c.obs||c.open)&&UI[lang][k+"Obs"]) || UI[lang][k];
 /* astronomy rounds are not all observation: the problem code says which round it is
    (O observation, D data analysis, P practical, M sky map) */
 /* IAO · APAO 는 주니어(α)와 시니어(β) 조가 따로 푼다 — 고른 조는 페이지를 옮겨도 남는다 */
@@ -4351,7 +4369,7 @@ function viewHome(){
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
-    for(const y of c.years){ probs+=y.problems.length;
+    for(const y of c.years){ if(!c.open) probs+=y.problems.length;   /* IYPT's research problems are not experiments */
       live+=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length; }
   }
   return `
@@ -4393,7 +4411,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso"]},
@@ -4648,7 +4666,7 @@ function viewComp(key,mode){
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
         <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
-        <div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>
+        ${c.open?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
         ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
@@ -4778,32 +4796,33 @@ function probCard(o){
           <div class="tags">${o.tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${o.note||""}
           <div class="acts">${o.main?`<div class="main">${o.main.join("\n")}</div>`:""}
-            <div class="docs n${o.docs.length}">${o.docs.join("\n")}</div></div>
+            ${o.docs.length?`<div class="docs n${o.docs.length}">${o.docs.join("\n")}</div>`:""}</div>
         </article>`;
 }
 /* the year's theory problems, as the experiments: «choose a problem» and a card per problem (T1, T2, …; T for a paper
    published whole), made by probCard.  The two main buttons are the problems and the solutions — in Korean the
    translation where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g;
    w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
-   answer sheets, the marking scheme and the paper in the other language */
+   marking scheme where it was published apart */
 function theoryHtml(key,yr){
   const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
   const ko=lang==="ko", kt=Object.fromEntries(t.pk||[]);
   const a=(f,lbl,main,tag)=>f?`<a class="btn${main?"":" ghost"}" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}${tag?` <span class="lgtag">${tag}</span>`:""}</a>`
                              :`<button class="btn${main?"":" ghost"}" disabled>${lbl}</button>`;
-  const o=(kv,fv)=>kv?[kv,""]:[fv,fv?d.thyOrig:""];          // Korean, else the original with its tag
+  /* only the problem, its solution and (where it was published apart) its marking scheme, each in the reader's
+     language — Korean opens the translation where there is one, else the original, tagged; the answer and working
+     sheets are the exam mode's */
   const card=(code,probs,f,k)=>{
-    const has=!!(k.paper||k.sol);
-    const P=ko?o(k.paper,f.paper):[f.paper,""], S=ko?o(k.sol,f.sol):[f.sol,""];
-    const A=ko?o(k.answer,f.answer):[f.answer,""], M=ko?o(k.mark,f.mark):[f.mark,""];
-    const other=ko?a(k.paper?f.paper:null,d.thyPaperO):a(k.paper,d.thyPaperO);
+    const has=ko&&!!(k.paper||k.sol);
+    const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
+    const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
       heading:titles.length?titles.join(" · "):code==="T"?d.thyAll:code, body:alt.map(esc).join(" · "),
       tags:[d.trkThy].concat(has?[d.thyKo]:[]),
       main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],d.thySol,false,S[1])],
-      /* RMPh 2012: the revised problem 2 takes the answer-sheet place, which that paper does not have */
-      docs:[k.rev&&!A[0]?a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")"):a(A[0],d.thyAns,false,A[1]), a(M[0],d.thyMark,false,M[1]), other]}); };
+      /* RMPh 2012: the revised problem 2 */
+      docs:(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[])}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   const cards=order.map(x=>card(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),t.f[x],t.f[x].ko||{})).join("")
@@ -4812,10 +4831,20 @@ function theoryHtml(key,yr){
   return `<div class="thycards">
     <div class="shead">
       <h2 style="font-size:1.15rem">${d.thyPick}</h2>
-      ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.thyGuide}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
+      ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}
     <div class="probs">${cards}</div></div>`;
+}
+/* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,
+   with a translation the year names (yr.general) laid over the unlabelled one */
+const GENERAL = window.GENERAL || {};
+function genLinks(key,yr){
+  const d=UI[lang], es=(GENERAL[key]&&GENERAL[key][yr.y]||[]).map(([lab,f])=>({lab, en:thyUrl(f)}));
+  if(yr.general){ const e=es.find(x=>!x.lab);
+    if(e) Object.assign(e,{ko:yr.general.ko, en:yr.general.en||e.en}); else es.unshift({lab:"", ko:yr.general.ko, en:yr.general.en}); }
+  return es.map(e=>{ const u=lang==="ko"?(e.ko||e.en):(e.en||e.ko);
+    return `<a class="genlink" href="${u}" target="_blank" rel="noopener">${d.actGeneral}${e.lab?` · ${esc(e.lab)}`:""}${lang!=="ko"&&!e.en?` <span class="lgtag">KO</span>`:""}</a>`; }).join("");
 }
 function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
@@ -4847,8 +4876,7 @@ function viewYear(key,year){
     <div${thyY?" hidden":""}>
     <div class="shead"${yr.problems.length?"":" hidden"}>
       <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
-      ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
-         target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
+      ${genLinks(key,yr)}
     </div>
     ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
       `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
@@ -4872,7 +4900,7 @@ function viewYear(key,year){
         const tags=(lang==="ko"?p.tags:p.tagsEn)||[];
         const heading = p.title ? p.title[lang] : ((lang==="ko"?p.ko:p.en)||p.en||d.soonTitle);
         const body    = p.desc ? p.desc[lang] : (c.soon ? c.soon[lang] : d.soonDesc);
-        const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : d.wip;
+        const chip    = mode==="live" ? d.live : mode==="dl" ? d.dlOnly : mode==="src" ? d.srcOnly : c.chip&&!held ? c.chip[lang] : d.wip;
         /* every card has the same layout as IPhO 2017: the note on the unsigned
            Windows build, then [run][Windows], then [sheet][solution][source];
            whatever is not there (or not released yet) stays as a greyed button */
@@ -4886,9 +4914,10 @@ function viewYear(key,year){
         /* 시뮬레이터를 만들지 않는 대회(화학 · 천문 · 통합과학)는 문제지 줄만 둔다 — 시뮬레이터가 생긴 문제만 빼고 */
         const docsOnly = !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
+        if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         const grp = grpOf(c,p);
-        return probCard({soon:mode==="wip", grp, code:grp?p.id.replace(/[αβγ]+$/,""):p.id, tr:grp?grpTag(d,grp):"", mode, chip,
+        return probCard({soon:mode==="wip"&&!c.chip, grp, code:grp?p.id.replace(/[αβγ]+$/,""):p.id, tr:grp?grpTag(d,grp):"", mode, chip,
           after:p.theory?`<span class="thytag">${d.theoryTag}</span>`:"", heading, body,
           tags:(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags), note, main:docsOnly?null:b, docs});}).join("")}
     </div>
