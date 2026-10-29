@@ -976,7 +976,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=b126ef0da5"></script>
+<script src="theory.js?v=67c9a3ceca"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
@@ -1036,7 +1036,7 @@ ko:{
   thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
   thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
-  thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
+  thyInv:"초청 라운드", thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
   onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", alsoThy:n=>`이 해에는 이론 문제 ${n}개도 있습니다.`, seeThy:"이론 보기", seeExp:"실험 보기",
@@ -1106,7 +1106,7 @@ en:{
   thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
   thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
-  thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
+  thyInv:"Invitational", thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
   onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", alsoThy:n=>`This year also has ${n} theory problem${n>1?"s":""}.`, seeThy:"See the theory", seeExp:"See the experiments",
@@ -3182,6 +3182,46 @@ const DATA={
               sol:{ko:"pdf/GPhO_2016_S_KO.pdf", en:"pdf/GPhO_2016_S.pdf"}}}
     ]}
   ]},
+ baupc:{
+  abbr:"BAUPC", since:1995,
+  full:{ko:"보스턴 지역 학부 물리 경시대회",en:"Boston Area Undergraduate Physics Competition"},
+  scope:{ko:"지역 · 미국 보스턴 (학부생)",en:"Regional · Boston, USA (undergraduates)"},
+  note:{ko:"하버드 대학교가 1995–2004년에 연 학부생 대회입니다. 해마다 여섯 문제가 한 시험지에 있어 한 해를 카드 하나로 두었습니다. 원문 문제지와 해설은 주최 측 기록 보관소(liquids.seas.harvard.edu)의 것이고, 한국어판은 문제지만 있습니다.",
+        en:"Harvard's undergraduate competition, held 1995–2004. Each year's six problems are one paper, so a year is one card. The original papers and solutions come from the organiser's archive (liquids.seas.harvard.edu); the Korean versions are of the papers only."},
+  years:[
+   {y:2004,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:2003,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:2002,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:2001,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:2000,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:1999,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:1998,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:1997,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:1996,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]},
+   {y:1995,host:{ko:"미국 · 하버드 대학교",en:"Harvard University, USA"},cc:"us",problems:[]}
+  ]},
+ physcup:{
+  abbr:"Physics Cup", since:2012,
+  full:{ko:"피직스 컵",en:"Physics Cup"},
+  scope:{ko:"국제 · 온라인 (에스토니아 탈린 공대)",en:"International · Online (TalTech, Estonia)"},
+  note:{ko:"Jaan Kalda가 여는 온라인 대회로, 한 문제씩 공개하고 몇 주에 걸쳐 힌트를 덧붙입니다. 문제지는 힌트와 중간 결과가 모두 붙은 마지막 판이고, 해설은 주최 측이 공개한 참가자 풀이 가운데 첫 번째 것입니다(주최 측 공식 풀이는 없습니다). PDF로 남은 2017–2019년만 실었습니다. 2013년은 WoPhO 선발 라운드였습니다.",
+        en:"Jaan Kalda's online competition: one problem at a time, with hints added over several weeks. The paper is each problem's last version, with every hint and the intermediate results; the solution is the first of the contestants' solutions the organiser published (there is no organiser's solution). Only 2017–2019 survive as PDFs; 2013 was WoPhO's selection round."},
+  years:[
+   {y:2019,host:{ko:"온라인 · 에스토니아 탈린",en:"Online · Tallinn, Estonia"},cc:"ee",problems:[]},
+   {y:2018,host:{ko:"온라인 · 에스토니아 탈린",en:"Online · Tallinn, Estonia"},cc:"ee",problems:[]},
+   {y:2017,host:{ko:"온라인 · 에스토니아 탈린",en:"Online · Tallinn, Estonia"},cc:"ee",problems:[]}
+  ]},
+ wopho:{
+  abbr:"WoPhO", since:2011,
+  full:{ko:"세계 물리 올림피아드",en:"World Physics Olympiad"},
+  scope:{ko:"국제 · 온라인 선발 + 본선",en:"International · online selection + final"},
+  note:{ko:"인터넷 선발 라운드(1–10번)와 본선(2011·2012년의 11–13번)입니다. 공식 사이트 wopho.org는 닫혀, olimpicos.net이 모아 둔 문제지와 해설을 실었습니다. 해설이 공개되지 않은 문제는 문제지만 있습니다.",
+        en:"The internet selection round (problems 1–10) and the final (11–13 in 2011 and 2012). The official site wopho.org is gone; the papers and solutions are those collected by olimpicos.net. Problems whose solution was never published have the paper only."},
+  years:[
+   {y:2013,host:{ko:"온라인 (선발 라운드)",en:"Online (selection round)"},cc:"id",problems:[]},
+   {y:2012,host:{ko:"온라인 (선발 · 본선)",en:"Online (selection and final rounds)"},cc:"id",problems:[]},
+   {y:2011,host:{ko:"온라인 · 본선 인도네시아 롬복",en:"Online · final in Lombok, Indonesia"},cc:"id",problems:[]}
+  ]},
  izho:{
   abbr:"IZhO", since:2005,
   full:{ko:"국제 자우트코프 올림피아드",en:"International Zhautykov Olympiad"},
@@ -4414,7 +4454,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso"]},
@@ -4452,7 +4492,8 @@ function viewComps(sub){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${LB(c,"problems")}</dt><dd>${probs}</dd></div>
+            ${probs||!THEORY[key]?`<div><dt>${LB(c,"problems")}</dt><dd>${probs}</dd></div>`
+              :`<div><dt>${d.thyPapers}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyCount(t),0)}</dd></div>`}
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4683,7 +4724,8 @@ function viewComp(key,mode){
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
         const th=thyOf(key,y.y), thy=trackOf(key)==="thy", none=thy?!th:y.problems.length===0;
         /* theory: a problem is out when its card opens a paper (original or Korean) */
-        const rt=th?Object.keys(th.f).filter(x=>!(x==="T"&&th.f.T1)&&(th.f[x].paper||(th.f[x].ko||{}).paper)).length+(th.w?1:0):0;
+        const rt=!th?0:THY_YEARLY.has(key)?(th.f.T&&(th.f.T.paper||(th.f.T.ko||{}).paper)?thyCount(th):0)
+          :Object.keys(th.f).filter(x=>!(x==="T"&&th.f.T1)&&(th.f[x].paper||(th.f[x].ko||{}).paper)).length+(th.w?1:0);
         const inner=`
           <div class="yrow">
             <div class="y">${y.y}</div>
@@ -4782,7 +4824,9 @@ function examHref(key,yr,group){
 function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
   const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:DATA[key].abbr,e:parts.join(","),t:all.join("|"),
-    p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),a:parts.map(x=>f(x).answer||"").join("|"),lang});
+    p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
+    /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
+    a:parts.map(x=>lang==="ko"&&(f(x).ko||{}).answer||f(x).answer||"").join("|"),...(lang==="ko"&&t.wk?{w:t.wk}:{}),lang});
   return "sim/exam.html?"+q.toString();
 }
 /* a problem card on a year page — the experiments and the theory problems both: code, status, title, text, tags,
@@ -4799,7 +4843,7 @@ function probCard(o){
           <div class="tags">${o.tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${o.note||""}
           <div class="acts">${o.main?`<div class="main">${o.main.join("\n")}</div>`:""}
-            ${o.docs.length?`<div class="docs n${o.docs.length}">${o.docs.join("\n")}</div>`:""}</div>
+            ${o.docs.length?`<div class="docs n${o.dn||o.docs.length}">${o.docs.join("\n")}</div>`:""}</div>
         </article>`;
 }
 /* the year's theory problems, as the experiments: «choose a problem» and a card per problem (T1, T2, …; T for a paper
@@ -4807,6 +4851,7 @@ function probCard(o){
    translation where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g;
    w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
    marking scheme where it was published apart */
+const THY_YEARLY=new Set(["baupc","usapho","opho"]);
 function theoryHtml(key,yr){
   const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
   const ko=lang==="ko", kt=Object.fromEntries(t.pk||[]);
@@ -4815,21 +4860,35 @@ function theoryHtml(key,yr){
   /* only the problem, its solution and (where it was published apart) its marking scheme, each in the reader's
      language — Korean opens the translation where there is one, else the original, tagged; the answer and working
      sheets are the exam mode's */
-  const card=(code,probs,f,k)=>{
+  const clip=ts=>{ const s=ts.join(" · "); return esc(s.length>280?s.slice(0,277).replace(/ · [^·]*$/,"")+" …":s); };
+  const card=(code,probs,f,k,head,docs)=>{
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
     const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
+    /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
+    const many=titles.length>1;
     return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
-      heading:titles.length?titles.join(" · "):code==="T"?d.thyAll:code, body:alt.map(esc).join(" · "),
-      tags:[d.trkThy].concat(has?[d.thyKo]:[]),
+      heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:many?clip(titles):alt.map(esc).join(" · "),
+      tags:[d.trkThy].concat(many?[d.thyCnt(titles.length)]:[], has?[d.thyKo]:[]),
       main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],d.thySol,false,S[1])],
-      /* RMPh 2012: the revised problem 2 */
-      docs:(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[])}); };
+      /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2 */
+      docs:(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
-  const cards=order.map(x=>card(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),t.f[x],t.f[x].ko||{})).join("")
-    +(t.w?card("T",[],{},t.w):"");
+  /* the problems of a part: its own; for a whole paper T every problem but the invitational round's (Ti1, Ti2, …),
+     which belong to Ti */
+  const probsOf=x=>(t.p||[]).filter(q=>x==="T"&&!t.f.T1?!/^Ti/.test(q[0]):x==="Ti"?/^Ti/.test(q[0]):q[0]===x);
+  let cards;
+  if(THY_YEARLY.has(key)&&t.f.T){
+    /* BAUPC, USAPhO, OPhO: a year is one card — the paper and its solution, and below them the invitational round
+       (OPhO) */
+    const f=t.f.T, k=f.ko||{}, inv=order.filter(x=>/^T\d*i$/.test(x)), docs=[];
+    inv.forEach((x,i)=>{ const lbl=d.thyInv+(inv.length>1?" "+(i+1):"");
+      if(t.f[x].paper) docs.push(a(t.f[x].paper,lbl)); if(t.f[x].sol) docs.push(a(t.f[x].sol,lbl+" "+d.thySol)); });
+    cards=card("T",(t.p||[]).filter(q=>!/^Ti/.test(q[0])).concat(inv.length?(t.p||[]).filter(q=>/^Ti/.test(q[0])):[]),f,k,
+               `${DATA[key].abbr} ${yr.y}`,docs);
+  } else cards=order.map(x=>card(x,probsOf(x),t.f[x],t.f[x].ko||{})).join("")+(t.w?card("T",[],{},t.w):"");
   const guide=t.g?(ko?t.g.ko||t.g.en:t.g.en||t.g.ko):"";
   return `<div class="thycards">
     <div class="shead">

@@ -13,7 +13,7 @@ theory.js keeps only what the site needs:
 
 Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_release.py, not mirrored): a part's own
 go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
-under w, Korean titles under pk, the general instructions under g ({ko, en}).
+under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk.
 
 The general instructions (kind "general", files <Prefix>_<year>_GT.pdf for the theory, _GE.pdf, _GE2.pdf … for the
 experiments or the observation rounds, with an optional label) go to the theory's g.en and to
@@ -105,6 +105,9 @@ def korean(out, bad):
                     t['g'] = dict(t.get('g', {}), **ko)     # a translation keeps the original found in the manifest
                     continue
                 if part == 'rev':
+                    continue
+                if part == 'ws':
+                    t['wk'] = ko          # the Korean working sheet, for the theory exam only
                     continue
                 ko = dict(ko)
                 title, en = ko.pop('title', None), ko.pop('en', None)
