@@ -695,7 +695,8 @@ B3.jack = function (x, y, z, col, o){
   cyl3('z', z + 0.9, z + 0.95, x, y, 0.22, '#111', { seg: 10 });
 };
 /* a hand stopwatch (button latency in s): startStop / lapReset / read like the handlab one */
-B3.Stopwatch = function (latency){ this.run = false; this.acc = 0; this.t0 = 0; this.lap = null; this.latency = latency || 0.03; this.pend = []; };
+B3.Stopwatch = function (latency, o){ this.run = false; this.acc = 0; this.t0 = 0; this.lap = null; this.latency = latency || 0.03; this.pend = [];
+  if (o && o.memory) this.laps = []; };                 /* with { memory: true } every LAP press while running is kept in .laps */
 B3.Stopwatch.prototype.read = function (t){ return this.acc + (this.run ? t - this.t0 : 0); };
 B3.Stopwatch.prototype.startStop = function (t){ this.pend.push(['ss', t + this.latency]); };
 B3.Stopwatch.prototype.lapReset = function (t){ this.pend.push(['lr', t + this.latency]); };
@@ -704,6 +705,7 @@ B3.Stopwatch.prototype.update = function (t){
   for (const p of this.pend){
     if (p[1] > t){ keep.push(p); continue; }
     if (p[0] === 'ss'){ if (this.run){ this.acc += p[1] - this.t0; this.run = false; } else { this.t0 = p[1]; this.run = true; } }
+    else if (this.laps){ if (this.run){ this.lap = this.read(p[1]); this.lapT = p[1]; this.laps.push(this.lap); } else { this.acc = 0; this.lap = null; this.laps.length = 0; } }
     else { if (this.run) this.lap = this.lap === null ? this.read(p[1]) : null; else { this.acc = 0; this.lap = null; } }
   }
   this.pend = keep;
@@ -724,9 +726,10 @@ B3.stopwatch = function (b, name, p, sw){
     HL.text(g, 'CASIO', 150, 40, '#e8ecef', 22, 'center', '800');
     HL.text(g, 'STOPWATCH  HS-3V', 150, 66, '#c9d0d6', 13, 'center', '600');
     HL.rr(g, 34, 86, 232, 110, 12, '#22262a'); HL.rr(g, 44, 96, 212, 90, 6, '#b9c4a4');
-    const v = sw.lap !== null ? sw.lap : sw.read(b.t), s = B3.fmtWatch(v);
+    const v = sw.laps ? (sw.run && sw.lap !== null && b.t - sw.lapT < 1.5 ? sw.lap : sw.read(b.t)) : sw.lap !== null ? sw.lap : sw.read(b.t), s = B3.fmtWatch(v);
     HL.text(g, s, 150, 146, '#1d2318', 44, 'center', '700', HL.MONO);
-    if (sw.lap !== null) HL.text(g, 'SPLIT', 64, 112, '#1d2318', 12, 'left', '800');
+    if (sw.laps && sw.laps.length) HL.text(g, 'LAP ' + sw.laps.length, 64, 112, '#1d2318', 12, 'left', '800');
+    else if (sw.lap !== null) HL.text(g, 'SPLIT', 64, 112, '#1d2318', 12, 'left', '800');
     if (sw.run) HL.text(g, '▶', 236, 112, '#1d2318', 12, 'right', '800');
     const lr = HL.button(ui, 'lr', 40, 232, 100, 70, { round: false, col: '#2e3237', label: b.L('LAP/RESET', 'LAP/RESET'), size: 13 });
     const ss = HL.button(ui, 'ss', 160, 232, 100, 70, { round: false, col: '#b83a32', label: 'START/STOP', size: 13 });

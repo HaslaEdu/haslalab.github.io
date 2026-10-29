@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAArg0lEQVR42u19a5BdV3Xmt9Y+59zb93arX2q9bBkby8jC8ttGxGDAMEkqxAyUqwyZDM5kKlRIeYrJTBIqyY9gM6kiUFNQmWKGqjGhUkDM2OLHFINdxjWDZcdgGwdjjPADP2RJlqWW5O5W933fe/Ze82Ofxz6nb7f6ce+VLHyrutTq+zpnr7XX+ta3HpvQw8fevXvVrbfeCiLS8d8+85nPFH7zN3/zos2bN18zMjp6iQnDq8rDw+ePjY6WAUwy8/DIyEgJIgBRz65FREA9/LzuXwJgHV9Rr9erYRg2jDGnKpVKtVKpHCWiX3Q6nReOHj26/yc/+cmvPv/5z9ede6KHH35Y3XTTTTr69nU/qEeLrQAYIhIA+Pa3v711z549N5VKpQ+Wy+V3FYvFt3ueV/Y8b0lh9XBdB6YA6/2Opd6rtYbWutFqtY50dOcnM7Mzjz23/7mHPvaxj/0qfs2+ffu8XigCrXMBGIDEgn/66ad/a/PmzX8wMjLyO8PDwxNd9ovRWlP8vUQEEIjQ553affUBEZzJR6T44v5ORMLMnJdNrVZrVev1fbNvvPGt22677XtPPfVUPd58rsUdlAKQiHD8xc8888xHt2/f/qcbNmy4SSkFADDGGAAGAFtZE+EseYhIrIE42x6x9RMRiRTUsF1TFb9mZmbm2WPHjn3t8ssv/0cAjfxG7KsCiAgrpYwxBg899NCe3bsv//zU1Mbfjp/WWhsi4tUKnHrl1M4WfND7axaIGCYiWAuBubm5p48ePXrn7t27/89arYG3Wl8ffUHx1VcP/dXU1ORflsvlYmTawfahzvbF7Cr8s8AlnOaaCURKRCDWusr4+PjV4+Pj3zt48NA999zzv/6SiA6vVglotcK/7777dl199TX/uG3b1j0RYNFvBqGfiw9jjFFEADPPzs4eevzxx//DzTfffH8kK7MSo0qrEf63vnX3xz7ykQ/fNTY2NmWMCQEoerPZ0tMshLwJr11EQmb2KpUKnnnmmb+68cYbvxRhNDndLdEKPtwjovC+++779I033vg/NmzYoN7a9csu2BkBl8YYEwFwfuGFF76ya9euP1+JEtBKhP/ggw/+0Q3vec8/DJfLorWOw5SzCtj1/TpWKlgiwJi+KUEcvUgXvCIiwswGgHrhxRe+smvn6ZVgSRC4b98+j4jChx565N9ef/01/zBcLhtjDFYq/LPJnPaGMqOzwwIQQZZQMCIiY4wCoC99x6V/tn//fiKiP1sOGHYV5t69e9VNN90UPvDAAzded93V3xgeHjah1kREfLb6yTej717zfS6jYGyfUwD07t27//MTT/z4L4hIR2zt6RXgjjvu4E984hP6S1/60iV73rVn78jISEEbA8VM62WPBgHifi0wxumIJCIYYxiAvvyKq7704IMP/k6kBIvkndcKevjhh/nOO+9Ud/3Pu767ddvW3W8BvjdpVGPdAQpBgcdGxz60YXTDPe973/sqAPiRRx6Rrhsn9hU///nP/+LKK6/8r4AJRch7aznf1FyBVkqpAwcO3HvxxRf/Xh4PsCN8BmDuvvvuSy+++OI7ABit5a2df/bE+mu1BAqAftvb3vaJH/3oRx/N4wEv92J59dVD/2V4eHg4Mv381tKfNSZ9ze8zWpNSCjt37fq7z372sw8BqMbRMce7n5nND3/4wxu2bdtyC2xu/63df64oDzMbY/TGiYldn/yDT95GRBIDQtcF4JIdl/x5EARKay3nCMP71iMbKMn287f/p9tvv32YmTUAcMQUmXvuuefKjVMbfxc2r/zW7j/HQsuIwzHjY+OX3H77Zz4qIti3b5+XVJ5ce+21/25oaKhgbD7/1y5+XpJ0ObciAgCQLVum/j0A+sAHPmCYmfUf//EflyYmJz+yLrQxSFk6wpGVb4E3i6b288MVACoOFd+/d+/e3URkWETwh3/4hzeMjo7uiMw/n+2CZ7I/FP0u59R+7Z+iRgyhLpfK3uVXXv5bCQjcuvW89ypmGGP02bwnmACG4ERL8MSC4MF5waGmgHFWF/P0XS1oFeGjiEAATIxNvD/hAYrFYE/05FlV3xEXSDIJxACvN4Ff1QXTIUEIEAKOtwU3jwkmfIaBgPDrFb2cTu+7EEhMAIaGhq758pe/POHdfffd48PDw7sdpHhWCV4b4LW64MUa4Y0QECIoBkhs5qtuBKfagglfzmnxS48cBkdJvSAItuzefdVV3sjIyDW+7289GyIfEYAZIAg6GjhYB16sArMhgZngswAEGInwgLGXbIyxBejU/zs4W4pc1hUNACYIAnXRRdt3elNTU5f5vm87e5aoD+i7ZseCJ0EzBA5UBa9UCQuGQAQUYsFHQqZI0AJbOq+1gUUChN70Fa1vl1IXhaGVCWYwu9AYIWZ4gfcOb2pqajtbADhQ9s8VPAiotg1eqQAHaoSqJvhMCJT1YUayRlAkjQaS/2T2Zf+UQJb5e1wxoSUFpYnFIOu2upsS+4uynVIrA7TrKGMXEQKA8lB5hwdgJwAYEVIDUoBksUgw3xK8NA8cqAItIfiKUGCBwPp/d6HiyzPx/8XRJIn/MHgjHbuumgZ+WRec1BLppbVg8XUTpUoSg1iOkTkBJQguCwibfIKR0xZsrjuoqDcauzyl1AQc7R3MYgkWWoJfzgJH6oSmBnwFBGSFaYxdnK5AR5A6qkWljjRwKCMAiIFaKHhoXlAxBEWECJ5Eiu5ckePCYkWI/BkqBEy3BO8DcJ5HfVPjuH2PmSe90dHRSW0XkqjPa2eFb3BkQfD4cUJDWzNfVJEsBYCOFoVc5ier9LQk4LNxwKBBGgnwfA2Y14wSS9IQ6aolOcbKvfTYmjHb9zTB+GXLYKuirOL0+KGNYNOmTR0m4vPCMEzCg35xV/HOn64IHnmdoIVRVPHFdKF2TbpYIlk3QM7up9hU0ACI1CUeoTY42TYoRBFKYr6ja5Tc/Un0mgzoE4sdPAjqAJra9A2RiwgZYwBBkcvD5REd6oFYzrBj8LPjBCMEjk29u0hdCP7ExTtKkId7IjijsVkY+/zoh5EDfA5WJXFMWdylHP0pfo8YIDTp5/XcYhGgjQExj7Ax6/8GWcHzTAZHK4I3GkDAgA6jJ0z6InG62Si3cPFimMzC0JpLpXrp12LA6gI3g9S35xXYXjdAOeJKnHs20ecuAXZ6Al5EJLUy/QwBrZIJjlUFRghiUlPpChmOoDPa7yyiK28TMULkIICebI9VKr/A7tgYD4gT3rkKHAcrkr+njOvLdSmu85boNM96/febUa7OCGptAYQShYDQIhAvYv9uuWAnpKecO0CcCSQn5u5B/L9Si+IqrTFgMEgA7QDDTCST3JvdbG4Y7wavEvEFYiSyElhXKluWVQuB12/fSdGtGSMQsSZbbPdCeoN5YoQsr5+Rp/O7xJ1RQlnG5UwwgEYSwZrI/yMWvnPNmf/Gl+3ccyz4eBMkm6TP3Ayn2ix93P8J+kxUwjV/iQ2M/GKyepLbbeJ+HsVG9szUepCrc2QjGdfMdwGB1uJR6uJM5taj90lP6xtkGQsnAnjWvFLfGTRxwh2JFY4onSIkKWWabomcHsScQLRL4kVMlIQGmwcQioGrdF11x6CBOAtmqRuZxSlAFAdArueWaAmME0NMtmO6egCflvGd4mxjcfw/zGK/Dnd3SJfQ0FkwF0Sm7mawBFCiq7QYwLpLkglznfs0JgcMF8cE/QGzksAs12GtYzGW6SGhnJCTXevqjkkJkljrXeUQWRwSQvJuQdZuGteJc4xZYtdFEY9r9jM2HzkrFq0F0ToZzdOAWXKNjqzUziz3ocs+l368jePJWgKJF0hsBs0sDpUW+VVjX2eM/UiDnMKsCvysHwdklEDnY9ru+ziPEch5bRwirxP8r8h92XWQVYQ/y+xyWem2E0rAYLorKMMB5E1mhgWUVIDGRHmBVVDSPbUA4rgdicNdWqy8JmuxENHAeZdgTGoBaUC8tpddPulNjLxI2wSU+LooYRNvAwKIySFOLFGUhEqciwadsJByyRJBPu7uMwhMJGXvh8lhNCnPb2SHhySezsl80uqZnHWGMeIoQD+DgNhExwmeHPtFIpYBSxBqNvdvhWlXkTjJE8EDQS/xZQNhiMmCWiJAgSA6FTZF0ZUWSYMsWgz28hUMmbC4X8J3chBef2DR0rA59nHuqJN4ZK6A4kgo4dUp5g9Iovk4kjQF6CilRokXHnQUQNEtSBKWmoSTtIDFTU9ztAli0icOBROL5+ADgUsNorezh5zP8WQgJoAWc/qUWoI4hZYQKyIRK7a4ph1MyfsoyRXTGW/80dql+yS1Ws4KxMCVXTZQVuhpV3iDK5ViTDd5NKAJiXGyyXRJ61ploBQDxFqfmFNbIhUrhyT2N7YmsjjcGBAbmMnmGIuTDbIUbzd770CgbIVTTHV3C6F6DW4FA8IA7tW5iBjRjkbq+2NmUBJcgFT4SDN+5LJqeeCwykWhdd4SKMt1xLvd/eAkouFcnoByPl9c2nyJWLp32osBzf+xd2ji3Rv5SiJrzk1GtK5rcHbHIktl/QgDKCmCydlQiaTCtPKKJVmDQiT5f+MQPRRRv66QnRQHxdGN84UuF7B46PvqhX/6/Sx5ENhvW+kUdUg+SZRy5ZSAIsqm0CRPvNjPKbPBWCE2HDGQJBBbzWpqQVUTGhpoAQijHaog8BkoMjCsCEMMcNRpulIQnivuyd5UlLHMM9iZbGAKYVKsR91mAdLaLNMKXjDQCWBxps81b5KQ6pRU16QbnNKkCbIJdPYItQ5h54YQ5UAhFILHlhtsGsLxhuBkCFRCK/S4Sjc6pMQaF7ZoXRFQIsGEB2zyBKMeg9kp41qOCIoElczmVrniT0lLwGMGy+TqHBiLi2IG9RicAkguzs2n8o0VeFrZK6l1cHyinY4O1DqETV4LV2wkhGAUWNAIDQ7WCdNtQd0QmO0NEkX/JjtQIqMiCTCtGMK8AV7rEEaVwXafsDmw0cVSNfrxcy6P75JA4ma23QIXk6WujWSSnxl2cyAKsCIDs15qLWHJxDGzEkXvlG2SIUkb/+O4P/4zE2ptwaagifefJygGPgDg5argYJ3RFMDnqMdAsmQSOby7HZiSaoWiVFnmNGEmBMZaBjsKwGQQ5fFza2XpCclDnUxuIuO9ojo8YudJTm9ZEI/t6pWfX40FkGXQUY+DbJP0dsWAUCI5UEqimPR7xQiUxwiNoBWG2DXaxjVbCOWCh4UO4fkKYVYTfCIEEdkUxjAiBwITZTCLvErCVipryTFvGD+tG7wtFFwyhKThg7oIQJxMHtzQzl3KKMsHk6aQM8gzWxlyWv+/ZuFLQq/GCkCnZ43W6Zgk4p4TACiUFlBSGvq5XDnFkQIJGm3BsNfBu7d28PYJBSaFQzXGCzWGFkIQt5PpLOJ2FzeeH0CUBaLkGDgXuPtRadqBFjDTAa4sGwx7nCqB2+ETF/qzQ3vz4hS/kKRMkHF2fI4jyJirfiQFsiBQ+scDuImOeIckqU9J79OQXRxKwROxNRONtsEFw01cfx4wXvLRNoRnFxiH6oyAAY/TPsLYnLrFQW6dKRw6VsTp1cuHZJTm8YsgVAzw+AJwVdlgqmh7G1JSCmBJvyj566IOpiwDJo6wY68wkOKW2PQQ+l8Umkl8xB0xEVVG9kA5SMQRxIpADCgFtEKA0ca7t4V4xxTDVwqn2sAvFxRm24SC01kEB+W7HWWZXR75ceMGHsgi8gS1OzG5jrJmGoR/qQLXiGDLEDl5e9sPKAbQYqzVYkfxOBVqPhlExuEEHGKIkIsbV4MDlnHbyYlp5FiAQQ1Zylb8UJozj2xw4ppAqDQNtg638e4LDCZHPChiHK0TnpkjdIRsc4nJdt66TFxcbgjn/8K5tcklnbKsXZRVdFK5HEUPT1WBq8Vg2xAjFKDgETw2aIcKpSAycm40YNKyy9jVxDF/opGcswyy6v21yG130wPKsdirqwfogTEgSWN6ifrE4/4+xUDHEHQ7xFXb2rjyfEbR96FBeO4U4aUKQxHBp6iCCEmSMNktXXMbtDhEA8GmbznbuJm4CtCiJYkP6vCI8XRVQNDYUiCEAlwyGWK6yoB4IFisk2T7RCynQbneRpcfMM59iNMg22tX4Gg/JfUAMgDywUW5Jkvdx2Cv1haMFVu4YUeI8yd8KGI0NOGpNwjHGoySZ4MxLdmoi8W6DAMrjHhXczRPSEU3GPfxZ3y+yYGuKAXB7vUi281LECgBnq4w3kUaowp4+0YP1VYHT00rDHl22okIZSp+BbCdI5xV2kz3czfKG7Q+WS+RDaTEAvSh/ii7eQQU+Xg3Zw4ASqxvbTdD7NzcxrsuIpQKAXwiTNcJPzlBaIltu9YmBkvR4pKgEDB8Dzg2YzDqtTDEbRSjXR0KoQmFFvsg5aPgOcpOkkHdlJs7INSlUCMP2IXw03nGe8YERaXwzs0GJ6sNvLYwhHKR0NGSxqLGyQ/EnxcLXjv5Au6J7FdmkckhgtbF86wkVIy+xC3iZCbUW0AxaOFDl2pcvMkDs4Ii4JezwLNzDIYdDhW/LzSApwhBgRAa4OhxjWdfbuOqrW1cf6ltqfY9jlLFGh0dotpp4kRbYS4sgQIfHi3meMXhBii/G13Y4pRwsQg6QviXOWDPuAaTwo1vJ/z41RZePVVAuUDZ2r/YBeV7ITJVswMA5QkdLnFjyDoxQFwTTbQEOHGSQdEu7hig3tLYsamNG3YAo6UATISOAR6fJhyqUmJKtVjhKI9Q8IBmR/DaIY2DhzReft3gfTtDfOJ6Rr3lQSmOD06CQOAbwVDRYDIMcapZwYF6gLpXRsGPqouoywLFBFXu6RgQuiVtCsB8SPiXOcYNkwKlPNxwYQeNl1o4WS+iGAhCs7ie1tYCWkSetIVxzI52if97ZQ3ctus4HSxCPQIWyyeCOhogMGotgaIO3rujg6suVAA8+Ao4USc8fhSodKzwTbTYrAD2CToEXjuk8fKBEAsVQSFQuHAz45Y9BCMehgoKnkepAoht3AyNoK0UJjyNDcUQr1YqONoqoxB4EKOTiMQgcjEOfJb8muWMnQjgEzDTVvj5vMG144LA9/Cvdmr888stHJ4PUC7a4Q+UZ0OjEJEif0MDKAfPS8VbJ6m4Yv0QELaOabw43cG2cYP3X6qxZSyANjaef/YNws9OEJjs/ABjrOCVR2i1BUdf0zhyRKPVJAS+wuZxQrNDuHAqxNYxH4CC7zEUc1JbEFcOeQJ4mtHpMJgV3jHWQalaxYuNEgqBn6J2chjoeHfmLZrJs3t2zxZYcLBKYBFcO0kgeHjfxR08+koLhxcKKAUEI8ZuNpcXMBFgTHLHlBS9Yn0Z4dMKRcQpCOnnoAUmIDSEKy5gbJ8IsaFECLwgScc+cpjwypxVBBUhZKWAZhM4dljj+AkTCZ4xOmyVhNl+8HiZEHiAEYZiygw6iusKFQmIFBQxVKjRJuD8kRAsNbzYLEMFPkhMUkQiEU2dgDSk1UpJCXeCBO0fQgEKDLxSYXgsuGpCYMTDBy7R+OmhBp49XkCxoKywjTuPQdLP5m7kT4+RYGTdYlfjIVd70a+HIgYUYdMoIxRCoATHqwaPHVGYawFDfsrMzVeAmRnBqTmNsAP4HqEwTFbAEWRXbBesVLAm345kW4L1gFUaUgCRAjPQbAPbRwlADc/XyygWA4gYG+vH/lqje70eZTuWXFp3iAnPzdmxMddOMdqasOciwmixiSdf82E4QNGPciJx7oPJwQUpKB9IOjipx+tnJwXFVTiWQy8qg5dmgCdeZ3TEmvxWG6jVgFNzBtWa3RGBrzDkR37Sye6ByMb94ep2CBEiK+GBiNBoE84fBRTX8VyN4PmeNelONY/olCIwlOVM3PLt+PWhCIoM/GqO0TGCd20maK1w6VbC1EiIJw42cKzqoxB48LwobyCpLcgMwEQfLAHR4mSQrCIXlHDJq5I/JX38TIIfHyY8Mw34TDBtYLYqqFUFWhNYEcrFdEGZKUnYUMTrMluCx8B2FYm4yPn0g9VtoYjCUGAtwXkbgI6p4dlqGaWiB4l6FcnJKBmXMHMsAEXSN5JVjiEPOHCKUGkLbthKKCuFiWHCb+3SeOVEC7+c7mChGcDzFNiz8aVSDAVCaIxT+tonEBAJ3FvtYAhmXjNe6GjBfb8AXpkhBAJU2mKHRQEIfAYXnD6BqGXMrQgjosQSMFsSiUmy81hXGAYxEzwoFCMluGBUYEwNLzaG4fsKYgyErPIZt7gE+aLNSPhGIvNtv0ALUFDAG3XCgwcF124GLtzAaIOwcwvjgokQR0818eoscLKuoElBC6OpgUsnOygXFAz6V7JFi1rDVowhVi98LQKPBb94VfDiMcaQsqyeryzYyxo6cZTNxUOSYpVIMEpRtqhiteCUCR4xiuKhKcBF4x0YVPFctYxSwQPEQEcgj7pMgM5OqqVFdKEACBTQ1oRHjwiOjAKXbyRs8BlMPi6aMjh/vINGO0S93UGzAwQeY8uol+YO+wYGJJcM6mcyIEp0n6gIfI+gvAjwSNyeTAkjRpQSNHHbFVNaKRR3ETDZiIFj7LLGfm8mhqcIxQLQaAMXj3egTQ0v1YdRDBQgxgnRHPe5XEcPZTkyFSnrq6eAY1XBjjHCRaPAsM8IVBFFXzAypFO6kSyZxX1EgtLvvoDF9XOpg6Rodyez/pAt4ICixL/GE7UsdU7pGlGyVusOYVhFlsC3luCSyQ48quK5agmFIADDwHTr53fIm0zZd7fpXwIUPUAbwv6TwAuzwNZhxvYRwXggKPsKDMDzrKvThqMq6rVbARevLYWOvCxbIz30MXlzKEkJOMXlX25FhpOW5eh1bsYwRsYxOUP5Qo91k5kETykUA0GzLXj7RAifa3h2wUD7BZuPcNC/28gBZ2aBe/Muwx7XJxDZkFcL4cgC4dA8oMAYLQKjJaBVA7YOGVx2vk14rccIuGA9d0p4stYDIYLcOnm38obYKQvjtMSq6+DH/A6kRRHNCjOTSy8WM+CRwhABjQ7h/DFCOWhg/2yIii6h6NlS4sxwR5FFxA05Li0RhGMV4pyQzwKfAFaMuTbw9CsGh48ILtwI7NwqUJwrL+4lCxhdshcjwj7TABlFkGjRssWP9sLIQVBEsoRPcSaMrFQBV3ihCgwoYAiEpgBjZcK7vA5empvHa80SyAsQqPQakwJXh3RyO65dYo+iBTDReUdeQAg1cOyEwasHNVoNYLjAUAR0tMU4pxP+Wr1fl/kAA6gIijSM4fQDZmhItzJTuhAYLscvyLWV9kZRo2EPpBjFwEM7ZIgQ3rmxg831Kg4s+JhrD0GUh0BFIBSCMLJkoKWHFTHbVDYxodkSHDwS4vBhQbUmKHiE8hAnp6PEgzVByxSI2nMA1zTmV1wmUPqchE58v0umRCVJi2E1ZUqz01x8vOtzEw1WGv+v0kQyKMos2h3ZCgmTwxqjxRBzjQperyrMtX20EMAQY6TEtgjFTf1KGskYAVptwclTgukTBiePGzQaQCFgjJRsDYRiW1xKFCvAafBfD0z2QDBAKljJ+U9yqOJ4PkBa3CeZPEXaGC6R5TB9m2+KqGePkvyBUjab2GbGJl+wsRyi1mzgjUYdldDDU68U0YTC+DAlmUStgWbToNEEKlWD+XlBp23Du8AjjI0wPLbsp2Jr8gUEXzmg+XTjnteIEhMXkHxNv4cqJT0BlOG+45m/ssRVipNMSJQ0SmUuBRLXyY4uWmClFIgMFDM8rdDRBlopDFOI8pCBMQZ3/98Wjs8HKBWtktucQ5S5VPZklMBXGCrHwqboxx6koZjgKYI2gxt9K4PDAJKOhnXCp7QVNGYA47hVktm6xGk8YDIpTTgHRcqqBbt61jCqMyCGUgwjBkbZdrV6q43JMQ8aCioSJkf8hfIIKuIrmARKUfR8RGSxJYmYYlrbup50l/anMFAWg8B+qkLUACqxb3NquJ1hDgA7XcDprieQraDJuQA43bnSgyhAVnAfzLboQ6AgrEBao0Q+Sj7D9xhDAZLj8JgtwmJFdpcTQ7HlQShSAMURMxrdGQHw/CV8fy91QWQxBhBZFsSulwteNPLVtQ9Jfb8zpCEZvpibu05EKZF0RiaFp7hcMcMww/cI5QIh8O1aKqboMMyoH4AJHtmRukQSPWfNv8fxNBPKzjrL9wVw7430wOYDuDN+k+RtYgnSEemU6blzTDzlt4A9eILcKHGVdmzdls7p9Al8IAgIvpKEVIorl2I5cuIKKLECFDUycoQXBHEU0YUAkp7qcDYZRAM8N9D9lyg7bjU5AjpNuCf1BHEuIK6jSyaOgtZk0Ne7nuS0lVkQB/heLORUAZL1jUI8drqE4gkhYElmJlE/zghaQg5eNkwz/elKzXW8iHFGQzhhXjpaLcsAijvRw6UPZXHj7Zl6EAs8D/AiZiWqgEvrGEgSpUUs8CSx5Y7sl9xhFH3qDokLQtJF7OMK5mfhOskBI/EJIrY9nCV7helASHIIIZcOzs3hGNCoQHegBGDrGjyP4HvJQQwZDJBmhcRJcFHmrA53mEV6tgp1377rNNmZxpCsv+2jEgilp4VlmieBbI8yZQGQU4ZjohwBZzJBUVn1IHd8bst4TPCUQKm0cilxcZRGPeSuNmc7le3kktMff7vuswQGDwKtJpuo4BKShnNI0LwT/zsRfiLc/LSPpRpaBzko1ImalIpCPxJwnMURq6hCeTC7ONSiCJUR0hpIyaxDr7FgHAauog99vWvrjmGJx6rHuXyCJO3b7GTUKKWRnCEPEg2b4oQ4ojOMAQAn9It3eSTJfF1jN9wazwYURPwASZ8V2kZfvJo9vPbXSTL4LT0PyD1UUdKzc+JTM40gjgnSo2EiKyKOIqxJEXu3qu7ZfswO6s8av8y5AgRJogTX5ysGQiOYKBvbuyi0pqmlK4H/8crxygxFjxbL5A9Uck4NEcqE+7ZMjDKDdJIzBxP6eK1Ck95tomjVlVMLRs6AJ+oqIaeJNh5Tx0BoGB5rXHleuKZqIFmpGXbewL2eQiGn0c305GzKKEIS8uVGpaVHyMRnA0RzfqJBAwkjOOiwr8v9Zs/9S319/iST2BWaWHGI0egAjBY+eHETm0bYHrDdz9uKppx68/Pz86Nj46NmiSwU9UwtXJBnC+QMpeVglN8d0Vi3ZJxMTAhJ6lTgVAvLgEfFuyUMib4aQNxehi5MKGfmExHaITDktXDpZBOXbRNMDgcQ2PRzvwKbuOFGa13xwk7npFJq1LYy9E/nXM1PZvVI91F4aZhLyBhSJyVMbMvHFUtmtg4GfHikO3cQufnW+Qkj8RpoYbRDg6JqYdemFnZuMhgrKzB5ACkEnook0S8NSA7ZaHr1em3WYyAMJWnS6If0CcC2cYOnDsRt2JL4wGREXNKEkTkgwP5fAENxI6j9uzbAlhEDIpUdBDgga5AnbF38wu5cB4l8vDAaHUHZb+GKLS3smAoxNqQA8sHsoeAxPI9tFrGPvAaJCDHT3Mys8cIwPBb92cAOvFgx+bHShy2pYuw6L8T+w228fDzAhiKDlQvKUn7cmks31x8FhlELNROh0gA2j7bxzvMEHU3w+AyQAZTiFJUQXSZD1DAB2jAabUE5aGLnlmjHlxSECmBmBIptj2BSR9Df6zeAMDOJkRlv69bNTwH4aNyqvBxANmtc2liwnsf43WtC/HB/iNdnCzCGEEb+gJ2Bii5sIHLLwO1sGVaCd24zePcOg8Dzs4WlNJjDT7qpmcAOgo6vN9TWx5f8Jq7a1sI7NhlsKDGAAMwM31PwVDTXIB6XR/2/Zm0EytaDH/QOHzx88pJLhwER9n3PmWrYS0Boq2C0URgeEvzr60PMVGqoNgCJJ2ui2+SNXHNDxJ0PBcDkiAdP+bZok7PMsaxmA6/blwIeA9oYCHx4Cmh1BO2OYNhv4Z3n2R0/WlIABSBWCCJTr6LdTqDBGS6ynQ0egDDsPO+dnJl57oJWKywUC96iOLGHDyaGr+xUmnaHMFFWGB+W3Ey0rFik6+fEu0VBMUcNorwmia7bSkTjYZmB6y4M8c8vMqp1wsiQxuXbrOA3lBgiAZSyI2w8ZjBzmganPinnMhqgtaGmCVEoeM96hw8f/sV1111/jFhtN8YI9csBUdySbUGOMZKwekuLhhbNGwTscAgmjn5k8emLA3wwAR2tsGubwdhQE6fqBptHgXKBILGpVwxPKVBU9o0zecSdJda41Wp2nn76Zy8RABybnr5/06bNH9ZhqD1vZbHAmtZb0lAuG0evXIKxubRTQyid2EC9MftdK4Ox3HEKBloL2qGBEW0nmRqAyA63tkWh0ei6M3y2oWVTjelo8MKp2YOf/exfXO0BQK1ef5IJH26GWnzf61+PQDLYmZNpH4udH63aDPec4FmFqyBiMBv4nh3wIEbgqXiKCScFH30JQNYAxjuhMYHvcafT/sk3v/nNUwwARw4ffqjWaJqOFrVS4UvPl3kwKKgfxVbMdsZA4DEKvoLvK3hK9T2eX8uj1eqQGMH8/PyPIkxF+NSnPvVkdWHhpUIQULsTml5dNA3cwK3sO6mHn+VGKEzkxPIDoKJX+dDaiBFSlWqt8cILLzwAAGyMUS+//HKrUavuLQaMerMtONsfAzhXrf9lmQPeHESoN1umXCpKs1F76JZbbnlFRDipNH/6ySe/OT9fqRExdzq6J7tX+iG45U7DWA6s4dx+nM5iiQia7ZAAQ9PT0/8IAA8//DB7RGRERBHRK4cPH/7f52/f/slTCzU9vqGser7TiM7YZ9Bqv0PeXCojp9n9lVrDlMtDNDs789zXvva1B0SEiChMGpmJCM8//4svN+qNlhZQs9WRsw3ADOxhzDllGbQxqDbaUgo8mnnjjb+/66676ojbESINMcYY/u3fvvnn09PHvrVxtMynKjUj8uspf5xLik+EUwt1MzE6oqanT+z/whe+8J1o95tEAQDgzjvvhIjQD37wg7+dnZ2bGSoWeW6hJkSEX1tF6DEIG5xFTRtsa402tBFhaDzzzNOf+6d/+qfad7/73QT75YZHCROReeyxx/7o3e/+jX84PrsQjpQKXnmoADHm3NoZAw9cnK7nASgAEaMTapyYrYTnbRrz9u/f/+0rrrjiDyK8p+NXejktlegF33jppZc+uGPHjt8/cnwuVEp5xcCDyFoTwv1luN4sFmBw38UwRnB8ZsFMTY56x45NH/j617/+52JPBskAHO5iO4yI0De+8Y3/OD19/PktU+PeiZkF3e6EadbtLCM4zlo+4Qz4zthlT8/MS7k0JLrdrD7xxOOf/OpXv3rSPp3toOAuHyB33nknffGLX5zZt++hW+fnZmY2To6q4zPzphPqpYcPvgX2evf5q3mfM301nptwfGZBfM8zIyVfPfnkk7ffcsstj0eWfVF40zXz98gjj4iIqCuuuOL4hRde+LPLdu382FB5pHhydt4UCwF5nlpV2d1byGH1VpBWqSx2vKzB8ZmKMJOZmhhRT/30p59773vf+1UR8Vy/v6wFcCyB3rdvn3f77bf/v+9///u3SKe+sGnjOE/PnNLVeitpe1qJlZNzXFj9wEGrNfvtjsaxk/OiFJvNkxvUL/bv/9yePXv+Ntr54ZovZt++fR4AfOdb3/rg/Pz8sVBEDh2d6Zycq4g2RkREjDGr+pFVvr6vP8tcf3RzZ+e9aC3xY77akENH3whn52vSbrflZz/7+d9EkYfqibLFocPevXvf+Z73vOfebdu27X79xJw2RmhybJhLxSAT6pxT6P0stGAxDmt3NGYXqmi2Qn3elklVXTjVfOLxx//0wx/+8F2Oz5eeWJtYCT70oesnv/71e7/4tgsv+lSl3sbcqQVdGirw2MgQBb6XKMJg2zN+fcgkAAi1wXy1gWq9qQu+T1s2buC5U6f2P/bjH//JzTff/Fg+1u+Zu4mJIgB49NFHf3/37t1/NzY2dsHx2QqarXY4VAjUhnKRigU/cZCDb9p6U7FDy2Y243b4ePHaoUa13sRCtWkUs2yeGle63cTs7Mx/+/SnP/35+++/f241wl9EBK1AA01EJhARfecrX/nKvt/7vY//1fDw6J9MTUwGJ2cqODFbCT2PuVwscGkogO8p5A+UlbXMJFjFWBQ5nXavZ8TKcu/tpumr+C5yUX30t05o0Gx3UK23pNnuGCbwlqkJ9hRQXZj70ZGDhz53+dVX7wOAvXv3rkr464rQXE27//77r9u9e/efTUxOfmy4XB46VW2hUq2LQLTHzIXAp0LgUdwIkRR0Er1lGSIlEQDGGIRa0A41Wu1QWp2OhPYIMSoVC2rjWBmtVhvNZuPHJ44f/+87d+6814pCFACTJ3l6bgHyYWJkDZiIfgrg97/3ve9ddt111/2bUqn08anx8iXFQuDVWga1egOzC3Voow1Hk5SZQUxMcZ1/HnBRNyTWBZElR6IsYVaWomAzo2go+7duGzltVFvcs0DdvkcWdzdIbqcbY+xwDBERA7H/CkDgIPBpZLhMG4Z81gaoVatzb5w8+cDc3Nx3du7c+UAkcNx7772r3vU952juuOMOvvPOOxHjg1tvvXX4b/76r39jYtOmD5ZKpff6QWGXgMaKhYICMzqhQScMoTshQq2htXZO38r8kjQLJqOh80xk15Pru2N3WspNUF5o3RZK0kO2k+/M9jQuen92wGnmFyKC79nTzpVS8H0fvmfvtdloQCCVsN062Ol0nmw0qg8/+uhjD992221H4vcaY9Yl+L6QdJEicI544O9///tbL7ts52VDhZFLla92NlqNy5r1xs5yqVwolMrlDSPDgTGypDuVRfswf/WSdhYj+lWWkIJ0J9PygstbI8l91uKPki4X1sWWRI0szIxarVprNZvNysJCxyv4rxaLpecbtdornU7zpRMnZp75whe+cOgHP/hBywXh3wXo4z0QfPz4/y5jUkuvXaxoAAAAAElFTkSuQmCC">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IZhO 2015 실험 — 흑연의 저항 · Resistance of Graphite · HaslaLab</title>
+<meta name="description" content="IZhO 2015 실험 문제를 브라우저에서 해 봅니다. 흑연 막대의 전류–전압 특성을 공기와 녹는 눈 속에서 재어 비저항과 저항의 온도 계수를 구하고, 브리지 회로로 가열한 막대가 식는 시간 상수를 잽니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IZhO 2015 실험 — 흑연의 저항 · Resistance of Graphite · HaslaLab">
+<meta property="og:description" content="IZhO 2015 실험: 흑연 막대의 비저항, 온도 계수, 식는 시간.">
+<style>
+:root{--bg:#0c0c0c;--fg:#cccccc;--dim:#7d7d7d;--accent:#4ec9b0;--line:#2a2a2a;--panel:#141414}
+*{box-sizing:border-box}
+body{margin:0;background:#1e1e1e;color:var(--fg);
+     font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0 0 3px;font-size:15px;color:#e8e8e8}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+header details{margin-top:7px}
+header summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+header ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:12.5px}
+header li{margin:2px 0}
+#screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
+        font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;
+        word-break:break-word}
+#screen .in{color:#9cdcfe}
+#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);
+     padding:6px 16px 10px}
+#ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;
+    white-space:pre;flex:none}
+#inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
+     font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;padding:0}
+#tools{display:flex;gap:8px;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line)}
+button{background:#2d2d2d;color:var(--fg);border:1px solid var(--line);border-radius:4px;
+       padding:5px 12px;font:12.5px inherit;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+
+</style>
+</head>
+<body>
+<script>
+/* IZhO 2015 on the 3-D bench.  The rod (5.0 cm between the clips, d = 1.0 mm): R = R₀(1 + αΔT) with R₀ ≈ 3.78 Ω,
+   α ≈ −1.3·10⁻³ K⁻¹ (official), the heat loss βΔT with γ = α/β ≈ −0.035 W⁻¹ in air (so β ≈ 0.037 W/K) and a heat
+   capacity giving τ ≈ 23 s; in melting snow the rod sits at 0 °C with a much larger β.  Room 20 °C.  The 4.5 V
+   battery has ≈ 2 Ω inside; the trimmer (pins a, b, c — b slides) is 100 Ω. */
+var PROGRAM = {
+  title: { ko: 'IZhO 2015 실험 — 흑연의 저항', en: 'IZhO 2015 — Resistance of graphite' },
+  subtitle: { ko: '흑연 막대의 저항은 온도에 따라 R_g = R₀(1 + αΔT) 로 변하고, 공기로 빠져나가는 열은 P = βΔT 라 봅니다. 장비: 흑연 막대(악어 집게로 연결, 잘 부러짐), 멀티미터, 4.5 V 전지, 1.0 Ω 과 10 Ω 저항, 가변 저항(자의 날카로운 끝으로 돌림), 도선, 스톱워치, 눈이 담긴 그릇. 실온은 20 °C 입니다.',
+              en: 'The graphite rod\'s resistance changes with temperature as R_g = R₀(1 + αΔT), and the heat it loses to the air is P = βΔT. Equipment: the graphite rod (joined with crocodile clips, very fragile), a multimeter, a 4.5 V battery, 1.0 Ω and 10 Ω resistors, a variable resistor (turned with the sharp edge of a ruler), wires, a stopwatch and a vessel of snow. The room is at 20 °C.' },
+  notes: { ko: [
+    '과제: 1.1 저항계로 가변 저항의 미끄럼 핀 찾기. 1.2 공기 중 막대의 I(U) (멀티미터는 전압계로, 전류는 1.0 Ω 양단으로; 바꾼 뒤 30–40 s 기다리기), 회로도, 이론식, 실온 비저항과 오차 (d = 1.0 ± 0.05 mm), R_g = R₀(1 + γP), R_g(P), γ. 1.3 녹는 눈 속에서 I(U), α 와 오차. 2 브리지(R₁ = 10 Ω): 위치 1 에서 평형 → 위치 2 로 1 분 가열 → 위치 1 에서 전압의 시간 변화, dT/dt = −(T − T̄)/τ 의 τ.',
+    '공식 해답: 미끄럼 핀은 b. 공기: U = 0.150 V, I = 0.040 A … 2.280 V, 0.640 A, R₀ = 3.78 ± 0.03 Ω, l = 5.0 cm → ρ = (5.9 ± 0.6)·10⁻⁵ Ω·m; P > 0.2 W 에서 R = 0.13·P + 3.75 → γ ≈ 0.035 W⁻¹ (크기). 눈: R = 3.88 ± 0.03 Ω → α ≈ −1.3·10⁻³ K⁻¹. 식음: 44 mV → 28 mV, 기울기 0.044 s⁻¹ → τ ≈ 23 s.',
+    '막대를 클릭하면 눈 그릇에 넣고 뺍니다. 전압계 읽기는 막대 온도를 따라 천천히 변합니다. 값은 방문할 때마다 조금 다릅니다.'], en: [
+    'Tasks: 1.1 find the trimmer\'s sliding pin with the ohmmeter. 1.2 the rod\'s I(U) in air (multimeter as a voltmeter, the current from the 1.0 Ω; wait 30–40 s after each change), the circuit, the theory, the room-temperature resistivity with error (d = 1.0 ± 0.05 mm), R_g = R₀(1 + γP), R_g(P), γ. 1.3 I(U) in melting snow, α with its error. 2 the bridge (R₁ = 10 Ω): balance at position 1 → heat a minute at position 2 → back at 1, voltage against time, τ in dT/dt = −(T − T̄)/τ.',
+    'Official solution: the sliding pin is b. Air: U = 0.150 V, I = 0.040 A … 2.280 V, 0.640 A, R₀ = 3.78 ± 0.03 Ω, l = 5.0 cm → ρ = (5.9 ± 0.6)·10⁻⁵ Ω·m; for P > 0.2 W R = 0.13·P + 3.75 → γ ≈ 0.035 W⁻¹ (magnitude). Snow: R = 3.88 ± 0.03 Ω → α ≈ −1.3·10⁻³ K⁻¹. Cooling: 44 mV → 28 mV, slope 0.044 s⁻¹ → τ ≈ 23 s.',
+    'Click the rod to put it in the snow or take it out. The voltmeter follows the rod\'s temperature slowly. The values differ a little from visit to visit.'] }
+};
+
+var LAB = { dmm: {}, leads: null, c: null, x: 0.5, T: 20, snow: false };
+PROGRAM.lab = {
+  intro: { ko: '책상 위: 받침 위 흑연 막대(양 끝 악어 집게 단자 G1, G2 — 5.0 cm 사이, 아래 모눈종이), 4.5 V 전지, 1.0 Ω 과 10 Ω 저항, 가변 저항(핀 a, b, c), 멀티미터, 눈 그릇, 스톱워치, 도선.',
+           en: 'On the desk: the graphite rod on its holder (crocodile-clip terminals G1, G2 at its ends — 5.0 cm apart, graph paper under it), the 4.5 V battery, the 1.0 Ω and 10 Ω resistors, the trimmer (pins a, b, c), the multimeter, the vessel of snow, a stopwatch and wires.' },
+  howto: { ko: ['도선: 단자를 클릭하면 도선이 들리고, 다른 단자를 클릭하면 이어집니다. 꽂힌 끝을 클릭하면 뽑아 다시 들고, 책상을 클릭하면 내려놓습니다 — 브리지의 위치 1/2 는 전지 도선을 옮겨 꽂아 바꿉니다',
+                '가변 저항 위에서 휠 또는 좌우로 끌기: 돌리기 (Shift + 휠: 잘게) · 막대 클릭: 눈 속에 넣기/빼기',
+                '멀티미터: 클릭해서 가까이 본 뒤 다이얼 · 스톱워치 <b>Space</b> · ×10 으로 기다리기'],
+           en: ['Wires: click a terminal to take up a wire, click another to plug it in. Click a plugged end to pull it out; click the desk to put it down — move the battery wire to switch the bridge between positions 1 and 2',
+                'Wheel or drag left/right over the trimmer: turn it (Shift + wheel: finely) · click the rod: into the snow / out',
+                'Multimeter: click it to look closer, then the dial · stopwatch <b>Space</b> · ×10 to wait'] },
+  notePlaceholder: { ko: '예) 공기: U = 0.150 V, U₀ = 40 mV … / 눈: 0.144 V, 37 mV … / 식음: 44 mV 0 s, 42 mV 2.2 s …', en: 'e.g. air: U = 0.150 V, U₀ = 40 mV … / snow: 0.144 V, 37 mV … / cooling: 44 mV at 0 s, 42 mV at 2.2 s …' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    var R0 = 3.78 * (1 + S.sys('R0', 0.02)), AL = -1.3e-3 * (1 + S.sys('al', 0.08)), BETA = 0.037 * (1 + S.sys('b', 0.06)), TAU = 23 * (1 + S.sys('tau', 0.06)), CAP = BETA * TAU, BS = 0.6;
+    var Ra = 1.0 * (1 + S.sys('ra', 0.02)), Rb = 10 * (1 + S.sys('rb', 0.02)), RP = 100 * (1 + S.sys('rp', 0.05)), EB = 4.5 * (1 + S.sys('eb', 0.02));
+    var dm = LAB.dmm; dm.err = { V: S.sys('mV', 0.003), A: 0, R: S.sys('mR', 0.004) };
+    var leads = LAB.leads = new B3.Leads({ max: 12 }), sw = new B3.Stopwatch(0.04), c = LAB.c = new B3.Circuit();
+    var RANGES = [['OFF'], ['V', 0.2], ['V', 2], ['V', 20], ['Ω', 200], ['Ω', 2000]];
+    var grid = (function () { var cv = document.createElement('canvas'); cv.width = 400; cv.height = 120; cv._static = true; var g = cv.getContext('2d'); g.fillStyle = '#fbfbf5'; g.fillRect(0, 0, 400, 120);
+      for (var i = 0; i <= 100; i++) { g.strokeStyle = i % 10 === 0 ? '#c86a3a' : '#efc6b0'; g.lineWidth = i % 10 === 0 ? 1.4 : 0.6; g.beginPath(); g.moveTo(i * 4, 0); g.lineTo(i * 4, 120); g.stroke(); }
+      for (var j = 0; j <= 30; j++) { g.strokeStyle = j % 10 === 0 ? '#c86a3a' : '#efc6b0'; g.beginPath(); g.moveTo(0, j * 4); g.lineTo(400, j * 4); g.stroke(); } return cv; })();
+    var bench = B3.bench(host, {
+      aspect: 0.6, lang: ctx.lang, keys: [' '], speeds: [1, 10], wheelIds: ['pot'],
+      home: { yaw: -0.25, pitch: 0.8, k: 12.5, tx: 2, ty: 2, tz: 1 },
+      views: { dmm: { yaw: 0, pitch: 1.35, k: 50, tx: 22, ty: 3.4, tz: 4, title: { ko: '멀티미터', en: 'Multimeter' } },
+               rod: { yaw: 0, pitch: 1.4, k: 45, tx: -18, ty: 2, tz: -8, title: { ko: '흑연 막대와 모눈종이', en: 'The rod on graph paper' } },
+               sw: { yaw: 0, pitch: 1.25, k: 62, tx: 31, ty: 1.7, tz: 12, title: { ko: '스톱워치', en: 'Stopwatch' } } },
+      frame: function (b) {
+        if (b.keys.indexOf(' ') >= 0) sw.startStop(b.t);
+        var mp = b.screenMoved('pot'), wp = b.wheel('pot'); if (mp[0] || wp) LAB.x = Math.max(0, Math.min(1, LAB.x + mp[0] * 0.004 + wp * 0.004));
+        if (b.clicked('c:rod')) { LAB.snow = !LAB.snow; b.say(LAB.snow ? '막대를 녹는 눈 속에 넣었습니다' : '막대를 공기 중으로 꺼냈습니다', LAB.snow ? 'The rod is in the melting snow' : 'The rod is back in the air'); }
+        if (b.clicked('c:paper')) b.go('rod');
+        B3.desk(-36, 40, -18, 20);
+        /* the rod: on its holder over graph paper, or down in the snow */
+        var Tenv = LAB.snow ? 0 : 20, Rg = R0 * (1 + AL * (LAB.T - 20));
+        B3.tex3(grid, 0, 0, 400, 120, [-23, 0.02, -11], [10, 0, 0], [0, 0, 3], { id: 'c:paper' });
+        B3.cyl3('y', 0, 12, -4, -2, 5, 'rgba(225,235,245,.35)', { seg: 26, caps: false, noObst: true });
+        B3.cyl3('y', 0, 9, -4, -2, 4.8, '#eef2f6', { seg: 26, cap: '#f8fafc' });
+        var rx0 = LAB.snow ? -6.5 : -20.5, rx1 = LAB.snow ? -1.5 : -15.5, ry = LAB.snow ? 9.2 : 1.2, rz = LAB.snow ? -2 : -9.5;
+        if (!LAB.snow) { B3.box3(-22.5, -21.5, 0, 1.2, -10.5, -8.5, '#3a3f46'); B3.box3(-14.5, -13.5, 0, 1.2, -10.5, -8.5, '#3a3f46'); }
+        B3.cyl3('x', rx0 - 1, rx1 + 1, ry, rz, 0.15, LAB.T > 40 ? '#4a3a3a' : '#2a2a2a', { seg: 8, id: 'c:rod' });
+        leads.term(b, 'g.1', [rx0, ry + 0.2, rz], { col: '#9aa0a6', label: 'G1', lc: '#e8e8e8', ls: 0.55, post: true });
+        leads.term(b, 'g.2', [rx1, ry + 0.2, rz], { col: '#9aa0a6', label: 'G2', lc: '#e8e8e8', ls: 0.55, post: true });
+        /* battery, resistors, trimmer */
+        var bat = B3.cells(b, leads, 'bat', [-26, 12], { n: 3, e: EB / 3, r: 2.2 / 3 });
+        B3.text3([-29, 1.02, 15.6], [1, 0, 0], [0, 0, -1], '4.5 V', 0.8, '#333', { weight: '800' });
+        [['r1', '1.0 Ω', -12], ['r10', '10 Ω', -2]].forEach(function (q) { var x = q[2];
+          B3.box3(x - 3.5, x + 3.5, 0, 0.8, 9, 14, '#2e6b4a', { top: '#357a55' }); B3.cylAB([x - 1.4, 1.3, 11.5], [x + 1.4, 1.3, 11.5], 0.4, '#c8b48a', { seg: 10 });
+          leads.term(b, q[0] + '.a', [x - 2.6, 0.8, 11.5], { col: '#d8d8d8' }); leads.term(b, q[0] + '.b', [x + 2.6, 0.8, 11.5], { col: '#d8d8d8' });
+          B3.text3([x - 3, 0.82, 13.6], [1, 0, 0], [0, 0, -1], q[1], 0.6, '#fff', { weight: '700' }); });
+        B3.box3(4, 12, 0, 1.6, 8, 14, '#2b4a7a', { top: '#335a8a' }); B3.cyl3('y', 1.6, 2.4, 8, 11.8, 1.2, '#e8e8e8', { seg: 18, cap: '#f2f2f2', id: 'm:pot' });
+        var pa = LAB.x * 5; B3.line3([8 - Math.cos(pa) * 1, 2.42, 11.8 - Math.sin(pa) * 1], [8 + Math.cos(pa) * 1, 2.42, 11.8 + Math.sin(pa) * 1], '#333', 2.5);
+        ['a', 'b', 'c'].forEach(function (t, j) { leads.term(b, 'p.' + t, [5.5 + j * 2.5, 1.6, 9.2], { col: '#b8b8b8', label: t, lc: '#e8e8e8', ls: 0.55 }); });
+        var m = B3.dmm(b, 'dmm', [22, 4], dm, leads, { ranges: RANGES });
+        B3.stopwatch(b, 'sw', [31, 12], sw);
+        /* circuit and heat */
+        c.reset();
+        var er = c.R('g.1', 'g.2', Rg); c.R('r1.a', 'r1.b', Ra); c.R('r10.a', 'r10.b', Rb);
+        c.R('p.a', 'p.b', Math.max(0.2, LAB.x * RP)); c.R('p.b', 'p.c', Math.max(0.2, (1 - LAB.x) * RP));
+        bat.stamp(c); m.stamp(c); leads.wire(c); c.solve(0.05);
+        var I = c.cur(er), P = I * I * Rg, bet = LAB.snow ? BS : BETA;
+        if (b.dt > 0) { var n = Math.ceil(b.dt / 0.05), h = b.dt / n; for (var i = 0; i < n; i++) LAB.T += (P - bet * (LAB.T - Tenv)) / CAP * h; }
+        if (LAB.snow && LAB.T < 0) LAB.T = 0;
+        m.read(c); leads.draw(b);
+        LAB.state = { T: LAB.T, Rg: Rg, I: I, P: P, read: dm.now };
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
+  }
+};
+</script>
+<script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
+<script src="consolesim.js"></script>
+  <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
+</body>
+</html>

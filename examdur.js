@@ -7,7 +7,9 @@
    - NBPhO: the organisers publish no time for the experiments alone, so the exam gets the year's
      competition time shared out evenly over its problems, times the experiments sat:
      total / problems × experiments.  The competition was one five-hour round in 2003–2005 and online
-     in 2020–2021, and two five-hour rounds in the other years (each round ends with its experiment). */
+     in 2020–2021, and two five-hour rounds in the other years (each round ends with its experiment).
+   - IZhO: the experimental round's own length on its paper — 3 hours, 4 hours in 2022, 2023 and 2026
+     (2021, a computer experiment done by hand, states none: 3 hours). */
 (function () {
   var NBPHO = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600, 8], 2007: [600, 8], 2008: [600, 10],
     2009: [600, 10], 2010: [600, 11], 2011: [600, 9], 2012: [600, 10], 2013: [600, 10], 2014: [600, 10], 2015: [600, 10],
@@ -19,6 +21,7 @@
     if (comp === 'usapho' && +year === 2022) return 3 * 3600;
     if (comp === 'rmph') return 4.5 * 3600;
     if (comp === 'nbpho' && NBPHO[year]) return Math.round(NBPHO[year][0] / NBPHO[year][1] * n) * 60;
+    if (comp === 'izho') return ([2022, 2023, 2026].indexOf(+year) >= 0 ? 4 : 3) * 3600;
     return 5 * 3600;
   }
   /* «5시간», «2시간 13분» / «5 hours», «2 h 13 min» */
