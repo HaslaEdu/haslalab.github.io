@@ -7,6 +7,11 @@ year's page).  Hosts are from the IYPT timeline (iypt.org past tournaments, Wiki
 
     python3 tools/iypt_build.py            # fetches iypt.org, writes iypt.js
     python3 tools/iypt_build.py --cache D  # keeps / reuses the pages in D
+    python3 tools/iypt_build.py --from-existing --no-index  # apply Korean text without refetching
+    python3 tools/iypt_build.py --check    # validate the existing source and translation coverage
+
+Korean translations live in tools/iypt_ko.json, by year and problem number. English originals remain in p;
+ko is a same-length list of translated [title, statement] pairs (null for an untranslated problem).
 """
 import hashlib, html, json, os, re, sys, urllib.request
 
@@ -36,6 +41,81 @@ HOSTS = {
  2027: ("오클랜드", "Auckland", "뉴질랜드", "New Zealand", "nz"),
 }
 NOT_HELD = {2020: ("COVID-19로 열리지 않음", "Not held (COVID-19)")}
+
+
+def normalize_shared_statements(statements):
+    """The 1994 page puts the 4–6 preamble between the numbered 3 and 4 headings."""
+    if len(statements) >= 6 and statements[2][0] == "Magnetism":
+        marker = "\nGravitation machine (problems 4, 5, 6)."
+        if marker in statements[2][1]:
+            own, common = statements[2][1].split(marker, 1)
+            statements[2][1] = own.strip()
+            common = marker.strip() + common
+            for number in (3, 4, 5):
+                statements[number][1] = common + "\n\n" + statements[number][1]
+    return statements
+
+
+def load_existing():
+    with open(os.path.join(ROOT, "iypt.js"), encoding="utf-8") as stream:
+        source = stream.read()
+    years = json.loads(source.split("window.IYPT=", 1)[1].strip().rstrip(";"))
+    for entry in years:
+        normalize_shared_statements(entry["p"])
+    return years
+
+
+def apply_translations(years):
+    with open(os.path.join(ROOT, "tools", "iypt_ko.json"), encoding="utf-8") as stream:
+        translations = json.load(stream)
+    available = {str(entry["y"]): entry for entry in years}
+    unknown = set(translations) - set(available) - {"_source_sha256", "_provenance"}
+    if unknown:
+        raise ValueError("Unknown Korean translation years: " + ", ".join(sorted(unknown)))
+    hashes = translations.get("_source_sha256", {})
+    translated, missing = 0, []
+    for entry in years:
+        year = str(entry["y"])
+        korean = translations.get(year)
+        if korean is None:
+            entry.pop("ko", None)
+            missing.extend(f"{year}/{i+1}" for i in range(len(entry["p"])))
+            continue
+        if len(korean) != len(entry["p"]):
+            raise ValueError(f"{year}: translation/source problem count differs")
+        source_hash = hashlib.sha256(json.dumps(entry["p"], ensure_ascii=False,
+                                    separators=(",", ":")).encode("utf-8")).hexdigest()
+        if hashes.get(year) != source_hash:
+            raise ValueError(f"{year}: English source changed; review the Korean translation before rebuilding")
+        for number, pair in enumerate(korean, 1):
+            if pair is None:
+                missing.append(f"{year}/{number}")
+                continue
+            if not isinstance(pair, list) or len(pair) != 2 or any(
+                not isinstance(text, str) or not text.strip() or not re.search("[가-힣]", text)
+                for text in pair
+            ):
+                raise ValueError(f"{year}/{number}: expected a Korean [title, statement] pair")
+            translated += 1
+        entry["ko"] = korean
+    print(f"Korean: {translated} translated, {len(missing)} untranslated", file=sys.stderr)
+    return missing
+
+
+def write_output(years, update_index=True):
+    js = ("/* IYPT problems, from iypt.org (tools/iypt_build.py); Korean: tools/iypt_ko.json — do not edit by hand */\n"
+          "window.IYPT=" + json.dumps(years, ensure_ascii=False, separators=(",", ":")) + ";\n")
+    with open(os.path.join(ROOT, "iypt.js"), "w", encoding="utf-8", newline="\n") as stream:
+        stream.write(js)
+    if update_index:
+        ih = os.path.join(ROOT, "index.html")
+        with open(ih, encoding="utf-8") as stream:
+            page = stream.read()
+        with open(ih, "w", encoding="utf-8", newline="\n") as stream:
+            stream.write(re.sub(r'src="iypt\.js(?:\?v=[0-9a-f]+)?"',
+                'src="iypt.js?v=%s"' % hashlib.sha1(js.encode("utf-8")).hexdigest()[:10], page))
+    print("iypt.js:", len(years), "years,", sum(len(e["p"]) for e in years), "problems,",
+          len(js.encode("utf-8")), "bytes", file=sys.stderr)
 
 def get(url, cache):
     name = cache and os.path.join(cache, re.sub(r"[^A-Za-z0-9]+", "_", url) + ".html")
@@ -111,9 +191,17 @@ def problems(page):
         if body and body[0].startswith(":"):                      # "Invent Yourself" | ": Paper Boomerang"
             title, body = title + ": " + body[0][1:].strip(), body[1:]
         res.append([title, "\n".join(body).strip()])
-    return res
+    return normalize_shared_statements(res)
 
 def main():
+    if "--from-existing" in sys.argv or "--check" in sys.argv:
+        out = load_existing()
+        missing = apply_translations(out)
+        if "--require-complete" in sys.argv and missing:
+            raise ValueError("Missing Korean translations: " + ", ".join(missing))
+        if "--check" not in sys.argv:
+            write_output(out, update_index="--no-index" not in sys.argv)
+        return
     cache = sys.argv[sys.argv.index("--cache") + 1] if "--cache" in sys.argv else None
     if cache:
         os.makedirs(cache, exist_ok=True)
@@ -139,15 +227,10 @@ def main():
         elif y in NOT_HELD:
             e["host"] = {"ko": NOT_HELD[y][0], "en": NOT_HELD[y][1]}
         out.append(e)
-    js = ("/* IYPT problems, from iypt.org (tools/iypt_build.py) — do not edit by hand */\n"
-          "window.IYPT=" + json.dumps(out, ensure_ascii=False, separators=(",", ":")) + ";\n")
-    open(os.path.join(ROOT, "iypt.js"), "w", encoding="utf-8").write(js)
-    # index.html asks for iypt.js by its content, so a new build is fetched at once, not after the browser's cache
-    ih = os.path.join(ROOT, "index.html")
-    page = open(ih, encoding="utf-8").read()
-    open(ih, "w", encoding="utf-8").write(re.sub(r'src="iypt\.js(?:\?v=[0-9a-f]+)?"',
-        'src="iypt.js?v=%s"' % hashlib.sha1(js.encode("utf-8")).hexdigest()[:10], page))
-    print("iypt.js:", len(out), "years,", sum(len(e["p"]) for e in out), "problems,", len(js), "bytes", file=sys.stderr)
+    missing = apply_translations(out)
+    if "--require-complete" in sys.argv and missing:
+        raise ValueError("Missing Korean translations: " + ", ".join(missing))
+    write_output(out, update_index="--no-index" not in sys.argv)
 
 if __name__ == "__main__":
     main()

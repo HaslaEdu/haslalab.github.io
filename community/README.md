@@ -317,6 +317,8 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | GET | `/api/posts?board=&q=&page=` | 글 목록 (20개씩) |
 | POST | `/api/posts` | `{board, title, body}` |
 | GET | `/api/posts/:id` | 글 + 댓글 (`?view=1`이면 조회수 +1) |
+| GET | `/api/users?nickname=&tab=posts\|comments&page=` | 공개 프로필과 작성 글·댓글 (20개씩, 로그인 불필요). 닉네임·프로필 사진·공개 활동만 반환하며, 기본은 한국어·영어 활동 전체 (`lang=ko\|en`으로 제한 가능) |
+| GET | `/api/users/:nickname?tab=posts\|comments&page=` | 같은 공개 프로필 API의 경로 방식. `..`처럼 URL에서 정규화되는 닉네임은 위의 쿼리 방식 사용 |
 | PATCH / DELETE | `/api/posts/:id` | 글 수정 / 삭제 (작성자 · 관리자) |
 | POST | `/api/posts/:id/like` | 좋아요 토글 |
 | POST | `/api/posts/:id/comments` | `{body}` |
