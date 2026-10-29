@@ -2,6 +2,8 @@
 
 대회별로, 해마다 대회가 공개한 **이론 문제지와 해설(원문)**, 따로 공개된 채점 기준표 · 답안지가 어디 있는지 적은 목록입니다. 번역본은 넣지 않습니다.
 
+한국어 번역본은 이 폴더가 아니라 `tools/theory_ko.json`에 적습니다(PDF 는 `python tools/pdf_release.py <폴더>`로 릴리스에 올림, 미러 대상 아님). `theory_build.py`가 원문 위에 얹어 연도 페이지에서 한국어판을 먼저 엽니다.
+
 - `python tools/theory_build.py` → 사이트가 읽는 `theory.js`를 만듭니다 (연도 페이지의 «이론 문제», 이론 실전 모드).
 - main에 이 폴더가 바뀌어 올라오면 `.github/workflows/theory-pdfs.yml`(`tools/theory_mirror.py`)이 각 PDF를 원래 주소에서 받아 PDF인지 확인하고 GitHub 릴리스 `pdf-<접두어>`에 올립니다. 이미 올라간 이름은 건너뜁니다. 받지 못한 파일은 실행 요약에 표로 남고, 다음 실행 때 다시 시도합니다. Actions › «Theory papers to releases» › Run workflow로 손으로(대회를 골라) 돌릴 수도 있습니다.
 

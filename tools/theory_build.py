@@ -10,6 +10,10 @@ theory.js keeps only what the site needs:
 
   window.THEORY = {ipho: {"2024": {p: [["T1", "title"], ...], f: {"T1": {paper, sol, mark, answer}, ...}}}}
   (NBPhO also x: the experimental problems' numbers, c: {"5": {paper, sol}} the problems cut out of the booklet)
+
+Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_release.py, not mirrored): a part's own
+go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
+under w, Korean titles under pk, the general instructions under g ({ko, en}).
 """
 import glob
 import json
@@ -59,7 +63,46 @@ def load():
                      if p.get('title') and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
     split(out)
+    korean(out, bad)
     return out, bad
+
+
+def korean(out, bad):
+    """tools/theory_ko.json: the Korean translations, laid over the parts the originals made."""
+    path = os.path.join(ROOT, 'tools', 'theory_ko.json')
+    if not os.path.exists(path):
+        return
+    for comp, years in json.load(open(path, encoding='utf-8')).items():
+        for year, parts in years.items():
+            t = out.get(comp, {}).get(year)
+            if not t:
+                bad.append((path, '%s %s: no originals for this year' % (comp, year)))
+                continue
+            rev = parts.get('rev')
+            for part, ko in parts.items():
+                if part == 'guide':
+                    t['g'] = ko
+                    continue
+                if part == 'rev':
+                    continue
+                ko = dict(ko)
+                title, en = ko.pop('title', None), ko.pop('en', None)
+                if part == 'T' and rev:
+                    ko['rev'] = rev
+                if part in t['f']:
+                    t['f'][part]['ko'] = ko
+                elif part == 'T':
+                    t['w'] = ko           # the whole paper in Korean, where the site lists only its problems
+                elif en:                  # a part the originals' list does not have (IPhO 2025's backup problem)
+                    t['f'][part] = {k: v for k, v in en.items() if k != 'title'}
+                    t['f'][part]['ko'] = ko
+                    if en.get('title'):
+                        t['p'].append([part, en['title']])
+                else:
+                    bad.append((path, '%s %s %s: no such part' % (comp, year, part)))
+                    continue
+                if title:
+                    t.setdefault('pk', []).append([part, title])
 
 
 def split(out):

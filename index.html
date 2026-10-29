@@ -1018,6 +1018,8 @@ ko:{
     ]},
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
   thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다).", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
+  thyNoteKo:"한국어 번역이 있는 것은 한국어판이 열립니다. 대회가 공개한 문제지는 「원문」에 있습니다.", thyOrig:"원문", thyKo:"한국어",
+  thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
   onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", seeThy:"이론 보기", seeExp:"실험 보기",
@@ -1084,6 +1086,8 @@ en:{
     ]},
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
   thyH:"Theory", thyNote:"As the olympiad published them, in the original language.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
+  thyNoteKo:"As the olympiad published them, in the original language; the Korean buttons open our translations.", thyOrig:"Original", thyKo:"Korean",
+  thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
   onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", seeThy:"See the theory", seeExp:"See the experiments",
@@ -4721,17 +4725,27 @@ function theoryHref(key,yr,parts){
     p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),a:parts.map(x=>f(x).answer||"").join("|"),lang});
   return "sim/exam.html?"+q.toString();
 }
-/* the year's theory papers: each part with its problems and the original files */
+/* the year's theory papers: each part with its problems and the original files; in Korean, the translation first where
+   there is one (theory_ko.json): its files under ko, the whole paper under w, Korean titles pk, general instructions g */
 function theoryHtml(key,yr){
   const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
+  const ko=lang==="ko", kt=Object.fromEntries(t.pk||[]);
+  const hasKo=!!(t.w||t.g||Object.values(t.f).some(f=>f.ko));
   const link=(f,lbl)=>f?`<a class="btn ghost" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}</a>`:"";
+  const btns=(f,k)=>ko
+    ? ["paper","sol","mark","answer"].map(x=>link(k[x]||f[x],d[{paper:"thyPaper",sol:"thySol",mark:"thyMark",answer:"thyAns"}[x]])).join("")
+      +(k.paper&&f.paper?link(f.paper,d.thyOrig):"")+link(k.rev,d.thyRev)
+    : link(f.paper,d.thyPaper)+link(f.sol,d.thySol)+link(f.mark,d.thyMark)+link(f.answer,d.thyAns)
+      +link(k.paper,d.thyKo)+link(k.rev,d.thyRev+" ("+d.thyKo+")");
+  const row=(code,probs,note,b)=>`<div class="pt"><span class="code">${esc(code)}</span>
+      <div>${probs.length?`<ol class="${probs.length===1?"one":""}">${probs.map(q=>`<li>${esc(ko&&kt[q[0]]||q[1])}</li>`).join("")}</ol>`:`<span style="color:var(--graphite);font-size:13px">${note}</span>`}</div>
+      <div class="d">${b}</div></div>`;
   const order=Object.keys(t.f).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
-  const rows=order.map(x=>{ const f=t.f[x];
-    const probs=x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x);
-    return `<div class="pt"><span class="code">${esc(x)}</span>
-      <div>${probs.length?`<ol class="${probs.length===1?"one":""}">${probs.map(q=>`<li>${esc(q[1])}</li>`).join("")}</ol>`:`<span style="color:var(--graphite);font-size:13px">${x==="T"?d.thyWhole:""}</span>`}</div>
-      <div class="d">${link(f.paper,d.thyPaper)}${link(f.sol,d.thySol)}${link(f.mark,d.thyMark)}${link(f.answer,d.thyAns)}</div></div>`; }).join("");
-  return `<section class="thy"><h3>${d.thyH}</h3><p class="tn">${d.thyNote}</p>${rows}
+  const rows=(t.g?row("",[],d.thyGuide,ko?link(t.g.ko||t.g.en,d.thyGuide):link(t.g.en,d.thyGuide)+link(t.g.ko,d.thyKo)):"")
+    +order.map(x=>{ const f=t.f[x];
+      return row(x,x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x),x==="T"?d.thyWhole:"",btns(f,f.ko||{})); }).join("")
+    +(t.w?row("T",[],d.thyWholeKo,link(t.w.paper,ko?d.thyPaper:d.thyKo)+link(t.w.answer,d.thyAns)):"");
+  return `<section class="thy"><h3>${d.thyH}</h3><p class="tn">${hasKo?d.thyNoteKo:d.thyNote}</p>${rows}
     ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="ex"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}</section>`;
 }
 function viewYear(key,year){
