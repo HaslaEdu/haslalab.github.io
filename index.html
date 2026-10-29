@@ -976,8 +976,9 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=76e53b7e9d"></script>
+<script src="theory.js?v=7a09d11ddd"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
+<script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -1036,8 +1037,8 @@ ko:{
   thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
   thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
-  thyPick:"이론 문제를 고르세요", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
-  thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
+  thyPick:"이론 문제를 고르세요", thyPickPlain:"문제를 고르세요", thyPapersPlain:"문제지", thyCntPlain:n=>`${n}문제`, trkThyPlain:"문제지", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
+  thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyExamPlain:"이 해를 실전 모드로 응시하기 →", tThyPlain:"문제지", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
   onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", alsoThy:n=>`이 해에는 이론 문제 ${n}개도 있습니다.`, seeThy:"이론 보기", seeExp:"실험 보기",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
@@ -1106,8 +1107,8 @@ en:{
   thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
   thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
-  thyPick:"Choose a theory problem", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
-  thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
+  thyPick:"Choose a theory problem", thyPickPlain:"Choose a paper", thyPapersPlain:"papers", thyCntPlain:n=>`${n} paper${n>1?"s":""}`, trkThyPlain:"Paper", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
+  thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyExamPlain:"Sit this year's paper in exam mode →", tThyPlain:"Papers", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
   onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", alsoThy:n=>`This year also has ${n} theory problem${n>1?"s":""}.`, seeThy:"See the theory", seeExp:"See the experiments",
   expN:"{n} experimental", noPapers:"no experimental papers",
@@ -4201,7 +4202,7 @@ const DATA={
 /* IYPT (iypt.js, tools/iypt_build.py): a research tournament — no exam paper and no solution, only the seventeen
    open problems of each year, their statements shown as iypt.org gives them, with the official problem sheet */
 if(window.IYPT) DATA.iypt={
-  abbr:"IYPT", since:1988, open:true,
+  abbr:"IYPT", since:1988, open:true, plain:true,
   full:{ko:"국제청소년물리토너먼트",en:"International Young Physicists' Tournament"},
   scope:{ko:"국제",en:"International"},
   get note(){ return this.soon; },
@@ -4211,11 +4212,25 @@ if(window.IYPT) DATA.iypt={
   years:window.IYPT.map(e=>({y:e.y, host:e.host||null, cc:e.cc, problems:e.p.map(([t,x],i)=>{
     const body=x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/\n/g,"<br>");
     return {id:String(i+1), title:{ko:t,en:t}, desc:{ko:body,en:body}, files:{pdf:e.pdf||e.src}}; })}))};
+/* USACO (usaco.js, tools/usaco_build.py): the statements and analyses are pages on usaco.org, so each problem's
+   buttons link them there — Gold and Platinum of every contest since December 2016 */
+if(window.USACO) DATA.usaco={
+  abbr:"USACO", since:1992, plain:true,
+  full:{ko:"미국 정보 올림피아드",en:"USA Computing Olympiad"},
+  scope:{ko:"미국",en:"United States"},
+  get note(){ return this.soon; },
+  soon:{ko:"문제와 해설은 usaco.org 페이지로 연결됩니다. 해마다 열리는 온라인 대회의 골드 · 플래티넘 문제를 모았습니다.",
+        en:"The statements and analyses open on usaco.org. These are the Gold and Platinum problems of each season's online contests."},
+  chip:{ko:"온라인 문제",en:"Online problem"},
+  years:window.USACO.map(e=>{ const ps=[];
+    for(const [cn,dv,list] of e.c) list.forEach(([t,u,s],i)=>ps.push({id:`${({First:"1st",Second:"2nd",Third:"3rd"})[cn.split(" ")[0]]||cn.replace(/^US /,"").slice(0,4).trim()} ${dv[0]}${i+1}`,
+      title:{ko:t,en:t}, desc:{ko:`${cn} · ${dv}`,en:`${cn} · ${dv}`}, files:Object.assign({pdf:u},s?{sol:s}:{})}));
+    return {y:e.y, host:{ko:"온라인",en:"Online"}, problems:ps}; })};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k]&&THEORY[k])
-  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, years:[]};
+  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, years:[]};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
     if(!yr){ c.years.push({y:+y,host:t.h||null,cc:t.cc,problems:[]}); continue; }
@@ -4334,7 +4349,9 @@ const compLogo = key =>
      src="logo/${key}.png?v=${LOGO_V}" onerror="logoFallback(this)">`;
 
 /* astronomy competitions count observation rounds, not experiments */
-const LB = (c,k) => (c&&(c.obs||c.open)&&UI[lang][k+"Obs"]) || UI[lang][k];
+/* papers that are not a theory round (IMO, IOI, USNCO …) drop the word «theory» */
+const TL = (c,k) => (c&&c.plain&&UI[lang][k+"Plain"]) || UI[lang][k];
+const LB = (c,k) => (c&&(c.obs||c.plain)&&UI[lang][k+"Obs"]) || UI[lang][k];
 /* astronomy rounds are not all observation: the problem code says which round it is
    (O observation, D data analysis, P practical, M sky map) */
 /* IAO · APAO 는 주니어(α)와 시니어(β) 조가 따로 푼다 — 고른 조는 페이지를 옮겨도 남는다 */
@@ -4375,7 +4392,7 @@ function viewHome(){
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
-    for(const y of c.years){ if(!c.open) probs+=y.problems.length;   /* IYPT's research problems are not experiments */
+    for(const y of c.years){ if(!c.plain) probs+=y.problems.length;   /* IYPT's and USACO's problems are not experiments */
       live+=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length; }
   }
   return `
@@ -4418,13 +4435,13 @@ function viewHome(){
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
   {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt"]},
-  {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho"]},
-  {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo"]},
-  {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso"]},
-  {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao"]},
+  {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","usnco"]},
+  {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
+  {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
+  {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao","usaaao"]},
   {k:"sci", ko:"통합과학", en:"Integrated science", logo:"ijso", comps:["ijso"]},
-  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:[], soon:"IMO"},
-  {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:[], soon:"IOI"},
+  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:["imo","usamo"], soon:"IMO"},
+  {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:["ioi","usaco"], soon:"IOI"},
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
 const subjOf=key=>(SUBJ.find(x=>x.comps.includes(key))||SUBJ[0]).k;
@@ -4455,7 +4472,7 @@ function viewComps(sub){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${hasExpC(c)?LB(c,"problems"):d.thyPapers}</dt><dd>${probs}</dd></div>
+            <div><dt>${hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4672,8 +4689,8 @@ function viewComp(key,mode){
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
         ${hasExpC(c)?`<div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>`:""}
-        ${c.open||!hasExpC(c)?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
-        ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
+        ${c.plain||!hasExpC(c)?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
+        ${THEORY[key]?`<div><dt>${TL(c,"tThy")}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
@@ -4694,7 +4711,7 @@ function viewComp(key,mode){
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
           <div class="cnt">${(thy?rt:r)&&!none?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
-            thy?d.thyCnt(thyCount(th))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+            thy?TL(c,"thyCnt")(thyCount(th))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -4825,7 +4842,7 @@ function theoryHtml(key,yr){
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
       heading:titles.length?titles.join(" · "):code==="T"?d.thyAll:code, body:alt.map(esc).join(" · "),
-      tags:[d.trkThy].concat(has?[d.thyKo]:[]),
+      tags:[TL(DATA[key],"trkThy")].concat(has?[d.thyKo]:[]),
       main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],d.thySol,false,S[1])],
       /* RMPh 2012: the revised problem 2 */
       docs:(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[])}); };
@@ -4836,10 +4853,10 @@ function theoryHtml(key,yr){
   const guide=t.g?(ko?t.g.ko||t.g.en:t.g.en||t.g.ko):"";
   return `<div class="thycards">
     <div class="shead">
-      <h2 style="font-size:1.15rem">${d.thyPick}</h2>
+      <h2 style="font-size:1.15rem">${TL(DATA[key],"thyPick")}</h2>
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
     </div>
-    ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}
+    ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(DATA[key],"thyExam")}</a></p>`:""}
     <div class="probs">${cards}</div></div>`;
 }
 /* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,
@@ -4872,7 +4889,7 @@ function viewYear(key,year){
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>
-        <div><dt>${thyY?d.thyPapers:LB(c,"problems")}</dt><dd>${thyY?thyCount(thyOf(key,yr.y)):yr.problems.length}</dd></div>
+        <div><dt>${thyY?TL(c,"thyPapers"):LB(c,"problems")}</dt><dd>${thyY?thyCount(thyOf(key,yr.y)):yr.problems.length}</dd></div>
       </dl>
     </div>
     ${adFitBanner("secondary")}
