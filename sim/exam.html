@@ -12,7 +12,8 @@
      up the bench goes dark and thirty minutes start for scanning the paper answer sheets and working sheets
      with a phone: a QR code opens scan.html with this exam's upload token, the pages arrive here read by OCR,
      the student checks the text and submits it for grading (the community Worker, /api/lab/...).
-     Only signed-in users sit it; a start costs one exam token, kept on the server.  The server also keeps the
+     Only signed-in users sit it; sitting is free, and grading with the review costs one exam token (asked for at the
+     start, while scanning, or later).  The server also keeps the
      clock and the state (running → scanning → graded), so a reload, a closed tab or another computer comes
      back to the same exam with the time still running and spends nothing.
      URL: exam.html?c=ipho&y=2024&e=E1,E2&f=ipho2024_E1_web.html,ipho2024_E2_web.html&t=title|title&p=pdf|pdf&lang=ko
@@ -224,22 +225,26 @@ const T = {
       "시간이 끝나면(또는 «시험 끝내기»를 누르면) 실험 화면이 꺼지고 <b>30분</b> 타이머가 돕니다. 화면의 QR 코드를 휴대폰으로 찍으면 답안지 · working sheet를 스캔해 보낼 수 있습니다.",
       "보낸 쪽은 AI가 바로 읽어 이 화면에 보여 줍니다. <b>읽힌 내용은 고칠 수 없습니다</b>. 잘못 읽혔으면 그 쪽을 빼고 다시 찍어 보내세요. 제출하면 공식 솔루션의 채점 기준표와 아래 채점 규정으로 채점합니다. 30분이 지나면 그때까지 보낸 쪽이 그대로 제출됩니다.",
       "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다. 사람이 다시 읽어 주지 않습니다.",
-      "시작하면 <b>실전 토큰 1개</b>를 씁니다. 시험 중에 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다. 다시 들어올 때는 토큰을 쓰지 않습니다. (시뮬레이터 안의 장치 상태는 다시 들어오면 처음으로 돌아갑니다.)",
+      "<b>응시는 무료</b>이고, <b>채점 · 첨삭을 받을 때만 실전 토큰 1개</b>를 씁니다(시작할 때, 스캔할 때, 끝난 뒤 성적표에서 신청). 채점을 신청하기 전에는 보낸 답안을 읽지 않습니다. 시험 중에 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다. 다시 들어올 때는 토큰을 쓰지 않습니다. (시뮬레이터 안의 장치 상태는 다시 들어오면 처음으로 돌아갑니다.)",
     ],
     tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
     sheetsH: "답안지 인쇄", sheetsB: "Answer sheet · Working sheet 인쇄 ↗", sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.",
     paper: "문제지 열기", paperClose: "문제지 닫기", paperDesk: "책상 위 문제지 — 눌러서 보기", paperLoading: "문제지를 불러오는 중…", paperFail: "문제지를 불러오지 못했습니다. 다시 열어 보세요.", paperNone: "이 실험은 문제지 파일이 없습니다.",
     docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: `실험 ${DK} + 답안 스캔 30분`,
-    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `실전 토큰 1개 (보유 ${n}개)`,
+    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `무료 · 채점 · 첨삭은 실전 토큰 1개 (보유 ${n}개)`,
     infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
-    agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
+    agrees: ["위 유의사항을 모두 읽었습니다.", "시험 시간은 시작하면 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
     agreeAll: "응시 동의에 모두 체크해야 시작할 수 있습니다.", examNo: "수험번호", applicant: "응시자",
     receiptH: "답안 제출 확인증", rcName: "시험명", rcStart: "시험 시작", rcEnd: "실험 종료", rcSubmit: "답안 제출", rcPages: "제출한 쪽", rcStatus: "채점 상태", print: "인쇄",
     pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
     loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
-    tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `토큰 1개 쓰고 시작 (${DC})`, startQ: "실전 토큰 1개를 씁니다",
-    startBody: n => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다. 남은 토큰 ${n}개 → ${n - 1}개.`,
-    noTokens: "실전 토큰이 없습니다. 토큰은 관리자가 나누어 줍니다 — 커뮤니티에 문의해 주세요.",
+    tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `시작하기 (${DC})`, startQ: "시험을 시작합니다",
+    startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청해 토큰 1개를 씁니다 (${n}개 → ${n - 1}개).` : " 토큰은 쓰지 않습니다."),
+    noTokens: "실전 토큰이 없습니다. 실전 모드 페이지(#/lab)에서 충전할 수 있습니다.",
+    payAsk: n => `채점 · 첨삭도 신청 (토큰 1개 · 보유 ${n}개) — 신청하면 보낸 답안을 바로 읽어 확인할 수 있습니다`,
+    payBtn: "채점 · 첨삭 받기 (토큰 1개)", payNote: "아직 채점을 신청하지 않았습니다. 신청 전에는 보낸 쪽을 읽지 않고, 신청하지 않고 끝내면 채점 없이 저장됩니다(나중에 성적표에서 신청 가능).",
+    paid: "채점 신청됨", endNoGrade: "채점 없이 끝내기", endNoGradeQ: "채점 없이 끝낼까요? 답안은 저장되고, 7일 안에 성적표에서 채점을 신청할 수 있습니다.",
+    unpaidPage: "채점 신청 후 읽습니다", endedNote: "채점하지 않고 끝낸 시험입니다. 보낸 답안은 7일 동안 보관되며, 그 안에 채점 · 첨삭을 신청할 수 있습니다.",
     otherActive: (x, y) => `진행 중인 다른 실전 시험(${x})이 있습니다. 한 번에 하나만 칠 수 있으니, 그 시험을 먼저 끝내세요.`, goOther: "그 시험으로 가기",
     resume: "진행 중인 시험으로 돌아왔습니다. 타이머는 그동안에도 흘렀습니다 (토큰은 쓰지 않았습니다).",
     end: "시험 끝내기", endQ: "시험을 끝낼까요?", endBody: "끝내면 실험 화면이 꺼지고 다시 켤 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.",
@@ -258,10 +263,10 @@ const T = {
     regH: "채점 규정", regV: v => `규정 ${v}`, graph: (n, f) => `그래프 · 점 ${n}개${f ? " · 맞춤선" : ""}`, table: (c, r) => `표 · ${c}열 × ${r}행`,
     submit: "제출하고 채점받기", submitting: "채점하는 중… (실험마다 30초~1분)", submitQ: "제출할까요? 제출하면 더 보낼 수 없습니다.",
     noServer: "채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.",
-    resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중"},
+    resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중", ended: "채점 안 함"},
     pendingWhy: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 아직 연결되지 않아 관리자가 채점합니다."},
     errorNote: "채점 서버가 응답하지 않았습니다. 답안은 저장되었고 관리자가 다시 채점합니다.",
-    detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기 (토큰 1개)",
+    detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기",
     closed: "스캔 시간이 끝났습니다. 보낸 쪽으로 채점합니다.",
     bad: "주소가 올바르지 않습니다. 대회 목록에서 실전 모드를 다시 여세요.",
     err: {network: "서버에 연결하지 못했습니다.", closed: "스캔 시간이 끝났습니다.", login_required: "로그인이 필요합니다.", no_tokens: "실전 토큰이 없습니다.", running: "먼저 시험을 끝내세요."},
@@ -277,22 +282,26 @@ const T = {
       "When time is up (or you press «Finish exam») the experiments switch off and a <b>30-minute</b> timer starts. Scan the QR code on the screen with your phone to photograph the answer sheets and working sheets.",
       "Each page is read by the AI at once and shown here. <b>What was read cannot be edited</b>: if a page was misread, take it out and photograph it again. On submission it is graded against the marking scheme of the official solution under the grading regulation below. After 30 minutes the pages that arrived are submitted as they are.",
       "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing. Nobody re-reads it.",
-      "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock. Coming back costs no token. (The apparatus inside the simulators starts afresh when you come back.)",
+      "<b>Sitting is free</b>; <b>grading and the review cost one exam token</b>, asked for at the start, while scanning or later from the score report. Your pages are read only once grading has been asked for. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock. Coming back costs no token. (The apparatus inside the simulators starts afresh when you come back.)",
     ],
     tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
     sheetsH: "Answer sheets", sheetsB: "Print the Answer and Working sheets ↗", sheetsNote: "Print them before you start. The problem sheet opens only on the exam screen.",
     paper: "Open problem sheet", paperClose: "Close problem sheet", paperDesk: "The problems on the desk — click to read", paperLoading: "Loading the problem sheet…", paperFail: "The problem sheet could not be loaded. Try opening it again.", paperNone: "This experiment has no problem sheet file.",
     docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: `${DE} of experiments + 30 minutes to scan`,
-    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `1 exam token (you have ${n})`,
+    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `free · grading and review: 1 exam token (you have ${n})`,
     infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
-    agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
+    agrees: ["I have read the rules above.", "Once started, the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
     agreeAll: "Tick every line of the declaration to start.", examNo: "Candidate no.", applicant: "Candidate",
     receiptH: "Receipt of submission", rcName: "Exam", rcStart: "Started", rcEnd: "Experiments ended", rcSubmit: "Answers submitted", rcPages: "Pages", rcStatus: "Grading", print: "Print",
     pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
     loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
-    tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Use 1 token and start (${DC})`, startQ: "Use one exam token",
-    startBody: n => `The ${DE} timer starts on the server and cannot be paused or undone. Tokens: ${n} → ${n - 1}.`,
-    noTokens: "You have no exam tokens. Tokens are handed out by the admins — please ask in the community.",
+    tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Start (${DC})`, startQ: "Start the exam",
+    startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and the review use one token (${n} → ${n - 1}).` : " No token is used."),
+    noTokens: "You have no exam tokens. Get some on the exam mode page (#/lab).",
+    payAsk: n => `Also ask for grading and the review (1 token · you have ${n}) — your pages are then read as they arrive, so you can check them`,
+    payBtn: "Get it graded and reviewed (1 token)", payNote: "Grading has not been asked for yet. Until then your pages are not read; finishing without it keeps them ungraded (you can still ask from the score report).",
+    paid: "grading asked for", endNoGrade: "Finish without grading", endNoGradeQ: "Finish without grading? Your pages are kept, and you can ask for grading from the score report within 7 days.",
+    unpaidPage: "read once grading is asked for", endedNote: "This sitting ended ungraded. Its pages are kept for 7 days; ask for grading and the review within that time.",
     otherActive: (x, y) => `Another exam (${x}) is in progress. Only one can be open at a time, so finish that one first.`, goOther: "Go to that exam",
     resume: "Back in the exam in progress. The timer kept running meanwhile (no token was used).",
     end: "Finish exam", endQ: "Finish the exam?", endBody: "The experiments will switch off and cannot be turned back on. The 30 minutes for scanning start at once.",
@@ -311,10 +320,10 @@ const T = {
     regH: "Grading regulation", regV: v => `regulation ${v}`, graph: (n, f) => `graph · ${n} points${f ? " · fitted line" : ""}`, table: (c, r) => `table · ${c} columns × ${r} rows`,
     submit: "Submit and grade", submitting: "Grading… (30 s to a minute per experiment)", submitQ: "Submit now? No more pages can be sent afterwards.",
     noServer: "The grading server does not support exam mode yet. Please come back shortly.",
-    resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress"},
+    resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress", ended: "not graded"},
     pendingWhy: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected yet, so an admin will grade it."},
     errorNote: "The grading server did not answer. Your pages are saved and an admin will grade them.",
-    detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again (1 token)",
+    detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again",
     closed: "Scanning has closed. The pages that arrived are being graded.",
     bad: "This address is not complete. Open exam mode again from the competition list.",
     err: {network: "Could not reach the server.", closed: "Scanning has closed.", login_required: "Please sign in.", no_tokens: "You have no exam tokens.", running: "Finish the exam first."},
@@ -332,11 +341,11 @@ const TH = {
       "시간이 끝나면(또는 «시험 끝내기»를 누르면) 문제지가 닫히고 <b>30분</b> 타이머가 돕니다. 화면의 QR 코드를 휴대폰으로 찍어 답안지 · working sheet를 스캔해 보냅니다.",
       "보낸 쪽은 AI가 바로 읽어 이 화면에 보여 줍니다. <b>읽힌 내용은 고칠 수 없습니다</b>. 제출하면 공식 해설과 채점 기준표를 함께 보고 문항별로 채점하며, 총평 · 고칠 습관 · 글씨까지 첨삭해 줍니다.",
       "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다.",
-      "시작하면 <b>실전 토큰 1개</b>를 씁니다. 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다.",
+      "<b>응시는 무료</b>이고, <b>채점 · 첨삭을 받을 때만 실전 토큰 1개</b>를 씁니다(시작할 때, 스캔할 때, 끝난 뒤 성적표에서 신청). 채점을 신청하기 전에는 보낸 답안을 읽지 않습니다. 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다.",
     ],
     infoTimeV: `이론 ${DK} + 답안 스캔 30분`, infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰",
     sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.", kind: "이론 시험",
-    agrees: ["위 유의사항을 모두 읽었습니다.", "시작하면 실전 토큰 1개가 쓰이고, 시험 시간은 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
+    agrees: ["위 유의사항을 모두 읽었습니다.", "시험 시간은 시작하면 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
     endBody: "끝내면 문제지가 닫히고 다시 열 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.", warn5: "5분 남았습니다. 답을 답안지 칸에 옮겨 쓰세요.",
     darkH: "시험 시간이 끝났습니다", darkB: "문제지를 닫았습니다.", rcEnd: "시험 종료",
     steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "문제(T1/T2 …)와 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타납니다. 읽힌 내용을 확인하고, 잘못 읽혔으면 «빼기» 후 다시 찍습니다.", "«제출하고 채점받기»를 누릅니다."],
@@ -351,11 +360,11 @@ const TH = {
       "When time is up (or you press «Finish exam») the paper closes and a <b>30-minute</b> timer starts. Scan the QR code on the screen with your phone to photograph your sheets.",
       "Each page is read by the AI at once and shown here. <b>What was read cannot be edited</b>. On submission it is graded item by item against the official solution and marking scheme together, with a review: what decided the mark, habits to fix and your handwriting.",
       "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing.",
-      "Starting uses <b>one exam token</b>. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock.",
+      "<b>Sitting is free</b>; <b>grading and the review cost one exam token</b>, asked for at the start, while scanning or later from the score report. Your pages are read only once grading has been asked for. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock.",
     ],
     infoTimeV: `${DE} of theory + 30 minutes to scan`, infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with",
     sheetsNote: "Print them before you start. The paper opens only on the exam screen.", kind: "theory exam",
-    agrees: ["I have read the rules above.", "Starting uses one exam token, and the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
+    agrees: ["I have read the rules above.", "Once started, the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
     endBody: "The paper will close and cannot be opened again. The 30 minutes for scanning start at once.", warn5: "5 minutes left. Copy your answers into their boxes.",
     darkH: "Time is up", darkB: "The paper has been closed.", rcEnd: "Exam ended",
     steps: ["Point your phone's camera at the QR code.", "Choose the problem (T1/T2 …) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "Each page appears on the right. Check what was read; if it is wrong, «Remove» it and photograph it again.", "Press «Submit and grade»."],
@@ -505,8 +514,9 @@ async function introView() {
       <div class="row"><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><span style="font-size:12.5px;color:var(--muted)">${t().loginWait}</span></div>`;
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
       <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
-  else if (!(ME.tokens > 0)) gate = `<div class="note w">${t().noTokens}</div>`;
-  else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}</div>
+  else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}
+      <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens > 0 ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
+      ${ME.tokens > 0 ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}</div>
       <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
   const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</div>`).join("");
   $("main").innerHTML = `<div class="page"><div class="card doc">
@@ -534,10 +544,10 @@ async function introView() {
     const boxes = [...document.querySelectorAll("[data-ag]")];
     const upd = () => { const all = boxes.every(b => b.checked); go.disabled = !all; $("agHint").hidden = all; };
     boxes.forEach(b => b.onchange = upd);
-    go.onclick = () => { if (!go.disabled) confirmBox(t().startQ, t().startBody(ME.tokens), t().startQ, startExam); };
+    go.onclick = () => { if (go.disabled) return; const pay = !!($("payNow") && $("payNow").checked); confirmBox(t().startQ, t().startBody(ME.tokens, pay), t().startQ, () => startExam(pay)); };
   }
 }
-async function startExam() {
+async function startExam(pay) {
   if (BUSY) return; BUSY = true;
   const go = $("go"); if (go) go.disabled = true;
   try {
@@ -549,6 +559,7 @@ async function startExam() {
     const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
+    if (pay && !r.session.paid) await payNow(true);
     if (r.resumed) toast(t().resume, 6000);
   } catch (e) {
     if (e.code === "other_active") { ME.other = e.other; ME.tokens = e.tokens; }
@@ -794,7 +805,7 @@ async function poll() {
 }
 function paintPages(s) {
   const box = $("pages"); if (!box) return;
-  const sig = JSON.stringify(s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible]));
+  const sig = JSON.stringify([s.paid, s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible])]);
   if (sig === pagesSeen) return;
   pagesSeen = sig;
   const opt = (v, cur, txt) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`;
@@ -809,9 +820,11 @@ function paintPages(s) {
       : i.kind === "table" ? t().table((i.columns || []).length, i.rows || 0) + (i.columns && i.columns.length ? " (" + esc(i.columns.join(", ")) + ")" : "")
       : esc(i.text)}${i.crossed_out ? ` <i>${t().crossed}</i>` : ""}</li>`).join("")}</ul>`;
   };
-  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : "";
-  box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div><button class="pri" id="sub">${t().submit}</button></div>
-    <div class="note">${t().noEdit}</div>` +
+  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
+  box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div>
+      ${s.paid ? `<span class="leg good">${t().paid}</span><button class="pri" id="sub">${t().submit}</button>`
+        : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
+    ${s.paid ? "" : `<div class="note w">${t().payNote}</div>`}<div class="note">${t().noEdit}</div>` +
     (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
       <div class="th" data-img="${p.id}"></div>
       <div><div class="meta">#${p.no}
@@ -826,7 +839,8 @@ function paintPages(s) {
   });
   box.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => confirmBox(t().remove, t().removeQ, t().remove, async () => {
     try { await api("DELETE", `/lab/sessions/${SES.id}/pages/${b.dataset.rm}`); pagesSeen = ""; poll(); } catch (e) { toast(errMsg(e)); } }));
-  $("sub").onclick = () => confirmBox(t().submit, t().submitQ, t().submit, submitNow);
+  $("sub").onclick = () => confirmBox(s.paid ? t().submit : t().payBtn, t().submitQ, s.paid ? t().submit : t().payBtn, () => submitNow(true));
+  if ($("noGrade")) $("noGrade").onclick = () => confirmBox(t().endNoGrade, t().endNoGradeQ, t().endNoGrade, () => submitNow(false));
 }
 async function thumb(el, id) {
   let url = imgCache.get(id);
@@ -840,12 +854,18 @@ async function thumb(el, id) {
   el.innerHTML = `<img alt="" src="${url}">`;
   el.onclick = () => { const z = document.createElement("div"); z.className = "zoom"; z.innerHTML = `<img alt="" src="${url}">`; z.onclick = () => z.remove(); document.body.append(z); };
 }
-async function submitNow() {
+/* grading and the review: one token, once per sitting (the server takes it; see /lab/sessions/:id/pay) */
+async function payNow(quiet) {
+  try { const r = await api("POST", `/lab/sessions/${SES.id}/pay?lang=${lang}`, { lang }); ME.tokens = r.tokens; setSession(r.session); pagesSeen = ""; return true; }
+  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (e.tokens != null) ME.tokens = e.tokens; return false; }
+  finally { if (!quiet && SES) { if (SES.status === "scanning") poll(); else { shown = ""; render(); } } }
+}
+async function submitNow(grade) {
   if (BUSY) return; BUSY = true;
   const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
   clearInterval(poller);
-  try { setSession((await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang })).session); render(); }
-  catch (e) { toast(errMsg(e)); if (sub) { sub.disabled = false; sub.textContent = t().submit; } poller = setInterval(poll, 4000); }
+  try { const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
+  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } poller = setInterval(poll, 4000); }
   finally { BUSY = false; }
 }
 
@@ -870,11 +890,13 @@ function doneView() {
       <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
       <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" ? ` · <b>${s.score} / ${s.points ?? "?"}</b>` : ""}</td></tr>
     </tbody></table>
-    <div class="result"><table><tbody>${rows}</tbody></table></div>
+    ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div><div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
+      : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
     <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
+  if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
   /* which medal the experiment alone would have earned that year, where the year's scores are published */
   if (s.status === "graded" && !THY && !MIX && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
     const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");

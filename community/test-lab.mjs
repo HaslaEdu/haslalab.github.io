@@ -36,16 +36,18 @@ ok(await tokens(Bt) === 5, "so does another");
 [s, j] = await call("POST", "/admin/lab/tokens", { user: "labA" + rnd, delta: -4, note: "test" }, ADM);
 ok(s === 200 && j.tokens === 1, "admin takes back 4 → 1");
 
-/* eight starts at once (double clicks, two tabs): one session, one token spent */
+/* eight starts at once (double clicks, two tabs): one session; sitting is free (v14), grading costs the token */
 const many = await Promise.all(Array.from({ length: 8 }, () => call("POST", "/lab/start", X, A)));
 const ids = new Set(many.map(([st, x]) => st === 200 && x.session && x.session.id));
 ok(ids.size === 1 && !ids.has(false), "8 parallel starts → one session " + JSON.stringify(many.map(x => x[0])));
 ok(many.filter(([, x]) => x.token).length === 1, "exactly one start got the upload token");
 const first = many.find(([, x]) => x.token)[1], SID = first.session.id, T0 = first.session.started_at;
 let KEY = first.token;
-ok(await tokens(A) === 0, "one token spent, not eight");
-let L = (await ledger(A)).filter(x => x.reason === "start");
-ok(L.length === 1 && L[0].delta === -1 && L[0].reason === "start" && L[0].session_id === SID, "ledger: one -1 for this session");
+ok(await tokens(A) === 1 && first.session.paid === false, "starting spends nothing");
+const pays = await Promise.all([1, 2, 3].map(() => call("POST", `/lab/sessions/${SID}/pay`, {}, A)));
+ok(pays.every(([st, x]) => st === 200 && x.session.paid) && await tokens(A) === 0, "asking for grading three times at once: paid, one token spent " + JSON.stringify(pays.map(x => x[0])));
+let L = (await ledger(A)).filter(x => x.reason === "grade");
+ok(L.length === 1 && L[0].delta === -1 && L[0].session_id === SID, "ledger: one -1 «grade» for this session");
 ok(first.session.status === "running" && first.session.ended_at === T0 + EXAM && first.session.exam_sec === EXAM, "running, the clock ends at start + exam");
 
 /* leaving and coming back: same session, same start, nothing spent */
@@ -131,12 +133,20 @@ ok(s === 410 && j.error === "scan_over", "…and the phone is told scanning is o
 [s, j] = await call("GET", "/lab/active", null, A);
 ok(j.active === null && j.tokens === 0, "nothing open after submitting");
 
-/* no tokens left: no new exam, the balance never goes negative */
+/* no tokens left: sitting is still free, grading is refused, the balance never goes negative */
 const tries = await Promise.all(Array.from({ length: 5 }, () => call("POST", "/lab/start", X, A)));
-ok(tries.every(([st, x]) => st === 402 && x.error === "no_tokens"), "0 tokens → 402 every time " + JSON.stringify(tries.map(x => x[0])));
+ok(tries.every(([st]) => st === 200) && new Set(tries.map(([, x]) => x.session.id)).size === 1, "0 tokens: a start is free, five at once open one exam " + JSON.stringify(tries.map(x => x[0])));
+const S0 = tries[0][1].session.id, K0 = tries.find(([, x]) => x.token)[1].token;
+[s, j] = await call("POST", `/lab/sessions/${S0}/pay`, {}, A);
+ok(s === 402 && j.error === "no_tokens", "asking for grading with 0 tokens → 402");
+await call("POST", `/lab/sessions/${S0}/finish`, null, A);
+[s, j] = await up(S0, K0, "E1", "answer", png);
+ok(s === 200 && j.ocr_status === "unpaid" && j.items === 0, "an unpaid sitting's page is kept but not read");
+[s, j] = await call("POST", `/lab/sessions/${S0}/submit`, {}, A);
+ok(s === 402 && j.error === "no_tokens", "submitting for grading with 0 tokens → 402");
+[s, j] = await call("POST", `/lab/sessions/${S0}/submit`, { grade: false }, A);
+ok(s === 200 && j.session.status === "ended" && j.session.paid === false && await tokens(A) === 0, "finishing without grading: ended, nothing spent");
 ok(await tokens(A) === 0 && (await ledger(A)).length === 2, "balance 0, ledger unchanged");
-[s, j] = await call("GET", "/lab/sessions", null, A);
-ok(j.sessions.length === 1, "no session was created by the refused starts");
 
 /* admin: the scheme for E2 arrives, regrade; tokens are granted */
 await call("POST", "/admin/lab/rubrics", { exam_key: "ipho2024", task: "E2", points: 10, rubric: JSON.stringify([{ id: "B1", name: "t", max: 10, requirement: "thickness" }]) }, ADM);
@@ -146,10 +156,15 @@ ok(s === 200 && j.session.status === "graded" && j.session.score === 10, "regrad
 ok(s === 403, "granting is admin only");
 [s, j] = await call("POST", "/admin/lab/tokens", { user: "labA" + rnd, delta: 2, note: "test" }, ADM);
 ok(s === 200 && j.tokens === 2 && await tokens(A) === 2, "admin grants 2");
+/* the ungraded sitting graded later, from the score report: paid once, graded at once */
+const later = await Promise.all([1, 2].map(() => call("POST", `/lab/sessions/${S0}/pay`, {}, A)));
+ok(later.some(([st, x]) => st === 200 && ["graded", "pending", "grading"].includes(x.session.status)) && await tokens(A) === 1, "an ended sitting graded later: one token for two clicks " + JSON.stringify(later.map(([st, x]) => [st, x.session && x.session.status])));
+[s, j] = await call("GET", `/lab/sessions/${S0}`, null, A);
+ok(j.session.paid && j.session.pages[0].read, "its page was read when it was graded");
 
-/* two tokens, parallel starts: still only one spent */
+/* parallel starts again: one exam, nothing spent */
 const two = await Promise.all(Array.from({ length: 6 }, () => call("POST", "/lab/start", X, A)));
-ok(new Set(two.map(([, x]) => x.session && x.session.id)).size === 1 && await tokens(A) === 1, "6 parallel starts with 2 tokens → one spent, 1 left");
+ok(new Set(two.map(([, x]) => x.session && x.session.id)).size === 1 && await tokens(A) === 1, "6 parallel starts → one exam, still 1 token");
 const S2 = two[0][1].session.id;
 /* finish early, twice */
 [s, j] = await call("POST", `/lab/sessions/${S2}/finish`, null, A);
@@ -160,19 +175,21 @@ await sleep(1100);
 ok(j.session.ended_at === end2 && j.session.scan_until === end2 + SCAN, "a second finish changes nothing (the scan clock is not reset)");
 [s, j] = await call("POST", "/lab/start", X, A);
 ok(j.resumed && j.session.id === S2 && j.session.scan_until === end2 + SCAN && await tokens(A) === 1, "coming back during the scan: same deadline, no spend");
-/* nobody submits: after the scan time the pages that arrived are submitted by themselves */
+/* nobody submits: after the scan time an unpaid sitting ends ungraded by itself */
 await sleep((end2 + SCAN + 2) * 1000 - Date.now() + 300);
 [s, j] = await call("GET", `/lab/sessions/${S2}`, null, A);
-ok(j.session.status === "graded" && j.session.detail.tasks.E1.status === "empty", "after the scan time: submitted as it stood (no pages → empty) " + j.session.status);
+ok(j.session.status === "ended" && await tokens(A) === 1, "after the scan time: unpaid → ended ungraded, nothing spent " + j.session.status);
 [s, j] = await call("DELETE", `/lab/sessions/${S2}`, null, A);
 ok(s === 200, "a finished session can be deleted");
 ok(await tokens(A) === 1, "…which gives no token back");
 
-/* the last token */
+/* the last token, asked for while the exam runs */
 [s, j] = await call("POST", "/lab/start", { comp: "apho", year: 2025, tasks: ["E1"] }, A);
-ok(s === 200 && !j.resumed && await tokens(A) === 0, "the last token starts APhO 2025");
+ok(s === 200 && !j.resumed && await tokens(A) === 1, "APhO 2025 starts for free");
+[s, j] = await call("POST", `/lab/sessions/${j.session.id}/pay`, {}, A);
+ok(s === 200 && j.session.paid && j.session.status === "running" && await tokens(A) === 0, "the last token pays for its grading while it runs");
 L = await ledger(A);
-ok(5 + L.reduce((a, x) => a + x.delta, 0) === 0 && L.filter(x => x.reason === "start").length === 3, "ledger: 5 (default) - 4 (revoke) + 2 (grant) - 3 (starts) = 0 " + JSON.stringify(L.map(x => x.delta)));
+ok(5 + L.reduce((a, x) => a + x.delta, 0) === 0 && L.filter(x => x.reason === "grade").length === 3, "ledger: 5 (default) - 4 (revoke) + 2 (grant) - 3 (gradings) = 0 " + JSON.stringify(L.map(x => x.delta)));
 [s, j] = await call("DELETE", `/lab/sessions/${j.session.id}`, null, A);
 ok(s === 409, "an open exam cannot be deleted (no way to dodge the clock)");
 
@@ -185,7 +202,7 @@ ok(s === 200 && !j.resumed && j.session.tasks.join() === "D1", "B starts IOAA 20
 [s, j] = await call("POST", "/lab/start", { comp: "ioaa", year: 2024, tasks: ["D2"] }, Bt);
 ok(s === 409 && j.error === "other_active" && j.other.tasks.join() === "D1", "D2 of the same year while D1 is open → 409, not a resume of D1");
 [s, j] = await call("POST", "/lab/start", { comp: "ioaa", year: 2024, tasks: ["D1"] }, Bt);
-ok(s === 200 && j.resumed && await tokens(Bt) === 4, "D1 again → resumed, one token spent in all");
+ok(s === 200 && j.resumed && await tokens(Bt) === 5, "D1 again → resumed, nothing spent");
 /* the exam list's numbers and the score report's standing */
 [s, j] = await call("GET", "/lab/stats?comp=ipho");
 const st = j.exams && j.exams["ipho2024:E1+E2"];

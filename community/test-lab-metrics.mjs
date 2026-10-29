@@ -19,6 +19,7 @@ const U = await sign("mtU"), A = await sign("mtA");
 sql(`UPDATE users SET role='admin' WHERE username='mtA${rnd}'; DELETE FROM ratelimits; DELETE FROM lab_rubrics WHERE exam_key='ipho2024'`);   // graded from the solution's scheme, not an admin rubric
 const [, st] = await call("POST", "/lab/start", { comp: "ipho", year: 2024, tasks: ["E1"], lang: "ko", sources: { E1: { sol: "IPhO_2024_S1" + rnd + ".pdf" } } }, U);
 const sid = st.session.id, key = st.token;
+await call("POST", `/lab/sessions/${sid}/pay`, {}, U);                                    // grading asked for: pages are read on arrival
 await call("POST", `/lab/sessions/${sid}/finish`, null, U);
 let [s, j] = await up(sid, key, "E1", "answer", png);
 const pid = j.id;

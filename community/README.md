@@ -222,6 +222,13 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - 메달 추정은 실험 점수 자료라 이론 · 통합 시험에는 보이지 않습니다.
 - 로컬 시험: `node test-theory.mjs`(mock, 6초 시계).
 
+## v14: 응시는 무료, 채점 · 첨삭에 토큰
+
+- 실전 모드 시작은 토큰을 쓰지 않습니다. **채점 · 첨삭을 신청할 때 실전 토큰 1개**(시험마다 한 번)를 씁니다 — 시작할 때(안내 화면의 «채점 · 첨삭도 신청»), 스캔 화면에서, 또는 끝난 뒤 성적표에서. `POST /api/lab/sessions/:id/pay`(한 번만 차감, 동시에 눌러도 한 번), `submit`은 `grade:false`면 채점 없이 끝내고(`status: 'ended'`) 그 밖에는 차감한 뒤 채점합니다. 장부 사유는 `grade`.
+- 채점을 신청하기 전에는 보낸 쪽을 **읽지 않습니다**(`ocr_status: 'unpaid'`, AI 비용이 들지 않음). 신청 뒤 온 쪽은 바로 읽고, 그 전에 온 쪽은 채점할 때 읽습니다.
+- 스캔 시간이 끝났는데 신청하지 않았으면 채점 없이 `ended`가 되고, 사진은 7일(`LAB_KEEP_ENDED_HOURS`) 보관한 뒤 지웁니다. 그 안에 성적표에서 채점을 신청할 수 있습니다.
+- 이전 응시(시작할 때 토큰을 쓴 것)는 이미 `charged=1`이라 그대로 채점됩니다. DB 변경은 없습니다.
+
 ## 자동 배포 (GitHub Actions)
 
 `main`에서 `community/src`나 `wrangler.toml`이 바뀌면 `.github/workflows/deploy-worker.yml`이 `wrangler deploy`로 Worker를 올립니다 — 대시보드에 붙여 넣을 필요가 없습니다. Actions 탭의 «Deploy community Worker» › Run workflow로 손으로 돌릴 수도 있습니다.
