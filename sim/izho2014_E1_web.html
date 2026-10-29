@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IZhO 2014 실험 — 자기 상호작용 · Magnetic Interactions · HaslaLab</title>
+<meta name="description" content="IZhO 2014 실험 문제를 브라우저에서 해 봅니다. 자석 구슬이 든 진자의 주기를 코일 전류에 따라, 아래 놓은 자석 구슬까지의 거리에 따라 재어 힘이 전류에 비례하고 거리의 네제곱에 반비례함을 보이고, 은박에 싼 초콜릿이 진동의 감쇠를 바꾸는 것을 확인합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IZhO 2014 실험 — 자기 상호작용 · Magnetic Interactions · HaslaLab">
+<meta property="og:description" content="IZhO 2014 실험: 자석 구슬 진자의 주기로 자기력 재기.">
+<style>
+:root{--bg:#0c0c0c;--fg:#cccccc;--dim:#7d7d7d;--accent:#4ec9b0;--line:#2a2a2a;--panel:#141414}
+*{box-sizing:border-box}
+body{margin:0;background:#1e1e1e;color:var(--fg);
+     font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0 0 3px;font-size:15px;color:#e8e8e8}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+header details{margin-top:7px}
+header summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+header ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:12.5px}
+header li{margin:2px 0}
+#screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
+        font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;
+        word-break:break-word}
+#screen .in{color:#9cdcfe}
+#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);
+     padding:6px 16px 10px}
+#ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;
+    white-space:pre;flex:none}
+#inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
+     font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;padding:0}
+#tools{display:flex;gap:8px;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line)}
+button{background:#2d2d2d;color:var(--fg);border:1px solid var(--line);border-radius:4px;
+       padding:5px 12px;font:12.5px inherit;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+
+</style>
+</head>
+<body>
+<script>
+/* IZhO 2014 on the 3-D bench.  The pendulum (two chopsticks in an eraser on a needle axis, clay at both ends, a
+   magnetized bead in the lower lump) swings with ν₀² ≈ 0.142 s⁻² (T₀ ≈ 2.65 s, official).  1: a coil under it
+   adds ν² − ν₀² ≈ 0.105 s⁻²/A × I (sign with the current's direction; official table 1).  2: a bead on clay a
+   gap x below attracts it with F = C/r⁴: ν² = ν₀² + K(l + x)/x⁵ (l ≈ 150 mm; K fitted to official table 2).
+   3: chocolate in foil under the swinging end: eddy currents in the foil raise the damping, the period stays. */
+var PROGRAM = {
+  title: { ko: 'IZhO 2014 실험 — 자기 상호작용', en: 'IZhO 2014 — Magnetic interactions' },
+  subtitle: { ko: '진자: 지우개에 꽂은 나무젓가락 둘, 양 끝의 점토(아래 점토 속에 자석 구슬), 지우개를 꿰뚫은 바늘 축. 장비: 삼각대, 진자, 점토, 자, 자석 구슬, 스톱워치, 4.5 V 전지, 6 Ω 가변 저항, 코일, 멀티미터, 스위치, 도선, 못, 초콜릿 한 조각. 구슬의 방향은 바꾸지 마세요.',
+              en: 'The pendulum: two wooden chopsticks in an eraser, clay at both ends (a magnetized bead inside the lower lump), a needle through the eraser as the axis. Equipment: a tripod, the pendulum, clay, a ruler, magnetized beads, a stopwatch, a 4.5 V battery, a 6 Ω rheostat, a coil, a multimeter, a switch, wires, nails and a piece of chocolate. Do not change the beads\' orientation.' },
+  notes: { ko: [
+    '과제: 1.1 진자의 주기와 오차(주기 2 s 이상). 1.2–1.4 진자 아래(구슬에서 코일 반지름의 절반쯤)에 코일을 두고 전류에 따른 주기 — 힘이 전류에 비례함을 ν² − ν₀² 대 I 로. 2 아래에 자석 구슬(끌어당기게) — 운동 방정식과 작은 진동의 주기, 구슬 중심 사이 거리에 따른 주기, F = C/r^γ 의 γ. 3 초콜릿(포장째) 위 1–2 mm 를 지나게 하면 진자의 무엇이 달라지는지와 그 증거.',
+    '공식 해답: 10T = 25.02, 25.06, 24.92 s → T = 2.50 ± 0.01 s. 코일: I = 0, 0.80, 0.37, −0.37, −0.72 A → T = 2.655, 2.062, 2.350, 3.083, 3.724 s, ν² − ν₀² 가 I 에 비례. 구슬: x = 23, 33, 43, 53 mm → T = 0.409, 0.886, 1.579, 1.940 s; ξ = (ν² − ν₀²)x/(l + x) 의 로그 그래프 기울기 → γ = 4. 초콜릿: 주기는 그대로, 감쇠가 커짐(은박의 맴돌이 전류).',
+    '전류의 방향은 코일 단자를 바꿔 꽂아 바꿉니다. 진폭은 진자 끝 뒤의 자로 읽습니다. 값은 방문할 때마다 조금 다릅니다.'], en: [
+    'Tasks: 1.1 the period with its error (above 2 s). 1.2–1.4 with the coil under the pendulum (the bead about half the coil radius from its centre), the period against the current — the force is proportional to the current, from ν² − ν₀² against I. 2 a bead underneath (attracting) — the equation of motion and the small-oscillation period, the period against the distance between the bead centres, γ in F = C/r^γ. 3 with the chocolate (still wrapped) 1–2 mm under the swinging end: what changes, and the evidence.',
+    'Official solution: 10T = 25.02, 25.06, 24.92 s → T = 2.50 ± 0.01 s. Coil: I = 0, 0.80, 0.37, −0.37, −0.72 A → T = 2.655, 2.062, 2.350, 3.083, 3.724 s, ν² − ν₀² proportional to I. Bead: x = 23, 33, 43, 53 mm → T = 0.409, 0.886, 1.579, 1.940 s; the slope of ξ = (ν² − ν₀²)x/(l + x) on log scales → γ = 4. Chocolate: the period stays, the damping grows (eddy currents in the foil).',
+    'Reverse the current by swapping the coil leads. Read the amplitude on the ruler behind the pendulum\'s end. The values differ a little from visit to visit.'] }
+};
+
+var LAB = { dmm: {}, leads: null, c: null, x: 0.5, mode: 1, gap: 33, th: 0, w: 0, held: false, swOn: false };
+PROGRAM.lab = {
+  intro: { ko: '책상 위: 삼각대에 걸린 진자, 그 뒤의 자(진폭 읽기), 아래쪽 자리(카드 1: 코일, 2: 점토 위 자석 구슬, 3: 초콜릿), 4.5 V 전지, 6 Ω 가변 저항, 스위치, 멀티미터, 스톱워치, 도선.',
+           en: 'On the desk: the pendulum on the tripod, a ruler behind it (for amplitudes), the place underneath (card 1: the coil, 2: a bead on clay, 3: the chocolate), the 4.5 V battery, the 6 Ω rheostat, the switch, the multimeter, a stopwatch and wires.' },
+  howto: { ko: ['진자 아래 끝을 좌우로 끌기: 기울였다 놓기 · 진자 클릭: 붙잡기',
+                '카드 1·2·3 클릭: 진자 아래에 둘 것 바꾸기 · 2: 점토 구슬 위에서 휠 — 구슬 사이 간격 1 mm 씩',
+                '도선: 단자 클릭으로 잇기 · 스위치 클릭: 켜기/끄기 · 가변 저항 손잡이 휠/끌기 · 멀티미터 다이얼(10 A 전류 단자는 mA 잭) · 스톱워치 <b>Space</b>'],
+           en: ['Drag the pendulum\'s lower end left/right: tilt it and let go · click the pendulum: catch it',
+                'Click card 1, 2 or 3: change what sits under the pendulum · 2: wheel over the clay bead — the gap between the beads by 1 mm',
+                'Wires: click terminals to join · click the switch: on/off · rheostat knob wheel/drag · multimeter dial (the current jack is mA) · stopwatch <b>Space</b>'] },
+  notePlaceholder: { ko: '예) 10T = 25.02 s … / I = 0.80 A: 10T = 20.6 s … / x = 23 mm: 10T = 4.27 s …', en: 'e.g. 10T = 25.02 s … / I = 0.80 A: 10T = 20.6 s … / x = 23 mm: 10T = 4.27 s …' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    var NU0 = 0.142 * (1 + S.sys('nu', 0.02)), MU = 0.105 * (1 + S.sys('mu', 0.05)), KB = 2.42e5 * (1 + S.sys('kb', 0.06)), LB = 150, G0 = 0.012, GC = 0.07 * (1 + S.sys('gc', 0.1));
+    var RC = 2.4 * (1 + S.sys('rc', 0.05)), RH = 6 * (1 + S.sys('rh', 0.03));
+    var dm = LAB.dmm; dm.err = { V: S.sys('mV', 0.003), A: S.sys('mA', 0.006), R: 0 };
+    var leads = LAB.leads = new B3.Leads({ max: 10 }), sw = new B3.Stopwatch(0.04), c = LAB.c = new B3.Circuit(), Icoil = 0;
+    var RANGES = [['OFF'], ['V', 2], ['V', 20], ['A', 0.2], ['A', 2]];
+    var amp = B3.scaleTex(20, { horiz: true, width: 2.4, from: -10, every: 2, bg: '#f2efe6' });
+    var PX = 0, PY = 34, LL = 30;                       /* axis, length to the lower lump (cm) */
+    var bench = B3.bench(host, {
+      aspect: 0.62, lang: ctx.lang, keys: [' '], speeds: [1, 0.25], wheelIds: ['rh', 'bead'],
+      home: { yaw: -0.25, pitch: 0.42, k: 10, tx: 6, ty: 16, tz: 0 },
+      views: { dmm: { yaw: 0, pitch: 1.35, k: 50, tx: 24, ty: 3.4, tz: 4, title: { ko: '멀티미터', en: 'Multimeter' } },
+               low: { yaw: 0, pitch: 0.12, k: 28, tx: PX, ty: 3, tz: 0, title: { ko: '진자의 아래 끝', en: 'The pendulum\'s lower end' } },
+               sw: { yaw: 0, pitch: 1.25, k: 62, tx: 34, ty: 1.7, tz: 12, title: { ko: '스톱워치', en: 'Stopwatch' } } },
+      frame: function (b) {
+        if (b.keys.indexOf(' ') >= 0) sw.startStop(b.t);
+        for (var q = 1; q <= 3; q++) if (b.clicked('c:card' + q)) LAB.mode = q;
+        if (b.clicked('c:sw')) LAB.swOn = !LAB.swOn;
+        if (b.clicked('c:ruler')) b.go('low');
+        var mr = b.screenMoved('rh'), wr = b.wheel('rh'); if (mr[0] || wr) LAB.x = Math.max(0, Math.min(1, LAB.x + mr[0] * 0.004 + wr * 0.01));
+        var wb = b.wheel('bead'); if (wb && LAB.mode === 2) LAB.gap = Math.max(18, Math.min(70, Math.round(LAB.gap + wb)));
+        if (b.dragging('pend')) { LAB.th = Math.max(-0.3, Math.min(0.3, LAB.th + b.screenMoved('pend')[0] / LL)); LAB.w = 0; LAB.held = true; LAB.drag = true; }
+        else if (LAB.drag) { LAB.drag = false; LAB.held = false; }
+        else if (b.clicked('m:pend')) { LAB.held = true; LAB.w = 0; }
+        var nu2 = NU0 + (LAB.mode === 1 ? MU * Icoil : 0) + (LAB.mode === 2 ? KB * (LB + LAB.gap) / Math.pow(LAB.gap, 5) : 0), gam = G0 + (LAB.mode === 3 ? GC : 0);
+        if (!LAB.held && b.dt > 0) { var n = Math.ceil(b.dt / 0.002), h = b.dt / n, k = 4 * Math.PI * Math.PI * nu2;
+          for (var i = 0; i < n; i++) { LAB.w += (-k * Math.sin(LAB.th) - 2 * gam * LAB.w) * h; LAB.th += LAB.w * h; } }
+        B3.desk(-36, 44, -18, 20);
+        /* tripod and pendulum */
+        B3.box3(-10, 10, 0, 1.4, -14, -8, '#3b4048', { top: '#474c55' }); B3.cylSeg('y', 1.4, PY + 4, -6, -11, 0.7, '#c3c8cd', { seg: 12, cap: '#dde1e4' }, 6);
+        B3.box3(-7, 1, PY - 0.6, PY + 0.6, -11.6, -10.4, '#9aa0a6'); B3.box3(-0.6, 0.6, PY - 0.6, PY + 0.6, -11, -0.5, '#9aa0a6');
+        var s = Math.sin(LAB.th), co = Math.cos(LAB.th), P = function (r) { return [PX + s * r, PY - co * r, 0]; };
+        B3.cyl3('z', -0.6, 0.6, PX, PY, 0.08, '#dde1e4', { seg: 6 });
+        B3.box3(-1.2, 1.2, PY - 1, PY + 1, -0.8, 0.8, '#d8708a', { id: 'm:pend' });
+        B3.cylAB(P(-1), P(-12), 0.25, '#d8b27a', { seg: 8, id: 'm:pend' }); B3.cylAB(P(1), P(LL - 1.4), 0.25, '#d8b27a', { seg: 8, id: 'm:pend' });
+        var u = P(-12.5), lo = P(LL); B3.cyl3('z', -1.2, 1.2, u[0], u[1], 1.2, '#7a8a5a', { seg: 16, cap: '#8a9a6a', id: 'm:pend' });
+        B3.cyl3('z', -1.4, 1.4, lo[0], lo[1], 1.4, '#7a8a5a', { seg: 16, cap: '#8a9a6a', id: 'm:pend' });
+        /* the amplitude ruler behind the lower end */
+        B3.box3(-11, 11, PY - LL - 3.6, PY - LL - 1.2, -3.2, -3.0, '#f2efe6', { id: 'c:ruler' });
+        B3.tex3(amp, 0, 0, amp.width, amp.height, [-11, PY - LL - 1.2, -2.98], [22, 0, 0], [0, -2.4, 0], { id: 'c:ruler' });
+        /* underneath: coil / bead on clay / chocolate */
+        var by = PY - LL - 1.4;
+        if (LAB.mode === 1) { B3.cyl3('y', 0, 2.2, PX, 0, 3.4, '#b87333', { seg: 28, cap: '#c88343' }); B3.cyl3('y', 2.2, 2.25, PX, 0, 1.2, '#2b2f35', { seg: 18 });
+          leads.term(b, 'coil.1', [PX - 4.5, 0, 2.5], { col: '#d8d8d8', label: '1', lc: '#333', post: true }); leads.term(b, 'coil.2', [PX + 4.5, 0, 2.5], { col: '#d8d8d8', label: '2', lc: '#333', post: true });
+          B3.cable([PX - 3, 1, 1.5], [PX - 4.5, 1, 2.5], '#b87333', 0.2, 1.4); B3.cable([PX + 3, 1, 1.5], [PX + 4.5, 1, 2.5], '#b87333', 0.2, 1.4); }
+        else if (LAB.mode === 2) { var cy = by - LAB.gap / 10; B3.cyl3('y', 0, Math.max(0.3, cy - 0.4), PX, 0, 1.6, '#7a8a5a', { seg: 16, cap: '#8a9a6a', id: 'm:bead' });
+          B3.cyl3('y', Math.max(0.3, cy - 0.4), Math.max(0.3, cy - 0.4) + 0.8, PX, 0, 0.45, '#3a3f46', { seg: 12, id: 'm:bead' }); }
+        else { B3.box3(PX - 6, PX + 6, 0, by - 0.25, -2.5, 2.5, '#b8bcc2', { top: '#d0d4d8' }); B3.box3(PX - 6.02, PX + 6.02, 0, by - 2.2, -2.52, 2.52, '#6a2a2a'); }
+        [1, 2, 3].forEach(function (q2) { var x = 12 + q2 * 5; B3.box3(x - 2, x + 2, 0, 0.1, 13, 17, q2 === LAB.mode ? '#ffd479' : '#e8e4d8', { id: 'c:card' + q2 });
+          B3.text3([x - 0.6, 0.12, 16], [1, 0, 0], [0, 0, -1], String(q2), 1.8, '#333', { weight: '800' }); });
+        /* battery, rheostat, switch, meter */
+        var bat = B3.cells(b, leads, 'bat', [-26, 10], { n: 3, e: 1.5 * (1 + S.sys('eb', 0.02)), r: 0.35 });
+        B3.box3(-18, -8, 0, 2, 8, 14, '#3a3f46', { top: '#474c55' }); B3.cyl3('y', 2, 3.6, -13, 11, 1.5, '#2b2f35', { seg: 20, cap: '#3a3f46', id: 'm:rh' });
+        var pa = (LAB.x - 0.5) * 4.5; B3.line3([-13, 3.62, 11], [-13 + Math.sin(pa) * 1.4, 3.62, 11 - Math.cos(pa) * 1.4], '#f2f2f2', 2.5);
+        ['A', 'W', 'B'].forEach(function (t, j) { leads.term(b, 'rh.' + t, [-16 + j * 3, 2, 13], { col: '#b8b8b8', label: t, lc: '#e8e8e8', ls: 0.6 }); });
+        B3.box3(-5, 1, 0, 1.4, 9, 13, '#2b2f35', { top: '#33373e' }); B3.box3(-3, -1, 1.4, 2.2, 10, 12, LAB.swOn ? '#3f8f4f' : '#7a2a2a', { id: 'c:sw' });
+        leads.term(b, 'k.a', [-4, 1.4, 12.2], { col: '#b8b8b8', ls: 0.5 }); leads.term(b, 'k.b', [0, 1.4, 12.2], { col: '#b8b8b8', ls: 0.5 });
+        var m = B3.dmm(b, 'dmm', [24, 4], dm, leads, { ranges: RANGES, rA: { 0.2: 0.5, 2: 0.05 }, fuseI: 3 });
+        B3.stopwatch(b, 'sw', [34, 12], sw);
+        c.reset(); bat.stamp(c);
+        c.R('rh.A', 'rh.W', Math.max(0.05, LAB.x * RH)); c.R('rh.W', 'rh.B', Math.max(0.05, (1 - LAB.x) * RH));
+        var ec = LAB.mode === 1 ? c.R('coil.1', 'coil.2', RC) : null; if (LAB.swOn) c.join('k.a', 'k.b');
+        m.stamp(c); leads.wire(c); c.solve(0.05); m.read(c);
+        Icoil = ec ? c.cur(ec) : 0;
+        leads.draw(b);
+        LAB.state = { mode: LAB.mode, I: Icoil, T: 1 / Math.sqrt(nu2), gap: LAB.gap, amp: LAB.th * LL };
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
+  }
+};
+</script>
+<script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
+<script src="consolesim.js"></script>
+  <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
+</body>
+</html>

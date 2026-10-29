@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IZhO 2017 실험 — 비틀림 진자 · Torsion Pendulum · HaslaLab</title>
+<meta name="description" content="IZhO 2017 실험 문제를 브라우저에서 해 봅니다. 두 실에 매단 볼트 진자의 작은 비틀림 진동 주기를 실 길이와 실 장력(자의 휨)에 따라 재고, 크게 꼬았을 때의 풀림 시간과 다시 꼬이는 반바퀴 수, 추를 들어 에너지를 넣는 효과를 조사합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IZhO 2017 실험 — 비틀림 진자 · Torsion Pendulum · HaslaLab">
+<meta property="og:description" content="IZhO 2017 실험: 두 실 비틀림 진자의 주기와 큰 꼬임.">
+<style>
+:root{--bg:#0c0c0c;--fg:#cccccc;--dim:#7d7d7d;--accent:#4ec9b0;--line:#2a2a2a;--panel:#141414}
+*{box-sizing:border-box}
+body{margin:0;background:#1e1e1e;color:var(--fg);
+     font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0 0 3px;font-size:15px;color:#e8e8e8}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+header details{margin-top:7px}
+header summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+header ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:12.5px}
+header li{margin:2px 0}
+#screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
+        font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;
+        word-break:break-word}
+#screen .in{color:#9cdcfe}
+#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);
+     padding:6px 16px 10px}
+#ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;
+    white-space:pre;flex:none}
+#inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
+     font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;padding:0}
+#tools{display:flex;gap:8px;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line)}
+button{background:#2d2d2d;color:var(--fg);border:1px solid var(--line);border-radius:4px;
+       padding:5px 12px;font:12.5px inherit;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+
+</style>
+</head>
+<body>
+<script>
+/* IZhO 2017 on the 3-D bench.  Small oscillations: T = 4πR/h·√(l/g) (R ≈ 4.33 cm, h ≈ 2.8 cm, official) with the
+   upper threads only; with lower threads tied to a bent ruler (both 20 cm) T⁻² grows linearly with the bending z
+   (the official slope ≈ 0.147 s⁻²/mm).  Large twists, N in half-turns from parallel threads: the bifilar well
+   U₂(1 − cos πN)/2 for |N| ≤ 1, then U₂ + C(|N| − 1)^γ with γ ≈ 1.54, drag c·v|v| in the twisted part and a
+   constant loss f — fitted to the official tables 3–4 (untwisting 1.9–2.6 s, N₁ ≈ 0.46N₀ + 0.84), all scaled
+   with the tension.  The 100 g weight on the ruler stiffens the threads and adds loss; lifting it while the
+   pendulum re-twists lets it go further (tables 5). */
+var PROGRAM = {
+  title: { ko: 'IZhO 2017 실험 — 비틀림 진자', en: 'IZhO 2017 — Torsion pendulum' },
+  subtitle: { ko: '너트로 단단히 이은 두 볼트를 두 실에 매단 비틀림 진자입니다. 진자는 수평면에서 비틀림 진동만 하게 하세요. 장비: 두 볼트와 이음 너트, 홀더 둘이 있는 삼각대, 실, 40 cm 나무 자 둘, 스톱워치, 100 g 추, 점토. g = 9.81 m/s².',
+              en: 'A torsion pendulum: two bolts rigidly joined by a coupling nut, hung on two threads. Make sure it only twists in a horizontal plane. Equipment: two bolts and the coupling nut, a tripod with two holders, thread, two 40 cm wooden rulers, a stopwatch, a 100 g weight and clay. g = 9.81 m/s².' },
+  notes: { ko: [
+    '과제: 1 실 길이 10–50 cm 에서 작은 비틀림 진동 주기, 이론 T = 4π√(Il/(mgh²)), T²(l) 직선, 회전 반지름 R 과 오차. 2 아래에도 실 두 가닥을 매어 40 cm 자에 묶고(위아래 모두 약 20 cm), 위 홀더를 올려 자가 휜 정도 z 로 장력을 바꾸며 주기, T⁻² ∝ z. 3 반바퀴 수 N ≤ 20 의 큰 꼬임: 풀리는 시간 t(N₀), U = CN^γ 의 γ 범위, 다시 꼬이는 N₁(N₀) (장력 두 가지), 자 아래 100 g 추를 단 채로/다시 꼬일 때만 추를 들어 올린 채로의 N₁(N₀).',
+    '공식 해답: l = 61, 49, 39, 28, 19, 10 cm → T = 4.82, 4.36, 3.84, 3.29, 2.67, 1.92 s; T² = 0.385·l − 0.12, h = 2.8 ± 0.1 cm → R = 4.33 ± 0.16 cm. z = 12, 20, 27, 37, 52 mm → T = 1.03, 0.71, 0.56, 0.45, 0.38 s. N = 5 … 21 → t = 1.91 … 2.63 s 이므로 γ < 2. N₁ = 0.46N₀ + 0.84 (장력에 거의 무관); 추를 단 채 N₁ ≈ 0.58N₀ − 3.5, 다시 꼬일 때 추를 들면 N₁ ≈ 0.37N₀ + 2.5 (더 높음 — 에너지 유입).',
+    '꼬임 반바퀴 수는 막대가 평행한 실 자리(N = 0)에서 셉니다. 큰 꼬임은 빠르니 ×0.25 로 보세요. 값은 방문할 때마다 조금 다릅니다.'], en: [
+    'Tasks: 1 the small torsional period for thread lengths 10–50 cm, the theory T = 4π√(Il/(mgh²)), the line T²(l), the radius of gyration R with its error. 2 tie two more threads below to a 40 cm ruler (about 20 cm above and below), raise the upper holder and vary the tension by the ruler\'s bending z: the period, T⁻² ∝ z. 3 large twists of N ≤ 20 half-turns: the untwisting time t(N₀), the range of γ in U = CN^γ, the re-twist N₁(N₀) at two tensions, and N₁(N₀) with a 100 g weight under the ruler — left hanging, or lifted only while the pendulum re-twists.',
+    'Official solution: l = 61, 49, 39, 28, 19, 10 cm → T = 4.82, 4.36, 3.84, 3.29, 2.67, 1.92 s; T² = 0.385·l − 0.12, h = 2.8 ± 0.1 cm → R = 4.33 ± 0.16 cm. z = 12, 20, 27, 37, 52 mm → T = 1.03, 0.71, 0.56, 0.45, 0.38 s. N = 5 … 21 → t = 1.91 … 2.63 s, so γ < 2. N₁ = 0.46N₀ + 0.84 (nearly independent of tension); with the weight hanging N₁ ≈ 0.58N₀ − 3.5, lifting it on re-twist N₁ ≈ 0.37N₀ + 2.5 (higher — energy goes in).',
+    'Half-turns count from the parallel-thread position (N = 0). Large twists are fast — watch them at ×0.25. The values differ a little from visit to visit.'] }
+};
+
+var LAB = { mode: 'A', l: 40, z: 20, N: 0, v: 0, held: false, wt: false };
+PROGRAM.lab = {
+  intro: { ko: '책상 위: 삼각대(위 홀더 — 위쪽 실, 아래 홀더 — 40 cm 자), 볼트 진자, 100 g 추, 스톱워치. 아래 자를 클릭하면 아래쪽 실을 매거나 풉니다.',
+           en: 'On the desk: the tripod (upper holder — the upper threads, lower holder — a 40 cm ruler), the bolt pendulum, the 100 g weight and a stopwatch. Click the lower ruler to tie or untie the lower threads.' },
+  howto: { ko: ['진자 위에서 휠: 반바퀴씩 꼬기 (Shift: 0.1) · 진자를 좌우로 끌기: 조금 돌리기 — 돌리는 동안 손에 잡고 있습니다 · 진자 클릭: 놓기 / 잡기',
+                '위 홀더 위에서 휠: 아래 실이 없으면 실 길이 l (1 cm), 있으면 홀더를 올려 자의 휨 z (1 mm) · 아래 자 클릭: 아래 실 매기/풀기',
+                '추 클릭: 자 아래에 걸기/떼기 · 추를 누르고 있는 동안: 들어 올리기 · 스톱워치 <b>Space</b>'],
+           en: ['Wheel over the pendulum: twist by half-turns (Shift: 0.1) · drag it left/right: turn it a little — you hold it while turning · click it: release / catch',
+                'Wheel over the upper holder: without lower threads the thread length l (1 cm), with them raise the holder — the ruler\'s bending z (1 mm) · click the lower ruler: tie/untie the lower threads',
+                'Click the weight: hang it under the ruler / take it off · press and hold the weight: lift it · stopwatch <b>Space</b>'] },
+  notePlaceholder: { ko: '예) l = 61 cm: 10T = 48.19, 48.02 s … / z = 12 mm: 10T = 10.22 s … / N₀ = 20: t = 2.6 s, N₁ = 10', en: 'e.g. l = 61 cm: 10T = 48.19, 48.02 s … / z = 12 mm: 10T = 10.22 s … / N₀ = 20: t = 2.6 s, N₁ = 10' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    var RG = 4.33 * (1 + S.sys('R', 0.02)), H = 2.8 * (1 + S.sys('h', 0.02)), G = 981, GAM = 1.54, C0 = 1.224 * (1 + S.sys('C', 0.04)), CQ = 0.0275, F0 = 0.788 * (1 + S.sys('f', 0.05)), KW = 1.343, FW = 2.32;
+    var YH = 75, sw = new B3.Stopwatch(0.04);
+    function omega2() { if (LAB.mode === 'A') { var T = 4 * Math.PI * RG / H * Math.sqrt(LAB.l / G); return 4 * Math.PI * Math.PI / (T * T); }
+      var T20 = 4 * Math.PI * RG / H * Math.sqrt(20 / G), inv = 1 / (T20 * T20) * (1 + 1.097 * LAB.z) * (LAB.wt ? KW : 1); return 4 * Math.PI * Math.PI * inv; }
+    var k35 = 4 * Math.PI * Math.PI * (1 / Math.pow(4 * Math.PI * RG / H * Math.sqrt(20 / G), 2)) * (1 + 1.097 * 35);
+    function accel(N, v, lifted) { var w2 = omega2(); if (LAB.wt && lifted) w2 /= KW; var kC = w2 / k35, U2 = 2 * w2 / (Math.PI * Math.PI), a = Math.abs(N), s = N > 0 ? 1 : -1, F, q = 0;
+      if (a > 1) { F = -s * GAM * C0 * kC * Math.pow(a - 1, GAM - 1); q = CQ * v * Math.abs(v); } else F = -U2 * Math.PI / 2 * Math.sin(Math.PI * N);
+      var fr = F0 * kC + (LAB.wt && !lifted ? FW * kC / KW : 0); fr *= Math.min(1, Math.abs(v) * 5);
+      return F - q - fr * (v > 0 ? 1 : v < 0 ? -1 : 0); }
+    var rul = B3.scaleTex(8, { width: 1.6, step: 0.1, every: 1 });
+    var bench = B3.bench(host, {
+      aspect: 0.62, lang: ctx.lang, keys: [' '], speeds: [1, 0.25], wheelIds: ['pend', 'hold'],
+      home: { yaw: -0.3, pitch: 0.28, k: 7.2, tx: 2, ty: 40, tz: 0 },
+      views: { top: { yaw: 0, pitch: 1.45, k: 26, tx: 0, ty: 40, tz: 0, title: { ko: '위에서 본 진자', en: 'The pendulum from above' } },
+               zr: { yaw: 0, pitch: 0.05, k: 30, tx: 6, ty: 12, tz: 0, title: { ko: '자의 휨', en: 'The ruler\'s bending' } },
+               sw: { yaw: 0, pitch: 1.25, k: 62, tx: 30, ty: 1.7, tz: 12, title: { ko: '스톱워치', en: 'Stopwatch' } } },
+      frame: function (b) {
+        if (b.keys.indexOf(' ') >= 0) sw.startStop(b.t);
+        var wh = b.wheel('hold'); if (wh) { if (LAB.mode === 'A') LAB.l = Math.max(10, Math.min(61, Math.round(LAB.l + wh))); else LAB.z = Math.max(0, Math.min(60, Math.round(LAB.z + wh))); }
+        if (b.clicked('c:ruler')) { LAB.mode = LAB.mode === 'A' ? 'B' : 'A'; LAB.N = 0; LAB.v = 0; if (LAB.mode === 'A') LAB.wt = false; }
+        if (b.clicked('c:wt') && !LAB.wasHeld) { if (LAB.mode === 'B') LAB.wt = !LAB.wt; else b.say('먼저 아래 실을 자에 매세요', 'Tie the lower threads to the ruler first'); }
+        var lifted = LAB.wt && b.held('c:wt'); LAB.wasHeld = false;
+        var wp = b.wheel('pend'), mp = b.screenMoved('pend');
+        if (wp || mp[0]) { LAB.N += wp + mp[0] * 0.01; LAB.held = true; LAB.v = 0; b.say('N = ' + LAB.N.toFixed(1) + b.L(' 반바퀴', ' half-turns'), 'N = ' + LAB.N.toFixed(1) + ' half-turns'); }
+        else if (b.clicked('m:pend')) { if (LAB.held) LAB.held = false; else { LAB.held = true; LAB.v = 0; } }
+        if (!LAB.held && b.dt > 0) { var n = Math.ceil(b.dt / 0.0005), h = b.dt / n;
+          for (var i = 0; i < n; i++) { LAB.v += accel(LAB.N, LAB.v, lifted) * h; LAB.N += LAB.v * h; } }
+        var l = LAB.mode === 'A' ? LAB.l : 20, YP = LAB.mode === 'A' ? YH - LAB.l : 40, yH = LAB.mode === 'A' ? YH : 60 + LAB.z / 10;
+        B3.desk(-36, 44, -18, 20);
+        /* tripod */
+        B3.box3(-24, -8, 0, 1.6, -10, 6, '#3b4048', { top: '#474c55' }); B3.cylSeg('y', 1.6, 82, -18, -2, 0.8, '#c3c8cd', { seg: 14, cap: '#dde1e4' }, 6);
+        B3.box3(-19.4, -16.6, yH - 1.4, yH + 1.4, -3.4, -0.6, '#3a3f46', { top: '#474c55', id: 'm:hold' });
+        B3.cyl3('x', -16.6, 2, yH, -2, 0.5, '#9aa0a6', { seg: 10, cap: '#b5bbc1', id: 'm:hold' }); B3.box3(-1, 1, yH - 0.6, yH + 0.6, -3, 3, '#3a3f46', { id: 'm:hold' });
+        /* the pendulum: two bolts and the nut, turned by θ = πN */
+        var th = Math.PI * LAB.N, d = [Math.cos(th), 0, -Math.sin(th)], e = [Math.sin(th), 0, Math.cos(th)];
+        B3.cylAB([-7.5 * d[0], YP, -7.5 * d[2]], [7.5 * d[0], YP, 7.5 * d[2]], 0.45, '#9aa0a6', { seg: 8, id: 'm:pend' });
+        B3.cylAB([-1.5 * d[0], YP, -1.5 * d[2]], [1.5 * d[0], YP, 1.5 * d[2]], 0.75, '#8d9399', { seg: 6, id: 'm:pend', cap: '#a2a8ae' });
+        [-1, 1].forEach(function (sg) { B3.cylAB([sg * 7.5 * d[0], YP, sg * 7.5 * d[2]], [sg * 8.6 * d[0], YP, sg * 8.6 * d[2]], 0.8, '#7d848b', { seg: 6, id: 'm:pend', cap: '#959ca3' }); });
+        function threads(yA, yB, fixedTop) { var aN = Math.abs(LAB.N), h2 = H / 2;
+          var Pf = function (sg) { return [0, fixedTop ? yA : yB, sg * h2]; }, Pm = function (sg) { return [sg * h2 * e[0], fixedTop ? yB : yA, sg * h2 * e[2]]; };
+          if (aN <= 1) { [-1, 1].forEach(function (sg) { B3.line3(Pf(sg), Pm(sg), '#f0f0f0', 1.2); }); return; }
+          var y1 = fixedTop ? yA - 2 : yB + 2, y2 = fixedTop ? yB + 2 : yA - 2, M = Math.max(16, Math.round(aN * 10));
+          [-1, 1].forEach(function (sg) { var pts = [Pf(sg)];
+            for (var i = 0; i <= M; i++) { var u = i / M, ph = (sg > 0 ? Math.PI / 2 : -Math.PI / 2) + th * (fixedTop ? u : 1 - u), yy = fixedTop ? y1 + (y2 - y1) * u : y1 + (y2 - y1) * u;
+              pts.push([0.12 * Math.sin(ph), yy, 0.12 * Math.cos(ph)]); }
+            pts.push(Pm(sg)); B3.poly3(fixedTop ? pts : pts, '#f0f0f0', 1.2); }); }
+        threads(yH - 0.6, YP + 0.45, true);
+        /* lower holder with the ruler (cantilever, bent up by z at the tie point) */
+        var zr = LAB.mode === 'B' ? LAB.z / 10 : 0, YR = 20;
+        B3.box3(-19.4, -16.6, YR - 1.4, YR + 1.4, -3.4, -0.6, '#3a3f46', { top: '#474c55' });
+        var segs = 8; for (var k = 0; k < segs; k++) { var x0 = -16.6 + k * 5, x1 = x0 + 5, bend = function (x) { var u = Math.max(0, (x + 16.6) / 18); return zr * (u < 1 ? u * u * (3 - u) / 2 : 1 + 1.5 * (u - 1)); };
+          B3.box3(x0, x1, YR - 0.3 + (bend(x0) + bend(x1)) / 2, YR + 0.3 + (bend(x0) + bend(x1)) / 2, -2.8, 0.8, '#d9c48f', { id: 'c:ruler' }); }
+        var tieY = YR + 0.3 + zr;
+        if (LAB.mode === 'B') { B3.box3(0.8, 2.4, YR - 6, YR + 2, -3.2, -2.9, '#f2efe6', { noObst: true });
+          B3.tex3(rul, 0, 0, rul.width, rul.height, [0.8, YR + 2 + 1 * 0.1 - 0.1, -2.88], [1.6, 0, 0], [0, -10 * 0.8 - 0 , 0], { id: 'c:zr' });
+          threads(YP - 0.45, tieY, false);
+          if (LAB.wt) { var wy = lifted ? 10 : 6; B3.line3([1.4, tieY, 2.5], [1.4, wy + 3, 2.5], '#f0f0f0', 1.2); B3.cyl3('y', wy, wy + 3, 1.4, 2.5, 1.1, '#8d6e3a', { seg: 14, cap: '#a1824a', id: 'c:wt' }); } }
+        if (!LAB.wt) B3.cyl3('y', 0, 3, 18, 10, 1.1, '#8d6e3a', { seg: 14, cap: '#a1824a', id: 'c:wt' });
+        if (b.clicked('c:zr')) b.go('zr');
+        B3.stopwatch(b, 'sw', [30, 12], sw);
+        LAB.state = { mode: LAB.mode, l: LAB.l, z: LAB.z, N: LAB.N, T: 2 * Math.PI / Math.sqrt(omega2()), held: LAB.held };
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
+  }
+};
+</script>
+<script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
+<script src="consolesim.js"></script>
+  <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
+</body>
+</html>
