@@ -37,5 +37,22 @@ ok(((await seen()).theoryGrades || 0) >= 2, "grading used the theory exam's word
 ok(t1.review && t1.review.summary && t1.items.length > 0, "T1 has marks per item and a review");
 [, j] = await call("GET", "/lab/stats?comp=ipho", null, U);
 ok(j.exams["ipho1995:T1+T2"] && j.exams["ipho1995:T1+T2"].sat >= 1, "the exam list counts it as ipho1995:T1+T2");
+/* NBPhO: the experiments and the rest of the booklet in one exam ("mixed") */
+sql(`DELETE FROM ratelimits; UPDATE users SET exam_tokens=5 WHERE username='thU${rnd}'`);
+[s, j] = await call("POST", "/lab/start", { comp: "nbpho", year: 2024, tasks: ["E1", "E2", "T"], lang: "ko",
+  sources: { E1: { sol: `NBPhO_2024_P5S${rnd}.pdf`, no: "5" }, E2: { sol: `NBPhO_2024_P10S_missing${rnd}.pdf`, no: "10" }, T: { sol: `NBPhO_2024_TS${rnd}.pdf`, kind: "theory", skip: "5,10" } } }, U);
+ok(s === 200 && j.session.kind === "mixed", "NBPhO: experiments and theory start as one exam (mixed) " + JSON.stringify([s, j.error, j.session && j.session.kind]));
+sid = j.session.id; const key2 = j.token;
+await call("POST", `/lab/sessions/${sid}/finish`, null, U);
+for (const k of ["E1", "E2", "T"]) await up(key2, k, "answer", png);
+ok(((await seen()).mixedReads || 0) >= 3, "pages read with the booklet's numbers: Problem 5 is E1");
+const site0 = (await seen()).siteSolutions || 0;
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, U);
+const per = j.session && j.session.detail.tasks;
+ok(s === 200 && ["E1", "E2", "T"].every(k => per[k] && per[k].status === "graded"), "all three graded " + JSON.stringify(per && Object.fromEntries(Object.entries(per).map(([k, v]) => [k, v.status]))));
+const sn = await seen();
+ok((sn.bookletNos || []).includes(5) && (sn.bookletNos || []).includes(10), "each experiment's scheme names its booklet number " + JSON.stringify(sn.bookletNos));
+ok(sn.leftOut === "5, 10", "the theory scheme leaves the experiments out " + JSON.stringify(sn.leftOut));
+ok((sn.siteSolutions || 0) > site0, "a solution cut out of the booklet is fetched from the site (pdfx/nbpho)");
 console.log(fails ? fails + " FAILED" : "all passed");
 process.exit(fails ? 1 : 0);

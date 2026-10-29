@@ -9,6 +9,7 @@ by .github/workflows/theory-pdfs.yml (tools/theory_mirror.py); the site and the 
 theory.js keeps only what the site needs:
 
   window.THEORY = {ipho: {"2024": {p: [["T1", "title"], ...], f: {"T1": {paper, sol, mark, answer}, ...}}}}
+  (NBPhO also x: the experimental problems' numbers, c: {"5": {paper, sol}} the problems cut out of the booklet)
 """
 import glob
 import json
@@ -56,7 +57,27 @@ def load():
             probs = [[str(p.get('id', ''))[:8], str(p.get('title', '')).strip()[:160]] for p in y.get('problems', [])
                      if p.get('title') and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
+    split(out)
     return out, bad
+
+
+def split(out):
+    """NBPhO: the booklet cut into one PDF per problem (pdfx/nbpho, tools/nbpho_split.py) — each theory problem becomes a
+    part of its own for practice; x lists the experimental problems' numbers and c the cut files of every problem, so the
+    experiment cards and the combined exam use them too.  The whole booklet stays as part T."""
+    path = os.path.join(ROOT, 'pdfx', 'nbpho', 'index.json')
+    if not os.path.exists(path):
+        return
+    for year, e in json.load(open(path, encoding='utf-8')).items():
+        t = out.get('nbpho', {}).get(year)
+        if not t:
+            continue
+        t['x'] = e['exp']
+        t['c'] = {k: {'paper': 'pdfx/nbpho/' + e['paper'][k], **({'sol': 'pdfx/nbpho/' + e['sol'][k]} if k in e['sol'] else {})}
+                  for k in e['paper']}
+        for k, v in t['c'].items():
+            if int(k) not in e['exp']:
+                t['f']['T' + k] = dict(v)
 
 
 def main():

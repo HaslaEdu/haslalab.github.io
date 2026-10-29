@@ -1013,6 +1013,7 @@ const NBPHO_TIME = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600,
 const THEORY_SEC = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600 };
 function labExamSec(comp, year, n, theory) {
   if (LAB.testSec) return LAB.testSec;
+  if (theory === "mixed") return comp === "nbpho" && NBPHO_TIME[year] ? NBPHO_TIME[year][0] * 60 : 5 * 3600;   // NBPhO: everything, the whole competition time
   if (theory) return THEORY_SEC[comp] || 5 * 3600;
   n = Math.max(1, n || 1);
   if (comp === "opho") return 3 * 3600;
@@ -1024,7 +1025,9 @@ function labExamSec(comp, year, n, theory) {
 /* which kind of exam a session is: a theory paper's tasks are marked kind "theory" in its sources when it starts */
 const labSrc = s => { try { return s.sources ? JSON.parse(s.sources) : {}; } catch (e) { return {}; } };
 const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[task] && src[task].kind === "theory") : Object.values(src).some(v => v && v.kind === "theory"); };
-const labDur = s => labExamSec(s.comp, s.year, JSON.parse(s.tasks).length, labTheory(s));
+/* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
+const labKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
+const labDur = s => { const k = labKind(s); return labExamSec(s.comp, s.year, JSON.parse(s.tasks).length, k === "mixed" ? "mixed" : k === "theory"); };
 const labOpen = (s, t) => s.status === "scanning" && t <= s.scan_until + LAB.graceSec;
 const labGet = (env, id) => env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first();
 /* move a session along the clock: when the exam's time is up the bench goes dark, thirty minutes later what
@@ -1058,7 +1061,7 @@ const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,ocr,ocr_c
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
-    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labTheory(s) ? "theory" : "lab", submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
+    exam_sec: labDur(s), scan_sec: LAB.scanSec, kind: labKind(s), submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     regulation: LAB_REG,
     pages: pages && pages.map(p => ({ id: p.id, no: p.no, task: p.task, kind: p.kind, ocr_status: p.ocr_status, ocr_conf: p.ocr_conf,
       text: p.text ?? p.ocr ?? "", edited: p.edited, legible: p.legible || null, read: p.read ? JSON.parse(p.read) : null, created_at: p.created_at })) };
@@ -1207,7 +1210,12 @@ async function labPdf(env, src) {
     if (r.ok) { const b = new Uint8Array(await r.arrayBuffer()); if (b.length > 15e6) throw new Error("solution too large"); return b; }
     if (r.status === 404) missing++; else console.error("lab solution", name, r.status);
   }
-  if (missing === names.length) return null;
+  if (missing === names.length) {
+    /* a problem cut out of a booklet (tools/nbpho_split.py) is kept on the site: pdfx/<prefix>/<name> */
+    const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}pdfx/${src.split("_")[0].toLowerCase()}/${src}`, { signal: AbortSignal.timeout(30000) });
+    if (r.ok) { const b = new Uint8Array(await r.arrayBuffer()); if (b.length > 15e6) throw new Error("solution too large"); return b; }
+    if (r.status === 404) return null;
+  }
   throw new Error("solution not fetched");
 }
 async function labScheme(env, s, task, m) {
@@ -1222,6 +1230,7 @@ async function labScheme(env, s, task, m) {
   const out = await gemini(env, theory ? [
     { text: [`[TASK: build marking scheme] This is the official solution of the theory paper ${task} of ${s.comp.toUpperCase()} ${s.year}` + (mark ? ", followed by its official marking scheme." : "; it usually contains the official marking scheme."),
       `If the paper is split into problems, keep every problem (task ${task} may be the whole paper, or one problem of it: Problem ${task.replace(/\D/g, "") || task}, Question ${task.replace(/\D/g, "")}).`,
+      ...(sx.skip ? [`Leave out problems ${sx.skip.replace(/,/g, ", ")} entirely: they are experimental problems, graded separately.`] : []),
       "List every marked item of the marking scheme exactly as printed: its id (prefix it with the problem number when the paper has several, e.g. 1.A.2 or T2-B.3), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
@@ -1233,7 +1242,8 @@ async function labScheme(env, s, task, m) {
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),
   ] : [
     { text: [`[TASK: build marking scheme] This is the official solution of experimental problem ${task} of ${s.comp.toUpperCase()} ${s.year}; it contains the official marking scheme.`,
-      `If the document holds several problems, use only ${task} (it may be called Problem ${task.replace(/\D/g, "") || task}, Experiment ${task.replace(/\D/g, "")} or ${task}).`,
+      sx.no ? `In the competition's booklet this experiment is Problem ${sx.no}; if the document holds several problems, use only Problem ${sx.no}.`
+        : `If the document holds several problems, use only ${task} (it may be called Problem ${task.replace(/\D/g, "") || task}, Experiment ${task.replace(/\D/g, "")} or ${task}).`,
       "List every marked item of the marking scheme exactly as printed: its id (e.g. A.1), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
@@ -1265,12 +1275,16 @@ async function labUpstage(env, buf, mime, m) {
 const LEG = ["good", "partial", "poor"];
 const capLegible = (leg, conf) => conf == null ? leg : LEG[Math.max(LEG.indexOf(leg), conf < 0.3 ? 2 : conf < 0.6 ? 1 : 0)];
 async function labReadPage(env, s, buf, mime, up, m) {
-  const theory = labTheory(s), tasks = JSON.parse(s.tasks).join(", ");
+  const kind = labKind(s), theory = kind !== "lab", tasks = JSON.parse(s.tasks).join(", ");
+  const src = labSrc(s), nos = Object.entries(src).filter(([, v]) => v.no).map(([k, v]) => `Problem ${v.no} → task ${k}`);
+  const thTask = Object.keys(src).find(k => src[k].kind === "theory");
   const out = await gemini(env, [
     { text: [theory
-      ? `[TASK: read page] A photographed page of the answer sheets or working sheets of the ${s.comp.toUpperCase()} ${s.year} theory exam, tasks ${tasks}.`
+      ? `[TASK: read page] A photographed page of the answer sheets or working sheets of the ${s.comp.toUpperCase()} ${s.year} ${kind === "mixed" ? "exam (experiments and theory)" : "theory exam"}, tasks ${tasks}.`
       : `[TASK: read page] A photographed page of the official answer sheets or working sheets of ${s.comp.toUpperCase()} ${s.year}, experiments ${tasks}.`,
-      theory
+      kind === "mixed"
+      ? `This exam holds experiments and a theory paper from one booklet. Read the printed header: which task (one of ${tasks}; ${nos.join(", ")}${thTask ? `, any other problem number → task ${thTask}` : ""}), whether it is an answer sheet (Answer Sheet / Answer Form) or a working sheet (Working Sheet / Writing Sheet), and the page number. Use null when it is not printed or cannot be read.`
+      : theory
       ? `Read the printed header: which task (one of ${tasks}; a problem number on the sheet such as «Problem 2», «T2», «Q2» or «Theory 2» means task T2 when the tasks are T1, T2, …, and the whole paper's task otherwise), whether it is an answer sheet (Answer Sheet / Answer Form) or a working sheet (Working Sheet / Writing Sheet), and the page number. Use null when it is not printed or cannot be read.`
       : "Read the printed header: which experiment (task, e.g. E1), whether it is an answer sheet (Answer Sheet / Answer Form) or a working sheet (Working Sheet / Writing Sheet), and the page number. Use null when it is not printed or cannot be read.",
       theory
@@ -1861,6 +1875,8 @@ async function lab(p, m, body, me, req, env, url) {
       if (typeof x.sol === "string" && SOL_RE.test(x.sol)) o.sol = x.sol;
       if (typeof x.mark === "string" && SOL_RE.test(x.mark)) o.mark = x.mark;
       if (x.kind === "theory") o.kind = "theory";
+      if (/^\d{1,2}$/.test(String(x.no || ""))) o.no = +x.no;                                  // its number in the booklet (NBPhO)
+      if (typeof x.skip === "string" && /^\d{1,2}(,\d{1,2}){0,9}$/.test(x.skip)) o.skip = x.skip;  // problems of the booklet graded elsewhere
       if (Object.keys(o).length) sources[k] = o;
     }
     /* coming back: the open exam is returned as it is, nothing is spent */
@@ -1869,7 +1885,8 @@ async function lab(p, m, body, me, req, env, url) {
       if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks)) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
-    const token = labScanCode(), dur = labExamSec(comp, year, tasks.length, Object.values(sources).some(v => v.kind === "theory"));
+    const nth = tasks.filter(k => sources[k] && sources[k].kind === "theory").length;
+    const token = labScanCode(), dur = labExamSec(comp, year, tasks.length, nth && nth < tasks.length ? "mixed" : nth > 0);
     /* one transaction: the session is written only if a token is left, the token is taken only for a session
        written by this very call (charged=0), and the unique index on open sessions makes a second start at
        the same moment fail as a whole, spending nothing */

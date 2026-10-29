@@ -91,6 +91,20 @@
   .ps.full{flex:1 1 auto;max-width:none;border-left:0}
   .ps .ph .on{background:var(--accent);border-color:var(--accent);color:#1c2027}
   #bPaper.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  /* the problem paper on the desk: a small stack of sheets, seen at an angle; it lifts under the pointer */
+  .paper3d{display:block;position:sticky;bottom:-18px;z-index:3;width:calc(100% + 20px);margin:14px -10px -18px;padding:4px 10px 10px;border:0;border-radius:0;cursor:pointer;perspective:520px;text-align:center;
+    background:linear-gradient(rgba(34,38,45,0),var(--panel) 22%)}
+  .paper3d:hover{border:0}
+  .paper3d .stk{position:relative;display:block;width:118px;height:150px;margin:0 auto -30px;transform:rotateX(50deg) rotateZ(-12deg);transform-style:preserve-3d;transition:transform .25s}
+  .paper3d .stk::before{content:"";position:absolute;inset:6px -2px -6px 6px;background:rgba(0,0,0,.45);filter:blur(7px);transform:translateZ(-8px)}
+  .paper3d i{position:absolute;inset:0;background:#e9e4d6;border:1px solid #bdb5a2;border-radius:2px}
+  .paper3d i:nth-child(1){transform:translateZ(-6px) rotateZ(3deg)}.paper3d i:nth-child(2){transform:translateZ(-4px) rotateZ(-2deg)}.paper3d i:nth-child(3){transform:translateZ(-2px) rotateZ(1deg)}
+  .paper3d .sh{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:12px 12px;background:#fbfaf5;border:1px solid #c9c2b0;border-radius:2px;color:#2b2b2b;text-align:left;
+    box-shadow:inset 0 -18px 30px rgba(0,0,0,.05)}
+  .paper3d .sh b{font:700 12px/1.2 Georgia,"Times New Roman",serif}.paper3d .sh em{font:italic 10.5px/1.2 Georgia,serif;color:#555;margin-bottom:4px}
+  .paper3d .sh u{display:block;width:100%;height:5px;border-bottom:1px solid #d6d1c4;text-decoration:none}.paper3d .sh u:nth-of-type(3n){width:70%}
+  .paper3d:hover .stk,.paper3d:focus-visible .stk{transform:rotateX(38deg) rotateZ(-8deg) translateZ(18px)}
+  .paper3d small{display:block;position:relative;margin-top:16px;font-size:11.5px;color:var(--accent)}
 
   /* ── cards: before, after, scanning ── */
   .page{height:100%;overflow:auto;padding:28px 16px 40px}
@@ -193,7 +207,9 @@ const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* the exam's length (examdur.js; the server's clock has the last word) */
 const THY = new URLSearchParams(location.search).get("m") === "t";        // a theory exam
-const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length, THY); })();
+/* a combined exam (NBPhO): experiments on the bench and the theory of the same booklet, a task with no simulator ("-") */
+const MIX = !THY && (new URLSearchParams(location.search).get("f") || "").split(",").includes("-");
+const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length, THY || (MIX ? "mixed" : false)); })();
 const DK = HLexam.text(DUR, "ko"), DE = HLexam.text(DUR, "en"), DC = HLexam.clock(DUR) + ":00";
 
 const T = {
@@ -212,7 +228,7 @@ const T = {
     ],
     tasksH: "이번 시험", sheet: "문제지", back: "시험 목록으로",
     sheetsH: "답안지 인쇄", sheetsB: "Answer sheet · Working sheet 인쇄 ↗", sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.",
-    paper: "문제지 열기", paperClose: "문제지 닫기", paperLoading: "문제지를 불러오는 중…", paperFail: "문제지를 불러오지 못했습니다. 다시 열어 보세요.", paperNone: "이 실험은 문제지 파일이 없습니다.",
+    paper: "문제지 열기", paperClose: "문제지 닫기", paperDesk: "책상 위 문제지 — 눌러서 보기", paperLoading: "문제지를 불러오는 중…", paperFail: "문제지를 불러오지 못했습니다. 다시 열어 보세요.", paperNone: "이 실험은 문제지 파일이 없습니다.",
     docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: `실험 ${DK} + 답안 스캔 30분`,
     infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `실전 토큰 1개 (보유 ${n}개)`,
     infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
@@ -265,7 +281,7 @@ const T = {
     ],
     tasksH: "This exam", sheet: "Problem sheet", back: "Back to the exam list",
     sheetsH: "Answer sheets", sheetsB: "Print the Answer and Working sheets ↗", sheetsNote: "Print them before you start. The problem sheet opens only on the exam screen.",
-    paper: "Open problem sheet", paperClose: "Close problem sheet", paperLoading: "Loading the problem sheet…", paperFail: "The problem sheet could not be loaded. Try opening it again.", paperNone: "This experiment has no problem sheet file.",
+    paper: "Open problem sheet", paperClose: "Close problem sheet", paperDesk: "The problems on the desk — click to read", paperLoading: "Loading the problem sheet…", paperFail: "The problem sheet could not be loaded. Try opening it again.", paperNone: "This experiment has no problem sheet file.",
     docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: `${DE} of experiments + 30 minutes to scan`,
     infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `1 exam token (you have ${n})`,
     infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
@@ -355,18 +371,19 @@ const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
   c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
-  marks: split("k", "|"), answers: split("a", "|"),
+  marks: split("k", "|"), answers: split("a", "|"), nos: split("o", "|"), skip: Q.get("x") || "",
 };
+const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
   (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(f))
-       : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.every(f => /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
+       : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.some(f => f !== "-") && EX.files.every(f => f === "-" || /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
-const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : PDF_BASE + s.replace(/^pdf\//, "");
+const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : /^pdfx\//.test(s) ? "../" + s : PDF_BASE + s.replace(/^pdf\//, "");
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
 /* the printable answer and working sheets (sheets.html) — the problem sheet is not among them */
 const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y, n: EX.name || EX.c.toUpperCase(), e: EX.tasks.join(","), t: EX.titles.join("|"), lang,
-  ...(THY ? { m: "t", a: EX.answers.join("|") } : {}) }).toString();
+  ...(THY ? { m: "t", a: EX.answers.join("|") } : MIX ? { tt: EX.tasks.filter((x, i) => isThy(i)).join(",") } : {}) }).toString();
 const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
 const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
 /* the address to come back to (kept on the server with the session), without the language */
@@ -417,8 +434,8 @@ function paintBar() {
   $("clock").hidden = !running; $("bEnd").hidden = $("bFull").hidden = !running;
   document.body.classList.toggle("running", !!running);
   $("bPaper").hidden = !running || THY || !EX.pdfs.some(Boolean); $("bPaper").textContent = PAPER.open ? t().paperClose : t().paper; $("bPaper").classList.toggle("on", PAPER.open);
-  $("views").innerHTML = running && !THY && EX.tasks.length > 1 ? [`<button data-v="" class="${!VIEW ? "on" : ""}">${t().viewAll}</button>`]
-    .concat(EX.tasks.map(x => `<button data-v="${x}" class="${VIEW === x ? "on" : ""}">${x}</button>`)).join("") : "";
+  $("views").innerHTML = running && !THY && EX.files.filter(f => f !== "-").length > 1 ? [`<button data-v="" class="${!VIEW ? "on" : ""}">${t().viewAll}</button>`]
+    .concat(EX.tasks.filter((x, i) => !isThy(i)).map(x => `<button data-v="${x}" class="${VIEW === x ? "on" : ""}">${x}</button>`)).join("") : "";
 }
 let VIEW = "";
 const PAPER = { open: false, i: 0, zoom: 1, docs: {} };    // the problem sheet beside the bench (see openPaper)
@@ -496,9 +513,9 @@ async function introView() {
     <span class="badge">${t().docBadge}</span>
     <h1>${esc(label())} · ${EX.tasks.length > 1 ? EX.tasks.join(" + ") : EX.tasks[0]}</h1><p class="lead">${t().docH} — ${t().introLead}</p>
     <table class="info"><tbody>
-      <tr><th>${t().infoName}</th><td>${esc(label())} ${THY ? t().kind : lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
+      <tr><th>${t().infoName}</th><td>${esc(label())} ${THY ? t().kind : MIX ? (lang === "ko" ? "실험 + 이론 시험" : "experiments + theory exam") : lang === "ko" ? "실험 시험" : "experimental exam"} (${EX.tasks.join(" + ")})</td></tr>
       <tr><th>${t().infoTasks}</th><td>${tasks}</td></tr>
-      <tr><th>${t().infoTime}</th><td>${t().infoTimeV}</td></tr>
+      <tr><th>${t().infoTime}</th><td>${MIX ? (lang === "ko" ? `실험 + 이론 ${DK} + 답안 스캔 30분` : `${DE} for the experiments and the theory + 30 minutes to scan`) : t().infoTimeV}</td></tr>
       <tr><th>${t().infoBring}</th><td>${t().infoBringV}</td></tr>
       <tr><th>${t().sheetsH}</th><td><a href="${esc(sheetsHref())}" target="_blank" rel="noopener"><button class="pri" type="button">${t().sheetsB}</button></a>
         <div style="font-size:12.5px;color:var(--muted);margin-top:6px">${t().sheetsNote}</div></td></tr>
@@ -506,7 +523,8 @@ async function introView() {
       <tr><th>${t().infoWho}</th><td>${ME && ME.nickname ? esc(ME.nickname) : "—"}</td></tr>
     </tbody></table>
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
-    <ol>${t().rules.map(r => `<li>${r}</li>`).join("")}</ol>
+    <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
+      : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
     ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
     ${gate}
     <div class="row"><a href="${back}">${t().back}</a></div>
@@ -524,8 +542,10 @@ async function startExam() {
   const go = $("go"); if (go) go.disabled = true;
   try {
     /* each experiment's official solution: the marking scheme is drawn from it */
-    const clean = v => (v || "").replace(PDF_BASE, "").replace(/^pdf\//, "");
-    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]), ...(THY ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}) } : {}) }]).filter(([, v]) => v.sol || v.kind));
+    const clean = v => (v || "").replace(PDF_BASE, "").replace(/^pdfx?\/([a-z]+\/)?/, "");
+    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]),
+      ...(isThy(i) ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}), ...(MIX && EX.skip ? { skip: EX.skip } : {}) } : {}),
+      ...(EX.nos[i] ? { no: EX.nos[i] } : {}) }]).filter(([, v]) => v.sol || v.kind));
     const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
@@ -551,7 +571,7 @@ function runView() {
   $("main").innerHTML = `<div class="hall"><aside class="kit" id="kit"></aside><div class="desk" id="desk"></div><aside class="ps" id="ps" hidden></aside></div>`;
   $("desk").addEventListener("click", e => { const a = e.target.closest("[data-paper]"); if (a) { e.preventDefault(); openPaper(+a.dataset.paper); } });
   PAPER.open = false; PAPER.docs = {};
-  stations = EX.tasks.map((id, i) => {
+  stations = EX.tasks.map((id, i) => ({ id, i })).filter(x => !isThy(x.i)).map(({ id, i }) => {
     const el = document.createElement("section"); el.className = "st"; el.dataset.task = id;
     el.innerHTML = `<div class="lbl"><b>${esc(id)}</b><span>${esc(EX.titles[i] || "")}</span>
       ${EX.pdfs[i] ? `<a class="pdf" href="#" data-paper="${i}">${t().paper}</a>` : ""}</div>`;
@@ -663,8 +683,14 @@ function paintKit() {
   const trays = stations.filter(st => st.tray);
   k.innerHTML = `<h2>${t().kitH}</h2><p class="sub" style="white-space:pre-line">${trays.length > 1 ? t().kitSub : trays.length ? t().kitSub1 : ""}</p>` +
     stations.map(st => `<div class="grp"><h3><i>${esc(st.id)}</i>${esc(EX.titles[st.i] || "")}</h3>${st.tray ? `<canvas data-k="${st.i}"></canvas>` : `<div class="placed">${t().placed}</div>`}</div>`).join("") +
-    `<div class="hand" id="hand">${t().handNone}</div>`;
-  k.querySelectorAll("canvas").forEach(c => wireMirror(c, stations[+c.dataset.k]));
+    `<div class="hand" id="hand">${t().handNone}</div>` +
+    /* the problem paper, lying on the desk: a click opens it beside the bench */
+    (EX.pdfs.some(Boolean) ? `<button type="button" class="paper3d" id="paper3d" title="${esc(t().paper)}"><span class="stk"><i></i><i></i><i></i>
+      <span class="sh"><b>${esc(label())}</b><em>${MIX ? "Experiment + Theory" : "Problems"}</em><u></u><u></u><u></u><u></u><u></u><u></u></span></span>
+      <small>${t().paperDesk}</small></button>` : "");
+  const pd = $("paper3d");
+  if (pd) pd.onclick = () => { const i = MIX ? EX.tasks.findIndex((x, j) => isThy(j)) : Math.max(0, EX.tasks.indexOf(VIEW)); PAPER.open && PAPER.i === i ? closePaper() : openPaper(i); };
+  k.querySelectorAll("canvas[data-k]").forEach(c => wireMirror(c, stations.find(st => st.i === +c.dataset.k)));
   copyTrays();
 }
 function copyTrays() {
@@ -850,7 +876,7 @@ function doneView() {
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
   /* which medal the experiment alone would have earned that year, where the year's scores are published */
-  if (s.status === "graded" && !THY && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
+  if (s.status === "graded" && !THY && !MIX && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
     const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");
     if (box && SES === s) box.innerHTML = window.labMedal.html(e, lang); });
   $("again").onclick = () => { SES = null; shown = ""; sync(); };

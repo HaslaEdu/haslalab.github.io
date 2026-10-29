@@ -105,6 +105,8 @@ const C = (Q.get("c") || "").toLowerCase(), Y = parseInt(Q.get("y")) || 0, NAME 
 const TASKS = (Q.get("e") || "").split(",").map(s => s.trim()).filter(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)).slice(0, 4);
 const TITLES = (Q.get("t") || "").split("|");
 const KEY = C + Y, THY = Q.get("m") === "t";
+/* a combined exam (NBPhO): these tasks are the theory of the booklet and get theory sheets */
+const TT = new Set((Q.get("tt") || "").split(",").filter(Boolean)), thy = task => THY || TT.has(task);
 const ANS = (Q.get("a") || "").split("|").map(s => s.trim());
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 const T = {
@@ -135,7 +137,7 @@ let ITEMS = {}, OFF = {}, ws = 4, want = { answer: true, working: true };
 const head = (task, kind, i, n, title) => `
   <div class="mk a"></div><div class="mk b"></div><div class="mk c"></div><div class="mk d"></div>
   <div class="hd"><div class="l">
-      <div class="ex">HaslaLab · ${esc(NAME)} ${Y} · ${THY ? "THEORY" : "EXPERIMENT"}</div>
+      <div class="ex">HaslaLab · ${esc(NAME)} ${Y} · ${thy(task) ? "THEORY" : "EXPERIMENT"}</div>
       <div class="k">${esc(task)} · ${kind === "answer" ? "ANSWER SHEET" : "WORKING SHEET"}<small>${kind === "answer" ? "답안지" : "연습지"}</small></div>
       <div class="ti">${esc(title || "")}</div></div>
     <div class="r"><span>${T.cand}</span><i>HL-${esc(KEY.toUpperCase())}-</i>
@@ -146,8 +148,8 @@ const foot = (task, kind) => `<div class="ft"><span>${esc(task)} ${kind === "ans
 function answerPages(task) {
   const tk = ITEMS[task] && ITEMS[task].items && ITEMS[task].items.length ? ITEMS[task] : null;
   const blank = n => Array.from({ length: n }, () => ({ id: "", p: null, h: 29 }));
-  const list = tk ? tk.items.map(([id, p]) => ({ id, p, h: Math.max(19, Math.min(40, 16 + (p || 0) * 14)) })).concat(blank(3)) : THY ? Array.from({ length: 10 }, () => ({ id: "", p: null, h: 46 })) : blank(16);
-  const note = !tk ? (THY ? T.thyItems : T.noItems) : tk.total && tk.points < tk.total - 0.05 ? T.someItems : "";
+  const list = tk ? tk.items.map(([id, p]) => ({ id, p, h: Math.max(19, Math.min(40, 16 + (p || 0) * 14)) })).concat(blank(3)) : thy(task) ? Array.from({ length: 10 }, () => ({ id: "", p: null, h: 46 })) : blank(16);
+  const note = !tk ? (thy(task) ? T.thyItems : T.noItems) : tk.total && tk.points < tk.total - 0.05 ? T.someItems : "";
   const room = 242, pages = [[]]; let used = note ? 7 : 0;
   for (const b of list) { if (used + b.h + 2.2 > room) { pages.push([]); used = 0; } pages[pages.length - 1].push(b); used += b.h + 2.2; }
   return pages.map((bs, k) => (k === 0 && note ? `<p class="note">${note}</p>` : "") + bs.map(b => `
@@ -183,7 +185,7 @@ function build() {
   for (const [ti, task] of TASKS.entries()) {
     const title = (ITEMS[task] && ITEMS[task].title) || TITLES[ti] || "";
     if (want.answer && !hasOff(task, "answer")) {
-      const bodies = THY ? answerPages(task) : [...answerPages(task), tablePage(), graphPage(), graphPage()];
+      const bodies = thy(task) ? answerPages(task) : [...answerPages(task), tablePage(), graphPage(), graphPage()];
       bodies.forEach((b, i) => out.push(`<div class="pg">${head(task, "answer", i + 1, bodies.length, title)}<div class="bd">${b}</div>${foot(task, "answer")}</div>`));
     }
     if (want.working && !hasOff(task, "working")) for (let i = 0; i < ws; i++)

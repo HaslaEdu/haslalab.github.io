@@ -25,3 +25,6 @@
  "missing":[{"y":1999,"why":"…"}]}
 ```
 `kind`: paper · solution · marking · answer.
+
+## NBPhO: 문제별로 자른 책자
+NBPhO는 문제지 · 해설이 각각 한 권이라, 연습 모드용으로 문제별 PDF를 `pdfx/nbpho/NBPhO_<연도>_P<번호>_EN.pdf` / `…_P<번호>S.pdf`로 잘라 둡니다(`python tools/nbpho_split.py <책자 폴더>`, 결과 목록 `pdfx/nbpho/index.json`). `theory_build.py`가 이를 읽어 이론 문제마다 T<번호>로, 실험 문제는 실험 카드에 연결합니다. 책자 전체(T)는 실전 모드(실험 + 이론)에 씁니다.

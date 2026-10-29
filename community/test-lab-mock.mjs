@@ -75,6 +75,12 @@ http.createServer(async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     return res.end(JSON.stringify({ text: OCR_TEXT, content: { markdown: OCR_TEXT }, confidence: unsure ? 0.5 : 0.91, usage: { pages: 1 } }));
   }
+  if (req.url.startsWith("/site/pdfx/")) {                         // the site's own copies: problems cut out of a booklet
+    const name = decodeURIComponent(req.url.split("/").pop());
+    if (!/_P\d+S/.test(name)) { res.statusCode = 404; return res.end("nope"); }
+    seen.siteSolutions = (seen.siteSolutions || 0) + 1;
+    res.setHeader("Content-Type", "application/pdf"); return res.end("%PDF-1.4 fake solution " + name);
+  }
   if (req.url.startsWith("/pdf/")) {
     const name = decodeURIComponent(req.url.slice(5));
     if (/missing|_KO\.pdf$/.test(name)) { res.statusCode = 404; return res.end("nope"); }   // only the English originals exist here
@@ -87,11 +93,14 @@ http.createServer(async (req, res) => {
     if (prompt.startsWith("[TASK: build marking scheme]")) {        // the stand-in solution PDF carries its own name
       const pdf = parts.find(p => p.inline_data), name = pdf ? Buffer.from(pdf.inline_data.data, "base64").toString() : "";
       /* theory papers (v13): what the scheme request held — its wording and every PDF sent (solution, marking scheme) */
+      if (/In the competition's booklet this experiment is Problem (\d+)/.test(prompt)) (seen.bookletNos = seen.bookletNos || []).push(+RegExp.$1);
+      if (/Leave out problems ([\d, ]+) entirely/.test(prompt)) seen.leftOut = RegExp.$1;
       if (/theory paper/.test(prompt)) (seen.theorySchemes = seen.theorySchemes || []).push({ pdfs: parts.filter(p => p.inline_data).map(p => Buffer.from(p.inline_data.data, "base64").toString().replace("%PDF-1.4 fake solution ", "")) });
       return reply(res, /_table/.test(name) ? SCHEME_T : SCHEME);
     }
     if (prompt.startsWith("[TASK: read page]")) {
       if (/theory exam/.test(prompt)) seen.theoryReads = (seen.theoryReads || 0) + 1;
+      if (/experiments and theory/.test(prompt) && /Problem 5 → task E1/.test(prompt)) seen.mixedReads = (seen.mixedReads || 0) + 1;
       if (prompt.includes("<<OCR>>") && prompt.includes("R0 = 108.2 ohm")) seen.ocrIntoRead++;
       /* only the tests' PNGs choose a header or a poor page by their length; a phone's JPEG is an ordinary, legible page */
       const img = parts.find(p => p.inline_data), n = img && img.inline_data.mime_type === "image/png" ? Buffer.from(img.inline_data.data, "base64").length : 0;
