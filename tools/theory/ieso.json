@@ -1,0 +1,107 @@
+{
+ "comp": "ieso",
+ "prefix": "IESO",
+ "years": [
+  {
+   "y": 2013,
+   "problems": [],
+   "files": [
+    {
+     "file": "IESO_2013_T3_EN.pdf",
+     "part": "T3",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://www.jeso.jp/download/exam/ieso/7thieso-exam-astro.pdf",
+     "bytes": 157186
+    }
+   ],
+   "note": "Written test was in three subject papers (T1 Geosphere, T2 Atmosphere & Hydrosphere, T3 Astronomy); only the Astronomy paper is available in the original English (from the Japanese committee jeso.jp). T1/T2 only exist there as Japanese translations (see fallback_ja)."
+  },
+  {
+   "y": 2009,
+   "problems": [],
+   "files": [
+    {
+     "file": "IESO_2009_T_EN.pdf",
+     "part": "T",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://www.jeso.jp/download/exam/ieso/3rdieso-answer-paper.pdf",
+     "bytes": 5236040
+    }
+   ],
+   "note": "Scanned official English written-test booklet (Taipei, 16 Sep 2009) with the correct answers marked in red, i.e. paper and answer key in one file (jeso.jp labels it the written-test answers)."
+  }
+ ],
+ "missing": [
+  {
+   "y": 2025,
+   "why": "Only a Japanese translation found (jeso.jp, see fallback_ja); igeoscied.org (IGEO past-exam page, which has the English originals) is not reachable from this container."
+  },
+  {
+   "y": 2024,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2023,
+   "why": "Online IESO (IGEO); no written test found; igeoscied.org unreachable."
+  },
+  {
+   "y": 2022,
+   "why": "Online IESO (Aosta); no written test found; igeoscied.org unreachable."
+  },
+  {
+   "y": 2021,
+   "why": "Online IESO (Tyumen); no written test found; igeoscied.org unreachable."
+  },
+  {
+   "y": 2020,
+   "why": "Not held (COVID-19)."
+  },
+  {
+   "y": 2019,
+   "why": "Only a Japanese translation (+ official answer sheet) found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2018,
+   "why": "Only a Japanese translation (+ official English answer keys) found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2017,
+   "why": "Only a Japanese translation (+ official answer forms) found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2016,
+   "why": "Only a Japanese translation (+ official English answer sheets) found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2015,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2014,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2012,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2011,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2010,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2008,
+   "why": "Only a Japanese translation found (see fallback_ja); igeoscied.org unreachable."
+  },
+  {
+   "y": 2007,
+   "why": "Nothing found (Korea, Daegu); igeoscied.org unreachable."
+  }
+ ],
+ "note": "The official IESO site (ieso-info.org) is dead (domain parked) and the IGEO past-exam archive (igeoscied.org) is blocked from this container, as is web.archive.org. The only reachable archive is the Japanese Earth Science Olympiad committee (www.jeso.jp/exam/ieso.html), which mostly hosts Japanese translations. years[] holds only original-English papers; fallback_ja holds the Japanese translations and answer keys (several of which are the official English/language-neutral keys) in case the site wants them - they break the \"original language only\" rule, so use with care."
+}

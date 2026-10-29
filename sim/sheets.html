@@ -14,7 +14,10 @@
      squares rather than from the paper's edge, and a printed header («E1 · ANSWER SHEET · 2/5») that tells the
      reader which experiment and sheet it is.  The items come from labsheets.json (the labels and points printed in
      each problem, tools/labsheets.py); an experiment without them gets boxes with a blank label.
-     URL: sheets.html?c=ipho&y=2024&n=IPhO&e=E1,E2&t=title|title&lang=ko -->
+     URL: sheets.html?c=ipho&y=2024&n=IPhO&e=E1,E2&t=title|title&lang=ko
+     A theory exam (m=t, a=official answer-sheet PDFs per task): the official answer sheets where they were published,
+     else HaslaLab's own (blank answer boxes, no data table or graph paper) — headed «THEORY».
+     URL: sheets.html?m=t&c=ipho&y=2024&n=IPhO&e=T1,T2,T3&t=…&a=IPhO_2024_T1A.pdf|…&lang=ko -->
 <style>
   :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e}
   *{box-sizing:border-box}
@@ -101,7 +104,11 @@ const lang = Q.get("lang") === "en" ? "en" : "ko";
 const C = (Q.get("c") || "").toLowerCase(), Y = parseInt(Q.get("y")) || 0, NAME = Q.get("n") || C.toUpperCase();
 const TASKS = (Q.get("e") || "").split(",").map(s => s.trim()).filter(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)).slice(0, 4);
 const TITLES = (Q.get("t") || "").split("|");
-const KEY = C + Y;
+const KEY = C + Y, THY = Q.get("m") === "t";
+/* a combined exam (NBPhO): these tasks are the theory of the booklet and get theory sheets */
+const TT = new Set((Q.get("tt") || "").split(",").filter(Boolean)), thy = task => THY || TT.has(task);
+const ANS = (Q.get("a") || "").split("|").map(s => s.trim());
+const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 const T = {
   ko: { h: "답안지 · Working sheet 인쇄", ans: "Answer sheet", work: "Working sheet", per: "실험마다 Working sheet", pages: "쪽", print: "인쇄 / PDF로 저장",
     hint: "A4, 배율 100%(«실제 크기»), 여백 없음으로 인쇄하세요. 네 귀퉁이의 검은 사각형은 휴대폰 스캔이 종이를 반듯하게 펴는 기준이니 가리거나 접지 마세요. 문제지는 시험이 시작된 뒤 시험 화면의 «문제지 열기»로만 볼 수 있습니다.",
@@ -111,6 +118,7 @@ const T = {
     offA: "공식 Answer sheet", offW: "공식 Working sheet", open: "PDF 열어 인쇄 ↗", offPages: (n, m) => `${n}쪽` + (m ? ` · 스캔 마커 ${m}쪽` : " · 스캔 마커 없음(종이 테두리로 찾음)"),
     ownA: "공식 Answer sheet가 공개되지 않아 HaslaLab 양식으로 인쇄합니다 (아래).", ownW: "공식 Working sheet가 공개되지 않아 HaslaLab 양식으로 인쇄합니다 (아래).",
     offHint: "공식 PDF는 열어서 A4 · 실제 크기로 인쇄하세요. HaslaLab이 네 귀퉁이에 스캔용 검은 사각형만 덧찍었고(빈 귀퉁이에만), 나머지는 대회가 공개한 그대로입니다.",
+    thyItems: "문항 번호(예: 2.B.1)를 각 칸 왼쪽에 쓰고 최종 답을 적으세요. 풀이는 Working sheet에 씁니다.", thyOff: "대회가 공개한 공식 답안지 · 스캔 마커 없음(종이 테두리로 찾음)",
     wsNote: "풀이 · 계산. 최종 답은 Answer sheet의 해당 칸에 옮겨 써야 인정됩니다.", cand: "수험번호", page: "쪽", item: "문항", axes: "축", bad: "주소가 올바르지 않습니다. 시험 안내 화면에서 다시 여세요." },
   en: { h: "Print the Answer sheets and Working sheets", ans: "Answer sheets", work: "Working sheets", per: "Working sheets per experiment", pages: "pages", print: "Print / save as PDF",
     hint: "Print on A4 at 100 % («actual size») with no margins. The black squares in the corners let the phone straighten the page: do not cover or fold them. The problem sheet opens only inside the exam, with «Open problem sheet».",
@@ -120,6 +128,7 @@ const T = {
     offA: "Official Answer sheet", offW: "Official Working sheet", open: "Open the PDF to print ↗", offPages: (n, m) => `${n} pages` + (m ? ` · scan markers on ${m}` : " · no scan markers (found by the paper's edge)"),
     ownA: "No official Answer sheet was published, so HaslaLab's is printed below.", ownW: "No official Working sheet was published, so HaslaLab's is printed below.",
     offHint: "Open the official PDFs and print them on A4 at actual size. HaslaLab only added the black scan squares in the corners (where they were blank); the rest is as the olympiad published it.",
+    thyItems: "Write the item (e.g. 2.B.1) at the left of each box and your final answer in it. The working goes on the Working sheets.", thyOff: "the olympiad's official answer sheets · no scan markers (found by the paper's edge)",
     wsNote: "Working. A final answer counts only when it is written in its box on an Answer sheet.", cand: "Candidate no.", page: "Page", item: "Item", axes: "Axes", bad: "This address is not complete. Open it again from the exam instructions." },
 }[lang];
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -128,7 +137,7 @@ let ITEMS = {}, OFF = {}, ws = 4, want = { answer: true, working: true };
 const head = (task, kind, i, n, title) => `
   <div class="mk a"></div><div class="mk b"></div><div class="mk c"></div><div class="mk d"></div>
   <div class="hd"><div class="l">
-      <div class="ex">HaslaLab · ${esc(NAME)} ${Y} · EXPERIMENT</div>
+      <div class="ex">HaslaLab · ${esc(NAME)} ${Y} · ${thy(task) ? "THEORY" : "EXPERIMENT"}</div>
       <div class="k">${esc(task)} · ${kind === "answer" ? "ANSWER SHEET" : "WORKING SHEET"}<small>${kind === "answer" ? "답안지" : "연습지"}</small></div>
       <div class="ti">${esc(title || "")}</div></div>
     <div class="r"><span>${T.cand}</span><i>HL-${esc(KEY.toUpperCase())}-</i>
@@ -139,8 +148,8 @@ const foot = (task, kind) => `<div class="ft"><span>${esc(task)} ${kind === "ans
 function answerPages(task) {
   const tk = ITEMS[task] && ITEMS[task].items && ITEMS[task].items.length ? ITEMS[task] : null;
   const blank = n => Array.from({ length: n }, () => ({ id: "", p: null, h: 29 }));
-  const list = tk ? tk.items.map(([id, p]) => ({ id, p, h: Math.max(19, Math.min(40, 16 + (p || 0) * 14)) })).concat(blank(3)) : blank(16);
-  const note = !tk ? T.noItems : tk.total && tk.points < tk.total - 0.05 ? T.someItems : "";
+  const list = tk ? tk.items.map(([id, p]) => ({ id, p, h: Math.max(19, Math.min(40, 16 + (p || 0) * 14)) })).concat(blank(3)) : thy(task) ? Array.from({ length: 10 }, () => ({ id: "", p: null, h: 46 })) : blank(16);
+  const note = !tk ? (thy(task) ? T.thyItems : T.noItems) : tk.total && tk.points < tk.total - 0.05 ? T.someItems : "";
   const room = 242, pages = [[]]; let used = note ? 7 : 0;
   for (const b of list) { if (used + b.h + 2.2 > room) { pages.push([]); used = 0; } pages[pages.length - 1].push(b); used += b.h + 2.2; }
   return pages.map((bs, k) => (k === 0 && note ? `<p class="note">${note}</p>` : "") + bs.map(b => `
@@ -153,6 +162,14 @@ const graphPage = () => `<p class="note">${T.graph}</p><div class="gq"><span>${T
    only for what is missing */
 function official() {
   const rows = [];
+  if (THY) {                                                     // theory: the official answer sheets travel with the exam's address
+    TASKS.forEach((task, i) => rows.push(ANS[i] && /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(ANS[i])
+      ? `<div class="o"><b>${esc(task)}</b><div>${T.offA}<small>${esc(T.thyOff)}</small></div>
+         <a href="${PDF_BASE + esc(ANS[i])}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`
+      : `<div class="o"><b>${esc(task)}</b><div><small>${T.ownA}</small></div></div>`));
+    document.getElementById("off").innerHTML = rows.join("");
+    return;
+  }
   for (const task of TASKS) for (const kind of ["answer", "working"]) {
     const list = (OFF[task] || {})[kind] || [];
     if (list.length) list.forEach(f => rows.push(`<div class="o"><b>${esc(task)}</b><div>${kind === "answer" ? T.offA : T.offW}<small>${esc(f.lang || "")} · ${esc(T.offPages(f.pages, f.marked))}</small></div>
@@ -161,14 +178,14 @@ function official() {
   }
   document.getElementById("off").innerHTML = (Object.keys(OFF).length ? `<p class="hint" style="margin:0;padding:0">${T.offHint}</p>` : "") + rows.join("");
 }
-const hasOff = (task, kind) => !!((OFF[task] || {})[kind] || []).length;
+const hasOff = (task, kind) => THY ? kind === "answer" && !!ANS[TASKS.indexOf(task)] : !!((OFF[task] || {})[kind] || []).length;
 function build() {
   const out = [];
   official();
   for (const [ti, task] of TASKS.entries()) {
     const title = (ITEMS[task] && ITEMS[task].title) || TITLES[ti] || "";
     if (want.answer && !hasOff(task, "answer")) {
-      const bodies = [...answerPages(task), tablePage(), graphPage(), graphPage()];
+      const bodies = thy(task) ? answerPages(task) : [...answerPages(task), tablePage(), graphPage(), graphPage()];
       bodies.forEach((b, i) => out.push(`<div class="pg">${head(task, "answer", i + 1, bodies.length, title)}<div class="bd">${b}</div>${foot(task, "answer")}</div>`));
     }
     if (want.working && !hasOff(task, "working")) for (let i = 0; i < ws; i++)
@@ -189,7 +206,7 @@ function tools() {
   document.getElementById("pr").onclick = () => print();
 }
 document.documentElement.lang = lang;
-if (!/^[a-z]{3,8}$/.test(C) || Y < 1990 || !TASKS.length) document.getElementById("paper").innerHTML = `<p style="padding:20px">${T.bad}</p>`;
+if (!/^[a-z]{3,8}$/.test(C) || Y < (THY ? 1960 : 1990) || !TASKS.length) document.getElementById("paper").innerHTML = `<p style="padding:20px">${T.bad}</p>`;
 else {
   document.title = `${NAME} ${Y} · Answer sheet · Working sheet · HaslaLab`;
   tools();

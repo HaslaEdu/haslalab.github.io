@@ -75,6 +75,12 @@ http.createServer(async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     return res.end(JSON.stringify({ text: OCR_TEXT, content: { markdown: OCR_TEXT }, confidence: unsure ? 0.5 : 0.91, usage: { pages: 1 } }));
   }
+  if (req.url.startsWith("/site/pdfx/")) {                         // the site's own copies: problems cut out of a booklet
+    const name = decodeURIComponent(req.url.split("/").pop());
+    if (!/_P\d+S/.test(name)) { res.statusCode = 404; return res.end("nope"); }
+    seen.siteSolutions = (seen.siteSolutions || 0) + 1;
+    res.setHeader("Content-Type", "application/pdf"); return res.end("%PDF-1.4 fake solution " + name);
+  }
   if (req.url.startsWith("/pdf/")) {
     const name = decodeURIComponent(req.url.slice(5));
     if (/missing|_KO\.pdf$/.test(name)) { res.statusCode = 404; return res.end("nope"); }   // only the English originals exist here
@@ -86,15 +92,22 @@ http.createServer(async (req, res) => {
     if (prompt.includes("Find the four corners of the sheet of paper")) return reply(res, { tl: [100, 80], tr: [900, 90], br: [880, 950], bl: [110, 940] });
     if (prompt.startsWith("[TASK: build marking scheme]")) {        // the stand-in solution PDF carries its own name
       const pdf = parts.find(p => p.inline_data), name = pdf ? Buffer.from(pdf.inline_data.data, "base64").toString() : "";
+      /* theory papers (v13): what the scheme request held — its wording and every PDF sent (solution, marking scheme) */
+      if (/In the competition's booklet this experiment is Problem (\d+)/.test(prompt)) (seen.bookletNos = seen.bookletNos || []).push(+RegExp.$1);
+      if (/Leave out problems ([\d, ]+) entirely/.test(prompt)) seen.leftOut = RegExp.$1;
+      if (/theory paper/.test(prompt)) (seen.theorySchemes = seen.theorySchemes || []).push({ pdfs: parts.filter(p => p.inline_data).map(p => Buffer.from(p.inline_data.data, "base64").toString().replace("%PDF-1.4 fake solution ", "")) });
       return reply(res, /_table/.test(name) ? SCHEME_T : SCHEME);
     }
     if (prompt.startsWith("[TASK: read page]")) {
+      if (/theory exam/.test(prompt)) seen.theoryReads = (seen.theoryReads || 0) + 1;
+      if (/experiments and theory/.test(prompt) && /Problem 5 → task E1/.test(prompt)) seen.mixedReads = (seen.mixedReads || 0) + 1;
       if (prompt.includes("<<OCR>>") && prompt.includes("R0 = 108.2 ohm")) seen.ocrIntoRead++;
       /* only the tests' PNGs choose a header or a poor page by their length; a phone's JPEG is an ordinary, legible page */
       const img = parts.find(p => p.inline_data), n = img && img.inline_data.mime_type === "image/png" ? Buffer.from(img.inline_data.data, "base64").length : 0;
       return reply(res, page(n > 600 ? 2 : n > 300 ? 1 : 0, n >= 150 && n <= 300));   // 150–300 bytes: a page with the measured tables
     }
     if (prompt.startsWith("[TASK: grade]")) {
+      if (/theory exam/.test(prompt) && /final answer not written in its box/.test(prompt)) seen.theoryGrades = (seen.theoryGrades || 0) + 1;
       const sc = JSON.parse(prompt.split("<<SCHEME>>")[1].split("<<END>>")[0]), pages = JSON.parse(prompt.split("<<PAGES>>")[1].split("<<END>>")[0]);
       const pg = (pages.find(p => p.kind === "answer") || pages[0] || {}).no ?? null;
       const val = { "A.1": 108.2, "A.2": 395, "A.3": 11 };

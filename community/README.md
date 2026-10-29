@@ -212,6 +212,16 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 성적표(`#/lab/<id>`)의 실험별 피드백 아래 «📝 총평» 칸에 나옵니다. 저장 위치: `detail.tasks.E1.review`.
 
+## v13: 이론 문제와 이론 실전 모드
+
+- **이론 문제(원문)**: 모든 대회의 해마다 공개된 이론 문제지 · 해설(번역 없이 원문), 따로 공개된 채점 기준표와 답안지를 연도 페이지의 «이론 문제»에 둡니다. 목록은 `tools/theory/<대회>.json`, 사이트는 그것으로 만든 `theory.js`를 읽습니다(`python tools/theory_build.py`). PDF는 GitHub Actions(«Theory papers to releases»)가 원래 주소에서 받아 릴리스 `pdf-<접두어>`에 올리고, PDF Worker가 내줍니다. 자세한 규칙: `tools/theory/README.md`.
+- **이론 실전 모드**: 실험 실전 모드와 같은 화면(수험 안내 → 시험 → 30분 스캔 → 채점)입니다. 시험 중에는 실험 책상 대신 **이론 문제지가 화면 가득** 열립니다(pdf.js로 그려서 내려받기 · 인쇄 버튼이 없고, 시험 창을 인쇄해도 아무것도 찍히지 않음). 시간: 5시간(USAPhO · IJSO · IBO · IESO · OPhO는 3시간, `THEORY_SEC` / `examdur.js`). 답안지는 공식 답안지가 공개된 해는 그것을, 아니면 HaslaLab 이론 답안지(빈 답 칸 + 스캔 마커)를 인쇄합니다.
+- **채점**: 시작할 때 각 문제가 `sources[task] = {sol, mark, kind:"theory"}`로 서버에 남습니다. 채점 기준표는 **공식 해설과 따로 공개된 채점 기준표를 함께** Gemini에 보내 만들고(`lab_schemes`의 source는 `해설+기준표`), 쪽 읽기와 채점은 이론 시험용 지시(수식은 LaTeX식으로 그대로 옮기기, 최종 답 칸, 풀이 점수)를 씁니다. 총평 · 잘한 점 · 고칠 습관(답 칸에 최종 답, 단계 생략, 차원 · 극한 확인, 근사 표시, 부호 · 2배 실수, 숫자를 너무 일찍 대입 …) · 글씨 · 답안 구성까지 첨삭합니다. DB 변경은 없습니다.
+- **NBPhO**: 대회 책자 한 권에 실험과 이론이 함께 있어 실전 모드도 **실험 + 이론 한 시험**입니다(과제 `E1, E2, T`, `kind: "mixed"`). 시간은 그해 대회 전체 시간(`NBPHO_TIME`, 두 라운드면 10시간). 책상 왼쪽 아래(부품함 밑)에 **문제지 더미**가 놓여 있고 누르면 책자가 열립니다(다른 실험 시험에도 같은 문제지가 놓입니다). 이론 과제 `T`의 채점 기준은 책자 해설에서 실험 문제(`skip`)를 빼고 만들고, 실험은 책자 번호(`no`, 예: Problem 5 → E1)로 찾습니다. 쪽 읽기도 이 번호표로 과제를 고릅니다.
+- **NBPhO 연습 모드**: 책자를 문제별 PDF로 잘라 `pdfx/nbpho/`에 둡니다(`python tools/nbpho_split.py <책자 폴더>`, PyMuPDF). 단 단위로 문제 영역만 남기고 나머지는 지운(redaction) 뒤 잘라 내 글자 · 그림은 벡터 그대로입니다. 실험 카드의 문제지 · 해설과 이론의 T1, T2 …가 이 파일을 씁니다. 스캔본이라 글자 정보가 없는 2003–2005 · 2007 · 2009년과 일부 해설은 책자 그대로입니다. 서버는 릴리스에 없는 해설을 사이트의 `pdfx/<대회>/`에서 찾습니다(`LAB_SITE_BASE`).
+- 메달 추정은 실험 점수 자료라 이론 · 통합 시험에는 보이지 않습니다.
+- 로컬 시험: `node test-theory.mjs`(mock, 6초 시계).
+
 ## 자동 배포 (GitHub Actions)
 
 `main`에서 `community/src`나 `wrangler.toml`이 바뀌면 `.github/workflows/deploy-worker.yml`이 `wrangler deploy`로 Worker를 올립니다 — 대시보드에 붙여 넣을 필요가 없습니다. Actions 탭의 «Deploy community Worker» › Run workflow로 손으로 돌릴 수도 있습니다.

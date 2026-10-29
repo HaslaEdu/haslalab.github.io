@@ -359,6 +359,16 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .modesw a.ex.on{border-color:#7a2e1f;background:#7a2e1f}
 @media(max-width:560px){.modesw a{padding:10px 12px}.modesw a span{display:none}}
 .yrexam{margin:-6px 0 16px;font-size:13.5px}.yrexam a{color:#7a2e1f;font-weight:600}
+/* the year's theory papers, as the olympiad published them */
+.thy{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:16px 19px;margin:0 0 22px}
+.thy h3{font-size:15px;margin:0}.thy .tn{margin:3px 0 12px;font-size:12.5px;color:var(--graphite)}
+.thy .pt{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-top:1px dashed var(--grid-fine)}
+.thy .pt .code{font-family:var(--mono);font-weight:600;font-size:1rem}
+.thy .pt ol{margin:0;padding:0 0 0 18px;font-size:13.5px;line-height:1.5}.thy .pt ol.one{list-style:none;padding:0}
+.thy .pt .d{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.thy .pt .d .btn{padding:7px 12px;font-size:13px}
+.thy .ex{margin:10px 0 0;font-size:13.5px}.thy .ex a{color:#7a2e1f;font-weight:600}
+@media(max-width:640px){.thy .pt{grid-template-columns:1fr}.thy .pt .d{justify-content:flex-start}}
 /* the exam portal: a notice, the exam table, the candidate card */
 .xm .xmnote{border:1px solid #e3c9bf;background:#fbf3ef;border-radius:12px;padding:14px 18px;margin-bottom:18px}
 .xm .xmnote b{color:#7a2e1f}
@@ -946,6 +956,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
+<script src="theory.js"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -1000,8 +1011,9 @@ ko:{
        medal:"silver", label:"은메달"},
       {y:"2025", n:"ESF",   sub:"동아시아 고교생 지구과학 페스티벌", medal:"bronze", label:"동메달"}
     ]},
-  tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨",
-  tallyNote:"실험 문제만 모읍니다.",
+  tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
+  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다).", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyAns:"답안지",
+  thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
   expNObs:"{n}문제", noPapersObs:"문제지 없음", problemsObs:"문제", pickProbObs:"문제를 고르세요",
   kind:{O:"관측",D:"자료 분석",P:"실기",M:"성도",G:"그룹 실험",F:"야외 실기"}, kindN:"{k} {n}",
@@ -1063,8 +1075,9 @@ en:{
        medal:"silver", label:"Silver"},
       {y:"2025", n:"ESF",   sub:"East Asia High School Earth Science Festival", medal:"bronze", label:"Bronze"}
     ]},
-  tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published",
-  tallyNote:"Experimental problems only.",
+  tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
+  thyH:"Theory", thyNote:"As the olympiad published them, in the original language.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyAns:"Answer sheets",
+  thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   expN:"{n} experimental", noPapers:"no experimental papers",
   expNObs:"{n} problems", noPapersObs:"no papers", problemsObs:"Problems", pickProbObs:"Choose a problem",
   kind:{O:"Observation",D:"Data analysis",P:"Practical",M:"Sky map",G:"Group experiment",F:"Field practical"}, kindN:"{n} {k}",
@@ -4152,6 +4165,37 @@ const DATA={
     if(typeof v==="string"){ if(v.startsWith("pdf/")) o[k]=PDF_BASE+v.slice(4); }
     else if(v&&typeof v==="object") toPdfHost(v); }
 })(DATA);
+/* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
+const THEORY = window.THEORY || {};
+for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
+  for(const y in THEORY[k]) if(!c.years.some(x=>String(x.y)===y)) c.years.push({y:+y,host:null,problems:[]});
+  c.years.sort((a,b)=>b.y-a.y); }
+const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
+/* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
+const thyUrl=f=>/^pdfx\//.test(f)?f:PDF_BASE+f;
+/* NBPhO: one booklet holds every problem; each experiment card gets its own problem and solution, cut out of it
+   (tools/nbpho_split.py), and its number in the booklet (no) for the combined exam */
+for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!t||!t.x||!t.c) continue;
+  const ex=y.problems.filter(p=>/^E\d+$/.test(p.id)).sort((a,b)=>a.id.localeCompare(b.id,"en",{numeric:true}));
+  if(ex.length!==t.x.length) continue;
+  ex.forEach((p,i)=>{ const c=t.c[String(t.x[i])]; p.no=t.x[i]; if(!c) return;
+    p.files={...p.files,pdf:{en:c.paper},...(c.sol?{sol:c.sol}:{})}; }); }
+/* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
+   problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
+function theoryGroups(key,yr){
+  const t=thyOf(key,yr.y); if(!t) return [];
+  if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol), by={};
+  for(const x of parts){ const m=/^(T|MC)(\d*)([a-z]?)$/.exec(x); (by[m[1]+m[3]]=by[m[1]+m[3]]||[]).push({x,n:m[2]}); }
+  const out=[];
+  for(const g of Object.values(by)){
+    const num=g.filter(q=>q.n).sort((a,b)=>a.n-b.n), whole=g.find(q=>!q.n);
+    const pick=num.length&&(!whole||num.length<=4)?num:whole?[whole]:num;
+    for(let i=0;i<pick.length;i+=4) out.push(pick.slice(i,i+4).map(q=>q.x));
+  }
+  return out;
+}
+const thyTitle=(t,x)=>{ const p=(t.p||[]).find(q=>q[0]===x); return p?p[1]:""; };
 
 /* ══════════════════════════════════════════════════════════════
    LANGUAGE
@@ -4262,7 +4306,8 @@ function adFitBanner(placement){
 function viewHome(){
   pickHero();
   const d=UI[lang];
-  let years=0, probs=0, live=0;
+  let years=0, probs=0, live=0, thy=0;
+  for(const k in THEORY) for(const y in THEORY[k]) thy+=Object.keys(THEORY[k][y].f).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
     for(const y of c.years){ probs+=y.problems.length;
@@ -4297,9 +4342,9 @@ function viewHome(){
       <div><dt>${d.tComps}</dt><dd>${Object.keys(DATA).length}</dd></div>
       <div><dt>${d.tYears}</dt><dd>${years}</dd></div>
       <div><dt>${d.tProbs}</dt><dd>${probs}</dd></div>
+      <div><dt>${d.tThy}</dt><dd>${thy}</dd></div>
       <div><dt>${d.tLive}</dt><dd class="hot">${live}</dd></div>
     </dl>
-    <p class="tallynote">${d.tallyNote}</p>
   </div></section>
 
   ${adFitBanner("home")}`;
@@ -4521,11 +4566,11 @@ function modeSwitch(key,mode){
     <a href="#/${key}" class="${mode!=="exam"?"on":""}" aria-current="${mode!=="exam"}"><b>📘 ${d.modePrac}</b><span>${d.modePracSub}</span></a>
     <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${d.modeExamSub}</span></a></div>`;
 }
-const hasExam=c=>c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim));
+const hasExam=(c,key)=>c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim)||(key&&theoryGroups(key,y).length));
 function viewComp(key,mode){
   const d=UI[lang], c=DATA[key];
   if(!c) return viewHome();
-  if(mode==="exam"&&!hasExam(c)) mode="";
+  if(mode==="exam"&&!hasExam(c,key)) mode="";
   const ready = c.years.reduce((n,y)=>n+y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length,0);
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
   return `
@@ -4543,17 +4588,18 @@ function viewComp(key,mode){
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
         <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
         <div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>
+        ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+Object.keys(t.f).length,0)}</dd></div>`:""}
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
-    ${hasExam(c)?modeSwitch(key,mode):""}
+    ${hasExam(c,key)?modeSwitch(key,mode):""}
     ${mode==="exam"?`<div class="xm" id="xmRoot" data-key="${key}">${xmPortalHtml(key,null)}</div></div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
     <div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>
     <div class="years">
       ${c.years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
-        const none=y.problems.length===0;
+        const th=thyOf(key,y.y), none=y.problems.length===0&&!th;
         const inner=`
           <div class="yrow">
             <div class="y">${y.y}</div>
@@ -4561,7 +4607,7 @@ function viewComp(key,mode){
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
           <div class="cnt">${r?'<i class="dot"></i>':""}${none?LB(c,"noPapers"):
-            countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+            [y.problems.length?countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:""):"",th?d.thyN:""].filter(Boolean).join(" · ")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -4574,19 +4620,25 @@ function viewComp(key,mode){
    what came from the server (null while it loads): {stats, mine, tokens, active, me, off} */
 function xmPortalHtml(key,x){
   const d=UI[lang], c=DATA[key], rows=[];
-  for(const y of c.years) for(const g of examGroups(key,y)){
-    const tasks=g.map(examTask), k=key+y.y+":"+tasks.join("+");
+  const row=(y,tasks,label,sub,sec,href)=>{
+    const k=key+y.y+":"+tasks.join("+");
     const st=x&&x.stats&&x.stats[k], my=x&&x.mine&&x.mine.find(s=>s.exam_key===key+y.y&&s.tasks.join("+")===tasks.join("+"));
     const open=my&&(my.status==="running"||my.status==="scanning");
-    const href=examHref(key,y,g);
     rows.push(`<tr><td class="y">${y.y}</td>
-      <td><div class="t">${c.abbr} ${y.y} ${d.xmExamLabel} · ${tasks.join(" + ")}</div><div class="s">${g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · ")}</div></td>
-      <td class="hs">${HLexam.clock(HLexam.sec(key,y.y,g.length))} + 0:30</td>
+      <td><div class="t">${c.abbr} ${y.y} ${label} · ${tasks.join(" + ")}</div><div class="s">${sub}</div></td>
+      <td class="hs">${HLexam.clock(sec)} + 0:30</td>
       <td class="hs">${x?(st&&st.sat?d.xmSatV(st.sat,st.avg):`<span style="color:var(--graphite)">${d.xmNone}</span>`):"…"}</td>
       <td>${my?`<span class="st ${my.status}">${d.xmSt[my.status]||my.status}${my.status==="graded"&&my.points?` · ${my.score}/${my.points}`:""}</span>`:""}</td>
       <td><div class="acts3">${open?`<a class="go" href="${href}">${d.xmResume}</a>`
         :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
         :`<a class="go" href="${href}">${d.xmGo}</a>`}</div></td></tr>`);
+  };
+  for(const y of c.years){
+    for(const g of examGroups(key,y)){ const mix=g.some(p=>p.thy);
+      row(y,g.map(examTask),mix?d.xmMixLabel:d.xmExamLabel,g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · "),HLexam.sec(key,y.y,g.length,mix?"mixed":false),examHref(key,y,g)); }
+    const t=thyOf(key,y.y);
+    for(const g of theoryGroups(key,y))
+      row(y,g,d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · "),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
   }
   const me=x&&x.me, act=x&&x.active;
   const card=!x?`<div class="in">…</div>`
@@ -4623,6 +4675,10 @@ const examTask=p=>/^[A-Z][A-Za-z0-9]{0,3}$/.test(p.id)?p.id:/^[A-Z]/.test(p.id)?
 function examGroups(key,yr){
   const live=yr.problems.filter(p=>!p.hold&&p.files&&p.files.sim&&/^sim\/[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(p.files.sim));
   const exp=live.filter(p=>/^E\d*$/.test(p.id)), out=exp.length?[exp]:[];
+  /* NBPhO: the year's experiments and the rest of its booklet (the theory) are one exam, as on the day */
+  const t=key==="nbpho"&&exp.length?thyOf(key,yr.y):null;
+  if(t&&t.f.T&&t.f.T.sol&&exp.length<4) out[0]=exp.concat([{id:"T",thy:true,skip:(t.x||[]).join(","),
+    title:{ko:"이론 (실험 문제를 뺀 나머지)",en:"Theory (every problem but the experiments)"},files:{pdf:PDF_BASE+t.f.T.paper,sol:PDF_BASE+t.f.T.sol}}]);
   live.filter(p=>!exp.includes(p)).forEach(p=>out.push([p]));
   return out;
 }
@@ -4630,9 +4686,32 @@ function examHref(key,yr,group){
   const pick=v=>typeof v==="string"?v:(v&&(v[lang]||v.ko||v.en))||"";
   const short=u=>u.startsWith(PDF_BASE)?u.slice(PDF_BASE.length):u;
   const q=new URLSearchParams({c:key,y:yr.y,n:DATA[key].abbr,e:group.map(examTask).join(","),
-    f:group.map(p=>p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
+    f:group.map(p=>p.thy?"-":p.files.sim.slice(4)).join(","),t:group.map(p=>p.title?p.title[lang]:"").join("|"),
     p:group.map(p=>short(pick(p.files.pdf))).join("|"),s:group.map(p=>short(pick(p.files.sol))).join("|"),lang});
+  /* a combined exam (NBPhO): the booklet number of each experiment, and the problems the theory part leaves out */
+  if(group.some(p=>p.thy)){ q.set("o",group.map(p=>p.no||"").join("|")); q.set("x",(group.find(p=>p.thy)||{}).skip||""); }
   return "sim/exam.html?"+q.toString();
+}
+/* a theory exam (sim/exam.html?m=t): the paper of each part on screen only; its solution, separate marking scheme and
+   answer sheets travel with it (the server draws the marking scheme from the solution and the scheme together) */
+function theoryHref(key,yr,parts){
+  const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
+  const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:DATA[key].abbr,e:parts.join(","),t:all.join("|"),
+    p:parts.map(x=>f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),a:parts.map(x=>f(x).answer||"").join("|"),lang});
+  return "sim/exam.html?"+q.toString();
+}
+/* the year's theory papers: each part with its problems and the original files */
+function theoryHtml(key,yr){
+  const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
+  const link=(f,lbl)=>f?`<a class="btn ghost" href="${thyUrl(f)}" target="_blank" rel="noopener">${lbl}</a>`:"";
+  const order=Object.keys(t.f).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
+  const rows=order.map(x=>{ const f=t.f[x];
+    const probs=x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x);
+    return `<div class="pt"><span class="code">${esc(x)}</span>
+      <div>${probs.length?`<ol class="${probs.length===1?"one":""}">${probs.map(q=>`<li>${esc(q[1])}</li>`).join("")}</ol>`:`<span style="color:var(--graphite);font-size:13px">${x==="T"?d.thyWhole:""}</span>`}</div>
+      <div class="d">${link(f.paper,d.thyPaper)}${link(f.sol,d.thySol)}${link(f.mark,d.thyMark)}${link(f.answer,d.thyAns)}</div></div>`; }).join("");
+  return `<section class="thy"><h3>${d.thyH}</h3><p class="tn">${d.thyNote}</p>${rows}
+    ${theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="ex"><a href="#/${key}/exam">⏱ ${d.thyExam}</a></p>`:""}</section>`;
 }
 function viewYear(key,year){
   const d=UI[lang], c=DATA[key];
@@ -4657,7 +4736,8 @@ function viewYear(key,year){
       </dl>
     </div>
     ${adFitBanner("secondary")}
-    <div class="shead">
+    ${theoryHtml(key,yr)}
+    <div class="shead"${yr.problems.length?"":" hidden"}>
       <h2 style="font-size:1.15rem">${LB(c,"pickProb")}</h2>
       ${yr.general?`<a class="genlink" href="${yr.general[lang]||yr.general.ko||yr.general.en}"
          target="_blank" rel="noopener">${d.actGeneral}</a>`:""}
