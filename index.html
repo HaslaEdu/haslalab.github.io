@@ -976,7 +976,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=b126ef0da5"></script>
+<script src="theory.js?v=76e53b7e9d"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="arena.js"></script>
 <script>
@@ -4213,6 +4213,9 @@ if(window.IYPT) DATA.iypt={
     return {id:String(i+1), title:{ko:t,en:t}, desc:{ko:body,en:body}, files:{pdf:e.pdf||e.src}}; })}))};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 const THEORY = window.THEORY || {};
+/* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
+for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k]&&THEORY[k])
+  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, years:[]};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
     if(!yr){ c.years.push({y:+y,host:t.h||null,cc:t.cc,problems:[]}); continue; }
@@ -4444,7 +4447,7 @@ function viewComps(sub){
     ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
       ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
-        const probs=c.years.reduce((n,y)=>n+y.problems.length,0);
+        const probs=hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
         return `<a class="comp" href="#/${key}">
           <div class="chead"><div class="abbr">${c.abbr}</div>${compLogo(key)}</div>
           <div class="full">${c.full[lang]}</div>
@@ -4452,7 +4455,7 @@ function viewComps(sub){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${LB(c,"problems")}</dt><dd>${probs}</dd></div>
+            <div><dt>${hasExpC(c)?LB(c,"problems"):d.thyPapers}</dt><dd>${probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4668,8 +4671,8 @@ function viewComp(key,mode){
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
         <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-        <div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>
-        ${c.open?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
+        ${hasExpC(c)?`<div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>`:""}
+        ${c.open||!hasExpC(c)?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
         ${THEORY[key]?`<div><dt>${d.tThy}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
