@@ -9,6 +9,8 @@
 <!-- Paddle and Toss Payments send the buyer back here.
      Paddle: ?paddle=1&order(&txn) — the signed webhook adds the tokens; meanwhile this page asks the server to look the
      transaction up with Paddle, a few times, until the order is done.
+     Paddle's payment links (this page is the account's «default payment link») arrive as ?_ptxn=txn_…: the
+     checkout opens here for that transaction; the signed webhook adds the tokens.
      Toss Payments, success: ?paymentKey&orderId&amount — this page asks the community
      server to confirm the payment (the server checks the amount against its own order and confirms it with the
      secret key, then adds the tokens once).  Failure: ?code&message(&orderId).  Then back to #/lab. -->
@@ -30,14 +32,17 @@ const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const Q = new URLSearchParams(location.search), en = (() => { try { return localStorage.getItem("hlLang") === "en"; } catch (e) { return false; } })();
 const T = en ? { checking: "Checking the payment…", ok: "Payment complete", got: (n, t) => `${n} token${n > 1 ? "s" : ""} added · you have ${t}`, bad: "The payment did not go through",
     canceled: "You cancelled the payment.", back: "Back to exam mode", login: "Please sign in on this browser and try again.", again: "No money was taken for a payment that was not confirmed.",
-    waiting: "Paddle is still confirming the payment. The tokens arrive by themselves within a few minutes — you can close this page." }
+    waiting: "Paddle is still confirming the payment. The tokens arrive by themselves within a few minutes — you can close this page.",
+    opening: "Opening the checkout…", paidLater: "The tokens arrive by themselves within a few minutes." }
   : { checking: "결제를 확인하는 중…", ok: "결제가 완료되었습니다", got: (n, t) => `토큰 ${n}개를 받았습니다 · 보유 ${t}개`, bad: "결제가 완료되지 않았습니다",
     canceled: "결제를 취소했습니다.", back: "실전 모드로 돌아가기", login: "이 브라우저에서 로그인한 뒤 다시 시도해 주세요.", again: "승인되지 않은 결제는 청구되지 않습니다.",
-    waiting: "Paddle이 아직 결제를 확인하는 중입니다. 몇 분 안에 토큰이 저절로 들어오니 이 창을 닫아도 됩니다." };
+    waiting: "Paddle이 아직 결제를 확인하는 중입니다. 몇 분 안에 토큰이 저절로 들어오니 이 창을 닫아도 됩니다.",
+    opening: "결제창을 여는 중…", paidLater: "몇 분 안에 토큰이 저절로 들어옵니다." };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const show = (cls, h, lines) => { document.getElementById("box").innerHTML = `<h1 class="${cls}">${esc(h)}</h1>${lines.map(l => `<p>${esc(l)}</p>`).join("")}<a class="btn" href="./#/lab">${esc(T.back)}</a>`; };
 (async () => {
   history.replaceState(null, "", location.pathname);                         // the payment key leaves the address bar
+  if (Q.get("_ptxn")) return paddleLink(Q.get("_ptxn"));
   if (Q.get("paddle")) return paddleDone();
   if (!Q.get("paymentKey")) return show("bad", T.bad, [Q.get("code") === "PAY_PROCESS_CANCELED" ? T.canceled : (Q.get("message") || ""), T.again]);
   let api = COMMUNITY_API, tok = "";
@@ -51,6 +56,23 @@ const show = (cls, h, lines) => { document.getElementById("box").innerHTML = `<h
     else show("bad", T.bad, [j.message || j.error || String(r.status), T.again]);
   } catch (e) { show("bad", T.bad, [String(e && e.message || e)]); }
 })();
+/* a Paddle payment link: open the checkout for its transaction here */
+async function paddleLink(txn) {
+  document.querySelector("#box h1").textContent = T.opening;
+  let api = COMMUNITY_API;
+  try { api = (localStorage.getItem("hlCmApi") || COMMUNITY_API).replace(/\/+$/, ""); } catch (e) {}
+  try {
+    const c = await (await fetch(api + "/api/pay/config")).json();
+    if (!c.paddle) throw new Error("paddle_off");
+    await new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = "https://cdn.paddle.com/paddle/v2/paddle.js"; sc.onload = ok; sc.onerror = () => no(new Error("load")); document.head.append(sc); });
+    if (c.paddle.env === "sandbox") Paddle.Environment.set("sandbox");
+    Paddle.Initialize({ token: c.paddle.token, eventCallback: ev => {
+      if (ev && ev.name === "checkout.completed") show("ok", T.ok, [T.paidLater]);
+      if (ev && ev.name === "checkout.error") { try { Paddle.Checkout.close(); } catch (e) {} show("bad", T.bad, [ev.detail || ev.code || "error", T.again]); }
+    } });
+    Paddle.Checkout.open({ transactionId: txn, settings: { displayMode: "overlay", locale: en ? "en" : "ko" } });
+  } catch (e) { show("bad", T.bad, [String(e && e.message || e), T.again]); }
+}
 async function paddleDone() {
   let api = COMMUNITY_API, tok = "";
   try { api = (localStorage.getItem("hlCmApi") || COMMUNITY_API).replace(/\/+$/, ""); tok = localStorage.getItem("hlCmTok") || ""; } catch (e) {}

@@ -365,10 +365,12 @@ const LBT = {
   ko: {h: "실전 모드", sub: "대회 실험 시간만큼 실험(IPhO 5시간, OPhO 3시간 …) + 30분 답안 스캔. 시작할 때마다 실전 토큰 1개를 씁니다. 진행 중인 시험으로 돌아갈 때는 쓰지 않습니다.",
        tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
        start: "시작", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
-       shopH: "토큰 충전", buyH: "구매", buy: (n, w) => `토큰 ${n}개 · ${w.toLocaleString()}원`, consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
-       buyP: (n, u) => `토큰 ${n}개${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "카드 · PayPal · Apple Pay 등(Paddle, 판매자 대행). 결제창에서 현지 통화와 세금이 함께 표시됩니다. 쓰지 않은 토큰은 구매 후 14일 안에 환불을 요청할 수 있습니다.", buyPH: "구매 (해외 결제 · USD)", buyTH: "구매 (국내 결제 · 원)",
+       shopH: "토큰 충전", consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
        buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
-       payOff: "결제는 준비 중입니다.", consentNeed: "구매 안내에 동의해 주세요.", adH: "광고 보고 충전", adWatch: "광고 보기", adParts: (k) => `광고 1편 = 토큰 1/3 · 지금 ${k}/3`,
+       payOff: "결제는 준비 중입니다.", tabP: "해외 카드 · USD", tabT: "국내 결제 · 원", tokU: () => "토큰", per: (x) => `개당 ${x}`, save: (p) => `${p}% 절약`,
+       payTotal: "결제 금액", payNow: (x) => `${x} 결제하기`, methodsP: "Visa · Mastercard · AMEX · PayPal · Apple Pay · Google Pay", methodsT: "신용 · 체크카드 · 토스페이 · 카카오페이 · 네이버페이",
+       morP: "결제는 Paddle.com이 판매자(Merchant of Record)로 처리하며, 현지 통화와 세금은 결제창에 표시됩니다. 쓰지 않은 토큰은 구매 후 14일 안에 환불을 요청할 수 있습니다.",
+       payErr: "결제창을 열지 못했습니다. 잠시 뒤 다시 시도해 주세요.", payCfg: "결제 설정이 아직 끝나지 않아 결제창을 열 수 없습니다. 잠시 뒤 다시 시도해 주세요.", consentNeed: "구매 안내에 동의해 주세요.", adH: "광고 보고 충전", adWatch: "광고 보기", adParts: (k) => `광고 1편 = 토큰 1/3 · 지금 ${k}/3`,
        adNote: (d) => `휴대폰에서만 볼 수 있습니다. 하루 ${d}편까지(토큰 ${Math.floor(d / 3) || "1/3"}개분).`, adLoading: "광고를 불러오는 중…", adNone: "지금은 보여 줄 광고가 없습니다. 잠시 뒤 다시 시도해 주세요.",
        adMobile: "보상형 광고는 휴대폰 화면에서만 지원됩니다. 휴대폰으로 이 페이지를 열어 주세요.", adGot: (k, n) => `토큰 1/3을 받았습니다 (${k}/3)${n ? ` · 토큰 ${n}개` : ""}`, adToken: "광고 3편을 다 봐서 토큰 1개를 받았습니다!",
        adClosed: "광고를 끝까지 보지 않아 보상이 없습니다.", adDaily: (d) => `오늘은 광고를 ${d}편 다 보셨습니다. 내일 다시 오세요.`, adOff: "광고 충전은 준비 중입니다.", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
@@ -390,10 +392,12 @@ const LBT = {
   en: {h: "Exam mode", sub: "Experiments for as long as on the day (IPhO five hours, OPhO three …), then 30 minutes to scan your answers. Each start uses one exam token; going back to an exam in progress does not.",
        tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
        start: "start", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
-       shopH: "Get tokens", buyH: "Buy", buy: (n, w) => `${n} token${n > 1 ? "s" : ""} · ₩${w.toLocaleString()}`, consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
-       buyP: (n, u) => `${n} token${n > 1 ? "s" : ""}${u != null ? ` · $${(+u).toFixed(2)}` : ""}`, buyPNote: "Card, PayPal, Apple Pay and more (Paddle, merchant of record). The checkout shows your local currency and tax. Unused tokens can be refunded within 14 days of purchase.", buyPH: "Buy (international · USD)", buyTH: "Buy (Korea · KRW)",
+       shopH: "Get tokens", consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
        buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
-       payOff: "Payments are not open yet.", consentNeed: "Please agree to the purchase terms.", adH: "Watch ads", adWatch: "Watch an ad", adParts: (k) => `1 ad = 1/3 token · now ${k}/3`,
+       payOff: "Payments are not open yet.", tabP: "International · USD", tabT: "Korea · KRW", tokU: (n) => n > 1 ? "tokens" : "token", per: (x) => `${x} each`, save: (p) => `save ${p}%`,
+       payTotal: "Total", payNow: (x) => `Pay ${x}`, methodsP: "Visa · Mastercard · AMEX · PayPal · Apple Pay · Google Pay", methodsT: "Cards · Toss Pay · Kakao Pay · Naver Pay",
+       morP: "Payments are processed by Paddle.com, our Merchant of Record; your local currency and tax are shown at checkout. Unused tokens can be refunded within 14 days of purchase.",
+       payErr: "The checkout could not open. Please try again in a moment.", payCfg: "Checkout is not set up yet, so it cannot open. Please try again later.", consentNeed: "Please agree to the purchase terms.", adH: "Watch ads", adWatch: "Watch an ad", adParts: (k) => `1 ad = 1/3 token · now ${k}/3`,
        adNote: (d) => `Phones only. Up to ${d} ads a day.`, adLoading: "Loading the ad…", adNone: "No ad is available right now. Please try again later.",
        adMobile: "Rewarded ads only run on a phone screen. Open this page on your phone.", adGot: (k, n) => `You got 1/3 of a token (${k}/3)${n ? ` · ${n} tokens` : ""}`, adToken: "Three ads watched: you got a token!",
        adClosed: "The ad was closed before the end, so there is no reward.", adDaily: (d) => `You have watched today's ${d} ads. Come back tomorrow.`, adOff: "Ads are not open yet.", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
@@ -438,59 +442,107 @@ async function arLabList(root, alive) {
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
   arShopWire(root, shop);
 }
-/* ── getting tokens: buying (Toss Payments) and rewarded video ads (a third each) ── */
+/* ── getting tokens: buying (Paddle in USD, Toss Payments in KRW) and rewarded video ads (a third each) ──
+   laid out like a top-up page: pick a pack, one total, one pay button */
+function arShopLists(c) {
+  const L = lbt(), out = [];
+  const usd = (v) => v == null ? "" : "$" + (+v).toFixed(2), krw = (v) => lang === "en" ? "₩" + Math.round(v).toLocaleString() : Math.round(v).toLocaleString() + "원";
+  if (c.paddle) out.push({k: "p", tab: L.tabP, attr: "data-ppack", fmt: usd, methods: L.methodsP, note: L.morP, packs: c.paddle.packs.map((p) => ({id: p.id, n: p.tokens, v: p.usd}))});
+  if (c.pay) out.push({k: "t", tab: L.tabT, attr: "data-pack", fmt: krw, methods: L.methodsT, note: L.buyNote, packs: c.pay.packs.map((p) => ({id: p.id, n: p.tokens, v: p.krw}))});
+  for (const x of out) {
+    const base = x.packs.reduce((m, p) => p.v != null && (!m || p.n < m.n) ? p : m, null);
+    x.packs.forEach((p) => { p.save = base && p.v != null ? Math.round((1 - p.v / p.n / (base.v / base.n)) * 100) : 0; });
+    x.sel = x.packs[Math.min(1, x.packs.length - 1)].id;                       // the middle pack, as most top-up pages do
+  }
+  return out;
+}
 function arShopHtml(c, parts) {
   const L = lbt();
   if (!c || (!c.pay && !c.paddle && !c.ads)) return "";
-  return `<div class="arpanel" id="lbShop"><h3>🎟 ${L.shopH}</h3>
-    ${c.paddle ? `<h4 class="arh4">${c.pay ? L.buyPH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.paddle.packs.map((p) => `<button class="cmbtn pri" data-ppack="${esc(p.id)}">${L.buyP(p.tokens, p.usd)}</button>`).join("")}</div>
-      <p class="arempty" style="margin:6px 0 0">${L.buyPNote}</p>` : ""}
-    ${c.pay ? `<h4 class="arh4">${c.paddle ? L.buyTH : L.buyH}</h4><div style="display:flex;gap:8px;flex-wrap:wrap">${c.pay.packs.map((p) => `<button class="cmbtn pri" data-pack="${esc(p.id)}">${L.buy(p.tokens, p.krw)}</button>`).join("")}</div>
-      <p class="arempty" style="margin:6px 0 0">${L.buyNote}</p>` : ""}
-    ${c.pay || c.paddle ? `<label style="display:flex;gap:8px;align-items:flex-start;margin:10px 0 4px;font-size:13px"><input type="checkbox" id="lbConsent" style="margin-top:3px"> ${L.consent}</label>` : `<p class="arempty">${L.payOff}</p>`}
-    ${c.ads ? `<h4 class="arh4">${L.adH}</h4><p style="margin:0 0 6px"><b id="lbParts">${L.adParts(parts)}</b></p>
-      <button class="cmbtn" id="lbAd">▶ ${L.adWatch}</button><p class="arempty" style="margin:6px 0 0">${L.adNote(c.ads.daily)}</p>` : ""}
+  const lists = arShopLists(c), cur = lists[0];
+  const row = (x, p) => `<button type="button" class="arpk" ${x.attr}="${esc(p.id)}" aria-pressed="${p.id === x.sel}">
+      <span class="arpk-n"><b>${p.n}</b>${L.tokU(p.n)}</span>
+      <span class="arpk-u">${p.v != null ? L.per(x.fmt(p.v / p.n)) : ""}${p.save >= 5 ? `<em>${L.save(p.save)}</em>` : ""}</span>
+      <span class="arpk-v">${x.fmt(p.v)}</span></button>`;
+  const selV = cur ? cur.packs.find((p) => p.id === cur.sel).v : null;
+  return `<div class="arpanel arshop" id="lbShop"><h3>${L.shopH}</h3>
+    ${lists.length > 1 ? `<div class="arseg" role="tablist">${lists.map((x, i) => `<button type="button" role="tab" data-tab="${x.k}" aria-selected="${i === 0}">${x.tab}</button>`).join("")}</div>` : ""}
+    ${lists.map((x, i) => `<div class="arpks" data-list="${x.k}"${i ? " hidden" : ""}>${x.packs.map((p) => row(x, p)).join("")}</div>`).join("")}
+    ${cur ? `<div class="arpay">
+      <div class="arpay-sum"><span>${L.payTotal}</span><b id="lbTotal">${cur.fmt(selV)}</b></div>
+      <label class="arpay-ok"><input type="checkbox" id="lbConsent"> <span>${L.consent}</span></label>
+      <button type="button" class="cmbtn pri arpay-go" id="lbPay">${L.payNow(cur.fmt(selV))}</button>
+      <p class="arpay-fine" id="lbFine">${cur.methods}<br>${cur.note}</p></div>` : `<p class="arempty">${L.payOff}</p>`}
+    ${c.ads ? `<div class="arad"><div><b>${L.adH}</b>
+      <div class="arad-row"><span class="arad-bar" id="lbBar">${[0, 1, 2].map((i) => `<i${i < parts ? ' class="on"' : ""}></i>`).join("")}</span><small id="lbParts">${L.adParts(parts)}</small></div></div><button type="button" class="cmbtn" id="lbAd">${L.adWatch}</button></div>
+      <p class="arpay-fine">${L.adNote(c.ads.daily)}</p>` : ""}
     <p id="lbShopMsg" class="arinfo" style="margin:8px 0 0"></p></div>`;
 }
 function arLoad(src, test) {
   return new Promise((ok, no) => { if (test()) return ok(); const sc = document.createElement("script"); sc.src = src; sc.async = true; sc.onload = () => ok(); sc.onerror = () => no(new Error("load")); document.head.append(sc); });
 }
-let arAd = null, arPaddle = {ready: false, order: null};                                                                  // the rewarded ad being shown: {slot, nonce, granted}
+let arAd = null, arPaddle = {ready: false, order: null, loaded: false, done: null};                                                                  // the rewarded ad being shown: {slot, nonce, granted}
 function arShopWire(root, c) {
   const L = lbt(), msg = (t) => { const m = document.querySelector("#lbShopMsg"); if (m) m.textContent = t; };
-  root.querySelectorAll("[data-pack]").forEach((b) => b.onclick = async () => {
-    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
-    b.disabled = true;
-    try {
-      const o = await cmApi("POST", "/pay/order", {pack: b.dataset.pack});
-      await arLoad("https://js.tosspayments.com/v2/standard", () => !!window.TossPayments);
-      const payment = window.TossPayments(c.pay.client_key).payment({customerKey: window.TossPayments.ANONYMOUS});
-      const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
-      await payment.requestPayment({method: "CARD", amount: {currency: "KRW", value: o.amount}, orderId: o.order_id, orderName: o.order_name, successUrl: back, failUrl: back});
-    } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
+  const lists = arShopLists(c || {}), pay = root.querySelector("#lbPay");
+  let cur = lists[0];
+  const show = () => {
+    const p = cur.packs.find((x) => x.id === cur.sel);
+    root.querySelector("#lbTotal").textContent = cur.fmt(p.v);
+    pay.textContent = L.payNow(cur.fmt(p.v));
+    root.querySelector("#lbFine").innerHTML = `${cur.methods}<br>${cur.note}`;
+  };
+  root.querySelectorAll("#lbShop [data-tab]").forEach((t) => t.onclick = () => {
+    cur = lists.find((x) => x.k === t.dataset.tab);
+    root.querySelectorAll("#lbShop [data-tab]").forEach((x) => x.setAttribute("aria-selected", x === t));
+    root.querySelectorAll("#lbShop [data-list]").forEach((x) => x.hidden = x.dataset.list !== cur.k);
+    show();
   });
-  /* Paddle: Paddle.js once per page, the overlay checkout with the pack's price and our order id; after payment
-     pay.html is told the transaction, and the server checks it with Paddle (the signed webhook adds the tokens too) */
+  for (const x of lists) root.querySelectorAll(`#lbShop [${x.attr}]`).forEach((b) => b.onclick = () => {
+    x.sel = b.getAttribute(x.attr);
+    root.querySelectorAll(`#lbShop [${x.attr}]`).forEach((y) => y.setAttribute("aria-pressed", y === b));
+    if (x === cur) show();
+  });
+  if (pay) pay.onclick = async () => {
+    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
+    pay.disabled = true; msg("");
+    try { await (cur.k === "p" ? arPaddleOpen(cur.sel) : arTossOpen(cur.sel)); }
+    catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); pay.disabled = false; }
+  };
   const back = location.origin + location.pathname.replace(/[^/]*$/, "") + "pay.html";
-  root.querySelectorAll("[data-ppack]").forEach((b) => b.onclick = async () => {
-    if (!root.querySelector("#lbConsent").checked) { msg(L.consentNeed); return; }
-    b.disabled = true;
-    try {
-      const o = await cmApi("POST", "/pay/order", {pack: b.dataset.ppack, provider: "paddle"});
-      await arLoad("https://cdn.paddle.com/paddle/v2/paddle.js", () => !!window.Paddle);
-      arPaddle.order = o.order_id;
-      if (!arPaddle.ready) {
-        if (c.paddle.env === "sandbox") window.Paddle.Environment.set("sandbox");
-        window.Paddle.Initialize({token: c.paddle.token, eventCallback: (ev) => {
-          if (ev && ev.name === "checkout.completed" && arPaddle.order) location.href = `${back}?paddle=1&order=${encodeURIComponent(arPaddle.order)}&txn=${encodeURIComponent((ev.data && ev.data.transaction_id) || "")}`;
-          if (ev && ev.name === "checkout.closed") document.querySelectorAll("[data-ppack]").forEach((x) => x.disabled = false);
-        }});
-        arPaddle.ready = true;
-      }
-      window.Paddle.Checkout.open({items: [{priceId: o.price_id, quantity: 1}], customData: {order_id: o.order_id},
-        settings: {displayMode: "overlay", locale: lang === "en" ? "en" : "ko", successUrl: `${back}?paddle=1&order=${encodeURIComponent(o.order_id)}`}});
-    } catch (e) { msg(e && e.code ? arErr(e) : (e && e.message) || "error"); b.disabled = false; }
-  });
+  async function arTossOpen(pack) {
+    const o = await cmApi("POST", "/pay/order", {pack});
+    await arLoad("https://js.tosspayments.com/v2/standard", () => !!window.TossPayments);
+    const payment = window.TossPayments(c.pay.client_key).payment({customerKey: window.TossPayments.ANONYMOUS});
+    await payment.requestPayment({method: "CARD", amount: {currency: "KRW", value: o.amount}, orderId: o.order_id, orderName: o.order_name, successUrl: back, failUrl: back});
+  }
+  /* Paddle: Paddle.js once per page, the overlay checkout with the pack's price and our order id; after payment
+     pay.html is told the transaction, and the server checks it with Paddle (the signed webhook adds the tokens too).
+     A checkout that fails before it has loaded (e.g. the account's default payment link not set) is closed and
+     explained here instead of Paddle's bare «Something went wrong». */
+  async function arPaddleOpen(pack) {
+    const o = await cmApi("POST", "/pay/order", {pack, provider: "paddle"});
+    await arLoad("https://cdn.paddle.com/paddle/v2/paddle.js", () => !!window.Paddle);
+    arPaddle.order = o.order_id; arPaddle.loaded = false;
+    arPaddle.done = (text) => { const b = document.querySelector("#lbPay"); if (b) b.disabled = false; if (text) { const m = document.querySelector("#lbShopMsg"); if (m) m.textContent = text; } };
+    if (!arPaddle.ready) {
+      if (c.paddle.env === "sandbox") window.Paddle.Environment.set("sandbox");
+      window.Paddle.Initialize({token: c.paddle.token, eventCallback: (ev) => {
+        const n = ev && ev.name;
+        if (n === "checkout.loaded") arPaddle.loaded = true;
+        if (n === "checkout.completed" && arPaddle.order) location.href = `${back}?paddle=1&order=${encodeURIComponent(arPaddle.order)}&txn=${encodeURIComponent((ev.data && ev.data.transaction_id) || "")}`;
+        if (n === "checkout.closed") arPaddle.done();
+        if (n === "checkout.error" && !arPaddle.loaded) {
+          console.warn("Paddle checkout", ev.detail || ev.code);
+          try { window.Paddle.Checkout.close(); } catch (e) {}
+          arPaddle.done(/default_checkout_url|domain|not_approved|forbidden/.test(ev.detail || "") ? lbt().payCfg : lbt().payErr);
+        }
+      }});
+      arPaddle.ready = true;
+    }
+    window.Paddle.Checkout.open({items: [{priceId: o.price_id, quantity: 1}], customData: {order_id: o.order_id},
+      settings: {displayMode: "overlay", locale: lang === "en" ? "en" : "ko", successUrl: `${back}?paddle=1&order=${encodeURIComponent(o.order_id)}`}});
+  }
   const ad = root.querySelector("#lbAd");
   if (ad) ad.onclick = async () => {
     ad.disabled = true; msg(L.adLoading);
@@ -518,7 +570,7 @@ function arShopWire(root, c) {
   async function arAdClaim(nonce, again) {
     try {
       const r = await cmApi("POST", "/ads/claim", {nonce});
-      const n = root.querySelector("#lbTokN"), pp = root.querySelector("#lbParts"); if (n) n.textContent = r.tokens; if (pp) pp.textContent = L.adParts(r.parts);
+      const n = root.querySelector("#lbTokN"), pp = root.querySelector("#lbParts"); if (n) n.textContent = r.tokens; if (pp) pp.textContent = L.adParts(r.parts); root.querySelectorAll("#lbBar i").forEach((x, i) => x.classList.toggle("on", i < r.parts));
       msg(r.parts === 0 ? L.adToken : L.adGot(r.parts, 0));
     } catch (e) {
       if (e.code === "too_soon" && !again) { setTimeout(() => arAdClaim(nonce, true), 6000); return; }

@@ -95,10 +95,14 @@ await pg.waitForSelector("h1.bad");
 ok(/취소/.test(await pg.textContent("#box")), "pay.html: a cancelled payment says so");
 /* the shop on #/lab */
 await pg.goto(SITE + "/#/lab"); await pg.waitForSelector("#lbShop", { timeout: 15000 });
-const btns = await pg.$$eval("#lbShop [data-pack]", b => b.map(x => x.textContent));
-ok(btns.length === 3 && /토큰 5개 · 7,900원/.test(btns.join()) && await pg.$("#lbAd") !== null && /광고 1편 = 토큰 1\/3/.test(await pg.textContent("#lbShop")), "#/lab: three packs, the consent line and the ad button " + btns.join(" | "));
+if (await pg.$("#lbShop [data-tab='t']")) await pg.click("#lbShop [data-tab='t']");      // with Paddle configured too, the KRW packs are the second tab
+const rows = await pg.$$eval("#lbShop [data-pack]", b => b.map(x => x.textContent.replace(/\s+/g, " ").trim()));
+ok(rows.length === 3 && /5 ?토큰/.test(rows[1]) && /7,900원/.test(rows[1]) && await pg.isVisible("#lbShop [data-pack='t5']") && await pg.$("#lbAd") !== null && /광고 1편 = 토큰 1\/3/.test(await pg.textContent("#lbShop")), "#/lab: three packs, the consent line and the ad button " + rows.join(" | "));
+ok(await pg.textContent("#lbTotal") === "7,900원" && /토스페이먼츠/.test(await pg.textContent("#lbFine")), "the KRW tab: its own total and terms");
 await pg.click("#lbShop [data-pack='t1']");
-ok(/동의/.test(await pg.textContent("#lbShopMsg")), "buying without ticking the consent line is stopped");
+ok(await pg.textContent("#lbTotal") === "1,900원", "picking the 1-token pack changes the total");
+await pg.click("#lbPay");
+ok(/동의/.test(await pg.textContent("#lbShopMsg")), "paying without ticking the consent line is stopped");
 ok(errs.length === 0, "no page errors " + JSON.stringify(errs));
 await br.close();
 console.log(fails ? fails + " FAILED" : "all passed");
