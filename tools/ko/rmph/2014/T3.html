@@ -1,0 +1,58 @@
+<h1>문제 3. 블랙홀 물리학 (Black holes physics) — 해설</h1>
+<p class="note">원문: Romanian Master of Physics 2014, PROBLEM 3: BLACK HOLES PHYSICS 해설. 배점은 원문대로 pt로 표기한다. 문제를 올바르게 푼 다른 모든 방법에도 그에 상응하는 점수를 준다.</p>
+
+<h3>a. <span class="pt">1.0 pt</span></h3>
+<p>민코프스키(Minkowski, 평탄한) 시공간에서는 $f(r) = g(r) = 1$이다.</p>
+\[\left(ds\right)^2 = -c^2\left(dt\right)^2+\left(dr\right)^2+r^2\left(d\theta\right)^2+r^2\sin^2\theta\left(d\phi\right)^2\]
+
+<h3>b. <span class="pt">1.0 pt</span></h3>
+\[\begin{aligned}&\left(ds\right)^2 = -c^2\left(1-\frac{r_\mathrm{S}}{r}\right)\left(dt\right)^2+\frac{\left(dr\right)^2}{1-\dfrac{r_\mathrm{S}}{r}} = -c^2\left(dt'\right)^2 \Rightarrow\\ &\left(1-\frac{r_\mathrm{S}}{r}\right)\left(\frac{dt}{dt'}\right)^2-\frac{\left(\dfrac{dr}{dt'}\right)^2}{c^2\left(1-\dfrac{r_\mathrm{S}}{r}\right)} = 1 \Rightarrow\\ &\frac{d^2r}{dt'^2}+\frac{r_\mathrm{S}c^2}{2r^2}\left[1+\frac{\left(\dfrac{dr}{dt'}\right)^2}{c^2\left(1-\dfrac{r_\mathrm{S}}{r}\right)}\right]-\frac{r_\mathrm{S}}{2r^2}\,\frac{1}{1-\dfrac{r_\mathrm{S}}{r}}\left(\frac{dr}{dt'}\right)^2 = 0 \Rightarrow\\ &a = \frac{d^2r}{dt'^2} = -\frac{r_\mathrm{S}c^2}{2r^2}\end{aligned}\]
+
+<h3>c. <span class="pt">0.5 pt</span></h3>
+<p>관측자는 언제나 고전적인 경우와 같은 가속도를 경험한다.</p>
+\[a = -\frac{GM}{r^2} \Rightarrow r_\mathrm{S} = \frac{2GM}{c^2}\]
+
+<h3>d. <span class="pt">1.0 pt</span></h3>
+\[\begin{aligned}&a = \frac{dv}{dt'} = \frac{dv}{dr}\frac{dr}{dt'} = \frac12\frac{d\left(v^2\right)}{dr} = -\frac{r_\mathrm{S}c^2}{2r^2} \Rightarrow\\ &d\left(v^2\right) = r_\mathrm{S}c^2\frac{1}{r^2}dr \Rightarrow v^2 = r_\mathrm{S}c^2\frac1r+C\end{aligned}\]
+<p>초기 조건으로부터 $C = -r_\mathrm{S}c^2/r_0$이므로</p>
+\[v = -c\sqrt{r_\mathrm{S}\left(\frac1r-\frac{1}{r_0}\right)} = -\sqrt{\frac{2GM}{r_0}\left(\frac{r_0}{r}-1\right)}\]
+<p>이번에도, 관측자의 관점에서 이것은 고전적인 결과와 똑같다.</p>
+
+<h3>e. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&dt' = \frac{dr}{v} = -\frac1c\sqrt{\frac{r_0r}{r_\mathrm{S}\left(r-r_0\right)}}\,dr \Rightarrow\\ &t' = \int_{r_0}^{r_\mathrm{S}}\left(-\frac1c\right)\sqrt{\frac{r_0}{r_\mathrm{S}}\,\frac{\dfrac{r}{r_0}}{1-\dfrac{r}{r_0}}}\,dr =\\ &\quad = \frac{r_0}{c}\sqrt{\frac{r_0}{r_\mathrm{S}}}\left[-\sqrt{x\left(1-x\right)}\,\Big|_{\frac{r_\mathrm{S}}{r_0}}^{1}-\arccos\left(\sqrt x\right)\Big|_{\frac{r_\mathrm{S}}{r_0}}^{1}\right] =\\ &\quad = \frac{r_0}{c}\sqrt{\frac{r_0}{r_\mathrm{S}}}\left[\sqrt{\frac{r_\mathrm{S}}{r_0}\left(1-\frac{r_\mathrm{S}}{r_0}\right)}+\arccos\left(\sqrt{\frac{r_\mathrm{S}}{r_0}}\right)\right] =\\ &\quad = \frac{r_0}{c}\left[\sqrt{\left(1-\frac{2GM}{c^2r_0}\right)}+\sqrt{\frac{c^2r_0}{2GM}}\arccos\left(\sqrt{\frac{2GM}{c^2r_0}}\right)\right]\end{aligned}\]
+<p>그리고 이번에도 이것은 낙하하는 물체에 대한 고전적인 결과와 똑같다.</p>
+
+<h3>f. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&\left(1-\frac{r_\mathrm{S}}{r}\right)\left(\frac{dt}{dt'}\right)^2-\frac{v^2}{c^2\left(1-\dfrac{r_\mathrm{S}}{r}\right)} = 1 \Rightarrow\\ &\frac{r-r_\mathrm{S}}{r}\left(\frac{dt}{dt'}\right)^2 = 1+\frac{c^2\dfrac{r_\mathrm{S}\left(r_0-r\right)}{r_0r}}{c^2\dfrac{r-r_\mathrm{S}}{r}} \Rightarrow\\ &\left(\frac{dt}{dt'}\right)^2 = \frac{r}{r-r_\mathrm{S}}\cdot\frac{r_0r-r_\mathrm{S}r}{r_0\left(r-r_\mathrm{S}\right)} \Rightarrow\\ &dt = dt'\cdot\frac{r}{r-r_\mathrm{S}}\sqrt{\frac{r_0-r_\mathrm{S}}{r_0}} = -\frac{dr}{c}\cdot\frac{r}{r-r_\mathrm{S}}\sqrt{\frac{r_0-r_\mathrm{S}}{r_0}}\sqrt{\frac{r_0r}{r_\mathrm{S}\left(r_0-r\right)}} =\\ &\quad = \frac{|dr|}{c}\cdot\frac{r}{r-r_\mathrm{S}}\sqrt{\frac{r}{r_\mathrm{S}}\cdot\frac{r_0-r_\mathrm{S}}{r_0-r}}\end{aligned}\]
+<p>그런데</p>
+\[\left.\begin{aligned}&\frac{r}{r_\mathrm{S}} &gt; 1\\ &\frac{r_0-r_\mathrm{S}}{r_0-r} &gt; 1\\ &\frac{r}{r-r_\mathrm{S}} &gt; \frac{r}{r-r_\mathrm{S}}\end{aligned}\right\}\Rightarrow dt &gt; \frac{|dr|}{c}\cdot\frac{r_\mathrm{S}}{r-r_\mathrm{S}} \Rightarrow\]
+\[\int_{r=r_0}^{r=r_\mathrm{S}}dt &gt; \int_{r_\mathrm{S}}^{r_0}\frac{r_\mathrm{S}}{c}\cdot\frac{1}{r-r_\mathrm{S}}\,dr = \infty\]
+<p class="note">(세 번째 부등식은 원문에 적힌 그대로이다. 의도된 것은 $\dfrac{r}{r-r_\mathrm{S}} &gt; \dfrac{r_\mathrm{S}}{r-r_\mathrm{S}}$로 보인다.)</p>
+<p>따라서 블랙홀 바깥에 있는 사람의 관점에서는, 낙하하는 관측자가 블랙홀 가장자리 바로 바깥에서 영원히 얼어붙은 채로 남아 있으며, 결코 사건의 지평선(event horizon)을 넘지 않는다!! 물론 이 결과는 근사일 뿐이며, 낙하하는 관측자가 중력장(시공간)에 미치는 영향을 무시할 수 있는 이상화된 영역에서만 성립한다.</p>
+
+<h3>g. <span class="pt">1.0 pt</span></h3>
+\[dS = \frac{dU}{T} = \frac{d\left(Mc^2\right)}{\dfrac{\hbar c^3}{8\pi Gk_\mathrm{B}M}} = \frac{8\pi Gk_\mathrm{B}}{\hbar c}MdM\]
+<p>정의상으로도, 상식적으로도, 블랙홀이 없으면 엔트로피도 없다. 따라서</p>
+\[S = \frac{4\pi Gk_\mathrm{B}M^2}{\hbar c} = \frac{4\pi Gk_\mathrm{B}}{\hbar c}\cdot\frac{r_S^2c^4}{4G^2} = \frac{k_\mathrm{B}c^3}{4G\hbar}A\]
+
+<h3>h. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&E_\text{radiated} = \left(M_1+M_2-M_{1+2}\right)c^2\\ &S_{1+2} \ge S_1+S_2 \Rightarrow A_{1+2} \ge A_1+A_2 \Rightarrow M_{1+2}^2 \ge M_1^2+M_2^2 \Rightarrow\\ &E_\text{max} = \left(M_1+M_2-\sqrt{M_1^2+M_2^2}\right)c^2\end{aligned}\]
+
+<h3>i. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&ds = \frac{dr}{\sqrt{G(r)}} \approx \frac{dr}{\sqrt{G'\left(r_h\right)\cdot\left(r-r_h\right)}} \Rightarrow\\ &R = \int_{r_h}^{r_h+\varepsilon}ds = \frac{1}{\sqrt{G'\left(r_h\right)}}\cdot2\sqrt{r-r_h}\,\Big|_{r_h}^{r_h+\varepsilon} = \frac{2\sqrt\varepsilon}{\sqrt{G'\left(r_h\right)}}\end{aligned}\]
+
+<h3>j. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&F(r) \approx F'\left(r_h\right)\cdot\left(r-r_h\right)\\ &ds = c\sqrt{F\left(r_h+\varepsilon\right)}d\tau \approx \sqrt{F'\left(r_h\right)\cdot\varepsilon}\cdot d\left(c\tau\right)\\ &L = \int_0^Pds = \sqrt{F'\left(r_h\right)\cdot\varepsilon}\cdot P\end{aligned}\]
+
+<h3>k. <span class="pt">1.0 pt</span></h3>
+\[\begin{aligned}&F\left(r_h\right) = G\left(r_h\right) = 0 \Rightarrow 1-\frac{2GM}{c^2r_h} = 0 \Rightarrow r_h = r_\mathrm{S}\\ &F'\left(r_h\right) = G'\left(r_h\right) = \frac{1}{r_\mathrm{S}}\\ &\sqrt{F'\left(r_h\right)\cdot\varepsilon}\cdot P = 2\pi\frac{2\sqrt\varepsilon}{\sqrt{G'\left(r_h\right)}} \Rightarrow P = \frac{4\pi}{\sqrt{F'\left(r_h\right)\cdot G'\left(r_h\right)}} = 4\pi r_\mathrm{S}\\ &4\pi\frac{2GM}{c^2} = \frac{\hbar c}{k_\mathrm{B}T_\mathrm{H}} \Rightarrow T_\mathrm{H} = \frac{\hbar c^3}{8\pi Gk_\mathrm{B}M}\end{aligned}\]
+
+<h3>l. <span class="pt">1.0 pt</span></h3>
+\[C = \frac{dU}{dT_\mathrm{H}} = \frac{d\left(Mc^2\right)}{dT_\mathrm{H}} = c^2\,\frac{d\left(\dfrac{\hbar c^3}{8\pi Gk_\mathrm{B}T_\mathrm{H}}\right)}{dT_\mathrm{H}} = -\frac{\hbar c^5}{8\pi Gk_\mathrm{B}T_\mathrm{H}^2}\]
+
+<h3>m. <span class="pt">0.5 pt</span></h3>
+\[W = \sigma T_\mathrm{H}^4A = \frac{\pi^2k_\mathrm{B}^4}{60\hbar^3c^2}\cdot\frac{\hbar^4c^{12}}{8^4\pi^4G^4k_\mathrm{B}^4M^4}\cdot4\pi\cdot\frac{4G^2M^2}{c^4} = \frac{\hbar c^6}{15360\pi G^2M^2}\]
+
+<h3>n. <span class="pt">0.5 pt</span></h3>
+\[\begin{aligned}&W = -\frac{dU}{dt} \Rightarrow \frac{\hbar c^6}{15360\pi G^2M^2} = -\frac{c^2dM}{dt} \Rightarrow\\ &\tau = \int_0^\tau dt = -\frac{15360\pi G^2}{\hbar c^4}\int_M^0M^2dM = \frac{5120\pi G^2M^3}{\hbar c^4}\end{aligned}\]
+<p>주어진 값들에 대해 $\tau$는 $10^{77}\,\mathrm{s}$ 정도로, 우주의 나이보다 약 $10^{60}$배 크다!!</p>
