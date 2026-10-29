@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=081c99ee62"></script>
+<script src="theory.js?v=127832bb9c"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -4279,8 +4279,14 @@ if(window.USACO) DATA.usaco={
 const THEORY = window.THEORY || {};
 const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "2026-2" → 2026.2: the order of the year list */
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
-for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k]&&THEORY[k])
-  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[]};
+for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k])
+  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[],
+    /* a manifest with no paper yet (CMO: no official PDF is published) lists the competition until they are found */
+    ...(THEORY[k]?{}:{note:{ko:"문제지는 준비 중입니다.",en:"The papers are being gathered."}})};
+/* the KMS undergraduate competition: listed before its papers are gathered */
+if(!DATA.kumc) DATA.kumc={abbr:"KUMC", since:1982, full:{ko:"대학생 수학경시대회 (대한수학회)",en:"KMS Undergraduate Mathematics Competition"},
+  scope:{ko:"대한민국 · 대학생",en:"Korea · undergraduates"}, plain:true, years:[],
+  note:{ko:"문제지는 준비 중입니다.",en:"The papers are being gathered."}};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
     if(!yr){ c.years.push({y:/^\d+$/.test(y)?+y:y,host:t.h||null,cc:t.cc,problems:[]}); continue; }   /* "2026-1": a year's first sitting (KPhE) */
@@ -4497,7 +4503,7 @@ const SUBJ=[
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
   {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao","usaaao"]},
   {k:"sci", ko:"통합과학", en:"Integrated science", logo:"ijso", comps:["ijso"]},
-  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:["imo","usamo"], soon:"IMO"},
+  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:["imo","kmo","cmo","usamo","putnam","kumc"], soon:"IMO"},
   {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:["ioi","usaco"], soon:"IOI"},
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
