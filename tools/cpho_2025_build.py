@@ -52,7 +52,7 @@ def clean_math_image(source,page,rect,target,pieces=None,roman=''):
     svg=re.sub(r'viewBox="[^"]+"',f'viewBox="{rect.x0} {rect.y0} {rect.width} {rect.height}"',svg,count=1)
     picture=fitz.open(stream=svg.encode(),filetype='svg')
     pdf=fitz.open(stream=picture.convert_to_pdf(),filetype='pdf')
-    pdf[0].get_pixmap(matrix=fitz.Matrix(4,4)).save(target)
+    pdf[0].get_pixmap(matrix=fitz.Matrix(4,4),alpha=True).save(target)
     return svg
 
 def whole_paragraph(data, source, work, page, start, end, name, bounds, crops, korean, size=10.9):

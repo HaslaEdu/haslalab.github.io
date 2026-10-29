@@ -64,9 +64,12 @@ for (const year of ['2016', '2017', '2019', '2022']) {
     solutions++;
   }
 }
-for (const kind of ['paper', 'sol']) {
-  assert.ok(assets[window.THEORY.izho['2026'].f.T.ko[kind]] > 0);
+for (const year of ['2025', '2026']) {
+  for (const kind of ['paper', 'sol']) {
+    assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
+  }
 }
+assert.ok(assets[window.THEORY.izho['2024'].f.T.ko.paper] > 0);
 let usapho = 0;
 for (let year = 1997; year <= 2026; year++) {
   const file = window.THEORY.usapho[String(year)].f.T;
@@ -75,12 +78,17 @@ for (let year = 1997; year <= 2026; year++) {
   assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
-for (const year of ['2024', '2025']) {
+for (const year of ['2013', '2024', '2025']) {
   const file = window.THEORY.cpho[year].f.T;
   assert.equal(file.paper, `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.ko.paper] > 0);
+  if (year !== '2025') {
+    assert.equal(file.sol, `CPhO_${year}_TS_BAUPC_EN.pdf`);
+    assert.ok(assets[file.sol] > 0);
+    assert.ok(assets[file.ko.sol] > 0);
+  }
   const source = JSON.parse(read('tools/theory/cpho.json')).years.find(y => String(y.y) === year);
   assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izho2026: 2, usapho, cphoBilingualYears: 2}));
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 5, usapho, cphoBilingualYears: 3}));

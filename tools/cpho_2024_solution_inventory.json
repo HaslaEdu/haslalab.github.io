@@ -1,0 +1,56 @@
+{
+  "competition": "CPhO",
+  "year": 2024,
+  "document": "complete solutions and marking schemes",
+  "source": "https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-cpho/CPhO_2024_TS.pdf",
+  "source_regions_audited": 533,
+  "source_prose_regions": 360,
+  "original_formula_regions_preserved": 173,
+  "final_typeset_regions": 330,
+  "minimum_prose_font_points": 8.966400146484375,
+  "minimum_scale": 0.834027149321267,
+  "figures": 7,
+  "figure_languages": [
+    "ko",
+    "en"
+  ],
+  "original_pages_and_equations_preserved": true,
+  "outline_source": true,
+  "output_files": [
+    {
+      "path": "pdfx/cpho/CPhO_2024_TS_KO.pdf",
+      "pages": 30,
+      "bytes": 10522386,
+      "sha256": "dfd3214328f6aefbe9900c5578c26d18a58fe26448d22e25d4b93aedecd78df5"
+    },
+    {
+      "path": "pdfx/cpho/CPhO_2024_TS_BAUPC_EN.pdf",
+      "pages": 30,
+      "bytes": 613919,
+      "sha256": "2785f071a165c81f42025e90053863dc8bed2f174d9a94d69dc642a71bba110f"
+    }
+  ],
+  "rebuild": "python tools/cpho_2024_solution_build.py",
+  "publish_sources": [
+    "tools/cpho_2024_solution_build.py",
+    "tools/cpho_2024_solution_figures.py",
+    "tools/ko/cpho/2024/solution/korean.txt",
+    "tools/ko/cpho/2024/solution/manual.txt",
+    "tools/ko/cpho/2024/solution-figures/*.svg"
+  ],
+  "shared_dependencies": [
+    "tools/pdf_layout_translate.py",
+    "tools/cpho_2025_build.py",
+    "tools/cpho_2025_figures.py",
+    "tools/ko/fonts/NotoSansKR-Regular.ttf"
+  ],
+  "qa": "tmp/cpho-build/2024-solution-qa",
+  "notes": [
+    "Complete six solutions and all marking schemes (320 marks).",
+    "Original source errata and translated notes are retained.",
+    "Original source shapes are outlined before prose masking, preserving neighboring mathematical glyphs.",
+    "Seven bilingual vector figures use explicit arrowheads and bounded cone hatching.",
+    "533 Korean mapping rows have exact mathematical placeholder coverage.",
+    "Generated source extraction PNGs and translation.json in tools/ko/cpho/2024/solution are staging artifacts; rebuilding does not require publishing them."
+  ]
+}

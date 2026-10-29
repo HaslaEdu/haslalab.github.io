@@ -2,7 +2,7 @@
 from pathlib import Path
 import math
 import pymupdf as fitz
-from cpho_2025_figures import HEAD, line, text
+from cpho_2025_figures import HEAD, line, text, arrow_head
 
 ROOT=Path(__file__).resolve().parents[1]
 FIG=ROOT/'tools/ko/cpho/2024/figures'
@@ -86,13 +86,13 @@ def figure(n,lang):
     elif n==6:
         s+=line(150,322,450,322,False,'stroke-width="6"')+line(177,320,177,175,False,'stroke-width="3"')+line(423,320,423,175,False,'stroke-width="3"')+line(177,270,423,270)
         s+=line(300,270,300,45,False,'stroke-dasharray="7 5"')+line(300,270,370,35,False,'stroke-width="3"')
-        s+='<path d="M300 93 A177 177 0 0 1 351 100" marker-end="url(#arr)"/>'
+        s+='<path d="M300 93 A177 177 0 0 1 351 100"/>'+arrow_head(351,100,.96,.28)
         s+=line(178,305,422,305,False,'marker-start="url(#arr)" marker-end="url(#arr)"')
         s+=text(297,292,'C',24)+text(295,300,'d',23)+text(322,79,'φ',25)+text(300,388,cap('4b'),20,False,'middle')
     elif n==7:
         s+='<circle cx="300" cy="233" r="104"/>'
         s+=line(300,128,300,35,False,'stroke-dasharray="4 4"')+line(270,134,236,37,False,'stroke-width="3"')
-        s+='<path d="M300 72 A62 62 0 0 0 254 83" marker-end="url(#arr)"/>'
+        s+='<path d="M300 72 A62 62 0 0 0 254 83"/>'+arrow_head(254,83,-.8,.3)
         s+=circle(300,233,12)+circle(300,233,2)
         s+=line(185,341,415,341,False,'stroke-width="4"')
         s+=text(267,65,'θ',25)+label(300,280,'토크','torque',lang,21)+text(300,392,cap('4c'),20,False,'middle')

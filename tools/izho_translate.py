@@ -14,6 +14,8 @@ import re
 from pathlib import Path
 import urllib.request
 import pymupdf as fitz
+from PIL import Image, ImageDraw
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 FONT = ROOT / "tools/ko/fonts/NotoSansKR-Regular.ttf"
@@ -49,6 +51,10 @@ def extract(source: Path, folder: Path, pages=None):
     doc = fitz.open(source)
     if pages is not None:
         doc.select(pages)
+    small_glyphs = any(s["bbox"][3]-s["bbox"][1] > s["size"]*2.5
+                       for page in doc for b in page.get_text("dict")["blocks"] if b["type"] == 0
+                       for line in b["lines"] for s in line["spans"])
+    fitz.TOOLS.set_small_glyph_heights(small_glyphs)
     entries = []
     for pi, page in enumerate(doc):
         for bi, block in enumerate(page.get_text("dict")["blocks"]):
@@ -84,6 +90,11 @@ def extract(source: Path, folder: Path, pages=None):
                     if math:
                         pending_text.append(text)
                         rect = fitz.Rect(span["bbox"])
+                        # Some official 2024 Cambria Math fonts report ascenders about five
+                        # times their size. Use the baseline to avoid cropping adjacent lines.
+                        if rect.height > span["size"] * 2.5:
+                            rect.y0 = span["origin"][1] - span["size"] * 1.05
+                            rect.y1 = span["origin"][1] + span["size"] * .30
                         if pending is None:
                             pending = rect
                         else:
@@ -98,6 +109,8 @@ def extract(source: Path, folder: Path, pages=None):
                             "size": base, "source": text, "math": maths,
                             "ko": ""})
     out = {"source": str(source.resolve()), "entries": entries}
+    if small_glyphs:
+        out["small_glyph_heights"] = True
     if pages is not None:
         out["source_pages"] = pages
     (folder / "translation.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf8")
@@ -106,6 +119,7 @@ def extract(source: Path, folder: Path, pages=None):
 
 def build(folder: Path, target: Path):
     data = json.loads((folder / "translation.json").read_text(encoding="utf8"))
+    fitz.TOOLS.set_small_glyph_heights(bool(data.get("small_glyph_heights")))
     missing = [e["id"] for e in data["entries"] if not e["ko"].strip()]
     if missing:
         raise ValueError("Untranslated regions: " + ", ".join(missing))
@@ -115,6 +129,49 @@ def build(folder: Path, target: Path):
     if data.get("source_pages") is not None:
         doc.select(data["source_pages"])
         original.select(data["source_pages"])
+    original_blocks = [page.get_text("dict")["blocks"] for page in original]
+    def restore_math(page, pi, rect):
+        if not data.get("transparent_math_restore"):
+            page.show_pdf_page(rect, original, pi, clip=rect)
+            return
+        # Transparent ink avoids an original page's white background masking adjacent Korean.
+        pix = original[pi].get_pixmap(matrix=fitz.Matrix(4, 4), clip=rect,
+                                     colorspace=fitz.csRGB, alpha=False)
+        rgb = pix.samples
+        if data.get("mask_original_prose_in_math"):
+            # A formula's font box can extend into the following prose row.
+            # Exclude original prose spans before restoring equation ink.
+            bitmap = Image.frombytes("RGB", (pix.width, pix.height), rgb)
+            draw = ImageDraw.Draw(bitmap)
+            for entry in data["entries"]:
+                if entry["page"] != pi or entry.get("passthrough"): continue
+                for mi, math in enumerate(entry.get("math", [])):
+                    if mi in entry.get("preserved_math", []): continue
+                    box = fitz.Rect(math["rect"]) & rect
+                    if not box.is_empty:
+                        draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
+                                        box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
+            for block in original_blocks[pi]:
+                if block["type"] != 0: continue
+                for line in block["lines"]:
+                    for span in line["spans"]:
+                        words = re.findall(r"[A-Za-z]{2,}", span["text"])
+                        if not words or span["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")): continue
+                        if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years"} for w in words): continue
+                        box = fitz.Rect(span["bbox"]) & rect
+                        if box.is_empty: continue
+                        draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
+                                        box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
+            rgb = bitmap.tobytes()
+        colors = np.frombuffer(rgb, dtype=np.uint8).reshape(-1, 3).astype(np.float64)
+        alpha = 255-colors.min(axis=1)
+        rgba = np.zeros((len(colors), 4), dtype=np.uint8)
+        live = alpha > 0
+        rgba[live, :3] = np.rint((colors[live]-255+alpha[live, None])*255/alpha[live, None]).astype(np.uint8)
+        rgba[:, 3] = alpha
+        ink = fitz.Pixmap(fitz.csRGB, pix.width, pix.height, rgba.tobytes(), True)
+        pixel_rect = fitz.Rect(pix.x/4, pix.y/4, (pix.x+pix.width)/4, (pix.y+pix.height)/4)
+        page.insert_image(pixel_rect, stream=ink.tobytes("png"), overlay=True, keep_proportion=False)
     # Stored crop rectangles allow a clean checkout to recreate absent inline-math PNGs.
     for e in data["entries"]:
         for math in e.get("math", []):
@@ -131,13 +188,45 @@ def build(folder: Path, target: Path):
       p {margin:0; padding:0; line-height:1.18;} img {vertical-align:middle;}"""
     failures, report = [], []
     for pi, page in enumerate(doc):
-        entries = [e for e in data["entries"] if e["page"] == pi]
+        entries = [e for e in data["entries"] if e["page"] == pi and not e.get("passthrough")]
+        pictures = [fitz.Rect(b["bbox"]) for b in original_blocks[pi] if b["type"] == 1]
+        math_rects = []
+        if data.get("transparent_math_restore"):
+            math_rects = [fitz.Rect(r["rect"]) for r in data.get("preserve_rects", [])
+                          if r["page"] == pi and not any(fitz.Rect(r["rect"]) == q for q in pictures)]
+            if data.get("preserve_all_math"):
+                for block in original_blocks[pi]:
+                    if block["type"] != 0:
+                        continue
+                    spans = [s for line in block["lines"] for s in line["spans"] if s["text"].strip()]
+                    words = re.findall(r"[A-Za-z]{2,}", " ".join(s["text"] for s in spans))
+                    if spans and any(s["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")) for s in spans) and all(
+                        w.lower() in {"sin", "cos", "tan", "exp", "ln", "log", "const", "max", "min", "mol", "mole", "dpt", "pa", "kg", "cm", "mm", "km"} for w in words
+                    ):
+                        # The complete block includes radical hooks and fraction rules
+                        # drawn outside individual text-glyph bounds by Word's equation engine.
+                        math_rects.append(fitz.Rect(block["bbox"]))
+            merged = []
+            for rect in math_rects:
+                while data.get("preserve_all_math"):
+                    overlap = next((j for j,r in enumerate(merged) if (rect & r).get_area() > 0
+                        or (min(rect.y1, r.y1) > max(rect.y0, r.y0)
+                            and max(rect.x0, r.x0)-min(rect.x1, r.x1) < 4)), None)
+                    if overlap is None: break
+                    rect |= merged.pop(overlap)
+                merged.append(rect)
+            math_rects = merged
+            # Mask each original equation once before Korean is inserted. A white overlay
+            # preserves score glyphs that straddle the crop boundary; text redaction
+            # would delete their complete glyph and restore only a clipped fragment.
+            for rect in math_rects:
+                page.draw_rect(rect, color=None, fill=(1, 1, 1), overlay=True)
         for erase in data.get("erase_rects", []):
             if erase["page"] == pi:
                 page.add_redact_annot(fitz.Rect(erase["rect"]), fill=(1, 1, 1))
         for e in entries:
             page.add_redact_annot(fitz.Rect(e.get("redact_rect", e["rect"])), fill=(1, 1, 1))
-        page.apply_redactions(images=0, graphics=0)
+        page.apply_redactions(images=0, graphics=0, text=1 if data.get("mask_prose_instead_of_redact") else 0)
         for e in entries:
             expected = Counter(re.findall(r"\[\[(\d+)\]\]", e["source"]))
             for mi in e.get("preserved_math", []):
@@ -163,10 +252,12 @@ def build(folder: Path, target: Path):
             if keep["page"] != pi:
                 continue
             rect = fitz.Rect(keep["rect"])
-            page.draw_rect(rect, color=None, fill=(1, 1, 1))
-            page.show_pdf_page(rect, original, pi, clip=rect)
-        if data.get("preserve_all_math"):
-            for block in original[pi].get_text("dict")["blocks"]:
+            if any(rect == picture for picture in pictures):
+                page.show_pdf_page(rect, original, pi, clip=rect)
+            elif not data.get("transparent_math_restore"):
+                restore_math(page, pi, rect)
+        if data.get("preserve_all_math") and not data.get("transparent_math_restore"):
+            for block in original_blocks[pi]:
                 if block["type"] != 0:
                     continue
                 spans = [s for line in block["lines"] for s in line["spans"]]
@@ -175,8 +266,9 @@ def build(folder: Path, target: Path):
                     w.lower() in {"sin", "cos", "tan", "exp", "ln", "log", "const", "max", "min", "mol", "mole", "dpt", "pa", "kg", "cm", "mm", "km"} for w in words
                 ):
                     rect = fitz.Rect(block["bbox"])
-                    page.draw_rect(rect, color=None, fill=(1, 1, 1))
-                    page.show_pdf_page(rect, original, pi, clip=rect)
+                    restore_math(page, pi, rect)
+        for rect in math_rects:
+            restore_math(page, pi, rect)
         # Preserve the rule beneath the original competition header.
         if data.get("header_rule"):
             page.draw_line((36, 49.5), (562.4, 49.5), color=(0, 0, 0), width=.5)

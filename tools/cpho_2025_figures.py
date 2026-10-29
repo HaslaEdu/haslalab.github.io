@@ -6,6 +6,7 @@ Both language editions share exactly the same physical geometry.
 """
 from pathlib import Path
 import math
+import re
 import pymupdf as fitz
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,8 +15,23 @@ HEAD = '''<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewB
 <defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="black"/></marker></defs>
 <g fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'''
 
+def arrow_head(x,y,dx,dy,size=8,width=6):
+    length=math.hypot(dx,dy)
+    if length==0:return ''
+    ux,uy=dx/length,dy/length;bx,by=x-size*ux,y-size*uy
+    px,py=-uy*width/2,ux*width/2
+    return (f'<path d="M{x:.3f} {y:.3f} L{bx+px:.3f} {by+py:.3f} '
+            f'L{bx-px:.3f} {by-py:.3f} Z" fill="black" stroke="none"/>')
+
 def line(x1,y1,x2,y2,arrow=False,extra=""):
-    return f'<path d="M{x1} {y1} L{x2} {y2}" {extra}'+(' marker-end="url(#arr)"' if arrow else '')+'/>'
+    # MuPDF's SVG renderer does not draw marker arrowheads. Real triangles
+    # preserve every physical direction in the exported vector PDF.
+    end=arrow or 'marker-end=' in extra;start='marker-start=' in extra
+    attrs=re.sub(r'\s*marker-(?:start|end)="[^"]*"','',extra)
+    svg=f'<path d="M{x1} {y1} L{x2} {y2}" {attrs}/>'
+    if end:svg+=arrow_head(x2,y2,x2-x1,y2-y1)
+    if start:svg+=arrow_head(x1,y1,x1-x2,y1-y2)
+    return svg
 
 def text(x,y,s,size=25,italic=True,anchor="start"):
     return f'</g><text x="{x}" y="{y}" font-family="Times New Roman,serif" font-size="{size}" font-style="'+('italic' if italic else 'normal')+f'" fill="black" text-anchor="{anchor}">{s}</text><g fill="none" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
@@ -53,7 +69,7 @@ def figure(n,lang):
         s+=line(205,145,67,145,True)
         s+=line(340,145,340,243,False,'stroke-dasharray="5 5"')
         s+=line(340,145,406,218)+line(340,145,428,102,False,'stroke-dasharray="5 5"')
-        s+='<path d="M390 82 A82 82 0 0 0 285 84" marker-end="url(#arr)"/>'
+        s+='<path d="M390 82 A82 82 0 0 0 285 84"/>'+arrow_head(285,84,-.7,.4)
         s+='<path d="M340 197 A52 52 0 0 0 375 183"/><path d="M368 173 A40 40 0 0 0 376 127"/>'
         s+=text(353,205,'ωt',22)+text(383,158,'φ',23)+text(412,238,'0',22,False)
         for x in [230,285,340,395,450]:s+=line(x,337,x,269,True)
