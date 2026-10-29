@@ -977,7 +977,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=98cc7dd266"></script>
+<script src="theory.js?v=43c14503a9"></script>
 <script src="iypt.js?v=55e3269e8c"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="arena.js"></script>
@@ -1039,7 +1039,7 @@ ko:{
   thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyInv:"초청 라운드", thyPick:"이론 문제를 고르세요", thyPickPlain:"문제를 고르세요", thyPapersPlain:"문제지", thyCntPlain:n=>`${n}문제`, trkThyPlain:"문제지", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
-  thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyExamPlain:"이 해를 실전 모드로 응시하기 →", tThyPlain:"문제지", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
+  thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyExamPlain:"이 해를 실전 모드로 응시하기 →", omrGo:"실전 모의 · 모니터 채점", omrKey:"정답", tThyPlain:"문제지", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
   trkExp:"실험", trkThy:"이론", trkLabel:"실험 / 이론", thyCnt:n=>`이론 ${n}문제`, thyPapers:"이론 문제지",
   onlyThy:"이 해는 이론 문제만 있습니다.", onlyExp:"이 해에는 이론 문제지가 없습니다.", alsoThy:n=>`이 해에는 이론 문제 ${n}개도 있습니다.`, seeThy:"이론 보기", seeExp:"실험 보기",
   expN:"실험 {n}문제", noPapers:"실험 자료 없음",
@@ -1109,7 +1109,7 @@ en:{
   thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyInv:"Invitational", thyPick:"Choose a theory problem", thyPickPlain:"Choose a paper", thyPapersPlain:"papers", thyCntPlain:n=>`${n} paper${n>1?"s":""}`, trkThyPlain:"Paper", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
-  thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyExamPlain:"Sit this year's paper in exam mode →", tThyPlain:"Papers", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
+  thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyExamPlain:"Sit this year's paper in exam mode →", omrGo:"On-screen mock exam", omrKey:"Answer key", tThyPlain:"Papers", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
   trkExp:"Experiment", trkThy:"Theory", trkLabel:"Experiment / theory", thyCnt:n=>`${n} theory problem${n>1?"s":""}`, thyPapers:"theory papers",
   onlyThy:"This year has theory problems only.", onlyExp:"This year has no theory papers.", alsoThy:n=>`This year also has ${n} theory problem${n>1?"s":""}.`, seeThy:"See the theory", seeExp:"See the experiments",
   expN:"{n} experimental", noPapers:"no experimental papers",
@@ -4271,7 +4271,7 @@ if(window.USACO) DATA.usaco={
 const THEORY = window.THEORY || {};
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k]&&THEORY[k])
-  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, years:[]};
+  DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[]};
 for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
   for(const y in THEORY[k]){ const t=THEORY[k][y], yr=c.years.find(x=>String(x.y)===y);
     if(!yr){ c.years.push({y:+y,host:t.h||null,cc:t.cc,problems:[]}); continue; }
@@ -4297,7 +4297,7 @@ function theoryGroups(key,yr){
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
   const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!/^https?:/.test(t.f[x].paper)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
-  if(key==="ioi") return [];                       /* IOI's tasks are programs, not written answers: no exam */
+  if(key==="ioi"||(DATA[key]&&DATA[key].omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(DATA[key]&&DATA[key].rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
   for(const x of parts){ const m=/^(T|MC)(\d*)([a-z]?)$/.exec(x); (by[m[1]+m[3]]=by[m[1]+m[3]]||[]).push({x,n:m[2]}); }
   const out=[];
@@ -4480,7 +4480,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","kphc"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","kphe","kphc"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -4897,6 +4897,7 @@ function theoryHtml(key,yr){
      language — Korean opens the translation where there is one, else the original, tagged; the answer and working
      sheets are the exam mode's */
   const clip=ts=>{ const s=ts.join(" · "); return esc(s.length>280?s.slice(0,277).replace(/ · [^·]*$/,"")+" …":s); };
+  const omr=!!(DATA[key]&&DATA[key].omr);
   const card=(code,probs,f,k,head,docs)=>{
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
@@ -4907,9 +4908,10 @@ function theoryHtml(key,yr){
     return probCard({code, mode:has?"live":"dl", chip:has?d.thyKoChip:d.thyOrigChip,
       heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:many?clip(titles):alt.map(esc).join(" · "),
       tags:[TL(DATA[key],"trkThy")].concat(many?[TL(DATA[key],"thyCnt")(titles.length)]:[], has?[d.thyKo]:[]),
-      main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],d.thySol,false,S[1])],
-      /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2 */
-      docs:(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+      main:[a(P[0],d.thyPaper,true,P[1]), a(S[0],omr?d.omrKey:d.thySol,false,S[1])],
+      /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
+         its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
+      docs:(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   /* the problems of a part: its own; for a whole paper T every problem but the invitational round's (Ti1, Ti2, …),

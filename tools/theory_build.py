@@ -42,7 +42,7 @@ def load():
         comp, prefix = m['comp'], m['prefix']
         # a competition the site lists only for its papers names itself here (full, since, scope): window.THEORY_META
         if m.get('full'):
-            meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds'))}
+            meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds')), 'omr': bool(m.get('omr'))}
         for y in m.get('years', []):
             year, files, gt = str(y['y']), {}, None
             for f in y.get('files', []):
@@ -87,6 +87,9 @@ def load():
                 out[comp][year]['h'] = y['host']
             if y.get('cc'):
                 out[comp][year]['cc'] = y['cc']
+            # the answer key of a multiple-choice paper, per part (KPhE): exam mode grades it on the screen, not by AI
+            if y.get('keys'):
+                out[comp][year]['k'] = {k: v for k, v in y['keys'].items() if k in files}
             if gt:
                 out[comp][year]['g'] = {'en': gt}
     split(out)
