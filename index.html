@@ -991,10 +991,11 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=50f2ee6922"></script>
+<script src="theory.js?v=96d2e06b68"></script>
 <script src="contest-exams.js"></script>
-<script src="iypt.js?v=55e3269e8c"></script>
+<script src="iypt.js?v=6c459553ee"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
+<script src="rupho-selection.js"></script>
 <script src="arena.js"></script>
 <script>
 "use strict";
@@ -4274,8 +4275,9 @@ if(window.IYPT) DATA.iypt={
         en:"A research tournament: there is no exam paper and no solution. These are each year's seventeen published problems and the official problem sheet."},
   chip:{ko:"연구 과제",en:"Open problem"},
   years:window.IYPT.map(e=>({y:e.y, host:e.host||null, cc:e.cc, problems:e.p.map(([t,x],i)=>{
-    const body=x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/\n/g,"<br>");
-    return {id:String(i+1), title:{ko:t,en:t}, desc:{ko:body,en:body}, files:{pdf:e.pdf||e.src}}; })}))};
+    const [kt,kx]=(e.ko&&e.ko[i])||[t,x];
+    const body=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/\n/g,"<br>");
+    return {id:String(i+1), title:{ko:kt,en:t}, desc:{ko:body(kx),en:body(x)}, files:{pdf:e.pdf||e.src}}; })}))};
 /* USACO (usaco.js, tools/usaco_build.py): the statements and analyses are pages on usaco.org, so each problem's
    buttons link them there — Gold and Platinum of every contest since December 2016 */
 if(window.USACO) DATA.usaco={
@@ -4291,6 +4293,7 @@ if(window.USACO) DATA.usaco={
       title:{ko:t,en:t}, desc:{ko:`${cn} · ${dv}`,en:`${cn} · ${dv}`}, files:Object.assign({pdf:u},s?{sol:s}:{})}));
     return {y:e.y, host:{ko:"온라인",en:"Online"}, problems:ps}; })};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
+Object.assign(DATA,window.RUPHO_SELECTION||{});
 const THEORY = window.THEORY || {};
 const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "2026-2" → 2026.2: the order of the year list */
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
@@ -4518,7 +4521,7 @@ function viewHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","kphe"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","baupc","cpho","rupho","ruphow","ruphox","ruphoy","kphe"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
