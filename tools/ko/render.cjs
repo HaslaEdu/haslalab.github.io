@@ -7,7 +7,8 @@ const fs = require("fs"), path = require("path");
   const [src, out, head] = process.argv.slice(2);
   const root = path.resolve(__dirname, "../.."), katex = "file://" + path.join(root, "vendor/katex");
   const tpl = fs.readFileSync(path.join(__dirname, "template.html"), "utf8").replace(/KATEX\//g, katex + "/");
-  const html = tpl.replace("<!-- BODY -->", fs.readFileSync(src, "utf8"));
+  const body = fs.readFileSync(src, "utf8");
+  const html = tpl.replace("<!-- BODY -->", () => body);   // a function: "$$" in the body must stay "$$"
   const tmp = path.join(path.dirname(path.resolve(src)), ".render-" + path.basename(src));
   fs.writeFileSync(tmp, html);
   const br = await chromium.launch(), pg = await br.newPage();
