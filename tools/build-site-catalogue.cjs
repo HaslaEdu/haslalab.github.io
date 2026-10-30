@@ -30,7 +30,7 @@ for(const key of ['kmo','kmchc']){
   const source=generated+'(function(){const add='+JSON.stringify(subset)+';const c=window.CONTEST_EXAMS||(window.CONTEST_EXAMS={competitions:{},entries:[],resources:[]});Object.assign(c.competitions,add.competitions);c.checkedAt=add.checkedAt;c.entries=c.entries.filter(e=>e.comp!=='+JSON.stringify(key)+').concat(add.entries);c.resources=c.resources.filter(e=>e.comp!=='+JSON.stringify(key)+').concat(add.resources);})();\n';
   outputs.set(name,source);versions['contest:'+key]=name+'?v='+digest(source);
 }
-for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'rupho-selection.js',arena:'arena.js'}))versions[key]=name+'?v='+digest(read(name));
+for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'rupho-selection.js',arena:'arena.js','developer-guide':'developer-server-guide.js'}))versions[key]=name+'?v='+digest(read(name));
 const competitions={};let years=0,probs=0,live=0,thy=0;
 for(const [key,c]of Object.entries(DATA)){
   const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite','officialWebsiteArchived'])if(c[k]!==undefined)data[k]=c[k];

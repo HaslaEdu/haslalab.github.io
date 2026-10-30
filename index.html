@@ -1092,7 +1092,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=5c1f3ab3116c"></script>
+<script src="site-catalogue.js?v=2671fb582c82"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=938310640469"></script>
@@ -9483,7 +9483,7 @@ function mountHaslaAdFit(){
 const siteDataLoader=window.HL_RUNTIME&&window.HL_CATALOGUE?window.HL_RUNTIME.createDataLoader({
   versions:window.HL_CATALOGUE.versions,
   loadScript:(url)=>new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=url;script.async=true;script.onload=resolve;script.onerror=()=>{script.remove();reject(new Error("module_unavailable"));};document.head.append(script);}),
-  onLoad:key=>{if(key!=="arena")hydrateCatalogue();}
+  onLoad:key=>{if(key!=="arena"&&key!=="developer-guide")hydrateCatalogue();}
 }):null;
 let siteRenderSeq=0;
 

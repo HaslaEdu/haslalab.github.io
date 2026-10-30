@@ -221,7 +221,7 @@ async function arMount() {
     const path=problem?'/problems/'+Number(c)+'?lang='+lang:weekly?(a==='weekly'?'/weekly':'/monthly')+'?lang='+lang+arPeriodQuery(b):'/rank?scope='+(b==='all'?'all':b==='week'?'week':'month')+arPeriodQuery(b);
     primary=arPageRead(path);primary.catch(()=>{});
   }
-  try{if(a==='lab'&&b!=='model-test'){
+  try{if(a==='lab'&&!['model-test','server-guide'].includes(b)){
     const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
     const id=b&&/^\d+$/.test(b)?'&id='+encodeURIComponent(b):'';
     bootstrap=typeof cmLabBootstrap==='function'?await cmLabBootstrap(b?{id:+b,include:'health'}:{}):await cmApi('GET','/lab/bootstrap?include=health'+(!b?',sessions':'')+id);
@@ -245,6 +245,7 @@ async function arMount() {
     else if ((a === "monthly" || a === "weekly") && b === "p" && c) await arProblem(root, alive, +c,primary);
     else if ((a === "monthly" || a === "weekly") && b === "admin") await arAdmin(root, alive);
     else if (a === "lab" && b === "model-test") await arModelTest(root, alive);
+    else if (a === "lab" && b === "server-guide") await arServerGuide(root, alive);
     else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
     else await arWeekly(root, alive, b,primary);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
@@ -762,6 +763,7 @@ async function arMe(root, alive,overview) {
   root.innerHTML = `
     <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/community/account">${T.settings}</a><button class="cmbtn sm" id="arLogout">${T.logout}</button></div></div>
+    ${arModelTestLink()}
     <div class="arstats"><div><small>${T.rating}</small><b style="color:${TIER_COL[tierKey(j.lv)]}">${j.rating}</b></div><div><small>${T.myRank}</small><b>${j.rank || "–"}</b></div><div><small>${T.solvedN}</small><b>${j.solved}</b></div><div><small>${T.myTotal}</small><b>${j.total}</b></div></div>
     ${(() => { const at = j.tierAt || [], lo = j.lv >= 1 ? at[j.lv - 1] : 0, hi = at[j.lv]; if (hi == null) return "";
       const f = Math.max(0, Math.min(1, (j.rating - lo) / (hi - lo)));
@@ -1229,6 +1231,33 @@ async function arAdmin(root, alive) {
 }
 
 /* Developer-only provider comparison. It does not create an exam or submit marks. */
+async function arServerGuide(root, alive) {
+  const english = lang === "en", T = english ? {
+    denied: "The operations guide is available to developer accounts.", login: "Sign in", retry: "Try again", failed: "Unable to load the operations guide."
+  } : {denied: "개발자 계정만 운영 가이드를 열 수 있습니다.", login: "로그인", retry: "다시 시도", failed: "운영 가이드를 불러오지 못했습니다."};
+  if (!alive()) return;
+  const denied = () => {
+    if (!cm.me) try { sessionStorage.setItem("hlCmBack", "#/lab/server-guide"); } catch (_) {}
+    root.innerHTML = `<div class="cmnote">${T.denied}${!cm.me ? ` <a class="cmbtn sm" href="#/login">${T.login}</a>` : ""}</div>`;
+  };
+  if (!cmTok()) { denied(); return; }
+  try {
+    // Revalidate against primary before downloading the developer-only UI.
+    // The guide contains no credentials; the server role remains authoritative.
+    const identity = await cmApi("GET", "/me", undefined, {forcePrimary:true});
+    if (!alive()) return;
+    cm.me = identity.user || null; cm.meChecked = true;
+    if (cm.me?.role !== "admin") { denied(); return; }
+    await siteDataLoader.load("developer-guide");
+    if (!alive() || cm.me?.role !== "admin") return;
+    ar.poller = window.HL_SERVER_GUIDE.mount(root, {language:lang, apiBase:cmBase(), alive:() => alive() && cm.me?.role === "admin"});
+  } catch (_) {
+    if (!alive()) return;
+    root.innerHTML = `<div class="cmnote">${T.failed} <button type="button" class="cmbtn sm" data-retry-server-guide>${T.retry}</button></div>`;
+    root.querySelector("[data-retry-server-guide]").onclick = () => arServerGuide(root, alive);
+  }
+}
+
 const AR_MODEL_PIPELINES = ["gemini-gemini", "gemini-deepseek", "deepseek-deepseek"];
 function arModelTestLabels() {
   return lang === "en" ? {
@@ -1275,8 +1304,12 @@ function arModelTestLabels() {
     pipeline: ["1. Gemini OCR + Gemini 채점", "2. Gemini OCR + DeepSeek 채점", "3. DeepSeek OCR + DeepSeek 채점"]
   };
 }
-function arModelTestLink() {
-  return cm.me?.role === "admin" ? `<a class="cmbtn sm" href="#/lab/model-test">${arModelTestLabels().link}</a>` : "";
+function arModelTestLink(active) {
+  if (cm.me?.role !== "admin") return "";
+  const english = lang === "en";
+  return `<nav aria-label="${english ? "Developer tools" : "개발자 도구"}" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px">
+    <a class="cmbtn sm" href="#/lab/model-test" ${active === "model-test" ? 'aria-current="page"' : ""}>${arModelTestLabels().link}</a>
+    <a class="cmbtn sm" href="#/lab/server-guide" ${active === "server-guide" ? 'aria-current="page"' : ""}>${english ? "Server & operations guide" : "서버 구조·운영 가이드"}</a></nav>`;
 }
 function arModelTestError(error, T, maxImages = 3) {
   const code = String(error?.code || error?.error || ""), messages = {
@@ -1334,6 +1367,7 @@ async function arModelTest(root, alive) {
   const pipelines = AR_MODEL_PIPELINES.map(id => (config.pipelines || []).find(x => x.id === id) || { id, available: false });
   const first = pipelines.find(x => x.available === true)?.id;
   root.innerHTML = `<div class="cmtop"><div><h1>${T.title}</h1><p>${T.intro}</p></div><a class="cmbtn sm" href="#/lab">${T.back}</a></div>
+    ${arModelTestLink("model-test")}
     <p class="arnote">${T.separate}</p>
     <form id="arModelTestForm"><fieldset style="border:0;padding:0;margin:0;min-width:0">
       <div class="arpanel"><h3>${T.choice}</h3>${pipelines.map((p, i) => `<label style="display:flex;align-items:flex-start;gap:10px;margin:14px 0">
