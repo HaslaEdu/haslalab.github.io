@@ -16,6 +16,16 @@ test('public monthly credits are removed without altering supplied problem recor
     assert.equal(published.title_ko, row.title_ko);
     assert.equal(published.title_en, row.title_en);
     assert.equal(published.rubric, row.rubric, 'the private rubric is not rewritten');
+    if (row.id === 4) {
+      for (const field of ['body_ko', 'body_en']) {
+        assert.equal(published[field], row[field].slice(row[field].indexOf('\n\n') + 2), 'only the introductory score-conversion paragraph is omitted');
+        assert.doesNotMatch(published[field], /원문 총 15점|Original total: 15 points/);
+      }
+      for (const field of ['model_ko', 'model_en']) assert.equal(published[field], row[field]);
+      assert.equal(published.points, 100);
+      assert.equal(published.rubric.reduce((sum, criterion) => sum + criterion.max, 0), 100);
+      continue;
+    }
     if (row.id !== 6) {
       for (const field of ['body_ko', 'body_en', 'model_ko', 'model_en']) assert.equal(published[field], row[field]);
       continue;
@@ -28,6 +38,19 @@ test('public monthly credits are removed without altering supplied problem recor
     assert.ok(published.body_en.includes('B.4 (10 points)'));
     assert.equal(published.model_ko, row.model_ko);
     assert.equal(published.model_en, row.model_en);
+  }
+});
+
+test('proton introduction removal handles already-published rows without trimming maintained text or mathematical content', () => {
+  const proton = rows[0], preserved = proton.body_en.slice(proton.body_en.indexOf('\n\n') + 2);
+  assert.equal(monthlyPublicPresentation(proton).body_en, preserved);
+  const crlf = { ...proton, body_en: proton.body_en.replaceAll('\n', '\r\n') };
+  assert.equal(monthlyPublicPresentation(crlf).body_en, preserved.replaceAll('\n', '\r\n'));
+  const maintained = 'A separately maintained introduction.\n\n' + proton.body_en;
+  assert.equal(monthlyPublicPresentation({ ...proton, body_en: maintained }).body_en, maintained, 'an internal discussion is not removed');
+  for (const id of [1, 7, 99]) {
+    const unrelated = { ...proton, id };
+    assert.equal(monthlyPublicPresentation(unrelated), unrelated);
   }
 });
 

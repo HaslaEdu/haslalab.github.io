@@ -368,6 +368,10 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
 | POST | `/api/problems/:id/submit` | 일반 문제 `{answer, via_ocr}`, 월별 답안지 `{parts, sheet_version, request_id, photo_ids}` → `{status, score, detail, attempts, feedback_held, feedback_available_at}` |
 | POST | `/api/monthly/problems/:id/photos?mode=text\|math` | 인증 필요. multipart `image`, `original_image`, `part_id` → OCR 결과와 소유자 전용 `photo_id` (제출 기회 차감 없음) |
+| POST | `/api/monthly/problems/:id/scan` | 인증한 소유자만 `{part_id}` 초기 소문항으로 20분 QR 권한 발급. `{session,token,now}` 반환, 같은 사용자·문제의 이전 권한 폐기 |
+| GET · DELETE | `/api/monthly/problems/:id/scan/:scanId` | 소유자만 업로드 회수(`?after=cursor`, 페이지 10장, `{session,photos,cursor,has_more,now}`) · 권한 폐기. 사진 원본은 보존 |
+| GET | `/api/monthly/scan` | `X-Monthly-Scan`으로 공개 문제명·소문항 목록·권한 만료 확인. 계정 정보·이전 답안은 반환하지 않음 |
+| POST | `/api/monthly/scan/photos?mode=text\|math` | 같은 헤더와 multipart `image`, `original_image`, `part_id`, `request_id`로 해당 문제에만 사진 업로드. 요청 ID는 16–100자의 영숫자·`_`·`-` |
 | GET | `/api/monthly/photos/:photoId` | 인증한 소유자 또는 관리자만 촬영 원본 조회 |
 | POST | `/api/ocr?mode=text\|math` | multipart `image` → `{text, confidence}` |
 | GET | `/api/rank?scope=month\|all&month=` | 월별·전체 랭킹 100위까지 (`scope=week` 호환 유지) |

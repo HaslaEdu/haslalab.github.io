@@ -477,3 +477,28 @@ html[data-theme="dark"] body.hl-site .ar .ar-rank-top .artier[style*="--c:#2d2d2
   body.hl-site .ar .ar-rank-table .ar-rank-mobile-meta{display:flex}
   body.hl-site .ar .ar-rank-table .ar-rank-score b{font-size:15px}
 }
+
+/* Monthly phone uploads share the homepage's dark purple palette in either theme. */
+body.hl-site .ar .armonthly-phone{margin:16px 0 22px;padding:20px;border:1px solid #50405f;border-radius:12px;background:#1b1625;color:#eee8f7}
+body.hl-site .ar .armonthly-phone-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+body.hl-site .ar .armonthly-phone h4{margin:0;color:#eee8f7;font-size:16px;line-height:1.5}
+body.hl-site .ar .armonthly-phone p{margin:12px 0;font-size:13px;line-height:1.8;color:#c4b7d3}
+body.hl-site .ar .armonthly-phone .armonthly-phone-private{color:#a99ab9;font-size:12px}
+body.hl-site .ar .armonthly-phone-content{display:flex;align-items:center;gap:24px;margin-top:18px}
+body.hl-site .ar .armonthly-phone-qr{width:184px;min-width:184px;padding:12px;border-radius:10px;background:#fff;color:#21172c}
+body.hl-site .ar .armonthly-phone-qr svg{display:block;width:100%;height:auto}
+body.hl-site .ar .armonthly-phone-qr p{color:#33283e;margin:0}
+body.hl-site .ar .armonthly-phone .cmbtn{border-color:#675276;background:#2b2238;color:#eadff7;white-space:normal;text-align:center}
+body.hl-site .ar .armonthly-phone .cmbtn.pri{border-color:#bea4ee;background:#bea4ee;color:#1b1226}
+body.hl-site .ar .armonthly-phone [data-phone-copy]{margin-left:8px}
+body.hl-site .ar .armonthly-phone .armonthly-phone-expiry{font-size:12px;color:#b4a1c9}
+body.hl-site .ar .armonthly-phone .armonthly-phone-error{color:#ffb3bc}
+body.hl-site .ar .armonthly-phone :is(button,a):focus-visible{outline:2px solid #d4b7ff;outline-offset:4px}
+@media(max-width:600px){
+  body.hl-site .ar .armonthly-phone{padding:16px}
+  body.hl-site .ar .armonthly-phone-head{align-items:flex-start}
+  body.hl-site .ar .armonthly-phone-head .cmbtn{flex:none}
+  body.hl-site .ar .armonthly-phone-content{flex-direction:column;align-items:stretch;gap:12px}
+  body.hl-site .ar .armonthly-phone-qr{align-self:center}
+  body.hl-site .ar .armonthly-phone [data-phone-copy]{margin:8px 0 0}
+}

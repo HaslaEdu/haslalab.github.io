@@ -92,7 +92,7 @@ function corsHeaders(req, env) {
   const allowed = (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
   const h = {
     "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Lab-Token,Cache-Control",
+    "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Lab-Token,X-Monthly-Scan,Cache-Control",
     "Access-Control-Max-Age": "86400",
     "Access-Control-Expose-Headers": "X-D1-Bookmark,X-Public-Read-Source",
     "Vary": "Origin",
@@ -508,7 +508,7 @@ async function handle(req, env, url) {
 
   const omr = await omrRouter(p, m, body, me, req, env, url);
   if (omr !== undefined) return omr;
-  const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url);
+  const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url, body);
   if (monthlyPhoto !== undefined) return monthlyPhoto;
   const ar = await arena(p, m, body, me, req, env, url);
   if (ar !== undefined) return ar;
@@ -632,7 +632,7 @@ const worker = {
        few seconds, so a busy board is served without touching the database; signed-in users
        (who see their own votes and posts at once) always get a fresh answer */
     /* /api/health is the same for everyone, signed in or not */
-    const shared = publicInvariant(req.method, url.pathname) || req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
+    const shared = !req.headers.get('X-Monthly-Scan') && (publicInvariant(req.method, url.pathname) || req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname));
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
     const refreshCache=wantsFresh(req);
     if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);

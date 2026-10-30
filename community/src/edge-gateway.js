@@ -15,7 +15,7 @@ function corsHeaders(request, env, headers) {
   const allowed = (env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
   if (allowed.includes(origin)) headers.set('Access-Control-Allow-Origin', origin);
   headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-  headers.set('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Lab-Token,Cache-Control');
+  headers.set('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Lab-Token,X-Monthly-Scan,Cache-Control');
   headers.set('Access-Control-Max-Age', '86400');
   headers.set('Access-Control-Expose-Headers', 'X-D1-Bookmark,X-Public-Read-Source');
   const vary = (headers.get('Vary') || '').split(',').map(v => v.trim()).filter(Boolean);
@@ -24,7 +24,7 @@ function corsHeaders(request, env, headers) {
 }
 
 function publicPolicy(request, url) {
-  if (request.method !== 'GET' || url.href.length > 4096 || url.searchParams.has('view')) return null;
+  if (request.method !== 'GET' || url.href.length > 4096 || url.searchParams.has('view') || request.headers.get('X-Monthly-Scan')) return null;
   const anonymous = !request.headers.get('Authorization') && !request.headers.get('Cookie') && !request.headers.get('X-Lab-Token');
   if (!PUBLIC_GET.test(url.pathname) && !(anonymous && ANONYMOUS_GET.test(url.pathname))) return null;
   const key = new URL(url.pathname + url.search, 'https://haslalab-community-edge.haslalab.workers.dev');

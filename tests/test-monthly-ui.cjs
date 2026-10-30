@@ -80,6 +80,24 @@ test('monthly ranking and global navigation use the monthly vocabulary without c
   assert.match(index,/<a href="#\/community"/);
 });
 
+test('month-end rewards are explained on monthly lists and rankings without promising rewards for all-time or legacy weekly ranks',async()=>{
+  for(const lang of ['ko','en']){
+    const a=app();a.context.lang=lang;
+    const check=html=>{
+      const note=html.match(/<div class="cmnote ar-monthly-rewards"[^>]*>([\s\S]*?)<\/div>/)?.[1];
+      assert.ok(note,'the reward explanation is visible above the monthly content');
+      assert.match(note,lang==='ko'?/월말 최종 월별 랭킹/:/final month-end monthly ranking/);
+      assert.match(note,lang==='ko'?/1위 9토큰.*2위 6토큰.*3위 3토큰/:/9 tokens for 1st place, 6 for 2nd and 3 for 3rd/);
+      assert.match(note,lang==='ko'?/전체 레이팅 랭킹은 보상 대상이 아닙니다/:/All-time rating rankings are not eligible for rewards/);
+    };
+    await a.context.arWeekly(a.root,()=>true,'2026-11',{period:'2026-11',problems:[],top:[],now:end});check(a.root.innerHTML);
+    await a.context.arRank(a.root,()=>true,'month',{period:'2026-11',rows:[]});check(a.root.innerHTML);
+    await a.context.arRank(a.root,()=>true,'all',{period:null,rows:[]});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
+    await a.context.arWeekly(a.root,()=>true,'2026-W43',{period:'2026-W43',problems:[],top:[],now:end});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
+    await a.context.arRank(a.root,()=>true,'2026-W43',{period:'2026-W43',rows:[]});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
+  }
+});
+
 test('the only past month stays reachable when the next month has no active problems', async () => {
   const a=app();
   await a.context.arWeekly(a.root,()=>true,null,{period:'2026-12',problems:[],top:[],now:end,
