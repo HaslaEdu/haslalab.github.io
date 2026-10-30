@@ -127,7 +127,7 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
             if following['type']==1 and following['font']==trace['font']and following['size']==trace['size']and following['chars']==trace['chars']and following['seqno']==trace['seqno']+1:
                 mode=2;ti+=1
         for cp,gid,origin,bbox in trace['chars']:
-            queues[family_name(trace['font'])].append({'c':chr(cp),'font':trace['font'],'size':trace['size'],'origin':origin,'bbox':bbox,'render_mode':mode})
+            queues[family_name(trace['font'])].append({'c':chr(cp),'font':trace['font'],'size':trace['size'],'origin':origin,'bbox':bbox,'render_mode':mode,'trace_gid':gid})
     counters=Counter();removed=[]
     with pikepdf.Pdf.open(source) as pdf:
         out=pikepdf.Pdf.new();out.pages.append(pdf.pages[page_number-1]);p=out.pages[0]
@@ -173,14 +173,24 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                         kept=bytearray()
                         for pos in range(0,len(raw),code_bytes):
                             code=int.from_bytes(raw[pos:pos+code_bytes],'big');decoded=encoding.get(code)
-                            qi=counters[family];counters[family]+=1
-                            if qi>=len(queues[family]):raise ValueError('More encoded CIDs than traced glyphs')
-                            ch=queues[family][qi]
-                            if tr!=ch['render_mode']:raise ValueError(f'PDF/trace rendering-mode mismatch {family}: Tr={tr}, trace={ch["render_mode"]}')
-                            if decoded!=ch['c']:raise ValueError(f'CID/trace mismatch {family} {code} {decoded!r} {ch["c"]!r}')
+                            if not decoded:raise ValueError(f'Missing Unicode destination {family} {code}')
+                            qi=counters[family];cluster=queues[family][qi:qi+len(decoded)]
+                            if len(cluster)!=len(decoded):raise ValueError('More encoded CIDs than traced glyphs')
+                            counters[family]+=len(decoded);ch=cluster[0]
+                            if any(tr!=part['render_mode']for part in cluster):raise ValueError(f'PDF/trace rendering-mode mismatch {family}: Tr={tr}, trace={ch["render_mode"]}')
+                            traced=''.join(part['c']for part in cluster)
+                            if decoded!=traced:raise ValueError(f'CID/trace mismatch {family} {code} {decoded!r} {traced!r}')
+                            if len(cluster)>1:
+                                # One CID can map to a Unicode string. MuPDF
+                                # emits the real painted glyph followed by
+                                # zero-width gid=-1 extraction continuations.
+                                # Only this exact, read-only profile is safe.
+                                if ch['trace_gid']<0 or any(part['trace_gid']!=-1 or part['origin']!=ch['origin']or part['size']!=ch['size']or abs(part['bbox'][2]-part['bbox'][0])>1e-6 for part in cluster[1:]):
+                                    raise ValueError('Unsupported multi-Unicode CID trace cluster')
+                                if any(glyph_key(part)in selected for part in cluster):raise ValueError('Selected prose uses a multi-Unicode CID cluster')
                             if not writable and protected_form_glyphs is not None:
-                                protected_form_glyphs.append({k:v for k,v in ch.items()if k!='render_mode'})
-                            if not writable and any(c['c']==ch['c']and c['font']==ch['font']and abs(c['origin'][0]-ch['origin'][0])<.0001 and abs(c['origin'][1]-ch['origin'][1])<.0001 for c in selected_glyphs):
+                                protected_form_glyphs.extend({k:v for k,v in part.items()if k not in ['render_mode','trace_gid']}for part in cluster)
+                            if not writable and any(c['c']==part['c']and c['font']==part['font']and abs(c['origin'][0]-part['origin'][0])<.0001 and abs(c['origin'][1]-part['origin'][1])<.0001 for c in selected_glyphs for part in cluster):
                                 raise ValueError('Selected prose inside a preserved native Form XObject: '+repr(ch))
                             if glyph_key(ch)in selected:
                                 if not writable:raise ValueError('Selected prose inside a preserved native Form XObject')

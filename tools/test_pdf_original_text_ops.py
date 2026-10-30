@@ -60,6 +60,37 @@ class NativeTextOpsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'preserved native Form'):
             suppress_prose(source,1,protected)
 
+    def test_multi_unicode_math_cid_remains_native(self):
+        source=fixture();cluster_source=WORK/'unicode-cluster.pdf'
+        pairs=[]
+        for code in range(32,127):
+            value='yy'if code==ord('y')else chr(code)
+            pairs.append(f'<{code:02X}> <{value.encode("utf-16-be").hex()}>')
+        cm=('begincmap\n1 begincodespacerange\n<00> <FF>\nendcodespacerange\n'
+            f'{len(pairs)} beginbfchar\n'+'\n'.join(pairs)+'\nendbfchar\nendcmap').encode()
+        with pikepdf.Pdf.open(source)as pdf:
+            pdf.pages[0].Resources.Font['/helv'].ToUnicode=pdf.make_stream(cm);pdf.save(cluster_source)
+        protected=native_form_glyphs(cluster_source,1)
+        self.assertEqual([c['c']for c in protected],['y','y'])
+        with self.assertRaisesRegex(ValueError,'multi-Unicode CID'):
+            suppress_prose(cluster_source,1,protected)
+        doc=fitz.open(cluster_source);stroke=next(t for t in doc[0].get_texttrace()if t['type']==1)
+        selected=[dict(c=chr(cp),font=stroke['font'],size=stroke['size'],origin=origin,bbox=bbox)
+                  for cp,gid,origin,bbox in stroke['chars']if not chr(cp).isspace()]
+        payload,count=suppress_prose(cluster_source,1,selected);self.assertEqual(count,len('Explain'))
+        target=WORK/'unicode-cluster-suppressed.pdf';target.write_bytes(payload)
+        spec=dict(source_page=1,erased_glyph_origins=[c['origin']for c in selected],
+                  protected_glyph_origins=[c['origin']for c in protected],
+                  allowed_rects=[[c['bbox'][0]-2,c['bbox'][1]-2,c['bbox'][2]+2,c['bbox'][3]+2]for c in selected])
+        result=audit(cluster_source,target,spec)
+        self.assertEqual(result['native_glyphs_changed'],[])
+        self.assertEqual(result['changed_pixels_in_native_glyph_neighborhood'],0)
+        self.assertEqual(result['changed_pixels_outside_prose'],0)
+        with pikepdf.Pdf.open(cluster_source)as a,pikepdf.Pdf.open(target)as b:
+            self.assertEqual(a.pages[0].Resources.XObject.Math.read_bytes(),b.pages[0].Resources.XObject.Math.read_bytes())
+            self.assertEqual(a.pages[0].Resources.Font['/helv'].ToUnicode.read_bytes(),b.pages[0].Resources.Font['/helv'].ToUnicode.read_bytes())
+        doc.close()
+
     def test_unused_zero_width_digits_are_not_native_coverage(self):
         from izho_early_fixed_style import font_catalog,latin_profile
         source=fixture();target=WORK/'unused-digit.pdf'

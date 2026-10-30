@@ -1,0 +1,28 @@
+{
+  "source_design": "tmp/source-audit/IZhO_2020_T_EN.pdf",
+  "source_sha256": "97754809daa7dc2ba95679ac93d8192db0357624777801bb563342dd86bb3e20",
+  "official_english": "https://izho.kz/wp-content/uploads/2020/01/IZhO-2020-Theory_eng.pdf",
+  "official_russian": "https://izho.kz/wp-content/uploads/2020/01/IZhO-2020-Theory_rus.pdf",
+  "official_russian_sha256": "79918d69e63a4d24d6837cbab8283582b72db54f0d573ec1c418ee84cda6ed3e",
+  "source_notes": [
+    {
+      "source_page": 4,
+      "topic": "Chemical-name inconsistency retained",
+      "english": "Tetrachloromethane or hydrogen tetrachloride",
+      "official_russian": "Тетрахлорметан или четырёххлористый водород",
+      "translation": "테트라클로로메탄 또는 사염화수소",
+      "detail": "Both official originals contain the hydrogen synonym. It is translated as written; later occurrences of carbon tetrachloride are translated as 사염화탄소. No silent source correction or added PDF note."
+    },
+    {
+      "topic": "Original CambriaMath ToUnicode clusters",
+      "example": "CID1846 maps to two mathematical italic T characters; MuPDF exposes one painted glyph plus a same-origin zero-width gid=-1 extraction continuation.",
+      "detail": "All original CID, CMap, font and Form bytes remain native. The suppressor validates the full read-only cluster and never suppresses selected multi-Unicode CID clusters."
+    },
+    {
+      "source_page": 3,
+      "topic": "Original font changes",
+      "detail": "Celsius glyph and chemical H2O formula remain native, including their source fallback fonts. Korean prose replacing the MS-PGothic sentence uses the matching sans role; Times prose uses serif. Plain T/P coordinate labels and parentheses are independently protected."
+    }
+  ],
+  "added_pdf_notes": false
+}

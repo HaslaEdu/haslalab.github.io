@@ -54,7 +54,10 @@ comparison between each joined page and its reviewed proof. The separate
 Hangul-outline report checks all seven final pages for missing translated ink.
 
 `python tools/test_pdf_original_text_ops.py` covers CID advances, filled/stroked
-text, untouched native Forms and CMap decoding. The font regression tests are
+text, untouched native Forms and CMap decoding. Native-only Unicode clusters
+are consumed only when the original font/GID, zero-width continuation and
+position checks agree; those clusters cannot be selected as translated prose.
+The font regression tests are
 `python tests/test_pdf_original_style_fonts.py`; unsupported Unicode whitespace
 must fail validation rather than becoming a visible missing-glyph box.
 

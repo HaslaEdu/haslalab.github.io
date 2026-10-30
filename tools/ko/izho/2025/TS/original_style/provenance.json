@@ -1,0 +1,31 @@
+{
+  "source": "IZhO_2025_TS.pdf",
+  "source_sha256": "9b4bbf5fdf1a4d763a379665c199e55164e3878918bae9871e6c42695374df83",
+  "translation_policy": "Translate prose only; preserve original native equations, figures, source font programs and source font sizes/styles/baselines. No added editorial notes in PDF.",
+  "source_anomalies_kept": [
+    {
+      "page": 2,
+      "description": "Problem 1.2 heading says 3.0 points, although the problem booklet gives 4.0. Heading and all grading totals preserved as printed."
+    },
+    {
+      "page": 2,
+      "description": "The source calls the work/internal-energy relation the second law of thermodynamics. Translated literally as written; source equation unchanged."
+    },
+    {
+      "page": 7,
+      "description": "Equation labels repeat 28 and 29, and the Formula (20 grading label lacks its closing parenthesis. Both preserved as printed."
+    }
+  ],
+  "nonEnglish_prose_translated": [
+    {
+      "page": 11,
+      "at": [
+        19,
+        4,
+        10
+      ],
+      "source": ", за каждое по 0.2 ",
+      "ko": ", 각각 0.2점"
+    }
+  ]
+}
