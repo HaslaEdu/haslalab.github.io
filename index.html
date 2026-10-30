@@ -375,7 +375,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .rupho-stages a{padding:10px 14px;border:1px solid var(--grid-bold);border-radius:8px;background:#fff;font-size:13px;color:var(--ink)}
 .rupho-stages a:hover{border-color:var(--rail)}
 .rupho-stages a[aria-current="page"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:700}
-.modesw{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 22px}
+.modesw{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:4px 0 22px}
 .modesw a{display:block;border:1.5px solid var(--grid-bold);border-radius:12px;padding:13px 16px;background:#fff;transition:.12s}
 .modesw a b{display:block;font-size:15.5px;color:var(--ink)}
 .modesw a span{display:block;font-size:12.5px;color:var(--graphite);margin-top:3px}
@@ -383,6 +383,9 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .modesw a.on{border-color:#16212e;background:#16212e}
 .modesw a.on b{color:#fff}.modesw a.on span{color:#c4ccd6}
 .modesw a.ex.on{border-color:#7a2e1f;background:#7a2e1f}
+.modesw a.review.on{border-color:#315b4d;background:#315b4d}
+.portalyear{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-weight:600}
+.portalyear select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;max-width:100%}
 @media(max-width:560px){.modesw a{padding:10px 12px}.modesw a span{display:none}}
 .yrexam{margin:-6px 0 16px;font-size:13.5px}.yrexam a{color:#7a2e1f;font-weight:600}
 /* the year's theory papers, as the olympiad published them */
@@ -998,7 +1001,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=7f369a9e49"></script>
+<script src="theory.js?v=87ab8e688a"></script>
+<script src="paper-languages.js?v=1"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
@@ -4776,16 +4780,19 @@ function viewAbout(){
   ${adFitBanner("about")}`;
 }
 
-/* the practice | exam switch: practice is the year grid below, exam the exam portal (#/<comp>/exam) */
-function modeSwitch(key,mode){
-  const d=UI[lang];
+/* Paper browsing, timed sitting, and submitting work already solved are separate entry points. */
+const REVIEW_ONLY=new Set(["physcup","ortvay","opho","wopho"]);
+const compModeHref=(key,mode="",year="")=>`#/${key}${year?"/"+encodeURIComponent(year):""}${mode?"/"+mode:""}`;
+function modeSwitch(key,mode,year=""){
+  const d=UI[lang], ko=lang==="ko";
   const local=contestEntries(key).length>0;
-  return `<div class="modesw" role="navigation" aria-label="${d.modePrac} / ${d.modeExam}">
-    <a href="#/${key}" class="${mode!=="exam"?"on":""}" aria-current="${mode!=="exam"}"><b>📘 ${d.modePrac}</b><span>${local?(lang==="ko"?"공식 문제지 · 정답 · 회차별 규정":"Official papers · answers · session rules"):d.modePracSub}</span></a>
-    <a href="#/${key}/exam" class="ex ${mode==="exam"?"on":""}" aria-current="${mode==="exam"}"><b>⏱ ${d.modeExam}</b><span>${local?(lang==="ko"?"종이 스캔 또는 화면 입력 · 서술형 토큰 채점":"Paper scan or on-screen entry · tokens for proofs"):d.modeExamSub}</span></a></div>`;
+  return `<div class="modesw" role="navigation" aria-label="${ko?"학습 방법":"Study mode"}">
+    <a href="${compModeHref(key,"",year)}" class="${!mode?"on":""}"${!mode?' aria-current="page"':""}><b>📘 ${d.modePrac}</b><span>${local?(ko?"공식 문제지 · 정답 · 회차별 규정":"Official papers · answers · session rules"):trackOf(key)==="thy"||REVIEW_ONLY.has(key)?(ko?"문제지 열람 · 자유롭게 풀이":"Browse papers · work at your own pace"):d.modePracSub}</span></a>
+    ${hasExam(compOf(key),key)?`<a href="${compModeHref(key,"exam",year)}" class="ex ${mode==="exam"?"on":""}"${mode==="exam"?' aria-current="page"':""}><b>⏱ ${d.modeExam}</b><span>${ko?"제한 시간에 맞춰 응시 · 종료 후 채점":"Sit with a time limit · grade after finishing"}</span></a>`:""}
+    <a href="${compModeHref(key,"review",year)}" class="review ${mode==="review"?"on":""}"${mode==="review"?' aria-current="page"':""}><b>✎ ${ko?"채점·첨삭만":"Grading & feedback"}</b><span>${ko?"이미 푼 답안 제출 · 시간 제한 없음":"Submit work already solved · no time limit"}</span></a></div>`;
 }
 const contestEntries=(key,year,part)=>(window.CONTEST_EXAMS?.entries||[]).filter(e=>e.comp===key&&(year===undefined||String(e.year)===String(year))&&(!part||e.part===part));
-const contestHref=e=>`sim/contest-exam.html?${new URLSearchParams({id:e.id,lang})}`;
+const contestHref=(e,review=false)=>`sim/contest-exam.html?${new URLSearchParams({id:e.id,lang,...(review?{grading:"1"}:{})})}`;
 function contestResources(key){
   const items=(window.CONTEST_EXAMS?.resources||[]).filter(e=>e.comp===key),ko=lang==="ko";
   if(!items.length)return "";
@@ -4796,23 +4803,45 @@ function filterContest(text){
   const terms=text.toLowerCase().trim().split(/\s+/).filter(Boolean);
   document.querySelectorAll('.contestrow').forEach(row=>row.hidden=!terms.every(t=>row.textContent.toLowerCase().includes(t)));
 }
-const hasExam=(c,key)=>contestEntries(key).length>0||(key&&trackOf(key)==="thy"?c.years.some(y=>theoryGroups(key,y).length):c.years.some(y=>y.problems.some(p=>!p.hold&&p.files&&p.files.sim)));
+function reviewTheoryGroups(key,yr){
+  if(!REVIEW_ONLY.has(key)) return theoryGroups(key,yr);
+  const t=thyOf(key,yr.y); if(!t) return [];
+  // Open competitions are submitted one problem at a time, or as their published booklet.
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].paper&&!t.f[x].kx);
+  if(THY_YEARLY.has(key)&&parts.includes("T")) return [["T"],...parts.filter(x=>/^T\d*i$/.test(x)).map(x=>[x])];
+  return parts.filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
+}
+const hasReview=(c,key)=>!!c&&(contestEntries(key).length>0||c.years.some(y=>reviewTheoryGroups(key,y).length||examGroups(key,y).length));
+const hasExam=(c,key)=>!REVIEW_ONLY.has(key)&&hasReview(c,key);
+function portalYearHtml(key,mode,year=""){
+  const c=compOf(key), ko=lang==="ko";
+  return `<label class="portalyear">${ko?"연도 선택":"Choose year"}<select aria-label="${ko?"연도 선택":"Choose year"}" onchange="selectPortalYear('${key}','${mode}',this.value)"><option value="">${ko?"전체 연도":"All years"}</option>${c.years.map(y=>`<option value="${esc(y.y)}"${String(y.y)===String(year)?" selected":""}>${esc(y.y)}</option>`).join("")}</select></label>`;
+}
+function selectPortalYear(key,mode,year){
+  const hash=compModeHref(key,mode,year);
+  location.hash=RUPHO_ARCHIVE?.isStage(key)?RUPHO_ARCHIVE.href(key,hash.slice(2).split("/").slice(1).join("/")):hash;
+}
+function portalHtml(key,mode,year=""){
+  const local=contestEntries(key).length>0;
+  return `${portalYearHtml(key,mode,year)}<div class="xm"${local?"":` id="xmRoot" data-key="${key}" data-mode="${mode}" data-year="${esc(year)}"`}>${local?contestPortalHtml(key,mode,year):xmPortalHtml(key,null,mode,year)}</div>`;
+}
 function contestNote(key){
   const c=window.CONTEST_EXAMS?.competitions?.[key]; if(!c) return "";
   const ko=lang==="ko", rules=ko?c.rules:c.rulesEn||c.rules;
   return `<details class="cnote"><summary>${ko?"공식 기출 수록 범위 · 시험 방법과 규정":"Archive coverage · exam format and rules"}</summary><p>${esc(ko?c.coverage:c.coverageEn||c.coverage)}</p><ul>${rules.map(s=>`<li>${esc(s)}</li>`).join("")}</ul><p>${(c.sources||[]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>`).join(" · ")}</p><p>${ko?"원문은 주최 측 사이트에서 열립니다. 회차별 원문 지침이 우선하며, 응시는 무료인 개인 연습입니다. 객관식·단답형은 무료로 채점하며 KMO 서술형 채점·첨삭은 교시당 실전 토큰 1개입니다. 화면 답안은 이 브라우저에 저장되며, 서술형 채점을 요청할 때 제출한 답안만 서버로 전송됩니다.":"Original documents open on the organisers' sites. Each paper's instructions take precedence. Sitting is free; objective answers are graded free, while KMO proof feedback uses one exam token per session. Screen answers stay in this browser until you submit them for proof review."}</p></details>`;
 }
-function contestPortalHtml(key){
-  const ko=lang==="ko", entries=contestEntries(key);
-  return `<div class="xmnote"><b>${ko?"회차별 무료 실전 연습":"Free timed practice by session"}</b><p>${ko?"대면 필기 시험처럼 A4 답안지를 출력해 풀이한 뒤 스캔하거나, 화면 양식에 직접 답을 입력할 수 있습니다. 객관식·단답형은 공식 정답으로 무료 채점하며, KMO 서술형은 종이·화면 답안 모두 교시당 실전 토큰 1개로 학습용 채점·첨삭을 요청할 수 있습니다.":"Print A4 answer sheets and scan your work, or enter answers on screen. Verified multiple-choice and short-answer keys are graded free. KMO proofs, on paper or typed, can receive practice grading and feedback for one exam token per session."}</p></div>
+function contestPortalHtml(key,mode="exam",year=""){
+  const ko=lang==="ko", review=mode==="review", entries=contestEntries(key,year||undefined);
+  return `<div class="xmnote"><b>${review?(ko?"이미 푼 답안 채점·첨삭":"Grade work you have already solved"):(ko?"회차별 무료 실전 연습":"Free timed practice by session")}</b><p>${review?(ko?"시험을 시작할 필요 없이 종이 답안을 스캔하거나 풀이를 직접 입력하세요. 풀이·제출 시간 제한은 없습니다. 객관식·단답형은 공식 정답으로 무료 채점하며, KMO 서술형 채점·첨삭은 교시당 실전 토큰 1개입니다.":"Scan your completed paper or enter your answers directly, with no exam or submission timer. Verified objective answers are graded free; KMO proof grading and feedback cost one exam token per session."):(ko?"대면 필기 시험처럼 A4 답안지를 출력해 풀이한 뒤 스캔하거나, 화면 양식에 직접 답을 입력할 수 있습니다. 객관식·단답형은 공식 정답으로 무료 채점하며, KMO 서술형은 종이·화면 답안 모두 교시당 실전 토큰 1개로 학습용 채점·첨삭을 요청할 수 있습니다.":"Print A4 answer sheets and scan your work, or enter answers on screen. Verified multiple-choice and short-answer keys are graded free. KMO proofs, on paper or typed, can receive practice grading and feedback for one exam token per session.")}</p></div>
     <p><label>${ko?"시험 찾기":"Find an exam"} <input type="search" aria-label="${ko?"시험 찾기":"Find an exam"}" placeholder="${ko?"예: 2025 중등 2차":"e.g. 2025 middle"}" oninput="filterContest(this.value)" style="padding:9px 12px;border:1px solid var(--line);border-radius:8px;max-width:100%"></label></p>
-    <div class="xmbox" style="overflow:auto"><table><thead><tr><th>${ko?"연도":"Year"}</th><th>${ko?"시험":"Exam"}</th><th>${ko?"시간 / 문항":"Time / questions"}</th><th>${ko?"답안 방식":"Answer format"}</th><th></th></tr></thead><tbody>${entries.map(e=>`<tr class="contestrow"><td>${esc(e.year)}</td><td><b>${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)}</b>${e.formatNote?`<details class="s"><summary>${ko?"회차 안내":"Session notes"}</summary>${esc(e.formatNote)}</details>`:""}</td><td>${e.minutes?`${e.minutes}${ko?"분":" min"}`:"—"} / ${e.questions||"—"}</td><td>${({choice:ko?"객관식":"Multiple choice",integer:ko?"단답형":"Short answer",proof:ko?"서술형":"Proof"})[e.kind]||"—"}<div class="s">${e.kind==="proof"?(ko?"종이·화면 · 채점 1토큰":"Paper or typed · 1 token to grade"):e.answersVerified?(ko?"종이 스캔·화면 · 무료 채점":"Scan or on-screen · free grading"):(ko?"정답 미확보 · 답안 저장":"No verified key · answer record")}</div></td><td><a class="go" href="${contestHref(e)}">${e.practice===false?(ko?"원문 · 규격 확인 중":"Paper · format pending"):(ko?"시험 준비":"Prepare")}</a></td></tr>`).join("")}</tbody></table></div>`;
+    <div class="xmbox" style="overflow:auto"><table><thead><tr><th>${ko?"연도":"Year"}</th><th>${ko?"시험":"Exam"}</th><th>${review?(ko?"문항":"Questions"):(ko?"시간 / 문항":"Time / questions")}</th><th>${ko?"답안 방식":"Answer format"}</th><th></th></tr></thead><tbody>${entries.map(e=>`<tr class="contestrow"><td>${esc(e.year)}</td><td><b>${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)}</b>${e.formatNote?`<details class="s"><summary>${ko?"회차 안내":"Session notes"}</summary>${esc(e.formatNote)}</details>`:""}</td><td>${review?"":(e.minutes?`${e.minutes}${ko?"분":" min"}`:"—")+" / "}${e.questions||"—"}</td><td>${({choice:ko?"객관식":"Multiple choice",integer:ko?"단답형":"Short answer",proof:ko?"서술형":"Proof"})[e.kind]||"—"}<div class="s">${e.kind==="proof"?(ko?"종이·화면 · 채점 1토큰":"Paper or typed · 1 token to grade"):e.answersVerified?(ko?"종이 스캔·화면 · 무료 채점":"Scan or on-screen · free grading"):(ko?"정답 미확보 · 답안 저장":"No verified key · answer record")}</div></td><td><a class="go" href="${contestHref(e,review)}">${e.practice===false?(ko?"원문 · 규격 확인 중":"Paper · format pending"):review?(ko?"답안 제출":"Submit answers"):(ko?"시험 준비":"Prepare")}</a></td></tr>`).join("")}</tbody></table></div>`;
 }
 function viewComp(key,mode){
   if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
   const d=UI[lang], c=compOf(key);
   if(!c) return viewHome();
-  if(mode==="exam"&&!hasExam(c,key)) mode="";
+  if(mode==="exam"&&REVIEW_ONLY.has(key)) mode="review";
+  if(mode&&!hasReview(c,key)) mode="";
   const ready = c.years.reduce((n,y)=>n+y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length,0);
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
   return ruphoPage(key,`
@@ -4837,8 +4866,8 @@ function viewComp(key,mode){
     ${contestNote(key)}
     ${contestResources(key)}
     ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 제공된 2023년 기출과 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, supplied 2023 papers, and available Korean Middle-School Physics Competition papers from 2015–2022. Papers without an official key do not receive automatic grading."}</p>`:""}
-    ${hasExam(c,key)?modeSwitch(key,mode):""}
-    ${mode==="exam"?`<div class="xm" ${contestEntries(key).length?"":`id="xmRoot" data-key="${key}"`}>${contestEntries(key).length?contestPortalHtml(key):xmPortalHtml(key,null)}</div></div>${adFitBanner("primary")}`:`
+    ${hasReview(c,key)?modeSwitch(key,mode):""}
+    ${mode?`${portalHtml(key,mode)}</div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
     <div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>
     <div class="years">
@@ -4861,25 +4890,27 @@ function viewComp(key,mode){
       }).join("")}
     </div>
   </div>
-  ${adFitBanner("primary")}`}`,mode==="exam"?"exam":"");
+  ${adFitBanner("primary")}`}`,mode||"");
 }
 /* the exam portal, as a university mock-exam site has it: the exams of every year in one table with how
    many sat and the average, the candidate's own status on each, and a card with their tokens.  `x` holds
    what came from the server (null while it loads): {stats, mine, tokens, active, me, off} */
-function xmPortalHtml(key,x){
-  const d=UI[lang], c=compOf(key), rows=[];
+function xmPortalHtml(key,x,mode="exam",year=""){
+  const d=UI[lang], c=compOf(key), rows=[], review=mode==="review", ko=lang==="ko";
+  const entryHref=href=>review?href+"&review=1":href;
   const row=(y,tasks,label,sub,sec,href)=>{
+    href=entryHref(href);
     const k=key+y.y+":"+tasks.join("+");
-    const st=x&&x.stats&&x.stats[k], my=x&&x.mine&&x.mine.find(s=>s.exam_key===key+y.y&&s.tasks.join("+")===tasks.join("+"));
+    const st=x&&x.stats&&x.stats[k], my=x&&x.mine&&x.mine.find(s=>s.exam_key===key+y.y&&s.tasks.join("+")===tasks.join("+")&&!!s.review_only===review);
     const open=my&&(my.status==="running"||my.status==="scanning");
     rows.push(`<tr><td class="y">${y.y}</td>
       <td><div class="t">${c.abbr} ${y.y} ${label} · ${tasks.join(" + ")}</div><div class="s">${sub}</div></td>
-      <td class="hs">${HLexam.clock(sec)} + 0:30</td>
-      <td class="hs">${x?(st&&st.sat?d.xmSatV(st.sat,st.avg):`<span style="color:var(--graphite)">${d.xmNone}</span>`):"…"}</td>
+      <td class="hs">${review?(ko?"시간 제한 없음":"No time limit"):HLexam.clock(sec)+" + 0:30"}</td>
+      ${review?"":`<td class="hs">${x?(st&&st.sat?d.xmSatV(st.sat,st.avg):`<span style="color:var(--graphite)">${d.xmNone}</span>`):"…"}</td>`}
       <td>${my?`<span class="st ${my.status}">${d.xmSt[my.status]||my.status}${my.status==="graded"&&my.points?` · ${my.score}/${my.points}`:""}</span>`:""}</td>
       <td><div class="acts3">${open?`<a class="go" href="${href}">${d.xmResume}</a>`
         :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
-        :`<a class="go" href="${href}">${d.xmGo}</a>`}</div></td></tr>`);
+        :`<a class="go" href="${href}">${review?(ko?"답안 제출":"Submit answers"):d.xmGo}</a>`}</div></td></tr>`);
   };
   const thyT=trackOf(key)==="thy";
   const setRow=y=>{ const eg=examGroups(key,y).find(g=>!g.some(p=>p.thy)), tg=theoryGroups(key,y)[0];
@@ -4887,40 +4918,43 @@ function xmPortalHtml(key,x){
       <td><div class="t">${c.abbr} ${y.y} ${d.xmSetLabel}</div><div class="s">${d.xmSetSub}</div></td>
       <td class="hs">—</td><td class="hs"></td><td></td>
       <td><div class="acts3"><a class="go sec" href="${examHref(key,y,eg)}">${d.trkExp}</a><a class="go sec" href="${theoryHref(key,y,tg)}">${d.trkThy}</a></div></td></tr>`); };
-  for(const y of c.years){
-    if(yearPair(key,y)) setRow(y);
-    if(!thyT) for(const g of examGroups(key,y)){ const mix=g.some(p=>p.thy);
+  for(const y of c.years.filter(y=>!year||String(y.y)===String(year))){
+    if(!review&&yearPair(key,y)) setRow(y);
+    for(const g of examGroups(key,y).filter(g=>!thyT||g.some(p=>p.thy))){ const mix=g.some(p=>p.thy);
       row(y,g.map(examTask),mix?d.xmMixLabel:d.xmExamLabel,g.map(p=>`${examTask(p)} ${esc(p.title?p.title[lang]:"")}`).join(" · ")+(!mix&&yearPair(key,y)?` · ${d.xmHalf}`:""),HLexam.sec(key,y.y,g.length,mix?"mixed":false),examHref(key,y,g)); }
     const t=thyOf(key,y.y);
-    if(thyT) for(const g of theoryGroups(key,y))
-      row(y,g,d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · ")+(yearPair(key,y)?` · ${d.xmHalf}`:""),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
+    if(thyT) for(const g of (review?reviewTheoryGroups(key,y):theoryGroups(key,y))){
+      const qualitative=review&&g.some(x=>!t.f[x].sol);
+      row(y,g,review?(ko?"문제지":"paper"):d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · ")+(yearPair(key,y)?` · ${d.xmHalf}`:"")+(qualitative?` · ${ko?"공식 해설 미공개 · 점수 없는 학습 첨삭":"No published solution · qualitative learning feedback"}`:""),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
+    }
   }
   const me=x&&x.me, act=x&&x.active;
   const card=!x?`<div class="in">…</div>`
-    :!me?`<div class="in"><p style="margin:0 0 10px">${d.xmLoginNote}</p><a class="go" href="#/login" onclick="try{sessionStorage.setItem('hlCmBack',location.hash)}catch(e){}">${CMT[lang].login}</a></div>`
+    :!me?`<div class="in"><p style="margin:0 0 10px">${review?(ko?"채점·첨삭을 신청하려면 로그인하세요.":"Sign in to request grading and feedback."):d.xmLoginNote}</p><a class="go" href="#/login" onclick="try{sessionStorage.setItem('hlCmBack',location.hash)}catch(e){}">${CMT[lang].login}</a></div>`
     :`<div class="in"><div style="font-weight:700">${esc(me.nickname)}</div><div style="color:var(--graphite);font-size:12px">@${esc(me.username)}</div>
        <div style="margin-top:12px;font-size:12px;color:var(--graphite)">${d.xmTokens}</div><div class="tk">${x.tokens??"–"}</div>
        ${act?`<div style="margin-top:10px;font-size:12px;color:var(--graphite)">${d.xmActive}</div><div><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${d.xmSt[act.status]||""}</div>
          ${act.entry?`<a class="go" style="margin-top:8px" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${d.xmResume}</a>`:""}`:""}
        <p style="margin:12px 0 0"><a class="lnk" href="#/lab">${d.xmAll}</a></p></div>`;
   return `${x&&x.off?`<div class="cmnote" style="margin-bottom:14px">${d.xmOff}</div>`:""}
-    <div class="xmnote"><b>${d.xmNotice}</b><ol>${d.xmSteps.map(t=>`<li>${t}</li>`).join("")}</ol></div>
-    <div class="xmgrid"><div class="xmbox"><h2>${d.xmListH}</h2>${rows.length?`<table><thead><tr><th>${d.xmYear}</th><th>${d.xmName}</th><th class="hs">${d.xmTime}</th><th class="hs">${d.xmSat}</th><th>${d.xmMine}</th><th></th></tr></thead>
+    <div class="xmnote"><b>${review?(ko?"채점·첨삭만 받기":"Grading and feedback only"):d.xmNotice}</b>${review?`<p>${ko?"연도와 문제를 고른 뒤 이미 푼 종이 답안을 스캔해 제출하세요. 시험 시작이나 타이머 없이 채점·첨삭을 신청할 수 있습니다. 채점 비용은 기존 회차별 토큰 기준과 같으며, 실전 응시 통계에는 포함되지 않습니다.":"Choose a year and paper, then scan and submit work you have already solved. There is no exam or scanning timer. Existing per-session grading token costs apply; these submissions are excluded from timed exam statistics."}</p>`:`<ol>${d.xmSteps.map(t=>`<li>${t}</li>`).join("")}</ol>`}</div>
+    <div class="xmgrid"><div class="xmbox"><h2>${review?(ko?"채점할 문제 선택":"Choose a paper to grade"):d.xmListH}</h2>${rows.length?`<table><thead><tr><th>${d.xmYear}</th><th>${d.xmName}</th><th class="hs">${review?(ko?"제출":"Submission"):d.xmTime}</th>${review?"":`<th class="hs">${d.xmSat}</th>`}<th>${d.xmMine}</th><th></th></tr></thead>
       <tbody>${rows.join("")}</tbody></table>`:`<p style="padding:16px">${d.xmNoExam}</p>`}</div>
-    <aside class="xmbox xmme"><h2>${d.xmMeH}</h2>${card}</aside></div>`;
+    <aside class="xmbox xmme"><h2>${review?(ko?"내 채점·첨삭":"My grading & feedback"):d.xmMeH}</h2>${card}</aside></div>`;
 }
 async function xmMount(key){
   const root=document.getElementById("xmRoot"); if(!root||root.dataset.key!==key) return;
+  const mode=root.dataset.mode||"exam",year=root.dataset.year||"";
   const x={stats:{},mine:[],tokens:null,active:null,me:null,off:false};
   const h=await cmHealth().catch(()=>({}));
   if(!h.lab){ x.off=true; }
   else{
     await cmLoadMe(); x.me=cm.me;
-    const jobs=[cmApi("GET","/lab/stats?comp="+key).then(r=>{x.stats=r.exams;},()=>{})];
+    const jobs=mode==="review"?[]:[cmApi("GET","/lab/stats?comp="+key).then(r=>{x.stats=r.exams;},()=>{})];
     if(cm.me) jobs.push(cmApi("GET","/lab/sessions").then(r=>{x.mine=r.sessions;},()=>{}), cmApi("GET","/lab/active").then(r=>{x.tokens=r.tokens;x.active=r.active;},()=>{}));
     await Promise.all(jobs);
   }
-  const now=document.getElementById("xmRoot"); if(now===root) root.innerHTML=xmPortalHtml(key,x);
+  const now=document.getElementById("xmRoot"); if(now===root) root.innerHTML=xmPortalHtml(key,x,mode,year);
 }
 
 /* exam mode (sim/exam.html): the experiments that are sat together — every E1, E2, … of a year with a
@@ -4955,11 +4989,16 @@ function examHref(key,yr,group){
    answer sheets travel with it (the server draws the marking scheme from the solution and the scheme together) */
 function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
+  const bundle=PaperLanguages.bundle(parts.map(f),lang);
   const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:compOf(key).abbr,e:parts.join(","),t:all.join("|"),
     /* ISPhO: in Korean the whole translated paper, typeset as the original */
     p:parts.map(x=>THY_WHOLE.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
     /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
     a:parts.map(x=>lang==="ko"&&(f(x).ko||{}).answer||f(x).answer||"").join("|"),...(lang==="ko"&&t.wk?{w:t.wk}:{}),lang});
+  if(bundle.language){
+    q.set("papers",JSON.stringify(bundle.papers)); q.set("pl",bundle.language);
+    q.set("p",bundle.papers[bundle.language].join("|"));
+  }
   if(yearPair(key,yr)) q.set("h","1");              /* the year has experiments too: grading the theory costs half a token */
   return "sim/exam.html?"+q.toString();
 }
@@ -5008,6 +5047,9 @@ function theoryHtml(key,yr){
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
+     const paperLanguages=PaperLanguages.files({...f,ko:k}), selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
+     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,`${d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
+     if(selectedLanguage) P[1]=PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
@@ -5019,7 +5061,7 @@ function theoryHtml(key,yr){
          (K[0]?[a(K[0],t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-       docs:contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const sim=simThy(key,yr);
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)&&!sim.has(x)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
@@ -5044,7 +5086,7 @@ function theoryHtml(key,yr){
     </div>
      ${key==="kphe"&&t.sourceType!=="recall"?`<p class="trknote">${kpheEditionNote(t,yr.y,ko)} <a href="https://kphe.kps.or.kr/" target="_blank" rel="noopener">${ko?"공식 안내":"Official information"}</a></p>`:""}
      ${t.sourceType==="recall"?`<p class="trknote"><b>${ko?"비공식 복기·재수록 자료":"Unofficial recollection / reprint"}</b><br>${esc(t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"작성자 원문·출처":"Author and source"}</a>`:""}</p>`:""}
-     ${contestEntries(key,yr.y).length||theoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${TL(compOf(key),"thyExam")}</a></p>`:""}
+     ${contestEntries(key,yr.y).length||reviewTheoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="${compModeHref(key,REVIEW_ONLY.has(key)?"review":"exam",yr.y)}">${REVIEW_ONLY.has(key)?(ko?"✎ 채점·첨삭만 받기":"✎ Grading & feedback"):"⏱ "+TL(compOf(key),"thyExam")}</a></p>`:""}
     ${sim.size?`<p class="cnote">${d.thySim([...sim].join(", "))}</p>`:""}
     <div class="probs">${cards}</div></div>`;
 }
@@ -5058,11 +5100,13 @@ function genLinks(key,yr){
   return es.map(e=>{ const u=lang==="ko"?(e.ko||e.en):(e.en||e.ko);
     return `<a class="genlink" href="${u}" target="_blank" rel="noopener">${d.actGeneral}${e.lab?` · ${esc(e.lab)}`:""}${lang!=="ko"&&!e.en?` <span class="lgtag">KO</span>`:""}</a>`; }).join("");
 }
-function viewYear(key,year){
+function viewYear(key,year,mode=""){
   if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
   const d=UI[lang], c=compOf(key);
   const yr = c && c.years.find(y=>String(y.y)===String(year));
   if(!yr) return viewComp(key);
+  if(mode==="exam"&&REVIEW_ONLY.has(key)) mode="review";
+  if(mode&&!hasReview(c,key)) mode="";
   /* 이 해에 있는 조만 고르개에 — 다른 해에서 고른 조가 없으면 전체를 보인다 */
   const yrGroups = c.groups ? ["a","b","c"].filter(g=>yr.problems.some(p=>grpOf(c,p).includes(g))) : [];
   const thyY = trackOf(key)==="thy";
@@ -5072,7 +5116,7 @@ function viewYear(key,year){
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
       <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span>
-      <a href="#/${key}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
+      <a href="${compModeHref(key,mode)}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
       <h1>${c.abbr} ${yr.y}</h1>
@@ -5082,6 +5126,8 @@ function viewYear(key,year){
         <div><dt>${thyY?TL(c,"thyPapers"):LB(c,"problems")}</dt><dd>${thyY?thyCount(thyOf(key,yr.y)):yr.problems.length}</dd></div>
       </dl>
     </div>
+    ${hasReview(c,key)?modeSwitch(key,mode,year):""}
+    ${mode?portalHtml(key,mode,year):`
     ${adFitBanner("secondary")}
     ${thyY?(thyOf(key,yr.y)?theoryHtml(key,yr):`<p class="trknote">${d.onlyExp}${yr.problems.length?`<button type="button" onclick="setTrack('exp')">${d.seeExp}</button>`:""}</p>`)
       :!yr.problems.length&&thyOf(key,yr.y)?`<p class="trknote">${d.onlyThy}<button type="button" onclick="setTrack('thy')">${d.seeThy}</button></p>`
@@ -5094,7 +5140,7 @@ function viewYear(key,year){
     ${c.groups?`<div class="grpsel" role="group" title="${d.grpHint}">${["all",...yrGroups].map(g=>
       `<button type="button" data-g="${g}" aria-pressed="${grpShow===g}" onclick="setGrp('${g}')">${g==="all"?d.grpAll:d.grp[g]}
        <i>${yr.problems.filter(p=>g==="all"||grpOf(c,p).includes(g)).length}</i></button>`).join("")}</div>`:""}
-    ${examGroups(key,yr).length?`<p class="yrexam"><a href="#/${key}/exam">⏱ ${d.xmToExam}</a></p>`:""}
+    ${examGroups(key,yr).length?`<p class="yrexam"><a href="${compModeHref(key,REVIEW_ONLY.has(key)?"review":"exam",year)}">${REVIEW_ONLY.has(key)?(lang==="ko"?"✎ 채점·첨삭만 받기":"✎ Grading & feedback"):"⏱ "+d.xmToExam}</a></p>`:""}
     <div class="probs"${c.groups?` data-show="${grpShow}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
@@ -5134,9 +5180,9 @@ function viewYear(key,year){
           after:p.theory?`<span class="thytag">${d.theoryTag}</span>`:"", heading, body,
           tags:(kindOf(c,p)?[kindOf(c,p)]:[]).concat(tags), note, main:docsOnly?null:b, docs});}).join("")}
     </div>
-    </div>
+    </div>`}
   </div>
-  ${adFitBanner("primary")}`,String(year));
+  ${adFitBanner("primary")}`,String(year)+(mode?"/"+mode:""));
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -9076,7 +9122,8 @@ function setDocTitle(first, second){
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
-    parts.push(second==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
+    const route=location.hash.split("?")[0].split("/"),mode=route.at(-1);
+    parts.push(mode==="review"||mode==="exam"&&REVIEW_ONLY.has(c===DATA[first]?first:RUPHO_ARCHIVE?.route(location.hash).key)?`${c.abbr} \u2014 ${lang==="ko"?"채점·첨삭만":"Grading & feedback"}`:mode==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
   }
   const tail = lang==="ko" ? "물리올림피아드 실험 시뮬레이터"
                            : "Physics Olympiad Experimental Simulations";
@@ -9114,7 +9161,8 @@ function render(){
   if(animId){cancelAnimationFrame(animId);animId=null;}
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
-  const [first,second]=parts;
+  const [first,second,third]=parts;
+  const studyMode=second==="exam"||second==="review"?second:third==="exam"||third==="review"?third:"";
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
@@ -9122,7 +9170,7 @@ function render(){
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
-  else if(first && DATA[first]){  html=second==="exam"?viewComp(first,"exam"):second?viewYear(first,second):viewComp(first); active="comps"; }
+  else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.body.dataset.siteRoute=active==="comps"?"archive":active;
   document.getElementById("view").innerHTML=html;
@@ -9144,7 +9192,7 @@ function render(){
   paintSiteTheme();
   if(active==="home"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
-  if(active==="comps" && second==="exam") xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
+  if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if(active==="weekly"||first==="lab") arMount();
   arChip();
   if(first==="comps"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }

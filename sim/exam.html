@@ -201,6 +201,7 @@
 
 <script src="../vendor/qrcode/qrcode.js"></script>
 <script src="../examdur.js"></script>
+<script src="../paper-languages.js?v=1"></script>
 <script src="labmedal.js"></script>
 <script>
 "use strict";
@@ -208,6 +209,7 @@ const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* the exam's length (examdur.js; the server's clock has the last word) */
 const THY = new URLSearchParams(location.search).get("m") === "t";        // a theory exam
+const REVIEW = new URLSearchParams(location.search).get("review") === "1" || ["physcup", "ortvay", "opho", "wopho"].includes((new URLSearchParams(location.search).get("c") || "").toLowerCase());
 /* a combined exam (NBPhO): experiments on the bench and the theory of the same booklet, a task with no simulator ("-") */
 const MIX = !THY && (new URLSearchParams(location.search).get("f") || "").split(",").includes("-");
 const DUR = (() => { const q = new URLSearchParams(location.search); return HLexam.sec((q.get("c") || "").toLowerCase(), parseInt(q.get("y")) || 0, (q.get("e") || "").split(",").filter(Boolean).length, THY || (MIX ? "mixed" : false)); })();
@@ -270,7 +272,7 @@ const T = {
     detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기",
     closed: "스캔 시간이 끝났습니다. 보낸 쪽으로 채점합니다.",
     bad: "주소가 올바르지 않습니다. 대회 목록에서 실전 모드를 다시 여세요.",
-    err: {network: "서버에 연결하지 못했습니다.", closed: "스캔 시간이 끝났습니다.", login_required: "로그인이 필요합니다.", no_tokens: "실전 토큰이 없습니다.", running: "먼저 시험을 끝내세요."},
+    err: {network: "서버에 연결하지 못했습니다.", closed: "답안 접수가 종료되었습니다.", login_required: "로그인이 필요합니다.", no_tokens: "실전 토큰이 없습니다.", running: "먼저 시험을 끝내세요.", no_answers: "채점할 답안을 먼저 저장하거나 스캔해 주세요."},
   },
   en: {
     exam: "Exam mode", practice: "Practice mode", left: "Time left", scanLeft: "Scanning closes in",
@@ -328,7 +330,7 @@ const T = {
     detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again",
     closed: "Scanning has closed. The pages that arrived are being graded.",
     bad: "This address is not complete. Open exam mode again from the competition list.",
-    err: {network: "Could not reach the server.", closed: "Scanning has closed.", login_required: "Please sign in.", no_tokens: "You have no exam tokens.", running: "Finish the exam first."},
+    err: {network: "Could not reach the server.", closed: "Answer submission has closed.", login_required: "Please sign in.", no_tokens: "You have no exam tokens.", running: "Finish the exam first.", no_answers: "Save typed answers or upload your work before grading."},
   },
 };
 
@@ -382,7 +384,23 @@ let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? 
 const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && s.cost != null ? s.cost : Q.get("h") === "1" && !MIX ? 0.5 : 1; };
 const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one token|1 token)\b/g, `${COST()} token`)
   : typeof v === "function" ? (...a) => costify(v(...a)) : Array.isArray(v) ? v.map(costify) : v;
-const t0 = () => THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang];
+const R = {
+  ko: { exam: "채점 · 첨삭", scanH: "답안 제출", scanLeft: "시간 제한 없음", start: "답안 제출 화면 열기", loginReq: "채점 · 첨삭은 로그인 후 이용할 수 있습니다.",
+    pendingWhy: { no_solution: "공식 해설을 확인하지 못해 채점을 보류했습니다.", no_grader: "첨삭 처리기를 사용할 수 없어 접수를 보류했습니다.", problem_unavailable: "공식 문제 원문을 불러오지 못해 첨삭을 보류했습니다.", scan_unavailable: "원본 답안 사진을 불러오지 못해 첨삭을 보류했습니다.", ocr_storage_limit: "답안 사진과 판독 내용이 저장 한도를 넘어 첨삭을 보류했습니다.", ungrounded_review: "답안에서 확인 가능한 근거가 부족해 첨삭을 보류했습니다." },
+    resume: "저장된 채점 접수를 이어갑니다. 시간 제한 없이 답안을 준비할 수 있습니다.",
+    steps: ["QR 코드를 휴대전화로 스캔하거나 아래 링크를 이 기기에서 여세요.", "이미 작성한 답안 사진을 올리거나 아래에 풀이를 직접 입력하세요.", "답안을 확인한 뒤 채점 · 첨삭을 요청하세요. 제출 전까지 시간 제한이 없습니다."],
+    infoTimeV: "시간 제한 없음 · 준비한 답안으로 바로 채점 요청", rcStart: "접수 시작", rcEnd: "풀이 제한", back: "채점 목록으로", noEdit: "스캔 판독 결과는 원본과 대조하세요. 잘못 찍힌 사진은 삭제하고 다시 올릴 수 있습니다.",
+    endNoGrade: "채점 없이 접수 종료", endNoGradeQ: "접수를 종료할까요? 저장된 답안은 결과 화면에서 나중에 채점을 요청할 수 있습니다.",
+    again: "다른 답안 제출", noTokens: "채점에 필요한 실전 토큰이 부족합니다. #/lab에서 충전할 수 있습니다." },
+  en: { exam: "Grading & feedback", scanH: "Submit your work", scanLeft: "No time limit", start: "Open answer submission", loginReq: "Sign in to request grading and feedback.",
+    pendingWhy: { no_solution: "The official solution could not be verified; grading is pending.", no_grader: "The feedback provider is unavailable; review is pending.", problem_unavailable: "The official problem paper could not be loaded; feedback is pending.", scan_unavailable: "The original answer scan could not be loaded; feedback is pending.", ocr_storage_limit: "The scan and its transcription exceed the storage limit; feedback is pending.", ungrounded_review: "The review lacked verifiable evidence from the submitted work and is pending." },
+    resume: "Resuming your saved review. There is no time limit to prepare your answers.",
+    steps: ["Scan the QR code with your phone, or open the link on this device.", "Upload photos of completed work, or type your solution below.", "Check your answers and request grading and feedback. There is no submission timer."],
+    infoTimeV: "No time limit · submit work you have already completed", rcStart: "Review opened", rcEnd: "Working limit", back: "Back to reviews", noEdit: "Check scanned text against your original. Remove and upload a photo again if needed.",
+    endNoGrade: "Close without grading", endNoGradeQ: "Close this review? Saved answers can be graded later from the result page.",
+    again: "Submit another answer", noTokens: "You do not have enough exam tokens for grading. Top up at #/lab." },
+};
+const t0 = () => { const base = THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang]; return REVIEW ? { ...base, ...R[lang] } : base; };
 const t = () => { const o = t0(); if (COST() === 1) return o; const c = {}; for (const k in o) c[k] = costify(o[k]); return c; };
 const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
@@ -392,9 +410,14 @@ const EX = {
   working: Q.get("w") || "",                                                     // a theory exam's working sheet, where there is one
   pair: Q.get("h") === "1",                                                      // the year has experiments and theory: half a token each
 };
+let paperOptions = {};
+try { paperOptions = window.PaperLanguages?.normalize(JSON.parse(Q.get("papers") || "{}"), EX.tasks.length) || {}; } catch (e) {}
+let paperLanguage = Object.hasOwn(paperOptions, Q.get("pl")) ? Q.get("pl") : Object.hasOwn(paperOptions, lang) ? lang : Object.keys(paperOptions)[0] || "";
+if (paperLanguage) EX.pdfs = paperOptions[paperLanguage].slice();
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
+const trustedReviewPaper = value => { try { const u = new URL(value); return u.protocol === "https:" && !u.username && !u.password && !u.port && !u.search && !u.hash && ((u.hostname === "ortvay.elte.hu" && /^\/\d{4}\/E\d{2}\.pdf$/.test(u.pathname)) || (u.hostname === "eik.bme.hu" && /^\/~vanko\/fizika\/eotvos\/[A-Za-z0-9_.-]+\.pdf$/.test(u.pathname))); } catch { return false; } };
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
-  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/.test(f))
+  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(f) || REVIEW && trustedReviewPaper(f))
        : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.some(f => f !== "-") && EX.files.every(f => f === "-" || /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
@@ -406,13 +429,21 @@ const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y
 const examNo = id => "HL-" + (EX.c + EX.y).toUpperCase() + "-" + String(id).padStart(6, "0");
 const when = t => { const d = new Date(t * 1000), z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}.${z(d.getMonth() + 1)}.${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`; };
 /* the address to come back to (kept on the server with the session), without the language */
-const ENTRY = (() => { const q = new URLSearchParams(location.search); q.delete("lang"); return "?" + q.toString(); })();
+const entryQuery = () => { const q = new URLSearchParams(location.search); q.delete("lang"); if (REVIEW) q.set("review", "1"); if (paperLanguage) { q.set("pl", paperLanguage); q.set("p", EX.pdfs.join("|")); } return "?" + q.toString(); };
 
 /* ── small helpers ── */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const hms = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
 function toast(msg, ms) { const d = document.createElement("div"); d.className = "toast"; d.textContent = msg; document.body.append(d); setTimeout(() => d.remove(), ms || 3500); }
+function paperLanguageHtml() {
+  const codes = Object.keys(paperOptions); if (!codes.length) return "";
+  return `<label style="display:block;margin:14px 0">${lang === "ko" ? "문제지 언어" : "Problem paper language"} <select id="paperLanguage" style="font:inherit;padding:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px">${codes.map(code => `<option value="${esc(code)}"${code === paperLanguage ? " selected" : ""}>${esc(PaperLanguages.label(code, lang))}</option>`).join("")}</select></label>`;
+}
+function bindPaperLanguage() {
+  const select = $("paperLanguage"); if (!select) return;
+  select.onchange = () => { if (!Object.hasOwn(paperOptions, select.value)) return; paperLanguage = select.value; EX.pdfs = paperOptions[paperLanguage].slice(); PAPER.docs = {}; PAPER.i = 0; const url = new URL(location.href); url.searchParams.set("pl", paperLanguage); url.searchParams.set("p", EX.pdfs.join("|")); history.replaceState(null, "", url); };
+}
 
 /* the community server: the same account and token as the site (same origin, same localStorage) */
 function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} return (o || COMMUNITY_API).replace(/\/+$/, ""); }
@@ -503,7 +534,7 @@ async function sync() {
   catch (e) { if (e.status === 401) { ME = null; SES = null; } return render(); }
   ME = ME || {}; ME.tokens = a.tokens; ME.other = null;
   if (!ME.nickname) { try { ME.nickname = ((await api("GET", "/me")).user || {}).nickname; } catch (e) {} }
-  if (a.active && a.active.exam_key === KEY && a.active.tasks.join(",") === EX.tasks.join(",")) setSession(a.active);
+  if (a.active && a.active.exam_key === KEY && a.active.tasks.join(",") === EX.tasks.join(",") && !!a.active.review_only === REVIEW) setSession(a.active);
   else {
     if (a.active) ME.other = a.active;
     /* this exam closed meanwhile (time ran out elsewhere, or it was submitted on another computer): show its result */
@@ -516,6 +547,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && OK
 addEventListener("storage", e => { if (e.key === "hlCmTok") sync(); });
 
 async function introView() {
+  if (REVIEW) return reviewIntroView();
   const back = `../#/${esc(EX.c)}/exam`;
   let gate;
   if (LABOK === false) gate = `<div class="note w">${t().noServer}</div>`;
@@ -547,9 +579,10 @@ async function introView() {
     <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
       : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
     ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
-    ${gate}
+    ${paperLanguageHtml()}${gate}
     <div class="row"><a href="${back}">${t().back}</a></div>
   </div></div>`;
+  bindPaperLanguage();
   const go = $("go");
   if (go) {
     const boxes = [...document.querySelectorAll("[data-ag]")];
@@ -558,16 +591,36 @@ async function introView() {
     go.onclick = () => { if (go.disabled) return; const pay = !!($("payNow") && $("payNow").checked); confirmBox(t().startQ, t().startBody(ME.tokens, pay), t().startQ, () => startExam(pay)); };
   }
 }
+function reviewIntroView() {
+  const ko = lang === "ko";
+  let gate;
+  if (LABOK === false) gate = `<div class="note w">${t().noServer}</div>`;
+  else if (LABOK === null && tok()) gate = `<div class="note w">${t().err.network}</div>`;
+  else if (!tok() || !ME) gate = `<div class="note w">${t().loginReq}</div><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><p>${t().loginWait}</p>`;
+  else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}`;
+  else gate = `<p>${t().tokens(ME.tokens)}</p><button class="pri" id="go">${t().start}</button>`;
+  $("main").innerHTML = `<div class="page"><section class="card"><span class="badge">${t().exam}</span><h1>${esc(label())} · ${esc(EX.tasks.join(" + "))}</h1>
+    <p class="lead">${ko ? "이미 푼 답안을 제출하고 채점 · 첨삭만 받으세요." : "Submit completed work directly for grading and feedback."}</p>
+    <p>${ko ? "시험을 시작하거나 타이머를 기다릴 필요 없이 종이 답안 사진 또는 화면에 입력한 풀이를 제출할 수 있습니다. 답안을 준비하는 동안에는 시간 제한이 없습니다." : "Upload your written answers or type your solutions without starting an exam. There is no time limit while preparing your submission."}</p>
+    <p>${ko ? `접수와 답안 저장은 무료이며, 채점 · 첨삭을 요청할 때만 실전 토큰 ${COST()}개를 사용합니다.` : `Opening a review and saving work are free. Grading and feedback cost ${COST()} exam token only when requested.`}</p>
+    ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
+    <div>${EX.tasks.map((task, i) => `<p><b>${esc(task)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? ` · <a class="reviewPaperLink" data-paper="${i}" href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${ko ? "문제지 보기" : "View problem paper"}</a>` : ""}</p>`).join("")}</div>
+    ${paperLanguageHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
+  bindPaperLanguage();
+  const select = $("paperLanguage");
+  if (select) { const update = select.onchange; select.onchange = () => { update(); document.querySelectorAll(".reviewPaperLink").forEach(a => { a.href = pdfUrl(EX.pdfs[+a.dataset.paper]); }); }; }
+  if ($("go")) $("go").onclick = () => startExam(false);
+}
 async function startExam(pay) {
   if (BUSY) return; BUSY = true;
   const go = $("go"); if (go) go.disabled = true;
   try {
     /* each experiment's official solution: the marking scheme is drawn from it */
     const clean = v => (v || "").replace(PDF_BASE, "").replace(/^pdfx?\/([a-z]+\/)?/, "");
-    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]),
+    const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]), ...(REVIEW && EX.pdfs[i] ? { paper: EX.pdfs[i] } : {}),
       ...(isThy(i) ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}), ...(MIX && EX.skip ? { skip: EX.skip } : {}) } : {}),
-      ...(EX.nos[i] ? { no: EX.nos[i] } : {}) }]).filter(([, v]) => v.sol || v.kind));
-    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: ENTRY, sources, ...(EX.pair && !MIX ? { pair: true } : {}) });
+      ...(EX.nos[i] ? { no: EX.nos[i] } : {}) }]).filter(([, v]) => v.sol || v.kind || v.paper));
+    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: entryQuery(), sources, ...(REVIEW ? { review: true } : {}), ...(EX.pair && !MIX ? { pair: true } : {}) });
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
     if (pay && !r.session.paid) await payNow(true);
@@ -771,20 +824,37 @@ async function finishExam() {
 }
 
 /* ── thirty minutes to scan ── */
-let pagesSeen = "", imgCache = new Map();
+let pagesSeen = "", imgCache = new Map(), typedDirty = false;
+async function saveTypedAnswers() {
+  const form = $("typedAnswers"); if (!form || !typedDirty) return;
+  const answers = Object.fromEntries([...form.querySelectorAll("[data-answer]")].map(input => [input.dataset.answer, input.value]));
+  const r = await api("POST", `/lab/sessions/${SES.id}/text`, { answers });
+  setSession(r.session); typedDirty = false; pagesSeen = ""; paintPages(SES);
+  $("typedSaved").textContent = lang === "ko" ? " 저장됨" : " Saved";
+}
 async function scanView() {
+  if (REVIEW && !Array.isArray(SES.pages)) { try { setSession((await api("GET", `/lab/sessions/${SES.id}`)).session); } catch (e) {} }
+  if (SES.status !== "scanning") return render();
   $("main").innerHTML = `<div class="page"><div class="scan">
     <div class="qrbox"><h2>${t().scanH}</h2><div style="color:var(--muted);font-size:12.5px">${t().scanLeft}</div>
-      <div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>
-      <div id="qrArea"><div class="note">…</div></div></div>
+      ${REVIEW ? "" : `<div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>`}
+      <div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}</div>
     <div class="pages" id="pages"></div></div></div>`;
   pagesSeen = "";
   let closedShown = false;
-  tick = setInterval(() => {
+  if (!REVIEW) tick = setInterval(() => {
     const left = SES.scan_until - srvNow(), c = $("sClock"); if (!c) return;
     c.textContent = hms(left); c.classList.toggle("warn", left <= 300);
     if (left <= 0 && !closedShown) { closedShown = true; toast(t().closed, 6000); }
   }, 500);
+  typedDirty = false;
+  if ($("typedAnswers")) $("typedAnswers").oninput = () => { typedDirty = true; $("typedSaved").textContent = ""; };
+  if ($("typedAnswers")) $("typedAnswers").onsubmit = async e => {
+    e.preventDefault(); const button = e.currentTarget.querySelector("button"); button.disabled = true;
+    try { await saveTypedAnswers(); }
+    catch (error) { toast(errMsg(error)); }
+    finally { button.disabled = false; }
+  };
   let k = upTok(SES.id);
   if (!k) { try { k = upTok(SES.id, (await api("POST", `/lab/sessions/${SES.id}/qr`)).token); } catch (e) {} }
   paintQr(k);
@@ -837,7 +907,7 @@ function paintPages(s) {
         : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
     ${s.paid ? "" : `<div class="note w">${t().payNote}</div>`}<div class="note">${t().noEdit}</div>` +
     (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
-      <div class="th" data-img="${p.id}"></div>
+      <div class="th"${p.source === "typed" ? "" : ` data-img="${p.id}"`}>${p.source === "typed" ? (lang === "ko" ? "직접 입력" : "Typed") : ""}</div>
       <div><div class="meta">#${p.no}
         <select data-f="task">${s.tasks.map(x => opt(x, p.task, x)).join("")}</select>
         <select data-f="kind">${opt("answer", p.kind, t().answer)}${opt("working", p.kind, t().working)}</select>
@@ -875,7 +945,7 @@ async function submitNow(grade) {
   if (BUSY) return; BUSY = true;
   const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
   clearInterval(poller);
-  try { const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
+  try { if (REVIEW) await saveTypedAnswers(); const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
   catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } poller = setInterval(poll, 4000); }
   finally { BUSY = false; }
 }
@@ -884,7 +954,7 @@ async function submitNow(grade) {
 function doneView() {
   const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
   const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
-    const sc = x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
+    const sc = x.grading_mode === "qualitative_review" ? (lang === "ko" ? "학습용 첨삭 · 점수 없음" : "Qualitative feedback · no score") : x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
     const why = x.status === "pending" ? (t().pendingWhy[x.why] || "") : x.status === "error" ? t().errorNote : "";
     return `<tr><td><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</td><td>${t().statusOf[x.status] || "—"}${why ? `<div style="font-size:12px;color:var(--muted)">${why}</div>` : ""}</td><td>${sc}</td>
       <td class="noprint">${EX.sols[i] ? `<a href="${esc(pdfUrl(EX.sols[i]))}" target="_blank" rel="noopener">${t().solution} ↗</a>` : ""}</td></tr>`; }).join("");
@@ -896,20 +966,20 @@ function doneView() {
       <tr><th>${t().applicant}</th><td>${esc((ME && ME.nickname) || s.nickname || "")}</td></tr>
       <tr><th>${t().rcName}</th><td>${esc(label())} (${EX.tasks.join(" + ")})</td></tr>
       <tr><th>${t().rcStart}</th><td>${when(s.started_at)}</td></tr>
-      <tr><th>${t().rcEnd}</th><td>${when(s.ended_at)}</td></tr>
+      <tr><th>${t().rcEnd}</th><td>${REVIEW ? t().scanLeft : when(s.ended_at)}</td></tr>
       <tr><th>${t().rcSubmit}</th><td>${s.submitted_at ? when(s.submitted_at) : "—"}</td></tr>
       <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
-      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" ? ` · <b>${s.score} / ${s.points ?? "?"}</b>` : ""}</td></tr>
+      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}</td></tr>
     </tbody></table>
     ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div><div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
     <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
-      <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/exam">${t().back}</a></div></div></div>`;
+      <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
   /* which medal the experiment alone would have earned that year, where the year's scores are published */
-  if (s.status === "graded" && !THY && !MIX && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
+  if (s.status === "graded" && !REVIEW && !THY && !MIX && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
     const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");
     if (box && SES === s) box.innerHTML = window.labMedal.html(e, lang); });
   $("again").onclick = () => { SES = null; shown = ""; sync(); };

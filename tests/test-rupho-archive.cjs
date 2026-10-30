@@ -13,7 +13,7 @@ function app(){
     localStorage:{getItem(){return 'thy'},setItem(){}},addEventListener(){},matchMedia(){return{matches:false}},
     setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},console};
   vm.createContext(context);
-  for(const file of ['theory.js','rupho-selection.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context);
+  for(const file of ['theory.js','paper-languages.js','rupho-selection.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context);
   // Source manifests are authoritative even before a local theory.js regeneration.
   const manifests={};
   for(const key of ['rupho','ruphow','ruphox','ruphoy']){
@@ -100,4 +100,27 @@ test('old stage URLs redirect to the selected stage and unavailable years fall b
   assert.ok(exam.includes('#/rupho/exam?stage=x'));
   const final=a.page('final',2026);
   for(const grade of ['T1','T2','T3'])assert.ok(final.includes(`RuPhO_2026_${grade}`),grade);
+});
+
+test('stage changes retain year and study mode as separate route segments',()=>{
+  const a=app();
+  for(const mode of ['exam','review']){
+    for(const letter of ['w','x','y']){
+      assert.equal(a.archive.canonical(`#/rupho${letter}/2025/${mode}`),`#/rupho/2025/${mode}?stage=${letter}`);
+      assert.equal(a.archive.href(`rupho${letter}`,`2025/${mode}`),`#/rupho/2025/${mode}?stage=${letter}`);
+      assert.equal(a.archive.href(`rupho${letter}`,2025,mode),`#/rupho/2025/${mode}?stage=${letter}`);
+    }
+    const route=a.archive.route(`#/rupho/2025/${mode}?stage=x`);
+    assert.equal(route.year,'2025');assert.equal(route.mode,mode);assert.equal(route.key,'ruphox');
+    const selector=a.archive.selector('ruphox',`2025/${mode}`,'en');
+    assert.match(selector,new RegExp(`#/rupho/2025/${mode}\\?stage=x`));
+    assert.doesNotMatch(selector,/%2f/i);
+    const unavailable=a.archive.selector('rupho',`1967/${mode}`,'en');
+    assert.match(unavailable,new RegExp(`#/rupho/${mode}\\?stage=x`));
+    assert.doesNotMatch(unavailable,new RegExp(`#/rupho/1967/${mode}\\?stage=x`));
+    const decorated=a.archive.decorate('ruphox',`<div class="phead"><a href="#/ruphox/2025/${mode}">continue</a></div>`,`2025/${mode}`,'en');
+    assert.match(decorated,new RegExp(`href="#/rupho/2025/${mode}\\?stage=x"`));
+    assert.doesNotMatch(decorated,/%2f/i);
+    assert.equal(a.archive.canonical(`#/rupho/2025%2F${mode}?stage=x`),`#/rupho/2025/${mode}?stage=x`);
+  }
 });

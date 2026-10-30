@@ -6,9 +6,9 @@
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
   const kinds = new Set(['choice', 'integer', 'proof']);
-  function ready(e) {
-    return !!(e && e.practice !== false && typeof e.id === 'string' && e.id &&
-      Number.isFinite(e.minutes) && e.minutes > 0 && Number.isInteger(e.questions) &&
+  function ready(e, untimed = false) {
+    return !!(e && (untimed || e.practice !== false && Number.isFinite(e.minutes) && e.minutes > 0) && typeof e.id === 'string' && e.id &&
+      Number.isInteger(e.questions) &&
       e.questions > 0 && e.questions <= 200 && kinds.has(e.kind));
   }
   function answer(e, value) {
@@ -19,14 +19,14 @@
     const max = e.kind === 'choice' ? (e.choices || 5) : e.answerMax === null ? Number.MAX_SAFE_INTEGER : Number.isInteger(e.answerMax) ? e.answerMax : 999;
     return Number.isInteger(n) && n >= min && n <= max ? n : null;
   }
-  function create(e, now, mode = 'online') {
-    if (!ready(e) || !Number.isFinite(now) || now <= 0) return null;
+  function create(e, now, mode = 'online', untimed = false) {
+    if (!ready(e, untimed) || !Number.isFinite(now) || now <= 0) return null;
     return {version: 1, id: String(now) + '-' + Math.random().toString(36).slice(2, 8), examId: e.id,
-      at: now, deadline: now + e.minutes * 60000, mode:mode==='paper'?'paper':'online', marks: {}, flags: {}, q: 1, done: null, paperSubmission:null};
+      at: now, deadline: untimed ? null : now + e.minutes * 60000, untimed: untimed === true, mode:mode==='paper'?'paper':'online', marks: {}, flags: {}, q: 1, done: null, paperSubmission:null};
   }
   function normalize(saved, e) {
-    if (!ready(e) || !saved || saved.examId !== e.id || !Number.isFinite(saved.at) || saved.at <= 0) return null;
-    const run = create(e, saved.at, saved.mode);
+    if (!saved || !ready(e, saved.untimed === true) || saved.examId !== e.id || !Number.isFinite(saved.at) || saved.at <= 0) return null;
+    const run = create(e, saved.at, saved.mode, saved.untimed === true);
     run.id = typeof saved.id === 'string' ? saved.id : String(saved.at);
     // The official configuration determines the duration; saved deadlines cannot add time.
     const marks = saved.marks && typeof saved.marks === 'object' ? saved.marks : {};
@@ -37,14 +37,14 @@
     }
     run.q = Math.max(1, Math.min(e.questions, Number.isInteger(saved.q) ? saved.q : 1));
     if (saved.done && Number.isFinite(saved.done.at) && saved.done.at >= run.at) {
-      run.done = {at: Math.min(saved.done.at, run.deadline), reason: saved.done.reason === 'timeout' ? 'timeout' : 'manual'};
+      run.done = {at: run.untimed ? saved.done.at : Math.min(saved.done.at, run.deadline), reason: !run.untimed && saved.done.reason === 'timeout' ? 'timeout' : 'manual'};
     }
     const paper=saved.paperSubmission;
     if(run.mode==='paper'&&run.done&&e.kind!=='proof'&&paper&&paper.reviewed===true&&Number.isFinite(paper.at)&&paper.at>=run.done.at)
       run.paperSubmission={at:paper.at,reviewed:true,pages:Number.isInteger(paper.pages)&&paper.pages>0?paper.pages:1};
     return run;
   }
-  function remaining(run, now) { return Math.max(0, run.deadline - now); }
+  function remaining(run, now) { return run.untimed ? Infinity : Math.max(0, run.deadline - now); }
   function setAnswer(run, e, q, value, now) {
     if (!run || run.mode==='paper' || run.done || remaining(run, now) <= 0 || !Number.isInteger(q) || q < 1 || q > e.questions) return false;
     const v = answer(e, value);
@@ -53,7 +53,7 @@
   }
   function finish(run, now, reason = 'manual') {
     if (!run || run.done) return false;
-    run.done = {at: Math.min(now, run.deadline), reason: remaining(run, now) <= 0 ? 'timeout' : reason};
+    run.done = {at: run.untimed ? now : Math.min(now, run.deadline), reason: run.untimed ? 'manual' : remaining(run, now) <= 0 ? 'timeout' : reason};
     return true;
   }
   function hasKey(e) {

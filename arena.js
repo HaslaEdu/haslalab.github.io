@@ -465,11 +465,11 @@ async function arMe(root, alive) {
 
 /* ── exam mode: tokens, exams, marks ── */
 const LBT = {
-  ko: {h: "실전 모드", sub: "대회 실험 시간만큼 실험(IPhO 5시간, OPhO 3시간 …) + 30분 답안 스캔. 응시는 무료이고, 채점 · 첨삭을 받을 때 실전 토큰 1개를 씁니다(실험 · 이론이 다 있는 해는 한쪽 0.5개, 세트로 둘 다 1개).",
-       tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "실전 모드 기록", mine: "내 시험", none: "아직 친 시험이 없습니다.",
+  ko: {h: "응시·채점 기록", sub: "실전 응시는 회차별 제한 시간에 맞춰 진행합니다. 이미 푼 답안은 시간 제한 없이 채점·첨삭만 받을 수 있습니다. 채점·첨삭을 요청할 때 기존 회차별 토큰을 사용합니다(실험·이론이 모두 있는 해는 한쪽 0.5개, 세트 1개).",
+       tokens: (n) => `남은 실전 토큰 <b>${n}</b>개`, ledger: "토큰 기록", all: "응시·채점 기록", mine: "내 기록", none: "아직 응시·채점 기록이 없습니다.",
        start: "시작", grade: "채점 · 첨삭", half: "실험·이론 중 한쪽 (0.5)", grant: "받음", revoke: "회수", refund: "돌려받음", purchase: "구매", ad: "광고 시청 3회", cancel: "구매 환불",
        shopH: "토큰 충전", consent: "구매 안내를 읽었고, 만 19세 미만이면 보호자의 동의를 받았습니다.",
-       buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 모드 응시에만 쓰입니다.",
+       buyNote: "카드 · 간편결제(토스페이먼츠). 쓰지 않은 토큰은 구매 후 7일 안에 환불을 요청할 수 있습니다(커뮤니티 문의). 토큰은 실전 답안과 별도 제출 답안의 채점·첨삭에 사용합니다.",
        payOff: "결제는 준비 중입니다.", tabP: "해외 카드 · USD", tabT: "국내 결제 · 원", tokU: () => "토큰", per: (x) => `개당 ${x}`, save: (p) => `${p}% 절약`,
        payTotal: "결제 금액", payNow: (x) => `${x} 결제하기`, methodsP: "Visa · Mastercard · AMEX · PayPal · Apple Pay · Google Pay", methodsT: "신용 · 체크카드 · 토스페이 · 카카오페이 · 네이버페이",
        morP: "결제는 Paddle.com이 판매자(Merchant of Record)로 처리하며, 현지 통화와 세금은 결제창에 표시됩니다. 쓰지 않은 토큰은 구매 후 14일 안에 환불을 요청할 수 있습니다.",
@@ -481,7 +481,7 @@ const LBT = {
        payH: "채점 · 첨삭 받기", payNote: "채점하지 않고 끝낸 시험입니다. 보낸 답안은 7일 동안 보관되며, 그 안에 실전 토큰 1개로 채점과 첨삭(총평 · 고칠 습관 · 글씨)을 받을 수 있습니다.", payBtn: "토큰 1개로 채점받기", payBusy: "채점하는 중… (1–2분)", payNo: "실전 토큰이 없습니다. 위 «토큰 충전»에서 충전하세요.",
        why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
-       del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "실전 모드 응시는 무료이고, 채점 · 첨삭을 받을 때 토큰 1개를 씁니다. 토큰은 위 «토큰 충전»에서 사거나 광고로 모을 수 있습니다.",
+       del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "응시는 무료이고, 실전 답안이나 이미 푼 답안의 채점·첨삭을 요청할 때 토큰을 씁니다. 토큰은 위 «토큰 충전»에서 사거나 광고로 모을 수 있습니다.",
        admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
        queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점",
        reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
@@ -493,11 +493,11 @@ const LBT = {
        mH: "채점 비용 · 시간 · 정확도", mDays: "최근 30일", mExam: "시험 1회당", mUsd: "비용", mTok: "토큰 (입력 / 출력)", mCalls: "AI 호출", mTime: "채점 시간", mWait: "제출→채점 완료",
        mStep: "단계별", mAcc: "정확도 (관리자 기준 점수와 비교)", mMae: "문항당 평균 차이", mExact: "일치한 문항", mTaskDiff: "실험 총점 차이 (만점 대비)", mItems: "비교한 문항",
        mStore: "답안 사진", mKeep: (h) => h == null ? "보관 중 (파기 꺼짐)" : `채점 ${h}시간 뒤 파기`, mNone: "아직 기록이 없습니다.", mRecent: "최근 채점"},
-  en: {h: "Exam mode", sub: "Experiments for as long as on the day (IPhO five hours, OPhO three …), then 30 minutes to scan your answers. Sitting is free; grading and the review use one exam token (half a token for one part of a year with experiments and theory, one for the set).",
-       tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Exam mode record", mine: "My exams", none: "No exams yet.",
+  en: {h: "Attempts & grading history", sub: "Timed attempts follow each session's time limit. Submit work already solved for grading and feedback without a timer. Existing session token costs apply only when requesting grading (half a token for one part of a year with experiments and theory, one for the set).",
+       tokens: (n) => `Exam tokens left: <b>${n}</b>`, ledger: "Token history", all: "Attempts & grading history", mine: "My records", none: "No attempts or grading submissions yet.",
        start: "start", grade: "grading and review", half: "one half of a year (0.5)", grant: "received", revoke: "taken back", refund: "refunded", purchase: "bought", ad: "3 ads watched", cancel: "purchase refunded",
        shopH: "Get tokens", consent: "I have read the purchase terms; if I am under 19, a parent or guardian agreed.",
-       buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens are only for exam mode.",
+       buyNote: "Card or easy pay (Toss Payments). Unused tokens can be refunded within 7 days of purchase (ask in the community). Tokens pay for grading timed attempts or work submitted separately.",
        payOff: "Payments are not open yet.", tabP: "International · USD", tabT: "Korea · KRW", tokU: (n) => n > 1 ? "tokens" : "token", per: (x) => `${x} each`, save: (p) => `save ${p}%`,
        payTotal: "Total", payNow: (x) => `Pay ${x}`, methodsP: "Visa · Mastercard · AMEX · PayPal · Apple Pay · Google Pay", methodsT: "Cards · Toss Pay · Kakao Pay · Naver Pay",
        morP: "Payments are processed by Paddle.com, our Merchant of Record; your local currency and tax are shown at checkout. Unused tokens can be refunded within 14 days of purchase.",
@@ -509,7 +509,7 @@ const LBT = {
        payH: "Get it graded and reviewed", payNote: "This sitting ended ungraded. Its pages are kept for 7 days; within that time one exam token gets them graded and reviewed (summary, habits to fix, handwriting).", payBtn: "Grade it for 1 token", payBusy: "Grading… (1–2 minutes)", payNo: "You have no exam tokens. Get some under «Get tokens» on the exam mode page.",
        why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
-       del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Sitting an exam is free; grading and the review use one token. Get tokens under «Get tokens» above, by buying them or watching ads.",
+       del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Sitting is free; tokens pay for grading and feedback on timed attempts or work already solved. Get tokens under «Get tokens» above, by buying them or watching ads.",
        admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
        queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks",
        reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
@@ -523,6 +523,26 @@ const LBT = {
        mStore: "Answer photos", mKeep: (h) => h == null ? "kept (removal off)" : `removed ${h} h after grading`, mNone: "Nothing recorded yet.", mRecent: "Recent gradings"}};
 const lbt = () => LBT[lang === "en" ? "en" : "ko"];
 const arIsContest = s => s && s.comp === "kmo" && s.purpose === "review" && typeof s.examId === "string";
+const arReviewOnly = s => !!(s && (s.review_only || arIsContest(s)));
+const arQualitative = x => !!(x && (x.grading_mode === "qualitative_review" || x.reference === "published_problem_only"));
+const arLabHasScore = x => !!(x && Number.isFinite(x.score) && Number.isFinite(x.points) && x.points > 0);
+const arLabModeLabel = s => arReviewOnly(s) ? (lang === "en" ? "Grading & feedback" : "채점·첨삭") : (lang === "en" ? "Timed attempt" : "실전 응시");
+const arLabScoreLabel = x => arLabHasScore(x) ? `${x.score} / ${x.points}` : x.status === "graded" ? (lang === "en" ? "Feedback complete · no score" : "첨삭 완료 · 점수 없음") : "–";
+function arLabLabels(s) {
+  const L = lbt(), english = lang === "en";
+  return arReviewOnly(s) ? {...L,
+    reportH: english ? "Grading & feedback report" : "채점·첨삭 결과",
+    examNo: english ? "Submission no." : "접수번호", cand: english ? "Submitted by" : "제출자",
+    exam: english ? "Competition / paper" : "대회·문제", date: english ? "Received" : "접수일",
+    examList: english ? "Papers for grading" : "채점할 문제 목록", active: english ? "Submission in progress" : "답안 제출 중",
+    empty: english ? "No answer pages were submitted for this task." : "이 문항에 제출한 답안이 없습니다.",
+    regH: english ? "Learning-review rules" : "학습용 검토 규정",
+    regNote: english ? "This is a learning review. If no official solution or marking scheme is available, the work and its evidence are reviewed without a numerical score." : "학습용 채점·첨삭입니다. 공식 해설·채점 기준이 없으면 점수 없이 풀이와 근거를 검토합니다.",
+    payNote: english ? "Grading has not been requested for this submission. Its pages are kept for seven days; request grading and feedback for one exam token within that time." : "아직 채점·첨삭을 신청하지 않은 답안입니다. 제출한 쪽은 7일 동안 보관되며, 그 안에 실전 토큰 1개로 채점·첨삭을 신청할 수 있습니다.",
+    delQ: english ? "Delete this submission record and its photos? The token is not given back." : "이 제출 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.",
+    st: {...L.st,running:english?"preparing answers":"답안 준비 중",scanning:english?"submitting answers":"답안 제출 중",graded:english?"review complete":"채점·첨삭 완료"}
+  } : L;
+}
 function arLabHref(s) {
   if (arIsContest(s)) return `sim/contest-exam.html?id=${encodeURIComponent(s.examId)}&review=${encodeURIComponent(s.id)}&lang=${lang === "en" ? "en" : "ko"}`;
   return s && s.entry ? `sim/exam.html${s.entry}&lang=${lang}` : "";
@@ -539,14 +559,14 @@ async function arLabList(root, alive) {
   const [a, tk, ls, shop] = await Promise.all([cmApi("GET", "/lab/active"), cmApi("GET", "/lab/tokens"), cmApi("GET", "/lab/sessions"), cmApi("GET", "/pay/config").catch(() => ({}))]); if (!alive()) return;
   const act = a.active;
   root.innerHTML = `
-    <div class="cmtop"><div><h1>⏱ ${L.h}</h1><p>${L.sub}</p></div></div>
+    <div class="cmtop"><div><h1>📄 ${L.h}</h1><p>${L.sub}</p></div></div>
     <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
     ${arShopHtml(shop, tk.parts || 0)}
-    ${act ? `<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>
+    ${act ? `<div class="arpanel"><h3>${arLabLabels(act).active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${arLabModeLabel(act)} · ${arLabLabels(act).st[act.status]}</p>
       ${arLabHref(act) ? `<a class="cmbtn pri" href="${esc(arLabHref(act))}">${L.resume}</a>` : ""}</div>` : ""}
     <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length ? `<table class="cmtbl artbl"><tbody>${ls.sessions.map((x) => `<tr>
-      <td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(" + "))}</a></td>
-      <td style="width:150px">${L.st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${x.status === "graded" ? x.score + (x.points ? " / " + x.points : "") : "–"}</b></td>
+      <td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(" + "))}</a><small class="arnote">${arLabModeLabel(x)}</small></td>
+      <td style="width:150px">${arLabLabels(x).st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${arLabScoreLabel(x)}</b></td>
       <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
     <div class="arpanel"><h3>${L.ledger}</h3><p class="arempty" style="margin-top:0">${L.howGet}</p>${tk.ledger.length ? `<table class="cmtbl artbl"><tbody>${tk.ledger.map((x) => `<tr>
       <td style="width:80px"><b style="color:${x.delta < 0 || x.note === "half" ? "#c0392b" : "#1e8449"}">${x.note === "half" ? "−0.5" : (x.delta > 0 ? "+" : "") + x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note && x.note !== "half" ? " · " + esc(x.note) : x.note === "half" ? " · " + L.half : ""}</td>
@@ -691,6 +711,7 @@ function arShopWire(root, c) {
 }
 /* one experiment graded from the images: per item the mark, how it was decided, where its evidence is and the rules that cost marks */
 function arLabItems(x, reg, rev) {
+  if (arQualitative(x)) return arLabQualitative(x);
   const L = lbt(), T = arT(), ref = (id) => { const r = rev && rev.list.find((y) => y.task === rev.task && y.item_id === id); return r ? r.ref_points : ""; }, rule = (id) => { const r = reg && reg.rules.find((y) => y.id === id); return `<span class="arrule" title="${esc(r ? (lang === "en" ? r.en : r.ko) : id)}">${esc(id)}</span>`; };
   return `<div class="arres ${x.score >= x.points ? "ok" : ""}"><b>${T.score}</b><span>${x.score} / ${x.points}${T.pts}</span>${x.grader ? `<small>${T.grader}: ${esc(x.grader)}${x.regulation ? " · " + esc(x.regulation) : ""}</small>` : ""}</div>
     <table class="cmtbl artbl"><thead><tr><th style="width:40%">${L.item}</th><th style="width:96px">${T.score}</th><th>${L.evid}</th><th style="width:90px">${L.rulesH}</th>${rev ? `<th style="width:76px">${L.ref}</th>` : ""}</tr></thead><tbody>
@@ -700,6 +721,14 @@ function arLabItems(x, reg, rev) {
       <td>${(i.rules || []).map(rule).join(" ")}</td>${rev ? `<td><input data-ref="${esc(i.id)}" type="number" step="0.1" min="0" max="${i.points}" value="${ref(i.id)}" style="width:64px"></td>` : ""}</tr>`).join("")}</tbody></table>
     ${rev ? `<p class="arempty" style="margin:6px 0">${L.refNote} <button class="cmbtn sm" data-rev="${esc(rev.task)}">${L.refSave}</button></p>` : ""}
     ${(x.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em>${f.label ? `<q>${esc(f.label)}</q> ` : ""}${esc(f.note)}</li>`).join("")}</ul>` : ""}
+    ${arLabReview(x.review)}`;
+}
+/* A problem-based learning review has evidence and feedback, without a fabricated mark. */
+function arLabQualitative(x) {
+  const english=lang==="en", L=lbt(), T=arT();
+  return `<div class="cmnote">${english?"Learning feedback based on the published problem and your submitted work. No official solution or marking scheme is available, so no numerical score is assigned.":"공개 문제와 제출한 답안을 바탕으로 한 학습용 첨삭입니다. 공식 해설·채점 기준이 없어 수치 점수를 매기지 않습니다."}</div>
+    ${Array.isArray(x.evidence)&&x.evidence.length?`<table class="cmtbl artbl"><thead><tr><th>${L.page}</th><th>${L.evid}</th><th>${T.feedback}</th></tr></thead><tbody>${x.evidence.map(e=>`<tr><td>${e.page?esc(e.page):"—"}</td><td class="t">${esc(e.quote||"")}</td><td class="t">${esc(e.note||"")}</td></tr>`).join("")}</tbody></table>`:""}
+    ${(x.feedback||[]).length?`<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map(f=>`<li class="${f.kind==="good"?"good":"fix"}"><em>${f.kind==="good"?T.good:T.fix}</em>${f.label?`<q>${esc(f.label)}</q> `:""}${esc(f.note||"")}</li>`).join("")}</ul>`:""}
     ${arLabReview(x.review)}`;
 }
 /* the coach's review of one experiment: overall, what went well, habits to fix, handwriting, presentation */
@@ -716,7 +745,7 @@ async function arLabOne(root, alive, id) {
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
   const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
-  const isContest = arIsContest(s), english = lang === "en", L = isContest ? {...lbt(),
+  const isContest = arIsContest(s), reviewOnly = arReviewOnly(s), english = lang === "en", L = isContest ? {...arLabLabels(s),
     resume: english ? "Open answer submission / review" : "답안 제출·검토 화면 열기",
     reportH: english ? "Written-proof learning review" : "서술형 학습용 검토 기록", total: english ? "Reference score" : "학습용 참고점수",
     date: english ? "Review received" : "채점 접수 시각", empty: english ? "No proof was submitted for this question." : "이 문항에 제출된 풀이가 없습니다.",
@@ -724,26 +753,27 @@ async function arLabOne(root, alive, id) {
     regNote: english ? "AI reference scores are not official KMO marking. Uncertain scans or arguments await manual review; compare OCR with the original before submitting." : "AI 참고점수는 공식 KMO 채점이 아닙니다. 판독·논증이 불확실하면 관리자 검토를 기다리며, OCR은 원본과 대조해 제출합니다.",
     st: {...lbt().st, scanning: english ? "preparing answers" : "답안 제출 준비", grading: english ? "under review" : "검토 중", graded: english ? "review complete" : "검토 완료", pending: english ? "awaiting manual review" : "관리자 검토 대기", ended: english ? "review not requested" : "검토 미신청"},
     why: Object.fromEntries(["needs_confirmation", "no_grader", "problem_unavailable", "uncertain_proof", "review_disagreement", "grader_unavailable", "answer_too_long", "scan_unavailable", "scan_too_large"].map(key => [key, english ? "The proof or review evidence needs manual checking. No score is final yet." : "답안 또는 검토 근거를 확인할 필요가 있어 관리자 검토를 기다립니다. 아직 확정된 점수는 없습니다."]))
-  } : lbt();
+  } : arLabLabels(s);
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
   /* the experiment alone, against the year's real contestants (sim/labmedal.js) */
-  const medal = s.status === "graded" && (!s.kind || s.kind === "lab") && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
+  const medal = !reviewOnly && arLabHasScore(s) && s.status === "graded" && (!s.kind || s.kind === "lab") && window.labMedal ? window.labMedal.estimate(await window.labMedal.load("sim/labmedals.json"), s.comp, s.year, s.score, s.points, s.tasks) : null;
   if (!alive()) return;
   root.innerHTML = `
-    <div class="cmtop"><div><h1>⏱ ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
-      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/exam">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}</div></div>
+    <div class="cmtop"><div><h1>${reviewOnly?"✎":"⏱"} ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${arLabModeLabel(s)} · ${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
+      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/${reviewOnly?"review":"exam"}">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}</div></div>
     ${isContest ? `<div class="cmnote">${L.regNote}</div>` : ""}
     <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl"><tbody>
       <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
       <tr><th>${L.exam}</th><td>${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</td><th>${L.date}</th><td>${cmFull(s.started_at).slice(0, 16)}</td></tr></tbody></table>
-      ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${L.total}</small><b>${s.score} / ${s.points ?? "?"}</b></div>
-        ${!isContest && s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
+      ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${arLabHasScore(s)?L.total:L.grade}</small><b>${arLabScoreLabel(s)}</b></div>
+        ${!reviewOnly && arLabHasScore(s) && s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
-        ${!isContest && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
+        ${!reviewOnly && arLabHasScore(s) && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}${medal ? window.labMedal.html(medal, lang) : ""}` : ""}</div>
     ${s.status === "ended" && !isContest ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${s.cost === 0.5 ? L.payNote.replace("토큰 1개", "토큰 0.5개").replace("one exam token", "half an exam token") : L.payNote}</p>
       <button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
-      const body = x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)
+      const body = x.status === "graded" && arQualitative(x) ? arLabQualitative(x)
+        : x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)
         : x.status === "graded" ? arResult({status: "graded", score: x.score, detail: {...x, kind: "essay"}}, {points: x.points})
         : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
         : x.status === "empty" ? `<div class="cmnote">${L.empty}</div>` : `<div class="cmnote">${L.st[s.status] || ""}</div>`;

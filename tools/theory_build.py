@@ -69,11 +69,20 @@ def load():
                     continue
                 part = g.group(3)
                 slot = files.setdefault(part, {})
+                value = f['local'] if f.get('local') else f['url'] if f.get('direct') else f['file']
+                # Keep every available source language even when the default is
+                # an English edition. Practice and exam language are separate
+                # from the language of the site's interface.
+                language = (f.get('lang') or g.group(4) or '').lower()
+                if kind == 'paper' and re.fullmatch(r'[a-z]{2}', language):
+                    slot.setdefault('papers', {})[language] = value
                 # one paper per part: English first, then whatever was published
                 if kind == 'paper' and 'paper' in slot and not (g.group(4) == 'EN' and not slot['paper'].endswith('_EN.pdf')):
                     continue
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
-                slot[kind] = f['local'] if f.get('local') else f['url'] if f.get('direct') else f['file']
+                slot[kind] = value
+                if kind == 'paper' and language:
+                    slot['paperLang'] = language
             # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
             # gets what the whole paper has, so it can be read, sat and graded on its own
             for part, slot in files.items():
@@ -83,6 +92,10 @@ def load():
                     for k in ('paper', 'sol', 'mark', 'answer'):
                         if k not in slot and k in whole:
                             slot[k] = whole[k]
+                            if k == 'paper':
+                                for prop in ('papers', 'paperLang'):
+                                    if prop in whole:
+                                        slot[prop] = whole[prop].copy() if isinstance(whole[prop], dict) else whole[prop]
             files = {k: v for k, v in files.items() if 'paper' in v}
             if not files:
                 continue
@@ -175,6 +188,9 @@ def korean(out, bad):
                     if en:
                         t['f'][part].update({k: v for k, v in en.items()
                                              if k in ('paper', 'sol', 'mark', 'answer') and v})
+                        if en.get('paper'):
+                            t['f'][part].setdefault('papers', {})['en'] = en['paper']
+                            t['f'][part]['paperLang'] = 'en'
                     t['f'][part]['ko'] = ko
                 elif part == 'T':
                     t['w'] = ko           # the whole paper in Korean, where the site lists only its problems

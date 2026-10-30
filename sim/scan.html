@@ -406,6 +406,7 @@ async function liveCamera() {
 setInterval(() => {
   if (!INFO) return;
   const c = $("clock");
+  if (INFO.review_only) { c.textContent = lang === "ko" ? "시간 제한 없음" : "No time limit"; c.classList.remove("warn"); return; }
   if (INFO.status === "running") { c.textContent = "--:--"; return; }
   const left = INFO.scan_until - srvNow(); c.textContent = ms(left); c.classList.toggle("warn", left <= 300);
   if (left <= -2 && INFO.open) { INFO.open = false; paint(); }
