@@ -63,6 +63,77 @@ test('old databases serve complete paginated notice bodies through SELECT-only r
   h.sql.close();
 });
 
+test('admins can publish Korean and English notices that immediately appear in the matching public mailbox and board summary',async()=>{
+  const h=fixture();
+  try{
+    const publish=async(lang,title,body)=>{
+      const result=await h.request('/posts','POST',{board:'free',tag:'notice',lang,title,body},'admin');
+      assert.equal(result.status,200,JSON.stringify(result.data));
+      assert.ok(Number.isSafeInteger(result.data.id));return result.data.id;
+    };
+    const ko=await publish('ko','New administrator announcement','Full Korean announcement\n'+'Public detail '.repeat(30));
+    const en=await publish('en','New English announcement','Full English announcement');
+    assert.equal(h.sql.prepare('SELECT tag FROM posts WHERE id=?').get(ko).tag,'notice');
+    const korean=(await h.request('/posts?notices=1&lang=ko')).data;
+    assert.equal(korean.posts[0].id,ko);assert.equal(korean.total,25);assert.equal(korean.posts[0].body.length>160,true);
+    assert.equal(korean.posts.some(post=>post.id===en),false);
+    const english=(await h.request('/posts?notices=1&lang=en')).data;
+    assert.equal(english.posts[0].id,en);assert.equal(english.total,2);assert.equal(english.posts.some(post=>post.id===ko),false);
+    assert.equal((await h.request('/posts?board=qna&lang=ko')).data.notices[0].id,ko,'a free-board announcement reaches other boards too');
+    const summary=(await h.request('/posts?lang=ko')).data;
+    assert.equal(summary.notices[0].id,ko);assert.equal(summary.posts.some(post=>post.id===ko),false,'notices stay in their dedicated summary');
+    const publicDetail=await h.request('/posts/'+ko);
+    assert.equal(publicDetail.status,200);assert.equal(!!publicDetail.data.post.mine,false);assert.equal(publicDetail.data.post.tag,'notice');
+    assert.equal((await h.request('/posts/'+ko,'GET',undefined,'admin')).data.post.mine,true);
+  }finally{h.sql.close();}
+});
+
+test('anonymous and ordinary users cannot publish, promote, edit or pin administrator announcements by forging request fields',async()=>{
+  const h=fixture();
+  try{
+    const payload={board:'free',tag:'notice',lang:'ko',title:'Forged notice',body:'Public text',role:'admin',user_id:1,pinned:true};
+    const before=h.sql.prepare('SELECT COUNT(*) n FROM posts').get().n;
+    const anonymous=await h.request('/posts','POST',payload);
+    assert.equal(anonymous.status,401);assert.equal(h.sql.prepare('SELECT COUNT(*) n FROM posts').get().n,before);
+    const created=await h.request('/posts','POST',payload,'user');
+    assert.equal(created.status,200);
+    const saved=h.sql.prepare('SELECT user_id,tag FROM posts WHERE id=?').get(created.data.id);
+    assert.equal(saved.user_id,2);assert.equal(saved.tag,'gen','forbidden notice tags follow the existing ordinary-post fallback');
+    const edited=await h.request('/posts/'+created.data.id,'PATCH',{...payload,title:'Still not a notice'},'user');
+    assert.equal(edited.status,200);assert.equal(h.sql.prepare('SELECT tag FROM posts WHERE id=?').get(created.data.id).tag,'gen');
+    const publicNotices=(await h.request('/posts?notices=1&lang=ko')).data;
+    assert.equal(publicNotices.total,24);assert.equal(publicNotices.posts.some(post=>post.id===created.data.id),false);
+    const changed=await h.request('/posts/1','PATCH',payload,'user');assert.equal(changed.status,403);
+    assert.equal(h.sql.prepare('SELECT title FROM posts WHERE id=1').get().title,'Notice 1');
+    assert.equal((await h.request('/posts/1/pin','PATCH',{pinned:true,role:'admin'},'user')).status,403);
+  }finally{h.sql.close();}
+});
+
+test('a former admin loses notice editing, deletion and pinning immediately while retaining ownership of ordinary posts',async()=>{
+  const h=fixture();
+  try{
+    // Keep the same authenticated session: privileges must come from the current
+    // database role, including when the author still owns the announcement.
+    h.sql.prepare("UPDATE users SET role='user' WHERE id=1").run();
+    const before=h.sql.prepare('SELECT title,body,tag FROM posts WHERE id=1').get();
+    assert.equal((await h.request('/posts/1','GET',undefined,'admin')).data.post.mine,false,'the detail UI receives the same current-role permission');
+    const patch=await h.request('/posts/1','PATCH',{title:'Changed by former admin',body:'Replacement',tag:'gen'},'admin');
+    assert.equal(patch.status,403);assert.equal(patch.data.error,'forbidden');
+    assert.equal((await h.request('/posts/1','DELETE',undefined,'admin')).status,403);
+    assert.equal((await h.request('/posts/1/pin','PATCH',{pinned:true},'admin')).status,403);
+    assert.deepEqual(h.sql.prepare('SELECT title,body,tag FROM posts WHERE id=1').get(),before);
+    const created=await h.request('/posts','POST',{board:'free',tag:'gen',title:'Own ordinary post',body:'Public text'},'admin');
+    assert.equal(created.status,200);
+    assert.equal((await h.request('/posts/'+created.data.id,'PATCH',{title:'Own post edited',body:'Updated public text'},'admin')).status,200);
+    assert.equal((await h.request('/posts/'+created.data.id,'DELETE',undefined,'admin')).status,200);
+    h.sql.prepare("UPDATE users SET role='admin' WHERE id=1").run();
+    assert.equal((await h.request('/posts/1','PATCH',{title:'Current admin edit',body:'Updated announcement'},'admin')).status,200);
+    assert.equal((await h.request('/posts/1')).data.post.tag,'notice');
+    assert.equal((await h.request('/posts/1','DELETE',undefined,'admin')).status,200);
+    assert.equal((await h.request('/posts/1')).status,404);
+  }finally{h.sql.close();}
+});
+
 test('only admins can pin notices; first pin bootstraps durably and unpin/re-tag updates every public list',async()=>{
   const h=fixture();
   assert.equal((await h.request('/posts/1/pin','PATCH',{pinned:true})).status,401);

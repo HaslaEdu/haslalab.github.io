@@ -6,7 +6,7 @@ const SITE_DESIGN_TEXT = {
 
 /* Actual repository changes. Add new entries here when publishing archive updates. */
 const SITE_UPDATES = [
-  {date:"2026-10-31",ko:"공지·업데이트 편지함과 공지 상단 고정",en:"Notice mailbox and pinned announcements",body:{ko:"홈의 공지·업데이트 ‘더보기’에서 전체 목록을 펼쳐 읽을 수 있습니다. 관리자가 상단 고정한 공지는 홈 요약과 전체 목록에 먼저 표시됩니다.",en:"Open More in the home notice panel to read all announcements and updates without leaving the page. Admin-pinned notices appear first in the summary and full list."},href:"#/"},
+  {date:"2026-10-31",ko:"공지·업데이트 편지함과 공지 상단 고정",en:"Notice mailbox and pinned announcements",body:{ko:"홈의 공지·업데이트 ‘더보기’에서 전체 목록을 펼쳐 읽을 수 있습니다. 관리자는 공지 작성 버튼으로 새 공지를 등록하고 상단에 고정할 수 있습니다. 고정 공지는 홈 요약과 전체 목록에 먼저 표시됩니다.",en:"Open More in the home notice panel to read all announcements and updates without leaving the page. Admins can write and pin notices. Pinned notices appear first in the summary and full list."},href:"#/"},
   {date:"2026-10-31",ko:"랭킹 프로필 표시와 모바일 목록 개선",en:"Leaderboard profiles and mobile layout improved",body:{ko:"랭킹에서 프로필 사진과 닉네임을 더 읽기 쉽게 정리하고, 화면이 좁아도 사용자와 점수를 확인할 수 있게 개선했습니다.",en:"Leaderboard profile pictures and nicknames are easier to read, with user identities and scores kept visible on smaller screens."},href:"#/rank"},
   {date:"2026-10-31",ko:"AI 채점 0.3토큰 · 이론·실험 세트 0.5토큰",en:"AI grading: 0.3 tokens, theory + experiment set: 0.5",body:{ko:"AI 채점 비용을 단일 채점 0.3토큰, 이론·실험 세트 채점 0.5토큰으로 조정했습니다. 채점을 시작하기 전에 표시되는 비용을 확인할 수 있습니다.",en:"AI grading now costs 0.3 tokens for a single grading and 0.5 tokens for a theory + experiment set. The cost is shown before starting."},href:"#/lab"},
   {date:"2026-10-30",ko:"PLANCKS 국제 결선 2014~2026 기출 추가",en:"PLANCKS international finals 2014–2026 added",body:{ko:"PLANCKS 국제 결선의 2014~2026년 문제 자료를 연도별 기출에서 확인할 수 있습니다.",en:"Problem papers from the 2014–2026 PLANCKS international finals are available in the archive by year."},href:"#/plancks"},
@@ -53,7 +53,7 @@ function viewHome(){
   return `<div class="shell hl-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
     <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
-    <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div><div id="homeNotices"></div>${updateRows}</section></div>
+    <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><div class="hl-panel-actions"><span id="homeNoticeWrite"></span><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div></div><div id="homeNotices"></div>${updateRows}</section></div>
     <section class="hl-home-archive"><div class="hl-section-head"><h2>${UI[lang].navComps}</h2><a href="#/comps">${T.more} →</a></div>${subjects}${cards.outerHTML}</section>
   </div>${adFitBanner("home")}`;
 }
@@ -62,6 +62,8 @@ async function mountHomeActivity(){
   const latest=document.getElementById("homeLatest"),notices=document.getElementById("homeNotices"),current=lang,T=SITE_DESIGN_TEXT[lang];
   if(!latest||!notices)return;
   const alive=()=>lang===current&&document.getElementById("homeLatest")===latest;
+  const paintWriter=()=>{const slot=document.getElementById('homeNoticeWrite');if(alive()&&slot)slot.innerHTML=siteNoticeWriteLink();};
+  paintWriter();cmLoadMe().then(paintWriter).catch(()=>{});
   try{
     const result=await cmApi("GET","/posts?lang="+current+"&page=1");
     if(!alive())return;
@@ -77,6 +79,9 @@ async function mountHomeActivity(){
 // A native modal keeps the current page in place and makes the background inert.
 // Notice bodies remain escaped text, formatted exactly like community posts.
 let siteMailboxState = null;
+function siteNoticeWriteLink(){
+  return cm.me?.role==='admin'?`<a class="cmbtn sm hl-notice-write" href="#/community/write/free?tag=notice">＋ ${lang==='ko'?'공지 작성':'Write a notice'}</a>`:'';
+}
 function siteMailboxRows(state){
   const T=SITE_DESIGN_TEXT[state.language],items=[];
   if(state.filter!=="updates")for(const post of state.posts)items.push({kind:"notice",id:String(post.id),at:post.created_at,pinned:!!post.pinned,post});
@@ -97,6 +102,7 @@ function paintSiteMailbox(state){
   if(siteMailboxState!==state||!state.dialog.open)return;
   if(lang!==state.language){state.dialog.close();return;}
   const T=SITE_DESIGN_TEXT[state.language],dialog=state.dialog;
+  const compose=dialog.querySelector('.hl-mail-compose');if(compose)compose.innerHTML=siteNoticeWriteLink();
   dialog.querySelector(".hl-mail-list").innerHTML=siteMailboxRows(state);
   dialog.querySelectorAll("[data-mail-filter]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.mailFilter===state.filter)));
   const status=dialog.querySelector(".hl-mail-status"),more=dialog.querySelector(".hl-mail-more");
@@ -136,7 +142,7 @@ function openSiteMailbox(trigger){
   if(siteMailboxState?.dialog.open){siteMailboxState.dialog.querySelector(".hl-mail-close").focus();return;}
   const T=SITE_DESIGN_TEXT[lang],dialog=document.createElement("dialog"),previousOverflow=document.body.style.overflow;
   dialog.className="hl-mailbox";dialog.setAttribute("aria-labelledby","hlMailboxTitle");dialog.setAttribute("aria-describedby","hlMailboxHint");
-  dialog.innerHTML=`<div class="hl-mail-head"><div><h2 id="hlMailboxTitle">${T.updates}</h2><p id="hlMailboxHint">${T.hint}</p></div><button type="button" class="hl-mail-close" aria-label="${T.close}" autofocus>×</button></div>
+  dialog.innerHTML=`<div class="hl-mail-head"><div><h2 id="hlMailboxTitle">${T.updates}</h2><p id="hlMailboxHint">${T.hint}</p></div><div class="hl-mail-head-actions"><span class="hl-mail-compose"></span><button type="button" class="hl-mail-close" aria-label="${T.close}" autofocus>×</button></div></div>
     <div class="hl-mail-tabs" role="group" aria-label="${T.updates}">${[["all",T.all],["notices",T.notice],["updates",T.update]].map(([key,label])=>`<button type="button" data-mail-filter="${key}" aria-pressed="${key==="all"}">${label}</button>`).join("")}</div>
     <div class="hl-mail-scroll"><div class="hl-mail-list"></div><p class="hl-mail-status" role="status" aria-live="polite"></p><button class="cmbtn hl-mail-more" type="button" hidden>${T.loadMore}</button></div>`;
   const state={dialog,language:lang,posts:[],page:1,total:Infinity,loading:false,error:false,filter:"all",expanded:new Set()};siteMailboxState=state;

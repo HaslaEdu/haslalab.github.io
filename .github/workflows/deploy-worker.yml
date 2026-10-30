@@ -38,7 +38,7 @@ jobs:
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs
       - run: node --test test-community-latency.mjs test-account-latency.mjs
-      - run: node --test test-notice-pins.mjs test-public-data.mjs test-global-public-read.mjs ../tests/test-site-mailbox.cjs ../tests/test-ranking-ui.cjs
+      - run: node --test test-notice-pins.mjs test-public-data.mjs test-global-public-read.mjs ../tests/test-site-mailbox.cjs ../tests/test-admin-notice-ui.cjs ../tests/test-ranking-ui.cjs
       - run: node --check src/edge-gateway.js && node --test test-edge-gateway.mjs
       - run: node --test test-token-pricing.mjs test-review-mode.mjs ../tests/test-grading-prices-ui.cjs ../tests/test-lab-pair-catalogue.cjs ../tests/test-study-navigation.cjs ../tests/test-paper-languages.cjs ../tests/test-contest-grading-ui.cjs ../tests/test-lab-review-records.cjs ../tests/test-external-paper-viewer.cjs ../tests/test-eotvos-archive.cjs ../tests/test-physics-archive.cjs
       - run: node --test test-provision-jobs.mjs test-replication-provision.mjs

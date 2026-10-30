@@ -397,7 +397,7 @@ async function handle(req, env, url) {
       const comments = rows[postIndex + 1].results, reaction = me ? rows[postIndex + 2].results[0] : null;
       const liked = !!reaction?.liked, disliked = !!reaction?.disliked;
       for (const c of comments) { c.mine = canEdit(me, c.user_id); delete c.user_id; }
-      post.mine = canEdit(me, post.user_id);
+      post.mine = canEdit(me, post.user_id) && (post.tag !== "notice" || me.role === "admin");
       if (post.tag === "notice") post.pinned = await noticeIsPinned(env.DB, id);
       delete post.user_id;
       return { post, comments, liked, my: liked ? 1 : disliked ? -1 : 0, user: me ? pubUser(me) : null, api_version: 5 };
@@ -405,6 +405,7 @@ async function handle(req, env, url) {
     const post = await readPost().first();
     if (!post) throw new HttpError(404, "not_found");
     if (!canEdit(needUser(me), post.user_id)) throw new HttpError(403, "forbidden");
+    if (post.tag === "notice" && me.role !== "admin" && (m === "PATCH" || m === "DELETE")) throw new HttpError(403, "forbidden");
     if (m === "PATCH") {
       const title = text(body.title, LIMITS.title, "bad_title");
       const content = text(body.body, LIMITS.body, "bad_body");
