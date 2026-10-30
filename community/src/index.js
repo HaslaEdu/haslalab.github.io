@@ -9,6 +9,7 @@ import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
+import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -93,14 +94,14 @@ function json(data, status, cors) {
 /* ── rate limiting: fixed window per key ────────────────────── */
 async function limit(env, key, max, windowSec) {
   const t = now();
-  const row = await env.DB.prepare("SELECT start,n FROM ratelimits WHERE k=?").bind(key).first();
-  if (!row || t - row.start >= windowSec) {
-    await env.DB.prepare("INSERT INTO ratelimits(k,start,n) VALUES(?,?,1) ON CONFLICT(k) DO UPDATE SET start=excluded.start,n=1")
-      .bind(key, t).run();
-    return;
-  }
-  if (row.n >= max) throw new HttpError(429, "rate_limited");
-  await env.DB.prepare("UPDATE ratelimits SET n=n+1 WHERE k=?").bind(key).run();
+  // Count admission atomically: concurrent requests cannot all pass a stale SELECT.
+  const row = await env.DB.prepare(`INSERT INTO ratelimits(k,start,n) VALUES(?,?,1)
+    ON CONFLICT(k) DO UPDATE SET
+      start=CASE WHEN excluded.start-ratelimits.start>=? THEN excluded.start ELSE ratelimits.start END,
+      n=CASE WHEN excluded.start-ratelimits.start>=? THEN 1 ELSE ratelimits.n+1 END
+    WHERE excluded.start-ratelimits.start>=? OR ratelimits.n<? RETURNING n`)
+    .bind(key, t, windowSec, windowSec, windowSec, max).first();
+  if (!row) throw new HttpError(429, "rate_limited");
 }
 const clientIp = req => req.headers.get("CF-Connecting-IP") || "local";
 
@@ -147,6 +148,7 @@ async function currentUser(req, env) {
 }
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); return u; }
 const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null });
+const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab, lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
@@ -157,10 +159,10 @@ async function handle(req, env, url) {
   const m = req.method;
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? await req.json().catch(() => ({})) : {};
-  const me = publicInvariant(m, p) ? null : await currentUser(req, env);
+  const me = publicInvariant(m, p) || m === 'GET' && /^\/api\/users(?:\/[^/]+)?$/.test(p) ? null : await currentUser(req, env);
   let r;
 
-  if (p === "/api/health") return { ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab: await labReady(env), lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } };
+  if (p === "/api/health") return healthData(env, await labReady(env));
   if (p === "/api/boards" && m === "GET") {
     const day = now() - 86400, lang = pickLang(url.searchParams.get("lang"));
     const rows = (await env.DB.prepare(
@@ -274,9 +276,11 @@ async function handle(req, env, url) {
   }
   if (p === "/api/me/identities" && m === "GET") {
     needUser(me);
-    const rows = (await env.DB.prepare("SELECT provider, created_at FROM identities WHERE user_id=?").bind(me.id).all()).results;
-    const u = await env.DB.prepare("SELECT pw IS NOT NULL AS has_pw FROM users WHERE id=?").bind(me.id).first();
-    return { identities: rows, has_pw: !!u.has_pw, providers: oauthProviders(env) };
+    const [identities, users] = await env.DB.batch([
+      env.DB.prepare("SELECT provider, created_at FROM identities WHERE user_id=?").bind(me.id),
+      env.DB.prepare("SELECT pw IS NOT NULL AS has_pw FROM users WHERE id=?").bind(me.id),
+    ]);
+    return { identities: identities.results, has_pw: !!users.results[0]?.has_pw, providers: oauthProviders(env) };
   }
   if (p === "/api/oauth/ticket" && m === "POST") {          // lets a signed-in user add a provider to the account
     needUser(me);
@@ -376,24 +380,31 @@ async function handle(req, env, url) {
   }
   if ((r = /^\/api\/posts\/(\d+)$/.exec(p))) {
     const id = +r[1];
-    const post = await env.DB.prepare(
-      `SELECT p.*,u.nickname,u.avatar AS av,u.deleted AS gone FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id=?`).bind(id).first();
-    if (!post) throw new HttpError(404, "not_found");
+    const readPost = () => env.DB.prepare(
+      `SELECT p.*,u.nickname,u.avatar AS av,u.deleted AS gone FROM posts p JOIN users u ON u.id=p.user_id WHERE p.id=?`).bind(id);
     if (m === "GET") {
-      if (url.searchParams.get("view") === "1") {
-        await env.DB.prepare("UPDATE posts SET views=views+1 WHERE id=?").bind(id).run();
-        post.views++;
-      }
-      const comments = (await env.DB.prepare(
+      // D1 executes a batch in order, so an optional view increment and every field
+      // needed to paint this private response arrive in one database round trip.
+      const statements = [];
+      if (url.searchParams.get("view") === "1") statements.push(env.DB.prepare("UPDATE posts SET views=views+1 WHERE id=?").bind(id));
+      const postIndex = statements.length;
+      statements.push(readPost(), env.DB.prepare(
         `SELECT c.id,c.parent_id,c.user_id,c.body,c.created_at,c.updated_at,u.nickname,u.avatar AS av,u.deleted AS gone
-         FROM comments c JOIN users u ON u.id=c.user_id WHERE c.post_id=? ORDER BY c.id`).bind(id).all()).results;
-      const liked = me ? !!(await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
-      const disliked = me ? !!(await env.DB.prepare("SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id).first()) : false;
+         FROM comments c JOIN users u ON u.id=c.user_id WHERE c.post_id=? ORDER BY c.id`).bind(id));
+      if (me) statements.push(env.DB.prepare(`SELECT
+        EXISTS(SELECT 1 FROM likes WHERE post_id=? AND user_id=?) liked,
+        EXISTS(SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?) disliked`).bind(id, me.id, id, me.id));
+      const rows = await env.DB.batch(statements), post = rows[postIndex].results[0];
+      if (!post) throw new HttpError(404, "not_found");
+      const comments = rows[postIndex + 1].results, reaction = me ? rows[postIndex + 2].results[0] : null;
+      const liked = !!reaction?.liked, disliked = !!reaction?.disliked;
       for (const c of comments) { c.mine = canEdit(me, c.user_id); delete c.user_id; }
       post.mine = canEdit(me, post.user_id);
       delete post.user_id;
-      return { post, comments, liked, my: liked ? 1 : disliked ? -1 : 0 };
+      return { post, comments, liked, my: liked ? 1 : disliked ? -1 : 0, user: me ? pubUser(me) : null, api_version: 5 };
     }
+    const post = await readPost().first();
+    if (!post) throw new HttpError(404, "not_found");
     if (!canEdit(needUser(me), post.user_id)) throw new HttpError(403, "forbidden");
     if (m === "PATCH") {
       const title = text(body.title, LIMITS.title, "bad_title");
@@ -418,18 +429,25 @@ async function handle(req, env, url) {
     needUser(me);
     await limit(env, "vote:" + me.id, 60, 600);
     const id = +r[1], v = r[2] === "like" ? 1 : (body.v === -1 ? -1 : 1);
-    if (!(await env.DB.prepare("SELECT 1 FROM posts WHERE id=?").bind(id).first())) throw new HttpError(404, "not_found");
-    const up = !!(await env.DB.prepare("SELECT 1 FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id).first());
-    const down = !!(await env.DB.prepare("SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id).first());
-    const ops = [];
-    if (up) ops.push(env.DB.prepare("DELETE FROM likes WHERE post_id=? AND user_id=?").bind(id, me.id), env.DB.prepare("UPDATE posts SET n_likes=n_likes-1 WHERE id=?").bind(id));
-    if (down) ops.push(env.DB.prepare("DELETE FROM dislikes WHERE post_id=? AND user_id=?").bind(id, me.id), env.DB.prepare("UPDATE posts SET n_dislikes=n_dislikes-1 WHERE id=?").bind(id));
-    const my = (v === 1 && up) || (v === -1 && down) ? 0 : v;      // pressing the same button again takes the vote back
-    if (my === 1) ops.push(env.DB.prepare("INSERT INTO likes(post_id,user_id,created_at) VALUES(?,?,?)").bind(id, me.id, now()), env.DB.prepare("UPDATE posts SET n_likes=n_likes+1 WHERE id=?").bind(id));
-    if (my === -1) ops.push(env.DB.prepare("INSERT INTO dislikes(post_id,user_id,created_at) VALUES(?,?,?)").bind(id, me.id, now()), env.DB.prepare("UPDATE posts SET n_dislikes=n_dislikes+1 WHERE id=?").bind(id));
-    if (ops.length) await env.DB.batch(ops);
-    const c = await env.DB.prepare("SELECT n_likes,n_dislikes FROM posts WHERE id=?").bind(id).first();
-    return { my, liked: my === 1, n_likes: c.n_likes, n_dislikes: c.n_dislikes };
+    const selected = v === 1 ? "likes" : "dislikes", opposite = v === 1 ? "dislikes" : "likes";
+    // The toggle and its counters share one transaction. Inserting only when the
+    // immediately preceding DELETE changed no row preserves same-button undo
+    // without a read/write race between simultaneous requests.
+    const rows = await env.DB.batch([
+      env.DB.prepare(`DELETE FROM ${opposite} WHERE post_id=? AND user_id=?`).bind(id, me.id),
+      env.DB.prepare(`DELETE FROM ${selected} WHERE post_id=? AND user_id=?`).bind(id, me.id),
+      env.DB.prepare(`INSERT INTO ${selected}(post_id,user_id,created_at)
+        SELECT ?,?,? WHERE changes()=0 AND EXISTS(SELECT 1 FROM posts WHERE id=?)`).bind(id, me.id, now(), id),
+      env.DB.prepare(`UPDATE posts SET n_likes=(SELECT COUNT(*) FROM likes WHERE post_id=?),
+        n_dislikes=(SELECT COUNT(*) FROM dislikes WHERE post_id=?) WHERE id=?`).bind(id, id, id),
+      env.DB.prepare(`SELECT n_likes,n_dislikes,
+        EXISTS(SELECT 1 FROM likes WHERE post_id=? AND user_id=?) liked,
+        EXISTS(SELECT 1 FROM dislikes WHERE post_id=? AND user_id=?) disliked FROM posts WHERE id=?`).bind(id, me.id, id, me.id, id),
+    ]);
+    const c = rows[4].results[0];
+    if (!c) throw new HttpError(404, "not_found");
+    const my = c.liked ? 1 : c.disliked ? -1 : 0;
+    return { my, liked: !!c.liked, n_likes: c.n_likes, n_dislikes: c.n_dislikes };
   }
 
   /* comments */
@@ -437,20 +455,24 @@ async function handle(req, env, url) {
     needUser(me);
     await limit(env, "cmt:" + me.id, 20, 600);
     const id = +r[1];
-    if (!(await env.DB.prepare("SELECT 1 FROM posts WHERE id=?").bind(id).first())) throw new HttpError(404, "not_found");
     const content = text(body.body, LIMITS.comment, "bad_body");
     // replies are one level deep: answering a reply joins its thread
-    let parent = null;
-    if (body.parent_id) {
-      const pc = await env.DB.prepare("SELECT id,parent_id FROM comments WHERE id=? AND post_id=?").bind(parseInt(body.parent_id) || 0, id).first();
-      if (!pc) throw new HttpError(404, "not_found");
-      parent = pc.parent_id || pc.id;
-    }
-    const [ins] = await env.DB.batch([
-      env.DB.prepare("INSERT INTO comments(post_id,parent_id,user_id,body,created_at) VALUES(?,?,?,?,?)").bind(id, parent, me.id, content, now()),
-      env.DB.prepare("UPDATE posts SET n_comments=n_comments+1 WHERE id=?").bind(id),
-    ]);
-    return { id: ins.meta.last_row_id };
+    const parentId = body.parent_id ? parseInt(body.parent_id) || 0 : null, createdAt = now();
+    const statements = [env.DB.prepare("SELECT id FROM posts WHERE id=?").bind(id)];
+    if (parentId !== null) statements.push(env.DB.prepare("SELECT id,parent_id FROM comments WHERE id=? AND post_id=?").bind(parentId, id));
+    const insertIndex = statements.length;
+    statements.push(parentId === null
+      ? env.DB.prepare(`INSERT INTO comments(post_id,parent_id,user_id,body,created_at)
+          SELECT ?,NULL,?,?,? WHERE EXISTS(SELECT 1 FROM posts WHERE id=?)`).bind(id, me.id, content, createdAt, id)
+      : env.DB.prepare(`INSERT INTO comments(post_id,parent_id,user_id,body,created_at)
+          SELECT ?,COALESCE(parent_id,id),?,?,? FROM comments WHERE id=? AND post_id=?
+          AND EXISTS(SELECT 1 FROM posts WHERE id=?)`).bind(id, me.id, content, createdAt, parentId, id, id));
+    statements.push(env.DB.prepare("UPDATE posts SET n_comments=n_comments+1 WHERE id=? AND changes()>0").bind(id));
+    const rows = await env.DB.batch(statements), ins = rows[insertIndex];
+    if (!rows[0].results.length || (parentId !== null && !rows[1].results.length)) throw new HttpError(404, "not_found");
+    const parent = parentId === null ? null : rows[1].results[0].parent_id || rows[1].results[0].id;
+    return { id: ins.meta.last_row_id, comment: { id: ins.meta.last_row_id, parent_id: parent, body: content,
+      created_at: createdAt, updated_at: null, nickname: me.nickname, av: me.avatar || null, gone: 0, mine: true } };
   }
   if ((r = /^\/api\/comments\/(\d+)$/.exec(p))) {
     const id = +r[1];
@@ -463,10 +485,10 @@ async function handle(req, env, url) {
       return { ok: true };
     }
     if (m === "DELETE") {
-      const n = 1 + (await env.DB.prepare("SELECT COUNT(*) n FROM comments WHERE parent_id=?").bind(id).first()).n;   // its replies go with it
       await env.DB.batch([
         env.DB.prepare("DELETE FROM comments WHERE id=? OR parent_id=?").bind(id, id),
-        env.DB.prepare("UPDATE posts SET n_comments=n_comments-? WHERE id=?").bind(n, c.post_id),
+        // Count inside the same transaction: replies may arrive after the owner lookup.
+        env.DB.prepare("UPDATE posts SET n_comments=(SELECT COUNT(*) FROM comments WHERE post_id=?) WHERE id=?").bind(c.post_id, c.post_id),
       ]);
       return { ok: true };
     }
@@ -549,10 +571,28 @@ const cacheSeconds = path => /\/(health|pay\/config|contest\/catalog)$/.test(pat
 /* every database round trip, counted and timed, sent back as Server-Timing (the browser's network panel shows it):
    the time a page waits on the server is mostly these round trips, one after another */
 function timedDB(db, q) {
-  const time = async (f) => { const t = Date.now(); try { return await f(); } finally { q.n++; q.ms += Date.now() - t; } };
+  const record = result => {
+    for (const item of Array.isArray(result) ? result : [result]) {
+      const meta = item?.meta;
+      if (!meta) continue;
+      if (Number.isFinite(meta.timings?.sql_duration_ms)) { q.sqlMs += meta.timings.sql_duration_ms; q.sqlSamples++; }
+      if (Number.isFinite(meta.rows_read)) q.rows += meta.rows_read;
+      if (meta.served_by_region) q.regions.add(String(meta.served_by_region).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 24));
+      if (typeof meta.served_by_primary === 'boolean') q.locations.add(meta.served_by_primary ? 'primary' : 'replica');
+    }
+    return result;
+  };
+  const time = async (f) => { const t = Date.now(); try { return record(await f()); } finally { q.n++; q.ms += Date.now() - t; } };
   const wrap = (st) => new Proxy(st, { get(o, k) {
     if (k === "bind") return (...a) => wrap(o.bind(...a));
-    if (k === "first" || k === "all" || k === "run" || k === "raw") return (...a) => time(() => o[k](...a));
+    // all() retains D1's SQL timing/region metadata; first() discards it.
+    if (k === 'first') return async column => {
+      const result = await time(() => o.all()), row = result.results?.[0] || null;
+      if (!row || column === undefined) return row;
+      if (!Object.hasOwn(row, column)) throw new Error('D1_ERROR: column not found');
+      return row[column];
+    };
+    if (k === "all" || k === "run" || k === "raw") return (...a) => time(() => o[k](...a));
     const v = o[k]; return typeof v === "function" ? v.bind(o) : v; } });
   return new Proxy(db, { get(o, k) {
     if (k === "prepare") return (sql) => wrap(o.prepare(sql));
@@ -561,9 +601,14 @@ function timedDB(db, q) {
 }
 export default {
   async fetch(req, env, ctx) {
-    const q = { n: 0, ms: 0 }, t0 = Date.now();
-    const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q) } : env, ctx);
-    try { res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}`); res.headers.set("Timing-Allow-Origin", "*"); }
+    const q = { n: 0, ms: 0, sqlMs: 0, sqlSamples: 0, rows: 0, regions: new Set(), locations: new Set(), hits: 0, misses: 0 }, t0 = Date.now();
+    const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q), [DB_SCOPE]: env.DB, [READ_METRICS]: q } : env, ctx);
+    try {
+      const extra = q.sqlSamples ? `, sql;desc="${q.sqlSamples} statements";dur=${q.sqlMs.toFixed(3)}, d1_read;desc="${q.rows} rows"` : '';
+      const region = q.regions.size ? `, d1_region;desc="${[...q.regions, ...q.locations].join(' ')}"` : '';
+      res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}${extra}${region}, public_cache;desc="${q.hits} hits ${q.misses} misses"`);
+      res.headers.set("Timing-Allow-Origin", "*");
+    }
     catch (e) { /* a response passed straight through keeps its own headers */ }
     return res;
   },
@@ -612,6 +657,7 @@ const worker = {
       if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
     try {
       const data = await handle(req, env, url), res = json(data, 200, cors);
+      if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method) && /^\/api\/(?:me(?:\/|$)|(?:admin\/)?(?:problems|submissions)(?:\/|$))/.test(url.pathname)) invalidatePublicReads(env);
       if (shared) {
         const put = caches.default.put(ckey, new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=" + cacheSeconds(url.pathname) } })).catch(e => console.error('edge cache write', e?.name || 'failed'));
         if (ctx) ctx.waitUntil(put); else await put;
@@ -925,7 +971,10 @@ async function ocr(env, file, mode, m) {
       was open (the worked solution is published when it closes); ties go to whoever reached it first ── */
 /* the leaderboard: a week ranks by points scored while the week was open; all time ranks by rating, which
  * counts every problem solved, whenever */
-async function ranking(env, weekFilter) {
+async function ranking(env, weekFilter, fresh = false) {
+  return publicRead(env, 'ranking:' + (weekFilter || 'all'), () => loadRanking(env, weekFilter), { fresh });
+}
+async function loadRanking(env, weekFilter) {
   const w = weekFilter ? "AND x.in_week=1 AND p.week=?" : "";
   const rows = (await env.DB.prepare(`
     SELECT x.user_id, x.problem_id, MAX(x.score) s, MIN(x.created_at) at, p.points, p.level, u.nickname, u.avatar AS av
@@ -943,29 +992,64 @@ async function ranking(env, weekFilter) {
   return out.slice(0, 200);
 }
 
+const ACCOUNT_HISTORY = `SELECT s.id,s.problem_id,s.status,s.score,s.created_at,p.week,p.no,p.points,p.title_ko,p.title_en FROM submissions s JOIN problems p ON p.id=s.problem_id
+  WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`;
+function accountStats(all, subs, me) {
+  const i = all.findIndex(x => x.nickname === me.nickname), u = i >= 0 ? all[i] : null;
+  return { rank: u ? i + 1 : null, total: u ? u.total : 0, solved: u ? u.solved : 0, rating: u ? u.rating : 0, lv: u ? u.lv : 0, tierAt: TIER_AT, subs };
+}
+async function accountOverview(env, me, req) {
+  // Validate the session once, then fetch only this account's private sections
+  // in one transaction. Only the public ranking projection can be reused.
+  const sections = async () => {
+    const [lab, half] = await Promise.all([labReady(env), halfReady(env)]);
+    const statements = [
+      env.DB.prepare(ACCOUNT_HISTORY).bind(me.id),
+      env.DB.prepare('SELECT provider,created_at FROM identities WHERE user_id=?').bind(me.id),
+      env.DB.prepare(`SELECT pw IS NOT NULL AS has_pw${lab ? `,exam_tokens,token_parts,${half ? 'exam_half' : '0 AS exam_half'}` : ''} FROM users WHERE id=?`).bind(me.id),
+    ];
+    if (lab) statements.push(env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(me.id));
+    return { lab, result: await env.DB.batch(statements) };
+  };
+  const [all, { lab, result }] = await Promise.all([ranking(env, null, wantsFresh(req)), sections()]), credit = result[2].results[0] || {};
+  const active = lab ? await labAdvance(env, result[3].results[0] || null) : null;
+  return { user: pubUser(me), stats: accountStats(all, result[0].results, me), identities: result[1].results,
+    has_password: !!credit.has_pw, providers: oauthProviders(env), active: active && ['running','scanning'].includes(active.status) ? pubLab(active, null) : null,
+    tokens: (credit.exam_tokens || 0) + (credit.exam_half ? 0.5 : 0), parts: credit.token_parts || 0, health: healthData(env, lab), now: now(), api_version: 5 };
+}
+
 async function arena(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   if (p === "/api/weekly" && m === "GET") {
     const t = now(), week = url.searchParams.get("week") || "";
-    // independent queries go out together: each one is a round trip to the database
-    const [rowsR, weeksR] = await env.DB.batch([
-      env.DB.prepare(week ? "SELECT * FROM problems WHERE week=? AND opens_at<=? ORDER BY no" : "SELECT * FROM problems WHERE opens_at<=? AND closes_at>? ORDER BY no").bind(...(week ? [week, t] : [t, t])),
-      env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
+    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : 'opens_at<=? AND closes_at>?', args = week ? [week, t] : [t, t];
+    // The public projection contains no answers, identity or individual score.
+    // Its private overlay can be read immediately, without waiting for the list.
+    const common = publicRead(env, `weekly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
+      const [rowsR, weeksR] = await env.DB.batch([
+        env.DB.prepare(`SELECT * FROM problems WHERE ${where} ORDER BY no`).bind(...args),
+        env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
+      ]);
+      const rows = rowsR.results, wk = week || rows[0]?.week || isoWeek(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
+      const [stats, top] = await Promise.all([
+        ids.length ? env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
+          FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${qs}) GROUP BY s.problem_id`).bind(...ids).all().then(r => r.results) : [],
+        ranking(env, wk, fresh),
+      ]);
+      const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false));
+      for (const x of problems) { const s = stats.find(y => y.problem_id === x.id); x.users = s?.users || 0; x.solvers = s?.solved || 0; }
+      return { week: wk, problems, weeks: weeksR.results, top: top.slice(0, 8) };
+    }, { fresh });
+    const [shared, mine] = await Promise.all([common,
+      me ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (SELECT id FROM problems WHERE ${where}) GROUP BY problem_id`).bind(me.id, ...args).all().then(r => r.results) : [],
     ]);
-    const rows = rowsR.results, weeks = weeksR.results, wk = week || (rows[0] && rows[0].week) || isoWeek(t);
-    const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false)), ids = problems.map(x => x.id), qs = ids.map(() => "?").join(",");
-    const [mine, stats, top] = await Promise.all([
-      me && ids.length ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (${qs}) GROUP BY problem_id`).bind(me.id, ...ids).all().then(r => r.results) : [],
-      ids.length ? env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
-        FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${qs}) GROUP BY s.problem_id`).bind(...ids).all().then(r => r.results) : [],
-      ranking(env, wk),
-    ]);
+    const { problems } = shared, servedAt = now();
     for (const x of problems) {
       const q = mine.find(y => y.problem_id === x.id); if (q) { x.best = q.best; x.pending = q.pend; }
-      const s = stats.find(y => y.problem_id === x.id); x.users = s ? s.users : 0; x.solvers = s ? s.solved : 0;
+      x.open = servedAt < x.closes_at; x.closed = !x.open;
     }
-    return { week: wk, problems, weeks, now: t, health: arenaHealth(env), top: top.slice(0, 8) };
+    return { ...shared, problems, now: servedAt, health: arenaHealth(env), user: me ? pubUser(me) : null, api_version: 5 };
   }
   if ((r = /^\/api\/problems\/(\d+)$/.exec(p)) && m === "GET") {
     const x = await env.DB.prepare("SELECT * FROM problems WHERE id=?").bind(+r[1]).first();
@@ -1005,18 +1089,17 @@ async function arena(p, m, body, me, req, env, url) {
   if (p === "/api/rank" && m === "GET") {
     const scope = url.searchParams.get("scope") === "week" ? "week" : "all";
     const week = scope === "week" ? (url.searchParams.get("week") || isoWeek(now())) : null;
-    const rows = await ranking(env, week);
+    const rows = await ranking(env, week, wantsFresh(req));
     rows.forEach((x, i) => { x.rank = i + 1; });
     let mine = null;
     if (me) { const i = rows.findIndex(x => x.nickname === me.nickname); if (i >= 0) mine = rows[i]; }
-    return { scope, week, rows: rows.slice(0, 100), mine, tierAt: TIER_AT };
+    return { scope, week, rows: rows.slice(0, 100), mine, tierAt: TIER_AT, user: me ? pubUser(me) : null, api_version: 5 };
   }
+  if (p === '/api/me/overview' && m === 'GET') return accountOverview(env, needUser(me), req);
   if (p === "/api/me/stats" && m === "GET") {
     needUser(me);
-    const [all, subs] = await Promise.all([ranking(env, null), env.DB.prepare(`SELECT s.id,s.problem_id,s.status,s.score,s.created_at,p.week,p.no,p.points,p.title_ko,p.title_en FROM submissions s JOIN problems p ON p.id=s.problem_id
-      WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id).all().then(r => r.results)]);
-    const i = all.findIndex(x => x.nickname === me.nickname), u = i >= 0 ? all[i] : null;
-    return { rank: u ? i + 1 : null, total: u ? u.total : 0, solved: u ? u.solved : 0, rating: u ? u.rating : 0, lv: u ? u.lv : 0, tierAt: TIER_AT, subs };
+    const [all, subs] = await Promise.all([ranking(env, null, wantsFresh(req)), env.DB.prepare(ACCOUNT_HISTORY).bind(me.id).all().then(r => r.results)]);
+    return accountStats(all, subs, me);
   }
 
   /* admin: problems and the grading queue */
@@ -2033,7 +2116,7 @@ async function labBootstrap(env,me,url){
   const include=new Set((url.searchParams.get('include')||'').split(',')),out={user:me?pubUser(me):null,tokens:0,parts:0,active:null,now:now()};
   const idText=url.searchParams.get('id'),id=idText===null?null:Number(idText);
   if(id!==null&&(!Number.isSafeInteger(id)||id<=0))bad('bad_session');
-  if(include.has('health'))out.health={ok:true,v:5,boards:BOARDS,tags:TAGS,best:BEST,langs:LANGS,arena:arenaHealth(env),oauth:oauthProviders(env),lab:await labReady(env),lab_reg:LAB_REG,jobs:{available:hasLabQueue(env),mode:'queue'}};
+  if(include.has('health'))out.health=healthData(env,await labReady(env));
   if(!me){if(include.has('sessions'))out.sessions=[];return out;}
   const half=await halfReady(env),statements=[
     env.DB.prepare(`SELECT exam_tokens,${half?'exam_half':'0 AS exam_half'},token_parts FROM users WHERE id=?`).bind(me.id),
@@ -2378,8 +2461,8 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if (p === "/api/lab/active" && m === "GET") {                      // the exam this user has open, if any, and the token balance
     needUser(me);
-    const s = await labActive(env, me.id);
-    return { tokens: await labTokens(env, me.id), active: s && (s.status === "running" || s.status === "scanning") ? pubLab(s, null) : null, now: t };
+    const { tokens, active, now } = await labBootstrap(env, me, new URL('https://worker.local/api/lab/bootstrap'));
+    return { tokens, active, now };
   }
   if (p === "/api/lab/start" && m === "POST") {
     needUser(me);
@@ -2429,9 +2512,12 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if (p === "/api/lab/tokens" && m === "GET") {
     needUser(me);
-    const u = await env.DB.prepare("SELECT * FROM users WHERE id=?").bind(me.id).first();
-    return { tokens: await labTokens(env, me.id), parts: (u && u.token_parts) || 0,
-      ledger: (await env.DB.prepare("SELECT l.delta,l.reason,l.session_id,l.note,l.created_at,s.exam_key FROM lab_ledger l LEFT JOIN lab_sessions s ON s.id=l.session_id WHERE l.user_id=? ORDER BY l.id DESC LIMIT 50").bind(me.id).all()).results };
+    const half = await halfReady(env);
+    const [credit, ledger] = await env.DB.batch([
+      env.DB.prepare(`SELECT exam_tokens,${half ? 'exam_half' : '0 AS exam_half'},token_parts FROM users WHERE id=?`).bind(me.id),
+      env.DB.prepare("SELECT l.delta,l.reason,l.session_id,l.note,l.created_at,s.exam_key FROM lab_ledger l LEFT JOIN lab_sessions s ON s.id=l.session_id WHERE l.user_id=? ORDER BY l.id DESC LIMIT 50").bind(me.id),
+    ]), u = credit.results[0] || {};
+    return { tokens: (u.exam_tokens || 0) + (u.exam_half ? 0.5 : 0), parts: u.token_parts || 0, ledger: ledger.results };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/finish$/.exec(p)) && m === "POST") {     // finish early: the bench goes dark now
     let s = await labAdvance(env, await labOwned(env, +r[1], me));

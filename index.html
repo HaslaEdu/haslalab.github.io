@@ -1002,8 +1002,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
-<script src="site-runtime.js?v=624c282fa6df"></script>
-<script src="site-catalogue.js?v=4475abeb8584"></script>
+<script src="site-runtime.js?v=c99dc395329c"></script>
+<script src="site-catalogue.js?v=096eb49ca5ea"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=0618dff05d24"></script>
 <script src="site-design.js?v=938310640469"></script>
@@ -8464,7 +8464,7 @@ function cmTok(v){
     if(v===undefined)return localStorage.getItem("hlCmTok")||"";
     const prior=localStorage.getItem("hlCmTok")||"";
     if(v)localStorage.setItem("hlCmTok",v);else localStorage.removeItem("hlCmTok");
-    if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;}
+    if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;}
   }catch(e){return "";}
 }
 async function cmApi(method, path, body){
@@ -8487,11 +8487,11 @@ async function cmApi(method, path, body){
     }
     return j;
   };
-  if(method!=="GET"&&typeof cmInvalidate==="function")cmInvalidate();
+  if(method!=="GET"&&/^\/(posts|comments|me|signup|login|logout|oauth)(\/|$)/.test(path))cm.boards=null;
   return typeof cmRequestCache==="object"&&cmRequestCache?cmRequestCache.run({method,path,base,token:t,lang:currentLang},send):send();
 }
 /* who is signed in and the server's settings: shared without delaying public page content. */
-let cmMeP=null,cmHealthP=null,cmHealthBase="",cmHealthUntil=0,cmBootstrapP=null;
+let cmMeP=null,cmHealthP=null,cmHealthBase="",cmHealthUntil=0,cmBootstrapP=null,cmOverviewP=null;
 const cmIdentityScope=()=>cmBase()+"\n"+cmTok();
 function cmLoadMe(){
   const scope=cmIdentityScope(),token=cmTok();
@@ -8508,6 +8508,44 @@ function cmHealth(){
   try{const c=JSON.parse(sessionStorage.getItem("hlCmHealth")||"null");if(c&&Date.now()-c.t<600000&&c.base===base){cmHealthBase=base;cmHealthUntil=c.t+600000;return cmHealthP=Promise.resolve(c.h);}}catch(e){}
   cmHealthBase=base;cmHealthUntil=Date.now()+600000;
   return cmHealthP=cmApi("GET","/health").then(h=>{try{sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base,h}));}catch(e){}return h;},()=>{if(cmHealthBase===base)cmHealthP=null;return{v:0};});
+}
+function cmPageRead(path){
+  const scope=cmIdentityScope();
+  if(cm.meScope!==scope){cm.me=null;cm.meChecked=false;}cm.meScope=scope;
+  const p=cmApi("GET",path).then(r=>{
+    if(cmIdentityScope()!==scope)throw{code:"account_changed"};
+    if(Object.prototype.hasOwnProperty.call(r,"user")){cm.me=r.user;cm.meChecked=true;}
+    if(r.api_version)cm.v=r.api_version;
+    return r;
+  });
+  const identity=p.then(r=>{
+    if(Object.prototype.hasOwnProperty.call(r,"user"))return r.user;
+    if(cmMeP===identity)cmMeP=null;
+    return cmLoadMe();
+  }).catch(()=>null).finally(()=>{if(cmMeP===identity)cmMeP=null;});
+  cmMeP=identity;return p;
+}
+function cmMeOverview(){
+  const scope=cmIdentityScope();
+  if(cmOverviewP?.scope===scope)return cmOverviewP.promise;
+  if(cm.meScope!==scope){cm.me=null;cm.meChecked=false;}cm.meScope=scope;
+  const p=cmApi("GET","/me/overview").catch(async error=>{
+    if(error.status!==404)throw error;
+    if(cmIdentityScope()!==scope)throw{code:"account_changed"};
+    const [identity,stats,ids,active,health]=await Promise.all([
+      cmApi("GET","/me"),cmApi("GET","/me/stats"),cmApi("GET","/me/identities"),
+      cmApi("GET","/lab/active").catch(e=>{if(e.status===404)return null;throw e;}),cmHealth()
+    ]);
+    return{user:identity.user,stats,identities:ids.identities,providers:ids.providers,has_password:ids.has_pw,active:active?.active,tokens:active?.tokens,health};
+  }).then(r=>{
+    if(cmIdentityScope()!==scope)throw{code:"account_changed"};
+    cm.me=r.user;cm.meChecked=true;
+    if(r.health){cm.v=r.health.v||cm.v;cmHealthBase=cmBase();cmHealthUntil=Date.now()+600000;cmHealthP=Promise.resolve(r.health);}
+    return r;
+  }).finally(()=>{if(cmOverviewP?.promise===p)cmOverviewP=null;});
+  cmOverviewP={scope,promise:p};
+  const identity=p.then(r=>cmIdentityScope()===scope?r.user:null).catch(()=>null).finally(()=>{if(cmMeP===identity)cmMeP=null;});
+  cmMeP=identity;return p;
 }
 function cmLabBootstrap(options={}){
   const scope=cmIdentityScope(),id=options.id===undefined?null:Number(options.id);
@@ -8698,7 +8736,7 @@ async function cmMount(){
   const {parts,q}=cmHash();
   const [a,b]=parts;
   const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
-  const identity=cmLoadMe();
+  const identity=a==="post"&&b?Promise.resolve():cmLoadMe();
   const settings=cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;});
   const boardLang=lang;
   if(cm.boardsLang!==boardLang){cm.boards=null;cm.boardsLang=boardLang;}
@@ -8722,7 +8760,7 @@ async function cmMount(){
     if(alive()) root.innerHTML=`<div class="cmnote">${esc(cmErr(e))}</div>`;
   }
   if(!alive()) return;
-  cmWire(document.querySelector(".cm"));
+  paintRail();cmWire(document.querySelector(".cm"));
   const right=document.getElementById("cmRight");
   if(right){ if(["login","signup"].includes(a)) right.innerHTML=""; else cmRight(where||"all",alive); }
 }
@@ -8855,24 +8893,26 @@ async function cmPost(root, id, alive){
   const T=CMT[lang];
   /* count a view once per tab, not on every redraw */
   let seen=false; try{ seen=sessionStorage.getItem("hlCmSeen"+id)==="1"; sessionStorage.setItem("hlCmSeen"+id,"1"); }catch(e){}
-  const [j]=await Promise.all([cmApi("GET",`/posts/${id}${seen?"":"?view=1"}`),cmLoadMe(),cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;})]);
+  const owner=cmIdentityScope(),j=await cmPageRead(`/posts/${id}${seen?"":"?view=1"}`);
+  if(!Object.prototype.hasOwnProperty.call(j,"user"))await Promise.all([cmLoadMe(),cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;})]);
+  if(owner!==cmIdentityScope())return;
   if(!alive()) return;
   const p=j.post, my=j.my!==undefined ? j.my : (j.liked?1:0);
   let order=cm.cmtOrder||"old";
-  const tops=j.comments.filter(c=>!c.parent_id), kids=id=>j.comments.filter(c=>c.parent_id===id);
+  const kids=id=>j.comments.filter(c=>c.parent_id===id);
   const cmtHtml=(c,rp)=>`<div class="cmc ${rp?"rp":""}" id="cmComment${c.id}" data-id="${c.id}">${cmAv(c.gone?"?":c.nickname,"",c.gone?null:c.av)}
       <div class="cb"><div class="who"><b>${cmName(c)}</b>${!c.gone&&!p.gone&&c.nickname===p.nickname?`<span class="op">${T.op}</span>`:""}<time title="${cmFull(c.created_at)}">${cmTime(c.created_at)}${c.updated_at?" · "+T.edited:""}</time></div>
         <div class="tx">${cmFmt(c.body)}</div>
         <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
         <div class="rf"></div></div></div>`;
-  const thread=()=>{ const list=order==="new"?[...tops].reverse():tops; return list.map(c=>cmtHtml(c,false)+kids(c.id).map(k=>cmtHtml(k,true)).join("")).join(""); };
+  const thread=()=>{ const tops=j.comments.filter(c=>!c.parent_id),list=order==="new"?[...tops].reverse():tops; return list.map(c=>cmtHtml(c,false)+kids(c.id).map(k=>cmtHtml(k,true)).join("")).join(""); };
   const bName=T.boards[p.board]||p.board;
   root.innerHTML=`<div class="cmpanel">
     <article class="cmpost">
       <div class="cmcrumb"><a href="#/community/${p.board}"># ${bName}</a>${p.tag?" › "+cmTag(p.tag):""}</div>
       <h2>${esc(p.title)}</h2>
       <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"",p.gone?null:p.av)}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
-        <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span>${T.comments} ${j.comments.length}</span></div>
+        <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span id="cmPostCount">${T.comments} ${j.comments.length}</span></div>
       <div class="cmtext">${cmFmt(p.body)}</div>
       <div class="cmrec">
         <button class="up ${my===1?"on":""}" type="button" id="cmUp"><b>${p.n_likes||0}</b><span>▲ ${T.up}</span></button>
@@ -8911,14 +8951,22 @@ async function cmPost(root, id, alive){
     try{ await cmApi("POST","/report",{kind,id:tid,reason:why}); cmToast(T.reported); }catch(e){ cmToast(cmErr(e)); }
   };
   if($("#cmRep")) $("#cmRep").onclick=()=>report("post",id);
-  root.querySelectorAll("[data-o]").forEach(bn=>bn.onclick=()=>{ cm.cmtOrder=bn.dataset.o; cmMount(); });
+  const paintComments=()=>{if(!alive()||owner!==cmIdentityScope())return;$("#cmThread").innerHTML=thread();$(".cmcmts .hd em").textContent=j.comments.length;$("#cmPostCount").textContent=T.comments+" "+j.comments.length;root.querySelectorAll("[data-o]").forEach(b=>b.classList.toggle("on",b.dataset.o===order));wireComments();};
+  const acceptComment=(r,f)=>{
+    if(!alive()||owner!==cmIdentityScope())return;
+    if(!r.comment){cmMount();return;}
+    if(!j.comments.some(c=>c.id===r.comment.id))j.comments.push(r.comment);
+    f.reset();paintComments();
+  };
+  root.querySelectorAll("[data-o]").forEach(bn=>bn.onclick=()=>{ order=cm.cmtOrder=bn.dataset.o;paintComments(); });
   if($("#cmCmt")) $("#cmCmt").onsubmit=async e=>{
     e.preventDefault();
-    const f=e.target, btn=f.querySelector("button"); btn.disabled=true;
-    try{ await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value}); cmMount(); }
-    catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); btn.disabled=false; }
+    const f=e.target, btn=f.querySelector("button");if(btn.disabled)return;btn.disabled=true;
+    try{ const r=await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value}); acceptComment(r,f); }
+    catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); }
+    finally{btn.disabled=false;}
   };
-  root.querySelectorAll(".cmc[data-id]").forEach(box=>{
+  const wireComments=()=>root.querySelectorAll(".cmc[data-id]").forEach(box=>{
     const cid=+box.dataset.id;
     box.querySelectorAll(":scope > .cb > .ops [data-c]").forEach(el=>el.onclick=async()=>{
       const k=el.dataset.c, c=j.comments.find(x=>x.id===cid);
@@ -8934,7 +8982,7 @@ async function cmPost(root, id, alive){
         const f=rf.querySelector("form"); f.body.focus();
         f.querySelector("button[type=button]").onclick=()=>{ rf.innerHTML=""; };
         f.onsubmit=async e=>{ e.preventDefault();
-          try{ await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value,parent_id:cid}); cmMount(); }
+          try{ const r=await cmApi("POST",`/posts/${id}/comments`,{body:f.body.value,parent_id:cid}); acceptComment(r,f); }
           catch(er){ f.querySelector(".cmerr").textContent=cmErr(er); } };
       }
       if(k==="edit"){
@@ -8949,6 +8997,7 @@ async function cmPost(root, id, alive){
       }
     });
   });
+  wireComments();
   const commentId=cmHash().q.get("comment");
   if(commentId && /^\d+$/.test(commentId)){
     const target=document.getElementById("cmComment"+commentId);
@@ -9318,7 +9367,7 @@ function render(){
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
-addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmHealthP=null;render();}});
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;render();}});
 initSiteDesign();
 render();
 </script>

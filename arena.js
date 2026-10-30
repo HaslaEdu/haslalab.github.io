@@ -139,28 +139,39 @@ async function arChip() {
 function viewArena(first) { return `<div class="shell cm ar"><div id="arRoot" data-r="${esc(first)}"><div class="cmnote">…</div></div></div>`; }
 async function arMount() {
   const root = document.getElementById("arRoot"); if (!root) return;
-  const my = ++ar.seq, alive = () => my === ar.seq && document.getElementById("arRoot") === root;
+  const my = ++ar.seq,scope=cmIdentityScope(),currentLang=lang,routeAlive=()=>my === ar.seq && document.getElementById("arRoot") === root && lang===currentLang, alive = () => routeAlive() && cmIdentityScope()===scope;
   const parts = location.hash.replace(/^#\/?/, "").split("?")[0].split("/").filter(Boolean), [a, b, c] = parts;
-  ar.poller?.dispose();ar.poller=null;let bootstrap=null;
+  ar.poller?.dispose();ar.poller=null;let bootstrap=null,primary=null,version=0;
+  const weekly=a==='weekly'&&b!=='p'&&b!=='admin';
+  if(weekly||a==='rank'){
+    const path=weekly?'/weekly?lang='+lang+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:''):'/rank?scope='+(b==='all'?'all':'week')+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:'');
+    primary=cmPageRead(path);primary.catch(()=>{});
+  }
   try{if(a==='lab'){
     const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
     const id=b&&/^\d+$/.test(b)?'&id='+encodeURIComponent(b):'';
     bootstrap=typeof cmLabBootstrap==='function'?await cmLabBootstrap(b?{id:+b,include:'health'}:{}):await cmApi('GET','/lab/bootstrap?include=health'+(!b?',sessions':'')+id);
     if(shop)bootstrap.shop=await shop;
     if(!alive())return;cm.me=bootstrap.user;cm.meChecked=true;ar.health=bootstrap.health||ar.health;
+  }else if(a==='me'){
+    bootstrap=await cmMeOverview();if(!alive())return;ar.health=bootstrap.health||ar.health;
+  }else if(primary){
+    const health=Promise.resolve(ar.health||cmHealth());health.then(h=>{if(alive())ar.health=h;},()=>{});
+    primary=await primary;version=primary.api_version||0;
+    if(!version){const [,h]=await Promise.all([cmLoadMe(),health]);ar.health=h;}
   }else{const [,h]=await Promise.all([cmLoadMe(),ar.health||cmHealth()]);ar.health=h;}}
-  catch(e){if(alive())root.innerHTML=`<div class="cmnote">${esc(arErr(e))}</div>`;return;}
+  catch(e){if(routeAlive()&&a==='me'&&e.status===401&&(!cmTok()||cmIdentityScope()===scope)){try{sessionStorage.setItem('hlCmBack','#/me');}catch(_){}location.hash='#/login';return;}if(alive())root.innerHTML=`<div class="cmnote">${esc(arErr(e))}</div>`;return;}
   if (!alive()) return;
   try {
     if (a === "login" || a === "signup") return arAuth(root, a);
     if (a === "oauth") return arOauthBack(root);
-    if ((ar.health.v || 0) < 4) { root.innerHTML = `<div class="cmnote">${arT().oldServer}</div>`; return; }
-    if (a === "me") await arMe(root, alive);
-    else if (a === "rank") await arRank(root, alive, b);
+    if ((version || ar.health?.v || 0) < 4) { root.innerHTML = `<div class="cmnote">${arT().oldServer}</div>`; return; }
+    if (a === "me") await arMe(root, alive,bootstrap);
+    else if (a === "rank") await arRank(root, alive, b,primary);
     else if (a === "weekly" && b === "p" && c) await arProblem(root, alive, +c);
     else if (a === "weekly" && b === "admin") await arAdmin(root, alive);
     else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
-    else await arWeekly(root, alive, b);
+    else await arWeekly(root, alive, b,primary);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
 }
 
@@ -211,9 +222,9 @@ async function arOauthBack(root) {
 }
 
 /* ── the week ── */
-async function arWeekly(root, alive, week) {
+async function arWeekly(root, alive, week,preloaded) {
   const T = arT(), q = week && /^\d{4}-W\d{2}$/.test(week) ? "&week=" + week : "";
-  const j = await cmApi("GET", "/weekly?lang=" + lang + q); if (!alive()) return;
+  const j = preloaded||await cmApi("GET", "/weekly?lang=" + lang + q); if (!alive()) return;
   let top = j.top ? {rows: j.top} : null;     // older servers leave the week's leaders out
   if (!top) { try { top = await cmApi("GET", "/rank?scope=week&week=" + j.week); } catch (e) {} if (!alive()) return; }
   const P = j.problems, open = P.length && P[0].open, ends = P.length ? P[0].closes_at : 0, starts = P.length ? P[0].opens_at : 0;
@@ -414,9 +425,9 @@ async function arProblem(root, alive, id) {
 }
 
 /* ── rankings ── */
-async function arRank(root, alive, which) {
+async function arRank(root, alive, which,preloaded) {
   const T = arT(), week = which && /^\d{4}-W\d{2}$/.test(which) ? which : null, scope = which === "all" ? "all" : "week";
-  const j = await cmApi("GET", "/rank?scope=" + scope + (week ? "&week=" + week : "")); if (!alive()) return;
+  const j = preloaded||await cmApi("GET", "/rank?scope=" + scope + (week ? "&week=" + week : "")); if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>${T.rankH}${j.week ? ` <span class="arwk">${esc(j.week)}</span>` : ""}</h1><p>${T.rankSub}</p></div>
       <div class="cmseg"><a href="#/rank/week" class="${scope === "week" ? "on" : ""}">${T.rankWeek}</a><a href="#/rank/all" class="${scope === "all" ? "on" : ""}">${T.rankAll}</a></div></div>
@@ -429,10 +440,11 @@ async function arRank(root, alive, which) {
 }
 
 /* ── my record ── */
-async function arMe(root, alive) {
+async function arMe(root, alive,overview) {
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/me"); } catch (e) {} location.hash = "#/login"; return; }
-  const j = await cmApi("GET", "/me/stats"); if (!alive()) return;
+  overview=overview||await cmMeOverview();if(!alive())return;
+  const j = overview.stats;
   j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `
     <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}</p></div>
@@ -458,15 +470,15 @@ async function arMe(root, alive) {
     try { const r = await cmApi("PATCH", "/me", {nickname: nf.n.value.trim()}); cm.me.nickname = r.nickname; nf.n.value = r.nickname; info.textContent = T.done; arChip();
       const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; } catch (er) { info.textContent = arErr(er); } };
   try {
-    const idj = await cmApi("GET", "/me/identities"), have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
+    const idj = {identities:overview.identities||[],providers:overview.providers||ar.health?.oauth||[],has_pw:overview.has_password}, have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
     box.innerHTML = `<div class="oauth">${[...new Set(arProvs().concat(have))].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
       : idj.providers.includes(p) && arProvs().includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.link}</a>` : "").join("")}</div>
       ${idj.has_pw ? "" : `<form id="arPw" class="arq"><span>${T.pwSet}</span><input type="password" name="pw" placeholder="${T.pwNew}" minlength="8"><button class="cmbtn sm">${T.save}</button><span class="arinfo"></span></form>`}`;
     for (const a of box.querySelectorAll("a[data-p]")) a.onclick = async (e) => { e.preventDefault(); try { const t = await cmApi("POST", "/oauth/ticket"); sessionStorage.setItem("hlCmBack", "#/me"); arOauthStart(a.dataset.p, t.ticket); } catch (er) { cmToast(arErr(er)); } };
     const pf = box.querySelector("#arPw"); if (pf) pf.onsubmit = async (e) => { e.preventDefault(); try { await cmApi("POST", "/me/password", {password: pf.pw.value}); pf.querySelector(".arinfo").textContent = T.done; } catch (er) { pf.querySelector(".arinfo").textContent = arErr(er); } };
   } catch (e) {}
-  if ((ar.health || {}).lab) cmApi("GET", "/lab/active").then((x) => { const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
-    el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }, () => {});
+  if ((ar.health || {}).lab) {const x=overview; const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
+    el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }
   else { const el = root.querySelector("#arLabMe"); if (el) el.remove(); }
   root.querySelector("#arLogout").onclick = async () => { try { await cmApi("POST", "/logout"); } catch (e) {} cmTok(null); cm.me = null; location.hash = "#/weekly"; arChip(); };
 }

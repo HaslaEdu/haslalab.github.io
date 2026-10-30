@@ -222,3 +222,112 @@ test('community list content starts before identity, health and board widgets fi
   a.run('cmLoadMe=()=>never;cmHealth=()=>never;cmApi=()=>never;cmList=paintList;');
   await a.run('cmMount()');assert.deepEqual(calls,['main']);assert.equal(a.node('cmRoot').innerHTML,'visible list');
 });
+
+test('account sections coalesce only while pending and never retain private results',async()=>{
+  for(const path of ['/me/stats','/me/identities','/me/overview']){
+    const policy=Runtime.requestPolicy('GET',path);assert.equal(policy.safe,true);assert.equal(policy.public,false);assert.equal(policy.ttl,0);
+    const cache=Runtime.createRequestCache();let calls=0,finish;
+    const state={path,token:'A'},send=()=>{calls++;return new Promise(resolve=>finish=resolve);};
+    const first=cache.run(state,send),second=cache.run(state,send);await tick();assert.equal(calls,1);finish({user:'A'});await Promise.all([first,second]);
+    await cache.run(state,async()=>{calls++;return{user:'A-new'};});assert.equal(calls,2);
+  }
+});
+
+test('public profiles omit authorization but fetch fresh visibility and names on every completed read',async()=>{
+  const a=app(),calls=[];a.store.set('hlCmTok','account-A');
+  a.context.fetch=async(url,options)=>{calls.push({url,options});return{ok:true,json:async()=>({profile:{nickname:'A'}})};};
+  for(const path of ['/users?nickname=A','/users/A']){
+    const policy=Runtime.requestPolicy('GET',path);assert.equal(policy.public,true);assert.equal(policy.ttl,0);
+    a.context.profilePath=path;await Promise.all([a.run('cmApi("GET",profilePath)'),a.run('cmApi("GET",profilePath)')]);await a.run('cmApi("GET",profilePath)');
+  }
+  assert.equal(calls.length,4);for(const call of calls)assert.equal(call.options.headers.Authorization,undefined);
+});
+
+test('a weekly submission bypasses its shared derived data while retaining configuration caches',async()=>{
+  const cache=Runtime.createRequestCache(),state={base:'https://a',token:'A',lang:'ko'};
+  await cache.run({...state,path:'/health'},async()=>({v:5}));await cache.run({...state,method:'POST',path:'/problems/4/submit'},async()=>({id:2}));
+  for(const path of ['/weekly?lang=ko','/rank?scope=week','/me/overview','/me/stats'])await cache.run({...state,path},async options=>{assert.equal(options.bypassCache,true,path+' must refresh its derived leaderboard');return{};});
+  await cache.run({...state,path:'/me/identities'},async options=>{assert.equal(options.bypassCache,false);return{};});
+  await cache.run({...state,path:'/health'},async()=>{throw Error('configuration cache should survive a submission');});
+});
+
+test('a community write refreshes all community lists while retaining unrelated public configuration and lab statistics',async()=>{
+  const cache=Runtime.createRequestCache(),state={base:'https://a',token:'A',lang:'ko'};
+  for(const path of ['/health','/pay/config','/lab/contest/catalog','/lab/stats?comp=kmo','/boards','/posts?sort=hot'])await cache.run({...state,path},async()=>({path}));
+  await cache.run({...state,method:'POST',path:'/posts/4/comments'},async()=>({id:2}));
+  for(const path of ['/health','/pay/config','/lab/contest/catalog','/lab/stats?comp=kmo'])await cache.run({...state,path},async()=>{throw Error('unrelated cache was discarded: '+path);});
+  for(const path of ['/boards','/posts?sort=hot','/posts?best=1'])await cache.run({...state,path},async options=>{assert.equal(options.bypassCache,true);return{};});
+  await cache.run({...state,path:'/lab/stats?comp=kmchc'},async options=>{assert.equal(options.bypassCache,false);return{};});
+});
+
+test('weekly and ranking content use their own version and identity without waiting for unrelated health or a second me request',async()=>{
+  for(const route of ['#/weekly/2026-W44','#/rank/all']){
+    const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash=route;
+    const root=a.node('arRoot');a.run('arWeekly=async(root,alive,week,data)=>{if(alive())root.innerHTML="weekly:"+data.week;};arRank=async(root,alive,scope,data)=>{if(alive())root.innerHTML="rank:"+data.scope;};');
+    a.context.fetch=async(url,options)=>{calls.push({url,options});if(url.includes('/health'))return new Promise(()=>{});return{ok:true,json:async()=>({api_version:5,user:{nickname:'A'},week:'2026-W44',scope:'all'})};};
+    const mounted=a.run('arMount()'),identity=a.run('cmLoadMe()');await mounted;assert.equal((await identity).nickname,'A');
+    assert.match(root.innerHTML,/^(weekly:2026-W44|rank:all)$/);assert.equal(calls.filter(x=>new URL(x.url).pathname==='/api/me').length,0);
+    assert.equal(calls[0].options.headers.Authorization,'Bearer account-A');assert.match(calls[0].url,route.includes('weekly')?/weekly\?lang=ko&week=2026-W44/:/rank\?scope=all/);
+  }
+});
+
+test('a stale page response cannot hydrate another account or render after a language change',async()=>{
+  const a=app();vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/weekly';let finish;
+  a.context.fetch=url=>url.includes('/health')?new Promise(()=>{}):new Promise(resolve=>finish=resolve);
+  a.run('arWeekly=async root=>{root.innerHTML="stale";};');const pending=a.run('arMount()');await tick();a.run('cmTok("account-B");lang="en"');
+  finish({ok:true,json:async()=>({api_version:5,user:{nickname:'A'}})});await pending;assert.equal(a.run('cm.me'),null);assert.notEqual(a.node('arRoot').innerHTML,'stale');
+});
+
+test('account overview is the sole initial request and shares identity with the header',async()=>{
+  const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/me';
+  a.run('arMe=async(root,alive,overview)=>{if(alive())root.innerHTML="tokens:"+overview.tokens;};');
+  a.context.fetch=async url=>{calls.push(url);return{ok:true,json:async()=>({user:{nickname:'A'},stats:{},identities:[],has_password:true,active:null,tokens:2,health:{v:5,lab:true}})};};
+  const pending=a.run('arMount()'),identity=a.run('cmLoadMe()');await pending;assert.equal((await identity).nickname,'A');assert.equal(calls.length,1);assert.match(calls[0],/\/me\/overview$/);assert.equal(a.node('arRoot').innerHTML,'tokens:2');
+  await a.run('cmMeOverview()');assert.equal(calls.length,2,'balances and role must not persist in a response cache');
+});
+
+test('overview falls back only on 404 and starts all older account sections together',async()=>{
+  const a=app(),calls=[],finishes=[];a.store.set('hlCmTok','account-A');
+  const data={'/api/me':{user:{nickname:'A'}},'/api/me/stats':{subs:[]},'/api/me/identities':{identities:[],providers:[],has_pw:true},'/api/lab/active':{tokens:4,active:null},'/api/health':{v:5,lab:true}};
+  a.context.fetch=async url=>{const p=new URL(url).pathname;calls.push(p);if(p==='/api/me/overview')return{ok:false,status:404,json:async()=>({error:'not_found'})};return new Promise(resolve=>finishes.push(()=>resolve({ok:true,json:async()=>data[p]})));};
+  const pending=a.run('cmMeOverview()');await tick();assert.equal(calls.length,6);assert.equal(finishes.length,5);for(const finish of finishes)finish();const result=await pending;assert.equal(result.tokens,4);assert.equal(result.has_password,true);
+  for(const status of [401,503]){
+    const b=app(),seen=[];b.store.set('hlCmTok','account-A');b.context.fetch=async url=>{seen.push(url);return{ok:false,status,json:async()=>({error:status===401?'login_required':'server_error'})};};
+    await assert.rejects(b.run('cmMeOverview()'));assert.equal(seen.length,1);
+  }
+});
+
+test('an expired overview session redirects to login without a fanout of account requests',async()=>{
+  const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/me';
+  a.context.fetch=async url=>{calls.push(url);return{ok:false,status:401,json:async()=>({error:'login_required'})};};
+  await a.run('arMount()');assert.equal(a.context.location.hash,'#/login');assert.equal(calls.length,1);assert.equal(a.store.has('hlCmTok'),false);
+});
+
+test('the actual account renderer consumes overview sections without additional HTTP reads',async()=>{
+  const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/me';
+  const elements=new Map(),get=s=>{if(!elements.has(s))elements.set(s,{innerHTML:'',textContent:'',value:'A',querySelector:child=>get(s+' '+child),querySelectorAll:()=>[]});return elements.get(s);};
+  a.node('arRoot').querySelector=get;get('#arNick').n={value:'A'};a.run('cmAvatarForm=()=>{};cmNickCheck=()=>async()=>true;');
+  a.context.fetch=async url=>{calls.push(url);return{ok:true,json:async()=>({user:{nickname:'A',username:'a'},stats:{subs:[],lv:0,rating:0,total:0,solved:0},identities:[{provider:'google'}],has_password:true,active:null,tokens:2,health:{v:5,lab:true,oauth:['google','kakao']}})};};
+  await a.run('arMount()');assert.equal(calls.length,1);assert.ok(a.node('arRoot').innerHTML.includes('@a'));assert.match(get('#arIds').innerHTML,/google/);assert.match(get('#arIds').innerHTML,/kakao/);assert.match(get('#arLabMe').innerHTML,/<b>2<\/b>/);
+});
+
+test('a legacy weekly response retains its old-server guard while the primary request starts before health',async()=>{
+  const a=app(),calls=[],finishes=new Map();vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/weekly';
+  a.context.fetch=url=>{const p=new URL(url).pathname;calls.push(p);return new Promise(resolve=>finishes.set(p,resolve));};
+  const pending=a.run('arMount()');await tick();assert.deepEqual(calls,['/api/weekly','/api/health']);
+  finishes.get('/api/weekly')({ok:true,json:async()=>({week:'2026-W44'})});await tick();assert.ok(calls.includes('/api/me'));
+  finishes.get('/api/me')({ok:true,json:async()=>({user:{nickname:'A'}})});finishes.get('/api/health')({ok:true,json:async()=>({v:3})});await pending;
+  assert.ok(a.node('arRoot').innerHTML.includes(a.run('arT().oldServer')));
+});
+
+test('post details render authoritative permissions without waiting on identity or health, and a returned comment updates locally',async()=>{
+  const a=app(),calls=[];a.store.set('hlCmTok','account-A');const root=a.node('cmRoot'),elements=new Map();
+  const get=selector=>{if(!elements.has(selector))elements.set(selector,{innerHTML:'',textContent:'',classList:{toggle(){}},querySelector(){return null;}});return elements.get(selector);};
+  const btn={disabled:false},error={textContent:''},form={body:{value:'New comment'},querySelector:s=>s==='button'?btn:error,reset(){this.body.value='';}};
+  root.querySelector=s=>s==='#cmDel'?null:s==='#cmCmt'?form:get(s);root.querySelectorAll=()=>[];
+  a.run('cmHealth=()=>new Promise(()=>{});cmMount=()=>{throw Error("must not remount after comment");};');
+  const post={id:12,board:'free',lang:'ko',title:'Post',body:'Body',nickname:'A',created_at:1,views:1,mine:false,n_likes:0,n_dislikes:0};
+  a.context.fetch=async(url,options)=>{calls.push({url,options});return{ok:true,json:async()=>options.method==='POST'?{id:13,comment:{id:13,parent_id:null,body:'New comment',nickname:'A',created_at:2,mine:true}}:new URL(url).pathname==='/api/posts/12'?{post,comments:[],my:0,user:{nickname:'A'},api_version:5}:{posts:[]}};};
+  const pending=a.run('cmPost(document.getElementById("cmRoot"),12,()=>true)'),identity=a.run('cmLoadMe()');await pending;assert.equal((await identity).nickname,'A');assert.ok(root.innerHTML.includes('id="cmCmt"'));assert.equal(calls.length,2);
+  await form.onsubmit({preventDefault(){},target:form});assert.equal(calls.length,3);assert.match(get('#cmThread').innerHTML,/New comment/);assert.match(get('#cmThread').innerHTML,/data-c="edit"/);assert.equal(get('.cmcmts .hd em').textContent,1);assert.equal(btn.disabled,false);assert.equal(form.body.value,'');
+});

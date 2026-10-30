@@ -10,22 +10,37 @@
     if(String(method).toUpperCase()!=='GET')return{safe:false,public:false,ttl:0};
     const u=new URL(path,'https://api.invalid');
     if(u.searchParams.has('view'))return{safe:false,public:false,ttl:0};
-    const publicRead=publicPaths.has(u.pathname);
-    const safe=publicRead||/^\/(?:me|users|nick-check|weekly|rank|ranking|problems(?:\/\d+)?|submissions(?:\/\d+)?|lab\/(?:bootstrap|active|tokens|sessions(?:\/\d+)?))$/.test(u.pathname);
-    const ttl=publicRead?u.pathname==='/health'||u.pathname==='/pay/config'||u.pathname==='/lab/contest/catalog'?300000:u.pathname==='/boards'?30000:u.pathname==='/lab/stats'?15000:5000:0;
+    const profileRead=/^\/users(?:\/[^/]+)?$/.test(u.pathname),publicRead=publicPaths.has(u.pathname)||profileRead;
+    const safe=publicRead||/^\/(?:me(?:\/(?:stats|identities|overview))?|users|nick-check|weekly|rank|ranking|problems(?:\/\d+)?|submissions(?:\/\d+)?|lab\/(?:bootstrap|active|tokens|sessions(?:\/\d+)?))$/.test(u.pathname);
+    const ttl=publicRead&&!profileRead?u.pathname==='/health'||u.pathname==='/pay/config'||u.pathname==='/lab/contest/catalog'?300000:u.pathname==='/boards'?30000:u.pathname==='/lab/stats'?15000:5000:0;
     return{safe,public:publicRead,ttl};
   }
   function canonicalPath(path){const u=new URL(path,'https://api.invalid');u.searchParams.sort();return u.pathname+u.search;}
   const clone=value=>value===undefined?value:typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
+  const family=path=>{const p=new URL(path,'https://api.invalid').pathname;return /^\/(posts|boards|comments|users)(\/|$)/.test(p)?'community':/^\/(weekly|rank|ranking|problems|submissions)(\/|$)/.test(p)||/^\/me\/(overview|stats)$/.test(p)?'arena':/^\/lab(\/|$)/.test(p)?'lab':p;};
+  function mutationFamilies(path){
+    const p=new URL(path,'https://api.invalid').pathname;
+    if(/^\/(me|signup|login|logout|oauth)(\/|$)/.test(p))return['community','arena'];
+    if(/^\/(posts|comments)(\/|$)/.test(p))return['community'];
+    if(/^\/(?:admin\/)?(?:problems|submissions)(\/|$)/.test(p))return['arena'];
+    if(/^\/(?:admin\/)?lab(\/|$)/.test(p))return['lab'];
+    return[];
+  }
   function createRequestCache({now=Date.now,maxEntries=100}={}){
-    const values=new Map(),pending=new Map();let generation=0,scope='',freshUntil=0;
-    function invalidate(fresh=false){generation++;values.clear();pending.clear();if(fresh)freshUntil=now()+30000;}
+    const values=new Map(),pending=new Map(),freshUntil=new Map();let generation=0,scope='';
+    function invalidate(){generation++;values.clear();pending.clear();freshUntil.clear();}
+    function changed(path){
+      generation++;pending.clear();
+      const affected=mutationFamilies(path);
+      for(const [key,value] of values)if(affected.includes(value.family))values.delete(key);
+      for(const group of affected)freshUntil.set(group,now()+30000);
+    }
     function run({method='GET',path,base='',token='',lang=''},send){
       method=String(method).toUpperCase();
       const next=JSON.stringify([base,token,lang]);
       if(scope!==next){scope=next;invalidate();}
       const policy=requestPolicy(method,path);
-      if(method!=='GET'){invalidate(true);return Promise.resolve().then(send).finally(()=>invalidate(true));}
+      if(method!=='GET'){changed(path);return Promise.resolve().then(send).finally(()=>changed(path));}
       if(!policy.safe)return Promise.resolve().then(send);
       const key=next+' '+canonicalPath(path),cached=values.get(key);
       if(cached&&cached.until>now())return Promise.resolve(clone(cached.value));
@@ -33,9 +48,10 @@
       let p=pending.get(key);
       if(!p){
         const at=generation;
-        p=Promise.resolve().then(()=>send({bypassCache:policy.public&&now()<freshUntil})).then(value=>{
+        const group=family(path);
+        p=Promise.resolve().then(()=>send({bypassCache:(policy.public||group==='arena')&&now()<(freshUntil.get(group)||0)})).then(value=>{
           if(at===generation&&policy.ttl>0){
-            values.delete(key);values.set(key,{until:now()+policy.ttl,value:clone(value)});
+            values.delete(key);values.set(key,{until:now()+policy.ttl,value:clone(value),family:group});
             while(values.size>maxEntries)values.delete(values.keys().next().value);
           }
           return value;
