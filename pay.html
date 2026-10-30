@@ -28,7 +28,8 @@
 <div class="card" id="box"><h1>결제를 확인하는 중…</h1><p>잠시만 기다려 주세요. 이 창을 닫지 마세요.</p></div>
 <script>
 "use strict";
-const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
+const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
+function apiBase(){let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;}
 const Q = new URLSearchParams(location.search), en = (() => { try { return localStorage.getItem("hlLang") === "en"; } catch (e) { return false; } })();
 const T = en ? { checking: "Checking the payment…", ok: "Payment complete", got: (n, t) => `${n} token${n > 1 ? "s" : ""} added · you have ${t}`, bad: "The payment did not go through",
     canceled: "You cancelled the payment.", back: "Back to exam mode", login: "Please sign in on this browser and try again.", again: "No money was taken for a payment that was not confirmed.",
@@ -45,8 +46,8 @@ const show = (cls, h, lines) => { document.getElementById("box").innerHTML = `<h
   if (Q.get("_ptxn")) return paddleLink(Q.get("_ptxn"));
   if (Q.get("paddle")) return paddleDone();
   if (!Q.get("paymentKey")) return show("bad", T.bad, [Q.get("code") === "PAY_PROCESS_CANCELED" ? T.canceled : (Q.get("message") || ""), T.again]);
-  let api = COMMUNITY_API, tok = "";
-  try { api = (localStorage.getItem("hlCmApi") || COMMUNITY_API).replace(/\/+$/, ""); tok = localStorage.getItem("hlCmTok") || ""; } catch (e) {}
+  const api=apiBase();let tok = "";
+  try { tok = localStorage.getItem("hlCmTok") || ""; } catch (e) {}
   if (!tok) return show("bad", T.bad, [T.login]);
   try {
     const r = await fetch(api + "/api/pay/confirm", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + tok },
@@ -59,8 +60,7 @@ const show = (cls, h, lines) => { document.getElementById("box").innerHTML = `<h
 /* a Paddle payment link: open the checkout for its transaction here */
 async function paddleLink(txn) {
   document.querySelector("#box h1").textContent = T.opening;
-  let api = COMMUNITY_API;
-  try { api = (localStorage.getItem("hlCmApi") || COMMUNITY_API).replace(/\/+$/, ""); } catch (e) {}
+  const api=apiBase();
   try {
     const c = await (await fetch(api + "/api/pay/config")).json();
     if (!c.paddle) throw new Error("paddle_off");
@@ -74,8 +74,8 @@ async function paddleLink(txn) {
   } catch (e) { show("bad", T.bad, [String(e && e.message || e), T.again]); }
 }
 async function paddleDone() {
-  let api = COMMUNITY_API, tok = "";
-  try { api = (localStorage.getItem("hlCmApi") || COMMUNITY_API).replace(/\/+$/, ""); tok = localStorage.getItem("hlCmTok") || ""; } catch (e) {}
+  const api=apiBase();let tok = "";
+  try { tok = localStorage.getItem("hlCmTok") || ""; } catch (e) {}
   if (!tok) return show("bad", T.bad, [T.login]);
   for (let i = 0; i < 12; i++) {
     try {

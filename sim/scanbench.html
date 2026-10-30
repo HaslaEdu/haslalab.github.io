@@ -47,7 +47,8 @@
 </div>
 <script type="module">
 import { detectQuad, solveHomography, MARKER_INSET } from "./labscan/scanner.js";
-const API = (() => { try { return (localStorage.getItem("hlCmApi") || "https://haslalab-community.haslalab.workers.dev").replace(/\/+$/, ""); } catch (e) { return "https://haslalab-community.haslalab.workers.dev"; } })();
+const COMMUNITY_API="https://haslalab-community-edge.haslalab.workers.dev";
+const API = (() => { let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; })();
 const TOK = (() => { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } })();
 const COL = { haslalab: "#57ab5a", gemini: "#4c8bf5", openai: "#c678dd", claude: "#e5534b", upstage: "#56b6c2", gt: "#f2c14e" };
 const $ = id => document.getElementById(id);

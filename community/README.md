@@ -4,6 +4,8 @@
 
 현재 배포는 `.github/workflows/deploy-worker.yml`과 `wrangler deploy`를 사용합니다. ESM 의존 모듈, D1, R2, `LAB_JOBS` 큐를 함께 유지해야 하므로 아래의 과거 대시보드 붙여넣기 안내 대신 이 워크플로를 사용하세요. 배포 전 `provision-jobs.mjs`가 기존 자격 증명으로 작업 큐를 준비하며 권한·통신 오류는 배포를 중단합니다. 고정된 추가 작업 테이블은 기존 D1 바인딩에서 한 번 초기화하므로 배포 토큰에 D1 관리·가져오기 권한을 추가할 필요가 없습니다. 성능 원칙과 확인 방법은 [PERFORMANCE.md](../PERFORMANCE.md)에 있습니다.
 
+브라우저의 현재 기본 API는 `https://haslalab-community-edge.haslalab.workers.dev`입니다. 이 엣지 Worker는 공개 캐시와 사전 요청을 가까운 위치에서 처리하고, 나머지는 Service Binding으로 기존 `haslalab-community` Worker에 전달합니다. 기존 Worker는 실측된 D1 primary(HKG) 가까이 배치되며 OAuth·결제·채점 Secrets와 작업 큐를 유지합니다. 공개 API의 기존 주소도 호환성을 위해 유지하며 등록된 OAuth 콜백·결제 webhook 주소는 바꾸지 않습니다. 배포 순서는 기존 Worker, `wrangler.edge.toml`의 엣지 Worker, PDF Worker입니다.
+
 ## 2026-10-30: 하슬라논술과 같은 스캔 · Upstage 원문 처리
 
 하슬라논술 저장소의 고정 버전 `24b8036037cb227237bd2fe75023f7b4d7472ef0`을 기준으로 촬영·전처리·Upstage 요청과 응답 처리를 맞췄습니다. 휴대폰 스캔, PC 검토용 사진·PDF, 주간 문제 사진 답안이 같은 스캐너를 사용합니다. 원문·수식은 그대로 보존하고 채점 입력에도 전달하며, Gemini는 기존 채점에 필요한 항목·그림 구조화를 보조합니다. OCR 오류가 나면 다른 엔진의 재필사로 조용히 대체하지 않습니다.

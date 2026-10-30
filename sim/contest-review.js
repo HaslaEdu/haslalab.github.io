@@ -6,7 +6,8 @@
 })(typeof globalThis==='object'?globalThis:this,function(){
   'use strict';
   const Network=typeof module==='object'&&module.exports?require('./exam-network.js'):window.HLExamNetwork;
-  const DEFAULT_API='https://haslalab-community.haslalab.workers.dev';
+  const DEFAULT_API='https://haslalab-community-edge.haslalab.workers.dev';
+  const apiBase=value=>{const base=String(value||DEFAULT_API).replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?DEFAULT_API:base;};
   const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
   const MAX_IMAGE=1850000,MAX_PAGES=40;
   const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -27,7 +28,7 @@
     return lang!=='en'?(storage?'사진은 보관했습니다. 사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.':'사진은 보관했지만 글자를 읽지 못했습니다. 원본을 확인하고 필요하면 다시 촬영해 주세요.'):(storage?'The photo was saved. The photo and full recognized text exceed the storage limit. Reduce the file size and upload again.':'The photo was saved, but its text could not be read. Check the original and retake it if needed.');
   }
   function createClient({fetch:fetcher,getToken,getBase}={}){
-    const base=()=>String(getBase?getBase():DEFAULT_API).replace(/\/+$/,'');
+    const base=()=>apiBase(getBase?getBase():DEFAULT_API);
     const transport=Network.createTransport({fetch:fetcher,getToken,getBase:base}),request=transport.request;
     return {
       request,fingerprint:transport.fingerprint,
@@ -95,7 +96,7 @@
     const read=(k,fallback)=>{try{return JSON.parse(storage.getItem(k)||'null')||fallback;}catch(_){return fallback;}};
     const write=(k,value)=>{try{storage.setItem(k,JSON.stringify(value));}catch(_){}};
     const getToken=()=>{try{return storage.getItem('hlCmTok')||'';}catch(_){return '';}};
-    const getBase=()=>{try{return storage.getItem('hlCmApi')||DEFAULT_API;}catch(_){return DEFAULT_API;}};
+    const getBase=()=>{try{return apiBase(storage.getItem('hlCmApi'));}catch(_){return DEFAULT_API;}};
     const client=createClient({fetch:options.fetch,getToken,getBase});
     const key=storageKey(entry,options.runId),numbers=taskNumbers(entry),answers=mapAnswers(entry,options.answers||options.localAnswers||{}),tasks=numbers.map(n=>'Q'+n);
     let alive=true,session=options.session||null,contest=options.contest||null,tokens=null,busy='',error='',approved=false,uploadCode=options.token||'',queue=[],poller=null,clock=null,qrUrl='',revision=0,skew=0,needsLogin=false;

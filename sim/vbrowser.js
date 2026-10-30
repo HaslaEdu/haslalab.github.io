@@ -190,7 +190,7 @@
   const META = new Map();
   const ytFind = (id) => YT.find((v) => v[0] === id) || META.get(id);
   YT_CAT.web = ["YouTube 검색", "From search"];
-  const YT_API = () => (window.HL_COMMUNITY_API || "https://haslalab-community.haslalab.workers.dev") + "/api/yt/";
+  const YT_API = () => {const base=(window.HL_COMMUNITY_API||"https://haslalab-community-edge.haslalab.workers.dev").replace(/\/+$/,"");return (base==="https://haslalab-community.haslalab.workers.dev"?"https://haslalab-community-edge.haslalab.workers.dev":base)+"/api/yt/";};
   const fmtViews = (n, k) => { n = +n || 0;
     if (k) return "조회수 " + (n >= 1e8 ? (n / 1e8).toFixed(n < 1e9 ? 1 : 0) + "억" : n >= 1e4 ? (n / 1e4).toFixed(n < 1e5 ? 1 : 0) + "만" : n >= 1e3 ? (n / 1e3).toFixed(1) + "천" : n) + "회";
     return (n >= 1e9 ? (n / 1e9).toFixed(1) + "B" : n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(n < 1e4 ? 1 : 0) + "K" : n) + " views"; };

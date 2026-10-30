@@ -10,6 +10,7 @@ import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
+import { ensureWeeklyContent } from './weekly-content.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -1030,6 +1031,9 @@ async function accountOverview(env, me, req) {
 async function arena(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
+  if ((p === '/api/weekly' && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
+    await ensureWeeklyContent(env.DB, env[DB_SCOPE] || env.DB);
+  }
   if (p === "/api/weekly" && m === "GET") {
     const t = now(), week = url.searchParams.get("week") || "";
     const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : 'opens_at<=? AND closes_at>?', args = week ? [week, t] : [t, t];

@@ -200,8 +200,8 @@
       "height_pt": 119.625,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "78152c3e068f3e780372a020f777d91311c6f91190dbddf4b7afc8a9df4f3fdf",
-      "pdf_sha256": "e0f91747ae949403044ba91a4c1b15e28cd7f96d3cf290915aa3897ebd736d02",
+      "sha256": "8be0d972c5ae706d8b396d301167cd82df02242e4be8edd9250d019570dae26d",
+      "pdf_sha256": "a0f856961462a63b6dbecfeddebf8e6434e1ec8002d7bcdf7001e2d54ae88f93",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -218,7 +218,7 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 3,
+      "native_geometry_revision": 4,
       "content_bbox_pt": [
         18.026615142822266,
         4.585093975067139,
@@ -238,7 +238,8 @@
         ]
       },
       "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
-      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
+      "review_proof": "tmp/kphe_redraw_cd_qa/followup3/print-point-proof.pdf",
+      "followup_review": "Only fixed-body label moved 12 design units (8.7pt) left toward the visible gray body center; geometry unchanged."
     },
     "8ccf2735804b491b": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q8-8ccf2735804b491b.svg",
@@ -301,8 +302,8 @@
       "height_pt": 165.0769230769231,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "3a455fe9e7bda0eab20ed04b757fab6be570287f53ed9535495d523f04dd3300",
-      "pdf_sha256": "66fd2537adcaa48889fc2e644f71050a4e1c6751fd8bc266db2cfc79761b4f42",
+      "sha256": "5de71a8fdc2c7f190080d89ef7670da3677433eb531b98e56f8bacd57ac8a326",
+      "pdf_sha256": "b67258c5917c68c76e64c0e1e1cc0b08ba3a5bb76c5c2794e62947cad1494dec",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -319,18 +320,25 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 4,
       "content_bbox_pt": [
         18.5794,
         6.2428,
         226.2585,
         164.5307
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [
+          9.8
+        ],
+        "math": [
+          9.8
+        ]
+      },
+      "followup_review": "Original four open process arrowheads restored at endpoint tangents. Removed extra straight arrow shafts on curved adiabats. Underlying curve/vertical geometry and labels unchanged.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/followup3/print-point-proof.pdf"
     },
     "0c9b3d7ba6e3cae4": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q10-0c9b3d7ba6e3cae4.svg",
@@ -531,8 +539,8 @@
       "height_pt": 99.0,
       "recommended_width_pt": 180.0,
       "font_profile": "HancomEQN",
-      "sha256": "d80244d2b1a9881bd1eb02ac6587e8de8a564d29293409ccd39bba71c91ae302",
-      "pdf_sha256": "995992f4eb80c6b8cfc5c54e72dc753e8d3c4e53f64062937b850c691cc0e03d",
+      "sha256": "661a940d3d802170730a0d4bc2e8d0a974ecaa8771ab8e5a48a10f203ef577e7",
+      "pdf_sha256": "a32e3e45dd00d92fe7187e0d0f70528d3a09d2f64361146de67a8f01dac1dd5c",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -549,7 +557,7 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 3,
+      "native_geometry_revision": 4,
       "content_bbox_pt": [
         6.75,
         3.563999891281128,
@@ -568,7 +576,8 @@
         ]
       },
       "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
-      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
+      "review_proof": "tmp/kphe_redraw_cd_qa/followup3/print-point-proof.pdf",
+      "followup_review": "Support endpoint now equals pulley center (164.76,16.3); support drawn to center after white wheel so the axle contact is visible. Source-scaled support vector (11.90,-12.77). All other geometry unchanged."
     },
     "3ce0938d42699c40": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q16-3ce0938d42699c40.svg",
@@ -2144,5 +2153,5 @@
       "restricted_4_5_17_report": "tmp/kphe_redraw_cd_qa/detail-restricted-scope-audit.json"
     }
   },
-  "generator_sha256": "03dea84bf80da7fdabab7f0e046c37dc7817fc80c0c5610651dac3e077a10473"
+  "generator_sha256": "197704a3c121b0c16d0ed085144aa757e55ffc061e00e9acd509318d0c37d6c6"
 }

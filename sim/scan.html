@@ -84,7 +84,7 @@
 <script type="module">
 import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
 
-const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
+const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
 const MAX_BYTES = 1850000;
 /* the token is taken out of the address bar (and of anything that copies it) once read, and kept for this
    tab only, so a reload still works */
@@ -95,7 +95,7 @@ try {
 } catch (e) {}
 /* the link holds one code (c=), made of the time and random digits; older links named the session (s=) beside it (k=) */
 const SID = +H.get("s") || 0, KEY = H.get("c") || H.get("k") || "", UP = SID ? `/lab/up/${SID}` : "/lab/up";
-const API = (H.get("a") || COMMUNITY_API).replace(/\/+$/, "");
+const requestedAPI=(H.get("a") || COMMUNITY_API).replace(/\/+$/, ""),API=requestedAPI==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:requestedAPI;
 let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.language || "").startsWith("ko") ? "ko" : "en";
 
 const T = {

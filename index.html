@@ -805,6 +805,10 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arprob{background:#fff;border:1px solid var(--cm-line);border-radius:12px;padding:20px 22px;margin-bottom:14px}
 .ar .arph{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}.ar .arph h1{font-size:1.4rem;margin:2px 0 6px}
 .ar .arstmt{font-size:15.5px;line-height:1.85}
+.ar .arstmt p{margin:0 0 1em}.ar .arstmt h2{font-size:1.15rem;margin:1.8em 0 .8em}.ar .arstmt h3{font-size:1rem;margin:1.4em 0 .6em}
+.ar .arstmt .arformula{min-width:0;max-width:100%;margin:.8em 0}.ar .arstmt .katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.ar .arfigure{margin:1.4em 0;padding:16px;background:#f8fafc;border:1px solid var(--cm-line);border-radius:8px;text-align:center;color:#26334c}
+.ar .arfigure img{display:block;width:100%;max-width:760px;height:auto;margin:0 auto}.ar .arfigure figcaption{font-size:12px;line-height:1.6;margin-top:10px;color:#59667c}
 .ar .arcrit{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}.ar .arcrit span{font-size:12px;background:var(--cm-soft);border:1px solid var(--cm-line);border-radius:7px;padding:4px 9px}
 .ar .arshort{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.ar .arshort input{font:600 16px var(--mono);padding:9px 12px;border:1px solid var(--cm-line);border-radius:8px;width:220px}
 .ar .aressay{display:flex;flex-direction:column;gap:10px}
@@ -1003,7 +1007,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=c99dc395329c"></script>
-<script src="site-catalogue.js?v=a3ea97faecc8"></script>
+<script src="site-catalogue.js?v=91068be8e429"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=938310640469"></script>
@@ -4966,7 +4970,7 @@ function viewComp(key,mode){
     ${archiveResources(c)}
     ${contestNote(key)}
     ${contestResources(key)}
-    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 2023년 기출과 한국 중학생 물리대회 2015년 제2차~2022년 기출·공식 정답 자료를 모았습니다. 중학생 대회는 당시의 별도 시험 체계에 따른 자료입니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, 2023 papers, and Korean Middle-School Physics Competition papers with official answer material from the second 2015 sitting through 2022. The middle-school papers follow their own historical examination system."}</p>`:""}
+    ${key==="kphe"?`<p class="cnote">${kpheSolutionNote(lang==="ko")}</p>`:""}
     ${hasReview(c,key)?modeSwitch(key,mode):""}
     ${mode?`${portalHtml(key,mode)}</div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
@@ -5122,11 +5126,8 @@ function probCard(o){
    w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
    marking scheme where it was published apart */
 const THY_YEARLY=new Set(["baupc","usapho","opho","plancks","eotvos"]);
-function kpheEditionNote(t,year,ko){
-  const y=String(year);
-  if(!y.includes('-'))return ko?'한국 중학생 물리대회 원문을 보존한 A4 학습용 편집본입니다. 당시 교시·시험 안내는 원문 기준입니다.':'A4 study edition of the Korean Middle-School Physics Competition. Original sessions and instructions are preserved.';
-  if(y.startsWith('2023'))return ko?'제공된 2023년 기출을 2026년 A4 양식으로 재편집했습니다. '+esc(t.note||'')+' 본 시험 60분, 정답과 자체 작성 해설을 구분합니다.':'Supplied 2023 papers retypeset in the 2026 A4 layout. Only the supplied levels are included. 60 minutes of working time; answer keys and independent solutions are separate.';
-  return ko?'초급 · 중급 · 고급 · 전문가 전 과정의 공식 문제지 원본입니다. 본 시험 60분, 추가 답안 작성 시간 없음. 정답표와 자체 작성 해설을 별도로 표시합니다.':'Unchanged official papers for all four levels. 60 minutes of working time, with no extra answer-entry period. Answer keys and independent solutions are separate.';
+function kpheSolutionNote(ko){
+  return ko?'해설은 자체 작성 자료이며 한국물리학회 공식 솔루션이 아닙니다.':'The solutions are independently written and are not official Korean Physical Society solutions.';
 }
 function theoryHtml(key,yr){
   const d=UI[lang], t=thyOf(key,yr.y); if(!t) return "";
@@ -5147,7 +5148,7 @@ function theoryHtml(key,yr){
      const paperLanguages=PaperLanguages.files({...f,ko:k}), selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
      const paperSourceType=f.paperSourceTypes?.[selectedLanguage];
      const paperDisplay=P[0]===f.paper&&f.sourcePages?.length?P[0]+"#page="+f.sourcePages[0]:P[0];
-     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,`${f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
+     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
      if(selectedLanguage) P[1]=PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
@@ -5157,8 +5158,8 @@ function theoryHtml(key,yr){
       heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:(many?clip(titles):alt.map(esc).join(" · "))+(archive?`<p><b>${archiveLabels[archive.type]||esc(archive.type)}</b> · ${esc(archive.note)}</p>`:""),
       tags:[TL(compOf(key),"trkThy")].concat(many?[TL(compOf(key),"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
       note:(f.containsSolutions?`<p class="trknote">${t.sourceType==="historical_reprint"?(ko?"선택한 연도의 문제와 다른 회차의 문제·해설이 함께 실린 보고서입니다. 해당 연도 문제 쪽으로 열리며, 이 회차의 해설을 제공하는 것은 아닙니다.":"This report reprints the selected year's problems alongside other years and solutions. The link opens at the relevant pages; a solution to this historical set is not supplied."):(ko?"당시 보고서에 문제와 해설이 함께 실려 있습니다. 학습용 합본이며 해설을 포함합니다.":"This contemporary report includes the problem statements and worked solutions together.")}</p>`:"")+(f.paperNotes?.[selectedLanguage]?`<p class="trknote">${esc(f.paperNotes[selectedLanguage])}</p>`:""),
-       main:[a(paperDisplay,paperLabel,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
-         (K[0]?[a(K[0],t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
+       main:[a(paperDisplay,paperLabel,true,key==="kphe"?"":P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
+         (K[0]?[a(K[0],key==="kphe"?(ko?"답안":"Answers"):t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
        docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
@@ -5185,7 +5186,7 @@ function theoryHtml(key,yr){
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
       ${t.solutionPage?`<a class="genlink" href="${esc(t.solutionPage)}" target="_blank" rel="noopener">${ko?"공개 해설 · 웹":"Published solutions · web"}</a>`:""}
     </div>
-     ${key==="kphe"&&t.sourceType!=="recall"?`<p class="trknote">${kpheEditionNote(t,yr.y,ko)} <a href="https://kphe.kps.or.kr/" target="_blank" rel="noopener">${ko?"공식 안내":"Official information"}</a></p>`:""}
+     ${key==="kphe"?`<p class="trknote">${kpheSolutionNote(ko)}</p>`:""}
      ${t.sourceType==="recall"?`<p class="trknote"><b>${ko?"비공식 복기·재수록 자료":"Unofficial recollection / reprint"}</b><br>${esc(t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"작성자 원문·출처":"Author and source"}</a>`:""}</p>`:""}
      ${['report_reprint','historical_reprint'].includes(t.sourceType)?`<p class="trknote"><b>${ko?"학술지·대회 보고서 재수록":"Journal / competition report"}</b><br>${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"자료 출처":"Source archive"}</a>`:""}</p>`:""}
      ${t.note&&!['recall','report_reprint','historical_reprint'].includes(t.sourceType)&&key!=="kphe"?`<p class="trknote">${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note)}</p>`:""}
@@ -8352,7 +8353,7 @@ function startHero(){
    개념글 (DC Inside, Arca), a card view with up/down votes and threaded
    replies (Reddit).
    ══════════════════════════════════════════════════════════════ */
-const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";   // Cloudflare Worker in /community
+const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 /* The community's live chat is the real «Physics Olympiads» Discord server (olympiad students from everywhere).
@@ -8514,7 +8515,8 @@ try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }cat
 
 function cmBase(){
   let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
-  return (o||COMMUNITY_API).replace(/\/+$/,"");
+  const base=(o||COMMUNITY_API).replace(/\/+$/,"");
+  return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;
 }
 const cmRequestCache=window.HL_RUNTIME?.createRequestCache()||null;
 function cmInvalidate(){cmRequestCache?.invalidate();cm.boards=null;}

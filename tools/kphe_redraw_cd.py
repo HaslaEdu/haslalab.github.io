@@ -177,7 +177,7 @@ def t1c5():
 
 @figure('T1c',7)
 def t1c7():
- s=SVG(320,165,label_policy='relative');cylinder(s,94,85,78,140,'#7e7e7e');cylinder(s,177,90,61,89,'#b5b0ac');s.text('고정됨',123,89,10)
+ s=SVG(320,165,label_policy='relative');cylinder(s,94,85,78,140,'#7e7e7e');cylinder(s,177,90,61,89,'#b5b0ac');s.text('고정됨',111,89,10)
  # The force stops on the left curved surface, rather than inside the body.
  s.arrow(10,83,63.21,83,12,'#aaa',15);s.arrow(309,83,257.6,83,12,'#aaa',15);s.text('힘 N',34,87,10);s.text('힘 N',284,87,10)
  s.text('접촉면',243,14,10);s.text('운동마찰계수',259,27,10);s.math(r'\mu',307,27,11)
@@ -194,9 +194,14 @@ def t1c8():
 @figure('T1c',9)
 def t1c9():
  s=SVG(260,185);s.arrow(18,165,253,165);s.arrow(33,180,33,8);s.math('P',24,15);s.math('V',250,180)
- s.line(88,165,88,104,dash='3 2');s.line(191,165,191,135,dash='3 2');s.arrow(88,103,88,29)
- s.path('M88,29 C115,48 143,63 191,72');s.arrow(174,69,191,72);s.arrow(191,72,191,135)
- s.path('M191,135 C148,131 113,119 88,103');s.arrow(104,114,88,103)
+ # Process arrows in the original are open heads placed on the endpoint
+ # tangents, not extra straight arrow shafts laid across the curved paths.
+ def process_head(x,y,dx,dy):
+  length=math.hypot(dx,dy);ux,uy=dx/length,dy/length;head=7;half=3.6
+  s.poly([(x-head*ux+half*uy,y-head*uy-half*ux),(x,y),(x-head*ux-half*uy,y-head*uy+half*ux)],.95)
+ s.line(88,165,88,104,dash='3 2');s.line(191,165,191,135,dash='3 2');s.line(88,103,88,29);process_head(88,29,0,-1)
+ s.path('M88,29 C115,48 143,63 191,72');process_head(191,72,48,9);s.line(191,72,191,135);process_head(191,135,0,1)
+ s.path('M191,135 C148,131 113,119 88,103');process_head(88,103,-25,-16)
  s.text('등적가열',60,65,11);s.text('(점화)',60,79,11);s.text('단열팽창',149,37,11);s.text('등적냉각',223,105,11);s.text('단열압축',140,145,11)
  s.math('V_i',88,182);s.math('V_f=rV_i',191,182,12);return s
 
@@ -245,7 +250,7 @@ def t1c13():
 def t1c14():
  s=SVG(200,110,width_pt=180);s.rect(7.5,90.75,185.9,12.34,'#ddd');s.rect(49.78,29.07,103.08,62.11,'#eee');s.rect(85.46,3.96,31.72,25.11);s.math('m_1',101.3,21,point_size=13.5);s.text('M',101,65,point_size=14.5)
  # A supported circular pulley; the rope is tangent to its top and right.
- s.line(152.86,29.07,164.76,20.7);s.circle(164.76,16.3,4.4,'white');s.line(117.18,11.9,164.76,11.9);s.arc(164.76,16.3,4.4,4.4,-90,0);s.line(169.16,16.3,169.16,48.9)
+ s.circle(164.76,16.3,4.4,'white');s.line(152.86,29.07,164.76,16.3);s.line(117.18,11.9,164.76,11.9);s.arc(164.76,16.3,4.4,4.4,-90,0);s.line(169.16,16.3,169.16,48.9)
  s.rect(153.74,48.9,31.28,24.67);s.math('m_2',169.4,66.3,point_size=13.5);s.arrow(7.5,57.7,43.6,57.7);s.math('F',25,51.5,point_size=12);return s
 
 @figure('T1c',16)
