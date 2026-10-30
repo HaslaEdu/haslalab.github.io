@@ -1,5 +1,34 @@
 [
   {
+    "file": "CPhO_2006_T_EN.pdf",
+    "pages": 4,
+    "bytes": 370899,
+    "sha256": "e67564d060e0c6ead3bac24b65d6af1c0a8d34325d991c892e492bf0f70c850c",
+    "qa": "tools/ko/cpho/2006/original/qa-en.json",
+    "generated_file": "tmp/original-style-repair/2006/editions/CPhO_2006_T_EN.pdf",
+    "audit_schema": "cpho-native-raster-problems",
+    "language": "en",
+    "poppler_qa": "tools/ko/cpho/2006/original/qa-poppler.json",
+    "raster_caption_provenance": "tools/ko/cpho/2006/original/raster-caption-provenance.json",
+    "source_notes": "tools/ko/cpho/2006/original/source-notes.json",
+    "aliases": [
+      "CPhO_2006_T_BAUPC_EN.pdf"
+    ]
+  },
+  {
+    "file": "CPhO_2006_T_KO.pdf",
+    "pages": 4,
+    "bytes": 551434,
+    "sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+    "qa": "tools/ko/cpho/2006/original/qa-ko.json",
+    "generated_file": "tmp/original-style-repair/2006/editions/CPhO_2006_T_KO.pdf",
+    "audit_schema": "cpho-native-raster-problems",
+    "language": "ko",
+    "poppler_qa": "tools/ko/cpho/2006/original/qa-poppler.json",
+    "raster_caption_provenance": "tools/ko/cpho/2006/original/raster-caption-provenance.json",
+    "source_notes": "tools/ko/cpho/2006/original/source-notes.json"
+  },
+  {
     "file": "CPhO_2007_T_EN.pdf",
     "pages": 4,
     "bytes": 575812,
@@ -33,6 +62,14 @@
     "sha256": "570cd8a1430268a73e7261cfea0158740c7f70291bc89c72b9cefbaa3e2b001f",
     "qa": "tools/qa/original-style/IZhO_2010_T_KO.qa.json",
     "generated_file": "pdfx/izho/original-style/IZhO_2010_T_KO.pdf"
+  },
+  {
+    "file": "IZhO_2011_T_KO.pdf",
+    "pages": 6,
+    "bytes": 3483002,
+    "sha256": "f0ee3c03e8f655f81b5b646987eaaba9804fe5e982a4f2bd5e64201ad5a15af3",
+    "qa": "tools/qa/original-style/IZhO_2011_T_KO.qa.json",
+    "generated_file": "pdfx/izho/original-style/IZhO_2011_T_KO.pdf"
   },
   {
     "file": "IZhO_2013_T_KO.pdf",

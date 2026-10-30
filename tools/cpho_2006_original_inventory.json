@@ -1,0 +1,71 @@
+{
+  "year": 2006,
+  "status": "READY",
+  "source": "CPhO_2006_T_ZH.pdf",
+  "source_sha256": "4ca77258299918a44f26320027466b81cc70c97e7e467ee190282be0f4516042",
+  "source_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "problems": 6,
+  "source_solution_available": false,
+  "prose_slots": 238,
+  "raster_caption_characters_translated": 2,
+  "redrawn_figures": 0,
+  "new_edition_labels": 0,
+  "printed_editorial_notes": 0,
+  "files": [
+    {
+      "file": "CPhO_2006_T_KO.pdf",
+      "path": "tmp/original-style-repair/2006/editions/CPhO_2006_T_KO.pdf",
+      "language": "ko",
+      "pages": 4,
+      "bytes": 551434,
+      "sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+      "qa": "tools/ko/cpho/2006/original/qa-ko.json"
+    },
+    {
+      "file": "CPhO_2006_T_EN.pdf",
+      "path": "tmp/original-style-repair/2006/editions/CPhO_2006_T_EN.pdf",
+      "language": "en",
+      "pages": 4,
+      "bytes": 370899,
+      "sha256": "e67564d060e0c6ead3bac24b65d6af1c0a8d34325d991c892e492bf0f70c850c",
+      "qa": "tools/ko/cpho/2006/original/qa-en.json"
+    }
+  ],
+  "authoring_files": [
+    "tools/cpho_2006_original_build.py",
+    "tools/cpho_2006_original_captions.py",
+    "tools/cpho_2006_original_qa.py",
+    "tools/cpho_original_style.py",
+    "tools/cpho_cjk_translate.py",
+    "tools/pdf_original_text_ops.py",
+    "tools/pdf_original_style_fonts.py",
+    "tools/pdf_original_style_audit.py",
+    "tools/pdf_hangul_visibility.py",
+    "tools/izho_native_math_audit.py",
+    "tools/ko/cpho/2006/original/fixed-slot-fit.json",
+    "tools/ko/cpho/2006/original/page01.tsv",
+    "tools/ko/cpho/2006/original/page02.tsv",
+    "tools/ko/cpho/2006/original/page03.tsv",
+    "tools/ko/cpho/2006/original/page04.tsv",
+    "tools/ko/cpho/2006/original/qa-en.json",
+    "tools/ko/cpho/2006/original/qa-ko.json",
+    "tools/ko/cpho/2006/original/qa-poppler.json",
+    "tools/ko/cpho/2006/original/raster-caption-provenance.json",
+    "tools/ko/cpho/2006/original/reviewed-pages.json",
+    "tools/ko/cpho/2006/original/source-notes.json"
+  ],
+  "typography": "Source Song mapped to official Noto Serif CJK KR Regular400 in KO, Times New Roman Latin serif in EN. Native source mathematics, font programs, figures, tables and coordinates stay unchanged. Header/footer red16.08pt and title15.12pt Tr2 at0.302pt stroke are retained. Body12pt Tr0 is retained. Raster caption7.44pt is measured, not claimed as exact font metadata.",
+  "validation": "Both languages, all4 pages: fixed-slot fit0; native nonspace glyph font/gid/size/origin/color/render-state bit-exact; font-program and original image-byte/rect identity; 4x MuPDF outside-prose/native-ink/rule changes0; no unexpected Han/NUL/style violations; caption numbers1/2 pixels0; no unexplained diagram pixels; KO unexpected visibility0 (34 source-occluded footer components separately recorded); independent Poppler outside-prose changes0 across8 pages. Every page and caption reviewed visually in both renderers.",
+  "source_notes": "tools/ko/cpho/2006/original/source-notes.json",
+  "review_contacts": [
+    "tmp/original-style-repair/2006/qa/CPhO_2006_T_KO/contact-mupdf.png",
+    "tmp/original-style-repair/2006/qa/CPhO_2006_T_EN/contact-mupdf.png",
+    "tmp/original-style-repair/2006/qa/CPhO_2006_T_KO/contact-poppler.png",
+    "tmp/original-style-repair/2006/qa/CPhO_2006_T_EN/contact-poppler.png"
+  ]
+}
