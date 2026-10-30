@@ -24,7 +24,7 @@ export function contestPublic(s) {
     official: false, grading_mode: "proof_review", entry_url: `sim/contest-exam.html?id=${encodeURIComponent(meta.examId)}&review=${s.id}&lang=${s.lang === "en" ? "en" : "ko"}` } : {};
 }
 const taskOf = (value, tasks) => { const key = String(value).replace(/^q/i, "Q"); return tasks.includes(key) ? key : tasks.includes("Q" + key) ? "Q" + key : null; };
-const capability = env => ({ available: !!env.GEMINI_API_KEY, mode: "proof_review", official: false, cost: 1,
+const capability = env => ({ available: !!env.GEMINI_API_KEY, mode: "proof_review", official: false, cost: 0.3,
   scan_seconds: 1800, requires_scan_confirmation: true, reference: "published_problem", regulation: CONTEST_REG });
 
 // The main Worker supplies the existing auth, ledger, storage, OCR and metering helpers.

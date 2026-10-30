@@ -354,3 +354,119 @@ html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#eb
   body.hl-site header .lang button{padding-left:3px;padding-right:3px}
   body.hl-site #acct .acct-me>span:not(.cmav){max-width:38px}
 }
+
+/* Notices stay above the current page, like a mailbox. Native dialog handles
+   focus trapping, Escape and the inert background. */
+body.hl-site .hl-more{border:0;padding:0;background:none;color:var(--graphite);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+body.hl-site .hl-more:hover{color:var(--laser)}
+body.hl-site .hl-pin-badge{display:inline-block;margin-right:7px;color:#765626;font:600 11px/1.6 var(--sans);white-space:nowrap}
+body.hl-site .hl-mailbox{box-sizing:border-box;width:min(900px,calc(100% - 40px));max-width:none;max-height:min(850px,90vh);max-height:min(850px,90svh);padding:0;border:1px solid #d5cddd;border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 24px 100px #15102040;overflow:hidden}
+body.hl-site .hl-mailbox[open]{display:flex;flex-direction:column}
+body.hl-site .hl-mailbox::backdrop{background:#15102099;backdrop-filter:blur(3px)}
+body.hl-site .hl-mail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:24px 26px 18px;border-bottom:1px solid var(--grid-bold);flex:none}
+body.hl-site .hl-mail-head h2{margin:0;font:650 22px/1.4 var(--sans);letter-spacing:-.025em}
+body.hl-site .hl-mail-head p{margin:6px 0 0;font-size:12px;color:var(--graphite);line-height:1.6}
+body.hl-site .hl-mail-close{display:grid;place-items:center;width:34px;height:34px;padding:0;flex:none;border:1px solid var(--grid-bold);border-radius:7px;background:none;color:var(--ink);font:26px/1 var(--sans);cursor:pointer}
+body.hl-site .hl-mail-tabs{display:flex;gap:7px;padding:14px 26px;flex:none;background:#faf9fc;border-bottom:1px solid var(--grid-bold)}
+body.hl-site .hl-mail-tabs button{padding:7px 16px;border:1px solid transparent;border-radius:20px;background:none;color:var(--graphite);font:500 13px/1.4 var(--sans);cursor:pointer}
+body.hl-site .hl-mail-tabs button[aria-pressed="true"]{border-color:#d7cee6;background:#eee8f8;color:#5c438f}
+body.hl-site .hl-mail-scroll{padding:8px 26px 24px;overflow:auto;overscroll-behavior:contain;min-height:0;scrollbar-gutter:stable}
+body.hl-site .hl-mail-item{border-bottom:1px solid var(--grid-bold)}
+body.hl-site .hl-mail-item summary{display:grid;grid-template-columns:66px minmax(0,1fr) auto 15px;align-items:center;gap:12px;list-style:none;padding:18px 0;cursor:pointer}
+body.hl-site .hl-mail-item summary::-webkit-details-marker{display:none}
+body.hl-site .hl-mail-kind{font-size:11px;color:var(--graphite)}
+body.hl-site .hl-mail-title{font-size:14px;font-weight:600;line-height:1.6;overflow-wrap:anywhere}
+body.hl-site .hl-mail-item summary time{font:11px/1.5 var(--mono);color:var(--graphite);white-space:nowrap}
+body.hl-site .hl-mail-chevron{color:var(--graphite);transition:transform .15s}
+body.hl-site .hl-mail-item[open] .hl-mail-chevron{transform:rotate(180deg)}
+body.hl-site .hl-mail-item.is-pinned .hl-mail-kind{color:#765626;font-weight:650}
+body.hl-site .hl-mail-body{padding:0 0 22px 78px;font-size:14px;line-height:1.85;overflow-wrap:anywhere}
+body.hl-site .hl-mail-body p{margin:0 0 15px}
+body.hl-site .hl-mail-copy{white-space:pre-wrap;margin-bottom:18px}
+body.hl-site .hl-mail-copy a{color:var(--laser);text-decoration:underline;text-underline-offset:3px}
+body.hl-site .hl-mail-actions{display:flex;flex-wrap:wrap;gap:8px}
+body.hl-site .hl-mail-status{font-size:12px;color:var(--graphite);line-height:1.8;margin:15px 0 0}
+body.hl-site .hl-mail-status:empty{display:none}
+body.hl-site .hl-mail-more{display:block;margin:20px auto 0}
+body.hl-site .hl-mail-more[hidden]{display:none}
+body.hl-site .hl-mailbox :is(button,a,summary):focus-visible{outline:2px solid var(--laser);outline-offset:4px;border-radius:5px}
+html[data-theme="dark"] body.hl-site .hl-mailbox{background:#1d1826;border-color:#51435f;box-shadow:0 24px 100px #0008}
+html[data-theme="dark"] body.hl-site .hl-mail-tabs{background:#251e30}
+html[data-theme="dark"] body.hl-site .hl-mail-tabs button[aria-pressed="true"]{background:#3d2e50;color:#e0c7ff;border-color:#69517f}
+html[data-theme="dark"] body.hl-site .hl-pin-badge,
+html[data-theme="dark"] body.hl-site .hl-mail-item.is-pinned .hl-mail-kind{color:#dfbc79}
+@media(max-width:600px){
+  body.hl-site .hl-mailbox{width:calc(100% - 16px);max-height:94vh;max-height:94svh;border-radius:10px}
+  body.hl-site .hl-mail-head{padding:18px 16px 15px;gap:10px}
+  body.hl-site .hl-mail-head h2{font-size:19px}
+  body.hl-site .hl-mail-tabs{padding:11px 16px}
+  body.hl-site .hl-mail-tabs button{padding:6px 13px;font-size:12px}
+  body.hl-site .hl-mail-scroll{padding:4px 16px 20px}
+  body.hl-site .hl-mail-item summary{grid-template-columns:minmax(0,1fr) auto 13px;gap:5px 9px;padding:15px 0}
+  body.hl-site .hl-mail-kind{grid-column:1;grid-row:1}
+  body.hl-site .hl-mail-title{grid-column:1/3;grid-row:2;font-size:13px}
+  body.hl-site .hl-mail-item summary time{grid-column:2;grid-row:1;font-size:10px}
+  body.hl-site .hl-mail-chevron{grid-column:3;grid-row:1/3}
+  body.hl-site .hl-mail-body{padding:0 0 19px;font-size:13px}
+}
+
+/* Public leaderboards keep the profile identity and score visible at every width. */
+body.hl-site .ar .ar-rank-panel{padding:0;overflow:hidden}
+body.hl-site .ar .ar-rank-panel>.arempty{padding:24px 16px}
+body.hl-site .ar .ar-rank-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+body.hl-site .ar .ar-rank-table caption{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+body.hl-site .ar .ar-rank-table th{padding:12px 10px;background:#f7f8fc;border-bottom:1px solid var(--grid-bold);color:var(--graphite);font-size:12px;font-weight:600;text-align:center}
+body.hl-site .ar .ar-rank-table td{padding:14px 10px;border-bottom:1px solid var(--grid,#e6eaf0);text-align:center;color:var(--graphite);font-variant-numeric:tabular-nums;vertical-align:middle}
+body.hl-site .ar .ar-rank-table tbody tr:last-child td{border-bottom:0}
+body.hl-site .ar .ar-rank-table tbody tr:hover td{background:#f8f7fc}
+body.hl-site .ar .ar-rank-table .ar-rank-number{width:52px}
+body.hl-site .ar .ar-rank-table .ar-rank-user{text-align:left;padding-left:14px}
+body.hl-site .ar .ar-rank-table .ar-rank-tier{width:144px}
+body.hl-site .ar .ar-rank-table .ar-rank-score{width:94px;text-align:right}
+body.hl-site .ar .ar-rank-table .ar-rank-score b{font-size:16px;color:var(--ink)}
+body.hl-site .ar .ar-rank-table .ar-rank-solved-cell{width:78px}
+body.hl-site .ar .ar-rank-position{display:inline-grid;place-items:center;min-width:24px;color:var(--graphite);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+body.hl-site .ar .ar-rank-person{display:flex;align-items:center;gap:12px;min-width:0;color:var(--ink);text-decoration:none;border-radius:6px}
+body.hl-site .ar .ar-rank-person:visited{color:var(--ink)}
+body.hl-site .ar .ar-rank-person:hover .ar-rank-name{text-decoration:underline;text-underline-offset:3px}
+body.hl-site .ar .ar-rank-person:focus-visible{outline:2px solid var(--laser,#7059a4);outline-offset:4px}
+body.hl-site .ar .ar-rank-person .ar-rank-avatar{width:42px;height:42px;flex:0 0 42px;object-fit:cover;object-position:center;border:1px solid var(--grid-bold);border-radius:50%;overflow:hidden}
+body.hl-site .ar .ar-rank-person .ar-rank-avatar-default{display:grid;place-items:center;background:#eaf0f7;color:#73829a}
+body.hl-site .ar .ar-rank-avatar-default svg{width:28px;height:28px;fill:currentColor}
+body.hl-site .ar .ar-rank-person .ar-rank-identity{display:block;min-width:0;flex:1;overflow:visible;white-space:normal}
+body.hl-site .ar .ar-rank-person .ar-rank-name{display:block;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;font-size:15px;font-weight:700;line-height:1.4}
+body.hl-site .ar .ar-rank-person .ar-rank-meta{display:flex;align-items:center;flex-wrap:wrap;gap:3px 9px;margin-top:4px;color:var(--graphite);font-size:11px;line-height:1.4}
+body.hl-site .ar .ar-rank-meta .artier{font-size:11px}
+body.hl-site .ar .ar-rank-person .ar-rank-mobile-meta{display:none}
+body.hl-site .ar .ar-rank-top{list-style:none;padding:0;margin:2px 0 14px}
+body.hl-site .ar .ar-rank-top li{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--grid,#e6eaf0)}
+body.hl-site .ar .ar-rank-top li:last-child{border-bottom:0}
+body.hl-site .ar .ar-rank-top li>.ar-rank-position{flex:0 0 22px;overflow:visible}
+body.hl-site .ar .ar-rank-top .ar-rank-person{flex:1;gap:9px}
+body.hl-site .ar .ar-rank-top .ar-rank-avatar{width:36px;height:36px;flex-basis:36px}
+body.hl-site .ar .ar-rank-top .ar-rank-name{font-size:13.5px}
+body.hl-site .ar .ar-rank-top-score{flex:none;text-align:right;line-height:1.35;font-variant-numeric:tabular-nums}
+body.hl-site .ar .ar-rank-top-score b{display:block;color:var(--ink);font-size:15px}
+body.hl-site .ar .ar-rank-top-score small{display:block;color:var(--graphite);font-size:10px}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-table th{background:#25202f;border-color:#3b334a}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-table td,
+html[data-theme="dark"] body.hl-site .ar .ar-rank-top li{border-color:#332b40}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-table tbody tr:hover td{background:#292132}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-person .ar-rank-avatar{border-color:#51435f}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-person .ar-rank-avatar-default{background:#332c40;color:#c2b2d4}
+html[data-theme="dark"] body.hl-site .ar .ar-rank-table .artier[style*="--c:#2d2d2d"],
+html[data-theme="dark"] body.hl-site .ar .ar-rank-top .artier[style*="--c:#2d2d2d"]{color:#b8accb}
+@media(max-width:760px){
+  body.hl-site .ar .ar-rank-table .ar-rank-tier,
+  body.hl-site .ar .ar-rank-table .ar-rank-solved-cell{display:none}
+  body.hl-site .ar .ar-rank-table .ar-rank-number{width:34px}
+  body.hl-site .ar .ar-rank-table .ar-rank-score{width:72px}
+  body.hl-site .ar .ar-rank-table th{padding:11px 7px}
+  body.hl-site .ar .ar-rank-table td{padding:12px 7px}
+  body.hl-site .ar .ar-rank-table .ar-rank-user{padding-left:4px}
+  body.hl-site .ar .ar-rank-table .ar-rank-person{gap:9px}
+  body.hl-site .ar .ar-rank-table .ar-rank-avatar{width:36px;height:36px;flex-basis:36px}
+  body.hl-site .ar .ar-rank-table .ar-rank-name{font-size:14px}
+  body.hl-site .ar .ar-rank-table .ar-rank-mobile-meta{display:flex}
+  body.hl-site .ar .ar-rank-table .ar-rank-score b{font-size:15px}
+}

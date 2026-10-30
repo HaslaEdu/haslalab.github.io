@@ -94,7 +94,7 @@ test('broker interruption leaves a durable outbox, retries recover without charg
   const a=await start(4),sid=a.session.id;await save(sid,4,{5:'Let n be an integer. Recoverable proof.'});brokerDown=true;
   const r=await api(`/lab/sessions/${sid}/submit`,{id:4,body:{}});assert.equal(r.status,200);assert.equal(r.data.session.status,'grading');assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_jobs WHERE session_id=? AND status='pending'").get(sid).n,4);
   brokerDown=false;sql.prepare('UPDATE lab_jobs SET available_at=0 WHERE session_id=?').run(sid);await dispatchLabJobs(env);providerFailure=true;await drain();
-  assert.equal((await api(`/lab/sessions/${sid}`,{id:4})).data.session.status,'graded');assert.equal(sql.prepare('SELECT exam_tokens FROM users WHERE id=4').get().exam_tokens,9);assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
+  assert.equal((await api(`/lab/sessions/${sid}`,{id:4})).data.session.status,'graded');assert.equal(sql.prepare('SELECT exam_tokens FROM users WHERE id=4').get().exam_tokens,9.7);assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
   const b=await start(5);await save(b.session.id,5,{5:'Let n be an integer.'});const missing={...env};delete missing.LAB_JOBS;
   const rejected=await api(`/lab/sessions/${b.session.id}/pay`,{id:5,body:{},settings:missing});assert.equal(rejected.status,503);assert.equal(sql.prepare('SELECT exam_tokens FROM users WHERE id=5').get().exam_tokens,10);
 });

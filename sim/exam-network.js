@@ -47,7 +47,7 @@
     doc?.addEventListener?.('visibilitychange',visibility);
     return{start,stop,wake,reset(){step=0;},dispose(){stop();disposed=true;doc?.removeEventListener?.('visibilitychange',visibility);},getDelay:()=>delays[Math.min(step,delays.length-1)],isRunning:()=>running};
   }
-  function sessionSignature(s){return JSON.stringify(s?[s.id,s.status,s.paid,s.score,s.points,s.graded_at,s.detail,(s.pages||[]).map(p=>[p.id,p.task,p.kind,p.ocr_status,p.legible,p.edited,p.text])]:null);}
+  function sessionSignature(s){return JSON.stringify(s?[s.id,s.status,s.paid,s.cost,s.price_estimate,s.paired_with,s.discount,s.pair_mixed_mode,s.score,s.points,s.graded_at,s.detail,(s.pages||[]).map(p=>[p.id,p.task,p.kind,p.ocr_status,p.legible,p.edited,p.text])]:null);}
   const reading=p=>p?.source!=='typed'&&['queued','reading'].includes(p?.ocr_status);
   return{createTransport,createPoll,sessionSignature,reading};
 });
