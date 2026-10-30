@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Build self-contained SVG display variants without changing official source assets.
 
-Pillow/NumPy are used only for in-memory pixel analysis. The source raster bytes are
-embedded unchanged; exterior-background removal is an SVG vector mask, and dark
-ink adjustments are SVG filters/vector overlays. No derived raster is written.
+Pillow/NumPy are used only for in-memory pixel analysis. Most source raster bytes
+are embedded unchanged; exterior-background removal uses SVG masks and dark ink
+adjustments use SVG filters/vector overlays. Reviewed native display vectors may
+replace raster rendering while retaining the published masters. No raster is edited.
 """
 from __future__ import annotations
 
@@ -24,6 +25,12 @@ ROOT = Path(__file__).resolve().parents[1]
 LOGO = ROOT / "logo"
 INK = "#ded5ee"
 NS = "http://www.w3.org/2000/svg"
+# These display vectors follow the existing artwork; the published raster
+# masters remain available for provenance and fallback.
+DISPLAY_VECTORS = {
+    "kmchc": {"light": "kmchc.svg", "dark": "kmchc-dark.svg"},
+    "wopho": {"light": "wopho.svg", "dark": "wopho.svg"},
+}
 # Reviewed in the actual dark UI. These published marks use very dark colored
 # ink; lift their tone while retaining the source channel ordering and alpha.
 DARK_GAMMA = {"cpho": 0.40, "rupho": 0.40, "ruphow": 0.40, "ruphox": 0.40,
@@ -386,9 +393,41 @@ def svg_variant(data, mime, width, height, view, removed, mode, neutral=None, ga
             ('</g>' + edge["paint"] if edge is not None else '') + '</svg>\n')
 
 
+def build_display_vector(path, width, height, source_sha):
+    spec = DISPLAY_VECTORS.get(path.stem)
+    if not spec:
+        return None
+    views = {}
+    for mode, name in spec.items():
+        source = LOGO / "display" / name
+        data = source.read_text(encoding="utf-8").encode("utf-8")
+        svg = checked_svg(data)
+        if any(node.tag.rsplit("}", 1)[-1] in {"image", "text"} for node in svg.iter()):
+            raise ValueError(f"Display vector must contain paths, not raster images or font-dependent text: {source}")
+        view = [float(v) for v in svg.attrib["viewBox"].replace(",", " ").split()]
+        if len(view) != 4 or min(view[2:]) <= 0:
+            raise ValueError(f"Invalid display vector viewBox: {source}")
+        views[mode] = view
+        (LOGO / mode / (path.stem + ".svg")).write_bytes(data)
+    if views["light"] != views["dark"]:
+        raise ValueError(f"Light and dark vector geometry must match: {path.stem}")
+    view = views["light"]
+    return {"original": path.relative_to(ROOT).as_posix(),
+            "light": f"logo/light/{path.stem}.svg", "dark": f"logo/dark/{path.stem}.svg",
+            "sourceWidth": width, "sourceHeight": height, "viewBox": view,
+            "aspectRatio": round(view[2] / view[3], 6), "mode": "restored-vector",
+            "backgroundRemoved": "transparent-vector", "sourceSha256": source_sha,
+            "displaySources": {mode: "logo/display/" + name for mode, name in spec.items()},
+            "notes": ["Display-only vector restoration follows the existing source silhouette, colors and proportions; it is not an officially supplied vector master.",
+                      "Smooth paths render without enlargement of the low-resolution raster or per-pixel edge rectangles. Published raster source bytes are preserved."]}
+
+
 def build(path: Path):
     data, mime, rgba, width, height, notes = source_image(path)
     source_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+    vector = build_display_vector(path, width, height, source_sha)
+    if vector:
+        return vector
     floor = DARK_FLOOR.get(path.stem, 0)
     if rgba is None:
         removed = None

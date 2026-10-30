@@ -87,5 +87,19 @@
     "width": 538,
     "height": 76,
     "sha256": "43d02864c4d49c585ada4c09fdf557608f22ced0cbcdbdc20162aac66d8f9b04"
+  },
+  {
+    "key": "wopho",
+    "path": "logo/wopho.png",
+    "kind": "competition",
+    "sourcePage": "https://olimpicos.net/files/wopho/WoPhO_2011_Q1.pdf",
+    "notes": "The legacy repository 500x132 raster identity was checked against the rainbow 3D wordmark on the official 2011 paper. The paper embeds an enlarged low-resolution raster, not a usable vector master. The legacy PNG is retained; its exact original download provenance predates this record.",
+    "displayRestoration": {
+      "kind": "derived-display-vector",
+      "light": "logo/display/wopho.svg",
+      "dark": "logo/display/wopho.svg",
+      "record": "logo/display/wopho-provenance.json",
+      "notes": "Five original letter-face silhouettes and counters traced into smooth paths, with source-sampled rainbow gradients and vector bevel/extrusion. No replacement font, raster upscaling or claim of official vector authorship."
+    }
   }
 ]
