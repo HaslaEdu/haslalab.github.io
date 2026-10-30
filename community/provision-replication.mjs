@@ -12,9 +12,9 @@ export async function provisionReplication(request, log = console.log, warn = co
     try { response = await request(method, body); }
     catch { throw new Error(`D1 read replication ${method}: network request failed.`); }
     log(`D1 read replication ${method}: HTTP ${response.status}.`);
-    if (response.status === 403) {
+    if (response.status === 401 || response.status === 403) {
       response.body?.cancel().catch(() => {});
-      warn('::warning::D1 read replication is unverified: HTTP 403 with the existing deployment token. No credential or permission changes were attempted.');
+      warn(`::warning::D1 read replication is unverified: HTTP ${response.status} with the existing deployment token. No credential or permission changes were attempted.`);
       return null;
     }
     if (!response.ok) {

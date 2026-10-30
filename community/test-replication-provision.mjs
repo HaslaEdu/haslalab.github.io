@@ -39,10 +39,30 @@ test('403 at any stage is explicitly unverified and never broadens or replaces c
   }
 });
 
+test('401 during GET, PUT or verification stays unverified, stops immediately and never exposes secrets', async () => {
+  for (const failAt of [1, 2, 3]) {
+    const calls = [], logs = [], warnings = [], token = 'SECRET_EXISTING_DEPLOY_TOKEN';
+    const result = await runReplicationProvision({ token, log: value => logs.push(value), warn: value => warnings.push(value),
+      fetchImpl: async (url, options) => {
+        calls.push({ url, options });
+        return calls.length === failAt
+          ? Response.json({ errors: [{ message: 'SECRET_AUTH_PAYLOAD' }] }, { status: 401 })
+          : reply(calls.length === 1 ? 'disabled' : 'auto');
+      } });
+    assert.deepEqual(result, { verified: false, mode: 'unverified' });
+    assert.deepEqual(calls.map(call => call.options.method), ['GET', 'PUT', 'GET'].slice(0, failAt));
+    assert.ok(calls.every(call => call.url === REPLICATION_URL && call.options.headers.Authorization === 'Bearer ' + token));
+    assert.equal(warnings.length, 1); assert.match(warnings[0], /::warning::.*unverified: HTTP 401/);
+    assert.match(warnings[0], /No credential or permission changes were attempted/);
+    assert.equal(logs.concat(warnings).join('\n').includes('SECRET_'), false);
+  }
+});
+
 test('network, unexpected HTTP, malformed responses and failed verification fail closed without logging payloads', async () => {
   const scenarios = [
     () => { throw new Error('SECRET_NETWORK_PAYLOAD'); },
     () => new Response('SECRET_SERVER_PAYLOAD', { status: 500 }),
+    ...[400, 402, 404, 429].map(status => () => new Response('SECRET_HTTP_PAYLOAD', { status })),
     () => new Response('SECRET_NOT_JSON'),
     () => Response.json({ success: false, errors: [{ message: 'SECRET_API_ERROR' }] }),
     () => Response.json({ success: true }),
