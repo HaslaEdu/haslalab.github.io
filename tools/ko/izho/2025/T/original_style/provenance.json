@@ -1,0 +1,24 @@
+{
+  "source": "IZhO_2025_T_EN.pdf",
+  "source_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+  "translation_policy": "Translate prose only; preserve original fonts for native characters, all equations, figures, coordinates, sizes, styles, page geometry, and original source anomalies. No editorial notes in PDF.",
+  "source_anomalies_kept": [
+    {
+      "page": 2,
+      "description": "Problem 1.3 source has doubled closing parenthesis after screen-distance index. Preserved verbatim."
+    },
+    {
+      "page": 7,
+      "description": "The magnetic-constant unit is printed H·m in the source, rather than H/m. Preserved verbatim in the native expression."
+    }
+  ],
+  "punctuation_slot_note": {
+    "page": 7,
+    "at": [
+      13,
+      0,
+      11
+    ],
+    "description": "Original prose comma is rewritten using the exact source font alias, source size, source baseline and origin. This separates the preceding deleted word constant from the comma-neighborhood audit; no equation glyph is selected."
+  }
+}

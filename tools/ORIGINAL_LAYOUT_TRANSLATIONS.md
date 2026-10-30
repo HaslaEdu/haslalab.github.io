@@ -47,6 +47,12 @@ compare a prose-suppressed control with the original native ink, avoiding false
 positives from neighbouring English glyph overhangs or unused font-metric boxes.
 The reviewed final page must still render identically to its individual proof.
 
+The 2025 edition uses `python tools/izho_legacy_style_rebuild.py 2025 T`,
+which reuses the original legacy font aliases, encodings and actual PDF widths.
+Its final report contains every original-page preservation audit and a zero-pixel
+comparison between each joined page and its reviewed proof. The separate
+Hangul-outline report checks all seven final pages for missing translated ink.
+
 `python tools/test_pdf_original_text_ops.py` covers CID advances, filled/stroked
 text, untouched native Forms and CMap decoding. The font regression tests are
 `python tests/test_pdf_original_style_fonts.py`; unsupported Unicode whitespace
