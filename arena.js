@@ -863,16 +863,16 @@ async function arLabOne(root, alive, id,preloaded) {
     why: Object.fromEntries(["needs_confirmation", "no_grader", "problem_unavailable", "uncertain_proof", "review_disagreement", "grader_unavailable", "answer_too_long", "scan_unavailable", "scan_too_large"].map(key => [key, english ? "The proof or review evidence needs manual checking. No score is final yet." : "답안 또는 검토 근거를 확인할 필요가 있어 관리자 검토를 기다립니다. 아직 확정된 점수는 없습니다."]))
   } : arLabLabels(s);
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
-  const comparison = !isContest && arLabHasScore(s) && s.status === "graded" && window.labComparison;
+  const comparison = !isContest && window.labComparison?.hasScore?.(s) && typeof window.labComparison.mount === 'function';
   if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>${reviewOnly?"✎":"⏱"} ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${arLabModeLabel(s)} · ${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/${reviewOnly?"review":"exam"}">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}</div></div>
     ${isContest ? `<div class="cmnote">${L.regNote}</div>` : ""}
-    <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl"><tbody>
+    <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl ar-score-meta"><tbody>
       <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
       <tr><th>${L.exam}</th><td>${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</td><th>${L.date}</th><td>${cmFull(s.started_at).slice(0, 16)}</td></tr></tbody></table>
-      ${s.status === "graded" ? `<div class="arstats" style="margin:14px 0 0"><div><small>${arLabHasScore(s)?L.total:L.grade}</small><b>${arLabScoreLabel(s)}</b></div>
+      ${s.status === "graded" && !comparison ? `<div class="arstats" style="margin:14px 0 0"><div><small>${arLabHasScore(s)?L.total:L.grade}</small><b>${arLabScoreLabel(s)}</b></div>
         ${!s.sample_standing && !reviewOnly && arLabHasScore(s) && s.standing ? `<div><small>${L.pct}</small><b>${s.standing.mine}%</b></div><div><small>HaslaLab · ${L.rank}</small><b>${L.rankV(s.standing.rank, s.standing.n)}</b></div>
         <div><small>${L.top}</small><b>${s.standing.top_pct}%</b></div><div><small>${L.avg} · ${L.max}</small><b>${s.standing.avg}% · ${s.standing.max}%</b></div>` : ""}</div>
         ${!s.sample_standing && !reviewOnly && arLabHasScore(s) && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}
