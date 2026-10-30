@@ -6,6 +6,8 @@
 
 KMO·AMC·Putnam·USABO·USNCO·RuPhO는 글자 내부의 닫힌 공간에 남은 종이색도 다크 표시본에서 제거합니다. AMC·Putnam의 다면체와 USNCO ACS 문장의 흰 면은 보존하며 라이트 표시본은 유지합니다.
 
+USAAAO·AMC·KMChC·WOPhO·Eötvös·RuPhO는 가장자리에서 배경색과 섞인 색·투명도를 복원한 SVG 표시본을 사용합니다. USAAAO의 AAA 안쪽 배경과 KMChC의 하늘색 배경도 제거합니다. AMC 다면체의 흰 면, WOPhO 내부 하이라이트, Eötvös의 초상·글자·진한 타원선은 보존합니다. 보정 범위와 픽셀 수는 `variants.json`의 `darkMatteCleanup`에 기록합니다.
+
 | 키 | 구분 | 공식 출처 |
 |---|---|---|
 | ortvay | 공식 문제지 제목 표장 | [출처](https://ortvay.elte.hu/) |
