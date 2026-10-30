@@ -5,6 +5,7 @@ import { readFileSync,readdirSync } from 'node:fs';
 import { ensureMonthlyRewardSchema,settleMonthlyRewards,monthlyRewardSummary,readFinalMonthlyRanking,
   MONTHLY_TOKEN_REWARDS } from './src/monthly-rewards.js';
 import { readPublicRanking } from './src/public-data.js';
+import { tokenBalance } from './src/lab-tokens.js';
 
 const OPEN = Date.parse('2026-11-01T00:00:00+09:00')/1000;
 const CLOSE = Date.parse('2026-12-01T00:00:00+09:00')/1000;
@@ -79,6 +80,18 @@ test('concurrent cron runs, retries and later score edits cannot pay twice or re
     await settleMonthlyRewards(db,{timestamp:CLOSE+86400});
     assert.deepEqual(await readFinalMonthlyRanking(db,'2026-11',{timestamp:CLOSE+86400}),original);
     assert.deepEqual(balances(),[14,11,8,5,5]);assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE reason='monthly_reward'").get().n,3);
+  });
+});
+
+test('whole monthly awards preserve fractional balances and legacy half tokens without granting them twice',async()=>{
+  await environment(async({db,sql,participants})=>{
+    participants();
+    sql.prepare('UPDATE users SET exam_tokens=0.2,exam_half=1 WHERE id=1').run();
+    sql.prepare('UPDATE users SET exam_tokens=1.9,exam_half=0 WHERE id=2').run();
+    sql.prepare('UPDATE users SET exam_tokens=0,exam_half=1 WHERE id=3').run();
+    await settleMonthlyRewards(db,{timestamp:CLOSE});await settleMonthlyRewards(db,{timestamp:CLOSE+1});
+    assert.deepEqual(sql.prepare('SELECT exam_tokens,exam_half FROM users WHERE id<=3 ORDER BY id').all().map(tokenBalance),[9.7,7.9,3.5]);
+    assert.deepEqual(sql.prepare("SELECT delta FROM lab_ledger WHERE reason='monthly_reward' ORDER BY user_id").all().map(row=>row.delta),[9,6,3]);
   });
 });
 

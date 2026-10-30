@@ -705,12 +705,12 @@ function arenaHealth(env) {
   return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.OPENAI_API_KEY ? "openai" : null };
 }
 function pubProblem(r, lang, open, full) {
+  const answerSheet = getMonthlyAnswerSheet(r);
   r = monthlyPublicPresentation(r);
   const en = lang === "en", closed = now() >= r.closes_at;
   const o = { id: r.id, week: r.week, no: r.no, kind: r.kind, subject: r.subject, level: r.level, points: r.points,
     title: en ? r.title_en : r.title_ko, unit: r.unit, source: r.source, opens_at: r.opens_at, closes_at: r.closes_at, open, closed };
   o.period = r.week; o.month = isMonthPeriod(r.week) ? r.week : null;
-  const answerSheet = getMonthlyAnswerSheet(r);
   if (answerSheet) o.answerSheet = answerSheet;
   if (full) {
     o.body = en ? r.body_en : r.body_ko;

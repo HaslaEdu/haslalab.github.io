@@ -2,8 +2,8 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.resolve(__dirname,'..');
 test('every actual subquestion has exactly one answer-sheet slot and its web points total 100',async()=>{
   const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
-  const source=JSON.parse(fs.readFileSync(path.join(root,'community/weekly/2026-W44.json'),'utf8')).problems;
-  for(const [index,id,count]of [[0,4,10],[1,5,5],[2,6,7]]){
+  const source=['2026-W44.json','2026-11-greenhouse-part-d.json'].flatMap(name=>JSON.parse(fs.readFileSync(path.join(root,'community/weekly',name),'utf8')).problems);
+  for(const [index,id,count]of [[0,4,10],[1,5,5],[2,6,7],[3,7,10]]){
     const sheet=getMonthlyAnswerSheet(id),ids=sheet.parts.map(p=>p.id);
     assert.equal(sheet.limit,3);assert.equal(ids.length,count);assert.equal(new Set(ids).size,count);
     assert.deepEqual(sheet.pages.flat(),ids,'the printed form covers every subquestion exactly once');
@@ -33,7 +33,7 @@ test('printable pages provide separate final-answer and working boxes, identifie
 test('every A4 page has four printable black corner marks with white quiet zones',async()=>{
   const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
   const {buildAnswerPages}=await import('../sim/monthly-answer-sheet.mjs');
-  for(const id of [4,5,6]) for(const lang of ['ko','en']){
+  for(const id of [4,5,6,7]) for(const lang of ['ko','en']){
     const sheet=getMonthlyAnswerSheet(id),html=buildAnswerPages({id,no:id-3,title:'Corner-mark check'},sheet,lang);
     const pages=html.split('<section class="paper"').slice(1);
     assert.equal(pages.length,sheet.pages.length);

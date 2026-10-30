@@ -94,10 +94,10 @@ test('introductory problems are retired while the three source problems keep IDs
     const before = sql.prepare('SELECT * FROM submissions').get();
     const list = await api('/monthly?month=2026-11', { authenticated: false });
     assert.equal(list.status, 200);
-    assert.deepEqual(list.data.problems.map(p => p.id), [4, 5, 6]);
-    assert.deepEqual(list.data.problems.map(p => p.no), [1, 2, 3]);
-    assert.deepEqual(list.data.problems.map(p => p.answerSheet.parts.length), [10, 5, 7]);
-    assert.equal(sql.prepare('SELECT COUNT(*) n FROM problems').get().n, 6, 'no original database row deleted');
+    assert.deepEqual(list.data.problems.map(p => p.id), [4, 5, 6, 7]);
+    assert.deepEqual(list.data.problems.map(p => p.no), [1, 2, 3, 4]);
+    assert.deepEqual(list.data.problems.map(p => p.answerSheet.parts.length), [10, 5, 7, 10]);
+    assert.equal(sql.prepare('SELECT COUNT(*) n FROM problems').get().n, 7, 'no original database row deleted');
     assert.deepEqual(sql.prepare('SELECT * FROM submissions').get(), before, 'historical grade preserved');
     for (const id of [1, 2, 3]) {
       assert.equal((await api('/problems/' + id, { authenticated: false })).status, 404);
@@ -141,7 +141,7 @@ test('opening an account first on a fresh database cannot cache away the later m
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM problems').get().n, 3, 'account setup precedes monthly source publication');
     const list = await api('/monthly');
     assert.equal(list.status, 200);
-    assert.deepEqual(list.data.problems.map(p => ({ id: p.id, no: p.no })), [{ id: 4, no: 1 }, { id: 5, no: 2 }, { id: 6, no: 3 }]);
+    assert.deepEqual(list.data.problems.map(p => ({ id: p.id, no: p.no })), [{ id: 4, no: 1 }, { id: 5, no: 2 }, { id: 6, no: 3 }, {id:7,no:4}]);
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_problem_retirements').get().n, 3);
     assert.equal((await api('/me/overview')).status, 200);
     assert.equal((await api('/problems/1')).status, 404);

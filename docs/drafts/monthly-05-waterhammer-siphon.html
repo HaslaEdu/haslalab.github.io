@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>월별 문제 5 제안 · 수격 현상과 사이펀</title>
+<link rel="stylesheet" href="../../vendor/katex/katex.min.css">
+<style>
+  :root{color-scheme:light dark;--bg:#f4faff;--paper:#fff;--ink:#21344a;--muted:#52697c;--line:#cbdde9;--accent:#287aa9;--code:#172333;--codeink:#e5edf5}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 system-ui,"Malgun Gothic",sans-serif;background-image:linear-gradient(#5285a909 1px,transparent 1px),linear-gradient(90deg,#5285a909 1px,transparent 1px);background-size:24px 24px}main{max-width:1080px;margin:auto;padding:30px 26px 60px}a{color:var(--accent)}nav{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:16px;font-size:13px}h1{font-size:clamp(28px,4vw,40px);line-height:1.25;margin:28px 0 12px}h2{font-size:21px;margin:32px 0 12px}h3{font-size:16px;margin:20px 0 6px}p{margin:9px 0}.sub{color:var(--muted);font-size:14px}.tag{font-weight:650;color:var(--accent)}.note{border-left:3px solid var(--accent);padding:9px 14px;background:var(--paper);margin:20px 0}.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start}.panel{background:var(--paper);border:1px solid var(--line);padding:20px}.diagram{width:100%;height:auto;color:var(--ink)}.diagram text{font-family:system-ui,"Malgun Gothic",sans-serif;fill:currentColor;font-size:17px}pre{overflow:auto;background:var(--code);color:var(--codeink);padding:20px;border-radius:3px;font:13px/1.8 ui-monospace,Consolas,monospace}code{font-family:ui-monospace,Consolas,monospace}table{width:100%;border-collapse:collapse;font-size:14px;margin:12px 0}th,td{border-bottom:1px solid var(--line);padding:11px 12px;text-align:left;vertical-align:top}th{font-weight:650;background:var(--paper)}.scroll{overflow:auto}.parts td:first-child{white-space:nowrap;width:70px}.parts td:last-child{width:240px}.formula{overflow:auto;padding:8px 0}.foot{border-top:1px solid var(--line);padding-top:20px;margin-top:34px;font-size:13px;color:var(--muted)}ul,ol{padding-left:22px}li{margin:6px 0}summary{cursor:pointer;font-weight:650;padding:9px 0}.katex{font-size:1.05em}details{border-top:1px solid var(--line);margin-top:24px}strong{font-weight:700}
+  @media(prefers-color-scheme:dark){:root{--bg:#17141f;--paper:#201c2a;--ink:#eee9f5;--muted:#b5aabd;--line:#443a50;--accent:#c3a4eb;--code:#100e17;--codeink:#e9def8}body{background-image:none}}
+  @media(max-width:760px){main{padding:20px 16px 44px}.grid{grid-template-columns:1fr;gap:16px}.panel{padding:16px}th,td{padding:9px 8px}.parts{min-width:720px}}
+  @media print{body{background:white;color:#182536}nav{display:none}main{max-width:none;padding:0}.grid{grid-template-columns:1fr 1fr}details>*{display:block!important}pre{white-space:pre-wrap}h2{break-after:avoid}tr,.panel{break-inside:avoid}}
+</style>
+</head>
+<body><main>
+<nav><a href="../../#/monthly">HaslaLab · 월별 문제</a><span class="tag">5번 제안 · 검토용 · 미게시</span></nav>
+<h1>끊어지지 않는 사이펀</h1>
+<p class="sub">수격 현상 + 사이펀 · 명령어로 조작하는 가상 실험 · 7개 소문항 / 100점</p>
+<p>관의 꼭대기가 높은 사이펀은 정상적으로 흐르다가도 밸브를 급하게 닫으면 액주가 끊길 수 있다. 유량과 압력 파형을 측정해 관의 성질을 알아내고, 물기둥을 유지하면서 밸브를 닫는 방법을 설계한다.</p>
+<div class="note"><strong>추천 방향</strong>　첨부 APhO 2021 Q1의 빠른 폐쇄·느린 폐쇄·반사파를 실험으로 바꾸고, 여기에 사이펀의 절대압 조건을 연결한다. 이 페이지는 문제 구성 제안이며 실행되는 시뮬레이터나 채점 가능한 5번 문제가 아니다.</div>
+
+<div class="grid">
+<section class="panel"><h2 style="margin-top:0">장치</h2>
+<svg class="diagram" viewBox="0 0 780 380" role="img" aria-label="상부 저장조에서 출발한 관이 꼭대기를 넘어 하부 수조에 잠긴 밸브로 이어지는 사이펀">
+  <defs><marker id="proposal05-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor"/></marker></defs>
+  <path d="M45 155V302H190V155" fill="none" stroke="currentColor" stroke-width="3"/>
+  <path d="M47 213H188V300H47Z" fill="currentColor" opacity=".08"/>
+  <path d="M628 251V345H775V251" fill="none" stroke="currentColor" stroke-width="3"/>
+  <path d="M630 280H773V343H630Z" fill="currentColor" opacity=".08"/>
+  <path d="M628 280H775" stroke="currentColor" stroke-width="2"/>
+  <path d="M45 213H190M25 213H755" stroke="currentColor" opacity=".4" stroke-dasharray="6 6"/>
+  <path d="M145 267H190L340 78H385L650 290H719" fill="none" stroke="currentColor" stroke-width="16" stroke-linejoin="round" opacity=".16"/>
+  <path d="M145 267H190L340 78H385L650 290H719" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M347 66H378" stroke="currentColor" stroke-width="4"/>
+  <circle cx="362" cy="78" r="6" fill="currentColor"/>
+  <circle cx="551" cy="211" r="6" fill="currentColor"/>
+  <path d="M663 276L681 304M681 276L663 304M672 276V255H692" stroke="currentColor" stroke-width="3" fill="none"/>
+  <path d="M219 260L249 224M562 250L602 282M720 290H750" stroke="currentColor" stroke-width="2" marker-end="url(#proposal05-arrow)"/>
+  <path d="M418 86V204M423 86H413M423 204H413M612 220V280M607 220H617M607 280H617" stroke="currentColor" stroke-width="1.5"/>
+  <text x="47" y="138">수면 높이 z = 0</text><text x="57" y="329">큰 저장조 · 대기압 pₐ</text>
+  <text x="273" y="43">꼭대기 C · 압력 센서</text><text x="431" y="153">h</text>
+  <text x="479" y="184">이동식 압력 센서</text><text x="635" y="242">잠긴 밸브</text>
+  <text x="589" y="256">H</text><text x="643" y="326">잠김 깊이 d</text><text x="586" y="371">하부 수면 z = −H</text>
+</svg>
+<p class="sub">관을 따라 잰 거리 \(s\), 전체 길이 \(L\). 꼭대기는 \(s_c=5L/12\). 길이를 유지한 채 관의 높이만 조정할 수 있다. 관의 양 끝은 큰 개방 수조 속에 잠겨 있고, 하부의 잠김 깊이는 \(d=0.20\,\mathrm m\)이다. 반사 중 흐름이 잠시 역전되어도 공기가 유입되지 않는다.</p></section>
+<section class="panel"><h2 style="margin-top:0">조작과 측정</h2>
+<table><tbody>
+<tr><th>변경 가능</th><td>관 길이 \(L=40,60,80\,\mathrm m\), 두 수면의 높이 차 \(H=0.2\!-\!1.5\,\mathrm m\), 꼭대기 높이 \(h=0.5\!-\!9.0\,\mathrm m\)</td></tr>
+<tr><th>밸브</th><td>초기 열림 \(\alpha_0=0.4\!-\!1\), 폐쇄 시간 \(T=0.01\!-\!8\,\mathrm s\), 선형 또는 2단계 폐쇄</td></tr>
+<tr><th>센서</th><td>압력 최대 4지점 + 출구 유량. 절대압 / 게이지압 전환. 결과에는 단위와 위치를 항상 표시</td></tr>
+<tr><th>숨은 값</th><td>유효 원주 탄성계수 \(E_{\rm eff}\), Darcy 마찰계수 \(f\), 밸브 계수 \(k_0\)</td></tr>
+<tr><th>실험 횟수</th><td><code>run</code> 40회. 설정·미리 채우기·기존 자료 열람·CSV 내보내기는 무료. 최종 답안 제출 3회와 별도</td></tr>
+</tbody></table>
+</section></div>
+
+<h2>명령어 방식</h2>
+<div class="grid"><pre aria-label="제안하는 명령어 예시">help
+set pipe length 60
+set head 0.60 crest 0.50
+set valve initial 1.0 law linear close 0.02
+probe add pressure crest unit kPa_abs
+probe add pressure 50 unit kPa_abs
+probe add pressure valve unit kPa_abs
+prime
+run duration 6 sample 0.001
+show run 1
+export run 1 format csv
+
+# 관 길이를 바꾸어 손실 계수를 분리
+set pipe length 40
+prime
+run duration 6 sample 0.001</pre>
+<div><p><code>help</code>에서 조작 범위와 센서 분해능을 알려 주고, <code>set</code>으로 장치를 조절한다. <code>prime</code>은 기포 없는 초기 정상류를 다시 준비한다. <code>run</code>의 출력은 측정값과 실험 ID이며 숨은 매개변수는 반환하지 않는다.</p>
+<p>CSV 열은 <code>time_s, pressure_C_kPa_abs, pressure_50m_kPa_abs, pressure_valve_kPa_abs, flow_m3_s, event</code>처럼 위치·단위를 분명히 한다. 그래프는 같은 자료를 시각화한다.</p>
+<p class="sub">권장 계측 잡음: 압력 표준편차 0.20 kPa, 유속 환산값 0.003 m/s, 시간 분해능 1 ms. 센서의 고정 영점 오차는 시작 시 정수압 검교정으로 구분하게 한다. 저장된 실행은 재조회해도 같은 자료이며, 새로운 <code>run</code>에서만 새 잡음을 만든다.</p>
+<p class="sub">명령어 예시는 인터페이스 제안이다. 이 페이지에서는 실행되지 않는다.</p></div></div>
+
+<h2>문항 구성과 채점 기준</h2>
+<div class="scroll"><table class="parts"><thead><tr><th>문항</th><th>학생에게 요구할 내용</th><th>부분 점수 기준</th></tr></thead><tbody>
+<tr><td>A · 12점</td><td><strong>정상류와 손실 계수.</strong> 길이가 서로 다른 관에서 정상 유량을 측정하고, \(f\)와 \(k_0\)를 분리해 추정한다. 선형화 그래프와 불확도를 제시한다.</td><td>에너지 식 4 / 길이 변화·선형화 4 / 측정값과 오차 4</td></tr>
+<tr><td>B · 16점</td><td><strong>파동 속도와 관의 탄성.</strong> 두 압력 센서의 도달 시간 차로 파동 속도 \(a\)를 구하고 \(E_{\rm eff}\)를 추정한다. 단순히 봉우리 간격만 재는 방법과 비교한다.</td><td>도달 시간 분석 6 / 두 지점 교차검증 4 / 탄성식 4 / 불확도 2</td></tr>
+<tr><td>C · 16점</td><td><strong>빠른 폐쇄와 반사.</strong> 여러 초기 유속에서 최초 양의 압력 점프를 측정해 \(\Delta p\)와 \(\Delta v\)의 관계를 검증한다. 저장조·닫힌 밸브에서 반사되는 압력파의 부호와 도달 순서를 설명한다.</td><td>점프 비례식·자료 6 / 반사 부호 4 / 시간 관계 4 / 압력 기준 2</td></tr>
+<tr><td>D · 14점</td><td><strong>느린 폐쇄의 두 시간 척도.</strong> 폐쇄 시간을 늘려 분포 파동 모델과 비압축성 액주 모델의 차이를 찾는다. “파동 왕복보다 느리면 매 순간 정상류”가 언제 성립하지 않는지 논하라.</td><td>\(T/(2L/a)\) 비교 4 / 액주 관성식 4 / 정상류 근사 한계 4 / 파형 확인 2</td></tr>
+<tr><td>E · 16점</td><td><strong>사이펀 유지 한계.</strong> 같은 유량·폐쇄 조건에서 꼭대기 높이를 바꾸고, 정상류 한계와 과도현상 중 최초 기화 한계를 구분한다. 기화가 시작되는 높이 구간을 좁혀라.</td><td>짝지은 실험 설계 6 / 경계 구간 4 / 절대압·증기압 4 / 모델 한계 2</td></tr>
+<tr><td>F · 18점</td><td><strong>닫기 전략 설계.</strong> \(L=60\,\mathrm m, H=0.60\,\mathrm m, h=6.50\,\mathrm m\)에서 관 전체의 압력이 \(p_v+5\,\mathrm{kPa}\) 이상, \(150\,\mathrm{kPa}\) 이하가 되도록 최대한 빠른 폐쇄 방식을 설계하라. 가장 빠른 실행만 적지 말고 더 짧은 조건이 실패하는 자료와 반복 측정을 제시한다.</td><td>목표·조건 3 / 탐색 설계 4 / 안전 조건 검증 4 / 근접 최적성 근거 4 / 반복 3</td></tr>
+<tr><td>G · 8점</td><td><strong>어디까지 알아낼 수 있는가.</strong> 관 길이를 바꿀 수 없으면 어떤 계수들이 구분되지 않는가? 유효 탄성계수를 물질 고유의 Young 계수라고 단정할 수 있는가? 기화 이후까지 예측하려면 무엇이 더 필요한가?</td><td>탄성·지지 조건 4 / 손실 계수의 식별성 2 / 기화 이후 모델 2</td></tr>
+</tbody></table></div>
+<p class="sub">합계 100점. 회귀식·표·그래프와 실행 ID를 답안에 포함한다. 잡음이 있는 측정의 마지막 자릿수나 우연히 가장 낮게 나온 한 번의 실행으로 채점하지 않는다. 최적화 목표와 허용 오차는 시뮬레이터의 수치 수렴 검증 후 확정한다.</p>
+
+<details open><summary>운영자 검토용: 물리 모델과 기준식</summary>
+<h3>1. 초기 정상류</h3>
+<p>두 큰 수조의 자유 수면은 같은 대기압 \(p_a=101.30\,\mathrm{kPa}\)이고, 수면 높이는 상부 0, 하부 \(-H\)이다. 관 지름 \(D=20\,\mathrm{mm}\), 벽 두께 \(e=1.0\,\mathrm{mm}\), 물의 \(\rho=998\,\mathrm{kg/m^3}\), \(K=2.2\,\mathrm{GPa}\), \(g=9.81\,\mathrm{m/s^2}\)는 알려 준다. 수조에서 관으로 들어올 때 손실 \(K_{\rm in}=0.5\), 관에서 큰 수조로 나갈 때 \(K_{\rm out}=1\)을 적용한다. 흐름이 반전되면 두 끝의 입구·출구 역할도 바뀐다. 상부 관 입구는 \(-0.50\,\mathrm m\), 하부 관 끝은 \(-H-d\), \(d=0.20\,\mathrm m\)이다. 꼭대기까지의 관 높이는 구간별 선형으로 정한다.</p>
+<div class="formula">\[v_0^2=\frac{2gH}{K_{\rm in}+K_{\rm out}+fL/D+k_0/\alpha_0^2}.\]</div>
+<p>\(\alpha_0=1\)에서 \(2gH/v_0^2-K_{\rm out}-K_{\rm in}\)를 \(L/D\)에 대해 그리면 기울기 \(f\), 절편 \(k_0\). <strong>길이와 밸브 상태가 모두 고정이면 \(H\)만 바꾸어도 \(fL/D+k_0\)만 얻는다.</strong> 두 계수를 각각 알아냈다는 답을 요구하지 않는다.</p>
+<h3>2. 유한한 압력파</h3>
+<p>일정 단면적·작은 변형·저마하수의 1차원 탄성관으로 한정한다. 관은 좌굴을 억제하도록 지지되어 있으며 단순화한 지지 계수는 1로 명시한다. 공기 주머니, 관의 점탄성, 이동하는 수면, 굴곡의 추가 손실은 제외한다. \(\mathcal H=p_{\rm abs}/(\rho g)+z(s)\)로 두면</p>
+<div class="formula">\[\partial_t\mathcal H+\frac{a^2}{g}\partial_s v=0,\qquad \partial_t v+g\partial_s\mathcal H+\frac{f}{2D}v|v|=0,\qquad a^{-2}=\rho\!\left(\frac1K+\frac{D}{E_{\rm eff}e}\right).\]</div>
+<p>수조 자유 수면의 수두를 \(\mathcal H_U=p_a/(\rho g)\), \(\mathcal H_D=p_a/(\rho g)-H\)라 하자. 상부·하부 관 끝의 속도는 각각 \(v_u=v(0,t)\), \(v_d=v(L,t)\), 밸브 손실 계수는 \(k_v=k_0/\alpha^2\)이다. 흐름의 부호에 따라 입구·출구 손실과 관 내부의 속도 수두를 모두 적용한다.</p>
+<div class="formula">\[\mathcal H(0,t)=\begin{cases}\mathcal H_U-(1+K_{\rm in})v_u^2/(2g),&v_u\ge0,\\\mathcal H_U+(K_{\rm out}-1)v_u^2/(2g),&v_u<0,\end{cases}\]</div>
+<div class="formula">\[\mathcal H(L,t)=\begin{cases}\mathcal H_D+(k_v+K_{\rm out}-1)v_d^2/(2g),&v_d\ge0,\\\mathcal H_D-(k_v+K_{\rm in}+1)v_d^2/(2g),&v_d<0.\end{cases}\]</div>
+<p>하부 수조에 잠긴 관 끝의 주변 압력은 \(p_a+\rho gd\)이며 자유 분출구의 \(p=p_a\) 조건을 재사용하지 않는다. \(\alpha=0\)이면 \(k_v\)를 계산하는 대신 \(v_d=0\)을 직접 적용한다. 측정된 \(a\)로부터의 역산은 <strong>이 구성식에서의 \(E_{\rm eff}\)</strong>이다. 지지·Poisson 보정이 미지이면 고유 물질 상수 \(E\)와 분리할 수 없다.</p>
+<p>최초 상류 진행파는 \(\Delta p=-\rho a\Delta v\). 닫을 때 \(\Delta v&lt;0\)이므로 처음 생기는 압력 변화는 <strong>양수</strong>다. 저장조와 닫힌 밸브에서 반사된 파가 이후 압력 하강을 만든다. 초기 파 도달 \((L-s)/a\), 왕복 \(2L/a\), 무손실 이상계의 반복 주기 \(4L/a\)를 구분하며, 마찰이 있는 장기 극솟값을 최초 Joukowsky 값과 같다고 놓지 않는다.</p>
+<h3>3. 느린 변화와 비압축성 근사</h3>
+<div class="formula">\[L\frac{dv}{dt}=gH-\frac12\left(K_{\rm in}+K_{\rm out}+\frac{fL}{D}+\frac{k_0}{\alpha^2}\right)v|v|.\]</div>
+<p>\(T\gg2L/a\)는 분포 파동을 무시할 근거이지 액주 관성을 없애는 조건은 아니다. 매 순간 정상류 근사는 관성 완화 시간과도 비교해야 한다. 고정된 \(\alpha\) 근처에서 \(\tau_m=L/(Cv_0)\), \(C=K_{\rm in}+K_{\rm out}+fL/D+k_0/\alpha^2\)를 쓸 수 있다.</p>
+<h3>4. 기화는 모델의 종료 조건</h3>
+<p>기포핵이 충분하고 핵생성 지연을 무시한 물을 가정한다. \(20^\circ\mathrm C\)의 \(p_v=2.34\,\mathrm{kPa}\)를 주고, 어느 위치든 \(p_{\rm abs}\le p_v\)가 처음 되는 순간 실행을 멈춰 <code>cavitation_onset</code> 시각과 위치를 기록한다. <strong>압력을 \(p_v\)에 잘라 붙이고 이후 물기둥이 그대로 흐른다고 계산하지 않는다.</strong> 붕괴·재결합이나 실제 유량 단절의 이후 시간은 별도의 기액 2상 모델 없이 채점하지 않는다.</p>
+<div class="formula">\[p_{c,0}=p_a-\rho gh-\frac{\rho v_0^2}{2}\left(1+K_{\rm in}+f s_c/D\right)>p_v.\]</div>
+<p>정상 상태 식만으로 과도현상 중의 안전을 보장할 수 없다. 반대로 “모든 사이펀은 무조건 약 10 m에서 끊어진다”도 일반 법칙으로 취급하지 않는다. 이 과제의 기화 판정은 위에서 지정한 물과 핵생성 모형의 가정이다.</p>
+<h3>5. 수치·평가 기준</h3>
+<p>권장 숨은 범위는 \(E_{\rm eff}=0.20\!-\!0.35\,\mathrm{GPa}\), \(f=0.018\!-\!0.026\), \(k_0=6\!-\!10\). 계정별 값은 고정하고 답안 제출 3회 동안 바꾸지 않는다. 내부 시간 간격은 출력 간격과 분리해 CFL 조건으로 정한다. 격자·시간 간격을 각각 절반으로 줄였을 때 최초 점프·도달 시간·기화 경계·최적 폐쇄 시간의 수렴부터 검증한다.</p>
+<p>검산용 예: \(L=60\,\mathrm m, H=0.60\,\mathrm m, h=0.50\,\mathrm m, E_{\rm eff}=0.25\,\mathrm{GPa}, f=0.020,k_0=8,\alpha_0=1\)이면 \(v_0=0.4116\,\mathrm{m/s}\), \(a=111.60\,\mathrm{m/s}\), 최초 이상 압력 점프 \(45.84\,\mathrm{kPa}\), 왕복 \(1.0753\,\mathrm s\), 정상 꼭대기 절대압 \(94.16\,\mathrm{kPa}\). <strong>최적 폐쇄 시간과 과도 기화 높이는 아직 계산한 정답이 아니다.</strong></p>
+</details>
+
+<footer class="foot"><strong>근거와 적용 범위</strong>
+<p>첨부 APhO 2021 이론 Q1의 4쪽을 확인했다. 원문은 비점성 유체·강체 관을 사용하고, 빠른 반사파와 \(2L/c\) 간격의 단계식 폐쇄를 다룬다. 위 제안은 그 문제를 그대로 옮긴 것이 아니라 관의 탄성, 마찰의 식별, 사이펀 높이와 실험 설계를 추가한 새 초안이다.</p>
+<p>탄성관 수격파와 수치 검증 범위: <a href="https://doc.comsol.com/6.3/doc/com.comsol.help.models.pipe.water_hammer_verification/water_hammer_verification.html">COMSOL의 Water Hammer 검증 모델</a>. 사이펀의 낮은 절대압과 기화 조건: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3994459/">Hughes &amp; Gurung, Scientific Reports (2014)</a>. 탈기 조건에 따른 한계의 차이: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4667279/">Boatwright 등, Scientific Reports (2015)</a>.</p>
+<p>검토용 초안. 월별 문제 목록·랭킹·채점 서버와 연결하지 않았다.</p></footer>
+</main>
+<script src="../../vendor/katex/katex.min.js"></script>
+<script src="../../vendor/katex/contrib/auto-render.min.js"></script>
+<script>if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});</script>
+</body></html>

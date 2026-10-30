@@ -117,12 +117,12 @@ export async function readPublicRanking(db, weekFilter = null) {
 }
 
 function problemSummary(row, lang, time) {
+  const answerSheet = getMonthlyAnswerSheet(row);
   row = monthlyPublicPresentation(row);
   const result = { id: row.id, week: row.week, period: row.week, month: isMonthPeriod(row.week) ? row.week : null,
     no: row.no, kind: row.kind, subject: row.subject, level: row.level, points: row.points,
     title: lang === 'en' ? row.title_en : row.title_ko, unit: row.unit, source: row.source, opens_at: row.opens_at, closes_at: row.closes_at,
     open: time < row.closes_at, closed: time >= row.closes_at };
-  const answerSheet = getMonthlyAnswerSheet(row);
   if (answerSheet) result.answerSheet = answerSheet;
   return result;
 }

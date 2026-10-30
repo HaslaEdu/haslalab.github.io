@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import test from 'node:test';
 import worker from './src/index.js';
-import { validateContent, publishWeeklyContent, ensureWeeklyContent, WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID } from './src/weekly-content.js';
+import { validateContent, publishWeeklyContent, ensureWeeklyContent, WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID, GREENHOUSE_PUBLICATION_ID } from './src/weekly-content.js';
 import { MONTHLY_RETIREMENT_ID } from './src/monthly-answers.js';
 import { getMonthlyAnswerSheet } from '../monthly-problems.mjs';
 import { monthlyPublicPresentation } from './src/monthly-presentation.js';
@@ -144,12 +144,12 @@ test('simultaneous requests share publication and a failed batch can be retried'
     const retry = ensureWeeklyContent(binding, key);
     assert.equal((await retry).inserted, 3);
     assert.equal(ensureWeeklyContent(binding, key), retry);
-    assert.equal(calls, 5, 'failed seed, successful retry, monthly transition, answer schema, and introductory retirement');
-    assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 6);
-    assert.equal(db.prepare("SELECT COUNT(*) n FROM problems WHERE week='2026-11'").get().n, 6);
+    assert.equal(calls, 6, 'failed seed, successful retry, monthly transition, answer schema, introductory retirement and greenhouse addition');
+    assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 7);
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM problems WHERE week='2026-11'").get().n, 7);
     assert.deepEqual(db.prepare(`SELECT p.id,p.no FROM problems p WHERE NOT EXISTS(
       SELECT 1 FROM monthly_problem_retirements r WHERE r.problem_id=p.id) ORDER BY p.no`).all().map(row => ({ ...row })),
-      [{ id: 4, no: 1 }, { id: 5, no: 2 }, { id: 6, no: 3 }]);
+      [{ id: 4, no: 1 }, { id: 5, no: 2 }, { id: 6, no: 3 }, {id:7,no:4}]);
   } finally { db.close(); }
 });
 
@@ -165,10 +165,10 @@ test('opening the weekly list or a direct problem link publishes through the exi
         const response = await worker.fetch(new Request('http://weekly.local/api' + path), env);
         assert.equal(response.status, 200);
         const data = await response.json();
-        assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 6);
+        assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 7);
         assert.deepEqual(db.prepare('SELECT id FROM weekly_publications ORDER BY id').all().map(row => row.id),
-          [WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID, MONTHLY_RETIREMENT_ID].sort(), 'publication, monthly transition and introductory retirement each run once');
-        if (path.startsWith('/weekly')) assert.deepEqual(data.problems.map(p => p.id), [4, 5, 6]);
+          [WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID, MONTHLY_RETIREMENT_ID,GREENHOUSE_PUBLICATION_ID].sort(), 'each independent publication and transition runs once');
+        if (path.startsWith('/weekly')) assert.deepEqual(data.problems.map(p => p.id), [4, 5, 6, 7]);
         else assert.equal(data.problem.body, monthlyPublicPresentation({ ...content.problems.find(p => p.no === 4), id: 4 }).body_ko);
       } finally { db.close(); }
     }
@@ -228,7 +228,7 @@ test('published native problems use authenticated, evidence-backed grading and r
   try {
     const list = await request('/weekly?week=2026-W44&lang=ko');
     assert.equal(list.status, 200);
-    assert.deepEqual(list.data.problems.map(p => p.id), [4, 5, 6]);
+    assert.deepEqual(list.data.problems.map(p => p.id), [4, 5, 6, 7]);
     for (const p of list.data.problems) for (const key of ['body', 'rubric', 'solution', 'model_en']) assert.equal(key in p, false);
     for (const row of rows) {
       const pub = await request(`/problems/${row.id}?lang=ko`);

@@ -116,10 +116,6 @@ export async function prepareMonthlyCaptureSubmission(db,userId,problem,body,key
   normalized.captureId=session.id;
   return normalized;
 }
-export async function markMonthlyCaptureAccepted(db,id,submissionId) {
-  await db.prepare('UPDATE monthly_capture_sessions SET submission_id=COALESCE(submission_id,?),revision=revision+CASE WHEN submission_id IS NULL THEN 1 ELSE 0 END WHERE id=?').bind(submissionId,id).run();
-}
-
 export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,visibleSql,attempts,limit,ocr,imageType,invoke,scope}) {
   const problemFor=async(env,id)=>{await ensureContent(env.DB,scope(env));const p=await env.DB.prepare(`SELECT p.* FROM problems p WHERE p.id=? AND ${visibleSql('p')}`).bind(id).first();
     if(!p||!getMonthlyAnswerSheet(p)||p.opens_at>now())fail('not_found',404);return p;};
