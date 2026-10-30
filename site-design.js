@@ -6,6 +6,7 @@ const SITE_DESIGN_TEXT = {
 
 /* Actual repository changes. Add new entries here when publishing archive updates. */
 const SITE_UPDATES = [
+  {date:"2026-10-30",ko:"AMC 8·10·12 문제·해설 130회차 추가",en:"130 AMC 8, 10 and 12 papers with solutions added",href:"#/amc"},
   {date:"2026-10-30",ko:"IZhO 2024 한국어 풀이 수식 보완",en:"Full equations restored in IZhO 2024 Korean solutions",href:"#/izho/2024"},
   {date:"2026-10-30",ko:"RuPhO 단계 선택 화면 통합",en:"RuPhO stage selection unified",href:"#/rupho"},
   {date:"2026-10-30",ko:"CPhO 2006 한국어 · 영어 자료 추가",en:"CPhO 2006 papers added in Korean and English",href:"#/cpho/2006"},
@@ -19,6 +20,11 @@ function paintSiteTheme(){
   document.querySelector('meta[name="theme-color"]').content=dark?"#111017":"#2E3945";
   const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261030-logos";
   if(icon&&icon.getAttribute("href")!==href)icon.setAttribute("href",href);
+  document.querySelectorAll("img[data-logo-key]").forEach(img=>{
+    const src=logoSource(img.dataset.logoKey)+"?v="+LOGO_V;
+    img.dataset.logoVariant=src.match(/\/(dark|light)\//)?.[1]||"original";
+    if(img.getAttribute("src")!==src)img.setAttribute("src",src);
+  });
 }
 
 function initSiteDesign(){
