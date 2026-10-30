@@ -37,6 +37,14 @@ def prepare():
     cluster={'chars':glyphs,'rect':list(bounds),'y':703.681884765625,'text':'Ek = 135 kV /'}
     entry['math'][2]=cjk.math_image(page.get_svg_image(text_as_path=True),cluster,FOLDER/'2-20-unit-fixed.png')
     entry['rect'][2]=max(entry['rect'][2],bounds.x1)
+    # The denominator's full-width minus belongs to a CJK font. It is a math
+    # symbol here, so include it instead of treating it as prose punctuation.
+    entry=by_id['2-14'];old=entry['math'][0];bounds=fitz.Rect(old['source_rect'])
+    glyphs=[c for c in chars if c['index'] in set(old['source_char_indices']) or
+            (c['c'] in '−－＋＝' and bounds.contains(fitz.Point(c['origin'])))]
+    cluster={'chars':glyphs,'rect':list(bounds),'y':442.0684814453125,'text':'E = R1 R2 / (R2 − R1) × U / r²'}
+    entry['math'][0]=cjk.math_image(page.get_svg_image(text_as_path=True),cluster,FOLDER/'2-14-field-complete.png')
+    entry['insert_rect']=[90,426,506,456]
     for key,(ko,en) in rows.items():
         entry=by_id[key];entry['ko']=ko;entry['en']=en
         entry['color']=0
@@ -56,7 +64,7 @@ def prepare():
         if key in ['4-19','4-20']:
             r=fitz.Rect(entry['rect']);entry['en_insert_rect']=list(r+(-10,-3,45,4))
     groups=[(1,4,9),(1,10,12),(1,14,22),(1,24,26),
-            (2,0,7),(2,9,14),(2,20,22),
+            (2,0,7),(2,9,13),(2,20,22),
             (3,1,5),(3,6,7),(3,9,14),(3,15,16),(3,17,20),
             (3,21,22),(3,23,25),
             (4,1,5),(4,6,7),(4,9,10),(4,12,16),(4,17,18)]
@@ -115,7 +123,7 @@ if __name__=='__main__':
         source=ROOT/'tmp/source-audit/CPhO_2007_T_ZH.pdf'
         report={'year':2007,'source':source.name,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
                 'source_pages':[1,2,3,4],'source_total_pages':20,'problems':7,'translated_source_rows':97,
-                'typeset_regions':38,'redrawn_figures':7,'figure_languages':['ko','en'],'files':inventory,
+                'typeset_regions':39,'redrawn_figures':7,'figure_languages':['ko','en'],'files':inventory,
                 'review':'All four pages in each language visually reviewed; source math glyphs and problem geometry retained.'}
         (ROOT/'tools/cpho_2007_inventory.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
         print(json.dumps(inventory))

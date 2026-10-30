@@ -6,7 +6,7 @@ All extracted entries need reviewed English/Korean text before a final build.
 """
 from pathlib import Path
 from collections import Counter
-import argparse,copy,html,json,math,re,statistics
+import argparse,copy,hashlib,html,json,math,re,statistics
 import pymupdf as fitz
 from PIL import Image,ImageChops
 import pdf_layout_translate as layout
@@ -14,6 +14,18 @@ import pdf_layout_translate as layout
 ROOT=Path(__file__).resolve().parents[1]
 HAN=re.compile('[\u3400-\u9fff]')
 CJK_FONTS=('SimSun','SimHei','MS PMincho','MS-Mincho','MS-Gothic','MicrosoftYaHei','ËÎÌå')
+
+
+def resolve_source(data):
+    """Use the recorded source locally, or its portable audited filename."""
+    candidate=Path(data['source'])
+    if not candidate.is_file():
+        name=data.get('source_filename') or str(data['source']).replace('\\','/').rsplit('/',1)[-1]
+        candidate=ROOT/'tmp/source-audit'/name
+    if not candidate.is_file():raise FileNotFoundError(f'Original source PDF required: {candidate}')
+    if data.get('source_sha256') and hashlib.sha256(candidate.read_bytes()).hexdigest()!=data['source_sha256']:
+        raise ValueError('Original source SHA256 mismatch: '+str(candidate))
+    return candidate
 
 
 def natural(ch):
@@ -89,7 +101,7 @@ def prose_rows(chars):
     return sorted(rows,key=lambda r:(r['baseline'],r['rect'][0]))
 
 
-def attach_math(rows,chars):
+def attach_math(rows,chars,max_right=528):
     # Assign glyphs to the gaps between Chinese words before joining fraction
     # levels. Otherwise vertically adjacent math in two prose lines can merge.
     selected={id(row):[] for row in rows};blocks={}
@@ -99,7 +111,7 @@ def attach_math(rows,chars):
         if row['plain'] in {'提示：','参考解答：'}:return False
         for ch in items:
             x,y=ch['origin'];width=min(ch['size']*1.1,fitz.Rect(ch['bbox']).width);cx=x+width*.4
-            if abs(row['baseline']-y)>20 or not row['rect'][0]-100<=x<=min(528,row['rect'][2]+45):return False
+            if abs(row['baseline']-y)>20 or not row['rect'][0]-100<=x<=min(max_right,row['rect'][2]+45):return False
             if any(c['bbox'][0]+.4<cx<c['bbox'][2]-.4 for c in row['chars'] if HAN.search(c['c'])):return False
         return True
     ordered=sorted(blocks.items(),key=lambda pair:(
@@ -196,7 +208,7 @@ def math_image(svg,cluster,target):
             'source_char_indices':[c['index'] for c in cluster['chars']]}
 
 
-def extract(source,folder,pages=None,regions=None):
+def extract(source,folder,pages=None,regions=None,math_right=528):
     folder.mkdir(parents=True,exist_ok=True);doc=fitz.open(source);entries=[];report=[]
     exclusions=json.loads(regions.read_text(encoding='utf8')).get('exclude',[]) if regions else []
     for pi,page in enumerate(doc):
@@ -204,7 +216,7 @@ def extract(source,folder,pages=None,regions=None):
         chars=characters(page)
         omitted=[fitz.Rect(r['rect']) for r in exclusions if r['page']==pi+1]
         chars=[c for c in chars if not any(r.contains(fitz.Point(c['origin'])) for r in omitted)]
-        rows=prose_rows(chars);attach_math(rows,chars)
+        rows=prose_rows(chars);attach_math(rows,chars,max_right=math_right)
         svg=page.get_svg_image(text_as_path=True);groups=paragraphs(rows)
         for gi,group in enumerate(groups):
             maths=[];source_rows=[];bounds=fitz.Rect(group[0]['rect'])
@@ -225,7 +237,8 @@ def extract(source,folder,pages=None,regions=None):
         report.append({'page':pi+1,'prose_rows':len(rows),'paragraphs':len(groups),
            'inline_math_clusters':sum(len(r['math']) for r in rows),'main_chinese_characters':sum(bool(HAN.search(c['c'])) and natural(c) for c in chars)})
         print(f'{pi+1}/{len(doc)}: {len(rows)} prose rows, {len(groups)} paragraphs',flush=True)
-    data={'source':str(source.resolve()),'page_count':len(doc),'source_mode':'native_with_math_restoration',
+    data={'source':str(source.resolve()),'source_filename':source.name,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
+          'math_right':math_right,'page_count':len(doc),'source_mode':'native_with_math_restoration',
           'source_exclusions':exclusions,'entries':entries,'extraction_report':report}
     (folder/'translation.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf8')
     (folder/'source.txt').write_text('\n'.join(f'{e["id"]}|{e["source"]}' for e in entries),encoding='utf8')
@@ -265,7 +278,7 @@ def build(folder,target,lang,pages=None):
     if missing:raise ValueError('Missing translations: '+', '.join(missing))
     unresolved=[e['id'] for e in entries if e.get('review_uncovered_math') and not e.get('math_reviewed')]
     if unresolved:raise ValueError('Review uncovered source math before building: '+', '.join(unresolved))
-    original=fitz.open(data['source']);doc=fitz.open(data['source']);archive=fitz.Archive(str(folder.resolve()))
+    source=resolve_source(data);original=fitz.open(source);doc=fitz.open(source);archive=fitz.Archive(str(folder.resolve()))
     for asset_root in data.get('asset_roots',[]):archive.add(asset_root)
     archive.add(str(layout.FONT.parent));body_font='NotoSansKR-Regular.ttf'
     serif=Path('C:/Windows/Fonts/times.ttf')
@@ -307,8 +320,8 @@ def build(folder,target,lang,pages=None):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();sub=p.add_subparsers(dest='command',required=True)
-    a=sub.add_parser('extract');a.add_argument('source',type=Path);a.add_argument('folder',type=Path);a.add_argument('--pages',type=int,nargs='*');a.add_argument('--regions',type=Path)
+    a=sub.add_parser('extract');a.add_argument('source',type=Path);a.add_argument('folder',type=Path);a.add_argument('--pages',type=int,nargs='*');a.add_argument('--regions',type=Path);a.add_argument('--math-right',type=float,default=528)
     a=sub.add_parser('build');a.add_argument('folder',type=Path);a.add_argument('target',type=Path);a.add_argument('--lang',choices=['ko','en'],required=True);a.add_argument('--pages',type=int,nargs='*')
     args=p.parse_args()
-    if args.command=='extract':extract(args.source,args.folder,args.pages,args.regions)
+    if args.command=='extract':extract(args.source,args.folder,args.pages,args.regions,args.math_right)
     else:build(args.folder,args.target,args.lang,args.pages)
