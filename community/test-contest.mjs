@@ -37,19 +37,21 @@ for (let id = 1; id <= 14; id++) {
 const messages=[];
 const env = { DB, LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", GEMINI_API_KEY: "mock-existing-key" };
 const examId = "kmo-2025-T2-s2", base = "/api/lab/contest", sessionBase = id => `/api/lab/sessions/${id}`;
-let providerCalls = [], proofMode = "valid";
+let providerCalls = [], providerBodies = [], providerUrls = [], proofMode = "valid", proofSummary = "";
 const originalFetch = globalThis.fetch;
 globalThis.fetch = async (input, init = {}) => {
   const url = String(input);
+  providerUrls.push(url);
   if (/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url)) return new Response("%PDF-1.7\nMock trusted problem paper", { headers: { "content-type": "application/pdf" } });
   if (url.includes(":generateContent")) {
     const req = JSON.parse(init.body), prompt = req.contents[0].parts.filter(p => p.text).map(p => p.text).join("\n");
     providerCalls.push(prompt);
+    providerBodies.push(req);
     let result;
     if (prompt.includes("[TASK: read page]")) result = { header: { task: "Q5", sheet: "answer", page: 1 }, legible: "good", items: [{ label: "proof", kind: "text", text: "Let n be an integer. This is the submitted proof.", crossed_out: false }] };
     else {
       const number = +(prompt.match(/Review ONLY problem (\d+)/)?.[1] || 0), no = +(prompt.match(/\[Page (\d+);/)?.[1] || 1);
-      result = { problem_no: number, score: 7, confidence: 0.96, verdict: "valid", summary: "검토한 논증입니다.", strengths: ["조건을 사용했습니다."], gaps: [], evidence: [{ page: no, quote: proofMode === "ungrounded" ? "invented unsupported words" : "Let n be an integer.", note: "제출한 문장" }] };
+      result = { problem_no: number, score: 7, confidence: 0.96, verdict: "valid", summary: proofSummary || "검토한 논증입니다.", strengths: ["조건을 사용했습니다."], gaps: [], evidence: [{ page: no, quote: proofMode === "ungrounded" ? "invented unsupported words" : "Let n be an integer.", note: "제출한 문장" }] };
       if (proofMode === "uncertain") { result.verdict = "uncertain"; result.confidence = 0.3; }
     }
     return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }], usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 50 } });
@@ -254,4 +256,48 @@ test("ordinary experiment/theory session timing, physics rules and single-round 
   await request(sessionBase(sid) + "/finish", {}, 10);
   assert.equal((await request(sessionBase(sid) + "/pay", {}, 10)).data.tokens, 4.7);
   assert.equal((await request(`${base}/sessions/${sid}/text`, { answers: { 1: "injected proof" } }, 10)).status, 404);
+});
+
+test("actual KMO requests share policies and public PDF before independent student tails", async () => {
+  const runs = [], scan = Buffer.from([255,216,255,224,0,16,74,70,73,70,17,23]), sentinel = "FIRST_PROVIDER_RESULT_PRIVATE_SENTINEL";
+  proofSummary = sentinel;
+  try {
+    for (const id of [11,12]) {
+      const marker = `PRIVATE_STUDENT_${id}_PROOF_TAIL`, started = await start(id), sid = started.data.session.id;
+      assert.equal(started.status,200); assert.equal((await save(sid,id,{5:"Let n be an integer. " + marker})).status,200);
+      if(id===12) sqlite.prepare(`INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,edited,legible,created_at)
+        VALUES(?,2,'Q5','answer','image/jpeg',?,?,'done',1,'good',?)`).run(sid,scan,"Let n be an integer. Original scan diagram " + marker,timestamp);
+      const before=providerBodies.length, firstUrl=providerUrls.length, graded=await settled(sessionBase(sid)+"/submit",{},id);
+      assert.equal(graded.status,200); assert.equal(graded.data.session.status,"graded"); assert.equal(graded.data.session.score,7);
+      const bodies=providerBodies.slice(before); assert.equal(bodies.length,2,"the two independent reviews retain exactly two provider calls");
+      const prefixes=[];
+      for(const [pass,body] of bodies.entries()) {
+        const parts=body.contents[0].parts, pdfIndex=parts.findIndex(part=>part.inline_data?.mime_type==="application/pdf");
+        assert.ok(pdfIndex>0,"fixed policy and exam context precede the public PDF");
+        assert.ok(parts[0].text.includes("M1:")); assert.ok(parts[0].text.includes("not an official KMO grade"));
+        assert.ok(!parts[0].text.includes("Review ONLY problem"),"the policy part does not start with dynamic exam scope");
+        assert.ok(parts.slice(1,pdfIndex).some(part=>part.text?.includes("Review ONLY problem 5")));
+        const adminIndex=parts.findIndex(part=>part.text?.includes("[ADMIN REVIEW REFERENCE"));
+        assert.equal(adminIndex,pdfIndex+1,"the public/admin reference is before student content");
+        const referenceEnd=adminIndex+1, reference=parts.slice(0,referenceEnd);
+        const studentIndex=parts.findIndex(part=>part.text?.includes("[Page 1; task Q5]")); assert.ok(studentIndex>=referenceEnd);
+        const tail=parts.slice(referenceEnd), text=tail.map(part=>part.text||"").join("\n");
+        assert.ok(text.includes(marker)); assert.ok(!JSON.stringify(reference).includes(marker)); assert.ok(!JSON.stringify(reference).includes(tokens[id]));
+        assert.ok(!JSON.stringify(body).includes(sentinel),"the independent second review never receives the first result");
+        if(pass===0) assert.equal(studentIndex,referenceEnd);
+        else {
+          assert.equal(studentIndex,referenceEnd+1);
+          assert.match(parts[referenceEnd].text,/Independently audit/);
+          assert.ok(!parts.slice(0,referenceEnd).some(part=>part.text?.includes("Independently audit")),"the second-pass instruction stays after the reusable reference prefix");
+        }
+        if(id===12) assert.ok(tail.some(part=>part.inline_data?.mime_type==="image/jpeg"&&Buffer.from(part.inline_data.data,"base64").equals(scan)),"original student scan bytes remain in the tail");
+        assert.ok(!Object.hasOwn(body,"cachedContent")); prefixes.push(reference);
+      }
+      assert.deepEqual(prefixes[0],prefixes[1],"both independent passes have an identical public/reference prefix");
+      assert.ok(providerUrls.slice(firstUrl).every(url=>url.includes(":generateContent")||/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url)),"no explicit provider-cache creation or update endpoint is called");
+      runs.push({marker,bodies,prefix:prefixes[0]});
+    }
+    assert.deepEqual(runs[0].prefix,runs[1].prefix,"different users selecting the same exam share the prefix through the PDF/reference");
+    for(const [index,run] of runs.entries()) assert.ok(!JSON.stringify(run.bodies).includes(runs[1-index].marker),"the other user's submission is never reused");
+  } finally { proofSummary=""; }
 });

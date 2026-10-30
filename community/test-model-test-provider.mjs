@@ -75,6 +75,29 @@ for (const [pipeline,providers] of [
   }
 });
 
+test('Gemini and DeepSeek keep the shared exam and policy before language and private OCR tails',async()=>{
+  for(const pipeline of ['gemini-gemini','deepseek-deepseek']) {
+    const runs=[];
+    for(const [lang,marker] of [['en','PRIVATE_STUDENT_A'],['ko','PRIVATE_STUDENT_B']]) {
+      const mock=fixture([read({text:'[Page 1] 2 + 2 = 4\n'+marker}),grade()]);
+      assert.equal((await runModelTest(env,body(pipeline,{lang}),mock)).grading.status,'graded');
+      const request=mock.calls[1].body, gemini=mock.calls[1].provider==='gemini';
+      const policy=gemini?request.systemInstruction.parts[0].text:request.messages[0].content;
+      const serialized=gemini?request.contents[0].parts[0].text:request.messages[1].content[0].text;
+      const input=JSON.parse(serialized), boundary=serialized.indexOf('"language":');
+      assert.deepEqual(Object.keys(input),['task','problem','rubric','points','min_score','language','transcript','uncertainties','legible']);
+      assert.ok(boundary>serialized.indexOf('"rubric":')); assert.ok(boundary<serialized.indexOf('"transcript":'));
+      assert.ok(policy.includes('Every evidence.quote must be copied exactly')); assert.ok(!policy.includes(marker));
+      assert.ok(serialized.includes(marker)); assert.ok(!serialized.slice(0,boundary).includes(marker));
+      assert.ok(!Object.hasOwn(request,'cachedContent')); assert.ok(!JSON.stringify(request).includes('"cache_control"'));
+      assert.ok(mock.calls.every(call=>call.url.endsWith(':generateContent')||call.url.endsWith('/chat/completions')));
+      runs.push({policy,prefix:serialized.slice(0,boundary),request});
+    }
+    assert.equal(runs[0].policy,runs[1].policy); assert.equal(runs[0].prefix,runs[1].prefix);
+    assert.ok(!JSON.stringify(runs[0].request).includes('PRIVATE_STUDENT_B')); assert.ok(!JSON.stringify(runs[1].request).includes('PRIVATE_STUDENT_A'));
+  }
+});
+
 test('validation rejects invalid pipeline, coercible points, unsupported/mismatched images and oversize bodies before calling a provider',async()=>{
   const invalid=[
     body('openai-openai'),body('gemini-gemini',{problem:''}),body('gemini-gemini',{rubric:''}),
