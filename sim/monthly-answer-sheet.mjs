@@ -1,4 +1,4 @@
-import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=4dc2db565898';
+import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=d39bf78633cf';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy = {

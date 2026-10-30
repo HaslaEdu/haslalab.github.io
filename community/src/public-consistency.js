@@ -1,7 +1,7 @@
 export const BOOKMARK_QUERY = '__hl_bm';
 export const BOOKMARK_HEADER = 'X-D1-Bookmark';
 export function publicReadEligible(request, url = new URL(request.url)) {
-  if (request.method !== 'GET' || request.headers.get('X-Monthly-Scan')) return false;
+  if (request.method !== 'GET') return false;
   if (/^\/api\/(?:boards|posts)$/.test(url.pathname)) return !url.searchParams.has('view');
   return /^\/api\/(?:monthly|weekly|rank)$/.test(url.pathname)
     && !request.headers.get('Authorization') && !request.headers.get('Cookie') && !request.headers.get('X-Lab-Token');

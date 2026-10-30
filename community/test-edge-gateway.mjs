@@ -26,7 +26,6 @@ test('preflight stays local and CORS is recalculated for every origin', async ()
   assert.equal(response.status, 204);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), ORIGIN);
   assert.match(response.headers.get('Access-Control-Allow-Headers'), /Authorization/);
-  assert.match(response.headers.get('Access-Control-Allow-Headers'), /X-Monthly-Scan/);
   assert.equal(response.headers.get('Access-Control-Max-Age'), '86400');
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
   response = await h.request('/api/me', { method: 'OPTIONS', headers: { Origin: 'https://untrusted.test' } });
@@ -58,14 +57,14 @@ test('invariant public GET cache crosses auth while canonical queries and caller
 });
 
 test('private paths, authenticated rankings, writes and unsafe upstream responses never enter shared cache', async () => {
-  const paths = ['/api/me', '/api/me/overview', '/api/users/Person', '/api/posts/7?view=1', '/api/lab/tokens', '/api/lab/sessions/7', '/api/pay/status?id=7', '/api/monthly/scan', '/api/monthly/problems/4/scan/00000000-0000-0000-0000-000000000000'];
+  const paths = ['/api/me', '/api/me/overview', '/api/users/Person', '/api/posts/7?view=1', '/api/lab/tokens', '/api/lab/sessions/7', '/api/pay/status?id=7'];
   const h = harness(() => Response.json({ private: true }, { headers: { 'Cache-Control': 'public, max-age=999', 'Access-Control-Allow-Origin': ORIGIN } }));
   for (const path of paths) for (let i = 0; i < 2; i++) {
     const response = await h.request(path, { headers: { Authorization: 'Bearer account' } });
     assert.equal(response.headers.get('Cache-Control'), 'no-store'); await response.text();
   }
   assert.equal(h.calls.length, paths.length * 2);
-  for (const headers of [{ Authorization: 'Bearer account' }, { Cookie: 'session=account' }, { 'X-Lab-Token': 'scan' }, { 'X-Monthly-Scan': 'monthly-scan' }]) {
+  for (const headers of [{ Authorization: 'Bearer account' }, { Cookie: 'session=account' }, { 'X-Lab-Token': 'scan' }]) {
     await (await h.request('/api/rank?case=private', { headers })).text();
     await (await h.request('/api/weekly?case=private', { headers })).text();
   }
@@ -107,22 +106,6 @@ test('request body, auth, scan code, client IP, URL and manual OAuth redirects s
   assert.equal(redirect.status, 302);
   assert.equal(new URL(redirect.headers.get('Location')).searchParams.get('redirect_uri'), 'https://haslalab-community.haslalab.workers.dev/api/oauth/google/callback');
   assert.equal(h.stored.size, 0);
-});
-
-test('monthly scan capabilities forward in their private header without entering shared caches or diagnostics', async () => {
-  const token='local-monthly-capability'.padEnd(43,'x');
-  const h=harness(request=>{
-    assert.equal(request.headers.get('X-Monthly-Scan'),token);
-    assert.equal(request.headers.has('Authorization'),false);
-    assert.equal(request.url.includes(token),false);
-    return Response.json({ok:true});
-  });
-  for(const path of ['/api/monthly/scan','/api/monthly'])for(let i=0;i<2;i++){
-    const r=await h.request(path,{headers:{'X-Monthly-Scan':token}});
-    assert.equal(r.headers.get('Cache-Control'),'no-store');assert.equal(r.headers.get('X-Edge-Cache'),'bypass');
-    assert.equal(r.headers.get('Server-Timing').includes(token),false);await r.text();
-  }
-  await h.flush();assert.equal(h.calls.length,4);assert.equal(h.stored.size,0);
 });
 
 test('public misses coalesce across accounts and cache writes never block responses', async () => {

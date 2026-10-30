@@ -84,10 +84,11 @@ test('month-end rewards are explained on monthly lists and rankings without prom
   for(const lang of ['ko','en']){
     const a=app();a.context.lang=lang;
     const check=html=>{
-      const note=html.match(/<div class="cmnote ar-monthly-rewards"[^>]*>([\s\S]*?)<\/div>/)?.[1];
+      const note=html.match(/<div class="[^"]*\bar-monthly-rewards\b[^"]*"[^>]*>([\s\S]*?)<\/div>/)?.[1];
       assert.ok(note,'the reward explanation is visible above the monthly content');
-      assert.match(note,lang==='ko'?/월말 최종 월별 랭킹/:/final month-end monthly ranking/);
-      assert.match(note,lang==='ko'?/1위 9토큰.*2위 6토큰.*3위 3토큰/:/9 tokens for 1st place, 6 for 2nd and 3 for 3rd/);
+      assert.equal((html.match(/\bar-monthly-rewards\b/g)||[]).length,1,'policy and authoritative settlement status share one notice');
+      assert.match(note,lang==='ko'?/월말 마감 후 최종 결과 발표일/:/After month-end close/);
+      assert.match(note,lang==='ko'?/1위 9개.*2위 6개.*3위 3개의 실전 토큰/:/9, 6 and 3 exam tokens/);
       assert.match(note,lang==='ko'?/전체 레이팅 랭킹은 보상 대상이 아닙니다/:/All-time rating rankings are not eligible for rewards/);
     };
     await a.context.arWeekly(a.root,()=>true,'2026-11',{period:'2026-11',problems:[],top:[],now:end});check(a.root.innerHTML);
@@ -95,6 +96,8 @@ test('month-end rewards are explained on monthly lists and rankings without prom
     await a.context.arRank(a.root,()=>true,'all',{period:null,rows:[]});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
     await a.context.arWeekly(a.root,()=>true,'2026-W43',{period:'2026-W43',problems:[],top:[],now:end});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
     await a.context.arRank(a.root,()=>true,'2026-W43',{period:'2026-W43',rows:[]});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
+    await a.context.arWeekly(a.root,()=>true,'2026-10',{period:'2026-10',problems:[],top:[],now:end});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
+    await a.context.arRank(a.root,()=>true,'month',{period:'2026-11',rows:[],reward:{eligible:false}});assert.doesNotMatch(a.root.innerHTML,/ar-monthly-rewards/);
   }
 });
 

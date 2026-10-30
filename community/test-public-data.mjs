@@ -268,3 +268,29 @@ test('retired problems disappear from public lists, period selection, week selec
   assert.equal(legacy.weeks.find(period => period.week === '2099-W01').n, 1);
   assert.equal((await readPublicRanking(db)).find(row => row.nickname === 'Person 1').total, 16);
 });
+
+test('monthly public metadata announces 9/6/3 prizes and published rankings use the frozen result without financial or answer reads',async()=>{
+  const period='2040-07',close=time-100;
+  for(const [id,no] of [[701,1],[702,2]]) sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)
+    VALUES(?,?,?,'short',100,10,'최종 결과','Final result','PRIVATE_BODY','PRIVATE_BODY',?,?,?)`).run(id,period,no,time-1000,close,time-1000);
+  for(const [problem,user,score] of [[701,1,40],[702,1,60],[701,2,30],[702,2,50]]) sql.prepare(`INSERT INTO submissions(problem_id,user_id,answer,status,score,in_week,created_at)
+    VALUES(?,?,'PRIVATE_PRIZE_SUBMISSION','graded',?,1,?)`).run(problem,user,score,time-500);
+  const planned=await read('/api/monthly?month='+period);
+  assert.equal(planned.reward.eligible,true);assert.equal(planned.reward.announcement_at,close);
+  assert.equal(planned.reward.status,'awaiting_publication');assert.equal(planned.reward.rows,null);
+  assert.deepEqual(planned.reward.rewards,[{rank:1,tokens:9},{rank:2,tokens:6},{rank:3,tokens:3}]);
+  sql.exec(`CREATE TABLE monthly_result_publications(period TEXT PRIMARY KEY,announcement_at INTEGER,published_at INTEGER,policy_version TEXT);
+    CREATE TABLE monthly_result_rows(period TEXT,rank INTEGER,user_id INTEGER,nickname TEXT,av TEXT,total REAL,solved INTEGER,tried INTEGER,last INTEGER,levels TEXT,token_reward INTEGER,PRIMARY KEY(period,rank))`);
+  sql.prepare("INSERT INTO monthly_result_publications VALUES(?,?,?,'monthly-token-awards-v1')").run(period,close,close+1);
+  for(const [rank,user,total,tokens] of [[1,1,100,9],[2,2,80,6]]) sql.prepare("INSERT INTO monthly_result_rows VALUES(?,?,?,?,NULL,?,0,2,?,'[]',?)").run(period,rank,user,'Person '+user,total,time-500,tokens);
+  sql.prepare('UPDATE submissions SET score=100 WHERE problem_id IN (701,702) AND user_id=2').run();
+  queries.length=0;
+  const monthly=await read('/api/monthly?month='+period),rank=await read('/api/rank?scope=month&month='+period);
+  assert.equal(monthly.reward.status,'published');assert.equal(rank.reward.status,'published');
+  assert.deepEqual(monthly.top.map(row=>[row.rank,row.nickname,row.total,row.token_reward]),[[1,'Person 1',100,9],[2,'Person 2',80,6]]);
+  assert.deepEqual(rank.rows,monthly.top);
+  assert.equal((await readPublicRanking(db,period)).find(row=>row.nickname==='Person 2').total,200,'live scores changed while the published month stays frozen');
+  assert.ok(queries.every(({query})=>/^SELECT\b/i.test(query)));
+  noPrivateFields(monthly);noPrivateFields(rank);
+  assert.equal((await read('/api/rank')).reward,undefined,'all-time ranking has no monthly prize overlay');
+});

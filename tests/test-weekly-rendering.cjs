@@ -34,7 +34,7 @@ test('only local weekly SVG figure paths render; HTML, external URLs and travers
 
 test('every supplied formula parses in KaTeX and every published diagram exists', () => {
   const katex = require(path.join(root, 'vendor/katex/katex.min.js'));
-  const content = JSON.parse(fs.readFileSync(path.join(root, 'community/weekly/2026-W44.json'), 'utf8'));
+  const content = {problems:['2026-W44.json','2026-11-greenhouse-part-d.json'].flatMap(name=>JSON.parse(fs.readFileSync(path.join(root,'community/weekly',name),'utf8')).problems)};
   let count = 0;
   for (const p of content.problems) for (const field of ['body_ko', 'body_en', 'model_ko', 'model_en']) {
     const text = p[field], equations = [...text.matchAll(/\$\$([\s\S]*?)\$\$|\$([^$\n]+)\$/g)];

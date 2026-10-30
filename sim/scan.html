@@ -72,6 +72,36 @@
   .lv .ctl button:not(.sh){min-width:84px;font-size:13.5px;padding:9px 10px}
   .shoot .live{background:var(--accent);color:#1c2027;font-size:17px;border:0}
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0b0e12;border:1px solid var(--accent);padding:10px 16px;border-radius:9px;z-index:60;font-size:14px;max-width:92vw}
+  /* The monthly page shares every capture control with the exam scanner.
+     Only this class changes its presentation; exam mode keeps its own theme. */
+  html.monthly-scan{background:#111017;color-scheme:dark}
+  body.monthly-scan{--bg:#111017;--panel:#1c1825;--ink:#ede7f6;--muted:#b0a3c1;--line:#3b334a;--accent:#c5a3f5;--deep:#17131e;font-size:14px;line-height:1.65}
+  body.monthly-scan .wrap{max-width:600px;padding:20px 18px max(32px,env(safe-area-inset-bottom))}
+  body.monthly-scan header{flex-wrap:wrap;align-items:flex-start;gap:13px;margin-bottom:18px}
+  body.monthly-scan header::before{content:"HaslaLab";width:100%;color:var(--accent);font:700 25px/1.2 Georgia,serif;letter-spacing:-.04em;margin-bottom:6px}
+  body.monthly-scan header>b{flex:1;min-width:0;color:var(--ink);font-size:18px;line-height:1.5;overflow-wrap:anywhere}
+  body.monthly-scan header .sp{display:none}
+  body.monthly-scan .clock{flex:none;max-width:100%;padding:8px 10px;background:#17131e;font-size:16px;color:var(--accent)}
+  body.monthly-scan .card{padding:17px;border-radius:12px;margin-top:15px}
+  body.monthly-scan .card h2{font-size:13px;color:var(--muted);margin-bottom:10px}
+  body.monthly-scan button{min-height:44px;background:#292232}
+  body.monthly-scan button:is(.pri,.on),body.monthly-scan .shoot :is(.live,.cam){background:var(--accent);color:#20142d;border-color:var(--accent)}
+  body.monthly-scan button:focus-visible,body.monthly-scan .shoot label:focus-within{outline:2px solid var(--accent);outline-offset:3px}
+  body.monthly-scan .chips{gap:7px;flex-wrap:wrap}
+  body.monthly-scan .chips button{min-width:50px;font-size:13px;padding:9px 12px}
+  body.monthly-scan .shoot{flex-wrap:wrap}
+  body.monthly-scan .shoot .live{flex:1 0 100%;font-size:16px;padding:15px}
+  body.monthly-scan .shoot .gal{background:#292232;font-size:13px}
+  body.monthly-scan .note{background:#17131e;font-size:13px}
+  body.monthly-scan .note.w{border-color:#77515e;color:#f2c4d1}
+  body.monthly-scan .sent .s.partial{color:var(--accent)}
+  body.monthly-scan .sent .s.poor{color:#f2a8b4}
+  body.monthly-scan .sent .s.good{color:#b5dec6}
+  body.monthly-scan .ce,body.monthly-scan .lv{background:#08070b}
+  body.monthly-scan .lv .sh{border-color:var(--accent);background:#c5a3f540}
+  body.monthly-scan .lv .msg.ok{color:#b5dec6}
+  body.monthly-scan .toast{background:#201a2a;box-shadow:0 10px 35px #0007;font-size:13px;bottom:max(24px,env(safe-area-inset-bottom))}
+  @media(max-width:360px){body.monthly-scan .wrap{padding-left:12px;padding-right:12px}body.monthly-scan .card{padding:14px}body.monthly-scan header>b{font-size:16px}body.monthly-scan .row button{font-size:12px;padding:10px 8px}}
 </style>
 </head>
 <body>
@@ -83,18 +113,27 @@
 <script src="exam-network.js"></script>
 <script type="module">
 import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
+let monthlyScanModule;
+const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=b7316705ffd3")).then(module => module.monthlyScanPayload(...args));
 
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
 const MAX_BYTES = 1850000;
 /* the token is taken out of the address bar (and of anything that copies it) once read, and kept for this
    tab only, so a reload still works */
 let H = new URLSearchParams(location.hash.slice(1));
+const MONTHLY = new URLSearchParams(location.search).get("monthly") === "1", SCAN_STORAGE = MONTHLY ? "hlMonthlyScan" : "hlScan";
+if (MONTHLY) {
+  document.body?.classList?.add("monthly-scan");
+  document.documentElement.classList?.add("monthly-scan");
+  const theme = document.querySelector?.('meta[name="theme-color"]'); if (theme) theme.content = "#111017";
+}
+const SCAN_ACCENT = MONTHLY ? "#c5a3f5" : "#f2c14e", SCAN_WASH = MONTHLY ? "rgba(197,163,245,.85)" : "rgba(242,193,78,.85)";
 try {
-  if (H.get("c") || H.get("k")) { sessionStorage.setItem("hlScan", H.toString()); history.replaceState(null, "", location.pathname); }
-  else H = new URLSearchParams(sessionStorage.getItem("hlScan") || "");
+  if (H.get("c") || H.get("k")) { sessionStorage.setItem(SCAN_STORAGE, H.toString()); history.replaceState(null, "", location.pathname + location.search); }
+  else H = new URLSearchParams(sessionStorage.getItem(SCAN_STORAGE) || "");
 } catch (e) {}
 /* the link holds one code (c=), made of the time and random digits; older links named the session (s=) beside it (k=) */
-const SID = +H.get("s") || 0, KEY = H.get("c") || H.get("k") || "", UP = SID ? `/lab/up/${SID}` : "/lab/up";
+const SID = +H.get("s") || 0, KEY = H.get("c") || H.get("k") || "", UP = MONTHLY ? "/monthly/up" : SID ? `/lab/up/${SID}` : "/lab/up";
 const requestedAPI=(H.get("a") || COMMUNITY_API).replace(/\/+$/, ""),API=requestedAPI==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:requestedAPI;
 let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.language || "").startsWith("ko") ? "ko" : "en";
 
@@ -150,7 +189,27 @@ const T = {
     err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "This photo is too large at a readable resolution. Try Original/B&W or retake with the page filling the frame.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "Choose a JPG, PNG or WebP photo.", input_too_big: "Choose a photo no larger than 12 MB.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
   },
 };
-const t = () => T[lang];
+const MONTHLY_COPY = {
+  ko: {task:"답안지 쪽",title:"월별 문제 답안 스캔",left:"촬영 링크 만료까지",working:"추가 풀이 용지",
+    help:"인쇄한 답안지의 쪽 번호를 선택하고 한 번에 한 쪽씩 찍으세요. 네 모서리의 검은 사각형이 모두 보이게 촬영합니다. 추가 풀이 용지는 해당 소문항이 있는 쪽을 선택해 주세요.",
+    closed:"촬영 링크가 만료되었거나 답안이 제출되었습니다. 컴퓨터의 월별 문제 화면에서 새 촬영 링크를 열어 주세요.",
+    over:"촬영 링크가 만료되었습니다. 컴퓨터의 월별 문제 화면에서 새 QR 코드를 열어 주세요.",
+    badLink:"이 월별 문제 촬영 링크를 사용할 수 없습니다. 월별 문제 화면에서 새 QR 코드를 열어 주세요.",
+    legH:{good:"잘 읽혔습니다.",partial:"일부만 읽혔습니다. 컴퓨터에서 소문항별 답과 풀이를 확인하세요.",poor:"잘 읽지 못했습니다. 원본을 확인하고 다시 촬영해 주세요."},
+    legS:{good:"잘 읽힘",partial:"소문항 확인 필요",poor:"다시 촬영 권장"},
+    ocrFailed:"사진을 보관했지만 소문항별 답과 풀이를 정확히 읽지 못했습니다. 이 사진을 빼고 더 선명하게 다시 촬영해 주세요."},
+  en: {task:"Answer-sheet page",title:"Monthly answer scan",left:"Scan link expires in",
+    help:"Select the printed page number and photograph one page at a time, with all four black corner squares visible. For extra working paper, select the page containing its subquestion.",
+    closed:"This scan link expired or the answer was submitted. Open a new link from the monthly problem on your computer.",
+    over:"This scan link expired. Open a new QR code from the monthly problem on your computer.",
+    badLink:"This monthly scan link is unavailable. Open a new QR code from the monthly problem.",
+    legH:{good:"Read well.",partial:"Only partly read. Check each part’s answer and working on your computer.",poor:"Not read clearly. Check the original and take another photo."},
+    legS:{good:"read well",partial:"check parts",poor:"retake recommended"},
+    ocrFailed:"The photo was saved, but its answer parts could not be read reliably. Remove it and take a clearer photo."},
+};
+const t = () => MONTHLY ? {...T[lang],...MONTHLY_COPY[lang],err:{...T[lang].err,
+  upload_processing:lang==="ko"?"이 사진을 처리하는 중입니다. 잠시 후 같은 사진으로 다시 보내면 결과를 확인합니다.":"This photo is still being processed. Wait briefly and send the same photo again to retrieve its result.",
+  upload_conflict:lang==="ko"?"사진의 전송 기록이 일치하지 않습니다. 쪽 번호와 사진을 확인한 뒤 다시 촬영해 주세요.":"This photo does not match its upload record. Check the page and retake the photo."}} : T[lang];
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const ms = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
@@ -160,7 +219,7 @@ let mutationEpoch=0;
 function api(method,path,body,type){if(method!=='GET')mutationEpoch++;return transport.request(method,path,body,{binary:true,headers:{'X-Lab-Token':KEY,...(type?{'Content-Type':type}:{})}});}
 
 let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
-let shotRevision = 0, closeShotEditor = null;
+let shotRevision = 0, closeShotEditor = null, monthlySending = false;
 const srvNow = () => Date.now() / 1000 + SKEW;
 
 let refreshing=null,refreshEpoch=-1,linkEnded=false;
@@ -170,7 +229,7 @@ function refresh(){
     const value=await api('GET',UP);if(epoch!==mutationEpoch)return false;INFO=value;SKEW=INFO.now-Date.now()/1000;
   }catch(e){if(epoch!==mutationEpoch)return false;INFO=null;
     if(e.code==='scan_over'||e.code==='bad_token'||e.status===403){linkEnded=true;phonePoll.stop();}
-    if(e.code==='scan_over'){try{sessionStorage.removeItem('hlScan');}catch(_){}$('clock').textContent='--:--';}
+    if(e.code==='scan_over'){try{sessionStorage.removeItem(SCAN_STORAGE);}catch(_){}$('clock').textContent='--:--';}
     if(!shot)$('app').innerHTML=`<div class="note w">${esc(e.code==='scan_over'?t().over:e.code==='bad_token'||e.status===403?t().badLink:t().err[e.code]||e.code)}</div>`;return false;
   }
   if(!task||!INFO.tasks.includes(task))task=INFO.tasks[0];if(!shot)paint();
@@ -180,7 +239,8 @@ const phonePoll=NETWORK.createPoll({document,delays:[10000,20000,30000],active:(
 
 function paint() {
   document.documentElement.lang = lang;
-  $("hTitle").textContent = `${INFO.comp.toUpperCase()} ${INFO.year} · ${t().title}`;
+  $("hTitle").textContent = MONTHLY ? `${(lang === "en" ? INFO.title_en : INFO.title_ko) || INFO.title || "HaslaLab"} · ${t().title}` : `${INFO.comp.toUpperCase()} ${INFO.year} · ${t().title}`;
+  if (MONTHLY) $("clock").title = lang === "ko" ? "촬영 링크 만료까지 · 제출 기회는 사용하지 않습니다." : "Scan-link expiry · reading photos does not use an attempt.";
   if (INFO.status === "running") { $("app").innerHTML = `<div class="note">${t().notYet}</div>`; return; }
   if (!INFO.open) { $("app").innerHTML = `<div class="note w">${t().closed}</div>${sentList()}`; return; }
   $("app").innerHTML = `
@@ -193,8 +253,8 @@ function paint() {
       ${canProcess() ? "" : `<div class="note w">${t().noCanvas}</div>`}</div>
     <div id="shot"></div>
     ${sentList()}`;
-  $("tasks").onclick = e => { const b = e.target.closest("button"); if (b) { task = b.dataset.t; paint(); } };
-  $("kinds").onclick = e => { const b = e.target.closest("button"); if (b) { kind = b.dataset.k; paint(); } };
+  $("tasks").onclick = e => { const b = e.target.closest("button"); if (b) { if (MONTHLY && (monthlySending || shot?.busy)) return; task = b.dataset.t; if (MONTHLY && shot && shot.task !== task) { shot.task = task; shot.requestId = null; } paint(); } };
+  $("kinds").onclick = e => { const b = e.target.closest("button"); if (b) { if (MONTHLY && (monthlySending || shot?.busy)) return; kind = b.dataset.k; if (MONTHLY && shot && shot.kind !== kind) { shot.kind = kind; shot.requestId = null; } paint(); } };
   $("cam").onchange = $("gal").onchange = e => { const file = e.target.files[0]; e.target.value = ""; take(file); };
   if ($("live")) $("live").onclick = () => liveCamera();
   wireSent();
@@ -215,12 +275,13 @@ function wireSent() {
 
 /* ── one photo: straighten, check, send ── */
 async function take(file, live, internal = false) {
-  if (!file) return;
+  if (!file || MONTHLY && monthlySending) return;
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast(t().err.bad_image);
   if (!internal && file.size > 12 * 1024 * 1024) return toast(t().err.input_too_big);
+  const captureFile = internal && shot?.captureFile || file;
   releaseShot();
   const revision = shotRevision;
-  shot = { file, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
+  shot = { file, captureFile, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
   mode = "clean"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
@@ -255,23 +316,25 @@ function paintShot() {
   if ($("rotate")) $("rotate").onclick = async () => { const keep = shot, revision = ++shotRevision, b = $("rotate"); b.disabled = true; try { const file = await rotatePhoto(keep.file); if (revision !== shotRevision || !shot) return; await take(file, keep.live, true); } catch (e) { if (revision !== shotRevision || !shot) return; toast(t().err[e.code] || t().err.bad_image); b.disabled = false; } };
   $("again").onclick = () => { const lv = shot.live; releaseShot(); paintShot(); if (lv) liveCamera(); else $("cam").click(); };
   $("send").onclick = send;
+  if (MONTHLY && monthlySending) { box.querySelectorAll("button").forEach(button => button.disabled = true); $("send").textContent = t().sending; }
 }
 async function redo(corners, m) {
-  if (!shot) return;
+  if (!shot || MONTHLY && monthlySending) return;
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, corners, busy: false, showOriginal: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
   catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }
 async function send() {
-  if (!shot || shot.busy) return;
+  if (!shot || shot.busy || MONTHLY && monthlySending) return;
   const sending = shot, revision = shotRevision;
+  if (MONTHLY) { monthlySending = true; paintShot(); }
   const b = $("send"); b.disabled = true; b.textContent = t().sending;
   try {
-    const body = await encodeUpload(sending.blob, { maxBytes: MAX_BYTES });
+    const body = MONTHLY ? await monthlyScanPayload(sending,encodeUpload) : await encodeUpload(sending.blob, { maxBytes: MAX_BYTES });
     if (revision !== shotRevision || !shot) return;
-    const r = await api("PUT", `${UP}/pages?task=${encodeURIComponent(sending.task)}&kind=${sending.kind}`, body, body.type);
+    const r = await api(MONTHLY ? "POST" : "PUT", `${UP}/pages?task=${encodeURIComponent(sending.task)}&kind=${sending.kind}`, body, MONTHLY ? undefined : body.type);
     if (revision !== shotRevision || !shot) return;
     const msg = [t().sentOk(r.no)];
     if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
@@ -282,8 +345,15 @@ async function send() {
     if (lv && INFO && INFO.open) liveCamera();                      // the next page, straight away
   } catch (e) {
     if (revision !== shotRevision || !shot) return;
+    if (MONTHLY && (e.code === "scan_over" || e.code === "bad_token" || e.status === 403 || e.status === 410)) {
+      linkEnded = true; phonePoll.stop(); try { sessionStorage.removeItem(SCAN_STORAGE); } catch (_) {}
+      releaseShot(); if (INFO) { INFO.open = false; paint(); } else $("app").innerHTML = `<div class="note w">${t().over}</div>`;
+      return;
+    }
     toast(t().err[e.code] || e.code, 5000); b.disabled = false; b.textContent = t().send;
     if (e.code === "closed") refresh();
+  } finally {
+    if (MONTHLY) { monthlySending = false; if (shot && revision === shotRevision) paintShot(); }
   }
 }
 
@@ -308,13 +378,13 @@ async function cornerEditor() {
   function draw() {
     g.clearRect(0, 0, cv.width, cv.height); g.drawImage(img, ox, oy, img.width * sc, img.height * sc);
     const q = [0, 1, 3, 2].map(i => scr(pts[i]));
-    g.strokeStyle = "#f2c14e"; g.lineWidth = 2 * dpr; g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.stroke();
-    pts.forEach((p, i) => { const s = scr(p); g.fillStyle = i === drag ? "#fff" : "rgba(242,193,78,.85)"; g.beginPath(); g.arc(s.x, s.y, 13 * dpr, 0, 7); g.fill(); });
+    g.strokeStyle = SCAN_ACCENT; g.lineWidth = 2 * dpr; g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.stroke();
+    pts.forEach((p, i) => { const s = scr(p); g.fillStyle = i === drag ? "#fff" : SCAN_WASH; g.beginPath(); g.arc(s.x, s.y, 13 * dpr, 0, 7); g.fill(); });
     if (drag >= 0) {                                               // magnifier
       const p = pts[drag], R = 60 * dpr, z = 3, mx = pts[drag].x < img.width / 2 ? cv.width - R - 10 : R + 10, my = R + 10;
       g.save(); g.beginPath(); g.arc(mx, my, R, 0, 7); g.clip();
       g.drawImage(img, p.x - R / (sc * z), p.y - R / (sc * z), 2 * R / (sc * z), 2 * R / (sc * z), mx - R, my - R, 2 * R, 2 * R);
-      g.strokeStyle = "#f2c14e"; g.lineWidth = 1.5 * dpr; g.beginPath(); g.moveTo(mx - 10 * dpr, my); g.lineTo(mx + 10 * dpr, my); g.moveTo(mx, my - 10 * dpr); g.lineTo(mx, my + 10 * dpr); g.stroke();
+      g.strokeStyle = SCAN_ACCENT; g.lineWidth = 1.5 * dpr; g.beginPath(); g.moveTo(mx - 10 * dpr, my); g.lineTo(mx + 10 * dpr, my); g.moveTo(mx, my - 10 * dpr); g.lineTo(mx, my + 10 * dpr); g.stroke();
       g.restore(); g.strokeStyle = "#fff"; g.beginPath(); g.arc(mx, my, R, 0, 7); g.stroke();
     }
   }
@@ -384,7 +454,7 @@ async function liveCamera() {
       if (d) {
         const s = Math.min(cv.width / w, cv.height / h), ox = (cv.width - w * s) / 2, oy = (cv.height - h * s) / 2;
         const q = [0, 1, 3, 2].map(i => ({ x: ox + d.corners[i].x * s, y: oy + d.corners[i].y * s }));
-        g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : "#f2c14e"; g.lineWidth = 3 * dpr;
+        g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : MONTHLY ? "rgba(197,163,245,.18)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : SCAN_ACCENT; g.lineWidth = 3 * dpr;
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
       /* steady: the four squares moved less than 1.2 % of the picture over the last six looks */

@@ -5,9 +5,14 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import worker from './src/index.js';
 import { publicRead, invalidatePublicReads } from './src/public-read-cache.js';
+import { GREENHOUSE_PUBLICATION_ID } from './src/weekly-content.js';
 
 const sql = new DatabaseSync(':memory:');
 for (const name of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort()) sql.exec(readFileSync(new URL('./migrations/' + name, import.meta.url), 'utf8'));
+// Isolate the synthetic high-ID scoring fixture from the independent content release.
+// Publication correctness and collision rollback are covered by its own SQLite suite.
+sql.exec('CREATE TABLE weekly_publications(id TEXT PRIMARY KEY,problems INTEGER NOT NULL,created_at INTEGER NOT NULL)');
+sql.prepare('INSERT INTO weekly_publications VALUES(?,1,1)').run(GREENHOUSE_PUBLICATION_ID);
 const metadata = () => ({ timings: { sql_duration_ms: 0.125 }, rows_read: 1, served_by_region: 'LOCAL', served_by_primary: true });
 const DB = {
   prepare(query) {
