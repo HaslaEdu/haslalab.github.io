@@ -33,7 +33,7 @@ for(const key of ['kmo','kmchc']){
 for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'rupho-selection.js',arena:'arena.js'}))versions[key]=name+'?v='+digest(read(name));
 const competitions={};let years=0,probs=0,live=0,thy=0;
 for(const [key,c]of Object.entries(DATA)){
-  const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite'])if(c[k]!==undefined)data[k]=c[k];
+  const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite','officialWebsiteArchived'])if(c[k]!==undefined)data[k]=c[k];
   const exp=c.years.reduce((n,y)=>n+y.problems.length,0),theory=Object.values(THEORY[key]||{}).reduce((n,t)=>n+(t.p?.length||Object.keys(t.f||{}).filter(k=>!t.f[k].kx).length),0);
   competitions[key]={data,counts:{years:c.years.length,hasProblems:c.years.some(y=>y.problems.length),mixed:!!c.theoryCount,problems:c.theoryCount?c.theoryCount+exp:c.years.some(y=>y.problems.length)?exp:theory}};
   years+=c.years.length;
