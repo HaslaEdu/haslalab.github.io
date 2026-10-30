@@ -1000,8 +1000,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 </div></footer>
 
 <script src="sim/labmedal.js"></script>
-<script src="examdur.js?v=20261030-study"></script>
-<script src="theory.js?v=d19c114710"></script>
+<script src="examdur.js?v=20261030-archives"></script>
+<script src="theory.js?v=db6ea0027a"></script>
 <script src="paper-languages.js?v=1"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
@@ -1009,8 +1009,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="rupho-selection.js"></script>
 <script src="rupho-archive.js?v=20261030-study"></script>
 <script src="arena.js?v=20261030-study"></script>
-<script src="logo/variants.js?v=20261030-logo-counters"></script>
-<script src="site-design.js?v=20261030-logo-counters"></script>
+<script src="logo/variants.js?v=20261030-archives"></script>
+<script src="site-design.js?v=20261030-archives"></script>
 <script>
 "use strict";
 
@@ -4357,7 +4357,7 @@ function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   const sim=simThy(key,yr);
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!sim.has(x)&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&EOTVOS_TIMED.has(+yr.y)&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!t.f[x].containsSolutions&&!sim.has(x)&&(key!=="eotvos"||EOTVOS_TIMED.has(+yr.y))&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
   if(key==="ioi"||(compOf(key)&&compOf(key).omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(compOf(key)&&compOf(key).rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
@@ -4436,8 +4436,8 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 17;
-const LOGO_FILES = {cmo:"cmo.svg"};
+const LOGO_V = 18;
+const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
   baupc:["하버드 대학교","Harvard University"],cpho:["중국물리학회","Chinese Physical Society"],
@@ -4445,6 +4445,7 @@ const LOGO_ORGANIZERS = {
   kumc:["대한수학회","Korean Mathematical Society"],cmo:["중국수학회","Chinese Mathematical Society"]
 };
 function logoTitle(key){
+  if(key==="plancks")return lang==="ko"?"PLANCKS 2026 국제 결선 공식 표장":"Official PLANCKS 2026 international final mark";
   if(key==="ortvay")return lang==="ko"?"Ortvay 공식 문제지 워드마크":"Ortvay official paper wordmark";
   if(key==="usamo")return lang==="ko"?"USAMO 공식 교사용 매뉴얼 제목 표장":"USAMO official teacher manual title wordmark";
   if(key==="kmchc")return lang==="ko"?"대한화학회 화학올림피아드 공통 표장":"Korean Chemistry Olympiad shared mark";
@@ -4570,7 +4571,7 @@ function viewOriginalHome(){
 
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","baupc","cpho","rupho","kphe"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","mskbo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -4911,7 +4912,7 @@ function viewComp(key,mode){
           </div>
           <div class="host">${y.host?y.host[lang]:"—"}</div>
           <div class="cnt">${(thy?rt:r)&&!none?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
-            thy?TL(c,"thyCnt")(thyCount(th))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
+            thy?(key==="plancks"||key==="eotvos"?(lang==="ko"?`문제지 ${thyParts(th).length}개`:`${thyParts(th).length} paper${thyParts(th).length>1?"s":""}`):TL(c,"thyCnt")(thyCount(th)))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
                     : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
       }).join("")}
@@ -5051,7 +5052,7 @@ function probCard(o){
    translation where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g;
    w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
    marking scheme where it was published apart */
-const THY_YEARLY=new Set(["baupc","usapho","opho"]);
+const THY_YEARLY=new Set(["baupc","usapho","opho","plancks","eotvos"]);
 function kpheEditionNote(t,year,ko){
   const y=String(year);
   if(!y.includes('-'))return ko?'한국 중학생 물리대회 원문을 보존한 A4 학습용 편집본입니다. 당시 교시·시험 안내는 원문 기준입니다.':'A4 study edition of the Korean Middle-School Physics Competition. Original sessions and instructions are preserved.';
@@ -5070,21 +5071,24 @@ function theoryHtml(key,yr){
   const omr=!!(compOf(key)&&compOf(key).omr);
   const card=(code,probs,f,k,head,docs)=>{
     const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};
-    const paperLabel=archive?.type==="publisher"?(ko?"문제·풀이 (부분)":"Problems and solutions (excerpt)"):d.thyPaper;
+    const paperLabel=t.sourceType==="historical_reprint"?(ko?"문제 재수록 보고서":"Report with reprinted problems"):f.containsSolutions?(ko?"문제·해설 합본":"Problems & solutions"):archive?.type==="publisher"?(ko?"문제·풀이 (부분)":"Problems and solutions (excerpt)"):d.thyPaper;
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
      const paperLanguages=PaperLanguages.files({...f,ko:k}), selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
-     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,`${d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
+     const paperSourceType=f.paperSourceTypes?.[selectedLanguage];
+     const paperDisplay=P[0]===f.paper&&f.sourcePages?.length?P[0]+"#page="+f.sourcePages[0]:P[0];
+     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,`${f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
      if(selectedLanguage) P[1]=PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
     const many=titles.length>1;
-    return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:d.thyOrigChip,
+    return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:paperSourceType==="unofficial_translation"?(ko?"비공식 영문 번역":"Unofficial English translation"):d.thyOrigChip,
       heading:head||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0]), body:(many?clip(titles):alt.map(esc).join(" · "))+(archive?`<p><b>${archiveLabels[archive.type]||esc(archive.type)}</b> · ${esc(archive.note)}</p>`:""),
       tags:[TL(compOf(key),"trkThy")].concat(many?[TL(compOf(key),"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
-       main:[a(P[0],paperLabel,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
+      note:(f.containsSolutions?`<p class="trknote">${t.sourceType==="historical_reprint"?(ko?"선택한 연도의 문제와 다른 회차의 문제·해설이 함께 실린 보고서입니다. 해당 연도 문제 쪽으로 열리며, 이 회차의 해설을 제공하는 것은 아닙니다.":"This report reprints the selected year's problems alongside other years and solutions. The link opens at the relevant pages; a solution to this historical set is not supplied."):(ko?"당시 보고서에 문제와 해설이 함께 실려 있습니다. 학습용 합본이며 해설을 포함합니다.":"This contemporary report includes the problem statements and worked solutions together.")}</p>`:"")+(f.paperNotes?.[selectedLanguage]?`<p class="trknote">${esc(f.paperNotes[selectedLanguage])}</p>`:""),
+       main:[a(paperDisplay,paperLabel,true,P[1])].concat(key==="kmo"||key==="kmchc"?[a(S[0],archive?(P[0]===S[0]?(ko?"문제·풀이 합본":"Problems and solutions"):(ko?"재수록 풀이":"Reprinted solutions")):P[0]===S[0]?(ko?"문제·정답 합본":"Problems and answers"):(ko?"공식 정답":"Official answers"),false,S[1])]:omr?
          (K[0]?[a(K[0],t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
@@ -5110,9 +5114,12 @@ function theoryHtml(key,yr){
     <div class="shead">
       <h2 style="font-size:1.15rem">${TL(compOf(key),"thyPick")}</h2>
       ${guide?`<a class="genlink" href="${thyUrl(guide)}" target="_blank" rel="noopener">${d.actGeneral}${!ko&&!t.g.en?` <span class="lgtag">KO</span>`:""}</a>`:""}
+      ${t.solutionPage?`<a class="genlink" href="${esc(t.solutionPage)}" target="_blank" rel="noopener">${ko?"공개 해설 · 웹":"Published solutions · web"}</a>`:""}
     </div>
      ${key==="kphe"&&t.sourceType!=="recall"?`<p class="trknote">${kpheEditionNote(t,yr.y,ko)} <a href="https://kphe.kps.or.kr/" target="_blank" rel="noopener">${ko?"공식 안내":"Official information"}</a></p>`:""}
      ${t.sourceType==="recall"?`<p class="trknote"><b>${ko?"비공식 복기·재수록 자료":"Unofficial recollection / reprint"}</b><br>${esc(t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"작성자 원문·출처":"Author and source"}</a>`:""}</p>`:""}
+     ${['report_reprint','historical_reprint'].includes(t.sourceType)?`<p class="trknote"><b>${ko?"학술지·대회 보고서 재수록":"Journal / competition report"}</b><br>${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"자료 출처":"Source archive"}</a>`:""}</p>`:""}
+     ${t.note&&!['recall','report_reprint','historical_reprint'].includes(t.sourceType)&&key!=="kphe"?`<p class="trknote">${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note)}</p>`:""}
      ${contestEntries(key,yr.y).length||reviewTheoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="${compModeHref(key,REVIEW_ONLY.has(key)?"review":"exam",yr.y)}">${REVIEW_ONLY.has(key)?(ko?"✎ 채점·첨삭만 받기":"✎ Grading & feedback"):"⏱ "+TL(compOf(key),"thyExam")}</a></p>`:""}
     ${sim.size?`<p class="cnote">${d.thySim([...sim].join(", "))}</p>`:""}
     <div class="probs">${cards}</div></div>`;

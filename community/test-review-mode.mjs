@@ -221,3 +221,39 @@ test('a verified Eotvos journal cannot redirect the Worker to an untrusted host'
     assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.deepEqual(fetched, [sitting.solution]);
   } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
 });
+
+test('PLANCKS uses its verified four-hour sitting and the 2021 sixteen-hour online exception on the server', async () => {
+  for (const [year, hours] of [[2026, 4], [2021, 16]]) {
+    const r = await request('/lab/start', { comp: 'plancks', year, tasks: ['T'], sources: { T: { kind: 'theory', sol: `PLANCKS_${year}_TS.pdf` } } }, 20);
+    assert.equal(r.status, 200);
+    assert.equal(r.data.session.exam_sec, hours * 3600);
+    assert.equal(r.data.session.ended_at - r.data.session.started_at, hours * 3600);
+    assert.equal(r.data.session.review_only, false);
+    sqlite.prepare("UPDATE lab_sessions SET status='ended' WHERE id=?").run(r.data.session.id);
+  }
+});
+
+test('a locally archived Eotvos report keeps the same current-year and printed-points safeguards as its publisher URL', async () => {
+  const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
+  globalThis.fetch = async (url, options) => {
+    if (String(url).startsWith('https://github.com/')) return new Response('', { status: 404 });
+    if (String(url) === 'https://haslalab.org/pdfx/eotvos/Eotvos_2014_TS.pdf') return new Response('%PDF-1.7\nOriginal annual report');
+    assert.ok(String(url).includes(':generateContent')); calls++;
+    const prompt = JSON.parse(options.body).contents[0].parts.map(p => p.text || '').join('\n');
+    assert.ok(prompt.includes('ONLY the exact 2014'));
+    assert.ok(prompt.includes('exclude anniversary and historical problems'));
+    return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ points_verified: false, items: [], notes: 'no_official_points' }) }] } }] });
+  };
+  try {
+    const started = await request('/lab/start', { comp: 'eotvos', year: 2014, tasks: ['T'], review: true, sources: { T: { kind: 'theory', sol: 'Eotvos_2014_TS.pdf' } } }, 20);
+    assert.equal(started.status, 200);
+    const id = started.data.session.id;
+    await request('/lab/sessions/' + id + '/text', { answers: { T: 'A submitted derivation: F = ma.' } }, 20);
+    const graded = await request('/lab/sessions/' + id + '/submit', { grade: true }, 20);
+    assert.equal(graded.status, 200);
+    assert.equal(graded.data.session.detail.tasks.T.why, 'no_official_points');
+    assert.equal(graded.data.session.score, null);
+    assert.equal(graded.data.session.points, null);
+    assert.equal(calls, 1);
+  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+});

@@ -21,9 +21,10 @@
     2016: [600, 10], 2017: [600, 10], 2018: [600, 9], 2019: [600, 8], 2020: [300, 5], 2021: [300, 4], 2022: [600, 9],
     2023: [600, 9], 2024: [600, 10], 2025: [600, 9], 2026: [600, 10] };
   var THEORY = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600,
-    cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600 };
+    cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600, plancks: 4 * 3600 };
   function sec(comp, year, n, theory) {
     if (['physcup', 'ortvay', 'opho', 'wopho'].indexOf(comp) >= 0) return 0;
+    if (comp === 'plancks' && +year === 2021 && theory) return 16 * 3600;
     if (theory === 'mixed') return comp === 'nbpho' && NBPHO[year] ? NBPHO[year][0] * 60 : 5 * 3600;   // NBPhO's whole booklet at once
     if (theory) return THEORY[comp] || 5 * 3600;
     n = Math.max(1, n || 1);

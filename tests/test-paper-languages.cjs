@@ -16,7 +16,7 @@ assert.equal(PaperLanguages.files(cpho).ko, cpho.ko.paper);
 const ru = catalogue.rupho['2026'].f.T1;
 assert.equal(PaperLanguages.files(ru).ru, 'RuPhO_2026_T1_RU.pdf');
 const hu = catalogue.eotvos['2026'].f.T;
-assert.equal(PaperLanguages.files(hu).hu, 'https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_2026.pdf');
+assert.equal(PaperLanguages.files(hu).hu, 'pdfx/eotvos/Eotvos_2026_T_HU.pdf');
 assert.equal(PaperLanguages.label('ru','en'), 'Русский');
 assert.equal(PaperLanguages.label('zh','en'), '中文');
 assert.equal(PaperLanguages.label('hu','en'), 'Magyar');

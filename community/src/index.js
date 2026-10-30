@@ -1177,10 +1177,11 @@ const NBPHO_TIME = { 2003: [300, 8], 2004: [300, 9], 2005: [300, 9], 2006: [600,
   2023: [600, 9], 2024: [600, 10], 2025: [600, 9], 2026: [600, 10] };
 /* a theory exam (v13): the whole written paper of the year, sat at once — five hours as at IPhO, APhO, IChO, IOAA and
    most others; three hours where the competition's own theory paper is shorter */
-const THEORY_SEC = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600, cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600 };
+const THEORY_SEC = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600, cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600, plancks: 4 * 3600 };
 function labExamSec(comp, year, n, theory) {
   if (["physcup", "ortvay", "opho", "wopho"].includes(comp)) return 0;
   if (LAB.testSec) return LAB.testSec;
+  if (comp === "plancks" && +year === 2021 && theory) return 16 * 3600;
   if (theory === "mixed") return comp === "nbpho" && NBPHO_TIME[year] ? NBPHO_TIME[year][0] * 60 : 5 * 3600;   // NBPhO: everything, the whole competition time
   if (theory) return THEORY_SEC[comp] || 5 * 3600;
   n = Math.max(1, n || 1);
@@ -1395,7 +1396,7 @@ const EOTVOS_SOLUTIONS = {
   2016: "https://fizikaiszemle.elft.hu/uploads/2017/08/fizszem-20170708-tichy-vanko-vigh_11_09_24_1504170564.3743.pdf",
   2020: "https://fizikaiszemle.elft.hu/uploads/2021/03/fizszem-202102-tichy-vanko-vigh_12_02_47_1615201367.5205.pdf",
 };
-const labEotvosSolution = (comp, year, source) => comp === "eotvos" && Object.hasOwn(EOTVOS_SOLUTIONS, year) && EOTVOS_SOLUTIONS[year] === source;
+const labEotvosSolution = (comp, year, source) => comp === "eotvos" && (Object.hasOwn(EOTVOS_SOLUTIONS, year) && EOTVOS_SOLUTIONS[year] === source || /^\d{4}$/.test(String(year)) && new RegExp(`^Eotvos_${year}_T\\d*S\\.pdf$`).test(source));
 function labReviewPaperAllowed(value) {
   if (typeof value !== "string") return false;
   if (SOL_RE.test(value) || /^pdfx\/[a-z]+\/[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(value)) return true;

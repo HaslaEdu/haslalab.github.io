@@ -79,11 +79,26 @@ def load():
                 language = (f.get('lang') or g.group(4) or '').lower()
                 if kind == 'paper' and re.fullmatch(r'[a-z]{2}', language):
                     slot.setdefault('papers', {})[language] = value
+                    if f.get('source_type'):
+                        slot.setdefault('paperSourceTypes', {})[language] = f['source_type']
+                    if f.get('source_type') == 'unofficial_translation' and f.get('note'):
+                        slot.setdefault('paperNotes', {})[language] = f['note']
+                    if f.get('contains_solutions'):
+                        slot.setdefault('paperContainsSolutions', {})[language] = True
                 # one paper per part: English first, then whatever was published
                 if kind == 'paper' and 'paper' in slot and not (g.group(4) == 'EN' and not slot['paper'].endswith('_EN.pdf')):
                     continue
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
                 slot[kind] = value
+                if kind == 'paper':
+                    if f.get('contains_solutions'):
+                        slot['containsSolutions'] = True
+                    else:
+                        slot.pop('containsSolutions', None)
+                    if f.get('source_pages') and all(isinstance(page, int) and page > 0 for page in f['source_pages']):
+                        slot['sourcePages'] = f['source_pages']
+                    else:
+                        slot.pop('sourcePages', None)
                 if kind == 'paper' and language:
                     slot['paperLang'] = language
             # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
@@ -96,7 +111,7 @@ def load():
                         if k not in slot and k in whole:
                             slot[k] = whole[k]
                             if k == 'paper':
-                                for prop in ('papers', 'paperLang'):
+                                for prop in ('papers', 'paperLang', 'containsSolutions', 'paperContainsSolutions', 'paperSourceTypes', 'paperNotes', 'sourcePages'):
                                     if prop in whole:
                                         slot[prop] = whole[prop].copy() if isinstance(whole[prop], dict) else whole[prop]
             files = {k: v for k, v in files.items() if 'paper' in v}
@@ -121,12 +136,14 @@ def load():
                     if f.get('kind') == 'key' and f.get('source_type')}
             if y.get('corrections'):
                 out[comp][year]['corrections'] = y['corrections']
-            if comp == 'kphe' and y.get('note'):
+            if y.get('note'):
                 out[comp][year]['note'] = y['note']
             if y.get('source_type'):
                 out[comp][year]['sourceType'] = y['source_type']
             if y.get('source_page'):
                 out[comp][year]['sourcePage'] = y['source_page']
+            if re.match(r'^https://', y.get('solution_page', '')):
+                out[comp][year]['solutionPage'] = y['solution_page']
             if gt:
                 out[comp][year]['g'] = {'en': gt}
     split(out)

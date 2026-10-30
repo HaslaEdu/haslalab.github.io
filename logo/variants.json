@@ -130,7 +130,7 @@
       "aspectRatio": 4.404301,
       "mode": "preserve-color",
       "backgroundRemoved": null,
-      "sourceSha256": "1275271f97afc91247dff6d7ea339eb6b7a5cc9c8419e923a711744d313a4492",
+      "sourceSha256": "6fc0fbf1e34e7c16f98f7a7ccbb45cf807b4b034d6e23729ae008240a76d3e37",
       "notes": [
         "The official SVG contains one raster image; its original embedded PNG bytes are reused unchanged.",
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
@@ -760,6 +760,26 @@
       "sourceSha256": "b8e4d17f9c52055e12510787892269f7c67d5695f6f6072a1531cf1ab37c0382",
       "notes": [
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "plancks": {
+      "original": "logo/plancks.svg",
+      "light": "logo/light/plancks.svg",
+      "dark": "logo/dark/plancks.svg",
+      "sourceWidth": 19.999998,
+      "sourceHeight": 27.698439,
+      "viewBox": [
+        0,
+        0,
+        19.999998,
+        27.698439
+      ],
+      "aspectRatio": 0.722062,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "2364d7fbf2ddfba5cb45fafe390733aec6e3a0a9d360766027573f0129880597",
+      "notes": [
+        "Native vector source retained without automatic pixel-based adjustments."
       ]
     },
     "putnam": {

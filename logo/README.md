@@ -10,6 +10,7 @@ KMO·AMC·Putnam·USABO·USNCO·RuPhO는 글자 내부의 닫힌 공간에 남�
 |---|---|---|
 | ortvay | 공식 문제지 제목 표장 | [출처](https://ortvay.elte.hu/) |
 | eotvos | 주최기관 표장 | [출처](https://elft.hu/eotvos-lorand-fizikaverseny-2026/) |
+| plancks | 2026 국제 결선 공식 표장 | [출처](https://plancks2026.verenigingspin.nl/) |
 | baupc | 주최기관 표장 | [출처](https://liquids.seas.harvard.edu/penanen/competition/welcome.html) |
 | cpho | 주최기관 표장 | [출처](https://www.cps-net.org.cn/Home/Content/show/id/905.do) |
 | rupho | 대회·공통 표장 | [출처](https://vserosolimp.edsoo.ru/brendbook) |

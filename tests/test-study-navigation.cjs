@@ -80,11 +80,30 @@ test('verified Eötvös sittings offer the Hungarian original in an English time
     const q=links[0].searchParams;
     assert.equal(q.get('lang'),'en');
     assert.equal(q.get('pl'),'hu');
-    assert.equal(q.get('p'),`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${year}.pdf`);
+    assert.equal(q.get('p'),`pdfx/eotvos/Eotvos_${year}_T_HU.pdf`);
     assert.equal(q.get('s'),a.context.window.THEORY.eotvos[String(year)].f.T.sol);
     assert.equal(q.get('review'),null);
     assert.equal(a.context.HLexam.sec('eotvos',year,1,true),300*60);
     assert.ok(html.includes('5:00 + 0:30'));
   }
   assert.equal(a.run('theoryGroups("eotvos",compOf("eotvos").years.find(y=>y.y===2026)).length'),0,'A recent paper without its verified solution must not become a timed scored sitting.');
+});
+
+test('new physics archives show PLANCKS finals and preserve context for old Eotvos reports',()=>{
+  const a=app();a.run("lang='en';track='thy'");
+  assert.equal(a.run('subjOf("plancks")'),'phys');
+  assert.match(a.run('viewComps("phys")'),/href="#\/plancks"/);
+  const modern=a.run('viewYear("plancks",2026,"exam")');
+  assert.match(modern,/4:00 \+ 0:30/);
+  const link=sessionLinks(modern)[0];
+  assert.equal(link.searchParams.get('p'),'pdfx/plancks/PLANCKS_2026_T_EN.pdf');
+  assert.match(a.run('viewYear("plancks",2021,"exam")'),/16:00 \+ 0:30/);
+  const historical=a.run('viewYear("eotvos",1988)');
+  assert.match(historical,/Journal \/ competition report/);
+  assert.match(historical,/\.pdf#page=\d+/);
+  assert.equal(a.run('theoryGroups("eotvos",compOf("eotvos").years.find(y=>y.y===1996)).length'),0,'A recovered English translation must not silently create an unverified historic sitting.');
+  const translated=a.run('viewYear("eotvos",1996)');
+  assert.match(translated,/Unofficial English translation/);
+  assert.match(translated,/Problems & solutions · Magyar/);
+  assert.match(a.run('viewYear("eotvos",2018)'),/corrected final temperature/,'The source translator’s substantive correction must remain visible.');
 });

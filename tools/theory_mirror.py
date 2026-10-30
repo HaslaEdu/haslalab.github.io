@@ -63,7 +63,7 @@ def main():
         for y in m.get('years', []):
             for f in y.get('files', []):
                 name = f['file']
-                if not f.get('url') or f.get('direct'):   # kept on the site (pdfx/…), or only linked
+                if f.get('local') or not f.get('url') or f.get('direct'):   # local originals/excerpts retain provenance URLs, but are already on the site
                     continue
                 if name in assets(tag):
                     skipped += 1
