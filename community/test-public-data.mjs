@@ -220,7 +220,8 @@ test('public monthly summaries include blank answer-sheet descriptors and period
   assert.equal(problem.period, '2026-11'); assert.equal(problem.month, '2026-11');
   assert.equal(problem.answerSheet.limit, 3);
   assert.equal(problem.answerSheet.parts.reduce((sum, part) => sum + part.points, 0), 100);
-  assert.deepEqual(Object.keys(problem.answerSheet).sort(), ['limit', 'pages', 'parts', 'version']);
+  assert.deepEqual(Object.keys(problem.answerSheet).sort(), ['limit', 'pages', 'parts', 'round', 'version']);
+  assert.equal(problem.round,'theory');assert.equal(problem.answerSheet.round,'theory');
   assert.ok(problem.answerSheet.parts.every(part => !('answer' in part) && !('working' in part) && part.label_ko && part.label_en));
   assert.equal('attempts' in problem, false, 'per-account remaining attempts never enter public data');
   assert.equal('answer_sheet' in problem, false); noPrivateFields(monthly);

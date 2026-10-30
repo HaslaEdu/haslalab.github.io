@@ -30,6 +30,37 @@ test('printable pages provide separate final-answer and working boxes, identifie
   }
 });
 
+test('the astronomy sheet prints letter labels while keeping existing answer and photo identifiers',async()=>{
+  const {getMonthlyAnswerSheet,getMonthlyProblemRound}=await import('../monthly-problems.mjs');
+  const {buildAnswerPages}=await import('../sim/monthly-answer-sheet.mjs');
+  const problem={id:8,week:'2026-11',no:4,title:'Radiative equilibrium and precession of a disk'};
+  const sheet=getMonthlyAnswerSheet(problem);
+  assert.deepEqual(sheet.parts.map(p=>p.displayId),['a','b','c','d','e','f','g','h','i','j']);
+  assert.deepEqual(sheet.parts.map(p=>p.id),['16','17','18','19','20a','20b','20c','21a','21b','21c']);
+  for(const lang of ['ko','en']){
+    const html=buildAnswerPages(problem,sheet,lang);
+    assert.equal((html.match(/data-display-part="\([a-j]\)"/g)||[]).length,10);
+    assert.ok(html.includes('data-part="16"'));assert.ok(html.includes('data-part="21c"'));
+    assert.ok(!/소문항 (?:16|17|18|19|20|21)|Part (?:16|17|18|19|20|21)/.test(html));
+  }
+  assert.equal(getMonthlyProblemRound(problem),'theory');
+  assert.equal(getMonthlyProblemRound({...problem,round:'experiment'}),'experiment');
+  assert.equal(getMonthlyProblemRound({answerSheet:{round:'experiment'}}),'experiment');
+});
+
+test('the printable browser entry resolves a native answer sheet after fetching its actual database ID',async()=>{
+  const nodes=Object.fromEntries(['back','print','message','help','sheets'].map(id=>[id,{textContent:'',innerHTML:'',hidden:false,disabled:true,addEventListener(){}}]));
+  const previous={document:global.document,location:global.location,fetch:global.fetch};
+  global.document={documentElement:{},getElementById:id=>nodes[id]};global.location={search:'?id=8&lang=ko'};
+  global.fetch=async url=>{assert.match(url,/\/problems\/8\?lang=ko$/);return Response.json({problem:{id:8,no:4,week:'2026-11',title:'원판 모형의 복사 평형과 세차'}});};
+  try{
+    await import('../sim/monthly-answer-sheet.mjs?case=actual-id8');
+    for(let i=0;i<5&&nodes.print.disabled;i++)await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(nodes.print.disabled,false);assert.ok(nodes.sheets.innerHTML.includes('data-display-part="(a)"'));
+    assert.ok(nodes.sheets.innerHTML.includes('HL-MONTHLY-8'));
+  }finally{for(const [key,value]of Object.entries(previous)){if(value===undefined)delete global[key];else global[key]=value;}}
+});
+
 test('every A4 page has four printable black corner marks with white quiet zones',async()=>{
   const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
   const {buildAnswerPages}=await import('../sim/monthly-answer-sheet.mjs');

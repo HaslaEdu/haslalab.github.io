@@ -2,7 +2,7 @@
 // Callers choose the D1 session/consistency policy and authenticate any private overlay.
 // Profiles, individual answers, votes, account state and financial data stay outside this module.
 import { canonicalProblemPeriod, isMonthPeriod, isProblemPeriod, isoMonth } from './problem-period.js';
-import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
+import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
 import { visibleMonthlySql } from './monthly-answers.js';
 import { missingNoticePins } from './notice-pins.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
@@ -124,6 +124,7 @@ function problemSummary(row, lang, time) {
     title: lang === 'en' ? row.title_en : row.title_ko, unit: row.unit, source: row.source, opens_at: row.opens_at, closes_at: row.closes_at,
     open: time < row.closes_at, closed: time >= row.closes_at };
   if (answerSheet) result.answerSheet = answerSheet;
+  if(result.month)result.round=getMonthlyProblemRound({...row,answerSheet});
   return result;
 }
 export async function readPublicWeekly(db, url, time = currentTime()) {

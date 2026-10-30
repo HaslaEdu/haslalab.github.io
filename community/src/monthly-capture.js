@@ -50,6 +50,7 @@ export async function extractMonthlyCaptureParts(sheet,pageNo,transcript,kind,in
     'The printed template contains problem titles, part labels, point values, blank answer/working boxes, name/date fields and footer instructions. None of these is student work.',
     'Copy each answer and working VERBATIM as a contiguous passage from the OCR, preserving LaTeX. Leave blank fields empty. Do not use a heading or a printed instruction as an answer.',
     'Only these part IDs are allowed on the selected printed page: '+JSON.stringify(ids),
+    'Printed labels map to canonical part IDs as follows: '+JSON.stringify(ids.map(id=>({id,printed_label:sheet.parts.find(part=>part.id===id)?.displayId||id,legacy_label:id})))+'. Return canonical IDs, including when an older printed sheet uses the legacy labels.',
     'Photo kind: '+kind+'. A working-sheet continuation contributes working only; its final answer must be empty.',
     '[OCR data]',transcript,
   ].join('\n'),EXTRACT_SCHEMA);

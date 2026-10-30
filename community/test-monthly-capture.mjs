@@ -131,6 +131,19 @@ test('extraction accepts only supported contiguous spans and declared page parts
   const work=await extractMonthlyCaptureParts(sheet,1,TRANSCRIPT,'working',async()=>({raw:{parts:parts()}}));assert.equal(work[0].answer,'');assert.equal(work[0].working,WORKING);
 });
 
+test('letter-labelled astronomy pages map to the durable submitted part IDs for both new and older printed sheets',async()=>{
+  const sheet=getMonthlyAnswerSheet(7);
+  for(const label of ['a','16']){
+    const text='Part '+label+'\nFinal answer\n'+ANSWER+'\nWorking\n'+WORKING;
+    const result=await extractMonthlyCaptureParts(sheet,1,text,'answer',async prompt=>{
+      assert.ok(prompt.includes('"id":"16","printed_label":"a","legacy_label":"16"'));
+      assert.ok(prompt.includes('"id":"17","printed_label":"b","legacy_label":"17"'));
+      return{raw:{parts:[{id:'16',answer:ANSWER,working:WORKING}]}};
+    });
+    assert.deepEqual(result,[{id:'16',answer:ANSWER,working:WORKING},{id:'17',answer:'',working:''}]);
+  }
+});
+
 test('unsupported extraction is saved for retake and cannot be submitted or consume a chance',async()=>{
   await environment(async({grant,phone,upload,submit,extract,sql,calls})=>{
     const scan=(await grant()).data.scan;extract([{id:'a',answer:'invented answer',working:WORKING}]);
