@@ -141,7 +141,7 @@
       "aspectRatio": 4.404301,
       "mode": "preserve-color",
       "backgroundRemoved": null,
-      "sourceSha256": "6fc0fbf1e34e7c16f98f7a7ccbb45cf807b4b034d6e23729ae008240a76d3e37",
+      "sourceSha256": "1275271f97afc91247dff6d7ea339eb6b7a5cc9c8419e923a711744d313a4492",
       "notes": [
         "The official SVG contains one raster image; its original embedded PNG bytes are reused unchanged.",
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
@@ -567,31 +567,23 @@
       "sourceWidth": 104,
       "sourceHeight": 128,
       "viewBox": [
-        7,
-        3,
-        93,
-        120
+        0.0,
+        0.0,
+        104.0,
+        128.0
       ],
-      "aspectRatio": 0.775,
-      "mode": "preserve-color-light-neutral-ink",
-      "backgroundRemoved": "light",
+      "aspectRatio": 0.8125,
+      "mode": "restored-vector",
+      "backgroundRemoved": "transparent-vector",
       "sourceSha256": "71301ac77d019946c13437087824e2708cd3af4b1b57252e2788cda9db06e858",
+      "displaySources": {
+        "light": "logo/display/kmchc.svg",
+        "dark": "logo/display/kmchc-dark.svg"
+      },
       "notes": [
-        "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
-        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
-        "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
-        "Reviewed white/color matte [211, 237, 250] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 358 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
-      ],
-      "darkMatteCleanup": {
-        "matte": [
-          211,
-          237,
-          250
-        ],
-        "pixels": 9793,
-        "paintPixels": 358
-      }
+        "Display-only vector restoration follows the existing source silhouette, colors and proportions; it is not an officially supplied vector master.",
+        "Smooth paths render without enlargement of the low-resolution raster or per-pixel edge rectangles. Published raster source bytes are preserved."
+      ]
     },
     "kmo": {
       "original": "logo/kmo.png",
@@ -1214,29 +1206,23 @@
       "sourceWidth": 500,
       "sourceHeight": 132,
       "viewBox": [
-        1,
-        1,
-        498,
-        130
+        0.0,
+        0.0,
+        500.0,
+        132.0
       ],
-      "aspectRatio": 3.830769,
-      "mode": "preserve-color-light-neutral-ink",
-      "backgroundRemoved": null,
+      "aspectRatio": 3.787879,
+      "mode": "restored-vector",
+      "backgroundRemoved": "transparent-vector",
       "sourceSha256": "323d72fde0bd57def851098234f241166bcde4b6ab226ec9eeb307c83d708ac3",
+      "displaySources": {
+        "light": "logo/display/wopho.svg",
+        "dark": "logo/display/wopho.svg"
+      },
       "notes": [
-        "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
-        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 4700 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
-      ],
-      "darkMatteCleanup": {
-        "matte": [
-          255,
-          255,
-          255
-        ],
-        "pixels": 9535,
-        "paintPixels": 4700
-      }
+        "Display-only vector restoration follows the existing source silhouette, colors and proportions; it is not an officially supplied vector master.",
+        "Smooth paths render without enlargement of the low-resolution raster or per-pixel edge rectangles. Published raster source bytes are preserved."
+      ]
     }
   }
 }
