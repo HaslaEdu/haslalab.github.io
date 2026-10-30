@@ -1,5 +1,13 @@
 # HaslaLab 커뮤니티 서버
 
+## 2026-10-30: 하슬라논술과 같은 스캔 · Upstage 원문 처리
+
+하슬라논술 저장소의 고정 버전 `24b8036037cb227237bd2fe75023f7b4d7472ef0`을 기준으로 촬영·전처리·Upstage 요청과 응답 처리를 맞췄습니다. 휴대폰 스캔, PC 검토용 사진·PDF, 주간 문제 사진 답안이 같은 스캐너를 사용합니다. 원문·수식은 그대로 보존하고 채점 입력에도 전달하며, Gemini는 기존 채점에 필요한 항목·그림 구조화를 보조합니다. OCR 오류가 나면 다른 엔진의 재필사로 조용히 대체하지 않습니다.
+
+기존 `UPSTAGE_API_KEY` Secret을 그대로 사용합니다. 키나 학생 답안으로 자동 테스트하지 않습니다. D1 용량 제한, 시험 QR 토큰·마감·결제·답안 수정 규칙은 유지합니다. 출처와 저장 방식 차이는 [스캐너 이식 기록](../sim/labscan/README.md)에 있습니다.
+
+회귀 검증: `node --test community/test-ocr-parity.mjs tests/test-scan-quality.mjs tests/test-contest-review.cjs` (저장소 루트에서 실행).
+
 haslalab.org의 `#/community` 화면이 쓰는 API입니다. GitHub를 쓰지 않고 **Cloudflare Workers**(서버)와 **D1**(SQLite 데이터베이스) 위에서 돌아갑니다. 무료 요금제 한도 안에서 충분히 운영할 수 있습니다.
 
 - 회원가입과 로그인을 지원합니다. 비밀번호는 PBKDF2-SHA256(100,000회)과 솔트로 해시해서 저장합니다.

@@ -41,6 +41,9 @@
   .note.w{border-color:#6b3b37;color:#ffcfc9}
   .prev{margin-top:12px}
   .prev img{width:100%;border-radius:8px;background:#fff;display:block}
+  .image-check{position:fixed;inset:0;z-index:45;background:#111;overflow:auto;touch-action:pan-x pan-y}
+  .image-check button{position:sticky;top:10px;left:10px;z-index:1;display:block;margin:10px}
+  .image-check img{display:block;max-width:none;margin:10px;min-width:100%}
   .bar{height:6px;background:#0b0e12;border-radius:4px;overflow:hidden;margin-top:8px}
   .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
   .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
@@ -78,7 +81,7 @@
 </div>
 
 <script type="module">
-import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET } from "./labscan/scanner.js";
+import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
 
 const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
 const MAX_BYTES = 1850000;
@@ -103,16 +106,22 @@ const T = {
     working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     blurry: "사진이 흐립니다. 다시 찍으면 글자를 더 잘 읽습니다.",
-    send: "보내기", retake: "다시 찍기", sending: "보내고 읽는 중… (10초쯤)", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽힌 내용을 확인하세요.`,
+    lowRes: "종이가 작게 찍혀 글씨의 원래 해상도가 낮습니다. 종이가 화면을 채우도록 가까이 찍어 주세요.",
+    processFailed: "자동 보정에 실패했습니다. 원본을 확인하고 다시 촬영하거나 원본 그대로 보내세요.",
+    compare: "원본 보기", processed: "보정본 보기", zoom: "크게 보기", rotate: "90° 회전", detail: "작은 글씨와 수식이 보이는지 확대해서 확인해 주세요.",
+    pointMarker: "검은 표식 중심", pointPaper: "종이 귀퉁이", ceMarker: "네 점을 검은 사각형 표식의 중심에 맞추세요. 표식 밖의 여백도 보존됩니다.", badCorners: "네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.",
+    send: "보내기", retake: "다시 찍기", sending: "보내고 읽는 중…", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽힌 내용을 확인하세요.`,
     moved: (k, w) => `답안지 머리글을 보고 ${k} · ${w}(으)로 분류했습니다.`, legH: { good: "잘 읽혔습니다.", partial: "일부만 읽혔습니다. 다시 찍는 것이 좋습니다.", poor: "거의 읽히지 않았습니다. 이대로면 0점입니다 — 빼고 다시 찍으세요." },
     sentH: "보낸 쪽", none: "아직 보낸 쪽이 없습니다.", del: "빼기",
+    ocrStorage: "사진은 보관했습니다. 사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.",
+    ocrFailed: "사진은 보관했지만 글자를 읽지 못했습니다. 원본을 확인하고 필요하면 다시 촬영해 주세요.",
     ocr: { done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
     over: "스캔 시간이 끝났습니다. 이 링크는 파기되어 더 이상 쓸 수 없습니다.",
     ceTop: "네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "이대로 펴기", ceCancel: "취소",
     noCanvas: "이 브라우저에서는 사진을 다듬을 수 없어 원본 그대로 보냅니다.",
-    err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "사진이 너무 큽니다.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "사진 파일이 아닙니다.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
+    err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "작은 글씨를 보존하는 화질로는 사진 용량이 너무 큽니다. 원본/흑백 모드를 바꾸거나 종이가 화면을 채우게 다시 찍어 주세요.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "JPG, PNG, WebP 사진을 선택해 주세요.", input_too_big: "12MB 이하의 사진을 선택해 주세요.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
   },
   en: {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
@@ -122,16 +131,22 @@ const T = {
     working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     blurry: "The photo is blurry. A sharper one reads better.",
-    send: "Send", retake: "Retake", sending: "Sending and reading… (about 10 s)", sentOk: n => `Page ${n} sent. Check what was read on the computer.`,
+    lowRes: "The page occupies too little of the photo. Move closer so small writing keeps enough detail.",
+    processFailed: "Automatic correction failed. Inspect the original, retake it, or send the original photo.",
+    compare: "View original", processed: "View corrected", zoom: "Enlarge", rotate: "Rotate 90°", detail: "Enlarge the image and check small writing and equations before sending.",
+    pointMarker: "Black marker centres", pointPaper: "Paper corners", ceMarker: "Put the four points at the centres of the black squares. The margins outside the markers are preserved.", badCorners: "Place the four points at four different corners.",
+    send: "Send", retake: "Retake", sending: "Sending and reading…", sentOk: n => `Page ${n} sent. Check what was read on the computer.`,
     moved: (k, w) => `Filed under ${k} · ${w} from the sheet's printed header.`, legH: { good: "Read well.", partial: "Only partly read. Better photograph it again.", poor: "Mostly unreadable — it scores 0 as it is. Remove it and photograph it again." },
     sentH: "Pages sent", none: "No pages sent yet.", del: "Remove",
+    ocrStorage: "The photo was saved. The photo and full recognized text exceed the storage limit. Reduce the file size and upload again.",
+    ocrFailed: "The photo was saved, but its text could not be read. Check the original and retake it if needed.",
     ocr: { done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
     over: "Scanning has ended. This link has been destroyed and can no longer be used.",
     ceTop: "Put the four points on the four corners of the paper.", ceOk: "Straighten", ceCancel: "Cancel",
     noCanvas: "This browser cannot straighten photos, so they are sent as taken.",
-    err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "The photo is too large.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "That is not a photo.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
+    err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "This photo is too large at a readable resolution. Try Original/B&W or retake with the page filling the frame.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "Choose a JPG, PNG or WebP photo.", input_too_big: "Choose a photo no larger than 12 MB.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
   },
 };
 const t = () => T[lang];
@@ -149,6 +164,7 @@ async function api(method, path, body, type) {
 }
 
 let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
+let shotRevision = 0, closeShotEditor = null;
 const srvNow = () => Date.now() / 1000 + SKEW;
 
 async function refresh() {
@@ -168,16 +184,15 @@ function paint() {
     <div class="card"><h2>${t().task}</h2><div class="chips" id="tasks">${INFO.tasks.map(x => `<button data-t="${x}" class="${x === task ? "on" : ""}">${x}</button>`).join("")}</div>
       <h2 style="margin-top:12px">${t().kind}</h2><div class="chips" id="kinds">${["answer", "working"].map(x => `<button data-k="${x}" class="${x === kind ? "on" : ""}">${t()[x]}</button>`).join("")}</div>
       <div class="shoot">${LIVE_OK ? `<button class="live" id="live">${t().live}</button>` : ""}
-        <label class="${LIVE_OK ? "gal" : "cam"}">${LIVE_OK ? t().camApp : t().shoot}<input id="cam" type="file" accept="image/*" capture="environment"></label>
-        <label class="gal">${t().gallery}<input id="gal" type="file" accept="image/*"></label></div>
+        <label class="${LIVE_OK ? "gal" : "cam"}">${LIVE_OK ? t().camApp : t().shoot}<input id="cam" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"></label>
+        <label class="gal">${t().gallery}<input id="gal" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
       <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">${t().help}</p>
       ${canProcess() ? "" : `<div class="note w">${t().noCanvas}</div>`}</div>
     <div id="shot"></div>
     ${sentList()}`;
   $("tasks").onclick = e => { const b = e.target.closest("button"); if (b) { task = b.dataset.t; paint(); } };
   $("kinds").onclick = e => { const b = e.target.closest("button"); if (b) { kind = b.dataset.k; paint(); } };
-  $("cam").onchange = e => take(e.target.files[0]);
-  $("gal").onchange = e => take(e.target.files[0]);
+  $("cam").onchange = $("gal").onchange = e => { const file = e.target.files[0]; e.target.value = ""; take(file); };
   if ($("live")) $("live").onclick = () => liveCamera();
   wireSent();
   if (shot) paintShot();
@@ -185,8 +200,8 @@ function paint() {
 function sentList() {
   const ps = INFO.pages || [];
   return `<div class="card"><h2>${t().sentH} · ${ps.length}</h2>${ps.length ? `<ul class="sent">${ps.map(p =>
-    `<li><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s ${p.legible || ""}">${p.legible ? t().legS[p.legible] : t().ocr[p.ocr_status] || ""}</span>
-      ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
+    `<li style="flex-wrap:wrap"><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s ${p.ocr_status === "failed" ? "poor" : p.legible || ""}">${p.ocr_status === "failed" ? t().ocr.failed : p.legible ? t().legS[p.legible] : t().ocr[p.ocr_status] || ""}</span>
+      ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}${p.ocr_status === "failed" ? `<div class="note w" style="width:100%">${p.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed}</div>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
 }
 function wireSent() {
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
@@ -196,67 +211,74 @@ function wireSent() {
 }
 
 /* ── one photo: straighten, check, send ── */
-async function take(file, live) {
+async function take(file, live, internal = false) {
   if (!file) return;
-  shot = { file, busy: true, pct: 0, task, kind, live: !!live };
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast(t().err.bad_image);
+  if (!internal && file.size > 12 * 1024 * 1024) return toast(t().err.input_too_big);
+  releaseShot();
+  const revision = shotRevision;
+  shot = { file, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };
   mode = "clean"; paintShot();
-  if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: URL.createObjectURL(file), autoScore: 1, quality: null }; return paintShot(); }
+  if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
-    const r = await processShot(file, { mode, onProgress: p => { shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
+    const r = await processShot(file, { mode, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
+    if (revision !== shotRevision || !shot) return;
     shot = { ...shot, ...r, busy: false };
-  } catch (e) { shot = { ...shot, busy: false, blob: file, previewUrl: URL.createObjectURL(file), autoScore: 1, quality: null }; }
+  } catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; }
   paintShot();
 }
+function releaseShot() { ++shotRevision; if (closeShotEditor) closeShotEditor(); if (shot?.originalUrl) URL.revokeObjectURL(shot.originalUrl); shot = null; }
 function paintShot() {
   const box = $("shot"); if (!box) return;
   if (!shot) { box.innerHTML = ""; return; }
   if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
   const q = shot.quality || {}, warn = [];
-  if (shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
+  if (shot.processFailed) warn.push(t().processFailed);
+  else if (shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
   if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
+  if (shot.sourceShortSide != null && shot.sourceShortSide < 1200) warn.push(t().lowRes);
   box.innerHTML = `<div class="card prev"><h2>${esc(shot.task)} · ${shot.kind === "answer" ? t().answer : t().working}</h2>
-    <img alt="" src="${shot.previewUrl}">
+    <img alt="${esc(shot.showOriginal ? t().compare : t().processed)}" src="${shot.showOriginal ? shot.originalUrl : shot.previewUrl}">
+    <p style="font-size:12.5px;color:var(--muted)">${t().detail}${shot.width ? ` · ${shot.width}×${shot.height}px` : ""}</p>
+    <div class="row"><button id="compare">${shot.showOriginal ? t().processed : t().compare}</button><button id="zoom">${t().zoom}</button>${canProcess() ? `<button id="rotate">${t().rotate}</button>` : ""}</div>
     ${warn.map(w => `<div class="note w">${w}</div>`).join("")}
     ${shot.baseUrl ? `<div class="chips" style="margin-top:10px">${Object.entries(t().modes).map(([k, v]) => `<button data-m="${k}" class="${k === mode ? "on" : ""}">${v}</button>`).join("")}</div>` : ""}
     <div class="row">${shot.baseUrl ? `<button id="fix">${t().corners}</button>` : ""}<button id="again">${t().retake}</button></div>
     <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
   box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
   if ($("fix")) $("fix").onclick = () => cornerEditor();
-  $("again").onclick = () => { const lv = shot.live; shot = null; paintShot(); if (lv) liveCamera(); else $("cam").click(); };
+  $("compare").onclick = () => { shot.showOriginal = !shot.showOriginal; paintShot(); };
+  $("zoom").onclick = () => { const ov = document.createElement("div"); ov.className = "image-check"; ov.innerHTML = `<button>${t().lvClose}</button><img alt="${esc(t().detail)}" src="${shot.showOriginal ? shot.originalUrl : shot.previewUrl}">`; document.body.append(ov); ov.querySelector("button").onclick = () => ov.remove(); };
+  if ($("rotate")) $("rotate").onclick = async () => { const keep = shot, revision = ++shotRevision, b = $("rotate"); b.disabled = true; try { const file = await rotatePhoto(keep.file); if (revision !== shotRevision || !shot) return; await take(file, keep.live, true); } catch (e) { if (revision !== shotRevision || !shot) return; toast(t().err[e.code] || t().err.bad_image); b.disabled = false; } };
+  $("again").onclick = () => { const lv = shot.live; releaseShot(); paintShot(); if (lv) liveCamera(); else $("cam").click(); };
   $("send").onclick = send;
 }
 async function redo(corners, m) {
+  if (!shot) return;
+  const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, mode, undefined, keep.method === "marker" ? MARKER_INSET : null); shot = { ...keep, ...r, corners, busy: false }; }
-  catch (e) { shot = { ...keep, busy: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, corners, busy: false, showOriginal: false }; }
+  catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }
-/* a JPEG under the server's limit, whatever the scanner produced (B&W comes out as PNG) */
-async function asJpeg(blob) {
-  if (blob.type === "image/jpeg" && blob.size <= MAX_BYTES) return blob;
-  const bmp = await createImageBitmap(blob);
-  let w = bmp.width, h = bmp.height, q = 0.88;
-  for (let i = 0; i < 6; i++) {
-    const c = document.createElement("canvas"); c.width = w; c.height = h;
-    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, w, h); g.drawImage(bmp, 0, 0, w, h);
-    const out = await new Promise(r => c.toBlob(r, "image/jpeg", q));
-    if (out && out.size <= MAX_BYTES) return out;
-    w = Math.round(w * 0.85); h = Math.round(h * 0.85); q = Math.max(0.7, q - 0.04);
-  }
-  throw { code: "image_too_big" };
-}
 async function send() {
+  if (!shot || shot.busy) return;
+  const sending = shot, revision = shotRevision;
   const b = $("send"); b.disabled = true; b.textContent = t().sending;
   try {
-    const body = await asJpeg(shot.blob);
-    const r = await api("PUT", `${UP}/pages?task=${encodeURIComponent(shot.task)}&kind=${shot.kind}`, body, "image/jpeg");
+    const body = await encodeUpload(sending.blob, { maxBytes: MAX_BYTES });
+    if (revision !== shotRevision || !shot) return;
+    const r = await api("PUT", `${UP}/pages?task=${encodeURIComponent(sending.task)}&kind=${sending.kind}`, body, body.type);
+    if (revision !== shotRevision || !shot) return;
     const msg = [t().sentOk(r.no)];
     if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
-    if (r.legible) msg.push(t().legH[r.legible]);
-    toast(msg.join(" "), r.legible === "poor" ? 9000 : 5500);
-    const lv = shot.live; shot = null; await refresh();
+    if (r.ocr_status === "failed") msg.push(r.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed);
+    else if (r.legible) msg.push(t().legH[r.legible]);
+    toast(msg.join(" "), r.ocr_status === "failed" || r.legible === "poor" ? 12000 : 5500);
+    const lv = sending.live; releaseShot(); await refresh();
     if (lv && INFO && INFO.open) liveCamera();                      // the next page, straight away
   } catch (e) {
+    if (revision !== shotRevision || !shot) return;
     toast(t().err[e.code] || e.code, 5000); b.disabled = false; b.textContent = t().send;
     if (e.code === "closed") refresh();
   }
@@ -264,12 +286,16 @@ async function send() {
 
 /* ── put the four corners by hand; the spot under the finger is shown magnified in the far corner ── */
 async function cornerEditor() {
-  const img = new Image(); img.src = shot.baseUrl; await img.decode().catch(() => {});
+  if (!shot) return;
+  const revision = shotRevision, editing = shot;
+  const img = new Image(); img.src = editing.baseUrl; await img.decode().catch(() => {});
+  if (revision !== shotRevision || !shot) return;
   const ov = document.createElement("div"); ov.className = "ce";
-  ov.innerHTML = `<div class="top">${t().ceTop}</div><canvas></canvas><div class="row"><button id="ceNo">${t().ceCancel}</button><button class="pri" id="ceOk">${t().ceOk}</button></div>`;
+  let pointMode = editing.method === "marker" ? "marker" : "page";
+  ov.innerHTML = `<div class="top"><div class="chips"><button data-point-mode="marker">${t().pointMarker}</button><button data-point-mode="page">${t().pointPaper}</button></div><p id="ceHint"></p></div><canvas></canvas><div class="row"><button id="ceNo">${t().ceCancel}</button><button class="pri" id="ceOk">${t().ceOk}</button></div>`;
   document.body.append(ov);
   const cv = ov.querySelector("canvas"), g = cv.getContext("2d");
-  let pts = (shot.corners || [{ x: 0, y: 0 }, { x: img.width, y: 0 }, { x: 0, y: img.height }, { x: img.width, y: img.height }]).map(p => ({ ...p }));
+  let pts = (editing.corners || [{ x: 0, y: 0 }, { x: img.width, y: 0 }, { x: 0, y: img.height }, { x: img.width, y: img.height }]).map(p => ({ ...p }));
   let sc = 1, ox = 0, oy = 0, drag = -1, dpr = devicePixelRatio || 1, moved = false;
   function fit() {
     const r = cv.getBoundingClientRect(); cv.width = r.width * dpr; cv.height = r.height * dpr;
@@ -294,9 +320,18 @@ async function cornerEditor() {
     if (bd * sc < 60 * dpr) { drag = best; cv.setPointerCapture(e.pointerId); draw(); } };
   cv.onpointermove = e => { if (drag < 0) return; moved = true; const p = at(e); pts[drag] = { x: Math.max(0, Math.min(img.width, p.x)), y: Math.max(0, Math.min(img.height, p.y)) }; draw(); };
   cv.onpointerup = () => { drag = -1; draw(); };
-  addEventListener("resize", fit, { once: true }); fit();
-  ov.querySelector("#ceNo").onclick = () => ov.remove();
-  ov.querySelector("#ceOk").onclick = () => { ov.remove(); shot.autoScore = 1; if (moved) shot.method = "manual"; redo(pts, mode); };
+  function choosePointMode(next) { pointMode = next; ov.querySelector("#ceHint").textContent = pointMode === "marker" ? t().ceMarker : t().ceTop; ov.querySelectorAll("[data-point-mode]").forEach(b => b.classList.toggle("on", b.dataset.pointMode === pointMode)); }
+  ov.querySelectorAll("[data-point-mode]").forEach(b => b.onclick = () => choosePointMode(b.dataset.pointMode)); choosePointMode(pointMode);
+  const close = () => { removeEventListener("resize", fit); ov.remove(); if (closeShotEditor === close) closeShotEditor = null; };
+  closeShotEditor = close;
+  addEventListener("resize", fit); fit();
+  ov.querySelector("#ceNo").onclick = close;
+  ov.querySelector("#ceOk").onclick = () => {
+    if (revision !== shotRevision || !shot) return close();
+    const ordered = orderCorners(pts);
+    if (quadScore(ordered, img.width, img.height) < 0.1) return toast(t().badCorners);
+    close(); shot.autoScore = 1; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
+  };
 }
 
 /* ── live camera, as scanning apps do it: the page is looked for in the moving picture a few times a second and
@@ -336,7 +371,7 @@ async function liveCamera() {
       const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * k), h = Math.round(v.videoHeight * k);
       if (small.width !== w) { small.width = w; small.height = h; }
       sg.drawImage(v, 0, 0, w, h);
-      const gray = toGray(sg.getImageData(0, 0, w, h).data, w, h);
+      const pixels = sg.getImageData(0, 0, w, h).data, gray = toGray(pixels, w, h);
       let d = findSheetMarkersGray(gray, w, h), how = "marker";
       if (!d || d.score < 0.5) { const p = findPageQuadGray(gray, w, h); d = p && p.corners && p.score > 0.45 ? p : null; how = "page"; }
       /* the overlay, where the video is drawn (object-fit: contain) */
@@ -350,12 +385,13 @@ async function liveCamera() {
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
       /* steady: the four squares moved less than 1.2 % of the picture over the last six looks */
-      if (d && how === "marker") {
+      const focused = inspectDocumentPixels(pixels, w, h).focus >= 22;
+      if (d && how === "marker" && d.score >= 0.75 && focused) {
         hist.push(d.corners); if (hist.length > 6) hist.shift();
         const span = Math.max(w, h), still = hist.length === 6 && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * 0.012));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; say(d ? t().lvPage : t().lvAim); }
+      } else { hist = []; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }

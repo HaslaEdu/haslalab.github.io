@@ -120,15 +120,17 @@ export async function contestRoute({ p, m, body, me, env, lang, t }, d) {
         const bytes = await d.labPageBytes(env, page);
         if (!bytes) throw new Error("missing_image");
         const up = await d.labUpstage(env, bytes, page.mime, mt);
-        if (!env.GEMINI_API_KEY) throw new Error("reader_unavailable");
+        if (!up && !env.GEMINI_API_KEY) throw new Error("reader_unavailable");
         const read = await d.labReadPage(env, s, bytes, page.mime, up, mt);
         // The student's selected task stays authoritative until explicitly confirmed by the student.
         const text = d.readText(read);
-        await env.DB.prepare("UPDATE lab_pages SET ocr=?,ocr_conf=?,ocr_status='done',text=?,read=?,legible=?,edited=0 WHERE id=? AND session_id=? AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')")
-          .bind(up?.text ?? text, up?.confidence ?? null, text, JSON.stringify(read), read.legible, page.id, s.id, s.id).run();
+        const stored = d.labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: "done" });
+        if (stored.error && page.ocr != null) throw new d.HttpError(502, stored.error);
+        await env.DB.prepare("UPDATE lab_pages SET ocr=?,ocr_conf=?,ocr_status=?,text=?,read=?,legible=?,edited=0 WHERE id=? AND session_id=? AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')")
+          .bind(stored.ocr, up?.confidence ?? null, stored.status, stored.text, stored.read, stored.legible, page.id, s.id, s.id).run();
       } catch (e) {
         console.error("contest read", String(e?.code || e?.message || "failed").slice(0, 100));
-        await env.DB.prepare("UPDATE lab_pages SET ocr_status='failed' WHERE id=? AND session_id=? AND ocr_status='reading'").bind(page.id, s.id).run();
+        await env.DB.prepare("UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=? AND session_id=? AND ocr_status='reading'").bind(page.read, page.id, s.id).run();
       }
       await d.meterSave(env, s.id, page.task, page.id, mt);
     }
@@ -140,8 +142,10 @@ export async function contestRoute({ p, m, body, me, env, lang, t }, d) {
   if (!task) fail(400, "bad_task");
   if (typeof text !== "string" || text.length > 50000) fail(400, "answer_too_long");
   if (page.ocr_status === "reading") fail(409, "reading");
+  const stored = d.labStoredReading(env, new Uint8Array(page.data || 0), { ocr: page.ocr, text, read: page.read, legible: page.legible, status: page.ocr_status });
+  if (stored.error) fail(413, stored.error);
   await env.DB.prepare("UPDATE lab_pages SET task=?,text=?,edited=1 WHERE id=? AND session_id=? AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')")
-    .bind(task, text, page.id, s.id, s.id).run();
+    .bind(task, stored.text, page.id, s.id, s.id).run();
   return response();
 }
 

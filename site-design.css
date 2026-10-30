@@ -124,7 +124,7 @@ html[data-theme="dark"] body.hl-site header{
   --ink:#ebe8f5;--graphite:#b5a8c8;--rail:#3b2e4b;--grid-bold:#44374f;--laser:#bca0ed;
 }
 html[data-theme="dark"] body.hl-site .mark{color:#e9ecf5}
-html[data-theme="dark"] body.hl-site .mark img{filter:hue-rotate(52deg) saturate(.66)}
+html[data-theme="dark"] body.hl-site :is(.mark img,.about .wm,.cmrail .srv img){filter:hue-rotate(52deg) saturate(.66)}
 html[data-theme="dark"] body.hl-site .mark em{color:#a8b2c8}
 html[data-theme="dark"] body.hl-site #nav a.on{color:#cfbdf2;border-color:#b09bdb}
 html[data-theme="dark"] body.hl-site #siteTheme,

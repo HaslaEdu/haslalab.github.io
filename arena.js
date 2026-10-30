@@ -20,6 +20,12 @@ const AT = {
        answer: "답", answerPh: "숫자만 쓰세요 (예: 1.79)", essayPh: "풀이를 쓰세요. 수식은 $...$ 안에 LaTeX로 쓰거나 그냥 글로 써도 됩니다.",
        photo: "답안 사진 올리기", photoHint: "종이에 쓴 풀이를 찍어 올리면 글자로 읽어 줍니다(OCR). 읽은 글을 꼭 확인하고 고친 뒤 제출하세요.",
        mathMode: "수식이 많은 답안 (수식을 LaTeX로 읽기)", reading: "사진을 읽는 중…", readDone: "사진을 읽었습니다. 아래 글이 답안과 같은지 확인하고 고친 뒤 제출하세요.",
+       scanPreparing: "사진의 기울기와 그림자를 보정하는 중…", scanCheck: "글씨와 수식이 잘리지 않았는지 확인한 뒤 읽기를 누르세요.",
+       scanOriginal: "촬영 원본", scanClean: "보정 사진", scanRead: "이 사진으로 읽기", scanRetake: "다른 사진", scanCancel: "취소",
+       scanFailed: "사진 보정에 실패했습니다. 촬영 원본을 확인하거나 다른 사진을 골라주세요.", scanUnavailable: "이 브라우저에서는 사진을 보정할 수 없습니다. 촬영 원본을 확인해 주세요.",
+       scanWeak: "종이 모서리를 확실하게 찾지 못했습니다. 잘린 글씨가 있으면 촬영 원본을 선택하거나 다시 찍어주세요.",
+       scanBlur: "사진이 흐립니다. 작은 수식과 첨자가 보이지 않으면 다시 찍어주세요.", scanSmall: "사진 해상도가 낮습니다. 작은 수식과 첨자가 보이도록 더 가까이 찍어주세요.",
+       scanLong: "읽은 글이 답안 길이 제한을 넘었습니다. 아래 글을 확인하고 12,000자 이내로 정리한 뒤 제출하세요.",
        preview: "미리보기", submit: "제출하고 채점받기", grading: "채점 중… (서술형은 30초쯤 걸립니다)", loginToSubmit: "로그인하면 제출하고 채점받을 수 있습니다.",
        result: "채점 결과", score: "점수", criteria: "채점 항목", evidence: "근거", feedback: "첨삭", good: "잘한 점", fix: "고칠 점",
        met: "충족", partial: "부분", not_met: "미충족", uncertain: "불확실", right: "정답입니다", wrong: "오답입니다",
@@ -36,6 +42,8 @@ const AT = {
        nickH: "닉네임 바꾸기", change: "바꾸기", pwSet: "비밀번호 만들기 (아이디로도 로그인)", pwNew: "새 비밀번호 (8자 이상)", done: "바꿨습니다",
        tiers: {bronze: "브론즈", silver: "실버", gold: "골드", platinum: "플래티넘", diamond: "다이아몬드", ruby: "루비", master: "마스터", unrated: "Unrated"},
        err: {bad_answer: "답을 입력하세요.", bad_image: "JPEG, PNG, WebP 사진 한 장만 올릴 수 있습니다.", image_too_big: "사진이 너무 큽니다(8 MB까지).",
+             ocr_empty: "사진에서 글씨를 찾지 못했습니다. 원본을 확인하거나 더 선명하게 다시 찍어주세요.",
+             ocr_image_too_big: "글씨의 선명도를 유지하면서 사진 용량을 줄이지 못했습니다. 종이가 화면을 채우게 다시 찍어주세요.",
              ocr_off: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다.", ocr_failed: "사진을 읽지 못했습니다. 더 밝고 반듯하게 찍어 보세요.", rate_limited: "요청이 너무 많습니다. 내일 다시 시도해 주세요.",
              forbidden: "관리자만 할 수 있습니다.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
              oauth_failed: "외부 로그인에 실패했습니다. 다시 시도해 주세요.", oauth_cancelled: "로그인을 취소했습니다.", oauth_in_use: "그 계정은 이미 다른 HaslaLab 계정에 연결되어 있습니다.", bad_week: "주는 2026-W45 형식으로 쓰세요.", bad_rubric: "채점 기준(JSON)을 확인하세요.", bad_kind: "유형을 고르세요."}},
@@ -50,6 +58,12 @@ const AT = {
        answer: "Answer", answerPh: "A number only (e.g. 1.79)", essayPh: "Write your solution. Put formulas in $...$ as LaTeX, or just write them out.",
        photo: "Upload a photo of your answer", photoHint: "Photograph your written solution and it is read into text (OCR). Check and correct the text before you submit.",
        mathMode: "Answer with many formulas (read them as LaTeX)", reading: "Reading the photo…", readDone: "The photo has been read. Check that the text below matches your answer, correct it, then submit.",
+       scanPreparing: "Straightening the photo and removing shadows…", scanCheck: "Check that no writing or formulas were cut off, then read this photo.",
+       scanOriginal: "Original photo", scanClean: "Straightened photo", scanRead: "Read this photo", scanRetake: "Choose another", scanCancel: "Cancel",
+       scanFailed: "The photo could not be straightened. Check the original photo or choose another.", scanUnavailable: "This browser cannot straighten photos. Check the original photo before reading it.",
+       scanWeak: "The page corners were not found for certain. If any writing is cut off, use the original photo or take another.",
+       scanBlur: "The photo is blurred. Take another if small formulas or subscripts are unclear.", scanSmall: "The photo has low resolution. Move closer so small formulas and subscripts are clear.",
+       scanLong: "The recognized text exceeds the answer limit. Check the text below and shorten it to 12,000 characters before submitting.",
        preview: "Preview", submit: "Submit and grade", grading: "Grading… (a written answer takes about 30 s)", loginToSubmit: "Sign in to submit and be graded.",
        result: "Result", score: "Score", criteria: "Criteria", evidence: "Evidence", feedback: "Comments", good: "Good", fix: "To fix",
        met: "met", partial: "partly", not_met: "not met", uncertain: "unsure", right: "Correct", wrong: "Not correct",
@@ -66,6 +80,8 @@ const AT = {
        nickH: "Change nickname", change: "Change", pwSet: "Create a password (to sign in with your username too)", pwNew: "New password (8+ characters)", done: "Changed",
        tiers: {bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", diamond: "Diamond", ruby: "Ruby", master: "Master", unrated: "Unrated"},
        err: {bad_answer: "Enter an answer.", bad_image: "Only one JPEG, PNG or WebP photo.", image_too_big: "The photo is too large (8 MB max).",
+             ocr_empty: "No writing was found. Check the original or take a clearer photo.",
+             ocr_image_too_big: "The photo could not be made smaller while keeping the writing clear. Take another with the page filling the frame.",
              ocr_off: "Photo reading (OCR) is not connected yet.", ocr_failed: "The photo could not be read. Try a brighter, straighter shot.", rate_limited: "Too many requests. Try again tomorrow.",
              forbidden: "Admins only.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
              oauth_failed: "The outside sign-in failed. Please try again.", oauth_cancelled: "Sign-in was cancelled.", oauth_in_use: "That account is already connected to another HaslaLab account.", bad_week: "Write the week as 2026-W45.", bad_rubric: "Check the rubric JSON.", bad_kind: "Choose a kind."}}};
@@ -229,7 +245,108 @@ function arResult(s, prob) {
     ${(d.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${d.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em><q>${esc(f.quote)}</q> ${esc(f.note)}</li>`).join("")}</ul>` : ""}
     ${d.note ? `<p class="arnote">${esc(d.note)}</p>` : ""}`;
 }
+let arScanner = null;
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=20261030-ocr").catch(error => { arScanner = null; throw error; }));
+/* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
+   which image to send; picking a file alone never starts a paid OCR request. */
+function arBindAnswerPhoto(f, alive, T, onRead) {
+  const fi = f.querySelector("input[type=file]"), info = f.querySelector(".arinfo"), box = f.querySelector(".arshot");
+  let photo = null, generation = 0, controller = null, disposed = false;
+  const urls = new Set(), current = token => !disposed && alive() && token === generation;
+  const imageUrl = blob => { const url = URL.createObjectURL(blob); urls.add(url); return url; };
+  const note = (text, bad = false) => { info.hidden = false; info.textContent = text; info.className = "arinfo" + (bad ? " bad" : ""); };
+  const clear = () => {
+    generation++; controller?.abort(); controller = null; photo = null;
+    for (const url of urls) URL.revokeObjectURL(url);
+    urls.clear(); box.innerHTML = ""; box.hidden = true;
+  };
+  const dispose = () => {
+    if (disposed) return;
+    clear(); disposed = true;
+    window.removeEventListener("hashchange", dispose); window.removeEventListener("pagehide", dispose);
+    if (ar.photoCleanup === dispose) ar.photoCleanup = null;
+  };
+  ar.photoCleanup = dispose;
+  window.addEventListener("hashchange", dispose); window.addEventListener("pagehide", dispose);
+  const paint = () => {
+    if (!photo || disposed || !alive()) return;
+    const selected = photo.clean && photo.selected === "clean" ? "clean" : "original", busy = photo.preparing || photo.reading;
+    const warnings = [];
+    if (photo.warning) warnings.push(photo.warning);
+    if (selected === "clean" && photo.result?.autoScore < 0.75) warnings.push(T.scanWeak);
+    if (photo.result?.quality?.focus != null && photo.result.quality.focus < 22) warnings.push(T.scanBlur);
+    if (photo.result?.sourceShortSide && photo.result.sourceShortSide < 1000) warnings.push(T.scanSmall);
+    box.hidden = false;
+    box.innerHTML = `<div class="arq" style="margin:12px 0 8px;flex-wrap:wrap">
+      <button type="button" class="cmbtn sm${selected === "original" ? " pri" : ""}" data-photo="original" aria-pressed="${selected === "original"}" ${busy ? "disabled" : ""}>${T.scanOriginal}</button>
+      ${photo.clean ? `<button type="button" class="cmbtn sm${selected === "clean" ? " pri" : ""}" data-photo="clean" aria-pressed="${selected === "clean"}" ${busy ? "disabled" : ""}>${T.scanClean}</button>` : ""}</div>
+      <img alt="${selected === "clean" ? T.scanClean : T.scanOriginal}" src="${selected === "clean" ? photo.cleanUrl : photo.originalUrl}">
+      <p class="arnote" aria-live="polite">${esc(photo.preparing ? T.scanPreparing : photo.reading ? T.reading : T.scanCheck)}</p>
+      ${warnings.map(text => `<p class="arinfo bad">${esc(text)}</p>`).join("")}
+      <div class="arq" style="gap:8px;flex-wrap:wrap;margin:8px 0 14px">
+        <button type="button" class="cmbtn sm pri" data-read-photo ${busy || photo.done ? "disabled" : ""}>${T.scanRead}</button>
+        <button type="button" class="cmbtn sm" data-new-photo>${T.scanRetake}</button>
+        <button type="button" class="cmbtn sm" data-cancel-photo>${T.scanCancel}</button></div>`;
+    for (const button of box.querySelectorAll("[data-photo]")) button.onclick = () => { photo.selected = button.dataset.photo; paint(); };
+    box.querySelector("[data-new-photo]").onclick = () => fi.click();
+    box.querySelector("[data-cancel-photo]").onclick = () => { clear(); info.hidden = true; };
+    box.querySelector("[data-read-photo]").onclick = read;
+  };
+  async function read() {
+    if (!photo || photo.preparing || photo.reading || photo.done) return;
+    const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file;
+    photo.reading = true; paint(); note(T.reading);
+    const ctrl = new AbortController(); controller = ctrl;
+    try {
+      /* Preserve an already-small PNG/JPEG/WebP. Larger photos are encoded once through the
+         shared 200dpi policy, with no repeated shrinking below the readable page size. */
+      const scanner = await arLoadScanner(), blob = await scanner.encodeUpload(selected, { maxBytes: 4 * 1024 * 1024 }).catch(error => {
+        if (error?.code === "image_too_big") throw { code: "ocr_image_too_big" };
+        throw error;
+      });
+      if (!current(token)) return;
+      const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[blob.type];
+      if (!ext) throw { code: "bad_image" };
+      const fd = new FormData(); fd.append("image", blob, `answer.${ext}`);
+      const response = await fetch(cmBase() + "/api/ocr?mode=" + (f.math.checked ? "math" : "text"), {
+        method: "POST", headers: { Authorization: "Bearer " + cmTok() }, body: fd, signal: ctrl.signal,
+      });
+      const result = await response.json().catch(() => ({ error: "server_error" }));
+      if (!current(token)) return;
+      if (!response.ok) throw { code: result.error };
+      if (typeof result.text !== "string" || !result.text.trim()) throw { code: "ocr_empty" };
+      onRead(result.text); photo.done = true;
+      const ta = f.querySelector("textarea");
+      note(ta.value.length > ta.maxLength && ta.maxLength > 0 ? T.scanLong : T.readDone);
+      info.className = "arinfo ok"; ta.focus();
+    } catch (error) {
+      if (current(token)) note(arErr(error), true);
+    } finally {
+      if (controller === ctrl) controller = null;
+      if (current(token)) { photo.reading = false; paint(); }
+    }
+  }
+  fi.onchange = async () => {
+    const file = fi.files[0]; fi.value = ""; if (!file) return;
+    clear(); info.hidden = true;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { note(T.err.bad_image, true); return; }
+    const token = generation;
+    photo = { file, originalUrl: imageUrl(file), selected: "original", preparing: true }; paint();
+    try {
+      const scanner = await arLoadScanner(); if (!current(token)) return;
+      if (!scanner.canProcess()) { photo.warning = T.scanUnavailable; return; }
+      const result = await scanner.processShot(file, { mode: "clean" });
+      if (!current(token)) return;
+      photo.result = result; photo.clean = result.blob; photo.cleanUrl = imageUrl(result.blob); photo.selected = "clean";
+    } catch (error) {
+      if (current(token)) photo.warning = T.scanFailed;
+    } finally {
+      if (current(token)) { photo.preparing = false; paint(); }
+    }
+  };
+}
 async function arProblem(root, alive, id) {
+  ar.photoCleanup?.();
   const T = arT(), j = await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
   const p = j.problem, now = Math.floor(Date.now() / 1000), ocrOn = j.health && j.health.ocr;
   root.innerHTML = `
@@ -274,21 +391,7 @@ async function arProblem(root, alive, id) {
     const prev = root.querySelector("#arPrev"); let tm = 0;
     const upd = () => { prev.innerHTML = arText(ta.value); arMath(prev); try { localStorage.setItem(key, ta.value); } catch (e) {} };
     ta.oninput = () => { clearTimeout(tm); tm = setTimeout(upd, 350); }; upd();
-    const fi = f.querySelector("input[type=file]"), info = f.querySelector(".arinfo"), shot = f.querySelector(".arshot");
-    fi.onchange = async () => {
-      const file = fi.files[0]; if (!file) return;
-      shot.hidden = false; shot.querySelector("img").src = URL.createObjectURL(file);
-      info.hidden = false; info.textContent = T.reading;
-      const fd = new FormData(); fd.append("image", file);
-      try {
-        const r = await fetch(cmBase() + "/api/ocr?mode=" + (f.math.checked ? "math" : "text"), {method: "POST", headers: {Authorization: "Bearer " + cmTok()}, body: fd});
-        const k = await r.json().catch(() => ({error: "server_error"}));
-        if (!r.ok) throw {code: k.error};
-        ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + k.text; viaOcr = true; upd();
-        info.textContent = T.readDone; info.className = "arinfo ok"; ta.focus();
-      } catch (e) { info.textContent = arErr(e); info.className = "arinfo bad"; }
-      fi.value = "";
-    };
+    arBindAnswerPhoto(f, alive, T, text => { ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + text; viaOcr = true; upd(); });
   }
   f.onsubmit = async (e) => {
     e.preventDefault(); const btn = f.querySelector("button[type=submit]"); btn.disabled = true;

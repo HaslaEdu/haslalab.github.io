@@ -872,6 +872,98 @@ export function inspect(canvas) {
   return inspectPixels(img.data, canvas.width, canvas.height);
 }
 
+/** White paper is expected to be mostly white; its white-pixel ratio alone is not glare.
+ * Measure focus before the clean/mono filters can turn pencil strokes into sharp edges. */
+export function inspectDocumentPixels(data, W, H) {
+  const q = inspectPixels(data, W, H);
+  const blurry = q.focus < 22;
+  return { ...q, ok: !blurry, hint: blurry ? '사진이 흐립니다. 다시 촬영해 주세요.' : null };
+}
+const inspectDocument = canvas => {
+  const img = imgData(canvas);
+  return inspectDocumentPixels(img.data, canvas.width, canvas.height);
+};
+
+/** Keep PNG/B&W and already-small JPEG/WebP bytes intact. For oversized photos,
+ * try JPEG qualities at the same resolution before a single 2400→2339px step.
+ * Never repeatedly shrink an A4 page below the scanner's 200dpi output. */
+export async function encodeUpload(blob, { maxBytes = 1850000 } = {}) {
+  if (!blob || !/^image\/(jpeg|png|webp)$/.test(blob.type)) throw { code: 'bad_image' };
+  if (blob.size <= maxBytes) return blob;
+  if (!canProcess()) throw { code: 'image_too_big' };
+  const bmp = await loadBitmap(blob);
+  try {
+    const longSide = Math.max(bmp.width, bmp.height);
+    const sides = [Math.min(WORK_MAX_SIDE, longSide)];
+    const a4Side = Math.round(dpiToWidth(DEFAULT_DPI) * A4_RATIO);
+    if (sides[0] > a4Side) sides.push(a4Side);
+    for (const side of sides) {
+      const canvas = toCanvas(bmp, side), ctx = canvas.getContext('2d');
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (const quality of [0.92, 0.88, 0.84, 0.8, 0.76]) {
+        const out = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+        if (out && out.size <= maxBytes) return out;
+      }
+    }
+    throw { code: 'image_too_big' };
+  } finally { try { bmp.close?.(); } catch { /* release decoded camera pixels */ } }
+}
+
+/** A quarter turn from the captured pixels, not from a compressed preview. */
+export async function rotatePhoto(file) {
+  const bmp = await loadBitmap(file);
+  try {
+    const base = toCanvas(bmp), out = document.createElement('canvas');
+    out.width = base.height; out.height = base.width;
+    const ctx = out.getContext('2d');
+    ctx.translate(out.width, 0); ctx.rotate(Math.PI / 2); ctx.drawImage(base, 0, 0);
+    const blob = await new Promise(resolve => out.toBlob(resolve, 'image/png'));
+    if (!blob) throw { code: 'bad_image' };
+    return blob;
+  } finally { try { bmp.close?.(); } catch { /* release decoded camera pixels */ } }
+}
+
+/** Optional desktop/weekly corner editor. The caller still decides when to upload. */
+export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko' } = {}) {
+  const image = await loadImage(baseUrl), W = image.naturalWidth || image.width, H = image.naturalHeight || image.height;
+  const ko = lang !== 'en', txt = (a, b) => ko ? a : b;
+  const points = (corners || [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: 0, y: H }, { x: W, y: H }]).map(p => ({ ...p }));
+  const dialog = document.createElement('dialog');
+  Object.assign(dialog.style, { width: 'min(900px,95vw)', maxHeight: '94dvh', overflow: 'auto', background: '#171c24', color: '#eef2f8', border: '1px solid #596573', borderRadius: '12px', padding: '18px' });
+  const title = document.createElement('h2'); title.textContent = txt('모서리 맞추기', 'Fix corners'); title.style.fontSize = '18px';
+  const select = document.createElement('select');
+  for (const [value, label] of [['marker', txt('검은 표식 중심 (여백 보존)', 'Black marker centres (keep margins)')], ['page', txt('종이의 네 귀퉁이', 'Four paper corners')]]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = label; select.append(option);
+  }
+  select.value = marker ? 'marker' : 'page'; select.setAttribute('aria-label', txt('기준점', 'Corner reference'));
+  const hint = document.createElement('p'); hint.textContent = txt('네 점을 선택한 기준에 맞게 끌어 옮기세요.', 'Drag all four points to the selected reference.'); hint.style.fontSize = '13px';
+  const wrap = document.createElement('div'); Object.assign(wrap.style, { position: 'relative', width: 'fit-content', maxWidth: '100%', margin: '16px auto' });
+  Object.assign(image.style, { display: 'block', maxWidth: '100%', maxHeight: '64vh', width: 'auto', height: 'auto' }); wrap.append(image);
+  const handles = points.map((p, i) => {
+    const handle = document.createElement('button'); handle.type = 'button'; handle.textContent = String(i + 1);
+    handle.setAttribute('aria-label', txt('모서리 ', 'Corner ') + (i + 1));
+    Object.assign(handle.style, { position: 'absolute', width: '34px', height: '34px', border: '2px solid #fff', borderRadius: '50%', background: '#e1b844', color: '#171c24', padding: '0', transform: 'translate(-50%,-50%)', touchAction: 'none', fontSize: '13px', fontWeight: '700' });
+    const place = () => { handle.style.left = points[i].x / W * 100 + '%'; handle.style.top = points[i].y / H * 100 + '%'; };
+    handle.onpointerdown = e => { e.preventDefault(); handle.setPointerCapture(e.pointerId); };
+    handle.onpointermove = e => { if (!handle.hasPointerCapture(e.pointerId)) return; const r = image.getBoundingClientRect(); points[i] = { x: Math.max(0, Math.min(W, (e.clientX - r.left) / r.width * W)), y: Math.max(0, Math.min(H, (e.clientY - r.top) / r.height * H)) }; place(); };
+    handle.onpointerup = e => { if (handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId); };
+    wrap.append(handle); place(); return handle;
+  });
+  const controls = document.createElement('div'); Object.assign(controls.style, { display: 'flex', gap: '10px' });
+  const cancel = document.createElement('button'), apply = document.createElement('button');
+  cancel.textContent = txt('취소', 'Cancel'); apply.textContent = txt('이대로 적용', 'Apply');
+  for (const button of [cancel, apply]) { button.type = 'button'; Object.assign(button.style, { flex: '1', padding: '12px', cursor: 'pointer', borderRadius: '7px' }); controls.append(button); }
+  dialog.append(title, select, hint, wrap, controls); document.body.append(dialog);
+  return new Promise(resolve => {
+    let done = false;
+    const finish = result => { if (done) return; done = true; dialog.close(); dialog.remove(); resolve(result); };
+    cancel.onclick = () => finish(null); dialog.oncancel = e => { e.preventDefault(); finish(null); }; dialog.onclose = () => finish(null);
+    apply.onclick = () => { const ordered = orderCorners(points); if (quadScore(ordered, W, H) < 0.1) { hint.textContent = txt('네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.', 'Place the four points at four different corners.'); return; } finish({ corners: ordered, marker: select.value === 'marker' }); };
+    dialog.showModal(); handles[0].focus();
+  });
+}
+
 /* 무거운 단계 사이에 한 틱 쉬어 화면이 얼지 않게 합니다 */
 const breathe = () => new Promise((r) => setTimeout(r, 0));
 
@@ -905,6 +997,7 @@ export async function processShot(file, opts = {}) {
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
   let out = warp(base, pts, dpiToWidth(dpi), method === 'marker' ? MARKER_INSET : null);
+  const quality = inspectDocument(out);
   await breathe();
 
   say(72, '그림자 지우는 중');
@@ -912,25 +1005,26 @@ export async function processShot(file, opts = {}) {
   await breathe();
 
   say(90, '선명도 확인 중');
-  const quality = inspect(out);
 
   const blob = await new Promise((r) =>
     mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
   );
+  if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
 
   return {
-    blob: blob || file,
-    previewUrl: out.toDataURL('image/jpeg', 0.6),
+    blob,
+    previewUrl: out.toDataURL('image/jpeg', 0.92),
     corners: pts,
     autoScore,
     method,
     quality,
     width: out.width,
     height: out.height,
-    baseUrl: base.toDataURL('image/jpeg', 0.65), // 모서리 조정 화면에서 씁니다
+    baseUrl: base.toDataURL('image/png'), // lossless baseline: repeated corner/mode edits keep pencil detail
     baseW: base.width,
     baseH: base.height,
+    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)),
   };
 }
 
@@ -939,10 +1033,13 @@ export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFA
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
   let out = warp(base, orderCorners(corners), dpiToWidth(dpi), inset);
+  const quality = inspectDocument(out);
   out = enhance(out, mode);
-  const quality = inspect(out);
   const blob = await new Promise((r) =>
     mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
   );
-  return { blob, previewUrl: out.toDataURL('image/jpeg', 0.6), quality, width: out.width, height: out.height };
+  if (!blob) throw { code: 'bad_image' };
+  const pts = orderCorners(corners);
+  return { blob, previewUrl: out.toDataURL('image/jpeg', 0.92), quality, width: out.width, height: out.height,
+    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)) };
 }
