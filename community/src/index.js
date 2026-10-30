@@ -15,6 +15,7 @@ import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
   monthlyAttempts, reserveMonthlySubmission, guardMonthlyGrade, MonthlyAnswerError } from './monthly-answers.js';
+import { createModelTestRouter, MODEL_TEST_PATH } from './model-test-route.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -157,11 +158,13 @@ const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, 
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
+const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
+  if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? await req.json().catch(() => ({})) : {};
   const me = publicInvariant(m, p) || m === 'GET' && /^\/api\/users(?:\/[^/]+)?$/.test(p) ? null : await currentUser(req, env);
