@@ -19,10 +19,12 @@
       "backgroundRemoved": "light",
       "sourceSha256": "0751271ef9adacb4413fe48f691e6dd2c15c91a7dc78625d5841d6772470e784",
       "notes": [
-        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "An SVG gamma lift (0.45, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "A 0.20 per-channel additive floor and 0.80 amplitude raise pure blue/navy luminance in the reviewed dark UI; original alpha and white remain unchanged.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "In dark mode the reviewed flat-paper wordmark region x>=76 also clears enclosed light-paper counters and gaps; 199 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 1131 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
       ],
       "darkWordmarkPaperCleanup": {
         "x": 76,
@@ -30,6 +32,15 @@
         "width": 128,
         "height": 70,
         "additionalPaperPixels": 199
+      },
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 7740,
+        "paintPixels": 1131
       }
     },
     "apao": {
@@ -177,8 +188,18 @@
       "notes": [
         "Dark display uses #ded5ee ink via an SVG luminance/alpha filter; source white holes and original transparency remain open.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [254, 254, 254] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 123 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
+      ],
+      "darkMatteCleanup": {
+        "matte": [
+          254,
+          254,
+          254
+        ],
+        "pixels": 2452,
+        "paintPixels": 123
+      }
     },
     "eupho": {
       "original": "logo/eupho.png",
@@ -559,8 +580,18 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [211, 237, 250] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 358 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
+      ],
+      "darkMatteCleanup": {
+        "matte": [
+          211,
+          237,
+          250
+        ],
+        "pixels": 9793,
+        "paintPixels": 358
+      }
     },
     "kmo": {
       "original": "logo/kmo.png",
@@ -854,7 +885,8 @@
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 2120 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
       ],
       "darkWordmarkPaperCleanup": {
         "x": 0,
@@ -862,6 +894,15 @@
         "width": 538,
         "height": 76,
         "additionalPaperPixels": 405
+      },
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 29264,
+        "paintPixels": 2120
       }
     },
     "ruphow": {
@@ -885,7 +926,8 @@
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 2120 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
       ],
       "darkWordmarkPaperCleanup": {
         "x": 0,
@@ -893,6 +935,15 @@
         "width": 538,
         "height": 76,
         "additionalPaperPixels": 405
+      },
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 29264,
+        "paintPixels": 2120
       }
     },
     "ruphox": {
@@ -916,7 +967,8 @@
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 2120 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
       ],
       "darkWordmarkPaperCleanup": {
         "x": 0,
@@ -924,6 +976,15 @@
         "width": 538,
         "height": 76,
         "additionalPaperPixels": 405
+      },
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 29264,
+        "paintPixels": 2120
       }
     },
     "ruphoy": {
@@ -947,7 +1008,8 @@
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 2120 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
       ],
       "darkWordmarkPaperCleanup": {
         "x": 0,
@@ -955,6 +1017,15 @@
         "width": 538,
         "height": 76,
         "additionalPaperPixels": 405
+      },
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 29264,
+        "paintPixels": 2120
       }
     },
     "usaaao": {
@@ -976,8 +1047,18 @@
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [246, 230, 240] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 2544 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
+      ],
+      "darkMatteCleanup": {
+        "matte": [
+          246,
+          230,
+          240
+        ],
+        "pixels": 151999,
+        "paintPixels": 2544
+      }
     },
     "usabo": {
       "original": "logo/usabo.png",
@@ -1144,8 +1225,18 @@
       "sourceSha256": "323d72fde0bd57def851098234f241166bcde4b6ab226ec9eeb307c83d708ac3",
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
-        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.",
+        "Reviewed white/color matte [255, 255, 255] is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; 4700 corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved."
+      ],
+      "darkMatteCleanup": {
+        "matte": [
+          255,
+          255,
+          255
+        ],
+        "pixels": 9535,
+        "paintPixels": 4700
+      }
     }
   }
 }

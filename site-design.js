@@ -42,11 +42,10 @@ function initSiteDesign(){
 function viewHome(){
   const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div"),archive=document.createElement("div");
   original.innerHTML=viewOriginalHome();
-  archive.innerHTML=viewComps();
+  archive.innerHTML=viewComps(undefined,4);
   const experiment=original.querySelector("figure.screen").outerHTML;
   const homeText=original.querySelector(".hero > div").innerHTML;
   const subjects=archive.querySelector(".subjs").outerHTML,cards=archive.querySelector(".comps");
-  [...cards.children].slice(4).forEach(node=>node.remove());
   const updateRows=SITE_UPDATES.map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
   return `<div class="shell hl-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>

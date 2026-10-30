@@ -70,7 +70,7 @@ export async function contestRoute({ p, m, body, me, env, lang, t }, d) {
     if (!matches(open)) fail(409, "other_active", { other: open ? d.pubLab(open, null) : null, tokens: await d.labTokens(env, me.id) });
     return response(open, { resumed: open.upload_hash !== hash, ...(open.upload_hash === hash ? { token } : {}) });
   }
-  const route = /^\/api\/lab\/contest\/sessions\/(\d+)\/(text|read|pages\/(\d+)\/confirm)$/.exec(p);
+  const route = /^\/api\/lab\/contest\/sessions\/(\d+)\/(text|read|confirm|pages\/(\d+)\/confirm)$/.exec(p);
   if (!route || m !== "POST") return undefined;
   const s = await d.labAdvance(env, await d.labOwned(env, +route[1], me)), meta = contestMeta(s);
   if (!meta) fail(404, "not_found");
@@ -107,33 +107,30 @@ export async function contestRoute({ p, m, body, me, env, lang, t }, d) {
   }
   if (!s.charged) fail(402, "not_paid", { tokens: await d.labTokens(env, s.user_id) });
   if (route[2] === "read") {
-    const pages = (await env.DB.prepare("SELECT * FROM lab_pages WHERE session_id=? AND mime<>'text/plain' AND edited=0 AND ocr_status<>'done' ORDER BY no").bind(s.id).all()).results;
-    for (const page of pages) {
-      // Claim an unread page before calling a provider; two browser clicks must not bill twice.
-      const claim = await env.DB.prepare(`UPDATE lab_pages SET ocr_status='reading',read=? WHERE id=? AND session_id=?
-        AND edited=0 AND (ocr_status NOT IN ('done','reading') OR (ocr_status='reading' AND COALESCE(json_extract(read,'$.processing_at'),0)<?))
-        AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')`).bind(JSON.stringify({ processing_at: t }), page.id, s.id, t - 180, s.id).run();
-      if (!claim.meta.changes) continue;
-      const mt = d.meter();
-      try {
-        await d.limit(env, "labocr:" + s.user_id, d.LAB.ocrPerDay, 86400);
-        const bytes = await d.labPageBytes(env, page);
-        if (!bytes) throw new Error("missing_image");
-        const up = await d.labUpstage(env, bytes, page.mime, mt);
-        if (!up && !env.GEMINI_API_KEY) throw new Error("reader_unavailable");
-        const read = await d.labReadPage(env, s, bytes, page.mime, up, mt);
-        // The student's selected task stays authoritative until explicitly confirmed by the student.
-        const text = d.readText(read);
-        const stored = d.labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: "done" });
-        if (stored.error && page.ocr != null) throw new d.HttpError(502, stored.error);
-        await env.DB.prepare("UPDATE lab_pages SET ocr=?,ocr_conf=?,ocr_status=?,text=?,read=?,legible=?,edited=0 WHERE id=? AND session_id=? AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')")
-          .bind(stored.ocr, up?.confidence ?? null, stored.status, stored.text, stored.read, stored.legible, page.id, s.id, s.id).run();
-      } catch (e) {
-        console.error("contest read", String(e?.code || e?.message || "failed").slice(0, 100));
-        await env.DB.prepare("UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=? AND session_id=? AND ocr_status='reading'").bind(page.read, page.id, s.id).run();
-      }
-      await d.meterSave(env, s.id, page.task, page.id, mt);
+    await d.labQueueOcr(env,s,undefined,true);
+    return {...await response(),queued:true};
+  }
+  if(route[2]==='confirm'){
+    const rows=body.pages;
+    if(!Array.isArray(rows)||!rows.length||rows.length>d.LAB.maxPages)fail(400,'bad_answers');
+    const ids=rows.map(row=>Number(row?.id));
+    if(ids.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(ids).size!==ids.length)fail(400,'bad_answers');
+    const pages=(await env.DB.prepare(`SELECT id,task,ocr,read,legible,ocr_status,length(data) AS image_bytes FROM lab_pages WHERE session_id=? AND id IN (${ids.map(()=>'?').join(',')})`).bind(s.id,...ids).all()).results;
+    if(pages.length!==rows.length)fail(404,'not_found');
+    let length=0;const updates=[];
+    for(const row of rows){
+      const page=pages.find(p=>p.id===Number(row.id)),task=taskOf(row.task??page.task,tasks),text=row.text;
+      if(!task)fail(400,'bad_task');
+      if(typeof text!=='string'||text.length>50000)fail(400,'answer_too_long');
+      if(['reading','queued'].includes(page.ocr_status))fail(409,'reading');
+      length+=text.length;const stored=d.labStoredReading(env,{byteLength:page.image_bytes||0},{ocr:page.ocr,text,read:page.read,legible:page.legible,status:page.ocr_status});
+      if(stored.error)fail(413,stored.error);
+      updates.push({id:page.id,task,text:stored.text});
     }
+    if(length>300000)fail(400,'answer_too_long');
+    const guard=`EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning') AND NOT EXISTS(SELECT 1 FROM lab_pages WHERE session_id=? AND id IN (${ids.map(()=>'?').join(',')}) AND ocr_status IN ('reading','queued'))`;
+    const changed=await env.DB.batch(updates.map(row=>env.DB.prepare(`UPDATE lab_pages SET task=?,text=?,edited=1 WHERE id=? AND session_id=? AND ${guard}`).bind(row.task,row.text,row.id,s.id,s.id,s.id,...ids)));
+    if(changed.some(r=>!r.meta.changes))fail(409,'closed');
     return response();
   }
   const page = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=? AND session_id=?").bind(+route[3], s.id).first();
@@ -141,7 +138,7 @@ export async function contestRoute({ p, m, body, me, env, lang, t }, d) {
   const task = body.task === undefined ? page.task : taskOf(body.task, tasks), text = body.text;
   if (!task) fail(400, "bad_task");
   if (typeof text !== "string" || text.length > 50000) fail(400, "answer_too_long");
-  if (page.ocr_status === "reading") fail(409, "reading");
+  if (["reading","queued"].includes(page.ocr_status)) fail(409, "reading");
   const stored = d.labStoredReading(env, new Uint8Array(page.data || 0), { ocr: page.ocr, text, read: page.read, legible: page.legible, status: page.ocr_status });
   if (stored.error) fail(413, stored.error);
   await env.DB.prepare("UPDATE lab_pages SET task=?,text=?,edited=1 WHERE id=? AND session_id=? AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND status='scanning')")

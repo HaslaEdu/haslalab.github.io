@@ -159,7 +159,7 @@ test('a newer phone photo survives late progress, correction errors and rotation
     URL: FixtureURL, URLSearchParams, Blob, console,
     document: { getElementById: node, querySelector: node, createElement: () => node('element'), body: { append() {} }, documentElement: {} },
     location: { hash: '', pathname: '/sim/scan.html' }, history: { replaceState() {} },
-    navigator: { language: 'ko' }, window: {},
+    navigator: { language: 'ko' }, window: { HLExamNetwork: require('../sim/exam-network.js') },
     sessionStorage: { getItem: () => null }, localStorage: { getItem: () => null },
     setInterval() {}, setTimeout() {}, clearTimeout() {},
     canProcess: () => true,

@@ -1,4 +1,4 @@
-"""Retain HyhwpEQ outlines in the one legacy-font official expert paper."""
+"""Retain HyhwpEQ outlines wherever the official typography profile uses them."""
 from functools import lru_cache
 from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import DecomposingRecordingPen

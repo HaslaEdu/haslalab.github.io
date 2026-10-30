@@ -40,13 +40,16 @@ test('qualitative review report shows grounded feedback without numerical score,
 test('grading history distinguishes untimed submissions and retains a real zero score',async()=>{
   const a=app(),s=qualitativeSession(),host=a.host();
   const timed={id:78,comp:'ipho',year:2024,tasks:['E1'],review_only:false,status:'graded',score:0,points:20};
-  a.context.cmApi=async(method,route)=>route==='/lab/active'?{active:null}:route==='/lab/tokens'?{tokens:2,ledger:[]}:route==='/lab/sessions'?{sessions:[s,timed]}:{};
+  const calls=[];
+  a.context.cmApi=async(method,route)=>{calls.push(route);return route.startsWith('/lab/bootstrap?')?{user:{nickname:'Student'},active:null,tokens:2,parts:0,sessions:[s,timed]}:{};};
   await a.context.arLabList(host,()=>true);
   assert.ok(host.innerHTML.includes('Feedback complete · no score'));
   assert.ok(host.innerHTML.includes('Grading & feedback'));
   assert.ok(host.innerHTML.includes('Timed attempt'));
   assert.ok(host.innerHTML.includes('0 / 20'));
   assert.doesNotMatch(host.innerHTML,/null\s*\/|0\s*\/\s*0/);
+  assert.equal(calls.filter(route=>route.startsWith('/lab/bootstrap?')).length,1);
+  assert.ok(!calls.includes('/lab/tokens'),'The ledger waits until it is opened.');
 });
 
 test('scored review-only reports keep the earned score but suppress timed standing',async()=>{

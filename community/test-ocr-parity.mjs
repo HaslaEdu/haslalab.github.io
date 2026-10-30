@@ -39,6 +39,14 @@ const originalFetch = globalThis.fetch;
 const png = Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082", "hex");
 const FORMULA = String.raw`A.1: $R_0=108.2\,\Omega$\n$\frac{\alpha_i^2}{\sqrt{x}}+\int_0^1 f(t)\,dt$`;
 let fixture = {}, captures = [], base, env, serial = 0;
+const messages=[];
+async function drainQueue(settings=env){
+  while(messages.length){
+    const body=messages.shift();
+    sqlite.prepare("UPDATE lab_jobs SET available_at=0 WHERE id=?").run(body.jobId);
+    await worker.queue({messages:[{body,ack(){},retry(){messages.push(body);}}]},settings);
+  }
+}
 const readFixture = () => ({ header: { task: "E1", sheet: "answer", page: 1 }, legible: "good", items: [
   { label: "A.1", kind: "value", text: "R0 = 999 (incorrect auxiliary transcription)", value: 108.2, unit: "ohm", crossed_out: false },
 ] });
@@ -79,7 +87,7 @@ const server = http.createServer(async (request, response) => {
 test.before(async () => {
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   base = "http://127.0.0.1:" + server.address().port;
-  env = { DB, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", UPSTAGE_API_KEY: "fixture-upstage-key", UPSTAGE_BASE: base + "/upstage", GEMINI_API_KEY: "fixture-gemini-key", GEMINI_BASE: base + "/gemini" };
+  env = { DB, LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", UPSTAGE_API_KEY: "fixture-upstage-key", UPSTAGE_BASE: base + "/upstage", GEMINI_API_KEY: "fixture-gemini-key", GEMINI_BASE: base + "/gemini" };
   globalThis.fetch = (input, init) => {
     const url = typeof input === "string" ? input : input.url;
     if (!url.startsWith(base + "/")) throw new Error("External provider calls forbidden in this test");
@@ -98,15 +106,26 @@ async function session(options = {}) {
 }
 async function api(path, options = {}, settings = env) {
   const response = await worker.fetch(new Request("http://worker.local/api" + path, options), settings);
-  return { status: response.status, data: await response.json() };
+  const out={status:response.status,data:await response.json()};
+  // This provider-parity fixture explicitly drains the test broker; HTTP queue latency is covered separately.
+  if(out.status===200&&options.method==='POST'&&(/\/submit$/.test(path)||/\/read$/.test(path))&&out.data.queued){
+    await drainQueue(settings);
+    return api('/lab/sessions/'+out.data.session.id,{headers:options.headers},settings);
+  }
+  return out;
 }
 async function recognize(s, mode = "math", settings = env) {
   const form = new FormData(); form.append("image", new File([png], "answer.png", { type: "image/png" }));
   return api("/ocr?mode=" + mode, { method: "POST", headers: { Authorization: "Bearer " + s.token }, body: form }, settings);
 }
-const upload = (s, image = png, scan = s.scan, settings = env) => api(`/lab/up/${s.id}/pages?task=E1&kind=answer`, {
-  method: "PUT", headers: { "Content-Type": "image/png", "X-Lab-Token": scan }, body: image,
-}, settings);
+const upload = async(s,image=png,scan=s.scan,settings=env)=>{
+  const out=await api(`/lab/up/${s.id}/pages?task=E1&kind=answer`,{method:'PUT',headers:{'Content-Type':'image/png','X-Lab-Token':scan},body:image},settings);
+  if(out.status===200&&out.data.queued){
+    await drainQueue(settings);const page=(await api('/lab/sessions/'+s.id,{headers:{Authorization:'Bearer '+s.token}},settings)).data.session.pages.find(p=>p.id===out.data.id);
+    out.data={...out.data,ocr_status:page.ocr_status,ocr_error:page.ocr_error,chars:page.text.length};
+  }
+  return out;
+};
 const getSession = s => api("/lab/sessions/" + s.id, { headers: { Authorization: "Bearer " + s.token } });
 
 test("math request matches Nonsul model/force/Markdown/coordinates and preserves original image bytes", async () => {
@@ -324,7 +343,8 @@ test("proof review scan stores the same original and still requires the student'
   const largeImage = Buffer.alloc(1900000); png.copy(largeImage);
   fixture.upstage = { content: { markdown: "original".padEnd(60000, "x") }, confidence: 0.94 };
   const large = await api(`/lab/up/${sid}/pages?task=Q5&kind=answer`, { method: "PUT", headers: { "Content-Type": "image/png", "X-Lab-Token": scan }, body: largeImage });
-  assert.equal(large.data.ocr_status, "done");
+  assert.equal(large.data.ocr_status, "queued");await drainQueue();
+  assert.equal((await api(`/lab/sessions/${sid}`,{headers})).data.session.pages.find(p=>p.id===large.data.id).ocr_status,'done');
   const overBudget = await api(`/lab/contest/sessions/${sid}/pages/${large.data.id}/confirm`, { method: "POST", headers,
     body: JSON.stringify({ task: "Q5", text: "a corrected original".padEnd(50000, "y") }) });
   assert.equal(overBudget.status, 413); assert.equal(overBudget.data.error, "ocr_storage_limit");

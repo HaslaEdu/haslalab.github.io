@@ -29,10 +29,10 @@ NS = "http://www.w3.org/2000/svg"
 DARK_GAMMA = {"cpho": 0.40, "rupho": 0.40, "ruphow": 0.40, "ruphox": 0.40,
               "ruphoy": 0.40, "iypt": 0.45, "ibo": 0.45, "ijso": 0.45,
               "useso": 0.40, "iao": 0.45, "owao": 0.45, "apho": 0.45,
-              "eupho": 0.45, "kphe": 0.45}
+              "eupho": 0.45, "kphe": 0.45, "amc": 0.45}
 # Pure blue/navy retains a low luminance even after gamma. A small additive
 # floor lifts those reviewed marks on dark UI; white stays white and alpha stays.
-DARK_FLOOR = {key: 0.20 for key in ("iao", "owao", "apho", "eupho", "kphe")}
+DARK_FLOOR = {key: 0.20 for key in ("iao", "owao", "apho", "eupho", "kphe", "amc")}
 PALE_INK = {"imcho"}  # The published IMChO mark is effectively one dark navy ink.
 # Reviewed flat-paper wordmarks: white enclosed by A/O/P/etc. is paper, not
 # white ink. Preserve the illustrated emblem to the left of these x positions.
@@ -43,6 +43,16 @@ PAPER_WORDMARK_X = {"kmo": 0, "amc": 76, "putnam": 195, "usabo": 0,
 PAPER_WORDMARK_SIZE = {"kmo": (246, 49), "amc": (204, 70), "putnam": (683, 178),
                        "usabo": (300, 136), "usnco": (1243, 290),
                        **{key: (538, 76) for key in ("rupho", "ruphow", "ruphox", "ruphoy")}}
+# These sources were published against a colored/white matte. Their soft edge
+# pixels contain paper mixed into the ink; deleting only white pixels leaves a
+# visible light fringe. Reconstruct those reviewed edge samples as SVG paint.
+EDGE_MATTE = {"usaaao": (246, 230, 240), "amc": (255, 255, 255),
+              "kmchc": (211, 237, 250), "wopho": (255, 255, 255),
+              "eotvos": (254, 254, 254),
+              **{key: (255, 255, 255) for key in ("rupho", "ruphow", "ruphox", "ruphoy")}}
+EDGE_MATTE_SIZE = {"usaaao": (400, 400), "amc": (204, 70), "kmchc": (104, 128),
+                   "wopho": (500, 132), "eotvos": (80, 98),
+                   **{key: (538, 76) for key in ("rupho", "ruphow", "ruphox", "ruphoy")}}
 
 
 def checked_svg(data: bytes) -> ET.Element:
@@ -211,13 +221,140 @@ def mono_filter(white_ink=False):
             '</filter>')
 
 
-def svg_variant(data, mime, width, height, view, removed, mode, neutral=None, gamma=False, floor=0):
+def matte_edge_paint(key, rgba, mode, gamma, floor):
+    """Unmix reviewed paper-contaminated AA pixels without eroding solid ink.
+
+    C = coverage * ink + (1-coverage) * matte. A nearby solid sample supplies
+    the ink estimate. Its RGB is unmatted while its recovered coverage becomes
+    alpha. Closed white emblem faces remain outside the reachable edge region.
+    All derived paint is vector paths; the original embedded image is unchanged.
+    """
+    if key not in EDGE_MATTE:
+        return None
+    if (rgba.shape[1], rgba.shape[0]) != EDGE_MATTE_SIZE[key]:
+        raise ValueError(f"Review the edge matte recipe after replacing {key}'s source artwork")
+    rgb = rgba[:, :, :3].astype(np.float32)
+    source_alpha = rgba[:, :, 3].astype(np.float32) / 255
+    matte = np.array(EDGE_MATTE[key], dtype=np.float32)
+    height, width = source_alpha.shape
+    delta = matte - rgb
+    strength = np.max(np.abs(delta), axis=2)
+    # Core samples are unwhitened dark/saturated ink, never the light paper.
+    core = (strength >= 145) & (source_alpha >= .85)
+    if key == "kmchc":
+        core = (strength >= 125) & (source_alpha >= .85)
+    if key == "eotvos":
+        core = (rgb.max(axis=2) < 40) & (source_alpha >= .85)
+    weak = strength < (125 if key == "kmchc" else 145)
+    if key == "amc":
+        # The exterior can reach AA on the outside of the polyhedron, but cannot
+        # cross its navy frame to erase its intentionally white enclosed faces.
+        region = edge_connected(weak)
+        region[:, 76:] |= weak[:, 76:]
+    elif key == "wopho":
+        # Opaque gray/silver bevel surfaces and internal white reflections are
+        # artwork. Only the translucent export halo and exterior white rim flow.
+        region = edge_connected((source_alpha < .995) | (strength < 65))
+        region &= (source_alpha < .995) | (strength < 65)
+    elif key == "eotvos":
+        region = edge_connected(weak)
+        # Its outer ellipse is genuine engraved artwork. Only treat the thin
+        # exterior paper fringe: the text ring and portrait retain their exact
+        # original image sampling rather than being rebuilt as pixel paths.
+        yy, xx = np.indices((height, width))
+        outside_ellipse = ((xx - 39.5) / 37) ** 2 + ((yy - 48.5) / 47) ** 2 >= .98
+        region &= outside_ellipse
+    else:
+        # USAAAO and KMChC have the same paper color in their enclosed gaps.
+        # RuPhO is a flat wordmark with no white ink anywhere in the source.
+        region = weak
+    paper = region & (strength < 23)
+    candidates = region & ~paper & (source_alpha > 0)
+    if key == "eotvos":
+        # The previous engraving display already removed the very pale exterior
+        # paper. Do not reintroduce it as a faint new ring while fixing its edge.
+        paper |= region & (rgb.max(axis=2) >= 215)
+        candidates &= rgb.max(axis=2) < 215
+    ys, xs = np.nonzero(candidates)
+    ink = np.zeros((len(xs), 3), dtype=np.float32)
+    found = np.zeros(len(xs), dtype=bool)
+    # A bounded nearest-solid search stays local to each colored stroke. Source
+    # resolution is small, so no optional image-processing dependency is needed.
+    offsets = sorted(((dx * dx + dy * dy, dy, dx) for dy in range(-8, 9)
+                      for dx in range(-8, 9) if dx or dy))
+    for _, dy, dx in offsets:
+        todo = np.flatnonzero(~found)
+        if not len(todo):
+            break
+        tx, ty = xs[todo] + dx, ys[todo] + dy
+        valid = (tx >= 0) & (tx < width) & (ty >= 0) & (ty < height)
+        todo, tx, ty = todo[valid], tx[valid], ty[valid]
+        hit = core[ty, tx]
+        ids = todo[hit]
+        ink[ids] = rgb[ty[hit], tx[hit]]
+        found[ids] = True
+    if key == "eotvos":
+        # This is a grayscale printed engraving, not a color-edge estimate.
+        # Black paper coverage preserves the actual ellipse and portrait lines.
+        ink[:] = 0
+        found[:] = True
+    selected = np.flatnonzero(found)
+    colors = np.zeros((height, width, 3), dtype=np.uint8)
+    opacity = np.zeros((height, width), dtype=np.uint8)
+    replaced = paper.copy()
+    if len(selected):
+        y, x = ys[selected], xs[selected]
+        observed, pigment = rgb[y, x], ink[selected]
+        vector = matte - pigment
+        coverage = np.clip(np.sum((matte - observed) * vector, axis=1) /
+                           np.maximum(np.sum(vector * vector, axis=1), 1), 0, 1)
+        residual = np.linalg.norm((matte - observed) - coverage[:, None] * vector, axis=1)
+        # Samples not explained by a matte mix are genuine local colors/bevels.
+        cleanable = (residual < 28) & (coverage < .995)
+        y, x, pigment, observed, coverage = y[cleanable], x[cleanable], pigment[cleanable], observed[cleanable], coverage[cleanable]
+        recovered = np.clip((observed - matte * (1 - coverage[:, None])) /
+                            np.maximum(coverage[:, None], .001), 0, 255)
+        recovered = np.where(coverage[:, None] < .35, pigment, recovered)
+        alpha = source_alpha[y, x] * coverage
+        # Suppress only very weak paper/JPEG noise; retain fractional edge ink.
+        alpha = np.clip((alpha - .018) / .982, 0, 1)
+        if mode.startswith("monochrome"):
+            recovered[:] = np.array([222, 213, 238])
+        else:
+            original = recovered.copy()
+            if gamma:
+                recovered = 255 * (floor + (1 - floor) * (recovered / 255) ** gamma)
+            if mode == "preserve-color-light-neutral-ink":
+                luminance = original @ np.array([.2126, .7152, .0722])
+                neutral = (np.ptp(original, axis=1) <= 18) & (luminance < 180)
+                mix = np.clip((190 - luminance) / 190, 0, 1)
+                recovered[neutral] = (recovered[neutral] * (1 - mix[neutral, None]) +
+                                      np.array([222, 213, 238]) * mix[neutral, None])
+        # 5-bit channels / 32 alpha levels keep small AA details while allowing
+        # same-color rectangles to coalesce into compact deterministic paths.
+        colors[y, x] = (np.round(recovered / 8) * 8).clip(0, 255).astype(np.uint8)
+        opacity[y, x] = np.round(alpha * 32).clip(0, 32).astype(np.uint8)
+        replaced[y, x] = True
+    paint = []
+    active = np.nonzero(opacity)
+    groups = np.unique(np.c_[colors[active], opacity[active]], axis=0)
+    for r, g, b, a in groups:
+        bits = (opacity == a) & np.all(colors == (r, g, b), axis=2)
+        paint.append(f'<path fill="#{r:02x}{g:02x}{b:02x}" opacity="{int(a) / 32:.5f}" d="{mask_path(bits)}"/>')
+    return {"replaced": replaced, "paint": "".join(paint), "pixels": int(replaced.sum()),
+            "paintPixels": int(np.count_nonzero(opacity)), "matte": list(EDGE_MATTE[key])}
+
+
+def svg_variant(data, mime, width, height, view, removed, mode, neutral=None, gamma=False, floor=0, edge=None):
     definitions = []
     wrapper = []
     if removed is not None and removed.any():
         definitions.append(f'<mask id="exterior" maskUnits="userSpaceOnUse" x="0" y="0" width="{width}" height="{height}" mask-type="luminance">'
                            f'<rect width="{width}" height="{height}" fill="white"/><path fill="black" d="{mask_path(removed)}"/></mask>')
         wrapper.append('mask="url(#exterior)"')
+    if edge is not None:
+        definitions.append(f'<mask id="matte" maskUnits="userSpaceOnUse" x="0" y="0" width="{width}" height="{height}" mask-type="luminance">'
+                           f'<rect width="{width}" height="{height}" fill="white"/><path fill="black" d="{mask_path(edge["replaced"])}"/></mask>')
     if mode.startswith("monochrome"):
         definitions.append(mono_filter(mode == "monochrome-light-ink"))
         image_filter = ' filter="url(#mono)"'
@@ -243,7 +380,10 @@ def svg_variant(data, mime, width, height, view, removed, mode, neutral=None, ga
     x, y, w, h = view
     return (f'<svg xmlns="{NS}" width="{w}" height="{h}" viewBox="{x} {y} {w} {h}" role="img">'
             f'<title>Official source mark: {mode} display variant</title>'
-            '<defs>' + "".join(definitions) + '</defs><g ' + " ".join(wrapper) + '>' + image + "".join(overlays) + '</g></svg>\n')
+            '<defs>' + "".join(definitions) + '</defs>' +
+            ('<g mask="url(#matte)">' if edge is not None else '') +
+            '<g ' + " ".join(wrapper) + '>' + image + "".join(overlays) + '</g>' +
+            ('</g>' + edge["paint"] if edge is not None else '') + '</svg>\n')
 
 
 def build(path: Path):
@@ -300,7 +440,10 @@ def build(path: Path):
         notes.append("Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.")
     dark = LOGO / "dark" / (path.stem + ".svg")
     light = LOGO / "light" / (path.stem + ".svg")
-    dark.write_text(svg_variant(data, mime, width, height, view, dark_removed, mode, neutral, gamma, floor), encoding="utf-8")
+    edge = matte_edge_paint(path.stem, rgba, mode, gamma, floor) if rgba is not None else None
+    if edge:
+        notes.append(f"Reviewed white/color matte {edge['matte']} is unmixed from soft edge pixels using nearby solid ink and fractional SVG alpha; {edge['paintPixels']} corrected edge samples replace the contaminated paint. Closed white emblem faces and solid artwork are preserved.")
+    dark.write_text(svg_variant(data, mime, width, height, view, dark_removed, mode, neutral, gamma, floor, edge), encoding="utf-8")
     # Keep a published dark field in light mode: white published lettering needs
     # that native background. This is not an added plate.
     light_removed = None if background == "dark" else removed
@@ -311,6 +454,8 @@ def build(path: Path):
             "backgroundRemoved": background, "sourceSha256": source_sha, "notes": notes}
     if wordmark_cleanup:
         result["darkWordmarkPaperCleanup"] = wordmark_cleanup
+    if edge:
+        result["darkMatteCleanup"] = {field: edge[field] for field in ("matte", "pixels", "paintPixels")}
     return result
 
 

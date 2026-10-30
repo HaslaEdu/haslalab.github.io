@@ -24,13 +24,27 @@ for (let id = 1; id <= 20; id++) {
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
   sqlite.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, timestamp, timestamp + 3600);
 }
-const env = { DB, ALLOWED_ORIGINS: 'http://localhost:8765', LAB_KEEP_HOURS: 'off' };
+const messages=[];
+const env = { DB,LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: 'http://localhost:8765', LAB_KEEP_HOURS: 'off' };
 const originalFetch = globalThis.fetch;
 globalThis.fetch = () => { throw new Error('Unexpected external request'); };
 test.after(() => { globalThis.fetch = originalFetch; sqlite.close(); });
 async function request(path, body, id = 1, method = body === undefined ? 'GET' : 'POST', extra = {}) {
   const response = await worker.fetch(new Request('http://worker.local/api' + path, { method, headers: { ...(id ? { Authorization: 'Bearer ' + tokens[id] } : {}), ...(body === undefined ? {} : { 'Content-Type': 'application/json' }), ...extra }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), env);
   return { status: response.status, data: await response.json() };
+}
+async function drainQueue(){
+  let safety=0;
+  while(messages.length){assert.ok(++safety<100);const body=messages.shift();sqlite.prepare('UPDATE lab_jobs SET available_at=0 WHERE id=?').run(body.jobId);await worker.queue({messages:[{body,ack(){},retry(){messages.push(body);}}]},env);}
+}
+async function settled(path,body,id=1){
+  const result=await request(path,body,id);
+  if(result.status===200&&result.data.queued){
+    assert.equal(result.data.session.status,'grading');
+    await drainQueue();const done=await request('/lab/sessions/'+result.data.session.id,undefined,id);
+    done.data.tokens=result.data.tokens;return done;
+  }
+  return result;
 }
 const exam = { comp: 'ipho', year: 2024, tasks: ['T1'], sources: { T1: { kind: 'theory', sol: 'IPhO_2024_T1S.pdf' } }, entry: '?c=ipho&y=2024&m=t&e=T1&review=1', review: true };
 let first;
@@ -64,8 +78,8 @@ test('typed work is validated, saved and replaced without spending tokens', asyn
 });
 test('grading is charged once, closes the review, and never assigns a timed ranking', async () => {
   const id = first.session.id;
-  let r = await request('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.5); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status, 'pending');
-  r = await request('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.data.tokens, 4.5);
+  let r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.5); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status, 'pending');
+  r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.data.tokens, 4.5);
   assert.equal((await request('/lab/sessions/' + id + '/text', { answers: { T1: 'late edit' } })).status, 409);
   assert.equal((await request('/lab/up', undefined, null, 'GET', { 'X-Lab-Token': first.token })).status, 410);
   sqlite.prepare("UPDATE lab_sessions SET status='graded',score=9,points=10 WHERE id=?").run(id);
@@ -81,9 +95,9 @@ test('Physics Cup, Ortvay, OPhO and WOPHO enforce review-only even for old timed
 });
 test('empty reviews cannot spend tokens, but can close for free to release the active session', async () => {
   const r = await request('/lab/start', exam, 7), id = r.data.session.id;
-  const empty = await request('/lab/sessions/' + id + '/submit', { grade: true }, 7); assert.equal(empty.status, 400); assert.equal(empty.data.error, 'no_answers');
+  const empty = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 7); assert.equal(empty.status, 400); assert.equal(empty.data.error, 'no_answers');
   assert.equal((await request('/lab/sessions/' + id + '/pay', {}, 7)).data.error, 'no_answers');
-  const ended = await request('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 5);
+  const ended = await settled('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 5);
 });
 test('ordinary timed exams retain their duration, scan window and answer lock', async () => {
   const r = await request('/lab/start', { ...exam, review: false, entry: '?c=ipho&y=2024&m=t&e=T1' }, 8), s = r.data.session;
@@ -115,7 +129,7 @@ test('typed numeric answers are indexed independently and fabricated grader valu
     const started = await request('/lab/start', { ...exam, year: 2025 }, 9), id = started.data.session.id;
     await request('/lab/sessions/' + id + '/text', { answers: { T1: 'A.1: F = 42 N' } }, 9);
     assert.equal(prompts.length, 0, 'saving a solution makes no provider request');
-    const graded = await request('/lab/sessions/' + id + '/submit', { grade: true }, 9), result = graded.data.session.detail.tasks.T1;
+    const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 9), result = graded.data.session.detail.tasks.T1;
     assert.equal(graded.status, 200); assert.equal(result.status, 'graded'); assert.equal(result.score, 1); assert.equal(result.points, 2);
     assert.equal(result.items[0].got, 1); assert.equal(result.items[1].got, 0); assert.ok(result.items[1].rules.includes('R9')); assert.equal(prompts.length, 2);
     assert.equal(graded.data.session.pages[0].text, 'A.1: F = 42 N');
@@ -133,7 +147,7 @@ test('Ortvay receives grounded qualitative feedback from the official paper with
   try {
     const started = await request('/lab/start', { comp: 'ortvay', year: 2026, tasks: ['T'], review: true, sources: { T: { kind: 'theory', paper: 'https://ortvay.elte.hu/2026/E26.pdf' } } }, 10), id = started.data.session.id;
     await request('/lab/sessions/' + id + '/text', { answers: { T: 'Problem 1. F = ma in an inertial frame.' } }, 10);
-    const graded = await request('/lab/sessions/' + id + '/submit', { grade: true }, 10), s = graded.data.session, result = s.detail.tasks.T;
+    const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 10), s = graded.data.session, result = s.detail.tasks.T;
     assert.equal(graded.status, 200); assert.equal(s.status, 'graded'); assert.equal(s.score, null); assert.equal(s.points, null); assert.equal(graded.data.tokens, 4); assert.equal(calls, 1);
     assert.equal(result.grading_mode, 'qualitative_review'); assert.equal(result.official, false); assert.equal(result.reference, 'published_problem_only'); assert.equal(result.score, null); assert.ok(result.review.summary); assert.equal(result.evidence[0].quote, 'F = ma');
     assert.equal((await request('/lab/sessions/' + id, undefined, 10)).data.session.standing, null);
@@ -159,7 +173,7 @@ test('qualitative scans preserve the original OCR once, include the image, and r
       const png = Buffer.from('89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082', 'hex');
       const image = Buffer.concat([png, Buffer.alloc(oversized ? 1800000 : 200, 4)]);
       const page = sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr_status,created_at) VALUES(?,1,'T','answer','image/png',?,'unpaid',?)").run(id, image, timestamp);
-      const graded = await request('/lab/sessions/' + id + '/submit', { grade: true }, user), stored = sqlite.prepare('SELECT * FROM lab_pages WHERE id=?').get(Number(page.lastInsertRowid));
+      const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, user), stored = sqlite.prepare('SELECT * FROM lab_pages WHERE id=?').get(Number(page.lastInsertRowid));
       assert.equal(graded.status, 200); assert.equal(stored.data.length, image.length);
       if (oversized) { assert.equal(graded.data.session.detail.tasks.T.why, 'ocr_storage_limit'); assert.equal(stored.ocr_status, 'failed'); assert.equal(stored.ocr, null); }
       else { assert.equal(graded.data.session.status, 'graded', JSON.stringify(graded.data.session.detail)); assert.equal(stored.ocr, original); assert.equal(stored.text, null); assert.equal(JSON.parse(stored.read).ocr.text, undefined); }
@@ -207,7 +221,7 @@ test('a source journal without printed current-year point values remains unscore
   try {
     await request('/lab/sessions/' + sitting.id + '/finish', {}, sitting.user);
     sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
-    const r = await request('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
+    const r = await settled('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
     assert.equal(r.status, 200); assert.equal(r.data.session.status, 'pending'); assert.equal(r.data.session.detail.tasks.T.why, 'no_official_points'); assert.equal(r.data.session.points, null); assert.equal(r.data.session.score, null); assert.equal(calls, 1);
   } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
 });
@@ -217,8 +231,8 @@ test('a verified Eotvos journal cannot redirect the Worker to an untrusted host'
   try {
     await request('/lab/sessions/' + sitting.id + '/finish', {}, sitting.user);
     sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
-    const r = await request('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
-    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.deepEqual(fetched, [sitting.solution]);
+    const r = await settled('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
+    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.ok(fetched.length>=1&&fetched.length<=4);assert.ok(fetched.every(url=>url===sitting.solution),'queue retries never follow an untrusted redirect');
   } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
 });
 
@@ -249,11 +263,27 @@ test('a locally archived Eotvos report keeps the same current-year and printed-p
     assert.equal(started.status, 200);
     const id = started.data.session.id;
     await request('/lab/sessions/' + id + '/text', { answers: { T: 'A submitted derivation: F = ma.' } }, 20);
-    const graded = await request('/lab/sessions/' + id + '/submit', { grade: true }, 20);
+    const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 20);
     assert.equal(graded.status, 200);
     assert.equal(graded.data.session.detail.tasks.T.why, 'no_official_points');
     assert.equal(graded.data.session.score, null);
     assert.equal(graded.data.session.points, null);
     assert.equal(calls, 1);
   } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+});
+
+test('paying for an untimed review never submits it through GET, bootstrap or the minute recovery sweep',async()=>{
+  const user=20,started=await request('/lab/start',exam,user),id=started.data.session.id;
+  await request('/lab/sessions/'+id+'/text',{answers:{T1:'An unfinished review: F = ma.'}},user);
+  const paid=await request('/lab/sessions/'+id+'/pay',{},user);assert.equal(paid.status,200);assert.equal(paid.data.session.paid,true);assert.equal(paid.data.session.status,'scanning');
+  sqlite.prepare('UPDATE lab_sessions SET started_at=?,ended_at=?,scan_until=0 WHERE id=?').run(timestamp-30*86400,timestamp-30*86400,id);
+  const savedFetch=globalThis.fetch;let calls=0;globalThis.fetch=()=>{calls++;throw Error('status reads and review sweep must not call AI');};
+  try{
+    assert.equal((await request('/lab/sessions/'+id,undefined,user)).data.session.status,'scanning');
+    assert.equal((await request('/lab/bootstrap?id='+id,undefined,user)).data.session.status,'scanning');
+    const work=[];await worker.scheduled({scheduledTime:Date.now()},env,{waitUntil:p=>work.push(p)});await Promise.all(work);
+    const row=sqlite.prepare('SELECT status,submitted_at FROM lab_sessions WHERE id=?').get(id);
+    assert.equal(row.status,'scanning');assert.equal(row.submitted_at,null);assert.equal(calls,0);
+    assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM lab_jobs WHERE session_id=?').get(id).n,0);
+  }finally{globalThis.fetch=savedFetch;}
 });

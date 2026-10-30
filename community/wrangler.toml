@@ -9,10 +9,22 @@ keep_vars = true
 [placement]
 mode = "smart"
 
-# Removes answer photos on time (LAB_KEEP_HOURS after grading) — without it the removal only runs now and then
-# on ordinary requests.
+# Recover interrupted job delivery within a minute; the handler gates photo cleanup to 15 minutes.
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["* * * * *"]
+
+# Only small job IDs enter the queue; answer scans remain in the existing D1/R2 storage.
+[[queues.producers]]
+binding = "LAB_JOBS"
+queue = "haslalab-lab-jobs"
+
+[[queues.consumers]]
+queue = "haslalab-lab-jobs"
+max_batch_size = 1
+max_batch_timeout = 1
+max_retries = 3
+max_concurrency = 4
+dead_letter_queue = "haslalab-lab-jobs-dead"
 
 # Sites allowed to call the API from the browser (comma-separated).
 [vars]

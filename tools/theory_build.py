@@ -28,6 +28,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 from kphe_review import review_questions
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -283,6 +284,10 @@ def main():
     print('theory.js: %d competitions, %d years, %d papers, %.0f kB' % (len(data), sum(len(c) for c in data.values()), n, len(js) / 1024))
     for path, f in bad:
         print('skipped', os.path.basename(path), f)
+    # The front end fetches per-competition chunks; refresh them with the authoritative catalogue.
+    lazy_builder = os.path.join(ROOT, 'tools', 'build-site-catalogue.cjs')
+    if os.path.isfile(lazy_builder):
+        subprocess.run(['node', lazy_builder], cwd=ROOT, check=True)
 
 
 if __name__ == '__main__':

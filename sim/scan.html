@@ -80,6 +80,7 @@
   <div id="app"><div class="note">…</div></div>
 </div>
 
+<script src="exam-network.js"></script>
 <script type="module">
 import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
 
@@ -115,7 +116,7 @@ const T = {
     sentH: "보낸 쪽", none: "아직 보낸 쪽이 없습니다.", del: "빼기",
     ocrStorage: "사진은 보관했습니다. 사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.",
     ocrFailed: "사진은 보관했지만 글자를 읽지 못했습니다. 원본을 확인하고 필요하면 다시 촬영해 주세요.",
-    ocr: { done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
+    ocr: { queued: "판독 대기", reading: "판독 중", done: "읽음", failed: "읽지 못함", off: "자동 읽기 꺼짐", none: "" }, legS: { good: "잘 읽힘", partial: "일부만 읽힘", poor: "못 읽음 · 다시 찍기" },
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
     over: "스캔 시간이 끝났습니다. 이 링크는 파기되어 더 이상 쓸 수 없습니다.",
@@ -140,7 +141,7 @@ const T = {
     sentH: "Pages sent", none: "No pages sent yet.", del: "Remove",
     ocrStorage: "The photo was saved. The photo and full recognized text exceed the storage limit. Reduce the file size and upload again.",
     ocrFailed: "The photo was saved, but its text could not be read. Check the original and retake it if needed.",
-    ocr: { done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
+    ocr: { queued: "queued", reading: "reading", done: "read", failed: "not read", off: "reading off", none: "" }, legS: { good: "read well", partial: "partly read", poor: "unreadable · retake" },
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
     over: "Scanning has ended. This link has been destroyed and can no longer be used.",
@@ -154,27 +155,29 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const ms = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
 function toast(m, d) { const x = document.createElement("div"); x.className = "toast"; x.textContent = m; document.body.append(x); setTimeout(() => x.remove(), d || 3500); }
-async function api(method, path, body, type) {
-  let r;
-  try { r = await fetch(API + "/api" + path, { method, headers: { "X-Lab-Token": KEY, ...(type ? { "Content-Type": type } : {}) }, body }); }
-  catch (e) { throw { code: "network" }; }
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw { code: j.error || "server_error", status: r.status };
-  return j;
-}
+const NETWORK=window.HLExamNetwork,transport=NETWORK.createTransport({getBase:()=>API,getToken:()=>''});
+let mutationEpoch=0;
+function api(method,path,body,type){if(method!=='GET')mutationEpoch++;return transport.request(method,path,body,{binary:true,headers:{'X-Lab-Token':KEY,...(type?{'Content-Type':type}:{})}});}
 
 let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
 let shotRevision = 0, closeShotEditor = null;
 const srvNow = () => Date.now() / 1000 + SKEW;
 
-async function refresh() {
-  try { INFO = await api("GET", UP); SKEW = INFO.now - Date.now() / 1000; }
-  catch (e) { INFO = null;
-    if (e.code === "scan_over") { try { sessionStorage.removeItem("hlScan"); } catch (x) {} $("clock").textContent = "--:--"; }
-    $("app").innerHTML = `<div class="note w">${esc(e.code === "scan_over" ? t().over : e.code === "bad_token" || e.status === 403 ? t().badLink : t().err[e.code] || e.code)}</div>`; return; }
-  if (!task || !INFO.tasks.includes(task)) task = INFO.tasks[0];
-  paint();
+let refreshing=null,refreshEpoch=-1,linkEnded=false;
+function refresh(){
+  const epoch=mutationEpoch;if(refreshing&&refreshEpoch===epoch)return refreshing;refreshEpoch=epoch;
+  const promise=(async()=>{const before=JSON.stringify(INFO&&[INFO.status,INFO.open,INFO.pages]);try{
+    const value=await api('GET',UP);if(epoch!==mutationEpoch)return false;INFO=value;SKEW=INFO.now-Date.now()/1000;
+  }catch(e){if(epoch!==mutationEpoch)return false;INFO=null;
+    if(e.code==='scan_over'||e.code==='bad_token'||e.status===403){linkEnded=true;phonePoll.stop();}
+    if(e.code==='scan_over'){try{sessionStorage.removeItem('hlScan');}catch(_){}$('clock').textContent='--:--';}
+    if(!shot)$('app').innerHTML=`<div class="note w">${esc(e.code==='scan_over'?t().over:e.code==='bad_token'||e.status===403?t().badLink:t().err[e.code]||e.code)}</div>`;return false;
+  }
+  if(!task||!INFO.tasks.includes(task))task=INFO.tasks[0];if(!shot)paint();
+  return before!==JSON.stringify([INFO.status,INFO.open,INFO.pages]);})();refreshing=promise;promise.finally(()=>{if(refreshing===promise)refreshing=null;});return promise;
 }
+const phonePoll=NETWORK.createPoll({document,delays:[10000,20000,30000],active:()=>!!KEY&&!linkEnded&&!shot&&(!INFO||INFO.open||INFO.status==='running'),task:refresh});
+
 function paint() {
   document.documentElement.lang = lang;
   $("hTitle").textContent = `${INFO.comp.toUpperCase()} ${INFO.year} · ${t().title}`;
@@ -217,7 +220,7 @@ async function take(file, live, internal = false) {
   if (!internal && file.size > 12 * 1024 * 1024) return toast(t().err.input_too_big);
   releaseShot();
   const revision = shotRevision;
-  shot = { file, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };
+  shot = { file, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
   mode = "clean"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
@@ -227,7 +230,7 @@ async function take(file, live, internal = false) {
   } catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; }
   paintShot();
 }
-function releaseShot() { ++shotRevision; if (closeShotEditor) closeShotEditor(); if (shot?.originalUrl) URL.revokeObjectURL(shot.originalUrl); shot = null; }
+function releaseShot() { ++shotRevision; if (closeShotEditor) closeShotEditor(); if (shot?.originalUrl) URL.revokeObjectURL(shot.originalUrl); shot = null;phonePoll.start(); }
 function paintShot() {
   const box = $("shot"); if (!box) return;
   if (!shot) { box.innerHTML = ""; return; }
@@ -411,8 +414,7 @@ setInterval(() => {
   const left = INFO.scan_until - srvNow(); c.textContent = ms(left); c.classList.toggle("warn", left <= 300);
   if (left <= -2 && INFO.open) { INFO.open = false; paint(); }
 }, 500);
-setInterval(() => { if (!shot) refresh(); }, 20000);
-if (!KEY) $("app").innerHTML = `<div class="note w">${t().badLink}</div>`; else refresh();
+if (!KEY) $("app").innerHTML = `<div class="note w">${t().badLink}</div>`; else refresh().finally(()=>phonePoll.start());
 </script>
 </body>
 </html>

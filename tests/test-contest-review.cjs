@@ -89,7 +89,7 @@ test('mount and open preparation never spend tokens; only the explicit one-token
   try{
     controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:4,questionOffset:4},{runId:'mock-run',storage,fetch,answers:{1:'Proof'}});
     await new Promise(resolve=>setImmediate(resolve));
-    assert.deepEqual(calls.map(c=>c.route),['/api/lab/active']);
+    assert.deepEqual(calls.map(c=>c.route),['/api/lab/bootstrap']);
     await host.querySelector('[data-cr-start]').onclick();
     assert.ok(calls.some(c=>c.route.endsWith('/contest/start')));
     assert.ok(!calls.some(c=>c.route.endsWith('/pay')));
@@ -169,4 +169,28 @@ test('account records reopen contest review and show math-review rules instead o
   assert.ok(!host.innerHTML.includes('id="arLabPay"'));
   assert.ok(!host.innerHTML.includes('sim/exam.html'));
   assert.equal(context.arLabHref({entry:'?c=ipho&y=2024'}),'sim/exam.html?c=ipho&y=2024&lang=ko');
+});
+
+test('queued OCR stays read-only and cannot be confirmed or submitted before it finishes',async()=>{
+  const previous={document:global.document,window:global.window,location:global.location};let controller;
+  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.window={};global.document={hidden:false,addEventListener(){},removeEventListener(){}};
+  try{
+    let status='queued';const calls=[],session=()=>({id:12,examId:'kmo-example',status:'scanning',paid:true,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'scan',ocr_status:status,text:status==='done'?'Proof x = 1.':'',confirmed:false}]}),host=testHost();
+    const fetch=async(url,opts)=>{calls.push({url,method:opts?.method});return url.endsWith('/img')?{ok:false}:{ok:true,json:async()=>({session:session(),tokens:2})};};
+    controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:1},{session:session(),storage:{getItem:key=>key==='hlCmTok'?'test-token':null,setItem(){}},fetch});await new Promise(resolve=>setImmediate(resolve));
+    assert.match(host.innerHTML,/판독을 진행 중/);assert.match(host.innerHTML,/data-cr-edit="34"[^>]*readonly[^>]*disabled/);assert.match(host.innerHTML,/data-cr-submit disabled/);
+    await host.querySelector('[data-cr-submit]').onclick();assert.ok(calls.every(c=>c.method==='GET'));
+    status='done';await controller.refresh();assert.ok(!host.innerHTML.includes('data-cr-submit disabled disabled'));assert.ok(!/data-cr-edit="34"[^>]*readonly/.test(host.innerHTML));
+    host.querySelector('[data-cr-approved]').checked=true;host.querySelector('[data-cr-approved]').onchange({target:{checked:true}});await host.querySelector('[data-cr-submit]').onclick();
+    assert.equal(calls.filter(c=>c.url.endsWith('/contest/sessions/12/confirm')).length,1);assert.equal(calls.filter(c=>c.url.endsWith('/submit')).length,1);assert.equal(calls.filter(c=>c.url.endsWith('/pay')).length,0);
+  }finally{controller?.dispose();for(const[key,value]of Object.entries(previous)){if(value===undefined)delete global[key];else global[key]=value;}}
+});
+
+test('the account dashboard reads balances and sessions once and loads the ledger only when opened',async()=>{
+  const vm=require('node:vm'),fs=require('node:fs'),calls=[],nodes=new Map(),host={innerHTML:'',querySelector(sel){return nodes.get(sel)||null;}},ledger={open:false,addEventListener(_name,fn){this.toggle=fn;}},ledgerBody={innerHTML:''};nodes.set('#lbLedger',ledger);nodes.set('#lbLedgerBody',ledgerBody);
+  const context=vm.createContext({lang:'ko',cm:{me:{nickname:'Candidate'}},window:{},esc:x=>String(x??''),cmShort:()=>'',cmTok:()=> 'account-a',cmApi:async(method,path)=>{calls.push({method,path});return path.startsWith('/lab/bootstrap')?{user:{nickname:'Candidate'},tokens:4,parts:0,active:null,sessions:[]}:path==='/lab/tokens'?{ledger:[]}:{pay:null,paddle:null,ads:null};}});
+  vm.runInContext(fs.readFileSync(require.resolve('../arena.js'),'utf8'),context);vm.runInContext('arShopWire=()=>{}',context);
+  await context.arLabList(host,()=>true);assert.equal(calls.length,2);assert.ok(calls.some(c=>c.path==='/lab/bootstrap?include=sessions,health'));assert.ok(!calls.some(c=>c.path==='/lab/tokens'));
+  ledger.open=true;await ledger.toggle();await ledger.toggle();assert.equal(calls.filter(c=>c.path==='/lab/tokens').length,1);
 });

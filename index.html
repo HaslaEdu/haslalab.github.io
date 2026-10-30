@@ -1000,17 +1000,13 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 </div></footer>
 
 <script src="sim/labmedal.js"></script>
-<script src="examdur.js?v=20261030-archives"></script>
-<script src="theory.js?v=db6ea0027a"></script>
-<script src="paper-languages.js?v=1"></script>
-<script src="contest-exams.js"></script>
-<script src="iypt.js?v=6c459553ee"></script>
-<script src="usaco.js?v=2ca7e01243"></script>
-<script src="rupho-selection.js"></script>
-<script src="rupho-archive.js?v=20261030-study"></script>
-<script src="arena.js?v=20261030-study"></script>
-<script src="logo/variants.js?v=20261030-archives"></script>
-<script src="site-design.js?v=20261030-archives"></script>
+<script src="examdur.js?v=9a7cae160dd1"></script>
+<script src="paper-languages.js?v=fd7e30d1aafa"></script>
+<script src="site-runtime.js?v=624c282fa6df"></script>
+<script src="site-catalogue.js?v=4475abeb8584"></script>
+<script src="rupho-archive.js?v=b1638eae9a5f"></script>
+<script src="logo/variants.js?v=0618dff05d24"></script>
+<script src="site-design.js?v=938310640469"></script>
 <script>
 "use strict";
 
@@ -4278,6 +4274,22 @@ const DATA={
     if(typeof v==="string"){ if(v.startsWith("pdf/")) o[k]=PDF_BASE+v.slice(4); }
     else if(v&&typeof v==="object") toPdfHost(v); }
 })(DATA);
+/* The compact catalogue keeps navigation and counts available before paper datasets load. */
+const THEORY=window.THEORY||(window.THEORY={});
+const GENERAL=window.GENERAL||(window.GENERAL={});
+const RUPHO_ARCHIVE=window.RUPHO_ARCHIVE;
+const ruphoFinalSource=DATA.rupho;
+const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "2026-2" → 2026.2: the order of the year list */
+const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
+const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
+const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
+const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
+function hydrateCatalogue(){
+  Object.assign(THEORY,window.THEORY||{});window.THEORY=THEORY;
+  Object.assign(GENERAL,window.GENERAL||{});window.GENERAL=GENERAL;
+  for(const [key,meta] of Object.entries(window.HL_CATALOGUE?.competitions||{}))if(!DATA[key])DATA[key]={...meta.data,years:[]};
+  const finalMeta=window.THEORY_META?.rupho||window.HL_CATALOGUE?.competitions.rupho?.data;
+  if(ruphoFinalSource)DATA.rupho=ruphoFinalSource;else if(finalMeta)DATA.rupho={...finalMeta,years:[]};
 /* IYPT (iypt.js, tools/iypt_build.py): a research tournament — no exam paper and no solution, only the seventeen
    open problems of each year, their statements shown as iypt.org gives them, with the official problem sheet */
 if(window.IYPT) DATA.iypt={
@@ -4308,8 +4320,6 @@ if(window.USACO) DATA.usaco={
     return {y:e.y, host:{ko:"온라인",en:"Online"}, problems:ps}; })};
 /* the theory papers (theory.js, tools/theory_build.py): a year that has only theory still gets its page */
 Object.assign(DATA,window.RUPHO_SELECTION||{});
-const THEORY = window.THEORY || {};
-const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "2026-2" → 2026.2: the order of the year list */
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k])
   DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[],
@@ -4327,13 +4337,8 @@ for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
     if(!yr.cc&&t.cc) yr.cc=t.cc; }
   c.years.sort((a,b)=>yNum(b.y)-yNum(a.y)); }
 /* Stage catalogues share one public competition; source paper keys stay unchanged. */
-const RUPHO_ARCHIVE=window.RUPHO_ARCHIVE;
 if(RUPHO_ARCHIVE) RUPHO_ARCHIVE.initialize(DATA,THEORY);
-const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
-const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
-const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
-const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
 /* NBPhO: one booklet holds every problem; each experiment card gets its own problem and solution, cut out of it
    (tools/nbpho_split.py), and its number in the booklet (no) for the combined exam */
 for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!t||!t.x) continue;
@@ -4343,6 +4348,9 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
   ex.forEach((p,i)=>{ const c=(t.c||{})[String(t.x[i])], k=(t.xk||{})[String(t.x[i])]; p.no=t.x[i];
     const en=c?c.paper:(p.files.pdf||{}).en;
     if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(c&&c.sol?{sol:c.sol}:{})}; }); }
+
+}
+hydrateCatalogue();
 /* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
 /* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
@@ -4525,12 +4533,17 @@ function adFitBanner(placement){
 function viewOriginalHome(){
   pickHero();
   const d=UI[lang];
-  let years=0, probs=0, live=0, thy=0;
+  const catalogueTotals=window.HL_CATALOGUE?.totals;
+  let years=0,probs=0,live=0,thy=0;
+  if(catalogueTotals){({years,probs,live,thy}=catalogueTotals);}
+  else{
+
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
   for(const c of Object.values(DATA)){
     years+=c.years.length;
     for(const y of c.years){ if(!c.plain) probs+=y.problems.length;   /* IYPT's and USACO's problems are not experiments */
       live+=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length; }
+  }
   }
   return `
   <div class="shell">
@@ -4558,7 +4571,7 @@ function viewOriginalHome(){
 
   <section><div class="shell">
     <dl class="tally">
-      <div><dt>${d.tComps}</dt><dd>${Object.keys(DATA).length}</dd></div>
+      <div><dt>${d.tComps}</dt><dd>${catalogueTotals?.comps??Object.keys(DATA).length}</dd></div>
       <div><dt>${d.tYears}</dt><dd>${years}</dd></div>
       <div><dt>${d.tProbs}</dt><dd>${probs}</dd></div>
       <div><dt>${d.tThy}</dt><dd>${thy}</dd></div>
@@ -4582,12 +4595,12 @@ const SUBJ=[
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
 const subjOf=key=>(SUBJ.find(x=>x.comps.includes(RUPHO_ARCHIVE?.isStage(key)?"rupho":key))||SUBJ[0]).k;
-function viewComps(sub){
+function viewComps(sub,limit=Infinity){
   const d=UI[lang];
   let cur=SUBJ.find(x=>x.k===sub);
   if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
   try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
-  const list=cur.comps.filter(k=>DATA[k]);
+  const list=cur.comps.filter(k=>DATA[k]).slice(0,limit);
   return `
   <div class="shell">
     <div class="phead">
@@ -4601,15 +4614,16 @@ function viewComps(sub){
     ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
       ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
-        const probs=c.theoryCount?c.theoryCount+c.years.reduce((n,y)=>n+y.problems.length,0):hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
+        const summary=window.HL_CATALOGUE?.competitions[key]?.counts;
+        const probs=summary?summary.problems:c.theoryCount?c.theoryCount+c.years.reduce((n,y)=>n+y.problems.length,0):hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
         return `<a class="comp" href="#/${key}">
           <div class="chead"><div class="abbr">${c.abbr}</div>${compLogo(key)}</div>
           <div class="full">${c.full[lang]}</div>
           <dl>
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
-            <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${c.resources?.length&&!probs?(lang==="ko"?"공개 자료":"Public resources"):c.theoryCount?(lang==="ko"?"문제 · 시험지":"Problems / papers"):hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${c.resources?.length&&!probs?c.resources.length:probs}</dd></div>
+            <div><dt>${d.lYears}</dt><dd>${summary?summary.years:c.years.length}</dd></div>
+            <div><dt>${c.resources?.length&&!probs?(lang==="ko"?"공개 자료":"Public resources"):(summary?summary.mixed:c.theoryCount)?(lang==="ko"?"문제 · 시험지":"Problems / papers"):(summary?summary.hasProblems:hasExpC(c))?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${c.resources?.length&&!probs?c.resources.length:probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4893,7 +4907,7 @@ function viewComp(key,mode){
     ${archiveResources(c)}
     ${contestNote(key)}
     ${contestResources(key)}
-    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 제공된 2023년 기출과 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, supplied 2023 papers, and available Korean Middle-School Physics Competition papers from 2015–2022. Papers without an official key do not receive automatic grading."}</p>`:""}
+    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 2023년 기출과 한국 중학생 물리대회 2015년 제2차~2022년 기출·공식 정답 자료를 모았습니다. 중학생 대회는 당시의 별도 시험 체계에 따른 자료입니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, 2023 papers, and Korean Middle-School Physics Competition papers with official answer material from the second 2015 sitting through 2022. The middle-school papers follow their own historical examination system."}</p>`:""}
     ${hasReview(c,key)?modeSwitch(key,mode):""}
     ${mode?`${portalHtml(key,mode)}</div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
@@ -4971,18 +4985,14 @@ function xmPortalHtml(key,x,mode="exam",year=""){
     <aside class="xmbox xmme"><h2>${review?(ko?"내 채점·첨삭":"My grading & feedback"):d.xmMeH}</h2>${card}</aside></div>`;
 }
 async function xmMount(key){
-  const root=document.getElementById("xmRoot"); if(!root||root.dataset.key!==key) return;
+  const root=document.getElementById("xmRoot");if(!root||root.dataset.key!==key)return;
   const mode=root.dataset.mode||"exam",year=root.dataset.year||"";
-  const x={stats:{},mine:[],tokens:null,active:null,me:null,off:false};
-  const h=await cmHealth().catch(()=>({}));
-  if(!h.lab){ x.off=true; }
-  else{
-    await cmLoadMe(); x.me=cm.me;
-    const jobs=mode==="review"?[]:[cmApi("GET","/lab/stats?comp="+key).then(r=>{x.stats=r.exams;},()=>{})];
-    if(cm.me) jobs.push(cmApi("GET","/lab/sessions").then(r=>{x.mine=r.sessions;},()=>{}), cmApi("GET","/lab/active").then(r=>{x.tokens=r.tokens;x.active=r.active;},()=>{}));
-    await Promise.all(jobs);
-  }
-  const now=document.getElementById("xmRoot"); if(now===root) root.innerHTML=xmPortalHtml(key,x,mode,year);
+  const currentLang=lang,x={stats:{},mine:[],tokens:null,active:null,me:null,off:false};
+  const alive=()=>document.getElementById("xmRoot")===root&&lang===currentLang;
+  const paint=()=>{if(alive())root.innerHTML=xmPortalHtml(key,x,mode,year);};
+  const stats=mode==="review"?Promise.resolve():cmApi("GET","/lab/stats?comp="+key).then(r=>{x.stats=r.exams;paint();},()=>{});
+  const account=cmLabBootstrap().then(r=>{x.me=r.user;x.mine=r.sessions||[];x.tokens=r.tokens;x.active=r.active;x.off=!r.health?.lab;paint();},()=>{x.off=true;paint();});
+  await Promise.all([stats,account]);
 }
 
 /* exam mode (sim/exam.html): the experiments that are sat together — every E1, E2, … of a year with a
@@ -5126,7 +5136,7 @@ function theoryHtml(key,yr){
 }
 /* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,
    with a translation the year names (yr.general) laid over the unlabelled one */
-const GENERAL = window.GENERAL || {};
+
 function genLinks(key,yr){
   const d=UI[lang], es=(GENERAL[key]&&GENERAL[key][yr.y]||[]).map(([lab,f])=>({lab, en:thyUrl(f)}));
   if(yr.general){ const e=es.find(x=>!x.lab);
@@ -8447,38 +8457,95 @@ function cmBase(){
   let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
   return (o||COMMUNITY_API).replace(/\/+$/,"");
 }
+const cmRequestCache=window.HL_RUNTIME?.createRequestCache()||null;
+function cmInvalidate(){cmRequestCache?.invalidate();cm.boards=null;}
 function cmTok(v){
   try{
-    if(v===undefined) return localStorage.getItem("hlCmTok")||"";
-    if(v) localStorage.setItem("hlCmTok",v); else localStorage.removeItem("hlCmTok");
-  }catch(e){ return ""; }
+    if(v===undefined)return localStorage.getItem("hlCmTok")||"";
+    const prior=localStorage.getItem("hlCmTok")||"";
+    if(v)localStorage.setItem("hlCmTok",v);else localStorage.removeItem("hlCmTok");
+    if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;}
+  }catch(e){return "";}
 }
 async function cmApi(method, path, body){
-  const h={};
-  const raw=body instanceof Blob;
-  if(body) h["Content-Type"]=raw?body.type:"application/json";
-  const t=cmTok(); if(t) h.Authorization="Bearer "+t;
-  let r;
-  try{ r=await fetch(cmBase()+"/api"+path,{method,headers:h,body:body?(raw?body:JSON.stringify(body)):undefined}); }
-  catch(e){ throw {code:"network"}; }
-  const j=await r.json().catch(()=>({error:"server_error"}));
-  if(!r.ok){
-    if(r.status===401 && j.error==="login_required" && t){ cmTok(null); cm.me=null; }
-    throw {code:j.error||"server_error", status:r.status};
-  }
-  return j;
+  method=String(method).toUpperCase();
+  const base=cmBase(),t=cmTok(),currentLang=lang;
+  const runtime=typeof window==="object"&&window.HL_RUNTIME;
+  const policy=runtime?runtime.requestPolicy(method,path):{public:false};
+  const send=async(cache={})=>{
+    const h={},raw=body instanceof Blob;
+    if(cache.bypassCache)h["Cache-Control"]="no-cache";
+    if(body)h["Content-Type"]=raw?body.type:"application/json";
+    if(t&&!policy.public)h.Authorization="Bearer "+t;
+    let r;
+    try{r=await fetch(base+"/api"+path,{method,headers:h,body:body?(raw?body:JSON.stringify(body)):undefined});}
+    catch(e){throw{code:"network"};}
+    const j=await r.json().catch(()=>({error:"server_error"}));
+    if(!r.ok){
+      if(r.status===401&&j.error==="login_required"&&t&&cmTok()===t&&cmBase()===base){cmTok(null);cm.me=null;}
+      throw{code:j.error||"server_error",status:r.status};
+    }
+    return j;
+  };
+  if(method!=="GET"&&typeof cmInvalidate==="function")cmInvalidate();
+  return typeof cmRequestCache==="object"&&cmRequestCache?cmRequestCache.run({method,path,base,token:t,lang:currentLang},send):send();
 }
-/* who is signed in and the server's settings: asked for once and shared by every view that needs them
-   (the settings are also kept for ten minutes, so a reload skips that request) */
-let cmMeP=null, cmHealthP=null;
+/* who is signed in and the server's settings: shared without delaying public page content. */
+let cmMeP=null,cmHealthP=null,cmHealthBase="",cmHealthUntil=0,cmBootstrapP=null;
+const cmIdentityScope=()=>cmBase()+"\n"+cmTok();
 function cmLoadMe(){
-  if(cm.meChecked||!cmTok()) return Promise.resolve(cm.me);
-  return cmMeP||(cmMeP=cmApi("GET","/me").then(r=>{cm.me=r.user;},()=>{}).then(()=>{cm.meChecked=true; cmMeP=null; return cm.me;}));
+  const scope=cmIdentityScope(),token=cmTok();
+  if(cm.meScope!==scope){cm.meScope=scope;cm.meChecked=false;cm.me=null;cmMeP=null;}
+  if(!token){cm.meChecked=true;return Promise.resolve(null);}
+  if(cm.meChecked)return Promise.resolve(cm.me);
+  if(cmMeP)return cmMeP;
+  const p=cmApi("GET","/me").then(r=>{if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;}return cmIdentityScope()===scope?cm.me:null;},()=>null).finally(()=>{if(cmMeP===p)cmMeP=null;});
+  cmMeP=p;return p;
 }
 function cmHealth(){
-  if(cmHealthP) return cmHealthP;
-  try{ const c=JSON.parse(sessionStorage.getItem("hlCmHealth")||"null"); if(c && Date.now()-c.t<600000 && c.base===cmBase()) return cmHealthP=Promise.resolve(c.h); }catch(e){}
-  return cmHealthP=cmApi("GET","/health").then(h=>{ try{ sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base:cmBase(),h})); }catch(e){} return h; },()=>{ cmHealthP=null; return {v:0}; });
+  const base=cmBase();
+  if(cmHealthP&&cmHealthBase===base&&Date.now()<cmHealthUntil)return cmHealthP;
+  try{const c=JSON.parse(sessionStorage.getItem("hlCmHealth")||"null");if(c&&Date.now()-c.t<600000&&c.base===base){cmHealthBase=base;cmHealthUntil=c.t+600000;return cmHealthP=Promise.resolve(c.h);}}catch(e){}
+  cmHealthBase=base;cmHealthUntil=Date.now()+600000;
+  return cmHealthP=cmApi("GET","/health").then(h=>{try{sessionStorage.setItem("hlCmHealth",JSON.stringify({t:Date.now(),base,h}));}catch(e){}return h;},()=>{if(cmHealthBase===base)cmHealthP=null;return{v:0};});
+}
+function cmLabBootstrap(options={}){
+  const scope=cmIdentityScope(),id=options.id===undefined?null:Number(options.id);
+  if(id!==null&&(!Number.isSafeInteger(id)||id<=0))return Promise.reject({code:"bad_session"});
+  const include=[...new Set(String(options.include||"sessions,health").split(",").map(v=>v.trim()).filter(v=>["sessions","health"].includes(v)))].sort().join(",");
+  const path="/lab/bootstrap?include="+include+(id!==null?"&id="+id:"");
+  if(cmBootstrapP?.scope===scope&&cmBootstrapP.path===path)return cmBootstrapP.promise;
+  if(cm.meScope!==scope){cm.meChecked=false;cm.me=null;}cm.meScope=scope;
+  const p=cmApi("GET",path).catch(async error=>{
+    if(error.status!==404)throw error;
+    if(cmIdentityScope()!==scope)throw{code:"account_changed"};
+    const signedIn=!!cmTok(),wants=include.split(",");
+    const [me,active,list,health,detail]=await Promise.all([
+      cmApi("GET","/me"),
+      signedIn?cmApi("GET","/lab/active"):Promise.resolve({tokens:null,active:null}),
+      signedIn&&wants.includes("sessions")?cmApi("GET","/lab/sessions"):Promise.resolve({sessions:[]}),
+      wants.includes("health")?cmApi("GET","/health"):Promise.resolve(null),
+      id!==null?cmApi("GET","/lab/sessions/"+id):Promise.resolve(null)
+    ]);
+    return{user:me.user,tokens:active.tokens,parts:active.parts||0,active:active.active,sessions:list.sessions,health:health||detail?.health,session:detail?.session,now:active.now};
+  }).then(r=>{
+    if(cmIdentityScope()!==scope)throw{code:"account_changed"};
+    if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;cm.v=r.health?.v||cm.v;}
+    if(r.health&&cmBase()===scope.split("\n")[0]){cmHealthBase=cmBase();cmHealthUntil=Date.now()+600000;cmHealthP=Promise.resolve(r.health);}
+    return r;
+  }).finally(()=>{if(cmBootstrapP?.promise===p)cmBootstrapP=null;});
+  cmBootstrapP={scope,path,promise:p};
+  const identity=p.then(r=>cmIdentityScope()===scope?r.user:null).catch(()=>null).finally(()=>{if(cmMeP===identity)cmMeP=null;});
+  cmMeP=identity;
+  return p;
+}
+async function cmAccountChip(){
+  const current=cmIdentityScope(),currentLang=lang;
+  let box=document.getElementById("acct");
+  if(!box){const controls=document.querySelector("header .lang");if(!controls)return;box=document.createElement("div");box.id="acct";box.className="acct";controls.before(box);}
+  await cmLoadMe();if(current!==cmIdentityScope()||currentLang!==lang)return;
+  box.innerHTML=cm.me?'<a href="#/me" class="acct-me">'+cmAv(cm.me.nickname,"s",cm.me.avatar)+'<span>'+esc(cm.me.nickname)+'</span></a>':'<a href="#/login" class="acct-in">'+(lang==="ko"?"로그인":"Sign in")+'</a>';
+  const login=box.querySelector('.acct-in');if(login)login.onclick=()=>{try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}};
 }
 const cmErr = e => { const T=CMT[lang]; return T.err[e&&e.code]||T.err.server_error; };
 /* a nickname field that asks the server, while it is typed, whether the name is free (the rule the server
@@ -8600,7 +8667,7 @@ function cmRailHtml(active){
     <a class="ch dc ${active==="discord"?"on":""}" href="#/community/discord"><span class="hash">${DC_SVG}</span>${DISCORD.name}<span class="on" id="dcOn">${dcInfo?"● "+dcNum(dcInfo.online):""}</span></a>
     ${me}`;
 }
-async function cmRight(where){
+async function cmRight(where,alive=()=>true){
   const el=document.getElementById("cmRight"); if(!el) return;
   const T=CMT[lang], B=cm.boards||{}, isB=CM_BOARDS.includes(where);
   const tot=isB ? (B[where]||{n:0,today:0}) : Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});
@@ -8610,13 +8677,13 @@ async function cmRight(where){
     <div class="cmside dcside"><h3>💬 ${DCT[lang].side}</h3><div class="in" id="dcSide"></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
-  const dcSide=()=>{ const x=document.getElementById("dcSide"); if(x) x.innerHTML=`${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="">`}<div style="min-width:0"><div class="nm">${DISCORD.name}</div>
+  const dcSide=()=>{ if(!alive())return; const x=document.getElementById("dcSide"); if(x) x.innerHTML=`${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="">`}<div style="min-width:0"><div class="nm">${DISCORD.name}</div>
       <div class="ct">● ${dcNum(dcInfo&&dcInfo.online)} ${DCT[lang].online}</div></div><a class="j" href="#/community/discord">${lang==="ko"?"열기":"Open"}</a>`;
     const on=document.getElementById("dcOn"); if(on&&dcInfo) on.textContent="● "+dcNum(dcInfo.online); };
   dcSide(); dcLoad().then(dcSide);
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
-    const h=document.getElementById("cmHot"); if(!h) return;
+    const h=document.getElementById("cmHot"); if(!h||!alive()) return;
     const top=j.posts.slice(0,6);
     h.innerHTML=top.length ? top.map(p=>`<a href="#/community/post/${p.id}"><em>${cmScore(p)}</em><span>${esc(p.title)}</span></a>`).join("") : `<span>${T.empty}</span>`;
   }catch(e){ const h=document.getElementById("cmHot"); if(h) h.textContent=""; }
@@ -8631,17 +8698,16 @@ async function cmMount(){
   const {parts,q}=cmHash();
   const [a,b]=parts;
   const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
-  /* who is signed in, the server's version and the board counts — once, then from memory */
-  try{
-    const jobs=[];
-    jobs.push(cmLoadMe());
-    if(!cm.v) jobs.push(cmHealth().then(r=>{cm.v=r.v||1;}));
-    if(cm.boardsLang!==lang) cm.boards=null;
-    if(!cm.boards){ cm.boardsLang=lang; jobs.push(cmApi("GET","/boards?lang="+lang).then(r=>{cm.boards={}; for(const x of r.boards) cm.boards[x.board]={n:x.n,today:x.today||0};}).catch(()=>{cm.boards={};})); }
-    await Promise.all(jobs); cm.meChecked=true;
-  }catch(e){}
-  if(!alive()) return;
-  const rail=document.getElementById("cmRail"); if(rail) rail.innerHTML=cmRailHtml(where||a);
+  const identity=cmLoadMe();
+  const settings=cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;});
+  const boardLang=lang;
+  if(cm.boardsLang!==boardLang){cm.boards=null;cm.boardsLang=boardLang;}
+  const boards=cm.boards&&Date.now()-(cm.boardsAt||0)<30000?Promise.resolve():cmApi("GET","/boards?lang="+boardLang).then(r=>{if(lang===boardLang){cm.boards={};cm.boardsAt=Date.now();for(const x of r.boards)cm.boards[x.board]={n:x.n,today:x.today||0};}},()=>{});
+  const paintRail=()=>{if(!alive())return;const rail=document.getElementById("cmRail");if(rail)rail.innerHTML=cmRailHtml(where||a);cmWire(document.querySelector(".cm"));};
+  paintRail();
+  Promise.allSettled([identity,settings,boards]).then(()=>{if(!alive())return;paintRail();const count=document.querySelectorAll("#cmRight .stat b"),B=cm.boards||{},isBoard=CM_BOARDS.includes(where);const total=isBoard?(B[where]||{n:0,today:0}):Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});if(count[0])count[0].textContent=total.n;if(count[1])count[1].textContent=total.today;});
+  if(["write","edit","login","signup","account"].includes(a))await identity;
+  if(!alive())return;
   try{
     if(a==="post" && b)                 await cmPost(root,+b,alive);
     else if(a==="user")                 await cmProfile(root,b,q,alive);
@@ -8658,7 +8724,7 @@ async function cmMount(){
   if(!alive()) return;
   cmWire(document.querySelector(".cm"));
   const right=document.getElementById("cmRight");
-  if(right){ if(["login","signup"].includes(a)) right.innerHTML=""; else cmRight(where||"all"); }
+  if(right){ if(["login","signup"].includes(a)) right.innerHTML=""; else cmRight(where||"all",alive); }
 }
 function cmWire(scope){
   if(!scope) return;
@@ -8672,6 +8738,7 @@ function cmWire(scope){
 /* voting from anywhere: list cards and the post itself */
 async function cmVote(id, v){
   if(!cm.me){ cmGoLogin(); return null; }
+  if(!cm.v){const h=await cmHealth();cm.v=h.v||1;}
   if(cm.v<2 && v<0) return null;
   try{ return cm.v>=2 ? await cmApi("POST",`/posts/${id}/vote`,{v}) : await cmApi("POST",`/posts/${id}/like`); }
   catch(e){ cmToast(cmErr(e)); return null; }
@@ -8788,7 +8855,7 @@ async function cmPost(root, id, alive){
   const T=CMT[lang];
   /* count a view once per tab, not on every redraw */
   let seen=false; try{ seen=sessionStorage.getItem("hlCmSeen"+id)==="1"; sessionStorage.setItem("hlCmSeen"+id,"1"); }catch(e){}
-  const j=await cmApi("GET",`/posts/${id}${seen?"":"?view=1"}`);
+  const [j]=await Promise.all([cmApi("GET",`/posts/${id}${seen?"":"?view=1"}`),cmLoadMe(),cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;})]);
   if(!alive()) return;
   const p=j.post, my=j.my!==undefined ? j.my : (j.liked?1:0);
   let order=cm.cmtOrder||"old";
@@ -9164,31 +9231,47 @@ function setDocTitle(first, second){
   document.title = parts.length ? `${parts[0]} \u00b7 ${SITE}` : `${SITE} \u2014 ${tail}`;
 }
 
+let adFitObserver=null;
 function mountHaslaAdFit(){
-  const slots=document.querySelectorAll(".haslalab-adfit-slot");
-  if(!slots.length) return;
+  adFitObserver?.disconnect();adFitObserver=null;
+  const slots=document.querySelectorAll(".haslalab-adfit-slot");if(!slots.length)return;
   const desktop=matchMedia("(min-width: 768px)").matches;
-  const ads=desktop
-    ? {primary:{unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90},secondary:{unit:"DAN-yC9q3CmZpKwsFdMz",width:728,height:90}}
-    : {primary:{unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50},secondary:{unit:"DAN-z8B8tUfB0Ev740NV",width:320,height:100}};
-  slots.forEach(slot=>{
-    const ad=ads[slot.dataset.adPlacement]||ads.primary;
+  const ads=desktop?{primary:{unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90},secondary:{unit:"DAN-yC9q3CmZpKwsFdMz",width:728,height:90}}:{primary:{unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50},secondary:{unit:"DAN-z8B8tUfB0Ev740NV",width:320,height:100}};
+  let scheduled=false;
+  const activate=slot=>{
+    if(!slot.isConnected||slot.dataset.adLoaded)return;
+    slot.dataset.adLoaded="1";const ad=ads[slot.dataset.adPlacement]||ads.primary;
     slot.closest(".adfit-banner").classList.toggle("adfit-banner--desktop",desktop);
-    const ins=document.createElement("ins");
-    ins.className="kakao_ad_area";
-    ins.style.display="none";
-    ins.dataset.adUnit=ad.unit;
-    ins.dataset.adWidth=String(ad.width);
-    ins.dataset.adHeight=String(ad.height);
-    slot.append(ins);
-  });
-  const script=document.createElement("script");
-  script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";
-  script.async=true;
-  document.body.append(script);
+    const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=ad.unit;ins.dataset.adWidth=String(ad.width);ins.dataset.adHeight=String(ad.height);slot.append(ins);
+    if(!scheduled){scheduled=true;queueMicrotask(()=>{scheduled=false;if(!slot.isConnected)return;const script=document.createElement("script");script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";script.async=true;document.body.append(script);});}
+  };
+  if(typeof IntersectionObserver!=="function"){slots.forEach(activate);return;}
+  adFitObserver=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){adFitObserver.unobserve(entry.target);activate(entry.target);}},{rootMargin:"200px"});
+  slots.forEach(slot=>adFitObserver.observe(slot));
+}
+
+const siteDataLoader=window.HL_RUNTIME&&window.HL_CATALOGUE?window.HL_RUNTIME.createDataLoader({
+  versions:window.HL_CATALOGUE.versions,
+  loadScript:(url)=>new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=url;script.async=true;script.onload=resolve;script.onerror=()=>{script.remove();reject(new Error("module_unavailable"));};document.head.append(script);}),
+  onLoad:key=>{if(key!=="arena")hydrateCatalogue();}
+}):null;
+let siteRenderSeq=0;
+
+function paintPageChrome(active){
+  const d=UI[lang];
+  document.getElementById("nav").innerHTML=
+    `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
+     <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
+     <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
+     <a href="#/weekly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
+     <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
+     <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
+  document.getElementById("footL").textContent=d.footL;
+  document.getElementById("footTop").textContent=d.footTop;
 }
 
 function render(){
+  const generation=++siteRenderSeq;
   if(/^#\/archive(?:\/|\?|$)/.test(location.hash)){ location.hash=location.hash.replace("#/archive","#/comps"); return; }
   const legacyRuPhO=RUPHO_ARCHIVE?.canonical(location.hash);
   if(legacyRuPhO){ history.replaceState(null,"",legacyRuPhO); }
@@ -9197,6 +9280,16 @@ function render(){
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
   const [first,second,third]=parts;
   const studyMode=second==="exam"||second==="review"?second:third==="exam"||third==="review"?third:"";
+  if(siteDataLoader){
+    const needs=window.HL_RUNTIME.routeNeeds(location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
+    if(!siteDataLoader.ready(needs)){
+      document.getElementById("view").innerHTML='<div class="shell"><div class="phead"><p role="status">'+(lang==="ko"?"자료를 불러오는 중…":"Loading archive…")+'</p></div></div>';
+      paintPageChrome(["weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
+      setDocTitle(first,second);paintSiteTheme();
+      siteDataLoader.ensure(needs).then(()=>{if(generation===siteRenderSeq)render();},()=>{if(generation!==siteRenderSeq)return;const box=document.getElementById("view");box.innerHTML='<div class="shell"><div class="phead"><p role="alert">'+(lang==="ko"?"자료를 불러오지 못했습니다.":"Could not load the archive.")+'</p><button type="button" class="cmbtn" id="retryCatalogue">'+(lang==="ko"?"다시 불러오기":"Retry")+'</button></div></div>';document.getElementById("retryCatalogue").onclick=render;});
+      return;
+    }
+  }
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
@@ -9211,15 +9304,7 @@ function render(){
   document.documentElement.lang = lang;
   setDocTitle(first, second);
 
-  document.getElementById("nav").innerHTML=
-    `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
-     <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
-     <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/weekly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
-     <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
-     <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
-  document.getElementById("footL").textContent=d.footL;
-  document.getElementById("footTop").textContent=d.footTop;
+  paintPageChrome(active);
   mountHaslaAdFit();
 
   buildRails();
@@ -9228,11 +9313,12 @@ function render(){
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if(active==="weekly"||first==="lab") arMount();
-  arChip();
+  if(typeof arChip==="function")arChip();else cmAccountChip();
   if(first==="comps"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmHealthP=null;render();}});
 initSiteDesign();
 render();
 </script>

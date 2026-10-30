@@ -8,6 +8,7 @@
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { createOmrRouter, ensureOmrSchema } from './omr.js';
+import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -75,7 +76,7 @@ function corsHeaders(req, env) {
   const allowed = (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
   const h = {
     "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Lab-Token",
+    "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Lab-Token,Cache-Control",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
@@ -156,10 +157,10 @@ async function handle(req, env, url) {
   const m = req.method;
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? await req.json().catch(() => ({})) : {};
-  const me = await currentUser(req, env);
+  const me = publicInvariant(m, p) ? null : await currentUser(req, env);
   let r;
 
-  if (p === "/api/health") return { ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab: await labReady(env), lab_reg: LAB_REG };
+  if (p === "/api/health") return { ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab: await labReady(env), lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } };
   if (p === "/api/boards" && m === "GET") {
     const day = now() - 86400, lang = pickLang(url.searchParams.get("lang"));
     const rows = (await env.DB.prepare(
@@ -541,6 +542,9 @@ async function ytRoute(req, env, url, cors) {
 }
 
 const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
+const PUBLIC_INVARIANT = /^\/api\/(health|boards|posts|lab\/stats|pay\/config|lab\/contest\/catalog)$/;
+const publicInvariant = (method, path) => method === 'GET' && PUBLIC_INVARIANT.test(path);
+const cacheSeconds = path => /\/(health|pay\/config|contest\/catalog)$/.test(path) ? 300 : EDGE_TTL;
 
 /* every database round trip, counted and timed, sent back as Server-Timing (the browser's network panel shows it):
    the time a page waits on the server is mostly these round trips, one after another */
@@ -559,16 +563,20 @@ export default {
   async fetch(req, env, ctx) {
     const q = { n: 0, ms: 0 }, t0 = Date.now();
     const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q) } : env, ctx);
-    if (keepHours(env) != null && ctx && Math.random() < 0.1) ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message)));
     try { res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}`); res.headers.set("Timing-Allow-Origin", "*"); }
     catch (e) { /* a response passed straight through keeps its own headers */ }
     return res;
   },
   /* a cron trigger (optional): remove the answer photos whose keeping time is over */
-  async scheduled(event, env, ctx) { ctx.waitUntil(labPurge(env).catch(e => console.error("lab purge", e && e.message))); },
+  async scheduled(event, env, ctx) {
+    const work=[labSweepJobs(env)];
+    if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env));
+    ctx.waitUntil(Promise.allSettled(work));
+  },
+  async queue(batch, env) { await consumeLabJobs(batch, env, LAB_JOB_HANDLERS); },
 };
 const worker = {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     // tests only: a short exam clock (the deployed Worker never sets these)
     if (env.LAB_TEST_EXAM_SEC) { LAB.testSec = +env.LAB_TEST_EXAM_SEC; LAB.scanSec = +env.LAB_TEST_SCAN_SEC || LAB.scanSec; LAB.graceSec = +env.LAB_TEST_GRACE_SEC || 0; LAB.retrySec = +env.LAB_TEST_RETRY_SEC || LAB.retrySec; }
     const cors = corsHeaders(req, env);
@@ -597,15 +605,19 @@ const worker = {
        few seconds, so a busy board is served without touching the database; signed-in users
        (who see their own votes and posts at once) always get a fresh answer */
     /* /api/health is the same for everyone, signed in or not */
-    const shared = req.method === "GET" && ((!req.headers.get("Authorization") && SHARED_GET.test(url.pathname)) || url.pathname === "/api/health");
+    const shared = publicInvariant(req.method, url.pathname) || req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
-    if (shared) { const hit = await caches.default.match(ckey);
-      if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Edge-Cache": "hit", ...cors } }); }
+    const refreshCache=/\b(no-cache|no-store|max-age=0)\b/i.test(req.headers.get('Cache-Control')||'');
+    if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);
+      if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
     try {
       const data = await handle(req, env, url), res = json(data, 200, cors);
-      if (shared) await caches.default.put(ckey, new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=" + EDGE_TTL } }));
+      if (shared) {
+        const put = caches.default.put(ckey, new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=" + cacheSeconds(url.pathname) } })).catch(e => console.error('edge cache write', e?.name || 'failed'));
+        if (ctx) ctx.waitUntil(put); else await put;
+      }
       // the server's settings change only on a deploy: let browsers keep them for five minutes
-      if (url.pathname === "/api/health") res.headers.set("Cache-Control", "public, max-age=300");
+      if (publicInvariant(req.method, url.pathname) && cacheSeconds(url.pathname) === 300) res.headers.set("Cache-Control", "public, max-age=300");
       return res;
     } catch (e) {
       if (e instanceof HttpError) return json({ ...(e.extra || {}), error: e.code }, e.status, cors);
@@ -734,7 +746,7 @@ async function callGrader(env, prompt, schema = SCORE_SCHEMA) {
       method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
       body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0.2, maxOutputTokens: 4096 } }),
-      signal: AbortSignal.timeout(55000) });
+      signal: labProviderSignal(env,55000) });
     if (!r.ok) throw new Error("gemini " + r.status);
     const j = await r.json();
     return { raw: parseJsonText((j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("")), model: "gemini:" + model };
@@ -746,7 +758,7 @@ async function callGrader(env, prompt, schema = SCORE_SCHEMA) {
       body: JSON.stringify({ model, store: false, input: prompt, max_output_tokens: 4096,
         instructions: "Apply the rubric strictly and return the structured grade sheet, using only evidence from the student's answer.",
         text: { format: { type: "json_schema", name: "grade_report", strict: true, schema } } }),
-      signal: AbortSignal.timeout(55000) });
+      signal: labProviderSignal(env,55000) });
     if (!r.ok) throw new Error("openai " + r.status);
     const j = await r.json();
     const out = j.output_text || (j.output || []).flatMap(i => i.content || []).filter(c => c.type === "output_text").map(c => c.text || "").join("");
@@ -894,7 +906,7 @@ async function ocr(env, file, mode, m) {
     if (mode === "math") { out.append("ocr", "force"); out.append("output_formats", JSON.stringify(["markdown"])); out.append("coordinates", "true"); }
     const t0 = Date.now(); let status = null;
     try {
-      const response = await fetch(env.UPSTAGE_BASE || AR.upstage, { method: "POST", headers: { Authorization: "Bearer " + env.UPSTAGE_API_KEY }, body: out, signal: AbortSignal.timeout(70000) });
+      const response = await fetch(env.UPSTAGE_BASE || AR.upstage, { method: "POST", headers: { Authorization: "Bearer " + env.UPSTAGE_API_KEY }, body: out, signal: labProviderSignal(env,70000) });
       status = response.status;
       if (!response.ok) { await response.body?.cancel(); throw new HttpError(status === 429 ? 429 : 502, "ocr_failed"); }
       const json = await ocrResponseJSON(response), result = ocrReadResponse(json, mode);
@@ -904,7 +916,7 @@ async function ocr(env, file, mode, m) {
       const retryable = status === 429 || status >= 500 || !(error instanceof HttpError);
       meterAdd(env, m, { step: "ocr", provider: "upstage", model, ms: Date.now() - t0, ok: 0, error: status !== null && status !== 200 ? "http " + status : error instanceof HttpError ? error.code : "network" });
       if (retryable && attempt < 2) continue;
-      throw error instanceof HttpError ? error : new HttpError(502, "ocr_failed");
+      throw Object.assign(error instanceof HttpError ? error : new HttpError(502, "ocr_failed"),{retryable});
     }
   }
 }
@@ -1211,19 +1223,8 @@ async function labAdvance(env, s) {
     s = await labGet(env, s.id);
   }
   if (s && ((s.status === "scanning" && !labReview(s) && t > s.scan_until + LAB.graceSec) || (s.status === "grading" && s.submitted_at < t - LAB.staleSec)))
-    s = s.charged ? await labFinalize(env, s, s.lang) : await labEnd(env, s);             // graded only when paid for
-  /* a grading that failed (the model did not answer) is tried again by itself: three times, two minutes apart */
-  /* also an experiment left waiting because its solution could not be fetched then */
-  const d = s && (s.status === "error" || s.status === "pending") && s.detail ? JSON.parse(s.detail) : null;
-  const again = x => x && (x.status === "error" || (x.status === "pending" && x.why === "no_solution") || (x.status === "empty" && x.points == null));
-  if (d && (d.tries || 0) < 3 && t - (d.at || 0) > LAB.retrySec && Object.values(d.tasks || {}).some(x => x.status === "error" || (x.status === "pending" && x.why === "no_solution"))) {
-    const r = await env.DB.prepare("UPDATE lab_sessions SET status='grading' WHERE id=? AND status IN ('error','pending')").bind(s.id).run();
-    if (r.meta.changes) {
-      const tasks = JSON.parse(s.tasks), per = d.tasks || {};
-      for (const k of tasks) if (again(per[k])) delete per[k];
-      s = await labGradeAll(env, { ...s, status: "grading", detail: JSON.stringify({ ...d, tasks: per }) }, s.lang, null, tasks.filter(k => !per[k]));
-    }
-  }
+    s = s.charged ? await labFinalize(env, s, s.lang) : await labEnd(env, s);
+  // Reads only advance the clock and durably enqueue IDs. AI runs exclusively in the Queue consumer.
   return s;
 }
 const labActive = async (env, userId) => labAdvance(env, await env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(userId).first());
@@ -1378,7 +1379,7 @@ async function gemini(env, parts, schema, max, m, step) {
       method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
       body: JSON.stringify({ contents: [{ role: "user", parts }],
         generationConfig: { responseMimeType: "application/json", responseSchema: schema, temperature: 0, maxOutputTokens: max || 8192 } }),
-      signal: AbortSignal.timeout(110000) });
+      signal: labProviderSignal(env,110000) });
     if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 200));
     const j = await r.json(), u = j.usageMetadata || {};
     meterAdd(env, m, { step, provider: "gemini", model, in: u.promptTokenCount, out: (u.candidatesTokenCount || 0) + (u.thoughtsTokenCount || 0), cached: u.cachedContentTokenCount || 0, ms: Date.now() - t0, ok: 1 }); metered = true;
@@ -1389,6 +1390,11 @@ async function gemini(env, parts, schema, max, m, step) {
   }
 }
 const SOL_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/;
+function labProviderSignal(env,limit){
+  const remaining=env.LAB_JOB_DEADLINE?env.LAB_JOB_DEADLINE-Date.now():limit;
+  if(remaining<=0)throw new HttpError(502,'job_timeout');
+  return AbortSignal.timeout(Math.max(1,Math.min(limit,remaining)));
+}
 // Exact existing source records; journal PDFs contain historical problems as well as that year's contest.
 const EOTVOS_SOLUTIONS = {
   2014: "https://fizikaiszemle.elft.hu/old/archivum/fsz1501/TichyG_VankoP_VighM.pdf",
@@ -1478,13 +1484,13 @@ async function labPdf(env, src) {
   let missing = 0;
   const names = [...new Set([src.replace(/_KO\.pdf$/, ".pdf"), src])];
   for (const name of names) {
-    const r = await fetch(solUrl(env, name), { redirect: "follow", signal: AbortSignal.timeout(30000) });
+    const r = await fetch(solUrl(env, name), { redirect: "follow", signal: labProviderSignal(env,30000) });
     if (r.ok) { const b = new Uint8Array(await r.arrayBuffer()); if (b.length > 15e6) throw new Error("solution too large"); return b; }
     if (r.status === 404) missing++; else console.error("lab solution", name, r.status);
   }
   if (missing === names.length) {
     /* a problem cut out of a booklet (tools/nbpho_split.py) is kept on the site: pdfx/<prefix>/<name> */
-    const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}pdfx/${src.split("_")[0].toLowerCase()}/${src}`, { signal: AbortSignal.timeout(30000) });
+    const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}pdfx/${src.split("_")[0].toLowerCase()}/${src}`, { signal: labProviderSignal(env,30000) });
     if (r.ok) { const b = new Uint8Array(await r.arrayBuffer()); if (b.length > 15e6) throw new Error("solution too large"); return b; }
     if (r.status === 404) return null;
   }
@@ -1839,18 +1845,7 @@ function labTotal(tasks, per) {
   return { status, score: rows.some(r => r.grading_mode === "qualitative_review" || r.why === "no_official_points") ? null : +score.toFixed(2), points: points || null };
 }
 async function labGradeAll(env, s, lang, only, list) {
-  const tasks = JSON.parse(s.tasks);
-  let pages = await labPagesOf(env, s.id);
-  if (new Set(pages.map(p => p.no)).size !== pages.length) {          // pages stored before numbers were given atomically: number them by arrival
-    const byId = [...pages].sort((a, b) => a.id - b.id);
-    await env.DB.batch(byId.map((p, i) => env.DB.prepare("UPDATE lab_pages SET no=? WHERE id=?").bind(i + 1, p.id)));
-    pages = await labPagesOf(env, s.id);
-  }
-  const rbs = (await env.DB.prepare("SELECT * FROM lab_rubrics WHERE exam_key=?").bind(s.exam_key).all()).results;
-  const prev = s.detail ? JSON.parse(s.detail) : {}, per = prev.tasks || {};
-  const t0 = Date.now();
-  await Promise.all(tasks.filter(t => list ? list.includes(t) : !only || only === t).map(async t => { per[t] = await labGradeTask(env, s, t, pages, rbs.find(r => r.task === t), lang); }));
-  return labSave(env, s, tasks, per, prev.tries, Date.now() - t0);
+  return labQueueGrade(env, s, lang, only, list, true);
 }
 async function labSave(env, s, tasks, per, tries, ms) {
   const tot = labTotal(tasks, per), t = now();
@@ -1902,12 +1897,173 @@ async function labEnd(env, s) {
 /* submit once: the session moves from 'scanning' to 'grading' in one statement, so a second click or a
    poll after the deadline cannot grade it twice; a grading that died half-way is retried after five minutes */
 async function labFinalize(env, s, lang) {
-  const t = now();
-  const r = await env.DB.prepare(`UPDATE lab_sessions SET status='grading',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
+  await labRequireJobs(env);
+  const t = now(),tasks=JSON.parse(s.tasks);
+  // Accepting grading and creating its durable outbox are one D1 transaction. A process exit after
+  // this commit can delay delivery, but it can never leave an accepted sitting without work to recover.
+  const changed=await env.DB.batch([env.DB.prepare(`UPDATE lab_sessions SET status='grading',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
     WHERE id=? AND charged=1 AND (status IN ('scanning','ended') OR (status='grading' AND submitted_at<?))`)
-    .bind(t, s.id, t - LAB.staleSec).run();
-  if (!r.meta.changes) return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
-  return labGradeAll(env, { ...s, status: "grading" }, lang);
+    .bind(t,s.id,t-LAB.staleSec),...tasks.map(task=>env.DB.prepare(`INSERT OR IGNORE INTO lab_jobs(job_key,kind,session_id,task,lang,status,available_at,created_at,updated_at)
+      SELECT ?,'grade',id,?,?,'pending',?,?,? FROM lab_sessions WHERE id=? AND charged=1 AND status='grading'`)
+      .bind(`grade:${s.id}:initial:${task}`,task,lang==='en'?'en':'ko',t,t,t,s.id))]);
+  if(!changed[0].meta.changes)return labGet(env,s.id);
+  if(!contestMeta(s))await labQueueOcr(env,{...s,status:'grading'});
+  const jobs=(await env.DB.prepare("SELECT * FROM lab_jobs WHERE session_id=? AND kind='grade' AND job_key LIKE ?").bind(s.id,`grade:${s.id}:initial:%`).all()).results;
+  await dispatchLabJobs(env,jobs).catch(()=>console.error('lab job dispatch','queue_unavailable'));
+  return labGet(env,s.id);
+}
+
+async function labRequireJobs(env) {
+  try { await requireLabQueue(env); }
+  catch (e) { console.error('lab jobs unavailable',String(e?.message||'binding missing').slice(0,160));throw new HttpError(503, 'jobs_unavailable'); }
+}
+async function labQueueOcr(env, s, ids, retryFailed = false) {
+  await labRequireJobs(env);
+  if (!s.charged || !['running','scanning','grading'].includes(s.status)) return [];
+  const pages = (await env.DB.prepare(`SELECT id,task FROM lab_pages WHERE session_id=? AND mime<>'text/plain' AND edited=0 AND ocr_status<>'done'
+    ${ids?.length ? `AND id IN (${ids.map(() => '?').join(',')})` : ''} ORDER BY no`).bind(s.id, ...(ids || [])).all()).results;
+  if (!pages.length) return [];
+  const jobs = await enqueueLabJobs(env, pages.map(p => ({ key: 'ocr:' + p.id, kind: 'ocr', sessionId: s.id, pageId: p.id, task: p.task, lang: s.lang })), { retryFailed });
+  await env.DB.batch(pages.map(p => env.DB.prepare(`UPDATE lab_pages SET ocr_status='queued' WHERE id=? AND edited=0 AND ocr_status NOT IN ('done','reading')
+    AND EXISTS(SELECT 1 FROM lab_jobs WHERE page_id=? AND kind='ocr' AND status IN ('pending','queued','running'))`).bind(p.id, p.id)));
+  return jobs;
+}
+async function labQueueGrade(env, s, lang, only, list, manual = false) {
+  await labRequireJobs(env);
+  if (!s.charged) throw new HttpError(402, 'not_paid');
+  const tasks = JSON.parse(s.tasks).filter(task => list ? list.includes(task) : !only || only === task);
+  if (!tasks.length) return s;
+  if (!contestMeta(s)) await labQueueOcr(env, { ...s, status: 'grading' });
+  const generation = manual ? 'manual:' + crypto.randomUUID() : 'initial';
+  const leadingStatements=[];
+  if (manual) {
+    let detail = s.detail ? JSON.parse(s.detail) : { tasks: {} }; detail.tasks ||= {};
+    for (const task of tasks) delete detail.tasks[task];
+    leadingStatements.push(env.DB.prepare(`UPDATE lab_sessions SET status='grading',submitted_at=?,detail=? WHERE id=?`).bind(now(),JSON.stringify(detail),s.id));
+  }
+  await enqueueLabJobs(env,tasks.map(task=>({key:`grade:${s.id}:${generation}:${task}`,kind:'grade',sessionId:s.id,task,lang})),{leadingStatements});
+  return labGet(env, s.id);
+}
+async function labRefreshQueuedTotal(env, id) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const s = await labGet(env, id); if (!s || s.status !== 'grading') return;
+    const detail = s.detail ? JSON.parse(s.detail) : {}, tasks = JSON.parse(s.tasks);
+    if (tasks.some(task => !detail.tasks?.[task])) return;
+    const total = labTotal(tasks, detail.tasks), t = now();
+    const r = await env.DB.prepare(`UPDATE lab_sessions SET status=?,score=?,points=?,graded_at=? WHERE id=? AND status='grading' AND detail=?`)
+      .bind(total.status, total.status === 'graded' ? total.score : null, total.points, total.status === 'graded' ? t : null, id, s.detail).run();
+    if (r.meta.changes) return;
+  }
+}
+const LAB_JOB_HANDLERS = {
+  async run(env, job) {
+    const s = await labGet(env, job.session_id);
+    if (!s || !s.charged) return { cancelled: true };
+    if (job.kind === 'ocr') {
+      const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(job.page_id, s.id).first();
+      if (!page || page.edited || page.ocr_status === 'done' || !['running','scanning','grading'].includes(s.status)) return { cancelled: true };
+      await env.DB.prepare(`UPDATE lab_pages SET ocr_status='reading' WHERE id=? AND edited=0`).bind(page.id).run();
+      const mt = meter();
+      try {
+        await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400);
+        const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
+        const up = await labUpstage(env, bytes, page.mime, mt);
+        if (!up && !env.GEMINI_API_KEY) throw new Error('reader_unavailable');
+        const read = await labReadPage(env, s, bytes, page.mime, up, mt), text = readText(read);
+        const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
+        let task = page.task, kind = page.kind;
+        if (!contestMeta(s)) {
+          const h = read.header || {}; let ht = String(h.task || '').trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, '');
+          const code = /^([AW])(\d)(?:-\d+)?$/.exec(ht);
+          if (code) { ht = 'E' + code[2]; if (!h.sheet) h.sheet = code[1] === 'A' ? 'answer' : 'working'; }
+          const hit = JSON.parse(s.tasks).find(t => t.toUpperCase() === ht || t.toUpperCase() === 'E' + ht);
+          if (hit) task = hit;
+          if (h.sheet === 'answer' || h.sheet === 'working') kind = h.sheet;
+        }
+        return { ...stored, conf: up?.confidence ?? null, task, kind };
+      } finally { await meterSave(env, s.id, page.task, page.id, mt); }
+    }
+    if (job.kind !== 'grade' || s.status !== 'grading' || !JSON.parse(s.tasks).includes(job.task)) return { cancelled: true };
+    const existing = s.detail ? JSON.parse(s.detail).tasks?.[job.task] : null;
+    if (existing) return { cancelled: true };
+    const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === job.task);
+    if (!contestMeta(s)) {
+      const failedPages=mine.filter(p=>p.mime!=='text/plain'&&p.ocr_status==='failed');
+      if(failedPages.length)return{status:'pending',why:failedPages.some(p=>p.read&&JSON.parse(p.read).ocr?.error==='ocr_storage_limit')?'ocr_storage_limit':'ocr_failed',score:null,pages:mine.length};
+      const failedStructure=mine.filter(p=>p.read&&JSON.parse(p.read).structure_status==='failed');
+      if(failedStructure.length>3)return{status:'pending',why:'ocr_structure',score:null,pages:mine.length};
+      const unread = mine.filter(p => p.mime !== 'text/plain' && !p.read);
+      const waiting=unread.filter(p=>['queued','reading','unpaid','off'].includes(p.ocr_status));
+      if(waiting.length){await labQueueOcr(env,s,waiting.map(p=>p.id));throw new LabJobDeferred(20);}
+      if (unread.some(p => p.ocr_status === 'failed')) return { status: 'pending', why: 'ocr_failed', score: null, pages: mine.length };
+    }
+    const rb = await env.DB.prepare('SELECT * FROM lab_rubrics WHERE exam_key=? AND task=?').bind(s.exam_key, job.task).first();
+    const result = await labGradeTask(env, s, job.task, pages, rb, job.lang);
+    if(result.status==='error'&&result.why==='ocr_storage_limit')return result;
+    if (result.status === 'error' || result.status === 'pending' && ['no_solution','grader_unavailable','problem_unavailable'].includes(result.why))
+      throw Object.assign(new Error(result.why || 'grader_failed'), { code: result.why || 'grader_failed' });
+    return result;
+  },
+  async statements(env, job, result, failed) {
+    if (result.cancelled) return [];
+    const guard = labJobGuard(job), at = now();
+    if (job.kind === 'ocr') {
+      if (failed) return [env.DB.prepare(`UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=? AND session_id=? AND edited=0 AND ${guard.sql}`)
+        .bind(JSON.stringify({items:[],structure_status:'failed',ocr:{error:result.why,review_required:true}}),job.page_id,job.session_id,...guard.args)];
+      return [env.DB.prepare(`UPDATE lab_pages SET task=?,kind=?,ocr=?,ocr_conf=?,ocr_status=?,text=?,read=?,legible=?,edited=0
+        WHERE id=? AND session_id=? AND edited=0 AND ${guard.sql}`)
+        .bind(result.task, result.kind, result.ocr, result.conf, result.status, result.text, result.read, result.legible, job.page_id, job.session_id, ...guard.args)];
+    }
+    return [env.DB.prepare(`UPDATE lab_sessions SET detail=json_set(COALESCE(detail,'{}'),? ,json(?),'$.at',?)
+      WHERE id=? AND status='grading' AND ${guard.sql}`)
+      .bind('$.tasks.' + job.task, JSON.stringify(result), at, job.session_id, ...guard.args)];
+  },
+  async failure(env, job, why) { return job.kind === 'ocr' ? { status: 'failed', why } : { status: 'error', why: /^[a-z_]{1,60}$/.test(why)?why:'job_failed', score: null }; },
+  async after(env, job) { if (job.kind === 'grade') await labRefreshQueuedTotal(env, job.session_id); },
+};
+async function labSweepJobs(env) {
+  if (!hasLabQueue(env) || !await labReady(env)) return;
+  const t = now(), rows = (await env.DB.prepare(`SELECT * FROM lab_sessions WHERE
+    (status='scanning' AND COALESCE(json_extract(sources,'$._review'),0)<>1 AND scan_until<?) OR (status='grading' AND submitted_at<?) ORDER BY id LIMIT 30`).bind(t - LAB.graceSec, t - LAB.staleSec).all()).results;
+  for (const s of rows) { await labAdvance(env, s); if (s.status === 'grading') await labRefreshQueuedTotal(env, s.id); }
+  await dispatchLabJobs(env);
+}
+const LAB_LIST_COLUMNS=['id','user_id','exam_key','comp','year','tasks','lang','entry','sources','started_at','ended_at','scan_until','status','charged','score','points','submitted_at','graded_at','created_at'].map(k=>'s.'+k).join(',');
+async function labBootstrap(env,me,url){
+  const include=new Set((url.searchParams.get('include')||'').split(',')),out={user:me?pubUser(me):null,tokens:0,parts:0,active:null,now:now()};
+  const idText=url.searchParams.get('id'),id=idText===null?null:Number(idText);
+  if(id!==null&&(!Number.isSafeInteger(id)||id<=0))bad('bad_session');
+  if(include.has('health'))out.health={ok:true,v:5,boards:BOARDS,tags:TAGS,best:BEST,langs:LANGS,arena:arenaHealth(env),oauth:oauthProviders(env),lab:await labReady(env),lab_reg:LAB_REG,jobs:{available:hasLabQueue(env),mode:'queue'}};
+  if(!me){if(include.has('sessions'))out.sessions=[];return out;}
+  const half=await halfReady(env),statements=[
+    env.DB.prepare(`SELECT exam_tokens,${half?'exam_half':'0 AS exam_half'},token_parts FROM users WHERE id=?`).bind(me.id),
+    env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(me.id),
+  ];
+  let selectedIndex=-1,listIndex=-1;
+  if(id!==null){selectedIndex=statements.length;statements.push(env.DB.prepare('SELECT * FROM lab_sessions WHERE id=? AND (user_id=? OR ?=1)').bind(id,me.id,isAdmin(me)?1:0));}
+  if(include.has('sessions')){listIndex=statements.length;statements.push(env.DB.prepare(`SELECT ${LAB_LIST_COLUMNS},(SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages FROM lab_sessions s WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id));}
+  const results=await env.DB.batch(statements),credit=results[0].results[0]||{};
+  out.tokens=(credit.exam_tokens||0)+(credit.exam_half?0.5:0);out.parts=credit.token_parts||0;
+  const active=await labAdvance(env,results[1].results[0]||null);
+  let selected=selectedIndex>=0?results[selectedIndex].results[0]:null;
+  if(selectedIndex>=0&&!selected)throw new HttpError(404,'not_found');
+  if(selected)selected=selected.id===active?.id?active:await labAdvance(env,selected);
+  const withActive=active&&['running','scanning'].includes(active.status);
+  const [activePages,selectedPages]=await Promise.all([
+    withActive&&active.status==='scanning'&&include.has('pages')?labPagesOf(env,active.id):null,
+    selected&&!(withActive&&selected.id===active.id&&active.status==='scanning'&&include.has('pages'))?labPagesOf(env,selected.id):null,
+  ]);
+  if(withActive)out.active=pubLab(active,activePages);
+  if(selected){
+    const [owner,standing,reviews]=await Promise.all([
+      selected.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(selected.user_id).first(),
+      labStanding(env,selected),
+      isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(selected.id).all().then(r=>r.results):undefined,
+    ]);
+    out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,standing,...(reviews?{reviews}:{})};
+  }
+  if(listIndex>=0)out.sessions=results[listIndex].results.map(s=>({...pubLab(s,null),detail:undefined,n_pages:s.n_pages}));
+  return out;
 }
 
 /* how everyone did on an exam: each person's first graded sitting counts (as on the day), as a percentage of full marks */
@@ -2157,8 +2313,9 @@ async function lab(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   const t = now();
+  if(p==='/api/lab/bootstrap'&&m==='GET')return labBootstrap(env,me,url);
   const contest = await contestRoute({ p, m, body, me, env, lang, t }, { HttpError, needUser, labReady, labActive, labAdvance, labOwned,
-    labGet, pubLab, labPagesOf, labTokens, labScanCode, sha256, labOpen, LAB, meter, meterSave, limit, labPageBytes, labUpstage, labReadPage, readText, labStoredReading });
+    labGet, pubLab, labPagesOf, labTokens, labScanCode, sha256, labOpen, LAB, meter, meterSave, limit, labPageBytes, labUpstage, labReadPage, readText, labStoredReading, labRequireJobs, labQueueOcr });
   if (contest !== undefined) return contest;
 
   /* the phone: holds the upload token from the QR code, not a sign-in */
@@ -2181,36 +2338,8 @@ async function lab(p, m, body, me, req, env, url) {
     if (buf.length > LAB.maxPage) throw new HttpError(413, "image_too_big");
     const cnt = await env.DB.prepare("SELECT COUNT(*) n, COALESCE(MAX(no),0) last FROM lab_pages WHERE session_id=?").bind(s.id).first();
     if (cnt.n >= LAB.maxPages) throw new HttpError(413, "too_many_pages");
-    let text = null, conf = null, status = "off", read = null, legible = null, ocrText = null;
-    let tk = task, kd = kind;
-    const mt = meter();
-    if (!s.charged) status = "unpaid";                                  // read only once grading is paid for (then, or at grading)
-    else if (env.GEMINI_API_KEY) {
-      try {
-        await limit(env, "labocr:" + s.user_id, LAB.ocrPerDay, 86400);
-        const up = await labUpstage(env, buf, mime, mt);
-        if (up) { conf = up.confidence; }
-        const rd = await labReadPage(env, s, buf, mime, up, mt), h = rd.header || {};
-        /* the printed header of the official sheet decides which experiment and which sheet; the phone's choice is the fallback */
-        let ht = typeof h.task === "string" ? h.task.trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, "") : "";
-        const code = /^([AW])(\d)(?:-\d+)?$/.exec(ht);               // an official sheet's code: A1-3, W2-1
-        if (code) { ht = "E" + code[2]; if (!h.sheet) h.sheet = code[1] === "A" ? "answer" : "working"; }
-        const hit = JSON.parse(s.tasks).find(x => x.toUpperCase() === ht || x.toUpperCase() === "E" + ht);
-        if (hit) tk = hit;
-        if (h.sheet === "answer" || h.sheet === "working") kd = h.sheet;
-        read = JSON.stringify(rd); legible = rd.legible; text = readText(rd); status = "done";
-        ocrText = up ? up.text : null;
-      } catch (e) { console.error("lab read", e && (e.code || e.message)); status = "failed"; }
-    } else if (env.UPSTAGE_API_KEY) {
-      try {
-        await limit(env, "labocr:" + s.user_id, LAB.ocrPerDay, 86400);
-        const o = await ocr(env, new Blob([buf], { type: mime }), "math", mt);
-        const rd = await labReadPage(env, s, buf, mime, o, mt);
-        text = o.text; ocrText = o.text; conf = o.confidence; read = JSON.stringify(rd); legible = rd.legible; status = "done";
-      } catch (e) { console.error("lab ocr", e && (e.code || e.message)); status = "failed"; }
-    }
-    const stored = labStoredReading(env, buf, { ocr: ocrText ?? text, text, read, legible, status });
-    ocrText = stored.ocr; text = stored.text; read = stored.read; legible = stored.legible; status = stored.status;
+    if(s.charged) await labRequireJobs(env);
+    const text=null,conf=null,status=s.charged?'queued':'unpaid',read=null,legible=null,ocrText=null,tk=task,kd=kind;
     /* the page number is given in the same statement that stores the page: pages read at the same time
        (a phone sending several, two phones) cannot get the same number */
     /* the photo itself: in R2 when the Worker has the LAB_PAGES bucket (needs migration 0009), otherwise in the row */
@@ -2220,9 +2349,9 @@ async function lab(p, m, body, me, req, env, url) {
       SELECT ?,COALESCE(MAX(no),0)+1,?,?,?,?,?,?,?,?,?,?,?${r2 ? ",?" : ""} FROM lab_pages WHERE session_id=?`)
       .bind(s.id, tk, kd, mime, r2 ? new Uint8Array(0) : buf, ocrText ?? text, conf, status, text, read, legible, t, ...(r2 ? [r2] : []), s.id).run();
     const no = (await env.DB.prepare("SELECT no FROM lab_pages WHERE id=?").bind(res.meta.last_row_id).first()).no;
-    await meterSave(env, s.id, tk, res.meta.last_row_id, mt);
+    if (s.charged) await labQueueOcr(env, s, [res.meta.last_row_id]);
     return { id: res.meta.last_row_id, no, task: tk, kind: kd, ocr_status: status, legible, items: read ? JSON.parse(read).items.length : 0,
-      chars: (text ?? ocrText ?? "").length, moved: tk !== task || kd !== kind, ...(stored.error ? { ocr_error: stored.error } : {}) };
+      chars: (text ?? ocrText ?? "").length, moved: tk !== task || kd !== kind, queued: !!s.charged };
   }
   if ((r = /^\/api\/lab\/up(?:\/(\d+))?\/pages\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labByToken(req, env, r[1] ? +r[1] : null);
@@ -2322,15 +2451,18 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if (p === "/api/lab/sessions" && m === "GET") {
     needUser(me);
-    const rows = (await env.DB.prepare(`SELECT s.*, (SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages FROM lab_sessions s
+    const rows = (await env.DB.prepare(`SELECT ${LAB_LIST_COLUMNS}, (SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages FROM lab_sessions s
       WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id).all()).results;
     return { sessions: rows.map(s => ({ ...pubLab(s, null), detail: undefined, n_pages: s.n_pages })) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "GET") {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
-    const owner = s.user_id === me.id ? me : await env.DB.prepare("SELECT nickname FROM users WHERE id=?").bind(s.user_id).first();
-    const reviews = isAdmin(me) ? await env.DB.prepare("SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?").bind(s.id).all().then(x => x.results).catch(() => []) : undefined;
-    return { session: { ...pubLab(s, await labPagesOf(env, s.id)), nickname: owner && owner.nickname, standing: await labStanding(env, s), ...(reviews ? { reviews } : {}) }, health: arenaHealth(env), ...(contestMeta(s) ? { tokens: await labTokens(env, s.user_id) } : {}) };
+    const [owner,reviews,pages,standing,tokens]=await Promise.all([
+      s.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(s.user_id).first(),
+      isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(s.id).all().then(x=>x.results).catch(()=>[]):undefined,
+      labPagesOf(env,s.id),labStanding(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined
+    ]);
+    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,standing,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);
@@ -2347,6 +2479,7 @@ async function lab(p, m, body, me, req, env, url) {
     if (s.status !== "scanning") throw new HttpError(409, "closed");
     const pg = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=? AND session_id=?").bind(+r[2], s.id).first();
     if (!pg) throw new HttpError(404, "not_found");
+    if(['reading','queued'].includes(pg.ocr_status))throw new HttpError(409,'reading');
     const task = body.task === undefined ? pg.task : String(body.task), kind = body.kind === undefined ? pg.kind : String(body.kind);
     if (!JSON.parse(s.tasks).includes(task)) bad("bad_task");
     if (kind !== "answer" && kind !== "working") bad("bad_kind");
@@ -2397,9 +2530,9 @@ async function lab(p, m, body, me, req, env, url) {
         if (!pages.some(p => String(p.text ?? p.ocr ?? "").trim() || p.mime !== "text/plain")) bad("no_answers");
         if (pages.some(p => !p.edited)) throw new HttpError(409, "needs_confirmation");
       }
-      s = await labCharge(env, s); s = await labFinalize(env, s, lang);
+      await labRequireJobs(env); s = await labCharge(env, s); s = await labFinalize(env, s, lang);
     }
-    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
+    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
   }
   /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
      arrive), while scanning, or later for a sitting that ended ungraded (graded at once) */
@@ -2407,9 +2540,11 @@ async function lab(p, m, body, me, req, env, url) {
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (!["running", "scanning", "ended"].includes(s.status) && !s.charged) throw new HttpError(409, "closed");
     if (labReview(s) && !s.charged && !(await labPagesOf(env, s.id)).length) bad("no_answers");
+    await labRequireJobs(env);
     s = await labCharge(env, s);
     if (s.status === "ended") s = await labFinalize(env, s, lang);
-    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
+    else if(!contestMeta(s)&&['running','scanning'].includes(s.status))await labQueueOcr(env,s);
+    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
   }
 
   /* admins: marking schemes and the sessions that wait for a person (arena() has already refused anyone else) */
