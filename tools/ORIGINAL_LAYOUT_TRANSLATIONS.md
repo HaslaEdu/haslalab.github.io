@@ -2,7 +2,8 @@
 
 `original_style_publication.json` lists the reviewed files served by the PDF
 release. Each entry points to the audit of the final joined PDF, rather than
-only the temporary page proofs. The PDFs are stored in the `pdf-izho` release.
+only the temporary page proofs. The PDFs are stored in the `pdf-izho` and
+`pdf-cpho` releases.
 
 The replacement engine removes selected prose text-show operands while keeping
 all original text advances and the other PDF tokens intact. Original font
@@ -50,3 +51,22 @@ The reviewed final page must still render identically to its individual proof.
 text, untouched native Forms and CMap decoding. The font regression tests are
 `python tests/test_pdf_original_style_fonts.py`; unsupported Unicode whitespace
 must fail validation rather than becoming a visible missing-glyph box.
+
+New Latin glyphs reused from an original font must also have a positive advance
+in that PDF's actual `/Widths` or `/W` array. Having the glyph in the embedded
+font program alone is insufficient. The 2026 audit records this separately in
+`native-ascii-audit.json`.
+
+For CPhO 2007, download the unchanged Chinese original
+`CPhO_2007_T_ZH.pdf` from the `pdf-cpho` release into `tmp/source-audit/`.
+Its SHA-256 is
+`2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9`.
+Run `python tools/cpho_2007_original_build.py extract`, then
+`python tools/cpho_2007_original_build.py build --pages 1 2 3 4`.
+Only the four problem pages are reviewed; the solution-page drafts are excluded
+from publication and cannot be composed without an explicit draft option.
+The English primary filename is `CPhO_2007_T_EN.pdf`; the old BAUPC-named URL
+is a byte-identical compatibility alias. Both languages retain the original
+seven figures, mathematical glyphs and source font programs. The final files
+pass both MuPDF and Poppler checks outside translated prose, and each joined
+page must render identically to its reviewed proof.

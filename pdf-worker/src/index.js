@@ -14,7 +14,7 @@ const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 16;         // 16: restore IZhO 2013/2026 original layouts and native mathematics (2026-10-30)
+const CACHE_V = 17;         // 17: native-layout CPhO 2007 and complete IZhO 2026 solutions (2026-10-30)
 
 export default {
   async fetch(req, env, ctx) {

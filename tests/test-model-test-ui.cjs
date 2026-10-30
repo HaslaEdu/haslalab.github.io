@@ -11,7 +11,7 @@ function harness(role='admin'){
   const calls=[],posts=[];let alive=true;
   const result={pipeline:'gemini-deepseek',ocr:{text:'<script>OCR</script>',provider:'gemini',model:'ocr-model',ms:10},grading:{status:'graded',score:8,points:10,feedback:'<img onerror=alert(1)>',provider:'deepseek',model:'grading-model',ms:20},usage:{calls:2,input_tokens:20,output_tokens:30,cached_tokens:0},elapsed_ms:30};
   const context={lang:'ko',cm:{me:role?{role}:null},esc:escape,sessionStorage:{setItem(){}},window:{addEventListener(){},removeEventListener(){}},
-    URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},cmApi:async(...args)=>{calls.push(args);return{pipelines};},cmBase:()=> 'https://example.com',cmTok:()=> 'session-token',
+    URL:class extends URL{static createObjectURL(){return 'blob:test';}static revokeObjectURL(){}},cmApi:async(...args)=>{calls.push(args);return{pipelines};},cmBase:()=> 'https://example.com',cmTok:()=> 'session-token',
     arLoadScanner:async()=>({encodeUpload:async file=>file}),btoa,Uint8Array,AbortController,setTimeout,clearTimeout,
     fetch:async(url,options)=>{posts.push({url,options});return{ok:true,json:async()=>result};}};
   vm.createContext(context);vm.runInContext(block,context);
@@ -42,5 +42,45 @@ function harness(role='admin'){
   const changed=harness();await changed.context.arModelTest(changed.root,changed.current);
   changed.context.fetch=async()=>{changed.context.cm.me={role:'user'};return{ok:true,json:async()=>changed.result};};
   await changed.form.onsubmit({preventDefault(){}});assert.equal(changed.nodes.arModelResults.innerHTML,'','changed account must not receive another result');
-  console.log('Developer UI: role gate, three choices, explicit submit, image payload, escaping, comparison reset, partial OCR and stale-account guards PASS');
+  const {priceModelTestStage,summarizeModelTestPricing}=await import('../community/src/model-test-pricing.js');
+  const ocr={stage:'ocr',provider:'gemini',model:'gemini-flash-latest',resolved_model:'gemini-2.5-flash',calls:1,
+    started_at:'2026-10-30T15:00:00.000Z',finished_at:'2026-10-30T15:00:00.500Z',ms:500,
+    input_tokens:400,cached_tokens:100,uncached_input_tokens:300,output_tokens:60,reasoning_tokens:10,total_tokens:460,output_tokens_per_second:120,ok:true,usage_known:true};
+  const grading={...ocr,stage:'grading',provider:'deepseek',model:'deepseek-flash',resolved_model:'deepseek-flash',
+    input_tokens:900,cached_tokens:0,uncached_input_tokens:900,output_tokens:100,reasoning_tokens:40,total_tokens:1000,ms:800,output_tokens_per_second:125};
+  const stages=[ocr,grading].map(stage=>({...stage,pricing:priceModelTestStage(stage)}));
+  const usage={calls:2,input_tokens:1300,cached_tokens:100,uncached_input_tokens:1200,output_tokens:160,reasoning_tokens:50,total_tokens:1460,
+    stages,pricing:summarizeModelTestPricing(stages)};
+  const labels=a.context.arModelTestLabels();
+  const detailed={...a.result,usage};
+  const completeHtml=a.context.arModelTestResult(detailed,labels);
+  for(const label of ['예상 총비용','단계별 시간·토큰·단가','요청 모델','응답 모델','비캐시 입력','생각 · 출력의 일부','100만 토큰당','1토큰당','단계 합계','공식 단가','2026-10-30'])assert.ok(completeHtml.includes(label),label);
+  assert.ok(completeHtml.includes('gemini-flash-latest'));assert.ok(completeHtml.includes('gemini-2.5-flash'));
+  assert.ok(completeHtml.includes('1,460'));assert.ok(completeHtml.includes('캐시 입력은 입력에'));
+  assert.ok(completeHtml.includes('https://ai.google.dev/gemini-api/docs/pricing'));
+  const missingStage={...grading,ok:false,usage_known:false,input_tokens:null,cached_tokens:null,uncached_input_tokens:null,output_tokens:null,reasoning_tokens:null,total_tokens:null};
+  missingStage.pricing=priceModelTestStage(missingStage);
+  const partialUsage={calls:2,total_tokens:null,incomplete:true,known_tokens:{total_tokens:460},stages:[stages[0],missingStage],pricing:summarizeModelTestPricing([stages[0],missingStage])};
+  const partialHtml=a.context.arModelTestResult({...detailed,usage:partialUsage},labels);
+  assert.ok(partialHtml.includes('확인된 부분합'));assert.ok(partialHtml.includes('총액 미확정'));assert.ok(partialHtml.includes('460 + ?'));
+  const unknownHtml=a.context.arModelTestResult({...detailed,usage:{calls:1,total_tokens:null,incomplete:true,stages:[],pricing:{status:'unknown',incomplete:true,known_usd:0,priced_calls:0,total_usd:null}}},labels);
+  assert.ok(unknownHtml.includes('미확정'));assert.ok(!unknownHtml.includes('$0'),'unknown total must not become zero dollars');
+  const peak={...grading,started_at:'2026-10-30T02:00:00Z'};peak.pricing=priceModelTestStage(peak);
+  const rangeHtml=a.context.arModelTestResult({...detailed,usage:{...usage,stages:[peak],pricing:summarizeModelTestPricing([peak])}},labels);
+  assert.ok(rangeHtml.includes('예상 비용 범위'));assert.ok(rangeHtml.includes(' – $'));
+  for(const unsafe of ['javascript:alert(1)','https://evil.test/','https://ai.google.dev@evil.test/','https://ai.google.dev.evil.test/'])assert.equal(a.context.arModelTestPriceLink(unsafe),'');
+  assert.equal(a.context.arModelTestPriceLink('https://api-docs.deepseek.com/quick_start/pricing'),'https://api-docs.deepseek.com/quick_start/pricing');
+  const unsafeSource={...stages[0],pricing:{...stages[0].pricing,source_url:'javascript:alert(1)'}};
+  assert.ok(!a.context.arModelTestStage(unsafeSource,labels).includes('href="javascript:'));
+  const failed=harness();await failed.context.arModelTest(failed.root,failed.current);
+  const failedOcr={...missingStage,stage:'ocr',provider:'gemini',model:'gemini-flash-latest',ms:null};
+  failedOcr.pricing=priceModelTestStage(failedOcr);
+  failed.context.fetch=async()=>({ok:false,json:async()=>({error:'model_test_provider_auth',stage:'ocr',provider:'gemini',model:'gemini-flash-latest',
+    usage:{calls:1,total_tokens:null,incomplete:true,stages:[failedOcr],pricing:summarizeModelTestPricing([failedOcr])},elapsed_ms:2000})});
+  await failed.form.onsubmit({preventDefault(){}});
+  assert.ok(failed.nodes.arModelResults.innerHTML.includes('data-model-result="gemini-deepseek"'));
+  assert.ok(failed.nodes.arModelResults.innerHTML.includes('테스트 미완료'));assert.ok(failed.nodes.arModelResults.innerHTML.includes('총액 미확정'));
+  assert.ok(failed.nodes.arModelResults.innerHTML.includes('반환된 OCR 결과가 없습니다.'));assert.ok(!failed.nodes.arModelResults.innerHTML.includes('0 / 10'));
+  a.context.lang='en';assert.ok(a.context.arModelTestResult(detailed,a.context.arModelTestLabels()).includes('Estimated total · USD'));
+  console.log('Developer UI: role gate, image flow, XSS, stale account, partial OCR, detailed timing/tokens/prices, unknown/range/partial costs and OCR-failure metrics PASS');
 })().catch(e=>{console.error(e);process.exitCode=1;});

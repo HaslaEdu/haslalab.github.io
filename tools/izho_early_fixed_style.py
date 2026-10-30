@@ -6,10 +6,15 @@ paragraph merging, source font subsetting, or equation rasterization occurs.
 """
 from pathlib import Path
 from collections import defaultdict
-import argparse,hashlib,json,math,re,urllib.request
+import argparse,hashlib,json,math,os,re,urllib.request
+# Image comparisons need no BLAS worker pool; avoid spawning dozens of
+# native threads on high-core workstations when pages are built separately.
+os.environ.setdefault('OPENBLAS_NUM_THREADS','1')
+os.environ.setdefault('OMP_NUM_THREADS','1')
 import pikepdf
 import pymupdf as fitz
 import numpy as np
+from PIL import Image
 from pdf_original_text_ops import suppress_prose,glyph_key,family_name,cmap,widths,native_form_glyphs
 from pdf_original_style_fonts import korean_font,source_font_role
 from pdf_original_style_audit import audit
@@ -30,6 +35,10 @@ def ensure_reviewed_source(data,plan_path):
     if not expected:raise ValueError('Source has no reviewed SHA256: '+data['source'])
     if not source.is_file():
         url=metadata.get('source_url')or metadata.get('provenance',{}).get('source_url')
+        if not url:
+            catalogue=json.loads((ROOT/'tools/theory/izho.json').read_text('utf8'))
+            matches={entry['url']for year in catalogue['years']for entry in year['files']if entry['file']==source.name}
+            if len(matches)==1:url=matches.pop()
         if not url:raise ValueError('Reviewed source URL missing: '+data['source'])
         request=urllib.request.Request(url,headers={'User-Agent':'HaslaLab original-style verified rebuild'})
         payload=urllib.request.urlopen(request,timeout=60).read()
@@ -120,21 +129,31 @@ def protected_image_rects(doc,page,data):
     if any(i<0 or i>=len(images)for i in reviewed):raise ValueError('Unknown reviewed inline-math image')
     for index,info in enumerate(images):
         if index not in reviewed:rects.append(list(info['bbox']));continue
-        # Reviewed Word fallback hbar images have a constant black 2x2 base
-        # and a high-resolution alpha glyph with wide transparent padding.
-        # Protect the actual source glyph, rather than unrelated prose that
-        # the original PDF already places in that transparent padding.
+        # Reviewed inline math bitmaps can have wide transparent padding or
+        # italic descenders extending left of their visible upper strokes.
+        # Protect actual source ink, rather than unrelated adjacent prose.
         base=fitz.Pixmap(doc,info['xref'])
-        if any(base.samples):raise ValueError('Inline-math image needs another reviewed color profile')
+        if base.colorspace and base.colorspace.n not in [1,3]:base=fitz.Pixmap(fitz.csRGB,base)
+        colors=np.frombuffer(base.samples,np.uint8).reshape(base.height,base.width,base.n)
+        if base.n==1:colors=np.repeat(colors,3,axis=2)
+        elif base.n!=3:raise ValueError('Inline-math image needs another reviewed color profile')
         kind,value=doc.xref_get_key(info['xref'],'SMask')
         if kind!='xref':raise ValueError('Inline-math image requires an explicit source alpha mask')
         mask=fitz.Pixmap(doc,int(value.split()[0]))
         if mask.n!=1:raise ValueError('Unsupported source alpha mask color space')
         alpha=np.frombuffer(mask.samples,np.uint8).reshape(mask.height,mask.width)
-        ys,xs=np.nonzero(alpha)
-        if not len(xs):continue
-        normalized=fitz.Rect(xs.min()/mask.width,ys.min()/mask.height,(xs.max()+1)/mask.width,(ys.max()+1)/mask.height)
-        ink=normalized*fitz.Matrix(info['transform']);rects.append(list(ink+(-.25,-.25,.25,.25)))
+        if colors.shape[:2]!=alpha.shape:colors=np.asarray(Image.fromarray(colors).resize((mask.width,mask.height),Image.Resampling.NEAREST))
+        ink=(alpha>0)&(np.min(colors,axis=2)<255)
+        # Row runs preserve the actual italic silhouette; one large bbox
+        # would falsely protect empty space next to a leaning p or hbar.
+        for y,row in enumerate(ink):
+            x=0
+            while x<mask.width:
+                if not row[x]:x+=1;continue
+                left=x
+                while x<mask.width and row[x]:x+=1
+                normalized=fitz.Rect(left/mask.width,y/mask.height,x/mask.width,(y+1)/mask.height)
+                rects.append(list(normalized*fitz.Matrix(info['transform'])))
     return rects
 
 def native_image_programs(path,page_number):
@@ -158,14 +177,14 @@ def native_image_programs(path,page_number):
 
 def latin_profile(catalog,font,text):
     for profile in catalog[font]:
-        if all(ch in profile['encoding']and profile['widths'].get(profile['encoding'][ch],profile['default'])is not None for ch in text):return profile
+        if all(ch in profile['encoding']and (profile['widths'].get(profile['encoding'][ch],profile['default'])or 0)>0 for ch in text):return profile
     raise ValueError(('No source-native encoding for prose',font,text))
 
 def split_parts(part,style,catalog,metrics):
     """Use the original Latin font; use the matched CJK face for Hangul only."""
     text=part['text'];chunks=[];groups=[]
     for char in text:
-        native=ord(char)<128 or (not '\uac00'<=char<='\ud7a3'and any(char in p['encoding']and p['widths'].get(p['encoding'][char],p['default'])is not None for p in catalog[style['font']]))
+        native=ord(char)<128 or (not '\uac00'<=char<='\ud7a3'and any(char in p['encoding']and (p['widths'].get(p['encoding'][char],p['default'])or 0)>0 for p in catalog[style['font']]))
         if groups and groups[-1][0]==native:groups[-1][1]+=char
         else:groups.append([native,char])
     for native,value in groups:
@@ -199,6 +218,7 @@ def build(plan_path,target):
     form_glyphs=native_form_glyphs(source,pi+1)
     protected=form_glyphs+[c for span in runs.values()if re.search(r'Cambria.?Math|Symbol|MT.?Extra',span['font'],re.I) for c in characters(span)if c['c'].strip()]
     for key in data.get('protected_runs',[]):protected.extend(c for c in characters(runs[tuple(key)])if c['c'].strip())
+    for spec in data.get('protected_substrings',[]):protected.extend(c for c in slot_source(spec,runs)[1]if c['c'].strip())
     for query in data.get('protect_text',[]):
         hits=page.search_for(query)
         if not hits:raise ValueError(('Protected native formula not found',query))

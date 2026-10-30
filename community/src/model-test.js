@@ -2,6 +2,7 @@
  * DeepSeek vision / JSON format: https://api-docs.deepseek.com/guides/vision/
  * https://api-docs.deepseek.com/guides/json_mode/ (verified 2026-10-30).
  */
+import { priceModelTestStage, summarizeModelTestPricing } from './model-test-pricing.js';
 export const MODEL_TEST_LIMITS = Object.freeze({
   maxImages: 3, maxImageBytes: 1900000, maxTotalImageBytes: 5700000,
   maxText: 12000, maxRubric: 20000, maxPoints: 1000, maxOcrText: 40000,
@@ -40,8 +41,11 @@ function providerSettings(env) {
 export function modelTestConfig(env) {
   const settings = providerSettings(env);
   return { pipelines: PIPELINES.map(row => {
-    const ocr = { provider: row.ocr, model: settings[row.ocr].ocrModel };
-    const grading = { provider: row.grading, model: settings[row.grading].model };
+    const configuredStage = (provider, model) => ({ provider, model,
+      pricing: priceModelTestStage({ provider, model, resolved_model: null, started_at: new Date().toISOString(), usage_known: false,
+        input_tokens: null, cached_tokens: null, output_tokens: null }) });
+    const ocr = configuredStage(row.ocr, settings[row.ocr].ocrModel);
+    const grading = configuredStage(row.grading, settings[row.grading].model);
     let reason = !settings[row.ocr].configured ? row.ocr + '_not_configured' :
       !settings[row.grading].configured ? row.grading + '_not_configured' :
       !ocr.model || !grading.model ? 'model_test_invalid_config' : null;
@@ -142,19 +146,56 @@ async function boundedResponseText(response) {
   for (const chunk of chunks) { bytes.set(chunk, position); position += chunk.byteLength; }
   return new TextDecoder().decode(bytes);
 }
-const token = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
+const token = value => Number.isSafeInteger(value) && value >= 0 ? value : null;
+const sumTokens = values => values.every(value => value !== null) ? token(values.reduce((sum, value) => sum + value, 0)) : null;
+const TOKEN_FIELDS = ['input_tokens', 'cached_tokens', 'uncached_input_tokens', 'output_tokens', 'reasoning_tokens', 'total_tokens'];
+const unknownUsage = () => Object.fromEntries(TOKEN_FIELDS.map(field => [field, null]));
 function usageOf(provider, response) {
+  const value = provider === 'gemini' ? response?.usageMetadata : response?.usage;
+  if (!object(value) || !Object.keys(value).length) return { ...unknownUsage(), usage_known: false };
+  let input, cached, output, reasoning, total, consistent = true;
   if (provider === 'gemini') {
-    const value = response.usageMetadata || {};
-    return { input_tokens: token(value.promptTokenCount), output_tokens: token(value.candidatesTokenCount) + token(value.thoughtsTokenCount), cached_tokens: token(value.cachedContentTokenCount) };
+    input = token(value.promptTokenCount);
+    const candidates = token(value.candidatesTokenCount);
+    total = token(value.totalTokenCount);
+    // Gemini omits zero-valued optional protobuf counters. A missing usage object,
+    // or an absent primary count, is never converted to a made-up zero.
+    reasoning = value.thoughtsTokenCount === undefined && (candidates !== null || total !== null) ? 0 : token(value.thoughtsTokenCount);
+    cached = value.cachedContentTokenCount === undefined && input !== null ? 0 : token(value.cachedContentTokenCount);
+    output = sumTokens([candidates, reasoning]);
+    const toolInput = value.toolUsePromptTokenCount === undefined ? 0 : token(value.toolUsePromptTokenCount);
+    if (output === null && value.candidatesTokenCount === undefined && total !== null && input !== null && toolInput === 0 && total >= input) {
+      output = total - input;
+    }
+    if (toolInput !== 0) consistent = false; // This adapter never enables tools.
+  } else {
+    input = token(value.prompt_tokens); output = token(value.completion_tokens); total = token(value.total_tokens);
+    cached = token(value.prompt_cache_hit_tokens ?? value.prompt_tokens_details?.cached_tokens);
+    const miss = token(value.prompt_cache_miss_tokens);
+    if (cached === null && value.prompt_cache_hit_tokens === undefined && value.prompt_tokens_details?.cached_tokens === undefined &&
+        miss !== null && input !== null && miss <= input) cached = input - miss;
+    if (input !== null && cached !== null && miss !== null && sumTokens([cached, miss]) !== input) consistent = false;
+    reasoning = token(value.completion_tokens_details?.reasoning_tokens);
   }
-  const value = response.usage || {};
-  return { input_tokens: token(value.prompt_tokens), output_tokens: token(value.completion_tokens),
-    cached_tokens: token(value.prompt_cache_hit_tokens ?? value.prompt_tokens_details?.cached_tokens) };
+  if (cached !== null && input !== null && cached > input) { cached = null; consistent = false; }
+  if (reasoning !== null && output !== null && reasoning > output) { reasoning = null; consistent = false; }
+  const combined = sumTokens([input, output]);
+  if (total === null && (provider === 'gemini' ? value.totalTokenCount : value.total_tokens) === undefined) total = combined;
+  else if (combined !== null && total !== null && combined !== total) consistent = false;
+  return { input_tokens: input, cached_tokens: cached, uncached_input_tokens: input !== null && cached !== null ? input - cached : null,
+    output_tokens: output, reasoning_tokens: reasoning, total_tokens: total,
+    usage_known: consistent && input !== null && cached !== null && output !== null };
 }
 async function providerCall(env, selected, stage, policy, input, images, schema, options) {
   const started = Date.now(), detail = { stage, provider: selected.provider, model: selected.model };
-  let timer, timedOut = false, attempted = false;
+  let timer, timedOut = false, attempted = false, parsed;
+  const usageStage = ok => {
+    const finished = Date.now(), ms = Math.max(0, finished - started), usage = usageOf(selected.provider, parsed);
+    const record = { ...detail, calls: 1, resolved_model: modelId(selected.provider === 'gemini' ? parsed?.modelVersion : parsed?.model, selected.provider),
+      started_at: new Date(started).toISOString(), finished_at: new Date(finished).toISOString(), ms, ...usage,
+      output_tokens_per_second: usage.output_tokens !== null && ms > 0 ? usage.output_tokens * 1000 / ms : null, ok };
+    return { ...record, pricing: priceModelTestStage(record) };
+  };
   const controller = new AbortController();
   // Promise.race also bounds a stalled fixture or an implementation that ignores AbortSignal.
   const timeout = new Promise((_, reject) => {
@@ -184,7 +225,7 @@ async function providerCall(env, selected, stage, policy, input, images, schema,
         'model_test_provider_rate_limited' : response.status === 404 ? 'model_test_model_unavailable' : 'model_test_provider_failed';
       throw new ModelTestError(502, code, detail);
     }
-    let raw, parsed;
+    let raw;
     try {
       parsed = JSON.parse(await boundedResponseText(response));
       if (selected.provider === 'gemini') {
@@ -197,16 +238,15 @@ async function providerCall(env, selected, stage, policy, input, images, schema,
         raw = parseObject(choice.message?.content);
       }
     } catch { throw new ModelTestError(502, 'model_test_invalid_response', detail); }
-    const ms = Date.now() - started;
-    return { raw, usage: { ...detail, ...usageOf(selected.provider, parsed), ms, ok: true }, ms };
+    const usage = usageStage(true);
+    return { raw, usage, ms: usage.ms };
   };
   try { return await Promise.race([request(), timeout]); }
   catch (error) {
     const safeError = error instanceof ModelTestError ? error : new ModelTestError(timedOut || error?.name === 'AbortError' ? 504 : 502,
       timedOut || error?.name === 'AbortError' ? 'model_test_timeout' : 'model_test_provider_failed', detail);
     Object.assign(safeError, detail);
-    if (attempted) safeError.usageStage = { ...detail, ms: Date.now() - started, ok: false,
-      input_tokens: null, output_tokens: null, cached_tokens: null };
+    if (attempted) safeError.usageStage = usageStage(false);
     throw safeError;
   } finally { clearTimeout(timer); }
 }
@@ -229,10 +269,15 @@ function safeGrade(raw, ocr, points, lang) {
     evidence, ...(reviewReasons.length ? { review_reasons: reviewReasons } : {}) };
 }
 function summarize(stages) {
-  return { calls: stages.length, input_tokens: stages.reduce((sum, stage) => sum + (stage.input_tokens || 0), 0),
-    output_tokens: stages.reduce((sum, stage) => sum + (stage.output_tokens || 0), 0),
-    cached_tokens: stages.reduce((sum, stage) => sum + (stage.cached_tokens || 0), 0),
-    ...(stages.some(stage => !stage.ok) ? { incomplete: true } : {}), stages };
+  const totals = {}, knownTokens = {};
+  for (const field of TOKEN_FIELDS) {
+    const known = stages.map(stage => stage[field]).filter(value => value !== null);
+    knownTokens[field] = known.length ? sumTokens(known) : null;
+    totals[field] = stages.length && known.length === stages.length ? knownTokens[field] : null;
+  }
+  return { calls: stages.length, ...totals, known_tokens: knownTokens,
+    ...(stages.some(stage => !stage.ok || !stage.usage_known) ? { incomplete: true } : {}),
+    stages, pricing: summarizeModelTestPricing(stages) };
 }
 export async function runModelTest(env, body, options = {}) {
   const input = validateModelTestRequest(body), started = Date.now();
@@ -253,17 +298,21 @@ export async function runModelTest(env, body, options = {}) {
     if (!text) fail('model_test_ocr_empty', 422, { stage: 'ocr', ...pipeline.ocr });
     if (text.length > MODEL_TEST_LIMITS.maxOcrText) fail('model_test_ocr_too_long', 422, { stage: 'ocr', ...pipeline.ocr });
     const unresolved = /\[(?:illegible|unreadable|판독\s*불가)\]/i.test(text);
-    ocr = { ...pipeline.ocr, text, uncertainties: read.raw.uncertainties.slice(0, 30).map(value => value.slice(0, 600)),
+    ocr = { provider: pipeline.ocr.provider, model: pipeline.ocr.model, text, uncertainties: read.raw.uncertainties.slice(0, 30).map(value => value.slice(0, 600)),
       legible: read.raw.legible && !unresolved, ms: read.ms };
     const graded = await providerCall(env, pipeline.grading, 'grading', GRADE_POLICY,
       { task: 'grading', language: input.lang, problem: input.problem, rubric: input.rubric, points: input.points,
         transcript: ocr.text, uncertainties: ocr.uncertainties, legible: ocr.legible }, [], GRADE_SCHEMA, settings);
     stages.push(graded.usage);
-    return { pipeline: input.pipeline, ocr, grading: { ...pipeline.grading, ...safeGrade(graded.raw, ocr, input.points, input.lang), ms: graded.ms },
+    return { pipeline: input.pipeline, ocr, grading: { provider: pipeline.grading.provider, model: pipeline.grading.model,
+      ...safeGrade(graded.raw, ocr, input.points, input.lang), ms: graded.ms },
       usage: summarize(stages), elapsed_ms: Date.now() - started };
   } catch (error) {
     if (error instanceof ModelTestError) {
       if (error.usageStage) stages.push(error.usageStage);
+      // A valid HTTP response can still fail OCR schema/content validation. Its
+      // reported token use remains billable and must survive that failure.
+      else if (stages.at(-1)?.stage === error.stage) stages.at(-1).ok = false;
       if (ocr) error.ocr = ocr;
       error.usage = summarize(stages); error.elapsed_ms = Date.now() - started;
     }

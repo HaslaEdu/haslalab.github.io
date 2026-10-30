@@ -1,4 +1,5 @@
 import { modelTestConfig, validateModelTestRequest, runModelTest, ModelTestError, MODEL_TEST_LIMITS } from './model-test.js';
+import { priceModelTestStage, summarizeModelTestPricing } from './model-test-pricing.js';
 
 export const MODEL_TEST_PATH = '/api/admin/lab/model-test';
 export const MODEL_TEST_MAX_BODY = 8 * 1024 * 1024;
@@ -43,6 +44,44 @@ async function boundedJson(request, HttpError) {
   }
 }
 
+const TOKEN_FIELDS = ['input_tokens', 'cached_tokens', 'uncached_input_tokens', 'output_tokens', 'reasoning_tokens', 'total_tokens'];
+const safeModelId = value => typeof value === 'string' && /^(?:gemini|deepseek)-[a-z0-9._-]{1,100}$/i.test(value);
+const safeTime = value => typeof value === 'string' && Number.isFinite(Date.parse(value)) &&
+  new Date(value).toISOString() === value;
+function safeModelUsage(usage) {
+  const clean = {};
+  for (const key of ['calls', ...TOKEN_FIELDS]) {
+    if (Number.isSafeInteger(usage[key]) && usage[key] >= 0) clean[key] = usage[key];
+    else if (usage[key] === null) clean[key] = null;
+  }
+  if (typeof usage.incomplete === 'boolean') clean.incomplete = usage.incomplete;
+  if (usage.known_tokens && typeof usage.known_tokens === 'object') {
+    clean.known_tokens = {};
+    for (const key of TOKEN_FIELDS) if (Number.isSafeInteger(usage.known_tokens[key]) && usage.known_tokens[key] >= 0) {
+      clean.known_tokens[key] = usage.known_tokens[key];
+    }
+  }
+  if (Array.isArray(usage.stages) && usage.stages.length) {
+    clean.stages = usage.stages.slice(0, 2).filter(stage => stage &&
+      ['ocr', 'grading'].includes(stage.stage) && ['gemini', 'deepseek'].includes(stage.provider) && safeModelId(stage.model))
+      .map(stage => {
+        const result = { stage: stage.stage, provider: stage.provider, model: stage.model, calls: 1,
+          ok: stage.ok === true, usage_known: stage.usage_known === true };
+        if (safeModelId(stage.resolved_model)) result.resolved_model = stage.resolved_model;
+        for (const key of ['started_at', 'finished_at']) if (safeTime(stage[key])) result[key] = stage[key];
+        for (const key of TOKEN_FIELDS) result[key] = Number.isSafeInteger(stage[key]) && stage[key] >= 0 ? stage[key] : null;
+        for (const key of ['ms', 'output_tokens_per_second']) {
+          result[key] = Number.isFinite(stage[key]) && stage[key] >= 0 ? stage[key] : null;
+        }
+        // Recompute prices from trusted rules instead of copying arbitrary error metadata.
+        result.pricing = priceModelTestStage(result);
+        return result;
+      });
+    clean.pricing = summarizeModelTestPricing(clean.stages);
+  }
+  return clean;
+}
+
 function safeModelError(error) {
   const extra = {};
   if (['ocr', 'grade', 'grading'].includes(error.stage)) extra.stage = error.stage;
@@ -60,11 +99,7 @@ function safeModelError(error) {
   }
   const usage = error.usage || partial.usage;
   if (usage && typeof usage === 'object') {
-    extra.usage = {};
-    for (const key of ['calls', 'input_tokens', 'output_tokens', 'cached_tokens']) {
-      if (Number.isFinite(usage[key]) && usage[key] >= 0) extra.usage[key] = usage[key];
-    }
-    if (typeof usage.incomplete === 'boolean') extra.usage.incomplete = usage.incomplete;
+    extra.usage = safeModelUsage(usage);
   }
   const elapsed = error.elapsed_ms ?? partial.elapsed_ms;
   if (Number.isFinite(elapsed) && elapsed >= 0) extra.elapsed_ms = elapsed;

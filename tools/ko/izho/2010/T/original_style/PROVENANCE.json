@@ -1,0 +1,22 @@
+{
+  "source_design": "tmp/source-audit/IZhO_2010_T_EN.pdf",
+  "source_sha256": "c3d309b54a876a0e71284afa01c5a180b3bb005e69781bcfaabe8f9dff9c8051",
+  "scope": "All five original pages. Only source prose operators are replaced by Korean at fixed baselines and sizes. Original formula, figure, font, CMap, image/alpha streams and vector geometry remain native.",
+  "source_typography_notes": [
+    "The source Delta baryon rest mass reads 1.232 x 10^6 eV/c^2. That original formula is retained exactly; no erratum is added to the PDF.",
+    "Original diagram labels inside figures are preserved as part of those figures."
+  ],
+  "inline_math_image_protection": [
+    {
+      "source_page": 4,
+      "image_index": 0,
+      "description": "T=2.7 K. Protect original image ink/alpha silhouette; transparent padding overlaps the prior original prose descender."
+    },
+    {
+      "source_page": 5,
+      "image_index": 16,
+      "description": "pi-zero. Protect original image ink/alpha silhouette; transparent padding adjoins the source prose word in."
+    }
+  ],
+  "added_pdf_notes": false
+}

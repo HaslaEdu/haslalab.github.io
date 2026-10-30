@@ -8,7 +8,7 @@
     ko: {
       title: '서버 구조·운영 가이드', kicker: 'DEVELOPER / OPERATIONS',
       intro: '처음 업무를 맡은 담당자를 위한 HaslaLab 서버 안내입니다. 요청이 어디로 가는지 이해한 뒤, 문제가 생긴 구간부터 확인하세요.',
-      date: '구현 기준 2026.10.30 · 구조가 바뀌면 이 가이드도 함께 수정',
+      date: '구현 기준 2026.10.31 · 구조가 바뀌면 이 가이드도 함께 수정',
       tools: '개발자 도구', model: '모델 테스트', back: '응시·채점 기록', current: '현재 문서',
       map: '한눈에 보는 구조', mapNote: '화살표는 요청·작업의 이동 방향입니다. 응답은 반대 방향으로 돌아옵니다.',
       browser: ['사용자 브라우저', '화면·입력·결과 표시'], static: ['GitHub Pages', 'HTML·JS·기출 자료'],
@@ -42,7 +42,7 @@
           steps:[['개발자 권한 확인','서버가 현재 admin 역할을 확인합니다. 일반 계정은 테스트 API를 실행할 수 없습니다.'],
             ['조건 준비','테스트 화면에서 문제·배점·채점 기준·답안 사진과 지원되는 모델 조합을 선택합니다. 지원 모델은 현재 서버 설정이 기준입니다.'],
             ['명시적으로 실행','실행 버튼을 눌렀을 때 외부 OCR·채점 API를 호출합니다. 현재 모델 테스트는 요청 안에서 처리하며 실전시험 Queue 경로와 구분합니다.'],
-            ['비교·판단','OCR 글, 채점 결과, 사용량과 시간을 비교합니다. 테스트 결과가 운영 모델을 자동으로 바꾸지는 않습니다.']],
+            ['비교·판단','OCR 글, 채점 결과, 사용량·시간·예상비용을 비교합니다. 비용은 공개 단가 기준 추정값이며 실제 청구액과 다를 수 있습니다. 테스트 결과가 운영 모델을 자동으로 바꾸지는 않습니다.']],
           note:'시험 기록·랭킹·토큰 장부는 변경하지 않지만 외부 API 사용료는 발생할 수 있습니다. 공급자 키는 Backend Secret에 두고, 개인정보 없는 검증용 답안을 사용하세요.'}
       ],
       operate: '느리거나 멈췄을 때',
@@ -71,7 +71,7 @@
       sourceRows: [['화면·요청 캐시','arena.js','site-runtime.js'],['공개 분기·복제·일관성','community/src/edge-gateway.js','community/src/public-reader.js','community/src/public-consistency.js'],
         ['공개 SQL·DB 시간 계측','community/src/public-data.js','community/src/d1-timing.js'],['인증·계정·실전시험 API','community/src/index.js'],
         ['Queue·복구','community/src/lab-jobs.js','community/wrangler.toml'],['월간 제출·사진·공개 정책','community/src/monthly-answers.js','community/src/monthly-photos.js','community/src/monthly-policy.js'],
-        ['개발자 모델 비교','community/src/model-test-route.js','community/src/model-test.js'],['배포·성능 원칙','PERFORMANCE.md','.github/workflows/deploy-worker.yml','.github/workflows/site-performance.yml']],
+        ['개발자 모델 비교','community/src/model-test-route.js','community/src/model-test.js','community/src/model-test-pricing.js'],['배포·성능 원칙','PERFORMANCE.md','.github/workflows/deploy-worker.yml','.github/workflows/site-performance.yml']],
       handoff: '담당자 인수인계 시 확인', handoffItems: ['저장소·Cloudflare·GitHub Actions 접근 권한과 담당 연락처', '현재 운영 커밋·환경 설정·Secret의 관리 위치 (값은 문서에 복사하지 않기)',
         'D1 복제 설정·캐시 제외 대상·기존 OAuth 및 결제 웹훅 주소', 'Queue·실패 작업·외부 AI 사용량과 비용 확인 위치', '사진 보관·삭제 정책 및 현재 환경의 실제 설정', '최근 정상 배포와 복구 절차·미해결 장애'],
       reference: '공식 참고', refs: ['D1 읽기 복제·북마크','Workers·D1 사용량 요금','Queue 재시도'],
@@ -79,7 +79,7 @@
     },
     en: {
       title:'Server architecture & operations', kicker:'DEVELOPER / OPERATIONS', intro:'A handover guide for HaslaLab maintainers. Follow the request path, then inspect the part that failed.',
-      date:'Implementation reference: 2026-10-30 · Update this guide when the architecture changes', tools:'Developer tools', model:'Model test', back:'My exams', current:'Current guide',
+      date:'Implementation reference: 2026-10-31 · Update this guide when the architecture changes', tools:'Developer tools', model:'Model test', back:'My exams', current:'Current guide',
       map:'Architecture at a glance', mapNote:'Arrows show requests and work moving forward. Responses return along the reverse path.',
       browser:['User browser','Interface, input and results'], static:['GitHub Pages','HTML, JS and past papers'], gateway:['Cloudflare Edge Gateway','Nearby public cache and request routing'],
       public:['Public reads','Cache hit → immediate response','Cache miss → D1 replica / primary when needed'], backend:['Regional Backend Worker','Authentication, private reads, all writes','Primary D1 · currently Hong Kong (HKG)'],
@@ -108,7 +108,7 @@
           ['Verify developer access','The server requires the current admin role. Ordinary accounts cannot run the test API.'],
           ['Prepare a comparison','Supply the problem, rubric, marks and answer images, then choose a currently supported combination. The server configuration determines available models.'],
           ['Run explicitly','Only the run button starts external OCR and grading calls. This test runs inside the request, separately from the exam Queue path.'],
-          ['Inspect results','Compare OCR text, marks, usage and timing. Tests do not automatically change production models.']],
+          ['Inspect results','Compare OCR text, marks, usage, timing and estimated cost. Public-price estimates may differ from actual bills. Tests do not automatically change production models.']],
           note:'Tests do not modify exam records, rankings or token ledgers, but provider API charges may apply. Keep provider keys in backend Secrets and use samples without personal information.'}
       ],
       operate:'When requests slow down or stop', runbooks:[
@@ -134,7 +134,7 @@
         ['Interface and request cache','arena.js','site-runtime.js'],['Public routing, replication and consistency','community/src/edge-gateway.js','community/src/public-reader.js','community/src/public-consistency.js'],
         ['Public SQL and DB timing','community/src/public-data.js','community/src/d1-timing.js'],['Authentication, accounts and exam API','community/src/index.js'],
         ['Queues and recovery','community/src/lab-jobs.js','community/wrangler.toml'],['Monthly answers, photos and release policy','community/src/monthly-answers.js','community/src/monthly-photos.js','community/src/monthly-policy.js'],
-        ['Developer model comparisons','community/src/model-test-route.js','community/src/model-test.js'],['Deployment and performance policy','PERFORMANCE.md','.github/workflows/deploy-worker.yml','.github/workflows/site-performance.yml']],
+        ['Developer model comparisons','community/src/model-test-route.js','community/src/model-test.js','community/src/model-test-pricing.js'],['Deployment and performance policy','PERFORMANCE.md','.github/workflows/deploy-worker.yml','.github/workflows/site-performance.yml']],
       handoff:'Handover checklist',handoffItems:['Repository, Cloudflare and GitHub Actions access, and responsible contacts','Current release, environment configuration and where Secrets are managed (never copy their values here)',
         'D1 replication, cache exclusions, existing OAuth and payment webhook URLs','Where to inspect queues, failed jobs, AI usage and costs','Photo retention/deletion policy and actual environment settings','Last healthy deployment, recovery steps and unresolved incidents'],
       reference:'Official references',refs:['D1 replication and bookmarks','Workers and D1 usage pricing','Queue retries'],cost:'Opening this guide and running its read diagnostic makes no AI calls. Replicas have no separate storage/compute charge; ordinary Workers, D1, Queue and provider usage remains subject to the existing plans.'

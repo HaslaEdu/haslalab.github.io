@@ -60,4 +60,14 @@ class NativeTextOpsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'preserved native Form'):
             suppress_prose(source,1,protected)
 
+    def test_unused_zero_width_digits_are_not_native_coverage(self):
+        from izho_early_fixed_style import font_catalog,latin_profile
+        source=fixture();target=WORK/'unused-digit.pdf'
+        with pikepdf.Pdf.open(source)as pdf:
+            font=pdf.pages[0].Resources.Font['/helv'];font.Widths[ord('1')]=0;pdf.save(target)
+        catalog=font_catalog(target,1,{'Helvetica'})
+        with self.assertRaisesRegex(ValueError,'No source-native encoding'):
+            latin_profile(catalog,'Helvetica','11')
+        self.assertEqual(latin_profile(catalog,'Helvetica','XX')['alias'],'helv')
+
 if __name__=='__main__':unittest.main()

@@ -11,9 +11,10 @@ const grade = (extra={}) => ({ status: 'graded', score: 1, feedback: 'The stated
   evidence: [{ quote: '2 + 2 = 4', reason: 'Correct result' }], ...extra });
 function response(provider, value, extra={}) {
   return new Response(JSON.stringify(provider === 'gemini' ? {
+    modelVersion: 'gemini-2.5-flash',
     candidates: [{ content: { parts: [{ text: JSON.stringify(value) }] }, finishReason: 'STOP' }],
     usageMetadata: { promptTokenCount: 120, candidatesTokenCount: 30, cachedContentTokenCount: 10 }, ...extra,
-  } : { choices: [{ message: { content: JSON.stringify(value) }, finish_reason: 'stop' }],
+  } : { model: 'deepseek-flash', choices: [{ message: { content: JSON.stringify(value) }, finish_reason: 'stop' }],
     usage: { prompt_tokens: 100, completion_tokens: 25, prompt_cache_hit_tokens: 5 }, ...extra }), { headers: { 'Content-Type': 'application/json' } });
 }
 function fixture(values=[read(),grade()]) {
@@ -165,4 +166,105 @@ test('provider response bytes are bounded even when Content-Length is absent',as
   const mock=fixture([new Response(stream)]);
   await assert.rejects(runModelTest(env,body(),mock),error=>error.code==='model_test_invalid_response');
   assert.equal(mock.calls.length,1);assert.equal(cancelled,true);
+});
+
+test('usage separates requested and resolved models, counts thinking once, splits cache, and records bounded wall time',async()=>{
+  const mock=fixture([
+    response('gemini',read(),{usageMetadata:{promptTokenCount:120,cachedContentTokenCount:10,candidatesTokenCount:30,thoughtsTokenCount:7,totalTokenCount:157}}),
+    response('deepseek',grade(),{usage:{prompt_tokens:100,prompt_cache_hit_tokens:5,prompt_cache_miss_tokens:95,completion_tokens:25,
+      completion_tokens_details:{reasoning_tokens:9},total_tokens:125}}),
+  ]);
+  const result=await runModelTest(env,body('gemini-deepseek'),mock),[ocr,grading]=result.usage.stages;
+  assert.equal(ocr.model,'gemini-flash-latest');assert.equal(ocr.resolved_model,'gemini-2.5-flash');
+  assert.equal(grading.model,'deepseek-flash');assert.equal(grading.resolved_model,'deepseek-flash');
+  assert.deepEqual([ocr.input_tokens,ocr.cached_tokens,ocr.uncached_input_tokens,ocr.output_tokens,ocr.reasoning_tokens,ocr.total_tokens],[120,10,110,37,7,157]);
+  assert.deepEqual([grading.input_tokens,grading.cached_tokens,grading.uncached_input_tokens,grading.output_tokens,grading.reasoning_tokens,grading.total_tokens],[100,5,95,25,9,125]);
+  assert.deepEqual([result.usage.input_tokens,result.usage.cached_tokens,result.usage.uncached_input_tokens,
+    result.usage.output_tokens,result.usage.reasoning_tokens,result.usage.total_tokens],[220,15,205,62,16,282]);
+  for(const stage of result.usage.stages){
+    assert.equal(stage.calls,1);assert.equal(stage.usage_known,true);assert.equal(stage.ok,true);
+    assert.equal(new Date(stage.started_at).toISOString(),stage.started_at);
+    assert.equal(new Date(stage.finished_at).toISOString(),stage.finished_at);
+    assert.equal(Date.parse(stage.finished_at)-Date.parse(stage.started_at),stage.ms);
+    assert.equal(stage.output_tokens_per_second,stage.ms>0?stage.output_tokens*1000/stage.ms:null);
+    assert.ok(stage.pricing);assert.ok(stage.pricing.unit_prices_per_token||stage.pricing.unit_price_ranges_per_token);
+  }
+  assert.ok(result.usage.pricing);assert.equal(result.usage.incomplete,undefined);
+});
+
+test('absent usage metadata is unknown, while explicitly reported zero tokens remain known zero',async()=>{
+  const unknown=await runModelTest(env,body('gemini-deepseek'),fixture([
+    response('gemini',read(),{usageMetadata:undefined}),response('deepseek',grade(),{usage:undefined}),
+  ]));
+  for(const stage of unknown.usage.stages){
+    assert.equal(stage.usage_known,false);assert.equal(stage.pricing.total_usd,null);assert.equal(stage.pricing.status,'unknown');
+    for(const field of ['input_tokens','cached_tokens','uncached_input_tokens','output_tokens','reasoning_tokens','total_tokens'])assert.equal(stage[field],null);
+  }
+  assert.equal(unknown.usage.input_tokens,null);assert.equal(unknown.usage.known_tokens.input_tokens,null);assert.equal(unknown.usage.incomplete,true);
+  assert.equal(unknown.usage.pricing.total_usd,null);
+  const zero=await runModelTest(env,body('deepseek-deepseek'),fixture([
+    response('deepseek',read(),{usage:{prompt_tokens:0,completion_tokens:0,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:0,total_tokens:0,completion_tokens_details:{reasoning_tokens:0}}}),
+    response('deepseek',grade(),{usage:{prompt_tokens:0,completion_tokens:0,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:0,total_tokens:0,completion_tokens_details:{reasoning_tokens:0}}}),
+  ]));
+  assert.equal(zero.usage.input_tokens,0);assert.equal(zero.usage.output_tokens,0);assert.equal(zero.usage.reasoning_tokens,0);
+  assert.equal(zero.usage.incomplete,undefined);assert.ok(zero.usage.stages.every(stage=>stage.usage_known));
+  assert.equal(zero.usage.pricing.total_usd,0);
+});
+
+test('partial token metadata preserves reported counts and never invents cache or reasoning amounts',async()=>{
+  const result=await runModelTest(env,body('gemini-deepseek'),fixture([
+    response('gemini',read(),{usageMetadata:{promptTokenCount:120,candidatesTokenCount:30,totalTokenCount:150}}),
+    response('deepseek',grade(),{usage:{prompt_tokens:100,completion_tokens:25,total_tokens:125}}),
+  ]));
+  const [ocr,grading]=result.usage.stages;
+  assert.equal(ocr.cached_tokens,0);assert.equal(ocr.reasoning_tokens,0);assert.equal(ocr.usage_known,true);
+  assert.equal(grading.input_tokens,100);assert.equal(grading.output_tokens,25);assert.equal(grading.total_tokens,125);
+  assert.equal(grading.cached_tokens,null);assert.equal(grading.uncached_input_tokens,null);assert.equal(grading.reasoning_tokens,null);
+  assert.equal(grading.usage_known,false);assert.equal(grading.pricing.total_usd,null);
+  assert.equal(result.usage.input_tokens,220);assert.equal(result.usage.cached_tokens,null);assert.equal(result.usage.known_tokens.cached_tokens,0);
+  assert.equal(result.usage.reasoning_tokens,null);assert.equal(result.usage.incomplete,true);assert.equal(result.usage.pricing.total_usd,null);
+});
+
+test('HTTP 200 model-output parse failures retain usage, resolved model, elapsed time and estimated billing',async()=>{
+  const invalidOcr=response('gemini',read(),{candidates:[{finishReason:'STOP',content:{parts:[{text:'not JSON'}]}}]});
+  await assert.rejects(runModelTest(env,body(),fixture([invalidOcr])),error=>{
+    assert.equal(error.code,'model_test_invalid_response');assert.equal(error.ocr,undefined);assert.equal(error.usage.calls,1);
+    const stage=error.usage.stages[0];assert.equal(stage.ok,false);assert.equal(stage.usage_known,true);
+    assert.equal(stage.resolved_model,'gemini-2.5-flash');assert.equal(stage.input_tokens,120);assert.equal(stage.output_tokens,30);
+    assert.equal(stage.pricing.status,'estimated');assert.ok(stage.pricing.total_usd>0);assert.equal(error.usage.incomplete,true);return true;
+  });
+  const invalidGrade=response('deepseek',grade(),{choices:[{finish_reason:'length',message:{content:'{"score":'}}]});
+  await assert.rejects(runModelTest(env,body('gemini-deepseek'),fixture([read(),invalidGrade])),error=>{
+    assert.equal(error.stage,'grading');assert.equal(error.ocr.text,read().text);assert.equal(error.usage.calls,2);
+    assert.equal(error.usage.input_tokens,220);assert.equal(error.usage.stages[1].ok,false);assert.equal(error.usage.stages[1].usage_known,true);
+    assert.equal(error.usage.stages[1].output_tokens,25);assert.ok(error.usage.stages[1].pricing.total_usd!==null||error.usage.stages[1].pricing.range_usd);return true;
+  });
+});
+
+test('semantic OCR schema failures retain known usage and mark the attempted stage as failed',async()=>{
+  await assert.rejects(runModelTest(env,body(),fixture([response('gemini',{text:'answer'})])),error=>{
+    assert.equal(error.usage.calls,1);assert.equal(error.usage.stages[0].ok,false);assert.equal(error.usage.stages[0].usage_known,true);
+    assert.equal(error.usage.input_tokens,120);assert.ok(error.usage.pricing.total_usd>0);return true;
+  });
+});
+
+test('network failures retain earlier known partial usage but never publish unknown usage as a zero total',async()=>{
+  await assert.rejects(runModelTest(env,body('gemini-deepseek'),fixture([read(),new Error('SECRET network request')])),error=>{
+    const failed=error.usage.stages[1];assert.equal(failed.usage_known,false);assert.equal(failed.ok,false);assert.equal(failed.resolved_model,null);
+    assert.equal(failed.total_tokens,null);assert.equal(error.usage.input_tokens,null);assert.equal(error.usage.output_tokens,null);
+    assert.equal(error.usage.known_tokens.input_tokens,120);assert.equal(error.usage.known_tokens.output_tokens,30);
+    assert.equal(error.usage.pricing.total_usd,null);assert.ok(error.usage.pricing.known_usd>0);
+    assert.ok(!JSON.stringify(error).includes('SECRET'));return true;
+  });
+});
+
+test('invalid token splits and unsafe resolved-model strings cannot fabricate known billing',async()=>{
+  const result=await runModelTest(env,body('deepseek-deepseek'),fixture([
+    response('deepseek',read(),{model:'sk-secret-do-not-publish',usage:{prompt_tokens:100,completion_tokens:25,prompt_cache_hit_tokens:101}}),
+    response('deepseek',grade(),{model:'deepseek-unknown-unpriced',usage:{prompt_tokens:100,completion_tokens:25,prompt_cache_hit_tokens:5,
+      prompt_cache_miss_tokens:95,total_tokens:125,completion_tokens_details:{reasoning_tokens:26}}}),
+  ]));
+  const [ocr,grading]=result.usage.stages;assert.equal(ocr.resolved_model,null);assert.equal(ocr.cached_tokens,null);assert.equal(ocr.usage_known,false);
+  assert.equal(grading.reasoning_tokens,null);assert.equal(grading.usage_known,false);assert.equal(grading.pricing.total_usd,null);
+  assert.ok(!JSON.stringify(result).includes('sk-secret'));assert.equal(result.usage.pricing.total_usd,null);
 });
