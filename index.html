@@ -862,7 +862,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arpf p,.ar .arpf button,.ar .arpf .arinfo{grid-column:1/-1}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=20261030-logo-refine">
+<link rel="stylesheet" href="site-design.css?v=20261030-study">
 </head>
 <body class="hl-site">
 
@@ -4346,6 +4346,8 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
 /* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
 const THY_WHOLE=new Set(["ispho"]);
+// These Eötvös years have both a published Hungarian paper and an archived solution report.
+const EOTVOS_TIMED=new Set([2014,2015,2016,2020]);
 /* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): it is
    practised and sat in the experiment track, with its simulator, so the theory track leaves it out */
 const simThy=(key,yr)=>new Set(((compOf(key)||{}).years||[]).filter(y=>String(y.y)===String(yr.y))
@@ -4354,7 +4356,7 @@ function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   const sim=simThy(key,yr);
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!sim.has(x)&&!/^https?:/.test(t.f[x].paper)), by={};
+  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!sim.has(x)&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&EOTVOS_TIMED.has(+yr.y)&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
   if(key==="ioi"||(compOf(key)&&compOf(key).omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(compOf(key)&&compOf(key).rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
@@ -4951,9 +4953,9 @@ function xmPortalHtml(key,x,mode="exam",year=""){
          ${act.entry?`<a class="go" style="margin-top:8px" href="sim/exam.html${esc(act.entry)}&lang=${lang}">${d.xmResume}</a>`:""}`:""}
        <p style="margin:12px 0 0"><a class="lnk" href="#/lab">${d.xmAll}</a></p></div>`;
   return `${x&&x.off?`<div class="cmnote" style="margin-bottom:14px">${d.xmOff}</div>`:""}
-    <div class="xmnote"><b>${review?(ko?"채점·첨삭만 받기":"Grading and feedback only"):d.xmNotice}</b>${review?`<p>${ko?"연도와 문제를 고른 뒤 이미 푼 종이 답안을 스캔해 제출하세요. 시험 시작이나 타이머 없이 채점·첨삭을 신청할 수 있습니다. 채점 비용은 기존 회차별 토큰 기준과 같으며, 실전 응시 통계에는 포함되지 않습니다.":"Choose a year and paper, then scan and submit work you have already solved. There is no exam or scanning timer. Existing per-session grading token costs apply; these submissions are excluded from timed exam statistics."}</p>`:`<ol>${d.xmSteps.map(t=>`<li>${t}</li>`).join("")}</ol>`}</div>
+    <div class="xmnote"><b>${review?(ko?"채점·첨삭만 받기":"Grading and feedback only"):(ko?"실전 모드에서는 회차별 제한 시간으로 풀이합니다.":"Work within each session's time limit in exam mode.")}</b>${review?`<p>${ko?"연도와 문제를 고른 뒤 이미 푼 답안을 스캔하거나 풀이를 직접 입력해 제출하세요. 시험 시작이나 타이머 없이 채점·첨삭을 신청할 수 있습니다. 채점 비용은 기존 회차별 토큰 기준과 같으며, 실전 응시 통계에는 포함되지 않습니다.":"Choose a year and paper, then scan your completed work or type your solution. There is no exam or scanning timer. Existing per-session grading token costs apply; these submissions are excluded from timed exam statistics."}</p>`:`<ol>${d.xmSteps.map(t=>`<li>${t}</li>`).join("")}</ol>`}</div>
     <div class="xmgrid"><div class="xmbox"><h2>${review?(ko?"채점할 문제 선택":"Choose a paper to grade"):d.xmListH}</h2>${rows.length?`<table><thead><tr><th>${d.xmYear}</th><th>${d.xmName}</th><th class="hs">${review?(ko?"제출":"Submission"):d.xmTime}</th>${review?"":`<th class="hs">${d.xmSat}</th>`}<th>${d.xmMine}</th><th></th></tr></thead>
-      <tbody>${rows.join("")}</tbody></table>`:`<p style="padding:16px">${d.xmNoExam}</p>`}</div>
+      <tbody>${rows.join("")}</tbody></table>`:`<p style="padding:16px">${ko?"선택한 연도·분야에는 연결할 수 있는 회차가 없습니다. 다른 연도·분야를 선택하거나 연습 모드에서 문제지를 확인하세요.":"No session is available for this year and track. Choose another year or track, or view the paper in practice mode."}</p>`}</div>
     <aside class="xmbox xmme"><h2>${review?(ko?"내 채점·첨삭":"My grading & feedback"):d.xmMeH}</h2>${card}</aside></div>`;
 }
 async function xmMount(key){

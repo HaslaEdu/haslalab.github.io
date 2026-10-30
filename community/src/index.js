@@ -1388,6 +1388,14 @@ async function gemini(env, parts, schema, max, m, step) {
   }
 }
 const SOL_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/;
+// Exact existing source records; journal PDFs contain historical problems as well as that year's contest.
+const EOTVOS_SOLUTIONS = {
+  2014: "https://fizikaiszemle.elft.hu/old/archivum/fsz1501/TichyG_VankoP_VighM.pdf",
+  2015: "https://fizikaiszemle.elft.hu/old/archivum/fsz1601/Eotvosversenyrol_2015.pdf",
+  2016: "https://fizikaiszemle.elft.hu/uploads/2017/08/fizszem-20170708-tichy-vanko-vigh_11_09_24_1504170564.3743.pdf",
+  2020: "https://fizikaiszemle.elft.hu/uploads/2021/03/fizszem-202102-tichy-vanko-vigh_12_02_47_1615201367.5205.pdf",
+};
+const labEotvosSolution = (comp, year, source) => comp === "eotvos" && Object.hasOwn(EOTVOS_SOLUTIONS, year) && EOTVOS_SOLUTIONS[year] === source;
 function labReviewPaperAllowed(value) {
   if (typeof value !== "string") return false;
   if (SOL_RE.test(value) || /^pdfx\/[a-z]+\/[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(value)) return true;
@@ -1398,12 +1406,16 @@ function labReviewPaperAllowed(value) {
 async function labReviewPaper(env, paper) {
   if (!labReviewPaperAllowed(paper)) throw new Error("untrusted_problem");
   if (SOL_RE.test(paper)) return labPdf(env, paper);
-  let url = paper.startsWith("pdfx/") ? `https://haslalab.org/${paper}` : paper;
+  const url = paper.startsWith("pdfx/") ? `https://haslalab.org/${paper}` : paper;
+  return labTrustedPdf(url, labReviewPaperAllowed);
+}
+async function labTrustedPdf(initialUrl, allowed) {
+  let url = initialUrl;
   for (let hop = 0; hop < 4; hop++) {
     const response = await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(25000) });
     if ([301, 302, 303, 307, 308].includes(response.status)) {
       const next = new URL(response.headers.get("location"), url).href;
-      if (!labReviewPaperAllowed(next)) throw new Error("untrusted_problem");
+      if (!allowed(next)) throw new Error("untrusted_problem");
       url = next; continue;
     }
     if (!response.ok || +(response.headers.get("content-length") || 0) > 8e6) throw new Error("problem_unavailable");
@@ -1461,6 +1473,7 @@ async function labQualitative(env, s, task, mine, paper, lang, m) {
 /* 1. the marking scheme of one experiment, from its official solution (the English original when there is one) */
 /* one official PDF from the releases: its bytes, null when there is no such file; a passing failure throws (graded again later) */
 async function labPdf(env, src) {
+  if (Object.values(EOTVOS_SOLUTIONS).includes(src)) return labTrustedPdf(src, value => Object.values(EOTVOS_SOLUTIONS).includes(value));
   let missing = 0;
   const names = [...new Set([src.replace(/_KO\.pdf$/, ".pdf"), src])];
   for (const name of names) {
@@ -1478,16 +1491,20 @@ async function labPdf(env, src) {
 }
 async function labScheme(env, s, task, m) {
   const sx = labSrc(s)[task] || {}, src = sx.sol, theory = sx.kind === "theory";
-  if (!src || !SOL_RE.test(src)) return null;
+  const eotvos = task === "T" && labEotvosSolution(s.comp, s.year, src);
+  if (!src || !(SOL_RE.test(src) || eotvos)) return null;
   const key = src + (sx.mark ? "+" + sx.mark : "");
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) return JSON.parse(kept.scheme);
   const res = await labPdf(env, src);
   if (!res) return null;                                              // there is no such solution
   const mark = sx.mark && SOL_RE.test(sx.mark) ? await labPdf(env, sx.mark).catch(e => { console.error("lab marking", e && e.message); return null; }) : null;
+  const schema = eotvos ? { ...SCHEME_SCHEMA, properties: { ...SCHEME_SCHEMA.properties, points_verified: { type: "boolean" } }, required: [...SCHEME_SCHEMA.required, "points_verified"] } : SCHEME_SCHEMA;
   const out = await gemini(env, theory ? [
     { text: [`[TASK: build marking scheme] This is the official solution of the theory paper ${task} of ${s.comp.toUpperCase()} ${s.year}` + (mark ? ", followed by its official marking scheme." : "; it usually contains the official marking scheme."),
       `If the paper is split into problems, keep every problem (task ${task} may be the whole paper, or one problem of it: Problem ${task.replace(/\D/g, "") || task}, Question ${task.replace(/\D/g, "")}).`,
+      ...(eotvos ? [`This journal report contains the Eotvos ${s.year} solutions and may also revisit contests from 25 or 50 years earlier. Use ONLY the exact ${s.year} contest's three tasks; exclude anniversary and historical problems.`,
+        "Set points_verified=true ONLY if this current-year section explicitly prints its problem or item point values. Never invent equal weights, partial credits, a total or a marking rubric. If no explicit point values are printed, return points_verified=false, points=0, items=[], notes=no_official_points."] : []),
       ...(sx.skip ? [`Leave out problems ${sx.skip.replace(/,/g, ", ")} entirely: they are experimental problems, graded separately.`] : []),
       "List every marked item of the marking scheme exactly as printed: its id (prefix it with the problem number when the paper has several, e.g. 1.A.2 or T2-B.3), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
@@ -1509,8 +1526,9 @@ async function labScheme(env, s, task, m) {
       "unit_rule: what the scheme says about units, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),
-  ], SCHEME_SCHEMA, 32768, m, "scheme");
+  ], schema, 32768, m, "scheme");
   const sc = out.raw;
+  if (eotvos && (!sc || sc.points_verified !== true || !Array.isArray(sc.items) || !sc.items.length)) return { unscored: true, points: null, items: [], notes: "no_official_points" };
   if (!sc || !Array.isArray(sc.items) || !sc.items.length) throw new Error("empty scheme");
   sc.items = sc.items.filter(i => i && i.id && i.points > 0).map(i => ({ ...i, id: String(i.id).slice(0, 20) }));
   sc.points = +sc.items.reduce((a, i) => a + i.points, 0).toFixed(2);
@@ -1781,6 +1799,11 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
     try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task, m); }
     catch (e) { console.error("lab scheme", e && e.message); return { status: "error", why: "scheme_failed", points: null, pages: mine.length }; }
     if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, pages: 0 };
+    if (scheme?.unscored) {
+      const paper = labSrc(s)[task]?.paper;
+      if (labReview(s) && paper) return labQualitative(env, s, task, mine, paper, lang, m);
+      return { status: "pending", why: "no_official_points", score: null, points: null, pages: mine.length };
+    }
     if (!scheme) {
       const paper = labSrc(s)[task]?.paper;
       if (labReview(s) && paper) { try { return await labQualitative(env, s, task, mine, paper, lang, m); } catch (error) { console.error("lab qualitative", error?.message); return { status: "error", why: "review_failed", points: null, score: null, pages: mine.length }; } }
@@ -1812,7 +1835,7 @@ function labTotal(tasks, per) {
   const done = rows.every(r => r.status === "graded" || r.status === "empty");
   const status = done ? "graded" : rows.some(r => r.status === "error") ? "error" : "pending";
   const score = rows.reduce((a, r) => a + (r.score || 0), 0), points = rows.reduce((a, r) => a + (r.points || 0), 0);
-  return { status, score: rows.some(r => r.grading_mode === "qualitative_review") ? null : +score.toFixed(2), points: points || null };
+  return { status, score: rows.some(r => r.grading_mode === "qualitative_review" || r.why === "no_official_points") ? null : +score.toFixed(2), points: points || null };
 }
 async function labGradeAll(env, s, lang, only, list) {
   const tasks = JSON.parse(s.tasks);
@@ -2240,7 +2263,7 @@ async function lab(p, m, body, me, req, env, url) {
        competition published one, and kind "theory" for a theory paper */
     for (const k of tasks) {
       const x = srcIn[k] || {}, o = {};
-      if (typeof x.sol === "string" && SOL_RE.test(x.sol)) o.sol = x.sol;
+      if (typeof x.sol === "string" && (SOL_RE.test(x.sol) || k === "T" && labEotvosSolution(comp, year, x.sol))) o.sol = x.sol;
       if (reviewOnly && labReviewPaperAllowed(x.paper)) o.paper = x.paper;
       if (typeof x.mark === "string" && SOL_RE.test(x.mark)) o.mark = x.mark;
       if (x.kind === "theory") o.kind = "theory";

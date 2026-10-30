@@ -18,7 +18,7 @@ const DB = {
 };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const timestamp = Math.floor(Date.now() / 1000), tokens = {};
-for (let id = 1; id <= 12; id++) {
+for (let id = 1; id <= 20; id++) {
   sqlite.prepare('INSERT INTO users(id,username,nickname,pw,role,created_at,exam_tokens) VALUES(?,?,?,?,?,?,?)').run(id, 'review' + id, 'Review ' + id, 'unused', 'user', timestamp, 5);
   const token = String(id).padStart(48, 'a'); tokens[id] = token;
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
@@ -166,4 +166,58 @@ test('qualitative scans preserve the original OCR once, include the image, and r
     }
     assert.equal(reviewCalls, 1, 'oversized OCR never reaches the feedback model');
   } finally { delete env.GEMINI_API_KEY; delete env.UPSTAGE_API_KEY; globalThis.fetch = savedFetch; }
+});
+const eotvosSources = JSON.parse(readFileSync(new URL('../tools/theory/eotvos.json', import.meta.url), 'utf8')).years
+  .filter(y => [2014, 2015, 2016, 2020].includes(y.y)).sort((a, b) => a.y - b.y)
+  .map(y => ({ year: y.y, solution: y.files.find(f => f.kind === 'solution').url }));
+const eotvosSessions = [];
+test('timed Eotvos preserves exactly the four verified journal source URLs for their matching year', async () => {
+  for (const [index, source] of eotvosSources.entries()) {
+    const user = 13 + index, r = await request('/lab/start', { comp: 'eotvos', year: source.year, tasks: ['T'], sources: { T: { kind: 'theory', sol: source.solution } } }, user);
+    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'running'); assert.equal(r.data.session.exam_sec, 18000); assert.equal(r.data.session.review_only, false);
+    const stored = sqlite.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(r.data.session.id);
+    assert.equal(JSON.parse(stored.sources).T.sol, source.solution);
+    eotvosSessions.push({ id: r.data.session.id, user, ...source });
+  }
+});
+test('Eotvos journal source validation rejects wrong years, hosts and unrelated competitions', async () => {
+  const cases = [
+    { comp: 'eotvos', year: 2020, sol: eotvosSources[0].solution },
+    { comp: 'eotvos', year: 2014, sol: eotvosSources[0].solution.replace('fizikaiszemle.elft.hu', 'fizikaiszemle.elft.hu.evil.invalid') },
+    { comp: 'ipho', year: 2014, sol: eotvosSources[0].solution },
+  ];
+  for (const [index, value] of cases.entries()) {
+    const r = await request('/lab/start', { ...value, tasks: ['T'], sources: { T: { kind: 'theory', sol: value.sol } } }, 17 + index);
+    assert.equal(r.status, 200);
+    const stored = sqlite.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(r.data.session.id);
+    assert.equal(JSON.parse(stored.sources).T.sol, undefined);
+  }
+});
+test('a source journal without printed current-year point values remains unscored instead of inventing a rubric', async () => {
+  const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
+  const sitting = eotvosSessions[0];
+  globalThis.fetch = async (url, options) => {
+    if (String(url) === sitting.solution) return new Response('%PDF-1.7\nOfficial Eotvos report with historical tasks');
+    assert.ok(String(url).includes(':generateContent')); calls++;
+    const request = JSON.parse(options.body), prompt = request.contents[0].parts.map(p => p.text || '').join('\n');
+    assert.ok(prompt.includes('ONLY the exact 2014')); assert.ok(prompt.includes('exclude anniversary and historical problems')); assert.ok(prompt.includes('Never invent equal weights'));
+    assert.ok(request.generationConfig.responseSchema.required.includes('points_verified'));
+    return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ points_verified: false, points: 0, items: [], notes: 'no_official_points' }) }] } }] });
+  };
+  try {
+    await request('/lab/sessions/' + sitting.id + '/finish', {}, sitting.user);
+    sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
+    const r = await request('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
+    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'pending'); assert.equal(r.data.session.detail.tasks.T.why, 'no_official_points'); assert.equal(r.data.session.points, null); assert.equal(r.data.session.score, null); assert.equal(calls, 1);
+  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+});
+test('a verified Eotvos journal cannot redirect the Worker to an untrusted host', async () => {
+  const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; const sitting = eotvosSessions[1], fetched = [];
+  globalThis.fetch = async url => { fetched.push(String(url)); assert.equal(String(url), sitting.solution); return new Response('', { status: 302, headers: { location: 'https://evil.invalid/paper.pdf' } }); };
+  try {
+    await request('/lab/sessions/' + sitting.id + '/finish', {}, sitting.user);
+    sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
+    const r = await request('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
+    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.deepEqual(fetched, [sitting.solution]);
+  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
 });

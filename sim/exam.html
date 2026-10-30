@@ -200,7 +200,7 @@
 <div id="layer"></div>
 
 <script src="../vendor/qrcode/qrcode.js"></script>
-<script src="../examdur.js"></script>
+<script src="../examdur.js?v=20261030-study"></script>
 <script src="../paper-languages.js?v=1"></script>
 <script src="labmedal.js"></script>
 <script>
@@ -400,7 +400,16 @@ const R = {
     endNoGrade: "Close without grading", endNoGradeQ: "Close this review? Saved answers can be graded later from the result page.",
     again: "Submit another answer", noTokens: "You do not have enough exam tokens for grading. Top up at #/lab." },
 };
-const t0 = () => { const base = THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang]; return REVIEW ? { ...base, ...R[lang] } : base; };
+const t0 = () => {
+  let base = THY ? { ...T[lang], ...TH[lang], pendingWhy: { ...T[lang].pendingWhy, ...TH[lang].pendingWhy } } : T[lang];
+  if (THY && Q.get("c") === "eotvos") {
+    const ko = lang === "ko", rules = base.rules.slice();
+    rules[1] = ko ? "헝가리어 공식 문제지를 시험 화면에서 엽니다. 주최 측 원문 뷰어에는 내려받기·인쇄 기능이 표시될 수 있습니다. 시험이 끝나면 이 화면의 뷰어가 닫힙니다." : "The official Hungarian paper opens in the exam screen. The organiser's original viewer may show download and print controls. The viewer in this screen closes when the exam ends.";
+    rules[4] = ko ? "제출한 답안은 해당 연도의 공식 해설과 대조합니다. 원문에 배점이 없는 경우 수치 점수를 임의로 만들지 않고 점수 확인을 보류합니다." : "Submitted work is checked against that year's published solutions. When the source gives no point values, numerical grading remains pending rather than inventing a score.";
+    base = { ...base, rules, pendingWhy: { ...base.pendingWhy, no_official_points: ko ? "공식 해설에 배점이 없어 수치 점수 확인을 보류했습니다." : "The published solutions do not give point values, so numerical grading is pending." } };
+  }
+  return REVIEW ? { ...base, ...R[lang] } : base;
+};
 const t = () => { const o = t0(); if (COST() === 1) return o; const c = {}; for (const k in o) c[k] = costify(o[k]); return c; };
 const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
@@ -416,8 +425,9 @@ let paperLanguage = Object.hasOwn(paperOptions, Q.get("pl")) ? Q.get("pl") : Obj
 if (paperLanguage) EX.pdfs = paperOptions[paperLanguage].slice();
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
 const trustedReviewPaper = value => { try { const u = new URL(value); return u.protocol === "https:" && !u.username && !u.password && !u.port && !u.search && !u.hash && ((u.hostname === "ortvay.elte.hu" && /^\/\d{4}\/E\d{2}\.pdf$/.test(u.pathname)) || (u.hostname === "eik.bme.hu" && /^\/~vanko\/fizika\/eotvos\/[A-Za-z0-9_.-]+\.pdf$/.test(u.pathname))); } catch { return false; } };
+const timedEotvosPaper = value => THY && EX.c === "eotvos" && [2014, 2015, 2016, 2020].includes(EX.y) && value === `https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${EX.y}.pdf`;
 const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.length <= 4 && EX.tasks.every(x => /^[A-Z][A-Za-z0-9]{0,3}$/.test(x)) &&
-  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(f) || REVIEW && trustedReviewPaper(f))
+  (THY ? EX.y >= 1960 && EX.pdfs.length === EX.tasks.length && EX.pdfs.every(f => /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(f) || REVIEW && trustedReviewPaper(f) || timedEotvosPaper(f))
        : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.some(f => f !== "-") && EX.files.every(f => f === "-" || /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
@@ -725,7 +735,13 @@ async function drawPaper() {
       out.push(c);
       if (n === 1) { const top = pv.scrollTop; pv.innerHTML = ""; pv.append(c); pv.scrollTop = top; } else pv.append(c);
     }
-  } catch (e) { if (ticket === PAPER.ticket) pv.innerHTML = `<div class="msg">${t().paperFail}</div>`; }
+  } catch (e) {
+    if (ticket !== PAPER.ticket || !PAPER.open || SES?.status !== "running") return;
+    if (timedEotvosPaper(EX.pdfs[i])) {
+      const url = pdfUrl(EX.pdfs[i]);
+      pv.innerHTML = `<div style="height:100%;min-height:70vh;display:flex;flex-direction:column"><p style="padding:8px 12px;margin:0;color:var(--muted)">${lang === "ko" ? "헝가리어 공식 문제지 · 주최 측 원문 뷰어" : "Official Hungarian paper · organiser's original viewer"} · <a href="${esc(url)}" target="_blank" rel="noopener">${lang === "ko" ? "원문 열기" : "Open original"}</a></p><iframe title="${esc(lang === "ko" ? "Eötvös 헝가리어 공식 문제지" : "Eötvös official Hungarian problem paper")}" src="${esc(url)}" style="flex:1;width:100%;min-height:65vh;border:0;background:white" referrerpolicy="no-referrer"></iframe></div>`;
+    } else pv.innerHTML = `<div class="msg">${t().paperFail}</div>`;
+  }
 }
 
 /* inside each simulator (same origin): fold its parts box into the shared kit and let its bench take the room */
@@ -808,6 +824,7 @@ let finishing = false;
 async function finishExam() {
   if (finishing || !SES || SES.status !== "running") return;
   finishing = true; clearInterval(tick);
+  PAPER.ticket = (PAPER.ticket || 0) + 1; closePaper();
   /* switch the experiments off: the frames go blank and are removed, nothing keeps running */
   stations.forEach(st => { try { st.frame.src = "about:blank"; } catch (e) {} st.frame.remove(); });
   stations = []; clearInterval(mirror);
