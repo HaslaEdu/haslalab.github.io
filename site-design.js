@@ -6,6 +6,7 @@ const SITE_DESIGN_TEXT = {
 
 /* Actual repository changes. Add new entries here when publishing archive updates. */
 const SITE_UPDATES = [
+  {date:"2026-10-30",ko:"중학생생물챌린지 공식 예시문항 추가",en:"Official MSKBO sample questions added",href:"#/mskbo"},
   {date:"2026-10-30",ko:"AMC 8·10·12 문제·해설 130회차 추가",en:"130 AMC 8, 10 and 12 papers with solutions added",href:"#/amc"},
   {date:"2026-10-30",ko:"IZhO 2024 한국어 풀이 수식 보완",en:"Full equations restored in IZhO 2024 Korean solutions",href:"#/izho/2024"},
   {date:"2026-10-30",ko:"RuPhO 단계 선택 화면 통합",en:"RuPhO stage selection unified",href:"#/rupho"},

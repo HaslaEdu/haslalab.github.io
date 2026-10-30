@@ -44,7 +44,7 @@ test('server timestamps alone do not reset backoff and OCR queue statuses stay u
 
 function examSyncContext(api,identity=()=> 'test-account'){
   const source=fs.readFileSync(require.resolve('../sim/exam.html'),'utf8'),part=source.slice(source.indexOf('let syncPromise=null'),source.indexOf('\nasync function introView()'));
-  const context=vm.createContext({transport:{fingerprint:identity},requestEpoch:0,SES:null,ME:null,SKEW:0,LABOK:null,REG:null,shown:'',pagesSeen:'',imgCache:new Map(),imgPending:new Map(),URL:{revokeObjectURL(){}},stopTimers(){},OK_EXAM:true,KEY:'ipho2024',EX:{tasks:['E1']},tok:()=>identity(),api,document:{hidden:false,addEventListener(){}},addEventListener(){},poller:null,render(){context.renders=(context.renders||0)+1;},setSession(s){context.SES=s;},Date,encodeURIComponent});
+  const context=vm.createContext({transport:{fingerprint:identity},requestEpoch:0,SES:null,ME:null,SKEW:0,LABOK:null,REG:null,shown:'',pagesSeen:'',imgCache:new Map(),imgPending:new Map(),URL:{revokeObjectURL(){}},stopTimers(){},OK_EXAM:true,REVIEW:false,KEY:'ipho2024',EX:{tasks:['E1']},tok:()=>identity(),api,document:{hidden:false,addEventListener(){}},addEventListener(){},poller:null,render(){context.renders=(context.renders||0)+1;},setSession(s){context.SES=s;},Date,encodeURIComponent});
   vm.runInContext(part,context);return context;
 }
 

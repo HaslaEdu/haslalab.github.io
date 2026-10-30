@@ -4,6 +4,8 @@
 
 원본 파일은 원래 색과 비율을 보존합니다. 다크 모드에서는 별도 SVG 표시본을 사용합니다. 외곽 배경을 투명하게 처리하고 어두운 글자·선을 밝게 표시해 흰 사각 받침 없이 읽을 수 있게 합니다. 표시본과 원본 해시는 [variants.json](variants.json)에 기록하며, `tools/build_logo_variants.py`로 다시 생성할 수 있습니다.
 
+KMO·AMC·Putnam·USABO·USNCO·RuPhO는 글자 내부의 닫힌 공간에 남은 종이색도 다크 표시본에서 제거합니다. AMC·Putnam의 다면체와 USNCO ACS 문장의 흰 면은 보존하며 라이트 표시본은 유지합니다.
+
 | 키 | 구분 | 공식 출처 |
 |---|---|---|
 | ortvay | 공식 문제지 제목 표장 | [출처](https://ortvay.elte.hu/) |
@@ -18,6 +20,7 @@
 | usnco | USNCO 전용 워드마크 | [출처](https://www.sazacs.org/) |
 | apao | 중앙 공식 사이트 공통 표장 | [출처](http://www.issp.ac.ru/iao/apao/img/logo.html) |
 | usabo | 대회·공통 표장 | [출처](https://www.cee.org/programs/usa-biolympiad) |
+| mskbo | 한국중학생생물대회 전용 표장 (현 중학생생물챌린지) | [출처](https://mskbo.bioedu.kr/) |
 | ceso | 대회·공통 표장 | [출처](https://ceso.ssoc.org.cn/) |
 | jeso | 대회·공통 표장 | [출처](https://x.com/jesojp) |
 | usaaao | 주최기관 표장 | [출처](https://x.com/USA__AAO) |

@@ -125,7 +125,7 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
         raise ValueError(f'Incomplete 2023 problem transcription: {year} {part}; expected {expected}')
     original = fitz.open(source)
     out = fitz.open()
-    note = '첨부 기출을 최신 형식으로 재조판한 학습용 편집본 · 공식 배포 원본과 구분'
+    note = False
     reference = INPUT / f'KPhE_2026_T2{part[-1]}_KO.pdf'
     flow = ColumnFlow(out, title, level, note, reference, False, kind='문제')
     for question in questions:
@@ -139,10 +139,15 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
         flow.problem_start(question['number'])
         values = question.get('paragraphs', question.get('statement', []))
         for value in ([values] if isinstance(values, str) else values):
-            flow.paragraph(value)
+            if re.fullmatch(r'\s*\$[^$]+\$\s*', value):
+                flow.display_math(value)
+            else:
+                flow.paragraph(value)
         for fig in figures:
             fig_doc = original if Path(fig['source']).name == source.name else fitz.open(INPUT / fig['source'])
             flow.figure(fig_doc, fig['page'], fig['rect'], max_height=220)
+        for value in question.get('after_figure', []):
+            flow.paragraph(value)
         values = question.get('givens', [])
         flow.boxed_givens([values] if isinstance(values, str) else values)
         for i, value in enumerate(question.get('options', question.get('choices', []))):
@@ -160,8 +165,7 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
 def transcribed_key(target, title, level, values, marked=False, reference=None):
     doc = fitz.open()
     page = doc.new_page(width=A4.width, height=A4.height)
-    note = ('첨부 문제지의 답 표시를 전사한 정답표 · 공식 별도 정답표가 아님' if marked else
-            '사용자 첨부 공식 정답표를 대조하여 옮긴 편집본')
+    note = False
     frame(page, title, level, 1, 1, note, header_source=reference)
     rows = (len(values) + 1) // 2
     height = min(48, 680 / max(1, rows))

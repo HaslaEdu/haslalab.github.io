@@ -2,7 +2,7 @@
    labExamSec (community/src/index.js), and its clock is the one that counts: keep the two alike.
 
    - IPhO, APhO, EuPhO and the rest: five hours, as the experimental exam on the day.
-   - OPhO: three hours.  USAPhO 2022 (team selection test): «3 hours allowed», as on its paper.
+   - Physics Cup, Ortvay, OPhO and WOPHO use untimed review only. USAPhO 2022: «3 hours allowed».
    - RMPh: 4 h 30 min, the length of a contest day in its regulation.
    - NBPhO: the organisers publish no time for the experiments alone, so the exam gets the year's
      competition time shared out evenly over its problems, times the experiments sat:
@@ -23,10 +23,10 @@
   var THEORY = { usapho: 3 * 3600, ijso: 3 * 3600, ibo: 3 * 3600, ieso: 3 * 3600, opho: 3 * 3600,
     cpho: 3 * 3600, imo: 9 * 3600, usaaao: 3 * 3600, useso: 3 * 3600, jeso: 3 * 3600 };
   function sec(comp, year, n, theory) {
+    if (['physcup', 'ortvay', 'opho', 'wopho'].indexOf(comp) >= 0) return 0;
     if (theory === 'mixed') return comp === 'nbpho' && NBPHO[year] ? NBPHO[year][0] * 60 : 5 * 3600;   // NBPhO's whole booklet at once
     if (theory) return THEORY[comp] || 5 * 3600;
     n = Math.max(1, n || 1);
-    if (comp === 'opho') return 3 * 3600;
     if (comp === 'usapho' && +year === 2022) return 3 * 3600;
     if (comp === 'rmph') return 4.5 * 3600;
     if (comp === 'nbpho' && NBPHO[year]) return Math.round(NBPHO[year][0] / NBPHO[year][1] * n) * 60;

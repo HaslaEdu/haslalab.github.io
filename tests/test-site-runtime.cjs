@@ -35,7 +35,8 @@ function app({preload=false}={}){
     localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)},sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},
     addEventListener:(event,fn)=>listeners[event]=fn,matchMedia:()=>({matches:false}),setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},scrollTo(){}};
   vm.createContext(context);
-  for(const file of ['site-catalogue.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context,{filename:file});
+  for(const file of ['site-catalogue.js','paper-languages.js','examdur.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context,{filename:file});
+  context.HLexam=context.window.HLexam||context.HLexam;
   if(preload)for(const file of ['theory.js','contest-exams.js','iypt.js','usaco.js','rupho-selection.js'])vm.runInContext(read(file),context,{filename:file});
   vm.runInContext(main.replace(/\nrender\(\);\s*$/,''),context,{filename:'index-main.js'});
   const run=code=>vm.runInContext(code,context);
@@ -62,6 +63,42 @@ test('individual AMC, KMO and chemistry chunks preserve paper links and scores w
   assert.deepEqual(plain(lean.context.window.CONTEST_EXAMS.entries).sort((a,b)=>a.id.localeCompare(b.id)),plain(full.context.window.CONTEST_EXAMS.entries).sort((a,b)=>a.id.localeCompare(b.id)));
   assert.equal(lean.run('DATA.kmo.years.length'),full.run('DATA.kmo.years.length'));
   assert.equal(lean.run('Object.keys(THEORY).length'),3);
+});
+
+test('lazy chunks retain every source export, general instructions and corrected KPhE PDF versions',()=>{
+  const full={window:{}};vm.runInNewContext(read('theory.js'),full);
+  assert.deepEqual(Object.keys(full.window).sort(),['GENERAL','KPHE_PDF_VERSIONS','THEORY','THEORY_META']);
+  vm.runInNewContext(read('contest-exams.js'),full);
+  const split={window:{}};
+  for(const key of catalogue.theoryKeys)vm.runInNewContext(read(catalogue.versions['theory:'+key].split('?')[0]),split);
+  for(const key of ['THEORY','THEORY_META','GENERAL','KPHE_PDF_VERSIONS'])assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
+  const lean=app();lean.load('theory:ipho');lean.load('theory:kphe');
+  assert.deepEqual(plain(lean.run('GENERAL.ipho')),plain(full.window.GENERAL.ipho));
+  const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),file+'?v='+version);
+  const [year,entries]=Object.entries(full.window.GENERAL.ipho)[0];const links=lean.run(`genLinks('ipho',{y:${JSON.stringify(year)}})`);assert.ok(links.includes(entries[0][1]),'the year retains its general instructions link');
+});
+
+test('resource-only MSKBO stays visible and honest before paper data loads',()=>{
+  const lean=app(),full=app({preload:true});
+  assert.deepEqual(plain(lean.run('DATA.mskbo.resources')),plain(full.run('DATA.mskbo.resources')));
+  assert.equal(lean.run('DATA.mskbo.years.length'),0);
+  const page=lean.run('lang="en";viewComp("mskbo")');assert.ok(page.includes('Official sample questions'));assert.ok(page.includes('https://mskbo.bioedu.kr/'));assert.ok(!page.includes('#/mskbo/2026'));
+});
+
+test('lazy native papers and year-specific standalone review keep language and mode arguments',()=>{
+  const lean=app();for(const key of ['nbpho','eotvos','physcup'])lean.load('theory:'+key);
+  lean.run('lang="en";track="thy"');
+  const combined=lean.run('viewYear("nbpho",2026,"review")');assert.match(combined,/data-mode="review" data-year="2026"/);assert.ok(combined.includes('review=1'));
+  const native=lean.run('viewYear("eotvos",2020,"exam")');assert.ok(native.includes('pl=hu'));assert.ok(native.includes('Eotvos_2020.pdf'));
+  const open=lean.run('viewComp("physcup","exam")');assert.ok(open.includes('No time limit'));assert.ok(open.includes('review=1'));assert.equal(/class="ex /.test(open),false);
+});
+
+test('async portal hydration retains the selected year and review mode while omitting timed statistics',async()=>{
+  const a=app(),calls=[];a.load('theory:nbpho');a.run('lang="en";track="thy"');
+  const portal=a.node('xmRoot');Object.assign(portal.dataset,{key:'nbpho',mode:'review',year:'2026'});
+  a.context.fetch=async(url)=>{calls.push(url);return{ok:true,json:async()=>url.includes('/lab/stats')?{exams:{}}:{user:null,sessions:[],health:{lab:true,v:5}}};};
+  await a.run('xmMount("nbpho")');assert.equal(calls.length,1);assert.ok(calls[0].includes('/lab/bootstrap'));assert.ok(portal.innerHTML.includes('No time limit'));assert.ok(portal.innerHTML.includes('y=2026'));assert.ok(portal.innerHTML.includes('review=1'));assert.ok(!portal.innerHTML.includes('y=2025'));
+  calls.length=0;portal.dataset.mode='exam';await a.run('xmMount("nbpho")');assert.equal(calls.length,2);assert.ok(calls.some(url=>url.includes('/lab/stats')));assert.ok(!portal.innerHTML.includes('review=1'));assert.ok(portal.innerHTML.includes('y=2026'));
 });
 
 test('loading RuPhO after another archive keeps stages and does not duplicate year problems on repeated hydration',()=>{
@@ -133,6 +170,18 @@ test('the exam bootstrap shares identity with the account chip without a second 
   assert.equal(b.tokens,3);assert.equal(user.nickname,'A');assert.equal(calls.length,1);assert.ok(calls[0].includes('/lab/bootstrap?include=health,sessions'));
   calls.length=0;
   await Promise.all([a.run('cmLabBootstrap({id:12,include:"health,sessions"})'),a.run('cmLabBootstrap({id:12,include:"sessions,health"})')]);assert.equal(calls.length,1);assert.ok(calls[0].includes('&id=12'));
+});
+
+test('only a missing bootstrap endpoint uses the older parallel reads during deployment or rollback',async()=>{
+  const a=app(),calls=[];a.store.set('hlCmTok','account-A');
+  const data={'/api/me':{user:{nickname:'A'}},'/api/lab/active':{tokens:4,active:null,now:100},'/api/lab/sessions':{sessions:[{id:12}]},'/api/health':{lab:true,v:5},'/api/lab/sessions/12':{session:{id:12,user_id:1}}};
+  a.context.fetch=async url=>{calls.push(url);const u=new URL(url);return u.pathname==='/api/lab/bootstrap'?{ok:false,status:404,json:async()=>({error:'not_found'})}:{ok:true,json:async()=>data[u.pathname]};};
+  const [first,second]=await Promise.all([a.run('cmLabBootstrap({id:12})'),a.run('cmLabBootstrap({id:12})')]);assert.equal(first.tokens,4);assert.equal(first.session.id,12);assert.equal(second.user.nickname,'A');assert.equal(calls.length,6);assert.equal(a.run('cm.me.nickname'),'A');
+  for(const status of [401,503]){
+    const b=app(),seen=[];b.store.set('hlCmTok','account-A');b.context.fetch=async url=>{seen.push(url);return{ok:false,status,json:async()=>({error:status===401?'login_required':'server_error'})};};await assert.rejects(b.run('cmLabBootstrap()'));assert.equal(seen.length,1,'fallback must not hide authentication or server errors');
+  }
+  const b=app(),seen=[];b.context.fetch=async url=>{seen.push(url);throw Error('offline');};await assert.rejects(b.run('cmLabBootstrap()'));assert.equal(seen.length,1,'network failure must not fan out into more failing requests');
+  const c=app();let finish;c.store.set('hlCmTok','account-A');c.context.fetch=()=>new Promise(resolve=>finish=resolve);const stale=c.run('cmLabBootstrap()');await tick();c.run('cmTok("account-B")');finish({ok:false,status:404,json:async()=>({error:'not_found'})});await assert.rejects(stale,error=>error.code==='account_changed');assert.equal(c.store.get('hlCmTok'),'account-B');assert.equal(c.run('cm.me'),null);
 });
 
 test('community list content starts before identity, health and board widgets finish',async()=>{

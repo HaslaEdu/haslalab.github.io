@@ -21,8 +21,16 @@
       "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=76 also clears enclosed light-paper counters and gaps; 199 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 76,
+        "y": 0,
+        "width": 128,
+        "height": 70,
+        "additionalPaperPixels": 199
+      }
     },
     "apao": {
       "original": "logo/apao.png",
@@ -573,8 +581,16 @@
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 382 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 246,
+        "height": 49,
+        "additionalPaperPixels": 382
+      }
     },
     "kphe": {
       "original": "logo/kphe.png",
@@ -616,6 +632,26 @@
       "sourceSha256": "06b366d04adeb2495498ba25ca2f631484d3ba132a9c2133604753b98abf1b0f",
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "mskbo": {
+      "original": "logo/mskbo.png",
+      "light": "logo/light/mskbo.svg",
+      "dark": "logo/dark/mskbo.svg",
+      "sourceWidth": 2000,
+      "sourceHeight": 504,
+      "viewBox": [
+        33,
+        11,
+        1848,
+        477
+      ],
+      "aspectRatio": 3.874214,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "4945e2f47a35ef093dee3fca752699f5ce0050c088374f6bb313e5ca6af193c0",
+      "notes": [
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -746,8 +782,16 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=195 also clears enclosed light-paper counters and gaps; 1045 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 195,
+        "y": 0,
+        "width": 488,
+        "height": 178,
+        "additionalPaperPixels": 1045
+      }
     },
     "rmph": {
       "original": "logo/rmph.png",
@@ -789,8 +833,16 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 538,
+        "height": 76,
+        "additionalPaperPixels": 405
+      }
     },
     "ruphow": {
       "original": "logo/ruphow.png",
@@ -812,8 +864,16 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 538,
+        "height": 76,
+        "additionalPaperPixels": 405
+      }
     },
     "ruphox": {
       "original": "logo/ruphox.png",
@@ -835,8 +895,16 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 538,
+        "height": 76,
+        "additionalPaperPixels": 405
+      }
     },
     "ruphoy": {
       "original": "logo/ruphoy.png",
@@ -858,8 +926,16 @@
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 405 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 538,
+        "height": 76,
+        "additionalPaperPixels": 405
+      }
     },
     "usaaao": {
       "original": "logo/usaaao.png",
@@ -902,8 +978,16 @@
       "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=0 also clears enclosed light-paper counters and gaps; 1530 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 0,
+        "y": 0,
+        "width": 300,
+        "height": 136,
+        "additionalPaperPixels": 1530
+      }
     },
     "usaco": {
       "original": "logo/usaco.png",
@@ -1011,8 +1095,16 @@
       "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
+        "In dark mode the reviewed flat-paper wordmark region x>=300 also clears enclosed light-paper counters and gaps; 5589 additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
-      ]
+      ],
+      "darkWordmarkPaperCleanup": {
+        "x": 300,
+        "y": 0,
+        "width": 943,
+        "height": 290,
+        "additionalPaperPixels": 5589
+      }
     },
     "wopho": {
       "original": "logo/wopho.png",

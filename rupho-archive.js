@@ -10,6 +10,11 @@
   let catalogues={};
   const byKey=key=>stages.find(s=>s.key===key);
   const byId=id=>stages.find(s=>s.id===String(id||"").toLowerCase())||stages[0];
+  function pathParts(value,mode=""){
+    let decoded=String(value||"");try{decoded=decodeURIComponent(decoded);}catch(e){}
+    const parts=decoded.split("/").filter(Boolean),isMode=x=>x==="exam"||x==="review";
+    return {year:isMode(parts[0])?"":parts[0]||"",mode:isMode(mode)?mode:isMode(parts[0])?parts[0]:isMode(parts[1])?parts[1]:""};
+  }
   function initialize(data,theory){
     catalogues={};
     for(const stage of stages){
@@ -35,14 +40,14 @@
     const [path,query=""]=String(hash||"").replace(/^#\/?/,"").split("?");
     const parts=path.split("/").filter(Boolean),legacy=byKey(parts[0]);
     const stage=parts[0]!=="rupho"&&legacy?legacy:byId(new URLSearchParams(query).get("stage"));
-    return {stage:stage.id,key:stage.key,year:parts[1]||"",legacy:!!legacy&&parts[0]!=="rupho"};
+    return {stage:stage.id,key:stage.key,...pathParts(parts.slice(1).join("/")),legacy:!!legacy&&parts[0]!=="rupho"};
   }
-  function href(key,year=""){
-    const stage=byKey(key)||byId(key);
-    return "#/rupho"+(year?"/"+encodeURIComponent(year):"")+"?stage="+stage.id;
+  function href(key,year="",mode=""){
+    const stage=byKey(key)||byId(key),parts=pathParts(year,mode);
+    return "#/rupho"+(parts.year?"/"+encodeURIComponent(parts.year):"")+(parts.mode?"/"+parts.mode:"")+"?stage="+stage.id;
   }
   function canonical(hash){
-    const r=route(hash);return r.legacy?href(r.key,r.year):null;
+    const r=route(hash);return r.legacy||(/%2f/i.test(String(hash).split("?")[0])&&/^#\/?rupho(?:[wxy])?\//.test(hash))?href(r.key,r.year,r.mode):null;
   }
   function availableYear(key,year){
     return (catalogues[key]?.years||[]).some(y=>String(y.y)===String(year));
@@ -51,8 +56,8 @@
     const active=byKey(key);if(!active)return "";
     const label=lang==="ko"?"RuPhO 단계 선택":"RuPhO stage";
     return `<nav class="rupho-stages" aria-label="${label}">${stages.filter(s=>catalogues[s.key]).map(s=>{
-      const target=year==="exam"||availableYear(s.key,year)?year:"";
-      return `<a href="${href(s.key,target)}"${s===active?' aria-current="page"':""}>${s.label[lang]}</a>`;
+      const parts=pathParts(year),selectedYear=availableYear(s.key,parts.year)?parts.year:"";
+      return `<a href="${href(s.key,selectedYear,parts.mode)}"${s===active?' aria-current="page"':""}>${s.label[lang]}</a>`;
     }).join("")}</nav>`;
   }
   function decorate(key,html,year,lang){

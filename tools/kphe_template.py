@@ -33,9 +33,26 @@ FONTS = {'body': fitz.Font(fontfile=str(FONT)), 'head': fitz.Font(fontfile=str(H
 FONT_PATHS = {'body': FONT, 'head': HEAD_FONT, 'math': MATH_FONT,
               'page': font_path('Batang'), 'number': font_path('TimesNewRomanPS-BoldMT')}
 TOP, BOTTOM = 70.6, 786.0
-COLUMNS = ((46.5, 291.5), (308.0, 549.0))
+COLUMNS = ((46.4, 290.9), (307.1, 551.6))
 _REGISTERED_MATH_FONTS = set()
 _EQUATION_FACE = 'HancomEQN'
+_EQUATION_RATIO = .83
+
+
+@lru_cache(None)
+def typography_profile(source=None):
+    name = Path(str(source)).name if source else 'KPhE_2026_T2c_KO.pdf'
+    if name.startswith('KPhE_2023_'):
+        name = f'KPhE_2026_T2{name.split("_")[2][-1]}_KO.pdf'
+    profiles = json.loads((ROOT/'tools/kphe_design_profiles.json').read_text(encoding='utf8'))
+    profile = profiles['profiles'].get(name)
+    if not profile:
+        return {'body_font':'Gulim','body_point':9.81,'equation_font':'HancomEQN','equation_ratio':.83}
+    body = profile['body'][0]
+    point = profile['dominant_math_point'] or body['point']
+    ratio = min((1., .83, 11/12), key=lambda value:abs(value-point/body['point']))
+    return {'body_font':body['font'],'body_point':body['point'],
+        'equation_font':profile['dominant_math_font'] or 'HyhwpEQ','equation_ratio':ratio}
 
 @lru_cache(None)
 def _math_cache():
@@ -65,13 +82,14 @@ def _vector_document(asset):
     return fitz.open('pdf',result)
 
 def set_typography(source=None):
-    global FONT, _EQUATION_FACE
-    _EQUATION_FACE = 'HyhwpEQ' if source and '2024_T2d' in str(source) else 'HancomEQN'
-    if source and original_body(source) == 'Haansoft Batang':
+    global FONT, _EQUATION_FACE, _EQUATION_RATIO
+    profile = typography_profile(str(source) if source else None)
+    _EQUATION_FACE, _EQUATION_RATIO = profile['equation_font'], profile['equation_ratio']
+    if source and profile['body_font'] == 'Haansoft Batang':
         from kphe_source_fonts import legacy_body_font
         FONT = legacy_body_font(source)
     else:
-        FONT = font_path(original_body(source))
+        FONT = font_path(profile['body_font'])
     FONT_PATHS['body'] = FONT
     FONTS['body'] = fitz.Font(fontfile=str(FONT))
     font_for.cache_clear()
@@ -149,6 +167,41 @@ def wrap(value, width, size=9.8, style='body'):
 def math_pdf(expression, size):
     return _math_pdf(expression,size,_EQUATION_FACE)
 
+
+def equation_pdf(expression, point_size):
+    """Typeset at a literal equation point size, independent of body-text size."""
+    return math_pdf(expression, point_size/.83)
+
+
+def inline_equation_pdf(expression, body_size=9.8):
+    return math_pdf(expression,body_size*_EQUATION_RATIO/.83)
+
+
+def math_pdf_transparent(expression, size):
+    """Use the same glyphs without Matplotlib's white page behind diagram labels."""
+    return _transparent_math_pdf(expression,size,_EQUATION_FACE)
+
+
+@lru_cache(maxsize=1024)
+def _transparent_math_pdf(expression,size,face):
+    original,width,height,depth=_math_pdf(expression,size,face)
+    doc=fitz.open('pdf',original.tobytes())
+    page=doc[0]
+    paths=page.get_drawings()
+    if paths:
+        first=paths[0]
+        full_page=max(abs(a-b) for a,b in zip(first['rect'],page.rect))<.01
+        if first['type']=='f' and first['fill']==(1.,1.,1.) and full_page and first['seqno']==0:
+            changed=False
+            for xref in page.get_contents():
+                data=doc.xref_stream(xref)
+                # This renderer emits the checked background as its first fill.
+                data,count=re.subn(rb'(?m)^f\s*$',b'n',data,count=1)
+                if count:
+                    doc.update_stream(xref,data);changed=True;break
+            if not changed:raise ValueError('Could not remove the checked equation background')
+    return doc,width,height,depth
+
 @lru_cache(maxsize=2048)
 def _math_pdf(expression, size, face):
     """Typeset inline fractions/radicals as vector PDF, preserving a real baseline."""
@@ -224,7 +277,7 @@ def rich_tokens(value, size):
     tokens, offset = [], 0
     for match in re.finditer(r'\$([^$]+)\$', value):
         tokens.extend(('text', ch, 0 if ch == '\n' else glyph_width(ch, size), size * 1.15, size * .25) for ch in value[offset:match.start()])
-        doc, width, height, descent = math_pdf(match.group(1), size)
+        doc, width, height, descent = inline_equation_pdf(match.group(1), size)
         tokens.append(('math', doc, width, height - descent, descent))
         offset = match.end()
     tokens.extend(('text', ch, 0 if ch == '\n' else glyph_width(ch, size), size * 1.15, size * .25) for ch in value[offset:])
@@ -412,7 +465,7 @@ class ColumnFlow:
         self.reserve(55, False)
         self.question = number
         self.start_region()
-        self.indent = 11
+        self.indent = 12.3
         left = COLUMNS[self.column][0]
         text(self.page, (left, self.y+1.9, left+10.5, self.y+17), f'{number}.', 8.15, style='number')
 
@@ -442,6 +495,21 @@ class ColumnFlow:
             page.draw_line(a,b,width=.4)
         self.y = bottom+15
         self.right_inset = previous_inset
+
+    def display_math(self, value, point_size=9.81):
+        """Separate equations use their own size and full-column centering."""
+        expression = value.strip()
+        if expression.startswith('$') and expression.endswith('$'):
+            expression = expression[1:-1]
+        source, width, height, _ = equation_pdf(expression, point_size)
+        if width > COLUMNS[self.column][1]-COLUMNS[self.column][0]:
+            raise ValueError(f'Display equation must be split: {expression}')
+        self.reserve(height+25)
+        left, right = COLUMNS[self.column]
+        x=(left+right-width)/2
+        self.y += 7
+        self.page.show_pdf_page(fitz.Rect(x,self.y,x+width,self.y+height),source,0)
+        self.y += height+18
 
     def paragraph_height(self, value, size=9.8, gap=8):
         if '$' not in value:
@@ -517,18 +585,23 @@ class ColumnFlow:
         self.y += gap
 
     def figure(self, source, page, rect, max_height=172):
+        source_name = Path(source.name).name
+        if source_name.startswith('KPhE_2023_'):
+            from kphe_redraw import native_figure, dimensions
+            asset,item = native_figure(source_name,page,rect)
+            width,height = dimensions(item,self.width)
+            self.reserve(height+12)
+            width,height = dimensions(item,self.width)
+            vector=fitz.open(asset) if asset.suffix=='.pdf' else _vector_document(asset)
+            x=self.x+(self.width-width)/2
+            self.page.show_pdf_page(fitz.Rect(x,self.y,x+width,self.y+height),vector,0)
+            self.y += height+12
+            return
         clip = fitz.Rect(rect)
         h = min(max_height, self.width * clip.height / clip.width)
         self.reserve(h + 10)
         target = fitz.Rect(self.x, self.y, self.x + self.width, self.y + h)
-        source_name = Path(source.name).name
-        if source_name.startswith('KPhE_2023_'):
-            from kphe_figures import vector_path
-            asset = vector_path(source_name, page, list(clip))
-            vector = _vector_document(asset)
-            self.page.show_pdf_page(target, vector, 0, keep_proportion=True)
-        else:
-            self.page.show_pdf_page(target, source, page - 1, clip=clip, keep_proportion=True)
+        self.page.show_pdf_page(target, source, page - 1, clip=clip, keep_proportion=True)
         self.y += h + 12
 
     def review_notice(self):

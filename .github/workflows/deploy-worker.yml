@@ -33,6 +33,7 @@ jobs:
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
+      - run: node --test test-review-mode.mjs ../tests/test-study-navigation.cjs ../tests/test-paper-languages.cjs ../tests/test-contest-grading-ui.cjs ../tests/test-lab-review-records.cjs ../tests/test-external-paper-viewer.cjs
       - run: node --test test-provision-jobs.mjs
       - run: node provision-jobs.mjs
         env:

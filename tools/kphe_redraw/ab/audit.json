@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "assets": 37,
+  "source_contact_sheets": 4,
+  "source_native_comparison_sheets": 5,
+  "final_pdf_renderer": "Poppler pdftoppm, 160 DPI",
+  "raster_image_xobjects": 0,
+  "minimum_plaintext_size_pt": 8.4986,
+  "clipped_plaintext_runs": [],
+  "checked": "labels, numerical values, axis units, resistor and meter connections, dashed lines, arrow directions, wave crest/compression alignment, fill regions and caption order",
+  "source_order_reflows": {
+    "T2b5": [
+      "ㄱ",
+      "ㄴ",
+      "ㄷ",
+      "ㄹ"
+    ],
+    "T2b11": [
+      "가",
+      "나"
+    ],
+    "T2b20": [
+      "가",
+      "나"
+    ]
+  },
+  "notes": [
+    "T1b16 meters each span two resistors.",
+    "T1b26 all three longitudinal compressions align with transverse crests.",
+    "T2b11 outer scale -1..5 A; inner scale -100..500 mA; needle 2/200; terminal connections 500 mA and +.",
+    "T2b20 text is real 9 pt native table text; A/B/C/D placeholders are preserved.",
+    "T2b11 final independent review corrections: two internal terminal leads and inner mA unit restored; external callout arrow cannot be confused with circuit wiring."
+  ],
+  "independent_review": {
+    "status": "passed",
+    "figures": [
+      "T1b16",
+      "T1b26",
+      "T2b11"
+    ],
+    "reviewer": "originals_dates_audit"
+  }
+}

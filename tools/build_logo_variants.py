@@ -34,6 +34,15 @@ DARK_GAMMA = {"cpho": 0.40, "rupho": 0.40, "ruphow": 0.40, "ruphox": 0.40,
 # floor lifts those reviewed marks on dark UI; white stays white and alpha stays.
 DARK_FLOOR = {key: 0.20 for key in ("iao", "owao", "apho", "eupho", "kphe")}
 PALE_INK = {"imcho"}  # The published IMChO mark is effectively one dark navy ink.
+# Reviewed flat-paper wordmarks: white enclosed by A/O/P/etc. is paper, not
+# white ink. Preserve the illustrated emblem to the left of these x positions.
+# KMO/USABO/RuPhO are entirely flat colored wordmarks with negative-space holes.
+PAPER_WORDMARK_X = {"kmo": 0, "amc": 76, "putnam": 195, "usabo": 0,
+                    "usnco": 300, "rupho": 0, "ruphow": 0, "ruphox": 0,
+                    "ruphoy": 0}
+PAPER_WORDMARK_SIZE = {"kmo": (246, 49), "amc": (204, 70), "putnam": (683, 178),
+                       "usabo": (300, 136), "usnco": (1243, 290),
+                       **{key: (538, 76) for key in ("rupho", "ruphow", "ruphox", "ruphoy")}}
 
 
 def checked_svg(data: bytes) -> ET.Element:
@@ -155,6 +164,30 @@ def background_mask(rgba: np.ndarray):
     return removed, kind
 
 
+def dark_wordmark_mask(key: str, rgba: np.ndarray, exterior: np.ndarray):
+    """Clear reviewed white-paper counters without erasing white emblem art.
+
+    A flood fill from the image edge cannot reach a letter's closed counter.
+    These source-specific wordmark regions have no white ink, so the same light
+    paper colors can safely be removed there even when enclosed by colored ink.
+    The source raster and the light-mode mask are deliberately left unchanged.
+    """
+    if key not in PAPER_WORDMARK_X:
+        return exterior, None
+    if (rgba.shape[1], rgba.shape[0]) != PAPER_WORDMARK_SIZE[key]:
+        raise ValueError(f"Review the wordmark paper region after replacing {key}'s source artwork")
+    rgb = rgba[:, :, :3].astype(np.float32)
+    luminance = rgb @ np.array([0.2126, 0.7152, 0.0722])
+    # Include the mild pink/gray paper field in the official USABO source and
+    # JPEG near-whites. Dark/color strokes remain outside this paper range.
+    paper = (luminance >= 215) & (np.ptp(rgb, axis=2) <= 60) & (rgba[:, :, 3] > 0)
+    start = PAPER_WORDMARK_X[key]
+    paper[:, :start] = False
+    extra = paper & ~exterior
+    return exterior | paper, {"x": start, "y": 0, "width": rgba.shape[1] - start,
+                              "height": rgba.shape[0], "additionalPaperPixels": int(extra.sum())}
+
+
 def bounds(bits: np.ndarray):
     ys, xs = np.nonzero(bits)
     if not len(xs):
@@ -219,6 +252,8 @@ def build(path: Path):
     floor = DARK_FLOOR.get(path.stem, 0)
     if rgba is None:
         removed = None
+        dark_removed = None
+        wordmark_cleanup = None
         view = [0, 0, width, height]
         mode = "preserve-color"
         neutral = None
@@ -230,6 +265,7 @@ def build(path: Path):
         luminance = rgb @ np.array([0.2126, 0.7152, 0.0722])
         chroma = np.ptp(rgb, axis=2)
         removed, background = background_mask(rgba)
+        dark_removed, wordmark_cleanup = dark_wordmark_mask(path.stem, rgba, removed)
         visible = (alpha > 12) & ~removed
         ink = visible & (luminance < 235) if background != "dark" else visible & (luminance > 40)
         dark_ink = background == "dark"
@@ -259,18 +295,23 @@ def build(path: Path):
         view = bounds(visible)
         if background:
             notes.append(f"Only edge-connected {background} background is removed by a vector mask; enclosed light areas are preserved.")
+        if wordmark_cleanup:
+            notes.append(f"In dark mode the reviewed flat-paper wordmark region x>={wordmark_cleanup['x']} also clears enclosed light-paper counters and gaps; {wordmark_cleanup['additionalPaperPixels']} additional paper pixels removed. Any illustrated emblem to its left keeps its original enclosed white artwork. Light mode is unchanged.")
         notes.append("Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged.")
     dark = LOGO / "dark" / (path.stem + ".svg")
     light = LOGO / "light" / (path.stem + ".svg")
-    dark.write_text(svg_variant(data, mime, width, height, view, removed, mode, neutral, gamma, floor), encoding="utf-8")
+    dark.write_text(svg_variant(data, mime, width, height, view, dark_removed, mode, neutral, gamma, floor), encoding="utf-8")
     # Keep a published dark field in light mode: white published lettering needs
     # that native background. This is not an added plate.
     light_removed = None if background == "dark" else removed
     light.write_text(svg_variant(data, mime, width, height, view, light_removed, "preserve-color"), encoding="utf-8")
-    return {"original": path.relative_to(ROOT).as_posix(), "light": light.relative_to(ROOT).as_posix(),
+    result = {"original": path.relative_to(ROOT).as_posix(), "light": light.relative_to(ROOT).as_posix(),
             "dark": dark.relative_to(ROOT).as_posix(), "sourceWidth": width, "sourceHeight": height,
             "viewBox": view, "aspectRatio": round(view[2] / view[3], 6), "mode": mode,
             "backgroundRemoved": background, "sourceSha256": source_sha, "notes": notes}
+    if wordmark_cleanup:
+        result["darkWordmarkPaperCleanup"] = wordmark_cleanup
+    return result
 
 
 def main():

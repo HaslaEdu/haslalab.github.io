@@ -84,3 +84,39 @@ test('paper scans are reviewed once after working time, without extending the or
   const loaded=core.normalize(r,base);assert.deepEqual(loaded.paperSubmission,{at:deadline+4000,reviewed:true,pages:2});
   assert.equal(core.submitPaper(loaded,base,{1:1},deadline+6000,{complete:true}),false);
 });
+
+test('grading-only answers have no deadline and remain editable after reload days later',()=>{
+  const r=core.create(base,1000,'online',true),later=1000+7*24*60*60*1000;
+  assert.equal(r.deadline,null);
+  assert.equal(core.remaining(r,later),Infinity);
+  assert.equal(core.setAnswer(r,base,1,3,later),true);
+  const loaded=core.normalize(JSON.parse(JSON.stringify(r)),base);
+  assert.equal(loaded.untimed,true);assert.equal(loaded.deadline,null);
+  assert.equal(core.remaining(loaded,later),Infinity);
+  assert.equal(core.setAnswer(loaded,base,2,4,later),true);
+  core.finish(loaded,later,'timeout');
+  assert.deepEqual(loaded.done,{at:later,reason:'manual'});
+  assert.equal(core.setAnswer(loaded,base,3,2,later+1),false);
+});
+
+test('grading-only can use a verified answer format without inventing an unverified exam duration',()=>{
+  const untimed={...base,minutes:null,practice:false};
+  assert.equal(core.ready(untimed),false);
+  assert.equal(core.ready(untimed,true),true);
+  assert.equal(core.create(untimed,1000),null);
+  const r=core.create(untimed,1000,'paper',true);
+  assert.equal(core.normalize(r,untimed).deadline,null);
+  for(const e of [{...untimed,questions:0},{...untimed,kind:'unknown'}]){
+    assert.equal(core.ready(e,true),false);assert.equal(core.create(e,1000,'paper',true),null);
+  }
+});
+
+test('grading-only paper work enters scan immediately and retains one reviewed submission',()=>{
+  const r=core.create(base,1000,'paper',true);
+  core.finish(r,1000);
+  assert.equal(core.submitPaper(r,base,{1:2},1001,{complete:false}),false);
+  assert.equal(core.submitPaper(r,base,{1:2},1002,{complete:true,pages:2}),true);
+  const loaded=core.normalize(JSON.parse(JSON.stringify(r)),base);
+  assert.equal(loaded.deadline,null);assert.deepEqual(loaded.marks,{1:2});
+  assert.equal(core.submitPaper(loaded,base,{1:3},1003,{complete:true}),false);
+});

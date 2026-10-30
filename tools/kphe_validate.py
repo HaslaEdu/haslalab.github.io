@@ -43,6 +43,12 @@ for year in manifest['years']:
     for f in year['files']:
         if current and f['kind'] in ('paper','key'):official_files.add(f['file'])
 assert originals==24 and exams==29 and questions==572,(originals,exams,questions)
+answer_sources=ROOT/'tools/kphc_answer_sources.json'
+if answer_sources.exists():
+    for source in json.loads(answer_sources.read_text(encoding='utf8'))['files']:
+        path=ROOT/source['local']
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==source['sha256'],path.name
+        if source['source_type']=='preserved_official_answer':official_files.add(path.name)
 assert not list((ROOT/'pdfx/kphe').glob('KPhE_*A.pdf')),'blank answer PDFs remain'
 for pdf in (ROOT/'pdfx/kphe').glob('*.pdf'):
     for page in fitz.open(pdf):
