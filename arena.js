@@ -221,7 +221,7 @@ async function arMount() {
     const path=problem?'/problems/'+Number(c)+'?lang='+lang:weekly?(a==='weekly'?'/weekly':'/monthly')+'?lang='+lang+arPeriodQuery(b):'/rank?scope='+(b==='all'?'all':b==='week'?'week':'month')+arPeriodQuery(b);
     primary=arPageRead(path);primary.catch(()=>{});
   }
-  try{if(a==='lab'){
+  try{if(a==='lab'&&b!=='model-test'){
     const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
     const id=b&&/^\d+$/.test(b)?'&id='+encodeURIComponent(b):'';
     bootstrap=typeof cmLabBootstrap==='function'?await cmLabBootstrap(b?{id:+b,include:'health'}:{}):await cmApi('GET','/lab/bootstrap?include=health'+(!b?',sessions':'')+id);
@@ -244,6 +244,7 @@ async function arMount() {
     else if (a === "rank") await arRank(root, alive, b,primary);
     else if ((a === "monthly" || a === "weekly") && b === "p" && c) await arProblem(root, alive, +c,primary);
     else if ((a === "monthly" || a === "weekly") && b === "admin") await arAdmin(root, alive);
+    else if (a === "lab" && b === "model-test") await arModelTest(root, alive);
     else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
     else await arWeekly(root, alive, b,primary);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
@@ -806,7 +807,7 @@ async function arLabList(root, alive,bootstrap) {
   if(!boot.user){try{sessionStorage.setItem('hlCmBack','#/lab');}catch(e){}location.hash='#/login';return;}
   cm.me=boot.user;const act=boot.active,tk=boot,ls={sessions:boot.sessions||[]};
   root.innerHTML = `
-    <div class="cmtop"><div><h1>📄 ${L.h}</h1><p>${L.sub}</p></div></div>
+    <div class="cmtop"><div><h1>📄 ${L.h}</h1><p>${L.sub}</p></div>${arModelTestLink()}</div>
     <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
     ${arShopHtml(shop, tk.parts || 0)}
     ${act ? `<div class="arpanel"><h3>${arLabLabels(act).active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${arLabModeLabel(act)} · ${arLabLabels(act).st[act.status]}</p>
@@ -1116,7 +1117,7 @@ async function arAdmin(root, alive) {
   const F = ["id", "week", "no", "kind", "subject", "level", "points", "title_ko", "title_en", "body_ko", "body_en", "unit", "answer", "rubric", "model_ko", "model_en", "source", "opens_at", "closes_at"];
   const big = ["body_ko", "body_en", "rubric", "model_ko", "model_en"];
   root.innerHTML = `
-    <div class="cmtop"><div><h1>${T.admin}</h1></div></div>
+    <div class="cmtop"><div><h1>${T.admin}</h1></div>${arModelTestLink()}</div>
     <div class="arpanel"><h3>${T.queue} (${qj.subs.length})</h3>${qj.subs.map((s) => `
       <details class="arsub"><summary><b>#${s.id}</b> ${esc(s.title_ko)} · ${esc(s.nickname)} · ${esc(s.status)}</summary><pre class="aranswer">${esc(s.answer)}</pre>
         <pre class="aranswer small">${esc(s.rubric || "")}</pre>
@@ -1139,4 +1140,193 @@ async function arAdmin(root, alive) {
     q.onsubmit = (e) => { e.preventDefault(); send({score: q.score.value, note: q.note.value}); };
     q.querySelector("[data-re]").onclick = () => send({regrade: true, lang});
   }
+}
+
+/* Developer-only provider comparison. It does not create an exam or submit marks. */
+const AR_MODEL_PIPELINES = ["gemini-gemini", "gemini-deepseek", "deepseek-deepseek"];
+function arModelTestLabels() {
+  return lang === "en" ? {
+    title: "Developer model test", link: "Model test · developer", back: "My exams",
+    intro: "Compare OCR and grading on the same answer pages.",
+    separate: "These test results do not enter learning records or rankings and do not use exam tokens.",
+    denied: "This test is available only to developer accounts.", login: "Sign in", retry: "Try again",
+    problem: "Problem statement", rubric: "Reference answer and marking criteria", points: "Full marks",
+    images: "Answer images", imageHint: n => `Choose up to ${n} JPEG, PNG or WebP images, in page order.`,
+    choice: "OCR and grading combination", run: "Run selected test", preparing: "Preparing images…", running: "Running OCR and grading…",
+    empty: "Run another combination with the same inputs to compare the results here.",
+    unavailable: "Not connected", ocr: "OCR", grading: "Grading", text: "Recognized answer", uncertain: "Check the transcription",
+    feedback: "Grading feedback", review: "Needs review · no final score", incomplete: "Grading incomplete", elapsed: "Total time", usage: "API usage", partialUsage: "Known API usage · partial total",
+    calls: "calls", input: "input", output: "output", cached: "cached", seconds: "s",
+    failed: "The test could not be completed.", geminiOff: "Gemini is not connected.", deepseekOff: "DeepSeek is not connected.",
+    badPipeline: "Choose one of the available combinations.", badProblem: "Enter a problem statement within the text limit.",
+    badRubric: "Enter the reference answer and marking criteria within the text limit.", badPoints: "Check the full-mark value.",
+    badImages: "Choose valid answer images.", tooMany: n => `Choose at most ${n} images.`, tooLarge: "An image is too large to send clearly. Choose a smaller original.",
+    auth: "The model provider rejected its API credentials.", limited: "The request limit was reached. Try again later.",
+    model: "The configured model is unavailable for this test.", timeout: "The model test timed out. Try again.",
+    invalid: "The model did not return a valid result.", noText: "No answer text could be read from the images.",
+    network: "The server could not be reached. Check the connection and try again.",
+    pipeline: ["1. Gemini OCR + Gemini grading", "2. Gemini OCR + DeepSeek grading", "3. DeepSeek OCR + DeepSeek grading"]
+  } : {
+    title: "개발자 모델 테스트", link: "모델 테스트 · 개발자", back: "내 시험",
+    intro: "같은 답안으로 OCR·채점 조합을 비교합니다.",
+    separate: "테스트 결과는 학습 기록·랭킹에 반영되지 않으며 실전 토큰을 사용하지 않습니다.",
+    denied: "개발자 계정만 사용할 수 있는 테스트입니다.", login: "로그인", retry: "다시 시도",
+    problem: "문제", rubric: "기준 정답·채점 기준", points: "만점",
+    images: "답안 사진", imageHint: n => `JPEG·PNG·WebP 사진을 쪽 순서대로 최대 ${n}장 선택하세요.`,
+    choice: "OCR·채점 조합", run: "선택한 조합 테스트", preparing: "사진을 준비하고 있습니다…", running: "OCR·채점을 실행하고 있습니다…",
+    empty: "같은 입력으로 다른 조합도 실행하면 결과를 나란히 비교할 수 있습니다.",
+    unavailable: "연결 안 됨", ocr: "OCR", grading: "채점", text: "OCR 원문", uncertain: "판독 확인",
+    feedback: "채점 피드백", review: "검토 필요 · 점수 미확정", incomplete: "채점 미완료", elapsed: "전체 시간", usage: "API 사용량", partialUsage: "확인된 API 사용량 · 부분 집계",
+    calls: "회 호출", input: "입력", output: "출력", cached: "캐시", seconds: "초",
+    failed: "테스트를 완료하지 못했습니다.", geminiOff: "Gemini가 연결되지 않았습니다.", deepseekOff: "DeepSeek가 연결되지 않았습니다.",
+    badPipeline: "사용할 수 있는 조합을 선택하세요.", badProblem: "문제를 글자 수 제한 안에서 입력하세요.",
+    badRubric: "기준 정답·채점 기준을 글자 수 제한 안에서 입력하세요.", badPoints: "만점을 확인하세요.",
+    badImages: "올바른 답안 사진을 선택하세요.", tooMany: n => `사진을 최대 ${n}장 선택하세요.`, tooLarge: "사진을 선명하게 전송하기에는 용량이 큽니다. 더 작은 원본을 선택하세요.",
+    auth: "모델 제공업체가 API 인증을 거부했습니다.", limited: "요청 한도에 도달했습니다. 잠시 후 다시 시도하세요.",
+    model: "설정된 모델로 이 테스트를 실행할 수 없습니다.", timeout: "모델 테스트 응답 시간이 초과됐습니다. 다시 시도하세요.",
+    invalid: "모델이 올바른 결과를 반환하지 않았습니다.", noText: "사진에서 답안 글씨를 읽지 못했습니다.",
+    network: "서버에 연결하지 못했습니다. 연결 상태를 확인한 뒤 다시 시도하세요.",
+    pipeline: ["1. Gemini OCR + Gemini 채점", "2. Gemini OCR + DeepSeek 채점", "3. DeepSeek OCR + DeepSeek 채점"]
+  };
+}
+function arModelTestLink() {
+  return cm.me?.role === "admin" ? `<a class="cmbtn sm" href="#/lab/model-test">${arModelTestLabels().link}</a>` : "";
+}
+function arModelTestError(error, T, maxImages = 3) {
+  const code = String(error?.code || error?.error || ""), messages = {
+    gemini_not_configured: T.geminiOff, deepseek_not_configured: T.deepseekOff,
+    model_test_bad_pipeline: T.badPipeline, model_test_bad_problem: T.badProblem,
+    model_test_bad_rubric: T.badRubric, model_test_bad_points: T.badPoints,
+    model_test_bad_images: T.badImages, model_test_bad_image: T.badImages, bad_image: T.badImages,
+    model_test_too_many_images: T.tooMany(maxImages), model_test_image_too_large: T.tooLarge, image_too_big: T.tooLarge,
+    model_test_provider_auth: T.auth, model_test_provider_rate_limited: T.limited, rate_limited: T.limited,
+    model_test_model_unavailable: T.model, model_test_ocr_model_unsupported: T.model, model_test_invalid_config: T.model,
+    model_test_timeout: T.timeout, model_test_invalid_response: T.invalid, model_test_ocr_empty: T.noText,
+    forbidden: T.denied, login_required: T.denied, network: T.network
+  };
+  const stage = error?.stage === "ocr" ? T.ocr : error?.stage === "grading" || error?.stage === "grade" ? T.grading : "";
+  const model = [error?.provider, error?.model].filter(x => typeof x === "string" && x).join(" · ");
+  return [stage, model, messages[code] || T.failed].filter(Boolean).join(" · ");
+}
+function arModelTestResult(result, T) {
+  const index = AR_MODEL_PIPELINES.indexOf(typeof result.pipeline === "string" ? result.pipeline : result.pipeline?.id);
+  const o = result.ocr || {}, g = result.grading || {}, u = result.usage || {};
+  const number = n => Number.isFinite(n) && n >= 0 ? n.toLocaleString(lang === "en" ? "en" : "ko") : "—";
+  const time = n => Number.isFinite(n) && n >= 0 ? (n / 1000).toFixed(1) + T.seconds : "—";
+  const scored = g.status === "graded" && Number.isFinite(g.score) && Number.isFinite(g.points);
+  return `<article class="arpanel" data-model-result="${esc(AR_MODEL_PIPELINES[index] || "")}">
+    <h3>${esc(T.pipeline[index] || T.title)}</h3>
+    <div class="arstats"><div><small>${T.ocr}</small><b>${esc(o.provider || "—")}</b><small>${esc(o.model || "")} · ${time(o.ms)}</small></div>
+      <div><small>${T.grading}</small><b>${esc(g.provider || "—")}</b><small>${esc(g.model || "")} · ${time(g.ms)}</small></div>
+      <div><small>${T.elapsed}</small><b>${time(result.elapsed_ms)}</b></div></div>
+    ${result.failure ? `<p class="arinfo bad">${esc(result.failure)}</p>` : ""}
+    <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? number(g.score) + " / " + number(g.points) : result.failure ? T.incomplete : T.review}</span></div>
+    ${g.feedback ? `<h4 class="arh4">${T.feedback}</h4><p style="white-space:pre-wrap">${esc(g.feedback)}</p>` : ""}
+    <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || "")}</pre></details>
+    ${(o.uncertainties || []).length ? `<h4 class="arh4">${T.uncertain}</h4><ul>${o.uncertainties.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <p class="arnote">${u.incomplete ? T.partialUsage : T.usage}: ${number(u.calls)} ${T.calls} · ${T.input} ${number(u.input_tokens)} · ${T.output} ${number(u.output_tokens)} · ${T.cached} ${number(u.cached_tokens)}</p>
+  </article>`;
+}
+async function arModelTest(root, alive) {
+  const T = arModelTestLabels();
+  if (!alive()) return;
+  if (cm.me?.role !== "admin") {
+    if (!cm.me) try { sessionStorage.setItem("hlCmBack", "#/lab/model-test"); } catch (_) {}
+    root.innerHTML = `<div class="cmnote">${T.denied}${!cm.me ? ` <a class="cmbtn sm" href="#/login">${T.login}</a>` : ""}</div>`;
+    return;
+  }
+  let config;
+  try { config = await cmApi("GET", "/admin/lab/model-test"); }
+  catch (error) {
+    if (!alive()) return;
+    root.innerHTML = `<div class="cmnote">${esc(arModelTestError(error, T))} <button class="cmbtn sm" data-retry-model-test>${T.retry}</button></div>`;
+    root.querySelector("[data-retry-model-test]").onclick = () => arModelTest(root, alive);
+    return;
+  }
+  if (!alive() || cm.me?.role !== "admin") return;
+  const limits = { maxImages: 3, maxImageBytes: 1900000, maxTotalImageBytes: 5700000, maxText: 12000, maxRubric: 20000, maxPoints: 1000, ...config.limits };
+  const pipelines = AR_MODEL_PIPELINES.map(id => (config.pipelines || []).find(x => x.id === id) || { id, available: false });
+  const first = pipelines.find(x => x.available === true)?.id;
+  root.innerHTML = `<div class="cmtop"><div><h1>${T.title}</h1><p>${T.intro}</p></div><a class="cmbtn sm" href="#/lab">${T.back}</a></div>
+    <p class="arnote">${T.separate}</p>
+    <form id="arModelTestForm"><fieldset style="border:0;padding:0;margin:0;min-width:0">
+      <div class="arpanel"><h3>${T.choice}</h3>${pipelines.map((p, i) => `<label style="display:flex;align-items:flex-start;gap:10px;margin:14px 0">
+        <input type="radio" name="pipeline" value="${p.id}" ${p.id === first ? "checked" : ""} ${p.available === true ? "" : "disabled"} style="margin-top:5px">
+        <span><b>${T.pipeline[i]}</b><small class="arnote" style="display:block">${p.available === true ? esc([p.ocr?.model, p.grading?.model].filter(Boolean).join(" → ")) : esc(p.reason ? arModelTestError({code:p.reason}, T, limits.maxImages) : T.unavailable)}</small></span></label>`).join("")}</div>
+      <div class="arpanel arpf"><label>${T.problem}<textarea name="problem" rows="5" required maxlength="${limits.maxText}"></textarea></label>
+        <label>${T.rubric}<textarea name="rubric" rows="5" required maxlength="${limits.maxRubric}"></textarea></label>
+        <label>${T.points}<input name="points" type="number" min="0.01" max="${limits.maxPoints}" step="any" value="10" required></label>
+        <label>${T.images}<input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><small class="arnote">${T.imageHint(limits.maxImages)}</small></label></div>
+      <div id="arModelPhotos" style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0"></div>
+      <button class="cmbtn pri" type="submit" ${first ? "" : "disabled"}>${T.run}</button>
+    </fieldset></form><p id="arModelStatus" class="arinfo" role="status" aria-live="polite"></p>
+    <p id="arModelEmpty" class="arnote">${T.empty}</p><div id="arModelResults"></div>`;
+  const form = root.querySelector("#arModelTestForm"), controls = form.querySelector("fieldset"), status = root.querySelector("#arModelStatus");
+  const field = name => form.elements.namedItem(name), results = new Map(), urls = new Set();
+  let busy = false, disposed = false, controller = null;
+  const current = () => !disposed && alive() && cm.me?.role === "admin";
+  const paintResults = () => {
+    root.querySelector("#arModelResults").innerHTML = AR_MODEL_PIPELINES.map(id => results.has(id) ? arModelTestResult(results.get(id), T) : "").join("");
+    root.querySelector("#arModelEmpty").hidden = results.size > 0;
+  };
+  const clearResults = () => { results.clear(); paintResults(); status.textContent = ""; };
+  const revoke = () => { for (const url of urls) URL.revokeObjectURL(url); urls.clear(); };
+  const dispose = () => { disposed = true; controller?.abort(); revoke(); window.removeEventListener("hashchange", dispose); window.removeEventListener("pagehide", dispose); };
+  window.addEventListener("hashchange", dispose); window.addEventListener("pagehide", dispose);
+  form.addEventListener("input", event => { if (current() && !busy && event.target.name !== "pipeline") clearResults(); });
+  field("images").onchange = () => {
+    if (!current()) return;
+    revoke(); clearResults();
+    const box = root.querySelector("#arModelPhotos"); box.innerHTML = "";
+    for (const file of Array.from(field("images").files || []).slice(0, limits.maxImages)) {
+      const url = URL.createObjectURL(file); urls.add(url);
+      box.innerHTML += `<figure style="margin:0;max-width:150px"><img src="${esc(url)}" alt="${esc(file.name)}" style="width:120px;height:150px;object-fit:contain;border:1px solid var(--line)"><figcaption class="arnote" style="overflow-wrap:anywhere">${esc(file.name)}</figcaption></figure>`;
+    }
+  };
+  form.onsubmit = async event => {
+    event.preventDefault(); if (busy || !current()) return;
+    const pipeline = field("pipeline").value, problem = field("problem").value.trim(), rubric = field("rubric").value.trim(), points = Number(field("points").value);
+    const files = Array.from(field("images").files || []);
+    const fail = code => { status.className = "arinfo bad"; status.textContent = arModelTestError({code}, T, limits.maxImages); };
+    if (!pipelines.some(p => p.id === pipeline && p.available === true)) return fail("model_test_bad_pipeline");
+    if (!problem || problem.length > limits.maxText) return fail("model_test_bad_problem");
+    if (!rubric || rubric.length > limits.maxRubric) return fail("model_test_bad_rubric");
+    if (!Number.isFinite(points) || points <= 0 || points > limits.maxPoints) return fail("model_test_bad_points");
+    if (!files.length) return fail("model_test_bad_images");
+    if (files.length > limits.maxImages) return fail("model_test_too_many_images");
+    busy = true; controls.disabled = true; status.className = "arinfo"; status.textContent = T.preparing;
+    let timeout, timedOut = false;
+    try {
+      const scanner = await arLoadScanner(), images = [];
+      for (const file of files) {
+        if (!current()) return;
+        if (file.type && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw {code:"model_test_bad_image"};
+        const blob = await scanner.encodeUpload(file, {maxBytes:limits.maxImageBytes});
+        if (!current()) return;
+        if (!["image/jpeg", "image/png", "image/webp"].includes(blob.type)) throw {code:"model_test_bad_image"};
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        if (bytes.length > limits.maxImageBytes) throw {code:"model_test_image_too_large"};
+        let raw = ""; for (let n = 0; n < bytes.length; n += 32768) raw += String.fromCharCode(...bytes.subarray(n, n + 32768));
+        images.push({mime:blob.type,data:btoa(raw)});
+      }
+      if (!current()) return;
+      status.textContent = T.running; controller = new AbortController();
+      timeout = setTimeout(() => { timedOut = true; controller?.abort(); }, 150000);
+      let response;
+      try { response = await fetch(cmBase() + "/api/admin/lab/model-test", {method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer " + cmTok()},body:JSON.stringify({pipeline,problem,rubric,points,images,lang}),signal:controller.signal}); }
+      catch (error) { throw {code:timedOut ? "model_test_timeout" : "network"}; }
+      const result = await response.json().catch(() => ({error:"model_test_invalid_response"}));
+      if (!current()) return;
+      if (!response.ok || result.error) throw {...result,code:result.error || "model_test_invalid_response"};
+      if (!result.ocr || !result.grading) throw {code:"model_test_invalid_response"};
+      results.set(pipeline, {...result,pipeline}); paintResults(); status.textContent = "";
+    } catch (error) { if (current()) {
+      const message = arModelTestError(error, T, limits.maxImages);
+      results.delete(pipeline);
+      if (error.ocr && typeof error.ocr.text === "string") results.set(pipeline, {...error,pipeline,failure:message,
+        grading:{provider:error.provider,model:error.model,status:"error"}});
+      paintResults(); status.className = "arinfo bad"; status.textContent = message;
+    } }
+    finally { clearTimeout(timeout); controller = null; busy = false; if (current()) controls.disabled = false; }
+  };
 }

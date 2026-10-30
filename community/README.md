@@ -176,6 +176,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - `sim/scan.html`: 실시간 카메라가 종이를 찾아 테두리를 그리고, 네 사각형이 1초쯤 멈추면 저절로 찍습니다(`labscan/scanner.js`의 `findSheetMarkersGray`).
 - 성적표와 확인증: `sim/result-comparison.js`가 `sim/results/<대회>.json`의 공개 점수·수상 기준과 비교합니다. 같은 연도·전체 문항·공식 만점이 일치한 라운드만 자동 비교하며, 일부 문항을 전체 시험으로 환산하지 않습니다. 메달 기준은 그 수상을 결정하는 전체 점수에만 적용합니다. 이론·실험 합산 대회는 다른 라운드 점수를 입력해 총점을 참고 비교할 수 있습니다. 입력 점수는 서버에 저장하지 않습니다. 자료가 수상자 일부만 포함하면 전체 참가자 순위·상위 비율로 표시하지 않습니다. 데이터 출처와 수록 범위는 `tools/results/README.md`에 설명되어 있습니다.
 - `GET /lab/sessions/:id`와 선택한 성적표의 bootstrap은 `sample_standing`을 반환합니다. 같은 대회·연도·문항·배점·채점 기준에서 1인 첫 채점 결과를 표본으로 삼고 실전/채점·첨삭은 분리합니다. 재응시는 본인의 현재 점수를 다른 사람의 첫 채점과 비교하며, 동점은 공동 순위입니다. 표본 1명일 때는 상위 비율을 표시하지 않습니다. 정성 첨삭과 점수가 없는 기록은 표본에서 제외합니다.
+- 이론·실험 단독 성적은 각 라운드의 실제 점수 분포로 순위를 비교하고, 그해 실제 금·은·동 수상 인원에 해당하는 라운드 점수를 참고 메달권으로 표시합니다. 공식 전체 총점 메달 컷과 구분하며, 일부만 공개된 분포는 공개 기록 기준임을 남깁니다. 이론·실험을 모두 채점받았다면 현재 성적표와 최근의 완전한 다른 라운드를 자동 합산합니다. 같은 사용자·대회·연도·시험 구분의 기록만 제공하는 `related_results`는 문제 구성·점수·만점·모드·기록 번호만 포함하며 답안·첨삭·이미지는 포함하지 않습니다. 동일 모드 기록을 우선하고 다른 모드만 있으면 혼합 모드 참고 합산으로 표시합니다. 합산은 무료 조회 계산이며 재채점·추가 차감·HaslaLab 표본 변경을 일으키지 않습니다.
 
 **스캔 AI 비교** (`sim/scanbench.html`, 관리자만): 휴대폰으로 찍은 A4 사진을 연결된 AI마다 가장 싼 비전 모델(Gemini `gemini-flash-lite-latest`, OpenAI `gpt-5-nano`, Claude `claude-haiku-5-5` — `BENCH_*_MODEL`로 바꿈, Claude 키는 `ANTHROPIC_API_KEY` 또는 `CLAUDE_API_KEY`)과 Upstage(페이지 탐지가 없어 글자 범위로 대신)에 보내 종이 네 귀퉁이를 찾게 하고, HaslaLab 기기 안 탐지와 함께 관리자가 표시한 정답 귀퉁이와의 오차로 순위를 매깁니다. 사진과 결과는 `scan_bench` 표(처음 쓸 때 저절로 만들어짐)에 남습니다. API: `POST/GET /api/admin/lab/scanbench`, `PATCH /api/admin/lab/scanbench/:id {gt}`.
 
@@ -366,6 +367,14 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/admin/submissions/:id` | `{score, note}` 또는 `{regrade: true}` (관리자) |
 | GET | `/api/omr/catalog` | 실전모드 시험 목록·문항 수·채점 기준 버전 |
 | POST | `/api/omr/attempts` | 로그인 필요. `{exam_key, client_id, answers}` → 서버 재채점 결과와 비교군 |
+
+## 개발자 모델 테스트
+
+`https://haslalab.org/#/lab/model-test`는 기존 관리자 계정(`role=admin`) 전용입니다. 같은 답안 사진과 문제·채점 기준으로 Gemini OCR/Gemini 채점, Gemini OCR/DeepSeek 채점, DeepSeek OCR/DeepSeek 채점을 선택해 비교합니다. OCR 원문, 모델명, 점수·피드백, 소요 시간과 API 토큰 사용량을 표시하며, 실전 성적·랭킹·실전 토큰에는 반영하지 않습니다. 외부 제공업체의 API 사용료는 해당 계정에서 발생합니다.
+
+키는 `haslalab-community` Worker의 기존 `GEMINI_API_KEY`·`DEEPSEEK_API_KEY` secrets를 사용합니다. 브라우저나 edge Worker에는 키를 복사하지 않습니다. Gemini 모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`), DeepSeek 채점 모델은 `DEEPSEEK_MODEL`(기본 `deepseek-flash`), DeepSeek OCR 모델은 `DEEPSEEK_OCR_MODEL`(기본 `deepseek-flash`)로 설정합니다. 이미지 입력은 [DeepSeek 공식 Vision 안내](https://api-docs.deepseek.com/guides/vision/)를 따릅니다. 채점에 텍스트 전용 모델을 선택해도 OCR 모델은 별도로 유지됩니다.
+
+`GET /api/admin/lab/model-test`는 비밀값 없이 세 조합의 연결 상태를 반환하고, `POST`는 선택한 OCR→채점 두 단계만 실행합니다. 사진은 최대 3장, 장당 1.9 MB이며 서버는 실제 본문 바이트를 8 MiB로 제한합니다. 인증과 관리자 권한을 확인한 뒤 사진을 읽으며, 계정당 시간당 30회까지 실행합니다. 제공업체 오류에는 다른 모델로 대체하지 않고 실패 단계를 표시합니다. 채점 실패 시 이미 성공한 OCR을 보존하며, 불명확한 판독·근거 없는 점수는 `needs_review`와 `score:null`로 반환합니다.
 
 ## 물리대회 실전 점수
 

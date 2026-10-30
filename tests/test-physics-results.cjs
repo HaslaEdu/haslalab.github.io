@@ -91,3 +91,69 @@ test('APhO awardee tables cannot claim full-field component percentiles', () => 
     assert.equal(get('apho', year, 'theory').medalCutoffs, undefined);
   }
 });
+
+test('component medal references use cumulative actual award counts on the same-round scores', () => {
+  let references = 0;
+  for (const comp of Object.values(data.competitions)) for (const r of comp.records) {
+    const ref = r.medalReference;
+    if (!ref) continue;
+    references++;
+    assert.ok(['theory', 'experiment'].includes(r.scope), r.id);
+    assert.equal(r.awardScope, false);
+    assert.equal(r.medalCutoffs, undefined, 'reference bands are separate from actual contest medals');
+    assert.equal(ref.basis, 'round_rank');
+    assert.equal(ref.population, r.complete ? 'complete' : 'published');
+    assert.ok(ref.sources.length > 0 && ref.sources.every(s => /^https?:\/\//.test(s.url) && typeof s.official === 'boolean'));
+    const descending = [...r.scores].sort((a, b) => b - a);
+    let cumulative = 0;
+    for (const tier of ['gold', 'silver', 'bronze']) {
+      assert.ok(Number.isInteger(ref.counts[tier]) && ref.counts[tier] >= 0);
+      cumulative += ref.counts[tier];
+      assert.ok(cumulative <= r.scores.length);
+      if (ref.counts[tier]) {
+        assert.equal(ref.cuts[tier], descending[cumulative - 1], r.id + ':' + tier);
+        assert.ok(descending.filter(s => s >= ref.cuts[tier]).length >= cumulative, 'ties remain on the boundary');
+      } else assert.equal(ref.cuts[tier], undefined);
+    }
+    assert.ok(cumulative > 0);
+    assert.equal(ref.counts.hm, undefined);
+  }
+  assert.equal(references, 36);
+});
+
+test('all nine scored IPhO editions keep reference and official total medal thresholds distinct', () => {
+  const expected = {
+    2012: [45, 71, 92], 2015: [38, 64, 93], 2016: [47, 74, 98],
+    2018: [42, 69, 99], 2021: [45, 61, 94], 2022: [39, 71, 97],
+    2023: [37, 74, 103], 2024: [18, 35, 53], 2025: [37, 81, 96],
+  };
+  for (const [yearText, values] of Object.entries(expected)) {
+    const year = Number(yearText);
+    for (const scope of ['theory', 'experiment']) {
+      const r = get('ipho', year, scope);
+      assert.deepEqual(r.medalReference.counts, Object.fromEntries(['gold', 'silver', 'bronze'].map((k, i) => [k, values[i]])));
+      assert.equal(r.medalReference.population, [2012, 2022].includes(year) ? 'complete' : 'published');
+    }
+    assert.equal(get('ipho', year, 'total').medalReference, undefined);
+  }
+  assert.equal(get('ipho', 2025, 'theory').medalReference.cuts.gold, 20.8);
+  assert.equal(get('ipho', 2025, 'experiment').medalReference.cuts.gold, 10.5);
+  assert.equal(get('ipho', 2025, 'total').medalCutoffs.gold, 31.1);
+});
+
+test('source-specific medal labels supply counts only when all award categories are verified', () => {
+  for (const scope of ['theory', 'experiment']) {
+    assert.deepEqual(get('apho', 2025, scope).medalReference.counts, {gold: 28, silver: 37, bronze: 59}, 'official Bronz spelling must be recognized');
+    assert.equal(get('apho', 2025, scope).medalReference.population, 'published');
+    assert.deepEqual(get('eupho', 2020, scope).medalReference.counts, {gold: 27, silver: 49, bronze: 60}, '2020 has explicit medal-section headings');
+    assert.equal(get('eupho', 2020, scope).medalReference.population, 'published');
+    assert.deepEqual(get('eupho', 2026, scope).medalReference.counts, {gold: 23, silver: 37, bronze: 51});
+    for (const year of [2021, 2022, 2025]) {
+      assert.equal(get('eupho', year, scope).medalReference, undefined);
+      assert.ok(data.competitions.eupho.coverage.medalReferenceOmitted[String(year)]);
+    }
+  }
+  const receipts = JSON.parse(fs.readFileSync(path.join(root, 'tools/results/physics-receipts.json'), 'utf8'));
+  assert.equal(receipts.medalReferences.length, 36);
+  assert.ok(receipts.medalReferences.every(r => r.tieRule.includes('same reference band')));
+});

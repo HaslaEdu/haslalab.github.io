@@ -3,8 +3,12 @@ const comparison=require('../sim/result-comparison.js');
 const source={url:'https://example.org/results',title:'Published results',official:true};
 const theory={id:'test-2025-theory',year:2025,scope:'theory',label:{ko:'이론',en:'Theory'},max:30,taskSets:[['T1','T2','T3']],scores:[30,25,25,10,0],complete:true,participants:5,population:'individual',awardScope:false,sources:[source]};
 const total={...theory,id:'test-2025-total',scope:'total',label:{ko:'전체 총점',en:'Overall total'},max:50,taskSets:[['T1','T2','T3','E1','E2']],scores:[48,40,35,35,10],awardScope:true,cutoffKind:'published',medalCutoffs:{gold:40,silver:35,bronze:20},components:[{id:'theory',label:{en:'Theory'},max:30,taskSets:[['T1','T2','T3']]},{id:'experiment',label:{en:'Experiment'},max:20,taskSets:[['E1','E2']]}]};
-const session=(extra={})=>({comp:'test',year:2025,status:'graded',score:25,points:30,tasks:['T3','T1','T2'],detail:{tasks:{}},...extra});
+const roundTheory={...theory,medalReference:{basis:'round_rank',counts:{gold:1,silver:1,bronze:2},cuts:{gold:30,silver:25,bronze:10},population:'complete',sources:[source]}};
+const experiment={...theory,id:'test-2025-experiment',scope:'experiment',label:{ko:'실험',en:'Experiment'},max:20,taskSets:[['E1','E2']],scores:[20,17,17,5,0],medalReference:{basis:'round_rank',counts:{gold:1,silver:1,bronze:2},cuts:{gold:20,silver:17,bronze:5},population:'complete',sources:[source]}};
+const session=(extra={})=>({id:10,exam_key:'test-2025',comp:'test',year:2025,status:'graded',score:25,points:30,tasks:['T3','T1','T2'],review_only:false,graded_at:100,created_at:90,detail:{tasks:{}},...extra});
 const dataset={schema:1,comp:'test',records:[theory,total]};
+const scopedDataset={...dataset,records:[roundTheory,experiment,total]};
+const complement=(extra={})=>session({id:11,tasks:['E2','E1'],score:17,points:20,graded_at:110,created_at:95,...extra});
 const text=html=>html.replace(/<[^>]*>/g,' ').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
 function metric(html,name){
   const start=new RegExp('<([a-z][a-z0-9-]*)\\b[^>]*\\bdata-metric="'+name+'"[^>]*>','i').exec(html);
@@ -91,6 +95,154 @@ test('medals use verified thresholds for the full award scope, including exact-b
   assert.match(observed,/<[^>]*class="[^"]*hlcr-medal\b[^>]*data-medal="gold"/);
   assert.match(text(withoutDetails(observed)),/참고/,'an observed medal badge retains its reference qualifier');
   assertCollapsed(observed);
+});
+
+test('round-reference medals use declared same-round rank bands and preserve boundary ties without awarding an actual overall medal',()=>{
+  for(const [record,score,medal] of [[roundTheory,30,'gold'],[roundTheory,25,'silver'],[roundTheory,24.9,'bronze'],[roundTheory,10,'bronze'],[roundTheory,0,'none'],[experiment,17,'silver']]){
+    const reference=comparison.roundReference(record,score),evaluation=comparison.evaluate(record,score);
+    assert.equal(reference.medal,medal);
+    assert.equal(reference.scope,record.scope);
+    assert.equal(reference.population,'complete');
+    assert.deepEqual(reference.cuts,record.medalReference.cuts);
+    assert.deepEqual(reference.counts,record.medalReference.counts);
+    assert.equal(evaluation.medal,null,'a component does not become an actual competition medal');
+    assert.equal(evaluation.reference.medal,medal);
+  }
+  assert.equal(comparison.evaluate(roundTheory,25).tied,2);
+  assert.equal(comparison.evaluate(total,40).medal,'gold','published overall thresholds keep their independent meaning');
+  assert.equal(comparison.roundReference(theory,25),null,'no undeclared default medal quotas');
+  assert.equal(comparison.roundReference(roundTheory,31),null);
+  assert.equal(comparison.roundReference(roundTheory,NaN),null);
+  for(const lang of ['ko','en']){
+    const html=comparison.resultHtml(comparison.evaluate(roundTheory,25),lang);
+    assert.match(html,/<[^>]*class="[^"]*hlcr-medal\b[^>]*data-medal="silver"/);
+    assert.match(text(withoutDetails(html)),lang==='en'?/reference/i:/참고/,'the component medal qualifier is visible without opening details');
+    assertCollapsed(html);
+  }
+});
+
+test('published-only round references remain visibly limited and invalid reference bands are rejected',()=>{
+  const partial={...roundTheory,complete:false,participants:20,medalReference:{...roundTheory.medalReference,population:'published'}};
+  const result=comparison.evaluate(partial,25);
+  assert.equal(result.reference.medal,'silver');
+  assert.equal(result.reference.population,'published');
+  assert.equal(result.medal,null);assert.equal(result.complete,false);assert.equal(result.top_pct,null);
+  for(const lang of ['ko','en']){
+    const visible=text(withoutDetails(comparison.resultHtml(result,lang)));
+    assert.match(visible,lang==='en'?/published.*reference|reference.*published/i:/공개.*참고/);
+    assert.doesNotMatch(visible,/Top [\d.]+%|상위 [\d.]+%/);
+  }
+  const badReferences=[
+    {...roundTheory.medalReference,counts:{gold:-1,silver:1,bronze:2}},
+    {...roundTheory.medalReference,counts:{gold:1.5,silver:1,bronze:2}},
+    {...roundTheory.medalReference,counts:{gold:4,silver:1,bronze:2}},
+    {...roundTheory.medalReference,cuts:{gold:31,silver:25,bronze:10}},
+    {...roundTheory.medalReference,cuts:{gold:20,silver:25,bronze:10}},
+    {...roundTheory.medalReference,cuts:{gold:30,silver:NaN,bronze:10}}
+  ];
+  for(const medalReference of badReferences)assert.equal(comparison.roundReference({...roundTheory,medalReference},25),null);
+  assert.equal(comparison.roundReference({...roundTheory,complete:false},25),null,'complete-population reference requires the full field');
+  assert.equal(comparison.roundReference({...roundTheory,participants:20},25),null,'a mismatched participant count cannot become a complete-population reference');
+  assert.equal(comparison.roundReference({...roundTheory,complete:false,scope:'theory',rankFloor:10},25),null,'a total-score coverage floor does not complete a component population');
+});
+
+test('separately scored subrounds retain a round rank label rather than becoming experiments',()=>{
+  for(const part of ['A','B']){
+    const record={...theory,scope:'round',label:{ko:`이론 ${part}`,en:`Theory ${part}`}};
+    for(const lang of ['ko','en']){
+      const visible=text(withoutDetails(comparison.resultHtml(comparison.evaluate(record,25),lang)));
+      assert.match(visible,lang==='en'?/Round score rank/:/라운드 기준 가상 순위/);
+      assert.doesNotMatch(visible,lang==='en'?/Experiment score rank/:/실험 기준 가상 순위/);
+    }
+  }
+});
+
+test('team medal references describe awarded teams and preserve the team population unit',()=>{
+  const record={...roundTheory,population:'team'},evaluation=comparison.evaluate(record,25);
+  const ko=comparison.resultHtml(evaluation,'ko'),en=comparison.resultHtml(evaluation,'en');
+  assert.match(text(ko),/팀 수\(1·1·2팀\)/);
+  assert.doesNotMatch(text(ko),/인원\(|1·1·2명/);
+  assert.match(text(withoutDetails(ko)),/전체 5팀 성적 기준/);
+  assert.match(text(withoutDetails(en)),/5 teams in the score table/);
+  assert.doesNotMatch(text(withoutDetails(en)),/5 contestants/);
+  assertCollapsed(ko);assertCollapsed(en);
+});
+
+test('same-edition full rounds automatically combine using the latest valid same-mode complement without mutating earned scores',()=>{
+  const related=[complement({id:12,score:20,graded_at:101}),complement({id:11,score:17,graded_at:110})];
+  const anchor=session({related_results:related,sample_standing:{cohort:'timed',n:20,rank:3,top_pct:15,avg:60,max:100,first:true}}),before=JSON.stringify(anchor);
+  for(const related_results of [related,[...related].reverse()]){
+    const entries=comparison.combinedResults(scopedDataset,{...anchor,related_results});
+    assert.equal(entries.length,1);
+    const result=entries[0];
+    assert.equal(result.record.id,total.id);assert.equal(result.score,42);assert.equal(result.record.max,50);
+    assert.equal(result.rank,2);assert.equal(result.medal,'gold');
+    assert.equal(result.combined.mixedMode,false);
+    assert.deepEqual(result.combined.sessions.map(s=>s.id),[10,11]);
+    assert.deepEqual(result.combined.sessions.map(s=>s.scope),['theory','experiment']);
+  }
+  const assessment=comparison.assess(scopedDataset,anchor);
+  assert.equal(assessment.comparisons.filter(e=>e.record.scope==='total').length,1);
+  assert.equal(assessment.totals.length,0,'an automatically covered total does not also request manual entry');
+  assert.equal(JSON.stringify(anchor),before);
+  const html=comparison.html(scopedDataset,anchor,'en');
+  assert.match(metric(html,'score'),/25\s*\/\s*30/,'the HaslaLab summary remains this sitting\'s earned grade');
+  assert.match(metric(html,'rank'),/3\s*\/\s*20/,'the HaslaLab sample is not recomputed from a historical reference total');
+  assert.match(text(withoutDetails(html)),/auto.*combin|combin.*score|combined total/i);
+});
+
+test('automatic totals reject another edition, key, unfinished or partial work, wrong scales and task overlap',()=>{
+  const invalid=[
+    complement({comp:'another'}),complement({year:2024}),complement({exam_key:'test-2025-another'}),
+    complement({status:'grading'}),complement({status:'pending'}),complement({status:'ended'}),
+    complement({score:null}),complement({points:100}),complement({score:21}),
+    complement({tasks:['E1'],points:10,score:9}),complement({tasks:['T1','E1'],points:20}),
+    complement({tasks:['T1','T2','T3','E1','E2'],points:50,score:42}),complement({id:10}),
+    complement({detail:{tasks:{E1:{grading_mode:'qualitative_review'}}}})
+  ];
+  for(const related of invalid)assert.deepEqual(comparison.combinedResults(scopedDataset,session({related_results:[related]})),[],JSON.stringify(related));
+  assert.deepEqual(comparison.combinedResults(scopedDataset,session({tasks:['T1'],points:10,score:9,related_results:[complement()]})),[],'the anchor also needs the complete component');
+  assert.deepEqual(comparison.combinedResults(scopedDataset,session({tasks:['T1','T2','T3','E1','E2'],points:50,score:42,related_results:[complement()]})),[],'a full combined sitting cannot count another experiment again');
+  const duplicate=complement();
+  const entries=comparison.combinedResults(scopedDataset,session({related_results:[duplicate,duplicate]}));
+  assert.equal(entries.length,1);assert.equal(entries[0].score,42);
+  const zero=comparison.combinedResults(scopedDataset,session({related_results:[complement({score:0})]}));
+  assert.equal(zero[0].score,25,'zero is a valid earned complement');
+  const unknown={...total,manualOnly:true,max:null,taskSets:[],components:[]};
+  assert.deepEqual(comparison.combinedResults({...scopedDataset,records:[roundTheory,experiment,unknown]},session({related_results:[complement()]})),[]);
+});
+
+test('same-mode complements take priority and cross-mode fallback is explicit rather than silently changing the cohort',()=>{
+  const same=complement({id:12,score:15,graded_at:100}),other=complement({id:13,score:20,review_only:true,graded_at:200});
+  const current=session({related_results:[other,same]});
+  const preferred=comparison.combinedResults(scopedDataset,current)[0];
+  assert.equal(preferred.score,40);assert.equal(preferred.combined.mixedMode,false);
+  assert.deepEqual(preferred.combined.sessions.map(s=>s.id),[10,12]);
+  const mixedSession=session({related_results:[other]}),before=JSON.stringify(mixedSession);
+  const mixed=comparison.combinedResults(scopedDataset,mixedSession)[0];
+  assert.equal(mixed.score,45);assert.equal(mixed.combined.mixedMode,true);
+  assert.deepEqual(mixed.combined.sessions.map(s=>s.review_only),[false,true]);
+  for(const lang of ['ko','en'])assert.match(text(withoutDetails(comparison.resultHtml(mixed,lang))),lang==='en'?/mixed|different.*mode|timed.*untimed/i:/혼합|다른.*모드|실전.*첨삭|실전.*시간 제한 없는.*채점|모드.*다름/);
+  assert.equal(JSON.stringify(mixedSession),before);
+});
+
+test('aggregation anchors either full round and selects latest graded time, creation fallback and id deterministically',()=>{
+  const candidates=[
+    complement({id:20,score:20,graded_at:101,created_at:999}),
+    complement({id:21,score:10,graded_at:null,created_at:102}),
+    complement({id:22,score:5,graded_at:null,created_at:102})
+  ];
+  for(const related_results of [candidates,[...candidates].reverse()]){
+    const result=comparison.combinedResults(scopedDataset,session({related_results}))[0];
+    assert.equal(result.score,30,'a lower score from the most recent qualifying sitting wins');
+    assert.deepEqual(result.combined.sessions.map(s=>s.id),[10,22]);
+  }
+  const result=comparison.combinedResults(scopedDataset,complement({related_results:[session()]}))[0];
+  assert.equal(result.score,42);
+  assert.deepEqual(result.combined.sessions.map(s=>s.id),[10,11],'component order is stable when the current anchor is experiment');
+  const duplicateTasks=complement({tasks:['E1','E2','E2']});
+  assert.deepEqual(comparison.combinedResults(scopedDataset,session({related_results:[duplicateTasks]})),[]);
+  assert.deepEqual(comparison.combinedResults(scopedDataset,session({tasks:['T1','T2','T3','T3'],related_results:[complement()]})),[]);
 });
 
 test('component grades offer an explicitly manual combined score without changing the graded result',()=>{

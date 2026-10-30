@@ -33,6 +33,25 @@ which the UI explicitly distinguishes. `medalCutoffRule: gt` marks a strict
 threshold; the default is inclusive. Do not invent total-score thresholds for
 awards defined by a complete individual problem, quotas, or other criteria.
 
+`medalReference` is separate from an official medal cutoff. For a complete
+theory or experimental paper it records the actual edition's gold/silver/bronze
+counts, their sources, and the same-round score at each cumulative award count.
+The client labels this a **theory/experiment reference medal range**. Ties share
+the highest matching band. A winner-only component distribution stays marked
+`published`; it never acquires a full-field rank or percentile. No honourable
+mention is inferred from rank counts. Both the builder and client recompute the
+reference boundaries and reject inconsistent counts, cuts, or coverage.
+
+When a signed-in student has both complete rounds graded, selected report APIs
+include private `related_results` metadata. The client anchors the current
+report, matches exact component tasks and maxima, then adds the latest valid
+complement from the same competition/edition/exam namespace. It prefers the
+same mode and explicitly labels any mixed timed/untimed fallback. Each chosen
+record is linked; duplicate sessions, overlapping tasks, partial or qualitative
+work and unknown/weighted scales cannot be silently added. This changes only
+the historical comparison, never the recorded grade, token balance, or current
+round's HaslaLab sample standing.
+
 The UI never extrapolates a partial paper, normalises a raw mark to a different
 official scale, or calls an incomplete winner-only distribution the full field.
 Combined competitions can provide additive `components` with their maxima and

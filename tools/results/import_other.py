@@ -178,6 +178,25 @@ def observed_cutoffs(rows: list[tuple[float, str]]) -> dict:
     return cuts
 
 
+def round_reference(scores: list[float], awards: list[str], sources: list[dict]) -> dict:
+    """Project the source's actual medal counts onto a complete round's ranks.
+
+    This is an explicit reference band, never an official component award.
+    Boundary score ties remain in the same reference band.
+    """
+    assert len(scores) == len(awards)
+    ordered = sorted(scores, reverse=True)
+    counts = {key: sum(award == label for award in awards)
+              for key, label in [('gold', 'Gold'), ('silver', 'Silver'), ('bronze', 'Bronze')]}
+    assert all(value > 0 for value in counts.values()) and sum(counts.values()) <= len(ordered)
+    cumulative, cuts = 0, {}
+    for key, count in counts.items():
+        cumulative += count
+        cuts[key] = compact(ordered[cumulative - 1])
+    return {'basis': 'round_rank', 'counts': counts, 'cuts': cuts,
+            'population': 'complete', 'sources': sources}
+
+
 def ioaa_2025():
     url = 'https://ioaa2025.in/wp-content/uploads/2025/12/IOAA2025-Final-Marklist.pdf'
     document = pdf(url)
@@ -215,14 +234,18 @@ def ioaa_2025():
                      'taskSets': whole_paper_sets('ioaa', 2025),
                      'scores': sorted((compact(value[-1]) for value in theory.values()), reverse=True),
                      'awardScope': False,
-                     'note': {'ko': '이론 12문제 전체의 원점수 분포입니다. 이론만의 메달 기준은 아니며 총점 메달과 비교하지 않습니다.',
-                              'en': 'Raw scores for all twelve theory problems. These give theory-only score positions, not medal estimates from combined totals.'}}
+                     'note': {'ko': '이론 12문제 전체의 원점수 분포입니다. 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 이론 순위에 적용한 기준이며, 공식 이론 메달이나 총점 메달 판정이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.',
+                              'en': 'Raw scores for all twelve theory problems. Reference medal bands apply the actual overall gold/silver/bronze award counts to theory ranks; these are not official theory awards or combined-total medal determinations. Boundary-score ties share a reference band.'}}
+    theory_record['medalReference'] = round_reference(theory_record['scores'],
+                                                      [value[1] for value in overall.values()], sources)
     practical = {**common, 'id': 'ioaa-2025-practical', 'scope': 'experiment',
                  'label': {'ko': '실기 전체 · 자료 분석 + 관측', 'en': 'Complete practical · data analysis + observation'},
                  'max': 300, 'scores': sorted((compact(value[0][3]) for value in overall.values()), reverse=True),
                  'awardScope': False,
-                 'note': {'ko': '자료 분석 150점과 관측 150점을 합한 실기 전체입니다. 일부 관측 문제만의 점수와 비교하지 않습니다.',
-                          'en': 'All data analysis (150) and observation (150) combined; a single observation task is not comparable.'}}
+                 'note': {'ko': '자료 분석 150점과 관측 150점을 합한 실기 전체입니다. 일부 관측 문제만의 점수와 비교하지 않습니다. 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 실기 순위에 적용한 기준이며 공식 실기 수상이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.',
+                          'en': 'All data analysis (150) and observation (150) combined; a single observation task is not comparable. Reference medal bands apply actual overall gold/silver/bronze counts to complete practical ranks, not official practical awards. Boundary-score ties share a reference band.'}}
+    practical['medalReference'] = round_reference(practical['scores'],
+                                                  [value[1] for value in overall.values()], sources)
     total = {**common, 'id': 'ioaa-2025-total', 'scope': 'total',
              'label': {'ko': '전체 대회 · 이론 + 실기', 'en': 'Complete competition · theory + practical'},
              'max': 600, 'scores': sorted((compact(value[0][4]) for value in overall.values()), reverse=True),
@@ -233,6 +256,8 @@ def ioaa_2025():
              'note': {'ko': '이론 300점과 실기 300점을 모두 합한 총점만 메달 분포와 비교합니다. 기준은 공식 표에 기재된 금·은·동 수상 등급의 최저 관측 점수입니다. 장려상은 총점만으로 결정되지 않아 기준을 제시하지 않습니다.',
                       'en': 'Only theory (300) plus every practical component (300) is comparable to this total. Medal cutoffs are observed gold/silver/bronze minima in the official marklist. Honourable mentions are not determined by total alone and have no scalar cutoff here.'}}
     RECEIPTS[url].update({'year': 2025, 'theoryRows': len(theory), 'overallRows': participants,
+                         'theoryMedalReference': theory_record['medalReference'],
+                         'practicalMedalReference': practical['medalReference'],
                          'crossChecks': ['unique and identical contestant-code populations', 'all twelve theory question sums',
                                          'theory totals agree in both tables', 'data analysis + observation = practical',
                                          'theory + practical = total', 'gold/silver/bronze observed minima are monotone in the complete table'],
@@ -287,7 +312,8 @@ def ibo_2024():
             columns = list(map(float, values[-15:]))
             a, b, total = columns[10:13]
             assert 0 <= a <= 50 and 0 <= b <= 50 and abs(a + b - total) < .001, line
-            rows.append((int(rank[1]), a, b, total))
+            award = re.search(r'\b(Gold|Silver|Bronze)\s*$', line)
+            rows.append((int(rank[1]), a, b, total, award[1] if award else ''))
     assert [rank for rank, *_ in rows] == list(range(1, 287))
     annual = next(year for year in manifest('ibo')['years'] if year['y'] == 2024)
     assert {'T1', 'T2'} <= {item.get('part') for item in annual['files'] if item['kind'] == 'paper'}
@@ -296,15 +322,20 @@ def ibo_2024():
                source(report, 'IBO 2024 official report, printed page 114: two 50-question theory papers and scoring scale')]
     common = {'year': 2024, 'complete': True, 'participants': len(rows), 'population': 'individual',
               'awardScope': False, 'sources': sources,
-              'note': {'ko': '공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 이론 점수 위치만 비교하며, 실험과 표준화 T점수를 합산해 정한 실제 메달 기준은 적용하지 않습니다. 공식 2025년 1월 수정 순위를 사용합니다.',
-                       'en': 'Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. Compare theory score positions only; actual medals use standardized theory and practical T-scores. Uses the official January 2025 amended ranking.'}}
+              'note': {'ko': '공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 공식 2025년 1월 수정 순위를 사용합니다.',
+                       'en': 'Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. These are separate from the standardized theory and practical T-scores used for actual medals. Uses the official January 2025 amended ranking.'}}
     definitions = [('theory', 'theory', 100, 3, [['T1', 'T2']], {'ko': '이론 전체 · A + B', 'en': 'Complete theory · A + B'}),
                    ('theory-a', 'round', 50, 1, [['T1']], {'ko': '이론 A', 'en': 'Theory A'}),
                    ('theory-b', 'round', 50, 2, [['T2']], {'ko': '이론 B', 'en': 'Theory B'})]
     records = [{**common, 'id': 'ibo-2024-' + identifier, 'scope': scope, 'label': label,
                 'max': maximum, 'taskSets': sets, 'scores': sorted((compact(row[column]) for row in rows), reverse=True)}
                for identifier, scope, maximum, column, sets, label in definitions]
+    records[0]['medalReference'] = round_reference(records[0]['scores'], [row[4] for row in rows], sources)
+    records[0]['note'] = {
+        'ko': common['note']['ko'] + ' 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 A+B 이론 순위에 적용한 기준이며 공식 수상이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.',
+        'en': common['note']['en'] + ' Reference medal bands apply actual overall gold/silver/bronze award counts to complete A+B theory ranks, not official awards. Boundary-score ties share a reference band.'}
     RECEIPTS[url].update({'year': 2024, 'scoreRows': len(rows), 'amended': '2025-01-26',
+                         'theoryMedalReference': records[0]['medalReference'],
                          'crossChecks': ['all 286 published ranks consecutive', 'all theory A and B scores between 0 and 50',
                                          'all theory totals equal A + B', 'published official report defines max and regressive scoring']})
     return records
@@ -356,8 +387,8 @@ def main():
                         'en': 'Official totals, maxima and medal boundaries for all 67 held editions, 1959–2026. No competition was held in 1980. Some historical printed ranks disagree with totals, so hypothetical positions use numeric scores. Honourable mentions are not inferred from totals.'},
         'sources': [source('https://www.imo-official.org/results/', 'IMO official results and edition statistics')]})
     data['competitions']['ioaa']['coverage'].update({
-        'limitations': {'ko': '2025년 공식 최종 성적표의 288명에 대해 이론·실기·총점 전체를 검증했습니다. 이론 단독 점수에는 총점 메달 기준을 적용하지 않습니다. 다른 연도는 점수 단위와 전체 수록 범위가 검증된 뒤 추가합니다.',
-                        'en': 'All 288 theory, practical and total score rows in the 2025 official final marklist were checked. Combined medal thresholds do not apply to theory alone. Other editions require verified score units and population coverage before importing.'},
+        'limitations': {'ko': '2025년 공식 최종 성적표의 288명에 대해 이론·실기·총점 전체를 검증했습니다. 전체 이론·실기의 참고 메달은 실제 금·은·동 수상 인원수를 각 라운드 순위에 적용하며 총점 메달 기준과 구분합니다. 다른 연도는 점수 단위와 전체 수록 범위가 검증된 뒤 추가합니다.',
+                        'en': 'All 288 theory, practical and total score rows in the 2025 official final marklist were checked. Complete-theory and complete-practical reference bands apply actual medal counts to each round\'s ranks, separately from combined-total medal thresholds. Other editions require verified score units and population coverage before importing.'},
         'sources': [source('https://ioaa2025.in/ioaa-2025-final-marklist/', 'IOAA 2025 organiser: final marklist')]})
     data['competitions']['icho']['coverage'].update({
         'limitations': {'ko': '2023년 주최 측 공식 최종 보고서 부록의 348명 가중 총점입니다. 중앙 2024·2025년 결과표에는 순위·수상만 있고 숫자 점수가 없습니다. 이론 점수를 전체 총점으로 환산하지 않습니다.',
@@ -365,8 +396,8 @@ def main():
         'sources': [source('https://science.olympiad.ch/icho2023', 'IChO 2023 organiser archive'),
                     source('https://www.icho-official.org/results/', 'IChO Steering Committee results database')]})
     data['competitions']['ibo']['coverage'].update({
-        'limitations': {'ko': '2024년 수정된 공식 순위표의 286명 이론 A·B 및 합계 원점수입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 다른 연도는 문제별 만점과 점수 체계를 검증한 뒤 추가합니다.',
-                        'en': 'Raw theory A, B and combined scores for all 286 students in the amended 2024 official ranking. These are separate from the standardized theory/practical T-scores used for medals. Other years require verified maxima and scoring rules.'},
+        'limitations': {'ko': '2024년 수정된 공식 순위표의 286명 이론 A·B 및 합계 원점수입니다. A+B 전체 이론의 참고 메달은 실제 수상 인원수를 이론 순위에 적용하며, 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 반쪽인 A 또는 B에는 참고 메달을 적용하지 않습니다. 다른 연도는 문제별 만점과 점수 체계를 검증한 뒤 추가합니다.',
+                        'en': 'Raw theory A, B and combined scores for all 286 students in the amended 2024 official ranking. Complete A+B theory reference bands apply actual medal counts to theory ranks, separately from the standardized theory/practical T-scores used for actual medals. No reference medals apply to A or B alone. Other years require verified maxima and scoring rules.'},
         'sources': [source('https://www.ibo-info.org/en/info/results-reports.html', 'IBO official results and reports, 1990–2026')]})
     data['competitions']['ieso']['coverage'].update({
         'limitations': {'ko': '2026년 공식 전체 순위표의 151명 총점을 수집했습니다. 만점·가중치가 검증되지 않아 공식 단위의 전체 총점을 직접 입력할 때만 비교합니다. 추가 동메달 때문에 보편적인 메달 컷은 제시하지 않습니다. 과거 IGEO 수상자 목록은 숫자 점수·만점 검증 없이 순위 분포로 만들지 않았습니다.',

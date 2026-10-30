@@ -95,6 +95,22 @@ def observed_cuts(scores, awards):
     return cuts
 
 
+def round_medal_reference(scores, awards, sources):
+    """Project actual overall G/S/B counts onto this complete round's score ranks.
+
+    These are reference bands, never actual round-specific medal declarations.
+    """
+    tiers = ('gold', 'silver', 'bronze')
+    counts = {tier: awards.count(tier) for tier in tiers}
+    if not all(counts.values()) or sum(counts.values()) > len(scores):
+        return None
+    ordered, running, cuts = sorted(scores, reverse=True), 0, {}
+    for tier in tiers:
+        running += counts[tier]
+        cuts[tier] = ordered[running - 1]
+    return {'basis': 'round_rank', 'counts': counts, 'cuts': cuts, 'population': 'complete', 'sources': sources}
+
+
 def opho():
     base = 'https://opho.physoly.org/'
     paths = ['2026'] + [f'{year}-invitational' for year in (2021, 2022, 2023, 2025)]
@@ -136,6 +152,9 @@ def opho():
             {'ko': '초청 라운드 · 이론·실험 합계', 'en': 'Invitational · theory + experiment'}, theory_max + experiment_max,
             totals, refs, tasks=[['Ti', 'E']], components=[component('theory', theory_max, [['Ti']]), component('experiment', experiment_max, [['E']])])
         awards = [next((key for key in ('gold', 'silver', 'bronze') if key in row[-1].lower()), '') for row in rows]
+        count_sources = [source(url, f'OPhO {year} Invitational — official overall gold/silver/bronze award counts')]
+        records[-2]['medalReference'] = round_medal_reference(theories, awards, count_sources)
+        records[-1]['medalReference'] = round_medal_reference(experiments, awards, count_sources)
         cuts = observed_cuts(totals, awards)
         if cuts:
             total.update(awardScope=True, medalCutoffs=cuts, cutoffKind='observed')
@@ -203,6 +222,9 @@ def izho():
             source(experiment_url, 'Archived original 2025 experimental marking scheme: TOTAL 20.0 (mirror)', False)]
     records = [record('izho', 2025, 'theory', 'theory', {'ko': '이론 전체', 'en': 'Complete theory'}, 30, theories, refs, population='individual', tasks=[['T']]),
                record('izho', 2025, 'experiment', 'experiment', {'ko': '실험 전체', 'en': 'Complete experiment'}, 20, experiments, refs, population='individual', tasks=[['E1']])]
+    count_sources = [source(data['url'], 'IZhO 2025 — official Physics gold/silver/bronze award counts')]
+    for row, scores in zip(records, (theories, experiments)):
+        row['medalReference'] = round_medal_reference(scores, [entry[6] for entry in rows], count_sources)
     total = record('izho', 2025, 'total', 'total', {'ko': '물리 전체 · 이론·실험 합계', 'en': 'Complete physics · theory + experiment'}, 50, totals, refs,
         population='individual', tasks=[['T', 'E1']], components=[component('theory', 30, [['T']]), component('experiment', 20, [['E1']])],
         note={'ko': '공식 페이지 제목은 2025년이며 URL에만 2020이 남아 있습니다. 물리 결과 180명만 집계했습니다.',

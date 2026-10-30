@@ -54,3 +54,26 @@ test('unverified comparisons retain honest coverage instead of invented scores o
   assert.equal(plancks.rankOnly,true);assert.equal(plancks.numericScores,false);assert.equal(plancks.pages,5);
   for(const r of records){assert.ok(r.sources.length);assert.ok(r.sources.every(s=>/^https?:\/\//.test(s.url)));assert.deepEqual(r.scores,sort(r.scores));}
 });
+
+test('round-only reference bands use actual official award counts and cumulative score-rank boundaries',()=>{
+  const expected=[
+    ['opho-2021-invitational',{gold:7,silver:7,bronze:8}],
+    ['opho-2022-invitational',{gold:3,silver:4,bronze:6}],
+    ['izho-2025',{gold:24,silver:34,bronze:35}],
+  ];
+  const sourceRows=JSON.parse(read('tools/results/physics-extra-izho2025-source.json')).rows;
+  assert.deepEqual(Object.fromEntries(['gold','silver','bronze'].map(t=>[t,sourceRows.filter(r=>r[6]===t).length])),expected[2][1]);
+  for(const [prefix,counts]of expected)for(const scope of ['theory','experiment']){
+    const record=byId(prefix+'-'+scope),ref=record.medalReference;
+    assert.equal(record.awardScope,false);assert.equal(record.medalCutoffs,undefined);assert.equal(record.complete,true);
+    assert.equal(ref.basis,'round_rank');assert.equal(ref.population,'complete');assert.deepEqual(ref.counts,counts);
+    assert.deepEqual(Object.keys(ref.cuts).sort(),['bronze','gold','silver']);
+    let running=0;
+    for(const tier of ['gold','silver','bronze']){running+=counts[tier];assert.ok(running<=record.scores.length);assert.equal(ref.cuts[tier],record.scores[running-1]);}
+    assert.ok(ref.cuts.gold>=ref.cuts.silver&&ref.cuts.silver>=ref.cuts.bronze);
+    assert.ok(ref.sources.length&&ref.sources.every(s=>s.official===true&&/^https:\/\/(opho\.physoly\.org|izho\.kz)\//.test(s.url)));
+  }
+  assert.equal(records.filter(r=>r.medalReference).length,6);
+  for(const r of records.filter(r=>r.scope==='total'||r.manualOnly||r.id.includes('2023')||r.id.includes('2025-invitational')))
+    assert.equal(r.medalReference,undefined,'unverified scopes and undeclared prize tiers must not receive projected medals');
+});
