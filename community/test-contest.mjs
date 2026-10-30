@@ -34,7 +34,8 @@ for (let id = 1; id <= 14; id++) {
   const hash = Buffer.from(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token))).toString("base64url");
   sqlite.prepare("INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)").run(hash, id, timestamp, timestamp + 3600);
 }
-const env = { DB, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", GEMINI_API_KEY: "mock-existing-key" };
+const messages=[];
+const env = { DB, LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", GEMINI_API_KEY: "mock-existing-key" };
 const examId = "kmo-2025-T2-s2", base = "/api/lab/contest", sessionBase = id => `/api/lab/sessions/${id}`;
 let providerCalls = [], proofMode = "valid";
 const originalFetch = globalThis.fetch;
@@ -65,6 +66,16 @@ async function request(path, body, id = 1, method = body === undefined ? "GET" :
 }
 const start = (id, extra = {}) => request(base + "/start", { examId, purpose: "review", runId: "run-" + id, ...extra }, id);
 const save = (sid, id, answers) => request(`${base}/sessions/${sid}/text`, { answers }, id);
+async function drainQueue(settings=env){
+  while(messages.length){const body=messages.shift();await worker.queue({messages:[{body,ack(){},retry(){throw Error('unexpected retry in completed-review fixture');}}]},settings);}
+}
+async function settled(path,body,id=1){
+  const r=await request(path,body,id);
+  if(r.status===200&&r.data.session?.status==='grading'){
+    await drainQueue();return request(sessionBase(r.data.session.id),undefined,id);
+  }
+  return r;
+}
 
 test("catalogue uses trusted questions, offsets, time and 1-token review capability", async () => {
   const r = await request(base + "/catalog", undefined, null);
@@ -115,13 +126,13 @@ test("concurrent pay is charged exactly once, whole token and no OCR until expli
 
 test("proof submission uses mathematics rules, two grounded reviews and retry-safe session payment", async () => {
   const sid = first.session.id, before = providerCalls.length;
-  const r = await request(sessionBase(sid) + "/submit", {}, 1);
+  const r = await settled(sessionBase(sid) + "/submit", {}, 1);
   assert.equal(r.status, 200); assert.equal(r.data.session.status, "graded"); assert.equal(r.data.session.score, 7); assert.equal(r.data.session.points, 28);
   const q5 = r.data.session.detail.tasks.Q5;
   assert.equal(q5.grading_mode, "proof_review"); assert.equal(q5.official, false); assert.equal(q5.reference, "published_problem_only"); assert.equal(q5.verification.passes, 2);
   assert.equal(providerCalls.length - before, 2);
   assert.ok(providerCalls.slice(before).every(p => !p.includes("R1:") && !p.includes("EXPERIMENTAL physics")));
-  assert.equal((await request(sessionBase(sid) + "/submit", {}, 1)).data.tokens, 4); assert.equal(providerCalls.length - before, 2);
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 1)).data.tokens, 4); assert.equal(providerCalls.length - before, 2);
   assert.equal((await save(sid, 1, { 5: "late change" })).status, 409);
   assert.equal((await start(1)).data.session.id, sid, "same run returns the closed review rather than a duplicate charge");
   assert.equal((await request(sessionBase(sid), undefined, 1)).data.session.standing, null);
@@ -139,25 +150,26 @@ test("unpaid scans are saved, require explicit payment, read once and require st
   const response = await worker.fetch(new Request(`http://worker.local/api/lab/up/pages?task=Q5&kind=answer`, { method: "PUT", headers: { "X-Lab-Token": r.data.token, "Content-Type": "image/jpeg" }, body: image }), env);
   const upload = await response.json(); assert.equal(response.status, 200); assert.equal(upload.ocr_status, "unpaid");
   assert.equal((await request(`${base}/sessions/${sid}/read`, {}, 4)).status, 402);
-  assert.equal((await request(sessionBase(sid) + "/submit", {}, 4)).data.error, "needs_confirmation");
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 4)).data.error, "needs_confirmation");
   assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=4").get().exam_tokens, 5);
   await request(sessionBase(sid) + "/pay", {}, 4);
   const before = providerCalls.length;
   const readResults = await Promise.all([request(`${base}/sessions/${sid}/read`, {}, 4), request(`${base}/sessions/${sid}/read`, {}, 4)]);
-  assert.ok(readResults.every(r => r.status === 200)); assert.equal(providerCalls.length - before, 1);
+  assert.ok(readResults.every(r => r.status === 200)); assert.equal(providerCalls.length - before, 0);
+  await drainQueue(); assert.equal(providerCalls.length-before,1);
   const pg = sqlite.prepare("SELECT * FROM lab_pages WHERE id=?").get(upload.id);
   assert.equal(pg.ocr_status, "done"); assert.equal(pg.edited, 0);
-  assert.equal((await request(sessionBase(sid) + "/submit", {}, 4)).data.error, "needs_confirmation");
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 4)).data.error, "needs_confirmation");
   assert.equal((await request(`${base}/sessions/${sid}/pages/${pg.id}/confirm`, { text: "Let n be an integer. Corrected formula: n^2.", task: 9 }, 4)).status, 400);
   const confirmed = await request(`${base}/sessions/${sid}/pages/${pg.id}/confirm`, { text: "Let n be an integer. Corrected formula: n^2.", task: 5 }, 4);
   assert.equal(confirmed.status, 200); assert.equal(confirmed.data.session.pages[0].confirmed, true);
   assert.equal(confirmed.data.session.pages[0].source, "scan"); assert.ok(confirmed.data.session.pages[0].read.items.length);
-  assert.equal((await request(sessionBase(sid) + "/submit", {}, 4)).data.session.status, "graded");
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 4)).data.session.status, "graded");
 });
 
 test("empty submissions cannot spend tokens and insufficient balance stays atomic", async () => {
   const r = await start(5), sid = r.data.session.id;
-  assert.equal((await request(sessionBase(sid) + "/submit", {}, 5)).data.error, "no_answers");
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 5)).data.error, "no_answers");
   assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=5").get().exam_tokens, 5);
   sqlite.prepare("UPDATE users SET exam_tokens=0,exam_half=1 WHERE id=5").run();
   await save(sid, 5, { 5: "Let n be an integer." });
@@ -170,7 +182,7 @@ test("unsupported or uncertain AI evidence yields pending, never an invented sco
   for (const [id, mode] of [[6, "ungrounded"], [7, "uncertain"]]) {
     const r = await start(id), sid = r.data.session.id; await save(sid, id, { 5: "Let n be an integer. Incomplete proof." });
     proofMode = mode;
-    const result = await request(sessionBase(sid) + "/submit", {}, id);
+    const result = await settled(sessionBase(sid) + "/submit", {}, id);
     assert.equal(result.status, 200); assert.equal(result.data.session.status, "pending"); assert.equal(result.data.session.score, null);
     assert.equal(result.data.session.detail.tasks.Q5.why, "uncertain_proof"); assert.equal(result.data.session.detail.tasks.Q5.manual_review, true);
   }
@@ -181,7 +193,8 @@ test("math-specific admin reference and manual review preserve 7-point maximum",
   const r = await start(8), sid = r.data.session.id; await save(sid, 8, { 5: "Let n be an integer." });
   const noGrader = { ...env }; delete noGrader.GEMINI_API_KEY;
   const response = await worker.fetch(new Request("http://worker.local" + sessionBase(sid) + "/submit", { method: "POST", headers: { Authorization: "Bearer " + tokens[8], "Content-Type": "application/json" }, body: "{}" }), noGrader);
-  const pending = await response.json(); assert.equal(pending.session.status, "pending"); assert.equal(pending.session.detail.tasks.Q5.why, "no_grader");
+  assert.equal((await response.json()).session.status,"grading");await drainQueue(noGrader);
+  const pending=(await request(sessionBase(sid),undefined,8)).data; assert.equal(pending.session.status, "pending"); assert.equal(pending.session.detail.tasks.Q5.why, "no_grader");
   assert.equal((await request(`/api/admin/lab/${sid}`, { task: "Q5", score: 8, points: 8 }, 14)).status, 400);
   const manual = await request(`/api/admin/lab/${sid}`, { task: "Q5", score: 4, points: 7, note: "수동 검토" }, 14);
   assert.equal(manual.status, 200); assert.equal(manual.data.session.detail.tasks.Q5.reviewed_by_admin, true); assert.equal(manual.data.session.official, false);
@@ -197,7 +210,7 @@ test("parallel starts and parallel submits never create duplicate runs or provid
   const starts = await Promise.all([start(9), start(9)]);
   assert.ok(starts.every(r => r.status === 200)); assert.equal(starts[0].data.session.id, starts[1].data.session.id);
   const sid = starts[0].data.session.id; await save(sid, 9, { 5: "Let n be an integer. Submitted proof." });
-  const before = providerCalls.length, results = await Promise.all([request(sessionBase(sid) + "/submit", {}, 9), request(sessionBase(sid) + "/submit", {}, 9)]);
+  const before = providerCalls.length, results = await Promise.all([settled(sessionBase(sid) + "/submit", {}, 9), settled(sessionBase(sid) + "/submit", {}, 9)]);
   assert.ok(results.every(r => r.status === 200)); assert.equal(providerCalls.length - before, 2);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_sessions WHERE user_id=9").get().n, 1);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=?").get(sid).n, 1);

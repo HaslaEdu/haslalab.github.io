@@ -141,7 +141,15 @@ async function arMount() {
   const root = document.getElementById("arRoot"); if (!root) return;
   const my = ++ar.seq, alive = () => my === ar.seq && document.getElementById("arRoot") === root;
   const parts = location.hash.replace(/^#\/?/, "").split("?")[0].split("/").filter(Boolean), [a, b, c] = parts;
-  const [, h] = await Promise.all([cmLoadMe(), ar.health ? ar.health : cmHealth()]); ar.health = h;
+  ar.poller?.dispose();ar.poller=null;let bootstrap=null;
+  try{if(a==='lab'){
+    const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
+    const id=b&&/^\d+$/.test(b)?'&id='+encodeURIComponent(b):'';
+    bootstrap=typeof cmLabBootstrap==='function'?await cmLabBootstrap(b?{id:+b,include:'health'}:{}):await cmApi('GET','/lab/bootstrap?include=health'+(!b?',sessions':'')+id);
+    if(shop)bootstrap.shop=await shop;
+    if(!alive())return;cm.me=bootstrap.user;cm.meChecked=true;ar.health=bootstrap.health||ar.health;
+  }else{const [,h]=await Promise.all([cmLoadMe(),ar.health||cmHealth()]);ar.health=h;}}
+  catch(e){if(alive())root.innerHTML=`<div class="cmnote">${esc(arErr(e))}</div>`;return;}
   if (!alive()) return;
   try {
     if (a === "login" || a === "signup") return arAuth(root, a);
@@ -151,7 +159,7 @@ async function arMount() {
     else if (a === "rank") await arRank(root, alive, b);
     else if (a === "weekly" && b === "p" && c) await arProblem(root, alive, +c);
     else if (a === "weekly" && b === "admin") await arAdmin(root, alive);
-    else if (a === "lab") await (b ? arLabOne(root, alive, +b) : arLabList(root, alive));
+    else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
     else await arWeekly(root, alive, b);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
 }
@@ -479,7 +487,7 @@ const LBT = {
        adClosed: "광고를 끝까지 보지 않아 보상이 없습니다.", adDaily: (d) => `오늘은 광고를 ${d}편 다 보셨습니다. 내일 다시 오세요.`, adOff: "광고 충전은 준비 중입니다.", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
        st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", ended: "채점 안 함"},
        payH: "채점 · 첨삭 받기", payNote: "채점하지 않고 끝낸 시험입니다. 보낸 답안은 7일 동안 보관되며, 그 안에 실전 토큰 1개로 채점과 첨삭(총평 · 고칠 습관 · 글씨)을 받을 수 있습니다.", payBtn: "토큰 1개로 채점받기", payBusy: "채점하는 중… (1–2분)", payNo: "실전 토큰이 없습니다. 위 «토큰 충전»에서 충전하세요.",
-       why: {no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
+       why: {ocr_failed: "사진 원문을 읽지 못해 점수를 보류했습니다. 답안을 확인하고 재촬영 또는 검토가 필요합니다.", ocr_structure: "사진 원문은 보관했지만 풀이 구조를 확인하지 못해 점수를 보류했습니다. 관리자 검토가 필요합니다.", no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
        del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "실전 모드 응시는 무료이고, 채점 · 첨삭을 받을 때 토큰 1개를 씁니다. 토큰은 위 «토큰 충전»에서 사거나 광고로 모을 수 있습니다.",
        admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
@@ -507,7 +515,7 @@ const LBT = {
        adClosed: "The ad was closed before the end, so there is no reward.", adDaily: (d) => `You have watched today's ${d} ads. Come back tomorrow.`, adOff: "Ads are not open yet.", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
        st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", ended: "not graded"},
        payH: "Get it graded and reviewed", payNote: "This sitting ended ungraded. Its pages are kept for 7 days; within that time one exam token gets them graded and reviewed (summary, habits to fix, handwriting).", payBtn: "Grade it for 1 token", payBusy: "Grading… (1–2 minutes)", payNo: "You have no exam tokens. Get some under «Get tokens» on the exam mode page.",
-       why: {no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
+       why: {ocr_failed: "The original photo could not be read. The score is held for a retake or review.", ocr_structure: "The original text is saved, but the solution structure could not be verified. The score is held for manual review.", no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
        del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Sitting an exam is free; grading and the review use one token. Get tokens under «Get tokens» above, by buying them or watching ads.",
        admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
@@ -533,26 +541,24 @@ function arLabSol(s, task) {
   const c = DATA[s.comp], y = c && c.years.find((x) => x.y === s.year), p = y && y.problems.find((x) => x.id === task || (typeof examTask === "function" && examTask(x) === task)), v = p && p.files && p.files.sol;
   return typeof v === "string" ? v : v ? (v[lang] || v.ko || v.en) : "";
 }
-async function arLabList(root, alive) {
+function arLedgerHtml(rows){const L=lbt();return rows.length?`<table class="cmtbl artbl"><tbody>${rows.map(x=>`<tr><td style="width:80px"><b style="color:${x.delta<0||x.note==='half'?'#c0392b':'#1e8449'}">${x.note==='half'?'−0.5':(x.delta>0?'+':'')+x.delta}</b></td><td class="t">${L[x.reason]||esc(x.reason)}${x.exam_key?' · '+esc(x.exam_key.toUpperCase()):''}${x.note&&x.note!=='half'?' · '+esc(x.note):x.note==='half'?' · '+L.half:''}</td><td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join('')}</tbody></table>`:'';}
+async function arLabList(root, alive,bootstrap) {
   const L = lbt();
-  if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab"); } catch (e) {} location.hash = "#/login"; return; }
-  const [a, tk, ls, shop] = await Promise.all([cmApi("GET", "/lab/active"), cmApi("GET", "/lab/tokens"), cmApi("GET", "/lab/sessions"), cmApi("GET", "/pay/config").catch(() => ({}))]); if (!alive()) return;
-  const act = a.active;
+  const [boot,shop]=await Promise.all([bootstrap||(typeof cmLabBootstrap==='function'?cmLabBootstrap():cmApi('GET','/lab/bootstrap?include=sessions,health')),bootstrap?.shop||cmApi('GET','/pay/config').catch(()=>({}))]);if(!alive())return;
+  if(!boot.user){try{sessionStorage.setItem('hlCmBack','#/lab');}catch(e){}location.hash='#/login';return;}
+  cm.me=boot.user;const act=boot.active,tk=boot,ls={sessions:boot.sessions||[]};
   root.innerHTML = `
     <div class="cmtop"><div><h1>⏱ ${L.h}</h1><p>${L.sub}</p></div></div>
-    <div class="arstats"><div><small>${lang === "en" ? "Tokens" : "실전 토큰"}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
-    ${arShopHtml(shop, tk.parts || 0)}
-    ${act ? `<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>
-      ${arLabHref(act) ? `<a class="cmbtn pri" href="${esc(arLabHref(act))}">${L.resume}</a>` : ""}</div>` : ""}
-    <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length ? `<table class="cmtbl artbl"><tbody>${ls.sessions.map((x) => `<tr>
-      <td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(" + "))}</a></td>
-      <td style="width:150px">${L.st[x.status] || esc(x.status)}</td><td style="width:110px"><b>${x.status === "graded" ? x.score + (x.points ? " / " + x.points : "") : "–"}</b></td>
-      <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
-    <div class="arpanel"><h3>${L.ledger}</h3><p class="arempty" style="margin-top:0">${L.howGet}</p>${tk.ledger.length ? `<table class="cmtbl artbl"><tbody>${tk.ledger.map((x) => `<tr>
-      <td style="width:80px"><b style="color:${x.delta < 0 || x.note === "half" ? "#c0392b" : "#1e8449"}">${x.note === "half" ? "−0.5" : (x.delta > 0 ? "+" : "") + x.delta}</b></td><td class="t">${L[x.reason] || esc(x.reason)}${x.exam_key ? " · " + esc(x.exam_key.toUpperCase()) : ""}${x.note && x.note !== "half" ? " · " + esc(x.note) : x.note === "half" ? " · " + L.half : ""}</td>
-      <td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>` : ""}</div>`;
-  arShopWire(root, shop);
+    <div class="arstats"><div><small>${lang==='en'?'Tokens':'실전 토큰'}</small><b id="lbTokN">${tk.tokens}</b></div><div><small>${L.mine}</small><b>${ls.sessions.length}</b></div></div>
+    ${arShopHtml(shop,tk.parts||0)}
+    ${act?`<div class="arpanel"><h3>${L.active}</h3><p style="margin:0 0 8px"><b>${esc(act.comp.toUpperCase())} ${act.year}</b> · ${L.st[act.status]}</p>${arLabHref(act)?`<a class="cmbtn pri" href="${esc(arLabHref(act))}">${L.resume}</a>`:''}</div>`:''}
+    <div class="arpanel"><h3>${L.mine}</h3>${ls.sessions.length?`<table class="cmtbl artbl"><tbody>${ls.sessions.map(x=>`<tr><td class="t"><a href="#/lab/${x.id}"><b>${esc(x.comp.toUpperCase())} ${x.year}</b> ${esc(x.tasks.join(' + '))}</a></td><td style="width:150px">${L.st[x.status]||esc(x.status)}</td><td style="width:110px"><b>${x.status==='graded'?x.score+(x.points?' / '+x.points:''):'–'}</b></td><td style="width:130px">${cmShort(x.created_at)}</td></tr>`).join('')}</tbody></table>`:`<p class="arempty">${L.none}</p>`}</div>
+    <div class="arpanel"><details id="lbLedger"><summary style="cursor:pointer;font-weight:700">${L.ledger}</summary><p class="arempty">${L.howGet}</p><div id="lbLedgerBody"></div></details></div>`;
+  arShopWire(root,shop);
+  const ledger=root.querySelector('#lbLedger');let loading=false,loaded=false;
+  if(ledger)ledger.addEventListener('toggle',async()=>{if(!ledger.open||loaded||loading)return;loading=true;const owner=cmTok();try{const r=await cmApi('GET','/lab/tokens');if(!alive()||owner!==cmTok())return;root.querySelector('#lbLedgerBody').innerHTML=arLedgerHtml(r.ledger||[]);loaded=true;}catch(e){if(alive())root.querySelector('#lbLedgerBody').textContent=arErr(e);}finally{loading=false;}});
 }
+
 /* ── getting tokens: buying (Paddle in USD, Toss Payments in KRW) and rewarded video ads (a third each) ──
    laid out like a top-up page: pick a pack, one total, one pay button */
 function arShopLists(c) {
@@ -712,10 +718,19 @@ function arLabReview(r) {
     ${r.handwriting ? `<p style="margin:6px 0 0"><b>${L.rvHand}</b> · ${L.rvRate[r.handwriting.rating] || ""} — ${esc(r.handwriting.notes)}</p>` : ""}
     ${r.presentation ? `<p style="margin:6px 0 0"><b>${L.rvPres}</b> — ${esc(r.presentation)}</p>` : ""}</div>`;
 }
-async function arLabOne(root, alive, id) {
+let arNetworkPromise=null;
+async function arWatchLab(root,alive,id,session){
+  if(typeof document!=='object')return;
+  try{const network=window.HLExamNetwork||await(arNetworkPromise||(arNetworkPromise=import('./sim/exam-network.js').then(()=>window.HLExamNetwork).catch(e=>{arNetworkPromise=null;throw e;})));if(!alive())return;
+    let signature=network.sessionSignature(session);
+    ar.poller?.dispose();ar.poller=network.createPoll({active:()=>{if(!alive()){ar.poller?.dispose();return false;}return true;},task:async()=>{const r=await cmApi('GET','/lab/sessions/'+id);if(!alive())return false;const next=network.sessionSignature(r.session),changed=signature!==next;signature=next;if(changed)await arLabOne(root,alive,id,r.session);return changed;}});ar.poller.start();
+  }catch(e){}
+}
+async function arLabOne(root, alive, id,preloaded) {
+  ar.poller?.dispose();ar.poller=null;
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
-  const s = (await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
+  const s = preloaded||(await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
   const isContest = arIsContest(s), english = lang === "en", L = isContest ? {...lbt(),
     resume: english ? "Open answer submission / review" : "답안 제출·검토 화면 열기",
     reportH: english ? "Written-proof learning review" : "서술형 학습용 검토 기록", total: english ? "Reference score" : "학습용 참고점수",
@@ -766,6 +781,7 @@ async function arLabOne(root, alive, id) {
       if (r.ok) box.innerHTML = `<img alt="" style="width:100%;border-radius:8px" src="${URL.createObjectURL(await r.blob())}">`;
       else if (r.status === 410) box.innerHTML = `<p class="arempty" style="padding:10px">${L.purged}</p>`; } catch (e) {}
   }));
+  if(s.status==='grading')void arWatchLab(root,alive,id,s);
   /* admins: the reference marks for this experiment */
   root.querySelectorAll("[data-rev]").forEach((b) => b.onclick = async () => {
     const panel = b.closest(".arpanel"), items = [...panel.querySelectorAll("[data-ref]")].filter((x) => x.value !== "").map((x) => ({id: x.dataset.ref, ref: +x.value}));

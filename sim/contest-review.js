@@ -5,6 +5,7 @@
   else root.ContestReview=api;
 })(typeof globalThis==='object'?globalThis:this,function(){
   'use strict';
+  const Network=typeof module==='object'&&module.exports?require('./exam-network.js'):window.HLExamNetwork;
   const DEFAULT_API='https://haslalab-community.haslalab.workers.dev';
   const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
   const MAX_IMAGE=1850000,MAX_PAGES=40;
@@ -26,21 +27,11 @@
     return lang!=='en'?(storage?'사진은 보관했습니다. 사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.':'사진은 보관했지만 글자를 읽지 못했습니다. 원본을 확인하고 필요하면 다시 촬영해 주세요.'):(storage?'The photo was saved. The photo and full recognized text exceed the storage limit. Reduce the file size and upload again.':'The photo was saved, but its text could not be read. Check the original and retake it if needed.');
   }
   function createClient({fetch:fetcher,getToken,getBase}={}){
-    const perform=fetcher||((...args)=>fetch(...args));
     const base=()=>String(getBase?getBase():DEFAULT_API).replace(/\/+$/,'');
-    async function request(method,path,body,extra={}){
-      const headers={...extra.headers},token=getToken?getToken():'';
-      if(token)headers.Authorization='Bearer '+token;
-      if(body!==undefined&&!extra.binary)headers['Content-Type']='application/json';
-      let response;
-      try{response=await perform(base()+'/api'+path,{method,headers,body:body===undefined?undefined:extra.binary?body:JSON.stringify(body)});}
-      catch(_){throw{code:'network'};}
-      const value=await response.json().catch(()=>({}));
-      if(!response.ok)throw{...value,code:value.error||'server_error',status:response.status};
-      return value;
-    }
+    const transport=Network.createTransport({fetch:fetcher,getToken,getBase:base}),request=transport.request;
     return {
-      request,
+      request,fingerprint:transport.fingerprint,
+      bootstrap:()=>request('GET','/lab/bootstrap'),
       active:()=>request('GET','/lab/active'),
       get:id=>request('GET','/lab/sessions/'+sessionId(id)),
       start:body=>request('POST','/lab/contest/start',{...body,purpose:'review'}),
@@ -48,6 +39,7 @@
       pay:id=>request('POST','/lab/sessions/'+sessionId(id)+'/pay',{}),
       read:id=>request('POST','/lab/contest/sessions/'+sessionId(id)+'/read',{}),
       confirm:(id,pid,text,task)=>request('POST','/lab/contest/sessions/'+sessionId(id)+'/pages/'+sessionId(pid)+'/confirm',{text,task}),
+      confirmAll:(id,pages)=>request('POST','/lab/contest/sessions/'+sessionId(id)+'/confirm',{pages}),
       submit:id=>request('POST','/lab/sessions/'+sessionId(id)+'/submit',{grade:true}),
       qr:id=>request('POST','/lab/sessions/'+sessionId(id)+'/qr',{}),
       upload:(code,task,blob)=>request('PUT','/lab/up/pages?task='+encodeURIComponent(task)+'&kind=answer',blob,{binary:true,headers:{'X-Lab-Token':code,'Content-Type':blob.type||'image/jpeg'}}),
@@ -107,30 +99,37 @@
     const client=createClient({fetch:options.fetch,getToken,getBase});
     const key=storageKey(entry,options.runId),numbers=taskNumbers(entry),answers=mapAnswers(entry,options.answers||options.localAnswers||{}),tasks=numbers.map(n=>'Q'+n);
     let alive=true,session=options.session||null,contest=options.contest||null,tokens=null,busy='',error='',approved=false,uploadCode=options.token||'',queue=[],poller=null,clock=null,qrUrl='',revision=0,skew=0,needsLogin=false;
-    const dirty=new Map(),thumbs=new Map();
+    const dirty=new Map(),thumbs=new Map(),thumbPending=new Map();
+    let refreshPromise=null,refreshKey='',revisionEpoch=0,identity=client.fingerprint();
     function $(s){return host.querySelector(s);}
     function saved(){return read(key,null);}
     function remember(){if(session)write(key,{id:session.id,examId:entry.id,mode:options.mode||'paper'});if(session&&uploadCode)try{storage.setItem('hlExamUp:'+session.id,uploadCode);}catch(_){}}
-    function use(response){if(response?.session){if(response.session.examId!==entry.id)throw{code:'bad_exam'};sessionId(response.session.id);session=response.session;if(Number.isFinite(session.now))skew=session.now-Date.now()/1000;}if(response?.contest)contest=response.contest;if(response?.token)uploadCode=response.token;if(Number.isFinite(response?.tokens)){tokens=response.tokens;if(options.onTokens)options.onTokens(tokens);}remember();if(options.onSession&&session)options.onSession(session);}
+    function use(response){if(response?.session){if(response.session.examId!==entry.id)throw{code:'bad_exam'};sessionId(response.session.id);const before=Network.sessionSignature(session);session=response.session;if(before!==Network.sessionSignature(session))approved=false;if(Number.isFinite(session.now))skew=session.now-Date.now()/1000;}if(response?.contest)contest=response.contest;if(response?.token)uploadCode=response.token;if(Number.isFinite(response?.tokens)){tokens=response.tokens;if(options.onTokens)options.onTokens(tokens);}remember();if(options.onSession&&session)options.onSession(session);}
     const reason=e=>({network:tr('서버에 연결하지 못했습니다. 다시 시도하세요.','Connection failed. Please retry.'),login_required:tr('채점을 접수하려면 로그인하세요.','Sign in to request review.'),no_tokens:tr('실전 토큰이 부족합니다. 토큰을 충전한 뒤 다시 요청하세요.','You need an exam token before requesting review.'),closed:tr('답안 제출 시간이 끝났습니다. 이미 접수한 답안과 기록은 내 시험에서 확인하세요.','The answer submission window has closed. See your submitted record under My exams.'),other_active:tr('다른 시험의 제출 접수가 열려 있습니다. 해당 시험을 먼저 마무리하세요.','Another exam submission is open. Finish it first.'),not_found:tr('이 채점 접수를 찾지 못했습니다. 로그인 계정과 서버 상태를 확인하세요.','This review could not be found. Check your account and server.'),bad_exam:tr('이 시험은 아직 서버의 서술형 채점 목록에 없습니다.','This exam is not in the written-review catalogue yet.'),too_many_pages:tr('한 접수에 최대 40쪽을 보낼 수 있습니다.','A review accepts at most 40 pages.'),bad_image:tr('사진 또는 PDF 파일을 선택하세요.','Choose an image or PDF.'),image_too_big:tr('작은 글씨를 보존하는 화질로는 용량이 너무 큽니다. 흑백 모드로 바꾸거나 종이가 화면을 채우게 다시 촬영하세요.','This image is too large at a readable resolution. Try B&W or retake with the page filling the frame.'),file_too_big:tr('파일 하나는 30 MB 이하여야 합니다.','Each file must be 30 MB or smaller.'),pdf_unavailable:tr('PDF 리더를 불러오지 못했습니다. 사진으로 보내거나 다시 시도하세요.','The PDF reader could not load. Try again or use image files.'),empty_answers:tr('제출할 풀이가 없습니다. 답안 사진 또는 작성한 풀이를 먼저 보내세요.','Add scanned pages or your written answers first.'),unconfirmed_pages:tr('스캔 원문과 읽힌 풀이를 대조하고 확인을 마쳐 주세요.','Check the scans against the recognized answers first.')})[({needs_confirmation:'unconfirmed_pages',no_answers:'empty_answers'})[e?.code]||e?.code]||tr('요청을 처리하지 못했습니다. 잠시 후 다시 시도하세요.','The request could not be completed. Please retry.');
     function stateLabel(state){return({scanning:tr('답안 제출 준비','Prepare answers'),running:tr('시험 진행 중','Exam running'),grading:tr('검토 중','Under review'),graded:tr('검토 완료','Review complete'),pending:tr('관리자 검토 대기','Waiting for manual review'),error:tr('검토 오류 · 관리자 확인 필요','Review error · awaiting staff'),ended:tr('채점 미신청','Review not requested'),empty:tr('제출 답안 없음','No answers submitted')})[state]||escape(state||'');}
     function rememberLogin(){try{sessionStorage.setItem('hlCmBack','#/kmo/exam');sessionStorage.setItem('hlContestReviewBack',location.href);}catch(_){}}
     function scanURL(){const u=new URL('scan.html',location.href),hash=new URLSearchParams({c:uploadCode,l:ko?'ko':'en'});if(getBase().replace(/\/+$/,'')!==DEFAULT_API)hash.set('a',getBase());u.hash=hash.toString();return u.href;}
     const authError=e=>e?.code==='login_required'||e?.status===401;
-    async function act(label,fn){if(busy||!alive)return;busy=label;error='';render();try{await fn();}catch(e){error=reason(e);if(authError(e)){tokens=null;needsLogin=true;}}finally{busy='';if(alive)render();}}
-    async function refresh(silent=false){
+    async function act(label,fn){if(busy||!alive)return;revisionEpoch++;busy=label;error='';render();try{await fn();}catch(e){error=reason(e);if(authError(e)){tokens=null;needsLogin=true;}}finally{busy='';if(alive)render();}}
+    function refresh(silent=false){
       if(!alive||!getToken())return;
-      try{
-        if(session){const r=await client.get(session.id);if(!alive)return;use(r);}
-        else{const r=await client.active();if(!alive)return;if(Number.isFinite(r.tokens))tokens=r.tokens;}
+      const account=client.fingerprint(),epoch=revisionEpoch,id=session?.id,key=account+'\n'+epoch+'\n'+(id||'');
+      if(refreshPromise&&refreshKey===key)return refreshPromise;
+      refreshKey=key;
+      const promise=(async()=>{try{
+        const r=id?await client.get(id):await client.bootstrap();
+        if(!alive||client.fingerprint()!==account||revisionEpoch!==epoch||session?.id!==id)return;
+        if(id)use(r);else if(Number.isFinite(r.tokens))tokens=r.tokens;
         if(!silent)render();
-      }catch(e){if(authError(e)){tokens=null;needsLogin=true;}if(!silent||needsLogin){error=reason(e);render();}}
+      }catch(e){if(!alive||client.fingerprint()!==account||revisionEpoch!==epoch)return;if(authError(e)){tokens=null;needsLogin=true;}if(!silent||needsLogin){error=reason(e);render();}}})();
+      refreshPromise=promise;promise.finally(()=>{if(refreshPromise===promise)refreshPromise=null;});return promise;
     }
-    function stopTimers(){if(poller)clearInterval(poller);if(clock)clearInterval(clock);poller=clock=null;}
+    function stopTimers(){poller?.stop();if(clock)clearInterval(clock);clock=null;}
     function startTimers(){
       stopTimers();
       if(!session)return;
-      if(['scanning','grading'].includes(session.status))poller=setInterval(async()=>{if(!busy&&alive){const prior=JSON.stringify([session.status,session.paid,session.pages,session.detail]);await refresh(true);if(alive&&prior!==JSON.stringify([session.status,session.paid,session.pages,session.detail]))render();}},5000);
+      if(!poller)poller=Network.createPoll({document:typeof document==='object'?document:null,active:()=>alive&&!busy&&!needsLogin&&!!getToken()&&['running','scanning','grading'].includes(session?.status),task:async()=>{const prior=Network.sessionSignature(session);await refresh(true);const changed=prior!==Network.sessionSignature(session);if(alive&&changed){poller?.reset();render();}return changed;}});
+      if(['running','scanning','grading'].includes(session.status))poller.start();
       if(session.status==='scanning'){clock=setInterval(paintClock,1000);paintClock();}
     }
     function paintClock(){const el=$('[data-cr-clock]');if(!el||!session)return;const remain=Math.max(0,Math.floor((session.scan_until||0)-(Date.now()/1000+skew)));el.textContent=remain?Math.floor(remain/60)+':'+String(remain%60).padStart(2,'0'):tr('제출 창 종료','Submission closed');}
@@ -143,28 +142,28 @@
       }
       if(!session){
         host.innerHTML=prefix+`<p>${tr('시험은 이미 종료됐습니다. 아래 버튼은 채점용 답안을 보내는 접수 창을 열며, 토큰을 차감하지 않습니다. 접수 후 30분은 스캔·전송 시간이며 추가 풀이 시간이 아닙니다.','Your exam has ended. Open an answer-submission window below without spending a token. Its 30 minutes are for scanning and transmission, not additional solving time.')}</p><button class="primary" data-cr-start ${busy?'disabled':''}>${tr('채점용 답안 제출 준비','Prepare answers for review')}</button><p class="cr-small">${tr('사진·PDF 또는 화면 풀이를 서버로 보낼 때 해당 자료가 계정의 채점 접수에 저장됩니다. 토큰은 별도의 ‘1토큰으로 검토 시작’ 버튼을 누를 때만 사용합니다.','Scans, PDFs and typed answers sent here are stored with your account review. A token is used only when you select “Start review for 1 token”.')}</p>`;
-        $('[data-cr-start]').onclick=()=>act(tr('제출 접수를 여는 중…','Opening submission…'),async()=>{use(await client.start({examId:entry.id,lang:ko?'ko':'en',entry:options.entry||'?id='+encodeURIComponent(entry.id),mode:options.mode==='paper'?'paper':'online',purpose:'review',runId:String(options.runId||'')}));await refresh(true);if(!uploadCode&&session)use(await client.qr(session.id));});return;
+        $('[data-cr-start]').onclick=()=>act(tr('제출 접수를 여는 중…','Opening submission…'),async()=>{use(await client.start({examId:entry.id,lang:ko?'ko':'en',entry:options.entry||'?id='+encodeURIComponent(entry.id),mode:options.mode==='paper'?'paper':'online',purpose:'review',runId:String(options.runId||'')}));if(!uploadCode&&session)use(await client.qr(session.id));});return;
       }
       if(!session.status){host.innerHTML=prefix+`<p>${tr('저장된 채점 접수 정보를 확인하고 있습니다.','Loading the saved review record.')}</p><button data-cr-refresh>${tr('다시 확인','Retry')}</button> <button data-cr-reset>${tr('이 기기의 접수 연결만 해제','Unlink saved review on this device')}</button>`;$('[data-cr-refresh]').onclick=()=>refresh();$('[data-cr-reset]').onclick=()=>{try{storage.removeItem(key);}catch(_){}session=null;error='';render();};return;}
       if(session.pages===null||session.pages===undefined)session.pages=[];
       if(!['scanning','running'].includes(session.status)){host.innerHTML=prefix+resultHTML();bindResult();startTimers();return;}
       if(session.status==='running'){host.innerHTML=prefix+`<p>${tr('서버의 시험이 아직 진행 중입니다. 종료 후 제출할 수 있습니다.','The server exam is still running. Submit answers after it ends.')}</p><button data-cr-refresh>${tr('상태 다시 확인','Refresh status')}</button>`;$('[data-cr-refresh]').onclick=()=>refresh();startTimers();return;}
-      const pages=session.pages||[],paid=!!session.paid;
+      const pages=session.pages||[],paid=!!session.paid,reading=pages.some(Network.reading);
       host.innerHTML=prefix+`<div class="cr-status"><b>${stateLabel(session.status)}</b><span>${tr('스캔·전송 마감까지','Scan/upload window')}: <strong data-cr-clock></strong></span><span>${tr('접수 번호','Review')}: ${session.id}</span></div>`+
-        `${paid?`<p class="cr-paid">${tr('1토큰 사용 완료 · 같은 접수의 최종 제출에 다시 차감하지 않습니다.','1 token used. Final submission of this review does not charge again.')}</p>`:''}`+
+        `${reading?`<p class="cr-progress" role="status">${tr('답안 판독을 진행 중입니다. 다른 화면으로 이동해도 계속 처리합니다.','Your pages are being read. Processing continues if you leave this screen.')}</p>`:''}${paid?`<p class="cr-paid">${tr('1토큰 사용 완료 · 같은 접수의 최종 제출에 다시 차감하지 않습니다.','1 token used. Final submission of this review does not charge again.')}</p>`:''}`+
         `${Object.keys(answers).length?onlineHTML():''}<div class="cr-columns"><section><h3>${tr('스캔 파일 보내기','Send scanned pages')}</h3><p class="cr-small">${tr('사진 또는 PDF를 선택한 뒤 문항을 지정하세요. ‘서버로 보내기’를 누르기 전에는 파일이 전송되지 않습니다. 한 접수에 최대 40쪽입니다.','Choose images or a PDF and assign each page to a question. Files are not transmitted until you select Send to server. Maximum 40 pages.')}</p><label class="cr-file">${tr('사진·PDF 선택','Choose images / PDF')}<input data-cr-files type="file" accept="image/*,application/pdf,.pdf" multiple ${busy?'disabled':''}></label><div data-cr-queue>${queueHTML()}</div></section><section class="cr-mobile"><h3>${tr('휴대전화로 스캔','Scan with your phone')}</h3><div data-cr-qr></div><p class="cr-small">${tr('기존 답안 스캐너를 엽니다. 종이 네 귀퉁이가 모두 보이게 찍고 원근 보정 후 전송하세요.','Open the existing answer scanner. Photograph all four corners, check the perspective correction, then send.')}</p><button data-cr-newqr ${busy?'disabled':''}>${tr('스캔 링크 새로 만들기','Renew scan link')}</button></section></div><section class="cr-pages"><h3>${tr('서버에 보낸 답안','Submitted pages')} · ${pages.length}</h3>${pagesHTML(pages)}</section>`+
-        `<div class="cr-actions">${!paid?`<button class="primary" data-cr-pay ${busy||!pages.length?'disabled':''}>${tr('1토큰으로 검토 시작','Start review for 1 token')}</button><p class="cr-small">${tr('이 버튼을 누르면 1토큰을 사용하고, 스캔한 풀이를 읽습니다. 읽힌 수식을 원문과 대조한 뒤 최종 제출하세요.','This uses 1 token and reads your scanned work. Check recognized formulas against the originals before final submission.')}</p>`:`<button data-cr-read ${busy||!pages.length?'disabled':''}>${tr('새 답안 읽기 / 다시 확인','Read new pages / refresh')}</button><label class="cr-check"><input data-cr-approved type="checkbox" ${approved?'checked':''}>${tr('원본 답안과 읽힌 수식·문항 분류를 대조했고, OCR 오독만 정정했습니다.','I checked question labels and recognized formulas against the originals and corrected only OCR errors.')}</label><button class="primary" data-cr-submit ${busy||!approved||!pages.length?'disabled':''}>${tr('확인한 답안 최종 제출','Submit checked answers')}</button>`}<a href="../#/lab/${session.id}">${tr('내 채점 접수 기록','My review record')}</a></div>`;
+        `<div class="cr-actions">${!paid?`<button class="primary" data-cr-pay ${busy||!pages.length?'disabled':''}>${tr('1토큰으로 검토 시작','Start review for 1 token')}</button><p class="cr-small">${tr('이 버튼을 누르면 1토큰을 사용하고, 스캔한 풀이를 읽습니다. 읽힌 수식을 원문과 대조한 뒤 최종 제출하세요.','This uses 1 token and reads your scanned work. Check recognized formulas against the originals before final submission.')}</p>`:`<button data-cr-read ${busy||reading||!pages.length?'disabled':''}>${tr('새 답안 읽기 / 다시 확인','Read new pages / refresh')}</button><label class="cr-check"><input data-cr-approved type="checkbox" ${reading?'disabled':''} ${approved?'checked':''}>${tr('원본 답안과 읽힌 수식·문항 분류를 대조했고, OCR 오독만 정정했습니다.','I checked question labels and recognized formulas against the originals and corrected only OCR errors.')}</label><button class="primary" data-cr-submit ${busy||reading||!approved||!pages.length?'disabled':''}>${tr('확인한 답안 최종 제출','Submit checked answers')}</button>`}<a href="../#/lab/${session.id}">${tr('내 채점 접수 기록','My review record')}</a></div>`;
       bindOnline();bindQueue();bindScanQueue();bindPages();
       $('[data-cr-files]').onchange=e=>{const files=Array.from(e.target.files||[]);e.target.value='';if(files.length)act(tr('스캔 파일을 준비하는 중…','Preparing scanned files…'),()=>prepareFiles(files));};
       $('[data-cr-newqr]').onclick=()=>act(tr('스캔 링크를 갱신하는 중…','Renewing scan link…'),async()=>{use(await client.qr(session.id));});
       if($('[data-cr-pay]'))$('[data-cr-pay]').onclick=()=>pay();
-      if($('[data-cr-read]'))$('[data-cr-read]').onclick=()=>act(tr('답안을 읽는 중…','Reading answers…'),async()=>{use(await client.read(session.id));approved=false;await refresh(true);});
-      if($('[data-cr-approved]'))$('[data-cr-approved]').onchange=e=>{approved=e.target.checked;const button=$('[data-cr-submit]');if(button)button.disabled=busy||!approved||!pages.length;};
+      if($('[data-cr-read]'))$('[data-cr-read]').onclick=()=>act(tr('답안을 읽는 중…','Reading answers…'),async()=>{use(await client.read(session.id));approved=false;});
+      if($('[data-cr-approved]'))$('[data-cr-approved]').onchange=e=>{approved=e.target.checked;const button=$('[data-cr-submit]');if(button)button.disabled=busy||reading||!approved||!pages.length;};
       if($('[data-cr-submit]'))$('[data-cr-submit]').onclick=()=>submit();
       paintQR();paintThumbs(pages);startTimers();
     }
     function onlineHTML(){return `<details class="cr-online"><summary>${tr('화면에 작성한 풀이 보내기','Send answers typed on screen')} · ${Object.keys(answers).length} ${tr('문항','questions')}</summary><p class="cr-small">${tr('시험 종료 때 확정된 풀이입니다. 서버로 보내기 전 내용을 확인하세요.','These answers were locked at the end of your attempt. Check them before sending.')}</p>${Object.entries(answers).map(([n,text])=>`<article><h4>${n}. ${tr('문항','Question')}</h4><pre>${escape(text)}</pre></article>`).join('')}<button data-cr-text ${busy||session.paid?'disabled':''}>${tr('이 풀이를 서버로 보내기','Send these answers to server')}</button></details>`;}
-    function bindOnline(){if($('[data-cr-text]'))$('[data-cr-text]').onclick=()=>act(tr('화면 풀이를 저장하는 중…','Saving typed answers…'),async()=>{use(await client.text(session.id,answers));approved=false;await refresh(true);});}
+    function bindOnline(){if($('[data-cr-text]'))$('[data-cr-text]').onclick=()=>act(tr('화면 풀이를 저장하는 중…','Saving typed answers…'),async()=>{use(await client.text(session.id,answers));approved=false;});}
     function taskOptions(selected){return tasks.map(t=>`<option value="${t}" ${selected===t?'selected':''}>${t.replace('Q','')} ${tr('번','')}</option>`).join('');}
     function queueHTML(){return queue.length?`<ul class="cr-queue">${queue.map((p,i)=>`<li><img src="${escape(p.url)}" alt="${escape(p.name)}"><div><b>${escape(p.name)}</b><label>${tr('문항','Question')} <select data-cr-qtask="${i}" ${busy?'disabled':''}>${taskOptions(p.task)}</select></label>${p.processingFailed?`<p class="cr-small">${tr('자동 보정 실패 · 원본을 확인하거나 다시 선택하세요.','Automatic correction failed. Check the original or choose another photo.')}</p>`:p.scan&&p.scan.autoScore<.75?`<p class="cr-small">${tr('모서리를 확인하고 필요하면 직접 맞춰 주세요.','Check the corners and adjust them if needed.')}</p>`:''}${p.scan?.quality&&!p.scan.quality.ok?`<p class="cr-small">${tr('사진이 흐립니다. 작은 글씨를 확인하고 필요하면 다시 촬영하세요.','The photo is blurry. Check small writing and retake if needed.')}</p>`:''}<div><button data-cr-qzoom="${i}" ${busy?'disabled':''}>${tr('크게 보기','Enlarge')}</button>${p.source?` <button data-cr-qsource="${i}" ${busy?'disabled':''}>${tr('촬영 원본','Original photo')}</button>`:''}${p.scan?.baseUrl?` <button data-cr-qedit="${i}" ${busy?'disabled':''}>${tr('모서리 맞추기','Fix corners')}</button><div>${[['clean',tr('또렷하게','Clean')],['mono',tr('흑백','B&W')],['original',tr('원본 색상','Original colour')]].map(([mode,label])=>`<button data-cr-qmode="${i}" data-mode="${mode}" aria-pressed="${p.mode===mode}" ${busy?'disabled':''}>${label}</button>`).join(' ')} <button data-cr-qrotate="${i}" ${busy?'disabled':''}>90° ↻</button></div>`:''}</div><button data-cr-qremove="${i}" ${busy?'disabled':''}>${tr('선택 취소','Remove')}</button></div></li>`).join('')}</ul><button data-cr-upload ${busy?'disabled':''}>${tr('선택한 '+queue.length+'쪽을 서버로 보내기','Send '+queue.length+' selected pages to server')}</button>`:'';}
     function inspectQueue(p,original){
@@ -190,19 +189,20 @@
       host.querySelectorAll('[data-cr-qedit]').forEach(el=>el.onclick=()=>act(tr('모서리를 확인하세요.','Check the corners.'),async()=>{const p=queue[+el.dataset.crQedit],scanner=await scannerLibrary(),edit=await scanner.editCorners(p.scan.baseUrl,p.scan.corners,{marker:p.scan.method==='marker',lang:ko?'ko':'en'});if(edit)await rebuildQueue(p,edit);}));
     }
     async function prepareFiles(files){for(const file of files){const remaining=MAX_PAGES-(session.pages||[]).length-queue.length;if(remaining<=0)throw{code:'too_many_pages'};const prepared=await filePages(file,remaining);if(!alive)return;for(const p of prepared)queue.push({...p,url:URL.createObjectURL(p.blob),task:tasks[0]});}}
-    function ocrLabel(p){return uploadWarning(p,ko?'ko':'en')||(p.source==='typed'?tr('확정된 화면 풀이','Locked typed answer'):({unpaid:tr('검토 시작 후 읽기','Read after review starts'),done:tr('읽음','Read'),failed:tr('판독 실패 · 원본 대조 필요','Reading failed · check original'),off:tr('자동 읽기 대기','Waiting for reading'),none:tr('접수됨','Received')})[p.ocr_status]||tr('원본 대조 필요','Check original'));}
+    function ocrLabel(p){return uploadWarning(p,ko?'ko':'en')||(p.source==='typed'?tr('확정된 화면 풀이','Locked typed answer'):({unpaid:tr('검토 시작 후 읽기','Read after review starts'),queued:tr('판독 대기','Queued for reading'),reading:tr('판독 중','Reading'),done:tr('읽음','Read'),failed:tr('판독 실패 · 원본 대조 필요','Reading failed · check original'),off:tr('자동 읽기 대기','Waiting for reading'),none:tr('접수됨','Received')})[p.ocr_status]||tr('원본 대조 필요','Check original'));}
     function pageText(p){if(dirty.has(p.id))return dirty.get(p.id);if(p.text)return p.text;return(p.read?.items||[]).filter(i=>!i.crossed_out).map(i=>i.label+': '+(i.text||(i.value??''))).join('\n');}
-    function pagesHTML(pages){if(!pages.length)return `<p class="cr-empty">${tr('아직 보낸 답안이 없습니다.','No pages sent yet.')}</p>`;return pages.map(p=>`<article class="cr-page" data-cr-page="${p.id}"><div class="cr-thumb" data-cr-thumb="${p.id}"></div><div class="cr-pagebody"><div class="cr-pagemeta"><b>#${p.no}</b><label>${tr('문항','Question')}<select data-cr-task="${p.id}" ${busy?'disabled':''}>${taskOptions(p.task)}</select></label><span>${escape(ocrLabel(p))}</span><button data-cr-remove="${p.id}" ${busy?'disabled':''}>${tr('이 쪽 빼기','Remove page')}</button></div>${session.paid?`<label class="cr-readlabel">${tr('읽힌 풀이 · 원본의 OCR 오독만 정정','Recognized solution · correct OCR errors only')}<textarea data-cr-edit="${p.id}" maxlength="50000" ${p.source==='typed'?'readonly':''} ${busy?'disabled':''}>${escape(pageText(p))}</textarea></label><p class="cr-small">${tr('원본과 정정 내용을 함께 보관합니다. 추가 풀이를 작성하는 칸이 아닙니다.','Original scans and corrections are retained together. This is not a space for additional solving.')}</p>`:`<p class="cr-small">${tr('답안을 저장했습니다. 1토큰으로 검토를 시작하면 읽힌 풀이를 확인할 수 있습니다.','Page saved. Start review for 1 token to inspect the recognized work.')}</p>`}</div></article>`).join('');}
+    function pagesHTML(pages){if(!pages.length)return `<p class="cr-empty">${tr('아직 보낸 답안이 없습니다.','No pages sent yet.')}</p>`;return pages.map(p=>`<article class="cr-page" data-cr-page="${p.id}"><div class="cr-thumb" data-cr-thumb="${p.id}"></div><div class="cr-pagebody"><div class="cr-pagemeta"><b>#${p.no}</b><label>${tr('문항','Question')}<select data-cr-task="${p.id}" ${busy?'disabled':''}>${taskOptions(p.task)}</select></label><span>${escape(ocrLabel(p))}</span><button data-cr-remove="${p.id}" ${busy?'disabled':''}>${tr('이 쪽 빼기','Remove page')}</button></div>${session.paid?`<label class="cr-readlabel">${tr('읽힌 풀이 · 원본의 OCR 오독만 정정','Recognized solution · correct OCR errors only')}<textarea data-cr-edit="${p.id}" maxlength="50000" ${p.source==='typed'||Network.reading(p)?'readonly':''} ${busy||Network.reading(p)?'disabled':''}>${escape(pageText(p))}</textarea></label><p class="cr-small">${tr('원본과 정정 내용을 함께 보관합니다. 추가 풀이를 작성하는 칸이 아닙니다.','Original scans and corrections are retained together. This is not a space for additional solving.')}</p>`:`<p class="cr-small">${tr('답안을 저장했습니다. 1토큰으로 검토를 시작하면 읽힌 풀이를 확인할 수 있습니다.','Page saved. Start review for 1 token to inspect the recognized work.')}</p>`}</div></article>`).join('');}
     function bindPages(){host.querySelectorAll('[data-cr-task]').forEach(el=>el.onchange=()=>act(tr('문항 분류를 저장하는 중…','Saving question label…'),async()=>{await client.classify(session.id,+el.dataset.crTask,el.value,'answer');approved=false;await refresh(true);}));host.querySelectorAll('[data-cr-remove]').forEach(el=>el.onclick=()=>act(tr('답안 쪽을 빼는 중…','Removing page…'),async()=>{await client.remove(session.id,+el.dataset.crRemove);dirty.delete(+el.dataset.crRemove);approved=false;await refresh(true);}));host.querySelectorAll('[data-cr-edit]').forEach(el=>el.oninput=()=>{dirty.set(+el.dataset.crEdit,el.value);approved=false;const check=$('[data-cr-approved]');if(check)check.checked=false;const button=$('[data-cr-submit]');if(button)button.disabled=true;});}
     async function pay(){
       if(!session||session.paid||busy)return;
-      await act(tr('1토큰을 사용하고 답안을 읽는 중…','Using one token and reading answers…'),async()=>{use(await client.pay(session.id));use(await client.read(session.id));approved=false;await refresh(true);});
+      await act(tr('1토큰을 사용하고 답안을 읽는 중…','Using one token and reading answers…'),async()=>{use(await client.pay(session.id));use(await client.read(session.id));approved=false;});
     }
     async function submit(){
-      if(!session?.paid||!approved||busy)return;
+      if(!session?.paid||!approved||busy||(session.pages||[]).some(Network.reading))return;
       await act(tr('확인한 답안을 제출하고 검토하는 중…','Submitting checked work for review…'),async()=>{
-        for(const p of session.pages||[])if(p.source!=='typed'||dirty.has(p.id))await client.confirm(session.id,p.id,pageText(p),p.task);
-        use(await client.submit(session.id));dirty.clear();approved=false;await refresh(true);
+        const pages=(session.pages||[]).filter(p=>(p.source!=='typed'&&!p.confirmed)||dirty.has(p.id)).map(p=>({id:p.id,text:pageText(p),task:p.task}));
+        if(pages.length)use(await client.confirmAll(session.id,pages));
+        use(await client.submit(session.id));dirty.clear();approved=false;
       });
     }
     async function paintQR(){
@@ -216,7 +216,8 @@
     async function paintThumbs(pages){
       const version=revision;
       for(const p of pages){const area=$('[data-cr-thumb="'+p.id+'"]');if(!area)continue;let url=thumbs.get(p.id);
-        if(!url){try{const r=await (options.fetch||fetch)(client.imageURL(p.id),{headers:{Authorization:'Bearer '+getToken()}});if(!r.ok)continue;const blob=await r.blob();if(!/^image\//.test(blob.type))continue;url=URL.createObjectURL(blob);if(!alive){URL.revokeObjectURL(url);return;}thumbs.set(p.id,url);}catch(_){continue;}}
+        if(p.source==='typed'){area.textContent=tr('화면 풀이','Typed answer');continue;}
+        if(!url){try{if(!thumbPending.has(p.id)){const account=client.fingerprint(),pending=(async()=>{const r=await (options.fetch||fetch)(client.imageURL(p.id),{headers:{Authorization:'Bearer '+getToken()}});if(!r.ok)return null;const blob=await r.blob();if(!/^image\//.test(blob.type)||!alive||client.fingerprint()!==account)return null;const value=URL.createObjectURL(blob);thumbs.set(p.id,value);return value;})();thumbPending.set(p.id,pending);pending.finally(()=>thumbPending.delete(p.id)).catch(()=>{});}url=await thumbPending.get(p.id);if(!url)continue;}catch(_){continue;}}
         if(!alive||version!==revision)return;area.innerHTML=`<a href="${escape(url)}" target="_blank" rel="noopener"><img src="${escape(url)}" alt="${tr('원본 답안','Original answer')} #${p.no}"></a>`;
       }
     }
@@ -234,12 +235,13 @@
       const link=saved();if(!session&&link?.examId===entry.id&&Number.isSafeInteger(link.id))session={id:link.id};
       render();
       if(getToken()){
-        if(session)try{const active=await client.active();if(Number.isFinite(active.tokens))tokens=active.tokens;}catch(_){}
         await refresh();if(session&&!uploadCode)try{uploadCode=storage.getItem('hlExamUp:'+session.id)||'';}catch(_){}if(alive)render();
       }
     }
+    function accountChanged(){if(identity===client.fingerprint())return;identity=client.fingerprint();revisionEpoch++;needsLogin=false;tokens=null;approved=false;dirty.clear();session=null;uploadCode='';for(const url of thumbs.values())URL.revokeObjectURL(url);thumbs.clear();render();if(getToken())void init();}
+    if(typeof window==='object')window.addEventListener?.('storage',accountChanged);
     init();
-    return{refresh:()=>refresh(),getSession:()=>session,dispose(){alive=false;revision++;stopTimers();for(const p of queue)URL.revokeObjectURL(p.url);for(const url of thumbs.values())URL.revokeObjectURL(url);queue=[];thumbs.clear();}};
+    return{refresh:()=>refresh(),getSession:()=>session,dispose(){alive=false;revision++;stopTimers();poller?.dispose();if(typeof window==='object')window.removeEventListener?.('storage',accountChanged);for(const p of queue)URL.revokeObjectURL(p.url);for(const url of thumbs.values())URL.revokeObjectURL(url);queue=[];thumbs.clear();}};
   }
   return{mount,createClient,mapAnswers,taskNumbers,storageKey,sessionId,uploadWarning,DEFAULT_API};
 });
