@@ -11,7 +11,7 @@ def fields(row):
         values = row.get(name, [])
         for i, value in enumerate([values] if isinstance(values, str) else values):
             yield f'{name}[{i}]', value
-    for name in ('statement', 'givens', 'choices'):
+    for name in ('statement', 'after_figure', 'givens', 'choices'):
         for i, value in enumerate(row.get('problem', {}).get(name, [])):
             yield f'problem.{name}[{i}]', value
 

@@ -84,7 +84,7 @@ def build(year, part, items, manifest):
     source = fitz.open(INPUT / f'KPhE_{year[:4]}_{part}_KO.pdf')
     preserve = int(year[:4]) >= 2024
     reference = INPUT / (f'KPhE_{year[:4]}_{part}_KO.pdf' if preserve else f'KPhE_2026_T2{part[-1]}_KO.pdf')
-    flow = ColumnFlow(doc, title, level, '자체 작성 풀이 해설 · 한국물리학회 공식 배포 해설이 아님',
+    flow = ColumnFlow(doc, title, level, False if not preserve else '자체 작성 풀이 해설 · 한국물리학회 공식 배포 해설이 아님',
                       reference, preserve)
     for i, q in enumerate(items):
         answers = q.get('accepted_answers', [q['answer']])
@@ -92,7 +92,12 @@ def build(year, part, items, manifest):
         keep = 25 + 9.8 * 1.6 * 2
         if q.get('figure'):
             r = fitz.Rect(q['figure']['rect'])
-            keep += min(172, flow.width * r.height / r.width) + 12
+            if not preserve:
+                from kphe_redraw import native_figure, dimensions
+                _,asset = native_figure(q['figure']['source'],q['figure']['page'],q['figure']['rect'])
+                keep += dimensions(asset,flow.width)[1]+12
+            else:
+                keep += min(172, flow.width * r.height / r.width) + 12
         elif q.get('diagram'):
             keep += 165
         answer_label = '제공 정답' if q.get('status') == 'needs_review' else '정답'

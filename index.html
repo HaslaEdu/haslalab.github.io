@@ -1001,7 +1001,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js?v=20261030-study"></script>
-<script src="theory.js?v=d19c114710"></script>
+<script src="theory.js?v=edc3b5b293"></script>
 <script src="paper-languages.js?v=1"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
@@ -4892,7 +4892,7 @@ function viewComp(key,mode){
     ${archiveResources(c)}
     ${contestNote(key)}
     ${contestResources(key)}
-    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 제공된 2023년 기출과 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, supplied 2023 papers, and available Korean Middle-School Physics Competition papers from 2015–2022. Papers without an official key do not receive automatic grading."}</p>`:""}
+    ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 2023년 기출과 한국 중학생 물리대회 2015년 제2차~2022년 기출·공식 정답 자료를 모았습니다. 중학생 대회는 당시의 별도 시험 체계에 따른 자료입니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, 2023 papers, and Korean Middle-School Physics Competition papers with official answer material from the second 2015 sitting through 2022. The middle-school papers follow their own historical examination system."}</p>`:""}
     ${hasReview(c,key)?modeSwitch(key,mode):""}
     ${mode?`${portalHtml(key,mode)}</div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
