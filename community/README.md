@@ -365,6 +365,14 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | GET | `/api/omr/catalog` | 실전모드 시험 목록·문항 수·채점 기준 버전 |
 | POST | `/api/omr/attempts` | 로그인 필요. `{exam_key, client_id, answers}` → 서버 재채점 결과와 비교군 |
 
+## 개발자 모델 테스트
+
+`https://haslalab.org/#/lab/model-test`는 기존 관리자 계정(`role=admin`) 전용입니다. 같은 답안 사진과 문제·채점 기준으로 Gemini OCR/Gemini 채점, Gemini OCR/DeepSeek 채점, DeepSeek OCR/DeepSeek 채점을 선택해 비교합니다. OCR 원문, 모델명, 점수·피드백, 소요 시간과 API 토큰 사용량을 표시하며, 실전 성적·랭킹·실전 토큰에는 반영하지 않습니다. 외부 제공업체의 API 사용료는 해당 계정에서 발생합니다.
+
+키는 `haslalab-community` Worker의 기존 `GEMINI_API_KEY`·`DEEPSEEK_API_KEY` secrets를 사용합니다. 브라우저나 edge Worker에는 키를 복사하지 않습니다. Gemini 모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`), DeepSeek 채점 모델은 `DEEPSEEK_MODEL`(기본 `deepseek-flash`), DeepSeek OCR 모델은 `DEEPSEEK_OCR_MODEL`(기본 `deepseek-flash`)로 설정합니다. 이미지 입력은 [DeepSeek 공식 Vision 안내](https://api-docs.deepseek.com/guides/vision/)를 따릅니다. 채점에 텍스트 전용 모델을 선택해도 OCR 모델은 별도로 유지됩니다.
+
+`GET /api/admin/lab/model-test`는 비밀값 없이 세 조합의 연결 상태를 반환하고, `POST`는 선택한 OCR→채점 두 단계만 실행합니다. 사진은 최대 3장, 장당 1.9 MB이며 서버는 실제 본문 바이트를 8 MiB로 제한합니다. 인증과 관리자 권한을 확인한 뒤 사진을 읽으며, 계정당 시간당 30회까지 실행합니다. 제공업체 오류에는 다른 모델로 대체하지 않고 실패 단계를 표시합니다. 채점 실패 시 이미 성공한 OCR을 보존하며, 불명확한 판독·근거 없는 점수는 `needs_review`와 `score:null`로 반환합니다.
+
 ## 물리대회 실전 점수
 
 `python tools/kphe_scoring_build.py`는 검증한 정답표와 `tools/kphe_scoring_policy.json`을 Worker에 묶습니다. 클라이언트가 보내는 점수는 받지 않고 답안을 다시 채점합니다. 같은 계정의 `client_id`는 다시 전송해도 기존 답안을 덮어쓰지 않습니다. 저장 테이블은 기존 D1 바인딩에서 멱등적인 `0012_omr.sql`을 최초 요청 시 실행해 준비합니다. 계정 삭제 시 답안 기록도 삭제됩니다.
