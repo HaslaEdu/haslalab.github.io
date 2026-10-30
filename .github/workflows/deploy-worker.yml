@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -30,7 +30,8 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
-      - run: node --test test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs ../tests/test-model-test-ui.cjs
+      - run: node ../tools/build-site-catalogue.cjs --check
+      - run: node --test test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
       - run: node weekly/build-seed.mjs --check
       - run: node --test test-weekly-content.mjs test-monthly-period.mjs test-monthly-answers.mjs test-monthly-policy.mjs test-monthly-photos.mjs test-monthly-presentation.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs

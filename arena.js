@@ -1286,7 +1286,14 @@ const AR_MODEL_PIPELINES = ["gemini-gemini", "gemini-deepseek", "deepseek-deepse
 function arModelTestLabels() {
   return lang === "en" ? {
     title: "Developer model test", link: "Model test · developer", back: "My exams",
-    intro: "Compare OCR and grading on the same answer pages.",
+    intro: "Select a past exam and compare OCR and grading on the same answer pages.",
+    examMode: "Select past exam", manualMode: "Advanced · enter manually", competition: "Competition", year: "Year / stage", exam: "Problem / task", wholePaper: "Whole paper",
+    loadingExams: "Loading past exams…", noExams: "No selectable past exams were found.", badExam: "Select a past-exam problem or task.", examLoadFailed: "The past-exam list could not be loaded. Select the year again to retry.",
+    paper: "Problem PDF", answerSheet: "Answer sheet", solution: "Published solution", mark: "Published marking criteria", publishedReference: "Published reference material is available. Scoring depends on the criteria verified by the server.",
+    independentReference: "No official marking criteria are available. The common reference is independently prepared and the result provides qualitative feedback without a numeric score.",
+    reference: "Common reference preparation", referenceCached: "Reused common reference · no preparation API call in this run", pipelineCost: "OCR + grading cost", referenceCost: "Common reference preparation cost", qualitative: "Qualitative feedback · no official marking criteria",
+    runCost: "Running a test uses external model APIs and may incur charges. The first run may also prepare a shared Gemini reference; later combinations reuse it. Selecting an exam or photos makes no AI calls.",
+    referenceBusy: "Another paper reference is being prepared. Try again after it finishes.", referenceLarge: "The reference PDFs exceed the size limit. Choose another paper or use manual input.", referenceScope: "The selected paper or question range could not be verified. Choose another item or use manual input.", referenceUnavailable: "Common reference preparation is unavailable. Gemini must be connected before running an exam test.", referenceFailed: "The common reference could not be prepared. OCR and grading were not completed.",
     separate: "These test results do not enter learning records or rankings and do not use exam tokens.",
     denied: "This test is available only to developer accounts.", login: "Sign in", retry: "Try again",
     problem: "Problem statement", rubric: "Reference answer and marking criteria", points: "Full marks",
@@ -1312,7 +1319,14 @@ function arModelTestLabels() {
     pipeline: ["1. Gemini OCR + Gemini grading", "2. Gemini OCR + DeepSeek grading", "3. DeepSeek OCR + DeepSeek grading"]
   } : {
     title: "개발자 모델 테스트", link: "모델 테스트 · 개발자", back: "내 시험",
-    intro: "같은 답안으로 OCR·채점 조합을 비교합니다.",
+    intro: "기출을 선택하고 같은 답안으로 OCR·채점 조합을 비교합니다.",
+    examMode: "기출 선택", manualMode: "고급 · 직접 입력", competition: "대회", year: "연도·차수", exam: "문제·과제", wholePaper: "시험지 전체",
+    loadingExams: "기출 목록을 불러오고 있습니다…", noExams: "선택할 수 있는 기출이 없습니다.", badExam: "기출 문제·과제를 선택하세요.", examLoadFailed: "기출 목록을 불러오지 못했습니다. 연도를 다시 선택해 재시도하세요.",
+    paper: "문제 PDF", answerSheet: "답안지", solution: "공개 정답·해설", mark: "공개 채점 기준", publishedReference: "공개된 참고 자료가 있습니다. 서버가 확인한 채점 기준에 따라 점수 제공 여부가 결정됩니다.",
+    independentReference: "공식 채점 기준이 없어 공통 기준을 독립적으로 준비합니다. 점수 없이 정성 피드백을 제공합니다.",
+    reference: "공통 기준 준비", referenceCached: "공통 기준 재사용 · 이번 실행의 준비 API 호출 없음", pipelineCost: "OCR·채점 비용", referenceCost: "공통 기준 준비 비용", qualitative: "정성 피드백 · 공식 채점 기준 없음",
+    runCost: "테스트 실행 시 외부 모델 API 사용료가 발생할 수 있습니다. 첫 실행은 Gemini 공통 기준 준비가 추가될 수 있으며 이후 조합은 이를 재사용합니다. 기출·사진 선택만으로 AI를 호출하지 않습니다.",
+    referenceBusy: "다른 기출의 공통 기준을 준비 중입니다. 완료 후 다시 실행해 주세요.", referenceLarge: "참조 PDF가 용량 제한을 넘었습니다. 다른 문항이나 직접 입력 방식을 선택해 주세요.", referenceScope: "선택한 문제·교시의 문항 범위를 확인하지 못했습니다. 다른 항목이나 직접 입력 방식을 선택해 주세요.", referenceUnavailable: "공통 기준을 준비할 수 없습니다. 기출 테스트를 실행하려면 Gemini 연결이 필요합니다.", referenceFailed: "공통 기준을 준비하지 못해 OCR·채점을 완료하지 못했습니다.",
     separate: "테스트 결과는 학습 기록·랭킹에 반영되지 않으며 실전 토큰을 사용하지 않습니다.",
     denied: "개발자 계정만 사용할 수 있는 테스트입니다.", login: "로그인", retry: "다시 시도",
     problem: "문제", rubric: "기준 정답·채점 기준", points: "만점",
@@ -1351,13 +1365,18 @@ function arModelTestError(error, T, maxImages = 3) {
     model_test_bad_pipeline: T.badPipeline, model_test_bad_problem: T.badProblem,
     model_test_bad_rubric: T.badRubric, model_test_bad_points: T.badPoints,
     model_test_bad_images: T.badImages, model_test_bad_image: T.badImages, bad_image: T.badImages,
+    model_test_bad_exam: T.badExam, model_test_exam_override: T.badExam,
+    model_test_reference_source: T.referenceFailed, model_test_reference_unavailable: T.referenceFailed,
+    model_test_reference_not_pdf: T.referenceFailed, model_test_reference_scope_unclear: T.referenceScope,
+    model_test_reference_invalid: T.referenceFailed, model_test_reference_too_large: T.referenceLarge,
+    model_test_reference_busy: T.referenceBusy,
     model_test_too_many_images: T.tooMany(maxImages), model_test_image_too_large: T.tooLarge, image_too_big: T.tooLarge,
     model_test_provider_auth: T.auth, model_test_provider_rate_limited: T.limited, rate_limited: T.limited,
     model_test_model_unavailable: T.model, model_test_ocr_model_unsupported: T.model, model_test_invalid_config: T.model,
-    model_test_timeout: T.timeout, model_test_invalid_response: T.invalid, model_test_ocr_empty: T.noText,
+    model_test_timeout: T.timeout, model_test_reference_timeout: T.timeout, model_test_invalid_response: T.invalid, model_test_ocr_empty: T.noText,
     forbidden: T.denied, login_required: T.denied, network: T.network
   };
-  const stage = error?.stage === "ocr" ? T.ocr : error?.stage === "grading" || error?.stage === "grade" ? T.grading : "";
+  const stage = error?.stage === "reference" ? T.reference : error?.stage === "ocr" ? T.ocr : error?.stage === "grading" || error?.stage === "grade" ? T.grading : "";
   const model = [error?.provider, error?.model].filter(x => typeof x === "string" && x).join(" · ");
   return [stage, model, messages[code] || T.failed].filter(Boolean).join(" · ");
 }
@@ -1393,7 +1412,7 @@ function arModelTestPriceLink(value) {
 }
 function arModelTestStage(stage, T) {
   const p = stage.pricing || {}, price = arModelTestPriceSummary(p, T);
-  const phase = stage.stage === "ocr" ? T.ocr : stage.stage === "grading" ? T.grading : String(stage.stage || T.unknown);
+  const phase = stage.stage === "reference" ? T.reference : stage.stage === "ocr" ? T.ocr : stage.stage === "grading" ? T.grading : String(stage.stage || T.unknown);
   const provider = ({gemini:"Gemini",deepseek:"DeepSeek"})[stage.provider] || stage.provider || T.unknown;
   const time = arModelTestKnown(stage.ms) ? arModelTestNumber(stage.ms / 1000, T) + T.seconds + " · " + arModelTestNumber(stage.ms, T) + " ms" : T.unknown;
   const pairs = [
@@ -1422,6 +1441,25 @@ function arModelTestStage(stage, T) {
     ${source ? `<p class="arnote" style="margin-bottom:0"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${T.priceSource}</a> · ${T.checked} ${esc(p.checked_at || T.unknown)}</p>` : ""}
   </section>`;
 }
+function arModelTestExamLabel(entry, T) {
+  const title = typeof entry?.title === "string" ? entry.title : entry?.title?.[lang] || entry?.title?.ko || entry?.title?.en || entry?.task || entry?.id || "";
+  const whole = entry?.wholePaper === true || entry?.task === "T";
+  const named = !whole && entry?.task && title !== entry.task ? entry.task + " · " + title : String(title);
+  return named + (whole ? " · " + T.wholePaper : "");
+}
+function arModelTestSourceLink(value) {
+  try {
+    if (typeof value !== "string" || !value || value.length > 2048 || /[\\\u0000-\u001f]/.test(value)) return "";
+    let target = value;
+    if (!/^https:\/\//i.test(target)) {
+      if (/^pdfx\//.test(target) && !target.split("/").some(x => x === "." || x === "..") && !/[?#]/.test(target)) target = "https://haslalab.org/" + target;
+      else if (!/[/:?#]/.test(target) && target !== "." && target !== "..") target = "https://haslalab-pdf.haslalab.workers.dev/pdf/" + encodeURIComponent(target);
+      else return "";
+    }
+    const url = new URL(target);
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : "";
+  } catch (_) { return ""; }
+}
 function arModelTestResult(result, T) {
   const index = AR_MODEL_PIPELINES.indexOf(typeof result.pipeline === "string" ? result.pipeline : result.pipeline?.id);
   const o = result.ocr || {}, g = result.grading || {}, u = result.usage || {}, stages = Array.isArray(u.stages) ? u.stages : [];
@@ -1429,15 +1467,21 @@ function arModelTestResult(result, T) {
   const price = arModelTestPriceSummary(u.pricing,T), knownTokens = arModelTestKnown(u.known_tokens?.total_tokens);
   const partialTokens = !arModelTestKnown(u.total_tokens) && u.incomplete && knownTokens;
   const stat = (label,value,note = "") => `<div style="min-width:0;overflow-wrap:anywhere"><small>${esc(label)}</small><b style="display:block;font-size:clamp(16px,3vw,22px);overflow-wrap:anywhere">${esc(value)}</b>${note ? `<small style="display:block;overflow-wrap:anywhere">${esc(note)}</small>` : ""}</div>`;
-  const scored = g.status === "graded" && Number.isFinite(g.score) && Number.isFinite(g.points);
+  const reference = result.reference, qualitative = reference?.scoring === "qualitative";
+  const scored = !qualitative && g.status === "graded" && Number.isFinite(g.score) && Number.isFinite(g.points);
+  const pipelinePrice = arModelTestPriceSummary(u.pipeline_pricing, T), referencePrice = arModelTestPriceSummary(u.reference_pricing, T);
   return `<article class="arpanel" data-model-result="${esc(AR_MODEL_PIPELINES[index] || "")}" style="min-width:0;overflow-wrap:anywhere">
     <h3>${esc(T.pipeline[index] || T.title)}</h3>
+    ${reference?.entry ? `<p class="arnote">${esc(arModelTestExamLabel(reference.entry, T))}</p>` : ""}
     <div class="arstats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px">
       ${stat(price.label,price.value,price.note)}${stat(T.elapsed,time(result.elapsed_ms))}
       ${stat(T.ocr,time(o.ms),[o.provider,o.model].filter(Boolean).join(" · "))}${stat(T.grading,time(g.ms),[g.provider,g.model].filter(Boolean).join(" · "))}
-      ${stat(partialTokens ? T.knownTokens : T.totalTokens,partialTokens ? arModelTestNumber(u.known_tokens.total_tokens,T) + " + ?" : arModelTestNumber(u.total_tokens,T))}${stat(T.calls,arModelTestNumber(u.calls,T))}</div>
+      ${stat(partialTokens ? T.knownTokens : T.totalTokens,partialTokens ? arModelTestNumber(u.known_tokens.total_tokens,T) + " + ?" : arModelTestNumber(u.total_tokens,T))}${stat(T.calls,arModelTestNumber(u.calls,T))}
+      ${reference && u.pipeline_pricing ? stat(T.pipelineCost,pipelinePrice.value,pipelinePrice.note) : ""}
+      ${reference && reference.cached !== true && u.reference_pricing ? stat(T.referenceCost,referencePrice.value,referencePrice.note) : ""}</div>
+    ${reference?.cached === true ? `<p class="arnote">${T.referenceCached}</p>` : ""}
     ${result.failure ? `<p class="arinfo bad">${esc(result.failure)}</p>` : ""}
-    <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? arModelTestNumber(g.score,T) + " / " + arModelTestNumber(g.points,T) : result.failure ? (result.failureStage === "ocr" ? T.testIncomplete : T.incomplete) : T.review}</span></div>
+    <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? esc(g.score.toLocaleString(lang === "en" ? "en" : "ko", {maximumFractionDigits:3})) + " / " + arModelTestNumber(g.points,T) : result.failure ? (["ocr","reference"].includes(result.failureStage) ? T.testIncomplete : T.incomplete) : qualitative ? T.qualitative : T.review}</span></div>
     ${g.feedback ? `<h4 class="arh4">${T.feedback}</h4><p style="white-space:pre-wrap">${esc(g.feedback)}</p>` : ""}
     <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || T.noOcrResult)}</pre></details>
     ${(o.uncertainties || []).length ? `<h4 class="arh4">${T.uncertain}</h4><ul>${o.uncertainties.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
@@ -1449,6 +1493,8 @@ function arModelTestResult(result, T) {
 }
 async function arModelTest(root, alive) {
   const T = arModelTestLabels();
+  const scope = { base: cmBase(), token: cmTok(), language: lang };
+  const inScope = () => alive() && scope.base === cmBase() && scope.token === cmTok() && scope.language === lang;
   if (!alive()) return;
   if (cm.me?.role !== "admin") {
     if (!cm.me) try { sessionStorage.setItem("hlCmBack", "#/lab/model-test"); } catch (_) {}
@@ -1458,46 +1504,109 @@ async function arModelTest(root, alive) {
   let config;
   try { config = await cmApi("GET", "/admin/lab/model-test"); }
   catch (error) {
-    if (!alive()) return;
+    if (!inScope()) return;
     root.innerHTML = `<div class="cmnote">${esc(arModelTestError(error, T))} <button class="cmbtn sm" data-retry-model-test>${T.retry}</button></div>`;
     root.querySelector("[data-retry-model-test]").onclick = () => arModelTest(root, alive);
     return;
   }
-  if (!alive() || cm.me?.role !== "admin") return;
+  if (!inScope() || cm.me?.role !== "admin") return;
   const limits = { maxImages: 3, maxImageBytes: 1900000, maxTotalImageBytes: 5700000, maxText: 12000, maxRubric: 20000, maxPoints: 1000, ...config.limits };
   const pipelines = AR_MODEL_PIPELINES.map(id => (config.pipelines || []).find(x => x.id === id) || { id, available: false });
   const first = pipelines.find(x => x.available === true)?.id;
+  const competitions = (Array.isArray(config.examCompetitions) ? config.examCompetitions : []).filter(x => typeof x.id === "string" && Array.isArray(x.years) && x.years.length);
+  const hasExams = competitions.length > 0;
+  const label = value => typeof value === "string" ? value : value?.[lang] || value?.ko || value?.en || "";
   root.innerHTML = `<div class="cmtop"><div><h1>${T.title}</h1><p>${T.intro}</p></div><a class="cmbtn sm" href="#/lab">${T.back}</a></div>
     ${arModelTestLink("model-test")}
     <p class="arnote">${T.separate}</p>
     <form id="arModelTestForm"><fieldset style="border:0;padding:0;margin:0;min-width:0">
+      <div class="arpanel arpf"><label>${T.examMode} / ${T.manualMode}<select name="mode" aria-label="${T.examMode} / ${T.manualMode}">
+        ${hasExams ? `<option value="exam">${T.examMode}</option>` : ""}<option value="manual">${T.manualMode}</option></select></label></div>
+      ${hasExams ? `<div class="arpanel arpf" id="arModelExamFields"><label>${T.competition}<select name="comp" aria-label="${T.competition}">${competitions.map(c => `<option value="${esc(c.id)}">${esc(label(c.title) || c.id)}</option>`).join("")}</select></label>
+        <label>${T.year}<select name="year" aria-label="${T.year}"></select></label><label>${T.exam}<select name="entryId" aria-label="${T.exam}"></select></label><div id="arModelExamInfo" class="arnote" role="status" aria-live="polite"></div></div>` : ""}
       <div class="arpanel"><h3>${T.choice}</h3>${pipelines.map((p, i) => `<label style="display:flex;align-items:flex-start;gap:10px;margin:14px 0">
         <input type="radio" name="pipeline" value="${p.id}" ${p.id === first ? "checked" : ""} ${p.available === true ? "" : "disabled"} style="margin-top:5px">
         <span><b>${T.pipeline[i]}</b><small class="arnote" style="display:block">${p.available === true ? esc([p.ocr?.model, p.grading?.model].filter(Boolean).join(" → ")) : esc(p.reason ? arModelTestError({code:p.reason}, T, limits.maxImages) : T.unavailable)}</small></span></label>`).join("")}</div>
-      <div class="arpanel arpf"><label>${T.problem}<textarea name="problem" rows="5" required maxlength="${limits.maxText}"></textarea></label>
-        <label>${T.rubric}<textarea name="rubric" rows="5" required maxlength="${limits.maxRubric}"></textarea></label>
-        <label>${T.points}<input name="points" type="number" min="0.01" max="${limits.maxPoints}" step="any" value="10" required></label>
-        <label>${T.images}<input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><small class="arnote">${T.imageHint(limits.maxImages)}</small></label></div>
+      <div class="arpanel arpf" id="arModelManualFields" ${hasExams ? "hidden" : ""}><label>${T.problem}<textarea name="problem" rows="5" ${hasExams ? "disabled" : "required"} maxlength="${limits.maxText}"></textarea></label>
+        <label>${T.rubric}<textarea name="rubric" rows="5" ${hasExams ? "disabled" : "required"} maxlength="${limits.maxRubric}"></textarea></label>
+        <label>${T.points}<input name="points" type="number" min="0.01" max="${limits.maxPoints}" step="any" value="10" ${hasExams ? "disabled" : "required"}></label></div>
+      <div class="arpanel arpf"><label>${T.images}<input name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><small class="arnote">${T.imageHint(limits.maxImages)}</small></label></div>
       <div id="arModelPhotos" style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0"></div>
-      <button class="cmbtn pri" type="submit" ${first ? "" : "disabled"}>${T.run}</button>
+      <p class="arnote">${T.runCost}</p><button class="cmbtn pri" id="arModelRun" type="submit" ${first && !hasExams ? "" : "disabled"}>${T.run}</button>
     </fieldset></form><p id="arModelStatus" class="arinfo" role="status" aria-live="polite"></p>
     <p id="arModelEmpty" class="arnote">${T.empty}</p><div id="arModelResults"></div>`;
   const form = root.querySelector("#arModelTestForm"), controls = form.querySelector("fieldset"), status = root.querySelector("#arModelStatus");
   const field = name => form.elements.namedItem(name), results = new Map(), urls = new Set();
-  let busy = false, disposed = false, controller = null;
-  const current = () => !disposed && alive() && cm.me?.role === "admin";
+  let busy = false, disposed = false, controller = null, revision = 0, selectionRequest = 0, exams = [];
+  const current = () => !disposed && inScope() && cm.me?.role === "admin";
+  const mode = () => hasExams && field("mode")?.value !== "manual" ? "exam" : "manual";
+  const selected = () => exams.find(x => x.id === field("entryId")?.value);
+  const runButton = root.querySelector("#arModelRun");
+  const updateRun = () => { if (runButton) runButton.disabled = !first || (mode() === "exam" && (!selected() || config.reference?.available !== true)); };
   const paintResults = () => {
     root.querySelector("#arModelResults").innerHTML = AR_MODEL_PIPELINES.map(id => results.has(id) ? arModelTestResult(results.get(id), T) : "").join("");
     root.querySelector("#arModelEmpty").hidden = results.size > 0;
   };
   const clearResults = () => { results.clear(); paintResults(); status.textContent = ""; };
   const revoke = () => { for (const url of urls) URL.revokeObjectURL(url); urls.clear(); };
+  const invalidate = (clearImages = false) => {
+    revision++; controller?.abort(); clearResults();
+    if (clearImages) { field("images").value = ""; revoke(); root.querySelector("#arModelPhotos").innerHTML = ""; }
+  };
+  const paintExam = () => {
+    const entry = selected(), box = root.querySelector("#arModelExamInfo");
+    if (!box) return;
+    const sheets = Array.isArray(entry?.answerSheets) ? entry.answerSheets : [];
+    const links = entry ? [[lang === "ko" && entry.paperKo || entry.paper,T.paper],[entry.solution,T.solution],[entry.mark,T.mark],
+      ...sheets.map((value,index) => [value,T.answerSheet + (sheets.length > 1 ? " " + (index + 1) : "")])].map(([value,text]) => {
+      const href = arModelTestSourceLink(value);
+      return href ? `<a class="cmbtn sm" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(text)}</a>` : "";
+    }).filter(Boolean).join(" ") : "";
+    box.innerHTML = entry ? `<b>${esc(arModelTestExamLabel(entry,T))}</b><p>${links}</p><p>${entry.referenceStatus === "published" ? T.publishedReference : T.independentReference}</p>${config.reference?.available !== true ? `<p>${T.referenceUnavailable}</p>` : ""}` : T.noExams;
+    updateRun();
+  };
+  const loadExams = async () => {
+    const request = ++selectionRequest, comp = field("comp").value, year = field("year").value;
+    exams = []; field("entryId").innerHTML = ""; field("entryId").value = ""; updateRun();
+    root.querySelector("#arModelExamInfo").textContent = T.loadingExams;
+    try {
+      const response = await cmApi("GET", "/admin/lab/model-test?comp=" + encodeURIComponent(comp) + "&year=" + encodeURIComponent(year));
+      if (!current() || request !== selectionRequest || comp !== field("comp").value || year !== field("year").value) return;
+      exams = (Array.isArray(response.exams) ? response.exams : []).filter(x => typeof x.id === "string");
+      field("entryId").innerHTML = exams.map(x => `<option value="${esc(x.id)}">${esc(arModelTestExamLabel(x,T))}</option>`).join("");
+      field("entryId").value = exams[0]?.id || ""; paintExam();
+    } catch (_) { if (current() && request === selectionRequest) { root.querySelector("#arModelExamInfo").textContent = T.examLoadFailed; updateRun(); } }
+  };
+  const chooseCompetition = () => {
+    const competition = competitions.find(x => x.id === field("comp").value);
+    const years = (competition?.years || []).map(String);
+    field("year").innerHTML = years.map(year => `<option value="${esc(year)}">${esc(year)}</option>`).join("");
+    field("year").value = years[0] || "";
+    return loadExams();
+  };
+  const paintMode = () => {
+    const manual = mode() === "manual";
+    root.querySelector("#arModelManualFields").hidden = !manual;
+    for (const name of ["problem","rubric","points"]) { field(name).disabled = !manual; field(name).required = manual; }
+    if (hasExams) {
+      root.querySelector("#arModelExamFields").hidden = manual;
+      for (const name of ["comp","year","entryId"]) field(name).disabled = manual;
+    }
+    updateRun();
+  };
   const dispose = () => { disposed = true; controller?.abort(); revoke(); window.removeEventListener("hashchange", dispose); window.removeEventListener("pagehide", dispose); };
   window.addEventListener("hashchange", dispose); window.addEventListener("pagehide", dispose);
-  form.addEventListener("input", event => { if (current() && !busy && event.target.name !== "pipeline") clearResults(); });
+  form.addEventListener("input", event => { if (current() && !["pipeline","mode","comp","year","entryId","images"].includes(event.target.name)) invalidate(); });
+  if (field("mode")) field("mode").onchange = () => { if (current()) { invalidate(true); paintMode(); } };
+  if (hasExams) {
+    field("comp").value = competitions[0].id;
+    field("comp").onchange = () => { if (current()) { invalidate(true); return chooseCompetition(); } };
+    field("year").onchange = () => { if (current()) { invalidate(true); return loadExams(); } };
+    field("entryId").onchange = () => { if (current()) { invalidate(true); paintExam(); } };
+  }
   field("images").onchange = () => {
     if (!current()) return;
-    revoke(); clearResults();
+    revoke(); invalidate();
     const box = root.querySelector("#arModelPhotos"); box.innerHTML = "";
     for (const file of Array.from(field("images").files || []).slice(0, limits.maxImages)) {
       const url = URL.createObjectURL(file); urls.add(url);
@@ -1506,45 +1615,51 @@ async function arModelTest(root, alive) {
   };
   form.onsubmit = async event => {
     event.preventDefault(); if (busy || !current()) return;
-    const pipeline = field("pipeline").value, problem = field("problem").value.trim(), rubric = field("rubric").value.trim(), points = Number(field("points").value);
+    const pipeline = field("pipeline").value, examMode = mode() === "exam", entry = selected();
+    const problem = field("problem").value.trim(), rubric = field("rubric").value.trim(), points = Number(field("points").value);
     const files = Array.from(field("images").files || []);
     const fail = code => { status.className = "arinfo bad"; status.textContent = arModelTestError({code}, T, limits.maxImages); };
     if (!pipelines.some(p => p.id === pipeline && p.available === true)) return fail("model_test_bad_pipeline");
-    if (!problem || problem.length > limits.maxText) return fail("model_test_bad_problem");
-    if (!rubric || rubric.length > limits.maxRubric) return fail("model_test_bad_rubric");
-    if (!Number.isFinite(points) || points <= 0 || points > limits.maxPoints) return fail("model_test_bad_points");
+    if (examMode && !entry) return fail("model_test_bad_exam");
+    if (examMode && config.reference?.available !== true) return fail("gemini_not_configured");
+    if (!examMode && (!problem || problem.length > limits.maxText)) return fail("model_test_bad_problem");
+    if (!examMode && (!rubric || rubric.length > limits.maxRubric)) return fail("model_test_bad_rubric");
+    if (!examMode && (!Number.isFinite(points) || points <= 0 || points > limits.maxPoints)) return fail("model_test_bad_points");
     if (!files.length) return fail("model_test_bad_images");
     if (files.length > limits.maxImages) return fail("model_test_too_many_images");
     busy = true; controls.disabled = true; status.className = "arinfo"; status.textContent = T.preparing;
+    const runRevision = revision, currentRun = () => current() && runRevision === revision;
     let timeout, timedOut = false;
     try {
-      const scanner = await arLoadScanner(), images = [];
+      const scanner = await arLoadScanner(), images = []; let totalBytes = 0;
       for (const file of files) {
-        if (!current()) return;
+        if (!currentRun()) return;
         if (file.type && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw {code:"model_test_bad_image"};
         const blob = await scanner.encodeUpload(file, {maxBytes:limits.maxImageBytes});
-        if (!current()) return;
+        if (!currentRun()) return;
         if (!["image/jpeg", "image/png", "image/webp"].includes(blob.type)) throw {code:"model_test_bad_image"};
         const bytes = new Uint8Array(await blob.arrayBuffer());
-        if (bytes.length > limits.maxImageBytes) throw {code:"model_test_image_too_large"};
+        totalBytes += bytes.length;
+        if (bytes.length > limits.maxImageBytes || totalBytes > limits.maxTotalImageBytes) throw {code:"model_test_image_too_large"};
         let raw = ""; for (let n = 0; n < bytes.length; n += 32768) raw += String.fromCharCode(...bytes.subarray(n, n + 32768));
         images.push({mime:blob.type,data:btoa(raw)});
       }
-      if (!current()) return;
+      if (!currentRun()) return;
       status.textContent = T.running; controller = new AbortController();
-      timeout = setTimeout(() => { timedOut = true; controller?.abort(); }, 150000);
+      timeout = setTimeout(() => { timedOut = true; controller?.abort(); }, 240000);
+      const body = examMode ? {mode:"exam",entryId:entry.id,pipeline,images,lang:scope.language} : {pipeline,problem,rubric,points,images,lang:scope.language};
       let response;
-      try { response = await fetch(cmBase() + "/api/admin/lab/model-test", {method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer " + cmTok()},body:JSON.stringify({pipeline,problem,rubric,points,images,lang}),signal:controller.signal}); }
+      try { response = await fetch(scope.base + "/api/admin/lab/model-test", {method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer " + scope.token},body:JSON.stringify(body),signal:controller.signal}); }
       catch (error) { throw {code:timedOut ? "model_test_timeout" : "network"}; }
       const result = await response.json().catch(() => ({error:"model_test_invalid_response"}));
-      if (!current()) return;
+      if (!currentRun()) return;
       if (!response.ok || result.error) throw {...result,code:result.error || "model_test_invalid_response"};
       if (!result.ocr || !result.grading) throw {code:"model_test_invalid_response"};
       results.set(pipeline, {...result,pipeline}); paintResults(); status.textContent = "";
-    } catch (error) { if (current()) {
+    } catch (error) { if (currentRun()) {
       const message = arModelTestError(error, T, limits.maxImages);
       results.delete(pipeline);
-      if (error.ocr || error.usage || arModelTestKnown(error.elapsed_ms)) {
+      if (error.ocr || error.reference || error.usage || arModelTestKnown(error.elapsed_ms)) {
         const stages = Array.isArray(error.usage?.stages) ? error.usage.stages : [];
         const metadata = key => { const stage = stages.find(x => x.stage === key); return stage ? {provider:stage.provider,model:stage.model,resolved_model:stage.resolved_model,ms:stage.ms} : {}; };
         results.set(pipeline, {...error,pipeline,failure:message,failureStage:error.stage,
@@ -1552,6 +1667,8 @@ async function arModelTest(root, alive) {
       }
       paintResults(); status.className = "arinfo bad"; status.textContent = message;
     } }
-    finally { clearTimeout(timeout); controller = null; busy = false; if (current()) controls.disabled = false; }
+    finally { clearTimeout(timeout); controller = null; busy = false; if (current()) { controls.disabled = false; updateRun(); } }
   };
+  paintMode();
+  if (hasExams) await chooseCompetition();
 }
