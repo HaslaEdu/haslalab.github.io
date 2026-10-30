@@ -29,7 +29,7 @@ const AT = {
        preview: "미리보기", submit: "제출하고 채점받기", grading: "채점 중… (서술형은 30초쯤 걸립니다)", loginToSubmit: "로그인하면 제출하고 채점받을 수 있습니다.",
        result: "채점 결과", score: "점수", criteria: "채점 항목", evidence: "근거", feedback: "첨삭", good: "잘한 점", fix: "고칠 점",
        met: "충족", partial: "부분", not_met: "미충족", uncertain: "불확실", right: "정답입니다", wrong: "오답입니다",
-       pendingNote: "이 서술형 답안은 AI 채점기가 아직 연결되지 않아 관리자가 채점합니다. 채점되면 여기와 랭킹에 반영됩니다.",
+       pendingNote: "답안이 접수되어 채점을 기다리고 있습니다. 채점 결과는 여기와 랭킹에 반영됩니다.",
        errorNote: "채점 서버가 응답하지 않았습니다. 답안은 저장되었고 관리자가 다시 채점합니다.",
        evidenceIssue: "답안에 없는 내용을 근거로 든 항목은 0점으로 처리했습니다.",
        mine: "내 제출", solution: "풀이", solutionLater: "풀이는 해당 월 문제의 마감 후 공개됩니다.", grader: "채점",
@@ -67,7 +67,7 @@ const AT = {
        preview: "Preview", submit: "Submit and grade", grading: "Grading… (a written answer takes about 30 s)", loginToSubmit: "Sign in to submit and be graded.",
        result: "Result", score: "Score", criteria: "Criteria", evidence: "Evidence", feedback: "Comments", good: "Good", fix: "To fix",
        met: "met", partial: "partly", not_met: "not met", uncertain: "unsure", right: "Correct", wrong: "Not correct",
-       pendingNote: "No AI grader is connected yet, so an admin will grade this written answer. The score will appear here and in the rankings.",
+       pendingNote: "Your answer has been accepted and is waiting to be graded. Its result will appear here and in the rankings.",
        errorNote: "The grading server did not answer. Your answer is saved and an admin will grade it.",
        evidenceIssue: "Criteria whose evidence was not in your answer were given 0.",
        mine: "My submissions", solution: "Solution", solutionLater: "The solution is published after this month's deadline.", grader: "Graded by",
@@ -137,7 +137,7 @@ function arPublishedText(s) {
       const figure = /^!\[([^\]\n]{1,300})\]\((weekly\/figures\/[a-z0-9][a-z0-9-]*\.svg)\)$/.exec(line);
       if (!line.trim()) { flush(); }
       else if (heading) { flush(); const level = heading[1].length; blocks.push(`<h${level}>${esc(heading[2])}</h${level}>`); }
-      else if (figure) { flush(); blocks.push(`<figure class="arfigure"><img src="${figure[2]}" alt="${esc(figure[1])}" loading="lazy" decoding="async"><figcaption>${esc(figure[1])}</figcaption></figure>`); }
+      else if (figure) { flush(); const svg = typeof HL_MONTHLY_FIGURES !== "undefined" && HL_MONTHLY_FIGURES.render(figure[2]); blocks.push(`<figure class="arfigure">${svg || `<img src="${figure[2]}" alt="${esc(figure[1])}" loading="lazy" decoding="async">`}<figcaption>${esc(figure[1])}</figcaption></figure>`); }
       else lines.push(line);
     }
     flush(); return blocks.join("\n");
@@ -344,7 +344,7 @@ let arScanner = null;
 const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=20261030-ocr").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
-function arBindAnswerPhoto(f, alive, T, onRead) {
+function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
   const fi = f.querySelector("input[type=file]"), info = f.querySelector(".arinfo"), box = f.querySelector(".arshot");
   let photo = null, generation = 0, controller = null, disposed = false;
   const urls = new Set(), current = token => !disposed && alive() && token === generation;
@@ -354,6 +354,7 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
     generation++; controller?.abort(); controller = null; photo = null;
     for (const url of urls) URL.revokeObjectURL(url);
     urls.clear(); box.innerHTML = ""; box.hidden = true;
+    options.onBusy?.(false);
   };
   const dispose = () => {
     if (disposed) return;
@@ -366,6 +367,7 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
   const paint = () => {
     if (!photo || disposed || !alive()) return;
     const selected = photo.clean && photo.selected === "clean" ? "clean" : "original", busy = photo.preparing || photo.reading;
+    options.onBusy?.(!!busy);
     const warnings = [];
     if (photo.warning) warnings.push(photo.warning);
     if (selected === "clean" && photo.result?.autoScore < 0.75) warnings.push(T.scanWeak);
@@ -388,8 +390,8 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
     box.querySelector("[data-read-photo]").onclick = read;
   };
   async function read() {
-    if (!photo || photo.preparing || photo.reading || photo.done) return;
-    const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file;
+    if (!photo || photo.preparing || photo.reading || photo.done || options.blocked?.()) return;
+    const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file, destination = options.target?.();
     photo.reading = true; paint(); note(T.reading);
     const ctrl = new AbortController(); controller = ctrl;
     try {
@@ -410,8 +412,8 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
       if (!current(token)) return;
       if (!response.ok) throw { code: result.error };
       if (typeof result.text !== "string" || !result.text.trim()) throw { code: "ocr_empty" };
-      onRead(result.text); photo.done = true;
-      const ta = f.querySelector("textarea");
+      onRead(result.text, destination); photo.done = true;
+      const ta = destination || f.querySelector("textarea");
       note(ta.value.length > ta.maxLength && ta.maxLength > 0 ? T.scanLong : T.readDone);
       info.className = "arinfo ok"; ta.focus();
     } catch (error) {
@@ -440,6 +442,152 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
     }
   };
 }
+
+/* Monthly answer sheets mirror the printable, labelled answer/working boxes. The server
+   validates these canonical part ids and owns the three-attempt limit. */
+function arSheetT() {
+  return lang === "ko" ? {
+    h: "답안지", print: "답안지 양식 열기 · 인쇄", help: "소문항마다 최종 답과 풀이를 함께 작성하세요. 수식은 LaTeX로 입력할 수 있습니다. 풀지 않은 소문항은 두 칸을 모두 비워도 됩니다.",
+    answer: "최종 답", answerHint: "LaTeX 예: \\omega(q)=\\sqrt{...} · 일반 글도 입력할 수 있습니다.", working: "풀이·근거", workingHint: "유도 과정과 근거를 적으세요. 수식은 $...$ 또는 $$...$$로 입력합니다.",
+    typed: "직접 입력", photo: "답안지 사진 읽기", photoHelp: "답안지 양식에서 소문항별로 작성한 부분을 찍어 올리세요. 읽은 풀이를 확인하고 최종 답도 채운 뒤 제출하세요. 여러 사진은 같은 소문항 풀이에 이어 붙일 수 있습니다.",
+    photoPart: "사진을 넣을 소문항", preview: "수식 미리보기", submit: "답안 제출 · 기회 1회 사용", total: "문제당 제출 기회 3회", remaining: n => `남은 제출 기회 ${n} / 3회`,
+    saved: "작성 내용은 이 계정의 브라우저에 임시 저장됩니다. 임시 저장과 사진 읽기는 제출 기회를 사용하지 않습니다.", exhausted: "이 문제의 제출 기회 3회를 모두 사용했습니다. 기존 채점 결과는 아래에서 확인할 수 있습니다.",
+    incomplete: id => `${id}: 최종 답과 풀이를 함께 입력하세요.`, empty: "한 소문항 이상에 최종 답과 풀이를 입력하세요.", tooLong: "답안이 너무 깁니다. 전체 답과 풀이를 60,000자 이내로 줄여주세요.", partLong: id => `${id}: 최종 답은 4,000자, 풀이는 16,000자 이내로 줄여주세요.`, photoLong: "읽은 풀이가 소문항당 16,000자를 넘었습니다. 내용을 확인하고 줄인 뒤 제출하세요.",
+    processing: "이 답안은 이미 접수되어 채점 중입니다. 같은 답안을 다시 제출해도 기회가 추가로 사용되지 않습니다.", conflict: "이미 접수된 제출 번호입니다. 답안을 수정한 뒤 다시 제출하세요.", next: "답안을 수정하면 남은 기회로 다시 제출할 수 있습니다.",
+    used: "제출이 접수되면 기회 1회가 사용됩니다. 통신 오류로 같은 제출을 다시 전송해도 중복 차감되지 않습니다."
+  } : {
+    h: "Answer sheet", print: "Open / print the answer sheet", help: "Enter the final answer and supporting work for each part. LaTeX is supported. Leave both boxes blank for any part you do not attempt.",
+    answer: "Final answer", answerHint: "LaTeX, e.g. \\omega(q)=\\sqrt{...}, or ordinary text.", working: "Working and justification", workingHint: "Show your derivation and reasoning. Use $...$ or $$...$$ for formulas.",
+    typed: "Type answers", photo: "Read answer-sheet photos", photoHelp: "Photograph a labelled part of the provided answer sheet. Check the recognized working and complete its final-answer box before submitting. Further photos append to the selected part.",
+    photoPart: "Part shown in the photo", preview: "Formula preview", submit: "Submit answer · use 1 attempt", total: "3 submission attempts per problem", remaining: n => `${n} / 3 attempts remaining`,
+    saved: "Drafts are saved for this account in this browser. Saving a draft or reading a photo does not use an attempt.", exhausted: "All 3 attempts for this problem have been used. Your existing grades remain below.",
+    incomplete: id => `${id}: enter both a final answer and supporting work.`, empty: "Complete the final answer and working for at least one part.", tooLong: "Keep all answers and working within 60,000 characters.", partLong: id => `${id}: keep the answer within 4,000 characters and the working within 16,000.`, photoLong: "The recognized working exceeds 16,000 characters for this part. Check and shorten it before submitting.",
+    processing: "This answer has already been accepted and is being graded. Retrying it does not use another attempt.", conflict: "This submission identifier has already been used. Edit your answer before submitting again.", next: "Edit your answer to submit again using a remaining attempt.",
+    used: "An accepted submission uses one attempt. Resending the same submission after a network error does not use an additional attempt."
+  };
+}
+function arSheetPartLabel(part) { const label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${part.id.includes(".") ? part.id : "("+part.id+")"} ${label}` : part.id; }
+function arSheetFinalPreview(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return /\$/.test(text) || !/[\\_^{}=]|^[\d+−-]/.test(text) ? arSheetWorkingPreview(text) : `<div>$$${esc(text)}$$</div>`;
+}
+function arSheetWorkingPreview(value) {
+  return String(value || "").split(/(\$\$[\s\S]*?\$\$)/).map(part => part.startsWith("$$") && part.endsWith("$$") ? `<div>${esc(part)}</div>` : arText(part)).join("");
+}
+function arSheetDraftKey(p) {
+  const account = cm.me?.id != null ? "id:"+cm.me.id : cm.me?.username ? "legacy:"+cm.me.username : null;
+  return account == null ? null : `hlMonthlySheet:${encodeURIComponent(typeof cmBase === "function" ? cmBase() : "")}:${encodeURIComponent(account)}:${p.id}:${p.answerSheet.version}`;
+}
+function arSheetParts(p, form) {
+  const S = arSheetT();
+  const parts = p.answerSheet.parts.map(part => ({id:part.id,
+    answer:form.querySelector(`[data-sheet-answer="${part.id}"]`).value.trim(),
+    working:form.querySelector(`[data-sheet-working="${part.id}"]`).value.trim()}));
+  for (const part of parts) if (!!part.answer !== !!part.working) throw {sheetMessage:S.incomplete(part.id)};
+  for (const part of parts) if (part.answer.length > 4000 || part.working.length > 16000) throw {sheetMessage:S.partLong(part.id)};
+  if (!parts.some(part => part.answer)) throw {sheetMessage:S.empty};
+  if (parts.reduce((n, part) => n + part.answer.length + part.working.length, 0) > 60000) throw {sheetMessage:S.tooLong};
+  return parts;
+}
+function arSheetError(error) {
+  const S = arSheetT();
+  return error?.sheetMessage || ({attempts_exhausted:S.exhausted, incomplete_part:S.empty, bad_answer_sheet:S.empty,
+    bad_answer:S.empty, request_conflict:S.conflict}[error?.code]) || arErr(error);
+}
+function arMonthlyAnswerHtml(p, ocrOn) {
+  const T = arT(), S = arSheetT(), signed = !!cm.me, attempts = p.attempts, exhausted = attempts?.remaining === 0;
+  return `<h3>${S.h}</h3><div class="arsheet-top"><a class="cmbtn sm" href="sim/monthly-answer-sheet.html?id=${p.id}&lang=${lang}" target="_blank" rel="noopener">${S.print} ↗</a>
+      <b class="artries" id="arSheetAttempts">${Number.isInteger(attempts?.remaining) ? S.remaining(attempts.remaining) : S.total}</b></div>
+    <p class="arnote">${S.help}</p><p class="arnote">${S.used}</p>
+    ${!signed ? `<p>${T.loginToSubmit} <a class="cmbtn sm pri" href="#/login" id="arLogin">${T.login}</a></p>` : ""}
+    ${exhausted ? `<p class="cmnote">${S.exhausted}</p>` : ""}
+    <form id="arSheetF" class="armonthly-sheet">
+      <div class="arsheet-modes" role="group" aria-label="${S.h}"><button type="button" class="cmbtn sm pri" data-sheet-mode="typed" aria-pressed="true">${S.typed}</button><button type="button" class="cmbtn sm" data-sheet-mode="photo" aria-pressed="false">${S.photo}</button></div>
+      <div class="arsheet-photo" hidden>
+        <p class="arnote">${S.photoHelp}</p>
+        <label class="arsheet-select">${S.photoPart}<select name="photo_part" ${!signed || exhausted ? "disabled" : ""}>${p.answerSheet.parts.map(part => `<option value="${esc(part.id)}">${esc(arSheetPartLabel(part))}</option>`).join("")}</select></label>
+        <div class="arocr"><label class="cmbtn sm ${!signed || !ocrOn || exhausted ? "dis" : ""}">📷 ${T.photo}<input type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden ${!signed || !ocrOn || exhausted ? "disabled" : ""}></label>
+          <label class="archk"><input type="checkbox" name="math" checked ${!signed || exhausted ? "disabled" : ""}> ${T.mathMode}</label>
+          <small>${ocrOn ? "" : T.ocrOff}</small></div><div class="arshot" hidden></div><p class="arinfo" hidden></p>
+      </div>
+      ${p.answerSheet.parts.map(part => `<fieldset class="aranswer-part" data-sheet-part="${esc(part.id)}" ${!signed || exhausted ? "disabled" : ""}>
+        <legend>${esc(arSheetPartLabel(part))}<span>${part.points}${T.pts}</span></legend>
+        <label>${S.answer}<textarea data-sheet-answer="${esc(part.id)}" rows="2" maxlength="4000" placeholder="${esc(S.answerHint)}"></textarea></label>
+        <div class="arsheet-preview" data-sheet-answer-preview="${esc(part.id)}" aria-label="${S.preview}"></div>
+        <label>${S.working}<textarea data-sheet-working="${esc(part.id)}" rows="6" maxlength="16000" placeholder="${esc(S.workingHint)}"></textarea></label>
+        <div class="arsheet-preview" data-sheet-working-preview="${esc(part.id)}" aria-label="${S.preview}"></div>
+      </fieldset>`).join("")}
+      ${signed ? `<p class="arnote">${S.saved}</p>` : ""}<button class="cmbtn pri" type="submit" ${!signed || exhausted ? "disabled" : ""}>${S.submit}</button>
+    </form>`;
+}
+function arMonthlySavedAnswer(submission) {
+  const sheet = submission.answer_sheet, S = arSheetT();
+  if (!sheet?.parts) return `<pre class="aranswer">${esc(submission.answer)}</pre>`;
+  return `<div class="arsheet-saved">${sheet.parts.filter(part => part.answer || part.working).map(part => `<section><h4>${esc(part.id)}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`;
+}
+function arBindMonthlyAnswer(root, p, alive, ocrOn) {
+  const f = root.querySelector("#arSheetF"), out = root.querySelector("#arOut"), S = arSheetT(), T = arT();
+  const button = f.querySelector("button[type=submit]"), key = arSheetDraftKey(p), fields = [...f.querySelectorAll("[data-sheet-answer], [data-sheet-working]")];
+  let requestId = null, accepted = false, viaOcr = false, busy = false, photoBusy = false, previewTimer = null;
+  const attempts = () => p.attempts?.remaining !== 0;
+  const save = () => { if (!key || !alive()) return; try { localStorage.setItem(key, JSON.stringify({version:p.answerSheet.version,request_id:requestId,accepted,via_ocr:viaOcr,
+    parts:p.answerSheet.parts.map(part => ({id:part.id, answer:f.querySelector(`[data-sheet-answer="${part.id}"]`).value,working:f.querySelector(`[data-sheet-working="${part.id}"]`).value}))})); } catch (_) {} };
+  const preview = () => {
+    for (const part of p.answerSheet.parts) {
+      f.querySelector(`[data-sheet-answer-preview="${part.id}"]`).innerHTML = arSheetFinalPreview(f.querySelector(`[data-sheet-answer="${part.id}"]`).value);
+      f.querySelector(`[data-sheet-working-preview="${part.id}"]`).innerHTML = arSheetWorkingPreview(f.querySelector(`[data-sheet-working="${part.id}"]`).value);
+    }
+    arMath(f);
+  };
+  if (key) try {
+    const draft = JSON.parse(localStorage.getItem(key) || "null");
+    if (draft?.version === p.answerSheet.version && Array.isArray(draft.parts)) {
+      for (const part of p.answerSheet.parts) { const saved = draft.parts.find(x => x.id === part.id); if (!saved) continue;
+        f.querySelector(`[data-sheet-answer="${part.id}"]`).value = typeof saved.answer === "string" ? saved.answer.slice(0,4000) : "";
+        f.querySelector(`[data-sheet-working="${part.id}"]`).value = typeof saved.working === "string" ? saved.working.slice(0,16000) : ""; }
+      requestId = typeof draft.request_id === "string" ? draft.request_id : null; accepted = !!draft.accepted; viaOcr = !!draft.via_ocr;
+    }
+  } catch (_) {}
+  button.disabled = !cm.me || !attempts() || accepted;
+  if (accepted && attempts()) out.innerHTML = `<p class="arnote">${S.next}</p>`;
+  const edited = () => { if (busy || !alive()) return; requestId = null; accepted = false; button.disabled = !cm.me || !attempts() || photoBusy; save(); clearTimeout(previewTimer); previewTimer = setTimeout(preview,250); };
+  for (const field of fields) field.oninput = edited;
+  preview();
+  for (const mode of f.querySelectorAll("[data-sheet-mode]")) mode.onclick = () => {
+    const photo = mode.dataset.sheetMode === "photo"; f.querySelector(".arsheet-photo").hidden = !photo;
+    for (const item of f.querySelectorAll("[data-sheet-mode]")) { const on = item === mode; item.classList.toggle("pri",on); item.setAttribute("aria-pressed",String(on)); }
+  };
+  if (cm.me && ocrOn && attempts()) arBindAnswerPhoto(f,alive,{...T,scanLong:S.photoLong},(text,destination) => {
+    if (!destination) return; destination.value = (destination.value.trim() ? destination.value.trim()+"\n\n" : "")+text;
+    viaOcr = true; edited(); preview();
+  }, {target:() => f.querySelector(`[data-sheet-working="${f.photo_part.value}"]`), blocked:() => busy || !attempts(),
+    onBusy: value => { photoBusy = value; if (alive()) button.disabled = !cm.me || !attempts() || accepted || busy || photoBusy; }});
+  f.onsubmit = async event => {
+    event.preventDefault(); if (busy || photoBusy || !cm.me || !attempts() || accepted || !alive()) return;
+    let parts; try { parts = arSheetParts(p,f); } catch (error) { out.innerHTML = `<p class="arinfo bad">${esc(arSheetError(error))}</p>`; return; }
+    if (!requestId) requestId = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "monthly-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
+    save(); busy = true; button.disabled = true;
+    for (const field of fields) field.disabled = true;
+    for (const control of f.querySelectorAll("input[type=file],select[name=photo_part],input[name=math]")) control.disabled = true;
+    out.innerHTML = `<p class="arinfo">${T.grading}</p>`;
+    try {
+      const result = await cmApi("POST",`/problems/${p.id}/submit`,{parts,request_id:requestId,sheet_version:p.answerSheet.version,via_ocr:viaOcr,lang});
+      if (!alive()) return;
+      if (result.attempts) { p.attempts = result.attempts; root.querySelector("#arSheetAttempts").textContent = S.remaining(result.attempts.remaining); }
+      accepted = !result.processing; save();
+      out.innerHTML = result.processing ? `<p class="arinfo">${S.processing}</p>` : `<h4 class="arh4">${T.result}</h4>`+arResult(result,p)+`<p class="arnote">${attempts() ? S.next : S.exhausted}</p>`; arMath(out);
+    } catch (error) {
+      if (!alive()) return;
+      if (error?.code === "attempts_exhausted") { p.attempts = {limit:3,used:3,remaining:0}; root.querySelector("#arSheetAttempts").textContent=S.remaining(0); }
+      out.innerHTML = `<p class="arinfo bad">${esc(arSheetError(error))}</p>`;
+    } finally {
+      busy = false; if (alive()) { for (const field of fields) field.disabled = !attempts();
+        for (const control of f.querySelectorAll("input[type=file],select[name=photo_part],input[name=math]")) control.disabled = !attempts() || (control.type === "file" && !ocrOn);
+        button.disabled = !attempts() || accepted || photoBusy; }
+    }
+  };
+}
 async function arProblem(root, alive, id) {
   ar.photoCleanup?.();
   const T = arT(), j = await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
@@ -454,7 +602,7 @@ async function arProblem(root, alive, id) {
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(c.id)}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
-      <h3>${T.answer}</h3>
+      ${p.answerSheet?.parts?.length ? arMonthlyAnswerHtml(p,ocrOn) : `<h3>${T.answer}</h3>
       ${!cm.me ? `<p class="arempty">${T.loginToSubmit}</p><a class="cmbtn pri" href="#/login" id="arLogin">${T.login}</a>` : p.kind === "short" ? `
         <form id="arF" class="arshort"><input name="a" inputmode="decimal" autocomplete="off" placeholder="${T.answerPh}" maxlength="60">${p.unit ? `<span>${esc(p.unit)}</span>` : ""}
           <button class="cmbtn pri" type="submit">${T.submit}</button></form>` : `
@@ -468,16 +616,17 @@ async function arProblem(root, alive, id) {
           <p class="arinfo" hidden></p>
           <textarea name="a" rows="12" maxlength="12000" placeholder="${T.essayPh}"></textarea>
           <div class="arprevh">${T.preview}</div><div class="arprev" id="arPrev"></div>
-          <button class="cmbtn pri" type="submit">${T.submit}</button></form>`}
+          <button class="cmbtn pri" type="submit">${T.submit}</button></form>`}`}
       <div id="arOut"></div>
     </div>
     ${p.mine && p.mine.length ? `<div class="arpanel"><h3>${T.mine}</h3>${p.mine.map((s) => `
       <details class="arsub"><summary><b>${s.status === "graded" ? s.score + " / " + p.points : T[s.status] || s.status}</b>
         <span>${cmFull(s.created_at)}</span>${s.via_ocr ? `<small>${T.viaOcr}</small>` : ""}${s.in_week ? "" : `<small>${T.practice}</small>`}</summary>
-        <pre class="aranswer">${esc(s.answer)}</pre>${arResult(s, p)}</details>`).join("")}</div>` : ""}
+        ${arMonthlySavedAnswer(s)}${arResult(s, p)}</details>`).join("")}</div>` : ""}
     <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arPublishedText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
   arMath(root);
   const lg = root.querySelector("#arLogin"); if (lg) lg.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
+  if (p.answerSheet?.parts?.length) { arBindMonthlyAnswer(root,p,alive,ocrOn); return; }
   const f = root.querySelector("#arF"); if (!f) return;
   const out = root.querySelector("#arOut"); let viaOcr = false;
   const ta = f.querySelector("textarea");

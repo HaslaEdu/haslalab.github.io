@@ -3,9 +3,9 @@ name: Site performance contracts
 on:
   push:
     branches: [main]
-    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/*.js", "sim/*.html", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "monthly-figures.js", "monthly-problems.mjs", "weekly/figures/**", "sim/monthly-answer-sheet.mjs", "tests/test-monthly-*.cjs", "catalogue/**", "sim/*.js", "sim/*.html", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
   pull_request:
-    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/*.js", "sim/*.html", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "monthly-figures.js", "monthly-problems.mjs", "weekly/figures/**", "sim/monthly-answer-sheet.mjs", "tests/test-monthly-*.cjs", "catalogue/**", "sim/*.js", "sim/*.html", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
 
 permissions:
   contents: read
@@ -24,4 +24,4 @@ jobs:
           python-version: "3.12"
       - run: python tools/build-result-comparisons.py --check
       - run: node --test tests/test-site-runtime.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs tests/test-result-comparison.cjs tests/test-*-results.cjs
-      - run: node --test tests/test-weekly-rendering.cjs tests/test-monthly-ui.cjs
+      - run: node --test tests/test-weekly-rendering.cjs tests/test-monthly-*.cjs

@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -31,7 +31,7 @@ jobs:
       - run: npm ci
       - run: node --check src/index.js
       - run: node weekly/build-seed.mjs --check
-      - run: node --test test-weekly-content.mjs test-monthly-period.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-ui.cjs
+      - run: node --test test-weekly-content.mjs test-monthly-period.mjs test-monthly-answers.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
