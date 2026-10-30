@@ -27,6 +27,32 @@ for (const item of published) {
   assert.equal(assets[item.file], item.bytes, 'Released bytes must match the reviewed original-layout PDF');
   assert.equal(font.bytes, item.bytes);
   assert.equal(font.sha256, item.sha256);
+  for (const alias of item.aliases || []) {
+    assert.equal(assets[alias], item.bytes);
+    assert.equal(revisions[alias], item.sha256.slice(0, 16));
+    assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
+  }
+  if (item.audit_schema === 'cpho-native-problems') {
+    assert.equal(qa.sha256, item.sha256);
+    assert.equal(qa.passed, true);
+    assert.equal(qa.pages.length, item.pages);
+    for (const page of qa.pages) {
+      assert.equal(page.proof_sha256, item.sha256);
+      assert.equal(page.passed, true);
+      for (const key of ['native_glyphs_changed', 'bit_exact_native_nonspace_glyphs_changed', 'protected_glyphs_selected_for_erasure', 'remaining_han']) assert.deepEqual(page[key], []);
+      for (const key of ['changed_pixels_in_native_glyph_neighborhood', 'changed_pixels_outside_prose', 'unexpected_nul']) assert.equal(page[key], 0);
+      assert.equal(page.original_images_identical, true);
+      assert.equal(page.original_font_programs_identical, true);
+    }
+    if (item.language === 'ko') assert.equal(qa.hangul_visibility.flagged_components, 0);
+    const poppler = read(item.poppler_qa).filter(row => row.lang === item.language.toUpperCase());
+    assert.equal(poppler.length, item.pages);
+    assert.ok(poppler.every(row => row.outside_changed === 0));
+    const identity = read(item.render_identity_qa).filter(row => row.lang === item.language.toUpperCase());
+    assert.equal(identity.length, item.pages);
+    assert.ok(identity.every(row => row.entire_page_changed_pixels === 0));
+    continue;
+  }
   if (item.audit_schema === 'native-outlines-and-control') {
     assert.equal(qa.output_sha256, item.sha256);
     assert.equal(qa.pages, item.pages);
@@ -43,6 +69,12 @@ for (const item of published) {
     const hangul = read(item.hangul_qa);
     assert.equal(hangul.sha256, item.sha256);
     assert.equal(hangul.flagged_components, 0);
+    if (item.native_ascii_qa) {
+      const ascii = read(item.native_ascii_qa);
+      assert.equal(ascii.sha256, item.sha256);
+      assert.equal(ascii.nonpositive_or_missing_width_count, 0);
+      assert.ok(ascii.page_audits.every(page => page.nonpositive_or_missing_widths.length === 0));
+    }
     continue;
   }
   assert.equal(qa.sha256, item.sha256);

@@ -160,6 +160,37 @@ test('a grading failure keeps the completed OCR result and only numeric usage', 
   });
 });
 
+test('partial failure retains detailed usage and recomputes trusted prices without leaking metadata', async () => {
+  const failure = new ModelTestError(502, 'model_test_provider_failed', { stage: 'grading', provider: 'deepseek', model: 'deepseek-flash' });
+  const stage = { stage: 'ocr', provider: 'deepseek', model: 'deepseek-flash', resolved_model: 'deepseek-v4.1-flash-1017',
+    calls: 1, started_at: '2026-10-30T14:00:00.000Z', finished_at: '2026-10-30T14:00:00.200Z', ms: 200,
+    input_tokens: 100, cached_tokens: 40, uncached_input_tokens: 60, output_tokens: 20, reasoning_tokens: 5,
+    total_tokens: 120, output_tokens_per_second: 100, usage_known: true, ok: true,
+    pricing: { source_url: 'javascript:synthetic-private', total_usd: 999 }, raw: 'synthetic-private' };
+  failure.usage = { calls: 2, input_tokens: null, output_tokens: null, cached_tokens: null, incomplete: true,
+    known_tokens: { input_tokens: 100, cached_tokens: 40, output_tokens: 20, raw: 'synthetic-private' },
+    pricing: { total_usd: 999, source_urls: ['javascript:synthetic-private'] }, stages: [stage,
+      { ...stage, stage: 'grading', ok: false, usage_known: false, input_tokens: null, cached_tokens: null,
+        uncached_input_tokens: null, output_tokens: null, reasoning_tokens: null, total_tokens: null }] };
+  const { handler } = fixture({ runError: failure });
+  await assert.rejects(handler(request(), {}), error => {
+    const usage = error.extra.usage;
+    assert.equal(usage.input_tokens, null);
+    assert.equal(usage.stages[0].resolved_model, stage.resolved_model);
+    assert.equal(usage.stages[0].calls, 1);
+    assert.equal(usage.stages[0].reasoning_tokens, 5);
+    assert.equal(usage.stages[0].pricing.status, 'estimated');
+    assert.ok(Math.abs(usage.stages[0].pricing.total_usd - 0.00002112) < 1e-12);
+    assert.equal(usage.pricing.status, 'incomplete');
+    assert.equal(usage.pricing.total_usd, null);
+    assert.ok(Math.abs(usage.pricing.known_usd - 0.00002112) < 1e-12);
+    assert.equal(usage.pricing.priced_calls, 1);
+    assert.equal(usage.pricing.total_calls, 2);
+    assert.ok(!JSON.stringify(usage).includes('synthetic-private'));
+    return true;
+  });
+});
+
 async function database() {
   const sql = new DatabaseSync(':memory:'), queries = [];
   sql.exec(`CREATE TABLE users(id INTEGER PRIMARY KEY,username TEXT,nickname TEXT,role TEXT,created_at INTEGER,avatar TEXT,deleted INTEGER DEFAULT 0);

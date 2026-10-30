@@ -1092,7 +1092,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=844d3e1a7522"></script>
+<script src="site-catalogue.js?v=f897c66c890c"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7673aba1cf33"></script>
@@ -4372,7 +4372,7 @@ const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
 const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* ORIGINAL_LAYOUT_PDF_VERSIONS */
-const ORIGINAL_LAYOUT_PDF_VERSIONS={"IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"c1bca894a1608166","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
+const ORIGINAL_LAYOUT_PDF_VERSIONS={"CPhO_2007_T_BAUPC_EN.pdf":"3fe3fc3f05e97c16","CPhO_2007_T_EN.pdf":"3fe3fc3f05e97c16","CPhO_2007_T_KO.pdf":"6d45fbd4ab984933","IZhO_2010_T_KO.pdf":"570cd8a1430268a7","IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"27bbd0ee97961d74","IZhO_2026_TS_KO.pdf":"07e3310f4e1c1ca4","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
 /* END_ORIGINAL_LAYOUT_PDF_VERSIONS */
 const thyUrl=f=>{
   const url=/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;
@@ -9499,7 +9499,7 @@ function mountHaslaAdFit(){
 const siteDataLoader=window.HL_RUNTIME&&window.HL_CATALOGUE?window.HL_RUNTIME.createDataLoader({
   versions:window.HL_CATALOGUE.versions,
   loadScript:(url)=>new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=url;script.async=true;script.onload=resolve;script.onerror=()=>{script.remove();reject(new Error("module_unavailable"));};document.head.append(script);}),
-  onLoad:key=>{if(key!=="arena")hydrateCatalogue();}
+  onLoad:key=>{if(key!=="arena"&&key!=="developer-guide")hydrateCatalogue();}
 }):null;
 let siteRenderSeq=0;
 

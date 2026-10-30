@@ -60,6 +60,12 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 계정당 문제별 최대 3회까지 답안을 접수합니다. 서버가 원자적으로 횟수를 확인하고 답안을 저장한 후 채점하므로 동시 제출도 제한을 넘지 않습니다. 임시저장·사진 인식·검증 실패는 횟수를 쓰지 않고, 같은 요청 번호로 통신 재시도하면 중복 차감하지 않습니다. 접수된 채점 대기·오류 답안도 보관되며 횟수에 포함됩니다. 관리자는 같은 제출 기록을 다시 채점할 수 있습니다.
 
+월별 문제는 채점 직후 총점만 공개합니다. 소문항별 점수·근거·첨삭은 서버의 `closes_at` 경계부터 공개하며, 11월 문제는 2026년 12월 1일 00:00 KST입니다. 제출 응답·같은 요청의 재조회·내 제출 목록에 동일한 공개 정책을 적용합니다. `feedback_held`와 `feedback_available_at`이 공개 상태를 알리며, 마감 전 응답에는 비공개 첨삭 원문을 포함하지 않습니다. 실전모드의 즉시 첨삭에는 영향을 주지 않습니다.
+
+직접 입력한 답안의 AI 작성 의심 검토는 명시적인 생성 흔적을 보수적으로 확인합니다. 문체나 LaTeX 사용만으로 판정하지 않으며, 불확실하거나 검토 제공자가 실패하면 정상 채점합니다. 검증된 의심 답안은 `ai_suspected`, `score: null`로 저장하고 기회 1회를 사용하며 채점하지 않습니다. 작성자를 확정하는 기능은 아니므로 오판 가능성과 본인이 직접 푼 손글씨 답안 권장을 제출 전에 표시합니다. 관리자는 같은 기록을 검토해 점수를 주거나 다시 채점할 수 있으며 기회를 추가 차감하지 않습니다. 검토와 채점은 각각 시간이 걸릴 수 있어 화면은 약 2분을 안내하고, 통신 재시도는 기존 요청 번호를 유지합니다.
+
+월별 문제에 업로드한 촬영 원본과 OCR 결과, 제출한 구조화 답안은 D1에 보관합니다. 사진 업로드는 선택한 보정 사진을 OCR에 보내고 촬영 원본을 별도로 저장하며, OCR 실패 시 사진을 남기지 않습니다. 사진 ID의 소유자·문제·소문항을 서버에서 검증하며, 원본 OCR과 최종 답·풀이 전체가 정규화 후 일치하는 소문항만 입력 답안 검토에서 제외합니다. `via_ocr` 값만으로 검토를 건너뛸 수 없습니다. 내 제출 기록의 사진은 로그인한 소유자와 관리자만 인증 헤더로 조회할 수 있고 공개 URL이나 토큰이 든 주소를 만들지 않습니다. 실전모드 사진의 임시 보관 정리와 분리됩니다. 인쇄 답안지 각 A4 페이지 네 모서리에는 검은 인식 마크가 있습니다.
+
 ### 올리는 순서
 
 1. **표 만들기**: `migrations/0004_arena.sql`을 원격 D1에 적용합니다. `npm run db:remote`를 실행하거나, 대시보드에서 **D1 → haslalab-community → Console**에 파일 내용을 붙여 넣고 실행합니다. 첫 주(2026-W44) 문제 세 개가 함께 들어갑니다.
@@ -360,7 +366,9 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | PATCH | `/api/me` | `{nickname}` 닉네임 바꾸기 |
 | GET | `/api/monthly?lang=&month=` | 해당 월 문제 목록, 내 최고 점수, 월 목록 (`/api/weekly` 호환 주소 유지) |
 | GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
-| POST | `/api/problems/:id/submit` | `{answer, via_ocr}` → `{status, score, detail}` |
+| POST | `/api/problems/:id/submit` | 일반 문제 `{answer, via_ocr}`, 월별 답안지 `{parts, sheet_version, request_id, photo_ids}` → `{status, score, detail, attempts, feedback_held, feedback_available_at}` |
+| POST | `/api/monthly/problems/:id/photos?mode=text\|math` | 인증 필요. multipart `image`, `original_image`, `part_id` → OCR 결과와 소유자 전용 `photo_id` (제출 기회 차감 없음) |
+| GET | `/api/monthly/photos/:photoId` | 인증한 소유자 또는 관리자만 촬영 원본 조회 |
 | POST | `/api/ocr?mode=text\|math` | multipart `image` → `{text, confidence}` |
 | GET | `/api/rank?scope=month\|all&month=` | 월별·전체 랭킹 100위까지 (`scope=week` 호환 유지) |
 | GET | `/api/me/stats` | 내 순위, 총점, 최근 제출 |
@@ -377,6 +385,8 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 키는 `haslalab-community` Worker의 기존 `GEMINI_API_KEY`·`DEEPSEEK_API_KEY` secrets를 사용합니다. 브라우저나 edge Worker에는 키를 복사하지 않습니다. Gemini 모델은 `GEMINI_MODEL`(기본 `gemini-flash-latest`), DeepSeek 채점 모델은 `DEEPSEEK_MODEL`(기본 `deepseek-flash`), DeepSeek OCR 모델은 `DEEPSEEK_OCR_MODEL`(기본 `deepseek-flash`)로 설정합니다. 이미지 입력은 [DeepSeek 공식 Vision 안내](https://api-docs.deepseek.com/guides/vision/)를 따릅니다. 채점에 텍스트 전용 모델을 선택해도 OCR 모델은 별도로 유지됩니다.
 
 `GET /api/admin/lab/model-test`는 비밀값 없이 세 조합의 연결 상태를 반환하고, `POST`는 선택한 OCR→채점 두 단계만 실행합니다. 사진은 최대 3장, 장당 1.9 MB이며 서버는 실제 본문 바이트를 8 MiB로 제한합니다. 인증과 관리자 권한을 확인한 뒤 사진을 읽으며, 계정당 시간당 30회까지 실행합니다. 제공업체 오류에는 다른 모델로 대체하지 않고 실패 단계를 표시합니다. 채점 실패 시 이미 성공한 OCR을 보존하며, 불명확한 판독·근거 없는 점수는 `needs_review`와 `score:null`로 반환합니다.
+
+개발자 결과에는 단계별 시작·종료 시각, 응답 시간, 요청/응답 모델, 입력·비캐시·캐시·출력·생각 토큰, 전체 토큰, 호출 수와 출력 토큰/응답 초를 표시합니다. 출력 속도는 전체 API 응답 시간을 분모로 한 참고값이며 순수 생성 속도가 아닙니다. 가격은 `src/model-test-pricing.js`의 확인일·공식 출처가 있는 유료 Standard 단가를 적용한 USD 예상치입니다. 캐시는 입력의 부분집합, 생각 토큰은 출력의 부분집합이므로 중복 청구하지 않습니다. 공개 가격이 없는 모델·누락된 사용량은 미확정이며, 오류 호출의 불명확한 지출을 0으로 계산하지 않습니다. 프로모션 종료 시간대나 DeepSeek의 중국 공휴일 여부가 확정되지 않은 구간은 가격 범위로 표시합니다. 무료 크레딧·계정 할인·세금·환율·별도 캐시 저장료·도구 이용료는 이 토큰 추정에 포함하지 않습니다.
 
 ## 물리대회 실전 점수
 
