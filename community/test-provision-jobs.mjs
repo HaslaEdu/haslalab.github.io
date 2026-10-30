@@ -11,6 +11,7 @@ test('repeated deployments reuse queues, while permission failures stop before m
   let calls = 0;
   await provision(async () => ({ code: ++calls <= 2 ? 1 : 0, output: 'A queue with this name already exists.' }), () => {});
   assert.equal(calls, 2);
+  await provision(async () => ({ code: 1, output: "Queue name 'haslalab-lab-jobs' is already taken. [code: 11009]" }), () => {});
   calls = 0;
   await assert.rejects(provision(async () => { calls++; return { code: 1, output: 'Authentication error: permission denied [403]' }; }, () => {}), /Cannot provision/);
   assert.equal(calls, 1);
