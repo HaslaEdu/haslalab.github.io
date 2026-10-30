@@ -174,6 +174,8 @@ def equation_pdf(expression, point_size):
 
 
 def inline_equation_pdf(expression, body_size=9.8):
+    if body_size<9.5 and _EQUATION_RATIO<.9:
+        return equation_pdf(expression,min(body_size,8.14))
     return math_pdf(expression,body_size*_EQUATION_RATIO/.83)
 
 
@@ -409,6 +411,10 @@ class ColumnFlow:
         self.column, self.y, self.page, self.question = 1, BOTTOM, None, None
         self.indent = 0
         self.right_inset = 0
+        self.body_size = 9.8
+        self.figure_scale = 1.
+        self.keep_question = False
+        self.exam_identity = None
         self.new_column()
 
     @property
@@ -448,6 +454,8 @@ class ColumnFlow:
         if height > BOTTOM - TOP - 25:
             raise ValueError(f'Unbreakable block too high: {height}')
         if self.y + height > BOTTOM:
+            if self.keep_question:
+                raise ValueError(f'Question {self.question} exceeds its column: {self.y+height} > {BOTTOM}')
             self.new_column(continuation)
 
     def heading(self, number, label, keep=75):
@@ -467,33 +475,33 @@ class ColumnFlow:
         self.start_region()
         self.indent = 12.3
         left = COLUMNS[self.column][0]
-        text(self.page, (left, self.y+1.9, left+10.5, self.y+17), f'{number}.', 8.15, style='number')
+        text(self.page, (left, self.y+(self.body_size-8.15)*1.15, left+10.5, self.y+17), f'{number}.', 8.15, style='number')
 
     def boxed_givens(self, values):
         if not values:
             return
         previous_inset = self.right_inset
         self.right_inset = 5
-        total = 19 + sum(self.paragraph_height(value, 9.8, 4) for value in values)
+        total = 29 + sum(self.paragraph_height(value, self.body_size, 0) for value in values)
         self.reserve(min(total, 680))
         page = self.page
         left, right = COLUMNS[self.column][0]+2, COLUMNS[self.column][1]-2
         top = self.y + 5
         label = '<보기>'
-        label_width = measure(label, 8.15)
+        label_width = measure(label, 9.03)
         center = (left+right)/2
         page.draw_line((left, top), (center-label_width/2-7, top), width=.4)
         page.draw_line((center+label_width/2+7, top), (right, top), width=.4)
-        text(page, (center-label_width/2, top-5, center+label_width/2+.1, top+10), label, 8.15)
+        text(page, (center-label_width/2, top-5, center+label_width/2+.1, top+10), label, 9.03)
         self.y = top+11
         for value in values:
-            self.paragraph(value, gap=4)
+            self.paragraph(value, gap=0)
         if self.page is not page:
             raise ValueError('A boxed list unexpectedly crossed a page')
         bottom = self.y+3
         for a,b in [((left,top),(left,bottom)),((right,top),(right,bottom)),((left,bottom),(right,bottom))]:
             page.draw_line(a,b,width=.4)
-        self.y = bottom+15
+        self.y = bottom+10
         self.right_inset = previous_inset
 
     def display_math(self, value, point_size=9.81):
@@ -504,16 +512,23 @@ class ColumnFlow:
         source, width, height, _ = equation_pdf(expression, point_size)
         if width > COLUMNS[self.column][1]-COLUMNS[self.column][0]:
             raise ValueError(f'Display equation must be split: {expression}')
-        self.reserve(height+25)
+        self.reserve(height+18)
         left, right = COLUMNS[self.column]
         x=(left+right-width)/2
         self.y += 7
         self.page.show_pdf_page(fitz.Rect(x,self.y,x+width,self.y+height),source,0)
-        self.y += height+18
+        self.y += height+11
 
-    def paragraph_height(self, value, size=9.8, gap=8):
+    def paragraph_height(self, value, size=None, gap=8):
+        size=self.body_size if size is None else size
         if '$' not in value:
-            return len(wrap(value, self.width, size)) * size * 1.6 + gap
+            remaining=value;count=0
+            while remaining:
+                line=wrap(remaining,self.width,size)[0]
+                if not line and remaining.startswith('\n'):
+                    remaining=remaining[1:];count+=1;continue
+                remaining=remaining[len(line):].lstrip(' \n');count+=1
+            return count*size*1.6+gap
         tokens, total = rich_tokens(value, size), 0
         while tokens:
             line = rich_line(tokens, self.width)
@@ -527,7 +542,8 @@ class ColumnFlow:
                 tokens = tokens[1:]
         return total + gap
 
-    def paragraph(self, value, size=9.8, gap=8):
+    def paragraph(self, value, size=None, gap=8):
+        size=self.body_size if size is None else size
         if '$' in value:
             return self.rich_paragraph(value, size, gap)
         # Widths differ by four points. Rewrap the remaining text on a column
@@ -589,13 +605,13 @@ class ColumnFlow:
         if source_name.startswith('KPhE_2023_'):
             from kphe_redraw import native_figure, dimensions
             asset,item = native_figure(source_name,page,rect)
-            width,height = dimensions(item,self.width)
-            self.reserve(height+12)
-            width,height = dimensions(item,self.width)
+            width,height = dimensions(item,self.width,min(max_height,155),self.figure_scale)
+            self.reserve(height+8)
+            width,height = dimensions(item,self.width,min(max_height,155),self.figure_scale)
             vector=fitz.open(asset) if asset.suffix=='.pdf' else _vector_document(asset)
             x=self.x+(self.width-width)/2
             self.page.show_pdf_page(fitz.Rect(x,self.y,x+width,self.y+height),vector,0)
-            self.y += height+12
+            self.y += height+8
             return
         clip = fitz.Rect(rect)
         h = min(max_height, self.width * clip.height / clip.width)
@@ -617,3 +633,6 @@ class ColumnFlow:
         for i, page in enumerate(self.doc):
             frame(page, self.title, self.level, i + 1, len(self.doc), self.note,
                   self.header_source, self.preserve_header)
+            if self.exam_identity:
+                from kphe_key_design import draw_exam_date
+                draw_exam_date(page, *self.exam_identity)

@@ -128,54 +128,32 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
     note = False
     reference = INPUT / f'KPhE_2026_T2{part[-1]}_KO.pdf'
     flow = ColumnFlow(out, title, level, note, reference, False, kind='문제')
+    from kphe_problem_layout import plan_question, render_question
+    layout_rows=[]
     for question in questions:
         if flow.y > 76:
             flow.new_column(False)
-        figures = question.get('figures', []) or ([question['figure']] if question.get('figure') else [])
-        keep = 25 + 9.8 * 1.6 * 2
-        if figures:
-            r = fitz.Rect(figures[0]['rect'])
-            keep += min(220, flow.width * r.height / r.width) + 12
-        flow.problem_start(question['number'])
-        values = question.get('paragraphs', question.get('statement', []))
-        for value in ([values] if isinstance(values, str) else values):
-            if re.fullmatch(r'\s*\$[^$]+\$\s*', value):
-                flow.display_math(value)
-            else:
-                flow.paragraph(value)
-        for fig in figures:
-            fig_doc = original if Path(fig['source']).name == source.name else fitz.open(INPUT / fig['source'])
-            flow.figure(fig_doc, fig['page'], fig['rect'], max_height=220)
-        for value in question.get('after_figure', []):
-            flow.paragraph(value)
-        values = question.get('givens', [])
-        flow.boxed_givens([values] if isinstance(values, str) else values)
-        for i, value in enumerate(question.get('options', question.get('choices', []))):
-            flow.paragraph(f'{"①②③④⑤"[i]} {value}', gap=4)
-        flow.y += 12
+        plan=plan_question(flow,question,part)
+        flow.keep_question=True
+        start=flow.y
+        render_question(flow,question,part)
+        actual=flow.y-start
+        if abs(actual-plan['height'])>.02:
+            raise ValueError(f'Question measurement differs: {question["number"]}: {actual} / {plan}')
+        layout_rows.append(dict(plan,number=question['number'],page=len(out),column=flow.column,actual_height=round(actual,3)))
+        flow.keep_question=False
     flow.finish()
     out.set_metadata({'title': f'{title} {level}', 'author': '한국물리학회 문항; 첨부 스캔 편집',
                       'subject': 'Retypeset study edition on 2026 KPS stationery'})
     out.subset_fonts()
     out.save(target, garbage=4, deflate=True)
+    report_path=ROOT/'tools/kphe_2023_layout_report.json'
+    report=json.loads(report_path.read_text(encoding='utf8')) if report_path.exists() else {}
+    report[f'{year}:{part}']={'questions':layout_rows,'all_questions_in_one_column':True,
+        'choice_gap_point':0,'figure_height_cap_point':155}
+    report_path.write_text(json.dumps(report,ensure_ascii=False,indent=1)+'\n',encoding='utf8')
     mapped = [flow.region_records[q['number']] for q in questions]
     return [r[0] if len(r) == 1 else r for r in mapped], [r[0]['page'] for r in mapped]
-
-
-def transcribed_key(target, title, level, values, marked=False, reference=None):
-    doc = fitz.open()
-    page = doc.new_page(width=A4.width, height=A4.height)
-    note = False
-    frame(page, title, level, 1, 1, note, header_source=reference)
-    rows = (len(values) + 1) // 2
-    height = min(48, 680 / max(1, rows))
-    for i, answer in enumerate(values):
-        col, row = i // rows, i % rows
-        x = 47 if col == 0 else 308
-        label = ' / '.join('①②③④⑤'[a - 1] for a in answer) if isinstance(answer, list) else '①②③④⑤'[answer - 1]
-        text(page, (x, 88 + row * height, x + 242, 110 + row * height), f'{i+1}. 정답: {label}', 10.5)
-    doc.subset_fonts()
-    doc.save(target, garbage=4, deflate=True)
 
 
 def remove_blank_sheets(overlay):
@@ -233,9 +211,9 @@ def main():
                 if official_copy:
                     shutil.copyfile(source, target)
                 elif file['kind'] == 'key' and y.startswith('2023'):
-                    transcribed_key(target, title, level, year['keys'][part],
-                                    file.get('source_type') == 'user_supplied_marked_paper',
-                                    INPUT/f'KPhE_2026_T2{part[-1]}_KO.pdf')
+                    from kphe_key_design import build_2023_key
+                    build_2023_key(y, part, year['keys'][part], target,
+                                   [c for c in year.get('corrections', []) if c['part'] == part])
                 elif file['kind'] == 'key':
                     fixes = [c for c in year.get('corrections', []) if c['part'] == part]
                     key_edition(source, target, title, level, fixes)

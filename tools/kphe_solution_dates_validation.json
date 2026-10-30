@@ -1,0 +1,863 @@
+{
+  "checked_on": "2026-10-30",
+  "scope": "Only 24 independently written 2024-2026 worked-explanation PDFs; 2023 PDFs are built by the main builder.",
+  "results": {
+    "solution_pdfs": 24,
+    "pages": 109,
+    "date_text_font_point_bbox_checks": 109,
+    "bbox_tolerance_pt": 0.035,
+    "pixel_checked_pages": 109,
+    "pixel_dpi": 144,
+    "outside_allowed_regions_changed_pixels": 0,
+    "header_rule_exception_pdfs": 4,
+    "idempotence_rerun_changed_pdfs": 0,
+    "check_only_changed_pdfs": 0,
+    "answer_key_source_pdfs_hash_rechecked": 29,
+    "official_question_or_key_pdfs_written": 0,
+    "header_rule_version": "v2",
+    "other_modern_solution_pdfs_byte_unchanged_during_v2_repair": 20
+  },
+  "allowed_regions": "Date bbox +0.3 pt. Only for 2024 T1b/T1c/T2b/T2c, additionally old/new header-rule bbox +0.8 pt (cover padding0.7 pt); all other pixels must be identical.",
+  "text_redaction": {
+    "images": 0,
+    "graphics": 0,
+    "bbox_padding_pt": 0.3
+  },
+  "pixel_evidence": "tmp/kphe-solution-dates/validation-modern.json (page-level checks and unchanged original backups under before/)",
+  "commands": [
+    "python -X utf8 tools/kphe_solution_dates.py --modern-only",
+    "python -X utf8 tools/kphe_solution_dates.py --modern-only --check-only"
+  ],
+  "files": [
+    {
+      "file": "pdfx/kphe/KPhE_2026_T2aS.pdf",
+      "pages": 4,
+      "before_sha256": "9ad3f4898615e0a9ba96cf3c5b2fdef4b935a74f160bccbf3776ce454f5582ad",
+      "sha256": "2c2e518ef64860f020755b85b0ec0a9e3c71e5dee0fc30516cd8c2d8cf20e24a",
+      "date_text": "2026. 9. 5",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        456.84227576622595,
+        52.1370290169776,
+        515.1367568969727,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004767095082947037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T2bS.pdf",
+      "pages": 4,
+      "before_sha256": "feba6970aca3879a5ec524c4ff5fb82f5d31ad2dd2854c3651d8a52af0ccef79",
+      "sha256": "e316c5e92274ce9c13f920201a742197a75f246a1ee0127c5575cf6f98f77799",
+      "date_text": "2026. 9. 5",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        456.84227576622595,
+        52.1370290169776,
+        515.1367568969727,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004767095082947037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T2cS.pdf",
+      "pages": 6,
+      "before_sha256": "4bebd718738817b3a79ef1546c4ce0b8f5ebe58c82163df386e72f5540321eed",
+      "sha256": "61f2ae613ce1c2c2e4d6bd4339b51ab244d10c51e054216762a9376593eba3ca",
+      "date_text": "2026. 9. 5",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        456.84227576622595,
+        52.1370290169776,
+        515.1367568969727,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004767095082947037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 6,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T2dS.pdf",
+      "pages": 5,
+      "before_sha256": "01cf50c23381413edff918519f9d13a0089582e04ac00f9beb1fb8487d49586e",
+      "sha256": "4936c8b8c5170d2d43b7039952ec8443e6cf917acbaecdf5c5a9aec2fa2d38ba",
+      "date_text": "2026. 9. 5",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        456.84227576622595,
+        52.1370290169776,
+        515.1367568969727,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004767095082947037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T1aS.pdf",
+      "pages": 4,
+      "before_sha256": "d28d60cad5dc20f92956f99e96d823aab35d118acf4228cb3f102c28bca312b2",
+      "sha256": "cbc9b4ec5cfa3a0f805c91f277210db83b94c8ba3116a27b7d4b9ea317d07541",
+      "date_text": "2026. 2. 28",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T1bS.pdf",
+      "pages": 4,
+      "before_sha256": "6551c83fbcdb27265471e4f69ab5d11a0ee0b9fe5405e63bf939b345fab7d432",
+      "sha256": "5c50a94dcaf4d14a95cee7623deea0b74282fff4518fc24c84a95e8f99332b34",
+      "date_text": "2026. 2. 28",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T1cS.pdf",
+      "pages": 5,
+      "before_sha256": "2f4572ca790bbe2f03ddfdd312d1bbbff98023ae403a29277f97968da70c8b2c",
+      "sha256": "5e7376a40165f3339058d8656d728103829c75a3967d84b9ce02ef169894fc42",
+      "date_text": "2026. 2. 28",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2026_T1dS.pdf",
+      "pages": 3,
+      "before_sha256": "029fd1ae0aa1f4a0c8649a7e2dbd0b126d42c4d51ecc7f6093e4d9f5b0926871",
+      "sha256": "a39964e9cfe30020e32a18b87c9ea79fd6bed7f87f2c2560f9d439d0a8ff45df",
+      "date_text": "2026. 2. 28",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 3,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T2aS.pdf",
+      "pages": 4,
+      "before_sha256": "d3d72c3adaf34ea742f0991ace76886387d1a6530b56ed4f7dbaddbe6382e9b5",
+      "sha256": "ffe49f4a4b78f3d6e5b49c730208451e0f3590b432d6fa30c621b7ad4a4f8657",
+      "date_text": "2025. 8. 30",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T2bS.pdf",
+      "pages": 4,
+      "before_sha256": "c8c0f6c1410a009846b796240a1d9ddeffcba8231601d9d03e07a2816ffa87f5",
+      "sha256": "4d34991a0e7a779f1130b1a442e59810fae57978aa7f96f4e328e44474ac51e2",
+      "date_text": "2025. 8. 30",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T2cS.pdf",
+      "pages": 5,
+      "before_sha256": "e775740e883da90239493d1bc78b4c5992dc23071a017b92280283d765fbce4e",
+      "sha256": "97947d6eadc34d0823dddb4fb47f3410663d6742cf8d6fc414df314816386748",
+      "date_text": "2025. 8. 30",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T2dS.pdf",
+      "pages": 4,
+      "before_sha256": "51fbb9767b53d915cc1e4f217b5298a7cbdbe75542e9b6697437d35c75930c21",
+      "sha256": "80fd265ae183f0adc80ccb483ed061e40a1592851fb9b14ec5f9364d276e14e5",
+      "date_text": "2025. 8. 30",
+      "font": "HancomGothicBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        452.72306295541614,
+        52.74954114112891,
+        519.2069332416241,
+        64.9997836241551
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.00470080223046665,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T1aS.pdf",
+      "pages": 4,
+      "before_sha256": "220bef017be57b66eea981f1f7d518d6d9dd29a81e24adb31f6a7e48c34f1635",
+      "sha256": "09b1721f02c979b663a357c18299a3db1b746d3c74d3176b38f454d701aa03dc",
+      "date_text": "2025. 2. 22",
+      "font": "Gungsuh",
+      "native_point": 15.583873748779297,
+      "a4_point": 12.73195008936733,
+      "a4_bbox": [
+        452.72306295541614,
+        51.00645428277357,
+        519.1857323279747,
+        63.733536432601085
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.006934934629036604,
+      "max_point_error_pt": 7.410344272784641e-05,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T1bS.pdf",
+      "pages": 4,
+      "before_sha256": "fb9c21b564b8f87e027ef9dca21e589def66ba71535e6a2eb86f1411122866ca",
+      "sha256": "3c5484000e4bad557d8ecd1c94f3b4e6d50e191d7216abdb1f3726116a8f82f2",
+      "date_text": "2025. 2. 22",
+      "font": "Gungsuh",
+      "native_point": 15.583873748779297,
+      "a4_point": 12.73195008936733,
+      "a4_bbox": [
+        452.72306295541614,
+        51.00645428277357,
+        519.1857323279747,
+        63.733536432601085
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.006934934629036604,
+      "max_point_error_pt": 7.410344272784641e-05,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T1cS.pdf",
+      "pages": 5,
+      "before_sha256": "d2a6dc2cd4ea1db1899205b77ce522d3f4c178a025a162d840e148eea515b63c",
+      "sha256": "846c47d341e27b4b93afccc16f547e95677201cc41c565ef8fb589e959b10c4f",
+      "date_text": "2025. 2. 22",
+      "font": "Gungsuh",
+      "native_point": 15.583873748779297,
+      "a4_point": 12.73195008936733,
+      "a4_bbox": [
+        452.72306295541614,
+        51.00645428277357,
+        519.1857323279747,
+        63.733536432601085
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.006934934629036604,
+      "max_point_error_pt": 7.410344272784641e-05,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2025_T1dS.pdf",
+      "pages": 5,
+      "before_sha256": "3dee442e049b320d28248aff56ade9e175f129346d4786b0e828d3c3c5c8505f",
+      "sha256": "a5d966259ee021e7324691ce92a90ad726f27b1affc12f2bd9cbe8abb16d3415",
+      "date_text": "2025. 2. 22",
+      "font": "Gungsuh",
+      "native_point": 15.583873748779297,
+      "a4_point": 12.73195008936733,
+      "a4_bbox": [
+        452.72306295541614,
+        51.00645428277357,
+        519.1857323279747,
+        63.733536432601085
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.006934934629036604,
+      "max_point_error_pt": 7.410344272784641e-05,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T2aS.pdf",
+      "pages": 4,
+      "before_sha256": "34217e1fa2d4a0d48a0b2021a9924a99a322a4d95e2612b9ff221549a156c1f9",
+      "sha256": "e7201df30fd22ebd6964b820d3bc02258b04cc580b0fea68d0e0b7c0f409ce73",
+      "date_text": "2024. 8. 31",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T2bS.pdf",
+      "pages": 3,
+      "before_sha256": "3ffc7b7d5b14582194c9f231032a4867b2f0163d244fab434daf1d030f5d3c8a",
+      "sha256": "63a4d4836890805a008500d02f7a550cf1dbeb603e71fbf93542b53f2309b778",
+      "date_text": "2024. 8. 31",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 3,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": {
+        "scope": "independently typeset worked explanations only; never official P/K",
+        "reason": "The original 2024 question header rule crosses the latest official key date location. Move its center to the latest key lower-rule baseline, retaining original length/thickness.",
+        "old_a4_bbox": [
+          46.356876446650574,
+          61.40229674523369,
+          548.7404045691857,
+          63.8499027699897
+        ],
+        "new_a4_bbox": [
+          46.356876446650574,
+          66.64172286321305,
+          548.7404045691857,
+          69.08932888796905
+        ],
+        "latest_key_rule_native_y": 83.0989990234375,
+        "original_width_pt": 502.3835281225351,
+        "original_thickness_pt": 2.4476060247560056,
+        "cover_padding_pt": 0.7,
+        "allowed_padding_pt": 0.8,
+        "idempotence_marker": "2024-2:T2b:v2"
+      },
+      "intermediate_v1_sha256": "e737e383db537b86cfd1d53dee9ee6a480f16fb31a92795ac5160d23e61514ad"
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T2cS.pdf",
+      "pages": 6,
+      "before_sha256": "ebb4cce55aa78d7dc1701c6edf0ab473904e03b8acbab4ebd9cca4b2971ab2eb",
+      "sha256": "816d22f4d84033a90a6a86d2966a0974c4e3b44d1acbe4a8a0cdbec7c332404f",
+      "date_text": "2024. 8. 31",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 6,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": {
+        "scope": "independently typeset worked explanations only; never official P/K",
+        "reason": "The original 2024 question header rule crosses the latest official key date location. Move its center to the latest key lower-rule baseline, retaining original length/thickness.",
+        "old_a4_bbox": [
+          46.356876446650574,
+          61.40229674523369,
+          548.7404045691857,
+          63.8499027699897
+        ],
+        "new_a4_bbox": [
+          46.356876446650574,
+          66.64172286321305,
+          548.7404045691857,
+          69.08932888796905
+        ],
+        "latest_key_rule_native_y": 83.0989990234375,
+        "original_width_pt": 502.3835281225351,
+        "original_thickness_pt": 2.4476060247560056,
+        "cover_padding_pt": 0.7,
+        "allowed_padding_pt": 0.8,
+        "idempotence_marker": "2024-2:T2c:v2"
+      },
+      "intermediate_v1_sha256": "89cf8b4a2647d46098b301b0423f7b5824251c971683c20e4d263f6a1634de88"
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T2dS.pdf",
+      "pages": 6,
+      "before_sha256": "ae3bafe4e1f3b22481bdbe8753fd346495189c3ff16c4cbeb2200dbf903b694c",
+      "sha256": "74aa6857922c34f7e96990ccac81ed278f1775e3b9ba85f45271a29847386ceb",
+      "date_text": "2024. 8. 31",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 6,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T1aS.pdf",
+      "pages": 5,
+      "before_sha256": "d652f62e41cfeb99f0e0b885f832bddef10cf44a1717a27719bb2f7a0947bd54",
+      "sha256": "515350b261cd10109a3523bbd1adc7b2004b0393b9fa35ce661fd9781147166a",
+      "date_text": "2024. 2. 24",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T1bS.pdf",
+      "pages": 4,
+      "before_sha256": "1888ab966794dd163af1af9e4a0c4fa6d731e5886d9703149fa62399a609b55f",
+      "sha256": "a52ffc5f3e5b0b2455bbb84f2ae03d39926e0f1ee8fbde76c07ee299cb1776f6",
+      "date_text": "2024. 2. 24",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 4,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": {
+        "scope": "independently typeset worked explanations only; never official P/K",
+        "reason": "The original 2024 question header rule crosses the latest official key date location. Move its center to the latest key lower-rule baseline, retaining original length/thickness.",
+        "old_a4_bbox": [
+          46.356876446650574,
+          61.40149920340537,
+          548.7404045691857,
+          63.8499027699897
+        ],
+        "new_a4_bbox": [
+          46.356876446650574,
+          66.64132409229889,
+          548.7404045691857,
+          69.0897276588832
+        ],
+        "latest_key_rule_native_y": 83.0989990234375,
+        "original_width_pt": 502.3835281225351,
+        "original_thickness_pt": 2.448403566584325,
+        "cover_padding_pt": 0.7,
+        "allowed_padding_pt": 0.8,
+        "idempotence_marker": "2024-1:T1b:v2"
+      },
+      "intermediate_v1_sha256": "6efd96180430ca03094a890e3f14db9d91e1265002d18c271db5461b1e0fdf2b"
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T1cS.pdf",
+      "pages": 6,
+      "before_sha256": "40e11386c8c3c20ce7c1000de36fe2424b5f3848036c3bf09b7c08d5b58a14d7",
+      "sha256": "6902d4f46ff02d485ce3804ebb9809b724f5490c2d3d908a08f0669beff71c63",
+      "date_text": "2024. 2. 24",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 6,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": {
+        "scope": "independently typeset worked explanations only; never official P/K",
+        "reason": "The original 2024 question header rule crosses the latest official key date location. Move its center to the latest key lower-rule baseline, retaining original length/thickness.",
+        "old_a4_bbox": [
+          46.356876446650574,
+          61.40149920340537,
+          548.7404045691857,
+          63.8499027699897
+        ],
+        "new_a4_bbox": [
+          46.356876446650574,
+          66.64132409229889,
+          548.7404045691857,
+          69.0897276588832
+        ],
+        "latest_key_rule_native_y": 83.0989990234375,
+        "original_width_pt": 502.3835281225351,
+        "original_thickness_pt": 2.448403566584325,
+        "cover_padding_pt": 0.7,
+        "allowed_padding_pt": 0.8,
+        "idempotence_marker": "2024-1:T1c:v2"
+      },
+      "intermediate_v1_sha256": "2f6e4111eaa56a5db3b70fcfc3a5ccc0e1eed2b8530459679971d4cf56c807f3"
+    },
+    {
+      "file": "pdfx/kphe/KPhE_2024_T1dS.pdf",
+      "pages": 5,
+      "before_sha256": "209e07f7f7eb6cbac89ec55678ec24fbe6117cbbfbd96c8e1c79a171afde7530",
+      "sha256": "b35b82a5fec9070cb9af790db9957969e0b0662707cf2cf6d45100bdbf9142cb",
+      "date_text": "2024. 2. 24",
+      "font": "KoPubDotumBold",
+      "native_point": 15.0,
+      "a4_point": 12.254928037739626,
+      "a4_bbox": [
+        453.5730449969952,
+        52.1370290169776,
+        518.4059876662034,
+        64.38727150000379
+      ],
+      "a4_baseline": 61.93722300339855,
+      "max_bbox_error_pt": 0.004706059926697037,
+      "max_point_error_pt": 4.217244020665589e-06,
+      "pixel_checked_pages": 5,
+      "outside_allowed_regions_changed_pixels": 0,
+      "header_rule_adjustment": null
+    }
+  ],
+  "header_rule_v2_repair": {
+    "files": [
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2bS.pdf",
+        "pages": 3,
+        "version": "v2",
+        "old_region_nonwhite_pixels_excluding_date": 0,
+        "initial_backup_sha256": "3ffc7b7d5b14582194c9f231032a4867b2f0163d244fab434daf1d030f5d3c8a",
+        "intermediate_v1_sha256": "e737e383db537b86cfd1d53dee9ee6a480f16fb31a92795ac5160d23e61514ad",
+        "sha256": "63a4d4836890805a008500d02f7a550cf1dbeb603e71fbf93542b53f2309b778",
+        "initial_to_v2_outside_allowed_regions_changed_pixels": 0,
+        "cover_padding_pt": 0.7,
+        "rule_allowed_padding_pt": 0.8
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2cS.pdf",
+        "pages": 6,
+        "version": "v2",
+        "old_region_nonwhite_pixels_excluding_date": 0,
+        "initial_backup_sha256": "ebb4cce55aa78d7dc1701c6edf0ab473904e03b8acbab4ebd9cca4b2971ab2eb",
+        "intermediate_v1_sha256": "89cf8b4a2647d46098b301b0423f7b5824251c971683c20e4d263f6a1634de88",
+        "sha256": "816d22f4d84033a90a6a86d2966a0974c4e3b44d1acbe4a8a0cdbec7c332404f",
+        "initial_to_v2_outside_allowed_regions_changed_pixels": 0,
+        "cover_padding_pt": 0.7,
+        "rule_allowed_padding_pt": 0.8
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1bS.pdf",
+        "pages": 4,
+        "version": "v2",
+        "old_region_nonwhite_pixels_excluding_date": 0,
+        "initial_backup_sha256": "1888ab966794dd163af1af9e4a0c4fa6d731e5886d9703149fa62399a609b55f",
+        "intermediate_v1_sha256": "6efd96180430ca03094a890e3f14db9d91e1265002d18c271db5461b1e0fdf2b",
+        "sha256": "a52ffc5f3e5b0b2455bbb84f2ae03d39926e0f1ee8fbde76c07ee299cb1776f6",
+        "initial_to_v2_outside_allowed_regions_changed_pixels": 0,
+        "cover_padding_pt": 0.7,
+        "rule_allowed_padding_pt": 0.8
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1cS.pdf",
+        "pages": 6,
+        "version": "v2",
+        "old_region_nonwhite_pixels_excluding_date": 0,
+        "initial_backup_sha256": "40e11386c8c3c20ce7c1000de36fe2424b5f3848036c3bf09b7c08d5b58a14d7",
+        "intermediate_v1_sha256": "2f6e4111eaa56a5db3b70fcfc3a5ccc0e1eed2b8530459679971d4cf56c807f3",
+        "sha256": "6902d4f46ff02d485ce3804ebb9809b724f5490c2d3d908a08f0669beff71c63",
+        "initial_to_v2_outside_allowed_regions_changed_pixels": 0,
+        "cover_padding_pt": 0.7,
+        "rule_allowed_padding_pt": 0.8
+      }
+    ],
+    "other_modern_solution_pdfs_byte_unchanged": 20,
+    "source_backup_preserved": true,
+    "pixel_baseline": "First pre-overlay original backup, not the intermediate v1 PDF",
+    "old_rule_region_check_dpi": 288,
+    "old_rule_region_nonwhite_pixels_excluding_date": 0,
+    "idempotence_rerun_changed_pdfs": 0,
+    "idempotence_verified_pages": 109
+  },
+  "all29_final_check": {
+    "command": "python -X utf8 tools/kphe_solution_dates.py --check-only",
+    "solution_pdfs": 29,
+    "pages": 139,
+    "changed_pdfs": 0,
+    "maximum_date_bbox_error_pt": 0.006934934629036604,
+    "new_2023_keys_date_font_point_bbox_checks": 5,
+    "files": [
+      {
+        "file": "pdfx/kphe/KPhE_2026_T2aS.pdf",
+        "sha256": "2c2e518ef64860f020755b85b0ec0a9e3c71e5dee0fc30516cd8c2d8cf20e24a",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T2bS.pdf",
+        "sha256": "e316c5e92274ce9c13f920201a742197a75f246a1ee0127c5575cf6f98f77799",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T2cS.pdf",
+        "sha256": "61f2ae613ce1c2c2e4d6bd4339b51ab244d10c51e054216762a9376593eba3ca",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T2dS.pdf",
+        "sha256": "4936c8b8c5170d2d43b7039952ec8443e6cf917acbaecdf5c5a9aec2fa2d38ba",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T1aS.pdf",
+        "sha256": "cbc9b4ec5cfa3a0f805c91f277210db83b94c8ba3116a27b7d4b9ea317d07541",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T1bS.pdf",
+        "sha256": "5c50a94dcaf4d14a95cee7623deea0b74282fff4518fc24c84a95e8f99332b34",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T1cS.pdf",
+        "sha256": "5e7376a40165f3339058d8656d728103829c75a3967d84b9ce02ef169894fc42",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2026_T1dS.pdf",
+        "sha256": "a39964e9cfe30020e32a18b87c9ea79fd6bed7f87f2c2560f9d439d0a8ff45df",
+        "pages": 3
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T2aS.pdf",
+        "sha256": "ffe49f4a4b78f3d6e5b49c730208451e0f3590b432d6fa30c621b7ad4a4f8657",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T2bS.pdf",
+        "sha256": "4d34991a0e7a779f1130b1a442e59810fae57978aa7f96f4e328e44474ac51e2",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T2cS.pdf",
+        "sha256": "97947d6eadc34d0823dddb4fb47f3410663d6742cf8d6fc414df314816386748",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T2dS.pdf",
+        "sha256": "80fd265ae183f0adc80ccb483ed061e40a1592851fb9b14ec5f9364d276e14e5",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T1aS.pdf",
+        "sha256": "09b1721f02c979b663a357c18299a3db1b746d3c74d3176b38f454d701aa03dc",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T1bS.pdf",
+        "sha256": "3c5484000e4bad557d8ecd1c94f3b4e6d50e191d7216abdb1f3726116a8f82f2",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T1cS.pdf",
+        "sha256": "846c47d341e27b4b93afccc16f547e95677201cc41c565ef8fb589e959b10c4f",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2025_T1dS.pdf",
+        "sha256": "a5d966259ee021e7324691ce92a90ad726f27b1affc12f2bd9cbe8abb16d3415",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2aS.pdf",
+        "sha256": "e7201df30fd22ebd6964b820d3bc02258b04cc580b0fea68d0e0b7c0f409ce73",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2bS.pdf",
+        "sha256": "63a4d4836890805a008500d02f7a550cf1dbeb603e71fbf93542b53f2309b778",
+        "pages": 3
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2cS.pdf",
+        "sha256": "816d22f4d84033a90a6a86d2966a0974c4e3b44d1acbe4a8a0cdbec7c332404f",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T2dS.pdf",
+        "sha256": "74aa6857922c34f7e96990ccac81ed278f1775e3b9ba85f45271a29847386ceb",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1aS.pdf",
+        "sha256": "515350b261cd10109a3523bbd1adc7b2004b0393b9fa35ce661fd9781147166a",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1bS.pdf",
+        "sha256": "a52ffc5f3e5b0b2455bbb84f2ae03d39926e0f1ee8fbde76c07ee299cb1776f6",
+        "pages": 4
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1cS.pdf",
+        "sha256": "6902d4f46ff02d485ce3804ebb9809b724f5490c2d3d908a08f0669beff71c63",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2024_T1dS.pdf",
+        "sha256": "b35b82a5fec9070cb9af790db9957969e0b0662707cf2cf6d45100bdbf9142cb",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2023_T2bS.pdf",
+        "sha256": "8dad81272a68575e1cd0fa9b277394ab0eb417088275c8935e439d22e1029f2b",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2023_T2cS.pdf",
+        "sha256": "bbccfa9feaa56f37502e3965d9ab377f64093a9795cc8199dfe13938fdf25a2a",
+        "pages": 6
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2023_T2dS.pdf",
+        "sha256": "9bc3a6afbb787e04e09dacaaa71493aece6a8c43cffd1c7d21152839d865161e",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2023_T1bS.pdf",
+        "sha256": "d3aaf68fb96a0805ee0ff08008643d8e8c9d65219dc3abd9f1d88ed3b9f892b8",
+        "pages": 5
+      },
+      {
+        "file": "pdfx/kphe/KPhE_2023_T1cS.pdf",
+        "sha256": "edb3cf9e0937d89e39332c9ac208d664c03a0fcf7b3bfe69abe4052003c3cf34",
+        "pages": 8
+      }
+    ]
+  }
+}

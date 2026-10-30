@@ -43,8 +43,8 @@ def equation(expr,size,face):
  return MathTextParser('path').parse('$'+expr+'$',dpi=72,prop=FontProperties(family=family+' Roman',size=size))
 
 class SVG:
- def __init__(self,w=300,h=180,face='HancomEQN'):
-  self.w,self.h,self.face=w,h,face;self.scale=min(1,232/w);self.items=[]
+ def __init__(self,w=300,h=180,face='HancomEQN',*,width_pt=None,label_policy='fixed'):
+  self.w,self.h,self.face=w,h,face;self.scale=width_pt/w if width_pt is not None else min(1,232/w);self.items=[];self.label_policy=label_policy;self.label_sizes={'body':[],'math':[]}
  def add(self,s):self.items.append(s)
  def dashed(self,pts,dash,width,color):
   pattern=[float(v)for v in dash.replace(',',' ').split()];pattern=pattern if len(pattern)%2==0 else pattern*2
@@ -103,14 +103,16 @@ class SVG:
   pts=[(cx+rx*math.cos(math.radians(a1+(a2-a1)*i/60)),cy+ry*math.sin(math.radians(a1+(a2-a1)*i/60)))for i in range(61)]
   self.poly(pts,width=width,dash=dash)
   if arrow:self.arrow(*pts[-3],*pts[-1],width,head=4)
- def text(self,s,x,y,size=12,anchor='middle',color=INK,font='Gulim'):
-  size=min(9.8,max(8.8,size*self.scale))/self.scale
+ def text(self,s,x,y,size=12,anchor='middle',color=INK,font='Gulim',point_size=None,outline_pt=0):
+  size=point_size/self.scale if point_size is not None else size if self.label_policy=='relative'else min(9.8,max(8.8,size*self.scale))/self.scale
+  self.label_sizes['body'].append(size*self.scale)
   p=str(font_path(font));gs=[glyph(p,ord(c))for c in s];width=sum(a/u*size for _,a,u in gs);xx=x-width/2 if anchor=='middle'else x-width if anchor=='end'else x
   for d,a,u in gs:
-   if d:self.add(f'<path d="{d}" fill="{color}" transform="translate({xx:.4f},{y:.4f}) scale({size/u:.7f},{-size/u:.7f})"/>')
+   if d:self.add(f'<path d="{d}" fill="{color}"'+(f' stroke="{color}" stroke-width="{outline_pt*u/(size*self.scale):.7f}"'if outline_pt else'')+f' transform="translate({xx:.4f},{y:.4f}) scale({size/u:.7f},{-size/u:.7f})"/>')
    xx+=a/u*size
- def math(self,s,x,y,size=13,anchor='middle',color=INK):
-  size=min(9.8,max(8.5,size*self.scale))/self.scale
+ def math(self,s,x,y,size=13,anchor='middle',color=INK,point_size=None):
+  size=point_size/self.scale if point_size is not None else size if self.label_policy=='relative'else min(9.8,max(8.5,size*self.scale))/self.scale
+  self.label_sizes['math'].append(size*self.scale)
   p=equation(s,size,self.face);xx=x-p.width/2 if anchor=='middle'else x-p.width if anchor=='end'else x
   for item in p.glyphs:
    f,sz,code=item[:3];gx,gy=item[-2:]
@@ -175,10 +177,11 @@ def t1c5():
 
 @figure('T1c',7)
 def t1c7():
- s=SVG(320,165);cylinder(s,94,85,78,140,'#7e7e7e');cylinder(s,177,90,61,89,'#b5b0ac');s.text('고정됨',126,89,12)
- s.arrow(10,83,75,83,12,'#aaa',15);s.arrow(309,83,257,83,12,'#aaa',15);s.text('힘 N',37,73,11);s.text('힘 N',284,73,11)
+ s=SVG(320,165,label_policy='relative');cylinder(s,94,85,78,140,'#7e7e7e');cylinder(s,177,90,61,89,'#b5b0ac');s.text('고정됨',123,89,10)
+ # The force stops on the left curved surface, rather than inside the body.
+ s.arrow(10,83,63.21,83,12,'#aaa',15);s.arrow(309,83,257.6,83,12,'#aaa',15);s.text('힘 N',34,87,10);s.text('힘 N',284,87,10)
  s.text('접촉면',243,14,10);s.text('운동마찰계수',259,27,10);s.math(r'\mu',307,27,11)
- s.arrow(241,65,241,115,both=True);s.text('상하',198,58,10);s.text('진동',198,72,10);s.text('(진동수',198,86,10);s.math('f,',198,100,10);s.text('진폭',198,114,10);s.math('A)',198,128,10);return s
+ s.arrow(165,72,165,105,both=True);s.text('상하',198,72,9.5);s.text('진동',198,83,9.5);s.text('(진동수',190,94,9.5);s.math('f,',212,94,10);s.text('진폭',195,105,9.5);s.math('A)',212,105,10);return s
 
 @figure('T1c',8)
 def t1c8():
@@ -240,7 +243,10 @@ def t1c13():
 
 @figure('T1c',14)
 def t1c14():
- s=SVG(200,155);s.rect(12,140,180,10,'#ddd');s.rect(53,58,104,82,'#eee');s.rect(86,30,34,28);s.math('m_1',103,49,15);s.text('M',105,107,20);s.circle(168,42,5);s.poly([(120,39),(166,39),(173,42),(173,80)]);s.rect(158,80,35,27);s.math('m_2',176,98,15);s.arrow(12,93,45,93);s.math('F',27,83);return s
+ s=SVG(200,110,width_pt=180);s.rect(7.5,90.75,185.9,12.34,'#ddd');s.rect(49.78,29.07,103.08,62.11,'#eee');s.rect(85.46,3.96,31.72,25.11);s.math('m_1',101.3,21,point_size=13.5);s.text('M',101,65,point_size=14.5)
+ # A supported circular pulley; the rope is tangent to its top and right.
+ s.line(152.86,29.07,164.76,20.7);s.circle(164.76,16.3,4.4,'white');s.line(117.18,11.9,164.76,11.9);s.arc(164.76,16.3,4.4,4.4,-90,0);s.line(169.16,16.3,169.16,48.9)
+ s.rect(153.74,48.9,31.28,24.67);s.math('m_2',169.4,66.3,point_size=13.5);s.arrow(7.5,57.7,43.6,57.7);s.math('F',25,51.5,point_size=12);return s
 
 @figure('T1c',16)
 def t1c16():
@@ -250,7 +256,7 @@ def t1c16():
 @figure('T1c',17)
 def t1c17():
  s=SVG(175,195);s.ellipse(81,151,67,25,dash='2 2');s.line(81,151,81,16,.8,dash='2 2');s.line(81,16,142,157);s.circle(142,157,5,'#bbb');s.math('m',161,167);s.arrow(87,13,149,145,.7,both=True,head=4);s.math('l',128,76)
- s.arc(81,16,21,21,66,90,.8);s.math(r'\theta',94,51);s.arrow(81,151,48,174,.7,both=True,head=4);s.math('r',63,152);return s
+ s.arc(81,16,21,21,66,90,.8);s.math(r'\theta',87,51);s.arrow(81,151,48,174,.7,both=True,head=4);s.math('r',63,152);return s
 
 @figure('T1c',19)
 def t1c19():
@@ -275,20 +281,23 @@ def t1c22():
 
 @figure('T1c',23)
 def t1c23():
- s=SVG(218,170);s.circle(19,71,7,'white');s.math(r'\pi',15,56,16);s.arrow(26,71,85,71);s.circle(100,71,18,'white');s.math('p',126,80,16)
- s.arrow(115,62,187,25);s.circle(190,23,9,INK);s.math(r'\pi',205,18,16);s.arrow(110,86,150,132);s.circle(156,140,17,INK);s.math('p',178,162,16);return s
+ s=SVG(218,170);s.circle(19,71,7,'white');s.math(r'\pi',15,56,16);s.line(26,71,82,71);s.arrow(45,71,55,71);s.circle(100,71,18,'white');s.math('p',126,80,16)
+ s.line(115,62,182,27);s.arrow(144,47,154,42);s.circle(190,23,9,INK);s.math(r'\pi',205,18,16)
+ s.line(110,86,144.3,127.2);s.arrow(121,99.2,130,110);s.circle(156,140,17,INK);s.math('p',178,162,16);return s
 
 @figure('T1c',24)
 def t1c24():
- s=SVG(190,220)
- for y in[10,104]:
-  s.rect(15,y,128,58);s.circle(37,y+67,14,'#999');s.circle(121,y+67,14,'#999')
- s.ellipse(79,40,28,16);s.text('관찰자',79,38,10);s.text('A',79,51,10);s.arrow(58,81,100,81);s.math('v',79,75)
- s.rect(39,104,33,20,'#eee');s.rect(80,104,33,20,'#eee');s.text('Q',55,119,11);s.text('P',97,119,11);s.ellipse(43,136,27,16);s.text('관찰자',43,133,10);s.text('B',43,146,10);s.rect(82,145,34,17);s.text('광원',99,157,10);s.arrow(2,211,177,211,.7);s.math('x',183,215);return s
+ s=SVG(190,220,label_policy='relative')
+ # The lower carriage is taller in the source, leaving distinct room for B/Q
+ # and for the floor-mounted lamp between the wheels.
+ for y,h,wheel_y in[(10,50,70.5),(104,71,186)]:
+  s.rect(15,y,128,h);s.circle(37,wheel_y,14,'#999');s.circle(121,wheel_y,14,'#999')
+ s.ellipse(79,37,28,16);s.text('관찰자',79,35,8);s.text('A',79,46,8);s.arrow(58,83,100,83);s.math('v',79,77,9)
+ s.rect(39,104,33,20,'#eee');s.rect(80,104,33,20,'#eee');s.text('Q',55,119,8.5);s.text('P',97,119,8.5);s.ellipse(44,145,27,16);s.text('관찰자',44,142,8);s.text('B',44,153,8);s.rect(79,157,31,18);s.text('광원',94.5,170,8.5);s.arrow(2,211,177,211,.7);s.math('x',183,215,9);return s
 
 @figure('T1c',25)
 def t1c25():
- s=SVG(300,200);s.rect(42,13,70,34,'#888','none');s.rect(112,13,67,34,'#eee');s.rect(179,13,70,34,'#888','none');s.math('X',145,36,18)
+ s=SVG(300,200);s.rect(42,13,70,34,'#888','none');s.rect(112,13,67,34,'#eee','none');s.rect(179,13,70,34,'#888','none');s.rect(42,13,207,34,'none','#888',.7);s.line(112,13,112,47,.7,'#888');s.line(179,13,179,47,.7,'#888');s.math('X',145,36,18)
  s.poly([(42,30),(23,30),(23,175),(42,175)]);s.poly([(249,30),(279,30),(279,92)]);s.resistor(279,92,279,128);s.poly([(279,128),(279,175),(249,175)]);s.line(145,47,145,175);s.line(103,175,174,175);s.rect(42,162,61,27,'white');s.rect(174,162,75,27,'white');s.math('V_{BE}',73,181);s.math('V_{CB}',210,181)
  for label,x,y in [('E',32,24),('B',134,61),('C',263,24),('I_E',10,103),('I_B',135,103),('I_C',291,91)]:s.math(label,x,y,13)
  return s
@@ -307,14 +316,17 @@ def person(s,x,y,name,pose='both'):
 
 @figure('T2c',1)
 def t2c1():
- s=SVG(330,102)
+ s=SVG(330,102,label_policy='relative')
  for ox in[0,111,222]:
   s.rect(ox+4,81,103,9,'#ccc');
   for xx in range(ox+4,ox+108,5):s.line(xx,90,min(xx+5,ox+107),81,.35,color='#888')
  for lab,x in[('(1)',9),('(2)',120),('(3)',231)]:s.text(lab,x,15,10)
- s.rect(24,25,14,56,'#aaa');person(s,60,38,'A','left');s.arrow(54,62,39,62,1,head=5);s.math('F',48,76,11)
- person(s,137,38,"B'",'right');person(s,173,38,'B','left');s.arrow(169,62,151,62,1,head=5);s.math('F',161,76,11)
- person(s,250,38,"C'",'right');person(s,297,38,'C','left');s.arrow(265,62,275,62,1,head=4);s.arrow(286,62,276,62,1,head=4);return s
+ def force(x1,x2,y):
+  direction=1 if x2>x1 else-1;neck=x2-direction*5
+  s.poly([(x1,y-2),(neck,y-2),(neck,y-5),(x2,y),(neck,y+5),(neck,y+2),(x1,y+2)],1,fill='white',close=True)
+ s.rect(24,25,14,56,'#aaa');person(s,60,38,'A','left');force(54,39,62);s.math('F',48,76,11)
+ person(s,137,38,"B'",'right');person(s,173,38,'B','left');force(169,151,62);s.math('F',161,76,11)
+ person(s,250,38,"C'",'right');person(s,297,38,'C','left');force(262,274,62);force(289,277,62);return s
 
 @figure('T2c',2)
 def t2c2():
@@ -324,23 +336,28 @@ def t2c2():
 
 @figure('T2c',3)
 def t2c3():
- s=SVG(250,215);s.ellipse(128,128,114,43,'white',width=1.4);s.path('M14,128 L14,134 A114,43 0 0 0 242,134 L242,128',1.1);s.line(128,177,128,210)
- s.poly([(45,111),(45,81),(84,111)],fill='white',close=True);s.poly([(45,81),(64,54),(105,82),(84,111)],fill='white',close=True)
- s.poly([(54,77),(64,63),(83,76),(73,90)],fill='#ddd',close=True);s.poly([(57,76),(64,67),(78,77),(71,85)],fill='white',close=True)
- s.math('3',40,104,11);s.math('4',65,124,11);s.math('5',61,96,11)
- s.line(68.5,76.5,68.5,28,.7,dash='2 2');s.line(128,128,128,28,.7,dash='2 2');s.arrow(68.5,33,128,33,.7,both=True,head=4);s.math(r'1\,\mathrm{m}',98.25,25,12);s.arc(128,128,84,34,100,47,arrow=True);s.math(r'\omega',184,155);return s
+ # Coordinates measured from the source's semantic edges, scaled uniformly
+ # into final print points. Its tall spindle and small wedge keep their ratio.
+ z=lambda x:x*160/550;pts=lambda seq:[(z(x),z(y))for x,y in seq]
+ s=SVG(160,z(526),label_policy='relative');s.ellipse(z(276),z(216),z(264),z(104),'white',width=.65)
+ s.path(f'M{z(12)},{z(216)} L{z(12)},{z(229)} A{z(264)},{z(104)} 0 0 0 {z(540)},{z(229)} L{z(540)},{z(216)}',.6);s.line(z(276),z(335),z(276),z(510),.55)
+ s.poly(pts([(89,186),(89,126),(181,186)]),.6,fill='white',close=True);s.poly(pts([(89,126),(116,80),(211,141),(181,186)]),.6,fill='white',close=True)
+ s.poly(pts([(125,114),(134,99),(168,122),(159,138)]),.55,fill='white',close=True);s.poly(pts([(125,114),(125,122),(159,146),(159,138)]),.55,fill='#eee',close=True);s.poly(pts([(159,138),(168,122),(169,129),(159,146)]),.55,fill='#aaa',close=True)
+ s.math('3',z(76),z(178),9);s.math('4',z(125),z(213),9);s.math('5',z(115),z(168),9)
+ s.line(z(148),z(134),z(148),z(13),.45,dash='1.2 1');s.line(z(276),z(209),z(276),z(13),.45,dash='1.2 1');s.arrow(z(148),z(38),z(276),z(38),.45,both=True,head=2.5);s.math(r'1\,\mathrm{m}',z(212),z(27),10)
+ s.arc(z(276),z(216),z(210),z(99),102,65,.5,arrow=True);s.math(r'\omega',z(391),z(303),10);return s
 
 @figure('T2c',4)
 def t2c4():
- s=SVG(130,200);s.circle(28,26,13);s.math('m',28,31,17);s.arrow(51,26,81,26,2.2,head=7);s.math('v',66,15,15);s.rect(89,27,29,163,'white',width=1.4);return s
+ s=SVG(130,200);s.circle(28,26,13);s.text('m',28,32,point_size=24,outline_pt=.35);s.arrow(51,26,81,26,2.2,head=7);s.text('v',66,15,point_size=22,outline_pt=.35);s.rect(89,27,29,163,'white',width=1.4);return s
 
 @figure('T2c',5)
 def t2c5():
  s=SVG(320,155)
  for cx in[85,261]:s.rect(cx-25,9,50,16,'#bbb');s.arrow(cx-55,35,cx-55,58);s.math('g',cx-64,43)
  s.line(85,25,85,79);s.circle(85,79,6,'#bbb');s.math('m',99,86);s.math('L',94,52)
- s.circle(21,119,6,'#bbb');s.math('M',15,142);s.path('M21,119 Q25,74 85,79',.8,dash='2 2');s.arrow(22,114,33,97);s.math('v',18,102);s.line(19,113,57,113,.7);s.arc(21,119,18,18,-64,-8,.7);s.math(r'\theta_1',43,106,11)
- s.arrow(85,79,85,119,.6,both=True,head=3);s.math('h',77,104);s.arrow(22,125,85,125,.6,both=True,head=3);s.math('D',54,141)
+ s.circle(21,119,6,'#bbb');s.math('M',15,142);s.path('M21,119 Q25,74 85,79',.8,dash='2 2');s.arrow(22,117,28,98);s.math('v',18,102);s.line(19,113,57,113,.7);s.arc(24.2,113,9.8,9.8,-72,0,.7);s.math(r'\theta_1',40,109,11)
+ s.arrow(85,80,85,119,.6,both=True,head=3);s.math('h',79,107);s.arrow(22,125,85,125,.6,both=True,head=3);s.math('D',54,141)
  s.arrow(130,78,173,78,12,'#aaa',13);s.line(261,25,261,79,.7,dash='2 2');s.line(261,25,288,69);s.circle(288,69,6,'#bbb');s.circle(281,74,6,'#bbb');s.path('M198,119 Q203,76 261,79',.8,dash='2 2');s.circle(198,119,6,'white',width=.7);s.arc(261,25,25,25,59,90,.7);s.math(r'\theta_2',273,62,11);return s
 
 @figure('T2c',6)
@@ -372,7 +389,7 @@ def t2c12():
 
 @figure('T2c',13)
 def t2c13():
- s=SVG(310,182)
+ s=SVG(310,182,width_pt=220,label_policy='relative')
  for ox,middle,title in[(0,True,'가'),(158,False,'나')]:
   a=(ox+40,66);b=(ox+80,24);c=(ox+80,109);d=(ox+120,66)
   for p,q in[(a,b),(b,d),(a,c),(c,d)]:s.resistor(*p,*q,n=4,amp=3)
@@ -396,10 +413,14 @@ def t2c14():
 
 @figure('T2c',15)
 def t2c15():
- s=SVG(250,195);s.poly([(22,74),(139,153),(236,91),(119,12)],.7,color='#888',close=True);s.poly([(76,107),(173,44),(177,51),(80,114)],fill='#aaa',close=True)
- s.arrow(46,90,141,28,.6,color='#888',both=True,head=3);s.math('L',83,49);s.arrow(171,128,171,71,.7,head=4);s.math('B_0',185,107)
- s.arrow(139,153,178,130,.7,head=4);s.arrow(139,153,113,164,.7,head=4);s.arrow(139,153,139,135,.7,head=4);s.math('x',181,136);s.math('y',107,169);s.math('z',138,130)
- s.line(139,153,15,135,.6,color='#999');s.arc(139,153,36,20,194,219,.7);s.math(r'\theta',100,142);return s
+ s=SVG(250,155,width_pt=220,label_policy='relative')
+ # The source has two open rails; it does not contain a fourth boundary
+ # joining their left ends. The conducting rod has rounded end caps.
+ s.poly([(25.46,55.47),(166.03,143.24),(246.20,92.70),(105.24,4.94)],.65,color='#888')
+ s.line(77.51,88.53,155.02,33.81,8.5,'#555');s.line(77.51,88.53,155.02,33.81,7,'#aaa')
+ s.arrow(52.05,69.15,126.13,19.76,.6,color='#888',both=True,head=3);s.math('L',84.73,44.45,11);s.arrow(175.53,112.46,175.53,53.19,.7,head=4);s.math('B_0',185.41,82.45,11)
+ s.arrow(169.45,148.18,186.55,137.54,.7,head=3);s.arrow(169.45,148.18,149.69,145.14,.7,head=3);s.arrow(169.45,148.18,169.45,129.94,.7,head=3);s.math('x',191,140,10);s.math('y',146,148.5,10);s.math('z',169.45,127.5,10)
+ s.line(166.03,143.24,169.45,148.18,.5,color='#999');s.line(166.03,143.24,14.05,117.78,.6,color='#999');s.arc(166.03,143.24,43.69,30.4,194,218,.65);s.math(r'\theta',117.02,128.8,11);return s
 
 @figure('T2c',16)
 def t2c16():
@@ -424,7 +445,10 @@ def t2c17():
  a=(105,48);b=(196,119);c=(105,119)
  for y,lab in[(48,'2P_0'),(119,'P_0')]:s.line(39,y,105,y,.5,color='#999',dash='1 2');s.math(lab,25,y+4,11)
  for x,lab in[(105,'V_0'),(196,'2V_0')]:s.line(x,119,x,163,.5,color='#999',dash='1 2');s.math(lab,x,180,11)
- s.arrow(*c,*a);s.arrow(*b,*c);s.path('M105,48 C117,87 146,100 196,119');s.arrow(134,93,144,99,1,head=5)
+ s.line(*c,*a);s.arrow(105,99,105,83);s.line(*b,*c);s.arrow(169,119,150,119);s.path('M105,48 C117,87 146,100 196,119')
+ def curve(t):
+  u=1-t;return(u**3*105+3*u*u*t*117+3*u*t*t*146+t**3*196,u**3*48+3*u*u*t*87+3*u*t*t*100+t**3*119)
+ s.arrow(*curve(.45),*curve(.52),1,head=5)
  for lab,x,y in[('A',105,40),('B',207,123),('C',96,132)]:s.math(lab,x,y,11)
  return s
 
@@ -480,7 +504,7 @@ def t2d13():
  s=SVG(190,135,'HyhwpEQ');s.arrow(15,84,178,84,.8,color='#777',head=4);s.arrow(84,84,84,12,.8,color='#777',head=4);s.line(15,84,150,84,1.3);s.arrow(84,84,84,124,1.1,head=5);s.math('V(x)',65,20,15);s.math('x',169,98,14);s.math('0',76,99,14);s.math(r'-U\delta(x)',122,124,14);return s
 
 def build(selected=None):
- OUT.mkdir(parents=True,exist_ok=True);index=json.loads((ROOT/'tools/kphe_figures/index.json').read_text(encoding='utf8'));figures={}
+ OUT.mkdir(parents=True,exist_ok=True);index=json.loads((ROOT/'tools/kphe_figures/index.json').read_text(encoding='utf8'));figures={};manifest=OUT/'manifest.json';previous=json.loads(manifest.read_text(encoding='utf8'))if manifest.exists()else{}
  wanted={'KPhE_2023_T1c_KO.pdf','KPhE_2023_T2c_KO.pdf','KPhE_2023_T2d_KO.pdf'}
  for key,spec in index['figures'].items():
   if spec['source']not in wanted:continue
@@ -489,10 +513,10 @@ def build(selected=None):
   scene=DRAW[(part,num)]();svg=scene.svg();name=f'2023-{part}-q{num}-{key}';sp=OUT/(name+'.svg');pp=OUT/(name+'.pdf');sp.write_text(svg,encoding='utf8')
   pdf=fitz.open(stream=svg.encode(),filetype='svg').convert_to_pdf();pp.write_bytes(pdf)
   check=fitz.open(pp);assert not check[0].get_images(full=True),f'Raster in {name}'
-  figures[key]=dict(file=sp.relative_to(ROOT).as_posix(),pdf=pp.relative_to(ROOT).as_posix(),source=spec['source'],page=spec['page'],rect=spec['rect'],width_pt=scene.w*scene.scale,height_pt=scene.h*scene.scale,recommended_width_pt=scene.w*scene.scale,font_profile=scene.face,sha256=hashlib.sha256(sp.read_bytes()).hexdigest(),pdf_sha256=hashlib.sha256(pp.read_bytes()).hexdigest(),status='draft',method='manually authored native geometry and font glyph outlines; no raster embedding or contour tracing',uses=spec['uses'])
- manifest=OUT/'manifest.json'
- if selected and manifest.exists():
-  old=json.loads(manifest.read_text(encoding='utf8'))['figures'];old.update(figures);figures=old
- manifest.write_text(json.dumps(dict(version=1,figures=figures),ensure_ascii=False,indent=2)+'\n',encoding='utf8');print('Authored',len(figures),'native geometry figures')
+  figures[key]={**previous.get('figures',{}).get(key,{}),**dict(file=sp.relative_to(ROOT).as_posix(),pdf=pp.relative_to(ROOT).as_posix(),source=spec['source'],page=spec['page'],rect=spec['rect'],width_pt=scene.w*scene.scale,height_pt=scene.h*scene.scale,recommended_width_pt=scene.w*scene.scale,font_profile=scene.face,sha256=hashlib.sha256(sp.read_bytes()).hexdigest(),pdf_sha256=hashlib.sha256(pp.read_bytes()).hexdigest(),status='draft',native_geometry_revision=3,source_crop_visually_checked=False,label_policy=scene.label_policy,label_point_sizes={kind:sorted(set(round(x,4)for x in values))for kind,values in scene.label_sizes.items()},method='manually authored native geometry and font glyph outlines; no raster embedding or contour tracing',uses=spec['uses'])}
+  for obsolete in['minimum_body_label_point_size','minimum_math_label_point_size','maximum_label_point_size','independent_review']:figures[key].pop(obsolete,None)
+ if selected:
+  old=previous.get('figures',{});old.update(figures);figures=old
+ manifest.write_text(json.dumps({**previous,'version':3,'figures':figures},ensure_ascii=False,indent=2)+'\n',encoding='utf8');print('Authored',len(figures),'native geometry figures')
 if __name__=='__main__':build()
 

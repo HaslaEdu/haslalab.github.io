@@ -51,8 +51,28 @@ def main():
                 statuses.append(item['status'])
             except Exception as error:errors.append([key,str(error)])
         overlay=json.loads((ROOT/'tools/kphe_print.json').read_text(encoding='utf8'))['kphe']
+        layouts=json.loads((ROOT/'tools/kphe_2023_layout_report.json').read_text(encoding='utf8'))
+        question_count=0
         for year in ('2023-1','2023-2'):
             for part,files in overlay[year]['f'].items():
+                layout=layouts[f'{year}:{part}']
+                regions=overlay[year]['questionRegions'][part]
+                paper=fitz.open(ROOT/files['paper'])
+                if not layout['all_questions_in_one_column'] or len(layout['questions'])!=len(regions):
+                    errors.append([year,part,'incomplete whole-question layout report'])
+                for number,(region,plan) in enumerate(zip(regions,layout['questions']),1):
+                    question_count+=1
+                    if isinstance(region,list) and len(region)!=1:
+                        errors.append([year,part,number,'question or choices cross columns'])
+                    if plan['actual_height']>plan['available_height'] or abs(plan['actual_height']-plan['height'])>.02:
+                        errors.append([year,part,number,'measured question does not fit',plan])
+                    segment=region[0] if isinstance(region,list) else region
+                    page=paper[segment['page']-1]
+                    r=fitz.Rect(segment['rect'])
+                    content=page.get_text(clip=fitz.Rect(r.x0*page.rect.width,r.y0*page.rect.height,
+                                                       r.x1*page.rect.width,r.y1*page.rect.height))
+                    if not all(label in content for label in '①②③④⑤'):
+                        errors.append([year,part,number,'five choices not all visible in the question column'])
                 for kind,name in files.items():
                     if kind not in ('paper','key','sol'):continue
                     for pn,page in enumerate(fitz.open(ROOT/name),1):
@@ -70,6 +90,7 @@ def main():
                 errors.append(['T2d',number,'potential display equation is not full size'])
     report={'math_runs':runs,'unique_math':len(unique),'maximum_equation_width':maximum,
         'native_figures':native_count,'raster_images_in_native_figures':image_count,'errors':errors}
+    if '--math-only' not in sys.argv:report['whole_questions_in_one_column']=question_count
     suffix='math' if '--math-only' in sys.argv else 'publication'
     (ROOT/f'tools/kphe_2023_{suffix}_validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=1)+'\n',encoding='utf8')
     print(json.dumps(report,ensure_ascii=False,indent=1))

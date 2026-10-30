@@ -87,7 +87,6 @@ class Figure:
             self.arrow(pts[-3], pts[-1], width, color, 4)
 
     def text(self, value, x, y, size=12, align='left', color=BLACK, rotate=0):
-        size=max(size,8.5/self.final_scale)
         length = self.font.text_length(value, fontsize=size)
         if rotate in [90,270]:
             sign=1 if rotate==90 else -1
@@ -96,19 +95,26 @@ class Figure:
         else:
             if align == 'center': x -= length/2
             if align == 'right': x -= length
-            x=max(1,min(x,self.w-length-1))
-            y=max(size*self.font.ascender+1,min(y,self.h+size*self.font.descender-1))
         self.page.insert_text((x, y), value, fontname='gulim', fontsize=size, color=color, rotate=rotate)
 
     def m(self, value, x, y, size=None, align='left'):
         size = self.math_base_size if size is None else size
-        size=max(size,8.5/(.83*self.final_scale))
         doc, w, h, depth = typography.math_pdf_transparent(value, size)
         if align == 'center': x -= w/2
         if align == 'right': x -= w
-        x=max(1,min(x,self.w-w-1))
-        y=max(h-depth+1,min(y,self.h-depth-1))
         self.page.show_pdf_page(fitz.Rect(x, y-(h-depth), x+w, y+depth), doc, 0)
+
+    def centered_text(self,value,x,y,size=12,color=BLACK):
+        baseline=y+(self.font.ascender+self.font.descender)*size/2
+        self.text(value,x,baseline,size,'center',color)
+
+    def tilted_text(self,value,x,y,angle,size=12,color=BLACK):
+        # Analogue scale numerals follow the radius as in the original meter.
+        length=self.font.text_length(value,fontsize=size)
+        baseline=y+(self.font.ascender+self.font.descender)*size/2
+        self.page.insert_text((x-length/2,baseline),value,fontname='gulim',
+                              fontsize=size,color=color,
+                              morph=(fitz.Point(x,y),fitz.Matrix(angle)))
 
     def spring(self, a, b, turns=12, radius=4, width=.8, color=BLACK):
         dx, dy = b[0]-a[0], b[1]-a[1]
@@ -147,9 +153,8 @@ class Figure:
         if underline:self.line((x-5,y+6),(x+5,y+6),.7)
 
     def save(self, path):
-        # The final asset is a native 232 pt object, independent of the 300 unit
-        # authoring coordinate system.  This preserves readable label sizes in
-        # a 244.5 pt A4 examination column.
+        # Native point sizes are per figure, independent of the 300 unit
+        # authoring coordinates. Preserve these dimensions in the A4 column.
         final = fitz.open()
         ratio = self.native_width / self.w
         page = final.new_page(width=self.native_width, height=self.h*ratio)
@@ -169,16 +174,36 @@ def axes(c,x0,y0,x1,y1,xlabel=None,ylabel=None,size=11):
         if x1+3+c.font.text_length(xlabel,fontsize=size)>c.w-2:
             c.text(xlabel,min(c.w-3,x1+3),y0+18,size,align='right')
         else:c.text(xlabel,x1+3,y0+6,size)
-    if ylabel:c.text(ylabel,x0-3,y1-6,size,align='center')
+    if ylabel:c.text(ylabel,x0-3,max(y1-6,c.font.ascender*size+.5),size,align='center')
 
 
 def bar_magnet(c,x,y,w=60,h=22,ns=('N','S')):
+    colors=[RED if pole=='N'else(.16,.43,.72)for pole in ns]
+    dx,dy=6,5
+    # The top is split at the same pole boundary as the front, and the exposed
+    # right end belongs to the right pole (red when that pole is N).
+    for i,color in enumerate(colors):
+        a=x+i*w/2;b=x+(i+1)*w/2
+        top=tuple(min(1,v*1.08+.025)for v in color)
+        c.poly([(a,y),(a+dx,y-dy),(b+dx,y-dy),(b,y)],fill=top,color=top,close=True,width=.4)
+    side=tuple(v*.7 for v in colors[1])
+    c.poly([(x+w,y),(x+w+dx,y-dy),(x+w+dx,y+h-dy),(x+w,y+h)],fill=side,color=side,close=True,width=.4)
     for i,label in enumerate(ns):
-        color=RED if label=='N' else (.16,.43,.72)
+        color=colors[i]
         c.rect((x+i*w/2,y,x+(i+1)*w/2,y+h),fill=color,width=.5,color=color)
         c.text(label,x+(i+.5)*w/2,y+h*.7,10,'center',color=(1,1,1))
-    c.poly([(x,y),(x+6,y-5),(x+w+6,y-5),(x+w,y)],fill=(.18,.44,.69),color=(.18,.44,.69),close=True)
-    c.poly([(x+w,y),(x+w+6,y-5),(x+w+6,y+h-5),(x+w,y+h)],fill=(.1,.3,.55),color=(.1,.3,.55),close=True)
+
+
+def block_on_slope(c,a,b,fraction,width,height,label):
+    dx,dy=b[0]-a[0],b[1]-a[1];length=math.hypot(dx,dy)
+    ux,uy=dx/length,dy/length;nx,ny=uy,-ux
+    px,py=a[0]+fraction*dx,a[1]+fraction*dy
+    points=[(px-width*ux/2,py-width*uy/2),(px+width*ux/2,py+width*uy/2),
+            (px+width*ux/2+height*nx,py+width*uy/2+height*ny),
+            (px-width*ux/2+height*nx,py-width*uy/2+height*ny)]
+    c.poly(points,fill=(.65,.65,.65),color=(.5,.5,.5),close=True,width=.6)
+    c.m(label,px+height*nx/2,py+height*ny/2+3,14,align='center')
+    return px,py
 
 
 def t1b1(c):
@@ -193,12 +218,13 @@ def t1b1(c):
 
 
 def t1b2(c):
-    y=c.h-32;cx=168;R=min(95,(c.h-45)/2)
+    y=c.h-38;cx=168;R=min(90,(c.h-55)/2)
     wall=cx-R;mass=wall+.49*R
     c.line((20,y),(cx,y),1.5);c.arc(cx,y-R,R,R,-90,90,1.7)
     c.line((cx,y-2*R-8),(cx,y+6),.8,(.5,.5,.5),'[2 2] 0')
     c.circle(cx,y-R,2.6,fill=BLACK)
-    c.arrow((cx,y-R),(cx+R*.72,y-R-R*.69),head=5);c.m('R',cx+20,y-R-24)
+    c.arrow((cx,y-R),(cx+R*.72,y-R-R*.69),head=5)
+    c.m('R',cx+R*.36+12,y-R-R*.345+13,16,align='center')
     c.line((wall,y-1),(wall,y-30),3);c.spring((wall+2,y-11),(mass-11,y-11),10,4)
     c.circle(mass,y-11,11,fill=(.22,.22,.22))
     c.arrow((mass+13,y-11),(cx+8,y-11),head=4);c.m('v_0',mass+24,y-18)
@@ -213,7 +239,7 @@ def t1b4(c):
     c.line((150,cy+42),(150,c.h-8),2.2,color=(.25,.25,.25))
     c.line((150,cy),(150,18),2.2,color=(.25,.25,.25))
     c.arc(150,27,12,16,180,0,1.3,head=True);c.m(r'\omega_0',157,12)
-    c.arrow((150,cy),(65,cy-27),head=5);c.m('2R',98,cy-5)
+    c.arrow((150,cy),(65,cy-27),head=5);c.m('2R',98,cy+1)
     c.spring((151,cy-1),(197,cy-15),12,4,1)
     c.circle(214,cy-21,12,fill=BLUE,color=BLUE);c.m('m',214,cy-16,align='center')
 
@@ -257,7 +283,7 @@ def t1b9(c):
     s=c.page.new_shape();s.draw_bezier((20,top),(36,top+hh*.38),(69,top+hh*.50),(100,top+hh*.50));s.draw_polyline([(100,top+hh*.50),(100,base),(20,base),(20,top)]);s.finish(color=(.55,.55,.55),fill=(.68,.68,.68),width=.6,closePath=True);s.commit()
     c.poly([(205,top),(270,top+hh*.50),(270,base),(205,base)],fill=(.68,.68,.68),width=.6,close=True,color=(.55,.55,.55))
     for x,label in [(20,'A'),(205,'B')]:c.circle(x,top,2.4,fill=(1,.63,.45),color=(1,.63,.45));c.text(label,x,top-5,8,'center')
-    c.arrow((9,top),(9,base),width=.6,head=2,both=True);c.m('h',4,(top+base)/2,10,align='right')
+    c.arrow((9,top),(9,base),width=.6,head=2,both=True);c.m('h',6,(top+base)/2,10,align='right')
     c.arrow((20,base-12),(100,base-12),width=.6,head=2,both=True);c.m('d',60,base-15,10,align='center')
     c.arrow((205,base-12),(270,base-12),width=.6,head=2,both=True);c.m('d',238,base-15,10,align='center')
     for x in [105,276]:c.arrow((x,top+hh*.50),(x,base),.6,head=2,both=True);c.m(r'h/2',x+2,base-hh*.2,10)
@@ -286,13 +312,13 @@ def t1b12(c):
 
 
 def t1b13(c):
-    y=c.h-15
+    y=c.h-8
     c.line((10,y),(293,y),2)
     c.line((38,y),(38,20),3)
-    c.spring((40,y-14),(110,y-14),12,8,1.2)
-    c.rect((110,y-43,189,y),fill=(.45,.45,.45),color=(.45,.45,.45))
-    c.rect((132,y-78,169,y-43),fill=(.68,.68,.68),color=(.68,.68,.68))
-    c.text('A',150,y-16,17,'center');c.text('B',151,y-54,17,'center')
+    c.spring((40,y-14),(115,y-14),12,7,1.2)
+    c.rect((115,y-38,191,y),fill=(.45,.45,.45),color=(.45,.45,.45))
+    c.rect((135,y-66,171,y-38),fill=(.68,.68,.68),color=(.68,.68,.68))
+    c.centered_text('A',153,y-19,16);c.centered_text('B',153,y-52,16)
 
 
 def t1b14(c):
@@ -309,15 +335,17 @@ def t1b14(c):
     c.ellipse((cx-45,bot-15,cx+45,bot+2),width=1,color=(.45,.45,.45))
     # Two separate, diverging metal foils.  There is no horizontal base joining
     # their free ends; the source is an open V, not a filled triangular plate.
-    c.line((cx,top+54),(cx,top+76),1)
+    fork=top+110;leaf_end=top+139
+    c.line((cx,top+54),(cx,fork),1)
     for sign in [-1,1]:
-        c.poly([(cx,top+75),(cx+sign*19,bot-21),(cx+sign*17,bot-21),(cx+sign*1,top+75)],
+        c.poly([(cx,fork),(cx+sign*20.5,leaf_end),(cx+sign*18.8,leaf_end),(cx+sign*1,fork)],
                width=.5,fill=(.84,.84,.84),color=(.35,.35,.35),close=True)
-    c.poly([(38,top+58),(96,top-5),(102,top+1),(44,top+65)],width=1,fill=(.7,.7,.7),close=True)
-    for x,y in [(63,top-6),(81,top-21),(103,top-7),(86,top+11),(67,top+29)]:c.line((x,y),(x+9,y),1.7)
+    c.poly([(15.4,132),(76,58),(81,62),(20.3,137)],width=1,fill=(.7,.7,.7),close=True)
+    for x,y in [(31.9,68.5),(49.6,52),(74.4,43.1),(92.1,60.8),(83.9,80.3),(64.4,97.5)]:
+        c.line((x,y),(x+15.5,y),1.4)
     c.text('금속판',191,24,15);c.line((195,28),(172,top-11),.7)
-    c.text('유리',29,top+102,14);c.text('막대',29,top+121,14)
-    c.text('금속박',220,top+116,15);c.arrow((217,top+108),(180,top+112),head=3)
+    c.text('유리',60,163,14,'center');c.text('막대',60,183,14,'center')
+    c.text('금속박',220,top+133,15);c.arrow((217,top+125),(cx+10.5,top+125),head=3)
 
 
 def t1b15(c):
@@ -326,7 +354,7 @@ def t1b15(c):
     c.arrow((133,10),(133,c.h-16),width=2.7,color=(.7,.18,.04),head=7)
     c.text('전류의 방향',143,c.h-8,8)
     c.arrow((269,y+18),(298,y+18),width=.6,head=3);c.arrow((269,y+18),(269,y-15),width=.6,head=3)
-    c.m('x',297,y+29,10);c.m('y',266,y-20,10)
+    c.m('x',292,y+29,10);c.m('y',266,y-20,10)
 
 
 def t1b16(c):
@@ -448,7 +476,8 @@ def spring_box(c,x,y,w,h,slanted=False):
     top=(cx-18,y+1)if slanted else(cx,y+1)
     bottom=(cx-18,y+h-1)if slanted else(cx,y+h-1)
     c.spring(top,(cx,cy-5),10,3,.8);c.spring((cx,cy+5),bottom,10,3,.8)
-    c.circle(cx,cy,4,fill=(.62,.62,.62),color=(.45,.45,.45))
+    c.circle(cx,cy,4.8,fill=(.62,.62,.62),color=(.45,.45,.45))
+    c.m('m',cx,cy+2.2,9,align='center')
 
 
 def t2b2(c):
@@ -476,21 +505,29 @@ def t2b3(c):
 
 def t2b4(c):
     cx=150
-    c.rect((48,6,252,15),fill=(.79,.79,.79),color=(.79,.79,.79),width=0)
-    c.line((cx,15),(cx,41),2)
-    c.spring((cx,41),(cx,c.h-94),14,16,2)
-    c.line((cx,c.h-94),(cx,c.h-63),2)
-    c.rect((118,c.h-63,182,c.h-8),fill=(.56,.56,.56),color=(.56,.56,.56),width=.8);c.m('m',150,c.h-25,43,align='center')
+    c.rect((58,8,242,19),fill=(.79,.79,.79),color=(.79,.79,.79),width=0)
+    c.line((cx,19),(cx,57),2.5)
+    points=[]
+    for i in range(1001):
+        t=i/1000;phi=2*math.pi*12*t
+        points.append((cx+27*math.sin(phi),57+220*t+10*(math.cos(phi)-1)))
+    c.poly(points,2.5,(.35,.35,.35))
+    c.line((cx,277),(cx,315),2.5)
+    c.rect((100,315,200,387),fill=(.56,.56,.56),color=(.56,.56,.56),width=.8)
+    c.m('m',150,362,50,align='center')
 
 
 def t2b5(c):
     for index in range(4):
-        y=4+index*135;ox=51;by=y+108;xx=277;top=y+31;xp=85;xe=221;end=255
-        c.circle(12,y+13,7.3,width=.7);c.text(['ㄱ','ㄴ','ㄷ','ㄹ'][index],12,y+16,10,'center')
-        axes(c,ox,by,xx,top-12,None,'속력',11)
-        c.text('거리',291,by+5,11,'right');c.text('90 km/h',ox-4,top+3,10.2,'right')
+        x=(index%2)*150;y=4+(index//2)*84
+        ox=x+27;by=y+58;xx=x+145;top=y+21;xp=ox+18;xe=ox+90;end=ox+108
+        c.circle(x+8,y+8,4.7,width=.7);c.text(['ㄱ','ㄴ','ㄷ','ㄹ'][index],x+8,y+10,6.8,'center')
+        axes(c,ox,by,xx,top-9,None,'속력',7)
+        c.text('거리',x+147,by+10,7,'right');c.text('90 km/h',ox-2,top+2,6.4,'right')
         c.line((ox,top),(xp,top),.35,(.55,.55,.55),'[1 1] 0')
-        for pos,lab in [(xp,'450 m'),(xe,'2250 m'),(end,'2700 m')]:c.line((pos,top),(pos,by),.35,(.55,.55,.55),'[1 1] 0');c.text(lab,pos,by+(27 if pos==end else 14),10.5,'center')
+        for pos,lab in [(xp,'450 m'),(xe,'2250 m'),(end,'2700 m')]:
+            c.line((pos,top),(pos,by),.35,(.55,.55,.55),'[1 1] 0')
+            c.text(lab,pos,by+(21 if pos==end else 9),7,'center')
         color=(.87,.28,.24)
         if index in [0]:c.bezier((ox,by),(ox+15,by-10),(xp,by-21),(xp,top),.85,color)
         elif index in [1,2]:c.bezier((ox,by),(ox+2,by-19),(xp-8,top),(xp,top),.85,color)
@@ -506,7 +543,7 @@ def t2b6(c):
     for k,cx in enumerate([77,227]):
         c.circle(cx,y,R,width=.7,color=(.55,.55,.55))
         c.line((cx,y),(cx,y-R),.6,(.55,.55,.55),'[2 2] 0')
-        c.bezier((cx+3,y-R+6),(cx+R*.32,y-R*.75),(cx+R*.32,y-R*.25),(cx+3,y-6),.5,(.55,.55,.55),'[1.5 1.5] 0');c.m('R',cx+18,y-R/2)
+        c.bezier((cx+3,y-R+6),(cx+R*.32,y-R*.75),(cx+R*.32,y-R*.25),(cx+3,y-6),.5,(.55,.55,.55),'[1.5 1.5] 0');c.m('R',cx+18,y-R/2,13)
         angles=[-90,30,150]if k==0 else[-90,90,180]
         points=[(cx+R*math.cos(math.radians(a)),y+R*math.sin(math.radians(a)))for a in angles]
         if k==0:c.poly(points+[points[0]],.6,(.65,.65,.65))
@@ -514,7 +551,7 @@ def t2b6(c):
             c.poly([points[1],points[2],points[0]],.6,(.65,.65,.65))
             c.line(points[0],points[1],.6,(.6,.6,.6),'[2 2] 0')
         c.circle(cx,y,11,fill=(.4,.4,.4),color=(.4,.4,.4));c.text('M',cx,y+4.5,14,'center',color=(1,1,1))
-        for x,yy in points:c.circle(x,yy,8.8,fill=(.55,.55,.55),color=(.55,.55,.55));c.m('m',x,yy+4,14.3,align='center')
+        for x,yy in points:c.circle(x,yy,5.3,fill=(.55,.55,.55),color=(.55,.55,.55));c.m('m',x,yy+3,10.5,align='center')
         # Equality tick marks on each side preserve the two source triangles.
         for j in range(3):
             a=points[j];b=points[(j+1)%3];mx=(a[0]+b[0])/2;my=(a[1]+b[1])/2;dx=b[0]-a[0];dy=b[1]-a[1];L=math.hypot(dx,dy)
@@ -530,31 +567,40 @@ def t2b7(c):
     c.poly([(13,top),(13,y),(corner,y)],fill=(.81,.81,.81),color=(.81,.81,.81),close=True,width=0)
     c.line((13,top),(corner,y),3)
     # A remains aligned to the slope; B is on the horizontal section.
-    c.poly([(24,top-10),(44,top+5),(33,top+20),(13,top+5)],fill=(.65,.65,.65),color=(.65,.65,.65),close=True)
-    c.m('A',29,top+6,17,align='center')
-    c.rect((228,y-27,261,y),fill=(.65,.65,.65),color=(.65,.65,.65));c.text('B',245,y-7,17,'center')
+    block_on_slope(c,(13,top),(corner,y),.12,24,23,'A')
+    c.rect((228,y-27,261,y),fill=(.65,.65,.65),color=(.5,.5,.5),width=.6);c.centered_text('B',244.5,y-13.5,17)
     c.arrow((38,top+25),(38,y-4),.9,head=4,both=True);c.m('h',27,(top+y)/2,18)
 
 
 def t2b8(c):
-    y=c.h-24;top=20
+    y=c.h-32;top=20
     c.rect((17,10,26,y+6),fill=(.9,.9,.9),color=(.9,.9,.9),width=0)
     c.poly([(25,top),(112,y),(292,y)],2.2)
     c.poly([(25,top),(112,y),(25,y)],fill=(.88,.88,.88),color=(.88,.88,.88),close=True,width=0)
     c.line((25,top),(112,y),2.2)
-    c.poly([(48,top+8),(62,top+18),(54,top+31),(40,top+21)],fill=(.62,.62,.62),color=(.62,.62,.62),close=True);c.m('A',50,top+23,11,align='center')
-    c.rect((222,y-15,242,y),fill=(.62,.62,.62),color=(.62,.62,.62));c.text('A',232,y-3,10,'center')
-    c.arrow((48,top+32),(48,y),.65,head=3,both=True);c.m('h',37,y-26,13)
-    c.arc(112,y,48,30,180,220,.8);c.m(r'\theta',82,y-10,12)
-    c.line((57,top+24),(232,y),.6,(.7,.7,.7));c.arc(232,y,60,60,180,199,.6,(.7,.7,.7));c.m(r'\theta/2',166,y-27,11)
-    c.arrow((112,y+15),(232,y+15),width=.7,head=3,both=True,dash='[2 2] 0');c.m('s',169,y+27,12,align='center')
+    px,py=block_on_slope(c,(25,top),(112,y),.27,19,19,'A')
+    theta=math.degrees(math.atan2(y-top,112-25))
+    final_x=px+(y-py)/math.tan(math.radians(theta/2))
+    c.rect((final_x-10,y-16,final_x+10,y),fill=(.62,.62,.62),color=(.5,.5,.5),width=.6)
+    c.centered_text('A',final_x,y-8,11)
+    c.arrow((px,py+3),(px,y),.65,head=3,both=True);c.m('h',px-10,(py+y)/2+3,13,align='right')
+    c.arc(112,y,40,40,180,180+theta,.8)
+    c.m(r'\theta',82,y-9,13)
+    c.line((px,py),(final_x,y),.6,(.7,.7,.7))
+    c.arc(final_x,y,57,57,180,180+theta/2,.6,(.55,.55,.55))
+    c.m(r'\frac{\theta}{2}',final_x-62,y-28,13,align='center')
+    c.arrow((112,y+15),(final_x,y+15),width=.7,head=3,both=True,dash='[2 2] 0');c.m('s',(112+final_x)/2,y+27,13,align='center')
 
 
 def t2b9(c):
-    left=50;top=18;right=250;bottom=c.h-89
+    left=50;top=20;right=250;bottom=220;mid=(top+bottom)/2
     c.rect((left,top,right,bottom),fill=(.82,.82,.82),color=(.82,.82,.82),width=0)
-    c.bezier((left,top),(90,top-17),(209,top-17),(right,top),.7,(.55,.55,.55));c.m('L',150,top-4,16,align='center')
-    c.bezier((left,top),(left-20,70),(left-20,bottom-39),(left,bottom),.7,(.55,.55,.55));c.m('L',left-16,(top+bottom)/2,16,align='center')
+    c.bezier((left,top),(70,top-11),(112,top-14),(137,top-14),.7,(.55,.55,.55))
+    c.bezier((163,top-14),(190,top-14),(231,top-11),(right,top),.7,(.55,.55,.55))
+    c.m('L',150,top-6,18,align='center')
+    c.bezier((left,top),(35,top+20),(29,mid-28),(29,mid-12),.7,(.55,.55,.55))
+    c.bezier((29,mid+12),(29,bottom-28),(35,bottom-10),(left,bottom),.7,(.55,.55,.55))
+    c.m('L',29,mid+5,18,align='center')
     cx=99;cy=c.h-40
     c.arrow((cx,cy+24),(cx,cy-25),1,head=4);c.arrow((cx-25,cy),(cx+25,cy),1,head=4)
     c.poly([(cx-25,cy),(cx,cy-25),(cx,cy)],1.4)
@@ -563,16 +609,21 @@ def t2b9(c):
 
 
 def t2b10(c):
-    y=20;h=c.h-44
-    c.rect((25,y,112,y+h),fill=(.76,.76,.76),color=(.5,.5,.5),width=.8);c.rect((33,y+8,104,y+h-8),fill=(1,1,1),color=(.5,.5,.5),width=.7)
-    c.line((69,y+8),(69,y+39),.8);c.circle(69,y+42,7,fill=(.68,.68,.68),color=(.4,.4,.4))
-    c.arrow((17,y+57),(17,y+35),width=3,color=(.5,.5,.5),head=6)
-    c.text('(가)',9,y-7,11);c.text('(나)',139,y-7,11)
-    ox=163;by=y+h-2;ex=277;peak=y+45
-    axes(c,ox,by,ex,y+16,'t(s)','v(m/s)',8)
-    c.poly([(ox,by),(185,peak),(237,peak),(260,by)],1)
-    for x,l in [(185,'3'),(237,'12'),(260,'15')]:c.text(l,x,by+12,8,'center')
-    c.text('0',ox-4,by+12,8,'right');c.m(r'\frac35g',ox-8,peak+6,12,align='right')
+    y=22;h=105
+    c.rect((25,y,113,y+h),fill=(.76,.76,.76),color=(.5,.5,.5),width=.8)
+    c.rect((33,y+8,105,y+h-8),fill=(1,1,1),color=(.5,.5,.5),width=.7)
+    c.line((69,y+8),(69,65),1);c.circle(69,72,7,fill=(.68,.68,.68),color=(.4,.4,.4))
+    c.poly([(7,82),(13,82),(13,67),(18,67),(10,56),(2,67),(7,67)],fill=(.5,.5,.5),color=(.5,.5,.5),close=True,width=.2)
+    c.text('(가)',12,14,11);c.text('(나)',139,14,11)
+    ox=156;by=123;peak=81
+    axes(c,ox,by,286,43,None,None)
+    c.m(r'v(\mathrm{m/s})',156,34,13,align='center')
+    c.line((ox,peak),(240,peak),.4,(.8,.8,.8))
+    for x in [177,240]:c.line((x,peak),(x,by),.4,(.8,.8,.8))
+    c.poly([(ox,by),(177,peak),(240,peak),(261,by)],1)
+    for x,l in [(177,'3'),(240,'12'),(261,'15')]:c.text(l,x,by+14,9,'center')
+    c.text('0',ox-4,by+14,9,'right');c.m(r'\frac35g',ox-12,peak+5,14,align='right')
+    c.m(r't(\mathrm{s})',294,by+14,13,align='right')
 
 
 def bulb(c,x,y,label):
@@ -582,42 +633,51 @@ def bulb(c,x,y,label):
 
 
 def t2b11(c):
-    # Circuit (가): A in series with parallel B/C; ammeter in B branch.
-    c.poly([(8,57),(8,128),(154,128),(154,57),(137,57)],.9)
-    c.line((8,57),(53,57),.9)
-    c.poly([(53,57),(53,31),(137,31),(137,90),(53,90),(53,57)],.9)
-    bulb(c,28,57,'A');bulb(c,77,31,'B');bulb(c,77,90,'C');c.meter(111,31,'A',9)
-    c.rect((63,112,121,146),fill=(1,1,1),width=.7)
-    c.circle(79,128,2.3,fill=(1,1,1),width=.5);c.circle(106,128,2.3,fill=(1,1,1),width=.5)
-    c.line((63,128),(76.7,128),.9);c.line((108.3,128),(121,128),.9)
-    c.text('(+)',79,123,7,'center');c.text('(−)',106,123,7,'center');c.text('전원 장치',92,141,8,'center')
-    # Native meter enclosure and its two concentric readable scales.
-    x0=174;y0=14;w=118;faceh=83
+    # Original side-by-side panels, measured from the source crop proportions.
+    # Circuit topology is A + ((B + ammeter) // C).
+    c.poly([(10,51),(10,115),(145,115),(145,51),(128,51)],.9)
+    c.line((10,51),(52,51),.9)
+    c.poly([(52,51),(52,27),(128,27),(128,74),(52,74),(52,51)],.9)
+    bulb(c,30,51,'A');bulb(c,73,27,'B');bulb(c,73,74,'C');c.meter(108,27,'A',9)
+    c.rect((52,100,103,131),fill=(1,1,1),width=.7)
+    c.circle(67,115,2.3,fill=(1,1,1),width=.5);c.circle(88,115,2.3,fill=(1,1,1),width=.5)
+    c.line((52,115),(64.7,115),.9);c.line((90.3,115),(103,115),.9)
+    c.text('(+)',67,110,8,'center');c.text('(−)',88,110,8,'center');c.text('전원 장치',77.5,126,9,'center')
+    c.text('(가)',78,145,11,'center')
+    c.bezier((111,13),(130,0),(149,0),(163,14),1.2)
+    c.arrow((157,9),(165,16),width=1.2,head=4)
+    # The source dial is an elliptical scale, rather than a circular dial.
+    x0=171;y0=8;w=123;faceh=68
     c.rect((x0,y0,x0+w,y0+faceh),fill=(.96,.96,.96),width=.8,color=(.55,.55,.55))
-    c.rect((x0+4,y0+4,x0+w-4,y0+faceh-4),fill=(1,1,1),width=.8,color=(.55,.55,.55))
-    cx=x0+w/2;cy=y0+faceh-4;r=49
-    c.arc(cx,cy,r,r,207,333,.8);c.arc(cx,cy,r-8,r-8,207,333,.6)
+    c.rect((x0+4,y0+4,x0+w-4,y0+faceh-3),fill=(1,1,1),width=.8,color=(.55,.55,.55))
+    cx=x0+w/2;cy=72;rx=49;ry=35
+    c.arc(cx,cy,rx,ry,207,333,.8)
     for i in range(7):
-        a=math.radians(210+i*20);p1=(cx+(r-4)*math.cos(a),cy+(r-4)*math.sin(a));p2=(cx+(r+4)*math.cos(a),cy+(r+4)*math.sin(a));c.line(p1,p2,.7)
-        px=cx+(r+11)*math.cos(a);py=cy+(r+11)*math.sin(a);c.text(str(i-1),px,py+2,6,'center')
-        inner=str((i-1)*100).replace('-','−')
-        if i==6:inner+=' mA'
-        c.text(inner,cx+(r-14)*math.cos(a),cy+(r-14)*math.sin(a)+2,5,'center')
-    c.poly([(cx-2,cy),(cx,cy-51),(cx+2,cy)],fill=BLACK,color=BLACK,close=True,width=.3)
-    c.arc(cx,cy,9,7,180,360,.7);c.text('A',x0+w-7,y0+48,6)
-    c.poly([(x0,y0+faceh),(x0-5,y0+faceh+45),(x0+w+5,y0+faceh+45),(x0+w,y0+faceh)],fill=(.86,.86,.86),color=(.55,.55,.55),close=True,width=.6)
-    for x,label in [(x0+19,'500 mA'),(cx,'5 A'),(x0+w-19,'+')]:
-        c.ellipse((x-10,y0+faceh+11,x+10,y0+faceh+20),fill=(.76,.76,.76),color=(.5,.5,.5),width=.5)
-        c.rect((x-7,y0+faceh+5,x+7,y0+faceh+16),fill=(.82,.82,.82),color=(.5,.5,.5),width=.5)
-        c.ellipse((x-7,y0+faceh+1,x+7,y0+faceh+8),fill=(.9,.9,.9),color=(.5,.5,.5),width=.5)
-        c.text(label,x,y0+faceh+33,8,'center')
-    c.line((x0+19,y0+faceh+17),(x0+10,c.h-12),2,(.6,.6,.6));c.line((x0+w-19,y0+faceh+17),(x0+w-10,c.h-12),2,(.6,.6,.6))
+        degrees=210+i*20;a=math.radians(degrees)
+        p1=(cx+(rx-3)*math.cos(a),cy+(ry-2)*math.sin(a))
+        p2=(cx+(rx+3)*math.cos(a),cy+(ry+2)*math.sin(a));c.line(p1,p2,.7)
+        outer=str(i-1).replace('-','−')+(' A' if i==6 else '')
+        c.tilted_text(outer,cx+(rx+10)*math.cos(a),cy+(ry+10)*math.sin(a),270-degrees,8.5)
+        inner=str((i-1)*100).replace('-','−')+(' mA' if i==6 else '')
+        ix,iy=(cx+42,cy-11)if i==6 else(cx+40*math.cos(a),cy+26*math.sin(a))
+        c.tilted_text(inner,ix,iy,270-degrees,7)
+    c.poly([(cx-2,cy),(cx,cy-39),(cx+2,cy)],fill=BLACK,color=BLACK,close=True,width=.3)
+    c.arc(cx,cy,10,6,180,360,.7)
+    c.poly([(x0,76),(167,122),(299,122),(294,76)],fill=(.86,.86,.86),color=(.55,.55,.55),close=True,width=.6)
+    for x,label in [(196,'500 mA'),(cx,'5 A'),(269,'+')]:
+        c.ellipse((x-10,87,x+10,97),fill=(.76,.76,.76),color=(.5,.5,.5),width=.5)
+        c.rect((x-7,82,x+7,92),fill=(.82,.82,.82),color=(.5,.5,.5),width=.5)
+        c.ellipse((x-7,79,x+7,86),fill=(.9,.9,.9),color=(.5,.5,.5),width=.5)
+        c.text(label,x,111,9.5,'center')
+    c.line((196,94),(187,134),2,(.6,.6,.6));c.line((269,94),(278,134),2,(.6,.6,.6))
+    c.text('(나)',cx,145,11,'center')
 
 
 def t2b12(c):
-    A=(150,16);B=(37,c.h-22);C=(269,c.h-22);D=((A[0]+B[0])/2,(A[1]+B[1])/2);E=((A[0]+C[0])/2,(A[1]+C[1])/2);F=((B[0]+C[0])/2,B[1])
+    A=(150,24);B=(40,24+110*math.sqrt(3));C=(260,B[1])
+    D=((A[0]+B[0])/2,(A[1]+B[1])/2);E=((A[0]+C[0])/2,(A[1]+C[1])/2);F=((B[0]+C[0])/2,B[1])
     c.poly([A,B,C,A],1,(.4,.4,.4),dash='[3 3] 0');c.poly([D,E,F,D],1,(.4,.4,.4),dash='[3 3] 0')
-    for p,label,dx,dy in [(A,'A',0,-2),(B,'B',-12,7),(C,'C',12,7),(D,'D',-19,5),(E,'E',20,5),(F,'F',0,19)]:c.text(label,p[0]+dx,p[1]+dy,13,'center')
+    for p,label,dx,dy in [(A,'A',0,-10),(B,'B',-12,7),(C,'C',12,7),(D,'D',-19,5),(E,'E',20,5),(F,'F',0,22)]:c.text(label,p[0]+dx,p[1]+dy,15,'center')
     for p in [D,E]:c.circle(*p,8,fill=(1,1,1),color=(.5,.5,.5))
     c.circle(*D,2.3,fill=BLACK)
     c.line((E[0]-5,E[1]-5),(E[0]+5,E[1]+5),.8);c.line((E[0]-5,E[1]+5),(E[0]+5,E[1]-5),.8)
@@ -645,37 +705,47 @@ def t2b14(c):
 
 def pylon(c,x,y,h=46,w=27):
     top=y-h
-    c.poly([(x-w/2,y),(x,top),(x+w/2,y)],.7)
-    for t in [.23,.43,.65,.84]:
-        yy=top+h*t;ww=w*t/2;c.line((x-ww,yy),(x+ww,yy),.6)
-    for a,b in [(.23,.43),(.43,.65),(.65,.84),(.84,1)]:
-        ya=top+h*a;yb=top+h*b;c.line((x-w*a/2,ya),(x+w*b/2,yb),.5);c.line((x+w*a/2,ya),(x-w*b/2,yb),.5)
-    for yy,ww in [(top+5,12),(top+11,18),(top+18,25)]:c.line((x-ww,yy),(x+ww,yy),.8)
+    start=top+12
+    def half(yy):return w*(.15+.35*(yy-start)/(y-start))
+    c.poly([(x-w/2,y),(x-w*.15,start),(x+w*.15,start),(x+w/2,y)],.7)
+    levels=[start+(y-start)*t for t in [0,.25,.5,.75,1]]
+    for yy in levels:c.line((x-half(yy),yy),(x+half(yy),yy),.55)
+    for a,b in zip(levels,levels[1:]):
+        c.line((x-half(a),a),(x+half(b),b),.55);c.line((x+half(a),a),(x-half(b),b),.55)
+    for yy,ww in [(top+4,w*.42),(top+9,w*.56),(top+14,w*.72)]:
+        c.line((x-ww,yy),(x+ww,yy),.9)
+        for xx in [x-ww,x+ww]:
+            c.line((xx,yy),(xx,yy+2),.5);c.ellipse((xx-1.5,yy+1,xx+1.5,yy+3),fill=(.8,.8,.8),width=.4)
+    return {'left':[(x-w*.56,top+11),(x-w*.72,top+16)],
+            'right':[(x+w*.56,top+11),(x+w*.72,top+16)]}
 
 
 def t2b15(c):
-    # The source has two independent outgoing transmission lines (A and B).
-    x=50;cy=c.h*.46
-    c.poly([(12,cy-16),(50,cy-29),(88,cy-15),(88,cy+26),(12,cy+26),(12,cy-16)],.8)
-    c.line((50,cy-29),(50,cy+26),.6)
-    for xx in [19,30,41,60,71,81]:c.line((xx,cy-13),(xx,cy+21),.5)
-    for xx in [27,50,73]:
-        c.rect((xx-5,cy+2,xx+5,cy+20),fill=(.88,.88,.88),width=.45)
-        c.spring((xx-2,cy-10),(xx-2,cy+2),4,1.4,.45)
-        c.spring((xx+2,cy-10),(xx+2,cy+2),4,1.4,.45)
-        c.ellipse((xx-5,cy-1,xx+5,cy+5),fill=(.8,.8,.8),width=.45)
-    c.text('변전소',50,cy-35,10,'center')
-    pylon(c,183,cy-22,42,24);pylon(c,100,c.h-14,42,25)
-    for off in [-5,0,5]:
-        c.bezier((86,cy-12+off),(118,cy+3+off),(151,cy-31+off),(183,cy-61+off),.5,(.45,.45,.45))
-        c.bezier((36,cy+20+off),(48,cy+36+off),(70,c.h-63+off),(100,c.h-54+off),.5,(.45,.45,.45))
-        c.bezier((183,cy-61+off),(194,cy-56+off),(202,cy-52+off),(211,cy-51+off),.5,(.45,.45,.45))
-        c.bezier((100,c.h-54+off),(128,c.h-33+off),(170,c.h-29+off),(211,c.h-35+off),.5,(.45,.45,.45))
-    c.rect((211,9,294,cy+3),width=.7,color=(.5,.5,.5));c.text('A 지역',252,cy*.55,10,'center')
-    c.rect((211,cy+38,294,c.h-9),width=.7,color=(.5,.5,.5));c.text('B 지역',252,(cy+38+c.h-9)/2+4,10,'center')
-    c.m(r'P,\ V_A',118,cy-18,13);c.m(r'P,\ V_B',32,cy+44,13)
-    c.text('송전선 A',184,cy-8,11,'center');c.text('송전선 B',100,c.h-2,11,'center')
-    c.arrow((115,cy-13),(146,cy-28),width=.6,head=3);c.arrow((107,c.h-27),(162,c.h-27),width=.6,head=3)
+    c.poly([(29,50),(49,43),(86,54),(86,78),(29,78),(29,50)],.8)
+    c.line((49,43),(49,78),.6)
+    c.poly([(29,50),(29,46),(49,39),(86,50),(86,54)],.7)
+    for t in range(8):
+        x=29+t*57/7;yy=46+4*abs(x-49)/37;c.line((x,yy),(x,yy+5),.45)
+    for xx in [37,59,79]:
+        c.rect((xx-4,66,xx+4,77),fill=(.87,.87,.87),width=.5)
+        c.ellipse((xx-4,64,xx+4,68),fill=(.75,.75,.75),width=.5)
+        for side in [-2,2]:c.spring((xx+side,59),(xx+side,65),3,1,.5)
+    c.text('변전소',49,31,12,'center')
+    tower_a=pylon(c,182,54,40,16)
+    tower_b=pylon(c,109,148,55,20)
+    c.rect((208,10,294,84),width=.7,color=(.5,.5,.5));c.text('A 지역',251,52,12,'center')
+    c.rect((158,100,247,166),width=.7,color=(.5,.5,.5));c.text('B 지역',202.5,137,12,'center')
+    for index,off in enumerate([0,3]):
+        aleft,aright=tower_a['left'][index],tower_a['right'][index]
+        bleft,bright=tower_b['left'][index],tower_b['right'][index]
+        c.bezier((80,65+off),(117,63+off),(156,43+off),aleft,.55,(.4,.4,.4))
+        c.bezier(aright,(195,38+off),(201,43+off),(208,44+off),.55,(.4,.4,.4))
+        c.bezier((57,76+off),(65,102+off),(77,115+off),bleft,.55,(.4,.4,.4))
+        c.bezier(bright,(127,132+off),(141,141+off),(158,143+off),.55,(.4,.4,.4))
+    c.m(r'P,\ V_A',102,43,15,align='center');c.m(r'P,\ V_B',31,98,15,align='center')
+    c.text('송전선 A',182,65,11,'center');c.text('송전선 B',109,160,11,'center')
+    c.arrow((124,56),(145,47),width=.7,head=3)
+    c.arrow((65,89),(76,105),width=.7,head=3)
 
 
 def t2b16(c):
@@ -694,17 +764,21 @@ def t2b17(c):
     c.rect((x,top,x+204,top+thick),fill=(.81,.81,.81),width=.8,color=(.5,.5,.5))
     c.rect((x,top+thick,x+204,top+2*thick),fill=(1,1,1),width=.8,color=(.5,.5,.5))
     c.text('금속 (가)',182,top+19,15,'center');c.text('금속 (나)',182,top+thick+19,15,'center')
-    c.arrow((273,top-12),(273,top-47),width=7,head=13);c.text('A',287,top-24,15)
+    c.poly([(268,top-14),(278,top-14),(278,top-39),(284,top-39),
+            (273,top-52),(262,top-39),(268,top-39)],fill=BLACK,color=BLACK,close=True,width=.3)
+    c.m('A',289,top-28,16)
 
 
 def t2b19(c):
     ox=27;by=c.h*.53;unit=26;amp=c.h*.31
-    axes(c,ox,by,293,15,'진행 거리(m)','위치',10);c.text('(m)',ox-3,34,10,'right')
+    axes(c,ox,by,293,10,None,None)
+    c.text('위',ox-15,22,10,'center');c.text('치',ox-15,34,10,'center');c.text('(m)',ox-15,48,10,'center')
+    c.text('진행 거리(m)',293,by+23,10,'right')
     pts=[(ox+i*.4,by-amp*math.sin((i*.4/unit)*math.pi/2))for i in range(476)]
     c.poly(pts,1.2)
-    labels=[(0,'A'),(1,'B'),(2,'C'),(3,'D'),(4,'E')]
-    for n,l in labels:
-        x=ox+n*unit;y=by-amp*math.sin(n*math.pi/2);c.circle(x,y,2.7,fill=BLACK);c.text(l,x+(6 if n%2==0 else 0),y+(-8 if n!=3 else 18),12,'center')
+    labels=[(0,'A',7,20),(1,'B',0,-8),(2,'C',8,-7),(3,'D',0,18),(4,'E',-11,-8)]
+    for n,l,dx,dy in labels:
+        x=ox+n*unit;y=by-amp*math.sin(n*math.pi/2);c.circle(x,y,2.7,fill=BLACK);c.text(l,x+dx,y+dy,12,'center')
     c.text('O',ox-9,by+5,12,'right')
     for n in range(1,7):c.line((ox+n*unit,by-3),(ox+n*unit,by+3),.6);c.text(str(n),ox+n*unit,by+15,11,'center')
     c.text('진행 방향',209,15,12,'center');c.arrow((186,24),(233,24),width=2,head=5)
@@ -755,6 +829,18 @@ DRAWINGS.update({('T2b',1):t2b1,('T2b',2):t2b2,('T2b',3):t2b3,('T2b',4):t2b4,
 ('T2b',14):t2b14,('T2b',15):t2b15,('T2b',16):t2b16,('T2b',17):t2b17,
 ('T2b',19):t2b19,('T2b',20):t2b20})
 
+NATURAL_WIDTHS={
+    ('T1b',1):176,('T1b',2):150,('T1b',4):194,('T1b',6):142,
+    ('T1b',7):176,('T1b',8):212,('T1b',9):232,('T1b',11):184,
+    ('T1b',12):224,('T1b',13):170,('T1b',14):138,('T1b',15):224,
+    ('T1b',16):190,('T1b',17):180,('T1b',18):218,('T1b',23):112,
+    ('T1b',25):116,('T1b',26):232,
+    ('T2b',1):194,('T2b',2):232,('T2b',3):232,('T2b',4):60,
+    ('T2b',5):232,('T2b',6):232,('T2b',7):158,('T2b',8):208,
+    ('T2b',9):140,('T2b',10):232,('T2b',11):232,('T2b',12):138,
+    ('T2b',13):232,('T2b',14):224,('T2b',15):224,('T2b',16):194,
+    ('T2b',17):176,('T2b',19):232,('T2b',20):232}
+
 
 def main():
     parser=argparse.ArgumentParser()
@@ -765,8 +851,10 @@ def main():
     args=parser.parse_args()
     OUT.mkdir(parents=True,exist_ok=True);QA.mkdir(parents=True,exist_ok=True)
     idx=json.loads((ROOT/'tools/kphe_figures/index.json').read_text(encoding='utf8'))
-    manifest={'version':1,'method':'manually authored native PDF geometry and real font text',
-              'raster_images':False,'contour_tracing':False,'math_base_size':args.math_base_size,'figures':{}}
+    manifest={'version':2,'method':'manually authored native PDF geometry and real font text',
+              'raster_images':False,'contour_tracing':False,'math_base_size':args.math_base_size,
+              'typography_mode':'explicit source-relative labels, no global font-size floor',
+              'layout_mode':'individual natural widths; original panel arrangements','figures':{}}
     if args.only and (OUT/'manifest.json').is_file():
         manifest=json.loads((OUT/'manifest.json').read_text(encoding='utf8'))
     for key,g in idx['figures'].items():
@@ -779,27 +867,15 @@ def main():
         w=300;h=w*(g['rect'][3]-g['rect'][1])/(g['rect'][2]-g['rect'][0])
         if (part,n)==('T2b',20):h=245
         if (part,n)==('T2b',3):h=96
-        if (part,n)==('T2b',5):h=550
-        native_width={('T2b',4):80,('T2b',9):185,('T1b',23):200}.get((part,n),232)
-        c=Figure(w,h,args.math_base_size,native_width,1.74 if (part,n)==('T2b',11) else 1);DRAWINGS[(part,n)](c)
-        if (part,n)==('T2b',11):
-            # Keep each panel's native geometry but give the meter scales enough
-            # printed size.  Both panels are vector forms, never raster images.
-            old=c.doc;stacked=fitz.open();p=stacked.new_page(width=300,height=562)
-            p.show_pdf_page(fitz.Rect(10,0,290,259),old,0,clip=fitz.Rect(0,0,160,148))
-            p.show_pdf_page(fitz.Rect(10,294,290,548),old,0,clip=fitz.Rect(169,0,300,146))
-            c.doc,c.page,c.h=stacked,p,562
-            # Caption glyphs are a separate native-font form, avoiding a second
-            # CID Gulim font resource after the source panels are imported.
-            c.m(r'\mathrm{(가)}',150,276,align='center')
-            c.m(r'\mathrm{(나)}',150,555,align='center')
-            # Enlargement pointer stays outside the electrical circuit.  Its
-            # first bend is above the upper branch, then its entire vertical
-            # segment is to the right of the return wire (x=279.5).
-            c.bezier((225,24),(251,4),(287,9),(291,43),1.1)
-            c.bezier((291,43),(298,105),(298,222),(291,267),1.1)
-            c.bezier((291,267),(283,289),(269,307),(250,318),1.1)
-            c.arrow((262,310),(250,318),width=1.1,head=6)
+        if (part,n)==('T2b',4):h=400
+        if (part,n)==('T2b',5):h=170
+        if (part,n)==('T2b',9):h=320
+        if (part,n)==('T2b',10):h=150
+        if (part,n)==('T2b',11):h=150
+        if (part,n)==('T2b',12):h=244
+        native_width=NATURAL_WIDTHS[(part,n)]
+        c=Figure(w,h,args.math_base_size,native_width);DRAWINGS[(part,n)](c)
+        assert (part,n)==('T2b',20) or h*native_width/w<=155.01,(part,n,h*native_width/w)
         target=OUT/f'{part}-q{n:02d}-{key}.pdf';c.save(target)
         preview=QA/f'native-{key}.png';c.page.get_pixmap(matrix=fitz.Matrix(2,2),alpha=False).save(preview)
         manifest['figures'][key]={'source':g['source'],'page':g['page'],'rect':g['rect'],'part':part,'number':n,
