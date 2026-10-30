@@ -64,15 +64,14 @@ for (const year of ['2016', '2017', '2019', '2022']) {
     solutions++;
   }
 }
-for (const year of ['2024', '2025', '2026']) {
+for (const year of ['2021', '2022', '2023', '2024', '2025', '2026']) {
   for (const kind of ['paper', 'sol']) {
     assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
   }
 }
-for (const year of ['2010', '2022', '2023']) {
+for (const year of ['2010', '2011', '2013']) {
   assert.ok(assets[window.THEORY.izho[year].f.T.ko.paper] > 0);
 }
-assert.ok(assets[window.THEORY.izho['2023'].f.T.ko.sol] > 0);
 let usapho = 0;
 for (let year = 1997; year <= 2026; year++) {
   const file = window.THEORY.usapho[String(year)].f.T;
@@ -94,4 +93,8 @@ for (const year of ['2005', '2006', '2007', '2013', '2024', '2025']) {
   const source = JSON.parse(read('tools/theory/cpho.json')).years.find(y => String(y.y) === year);
   if (Number(year) >= 2013) assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 10, usapho, cphoBilingualYears: 6}));
+for (const file of JSON.parse(read('tools/translation_font_validation.json')).files) {
+  assert.equal(assets[file.file], file.bytes, `Published PDF size differs from audited version: ${file.file}`);
+  assert.equal(file.missing_glyph_spans.length, 0, file.file);
+}
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 15, usapho, cphoBilingualYears: 6}));

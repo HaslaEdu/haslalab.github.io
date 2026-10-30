@@ -415,24 +415,24 @@
       "page": 1,
       "rect": [
         59.76000213623047,
-        168.86236572265625,
+        161.8,
         404.20635986328125,
-        186.69647216796875
+        185.69647216796875
       ],
       "size": 11.259224891662598,
       "source": "[[0]] , where [[1]] denotes the speed of the ball center with [[2]] being its mass.",
       "math": [
         {
           "file": "2-4-m0.png",
-          "width": 32.82059097290039,
-          "height": 18.434112548828125,
+          "width": 32.839999999999996,
+          "height": 20.900000000000006,
           "rect": [
-            59.46000289916992,
-            168.56236267089844,
-            92.28059387207031,
-            186.99647521972656
+            59.46,
+            166.1,
+            92.3,
+            187.0
           ],
-          "text": "ଵ଴ 𝑚𝑣 ଶ"
+          "text": "7/10 mv^2"
         },
         {
           "file": "2-4-m1.png",
@@ -460,7 +460,13 @@
         }
       ],
       "ko": "[[0]]이다. 여기서 [[1]]는 구 중심의 속력, [[2]]은 질량이다.",
-      "translate": "[[0]] , where [[1]] denotes the speed of the ball center with [[2]] being its mass."
+      "translate": "[[0]] , where [[1]] denotes the speed of the ball center with [[2]] being its mass.",
+      "redact_rect": [
+        59.46,
+        166.1,
+        404.21,
+        187.0
+      ]
     },
     {
       "id": "2-5",
@@ -3541,6 +3547,9 @@
     "notes": [
       "Original unit typos retained in the source formula crops: Wien constant m/K and laser intensity microW/sm^2.",
       "Source PDF fonts give superscript 8 zero advance. Two math crops include its original ink in an explicitly stored ink_rects patch."
+    ],
+    "source_notes": [
+      "The separate source numerator 7 in the rolling kinetic-energy fraction was rejoined to its complete original 7/10 mv^2 equation crop."
     ]
   },
   "tables": [

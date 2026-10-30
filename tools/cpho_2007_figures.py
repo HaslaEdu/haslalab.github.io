@@ -218,7 +218,7 @@ def replace(path,lang):
         if p['index']==10:r=fitz.Rect(135,65,458,215)
         if p['index']==11:r=fitz.Rect(130,316,455,468)
         if p['index']==12:r=fitz.Rect(348,264,500,469)
-        if p['index']==13:
+        if p['index'] in [3,4,13]:
             page.add_redact_annot(r,fill=(1,1,1));page.apply_redactions(images=0,graphics=0)
         page.draw_rect(r,color=None,fill=(1,1,1))
         picture=drawings[p['index']];vector=fitz.open(stream=picture.convert_to_pdf(),filetype='pdf')

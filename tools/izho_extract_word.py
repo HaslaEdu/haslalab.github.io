@@ -7,6 +7,10 @@ FUNCTIONS={'arcsin','arccos','arctan','asin','acos','atan','sinh','cosh','tanh',
 UNIT={'K','К','Cl','C','Hz','kg','mm','cm','km','m','s','h','k','F/m','H/m','J/K','km/s','m/s','km/h','rad/s','H','F','V','J','W','Pa','A','mA','Ω','sin','cos','tan','ln','log','exp','max','min'}
 UNIT |= FUNCTIONS | {'mol','mole','year','years'}
 UNIT |= {'mu','eEx','eBu','eB','eBx','mE','mru','dp','er','rdr','eE','Rdl','NI','dj','eBrdr','eBr','eV','mV','eb','vt','eu','NIR','Edr','dr','dt','dl','nl','const'}
+UNIT |= {'mgR','pV','RT','gR','Rd','Qdq','mgd','mg','nRT','KR','cn','xdx','Vdt','GM','FR','mVR','rdrd','cR'}
+UNIT |= {'sly','sgy','kx','ky','my','mx','gs','Vg','pS','gH','Hl','CU','Nk','ne','kc','ak','edq','AB','CD','AF'}
+UNIT |= {'dk','LI','mr','NW','sl','ABCD','ABEF','dx','dq','dy','dz','du','da','dv'}
+UNIT |= {'Па','Кл','Дж','Вт','Гц','кг','см','мм','км'}
 MATH_FONTS=set()
 def configure_math_fonts(doc):
  MATH_FONTS.clear()

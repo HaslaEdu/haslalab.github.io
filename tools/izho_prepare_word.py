@@ -27,7 +27,7 @@ def prepare(path):
  blocks=[p.get_text('dict')['blocks'] for p in src]
  tables=[[f.Rect(t.bbox) for t in p.find_tables().tables] for p in src]
  data['tables']=[{'page':pi,'rect':list(r)} for pi,rs in enumerate(tables) for r in rs]
- data['preserve_rects']=[{'page':pi,'rect':b['bbox']} for pi,bs in enumerate(blocks) for b in bs if b['type']==1]
+ data['preserve_rects']=[{'page':pi,'rect':b['bbox']} for pi,bs in enumerate(blocks) for b in bs if b['type']==1 and not f.Rect(b['bbox']).is_empty]
  labels=[]
  year=int(re.search(r'20\d{2}',data['provenance']['source_name']).group())
  kind=' 해설' if '_TS' in data['provenance']['source_name'] else ''

@@ -45,6 +45,15 @@ def prepare():
     cluster={'chars':glyphs,'rect':list(bounds),'y':442.0684814453125,'text':'E = R1 R2 / (R2 − R1) × U / r²'}
     entry['math'][0]=cjk.math_image(page.get_svg_image(text_as_path=True),cluster,FOLDER/'2-14-field-complete.png')
     entry['insert_rect']=[90,426,506,456]
+    # These two comparisons are explicitly typeset as translated prose. The
+    # newer general extractor classifies their full-width sign as math, so
+    # suppress restoration of the old sign at its former paragraph position.
+    page3_chars=cjk.characters(original[2])
+    for key in ['3-12','3-16']:
+        entry=by_id[key];region=fitz.Rect(entry['rect'])
+        signs=[c['index'] for c in page3_chars if c['c']=='＞' and region.contains(fitz.Point(c['origin']))]
+        entry['math'][0]['source_char_indices']=sorted(set(entry['math'][0]['source_char_indices']+signs))
+        entry['math'][0]['operators_translated_in_prose']=signs
     for key,(ko,en) in rows.items():
         entry=by_id[key];entry['ko']=ko;entry['en']=en
         entry['color']=0
@@ -77,6 +86,10 @@ def prepare():
         box=fitz.Rect(members[0]['rect'])
         for member in members[1:]:box|=fitz.Rect(member['rect'])
         entry['rect']=list(box);entry['insert_rect']=list(box)
+        if entry['id']=='3-9':
+            # Native y/G/P figure labels lie beyond the prose column. They
+            # remain in the source layer but must not widen this paragraph.
+            entry['insert_rect'][2]=338
         texts={kind:[] for kind in ['source','ko','en']}
         for member in members:
             offset=len(entry['math'])

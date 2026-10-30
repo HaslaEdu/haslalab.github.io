@@ -22,7 +22,7 @@ for pi,page in enumerate(out):
    draw.rectangle(tuple(v*4 for v in e.get('redact_rect',e['rect'])),fill='white')
  for key in ['erase_rects','preserve_rects']:
   for e in data.get(key,[]):
-   if e['page']==pi:draw.rectangle(tuple(v*4 for v in e['rect']),fill='white')
+   if e['page']==pi and not f.Rect(e['rect']).is_empty:draw.rectangle(tuple(v*4 for v in e['rect']),fill='white')
  mathink=np.asarray(base.convert('L'))<80
  mathink[:240,:]=False
  kd=f.open();kp=kd.new_page(width=page.rect.width,height=page.rect.height);kp.insert_font(fontname='ko',fontfile=str(FONT))

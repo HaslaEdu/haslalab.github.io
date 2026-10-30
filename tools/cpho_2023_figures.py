@@ -218,8 +218,10 @@ def rutherford_apparatus(lang):
     s+=line(cx,cy,cx+85,cy-85,True,'stroke-width="2.3"')
     s+=line(cx,cy,cx+108,cy,False,'stroke-dasharray="5 5"')+arc(cx,cy,55,-math.pi/4,0)
     s+=text(cx+57,cy-17,'θ',25)+text(195,248,'α',25)
-    for x,y,ko,en in [(45,283,'방사선원','Radioactive source'),(272,344,'금박','Gold foil'),(422,281,'형광막','Fluorescent screen'),(483,313,'현미경','Microscope')]:
-        s+=text(x,y,ko if lang=='ko' else en,18,False)
+    for x,y,ko,en in [(35,290,'방사선원','Source'),(272,350,'금박','Gold foil'),(483,375,'현미경','Microscope')]:
+        s+=text(x,y,ko if lang=='ko' else en,26 if ko!='현미경' else 24,False)
+    if lang=='ko':s+=text(500,309,'형광막',26,False)
+    else:s+=text(500,303,'Fluorescent',22,False)+text(500,329,'screen',22,False)
     return svg(620,420,s)
 
 def scattering_geometry(mode):

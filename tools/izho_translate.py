@@ -21,6 +21,42 @@ ROOT = Path(__file__).resolve().parents[1]
 FONT = ROOT / "tools/ko/fonts/NotoSansKR-Regular.ttf"
 
 
+def regenerate_math_crop(page, math, target):
+    """Recreate a reviewed crop, including recorded source glyph repairs."""
+    if math.get("clean_prose"):
+        from izho_math_clean import math_pixmap
+        bitmap, pix = math_pixmap(page, fitz.Rect(math["rect"]))
+    else:
+        pix = page.get_pixmap(matrix=fitz.Matrix(4, 4), clip=fitz.Rect(math["rect"]), alpha=False)
+        bitmap = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+    if math.get("ink_rects"):
+        mask = Image.new("L", bitmap.size)
+        draw = ImageDraw.Draw(mask)
+        for q in math["ink_rects"]:
+            r = fitz.Rect(q)
+            draw.rectangle((r.x0*4-pix.x, r.y0*4-pix.y,
+                            r.x1*4-pix.x, r.y1*4-pix.y), fill=255)
+        bitmap = Image.composite(bitmap, Image.new("RGB", bitmap.size, "white"), mask)
+    for patch in math.get("glyph_patches", []):
+        q = fitz.Rect(patch["rect"])
+        ImageDraw.Draw(bitmap).rectangle((q.x0*4-pix.x, q.y0*4-pix.y,
+                                         q.x1*4-pix.x, q.y1*4-pix.y), fill="white")
+        glyph_doc = fitz.open()
+        glyph_page = glyph_doc.new_page(width=pix.width/4, height=pix.height/4)
+        font = patch.get("font", "noto")
+        if font == "noto":
+            glyph_page.insert_font(fontname=font, fontfile=str(FONT))
+        point = fitz.Point(patch["point"]) - fitz.Point(pix.x/4, pix.y/4)
+        glyph_page.insert_text(point, patch["text"], fontname=font,
+                               fontsize=patch.get("size", 9))
+        glyph = glyph_page.get_pixmap(matrix=fitz.Matrix(4, 4), alpha=False)
+        ink = Image.frombytes("RGB", (glyph.width, glyph.height), glyph.samples)
+        from PIL import ImageChops
+        bitmap = ImageChops.darker(bitmap, ink)
+        glyph_doc.close()
+    bitmap.save(target)
+
+
 def resolve_source(data):
     """Resolve a portable original, fetching the already-published archive asset if needed."""
     name = data.get("provenance", {}).get("source_name") or Path(data["source"]).name
@@ -167,7 +203,10 @@ def build(folder: Path, target: Path):
                             from izho_extract_word import mathword
                             if words and all(mathword(w) for w in words):
                                 continue
-                            if re.search(r"[А-Яа-яЁё]{2,}", span["text"]):
+                            cyrillic_words = re.findall(r"[А-Яа-яЁё]{2,}", span["text"])
+                            if cyrillic_words and all(mathword(w) for w in cyrillic_words):
+                                continue
+                            if cyrillic_words:
                                 box = fitz.Rect(span["bbox"]) & rect
                                 if not box.is_empty:
                                     draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
@@ -196,21 +235,7 @@ def build(folder: Path, target: Path):
             if not target_crop.exists():
                 if "rect" not in math:
                     raise ValueError("Missing math crop without a source rectangle: " + str(target_crop))
-                pix = original[e["page"]].get_pixmap(matrix=fitz.Matrix(4, 4),
-                    clip=fitz.Rect(math["rect"]), alpha=False)
-                if math.get("ink_rects"):
-                    source_bitmap = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
-                    mask = Image.new("L", source_bitmap.size)
-                    draw = ImageDraw.Draw(mask)
-                    for q in math["ink_rects"]:
-                        r = fitz.Rect(q)
-                        draw.rectangle((r.x0*4-pix.x, r.y0*4-pix.y,
-                                        r.x1*4-pix.x, r.y1*4-pix.y), fill=255)
-                    crop = Image.new("RGB", source_bitmap.size, "white")
-                    crop.paste(source_bitmap, mask=mask)
-                    crop.save(target_crop)
-                else:
-                    pix.save(target_crop)
+                regenerate_math_crop(original[e["page"]], math, target_crop)
     archive = fitz.Archive(str(folder.resolve()))
     archive.add(str(FONT.parent))
     css = """@font-face { font-family: Korean; src: url(NotoSansKR-Regular.ttf); }
@@ -267,6 +292,8 @@ def build(folder: Path, target: Path):
             if actual != expected:
                 raise ValueError(f"Formula placeholders differ at {e['id']}: {expected} != {actual}")
             content = html.escape(e["ko"])
+            if data.get("honor_line_breaks"):
+                content = content.replace("\n", "<br>")
             for mi, math in enumerate(e["math"]):
                 image = f'<img src="{math["file"]}" width="{math["width"]}" height="{math["height"]}">'
                 content = content.replace(f"[[{mi}]]", image)
@@ -293,6 +320,8 @@ def build(folder: Path, target: Path):
             if keep["page"] != pi:
                 continue
             rect = fitz.Rect(keep["rect"])
+            if rect.is_empty or rect.is_infinite:
+                continue
             if any(rect == picture for picture in pictures):
                 page.show_pdf_page(rect, original, pi, clip=rect)
             elif not data.get("transparent_math_restore"):

@@ -33,7 +33,8 @@ def run(year,kind):
   for block in a.get_text('dict')['blocks']:
    if block['type']!=0:continue
    spans=[s for l in block['lines'] for s in l['spans']];text=' '.join(s['text'] for s in spans);words=re.findall('[A-Za-z]{2,}',text)
-   if re.search('[А-Яа-яЁё]{2,}',text) or any(not mathword(w) for w in words):continue
+   cyrillic=re.findall('[А-Яа-яЁё]{2,}',text)
+   if any(not mathword(w) for w in cyrillic) or any(not mathword(w) for w in words):continue
    if not any(candidate(s) for s in spans):continue
    r=f.Rect(block['bbox']);rects.append(list(r));draw.rectangle(tuple(v*4 for v in r),fill=1)
   for e in data['entries']:

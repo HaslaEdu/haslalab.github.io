@@ -30,6 +30,7 @@ def resolve_source(data):
 
 def natural(ch):
     c=ch['c'];n=ord(c)
+    if c in '−－＋＝＜＞±×÷':return False
     return ch['size']>=9 and (bool(HAN.search(c)) or
         (ch['font'].startswith(CJK_FONTS) and
          (c.isspace() or c in '，。；：！？、（）【】《》“”‘’…—,.():;!?[]' or 0x3000<=n<=0x303f or 0xff00<=n<=0xffef)))

@@ -48,8 +48,10 @@ def figure(n,lang):
         s+=splitter(42,105)+mirror(160,105,1)+mirror(42,280,1)+mirror(160,280,-1)+circle(160,198,10)
         s+=line(170,198,227,198,True)+line(238,198,263,198)
         s+='<rect x="227" y="187" width="11" height="22"/><rect x="263" y="179" width="27" height="37"/>'
-        for x,y,k,e in [(99,61,'倍频 Nd:YVO₄','Nd:YVO₄'),(41,91,'빔분할기','BS'),(181,218,'철사','wire'),(232,240,'카메라','CCD'),(274,264,'컴퓨터','PC')]:
-            s+=label(x,y,k if k!='倍频 Nd:YVO₄' else '주파수 배가 Nd:YVO₄',e,lang,13)
+        s+=text(65,61,'주파수 배가 Nd:YVO₄' if lang=='ko' else 'Frequency-doubled Nd:YVO₄',13,False)
+        s+=text(65,91,'빔분할기' if lang=='ko' else 'BS',13,False)
+        for x,y,k,e in [(181,218,'철사','wire'),(232,240,'카메라','CCD'),(274,264,'컴퓨터','PC')]:
+            s+=label(x,y,k,e,lang,13)
         s+=text(168,95,'M₁',17)+text(167,302,'M₂',17)+text(21,301,'M₃',17)+text(153,340,'(a)',20,False,'middle')
         # (b) cross section with y upward, z towards the screen, x into paper.
         s+=circle(370,200,28)+line(326,200,575,200,True)+line(370,290,370,52,True)+line(555,74,555,296)

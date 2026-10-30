@@ -7,11 +7,14 @@ OPERATORS=set('−－＋＝<>＜＞±×÷≤≥≠')
 
 def audit(manifest,pages=None,pdf=None):
     data=json.loads(manifest.read_text(encoding='utf8'));source=resolve_source(data);doc=fitz.open(source)
-    missing=[];seen=set();assets=0;prose=[]
+    missing=[];seen=set();assets=0;prose=[];native=0
     for entry in data['entries']:
         if pages and entry['page']+1 not in pages:continue
         chars=[c for c in characters(doc[entry['page']]) if c['c'] in OPERATORS]
         for mi,math in enumerate(entry['math']):
+            if mi in entry.get('preserved_math',[]):
+                native+=1
+                continue
             assets+=1;box=fitz.Rect(math['source_rect']);origins=math.get('glyph_origins',[])
             for char in chars:
                 x,y=char['origin']
@@ -28,7 +31,7 @@ def audit(manifest,pages=None,pdf=None):
                     else:missing.append(item)
     report={'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
             'manifest_sha256':hashlib.sha256(manifest.read_bytes()).hexdigest(),
-            'math_assets':assets,'source_operators_checked':len(seen),'operators_preserved_in_prose':prose,'omitted_operators':missing}
+            'math_assets':assets,'native_math_fields_preserved':native,'source_operators_checked':len(seen),'operators_preserved_in_prose':prose,'omitted_operators':missing}
     if pdf:report['pdf_sha256']=hashlib.sha256(pdf.read_bytes()).hexdigest()
     return report
 
