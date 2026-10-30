@@ -6,14 +6,37 @@ paragraph merging, source font subsetting, or equation rasterization occurs.
 """
 from pathlib import Path
 from collections import defaultdict
-import argparse,hashlib,json,math,re
+import argparse,hashlib,json,math,re,urllib.request
 import pikepdf
 import pymupdf as fitz
+import numpy as np
 from pdf_original_text_ops import suppress_prose,glyph_key,family_name,cmap,widths,native_form_glyphs
 from pdf_original_style_fonts import korean_font,source_font_role
 from pdf_original_style_audit import audit
 
 ROOT=Path(__file__).resolve().parents[1]
+
+def ensure_reviewed_source(data,plan_path):
+    """Recover only the exact, hash-pinned source from the reviewed bank."""
+    source=ROOT/data['source'];metadata=data
+    if not metadata.get('source_sha256'):
+        year_folder=Path(plan_path).resolve().parents[2]
+        candidates=list(year_folder.glob('*/translation.raw.json'))
+        for candidate in candidates:
+            entry=json.loads(candidate.read_text('utf8'))
+            if entry.get('source')==data['source']:
+                metadata=entry;break
+    expected=metadata.get('source_sha256')
+    if not expected:raise ValueError('Source has no reviewed SHA256: '+data['source'])
+    if not source.is_file():
+        url=metadata.get('source_url')or metadata.get('provenance',{}).get('source_url')
+        if not url:raise ValueError('Reviewed source URL missing: '+data['source'])
+        request=urllib.request.Request(url,headers={'User-Agent':'HaslaLab original-style verified rebuild'})
+        payload=urllib.request.urlopen(request,timeout=60).read()
+        if not payload.startswith(b'%PDF-')or hashlib.sha256(payload).hexdigest()!=expected:raise ValueError('Downloaded source differs from reviewed PDF')
+        source.parent.mkdir(parents=True,exist_ok=True);source.write_bytes(payload)
+    if hashlib.sha256(source.read_bytes()).hexdigest()!=expected:raise ValueError('Source differs from reviewed PDF: '+str(source))
+    return source
 
 def runs_of(page):
     names={t['font']for t in page.get_texttrace()};result={}
@@ -74,6 +97,65 @@ def font_catalog(source,page_number,trace_names):
     for values in result.values():values.sort(key=lambda v:v['bytes'])
     return result
 
+def native_font_programs(path,page_number):
+    """Inspect PDF resources directly, including hidden fallback Form fonts."""
+    result=[]
+    with pikepdf.Pdf.open(path)as pdf:
+        def walk(resources,prefix,ancestors=()):
+            for name,font in resources.get('/Font',{}).items():
+                descendant=font.get('/DescendantFonts',[font])[0]
+                descriptor=descendant.get('/FontDescriptor',{})
+                programs=tuple((key,hashlib.sha256(descriptor[key].read_bytes()).hexdigest())for key in ['/FontFile','/FontFile2','/FontFile3']if key in descriptor)
+                unicode_sha=hashlib.sha256(font.ToUnicode.read_bytes()).hexdigest()if '/ToUnicode'in font else None
+                result.append((prefix,str(name),str(font.get('/BaseFont')),str(font.get('/Subtype')),str(font.get('/Encoding')),unicode_sha,programs))
+            for name,child in resources.get('/XObject',{}).items():
+                if str(child.get('/Subtype'))=='/Form'and '/Resources'in child:
+                    if child.objgen in ancestors:raise ValueError('Recursive native font resource graph')
+                    walk(child.Resources,prefix+'/'+str(name),ancestors+(child.objgen,))
+        walk(pdf.pages[page_number-1].Resources,'Page')
+    return result
+
+def protected_image_rects(doc,page,data):
+    images=page.get_image_info(xrefs=True);reviewed=data.get('inline_math_images',[]);rects=[]
+    if any(i<0 or i>=len(images)for i in reviewed):raise ValueError('Unknown reviewed inline-math image')
+    for index,info in enumerate(images):
+        if index not in reviewed:rects.append(list(info['bbox']));continue
+        # Reviewed Word fallback hbar images have a constant black 2x2 base
+        # and a high-resolution alpha glyph with wide transparent padding.
+        # Protect the actual source glyph, rather than unrelated prose that
+        # the original PDF already places in that transparent padding.
+        base=fitz.Pixmap(doc,info['xref'])
+        if any(base.samples):raise ValueError('Inline-math image needs another reviewed color profile')
+        kind,value=doc.xref_get_key(info['xref'],'SMask')
+        if kind!='xref':raise ValueError('Inline-math image requires an explicit source alpha mask')
+        mask=fitz.Pixmap(doc,int(value.split()[0]))
+        if mask.n!=1:raise ValueError('Unsupported source alpha mask color space')
+        alpha=np.frombuffer(mask.samples,np.uint8).reshape(mask.height,mask.width)
+        ys,xs=np.nonzero(alpha)
+        if not len(xs):continue
+        normalized=fitz.Rect(xs.min()/mask.width,ys.min()/mask.height,(xs.max()+1)/mask.width,(ys.max()+1)/mask.height)
+        ink=normalized*fitz.Matrix(info['transform']);rects.append(list(ink+(-.25,-.25,.25,.25)))
+    return rects
+
+def native_image_programs(path,page_number):
+    """Inspect image and alpha streams even when MuPDF omits Form xrefs."""
+    result=[]
+    def digest(stream):
+        try:payload=stream.read_bytes()
+        except pikepdf.PdfError:payload=stream.read_raw_bytes()
+        return hashlib.sha256(payload).hexdigest()
+    with pikepdf.Pdf.open(path)as pdf:
+        def walk(resources,prefix,ancestors=()):
+            for name,child in resources.get('/XObject',{}).items():
+                if str(child.get('/Subtype'))=='/Image':
+                    mask=child.get('/SMask');alpha=digest(mask)if isinstance(mask,pikepdf.Stream)else None
+                    result.append((prefix,str(name),digest(child),alpha,int(child.Width),int(child.Height)))
+                elif str(child.get('/Subtype'))=='/Form'and '/Resources'in child:
+                    if child.objgen in ancestors:raise ValueError('Recursive native image resource graph')
+                    walk(child.Resources,prefix+'/'+str(name),ancestors+(child.objgen,))
+        walk(pdf.pages[page_number-1].Resources,'Page')
+    return result
+
 def latin_profile(catalog,font,text):
     for profile in catalog[font]:
         if all(ch in profile['encoding']and profile['widths'].get(profile['encoding'][ch],profile['default'])is not None for ch in text):return profile
@@ -98,7 +180,7 @@ def split_parts(part,style,catalog,metrics):
     return chunks
 
 def build(plan_path,target):
-    plan_path=Path(plan_path);data=json.loads(plan_path.read_text('utf8'));source=ROOT/data['source'];pi=data['page']
+    plan_path=Path(plan_path);data=json.loads(plan_path.read_text('utf8'));source=ensure_reviewed_source(data,plan_path);pi=data['page']
     original=fitz.open(source);page=original[pi]
     if page.rotation:raise ValueError('Rotated source needs a reviewed page transform')
     runs=runs_of(page);selected=[];work=[];all_text=defaultdict(str)
@@ -107,7 +189,7 @@ def build(plan_path,target):
         parts=spec.get('parts',[{'text':spec.get('text','')}])
         for part in parts:
             style=runs[tuple(part.get('style_from',spec['at']))]
-            if abs(style['size']-anchor['size'])>.001:raise ValueError('Mixed-size slot requires separate source slots')
+            if abs(style['size']-anchor['size'])>.001 and not spec.get('reviewed_mixed_sizes'):raise ValueError('Mixed-size slot requires an explicit reviewed baseline plan')
             all_text[source_font_role(style['font'],style['flags'])]+=part['text']
         work.append((spec,anchor,chars,rect,point,parts))
     selected_keys=[glyph_key(c)for c in selected if c['c'].strip()]
@@ -124,11 +206,12 @@ def build(plan_path,target):
             for c in characters(span):
                 if c['c'].strip()and any(fitz.Rect(c['bbox']).intersects(r)for r in hits):protected.append(c)
     if set(selected_keys)&{glyph_key(c)for c in protected}:raise ValueError('Reviewed prose selection touches protected math')
+    protected_keys={glyph_key(c)for c in protected}
     untranslated=[]
     for key,span in runs.items():
         if re.search(r'Cambria.?Math|Symbol|MT.?Extra',span['font'],re.I):continue
-        remaining=''.join(c['c']if glyph_key(c)not in selected_keys and not any(c['font']==g['font']and abs(c['origin'][0]-g['origin'][0])<.0001 and abs(c['origin'][1]-g['origin'][1])<.0001 for g in form_glyphs)else ' 'for c in characters(span))
-        words=re.findall(r'[A-Za-z]{3,}',remaining)
+        remaining=''.join(c['c']if glyph_key(c)not in selected_keys and glyph_key(c)not in protected_keys and not any(c['font']==g['font']and abs(c['origin'][0]-g['origin'][0])<.0001 and abs(c['origin'][1]-g['origin'][1])<.0001 for g in form_glyphs)else ' 'for c in characters(span))
+        words=[word for word in re.findall(r'[A-Za-z]{3,}',remaining)if word not in data.get('native_prose_tokens',[])]
         if words and list(key)not in data.get('native_text_exceptions',[]):untranslated.append(dict(at=key,remaining=remaining))
     if untranslated:raise ValueError('Unreviewed English source prose: '+repr(untranslated))
     buffers={};metrics={}
@@ -175,19 +258,16 @@ def build(plan_path,target):
     outdoc.save(target,garbage=4,deflate=True);outdoc.close()
     spec=dict(source_page=pi+1,proof_page=1,allowed_rects=allowed,erased_glyph_origins=[list(c['origin'])for c in selected if c['c'].strip()],
         protected_glyph_origins=[list(c['origin'])for c in protected],protected_glyphs=protected,
-        protected_rects=[list(info['bbox'])for info in page.get_image_info()])
+        protected_rects=protected_image_rects(original,page,data))
     target.with_suffix('.audit-spec.json').write_text(json.dumps(spec,ensure_ascii=False,indent=2),'utf8')
     result=audit(source,target,spec);result.update(removed_prose_glyphs=count,placements=placements,autoshrink=False,reflow=False,equation_images=0,
         plan=str(plan_path.relative_to(ROOT))if plan_path.is_absolute()else str(plan_path),plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest())
     target.with_suffix('.qa.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),'utf8')
     final=fitz.open(target)
-    def font_programs(doc,pg):
-        return [(resource,name,kind,encoding,hashlib.sha256(doc.extract_font(xref)[3]).hexdigest())
-                for xref,extension,kind,name,resource,encoding,*rest in pg.get_fonts(full=True)]
-    source_fonts=font_programs(original,page);target_fonts=font_programs(final,final[0])
+    source_fonts=native_font_programs(source,pi+1);target_fonts=native_font_programs(target,1)
     result['source_font_programs_and_names_unchanged']=all(row in target_fonts for row in source_fonts)
-    def image_objects(pg):return sorted((im['digest'].hex(),tuple(im['bbox']))for im in pg.get_image_info(hashes=True))
-    result['source_images_bytes_and_rects_unchanged']=image_objects(page)==image_objects(final[0])
+    def image_geometry(pg):return sorted((im['digest'].hex(),tuple(im['bbox']),tuple(im['transform']))for im in pg.get_image_info(hashes=True))
+    result['source_images_bytes_and_rects_unchanged']=image_geometry(page)==image_geometry(final[0])and native_image_programs(source,pi+1)==native_image_programs(target,1)
     # seqno counts preceding text paints; deleting prose changes that counter,
     # while every path command/style/coordinate and vector order stays native.
     def drawings(pg):return [{k:v for k,v in row.items()if k!='seqno'}for row in pg.get_drawings()]

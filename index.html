@@ -4286,7 +4286,15 @@ const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "
 const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
 const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
-const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
+/* ORIGINAL_LAYOUT_PDF_VERSIONS */
+const ORIGINAL_LAYOUT_PDF_VERSIONS={"IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"c1bca894a1608166","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
+/* END_ORIGINAL_LAYOUT_PDF_VERSIONS */
+const thyUrl=f=>{
+  const url=/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;
+  const key=(f.startsWith(PDF_BASE)?f.slice(PDF_BASE.length):f).split(/[?#]/)[0];
+  const version=ORIGINAL_LAYOUT_PDF_VERSIONS[key]||(window.KPHE_PDF_VERSIONS||{})[f];
+  return version?url+(url.includes("?")?"&":"?")+"v="+encodeURIComponent(version):url;
+};   /* a release name, a site file, or a paper only linked */
 /* Competition or organiser websites, independent of whether any extra resources or papers have loaded. */
 const OFFICIAL_WEBSITES={
   ipho:"https://www.ipho-new.org/",

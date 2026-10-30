@@ -28,13 +28,16 @@ def subset_font(font_path,texts,cache_dir=None):
     font_path=Path(font_path)
     text=texts if isinstance(texts,str) else ''.join(texts)
     chars=''.join(sorted(set(text)))
-    digest=hashlib.sha256(b'retain-cid-gids-v1'+font_path.read_bytes()+chars.encode('utf8')).hexdigest()[:16]
+    digest=hashlib.sha256(b'retain-cid-gids-v2-strict-spaces'+font_path.read_bytes()+chars.encode('utf8')).hexdigest()[:16]
     cache=Path(cache_dir) if cache_dir else ROOT/'tmp/original-style-repair/fonts'
     cache.mkdir(parents=True,exist_ok=True)
     target=cache/(font_path.stem+'-'+digest+font_path.suffix)
     if target.exists():return target
-    font=TTFont(font_path)
-    cmap=font.getBestCmap();missing=[c for c in chars if not c.isspace() and ord(c)not in cmap]
+    font=TTFont(font_path,recalcTimestamp=False)
+    # Unicode thin/hair spaces are not automatically present in CJK fonts.
+    # Whitespace without a real cmap entry becomes a visible .notdef glyph
+    # when inserted into a PDF, despite looking narrower in text measurement.
+    cmap=font.getBestCmap();missing=[c for c in chars if c not in'\r\n\t'and ord(c)not in cmap]
     if missing:raise ValueError(f'{font_path.name}: unsupported characters {missing}')
     options=subset.Options();options.name_IDs=['*'];options.name_legacy=True;options.name_languages=['*']
     options.retain_gids=True

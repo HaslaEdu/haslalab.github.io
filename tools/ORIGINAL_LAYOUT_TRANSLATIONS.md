@@ -35,3 +35,18 @@ Hangul-outline audit checks for hidden or missing translated text.
 
 `tests/test-original-layout-translations.cjs` checks the publication manifest,
 approved hashes, final-file audit coverage, font provenance and release sizes.
+It also checks that archive links carry the approved file revision, so an older
+PDF in the browser cache is not reused after an in-place replacement. Refresh
+the inline revision map with `python tools/update_original_layout_versions.py`.
+
+The newer-year engine is rebuilt with
+`python tools/izho_original_style_rebuild.py 2026 T`. It automatically retrieves
+the source archive asset and checks its recorded SHA-256. Its audits additionally
+compare a prose-suppressed control with the original native ink, avoiding false
+positives from neighbouring English glyph overhangs or unused font-metric boxes.
+The reviewed final page must still render identically to its individual proof.
+
+`python tools/test_pdf_original_text_ops.py` covers CID advances, filled/stroked
+text, untouched native Forms and CMap decoding. The font regression tests are
+`python tests/test_pdf_original_style_fonts.py`; unsupported Unicode whitespace
+must fail validation rather than becoming a visible missing-glyph box.

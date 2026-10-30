@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json
 import pymupdf as fitz
 import pikepdf
-from izho_early_fixed_style import build,ROOT
+from izho_early_fixed_style import build,ROOT,ensure_reviewed_source,native_font_programs,native_image_programs
 from pdf_original_style_audit import audit
 from pdf_hangul_visibility import audit as hangul_audit
 
@@ -17,6 +17,7 @@ def rebuild(year,kind,assemble_only=False):
     if [int(p.stem[4:])for p in plans]!=expected:raise ValueError('Page plan numbering must be complete and contiguous')
     work=ROOT/f'tmp/izho-original-style/{year}/{kind}';work.mkdir(parents=True,exist_ok=True)
     data=[json.loads(p.read_text('utf8'))for p in plans]
+    for entry,plan in zip(data,plans):ensure_reviewed_source(entry,plan)
     unique_sources={d['source']for d in data}
     if len(unique_sources)==1:
         with fitz.open(ROOT/data[0]['source'])as source:
@@ -41,7 +42,10 @@ def rebuild(year,kind,assemble_only=False):
     for index,(page,entry)in enumerate(zip(pages,data),1):
         spec=json.loads(page.with_suffix('.audit-spec.json').read_text('utf8'));spec['proof_page']=index
         result=audit(ROOT/entry['source'],target,spec)
+        result['source_font_programs_and_names_unchanged']=all(font in native_font_programs(target,index)for font in native_font_programs(ROOT/entry['source'],entry['page']+1))
+        result['source_image_and_alpha_streams_unchanged']=native_image_programs(ROOT/entry['source'],entry['page']+1)==native_image_programs(target,index)
         if result['native_glyphs_changed']or result['protected_glyphs_selected_for_erasure']or result['changed_pixels_outside_prose']or result['changed_pixels_in_native_glyph_neighborhood']:raise ValueError('Joined PDF native audit failed: '+str(index))
+        if not result['source_font_programs_and_names_unchanged']or not result['source_image_and_alpha_streams_unchanged']:raise ValueError('Joined PDF native resource audit failed: '+str(index))
         reports.append(result)
     visibility=hangul_audit(target)
     if visibility['flagged_components']:raise ValueError('Joined PDF contains hidden Hangul glyphs')

@@ -216,3 +216,4 @@ def native_form_glyphs(source,page_number):
     """
     glyphs=[];suppress_prose(source,page_number,[],protected_form_glyphs=glyphs)
     return glyphs
+
