@@ -14,11 +14,35 @@
   const label = (x, lang) => typeof x === 'string' ? x : x?.[lang] || x?.en || x?.ko || '';
   const fmt = x => finite(x) ? String(Math.round(x * 1000) / 1000) : '—';
   const taskKey = tasks => Array.isArray(tasks) ? [...new Set(tasks.map(String))].sort().join('|') : '';
+  const uniqueTasks=s=>Array.isArray(s.tasks)&&s.tasks.length>0&&s.tasks.every(t=>typeof t==='string'&&t)&&new Set(s.tasks).size===s.tasks.length;
   const hasScore = s => s?.status === 'graded' && validScore(s.score, s.points) &&
     !Object.values(s.detail?.tasks || {}).some(t => t.grading_mode === 'qualitative_review');
   function matches(record, session) {
-    return !record.manualOnly && hasScore(session) && Math.abs(session.points - record.max) < EPS &&
+    return !record.manualOnly && hasScore(session) && uniqueTasks(session) && Math.abs(session.points - record.max) < EPS &&
       record.taskSets?.some(tasks => taskKey(tasks) === taskKey(session.tasks));
+  }
+  function roundReference(record, score) {
+    const ref=record?.medalReference,tiers=['gold','silver','bronze'];
+    if (!ref || ref.basis!=='round_rank' || record.awardScope || record.manualOnly ||
+        !['theory','experiment'].includes(record.scope) || !validScore(score,record.max)) return null;
+    const scores=(record.scores||[]).filter(x=>validScore(x,record.max)).slice().sort((a,b)=>b-a);
+    const complete=record.complete===true&&record.participants===scores.length;
+    if (!scores.length || ref.population!==(complete?'complete':'published') ||
+        !ref.sources?.length || !ref.sources.every(s=>/^https?:\/\//.test(s.url||''))) return null;
+    if (!tiers.every(k=>Number.isInteger(ref.counts?.[k])&&ref.counts[k]>=0)) return null;
+    const total=tiers.reduce((n,k)=>n+ref.counts[k],0);
+    if (!(total>0) || total>scores.length) return null;
+    const cuts={};let boundary=0;
+    for(const tier of tiers){
+      boundary+=ref.counts[tier];
+      if(ref.counts[tier]){
+        const cut=scores[boundary-1];
+        if(!finite(ref.cuts?.[tier])||Math.abs(ref.cuts[tier]-cut)>EPS)return null;
+        cuts[tier]=cut;
+      }else if(ref.cuts?.[tier]!=null)return null;
+    }
+    const medal=tiers.find(k=>finite(cuts[k])&&score+EPS>=cuts[k])||'none';
+    return {medal,scope:record.scope,counts:{...ref.counts},cuts,population:ref.population,sources:ref.sources};
   }
   function evaluate(record, score, manual = false) {
     if (!record || record.manualOnly && !manual || !validReference(record,score)) return null;
@@ -39,14 +63,60 @@
         (Object.keys(cuts).length ? 'none' : null);
     }
     return {record, score, manual, n:scores.length, rank:scores.length ? above + 1 : null,
-      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal};
+      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal,reference:roundReference(record,score)};
+  }
+  const mode=s=>s.review_only===true;
+  const stamp=s=>finite(s.graded_at)?s.graded_at:finite(s.created_at)?s.created_at:0;
+  const examKey=s=>s.exam_key||`${s.comp}${s.year}`;
+  function componentMatches(component,s){
+    if(!uniqueTasks(s)||!matches(component,s))return false;
+    if(component.id==='theory'&&s.kind&&s.kind!=='theory')return false;
+    if(['experiment','practical'].includes(component.id)&&s.kind&&s.kind!=='lab')return false;
+    return true;
+  }
+  function combinedResults(data,session){
+    if(data?.comp!==session?.comp||!hasScore(session)||!uniqueTasks(session)||!Number.isInteger(session.id)||session.id<1)return [];
+    const records=(data.records||[]).filter(r=>String(r.year)===String(session.year));
+    const history=(Array.isArray(session.related_results)?session.related_results:[]).filter(s=>s&&Number.isInteger(s.id)&&s.id>0&&s.id!==session.id&&
+      s.comp===session.comp&&String(s.year)===String(session.year)&&examKey(s)===examKey(session)&&hasScore(s)&&uniqueTasks(s))
+      .slice().sort((a,b)=>Number(mode(a)!==mode(session))-Number(mode(b)!==mode(session))||stamp(b)-stamp(a)||b.id-a.id);
+    const results=[];
+    for(const record of records){
+      const components=record.components||[];
+      if(record.manualOnly||!finite(record.max)||components.length<2||components.length>4||matches(record,session)||
+        !components.every(c=>finite(c.max)&&c.max>0&&c.taskSets?.length)||
+        Math.abs(components.reduce((n,c)=>n+c.max,0)-record.max)>EPS)continue;
+      const anchors=components.map((c,i)=>componentMatches(c,session)?i:-1).filter(i=>i>=0);
+      if(anchors.length!==1)continue;
+      const chosen=components.map(()=>null);chosen[anchors[0]]=session;
+      function fill(index,usedIds,usedTasks){
+        if(index===components.length)return true;
+        if(chosen[index])return fill(index+1,usedIds,usedTasks);
+        for(const candidate of history){
+          if(usedIds.has(candidate.id)||candidate.tasks.some(t=>usedTasks.has(t))||!componentMatches(components[index],candidate))continue;
+          chosen[index]=candidate;
+          if(fill(index+1,new Set([...usedIds,candidate.id]),new Set([...usedTasks,...candidate.tasks])))return true;
+          chosen[index]=null;
+        }
+        return false;
+      }
+      if(!fill(0,new Set([session.id]),new Set(session.tasks)))continue;
+      const score=Math.round(chosen.reduce((n,s)=>n+s.score,0)*1e8)/1e8,e=evaluate(record,score);
+      if(!e)continue;
+      e.combined={sessions:chosen.map((s,i)=>({id:s.id,scope:components[i].id,label:components[i].label,score:s.score,points:s.points,review_only:mode(s)})),
+        mixedMode:chosen.some(s=>mode(s)!==mode(session))};
+      results.push(e);
+    }
+    return results;
   }
   function assess(data, session) {
     if (!hasScore(session)) return {records:[], comparisons:[], totals:[]};
     const records = (data?.comp === session.comp ? data.records || [] : []).filter(r => String(r.year) === String(session.year));
+    const direct=records.filter(r=>matches(r,session)).map(r=>evaluate(r,session.score));
+    const combined=direct.some(e=>e.record.awardScope||e.record.scope==='total')?[]:combinedResults(data,session);
+    const comparisons=combined.length?combined:direct,covered=new Set(comparisons.map(e=>e.record.id));
     return {records, scaleMismatch:records.some(r=>r.taskSets?.some(tasks=>taskKey(tasks)===taskKey(session.tasks))&&Math.abs(session.points-r.max)>=EPS),
-      comparisons:records.filter(r => matches(r, session)).map(r => evaluate(r, session.score)),
-      totals:records.filter(r => (r.scope==='total'||r.awardScope) && (r.medalCutoffs||r.scores?.length) && !matches(r, session))};
+      comparisons,totals:records.filter(r => (r.scope==='total'||r.awardScope) && (r.medalCutoffs||r.scores?.length) && !covered.has(r.id))};
   }
   const names = {
     ko:{gold:'금메달',silver:'은메달',bronze:'동메달',hm:'장려상',none:'공개 수상 기준 미달'},
@@ -64,13 +134,18 @@
   function resultHtml(e, lang) {
     if (!e) return '';
     const en = lang === 'en', r = e.record, awards = names[en?'en':'ko'];
+    const reference=e.reference,shownMedal=e.medal||reference?.medal;
+    const scopeName=r.scope==='theory'?(en?'Theory':'이론'):r.scope==='experiment'?(en?'Experiment':'실험'):(en?'Round':'라운드');
     const population = r.population === 'team' ? (en?'teams':'팀') : (en?'contestants':'명');
     const title = label(r.label,lang) || r.scope;
-    const cutLabel = r.cutoffKind === 'observed' ? (en?'Award-winning scores · reference':'수상자 최저점 · 참고') : (en?'Medal cutoffs':'메달 컷');
-    const cutEntries = Object.entries(r.medalCutoffs || {}).filter(([k,v]) => awards[k] && finite(v));
-    const cuts = cutEntries.map(([k,v]) => `<span class="hlcr-cut" data-tier="${k}"><i aria-hidden="true"></i>${esc(awards[k])} ${r.medalCutoffRule==='gt'?'>':'≥'} ${fmt(v)}</span>`).join('');
+    const cutLabel = reference?(en?`${scopeName} medal bands · reference`:`${scopeName} 기준 메달권 컷 · 참고`):r.cutoffKind === 'observed' ? (en?'Award-winning scores · reference':'수상자 최저점 · 참고') : (en?'Medal cutoffs':'메달 컷');
+    const cutEntries = Object.entries(reference?.cuts||r.medalCutoffs || {}).filter(([k,v]) => awards[k] && finite(v));
+    const cuts = cutEntries.map(([k,v]) => `<span class="hlcr-cut" data-tier="${k}"><i aria-hidden="true"></i>${esc(awards[k])} ${!reference&&r.medalCutoffRule==='gt'?'>':'≥'} ${fmt(v)}</span>`).join('');
     let medal = '';
-    if (e.medal) {
+    if(reference){
+      medal=reference.medal==='none'?(en?`${scopeName} · below medal bands (reference)`:`${scopeName} 기준 메달권 밖 · 참고`):
+        (en?`${scopeName} · ${awards[reference.medal]} range (reference)`:`${scopeName} 기준 ${awards[reference.medal]}권 · 참고`);
+    }else if (e.medal) {
       const observed = r.cutoffKind === 'observed';
       medal = e.medal === 'none' ? (en?'Below verified cutoffs':'확인된 수상컷 미달') : `${awards[e.medal]}${en ? (observed?' range · reference':' threshold met') : (observed?' 점수대 · 참고':' 기준 충족')}`;
     }
@@ -82,26 +157,31 @@
       e.bounded?(en?'All scores above this published coverage floor are available.':'이 점수 이상의 기록이 모두 공개되어 가상 순위를 계산할 수 있습니다.'):null,
       !e.complete&&!e.bounded&&e.n?(en?'The full-field rank is unavailable.':'전체 참가자 순위는 확인할 수 없습니다.'):null,
       r.scope!=='total'&&!r.awardScope?(en?'This round alone does not determine the overall medal.':'이 라운드 점수만으로 실제 대회 메달이 정해지지는 않습니다.'):null,
+      reference?(en?`The actual award counts (${reference.counts.gold} gold, ${reference.counts.silver} silver, ${reference.counts.bronze} bronze) are applied to scores ranked within this round. This is a round-specific reference, not an official medal allocation.`:
+        `그해 실제 금·은·동메달 ${r.population==='team'?'팀 수':'인원'}(${reference.counts.gold}·${reference.counts.silver}·${reference.counts.bronze}${r.population==='team'?'팀':'명'})을 해당 라운드의 점수 순위에 적용했습니다. 라운드별 참고 메달권이며 공식 수상 결과는 아닙니다.`):null,
       r.cutoffKind==='observed'&&medal?(en?'Observed award-winning scores, not an official cutoff declaration. Eligibility and tie rules may apply.':'공식 컷 발표가 아닌 공개 수상 점수의 관측값입니다. 자격·동점 처리 등 다른 수상 규정은 별도로 적용됩니다.'):null,
       r.note?label(r.note,lang):null
     ].filter(Boolean);
-    return `<article class="hlcr-result" data-comparison="${esc(r.id)}"${e.medal?` data-medal="${esc(e.medal)}"`:''}>
+    const rankTitle=(r.scope==='total'||r.awardScope)?(en?'Overall score rank':'총합 기준 가상 순위'):(en?`${scopeName} score rank`:`${scopeName} 기준 가상 순위`);
+    const sources=reference?{...r,sources:[...(r.sources||[]),...reference.sources].filter((s,i,a)=>a.findIndex(x=>x.url===s.url)===i)}:r;
+    return `<article class="hlcr-result" data-comparison="${esc(r.id)}"${shownMedal?` data-medal="${esc(shownMedal)}" data-medal-basis="${reference?'round_rank':esc(r.cutoffKind||'published')}"`:''}>
       <div class="hlcr-result-head"><h4>${esc(title)} <span class="hlcr-score">${fmt(e.score)}${finite(r.max)?` / ${fmt(r.max)}`:''}</span></h4>
-        ${medal?`<span class="hlcr-medal" data-medal="${esc(e.medal)}">${icons[e.medal]?`<span aria-hidden="true">${icons[e.medal]}</span> `:''}${esc(medal)}</span>`:`<span class="hlcr-scope">${en?'Score comparison':'점수 비교'}</span>`}</div>
-      <div class="hlcr-result-line"><div class="hlcr-rank"><span>${en?'Historical score rank':'대회 가상 순위'}</span> <strong>${e.rank==null?'—':`${en?'':e.tied?'공동 ':''}${e.rank}${en?'':'위'}`}</strong>${en&&e.tied?'<small>tied</small>':''}</div>
+        ${medal?`<span class="hlcr-medal" data-medal="${esc(shownMedal)}">${icons[shownMedal]?`<span aria-hidden="true">${icons[shownMedal]}</span> `:''}${esc(medal)}</span>`:`<span class="hlcr-scope">${en?'Score comparison':'점수 비교'}</span>`}</div>
+      ${e.combined?`<div class="hlcr-combined" data-combined="true"><b>${en?'Theory + experiment · automatically combined':'이론 + 실험 자동 합산'}</b><p>${e.combined.sessions.map(s=>`<a href="/#/lab/${s.id}">${esc(label(s.label,lang)||s.scope)} ${fmt(s.score)} / ${fmt(s.points)}</a>`).join(' + ')}</p><p class="hlcr-caption">${e.combined.mixedMode?(en?'Mixed timed and untimed records · reference total':'실전·시간 제한 없는 채점 기록을 합산한 참고 총점'):(en?'This result plus the latest matching result from the other round':'이번 성적표와 같은 모드의 최근 다른 라운드 성적을 합산했습니다.')}</p></div>`:''}
+      <div class="hlcr-result-line"><div class="hlcr-rank"><span>${esc(rankTitle)}</span> <strong>${e.rank==null?'—':`${en?'':e.tied?'공동 ':''}${e.rank}${en?'':'위'}`}</strong>${en&&e.tied?'<small>tied</small>':''}</div>
         ${e.rank!=null?`<span class="hlcr-context">${esc(context)}</span>`:''}
         ${e.top_pct==null?'':`<span class="hlcr-history-top">${en?'Top':'상위'} ${fmt(Math.round(e.top_pct*10)/10)}%</span>`}</div>
       ${!e.n?`<p class="hlcr-caption">${en?'Historical rank data unavailable':'순위 비교 자료 미확보'}</p>`:''}
       ${!e.complete&&!e.bounded&&e.n?`<p class="hlcr-caption">${en?'Published scores only · full-field rank unknown':'공개 점수 기준 · 전체 순위 미확인'}</p>`:''}
-      ${r.scope!=='total'&&!r.awardScope?`<p class="hlcr-caption">${en?'Round score only · medals use the overall total':'해당 라운드만 비교 · 메달은 전체 총점으로 결정'}</p>`:''}
+      ${reference?`<p class="hlcr-caption">${reference.population==='published'?(en?'Published scores only · reference medal range':`공개 ${scopeName} 점수 기준의 참고 메달권`):(en?'Reference medal range based on this round’s ranking':`${scopeName} 순위 기준의 참고 메달권`)}</p>`:r.scope!=='total'&&!r.awardScope?`<p class="hlcr-caption">${en?'Round score only · medal reference data unavailable':'해당 라운드만 비교 · 메달권 기준 자료 미확보'}</p>`:''}
       ${e.manual?`<p class="hlcr-caption hlcr-manual-note">${en?'Entered score · does not change your grade or HaslaLab standing':'직접 입력한 점수 · 채점 성적·HaslaLab 순위에 반영되지 않음'}</p>`:''}
       ${cuts?`<div class="hlcr-cuts"><span class="hlcr-cut-label">${esc(cutLabel)}</span>${cuts}</div>`:''}
       <details class="hlcr-details"><summary>${en?'Comparison details & sources':'비교 기준·출처'}</summary>
         ${e.manual?`<p>${en?'Reference comparison using your entered score; this does not change your graded result or HaslaLab sample.':'직접 입력한 점수의 참고 비교입니다. 채점 성적이나 HaslaLab 표본에는 반영되지 않습니다.'}</p>`:''}
-        ${limitations.map(note=>`<p>${esc(note)}</p>`).join('')}${sourcesHtml(r,lang)}</details>
+        ${limitations.map(note=>`<p>${esc(note)}</p>`).join('')}${sourcesHtml(sources,lang)}</details>
     </article>`;
   }
-  function sampleHtml(s, lang) {
+  function sampleHtml(s, lang, combined = false) {
     const en = lang === 'en', x = s?.sample_standing;
     if (!hasScore(s)) return '';
     const known=x&&Number.isInteger(x.n)&&x.n>0, enough=known&&x.n>1;
@@ -110,7 +190,7 @@
     const cohort=(x?.cohort|| (s.review_only?'review':'timed'))==='review'?(en?'Untimed grading & feedback':'시간 제한 없는 채점·첨삭'):(en?'Timed attempts':'시간 제한 있는 실전 응시');
     const metric=(id,title,value,extra='')=>`<div class="hlcr-metric ${extra}" data-metric="${id}"><dt>${title}</dt><dd>${value}</dd></div>`;
     return `<div class="hlcr-summary" data-cohort="${esc(x?.cohort|| (s.review_only?'review':'timed'))}"><dl class="hlcr-metrics">
-      ${metric('score',en?'Total':'총점',`${fmt(s.score)} <small>/ ${fmt(s.points)}</small>`,'hlcr-total')}
+      ${metric('score',combined?(en?'This graded round':'이번 채점'):(en?'Total':'총점'),`${fmt(s.score)} <small>/ ${fmt(s.points)}</small>`,'hlcr-total')}
       ${metric('percentage',en?'Percentage':'득점률',`${pct}<small>%</small>`)}
       ${metric('rank',en?'HaslaLab rank':'HaslaLab 순위',rank)}
       ${metric('top',en?'HaslaLab top':'HaslaLab 상위',enough&&finite(x.top_pct)?`${fmt(x.top_pct)}<small>%</small>`:'—')}
@@ -157,6 +237,7 @@
 .hlcr-manual{border:1px dashed var(--hlcr-line);border-radius:9px;background:var(--hlcr-soft);padding:10px 13px;margin:8px 0}.hlcr-manual>summary{font-size:12.5px;font-weight:650}.hlcr-manual>.hlcr-note{margin-top:9px}.hlcr-inputs{display:flex;align-items:flex-end;gap:10px 12px;flex-wrap:wrap;margin-top:10px}.hlcr label{display:flex;flex-direction:column;gap:5px;font-size:12px;max-width:100%;font-weight:600}.hlcr input{font:inherit;color:inherit;background:transparent;border:1px solid var(--hlcr-line);border-radius:6px;padding:8px 10px;width:146px;max-width:100%}.hlcr input[readonly]{opacity:.65}.hlcr button{font:inherit;font-size:12.5px;font-weight:700;color:inherit;background:transparent;border:1px solid var(--hlcr-line);border-radius:6px;padding:8px 12px;cursor:pointer}.hlcr input:focus,.hlcr button:focus-visible,.hlcr summary:focus-visible{outline:2px solid var(--accent,#637d9e);outline-offset:3px}.hlcr [data-result-error]{font-size:12px;color:#bd3d35;margin-top:5px}.hlcr [data-result-error]:empty{display:none}
 .hlcr-empty{border:1px solid var(--hlcr-line);border-radius:9px;padding:11px 13px;margin:8px 0;font-size:12px}.hlcr-empty p{font-size:12px;color:var(--hlcr-muted);margin-top:3px}.hlcr-footer{font-size:11px;color:var(--hlcr-muted);margin-top:9px!important}
 .hlcr-averages dd{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 4px;white-space:normal;line-height:1.5;padding-top:2px}
+.hlcr-combined{margin:9px 0 7px;padding-bottom:8px;border-bottom:1px dashed var(--hlcr-line);font-size:12px}.hlcr-combined p{margin-top:4px}.hlcr-combined a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:760px){.hlcr .hlcr-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hlcr-total{grid-column:1/-1;border-bottom:1px solid var(--hlcr-line);border-right:0}.hlcr-metric{padding:11px 13px}.hlcr-metric:nth-child(2),.hlcr-metric:nth-child(3){border-bottom:1px solid var(--hlcr-line)}.hlcr-metric:nth-child(3){border-right:0}.hlcr-metric dd{font-size:23px}.hlcr-total dd{font-size:28px}.hlcr-averages dd{font-size:17px;line-height:1.75}.hlcr-result{padding:11px 12px}.hlcr-result-head{align-items:flex-start}.hlcr-history-top{margin-left:0}.hlcr-section-head{align-items:flex-start}.hlcr-section-head>span{text-align:right}.hlcr-inputs>*{flex:1 1 125px}.hlcr input{width:100%}.hlcr-inputs>button{flex-grow:0}.hlcr-rank strong{font-size:22px}}
 @media print{.hlcr{--hlcr-line:#bbb;--hlcr-muted:#444;--hlcr-soft:#fff;color:#111}.hlcr-result,.hlcr-metrics{break-inside:avoid}.hlcr-medal{color:#111;border-color:#888}.hlcr input,.hlcr button{color:#111}.hlcr-coverage{display:none}}
 </style>`;
@@ -168,7 +249,7 @@
       (en?'This grade covers only part of the competition. Partial scores are not scaled to the full paper; compare a complete total below.':'대회 전체 점수로 비교해야 해요. 일부 문제 점수를 전체 총점으로 환산하지 않습니다.') :
       (en?'Verified comparison data for this year have not yet been collected.':'해당 연도의 비교 자료를 아직 확보하지 못했습니다.');
     return `${style}<section class="hlcr" aria-label="${en?'Score summary and competition comparison':'성적 요약·대회 비교'}">
-      ${sampleHtml(session,lang)}<div class="hlcr-section-head"><h3>${en?'Competition comparison':'실제 대회와 비교'}</h3><span>${esc(session.comp.toUpperCase())} ${esc(session.year)} · ${en?'reference':'참고 결과'}</span></div>
+      ${sampleHtml(session,lang,a.comparisons.some(e=>e.combined))}<div class="hlcr-section-head"><h3>${en?'Competition comparison':'실제 대회와 비교'}</h3><span>${esc(session.comp.toUpperCase())} ${esc(session.year)} · ${en?'reference':'참고 결과'}</span></div>
       ${loading?`<div class="hlcr-empty">${en?'Loading published results…':'대회 성적을 불러오는 중…'}</div>`:a.comparisons.map(e=>resultHtml(e,lang)).join('')+(explanation?`<div class="hlcr-empty">${esc(explanation)}</div>`:'')+a.totals.map(r=>manualHtml(r,session,lang)).join('')+coverageHtml(data,lang,a.records.length>0)}
       <p class="hlcr-footer">${en?'Practice-score reference · not an official competition result.':'학습용 채점에 따른 참고 비교이며 실제 대회의 공식 성적·수상을 뜻하지 않습니다.'}</p></section>`;
   }
@@ -207,5 +288,5 @@
       });
     }
   }
-  return {hasScore, taskKey, matches, evaluate, assess, sampleHtml, resultHtml, html, load, mount};
+  return {hasScore, taskKey, matches, roundReference, combinedResults, evaluate, assess, sampleHtml, resultHtml, html, load, mount};
 });

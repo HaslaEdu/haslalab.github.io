@@ -184,3 +184,85 @@ test('idempotent submission of an already graded review returns its sample witho
   assert.equal(submitted.data.session.sample_standing.n, 2); assert.equal(submitted.data.tokens, credit);
   assert.equal(sqlite.prepare('SELECT COUNT(*) AS n FROM lab_ledger').get().n, 0);
 });
+
+test('related results are private same-edition references, retaining mode and latest completion rather than best score', async () => {
+  const current = seed({ tasks: ['T1'] }), exp = { tasks: ['E1'], maxima: { E1: 20 }, sources: { E1: { sol: 'IPhO_2024_S1.pdf' } } };
+  seed({ ...exp, score: 18, graded_at: timestamp - 30 });
+  const latest = seed({ ...exp, score: 3, graded_at: timestamp + 10 });
+  seed({ ...exp, score: 19, graded_at: timestamp - 20 }); // Higher ID and mark, but an older completion.
+  const otherMode = seed({ ...exp, review: true, score: 0 });
+  seed({ ...exp, user: 2 }); seed({ ...exp, comp: 'apho' }); seed({ ...exp, year: 2025 }); seed({ ...exp, exam_key: 'ipho2024:round2' });
+  const s = await report(current), related = s.related_results;
+  assert.deepEqual(related.map(r => r.id), [latest, otherMode]);
+  assert.equal(related[0].score, 3); assert.equal(related[0].kind, 'lab'); assert.equal(related[0].review_only, false);
+  assert.equal(related[1].score, 0); assert.equal(related[1].review_only, true);
+  assert.deepEqual(related[0].task_points, { E1: 20 }); assert.equal(related[0].status, 'graded');
+  assert.ok(related.every(r => r.id !== current && r.comp === s.comp && r.year === s.year && r.exam_key === s.exam_key));
+  assert.deepEqual(Object.keys(related[0]).sort(), ['id','exam_key','comp','year','tasks','status','kind','review_only','score','points','task_points','graded_at','created_at'].sort());
+});
+
+test('many retries and newer partial sets cannot hide an older complete sibling round', async () => {
+  const current = seed({ tasks: ['E1'], sources: { E1: { sol: 'IPhO_2024_S1.pdf' } } });
+  const full = seed({ tasks: ['T3','T1','T2'], score: 24 });
+  let newest;
+  for (let i = 0; i < 80; i++) newest = seed({ tasks: ['T1'], score: 10 - i / 10, graded_at: timestamp + i });
+  const related = (await report(current)).related_results;
+  assert.equal(related.length, 2); assert.equal(related[0].id, newest); assert.ok(related.some(r => r.id === full));
+  const complete = related.find(r => r.id === full);
+  assert.deepEqual(complete.tasks, ['T1','T2','T3']); assert.equal(complete.points, 30); assert.equal(complete.kind, 'theory');
+});
+
+test('unsuccessful, qualitative, malformed and inconsistent task marks cannot mask the last valid completion', async () => {
+  const current = seed(), valid = seed({ tasks: ['E1'], sources: { E1: { sol: 'IPhO_2024_S1.pdf' } } });
+  const bad = [
+    { status: 'pending' }, { status: 'error' }, { score: null }, { score: -1 }, { score: 11 }, { points: 0 },
+    { detail: null }, { detail: '{bad' }, { detail: JSON.stringify({ tasks: 'PRIVATE_INVALID_TASK_MARKS' }) },
+    { detail: JSON.stringify({ tasks: { E1: 'PRIVATE_INVALID_MARK' } }) },
+    { detail: JSON.stringify({ tasks: { E1: { status: 'graded', score: 5, points: 10, grading_mode: 'qualitative_review' } } }) },
+    { detail: JSON.stringify({ tasks: { E1: { status: 'graded', score: 5, points: 10, why: 'no_official_points' } } }) },
+    { detail: JSON.stringify({ tasks: { E1: { status: 'pending', score: 5, points: 10 } } }) },
+    { detail: JSON.stringify({ tasks: { E1: { status: 'graded', score: 2, points: 10 } } }) },
+    { detail: JSON.stringify({ tasks: { E1: { status: 'graded', score: 5, points: 9 } } }) },
+    { detail: JSON.stringify({ tasks: { T1: { status: 'graded', score: 5, points: 10 } } }) },
+  ];
+  for (const values of bad) seed({ tasks: ['E1'], sources: { E1: { sol: 'IPhO_2024_S1.pdf' } }, ...values });
+  seed({ tasks: ['E2'], sources: { E2: 'PRIVATE_INVALID_SOURCE' } });
+  seed({ tasks: ['E3'], sources: { E3: { kind: 'PRIVATE_INVALID_KIND' } } });
+  seed({ tasks: ['E4'], sources: { E4: { sol: 'https://example.org/PRIVATE_BAD.pdf' } } });
+  seed({ tasks: ['E5'], sources: { E5: {}, _contest: { purpose: 'review' } } });
+  assert.deepEqual((await report(current)).related_results.map(r => r.id), [valid]);
+});
+
+test('selected GET, bootstrap and terminal POST share answer-free related metadata without mutations or charges', async () => {
+  const current = seed({ review: true });
+  const exp = seed({ tasks: ['E1'], review: true, detail: JSON.stringify({ tasks: { E1: { status: 'graded', score: 5, points: 10,
+    feedback: ['PRIVATE_FEEDBACK'], review: { summary: 'PRIVATE_COACH_TEXT' }, items: [{ id: 'A', points: 10, got: 5, note: 'PRIVATE_ANSWER_TEXT' }] } } }),
+    sources: { E1: { sol: 'IPhO_2024_S1.pdf' }, _private: 'PRIVATE_SOURCE_VALUE' } });
+  const before = sqlite.prepare('SELECT id,status,score,points,detail,charged FROM lab_sessions ORDER BY id').all();
+  const direct = (await report(current)).related_results;
+  const bootstrap = await request('/lab/bootstrap?id=' + current), submit = await request('/lab/sessions/' + current + '/submit', 1, { grade: true });
+  assert.deepEqual(direct.map(r => r.id), [exp]); assert.deepEqual(bootstrap.data.session.related_results, direct); assert.deepEqual(submit.data.session.related_results, direct);
+  assert.doesNotMatch(JSON.stringify(direct), /PRIVATE_|user_id|sources|detail|feedback|pages|items|rubric/);
+  assert.deepEqual(sqlite.prepare('SELECT id,status,score,points,detail,charged FROM lab_sessions ORDER BY id').all(), before);
+  assert.equal(sqlite.prepare('SELECT COUNT(*) AS n FROM lab_ledger').get().n, 0);
+});
+
+test('administrator views use the selected student owner rather than the administrator for related references', async () => {
+  const current = seed(), sameOwner = seed({ tasks: ['E1'] }); seed({ user: 20, tasks: ['E1'] });
+  sqlite.prepare("UPDATE users SET role='admin' WHERE id=20").run();
+  try {
+    assert.deepEqual((await report(current, 20)).related_results.map(r => r.id), [sameOwner]);
+    const bootstrap = await request('/lab/bootstrap?id=' + current, 20);
+    assert.equal(bootstrap.status, 200); assert.deepEqual(bootstrap.data.session.related_results.map(r => r.id), [sameOwner]);
+  } finally { sqlite.prepare("UPDATE users SET role='user' WHERE id=20").run(); }
+  assert.equal((await request('/lab/sessions/' + current, 2)).status, 404);
+});
+
+test('related metadata is bounded to 64 latest unique profiles and unavailable for unscored selected sessions', async () => {
+  const current = seed(); let newest;
+  for (let i = 1; i <= 70; i++) newest = seed({ tasks: ['E' + i] });
+  const related = (await report(current)).related_results;
+  assert.equal(related.length, 64); assert.equal(related[0].id, newest); assert.equal(new Set(related.map(r => JSON.stringify([r.tasks,r.points,r.review_only]))).size, 64);
+  const pending = seed({ status: 'pending' }), qualitative = seed({ score: null, points: null }), legacy = seed({ detail: null });
+  for (const id of [pending, qualitative, legacy]) assert.deepEqual((await report(id)).related_results, []);
+});

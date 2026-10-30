@@ -83,6 +83,36 @@ test('IBO 2024 compares raw complete theory papers without applying standardized
   assert.ok(Math.abs(sum(a) + sum(b) - sum(theory)) < 1e-6, 'both raw components reconcile with the full theory population');
 });
 
+test('complete round reference bands use official overall award counts on the same-round score distribution', () => {
+  const receipts = json('tools/results/other-receipts.json');
+  for (const [id, counts] of [
+    ['ioaa-2025-theory', {gold: 49, silver: 44, bronze: 49}],
+    ['ioaa-2025-practical', {gold: 49, silver: 44, bronze: 49}],
+    ['ibo-2024-theory', {gold: 31, silver: 57, bronze: 85}]
+  ]) {
+    const record = find(id), reference = record.medalReference;
+    assert.equal(reference.basis, 'round_rank');
+    assert.equal(reference.population, 'complete');
+    assert.deepEqual(reference.counts, counts);
+    assert.equal(record.complete, true);
+    assert.equal(record.scores.length, record.participants);
+    assert.equal(record.awardScope, false);
+    assert.equal(record.medalCutoffs, undefined, 'a round reference is not an official award boundary');
+    let cumulative = 0;
+    const scores = [...record.scores].sort((a, b) => b - a);
+    for (const award of ['gold', 'silver', 'bronze']) {
+      cumulative += counts[award];
+      assert.equal(reference.cuts[award], scores[cumulative - 1], `${id} ${award} uses this round's score boundary`);
+    }
+    assert.ok(reference.sources.every(source => source.official && source.url.startsWith('https://')));
+    assert.ok(receipts.files.some(file => [file.theoryMedalReference, file.practicalMedalReference].some(value => value &&
+      JSON.stringify(value) === JSON.stringify(reference))), 'the import receipt records the source-backed projection');
+    assert.match(record.note.en, /reference.*not official|reference.*not.*official|not official.*reference/i);
+  }
+  assert.equal(find('ibo-2024-theory-a').medalReference, undefined, 'a half-paper is not the complete theory round');
+  assert.equal(find('ibo-2024-theory-b').medalReference, undefined);
+});
+
 test('IESO preserves published raw totals only for explicit manual comparison and omits misleading medal minima', () => {
   const record = find('ieso-2026-total');
   assert.equal(record.manualOnly, true);

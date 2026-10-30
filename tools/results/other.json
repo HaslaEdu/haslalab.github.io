@@ -26433,8 +26433,34 @@
           ],
           "awardScope": false,
           "note": {
-            "ko": "이론 12문제 전체의 원점수 분포입니다. 이론만의 메달 기준은 아니며 총점 메달과 비교하지 않습니다.",
-            "en": "Raw scores for all twelve theory problems. These give theory-only score positions, not medal estimates from combined totals."
+            "ko": "이론 12문제 전체의 원점수 분포입니다. 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 이론 순위에 적용한 기준이며, 공식 이론 메달이나 총점 메달 판정이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.",
+            "en": "Raw scores for all twelve theory problems. Reference medal bands apply the actual overall gold/silver/bronze award counts to theory ranks; these are not official theory awards or combined-total medal determinations. Boundary-score ties share a reference band."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 49,
+              "silver": 44,
+              "bronze": 49
+            },
+            "cuts": {
+              "gold": 113,
+              "silver": 85,
+              "bronze": 60.5
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://ioaa2025.in/wp-content/uploads/2025/12/IOAA2025-Final-Marklist.pdf",
+                "title": "IOAA 2025 official final component marklist",
+                "official": true
+              },
+              {
+                "url": "https://ioaa2025.in/ioaa-2025-final-marklist/",
+                "title": "IOAA 2025 organiser: final marklist",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -26753,8 +26779,34 @@
           ],
           "awardScope": false,
           "note": {
-            "ko": "자료 분석 150점과 관측 150점을 합한 실기 전체입니다. 일부 관측 문제만의 점수와 비교하지 않습니다.",
-            "en": "All data analysis (150) and observation (150) combined; a single observation task is not comparable."
+            "ko": "자료 분석 150점과 관측 150점을 합한 실기 전체입니다. 일부 관측 문제만의 점수와 비교하지 않습니다. 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 실기 순위에 적용한 기준이며 공식 실기 수상이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.",
+            "en": "All data analysis (150) and observation (150) combined; a single observation task is not comparable. Reference medal bands apply actual overall gold/silver/bronze counts to complete practical ranks, not official practical awards. Boundary-score ties share a reference band."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 49,
+              "silver": 44,
+              "bronze": 49
+            },
+            "cuts": {
+              "gold": 166.5,
+              "silver": 136.5,
+              "bronze": 113
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://ioaa2025.in/wp-content/uploads/2025/12/IOAA2025-Final-Marklist.pdf",
+                "title": "IOAA 2025 official final component marklist",
+                "official": true
+              },
+              {
+                "url": "https://ioaa2025.in/ioaa-2025-final-marklist/",
+                "title": "IOAA 2025 organiser: final marklist",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -27117,8 +27169,8 @@
         ],
         "publishedCutoffYears": [],
         "limitations": {
-          "ko": "2025년 공식 최종 성적표의 288명에 대해 이론·실기·총점 전체를 검증했습니다. 이론 단독 점수에는 총점 메달 기준을 적용하지 않습니다. 다른 연도는 점수 단위와 전체 수록 범위가 검증된 뒤 추가합니다.",
-          "en": "All 288 theory, practical and total score rows in the 2025 official final marklist were checked. Combined medal thresholds do not apply to theory alone. Other editions require verified score units and population coverage before importing."
+          "ko": "2025년 공식 최종 성적표의 288명에 대해 이론·실기·총점 전체를 검증했습니다. 전체 이론·실기의 참고 메달은 실제 금·은·동 수상 인원수를 각 라운드 순위에 적용하며 총점 메달 기준과 구분합니다. 다른 연도는 점수 단위와 전체 수록 범위가 검증된 뒤 추가합니다.",
+          "en": "All 288 theory, practical and total score rows in the 2025 official final marklist were checked. Complete-theory and complete-practical reference bands apply actual medal counts to each round's ranks, separately from combined-total medal thresholds. Other editions require verified score units and population coverage before importing."
         },
         "sources": [
           {
@@ -27590,8 +27642,8 @@
             }
           ],
           "note": {
-            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 이론 점수 위치만 비교하며, 실험과 표준화 T점수를 합산해 정한 실제 메달 기준은 적용하지 않습니다. 공식 2025년 1월 수정 순위를 사용합니다.",
-            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. Compare theory score positions only; actual medals use standardized theory and practical T-scores. Uses the official January 2025 amended ranking."
+            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 공식 2025년 1월 수정 순위를 사용합니다. 참고 메달은 실제 전체 대회의 금·은·동 수상 인원수를 A+B 이론 순위에 적용한 기준이며 공식 수상이 아닙니다. 경계 점수의 동점자는 같은 참고 등급입니다.",
+            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. These are separate from the standardized theory and practical T-scores used for actual medals. Uses the official January 2025 amended ranking. Reference medal bands apply actual overall gold/silver/bronze award counts to complete A+B theory ranks, not official awards. Boundary-score ties share a reference band."
           },
           "id": "ibo-2024-theory",
           "scope": "theory",
@@ -27893,7 +27945,33 @@
             24.4,
             17.6,
             7.4
-          ]
+          ],
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 31,
+              "silver": 57,
+              "bronze": 85
+            },
+            "cuts": {
+              "gold": 61.6,
+              "silver": 52,
+              "bronze": 43.6
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://www.ibo-info.org/files/downloads/results-reports/results/IBO2024%20results%20-%20amended%20version%20January%202025.pdf",
+                "title": "IBO 2024 official amended ranking, approved 26 January 2025",
+                "official": true
+              },
+              {
+                "url": "https://www.ibo-info.org/files/downloads/results-reports/final-reports/IBO-2024%20Report.pdf",
+                "title": "IBO 2024 official report, printed page 114: two 50-question theory papers and scoring scale",
+                "official": true
+              }
+            ]
+          }
         },
         {
           "year": 2024,
@@ -27914,8 +27992,8 @@
             }
           ],
           "note": {
-            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 이론 점수 위치만 비교하며, 실험과 표준화 T점수를 합산해 정한 실제 메달 기준은 적용하지 않습니다. 공식 2025년 1월 수정 순위를 사용합니다.",
-            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. Compare theory score positions only; actual medals use standardized theory and practical T-scores. Uses the official January 2025 amended ranking."
+            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 공식 2025년 1월 수정 순위를 사용합니다.",
+            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. These are separate from the standardized theory and practical T-scores used for actual medals. Uses the official January 2025 amended ranking."
           },
           "id": "ibo-2024-theory-a",
           "scope": "round",
@@ -28237,8 +28315,8 @@
             }
           ],
           "note": {
-            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 이론 점수 위치만 비교하며, 실험과 표준화 T점수를 합산해 정한 실제 메달 기준은 적용하지 않습니다. 공식 2025년 1월 수정 순위를 사용합니다.",
-            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. Compare theory score positions only; actual medals use standardized theory and practical T-scores. Uses the official January 2025 amended ranking."
+            "ko": "공식 원점수입니다. 각 문항은 1/0.6/0.2/0점이며 A·B 각 50문항입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 공식 2025년 1월 수정 순위를 사용합니다.",
+            "en": "Official raw scores: each of the fifty questions in A and B earns 1/0.6/0.2/0 points. These are separate from the standardized theory and practical T-scores used for actual medals. Uses the official January 2025 amended ranking."
           },
           "id": "ibo-2024-theory-b",
           "scope": "round",
@@ -28552,8 +28630,8 @@
         ],
         "publishedCutoffYears": [],
         "limitations": {
-          "ko": "2024년 수정된 공식 순위표의 286명 이론 A·B 및 합계 원점수입니다. 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 다른 연도는 문제별 만점과 점수 체계를 검증한 뒤 추가합니다.",
-          "en": "Raw theory A, B and combined scores for all 286 students in the amended 2024 official ranking. These are separate from the standardized theory/practical T-scores used for medals. Other years require verified maxima and scoring rules."
+          "ko": "2024년 수정된 공식 순위표의 286명 이론 A·B 및 합계 원점수입니다. A+B 전체 이론의 참고 메달은 실제 수상 인원수를 이론 순위에 적용하며, 실제 메달을 결정한 표준화 이론·실험 T점수와 구분합니다. 반쪽인 A 또는 B에는 참고 메달을 적용하지 않습니다. 다른 연도는 문제별 만점과 점수 체계를 검증한 뒤 추가합니다.",
+          "en": "Raw theory A, B and combined scores for all 286 students in the amended 2024 official ranking. Complete A+B theory reference bands apply actual medal counts to theory ranks, separately from the standardized theory/practical T-scores used for actual medals. No reference medals apply to A or B alone. Other years require verified maxima and scoring rules."
         },
         "sources": [
           {

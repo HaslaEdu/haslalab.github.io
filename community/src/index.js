@@ -1397,7 +1397,7 @@ const labCost = s => !contestMeta(s) && labSrc(s)._half && labKind(s) !== "mixed
 const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,mime,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
-    score: s.score, points: s.points, sample_standing: null, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
+    score: s.score, points: s.points, sample_standing: null, related_results: [], started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
     exam_sec: labDur(s), scan_sec: labReview(s) ? null : LAB.scanSec, review_only: labReview(s), kind: labKind(s), cost: labCost(s) / 2, paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     ...contestPublic(s), regulation: contestMeta(s) ? CONTEST_REG : LAB_REG,
     pages: pages && pages.map(p => {
@@ -2205,12 +2205,13 @@ async function labBootstrap(env,me,url){
   ]);
   if(withActive)out.active=pubLab(active,activePages);
   if(selected){
-    const [owner,standings,reviews]=await Promise.all([
+    const [owner,standings,reviews,related]=await Promise.all([
       selected.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(selected.user_id).first(),
       labStandings(env,selected),
       isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(selected.id).all().then(r=>r.results):undefined,
+      labRelatedResults(env,selected),
     ]);
-    out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,...standings,...(reviews?{reviews}:{})};
+    out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,...standings,related_results:related,...(reviews?{reviews}:{})};
   }
   if(listIndex>=0)out.sessions=results[listIndex].results.map(s=>({...pubLab(s,null),detail:undefined,n_pages:s.n_pages}));
   return out;
@@ -2289,6 +2290,79 @@ async function labStandings(env, s) {
     max: pct1(Math.max(...values)), mine: pct1(mine), first: firsts.get(s.user_id)?.id === s.id || !firsts.has(s.user_id) };
   // Keep the legacy timed field, but never put an untimed review into it.
   return { standing: scope.cohort === 'timed' ? sample : null, sample_standing: sample };
+}
+
+/* Private references for combining complete official rounds. These are not HaslaLab sample standings.
+   The client must still match exact official component task sets/maxima and reject overlapping tasks. */
+function labRelatedMeta(s, projected) {
+  if (!s || s.status !== 'graded' || /^contest:/.test(s.exam_key) || contestMeta(s) ||
+      typeof s.score !== 'number' || !Number.isFinite(s.score) || s.score < 0 ||
+      typeof s.points !== 'number' || !Number.isFinite(s.points) || s.points <= 0 || s.score > s.points) return null;
+  let tasks, marks, sources;
+  try {
+    tasks = JSON.parse(s.tasks);
+    marks = projected === undefined ? JSON.parse(s.detail || '{}').tasks : JSON.parse(projected || '{}');
+    sources = JSON.parse(s.sources || '{}');
+  } catch { return null; }
+  if (!Array.isArray(tasks) || !tasks.length || tasks.length > 4 || tasks.some(task => typeof task !== 'string' || !LAB_TASK_RE.test(task)) ||
+      new Set(tasks).size !== tasks.length || !marks || typeof marks !== 'object' || Array.isArray(marks) ||
+      !sources || typeof sources !== 'object' || Array.isArray(sources) || sources._contest ||
+      Object.keys(marks).length !== tasks.length || Object.keys(marks).some(task => !tasks.includes(task))) return null;
+  const taskPoints = {}; let score = 0, points = 0, theory = 0;
+  for (const task of [...tasks].sort()) {
+    const row = marks[task], source = sources[task];
+    if (!row || !['graded','empty'].includes(row.status) || row.grading_mode === 'qualitative_review' || row.why === 'no_official_points' ||
+        typeof row.score !== 'number' || !Number.isFinite(row.score) || row.score < 0 ||
+        typeof row.points !== 'number' || !Number.isFinite(row.points) || row.points <= 0 || row.score > row.points) return null;
+    if (source != null && (typeof source !== 'object' || Array.isArray(source) ||
+        source.kind != null && source.kind !== 'theory' ||
+        source.sol != null && (typeof source.sol !== 'string' || !(SOL_RE.test(source.sol) || task === 'T' && labEotvosSolution(s.comp, s.year, source.sol))))) return null;
+    score += row.score; points += row.points; taskPoints[task] = row.points;
+    if (source?.kind === 'theory') theory++;
+  }
+  if (Math.abs(score - s.score) > 0.005 || Math.abs(points - s.points) > 0.005) return null;
+  return { id:s.id,exam_key:s.exam_key,comp:s.comp,year:s.year,tasks:[...tasks].sort(),status:'graded',
+    kind:theory === tasks.length ? 'theory' : theory ? 'mixed' : 'lab',review_only:sources._review === 1,
+    score:s.score,points:s.points,task_points:taskPoints,graded_at:s.graded_at,created_at:s.created_at };
+}
+async function labRelatedResults(env, s) {
+  if (!labRelatedMeta(s)) return [];
+  // Filter unsuccessful/qualitative/partial grading before choosing each profile's latest completion.
+  // Only compact task marks leave D1: answer text, images, feedback and rubric descriptions are not loaded.
+  const mark = "CASE WHEN j.type='object' THEN j.value ELSE '{}' END";
+  const rows = (await env.DB.prepare(`WITH projected AS (
+      SELECT id,user_id,exam_key,comp,year,tasks,sources,status,score,points,graded_at,created_at,
+        CASE WHEN json_valid(tasks) THEN tasks ELSE '[]' END AS task_list,
+        CASE WHEN json_type(CASE WHEN json_valid(detail) THEN detail ELSE '{}' END,'$.tasks')='object'
+          THEN json_extract(detail,'$.tasks') ELSE '{}' END AS marks,
+        CASE WHEN json_extract(CASE WHEN json_valid(sources) THEN sources ELSE '{}' END,'$._review')=1 THEN 1 ELSE 0 END AS review_mode
+      FROM lab_sessions WHERE user_id=? AND comp=? AND year=? AND exam_key=? AND id<>?
+        AND status='graded' AND score IS NOT NULL AND score>=0 AND points>0 AND score<=points
+        AND exam_key NOT LIKE 'contest:%' AND json_valid(COALESCE(sources,'{}'))
+        AND json_extract(CASE WHEN json_valid(sources) THEN sources ELSE '{}' END,'$._contest') IS NULL
+    ), qualified AS (
+      SELECT *,ROW_NUMBER() OVER(PARTITION BY tasks,points,review_mode ORDER BY COALESCE(graded_at,created_at) DESC,id DESC) AS profile_rank
+      FROM projected WHERE json_type(task_list)='array' AND json_array_length(task_list) BETWEEN 1 AND 4
+        AND json_type(marks)='object' AND (SELECT COUNT(*) FROM json_each(marks))=json_array_length(task_list)
+        AND NOT EXISTS(SELECT 1 FROM json_each(task_list) task WHERE task.type<>'text'
+          OR NOT EXISTS(SELECT 1 FROM json_each(marks) j WHERE j.key=task.value))
+        AND NOT EXISTS(SELECT 1 FROM json_each(marks) j WHERE j.type<>'object'
+          OR COALESCE(json_extract(${mark},'$.status'),'') NOT IN ('graded','empty')
+          OR json_extract(${mark},'$.grading_mode')='qualitative_review' OR json_extract(${mark},'$.why')='no_official_points'
+          OR COALESCE(json_type(${mark},'$.score'),'') NOT IN ('integer','real')
+          OR COALESCE(json_type(${mark},'$.points'),'') NOT IN ('integer','real')
+          OR json_extract(${mark},'$.score')<0 OR json_extract(${mark},'$.points')<=0
+          OR json_extract(${mark},'$.score')>json_extract(${mark},'$.points'))
+        AND ABS((SELECT SUM(json_extract(${mark},'$.score')) FROM json_each(marks) j)-score)<=0.005
+        AND ABS((SELECT SUM(json_extract(${mark},'$.points')) FROM json_each(marks) j)-points)<=0.005
+    ) SELECT id,user_id,exam_key,comp,year,tasks,sources,status,score,points,graded_at,created_at,
+      (SELECT json_group_object(j.key,json_object('status',json_extract(${mark},'$.status'),
+        'score',json_extract(${mark},'$.score'),'points',json_extract(${mark},'$.points'),
+        'grading_mode',json_extract(${mark},'$.grading_mode'),'why',json_extract(${mark},'$.why')))
+        FROM json_each(marks) j) AS task_marks
+    FROM qualified WHERE profile_rank=1 ORDER BY COALESCE(graded_at,created_at) DESC,id DESC LIMIT 64`)
+    .bind(s.user_id,s.comp,s.year,s.exam_key,s.id).all()).results;
+  return rows.map(row => labRelatedMeta(row,row.task_marks)).filter(Boolean);
 }
 
 async function labImage(req, env, pid, cors) {
@@ -2668,12 +2742,12 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "GET") {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
-    const [owner,reviews,pages,standings,tokens]=await Promise.all([
+    const [owner,reviews,pages,standings,tokens,related]=await Promise.all([
       s.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(s.user_id).first(),
       isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(s.id).all().then(x=>x.results).catch(()=>[]):undefined,
-      labPagesOf(env,s.id),labStandings(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined
+      labPagesOf(env,s.id),labStandings(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined,labRelatedResults(env,s)
     ]);
-    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,...standings,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
+    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,...standings,related_results:related,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);
@@ -2743,10 +2817,11 @@ async function lab(p, m, body, me, req, env, url) {
       }
       await labRequireJobs(env); s = await labCharge(env, s); s = await labFinalize(env, s, lang);
     }
-    const [pages, tokens, standings] = await Promise.all([
+    const [pages, tokens, standings, related] = await Promise.all([
       labPagesOf(env, s.id), labTokens(env, s.user_id), s.status === 'graded' ? labStandings(env, s) : null,
+      s.status === 'graded' ? labRelatedResults(env, s) : [],
     ]);
-    return { session: { ...pubLab(s, pages), ...(standings || {}) }, tokens, queued: s.status === "grading" };
+    return { session: { ...pubLab(s, pages), ...(standings || {}), related_results:related }, tokens, queued: s.status === "grading" };
   }
   /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
      arrive), while scanning, or later for a sitting that ended ungraded (graded at once) */

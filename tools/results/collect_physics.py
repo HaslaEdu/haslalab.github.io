@@ -14,7 +14,7 @@ import json
 import re
 import zipfile
 import xml.etree.ElementTree as ET
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import pymupdf
@@ -170,6 +170,68 @@ def observed_cutoffs(rows):
     return cuts
 
 
+def award_counts(rows):
+    """Actual published overall G/S/B awards, not fixed medal percentages."""
+    counts = Counter(r[3] for r in rows)
+    return {name: counts[code] for code, name in [("G", "gold"), ("S", "silver"), ("B", "bronze")]}
+
+
+def round_reference(item, counts, sources):
+    """Project an edition's actual medal counts onto one complete-round score.
+
+    This is explicitly a reference medal band, never an official separate-round
+    award. Incomplete score distributions stay published-population references.
+    Boundary ties share a band; no score is rescaled to a different examination.
+    """
+    assert item["scope"] in {"theory", "experiment"} and not item["awardScope"]
+    keys = ["gold", "silver", "bronze"]
+    assert set(counts) == set(keys) and all(type(counts[k]) is int and counts[k] >= 0 for k in keys)
+    if not sources or not 0 < sum(counts.values()) <= len(item["scores"]):
+        return False
+    ordered = sorted(item["scores"], reverse=True)
+    cuts, rank = {}, 0
+    for key in keys:
+        rank += counts[key]
+        if counts[key]:
+            cuts[key] = ordered[rank - 1]
+    item["medalReference"] = {
+        "basis": "round_rank", "counts": dict(counts), "cuts": cuts,
+        "population": "complete" if item["complete"] else "published",
+        "sources": list(sources),
+    }
+    return True
+
+
+def eupho2020_award_counts(data, rows):
+    """The 2020 PDF uses explicit award-section headings, not per-row labels.
+
+    Match every extracted score vector back to the established numeric table.
+    The HM heading also precedes anonymous non-award rows, so HM is not counted.
+    """
+    headings = {"gold medals": "G", "silver medals": "S", "bronze medals": "B", "honourable mentions": "H"}
+    state, seen, found = None, [], []
+    for page in pymupdf.open(stream=data, filetype="pdf"):
+        for line in page.get_text(sort=True).splitlines():
+            key = line.strip().lower()
+            if key in headings:
+                state = headings[key]
+                seen.append(state)
+            if line.strip().startswith(("MAX possible", "% from MAX")):
+                continue
+            numbers = re.findall(r"(?<![A-Za-z])\b\d+(?:[.,]\d+)?\b(?![A-Za-z])", line)
+            if len(numbers) != 21:
+                continue
+            values = [float(x.replace(",", ".")) for x in numbers]
+            theory, experiment, total = values[-1], values[-2], values[-3]
+            if close(theory + experiment, total):
+                found.append((theory, experiment, total, state))
+    assert seen == ["G", "S", "B", "H"]
+    assert sorted(r[:3] for r in found) == sorted(r[:3] for r in rows)
+    result = award_counts(found)
+    assert result == {"gold": 27, "silver": 49, "bronze": 60}
+    return result
+
+
 def ipho():
     raw = fetch(IPHO_RAW + "participants.csv", "ipho-participants.csv").decode("utf-8")
     timeline = csv.reader(io.StringIO(fetch(IPHO_RAW + "timeline.csv", "ipho-timeline.csv").decode("utf-8")))
@@ -256,8 +318,18 @@ def ipho():
                 if len(component_rows) != len(rows):
                     component_note = {"ko": note["ko"] + " 원문에서 합계와 0.2점 어긋나는 1명의 이론·실험 점수는 제외했습니다.",
                                       "en": note["en"] + " One inconsistent theory/experiment pair (0.2-point total discrepancy) is excluded."}
-                records.append(record("ipho", year, scope, maximum, [r[i] for r in component_rows], n, complete,
-                                      src, sets=paper_sets("ipho", year) if scope == "theory" else EXPERIMENT_SETS["ipho"].get(year), note=component_note))
+                item = record("ipho", year, scope, maximum, [r[i] for r in component_rows], n, complete,
+                              src, sets=paper_sets("ipho", year) if scope == "theory" else EXPERIMENT_SETS["ipho"].get(year), note=component_note)
+                count_url = minutes.get(year, "https://www.ipho-new.org/download/437/")
+                # Every gold/silver/bronze winner is included in the public
+                # database, even where non-award scores remain unpublished.
+                counts = {name: sum(p[4] == code for p in people[year])
+                          for code, name in [("G", "gold"), ("S", "silver"), ("B", "bronze")]}
+                round_reference(item, counts, [
+                    source(count_url, f"IPhO {year} official minutes: actual overall medal counts"),
+                    source(IPHO_RAW + "participants.csv", "Complete public IPhO award listing (MIT; pinned revision)", False),
+                ])
+                records.append(item)
         total = record("ipho", year, "total", 50, [r[2] for r in rows], n, complete, src, note=note if rows else {
             "ko": "공식 회의록의 총점 수상 기준만 확인되었으며 점수 분포는 확보하지 못했습니다.",
             "en": "Published overall award thresholds only; no numeric score distribution has been recovered."})
@@ -284,6 +356,8 @@ def ipho():
         "sourceRevision": IPHO_COMMIT, "completeScoreYears": sorted(full_sources),
         "limitations": {"ko": "1967–2026 공개 데이터베이스 전체를 점검했습니다. 비공식 데이터베이스의 9개 점수 연도 중 2012·2022년은 익명 비수상자 행이 포함된 공개 통합문서로 보완했습니다. 나머지는 수상자만 있습니다. 2020은 별도 IDPhO이므로 IPhO로 합치지 않았습니다.",
                         "en": "The entire 1967–2026 database was inspected. Of its nine scored editions, 2012 and 2022 were supplemented by public workbooks including anonymous non-award scores. Other editions remain awardees-only. 2020 IDPhO is separate and not merged into IPhO."},
+        "medalReferenceYears": sorted(scored),
+        "medalReferenceMethod": "Actual overall G/S/B award counts projected onto each same-round score ranking; boundary ties included. Component references are not official medals.",
         "sources": [source("https://ipho-unofficial.org/", "IPhO unofficial archive requested by the user", False),
                     source("https://www.ipho-new.org/documentations/", "Official IPhO minutes archive")]}}
 
@@ -335,6 +409,11 @@ def eupho():
             award = {"Gold": "G", "Silver": "S", "Bronze": "B"}.get(m[1], m[1]) if m else None
             rows.append((t, e, total, award))
         assert len(rows) == n, (year, len(rows), n)
+        counts = None
+        if year in {2017, 2018, 2023, 2024, 2026}:
+            counts = award_counts(rows)
+        elif year == 2020:
+            counts = eupho2020_award_counts(data, rows)
         src = [source(url, f"EuPhO {year} official final score table"),
                source("https://eupho.ee/rules/", "EuPhO rules: theory 30, experiment 20; guest awards")]
         note = {"ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
@@ -354,6 +433,8 @@ def eupho():
         for scope, maximum, idx in [("theory", 30, 0), ("experiment", 20, 1), ("total", 50, 2)]:
             item = record("eupho", year, scope, maximum, [r[idx] for r in rows], n if year != 2020 else None, year != 2020,
                           src, sets=paper_sets("eupho", year) if scope == "theory" else EXPERIMENT_SETS["eupho"].get(year) if scope == "experiment" else None, note=dict(note))
+            if scope in {"theory", "experiment"} and counts:
+                round_reference(item, counts, [source(url, f"EuPhO {year} official final table: actual G/S/B award counts")])
             if scope == "total":
                 item["components"] = components("eupho", year)
                 if year in [2024, 2026]:
@@ -384,6 +465,9 @@ def eupho():
     return {"records": records, "coverage": {"checked": CHECKED, "scoreYears": list(range(2017, 2027)),
             "completeScoreYears": sorted(y for y in EUPHO if y != 2020), "limitations": {"ko": "2019년은 수상자 총점만 공개되었습니다. 2020년 수치 행과 참가 인원에 불일치가 있습니다. 2020–2022년 결과표의 색상만으로 메달 기준을 추정하지 않았습니다.",
             "en": "2019 provides awardee totals only. 2020 has a row-count/participant-count discrepancy. Medal thresholds were not inferred from colored rows in 2020–2022."},
+            "medalReferenceYears": [2017, 2018, 2020, 2023, 2024, 2026],
+            "medalReferenceOmitted": {"2019": "No separate theory/experiment scores.", "2021": "Ordinary medal categories are color-only; special-prize labels cannot supply G/S/B counts.", "2022": "Ordinary medal categories are color-only; exact published G/S/B counts were not independently verified.", "2025": "Best/BExp/BThe replace ordinary medal labels on three rows; complete G/S/B counts remain ambiguous."},
+            "medalReferenceMethod": "Actual G/S/B award counts in the official table projected onto same-round score rankings, including source guest populations. These are reference bands, not official component awards.",
             "sources": [source("https://eupho.ee/archive/", "Official EuPhO archive covering every edition")]}}
 
 
@@ -508,8 +592,9 @@ def apho():
     data = fetch(url, "apho-2025.pdf")
     rows = []
     for t, e, total, raw in rotated_apho_rows(data):
-        m = re.search(r"\b(Gold|Silver|Bronze)\s*$", raw)
-        rows.append((t, e, total, {"Gold": "G", "Silver": "S", "Bronze": "B"}.get(m[1]) if m else None))
+        # The official 2025 table consistently spells the category "Bronz".
+        m = re.search(r"\b(Gold|Silver|Bronze|Bronz)\s*$", raw)
+        rows.append((t, e, total, {"Gold": "G", "Silver": "S", "Bronze": "B", "Bronz": "B"}.get(m[1]) if m else None))
     assert len(rows) == 169
     groups[2025] = (url, rows, None, False)
     url = "https://apho2026.kr/en/APhO_2026_ranking.pdf"
@@ -523,6 +608,11 @@ def apho():
     assert len(rows) == 161
     groups[2026] = (url, rows, 201, False)
     for year, (url, rows, n, complete) in groups.items():
+        assert award_counts(rows) == {
+            2017: {"gold": 19, "silver": 13, "bronze": 25},
+            2025: {"gold": 28, "silver": 37, "bronze": 59},
+            2026: {"gold": 29, "silver": 31, "bronze": 48},
+        }[year]
         src = [source(url, f"APhO {year} official final score table"), source(rules, "APhO statutes §9: theory 30 + experiment 20")]
         note = {"ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다.",
                 "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries."}
@@ -540,10 +630,14 @@ def apho():
                           note=dict(note))
             if year == 2025:
                 item["participantCountUncertain"] = True
+            if scope in {"theory", "experiment"}:
+                round_reference(item, award_counts(rows), [source(url, f"APhO {year} official final table: actual G/S/B award counts")])
             if scope == "total":
                 item.update(components=components("apho", year), medalCutoffs=observed_cutoffs(rows), cutoffKind="observed", medalCutoffRule="gte")
             records.append(item)
     return {"records": records, "coverage": {"checked": CHECKED, "scoreYears": sorted(groups), "completeScoreYears": [2017],
+            "medalReferenceYears": sorted(groups),
+            "medalReferenceMethod": "Actual G/S/B award counts from each official final table projected onto same-round score rankings; only the published score population is used for incomplete editions. Not official component awards.",
             "limitations": {"ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 수상자 점수만 있습니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
                            "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees only. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."},
             "sources": [source("https://apho2019.asi.edu.au/2019-awards-list-2/", "Official 2019 result candidate excluded pending reliable extraction"),
@@ -554,5 +648,10 @@ if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     result = {"schema": 1, "checked": CHECKED, "competitions": {"ipho": ipho(), "eupho": eupho(), "nbpho": nbpho(), "apho": apho()}}
     (OUT / "physics.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (OUT / "physics-receipts.json").write_text(json.dumps({"checked": CHECKED, "sources": RECEIPTS}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    references = [{"record": r["id"], "method": "same-round descending score at cumulative actual G/S/B award counts",
+                   "scoreCount": len(r["scores"]), "counts": r["medalReference"]["counts"],
+                   "cuts": r["medalReference"]["cuts"], "population": r["medalReference"]["population"],
+                   "tieRule": "all scores equal to the boundary remain in the same reference band"}
+                  for c in result["competitions"].values() for r in c["records"] if "medalReference" in r]
+    (OUT / "physics-receipts.json").write_text(json.dumps({"checked": CHECKED, "sources": RECEIPTS, "medalReferences": references}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print({key: len(value["records"]) for key, value in result["competitions"].items()})

@@ -57,6 +57,23 @@ def validate(record):
     if cuts:
         require(record.get('awardScope') is True, 'partial component scores cannot award overall medals')
         require(record.get('cutoffKind') in ('published', 'observed'), 'cutoff provenance must be explicit')
+    reference = record.get('medalReference')
+    if reference is not None:
+        require(record['scope'] in ('theory', 'experiment') and not record.get('awardScope') and not record.get('manualOnly'), 'reference medal bands apply only to a known component scale')
+        require(reference.get('basis') == 'round_rank', 'unknown component reference method')
+        require(reference.get('population') == ('complete' if record['complete'] else 'published'), 'reference population must match score coverage')
+        counts, ref_cuts = reference.get('counts', {}), reference.get('cuts', {})
+        tiers = ('gold', 'silver', 'bronze')
+        require(set(counts) == set(tiers) and all(type(counts[k]) is int and counts[k] >= 0 for k in tiers), 'verified G/S/B award counts required')
+        require(0 < sum(counts.values()) <= len(scores), 'award reference ranks must be covered by the published component scores')
+        ranked, boundary, expected = sorted(scores, reverse=True), 0, {}
+        for tier in tiers:
+            boundary += counts[tier]
+            if counts[tier]:
+                expected[tier] = ranked[boundary - 1]
+        require(set(ref_cuts) == set(expected) and all(number(ref_cuts[k]) and abs(ref_cuts[k] - value) < 1e-7 for k, value in expected.items()), 'reference cuts must use cumulative award counts on this component, preserving ties')
+        proof = reference.get('sources', [])
+        require(bool(proof) and all(isinstance(s.get('url'), str) and s['url'].startswith(('https://', 'http://')) and type(s.get('official')) is bool for s in proof), 'award-count sources required for component reference')
     components = record.get('components', [])
     require(isinstance(components, list), 'components must be a list')
     component_ids = set()
