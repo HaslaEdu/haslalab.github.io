@@ -4,9 +4,9 @@ const block=source.slice(source.indexOf('const AR_MODEL_PIPELINES ='));
 const escape=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pipelines=['gemini-gemini','gemini-deepseek','deepseek-deepseek'].map(id=>({id,available:true,ocr:{provider:id.split('-')[0],model:'ocr-model'},grading:{provider:id.split('-')[1],model:'grading-model'}}));
 function harness(role='admin'){
-  const fields={pipeline:{value:'gemini-deepseek'},problem:{value:'Find x.'},rubric:{value:'x=2 is worth 10.'},points:{value:'10'},images:{files:[new Blob(['test'],{type:'image/jpeg'})]}};
+  const fields={mode:{value:'manual'},pipeline:{value:'gemini-deepseek'},problem:{value:'Find x.'},rubric:{value:'x=2 is worth 10.'},points:{value:'10'},images:{files:[new Blob(['test'],{type:'image/jpeg'})]}};
   const controls={disabled:false},form={elements:{namedItem:n=>fields[n]},events:{},querySelector:()=>controls,addEventListener:(n,f)=>form.events[n]=f};
-  const nodes={arModelTestForm:form,arModelStatus:{},arModelResults:{innerHTML:''},arModelEmpty:{},arModelPhotos:{innerHTML:''}};
+  const nodes={arModelTestForm:form,arModelStatus:{},arModelResults:{innerHTML:''},arModelEmpty:{},arModelPhotos:{innerHTML:''},arModelManualFields:{},arModelRun:{}};
   const root={innerHTML:'',querySelector:q=>nodes[q.slice(1)]};
   const calls=[],posts=[];let alive=true;
   const result={pipeline:'gemini-deepseek',ocr:{text:'<script>OCR</script>',provider:'gemini',model:'ocr-model',ms:10},grading:{status:'graded',score:8,points:10,feedback:'<img onerror=alert(1)>',provider:'deepseek',model:'grading-model',ms:20},usage:{calls:2,input_tokens:20,output_tokens:30,cached_tokens:0},elapsed_ms:30};

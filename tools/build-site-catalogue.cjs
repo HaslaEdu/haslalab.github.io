@@ -44,6 +44,11 @@ for(const [comp,competition]of Object.entries(DATA))for(const year of competitio
 }
 outputs.set('community/src/lab-pair-catalog.js',generated+'export const LAB_PAIR_CATALOGUE='+JSON.stringify(pairProfiles)+';\n'+
   'export const LAB_MIXED_CATALOGUE='+JSON.stringify(mixedProfiles)+';\n');
+const {buildModelTestCatalogue}=require('./model-test-catalogue.cjs');
+const modelTestExams=buildModelTestCatalogue(DATA,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
+const modelTestVersion=digest(JSON.stringify(modelTestExams)+read('pdf-assets.json'));
+outputs.set('community/src/model-test-catalog.js',generated+'export const MODEL_TEST_CATALOGUE_VERSION='+JSON.stringify(modelTestVersion)+';\n'+
+  'export const MODEL_TEST_EXAMS='+JSON.stringify(modelTestExams)+';\n');
 const dataKeys=[...new Set([...Object.keys(THEORY),...Object.keys(window.THEORY_META||{}),...Object.keys(window.GENERAL||{})])];
 for(const key of dataKeys){
   const name='catalogue/theory-'+key+'.js';

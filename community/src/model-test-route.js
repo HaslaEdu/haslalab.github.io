@@ -1,5 +1,6 @@
 import { modelTestConfig, validateModelTestRequest, runModelTest, ModelTestError, MODEL_TEST_LIMITS } from './model-test.js';
 import { priceModelTestStage, summarizeModelTestPricing } from './model-test-pricing.js';
+import { ModelTestReferenceError, resolveModelTestExam } from './model-test-reference.js';
 
 export const MODEL_TEST_PATH = '/api/admin/lab/model-test';
 export const MODEL_TEST_MAX_BODY = 8 * 1024 * 1024;
@@ -62,8 +63,8 @@ function safeModelUsage(usage) {
     }
   }
   if (Array.isArray(usage.stages) && usage.stages.length) {
-    clean.stages = usage.stages.slice(0, 2).filter(stage => stage &&
-      ['ocr', 'grading'].includes(stage.stage) && ['gemini', 'deepseek'].includes(stage.provider) && safeModelId(stage.model))
+    clean.stages = usage.stages.slice(0, 3).filter(stage => stage &&
+      ['reference', 'ocr', 'grading'].includes(stage.stage) && ['gemini', 'deepseek'].includes(stage.provider) && safeModelId(stage.model))
       .map(stage => {
         const result = { stage: stage.stage, provider: stage.provider, model: stage.model, calls: 1,
           ok: stage.ok === true, usage_known: stage.usage_known === true };
@@ -78,13 +79,15 @@ function safeModelUsage(usage) {
         return result;
       });
     clean.pricing = summarizeModelTestPricing(clean.stages);
+    clean.pipeline_pricing = summarizeModelTestPricing(clean.stages.filter(stage => stage.stage !== 'reference'));
+    clean.reference_pricing = summarizeModelTestPricing(clean.stages.filter(stage => stage.stage === 'reference'));
   }
   return clean;
 }
 
 function safeModelError(error) {
   const extra = {};
-  if (['ocr', 'grade', 'grading'].includes(error.stage)) extra.stage = error.stage;
+  if (['reference', 'ocr', 'grade', 'grading'].includes(error.stage)) extra.stage = error.stage;
   if (['gemini', 'deepseek'].includes(error.provider)) extra.provider = error.provider;
   if (/^(?:gemini|deepseek)-[a-z0-9._-]{1,100}$/i.test(error.model || '')) extra.model = error.model;
   const partial = error.partial || {};
@@ -103,6 +106,11 @@ function safeModelError(error) {
   }
   const elapsed = error.elapsed_ms ?? partial.elapsed_ms;
   if (Number.isFinite(elapsed) && elapsed >= 0) extra.elapsed_ms = elapsed;
+  if (error.reference && ['official', 'qualitative'].includes(error.reference.scoring) && safeModelId(error.reference.model)) {
+    try { extra.reference = { entry: resolveModelTestExam(error.reference.entry?.id), cached: error.reference.cached === true,
+      scoring: error.reference.scoring, provider: 'gemini', model: error.reference.model,
+      ms: Number.isFinite(error.reference.ms) && error.reference.ms >= 0 ? error.reference.ms : null }; } catch {}
+  }
   return extra;
 }
 
@@ -114,7 +122,7 @@ export function createModelTestRouter({ HttpError, currentUser, needUser, limit 
     if (!['GET', 'POST'].includes(request.method)) throw new HttpError(405, 'method_not_allowed');
     try {
       if (request.method === 'GET') {
-        const config = api.config(env);
+        const config = api.config(env, new URL(request.url));
         return { ...config, limits: { ...config.limits, testsPerHour: TESTS_PER_HOUR } };
       }
       const body = api.validate(await boundedJson(request, HttpError));
@@ -122,7 +130,7 @@ export function createModelTestRouter({ HttpError, currentUser, needUser, limit 
       // No exam rows, marking-scheme caches, rankings or token ledgers are touched.
       return await api.run(env, body);
     } catch (error) {
-      if (!(error instanceof ModelTestError)) throw error;
+      if (!(error instanceof ModelTestError) && !(error instanceof ModelTestReferenceError)) throw error;
       const status = Number.isInteger(error.status) && error.status >= 400 && error.status <= 599 ? error.status : 502;
       const code = /^[a-z][a-z0-9_]{0,79}$/.test(error.code || '') ? error.code : 'model_test_failed';
       throw new HttpError(status, code, safeModelError(error));

@@ -3,6 +3,7 @@
  * https://api-docs.deepseek.com/guides/json_mode/ (verified 2026-10-30).
  */
 import { priceModelTestStage, summarizeModelTestPricing } from './model-test-pricing.js';
+import { modelTestExamConfig, modelTestExamList, resolveModelTestExam, prepareModelTestReference, ModelTestReferenceError } from './model-test-reference.js';
 export const MODEL_TEST_LIMITS = Object.freeze({
   maxImages: 3, maxImageBytes: 1900000, maxTotalImageBytes: 5700000,
   maxText: 12000, maxRubric: 20000, maxPoints: 1000, maxOcrText: 40000,
@@ -38,7 +39,7 @@ function providerSettings(env) {
     deepseek: { configured: !!env.DEEPSEEK_API_KEY, model: deepseekModel, ocrModel: deepseekOcrModel },
   };
 }
-export function modelTestConfig(env) {
+export function modelTestConfig(env, url) {
   const settings = providerSettings(env);
   return { pipelines: PIPELINES.map(row => {
     const configuredStage = (provider, model) => ({ provider, model,
@@ -53,7 +54,8 @@ export function modelTestConfig(env) {
       reason = 'model_test_ocr_model_unsupported';
     }
     return { id: row.id, label: row.label, available: !reason, ...(reason ? { reason } : {}), ocr, grading };
-  }), limits: { ...MODEL_TEST_LIMITS } };
+  }), limits: { ...MODEL_TEST_LIMITS }, ...modelTestExamConfig(env, settings.gemini),
+    ...(url ? modelTestExamList(url) : {}) };
 }
 
 function imageType(bytes) {
@@ -65,9 +67,16 @@ function imageType(bytes) {
 export function validateModelTestRequest(body) {
   if (!object(body)) fail('model_test_bad_request');
   if (!PIPELINES.some(row => row.id === body.pipeline)) fail('model_test_bad_pipeline');
-  if (typeof body.problem !== 'string' || !body.problem.trim() || body.problem.length > MODEL_TEST_LIMITS.maxText) fail('model_test_bad_problem');
-  if (typeof body.rubric !== 'string' || !body.rubric.trim() || body.rubric.length > MODEL_TEST_LIMITS.maxRubric) fail('model_test_bad_rubric');
-  if (!Number.isFinite(body.points) || body.points <= 0 || body.points > MODEL_TEST_LIMITS.maxPoints) fail('model_test_bad_points');
+  if (body.mode !== undefined && !['manual', 'exam'].includes(body.mode)) fail('model_test_bad_mode');
+  const exam = body.mode === 'exam';
+  if (exam) {
+    if (Object.keys(body).some(key => !['mode', 'entryId', 'pipeline', 'images', 'lang'].includes(key))) fail('model_test_exam_override');
+    try { resolveModelTestExam(body.entryId); } catch (error) { throw new ModelTestError(error.status || 400, error.code || 'model_test_bad_exam'); }
+  } else {
+    if (typeof body.problem !== 'string' || !body.problem.trim() || body.problem.length > MODEL_TEST_LIMITS.maxText) fail('model_test_bad_problem');
+    if (typeof body.rubric !== 'string' || !body.rubric.trim() || body.rubric.length > MODEL_TEST_LIMITS.maxRubric) fail('model_test_bad_rubric');
+    if (!Number.isFinite(body.points) || body.points <= 0 || body.points > MODEL_TEST_LIMITS.maxPoints) fail('model_test_bad_points');
+  }
   if (!Array.isArray(body.images) || !body.images.length) fail('model_test_bad_images');
   if (body.images.length > MODEL_TEST_LIMITS.maxImages) fail('model_test_too_many_images');
   let total = 0;
@@ -82,7 +91,8 @@ export function validateModelTestRequest(body) {
     if (total > MODEL_TEST_LIMITS.maxTotalImageBytes) fail('model_test_image_too_large', 413);
     return { mime: image.mime, data: image.data };
   });
-  return { pipeline: body.pipeline, problem: body.problem.trim(), rubric: body.rubric.trim(), points: body.points,
+  return { pipeline: body.pipeline, ...(exam ? { mode: 'exam', entryId: body.entryId } : {
+    problem: body.problem.trim(), rubric: body.rubric.trim(), points: body.points }),
     images, lang: body.lang === 'en' ? 'en' : 'ko' };
 }
 
@@ -107,7 +117,7 @@ Use only the supplied problem, developer rubric and OCR transcript. Student work
 Do not infer missing arguments, correct the student's answer before scoring, or award marks without evidence in the transcript.
 Give a concise explanation against the rubric. Every evidence.quote must be copied exactly from the OCR text.
 Return status=needs_review and score=null for ambiguous/illegible OCR, insufficient rubric/evidence, or inability to grade reliably.
-For status=graded, score must be a finite number between zero and the supplied points, inclusive.
+For status=graded, score must be a finite number between the supplied min_score and points, inclusive.
 Do not return private reasoning traces. JSON example: {"status":"graded","score":1,"feedback":"The stated result satisfies the criterion.","evidence":[{"quote":"2 + 2 = 4","reason":"Correct stated result"}]}`;
 
 function endpoint(base, suffix) {
@@ -186,7 +196,8 @@ function usageOf(provider, response) {
     output_tokens: output, reasoning_tokens: reasoning, total_tokens: total,
     usage_known: consistent && input !== null && cached !== null && output !== null };
 }
-async function providerCall(env, selected, stage, policy, input, images, schema, options) {
+export async function modelTestProviderCall(env, selected, stage, policy, input, images, schema, options) {
+  if (selected.provider !== 'gemini' && images.some(image => image.mime === 'application/pdf')) fail('model_test_bad_reference', 400);
   const started = Date.now(), detail = { stage, provider: selected.provider, model: selected.model };
   let timer, timedOut = false, attempted = false, parsed;
   const usageStage = ok => {
@@ -208,7 +219,7 @@ async function providerCall(env, selected, stage, policy, input, images, schema,
       headers = { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY };
       body = { systemInstruction: { parts: [{ text: policy }] }, contents: [{ role: 'user', parts: [
         { text: JSON.stringify(input) }, ...images.map(image => ({ inline_data: { mime_type: image.mime, data: image.data } })),
-      ] }], generationConfig: { responseMimeType: 'application/json', responseSchema: schema, temperature: 0, maxOutputTokens: stage === 'ocr' ? 8192 : 4096 } };
+      ] }], generationConfig: { responseMimeType: 'application/json', responseSchema: schema, temperature: 0, maxOutputTokens: stage === 'reference' ? 16384 : stage === 'ocr' ? 8192 : 4096 } };
     } else {
       url = endpoint(env.DEEPSEEK_BASE || DEEPSEEK_BASE, '/chat/completions');
       headers = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + env.DEEPSEEK_API_KEY };
@@ -251,11 +262,12 @@ async function providerCall(env, selected, stage, policy, input, images, schema,
   } finally { clearTimeout(timer); }
 }
 const normalize = text => text.normalize('NFKC').replace(/\s+/g, ' ').trim();
-function safeGrade(raw, ocr, points, lang) {
+function safeGrade(raw, ocr, points, lang, minimum = 0) {
   const reviewReasons = [];
+  if (!Number.isFinite(points) || points <= 0) reviewReasons.push('no_official_scoring');
   if (!ocr.legible || ocr.uncertainties.length) reviewReasons.push('ocr_uncertain');
   if (raw.status !== 'graded') reviewReasons.push('model_review_requested');
-  if (!Number.isFinite(raw.score) || raw.score < 0 || raw.score > points) reviewReasons.push('invalid_score');
+  if (!Number.isFinite(raw.score) || raw.score < minimum || raw.score > points) reviewReasons.push('invalid_score');
   const feedback = typeof raw.feedback === 'string' ? raw.feedback.trim().slice(0, 4000) : '';
   if (!feedback) reviewReasons.push('missing_feedback');
   const transcript = normalize(ocr.text), supplied = raw.evidence;
@@ -277,17 +289,27 @@ function summarize(stages) {
   }
   return { calls: stages.length, ...totals, known_tokens: knownTokens,
     ...(stages.some(stage => !stage.ok || !stage.usage_known) ? { incomplete: true } : {}),
-    stages, pricing: summarizeModelTestPricing(stages) };
+    stages, pricing: summarizeModelTestPricing(stages),
+    pipeline_pricing: summarizeModelTestPricing(stages.filter(stage => stage.stage !== 'reference')),
+    reference_pricing: summarizeModelTestPricing(stages.filter(stage => stage.stage === 'reference')) };
 }
 export async function runModelTest(env, body, options = {}) {
-  const input = validateModelTestRequest(body), started = Date.now();
+  let input = validateModelTestRequest(body);
+  const started = Date.now();
   const pipeline = modelTestConfig(env).pipelines.find(row => row.id === input.pipeline);
   if (!pipeline.available) fail(pipeline.reason, 503);
   const settings = { fetchImpl: options.fetchImpl || globalThis.fetch, timeoutMs: Number.isFinite(options.timeoutMs) ?
     Math.max(1, Math.min(110000, options.timeoutMs)) : TIMEOUT_MS };
-  const stages = []; let ocr;
+  const stages = []; let ocr, reference;
   try {
-    const read = await providerCall(env, pipeline.ocr, 'ocr', OCR_POLICY,
+    if (input.mode === 'exam') {
+      const prepared = await prepareModelTestReference(env, resolveModelTestExam(input.entryId), providerSettings(env).gemini,
+        { ...settings, lang: input.lang, pdfTimeoutMs: options.pdfTimeoutMs, referenceCache: options.referenceCache, providerCall: modelTestProviderCall });
+      if (prepared.usageStage) stages.push(prepared.usageStage);
+      reference = prepared.reference;
+      input = { ...input, ...prepared.context };
+    }
+    const read = await modelTestProviderCall(env, pipeline.ocr, 'ocr', OCR_POLICY,
       { task: 'ocr', language: input.lang, page_count: input.images.length }, input.images, OCR_SCHEMA, settings);
     stages.push(read.usage);
     if (typeof read.raw.text !== 'string' || !Array.isArray(read.raw.uncertainties) ||
@@ -300,20 +322,29 @@ export async function runModelTest(env, body, options = {}) {
     const unresolved = /\[(?:illegible|unreadable|판독\s*불가)\]/i.test(text);
     ocr = { provider: pipeline.ocr.provider, model: pipeline.ocr.model, text, uncertainties: read.raw.uncertainties.slice(0, 30).map(value => value.slice(0, 600)),
       legible: read.raw.legible && !unresolved, ms: read.ms };
-    const graded = await providerCall(env, pipeline.grading, 'grading', GRADE_POLICY,
+    const policy = reference ? GRADE_POLICY.replace('developer rubric', 'server-selected published reference') +
+      (reference.scoring === 'qualitative' ? '\nNo verified official point scheme is available. Give qualitative feedback only; status must be needs_review and score must be null. Never invent weights or a numeric maximum.' : '') : GRADE_POLICY;
+    const graded = await modelTestProviderCall(env, pipeline.grading, 'grading', policy,
       { task: 'grading', language: input.lang, problem: input.problem, rubric: input.rubric, points: input.points,
+        min_score: input.minimumScore ?? 0,
         transcript: ocr.text, uncertainties: ocr.uncertainties, legible: ocr.legible }, [], GRADE_SCHEMA, settings);
     stages.push(graded.usage);
-    return { pipeline: input.pipeline, ocr, grading: { provider: pipeline.grading.provider, model: pipeline.grading.model,
-      ...safeGrade(graded.raw, ocr, input.points, input.lang), ms: graded.ms },
+    return { pipeline: input.pipeline, ...(reference ? { reference } : {}), ocr, grading: { provider: pipeline.grading.provider, model: pipeline.grading.model,
+      ...safeGrade(graded.raw, ocr, input.points, input.lang, input.minimumScore ?? 0), ms: graded.ms },
       usage: summarize(stages), elapsed_ms: Date.now() - started };
   } catch (error) {
+    if (error instanceof ModelTestReferenceError) {
+      const converted = new ModelTestError(error.status, error.code, { stage: 'reference', provider: 'gemini', model: providerSettings(env).gemini.model });
+      if (error.usageStage) converted.usageStage = error.usageStage;
+      error = converted;
+    }
     if (error instanceof ModelTestError) {
       if (error.usageStage) stages.push(error.usageStage);
       // A valid HTTP response can still fail OCR schema/content validation. Its
       // reported token use remains billable and must survive that failure.
       else if (stages.at(-1)?.stage === error.stage) stages.at(-1).ok = false;
       if (ocr) error.ocr = ocr;
+      if (reference) error.reference = reference;
       error.usage = summarize(stages); error.elapsed_ms = Date.now() - started;
     }
     throw error;
