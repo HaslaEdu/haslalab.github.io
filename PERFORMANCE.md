@@ -18,7 +18,7 @@ The site keeps the existing GitHub Pages front end and Cloudflare Worker/D1/R2 s
 
 ## Deployment and verification
 
-The existing `deploy-worker.yml` workflow runs `community/provision-jobs.mjs` before deploying. It reuses the two named queues and applies only the additive `0013_lab_jobs.sql` schema. Authentication, permission or network errors fail deployment instead of silently disabling grading. Both Wrangler entry points declare the same queue binding and consumer.
+The existing `deploy-worker.yml` workflow runs `community/provision-jobs.mjs` before deploying. It reuses the two named queues; the fixed additive schema documented in `0013_lab_jobs.sql` initializes once through the existing Worker D1 binding. This does not require the deployment token to manage or import databases. Queue authentication, permission or network errors fail deployment instead of silently disabling grading. Both Wrangler entry points declare the same queue binding and consumer. The minute recovery sweep retries stranded outbox work, while photo cleanup runs only every fifteen minutes.
 
 Use `Server-Timing` (`db` and `total`), `X-Edge-Cache` and `cf-placement` to separate Worker work, database round trips and network latency. Database timings can overlap and must not be added to elapsed response time. Compare first loads with warm loads, and cached public requests with authenticated requests. Do not spend production tokens for a performance test; use the SQLite and fake-provider integration suites.
 

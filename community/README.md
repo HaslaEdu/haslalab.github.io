@@ -2,7 +2,7 @@
 
 ## 지연·트래픽 관리
 
-현재 배포는 `.github/workflows/deploy-worker.yml`과 `wrangler deploy`를 사용합니다. ESM 의존 모듈, D1, R2, `LAB_JOBS` 큐를 함께 유지해야 하므로 아래의 과거 대시보드 붙여넣기 안내 대신 이 워크플로를 사용하세요. 배포 전 `provision-jobs.mjs`가 기존 자격 증명으로 작업 큐와 추가 작업 테이블을 준비하며 권한·통신 오류는 배포를 중단합니다. 성능 원칙과 확인 방법은 [PERFORMANCE.md](../PERFORMANCE.md)에 있습니다.
+현재 배포는 `.github/workflows/deploy-worker.yml`과 `wrangler deploy`를 사용합니다. ESM 의존 모듈, D1, R2, `LAB_JOBS` 큐를 함께 유지해야 하므로 아래의 과거 대시보드 붙여넣기 안내 대신 이 워크플로를 사용하세요. 배포 전 `provision-jobs.mjs`가 기존 자격 증명으로 작업 큐를 준비하며 권한·통신 오류는 배포를 중단합니다. 고정된 추가 작업 테이블은 기존 D1 바인딩에서 한 번 초기화하므로 배포 토큰에 D1 관리·가져오기 권한을 추가할 필요가 없습니다. 성능 원칙과 확인 방법은 [PERFORMANCE.md](../PERFORMANCE.md)에 있습니다.
 
 ## 2026-10-30: 하슬라논술과 같은 스캔 · Upstage 원문 처리
 

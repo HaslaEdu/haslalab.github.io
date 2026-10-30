@@ -3,7 +3,7 @@
  */
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'..'),check=process.argv.includes('--check');
-const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const read=f=>fs.readFileSync(path.join(root,f),'utf8').replace(/\r\n/g,'\n');
 const digest=s=>crypto.createHash('sha256').update(s).digest('hex').slice(0,12);
 const window={},scope={window,URL,URLSearchParams,localStorage:{getItem:()=>null},console};
 vm.createContext(scope);

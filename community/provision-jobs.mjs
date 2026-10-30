@@ -1,5 +1,6 @@
 // Called by the existing deployment workflow, using its existing Cloudflare credential.
-// Never ignores permission/network errors, or reapplies unrelated historical migrations.
+// Never ignores permission/network errors. The fixed additive job schema initializes through
+// the Worker's existing D1 binding; this deploy token needs no D1 management/import permission.
 import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
@@ -13,9 +14,7 @@ export async function provision(run, log = console.log) {
     if (result.code !== 0 && !alreadyExists(result)) throw new Error(`Cannot provision ${queue}: ${result.output}`);
     log(`${queue}: ${result.code === 0 ? 'created' : 'already configured'}`);
   }
-  const migration = await run(['d1', 'execute', 'haslalab-community', '--remote', '--yes', '--file', 'migrations/0013_lab_jobs.sql']);
-  if (migration.code !== 0) throw new Error(`Cannot prepare job storage: ${migration.output}`);
-  log('Job storage is ready.');
+  log('Queue resources are ready; fixed job tables initialize through the existing D1 binding.');
 }
 
 function runWrangler(args) {
