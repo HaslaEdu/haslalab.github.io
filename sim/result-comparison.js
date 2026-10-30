@@ -100,8 +100,11 @@
     const placement = x.n < 2 || !finite(x.top_pct) ?
       (en ? `Sample: ${x.n}. More comparable candidates are needed to report a percentile.` : `현재 표본 ${x.n}명입니다. 상위 비율을 표시하려면 비교 표본이 더 필요합니다.`) :
       (en ? `Rank ${x.rank} of ${x.n} · Top ${fmt(x.top_pct)}%` : `${x.n}명 중 ${x.rank}위 · 상위 ${fmt(x.top_pct)}%`);
+    const statistics=[finite(x.mine)?`${en?'Your percentage':'내 득점률'} ${fmt(x.mine)}%`:null,
+      x.n>1&&finite(x.avg)?`${en?'Sample average':'표본 평균'} ${fmt(x.avg)}%`:null,
+      x.n>1&&finite(x.max)?`${en?'Sample best':'표본 최고'} ${fmt(x.max)}%`:null].filter(Boolean).join(' · ');
     return `<article class="hlcr-result" data-cohort="${esc(x.cohort)}"><h4>${en?'HaslaLab sample':'HaslaLab 표본'}</h4>
-      <p><b>${esc(placement)}</b></p><p class="hlcr-note">${esc(cohort)} · ${en?'Same contest, year, tasks and marking scale; one first graded attempt per person. Ties share a rank.':'같은 대회·연도·문항·배점의 1인 첫 채점 기준입니다. 동점은 같은 순위로 계산합니다.'}</p>
+      <p><b>${esc(placement)}</b></p>${statistics?`<p class="hlcr-note">${esc(statistics)}</p>`:''}<p class="hlcr-note">${esc(cohort)} · ${en?'Same contest, year, tasks and marking scale; one first graded attempt per person. Ties share a rank.':'같은 대회·연도·문항·배점의 1인 첫 채점 기준입니다. 동점은 같은 순위로 계산합니다.'}</p>
       ${x.first===false?`<p class="hlcr-note">${en?'This repeat attempt is compared with other candidates’ first graded attempts.':'이번 재응시 점수를 다른 응시자의 첫 채점 결과와 비교했습니다.'}</p>`:''}</article>`;
   }
   function manualHtml(record, session, lang) {

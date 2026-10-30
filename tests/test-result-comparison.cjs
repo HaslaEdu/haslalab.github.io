@@ -93,10 +93,11 @@ test('HaslaLab cohorts and insufficient samples are labelled separately from his
   assert.match(comparison.sampleHtml(first,'ko'),/현재 표본 1명/);
   assert.match(comparison.sampleHtml(first,'ko'),/시간 제한 없는 채점·첨삭/);
   assert.doesNotMatch(comparison.sampleHtml(first,'ko'),/상위 100%/);
-  const s=session({sample_standing:{cohort:'timed',n:20,rank:3,top_pct:15,first:false}});
+  const s=session({sample_standing:{cohort:'timed',n:20,rank:3,top_pct:15,mine:83.3,avg:60,max:100,first:false}});
   assert.match(comparison.sampleHtml(s,'en'),/Rank 3 of 20 · Top 15%/);
   assert.match(comparison.sampleHtml(s,'en'),/Timed attempts/);
   assert.match(comparison.sampleHtml(s,'en'),/repeat attempt/);
+  assert.match(comparison.sampleHtml(s,'en'),/Your percentage 83.3% · Sample average 60% · Sample best 100%/);
 });
 
 test('source attribution, unavailable editions and text escaping stay honest',()=>{
