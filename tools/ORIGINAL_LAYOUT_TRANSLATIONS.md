@@ -70,3 +70,13 @@ is a byte-identical compatibility alias. Both languages retain the original
 seven figures, mathematical glyphs and source font programs. The final files
 pass both MuPDF and Poppler checks outside translated prose, and each joined
 page must render identically to its reviewed proof.
+
+CPhO 2006 uses the corresponding `cpho_2006_original_build.py` commands and all
+four reviewed pages. Its source SHA-256 is
+`4ca77258299918a44f26320027466b81cc70c97e7e467ee190282be0f4516042`.
+The original page-2 image covers part of the footer. The translated footer
+retains that source stacking order; the visibility audit records those same
+occluded components separately and requires zero unexpected hidden components.
+Only the raster Chinese caption character is overlaid; the original numeric
+caption glyphs and all diagram geometry remain unchanged. The inferred raster
+font size and baseline are documented in `raster-caption-provenance.json`.
