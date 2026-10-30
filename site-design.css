@@ -361,6 +361,9 @@ html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#eb
    focus trapping, Escape and the inert background. */
 body.hl-site .hl-more{border:0;padding:0;background:none;color:var(--graphite);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
 body.hl-site .hl-more:hover{color:var(--laser)}
+body.hl-site .hl-panel-actions,body.hl-site .hl-mail-head-actions{display:flex;align-items:center;gap:12px;flex:none}
+body.hl-site .hl-notice-write{white-space:nowrap}
+body.hl-site .hl-mail-compose:empty,body.hl-site #homeNoticeWrite:empty{display:none}
 body.hl-site .hl-pin-badge{display:inline-block;margin-right:7px;color:#765626;font:600 11px/1.6 var(--sans);white-space:nowrap}
 body.hl-site .hl-mailbox{box-sizing:border-box;width:min(900px,calc(100% - 40px));max-width:none;max-height:min(850px,90vh);max-height:min(850px,90svh);padding:0;border:1px solid #d5cddd;border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 24px 100px #15102040;overflow:hidden}
 body.hl-site .hl-mailbox[open]{display:flex;flex-direction:column}
@@ -400,6 +403,8 @@ html[data-theme="dark"] body.hl-site .hl-mail-item.is-pinned .hl-mail-kind{color
 @media(max-width:600px){
   body.hl-site .hl-mailbox{width:calc(100% - 16px);max-height:94vh;max-height:94svh;border-radius:10px}
   body.hl-site .hl-mail-head{padding:18px 16px 15px;gap:10px}
+  body.hl-site .hl-mail-head-actions{gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:145px}
+  body.hl-site .hl-mail-head-actions .hl-notice-write{font-size:11px;padding:6px 8px}
   body.hl-site .hl-mail-head h2{font-size:19px}
   body.hl-site .hl-mail-tabs{padding:11px 16px}
   body.hl-site .hl-mail-tabs button{padding:6px 13px;font-size:12px}

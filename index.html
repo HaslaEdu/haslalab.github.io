@@ -950,7 +950,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 .ar .arpf p,.ar .arpf button,.ar .arpf .arinfo{grid-column:1/-1}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=4b2f0c6c9834">
+<link rel="stylesheet" href="site-design.css?v=ff5f0cd66102">
 </head>
 <body class="hl-site">
 
@@ -1095,7 +1095,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=52dbeb78e952"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=7673aba1cf33"></script>
+<script src="site-design.js?v=818e8a424448"></script>
 <script>
 "use strict";
 
@@ -8927,7 +8927,7 @@ async function cmMount(){
     let content;
     if(a==="post" && b)                 content=cmPost(root,+b,alive);
     else if(a==="user")                 content=cmProfile(root,b,q,alive);
-    else if(a==="write")                content=cmWrite(root,null,CM_BOARDS.includes(b)?b:"free");
+    else if(a==="write")                content=cmWrite(root,null,CM_BOARDS.includes(b)?b:"free",q.get("tag"));
     else if(a==="edit" && b)            content=cmEdit(root,+b,alive);
     else if(a==="login")                content=cmLogin(root);
     else if(a==="signup")               content=cmSignup(root);
@@ -9211,27 +9211,29 @@ async function cmPost(root, id, alive){
   }catch(e){}
 }
 
-function cmWrite(root, post, board){
+function cmWrite(root, post, board, requestedTag){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
-  const key=post?"e"+post.id:"new";
-  const d=cm.draft[key]||(post?{board:post.board,tag:post.tag||"gen",title:post.title,body:post.body}:{board,tag:"gen",title:"",body:""});
+  const noticeMode=!post&&requestedTag==="notice"&&cm.me.role==="admin";
+  const noticeTitle=lang==="ko"?"공지 작성":"Write a notice";
+  const key=post?"e"+post.id:noticeMode?"notice":"new";
+  const d=cm.draft[key]||(post?{board:post.board,tag:post.tag||"gen",title:post.title,body:post.body}:{board:noticeMode?"free":board,tag:noticeMode?"notice":"gen",title:"",body:""});
   const tags=CM_TAGS.filter(t=>t!=="notice"||(cm.me&&cm.me.role==="admin"));
   root.innerHTML=`<div class="cmpanel">
-    <div class="cmbh"><h2>✎ ${post?T.editPost:T.newPost}</h2></div>
+    <div class="cmbh"><h2>✎ ${post?T.editPost:noticeMode?noticeTitle:T.newPost}</h2></div>
     <form class="cmform" id="cmW">
-      <div class="two">
+      ${noticeMode?`<p class="cmnote">${lang==="ko"?"등록한 공지는 홈의 공지·업데이트 목록에 표시됩니다. 등록 후 상단에 고정할 수 있습니다.":"Your notice appears in Notices & updates on the home page. You can pin it after publishing."}</p><input type="hidden" name="board" value="free"><input type="hidden" name="tag" value="notice">`:`<div class="two">
         <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
         <label>${T.tag}<select name="tag">${tags.map(t=>`<option value="${t}" ${t===d.tag?"selected":""}>${T.tags[t]}</option>`).join("")}</select></label>
-      </div>
+      </div>`}
       <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}" placeholder="${T.titlePh}"></label>
       <div class="row"><div class="cmseg"><button type="button" data-tab="w" class="on">${T.editTab}</button><button type="button" data-tab="p">${T.preview}</button></div>
         <span class="sp"></span><span class="cnt" id="cmCnt"></span></div>
       <textarea class="big" name="body" maxlength="20000" required placeholder="${T.bodyPh}">${esc(d.body)}</textarea>
       <div class="cmprev" hidden></div>
       <div class="row"><span class="cmerr"></span><span class="sp"></span>
-        <a class="cmbtn" href="${post?"#/community/post/"+post.id:"#/community/"+d.board}">${T.cancel}</a>
-        <button class="cmbtn pri" type="submit">${post?T.save:T.post}</button></div>
+        <a class="cmbtn" href="${post?"#/community/post/"+post.id:noticeMode?"#/":"#/community/"+d.board}">${T.cancel}</a>
+        <button class="cmbtn pri" type="submit">${post?T.save:noticeMode?(lang==="ko"?"공지 등록":"Publish notice"):T.post}</button></div>
     </form></div>`;
   const f=root.querySelector("#cmW"), cnt=root.querySelector("#cmCnt"), prev=root.querySelector(".cmprev");
   const count=()=>{ cnt.textContent=`${f.body.value.length.toLocaleString()} / 20,000`; };
@@ -9245,7 +9247,7 @@ function cmWrite(root, post, board){
   f.onsubmit=async e=>{
     e.preventDefault();
     const btn=f.querySelector("button[type=submit]"); btn.disabled=true;
-    const data={board:f.board.value,tag:f.tag.value,title:f.title.value,body:f.body.value,lang};   /* a post belongs to the server it is written on */
+    const data={board:noticeMode?"free":f.board.value,tag:noticeMode?"notice":f.tag.value,title:f.title.value,body:f.body.value,lang};   /* a post belongs to the server it is written on */
     try{
       if(post){ await cmApi("PATCH",`/posts/${post.id}`,data); delete cm.draft[key]; location.hash=`#/community/post/${post.id}`; }
       else{ const r=await cmApi("POST","/posts",data); delete cm.draft[key]; cm.boards=null; location.hash=`#/community/post/${r.id}`; }
