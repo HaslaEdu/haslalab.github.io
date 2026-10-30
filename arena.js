@@ -1241,8 +1241,13 @@ function arModelTestLabels() {
     choice: "OCR and grading combination", run: "Run selected test", preparing: "Preparing images…", running: "Running OCR and grading…",
     empty: "Run another combination with the same inputs to compare the results here.",
     unavailable: "Not connected", ocr: "OCR", grading: "Grading", text: "Recognized answer", uncertain: "Check the transcription",
-    feedback: "Grading feedback", review: "Needs review · no final score", incomplete: "Grading incomplete", elapsed: "Total time", usage: "API usage", partialUsage: "Known API usage · partial total",
-    calls: "calls", input: "input", output: "output", cached: "cached", seconds: "s",
+    feedback: "Grading feedback", review: "Needs review · no final score", incomplete: "Grading incomplete", testIncomplete: "Test incomplete", elapsed: "Total time", usage: "API usage", partialUsage: "Known API usage · partial total",
+    totalCost: "Estimated total · USD", costRange: "Estimated range · USD", partialCost: "Known subtotal · USD", unknown: "Unconfirmed", totalUnknown: "Final total unconfirmed",
+    totalTokens: "Total tokens", knownTokens: "Known tokens", details: "Stage timing, tokens and prices", requestedModel: "Requested model", resolvedModel: "Response model",
+    started: "Started", finished: "Finished", latency: "Response time", tokenRate: "Output tokens/s · reference", inputAll: "Input · includes cache", uncached: "Uncached input", cacheInput: "Cached input", outputAll: "Output · includes thinking", thinking: "Thinking · part of output",
+    item: "Billing item", unitPrice: "Price · USD", itemCost: "Estimated cost · USD", perMillion: "per 1M tokens", perToken: "per token", subtotal: "Stage subtotal", priceSource: "Official prices", checked: "Checked",
+    pricingNote: "Estimated from public paid Standard token prices; your actual bill may differ.", accountingNote: "Cached input is part of input; thinking tokens are part of output. They are not added twice to totals or costs.", speedNote: "Output tokens/s uses the full request response time and is only a reference.", noOcrResult: "No OCR result was returned.",
+    calls: "API calls", input: "input", output: "output", cached: "cached", seconds: "s",
     failed: "The test could not be completed.", geminiOff: "Gemini is not connected.", deepseekOff: "DeepSeek is not connected.",
     badPipeline: "Choose one of the available combinations.", badProblem: "Enter a problem statement within the text limit.",
     badRubric: "Enter the reference answer and marking criteria within the text limit.", badPoints: "Check the full-mark value.",
@@ -1262,8 +1267,13 @@ function arModelTestLabels() {
     choice: "OCR·채점 조합", run: "선택한 조합 테스트", preparing: "사진을 준비하고 있습니다…", running: "OCR·채점을 실행하고 있습니다…",
     empty: "같은 입력으로 다른 조합도 실행하면 결과를 나란히 비교할 수 있습니다.",
     unavailable: "연결 안 됨", ocr: "OCR", grading: "채점", text: "OCR 원문", uncertain: "판독 확인",
-    feedback: "채점 피드백", review: "검토 필요 · 점수 미확정", incomplete: "채점 미완료", elapsed: "전체 시간", usage: "API 사용량", partialUsage: "확인된 API 사용량 · 부분 집계",
-    calls: "회 호출", input: "입력", output: "출력", cached: "캐시", seconds: "초",
+    feedback: "채점 피드백", review: "검토 필요 · 점수 미확정", incomplete: "채점 미완료", testIncomplete: "테스트 미완료", elapsed: "전체 시간", usage: "API 사용량", partialUsage: "확인된 API 사용량 · 부분 집계",
+    totalCost: "예상 총비용 · USD", costRange: "예상 비용 범위 · USD", partialCost: "확인된 부분합 · USD", unknown: "미확정", totalUnknown: "총액 미확정",
+    totalTokens: "총 토큰", knownTokens: "확인된 토큰", details: "단계별 시간·토큰·단가", requestedModel: "요청 모델", resolvedModel: "응답 모델",
+    started: "시작", finished: "종료", latency: "응답 시간", tokenRate: "출력 토큰/초 · 참고", inputAll: "입력 · 캐시 포함", uncached: "비캐시 입력", cacheInput: "캐시 입력", outputAll: "출력 · 생각 포함", thinking: "생각 · 출력의 일부",
+    item: "비용 항목", unitPrice: "단가 · USD", itemCost: "예상 비용 · USD", perMillion: "100만 토큰당", perToken: "1토큰당", subtotal: "단계 합계", priceSource: "공식 단가", checked: "확인일",
+    pricingNote: "유료 Standard 공개 단가 기준 예상비용이며 실제 청구액과 다를 수 있습니다.", accountingNote: "캐시 입력은 입력에, 생각 토큰은 출력에 포함됩니다. 합계·비용에 다시 더하지 않습니다.", speedNote: "출력 토큰/초는 요청 전체 응답시간 기준 참고값입니다.", noOcrResult: "반환된 OCR 결과가 없습니다.",
+    calls: "API 호출수", input: "입력", output: "출력", cached: "캐시", seconds: "초",
     failed: "테스트를 완료하지 못했습니다.", geminiOff: "Gemini가 연결되지 않았습니다.", deepseekOff: "DeepSeek가 연결되지 않았습니다.",
     badPipeline: "사용할 수 있는 조합을 선택하세요.", badProblem: "문제를 글자 수 제한 안에서 입력하세요.",
     badRubric: "기준 정답·채점 기준을 글자 수 제한 안에서 입력하세요.", badPoints: "만점을 확인하세요.",
@@ -1294,23 +1304,90 @@ function arModelTestError(error, T, maxImages = 3) {
   const model = [error?.provider, error?.model].filter(x => typeof x === "string" && x).join(" · ");
   return [stage, model, messages[code] || T.failed].filter(Boolean).join(" · ");
 }
+const arModelTestKnown = n => Number.isFinite(n) && n >= 0;
+function arModelTestNumber(n, T, digits = 3) {
+  return arModelTestKnown(n) ? n.toLocaleString(lang === "en" ? "en" : "ko", {maximumFractionDigits:digits}) : T.unknown;
+}
+function arModelTestUsd(n, T) {
+  if (!arModelTestKnown(n)) return T.unknown;
+  const value = Number(n.toPrecision(6)).toLocaleString("en-US", {maximumFractionDigits:12,useGrouping:false});
+  return "$" + (n > 0 && Number(value) === 0 ? n.toExponential(4) : value);
+}
+function arModelTestMoneyRange(range, T) {
+  if (!range || !arModelTestKnown(range.min) || !arModelTestKnown(range.max) || range.min > range.max) return T.unknown;
+  return arModelTestUsd(range.min, T) + (range.min === range.max ? "" : " – " + arModelTestUsd(range.max, T));
+}
+function arModelTestPriceSummary(pricing, T) {
+  const p = pricing || {};
+  if (p.incomplete || p.status === "incomplete") return {label:T.partialCost,
+    value:p.priced_calls > 0 ? (p.known_range_usd ? arModelTestMoneyRange(p.known_range_usd, T) : arModelTestUsd(p.known_usd, T)) : T.unknown,
+    note:T.totalUnknown};
+  if (p.status === "estimated") return {label:T.totalCost,value:arModelTestUsd(p.total_usd, T),note:""};
+  if (p.status === "range") return {label:T.costRange,value:arModelTestMoneyRange(p.range_usd, T),note:""};
+  return {label:T.totalCost,value:T.unknown,note:T.totalUnknown};
+}
+function arModelTestPriceLink(value) {
+  try {
+    if (typeof value !== "string" || value.length > 2048) return "";
+    const url = new URL(value);
+    if (url.protocol !== "https:" || !["ai.google.dev", "api-docs.deepseek.com"].includes(url.hostname) || url.username || url.password || (url.port && url.port !== "443")) return "";
+    return url.href;
+  } catch (_) { return ""; }
+}
+function arModelTestStage(stage, T) {
+  const p = stage.pricing || {}, price = arModelTestPriceSummary(p, T);
+  const phase = stage.stage === "ocr" ? T.ocr : stage.stage === "grading" ? T.grading : String(stage.stage || T.unknown);
+  const provider = ({gemini:"Gemini",deepseek:"DeepSeek"})[stage.provider] || stage.provider || T.unknown;
+  const time = arModelTestKnown(stage.ms) ? arModelTestNumber(stage.ms / 1000, T) + T.seconds + " · " + arModelTestNumber(stage.ms, T) + " ms" : T.unknown;
+  const pairs = [
+    [T.requestedModel, stage.model || T.unknown], [T.resolvedModel, stage.resolved_model || T.unknown],
+    [T.started + " · UTC", stage.started_at || T.unknown], [T.finished + " · UTC", stage.finished_at || T.unknown],
+    [T.calls, arModelTestNumber(stage.calls, T)], [T.latency, time], [T.tokenRate, arModelTestNumber(stage.output_tokens_per_second, T, 2)]
+  ];
+  const tokens = [[T.inputAll,stage.input_tokens],[T.uncached,stage.uncached_input_tokens],[T.cacheInput,stage.cached_tokens],
+    [T.outputAll,stage.output_tokens],[T.thinking,stage.reasoning_tokens],[T.totalTokens,stage.total_tokens]];
+  const rate = (key, unit) => {
+    const fixed = p["unit_prices_per_" + unit]?.[key], ranges = p["unit_price_ranges_per_" + unit];
+    return arModelTestKnown(fixed) ? arModelTestUsd(fixed, T) : arModelTestMoneyRange(ranges && {min:ranges.min?.[key],max:ranges.max?.[key]}, T);
+  };
+  const component = key => arModelTestKnown(p.components_usd?.[key]) ? arModelTestUsd(p.components_usd[key], T) :
+    arModelTestMoneyRange(p.component_ranges_usd && {min:p.component_ranges_usd.min?.[key],max:p.component_ranges_usd.max?.[key]}, T);
+  const source = arModelTestPriceLink(p.source_url);
+  return `<section style="margin:18px 0;padding:14px;border:1px solid var(--line);border-radius:10px;min-width:0;overflow-wrap:anywhere">
+    <h4 class="arh4" style="margin-top:0">${esc(phase)} · ${esc(provider)}</h4>
+    <dl style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:6px 14px;margin:0 0 14px;font-size:.84rem">
+      ${pairs.map(([label,value]) => `<dt style="word-break:keep-all">${esc(label)}</dt><dd style="margin:0;min-width:0;overflow-wrap:anywhere">${esc(value)}</dd>`).join("")}</dl>
+    <table class="cmtbl artbl" style="table-layout:fixed;width:100%;margin-bottom:14px;word-break:keep-all"><tbody>${tokens.map(([label,value]) => `<tr><th style="width:60%;text-align:left;overflow-wrap:anywhere">${esc(label)}</th><td style="display:table-cell;white-space:normal;overflow-wrap:anywhere;text-overflow:clip">${esc(arModelTestNumber(value,T))}</td></tr>`).join("")}</tbody></table>
+    <table class="cmtbl artbl" style="table-layout:fixed;width:100%;font-size:.79rem;overflow-wrap:anywhere;word-break:keep-all"><thead style="display:table-header-group"><tr><th style="width:27%">${T.item}</th><th style="width:43%">${T.unitPrice}</th><th style="width:30%">${T.itemCost}</th></tr></thead><tbody>
+      ${[["input_uncached",T.uncached],["input_cached",T.cacheInput],["output",T.outputAll]].map(([key,label]) => `<tr><td style="display:table-cell;white-space:normal;overflow-wrap:anywhere;text-overflow:clip">${esc(label)}<small style="display:block">${esc(arModelTestNumber(p.billing_tokens?.[key],T))}</small></td>
+        <td style="display:table-cell;white-space:normal;overflow-wrap:anywhere;text-overflow:clip">${esc(rate(key,"million"))}<small style="display:block">${T.perMillion}</small>${esc(rate(key,"token"))}<small style="display:block">${T.perToken}</small></td><td style="display:table-cell;white-space:normal;overflow-wrap:anywhere;text-overflow:clip">${esc(component(key))}</td></tr>`).join("")}
+      <tr><th colspan="2" style="text-align:left">${T.subtotal}</th><td style="display:table-cell;white-space:normal;overflow-wrap:anywhere;text-overflow:clip"><b>${esc(price.value)}</b></td></tr></tbody></table>
+    ${source ? `<p class="arnote" style="margin-bottom:0"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${T.priceSource}</a> · ${T.checked} ${esc(p.checked_at || T.unknown)}</p>` : ""}
+  </section>`;
+}
 function arModelTestResult(result, T) {
   const index = AR_MODEL_PIPELINES.indexOf(typeof result.pipeline === "string" ? result.pipeline : result.pipeline?.id);
-  const o = result.ocr || {}, g = result.grading || {}, u = result.usage || {};
-  const number = n => Number.isFinite(n) && n >= 0 ? n.toLocaleString(lang === "en" ? "en" : "ko") : "—";
-  const time = n => Number.isFinite(n) && n >= 0 ? (n / 1000).toFixed(1) + T.seconds : "—";
+  const o = result.ocr || {}, g = result.grading || {}, u = result.usage || {}, stages = Array.isArray(u.stages) ? u.stages : [];
+  const time = n => arModelTestKnown(n) ? arModelTestNumber(n / 1000,T) + T.seconds : T.unknown;
+  const price = arModelTestPriceSummary(u.pricing,T), knownTokens = arModelTestKnown(u.known_tokens?.total_tokens);
+  const partialTokens = !arModelTestKnown(u.total_tokens) && u.incomplete && knownTokens;
+  const stat = (label,value,note = "") => `<div style="min-width:0;overflow-wrap:anywhere"><small>${esc(label)}</small><b style="display:block;font-size:clamp(16px,3vw,22px);overflow-wrap:anywhere">${esc(value)}</b>${note ? `<small style="display:block;overflow-wrap:anywhere">${esc(note)}</small>` : ""}</div>`;
   const scored = g.status === "graded" && Number.isFinite(g.score) && Number.isFinite(g.points);
-  return `<article class="arpanel" data-model-result="${esc(AR_MODEL_PIPELINES[index] || "")}">
+  return `<article class="arpanel" data-model-result="${esc(AR_MODEL_PIPELINES[index] || "")}" style="min-width:0;overflow-wrap:anywhere">
     <h3>${esc(T.pipeline[index] || T.title)}</h3>
-    <div class="arstats"><div><small>${T.ocr}</small><b>${esc(o.provider || "—")}</b><small>${esc(o.model || "")} · ${time(o.ms)}</small></div>
-      <div><small>${T.grading}</small><b>${esc(g.provider || "—")}</b><small>${esc(g.model || "")} · ${time(g.ms)}</small></div>
-      <div><small>${T.elapsed}</small><b>${time(result.elapsed_ms)}</b></div></div>
+    <div class="arstats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px">
+      ${stat(price.label,price.value,price.note)}${stat(T.elapsed,time(result.elapsed_ms))}
+      ${stat(T.ocr,time(o.ms),[o.provider,o.model].filter(Boolean).join(" · "))}${stat(T.grading,time(g.ms),[g.provider,g.model].filter(Boolean).join(" · "))}
+      ${stat(partialTokens ? T.knownTokens : T.totalTokens,partialTokens ? arModelTestNumber(u.known_tokens.total_tokens,T) + " + ?" : arModelTestNumber(u.total_tokens,T))}${stat(T.calls,arModelTestNumber(u.calls,T))}</div>
     ${result.failure ? `<p class="arinfo bad">${esc(result.failure)}</p>` : ""}
-    <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? number(g.score) + " / " + number(g.points) : result.failure ? T.incomplete : T.review}</span></div>
+    <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? arModelTestNumber(g.score,T) + " / " + arModelTestNumber(g.points,T) : result.failure ? (result.failureStage === "ocr" ? T.testIncomplete : T.incomplete) : T.review}</span></div>
     ${g.feedback ? `<h4 class="arh4">${T.feedback}</h4><p style="white-space:pre-wrap">${esc(g.feedback)}</p>` : ""}
-    <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || "")}</pre></details>
+    <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || T.noOcrResult)}</pre></details>
     ${(o.uncertainties || []).length ? `<h4 class="arh4">${T.uncertain}</h4><ul>${o.uncertainties.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-    <p class="arnote">${u.incomplete ? T.partialUsage : T.usage}: ${number(u.calls)} ${T.calls} · ${T.input} ${number(u.input_tokens)} · ${T.output} ${number(u.output_tokens)} · ${T.cached} ${number(u.cached_tokens)}</p>
+    <details style="margin-top:16px" data-model-metrics><summary style="font-weight:700;cursor:pointer">${T.details}</summary>
+      ${stages.map(stage => arModelTestStage(stage,T)).join("") || `<p class="arnote">${T.unknown}</p>`}
+      <p class="arnote">${T.accountingNote}<br>${T.speedNote}</p></details>
+    <p class="arnote">${T.pricingNote}</p>
   </article>`;
 }
 async function arModelTest(root, alive) {
@@ -1409,8 +1486,12 @@ async function arModelTest(root, alive) {
     } catch (error) { if (current()) {
       const message = arModelTestError(error, T, limits.maxImages);
       results.delete(pipeline);
-      if (error.ocr && typeof error.ocr.text === "string") results.set(pipeline, {...error,pipeline,failure:message,
-        grading:{provider:error.provider,model:error.model,status:"error"}});
+      if (error.ocr || error.usage || arModelTestKnown(error.elapsed_ms)) {
+        const stages = Array.isArray(error.usage?.stages) ? error.usage.stages : [];
+        const metadata = key => { const stage = stages.find(x => x.stage === key); return stage ? {provider:stage.provider,model:stage.model,resolved_model:stage.resolved_model,ms:stage.ms} : {}; };
+        results.set(pipeline, {...error,pipeline,failure:message,failureStage:error.stage,
+          ocr:error.ocr || metadata("ocr"), grading:{...metadata("grading"),status:"error"}});
+      }
       paintResults(); status.className = "arinfo bad"; status.textContent = message;
     } }
     finally { clearTimeout(timeout); controller = null; busy = false; if (current()) controls.disabled = false; }
