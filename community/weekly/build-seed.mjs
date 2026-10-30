@@ -9,10 +9,17 @@ import { validateContent } from '../src/weekly-content.js';
 
 export { validateContent } from '../src/weekly-content.js';
 
+export function validateReviewedSources() {
+  const load = name => validateContent(JSON.parse(readFileSync(new URL(name,import.meta.url),'utf8')));
+  return {
+    publications: ['./2026-W44.json','./2026-11-greenhouse-part-d.json'].map(load),
+    revisions: ['./2026-11-astronomy-revision.json'].map(load),
+  };
+}
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   if (args.some(arg => arg !== '--check')) throw new Error('Usage: node weekly/build-seed.mjs --check');
-  const source = new URL('./2026-W44.json', import.meta.url);
-  const content = validateContent(JSON.parse(readFileSync(source, 'utf8')));
-  console.log(`Reviewed weekly content verified: ${content.problems.length} problems; atomic D1 binding publication`);
+  const {publications,revisions} = validateReviewedSources();
+  console.log(`Reviewed content verified: ${publications.reduce((sum,content)=>sum+content.problems.length,0)} problems in ${publications.length} independent publications; ${revisions.length} editorial revision; atomic D1 binding publication`);
 }

@@ -95,6 +95,9 @@ outputs.set('sim/contest-exam.html',contestHtml);
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
 outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html').replace(/src="monthly-answer-sheet\.mjs(?:\?[^"\n]*)?"/,'src="monthly-answer-sheet.mjs?v='+digest(sheetModule)+'"'));
+const monthlyScanVersion=digest(read('sim/monthly-scan.mjs'));
+outputs.set('sim/monthly-scan.html',read('sim/monthly-scan.html').replace(/src="monthly-scan\.mjs(?:\?[^"\n]*)?"/,'src="monthly-scan.mjs?v='+monthlyScanVersion+'"'));
+outputs.set('sim/scan.html',read('sim/scan.html').replace(/import\("\.\/monthly-scan\.mjs(?:\?[^"\n]*)?"\)/,'import("./monthly-scan.mjs?v='+monthlyScanVersion+'")'));
 const stale=[];
 for(const [name,content]of outputs){const file=path.join(root,name);if(check){if(!fs.existsSync(file)||fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n')!==content.replace(/\r\n/g,'\n'))stale.push(name);}else{fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,content);}}
 if(stale.length){console.error('Generated catalogue is stale: '+stale.join(', '));process.exitCode=1;}

@@ -42,16 +42,44 @@ const sheets = {
     ],
     pages: [['A.1','A.2','A.3'], ['B.1','B.2'], ['B.3','B.4']],
   },
+  7: {
+    parts: [
+      part('16','현재 원판·구형의 복사 평형','Present radiative equilibrium of disk and sphere',14,12),
+      part('17','천정거리와 세차 온도','Zenith angle and precessing temperature',16,12),
+      part('18','최초 1 K 냉각 시각','First one-kelvin fall',19,20),
+      part('19','세차 주기의 최저 온도','Minimum over a precession cycle',11,12),
+      part('20a','원판의 두 대기층','Two atmospheric layers on a disk',7,14),
+      part('20b','구형 모형의 대기층','Atmospheric layer on a sphere',7,14),
+      part('20c','투과율에 대한 온도 민감도','Temperature sensitivity to transmission',7,10),
+      part('21a','온도 개략도의 수치 읽기','Quantitative reading of the temperature schematic',5,10),
+      part('21b','원판 모형과 기록의 정량 비교','Quantitative disk and record comparison',7,12),
+      part('21c','전지구 흡수 일률과 세차 평균','Global absorbed flux and precession average',7,14),
+    ],
+    pages:[['16','17'],['18','19'],['20a','20b'],['20c','21a'],['21b','21c']],
+  },
 };
 
 export function getMonthlyAnswerSheet(problem) {
-  const id = Number(typeof problem === 'object' && problem !== null ? problem.id : problem);
-  const value = sheets[id];
+  const object = typeof problem === 'object' && problem !== null;
+  const id = Number(object ? problem.id : problem);
+  const greenhouse = object && (problem.week || problem.period || problem.month) === '2026-11' && Number(problem.no) === 4 &&
+    (problem.answerSheet?.key === 'greenhouse-part-d-v1' || problem.source === '제공 자료 · Part D' ||
+      [problem.title_ko,problem.title_en,problem.title].some(title => title === '원판 모형의 복사 평형과 세차' || title === 'Radiative equilibrium and precession of a disk'));
+  if (object && id === 7 && !greenhouse) return null;
+  const value = sheets[greenhouse ? 7 : id];
   if (!value) return null;
   return {
     version: MONTHLY_SHEET_VERSION,
+    ...((greenhouse || !object && id === 7) ? {key:'greenhouse-part-d-v1'} : {}),
     limit: MONTHLY_ANSWER_LIMIT,
-    parts: value.parts.map(p => ({...p})),
+    round: value.round || 'theory',
+    parts: value.parts.map((p,index) => ({...p,...(greenhouse || !object && id === 7 ? {displayId:String.fromCharCode(97+index)} : {})})),
     pages: value.pages.map(page => [...page]),
   };
+}
+
+// Round describes the problem; kind continues to select its grading method.
+export function getMonthlyProblemRound(problem) {
+  const defined=problem?.round || problem?.answerSheet?.round || getMonthlyAnswerSheet(problem)?.round;
+  return defined === 'experiment' ? 'experiment' : 'theory';
 }

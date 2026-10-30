@@ -33,7 +33,7 @@ test('every actual problem has labelled answer and working boxes, a printable fo
     assert.match(html,/남은 제출 기회 2 \/ 3회/);
     assert.ok(html.includes(`sim/monthly-answer-sheet.html?id=${id}&lang=ko`));
     assert.match(html,/답안 제출 · 기회 1회 사용/);
-    assert.match(html,/사진을 넣을 소문항/);
+    assert.match(html,/답안지 촬영/);assert.match(html,/QR/);assert.match(html,/네 모서리 보정/);
     assert.match(html,/LaTeX/);
   }
 });

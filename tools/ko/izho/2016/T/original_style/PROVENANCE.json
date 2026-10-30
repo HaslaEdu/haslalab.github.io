@@ -1,0 +1,30 @@
+{
+  "source_design": "tmp/source-audit/IZhO_2016_T_EN.pdf",
+  "source_sha256": "88f5f2c904884d0a4f41f74b6fa54428f95aaa18ae15d33731687d42777db94c",
+  "official_english": "https://izho.kz/wp-content/uploads/2018/01/IZhO-2016-Theory_eng.pdf",
+  "official_russian": "https://izho.kz/wp-content/uploads/2018/01/IZhO-2016-Theory_rus.pdf",
+  "official_russian_sha256": "5bdb931fe379a305c991442238859bd782b074afa531dcd9927c051bb8f589bf",
+  "source_notes": [
+    {
+      "source_page": 4,
+      "topic": "Mathematical tips",
+      "english": "up to higher orders",
+      "official_russian": "с точностью до малых величин высшего порядка",
+      "translation": "고차항을 무시하면",
+      "reason": "The phrase specifies the accuracy of the approximation; higher-order small corrections are neglected. Original equations remain unchanged."
+    },
+    {
+      "source_page": 4,
+      "topic": "Italic note punctuation",
+      "detail": "Original italic comma remains native. A new full stop is not encoded with this unembedded source face because its source Widths entry is unused/zero."
+    },
+    {
+      "source_pages": [
+        5,
+        6
+      ],
+      "detail": "Original graph and squared-paper pages are preserved byte-for-byte as native image/vector objects; only the running prose headers are translated."
+    }
+  ],
+  "added_pdf_notes": false
+}

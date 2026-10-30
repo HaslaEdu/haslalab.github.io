@@ -50,7 +50,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 - **단답형** 문제는 서버가 숫자를 정답과 비교해 바로 채점합니다(허용 오차는 문제마다 `rel` 또는 `abs`). AI 키가 없어도 동작합니다.
 - **서술형** 문제는 하슬라논술 채점기(`grade-v2`)와 같은 방식으로 채점합니다. 문제의 채점 기준(루브릭)마다 점수를 매기고, 학생 답안에서 그대로 인용한 근거를 붙입니다. 답안에 없는 근거로 준 점수는 0점으로 바꿉니다. Gemini 키가 있으면 Gemini를, 없고 OpenAI 키가 있으면 OpenAI를 씁니다. 둘 다 없으면 답안은 「채점 대기」로 저장되고, 관리자가 `#/weekly/admin`에서 점수를 줍니다.
-- **사진 답안**은 하슬라논술처럼 Upstage OCR로 읽습니다. 수식이 많으면 Document Parse로 LaTeX를 살려 읽습니다. 읽은 글은 학생이 확인하고 고친 뒤에 제출합니다. 이미지는 JPEG·PNG·WebP 한 장, 8 MB까지 받고, 한 사람이 하루 30번까지 쓸 수 있습니다.
+- **사진 답안**은 Upstage OCR로 읽습니다. 월별 문제의 촬영 모드는 실전모드와 같은 QR·전체 쪽 촬영·모서리 보정 화면을 사용하며, 판독된 내용은 확인 후 제출하거나 해당 쪽을 빼고 다시 촬영합니다. 촬영 모드에서는 판독 내용을 직접 고치지 않습니다. LaTeX 모드의 입력란은 별도로 유지됩니다. 보정본과 촬영 원본은 각각 4 MiB까지, 한 사람이 하루 30회까지 읽을 수 있습니다. 일반 문제의 기존 사진 OCR은 그대로 사용할 수 있습니다.
 - **월별 랭킹**은 해당 월의 제출 기간 안에 받은 문제별 최고 점수를 더합니다. 같은 점수면 먼저 도달한 사람이 앞섭니다. 마감 후에는 풀이가 공개되고, 이후 제출은 연습으로만 채점합니다. 전체 랭킹과 티어는 레이팅을 사용합니다.
 - 문제는 관리자 화면에서 월 단위로 추가합니다. 기존 `week` 필드는 월 식별자 `YYYY-MM`도 받으며, `opens_at`/`closes_at`은 유닉스 초입니다. 마감은 포함하지 않는 경계입니다. 2026년 11월 문제는 11월 30일 전체를 포함하고 12월 1일 00:00 KST (`1796050800`)에 마감합니다.
 
@@ -364,19 +364,24 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/oauth/ticket` | 로그인한 계정에 서비스를 연결할 때 쓰는 일회용 표 |
 | GET | `/api/me/identities` | 연결된 서비스, 비밀번호 유무 |
 | PATCH | `/api/me` | `{nickname}` 닉네임 바꾸기 |
-| GET | `/api/monthly?lang=&month=` | 해당 월 문제 목록, 내 최고 점수, 월 목록 (`/api/weekly` 호환 주소 유지) |
+| GET | `/api/monthly?lang=&month=` | 해당 월 문제 목록, 내 최고 점수, 월 목록, `reward` 보상·최종 발표 상태 (`/api/weekly` 호환 주소 유지) |
 | GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
 | POST | `/api/problems/:id/submit` | 일반 문제 `{answer, via_ocr}`, 월별 답안지 `{parts, sheet_version, request_id, photo_ids}` → `{status, score, detail, attempts, feedback_held, feedback_available_at}` |
 | POST | `/api/monthly/problems/:id/photos?mode=text\|math` | 인증 필요. multipart `image`, `original_image`, `part_id` → OCR 결과와 소유자 전용 `photo_id` (제출 기회 차감 없음) |
 | GET | `/api/monthly/photos/:photoId` | 인증한 소유자 또는 관리자만 촬영 원본 조회 |
+| POST / GET | `/api/monthly/problems/:id/scan` | 소유자 인증. 촬영 생성·QR 갱신 및 `?scan_id=`로 보낸 쪽·읽기 전용 판독 결과 확인 |
+| DELETE | `/api/monthly/problems/:id/scan/pages/:photoId?scan_id=` | 소유자가 미제출 촬영의 쪽을 빼기. 기존 제출의 원본은 보존 |
+| GET / POST / DELETE | `/api/monthly/up`, `/api/monthly/up/pages` | 휴대폰 촬영 전용 `X-Lab-Token` 권한. 보정본·최초 원본 업로드, 쪽 목록·빼기만 허용. 채점 제출 권한 없음 |
 | POST | `/api/ocr?mode=text\|math` | multipart `image` → `{text, confidence}` |
-| GET | `/api/rank?scope=month\|all&month=` | 월별·전체 랭킹 100위까지 (`scope=week` 호환 유지) |
+| GET | `/api/rank?scope=month\|all&month=` | 월별·전체 랭킹 100위까지. 월별은 `reward` 발표·보상 정보 포함, 발표 후에는 확정 순위 (`scope=week` 호환 유지) |
 | GET | `/api/me/stats` | 내 순위, 총점, 최근 제출 |
 | GET/POST | `/api/admin/problems` | 문제 목록 / 추가·수정 (관리자) |
 | GET | `/api/admin/queue` | 채점 대기 답안 (관리자) |
 | POST | `/api/admin/submissions/:id` | `{score, note}` 또는 `{regrade: true}` (관리자) |
 | GET | `/api/omr/catalog` | 실전모드 시험 목록·문항 수·채점 기준 버전 |
 | POST | `/api/omr/attempts` | 로그인 필요. `{exam_key, client_id, answers}` → 서버 재채점 결과와 비교군 |
+
+월별 점수는 문제별 최고 제출 점수의 합계입니다. 85 → 90 → 88점 제출은 해당 문제 90점으로 기록됩니다. 2026년 11월부터 최종 1·2·3위에게 각각 실전 토큰 9·6·3개를 지급합니다. 최종 발표일은 해당 월 문제들의 마감 시각이며, 접수된 답안의 채점 대기·오류가 남아 있으면 해결 후 확정합니다. 기본 11월 발표는 2026년 12월 1일 00:00(한국 시각)입니다. 서버의 기존 분 단위 예약 작업이 최종 순위 고정, `users.exam_tokens` 잔액 추가, `lab_ledger`의 `monthly_reward` 이력을 한 트랜잭션으로 처리합니다. 재실행·중복 호출에도 한 번만 지급되고, 마감 후 연습 제출이나 발표 후 재채점으로 확정 순위·보상을 변경하지 않습니다. 공개 조회는 읽기 전용이며 토큰 지급을 실행하지 않습니다.
 
 ## 개발자 모델 테스트
 

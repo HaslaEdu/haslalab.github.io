@@ -1,8 +1,10 @@
 // Reviewed weekly problems are bundled with the Worker. Publish only through
 // its existing D1 binding; deployment needs no D1 management/import credential.
 import reviewed from '../weekly/2026-W44.json' with { type: 'json' };
+import greenhouse from '../weekly/2026-11-greenhouse-part-d.json' with { type: 'json' };
 import { isProblemPeriod, CURRENT_MONTHLY_PERIOD, LEGACY_MONTHLY_PERIOD, MONTHLY_CLOSES_AT } from './problem-period.js';
 import { retireIntroMonthlyProblems } from './monthly-answers.js';
+import { ensureAstronomyRevision } from './astronomy-revision.js';
 
 export const PROBLEM_FIELDS = Object.freeze(['week', 'no', 'kind', 'subject', 'level', 'points',
   'title_ko', 'title_en', 'body_ko', 'body_en', 'unit', 'answer', 'rubric', 'model_ko', 'model_en',
@@ -55,6 +57,8 @@ export function validateContent(content) {
 export const REVIEWED_WEEKLY_CONTENT = validateContent(reviewed);
 export const WEEKLY_PUBLICATION_ID = '2026-W44-uploaded-physics-v1';
 export const MONTHLY_PUBLICATION_ID = 'monthly-2026-11-v1';
+export const GREENHOUSE_MONTHLY_CONTENT = validateContent(greenhouse);
+export const GREENHOUSE_PUBLICATION_ID = 'monthly-2026-11-greenhouse-part-d-v1';
 
 export async function publishWeeklyContent(db, content = REVIEWED_WEEKLY_CONTENT, publicationId = WEEKLY_PUBLICATION_ID) {
   validateContent(content);
@@ -128,7 +132,9 @@ export function ensureWeeklyContent(db, cacheKey = db) {
   let promise = initialized.get(cacheKey);
   if (!promise) {
     promise = publishWeeklyContent(db).then(async publication => ({ ...publication,
-      monthly: await migrateMonthlyPeriod(db), answerSheet: await retireIntroMonthlyProblems(db, cacheKey) }));
+      monthly: await migrateMonthlyPeriod(db), answerSheet: await retireIntroMonthlyProblems(db, cacheKey),
+      greenhouse: await publishWeeklyContent(db,GREENHOUSE_MONTHLY_CONTENT,GREENHOUSE_PUBLICATION_ID),
+      astronomy: await ensureAstronomyRevision(db,cacheKey) }));
     initialized.set(cacheKey, promise);
     promise.catch(() => { if (initialized.get(cacheKey) === promise) initialized.delete(cacheKey); });
   }
