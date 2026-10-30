@@ -14,6 +14,11 @@ ROOT=Path(__file__).resolve().parents[1]
 def block_index(e):return int(re.match(r'\d+-(\d+)',e['id'])[1])
 
 FLOW={
+ (2017,'T','5-2'):[([85,73,556,88],'각기둥의 저항'),([85,89,556,103],'1. 수학적 도입 (3.0점)'),([85,104,556,143],'수열의 각 항이 앞선 항들로 표현되면 점화 관계를 만족한다고 한다. 예를 들어 잘 알려진 등비수열에서는')],
+ (2017,'T','6-1'):[([85,57,420,157],'2.1 [0.8점] 그림처럼 이웃한 두 꼭짓점에 전원을 연결했을 때 정육면체의 전체 저항을 구하라. 이제 옆면이 [[0]]개인 정각기둥 도선 틀을 생각한다. 각 모서리의 저항은 [[1]]이다.'),([85,159,556,226],'아래 그림처럼 한 옆 모서리의 양 끝점에 전원을 연결한다. 위아래 밑면의 꼭짓점에 차례로 번호를 붙이고 전위를 표시한다. 0번 꼭짓점들에 직류 전압원을 연결하여 전위를 각각 다음과 같이 정한다.')],
+ (2016,'T','3-3'):[([85,175,556,205],'관 안의 물 높이를 [[0]]라 하자. 반드시 평형 높이일 필요는 없다.'),([85,207,430,277],'2.1 [0.5점] 수면의 작은 추가 상승량 [[2]]에 따른 표면 에너지 변화 [[1]]의 식을 구하라. 2.2 [0.5점] 같은 상승에 따른 중력 위치 에너지')],
+ (2016,'T','3-7'):[([85,497,420,534],'관 안의 물 높이를 [[0]]라 하자. 반드시 평형 높이일 필요는 없다.'),([85,536,556,719],'3.1 [0.5점] 작은 추가 상승량 [[2]]에 따른 표면 에너지 변화 [[1]]의 식을 구하라. 3.2 [0.5점] 상승량 [[4]]에 따른 중력 위치 에너지 변화 [[3]]의 식을 구하라. 3.3 [1.0점] 평형 높이 방정식을 [[5]]와 물음 2.3의 [[6]]로 나타내라. 3.4 [1.0점] 각이 [[7]]일 때 관을 높이 [[8]]까지 물로 채웠다. 최종 수면 높이를 [[9]]의 함수로 구하라. 3.5 [1.0점] 물이 관을 완전히 채우는 각 [[10]]의 범위를 수치와 함께 제시하라.')],
+ (2016,'T','4-1'):[([85,57,556,79],'4.1 [3.0점] 물이 병 밖으로 흐르기 시작하는 구멍 반지름의 최솟값은?'),([175,82,360,100],'수학적 도움말'),([85,102,360,126],'구면의 작은 볼록 부분은 다음 함수로 근사할 수 있다.')],
  (2015,'T','2-5'):[([85,383,556,407],'문제 2. 물이 든 용기 (7점)'),([85,408,556,426],'단면적 [[0]], 높이 [[1]]인 원통 용기가 있다.'),([85,427,344,578],'밀폐된 뚜껑에 양 끝이 열린 길이 [[2]]의 관을 수직으로 끼웠다. 아래 끝은 용기 바닥보다 조금 높다. 그림처럼 밀도 [[3]] [[4]]인 물을 붓는다. 관의 단면적은 용기보다 매우 작고 용기 벽은 열을 잘 전도한다. 대기압은 [[5]], 주위 온도는 [[6]] [[7]], 중력 가속도는 [[8]] [[9]]이다.'),([85,582,556,633],'1. [2.0점] 관 전체가 물로 채워지는 순간 용기 안의 수면 높이 [[10]]를 구하라. [[11]]로 나타내고 수치를 계산하라.')],
  (2012,'T','6-2'):[([72,76,330,96],'정전기 상호작용 에너지는 대략 다음과 같다:')],
  (2012,'T','6-4'):[([72,104,413,123],'3.8 [2점] 임계값의 식과 수치를 구하라:'),([72,134,556,153],'알려진 물리 상수:'),([72,153,280,169],'기본 전하'),([363,153,385,169],'C'),([72,169,280,186],'진공 유전율'),([363,169,395,186],'F/m')],
@@ -23,7 +28,7 @@ FLOW={
  (2010,'T','3-13'):[([410,692,458,711],'여기서 [[3]]')],
  (2012,'T','2-9'):[([72,524,556,540],'두께 [[0]]인 투명한 원형 평행 평판은'),([72,541,333,583],'굴절률이 중심축에서 거리 [[1]]에 따라 다음과 같이 변하는 물질로 만들어졌다.')],
  (2012,'T','2-10'):[([72,600,336,675],'여기서 [[1]]는 알려진 양의 상수이다. 평판은 굴절률 [[2]]인 공기 중에 있다. 축 위에서 평판까지 거리 [[3]] [[4]])인 곳에 점광원 [[5]]가 있다.'),([72,676,556,719],'이 평판이 상을 만드는 렌즈처럼 작용함을 보여라. 광원 [[7]]의 상이 평판에서 떨어진 거리 [[6]] 및 초점 거리를 구하라.')],
- (2012,'T','3-2'):[([235,101,556,291],'높이 [[0]] [[1]] cm, 단면적 [[2]] cm²인 열린 원통 용기에 대기압 [[3]] Pa, 온도 [[4]]인 공기가 있다. 위에서 질량 [[5]] [[6]] kg인 얇고 무거운 피스톤을 조심스럽게 끼운다. 벽과 피스톤은 열전도성이 매우 낮다. 공기는 평균 몰질량 [[7]] g/mol인 이상 이원자 기체이다. 중력 가속도는 [[8]], 기체 상수는 [[9]] J/(mol·K)이다. 용기·피스톤의 열용량과 벽면 마찰은 무시한다.'),([72,292,556,425],'피스톤을 놓으면 최종 평형까지 두 단계를 거친다. 첫 단계에서는 피스톤이 진동하며 기체 과정은 비평형이다. 이로 인해 진동이 감쇠하고 역학적 에너지가 소산된다. 소산 에너지의 절반은 용기 안 기체에, 절반은 대기에 전달된다. 이 단계에서는 벽과 피스톤을 통한 열전도를 무시한다. 진동이 멎을 때 높이는 [[10]]이다. 두 번째 단계는 느리게 진행되어 높이 [[11]]에서 완전히 멈춘다.'),([91,426,556,463],'2.1 [0.5점] 첫 단계가 끝날 때 압력 [[12]]를 대기압 [[13]], 비열비 [[14]] 및 다음 매개변수로 나타내라.')],
+ (2012,'T','3-2'):[([235,101,556,291],'높이 [[0]] [[1]] cm, 단면적 [[2]] cm²인 열린 원통 용기에 대기압 [[3]] Pa, 온도 [[4]] K인 공기가 있다. 위에서 질량 [[5]] [[6]] kg인 얇고 무거운 피스톤을 조심스럽게 끼운다. 벽과 피스톤은 열전도성이 매우 낮다. 공기는 평균 몰질량 [[7]] g/mol인 이상 이원자 기체이다. 중력 가속도는 [[8]] m/s², 기체 상수는 [[9]] J/(mol·K)이다. 용기·피스톤의 열용량과 벽면 마찰은 무시한다.'),([72,292,556,425],'피스톤을 놓으면 최종 평형까지 두 단계를 거친다. 첫 단계에서는 피스톤이 진동하며 기체 과정은 비평형이다. 이로 인해 진동이 감쇠하고 역학적 에너지가 소산된다. 소산 에너지의 절반은 용기 안 기체에, 절반은 대기에 전달된다. 이 단계에서는 벽과 피스톤을 통한 열전도를 무시한다. 진동이 멎을 때 높이는 [[10]]이다. 두 번째 단계는 느리게 진행되어 높이 [[11]]에서 완전히 멈춘다.'),([91,426,556,463],'2.1 [0.5점] 첫 단계가 끝날 때 압력 [[12]]를 대기압 [[13]], 비열비 [[14]] 및 다음 매개변수로 나타내라.')],
  (2012,'TS','1-2'):[([256,90,414,107],'문제 1 (10점)'),([113,122,280,137],'문제 1A. 2012'),([85,138,281,280],'계에 작용하는 힘은 그림과 같다. 막대가 강체이고 실이 늘어나지 않으므로 추의 가속도 비는 1:2:3이다. 질량 없는 막대의 토크 합은 0이다. 이 조건들과 각 추의 뉴턴 제2법칙으로 다음 연립방정식을 얻는다.')],
  (2012,'TS','2-12'):[([85,533,322,612],'[[0]]의 전류에 해당 배수를 곱하면 된다. 여러 전압에서 전류를 읽고 각각 2배, 3배 한 점을 그래프에 찍는다.'),([85,614,556,644],'직렬 연결의 전체 전압은 각 부분 전압의 합이므로')],
  (2013,'T','2-4'):[([218,358,424,375],'문제 1C 피라미드 (3.0점)'),([85,375,304,518],'정삼각뿔 ABCD는 굴절률 [[0]]인 투명 물질로 만들어졌다. 꼭짓점의 세 각은 모두 직각이고 밑면의 변 길이는 [[1]]이다. 정육면체의 모서리 부분을 잘라낸 모양이다. 빛을 높이 방향, 즉 밑면에 수직으로 고르게 비춘다.'),([85,519,556,577],'1. 면 ABC에서 굴절한 빛이 비추는 밑면 영역을 그려라. 2. 밑면에서 L = 10 cm 떨어진 곳에 평행한 스크린을 놓는다. 굴절한 빛이 비추는 영역을 그리고 위치와 크기를 밝혀라.')]
@@ -55,11 +60,22 @@ TABLE_CUTOFFS={(2013,'TS','1-53'):760,(2013,'TS','2-15'):400}
 TABLE_CUTOFFS[(2011,'TS','1-14')]=680
 ATOM_IDS={(2013,'TS'):set('2-17 2-19 2-21 2-22 2-23 2-24 2-25 2-26 3-1'.split())}
 ATOM_IDS[(2011,'TS')]={'4-10'}
+ATOM_IDS[(2010,'TS')]=set('3-4 3-12 3-16 3-21 3-25 4-3 4-5 4-7 4-9 4-13 4-17 4-19 4-21 4-23 4-25 4-27 4-29 4-31 4-33 4-35 4-37 4-39 4-41'.split())
+ATOM_IDS[(2010,'TS')].update({'6-18','6-22'})
 ATOM_IDS[(2012,'TS')]={'3-4'}
-ATOM_IDS[(2012,'T')]={'6-8','6-9'}
+ATOM_IDS[(2012,'TS')].add('6-27')
+ATOM_IDS[(2012,'T')]={'4-4','6-8','6-9'}
 ATOM_IDS[(2013,'TS')].add('1-31')
+ATOM_IDS[(2013,'TS')].add('9-21')
 ATOM_IDS[(2014,'TS')]={'1-15','2-3','2-49','6-42'}
+ATOM_IDS[(2014,'TS')].add('7-15')
+ATOM_IDS[(2014,'T')]={'4-7'}
+ATOM_IDS[(2014,'T')].add('5-4')
 ATOM_IDS[(2015,'TS')]={'6-16','8-55','8-59','8-60'}
+ATOM_IDS[(2015,'TS')].update({'7-30','7-31'})
+ATOM_IDS[(2016,'T')]={'2-14','2-15','2-16','2-17'}
+ATOM_IDS[(2017,'T')]={'6-4'}
+ATOM_IDS[(2017,'T')].update({'5-3','5-4','5-7','5-8','5-10','5-11','5-12'})
 ATOM_WORDS={', thus':', 따라서','. Thus,':'. 따라서','the pyramid. The height of the lateral facet is':'옆면의 높이는','pyramid’s height':'피라미드 높이는','Then,':'따라서','.Finally, the point':'. 구하는 점은','sought is located at the':'다음만큼','distance':'떨어져 있다:','. The':'. 또한 이','same point is located at a distance':'점의 밑변 중점까지 거리는','fromthemiddlepointofbase’sside Thus,the beam refracted by the facet':'이다. 따라서 옆면에서 굴절한 광선은'}
 ATOM_WORDS['and']='및'
 ATOM_WORDS.update({', thus':', 즉','distance':'거리는','. The':'. 이','sought is located at the':'구하는'})
@@ -68,12 +84,66 @@ ATOM_WORDS.update({'where':'단,','— the inverse of graphically given function
  'Thus, the efficiency of the steam engine is':'따라서 증기 기관의 효율은',
  '8. In the proper reference frame the rocket motion is classical, and its acceleration is given by':'8. 고유 기준계에서 로켓의 운동은 고전적으로 다룰 수 있으며, 가속도는 다음과 같다.'})
 ATOM_WORDS.update({'arcsin':'arcsin','при':'단,'})
+ATOM_WORDS.update({'где':'단,','– постоянная Больцмана.':'는 볼츠만 상수이다.'})
 ATOM_WORDS.update({',   при':'단,','equivalent source with the parameters':'등가 전원의 매개변수는','On substituting':'대입하면','we finally obtain':'최종적으로 다음을 얻는다.'})
 ATOM_WORDS[', we finally obtain']=', 최종적으로 다음을 얻는다.'
 ATOM_WORDS.update({'At':'단,','it simplifies to':'이면 다음과 같이 된다.',
  'The electric field strength of the point charge is determined by the formula':'점전하의 전기장 세기는 다음과 같다.',
  'Equating these two expression the surface density of the induced charges is found as':'두 식을 같게 놓으면 유도 면전하 밀도는',
  'and the magnitude of the induced charge on each side of the disc':'원판의 각 표면에 유도된 전하량의 크기는',', where':', 단'})
+ATOM_WORDS['it simplifies to']='이면'
+ATOM_WORDS[', we finally obtain']=', 따라서'
+ATOM_WORDS.update({'we obtain':'얻는다','is the coefficient determined in formula (16).':'는 식 (16)의 계수이다.',
+ 'the surface tension':'표면 장력','the contact angle':'접촉각','the mass density':'밀도','the acceleration of gravity':'중력 가속도'})
+ATOM_WORDS.update({'Wire frame in the shape of a prism':'각기둥 모양의 도선 틀',"Numbering and denoting vertices' potentials":'꼭짓점 번호와 전위 표시'})
+ATOM_WORDS.update({'9. The fallingtime':'9. 낙하 시간','is found from the condition':'는 다음 조건으로 정한다:',
+ '. By substituting this into equation (14)':'. 이를 식 (14)에 대입하면'})
+ATOM_WORDS['stands for the power loss per unit surface of the wire with the surface temperature']='는 전선의 단위 면적당 열손실률이고, 표면 온도는'
+ATOM_WORDS.update({
+ 'Curves 1 and 2 don’t intersect (Fig.1), if the condition':'다음 조건에서 곡선 1, 2는 만나지 않는다(그림 1):',
+ 'Fig.4':'그림 4','In this case the test-tube will always sink.':'이 경우 시험관은 항상 가라앉는다.','If the conditions':'다음 두 조건이','If conditions':'다음 조건이',
+ 'Point A is unstable because the test-tube will sink due to the shift down, and it will rise due to the':'점 A에서 아래로 옮기면 가라앉고 위로 옮기면 떠오르므로 불안정하다.',
+ 'shift up. Analysis of stability of the point B will be presented below.':'점 B의 안정성은 아래에서 분석한다.',
+ 'are fulfilled in the same time, curves intersect in two points A and B (Fig.2):':'동시에 성립하면 두 곡선은 A, B 두 점에서 만난다(그림 2).',
+ 'are fulfilled, only the intersection point B exists (Fig.3). But one should take into account that at the':'성립하면 교점 B만 존재한다(그림 3). 다만 다음 점을 고려해야 한다.',
+ 'horizontal part of curve 2 motion to the right along this curve results to the gas flow out of the test-':'곡선 2의 수평 부분을 오른쪽으로 이동할 때는 기체가 시험관 밖으로 빠져나간다.',
+ 'tube. Consequently, motion to the left along the curve will be quite different. It will take place':'따라서 왼쪽으로 되돌아갈 때는 다른 경로를 따른다. 즉,',
+ 'along the parabola corresponding to (6) (upper line of the formula), but with the new (larger) value':'식 (6)의 위쪽 포물선을 따르지만, 다음 값은 이전보다 커진다:',
+ 'corresponding to the amount of gas remained in the test-tube.':'이는 시험관 안에 남은 기체의 양에 해당한다.',
+ 'is fulfilled for':'가 성립하는 경우이다.','газа':'기체','жидкости':'액체',
+ 'The form of shape described in the problem is explained by the appearance of the full shade (dark':'문제의 그림자는 본그림자(짙은 직사각형)와',
+ 'rectangle)  and the semi-shadow (lighter outer rectangle). Fig. 1 illustrates the course of outer rays':'반그림자(옅은 바깥 직사각형)가 겹쳐 생긴다. 그림 1은 광선 경로를 나타낸다.',
+ 'forming a shadow':'본그림자 광선','and the semi-shadow (':'및 반그림자 광선(',
+ ') in cross section perpendicular to':')는 광원의',
+ 'one sides of the source. Denote the full width of the shadow':'한 변에 수직인 단면의 광선이다. 본그림자의 폭을',
+ ',, the width of the semi-':', 반그림자','shadow':'의 폭을',
+ '. These values can be expressed through the geometric dimensions of the source':'로 놓는다. 이 값들은 광원의 기하학적 크기와',
+ 'and the plate.':'판의 크기로 나타낼 수 있다.','From the similarity of the triangles':'다음 삼각형의 닮음에서',
+ 'it follows':'다음을 얻는다.','From the drawing of shadows, we define the':'그림자의 도면에서',
+ 'required sizes':'필요한 길이를 구하면','Using formula (1) we find':'식 (1)을 이용하면',
+ 'Hence,':'따라서','we':'','find':'즉','From':'또한',
+ 'formula (2) we find one of the transverse':'식 (2)로 광원의 한 방향 크기를','source size':'구하면',
+ '. Similar calculations for the perpendicular cross section gives the following':'. 수직인 다른 단면에서 같은 계산을 하면',
+ 'results:':'다음과 같다:','Then, it follows that':'따라서',
+ 'The results indicate that the long side of the source is placed horizontally (if you use fig.2 from the':'이 결과에서 광원의 긴 변이 수평으로 놓였음을 알 수 있다',
+ 'conditions of the problem).':'(문제의 그림 2 기준).'
+})
+ATOM_WORDS.update({'and the plate.':'판 크기로 구한다.','required sizes':'길이를 구하면','results:':'얻는다:'})
+ATOM_WORDS.update({'The mutual orientation of the vectors':'다음 벡터의 상대적 방향', 'is shown below.':'은 아래와 같다.'})
+ATOM_WORDS.update({'whence':'따라서','Help! The value of the magnetic constant is':'참고: 자기 상수는','Гн':'H','м .':'m .'})
+ATOM_WORDS.update({
+ 'stands for a fixed number and zeroth term of the numerical sequence has':'는 상수이며, 수열의 0번째 항은',
+ 'some value of':'다음과 같다:', ', i.e.':', 즉', '[0.2 points]':'[0.2점]', '[0.4 points]':'[0.4점]', '[0.7 points]':'[0.7점]',
+ 'Obtain an explicit formula for an arbitrary term of the sequence':'다음 수열의 일반항을 구하라:',
+ 'express it through the successive number':'항 번호', ', the initial value':', 초기값',
+ 'Let us consider the number':'다음 수를 생각하자:', '. Taking its natural power of':'의 자연수',
+ ', the result can be':'제곱은 다음과 같다:', 'presented in the following form':'',
+ 'Find the recurrence relations, expressing the values of':'다음 계수의 점화 관계를 구하라:',
+ 'through the':'앞선', 'previous values':'값으로 나타내라:',
+ '. Find also the inverse relations, expressing':'. 또한 역방향 관계도 구하라:', 'through':'다음 값으로',
+ 'Calculate the numerical values of the coefficients':'다음 계수의 수치를 계산하라:', 'for':'단,',
+ 'Express the number':'다음 수를 구하라:', 'in terms of':'표현 변수:',
+ 'Let the terms of a certain numerical sequence obey the recurrence relation':'이제 다음 점화 관계를 만족하는 수열을 생각하자.'})
 TABLE_WORDS={
  'points':'배점','Points':'배점','Figure with all the forces':'모든 힘을 표시한 그림','The system of equations (1)':'연립방정식 (1)','The solution of (1) to speed up (2)':'식 (1)의 해, 가속도 (2)',
  'Exception 4 second load from a consideration of':'두 번째 추를 운동 방정식에서 제외','Proof of exceptions (second acceleration load greater tensile':'제외 근거: 가속도가 g보다 크거나',
@@ -156,7 +226,7 @@ def prepare(year,kind):
  if not raw.exists():raw.write_bytes((folder/'translation.json').read_bytes())
  data=json.loads(raw.read_text(encoding='utf8'));fitz.TOOLS.set_small_glyph_heights(bool(data.get('small_glyph_heights')));doc=fitz.open(ROOT/data['source']);out=[];equation_separations=[]
  if data.get('source_pages') is not None:doc.select(data['source_pages'])
- register_math_regions(doc,data['entries'])
+ register_math_regions(doc,data['entries'],prefer_svg=bool(data.get('small_glyph_heights')))
  split=[]
  for e in data['entries']:
   match=re.match(r'(.*?(?:Page|с\.)\s*\d+\s*/\s*\d+)\s*(.+)',e['source']) if e['rect'][1]<51 else None
@@ -194,6 +264,12 @@ def prepare(year,kind):
       cells.append({'id':e['id']+f'cap{j}','page':pi,'rect':list(span['bbox']),'size':min(e['size'],11),'source':span['text'].strip(),'ko':'그림 '+match[1],'math':[],'figure_caption':True});j+=1
   if year==2011 and kind=='T' and pi==2:entries=[e for e in entries if e['id'] not in {'3-64','3-65'}]
   if year==2013 and kind=='T' and pi==3:entries=[e for e in entries if e['id'] not in {'4-6','4-8'}]
+  if year==2017 and kind=='T' and pi==2:entries=[e for e in entries if e['id'] not in {'3-13','3-16','3-17','3-18'}]
+  if year==2017 and kind=='T' and pi==4:
+   # The source divides one prose/formula line between blocks 11 and 12.
+   # Translate only its prose outlines so the negative-power radical stays native.
+   duplicate=copy.deepcopy(next(e for e in entries if e['id']=='5-11'));duplicate['id']='5-12';entries.append(duplicate)
+   next(e for e in entries if e['id']=='5-1')['align']='center'
   for e in list(entries):
    if e['id'] not in ATOM_IDS.get((year,kind),set()):continue
    entries.remove(e);j=0
@@ -206,9 +282,11 @@ def prepare(year,kind):
    for line in page.get_text('dict')['blocks'][block_index(e)].get('lines',[]):
     for span in line['spans']:
      t=span['text'].strip()
-     if (not re.search(r'[A-Za-zА-Яа-яЁё]{3,}',t) and t not in ATOM_WORDS) or candidate(span):continue
+     if (not re.search(r'[A-Za-zА-Яа-яЁё]{3,}',t) and t not in ATOM_WORDS) or (candidate(span) and t not in ATOM_WORDS):continue
      if t not in ATOM_WORDS:raise ValueError('Untranslated formula-adjacent prose: '+t)
-     cells.append({'id':e['id']+f'a{j}','page':pi,'rect':list(span['bbox']),'size':min(e['size'],11.4),'source':t,'ko':ATOM_WORDS[t],'math':[],'formula_adjacent_prose':True})
+     if not ATOM_WORDS[t]:
+      data['erase_rects'].append({'page':pi,'rect':list(span['bbox'])});continue
+     cells.append({'id':e['id']+f'a{j}','page':pi,'rect':list(span['bbox']),'size':min(e['size'],span['size'],11.4),'source':t,'ko':ATOM_WORDS[t],'math':[],'formula_adjacent_prose':True})
      j+=1
   for drawing in page.get_drawings():
    r=drawing['rect']
@@ -223,6 +301,7 @@ def prepare(year,kind):
    for rr in [[84,143,220,237],[93,514,331,674]]:data['preserve_rects'].append({'page':pi,'rect':rr,'kind':'original_diagram_ink','source_type':'vector'})
   if year==2013 and kind=='T' and pi==3:
    for rr in [[207,313.4,278,330],[352,313.5,385,330]]:data['preserve_rects'].append({'page':pi,'rect':rr,'kind':'original_display_formula'})
+  if year==2017 and kind=='T' and pi==2:data['preserve_rects'].append({'page':pi,'rect':[178,215,458,397.3],'kind':'original_diagram_ink','source_type':'vector'})
   for b in page.get_text('dict')['blocks']:
    if b['type']!=1:continue
    r=fitz.Rect(b['bbox'])
@@ -243,6 +322,7 @@ def prepare(year,kind):
       data['erase_rects'].append({'page':pi,'rect':list(span['bbox'])})
     for fi,(r,ko) in enumerate(flow):
      q=copy.deepcopy(e);q['id']+=f'f{fi}';q['rect']=r;q['ko']=ko;q['source_unsegmented']=e['source'];q['flow_segment']=True
+     if (year,kind,e['id'])==(2017,'T','5-2') and fi<2:q['align']='center'
      if year>=2014:q['size']=min(e['size'],12)
      if year==2012 and kind=='T' and pi==5:q['size']=min(e['size'],11.4)
      if (year,kind,e['id'],fi)==(2013,'T','4-4',1):q['size']=11.2
@@ -312,6 +392,7 @@ def prepare(year,kind):
     oldko=e['ko']
     for mi in outside:e['ko']=e['ko'].replace(f'[[{mi}]]','')
     e['ko']=LAYOUT_KO.get((year,kind,e['id']),e['ko'])
+    if (year,kind,e['id'])==(2014,'T','3-3'):e['ko']=re.sub(r'^\s*1\s+At\s*','',e['ko'])
     label=re.match(r'\s*\[\[(\d+)\]\]\s*(\(\d+\))',e['source'])
     if label and int(label[1]) in outside:
      e['ko']=re.sub(r'^\s*'+re.escape(label[2])+r'\s*','',e['ko'])
@@ -345,7 +426,8 @@ def prepare(year,kind):
     # More than the natural 2 pt ascender/descender overlap means Word split a
     # paragraph at an inline object. Neighbouring ordinary lines stay separate.
     if e.get('flow_segment') or any(q.get('flow_segment') for q in g):continue
-    if any((r&fitz.Rect(q['rect'])).height>3.4 and (r&fitz.Rect(q['rect'])).width>1 for q in g):
+    forced=year==2014 and kind=='T' and {e['id'],*(q['id'] for q in g)}=={'3-4','3-5'}
+    if forced or any((r&fitz.Rect(q['rect'])).height>3.4 and (r&fitz.Rect(q['rect'])).width>1 for q in g):
      union=fitz.Rect(r)
      for q in g:union|=fitz.Rect(q['rect'])
      unsafe=False
@@ -411,6 +493,10 @@ def prepare(year,kind):
   data['post_overlays']=[{'page':2,'rect':[107,107,176,124],'text':'대기','size':10.5,'align':'center'},
     {'page':2,'rect':[175,139,228,154],'text':'피스톤','size':10,'align':'center'},
     {'page':2,'rect':[116,228,156,242],'text':'공기','size':10.5,'align':'center'}]
+  unit_labels={'1еВ':'1eV','В':'V','Дж':'J'}
+  for line in doc[5].get_text('dict')['blocks'][6]['lines']:
+   for span in line['spans']:
+    if span['text'].strip() in unit_labels:data['post_overlays'].append({'page':5,'rect':list(span['bbox']),'text':unit_labels[span['text'].strip()],'size':10.5,'align':'left'})
  if year==2010 and kind=='T':
   data['post_overlays']=[{'page':3,'rect':[85,803,556,824],
     'text':'정오: 델타(1232) 질량은 1.232 x 10^9 eV/c^2이다. 원문의 10^6은 10^9의 오탈자다.',
@@ -418,6 +504,18 @@ def prepare(year,kind):
   data['editorial_corrections']=[{'page':3,'original':'m_Delta=1.232×10^6 eV/c²','correct':'m_Delta=1.232×10^9 eV/c²',
      'source':'https://pdgweb.lbl.gov/2025/tables/rpp2025-tab-baryons-Delta.pdf',
      'note':'Both official EN and RU statements have the exponent typo; original glyphs are retained and an explicit Korean erratum is added in the margin.'}]
+ if year==2010 and kind=='TS':
+  data['post_overlays']=[]
+  data['post_overlays'].append({'page':3,'rect':[297,496.5,335,509],'text':'그림 1','size':10.5,'align':'left'})
+  data['post_overlays'].append({'page':5,'rect':[277.2,537.36,289.68,553.524],'text':',','size':11.4,'align':'left'})
+  short={'i.e.':'즉','e.g.':'예:','No.':'번호','No':'번호','as':'즉'}
+  for pi,page in enumerate(doc):
+   for b in page.get_text('dict')['blocks']:
+    for line in b.get('lines',[]):
+     for span in line['spans']:
+      t=span['text'].strip();rr=fitz.Rect(span['bbox'])
+      if t in short and not any(e['page']==pi and (rr&fitz.Rect(e['rect'])).get_area()>1 for e in out):
+       data['post_overlays'].append({'page':pi,'rect':list(rr),'text':short[t],'size':min(11,span['size']),'align':'left'})
  if year==2011 and kind=='T':
   data['post_overlays']=[{'page':2,'rect':[106,523,130,540],'text':'이온','size':9.5,'align':'center'},
     {'page':2,'rect':[218,647,261,665],'text':'전자','size':10,'align':'center'}]
@@ -428,6 +526,19 @@ def prepare(year,kind):
     {'page':3,'rect':[385,314.8,428,330],'text':', 여기서','size':10.5,'align':'left'},
     {'page':3,'rect':[439,314.8,556,330],'text':'은 주양자수이다.','size':10.5,'align':'left'},
     {'page':3,'rect':[85,329.8,128,343.3],'text':'','size':10.5,'align':'left'}]
+ if year==2017 and kind=='T':
+  data['post_overlays']=[]
+  labels={'Spacecraft':'우주선','Planet':'행성','Course':'진로','Center':'중심'}
+  for b in doc[2].get_text('dict')['blocks']:
+   for l in b.get('lines',[]):
+    for s in l['spans']:
+     if s['text'].strip() in labels:data['post_overlays'].append({'page':2,'rect':list(s['bbox']),'text':labels[s['text'].strip()],'size':min(10.5,s['size']),'align':'center'})
+  for pi,page in enumerate(doc):
+   for b in page.get_text('dict')['blocks']:
+    for l in b.get('lines',[]):
+     for s in l['spans']:
+      if s['text'].strip()=='to' and pi==2:
+       data['post_overlays'].append({'page':pi,'rect':list(s['bbox']),'text':'','size':10,'align':'left'})
  data['entries']=sorted(out,key=lambda e:(e['page'],float(re.match(r'\d+-(\d+)',e['id'])[1])))
  data['layout_preparation']='izho_early_layout.py: joined overlapping prose fragments with intervening original equations'
  (folder/'translation.json').write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf8')

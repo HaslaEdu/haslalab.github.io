@@ -13,7 +13,7 @@ function app(){
     localStorage:{getItem(){return 'thy'},setItem(){}},addEventListener(){},matchMedia(){return{matches:false}},
     setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},console};
   vm.createContext(context);
-  for(const file of ['theory.js','rupho-selection.js','rupho-archive.js'])vm.runInContext(read(file),context);
+  for(const file of ['theory.js','rupho-selection.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context);
   // Source manifests are authoritative even before a local theory.js regeneration.
   const manifests={};
   for(const key of ['rupho','ruphow','ruphox','ruphoy']){

@@ -25,7 +25,7 @@ def regenerate_math_crop(page, math, target):
     """Recreate a reviewed crop, including recorded source glyph repairs."""
     if math.get("clean_prose"):
         from izho_math_clean import math_pixmap
-        bitmap, pix = math_pixmap(page, fitz.Rect(math["rect"]))
+        bitmap, pix = math_pixmap(page, fitz.Rect(math["rect"]), math.get("keep_glyph_origins", ()))
     else:
         pix = page.get_pixmap(matrix=fitz.Matrix(4, 4), clip=fitz.Rect(math["rect"]), alpha=False)
         bitmap = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
@@ -166,6 +166,12 @@ def build(folder: Path, target: Path):
         doc.select(data["source_pages"])
         original.select(data["source_pages"])
     original_blocks = [page.get_text("dict")["blocks"] for page in original]
+    def prose_span_rect(span, pi):
+        for override in data.get("prose_mask_overrides", []):
+            if override["page"] == pi and max(abs(a-b) for a, b in zip(override["source_rect"], span["bbox"])) < .05:
+                return fitz.Rect(override["rect"])
+        return fitz.Rect(span["bbox"])
+
     def restore_math(page, pi, rect):
         if not data.get("transparent_math_restore"):
             page.show_pdf_page(rect, original, pi, clip=rect)
@@ -207,14 +213,14 @@ def build(folder: Path, target: Path):
                             if cyrillic_words and all(mathword(w) for w in cyrillic_words):
                                 continue
                             if cyrillic_words:
-                                box = fitz.Rect(span["bbox"]) & rect
+                                box = prose_span_rect(span, pi) & rect
                                 if not box.is_empty:
                                     draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
                                                     box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
                                 continue
                         if not words or span["font"].replace(" ", "").startswith(("CambriaMath", "CM", "Symbol")): continue
                         if all(w.lower() in {"sin","cos","tan","exp","ln","log","const","max","min","mol","mole","dpt","pa","kg","cm","mm","km","rad","years","ma","wb","hz","hn","year","arcsin","arccos","arctan","asin","acos","atan","sinh","cosh","tanh","coth","abs","sign","floor","ceil"} or re.fullmatch(r"[A-Za-z]*d[A-Z][A-Za-z]*", w) or w.lower() in {"dx","dy","dz","dt","dr","du","da","dq","dv"} for w in words): continue
-                        box = fitz.Rect(span["bbox"]) & rect
+                        box = prose_span_rect(span, pi) & rect
                         if box.is_empty: continue
                         draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
                                         box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
@@ -295,7 +301,10 @@ def build(folder: Path, target: Path):
             if data.get("honor_line_breaks"):
                 content = content.replace("\n", "<br>")
             for mi, math in enumerate(e["math"]):
-                image = f'<img src="{math["file"]}" width="{math["width"]}" height="{math["height"]}">'
+                baseline_style = ''
+                if "baseline_from_bottom" in math:
+                    baseline_style = f' style="vertical-align:{-math["baseline_from_bottom"]}pt"'
+                image = f'<img src="{math["file"]}" width="{math["width"]}" height="{math["height"]}"{baseline_style}>'
                 content = content.replace(f"[[{mi}]]", image)
             rect = fitz.Rect(e["rect"])
             rect.y0 -= 1

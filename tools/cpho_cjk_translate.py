@@ -177,8 +177,10 @@ def math_image(svg,cluster,target):
         values=[float(x) for x in transform[1].split(',')]
         return m[0] if any(abs(values[-2]-x)<.025 and abs(values[-1]-y)<.025 for x,y in allowed) else ''
     # SVG→PDF currently mishandles some Word auxiliary-image soft masks.
-    # Mathematical symbols are native glyphs/paths; raster figures do not
-    # belong in inline math sprites.
+    # This pass emits native glyphs/rules. Word can store accents (dots,
+    # phasor tildes, h-bars) as soft-masked images; complete those separately
+    # with cpho_native_math_accents before a final build. Full-size raster
+    # figures do not belong in inline mathematical sprites.
     image_ids=re.findall(r'<image\b[^>]*\bid="([^"]+)"',svg)
     filtered=re.sub(r'<image\b[^>]*?/?>','',svg)
     filtered=re.sub(r'<path\b[^>]*fill="#ffffff"[^>]*?/?>','',filtered)

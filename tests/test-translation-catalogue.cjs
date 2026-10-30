@@ -69,7 +69,7 @@ for (const year of ['2021', '2022', '2023', '2024', '2025', '2026']) {
     assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
   }
 }
-for (const year of ['2010', '2011', '2013']) {
+for (const year of ['2010', '2011', '2013', '2015', '2016', '2020']) {
   assert.ok(assets[window.THEORY.izho[year].f.T.ko.paper] > 0);
 }
 let usapho = 0;
@@ -80,9 +80,9 @@ for (let year = 1997; year <= 2026; year++) {
   assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
-for (const year of ['2005', '2006', '2007', '2013', '2024', '2025']) {
+for (const year of ['2005', '2006', '2007', '2013', '2022', '2023', '2024', '2025']) {
   const file = window.THEORY.cpho[year].f.T;
-  assert.equal(file.paper, `CPhO_${year}_T_BAUPC_EN.pdf`);
+  assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.ko.paper] > 0);
   if (year === '2013' || year === '2024') {
@@ -90,11 +90,18 @@ for (const year of ['2005', '2006', '2007', '2013', '2024', '2025']) {
     assert.ok(assets[file.sol] > 0);
     assert.ok(assets[file.ko.sol] > 0);
   }
+  if (year === '2023') {
+    assert.equal(file.sol, file.paper);
+    assert.equal(file.ko.sol, file.ko.paper);
+  }
   const source = JSON.parse(read('tools/theory/cpho.json')).years.find(y => String(y.y) === year);
-  if (Number(year) >= 2013) assert.ok(source.files[0].url.startsWith('https://olimpicos.net/'), 'Original source provenance must be preserved');
+  if (Number(year) >= 2013) {
+    const originalHost = {2022: '19216675.s21i.faiusr.com', 2023: 'wds-service-1258344699.file.myqcloud.com'}[year] || 'olimpicos.net';
+    assert.equal(new URL(source.files[0].url).hostname, originalHost, 'Original source provenance must be preserved');
+  }
 }
 for (const file of JSON.parse(read('tools/translation_font_validation.json')).files) {
   assert.equal(assets[file.file], file.bytes, `Published PDF size differs from audited version: ${file.file}`);
   assert.equal(file.missing_glyph_spans.length, 0, file.file);
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 15, usapho, cphoBilingualYears: 6}));
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 18, usapho, cphoBilingualYears: 8}));
