@@ -15,9 +15,9 @@ import pikepdf
 import pymupdf as fitz
 import numpy as np
 from PIL import Image
-from pdf_original_text_ops import suppress_prose,glyph_key,family_name,cmap,widths,native_form_glyphs
+from pdf_original_text_ops import suppress_prose,glyph_key,family_name,cmap,widths,native_form_glyphs,source_code_bytes
 from pdf_original_style_fonts import korean_font,source_font_role
-from pdf_original_style_audit import audit
+from pdf_original_style_audit import audit,glyphs as source_trace_glyphs
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -90,8 +90,8 @@ def font_catalog(source,page_number,trace_names):
     result=defaultdict(list)
     with pikepdf.Pdf.open(source)as pdf:
         for name,font in pdf.pages[page_number-1].Resources.Font.items():
-            encoding=str(font.get('/Encoding'))
-            if encoding not in ['/WinAnsiEncoding','/Identity-H']:continue
+            try:code_bytes=source_code_bytes(font)
+            except ValueError:continue
             full=family_name(bytes(font.get('/BaseFont')).decode('latin1'))
             aliases=[full]if full in trace_names else [n for n in trace_names if full.startswith(n)or n.startswith(full)]
             if len(aliases)!=1:continue
@@ -102,9 +102,60 @@ def font_catalog(source,page_number,trace_names):
             if descriptor is None and '/DescendantFonts'in font:descriptor=font.DescendantFonts[0].get('/FontDescriptor')
             angle=float(descriptor.get('/ItalicAngle',-15))if descriptor is not None else -15
             result[aliases[0]].append(dict(alias=str(name).lstrip('/'),encoding=inverse,widths=ws,default=default,
-                bytes=1 if encoding=='/WinAnsiEncoding'else 2,angle=angle))
+                bytes=code_bytes,angle=angle))
     for values in result.values():values.sort(key=lambda v:v['bytes'])
     return result
+
+def measure_source_cff_italic_slant(source,page_number,font_name):
+    """Measure an explicitly reviewed italic face with missing zero metadata.
+
+    The actual embedded CFF stem outlines are the source of the estimate. No
+    system font, altered source font, or global fallback angle is introduced.
+    """
+    from io import BytesIO
+    from fontTools.cffLib import CFFFontSet
+    from fontTools.pens.recordingPen import RecordingPen
+    matches=[]
+    with pikepdf.Pdf.open(source)as pdf:
+        for alias,font in pdf.pages[page_number-1].Resources.Font.items():
+            if family_name(str(font.get('/BaseFont')))!=font_name:continue
+            descriptor=font.get('/FontDescriptor')or{}
+            program=descriptor.get('/FontFile3')
+            if program is None or str(program.get('/Subtype'))!='/Type1C':continue
+            if float(descriptor.get('/ItalicAngle',0))!=0:raise ValueError('Declared italic angle already exists')
+            payload=program.read_bytes();cff=CFFFontSet();cff.decompile(BytesIO(payload),None)
+            if len(cff.fontNames)!=1:raise ValueError('Ambiguous source CFF face')
+            face=cff[0]
+            if float(face.ItalicAngle)!=0:raise ValueError('CFF italic angle already exists')
+            matrix=list(map(float,face.FontMatrix));a,b,c,d,e,f=matrix;segments=[]
+            for name in ['l','i','I','H','h']:
+                if name not in face.CharStrings:continue
+                pen=RecordingPen();face.CharStrings[name].draw(pen);point=start=None
+                for operator,points in pen.value:
+                    if operator=='moveTo':point=start=points[0]
+                    elif operator=='lineTo':
+                        for q in points:
+                            dx,dy=q[0]-point[0],q[1]-point[1]
+                            tx,ty=a*dx+c*dy,b*dx+d*dy
+                            if abs(ty)>.35 and 0<tx/ty<math.tan(math.radians(30)):
+                                segments.append(dict(glyph=name,start=list(point),end=list(q),
+                                    dx_em=tx,dy_em=ty,slope=tx/ty,angle_deg=math.degrees(math.atan(tx/ty))))
+                            point=q
+                    elif operator in ['curveTo','qCurveTo']:point=points[-1]
+                    elif operator=='closePath':point=start
+                    else:raise ValueError('Unsupported CFF glyph path while measuring italic slant')
+            if not segments:raise ValueError('No long source italic stems to measure')
+            total=sum(abs(row['dy_em'])for row in segments);accumulated=0
+            for row in sorted(segments,key=lambda item:item['slope']):
+                accumulated+=abs(row['dy_em'])
+                if accumulated>=total/2:angle=row['angle_deg'];break
+            matches.append(dict(font=font_name,source_alias=str(alias),font_program_sha256=hashlib.sha256(payload).hexdigest(),
+                declared_fontdescriptor_angle=0,declared_cff_angle=0,font_matrix=matrix,
+                method='Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.',
+                estimated_angle_deg=angle,segments=segments))
+    if len(matches)!=1:raise ValueError(('Unique source italic CFF measurement required',font_name,len(matches)))
+    return matches[0]
+
 
 def native_font_programs(path,page_number):
     """Inspect PDF resources directly, including hidden fallback Form fonts."""
@@ -244,6 +295,12 @@ def build(plan_path,target):
     raw,count=suppress_prose(source,pi+1,selected);outdoc=fitz.open(stream=raw,filetype='pdf');out=outdoc[0];out.wrap_contents()
     for role,path in buffers.items():out.insert_font(fontname='KO_'+role.replace('-','_'),fontfile=str(path))
     catalog=font_catalog(source,pi+1,{t['font']for t in page.get_texttrace()});placements=[];allowed=[];overflows=[]
+    italic_measurements=[]
+    for name in data.get('reviewed_missing_italic_angle_fonts',[]):
+        if not any(s['font']==name and s['flags']&2 for s in runs.values()):raise ValueError('Reviewed missing-angle face is not an original italic face')
+        if not catalog[name]or any(profile['angle']!=0 for profile in catalog[name]):raise ValueError('Only a source face with missing zero italic metadata may be measured')
+        measured=measure_source_cff_italic_slant(source,pi+1,name);italic_measurements.append(measured)
+        for profile in catalog[name]:profile['angle']=-measured['estimated_angle_deg']
     for spec,anchor,chars,rect,point,parts in work:
         chunks=[]
         for part in parts:chunks.extend(split_parts(part,runs[tuple(part.get('style_from',spec['at']))],catalog,metrics))
@@ -282,9 +339,27 @@ def build(plan_path,target):
     spec=dict(source_page=pi+1,proof_page=1,allowed_rects=allowed,erased_glyph_origins=[list(c['origin'])for c in selected if c['c'].strip()],
         protected_glyph_origins=[list(c['origin'])for c in protected],protected_glyphs=protected,
         protected_rects=protected_image_rects(original,page,data))
+    if data.get('journal_selected_prose_whitespace',False):
+        scope=data['journal_selected_prose_whitespace'];space_selection=selected
+        if isinstance(scope,list):
+            requested={tuple(at)for at in scope};available={tuple(item[0]['at'])for item in work}
+            if not requested<=available:raise ValueError('Prose-whitespace scope is not an explicitly selected source slot')
+            space_selection=[c for item in work if tuple(item[0]['at'])in requested for c in item[2]]
+        elif scope is not True:raise ValueError('Prose-whitespace journal needs true or explicit source-slot coordinates')
+        chosen={glyph_key(c)for c in space_selection if c['c'].isspace()}
+        # Journal original trace records, not rawdict's synthetic spaces.
+        actual=[g for g in source_trace_glyphs(page)if g['c'].isspace()]
+        math_spaces=[c for r in runs.values()if re.search(r'Cambria.?Math|Symbol|MT.?Extra',r['font'],re.I)for c in characters(r)if c['c'].isspace()]
+        for at in data.get('protected_runs',[]):math_spaces.extend(c for c in characters(runs[tuple(at)])if c['c'].isspace())
+        for item in data.get('protected_substrings',[]):math_spaces.extend(c for c in slot_source(item,runs)[1]if c['c'].isspace())
+        math_keys={glyph_key(c)for c in math_spaces+form_glyphs if c['c'].isspace()}
+        def journal(g):return {k:g[k]for k in ['c','font','size','origin']}
+        spec['mutable_prose_whitespace_glyphs']=[journal(g)for g in actual if glyph_key(g)in chosen]
+        spec['protected_whitespace_glyphs']=[journal(g)for g in actual if glyph_key(g)in math_keys]
     target.with_suffix('.audit-spec.json').write_text(json.dumps(spec,ensure_ascii=False,indent=2),'utf8')
     result=audit(source,target,spec);result.update(removed_prose_glyphs=count,placements=placements,autoshrink=False,reflow=False,equation_images=0,
         plan=str(plan_path.relative_to(ROOT))if plan_path.is_absolute()else str(plan_path),plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest())
+    if italic_measurements:result['reviewed_source_italic_slant_measurements']=italic_measurements
     target.with_suffix('.qa.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),'utf8')
     final=fitz.open(target)
     source_fonts=native_font_programs(source,pi+1);target_fonts=native_font_programs(target,1)

@@ -28,6 +28,35 @@ def key(g):
     return (g['c'],g['gid'],g['font'],round(g['size'],4),round(g['origin'][0],3),round(g['origin'][1],3),
             tuple(round(c,5)for c in g['color']),g['render_type'])
 
+
+def whitespace_identity(g):
+    """Exact actual-trace identity; never match synthetic/rawdict padding."""
+    return (g['c'],re.sub(r'^[A-Z]{6}\+','',g['font']),float(g['size']),
+            float(g['origin'][0]),float(g['origin'][1]))
+
+
+def reviewed_prose_whitespace(old,spec):
+    """Classify only explicitly selected, real prose whitespace as mutable.
+
+    Physical/math/Form whitespace remains native. The caller's opt-in journal
+    must exactly match the original trace and lie inside a prose frame.
+    """
+    journal=spec.get('mutable_prose_whitespace_glyphs',[])
+    actual={whitespace_identity(g)for g in old if g['c'].isspace()}
+    protected={whitespace_identity(g)for g in spec.get('protected_whitespace_glyphs',[])}
+    result=set()
+    for entry in journal:
+        token=whitespace_identity(entry)
+        if not entry['c'].isspace()or token not in actual:
+            raise ValueError('Prose whitespace journal does not identify an actual source-trace whitespace glyph')
+        if token in result:raise ValueError('Duplicate prose whitespace journal entry')
+        if token in protected or re.search(r'Cambria.?Math|Symbol|MT.?Extra',entry['font'],re.I)or any(close_origin(entry['origin'],p)for p in spec.get('protected_glyph_origins',[])):
+            raise ValueError('Prose whitespace journal touches protected native math/Form whitespace')
+        if not any(fitz.Point(entry['origin'])in fitz.Rect(rect)for rect in spec['allowed_rects']):
+            raise ValueError('Prose whitespace journal lies outside the explicit prose frames')
+        result.add(token)
+    return result
+
 def native_ink_neighborhood(page,origins,scale):
     """Use actual outlines, avoiding the oversized source font metric boxes."""
     svg=page.get_svg_image(text_as_path=True)
@@ -61,8 +90,8 @@ def audit(source_path,proof_path,spec,scale=4):
     erased=spec.get('erased_glyph_origins',[])
     locked=spec.get('protected_glyph_origins',[])
     protected_erasure=[p for p in locked if any(close_origin(p,q)for q in erased)]
-    old=glyphs(a);current=Counter(key(g)for g in glyphs(b))
-    preserved=[g for g in old if any(close_origin(g['origin'],p)for p in locked)or not any(close_origin(g['origin'],p)for p in erased)]
+    old=glyphs(a);current=Counter(key(g)for g in glyphs(b));mutable_spaces=reviewed_prose_whitespace(old,spec)
+    preserved=[g for g in old if whitespace_identity(g)not in mutable_spaces and(any(close_origin(g['origin'],p)for p in locked)or not any(close_origin(g['origin'],p)for p in erased))]
     missing=[]
     for g in preserved:
         token=key(g)
@@ -91,6 +120,8 @@ def audit(source_path,proof_path,spec,scale=4):
         proof_sha256=hashlib.sha256(Path(proof_path).read_bytes()).hexdigest(),
         source_page=spec['source_page'],proof_page=spec.get('proof_page',1),scale=scale,
         native_glyphs_checked=len(preserved),native_glyphs_changed=missing,
+        selected_prose_actual_whitespace_glyphs_checked=len(mutable_spaces),
+        mutable_prose_whitespace_glyphs=spec.get('mutable_prose_whitespace_glyphs',[]),
         protected_glyph_origins_checked=len(locked),protected_glyphs_selected_for_erasure=protected_erasure,
         native_glyph_outlines_checked=outline_count,
         changed_pixels_in_native_glyph_neighborhood=int(changed_native_ink.sum()),

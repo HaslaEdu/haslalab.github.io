@@ -1,0 +1,997 @@
+{
+  "output": "tmp\\original-style-repair\\2023\\T\\IZhO_2023_T_KO.pdf",
+  "output_sha256": "c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423",
+  "pages": 6,
+  "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+  "source_page_count": 20,
+  "source_pages_1based": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "source_page_selection_note": "The source contains the complete six-page English edition on pages1–6, followed by eight Kazakh pages and six Russian pages. Translate the English edition once, preserving its original 1/6–6/6 counters.",
+  "assembly": "pikepdf native page append",
+  "no_autoshrink": true,
+  "no_equation_rasterization": true,
+  "no_paragraph_reflow": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page1.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "18477e4a9f15eb82dad752f46f13a55c2742fd3f1bf96b5ba23608d2d7b38504",
+      "source_page": 1,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 230,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 0,
+      "mutable_prose_whitespace_glyphs": [],
+      "protected_glyph_origins_checked": 0,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 230,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.19524825941193952,
+      "removed_prose_glyphs": 1006,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page1.json",
+      "plan_sha256": "c6c9d82582d2128daee66ed383808cd023ca7e2986f9dd050eb4f747078b029b",
+      "reviewed_source_italic_slant_measurements": [
+        {
+          "font": "Times-BoldItalic",
+          "source_alias": "/R22",
+          "font_program_sha256": "e3b37238e11b6aec475ee2009ed651bcf7f5541ad537e56d922ca1a382fc91ad",
+          "declared_fontdescriptor_angle": 0,
+          "declared_cff_angle": 0,
+          "font_matrix": [
+            0.001,
+            0.0,
+            0.0,
+            0.001,
+            0.0,
+            0.0
+          ],
+          "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+          "estimated_angle_deg": 15.19524852681988,
+          "segments": [
+            {
+              "glyph": "l",
+              "start": [
+                145,
+                176
+              ],
+              "end": [
+                290,
+                699
+              ],
+              "dx_em": 0.145,
+              "dy_em": 0.523,
+              "slope": 0.27724665391969405,
+              "angle_deg": 15.495855855779578
+            },
+            {
+              "glyph": "h",
+              "start": [
+                187,
+                283
+              ],
+              "end": [
+                294,
+                699
+              ],
+              "dx_em": 0.107,
+              "dy_em": 0.41600000000000004,
+              "slope": 0.25721153846153844,
+              "angle_deg": 14.424464152405259
+            },
+            {
+              "glyph": "h",
+              "start": [
+                141,
+                567
+              ],
+              "end": [
+                -13,
+                0
+              ],
+              "dx_em": -0.154,
+              "dy_em": -0.5670000000000001,
+              "slope": 0.2716049382716049,
+              "angle_deg": 15.19524852681988
+            }
+          ]
+        }
+      ],
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page1.json": "c6c9d82582d2128daee66ed383808cd023ca7e2986f9dd050eb4f747078b029b",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 1
+    },
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page2.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "227a9480840ceb78bf1f88acaa98a1a157fccf0fa048dbd980915e91d918926f",
+      "source_page": 2,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 580,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 0,
+      "mutable_prose_whitespace_glyphs": [],
+      "protected_glyph_origins_checked": 59,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 580,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.3665572005799633,
+      "removed_prose_glyphs": 1920,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page2.json",
+      "plan_sha256": "928023e616a4323a90f8dba8335bf47d6be8df2015689933ae817e3a167e565e",
+      "reviewed_source_italic_slant_measurements": [
+        {
+          "font": "Times-Italic",
+          "source_alias": "/R34",
+          "font_program_sha256": "73d36643e2a819db2aa1ba3c806bfd80e1966d156ead8faec18191c49b2bd4c6",
+          "declared_fontdescriptor_angle": 0,
+          "declared_cff_angle": 0,
+          "font_matrix": [
+            0.001,
+            0.0,
+            0.0,
+            0.001,
+            0.0,
+            0.0
+          ],
+          "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+          "estimated_angle_deg": 15.517440164380966,
+          "segments": [
+            {
+              "glyph": "I",
+              "start": [
+                179,
+                120
+              ],
+              "end": [
+                302,
+                563
+              ],
+              "dx_em": 0.123,
+              "dy_em": 0.443,
+              "slope": 0.27765237020316025,
+              "angle_deg": 15.517440164380966
+            },
+            {
+              "glyph": "I",
+              "start": [
+                196,
+                532
+              ],
+              "end": [
+                73,
+                90
+              ],
+              "dx_em": -0.123,
+              "dy_em": -0.442,
+              "slope": 0.27828054298642535,
+              "angle_deg": 15.550850362220793
+            }
+          ]
+        }
+      ],
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page2.json": "928023e616a4323a90f8dba8335bf47d6be8df2015689933ae817e3a167e565e",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 2
+    },
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page3.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "af20c35daa4b2a881b81187bc381aa1977ac7c2b4e37ede25846027be10bc936",
+      "source_page": 3,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 597,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 18,
+      "mutable_prose_whitespace_glyphs": [
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            81.37026977539062,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            101.85272216796875,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            126.67887115478516,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            143.81362915039062,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            187.61236572265625,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            205.46786499023438,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            249.19454956054688,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            292.3956604003906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            305.49908447265625,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            339.3018798828125,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            383.7726135253906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            396.9483947753906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            418.0558166503906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            455.6026611328125,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            477.4054260253906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            504.5128479003906,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            545.6475830078125,
+            595.0296630859375
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            558.9444580078125,
+            595.0296630859375
+          ]
+        }
+      ],
+      "protected_glyph_origins_checked": 71,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 597,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.37579014521021675,
+      "removed_prose_glyphs": 1941,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page3.json",
+      "plan_sha256": "fe4a8b18aad7fdf65aa3dac624a67d4e2d4e8c690cb904b95b2d7187b63cb646",
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page3.json": "fe4a8b18aad7fdf65aa3dac624a67d4e2d4e8c690cb904b95b2d7187b63cb646",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 3
+    },
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page4.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "49fbabf5302f81264250b0a8cdc16411f45ee4b7597d6bb659e90b3ceafb7b84",
+      "source_page": 4,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 534,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 19,
+      "mutable_prose_whitespace_glyphs": [
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            64.55878448486328,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            101.38691711425781,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            120.61934661865234,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            160.58029174804688,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            183.14083862304688,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            202.35366821289062,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            248.252197265625,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            262.8087158203125,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            281.8400573730469,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            309.7697448730469,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            341.5900573730469,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            384.154541015625,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            428.7463684082031,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            441.9338684082031,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            461.1700744628906,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            490.3185119628906,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            525.4533081054688,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            539.9844970703125,
+            479.1089782714844
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            559.244384765625,
+            479.1089782714844
+          ]
+        }
+      ],
+      "protected_glyph_origins_checked": 30,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 534,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.34592180865597283,
+      "removed_prose_glyphs": 1817,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page4.json",
+      "plan_sha256": "bf49d010e91f707fc5796d49a5da660e127c276f2d77be53406a049506393004",
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page4.json": "bf49d010e91f707fc5796d49a5da660e127c276f2d77be53406a049506393004",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 4
+    },
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page5.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "886cca998bae9f6272a9b83d3076b562da74490f6aa015bd07082a488f2d8610",
+      "source_page": 5,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 751,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 19,
+      "mutable_prose_whitespace_glyphs": [
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            94.2105484008789,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            115.18518829345703,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            124.17151641845703,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            166.60321044921875,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            205.4957275390625,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            231.13836669921875,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            256.20672607421875,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            274.75347900390625,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            316.9898681640625,
+            240.61920166015625
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            265.1031188964844,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            283.7143859863281,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            318.35894775390625,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            332.29052734375,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            350.8667297363281,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            383.3492126464844,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            468.1402893066406,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            526.8082275390625,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            540.75146484375,
+            445.2699890136719
+          ]
+        },
+        {
+          "c": " ",
+          "font": "Times-Roman",
+          "size": 12.0,
+          "origin": [
+            559.3276977539062,
+            445.2699890136719
+          ]
+        }
+      ],
+      "protected_glyph_origins_checked": 53,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 751,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.49115683042454195,
+      "removed_prose_glyphs": 2666,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page5.json",
+      "plan_sha256": "ed3a7798bdd4345033c593170804c1296125e348e440c9c26219774d8baa6fef",
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page5.json": "ed3a7798bdd4345033c593170804c1296125e348e440c9c26219774d8baa6fef",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 5
+    },
+    {
+      "source": "IZhO_2023_T_EN.pdf",
+      "proof": "page6.pdf",
+      "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "proof_sha256": "cb70931db8eab2c31faa7ccfe869dcd6ae77dbd2a4b919b8176ab890d74e4b86",
+      "source_page": 6,
+      "proof_page": 1,
+      "scale": 4,
+      "native_glyphs_checked": 601,
+      "native_glyphs_changed": [],
+      "selected_prose_actual_whitespace_glyphs_checked": 0,
+      "mutable_prose_whitespace_glyphs": [],
+      "protected_glyph_origins_checked": 78,
+      "protected_glyphs_selected_for_erasure": [],
+      "native_glyph_outlines_checked": 601,
+      "changed_pixels_in_native_glyph_neighborhood": 0,
+      "changed_pixels_outside_prose": 0,
+      "allowed_page_area_fraction": 0.29896781283218754,
+      "removed_prose_glyphs": 1542,
+      "autoshrink": false,
+      "reflow": false,
+      "equation_images": 0,
+      "plan": "tools\\ko\\izho\\2023\\T\\original_style\\page6.json",
+      "plan_sha256": "3cdfb70b406e466f0d07dc8a62390b30f98c5955d5d3936d4315ccb85ff2d61b",
+      "reviewed_source_italic_slant_measurements": [
+        {
+          "font": "Times-BoldItalic",
+          "source_alias": "/R22",
+          "font_program_sha256": "e3b37238e11b6aec475ee2009ed651bcf7f5541ad537e56d922ca1a382fc91ad",
+          "declared_fontdescriptor_angle": 0,
+          "declared_cff_angle": 0,
+          "font_matrix": [
+            0.001,
+            0.0,
+            0.0,
+            0.001,
+            0.0,
+            0.0
+          ],
+          "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+          "estimated_angle_deg": 15.19524852681988,
+          "segments": [
+            {
+              "glyph": "l",
+              "start": [
+                145,
+                176
+              ],
+              "end": [
+                290,
+                699
+              ],
+              "dx_em": 0.145,
+              "dy_em": 0.523,
+              "slope": 0.27724665391969405,
+              "angle_deg": 15.495855855779578
+            },
+            {
+              "glyph": "h",
+              "start": [
+                187,
+                283
+              ],
+              "end": [
+                294,
+                699
+              ],
+              "dx_em": 0.107,
+              "dy_em": 0.41600000000000004,
+              "slope": 0.25721153846153844,
+              "angle_deg": 14.424464152405259
+            },
+            {
+              "glyph": "h",
+              "start": [
+                141,
+                567
+              ],
+              "end": [
+                -13,
+                0
+              ],
+              "dx_em": -0.154,
+              "dy_em": -0.5670000000000001,
+              "slope": 0.2716049382716049,
+              "angle_deg": 15.19524852681988
+            }
+          ]
+        }
+      ],
+      "source_font_programs_and_names_unchanged": true,
+      "source_images_bytes_and_rects_unchanged": true,
+      "source_vector_drawings_unchanged": true,
+      "unreviewed_english_prose_runs": [],
+      "authoring_sha256": {
+        "tools\\ko\\izho\\2023\\T\\original_style\\page6.json": "3cdfb70b406e466f0d07dc8a62390b30f98c5955d5d3936d4315ccb85ff2d61b",
+        "tools\\izho_legacy_style_rebuild.py": "17aaca8c87564de9c7268ea44a3cdcdde36cedaf3c35191375f3e437c3e6ddc0",
+        "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+        "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d",
+        "tools\\pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "tools\\pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "tools\\izho_native_ascii_audit.py": "f8e44675fabf1ad821a24bae56b76f8fe3fab6152265869e4711dfa8fc8502b6",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_page": 6
+    }
+  ],
+  "visual_review_required": false,
+  "new_native_ascii_codes_checked": 1481,
+  "new_native_ascii_nonpositive_widths": 0,
+  "visual_review": {
+    "reviewed_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "source_comparison": true,
+    "source_font_family_size_bold_italic_baseline_checked": true,
+    "all_equations_native_and_fixed": true,
+    "bitmap_language_labels_found": 0,
+    "opaque_diagram_regions_unchanged": true,
+    "original_inline_formula_alpha_ink_preserved": true,
+    "reviewed_after_final_assembly": true
+  }
+}

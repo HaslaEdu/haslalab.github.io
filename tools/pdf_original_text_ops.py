@@ -1,6 +1,7 @@
 """Exact native PDF prose-CID suppression, preserving all text advances.
 
-Supported profiles: horizontal Identity-H and WinAnsi, Tj/TJ, including Tc/Tw.
+Supported profiles: horizontal Identity-H, WinAnsi, and explicitly mapped
+embedded symbolic simple TrueType; Tj/TJ, including Tc/Tw.
 This deliberately fails closed for unsupported source encodings/state.
 Input glyph dictionaries carry c, font, size and origin from source extraction.
 Return (single_page_pdf_bytes, removed_glyph_count); never rasterize the page.
@@ -14,6 +15,34 @@ import pymupdf as fitz
 
 def glyph_key(c):
     return (c['c'],c['font'],round(c['size'],6),round(c['origin'][0],5),round(c['origin'][1],5))
+
+
+def source_code_bytes(font):
+    """Return a verified source code width; never guess a font encoding."""
+    encoding=str(font.get('/Encoding'))
+    if encoding=='/WinAnsiEncoding':return 1
+    if encoding=='/Identity-H':return 2
+    if font.get('/Encoding')is None and str(font.get('/Subtype'))=='/TrueType':
+        descriptor=font.get('/FontDescriptor')or{}
+        # ISO32000-1 9.6.6.4 permits symbolic embedded simple TrueType fonts
+        # without /Encoding. Use their own single-byte ToUnicode and Widths,
+        # then require exact CID/trace agreement; do not assume WinAnsi/Mac.
+        # https://opensource.adobe.com/dc-acrobat-sdk-docs/standards/pdfstandards/pdf/PDF32000_2008.pdf
+        required=['/FirstChar','/LastChar','/Widths','/ToUnicode']
+        if not all(k in font for k in required)or '/FontFile2'not in descriptor or not int(descriptor.get('/Flags',0))&4:
+            raise ValueError('Implicit simple TrueType requires embedded symbolic TTF, explicit Widths and ToUnicode')
+        first,last=int(font.FirstChar),int(font.LastChar)
+        if first!=font.FirstChar or last!=font.LastChar or not 0<=first<=last<=255 or len(font.Widths)!=last-first+1:
+            raise ValueError('Implicit simple TrueType has an invalid explicit Widths range')
+        text=font.ToUnicode.read_bytes().decode('latin1')
+        spaces=[pair for body in re.findall(r'begincodespacerange(.*?)endcodespacerange',text,re.S)for pair in re.findall(r'<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>',body)]
+        if not spaces or any(len(a)!=2 or len(b)!=2 or int(a,16)>int(b,16)for a,b in spaces):
+            raise ValueError('Implicit simple TrueType requires an explicit single-byte ToUnicode code space')
+        mapping=cmap(font)
+        if not mapping or any(not 0<=code<=255 for code in mapping):
+            raise ValueError('Implicit simple TrueType has a non-single-byte ToUnicode map')
+        return 1
+    raise ValueError('Unsupported source encoding: '+encoding)
 
 
 def cmap(font):
@@ -46,7 +75,7 @@ def cmap(font):
 
 
 def widths(font):
-    if str(font.get('/Encoding'))=='/WinAnsiEncoding':
+    if source_code_bytes(font)==1:
         if '/Widths'not in font:raise ValueError('WinAnsi requires explicit glyph Widths')
         start=int(font.get('/FirstChar',0))
         return {start+i:float(w)for i,w in enumerate(font['/Widths'])},None
@@ -140,8 +169,7 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                     aliases=[value for value in trace_names if family.startswith(value)]
                     if len(aliases)==1:family=aliases[0]
                 if family not in selected_families and protected_form_glyphs is None:continue
-                enc=str(font.get('/Encoding'))
-                if enc not in ['/Identity-H','/WinAnsiEncoding']:raise ValueError('Unsupported source encoding: '+enc)
+                enc=str(font.get('/Encoding'));code_bytes=source_code_bytes(font)
                 descendant=font.get('/DescendantFonts',[font])[0]
                 descriptor=descendant.get('/FontDescriptor',{})
                 # Some original Word math subsets omit ToUnicode entries for
@@ -149,7 +177,7 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                 # map and embedded TTF can still identify a read-only glyph
                 # against MuPDF's gid/FFFD trace, without inventing Unicode.
                 identity_native=(enc=='/Identity-H'and str(descendant.get('/CIDToGIDMap'))=='/Identity'and '/FontFile2'in descriptor)
-                ws,default=widths(font);info[str(name)]=(family,cmap(font),ws,default,2 if enc=='/Identity-H'else 1,identity_native)
+                ws,default=widths(font);info[str(name)]=(family,cmap(font),ws,default,code_bytes,identity_native)
             return info
         replacements={}
         def walk(container,resources,state=('',0,0,1,0),writable=True,ancestors=()):
@@ -163,6 +191,7 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                 if operator=='Tc':tc=float(operands[0])
                 if operator=='Tw':tw=float(operands[0])
                 if operator=='Tr':tr=int(operands[0])
+                if operator=='"':tw=float(operands[0]);tc=float(operands[1])
                 if operator=='Do':
                     child=resources.get('/XObject',{}).get(operands[0])
                     if child is not None and str(child.get('/Subtype'))=='/Form':
@@ -171,8 +200,9 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                         # participates in the native trace order, but its
                         # streams/resources must remain completely untouched.
                         walk(child,child.get('/Resources',resources),(active,tc,tw,tf,tr),False,ancestors+(child.objgen,))
-                if operator in ['TJ','Tj'] and active in fontinfo:
-                    family,encoding,ws,default,code_bytes,identity_native=fontinfo[active];items=list(operands[0])if operator=='TJ'else[operands[0]];new=[]
+                if operator in ['TJ','Tj',"'",'"'] and active in fontinfo:
+                    family,encoding,ws,default,code_bytes,identity_native=fontinfo[active]
+                    items=list(operands[0])if operator=='TJ'else[operands[-1]];new=[]
                     for item in items:
                         if not isinstance(item,pikepdf.String):new.append(item);continue
                         raw=bytes(item)
@@ -211,6 +241,11 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                                 raise ValueError('Selected prose inside a preserved native Form XObject: '+repr(ch))
                             if glyph_key(ch)in selected:
                                 if not writable:raise ValueError('Selected prose inside a preserved native Form XObject')
+                                # Quote shows combine line movement (and, for
+                                # double quote, spacing changes) with text.
+                                # Match their native trace and retain the
+                                # original operator bytes; never rewrite them.
+                                if operator in ["'",'"']:raise ValueError('Selected prose inside a read-only quote text-show operator')
                                 changed_here=True
                                 if kept:new.append(pikepdf.String(bytes(kept)));kept.clear()
                                 width=ws.get(code,default)

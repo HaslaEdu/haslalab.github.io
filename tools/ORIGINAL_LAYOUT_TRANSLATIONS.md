@@ -74,6 +74,13 @@ from ToUnicode remain read-only and require a matching embedded font and GID.
 Compressed and uncompressed image/soft-mask streams retain their original
 bytes and filters; saving does not recompress original streams.
 
+Only explicitly selected actual prose spaces can use the opt-in whitespace
+journal. The audit validates their character, font, size, original position and
+prose frame, and rejects fabricated or protected math/Form spaces. Run
+`python tools/test_pdf_original_style_prose_whitespace.py` for those regressions.
+The core also supports explicit one-byte ToUnicode/Widths maps in embedded
+Symbolic TrueType fonts and read-only original quote text-show operators.
+
 For CPhO 2007, download the unchanged Chinese original
 `CPhO_2007_T_ZH.pdf` from the `pdf-cpho` release into `tmp/source-audit/`.
 Its SHA-256 is
@@ -97,3 +104,16 @@ occluded components separately and requires zero unexpected hidden components.
 Only the raster Chinese caption character is overlaid; the original numeric
 caption glyphs and all diagram geometry remain unchanged. The inferred raster
 font size and baseline are documented in `raster-caption-provenance.json`.
+
+CPhO 2022 uses `cpho_2022_original_build.py extract` and
+`cpho_2022_original_build.py build --pages 1 2 3 4`. Its Chinese source SHA-256 is
+`89d1718db8a92afebb741b755beadd4476ac11654b50a5b79d4eaa2d13b91e04`.
+`cpho_2022_original_inventory.json` records both reviewed editions and all
+authoring/QA files. The original six diagrams and mathematical subscripts are
+retained; only 15 diagram-language labels are overlaid. Raster-label font
+measurements are inferred and recorded separately from native PDF typography.
+Body baselines are checked to 0.0001pt; rotated raster labels use a 0.005pt
+rounding limit. MuPDF and Poppler verify native ink and non-language geometry.
+The English primary is `CPhO_2022_T_EN.pdf`, with the old BAUPC URL retained as
+a byte-identical alias. Rebuild the site catalogue only after Release uploads
+finish, since its version includes the final PDF manifest.

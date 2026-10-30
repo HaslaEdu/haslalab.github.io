@@ -16,7 +16,8 @@ from pdf_hangul_visibility import audit as hangul_audit
 ROOT=pipeline.ROOT
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
-def rebuild(year,kind,ready=False):
+def rebuild(year,kind,ready=False,move_final=False):
+    if move_final and not ready:raise ValueError('--move-final requires --ready')
     pipeline.rebuild(year,kind)
     folder=ROOT/f'tools/ko/izho/{year}/{kind}/original_style'
     report=json.loads((folder/'audit.json').read_text('utf8'))
@@ -37,7 +38,17 @@ def rebuild(year,kind,ready=False):
     visibility=hangul_audit(final)
     if visibility['flagged_components']:raise ValueError('Final Korean glyphs are hidden')
     target=ROOT/f'pdfx/izho/original-style/IZhO_{year}_{kind}_KO.pdf'
-    target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(final,target)
+    target.parent.mkdir(parents=True,exist_ok=True)
+    if move_final:
+        # The complete, audited assembly is on the same workspace volume.
+        # Rename it into its canonical location rather than retaining a
+        # second large PDF. Existing canonical versions are never replaced
+        # by this opt-in path.
+        if target.exists():raise ValueError('--move-final requires a new canonical target')
+        final.rename(target)
+        report['output']=str(target.relative_to(ROOT)).replace('\\','/')
+        (folder/'audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),'utf8')
+    else:shutil.copyfile(final,target)
     record=dict(year=year,kind=kind,status='READY',file=str(target.relative_to(ROOT)).replace('\\','/'),
         sha256=sha(target),bytes=target.stat().st_size,pages=report['pages'],
         source_sha256=report['source_sha256'],source_pages_1based=report['source_pages_1based'],
@@ -45,6 +56,8 @@ def rebuild(year,kind,ready=False):
         native_glyphs_checked=sum(qa['native_glyphs_checked']for qa in report['page_audits']),
         protected_glyph_origins_checked=sum(qa['protected_glyph_origins_checked']for qa in report['page_audits']),
         native_glyphs_changed=0,protected_glyphs_selected_for_erasure=0,
+        selected_prose_actual_whitespace_glyphs_checked=sum(qa.get('selected_prose_actual_whitespace_glyphs_checked',0)for qa in report['page_audits']),
+        selected_prose_whitespace_scope=[dict(page=qa['source_page'],glyphs=qa['mutable_prose_whitespace_glyphs'])for qa in report['page_audits']if qa.get('mutable_prose_whitespace_glyphs')],
         changed_pixels_in_native_glyph_neighborhood=0,changed_pixels_outside_prose=0,
         final_vs_reviewed_proof_changed_pixels=0,new_native_ascii_nonpositive_widths=report['new_native_ascii_nonpositive_widths'],
         hangul_visibility_candidates=0,visual_reviewed_pages=sorted(reviews),
@@ -67,4 +80,6 @@ def rebuild(year,kind,ready=False):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('year',type=int,choices=[2021,2022]);p.add_argument('kind',choices=['T','TS'])
-    p.add_argument('--ready',action='store_true');a=p.parse_args();rebuild(a.year,a.kind,a.ready)
+    p.add_argument('--ready',action='store_true')
+    p.add_argument('--move-final',action='store_true',help='Rename a newly audited assembly into a new canonical target, avoiding a duplicate PDF')
+    a=p.parse_args();rebuild(a.year,a.kind,a.ready,a.move_final)

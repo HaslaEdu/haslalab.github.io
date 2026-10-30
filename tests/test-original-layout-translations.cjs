@@ -48,6 +48,38 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'cpho-native-labelled-problems') {
+    assert.equal(qa.sha256, item.sha256);
+    assert.equal(qa.passed, true);
+    assert.equal(qa.pages.length, item.pages);
+    assert.equal(qa.final_file_byte_identical_to_verified_preview, true);
+    assert.equal(qa.verified_preview_sha256, item.sha256);
+    for (const page of qa.pages) {
+      assert.equal(page.proof_sha256, item.sha256);
+      assert.equal(page.passed, true);
+      for (const key of ['native_glyphs_changed', 'bit_exact_native_nonspace_glyphs_changed', 'protected_glyphs_selected_for_erasure', 'unexpected_han', 'unexpected_nul', 'translation_style_violations', 'graphic_collision_components']) assert.deepEqual(page[key], []);
+      for (const key of ['changed_pixels_in_native_glyph_neighborhood', 'changed_pixels_outside_prose', 'changed_pixels_in_native_bitmap_ink_outside_language', 'changed_pixels_in_native_vector_graphics']) assert.equal(page[key], 0);
+      assert.ok(page.translation_size_max_delta_pt < 0.0001);
+      // Body baselines are checked to 0.0001pt by the style audit. Its
+      // inferred, rotated bitmap-label baselines allow 0.005pt rounding.
+      assert.ok(page.translation_baseline_max_delta_pt < 0.005);
+      assert.equal(page.original_font_programs_identical, true);
+      assert.equal(page.original_images_and_smask_streams_identical, true);
+    }
+    if (item.language === 'ko') assert.equal(qa.hangul_visibility.flagged_components, 0);
+    const poppler = read(item.poppler_qa);
+    assert.equal(poppler.passed, true);
+    assert.equal(poppler.prose_antialias_guard_px, 1);
+    const rendered = poppler.files.find(row => row.file === item.file);
+    assert.equal(rendered.sha256, item.sha256);
+    assert.equal(rendered.pages.length, item.pages);
+    assert.ok(rendered.pages.every(page => page.changed_pixels_outside_prose === 0 && page.changed_pixels_in_native_actual_ink === 0 && page.maximum_fringe_distance_px <= 1));
+    const identity = read(item.render_identity_qa).files.find(row => row.file === item.file);
+    assert.equal(identity.sha256, item.sha256);
+    assert.equal(identity.byte_identical, true);
+    assert.deepEqual(identity.reviewed_pages, Array.from({length:item.pages}, (_,i) => i+1));
+    continue;
+  }
   if (['cpho-native-problems', 'cpho-native-raster-problems'].includes(item.audit_schema)) {
     assert.equal(qa.sha256, item.sha256);
     assert.equal(qa.passed, true);
@@ -121,6 +153,12 @@ for (const item of published) {
         }
         const plan = fs.readFileSync(path.join(root, page.plan.replaceAll('\\', '/')));
         assert.equal(crypto.createHash('sha256').update(plan).digest('hex'), page.plan_sha256);
+        const spaces = page.mutable_prose_whitespace_glyphs || [];
+        if (spaces.length) {
+          assert.ok(JSON.parse(plan).journal_selected_prose_whitespace, 'Mutable spaces need an explicitly selected prose journal');
+          assert.equal(page.selected_prose_actual_whitespace_glyphs_checked, spaces.length);
+          assert.ok(spaces.every(glyph => glyph.c.length > 0 && glyph.c.trim() === '' && typeof glyph.font === 'string' && glyph.size > 0 && glyph.origin.length === 2 && glyph.origin.every(Number.isFinite)));
+        }
         continue;
       }
       for (const key of ['outside_prose_changed_pixels', 'missing_or_moved_native_glyphs', 'missing_or_moved_math_glyphs', 'original_math_ink_changed_pixels', 'original_native_ink_changed_pixels', 'original_figure_ink_changed_pixels', 'source_to_suppression_control_native_ink_changed_pixels', 'korean_intrusion_on_native_ink_pixels', 'final_vs_reviewed_proof_changed_pixels']) assert.equal(page[key], 0, `${item.file}: ${key}`);

@@ -6,7 +6,7 @@ only appended Korean/prose streams are inspected. Original math is never edited.
 from pathlib import Path
 import argparse,hashlib,json
 import pikepdf
-from pdf_original_text_ops import cmap,widths
+from pdf_original_text_ops import cmap,widths,source_code_bytes
 
 def streams(contents):return list(contents)if isinstance(contents,pikepdf.Array)else[contents]
 
@@ -30,9 +30,7 @@ def audit(pdf_path,control_folder):
                     if current is None:raise ValueError('A new text stream inherits an unknown font')
                     if str(current).startswith('/KO_'):continue
                     if current not in source_aliases:raise ValueError('Unexpected new non-Korean font alias '+str(current))
-                    font=page.Resources.Font[current];encoding=str(font.get('/Encoding'))
-                    count=1 if encoding=='/WinAnsiEncoding'else 2 if encoding=='/Identity-H'else 0
-                    if not count:raise ValueError('Unknown native prose encoding '+encoding)
+                    font=page.Resources.Font[current];count=source_code_bytes(font)
                     ws,default=widths(font);mapping=cmap(font);aliases.add(str(current))
                     strings=[operands[0]]if operator=='Tj'else[value for value in operands[0]if isinstance(value,pikepdf.String)]
                     for value in strings:

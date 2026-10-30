@@ -307,7 +307,9 @@ def build(folder,target,lang,pages=None):
             for mi,m in enumerate(maths):
                 if mi in e.get('preserved_math',[]):continue
                 factor=min(1,e.get('math_cap',26)/m['height']);w,h=m['width']*factor,m['height']*factor;max_height=max(max_height,h)
-                text=text.replace(f'[[{mi}]]',f'<img src="{m["file"]}" width="{w}" height="{h}">')
+                dimensions=(f'style="width:{w}pt;height:{h}pt"' if data.get('math_css_dimensions',False)
+                            else f'width="{w}" height="{h}"')
+                text=text.replace(f'[[{mi}]]',f'<img src="{m["file"]}" {dimensions}>')
             height=e.get('line_height',max(1.25,(max_height+2)/e['size']))
             rect=fitz.Rect(e.get(f'{lang}_insert_rect',e.get('insert_rect',e['rect'])));rect.y0-=.7;rect.y1+=1
             color=e.get('color',0);color=f'#{color:06x}' if isinstance(color,int) else color

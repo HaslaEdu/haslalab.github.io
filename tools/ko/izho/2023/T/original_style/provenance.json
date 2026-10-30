@@ -1,0 +1,230 @@
+{
+  "source": "IZhO_2023_T_EN.pdf",
+  "source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+  "source_edition_pages_1based": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "translation_policy": "Translate only the complete English edition of the multilingual source. Preserve native equations, variables, numerical data, font programs, page geometry, and original diagram/inline-image programs. No editorial notes added to the PDF.",
+  "source_anomalies_kept": [
+    {
+      "page": 2,
+      "description": "Problem1.3 is printed as4.0points while the Problem1 heading says10.0points; both original values are retained."
+    },
+    {
+      "page": 2,
+      "description": "The original gas-constant unit is J/K, and the period unit in the native Jupiter expression is year. Native units are retained without normalization."
+    },
+    {
+      "page": 3,
+      "description": "The original wording of2.1 refers to cars in A overtaking B even though the stated speeds are80 and90km/h. The requested overtaking direction is translated as written."
+    }
+  ],
+  "source_prose_typography_handling": [
+    {
+      "page": 5,
+      "source_text": "inductionшт in the plane",
+      "selected_source_prose_slot": [
+        13,
+        9,
+        1
+      ],
+      "description": "The Cyrillic keyboard artifact шт is part of the source prose after induction, not a mathematical variable. That prose phrase is translated together into Korean. The following native B=alpha r equation is untouched."
+    }
+  ],
+  "matched_korean_faces": "Original serif/sans, weight, point size, baseline, and title hierarchy are preserved using matching Noto CJK faces where the source font has no Korean glyphs. Original Latin and equation fonts are reused unchanged.",
+  "missing_source_italic_angle_policy": "Explicit opt-in only: original FontDescriptor and embedded CFF both declare zero despite visibly italic glyph outlines. The actual embedded long stems and FontMatrix are measured; segment coordinates, program hashes, and estimates follow.",
+  "source_italic_slant_measurements": [
+    {
+      "page": 1,
+      "font": "Times-BoldItalic",
+      "source_alias": "/R22",
+      "font_program_sha256": "e3b37238e11b6aec475ee2009ed651bcf7f5541ad537e56d922ca1a382fc91ad",
+      "declared_fontdescriptor_angle": 0,
+      "declared_cff_angle": 0,
+      "font_matrix": [
+        0.001,
+        0.0,
+        0.0,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+      "estimated_angle_deg": 15.19524852681988,
+      "segments": [
+        {
+          "glyph": "l",
+          "start": [
+            145,
+            176
+          ],
+          "end": [
+            290,
+            699
+          ],
+          "dx_em": 0.145,
+          "dy_em": 0.523,
+          "slope": 0.27724665391969405,
+          "angle_deg": 15.495855855779578
+        },
+        {
+          "glyph": "h",
+          "start": [
+            187,
+            283
+          ],
+          "end": [
+            294,
+            699
+          ],
+          "dx_em": 0.107,
+          "dy_em": 0.41600000000000004,
+          "slope": 0.25721153846153844,
+          "angle_deg": 14.424464152405259
+        },
+        {
+          "glyph": "h",
+          "start": [
+            141,
+            567
+          ],
+          "end": [
+            -13,
+            0
+          ],
+          "dx_em": -0.154,
+          "dy_em": -0.5670000000000001,
+          "slope": 0.2716049382716049,
+          "angle_deg": 15.19524852681988
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "font": "Times-Italic",
+      "source_alias": "/R34",
+      "font_program_sha256": "73d36643e2a819db2aa1ba3c806bfd80e1966d156ead8faec18191c49b2bd4c6",
+      "declared_fontdescriptor_angle": 0,
+      "declared_cff_angle": 0,
+      "font_matrix": [
+        0.001,
+        0.0,
+        0.0,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+      "estimated_angle_deg": 15.517440164380966,
+      "segments": [
+        {
+          "glyph": "I",
+          "start": [
+            179,
+            120
+          ],
+          "end": [
+            302,
+            563
+          ],
+          "dx_em": 0.123,
+          "dy_em": 0.443,
+          "slope": 0.27765237020316025,
+          "angle_deg": 15.517440164380966
+        },
+        {
+          "glyph": "I",
+          "start": [
+            196,
+            532
+          ],
+          "end": [
+            73,
+            90
+          ],
+          "dx_em": -0.123,
+          "dy_em": -0.442,
+          "slope": 0.27828054298642535,
+          "angle_deg": 15.550850362220793
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "font": "Times-BoldItalic",
+      "source_alias": "/R22",
+      "font_program_sha256": "e3b37238e11b6aec475ee2009ed651bcf7f5541ad537e56d922ca1a382fc91ad",
+      "declared_fontdescriptor_angle": 0,
+      "declared_cff_angle": 0,
+      "font_matrix": [
+        0.001,
+        0.0,
+        0.0,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+      "estimated_angle_deg": 15.19524852681988,
+      "segments": [
+        {
+          "glyph": "l",
+          "start": [
+            145,
+            176
+          ],
+          "end": [
+            290,
+            699
+          ],
+          "dx_em": 0.145,
+          "dy_em": 0.523,
+          "slope": 0.27724665391969405,
+          "angle_deg": 15.495855855779578
+        },
+        {
+          "glyph": "h",
+          "start": [
+            187,
+            283
+          ],
+          "end": [
+            294,
+            699
+          ],
+          "dx_em": 0.107,
+          "dy_em": 0.41600000000000004,
+          "slope": 0.25721153846153844,
+          "angle_deg": 14.424464152405259
+        },
+        {
+          "glyph": "h",
+          "start": [
+            141,
+            567
+          ],
+          "end": [
+            -13,
+            0
+          ],
+          "dx_em": -0.154,
+          "dy_em": -0.5670000000000001,
+          "slope": 0.2716049382716049,
+          "angle_deg": 15.19524852681988
+        }
+      ]
+    }
+  ],
+  "bitmap_language_review": "bitmap-language-review.json",
+  "reproducibility": {
+    "builder": "tools/izho_legacy_style_rebuild.py 2023 T",
+    "assembly": "pikepdf native page append; compress_streams=False",
+    "original_prose_suppression": "tools/pdf_original_text_ops.py",
+    "source_ascii_width_audit": "tools/izho_native_ascii_audit.py"
+  }
+}
