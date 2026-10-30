@@ -138,12 +138,18 @@ export function guardMonthlyGrade(grade, problem, normalized, lang) {
 }
 
 export async function reserveMonthlySubmission(db, problem, userId, normalized, timestamp) {
+  const captureGuard = normalized.captureId ? ` AND EXISTS(SELECT 1 FROM monthly_capture_sessions
+    WHERE id=? AND user_id=? AND problem_id=? AND revision=? AND submission_id IS NULL AND revoked=0)` : '';
   const result = await db.batch([
     db.prepare(`INSERT INTO monthly_answer_requests(user_id,problem_id,request_id,answer_sheet,answer_text,via_ocr,created_at)
       SELECT ?,?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM submissions WHERE user_id=? AND problem_id=?)<?
-      AND NOT EXISTS(SELECT 1 FROM monthly_answer_requests WHERE user_id=? AND problem_id=? AND request_id=?)`)
+      AND NOT EXISTS(SELECT 1 FROM monthly_answer_requests WHERE user_id=? AND problem_id=? AND request_id=?)
+      AND (?='' OR NOT EXISTS(SELECT 1 FROM monthly_answer_requests WHERE user_id=? AND problem_id=?
+        AND json_extract(answer_sheet,'$.capture.scan_id')=?))${captureGuard}`)
       .bind(userId, problem.id, normalized.requestId, normalized.serialized, normalized.answer, normalized.viaOcr, timestamp,
-        userId, problem.id, MONTHLY_ATTEMPT_LIMIT, userId, problem.id, normalized.requestId),
+        userId, problem.id, MONTHLY_ATTEMPT_LIMIT, userId, problem.id, normalized.requestId,
+        normalized.captureId||'',userId,problem.id,normalized.captureId||'',
+        ...(normalized.captureId ? [normalized.captureId,userId,problem.id,normalized.sheet.capture.revision] : [])),
     db.prepare(`INSERT INTO submissions(problem_id,user_id,answer,via_ocr,status,score,detail,in_week,created_at,graded_at)
       SELECT problem_id,user_id,answer_text,via_ocr,'pending',NULL,NULL,?,?,NULL FROM monthly_answer_requests
       WHERE user_id=? AND problem_id=? AND request_id=? AND submission_id IS NULL`)
@@ -152,11 +158,24 @@ export async function reserveMonthlySubmission(db, problem, userId, normalized, 
       WHERE user_id=? AND problem_id=? ORDER BY id DESC LIMIT 1)
       WHERE user_id=? AND problem_id=? AND request_id=? AND submission_id IS NULL`)
       .bind(userId, problem.id, userId, problem.id, normalized.requestId),
+    ...(normalized.captureId ? [db.prepare(`UPDATE monthly_capture_sessions SET
+      submission_id=(SELECT submission_id FROM monthly_answer_requests WHERE user_id=? AND problem_id=? AND request_id=?),
+      revision=revision+1 WHERE id=? AND submission_id IS NULL AND EXISTS(SELECT 1 FROM monthly_answer_requests
+        WHERE user_id=? AND problem_id=? AND request_id=? AND submission_id IS NOT NULL)`)
+      .bind(userId,problem.id,normalized.requestId,normalized.captureId,userId,problem.id,normalized.requestId)] : []),
   ]);
   const request = await db.prepare(`SELECT r.*,s.status,s.score,s.detail,s.graded_at FROM monthly_answer_requests r
     JOIN submissions s ON s.id=r.submission_id
     WHERE r.user_id=? AND r.problem_id=? AND r.request_id=?`).bind(userId, problem.id, normalized.requestId).first();
-  if (!request) fail('attempts_exhausted', 409);
+  if (!request) {
+    if(normalized.captureId && await db.prepare(`SELECT request_id FROM monthly_answer_requests WHERE user_id=? AND problem_id=?
+      AND json_extract(answer_sheet,'$.capture.scan_id')=?`).bind(userId,problem.id,normalized.captureId).first()) fail('capture_already_submitted',409);
+    if(normalized.captureId) {
+      const current=await db.prepare('SELECT revision,revoked,submission_id FROM monthly_capture_sessions WHERE id=?').bind(normalized.captureId).first();
+      if(!current||current.revoked||current.submission_id||current.revision!==normalized.sheet.capture.revision)fail('capture_changed',409);
+    }
+    fail('attempts_exhausted',409);
+  }
   if (request.answer_sheet !== normalized.serialized || request.via_ocr !== normalized.viaOcr) fail('request_conflict', 409);
   return { created: !!result[0].meta?.changes, request };
 }

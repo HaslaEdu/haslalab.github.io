@@ -29,7 +29,7 @@ export function ensureMonthlyPhotoSchema(db, key = db) {
   return promise;
 }
 
-async function storePhoto(db, { userId, problemId, partId, mime, data, transcript, timestamp }) {
+export async function storePhoto(db, { userId, problemId, partId, mime, data, transcript, timestamp }) {
   const id = crypto.randomUUID(), statements = [db.prepare(`INSERT INTO monthly_answer_photos
     (id,user_id,problem_id,part_id,mime,bytes,ocr_text,created_at)
     SELECT ?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM users WHERE id=? AND deleted=0)
@@ -109,7 +109,7 @@ export function monthlyPhotoDeletion(db,userId) {
   ];
 }
 
-async function boundedForm(req, HttpError) {
+export async function boundedForm(req, HttpError) {
   const maximum = 2*MAX_IMAGE+16384;
   if (Number(req.headers.get('Content-Length')) > maximum) throw new HttpError(413,'image_too_big');
   const reader = req.body?.getReader();

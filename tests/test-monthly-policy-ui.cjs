@@ -80,36 +80,30 @@ test('native monthly provenance is absent from the header while other contest at
   await context.arProblem(root,()=>true,4);assert.match(root.innerHTML,/Official contest attribution/);
 });
 
-function binding(context,p=clone(problem),ocr=false) {
+function binding(context,p=clone(problem),ocr=false,withModes=false) {
   const fields=new Map(),previews=new Map(),button={disabled:false},out={innerHTML:''},counter={textContent:''};
+  const typedPanel={hidden:false},photoPanel={hidden:true};
+  const modes=['typed','photo'].map(sheetMode=>({dataset:{sheetMode},classList:{toggle(){}},setAttribute(name,value){this[name]=value;}}));
   for(const part of p.answerSheet.parts)for(const kind of ['answer','working']){
     fields.set(`${kind}:${part.id}`,{value:'',disabled:false,dataset:{[kind==='working'?'sheetWorking':'sheetAnswer']:part.id}});
     previews.set(`${kind}:${part.id}`,{innerHTML:''});
   }
   const form={photo_part:{value:'a'},querySelector(selector){
     if(selector==='button[type=submit]')return button;
+    if(selector==='.arsheet-typed')return typedPanel;if(selector==='.arsheet-photo')return photoPanel;
     let match=/^\[data-sheet-(answer|working)="([^"]+)"\]$/.exec(selector);if(match)return fields.get(`${match[1]}:${match[2]}`);
     match=/^\[data-sheet-(answer|working)-preview="([^"]+)"\]$/.exec(selector);if(match)return previews.get(`${match[1]}:${match[2]}`);
     throw Error('Unexpected selector '+selector);
-  },querySelectorAll:selector=>selector.startsWith('[data-sheet-answer]')?[...fields.values()]:[]};
+  },querySelectorAll:selector=>selector.startsWith('[data-sheet-answer]')?[...fields.values()]:selector==='[data-sheet-mode]'&&withModes?modes:[]};
   const root={querySelector:selector=>({'#arSheetF':form,'#arOut':out,'#arSheetAttempts':counter}[selector])};
   context.arBindMonthlyAnswer(root,p,()=>true,ocr);
-  return {form,fields,button,out,p};
+  return {form,fields,button,out,p,modes,typedPanel,photoPanel};
 }
 
-test('verified photo IDs are deduplicated, restored with the account draft and submitted with their part',async()=>{
-  const {context,storage}=app();let read,options,request;
-  context.arBindAnswerPhoto=(_f,_alive,_T,onRead,opts)=>{read=onRead;options=opts;};
-  const form=binding(context,clone(problem),true);
-  assert.equal(options.request(form.fields.get('working:a')).path,'/monthly/problems/4/photos');
-  assert.equal(options.request(form.fields.get('working:a')).fields.part_id,'a');
-  assert.equal(options.request(form.fields.get('working:a')).original,true);
-  const dest=form.fields.get('working:a');
-  read('my handwritten work',dest,{photo_id:'photo-1',part_id:'a'});
-  read('continued work',dest,{photo_id:'photo-1',part_id:'a'});
-  read('wrong association',dest,{photo_id:'photo-wrong',part_id:'b'});
-  form.fields.get('answer:a').value='42';form.fields.get('answer:a').oninput();
-  const draft=JSON.parse([...storage.values()][0]);assert.deepEqual(draft.photos,[{id:'photo-1',part_id:'a'}]);
+test('legacy photographed draft attachments remain deduplicated when reopened in LaTeX mode',async()=>{
+  const {context,storage}=app();let request;
+  storage.set(context.arSheetDraftKey(problem),JSON.stringify({version:problem.answerSheet.version,
+    parts:[{id:'a',answer:'42',working:'Previously recognized work'}],photos:[{id:'photo-1',part_id:'a'},{id:'photo-1',part_id:'a'}]}));
   context.cmApi=async(_method,_path,body)=>{request=clone(body);return{status:'graded',score:73,feedback_held:true,feedback_available_at:deadline,attempts:{limit:3,used:1,remaining:2}};};
   const restored=binding(context,clone(problem),false);
   await restored.form.onsubmit({preventDefault(){}});
@@ -128,6 +122,104 @@ test('the monthly form allows the longer review and locks one accepted suspicion
   assert.equal(f.button.disabled,true);assert.equal(f.p.attempts.remaining,2);assert.match(f.out.innerHTML,/제출 기회 1회 사용/);
   await f.form.onsubmit({preventDefault(){}});assert.equal(calls,1);
   f.fields.get('working:a').value+=' corrected';f.fields.get('working:a').oninput();assert.equal(f.button.disabled,false);
+});
+
+test('photo mode is a separate exam scanner workspace and submits only its server-owned capture',async()=>{
+  const {context}=app();let hooks,request;
+  const scan={id:'capture-1',open:true,status:'scanning',revision:1,pages:[{id:'photo-1',ocr_status:'done'}],photo_ids:['photo-1'],parts:[{id:'a',answer:'99',working:'Recognized work'}]};
+  context.arBindMonthlyCapture=(_form,_p,_alive,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},resume(){},pause(){},refresh(){},setBusy(value){hooks.onBusy(value);}};};
+  context.cmApi=async(_method,_path,payload)=>{request=clone(payload);return{...clone(grade),feedback_held:true,attempts:{limit:3,used:1,remaining:2}};};
+  const f=binding(context,clone(problem),true,true);f.fields.get('answer:a').value='42';f.fields.get('working:a').value='Typed derivation';
+  f.modes[1].onclick();assert.equal(f.typedPanel.hidden,true);assert.equal(f.photoPanel.hidden,false);assert.equal(f.button.disabled,false);
+  await f.form.onsubmit({preventDefault(){}});
+  assert.equal(request.scan_id,'capture-1');assert.equal(request.parts,undefined);assert.equal(request.photo_ids,undefined);assert.equal(request.via_ocr,undefined);
+  assert.equal(f.fields.get('answer:a').value,'42','photo mode never overwrites the typed draft');
+  assert.equal(f.button.disabled,true);f.modes[0].onclick();assert.equal(f.typedPanel.hidden,false);assert.equal(f.photoPanel.hidden,true);assert.equal(f.button.disabled,false);
+});
+
+test('photo network retries retain the accepted request key even after the server closes the capture',async()=>{
+  const {context}=app();let hooks,calls=0;const requests=[];
+  const scan={id:'capture-1',open:true,status:'scanning',pages:[{id:'photo-1',ocr_status:'done'}],photo_ids:['photo-1'],parts:[{id:'a',answer:'99',working:'Recognized work'}]};
+  context.arBindMonthlyCapture=(_f,_p,_a,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},pause(){},resume(){},refresh(){},setBusy(value){hooks.onBusy(value);}};};
+  context.cmApi=async(_m,_p,payload)=>{requests.push(clone(payload));if(++calls===1){scan.open=false;scan.status='submitted';hooks.onChange(scan);throw{code:'network'};}return{...clone(grade),attempts:{limit:3,used:1,remaining:2}};};
+  const f=binding(context,clone(problem),true,true);f.modes[1].onclick();await f.form.onsubmit({preventDefault(){}});assert.equal(f.button.disabled,false);
+  await f.form.onsubmit({preventDefault(){}});assert.equal(requests.length,2);assert.equal(requests[0].request_id,requests[1].request_id);assert.equal(requests[1].scan_id,'capture-1');
+});
+
+test('a late hidden photo poll cannot reset a LaTeX submission retry key',async()=>{
+  const {context}=app();let hooks;const requests=[];
+  const scan={id:'capture-1',open:true,status:'scanning',pages:[{ocr_status:'done'}],photo_ids:['photo-1'],parts:[{id:'a',answer:'99',working:'Recognized work'}]};
+  context.arBindMonthlyCapture=(_f,_p,_a,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},pause(){},resume(){},refresh(){},setBusy(){}};};
+  context.cmApi=async(_m,_p,payload)=>{requests.push(clone(payload));if(requests.length===1)throw{code:'network'};return{...clone(grade),attempts:{limit:3,used:1,remaining:2}};};
+  const f=binding(context,clone(problem),true,true);f.fields.get('answer:a').value='42';f.fields.get('working:a').value='Typed derivation';
+  f.modes[1].onclick();f.modes[0].onclick();await f.form.onsubmit({preventDefault(){}});
+  hooks.onChange({...scan,parts:[{id:'a',answer:'100',working:'Late uploaded work'}]});await f.form.onsubmit({preventDefault(){}});
+  assert.equal(requests[0].request_id,requests[1].request_id);assert.equal(requests[1].scan_id,undefined);assert.equal(requests[1].parts[0].answer,'42');
+});
+
+test('a later lower score shows the latest grade alongside the unchanged problem record',()=>{
+  const {context}=app();const html=context.arResult({...clone(grade),score:88,best:90},problem);
+  assert.match(html,/88 \/ 100점/);assert.match(html,/문제 기록 \(최고점\)/);assert.match(html,/90 \/ 100점/);assert.ok(!html.includes('private-'));
+});
+
+test('a capture revision conflict refreshes the photographed answer without consuming the old request key',async()=>{
+  const {context}=app();let hooks,refreshes=0,serial=0;const requests=[];
+  context.crypto.randomUUID=()=>`request-${++serial}`;
+  let scan={id:'capture-1',open:true,status:'scanning',pages:[{ocr_status:'done'}],photo_ids:['photo-1'],parts:[{id:'a',answer:'99',working:'Recognized work'}]};
+  context.arBindMonthlyCapture=(_f,_p,_a,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},pause(){},resume(){},
+    refresh(){refreshes++;scan={...scan,photo_ids:['photo-2'],parts:[{id:'a',answer:'100',working:'Updated captured work'}]};hooks.onChange(scan);},setBusy(value){hooks.onBusy(value);}};};
+  context.cmApi=async(_m,_p,payload)=>{requests.push(clone(payload));if(requests.length===1)throw{code:'capture_changed'};return{...clone(grade),attempts:{limit:3,used:1,remaining:2}};};
+  const f=binding(context,clone(problem),true,true);f.modes[1].onclick();await f.form.onsubmit({preventDefault(){}});
+  assert.equal(f.p.attempts.used,0);assert.equal(refreshes,1);assert.match(f.out.innerHTML,/촬영 답안이 변경/);assert.equal(f.button.disabled,false);
+  await f.form.onsubmit({preventDefault(){}});assert.notEqual(requests[0].request_id,requests[1].request_id);assert.equal(requests[1].scan_id,'capture-1');
+});
+
+test('unreadable or incomplete photographed parts cannot be sent as an invented zero',()=>{
+  const {context}=app();const scan={pages:[{ocr_status:'done'}],parts:[{id:'a',answer:'42',working:'Derivation'},{id:'b',answer:'',working:''}]};
+  assert.equal(context.arMonthlyCaptureReady(scan),true);scan.pages[0].ocr_status='failed';assert.equal(context.arMonthlyCaptureReady(scan),false);
+  scan.pages[0].ocr_status='done';scan.parts[0].working='';assert.equal(context.arMonthlyCaptureReady(scan),false);
+  assert.equal(context.arMonthlyCaptureReady({pages:[],parts:scan.parts}),false);
+});
+
+test('monthly reward notices state highest-score totals, 9/6/3 rewards and delayed finalization in both languages',()=>{
+  const {context}=app();const reward={eligible:true,status:'awaiting_grading',announcement_at:deadline};
+  let html=context.arMonthlyRewardNotice(reward,'2026-11');assert.match(html,/최고 점수/);assert.match(html,/1위 9개 · 2위 6개 · 3위 3개/);assert.match(html,/남은 채점/);
+  assert.equal(context.arMonthlyRewardNotice(reward,'2026-W44'),'');assert.equal(context.arMonthlyRewardNotice({eligible:false},'2026-11'),'');
+  context.lang='en';html=context.arMonthlyRewardNotice({...reward,status:'published'},'2026-11');assert.match(html,/highest score/);assert.match(html,/9, 6 and 3 exam tokens/);assert.match(html,/tokens credited/);
+  assert.match(context.arSheetT().bestOnly,/only your highest score/);
+});
+
+function captureFixture(context) {
+  const renew={},refresh={},newButton={},qr={innerHTML:'',querySelector:()=>renew},info={hidden:true};
+  const removed=[];
+  const pages={innerHTML:'',querySelector:selector=>selector==='[data-capture-refresh]'?refresh:pages.innerHTML.includes('data-capture-new')?newButton:null,
+    querySelectorAll:selector=>selector==='[data-capture-remove]'?[...pages.innerHTML.matchAll(/data-capture-remove="([^"]+)"/g)].map(match=>{const button={dataset:{captureRemove:match[1]}};removed.push(button);return button;}):[]};
+  const box={querySelector:selector=>({'[data-capture-qr]':qr,'[data-capture-pages]':pages,'[data-capture-info]':info}[selector])};
+  context.URL=URL;context.URLSearchParams=URLSearchParams;context.document={baseURI:'https://haslalab.org/',hidden:false};context.arLoad=async()=>{};context.arBindMonthlyPhotos=()=>{};
+  const urls=[];context.window.qrcode=()=>({addData:value=>urls.push(value),make(){},createSvgTag:()=>'<svg data-qr="1"></svg>'});
+  return{root:{querySelector:()=>box},qr,pages,info,renew,refresh,newButton,removed,urls};
+}
+
+test('the exam-style capture controller restores its owner session, renders a scoped scanner QR and removes pages without grading',async()=>{
+  const {context}=app(),ui=captureFixture(context),requests=[];
+  let scan={id:'capture-1',token:'opaque-upload-grant',open:true,status:'scanning',revision:1,photo_ids:['photo-1'],
+    pages:[{id:'photo-1',page_no:1,ocr_status:'done',text:'<script>private</script>'}],parts:[{id:'a',answer:'42',working:'Original derivation'}]};
+  context.cmApi=async(method,path,body)=>{requests.push({method,path,body});if(method==='DELETE')scan={...scan,revision:2,pages:[],parts:[],photo_ids:[]};return{scan:clone(scan)};};
+  const controller=context.arBindMonthlyCapture(ui.root,clone(problem),()=>true,{scanId:'capture-1'});await controller.start();
+  assert.equal(requests[0].path,'/monthly/problems/4/scan');assert.equal(requests[0].body.scan_id,'capture-1');
+  const url=new URL(ui.urls[0]),hash=new URLSearchParams(url.hash.slice(1));assert.equal(url.pathname,'/sim/monthly-scan.html');assert.equal(hash.get('c'),'opaque-upload-grant');assert.equal(hash.get('a'),'https://api.test');
+  assert.ok(!ui.qr.innerHTML.includes('owner-token'));assert.ok(!ui.pages.innerHTML.includes('<script>'));assert.match(ui.pages.innerHTML,/&lt;script&gt;/);assert.ok(!ui.pages.innerHTML.includes('<textarea'));
+  await ui.removed[0].onclick();assert.equal(requests[1].method,'DELETE');assert.equal(requests[1].path,'/monthly/problems/4/scan/pages/photo-1?scan_id=capture-1');
+  assert.equal(requests[2].method,'GET');assert.ok(requests.every(request=>!request.path.includes('/submit')));assert.equal(controller.snapshot().pages.length,0);
+  controller.dispose();assert.equal(ui.qr.innerHTML,'');assert.equal(ui.pages.innerHTML,'');
+});
+
+test('a late scanner grant never appears after the signed-in account changes',async()=>{
+  const {context,setAuth}=app(),ui=captureFixture(context);let finish;
+  context.cmApi=()=>new Promise(resolve=>{finish=()=>resolve({scan:{id:'private',token:'private-upload-grant',open:true,pages:[],parts:[]}});});
+  const controller=context.arBindMonthlyCapture(ui.root,clone(problem),()=>context.cmTok()==='owner-token');const pending=controller.start();
+  setAuth('another-owner');finish();await pending;
+  assert.equal(ui.qr.innerHTML,'');assert.equal(ui.pages.innerHTML,'');assert.deepEqual(ui.urls,[]);
 });
 
 function scannerForm() {

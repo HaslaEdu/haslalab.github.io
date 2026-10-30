@@ -6,6 +6,7 @@ import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { visibleMonthlySql } from './monthly-answers.js';
 import { missingNoticePins } from './notice-pins.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
+import { monthlyRewardSummary } from './monthly-rewards.js';
 export const PUBLIC_BOARDS = Object.freeze(['free', 'qna', 'sim', 'study']);
 export const PUBLIC_TAGS = Object.freeze(['gen', 'q', 'info', 'review', 'bug', 'notice']);
 export const PUBLIC_PAGE = 20, PUBLIC_BEST = 3;
@@ -143,8 +144,11 @@ export async function readPublicWeekly(db, url, time = currentTime()) {
   const counts = new Map(stats.results.map(row => [row.problem_id, row]));
   const problems = rows.results.map(row => ({ ...problemSummary(row, lang, time), users: counts.get(row.id)?.users || 0, solvers: counts.get(row.id)?.solved || 0 }));
   const period = week || rows.results[0]?.week || isoMonth(time);
+  const awards = isMonthPeriod(period) ? await monthlyRewardSummary(db,period,{timestamp:time,
+    announcementAt:weeks.results.find(row=>row.week===period)?.c ?? null}) : null;
   return { week: period, period, month: isMonthPeriod(period) ? period : null, problems, weeks: weeks.results, months: weeks.results,
-    top: projectRankingRows(ranked.results, true).slice(0, 8), now: time, user: null, api_version: 5 };
+    top:(awards?.status === 'published' ? awards.rows : projectRankingRows(ranked.results, true)).slice(0,8),
+    ...(awards ? {reward:awards} : {}), now: time, user: null, api_version: 5 };
 }
 export const readPublicMonthly = readPublicWeekly;
 
@@ -155,16 +159,20 @@ export async function readPublicData(path, url, db, time = currentTime()) {
   if (path === '/api/rank') {
     const scopeArg = url.searchParams.get('scope'), scope = ['month', 'week'].includes(scopeArg) ? scopeArg : 'all';
     const requested = arenaPeriod(url);
-    let week = scope === 'all' ? null : requested, rows;
+    let week = scope === 'all' ? null : requested, rows, announcementAt;
     if (scope !== 'all' && !week) {
       const [active, ranked] = await db.batch([
-        db.prepare(ACTIVE_PERIOD_SQL).bind(time, time),
+        db.prepare(`SELECT active.week,(SELECT MAX(p.closes_at) FROM problems p WHERE p.week=active.week AND ${visibleMonthlySql('p')}) announcement_at
+          FROM (${ACTIVE_PERIOD_SQL}) active`).bind(time, time),
         rankingStatement(db, `COALESCE((${ACTIVE_PERIOD_SQL}),?)`, [time, time, isoMonth(time)]),
       ]);
       week = active.results[0]?.week || isoMonth(time);
+      announcementAt = active.results[0]?.announcement_at ?? null;
       rows = projectRankingRows(ranked.results, true);
     } else rows = await readPublicRanking(db, week);
-    return { scope, week, period: week, month: isMonthPeriod(week) ? week : null,
+    const awards = isMonthPeriod(week) ? await monthlyRewardSummary(db,week,{timestamp:time,...(announcementAt !== undefined ? {announcementAt} : {})}) : null;
+    if (awards?.status === 'published') rows = awards.rows;
+    return { scope, week, period: week, month: isMonthPeriod(week) ? week : null,...(awards ? {reward:awards} : {}),
       rows: rows.slice(0, 100).map((row, index) => ({ ...row, rank: index + 1 })), mine: null, tierAt: TIER_AT, user: null, api_version: 5 };
   }
   return undefined;
