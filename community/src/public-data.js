@@ -4,6 +4,7 @@
 import { canonicalProblemPeriod, isMonthPeriod, isProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { visibleMonthlySql } from './monthly-answers.js';
+import { monthlyPublicPresentation } from './monthly-presentation.js';
 export const PUBLIC_BOARDS = Object.freeze(['free', 'qna', 'sim', 'study']);
 export const PUBLIC_TAGS = Object.freeze(['gen', 'q', 'info', 'review', 'bug', 'notice']);
 export const PUBLIC_PAGE = 20, PUBLIC_BEST = 3;
@@ -105,6 +106,7 @@ export async function readPublicRanking(db, weekFilter = null) {
 }
 
 function problemSummary(row, lang, time) {
+  row = monthlyPublicPresentation(row);
   const result = { id: row.id, week: row.week, period: row.week, month: isMonthPeriod(row.week) ? row.week : null,
     no: row.no, kind: row.kind, subject: row.subject, level: row.level, points: row.points,
     title: lang === 'en' ? row.title_en : row.title_ko, unit: row.unit, source: row.source, opens_at: row.opens_at, closes_at: row.closes_at,

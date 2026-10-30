@@ -226,6 +226,30 @@ test('public monthly summaries include blank answer-sheet descriptors and period
   assert.equal('answer_sheet' in problem, false); noPrivateFields(monthly);
 });
 
+test('public monthly and legacy summaries omit native problem credits while preserving unrelated sources and stored provenance', async () => {
+  const nativeCredit = 'xPhO 2026 Week 1 · Carina · 제공 자료 번역·웹 편집';
+  const unrelatedCredit = 'Independent competition source';
+  for (const [id, number, source] of [[6, 1, nativeCredit], [509, 2, unrelatedCredit]]) {
+    sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,source,body_ko,body_en,opens_at,closes_at,created_at)
+      VALUES(?,'2031-12',?,'essay',100,10,'공개 제목','Public title',?,'PRIVATE_BODY','PRIVATE_BODY',?,?,?)`)
+      .run(id, number, source, time - 1000, time + 600, time);
+  }
+  try {
+    for (const route of ['monthly', 'weekly']) {
+      const result = await read(`/api/${route}?month=2031-12&lang=en`);
+      assert.deepEqual(result.problems.map(problem => problem.id), [6, 509]);
+      assert.equal(result.problems[0].source, null, 'the shared public lane applies native monthly presentation policy');
+      assert.equal(result.problems[1].source, unrelatedCredit, 'other competition credits remain visible');
+      assert.ok(result.problems[0].answerSheet);
+      assert.equal('answerSheet' in result.problems[1], false);
+      assert.ok(!JSON.stringify(result).includes(nativeCredit));
+      noPrivateFields(result);
+    }
+    assert.equal(sql.prepare('SELECT source FROM problems WHERE id=6').get().source, nativeCredit,
+      'public projection never changes stored source metadata');
+  } finally { sql.prepare('DELETE FROM problems WHERE id IN (6,509)').run(); }
+});
+
 test('retired problems disappear from public lists, period selection, week selectors and rankings', async () => {
   const rankingBefore = await readPublicRanking(db), periodBefore = await currentPeriod(db, time);
   sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)

@@ -32,7 +32,7 @@ jobs:
       - run: node --check src/index.js
       - run: node --test test-model-test-provider.mjs test-model-test-route.mjs ../tests/test-model-test-ui.cjs
       - run: node weekly/build-seed.mjs --check
-      - run: node --test test-weekly-content.mjs test-monthly-period.mjs test-monthly-answers.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
+      - run: node --test test-weekly-content.mjs test-monthly-period.mjs test-monthly-answers.mjs test-monthly-policy.mjs test-monthly-photos.mjs test-monthly-presentation.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs

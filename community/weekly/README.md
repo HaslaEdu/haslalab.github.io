@@ -12,6 +12,14 @@ Each account has at most three accepted submissions per problem, across typed an
 
 The photo workflow uses the shared scanner and Upstage OCR, with an explicit target subquestion. The student checks the recognized working and enters/checks the final answer before submission. Printable sheets are HTML at `sim/monthly-answer-sheet.html`, not embedded PDFs. `monthly-figures.js` safely inlines the three reviewed SVGs with inherited theme colors and scoped identifiers; no white image panels are used.
 
+Each printable A4 page has four solid black corner marks for scan alignment. Monthly uploads send the selected OCR scan and a separately encoded capture to `POST /api/monthly/problems/:id/photos`. Successful OCR retains the capture and recognized text in D1; failed OCR does not retain a photo. The account-scoped browser draft keeps deduplicated photo IDs by part and submits `photo_ids` with the answer. The server validates photo ownership, problem and part. Own submission history offers authenticated capture viewing through `GET /api/monthly/photos/:photoId`, with no token in URLs and with object URLs revoked on navigation. Monthly captures and submitted answers persist independently of the exam-mode temporary-image cleanup.
+
+Only the total score is released immediately for native monthly problems. Criterion scores, evidence and corrections remain private in submit responses, idempotent replays and own submission reads until the exact exclusive cutoff. For November this is December 1, 2026 at 00:00 KST. Responses expose `feedback_held` and `feedback_available_at`; the browser also suppresses stale cached details before that time. Exam-mode immediate feedback is unchanged.
+
+Typed work receives a separate conservative review for explicit AI-generation artifacts. Style or LaTeX alone cannot justify withholding a grade; uncertain or failed reviews continue to normal grading. A supported suspicion is saved as `ai_suspected` with no numeric score, consumes one accepted attempt, and can be reviewed/regraded by an administrator without a new attempt. The UI explains false positives and recommends the student's own handwritten solution without claiming a photograph proves authorship. Verified photo OCR exempts a part only when its complete final answer and working match after whitespace/math-delimiter normalization; typed replacements and additions remain eligible for review. Client `via_ocr` flags cannot grant this exemption. Screening plus grading may take about two minutes; transport does not impose a shorter abort and network retries retain the original request ID.
+
+Native monthly public presentation omits the supplied-material/editor provenance labels in headers and statement/solution tails. Private source content and the historical publication JSON remain available for administration and publication verification.
+
 The Worker imports the JSON through `src/weekly-content.js`. Its existing D1 binding publishes the reviewed batch atomically on the first monthly/legacy weekly/problem request. The durable `weekly_publications` marker prevents duplication and preserves subsequent administrator edits. A conflicting occupied week/number aborts the initial batch. This needs no new credential or D1 management permission. Canonical links use `#/monthly`; old `#/weekly` problem links remain valid.
 
 After publication, edit a live problem through the existing administrator problem editor. Changing this JSON does not overwrite published records. A new reviewed batch needs its own explicit publication ID and unused week/number slots.
@@ -28,7 +36,7 @@ Validation:
 
 ```sh
 node community/weekly/build-seed.mjs --check
-node --test community/test-weekly-content.mjs community/test-monthly-period.mjs community/test-monthly-answers.mjs tests/test-weekly-rendering.cjs tests/test-monthly-*.cjs
+node --test community/test-weekly-content.mjs community/test-monthly-period.mjs community/test-monthly-answers.mjs community/test-monthly-policy.mjs community/test-monthly-photos.mjs community/test-monthly-presentation.mjs tests/test-weekly-rendering.cjs tests/test-monthly-*.cjs
 ```
 
 The deployment workflow validates the content and grading integration before deploying the Worker. Rebuild the site catalogue after changing `arena.js` so its lazy asset hash stays current.

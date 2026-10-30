@@ -8,6 +8,7 @@ import worker from './src/index.js';
 import { validateContent, publishWeeklyContent, ensureWeeklyContent, WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID } from './src/weekly-content.js';
 import { MONTHLY_RETIREMENT_ID } from './src/monthly-answers.js';
 import { getMonthlyAnswerSheet } from '../monthly-problems.mjs';
+import { monthlyPublicPresentation } from './src/monthly-presentation.js';
 
 const content = JSON.parse(readFileSync(new URL('./weekly/2026-W44.json', import.meta.url), 'utf8'));
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -168,7 +169,7 @@ test('opening the weekly list or a direct problem link publishes through the exi
         assert.deepEqual(db.prepare('SELECT id FROM weekly_publications ORDER BY id').all().map(row => row.id),
           [WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID, MONTHLY_RETIREMENT_ID].sort(), 'publication, monthly transition and introductory retirement each run once');
         if (path.startsWith('/weekly')) assert.deepEqual(data.problems.map(p => p.id), [4, 5, 6]);
-        else assert.equal(data.problem.body, content.problems.find(p => p.no === 4).body_ko);
+        else assert.equal(data.problem.body, monthlyPublicPresentation({ ...content.problems.find(p => p.no === 4), id: 4 }).body_ko);
       } finally { db.close(); }
     }
   } finally { globalThis.caches = originalCaches; }
@@ -197,13 +198,16 @@ test('published native problems use authenticated, evidence-backed grading and r
     assert.match(String(input), /:generateContent$/);
     const request = JSON.parse(init.body);
     const prompt = request.contents[0].parts.map(part => part.text || '').join('\n');
+    calls++;
+    if (request.generationConfig.responseSchema.properties.assessment) {
+      return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ assessment: 'uncertain', confidence: 0.5, signals: [] }) }] } }] });
+    }
     const p = rows.find(row => prompt.includes(row.body_en));
     assert.ok(p, 'grader receives the complete English web problem');
     assert.ok(prompt.includes(p.model_en), 'grader receives the complete worked reference');
     assert.ok(prompt.includes('[Student answer]\n['));
     assert.ok(prompt.includes('Final answer:\n' + answer));
     assert.ok(prompt.includes('Working:\n' + answer));
-    calls++;
     const rubric = JSON.parse(p.rubric);
     const result = {
       scores: rubric.map((c, i) => ({ id: c.id, got: c.max, note: 'Test criterion assessment', decision: 'met',
@@ -229,7 +233,8 @@ test('published native problems use authenticated, evidence-backed grading and r
     for (const row of rows) {
       const pub = await request(`/problems/${row.id}?lang=ko`);
       assert.equal(pub.status, 200);
-      assert.equal(pub.data.problem.body, row.body_ko);
+      assert.equal(pub.data.problem.body, monthlyPublicPresentation(row).body_ko);
+      assert.equal(pub.data.problem.source, null);
       assert.equal(pub.data.problem.criteria.length, JSON.parse(row.rubric).length);
       assert.equal(pub.data.problem.solution, undefined);
       assert.equal(pub.data.problem.rubric, undefined);
@@ -240,8 +245,10 @@ test('published native problems use authenticated, evidence-backed grading and r
       assert.equal(graded.status, 200);
       assert.equal(graded.data.status, 'graded');
       assert.equal(graded.data.score, row.points);
-      assert.equal(graded.data.detail.scores.reduce((sum, c) => sum + c.got, 0), row.points);
+      assert.equal(graded.data.detail, null, 'criterion scores and feedback remain private before closing');
+      assert.equal(graded.data.feedback_held, true);
       const stored = db.prepare('SELECT * FROM submissions WHERE id=?').get(graded.data.id);
+      assert.equal(JSON.parse(stored.detail).scores.reduce((sum, criterion) => sum + criterion.got, 0), row.points);
       assert.equal(stored.in_week, 1);
       assert.ok(stored.answer.includes('Final answer:\n' + answer));
       assert.ok(stored.answer.includes('Working:\n' + answer));
@@ -250,19 +257,24 @@ test('published native problems use authenticated, evidence-backed grading and r
     const row = rows[0];
     const unsupported = await request(`/problems/${row.id}/submit`, { authenticated: true, body: answerBody(row) });
     assert.equal(unsupported.data.score, row.points - JSON.parse(row.rubric)[0].max);
-    assert.equal(unsupported.data.detail.evidenceIssue, true);
-    assert.equal(unsupported.data.detail.scores[0].got, 0);
+    assert.equal(unsupported.data.detail, null);
+    const unsupportedDetail = JSON.parse(db.prepare('SELECT detail FROM submissions WHERE id=?').get(unsupported.data.id).detail);
+    assert.equal(unsupportedDetail.evidenceIssue, true);
+    assert.equal(unsupportedDetail.scores[0].got, 0);
     evidenceMode = 'valid';
     db.prepare('UPDATE problems SET closes_at=? WHERE id=?').run(t - 1, row.id);
     const closed = await request(`/problems/${row.id}?lang=ko`, { authenticated: true });
     assert.equal(closed.data.problem.solution, row.model_ko);
     assert.equal(closed.data.problem.open, false);
     assert.equal(closed.data.problem.mine.length, 2);
+    assert.equal(closed.data.problem.mine[0].feedback_held, false);
+    assert.equal(closed.data.problem.mine[0].detail.evidenceIssue, true, 'saved feedback releases without another model request');
+    assert.equal(closed.data.problem.mine[0].detail.authorship, undefined, 'authorship audit remains private after the deadline');
     const practice = await request(`/problems/${row.id}/submit`, { authenticated: true, body: answerBody(row) });
     assert.equal(practice.data.status, 'graded');
     assert.equal(practice.data.score, row.points);
     assert.equal(db.prepare('SELECT in_week FROM submissions WHERE id=?').get(practice.data.id).in_week, 0);
-    assert.equal(calls, 5);
+    assert.equal(calls, 10, 'five accepted answers each use a screen followed by grading');
   } finally {
     globalThis.fetch = originalFetch;
     globalThis.caches = originalCaches;

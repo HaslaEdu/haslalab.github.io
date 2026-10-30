@@ -12,7 +12,7 @@ const AT = {
   ko: {nav: "월별 문제", login: "로그인", signup: "회원가입", me: "내 기록", logout: "로그아웃",
        weekH: "월별 문제", weekSub: "월별로 문제를 모아 풉니다. 마감 전에 제출한 답은 해당 월 랭킹에 반영되고, 마감 후에는 풀이가 공개됩니다. 마감 시각은 한국 시각 기준입니다.",
        closesIn: "마감까지", deadline: "마감", closed: "마감", opens: "열림", short: "단답", essay: "서술", pts: "점", level: "난이도", users: "명 도전", solvers: "명 만점",
-       best: "내 최고", pending: "채점 대기", solve: "풀기", archive: "지난 월별 문제", rank: "랭킹", rankWeek: "월별", rankAll: "전체", rankH: "랭킹",
+       best: "내 최고", pending: "채점 대기", ai_suspected: "AI 작성 의심 · 채점 보류", solve: "풀기", archive: "지난 월별 문제", rank: "랭킹", rankWeek: "월별", rankAll: "전체", rankH: "랭킹",
        rankSub: "월별 랭킹은 마감 전에 제출한 답의 문제별 최고 점수를 더합니다(같으면 먼저 닿은 사람이 앞). 전체 랭킹은 레이팅 순입니다.",
        ratingHelp: "레이팅 = 푼 문제 중 어려운 100문제의 난이도 점수 합 + 푼 문제 수 보너스. 단답은 정답, 서술형은 80% 이상이면 푼 문제로 칩니다. 지난 월별 문제도 풀면 레이팅에 들어갑니다.",
        rating: "레이팅", nextTier: "다음 티어까지", solvedN: "푼 문제",
@@ -50,7 +50,7 @@ const AT = {
   en: {nav: "Monthly", login: "Sign in", signup: "Sign up", me: "My record", logout: "Sign out",
        weekH: "Problems of the month", weekSub: "Problems are grouped by month. Answers submitted before the deadline count towards that month's rankings; solutions are published after the deadline. All deadlines use Korean time (KST).",
        closesIn: "Closes in", deadline: "Deadline", closed: "Closed", opens: "Opened", short: "Short answer", essay: "Written", pts: "pts", level: "Level", users: "tried", solvers: "full marks",
-       best: "My best", pending: "Waiting", solve: "Solve", archive: "Past monthly problems", rank: "Rankings", rankWeek: "Monthly", rankAll: "All time", rankH: "Rankings",
+       best: "My best", pending: "Waiting", ai_suspected: "Suspected AI writing · not graded", solve: "Solve", archive: "Past monthly problems", rank: "Rankings", rankWeek: "Monthly", rankAll: "All time", rankH: "Rankings",
        rankSub: "The monthly ranking adds your best score on each problem submitted before its deadline (ties go to whoever got there first). All time ranks by rating.",
        ratingHelp: "Rating = the difficulty points of your 100 hardest solved problems plus a bonus for the number solved. A short answer counts when right, a written one at 80 % or more. Past monthly problems count too.",
        rating: "Rating", nextTier: "to the next tier", solvedN: "Solved",
@@ -329,8 +329,16 @@ async function arWeekly(root, alive, week,preloaded) {
 /* ── one problem ── */
 function arResult(s, prob) {
   const T = arT(), d = s.detail || {};
+  const S = arSheetT();
+  if (s.status === "ai_suspected") return `<div class="cmnote"><b>${S.aiSuspected}</b><p>${S.aiReview}</p></div>`;
   if (s.status === "pending") return `<div class="cmnote">${T.pendingNote}</div>`;
   if (s.status === "error") return `<div class="cmnote">${T.errorNote}</div>`;
+  const releaseAt = arMonthlyFeedbackRelease(s, prob);
+  /* The API withholds private details too. This also hides stale, cached details if a
+     monthly result was loaded before the correction-release deadline. */
+  if (prob?.answerSheet && (s.feedback_held || (releaseAt && Date.now() / 1000 < releaseAt))) {
+    return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span></div><p class="arnote">${S.release(releaseAt ? arDeadline(releaseAt + 1) : "")}</p>`;
+  }
   if (d.kind === "short") return `<div class="arres ${d.ok ? "ok" : "no"}"><b>${d.ok ? "✓ " + T.right : "✗ " + T.wrong}</b><span>${s.score} / ${prob.points}${T.pts}</span></div>`;
   return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>
     ${d.evidenceIssue ? `<p class="arwarn">${T.evidenceIssue}</p>` : ""}
@@ -341,14 +349,19 @@ function arResult(s, prob) {
     ${(d.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${d.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em><q>${esc(f.quote)}</q> ${esc(f.note)}</li>`).join("")}</ul>` : ""}
     ${d.note ? `<p class="arnote">${esc(d.note)}</p>` : ""}`;
 }
+function arMonthlyFeedbackRelease(submission, problem) {
+  const dates = [submission?.feedback_available_at, problem?.closes_at].map(Number).filter(value => Number.isFinite(value) && value > 0);
+  return dates.length ? Math.max(...dates) : null;
+}
 let arScanner = null;
 const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=20261030-ocr").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
   const fi = f.querySelector("input[type=file]"), info = f.querySelector(".arinfo"), box = f.querySelector(".arshot");
+  const authBase = cmBase(), authToken = cmTok();
   let photo = null, generation = 0, controller = null, disposed = false;
-  const urls = new Set(), current = token => !disposed && alive() && token === generation;
+  const urls = new Set(), current = token => !disposed && alive() && token === generation && cmBase() === authBase && cmTok() === authToken;
   const imageUrl = blob => { const url = URL.createObjectURL(blob); urls.add(url); return url; };
   const note = (text, bad = false) => { info.hidden = false; info.textContent = text; info.className = "arinfo" + (bad ? " bad" : ""); };
   const clear = () => {
@@ -393,6 +406,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
   async function read() {
     if (!photo || photo.preparing || photo.reading || photo.done || options.blocked?.()) return;
     const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file, destination = options.target?.();
+    const request = options.request?.(destination) || {path:"/ocr"};
     photo.reading = true; paint(); note(T.reading);
     const ctrl = new AbortController(); controller = ctrl;
     try {
@@ -406,14 +420,25 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
       const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[blob.type];
       if (!ext) throw { code: "bad_image" };
       const fd = new FormData(); fd.append("image", blob, `answer.${ext}`);
-      const response = await fetch(cmBase() + "/api/ocr?mode=" + (f.math.checked ? "math" : "text"), {
-        method: "POST", headers: { Authorization: "Bearer " + cmTok() }, body: fd, signal: ctrl.signal,
+      if (request.original) {
+        const original = selected === photo.file ? blob : await scanner.encodeUpload(photo.file, {maxBytes:4 * 1024 * 1024}).catch(error => {
+          if (error?.code === "image_too_big") throw {code:"ocr_image_too_big"};
+          throw error;
+        });
+        if (!current(token)) return;
+        const originalExt = {"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[original.type];
+        if (!originalExt) throw {code:"bad_image"};
+        fd.append("original_image",original,`original.${originalExt}`);
+      }
+      for (const [name,value] of Object.entries(request.fields || {})) fd.append(name,String(value));
+      const response = await fetch(authBase + "/api" + request.path + "?mode=" + (f.math.checked ? "math" : "text"), {
+        method: "POST", headers: { Authorization: "Bearer " + authToken }, body: fd, signal: ctrl.signal,
       });
       const result = await response.json().catch(() => ({ error: "server_error" }));
       if (!current(token)) return;
       if (!response.ok) throw { code: result.error };
       if (typeof result.text !== "string" || !result.text.trim()) throw { code: "ocr_empty" };
-      onRead(result.text, destination); photo.done = true;
+      onRead(result.text, destination, result); photo.done = true;
       const ta = destination || f.querySelector("textarea");
       note(ta.value.length > ta.maxLength && ta.maxLength > 0 ? T.scanLong : T.readDone);
       info.className = "arinfo ok"; ta.focus();
@@ -422,6 +447,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     } finally {
       if (controller === ctrl) controller = null;
       if (current(token)) { photo.reading = false; paint(); }
+      else if (cmBase() !== authBase || cmTok() !== authToken) dispose();
     }
   }
   fi.onchange = async () => {
@@ -455,7 +481,15 @@ function arSheetT() {
     saved: "작성 내용은 이 계정의 브라우저에 임시 저장됩니다. 임시 저장과 사진 읽기는 제출 기회를 사용하지 않습니다.", exhausted: "이 문제의 제출 기회 3회를 모두 사용했습니다. 기존 채점 결과는 아래에서 확인할 수 있습니다.",
     incomplete: id => `${id}: 최종 답과 풀이를 함께 입력하세요.`, empty: "한 소문항 이상에 최종 답과 풀이를 입력하세요.", tooLong: "답안이 너무 깁니다. 전체 답과 풀이를 60,000자 이내로 줄여주세요.", partLong: id => `${id}: 최종 답은 4,000자, 풀이는 16,000자 이내로 줄여주세요.`, photoLong: "읽은 풀이가 소문항당 16,000자를 넘었습니다. 내용을 확인하고 줄인 뒤 제출하세요.",
     processing: "이 답안은 이미 접수되어 채점 중입니다. 같은 답안을 다시 제출해도 기회가 추가로 사용되지 않습니다.", conflict: "이미 접수된 제출 번호입니다. 답안을 수정한 뒤 다시 제출하세요.", next: "답안을 수정하면 남은 기회로 다시 제출할 수 있습니다.",
-    used: "제출이 접수되면 기회 1회가 사용됩니다. 통신 오류로 같은 제출을 다시 전송해도 중복 차감되지 않습니다."
+    used: "제출이 접수되면 기회 1회가 사용됩니다. 통신 오류로 같은 제출을 다시 전송해도 중복 차감되지 않습니다.",
+    release: date => `제출 직후에는 총점만 표시됩니다. 소문항별 채점 내역과 첨삭은 마감 후${date ? ` ${date}부터` : ""} 공개됩니다.`,
+    authorship: "직접 입력한 답안은 AI 작성 의심 여부를 확인합니다. AI 판별은 오판할 수 있으며, 의심 답안은 제출 기회 1회를 사용하고 채점하지 않습니다. 본인이 직접 푼 손글씨 답안 제출을 권장합니다. 손글씨 사진만으로 작성자를 확인할 수는 없습니다.",
+    retained: "제출한 월별 문제 답안과 업로드한 답안 사진은 서버에 보관됩니다.",
+    aiSuspected: "AI 작성 의심으로 채점 보류 · 제출 기회 1회 사용",
+    aiReview: "AI 판별에는 오판 가능성이 있습니다. 오판이 의심되면 관리자에게 검토를 요청해 주세요.",
+    photoReadDone: "사진을 읽고 촬영 원본을 서버에 보관했습니다. 읽은 풀이가 답안과 같은지 확인하고 최종 답도 채운 뒤 제출하세요.",
+    originalPhoto: "제출한 촬영 원본 보기", photoFailed: "답안 사진을 불러오지 못했습니다. 다시 시도해 주세요.",
+    grading: "답안을 확인하고 채점하는 중입니다. 최대 2분 정도 걸릴 수 있습니다."
   } : {
     h: "Answer sheet", print: "Open / print the answer sheet", help: "Enter the final answer and supporting work for each part. LaTeX is supported. Leave both boxes blank for any part you do not attempt.",
     answer: "Final answer", answerHint: "LaTeX, e.g. \\omega(q)=\\sqrt{...}, or ordinary text.", working: "Working and justification", workingHint: "Show your derivation and reasoning. Use $...$ or $$...$$ for formulas.",
@@ -464,7 +498,15 @@ function arSheetT() {
     saved: "Drafts are saved for this account in this browser. Saving a draft or reading a photo does not use an attempt.", exhausted: "All 3 attempts for this problem have been used. Your existing grades remain below.",
     incomplete: id => `${id}: enter both a final answer and supporting work.`, empty: "Complete the final answer and working for at least one part.", tooLong: "Keep all answers and working within 60,000 characters.", partLong: id => `${id}: keep the answer within 4,000 characters and the working within 16,000.`, photoLong: "The recognized working exceeds 16,000 characters for this part. Check and shorten it before submitting.",
     processing: "This answer has already been accepted and is being graded. Retrying it does not use another attempt.", conflict: "This submission identifier has already been used. Edit your answer before submitting again.", next: "Edit your answer to submit again using a remaining attempt.",
-    used: "An accepted submission uses one attempt. Resending the same submission after a network error does not use an additional attempt."
+    used: "An accepted submission uses one attempt. Resending the same submission after a network error does not use an additional attempt.",
+    release: date => `Only the total score is shown immediately. Per-part marks and corrections are released after the deadline${date ? `, from ${date}` : ""}.`,
+    authorship: "Typed answers are screened for suspected AI writing. This can produce false positives. A flagged answer uses one attempt and is not graded. We recommend submitting your own handwritten solution. A handwriting photo alone does not establish authorship.",
+    retained: "Submitted monthly answers and uploaded answer photos are stored on the server.",
+    aiSuspected: "Suspected AI writing · not graded · 1 attempt used",
+    aiReview: "AI screening can produce false positives. If you believe this was a mistake, ask an administrator to review it.",
+    photoReadDone: "The photo has been read and its capture saved on the server. Check the recognized working and complete the final answer before submitting.",
+    originalPhoto: "View submitted capture", photoFailed: "The answer photo could not be loaded. Please try again.",
+    grading: "Checking and grading your answer. This may take about 2 minutes."
   };
 }
 function arSheetPartLabel(part) { const label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${part.id.includes(".") ? part.id : "("+part.id+")"} ${label}` : part.id; }
@@ -501,6 +543,7 @@ function arMonthlyAnswerHtml(p, ocrOn) {
   return `<h3>${S.h}</h3><div class="arsheet-top"><a class="cmbtn sm" href="sim/monthly-answer-sheet.html?id=${p.id}&lang=${lang}" target="_blank" rel="noopener">${S.print} ↗</a>
       <b class="artries" id="arSheetAttempts">${Number.isInteger(attempts?.remaining) ? S.remaining(attempts.remaining) : S.total}</b></div>
     <p class="arnote">${S.help}</p><p class="arnote">${S.used}</p>
+    <p class="arnote">${S.release(p.closes_at ? arDeadline(p.closes_at + 1) : "")}</p><p class="arnote">${S.authorship}</p><p class="arnote">${S.retained}</p>
     ${!signed ? `<p>${T.loginToSubmit} <a class="cmbtn sm pri" href="#/login" id="arLogin">${T.login}</a></p>` : ""}
     ${exhausted ? `<p class="cmnote">${S.exhausted}</p>` : ""}
     <form id="arSheetF" class="armonthly-sheet">
@@ -524,15 +567,52 @@ function arMonthlyAnswerHtml(p, ocrOn) {
 }
 function arMonthlySavedAnswer(submission) {
   const sheet = submission.answer_sheet, S = arSheetT();
-  if (!sheet?.parts) return `<pre class="aranswer">${esc(submission.answer)}</pre>`;
-  return `<div class="arsheet-saved">${sheet.parts.filter(part => part.answer || part.working).map(part => `<section><h4>${esc(part.id)}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`;
+  const photos = (submission.photo_attachments || []).map(photo => `<div class="arsheet-photo-saved"><button class="cmbtn sm" type="button" data-monthly-photo="${esc(photo.id)}">${S.originalPhoto} · ${esc(photo.part_id)}</button><p class="arinfo" hidden></p><img class="armonthly-original" alt="${S.originalPhoto} · ${esc(photo.part_id)}" hidden style="max-width:100%;height:auto"></div>`).join("");
+  if (!sheet?.parts) return `<pre class="aranswer">${esc(submission.answer)}</pre>`+photos;
+  return `<div class="arsheet-saved">${sheet.parts.filter(part => part.answer || part.working).map(part => `<section><h4>${esc(part.id)}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}${photos}</div>`;
+}
+function arBindMonthlyPhotos(root, alive) {
+  const buttons = [...(root.querySelectorAll?.("[data-monthly-photo]") || [])];
+  if (!buttons.length || !cm.me) return;
+  ar.monthlyPhotoCleanup?.();
+  const S = arSheetT(), base = cmBase(), token = cmTok(), owner = cm.me.id ?? cm.me.username, urls = new Set(), controllers = new Set();
+  let disposed = false;
+  const current = () => !disposed && alive() && cmBase() === base && cmTok() === token && !!cm.me && (cm.me.id ?? cm.me.username) === owner;
+  const dispose = () => {
+    if (disposed) return; disposed = true;
+    for (const controller of controllers) controller.abort(); controllers.clear();
+    for (const url of urls) URL.revokeObjectURL(url); urls.clear();
+    for (const button of buttons) { const image = button.parentElement.querySelector("img"); image.removeAttribute("src"); image.hidden = true; }
+    window.removeEventListener("hashchange",dispose); window.removeEventListener("pagehide",dispose);
+    if (ar.monthlyPhotoCleanup === dispose) ar.monthlyPhotoCleanup = null;
+  };
+  ar.monthlyPhotoCleanup = dispose;
+  window.addEventListener("hashchange",dispose); window.addEventListener("pagehide",dispose);
+  for (const button of buttons) button.onclick = async () => {
+    if (!current()) { dispose(); return; }
+    const box = button.parentElement, image = box.querySelector("img"), info = box.querySelector(".arinfo"), controller = new AbortController();
+    controllers.add(controller); button.disabled = true; info.hidden = true;
+    try {
+      const response = await fetch(base+"/api/monthly/photos/"+encodeURIComponent(button.dataset.monthlyPhoto),{headers:{Authorization:"Bearer "+token},signal:controller.signal});
+      if (!response.ok) throw new Error("photo_unavailable");
+      const blob = await response.blob();
+      if (!current()) { dispose(); return; }
+      if (!/^image\/(jpeg|png|webp)$/.test(blob.type)) throw new Error("bad_image");
+      const url = URL.createObjectURL(blob); urls.add(url); image.src = url; image.hidden = false; button.hidden = true;
+    } catch (error) {
+      if (current()) { info.textContent = S.photoFailed; info.hidden = false; info.className = "arinfo bad"; }
+    } finally { controllers.delete(controller); if (current()) button.disabled = false; else dispose(); }
+  };
 }
 function arBindMonthlyAnswer(root, p, alive, ocrOn) {
+  const pageAlive = alive, owner = cm.me?.id ?? cm.me?.username, base = cmBase(), token = typeof cmTok === "function" ? cmTok() : null;
+  alive = () => pageAlive() && (cm.me?.id ?? cm.me?.username) === owner && cmBase() === base && (typeof cmTok !== "function" || cmTok() === token);
   const f = root.querySelector("#arSheetF"), out = root.querySelector("#arOut"), S = arSheetT(), T = arT();
   const button = f.querySelector("button[type=submit]"), key = arSheetDraftKey(p), fields = [...f.querySelectorAll("[data-sheet-answer], [data-sheet-working]")];
   let requestId = null, accepted = false, viaOcr = false, busy = false, photoBusy = false, previewTimer = null;
+  const photos = new Map();
   const attempts = () => p.attempts?.remaining !== 0;
-  const save = () => { if (!key || !alive()) return; try { localStorage.setItem(key, JSON.stringify({version:p.answerSheet.version,request_id:requestId,accepted,via_ocr:viaOcr,
+  const save = () => { if (!key || !alive()) return; try { localStorage.setItem(key, JSON.stringify({version:p.answerSheet.version,request_id:requestId,accepted,via_ocr:viaOcr,photos:[...photos].map(([id,part_id])=>({id,part_id})),
     parts:p.answerSheet.parts.map(part => ({id:part.id, answer:f.querySelector(`[data-sheet-answer="${part.id}"]`).value,working:f.querySelector(`[data-sheet-working="${part.id}"]`).value}))})); } catch (_) {} };
   const preview = () => {
     for (const part of p.answerSheet.parts) {
@@ -548,6 +628,7 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
         f.querySelector(`[data-sheet-answer="${part.id}"]`).value = typeof saved.answer === "string" ? saved.answer.slice(0,4000) : "";
         f.querySelector(`[data-sheet-working="${part.id}"]`).value = typeof saved.working === "string" ? saved.working.slice(0,16000) : ""; }
       requestId = typeof draft.request_id === "string" ? draft.request_id : null; accepted = !!draft.accepted; viaOcr = !!draft.via_ocr;
+      for (const photo of draft.photos || []) if (typeof photo.id === "string" && photo.id.length <= 100 && p.answerSheet.parts.some(part=>part.id === photo.part_id)) photos.set(photo.id,photo.part_id);
     }
   } catch (_) {}
   button.disabled = !cm.me || !attempts() || accepted;
@@ -559,10 +640,12 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
     const photo = mode.dataset.sheetMode === "photo"; f.querySelector(".arsheet-photo").hidden = !photo;
     for (const item of f.querySelectorAll("[data-sheet-mode]")) { const on = item === mode; item.classList.toggle("pri",on); item.setAttribute("aria-pressed",String(on)); }
   };
-  if (cm.me && ocrOn && attempts()) arBindAnswerPhoto(f,alive,{...T,scanLong:S.photoLong},(text,destination) => {
+  if (cm.me && ocrOn && attempts()) arBindAnswerPhoto(f,alive,{...T,scanLong:S.photoLong,readDone:S.photoReadDone},(text,destination,result) => {
     if (!destination) return; destination.value = (destination.value.trim() ? destination.value.trim()+"\n\n" : "")+text;
+    if (typeof result?.photo_id === "string" && result.part_id === destination.dataset.sheetWorking) photos.set(result.photo_id,result.part_id);
     viaOcr = true; edited(); preview();
   }, {target:() => f.querySelector(`[data-sheet-working="${f.photo_part.value}"]`), blocked:() => busy || !attempts(),
+    request:destination => ({path:`/monthly/problems/${p.id}/photos`,fields:{part_id:destination.dataset.sheetWorking},original:true}),
     onBusy: value => { photoBusy = value; if (alive()) button.disabled = !cm.me || !attempts() || accepted || busy || photoBusy; }});
   f.onsubmit = async event => {
     event.preventDefault(); if (busy || photoBusy || !cm.me || !attempts() || accepted || !alive()) return;
@@ -571,9 +654,10 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
     save(); busy = true; button.disabled = true;
     for (const field of fields) field.disabled = true;
     for (const control of f.querySelectorAll("input[type=file],select[name=photo_part],input[name=math]")) control.disabled = true;
-    out.innerHTML = `<p class="arinfo">${T.grading}</p>`;
+    out.innerHTML = `<p class="arinfo">${S.grading}</p>`;
     try {
-      const result = await cmApi("POST",`/problems/${p.id}/submit`,{parts,request_id:requestId,sheet_version:p.answerSheet.version,via_ocr:viaOcr,lang});
+      const photoIds = [...photos].filter(([,partId])=>parts.some(part=>part.id === partId && part.answer && part.working)).map(([id])=>id);
+      const result = await cmApi("POST",`/problems/${p.id}/submit`,{parts,request_id:requestId,sheet_version:p.answerSheet.version,photo_ids:photoIds,via_ocr:viaOcr,lang});
       if (!alive()) return;
       if (result.attempts) { p.attempts = result.attempts; root.querySelector("#arSheetAttempts").textContent = S.remaining(result.attempts.remaining); }
       accepted = !result.processing; save();
@@ -591,6 +675,7 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
 }
 async function arProblem(root, alive, id,preloaded) {
   ar.photoCleanup?.();
+  ar.monthlyPhotoCleanup?.();
   const T = arT(), j = preloaded||await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
   const p = j.problem, now = Math.floor(Date.now() / 1000), ocrOn = j.health && j.health.ocr;
   root.innerHTML = `
@@ -598,7 +683,7 @@ async function arProblem(root, alive, id,preloaded) {
     <div class="arprob">
       <div class="arph"><span class="arno">${p.no}</span><div><h1>${esc(p.title)}</h1>
         <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
-          <span>${p.points}${T.pts}</span><span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
+          <span>${p.points}${T.pts}</span><span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(c.id)}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
@@ -626,6 +711,7 @@ async function arProblem(root, alive, id,preloaded) {
         ${arMonthlySavedAnswer(s)}${arResult(s, p)}</details>`).join("")}</div>` : ""}
     <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arPublishedText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
   arMath(root);
+  arBindMonthlyPhotos(root,alive);
   const lg = root.querySelector("#arLogin"); if (lg) lg.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
   if (p.answerSheet?.parts?.length) { arBindMonthlyAnswer(root,p,alive,ocrOn); return; }
   const f = root.querySelector("#arF"); if (!f) return;

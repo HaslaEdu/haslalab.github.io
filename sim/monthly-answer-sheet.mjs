@@ -15,7 +15,10 @@ const copy = {
 export function buildAnswerPages(problem, sheet, lang='ko') {
   const t=copy[lang]||copy.ko, title=problem.title||problem['title_'+lang]||'', number=problem.no, period=problem.month||problem.period||problem.week||'2026-11';
   const byId=new Map(sheet.parts.map(p=>[p.id,p]));
+  // SVG ink remains printable when a browser omits CSS background graphics.
+  const scanCorners=['tl','tr','bl','br'].map(corner=>`<span class="scan-mark" data-scan-corner="${corner}" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" focusable="false" shape-rendering="crispEdges"><rect width="10" height="10" fill="#fff"/><rect x="2" y="2" width="6" height="6" fill="#000"/></svg></span>`).join('');
   return sheet.pages.map((ids,index)=>`<section class="paper" aria-label="${esc(t.page)} ${index+1}">
+    ${scanCorners}
     <header><div class="brand">HaslaLab · ${esc(t.name)} · ${esc(period)}</div><h1>${esc(number)}. ${esc(title)}</h1>
       <div class="meta"><span>${esc(t.nickname)}: ____________________</span><span>${esc(t.date)}: ____________________</span><span>${esc(t.page)} ${index+1} / ${sheet.pages.length}</span></div>
       <p class="instructions">${esc(t.note)}</p></header>
