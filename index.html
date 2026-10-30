@@ -9406,6 +9406,12 @@ async function cmAccount(root, alive){
     <div class="cmpost" style="display:flex;gap:16px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--cm-line)">
       <span id="cmAvBox">${cmAv(cm.me.nickname,"l",cm.me.avatar)}</span><div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
       <div class="cmpm" style="border:0;padding:4px 0 0">@${esc(cm.me.username)} · ${T.joined} ${cmFull(cm.me.created_at).slice(0,10)}${cm.me.role==="admin"?' · <span class="cmtag notice">admin</span>':""}</div></div></div>
+    ${cm.me.role === "admin" ? `<section class="cmform" data-developer-settings style="border-bottom:8px solid var(--cm-soft)">
+      <h3 style="font-size:15px">${lang === "en" ? "Developer environment" : "개발자 환경"}</h3>
+      <nav aria-label="${lang === "en" ? "Developer tools" : "개발자 도구"}" style="display:flex;flex-wrap:wrap;gap:8px">
+        <a class="cmbtn" href="#/lab/model-test">${lang === "en" ? "Model test" : "모델 테스트"}</a>
+        <a class="cmbtn" href="#/lab/server-guide">${lang === "en" ? "Server & operations guide" : "서버 구조·운영 가이드"}</a>
+      </nav></section>` : ""}
     <div class="cmform" id="cmAvatar"><h3 style="font-size:15px">${T.avatarH}</h3>
       <div class="row"><label class="cmbtn">${T.avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
       <button class="cmbtn" type="button" data-del ${cm.me.avatar?"":"hidden"}>${T.avatarDel}</button><span class="cmerr"></span><span class="sp"></span></div>
