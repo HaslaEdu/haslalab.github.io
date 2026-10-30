@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import test from 'node:test';
 import worker from './src/index.js';
-import { validateContent, publishWeeklyContent, ensureWeeklyContent } from './src/weekly-content.js';
+import { validateContent, publishWeeklyContent, ensureWeeklyContent, WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID } from './src/weekly-content.js';
 
 const content = JSON.parse(readFileSync(new URL('./weekly/2026-W44.json', import.meta.url), 'utf8'));
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -141,8 +141,9 @@ test('simultaneous requests share publication and a failed batch can be retried'
     const retry = ensureWeeklyContent(binding, key);
     assert.equal((await retry).inserted, 3);
     assert.equal(ensureWeeklyContent(binding, key), retry);
-    assert.equal(calls, 2);
+    assert.equal(calls, 3, 'failed seed, successful retry, and one monthly transition');
     assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 6);
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM problems WHERE week='2026-11'").get().n, 6);
   } finally { db.close(); }
 });
 
@@ -159,7 +160,8 @@ test('opening the weekly list or a direct problem link publishes through the exi
         assert.equal(response.status, 200);
         const data = await response.json();
         assert.equal(db.prepare('SELECT COUNT(*) n FROM problems').get().n, 6);
-        assert.equal(db.prepare('SELECT COUNT(*) n FROM weekly_publications').get().n, 1);
+        assert.deepEqual(db.prepare('SELECT id FROM weekly_publications ORDER BY id').all().map(row => row.id),
+          [WEEKLY_PUBLICATION_ID, MONTHLY_PUBLICATION_ID].sort(), 'original publication and monthly transition each run once');
         if (path.startsWith('/weekly')) assert.equal(data.problems.filter(p => p.no >= 4).length, 3);
         else assert.equal(data.problem.body, content.problems.find(p => p.no === 4).body_ko);
       } finally { db.close(); }

@@ -420,7 +420,7 @@ test('cached HTML overview compatibility keeps 404-only fallback and rejects sta
 test('head prefetch starts the route read before lazy arena and hands it to the scoped client exactly once',async()=>{
   assert.ok(html.indexOf('id="hlEarlyApi"')<html.indexOf('rel="apple-touch-icon"'));
   assert.match(html,/<link rel="preconnect" href="https:\/\/haslalab-community-edge\.haslalab\.workers\.dev" crossorigin>/);
-  for(const route of ['#/weekly/2026-W44','#/rank/all','#/weekly/p/12','#/me']){
+  for(const route of ['#/monthly/2026-11','#/monthly/2026-W44','#/weekly/2026-W44','#/weekly/2026-11','#/rank/all','#/rank/month','#/rank/week','#/rank/2026-11','#/rank/2026-W44','#/monthly/p/12','#/weekly/p/12','#/me']){
     const a=app(),calls=[];a.store.set('hlCmTok','account-A');a.context.location.hash=route;
     a.context.fetch=async(url,options)=>{calls.push({url,options});if(url.includes('/health'))return new Promise(()=>{});return{ok:true,json:async()=>({api_version:5,user:{nickname:'A'},week:'2026-W44',scope:'all',problem:{id:12},stats:{},identities:[],tokens:2,health:{v:5,lab:true}})};};
     enableReadState(a);assert.equal(calls.length,1,'the read starts before arena loads');
@@ -453,8 +453,8 @@ test('bookmarks use a hashed storage scope, travel only on eligible read URLs an
   a.context.fetch=async(url,options)=>{calls.push({url,options});return{ok:true,headers:{get:()=> 'opaque-position-1'},json:async()=>({posts:[]})};};const saved=enableReadState(a);
   await a.run('cmApi("GET","/posts")');await a.run('cmApi("GET","/posts?sort=new&page=1&lang=ko")');assert.equal(calls.length,1,'this exact response may be reused at its own returned bookmark');
   const scope={base:a.run('cmBase()'),token:'private-token-A',lang:'ko'},reads=a.context.window.HL_READ_STATE;
-  for(const path of ['/posts','/boards','/weekly?lang=ko','/rank?scope=all'])assert.equal(new URL(reads.prepare({...scope,path}).path,'https://api.invalid').searchParams.get('__hl_bm'),'opaque-position-1');
-  for(const path of ['/me/overview','/me/stats','/users?nickname=A','/lab/tokens','/pay/config'])assert.equal(new URL(reads.prepare({...scope,path}).path,'https://api.invalid').searchParams.has('__hl_bm'),false,path);
+  for(const path of ['/posts','/boards'])assert.equal(new URL(reads.prepare({...scope,path}).path,'https://api.invalid').searchParams.get('__hl_bm'),'opaque-position-1');
+  for(const path of ['/monthly?month=2026-11','/weekly?lang=ko','/rank?scope=all','/me/overview','/me/stats','/users?nickname=A','/lab/tokens','/pay/config'])assert.equal(new URL(reads.prepare({...scope,path}).path,'https://api.invalid').searchParams.has('__hl_bm'),false,path);
   for(const changed of [{token:'private-token-B'},{base:'http://localhost:8765'},{lang:'en'}])assert.equal(new URL(reads.prepare({...scope,...changed,path:'/posts'}).path,'https://api.invalid').searchParams.has('__hl_bm'),false);
   assert.ok([...saved.keys()].every(key=>/^hlReadBookmark:v1:[0-9a-f]+$/.test(key)));assert.ok(!JSON.stringify([...saved]).includes('private-token-A'));
   const b=app();b.store.set('hlCmTok','private-token-A');enableReadState(b,saved);assert.equal(new URL(b.context.window.HL_READ_STATE.prepare({...scope,path:'/posts'}).path,'https://api.invalid').searchParams.get('__hl_bm'),'opaque-position-1');
@@ -483,7 +483,7 @@ test('a dirty checkpoint restored on reload consumes its already-primary head re
   const a=app(),saved=enableReadState(a),scope={base:a.run('cmBase()'),token:'account-A',lang:'ko'};
   const write=a.context.window.HL_READ_STATE.prepare({...scope,method:'POST',path:'/posts'});a.context.window.HL_READ_STATE.accept(write,'own-write');a.context.window.HL_READ_STATE.finish(write);
   const b=app(),calls=[];b.store.set('hlCmTok','account-A');b.context.location.hash='#/weekly';b.context.fetch=async(url,options)=>{calls.push({url,options});return{ok:true,headers:{get:()=> 'fresh-primary'},json:async()=>({api_version:5,user:{nickname:'A'}})};};enableReadState(b,saved);
-  await b.run('cmPageRead("/weekly?lang=ko")');assert.equal(calls.length,1);assert.equal(calls[0].options.headers['Cache-Control'],'no-cache');assert.equal(new URL(calls[0].url).searchParams.get('__hl_bm'),'own-write');
+  await b.run('cmPageRead("/weekly?lang=ko")');assert.equal(calls.length,1);assert.equal(calls[0].options.headers['Cache-Control'],'no-cache');assert.equal(new URL(calls[0].url).searchParams.has('__hl_bm'),false,'signed primary URL remains stable');
 });
 
 test('expired public lists render immediately and share one background refresh while private responses stay live',async()=>{
@@ -546,4 +546,18 @@ test('a legacy response without a checkpoint never disables post-mutation primar
   const a=app(),calls=[];a.context.fetch=async(url,options)=>{calls.push({url,options});return{ok:true,json:async()=>({posts:[],ok:true})};};enableReadState(a);
   await a.run('cmApi("POST","/posts",{body:"new"})');await a.run('cmApi("GET","/posts?board=free")');await a.run('cmApi("GET","/posts?board=qna")');
   for(const call of calls.slice(1)){assert.equal(call.options.headers['Cache-Control'],'no-cache');assert.equal(new URL(call.url).searchParams.has('__hl_bm'),false);}
+});
+
+test('signed period and rank URLs remain stable while anonymous reads carry their scoped replica checkpoint',async()=>{
+  const paths=['/monthly?month=2026-11','/weekly?week=2026-W44','/rank?scope=month','/rank?scope=all'];
+  for(const token of ['signed-account','']){
+    const a=app(),calls=[];if(token)a.store.set('hlCmTok',token);let number=0;
+    a.context.fetch=async(url,options)=>{calls.push({url,options});const bookmark='position-'+(++number);return{ok:true,headers:{get:()=>bookmark},json:async()=>({posts:[],rows:[],user:token?{nickname:'A'}:null})};};enableReadState(a);
+    await a.run('cmApi("GET","/boards")');
+    for(const path of paths){
+      a.context.readPath=path;await a.run('cmApi("GET",readPath)');const first=calls.at(-1);await a.run('cmApi("GET",readPath)');const second=calls.at(-1);
+      if(token){assert.equal(first.url,second.url);assert.equal(new URL(first.url).searchParams.has('__hl_bm'),false);assert.equal(first.options.headers.Authorization,'Bearer '+token);}
+      else{assert.ok(new URL(first.url).searchParams.get('__hl_bm'));assert.notEqual(first.url,second.url);assert.equal(first.options.headers.Authorization,undefined);assert.equal(Object.keys(first.options.headers).length,0);}
+    }
+  }
 });

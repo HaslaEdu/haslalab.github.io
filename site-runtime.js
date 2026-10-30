@@ -11,13 +11,13 @@
     const u=new URL(path,'https://api.invalid');
     if(u.searchParams.has('view'))return{safe:false,public:false,ttl:0};
     const profileRead=/^\/users(?:\/[^/]+)?$/.test(u.pathname),publicRead=publicPaths.has(u.pathname)||profileRead;
-    const safe=publicRead||/^\/(?:me(?:\/(?:stats|identities|overview))?|users|nick-check|weekly|rank|ranking|problems(?:\/\d+)?|submissions(?:\/\d+)?|lab\/(?:bootstrap|active|tokens|sessions(?:\/\d+)?))$/.test(u.pathname);
+    const safe=publicRead||/^\/(?:me(?:\/(?:stats|identities|overview))?|users|nick-check|monthly|weekly|rank|ranking|problems(?:\/\d+)?|submissions(?:\/\d+)?|lab\/(?:bootstrap|active|tokens|sessions(?:\/\d+)?))$/.test(u.pathname);
     const ttl=publicRead&&!profileRead?u.pathname==='/health'||u.pathname==='/pay/config'||u.pathname==='/lab/contest/catalog'?300000:u.pathname==='/boards'?30000:u.pathname==='/lab/stats'?15000:5000:0;
     return{safe,public:publicRead,ttl,staleTTL:u.pathname==='/posts'?30000:0};
   }
   function canonicalPath(path){const u=new URL(path,'https://api.invalid');if(u.pathname==='/posts'){if(!u.searchParams.get('page'))u.searchParams.set('page','1');if(!u.searchParams.get('sort'))u.searchParams.set('sort','new');if(!u.searchParams.get('lang'))u.searchParams.set('lang','ko');}u.searchParams.sort();return u.pathname+u.search;}
   const clone=value=>value===undefined?value:typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
-  const family=path=>{const p=new URL(path,'https://api.invalid').pathname;return /^\/(posts|boards|comments|users)(\/|$)/.test(p)?'community':/^\/(weekly|rank|ranking|problems|submissions)(\/|$)/.test(p)||/^\/me\/(overview|stats)$/.test(p)?'arena':/^\/lab(\/|$)/.test(p)?'lab':p;};
+  const family=path=>{const p=new URL(path,'https://api.invalid').pathname;return /^\/(posts|boards|comments|users)(\/|$)/.test(p)?'community':/^\/(monthly|weekly|rank|ranking|problems|submissions)(\/|$)/.test(p)||/^\/me\/(overview|stats)$/.test(p)?'arena':/^\/lab(\/|$)/.test(p)?'lab':p;};
   function mutationFamilies(path){
     const p=new URL(path,'https://api.invalid').pathname;
     if(/^\/(me|signup|login|logout|oauth)(\/|$)/.test(p))return['community','arena'];
@@ -67,7 +67,7 @@
   }
   function routeNeeds(hash,{known=[],theory=[],versions={}}={}){
     const [first,second]=String(hash||'').replace(/^#\/?/,'').split('?')[0].split('/').filter(Boolean);
-    if(['weekly','rank','me','login','signup','oauth','lab'].includes(first)||first==='community'&&['login','signup'].includes(second))return['arena'];
+    if(['monthly','weekly','rank','me','login','signup','oauth','lab'].includes(first)||first==='community'&&['login','signup'].includes(second))return['arena'];
     if(first==='iypt')return['iypt'];
     if(first==='usaco')return['usaco'];
     const russian=['rupho','ruphow','ruphox','ruphoy'].includes(first);

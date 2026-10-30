@@ -8,7 +8,7 @@
 /* Start the current route's read while the document and lazy UI are still loading. */
 (function(){
   if(typeof fetch!=="function")return;
-  const positions=new Map(),eligible=/^\/(boards|posts|weekly|rank)$/;
+  const positions=new Map(),publicLists=/^\/(boards|posts)$/,anonymousPeriods=/^\/(monthly|weekly|rank)$/;
   const positionKey=scope=>{let hash=2166136261;for(let i=0;i<scope.length;i++){hash^=scope.charCodeAt(i);hash=Math.imul(hash,16777619);}return"hlReadBookmark:v1:"+(hash>>>0).toString(16);};
   const validBookmark=value=>typeof value==="string"&&value.length>0&&value.length<=2048;
   const save=state=>{try{sessionStorage.setItem(state.key,JSON.stringify({bookmark:state.bookmark,dirty:state.dirty}));}catch(e){}};
@@ -20,7 +20,7 @@
   };
   const reads=window.HL_READ_STATE={
     prepare({method="GET",path,base,token="",lang=""}){
-      method=method.toUpperCase();const scope=JSON.stringify([base,token,lang]),state=position(scope),url=new URL(path,"https://api.invalid"),replica=method==="GET"&&eligible.test(url.pathname),track=!/^\/(?:health|pay\/config|lab\/stats|lab\/contest\/catalog|avatar\/|yt\/)/.test(url.pathname);
+      method=method.toUpperCase();const scope=JSON.stringify([base,token,lang]),state=position(scope),url=new URL(path,"https://api.invalid"),replica=method==="GET"&&(publicLists.test(url.pathname)||!token&&anonymousPeriods.test(url.pathname)),track=!/^\/(?:health|pay\/config|lab\/stats|lab\/contest\/catalog|avatar\/|yt\/)/.test(url.pathname);
       if(method!=="GET"){state.version++;state.writes++;state.dirty=true;save(state);}
       if(replica){url.searchParams.delete("__hl_bm");if(state.bookmark)url.searchParams.set("__hl_bm",state.bookmark);}
       return{method,path:replica?url.pathname+url.search:path,scope,version:state.version,bookmark:state.bookmark,pending:state.writes,track,replica,forcePrimary:method==="GET"&&track&&state.dirty,primary:!replica||state.dirty};
@@ -49,10 +49,11 @@
   if(base==="https://haslalab-community.haslalab.workers.dev")base=production;
   const hash=location.hash,parts=hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean),[route,section,item]=parts;
   const language=new URLSearchParams(location.search).get("lang")==="en"?"en":"ko";
+  const periodQuery=value=>/^\d{4}-(?:0[1-9]|1[0-2])$/.test(value||"")?"&month="+encodeURIComponent(value):/^\d{4}-W\d{2}$/.test(value||"")?"&week="+encodeURIComponent(value):"";
   let path="",publicRead=false;
-  if(route==="weekly"&&section==="p"&&/^\d+$/.test(item||""))path="/problems/"+Number(item)+"?lang="+language;
-  else if(route==="weekly"&&section!=="p"&&section!=="admin")path="/weekly?lang="+language+(section&&/^\d{4}-W\d{2}$/.test(section)?"&week="+section:"");
-  else if(route==="rank")path="/rank?scope="+(section==="all"?"all":"week")+(section&&/^\d{4}-W\d{2}$/.test(section)?"&week="+section:"");
+  if((route==="monthly"||route==="weekly")&&section==="p"&&/^\d+$/.test(item||""))path="/problems/"+Number(item)+"?lang="+language;
+  else if((route==="monthly"||route==="weekly")&&section!=="p"&&section!=="admin")path="/"+route+"?lang="+language+periodQuery(section);
+  else if(route==="rank")path="/rank?scope="+(section==="all"?"all":section==="week"?"week":"month")+periodQuery(section);
   else if(route==="me")path="/me/overview";
   else if(route==="community"&&(!section||["all","free","qna","sim","study","best","hot"].includes(section))){
     const options=new URLSearchParams(hash.split("?")[1]||""),query=new URLSearchParams({page:Math.max(1,parseInt(item)||1),lang:language,sort:options.get("sort")||(section==="hot"?"hot":"new")});
@@ -1069,11 +1070,11 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
         &nbsp;·&nbsp; <a href="#/" id="footTop"></a></span>
 </div></footer>
 
-<script src="sim/labmedal.js"></script>
+<script src="sim/result-comparison.js?v=a88e3c1845b8"></script>
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
-<script src="site-runtime.js?v=f2d8ac529bea"></script>
-<script src="site-catalogue.js?v=01b41c38df48"></script>
+<script src="site-runtime.js?v=70c2f47fdc85"></script>
+<script src="site-catalogue.js?v=c84310741747"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=938310640469"></script>
@@ -1101,7 +1102,7 @@ const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"주간문제",
+  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
   ebLearn:"학습", hLearn:"학습을 시작하세요",
   pLearn:"물리 · 화학 · 생물 · 지구과학 · 천문 · 과학 실험과 실기, 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
@@ -1170,7 +1171,7 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Weekly",
+  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
   ebLearn:"Learn", hLearn:"Start learning",
   pLearn:"Textbooks, study guides and basic experiments, practicals and observations for physics, chemistry, biology, earth science, astronomy and integrated science. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
@@ -1342,6 +1343,7 @@ const lst = rows => rows.map(([id,en,ko,q,s,gr])=>{
 const DATA={
  ipho:{
   abbr:"IPhO", since:1967,
+  resources:[{label:{ko:"IPhO 비공식 기록 · 성적과 수상 기록",en:"IPhO unofficial records · scores and awards"},url:"https://ipho-unofficial.org/",kind:"page"}],
   full:{ko:"국제물리올림피아드",en:"International Physics Olympiad"},
   scope:{ko:"국제",en:"International"},
   years:[
@@ -4351,7 +4353,15 @@ const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "
 const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
 const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
-const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
+/* ORIGINAL_LAYOUT_PDF_VERSIONS */
+const ORIGINAL_LAYOUT_PDF_VERSIONS={"IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"c1bca894a1608166","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
+/* END_ORIGINAL_LAYOUT_PDF_VERSIONS */
+const thyUrl=f=>{
+  const url=/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;
+  const key=(f.startsWith(PDF_BASE)?f.slice(PDF_BASE.length):f).split(/[?#]/)[0];
+  const version=ORIGINAL_LAYOUT_PDF_VERSIONS[key]||(window.KPHE_PDF_VERSIONS||{})[f];
+  return version?url+(url.includes("?")?"&":"?")+"v="+encodeURIComponent(version):url;
+};   /* a release name, a site file, or a paper only linked */
 /* Competition or organiser websites, independent of whether any extra resources or papers have loaded. */
 const OFFICIAL_WEBSITES={
   ipho:"https://www.ipho-new.org/",
@@ -9420,7 +9430,7 @@ function setDocTitle(first, second){
   if(first==="about")            parts.push(d.hAbout);
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
-  else if(["weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
+  else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
@@ -9465,7 +9475,7 @@ function paintPageChrome(active){
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
      <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/weekly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
+     <a href="#/monthly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
@@ -9486,7 +9496,7 @@ function render(){
     const needs=window.HL_RUNTIME.routeNeeds(location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
     if(!siteDataLoader.ready(needs)){
       document.getElementById("view").innerHTML='<div class="shell"><div class="phead"><p role="status">'+(lang==="ko"?"자료를 불러오는 중…":"Loading archive…")+'</p></div></div>';
-      paintPageChrome(["weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
+      paintPageChrome(["monthly","weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
       setDocTitle(first,second);paintSiteTheme();
       siteDataLoader.ensure(needs).then(()=>{if(generation===siteRenderSeq)render();},()=>{if(generation!==siteRenderSeq)return;const box=document.getElementById("view");box.innerHTML='<div class="shell"><div class="phead"><p role="alert">'+(lang==="ko"?"자료를 불러오지 못했습니다.":"Could not load the archive.")+'</p><button type="button" class="cmbtn" id="retryCatalogue">'+(lang==="ko"?"다시 불러오기":"Retry")+'</button></div></div>';document.getElementById("retryCatalogue").onclick=render;});
       return;
@@ -9498,7 +9508,7 @@ function render(){
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
+  else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.body.dataset.siteRoute=active==="comps"?"archive":active;

@@ -3,11 +3,11 @@ export const BOOKMARK_HEADER = 'X-D1-Bookmark';
 export function publicReadEligible(request, url = new URL(request.url)) {
   if (request.method !== 'GET') return false;
   if (/^\/api\/(?:boards|posts)$/.test(url.pathname)) return !url.searchParams.has('view');
-  return /^\/api\/(?:weekly|rank)$/.test(url.pathname)
+  return /^\/api\/(?:monthly|weekly|rank)$/.test(url.pathname)
     && !request.headers.get('Authorization') && !request.headers.get('Cookie') && !request.headers.get('X-Lab-Token');
 }
 export function primaryCheckpointRequest(request, url = new URL(request.url)) {
-  if (request.method === 'GET') return /^\/api\/(?:boards|posts|weekly|rank)$/.test(url.pathname);
+  if (request.method === 'GET') return /^\/api\/(?:boards|posts|monthly|weekly|rank)$/.test(url.pathname);
   if (['HEAD', 'OPTIONS'].includes(request.method)) return false;
   // Financial, authentication and exam state remain on the original primary binding.
   return /^\/api\/(?:posts|comments|me|(?:admin\/)?(?:problems|submissions))(?:\/|$)/.test(url.pathname);

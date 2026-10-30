@@ -1,6 +1,7 @@
 // Public SELECTs shared by the primary backend and the global read lane.
 // Callers choose the D1 session/consistency policy and authenticate any private overlay.
 // Profiles, individual answers, votes, account state and financial data stay outside this module.
+import { canonicalProblemPeriod, isMonthPeriod, isProblemPeriod, isoMonth } from './problem-period.js';
 export const PUBLIC_BOARDS = Object.freeze(['free', 'qna', 'sim', 'study']);
 export const PUBLIC_TAGS = Object.freeze(['gen', 'q', 'info', 'review', 'bug', 'notice']);
 export const PUBLIC_PAGE = 20, PUBLIC_BEST = 3;
@@ -11,7 +12,18 @@ const currentTime = () => Math.floor(Date.now() / 1000);
 export class PublicDataError extends Error {
   constructor(code) { super(code); this.status = 400; this.code = code; }
 }
-export const publicDataPath = path => /^\/api\/(?:boards|posts|weekly|rank)$/.test(path);
+export const publicDataPath = path => /^\/api\/(?:boards|posts|monthly|weekly|rank)$/.test(path);
+const ACTIVE_PERIOD_SQL = `SELECT week FROM problems WHERE opens_at<=? AND closes_at>?
+  ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,opens_at DESC,closes_at DESC,week DESC LIMIT 1`;
+export function arenaPeriod(url) {
+  const requested = url.searchParams.get('month') || url.searchParams.get('week') || '';
+  if (requested && !isProblemPeriod(requested)) throw new PublicDataError('bad_week');
+  return canonicalProblemPeriod(requested);
+}
+export async function currentPeriod(db, time = currentTime()) {
+  const active = await db.prepare(ACTIVE_PERIOD_SQL).bind(time, time).all();
+  return active.results[0]?.week || isoMonth(time);
+}
 
 export function publicIsoWeek(time) {
   const d = new Date((time + 9 * 3600) * 1000), day = (d.getUTCDay() + 6) % 7;
@@ -96,10 +108,10 @@ function problemSummary(row, lang, time) {
     open: time < row.closes_at, closed: time >= row.closes_at };
 }
 export async function readPublicWeekly(db, url, time = currentTime()) {
-  const lang = pickLang(url.searchParams.get('lang')), week = url.searchParams.get('week') || '';
-  const where = week ? 'week=? AND opens_at<=?' : 'opens_at<=? AND closes_at>?', args = week ? [week, time] : [time, time];
-  const weekExpression = week ? '?' : 'COALESCE((SELECT week FROM problems WHERE opens_at<=? AND closes_at>? ORDER BY no LIMIT 1),?)';
-  const rankingArgs = week ? [week] : [time, time, publicIsoWeek(time)];
+  const lang = pickLang(url.searchParams.get('lang')), week = arenaPeriod(url);
+  const where = week ? 'week=? AND opens_at<=?' : `week=(${ACTIVE_PERIOD_SQL}) AND opens_at<=?`, args = week ? [week, time] : [time, time, time];
+  const weekExpression = week ? '?' : `COALESCE((${ACTIVE_PERIOD_SQL}),?)`;
+  const rankingArgs = week ? [week] : [time, time, isoMonth(time)];
   // Explicit columns prevent fetching answer keys, rubrics, worked solutions or private submissions.
   // All four public projections share one D1 round trip and one database snapshot.
   const [rows, weeks, stats, ranked] = await db.batch([
@@ -111,19 +123,30 @@ export async function readPublicWeekly(db, url, time = currentTime()) {
   ]);
   const counts = new Map(stats.results.map(row => [row.problem_id, row]));
   const problems = rows.results.map(row => ({ ...problemSummary(row, lang, time), users: counts.get(row.id)?.users || 0, solvers: counts.get(row.id)?.solved || 0 }));
-  return { week: week || rows.results[0]?.week || publicIsoWeek(time), problems, weeks: weeks.results,
+  const period = week || rows.results[0]?.week || isoMonth(time);
+  return { week: period, period, month: isMonthPeriod(period) ? period : null, problems, weeks: weeks.results, months: weeks.results,
     top: projectRankingRows(ranked.results, true).slice(0, 8), now: time, user: null, api_version: 5 };
 }
+export const readPublicMonthly = readPublicWeekly;
 
 export async function readPublicData(path, url, db, time = currentTime()) {
   if (path === '/api/boards') return readPublicBoards(db, url, time);
   if (path === '/api/posts') return readPublicPosts(db, url, time);
-  if (path === '/api/weekly') return readPublicWeekly(db, url, time);
+  if (path === '/api/monthly' || path === '/api/weekly') return readPublicWeekly(db, url, time);
   if (path === '/api/rank') {
-    const scope = url.searchParams.get('scope') === 'week' ? 'week' : 'all';
-    const week = scope === 'week' ? url.searchParams.get('week') || publicIsoWeek(time) : null;
-    const rows = await readPublicRanking(db, week);
-    return { scope, week, rows: rows.slice(0, 100).map((row, index) => ({ ...row, rank: index + 1 })), mine: null, tierAt: TIER_AT, user: null, api_version: 5 };
+    const scopeArg = url.searchParams.get('scope'), scope = ['month', 'week'].includes(scopeArg) ? scopeArg : 'all';
+    const requested = arenaPeriod(url);
+    let week = scope === 'all' ? null : requested, rows;
+    if (scope !== 'all' && !week) {
+      const [active, ranked] = await db.batch([
+        db.prepare(ACTIVE_PERIOD_SQL).bind(time, time),
+        rankingStatement(db, `COALESCE((${ACTIVE_PERIOD_SQL}),?)`, [time, time, isoMonth(time)]),
+      ]);
+      week = active.results[0]?.week || isoMonth(time);
+      rows = projectRankingRows(ranked.results, true);
+    } else rows = await readPublicRanking(db, week);
+    return { scope, week, period: week, month: isMonthPeriod(week) ? week : null,
+      rows: rows.slice(0, 100).map((row, index) => ({ ...row, rank: index + 1 })), mine: null, tierAt: TIER_AT, user: null, api_version: 5 };
   }
   return undefined;
 }

@@ -1,6 +1,7 @@
 // Reviewed weekly problems are bundled with the Worker. Publish only through
 // its existing D1 binding; deployment needs no D1 management/import credential.
 import reviewed from '../weekly/2026-W44.json' with { type: 'json' };
+import { isProblemPeriod, CURRENT_MONTHLY_PERIOD, LEGACY_MONTHLY_PERIOD, MONTHLY_CLOSES_AT } from './problem-period.js';
 
 export const PROBLEM_FIELDS = Object.freeze(['week', 'no', 'kind', 'subject', 'level', 'points',
   'title_ko', 'title_en', 'body_ko', 'body_en', 'unit', 'answer', 'rubric', 'model_ko', 'model_en',
@@ -17,7 +18,7 @@ export function validateContent(content) {
   const slots = new Set();
   for (const p of content.problems) {
     const label = `${p.week} #${p.no}`;
-    if (!/^\d{4}-W(?:0[1-9]|[1-4]\d|5[0-3])$/.test(p.week || '')) fail(`${label}: invalid ISO week`);
+    if (!isProblemPeriod(p.week)) fail(`${label}: invalid problem period`);
     if (!Number.isInteger(p.no) || p.no < 1) fail(`${label}: invalid number`);
     if (slots.has(label)) fail(`${label}: duplicate week/number`);
     slots.add(label);
@@ -52,6 +53,7 @@ export function validateContent(content) {
 
 export const REVIEWED_WEEKLY_CONTENT = validateContent(reviewed);
 export const WEEKLY_PUBLICATION_ID = '2026-W44-uploaded-physics-v1';
+export const MONTHLY_PUBLICATION_ID = 'monthly-2026-11-v1';
 
 export async function publishWeeklyContent(db, content = REVIEWED_WEEKLY_CONTENT, publicationId = WEEKLY_PUBLICATION_ID) {
   validateContent(content);
@@ -83,11 +85,48 @@ export async function publishWeeklyContent(db, content = REVIEWED_WEEKLY_CONTENT
     applied: !!result.at(-1).meta?.changes };
 }
 
+// One additive transition changes the schedule, never the problem ids, statements, rubrics,
+// scores or evidence. The marker allows administrators to maintain these records afterwards.
+export async function migrateMonthlyPeriod(db) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS weekly_publications (
+    id TEXT PRIMARY KEY, problems INTEGER NOT NULL, created_at INTEGER NOT NULL
+  )`).run();
+  if (await db.prepare('SELECT id FROM weekly_publications WHERE id=?').bind(MONTHLY_PUBLICATION_ID).first()) {
+    return { changed: 0, applied: false };
+  }
+  const rows = (await db.prepare('SELECT id FROM problems WHERE week=? AND no BETWEEN 1 AND 6 ORDER BY no')
+    .bind(LEGACY_MONTHLY_PERIOD).all()).results;
+  const ids = rows.map(row => row.id), places = ids.map(() => '?').join(',');
+  const statements = [];
+  if (ids.length) {
+    // A different problem already in a destination slot must abort the entire transition.
+    statements.push(db.prepare(`INSERT INTO weekly_publications(id,problems,created_at)
+      SELECT NULL,NULL,NULL WHERE NOT EXISTS(SELECT 1 FROM weekly_publications WHERE id=?)
+      AND EXISTS(SELECT 1 FROM problems old JOIN problems target ON target.no=old.no AND target.id<>old.id
+        WHERE old.id IN (${places}) AND target.week=?)`)
+      .bind(MONTHLY_PUBLICATION_ID, ...ids, CURRENT_MONTHLY_PERIOD));
+    statements.push(db.prepare(`UPDATE problems SET week=?,closes_at=? WHERE id IN (${places}) AND week=?
+      AND NOT EXISTS(SELECT 1 FROM weekly_publications WHERE id=?)`)
+      .bind(CURRENT_MONTHLY_PERIOD, MONTHLY_CLOSES_AT, ...ids, LEGACY_MONTHLY_PERIOD, MONTHLY_PUBLICATION_ID));
+    statements.push(db.prepare(`UPDATE submissions SET in_week=CASE
+      WHEN created_at>=(SELECT opens_at FROM problems WHERE problems.id=submissions.problem_id)
+        AND created_at<? THEN 1 ELSE 0 END
+      WHERE problem_id IN (${places})
+        AND EXISTS(SELECT 1 FROM problems WHERE problems.id=submissions.problem_id AND week=?)
+        AND NOT EXISTS(SELECT 1 FROM weekly_publications WHERE id=?)`)
+      .bind(MONTHLY_CLOSES_AT, ...ids, CURRENT_MONTHLY_PERIOD, MONTHLY_PUBLICATION_ID));
+  }
+  statements.push(db.prepare(`INSERT INTO weekly_publications(id,problems,created_at) VALUES(?,?,?)
+    ON CONFLICT(id) DO NOTHING`).bind(MONTHLY_PUBLICATION_ID, ids.length, Math.floor(Date.now() / 1000)));
+  const result = await db.batch(statements);
+  return { changed: ids.length ? result[1].meta?.changes || 0 : 0, applied: !!result.at(-1).meta?.changes };
+}
+
 const initialized = new WeakMap();
 export function ensureWeeklyContent(db, cacheKey = db) {
   let promise = initialized.get(cacheKey);
   if (!promise) {
-    promise = publishWeeklyContent(db);
+    promise = publishWeeklyContent(db).then(async publication => ({ ...publication, monthly: await migrateMonthlyPeriod(db) }));
     initialized.set(cacheKey, promise);
     promise.catch(() => { if (initialized.get(cacheKey) === promise) initialized.delete(cacheKey); });
   }

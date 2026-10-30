@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
-import { readPublicData, readPublicRanking, projectRankingRows, publicDataPath, publicIsoWeek, rateUser, tierOf, TIER_AT, PublicDataError } from './src/public-data.js';
+import { readPublicData, readPublicRanking, projectRankingRows, publicDataPath, publicIsoWeek, rateUser, tierOf, TIER_AT, PublicDataError, arenaPeriod, currentPeriod } from './src/public-data.js';
+import { isoMonth } from './src/problem-period.js';
 
 const sql = new DatabaseSync(':memory:');
 for (const name of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort()) sql.exec(readFileSync(new URL('./migrations/' + name, import.meta.url), 'utf8'));
@@ -35,10 +36,10 @@ for (let id = 1; id <= 30; id++) sql.prepare("INSERT INTO posts(id,user_id,board
 for (const [id, board, lang] of [[101, 'free', 'ko'], [102, 'qna', 'ko'], [103, 'study', 'ko'], [104, 'free', 'en']]) sql.prepare("INSERT INTO posts(id,user_id,board,tag,lang,title,body,created_at) VALUES(?,3,?,'notice',?,'Notice','Public notice',?)").run(id, board, lang, time - 1000);
 sql.prepare("INSERT INTO posts(id,user_id,board,tag,lang,title,body,created_at) VALUES(201,2,'free','gen','en','English post','English body',?)").run(time);
 for (const [id, week, number, kind, points, level, open, close] of [
-  [501, 'TEST-W01', 1, 'short', 100, 10, time - 600, time + 600],
-  [502, 'TEST-W01', 2, 'essay', 20, 20, time - 600, time + 600],
-  [503, 'OLD-W01', 1, 'short', 100, 30, time - 1000, time - 100],
-  [504, 'FUTURE-W01', 1, 'short', 100, 30, time + 1000, time + 2000],
+  [501, '2099-W01', 1, 'short', 100, 10, time - 600, time + 600],
+  [502, '2099-W01', 2, 'essay', 20, 20, time - 600, time + 600],
+  [503, '2098-W52', 1, 'short', 100, 30, time - 1000, time - 100],
+  [504, '2100-W01', 1, 'short', 100, 30, time + 1000, time + 2000],
 ]) sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,answer,rubric,model_ko,model_en,opens_at,closes_at,created_at)
   VALUES(?,?,?,?,?,?,'공개 제목','Public title','PRIVATE_BODY','PRIVATE_BODY','PRIVATE_ANSWER','PRIVATE_RUBRIC','PRIVATE_MODEL','PRIVATE_MODEL',?,?,?)`)
   .run(id, week, number, kind, points, level, open, close, time);
@@ -116,7 +117,7 @@ test('anonymous weekly data batches metadata, counts and ranking without reading
   trips = 0; queries.length = 0;
   const result = await read('/api/weekly?lang=en');
   assert.equal(trips, 1); assert.equal(queries.length, 4);
-  assert.equal(result.week, 'TEST-W01'); assert.equal(result.now, time); assert.equal(result.user, null);
+  assert.equal(result.week, '2099-W01'); assert.equal(result.now, time); assert.equal(result.user, null);
   assert.deepEqual(result.problems.map(row => row.id), [501, 502]);
   assert.equal(result.problems[0].title, 'Public title');
   assert.equal(result.problems[0].users, 4); assert.equal(result.problems[0].solvers, 2);
@@ -124,12 +125,12 @@ test('anonymous weekly data batches metadata, counts and ranking without reading
   assert.equal(result.top[0].nickname, 'Person 1'); assert.equal(result.top[0].total, 116);
   assert.equal(result.top[0].solved, 2); assert.equal(result.top[1].total, 80);
   assert.ok(result.problems.every(row => row.open && !row.closed));
-  assert.ok(result.weeks.every(row => row.week !== 'FUTURE-W01'));
+  assert.ok(result.weeks.every(row => row.week !== '2100-W01'));
   for (const problem of result.problems) for (const field of ['answer', 'body', 'criteria', 'solution', 'rubric', 'model_ko']) assert.equal(field in problem, false);
-  const closed = await read('/api/weekly?week=OLD-W01');
+  const closed = await read('/api/weekly?week=2098-W52');
   assert.equal(closed.problems[0].closed, true); noPrivateFields(closed); noPrivateFields(result);
-  const empty = await read('/api/weekly?week=FUTURE-W01');
-  assert.deepEqual(empty.problems, []); assert.equal(empty.week, 'FUTURE-W01');
+  const empty = await read('/api/weekly?week=2100-W01');
+  assert.deepEqual(empty.problems, []); assert.equal(empty.week, '2100-W01');
 });
 
 test('ranking preserves best-per-problem, weekly eligibility and rating order without account identifiers', async () => {
@@ -138,11 +139,11 @@ test('ranking preserves best-per-problem, weekly eligibility and rating order wi
   assert.equal(all.rows[0].nickname, 'Person 2'); assert.equal(all.rows[0].total, 200);
   assert.equal(all.rows[0].rank, 1); assert.equal(all.mine, null); assert.equal(all.user, null);
   assert.deepEqual(all.tierAt, TIER_AT);
-  const week = await read('/api/rank?scope=week&week=TEST-W01');
+  const week = await read('/api/rank?scope=week&week=2099-W01');
   assert.equal(week.rows[0].nickname, 'Person 1'); assert.equal(week.rows[0].total, 116);
   assert.equal(week.rows[0].last, time - 50); assert.equal(week.rows[1].tried, 1);
   assert.ok(week.rows.every(row => !['Person 3', 'Person 4'].includes(row.nickname)));
-  assert.deepEqual(await readPublicRanking(db, 'TEST-W01'), week.rows.map(({ rank, ...row }) => row));
+  assert.deepEqual(await readPublicRanking(db, '2099-W01'), week.rows.map(({ rank, ...row }) => row));
   noPrivateFields(all); noPrivateFields(week);
 });
 
@@ -153,4 +154,59 @@ test('shared pure ranking helpers retain tier boundaries, tie order and Korean I
   const raw = Array.from({ length: 205 }, (_, i) => ({ user_id: i, problem_id: 1, s: 100, at: 205 - i, points: 100, level: 1, nickname: 'Public ' + i, av: null }));
   const ranked = projectRankingRows(raw, true);
   assert.equal(ranked.length, 200); assert.equal(ranked[0].nickname, 'Public 204'); noPrivateFields(ranked);
+});
+
+test('monthly and legacy routes prefer one active month and expose compatible period and selector aliases', async () => {
+  const month = isoMonth(time);
+  for (const [id, period, ago] of [[505, month, 700], [506, '2029-01', 800]]) sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)
+    VALUES(?,?,1,'short',100,10,'월간 제목','Monthly title','PRIVATE_BODY','PRIVATE_BODY',?,?,?)`).run(id, period, time - ago, time + 600, time);
+  sql.prepare("INSERT INTO submissions(problem_id,user_id,answer,status,score,in_week,created_at) VALUES(505,2,'PRIVATE_MONTHLY_SUBMISSION','graded',100,1,?)").run(time);
+  trips = 0;
+  const monthly = await read('/api/monthly'); assert.equal(trips, 1);
+  assert.equal(monthly.week, month); assert.equal(monthly.period, month); assert.equal(monthly.month, month);
+  assert.deepEqual(monthly.problems.map(row => row.id), [505], 'month preference beats a newer overlapping legacy week');
+  assert.deepEqual(monthly.months, monthly.weeks);
+  assert.deepEqual((await read('/api/weekly')).problems, monthly.problems);
+  assert.equal(await currentPeriod(db, time), month);
+  const explicit = await read('/api/monthly?' + new URLSearchParams({ month, week: '2099-W01' }));
+  assert.equal(explicit.week, month, 'month query parameter takes precedence');
+  assert.deepEqual((await read('/api/monthly?week=2099-W01')).problems.map(row => row.id), [501, 502]);
+  trips = 0;
+  const ranked = await read('/api/rank?scope=month'); assert.equal(trips, 1, 'active period and ranking share one batch');
+  assert.equal(ranked.scope, 'month'); assert.equal(ranked.week, month); assert.equal(ranked.month, month);
+  assert.deepEqual(ranked.rows.map(row => row.nickname), ['Person 2']);
+  assert.equal((await read('/api/rank?scope=week')).week, month);
+  noPrivateFields(monthly); noPrivateFields(ranked);
+});
+
+test('the migrated 2026-W44 bookmark route resolves to November without breaking other legacy weeks', async () => {
+  sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)
+    VALUES(507,'2026-11',1,'short',100,10,'11월 문제','November problem','PRIVATE_BODY','PRIVATE_BODY',?,?,?)`).run(time - 1000, time + 600, time);
+  assert.equal(arenaPeriod(url('/api/weekly?week=2026-W44')), '2026-11');
+  assert.equal(arenaPeriod(url('/api/weekly?week=2099-W01')), '2099-W01');
+  const migrated = await read('/api/weekly?week=2026-W44');
+  assert.equal(migrated.period, '2026-11'); assert.equal(migrated.month, '2026-11');
+  assert.deepEqual(migrated.problems.map(row => row.id), [507]);
+  const rank = await read('/api/rank?scope=week&week=2026-W44');
+  assert.equal(rank.week, '2026-11'); assert.equal(rank.month, '2026-11');
+});
+
+test('invalid month and week values are rejected before querying even for all-time rankings', async () => {
+  const before = trips;
+  for (const period of ['2026-00', '2026-13', '2026-W00', '2026-W54', "2026-11' OR 1=1"]) {
+    for (const path of ['/api/monthly', '/api/weekly', '/api/rank?scope=all']) {
+      const target = url(path); target.searchParams.set('month', period);
+      await assert.rejects(read(target.pathname + target.search), error => error instanceof PublicDataError && error.code === 'bad_week');
+    }
+  }
+  assert.equal(trips, before);
+});
+
+test('empty active data falls back to the Korean calendar month rather than an ISO week', async () => {
+  const later = time + 40 * 86400, month = isoMonth(later);
+  const empty = await readPublicData('/api/monthly', url('/api/monthly'), db, later);
+  assert.equal(empty.week, month); assert.equal(empty.period, month); assert.equal(empty.month, month); assert.deepEqual(empty.problems, []);
+  const ranking = await readPublicData('/api/rank', url('/api/rank?scope=month'), db, later);
+  assert.equal(ranking.week, month); assert.equal(ranking.month, month); assert.deepEqual(ranking.rows, []);
+  assert.equal(await currentPeriod(db, later), month);
 });

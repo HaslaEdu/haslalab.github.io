@@ -104,9 +104,9 @@ async function fixture({ actualBackend = false, enabled = true, supported = true
 test.after(() => fixtures.forEach(sql => sql.close()));
 const noPrivateData = data => assert.doesNotMatch(JSON.stringify(data), /PRIVATE_|tokenHash|token_hash|user_id|problem_id|"username"|"answer"|"rubric"|"solution"/);
 
-test('the four exact public routes read local replicas with real public SQL and region metadata', async () => {
+test('monthly and legacy public routes read local replicas with real public SQL and region metadata', async () => {
   const h = await fixture(), before = h.sql.prepare('SELECT COUNT(*) n FROM problems').get().n;
-  for (const [path, auth] of [['/boards?case=local', true], ['/posts?case=local', true], ['/weekly?week=2099-W01&case=local', false], ['/rank?case=local', false]]) {
+  for (const [path, auth] of [['/boards?case=local', true], ['/posts?case=local', true], ['/monthly?week=2099-W01&case=local', false], ['/weekly?week=2099-W01&case=local', false], ['/rank?case=local', false]]) {
     const r = await h.request(path, { auth });
     assert.equal(r.status, 200); assert.equal(r.headers.get('X-Public-Read-Source'), 'replica');
     assert.match(r.headers.get('Server-Timing'), /d1_region;desc="WNAM replica"/);
@@ -116,7 +116,7 @@ test('the four exact public routes read local replicas with real public SQL and 
     assert.match(r.headers.get('Access-Control-Expose-Headers'), /X-D1-Bookmark/);
     await h.flush();
   }
-  assert.equal(h.services.length, 0); assert.deepEqual(h.edgeModes, Array(4).fill('first-unconstrained'));
+  assert.equal(h.services.length, 0); assert.deepEqual(h.edgeModes, Array(5).fill('first-unconstrained'));
   assert.ok(h.queries.every(row => row.lane === 'replica' && /^SELECT\b/.test(row.query)));
   assert.equal(h.sql.prepare('SELECT COUNT(*) n FROM problems').get().n, before, 'global weekly reads never publish seed data');
 });
@@ -124,14 +124,14 @@ test('the four exact public routes read local replicas with real public SQL and 
 test('authenticated rankings, private pages, writes and fresh reads use the service binding without local D1', async () => {
   const h = await fixture();
   for (const [path, options] of [
-    ['/weekly?case=auth', { auth: true }], ['/rank?case=auth', { auth: true }],
+    ['/monthly?case=auth', { auth: true }], ['/weekly?case=auth', { auth: true }], ['/rank?case=auth', { auth: true }],
     ['/rank?case=cookie', { headers: { Cookie: 'account=x' } }], ['/weekly?case=scan', { headers: { 'X-Lab-Token': 'scan-code' } }],
     ['/me/overview', {}], ['/users/Public%20Owner', {}], ['/posts/1?view=1', {}], ['/lab/tokens', {}], ['/lab/sessions/1', {}], ['/pay/status?id=1', {}],
     ['/posts', { auth: true, method: 'POST', body: { title: 'Write' } }], ['/comments/1', { auth: true, method: 'PATCH', body: { body: 'Edit' } }],
     ['/lab/up/pages', { method: 'PUT', body: { scan: true } }], ['/posts/1', { auth: true, method: 'DELETE' }],
-    ['/boards?case=fresh', { headers: { 'Cache-Control': 'no-cache' } }], ['/posts?case=fresh', { headers: { 'Cache-Control': 'max-age=0' } }], ['/rank?case=fresh', { headers: { 'Cache-Control': 'no-store' } }],
+    ['/boards?case=fresh', { headers: { 'Cache-Control': 'no-cache' } }], ['/monthly?case=fresh', { headers: { 'Cache-Control': 'no-cache' } }], ['/posts?case=fresh', { headers: { 'Cache-Control': 'max-age=0' } }], ['/rank?case=fresh', { headers: { 'Cache-Control': 'no-store' } }],
   ]) assert.equal((await h.request(path, options)).data.from, 'primary');
-  assert.equal(h.services.length, 17); assert.equal(h.edgeModes.length, 0); assert.equal(h.queries.length, 0); await h.flush();
+  assert.equal(h.services.length, 19); assert.equal(h.edgeModes.length, 0); assert.equal(h.queries.length, 0); await h.flush();
 });
 
 test('bookmarks constrain sessions, survive cache hits and isolate cached database versions', async () => {
@@ -257,8 +257,10 @@ test('a later authenticated session joining an older rank query never certifies 
   const held = new Promise(resolve => { release = resolve; });
   const loading = new Promise(resolve => { rankingStarted = resolve; });
   const authenticated = new Promise(resolve => { newerAuth = resolve; });
-  let paused = false;
-  h.state.pauseRanking = async () => { if (!paused) { paused = true; rankingStarted(); await held; } };
+  let paused = false, snapshotVersion;
+  h.state.pauseRanking = async () => {
+    if (!paused) { paused = true; snapshotVersion = h.state.version; rankingStarted(); await held; }
+  };
   h.state.onQuery = ({ query }) => {
     if (/FROM sessions/.test(query) && h.queries.filter(row => /FROM sessions/.test(row.query)).length === 2) newerAuth();
   };
@@ -273,11 +275,13 @@ test('a later authenticated session joining an older rank query never certifies 
   assert.equal(older.status, 200); assert.equal(joined.status, 200);
   assert.equal(older.data.rows[0].total, 80); assert.equal(joined.data.rows[0].total, 80);
   const authVersions = h.queries.filter(row => /FROM sessions/.test(row.query)).map(row => row.version);
-  assert.deepEqual(authVersions, [0, 1], 'the joining session really authenticated after a newer commit');
-  assert.equal(older.headers.get('X-D1-Bookmark'), 'bm-primary-session-v0');
+  assert.equal(authVersions.length, 2);
+  assert.ok(authVersions[0] <= snapshotVersion, 'publication may commit before the first ranking snapshot');
+  assert.ok(authVersions[1] > snapshotVersion, 'the joining session really authenticated after a newer commit');
+  assert.equal(older.headers.get('X-D1-Bookmark'), `bm-primary-session-v${snapshotVersion}`);
   assert.equal(joined.headers.has('X-D1-Bookmark'), false, 'B2 authentication cannot certify reused B1 ranking data');
   assert.match(joined.headers.get('Server-Timing'), /public_cache;desc="1 hits 0 misses"/);
   const fresh = await h.request('/rank?scope=all&case=checkpoint-join', { auth: true, headers: { 'Cache-Control': 'no-cache' } });
   assert.equal(fresh.data.rows[0].total, 100);
-  assert.equal(fresh.headers.get('X-D1-Bookmark'), 'bm-primary-session-v1');
+  assert.equal(fresh.headers.get('X-D1-Bookmark'), `bm-primary-session-v${authVersions[1]}`);
 });

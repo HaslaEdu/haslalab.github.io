@@ -202,7 +202,7 @@
 <script src="../vendor/qrcode/qrcode.js"></script>
 <script src="../examdur.js?v=20261030-archives"></script>
 <script src="../paper-languages.js?v=1"></script>
-<script src="labmedal.js"></script>
+<script src="result-comparison.js?v=a88e3c1845b8"></script>
 <script src="exam-network.js"></script>
 <script>
 "use strict";
@@ -1009,10 +1009,8 @@ function doneView() {
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
-  /* which medal the experiment alone would have earned that year, where the year's scores are published */
-  if (s.status === "graded" && !REVIEW && !THY && !MIX && window.labMedal) window.labMedal.load("labmedals.json").then(d => {
-    const e = window.labMedal.estimate(d, EX.c, EX.y, s.score, s.points, EX.tasks), box = $("medal");
-    if (box && SES === s) box.innerHTML = window.labMedal.html(e, lang); });
+  if (s.status === "graded" && window.labComparison) window.labComparison.mount($("medal"),
+    {...s,comp:s.comp||EX.c,year:s.year||EX.y,tasks:s.tasks||EX.tasks},lang,{base:'results/',isCurrent:()=>SES===s});
   $("again").onclick = () => { SES = null; shown = ""; sync(); };
   if(s.status==='grading')startPoll(poll,'grading');
 }

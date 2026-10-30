@@ -31,10 +31,11 @@ jobs:
       - run: npm ci
       - run: node --check src/index.js
       - run: node weekly/build-seed.mjs --check
-      - run: node --test test-weekly-content.mjs ../tests/test-weekly-rendering.cjs
+      - run: node --test test-weekly-content.mjs test-monthly-period.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-ui.cjs
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
+      - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs
       - run: node --test test-community-latency.mjs test-account-latency.mjs
       - run: node --test test-public-data.mjs test-global-public-read.mjs
       - run: node --check src/edge-gateway.js && node --test test-edge-gateway.mjs

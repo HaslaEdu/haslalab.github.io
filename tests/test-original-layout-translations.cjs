@@ -2,19 +2,49 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const read = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
 const assets = read('pdf-assets.json');
 const fonts = read('tools/translation_font_validation.json').files;
 const published = read('tools/original_style_publication.json');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const versions = html.match(/const ORIGINAL_LAYOUT_PDF_VERSIONS=(\{[^;]+\});/);
+assert.ok(versions, 'Restored PDFs need distinct browser-cache URLs');
+const revisions = JSON.parse(versions[1]);
+const begin = html.indexOf('const thyUrl=');
+const end = html.indexOf('/* Competition or organiser websites', begin);
+const base = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
+const thyUrl = vm.runInNewContext(html.slice(begin, end) + '\nthyUrl;', {PDF_BASE: base, ORIGINAL_LAYOUT_PDF_VERSIONS: revisions, window: {KPHE_PDF_VERSIONS: {'pdfx/kphe/existing.pdf': 'existing'}}});
 assert.ok(published.length > 0);
 for (const item of published) {
   const qa = read(item.qa);
   const font = fonts.find(row => row.file === item.file);
+  assert.equal(revisions[item.file], item.sha256.slice(0, 16));
+  assert.equal(thyUrl(item.file), base + item.file + '?v=' + item.sha256.slice(0, 16));
+  assert.equal(thyUrl(base + item.file), thyUrl(item.file));
   assert.ok(font, item.file);
   assert.equal(assets[item.file], item.bytes, 'Released bytes must match the reviewed original-layout PDF');
   assert.equal(font.bytes, item.bytes);
   assert.equal(font.sha256, item.sha256);
+  if (item.audit_schema === 'native-outlines-and-control') {
+    assert.equal(qa.output_sha256, item.sha256);
+    assert.equal(qa.pages, item.pages);
+    assert.equal(qa.page_audits.length, item.pages);
+    for (const key of ['no_autoshrink', 'no_equation_rasterization', 'no_paragraph_reflow', 'no_added_editorial_notes']) assert.equal(qa[key], true);
+    assert.equal(qa.visual_review_required, false);
+    assert.deepEqual(qa.visual_review.reviewed_pages, Array.from({length: item.pages}, (_, i) => i + 1));
+    for (const page of qa.page_audits) {
+      for (const key of ['outside_prose_changed_pixels', 'missing_or_moved_native_glyphs', 'missing_or_moved_math_glyphs', 'original_math_ink_changed_pixels', 'original_native_ink_changed_pixels', 'original_figure_ink_changed_pixels', 'source_to_suppression_control_native_ink_changed_pixels', 'korean_intrusion_on_native_ink_pixels', 'final_vs_reviewed_proof_changed_pixels']) assert.equal(page[key], 0, `${item.file}: ${key}`);
+      for (const key of ['native_images_unchanged', 'native_vector_drawings_unchanged', 'suppression_control_native_geometry_unchanged', 'suppression_control_source_font_programs_unchanged', 'final_vs_reviewed_proof_glyph_geometry_identical', 'original_font_sizes_and_baselines_identical']) assert.equal(page[key], true);
+      const plan = fs.readFileSync(path.join(root, page.plan.replaceAll('\\', '/')));
+      assert.equal(crypto.createHash('sha256').update(plan).digest('hex'), page.plan_sha256);
+    }
+    const hangul = read(item.hangul_qa);
+    assert.equal(hangul.sha256, item.sha256);
+    assert.equal(hangul.flagged_components, 0);
+    continue;
+  }
   assert.equal(qa.sha256, item.sha256);
   assert.equal(qa.pages, item.pages);
   assert.equal(qa.page_audits.length, item.pages, 'Every page needs a final joined-PDF audit');
@@ -32,6 +62,8 @@ for (const item of published) {
     assert.equal(page.changed_pixels_outside_prose, 0);
   }
 }
+assert.equal(thyUrl('pdfx/kphe/existing.pdf'), 'pdfx/kphe/existing.pdf?v=existing');
+assert.equal(thyUrl('unchanged.pdf'), base + 'unchanged.pdf');
 for (const font of read('tools/ko/fonts/NOTO_CJK_PROVENANCE.json')) {
   const data = fs.readFileSync(path.join(root, 'tools/ko/fonts', font.file));
   assert.equal(crypto.createHash('sha256').update(data).digest('hex'), font.sha256);

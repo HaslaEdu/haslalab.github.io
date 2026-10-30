@@ -44,15 +44,15 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 
 글마다 `lang`(`ko`/`en`)이 붙고, 목록·게시판 통계·인기글은 사이트 언어의 서버 것만 보여 줍니다. `migrations/0003_lang.sql`은 원격 D1에 적용해 두었습니다(기존 글은 모두 한국어 서버). `src/index.js`를 다시 붙여 넣고 Deploy하면 됩니다.
 
-## v4: 사이트 로그인 · 주간 문제 · 채점 · 랭킹
+## v4: 사이트 로그인 · 월별 문제 · 채점 · 랭킹
 
-커뮤니티 계정이 그대로 사이트 계정이 됩니다. 사이트 오른쪽 위에 로그인 버튼이 생기고, 「주간 문제」(`#/weekly`), 랭킹(`#/rank`), 내 기록(`#/me`) 화면이 열립니다.
+커뮤니티 계정이 그대로 사이트 계정이 됩니다. 사이트 오른쪽 위에 로그인 버튼이 생기고, 「월별 문제」(`#/monthly`), 랭킹(`#/rank`), 내 기록(`#/me`) 화면이 열립니다. 예전 `#/weekly` 주소도 계속 열립니다.
 
 - **단답형** 문제는 서버가 숫자를 정답과 비교해 바로 채점합니다(허용 오차는 문제마다 `rel` 또는 `abs`). AI 키가 없어도 동작합니다.
 - **서술형** 문제는 하슬라논술 채점기(`grade-v2`)와 같은 방식으로 채점합니다. 문제의 채점 기준(루브릭)마다 점수를 매기고, 학생 답안에서 그대로 인용한 근거를 붙입니다. 답안에 없는 근거로 준 점수는 0점으로 바꿉니다. Gemini 키가 있으면 Gemini를, 없고 OpenAI 키가 있으면 OpenAI를 씁니다. 둘 다 없으면 답안은 「채점 대기」로 저장되고, 관리자가 `#/weekly/admin`에서 점수를 줍니다.
 - **사진 답안**은 하슬라논술처럼 Upstage OCR로 읽습니다. 수식이 많으면 Document Parse로 LaTeX를 살려 읽습니다. 읽은 글은 학생이 확인하고 고친 뒤에 제출합니다. 이미지는 JPEG·PNG·WebP 한 장, 8 MB까지 받고, 한 사람이 하루 30번까지 쓸 수 있습니다.
-- **랭킹**은 문제마다 가장 높은 점수를 더해 매깁니다. 같은 점수면 그 점수에 먼저 닿은 사람이 앞섭니다. 주가 열려 있는 동안 낸 답만 셉니다. 주가 끝나면 풀이가 공개되므로, 그 뒤에 낸 답은 연습으로만 채점합니다. 티어는 총점 기준으로 브론즈(0), 실버(300), 골드(800), 플래티넘(1600), 다이아몬드(3000), 루비(5000)입니다.
-- 새 주는 월요일 0시(한국 시각)에 열립니다. 문제는 관리자 화면에서 추가합니다(`week`, `opens_at`/`closes_at`은 유닉스 초).
+- **월별 랭킹**은 해당 월의 제출 기간 안에 받은 문제별 최고 점수를 더합니다. 같은 점수면 먼저 도달한 사람이 앞섭니다. 마감 후에는 풀이가 공개되고, 이후 제출은 연습으로만 채점합니다. 전체 랭킹과 티어는 레이팅을 사용합니다.
+- 문제는 관리자 화면에서 월 단위로 추가합니다. 기존 `week` 필드는 월 식별자 `YYYY-MM`도 받으며, `opens_at`/`closes_at`은 유닉스 초입니다. 마감은 포함하지 않는 경계입니다. 2026년 11월 문제는 11월 30일 전체를 포함하고 12월 1일 00:00 KST (`1796050800`)에 마감합니다.
 
 ### 올리는 순서
 
@@ -168,7 +168,8 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - `sim/sheets.html`: 시작 전에 인쇄하는 답안지. 대회가 공개한 **공식 Answer sheet · Working sheet**가 있으면 그것을 그대로 엽니다(`sim/sheets/`, `tools/labofficial.py` — 비어 있는 귀퉁이에만 스캐너용 검은 사각형을 덧찍음, 목록은 `sim/sheets/index.json`). 공개되지 않은 것만 HaslaLab 양식(문항 칸 · 측정표 · 그래프 용지, 문항 번호와 배점은 `sim/labsheets.json` / `tools/labsheets.py`)으로 인쇄합니다. 문제지는 여기 없습니다. 공식 시트의 머리글 코드(A1-3 = 실험 1 답안지 3쪽, W2-1 = 실험 2 연습지)는 읽을 때 실험 · 시트로 옮겨집니다.
 - `sim/exam.html`: 문제지는 시험 중에만 «문제지 열기»로 책상 옆에 pdf.js로 그려 보여 줍니다(내려받기 · 인쇄 버튼 없음, 시험 창 인쇄는 빈 쪽).
 - `sim/scan.html`: 실시간 카메라가 종이를 찾아 테두리를 그리고, 네 사각형이 1초쯤 멈추면 저절로 찍습니다(`labscan/scanner.js`의 `findSheetMarkersGray`).
-- 성적표와 확인증: 실험 점수를 그해 공개된 실험 점수(`sim/labmedals.json`, `tools/labmedals.py` — IPhO 비공식 기록과 APhO 공식 결과, 이름 없이 점수와 메달 수만)에 넣어 «실험만으로 본 메달권»을 추정합니다(`sim/labmedal.js`).
+- 성적표와 확인증: `sim/result-comparison.js`가 `sim/results/<대회>.json`의 공개 점수·수상 기준과 비교합니다. 같은 연도·전체 문항·공식 만점이 일치한 라운드만 자동 비교하며, 일부 문항을 전체 시험으로 환산하지 않습니다. 메달 기준은 그 수상을 결정하는 전체 점수에만 적용합니다. 이론·실험 합산 대회는 다른 라운드 점수를 입력해 총점을 참고 비교할 수 있습니다. 입력 점수는 서버에 저장하지 않습니다. 자료가 수상자 일부만 포함하면 전체 참가자 순위·상위 비율로 표시하지 않습니다. 데이터 출처와 수록 범위는 `tools/results/README.md`에 설명되어 있습니다.
+- `GET /lab/sessions/:id`와 선택한 성적표의 bootstrap은 `sample_standing`을 반환합니다. 같은 대회·연도·문항·배점·채점 기준에서 1인 첫 채점 결과를 표본으로 삼고 실전/채점·첨삭은 분리합니다. 재응시는 본인의 현재 점수를 다른 사람의 첫 채점과 비교하며, 동점은 공동 순위입니다. 표본 1명일 때는 상위 비율을 표시하지 않습니다. 정성 첨삭과 점수가 없는 기록은 표본에서 제외합니다.
 
 **스캔 AI 비교** (`sim/scanbench.html`, 관리자만): 휴대폰으로 찍은 A4 사진을 연결된 AI마다 가장 싼 비전 모델(Gemini `gemini-flash-lite-latest`, OpenAI `gpt-5-nano`, Claude `claude-haiku-5-5` — `BENCH_*_MODEL`로 바꿈, Claude 키는 `ANTHROPIC_API_KEY` 또는 `CLAUDE_API_KEY`)과 Upstage(페이지 탐지가 없어 글자 범위로 대신)에 보내 종이 네 귀퉁이를 찾게 하고, HaslaLab 기기 안 탐지와 함께 관리자가 표시한 정답 귀퉁이와의 오차로 순위를 매깁니다. 사진과 결과는 `scan_bench` 표(처음 쓸 때 저절로 만들어짐)에 남습니다. API: `POST/GET /api/admin/lab/scanbench`, `PATCH /api/admin/lab/scanbench/:id {gt}`.
 
@@ -348,11 +349,11 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 | POST | `/api/oauth/ticket` | 로그인한 계정에 서비스를 연결할 때 쓰는 일회용 표 |
 | GET | `/api/me/identities` | 연결된 서비스, 비밀번호 유무 |
 | PATCH | `/api/me` | `{nickname}` 닉네임 바꾸기 |
-| GET | `/api/weekly?lang=&week=` | 이번 주(또는 그 주) 문제 목록, 내 최고 점수, 주 목록 |
+| GET | `/api/monthly?lang=&month=` | 해당 월 문제 목록, 내 최고 점수, 월 목록 (`/api/weekly` 호환 주소 유지) |
 | GET | `/api/problems/:id?lang=` | 문제 본문, 채점 항목, 내 제출, (마감 후) 풀이 |
 | POST | `/api/problems/:id/submit` | `{answer, via_ocr}` → `{status, score, detail}` |
 | POST | `/api/ocr?mode=text\|math` | multipart `image` → `{text, confidence}` |
-| GET | `/api/rank?scope=week\|all&week=` | 랭킹 100위까지 |
+| GET | `/api/rank?scope=month\|all&month=` | 월별·전체 랭킹 100위까지 (`scope=week` 호환 유지) |
 | GET | `/api/me/stats` | 내 순위, 총점, 최근 제출 |
 | GET/POST | `/api/admin/problems` | 문제 목록 / 추가·수정 (관리자) |
 | GET | `/api/admin/queue` | 채점 대기 답안 (관리자) |

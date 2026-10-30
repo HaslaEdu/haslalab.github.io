@@ -14,6 +14,7 @@ import { ensureWeeklyContent } from './weekly-content.js';
 import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
 import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
+import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -531,7 +532,7 @@ async function ytRoute(req, env, url, cors) {
   return reply(body);
 }
 
-const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
+const SHARED_GET = /^\/api\/(boards|posts|monthly|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
 const PUBLIC_INVARIANT = /^\/api\/(health|boards|posts|lab\/stats|pay\/config|lab\/contest\/catalog)$/;
 const publicInvariant = (method, path) => method === 'GET' && PUBLIC_INVARIANT.test(path);
 const cacheSeconds = path => /\/(health|pay\/config|contest\/catalog)$/.test(path) ? 300 : EDGE_TTL;
@@ -655,22 +656,15 @@ function rateUser(solvedLevels) {
 function arenaHealth(env) {
   return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.OPENAI_API_KEY ? "openai" : null };
 }
-/* ISO week of a unix time, in Korean time (weeks turn over at Monday 00:00 KST) */
-function isoWeek(t) {
-  const d = new Date((t + 9 * 3600) * 1000), day = (d.getUTCDay() + 6) % 7;
-  d.setUTCDate(d.getUTCDate() - day + 3);
-  const y = d.getUTCFullYear(), first = new Date(Date.UTC(y, 0, 4)), fd = (first.getUTCDay() + 6) % 7;
-  first.setUTCDate(first.getUTCDate() - fd + 3);
-  return `${y}-W${String(1 + Math.round((d - first) / 604800000)).padStart(2, "0")}`;
-}
 function pubProblem(r, lang, open, full) {
   const en = lang === "en", closed = now() >= r.closes_at;
   const o = { id: r.id, week: r.week, no: r.no, kind: r.kind, subject: r.subject, level: r.level, points: r.points,
     title: en ? r.title_en : r.title_ko, unit: r.unit, source: r.source, opens_at: r.opens_at, closes_at: r.closes_at, open, closed };
+  o.period = r.week; o.month = isMonthPeriod(r.week) ? r.week : null;
   if (full) {
     o.body = en ? r.body_en : r.body_ko;
     if (r.kind === "essay" && r.rubric) o.criteria = JSON.parse(r.rubric).map(c => ({ id: c.id, name: c.name, max: c.max }));
-    if (closed) o.solution = en ? r.model_en : r.model_ko;      // the worked solution once the week is over
+    if (closed) o.solution = en ? r.model_en : r.model_ko;      // the worked solution once the period is over
   }
   return o;
 }
@@ -952,20 +946,25 @@ async function accountOverview(env, me, req) {
 async function arena(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
-  if ((p === '/api/weekly' && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
+  if ((['/api/monthly', '/api/weekly', '/api/rank'].includes(p) && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
     await ensureWeeklyContent(env.DB, env[DB_SCOPE] || env.DB);
   }
-  if (p === "/api/weekly" && m === "GET") {
-    const t = now(), week = url.searchParams.get("week") || "";
-    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : 'opens_at<=? AND closes_at>?', args = week ? [week, t] : [t, t];
+  if ((p === "/api/monthly" || p === "/api/weekly") && m === "GET") {
+    const t = now(), requested = url.searchParams.get("month") || url.searchParams.get("week") || "";
+    if (requested && !isProblemPeriod(requested)) bad('bad_week');
+    const week = canonicalProblemPeriod(requested);
+    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : `week=(SELECT week FROM problems
+      WHERE opens_at<=? AND closes_at>? ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,
+        opens_at DESC,closes_at DESC,week DESC LIMIT 1) AND opens_at<=?`,
+      args = week ? [week, t] : [t, t, t];
     // The public projection contains no answers, identity or individual score.
     // Its private overlay can be read immediately, without waiting for the list.
-    const common = publicRead(env, `weekly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
+    const common = publicRead(env, `monthly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
       const [rowsR, weeksR] = await env.DB.batch([
         env.DB.prepare(`SELECT * FROM problems WHERE ${where} ORDER BY no`).bind(...args),
         env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
       ]);
-      const rows = rowsR.results, wk = week || rows[0]?.week || isoWeek(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
+      const rows = rowsR.results, wk = week || rows[0]?.week || isoMonth(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
       const [stats, top] = await Promise.all([
         ids.length ? env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
           FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${qs}) GROUP BY s.problem_id`).bind(...ids).all().then(r => r.results) : [],
@@ -973,7 +972,8 @@ async function arena(p, m, body, me, req, env, url) {
       ]);
       const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false));
       for (const x of problems) { const s = stats.find(y => y.problem_id === x.id); x.users = s?.users || 0; x.solvers = s?.solved || 0; }
-      return { week: wk, problems, weeks: weeksR.results, top: top.slice(0, 8) };
+      return { week: wk, period: wk, month: isMonthPeriod(wk) ? wk : null, problems,
+        weeks: weeksR.results, months: weeksR.results, top: top.slice(0, 8) };
     }, { fresh });
     const [shared, mine] = await Promise.all([common,
       me ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (SELECT id FROM problems WHERE ${where}) GROUP BY problem_id`).bind(me.id, ...args).all().then(r => r.results) : [],
@@ -1021,13 +1021,23 @@ async function arena(p, m, body, me, req, env, url) {
     return await ocr(env, f, url.searchParams.get("mode") === "math" ? "math" : "text");
   }
   if (p === "/api/rank" && m === "GET") {
-    const scope = url.searchParams.get("scope") === "week" ? "week" : "all";
-    const week = scope === "week" ? (url.searchParams.get("week") || isoWeek(now())) : null;
+    const scopeArg = url.searchParams.get("scope"), scope = ['month', 'week'].includes(scopeArg) ? scopeArg : "all";
+    const requested = url.searchParams.get("month") || url.searchParams.get("week") || "";
+    if (requested && !isProblemPeriod(requested)) bad('bad_week');
+    let week = scope !== "all" ? canonicalProblemPeriod(requested) : null;
+    if (scope !== 'all' && !week) {
+      const t = now(), active = await publicRead(env, `active-problem-period:${Math.floor(t / 5)}`, () =>
+        env.DB.prepare(`SELECT week FROM problems WHERE opens_at<=? AND closes_at>?
+          ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,opens_at DESC,closes_at DESC,week DESC LIMIT 1`)
+          .bind(t, t).first(), { fresh: wantsFresh(req) });
+      week = active?.week || isoMonth(t);
+    }
     const rows = await ranking(env, week, wantsFresh(req));
     rows.forEach((x, i) => { x.rank = i + 1; });
     let mine = null;
     if (me) { const i = rows.findIndex(x => x.nickname === me.nickname); if (i >= 0) mine = rows[i]; }
-    return { scope, week, rows: rows.slice(0, 100), mine, tierAt: TIER_AT, user: me ? pubUser(me) : null, api_version: 5 };
+    return { scope, week, period: week, month: isMonthPeriod(week) ? week : null,
+      rows: rows.slice(0, 100), mine, tierAt: TIER_AT, user: me ? pubUser(me) : null, api_version: 5 };
   }
   if (p === '/api/me/overview' && m === 'GET') return accountOverview(env, needUser(me), req);
   if (p === "/api/me/stats" && m === "GET") {
@@ -1043,7 +1053,9 @@ async function arena(p, m, body, me, req, env, url) {
       return { problems: (await env.DB.prepare("SELECT * FROM problems ORDER BY opens_at DESC, no LIMIT 200").all()).results };
     if (p === "/api/admin/problems" && m === "POST") {
       const f = ["week", "no", "kind", "subject", "level", "points", "title_ko", "title_en", "body_ko", "body_en", "unit", "answer", "rubric", "model_ko", "model_en", "source", "opens_at", "closes_at"];
-      if (!/^\d{4}-W\d{2}$/.test(body.week || "")) bad("bad_week");
+      const period = body.month || body.period || body.week;
+      if (!isProblemPeriod(period)) bad("bad_week");
+      body.week = canonicalProblemPeriod(period);
       if (!["short", "essay"].includes(body.kind)) bad("bad_kind");
       if (body.level !== undefined && !(Number.isInteger(+body.level) && +body.level >= 1 && +body.level <= 30)) bad("bad_level");
       if (body.kind === "short") { const a = JSON.parse(body.answer || "null"); if (!a || typeof a.value !== "number") bad("bad_answer"); }
@@ -1264,7 +1276,7 @@ const labCost = s => !contestMeta(s) && labSrc(s)._half && labKind(s) !== "mixed
 const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,mime,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
-    score: s.score, points: s.points, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
+    score: s.score, points: s.points, sample_standing: null, started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
     exam_sec: labDur(s), scan_sec: labReview(s) ? null : LAB.scanSec, review_only: labReview(s), kind: labKind(s), cost: labCost(s) / 2, paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     ...contestPublic(s), regulation: contestMeta(s) ? CONTEST_REG : LAB_REG,
     pages: pages && pages.map(p => {
@@ -1804,7 +1816,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   }
   const out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");
   const sc = labScore(scheme, out.raw, mine);
-  return { status: "graded", score: sc.score, points: scheme.points, grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  return { status: "graded", score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model, regulation: LAB_REG.version, pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -1822,7 +1834,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
     let scheme;
     try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task, m); }
     catch (e) { console.error("lab scheme", e && e.message); return { status: "error", why: "scheme_failed", points: null, pages: mine.length }; }
-    if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, pages: 0 };
+    if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, comparison_rubric: labComparisonRubric(scheme?.items), pages: 0 };
     if (scheme?.unscored) {
       const paper = labSrc(s)[task]?.paper;
       if (labReview(s) && paper) return labQualitative(env, s, task, mine, paper, lang, m);
@@ -1839,7 +1851,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   return labGradeText(env, s, task, mine, rb, lang);
 }
 async function labGradeText(env, s, task, mine, rb, lang) {
-  if (!mine.length) return { status: "empty", score: 0, points: rb ? rb.points : null, pages: 0 };
+  if (!mine.length) return { status: "empty", score: 0, points: rb ? rb.points : null, comparison_rubric: rb ? labComparisonRubric(JSON.parse(rb.rubric)) : null, pages: 0 };
   if (!rb) return { status: "pending", why: "no_scheme", points: null, pages: mine.length };
   const n = { answer: 0, working: 0 };
   const answer = mine.map(p => `[${p.kind === "answer" ? "Answer sheet" : "Working sheet"} ${++n[p.kind]}]\n${p.text ?? p.ocr ?? ""}`).join("\n\n");
@@ -1851,7 +1863,7 @@ async function labGradeText(env, s, task, mine, rb, lang) {
   if (!res) return { status: "pending", why: "no_grader", points: rb.points, pages: mine.length };
   const g = normalizeGrade(res.raw, rubric, answer, 0.1);
   const score = +Math.min(rb.points, g.scores.reduce((a, x) => a + x.got, 0)).toFixed(2);
-  return { status: "graded", score, points: rb.points, grader: res.model, pages: mine.length, ...g };
+  return { status: "graded", score, points: rb.points, comparison_rubric: labComparisonRubric(rubric), grader: res.model, pages: mine.length, ...g };
 }
 /* the whole session's mark from its experiments' marks */
 function labTotal(tasks, per) {
@@ -2072,12 +2084,12 @@ async function labBootstrap(env,me,url){
   ]);
   if(withActive)out.active=pubLab(active,activePages);
   if(selected){
-    const [owner,standing,reviews]=await Promise.all([
+    const [owner,standings,reviews]=await Promise.all([
       selected.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(selected.user_id).first(),
-      labStanding(env,selected),
+      labStandings(env,selected),
       isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(selected.id).all().then(r=>r.results):undefined,
     ]);
-    out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,standing,...(reviews?{reviews}:{})};
+    out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,...standings,...(reviews?{reviews}:{})};
   }
   if(listIndex>=0)out.sessions=results[listIndex].results.map(s=>({...pubLab(s,null),detail:undefined,n_pages:s.n_pages}));
   return out;
@@ -2086,18 +2098,76 @@ async function labBootstrap(env,me,url){
 /* how everyone did on an exam: each person's first graded sitting counts (as on the day), as a percentage of full marks */
 async function labFirsts(env, where, args) {
   return (await env.DB.prepare(`SELECT s.id, s.exam_key, s.tasks, s.user_id, s.score, s.points FROM lab_sessions s
-    JOIN (SELECT user_id, exam_key, tasks, MIN(id) id FROM lab_sessions WHERE status='graded' AND points>0 AND COALESCE(json_extract(sources,'$._review'),0)=0 AND exam_key NOT LIKE 'contest:%' ${where} GROUP BY user_id, exam_key, tasks) f ON f.id=s.id`).bind(...args).all()).results
+    JOIN (SELECT user_id, exam_key, tasks, MIN(id) id FROM lab_sessions WHERE status='graded' AND points>0 AND score IS NOT NULL AND score>=0 AND score<=points AND COALESCE(json_extract(sources,'$._review'),0)=0 AND exam_key NOT LIKE 'contest:%' ${where} GROUP BY user_id, exam_key, tasks) f ON f.id=s.id`).bind(...args).all()).results
     .map(r => ({ ...r, pct: 100 * r.score / r.points }));
 }
 const pct1 = x => Math.round(x * 10) / 10;
-async function labStanding(env, s) {
-  if (contestMeta(s) || labReview(s)) return null; // study reviews do not enter timed exam rankings
-  if (s.status !== "graded" || !(s.points > 0)) return null;
-  const rows = await labFirsts(env, "AND exam_key=? AND tasks=?", [s.exam_key, s.tasks]), mine = 100 * s.score / s.points;
-  const others = rows.filter(r => r.user_id !== s.user_id), all = others.map(r => r.pct).concat(mine);
-  const above = others.filter(r => r.pct > mine).length;
-  return { n: all.length, rank: above + 1, top_pct: pct1(100 * (above + 1) / all.length), avg: pct1(all.reduce((a, x) => a + x, 0) / all.length),
-    max: pct1(Math.max(...all)), mine: pct1(mine), first: rows.some(r => r.id === s.id) };   // a later sitting is ranked against the others' first ones
+/* Store the whole source rubric, including for an unanswered (zero-mark) task. Awarded items alone
+   are never a cohort definition. Older full vision/text rubrics remain readable without a migration. */
+function labComparisonRubric(items) {
+  if (!Array.isArray(items) || !items.length) return null;
+  const seen = new Set(), out = [];
+  for (const item of items) {
+    const id = item && String(item.id ?? ''), max = item?.points ?? item?.max;
+    if (!id || seen.has(id) || typeof max !== 'number' || !Number.isFinite(max) || max < 0) return null;
+    seen.add(id); out.push([id, max]);
+  }
+  return out.sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
+}
+function labSampleScope(s) {
+  if (!s || s.status !== 'graded' || /^contest:/.test(s.exam_key) || contestMeta(s) ||
+      typeof s.score !== 'number' || !Number.isFinite(s.score) || s.score < 0 ||
+      typeof s.points !== 'number' || !Number.isFinite(s.points) || s.points <= 0 || s.score > s.points) return null;
+  let tasks, detail;
+  try { tasks = JSON.parse(s.tasks); detail = s.detail ? JSON.parse(s.detail) : null; } catch { return null; }
+  if (!Array.isArray(tasks) || !tasks.length || tasks.some(t => typeof t !== 'string' || !t) || new Set(tasks).size !== tasks.length) return null;
+  tasks = [...tasks].sort();
+  const src = labSrc(s), per = detail?.tasks;
+  if (src._contest || per && Object.values(per).some(r => r?.grading_mode === 'qualitative_review' || r?.why === 'no_official_points')) return null;
+  // Historical totals without their task maxima/rubric are valid marks, but cannot safely pool with another sitting.
+  let verified = !!per, totalPoints = 0, totalScore = 0;
+  const rubric = tasks.map(task => {
+    const row = per?.[task], source = src[task] || {};
+    if (!row) { verified = false; return null; }
+    if (!['graded','empty'].includes(row.status) || typeof row.points !== 'number' || !Number.isFinite(row.points) || row.points <= 0 ||
+        typeof row.score !== 'number' || !Number.isFinite(row.score) || row.score < 0 || row.score > row.points) { verified = false; return null; }
+    totalPoints += row.points; totalScore += row.score;
+    const criteria = Array.isArray(row.comparison_rubric)
+      ? labComparisonRubric(row.comparison_rubric.map(pair => ({ id: pair?.[0], points: pair?.[1] })))
+      : labComparisonRubric(row.items || row.scores);
+    if (!criteria) verified = false;
+    return [task, source.kind === 'theory' ? 'theory' : 'lab', source.sol || null, source.mark || null,
+      source.no ?? null, source.skip || null, row.points, criteria];
+  });
+  if (per && (Object.keys(per).some(task => !tasks.includes(task)) ||
+      tasks.some(task => !per[task] || !['graded','empty'].includes(per[task].status)))) return null;
+  if (verified && (Math.abs(totalPoints - s.points) > 0.005 || Math.abs(totalScore - s.score) > 0.005)) return null;
+  return { tasks, cohort: labReview(s) ? 'review' : 'timed', key: verified ? JSON.stringify(rubric) : 'unverified:' + s.id };
+}
+async function labStandings(env, s) {
+  const scope = labSampleScope(s);
+  if (!scope) return { standing: null, sample_standing: null };
+  const rows = (await env.DB.prepare(`SELECT id,user_id,exam_key,comp,year,tasks,sources,status,score,points,detail
+    FROM lab_sessions WHERE comp=? AND year=? AND exam_key=? AND points=? AND status='graded'
+    AND score IS NOT NULL AND score>=0 AND score<=points AND exam_key NOT LIKE 'contest:%'
+    AND COALESCE(json_extract(sources,'$._review'),0)=? ORDER BY id`)
+    .bind(s.comp, s.year, s.exam_key, s.points, scope.cohort === 'review' ? 1 : 0).all()).results;
+  const firsts = new Map();
+  for (const row of rows) {
+    const other = labSampleScope(row);
+    if (other?.cohort === scope.cohort && other.key === scope.key && !firsts.has(row.user_id)) firsts.set(row.user_id, row);
+  }
+  const mine = 100 * s.score / s.points, others = [...firsts.values()].filter(row => row.user_id !== s.user_id),
+    values = others.map(row => 100 * row.score / row.points).concat(mine), n = values.length;
+  // New totals are rounded to two decimals; historical SQLite REAL values may still carry binary residue.
+  const above = others.filter(row => row.score > s.score + 1e-7).length, below = others.filter(row => row.score < s.score - 1e-7).length;
+  const sample = { cohort: scope.cohort,
+    cohort_label: scope.cohort === 'review' ? { ko: '채점·첨삭 표본', en: 'Grading & feedback sample' } : { ko: '실전모드 표본', en: 'Timed exam sample' },
+    basis: 'each_user_first_graded', n, rank: above + 1, top_pct: n > 1 ? pct1(100 * (above + 1) / n) : null,
+    percentile: n > 1 ? pct1(100 * below / n) : null, avg: pct1(values.reduce((a, x) => a + x, 0) / n),
+    max: pct1(Math.max(...values)), mine: pct1(mine), first: firsts.get(s.user_id)?.id === s.id || !firsts.has(s.user_id) };
+  // Keep the legacy timed field, but never put an untimed review into it.
+  return { standing: scope.cohort === 'timed' ? sample : null, sample_standing: sample };
 }
 
 async function labImage(req, env, pid, cors) {
@@ -2477,12 +2547,12 @@ async function lab(p, m, body, me, req, env, url) {
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "GET") {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));                      // time is up: what arrived is the answer
-    const [owner,reviews,pages,standing,tokens]=await Promise.all([
+    const [owner,reviews,pages,standings,tokens]=await Promise.all([
       s.user_id===me.id?me:env.DB.prepare('SELECT nickname FROM users WHERE id=?').bind(s.user_id).first(),
       isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(s.id).all().then(x=>x.results).catch(()=>[]):undefined,
-      labPagesOf(env,s.id),labStanding(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined
+      labPagesOf(env,s.id),labStandings(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined
     ]);
-    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,standing,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
+    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,...standings,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);
@@ -2552,7 +2622,10 @@ async function lab(p, m, body, me, req, env, url) {
       }
       await labRequireJobs(env); s = await labCharge(env, s); s = await labFinalize(env, s, lang);
     }
-    return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
+    const [pages, tokens, standings] = await Promise.all([
+      labPagesOf(env, s.id), labTokens(env, s.user_id), s.status === 'graded' ? labStandings(env, s) : null,
+    ]);
+    return { session: { ...pubLab(s, pages), ...(standings || {}) }, tokens, queued: s.status === "grading" };
   }
   /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
      arrive), while scanning, or later for a sitting that ended ungraded (graded at once) */
