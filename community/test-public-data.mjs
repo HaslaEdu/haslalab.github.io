@@ -9,6 +9,7 @@ import { isoMonth } from './src/problem-period.js';
 const sql = new DatabaseSync(':memory:');
 for (const name of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort()) sql.exec(readFileSync(new URL('./migrations/' + name, import.meta.url), 'utf8'));
 sql.exec('DELETE FROM submissions; DELETE FROM problems;');
+sql.exec('CREATE TABLE monthly_problem_retirements(problem_id INTEGER PRIMARY KEY, retired_at INTEGER NOT NULL, reason TEXT NOT NULL)');
 const time = 1900000000, queries = []; let trips = 0;
 const db = {
   prepare(query) {
@@ -209,4 +210,37 @@ test('empty active data falls back to the Korean calendar month rather than an I
   const ranking = await readPublicData('/api/rank', url('/api/rank?scope=month'), db, later);
   assert.equal(ranking.week, month); assert.equal(ranking.month, month); assert.deepEqual(ranking.rows, []);
   assert.equal(await currentPeriod(db, later), month);
+});
+
+test('public monthly summaries include blank answer-sheet descriptors and period aliases without student answers', async () => {
+  sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)
+    VALUES(4,'2026-11',10,'essay',100,10,'구조화 답안','Structured answer','PRIVATE_BODY','PRIVATE_BODY',?,?,?)`).run(time - 1000, time + 600, time);
+  const monthly = await read('/api/monthly?month=2026-11');
+  const problem = monthly.problems.find(row => row.id === 4);
+  assert.equal(problem.period, '2026-11'); assert.equal(problem.month, '2026-11');
+  assert.equal(problem.answerSheet.limit, 3);
+  assert.equal(problem.answerSheet.parts.reduce((sum, part) => sum + part.points, 0), 100);
+  assert.deepEqual(Object.keys(problem.answerSheet).sort(), ['limit', 'pages', 'parts', 'version']);
+  assert.ok(problem.answerSheet.parts.every(part => !('answer' in part) && !('working' in part) && part.label_ko && part.label_en));
+  assert.equal('attempts' in problem, false, 'per-account remaining attempts never enter public data');
+  assert.equal('answer_sheet' in problem, false); noPrivateFields(monthly);
+});
+
+test('retired problems disappear from public lists, period selection, week selectors and rankings', async () => {
+  const rankingBefore = await readPublicRanking(db), periodBefore = await currentPeriod(db, time);
+  sql.prepare(`INSERT INTO problems(id,week,no,kind,points,level,title_ko,title_en,body_ko,body_en,opens_at,closes_at,created_at)
+    VALUES(508,'2050-01',1,'short',100,30,'Retired title','Retired title','PRIVATE_BODY','PRIVATE_BODY',?,?,?)`).run(time - 1, time + 5000, time);
+  sql.prepare("INSERT INTO submissions(problem_id,user_id,answer,status,score,in_week,created_at) VALUES(508,1,'PRIVATE_RETIRED_ANSWER','graded',100,1,?)").run(time);
+  sql.prepare("INSERT INTO monthly_problem_retirements(problem_id,retired_at,reason) VALUES(508,?,'Public visibility change')").run(time);
+  assert.deepEqual(await readPublicRanking(db), rankingBefore);
+  assert.equal(await currentPeriod(db, time), periodBefore);
+  const monthly = await read('/api/monthly');
+  assert.equal(monthly.problems.some(problem => problem.id === 508), false);
+  assert.equal(monthly.weeks.some(period => period.week === '2050-01'), false);
+  assert.deepEqual((await read('/api/monthly?month=2050-01')).problems, []);
+  sql.prepare("INSERT INTO monthly_problem_retirements(problem_id,retired_at,reason) VALUES(501,?,'Retired legacy item')").run(time);
+  const legacy = await read('/api/weekly?week=2099-W01');
+  assert.deepEqual(legacy.problems.map(problem => problem.id), [502]);
+  assert.equal(legacy.weeks.find(period => period.week === '2099-W01').n, 1);
+  assert.equal((await readPublicRanking(db)).find(row => row.nickname === 'Person 1').total, 16);
 });

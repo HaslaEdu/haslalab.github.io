@@ -151,11 +151,12 @@ test('October visitors see the active November month, and legacy weekly API link
     await publishWeeklyContent(binding);
     cloneProblem(sql);
     const token = await student(sql);
-    sql.prepare("INSERT INTO submissions(problem_id,user_id,answer,status,score,in_week,created_at) VALUES(1,1,'Existing ranked answer','graded',70,1,?)").run(OCTOBER_NOW - 1);
+    sql.prepare("INSERT INTO submissions(problem_id,user_id,answer,status,score,in_week,created_at) VALUES(4,1,'Existing ranked answer','graded',70,1,?)").run(OCTOBER_NOW - 1);
     const monthly = await api(env, '/monthly?lang=ko', { token });
     assert.equal(monthly.status, 200);
     assert.equal(monthly.data.week, '2026-11');
-    assert.deepEqual(monthly.data.problems.map(p => p.id), [1, 2, 3, 4, 5, 6]);
+    assert.deepEqual(monthly.data.problems.map(p => p.id), [4, 5, 6]);
+    assert.deepEqual(monthly.data.problems.map(p => p.no), [1, 2, 3], 'remaining problems use consecutive display numbers');
     assert.ok(monthly.data.problems.every(p => p.closes_at === NOVEMBER_END && p.open));
     const legacy = await api(env, '/weekly?week=2026-W44&lang=ko', { token });
     assert.equal(legacy.status, 200);
@@ -176,21 +177,25 @@ test('October visitors see the active November month, and legacy weekly API link
 
 test('November 30 remains ranked through 23:59:59 KST; December begins practice and releases solutions', async t => {
   t.mock.timers.enable({ apis: ['Date'], now: new Date((NOVEMBER_END - 1) * 1000) });
-  await environment(async ({ sql, env }) => {
+  await environment(async ({ sql, binding, env }) => {
+    await publishWeeklyContent(binding);
+    await migrateMonthlyPeriod(binding);
+    cloneProblem(sql, {id:7,week:'2026-11',no:7});
+    sql.prepare('UPDATE problems SET closes_at=? WHERE id=7').run(NOVEMBER_END);
     const token = await student(sql);
-    const before = await api(env, '/problems/1?lang=ko', { token });
+    const before = await api(env, '/problems/7?lang=ko', { token });
     assert.equal(before.status, 200);
     assert.equal(before.data.problem.open, true);
     assert.equal(before.data.problem.solution, undefined);
-    const ranked = await api(env, '/problems/1/submit', { token, body: { answer: '0', lang: 'ko' } });
+    const ranked = await api(env, '/problems/7/submit', { token, body: { answer: '0', lang: 'ko' } });
     assert.equal(ranked.status, 200);
     assert.equal(ranked.data.score, 0);
     assert.equal(sql.prepare('SELECT in_week FROM submissions WHERE id=?').get(ranked.data.id).in_week, 1);
     t.mock.timers.setTime(NOVEMBER_END * 1000);
-    const closed = await api(env, '/problems/1?lang=ko', { token });
+    const closed = await api(env, '/problems/7?lang=ko', { token });
     assert.equal(closed.data.problem.open, false);
     assert.ok(closed.data.problem.solution?.length > 0);
-    const practice = await api(env, '/problems/1/submit', { token, body: { answer: '1.79', lang: 'ko' } });
+    const practice = await api(env, '/problems/7/submit', { token, body: { answer: '1.79', lang: 'ko' } });
     assert.equal(practice.status, 200);
     assert.equal(practice.data.score, 100);
     assert.equal(sql.prepare('SELECT in_week FROM submissions WHERE id=?').get(practice.data.id).in_week, 0);

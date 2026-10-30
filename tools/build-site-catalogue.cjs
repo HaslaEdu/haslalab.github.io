@@ -46,8 +46,12 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>');
 for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 outputs.set('sim/exam.html',read('sim/exam.html').replace(/<script src="result-comparison\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="result-comparison.js?v='+digest(read('sim/result-comparison.js'))+'"></script>'));
+const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
+outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
+outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html').replace(/src="monthly-answer-sheet\.mjs(?:\?[^"\n]*)?"/,'src="monthly-answer-sheet.mjs?v='+digest(sheetModule)+'"'));
 const stale=[];
 for(const [name,content]of outputs){const file=path.join(root,name);if(check){if(!fs.existsSync(file)||fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n')!==content.replace(/\r\n/g,'\n'))stale.push(name);}else{fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,content);}}
 if(stale.length){console.error('Generated catalogue is stale: '+stale.join(', '));process.exitCode=1;}

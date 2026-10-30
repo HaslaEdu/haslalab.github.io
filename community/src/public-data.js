@@ -2,6 +2,8 @@
 // Callers choose the D1 session/consistency policy and authenticate any private overlay.
 // Profiles, individual answers, votes, account state and financial data stay outside this module.
 import { canonicalProblemPeriod, isMonthPeriod, isProblemPeriod, isoMonth } from './problem-period.js';
+import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
+import { visibleMonthlySql } from './monthly-answers.js';
 export const PUBLIC_BOARDS = Object.freeze(['free', 'qna', 'sim', 'study']);
 export const PUBLIC_TAGS = Object.freeze(['gen', 'q', 'info', 'review', 'bug', 'notice']);
 export const PUBLIC_PAGE = 20, PUBLIC_BEST = 3;
@@ -13,8 +15,8 @@ export class PublicDataError extends Error {
   constructor(code) { super(code); this.status = 400; this.code = code; }
 }
 export const publicDataPath = path => /^\/api\/(?:boards|posts|monthly|weekly|rank)$/.test(path);
-const ACTIVE_PERIOD_SQL = `SELECT week FROM problems WHERE opens_at<=? AND closes_at>?
-  ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,opens_at DESC,closes_at DESC,week DESC LIMIT 1`;
+const ACTIVE_PERIOD_SQL = `SELECT p.week FROM problems p WHERE p.opens_at<=? AND p.closes_at>? AND ${visibleMonthlySql('p')}
+  ORDER BY CASE WHEN length(p.week)=7 THEN 0 ELSE 1 END,p.opens_at DESC,p.closes_at DESC,p.week DESC LIMIT 1`;
 export function arenaPeriod(url) {
   const requested = url.searchParams.get('month') || url.searchParams.get('week') || '';
   if (requested && !isProblemPeriod(requested)) throw new PublicDataError('bad_week');
@@ -79,7 +81,7 @@ export async function readPublicPosts(db, url, time = currentTime()) {
 function rankingStatement(db, weekExpression = null, args = []) {
   return db.prepare(`SELECT x.user_id, x.problem_id, MAX(x.score) s, MIN(x.created_at) at, p.points, p.level, u.nickname, u.avatar AS av
     FROM submissions x JOIN problems p ON p.id=x.problem_id JOIN users u ON u.id=x.user_id
-    WHERE x.status='graded' AND u.deleted=0 ${weekExpression ? `AND x.in_week=1 AND p.week=${weekExpression}` : ''}
+    WHERE x.status='graded' AND u.deleted=0 AND ${visibleMonthlySql('p')} ${weekExpression ? `AND x.in_week=1 AND p.week=${weekExpression}` : ''}
     GROUP BY x.user_id, x.problem_id`).bind(...args);
 }
 export function projectRankingRows(rows, weekFilter) {
@@ -103,22 +105,27 @@ export async function readPublicRanking(db, weekFilter = null) {
 }
 
 function problemSummary(row, lang, time) {
-  return { id: row.id, week: row.week, no: row.no, kind: row.kind, subject: row.subject, level: row.level, points: row.points,
+  const result = { id: row.id, week: row.week, period: row.week, month: isMonthPeriod(row.week) ? row.week : null,
+    no: row.no, kind: row.kind, subject: row.subject, level: row.level, points: row.points,
     title: lang === 'en' ? row.title_en : row.title_ko, unit: row.unit, source: row.source, opens_at: row.opens_at, closes_at: row.closes_at,
     open: time < row.closes_at, closed: time >= row.closes_at };
+  const answerSheet = getMonthlyAnswerSheet(row);
+  if (answerSheet) result.answerSheet = answerSheet;
+  return result;
 }
 export async function readPublicWeekly(db, url, time = currentTime()) {
   const lang = pickLang(url.searchParams.get('lang')), week = arenaPeriod(url);
-  const where = week ? 'week=? AND opens_at<=?' : `week=(${ACTIVE_PERIOD_SQL}) AND opens_at<=?`, args = week ? [week, time] : [time, time, time];
+  const where = (week ? 'p.week=? AND p.opens_at<=?' : `p.week=(${ACTIVE_PERIOD_SQL}) AND p.opens_at<=?`) + ` AND ${visibleMonthlySql('p')}`;
+  const args = week ? [week, time] : [time, time, time];
   const weekExpression = week ? '?' : `COALESCE((${ACTIVE_PERIOD_SQL}),?)`;
   const rankingArgs = week ? [week] : [time, time, isoMonth(time)];
   // Explicit columns prevent fetching answer keys, rubrics, worked solutions or private submissions.
   // All four public projections share one D1 round trip and one database snapshot.
   const [rows, weeks, stats, ranked] = await db.batch([
-    db.prepare(`SELECT id,week,no,kind,subject,level,points,title_ko,title_en,unit,source,opens_at,closes_at FROM problems WHERE ${where} ORDER BY no`).bind(...args),
-    db.prepare('SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60').bind(time),
+    db.prepare(`SELECT p.id,p.week,p.no,p.kind,p.subject,p.level,p.points,p.title_ko,p.title_en,p.unit,p.source,p.opens_at,p.closes_at FROM problems p WHERE ${where} ORDER BY p.no`).bind(...args),
+    db.prepare(`SELECT p.week, MIN(p.opens_at) o, MAX(p.closes_at) c, COUNT(*) n FROM problems p WHERE p.opens_at<=? AND ${visibleMonthlySql('p')} GROUP BY p.week ORDER BY o DESC LIMIT 60`).bind(time),
     db.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
-      FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (SELECT id FROM problems WHERE ${where}) GROUP BY s.problem_id`).bind(...args),
+      FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (SELECT p.id FROM problems p WHERE ${where}) GROUP BY s.problem_id`).bind(...args),
     rankingStatement(db, weekExpression, rankingArgs),
   ]);
   const counts = new Map(stats.results.map(row => [row.problem_id, row]));

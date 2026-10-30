@@ -4,7 +4,7 @@ compatibility_date = "2025-09-01"
 workers_dev = true
 keep_vars = true
 
-# Deliberately stay at the visitor's edge. Data, secrets, D1 and Queues stay in the existing backend.
+# Stay at the visitor's edge. Private data, provider secrets and Queues stay in the backend.
 [vars]
 ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
 GLOBAL_PUBLIC_READS = "1"

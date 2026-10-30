@@ -202,7 +202,7 @@
 <script src="../vendor/qrcode/qrcode.js"></script>
 <script src="../examdur.js?v=20261030-archives"></script>
 <script src="../paper-languages.js?v=1"></script>
-<script src="result-comparison.js?v=a88e3c1845b8"></script>
+<script src="result-comparison.js?v=95330087f58b"></script>
 <script src="exam-network.js"></script>
 <script>
 "use strict";
@@ -984,6 +984,7 @@ async function submitNow(grade) {
 /* ── the result ── */
 function doneView() {
   const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
+  const comparison = window.labComparison?.hasScore?.(s) && typeof window.labComparison.mount === 'function';
   const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
     const sc = x.grading_mode === "qualitative_review" ? (lang === "ko" ? "학습용 첨삭 · 점수 없음" : "Qualitative feedback · no score") : x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
     const why = x.status === "pending" ? (t().pendingWhy[x.why] || "") : x.status === "error" ? t().errorNote : "";
@@ -1000,7 +1001,7 @@ function doneView() {
       <tr><th>${t().rcEnd}</th><td>${REVIEW ? t().scanLeft : when(s.ended_at)}</td></tr>
       <tr><th>${t().rcSubmit}</th><td>${s.submitted_at ? when(s.submitted_at) : "—"}</td></tr>
       <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
-      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}</td></tr>
+      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${!comparison && s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}</td></tr>
     </tbody></table>
     ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div><div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
@@ -1009,7 +1010,7 @@ function doneView() {
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
-  if (s.status === "graded" && window.labComparison) window.labComparison.mount($("medal"),
+  if (comparison) window.labComparison.mount($("medal"),
     {...s,comp:s.comp||EX.c,year:s.year||EX.y,tasks:s.tasks||EX.tasks},lang,{base:'results/',isCurrent:()=>SES===s});
   $("again").onclick = () => { SES = null; shown = ""; sync(); };
   if(s.status==='grading')startPoll(poll,'grading');

@@ -9,8 +9,8 @@ export function publicReadEligible(request, url = new URL(request.url)) {
 export function primaryCheckpointRequest(request, url = new URL(request.url)) {
   if (request.method === 'GET') return /^\/api\/(?:boards|posts|monthly|weekly|rank)$/.test(url.pathname);
   if (['HEAD', 'OPTIONS'].includes(request.method)) return false;
-  // Financial, authentication and exam state remain on the original primary binding.
-  return /^\/api\/(?:posts|comments|me|(?:admin\/)?(?:problems|submissions))(?:\/|$)/.test(url.pathname);
+  // Monthly attempts, grading, financial and exam writes keep the original primary binding.
+  return /^\/api\/(?:posts|comments|me)(?:\/|$)/.test(url.pathname);
 }
 export function requestBookmark(url) {
   const value = url.searchParams.get(BOOKMARK_QUERY);

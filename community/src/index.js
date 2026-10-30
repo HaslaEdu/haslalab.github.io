@@ -15,6 +15,9 @@ import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
 import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
+import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
+import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
+  monthlyAttempts, reserveMonthlySubmission, guardMonthlyGrade, MonthlyAnswerError } from './monthly-answers.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -562,7 +565,7 @@ export default {
   },
   /* a cron trigger (optional): remove the answer photos whose keeping time is over */
   async scheduled(event, env, ctx) {
-    const work=[ensureWeeklyContent(env.DB, env.DB),labSweepJobs(env)];
+    const work=[ensureWeeklyContent(env.DB, env.DB).then(() => ensureMonthlyAnswerSetup(env.DB, env.DB)),labSweepJobs(env)];
     if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env));
     ctx.waitUntil(Promise.allSettled(work));
   },
@@ -661,6 +664,8 @@ function pubProblem(r, lang, open, full) {
   const o = { id: r.id, week: r.week, no: r.no, kind: r.kind, subject: r.subject, level: r.level, points: r.points,
     title: en ? r.title_en : r.title_ko, unit: r.unit, source: r.source, opens_at: r.opens_at, closes_at: r.closes_at, open, closed };
   o.period = r.week; o.month = isMonthPeriod(r.week) ? r.week : null;
+  const answerSheet = getMonthlyAnswerSheet(r);
+  if (answerSheet) o.answerSheet = answerSheet;
   if (full) {
     o.body = en ? r.body_en : r.body_ko;
     if (r.kind === "essay" && r.rubric) o.criteria = JSON.parse(r.rubric).map(c => ({ id: c.id, name: c.name, max: c.max }));
@@ -913,7 +918,12 @@ async function ocr(env, file, mode, m) {
 /* the leaderboard: a week ranks by points scored while the week was open; all time ranks by rating, which
  * counts every problem solved, whenever */
 async function ranking(env, weekFilter, fresh = false) {
-  return publicRead(env, 'ranking:' + (weekFilter || 'all'), () => loadRanking(env, weekFilter), { fresh });
+  return publicRead(env, 'ranking:' + (weekFilter || 'all'), async () => {
+    // Initialization belongs to the database load, not every caller of a warm
+    // public snapshot. Deferred retirement still retries on the next fresh load.
+    await ensureMonthlyAnswerSetup(env.DB, env[DB_SCOPE] || env.DB);
+    return loadRanking(env, weekFilter);
+  }, { fresh });
 }
 async function loadRanking(env, weekFilter) { return readPublicRanking(env.DB, weekFilter); }
 
@@ -948,21 +958,22 @@ async function arena(p, m, body, me, req, env, url) {
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   if ((['/api/monthly', '/api/weekly', '/api/rank'].includes(p) && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
     await ensureWeeklyContent(env.DB, env[DB_SCOPE] || env.DB);
+    await ensureMonthlyAnswerSetup(env.DB, env[DB_SCOPE] || env.DB);
   }
   if ((p === "/api/monthly" || p === "/api/weekly") && m === "GET") {
     const t = now(), requested = url.searchParams.get("month") || url.searchParams.get("week") || "";
     if (requested && !isProblemPeriod(requested)) bad('bad_week');
     const week = canonicalProblemPeriod(requested);
-    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : `week=(SELECT week FROM problems
-      WHERE opens_at<=? AND closes_at>? ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,
-        opens_at DESC,closes_at DESC,week DESC LIMIT 1) AND opens_at<=?`,
+    const fresh = wantsFresh(req), where = (week ? 'p.week=? AND p.opens_at<=?' : `p.week=(SELECT q.week FROM problems q
+      WHERE q.opens_at<=? AND q.closes_at>? AND ${visibleMonthlySql('q')} ORDER BY CASE WHEN length(q.week)=7 THEN 0 ELSE 1 END,
+        q.opens_at DESC,q.closes_at DESC,q.week DESC LIMIT 1) AND p.opens_at<=?`) + ` AND ${visibleMonthlySql('p')}`,
       args = week ? [week, t] : [t, t, t];
     // The public projection contains no answers, identity or individual score.
     // Its private overlay can be read immediately, without waiting for the list.
     const common = publicRead(env, `monthly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
       const [rowsR, weeksR] = await env.DB.batch([
-        env.DB.prepare(`SELECT * FROM problems WHERE ${where} ORDER BY no`).bind(...args),
-        env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
+        env.DB.prepare(`SELECT p.* FROM problems p WHERE ${where} ORDER BY p.no`).bind(...args),
+        env.DB.prepare(`SELECT p.week, MIN(p.opens_at) o, MAX(p.closes_at) c, COUNT(*) n FROM problems p WHERE p.opens_at<=? AND ${visibleMonthlySql('p')} GROUP BY p.week ORDER BY o DESC LIMIT 60`).bind(t),
       ]);
       const rows = rowsR.results, wk = week || rows[0]?.week || isoMonth(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
       const [stats, top] = await Promise.all([
@@ -976,27 +987,58 @@ async function arena(p, m, body, me, req, env, url) {
         weeks: weeksR.results, months: weeksR.results, top: top.slice(0, 8) };
     }, { fresh });
     const [shared, mine] = await Promise.all([common,
-      me ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (SELECT id FROM problems WHERE ${where}) GROUP BY problem_id`).bind(me.id, ...args).all().then(r => r.results) : [],
+      me ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend,COUNT(*) used FROM submissions WHERE user_id=? AND problem_id IN (SELECT p.id FROM problems p WHERE ${where}) GROUP BY problem_id`).bind(me.id, ...args).all().then(r => r.results) : [],
     ]);
     const { problems } = shared, servedAt = now();
     for (const x of problems) {
       const q = mine.find(y => y.problem_id === x.id); if (q) { x.best = q.best; x.pending = q.pend; }
+      if (me && x.answerSheet) x.attempts = { limit: 3, used: Number(q?.used || 0), remaining: Math.max(0, 3 - Number(q?.used || 0)) };
       x.open = servedAt < x.closes_at; x.closed = !x.open;
     }
     return { ...shared, problems, now: servedAt, health: arenaHealth(env), user: me ? pubUser(me) : null, api_version: 5 };
   }
   if ((r = /^\/api\/problems\/(\d+)$/.exec(p)) && m === "GET") {
-    const x = await env.DB.prepare("SELECT * FROM problems WHERE id=?").bind(+r[1]).first();
+    const x = await env.DB.prepare(`SELECT p.* FROM problems p WHERE p.id=? AND ${visibleMonthlySql('p')}`).bind(+r[1]).first();
     if (!x || (x.opens_at > now() && !isAdmin(me))) throw new HttpError(404, "not_found");
     const o = pubProblem(x, lang, now() < x.closes_at, true);
-    if (me) o.mine = (await env.DB.prepare("SELECT id,answer,via_ocr,status,score,detail,in_week,created_at FROM submissions WHERE user_id=? AND problem_id=? ORDER BY id DESC LIMIT 20")
-      .bind(me.id, x.id).all()).results.map(s => ({ ...s, detail: s.detail ? JSON.parse(s.detail) : null }));
+    if (me) {
+      o.mine = (await env.DB.prepare(`SELECT s.id,s.answer,s.via_ocr,s.status,s.score,s.detail,s.in_week,s.created_at,r.answer_sheet
+        FROM submissions s LEFT JOIN monthly_answer_requests r ON r.submission_id=s.id
+        WHERE s.user_id=? AND s.problem_id=? ORDER BY s.id DESC LIMIT 20`)
+        .bind(me.id, x.id).all()).results.map(s => ({ ...s, detail: s.detail ? JSON.parse(s.detail) : null,
+          answer_sheet: s.answer_sheet ? JSON.parse(s.answer_sheet) : null }));
+      if (o.answerSheet) o.attempts = await monthlyAttempts(env.DB, x.id, me.id);
+    }
     return { problem: o, health: arenaHealth(env), user: me ? pubUser(me) : null, api_version: 5 };
   }
   if ((r = /^\/api\/problems\/(\d+)\/submit$/.exec(p)) && m === "POST") {
     needUser(me);
-    const x = await env.DB.prepare("SELECT * FROM problems WHERE id=?").bind(+r[1]).first();
+    const x = await env.DB.prepare(`SELECT p.* FROM problems p WHERE p.id=? AND ${visibleMonthlySql('p')}`).bind(+r[1]).first();
     if (!x || x.opens_at > now()) throw new HttpError(404, "not_found");
+    if (getMonthlyAnswerSheet(x)) {
+      let normalized, reservation;
+      try {
+        normalized = normalizeMonthlyParts(x, body);
+        reservation = await reserveMonthlySubmission(env.DB, x, me.id, normalized, now());
+      } catch (error) {
+        if (error instanceof MonthlyAnswerError) throw new HttpError(error.status, error.code,
+          { attempts: await monthlyAttempts(env.DB, x.id, me.id) });
+        throw error;
+      }
+      const accepted = reservation.request;
+      if (reservation.created) {
+        let grade = null, status = 'pending';
+        try { grade = guardMonthlyGrade(await gradeEssay(env, x, normalized.answer, lang), x, normalized, lang); }
+        catch (error) { console.error('grader', error?.message); status = 'error'; }
+        await env.DB.prepare('UPDATE submissions SET status=?,score=?,detail=?,graded_at=? WHERE id=?')
+          .bind(grade ? 'graded' : status, grade?.score ?? null, grade ? JSON.stringify(grade.detail) : null,
+            grade ? now() : null, accepted.submission_id).run();
+      }
+      const saved = await env.DB.prepare('SELECT id,status,score,detail FROM submissions WHERE id=?').bind(accepted.submission_id).first();
+      return { ...saved, points: x.points, detail: saved.detail ? JSON.parse(saved.detail) : null,
+        attempts: await monthlyAttempts(env.DB, x.id, me.id), processing: !reservation.created && saved.status === 'pending',
+        request_id: normalized.requestId, answer_sheet: normalized.sheet };
+    }
     await limit(env, "sub:" + me.id + ":" + x.id, AR.subsPerDay, 86400);
     const answer = text(body.answer, x.kind === "short" ? 60 : AR.maxAnswer, "bad_answer");
     const t = now(), inWeek = t < x.closes_at ? 1 : 0;
@@ -1027,8 +1069,8 @@ async function arena(p, m, body, me, req, env, url) {
     let week = scope !== "all" ? canonicalProblemPeriod(requested) : null;
     if (scope !== 'all' && !week) {
       const t = now(), active = await publicRead(env, `active-problem-period:${Math.floor(t / 5)}`, () =>
-        env.DB.prepare(`SELECT week FROM problems WHERE opens_at<=? AND closes_at>?
-          ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,opens_at DESC,closes_at DESC,week DESC LIMIT 1`)
+        env.DB.prepare(`SELECT p.week FROM problems p WHERE p.opens_at<=? AND p.closes_at>? AND ${visibleMonthlySql('p')}
+          ORDER BY CASE WHEN length(p.week)=7 THEN 0 ELSE 1 END,p.opens_at DESC,p.closes_at DESC,p.week DESC LIMIT 1`)
           .bind(t, t).first(), { fresh: wantsFresh(req) });
       week = active?.week || isoMonth(t);
     }
@@ -1072,11 +1114,16 @@ async function arena(p, m, body, me, req, env, url) {
       return { subs: (await env.DB.prepare(`SELECT s.id,s.answer,s.status,s.created_at,s.via_ocr,p.id pid,p.title_ko,p.points,p.rubric,u.nickname FROM submissions s
         JOIN problems p ON p.id=s.problem_id JOIN users u ON u.id=s.user_id WHERE s.status IN ('pending','error') ORDER BY s.id LIMIT 50`).all()).results };
     if ((r = /^\/api\/admin\/submissions\/(\d+)$/.exec(p)) && m === "POST") {
-      const s = await env.DB.prepare("SELECT s.*,p.points,p.rubric,p.kind,p.body_en,p.model_en FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.id=?").bind(+r[1]).first();
+      await ensureMonthlyAnswerSetup(env.DB, env[DB_SCOPE] || env.DB);
+      const s = await env.DB.prepare(`SELECT s.*,p.points,p.rubric,p.kind,p.body_en,p.model_en,r.answer_sheet
+        FROM submissions s JOIN problems p ON p.id=s.problem_id
+        LEFT JOIN monthly_answer_requests r ON r.submission_id=s.id WHERE s.id=?`).bind(+r[1]).first();
       if (!s) throw new HttpError(404, "not_found");
       let score, detail;
       if (body.regrade) {                                              // try the language model again
-        const g = await gradeEssay(env, s, s.answer, lang); if (!g) throw new HttpError(503, "grader_off");
+        const problem = { ...s, id: s.problem_id };
+        let g = await gradeEssay(env, problem, s.answer, lang); if (!g) throw new HttpError(503, "grader_off");
+        if (s.answer_sheet) g = guardMonthlyGrade(g, problem, { sheet: JSON.parse(s.answer_sheet) }, lang);
         score = g.score; detail = g.detail;
       } else {
         score = Math.max(0, Math.min(s.points, parseInt(body.score))); if (!isFinite(score)) bad("bad_score");

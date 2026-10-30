@@ -2,6 +2,7 @@
 // its existing D1 binding; deployment needs no D1 management/import credential.
 import reviewed from '../weekly/2026-W44.json' with { type: 'json' };
 import { isProblemPeriod, CURRENT_MONTHLY_PERIOD, LEGACY_MONTHLY_PERIOD, MONTHLY_CLOSES_AT } from './problem-period.js';
+import { retireIntroMonthlyProblems } from './monthly-answers.js';
 
 export const PROBLEM_FIELDS = Object.freeze(['week', 'no', 'kind', 'subject', 'level', 'points',
   'title_ko', 'title_en', 'body_ko', 'body_en', 'unit', 'answer', 'rubric', 'model_ko', 'model_en',
@@ -126,7 +127,8 @@ const initialized = new WeakMap();
 export function ensureWeeklyContent(db, cacheKey = db) {
   let promise = initialized.get(cacheKey);
   if (!promise) {
-    promise = publishWeeklyContent(db).then(async publication => ({ ...publication, monthly: await migrateMonthlyPeriod(db) }));
+    promise = publishWeeklyContent(db).then(async publication => ({ ...publication,
+      monthly: await migrateMonthlyPeriod(db), answerSheet: await retireIntroMonthlyProblems(db, cacheKey) }));
     initialized.set(cacheKey, promise);
     promise.catch(() => { if (initialized.get(cacheKey) === promise) initialized.delete(cacheKey); });
   }

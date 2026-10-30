@@ -6,7 +6,7 @@
 
 브라우저의 현재 기본 API는 `https://haslalab-community-edge.haslalab.workers.dev`입니다. 이 엣지 Worker는 공개 캐시와 사전 요청을 가까운 위치에서 처리하고, 나머지는 Service Binding으로 기존 `haslalab-community` Worker에 전달합니다. 기존 Worker는 실측된 D1 primary(HKG) 가까이 배치되며 OAuth·결제·채점 Secrets와 작업 큐를 유지합니다. 공개 API의 기존 주소도 호환성을 위해 유지하며 등록된 OAuth 콜백·결제 webhook 주소는 바꾸지 않습니다. 배포 순서는 기존 Worker, `wrangler.edge.toml`의 엣지 Worker, PDF Worker입니다.
 
-공개 게시판·게시글 목록과 비로그인 주간 목록·순위는 엣지의 `PUBLIC_DB.withSession()`에서 조회할 수 있습니다. 계정·잔액·답안·게시글 상세와 모든 쓰기는 기존 primary 경로를 유지합니다. `GLOBAL_PUBLIC_READS=1`은 공개 SELECT 경로를 켜는 설정이며 D1 복제 활성화 자체는 별도입니다. CI의 `provision-replication.mjs`가 기존 DB 설정을 조회·검증하고, 기존 키의 권한이 부족한 401/403은 `unverified`로 보고합니다. 이 경우 Cloudflare의 **D1 → haslalab-community → Settings → Read replication** 설정을 확인해야 합니다. 실제 복제본 동작은 `/api/health?read_region_check=1`의 `replica`, `primary`, 지역 정보로 판정합니다. 새 유료 상품·플랜·API 키는 만들지 않습니다.
+공개 게시판·게시글 목록과 비로그인 월간 목록·순위는 엣지의 `PUBLIC_DB.withSession()`에서 조회할 수 있습니다. 계정·잔액·답안·게시글 상세와 모든 쓰기는 기존 primary 경로를 유지합니다. `GLOBAL_PUBLIC_READS=1`은 공개 SELECT 경로를 켜는 설정이며 D1 복제 활성화 자체는 별도입니다. CI의 `provision-replication.mjs`가 기존 DB 설정을 조회·검증하고, 기존 키의 권한이 부족한 401/403은 `unverified`로 보고합니다. 이 경우 Cloudflare의 **D1 → haslalab-community → Settings → Read replication** 설정을 확인해야 합니다. 실제 복제본 동작은 `/api/health?read_region_check=1`의 `replica`, `primary`, 지역 정보로 판정합니다. 새 유료 상품·플랜·API 키는 만들지 않습니다.
 
 ## 2026-10-30: 하슬라논술과 같은 스캔 · Upstage 원문 처리
 
@@ -53,6 +53,12 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - **사진 답안**은 하슬라논술처럼 Upstage OCR로 읽습니다. 수식이 많으면 Document Parse로 LaTeX를 살려 읽습니다. 읽은 글은 학생이 확인하고 고친 뒤에 제출합니다. 이미지는 JPEG·PNG·WebP 한 장, 8 MB까지 받고, 한 사람이 하루 30번까지 쓸 수 있습니다.
 - **월별 랭킹**은 해당 월의 제출 기간 안에 받은 문제별 최고 점수를 더합니다. 같은 점수면 먼저 도달한 사람이 앞섭니다. 마감 후에는 풀이가 공개되고, 이후 제출은 연습으로만 채점합니다. 전체 랭킹과 티어는 레이팅을 사용합니다.
 - 문제는 관리자 화면에서 월 단위로 추가합니다. 기존 `week` 필드는 월 식별자 `YYYY-MM`도 받으며, `opens_at`/`closes_at`은 유닉스 초입니다. 마감은 포함하지 않는 경계입니다. 2026년 11월 문제는 11월 30일 전체를 포함하고 12월 1일 00:00 KST (`1796050800`)에 마감합니다.
+
+현재 11월 문제는 양성자 사슬·연속 벽과 자유 표적·광학 러더퍼드 산란의 세 문제입니다. 기존 입문 문제 1·2·3번은 공개 목록과 랭킹에서 내렸고, 남은 문제는 화면에서 1·2·3번으로 표시합니다(내부 ID 4·5·6과 기존 기록 유지).
+
+소문항별 답안지에는 최종 답과 풀이를 함께 적습니다. LaTeX 입력과 미리보기, 같은 양식의 HTML 인쇄 답안지, 소문항을 선택해 넣는 사진 OCR을 지원합니다. 사진을 읽은 뒤 최종 답·풀이를 확인하고 제출합니다. 빈 소문항은 둘 다 비워 부분 답안을 제출할 수 있으며, 해당 소문항은 0점입니다.
+
+계정당 문제별 최대 3회까지 답안을 접수합니다. 서버가 원자적으로 횟수를 확인하고 답안을 저장한 후 채점하므로 동시 제출도 제한을 넘지 않습니다. 임시저장·사진 인식·검증 실패는 횟수를 쓰지 않고, 같은 요청 번호로 통신 재시도하면 중복 차감하지 않습니다. 접수된 채점 대기·오류 답안도 보관되며 횟수에 포함됩니다. 관리자는 같은 제출 기록을 다시 채점할 수 있습니다.
 
 ### 올리는 순서
 

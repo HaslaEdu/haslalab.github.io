@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
 import gateway from './src/edge-gateway.js';
 import backend from './src/index.js';
-import { selectOnly } from './src/public-consistency.js';
+import { selectOnly, primaryCheckpointRequest } from './src/public-consistency.js';
 import { DB_SCOPE, READ_METRICS, publicRead } from './src/public-read-cache.js';
 import { createD1Metrics } from './src/d1-timing.js';
 
@@ -15,6 +15,7 @@ async function fixture({ actualBackend = false, enabled = true, supported = true
   const sql = new DatabaseSync(':memory:'); fixtures.push(sql);
   for (const name of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort()) sql.exec(readFileSync(new URL('./migrations/' + name, import.meta.url), 'utf8'));
   sql.exec('DELETE FROM submissions; DELETE FROM problems');
+  sql.exec('CREATE TABLE monthly_problem_retirements(problem_id INTEGER PRIMARY KEY, retired_at INTEGER NOT NULL, reason TEXT NOT NULL)');
   const time = Math.floor(Date.now() / 1000), token = 'local_global_read_owner'.padEnd(48, 'x');
   sql.prepare("INSERT INTO users(id,username,nickname,pw,role,avatar,created_at,exam_tokens) VALUES(1,'PRIVATE_LOGIN','Public Owner','PRIVATE_HASH','user','publicAvatar',?,7)").run(time);
   const tokenHash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
@@ -174,6 +175,14 @@ test('invalid, revoked and unavailable replica reads fall back to a fresh primar
   assert.equal(failed.data.from, 'primary'); assert.equal(failed.headers.get('X-Public-Read-Source'), 'primary-fallback');
   assert.equal(h.services.at(-1).headers.get('Cache-Control'), 'no-cache');
   assert.ok(h.services.every(request => request.method === 'GET'));
+  const cold = await fixture({ actualBackend: true });
+  cold.sql.exec('DROP TABLE monthly_problem_retirements');
+  const initialized = await cold.request('/monthly?week=2099-W01&case=missing-retirement-table'); await cold.flush();
+  assert.equal(initialized.status, 200); assert.equal(initialized.headers.get('X-Public-Read-Source'), 'primary-fallback');
+  assert.equal(cold.services[0].headers.get('Cache-Control'), 'no-cache');
+  const local = await cold.request('/monthly?week=2099-W01&case=initialized-retirement-table'); await cold.flush();
+  assert.equal(local.headers.get('X-Public-Read-Source'), 'replica'); assert.equal(cold.services.length, 1);
+  assert.ok(cold.queries.filter(row => row.lane === 'replica').every(row => /^SELECT\b/.test(row.query)), 'only primary initialization may create the visibility table');
 });
 
 test('region capability checks issue SELECT 1 only and never reuse a cached response as routing evidence', async () => {
@@ -220,6 +229,31 @@ test('public mutations authenticate inside a first-primary session while balance
   const me = await h.request('/me', { auth: true }); assert.equal(me.data.user.nickname, 'Public Owner');
   assert.equal(h.primaryModes.length, 0); assert.ok(h.queries.every(row => row.lane === 'primary'));
   assert.equal(h.edgeModes.length, 0);
+});
+
+test('monthly attempt validation and unconfigured grading use the raw primary binding without a checkpoint session', async () => {
+  const h = await fixture({ actualBackend: true });
+  // Publish/setup through the normal primary path before adding a separate structured fixture.
+  assert.equal((await h.request('/monthly?week=2099-W01', { auth: true, headers: { 'Cache-Control': 'no-cache' } })).status, 200);
+  h.change(`INSERT INTO problems(id,week,no,kind,subject,points,level,title_ko,title_en,body_ko,body_en,rubric,opens_at,closes_at,created_at)
+    VALUES(4,'2026-11',90,'essay','physics',100,10,'Structured fixture','Structured fixture','Public statement','Public statement','[]',?,?,?)`,
+    Math.floor(Date.now() / 1000) - 60, Math.floor(Date.now() / 1000) + 3600, Math.floor(Date.now() / 1000));
+  h.queries.length = 0; h.primaryModes.length = 0;
+  const invalid = await h.request('/problems/4/submit', { auth: true, method: 'POST', body: { request_id: 'invalid', parts: [] } });
+  assert.equal(invalid.status, 400); assert.equal(invalid.data.error, 'bad_answer_sheet');
+  assert.equal(invalid.headers.has('X-D1-Bookmark'), false);
+  const accepted = await h.request('/problems/4/submit', { auth: true, method: 'POST', body: {
+    request_id: 'local-monthly-request'.padEnd(32, 'x'), parts: [{ id: 'a', answer: 'Submitted equation', working: 'Submitted derivation' }],
+  } });
+  assert.equal(accepted.status, 200); assert.equal(accepted.data.status, 'pending', 'no grader key is configured');
+  assert.equal(accepted.data.attempts.used, 1); assert.equal(accepted.headers.has('X-D1-Bookmark'), false);
+  assert.equal(h.primaryModes.length, 0); assert.equal(h.edgeModes.length, 0);
+  assert.ok(h.queries.some(row => /FROM sessions/.test(row.query)));
+  assert.ok(h.queries.some(row => /INSERT INTO submissions/.test(row.query)));
+  assert.ok(h.queries.every(row => row.lane === 'primary'));
+  for (const path of ['/api/problems/4/submit', '/api/problems', '/api/submissions', '/api/admin/problems', '/api/admin/submissions/1']) {
+    assert.equal(primaryCheckpointRequest(new Request('https://primary.test' + path, { method: 'POST' })), false);
+  }
 });
 
 test('weekly publication runs only through the primary cron and never through the global reader', async () => {
