@@ -46,7 +46,7 @@ def extract(source,folder,pages):
     if not candidate(s):continue
     r=fitz.Rect(s['bbox']);ids=[i]
     while True:
-     j=next((j for j,(q,is_) in enumerate(groups) if abs(s['origin'][1]-sum(spans[n]['origin'][1] for n in is_)/len(is_))<=max([s['size']]+[spans[n]['size'] for n in is_])*.9 and ((min(r.y1,q.y1)>max(r.y0,q.y0) and max(r.x0,q.x0)-min(r.x1,q.x1)<4)
+     j=next((j for j,(q,is_) in enumerate(groups) if abs(s['origin'][1]-sum(spans[n]['origin'][1] for n in is_)/len(is_))<=min([s['size']]+[spans[n]['size'] for n in is_])*.45 and ((min(r.y1,q.y1)>max(r.y0,q.y0) and max(r.x0,q.x0)-min(r.x1,q.x1)<4)
         or (min(r.x1,q.x1)>max(r.x0,q.x0) and max(r.y0,q.y0)-min(r.y1,q.y1)<4))),None)
      if j is None:break
      q,others=groups.pop(j);r|=q;ids+=others
@@ -68,11 +68,20 @@ def extract(source,folder,pages):
  for entry in entries:
   old=entry['math'];maths=[];chunks=[];end=0
   for match in re.finditer(r'\[\[\d+\]\](?:\s+\[\[\d+\]\])*',entry['source']):
-   ids=list(map(int,re.findall(r'\d+',match.group())));r=fitz.Rect(old[ids[0]]['rect'])
-   for mi in ids[1:]:r|=fitz.Rect(old[mi]['rect'])
-   mi=len(maths);name=f"{entry['id']}-m{mi}.png";doc[entry['page']].get_pixmap(matrix=fitz.Matrix(4,4),clip=r,alpha=False).save(folder/name)
-   maths.append({'file':name,'width':r.width,'height':r.height,'rect':list(r),'text':' '.join(old[n]['text'] for n in ids)})
-   chunks += [entry['source'][end:match.start()],f'[[{mi}]]'];end=match.end()
+   ids=list(map(int,re.findall(r'\d+',match.group())));groups=[]
+   for oi in ids:
+    q=fitz.Rect(old[oi]['rect'])
+    if groups:
+     r,part=groups[-1]
+     near=(min(r.y1,q.y1)>max(r.y0,q.y0) and max(r.x0,q.x0)-min(r.x1,q.x1)<12) or (min(r.x1,q.x1)>max(r.x0,q.x0) and max(r.y0,q.y0)-min(r.y1,q.y1)<5)
+    else:near=False
+    if near:groups[-1]=(r|q,part+[oi])
+    else:groups.append((q,[oi]))
+   tokens=[]
+   for r,part in groups:
+    mi=len(maths);name=f"{entry['id']}-m{mi}.png";doc[entry['page']].get_pixmap(matrix=fitz.Matrix(4,4),clip=r,alpha=False).save(folder/name)
+    maths.append({'file':name,'width':r.width,'height':r.height,'rect':list(r),'text':' '.join(old[n]['text'] for n in part)});tokens.append(f'[[{mi}]]')
+   chunks += [entry['source'][end:match.start()],' '.join(tokens)];end=match.end()
   chunks.append(entry['source'][end:]);entry['source']=''.join(chunks);entry['math']=maths
  out={'source':'tmp/source-audit/'+source.name,'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'source_pages':pages,'small_glyph_heights':small,'word_equations':True,'entries':entries,'provenance':{'source_name':source.name}}
  (folder/'translation.json').write_text(json.dumps(out,ensure_ascii=False,indent=2),'utf8');print('Extracted',len(entries),'regions')
