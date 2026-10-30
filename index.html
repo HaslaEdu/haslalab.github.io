@@ -1006,8 +1006,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="sim/result-comparison.js?v=a88e3c1845b8"></script>
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
-<script src="site-runtime.js?v=c99dc395329c"></script>
-<script src="site-catalogue.js?v=91068be8e429"></script>
+<script src="site-runtime.js?v=7eacc7aaac13"></script>
+<script src="site-catalogue.js?v=c230c3e36a66"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=938310640469"></script>
@@ -1035,7 +1035,7 @@ const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"주간문제",
+  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
   ebLearn:"학습", hLearn:"학습을 시작하세요",
   pLearn:"물리 · 화학 · 생물 · 지구과학 · 천문 · 과학 실험과 실기, 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
@@ -1104,7 +1104,7 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Weekly",
+  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
   ebLearn:"Learn", hLearn:"Start learning",
   pLearn:"Textbooks, study guides and basic experiments, practicals and observations for physics, chemistry, biology, earth science, astronomy and integrated science. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
@@ -9328,7 +9328,7 @@ function setDocTitle(first, second){
   if(first==="about")            parts.push(d.hAbout);
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
-  else if(["weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
+  else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
@@ -9373,7 +9373,7 @@ function paintPageChrome(active){
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
      <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/weekly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
+     <a href="#/monthly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
@@ -9394,7 +9394,7 @@ function render(){
     const needs=window.HL_RUNTIME.routeNeeds(location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
     if(!siteDataLoader.ready(needs)){
       document.getElementById("view").innerHTML='<div class="shell"><div class="phead"><p role="status">'+(lang==="ko"?"자료를 불러오는 중…":"Loading archive…")+'</p></div></div>';
-      paintPageChrome(["weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
+      paintPageChrome(["monthly","weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
       setDocTitle(first,second);paintSiteTheme();
       siteDataLoader.ensure(needs).then(()=>{if(generation===siteRenderSeq)render();},()=>{if(generation!==siteRenderSeq)return;const box=document.getElementById("view");box.innerHTML='<div class="shell"><div class="phead"><p role="alert">'+(lang==="ko"?"자료를 불러오지 못했습니다.":"Could not load the archive.")+'</p><button type="button" class="cmbtn" id="retryCatalogue">'+(lang==="ko"?"다시 불러오기":"Retry")+'</button></div></div>';document.getElementById("retryCatalogue").onclick=render;});
       return;
@@ -9406,7 +9406,7 @@ function render(){
   else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(["weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
+  else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.body.dataset.siteRoute=active==="comps"?"archive":active;

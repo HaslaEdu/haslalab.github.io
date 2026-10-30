@@ -1,12 +1,14 @@
-# Reviewed weekly content
+# Reviewed monthly problems and historical publication
 
-`2026-W44.json` contains the three supplied physics problems, complete Korean and English web statements and solutions, and evidence-based partial-credit rubrics. Numbers 4–6 append to the existing week. Each web rubric totals 100 points; the proton-chain statement also preserves the original 15-point allocations.
+`2026-W44.json` preserves the original publication of the three supplied physics problems, complete Korean and English web statements and solutions, and evidence-based partial-credit rubrics. Numbers 4–6 originally appended to the existing week. Each web rubric totals 100 points; the proton-chain statement also preserves the original 15-point allocations.
 
-The Worker imports the JSON through `src/weekly-content.js`. Its existing D1 binding publishes the reviewed batch atomically on the first weekly/problem request. The durable `weekly_publications` marker prevents duplication and preserves subsequent administrator edits. A conflicting occupied week/number aborts the initial batch. This needs no new API endpoint, credential, or D1 management permission.
+The monthly transition moves the current six problems to `2026-11`, preserving their database IDs, content, rubrics, submissions and scores. They remain open through November 30, 2026 in Korea; the exclusive cutoff is December 1 00:00 KST (`1796050800`). A separate durable publication marker applies this transition once and preserves later administrator edits. The original JSON stays unchanged so existing and fresh databases follow the same publication history.
+
+The Worker imports the JSON through `src/weekly-content.js`. Its existing D1 binding publishes the reviewed batch atomically on the first monthly/legacy weekly/problem request. The durable `weekly_publications` marker prevents duplication and preserves subsequent administrator edits. A conflicting occupied week/number aborts the initial batch. This needs no new credential or D1 management permission. Canonical links use `#/monthly`; old `#/weekly` problem links remain valid.
 
 After publication, edit a live problem through the existing administrator problem editor. Changing this JSON does not overwrite published records. A new reviewed batch needs its own explicit publication ID and unused week/number slots.
 
-Statements and models use escaped plain text, `$…$` / `$$…$$` math, `##` / `###` headings, and standalone `![caption](weekly/figures/name.svg)` figures. Only local weekly SVG paths render as images. Student answer previews remain plain escaped text. The attached PDFs are not embedded or offered as the problem interface. The existing API/UI releases worked solutions after the week closes, while continuing to accept practice submissions.
+Statements and models use escaped plain text, `$…$` / `$$…$$` math, `##` / `###` headings, and standalone `![caption](weekly/figures/name.svg)` figures. Only local figure paths render as images; those existing asset URLs remain unchanged. Student answer previews remain plain escaped text. The attached PDFs are not embedded or offered as the problem interface. The API/UI releases worked solutions after the monthly deadline, while continuing to accept practice submissions.
 
 Editorial details:
 

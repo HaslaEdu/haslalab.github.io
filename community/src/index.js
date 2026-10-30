@@ -11,6 +11,7 @@ import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
 import { ensureWeeklyContent } from './weekly-content.js';
+import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -564,7 +565,7 @@ async function ytRoute(req, env, url, cors) {
   return reply(body);
 }
 
-const SHARED_GET = /^\/api\/(boards|posts|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
+const SHARED_GET = /^\/api\/(boards|posts|monthly|weekly|rank|lab\/stats)$/, EDGE_TTL = 15;
 const PUBLIC_INVARIANT = /^\/api\/(health|boards|posts|lab\/stats|pay\/config|lab\/contest\/catalog)$/;
 const publicInvariant = (method, path) => method === 'GET' && PUBLIC_INVARIANT.test(path);
 const cacheSeconds = path => /\/(health|pay\/config|contest\/catalog)$/.test(path) ? 300 : EDGE_TTL;
@@ -718,22 +719,15 @@ function rateUser(solvedLevels) {
 function arenaHealth(env) {
   return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.OPENAI_API_KEY ? "openai" : null };
 }
-/* ISO week of a unix time, in Korean time (weeks turn over at Monday 00:00 KST) */
-function isoWeek(t) {
-  const d = new Date((t + 9 * 3600) * 1000), day = (d.getUTCDay() + 6) % 7;
-  d.setUTCDate(d.getUTCDate() - day + 3);
-  const y = d.getUTCFullYear(), first = new Date(Date.UTC(y, 0, 4)), fd = (first.getUTCDay() + 6) % 7;
-  first.setUTCDate(first.getUTCDate() - fd + 3);
-  return `${y}-W${String(1 + Math.round((d - first) / 604800000)).padStart(2, "0")}`;
-}
 function pubProblem(r, lang, open, full) {
   const en = lang === "en", closed = now() >= r.closes_at;
   const o = { id: r.id, week: r.week, no: r.no, kind: r.kind, subject: r.subject, level: r.level, points: r.points,
     title: en ? r.title_en : r.title_ko, unit: r.unit, source: r.source, opens_at: r.opens_at, closes_at: r.closes_at, open, closed };
+  o.period = r.week; o.month = isMonthPeriod(r.week) ? r.week : null;
   if (full) {
     o.body = en ? r.body_en : r.body_ko;
     if (r.kind === "essay" && r.rubric) o.criteria = JSON.parse(r.rubric).map(c => ({ id: c.id, name: c.name, max: c.max }));
-    if (closed) o.solution = en ? r.model_en : r.model_ko;      // the worked solution once the week is over
+    if (closed) o.solution = en ? r.model_en : r.model_ko;      // the worked solution once the period is over
   }
   return o;
 }
@@ -1031,20 +1025,25 @@ async function accountOverview(env, me, req) {
 async function arena(p, m, body, me, req, env, url) {
   let r;
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
-  if ((p === '/api/weekly' && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
+  if ((['/api/monthly', '/api/weekly', '/api/rank'].includes(p) && m === 'GET') || /^\/api\/problems\/\d+(?:\/submit)?$/.test(p)) {
     await ensureWeeklyContent(env.DB, env[DB_SCOPE] || env.DB);
   }
-  if (p === "/api/weekly" && m === "GET") {
-    const t = now(), week = url.searchParams.get("week") || "";
-    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : 'opens_at<=? AND closes_at>?', args = week ? [week, t] : [t, t];
+  if ((p === "/api/monthly" || p === "/api/weekly") && m === "GET") {
+    const t = now(), requested = url.searchParams.get("month") || url.searchParams.get("week") || "";
+    if (requested && !isProblemPeriod(requested)) bad('bad_week');
+    const week = canonicalProblemPeriod(requested);
+    const fresh = wantsFresh(req), where = week ? 'week=? AND opens_at<=?' : `week=(SELECT week FROM problems
+      WHERE opens_at<=? AND closes_at>? ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,
+        opens_at DESC,closes_at DESC,week DESC LIMIT 1) AND opens_at<=?`,
+      args = week ? [week, t] : [t, t, t];
     // The public projection contains no answers, identity or individual score.
     // Its private overlay can be read immediately, without waiting for the list.
-    const common = publicRead(env, `weekly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
+    const common = publicRead(env, `monthly:${week}:${lang}:${Math.floor(t / 5)}`, async () => {
       const [rowsR, weeksR] = await env.DB.batch([
         env.DB.prepare(`SELECT * FROM problems WHERE ${where} ORDER BY no`).bind(...args),
         env.DB.prepare("SELECT week, MIN(opens_at) o, MAX(closes_at) c, COUNT(*) n FROM problems WHERE opens_at<=? GROUP BY week ORDER BY o DESC LIMIT 60").bind(t),
       ]);
-      const rows = rowsR.results, wk = week || rows[0]?.week || isoWeek(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
+      const rows = rowsR.results, wk = week || rows[0]?.week || isoMonth(t), ids = rows.map(x => x.id), qs = ids.map(() => '?').join(',');
       const [stats, top] = await Promise.all([
         ids.length ? env.DB.prepare(`SELECT s.problem_id, COUNT(DISTINCT s.user_id) users, COUNT(DISTINCT CASE WHEN s.score>=p.points THEN s.user_id END) solved
           FROM submissions s JOIN problems p ON p.id=s.problem_id WHERE s.problem_id IN (${qs}) GROUP BY s.problem_id`).bind(...ids).all().then(r => r.results) : [],
@@ -1052,7 +1051,8 @@ async function arena(p, m, body, me, req, env, url) {
       ]);
       const problems = rows.map(x => pubProblem(x, lang, t < x.closes_at, false));
       for (const x of problems) { const s = stats.find(y => y.problem_id === x.id); x.users = s?.users || 0; x.solvers = s?.solved || 0; }
-      return { week: wk, problems, weeks: weeksR.results, top: top.slice(0, 8) };
+      return { week: wk, period: wk, month: isMonthPeriod(wk) ? wk : null, problems,
+        weeks: weeksR.results, months: weeksR.results, top: top.slice(0, 8) };
     }, { fresh });
     const [shared, mine] = await Promise.all([common,
       me ? env.DB.prepare(`SELECT problem_id, MAX(score) best, SUM(status='pending') pend FROM submissions WHERE user_id=? AND problem_id IN (SELECT id FROM problems WHERE ${where}) GROUP BY problem_id`).bind(me.id, ...args).all().then(r => r.results) : [],
@@ -1100,13 +1100,23 @@ async function arena(p, m, body, me, req, env, url) {
     return await ocr(env, f, url.searchParams.get("mode") === "math" ? "math" : "text");
   }
   if (p === "/api/rank" && m === "GET") {
-    const scope = url.searchParams.get("scope") === "week" ? "week" : "all";
-    const week = scope === "week" ? (url.searchParams.get("week") || isoWeek(now())) : null;
+    const scopeArg = url.searchParams.get("scope"), scope = ['month', 'week'].includes(scopeArg) ? scopeArg : "all";
+    const requested = url.searchParams.get("month") || url.searchParams.get("week") || "";
+    if (requested && !isProblemPeriod(requested)) bad('bad_week');
+    let week = scope !== "all" ? canonicalProblemPeriod(requested) : null;
+    if (scope !== 'all' && !week) {
+      const t = now(), active = await publicRead(env, `active-problem-period:${Math.floor(t / 5)}`, () =>
+        env.DB.prepare(`SELECT week FROM problems WHERE opens_at<=? AND closes_at>?
+          ORDER BY CASE WHEN length(week)=7 THEN 0 ELSE 1 END,opens_at DESC,closes_at DESC,week DESC LIMIT 1`)
+          .bind(t, t).first(), { fresh: wantsFresh(req) });
+      week = active?.week || isoMonth(t);
+    }
     const rows = await ranking(env, week, wantsFresh(req));
     rows.forEach((x, i) => { x.rank = i + 1; });
     let mine = null;
     if (me) { const i = rows.findIndex(x => x.nickname === me.nickname); if (i >= 0) mine = rows[i]; }
-    return { scope, week, rows: rows.slice(0, 100), mine, tierAt: TIER_AT, user: me ? pubUser(me) : null, api_version: 5 };
+    return { scope, week, period: week, month: isMonthPeriod(week) ? week : null,
+      rows: rows.slice(0, 100), mine, tierAt: TIER_AT, user: me ? pubUser(me) : null, api_version: 5 };
   }
   if (p === '/api/me/overview' && m === 'GET') return accountOverview(env, needUser(me), req);
   if (p === "/api/me/stats" && m === "GET") {
@@ -1122,7 +1132,9 @@ async function arena(p, m, body, me, req, env, url) {
       return { problems: (await env.DB.prepare("SELECT * FROM problems ORDER BY opens_at DESC, no LIMIT 200").all()).results };
     if (p === "/api/admin/problems" && m === "POST") {
       const f = ["week", "no", "kind", "subject", "level", "points", "title_ko", "title_en", "body_ko", "body_en", "unit", "answer", "rubric", "model_ko", "model_en", "source", "opens_at", "closes_at"];
-      if (!/^\d{4}-W\d{2}$/.test(body.week || "")) bad("bad_week");
+      const period = body.month || body.period || body.week;
+      if (!isProblemPeriod(period)) bad("bad_week");
+      body.week = canonicalProblemPeriod(period);
       if (!["short", "essay"].includes(body.kind)) bad("bad_kind");
       if (body.level !== undefined && !(Number.isInteger(+body.level) && +body.level >= 1 && +body.level <= 30)) bad("bad_level");
       if (body.kind === "short") { const a = JSON.parse(body.answer || "null"); if (!a || typeof a.value !== "number") bad("bad_answer"); }

@@ -1,7 +1,7 @@
 // Keep public cache hits near the visitor; the existing placed Worker owns all data and secrets.
 const BACKEND_ORIGIN = 'https://haslalab-community.haslalab.workers.dev';
 const PUBLIC_GET = /^\/api\/(?:health|boards|posts|lab\/stats|pay\/config|lab\/contest\/catalog)$/;
-const ANONYMOUS_GET = /^\/api\/(?:weekly|rank)$/;
+const ANONYMOUS_GET = /^\/api\/(?:monthly|weekly|rank)$/;
 const SETTINGS = /^\/api\/(?:health|pay\/config|lab\/contest\/catalog)$/;
 const AVATAR = /^\/api\/avatar\/[A-Za-z0-9_-]{8,32}$/;
 const MAX_PENDING = 128, PENDING_MS = 5000;
