@@ -114,7 +114,7 @@
 <script type="module">
 import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
 let monthlyScanModule;
-const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=b7316705ffd3")).then(module => module.monthlyScanPayload(...args));
+const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
 const MAX_BYTES = 1850000;

@@ -334,6 +334,27 @@ test('a stale processing lease can be retried without letting late OCR overwrite
   });
 });
 
+test('a late old lease reports processing while the replacement still owns a live unfinished upload',async()=>{
+  await environment(async({grant,upload,beforeOcr,time,calls,sql,phone})=>{
+    const scan=(await grant()).data.scan,id=crypto.randomUUID();let signalA,signalB,releaseA,releaseB;
+    const enteredA=new Promise(resolve=>{signalA=resolve;}),enteredB=new Promise(resolve=>{signalB=resolve;});
+    const gateA=new Promise(resolve=>{releaseA=resolve;}),gateB=new Promise(resolve=>{releaseB=resolve;});
+    beforeOcr(async()=>{if(calls.ocr===1){signalA();await gateA;}else if(calls.ocr===2){signalB();await gateB;}});
+    const first=upload(scan,{request_id:id});await enteredA;time(NOW+301);
+    const replacement=upload(scan,{request_id:id});await enteredB;let done;
+    try{
+      releaseA();const late=await first;
+      assert.equal(late.status,409);assert.equal(late.data.error,'upload_processing');assert.equal(late.data.retry_after,2);
+      assert.equal((await phone(scan)).data.open,true);
+      const pending=sql.prepare('SELECT claim,photo_id FROM monthly_capture_uploads WHERE session_id=? AND request_id=?').get(scan.id,id);
+      assert.ok(pending.claim);assert.equal(pending.photo_id,null);
+      assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photos').get().n,0);
+    }finally{releaseA();releaseB();done=await replacement;}
+    assert.equal(done.status,200);assert.equal((await upload(scan,{request_id:id})).data.id,done.data.id);
+    assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_capture_pages').get().n,1);assert.equal(calls.ocr,2);
+  });
+});
+
 test('closure during extraction cannot leave new original bytes, pages or a stale receipt',async()=>{
   for(const race of ['revoke','rotate','expire','submit','delete','retire','exhaust'])await environment(async({sql,api,grant,upload,submit,beforeExtract,time})=>{
     const scan=(await grant()).data.scan;assert.equal((await upload(scan)).status,200);

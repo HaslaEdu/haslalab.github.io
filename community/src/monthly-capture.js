@@ -286,6 +286,11 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
           WHERE session_id=? AND request_id=? AND claim=? AND photo_id IS NULL`).bind(session.id,requestId,reservation.claim).run().catch(()=>{});
         if(error instanceof MonthlyAnswerError&&error.code==='scan_over'){
           const replay=await receiptFor(env,session,requestId);if(replay)return replay;
+          const guard=liveGuard(session);
+          const takeover=await env.DB.prepare(`SELECT claim FROM monthly_capture_uploads WHERE session_id=? AND request_id=?
+            AND photo_id IS NULL AND claim<>'' AND claim<>? AND (${guard.sql})`)
+            .bind(session.id,requestId,reservation.claim,...guard.args).first();
+          if(takeover)throw new HttpError(409,'upload_processing',{retry_after:2});
         }
         throw error;
       }
