@@ -17,6 +17,8 @@ function paintSiteTheme(){
   const label=lang==="ko"?(dark?"화이트 모드":"다크 모드"):(dark?"Light mode":"Dark mode");
   button.setAttribute("aria-label",label);button.setAttribute("title",label);button.setAttribute("aria-pressed",String(dark));button.textContent=dark?"☀":"◐";
   document.querySelector('meta[name="theme-color"]').content=dark?"#111017":"#2E3945";
+  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261030-logos";
+  if(icon&&icon.getAttribute("href")!==href)icon.setAttribute("href",href);
 }
 
 function initSiteDesign(){

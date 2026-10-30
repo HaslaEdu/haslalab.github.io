@@ -8,6 +8,7 @@ body.hl-site .mark{
   font-size:24px;font-weight:700;letter-spacing:-.055em;line-height:1.15;white-space:nowrap;
 }
 body.hl-site .mark img{width:26px;height:26px;top:0;filter:none}
+body.hl-site .clogo{max-width:48%}
 body.hl-site .mark em{
   display:block;font-family:var(--mono);font-size:9px;font-weight:500;
   letter-spacing:.1em;color:#6e778b;padding-left:1px;
@@ -126,6 +127,14 @@ html[data-theme="dark"] body.hl-site header{
 html[data-theme="dark"] body.hl-site .mark{color:#e9ecf5}
 html[data-theme="dark"] body.hl-site :is(.mark img,.about .wm,.cmrail .srv img){filter:hue-rotate(52deg) saturate(.66)}
 html[data-theme="dark"] body.hl-site .mark em{color:#a8b2c8}
+/* Keep official competition artwork in its original colours on a light backing. */
+html[data-theme="dark"] body.hl-site .clogo{
+  box-sizing:content-box;max-width:calc(48% - 14px);padding:6px;
+  background:#fff;border:1px solid #fff;border-radius:5px;
+}
+html[data-theme="dark"] body.hl-site .subjs img{
+  box-sizing:content-box;padding:4px;background:#fff;border-radius:4px;
+}
 html[data-theme="dark"] body.hl-site #nav a.on{color:#cfbdf2;border-color:#b09bdb}
 html[data-theme="dark"] body.hl-site #siteTheme,
 html[data-theme="dark"] body.hl-site header .lang,
