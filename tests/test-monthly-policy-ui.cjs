@@ -319,3 +319,57 @@ test('an original-photo fetch finishing after account switching is never display
   setAuth('different-owner');finish();await pending;
   assert.equal(image.src,undefined);assert.equal(image.hidden,true);assert.deepEqual(revoked,[]);
 });
+
+test('monthly badges distinguish Theory and Experiment while legacy answer-type badges remain intact',async()=>{
+  const {context}=app();context.arLevel=()=>'';context.cm.me=null;
+  const root={innerHTML:''},theory={...clone(problem),round:'theory',opens_at:deadline-86400,users:0,solvers:0};
+  const experiment={...theory,id:99,no:5,title:'Experiment problem',round:'experiment'};
+  for(const language of ['ko','en']) {
+    context.lang=language;
+    await context.arWeekly(root,()=>true,'2026-11',{period:'2026-11',problems:[theory,experiment],months:[],top:[],now:deadline-60});
+    assert.match(root.innerHTML,/data-round="theory">Theory<\/span>/);
+    assert.match(root.innerHTML,/data-round="experiment">Experiment<\/span>/);
+    assert.ok(!/<span class="arkind[^>]*>(?:서술|Written)<\/span>/.test(root.innerHTML));
+    assert.match(context.arProblemKindBadge({week:'2026-11',kind:'essay'}),/>Theory<\/span>/,'older monthly APIs default to theory');
+    assert.match(context.arProblemKindBadge({week:'2026-W43',kind:'essay'}),language==='ko'?/>서술<\/span>/:/>Written<\/span>/);
+    assert.match(context.arProblemKindBadge({week:'2026-W43',kind:'short'}),language==='ko'?/>단답<\/span>/:/>Short answer<\/span>/);
+  }
+});
+
+test('letter labels replace greenhouse legacy numbers across forms, validation, saved answers and released criteria',()=>{
+  const {context,setNow}=app(),p={...clone(problem),id:7,no:4,subject:'astronomy',round:'theory',answerSheet:{version:'2026-11-v1',parts:[
+    {id:'16',displayId:'a',label_ko:'복사 평형',label_en:'Radiative equilibrium',points:40},
+    {id:'20a',displayId:'e',label_ko:'대기층',label_en:'Atmospheric layer',points:60},
+  ]}};
+  const html=context.arMonthlyAnswerHtml(p,true);
+  assert.match(html,/<legend>\(a\) 복사 평형/);assert.match(html,/<legend>\(e\) 대기층/);
+  assert.match(html,/data-sheet-answer="16"/);assert.match(html,/data-sheet-working="20a"/,'canonical payload fields remain compatible');
+  const saved=context.arMonthlySavedAnswer({answer_sheet:{parts:[{id:'16',answer:'T',working:'Derivation'}]},photo_attachments:[{id:'photo-16',part_id:'16'}]},p);
+  assert.match(saved,/<h4>\(a\)<\/h4>/);assert.match(saved,/촬영 원본 보기 · \(a\)/);assert.ok(!saved.includes('<h4>16</h4>'));
+  setNow((deadline+1)*1000);
+  const released=context.arResult({status:'graded',score:40,detail:{scores:[{id:'16',name:'Radiative equilibrium',got:40,max:40,evidence:[],note:'Correct'}]}},p);
+  assert.match(released,/<b>\(a\)<\/b>/);assert.ok(!released.includes('<b>16</b>'));
+  const data={'16':{answer:'T',working:''},'20a':{answer:'',working:''}};
+  assert.throws(()=>context.arSheetParts(p,{querySelector:selector=>{const [,kind,id]=/data-sheet-(answer|working)="([^"]+)"/.exec(selector);return{value:data[id][kind]};}}),error=>error.sheetMessage.includes('(a):'));
+});
+
+test('problem headers and criterion summaries use monthly rounds and display letters without exposing old numbering',async()=>{
+  const {context}=app();context.cm.me=null;context.arBindMonthlyAnswer=()=>{};
+  const root={innerHTML:'',querySelector:()=>null},p={...clone(problem),id:7,no:4,subject:'astronomy',round:'experiment',criteria:[{id:'16',name:'Radiative equilibrium',max:100}],
+    answerSheet:{version:'2026-11-v1',parts:[{id:'16',displayId:'a',label_ko:'복사 평형',label_en:'Radiative equilibrium',points:100}]},
+    mine:[{status:'graded',score:73,created_at:1,answer_sheet:{parts:[{id:'16',answer:'T',working:'Derivation'}]}}]};
+  context.cmApi=async()=>({problem:p,health:{ocr:false}});
+  await context.arProblem(root,()=>true,7);
+  assert.match(root.innerHTML,/data-round="experiment">Experiment<\/span>/);assert.match(root.innerHTML,/<span>astronomy<\/span>/);
+  assert.match(root.innerHTML,/<div class="arcrit"><span><b>\(a\)<\/b>/);assert.match(root.innerHTML,/<h4>\(a\)<\/h4>/);
+  assert.ok(!root.innerHTML.includes('<b>16</b>'));assert.ok(!root.innerHTML.includes('<h4>16</h4>'));
+});
+
+test('read-only captured parts use display letters while their server-owned IDs remain unchanged',async()=>{
+  const {context}=app(),ui=captureFixture(context),p={...clone(problem),answerSheet:{version:'2026-11-v1',parts:[{id:'16',displayId:'a',points:100}]}};
+  const scan={id:'scan-letters',open:true,status:'scanning',revision:1,pages:[{id:'photo-1',page_no:1,ocr_status:'done',text:'Captured original'}],parts:[{id:'16',answer:'T',working:'Captured derivation'}]};
+  context.cmApi=async()=>({scan:clone(scan)});
+  const controller=context.arBindMonthlyCapture(ui.root,p,()=>true);await controller.start();
+  assert.match(ui.pages.innerHTML,/<h4>\(a\)<\/h4>/);assert.ok(!ui.pages.innerHTML.includes('<h4>16</h4>'));
+  assert.equal(controller.snapshot().parts[0].id,'16');controller.dispose();
+});

@@ -1,4 +1,4 @@
-import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=d39bf78633cf';
+import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=9a858f70e852';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy = {
@@ -24,21 +24,24 @@ export function buildAnswerPages(problem, sheet, lang='ko') {
       <p class="instructions">${esc(t.note)}</p></header>
     <div class="parts" style="--part-count:${ids.length}">${ids.map(id=>{
       const p=byId.get(id);if(!p)throw Error('Unknown answer-sheet part');
-      return `<section class="part" data-part="${esc(id)}"><h2>${esc(t.part)} ${esc(id)} · ${esc(p['label_'+lang]||p.label_ko)} · ${p.points}${esc(t.points)}</h2>
+      const display=p.displayId?`(${p.displayId})`:id;
+      return `<section class="part" data-part="${esc(id)}" data-display-part="${esc(display)}"><h2>${esc(t.part)} ${esc(display)} · ${esc(p['label_'+lang]||p.label_ko)} · ${p.points}${esc(t.points)}</h2>
         <div class="label">${esc(t.answer)}</div><div class="answer"></div><div class="label">${esc(t.working)}</div><div class="working"></div></section>`;
     }).join('')}</div><footer><span>${esc(t.footer)}</span><span>HL-MONTHLY-${esc(problem.id)} · ${esc(sheet.version)} · ${index+1}/${sheet.pages.length}</span></footer></section>`).join('');
 }
 
 async function mount() {
-  const q=new URLSearchParams(location.search),id=Number(q.get('id')),lang=q.get('lang')==='en'?'en':'ko',t=copy[lang],sheet=getMonthlyAnswerSheet(id);
+  const q=new URLSearchParams(location.search),id=Number(q.get('id')),lang=q.get('lang')==='en'?'en':'ko',t=copy[lang];
   document.documentElement.lang=lang;
   const back=document.getElementById('back'),button=document.getElementById('print'),message=document.getElementById('message');
   back.textContent=t.back;back.href='../?lang='+lang+'#/monthly/p/'+id;button.textContent=t.print;document.getElementById('help').textContent=t.help;
   try {
-    if(!sheet)throw Error('Unknown problem');
+    if(!Number.isInteger(id)||id<1)throw Error('Unknown problem');
     const response=await fetch('https://haslalab-community-edge.haslalab.workers.dev/api/problems/'+id+'?lang='+lang,{cache:'no-store'});
     if(!response.ok)throw Error('Problem unavailable');
     const {problem}=await response.json();
+    const sheet=getMonthlyAnswerSheet(problem);
+    if(!sheet)throw Error('Unknown answer sheet');
     document.title=problem.title+' · '+t.name+' · HaslaLab';
     document.getElementById('sheets').innerHTML=buildAnswerPages(problem,sheet,lang);
     message.hidden=true;button.disabled=false;button.addEventListener('click',()=>window.print());

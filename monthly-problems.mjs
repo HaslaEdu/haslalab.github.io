@@ -50,10 +50,10 @@ const sheets = {
       part('19','세차 주기의 최저 온도','Minimum over a precession cycle',11,12),
       part('20a','원판의 두 대기층','Two atmospheric layers on a disk',7,14),
       part('20b','구형 모형의 대기층','Atmospheric layer on a sphere',7,14),
-      part('20c','기하와 대기의 공통 인자','Geometrical and atmospheric factors',7,10),
-      part('21a','궤도·온도 개략도 읽기','Reading orbital and temperature schematics',5,10),
-      part('21b','원판 예측과 온도 기록','Disk prediction and temperature record',7,12),
-      part('21c','전체 복사량과 기후 해석','Global radiation and climate interpretation',7,14),
+      part('20c','투과율에 대한 온도 민감도','Temperature sensitivity to transmission',7,10),
+      part('21a','온도 개략도의 수치 읽기','Quantitative reading of the temperature schematic',5,10),
+      part('21b','원판 모형과 기록의 정량 비교','Quantitative disk and record comparison',7,12),
+      part('21c','전지구 흡수 일률과 세차 평균','Global absorbed flux and precession average',7,14),
     ],
     pages:[['16','17'],['18','19'],['20a','20b'],['20c','21a'],['21b','21c']],
   },
@@ -72,7 +72,14 @@ export function getMonthlyAnswerSheet(problem) {
     version: MONTHLY_SHEET_VERSION,
     ...((greenhouse || !object && id === 7) ? {key:'greenhouse-part-d-v1'} : {}),
     limit: MONTHLY_ANSWER_LIMIT,
-    parts: value.parts.map(p => ({...p})),
+    round: value.round || 'theory',
+    parts: value.parts.map((p,index) => ({...p,...(greenhouse || !object && id === 7 ? {displayId:String.fromCharCode(97+index)} : {})})),
     pages: value.pages.map(page => [...page]),
   };
+}
+
+// Round describes the problem; kind continues to select its grading method.
+export function getMonthlyProblemRound(problem) {
+  const defined=problem?.round || problem?.answerSheet?.round || getMonthlyAnswerSheet(problem)?.round;
+  return defined === 'experiment' ? 'experiment' : 'theory';
 }

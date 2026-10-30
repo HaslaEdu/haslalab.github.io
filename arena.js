@@ -301,6 +301,12 @@ async function arOauthBack(root) {
 }
 
 /* ── the month (legacy weekly links remain readable) ── */
+function arProblemKindBadge(problem,period) {
+  const monthly = /^\d{4}-\d{2}$/.test(arPeriodId(problem)||period||"") || !!problem.answerSheet;
+  if (!monthly) return `<span class="arkind ${problem.kind}">${problem.kind === "short" ? arT().short : arT().essay}</span>`;
+  const round = problem.round === "experiment" ? "experiment" : "theory";
+  return `<span class="arkind essay ${round}" data-round="${round}">${round === "experiment" ? "Experiment" : "Theory"}</span>`;
+}
 function arMonthlyRewardNotice(reward,period) {
   if(reward?.eligible===false||!/^\d{4}-\d{2}$/.test(period||"")||(period||"")<"2026-11")return"";
   const ko=lang==="ko",status=reward?.status,when=reward?.announcement_at?arDeadline(reward.announcement_at+1):"";
@@ -326,7 +332,7 @@ async function arWeekly(root, alive, week,preloaded) {
         <a class="arcard" href="#/monthly/p/${p.id}">
           <div class="arno">${p.no}</div>
           <div class="arbody"><h3>${esc(p.title)}</h3>
-            <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>
+            <div class="armeta">${arProblemKindBadge(p,period)}<span>${esc(p.subject)}</span>
               ${arLevel(p.level)}<span>${p.points}${T.pts}</span>
               <span>${p.users} ${T.users} · ${p.solvers} ${T.solvers}</span></div></div>
           <div class="army">${p.best != null ? `<b>${p.best}</b><small>${T.best}</small>` : p.pending ? `<small>${T.pending}</small>` : `<span class="cmbtn sm pri">${T.solve}</span>`}</div>
@@ -357,7 +363,7 @@ function arResult(s, prob) {
   return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>${record}
     ${d.evidenceIssue ? `<p class="arwarn">${T.evidenceIssue}</p>` : ""}
     ${(d.scores || []).length ? `<table class="cmtbl artbl"><thead><tr><th style="width:42%">${T.criteria}</th><th style="width:70px">${T.score}</th><th>${T.evidence}</th></tr></thead><tbody>
-      ${d.scores.map((c) => `<tr><td class="t"><b>${esc(c.id)}</b> ${esc(c.name)}<div class="arnote">${esc(c.note)}</div></td>
+      ${d.scores.map((c) => `<tr><td class="t"><b>${esc(arMonthlyPartNumber(prob,c.id,c.display_id))}</b> ${esc(c.name)}<div class="arnote">${esc(c.note)}</div></td>
         <td><b>${c.got}</b>/${c.max}<div class="ardec ${c.decision}">${T[c.decision] || ""}</div></td>
         <td class="t">${(c.evidence || []).map((e) => `<q>${esc(e)}</q>`).join(" ")}</td></tr>`).join("")}</tbody></table>` : ""}
     ${(d.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${d.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em><q>${esc(f.quote)}</q> ${esc(f.note)}</li>`).join("")}</ul>` : ""}
@@ -523,7 +529,12 @@ function arSheetT() {
     grading: "Checking and grading your answer. This may take about 2 minutes."
   };
 }
-function arSheetPartLabel(part) { const label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${part.id.includes(".") ? part.id : "("+part.id+")"} ${label}` : part.id; }
+function arSheetPartLabel(part) { const id = String(part.displayId || part.id), label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${id.includes(".") ? id : "("+id+")"} ${label}` : id; }
+function arMonthlyPartNumber(problem,id,displayId) {
+  const part = problem?.answerSheet?.parts?.find(part => part.id === id);
+  const displayed = displayId || part?.displayId;
+  return displayed ? (String(displayed).includes(".") ? String(displayed) : "("+displayed+")") : String(id);
+}
 function arSheetFinalPreview(value) {
   const text = String(value || "").trim();
   if (!text) return "";
@@ -541,8 +552,8 @@ function arSheetParts(p, form) {
   const parts = p.answerSheet.parts.map(part => ({id:part.id,
     answer:form.querySelector(`[data-sheet-answer="${part.id}"]`).value.trim(),
     working:form.querySelector(`[data-sheet-working="${part.id}"]`).value.trim()}));
-  for (const part of parts) if (!!part.answer !== !!part.working) throw {sheetMessage:S.incomplete(part.id)};
-  for (const part of parts) if (part.answer.length > 4000 || part.working.length > 16000) throw {sheetMessage:S.partLong(part.id)};
+  for (const part of parts) if (!!part.answer !== !!part.working) throw {sheetMessage:S.incomplete(arMonthlyPartNumber(p,part.id))};
+  for (const part of parts) if (part.answer.length > 4000 || part.working.length > 16000) throw {sheetMessage:S.partLong(arMonthlyPartNumber(p,part.id))};
   if (!parts.some(part => part.answer)) throw {sheetMessage:S.empty};
   if (parts.reduce((n, part) => n + part.answer.length + part.working.length, 0) > 60000) throw {sheetMessage:S.tooLong};
   return parts;
@@ -610,7 +621,7 @@ function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=(
       (scan.pages?.length?scan.pages.map(page=>`<article class="arpanel" style="padding:12px;margin:10px 0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b>${esc(C.page(page.page_no||page.task||page.no))}</b><span class="arnote">${page.ocr_status==="done"?C.done:page.ocr_status==="failed"?C.failed:C.reading}</span><button type="button" class="cmbtn sm" data-capture-remove="${esc(page.id)}" ${busy||!scan.open?"disabled":""}>${C.remove}</button></div>
         <div class="arsheet-photo-saved"><button type="button" class="cmbtn sm" data-monthly-photo="${esc(page.id)}" style="margin-top:8px">${C.original}</button><p class="arinfo" hidden></p><img alt="${C.original}" hidden style="max-width:100%;height:auto"></div>
         <details style="margin-top:8px"><summary>${C.read}</summary><div class="arsheet-preview">${arSheetWorkingPreview(page.text||"")}</div></details></article>`).join(""):`<p class="arnote">${C.none}</p>`)+
-      (scan.parts?.some(part=>part.answer||part.working)?`<h4 class="arh4">${C.read}</h4><div class="arsheet-saved">${scan.parts.filter(part=>part.answer||part.working).map(part=>`<section><h4>${esc(part.id)}</h4><b>${arSheetT().answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${arSheetT().working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`:"")+
+      (scan.parts?.some(part=>part.answer||part.working)?`<h4 class="arh4">${C.read}</h4><div class="arsheet-saved">${scan.parts.filter(part=>part.answer||part.working).map(part=>`<section><h4>${esc(arMonthlyPartNumber(p,part.id))}</h4><b>${arSheetT().answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${arSheetT().working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`:"")+
       (!scan.open?`<p class="cmnote">${scan.status==="submitted"?C.closed:C.expired}</p>${scan.status==="submitted"?`<button type="button" class="cmbtn sm" data-capture-new>${C.newAnswer}</button>`:""}`:"");
     pages.querySelector("[data-capture-refresh]").onclick=()=>refresh(true);
     for(const button of pages.querySelectorAll("[data-capture-remove]"))button.onclick=async()=>{
@@ -667,11 +678,11 @@ function arMonthlyAnswerHtml(p, ocrOn) {
       ${signed ? `<p class="arnote">${S.saved}</p>` : ""}<button class="cmbtn pri" type="submit" ${!signed || exhausted ? "disabled" : ""}>${S.submit}</button>
     </form>`;
 }
-function arMonthlySavedAnswer(submission) {
+function arMonthlySavedAnswer(submission,problem) {
   const sheet = submission.answer_sheet, S = arSheetT();
-  const photos = (submission.photo_attachments || []).map(photo => `<div class="arsheet-photo-saved"><button class="cmbtn sm" type="button" data-monthly-photo="${esc(photo.id)}">${S.originalPhoto} · ${esc(photo.part_id)}</button><p class="arinfo" hidden></p><img class="armonthly-original" alt="${S.originalPhoto} · ${esc(photo.part_id)}" hidden style="max-width:100%;height:auto"></div>`).join("");
+  const photos = (submission.photo_attachments || []).map(photo => `<div class="arsheet-photo-saved"><button class="cmbtn sm" type="button" data-monthly-photo="${esc(photo.id)}">${S.originalPhoto} · ${esc(arMonthlyPartNumber(problem,photo.part_id))}</button><p class="arinfo" hidden></p><img class="armonthly-original" alt="${S.originalPhoto} · ${esc(arMonthlyPartNumber(problem,photo.part_id))}" hidden style="max-width:100%;height:auto"></div>`).join("");
   if (!sheet?.parts) return `<pre class="aranswer">${esc(submission.answer)}</pre>`+photos;
-  return `<div class="arsheet-saved">${sheet.parts.filter(part => part.answer || part.working).map(part => `<section><h4>${esc(part.id)}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}${photos}</div>`;
+  return `<div class="arsheet-saved">${sheet.parts.filter(part => part.answer || part.working).map(part => `<section><h4>${esc(arMonthlyPartNumber(problem,part.id))}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}${photos}</div>`;
 }
 function arBindMonthlyPhotos(root, alive) {
   const buttons = [...(root.querySelectorAll?.("[data-monthly-photo]") || [])];
@@ -796,10 +807,10 @@ async function arProblem(root, alive, id,preloaded) {
     <div class="arcrumb"><a href="#/monthly/${esc(arPeriodId(p))}">← ${T.weekH} ${esc(arPeriodLabel(p))}</a></div>
     <div class="arprob">
       <div class="arph"><span class="arno">${p.no}</span><div><h1>${esc(p.title)}</h1>
-        <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
+        <div class="armeta">${arProblemKindBadge(p)}<span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span>${p.answerSheet&&Number.isFinite(p.best)?`<span>${T.best} ${p.best} / ${p.points}${T.pts}</span>`:""}<span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
-      ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(c.id)}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
+      ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
       ${p.answerSheet?.parts?.length ? arMonthlyAnswerHtml(p,ocrOn) : `<h3>${T.answer}</h3>
@@ -822,7 +833,7 @@ async function arProblem(root, alive, id,preloaded) {
     ${p.mine && p.mine.length ? `<div class="arpanel"><h3>${T.mine}</h3>${p.mine.map((s) => `
       <details class="arsub"><summary><b>${s.status === "graded" ? s.score + " / " + p.points : T[s.status] || s.status}</b>
         <span>${cmFull(s.created_at)}</span>${s.via_ocr ? `<small>${T.viaOcr}</small>` : ""}${s.in_week ? "" : `<small>${T.practice}</small>`}</summary>
-        ${arMonthlySavedAnswer(s)}${arResult(s, p)}</details>`).join("")}</div>` : ""}
+        ${arMonthlySavedAnswer(s,p)}${arResult(s, p)}</details>`).join("")}</div>` : ""}
     <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arPublishedText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
   arMath(root);
   arBindMonthlyPhotos(root,alive);

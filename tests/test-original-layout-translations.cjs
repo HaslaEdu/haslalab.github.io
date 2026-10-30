@@ -72,7 +72,7 @@ for (const item of published) {
     assert.ok(identity.every(row => row.entire_page_changed_pixels === 0));
     continue;
   }
-  if (item.audit_schema === 'native-outlines-and-control') {
+  if (['native-outlines-and-control', 'legacy-fixed-native'].includes(item.audit_schema)) {
     assert.equal(qa.output_sha256, item.sha256);
     assert.equal(qa.pages, item.pages);
     assert.equal(qa.page_audits.length, item.pages);
@@ -80,6 +80,16 @@ for (const item of published) {
     assert.equal(qa.visual_review_required, false);
     assert.deepEqual(qa.visual_review.reviewed_pages, Array.from({length: item.pages}, (_, i) => i + 1));
     for (const page of qa.page_audits) {
+      if (item.audit_schema === 'legacy-fixed-native') {
+        for (const key of ['native_glyphs_changed', 'protected_glyphs_selected_for_erasure', 'unreviewed_english_prose_runs']) assert.deepEqual(page[key], []);
+        for (const key of ['changed_pixels_in_native_glyph_neighborhood', 'changed_pixels_outside_prose', 'final_vs_reviewed_proof_changed_pixels', 'equation_images']) assert.equal(page[key], 0);
+        for (const key of ['source_font_programs_and_names_unchanged', 'source_images_bytes_and_rects_unchanged', 'source_vector_drawings_unchanged']) assert.equal(page[key], true);
+        assert.equal(page.autoshrink, false);
+        assert.equal(page.reflow, false);
+        const plan = fs.readFileSync(path.join(root, page.plan.replaceAll('\\', '/')));
+        assert.equal(crypto.createHash('sha256').update(plan).digest('hex'), page.plan_sha256);
+        continue;
+      }
       for (const key of ['outside_prose_changed_pixels', 'missing_or_moved_native_glyphs', 'missing_or_moved_math_glyphs', 'original_math_ink_changed_pixels', 'original_native_ink_changed_pixels', 'original_figure_ink_changed_pixels', 'source_to_suppression_control_native_ink_changed_pixels', 'korean_intrusion_on_native_ink_pixels', 'final_vs_reviewed_proof_changed_pixels']) assert.equal(page[key], 0, `${item.file}: ${key}`);
       for (const key of ['native_images_unchanged', 'native_vector_drawings_unchanged', 'suppression_control_native_geometry_unchanged', 'suppression_control_source_font_programs_unchanged', 'final_vs_reviewed_proof_glyph_geometry_identical', 'original_font_sizes_and_baselines_identical']) assert.equal(page[key], true);
       const plan = fs.readFileSync(path.join(root, page.plan.replaceAll('\\', '/')));
