@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
 export const QUEUES = ['haslalab-lab-jobs-dead', 'haslalab-lab-jobs'];
-const alreadyExists = result => /\bqueue\b[^\n]*\balready exists\b/i.test(result.output || '') &&
+const alreadyExists = result => /\bqueue\b[^\n]*\balready (?:exists|taken)\b/i.test(result.output || '') &&
   !/authentication error|permission denied|unauthorized|forbidden|\b403\b|\b401\b/i.test(result.output || '');
 
 export async function provision(run, log = console.log) {
