@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -39,7 +39,13 @@ jobs:
       - run: node --test test-community-latency.mjs test-account-latency.mjs
       - run: node --check src/edge-gateway.js && node --test test-edge-gateway.mjs
       - run: node --test test-review-mode.mjs ../tests/test-study-navigation.cjs ../tests/test-paper-languages.cjs ../tests/test-contest-grading-ui.cjs ../tests/test-lab-review-records.cjs ../tests/test-external-paper-viewer.cjs ../tests/test-eotvos-archive.cjs ../tests/test-physics-archive.cjs
-      - run: node --test test-provision-jobs.mjs
+      - run: node --test test-provision-jobs.mjs test-replication-provision.mjs
+      # Existing token only; permission denial reports unverified and never enables the read lane.
+      - name: Verify D1 read replication
+        id: replication
+        run: node provision-replication.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - run: node provision-jobs.mjs
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
