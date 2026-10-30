@@ -3,9 +3,9 @@ name: Site performance contracts
 on:
   push:
     branches: [main]
-    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "sim/exam.html", "sim/result-comparison.js", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", ".github/workflows/site-performance.yml"]
   pull_request:
-    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "sim/exam.html", "sim/result-comparison.js", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", ".github/workflows/site-performance.yml"]
 
 permissions:
   contents: read
@@ -19,4 +19,8 @@ jobs:
         with:
           node-version: 22
       - run: node tools/build-site-catalogue.cjs --check
-      - run: node --test tests/test-site-runtime.cjs tests/test-exam-network.cjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/build-result-comparisons.py --check
+      - run: node --test tests/test-site-runtime.cjs tests/test-exam-network.cjs tests/test-result-comparison.cjs tests/test-*-results.cjs

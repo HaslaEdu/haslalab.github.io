@@ -164,7 +164,8 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 - `sim/sheets.html`: 시작 전에 인쇄하는 답안지. 대회가 공개한 **공식 Answer sheet · Working sheet**가 있으면 그것을 그대로 엽니다(`sim/sheets/`, `tools/labofficial.py` — 비어 있는 귀퉁이에만 스캐너용 검은 사각형을 덧찍음, 목록은 `sim/sheets/index.json`). 공개되지 않은 것만 HaslaLab 양식(문항 칸 · 측정표 · 그래프 용지, 문항 번호와 배점은 `sim/labsheets.json` / `tools/labsheets.py`)으로 인쇄합니다. 문제지는 여기 없습니다. 공식 시트의 머리글 코드(A1-3 = 실험 1 답안지 3쪽, W2-1 = 실험 2 연습지)는 읽을 때 실험 · 시트로 옮겨집니다.
 - `sim/exam.html`: 문제지는 시험 중에만 «문제지 열기»로 책상 옆에 pdf.js로 그려 보여 줍니다(내려받기 · 인쇄 버튼 없음, 시험 창 인쇄는 빈 쪽).
 - `sim/scan.html`: 실시간 카메라가 종이를 찾아 테두리를 그리고, 네 사각형이 1초쯤 멈추면 저절로 찍습니다(`labscan/scanner.js`의 `findSheetMarkersGray`).
-- 성적표와 확인증: 실험 점수를 그해 공개된 실험 점수(`sim/labmedals.json`, `tools/labmedals.py` — IPhO 비공식 기록과 APhO 공식 결과, 이름 없이 점수와 메달 수만)에 넣어 «실험만으로 본 메달권»을 추정합니다(`sim/labmedal.js`).
+- 성적표와 확인증: `sim/result-comparison.js`가 `sim/results/<대회>.json`의 공개 점수·수상 기준과 비교합니다. 같은 연도·전체 문항·공식 만점이 일치한 라운드만 자동 비교하며, 일부 문항을 전체 시험으로 환산하지 않습니다. 메달 기준은 그 수상을 결정하는 전체 점수에만 적용합니다. 이론·실험 합산 대회는 다른 라운드 점수를 입력해 총점을 참고 비교할 수 있습니다. 입력 점수는 서버에 저장하지 않습니다. 자료가 수상자 일부만 포함하면 전체 참가자 순위·상위 비율로 표시하지 않습니다. 데이터 출처와 수록 범위는 `tools/results/README.md`에 설명되어 있습니다.
+- `GET /lab/sessions/:id`와 선택한 성적표의 bootstrap은 `sample_standing`을 반환합니다. 같은 대회·연도·문항·배점·채점 기준에서 1인 첫 채점 결과를 표본으로 삼고 실전/채점·첨삭은 분리합니다. 재응시는 본인의 현재 점수를 다른 사람의 첫 채점과 비교하며, 동점은 공동 순위입니다. 표본 1명일 때는 상위 비율을 표시하지 않습니다. 정성 첨삭과 점수가 없는 기록은 표본에서 제외합니다.
 
 **스캔 AI 비교** (`sim/scanbench.html`, 관리자만): 휴대폰으로 찍은 A4 사진을 연결된 AI마다 가장 싼 비전 모델(Gemini `gemini-flash-lite-latest`, OpenAI `gpt-5-nano`, Claude `claude-haiku-5-5` — `BENCH_*_MODEL`로 바꿈, Claude 키는 `ANTHROPIC_API_KEY` 또는 `CLAUDE_API_KEY`)과 Upstage(페이지 탐지가 없어 글자 범위로 대신)에 보내 종이 네 귀퉁이를 찾게 하고, HaslaLab 기기 안 탐지와 함께 관리자가 표시한 정답 귀퉁이와의 오차로 순위를 매깁니다. 사진과 결과는 `scan_bench` 표(처음 쓸 때 저절로 만들어짐)에 남습니다. API: `POST/GET /api/admin/lab/scanbench`, `PATCH /api/admin/lab/scanbench/:id {gt}`.
 
