@@ -10,11 +10,14 @@ from pdf_original_text_ops import cmap,widths,source_code_bytes
 
 def streams(contents):return list(contents)if isinstance(contents,pikepdf.Array)else[contents]
 
-def audit(pdf_path,control_folder):
+def audit(pdf_path,control_folder,control_stems=None):
     results=[]
     with pikepdf.open(pdf_path)as pdf:
+        stems=list(control_stems)if control_stems is not None else[f'page{i+1}'for i in range(len(pdf.pages))]
+        if len(stems)!=len(pdf.pages)or len(set(stems))!=len(stems)or any(not isinstance(stem,str)or not stem or Path(stem).name!=stem or '/'in stem or '\\'in stem for stem in stems):
+            raise ValueError('Control stems must uniquely identify one local proof per output page')
         for i,page in enumerate(pdf.pages):
-            control=control_folder/f'page{i+1}.control.pdf'
+            control=control_folder/f'{stems[i]}.control.pdf'
             with pikepdf.open(control)as source:
                 originals={s.read_bytes()for s in streams(source.pages[0].Contents)}
                 source_aliases=set(source.pages[0].Resources.Font.keys())
@@ -54,7 +57,7 @@ def audit(pdf_path,control_folder):
     return report
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('pdf',type=Path);p.add_argument('controls',type=Path);p.add_argument('--output',required=True,type=Path);a=p.parse_args()
-    result=audit(a.pdf,a.controls);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf8')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('pdf',type=Path);p.add_argument('controls',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--control-stems',nargs='+');a=p.parse_args()
+    result=audit(a.pdf,a.controls,a.control_stems);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps({k:v for k,v in result.items()if k!='page_audits'},ensure_ascii=False,indent=2))
     raise SystemExit(bool(result['nonpositive_or_missing_width_count']))

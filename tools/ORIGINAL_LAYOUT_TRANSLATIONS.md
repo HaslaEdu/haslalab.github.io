@@ -117,3 +117,8 @@ rounding limit. MuPDF and Poppler verify native ink and non-language geometry.
 The English primary is `CPhO_2022_T_EN.pdf`, with the old BAUPC URL retained as
 a byte-identical alias. Rebuild the site catalogue only after Release uploads
 finish, since its version includes the final PDF manifest.
+
+The 2023 solution source contains 62 pages. The reviewed Korean edition selects
+English physical pages 25–43, keeping their original printed page numbers. Its
+explicit control-stem mapping audits those source-page controls against all
+19 final pages; the shared default mapping is unchanged.

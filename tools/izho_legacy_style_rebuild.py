@@ -120,7 +120,7 @@ def rebuild(year,kind):
         source_page_selection_note=data[0].get('source_page_selection_note'),
         assembly='pikepdf native page append',no_autoshrink=True,no_equation_rasterization=True,no_paragraph_reflow=True,
         no_added_editorial_notes=True,page_audits=audits,visual_review_required=True)
-    ascii_result=ascii_audit(target,scratch)
+    ascii_result=ascii_audit(target,scratch,[proof.stem for proof in proofs])
     (folder/'native-ascii-audit.json').write_text(json.dumps(ascii_result,ensure_ascii=False,indent=2),encoding='utf8')
     if ascii_result['nonpositive_or_missing_width_count']:raise ValueError('New native prose has an unsupported PDF Width')
     report['new_native_ascii_codes_checked']=ascii_result['ascii_codes_checked']
