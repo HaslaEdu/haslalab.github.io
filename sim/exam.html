@@ -206,7 +206,7 @@
 <script src="exam-network.js"></script>
 <script>
 "use strict";
-const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";
+const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 /* the exam's length (examdur.js; the server's clock has the last word) */
 const THY = new URLSearchParams(location.search).get("m") === "t";        // a theory exam
@@ -457,7 +457,7 @@ function bindPaperLanguage() {
 }
 
 /* the community server: the same account and token as the site (same origin, same localStorage) */
-function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} return (o || COMMUNITY_API).replace(/\/+$/, ""); }
+function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} const base=(o || COMMUNITY_API).replace(/\/+$/, "");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; }
 function tok() { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } }
 const EXAM_NETWORK=window.HLExamNetwork,transport=EXAM_NETWORK.createTransport({getBase:apiBase,getToken:tok});
 let requestEpoch=0;

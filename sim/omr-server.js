@@ -1,6 +1,7 @@
 /* Server regrades answers; browser scores are never accepted as ranking data. */
 (function(){
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const apiBase=()=>{let value='';try{value=localStorage.getItem('hlCmApi')||'';}catch(e){}const base=(value||'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?'https://haslalab-community-edge.haslalab.workers.dev':base;};
   window.OmrServer={async mount({container,run,comp,year,part,count,lang}){
     if(comp!=='kphe'||!run.done)return;
     const ko=lang!=='en',card=document.createElement('div');card.className='card';
@@ -12,7 +13,7 @@
       status.textContent=ko?'서버에서 채점·저장하는 중…':'Grading and saving on the server…';
       const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
       try{
-        const response=await fetch('https://haslalab-community.haslalab.workers.dev/api/omr/attempts',{
+        const response=await fetch(apiBase()+'/api/omr/attempts',{
           method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},signal:controller.signal,
           body:JSON.stringify({exam_key:`kphe:${year}:${part}`,client_id:run.id,answers:Array.from({length:count},(_,i)=>run.marks[i+1]||null)})});
         const data=await response.json();if(!response.ok)throw Error(data.error||String(response.status));

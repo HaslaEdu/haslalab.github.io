@@ -8351,7 +8351,7 @@ function startHero(){
    개념글 (DC Inside, Arca), a card view with up/down votes and threaded
    replies (Reddit).
    ══════════════════════════════════════════════════════════════ */
-const COMMUNITY_API = "https://haslalab-community.haslalab.workers.dev";   // Cloudflare Worker in /community
+const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 /* The community's live chat is the real «Physics Olympiads» Discord server (olympiad students from everywhere).
@@ -8513,7 +8513,8 @@ try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }cat
 
 function cmBase(){
   let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
-  return (o||COMMUNITY_API).replace(/\/+$/,"");
+  const base=(o||COMMUNITY_API).replace(/\/+$/,"");
+  return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;
 }
 const cmRequestCache=window.HL_RUNTIME?.createRequestCache()||null;
 function cmInvalidate(){cmRequestCache?.invalidate();cm.boards=null;}

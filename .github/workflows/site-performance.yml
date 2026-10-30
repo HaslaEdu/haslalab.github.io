@@ -3,9 +3,9 @@ name: Site performance contracts
 on:
   push:
     branches: [main]
-    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/*.js", "sim/*.html", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
   pull_request:
-    paths: ["index.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/exam-network.js", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
+    paths: ["index.html", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "catalogue/**", "sim/*.js", "sim/*.html", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", ".github/workflows/site-performance.yml"]
 
 permissions:
   contents: read
@@ -19,4 +19,4 @@ jobs:
         with:
           node-version: 22
       - run: node tools/build-site-catalogue.cjs --check
-      - run: node --test tests/test-site-runtime.cjs tests/test-exam-network.cjs
+      - run: node --test tests/test-site-runtime.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs
