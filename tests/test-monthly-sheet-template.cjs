@@ -48,6 +48,41 @@ test('the astronomy sheet prints letter labels while keeping existing answer and
   assert.equal(getMonthlyProblemRound({answerSheet:{round:'experiment'}}),'experiment');
 });
 
+test('native theory forms prompt for the actual outputs and keep all response cells blank',async()=>{
+  const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
+  for(const id of [4,5,6,7]){
+    const sheet=getMonthlyAnswerSheet(id);
+    for(const p of sheet.parts){
+      assert.ok(p.results?.length,'each theory part names its requested outputs');
+      for(const field of p.results){assert.ok(field.label_ko&&field.label_en);assert.ok(!('value'in field));assert.ok(!('answer'in field));}
+    }
+  }
+  assert.deepEqual(getMonthlyAnswerSheet(4).parts.find(p=>p.id==='c').results.map(r=>r.label_ko),['허용 파수 q_s','ω(0)','ω_max','이웃 간 위상차']);
+  assert.equal(getMonthlyAnswerSheet(6).parts.find(p=>p.id==='B.4').tables[0].rows.length,8);
+  assert.equal(getMonthlyAnswerSheet(7).parts.find(p=>p.id==='21a').tables[0].rows.length,3);
+  assert.equal(getMonthlyAnswerSheet(7).parts.find(p=>p.id==='21b').tables[0].rows.length,5);
+  const mutable=getMonthlyAnswerSheet(6);mutable.parts[6].tables[0].columns[0].label_ko='mutated';mutable.parts[0].results[0].label_en='mutated';
+  assert.notEqual(getMonthlyAnswerSheet(6).parts[6].tables[0].columns[0].label_ko,'mutated');
+  assert.notEqual(getMonthlyAnswerSheet(6).parts[0].results[0].label_en,'mutated');
+});
+
+test('custom experiment worksheets render seven-row measurement tables and real printable graph grids',async()=>{
+  const {buildAnswerPages,buildResponseGraph}=await import('../sim/monthly-answer-sheet.mjs');
+  const sheet={version:'review',pages:[['A.1']],parts:[{id:'A.1',label_ko:'측정',label_en:'Measurement',points:100,
+    results:[{label_ko:'기울기',label_en:'Slope',unit:'m/s'}],
+    tables:[{title_ko:'7회 반복 측정',title_en:'Seven repeated measurements',columns:[{label_ko:'횟수',label_en:'Trial'},{label_ko:'측정값',label_en:'Reading'}],rows:Array.from({length:7},(_,i)=>[String(i+1),''])}],
+    graphs:[{title_ko:'측정 그래프',title_en:'Measurement graph',x_label_ko:'x (m)',x_label_en:'x (m)',y_label_ko:'t (ms)',y_label_en:'t (ms)',columns:28,rows:20,heightMm:65}]}]};
+  const html=buildAnswerPages({id:'draft-5',no:5,title:'실험'},sheet,'ko');
+  assert.equal((html.match(/<tr>/g)||[]).length,8,'one heading row and seven blank measurement rows');
+  assert.equal((html.match(/<line /g)||[]).length,50,'the grid is printable vector ink rather than a CSS background');
+  assert.match(html,/class="result-field"/);assert.match(html,/\[m\/s\]/);
+  assert.match(html,/x \(m\)/);assert.match(html,/t \(ms\)/);
+  assert.match(html,/data-part="A\.1"/);assert.match(html,/HL-MONTHLY-draft-5/);
+  const escaped=buildResponseGraph({title_en:'<script>',x_label_en:'<x>',y_label_en:'&y',heightMm:Infinity,columns:NaN,rows:Infinity},'en');
+  assert.match(escaped,/&lt;script&gt;/);assert.match(escaped,/&lt;x&gt;/);assert.match(escaped,/&amp;y/);
+  assert.ok(!/Infinity|NaN|<script/.test(escaped));
+});
+
 test('the printable browser entry resolves a native answer sheet after fetching its actual database ID',async()=>{
   const nodes=Object.fromEntries(['back','print','message','help','sheets'].map(id=>[id,{textContent:'',innerHTML:'',hidden:false,disabled:true,addEventListener(){}}]));
   const previous={document:global.document,location:global.location,fetch:global.fetch};
