@@ -168,7 +168,10 @@ def native_image_programs(path,page_number):
             for name,child in resources.get('/XObject',{}).items():
                 if str(child.get('/Subtype'))=='/Image':
                     mask=child.get('/SMask');alpha=digest(mask)if isinstance(mask,pikepdf.Stream)else None
-                    result.append((prefix,str(name),digest(child),alpha,int(child.Width),int(child.Height)))
+                    raw=hashlib.sha256(child.read_raw_bytes()).hexdigest()
+                    alpha_raw=hashlib.sha256(mask.read_raw_bytes()).hexdigest()if isinstance(mask,pikepdf.Stream)else None
+                    result.append((prefix,str(name),digest(child),alpha,int(child.Width),int(child.Height),
+                        raw,str(child.get('/Filter')),alpha_raw,str(mask.get('/Filter'))if isinstance(mask,pikepdf.Stream)else None))
                 elif str(child.get('/Subtype'))=='/Form'and '/Resources'in child:
                     if child.objgen in ancestors:raise ValueError('Recursive native image resource graph')
                     walk(child.Resources,prefix+'/'+str(name),ancestors+(child.objgen,))
@@ -275,7 +278,7 @@ def build(plan_path,target):
     if overflows:
         target.with_suffix('.overflow.json').write_text(json.dumps(overflows,ensure_ascii=False,indent=2),'utf8');outdoc.close()
         raise ValueError('Fixed-size Korean overflows: '+json.dumps(overflows,ensure_ascii=False))
-    outdoc.save(target,garbage=4,deflate=True);outdoc.close()
+    outdoc.save(target,garbage=4,deflate=False);outdoc.close()
     spec=dict(source_page=pi+1,proof_page=1,allowed_rects=allowed,erased_glyph_origins=[list(c['origin'])for c in selected if c['c'].strip()],
         protected_glyph_origins=[list(c['origin'])for c in protected],protected_glyphs=protected,
         protected_rects=protected_image_rects(original,page,data))

@@ -66,6 +66,14 @@ in that PDF's actual `/Widths` or `/W` array. Having the glyph in the embedded
 font program alone is insufficient. The 2026 audit records this separately in
 `native-ascii-audit.json`.
 
+The 2021–2022 editions use `python tools/izho_2021_2022_style_ready.py YEAR T`
+(or `TS`). Finalization with `--ready` verifies the external visual-review
+record against every page-proof hash and the joined-page pixel comparison.
+Publication checks that record independently. Native Identity CIDs missing
+from ToUnicode remain read-only and require a matching embedded font and GID.
+Compressed and uncompressed image/soft-mask streams retain their original
+bytes and filters; saving does not recompress original streams.
+
 For CPhO 2007, download the unchanged Chinese original
 `CPhO_2007_T_ZH.pdf` from the `pdf-cpho` release into `tmp/source-audit/`.
 Its SHA-256 is

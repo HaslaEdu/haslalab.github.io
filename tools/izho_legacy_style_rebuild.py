@@ -14,6 +14,7 @@ from pdf_original_style_fonts import FONTS
 from pdf_original_style_audit import glyphs,key
 from pdf_original_text_ops import suppress_prose
 from izho_native_ascii_audit import audit as ascii_audit
+from izho_bitmap_labels import apply as bitmap_labels
 
 ROOT=legacy.ROOT
 
@@ -21,7 +22,11 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def hashes(plan):
     paths=[plan,Path(__file__).resolve(),ROOT/'tools/izho_early_fixed_style.py',ROOT/'tools/pdf_original_text_ops.py',
-           ROOT/'tools/pdf_original_style_audit.py',ROOT/'tools/pdf_original_style_fonts.py',*FONTS.values()]
+           ROOT/'tools/pdf_original_style_audit.py',ROOT/'tools/pdf_original_style_fonts.py',
+           ROOT/'tools/izho_native_ascii_audit.py',*FONTS.values()]
+    if json.loads(plan.read_text('utf8')).get('raster_language_overlays'):paths.append(ROOT/'tools/izho_bitmap_labels.py')
+    if any(row.get('protect_features')for row in json.loads(plan.read_text('utf8')).get('raster_language_overlays',[])):
+        paths.append(ROOT/'tools/izho_bitmap_features.py')
     return {str(p.relative_to(ROOT)):sha(p)for p in paths}
 
 def check(plan):
@@ -52,8 +57,10 @@ def valid(proof,plan):
     if not proof.exists()or not path.exists():return False
     qa=json.loads(path.read_text('utf8'))
     return qa.get('authoring_sha256')==hashes(plan)and qa.get('proof_sha256')==sha(proof)and not any(qa.get(k)for k in[
-        'native_glyphs_changed','protected_glyphs_selected_for_erasure','changed_pixels_outside_prose','changed_pixels_in_native_glyph_neighborhood'])and all(qa.get(k)is True for k in[
-        'source_font_programs_and_names_unchanged','source_images_bytes_and_rects_unchanged','source_vector_drawings_unchanged'])
+        'native_glyphs_changed','protected_glyphs_selected_for_erasure','changed_pixels_outside_prose','changed_pixels_in_native_glyph_neighborhood',
+        'changed_pixels_outside_raster_language_regions','changed_pixels_in_visible_raster_graphics'])and all(qa.get(k)is True for k in[
+        'source_font_programs_and_names_unchanged','source_images_bytes_and_rects_unchanged'])and(
+        qa.get('source_original_vector_drawings_preserved',qa.get('source_vector_drawings_unchanged'))is True)
 
 def build(plan,proof):
     data=json.loads(plan.read_text('utf8'))
@@ -63,7 +70,11 @@ def build(plan,proof):
     for spec in data['slots']:selected.extend(legacy.slot_source(spec,runs)[1])
     raw,removed=suppress_prose(source,data['page']+1,selected);doc.close()
     proof.parent.mkdir(parents=True,exist_ok=True);proof.with_suffix('.control.pdf').write_bytes(raw)
-    qa=legacy.build(plan,proof);qa['authoring_sha256']=hashes(plan)
+    labels=data.get('raster_language_overlays',[])
+    base=proof.with_name(proof.stem+'.base.pdf')if labels else proof
+    qa=legacy.build(plan,base)
+    if labels:qa.update(bitmap_labels(source,data['page']+1,base,proof,labels))
+    qa['authoring_sha256']=hashes(plan)
     proof.with_suffix('.qa.json').write_text(json.dumps(qa,ensure_ascii=False,indent=2),encoding='utf8')
     return qa
 
@@ -77,7 +88,14 @@ def rebuild(year,kind):
     if not plans:raise ValueError('No reviewed plans')
     data=[json.loads(p.read_text('utf8'))for p in plans]
     source=legacy.ensure_reviewed_source(data[0],plans[0]);doc=fitz.open(source)
-    if len(doc)!=len(plans)or [d['page']for d in data]!=list(range(len(doc))):raise ValueError('Complete ordered plans required')
+    selection=data[0].get('source_page_selection',list(range(len(doc))))
+    if not selection or selection!=sorted(set(selection))or any(type(i)is not int or not 0<=i<len(doc)for i in selection):
+        raise ValueError('Source-page selection must be an explicit ordered set of valid source pages')
+    if 'source_page_selection'in data[0]:
+        if not data[0].get('source_page_selection_note')or any(d.get('source_page_selection')!=selection for d in data):
+            raise ValueError('A reviewed multilingual source selection and its explanation must be present in every plan')
+    if len(selection)!=len(plans)or [d['page']for d in data]!=selection:raise ValueError('Complete ordered plans required')
+    source_count=len(doc)
     doc.close();scratch=ROOT/'tmp/original-style-repair'/str(year)/kind;scratch.mkdir(parents=True,exist_ok=True)
     proofs=[]
     for plan in plans:
@@ -89,7 +107,7 @@ def rebuild(year,kind):
     with pikepdf.Pdf.new()as joined:
         for proof in proofs:
             with pikepdf.open(proof)as src:joined.pages.append(src.pages[0])
-        joined.save(target)
+        joined.save(target,compress_streams=False)
     final=fitz.open(target);audits=[]
     for i,(plan,proof)in enumerate(zip(plans,proofs)):
         single=fitz.open(proof);diff=int(np.any(rgb(single[0])!=rgb(final[i]),axis=2).sum())
@@ -98,6 +116,8 @@ def rebuild(year,kind):
         qa=json.loads(proof.with_suffix('.qa.json').read_text('utf8'));qa.pop('placements')
         qa['final_vs_reviewed_proof_changed_pixels']=diff;qa['final_page']=i+1;audits.append(qa);single.close()
     final.close();report=dict(output=str(target.relative_to(ROOT)),output_sha256=sha(target),pages=len(plans),
+        source_sha256=sha(source),source_page_count=source_count,source_pages_1based=[i+1 for i in selection],
+        source_page_selection_note=data[0].get('source_page_selection_note'),
         assembly='pikepdf native page append',no_autoshrink=True,no_equation_rasterization=True,no_paragraph_reflow=True,
         no_added_editorial_notes=True,page_audits=audits,visual_review_required=True)
     ascii_result=ascii_audit(target,scratch)

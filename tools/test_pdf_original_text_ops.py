@@ -1,6 +1,9 @@
 """Native-layout regressions for PDF prose suppression, without network data."""
 from pathlib import Path
 import unittest
+import zlib
+from fontTools.fontBuilder import FontBuilder
+from fontTools.pens.ttGlyphPen import TTGlyphPen
 import pikepdf
 import pymupdf as fitz
 from pdf_original_text_ops import cmap,suppress_prose,native_form_glyphs
@@ -100,5 +103,77 @@ class NativeTextOpsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'No source-native encoding'):
             latin_profile(catalog,'Helvetica','11')
         self.assertEqual(latin_profile(catalog,'Helvetica','XX')['alias'],'helv')
+
+    def test_unmapped_identity_math_cid_is_read_only(self):
+        WORK.mkdir(parents=True,exist_ok=True)
+        builder=FontBuilder(1000,isTTF=True);order=['.notdef','A','x'];builder.setupGlyphOrder(order)
+        builder.setupCharacterMap({65:'A',120:'x'});glyphs={}
+        for name in order:
+            pen=TTGlyphPen(None);pen.moveTo((40,0));pen.lineTo((300,700));pen.lineTo((560,0));pen.closePath();glyphs[name]=pen.glyph()
+        builder.setupGlyf(glyphs);builder.setupHorizontalMetrics({name:(600,0)for name in order})
+        builder.setupHorizontalHeader(ascent=800,descent=-200)
+        builder.setupNameTable(dict(familyName='NativeCIDFixture',styleName='Regular',uniqueFontIdentifier='NativeCIDFixture',fullName='NativeCIDFixture',psName='NativeCIDFixture'))
+        builder.setupOS2(sTypoAscender=800,sTypoDescender=-200,usWinAscent=800,usWinDescent=200);builder.setupPost();builder.setupMaxp()
+        fontpath=WORK/'native-cid-fixture.ttf';builder.save(fontpath)
+        doc=fitz.open();page=doc.new_page();page.insert_font(fontname='Test',fontfile=str(fontpath));page.insert_text((72,72),'Ax',fontname='Test',fontsize=12)
+        initial=WORK/'native-cid-initial.pdf';doc.save(initial);doc.close()
+        source=WORK/'unmapped-identity.pdf'
+        with pikepdf.Pdf.open(initial)as pdf:
+            font=pdf.pages[0].Resources.Font.Test
+            font.DescendantFonts[0].CIDToGIDMap=pikepdf.Name.Identity
+            # The real glyph for A remains embedded, but the source's CMap
+            # deliberately has no Unicode destination for CID1.
+            font.ToUnicode=pdf.make_stream(b'begincmap 1 begincodespacerange <0000> <FFFF> endcodespacerange 1 beginbfchar <0002> <0078> endbfchar endcmap')
+            pdf.save(source)
+        original=fitz.open(source);traces=original[0].get_texttrace();trace=traces[0]
+        unknown,nextchar=trace['chars'];self.assertEqual(unknown[:2],(65533,1))
+        selected=[dict(c='x',font=trace['font'],size=trace['size'],origin=nextchar[2],bbox=nextchar[3])]
+        payload,count=suppress_prose(source,1,selected);self.assertEqual(count,1)
+        target=WORK/'unmapped-identity-suppressed.pdf';target.write_bytes(payload)
+        result=audit(source,target,dict(source_page=1,erased_glyph_origins=[nextchar[2]],allowed_rects=[[nextchar[3][0]-1,nextchar[3][1]-1,nextchar[3][2]+1,nextchar[3][3]+1]]))
+        self.assertEqual(result['native_glyphs_changed'],[]);self.assertEqual(result['changed_pixels_in_native_glyph_neighborhood'],0);self.assertEqual(result['changed_pixels_outside_prose'],0)
+        with pikepdf.Pdf.open(source)as a,pikepdf.Pdf.open(target)as b:
+            af=a.pages[0].Resources.Font.Test;bf=b.pages[0].Resources.Font.Test
+            self.assertEqual(af.ToUnicode.read_bytes(),bf.ToUnicode.read_bytes())
+            self.assertEqual(af.DescendantFonts[0].FontDescriptor.FontFile2.read_bytes(),bf.DescendantFonts[0].FontDescriptor.FontFile2.read_bytes())
+        # rawdict may expose chr(CID), whereas texttrace exposes FFFD. Both
+        # spellings must reject erasure of the unidentified native glyph.
+        for char in ['\ufffd','\x01']:
+            with self.assertRaisesRegex(ValueError,'unmapped native Identity CID'):
+                suppress_prose(source,1,[dict(c=char,font=trace['font'],size=trace['size'],origin=unknown[2],bbox=unknown[3])])
+        original.close()
+
+    def test_raw_and_flate_image_alpha_streams_are_unchanged(self):
+        base=fixture();source=WORK/'image-streams.pdf'
+        with pikepdf.Pdf.open(base)as pdf:
+            page=pdf.pages[0]
+            for name,compressed in [('RawImage',False),('FlateImage',True)]:
+                color=b'\x80\x40';alpha=b'\xff\x00\xaa\xff'
+                mask=pdf.make_stream(zlib.compress(alpha)if compressed else alpha)
+                mask.Type=pikepdf.Name.XObject;mask.Subtype=pikepdf.Name.Image
+                mask.Width=2;mask.Height=2;mask.BitsPerComponent=8;mask.ColorSpace=pikepdf.Name.DeviceGray
+                image=pdf.make_stream(zlib.compress(color)if compressed else color)
+                image.Type=pikepdf.Name.XObject;image.Subtype=pikepdf.Name.Image
+                image.Width=2;image.Height=2;image.BitsPerComponent=1;image.ColorSpace=pikepdf.Name.DeviceGray;image.SMask=mask
+                if compressed:mask.Filter=pikepdf.Name.FlateDecode;image.Filter=pikepdf.Name.FlateDecode
+                page.Resources.XObject['/'+name]=image
+            page.Contents=pikepdf.Array([page.Contents,pdf.make_stream(b'q 20 0 0 20 300 400 cm /RawImage Do Q q 20 0 0 20 350 400 cm /FlateImage Do Q')])
+            pdf.save(source,compress_streams=False)
+        doc=fitz.open(source);stroke=next(t for t in doc[0].get_texttrace()if t['type']==1)
+        selected=[dict(c=chr(cp),font=stroke['font'],size=stroke['size'],origin=origin,bbox=bbox)for cp,gid,origin,bbox in stroke['chars']if not chr(cp).isspace()]
+        payload,count=suppress_prose(source,1,selected);self.assertEqual(count,len('Explain'))
+        target=WORK/'image-streams-suppressed.pdf';target.write_bytes(payload)
+        with pikepdf.Pdf.open(source)as a,pikepdf.Pdf.open(target)as b:
+            for name in ['/RawImage','/FlateImage']:
+                left=a.pages[0].Resources.XObject[name];right=b.pages[0].Resources.XObject[name]
+                for before,after in [(left,right),(left.SMask,right.SMask)]:
+                    self.assertEqual(before.read_raw_bytes(),after.read_raw_bytes());self.assertEqual(before.read_bytes(),after.read_bytes())
+                    self.assertEqual(str(before.get('/Filter')),str(after.get('/Filter')))
+            self.assertEqual(len(a.pages[0].Resources.XObject.RawImage.read_raw_bytes()),2)
+            self.assertIsNone(a.pages[0].Resources.XObject.RawImage.get('/Filter'))
+            self.assertEqual(str(a.pages[0].Resources.XObject.FlateImage.Filter),'/FlateDecode')
+        result=audit(source,target,dict(source_page=1,erased_glyph_origins=[c['origin']for c in selected],allowed_rects=[[c['bbox'][0]-2,c['bbox'][1]-2,c['bbox'][2]+2,c['bbox'][3]+2]for c in selected]))
+        self.assertEqual(result['native_glyphs_changed'],[]);self.assertEqual(result['changed_pixels_in_native_glyph_neighborhood'],0);self.assertEqual(result['changed_pixels_outside_prose'],0)
+        doc.close()
 
 if __name__=='__main__':unittest.main()

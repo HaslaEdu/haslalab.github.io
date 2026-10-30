@@ -142,7 +142,14 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                 if family not in selected_families and protected_form_glyphs is None:continue
                 enc=str(font.get('/Encoding'))
                 if enc not in ['/Identity-H','/WinAnsiEncoding']:raise ValueError('Unsupported source encoding: '+enc)
-                ws,default=widths(font);info[str(name)]=(family,cmap(font),ws,default,2 if enc=='/Identity-H'else 1)
+                descendant=font.get('/DescendantFonts',[font])[0]
+                descriptor=descendant.get('/FontDescriptor',{})
+                # Some original Word math subsets omit ToUnicode entries for
+                # painted superscript CIDs. Their explicit Identity CID-to-GID
+                # map and embedded TTF can still identify a read-only glyph
+                # against MuPDF's gid/FFFD trace, without inventing Unicode.
+                identity_native=(enc=='/Identity-H'and str(descendant.get('/CIDToGIDMap'))=='/Identity'and '/FontFile2'in descriptor)
+                ws,default=widths(font);info[str(name)]=(family,cmap(font),ws,default,2 if enc=='/Identity-H'else 1,identity_native)
             return info
         replacements={}
         def walk(container,resources,state=('',0,0,1,0),writable=True,ancestors=()):
@@ -165,7 +172,7 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                         # streams/resources must remain completely untouched.
                         walk(child,child.get('/Resources',resources),(active,tc,tw,tf,tr),False,ancestors+(child.objgen,))
                 if operator in ['TJ','Tj'] and active in fontinfo:
-                    family,encoding,ws,default,code_bytes=fontinfo[active];items=list(operands[0])if operator=='TJ'else[operands[0]];new=[]
+                    family,encoding,ws,default,code_bytes,identity_native=fontinfo[active];items=list(operands[0])if operator=='TJ'else[operands[0]];new=[]
                     for item in items:
                         if not isinstance(item,pikepdf.String):new.append(item);continue
                         raw=bytes(item)
@@ -173,7 +180,17 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                         kept=bytearray()
                         for pos in range(0,len(raw),code_bytes):
                             code=int.from_bytes(raw[pos:pos+code_bytes],'big');decoded=encoding.get(code)
-                            if not decoded:raise ValueError(f'Missing Unicode destination {family} {code}')
+                            if not decoded:
+                                qi=counters[family];unknown=queues[family][qi:qi+1]
+                                if not(identity_native and len(unknown)==1 and unknown[0]['trace_gid']==code and unknown[0]['c']=='\ufffd'):
+                                    raise ValueError(f'Missing Unicode destination {family} {code}')
+                                ch=unknown[0]
+                                # rawdict can spell the same unknown glyph as
+                                # chr(CID), so erasure rejection uses geometry,
+                                # independently of its unreliable Unicode.
+                                if any(family_name(c['font'])==family and abs(c['size']-ch['size'])<.0001 and abs(c['origin'][0]-ch['origin'][0])<.0001 and abs(c['origin'][1]-ch['origin'][1])<.0001 for c in selected_glyphs):
+                                    raise ValueError('Selected prose has an unmapped native Identity CID')
+                                decoded='\ufffd'
                             qi=counters[family];cluster=queues[family][qi:qi+len(decoded)]
                             if len(cluster)!=len(decoded):raise ValueError('More encoded CIDs than traced glyphs')
                             counters[family]+=len(decoded);ch=cluster[0]
@@ -214,7 +231,10 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
         for family,count in counters.items():
             if count!=len(queues[family]):raise ValueError('Unconsumed source glyph trace: '+family)
         p.Contents=out.make_stream(replace_show_regions(p,replacements))
-        stream=BytesIO();out.save(stream);native.close();return stream.getvalue(),len(removed)
+        # QPDF's default stream compression rewrites tiny originally raw
+        # image/alpha streams even when every drawing operator is untouched.
+        # Preserve existing raw and Flate payloads in their original state.
+        stream=BytesIO();out.save(stream,compress_streams=False);native.close();return stream.getvalue(),len(removed)
 
 
 def native_form_glyphs(source,page_number):

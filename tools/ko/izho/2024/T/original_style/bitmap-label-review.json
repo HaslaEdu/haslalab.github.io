@@ -1,0 +1,193 @@
+{
+  "year": 2024,
+  "kind": "T",
+  "pages": [
+    {
+      "page": 4,
+      "image": 0,
+      "original_image_digest": "4f60565f1280ca40d0e32da64bb8c8a2",
+      "original_english_label_count": 7,
+      "original_english_labels": [
+        "Main asteroid belt",
+        "Venus",
+        "Mercury",
+        "Mars",
+        "Earth",
+        "Jupiter",
+        "Trojan asteroid"
+      ],
+      "korean_labels": [
+        "주 소행성대",
+        "금성",
+        "수성",
+        "화성",
+        "지구",
+        "목성",
+        "트로이 소행성"
+      ],
+      "mask_legend": {
+        "language_ink": "red",
+        "planet_surfaces": "(40, 230, 90)",
+        "gray_white_asteroid_points": "(40, 210, 255)",
+        "colored_orbits": "(255, 190, 40)"
+      },
+      "mask_notes": "Language ink is colour-filtered only inside reviewed English glyph rectangles. Native feature masks use the explicit planet bounds and colour criteria stored in the plan. The full picture remains separately compared outside the language regions.",
+      "feature_source_pixel_counts": {
+        "planet_surfaces": 2008,
+        "gray_white_asteroid_points": 6146,
+        "colored_orbits": 2053
+      },
+      "native_picture_feature_masks": [
+        {
+          "image": 0,
+          "kind": "planet_surfaces",
+          "source_pixel_cells": 2008,
+          "page_pixels": 12146,
+          "page_pixels_inside_language_regions": 365
+        },
+        {
+          "image": 0,
+          "kind": "gray_white_asteroid_points",
+          "source_pixel_cells": 6146,
+          "page_pixels": 45396,
+          "page_pixels_inside_language_regions": 55
+        },
+        {
+          "image": 0,
+          "kind": "colored_orbits",
+          "source_pixel_cells": 2053,
+          "page_pixels": 17866,
+          "page_pixels_inside_language_regions": 152
+        }
+      ],
+      "changed_native_picture_feature_pixels_inside_language_regions": 0,
+      "changed_native_picture_feature_pixels_outside_language_regions": 0,
+      "changed_pixels_outside_language_regions": 0,
+      "changed_visible_nonlanguage_graphic_pixels": 0,
+      "source_bitmap_bytes_and_coordinates_unchanged": true,
+      "proof_sha256": "897eb6ba1599b0ad9858d83756718047ccde63e0bd49c2f82a4c6aa7440ca5e5",
+      "review_artifacts": [
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page4-image0-language-vs-native-mask.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page4-image0-source-4x.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page4-image0-ko-4x.png"
+      ]
+    },
+    {
+      "page": 5,
+      "image": 0,
+      "original_image_digest": "78fa1523577517068fc0372b3fdd9851",
+      "original_english_label_count": 1,
+      "original_english_labels": [
+        "lamp"
+      ],
+      "korean_labels": [
+        "전등"
+      ],
+      "mask_legend": {
+        "language_ink": "red",
+        "planet_surfaces": "(40, 230, 90)",
+        "gray_white_asteroid_points": "(40, 210, 255)",
+        "colored_orbits": "(255, 190, 40)"
+      },
+      "mask_notes": "Language ink is colour-filtered only inside reviewed English glyph rectangles. Native feature masks use the explicit planet bounds and colour criteria stored in the plan. The full picture remains separately compared outside the language regions.",
+      "feature_source_pixel_counts": {},
+      "native_picture_feature_masks": [],
+      "changed_native_picture_feature_pixels_inside_language_regions": 0,
+      "changed_native_picture_feature_pixels_outside_language_regions": 0,
+      "changed_pixels_outside_language_regions": 0,
+      "changed_visible_nonlanguage_graphic_pixels": 0,
+      "source_bitmap_bytes_and_coordinates_unchanged": true,
+      "proof_sha256": "7db7d44cf5b037833f457eb8c2b264f9667ba0e24f21482aaebc216f89ebae51",
+      "review_artifacts": [
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image0-language-vs-native-mask.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image0-source-4x.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image0-ko-4x.png"
+      ]
+    },
+    {
+      "page": 5,
+      "image": 1,
+      "original_image_digest": "7c9b9c48cf0ed681310d3e575b3a861a",
+      "original_english_label_count": 4,
+      "original_english_labels": [
+        "screen",
+        "lamp",
+        "detector",
+        "plate"
+      ],
+      "korean_labels": [
+        "스크린",
+        "전등",
+        "검출기",
+        "판"
+      ],
+      "mask_legend": {
+        "language_ink": "red",
+        "planet_surfaces": "(40, 230, 90)",
+        "gray_white_asteroid_points": "(40, 210, 255)",
+        "colored_orbits": "(255, 190, 40)"
+      },
+      "mask_notes": "Language ink is colour-filtered only inside reviewed English glyph rectangles. Native feature masks use the explicit planet bounds and colour criteria stored in the plan. The full picture remains separately compared outside the language regions.",
+      "feature_source_pixel_counts": {},
+      "native_picture_feature_masks": [],
+      "changed_native_picture_feature_pixels_inside_language_regions": 0,
+      "changed_native_picture_feature_pixels_outside_language_regions": 0,
+      "changed_pixels_outside_language_regions": 0,
+      "changed_visible_nonlanguage_graphic_pixels": 0,
+      "source_bitmap_bytes_and_coordinates_unchanged": true,
+      "proof_sha256": "7db7d44cf5b037833f457eb8c2b264f9667ba0e24f21482aaebc216f89ebae51",
+      "review_artifacts": [
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image1-language-vs-native-mask.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image1-source-4x.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page5-image1-ko-4x.png"
+      ]
+    },
+    {
+      "page": 6,
+      "image": 0,
+      "original_image_digest": "a69ed0177496877792e5c33eb77b9ab8",
+      "original_english_label_count": 4,
+      "original_english_labels": [
+        "screen",
+        "lamp",
+        "detector",
+        "plate"
+      ],
+      "korean_labels": [
+        "스크린",
+        "전등",
+        "검출기",
+        "판"
+      ],
+      "mask_legend": {
+        "language_ink": "red",
+        "planet_surfaces": "(40, 230, 90)",
+        "gray_white_asteroid_points": "(40, 210, 255)",
+        "colored_orbits": "(255, 190, 40)"
+      },
+      "mask_notes": "Language ink is colour-filtered only inside reviewed English glyph rectangles. Native feature masks use the explicit planet bounds and colour criteria stored in the plan. The full picture remains separately compared outside the language regions.",
+      "feature_source_pixel_counts": {},
+      "native_picture_feature_masks": [],
+      "changed_native_picture_feature_pixels_inside_language_regions": 0,
+      "changed_native_picture_feature_pixels_outside_language_regions": 0,
+      "changed_pixels_outside_language_regions": 0,
+      "changed_visible_nonlanguage_graphic_pixels": 0,
+      "source_bitmap_bytes_and_coordinates_unchanged": true,
+      "proof_sha256": "9b3abe46426dfd19a59aac611f937f1d80b2d05896c4211003479e1466c25aec",
+      "review_artifacts": [
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page6-image0-language-vs-native-mask.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page6-image0-source-4x.png",
+        "tmp\\original-style-repair\\2024\\T\\qa-bitmap\\page6-image0-ko-4x.png"
+      ]
+    }
+  ],
+  "full_figure_pixel_equality_claimed": false,
+  "visual_review_required": false,
+  "visual_review": {
+    "all_original_and_korean_enlargements_compared": true,
+    "all_masks_compared": true,
+    "korean_labels_legible": true,
+    "native_planet_surfaces_and_dot_fields_visible": true,
+    "native_lines_points_variables_numbers_preserved": true
+  }
+}

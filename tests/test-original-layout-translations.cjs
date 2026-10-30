@@ -18,7 +18,23 @@ const base = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
 const thyUrl = vm.runInNewContext(html.slice(begin, end) + '\nthyUrl;', {PDF_BASE: base, ORIGINAL_LAYOUT_PDF_VERSIONS: revisions, window: {KPHE_PDF_VERSIONS: {'pdfx/kphe/existing.pdf': 'existing'}}});
 assert.ok(published.length > 0);
 for (const item of published) {
-  const qa = read(item.qa);
+  const record = read(item.qa);
+  const assignedReady = item.audit_schema === 'legacy-reviewed-ready';
+  const qa = assignedReady ? record.source_audit : record;
+  if (assignedReady) {
+    assert.equal(record.status, 'READY');
+    assert.equal(record.sha256, item.sha256);
+    assert.equal(record.pages, item.pages);
+    assert.equal(record.final_vs_reviewed_proof_changed_pixels, 0);
+    const review = read(record.visual_review_file);
+    assert.equal(review.source_sha256, qa.source_sha256);
+    assert.deepEqual(review.pages.map(page => page.page).sort((a,b) => a-b), Array.from({length:item.pages}, (_,i) => i+1));
+    for (const page of qa.page_audits) {
+      const checked = review.pages.find(row => row.page === page.source_page);
+      assert.equal(checked.reviewed, true);
+      assert.equal(checked.proof_sha256, page.proof_sha256);
+    }
+  }
   const font = fonts.find(row => row.file === item.file);
   assert.equal(revisions[item.file], item.sha256.slice(0, 16));
   assert.equal(thyUrl(item.file), base + item.file + '?v=' + item.sha256.slice(0, 16));
@@ -72,20 +88,37 @@ for (const item of published) {
     assert.ok(identity.every(row => row.entire_page_changed_pixels === 0));
     continue;
   }
-  if (['native-outlines-and-control', 'legacy-fixed-native'].includes(item.audit_schema)) {
+  if (['native-outlines-and-control', 'legacy-fixed-native', 'legacy-reviewed-ready'].includes(item.audit_schema)) {
     assert.equal(qa.output_sha256, item.sha256);
     assert.equal(qa.pages, item.pages);
     assert.equal(qa.page_audits.length, item.pages);
     for (const key of ['no_autoshrink', 'no_equation_rasterization', 'no_paragraph_reflow', 'no_added_editorial_notes']) assert.equal(qa[key], true);
-    assert.equal(qa.visual_review_required, false);
-    assert.deepEqual(qa.visual_review.reviewed_pages, Array.from({length: item.pages}, (_, i) => i + 1));
+    if (qa.source_page_count && qa.source_page_count !== qa.pages) {
+      assert.ok(qa.source_page_selection_note, 'A multilingual original requires an explicit subsection selection');
+      assert.equal(new Set(qa.source_pages_1based).size, qa.pages);
+      assert.ok(qa.source_pages_1based.every(page => page > 0 && page <= qa.source_page_count));
+    }
+    if (!assignedReady) {
+      assert.equal(qa.visual_review_required, false);
+      assert.deepEqual(qa.visual_review.reviewed_pages, Array.from({length: item.pages}, (_, i) => i + 1));
+    }
     for (const page of qa.page_audits) {
-      if (item.audit_schema === 'legacy-fixed-native') {
+      if (['legacy-fixed-native', 'legacy-reviewed-ready'].includes(item.audit_schema)) {
         for (const key of ['native_glyphs_changed', 'protected_glyphs_selected_for_erasure', 'unreviewed_english_prose_runs']) assert.deepEqual(page[key], []);
         for (const key of ['changed_pixels_in_native_glyph_neighborhood', 'changed_pixels_outside_prose', 'final_vs_reviewed_proof_changed_pixels', 'equation_images']) assert.equal(page[key], 0);
-        for (const key of ['source_font_programs_and_names_unchanged', 'source_images_bytes_and_rects_unchanged', 'source_vector_drawings_unchanged']) assert.equal(page[key], true);
+        for (const key of ['source_font_programs_and_names_unchanged', 'source_images_bytes_and_rects_unchanged']) assert.equal(page[key], true);
+        if (page.raster_language_overlays) assert.equal(page.source_original_vector_drawings_preserved, true);
+        else assert.equal(page.source_vector_drawings_unchanged, true);
         assert.equal(page.autoshrink, false);
         assert.equal(page.reflow, false);
+        if (page.raster_language_overlays) {
+          assert.equal(page.raster_language_region_count, page.raster_language_overlays.length);
+          for (const key of ['changed_pixels_outside_raster_language_regions', 'changed_pixels_in_visible_raster_graphics', 'changed_native_picture_feature_pixels_inside_language_regions', 'changed_native_picture_feature_pixels_outside_language_regions', 'additional_clipped_reuses_of_unchanged_original_image']) assert.equal(page[key], 0);
+          for (const key of ['original_bitmap_visual_pixels_unchanged_outside_language_regions', 'no_new_bitmap_pixel_data']) assert.equal(page[key], true);
+          assert.equal(typeof page.original_visible_raster_graphics_excluded_from_new_paint, 'boolean');
+          if (page.native_picture_feature_masks.length) assert.equal(page.original_visible_raster_graphics_excluded_from_new_paint, true);
+          assert.ok(page.raster_font_metadata_note, 'Bitmap font measurements must record their inferred provenance');
+        }
         const plan = fs.readFileSync(path.join(root, page.plan.replaceAll('\\', '/')));
         assert.equal(crypto.createHash('sha256').update(plan).digest('hex'), page.plan_sha256);
         continue;
