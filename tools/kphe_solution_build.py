@@ -86,6 +86,7 @@ def build(year, part, items, manifest):
     reference = INPUT / (f'KPhE_{year[:4]}_{part}_KO.pdf' if preserve else f'KPhE_2026_T2{part[-1]}_KO.pdf')
     flow = ColumnFlow(doc, title, level, False if not preserve else '자체 작성 풀이 해설 · 한국물리학회 공식 배포 해설이 아님',
                       reference, preserve)
+    flow.exam_identity = (year, part)
     for i, q in enumerate(items):
         answers = q.get('accepted_answers', [q['answer']])
         label = ' / '.join('①②③④⑤'[a - 1] for a in answers)
@@ -95,7 +96,7 @@ def build(year, part, items, manifest):
             if not preserve:
                 from kphe_redraw import native_figure, dimensions
                 _,asset = native_figure(q['figure']['source'],q['figure']['page'],q['figure']['rect'])
-                keep += dimensions(asset,flow.width)[1]+12
+                keep += dimensions(asset,flow.width,155)[1]+8
             else:
                 keep += min(172, flow.width * r.height / r.width) + 12
         elif q.get('diagram'):

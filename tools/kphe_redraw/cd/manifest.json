@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "figures": {
     "72c2a70bfad18d8d": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q1-72c2a70bfad18d8d.svg",
@@ -200,8 +200,8 @@
       "height_pt": 119.625,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "c331284026457811e883330f7df59d54aa9dc33e8f477abf8eff030c7da64673",
-      "pdf_sha256": "e17ae5fd7725fbbc171912a2a2c3d413f06203a3dd0c04bed224a92d3cb5ab6d",
+      "sha256": "78152c3e068f3e780372a020f777d91311c6f91190dbddf4b7afc8a9df4f3fdf",
+      "pdf_sha256": "e0f91747ae949403044ba91a4c1b15e28cd7f96d3cf290915aa3897ebd736d02",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -218,18 +218,27 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        18.7856,
-        3.3953,
-        224.6901,
+        18.026615142822266,
+        4.585093975067139,
+        224.40280151367188,
         112.375
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [
+          6.8875,
+          7.25
+        ],
+        "math": [
+          7.25,
+          7.975
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "8ccf2735804b491b": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q8-8ccf2735804b491b.svg",
@@ -518,12 +527,12 @@
         1945.31,
         439.72
       ],
-      "width_pt": 200,
-      "height_pt": 155,
-      "recommended_width_pt": 200,
+      "width_pt": 180.0,
+      "height_pt": 99.0,
+      "recommended_width_pt": 180.0,
       "font_profile": "HancomEQN",
-      "sha256": "cde2dc2d9ac44b26783450dc94ef505491e1721af076491db39ba43bf0254b42",
-      "pdf_sha256": "73aad2c8b808ea570e45aa17249c6f3876abdf4ef6eab87486ed4e243df79c53",
+      "sha256": "d80244d2b1a9881bd1eb02ac6587e8de8a564d29293409ccd39bba71c91ae302",
+      "pdf_sha256": "995992f4eb80c6b8cfc5c54e72dc753e8d3c4e53f64062937b850c691cc0e03d",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -540,18 +549,26 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        12.0,
-        30.0,
-        193.0,
-        150.0
+        6.75,
+        3.563999891281128,
+        174.0599822998047,
+        92.78099060058594
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [
+          14.5
+        ],
+        "math": [
+          12.0,
+          13.5
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "3ce0938d42699c40": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q16-3ce0938d42699c40.svg",
@@ -614,8 +631,8 @@
       "height_pt": 195,
       "recommended_width_pt": 175,
       "font_profile": "HancomEQN",
-      "sha256": "26b2e80aae4fc5b12b0a4472c4bbfa87f52fe059ee0738b6857ac00e3fbdbb10",
-      "pdf_sha256": "ec54f4464ee376f3d6dd17b421408082fe7454c364722e9043d3ddce98b37a52",
+      "sha256": "fcb6caf1fbb236527dd40f00ad96c45fe2d6ff799a1ec758ebd70d34c898de42",
+      "pdf_sha256": "c5031fa7120a78e2a53a47efe6ac423f993e71e9c9c786e63367a255303adece",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -632,18 +649,23 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
         14.0,
         13.0,
-        164.2424,
+        164.24237060546875,
         176.0
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          9.8
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "23690aef274a3cfe": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q19-23690aef274a3cfe.svg",
@@ -798,8 +820,8 @@
       "height_pt": 170,
       "recommended_width_pt": 218,
       "font_profile": "HancomEQN",
-      "sha256": "0026142315d1b37fc64960a70ab5a5b952df49b5b33d8ffd84a1eb7636c17e85",
-      "pdf_sha256": "fd946f7f415aa8d5501dcdf17eb1fbcc712fd5d98b9062170a542f920895bce5",
+      "sha256": "5d6390b214b658e6bdf62d5df67b9fde35a6e32d3298759ed5eb46ca62fff10e",
+      "pdf_sha256": "ec111614656a0dbb735fdb2c11bb9fe313e3dcb27a45677e7587484786f62c39",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -816,18 +838,23 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
         12.0,
-        13.0211,
-        207.5731,
-        163.4379
+        13.021099090576172,
+        207.57310485839844,
+        163.4379119873047
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          9.8
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "343db3401d79c179": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q24-343db3401d79c179.svg",
@@ -844,8 +871,8 @@
       "height_pt": 220,
       "recommended_width_pt": 190,
       "font_profile": "HancomEQN",
-      "sha256": "c3bbda01abf1a62fa8679d7fba669847f840db3bd0e2ce0ba82a563e01d88f1a",
-      "pdf_sha256": "da21d25bf4ef648283d312be4b59c4c6c1bb87de4dab06ecbad671c47fbbea6d",
+      "sha256": "ee533d8f6f5f54ef57e79208b935e9d39c6e70544fe66eb1cc5874311b5c0228",
+      "pdf_sha256": "a375fec39facd716c05a6520d5480566ce35b92de99d4730fb1e106fdf477e03",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -862,18 +889,26 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
         15.0,
         10.0,
-        185.2286,
-        214.3987
+        184.80177307128906,
+        215.0322265625
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [
+          8,
+          8.5
+        ],
+        "math": [
+          9
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "26f61b3c81d49751": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q25-26f61b3c81d49751.svg",
@@ -890,8 +925,8 @@
       "height_pt": 154.66666666666666,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "de56a3bb0627876f050d9253a8ee01dc7f6601e897fd460e75f639cd8bf160a4",
-      "pdf_sha256": "05b05061b784b9d4039c48c8465d951bf09b2c2967303da297350944257448f3",
+      "sha256": "00d73cee74a8fb64e0e8f9bf6c56958ddec5ca0a4ca0965dcc8bac3d94042816",
+      "pdf_sha256": "5b942c61a055475bdafe75fc01474dbedefdd6f67a12dcfd7378bcc1979bdb82",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -908,18 +943,23 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        3.7671,
-        10.0533,
-        228.2006,
-        146.16
+        3.767120361328125,
+        10.053348541259766,
+        228.2006378173828,
+        146.16001892089844
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          9.8
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "30c2fc3f450eff0b": {
       "file": "tools/kphe_redraw/cd/2023-T1c-q26-30c2fc3f450eff0b.svg",
@@ -1262,8 +1302,8 @@
       "height_pt": 71.7090909090909,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "3ef69e87ff4b7eb87ac17b0d1d2f85477266aa5825a4f33db279ebd095284ed1",
-      "pdf_sha256": "5b76f4218832711a3ff4715f13c2e8fde944d9e6ecb6f9cbb6325d01c2498b14",
+      "sha256": "a2f74698bb89ad4d376c45cf7e92e98cc29910b9ddda325c44fb33550f6eeef2",
+      "pdf_sha256": "80ea661b75b278e2e898fde5465fd3d0697ab58df31508fb64d6f6d0b0c646f2",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1280,18 +1320,25 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        1.4202,
-        3.3467,
-        231.297,
-        63.2727
+        2.4070487022399902,
+        4.794442653656006,
+        231.29696655273438,
+        63.27272415161133
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [
+          7.0303
+        ],
+        "math": [
+          7.7333
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "0faf4810b849364c": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q2-0faf4810b849364c.svg",
@@ -1350,12 +1397,12 @@
         829.92,
         787.26
       ],
-      "width_pt": 232.0,
-      "height_pt": 199.52,
-      "recommended_width_pt": 232.0,
+      "width_pt": 160,
+      "height_pt": 153.01818181818183,
+      "recommended_width_pt": 160,
       "font_profile": "HancomEQN",
-      "sha256": "7fb1b0666c1cb5f221fc6180253a0b53bba93451d2ae2755306c3f010c91b3a1",
-      "pdf_sha256": "f4d7e490bfcd5a428908e39a49ca965bce8d0a620e506c458ab4d82761eb9446",
+      "sha256": "c90729b90dc279a76c2499dc0828425129da6c60decefdb2f24e4dbf7b2b39cb",
+      "pdf_sha256": "604eb5263a8722906ce9baeb0cec419bef25d2f5b8090c7242bb58df5a0fa60b",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1372,18 +1419,24 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        12.992,
-        15.7605,
-        224.576,
-        164.256
+        3.49090576171875,
+        0.8564701080322266,
+        157.09091186523438,
+        96.87272644042969
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          9,
+          10
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "3d97fef2bac4e4e3": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q4-3d97fef2bac4e4e3.svg",
@@ -1400,8 +1453,8 @@
       "height_pt": 200,
       "recommended_width_pt": 130,
       "font_profile": "HancomEQN",
-      "sha256": "271d1358dd673329cf1ae08f3ca1ceb5d9d62dd35b158e088017e397a4c20d93",
-      "pdf_sha256": "e0ff2797ce42b4ad4b73d9f93bb712ed3200386b4f150af790bd3a884a2e2a2b",
+      "sha256": "135beb6914f0e26d80dfaf66593d4c81b0ccf6764d52cf3670807c002b975549",
+      "pdf_sha256": "73a63c5bc9a975468884c6d0b7f1f712e7b0229933357f90bcd70dabcc0d3aa4",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1418,18 +1471,25 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
         15.0,
-        9.9995,
+        3.126288414001465,
         118.0,
         190.0
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [
+          22.0,
+          24.0
+        ],
+        "math": []
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf",
+      "label_style_note": "Only m/v: original Gulim glyphs, positions and point sizes unchanged, 0.35pt native vector outline added following root print-proof review."
     },
     "3b19db5d51b00028": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q5-3b19db5d51b00028.svg",
@@ -1446,8 +1506,8 @@
       "height_pt": 112.375,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "c7e8c8506ac19ebf49acbfec6b592cd0e59ae5e2c2f9a34bfb6c0760cacff0e7",
-      "pdf_sha256": "91d36513bb71b8a74c11f52450ff319b331069e376027629188feda67b3e809c",
+      "sha256": "00e8780c108c33c71770fae898934eb8af8bf4313114080a048d86976fc545ad",
+      "pdf_sha256": "b20370262c07e9ea3b3fb2a808ccd93e2baa2e035f3c3467ce56086a89b3233f",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1464,18 +1524,24 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        6.4386,
-        6.525,
-        213.1499,
-        102.9118
+        6.43862247467041,
+        6.525000095367432,
+        213.14993286132812,
+        102.91179656982422
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          8.5,
+          9.425
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "56ca2954ff93ad87": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q6-56ca2954ff93ad87.svg",
@@ -1672,12 +1738,12 @@
         970.14,
         853.5
       ],
-      "width_pt": 232.0,
-      "height_pt": 136.20645161290324,
-      "recommended_width_pt": 232.0,
+      "width_pt": 220.0,
+      "height_pt": 129.16129032258064,
+      "recommended_width_pt": 220.0,
       "font_profile": "HancomEQN",
-      "sha256": "f817dcbe26e57df199242e4960eba7083d770ac39783b7f88b1f2c342f157784",
-      "pdf_sha256": "8d59c88b5ccbe34e9b3fb9a6c70dc7d5141268b7ff4b97d4dbb4a9b518f980ec",
+      "sha256": "34e9c71e8c0629ea5ed8eaa2e4d9d970755e52377f07d5a44c4b5eaeb8591890",
+      "pdf_sha256": "669a4d45a72975757c61c2b85b9d2b207249852b49eed9f2838081e85071d973",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1694,18 +1760,26 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        6.7355,
-        4.4793,
-        229.7548,
-        129.6393
+        6.387088775634766,
+        4.970448970794678,
+        217.8709716796875,
+        122.8037338256836
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [
+          7.0968
+        ],
+        "math": [
+          7.0968,
+          7.8065
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "7c84b358fccc6c3a": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q14-7c84b358fccc6c3a.svg",
@@ -1764,12 +1838,12 @@
         890.43,
         929.24
       ],
-      "width_pt": 232.0,
-      "height_pt": 180.96,
-      "recommended_width_pt": 232.0,
+      "width_pt": 220.0,
+      "height_pt": 136.4,
+      "recommended_width_pt": 220.0,
       "font_profile": "HancomEQN",
-      "sha256": "0ef6e42c81dc3fe29f373a8f70dbba33b68161bce7f6fc319b699125c2b5fa01",
-      "pdf_sha256": "68a9cad87a3743f3ad3a3664489e3f845148dee10c3c587e9d29b44a1574746f",
+      "sha256": "95967a4223f978ca147ed30b345e44aa866f3655ad15de5bc215f768596a9555",
+      "pdf_sha256": "876e693e7e9f76c563cc6d5e7c99528991c23a6835b9b68e89441d6e6c7afc82",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1786,18 +1860,24 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        13.92,
-        11.136,
-        219.008,
-        157.8001
+        12.36398696899414,
+        4.3471999168396,
+        216.65597534179688,
+        131.31248474121094
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked"
+      "label_policy": "relative",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          8.8,
+          9.68
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "ab1ee17bb836a61d": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q16-ab1ee17bb836a61d.svg",
@@ -1860,8 +1940,8 @@
       "height_pt": 158.96296296296296,
       "recommended_width_pt": 232.0,
       "font_profile": "HancomEQN",
-      "sha256": "242772bb8086bec1cdd89b914903e80bde81b52118689d9cade2f4946a364e3b",
-      "pdf_sha256": "8c0c85f3c9d632f36b24b3aff4886c7b09f0231fc93304ab9d2c500b396c1ae2",
+      "sha256": "a542a3b848259137532b751ffac108776b39b294f679bd61e72eee45c4283b1e",
+      "pdf_sha256": "18f8c90c4f95606c448e7db23010f916ce3d6521d4d034011620a370d82f0ad9",
       "status": "verified",
       "method": "manually authored native geometry and font glyph outlines; no raster embedding or contour tracing",
       "uses": [
@@ -1878,25 +1958,30 @@
           "where": "problem"
         }
       ],
-      "native_geometry_revision": 2,
+      "native_geometry_revision": 3,
       "content_bbox_pt": [
-        5.0028,
-        6.0344,
-        219.6702,
-        156.5964
+        5.002835750579834,
+        6.034386157989502,
+        219.670166015625,
+        156.59637451171875
       ],
-      "minimum_body_label_point_size": 8.8,
-      "minimum_math_label_point_size": 8.5,
-      "maximum_label_point_size": 9.8,
       "source_crop_visually_checked": true,
-      "independent_review": "root compared all 14 source/native contact sheets; reported corrections applied and rechecked",
       "expanded_reference_rect": [
         120,
         380,
         1100,
         1050
       ],
-      "reference_note": "Expanded original inspected to restore the complete V(m^3) axis label."
+      "reference_note": "Expanded original inspected to restore the complete V(m^3) axis label.",
+      "label_policy": "fixed",
+      "label_point_sizes": {
+        "body": [],
+        "math": [
+          9.4519
+        ]
+      },
+      "final_print_point_review": "Original source and native output compared at actual print point size; whole-object height cap 155pt; individual relative label sizes preserved where needed.",
+      "review_proof": "tmp/kphe_redraw_cd_qa/detail-print-proof.pdf"
     },
     "83eb1ec8e52792f1": {
       "file": "tools/kphe_redraw/cd/2023-T2c-q18-83eb1ec8e52792f1.svg",
@@ -2049,7 +2134,15 @@
     "figures": 42,
     "source_crops_checked": 42,
     "independent_source_native_contact_sheets_checked": 14,
-    "all_reported_semantic_and_typography_corrections_applied": true
+    "all_reported_semantic_and_typography_corrections_applied": true,
+    "detailed_source_revision": {
+      "revised_figures": 13,
+      "print_point_proof_pages": 4,
+      "excluded_T2c_10_and_T2d_4_assets_unchanged": true,
+      "nontarget_29_manifest_entries_and_assets_unchanged": true,
+      "scope_report": "tmp/kphe_redraw_cd_qa/detail-scope-audit.json",
+      "restricted_4_5_17_report": "tmp/kphe_redraw_cd_qa/detail-restricted-scope-audit.json"
+    }
   },
-  "generator_sha256": "643cab41e3edd47f605b21a8ca65a96d86ee4e017c0095516567a7d66bb967f8"
+  "generator_sha256": "03dea84bf80da7fdabab7f0e046c37dc7817fc80c0c5610651dac3e077a10473"
 }

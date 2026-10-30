@@ -1,9 +1,11 @@
 {
-  "version": 1,
+  "version": 2,
   "method": "manually authored native PDF geometry and real font text",
   "raster_images": false,
   "contour_tracing": false,
   "math_base_size": 15.2,
+  "typography_mode": "explicit source-relative labels, no global font-size floor",
+  "layout_mode": "individual natural widths; original panel arrangements",
   "figures": {
     "29adecc63abb5cf2": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -17,10 +19,10 @@
       "part": "T1b",
       "number": 1,
       "file": "tools/kphe_redraw/ab/T1b-q01-29adecc63abb5cf2.pdf",
-      "sha256": "ed183dbaa9d33d33b04673063bba977999b656bf95661d8f6086122b2fdada25",
-      "width_pt": 232,
-      "height_pt": 138.92215568862275,
-      "recommended_width_pt": 232,
+      "sha256": "5ce12f3cb1a31f0d64bd4e26acc77a692ce14aeee8aff624e59e5a7fe0cf9e33",
+      "width_pt": 176,
+      "height_pt": 105.38922155688623,
+      "recommended_width_pt": 176,
       "source_crop_width_pt": 167,
       "source_crop_height_pt": 100,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -28,9 +30,7 @@
       "native_text_characters": 22,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "ed183dbaa9d33d33b04673063bba977999b656bf95661d8f6086122b2fdada25",
-      "minimum_plaintext_size_pt": 9.28,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "38353dc474884659": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -44,10 +44,10 @@
       "part": "T1b",
       "number": 2,
       "file": "tools/kphe_redraw/ab/T1b-q02-38353dc474884659.pdf",
-      "sha256": "a00e2f42396d416d064bd0d8dc53585fabf4e2ae02bfbeee8cc27e7e5cbfa5b4",
-      "width_pt": 232,
-      "height_pt": 181.56521739130434,
-      "recommended_width_pt": 232,
+      "sha256": "871b763a302fb4e0f274c145857c8fdf6773cbd94efab52220990c988d749fb6",
+      "width_pt": 150,
+      "height_pt": 117.3913043478261,
+      "recommended_width_pt": 150,
       "source_crop_width_pt": 138,
       "source_crop_height_pt": 108,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -55,9 +55,7 @@
       "native_text_characters": 9,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "a00e2f42396d416d064bd0d8dc53585fabf4e2ae02bfbeee8cc27e7e5cbfa5b4",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "6be32d06d5e21dd9": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -71,10 +69,10 @@
       "part": "T1b",
       "number": 4,
       "file": "tools/kphe_redraw/ab/T1b-q04-6be32d06d5e21dd9.pdf",
-      "sha256": "34768d40c04d85d946e6a10c2c750591389e9643c2e49b4a3bbb215a83c59567",
-      "width_pt": 232,
-      "height_pt": 154.08,
-      "recommended_width_pt": 232,
+      "sha256": "91b2068c1dec1a768e87f294350c3b272617a641a5ce240ddfe94ac2fd46728f",
+      "width_pt": 194,
+      "height_pt": 128.84275862068966,
+      "recommended_width_pt": 194,
       "source_crop_width_pt": 145,
       "source_crop_height_pt": 96.30000000000001,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -82,9 +80,7 @@
       "native_text_characters": 8,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "34768d40c04d85d946e6a10c2c750591389e9643c2e49b4a3bbb215a83c59567",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "73de9812f22cedb2": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -98,10 +94,10 @@
       "part": "T1b",
       "number": 6,
       "file": "tools/kphe_redraw/ab/T1b-q06-73de9812f22cedb2.pdf",
-      "sha256": "ee11b300dbb7b4a4b0d8975ccf8ca8b0fa0fdf8a27fc3d6db3871d950c8de6b2",
-      "width_pt": 232,
-      "height_pt": 232.0,
-      "recommended_width_pt": 232,
+      "sha256": "27ea27686133464dd66cf76d3d62f3e12e087c61c72120d45872a1da3cb30c32",
+      "width_pt": 142,
+      "height_pt": 142.0,
+      "recommended_width_pt": 142,
       "source_crop_width_pt": 108,
       "source_crop_height_pt": 108,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -109,9 +105,7 @@
       "native_text_characters": 12,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "ee11b300dbb7b4a4b0d8975ccf8ca8b0fa0fdf8a27fc3d6db3871d950c8de6b2",
-      "minimum_plaintext_size_pt": 12.3733,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "473a149ba2660e62": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -125,10 +119,10 @@
       "part": "T1b",
       "number": 7,
       "file": "tools/kphe_redraw/ab/T1b-q07-473a149ba2660e62.pdf",
-      "sha256": "c6d6563b0bb0fd3a8c27a97700e2747e04d5b295cc74a0e2fbdba18a63363bd5",
-      "width_pt": 232,
-      "height_pt": 156.21333333333334,
-      "recommended_width_pt": 232,
+      "sha256": "11dcb992e3debc6a4e1e7a0c8dbcaeabdd89ff571532a5f96c1273ae24417699",
+      "width_pt": 176,
+      "height_pt": 118.50666666666666,
+      "recommended_width_pt": 176,
       "source_crop_width_pt": 150,
       "source_crop_height_pt": 101,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -136,9 +130,7 @@
       "native_text_characters": 19,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "c6d6563b0bb0fd3a8c27a97700e2747e04d5b295cc74a0e2fbdba18a63363bd5",
-      "minimum_plaintext_size_pt": 8.5066,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "f9a4d41e348f1b1a": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -152,10 +144,10 @@
       "part": "T1b",
       "number": 8,
       "file": "tools/kphe_redraw/ab/T1b-q08-f9a4d41e348f1b1a.pdf",
-      "sha256": "ef59e7b48ef10fcfad1ce547fb051c8f95f186656514c5e1615c696ab685e399",
-      "width_pt": 232,
-      "height_pt": 86.45283018867924,
-      "recommended_width_pt": 232,
+      "sha256": "825449dbcdcae0de4d887b89d99d9c610ff56d34cd9b53c0ffb6acac8031660a",
+      "width_pt": 212,
+      "height_pt": 79.0,
+      "recommended_width_pt": 212,
       "source_crop_width_pt": 212,
       "source_crop_height_pt": 79,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -163,9 +155,7 @@
       "native_text_characters": 10,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "ef59e7b48ef10fcfad1ce547fb051c8f95f186656514c5e1615c696ab685e399",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "9780867b03f5e7b3": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -179,7 +169,7 @@
       "part": "T1b",
       "number": 9,
       "file": "tools/kphe_redraw/ab/T1b-q09-9780867b03f5e7b3.pdf",
-      "sha256": "80265baa100c42697d5d8b98f334ef07021c078c96546e1468e102c9af75bb7b",
+      "sha256": "c2cc38dcc60b1e06f5d8a570cfe823daa82a8e4ca25ae0694a8e883ffc76bf08",
       "width_pt": 232,
       "height_pt": 71.5068493150685,
       "recommended_width_pt": 232,
@@ -190,9 +180,7 @@
       "native_text_characters": 18,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "80265baa100c42697d5d8b98f334ef07021c078c96546e1468e102c9af75bb7b",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "41c94783e19a37e2": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -206,10 +194,10 @@
       "part": "T1b",
       "number": 11,
       "file": "tools/kphe_redraw/ab/T1b-q11-41c94783e19a37e2.pdf",
-      "sha256": "d01f9cc8e96e34d6ef36922949e5b63a811dd78cd1a24d566507c57a36975de9",
-      "width_pt": 232,
-      "height_pt": 136.29999999999998,
-      "recommended_width_pt": 232,
+      "sha256": "6e750a5e874a1fbb5d622902a9713c8481914c5dd67ed26cfbed39ab8b74667f",
+      "width_pt": 184,
+      "height_pt": 108.1,
+      "recommended_width_pt": 184,
       "source_crop_width_pt": 160,
       "source_crop_height_pt": 94,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -217,9 +205,7 @@
       "native_text_characters": 6,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "d01f9cc8e96e34d6ef36922949e5b63a811dd78cd1a24d566507c57a36975de9",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "03e979a1fb799a38": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -233,10 +219,10 @@
       "part": "T1b",
       "number": 12,
       "file": "tools/kphe_redraw/ab/T1b-q12-03e979a1fb799a38.pdf",
-      "sha256": "d9975cb0cbaaf587da7eac2568bfa00abb868019ba30af65b1e77521f626372a",
-      "width_pt": 232,
-      "height_pt": 50.34893617021277,
-      "recommended_width_pt": 232,
+      "sha256": "3ab2cba72f798cd03e901d503101d1dc45795df402b9a15d3a9feb15987cb54c",
+      "width_pt": 224,
+      "height_pt": 48.61276595744681,
+      "recommended_width_pt": 224,
       "source_crop_width_pt": 235,
       "source_crop_height_pt": 51,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -244,9 +230,7 @@
       "native_text_characters": 4,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "d9975cb0cbaaf587da7eac2568bfa00abb868019ba30af65b1e77521f626372a",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "883037f525752771": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -260,10 +244,10 @@
       "part": "T1b",
       "number": 13,
       "file": "tools/kphe_redraw/ab/T1b-q13-883037f525752771.pdf",
-      "sha256": "12bd142cd422b3fc064050a8207d618ff517f2846822d6297bb87fae3338883c",
-      "width_pt": 232,
-      "height_pt": 65.46534653465346,
-      "recommended_width_pt": 232,
+      "sha256": "f3db157b15273e74bc523514ff6b19aeb51f12036366cd70bf84b70e855b623d",
+      "width_pt": 170,
+      "height_pt": 47.97029702970297,
+      "recommended_width_pt": 170,
       "source_crop_width_pt": 202,
       "source_crop_height_pt": 57,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -271,9 +255,7 @@
       "native_text_characters": 4,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "12bd142cd422b3fc064050a8207d618ff517f2846822d6297bb87fae3338883c",
-      "minimum_plaintext_size_pt": 13.1466,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "7ffed449c1487b4d": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -287,20 +269,16 @@
       "part": "T1b",
       "number": 14,
       "file": "tools/kphe_redraw/ab/T1b-q14-7ffed449c1487b4d.pdf",
-      "sha256": "dcff9ec7cfbe472b4788fa80f16d7bb4352b9412cb795d3f4eb55ba918623763",
-      "width_pt": 232,
-      "height_pt": 189.9842519685039,
-      "recommended_width_pt": 232,
+      "sha256": "7cd8cfd9cfd8612773f4ef67e03a6167246fc6af70d88729cb3a4f57b4ddc710",
+      "width_pt": 138,
+      "height_pt": 113.00787401574803,
+      "recommended_width_pt": 138,
       "source_crop_width_pt": 127,
       "source_crop_height_pt": 104,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
       "image_xobjects": 0,
       "native_text_characters": 14,
-      "status": "verified",
-      "reviewed_against_original": true,
-      "file_sha256": "dcff9ec7cfbe472b4788fa80f16d7bb4352b9412cb795d3f4eb55ba918623763",
-      "minimum_plaintext_size_pt": 10.8266,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "status": "verified"
     },
     "0cf31a72ffa0e400": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -314,10 +292,10 @@
       "part": "T1b",
       "number": 15,
       "file": "tools/kphe_redraw/ab/T1b-q15-0cf31a72ffa0e400.pdf",
-      "sha256": "6760bb0681a3da0141930373024b76313f92ec38ce9d5003db7d4ec43f77fb2f",
-      "width_pt": 232,
-      "height_pt": 107.8174273858921,
-      "recommended_width_pt": 232,
+      "sha256": "c16a903238296f4d3b389388704185415f410ba4d82bd046aead95b1208173a7",
+      "width_pt": 224,
+      "height_pt": 104.09958506224066,
+      "recommended_width_pt": 224,
       "source_crop_width_pt": 241,
       "source_crop_height_pt": 112,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -325,9 +303,7 @@
       "native_text_characters": 19,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "6760bb0681a3da0141930373024b76313f92ec38ce9d5003db7d4ec43f77fb2f",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "513aa6bc3ed76095": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -341,10 +317,10 @@
       "part": "T1b",
       "number": 16,
       "file": "tools/kphe_redraw/ab/T1b-q16-513aa6bc3ed76095.pdf",
-      "sha256": "452c1747a998daa1bd25017ce6effbe543f84ab1a3f4d634134934342028d7d2",
-      "width_pt": 232,
-      "height_pt": 185.87134502923976,
-      "recommended_width_pt": 232,
+      "sha256": "a8cfff5f8862838c31a5dabaaca9c31eaf449a6131de8ba2a606acbd3ce236be",
+      "width_pt": 190,
+      "height_pt": 152.22222222222223,
+      "recommended_width_pt": 190,
       "source_crop_width_pt": 171,
       "source_crop_height_pt": 137,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -352,9 +328,7 @@
       "native_text_characters": 28,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "452c1747a998daa1bd25017ce6effbe543f84ab1a3f4d634134934342028d7d2",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "c5c863dca5e6aed0": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -368,10 +342,10 @@
       "part": "T1b",
       "number": 17,
       "file": "tools/kphe_redraw/ab/T1b-q17-c5c863dca5e6aed0.pdf",
-      "sha256": "5ec759733337309a8b9aede12c3b165d967bb034f83305bf558ae7f8ab301721",
-      "width_pt": 232,
-      "height_pt": 190.52513966480447,
-      "recommended_width_pt": 232,
+      "sha256": "cea4ef7e77ae910122896246c081344652fcdc365f47fd4eae0c75ca6b07dc26",
+      "width_pt": 180,
+      "height_pt": 147.82122905027933,
+      "recommended_width_pt": 180,
       "source_crop_width_pt": 179,
       "source_crop_height_pt": 147,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -379,9 +353,7 @@
       "native_text_characters": 33,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "5ec759733337309a8b9aede12c3b165d967bb034f83305bf558ae7f8ab301721",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "566b09e3012b6a65": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -395,10 +367,10 @@
       "part": "T1b",
       "number": 18,
       "file": "tools/kphe_redraw/ab/T1b-q18-566b09e3012b6a65.pdf",
-      "sha256": "3de2b09f641318016362b9b8cb1d81617cbd95f0d75cda7a44c82cc1bfd0c793",
-      "width_pt": 232,
-      "height_pt": 135.42583732057417,
-      "recommended_width_pt": 232,
+      "sha256": "7b509b249ec9e6363961f0aa93d58219b9618d5810639395d88aa73fc7a887d9",
+      "width_pt": 218,
+      "height_pt": 127.25358851674642,
+      "recommended_width_pt": 218,
       "source_crop_width_pt": 209,
       "source_crop_height_pt": 122,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -406,9 +378,7 @@
       "native_text_characters": 11,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "3de2b09f641318016362b9b8cb1d81617cbd95f0d75cda7a44c82cc1bfd0c793",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "e9fa0c7eda6366a9": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -422,10 +392,10 @@
       "part": "T1b",
       "number": 23,
       "file": "tools/kphe_redraw/ab/T1b-q23-e9fa0c7eda6366a9.pdf",
-      "sha256": "70c4cb0fbc127fb237da828a85657ce17c8380e8d6f9081792a157cb0523189c",
-      "width_pt": 200,
-      "height_pt": 253.7037037037037,
-      "recommended_width_pt": 200,
+      "sha256": "c2081f7817fb78d4ffe29906c562831f829d53f0781213ce5bb622a7ba0c4950",
+      "width_pt": 112,
+      "height_pt": 142.07407407407408,
+      "recommended_width_pt": 112,
       "source_crop_width_pt": 108,
       "source_crop_height_pt": 137,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -433,9 +403,7 @@
       "native_text_characters": 31,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "70c4cb0fbc127fb237da828a85657ce17c8380e8d6f9081792a157cb0523189c",
-      "minimum_plaintext_size_pt": 8.6667,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "4c20db7bfac8de91": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -449,10 +417,10 @@
       "part": "T1b",
       "number": 25,
       "file": "tools/kphe_redraw/ab/T1b-q25-4c20db7bfac8de91.pdf",
-      "sha256": "e8f29ce485ca7728fde9b7eaaa1093065913064e4519c0177cf584beabf7bcb5",
-      "width_pt": 232,
-      "height_pt": 250.1565217391304,
-      "recommended_width_pt": 232,
+      "sha256": "1157c592836b509eadf68b720d713b362cc785e860c8ad71d37d29cd7b247df8",
+      "width_pt": 116,
+      "height_pt": 125.0782608695652,
+      "recommended_width_pt": 116,
       "source_crop_width_pt": 115,
       "source_crop_height_pt": 124,
       "source_sha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
@@ -460,9 +428,7 @@
       "native_text_characters": 4,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "e8f29ce485ca7728fde9b7eaaa1093065913064e4519c0177cf584beabf7bcb5",
-      "minimum_plaintext_size_pt": 12.3733,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "f8d91149e5bb8594": {
       "source": "KPhE_2023_T1b_KO.pdf",
@@ -476,7 +442,7 @@
       "part": "T1b",
       "number": 26,
       "file": "tools/kphe_redraw/ab/T1b-q26-f8d91149e5bb8594.pdf",
-      "sha256": "b2bf3200f4c06ae9c130de54d4d1f383a0ff7ecdd598d808d6f2ae5003b47d4f",
+      "sha256": "429d347369b66d624cf21e66245c96ae49f500d4a67bca19e506d8946e4c7e60",
       "width_pt": 232,
       "height_pt": 120.29629629629629,
       "recommended_width_pt": 232,
@@ -487,9 +453,7 @@
       "native_text_characters": 22,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "b2bf3200f4c06ae9c130de54d4d1f383a0ff7ecdd598d808d6f2ae5003b47d4f",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "f4b57506554e7683": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -503,10 +467,10 @@
       "part": "T2b",
       "number": 1,
       "file": "tools/kphe_redraw/ab/T2b-q01-f4b57506554e7683.pdf",
-      "sha256": "c0caf0aef6a8e764f45406a67517cbe9cde9f67e8132ec1be01f5ae1acdef692",
-      "width_pt": 232,
-      "height_pt": 115.4051282051282,
-      "recommended_width_pt": 232,
+      "sha256": "28143754ea15137f55679252cda2d88ec3cb1c138be0fbed9ffeb79c89d052ec",
+      "width_pt": 194,
+      "height_pt": 96.5025641025641,
+      "recommended_width_pt": 194,
       "source_crop_width_pt": 195,
       "source_crop_height_pt": 97,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -514,9 +478,7 @@
       "native_text_characters": 4,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "c0caf0aef6a8e764f45406a67517cbe9cde9f67e8132ec1be01f5ae1acdef692",
-      "minimum_plaintext_size_pt": 8.5066,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "08830bca982d18b3": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -530,7 +492,7 @@
       "part": "T2b",
       "number": 2,
       "file": "tools/kphe_redraw/ab/T2b-q02-08830bca982d18b3.pdf",
-      "sha256": "3edd2b9361fa12fb5589ab96dc54bf5fc83152dd1cfe21cdf344d0a2cca27f98",
+      "sha256": "cab95b837a04bba4836155b8757bfda5ddf9baedb4ca6f568874a54660acc3bd",
       "width_pt": 232,
       "height_pt": 81.11278195488723,
       "recommended_width_pt": 232,
@@ -538,12 +500,10 @@
       "source_crop_height_pt": 93,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
       "image_xobjects": 0,
-      "native_text_characters": 8,
+      "native_text_characters": 12,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "3edd2b9361fa12fb5589ab96dc54bf5fc83152dd1cfe21cdf344d0a2cca27f98",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "3813fe5cccfcc811": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -557,7 +517,7 @@
       "part": "T2b",
       "number": 3,
       "file": "tools/kphe_redraw/ab/T2b-q03-3813fe5cccfcc811.pdf",
-      "sha256": "451526f09dbc563863a57cd131bee8848f5cf4069c72f48119282bc37b57e636",
+      "sha256": "e70a0557d2dbb605e2e033fa5436a684cfa55f228f6fbb4fd8f0186571875c6e",
       "width_pt": 232,
       "height_pt": 74.24,
       "recommended_width_pt": 232,
@@ -568,9 +528,7 @@
       "native_text_characters": 29,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "451526f09dbc563863a57cd131bee8848f5cf4069c72f48119282bc37b57e636",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "f84bd9c77029be8d": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -584,10 +542,10 @@
       "part": "T2b",
       "number": 4,
       "file": "tools/kphe_redraw/ab/T2b-q04-f84bd9c77029be8d.pdf",
-      "sha256": "ac10c9c1dc6b1a362de5fb9aa427d2126015c1d100b36accae14dde76975bf73",
-      "width_pt": 80,
-      "height_pt": 140.40816326530611,
-      "recommended_width_pt": 80,
+      "sha256": "705e163e5247d9fea79f6d304243fc26988307585d594eea66e763caf50517dd",
+      "width_pt": 60,
+      "height_pt": 80.0,
+      "recommended_width_pt": 60,
       "source_crop_width_pt": 49,
       "source_crop_height_pt": 86,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -595,9 +553,7 @@
       "native_text_characters": 2,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "ac10c9c1dc6b1a362de5fb9aa427d2126015c1d100b36accae14dde76975bf73",
-      "minimum_plaintext_size_pt": null,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "2f271e8411a9b898": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -611,21 +567,18 @@
       "part": "T2b",
       "number": 5,
       "file": "tools/kphe_redraw/ab/T2b-q05-2f271e8411a9b898.pdf",
-      "sha256": "73db81ecc71d699578fa9a797bc0ad0d1ea62cad82ea4e20022ca3a50d66a7ed",
+      "sha256": "34e369a63ee8abbec527eaf1d182b0b4cb2f3799056428ac1666a70a7fd73de3",
       "width_pt": 232,
-      "height_pt": 425.3333333333333,
+      "height_pt": 131.46666666666667,
       "recommended_width_pt": 232,
       "source_crop_width_pt": 330,
       "source_crop_height_pt": 146,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
       "image_xobjects": 0,
-      "native_text_characters": 144,
+      "native_text_characters": 140,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "73db81ecc71d699578fa9a797bc0ad0d1ea62cad82ea4e20022ca3a50d66a7ed",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs",
-      "layout": "vertical panels preserving source order"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "b69cf88c5a538fde": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -639,7 +592,7 @@
       "part": "T2b",
       "number": 6,
       "file": "tools/kphe_redraw/ab/T2b-q06-b69cf88c5a538fde.pdf",
-      "sha256": "d4a895894ee1db352a561013fe913deecfa6120dcac7de47550060cb550aa8dd",
+      "sha256": "870cb2670befc8ff2e6b2ebba2acb0642321e54c844ad0123a7a282d78faf6a8",
       "width_pt": 232,
       "height_pt": 108.12669683257919,
       "recommended_width_pt": 232,
@@ -650,9 +603,7 @@
       "native_text_characters": 20,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "d4a895894ee1db352a561013fe913deecfa6120dcac7de47550060cb550aa8dd",
-      "minimum_plaintext_size_pt": 10.8266,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "0a6133c120484b25": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -666,10 +617,10 @@
       "part": "T2b",
       "number": 7,
       "file": "tools/kphe_redraw/ab/T2b-q07-0a6133c120484b25.pdf",
-      "sha256": "a4b14433c600505a1144ecf54e6099ef0bd77038dc4caa1d0e565838b703775d",
-      "width_pt": 232,
-      "height_pt": 126.37398373983739,
-      "recommended_width_pt": 232,
+      "sha256": "dda76532dd540b787424c296d88b19cc0501f2d4b244c1c3810e882ca9f312e2",
+      "width_pt": 158,
+      "height_pt": 86.06504065040649,
+      "recommended_width_pt": 158,
       "source_crop_width_pt": 123,
       "source_crop_height_pt": 67,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -677,9 +628,7 @@
       "native_text_characters": 6,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "a4b14433c600505a1144ecf54e6099ef0bd77038dc4caa1d0e565838b703775d",
-      "minimum_plaintext_size_pt": 13.1466,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "c7ef62ee33a44fab": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -693,10 +642,10 @@
       "part": "T2b",
       "number": 8,
       "file": "tools/kphe_redraw/ab/T2b-q08-c7ef62ee33a44fab.pdf",
-      "sha256": "b261fd33fbde7b2c99ef415f561c8e89b5490d7ca3c81a4f263113579859fc4d",
-      "width_pt": 232,
-      "height_pt": 98.88524590163934,
-      "recommended_width_pt": 232,
+      "sha256": "40caa63d55f018fe5ed31049eda3920131ea55c6d04847cf1a0a85fce9f393b6",
+      "width_pt": 208,
+      "height_pt": 88.65573770491804,
+      "recommended_width_pt": 208,
       "source_crop_width_pt": 183,
       "source_crop_height_pt": 78,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -704,9 +653,7 @@
       "native_text_characters": 14,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "b261fd33fbde7b2c99ef415f561c8e89b5490d7ca3c81a4f263113579859fc4d",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "44597d7bc85bb858": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -720,10 +667,10 @@
       "part": "T2b",
       "number": 9,
       "file": "tools/kphe_redraw/ab/T2b-q09-44597d7bc85bb858.pdf",
-      "sha256": "f0b955f32f9d7489c90fdbc9eb9c84e33e6445029aa1cfa4bbd313e38c525518",
-      "width_pt": 185,
-      "height_pt": 229.27350427350427,
-      "recommended_width_pt": 185,
+      "sha256": "f1daa240b9d3fefcdd5bb4e2d03108d6ce93cc344e1ccb8389695972a6693b6f",
+      "width_pt": 140,
+      "height_pt": 149.33333333333334,
+      "recommended_width_pt": 140,
       "source_crop_width_pt": 117,
       "source_crop_height_pt": 145,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -731,9 +678,7 @@
       "native_text_characters": 16,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "f0b955f32f9d7489c90fdbc9eb9c84e33e6445029aa1cfa4bbd313e38c525518",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "5d5663af105390c3": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -747,9 +692,9 @@
       "part": "T2b",
       "number": 10,
       "file": "tools/kphe_redraw/ab/T2b-q10-5d5663af105390c3.pdf",
-      "sha256": "3e934e507186fb628cd7b3eb4066a797c08b6547d2a2197da086faf13747fa3b",
+      "sha256": "9a4e858ede02c2f0495ca53613299945d5273f8f1c9694dccd5c09c01759f0d4",
       "width_pt": 232,
-      "height_pt": 98.15384615384615,
+      "height_pt": 116.0,
       "recommended_width_pt": 232,
       "source_crop_width_pt": 260,
       "source_crop_height_pt": 110,
@@ -758,9 +703,7 @@
       "native_text_characters": 35,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "3e934e507186fb628cd7b3eb4066a797c08b6547d2a2197da086faf13747fa3b",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "cce844c9e67c8a7f": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -774,9 +717,9 @@
       "part": "T2b",
       "number": 11,
       "file": "tools/kphe_redraw/ab/T2b-q11-cce844c9e67c8a7f.pdf",
-      "sha256": "cbd21b246571fb6ced631a703f98fbbc3a5b21030022d42092a5aa897714ed17",
+      "sha256": "2b2094d9d3b72cd3f70773c06cc24006aad7e1fe49656aae2348193b92a68c48",
       "width_pt": 232,
-      "height_pt": 434.61333333333334,
+      "height_pt": 116.0,
       "recommended_width_pt": 232,
       "source_crop_width_pt": 215,
       "source_crop_height_pt": 111,
@@ -784,18 +727,8 @@
       "image_xobjects": 0,
       "native_text_characters": 90,
       "status": "verified",
-      "file_sha256": "cbd21b246571fb6ced631a703f98fbbc3a5b21030022d42092a5aa897714ed17",
       "reviewed_against_original": true,
-      "minimum_plaintext_size_pt": 8.4986,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs",
-      "layout": "vertical panels preserving source order",
-      "revision_note": "Restored both power-supply terminal connections, printed the inner scale unit mA, and routed the enlargement arrow outside all circuit wires.",
-      "independent_review": {
-        "status": "passed",
-        "reviewer": "originals_dates_audit",
-        "sha256": "cbd21b246571fb6ced631a703f98fbbc3a5b21030022d42092a5aa897714ed17",
-        "checked": "internal power terminal leads, inner mA unit, enlargement arrow outside circuit, both scales and selected terminals"
-      }
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "bfcb123eae9f183e": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -809,10 +742,10 @@
       "part": "T2b",
       "number": 12,
       "file": "tools/kphe_redraw/ab/T2b-q12-bfcb123eae9f183e.pdf",
-      "sha256": "b447154414f686b0761b68010a17f3a3805e5d8d70ceac85983aece84d7b2de6",
-      "width_pt": 232,
-      "height_pt": 211.72815533980582,
-      "recommended_width_pt": 232,
+      "sha256": "3062f772733f46adfc744f6aecb427de6e0a3bb50e4393a101051d9dfe015deb",
+      "width_pt": 138,
+      "height_pt": 112.24000000000001,
+      "recommended_width_pt": 138,
       "source_crop_width_pt": 103,
       "source_crop_height_pt": 94,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -820,9 +753,7 @@
       "native_text_characters": 12,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "b447154414f686b0761b68010a17f3a3805e5d8d70ceac85983aece84d7b2de6",
-      "minimum_plaintext_size_pt": 10.0533,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "6ca9a031cd33986e": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -836,7 +767,7 @@
       "part": "T2b",
       "number": 13,
       "file": "tools/kphe_redraw/ab/T2b-q13-6ca9a031cd33986e.pdf",
-      "sha256": "c20c753e264956cdef3549acc5e7bb86ed37582a943330dbab414786d95f3b09",
+      "sha256": "d9e8714469dcd9706b66b3d427bf85297bda05f7594c159736f32aee5c846018",
       "width_pt": 232,
       "height_pt": 91.47967479674797,
       "recommended_width_pt": 232,
@@ -847,9 +778,7 @@
       "native_text_characters": 42,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "c20c753e264956cdef3549acc5e7bb86ed37582a943330dbab414786d95f3b09",
-      "minimum_plaintext_size_pt": 8.5066,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "fe7e956eb7566650": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -863,10 +792,10 @@
       "part": "T2b",
       "number": 14,
       "file": "tools/kphe_redraw/ab/T2b-q14-fe7e956eb7566650.pdf",
-      "sha256": "dcdc4c6b5d30ae05c0f354d0c28f16e14d1328192c28e2956ba881b43f490b55",
-      "width_pt": 232,
-      "height_pt": 94.61960784313726,
-      "recommended_width_pt": 232,
+      "sha256": "bd90b4eb2ad517d50c03d2a22e4a73aaf1f0a9a64d6c36dfb1b91dfec7a77068",
+      "width_pt": 224,
+      "height_pt": 91.35686274509804,
+      "recommended_width_pt": 224,
       "source_crop_width_pt": 255,
       "source_crop_height_pt": 104,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -874,9 +803,7 @@
       "native_text_characters": 16,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "dcdc4c6b5d30ae05c0f354d0c28f16e14d1328192c28e2956ba881b43f490b55",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "81ab84f633918b44": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -890,10 +817,10 @@
       "part": "T2b",
       "number": 15,
       "file": "tools/kphe_redraw/ab/T2b-q15-81ab84f633918b44.pdf",
-      "sha256": "1b2cba0b0ca476035d2744f68011a2fa606da19b79a9dcf7420fac9c2fc166a9",
-      "width_pt": 232,
-      "height_pt": 137.0909090909091,
-      "recommended_width_pt": 232,
+      "sha256": "73263aa7777e3b83973968c3e7b4754b25861ad24d773fb001f95021dfc86185",
+      "width_pt": 224,
+      "height_pt": 132.36363636363637,
+      "recommended_width_pt": 224,
       "source_crop_width_pt": 220,
       "source_crop_height_pt": 130,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -901,9 +828,7 @@
       "native_text_characters": 38,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "1b2cba0b0ca476035d2744f68011a2fa606da19b79a9dcf7420fac9c2fc166a9",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "602f0007b1cf01f2": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -917,10 +842,10 @@
       "part": "T2b",
       "number": 16,
       "file": "tools/kphe_redraw/ab/T2b-q16-602f0007b1cf01f2.pdf",
-      "sha256": "1c39e34c0b36025583063cd853fe9ccfb5a446d2a89053bd2581bf8c1a23fe72",
-      "width_pt": 232,
-      "height_pt": 106.87640449438202,
-      "recommended_width_pt": 232,
+      "sha256": "be9f1a93951df3f12d443768e98fa133bfb96fcdc6c62dd6428162594c6f93e2",
+      "width_pt": 194,
+      "height_pt": 89.37078651685391,
+      "recommended_width_pt": 194,
       "source_crop_width_pt": 178,
       "source_crop_height_pt": 82,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -928,9 +853,7 @@
       "native_text_characters": 10,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "1c39e34c0b36025583063cd853fe9ccfb5a446d2a89053bd2581bf8c1a23fe72",
-      "minimum_plaintext_size_pt": 10.0533,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "4af79247bdadd1ac": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -944,10 +867,10 @@
       "part": "T2b",
       "number": 17,
       "file": "tools/kphe_redraw/ab/T2b-q17-4af79247bdadd1ac.pdf",
-      "sha256": "6131de85968cf501ccd4628d3647402869c5631a298efef3d01ae0aa48d4569e",
-      "width_pt": 232,
-      "height_pt": 137.33333333333331,
-      "recommended_width_pt": 232,
+      "sha256": "4ec99fb024fb17907184dc31015e52e1d8dbb36119a2010480f1120d982a9d18",
+      "width_pt": 176,
+      "height_pt": 104.183908045977,
+      "recommended_width_pt": 176,
       "source_crop_width_pt": 174,
       "source_crop_height_pt": 103,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
@@ -955,9 +878,7 @@
       "native_text_characters": 16,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "6131de85968cf501ccd4628d3647402869c5631a298efef3d01ae0aa48d4569e",
-      "minimum_plaintext_size_pt": 11.5999,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "b7e169d21a503ab4": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -971,7 +892,7 @@
       "part": "T2b",
       "number": 19,
       "file": "tools/kphe_redraw/ab/T2b-q19-b7e169d21a503ab4.pdf",
-      "sha256": "fce081a01abc2409ac963b4a743623acfcab563a18c4669fe4da4971e0f9b6a4",
+      "sha256": "010c70755c47f6698693e6c78623ff26075d2add7e97d4a9dc2b0f571b5dbdc5",
       "width_pt": 232,
       "height_pt": 123.57788944723617,
       "recommended_width_pt": 232,
@@ -979,12 +900,10 @@
       "source_crop_height_pt": 106,
       "source_sha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
       "image_xobjects": 0,
-      "native_text_characters": 46,
+      "native_text_characters": 47,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "fce081a01abc2409ac963b4a743623acfcab563a18c4669fe4da4971e0f9b6a4",
-      "minimum_plaintext_size_pt": 8.5,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     },
     "0b797b330bb88e2b": {
       "source": "KPhE_2023_T2b_KO.pdf",
@@ -998,7 +917,7 @@
       "part": "T2b",
       "number": 20,
       "file": "tools/kphe_redraw/ab/T2b-q20-0b797b330bb88e2b.pdf",
-      "sha256": "04c19f5fd1022878a55f8f78e9ccad3ad5fd045ac948c426128608c84267c79f",
+      "sha256": "b1a7539a0f41af0e551737c4b331568daa36ca60aca944504ff4376002944fbd",
       "width_pt": 232,
       "height_pt": 189.46666666666667,
       "recommended_width_pt": 232,
@@ -1009,55 +928,7 @@
       "native_text_characters": 145,
       "status": "verified",
       "reviewed_against_original": true,
-      "file_sha256": "04c19f5fd1022878a55f8f78e9ccad3ad5fd045ac948c426128608c84267c79f",
-      "minimum_plaintext_size_pt": 9.0,
-      "equation_font_profile": "2026 T2b / HyhwpEQ; native KPS source font glyphs",
-      "layout": "vertical panels preserving source order",
-      "structured_table_file": "tools/kphe_redraw/ab/T2b20-table.json"
-    }
-  },
-  "build_command": "python tools/kphe_redraw_ab.py --reviewed",
-  "manual_review": {
-    "status": "passed",
-    "assets": 37,
-    "source_contact_sheets": 4,
-    "source_native_comparison_sheets": 5,
-    "final_pdf_renderer": "Poppler pdftoppm, 160 DPI",
-    "raster_image_xobjects": 0,
-    "minimum_plaintext_size_pt": 8.4986,
-    "clipped_plaintext_runs": [],
-    "checked": "labels, numerical values, axis units, resistor and meter connections, dashed lines, arrow directions, wave crest/compression alignment, fill regions and caption order",
-    "source_order_reflows": {
-      "T2b5": [
-        "ㄱ",
-        "ㄴ",
-        "ㄷ",
-        "ㄹ"
-      ],
-      "T2b11": [
-        "가",
-        "나"
-      ],
-      "T2b20": [
-        "가",
-        "나"
-      ]
-    },
-    "notes": [
-      "T1b16 meters each span two resistors.",
-      "T1b26 all three longitudinal compressions align with transverse crests.",
-      "T2b11 outer scale -1..5 A; inner scale -100..500 mA; needle 2/200; terminal connections 500 mA and +.",
-      "T2b20 text is real 9 pt native table text; A/B/C/D placeholders are preserved.",
-      "T2b11 final independent review corrections: two internal terminal leads and inner mA unit restored; external callout arrow cannot be confused with circuit wiring."
-    ],
-    "independent_review": {
-      "status": "passed",
-      "figures": [
-        "T1b16",
-        "T1b26",
-        "T2b11"
-      ],
-      "reviewer": "originals_dates_audit"
+      "review": "source/native point-size comparison and 1:1 point-size A4 proof; revised natural-width layout"
     }
   }
 }

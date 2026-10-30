@@ -35,7 +35,11 @@ def native_figure(source,page,rect):
         raise ValueError(f'Native diagram changed after verification: {key}')
     return path,item
 
-def dimensions(item,available_width):
+def dimensions(item,available_width,max_height=None,scale=1.):
     width=float(item.get('recommended_width_pt',item['width_pt']))
-    width=min(width,available_width)
-    return width,float(item['height_pt'])*width/float(item['width_pt'])
+    width=min(width,available_width)*scale
+    height=float(item['height_pt'])*width/float(item['width_pt'])
+    is_table=item.get('role')=='table' or (item.get('part')=='T2b' and item.get('number')==20)
+    if max_height and height>max_height and not is_table:
+        width*=max_height/height;height=max_height
+    return width,height
