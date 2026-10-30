@@ -859,7 +859,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arpf p,.ar .arpf button,.ar .arpf .arinfo{grid-column:1/-1}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=20261030-logos">
+<link rel="stylesheet" href="site-design.css?v=20261030-logo-refine">
 </head>
 <body class="hl-site">
 
@@ -998,14 +998,15 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js"></script>
-<script src="theory.js?v=7f369a9e49"></script>
+<script src="theory.js?v=a13c70b92f"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
 <script src="usaco.js?v=2ca7e01243"></script>
 <script src="rupho-selection.js"></script>
 <script src="rupho-archive.js"></script>
 <script src="arena.js?v=20261030-ocr"></script>
-<script src="site-design.js?v=20261030-logos"></script>
+<script src="logo/variants.js?v=20261030-logo-refine"></script>
+<script src="site-design.js?v=20261030-logo-refine"></script>
 <script>
 "use strict";
 
@@ -4428,17 +4429,18 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 14;
+const LOGO_V = 16;
 const LOGO_FILES = {cmo:"cmo.svg"};
 const LOGO_ORGANIZERS = {
-  ortvay:["외트뵈시 물리학회","Roland Eotvos Physical Society"],eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
+  eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
   baupc:["하버드 대학교","Harvard University"],cpho:["중국물리학회","Chinese Physical Society"],
-  kmchc:["대한화학회","Korean Chemical Society"],usnco:["미국화학회","American Chemical Society"],
   usaaao:["미국 천문학 및 천체물리학 기구","USA Astronomy and Astrophysics Organization"],
-  kumc:["대한수학회","Korean Mathematical Society"],cmo:["중국수학회","Chinese Mathematical Society"],
-  usamo:["미국수학협회","Mathematical Association of America"],putnam:["미국수학협회","Mathematical Association of America"]
+  kumc:["대한수학회","Korean Mathematical Society"],cmo:["중국수학회","Chinese Mathematical Society"]
 };
 function logoTitle(key){
+  if(key==="ortvay")return lang==="ko"?"Ortvay 공식 문제지 워드마크":"Ortvay official paper wordmark";
+  if(key==="usamo")return lang==="ko"?"USAMO 공식 교사용 매뉴얼 제목 표장":"USAMO official teacher manual title wordmark";
+  if(key==="kmchc")return lang==="ko"?"대한화학회 화학올림피아드 공통 표장":"Korean Chemistry Olympiad shared mark";
   if(LOGO_ORGANIZERS[key])return LOGO_ORGANIZERS[key][lang==="ko"?0:1]+(lang==="ko"?" · 주최기관 로고":" · organizer mark");
   if(/^rupho[wxy]?$/.test(key))return lang==="ko"?"전러시아 학생 올림피아드 공통 로고":"All-Russian School Olympiad shared mark";
   return "";
@@ -4450,8 +4452,20 @@ function logoTitle(key){
 const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    ispho:0.468, rmph:0.760, opho:0.42, usapho:0.30, gpho:0.32, izho:0.30,
                    ijso:0.42, ioaa:0.50, icho:0.30, imcho:0.26, ioaajr:0.42,
-                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31};
+                   iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31,
+                   ortvay:0.72, eotvos:0.38, baupc:0.40, usaaao:0.35,
+                   useso:0.32, ceso:0.36, jeso:0.36, kmchc:0.38,
+                   usamo:0.83, putnam:0.45, amc:0.30};
+function logoSource(key){
+  const variant=window.LOGO_VARIANTS?.[key];
+  return variant?.[document.documentElement.dataset.theme==="dark"?"dark":"light"]
+    ||"logo/"+(LOGO_FILES[key]||key+".png");
+}
 function logoFallback(img){
+  if(img.getAttribute("src").match(/^logo\/(dark|light)\//)){
+    img.dataset.logoVariant="original";
+    img.src="logo/"+(LOGO_FILES[img.dataset.logoKey]||img.dataset.logoKey+".png")+"?v="+LOGO_V;return;
+  }
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
     img.src=img.src.replace(/\.png(\?|$)/,".svg$1"); return;
@@ -4459,9 +4473,9 @@ function logoFallback(img){
   img.remove();
 }
 const compLogo = key =>
-  `<img class="clogo" loading="lazy" decoding="async" alt="" data-logo-key="${key}" data-try="${LOGO_FILES[key]?.endsWith(".svg")?"svg":"png"}" title="${esc(logoTitle(key))}"
+  `<img class="clogo" loading="lazy" decoding="async" alt="" data-logo-key="${key}" data-logo-variant="${logoSource(key).match(/\/(dark|light)\//)?.[1]||"original"}" data-try="${LOGO_FILES[key]?.endsWith(".svg")?"svg":"png"}" title="${esc(logoTitle(key))}"
      style="height:calc(var(--lcap)/${LOGO_TEXT[key]||0.5})"
-     src="logo/${LOGO_FILES[key]||key+".png"}?v=${LOGO_V}" onerror="logoFallback(this)">`;
+     src="${logoSource(key)}?v=${LOGO_V}" onerror="logoFallback(this)">`;
 
 /* astronomy competitions count observation rounds, not experiments */
 /* papers that are not a theory round (IMO, IOI, USNCO …) drop the word «theory» */
@@ -4555,7 +4569,7 @@ const SUBJ=[
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
   {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao","usaaao"]},
   {k:"sci", ko:"통합과학", en:"Integrated science", logo:"ijso", comps:["ijso"]},
-  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:["imo","kmo","cmo","usamo","putnam","kumc"], soon:"IMO"},
+  {k:"math", ko:"수학", en:"Mathematics", logo:"imo", comps:["imo","kmo","cmo","amc","usamo","putnam","kumc"], soon:"IMO"},
   {k:"info", ko:"정보", en:"Informatics", logo:"ioi", comps:["ioi","usaco"], soon:"IOI"},
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
@@ -4574,7 +4588,7 @@ function viewComps(sub){
       <div class="sub">${d.pComps}</div>
     </div>
     <nav class="subjs" aria-label="${d.subjLabel}">${SUBJ.map(x=>{ const n=x.comps.filter(k=>DATA[k]).length;
-      return `<a href="#/comps/${x.k}"${x===cur?' aria-current="true"':""} class="${n?"":"none"}"><img src="logo/${x.logo}.png?v=${LOGO_V}" alt="" loading="lazy" decoding="async"><b>${x[lang]}</b><small>${n?d.subjN(n):d.subjSoon}</small></a>`; }).join("")}</nav>
+      return `<a href="#/comps/${x.k}"${x===cur?' aria-current="true"':""} class="${n?"":"none"}"><img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)"><b>${x[lang]}</b><small>${n?d.subjN(n):d.subjSoon}</small></a>`; }).join("")}</nav>
     ${adFitBanner("secondary")}
     ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
