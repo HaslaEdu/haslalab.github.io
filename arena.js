@@ -202,9 +202,9 @@ async function arMount() {
   const my = ++ar.seq,scope=cmIdentityScope(),currentLang=lang,routeAlive=()=>my === ar.seq && document.getElementById("arRoot") === root && lang===currentLang, alive = () => routeAlive() && cmIdentityScope()===scope;
   const parts = location.hash.replace(/^#\/?/, "").split("?")[0].split("/").filter(Boolean), [a, b, c] = parts;
   ar.poller?.dispose();ar.poller=null;let bootstrap=null,primary=null,version=0;
-  const weekly=a==='weekly'&&b!=='p'&&b!=='admin';
-  if(weekly||a==='rank'){
-    const path=weekly?'/weekly?lang='+lang+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:''):'/rank?scope='+(b==='all'?'all':'week')+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:'');
+  const weekly=a==='weekly'&&b!=='p'&&b!=='admin',problem=a==='weekly'&&b==='p'&&/^\d+$/.test(c||'');
+  if(weekly||problem||a==='rank'){
+    const path=problem?'/problems/'+Number(c)+'?lang='+lang:weekly?'/weekly?lang='+lang+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:''):'/rank?scope='+(b==='all'?'all':'week')+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:'');
     primary=arPageRead(path);primary.catch(()=>{});
   }
   try{if(a==='lab'){
@@ -228,7 +228,7 @@ async function arMount() {
     if ((version || ar.health?.v || 0) < 4) { root.innerHTML = `<div class="cmnote">${arT().oldServer}</div>`; return; }
     if (a === "me") await arMe(root, alive,bootstrap);
     else if (a === "rank") await arRank(root, alive, b,primary);
-    else if (a === "weekly" && b === "p" && c) await arProblem(root, alive, +c);
+    else if (a === "weekly" && b === "p" && c) await arProblem(root, alive, +c,primary);
     else if (a === "weekly" && b === "admin") await arAdmin(root, alive);
     else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
     else await arWeekly(root, alive, b,primary);
@@ -424,9 +424,9 @@ function arBindAnswerPhoto(f, alive, T, onRead) {
     }
   };
 }
-async function arProblem(root, alive, id) {
+async function arProblem(root, alive, id,preloaded) {
   ar.photoCleanup?.();
-  const T = arT(), j = await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
+  const T = arT(), j = preloaded||await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
   const p = j.problem, now = Math.floor(Date.now() / 1000), ocrOn = j.health && j.health.ocr;
   root.innerHTML = `
     <div class="arcrumb"><a href="#/weekly/${esc(p.week)}">← ${T.weekH} ${esc(p.week)}</a></div>

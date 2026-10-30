@@ -13,9 +13,9 @@
     const profileRead=/^\/users(?:\/[^/]+)?$/.test(u.pathname),publicRead=publicPaths.has(u.pathname)||profileRead;
     const safe=publicRead||/^\/(?:me(?:\/(?:stats|identities|overview))?|users|nick-check|weekly|rank|ranking|problems(?:\/\d+)?|submissions(?:\/\d+)?|lab\/(?:bootstrap|active|tokens|sessions(?:\/\d+)?))$/.test(u.pathname);
     const ttl=publicRead&&!profileRead?u.pathname==='/health'||u.pathname==='/pay/config'||u.pathname==='/lab/contest/catalog'?300000:u.pathname==='/boards'?30000:u.pathname==='/lab/stats'?15000:5000:0;
-    return{safe,public:publicRead,ttl};
+    return{safe,public:publicRead,ttl,staleTTL:u.pathname==='/posts'?30000:0};
   }
-  function canonicalPath(path){const u=new URL(path,'https://api.invalid');u.searchParams.sort();return u.pathname+u.search;}
+  function canonicalPath(path){const u=new URL(path,'https://api.invalid');if(u.pathname==='/posts'){if(!u.searchParams.get('page'))u.searchParams.set('page','1');if(!u.searchParams.get('sort'))u.searchParams.set('sort','new');if(!u.searchParams.get('lang'))u.searchParams.set('lang','ko');}u.searchParams.sort();return u.pathname+u.search;}
   const clone=value=>value===undefined?value:typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
   const family=path=>{const p=new URL(path,'https://api.invalid').pathname;return /^\/(posts|boards|comments|users)(\/|$)/.test(p)?'community':/^\/(weekly|rank|ranking|problems|submissions)(\/|$)/.test(p)||/^\/me\/(overview|stats)$/.test(p)?'arena':/^\/lab(\/|$)/.test(p)?'lab':p;};
   function mutationFamilies(path){
@@ -35,7 +35,7 @@
       for(const [key,value] of values)if(affected.includes(value.family))values.delete(key);
       for(const group of affected)freshUntil.set(group,now()+30000);
     }
-    function run({method='GET',path,base='',token='',lang=''},send){
+    function run({method='GET',path,base='',token='',lang='',onRefresh,forceFresh=false,responsePath},send){
       method=String(method).toUpperCase();
       const next=JSON.stringify([base,token,lang]);
       if(scope!==next){scope=next;invalidate();}
@@ -43,21 +43,24 @@
       if(method!=='GET'){changed(path);return Promise.resolve().then(send).finally(()=>changed(path));}
       if(!policy.safe)return Promise.resolve().then(send);
       const key=next+' '+canonicalPath(path),cached=values.get(key);
-      if(cached&&cached.until>now())return Promise.resolve(clone(cached.value));
-      if(cached)values.delete(key);
+      if(cached&&!forceFresh&&cached.until>now())return Promise.resolve(clone(cached.value));
+      const group=family(path),familyRefresh=(policy.public||group==='arena')&&now()<(freshUntil.get(group)||0),bypassCache=forceFresh||familyRefresh;
+      const stale=cached&&policy.public&&cached.staleUntil>now()&&!bypassCache&&typeof onRefresh==='function';
+      if(cached&&!stale)values.delete(key);
       let p=pending.get(key);
       if(!p){
         const at=generation;
-        const group=family(path);
-        p=Promise.resolve().then(()=>send({bypassCache:(policy.public||group==='arena')&&now()<(freshUntil.get(group)||0)})).then(value=>{
+        p=Promise.resolve().then(()=>send({bypassCache,familyRefresh,forceFresh})).then(value=>{
           if(at===generation&&policy.ttl>0){
-            values.delete(key);values.set(key,{until:now()+policy.ttl,value:clone(value),family:group});
+            const savedKey=next+' '+canonicalPath(typeof responsePath==='function'?responsePath():path);
+            values.delete(key);values.delete(savedKey);values.set(savedKey,{until:now()+policy.ttl,staleUntil:now()+policy.ttl+policy.staleTTL,value:clone(value),family:group});
             while(values.size>maxEntries)values.delete(values.keys().next().value);
           }
           return value;
         }).finally(()=>{if(pending.get(key)===p)pending.delete(key);});
         pending.set(key,p);
       }
+      if(stale){const at=generation;p.then(value=>{if(at===generation&&scope===next)return onRefresh(clone(value));}).catch(()=>{});return Promise.resolve(clone(cached.value));}
       return p.then(clone);
     }
     return{run,invalidate};

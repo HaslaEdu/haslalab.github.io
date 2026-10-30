@@ -26,15 +26,15 @@ test('disabled or missing mode performs only PUT auto then an independent GET ve
   }
 });
 
-test('403 at any stage is explicitly unverified and never broadens or replaces credentials', async () => {
-  for (const failAt of [1, 2, 3]) {
+test('401 or 403 at any stage is explicitly unverified and never broadens or replaces credentials', async () => {
+  for (const status of [401, 403]) for (const failAt of [1, 2, 3]) {
     let calls = 0; const warnings = [], logs = [];
     const result = await provisionReplication(async () => {
       calls++;
-      return calls === failAt ? Response.json({ errors: [{ message: 'SECRET_API_PAYLOAD' }] }, { status: 403 }) : reply(calls === 1 ? 'disabled' : 'auto');
+      return calls === failAt ? Response.json({ errors: [{ message: 'SECRET_API_PAYLOAD' }] }, { status }) : reply(calls === 1 ? 'disabled' : 'auto');
     }, value => logs.push(value), value => warnings.push(value));
     assert.deepEqual(result, { verified: false, mode: 'unverified' }); assert.equal(calls, failAt);
-    assert.equal(warnings.length, 1); assert.match(warnings[0], /HTTP 403/);
+    assert.equal(warnings.length, 1); assert.ok(warnings[0].includes('HTTP ' + status));
     assert.equal(logs.concat(warnings).join('\n').includes('SECRET_API_PAYLOAD'), false);
   }
 });

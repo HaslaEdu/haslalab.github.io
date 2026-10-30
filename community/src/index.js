@@ -11,6 +11,9 @@ import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
 import { ensureWeeklyContent } from './weekly-content.js';
+import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
+import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
+import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -80,6 +83,7 @@ function corsHeaders(req, env) {
     "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Lab-Token,Cache-Control",
     "Access-Control-Max-Age": "86400",
+    "Access-Control-Expose-Headers": "X-D1-Bookmark,X-Public-Read-Source",
     "Vary": "Origin",
   };
   if (allowed.includes(origin)) h["Access-Control-Allow-Origin"] = origin;
@@ -164,12 +168,7 @@ async function handle(req, env, url) {
   let r;
 
   if (p === "/api/health") return healthData(env, await labReady(env));
-  if (p === "/api/boards" && m === "GET") {
-    const day = now() - 86400, lang = pickLang(url.searchParams.get("lang"));
-    const rows = (await env.DB.prepare(
-      `SELECT board, COUNT(*) n, SUM(created_at > ?) today FROM posts WHERE lang=? GROUP BY board`).bind(day, lang).all()).results;
-    return { boards: rows };
-  }
+  if (p === "/api/boards" && m === "GET") return readPublicBoards(env.DB, url);
 
   /* auth */
   if (p === "/api/signup" && m === "POST") {
@@ -335,39 +334,7 @@ async function handle(req, env, url) {
   }
 
   /* posts */
-  if (p === "/api/posts" && m === "GET") {
-    const sp = url.searchParams, board = sp.get("board") || "", tag = sp.get("tag") || "";
-    const q = (sp.get("q") || "").trim().slice(0, 60), field = sp.get("field") || "all";
-    const sort = sp.get("sort") || "new", best = sp.get("best") === "1";
-    const page = Math.max(1, Math.min(500, parseInt(sp.get("page")) || 1));
-    if (board && !BOARDS.includes(board)) bad("bad_board");
-    const lang = pickLang(sp.get("lang"));
-    const where = ["p.tag<>'notice'", "p.lang=?"], args = [lang];
-    if (board) { where.push("p.board=?"); args.push(board); }
-    if (tag && TAGS.includes(tag)) { where.push("p.tag=?"); args.push(tag); }
-    if (best) where.push(`(p.n_likes-p.n_dislikes)>=${BEST}`);
-    if (q) {
-      const l = "%" + q.replace(/[\\%_]/g, "\\$&") + "%";
-      if (field === "title") { where.push("p.title LIKE ? ESCAPE '\\'"); args.push(l); }
-      else if (field === "author") { where.push("u.nickname LIKE ? ESCAPE '\\'"); args.push(l); }
-      else { where.push("(p.title LIKE ? ESCAPE '\\' OR p.body LIKE ? ESCAPE '\\')"); args.push(l, l); }
-    }
-    const w = "WHERE " + where.join(" AND ");
-    const order = sort === "top" ? "(p.n_likes-p.n_dislikes) DESC, p.id DESC"
-      : sort === "cmt" ? "p.n_comments DESC, p.id DESC"
-      : sort === "hot" ? `((p.n_likes-p.n_dislikes)*2+p.n_comments+p.views*0.05+1)*1.0/((${now()}-p.created_at)/3600.0+2) DESC, p.id DESC`
-      : "p.id DESC";
-    const cols = `p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.avatar AS av,u.deleted AS gone`;
-    // the count, the page and (first page only) the notices go to the database in one round trip
-    const stmts = [env.DB.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${w}`).bind(...args),
-      env.DB.prepare(`SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id ${w} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...args, PAGE, (page - 1) * PAGE)];
-    // notices sit on top of the first page, as on every Korean board
-    if (page === 1 && !q) stmts.push(env.DB.prepare(
-      `SELECT ${cols} FROM posts p JOIN users u ON u.id=p.user_id WHERE p.tag='notice' AND p.lang=? ${board ? "AND (p.board=? OR p.board='free')" : ""} ORDER BY p.id DESC LIMIT 5`)
-      .bind(lang, ...(board ? [board] : [])));
-    const [c, r, nt] = await env.DB.batch(stmts);
-    return { posts: r.results, notices: nt ? nt.results : [], total: c.results[0].n, page, per: PAGE };
-  }
+  if (p === "/api/posts" && m === "GET") return readPublicPosts(env.DB, url);
   if (p === "/api/posts" && m === "POST") {
     needUser(me);
     await limit(env, "post:" + me.id, 5, 600);
@@ -571,40 +538,11 @@ const cacheSeconds = path => /\/(health|pay\/config|contest\/catalog)$/.test(pat
 
 /* every database round trip, counted and timed, sent back as Server-Timing (the browser's network panel shows it):
    the time a page waits on the server is mostly these round trips, one after another */
-function timedDB(db, q) {
-  const record = result => {
-    for (const item of Array.isArray(result) ? result : [result]) {
-      const meta = item?.meta;
-      if (!meta) continue;
-      if (Number.isFinite(meta.timings?.sql_duration_ms)) { q.sqlMs += meta.timings.sql_duration_ms; q.sqlSamples++; }
-      if (Number.isFinite(meta.rows_read)) q.rows += meta.rows_read;
-      if (meta.served_by_region) q.regions.add(String(meta.served_by_region).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 24));
-      if (/^[A-Z]{3}$/.test(meta.served_by_colo || '')) q.colos.add(meta.served_by_colo);
-      if (typeof meta.served_by_primary === 'boolean') q.locations.add(meta.served_by_primary ? 'primary' : 'replica');
-    }
-    return result;
-  };
-  const time = async (f) => { const t = Date.now(); try { return record(await f()); } finally { q.n++; q.ms += Date.now() - t; } };
-  const wrap = (st) => new Proxy(st, { get(o, k) {
-    if (k === "bind") return (...a) => wrap(o.bind(...a));
-    // all() retains D1's SQL timing/region metadata; first() discards it.
-    if (k === 'first') return async column => {
-      const result = await time(() => o.all()), row = result.results?.[0] || null;
-      if (!row || column === undefined) return row;
-      if (!Object.hasOwn(row, column)) throw new Error('D1_ERROR: column not found');
-      return row[column];
-    };
-    if (k === "all" || k === "run" || k === "raw") return (...a) => time(() => o[k](...a));
-    const v = o[k]; return typeof v === "function" ? v.bind(o) : v; } });
-  return new Proxy(db, { get(o, k) {
-    if (k === "prepare") return (sql) => wrap(o.prepare(sql));
-    if (k === "batch") return (sts) => time(() => o.batch(sts));
-    const v = o[k]; return typeof v === "function" ? v.bind(o) : v; } });
-}
 export default {
   async fetch(req, env, ctx) {
-    const q = { n: 0, ms: 0, sqlMs: 0, sqlSamples: 0, rows: 0, regions: new Set(), colos: new Set(), locations: new Set(), hits: 0, misses: 0 }, t0 = Date.now();
-    const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q), [DB_SCOPE]: env.DB, [READ_METRICS]: q } : env, ctx);
+    const q = createD1Metrics(), t0 = Date.now();
+    const session = env.DB?.withSession && primaryCheckpointRequest(req) ? env.DB.withSession('first-primary') : null;
+    const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(session || env.DB, q), [DB_SCOPE]: env.DB, [READ_METRICS]: q } : env, ctx);
     try {
       const check = req.headers.get('X-Hasla-IP-Check'), address = new URL(req.url);
       if (check && address.pathname === '/api/health' && address.searchParams.get('transport_check') === '1') {
@@ -613,10 +551,9 @@ export default {
         const ip = req.headers.get('CF-Connecting-IP');
         res.headers.set('X-Hasla-IP-Preserved', ip && check === await sha256(ip) ? '1' : '0');
       }
-      const extra = q.sqlSamples ? `, sql;desc="${q.sqlSamples} statements";dur=${q.sqlMs.toFixed(3)}, d1_read;desc="${q.rows} rows"` : '';
-      const region = q.regions.size ? `, d1_region;desc="${[...q.regions, ...q.locations].join(' ')}"` : '';
-      const colo = q.colos.size ? `, d1_colo;desc="${[...q.colos].join(' ')}"` : '';
-      res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}${extra}${region}${colo}, public_cache;desc="${q.hits} hits ${q.misses} misses"`);
+      const bookmark = session && q.hits === 0 && res.ok ? session.getBookmark() : null;
+      if (bookmark) res.headers.set(BOOKMARK_HEADER, bookmark);
+      res.headers.set("Server-Timing", d1Timing(q, Date.now() - t0));
       res.headers.set("Timing-Allow-Origin", "*");
     }
     catch (e) { /* a response passed straight through keeps its own headers */ }
@@ -624,7 +561,7 @@ export default {
   },
   /* a cron trigger (optional): remove the answer photos whose keeping time is over */
   async scheduled(event, env, ctx) {
-    const work=[labSweepJobs(env)];
+    const work=[ensureWeeklyContent(env.DB, env.DB),labSweepJobs(env)];
     if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env));
     ctx.waitUntil(Promise.allSettled(work));
   },
@@ -662,7 +599,7 @@ const worker = {
     /* /api/health is the same for everyone, signed in or not */
     const shared = publicInvariant(req.method, url.pathname) || req.method === "GET" && !req.headers.get("Authorization") && SHARED_GET.test(url.pathname);
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
-    const refreshCache=/\b(no-cache|no-store|max-age=0)\b/i.test(req.headers.get('Cache-Control')||'');
+    const refreshCache=wantsFresh(req);
     if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);
       if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
     try {
@@ -676,7 +613,7 @@ const worker = {
       if (publicInvariant(req.method, url.pathname) && cacheSeconds(url.pathname) === 300) res.headers.set("Cache-Control", "public, max-age=300");
       return res;
     } catch (e) {
-      if (e instanceof HttpError) return json({ ...(e.extra || {}), error: e.code }, e.status, cors);
+      if (e instanceof HttpError || e instanceof PublicDataError) return json({ ...(e.extra || {}), error: e.code }, e.status, cors);
       console.error(e && e.stack || e);
       return json({ error: "server_error" }, 500, cors);
     }
@@ -984,23 +921,7 @@ async function ocr(env, file, mode, m) {
 async function ranking(env, weekFilter, fresh = false) {
   return publicRead(env, 'ranking:' + (weekFilter || 'all'), () => loadRanking(env, weekFilter), { fresh });
 }
-async function loadRanking(env, weekFilter) {
-  const w = weekFilter ? "AND x.in_week=1 AND p.week=?" : "";
-  const rows = (await env.DB.prepare(`
-    SELECT x.user_id, x.problem_id, MAX(x.score) s, MIN(x.created_at) at, p.points, p.level, u.nickname, u.avatar AS av
-    FROM submissions x JOIN problems p ON p.id=x.problem_id JOIN users u ON u.id=x.user_id
-    WHERE x.status='graded' AND u.deleted=0 ${w} GROUP BY x.user_id, x.problem_id`).bind(...(weekFilter ? [weekFilter] : [])).all()).results;
-  const by = new Map();
-  for (const r of rows) {
-    let u = by.get(r.user_id);
-    if (!u) by.set(r.user_id, u = { nickname: r.nickname, av: r.av, total: 0, solved: 0, tried: 0, last: 0, levels: [] });
-    u.total += r.s; u.tried++; u.last = Math.max(u.last, r.at);
-    if (r.s >= r.points * SOLVED_AT) { u.solved++; u.levels.push(r.level); }
-  }
-  const out = [...by.values()].map(u => { const rating = rateUser(u.levels); const { levels, ...rest } = u; return { ...rest, rating, lv: tierOf(rating) }; });
-  out.sort(weekFilter ? (a, b) => b.total - a.total || a.last - b.last : (a, b) => b.rating - a.rating || b.solved - a.solved || a.last - b.last);
-  return out.slice(0, 200);
-}
+async function loadRanking(env, weekFilter) { return readPublicRanking(env.DB, weekFilter); }
 
 const ACCOUNT_HISTORY = `SELECT s.id,s.problem_id,s.status,s.score,s.created_at,p.week,p.no,p.points,p.title_ko,p.title_en FROM submissions s JOIN problems p ON p.id=s.problem_id
   WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`;
@@ -1070,7 +991,7 @@ async function arena(p, m, body, me, req, env, url) {
     const o = pubProblem(x, lang, now() < x.closes_at, true);
     if (me) o.mine = (await env.DB.prepare("SELECT id,answer,via_ocr,status,score,detail,in_week,created_at FROM submissions WHERE user_id=? AND problem_id=? ORDER BY id DESC LIMIT 20")
       .bind(me.id, x.id).all()).results.map(s => ({ ...s, detail: s.detail ? JSON.parse(s.detail) : null }));
-    return { problem: o, health: arenaHealth(env) };
+    return { problem: o, health: arenaHealth(env), user: me ? pubUser(me) : null, api_version: 5 };
   }
   if ((r = /^\/api\/problems\/(\d+)\/submit$/.exec(p)) && m === "POST") {
     needUser(me);

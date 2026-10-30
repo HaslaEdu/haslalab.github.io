@@ -1,4 +1,5 @@
-// Keep public cache hits near the visitor; the existing placed Worker owns all data and secrets.
+// Public SELECTs and cache hits stay near the visitor. The placed Worker owns private checks, writes and secrets.
+import { readAtEdge } from './public-reader.js';
 const BACKEND_ORIGIN = 'https://haslalab-community.haslalab.workers.dev';
 const PUBLIC_GET = /^\/api\/(?:health|boards|posts|lab\/stats|pay\/config|lab\/contest\/catalog)$/;
 const ANONYMOUS_GET = /^\/api\/(?:weekly|rank)$/;
@@ -16,6 +17,7 @@ function corsHeaders(request, env, headers) {
   headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Lab-Token,Cache-Control');
   headers.set('Access-Control-Max-Age', '86400');
+  headers.set('Access-Control-Expose-Headers', 'X-D1-Bookmark,X-Public-Read-Source');
   const vary = (headers.get('Vary') || '').split(',').map(v => v.trim()).filter(Boolean);
   if (!vary.some(v => v.toLowerCase() === 'origin')) vary.push('Origin');
   headers.set('Vary', vary.join(', '));
@@ -111,22 +113,24 @@ function queueWrite(key, entry, stored, policy, ctx) {
   background(ctx, writer.done);
 }
 
-function fetchPublic(request, env, ctx, policy, bypass) {
+function fetchPublic(request, env, ctx, policy, bypass, fetchData) {
   const key = policy.key.url, time = Date.now();
   for (const [k, entry] of pending) if (entry.expires <= time) { entry.obsolete = true; pending.delete(k); }
   const existing = pending.get(key);
   if (!bypass && existing) return { response: existing.response, coalesced: true };
   if (existing) { existing.obsolete = true; pending.delete(key); }
   // When saturated, forward normally and avoid retaining or caching another in-flight body.
-  if (pending.size >= MAX_PENDING) return { response: env.COMMUNITY.fetch(request), coalesced: false };
+  if (pending.size >= MAX_PENDING) return { response: fetchData(request), coalesced: false };
   const entry = { expires: time + PENDING_MS, obsolete: false, response: null };
   pending.set(key, entry);
   const remove = () => { if (pending.get(key) === entry) pending.delete(key); };
-  entry.response = Promise.resolve().then(() => env.COMMUNITY.fetch(request)).then(response => {
+  entry.response = Promise.resolve().then(() => fetchData(request)).then(response => {
     if (!cacheable(response) || entry.obsolete || pending.get(key) !== entry) { remove(); return response; }
     if (writes.size >= MAX_PENDING && !writes.has(key)) { remove(); return response; }
     const stored = new Response(response.clone().body, { headers: {
       'Content-Type': response.headers.get('Content-Type'), 'Cache-Control': `public, max-age=${policy.ttl}`,
+      ...(response.headers.get('X-D1-Bookmark') ? { 'X-D1-Bookmark': response.headers.get('X-D1-Bookmark') } : {}),
+      ...(response.headers.get('X-Public-Read-Source') ? { 'X-Public-Read-Source': response.headers.get('X-Public-Read-Source') } : {}),
     } });
     // Serialize puts for this key: an old miss cannot finish writing after a refresh.
     queueWrite(key, entry, stored, policy, ctx);
@@ -140,7 +144,7 @@ export default {
     const started = Date.now(), url = new URL(request.url);
     if (request.method === 'OPTIONS') return finish(new Response(null, { status: 204 }), request, env, started, 'preflight');
     if (!url.pathname.startsWith('/api/')) return finish(Response.json({ error: 'not_found' }, { status: 404 }), request, env, started, 'bypass');
-    const diagnostic = url.pathname === '/api/health' && url.searchParams.get('transport_check') === '1';
+    const diagnostic = url.pathname === '/api/health' && (url.searchParams.get('transport_check') === '1' || url.searchParams.get('read_region_check') === '1');
     const policy = diagnostic ? null : publicPolicy(request, url), bypass = refreshRequested(request);
     if (policy && !bypass) {
       const cached = await caches.default.match(policy.key).catch(() => null);
@@ -148,9 +152,19 @@ export default {
     }
     try {
       const forwarded = forwardRequest(request, url);
-      if (diagnostic) await ipDiagnostic(request, forwarded);
-      const read = policy ? fetchPublic(forwarded, env, ctx, policy, bypass) : null;
-      const response = read ? (await read.response).clone() : await env.COMMUNITY.fetch(forwarded);
+      if (url.searchParams.get('transport_check') === '1') await ipDiagnostic(request, forwarded);
+      const fetchData = async target => {
+        try { const local = await readAtEdge(target, env); if (local) return local; }
+        catch {
+          const headers = new Headers(target.headers); headers.set('Cache-Control', 'no-cache');
+          const primary = await env.COMMUNITY.fetch(new Request(target, { headers }));
+          const copied = new Headers(primary.headers); copied.set('X-Public-Read-Source', 'primary-fallback');
+          return new Response(primary.body, { status: primary.status, statusText: primary.statusText, headers: copied });
+        }
+        return env.COMMUNITY.fetch(target);
+      };
+      const read = policy ? fetchPublic(forwarded, env, ctx, policy, bypass, fetchData) : null;
+      const response = read ? (await read.response).clone() : await fetchData(forwarded);
       return finish(response, request, env, started, policy ? (read.coalesced ? 'coalesced' : bypass ? 'refresh' : 'miss') : 'bypass', { diagnostic });
     } catch {
       return finish(Response.json({ error: 'upstream_unavailable' }, { status: 502 }), request, env, started, 'error', { diagnostic });

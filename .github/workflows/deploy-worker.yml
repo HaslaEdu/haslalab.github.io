@@ -36,6 +36,7 @@ jobs:
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-community-latency.mjs test-account-latency.mjs
+      - run: node --test test-public-data.mjs test-global-public-read.mjs
       - run: node --check src/edge-gateway.js && node --test test-edge-gateway.mjs
       - run: node --test test-review-mode.mjs ../tests/test-study-navigation.cjs ../tests/test-paper-languages.cjs ../tests/test-contest-grading-ui.cjs ../tests/test-lab-review-records.cjs ../tests/test-external-paper-viewer.cjs ../tests/test-eotvos-archive.cjs ../tests/test-physics-archive.cjs
       - run: node --test test-provision-jobs.mjs test-replication-provision.mjs
