@@ -862,7 +862,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .ar .arpf p,.ar .arpf button,.ar .arpf .arinfo{grid-column:1/-1}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=20261030-study">
+<link rel="stylesheet" href="site-design.css?v=20261030-logo-counters">
 </head>
 <body class="hl-site">
 
@@ -1001,7 +1001,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 
 <script src="sim/labmedal.js"></script>
 <script src="examdur.js?v=20261030-study"></script>
-<script src="theory.js?v=c3e2191b42"></script>
+<script src="theory.js?v=d19c114710"></script>
 <script src="paper-languages.js?v=1"></script>
 <script src="contest-exams.js"></script>
 <script src="iypt.js?v=6c459553ee"></script>
@@ -1009,8 +1009,8 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="rupho-selection.js"></script>
 <script src="rupho-archive.js?v=20261030-study"></script>
 <script src="arena.js?v=20261030-study"></script>
-<script src="logo/variants.js?v=20261030-logo-refine"></script>
-<script src="site-design.js?v=20261030-logo-refine"></script>
+<script src="logo/variants.js?v=20261030-logo-counters"></script>
+<script src="site-design.js?v=20261030-logo-counters"></script>
 <script>
 "use strict";
 
@@ -4313,8 +4313,9 @@ const yNum=y=>parseFloat(String(y).replace("-","."));        /* 2026 → 2026, "
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k])
   DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[],
+    ...(m.resources?{resources:m.resources,officialWebsite:m.officialWebsite,note:m.resourceNote}:{}),
     /* a manifest with no paper yet (CMO: no official PDF is published) lists the competition until they are found */
-    ...(THEORY[k]?{}:{note:{ko:"문제지는 준비 중입니다.",en:"The papers are being gathered."}})};
+    ...(THEORY[k]||m.resourceNote?{}:{note:{ko:"문제지는 준비 중입니다.",en:"The papers are being gathered."}})};
 /* the KMS undergraduate competition: listed before its papers are gathered */
 if(!DATA.kumc) DATA.kumc={abbr:"KUMC", since:1982, full:{ko:"대학생 수학경시대회 (대한수학회)",en:"KMS Undergraduate Mathematics Competition"},
   scope:{ko:"대한민국 · 대학생",en:"Korea · undergraduates"}, plain:true, years:[],
@@ -4435,7 +4436,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 16;
+const LOGO_V = 17;
 const LOGO_FILES = {cmo:"cmo.svg"};
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
@@ -4461,7 +4462,7 @@ const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    iao:0.30, owao:0.35, apao:0.30, ibo:0.33, ieso:0.335, iypt:0.31,
                    ortvay:0.72, eotvos:0.38, baupc:0.40, usaaao:0.35,
                    useso:0.32, ceso:0.36, jeso:0.36, kmchc:0.38,
-                   usamo:0.83, putnam:0.45, amc:0.30};
+                   usamo:0.83, putnam:0.45, amc:0.30, mskbo:0.40};
 function logoSource(key){
   const variant=window.LOGO_VARIANTS?.[key];
   return variant?.[document.documentElement.dataset.theme==="dark"?"dark":"light"]
@@ -4571,7 +4572,7 @@ function viewOriginalHome(){
 const SUBJ=[
   {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","baupc","cpho","rupho","kphe"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
-  {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","usabo"]},
+  {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","mskbo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
   {k:"astro", ko:"천문", en:"Astronomy", logo:"ioaa", comps:["ioaa","ioaajr","iao","apao","owao","usaaao"]},
   {k:"sci", ko:"통합과학", en:"Integrated science", logo:"ijso", comps:["ijso"]},
@@ -4607,7 +4608,7 @@ function viewComps(sub){
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
             <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
-            <div><dt>${c.theoryCount?(lang==="ko"?"문제 · 시험지":"Problems / papers"):hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${probs}</dd></div>
+            <div><dt>${c.resources?.length&&!probs?(lang==="ko"?"공개 자료":"Public resources"):c.theoryCount?(lang==="ko"?"문제 · 시험지":"Problems / papers"):hasExpC(c)?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${c.resources?.length&&!probs?c.resources.length:probs}</dd></div>
           </dl>
           <span class="go">→</span>
         </a>`;}).join("")}
@@ -4815,6 +4816,15 @@ function contestResources(key){
   const labels=ko?{preview:"공개 미리보기",login:"다운로드에 로그인 필요",notice:"안내만 확인"}:{preview:"Public preview",login:"Login required to download",notice:"Information only"};
   return `<details class="cnote"><summary>${ko?"추가 자료실 · 미리보기와 접근 상태":"Additional sources · previews and access"}</summary><ul>${items.map(e=>`<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a> — ${labels[e.access]||esc(e.access)}<p>${esc(e.note)}</p></li>`).join("")}</ul></details>`;
 }
+function archiveResources(c){
+  const items=(c.resources||[]).filter(item=>/^https:\/\//.test(item.url)),ko=lang==="ko";
+  if(!items.length)return "";
+  const label=item=>esc(item.label[lang]||item.label.en);
+  return `<section class="archive-resources"><h2>${ko?"공개 자료":"Public resources"}</h2>
+    <p>${/^https:\/\//.test(c.officialWebsite||"")?`<a class="btn" href="${esc(c.officialWebsite)}" target="_blank" rel="noopener">${ko?"공식 홈페이지":"Official website"} ↗</a> `:""}${items.map(item=>`<a class="btn" href="${esc(item.url)}" target="_blank" rel="noopener">${label(item)} ↗</a>`).join(" ")}</p>
+    ${items.filter(item=>item.kind==="image").map(item=>`<figure><a href="${esc(item.url)}" target="_blank" rel="noopener"><img src="${esc(item.url)}" alt="${label(item)}" loading="lazy" decoding="async"></a><figcaption>${label(item)}</figcaption></figure>`).join("")}
+  </section>`;
+}
 function filterContest(text){
   const terms=text.toLowerCase().trim().split(/\s+/).filter(Boolean);
   document.querySelectorAll('.contestrow').forEach(row=>row.hidden=!terms.every(t=>row.textContent.toLowerCase().includes(t)));
@@ -4872,20 +4882,21 @@ function viewComp(key,mode){
       <dl class="meta">
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
         <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
-        <div><dt>${d.lYears}</dt><dd>${c.years.length}</dd></div>
+        <div><dt>${c.resources?.length&&!c.years.length?(lang==="ko"?"공개 자료":"Public resources"):d.lYears}</dt><dd>${c.resources?.length&&!c.years.length?c.resources.length:c.years.length}</dd></div>
         ${hasExpC(c)?`<div><dt>${LB(c,"problems")}</dt><dd>${total}</dd></div>`:""}
         ${c.plain||!hasExpC(c)?"":`<div><dt>${d.cntReady}</dt><dd class="${ready?"hot":""}">${ready}</dd></div>`}
         ${THEORY[key]?`<div><dt>${TL(c,"tThy")}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
+    ${archiveResources(c)}
     ${contestNote(key)}
     ${contestResources(key)}
     ${key==="kphe"?`<p class="cnote">${lang==="ko"?"물리대회 2024~2026년 6회차의 초급·중급·고급·전문가 공식 원본, 제공된 2023년 기출과 한국 중학생 물리대회 2015~2022년 공개 기출을 모았습니다. 공식 정답이 없는 자료에는 자동 채점을 제공하지 않습니다.":"Includes unchanged official papers for all four levels from six TPL sittings in 2024–2026, supplied 2023 papers, and available Korean Middle-School Physics Competition papers from 2015–2022. Papers without an official key do not receive automatic grading."}</p>`:""}
     ${hasReview(c,key)?modeSwitch(key,mode):""}
     ${mode?`${portalHtml(key,mode)}</div>${adFitBanner("primary")}`:`
     ${adFitBanner("secondary")}
-    <div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>
+    ${c.resources?.length&&!c.years.length?"":`<div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>`}
     <div class="years">
       ${c.years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;

@@ -45,6 +45,9 @@ def load():
         # a competition the site lists only for its papers names itself here (full, since, scope): window.THEORY_META
         if m.get('full'):
             meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds')), 'omr': bool(m.get('omr'))}
+            for field in ('officialWebsite', 'resourceNote', 'resources'):
+                if m.get(field):
+                    meta[comp][field] = m[field]
         for y in m.get('years', []):
             # a year is "2026", or "2026-1" / "2026-2" for a competition sat twice a year (KPhE); file names keep the 4 digits
             year, files, gt = str(y['y']), {}, None

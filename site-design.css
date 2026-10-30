@@ -9,7 +9,13 @@ body.hl-site .mark{
 }
 body.hl-site .mark img{width:26px;height:26px;top:0;filter:none}
 body.hl-site .clogo{max-width:48%}
-body.hl-site .clogo:is([data-logo-key="ortvay"],[data-logo-key="usnco"],[data-logo-key="putnam"],[data-logo-key="useso"]){max-width:56%}
+body.hl-site .clogo:is([data-logo-key="ortvay"],[data-logo-key="usnco"],[data-logo-key="putnam"],[data-logo-key="useso"],[data-logo-key="mskbo"]){max-width:56%}
+body.hl-site .archive-resources{margin:28px 0}
+body.hl-site .archive-resources h2{font-size:1.15rem}
+body.hl-site .archive-resources .btn{margin:0 6px 8px 0}
+body.hl-site .archive-resources figure{margin:20px 0;max-width:1024px}
+body.hl-site .archive-resources img{display:block;max-width:100%;height:auto;background:#fff;border:1px solid var(--grid-bold);border-radius:5px}
+body.hl-site .archive-resources figcaption{margin-top:8px;font-size:12px;color:var(--graphite)}
 body.hl-site .mark em{
   display:block;font-family:var(--mono);font-size:9px;font-weight:500;
   letter-spacing:.1em;color:#6e778b;padding-left:1px;
