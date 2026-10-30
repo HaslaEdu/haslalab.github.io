@@ -8,6 +8,19 @@ const DEG=Math.PI/180,ROOM_W=272,ROOM_D=208,LOW=2.2,HIGH=6.0;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const finite=n=>Number.isFinite(n);
 
+export function opticalFocus(lab,key) {
+  if(!lab)return null;
+  if(key==='tape'){
+    const a=lab.tape_a,b=lab.tape_b;
+    if(!a||!b||![...a,...b].every(finite))return null;
+    return {target:[(a[0]+b[0])/2,1.5,(a[1]+b[1])/2],distance:Math.max(30,Math.hypot(b[0]-a[0],b[1]-a[1])*1.2)};
+  }
+  const actual=key==='laser'?'ruler':key==='holder12b'?'holder':key;
+  if(!lab.obj?.[actual])return null;
+  const [x,z]=key==='laser'?lab.pivot():lab.pose(actual);
+  return {target:[x,key==='laser'?3:1.5,z],distance:({disk:43,ruler:80,laser:24,holder:32,holder12b:24,ruler8:42,screen:145,tape6:20})[key]||85};
+}
+
 export function createOpticalScene(container,options={}) {
   const geometries=new Set(),materials=new Set(),textures=new Set(),gcache=new Map(),mcache=new Map();
   const scene=new THREE.Scene();scene.background=new THREE.Color('#26352f');
@@ -287,8 +300,8 @@ export function createOpticalScene(container,options={}) {
   }
   const observer=typeof ResizeObserver==='function'?new ResizeObserver(resize):null;observer?.observe(container);
   function focus(key){
-    if(!lab)return;const actual=key==='laser'?'ruler':key==='holder12b'?'holder':key,[x,z]=pose(actual),target=new THREE.Vector3(x,key==='laser'?3:1.5,z),distance=({disk:43,ruler:80,laser:24,holder:32,holder12b:24,ruler8:42,screen:145,tape6:20})[key]||85;
-    if(key==='laser'){const p=lab.pivot?.();if(p)target.set(p[0],3,p[1]);}
+    const specification=opticalFocus(lab,key);if(!specification)return;
+    const target=new THREE.Vector3(...specification.target),distance=specification.distance;
     const offset=camera.position.clone().sub(controls.target).normalize();if(viewMode==='top')offset.set(0,1,.0001);camera.position.copy(target).addScaledVector(offset,distance);controls.target.copy(target);controls.update();invalidate();
   }
   function setView(view){

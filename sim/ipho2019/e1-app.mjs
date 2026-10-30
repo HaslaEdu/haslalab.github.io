@@ -1,5 +1,5 @@
 import { OpticalLab, vis } from './e1-physics.mjs?v=3393379d33c4';
-import { createOpticalScene } from './e1-scene.mjs?v=3a87254fbe0e';
+import { createOpticalScene } from './e1-scene.mjs?v=1d0b754fcbf7';
 
 const $ = id => document.getElementById(id);
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -28,4 +28,4 @@ jobs:
 
       - run: node --check developer-server-guide.js && node --test tests/test-developer-guide.cjs tests/test-model-test-ui.cjs tests/test-model-test-exam-ui.cjs tests/test-model-test-catalogue.cjs
 
-      - run: node --test tests/test-ipho2019-e1-physics.mjs tests/test-learn-coming-soon.cjs
+      - run: node --test tests/test-ipho2019-e1-physics.mjs tests/test-ipho2019-e1-scene.mjs tests/test-learn-coming-soon.cjs
