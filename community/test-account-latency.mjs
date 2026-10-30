@@ -124,3 +124,13 @@ test('refreshing a nested public ranking does not prevent its weekly projection 
   const r = await publicRead(env, 'weekly', () => { throw new Error('fresh outer projection was lost'); });
   assert.deepEqual(r, { top: [10] });
 });
+
+test('the health transport check reveals only IP equality and is not an authentication input', async () => {
+  const ip = '198.51.100.7', digest = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip))).toString('base64url');
+  const r = await api('/health?transport_check=1', { id: null, headers: { 'CF-Connecting-IP': ip, 'X-Hasla-IP-Check': digest, 'Cache-Control': 'no-cache' } });
+  assert.equal(r.headers.get('X-Hasla-IP-Preserved'), '1');
+  assert.ok(!JSON.stringify(r.data).includes(ip) && !JSON.stringify(r.data).includes(digest));
+  const missing = await api('/health?transport_check=1', { id: null, headers: { 'X-Hasla-IP-Check': digest, 'Cache-Control': 'no-cache' } });
+  assert.equal(missing.headers.get('X-Hasla-IP-Preserved'), '0');
+  assert.equal((await api('/me/overview', { id: null, headers: { 'X-Hasla-IP-Check': digest } })).status, 401);
+});

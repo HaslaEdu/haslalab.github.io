@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/migrations/**", "community/wrangler.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -34,12 +34,17 @@ jobs:
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-community-latency.mjs test-account-latency.mjs
+      - run: node --check src/edge-gateway.js && node --test test-edge-gateway.mjs
       - run: node --test test-review-mode.mjs ../tests/test-study-navigation.cjs ../tests/test-paper-languages.cjs ../tests/test-contest-grading-ui.cjs ../tests/test-lab-review-records.cjs ../tests/test-external-paper-viewer.cjs ../tests/test-eotvos-archive.cjs ../tests/test-physics-archive.cjs
       - run: node --test test-provision-jobs.mjs
       - run: node provision-jobs.mjs
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # Public cache/preflight stay at the visitor's edge. Misses use the existing regional Worker.
+      - run: npx wrangler deploy --config wrangler.edge.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       # the PDF Worker (problem sheets and solutions from the releases), with the same wrangler

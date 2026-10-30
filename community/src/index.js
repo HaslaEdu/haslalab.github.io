@@ -605,6 +605,13 @@ export default {
     const q = { n: 0, ms: 0, sqlMs: 0, sqlSamples: 0, rows: 0, regions: new Set(), colos: new Set(), locations: new Set(), hits: 0, misses: 0 }, t0 = Date.now();
     const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q), [DB_SCOPE]: env.DB, [READ_METRICS]: q } : env, ctx);
     try {
+      const check = req.headers.get('X-Hasla-IP-Check'), address = new URL(req.url);
+      if (check && address.pathname === '/api/health' && address.searchParams.get('transport_check') === '1') {
+        // Read-only transport check: reveal only equality, never an IP or its digest.
+        // Authentication/rate limiting still trust only Cloudflare's original header.
+        const ip = req.headers.get('CF-Connecting-IP');
+        res.headers.set('X-Hasla-IP-Preserved', ip && check === await sha256(ip) ? '1' : '0');
+      }
       const extra = q.sqlSamples ? `, sql;desc="${q.sqlSamples} statements";dur=${q.sqlMs.toFixed(3)}, d1_read;desc="${q.rows} rows"` : '';
       const region = q.regions.size ? `, d1_region;desc="${[...q.regions, ...q.locations].join(' ')}"` : '';
       const colo = q.colos.size ? `, d1_colo;desc="${[...q.colos].join(' ')}"` : '';

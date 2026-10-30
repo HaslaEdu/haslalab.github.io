@@ -1,0 +1,13 @@
+name = "haslalab-community-edge"
+main = "src/edge-gateway.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+keep_vars = true
+
+# Deliberately stay at the visitor's edge. Data, secrets, D1 and Queues stay in the existing backend.
+[vars]
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+
+[[services]]
+binding = "COMMUNITY"
+service = "haslalab-community"
