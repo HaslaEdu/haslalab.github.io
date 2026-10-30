@@ -325,8 +325,8 @@ export async function runModelTest(env, body, options = {}) {
     const policy = reference ? GRADE_POLICY.replace('developer rubric', 'server-selected published reference') +
       (reference.scoring === 'qualitative' ? '\nNo verified official point scheme is available. Give qualitative feedback only; status must be needs_review and score must be null. Never invent weights or a numeric maximum.' : '') : GRADE_POLICY;
     const graded = await modelTestProviderCall(env, pipeline.grading, 'grading', policy,
-      { task: 'grading', language: input.lang, problem: input.problem, rubric: input.rubric, points: input.points,
-        min_score: input.minimumScore ?? 0,
+      { task: 'grading', problem: input.problem, rubric: input.rubric, points: input.points,
+        min_score: input.minimumScore ?? 0, language: input.lang,
         transcript: ocr.text, uncertainties: ocr.uncertainties, legible: ocr.legible }, [], GRADE_SCHEMA, settings);
     stages.push(graded.usage);
     return { pipeline: input.pipeline, ...(reference ? { reference } : {}), ocr, grading: { provider: pipeline.grading.provider, model: pipeline.grading.model,

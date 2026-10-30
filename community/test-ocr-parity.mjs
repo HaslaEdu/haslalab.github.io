@@ -72,14 +72,15 @@ const server = http.createServer(async (request, response) => {
     }
     if (request.url.includes(":generateContent")) {
       const body = JSON.parse(bytes), parts = body.contents[0].parts, prompt = parts.map(part => part.text || "").join("\n");
-      captures.push({ provider: "gemini", prompt, parts });
+      captures.push({ provider: "gemini", url: request.url, body, prompt, parts });
       response.statusCode = fixture.geminiStatus;
       response.setHeader("Content-Type", "application/json");
       if (fixture.geminiStatus !== 200) return response.end('{"error":"fixture structure unavailable"}');
       const result = prompt.startsWith("[TASK: read page]") ? fixture.read : {
         items: [{ id: "A.1", found: true, page: 1, value: 108.2, unit_ok: true, score: 1, checks_met: [], rules: [], note: "fixture grounded value" }], feedback: [], review: null,
       };
-      return response.end(JSON.stringify({ candidates: [{ content: { parts: [{ text: JSON.stringify(result) }] } }], usageMetadata: { promptTokenCount: 100, candidatesTokenCount: 50 } }));
+      return response.end(JSON.stringify({ candidates: [{ content: { parts: [{ text: fixture.geminiText ?? JSON.stringify(result) }] } }],
+        ...(fixture.geminiModel ? { modelVersion: fixture.geminiModel } : {}), usageMetadata: fixture.geminiUsage || { promptTokenCount: 100, candidatesTokenCount: 50 } }));
     }
     response.statusCode = 404; response.end("unexpected fixture path");
   } catch (error) { response.statusCode = 500; response.end(String(error.message)); }
@@ -98,11 +99,13 @@ test.after(async () => { globalThis.fetch = originalFetch; await new Promise(res
 const hash = async text => Buffer.from(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text))).toString("base64url");
 async function session(options = {}) {
   const id = ++serial, timestamp = Math.floor(Date.now() / 1000), token = ("owner_fixture_" + id).padEnd(48, "a"), scan = ("scan_fixture_" + id).padEnd(48, "b");
+  const comp = options.comp || "ipho", year = options.year || 2024, task = options.task || "E1", examKey = comp + year;
+  const sol = `IPhO_${year}_S1.pdf`, sources = { [task]: { sol, ...(options.theory ? { kind: "theory" } : {}) } };
   sqlite.prepare("INSERT INTO users(id,username,nickname,pw,created_at) VALUES(?,?,?,'unused',?)").run(id, "ocr" + id, "OCR " + id, timestamp);
   sqlite.prepare("INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)").run(await hash(token), id, timestamp, timestamp + 3600);
   sqlite.prepare(`INSERT INTO lab_sessions(id,user_id,exam_key,comp,year,tasks,lang,started_at,ended_at,scan_until,upload_hash,status,charged,created_at,sources)
-    VALUES(?,?,'ipho2024','ipho',2024,'["E1"]','ko',?,?,?,?,?,?,?,?)`).run(id, id, timestamp - 18000, timestamp - 10, timestamp + 3600, await hash(scan), options.status || "scanning", options.charged ?? 1, timestamp, JSON.stringify({ E1: { sol: "IPhO_2024_S1.pdf" } }));
-  return { id, token, scan };
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(id, id, examKey, comp, year, JSON.stringify([task]), options.lang || "ko", timestamp - 18000, timestamp - 10, timestamp + 3600, await hash(scan), options.status || "scanning", options.charged ?? 1, timestamp, JSON.stringify(sources));
+  return { id, token, scan, task, examKey, sol };
 }
 async function api(path, options = {}, settings = env) {
   const response = await worker.fetch(new Request("http://worker.local/api" + path, options), settings);
@@ -119,7 +122,7 @@ async function recognize(s, mode = "math", settings = env) {
   return api("/ocr?mode=" + mode, { method: "POST", headers: { Authorization: "Bearer " + s.token }, body: form }, settings);
 }
 const upload = async(s,image=png,scan=s.scan,settings=env)=>{
-  const out=await api(`/lab/up/${s.id}/pages?task=E1&kind=answer`,{method:'PUT',headers:{'Content-Type':'image/png','X-Lab-Token':scan},body:image},settings);
+  const out=await api(`/lab/up/${s.id}/pages?task=${s.task || 'E1'}&kind=answer`,{method:'PUT',headers:{'Content-Type':'image/png','X-Lab-Token':scan},body:image},settings);
   if(out.status===200&&out.data.queued){
     await drainQueue(settings);const page=(await api('/lab/sessions/'+s.id,{headers:{Authorization:'Bearer '+s.token}},settings)).data.session.pages.find(p=>p.id===out.data.id);
     out.data={...out.data,ocr_status:page.ocr_status,ocr_error:page.ocr_error,chars:page.text.length};
@@ -265,6 +268,71 @@ test("real grading input retains unabridged original equations and existing nume
   assert.ok(grading.prompt.includes("Upstage original transcript"));
   assert.ok(grading.prompt.includes("auxiliary indexes"));
   assert.equal(result.data.session.score, 1, "existing range/unit/answer-sheet checks still determine the mark");
+});
+
+test("actual Gemini grading bodies share the regulation/output/evidence prefix across exams and students", async () => {
+  const runs = [];
+  for (const scope of [{ comp: "ipho", year: 2024, task: "E1", lang: "ko" },
+    { comp: "apho", year: 2025, task: "E2", lang: "en" }, { comp: "ipho", year: 2026, task: "T2", theory: true, lang: "ko" }]) {
+    const s = await session(scope), marker = `PRIVATE_STUDENT_${s.id}_FINAL_ANSWER`, original = FORMULA + "\n" + marker;
+    const image = Buffer.concat([png, Buffer.from(marker)]), reading = readFixture(); reading.header.task = scope.task;
+    reset({ upstage: { content: { markdown: original }, confidence: 0.94 }, read: reading,
+      geminiModel: "gemini-2.5-flash", geminiUsage: { promptTokenCount: 1000, candidatesTokenCount: 80, thoughtsTokenCount: 20, cachedContentTokenCount: 400 } });
+    assert.equal((await upload(s, image)).data.ocr_status, "done");
+    sqlite.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,'fixture',?)")
+      .run(s.examKey, scope.task, s.sol, JSON.stringify({ points: 1, items: [{ id: "A.1", points: 1, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 108, full_max: 109, partial: [] }] }), Math.floor(Date.now() / 1000));
+    const result = await api(`/lab/sessions/${s.id}/submit`, { method: "POST", headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/json" }, body: JSON.stringify({ lang: scope.lang }) });
+    assert.equal(result.status, 200); assert.equal(result.data.session.status, "graded"); assert.equal(result.data.session.score, 1);
+    const grading = captures.find(row => row.provider === "gemini" && row.prompt.startsWith("[TASK: grade]")); assert.ok(grading);
+    const head = grading.parts[0].text, boundary = head.indexOf("\n[Exam context]\n"); assert.ok(boundary > 0);
+    const prefix = head.slice(0, boundary), tail = head.slice(boundary);
+    for (const policy of ["Grading regulation", "R1.", "R10.", "For every scheme item", "primary text evidence", "never changes a mark"]) assert.ok(prefix.includes(policy), policy);
+    assert.ok(!prefix.includes(marker)); assert.ok(!prefix.includes(s.token)); assert.ok(!prefix.includes(original)); assert.ok(!prefix.includes("<<SCHEME>>"));
+    assert.ok(tail.includes(scope.comp.toUpperCase() + " " + scope.year)); assert.ok(tail.includes(scope.task)); assert.ok(tail.includes(scope.lang === "en" ? "English" : "Korean"));
+    assert.ok(grading.prompt.includes(original), "the complete original remains in the student tail");
+    assert.ok(grading.parts.some(part => part.inline_data?.mime_type === "image/png" && Buffer.from(part.inline_data.data, "base64").equals(image)), "the original scan bytes remain attached");
+    assert.ok(!JSON.stringify(grading.body).includes('"cachedContent"')); assert.match(grading.url, /:generateContent$/);
+    const metered = sqlite.prepare("SELECT model,in_tok,out_tok,cached_tok,usd FROM lab_calls WHERE session_id=? AND step='grade'").get(s.id);
+    assert.equal(metered.model, "gemini-2.5-flash"); assert.equal(metered.in_tok, 1000); assert.equal(metered.out_tok, 100); assert.equal(metered.cached_tok, 400); assert.ok(metered.usd > 0);
+    runs.push({ prefix, original, prompt: grading.prompt });
+  }
+  assert.equal(runs[0].prefix, runs[1].prefix); assert.equal(runs[1].prefix, runs[2].prefix);
+  assert.ok(runs[0].prefix.length > 1000, "compare the substantive common policy, not only a task tag");
+  for (let i = 0; i < runs.length; i++) for (let j = 0; j < runs.length; j++) if (i !== j) assert.ok(!runs[i].prompt.includes(runs[j].original), "another student's tail never leaks into a reused prefix");
+});
+
+test("real Worker metering retains alias overrides and bills known-usage parse failures exactly once", async () => {
+  const alias = "gemini-fixture-alias", settings = { ...env, GEMINI_MODEL: alias, LAB_PRICES: JSON.stringify({ [alias]: [2,5,0.25] }) };
+  const expected = ((1000-400)*2 + 400*0.25 + 100*5)/1e6;
+  for(const invalid of [false,true]) {
+    reset({ geminiModel: "gemini-2.5-flash", geminiUsage: { promptTokenCount:1000,candidatesTokenCount:80,thoughtsTokenCount:20,cachedContentTokenCount:400 },
+      ...(invalid ? { geminiText:"not JSON PRIVATE_UPSTREAM_PAYLOAD" } : {}) });
+    const s=await session(), result=await upload(s,png,s.scan,settings);
+    assert.equal(result.status,200); assert.equal(result.data.ocr_status,"done","successful original OCR survives optional structure parsing failure");
+    const rows=sqlite.prepare("SELECT model,in_tok,out_tok,cached_tok,usd,ok,error FROM lab_calls WHERE session_id=? AND provider='gemini'").all(s.id);
+    assert.equal(rows.length,1,"one attempted provider request produces one billing row, even when its output cannot be parsed");
+    const row=rows[0]; assert.equal(row.model,"gemini-2.5-flash"); assert.equal(row.in_tok,1000); assert.equal(row.out_tok,100); assert.equal(row.cached_tok,400);
+    assert.ok(Math.abs(row.usd-expected)<1e-9,"the requested alias override is retained when no resolved-model override exists");
+    assert.equal(row.ok,invalid?0:1); assert.ok(!String(row.error||"").includes("PRIVATE_UPSTREAM_PAYLOAD"));
+    const calls=captures.filter(call=>call.provider==="gemini"); assert.equal(calls.length,1); assert.match(calls[0].url,new RegExp(alias+":generateContent$"));
+    if(invalid) assert.equal(JSON.parse(sqlite.prepare("SELECT read FROM lab_pages WHERE id=?").get(result.data.id).read).structure_status,"failed");
+  }
+});
+
+test("real admin metrics keep incomplete totals null while exposing known costs and unknown-call counts", async () => {
+  reset(); const admin=await session(), s=await session({status:"graded"}), timestamp=Math.floor(Date.now()/1000), model="gemini-metrics-fixture";
+  sqlite.prepare("UPDATE users SET role='admin' WHERE id=?").run(admin.id);
+  sqlite.prepare("UPDATE lab_sessions SET submitted_at=?,graded_at=?,score=1,points=1,detail=? WHERE id=?").run(timestamp,timestamp,JSON.stringify({grade_ms:42}),s.id);
+  const insert=sqlite.prepare(`INSERT INTO lab_calls(session_id,task,step,provider,model,in_tok,out_tok,cached_tok,usd,ms,ok,error,created_at)
+    VALUES(?,'E1','grade','gemini',?,?,?,?,?,?,?, ?,?)`);
+  insert.run(s.id,model,1000,100,400,0.00234,30,1,null,timestamp);
+  insert.run(s.id,model,null,null,null,null,20,0,"fixture unknown usage",timestamp);
+  const result=await api("/admin/lab/metrics?days=1",{headers:{Authorization:"Bearer "+admin.token}});
+  assert.equal(result.status,200); const step=result.data.steps.find(row=>row.model===model&&row.step==="grade"), sitting=result.data.sessions.find(row=>row.id===s.id);
+  assert.ok(step); assert.equal(step.n,2); assert.equal(step.failed,1); assert.equal(step.usd,null); assert.equal(step.known_usd,0.00234); assert.equal(step.unknown_cost_calls,1);
+  assert.equal(step.cache_hit_calls,1); assert.equal(step.unknown_cache_calls,1);
+  assert.ok(sitting); assert.equal(sitting.calls,2); assert.equal(sitting.usd,null); assert.equal(sitting.known_usd,0.00234); assert.equal(sitting.unknown_cost_calls,1);
+  assert.equal(captures.length,0,"reading administrator metrics cannot call any provider");
 });
 
 test("auth, QR token, payment, upload limit and read-only exam transcript checks remain enforced", async () => {

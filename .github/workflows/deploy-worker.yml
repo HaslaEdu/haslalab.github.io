@@ -31,7 +31,7 @@ jobs:
       - run: npm ci
       - run: node --check src/index.js
       - run: node ../tools/build-site-catalogue.cjs --check
-      - run: node --test test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
+      - run: node --test test-lab-call-pricing.mjs test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
       - run: node weekly/build-seed.mjs --check
       - run: node --test test-weekly-content.mjs test-greenhouse-content.mjs test-astronomy-revision.mjs test-monthly-period.mjs test-monthly-answers.mjs test-monthly-capture.mjs test-monthly-policy.mjs test-monthly-photos.mjs test-monthly-presentation.mjs test-monthly-rewards.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs
