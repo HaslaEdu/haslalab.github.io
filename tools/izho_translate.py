@@ -196,8 +196,21 @@ def build(folder: Path, target: Path):
             if not target_crop.exists():
                 if "rect" not in math:
                     raise ValueError("Missing math crop without a source rectangle: " + str(target_crop))
-                original[e["page"]].get_pixmap(matrix=fitz.Matrix(4, 4),
-                    clip=fitz.Rect(math["rect"]), alpha=False).save(target_crop)
+                pix = original[e["page"]].get_pixmap(matrix=fitz.Matrix(4, 4),
+                    clip=fitz.Rect(math["rect"]), alpha=False)
+                if math.get("ink_rects"):
+                    source_bitmap = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+                    mask = Image.new("L", source_bitmap.size)
+                    draw = ImageDraw.Draw(mask)
+                    for q in math["ink_rects"]:
+                        r = fitz.Rect(q)
+                        draw.rectangle((r.x0*4-pix.x, r.y0*4-pix.y,
+                                        r.x1*4-pix.x, r.y1*4-pix.y), fill=255)
+                    crop = Image.new("RGB", source_bitmap.size, "white")
+                    crop.paste(source_bitmap, mask=mask)
+                    crop.save(target_crop)
+                else:
+                    pix.save(target_crop)
     archive = fitz.Archive(str(folder.resolve()))
     archive.add(str(FONT.parent))
     css = """@font-face { font-family: Korean; src: url(NotoSansKR-Regular.ttf); }

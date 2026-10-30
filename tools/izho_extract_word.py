@@ -73,7 +73,7 @@ def extract(source,folder,pages):
     q=fitz.Rect(old[oi]['rect'])
     if groups:
      r,part=groups[-1]
-     near=(min(r.y1,q.y1)>max(r.y0,q.y0) and max(r.x0,q.x0)-min(r.x1,q.x1)<12) or (min(r.x1,q.x1)>max(r.x0,q.x0) and max(r.y0,q.y0)-min(r.y1,q.y1)<5)
+     near=(min(r.y1,q.y1)>max(r.y0,q.y0) and max(r.x0,q.x0)-min(r.x1,q.x1)<12) or (max(r.x0,q.x0)-min(r.x1,q.x1)<4 and max(r.y0,q.y0)-min(r.y1,q.y1)<5)
     else:near=False
     if near:groups[-1]=(r|q,part+[oi])
     else:groups.append((q,[oi]))

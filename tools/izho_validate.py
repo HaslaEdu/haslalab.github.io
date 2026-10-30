@@ -12,11 +12,14 @@ from izho_translate import ROOT, resolve_source
 
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument("years", type=int, nargs="+")
+p.add_argument("--kind", choices=("T", "TS"), help="Audit one edition while the other is still being translated.")
 a = p.parse_args()
 failures = []
 report = []
 for year in a.years:
     for kind in ("T", "TS"):
+        if a.kind and kind != a.kind:
+            continue
         path = ROOT / "tools" / "ko" / "izho" / str(year) / kind / "translation.json"
         if not path.exists():
             continue

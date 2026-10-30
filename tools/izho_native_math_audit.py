@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image,ImageDraw
 import pymupdf as f
 from izho_translate import ROOT,resolve_source
-from izho_extract_word import mathword
+from izho_extract_word import mathword,candidate,configure_math_fonts
 def components(mask):
  pending=set(map(tuple,np.argwhere(mask)));groups=[]
  while pending:
@@ -23,6 +23,7 @@ def run(year,kind):
  folder=ROOT/'tools/ko/izho'/str(year)/kind;data=json.loads((folder/'translation.json').read_text('utf8'));f.TOOLS.set_small_glyph_heights(bool(data.get('small_glyph_heights')))
  src=f.open(resolve_source(data));
  if data.get('source_pages') is not None:src.select(data['source_pages'])
+ configure_math_fonts(src)
  target=ROOT/'pdfx/izho'/f'IZhO_{year}_{kind}_KO.pdf';out=f.open(target);pages=[]
  for pi,(a,b) in enumerate(zip(src,out)):
   pa=a.get_pixmap(matrix=f.Matrix(4,4),colorspace=f.csGRAY);pb=b.get_pixmap(matrix=f.Matrix(4,4),colorspace=f.csGRAY)
@@ -33,7 +34,7 @@ def run(year,kind):
    if block['type']!=0:continue
    spans=[s for l in block['lines'] for s in l['spans']];text=' '.join(s['text'] for s in spans);words=re.findall('[A-Za-z]{2,}',text)
    if re.search('[А-Яа-яЁё]{2,}',text) or any(not mathword(w) for w in words):continue
-   if not any(s['font'].replace(' ','').startswith(('CM','CambriaMath','Symbol','MTExtra')) for s in spans):continue
+   if not any(candidate(s) for s in spans):continue
    r=f.Rect(block['bbox']);rects.append(list(r));draw.rectangle(tuple(v*4 for v in r),fill=1)
   for e in data['entries']:
    if e['page']!=pi or e.get('passthrough'):continue
