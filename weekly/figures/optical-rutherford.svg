@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" role="img" aria-labelledby="title desc">
+  <title id="title">Ray deflection in a radial refractive-index field</title>
+  <desc id="desc">Schematic incoming rays above a central heat source. A positive index contrast deflects them inwards; a negative contrast deflects them outwards. The impact parameter b is measured from the incoming straight asymptote to the centre.</desc>
+  <defs>
+    <marker id="ray-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10z" fill="#63529b"/></marker>
+    <marker id="measure" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M9 1 1 5 9 9" fill="none" stroke="#45536b" stroke-width="1.5"/></marker>
+  </defs>
+  <g fill="none" stroke="#bdc6d4" stroke-width="1.2" stroke-dasharray="5 5"><path d="M28 230H422M478 230H872M28 116H422M478 116H872"/></g>
+  <g fill="#efeaf8" stroke="#c8bddf"><circle cx="239" cy="230" r="52"/><circle cx="689" cy="230" r="52"/></g>
+  <g fill="none" stroke="#63529b" stroke-width="2.8" marker-end="url(#ray-arrow)">
+    <path d="M30 80H170C250 80 310 99 407 138"/>
+    <path d="M30 116H168C248 116 313 153 407 204"/>
+    <path d="M480 80H610C700 80 746 62 857 34"/>
+    <path d="M480 116H610C696 116 751 95 857 65"/>
+  </g>
+  <g stroke="#45536b" stroke-width="1.3" marker-start="url(#measure)" marker-end="url(#measure)"><path d="M84 122V224"/><path d="M534 122V224"/></g>
+  <g fill="#efb762" stroke="#835e2d" stroke-width="1.5"><circle cx="239" cy="230" r="10"/><circle cx="689" cy="230" r="10"/></g>
+  <g fill="#26334c" font-family="Georgia, 'Times New Roman', serif" font-size="21">
+    <text x="66" y="178" font-style="italic">b</text><text x="516" y="178" font-style="italic">b</text>
+    <text x="239" y="270" text-anchor="middle">Δn &gt; 0 · inward</text><text x="689" y="270" text-anchor="middle">Δn &lt; 0 · outward</text>
+    <text x="253" y="223" font-style="italic">R</text><text x="703" y="223" font-style="italic">R</text>
+  </g>
+  <text x="450" y="296" text-anchor="middle" fill="#59667c" font-family="system-ui, sans-serif" font-size="12">Schematic trajectories · not to scale</text>
+</svg>

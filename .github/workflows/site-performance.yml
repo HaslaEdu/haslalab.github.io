@@ -20,3 +20,4 @@ jobs:
           node-version: 22
       - run: node tools/build-site-catalogue.cjs --check
       - run: node --test tests/test-site-runtime.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs
+      - run: node --test tests/test-weekly-rendering.cjs

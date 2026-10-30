@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "community/test-*.mjs", "community/provision-jobs.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -30,6 +30,8 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
+      - run: node weekly/build-seed.mjs --check
+      - run: node --test test-weekly-content.mjs ../tests/test-weekly-rendering.cjs
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
@@ -43,6 +45,9 @@ jobs:
       - run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # Reviewed weekly content is bundled above and publishes atomically through
+      # the existing D1 binding on the first weekly/problem request. This avoids
+      # requiring D1 management privileges from the deployment credential.
       # Public cache/preflight stay at the visitor's edge. Misses use the existing regional Worker.
       - run: npx wrangler deploy --config wrangler.edge.toml
         env:
