@@ -112,6 +112,25 @@ function arLeft(sec) { if (sec <= 0) return arT().closed; const d = Math.floor(s
 function arDate(s) { const D = new Date(s * 1000); return (D.getMonth() + 1) + "." + D.getDate(); }
 /* text with $...$ formulas: escaped, line breaks kept; KaTeX renders it afterwards */
 function arText(s) { return esc(s || "").replace(/\n/g, "<br>"); }
+/* Published problems have a deliberately small, escaped format. Student answers keep arText.
+   Only repository-owned weekly diagrams are permitted; HTML and remote image URLs stay text. */
+function arPublishedText(s) {
+  const prose = text => {
+    const blocks = [], lines = [];
+    const flush = () => { if (lines.length) blocks.push(`<p>${lines.splice(0).map(esc).join("<br>")}</p>`); };
+    for (const line of text.replace(/\r\n?/g, "\n").split("\n")) {
+      const heading = /^(#{2,3})\s+(.+)$/.exec(line);
+      const figure = /^!\[([^\]\n]{1,300})\]\((weekly\/figures\/[a-z0-9][a-z0-9-]*\.svg)\)$/.exec(line);
+      if (!line.trim()) { flush(); }
+      else if (heading) { flush(); const level = heading[1].length; blocks.push(`<h${level}>${esc(heading[2])}</h${level}>`); }
+      else if (figure) { flush(); blocks.push(`<figure class="arfigure"><img src="${figure[2]}" alt="${esc(figure[1])}" loading="lazy" decoding="async"><figcaption>${esc(figure[1])}</figcaption></figure>`); }
+      else lines.push(line);
+    }
+    flush(); return blocks.join("\n");
+  };
+  return String(s || "").split(/(\$\$[\s\S]*?\$\$)/).map(part => part.startsWith("$$") && part.endsWith("$$")
+    ? `<div class="arformula">${esc(part)}</div>` : prose(part)).join("\n");
+}
 let arKatex = null;
 function arMath(el) {
   if (!el) return;
@@ -415,7 +434,7 @@ async function arProblem(root, alive, id) {
       <div class="arph"><span class="arno">${p.no}</span><div><h1>${esc(p.title)}</h1>
         <div class="armeta"><span class="arkind ${p.kind}">${p.kind === "short" ? T.short : T.essay}</span><span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
-      <div class="arstmt" id="arStmt">${arText(p.body)}</div>
+      <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(c.id)}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
@@ -440,7 +459,7 @@ async function arProblem(root, alive, id) {
       <details class="arsub"><summary><b>${s.status === "graded" ? s.score + " / " + p.points : T[s.status] || s.status}</b>
         <span>${cmFull(s.created_at)}</span>${s.via_ocr ? `<small>${T.viaOcr}</small>` : ""}${s.in_week ? "" : `<small>${T.practice}</small>`}</summary>
         <pre class="aranswer">${esc(s.answer)}</pre>${arResult(s, p)}</details>`).join("")}</div>` : ""}
-    <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
+    <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arPublishedText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
   arMath(root);
   const lg = root.querySelector("#arLogin"); if (lg) lg.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
   const f = root.querySelector("#arF"); if (!f) return;

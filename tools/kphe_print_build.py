@@ -180,6 +180,7 @@ def main():
     selected_parts = [arg.split('=', 1)[1] for arg in sys.argv[1:] if arg.startswith('--part=')]
     modern_only = '--modern-only' in sys.argv[1:]
     keys_only = '--keys-only' in sys.argv[1:]
+    papers_only = '--papers-only' in sys.argv[1:]
     if selected:
         manifests = [p for p in manifests if p.stem in selected]
     overlay = copy.deepcopy(previous)
@@ -199,6 +200,8 @@ def main():
                 if file['kind'] not in ('paper', 'key'):
                     continue
                 if keys_only and file['kind'] != 'key':
+                    continue
+                if papers_only and file['kind'] != 'paper':
                     continue
                 if selected_parts and file['part'] not in selected_parts:
                     continue
