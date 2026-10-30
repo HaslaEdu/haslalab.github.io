@@ -162,9 +162,6 @@ def write_manifest(report):
                     resourceNote={"ko": "2014~2026년 국제 결선 13개년의 영어 원문 문제지와 확보한 공식 해설을 모았습니다. 국가별 예선은 포함하지 않습니다. 2017~2019년 공식 해설은 확인되지 않았습니다. 보통 4시간이며, 2021년 포르투 온라인 결선은 원문 규정에 따라 12문항·16시간입니다.",
                                   "en": "All thirteen international finals from 2014–2026, with original English papers and available official solutions. National preliminaries are excluded. No official solutions were found for 2017–2019. The usual duration is four hours; the 2021 Porto online final had twelve problems and sixteen hours."},
                     resources=[
-                        dict(label={"ko": "2026 주최 측 · 결선 기출 자료실", "en": "2026 organiser · finals archive"}, url=NL_INDEX, kind="page"),
-                        dict(label={"ko": "영국·아일랜드 공식 기출 자료실", "en": "UK & Ireland official past-paper archive"}, url=UK_INDEX, kind="page"),
-                        dict(label={"ko": "2016 주최 단체 · 결선 기출 자료실", "en": "2016 organising association · finals archive"}, url=RO_INDEX, kind="page"),
                         dict(label={"ko": "IAPS 공식 일반 규정", "en": "IAPS official general rules"}, url=rules, kind="pdf"),
                     ], sources=[UK_INDEX, RO_INDEX, NL_INDEX, "https://estudiantes.rsef.es/PLANCKS25/Exams", rules], years=[])
     for year in sorted(locations, reverse=True):

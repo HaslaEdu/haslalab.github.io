@@ -3,6 +3,9 @@ const Runtime=require('../site-runtime.js'),root=path.resolve(__dirname,'..'),re
 const html=read('index.html'),main=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('const REL ='))[1];
 const metadataScope={window:{}};vm.runInNewContext(read('site-catalogue.js'),metadataScope);const catalogue=metadataScope.window.HL_CATALOGUE;
 const plain=v=>JSON.parse(JSON.stringify(v)),tick=()=>new Promise(r=>setImmediate(r));
+const anchors=html=>[...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map(([,url,label])=>({
+  url:url.replaceAll('&amp;','&').replaceAll('&quot;','"').replaceAll('&#39;',"'"),label:label.replace(/<[^>]+>/g,'')
+}));
 
 test('home, subjects, learning and community do not download paper datasets; deep links select only their data',()=>{
   const options={known:Object.keys(catalogue.competitions),theory:catalogue.theoryKeys,versions:catalogue.versions};
@@ -83,6 +86,59 @@ test('resource-only MSKBO stays visible and honest before paper data loads',()=>
   assert.deepEqual(plain(lean.run('DATA.mskbo.resources')),plain(full.run('DATA.mskbo.resources')));
   assert.equal(lean.run('DATA.mskbo.years.length'),0);
   const page=lean.run('lang="en";viewComp("mskbo")');assert.ok(page.includes('Official sample questions'));assert.ok(page.includes('https://mskbo.bioedu.kr/'));assert.ok(!page.includes('#/mskbo/2026'));
+});
+
+test('every competition keeps its labelled official website before and after lazy hydration in both interface languages',()=>{
+  const lean=app(),full=app({preload:true}),keys=Object.keys(catalogue.competitions);
+  const check=(a,phase)=>{
+    for(const language of ['ko','en']){
+      a.run(`lang=${JSON.stringify(language)}`);
+      for(const key of keys){
+        const meta=catalogue.competitions[key].data,c=a.run(`compOf(${JSON.stringify(key)})`),site=meta.officialWebsite;
+        assert.match(site,/^https?:\/\//,`${phase}/${key}: published official website`);
+        assert.equal(c.officialWebsite,site,`${phase}/${key}: hydrated official website`);
+        assert.equal(Boolean(c.officialWebsiteArchived),Boolean(meta.officialWebsiteArchived),`${phase}/${key}: archived-site context`);
+        if(new URL(site).hostname==='web.archive.org')assert.equal(meta.officialWebsiteArchived,true,`${key}: archived official website must be disclosed`);
+        const page=a.run(`viewComp(${JSON.stringify(key)})`);
+        const official=anchors(page).find(link=>link.url===site&&(language==='ko'?/공식/:/official/i).test(link.label));
+        assert.ok(official,`${phase}/${key}/${language}: labelled official website link`);
+        if(c.officialWebsiteArchived)assert.match(official.label,language==='ko'?/보관|아카이브/:/archiv/i,`${key}: archived label`);
+      }
+    }
+  };
+  check(lean,'cold metadata');check(full,'preloaded');
+  lean.run('hydrateCatalogue()');check(lean,'repeated hydration');
+  for(const key of catalogue.theoryKeys)lean.load('theory:'+key);
+  for(const key of ['iypt','usaco','rupho'])lean.load(key);
+  check(lean,'lazy archives loaded');
+  for(const key of ['rupho','ruphow','ruphox','ruphoy']){
+    for(const language of ['ko','en']){
+      lean.run(`lang=${JSON.stringify(language)}`);
+      const source=lean.run(`compOf(${JSON.stringify(key)})`);
+      assert.match(source.officialWebsite,/^https?:\/\//,key+' official stage website');
+      assert.ok(anchors(lean.run(`viewComp(${JSON.stringify(key)})`)).some(link=>link.url===source.officialWebsite&&(language==='ko'?/공식/:/official/i).test(link.label)),key+'/'+language+' official stage link');
+    }
+  }
+});
+
+test('PLANCKS public resources contain only its official homepage and general rules while preserving archive papers',()=>{
+  const lean=app(),full=app({preload:true}),manifest=JSON.parse(read('tools/theory/plancks.json'));
+  const rules='https://iaps.info/wp-content/uploads/2021/01/PLANCKS-General-Rules-EGM-2020.pdf';
+  for(const phase of ['cold','loaded']){
+    if(phase==='loaded')lean.load('theory:plancks');
+    for(const language of ['ko','en']){
+      const links=anchors(lean.run(`lang=${JSON.stringify(language)};archiveResources(compOf("plancks"))`));
+      assert.deepEqual(links.map(link=>link.url).sort(),[manifest.officialWebsite,rules].sort(),phase+'/'+language+' visible resources');
+    }
+  }
+  assert.deepEqual(plain(lean.run('THEORY.plancks')),plain(full.run('THEORY.plancks')),'resource trimming must not change any question or solution PDF');
+  for(const year of manifest.years){
+    const published=lean.run(`THEORY.plancks[${year.y}].f.T`);
+    for(const file of year.files){
+      if(file.kind==='paper')assert.equal(published.papers[file.lang.toLowerCase()],file.local,`${year.y}: paper remains available`);
+      if(file.kind==='solution')assert.equal(published.sol,file.local,`${year.y}: solution remains available`);
+    }
+  }
 });
 
 test('new physics archives retain official metadata and historical context through independent lazy loads',()=>{

@@ -1003,9 +1003,9 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=c99dc395329c"></script>
-<script src="site-catalogue.js?v=096eb49ca5ea"></script>
+<script src="site-catalogue.js?v=5956f43742fa"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
-<script src="logo/variants.js?v=0618dff05d24"></script>
+<script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=938310640469"></script>
 <script>
 "use strict";
@@ -4284,6 +4284,59 @@ const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
 const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 const thyUrl=f=>/^(pdfx\/|https?:)/.test(f)?f+((window.KPHE_PDF_VERSIONS||{})[f]?'?v='+window.KPHE_PDF_VERSIONS[f]:''):PDF_BASE+f;   /* a release name, a site file, or a paper only linked */
+/* Competition or organiser websites, independent of whether any extra resources or papers have loaded. */
+const OFFICIAL_WEBSITES={
+  ipho:"https://www.ipho-new.org/",
+  apho:"https://apho2026.kr/",
+  eupho:"https://eupho.ee/",
+  nbpho:"https://nbpho.ee/",
+  ispho:"https://ispho.mipt.ru/",
+  opho:"https://opho.physoly.org/",
+  rmph:"https://rmph.lbi.ro/2024/",
+  usapho:"https://www.aapt.org/physicsteam/",
+  gpho:"https://ds.abegs.org/gpho/",
+  baupc:"https://liquids.seas.harvard.edu/oleg/competition/",
+  physcup:"https://physicscup.ee/",
+  cpho:"https://cpho.pku.edu.cn/",
+  rupho:"https://vserosolimp.edsoo.ru/physics",
+  ruphow:"https://vserosolimp.edsoo.ru/physics",
+  ruphox:"https://vserosolimp.edsoo.ru/physics",
+  ruphoy:"https://vserosolimp.edsoo.ru/physics",
+  izho:"https://izho.kz/",
+  ortvay:"https://ortvay.elte.hu/",
+  iypt:"https://iypt.org/",
+  imo:"https://www.imo-official.org/",
+  ioi:"https://ioinformatics.org/",
+  jeso:"https://jeso.jp/",
+  kmo:"https://www.kmo.or.kr/",
+  kphe:"https://kphe.kps.or.kr/",
+  mskbo:"https://mskbo.bioedu.kr/",
+  putnam:"https://maa.org/putnam/",
+  usaaao:"https://usaaao.org/",
+  usabo:"https://www.cee.org/programs/usa-biolympiad",
+  usamo:"https://maa.org/maa-invitational-competitions/",
+  useso:"https://www.useso.org/",
+  usnco:"https://www.acs.org/education/olympiad.html",
+  kmchc:"https://olympiad.kchem.org/",
+  kumc:"https://www.kms.or.kr/",
+  amc:"https://maa.org/student-programs/amc/",
+  apao:"http://www.issp.ac.ru/iao/apao/",
+  ceso:"https://ceso.ssoc.org.cn/",
+  iao:"http://www.issp.ac.ru/iao/",
+  ibo:"https://www.ibo-info.org/en/",
+  icho:"https://www.ichosc.org/home",
+  ieso:"https://www.igeoscied.org/activities/ieso/",
+  ijso:"https://ijsoweb.org/",
+  imcho:"https://mendeleevolympiad.org/eng",
+  ioaa:"https://ioaastrophysics.org/",
+  ioaajr:"https://ioaastrophysics.org/junior-ioaa/current-junior-ioaa-olympiad",
+  owao:"https://owao.siriusolymp.ru/en/about",
+  cmo:"https://www.cms.org.cn/competition.html",
+  usaco:"https://usaco.org/",
+  eotvos:"https://eik.bme.hu/~vanko/fizika/eotvos.htm",
+  plancks:"https://iaps.info/events/plancks/",
+  wopho:"https://web.archive.org/web/20130111071302/http://www.wopho.org:80/"
+};
 function hydrateCatalogue(){
   Object.assign(THEORY,window.THEORY||{});window.THEORY=THEORY;
   Object.assign(GENERAL,window.GENERAL||{});window.GENERAL=GENERAL;
@@ -4323,7 +4376,9 @@ Object.assign(DATA,window.RUPHO_SELECTION||{});
 /* a competition with papers only (no experiment yet: CPhO, IMO, USNCO …) is named by its manifest */
 for(const [k,m] of Object.entries(window.THEORY_META||{})) if(!DATA[k])
   DATA[k]={abbr:m.abbr, since:m.since||"—", full:m.full, scope:m.scope, plain:!!m.plain, rounds:!!m.rounds, omr:!!m.omr, years:[],
-    ...(m.resources?{resources:m.resources,officialWebsite:m.officialWebsite,note:m.resourceNote}:{}),
+    ...(m.officialWebsite?{officialWebsite:m.officialWebsite}:{}),
+    ...(m.resources?{resources:m.resources}:{}),
+    ...(m.resourceNote?{note:m.resourceNote}:{}),
     /* a manifest with no paper yet (CMO: no official PDF is published) lists the competition until they are found */
     ...(THEORY[k]||m.resourceNote?{}:{note:{ko:"문제지는 준비 중입니다.",en:"The papers are being gathered."}})};
 /* the KMS undergraduate competition: listed before its papers are gathered */
@@ -4337,6 +4392,10 @@ for(const k in THEORY){ const c=DATA[k]; if(!c) continue;
     if(!yr.cc&&t.cc) yr.cc=t.cc; }
   c.years.sort((a,b)=>yNum(b.y)-yNum(a.y)); }
 /* Stage catalogues share one public competition; source paper keys stay unchanged. */
+for(const [key,c] of Object.entries(DATA)){
+  if(OFFICIAL_WEBSITES[key]) c.officialWebsite=OFFICIAL_WEBSITES[key];
+  if(key==="wopho") c.officialWebsiteArchived=true;
+}
 if(RUPHO_ARCHIVE) RUPHO_ARCHIVE.initialize(DATA,THEORY);
 /* a theory file: in a release (served by the PDF Worker), or cut out of a booklet and kept on the site (pdfx/…) */
 /* NBPhO: one booklet holds every problem; each experiment card gets its own problem and solution, cut out of it
@@ -4444,7 +4503,7 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 18;
+const LOGO_V = 19;
 const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
@@ -4677,7 +4736,7 @@ const LEARN={
   LR("b","free","https://bio.libretexts.org/Learning_Objects/Laboratory_Experiments","생물 실험 매뉴얼 모음","Biology laboratory experiments","LibreTexts","LibreTexts",
     "현미경 관찰, 세포, 유전, 생리 실험 절차를 담은 공개 실험서 모음입니다.","Open lab manuals for microscopy, cells, genetics and physiology.")]},
  earth:{name:{ko:"지구과학",en:"Earth science"},abbr:"Earth",comps:"IESO",obs:true,items:[
-  LR("g","official","https://www.ieso.info/","IESO 공식 사이트","IESO official site","국제지구과학올림피아드","International Earth Science Olympiad",
+  LR("g","official","https://www.igeoscied.org/activities/ieso/","IESO 공식 사이트","IESO official site","국제지구과학올림피아드","International Earth Science Olympiad",
     "대회 규정, 출제 범위, 개최 일정이 올라오는 공식 사이트입니다.","The official site, with the rules, the syllabus and the schedule of coming olympiads."),
   LR("g","archive","https://www.igeoscied.org/activities/ieso-2/past-ieso-exams/","역대 IESO 문제","Past IESO exams","지구과학교육기구 IGEO","International Geoscience Education Organisation",
     "역대 필기 · 실험실 · 야외 실기 문제지를 연도별로 모아 둔 공개 아카이브입니다.","A public archive of past written, laboratory and field tests by year."),
@@ -4833,10 +4892,11 @@ function contestResources(key){
 }
 function archiveResources(c){
   const items=(c.resources||[]).filter(item=>/^https:\/\//.test(item.url)),ko=lang==="ko";
-  if(!items.length)return "";
+  const official=/^https?:\/\//.test(c.officialWebsite||"");
+  if(!official&&!items.length)return "";
   const label=item=>esc(item.label[lang]||item.label.en);
-  return `<section class="archive-resources"><h2>${ko?"공개 자료":"Public resources"}</h2>
-    <p>${/^https:\/\//.test(c.officialWebsite||"")?`<a class="btn" href="${esc(c.officialWebsite)}" target="_blank" rel="noopener">${ko?"공식 홈페이지":"Official website"} ↗</a> `:""}${items.map(item=>`<a class="btn" href="${esc(item.url)}" target="_blank" rel="noopener">${label(item)} ↗</a>`).join(" ")}</p>
+  return `<section class="archive-resources"><h2>${items.length?(ko?"공개 자료":"Public resources"):(ko?"공식 사이트":"Official website")}</h2>
+    <p>${official?`<a class="btn" href="${esc(c.officialWebsite)}" target="_blank" rel="noopener">${ko?"공식 홈페이지":"Official website"}${c.officialWebsiteArchived?(ko?" (보관본)":" (archived)"):""} ↗</a> `:""}${items.map(item=>`<a class="btn" href="${esc(item.url)}" target="_blank" rel="noopener">${label(item)} ↗</a>`).join(" ")}</p>
     ${items.filter(item=>item.kind==="image").map(item=>`<figure><a href="${esc(item.url)}" target="_blank" rel="noopener"><img src="${esc(item.url)}" alt="${label(item)}" loading="lazy" decoding="async"></a><figcaption>${label(item)}</figcaption></figure>`).join("")}
   </section>`;
 }
