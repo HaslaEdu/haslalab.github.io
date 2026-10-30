@@ -12,7 +12,7 @@
      up the bench goes dark and thirty minutes start for scanning the paper answer sheets and working sheets
      with a phone: a QR code opens scan.html with this exam's upload token, the pages arrive here read by OCR,
      the student checks the text and submits it for grading (the community Worker, /api/lab/...).
-     Only signed-in users sit it; sitting is free, and grading with the review costs one exam token (asked for at the
+     Only signed-in users sit it; sitting is free, and grading costs 0.3 token, or 0.5 for a combined sitting (asked for at the
      start, while scanning, or later).  The server also keeps the
      clock and the state (running → scanning → graded), so a reload, a closed tab or another computer comes
      back to the same exam with the time still running and spends nothing.
@@ -203,7 +203,7 @@
 <script src="../examdur.js?v=20261030-archives"></script>
 <script src="../paper-languages.js?v=1"></script>
 <script src="result-comparison.js?v=b2d9019528e0"></script>
-<script src="exam-network.js"></script>
+<script src="exam-network.js?v=470e9c866d5d"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
@@ -242,9 +242,9 @@ const T = {
     pagesFmt: (a, w) => `답안지 ${a}쪽 · Working sheet ${w}쪽`, noPages: "제출한 쪽 없음",
     loginReq: "실전 모드는 로그인한 사람만 할 수 있습니다.", login: "로그인", loginWait: "로그인하면 이 화면이 저절로 이어집니다.", loginAs: "로그인됨:",
     tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `시작하기 (${DC})`, startQ: "시험을 시작합니다",
-    startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청해 토큰 1개를 씁니다 (${n}개 → ${n - COST()}개).` : " 토큰은 쓰지 않습니다."),
+    startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청합니다. 확정 비용은 최대 토큰 1개이며 한 번만 차감합니다.` : " 토큰은 쓰지 않습니다."),
     noTokens: "실전 토큰이 없습니다. 실전 모드 페이지(#/lab)에서 충전할 수 있습니다.",
-    halfNote: "이 해는 실험과 이론이 함께 있어 한쪽 채점은 0.5토큰입니다(세트로 둘 다 채점하면 1토큰). 토큰 1개에서 쓰고 남은 0.5는 적립되어 다른 쪽 채점에 쓰입니다.",
+    halfNote: "한 시험 채점은 0.3토큰입니다. 같은 연도의 이론·실험을 세트로 채점하면 첫 라운드 0.3토큰, 다른 라운드 0.2토큰으로 합계 0.5토큰입니다. 이론·실험이 합쳐진 시험은 0.5토큰입니다.",
     payAsk: n => `채점 · 첨삭도 신청 (토큰 1개 · 보유 ${n}개) — 신청하면 보낸 답안을 바로 읽어 확인할 수 있습니다`,
     payBtn: "채점 · 첨삭 받기 (토큰 1개)", payNote: "아직 채점을 신청하지 않았습니다. 신청 전에는 보낸 쪽을 읽지 않고, 신청하지 않고 끝내면 채점 없이 저장됩니다(나중에 성적표에서 신청 가능).",
     paid: "채점 신청됨", endNoGrade: "채점 없이 끝내기", endNoGradeQ: "채점 없이 끝낼까요? 답안은 저장되고, 7일 안에 성적표에서 채점을 신청할 수 있습니다.",
@@ -273,7 +273,7 @@ const T = {
     detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기",
     closed: "스캔 시간이 끝났습니다. 보낸 쪽으로 채점합니다.",
     bad: "주소가 올바르지 않습니다. 대회 목록에서 실전 모드를 다시 여세요.",
-    err: {network: "서버에 연결하지 못했습니다.", closed: "답안 접수가 종료되었습니다.", login_required: "로그인이 필요합니다.", no_tokens: "실전 토큰이 없습니다.", running: "먼저 시험을 끝내세요.", no_answers: "채점할 답안을 먼저 저장하거나 스캔해 주세요."},
+    err: {network: "서버에 연결하지 못했습니다.", closed: "답안 접수가 종료되었습니다.", login_required: "로그인이 필요합니다.", no_tokens: "채점에 필요한 실전 토큰이 부족합니다.", price_changed: "채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.", running: "먼저 시험을 끝내세요.", no_answers: "채점할 답안을 먼저 저장하거나 스캔해 주세요."},
   },
   en: {
     exam: "Exam mode", practice: "Practice mode", left: "Time left", scanLeft: "Scanning closes in",
@@ -300,9 +300,9 @@ const T = {
     pagesFmt: (a, w) => `answer sheets ${a} · working sheets ${w}`, noPages: "no pages",
     loginReq: "Exam mode is for signed-in users only.", login: "Sign in", loginWait: "This page carries on by itself once you are signed in.", loginAs: "Signed in:",
     tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Start (${DC})`, startQ: "Start the exam",
-    startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and the review use one token (${n} → ${n - COST()}).` : " No token is used."),
+    startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and feedback will use up to one token, charged once.` : " No token is used."),
     noTokens: "You have no exam tokens. Get some on the exam mode page (#/lab).",
-    halfNote: "This year has experiments and theory, so grading one of them costs half a token (both, as a set, one token). The other half of a token is kept and pays for the other part.",
+    halfNote: "Grading one exam costs 0.3 token. A same-year theory + experiment set costs 0.3 for the first round and 0.2 for its complementary round, totaling 0.5 token. A combined sitting costs 0.5 token.",
     payAsk: n => `Also ask for grading and the review (1 token · you have ${n}) — your pages are then read as they arrive, so you can check them`,
     payBtn: "Get it graded and reviewed (1 token)", payNote: "Grading has not been asked for yet. Until then your pages are not read; finishing without it keeps them ungraded (you can still ask from the score report).",
     paid: "grading asked for", endNoGrade: "Finish without grading", endNoGradeQ: "Finish without grading? Your pages are kept, and you can ask for grading from the score report within 7 days.",
@@ -331,7 +331,7 @@ const T = {
     detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again",
     closed: "Scanning has closed. The pages that arrived are being graded.",
     bad: "This address is not complete. Open exam mode again from the competition list.",
-    err: {network: "Could not reach the server.", closed: "Answer submission has closed.", login_required: "Please sign in.", no_tokens: "You have no exam tokens.", running: "Finish the exam first.", no_answers: "Save typed answers or upload your work before grading."},
+    err: {network: "Could not reach the server.", closed: "Answer submission has closed.", login_required: "Please sign in.", no_tokens: "You do not have enough exam tokens.", price_changed: "The fee changed. Check the updated fee and request grading again.", running: "Finish the exam first.", no_answers: "Save typed answers or upload your work before grading."},
   },
 };
 
@@ -380,10 +380,9 @@ const TH = {
 /* ── what this exam is ── */
 const Q = new URLSearchParams(location.search);
 let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? "en" : "ko";
-/* what grading costs here (v15): half a token for the experiments or the theory of a year that has both (h=1 — the
-   other half pays the other part, so the set is one token), a whole token for anything else and for a combined sitting */
-const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && s.cost != null ? s.cost : Q.get("h") === "1" && !MIX ? 0.5 : 1; };
-const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one token|1 token)\b/g, `${COST()} token`)
+/* The server quotes the current fee, including a complementary-round discount. */
+const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && Number.isFinite(s.cost) ? s.cost : MIX ? 0.5 : 0.3; };
+const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one exam token|1 exam token|one token|1 token)\b/g, `${COST()} token`)
   : typeof v === "function" ? (...a) => costify(v(...a)) : Array.isArray(v) ? v.map(costify) : v;
 const R = {
   ko: { exam: "채점 · 첨삭", scanH: "답안 제출", scanLeft: "시간 제한 없음", start: "답안 제출 화면 열기", loginReq: "채점 · 첨삭은 로그인 후 이용할 수 있습니다.",
@@ -411,14 +410,14 @@ const t0 = () => {
   }
   return REVIEW ? { ...base, ...R[lang] } : base;
 };
-const t = () => { const o = t0(); if (COST() === 1) return o; const c = {}; for (const k in o) c[k] = costify(o[k]); return c; };
+const t = () => { const o = t0(); const c = {}; for (const k in o) c[k] = costify(o[k]); return c; };
 const split = (k, sep) => (Q.get(k) || "").split(sep).map(s => s.trim());
 const EX = {
   c: (Q.get("c") || "").toLowerCase(), y: parseInt(Q.get("y")) || 0, name: Q.get("n") || "",
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
   marks: split("k", "|"), answers: split("a", "|"), nos: split("o", "|"), skip: Q.get("x") || "",
   working: Q.get("w") || "",                                                     // a theory exam's working sheet, where there is one
-  pair: Q.get("h") === "1",                                                      // the year has experiments and theory: half a token each
+  pair: Q.get("h") === "1",                                                      // eligible for the complementary-round set discount
 };
 let paperOptions = {};
 try { paperOptions = window.PaperLanguages?.normalize(JSON.parse(Q.get("papers") || "{}"), EX.tasks.length) || {}; } catch (e) {}
@@ -568,9 +567,9 @@ async function introView() {
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
       <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
   else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}
-      <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens >= COST() ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
-      ${ME.tokens >= COST() ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}
-      ${COST() < 1 ? `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().halfNote}</div>` : ""}</div>
+      <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens >= (EX.pair && !MIX ? 0.2 : COST()) ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
+      ${ME.tokens >= (EX.pair && !MIX ? 0.2 : COST()) ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}
+      <div style="font-size:12px;color:var(--muted);margin-left:22px">${t().halfNote}</div></div>
       <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
   const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</div>`).join("");
   $("main").innerHTML = `<div class="page"><div class="card doc">
@@ -966,19 +965,20 @@ async function thumb(el, id) {
   el.innerHTML = `<img alt="" src="${url}">`;
   el.onclick = () => { const z = document.createElement("div"); z.className = "zoom"; z.innerHTML = `<img alt="" src="${url}">`; z.onclick = () => z.remove(); document.body.append(z); };
 }
-/* grading and the review: one token, once per sitting (the server takes it; see /lab/sessions/:id/pay) */
+/* grading and the review: the quoted fee, once per sitting (the server takes it; see /lab/sessions/:id/pay) */
 async function payNow(quiet) {
-  try { const r = await api("POST", `/lab/sessions/${SES.id}/pay?lang=${lang}`, { lang }); ME.tokens = r.tokens; setSession(r.session); pagesSeen = ""; return true; }
-  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (e.tokens != null) ME.tokens = e.tokens; return false; }
-  finally { if (!quiet && SES) { if (SES.status === "scanning") poll(); else { shown = ""; render(); } } }
+  let quoteChanged=false;
+  try { const r = await api("POST", `/lab/sessions/${SES.id}/pay?lang=${lang}`, { lang,max_cost:COST() }); ME.tokens = r.tokens; setSession(r.session); pagesSeen = ""; return true; }
+  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (e.tokens != null) ME.tokens = e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} return false; }
+  finally { if (!quiet && SES) { if (SES.status === "scanning"&&!quoteChanged) poll(); else { shown = ""; render(); } } }
 }
 async function submitNow(grade) {
-  if (BUSY) return; BUSY = true;
+  if (BUSY) return; BUSY = true; let quoteChanged=false;
   const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
   poller?.stop();
-  try { if (REVIEW) await saveTypedAnswers(); const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
-  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } startPoll(poll,'scanning'); }
-  finally { BUSY = false; }
+  try { if (REVIEW) await saveTypedAnswers(); const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false,max_cost:COST() }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
+  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if(Number.isFinite(e.tokens)&&ME)ME.tokens=e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } startPoll(poll,'scanning'); }
+  finally { BUSY = false; if(quoteChanged){shown="";render();} }
 }
 
 /* ── the result ── */

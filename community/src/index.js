@@ -7,6 +7,8 @@
 
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
+import { tokenUnits, tokenBalance, tokenSql, tokenSet } from './lab-tokens.js';
+import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE } from './lab-pair-catalog.js';
 import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
@@ -19,6 +21,7 @@ import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
   monthlyAttempts, reserveMonthlySubmission, guardMonthlyGrade, MonthlyAnswerError } from './monthly-answers.js';
 import { createModelTestRouter, MODEL_TEST_PATH } from './model-test-route.js';
+import { ensureNoticePins, noticeIsPinned, removeNoticePin } from './notice-pins.js';
 import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, ensureMonthlyPhotoSchema, monthlyPhotoDeletion } from './monthly-photos.js';
@@ -360,6 +363,19 @@ async function handle(req, env, url) {
       .bind(board, tag, pickLang(body.lang), me.id, title, content, now()).run();
     return { id: res.meta.last_row_id };
   }
+  if ((r = /^\/api\/posts\/(\d+)\/pin$/.exec(p)) && m === "PATCH") {
+    needUser(me);
+    if (me.role !== "admin") throw new HttpError(403, "forbidden");
+    if (typeof body.pinned !== "boolean") bad("bad_pin");
+    const id = +r[1], post = await env.DB.prepare('SELECT tag FROM posts WHERE id=?').bind(id).first();
+    if (!post) throw new HttpError(404, "not_found");
+    if (post.tag !== "notice") bad("not_notice");
+    await ensureNoticePins(env.DB, env[DB_SCOPE] || env.DB);
+    if (body.pinned) await env.DB.prepare('INSERT INTO notice_pins(post_id,pinned_at) VALUES(?,?) ON CONFLICT(post_id) DO NOTHING').bind(id, now()).run();
+    else await removeNoticePin(env.DB, id);
+    invalidatePublicReads(env);
+    return { ok: true, id, pinned: body.pinned };
+  }
   if ((r = /^\/api\/posts\/(\d+)$/.exec(p))) {
     const id = +r[1];
     const readPost = () => env.DB.prepare(
@@ -382,6 +398,7 @@ async function handle(req, env, url) {
       const liked = !!reaction?.liked, disliked = !!reaction?.disliked;
       for (const c of comments) { c.mine = canEdit(me, c.user_id); delete c.user_id; }
       post.mine = canEdit(me, post.user_id);
+      if (post.tag === "notice") post.pinned = await noticeIsPinned(env.DB, id);
       delete post.user_id;
       return { post, comments, liked, my: liked ? 1 : disliked ? -1 : 0, user: me ? pubUser(me) : null, api_version: 5 };
     }
@@ -395,6 +412,7 @@ async function handle(req, env, url) {
       const tag = body.tag === undefined ? post.tag : pickTag(body.tag, me);
       await env.DB.prepare("UPDATE posts SET title=?,body=?,board=?,tag=?,updated_at=? WHERE id=?")
         .bind(title, content, board, tag, now(), id).run();
+      if (post.tag === "notice" && tag !== "notice") await removeNoticePin(env.DB, id);
       return { ok: true };
     }
     if (m === "DELETE") {
@@ -971,7 +989,7 @@ async function accountOverview(env, me, req) {
   const active = lab ? await labAdvance(env, result[3].results[0] || null) : null;
   return { user: pubUser(me), stats: accountStats(all, result[0].results, me), identities: result[1].results,
     has_password: !!credit.has_pw, providers: oauthProviders(env), active: active && ['running','scanning'].includes(active.status) ? pubLab(active, null) : null,
-    tokens: (credit.exam_tokens || 0) + (credit.exam_half ? 0.5 : 0), parts: credit.token_parts || 0, health: healthData(env, lab), now: now(), api_version: 5 };
+    tokens: tokenBalance(credit), parts: credit.token_parts || 0, health: healthData(env, lab), now: now(), api_version: 5 };
 }
 
 async function arena(p, m, body, me, req, env, url) {
@@ -1325,7 +1343,12 @@ const LAB_REVIEW_ONLY = new Set(["physcup", "ortvay", "opho", "wopho"]);
 const labReview = s => labSrc(s)._review === 1;
 const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[task] && src[task].kind === "theory") : Object.values(src).some(v => v && v.kind === "theory"); };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
-const labKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
+const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
+const labCanonicalMixed = s => {
+  const key = JSON.parse(s.tasks).sort().join('+');
+  return (LAB_MIXED_CATALOGUE[s.comp]?.[String(s.year)] || []).some(tasks => [...tasks].sort().join('+') === key);
+};
+const labKind = s => labCanonicalMixed(s) ? 'mixed' : labSourceKind(s);
 const labDur = s => { if (contestMeta(s) || labReview(s)) return 0; const k = labKind(s); return labExamSec(s.comp, s.year, JSON.parse(s.tasks).length, k === "mixed" ? "mixed" : k === "theory"); };
 const labOpen = (s, t) => s.status === "scanning" && (labReview(s) || t <= s.scan_until + LAB.graceSec);
 const labGet = (env, id) => env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(id).first();
@@ -1340,13 +1363,11 @@ async function labAdvance(env, s) {
   }
   if (s && ((s.status === "scanning" && !labReview(s) && t > s.scan_until + LAB.graceSec) || (s.status === "grading" && s.submitted_at < t - LAB.staleSec)))
     s = s.charged ? await labFinalize(env, s, s.lang) : await labEnd(env, s);
-  // Reads only advance the clock and durably enqueue IDs. AI runs exclusively in the Queue consumer.
-  return s;
+  // Reads advance the clock, durably enqueue IDs and quote eligible unpaid pairs. AI runs only in the Queue consumer.
+  return labQuote(env, s);
 }
 const labActive = async (env, userId) => labAdvance(env, await env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(userId).first());
-/* v15: half tokens.  The experiments or the theory of a year that has both cost half a token each (the two together, a
-   set, one token); a half taken from a whole token leaves the other half in users.exam_half.  Before migration 0011 the
-   column is missing and every grading costs a whole token, as before. */
+/* Legacy half-token balances remain readable. All new monetary arithmetic uses integer tenths. */
 let HALF_READY = false;
 async function halfReady(env) {
   if (!HALF_READY) { try { await env.DB.prepare("SELECT exam_half FROM users LIMIT 0").all(); HALF_READY = true; } catch (e) {} }
@@ -1355,16 +1376,53 @@ async function halfReady(env) {
 const labTokens = async (env, userId) => {
   const half = await halfReady(env);
   const u = await env.DB.prepare(`SELECT exam_tokens${half ? ",exam_half" : ""} FROM users WHERE id=?`).bind(userId).first() || {};
-  return (u.exam_tokens || 0) + (u.exam_half ? 0.5 : 0);
+  return tokenBalance(u);
 };
-/* what grading this sitting costs, in half tokens: 1 for the experiments or the theory of a year that has both (the start
-   said so: sources._half), 2 for anything else — a combined sitting (NBPhO) included */
-const labCost = s => !contestMeta(s) && labSrc(s)._half && labKind(s) !== "mixed" ? 1 : 2;
+// One exam costs 0.3; a mixed theory/experiment sitting costs 0.5. A later full paid counterpart costs 0.2.
+const labCost = s => labKind(s) === 'mixed' ? 5 : 3;
+function labPairProfile(s) {
+  if (contestMeta(s) || !labSrc(s)._half || labKind(s) === 'mixed') return null;
+  const scope = labKind(s), tasks = JSON.parse(s.tasks), key = [...tasks].sort().join('+');
+  const raw = LAB_PAIR_CATALOGUE[s.comp]?.[String(s.year)], groups = Array.isArray(raw) ? raw : raw ? [{ id:'default',...raw }] : [];
+  const hit = groups.find(group => (group[scope] || []).some(set => [...set].sort().join('+') === key));
+  return hit ? { scope, profile:hit.id || 'default' } : null;
+}
+// Shared by the read-only quote and the atomic payment. No quote reserves or consumes a partner.
+function labPairMatch(s) {
+  const pair = labPairProfile(s), note = "CASE WHEN json_valid(l.note) THEN l.note ELSE '{}' END";
+  const sql = pair ? `SELECT c.id,CASE WHEN json_extract(c.sources,'$._review')=1 THEN 1 ELSE 0 END AS review
+    FROM lab_ledger l JOIN lab_sessions c ON c.id=l.session_id
+    WHERE l.user_id=? AND c.user_id=? AND c.comp=? AND c.year=? AND c.exam_key=? AND c.charged=1
+      AND l.reason='grade' AND json_extract(${note},'$.pricing_version')=2
+      AND json_extract(${note},'$.units')=3 AND json_extract(${note},'$.pair_eligible')=1
+      AND json_extract(${note},'$.pair_profile')=? AND json_extract(${note},'$.scope')=?
+      AND json_extract(${note},'$.paired_with') IS NULL
+      AND NOT EXISTS(SELECT 1 FROM lab_ledger used WHERE used.user_id=c.user_id AND used.reason='grade' AND
+        json_extract(CASE WHEN json_valid(used.note) THEN used.note ELSE '{}' END,'$.paired_with')=c.id)
+      AND NOT EXISTS(SELECT 1 FROM json_each(c.tasks) a JOIN json_each(?) b ON a.value=b.value)
+    ORDER BY l.id DESC LIMIT 1` : 'SELECT NULL AS id,0 AS review WHERE 0';
+  const args = pair ? [s.user_id,s.user_id,s.comp,s.year,s.exam_key,pair.profile,pair.scope==='theory'?'lab':'theory',s.tasks] : [];
+  return { pair, sql, args };
+}
+async function labQuote(env, s) {
+  if (!s || s.charged || s._price_quote !== undefined) return s;
+  const { pair, sql, args } = labPairMatch(s);
+  if (!pair) return s;
+  const candidate = await env.DB.prepare(sql).bind(...args).first();
+  return { ...s, _price_quote:candidate ? { cost:0.2,paired_with:candidate.id,discount:0.1,pair_mixed_mode:!!candidate.review !== labReview(s) } : null };
+}
+function labPrice(s) {
+  const saved = labSrc(s)._pricing;
+  if (s.charged && saved?.pricing_version === 2 && [2,3,5].includes(saved.units))
+    return { cost:saved.units/10,pricing_version:2,paired_with:saved.paired_with||null,discount:saved.discount||0,pair_mixed_mode:!!saved.pair_mixed_mode,price_estimate:false };
+  if (s.charged) return { cost:!contestMeta(s)&&labSrc(s)._half&&labSourceKind(s)!=='mixed'?0.5:1,pricing_version:1,paired_with:null,discount:0,pair_mixed_mode:false,price_estimate:false };
+  return { cost:labCost(s)/10,pricing_version:2,paired_with:null,discount:0,pair_mixed_mode:false,...s._price_quote,price_estimate:true };
+}
 const labPagesOf = (env, id) => env.DB.prepare("SELECT id,no,task,kind,mime,ocr,ocr_conf,ocr_status,text,edited,read,legible,created_at FROM lab_pages WHERE session_id=? ORDER BY no").bind(id).all().then(r => r.results);
 function pubLab(s, pages) {
   return { id: s.id, exam_key: s.exam_key, comp: s.comp, year: s.year, tasks: JSON.parse(s.tasks), lang: s.lang, entry: s.entry, status: s.status,
     score: s.score, points: s.points, sample_standing: null, related_results: [], started_at: s.started_at, ended_at: s.ended_at, scan_until: s.scan_until, created_at: s.created_at,
-    exam_sec: labDur(s), scan_sec: labReview(s) ? null : LAB.scanSec, review_only: labReview(s), kind: labKind(s), cost: labCost(s) / 2, paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
+    exam_sec: labDur(s), scan_sec: labReview(s) ? null : LAB.scanSec, review_only: labReview(s), kind: labKind(s), ...labPrice(s), paid: !!s.charged, submitted_at: s.submitted_at, graded_at: s.graded_at, detail: s.detail ? JSON.parse(s.detail) : null, now: now(),
     ...contestPublic(s), regulation: contestMeta(s) ? CONTEST_REG : LAB_REG,
     pages: pages && pages.map(p => {
       const read = p.read ? JSON.parse(p.read) : null;
@@ -1971,35 +2029,42 @@ async function labSave(env, s, tasks, per, tries, ms) {
     .bind(tot.status, tot.status === "graded" ? tot.score : null, tot.points, JSON.stringify(detail), tot.status === "graded" ? t : null, s.id).run();
   return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
 }
-/* grading and the review cost one exam token, taken once per sitting (charged), in one transaction: the ledger line
-   is written only while the token is there and the sitting unpaid, the balance drops only for an unpaid sitting, and the
-   sitting is marked paid only once its line is written — so two requests at once, or none left, never spend twice or
-   go below zero.  Sittings started before v14 paid at the start and are already charged. */
-async function labCharge(env, s) {
+/* Price, paid-pair matching, balance and charged flag are one D1 transaction. A full paid pair's
+   first round costs 0.3 and its one complementary round 0.2; mixed sittings cost 0.5.
+   Old charged sittings and old half-token ledger rows are never repriced or matched. */
+async function labCharge(env, s, maxCost) {
+  const maxUnits = maxCost === undefined ? null : tokenUnits(maxCost);
+  if (maxCost !== undefined && (maxUnits == null || maxUnits < 0)) bad('bad_max_cost');
   if (s.charged) return s;
-  const t = now();
-  if (labCost(s) === 1 && await halfReady(env)) {
-    /* half a token: the half put aside by an earlier half if there is one (the ledger row is 0), else a whole token of
-       which the other half is put aside (the row is -1).  The note 'half' marks either as half a token. */
-    await env.DB.batch([
-      env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,note,session_id,created_at) SELECT s.user_id,CASE WHEN u.exam_half=1 THEN 0 ELSE -1 END,'grade','half',s.id,?
-        FROM lab_sessions s JOIN users u ON u.id=s.user_id WHERE s.id=? AND s.charged=0 AND (u.exam_half=1 OR u.exam_tokens>0)`).bind(t, s.id),
-      env.DB.prepare(`UPDATE users SET exam_tokens=exam_tokens-CASE WHEN exam_half=1 THEN 0 ELSE 1 END, exam_half=1-exam_half
-        WHERE id=? AND (exam_half=1 OR exam_tokens>0) AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND charged=0) AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')`).bind(s.user_id, s.id, s.id),
-      env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE id=? AND charged=0 AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.id, s.id),
-    ]);
-    const now_ = await labGet(env, s.id);
-    if (!now_.charged) throw new HttpError(402, "no_tokens", { tokens: await labTokens(env, s.user_id) });
-    return now_;
-  }
-  await env.DB.batch([
-    env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,session_id,created_at) SELECT user_id,-1,'grade',id,? FROM lab_sessions
-      WHERE id=? AND charged=0 AND (SELECT exam_tokens FROM users WHERE id=lab_sessions.user_id) > 0`).bind(t, s.id),
-    env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens-1 WHERE id=? AND exam_tokens>0 AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND charged=0) AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.user_id, s.id, s.id),
-    env.DB.prepare("UPDATE lab_sessions SET charged=1 WHERE id=? AND charged=0 AND EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=? AND reason='grade')").bind(s.id, s.id),
+  const t = now(), half = await halfReady(env), base = labCost(s), balance = tokenSql(half);
+  const { pair, sql:other, args:pairArgs } = labPairMatch(s);
+  const validNote = "CASE WHEN json_valid(note) THEN note ELSE '{}' END";
+  const ledger = `SELECT json_extract(${validNote},'$.units') FROM lab_ledger WHERE session_id=? AND reason='grade' AND json_extract(${validNote},'$.pricing_version')=2`;
+  const priceSql = `WITH other AS (${other}), price AS (SELECT CASE WHEN EXISTS(SELECT 1 FROM other) THEN 2 ELSE ${base} END AS units)`;
+  const result = await env.DB.batch([
+    ...(maxUnits === null ? [] : [env.DB.prepare(`${priceSql} SELECT units AS cost_units FROM price`).bind(...pairArgs)]),
+    env.DB.prepare(`${priceSql}
+      INSERT INTO lab_ledger(user_id,delta,reason,note,session_id,created_at)
+      SELECT s.user_id,-price.units/10.0,'grade',json_object('pricing_version',2,'units',price.units,'cost',price.units/10.0,
+        'scope',?,'pair_eligible',?,'pair_profile',?,'paired_with',(SELECT id FROM other),
+        'discount',(${base}-price.units)/10.0,'pair_mixed_mode',CASE WHEN EXISTS(SELECT 1 FROM other WHERE review<>?) THEN 1 ELSE 0 END),s.id,?
+      FROM lab_sessions s JOIN users u ON u.id=s.user_id CROSS JOIN price
+      WHERE s.id=? AND s.charged=0 AND ${tokenSql(half,'u.')}>=price.units AND price.units<=?
+        AND NOT EXISTS(SELECT 1 FROM lab_ledger WHERE session_id=s.id AND reason='grade')`)
+      .bind(...pairArgs,labKind(s),pair?1:0,pair?.profile||null,labReview(s)?1:0,t,s.id,maxUnits ?? 5),
+    env.DB.prepare(`UPDATE users SET ${tokenSet(`${balance}-(${ledger})`,half)} WHERE id=?
+      AND EXISTS(SELECT 1 FROM lab_sessions WHERE id=? AND charged=0) AND EXISTS(${ledger})`)
+      .bind(s.id,s.user_id,s.id,s.id),
+    env.DB.prepare(`UPDATE lab_sessions SET charged=1,sources=json_set(COALESCE(sources,'{}'),'$._pricing',
+      json((SELECT note FROM lab_ledger WHERE session_id=? AND reason='grade' AND json_extract(${validNote},'$.pricing_version')=2)))
+      WHERE id=? AND charged=0 AND EXISTS(${ledger})`).bind(s.id,s.id,s.id),
   ]);
   const now_ = await labGet(env, s.id);
-  if (!now_.charged) throw new HttpError(402, "no_tokens", { tokens: await labTokens(env, s.user_id) });
+  if (!now_.charged) {
+    const tokens = await labTokens(env, s.user_id), cost = maxUnits === null ? null : result[0].results[0].cost_units / 10;
+    if (cost !== null && tokenUnits(cost) > maxUnits) throw new HttpError(409, 'price_changed', { cost, tokens });
+    throw new HttpError(402, "no_tokens", { tokens });
+  }
   return now_;
 }
 /* scanning over (or «finish without grading») and nothing paid: the sitting is kept as it stands, ungraded ('ended');
@@ -2008,7 +2073,7 @@ async function labEnd(env, s) {
   const t = now();
   await env.DB.prepare(`UPDATE lab_sessions SET status='ended',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
     WHERE id=? AND status='scanning' AND charged=0`).bind(t, s.id).run();
-  return labGet(env, s.id);
+  return labQuote(env, await labGet(env, s.id));
 }
 /* submit once: the session moves from 'scanning' to 'grading' in one statement, so a second click or a
    poll after the deadline cannot grade it twice; a grading that died half-way is retried after five minutes */
@@ -2159,7 +2224,7 @@ async function labBootstrap(env,me,url){
   if(id!==null){selectedIndex=statements.length;statements.push(env.DB.prepare('SELECT * FROM lab_sessions WHERE id=? AND (user_id=? OR ?=1)').bind(id,me.id,isAdmin(me)?1:0));}
   if(include.has('sessions')){listIndex=statements.length;statements.push(env.DB.prepare(`SELECT ${LAB_LIST_COLUMNS},(SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages FROM lab_sessions s WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id));}
   const results=await env.DB.batch(statements),credit=results[0].results[0]||{};
-  out.tokens=(credit.exam_tokens||0)+(credit.exam_half?0.5:0);out.parts=credit.token_parts||0;
+  out.tokens=tokenBalance(credit);out.parts=credit.token_parts||0;
   const active=await labAdvance(env,results[1].results[0]||null);
   let selected=selectedIndex>=0?results[selectedIndex].results[0]:null;
   if(selectedIndex>=0&&!selected)throw new HttpError(404,'not_found');
@@ -2357,14 +2422,14 @@ async function labImage(req, env, pid, cors) {
    PADDLE_PRICES (the price ids of 1, 5 and 10 tokens — $1.49, $5.99, $9.99 — made in Paddle's catalogue, comma-separated)
    or PADDLE_PACKS (JSON [{id, tokens, price_id, usd}]).  The API key needs transaction.read and adjustment.write. */
 const PACKS = [{ id: "t1", tokens: 1, krw: 1900 }, { id: "t5", tokens: 5, krw: 7900 }, { id: "t12", tokens: 12, krw: 15900 }];
-const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length) return x; } catch (e) {} return PACKS; };
+const packsOf = env => { try { const x = env.PAY_PACKS && JSON.parse(env.PAY_PACKS); if (Array.isArray(x) && x.length && x.every(p=>tokenUnits(p.tokens)>0)) return x; } catch (e) {} return PACKS; };
 const adsOf = env => ({ unit: env.ADS_REWARDED_UNIT === "test" ? "/22639388115/rewarded_web_example" : env.ADS_REWARDED_UNIT || null,
   daily: Math.max(1, parseInt(env.ADS_DAILY) || 3), min_sec: Math.max(0, parseInt(env.ADS_MIN_SEC ?? "10")), parts: 3 });
 const kstDay = t => Math.floor((t + 9 * 3600) / 86400) * 86400 - 9 * 3600;      // the start of today in Korea
 /* the packs: PADDLE_PRICES = the three price ids (made in Paddle's catalogue) of 1, 5 and 10 tokens, or PADDLE_PACKS for others */
 const PADDLE_DEFAULT = [{ id: "p1", tokens: 1, usd: 1.49 }, { id: "p5", tokens: 5, usd: 5.99 }, { id: "p10", tokens: 10, usd: 9.99 }];
 const paddlePacks = env => {
-  try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.length && x.every(p => p.id && p.tokens > 0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {}
+  try { const x = env.PADDLE_PACKS && JSON.parse(env.PADDLE_PACKS); if (Array.isArray(x) && x.length && x.every(p => p.id && tokenUnits(p.tokens)>0 && /^pri_\w+$/.test(p.price_id))) return x; } catch (e) {}
   const ids = String(env.PADDLE_PRICES || "").split(",").map(x => x.trim()).filter(Boolean);
   return ids.length === PADDLE_DEFAULT.length && ids.every(x => /^pri_\w+$/.test(x)) ? PADDLE_DEFAULT.map((p, i) => ({ ...p, price_id: ids[i] })) : null;
 };
@@ -2412,10 +2477,14 @@ async function paddleWebhook(req, env, cors) {
   return json({ ok: true }, 200, cors);
 }
 async function payCancelTokens(env, o, by, t) {
+  const half=await halfReady(env),units=tokenUnits(o.tokens),balance=tokenSql(half);
+  if (units == null || units <= 0) throw new HttpError(500,'bad_token_amount');
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT u.id,-MIN(u.exam_tokens,?),'cancel',?,?,? FROM users u WHERE u.id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')")
-      .bind(o.tokens, o.order_id, by, t, o.user_id, o.order_id),
-    env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens-?) WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done')").bind(o.tokens, o.user_id, o.order_id),
+    env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,note,by_user,created_at) SELECT id,-MIN(${balance},?)/10.0,'cancel',?,?,?
+      FROM users WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done' AND credited=1)`)
+      .bind(units, o.order_id, by, t, o.user_id, o.order_id),
+    env.DB.prepare(`UPDATE users SET ${tokenSet(`MAX(0,${balance}-?)`,half)} WHERE id=?
+      AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done' AND credited=1)`).bind(units, o.user_id, o.order_id),
     env.DB.prepare("UPDATE pay_orders SET status='canceled',canceled_at=? WHERE order_id=? AND status='done'").bind(t, o.order_id),
   ]);
 }
@@ -2427,9 +2496,11 @@ async function toss(env, method, path, body) {
 }
 /* the tokens of a paid order, added once: the order is marked credited in the same transaction */
 async function payCredit(env, o, t) {
+  const half=await halfReady(env),units=tokenUnits(o.tokens);
+  if (units == null || units <= 0) throw new HttpError(500,'bad_token_amount');
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,created_at) SELECT user_id,tokens,'purchase',order_id,? FROM pay_orders WHERE order_id=? AND status='done' AND credited=0").bind(t, o.order_id),
-    env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens+? WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done' AND credited=0)").bind(o.tokens, o.user_id, o.order_id),
+    env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,created_at) SELECT user_id,?/10.0,'purchase',order_id,? FROM pay_orders WHERE order_id=? AND status='done' AND credited=0").bind(units,t, o.order_id),
+    env.DB.prepare(`UPDATE users SET ${tokenSet(`${tokenSql(half)}+?`,half)} WHERE id=? AND EXISTS(SELECT 1 FROM pay_orders WHERE order_id=? AND status='done' AND credited=0)`).bind(units, o.user_id, o.order_id),
     env.DB.prepare("UPDATE pay_orders SET credited=1 WHERE order_id=? AND status='done' AND credited=0").bind(o.order_id),
   ]);
 }
@@ -2541,18 +2612,18 @@ async function shop(p, m, body, me, req, env, url) {
     if (t - v.started_at < ads.min_sec) throw new HttpError(409, "too_soon");
     if (t - v.started_at > 3600) throw new HttpError(409, "expired");
     /* one transaction: granted once (this request's mark), within today's limit, a third added, three thirds → a token */
-    const claim = b64u(crypto.getRandomValues(new Uint8Array(12)));
+    const claim = b64u(crypto.getRandomValues(new Uint8Array(12))),half=await halfReady(env);
     await env.DB.batch([
       env.DB.prepare("UPDATE ad_views SET granted_at=?,claim=? WHERE id=? AND granted_at IS NULL AND (SELECT COUNT(*) FROM ad_views WHERE user_id=? AND granted_at>=?) < ?")
         .bind(t, claim, v.id, me.id, kstDay(t), ads.daily),
       env.DB.prepare("UPDATE users SET token_parts=token_parts+1 WHERE id=? AND EXISTS(SELECT 1 FROM ad_views WHERE id=? AND claim=?)").bind(me.id, v.id, claim),
       env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,created_at) SELECT id,1,'ad','3 ads',? FROM users WHERE id=? AND token_parts>=3").bind(t, me.id),
-      env.DB.prepare("UPDATE users SET exam_tokens=exam_tokens+1,token_parts=token_parts-3 WHERE id=? AND token_parts>=3").bind(me.id),
+      env.DB.prepare(`UPDATE users SET ${tokenSet(`${tokenSql(half)}+10`,half)},token_parts=token_parts-3 WHERE id=? AND token_parts>=3`).bind(me.id),
     ]);
-    const after = await env.DB.prepare("SELECT v.claim, u.exam_tokens, u.token_parts FROM ad_views v JOIN users u ON u.id=v.user_id WHERE v.id=?").bind(v.id).first();
+    const after = await env.DB.prepare(`SELECT v.claim,u.exam_tokens,${half?'u.exam_half':'0 AS exam_half'},u.token_parts FROM ad_views v JOIN users u ON u.id=v.user_id WHERE v.id=?`).bind(v.id).first();
     if (after.claim !== claim) throw after.claim ? new HttpError(409, "already_granted") : new HttpError(429, "ads_daily", { daily: ads.daily });
     const today = (await env.DB.prepare("SELECT COUNT(*) n FROM ad_views WHERE user_id=? AND granted_at>=?").bind(me.id, kstDay(t)).first()).n;
-    return { ok: true, tokens: after.exam_tokens, parts: after.token_parts, left: Math.max(0, ads.daily - today) };
+    return { ok: true, tokens: tokenBalance(after), parts: after.token_parts, left: Math.max(0, ads.daily - today) };
   }
   return undefined;
 }
@@ -2649,7 +2720,7 @@ async function lab(p, m, body, me, req, env, url) {
       if (typeof x.skip === "string" && /^\d{1,2}(,\d{1,2}){0,9}$/.test(x.skip)) o.skip = x.skip;  // problems of the booklet graded elsewhere
       if (Object.keys(o).length) sources[k] = o;
     }
-    if (body.pair === true) sources._half = 1;                 // the year has experiments and theory: each half a token
+    if (body.pair === true) sources._half = 1;                 // full theory/experiment sets may qualify for the paired price
     if (reviewOnly) sources._review = 1;                      // no working-period or scan deadline; submit when ready
     /* coming back: the open exam is returned as it is, nothing is spent */
     let open = await labActive(env, me.id);
@@ -2657,8 +2728,8 @@ async function lab(p, m, body, me, req, env, url) {
       if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks) || labReview(open) !== reviewOnly) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
-    const nth = tasks.filter(k => sources[k] && sources[k].kind === "theory").length;
-    const token = labScanCode(), dur = labExamSec(comp, year, tasks.length, nth && nth < tasks.length ? "mixed" : nth > 0);
+    const kind = labKind({ comp,year,tasks:JSON.stringify(tasks),sources:JSON.stringify(sources) });
+    const token = labScanCode(), dur = labExamSec(comp, year, tasks.length, kind === 'mixed' ? 'mixed' : kind === 'theory');
     /* sitting an exam is free (v14): a token is spent only for grading and the review (labCharge).  The unique index on
        open sessions makes a second start at the same moment fail, so parallel starts open one exam */
     try {
@@ -2682,7 +2753,7 @@ async function lab(p, m, body, me, req, env, url) {
       env.DB.prepare(`SELECT exam_tokens,${half ? 'exam_half' : '0 AS exam_half'},token_parts FROM users WHERE id=?`).bind(me.id),
       env.DB.prepare("SELECT l.delta,l.reason,l.session_id,l.note,l.created_at,s.exam_key FROM lab_ledger l LEFT JOIN lab_sessions s ON s.id=l.session_id WHERE l.user_id=? ORDER BY l.id DESC LIMIT 50").bind(me.id),
     ]), u = credit.results[0] || {};
-    return { tokens: (u.exam_tokens || 0) + (u.exam_half ? 0.5 : 0), parts: u.token_parts || 0, ledger: ledger.results };
+    return { tokens: tokenBalance(u), parts: u.token_parts || 0, ledger: ledger.results };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/finish$/.exec(p)) && m === "POST") {     // finish early: the bench goes dark now
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
@@ -2691,7 +2762,7 @@ async function lab(p, m, body, me, req, env, url) {
       await env.DB.prepare("UPDATE lab_sessions SET status='scanning',ended_at=?,scan_until=? WHERE id=? AND status='running'").bind(end, end + LAB.scanSec, s.id).run();
       s = await labGet(env, s.id);
     }
-    return { session: pubLab(s, null) };
+    return { session: pubLab(await labQuote(env, s), null) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/qr$/.exec(p)) && m === "POST") {         // a new upload token, for a computer that lost the old one
     const s = await labAdvance(env, await labOwned(env, +r[1], me));
@@ -2781,7 +2852,7 @@ async function lab(p, m, body, me, req, env, url) {
         if (!pages.some(p => String(p.text ?? p.ocr ?? "").trim() || p.mime !== "text/plain")) bad("no_answers");
         if (pages.some(p => !p.edited)) throw new HttpError(409, "needs_confirmation");
       }
-      await labRequireJobs(env); s = await labCharge(env, s); s = await labFinalize(env, s, lang);
+      await labRequireJobs(env); s = await labCharge(env, s, body.max_cost); s = await labFinalize(env, s, lang);
     }
     const [pages, tokens, standings, related] = await Promise.all([
       labPagesOf(env, s.id), labTokens(env, s.user_id), s.status === 'graded' ? labStandings(env, s) : null,
@@ -2789,14 +2860,14 @@ async function lab(p, m, body, me, req, env, url) {
     ]);
     return { session: { ...pubLab(s, pages), ...(standings || {}), related_results:related }, tokens, queued: s.status === "grading" };
   }
-  /* ask for grading and the review: one token, once per sitting — while the exam runs (its pages are then read as they
+  /* Ask for grading once per sitting, at the server-resolved single/mixed/paired price — while the exam runs (pages are read as they
      arrive), while scanning, or later for a sitting that ended ungraded (graded at once) */
   if ((r = /^\/api\/lab\/sessions\/(\d+)\/pay$/.exec(p)) && m === "POST") {
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (!["running", "scanning", "ended"].includes(s.status) && !s.charged) throw new HttpError(409, "closed");
     if (labReview(s) && !s.charged && !(await labPagesOf(env, s.id)).length) bad("no_answers");
     await labRequireJobs(env);
-    s = await labCharge(env, s);
+    s = await labCharge(env, s, body.max_cost);
     if (s.status === "ended") s = await labFinalize(env, s, lang);
     else if(!contestMeta(s)&&['running','scanning'].includes(s.status))await labQueueOcr(env,s);
     return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
@@ -2893,19 +2964,20 @@ async function lab(p, m, body, me, req, env, url) {
       return { ok: true };
     }
     if (p === "/api/admin/lab/tokens" && m === "GET") {
-      const u = await env.DB.prepare("SELECT id,username,nickname,exam_tokens FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(url.searchParams.get("user") || "", url.searchParams.get("user") || "").first();
+      const half=await halfReady(env),u = await env.DB.prepare(`SELECT id,username,nickname,exam_tokens,${half?'exam_half':'0 AS exam_half'} FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0`).bind(url.searchParams.get("user") || "", url.searchParams.get("user") || "").first();
       if (!u) throw new HttpError(404, "no_user");
-      return { user: u, ledger: (await env.DB.prepare("SELECT * FROM lab_ledger WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(u.id).all()).results };
+      return { user: {id:u.id,username:u.username,nickname:u.nickname,exam_tokens:tokenBalance(u)},tokens:tokenBalance(u), ledger: (await env.DB.prepare("SELECT * FROM lab_ledger WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(u.id).all()).results };
     }
     if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens; the balance never goes below 0
-      const who = String(body.user || ""), delta = parseInt(body.delta);
-      if (!Number.isInteger(delta) || !delta || Math.abs(delta) > 1000) bad("bad_delta");
-      const u = await env.DB.prepare("SELECT id,exam_tokens FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(who, who).first();
+      const who = String(body.user || ""), delta = Number(body.delta),units=tokenUnits(delta);
+      if (units == null || !units || Math.abs(delta) > 1000) bad("bad_delta");
+      const half=await halfReady(env),balance=tokenSql(half),u = await env.DB.prepare("SELECT id FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(who, who).first();
       if (!u) throw new HttpError(404, "no_user");
-      const d = Math.max(delta, -u.exam_tokens);
       await env.DB.batch([
-        env.DB.prepare("UPDATE users SET exam_tokens=MAX(0,exam_tokens+?) WHERE id=?").bind(d, u.id),
-        env.DB.prepare("INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at) VALUES(?,?,?,?,?,?)").bind(u.id, d, d > 0 ? "grant" : "revoke", me.id, String(body.note || "").slice(0, 300) || null, t),
+        env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at)
+          SELECT id,MAX(?, -${balance})/10.0,?,?,?,? FROM users WHERE id=?`)
+          .bind(units,units>0?'grant':'revoke',me.id,String(body.note || '').slice(0,300)||null,t,u.id),
+        env.DB.prepare(`UPDATE users SET ${tokenSet(`MAX(0,${balance}+?)`,half)} WHERE id=?`).bind(units,u.id),
       ]);
       return { tokens: await labTokens(env, u.id) };
     }

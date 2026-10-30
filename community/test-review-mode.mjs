@@ -52,7 +52,7 @@ test('standalone review starts without an exam or upload timer and preserves the
   const r = await request('/lab/start', { ...exam, pair: true }); assert.equal(r.status, 200); first = r.data;
   assert.equal(first.session.status, 'scanning'); assert.equal(first.session.review_only, true);
   assert.equal(first.session.exam_sec, 0); assert.equal(first.session.scan_sec, null); assert.equal(first.session.scan_until, 0);
-  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.5); assert.equal(first.session.paid, false); assert.equal(first.tokens, 5);
+  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.3); assert.equal(first.session.paid, false); assert.equal(first.tokens, 5);
   const saved = sqlite.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(first.session.id);
   assert.equal(JSON.parse(saved.sources)._review, 1);
   const resume = await request('/lab/start', { ...exam, pair: true }); assert.equal(resume.data.session.id, first.session.id); assert.equal(resume.data.resumed, true);
@@ -78,8 +78,8 @@ test('typed work is validated, saved and replaced without spending tokens', asyn
 });
 test('grading is charged once, closes the review, and never assigns a timed ranking', async () => {
   const id = first.session.id;
-  let r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.5); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status, 'pending');
-  r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.data.tokens, 4.5);
+  let r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.7); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status, 'pending');
+  r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.data.tokens, 4.7);
   assert.equal((await request('/lab/sessions/' + id + '/text', { answers: { T1: 'late edit' } })).status, 409);
   assert.equal((await request('/lab/up', undefined, null, 'GET', { 'X-Lab-Token': first.token })).status, 410);
   sqlite.prepare("UPDATE lab_sessions SET status='graded',score=9,points=10 WHERE id=?").run(id);
@@ -148,7 +148,7 @@ test('Ortvay receives grounded qualitative feedback from the official paper with
     const started = await request('/lab/start', { comp: 'ortvay', year: 2026, tasks: ['T'], review: true, sources: { T: { kind: 'theory', paper: 'https://ortvay.elte.hu/2026/E26.pdf' } } }, 10), id = started.data.session.id;
     await request('/lab/sessions/' + id + '/text', { answers: { T: 'Problem 1. F = ma in an inertial frame.' } }, 10);
     const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 10), s = graded.data.session, result = s.detail.tasks.T;
-    assert.equal(graded.status, 200); assert.equal(s.status, 'graded'); assert.equal(s.score, null); assert.equal(s.points, null); assert.equal(graded.data.tokens, 4); assert.equal(calls, 1);
+    assert.equal(graded.status, 200); assert.equal(s.status, 'graded'); assert.equal(s.score, null); assert.equal(s.points, null); assert.equal(graded.data.tokens, 4.7); assert.equal(calls, 1);
     assert.equal(result.grading_mode, 'qualitative_review'); assert.equal(result.official, false); assert.equal(result.reference, 'published_problem_only'); assert.equal(result.score, null); assert.ok(result.review.summary); assert.equal(result.evidence[0].quote, 'F = ma');
     assert.equal((await request('/lab/sessions/' + id, undefined, 10)).data.session.standing, null);
   } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }

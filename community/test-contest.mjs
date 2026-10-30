@@ -77,9 +77,9 @@ async function settled(path,body,id=1){
   return r;
 }
 
-test("catalogue uses trusted questions, offsets, time and 1-token review capability", async () => {
+test("catalogue uses trusted questions, offsets, time and 0.3-token review capability", async () => {
   const r = await request(base + "/catalog", undefined, null);
-  assert.equal(r.status, 200); assert.equal(r.data.cost, 1); assert.equal(r.data.official, false);
+  assert.equal(r.status, 200); assert.equal(r.data.cost, 0.3); assert.equal(r.data.official, false);
   assert.equal(r.data.exams.length, Object.keys(CONTEST_PROOF_EXAMS).length);
   assert.deepEqual(r.data.exams.find(e => e.id === examId).tasks, ["Q5", "Q6", "Q7", "Q8"]);
   assert.ok(r.data.regulation.rules.every(r => /^M\d+$/.test(r.id)));
@@ -93,7 +93,7 @@ test("review start does not charge, trusts only catalog and records reception ti
   const r = await start(1, { minutes: 1, points: [99], tasks: ["Q99"], sources: { _half: 1, _contest: { originalMinutes: 1 } }, entry: "?evil=true" });
   assert.equal(r.status, 200); first = r.data;
   const s = r.data.session;
-  assert.equal(s.status, "scanning"); assert.equal(s.cost, 1); assert.equal(s.paid, false); assert.equal(r.data.tokens, 5);
+  assert.equal(s.status, "scanning"); assert.equal(s.cost, 0.3); assert.equal(s.paid, false); assert.equal(r.data.tokens, 5);
   assert.equal(s.started_at, s.ended_at); assert.ok(Math.abs(s.started_at - timestamp) < 15);
   assert.equal(s.scan_until - s.started_at, 1800); assert.equal(s.exam_sec, 0); assert.equal(s.original_minutes, 180);
   assert.equal(s.purpose, "review"); assert.ok(s.entry_url.includes("contest-exam.html?id=" + examId));
@@ -115,11 +115,11 @@ test("ownership, task validation, answer length and idempotent concurrent text s
   const qr = await request(sessionBase(sid) + "/qr", {}, 1); assert.equal(qr.status, 200); assert.ok(qr.data.token);
 });
 
-test("concurrent pay is charged exactly once, whole token and no OCR until explicitly read", async () => {
+test("concurrent pay is charged exactly once at 0.3 token and no OCR until explicitly read", async () => {
   const sid = first.session.id, beforeCalls = providerCalls.length;
   const results = await Promise.all([request(sessionBase(sid) + "/pay", {}, 1), request(sessionBase(sid) + "/pay", {}, 1)]);
   assert.ok(results.every(r => r.status === 200)); assert.equal(providerCalls.length, beforeCalls);
-  assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=1").get().exam_tokens, 4);
+  assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=1").get().exam_tokens, 4.7);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n, 1);
   assert.equal((await request(sessionBase(sid) + "/pay", {}, 2)).status, 404);
 });
@@ -132,7 +132,7 @@ test("proof submission uses mathematics rules, two grounded reviews and retry-sa
   assert.equal(q5.grading_mode, "proof_review"); assert.equal(q5.official, false); assert.equal(q5.reference, "published_problem_only"); assert.equal(q5.verification.passes, 2);
   assert.equal(providerCalls.length - before, 2);
   assert.ok(providerCalls.slice(before).every(p => !p.includes("R1:") && !p.includes("EXPERIMENTAL physics")));
-  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 1)).data.tokens, 4); assert.equal(providerCalls.length - before, 2);
+  assert.equal((await settled(sessionBase(sid) + "/submit", {}, 1)).data.tokens, 4.7); assert.equal(providerCalls.length - before, 2);
   assert.equal((await save(sid, 1, { 5: "late change" })).status, 409);
   assert.equal((await start(1)).data.session.id, sid, "same run returns the closed review rather than a duplicate charge");
   assert.equal((await request(sessionBase(sid), undefined, 1)).data.session.standing, null);
@@ -171,9 +171,9 @@ test("empty submissions cannot spend tokens and insufficient balance stays atomi
   const r = await start(5), sid = r.data.session.id;
   assert.equal((await settled(sessionBase(sid) + "/submit", {}, 5)).data.error, "no_answers");
   assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=5").get().exam_tokens, 5);
-  sqlite.prepare("UPDATE users SET exam_tokens=0,exam_half=1 WHERE id=5").run();
+  sqlite.prepare("UPDATE users SET exam_tokens=0.2,exam_half=0 WHERE id=5").run();
   await save(sid, 5, { 5: "Let n be an integer." });
-  const noBalance = await request(sessionBase(sid) + "/pay", {}, 5); assert.equal(noBalance.status, 402); assert.equal(noBalance.data.tokens, 0.5);
+  const noBalance = await request(sessionBase(sid) + "/pay", {}, 5); assert.equal(noBalance.status, 402); assert.equal(noBalance.data.tokens, 0.2);
   assert.equal(sqlite.prepare("SELECT charged FROM lab_sessions WHERE id=?").get(sid).charged, 0);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=?").get(sid).n, 0);
 });
@@ -214,7 +214,7 @@ test("parallel starts and parallel submits never create duplicate runs or provid
   assert.ok(results.every(r => r.status === 200)); assert.equal(providerCalls.length - before, 2);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_sessions WHERE user_id=9").get().n, 1);
   assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=?").get(sid).n, 1);
-  assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=9").get().exam_tokens, 4);
+  assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE id=9").get().exam_tokens, 4.7);
 });
 
 test("provider disagreement and unexpected problem identities remain pending", async () => {
@@ -246,12 +246,12 @@ test("untrusted redirects and non-PDF official-server responses never reach the 
   await fake("redirect"); await fake("html");
 });
 
-test("ordinary experiment/theory session timing, physics rules and half-token cost still work", async () => {
+test("ordinary experiment/theory session timing, physics rules and single-round cost still work", async () => {
   const r = await request("/api/lab/start", { comp: "ipho", year: 2024, tasks: ["E1"], pair: true, sources: { E1: { sol: "IPhO_2024_S1.pdf" }, _contest: { examId, purpose: "review" } } }, 10);
-  assert.equal(r.status, 200); assert.equal(r.data.session.exam_sec, 5 * 3600); assert.equal(r.data.session.status, "running"); assert.equal(r.data.session.cost, 0.5);
+  assert.equal(r.status, 200); assert.equal(r.data.session.exam_sec, 5 * 3600); assert.equal(r.data.session.status, "running"); assert.equal(r.data.session.cost, 0.3);
   assert.equal(r.data.session.purpose, undefined); assert.ok(r.data.session.regulation.rules.some(r => r.id === "R1"));
   const sid = r.data.session.id;
   await request(sessionBase(sid) + "/finish", {}, 10);
-  assert.equal((await request(sessionBase(sid) + "/pay", {}, 10)).data.tokens, 4.5);
+  assert.equal((await request(sessionBase(sid) + "/pay", {}, 10)).data.tokens, 4.7);
   assert.equal((await request(`${base}/sessions/${sid}/text`, { answers: { 1: "injected proof" } }, 10)).status, 404);
 });

@@ -4,6 +4,7 @@
 import { canonicalProblemPeriod, isMonthPeriod, isProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { visibleMonthlySql } from './monthly-answers.js';
+import { missingNoticePins } from './notice-pins.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 export const PUBLIC_BOARDS = Object.freeze(['free', 'qna', 'sim', 'study']);
 export const PUBLIC_TAGS = Object.freeze(['gen', 'q', 'info', 'review', 'bug', 'notice']);
@@ -50,12 +51,12 @@ export async function readPublicBoards(db, url, time = currentTime()) {
 export async function readPublicPosts(db, url, time = currentTime()) {
   const sp = url.searchParams, board = sp.get('board') || '', tag = sp.get('tag') || '';
   const query = (sp.get('q') || '').trim().slice(0, 60), field = sp.get('field') || 'all';
-  const sort = sp.get('sort') || 'new', best = sp.get('best') === '1';
+  const sort = sp.get('sort') || 'new', best = sp.get('best') === '1', noticesOnly = sp.get('notices') === '1';
   const page = Math.max(1, Math.min(500, parseInt(sp.get('page')) || 1));
   if (board && !PUBLIC_BOARDS.includes(board)) throw new PublicDataError('bad_board');
-  const lang = pickLang(sp.get('lang')), where = ["p.tag<>'notice'", 'p.lang=?'], args = [lang];
+  const lang = pickLang(sp.get('lang')), where = [noticesOnly ? "p.tag='notice'" : "p.tag<>'notice'", 'p.lang=?'], args = [lang];
   if (board) { where.push('p.board=?'); args.push(board); }
-  if (tag && PUBLIC_TAGS.includes(tag)) { where.push('p.tag=?'); args.push(tag); }
+  if (!noticesOnly && tag && PUBLIC_TAGS.includes(tag)) { where.push('p.tag=?'); args.push(tag); }
   if (best) where.push(`(p.n_likes-p.n_dislikes)>=${PUBLIC_BEST}`);
   if (query) {
     const like = '%' + query.replace(/[\\%_]/g, '\\$&') + '%';
@@ -69,13 +70,22 @@ export async function readPublicPosts(db, url, time = currentTime()) {
     : sort === 'hot' ? `((p.n_likes-p.n_dislikes)*2+p.n_comments+p.views*0.05+1)*1.0/((${time}-p.created_at)/3600.0+2) DESC, p.id DESC`
     : 'p.id DESC';
   const columns = 'p.id,p.board,p.tag,p.title,substr(p.body,1,160) AS snip,p.created_at,p.updated_at,p.views,p.n_comments,p.n_likes,p.n_dislikes,u.nickname,u.avatar AS av,u.deleted AS gone';
-  const statements = [
-    db.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${filter}`).bind(...args),
-    db.prepare(`SELECT ${columns} FROM posts p JOIN users u ON u.id=p.user_id ${filter} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...args, PUBLIC_PAGE, (page - 1) * PUBLIC_PAGE),
-  ];
-  if (page === 1 && !query) statements.push(db.prepare(`SELECT ${columns} FROM posts p JOIN users u ON u.id=p.user_id
-    WHERE p.tag='notice' AND p.lang=? ${board ? "AND (p.board=? OR p.board='free')" : ''} ORDER BY p.id DESC LIMIT 5`).bind(lang, ...(board ? [board] : [])));
-  const [count, rows, notices] = await db.batch(statements);
+  const load = withPins => {
+    const join = withPins ? ' LEFT JOIN notice_pins np ON np.post_id=p.id' : '';
+    const pin = withPins ? 'CASE WHEN np.post_id IS NULL THEN 0 ELSE 1 END AS pinned' : '0 AS pinned';
+    const noticeOrder = withPins ? 'pinned DESC, p.id DESC' : 'p.id DESC';
+    const statements = [
+      db.prepare(`SELECT COUNT(*) n FROM posts p JOIN users u ON u.id=p.user_id ${filter}`).bind(...args),
+      db.prepare(`SELECT ${columns}${noticesOnly ? ',p.body,' + pin : ''} FROM posts p JOIN users u ON u.id=p.user_id${noticesOnly ? join : ''} ${filter} ORDER BY ${noticesOnly ? noticeOrder : order} LIMIT ? OFFSET ?`).bind(...args, PUBLIC_PAGE, (page - 1) * PUBLIC_PAGE),
+    ];
+    if (!noticesOnly && page === 1 && !query) statements.push(db.prepare(`SELECT ${columns},${pin} FROM posts p JOIN users u ON u.id=p.user_id${join}
+      WHERE p.tag='notice' AND p.lang=? ${board ? "AND (p.board=? OR p.board='free')" : ''} ORDER BY ${noticeOrder} LIMIT 5`).bind(lang, ...(board ? [board] : [])));
+    return db.batch(statements);
+  };
+  let data;
+  try { data = await load(true); }
+  catch (error) { if (!missingNoticePins(error)) throw error; data = await load(false); }
+  const [count, rows, notices] = data;
   return { posts: rows.results, notices: notices?.results || [], total: count.results[0].n, page, per: PUBLIC_PAGE };
 }
 
