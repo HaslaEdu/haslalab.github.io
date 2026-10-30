@@ -7,9 +7,8 @@ keep_vars = true
 # Run the Worker next to its database rather than next to the visitor: a page makes several
 # database queries, and each one is a round trip, so this cuts the waiting the most.
 [placement]
-# Production D1 reports APAC. Benchmark this explicit APAC execution target;
-# it is a Worker placement hint, not a claim about the database's exact city.
-region = "aws:ap-northeast-1"
+# Production D1 metadata reports HKG primary. Place HTTP database work nearby.
+region = "aws:ap-east-1"
 
 # Recover interrupted job delivery within a minute; the handler gates photo cleanup to 15 minutes.
 [triggers]

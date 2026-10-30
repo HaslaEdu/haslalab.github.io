@@ -7,8 +7,8 @@ compatibility_date = "2025-09-01"
 keep_vars = true
 
 [placement]
-# Keep in sync with community/wrangler.toml; D1's primary reports APAC.
-region = "aws:ap-northeast-1"
+# Keep in sync with community/wrangler.toml; D1's primary reports HKG.
+region = "aws:ap-east-1"
 
 [triggers]
 crons = ["* * * * *"]
