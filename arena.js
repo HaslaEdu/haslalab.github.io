@@ -137,6 +137,47 @@ async function arChip() {
 }
 
 function viewArena(first) { return `<div class="shell cm ar"><div id="arRoot" data-r="${esc(first)}"><div class="cmnote">…</div></div></div>`; }
+/* Cached HTML can load a newer lazy arena file while its inline helpers are still old. */
+function arPageRead(path) {
+  if(typeof cmPageRead==='function')return cmPageRead(path);
+  const scope=cmIdentityScope();
+  if(cm.meScope!==scope){cm.me=null;cm.meChecked=false;}cm.meScope=scope;
+  const p=cmApi('GET',path).then(r=>{
+    if(cmIdentityScope()!==scope)throw{code:'account_changed'};
+    if(Object.prototype.hasOwnProperty.call(r,'user')){cm.me=r.user;cm.meChecked=true;}
+    if(r.api_version)cm.v=r.api_version;
+    return r;
+  });
+  const identity=p.then(r=>{
+    if(Object.prototype.hasOwnProperty.call(r,'user'))return r.user;
+    if(cmMeP===identity)cmMeP=null;
+    return cmLoadMe();
+  }).catch(()=>null).finally(()=>{if(cmMeP===identity)cmMeP=null;});
+  cmMeP=identity;return p;
+}
+function arMeOverview() {
+  if(typeof cmMeOverview==='function')return cmMeOverview();
+  const scope=cmIdentityScope();
+  if(ar.overviewP?.scope===scope)return ar.overviewP.promise;
+  if(cm.meScope!==scope){cm.me=null;cm.meChecked=false;}cm.meScope=scope;
+  const p=cmApi('GET','/me/overview').catch(async error=>{
+    if(error.status!==404)throw error;
+    if(cmIdentityScope()!==scope)throw{code:'account_changed'};
+    const [identity,stats,ids,active,health]=await Promise.all([
+      cmApi('GET','/me'),cmApi('GET','/me/stats'),cmApi('GET','/me/identities'),
+      cmApi('GET','/lab/active').catch(e=>{if(e.status===404)return null;throw e;}),cmHealth()
+    ]);
+    return{user:identity.user,stats,identities:ids.identities,providers:ids.providers,has_password:ids.has_pw,active:active?.active,tokens:active?.tokens,health};
+  }).then(r=>{
+    if(cmIdentityScope()!==scope)throw{code:'account_changed'};
+    cm.me=r.user;cm.meChecked=true;
+    if(r.health){ar.health=r.health;cm.v=r.health.v||cm.v;cmHealthBase=cmBase();cmHealthUntil=Date.now()+600000;cmHealthP=Promise.resolve(r.health);}
+    return r;
+  }).finally(()=>{if(ar.overviewP?.promise===p)ar.overviewP=null;});
+  ar.overviewP={scope,promise:p};
+  const identity=p.then(r=>cmIdentityScope()===scope?r.user:null).catch(()=>null).finally(()=>{if(cmMeP===identity)cmMeP=null;});
+  cmMeP=identity;return p;
+}
 async function arMount() {
   const root = document.getElementById("arRoot"); if (!root) return;
   const my = ++ar.seq,scope=cmIdentityScope(),currentLang=lang,routeAlive=()=>my === ar.seq && document.getElementById("arRoot") === root && lang===currentLang, alive = () => routeAlive() && cmIdentityScope()===scope;
@@ -145,7 +186,7 @@ async function arMount() {
   const weekly=a==='weekly'&&b!=='p'&&b!=='admin';
   if(weekly||a==='rank'){
     const path=weekly?'/weekly?lang='+lang+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:''):'/rank?scope='+(b==='all'?'all':'week')+(b&&/^\d{4}-W\d{2}$/.test(b)?'&week='+b:'');
-    primary=cmPageRead(path);primary.catch(()=>{});
+    primary=arPageRead(path);primary.catch(()=>{});
   }
   try{if(a==='lab'){
     const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
@@ -154,7 +195,7 @@ async function arMount() {
     if(shop)bootstrap.shop=await shop;
     if(!alive())return;cm.me=bootstrap.user;cm.meChecked=true;ar.health=bootstrap.health||ar.health;
   }else if(a==='me'){
-    bootstrap=await cmMeOverview();if(!alive())return;ar.health=bootstrap.health||ar.health;
+    bootstrap=await arMeOverview();if(!alive())return;ar.health=bootstrap.health||ar.health;
   }else if(primary){
     const health=Promise.resolve(ar.health||cmHealth());health.then(h=>{if(alive())ar.health=h;},()=>{});
     primary=await primary;version=primary.api_version||0;
@@ -443,7 +484,7 @@ async function arRank(root, alive, which,preloaded) {
 async function arMe(root, alive,overview) {
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/me"); } catch (e) {} location.hash = "#/login"; return; }
-  overview=overview||await cmMeOverview();if(!alive())return;
+  overview=overview||await arMeOverview();if(!alive())return;
   const j = overview.stats;
   j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `

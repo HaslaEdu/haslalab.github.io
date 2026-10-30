@@ -387,3 +387,26 @@ test('post details render authoritative permissions without waiting on identity 
   const pending=a.run('cmPost(document.getElementById("cmRoot"),12,()=>true)'),identity=a.run('cmLoadMe()');await pending;assert.equal((await identity).nickname,'A');assert.ok(root.innerHTML.includes('id="cmCmt"'));assert.equal(calls.length,2);
   await form.onsubmit({preventDefault(){},target:form});assert.equal(calls.length,3);assert.match(get('#cmThread').innerHTML,/New comment/);assert.match(get('#cmThread').innerHTML,/data-c="edit"/);assert.equal(get('.cmcmts .hd em').textContent,1);assert.equal(btn.disabled,false);assert.equal(form.body.value,'');
 });
+
+test('new lazy arena remains compatible with cached HTML missing the new page and overview helpers',async()=>{
+  for(const route of ['#/weekly','#/rank/all','#/me']){
+    const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash=route;
+    a.run('cmPageRead=undefined;cmMeOverview=undefined;arWeekly=async(root,alive,week,data)=>{if(alive())root.innerHTML="weekly:"+data.week;};arRank=async(root,alive,scope,data)=>{if(alive())root.innerHTML="rank:"+data.scope;};arMe=async(root,alive,data)=>{if(alive())root.innerHTML="tokens:"+data.tokens;};');
+    a.context.fetch=async(url,options)=>{calls.push({url,options});if(url.includes('/health'))return new Promise(()=>{});return{ok:true,json:async()=>({api_version:5,user:{nickname:'A'},week:'2026-W44',scope:'all',stats:{},identities:[],has_password:true,tokens:2,health:{v:5,lab:true}})};};
+    const mounted=a.run('arMount()'),identity=a.run('cmLoadMe()');await mounted;assert.equal((await identity).nickname,'A');
+    assert.match(a.node('arRoot').innerHTML,/^(weekly:2026-W44|rank:all|tokens:2)$/);
+    assert.equal(calls.filter(c=>!c.url.includes('/health')).length,1,'primary response must also supply header identity');
+    assert.equal(calls.some(c=>new URL(c.url).pathname==='/api/me'),false);assert.equal(calls[0].options.headers.Authorization,'Bearer account-A');
+  }
+});
+
+test('cached HTML overview compatibility keeps 404-only fallback and rejects stale identity',async()=>{
+  for(const status of [401,503]){
+    const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.run('cmMeOverview=undefined');a.store.set('hlCmTok','account-A');
+    a.context.fetch=async url=>{calls.push(url);return{ok:false,status,json:async()=>({error:status===401?'login_required':'server_error'})};};
+    await assert.rejects(a.run('arMeOverview()'));assert.equal(calls.length,1);
+  }
+  const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.run('cmMeOverview=undefined');a.store.set('hlCmTok','account-A');let finish;
+  a.context.fetch=url=>{calls.push(url);return new Promise(resolve=>finish=resolve);};const pending=a.run('arMeOverview()');await tick();a.run('cmTok("account-B")');finish({ok:false,status:404,json:async()=>({error:'not_found'})});
+  await assert.rejects(pending,error=>error.code==='account_changed');assert.equal(calls.length,1);assert.equal(a.run('cm.me'),null);
+});

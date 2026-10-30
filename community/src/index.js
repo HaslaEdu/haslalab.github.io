@@ -578,6 +578,7 @@ function timedDB(db, q) {
       if (Number.isFinite(meta.timings?.sql_duration_ms)) { q.sqlMs += meta.timings.sql_duration_ms; q.sqlSamples++; }
       if (Number.isFinite(meta.rows_read)) q.rows += meta.rows_read;
       if (meta.served_by_region) q.regions.add(String(meta.served_by_region).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 24));
+      if (/^[A-Z]{3}$/.test(meta.served_by_colo || '')) q.colos.add(meta.served_by_colo);
       if (typeof meta.served_by_primary === 'boolean') q.locations.add(meta.served_by_primary ? 'primary' : 'replica');
     }
     return result;
@@ -601,12 +602,13 @@ function timedDB(db, q) {
 }
 export default {
   async fetch(req, env, ctx) {
-    const q = { n: 0, ms: 0, sqlMs: 0, sqlSamples: 0, rows: 0, regions: new Set(), locations: new Set(), hits: 0, misses: 0 }, t0 = Date.now();
+    const q = { n: 0, ms: 0, sqlMs: 0, sqlSamples: 0, rows: 0, regions: new Set(), colos: new Set(), locations: new Set(), hits: 0, misses: 0 }, t0 = Date.now();
     const res = await worker.fetch(req, env.DB ? { ...env, DB: timedDB(env.DB, q), [DB_SCOPE]: env.DB, [READ_METRICS]: q } : env, ctx);
     try {
       const extra = q.sqlSamples ? `, sql;desc="${q.sqlSamples} statements";dur=${q.sqlMs.toFixed(3)}, d1_read;desc="${q.rows} rows"` : '';
       const region = q.regions.size ? `, d1_region;desc="${[...q.regions, ...q.locations].join(' ')}"` : '';
-      res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}${extra}${region}, public_cache;desc="${q.hits} hits ${q.misses} misses"`);
+      const colo = q.colos.size ? `, d1_colo;desc="${[...q.colos].join(' ')}"` : '';
+      res.headers.set("Server-Timing", `db;desc="${q.n} queries";dur=${q.ms}, total;dur=${Date.now() - t0}${extra}${region}${colo}, public_cache;desc="${q.hits} hits ${q.misses} misses"`);
       res.headers.set("Timing-Allow-Origin", "*");
     }
     catch (e) { /* a response passed straight through keeps its own headers */ }
