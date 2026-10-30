@@ -1,0 +1,331 @@
+{
+  "editions": 18,
+  "pages": 158,
+  "new_nonspace_glyphs_checked": 79010,
+  "new_ascii_glyphs_checked": 9784,
+  "empty_outline_count": 0,
+  "audited_at_utc": "2026-10-30T21:45:02.313214+00:00",
+  "read_only": true,
+  "original_pdf_files_modified": false,
+  "source_identity_origin_tolerance_pt": 0.0001,
+  "identical_original_glyphs_excluded": 96894,
+  "zero_width_continuations_excluded": 1994,
+  "embedded_new_glyph_outlines_checked": 74968,
+  "unembedded_resolved_svg_outlines_checked": 4042,
+  "method": "Exact final Tj/TJ/quote CID and font-resource association with texttrace; check actual embedded program at the traced GID with BoundsPen. Original identical glyphs and extraction continuations excluded. For original unembedded source faces, actual resolved SVG paths are checked and reported separately.",
+  "scope": "Ink-presence verification only, supplementing existing original-style geometry, font/size/baseline, pixel, visual, and PDF Widths audits.",
+  "regression": "A real PDF fixture has two font resources sharing the same face name. Both have positive widths/nonzero GIDs, but only one has an empty A. The new empty A is flagged; the valid alias and an original pre-existing empty A are excluded correctly.",
+  "authoring_sha256": {
+    "tools\\izho_new_prose_outline_qa.py": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+    "tools\\test_izho_new_prose_outline_qa.py": "30629eb8ed1858469e6c41867a337f948d673d9ef970297e4e12679a5e04a8d2",
+    "tools\\pdf_original_text_ops.py": "0db1bb7394602ba3f7850370edaffce3b1c31e4bcfaa465aceb2e0ec255ff11d"
+  },
+  "edition_audits": [
+    {
+      "year": 2010,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2010_T_KO.pdf",
+      "sha256": "570cd8a1430268a73e7261cfea0158740c7f70291bc89c72b9cefbaa3e2b001f",
+      "pages": 5,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3386,
+      "new_ascii_glyphs_checked": 383,
+      "unembedded_resolved_outlines_checked": 383,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2010_T_EN.pdf": "c3d309b54a876a0e71284afa01c5a180b3bb005e69781bcfaabe8f9dff9c8051"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2010_T_KO.json",
+      "detail_report_sha256": "9357f883b660e79789efd63b36d6726a663b74e038a9a56731b442526d9fe6be"
+    },
+    {
+      "year": 2011,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2011_T_KO.pdf",
+      "sha256": "f0ee3c03e8f655f81b5b646987eaaba9804fe5e982a4f2bd5e64201ad5a15af3",
+      "pages": 6,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3745,
+      "new_ascii_glyphs_checked": 428,
+      "unembedded_resolved_outlines_checked": 430,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2011_T_EN.pdf": "40aeea9651c28025282b0e57f3353f3fee1158dc00b42706806a7e8ae5970111"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2011_T_KO.json",
+      "detail_report_sha256": "411d5ef6b8c5e709cb6ce8f6a7397b8a3cb506050cb633c507c3c40e7d3d4707"
+    },
+    {
+      "year": 2013,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2013_T_KO.pdf",
+      "sha256": "f2a13308d8853dff444b36dd2f7bb5a0855a3ab01202111ae594661c22c6aeb0",
+      "pages": 4,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 2709,
+      "new_ascii_glyphs_checked": 380,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2013_T_EN.pdf": "1ac01c052414ffb4237de9844faa0669cc0ab7b8a903de8d7b1f6d41f1912d8a"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2013_T_KO.json",
+      "detail_report_sha256": "c386985d1bfa36946b42673e9c733b6191e6d8e56a60efab1203a75fa4cb50c3"
+    },
+    {
+      "year": 2015,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2015_T_KO.pdf",
+      "sha256": "27bbd0ee97961d7462f25707c8a268c44e57ee4f5498bbdeb59e4ffc93af71aa",
+      "pages": 5,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3023,
+      "new_ascii_glyphs_checked": 388,
+      "unembedded_resolved_outlines_checked": 388,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2015_T_EN.pdf": "f44e9ad512d9dee30b76feffa626be6448630f59627ba462fe58030937dfc84c"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2015_T_KO.json",
+      "detail_report_sha256": "a9053b49bb63abbe1d3de3bc80cb2ad5ab530ed217de740641b6075466034564"
+    },
+    {
+      "year": 2016,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2016_T_KO.pdf",
+      "sha256": "73de2de1684d429b1c5eb921d47689e038165bf6a88f5864fe6bfbaf95b8f3b8",
+      "pages": 6,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 2723,
+      "new_ascii_glyphs_checked": 382,
+      "unembedded_resolved_outlines_checked": 382,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2016_T_EN.pdf": "88f5f2c904884d0a4f41f74b6fa54428f95aaa18ae15d33731687d42777db94c"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2016_T_KO.json",
+      "detail_report_sha256": "252ed2ef7d20dd8f394d66243a2730e0e4b215397c3ce78dec60d8aa3e6e33c8"
+    },
+    {
+      "year": 2020,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2020_T_KO.pdf",
+      "sha256": "fe08ad7d3d3db5399c5f72e62c99d76622e6906fca47a474bb847c22ffbb7d09",
+      "pages": 5,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3473,
+      "new_ascii_glyphs_checked": 259,
+      "unembedded_resolved_outlines_checked": 261,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2020_T_EN.pdf": "97754809daa7dc2ba95679ac93d8192db0357624777801bb563342dd86bb3e20"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2020_T_KO.json",
+      "detail_report_sha256": "4fff6a0a6d6caa29aab594daeaaa903f7a2d88fdc20c22cf2d14c25d1caf77ac"
+    },
+    {
+      "year": 2021,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2021_T_KO.pdf",
+      "sha256": "d25ac8f8a92db049e1d9567870f4992c80e53fed80c1c935b54280b870d43a25",
+      "pages": 6,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3689,
+      "new_ascii_glyphs_checked": 268,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2021_T_EN.pdf": "96b36cbbaf2d7fd19532afa0651aaf19f9b3c55b7c251c0572bfc9f04cad0598"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2021_T_KO.json",
+      "detail_report_sha256": "f3ad664b82e29d35ff352f8a76f72c91ded9303387bfdd03564f15363ba33202"
+    },
+    {
+      "year": 2021,
+      "kind": "TS",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2021_TS_KO.pdf",
+      "sha256": "dcc72d0162266ade439cf54ac81ba55bae2f639d9e69f257029190d3f3fdb25f",
+      "pages": 16,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 5445,
+      "new_ascii_glyphs_checked": 1024,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2021_TS.pdf": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2021_TS_KO.json",
+      "detail_report_sha256": "0aa4868571d96b0c8f374217b87608865f782951bd2dd11f03def807ff5b7631"
+    },
+    {
+      "year": 2022,
+      "kind": "T",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2022_T_KO.pdf",
+      "sha256": "98f4ee28b296a7174f6f7fc2af08c318c52bee1df994948643ea9ea699a81d74",
+      "pages": 7,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 4318,
+      "new_ascii_glyphs_checked": 316,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2022_T_EN.pdf": "979b3ed80a9f4ebc185cb19cab10cdb7242d36ae296797da5690ddf8768892f2"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2022_T_KO.json",
+      "detail_report_sha256": "9f67becf3cec80ec9f8d10dc843f7ee9b44535d5f04a30852fee01527e56aa1e"
+    },
+    {
+      "year": 2022,
+      "kind": "TS",
+      "pdf": "pdfx\\izho\\original-style\\IZhO_2022_TS_KO.pdf",
+      "sha256": "bc47fddc9f1fb9846b16591a200acb9ef4d97277a31d24e49cdeeb63b5092895",
+      "pages": 15,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 5946,
+      "new_ascii_glyphs_checked": 941,
+      "unembedded_resolved_outlines_checked": 941,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2022_TS.pdf": "4b38c9d060853831701a6067cda4d4183f14a8597a5308d5471481b994b97fe2"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2022_TS_KO.json",
+      "detail_report_sha256": "004bcea1fd75e868b9a0f7c74a7cb8dabdc9619602e4a25fed9f4b2bb8c1864c"
+    },
+    {
+      "year": 2023,
+      "kind": "T",
+      "pdf": "tmp\\original-style-repair\\2023\\T\\IZhO_2023_T_KO.pdf",
+      "sha256": "c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423",
+      "pages": 6,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3869,
+      "new_ascii_glyphs_checked": 285,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2023_T_EN.pdf": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2023_T_KO.json",
+      "detail_report_sha256": "5c4069eeaa4accba1032b45ff842adffef2fb7b46ba61a42743d06c17277185e"
+    },
+    {
+      "year": 2023,
+      "kind": "TS",
+      "pdf": "tmp\\original-style-repair\\2023\\TS\\IZhO_2023_TS_KO.pdf",
+      "sha256": "8dcc21a85d8e05799d7d7eacffaf4fcd0585d28ffd5b3b5121c7cc99e9160e03",
+      "pages": 19,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 6095,
+      "new_ascii_glyphs_checked": 1073,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2023_TS.pdf": "f71699850bf7313579b273c6b40e17984edfeb8fadde30354c8afe1b526ce93d"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2023_TS_KO.json",
+      "detail_report_sha256": "2c14e4a3efc56ef284ebda0544157a1bcffa5461929078e36f12337a40a99ed3"
+    },
+    {
+      "year": 2024,
+      "kind": "T",
+      "pdf": "tmp\\original-style-repair\\2024\\T\\IZhO_2024_T_KO.pdf",
+      "sha256": "0c5d4060c432a1b0cc9676156eaf0821dc86474c710ecba47a7ed3ec5ef014c8",
+      "pages": 6,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 3825,
+      "new_ascii_glyphs_checked": 349,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2024_T_EN.pdf": "adad60cced7c5ca359544553ed41435fabc55043f2d8e165e7151f6526427865"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2024_T_KO.json",
+      "detail_report_sha256": "5d9fd7e343cf370be9c523981717cefd5f98b1ef37beccbcd0710dbb26413fe5"
+    },
+    {
+      "year": 2024,
+      "kind": "TS",
+      "pdf": "tmp\\original-style-repair\\2024\\TS\\IZhO_2024_TS_KO.pdf",
+      "sha256": "8de2960f06e486150ba9f97165277e5986d6f2e3ab9d26fa33a3656248376654",
+      "pages": 14,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 5864,
+      "new_ascii_glyphs_checked": 1075,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2024_TS.pdf": "b0caedaf42ed084821305e453962cb38563c926031c43d107fd46474b18e0e1b"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2024_TS_KO.json",
+      "detail_report_sha256": "6345dda279ea59952085200ba44011a0f290fb1cd3d5195b0fd5529636aecda1"
+    },
+    {
+      "year": 2025,
+      "kind": "T",
+      "pdf": "tmp\\original-style-repair\\2025\\T\\IZhO_2025_T_KO.pdf",
+      "sha256": "16a6afed6cb36aa739345d101788242e1f261f4f1d268e1da07589446741bdca",
+      "pages": 7,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 5246,
+      "new_ascii_glyphs_checked": 446,
+      "unembedded_resolved_outlines_checked": 446,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2025_T_EN.pdf": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2025_T_KO.json",
+      "detail_report_sha256": "d58dede29626adf8c6c635fda7e35d8628838f291d7f6c27f8b3cb3391326c5e"
+    },
+    {
+      "year": 2025,
+      "kind": "TS",
+      "pdf": "tmp\\original-style-repair\\2025\\TS\\IZhO_2025_TS_KO.pdf",
+      "sha256": "1c950c887445d26fb671454621cc52daa56a725901090ad779212eaa5b9f7270",
+      "pages": 12,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 4760,
+      "new_ascii_glyphs_checked": 811,
+      "unembedded_resolved_outlines_checked": 811,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2025_TS.pdf": "9b4bbf5fdf1a4d763a379665c199e55164e3878918bae9871e6c42695374df83"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2025_TS_KO.json",
+      "detail_report_sha256": "bc035b1067c413386e02500e8f8eaa34d950ab29f20eaab4e6418078fee71a68"
+    },
+    {
+      "year": 2026,
+      "kind": "T",
+      "pdf": "tmp\\original-style-repair\\2026\\T\\IZhO_2026_T_KO.pdf",
+      "sha256": "3217bd6317b40b46e1f36c357ef849ee78b999b8ddaac95a57928fda60c8511c",
+      "pages": 8,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 6485,
+      "new_ascii_glyphs_checked": 477,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2026_T_EN.pdf": "1782a8234a1dbd752ec2cd3715da41aaed51992b041c53bc3b5b4201e938daa3"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2026_T_KO.json",
+      "detail_report_sha256": "8f82b5a3477a0b025c06a48315414015bab375a59054930617333ba76c0ab23e"
+    },
+    {
+      "year": 2026,
+      "kind": "TS",
+      "pdf": "tmp\\original-style-repair\\2026\\TS\\IZhO_2026_TS_KO.pdf",
+      "sha256": "07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400",
+      "pages": 11,
+      "source_identity_origin_tolerance_pt": 0.0001,
+      "new_nonspace_glyphs_checked": 4409,
+      "new_ascii_glyphs_checked": 499,
+      "unembedded_resolved_outlines_checked": 0,
+      "empty_outline_count": 0,
+      "source_sha256": {
+        "tmp\\source-audit\\IZhO_2026_TS.pdf": "2b27f8e79e0aa84027a08983a04bd59593e1d5839fac466e51c6cca2bad17b92"
+      },
+      "detail_report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-outline-audit\\IZhO_2026_TS_KO.json",
+      "detail_report_sha256": "5753b209c51395938dec5bde19536197cd6be9c062d8d83f042ea0b04b2b4542"
+    }
+  ]
+}

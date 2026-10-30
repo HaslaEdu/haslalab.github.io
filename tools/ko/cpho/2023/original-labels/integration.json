@@ -1,0 +1,50 @@
+{
+  "module": "tools/cpho_2023_original_labels.py",
+  "source": "tmp/source-audit/CPhO_2023_T_ZH.pdf",
+  "source_sha256": "956f132218ce6591d418a1faa998648b00a6195b2f2b522e6e16c1a405a418f0",
+  "ownership": "Figure language only. Root owns tools/cpho_2023_original_style.py, body TSVs and ordinary captions; those files are never edited by this module.",
+  "pages_with_overlays": [
+    1,
+    3,
+    5,
+    11,
+    17,
+    32,
+    33,
+    34
+  ],
+  "labels": 34,
+  "raster_language_regions": 25,
+  "native_form_language_regions": 9,
+  "native_form_language_glyphs": 15,
+  "physical_form_chinese_glyphs_kept": 21,
+  "api": {
+    "fonts(lang)": "Return subset font Paths for serif and sans. Subset only the new translation fonts; never globally subset the PDF.",
+    "apply(page, source_page, lang, font_paths=None)": "Call after original-style body composition, before final QA. source_page is one-based in the original 36-page combined source. Returns a journal with original erasure rectangles, exact/inferred source sizes, placement runs and font paths. All source Form and image streams remain intact.",
+    "audit_spec(source_page)": "Return source_language_regions, mutable_form_prose_origins and delegated_body_slot_ids. Add the language regions to clip-aware graphics exceptions. Exclude only mutable_form_prose_origins from the physical/math glyph-ink locks, and include them as intentionally covered prose in the general source-ink audit. Still require every original Form glyph metadata and raw/decoded Form program to remain unchanged. Add actual new prose glyph outline boxes to allowed prose rectangles.",
+    "proofs(lang)": "CLI command proof --lang ko|en creates internal eight-page label-only proofs with Chinese body retained for direct source comparison; these are not final translated editions."
+  },
+  "delegated_photo_label": {
+    "page": 2,
+    "body_slot": "2-8-0",
+    "source": "附属虹→",
+    "ko": "간섭띠",
+    "en": "Fringes",
+    "policy": "Root's existing native CID suppression restores the exact original photograph underneath the original white prose. Preserve the original arrow. This module never overlays that photo label again."
+  },
+  "abbreviations": {
+    "nd_after_native_digit_2": "Second-order ray. The original bitmap digit 2 and ray geometry stay fixed; the ordinal labels the ray already drawn.",
+    "Rad. source": "Radioactive source.",
+    "Fluor. screen": "Fluorescent screen. The full phrase crosses the original gold foil and circular apparatus; the abbreviation keeps the original inferred point size and baseline.",
+    "part. KE": "Particle kinetic energy. Original Greek alpha and /MeV stay at their original bitmap positions.",
+    "입자 KE": "입자 운동에너지. KE is the standard kinetic-energy abbreviation; original alpha and /MeV stay fixed.",
+    "arb.const.": "Arbitrary constant. The native plus sign and final punctuation stay fixed."
+  },
+  "style_evidence": "Native Form prose inherits the source SimSun point size and baseline; KO uses official Noto Serif CJK KR Regular400, EN uses Times New Roman. Raster fonts have no recoverable font metadata: serif/sans structure and same-document Song outline ink measurements determine recorded nominal sizes. Figure18 raster language is sans; KO uses official Noto Sans CJK KR Regular400 and EN Arial. No fit-dependent scaling, extra rows or mathematical reconstruction is used.",
+  "small_placement_adjustments": "The Fig./도 prefix grows left from the original native2a with additional0.4pt left clearance. Lower English Violet moves2pt left within free prose space to avoid the original ray arrowhead. Font sizes and baselines do not change.",
+  "page_copy_requirement": "Preserve original Page /Group (/Transparency,/DeviceRGB). MuPDF insert_pdf omits it and can change native antialiasing on pages containing alpha images. The internal proof builder uses pikepdf.pages.append to copy complete page dictionaries, preserving source /Group and raw Form/image streams.",
+  "untranslated_physical_notation": "All original native Greek/Latin mathematical symbols, units, numbers and Form physical subscripts 红/紫/初/末 remain untouched. Ordinary figure captions belong to the root body; only native Form 图 of p5 图2a is translated here.",
+  "printed_editorial_notes": 0,
+  "redrawn_figures": 0,
+  "new_edition_labels": 0
+}

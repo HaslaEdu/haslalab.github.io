@@ -1,0 +1,68 @@
+{
+  "status": "READY",
+  "scope": "CPhO2023 original-figure language module and manual plan; combine with root original-style body translations before publication.",
+  "source": "CPhO_2023_T_ZH.pdf",
+  "source_sha256": "956f132218ce6591d418a1faa998648b00a6195b2f2b522e6e16c1a405a418f0",
+  "labels": 34,
+  "raster_language_regions": 25,
+  "native_form_language_regions": 9,
+  "native_form_language_glyphs": 15,
+  "physical_form_chinese_glyphs_preserved": 21,
+  "pages": [
+    1,
+    3,
+    5,
+    11,
+    17,
+    32,
+    33,
+    34
+  ],
+  "delegated_photo_page": 2,
+  "delegated_photo_body_slot": "2-8-0",
+  "redrawn_figures": 0,
+  "printed_editorial_notes": 0,
+  "new_edition_labels": 0,
+  "internal_proofs": [
+    {
+      "language": "ko",
+      "path": "tmp/original-style-repair/2023/figure-language/CPhO_2023_figure_language_KO_proof.pdf",
+      "pages": 8,
+      "bytes": 2329399,
+      "sha256": "a43f596b89ef7c6ef6428bf05cdb52343f1d92bee1bc2def00d8829d9c550f58",
+      "qa": "tools/ko/cpho/2023/original-labels/CPhO_2023_figure_language_KO_proof-qa.json",
+      "internal_label_only_proof": true
+    },
+    {
+      "language": "en",
+      "path": "tmp/original-style-repair/2023/figure-language/CPhO_2023_figure_language_EN_proof.pdf",
+      "pages": 8,
+      "bytes": 1142357,
+      "sha256": "581f6308cc5f7764987053f8e8a94ca0099ea7611b971a0e033507c15bbcc50b",
+      "qa": "tools/ko/cpho/2023/original-labels/CPhO_2023_figure_language_EN_proof-qa.json",
+      "internal_label_only_proof": true
+    }
+  ],
+  "authoring_files": [
+    "tools/cpho_2023_original_labels.py",
+    "tools/cpho_2023_original_labels_qa.py",
+    "tools/ko/cpho/2023/original-labels/source-survey.json",
+    "tools/ko/cpho/2023/original-labels/label-plan.json",
+    "tools/ko/cpho/2023/original-labels/integration.json",
+    "tools/ko/cpho/2023/original-labels/CPhO_2023_figure_language_KO_proof-qa.json",
+    "tools/ko/cpho/2023/original-labels/CPhO_2023_figure_language_EN_proof-qa.json",
+    "tools/ko/cpho/2023/original-labels/qa-poppler.json",
+    "tools/ko/cpho/2023/original-labels/qa-hangul-visibility.json"
+  ],
+  "common_dependencies": [
+    "tools/pdf_original_text_ops.py",
+    "tools/pdf_original_style_fonts.py",
+    "tools/pdf_original_style_audit.py",
+    "tools/pdf_original_graphics_ink.py",
+    "tools/pdf_original_image_ink.py",
+    "tools/pdf_hangul_visibility.py"
+  ],
+  "validation": "Both languages,8affected source pages each: strict4x MuPDF outside-prose/native-glyph-ink/clip-aware-graphics changes0; every original glyph including spaces has exact font/gid/size/origin/color/render state; every original Form raw/decoded program and numeric BBox/Matrix, font program and image/SMask program/position is unchanged. Independent Poppler26.07 at110dpi outside prose0 with1pixel prose AA allowance and original nonlanguage ink0. KO visibility loss0. New Han/NUL/gid0=0. Every label reviewed enlarged in both languages.",
+  "integration": "tools/ko/cpho/2023/original-labels/integration.json",
+  "raster_font_limit": "Raster fonts have no recovered font metadata; measured nominal size, serif/sans style and baseline estimates are explicitly recorded in label-plan.json."
+}

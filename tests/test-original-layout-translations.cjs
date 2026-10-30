@@ -48,6 +48,57 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'cpho-original-combined') {
+    assert.equal(qa.sha256, item.sha256);
+    assert.equal(qa.bytes, item.bytes);
+    assert.equal(qa.pages, item.pages);
+    assert.equal(qa.passed, true);
+    assert.equal(qa.page_audits.length, item.pages);
+    for (const flag of ['original_page_order', 'original_shared_resources_retained', 'no_autoshrink', 'no_reflow', 'no_equation_rasterization']) assert.equal(qa[flag], true);
+    assert.equal(qa.redrawn_figures, 0);
+    assert.equal(qa.printed_editorial_notes, 0);
+    for (const page of qa.page_audits) {
+      assert.equal(page.passed, true);
+      for (const key of ['native_glyphs_changed', 'protected_glyphs_selected_for_erasure', 'original_form_glyph_metadata_changed', 'final_vs_reviewed_proof_glyph_metadata_changed', 'unexpected_untranslated_body_han']) assert.deepEqual(page[key], []);
+      for (const key of ['changed_pixels_outside_prose', 'changed_pixels_in_native_glyph_neighborhood', 'final_vs_reviewed_proof_changed_pixels']) assert.equal(page[key], 0);
+      assert.equal(page.original_font_programs_identical, true);
+      assert.equal(page.original_form_raw_and_decoded_programs_identical, true);
+      assert.equal(page.graphics_audit.original_graphics_ink_changed_pixels, 0);
+      assert.equal(page.graphics_audit.original_image_and_smask_programs_and_positions_identical, true);
+      assert.equal(page.autoshrink, false);
+      assert.equal(page.reflow, false);
+      assert.equal(page.math_images, false);
+      for (const run of page.placements) assert.equal(run.size, run.source_size);
+    }
+    const poppler = read(item.poppler_qa);
+    assert.equal(poppler.sha256, item.sha256);
+    assert.equal(poppler.passed, true);
+    assert.equal(poppler.pages.length, item.pages);
+    for (const page of poppler.pages) {
+      assert.equal(page.changed_pixels_outside_prose, 0);
+      assert.equal(page.changed_pixels_in_native_control_ink, 0);
+      assert.equal(page.coarse_fringe_control_pixels_at_least_250, true);
+    }
+    const ink = read(item.font_ink_qa);
+    assert.equal(ink.sha256, item.sha256);
+    assert.equal(ink.passed, true);
+    assert.equal(ink.pages.length, item.pages);
+    for (const key of ['nonpositive_width_codes', 'new_missing_or_han_glyphs', 'empty_new_nonspace_glyphs']) assert.deepEqual(ink[key], []);
+    const review = read(item.visual_qa);
+    assert.equal(review.sha256, item.sha256);
+    assert.deepEqual(review.pages.map(p => p.page), Array.from({length:item.pages}, (_,i) => i+1));
+    for (const row of review.pages) {
+      assert.equal(row.reviewed, true);
+      assert.equal(row.proof_sha256, qa.page_audits[row.page-1].proof_sha256);
+    }
+    if (item.language === 'ko') {
+      const hangul = read(item.hangul_qa);
+      assert.equal(hangul.sha256, item.sha256);
+      assert.equal(hangul.pages.length, item.pages);
+      assert.equal(hangul.flagged_components, 0);
+    }
+    continue;
+  }
   if (item.audit_schema === 'cpho-native-labelled-problems') {
     assert.equal(qa.sha256, item.sha256);
     assert.equal(qa.passed, true);

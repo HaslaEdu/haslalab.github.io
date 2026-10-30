@@ -122,3 +122,22 @@ The 2023 solution source contains 62 pages. The reviewed Korean edition selects
 English physical pages 25–43, keeping their original printed page numbers. Its
 explicit control-stem mapping audits those source-page controls against all
 19 final pages; the shared default mapping is unchanged.
+
+For the CPhO 2023 combined Korean edition, put the recorded Chinese source in
+`tmp/source-audit/CPhO_2023_T_ZH.pdf` and run
+`python tools/cpho_2023_original_ready.py --lang ko --rebuild`. The manual body
+plan and figure-language plan preserve all 36 original pages. Final assembly
+keeps the source document's shared font, Form and image resources, importing
+only the reviewed prose streams and new prose fonts. Each final page must
+render identically to its audited proof and retain its exact glyph metadata.
+Independent Poppler comparisons protect actual source-control ink; expanded
+neighborhood antialias counts remain recorded separately. The regression in
+`test_cpho_2023_original_poppler.py` still rejects covered fraction bars/glyphs.
+
+A cmap entry, nonzero GID and positive PDF width do not prove that a subset
+glyph has ink. The CPhO font audit follows the actual new font resource/CID
+and checks its embedded glyph bounds. A blank source-subset logical OR was
+replaced with a complete installed SimSun face in the new prose resource;
+the original PDF fonts remain untouched. The separate final-PDF audit in
+`izho_new_prose_outline_qa.py` checks all 18 published IZhO editions and
+distinguishes duplicate font-subset names using actual text-show resources.
