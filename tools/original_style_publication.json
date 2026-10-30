@@ -1,11 +1,66 @@
 [
   {
-    "file": "IZhO_2015_T_KO.pdf",
-    "qa": "tools/qa/original-style/IZhO_2015_T_KO.qa.json",
+    "file": "CPhO_2007_T_EN.pdf",
+    "pages": 4,
+    "bytes": 575812,
+    "sha256": "3fe3fc3f05e97c1605ebc8d003bbc7daa974e7fe2159074752a55497553c0641",
+    "qa": "tools/ko/cpho/2007/original/qa-problems-en.json",
+    "generated_file": "tmp/original-style-repair/2007/editions/CPhO_2007_T_EN.pdf",
+    "audit_schema": "cpho-native-problems",
+    "aliases": [
+      "CPhO_2007_T_BAUPC_EN.pdf"
+    ],
+    "language": "en",
+    "poppler_qa": "tools/ko/cpho/2007/original/qa-problems-poppler.json",
+    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json"
+  },
+  {
+    "file": "CPhO_2007_T_KO.pdf",
+    "pages": 4,
+    "bytes": 770276,
+    "sha256": "6d45fbd4ab984933febe512157a0d9dea839714169f4d01064f1bf5333c69aa2",
+    "qa": "tools/ko/cpho/2007/original/qa-problems-ko.json",
+    "generated_file": "tmp/original-style-repair/2007/editions/CPhO_2007_T_KO.pdf",
+    "audit_schema": "cpho-native-problems",
+    "language": "ko",
+    "poppler_qa": "tools/ko/cpho/2007/original/qa-problems-poppler.json",
+    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json"
+  },
+  {
+    "file": "IZhO_2010_T_KO.pdf",
     "pages": 5,
-    "bytes": 3579966,
-    "sha256": "c1bca894a16081666e868a016d17099e60ba6dbdaf6fd8430b32b55266b54e4c",
+    "bytes": 2833967,
+    "sha256": "570cd8a1430268a73e7261cfea0158740c7f70291bc89c72b9cefbaa3e2b001f",
+    "qa": "tools/qa/original-style/IZhO_2010_T_KO.qa.json",
+    "generated_file": "pdfx/izho/original-style/IZhO_2010_T_KO.pdf"
+  },
+  {
+    "file": "IZhO_2013_T_KO.pdf",
+    "pages": 4,
+    "bytes": 2932009,
+    "sha256": "f2a13308d8853dff444b36dd2f7bb5a0855a3ab01202111ae594661c22c6aeb0",
+    "original_style": true,
+    "qa": "tools/qa/original-style/IZhO_2013_T_KO.qa.json",
+    "generated_file": "pdfx/izho/original-style/IZhO_2013_T_KO.pdf"
+  },
+  {
+    "file": "IZhO_2015_T_KO.pdf",
+    "pages": 5,
+    "bytes": 3580016,
+    "sha256": "27bbd0ee97961d7462f25707c8a268c44e57ee4f5498bbdeb59e4ffc93af71aa",
+    "qa": "tools/qa/original-style/IZhO_2015_T_KO.qa.json",
     "generated_file": "pdfx/izho/original-style/IZhO_2015_T_KO.pdf"
+  },
+  {
+    "file": "IZhO_2026_TS_KO.pdf",
+    "pages": 11,
+    "bytes": 8512469,
+    "sha256": "07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400",
+    "qa": "tools/qa/original-style/IZhO_2026_TS_KO.qa.json",
+    "generated_file": "tmp/original-style-repair/2026/TS/IZhO_2026_TS_KO.pdf",
+    "audit_schema": "native-outlines-and-control",
+    "hangul_qa": "tools/qa/original-style/IZhO_2026_TS_KO.hangul.json",
+    "native_ascii_qa": "tools/ko/izho/2026/TS/original_style/native-ascii-audit.json"
   },
   {
     "file": "IZhO_2026_T_KO.pdf",
@@ -16,15 +71,7 @@
     "qa": "tools/qa/original-style/IZhO_2026_T_KO.qa.json",
     "audit_schema": "native-outlines-and-control",
     "hangul_qa": "tools/qa/original-style/IZhO_2026_T_KO.hangul.json",
-    "generated_file": "tmp/original-style-repair/2026/T/IZhO_2026_T_KO.pdf"
-  },
-  {
-    "file": "IZhO_2013_T_KO.pdf",
-    "pages": 4,
-    "bytes": 2932009,
-    "sha256": "f2a13308d8853dff444b36dd2f7bb5a0855a3ab01202111ae594661c22c6aeb0",
-    "original_style": true,
-    "qa": "tools/qa/original-style/IZhO_2013_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2013_T_KO.pdf"
+    "generated_file": "tmp/original-style-repair/2026/T/IZhO_2026_T_KO.pdf",
+    "native_ascii_qa": "tools/ko/izho/2026/T/original_style/native-ascii-audit.json"
   }
 ]

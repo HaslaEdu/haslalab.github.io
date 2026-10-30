@@ -23,10 +23,13 @@ ZERO_CHECKS=('outside_prose_changed_pixels','missing_or_moved_native_glyphs',
              'missing_or_moved_math_glyphs','original_math_ink_changed_pixels',
              'original_native_ink_changed_pixels','original_figure_ink_changed_pixels',
              'source_to_suppression_control_native_ink_changed_pixels',
-             'korean_intrusion_on_native_ink_pixels')
+             'korean_intrusion_on_native_ink_pixels',
+             'source_to_suppression_control_figure_ink_changed_pixels',
+             'korean_intrusion_on_figure_ink_pixels')
 TRUE_CHECKS=('native_images_unchanged','native_vector_drawings_unchanged',
              'source_embedded_glyph_outline_bounds','suppression_control_native_geometry_unchanged',
-             'suppression_control_source_font_programs_unchanged')
+             'suppression_control_source_font_programs_unchanged','native_font_gid_size_unchanged',
+             'original_source_font_programs_preserved_in_final')
 
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 

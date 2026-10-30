@@ -4,7 +4,7 @@ import json,re
 
 ROOT=Path(__file__).resolve().parents[1]
 items=json.loads((ROOT/'tools/original_style_publication.json').read_text(encoding='utf8'))
-versions={item['file']:item['sha256'][:16]for item in items}
+versions={name:item['sha256'][:16]for item in items for name in[item['file'],*item.get('aliases',[])]}
 block='/* ORIGINAL_LAYOUT_PDF_VERSIONS */\nconst ORIGINAL_LAYOUT_PDF_VERSIONS='+json.dumps(dict(sorted(versions.items())),separators=(',',':'))+';\n/* END_ORIGINAL_LAYOUT_PDF_VERSIONS */'
 path=ROOT/'index.html';text=path.read_text(encoding='utf8')
 if '/* ORIGINAL_LAYOUT_PDF_VERSIONS */'in text:

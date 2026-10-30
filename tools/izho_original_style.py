@@ -109,6 +109,47 @@ def native_trace(page):
                    for cp, gid, origin, bbox in trace['chars'] if not chr(cp).isspace())
 
 
+def trace_records(page):
+    return [dict(c=chr(cp),font=trace['font'],size=trace['size'],gid=gid,origin=origin)
+            for trace in page.get_texttrace()
+            for cp,gid,origin,bbox in trace['chars']if not chr(cp).isspace()]
+
+
+def float32_ulp(value):
+    value=np.float32(abs(value))
+    return float(np.nextafter(value,np.float32(np.inf))-value)
+
+
+def compare_native_records(expected,actual):
+    """Keep font/GID/size exact; allow only insignificant float32 origins.
+
+    Replacing a run of CID advances with an equivalent TJ number changes the
+    multiplication order in MuPDF. At x=553pt its one float32 ULP is 0.000061pt.
+    No kerning is changed to imitate an interpreter's internal rounding.
+    """
+    groups={}
+    for record in actual:
+        key=tuple(record[k]for k in('c','font','size','gid'))
+        groups.setdefault(key,[]).append(record)
+    missing=[];differences=[]
+    for record in expected:
+        key=tuple(record[k]for k in('c','font','size','gid'))
+        candidates=groups.get(key,[])
+        if not candidates:missing.append(record);continue
+        nearest=min(candidates,key=lambda r:max(abs(a-b)for a,b in zip(r['origin'],record['origin'])))
+        delta=[abs(a-b)for a,b in zip(nearest['origin'],record['origin'])]
+        limits=[max(.0001,float32_ulp(value))for value in record['origin']]
+        if any(a>b for a,b in zip(delta,limits)):missing.append(record);continue
+        candidates.remove(nearest)
+        if any(delta):
+            differences.append(dict(c=record['c'],font=record['font'],size=record['size'],gid=record['gid'],
+                                    source_origin=record['origin'],output_origin=nearest['origin'],
+                                    max_delta_pt=max(delta),max_delta_float32_ulps=max(d/float32_ulp(v)if d else 0 for d,v in zip(delta,record['origin']))))
+    return dict(missing=missing,extra=sum(len(rows)for rows in groups.values()),differences=differences,
+                max_delta_pt=max([row['max_delta_pt']for row in differences]or[0]),
+                max_delta_float32_ulps=max([row['max_delta_float32_ulps']for row in differences]or[0]))
+
+
 def rgb(page, scale):
     pix = page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
     return np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, 3)
@@ -182,7 +223,10 @@ def build(plan_path, target):
         name=source_font_name(item[3])
         if name not in outline_faces and item[1] in {'ttf','otf'}:
             face=TTFont(BytesIO(source.extract_font(item[0])[3]))
-            outline_faces[name]=(face,face.getGlyphSet(),face.getBestCmap(),face['head'].unitsPerEm)
+            cmap=face.getBestCmap()or{}
+            if not cmap:
+                for table in face['cmap'].tables:cmap.update(table.cmap)
+            outline_faces[name]=(face,face.getGlyphSet(),cmap,face['head'].unitsPerEm)
     outline_cache={}
     def actual_char_rect(char):
         name=char['font'];cp=ord(char['c']);key=(name,cp)
@@ -368,6 +412,13 @@ def build(plan_path, target):
     missing_native=expected-actual
     original_math=(Counter(glyph_key(c)for r in runs.values() if r['font'].startswith('CambriaMath') for c in chars_of(r) if not c['c'].isspace())-selected_counter)
     missing_math=original_math-actual
+    remove_counts=selected_counter.copy();expected_records=[]
+    for record in trace_records(page):
+        key=glyph_key(record)
+        if remove_counts[key]:remove_counts[key]-=1
+        else:expected_records.append(record)
+    native_geometry=compare_native_records(expected_records,trace_records(final))
+    math_geometry=compare_native_records([r for r in expected_records if r['font'].startswith('CambriaMath')],trace_records(final))
     # Compare visible formula pixels inside the original small glyph bounds.
     math_mask=Image.new('1',allowed.size)
     math_draw=ImageDraw.Draw(math_mask)
@@ -408,8 +459,10 @@ def build(plan_path, target):
     intrusion=control_final_delta&native_region&control_ink
     def font_programs(pg,doc):
         return {(item[3],hashlib.sha256(doc.extract_font(item[0])[3]).hexdigest())for item in pg.get_fonts(full=True)}
-    control_geometry_unchanged=native_trace(control[0])==expected
+    control_geometry=compare_native_records(expected_records,trace_records(control[0]))
+    control_geometry_unchanged=not control_geometry['missing']and not control_geometry['extra']
     control_fonts_unchanged=font_programs(page,source)==font_programs(control[0],control)
+    final_fonts_unchanged=font_programs(page,source)<=font_programs(final,output)
     target.with_suffix('.control.pdf').write_bytes(native_bytes)
     source_images=Counter((info['digest'].hex(),tuple(round(v,5)for v in info['bbox']))
                           for info in page.get_image_info(hashes=True))
@@ -420,7 +473,13 @@ def build(plan_path, target):
     for info in page.get_image_info(hashes=True):
         figure_draw.rectangle(tuple(v*scale for v in info['bbox']),fill=1)
     figure_delta=changed&np.asarray(figure_mask,dtype=bool)
-    figure_ink_delta=figure_delta&original_ink
+    # An image's fractional outer bbox can round into a neighbouring prose
+    # descender row. Protect the actual native image ink in the prose-free
+    # control, and verify the original image data and placement independently.
+    figure_region=np.asarray(figure_mask,dtype=bool)
+    figure_ink_delta=figure_delta&original_ink&control_ink
+    control_figure_delta=source_control_delta&figure_region&control_ink
+    figure_intrusion=control_final_delta&figure_region&control_ink
     report=dict(source=data['source'],source_page=pi+1,output=str(target.relative_to(ROOT)),
                 output_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                 source_sha256=source_sha,
@@ -431,9 +490,15 @@ def build(plan_path, target):
                 source_embedded_glyph_outline_bounds=True,
                 outside_prose_changed_pixels=int(outside.sum()),
                 native_glyphs_expected=sum(expected.values()),
-                missing_or_moved_native_glyphs=sum(missing_native.values()),
+                missing_or_moved_native_glyphs=len(native_geometry['missing']),
+                strict_native_origin_mismatches_at_5_decimals=sum(missing_native.values()),
+                native_font_gid_size_unchanged=not native_geometry['missing'],
+                native_origin_tolerance_pt=.0001,
+                max_native_origin_delta_pt=native_geometry['max_delta_pt'],
+                max_native_origin_delta_float32_ulps=native_geometry['max_delta_float32_ulps'],
+                native_origin_rounding_differences=native_geometry['differences'],
                 mathematical_glyphs=sum(original_math.values()),
-                missing_or_moved_math_glyphs=sum(missing_math.values()),
+                missing_or_moved_math_glyphs=len(math_geometry['missing']),
                 changed_pixels_inside_math_bounds=int(mathematical_delta.sum()),
                 original_math_ink_changed_pixels=int(mathematical_ink_delta.sum()),
                 original_native_ink_changed_pixels=int(native_ink_delta.sum()),
@@ -441,8 +506,11 @@ def build(plan_path, target):
                 korean_intrusion_on_native_ink_pixels=int(intrusion.sum()),
                 suppression_control_native_geometry_unchanged=control_geometry_unchanged,
                 suppression_control_source_font_programs_unchanged=control_fonts_unchanged,
+                original_source_font_programs_preserved_in_final=final_fonts_unchanged,
                 changed_pixels_inside_figure_bounds=int(figure_delta.sum()),
                 original_figure_ink_changed_pixels=int(figure_ink_delta.sum()),
+                source_to_suppression_control_figure_ink_changed_pixels=int(control_figure_delta.sum()),
+                korean_intrusion_on_figure_ink_pixels=int(figure_intrusion.sum()),
                 native_images_unchanged=source_images==output_images,
                 native_vector_drawings_unchanged=[{k:v for k,v in path.items()if k!='seqno'}for path in page.get_drawings()]==[{k:v for k,v in path.items()if k!='seqno'}for path in final.get_drawings()],
                 placements=placements,prose_frames=prose_frames)
@@ -452,8 +520,8 @@ def build(plan_path, target):
     diff=np.full_like(before,255)
     diff[changed]=[255,0,0]
     Image.fromarray(diff).save(target.parent/f'{target.stem}-difference.png')
-    print(json.dumps({k:v for k,v in report.items() if k not in {'placements','prose_frames'}},ensure_ascii=False,indent=2))
-    if report['outside_prose_changed_pixels'] or report['missing_or_moved_native_glyphs'] or report['missing_or_moved_math_glyphs'] or report['original_math_ink_changed_pixels'] or report['original_native_ink_changed_pixels'] or report['original_figure_ink_changed_pixels'] or report['source_to_suppression_control_native_ink_changed_pixels'] or report['korean_intrusion_on_native_ink_pixels'] or not control_geometry_unchanged or not control_fonts_unchanged or not report['native_vector_drawings_unchanged'] or not report['native_images_unchanged']:
+    print(json.dumps({k:v for k,v in report.items() if k not in {'placements','prose_frames','native_origin_rounding_differences'}},ensure_ascii=False,indent=2))
+    if report['outside_prose_changed_pixels'] or report['missing_or_moved_native_glyphs'] or report['missing_or_moved_math_glyphs'] or report['original_math_ink_changed_pixels'] or report['original_native_ink_changed_pixels'] or report['original_figure_ink_changed_pixels'] or report['source_to_suppression_control_native_ink_changed_pixels'] or report['korean_intrusion_on_native_ink_pixels'] or report['source_to_suppression_control_figure_ink_changed_pixels'] or report['korean_intrusion_on_figure_ink_pixels'] or not control_geometry_unchanged or not control_fonts_unchanged or not final_fonts_unchanged or not report['native_vector_drawings_unchanged'] or not report['native_images_unchanged']:
         raise ValueError('Original-layout proof audit failed')
 
 
