@@ -305,6 +305,13 @@ section{padding:58px 0}
 
 /* ═══════ learn ═══════ */
 .lsubj .abbr{font-size:1.35rem}
+.learn-state{display:inline-block;padding:3px 10px;border:1px solid var(--grid-bold);border-radius:20px;color:var(--graphite);font-size:12px;font-weight:600;line-height:1.5;letter-spacing:0;white-space:nowrap}
+.phead h1 .learn-state{margin-left:12px;vertical-align:middle}
+.learn-note{margin:16px 0 0;color:var(--graphite);font-size:13px;line-height:1.7}
+.learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
+.learn-pending h2{margin:0 0 12px;font-size:1.35rem}
+.learn-pending p{margin:0;color:var(--graphite);font-size:14px;line-height:1.8}
+@media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
 .lsec{margin:0 0 38px}
 .lsec>h2{font-size:1.25rem;margin:0 0 6px}
 .lsec>p{margin:0 0 16px;color:var(--graphite);font-size:13.5px;max-width:72ch}
@@ -1097,7 +1104,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=7a8e9dddd875"></script>
+<script src="site-catalogue.js?v=a0e3bdecc3e0"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=818e8a424448"></script>
@@ -1126,8 +1133,9 @@ const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
 const UI={
 ko:{
   navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
-  ebLearn:"학습", hLearn:"학습을 시작하세요",
-  pLearn:"물리 · 화학 · 생물 · 지구과학 · 천문 · 과학 실험과 실기, 관측을 익히는 교재와 학습 가이드, 기초 실험 및 관측을 모읍니다. HaslaLab의 교재와 가이드는 준비 중이고, 지금은 인터넷에 공개된 자료를 골라 두었습니다.",
+  ebLearn:"학습", hLearn:"학습", learnSoon:"준비중",
+  pLearn:"과목별 교재·학습 가이드와 기초 실험·관측 콘텐츠를 준비하고 있습니다.",
+  learnSoonNote:"이 과목의 학습 콘텐츠를 준비하고 있습니다. 준비가 끝나면 이곳에서 안내하겠습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
   foundNote:"아래 자료는 각 기관과 저자가 인터넷에 무료로 공개한 것입니다. 링크는 원래 사이트로 연결되고, HaslaLab이 내용을 고치거나 다시 올리지 않았습니다.",
@@ -1195,8 +1203,9 @@ ko:{
 },
 en:{
   navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
-  ebLearn:"Learn", hLearn:"Start learning",
-  pLearn:"Textbooks, study guides and basic experiments, practicals and observations for physics, chemistry, biology, earth science, astronomy and integrated science. HaslaLab's own textbooks and guides are in preparation; for now, here is a selection of material published on the internet.",
+  ebLearn:"Learn", hLearn:"Learn", learnSoon:"Coming soon",
+  pLearn:"Subject textbooks, study guides, basic experiments and observation materials are in preparation.",
+  learnSoonNote:"Learning materials for this subject are in preparation. They will appear here when ready.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
   ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
   foundNote:"The material below is published free on the internet by its institutions and authors. The links go to the original sites; HaslaLab has not edited or re-hosted it.",
@@ -1517,10 +1526,9 @@ const DATA={
     ]},
    {y:2019,host:{ko:"이스라엘 · 텔아비브",en:"Tel Aviv, Israel"},cc:"il",
     problems:[
-      {id:"E1", en:"Optical Measurements", ko:"광학 측정", state:"wip", hold:true,
+      {id:"E1", title:{ko:"광학 측정",en:"Optical Measurements"},
+       desc:{ko:"가상 실험대의 광학 장치를 조작하며 IPhO 2019 실험 1의 측정을 진행합니다.",en:"Operate the optical apparatus on a virtual bench for IPhO 2019 Experiment 1."},
        files:{sim:"sim/ipho2019_E1_web.html",
-              exe:{ko:REL+"v1.0/IPhO2019_E1_sim_KO.exe", en:REL+"v1.0/IPhO2019_E1_sim_EN.exe"},
-              src:{ko:"src/ipho2019_E1_sim_KO.py", en:"src/ipho2019_E1_sim_EN.py"},
               pdf:{ko:"pdf/IPhO_2019_E1_KO.pdf", en:"pdf/IPhO_2019_E1_EN.pdf"},
               sol:{ko:"pdf/IPhO_2019_S1_KO.pdf", en:"pdf/IPhO_2019_S1.pdf"}}},
       {id:"E2",
@@ -4792,9 +4800,8 @@ function viewComps(sub,limit=Infinity){
   ${adFitBanner("primary")}`;
 }
 
-/* ── learn: textbooks, study guides, basic experiments and observation ──
-   HaslaLab's own material is still to be written; until then each subject
-   lists what its olympiad and open publishers already put on the internet.
+/* ── learn: subject routes remain available while materials are prepared.
+   Resource metadata is retained below, but is not published as ready content.
    s: "g" textbooks / study guides, "b" basic experiments and observation;
    k: official | free | guide | tool | archive */
 const LR=(s,k,u,tko,ten,bko,ben,dko,den)=>({s,k,u,t:{ko:tko,en:ten},by:{ko:bko,en:ben},d:{ko:dko,en:den}});
@@ -4885,19 +4892,15 @@ function viewLearn(){
   <div class="shell">
     <div class="phead">
       <p class="eyebrow">${d.ebLearn}</p>
-      <h1>${d.hLearn}</h1>
+      <h1>${d.hLearn} <span class="learn-state">${d.learnSoon}</span></h1>
       <div class="sub">${d.pLearn}</div>
     </div>
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
-        const g=L.items.filter(r=>r.s==="g").length, b=L.items.filter(r=>r.s==="b").length;
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${d.learnSoon}</span></div>
           <div class="full">${L.comps}</div>
-          <dl>
-            <div><dt>${d.lGuides}</dt><dd>${g}</dd></div>
-            <div><dt>${d.lBasics}</dt><dd>${b}</dd></div>
-          </dl>
+          <p class="learn-note">${d.learnSoonNote}</p>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -4908,18 +4911,6 @@ function viewLearn(){
 function viewLearnSubject(key){
   const d=UI[lang], L=LEARN[key];
   if(!L) return viewLearn();
-  const card=r=>`<a class="ritem" href="${esc(r.u)}" target="_blank" rel="noopener">
-      <span class="rk">${d[LKIND[r.k]]} · ${esc(r.by[lang])}</span>
-      <h3>${esc(r.t[lang])}</h3>
-      <span class="rd">${esc(r.d[lang])}</span>
-      <span class="rs">${esc(lhost(r.u))} ↗</span></a>`;
-  const own=t=>`<div class="ritem soon"><span class="rk"><b>${d.lOwn}</b></span><h3>${t}</h3><span class="rd">${d.soonOwn}</span></div>`;
-  const sec=(s,title,ownT)=>`
-    <div class="lsec">
-      <h2>${title}</h2>
-      <p>${d.foundNote}</p>
-      <div class="rlist">${own(ownT)}${L.items.filter(r=>r.s===s).map(card).join("")}</div>
-    </div>`;
   return `
   <div class="shell">
     <div class="phead">
@@ -4927,8 +4918,10 @@ function viewLearnSubject(key){
       <h1>${L.name[lang]}</h1>
       <div class="sub">${L.comps}</div>
     </div>
-    ${sec("g",d.lGuides,d.ownGuide)}
-    ${sec("b",d.lBasics,d.ownBasics)}
+    <section class="learn-pending" role="status">
+      <h2>${d.learnSoon}</h2>
+      <p>${d.learnSoonNote}</p>
+    </section>
   </div>
   ${adFitBanner("primary")}`;
 }
