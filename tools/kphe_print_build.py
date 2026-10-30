@@ -109,43 +109,6 @@ def source_edition(source, target, title, label, recall=False, source_note=None,
     out.save(target, garbage=4, deflate=True)
 
 
-def fragment_2021_solution(target, title, level):
-    """Retypeset the existing self-derived hydrogen fragment explanation."""
-    out = fitz.open()
-    flow = ColumnFlow(out, title, level,
-                      '직접 유도한 비공식 해설 · 문제 출처: 雀(Suzume) 「정적분 100題」')
-    flow.heading(1, '수소 원자 바닥상태의 전자 확률', keep=120)
-    for value in [
-        r'바닥상태 파동함수는 $\psi(r)=e^{-r/a_0}/\sqrt{\pi a_0^3}$이다. 핵에서 $a_0/2$보다 먼 곳에서 전자를 발견할 확률을 구한다. $a_0$는 보어 반지름이다.',
-        r'파동함수의 절댓값 제곱은 단위 부피당 확률 밀도이다. 구면 껍질의 부피 요소 $4\pi r^2\,dr$을 곱하고 $r=a_0/2$부터 무한대까지 적분한다.',
-        r'$P=\frac{4}{a_0^3}\int_{a_0/2}^{\infty}r^2e^{-2r/a_0}\,dr$',
-        r'$u=2r/a_0$로 치환하면 $r^2\,dr=(a_0^3/8)u^2\,du$이고 적분 구간은 $1$부터 무한대까지가 된다.',
-        r'$P=\frac12\int_1^{\infty}u^2e^{-u}\,du$',
-        r'부분적분을 두 번 적용하면 다음 원시함수를 얻는다.',
-        r'$\int u^2e^{-u}\,du=-e^{-u}(u^2+2u+2)+C$',
-        r'$u\to\infty$에서 경계항은 $0$이고 $u=1$에서 괄호 안의 값은 $5$이다. 따라서 정답은 다음과 같다.',
-        r'$P=\frac{5}{2e}=0.9196986\cdots\simeq91.97\%$',
-        r'검산하면 $r$의 전 구간에 대한 확률 적분은 $1$이다. $r<a_0/2$일 확률은 약 $8.03\%$이며 두 확률의 합은 $100\%$이다.',
-        '이 해설은 문제의 적분식에서 직접 유도했다. 자료집의 풀이를 복사한 것이 아니다.',
-    ]:
-        flow.paragraph(value)
-    flow.reserve(170)
-    flow.paragraph('출처와 편집 범위', 9.8)
-    for value in [
-        '雀(Suzume), 「정적분 100題」 ver. 20220629, 문항 16(16쪽). 자료집 풀이 26쪽의 [2021 물리인증 1급 기출] 표기를 근거로 한 단편이다.',
-        '회차와 원래 시험 번호·선택지는 확인되지 않았다. 자료집의 16번을 원시험 번호로 해석하지 않는다. 이 편집본은 비공식 자료이다.',
-        '저자 게시글: https://orbi.kr/00057373007',
-        '공개 원본: https://orbi.kr/download/united/57373007/1',
-        '동일 자료 공개 열람: https://scribd.com/document/1005314514',
-    ]:
-        flow.paragraph(value, 8)
-    flow.finish()
-    out.set_metadata({'title': f'{title} {level} 풀이 해설', 'author': '직접 작성 해설',
-                      'subject': 'Self-derived solution to an unofficial attributed hydrogen probability fragment'})
-    out.subset_fonts()
-    out.save(target, garbage=4, deflate=True)
-
-
 def scan_2023_edition(source, target, title, level, part, year, expected):
     """Reflow verified transcriptions; equations and original diagrams remain unambiguous."""
     layout_path = ROOT / 'tools/kphe_2023_layout.json'
@@ -163,16 +126,17 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
     original = fitz.open(source)
     out = fitz.open()
     note = '첨부 기출을 최신 형식으로 재조판한 학습용 편집본 · 공식 배포 원본과 구분'
-    flow = ColumnFlow(out, title, level, note, kind='문제')
+    reference = INPUT / f'KPhE_2026_T2{part[-1]}_KO.pdf'
+    flow = ColumnFlow(out, title, level, note, reference, False, kind='문제')
     for question in questions:
         if flow.y > 76:
             flow.new_column(False)
         figures = question.get('figures', []) or ([question['figure']] if question.get('figure') else [])
-        keep = 25 + 9.8 * 1.45 * 2
+        keep = 25 + 9.8 * 1.6 * 2
         if figures:
             r = fitz.Rect(figures[0]['rect'])
             keep += min(220, flow.width * r.height / r.width) + 12
-        flow.heading(question['number'], '', min(keep, 680))
+        flow.problem_start(question['number'])
         values = question.get('paragraphs', question.get('statement', []))
         for value in ([values] if isinstance(values, str) else values):
             flow.paragraph(value)
@@ -180,8 +144,7 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
             fig_doc = original if Path(fig['source']).name == source.name else fitz.open(INPUT / fig['source'])
             flow.figure(fig_doc, fig['page'], fig['rect'], max_height=220)
         values = question.get('givens', [])
-        for value in ([values] if isinstance(values, str) else values):
-            flow.paragraph(value)
+        flow.boxed_givens([values] if isinstance(values, str) else values)
         for i, value in enumerate(question.get('options', question.get('choices', []))):
             flow.paragraph(f'{"①②③④⑤"[i]} {value}', gap=4)
         flow.y += 12
@@ -194,12 +157,12 @@ def scan_2023_edition(source, target, title, level, part, year, expected):
     return [r[0] if len(r) == 1 else r for r in mapped], [r[0]['page'] for r in mapped]
 
 
-def transcribed_key(target, title, level, values, marked=False):
+def transcribed_key(target, title, level, values, marked=False, reference=None):
     doc = fitz.open()
     page = doc.new_page(width=A4.width, height=A4.height)
     note = ('첨부 문제지의 답 표시를 전사한 정답표 · 공식 별도 정답표가 아님' if marked else
             '사용자 첨부 공식 정답표를 대조하여 옮긴 편집본')
-    frame(page, title, level, 1, 1, note)
+    frame(page, title, level, 1, 1, note, header_source=reference)
     rows = (len(values) + 1) // 2
     height = min(48, 680 / max(1, rows))
     for i, answer in enumerate(values):
@@ -228,7 +191,7 @@ def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     overlay_path = ROOT / 'tools/kphe_print.json'
     previous = json.loads(overlay_path.read_text(encoding='utf-8')) if overlay_path.exists() else {}
-    manifests = [ROOT / f'tools/theory/{name}.json' for name in ('kphe', 'kphc', 'kphrecall')]
+    manifests = [ROOT / f'tools/theory/{name}.json' for name in ('kphe', 'kphc')]
     manifests = [p for p in manifests if p.exists()]
     selected = {arg for arg in sys.argv[1:] if not arg.startswith('--')}
     selected_years = [arg.split('=', 1)[1] for arg in sys.argv[1:] if arg.startswith('--year=')]
@@ -251,26 +214,24 @@ def main():
             record = copy.deepcopy(previous.get(manifest['comp'], {}).get(y, {'f': {}}))
             overlay.setdefault(manifest['comp'], {})[y] = record
             for file in year['files']:
-                fragment_solution = (manifest['prefix'] == 'KPhR' and y == '2021-r' and file['kind'] == 'solution')
-                if file['kind'] not in ('paper', 'key') and not fragment_solution:
+                if file['kind'] not in ('paper', 'key'):
                     continue
                 if keys_only and file['kind'] != 'key':
                     continue
                 if selected_parts and file['part'] not in selected_parts:
                     continue
                 part = file['part']
-                source_file = next(f for f in year['files'] if f['part'] == part and f['kind'] == 'paper') if fragment_solution else file
-                source = source_path(source_file)
+                source = source_path(file)
                 title, level = identity(manifest, year, part)
                 target = OUTPUT / file['file']
                 scan_maps = None
                 official_copy = file['kind'] == 'paper' and manifest['prefix'] == 'KPhE' and 2024 <= int(y[:4]) <= 2026
-                if fragment_solution:
-                    fragment_2021_solution(target, title, level)
-                elif official_copy:
+                if official_copy:
                     shutil.copyfile(source, target)
                 elif file['kind'] == 'key' and y.startswith('2023'):
-                    transcribed_key(target, title, level, year['keys'][part], file.get('source_type') == 'user_supplied_marked_paper')
+                    transcribed_key(target, title, level, year['keys'][part],
+                                    file.get('source_type') == 'user_supplied_marked_paper',
+                                    INPUT/f'KPhE_2026_T2{part[-1]}_KO.pdf')
                 elif file['kind'] == 'key':
                     fixes = [c for c in year.get('corrections', []) if c['part'] == part]
                     key_edition(source, target, title, level, fixes)

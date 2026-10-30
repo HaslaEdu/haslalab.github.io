@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pymupdf as fitz
 from kphe_print_build import identity
-from kphe_template import A4, FONT, INPUT, OUTPUT, text, measure, ColumnFlow, readable_formula
+from kphe_template import A4, FONT, INPUT, OUTPUT, text, measure, math_pdf, ColumnFlow, readable_formula
 
 ROOT = Path(__file__).resolve().parents[1]
 INK = (0.05, 0.05, 0.05)
@@ -48,6 +48,9 @@ def arrow(page, start, end):
 
 
 def diagram(page, x, y, width, spec):
+    def label(left, top, expression):
+        source, w, h, _ = math_pdf(expression, 9.8)
+        page.show_pdf_page(fitz.Rect(left, top, left+w, top+h), source, 0)
     if spec['type'] == 'pv_cycle':
         ox, oy = x + 40, y + 130
         arrow(page, (ox, oy), (x + width - 10, oy))
@@ -55,11 +58,11 @@ def diagram(page, x, y, width, spec):
         pts = {'A': (ox + 45, oy - 40), 'B': (ox + 45, oy - 95),
                'C': (ox + 135, oy - 95), 'D': (ox + 135, oy - 40)}
         for key, pos in pts.items():
-            text(page, (pos[0] + 3, pos[1] - 17, pos[0] + 25, pos[1]), key, 8)
+            label(pos[0] + 3, pos[1] - 14, key)
         for s, e in [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A')]:
             arrow(page, pts[s], pts[e])
-        text(page, (x + width - 60, oy + 6, x + width, oy + 22), 'V/V₀', 8)
-        text(page, (x + 5, y, x + 35, y + 20), 'P/P₀', 8)
+        label(x + width - 60, oy + 6, r'V/V_0')
+        label(x + 5, y, r'P/P_0')
         return 165
     return 0
 
@@ -80,12 +83,13 @@ def build(year, part, items, manifest):
     doc = fitz.open()
     source = fitz.open(INPUT / f'KPhE_{year[:4]}_{part}_KO.pdf')
     preserve = int(year[:4]) >= 2024
+    reference = INPUT / (f'KPhE_{year[:4]}_{part}_KO.pdf' if preserve else f'KPhE_2026_T2{part[-1]}_KO.pdf')
     flow = ColumnFlow(doc, title, level, '자체 작성 풀이 해설 · 한국물리학회 공식 배포 해설이 아님',
-                      INPUT / f'KPhE_{year[:4]}_{part}_KO.pdf' if preserve else None, preserve)
+                      reference, preserve)
     for i, q in enumerate(items):
         answers = q.get('accepted_answers', [q['answer']])
         label = ' / '.join('①②③④⑤'[a - 1] for a in answers)
-        keep = 25 + 9.8 * 1.45 * 2
+        keep = 25 + 9.8 * 1.6 * 2
         if q.get('figure'):
             r = fitz.Rect(q['figure']['rect'])
             keep += min(172, flow.width * r.height / r.width) + 12
@@ -112,14 +116,13 @@ def build(year, part, items, manifest):
         for value in q['explanation']:
             flow.paragraph(value)
         if q.get('formula'):
-            formulas = [readable_formula(value) for value in q['formula']]
-            group_height = 6 + sum(flow.paragraph_height(value, 8.5) for value in formulas)
+            formulas = [readable_formula(value, 9.8) for value in q['formula']]
+            group_height = 6 + sum(flow.paragraph_height(value, 9.8) for value in formulas)
             flow.reserve(min(group_height, 680))
-            flow.reserve(min(6 + sum(flow.paragraph_height(value, 8.5) for value in formulas), 680))
             flow.page.draw_line((flow.x, flow.y), (flow.x + flow.width, flow.y), color=(.7, .7, .7), width=.4)
             flow.y += 6
             for value in formulas:
-                flow.paragraph(value, 8.5)
+                flow.paragraph(value, 9.8)
         flow.y += 12
     flow.finish()
     target = OUTPUT / f'KPhE_{year[:4]}_{part}S.pdf'

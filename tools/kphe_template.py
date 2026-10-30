@@ -1,4 +1,4 @@
-"""The 2026 KPS paper's vector stationery, with a two-column Ming/serif text flow.
+"""The KPS paper's vector stationery, original Korean fonts and equation outlines.
 
 Official 2024--2026 question PDFs are copied unchanged by kphe_print_build.py.
 This stationery is only for independently typeset material, clearly labelled as such.
@@ -8,24 +8,74 @@ from pathlib import Path
 import io
 import logging
 import re
+import hashlib
+import json
+import sqlite3
+import gzip
 import pymupdf as fitz
+from kphe_fonts import font_path, equation_fonts, original_body
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / 'tmp/kphe_archive/originals'
 OUTPUT = ROOT / 'pdfx/kphe'
 A4 = fitz.paper_rect('a4')
-FONT = ROOT / 'tools/ko/fonts/NotoSerifKR-Regular.ttf'
-HEAD_FONT = ROOT / 'tools/ko/fonts/NotoSansKR-Bold.ttf'
-MATH_FONT = ROOT / 'tools/ko/fonts/DejaVuSans.ttf'
+FONT = font_path('Gulim')
+HEAD_FONT = font_path('KoPubDotumBold')
+MATH_FONT = font_path('HancomEQN')
 REFERENCE = INPUT / 'KPhE_2026_T2c_KO.pdf'
 if not REFERENCE.exists():
     REFERENCE = OUTPUT / 'KPhE_2026_T2c_KO.pdf'
 STATIONERY = ROOT / 'tools/kphe_template_assets.pdf'
 FONTS = {'body': fitz.Font(fontfile=str(FONT)), 'head': fitz.Font(fontfile=str(HEAD_FONT)),
-         'math': fitz.Font(fontfile=str(MATH_FONT))}
-FONT_PATHS = {'body': FONT, 'head': HEAD_FONT, 'math': MATH_FONT}
-TOP, BOTTOM = 76.0, 786.0
+         'math': fitz.Font(fontfile=str(MATH_FONT)),
+         'page': fitz.Font(fontfile=str(font_path('Batang'))),
+         'number': fitz.Font(fontfile=str(font_path('TimesNewRomanPS-BoldMT')))}
+FONT_PATHS = {'body': FONT, 'head': HEAD_FONT, 'math': MATH_FONT,
+              'page': font_path('Batang'), 'number': font_path('TimesNewRomanPS-BoldMT')}
+TOP, BOTTOM = 70.6, 786.0
 COLUMNS = ((46.5, 291.5), (308.0, 549.0))
+_REGISTERED_MATH_FONTS = set()
+_EQUATION_FACE = 'HancomEQN'
+
+@lru_cache(None)
+def _math_cache():
+    connection = sqlite3.connect(ROOT/'tmp/kphe-equation-cache.sqlite3', timeout=60, isolation_level=None)
+    connection.execute('PRAGMA journal_mode=WAL')
+    connection.execute('CREATE TABLE IF NOT EXISTS equations(key TEXT PRIMARY KEY,pdf BLOB,depth REAL)')
+    return connection
+
+@lru_cache(None)
+def _math_profile():
+    import matplotlib
+    from kphe_fonts import __file__ as fonts_source
+    return hashlib.sha256(Path(fonts_source).read_bytes()+matplotlib.__version__.encode()+
+        b'original-hancom-083-display-fractions-times-bold-v1').hexdigest()
+
+@lru_cache(maxsize=96)
+def _vector_document(asset):
+    data = Path(asset).read_bytes()
+    cache = ROOT/'tmp/kphe-vector-cache'
+    cache.mkdir(exist_ok=True)
+    target = cache/(hashlib.sha256(data).hexdigest()+'.pdf')
+    if target.is_file(): return fitz.open(target)
+    if Path(asset).suffix == '.svgz': data = gzip.decompress(data)
+    svg = fitz.open(stream=data,filetype='svg')
+    result = svg.convert_to_pdf()
+    target.write_bytes(result)
+    return fitz.open('pdf',result)
+
+def set_typography(source=None):
+    global FONT, _EQUATION_FACE
+    _EQUATION_FACE = 'HyhwpEQ' if source and '2024_T2d' in str(source) else 'HancomEQN'
+    if source and original_body(source) == 'Haansoft Batang':
+        from kphe_source_fonts import legacy_body_font
+        FONT = legacy_body_font(source)
+    else:
+        FONT = font_path(original_body(source))
+    FONT_PATHS['body'] = FONT
+    FONTS['body'] = fitz.Font(fontfile=str(FONT))
+    font_for.cache_clear()
+    glyph_width.cache_clear()
 
 
 @lru_cache(maxsize=None)
@@ -76,6 +126,17 @@ def wrap(value, width, size=9.8, style='body'):
     lines, line = [], ''
     for ch in value:
         if ch == '\n' or (line and measure(line + ch, size, style) > width):
+            if ch != '\n' and ch in '.,:;!?)]}、。，：；！？）］｝」』】〉》' and len(line.rstrip()) > 1:
+                previous = line.rstrip()
+                split = len(previous)-1
+                while split > 0 and previous[split] in '.,:;!?)]}、。，：；！？）］｝」』】〉》':
+                    split -= 1
+                while split > 0 and previous[split-1] in '([{（［｛「『【〈《':
+                    split -= 1
+                if split:
+                    lines.append(previous[:split])
+                    line = previous[split:] + ch
+                    continue
             lines.append(line.rstrip())
             line = '' if ch == '\n' else ch
         else:
@@ -85,30 +146,45 @@ def wrap(value, width, size=9.8, style='body'):
     return lines
 
 
-@lru_cache(maxsize=2048)
 def math_pdf(expression, size):
+    return _math_pdf(expression,size,_EQUATION_FACE)
+
+@lru_cache(maxsize=2048)
+def _math_pdf(expression, size, face):
     """Typeset inline fractions/radicals as vector PDF, preserving a real baseline."""
+    key = [_math_profile(), expression, size]
+    if face != 'HancomEQN': key.append(face)
+    cache_key = hashlib.sha256(json.dumps(key,ensure_ascii=False).encode()).hexdigest()
+    cached = _math_cache().execute('SELECT pdf,depth FROM equations WHERE key=?',(cache_key,)).fetchone()
+    if cached:
+        doc = fitz.open(stream=cached[0],filetype='pdf')
+        return doc,doc[0].rect.width,doc[0].rect.height,cached[1]
     import matplotlib
     from matplotlib.mathtext import MathTextParser, math_to_image
     from matplotlib.font_manager import FontProperties, fontManager
-    korean = bool(re.search(r'[\u1100-\u11ff\u3130-\u318f가-힣]', expression))
-    if korean:
-        fontManager.addfont(str(FONT))
-        matplotlib.rcParams['mathtext.fontset'] = 'custom'
-        matplotlib.rcParams['mathtext.rm'] = 'Noto Serif KR'
-        matplotlib.rcParams['mathtext.it'] = 'cmmi10'
-        matplotlib.rcParams['mathtext.bf'] = 'Noto Serif KR'
-        matplotlib.rcParams['mathtext.cal'] = 'cmsy10'
-        expression = re.sub(r'[\u1100-\u11ff\u3130-\u318f가-힣]+', lambda m: r'\mathrm{' + m[0] + '}', expression)
+    if face == 'HyhwpEQ':
+        from kphe_legacy_equations import legacy_equation_fonts
+        roman, italic = legacy_equation_fonts()
     else:
-        matplotlib.rcParams['mathtext.fontset'] = 'cm'
+        roman, italic = equation_fonts()
+    for path in (roman, italic, font_path('TimesNewRomanPS-BoldMT')):
+        if str(path) not in _REGISTERED_MATH_FONTS:
+            fontManager.addfont(str(path))
+            _REGISTERED_MATH_FONTS.add(str(path))
+    matplotlib.rcParams['mathtext.fontset'] = 'custom'
+    matplotlib.rcParams['mathtext.rm'] = f'KPhE {face} Roman'
+    matplotlib.rcParams['mathtext.it'] = f'KPhE {face} Italic'
+    matplotlib.rcParams['mathtext.bf'] = 'Times New Roman:weight=bold'
+    matplotlib.rcParams['mathtext.sf'] = f'KPhE {face} Roman'
+    matplotlib.rcParams['mathtext.tt'] = f'KPhE {face} Roman'
+    matplotlib.rcParams['mathtext.cal'] = 'STIXGeneral:style=italic'
     matplotlib.rcParams['mathtext.fallback'] = 'stix'
     subs = str.maketrans('₀₁₂₃₄₅₆₇₈₉₊₋', '0123456789+-')
     supers = str.maketrans('⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻', '0123456789+-')
     expression = re.sub(r'[₀₁₂₃₄₅₆₇₈₉₊₋]+', lambda m: '_{' + m[0].translate(subs) + '}', expression)
     expression = re.sub(r'[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+', lambda m: '^{' + m[0].translate(supers) + '}', expression)
     expression = expression.replace('ħ', r'\hbar ').replace('ℏ', r'\hbar ')
-    expression = expression.replace(r'\dfrac', r'\frac').replace(r'\tfrac', r'\frac').replace(r'\displaystyle', '')
+    expression = expression.replace(r'\tfrac', r'\frac').replace(r'\displaystyle', '')
     expression = re.sub(r'\\frac\s*([0-9A-Za-z])\s*([0-9A-Za-z])', r'\\frac{\1}{\2}', expression)
     expression = re.sub(r'\\frac\s*([0-9A-Za-z])\s*(\{)', r'\\frac{\1}\2', expression)
     expression = re.sub(r'(\\frac\{[^{}]+\})\s*([0-9A-Za-z])', r'\1{\2}', expression)
@@ -116,7 +192,10 @@ def math_pdf(expression, size):
     expression = re.sub(r'\\(mathbf|mathrm|mathit|mathsf|mathtt)\s+([A-Za-z])', r'\\\1{\2}', expression)
     expression = re.sub(r'\\le(?![a-z])', r'\\leq', expression)
     expression = re.sub(r'\\ge(?![a-z])', r'\\geq', expression)
-    value, prop = '$' + expression + '$', FontProperties(size=size)
+    # HWP's official equation glyphs are 9.96 pt next to 12 pt body text.
+    # Full-size display fractions retain that same numerator/denominator size.
+    expression = expression.replace(r'\frac', r'\dfrac')
+    value, prop = '$' + expression + '$', FontProperties(family=f'KPhE {face} Roman', size=size * .83)
     missing = []
     class GlyphAudit(logging.Handler):
         def emit(self, record):
@@ -136,6 +215,8 @@ def math_pdf(expression, size):
         logger.removeHandler(audit)
         logger.propagate = propagation
     doc = fitz.open(stream=buffer.getvalue(), filetype='pdf')
+    _math_cache().execute('INSERT OR REPLACE INTO equations VALUES(?,?,?)',
+                          (cache_key,buffer.getvalue(),float(parsed.depth)))
     return doc, doc[0].rect.width, doc[0].rect.height, float(parsed.depth)
 
 
@@ -148,6 +229,30 @@ def rich_tokens(value, size):
         offset = match.end()
     tokens.extend(('text', ch, 0 if ch == '\n' else glyph_width(ch, size), size * 1.15, size * .25) for ch in value[offset:])
     return tokens
+
+
+def rich_line(tokens, width):
+    """Keep closing punctuation with the preceding character or equation."""
+    line, used = [], 0
+    for token in tokens:
+        if token[0] == 'text' and token[1] == '\n':
+            break
+        if line and used + token[2] > width:
+            if token[0] == 'text' and token[1] in '.,:;!?)]}、。，：；！？）］｝」』】〉》':
+                while line and line[-1][0] == 'text' and line[-1][1].isspace():
+                    line.pop()
+                while len(line) > 1 and line[-1][0] == 'text' and line[-1][1] in '.,:;!?)]}、。，：；！？）］｝」』】〉》':
+                    line.pop()
+                if len(line) > 1:
+                    line.pop()
+                while len(line) > 1 and line[-1][0] == 'text' and line[-1][1] in '([{（［｛「『【〈《':
+                    line.pop()
+            break
+        if token[2] > width:
+            raise ValueError(f'Equation must be split without shrinking: {token[2]} > {width}')
+        line.append(token)
+        used += token[2]
+    return line
 
 
 def readable_formula(value, size=8.5):
@@ -197,11 +302,24 @@ def _paste(page, original, clip):
 
 def frame(page, title, subtitle, number, total, source_note=True, header_source=None,
           preserve_header=False, columns=True):
-    original = fitz.open(header_source if preserve_header and header_source else STATIONERY)
+    canonical_header = bool(header_source)
+    original = fitz.open(header_source if canonical_header else STATIONERY)
     w, h = original[0].rect.width, original[0].rect.height
     sx, sy = A4.width / w, A4.height / h
     _paste(page, original, (0, 0, w, h * 86 / 1031))
-    if not preserve_header:
+    if canonical_header and not preserve_header:
+        spans = [s for b in original[0].get_text('dict')['blocks'] if b['type'] == 0
+                 for line in b['lines'] for s in line['spans'] if '년 제' in s['text']]
+        if len(spans) != 1:
+            raise ValueError('Cannot locate the original title in canonical stationery')
+        span = spans[0]
+        box = fitz.Rect(span['bbox'])
+        page.add_redact_annot(fitz.Rect(box.x0*sx-.2, box.y0*sy-.2, box.x1*sx+.2, box.y1*sy+.2), fill=(1,1,1))
+        page.apply_redactions(images=0, graphics=0)
+        page.insert_font(fontname='head', fontfile=str(HEAD_FONT))
+        page.insert_text((span['origin'][0]*sx, span['origin'][1]*sy), title,
+                         fontname='head', fontsize=span['size']*sx)
+    elif not preserve_header:
         # Preserve the official logo and thick horizontal rule. Only the varying
         # title/year and course line are replaced in their original positions.
         page.draw_rect(fitz.Rect(170 * sx, 27 * sy, 680 * sx, 80 * sy),
@@ -220,7 +338,7 @@ def frame(page, title, subtitle, number, total, source_note=True, header_source=
     # Leave the original vector word '페이지'; change its changing numbers.
     page.draw_rect(fitz.Rect(367.4 * rsx, 970 * rsy, 410 * rsx, 986 * rsy),
                    color=None, fill=(1, 1, 1))
-    text(page, (369 * rsx, 970 * rsy, 444 * rsx, 989 * rsy), f'{number} / {total}', 8.15)
+    text(page, (369 * rsx, 970 * rsy, 444 * rsx, 989 * rsy), f'{number} / {total}', 8.15, style='page')
     if source_note:
         note = source_note if isinstance(source_note, str) else '자체 편집 자료 · 한국물리학회 공식 배포본이 아님'
         text(page, (46.5, 820, 549, 834), note, 6.3, 1)
@@ -231,19 +349,22 @@ def frame(page, title, subtitle, number, total, source_note=True, header_source=
 class ColumnFlow:
     """Keep every explanation in the official two-column page grid, including continuations."""
     def __init__(self, doc, title, level, note, header_source=None, preserve_header=False, kind='해설'):
+        set_typography(header_source)
         self.doc, self.title, self.level, self.note = doc, title, level, note
         self.header_source, self.preserve_header = header_source, preserve_header
         self.kind, self.region_records, self.active_region = kind, {}, None
         self.column, self.y, self.page, self.question = 1, BOTTOM, None, None
+        self.indent = 0
+        self.right_inset = 0
         self.new_column()
 
     @property
     def x(self):
-        return COLUMNS[self.column][0]
+        return COLUMNS[self.column][0] + self.indent
 
     @property
     def width(self):
-        return COLUMNS[self.column][1] - self.x
+        return COLUMNS[self.column][1] - self.x - self.right_inset
 
     def new_column(self, continuation=False):
         self.end_region()
@@ -285,19 +406,58 @@ class ColumnFlow:
              f'{number}. {label}', 10.3)
         self.y += 25
 
+    def problem_start(self, number):
+        """Official papers use a small bold number beside the first body line."""
+        self.end_region()
+        self.reserve(55, False)
+        self.question = number
+        self.start_region()
+        self.indent = 11
+        left = COLUMNS[self.column][0]
+        text(self.page, (left, self.y+1.9, left+10.5, self.y+17), f'{number}.', 8.15, style='number')
+
+    def boxed_givens(self, values):
+        if not values:
+            return
+        previous_inset = self.right_inset
+        self.right_inset = 5
+        total = 19 + sum(self.paragraph_height(value, 9.8, 4) for value in values)
+        self.reserve(min(total, 680))
+        page = self.page
+        left, right = COLUMNS[self.column][0]+2, COLUMNS[self.column][1]-2
+        top = self.y + 5
+        label = '<보기>'
+        label_width = measure(label, 8.15)
+        center = (left+right)/2
+        page.draw_line((left, top), (center-label_width/2-7, top), width=.4)
+        page.draw_line((center+label_width/2+7, top), (right, top), width=.4)
+        text(page, (center-label_width/2, top-5, center+label_width/2+.1, top+10), label, 8.15)
+        self.y = top+11
+        for value in values:
+            self.paragraph(value, gap=4)
+        if self.page is not page:
+            raise ValueError('A boxed list unexpectedly crossed a page')
+        bottom = self.y+3
+        for a,b in [((left,top),(left,bottom)),((right,top),(right,bottom)),((left,bottom),(right,bottom))]:
+            page.draw_line(a,b,width=.4)
+        self.y = bottom+15
+        self.right_inset = previous_inset
+
     def paragraph_height(self, value, size=9.8, gap=8):
         if '$' not in value:
-            return len(wrap(value, self.width, size)) * size * 1.45 + gap
-        tokens = rich_tokens(value, size)
-        total = width = 0
-        ascent, descent = size * 1.15, size * .25
-        for token in tokens:
-            if width and (width + token[2] > self.width or token[1] == '\n'):
-                total += max(size * 1.45, ascent + descent + 2)
-                width, ascent, descent = 0, size * 1.15, size * .25
-            width += min(token[2], self.width)
-            ascent, descent = max(ascent, token[3]), max(descent, token[4])
-        return total + max(size * 1.45, ascent + descent + 2) + gap
+            return len(wrap(value, self.width, size)) * size * 1.6 + gap
+        tokens, total = rich_tokens(value, size), 0
+        while tokens:
+            line = rich_line(tokens, self.width)
+            if not line:
+                tokens = tokens[1:]
+                total += size * 1.6
+                continue
+            total += max(size * 1.6, max(t[3] for t in line) + max(t[4] for t in line) + 2)
+            tokens = tokens[len(line):]
+            while tokens and tokens[0][0] == 'text' and tokens[0][1] in ' \n':
+                tokens = tokens[1:]
+        return total + gap
 
     def paragraph(self, value, size=9.8, gap=8):
         if '$' in value:
@@ -309,37 +469,28 @@ class ColumnFlow:
             line = wrap(remaining, self.width, size)[0]
             if not line and remaining.startswith('\n'):
                 remaining = remaining[1:]
-                self.y += size * 1.45
+                self.y += size * 1.6
                 continue
-            self.reserve(size * 1.45)
+            self.reserve(size * 1.6)
             if measure(line, size) > self.width:
                 line = wrap(remaining, self.width, size)[0]
             text(self.page, (self.x, self.y, self.x + self.width, self.y + size * 1.4), line, size)
             remaining = remaining[len(line):].lstrip(' \n')
-            self.y += size * 1.45
+            self.y += size * 1.6
         self.y += gap
 
     def rich_paragraph(self, value, size, gap):
         remaining = rich_tokens(value, size)
         while remaining:
-            line, width = [], 0
-            for token in remaining:
-                if token[0] == 'text' and token[1] == '\n':
-                    break
-                if line and width + token[2] > self.width:
-                    break
-                if token[2] > self.width:
-                    factor = self.width / token[2]
-                    token = (token[0], token[1], token[2] * factor, token[3] * factor, token[4] * factor)
-                line.append(token)
-                width += token[2]
+            line = rich_line(remaining, self.width)
+            width = sum(token[2] for token in line)
             if not line:
                 remaining = remaining[1:]
-                self.y += size * 1.45
+                self.y += size * 1.6
                 continue
             ascent = max(t[3] for t in line)
             descent = max(t[4] for t in line)
-            height = max(size * 1.45, ascent + descent + 2)
+            height = max(size * 1.6, ascent + descent + 2)
             old_column = self.column
             self.reserve(height)
             if old_column != self.column and width > self.width:
@@ -369,8 +520,15 @@ class ColumnFlow:
         clip = fitz.Rect(rect)
         h = min(max_height, self.width * clip.height / clip.width)
         self.reserve(h + 10)
-        self.page.show_pdf_page(fitz.Rect(self.x, self.y, self.x + self.width, self.y + h),
-                                source, page - 1, clip=clip, keep_proportion=True)
+        target = fitz.Rect(self.x, self.y, self.x + self.width, self.y + h)
+        source_name = Path(source.name).name
+        if source_name.startswith('KPhE_2023_'):
+            from kphe_figures import vector_path
+            asset = vector_path(source_name, page, list(clip))
+            vector = _vector_document(asset)
+            self.page.show_pdf_page(target, vector, 0, keep_proportion=True)
+        else:
+            self.page.show_pdf_page(target, source, page - 1, clip=clip, keep_proportion=True)
         self.y += h + 12
 
     def review_notice(self):

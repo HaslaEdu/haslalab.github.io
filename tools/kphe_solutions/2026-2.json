@@ -9,306 +9,736 @@
   },
   "T2c": [
     {
-      "number": 1, "answer": 4, "status": "verified",
+      "number": 1,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
         "ㄱ은 틀리다. 관성계에서 장력은 원의 중심을 향하며 구심력 역할을 한다. 원심력은 회전 좌표계에서 도입하는 관성력이다.",
-        "ㄴ은 옳다. 주기가 T이면 v=2πL/T이고 장력은 mv²/L=4π²mL/T²이다. 주기를 유지한 채 실의 길이를 2L로 늘리면 속력과 장력이 각각 2배가 된다.",
+        "ㄴ은 옳다. 주기가 $T$이면 $v= \\frac{2\\pi L}{T}$이고 장력은 $\\frac{mv^{2}}{L}= \\frac{4\\pi ^{2}mL}{T^{2}}$이다. 주기를 유지한 채 실의 길이를 $2L$로 늘리면 속력과 장력이 각각 2배가 된다.",
         "ㄷ은 옳다. 실이 끊어진 뒤에는 수평 방향의 알짜힘이 사라진다. 따라서 끊어지는 순간의 접선 방향 속도를 유지하며 등속 직선 운동한다. 정답은 ㄴ, ㄷ에 해당하는 ④이다."
       ],
-      "formula": ["F_tension = m v^2/L = 4π^2 mL/T^2"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 1, "rect": [101.1, 165.5, 308.4, 264.4]}
-    },
-    {
-      "number": 2, "answer": 1, "status": "verified",
-      "explanation": [
-        "두 블록 전체에 작용하는 바닥의 운동마찰력은 μ(3Mg)이다. 전체 질량은 3M이므로 가속도는 (F-3μMg)/(3M)이다. 따라서 ㄱ은 옳다.",
-        "A가 B에 가하는 정지마찰력의 크기를 f라 하면 B에 대해 F-f=Ma이다. 따라서 f=2F/3+μMg이다. 이 힘은 B의 이동 방향과 반대이므로 B가 거리 d를 이동할 때 한 일은 -fd이며 0이 아니다. 미끄러지지 않더라도 개별 블록에 대한 정지마찰력의 일은 0일 필요가 없다.",
-        "두 블록 사이의 최대 정지마찰력은 7μMg이다. 따라서 2F/3+μMg≤7μMg에서 F≤9μMg이다. 함께 미끄러지지 않고 움직일 수 있는 F의 최댓값은 9μMg이므로 ㄷ도 틀리다. 정답은 ㄱ만 고른 ①이다."
+      "formula": [
+        "$F_{\\mathrm{tension}}= \\frac{m\\,v^{2}}{L}= \\frac{4\\pi ^{2}\\,mL}{T^{2}}$"
       ],
-      "formula": ["a = (F-3μMg)/(3M)", "f = F-Ma = 2F/3+μMg", "F_max = 9μMg"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 1, "rect": [396.1, 262.6, 650.7, 362.0]}
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          101.1,
+          165.5,
+          308.4,
+          264.4
+        ]
+      }
     },
     {
-      "number": 3, "answer": 1, "status": "verified",
+      "number": 2,
+      "answer": 1,
+      "status": "verified",
       "explanation": [
-        "충돌 전 운동에너지는 세 경우 모두 Mv²/2이다. (가)에서는 선운동량 보존으로 충돌 후 속력이 v/3이므로 최종 운동에너지는 Mv²/6, 손실량은 Mv²/3이다.",
-        "(나)에서는 고정축에 대한 각운동량을 보존한다. 충돌 전 각운동량은 MvL/2이고 충돌 후 회전관성은 (2M)L²/12+M(L/2)²=5ML²/12이다. 최종 회전운동에너지는 3Mv²/10, 손실량은 Mv²/5이다.",
-        "(다)에서는 전체 질량중심이 막대 중심에서 공 쪽으로 L/6에 있다. 전체 질량중심 속력은 v/3이므로 병진에너지는 Mv²/6이다. 이 질량중심에 대한 회전관성은 ML²/3, 충돌 전 각운동량은 MvL/3이므로 회전에너지도 Mv²/6이다. 따라서 손실량은 Mv²/6이다.",
-        "1/3 > 1/5 > 1/6이므로 에너지 손실은 (가), (나), (다)의 순서이다. 정답은 ①이다."
+        "두 블록 전체에 작용하는 바닥의 운동마찰력은 $\\mu \\left(3Mg\\right)$이다. 전체 질량은 $3M$이므로 가속도는 $\\frac{\\left(F- 3\\mu Mg\\right)}{\\left(3M\\right)}$이다. 따라서 ㄱ은 옳다.",
+        "$A$가 $B$에 가하는 정지마찰력의 크기를 $f$라 하면 $B$에 대해 $F- f= Ma$이다. 따라서 $f= \\frac{2F}{3}+ \\mu Mg$이다. 이 힘은 $B$의 이동 방향과 반대이므로 $B$가 거리 $d$를 이동할 때 한 일은 $-fd$이며 $0$이 아니다. 미끄러지지 않더라도 개별 블록에 대한 정지마찰력의 일은 0일 필요가 없다.",
+        "두 블록 사이의 최대 정지마찰력은 $7\\mu Mg$이다. 따라서 $\\frac{2F}{3}+ \\mu Mg\\leq 7\\mu Mg$에서 $F\\leq 9\\mu Mg$이다. 함께 미끄러지지 않고 움직일 수 있는 $F$의 최댓값은 $9\\mu Mg$이므로 ㄷ도 틀리다. 정답은 ㄱ만 고른 ①이다."
       ],
-      "formula": ["ΔK_(가) = Mv^2/3", "ΔK_(나) = Mv^2/5", "ΔK_(다) = Mv^2/6"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 2, "rect": [74.7, 512.0, 334.7, 650.8]}
+      "formula": [
+        "$a= \\frac{\\left(F- 3\\mu Mg\\right)}{\\left(3M\\right)}$",
+        "$f= F- Ma= \\frac{2F}{3}+ \\mu Mg$",
+        "$F_{\\mathrm{max}}= 9\\mu Mg$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          396.1,
+          262.6,
+          650.7,
+          362.0
+        ]
+      }
     },
     {
-      "number": 4, "answer": 4, "status": "verified",
+      "number": 3,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "충돌 전 운동에너지는 세 경우 모두 $\\frac{Mv^{2}}{2}$이다. (가)에서는 선운동량 보존으로 충돌 후 속력이 $\\frac{v}{3}$이므로 최종 운동에너지는 $\\frac{Mv^{2}}{6}$, 손실량은 $\\frac{Mv^{2}}{3}$이다.",
+        "(나)에서는 고정축에 대한 각운동량을 보존한다. 충돌 전 각운동량은 $\\frac{MvL}{2}$이고 충돌 후 회전관성은 $\\frac{\\left(2M\\right)L^{2}}{12}+ M\\left(\\frac{L}{2}\\right)^{2}= \\frac{5ML^{2}}{12}$이다. 최종 회전운동에너지는 $\\frac{3Mv^{2}}{10}$, 손실량은 $\\frac{Mv^{2}}{5}$이다.",
+        "(다)에서는 전체 질량중심이 막대 중심에서 공 쪽으로 $\\frac{L}{6}$에 있다. 전체 질량중심 속력은 $\\frac{v}{3}$이므로 병진에너지는 $\\frac{Mv^{2}}{6}$이다. 이 질량중심에 대한 회전관성은 $\\frac{ML^{2}}{3}$, 충돌 전 각운동량은 $\\frac{MvL}{3}$이므로 회전에너지도 $\\frac{Mv^{2}}{6}$이다. 따라서 손실량은 $\\frac{Mv^{2}}{6}$이다.",
+        "$\\frac{1}{3}> \\frac{1}{5}> \\frac{1}{6}$이므로 에너지 손실은 (가), (나), (다)의 순서이다. 정답은 ①이다."
+      ],
+      "formula": [
+        "$\\Delta K_{가}= \\frac{Mv^{2}}{3}$",
+        "$\\Delta K_{나}= \\frac{Mv^{2}}{5}$",
+        "$\\Delta K_{다}= \\frac{Mv^{2}}{6}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 2,
+        "rect": [
+          74.7,
+          512.0,
+          334.7,
+          650.8
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
         "ㄱ은 틀리다. 굴림 운동의 정지마찰력은 접촉점의 미끄러짐을 막는 방향으로 작용한다. 공이 올라갈 때와 내려갈 때 중력의 접선 성분이 달라지므로 마찰력이 항상 질량중심 속도의 반대 방향일 수는 없다.",
-        "ㄴ은 옳다. 미끄러짐 없는 굴림에서 고정된 레일과 맞닿는 접촉점의 순간 속도는 0이다. 따라서 정지마찰력의 순간 일률과 공 전체에 한 총 일은 0이다. 병진 운동에너지와 회전 운동에너지 사이의 배분은 바뀔 수 있다.",
-        "ㄷ은 옳다. 마찰이 없고 처음 정지했다면 회전 에너지가 생기지 않으므로 같은 높이에서 굴림 경우보다 병진 속력이 크다. 루프 최고점에서 N+mg=mv²/R이므로 속력이 더 큰 무마찰 경우의 N이 더 크다. 정답은 ㄴ, ㄷ인 ④이다."
+        "ㄴ은 옳다. 미끄러짐 없는 굴림에서 고정된 레일과 맞닿는 접촉점의 순간 속도는 $0$이다. 따라서 정지마찰력의 순간 일률과 공 전체에 한 총 일은 $0$이다. 병진 운동에너지와 회전 운동에너지 사이의 배분은 바뀔 수 있다.",
+        "ㄷ은 옳다. 마찰이 없고 처음 정지했다면 회전 에너지가 생기지 않으므로 같은 높이에서 굴림 경우보다 병진 속력이 크다. 루프 최고점에서 $N+ mg= \\frac{mv^{2}}{R}$이므로 속력이 더 큰 무마찰 경우의 $N$이 더 크다. 정답은 ㄴ, ㄷ인 ④이다."
       ],
-      "formula": ["N_top = m v_top^2/R - mg"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 2, "rect": [425.0, 224.2, 621.9, 375.0]}
+      "formula": [
+        "$N_{\\mathrm{top}}= \\frac{m\\,v_{\\mathrm{top}}^{2}}{R}- mg$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 2,
+        "rect": [
+          425.0,
+          224.2,
+          621.9,
+          375.0
+        ]
+      }
     },
     {
-      "number": 5, "answer": 3, "status": "verified",
+      "number": 5,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "행성 중심 관성계에서 처음 속력을 u=ωR, 동일한 타원궤도에 진입한 직후 속력을 v라 하자. 같은 궤도의 같은 지점에서는 궤도 에너지가 같으므로 진행 방향이 반대라도 속력 v는 같다. ㄱ은 옳다.",
-        "자전 방향을 양으로 잡으면 속도는 처음 +u이고 순행 진입 후 +v, 역행 진입 후 -v이다. 두 경우의 속도 변화 크기는 각각 v-u와 v+u이므로 그 차이는 2u=2ωR이다. ㄴ은 옳다.",
-        "물체의 위치는 가속 동안 변하지 않으므로 퍼텐셜 에너지 변화는 없다. 두 경우 모두 운동에너지 변화가 m(v²-u²)/2로 같으므로 역학적 에너지 변화도 같다. ㄷ은 틀리며 정답은 ③이다."
+        "행성 중심 관성계에서 처음 속력을 $u= \\omega R$, 동일한 타원궤도에 진입한 직후 속력을 $v$라 하자. 같은 궤도의 같은 지점에서는 궤도 에너지가 같으므로 진행 방향이 반대라도 속력 $v$는 같다. ㄱ은 옳다.",
+        "자전 방향을 양으로 잡으면 속도는 처음 $+u$이고 순행 진입 후 $+v$, 역행 진입 후 $-v$이다. 두 경우의 속도 변화 크기는 각각 $v- u$와 $v+ u$이므로 그 차이는 $2u= 2\\omega R$이다. ㄴ은 옳다.",
+        "물체의 위치는 가속 동안 변하지 않으므로 퍼텐셜 에너지 변화는 없다. 두 경우 모두 운동에너지 변화가 $\\frac{m\\left(v^{2}- u^{2}\\right)}{2}$로 같으므로 역학적 에너지 변화도 같다. ㄷ은 틀리며 정답은 ③이다."
       ],
-      "formula": ["|Δv_retrograde|-|Δv_prograde| = 2ωR", "ΔE = m(v^2-u^2)/2"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 3, "rect": [77.8, 358.5, 331.7, 485.3]}
+      "formula": [
+        "$|\\Delta v_{\\mathrm{retrograde}}|- |\\Delta v_{\\mathrm{prograde}}|= 2\\omega R$",
+        "$\\Delta E= \\frac{m\\left(v^{2}- u^{2}\\right)}{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 3,
+        "rect": [
+          77.8,
+          358.5,
+          331.7,
+          485.3
+        ]
+      }
     },
     {
-      "number": 6, "answer": 5, "status": "verified",
+      "number": 6,
+      "answer": 5,
+      "status": "verified",
       "explanation": [
-        "탱크의 수평 단면적을 A, 출구 단면적을 εA, 수면의 하강 속력을 u, 출구 유속을 v라 하자. 연속 방정식 Au=εAv에서 u=εv이다.",
-        "수면과 출구는 모두 대기압이므로 베르누이 방정식에서 gh+u²/2=v²/2이다. 여기에 u=εv를 대입하면 v²(1-ε²)=2gh이다.",
-        "따라서 출구 속력은 sqrt(2gh/(1-ε²))이다. 수면의 하강 속력을 무시할 수 없는 조건이므로 단순한 sqrt(2gh)와 구별해야 한다. 정답은 ㅁ에 해당하는 ⑤이다."
+        "탱크의 수평 단면적을 $A$, 출구 단면적을 $\\epsilon A$, 수면의 하강 속력을 $u$, 출구 유속을 $v$라 하자. 연속 방정식 $Au= \\epsilon Av$에서 $u= \\epsilon v$이다.",
+        "수면과 출구는 모두 대기압이므로 베르누이 방정식에서 $gh+ \\frac{u^{2}}{2}= \\frac{v^{2}}{2}$이다. 여기에 $u= \\epsilon v$를 대입하면 $v^{2}\\left(1- \\epsilon ^{2}\\right)= 2gh$이다.",
+        "따라서 출구 속력은 $\\sqrt{\\frac{2gh}{\\left(1- \\epsilon ^{2}\\right)}}$이다. 수면의 하강 속력을 무시할 수 없는 조건이므로 단순한 $\\sqrt{2gh}$와 구별해야 한다. 정답은 ㅁ에 해당하는 ⑤이다."
       ],
-      "formula": ["u=εv", "v=sqrt(2gh/(1-ε^2))"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 3, "rect": [455.3, 320.2, 619.8, 451.2]}
+      "formula": [
+        "$u= \\epsilon v$",
+        "$v= \\sqrt{\\frac{2gh}{\\left(1- \\epsilon ^{2}\\right)}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 3,
+        "rect": [
+          455.3,
+          320.2,
+          619.8,
+          451.2
+        ]
+      }
     },
     {
-      "number": 7, "answer": 2, "status": "verified",
+      "number": 7,
+      "answer": 2,
+      "status": "verified",
       "explanation": [
-        "전류를 I(t)라 하면 키르히호프 법칙으로 L dI/dt+RI=V이다. 처음 전류가 0이므로 I(t)=(V/R)(1-exp(-Rt/L))이고 dI/dt=(V/L)exp(-Rt/L)이다.",
-        "ㄱ은 틀리다. 전류 변화율은 t=0인 순간에는 V/L이지만 일반적인 시각에는 지수항을 통해 R에 의존한다. ㄴ도 틀리다. L을 증가시키면 시정수 L/R이 커져 전류 형성이 지연되며, 특히 초기 변화율 V/L은 감소한다. L이 커지면 변화율이 항상 증가한다는 주장은 성립하지 않는다.",
-        "충분히 시간이 지나면 인덕터 양단 전압은 0이 되고 전류는 V/R로 일정해진다. 따라서 ㄷ만 옳으며 정답은 ②이다."
+        "전류를 $I\\left(t\\right)$라 하면 키르히호프 법칙으로 $\\frac{L\\,dI}{dt}+ RI= V$이다. 처음 전류가 $0$이므로 $I\\left(t\\right)= \\left(\\frac{V}{R}\\right)\\left(1- \\exp \\left(\\frac{-Rt}{L}\\right)\\right)$이고 $\\frac{dI}{dt}= \\left(\\frac{V}{L}\\right)\\exp \\left(\\frac{-Rt}{L}\\right)$이다.",
+        "ㄱ은 틀리다. 전류 변화율은 $t= 0$인 순간에는 $\\frac{V}{L}$이지만 일반적인 시각에는 지수항을 통해 $R$에 의존한다. ㄴ도 틀리다. $L$을 증가시키면 시정수 $\\frac{L}{R}$이 커져 전류 형성이 지연되며, 특히 초기 변화율 $\\frac{V}{L}$은 감소한다. $L$이 커지면 변화율이 항상 증가한다는 주장은 성립하지 않는다.",
+        "충분히 시간이 지나면 인덕터 양단 전압은 $0$이 되고 전류는 $\\frac{V}{R}$로 일정해진다. 따라서 ㄷ만 옳으며 정답은 ②이다."
       ],
-      "formula": ["I(t)=(V/R)(1-exp(-Rt/L))", "dI/dt=(V/L)exp(-Rt/L)", "I(∞)=V/R"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 4, "rect": [89.8, 205.0, 319.7, 374.1]}
+      "formula": [
+        "$I\\left(t\\right)= \\left(\\frac{V}{R}\\right)\\left(1- \\exp \\left(\\frac{-Rt}{L}\\right)\\right)$",
+        "$\\frac{dI}{dt}= \\left(\\frac{V}{L}\\right)\\exp \\left(\\frac{-Rt}{L}\\right)$",
+        "$I\\left(\\infty \\right)= \\frac{V}{R}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          89.8,
+          205.0,
+          319.7,
+          374.1
+        ]
+      }
     },
     {
-      "number": 8, "answer": 5, "status": "verified",
+      "number": 8,
+      "answer": 5,
+      "status": "verified",
       "explanation": [
-        "균일한 부피 전하분포에서 반지름 r≤R인 가우스면 내부 전하량은 Qr³/R³이다. 가우스 법칙으로 내부 전기장은 E(r)=kQr/R³이다.",
-        "따라서 중심에서는 E=0이고 r=R/2에서는 E=kQ/(2R²)이다. 구 바깥에서는 전체 전하가 중심에 모인 것처럼 E=kQ/r²이다.",
-        "내부에서는 r에 비례하여 증가하고 외부에서는 r²에 반비례하여 감소하므로 표면 r=R에서 최대이다. ㄱ, ㄴ, ㄷ이 모두 옳아 정답은 ⑤이다."
+        "균일한 부피 전하분포에서 반지름 $r\\leq R$인 가우스면 내부 전하량은 $\\frac{Qr^{3}}{R^{3}}$이다. 가우스 법칙으로 내부 전기장은 $E\\left(r\\right)= \\frac{kQr}{R^{3}}$이다.",
+        "따라서 중심에서는 $E= 0$이고 $r= \\frac{R}{2}$에서는 $E= \\frac{kQ}{\\left(2R^{2}\\right)}$이다. 구 바깥에서는 전체 전하가 중심에 모인 것처럼 $E= \\frac{kQ}{r^{2}}$이다.",
+        "내부에서는 $r$에 비례하여 증가하고 외부에서는 $r^{2}$에 반비례하여 감소하므로 표면 $r= R$에서 최대이다. ㄱ, ㄴ, ㄷ이 모두 옳아 정답은 ⑤이다."
       ],
-      "formula": ["E(r≤R)=kQr/R^3", "E(r≥R)=kQ/r^2"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 4, "rect": [444.6, 166.7, 602.0, 321.6]}
+      "formula": [
+        "$E\\left(r\\leq R\\right)= \\frac{kQr}{R^{3}}$",
+        "$E\\left(r\\geq R\\right)= \\frac{kQ}{r^{2}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          444.6,
+          166.7,
+          602.0,
+          321.6
+        ]
+      }
     },
     {
-      "number": 9, "answer": 2, "status": "verified",
+      "number": 9,
+      "answer": 2,
+      "status": "verified",
       "explanation": [
-        "두 전류의 방향이 같으므로 도선 사이에서는 자기장의 방향이 반대이고 도선 바깥에서는 같다. 따라서 자기장이 0인 점은 두 도선 사이에 있다.",
-        "A로부터의 거리를 x라 하면 B로부터 거리는 d-x이다. 두 자기장 크기가 같아야 하므로 μ₀I/(2πx)=μ₀(2I)/(2π(d-x))이다.",
-        "d-x=2x에서 x=d/3이다. 정답은 ②이다."
+        "두 전류의 방향이 같으므로 도선 사이에서는 자기장의 방향이 반대이고 도선 바깥에서는 같다. 따라서 자기장이 $0$인 점은 두 도선 사이에 있다.",
+        "$A$로부터의 거리를 $x$라 하면 $B$로부터 거리는 $d- x$이다. 두 자기장 크기가 같아야 하므로 $\\frac{\\mu _{0}I}{\\left(2\\pi x\\right)}= \\frac{\\mu _{0}\\left(2I\\right)}{\\left(2\\pi \\left(d- x\\right)\\right)}$이다.",
+        "$d- x= 2x$에서 $x= \\frac{d}{3}$이다. 정답은 ②이다."
       ],
-      "formula": ["I/x=2I/(d-x)", "x=d/3"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 5, "rect": [109.8, 185.9, 299.7, 349.8]}
+      "formula": [
+        "$\\frac{I}{x}= \\frac{2I}{\\left(d- x\\right)}$",
+        "$x= \\frac{d}{3}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          109.8,
+          185.9,
+          299.7,
+          349.8
+        ]
+      }
     },
     {
-      "number": 10, "answer": 2, "status": "verified",
+      "number": 10,
+      "answer": 2,
+      "status": "verified",
       "explanation": [
-        "길이 L인 막대가 자기장에 수직으로 속력 v로 움직이면 운동기전력은 BLv이다. 주어진 수치를 대입하면 0.5×0.2×10=1.0 V이다.",
-        "회로의 전체 저항은 2 Ω이므로 옴의 법칙에서 유도전류는 I=1.0/2=0.50 A이다. 정답은 ②이다."
+        "길이 $L$인 막대가 자기장에 수직으로 속력 $v$로 움직이면 운동기전력은 $BLv$이다. 주어진 수치를 대입하면 $0.5\\times 0.2\\times 10= 1.0\\,\\mathrm{V}$이다.",
+        "회로의 전체 저항은 $2\\,\\mathrm{\\Omega }$이므로 옴의 법칙에서 유도전류는 $I= \\frac{1.0}{2}= 0.50\\,\\mathrm{A}$이다. 정답은 ②이다."
       ],
-      "formula": ["emf=BLv=1.0 V", "I=BLv/R=0.50 A"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 5, "rect": [395.7, 205.0, 650.9, 318.8]}
+      "formula": [
+        "$emf= BLv= 1.0\\,\\mathrm{V}$",
+        "$I= \\frac{BLv}{R}= 0.50\\,\\mathrm{A}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          395.7,
+          205.0,
+          650.9,
+          318.8
+        ]
+      }
     },
     {
-      "number": 11, "answer": 3, "status": "verified",
+      "number": 11,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "전원을 제거한 축전기는 외부와 전하를 주고받을 수 없으므로 극판의 자유전하량 Q는 일정하다. 따라서 ㄱ은 옳다.",
-        "유전상수 κ=2인 유전체를 완전히 삽입하면 정전용량은 C'=2C이다. Q가 일정하므로 전위차는 V'=Q/C'=V/2로 감소한다. ㄴ은 옳다.",
-        "저장 에너지는 U=Q²/(2C)이므로 삽입 후 U'=U/2이다. 2배로 증가한다는 ㄷ은 틀리다. 정답은 ㄱ, ㄴ을 고른 ③이다."
+        "전원을 제거한 축전기는 외부와 전하를 주고받을 수 없으므로 극판의 자유전하량 $Q$는 일정하다. 따라서 ㄱ은 옳다.",
+        "유전상수 $\\kappa = 2$인 유전체를 완전히 삽입하면 정전용량은 $C^{\\prime}= 2C$이다. $Q$가 일정하므로 전위차는 $V^{\\prime}= \\frac{Q}{C^{\\prime}}= \\frac{V}{2}$로 감소한다. ㄴ은 옳다.",
+        "저장 에너지는 $U= \\frac{Q^{2}}{\\left(2C\\right)}$이므로 삽입 후 $U^{\\prime}= \\frac{U}{2}$이다. 2배로 증가한다는 ㄷ은 틀리다. 정답은 ㄱ, ㄴ을 고른 ③이다."
       ],
-      "formula": ["Q'=Q", "C'=2C", "V'=V/2", "U'=Q^2/(2C')=U/2"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 6, "rect": [77.2, 185.9, 332.3, 285.0]}
+      "formula": [
+        "$Q^{\\prime}= Q$",
+        "$C^{\\prime}= 2C$",
+        "$V^{\\prime}= \\frac{V}{2}$",
+        "$U^{\\prime}= \\frac{Q^{2}}{\\left(2C^{\\prime}\\right)}= \\frac{U}{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 6,
+        "rect": [
+          77.2,
+          185.9,
+          332.3,
+          285.0
+        ]
+      }
     },
     {
-      "number": 12, "answer": 3, "status": "verified",
+      "number": 12,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "구별 가능한 6개 입자 중 왼쪽에 들어갈 3개를 고르는 방법은 조합 6C3=20가지이다. 모든 입자가 왼쪽에 있는 경우는 1가지이므로 ΩA/ΩB=20이다. ㄱ은 옳다.",
-        "엔트로피 정의를 적용하면 SA-SB=kB ln(ΩA/ΩB)=kB ln20이다. 따라서 ㄴ은 옳다.",
-        "모든 미시상태는 같은 확률 1/2⁶을 갖는다. 거시상태 확률은 미시상태 수에 비례하므로 PA/PB=20이며 ln20이 아니다. ㄷ은 틀리고 정답은 ③이다."
+        "구별 가능한 6개 입자 중 왼쪽에 들어갈 3개를 고르는 방법은 조합 $6C_{3}= 20$가지이다. 모든 입자가 왼쪽에 있는 경우는 $1$가지이므로 $\\frac{\\Omega_A}{\\Omega_B}= 20$이다. ㄱ은 옳다.",
+        "엔트로피 정의를 적용하면 $S_A- S_B= k_{B}\\,\\ln \\left(\\frac{\\Omega_A}{\\Omega_B}\\right)= k_{B}\\,\\ln 20$이다. 따라서 ㄴ은 옳다.",
+        "모든 미시상태는 같은 확률 $\\frac{1}{2^{6}}$을 갖는다. 거시상태 확률은 미시상태 수에 비례하므로 $\\frac{P_A}{P_B}= 20$이며 $\\ln 20$이 아니다. ㄷ은 틀리고 정답은 ③이다."
       ],
-      "formula": ["ΩA=6!/(3!3!)=20", "ΩB=1", "SA-SB=kB ln20", "PA/PB=20"]
+      "formula": [
+        "$\\Omega_A= \\frac{6!}{\\left(3!3!\\right)}= 20$",
+        "$\\Omega_B= 1$",
+        "$S_A- S_B= k_{B}\\,\\ln 20$",
+        "$\\frac{P_A}{P_B}= 20$"
+      ]
     },
     {
-      "number": 13, "answer": 4, "status": "verified",
+      "number": 13,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "병진 자유도 3개와 회전 자유도 2개가 활성화되어 총 자유도는 5이다. 에너지 등분배 정리에서 U=(5/2)nRT이다. 온도 변화는 T0이므로 ΔU=(5/2)nRT0이다. ㄱ은 옳다.",
-        "정압 과정에서는 이상기체식 PV=nRT에 의해 W=PΔV=nRΔT=nRT0이다. 따라서 2nRT0이라는 ㄴ은 틀리다.",
-        "열역학 제1법칙에서 흡수 열량은 Q=ΔU+W=(7/2)nRT0이다. ㄷ은 옳으므로 정답은 ④이다."
+        "병진 자유도 3개와 회전 자유도 2개가 활성화되어 총 자유도는 $5$이다. 에너지 등분배 정리에서 $U= \\left(\\frac{5}{2}\\right)nRT$이다. 온도 변화는 $T_{0}$이므로 $\\Delta U= \\left(\\frac{5}{2}\\right)nRT_{0}$이다. ㄱ은 옳다.",
+        "정압 과정에서는 이상기체식 $PV= nRT$에 의해 $W= P\\Delta V= nR\\Delta T= nRT_{0}$이다. 따라서 $2nRT_{0}$이라는 ㄴ은 틀리다.",
+        "열역학 제1법칙에서 흡수 열량은 $Q= \\Delta U+ W= \\left(\\frac{7}{2}\\right)nRT_{0}$이다. ㄷ은 옳으므로 정답은 ④이다."
       ],
-      "formula": ["ΔU=(5/2)nRT0", "W=nRT0", "Q=(7/2)nRT0"]
+      "formula": [
+        "$\\Delta U= \\left(\\frac{5}{2}\\right)nRT_{0}$",
+        "$W= nRT_{0}$",
+        "$Q= \\left(\\frac{7}{2}\\right)nRT_{0}$"
+      ]
     },
     {
-      "number": 14, "answer": 3, "status": "verified",
+      "number": 14,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "PV 평면의 직사각형을 시계 방향으로 도는 순환이다. 한 주기 알짜 일은 둘러싼 넓이 (2P0-P0)(2V0-V0)=P0V0=100 J이다. ㄱ은 옳다.",
-        "한 주기 후 내부에너지 변화는 0이다. 따라서 흡수 열량과 방출 열량의 차이가 일과 같아 Qout=650-100=550 J이다. ㄴ은 옳다.",
-        "효율은 W/Qin=100/650=2/13로 약 15.38%이다. 17%보다 작으므로 ㄷ은 틀리다. 정답은 ③이다."
+        "$PV$ 평면의 직사각형을 시계 방향으로 도는 순환이다. 한 주기 알짜 일은 둘러싼 넓이 $\\left(2P_{0}- P_{0}\\right)\\left(2V_{0}- V_{0}\\right)= P_{0}V_{0}= 100\\,\\mathrm{J}$이다. ㄱ은 옳다.",
+        "한 주기 후 내부에너지 변화는 $0$이다. 따라서 흡수 열량과 방출 열량의 차이가 일과 같아 $Q_{\\mathrm{out}}= 650- 100= 550\\,\\mathrm{J}$이다. ㄴ은 옳다.",
+        "효율은 $\\frac{W}{Q_{\\mathrm{in}}}= \\frac{100}{650}= \\frac{2}{13}$로 약 $15.38\\% $이다. $17\\% $보다 작으므로 ㄷ은 틀리다. 정답은 ③이다."
       ],
-      "formula": ["W=P0V0=100 J", "Qout=550 J", "efficiency=2/13≈15.38%"],
-      "diagram": {"type": "pv_cycle", "points": {"A": [1, 1], "B": [1, 2], "C": [2, 2], "D": [2, 1]}, "arrows": ["A>B", "B>C", "C>D", "D>A"], "axes": ["V/V0", "P/P0"]}
+      "formula": [
+        "$W= P_{0}V_{0}= 100\\,\\mathrm{J}$",
+        "$Q_{\\mathrm{out}}= 550\\,\\mathrm{J}$",
+        "효율 $\\eta=\\frac{2}{13}\\approx15.38\\%$"
+      ],
+      "diagram": {
+        "type": "pv_cycle",
+        "points": {
+          "A": [
+            1,
+            1
+          ],
+          "B": [
+            1,
+            2
+          ],
+          "C": [
+            2,
+            2
+          ],
+          "D": [
+            2,
+            1
+          ]
+        },
+        "arrows": [
+          "A>B",
+          "B>C",
+          "C>D",
+          "D>A"
+        ],
+        "axes": [
+          "V/V0",
+          "P/P0"
+        ]
+      }
     },
     {
-      "number": 15, "answer": 5, "status": "verified",
+      "number": 15,
+      "answer": 5,
+      "status": "verified",
       "explanation": [
-        "주어진 세기는 단일 슬릿 회절 인자 (sinβ/β)²와 이중 슬릿 간섭 인자 cos²α의 곱이다. 이상적인 이중 슬릿에서 상쇄 간섭하는 각도는 cosα=0이므로 슬릿 폭 a를 바꾸어도 세기가 0이다. ㄱ은 옳다.",
-        "반대로 이상적인 보강 간섭 각도에서는 cos²α=1이지만, 그 각도가 회절 인자의 영점 β=nπ와 겹치면 세기가 0이 된다. 슬릿 폭을 늘리면 이런 빠진 차수가 나타날 수 있다. ㄴ은 옳다.",
-        "입사광 세기가 일정할 때 슬릿의 폭을 늘리면 중앙 방향으로 기여하는 파의 진폭이 a에 비례하여 커진다. 따라서 중앙 세기 I0(a)는 a²에 비례하여 증가한다. ㄷ도 옳으므로 정답은 ⑤이다."
+        "주어진 세기는 단일 슬릿 회절 인자 $\\left(\\frac{\\sin \\beta }{\\beta }\\right)^{2}$와 이중 슬릿 간섭 인자 $\\cos ^{2}\\alpha $의 곱이다. 이상적인 이중 슬릿에서 상쇄 간섭하는 각도는 $\\cos \\alpha = 0$이므로 슬릿 폭 $a$를 바꾸어도 세기가 $0$이다. ㄱ은 옳다.",
+        "반대로 이상적인 보강 간섭 각도에서는 $\\cos ^{2}\\alpha = 1$이지만, 그 각도가 회절 인자의 영점 $\\beta = n\\pi $와 겹치면 세기가 $0$이 된다. 슬릿 폭을 늘리면 이런 빠진 차수가 나타날 수 있다. ㄴ은 옳다.",
+        "입사광 세기가 일정할 때 슬릿의 폭을 늘리면 중앙 방향으로 기여하는 파의 진폭이 $a$에 비례하여 커진다. 따라서 중앙 세기 $I_{0}\\left(a\\right)$는 $a^{2}$에 비례하여 증가한다. ㄷ도 옳으므로 정답은 ⑤이다."
       ],
-      "formula": ["I(θ)=I0(a)(sinβ/β)^2 cos^2α", "α=πd sinθ/λ", "β=πa sinθ/λ", "I0(a) ∝ a^2"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 8, "rect": [79.6, 224.2, 329.8, 334.6]}
+      "formula": [
+        "$I\\left(\\theta \\right)= I_{0}\\left(a\\right)\\left(\\frac{\\sin \\beta }{\\beta }\\right)^{2}\\,\\cos ^{2}\\alpha $",
+        "$\\alpha = \\frac{\\pi d\\,\\sin \\theta }{\\lambda }$",
+        "$\\beta = \\frac{\\pi a\\,\\sin \\theta }{\\lambda }$",
+        "$I_{0}\\left(a\\right)\\propto a^{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 8,
+        "rect": [
+          79.6,
+          224.2,
+          329.8,
+          334.6
+        ]
+      }
     },
     {
-      "number": 16, "answer": 2, "status": "verified",
+      "number": 16,
+      "answer": 2,
+      "status": "verified",
       "explanation": [
-        "결정면에서 반사된 X선의 보강 간섭 조건은 브래그 법칙 2d sinθ=nλ이다. 각도를 증가시킬 때 처음 관측한 보강 간섭이므로 n=1이다.",
-        "d=λ/(2 sin30°)=0.20/(2×0.5)=0.20 nm이다. 정답은 ②이다."
+        "결정면에서 반사된 $X$선의 보강 간섭 조건은 브래그 법칙 $2d\\,\\sin \\theta = n\\lambda $이다. 각도를 증가시킬 때 처음 관측한 보강 간섭이므로 $n= 1$이다.",
+        "$d= \\frac{\\lambda }{\\left(2\\,\\sin 30^\\circ \\right)}= \\frac{0.20}{\\left(2\\times 0.5\\right)}= 0.20\\,\\mathrm{nm}$이다. 정답은 ②이다."
       ],
-      "formula": ["2d sinθ=nλ", "d=0.20 nm"],
-      "figure": {"source": "KPhE_2026_T2c_KO.pdf", "page": 8, "rect": [408.4, 185.9, 638.3, 352.3]}
+      "formula": [
+        "$2d\\,\\sin \\theta = n\\lambda $",
+        "$d= 0.20\\,\\mathrm{nm}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2c_KO.pdf",
+        "page": 8,
+        "rect": [
+          408.4,
+          185.9,
+          638.3,
+          352.3
+        ]
+      }
     },
     {
-      "number": 17, "answer": 3, "status": "verified",
+      "number": 17,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "ㄱ은 틀리다. 정적인 퍼텐셜 장벽에서 터널링하는 동안 입자의 전체 에너지는 보존되며 반드시 외부 에너지를 공급해야 하는 것은 아니다. 파동함수가 고전적으로 금지된 영역 안에서도 0이 아니기 때문에 장벽 반대편에서 입자가 검출될 수 있다.",
-        "ㄴ도 틀리다. 장벽 두께가 증가하면 터널링 확률은 대략 exp(-2κs)에 따라 감소한다. 따라서 STM에서 탐침과 시료 사이 거리 s가 증가하면 터널링 전류는 감소한다.",
+        "ㄱ은 틀리다. 정적인 퍼텐셜 장벽에서 터널링하는 동안 입자의 전체 에너지는 보존되며 반드시 외부 에너지를 공급해야 하는 것은 아니다. 파동함수가 고전적으로 금지된 영역 안에서도 $0$이 아니기 때문에 장벽 반대편에서 입자가 검출될 수 있다.",
+        "ㄴ도 틀리다. 장벽 두께가 증가하면 터널링 확률은 대략 $\\exp \\left(-2\\kappa s\\right)$에 따라 감소한다. 따라서 $\\mathrm{STM}$에서 탐침과 시료 사이 거리 $s$가 증가하면 터널링 전류는 감소한다.",
         "ㄷ은 옳다. 원자핵 안의 알파 입자가 핵 바깥의 퍼텐셜 장벽을 터널링하여 나오는 과정으로 알파 붕괴를 설명할 수 있다. 정답은 ③이다."
       ],
-      "formula": ["tunneling probability ∝ exp(-2κs)"]
+      "formula": [
+        "터널링 확률 $\\propto\\exp(-2\\kappa s)$"
+      ]
     },
     {
-      "number": 18, "answer": 4, "status": "verified",
+      "number": 18,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "지구계에서 편도 거리는 8광년이고 속력은 0.8c이다. 편도 시간은 8/0.8=10년이므로 왕복 시간은 20년이다. ㄱ은 옳다.",
-        "로런츠 인자는 1/sqrt(1-0.8²)=5/3이다. 우주선에서 흐르는 고유시간은 지구계 시간의 3/5배이므로 왕복 12년이다. ㄴ은 옳다.",
-        "다시 만날 때 A는 20년, B는 12년만큼 나이를 먹어 A가 8년 더 늙는다. B는 방향을 바꾸며 관성계를 바꾸므로 두 여행자의 세계선은 대칭이 아니다. ㄷ은 틀리고 정답은 ④이다."
+        "지구계에서 편도 거리는 $8$광년이고 속력은 $0.8c$이다. 편도 시간은 $\\frac{8}{0.8}= 10$년이므로 왕복 시간은 20년이다. ㄱ은 옳다.",
+        "로런츠 인자는 $\\frac{1}{\\sqrt{1- 0.8^{2}}}= \\frac{5}{3}$이다. 우주선에서 흐르는 고유시간은 지구계 시간의 $\\frac{3}{5}$배이므로 왕복 12년이다. ㄴ은 옳다.",
+        "다시 만날 때 $A$는 20년, $B$는 12년만큼 나이를 먹어 $A$가 8년 더 늙는다. $B$는 방향을 바꾸며 관성계를 바꾸므로 두 여행자의 세계선은 대칭이 아니다. ㄷ은 틀리고 정답은 ④이다."
       ],
-      "formula": ["t_A=2×8/0.8=20 years", "γ=5/3", "τ_B=t_A/γ=12 years"]
+      "formula": [
+        "$t_{A}= \\frac{2\\times 8}{0.8}= 20$ years",
+        "$\\gamma = \\frac{5}{3}$",
+        "$\\tau _{B}= \\frac{t_{A}}{\\gamma }= 12$ years"
+      ]
     }
   ],
   "T2d": [
     {
-      "number": 1, "answer": 3, "status": "verified",
+      "number": 1,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "외력이 없고 초기 전체 운동량이 0이므로 질량중심은 움직이지 않는다. 세 질량이 같으므로 모든 시각에 xA+xB+xC=d이다. ㄱ은 옳다.",
-        "세 고유모드는 (1,1,1), (1,0,-1), (1,-2,1)이며 각진동수는 각각 0, ω=sqrt(k/m), sqrt(3)ω이다. 초기 변위 (d,0,0)는 d(1,1,1)/3+d(1,0,-1)/2+d(1,-2,1)/6으로 분해된다.",
-        "따라서 xB=(d/3)(1-cos(sqrt(3)ωt))이다. ㄴ은 옳다. xB가 처음 최대가 되는 시각은 t=π/(sqrt(3)ω)이다.",
-        "같은 시각에 xA-xC=d cos(π/sqrt(3))이며 이는 0이 아니다. 따라서 xA=xC라는 ㄷ은 틀리다. 정답은 ③이다."
+        "외력이 없고 초기 전체 운동량이 $0$이므로 질량중심은 움직이지 않는다. 세 질량이 같으므로 모든 시각에 $x_A+ x_B+ x_C= d$이다. ㄱ은 옳다.",
+        "세 고유모드는 $\\left(1, 1, 1\\right), \\left(1, 0, -1\\right), \\left(1, -2, 1\\right)$이며 각진동수는 각각 $0, \\omega = \\sqrt{\\frac{k}{m}}, \\sqrt{3}\\omega $이다. 초기 변위 $\\left(d, 0, 0\\right)$는 $\\frac{d\\left(1, 1, 1\\right)}{3}+ \\frac{d\\left(1, 0, -1\\right)}{2}+ \\frac{d\\left(1, -2, 1\\right)}{6}$으로 분해된다.",
+        "따라서 $x_B= \\left(\\frac{d}{3}\\right)\\left(1- \\cos \\left(\\sqrt{3}\\omega t\\right)\\right)$이다. ㄴ은 옳다. $x_B$가 처음 최대가 되는 시각은 $t= \\frac{\\pi }{\\left(\\sqrt{3}\\omega \\right)}$이다.",
+        "같은 시각에 $x_A- x_C= d\\,\\cos \\left(\\frac{\\pi }{\\sqrt{3}}\\right)$이며 이는 $0$이 아니다. 따라서 $x_A= x_C$라는 ㄷ은 틀리다. 정답은 ③이다."
       ],
-      "formula": ["xA=d/3+(d/2)cos(ωt)+(d/6)cos(sqrt(3)ωt)", "xB=(d/3)(1-cos(sqrt(3)ωt))", "xC=d/3-(d/2)cos(ωt)+(d/6)cos(sqrt(3)ωt)"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 1, "rect": [89.0, 256.3, 320.4, 429.6]}
+      "formula": [
+        "$x_A= \\frac{d}{3}+ \\left(\\frac{d}{2}\\right)\\cos \\left(\\omega t\\right)+ \\left(\\frac{d}{6}\\right)\\cos \\left(\\sqrt{3}\\omega t\\right)$",
+        "$x_B= \\left(\\frac{d}{3}\\right)\\left(1- \\cos \\left(\\sqrt{3}\\omega t\\right)\\right)$",
+        "$x_C= \\frac{d}{3}- \\left(\\frac{d}{2}\\right)\\cos \\left(\\omega t\\right)+ \\left(\\frac{d}{6}\\right)\\cos \\left(\\sqrt{3}\\omega t\\right)$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          89.0,
+          285.0,
+          320.5,
+          405.0
+        ]
+      }
     },
     {
-      "number": 2, "answer": 4, "status": "verified",
+      "number": 2,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "kA=0일 때 가장 낮은 고유모드는 세 질량이 함께 이동하는 병진 모드 (1,1,1)이고 고유진동수는 0이다. kA가 k에 비해 매우 작으면 이 모드에서 세 물체의 변위가 선도차수에서 같다.",
-        "공통 변위를 X로 놓으면 운동에너지는 (1/2)(3m)Xdot²이고 벽에 연결한 용수철의 퍼텐셜 에너지는 (1/2)kA X²이다. 따라서 유효 질량 3m, 유효 용수철 상수 kA인 진동자로 볼 수 있다.",
-        "그러므로 Ω²=kA/(3m)이고 나머지는 상대적인 크기 kA/k의 보정이다. q=1/3이며 정답은 ④이다."
+        "$k_{A}= 0$일 때 가장 낮은 고유모드는 세 질량이 함께 이동하는 병진 모드 $\\left(1, 1, 1\\right)$이고 고유진동수는 $0$이다. $k_{A}$가 $k$에 비해 매우 작으면 이 모드에서 세 물체의 변위가 선도차수에서 같다.",
+        "공통 변위를 $X$로 놓으면 운동에너지는 $\\left(\\frac{1}{2}\\right)\\left(3m\\right)\\dot{X}^{2}$이고 벽에 연결한 용수철의 퍼텐셜 에너지는 $\\left(\\frac{1}{2}\\right)k_{A}\\,X^{2}$이다. 따라서 유효 질량 $3m$, 유효 용수철 상수 $k_{A}$인 진동자로 볼 수 있다.",
+        "그러므로 $\\Omega ^{2}= \\frac{k_{A}}{\\left(3m\\right)}$이고 나머지는 상대적인 크기 $\\frac{k_{A}}{k}$의 보정이다. $q= \\frac{1}{3}$이며 정답은 ④이다."
       ],
-      "formula": ["Ω^2=(kA/(3m))(1+O(kA/k))", "q=1/3"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 1, "rect": [407.6, 288.6, 639.0, 462.0]}
+      "formula": [
+        "$\\Omega ^{2}= \\left(\\frac{k_{A}}{\\left(3m\\right)}\\right)\\left(1+ O\\left(\\frac{k_{A}}{k}\\right)\\right)$",
+        "$q= \\frac{1}{3}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          407.6,
+          317.5,
+          639.1,
+          437.0
+        ]
+      }
     },
     {
-      "number": 3, "answer": 3, "status": "verified",
+      "number": 3,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "그림에서 충격점 B의 좌표는 (a,b,0)이다. 선충격량 p z방향에 의해 질량중심 속도는 (p/M) z방향이 된다. 질량중심에 대한 각충격량은 rB×p z방향=(bp,-ap,0)이다.",
-        "관성모멘트 Ix=Mb²/3, Iy=Ma²/3을 적용하면 ωx=3p/(Mb), ωy=-3p/(Ma)이다.",
-        "강체 위 점 (x,y)의 순간 속도는 질량중심 속도에 회전 속도 ω×r를 더한 값이다. z성분은 vz=p/M+ωx y-ωy x=(p/M)(1+3x/a+3y/b)이다.",
-        "vz=0인 직선은 1+3x/a+3y/b=0이므로 u=w=3이다. 정답은 ③이다."
+        "그림에서 충격점 $B$의 좌표는 $(a,b,0)$이다. 선충격량 $p\\hat z$에 의해 질량중심 속도는 $(p/M)\\hat z$이 된다. 질량중심에 대한 각충격량은 $\\vec r_B\\times p\\hat z=(bp,-ap,0)$이다.",
+        "관성모멘트 $I_x= \\frac{Mb^{2}}{3}, I_y= \\frac{Ma^{2}}{3}$을 적용하면 $\\omega_x= \\frac{3p}{\\left(Mb\\right)}, \\omega_y= \\frac{-3p}{\\left(Ma\\right)}$이다.",
+        "강체 위 점 $\\left(x, y\\right)$의 순간 속도는 질량중심 속도에 회전 속도 $\\omega \\times r$를 더한 값이다. $z$성분은 $v_{z}= \\frac{p}{M}+ \\omega_x\\,y- \\omega_y\\,x= \\left(\\frac{p}{M}\\right)\\left(1+ \\frac{3x}{a}+ \\frac{3y}{b}\\right)$이다.",
+        "$v_{z}= 0$인 직선은 $1+ \\frac{3x}{a}+ \\frac{3y}{b}= 0$이므로 $u= w= 3$이다. 정답은 ③이다."
       ],
-      "formula": ["ΔL=(bp,-ap,0)", "vz=(p/M)(1+3x/a+3y/b)", "u=w=3"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 2, "rect": [89.0, 224.2, 321.1, 398.5]}
+      "formula": [
+        "$\\Delta L= \\left(bp, -ap, 0\\right)$",
+        "$v_{z}= \\left(\\frac{p}{M}\\right)\\left(1+ \\frac{3x}{a}+ \\frac{3y}{b}\\right)$",
+        "$u= w= 3$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          89.0,
+          224.2,
+          321.1,
+          398.5
+        ]
+      }
     },
     {
-      "number": 4, "answer": 1, "status": "verified",
+      "number": 4,
+      "answer": 1,
+      "status": "verified",
       "explanation": [
-        "충격점 S=(-a/3,b,0)에 z방향 선충격량 p가 작용하므로 질량중심에 대한 각운동량 변화는 (bp,ap/3,0)이다. x축과 y축이 주축이므로 두 회전 성분의 에너지를 더할 수 있다.",
-        "질량중심에 대한 회전운동에너지는 Lx²/(2Ix)+Ly²/(2Iy)이다. 값을 대입하면 (3/2)p²/M+(1/6)p²/M=(5/3)p²/M이다.",
-        "문제는 병진 운동에너지가 아니라 질량중심에 대한 회전운동에너지만 묻고 있다. 따라서 γ=5/3이며 정답은 ①이다."
+        "충격점 $S= \\left(\\frac{-a}{3}, b, 0\\right)$에 $z$방향 선충격량 $p$가 작용하므로 질량중심에 대한 각운동량 변화는 $\\left(bp, \\frac{ap}{3}, 0\\right)$이다. $x$축과 $y$축이 주축이므로 두 회전 성분의 에너지를 더할 수 있다.",
+        "질량중심에 대한 회전운동에너지는 $\\frac{L_x^{2}}{\\left(2I_x\\right)}+ \\frac{L_y^{2}}{\\left(2I_y\\right)}$이다. 값을 대입하면 $\\frac{\\left(\\frac{3}{2}\\right)p^{2}}{M}+ \\frac{\\left(\\frac{1}{6}\\right)p^{2}}{M}= \\frac{\\left(\\frac{5}{3}\\right)p^{2}}{M}$이다.",
+        "문제는 병진 운동에너지가 아니라 질량중심에 대한 회전운동에너지만 묻고 있다. 따라서 $\\gamma = \\frac{5}{3}$이며 정답은 ①이다."
       ],
-      "formula": ["ΔL=(bp,ap/3,0)", "Krot=(bp)^2/(2Mb^2/3)+(ap/3)^2/(2Ma^2/3)=(5/3)p^2/M"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 2, "rect": [407.7, 224.2, 639.9, 398.5]}
+      "formula": [
+        "$\\Delta L= \\left(bp, \\frac{ap}{3}, 0\\right)$",
+        "$K_{\\mathrm{rot}}= \\frac{\\left(bp\\right)^{2}}{\\left(\\frac{2Mb^{2}}{3}\\right)}+ \\frac{\\left(\\frac{ap}{3}\\right)^{2}}{\\left(\\frac{2Ma^{2}}{3}\\right)}= \\frac{\\left(\\frac{5}{3}\\right)p^{2}}{M}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          407.7,
+          224.2,
+          639.9,
+          398.5
+        ]
+      }
     },
     {
-      "number": 5, "answer": 4, "status": "verified",
+      "number": 5,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "접지 평면과 반구의 경계조건을 동시에 만족하는 영상전하를 사용한다. 실제 +q가 z=d에 있을 때 영상전하는 z=-d의 -q, z=R²/d의 -qR/d, z=-R²/d의 +qR/d이다. 평면에서는 위아래 전하쌍의 퍼텐셜이 상쇄되고 반구에서는 구의 Kelvin 영상전하 관계로 퍼텐셜이 0이 된다.",
-        "꼭대기 z=R에서 이 네 전하의 축방향 전기장을 더한다. E_z=(q/(4πε₀))[-1/(d-R)²-1/(d+R)²-(R/d)/(R-R²/d)²+(R/d)/(R+R²/d)²]이다.",
-        "정리하면 E_z=-(q/(4πε₀))·2(3d²+R²)/(d²-R²)²이다. 접지 도체 내부의 전기장은 0이므로 표면 전하밀도는 σ=ε₀E_z이며 음수이다.",
-        "따라서 그 크기는 |σ|=(2q/(4π))(3d²+R²)/(d²-R²)²이다. α=2, β=3이므로 αβ=6, 정답은 ④이다."
+        "접지 평면과 반구의 경계조건을 동시에 만족하는 영상전하를 사용한다. 실제 $+q$가 $z= d$에 있을 때 영상전하는 $z= -d$의 $-q, z= \\frac{R^{2}}{d}$의 $\\frac{-qR}{d}, z= \\frac{-R^{2}}{d}$의 $\\frac{+qR}{d}$이다. 평면에서는 위아래 전하쌍의 퍼텐셜이 상쇄되고 반구에서는 구의 Kelvin 영상전하 관계로 퍼텐셜이 $0$이 된다.",
+        "꼭대기 $z=R$에서 이 네 전하의 축방향 전기장을 더한다. $E_z=\\frac{q}{4\\pi\\epsilon_0}[\\frac{-1}{(d-R)^2}-\\frac{1}{(d+R)^2}$\n$-\\frac{R/d}{(R-R^2/d)^2}+\\frac{R/d}{(R+R^2/d)^2}]$이다.",
+        "정리하면 $E_{z}= \\frac{-\\left(\\frac{q}{\\left(4\\pi \\epsilon _{0}\\right)}\\right)\\cdot 2\\left(3d^{2}+ R^{2}\\right)}{\\left(d^{2}- R^{2}\\right)^{2}}$이다. 접지 도체 내부의 전기장은 $0$이므로 표면 전하밀도는 $\\sigma = \\epsilon _{0}E_{z}$이며 음수이다.",
+        "따라서 그 크기는 $|\\sigma |= \\frac{\\left(\\frac{2q}{\\left(4\\pi \\right)}\\right)\\left(3d^{2}+ R^{2}\\right)}{\\left(d^{2}- R^{2}\\right)^{2}}$이다. $\\alpha = 2, \\beta = 3$이므로 $\\alpha \\beta = 6$, 정답은 ④이다."
       ],
-      "formula": ["images: (-q,-d), (-qR/d,R^2/d), (+qR/d,-R^2/d)", "|σ_top|=(2q/(4π))(3d^2+R^2)/(d^2-R^2)^2", "αβ=2×3=6"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 3, "rect": [79.3, 171.7, 330.2, 386.0]},
-      "diagram": {"type": "axial_image_charges", "axis": "z/R", "charges": [{"z": "d/R", "q": "+q", "real": true}, {"z": "R/d", "q": "-qR/d"}, {"z": "-R/d", "q": "+qR/d"}, {"z": "-d/R", "q": "-q"}]}
+      "formula": [
+        "영상전하(전하량, 위치): $\\left(-q, -d\\right), \\left(\\frac{-qR}{d}, \\frac{R^{2}}{d}\\right), \\left(\\frac{+qR}{d}, \\frac{-R^{2}}{d}\\right)$",
+        "$|\\sigma _{\\mathrm{top}}|= \\frac{\\left(\\frac{2q}{\\left(4\\pi \\right)}\\right)\\left(3d^{2}+ R^{2}\\right)}{\\left(d^{2}- R^{2}\\right)^{2}}$",
+        "$\\alpha \\beta = 2\\times 3= 6$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          79.3,
+          200.0,
+          330.3,
+          386.0
+        ]
+      },
+      "diagram": {
+        "type": "axial_image_charges",
+        "axis": "z/R",
+        "charges": [
+          {
+            "z": "d/R",
+            "q": "+q",
+            "real": true
+          },
+          {
+            "z": "R/d",
+            "q": "-qR/d"
+          },
+          {
+            "z": "-R/d",
+            "q": "+qR/d"
+          },
+          {
+            "z": "-d/R",
+            "q": "-q"
+          }
+        ]
+      }
     },
     {
-      "number": 6, "answer": 5, "status": "verified",
+      "number": 6,
+      "answer": 5,
+      "status": "verified",
       "explanation": [
-        "앞 문항과 같은 영상전하계에서 실제 전하 q에 작용하는 도체의 힘은 세 영상전하가 q에 미치는 힘을 더한 값이다. 영상전하에 의한 힘을 계산할 때 에너지 계산의 1/2 인자를 붙이지 않는다.",
-        "d=2R이면 영상전하는 z=-2R의 -q, z=R/2의 -q/2, z=-R/2의 +q/2이다. 앞의 두 힘은 아래쪽, 마지막 힘은 위쪽이다. 실제 전하로부터의 거리는 각각 4R, 3R/2, 5R/2이다.",
-        "따라서 아래쪽 알짜힘의 크기는 (q²/(4πε₀R²))[1/16+(1/2)/(3/2)²-(1/2)/(5/2)²]이다. 괄호 안은 1/16+2/9-2/25=737/3600이다.",
-        "α=737/3600이므로 정답은 ⑤이다."
+        "앞 문항과 같은 영상전하계에서 실제 전하 $q$에 작용하는 도체의 힘은 세 영상전하가 $q$에 미치는 힘을 더한 값이다. 영상전하에 의한 힘을 계산할 때 에너지 계산의 $\\frac{1}{2}$ 인자를 붙이지 않는다.",
+        "$d= 2R$이면 영상전하는 $z= -2R$의 $-q, z= \\frac{R}{2}$의 $\\frac{-q}{2}, z= \\frac{-R}{2}$의 $\\frac{+q}{2}$이다. 앞의 두 힘은 아래쪽, 마지막 힘은 위쪽이다. 실제 전하로부터의 거리는 각각 $4R, \\frac{3R}{2}, \\frac{5R}{2}$이다.",
+        "따라서 아래쪽 알짜힘의 크기는 $\\left(\\frac{q^{2}}{\\left(4\\pi \\epsilon _{0}R^{2}\\right)}\\right)\\left[\\frac{1}{16}+ \\frac{\\left(\\frac{1}{2}\\right)}{\\left(\\frac{3}{2}\\right)^{2}}- \\frac{\\left(\\frac{1}{2}\\right)}{\\left(\\frac{5}{2}\\right)^{2}}\\right]$이다. 괄호 안은 $\\frac{1}{16}+ \\frac{2}{9}- \\frac{2}{25}= \\frac{737}{3600}$이다.",
+        "$\\alpha = \\frac{737}{3600}$이므로 정답은 ⑤이다."
       ],
-      "formula": ["α=1/16+2/9-2/25=737/3600", "F=(737/3600)q^2/(4πε0R^2)"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 3, "rect": [397.9, 171.7, 648.9, 386.0]}
+      "formula": [
+        "$\\alpha = \\frac{1}{16}+ \\frac{2}{9}- \\frac{2}{25}= \\frac{737}{3600}$",
+        "$F= \\frac{\\left(\\frac{737}{3600}\\right)q^{2}}{\\left(4\\pi \\epsilon _{0}R^{2}\\right)}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          397.9,
+          200.0,
+          648.9,
+          386.0
+        ]
+      }
     },
     {
-      "number": 7, "answer": 3, "status": "verified",
+      "number": 7,
+      "answer": 3,
+      "status": "verified",
       "explanation": [
-        "막대 위치 x까지 자기장을 면적분하면 Φ=∫₀ˣ B0 exp(-ks)L ds=(B0L/k)(1-exp(-kx))이다. 따라서 선속 식의 α는 1이다.",
-        "막대를 일정한 속력 v로 끌면 패러데이 법칙에서 유도기전력의 크기는 |dΦ/dt|=B0L v exp(-kx)이다. 회로 저항이 R이므로 I=(B0Lv/R)exp(-kx)이고 β=1이다.",
-        "따라서 αβ=1이며 정답은 ③이다."
+        "막대 위치 $x$까지 자기장을 면적분하면 $\\Phi=\\int_0^x B_0\\exp(-ks)L\\,\\mathrm{d}s=(B_0L/k)(1-\\exp(-kx))$이다. 따라서 선속 식의 $\\alpha$는 $1$이다.",
+        "막대를 일정한 속력 $v$로 끌면 패러데이 법칙에서 유도기전력의 크기는 $|d\\Phi /dt|= B_{0}L\\,v\\,\\exp \\left(-kx\\right)$이다. 회로 저항이 $R$이므로 $I= \\left(\\frac{B_{0}Lv}{R}\\right)\\exp \\left(-kx\\right)$이고 $\\beta = 1$이다.",
+        "따라서 $\\alpha \\beta = 1$이며 정답은 ③이다."
       ],
-      "formula": ["Φ=(B0L/k)(1-exp(-kx))", "I=(B0Lv/R)exp(-kx)", "αβ=1"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 4, "rect": [78.5, 225.9, 331.0, 342.5]}
+      "formula": [
+        "$\\Phi = \\left(\\frac{B_{0}L}{k}\\right)\\left(1- \\exp \\left(-kx\\right)\\right)$",
+        "$I= \\left(\\frac{B_{0}Lv}{R}\\right)\\exp \\left(-kx\\right)$",
+        "$\\alpha \\beta = 1$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 4,
+        "rect": [
+          78.5,
+          225.9,
+          331.0,
+          342.5
+        ]
+      }
     },
     {
-      "number": 8, "answer": 2, "status": "verified",
+      "number": 8,
+      "answer": 2,
+      "status": "verified",
       "explanation": [
-        "렌츠 법칙에 따라 유도전류가 받는 자기력은 운동을 방해한다. 막대의 운동 방정식은 M dv/dt=-(B0²L²/R) exp(-2kx)v이다.",
-        "dv/dt=v dv/dx를 이용하면 v>0인 동안 dv/dx=-(B0²L²/(RM))exp(-2kx)이다. x=0에서 v=v0인 초기조건으로 적분하면 v(x)=v0-(B0²L²/(2kRM))(1-exp(-2kx))이다.",
-        "정지 한계 x=xf에서 v=0을 대입하면 exp(-2kxf)=1-2kRMv0/(B0²L²)이다. 따라서 xf=-(1/(2k))ln[(B0²L²-2kRMv0)/(B0²L²)]이다. 주어진 조건에서 로그의 진수는 0과 1 사이여서 xf는 양수이다.",
-        "α=-1/2, β=2이므로 αβ=-1이다. 정답은 ②이다."
+        "렌츠 법칙에 따라 유도전류가 받는 자기력은 운동을 방해한다. 막대의 운동 방정식은 $\\frac{M\\,dv}{dt}= -\\left(\\frac{B_{0}^{2}L^{2}}{R}\\right)\\,\\exp \\left(-2kx\\right)v$이다.",
+        "$\\frac{dv}{dt}= \\frac{v\\,dv}{dx}$를 이용하면 $v> 0$인 동안 $\\frac{dv}{dx}= -\\left(\\frac{B_{0}^{2}L^{2}}{\\left(RM\\right)}\\right)\\exp \\left(-2kx\\right)$이다. $x= 0$에서 $v= v_{0}$인 초기조건으로 적분하면 $v\\left(x\\right)= v_{0}- \\left(\\frac{B_{0}^{2}L^{2}}{\\left(2kRM\\right)}\\right)\\left(1- \\exp \\left(-2kx\\right)\\right)$이다.",
+        "정지 한계 $x= x_f$에서 $v= 0$을 대입하면 $\\exp \\left(-2kx_f\\right)= 1- \\frac{2kRMv_{0}}{\\left(B_{0}^{2}L^{2}\\right)}$이다. 따라서 $x_f= -\\left(\\frac{1}{\\left(2k\\right)}\\right)\\ln \\left[\\frac{\\left(B_{0}^{2}L^{2}- 2kRMv_{0}\\right)}{\\left(B_{0}^{2}L^{2}\\right)}\\right]$이다. 주어진 조건에서 로그의 진수는 $0$과 $1$ 사이여서 $x_f$는 양수이다.",
+        "$\\alpha = \\frac{-1}{2}, \\beta = 2$이므로 $\\alpha \\beta = -1$이다. 정답은 ②이다."
       ],
-      "formula": ["M dv/dt=-(B0^2 L^2/R)exp(-2kx)v", "v(x)=v0-(B0^2 L^2/(2kRM))(1-exp(-2kx))", "xf=-(1/(2k))ln(1-2kRMv0/(B0^2 L^2))", "αβ=(-1/2)×2=-1"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 4, "rect": [397.2, 225.9, 649.6, 342.5]}
+      "formula": [
+        "$\\frac{M\\,dv}{dt}= -\\left(\\frac{B_{0}^{2}\\,L^{2}}{R}\\right)\\exp \\left(-2kx\\right)v$",
+        "$v\\left(x\\right)= v_{0}- \\left(\\frac{B_{0}^{2}\\,L^{2}}{\\left(2kRM\\right)}\\right)\\left(1- \\exp \\left(-2kx\\right)\\right)$",
+        "$x_f= -\\left(\\frac{1}{\\left(2k\\right)}\\right)\\ln \\left(1- \\frac{2kRMv_{0}}{\\left(B_{0}^{2}\\,L^{2}\\right)}\\right)$",
+        "$\\alpha \\beta = \\left(\\frac{-1}{2}\\right)\\times 2= -1$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 4,
+        "rect": [
+          397.2,
+          225.9,
+          649.6,
+          342.5
+        ]
+      }
     },
     {
-      "number": 9, "answer": 4, "status": "verified",
+      "number": 9,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "속박 상태에서는 E=-ħ²κ²/(2m), κ>0으로 놓을 수 있다. 원점 밖에서 정규화 가능한 해는 ψ(x)=A exp(-κ|x|)이다. 파동함수는 원점에서 연속이다.",
-        "슈뢰딩거 방정식을 원점 양옆의 작은 구간에서 적분하면 ψ'(0+)-ψ'(0-)=-(2mα/ħ²)ψ(0)이다. 지수해를 대입하면 κ=mα/ħ²이므로 에너지는 -mα²/(2ħ²)이다. 가능한 κ는 하나이므로 속박 상태는 유일하다.",
-        "α≠0일 때 1차 미분은 원점에서 불연속이므로 ㄴ은 틀리다. α<0이면 위 조건이 κ<0을 요구하여 정규화 가능한 속박해가 없다. 따라서 ㄱ, ㄷ이 옳고 정답은 ④이다."
+        "속박 상태에서는 $E= \\frac{-\\hbar ^{2}\\kappa ^{2}}{\\left(2m\\right)}, \\kappa > 0$으로 놓을 수 있다. 원점 밖에서 정규화 가능한 해는 $\\psi \\left(x\\right)= A\\,\\exp \\left(-\\kappa |x|\\right)$이다. 파동함수는 원점에서 연속이다.",
+        "슈뢰딩거 방정식을 원점 양옆의 작은 구간에서 적분하면 $\\psi ^{\\prime}\\left(0+ \\right)- \\psi ^{\\prime}\\left(0- \\right)= -\\left(\\frac{2m\\alpha }{\\hbar ^{2}}\\right)\\psi \\left(0\\right)$이다. 지수해를 대입하면 $\\kappa = \\frac{m\\alpha }{\\hbar ^{2}}$이므로 에너지는 $\\frac{-m\\alpha ^{2}}{\\left(2\\hbar ^{2}\\right)}$이다. 가능한 $\\kappa $는 하나이므로 속박 상태는 유일하다.",
+        "$\\alpha \\ne 0$일 때 $1$차 미분은 원점에서 불연속이므로 ㄴ은 틀리다. $\\alpha < 0$이면 위 조건이 $\\kappa < 0$을 요구하여 정규화 가능한 속박해가 없다. 따라서 ㄱ, ㄷ이 옳고 정답은 ④이다."
       ],
-      "formula": ["ψ(x)=sqrt(κ)exp(-κ|x|)", "ψ'(0+)-ψ'(0-)=-(2mα/ħ^2)ψ(0)", "κ=mα/ħ^2", "E=-mα^2/(2ħ^2)"]
+      "formula": [
+        "$\\psi \\left(x\\right)= \\sqrt{\\kappa }\\exp \\left(-\\kappa |x|\\right)$",
+        "$\\psi ^{\\prime}\\left(0+ \\right)- \\psi ^{\\prime}\\left(0- \\right)= -\\left(\\frac{2m\\alpha }{\\hbar ^{2}}\\right)\\psi \\left(0\\right)$",
+        "$\\kappa = \\frac{m\\alpha }{\\hbar ^{2}}$",
+        "$E= \\frac{-m\\alpha ^{2}}{\\left(2\\hbar ^{2}\\right)}$"
+      ]
     },
     {
-      "number": 10, "answer": 4, "status": "verified",
+      "number": 10,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "입사파의 파수를 k=sqrt(2mE)/ħ라 하고 κ=mα/ħ²라 하자. 원점 왼쪽은 exp(ikx)+r exp(-ikx), 오른쪽은 t exp(ikx)로 쓴다.",
-        "파동함수 연속조건은 1+r=t이고, 미분의 도약조건은 ikt-ik(1-r)=-2κt이다. 이를 풀면 투과율은 |t|²=k²/(k²+κ²)이다.",
-        "주어진 E=mα²/(2ħ²)를 대입하면 k²=m²α²/ħ⁴=κ²이다. 따라서 투과율은 1/2이며 정답은 ④이다."
+        "입사파의 파수를 $k= \\frac{\\sqrt{2mE}}{\\hbar }$라 하고 $\\kappa = \\frac{m\\alpha }{\\hbar ^{2}}$라 하자. 원점 왼쪽은 $\\exp \\left(ikx\\right)+ r\\,\\exp \\left(-ikx\\right)$, 오른쪽은 $t\\,\\exp \\left(ikx\\right)$로 쓴다.",
+        "파동함수 연속조건은 $1+ r= t$이고, 미분의 도약조건은 $ikt- ik\\left(1- r\\right)= -2\\kappa t$이다. 이를 풀면 투과율은 $|t|^{2}= \\frac{k^{2}}{\\left(k^{2}+ \\kappa ^{2}\\right)}$이다.",
+        "주어진 $E= \\frac{m\\alpha ^{2}}{\\left(2\\hbar ^{2}\\right)}$를 대입하면 $k^{2}= \\frac{m^{2}\\alpha ^{2}}{\\hbar ^{4}}= \\kappa ^{2}$이다. 따라서 투과율은 $\\frac{1}{2}$이며 정답은 ④이다."
       ],
-      "formula": ["T=k^2/(k^2+κ^2)", "k^2=2mE/ħ^2=κ^2", "T=1/2"]
+      "formula": [
+        "$T= \\frac{k^{2}}{\\left(k^{2}+ \\kappa ^{2}\\right)}$",
+        "$k^{2}= \\frac{2mE}{\\hbar ^{2}}= \\kappa ^{2}$",
+        "$T= \\frac{1}{2}$"
+      ]
     },
     {
-      "number": 11, "answer": 4, "status": "verified",
+      "number": 11,
+      "answer": 4,
+      "status": "verified",
       "explanation": [
-        "C(T)=γT이므로 적분하여 U(T)=γT²/2+상수, S(T)=γT+상수이다. 두 물체를 합친 계가 외부와 열을 교환하지 않고 일을 하지 않으므로 전체 내부에너지는 보존된다.",
-        "따라서 (γ/2)[(7T0)²+T0²]=(γ/2)(2Tf²)이다. 정리하면 Tf²=25T0²이고 양의 절대온도에서 Tf=5T0이다.",
-        "전체 엔트로피 변화는 γ[(5T0-7T0)+(5T0-T0)]=2γT0이다. 따라서 Tf/T0=5, ΔStot/(γT0)=2이며 정답은 ④이다."
+        "$C\\left(T\\right)= \\gamma T$이므로 적분하여 $U\\left(T\\right)= \\frac{\\gamma T^{2}}{2}+ $상수, $S\\left(T\\right)= \\gamma T+ $상수이다. 두 물체를 합친 계가 외부와 열을 교환하지 않고 일을 하지 않으므로 전체 내부에너지는 보존된다.",
+        "따라서 $\\left(\\frac{\\gamma }{2}\\right)\\left[\\left(7T_{0}\\right)^{2}+ T_{0}^{2}\\right]= \\left(\\frac{\\gamma }{2}\\right)\\left(2T_{f}^{2}\\right)$이다. 정리하면 $T_{f}^{2}= 25T_{0}^{2}$이고 양의 절대온도에서 $T_{f}= 5T_{0}$이다.",
+        "전체 엔트로피 변화는 $\\gamma \\left[\\left(5T_{0}- 7T_{0}\\right)+ \\left(5T_{0}- T_{0}\\right)\\right]= 2\\gamma T_{0}$이다. 따라서 $\\frac{T_{f}}{T_{0}}= 5, \\frac{\\Delta S_{\\mathrm{total}}}{\\left(\\gamma T_{0}\\right)}= 2$이며 정답은 ④이다."
       ],
-      "formula": ["U(T)=γT^2/2+constant", "S(T)=γT+constant", "Tf=5T0", "ΔStot=2γT0"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 6, "rect": [97.1, 259.5, 311.4, 420.2]}
+      "formula": [
+        "$U\\left(T\\right)= \\frac{\\gamma T^{2}}{2}+ \\mathrm{const}$",
+        "$S\\left(T\\right)= \\gamma T+ \\mathrm{const}$",
+        "$T_{f}= 5T_{0}$",
+        "$\\Delta S_{\\mathrm{total}}= 2\\gamma T_{0}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 6,
+        "rect": [
+          115.0,
+          298.0,
+          295.0,
+          372.0
+        ]
+      }
     },
     {
-      "number": 12, "answer": 5, "status": "verified",
+      "number": 12,
+      "answer": 5,
+      "status": "verified",
       "explanation": [
-        "열기관은 순환하여 처음 상태로 돌아오므로 기관 자체의 엔트로피와 내부에너지 변화는 0이다. 전체 계는 외부와 열을 교환하지 않으므로 엔트로피 생성량은 두 물체의 엔트로피 변화 2γT*-8γT0이다.",
-        "열역학 제2법칙에서 이 값은 0 이상이다. 따라서 T*≥4T0으로 ㄱ은 옳다.",
-        "전체 에너지 보존에서 기관이 한 일은 W=U초기-U최종=25γT0²-γT*²이다. T*≥4T0를 적용하면 W≤9γT0²이므로 ㄴ은 옳다.",
-        "최대 일 W=9γT0²을 얻으면 T*=4T0가 되고 전체 엔트로피 생성량은 0이다. 따라서 ㄷ도 옳다. 정답은 ⑤이다."
+        "열기관은 순환하여 처음 상태로 돌아오므로 기관 자체의 엔트로피와 내부에너지 변화는 $0$이다. 전체 계는 외부와 열을 교환하지 않으므로 엔트로피 생성량은 두 물체의 엔트로피 변화 $2\\gamma T^{\\ast}- 8\\gamma T_{0}$이다.",
+        "열역학 제2법칙에서 이 값은 $0$ 이상이다. 따라서 $T^{\\ast}\\geq 4T_{0}$으로 ㄱ은 옳다.",
+        "전체 에너지 보존에서 기관이 한 일은 $W= U_{\\mathrm{초기}}- U_{\\mathrm{최종}}= 25\\gamma T_{0}^{2}- \\gamma \\left(T^{\\ast}\\right)^{2}$이다. $T^{\\ast}\\geq 4T_{0}$를 적용하면 $W\\leq 9\\gamma T_{0}^{2}$이므로 ㄴ은 옳다.",
+        "최대 일 $W= 9\\gamma T_{0}^{2}$을 얻으면 $T^{\\ast}= 4T_{0}$가 되고 전체 엔트로피 생성량은 $0$이다. 따라서 ㄷ도 옳다. 정답은 ⑤이다."
       ],
-      "formula": ["ΔStot=2γT*-8γT0≥0", "T*≥4T0", "W=25γT0^2-γT*^2≤9γT0^2"],
-      "figure": {"source": "KPhE_2026_T2d_KO.pdf", "page": 6, "rect": [395.4, 243.5, 651.5, 435.6]}
+      "formula": [
+        "$\\Delta S_{\\mathrm{total}}= 2\\gamma T^{\\ast}- 8\\gamma T_{0}\\geq 0$",
+        "$T^{\\ast}\\geq 4T_{0}$",
+        "$W= 25\\gamma T_{0}^{2}- \\gamma \\left(T^{\\ast}\\right)^{2}\\leq 9\\gamma T_{0}^{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2026_T2d_KO.pdf",
+        "page": 6,
+        "rect": [
+          408.0,
+          298.0,
+          639.0,
+          369.0
+        ]
+      }
     }
   ]
 }

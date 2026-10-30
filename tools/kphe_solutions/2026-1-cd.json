@@ -11,12 +11,12 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "대칭축을 y축으로 놓으면 궤적은 y=A-Bx²이다. 발사점 x=-x0에서 기울기는 tan60°이므로 B=√3/(2x0), A=√3x0/2이다.",
-        "원 x²+y²=R²에 접하는 점에서는 두 곡선의 기울기가 같아 -2Bx=-x/y이다. 옆면의 접점에서 y=1/(2B)=x0/√3이고, 궤적식에서 x²=x0²/3이다. 따라서 R²=2x0²/3이고 x0=(√6/2)R이다. 정답은 ②이다."
+        "대칭축을 $y$축으로 놓으면 궤적은 $y= A- Bx^{2}$이다. 발사점 $x= -x_{0}$에서 기울기는 $\\tan 60^\\circ $이므로 $B= \\frac{\\sqrt{3}}{\\left(2x_{0}\\right)}, A= \\frac{\\sqrt{3}\\,x_{0}}{2}$이다.",
+        "원 $x^{2}+ y^{2}= R^{2}$에 접하는 점에서는 두 곡선의 기울기가 같아 $-2Bx= \\frac{-x}{y}$이다. 옆면의 접점에서 $y= \\frac{1}{\\left(2B\\right)}= \\frac{x_{0}}{\\sqrt{3}}$이고, 궤적식에서 $x^{2}= \\frac{x_{0}^{2}}{3}$이다. 따라서 $R^{2}= \\frac{2x_{0}^{2}}{3}$이고 $x_{0}= \\left(\\frac{\\sqrt{6}}{2}\\right)R$이다. 정답은 ②이다."
       ],
       "formula": [
-        "y=(√3/(2x0))(x0²-x²)",
-        "x0=(√6/2)R"
+        "$y= \\left(\\frac{\\sqrt{3}}{\\left(2x_{0}\\right)}\\right)\\left(x_{0}^{2}- x^{2}\\right)$",
+        "$x_{0}= \\left(\\frac{\\sqrt{6}}{2}\\right)R$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -34,13 +34,13 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "막대의 각가속도는 α=3g sinθ/(2L)이다. 선밀도를 λ=M/L라 하고 바닥에서 거리 h인 단면 위쪽의 부분을 생각하면, 중력과 접선가속도를 함께 고려한 굽힘모멘트 크기는 λg sinθ·h(L-h)²/(4L)이다.",
-        "h(L-h)²를 미분하면 (L-h)(L-3h)이므로 내부 최대는 h=L/3에서 생긴다. 따라서 균일한 막대는 이 단면에서 먼저 파손되며 ㄱ이 옳다. 파손 각도는 굽힘모멘트가 재료의 한계에 도달하는 때이므로 재료 강도에 의존하여 ㄴ은 틀리다.",
-        "부러진 윗부분에는 질량중심에 대한 중력 토크가 없으므로 자유낙하하며 자체 각속도는 유지된다. 반면 아랫부분은 O를 중심으로 계속 각가속도를 얻는다. 윗부분이 더 빨리 회전한다는 ㄷ은 틀려 정답은 ①이다."
+        "막대의 각가속도는 $\\alpha = \\frac{3g\\,\\sin \\theta }{\\left(2L\\right)}$이다. 선밀도를 $\\lambda = \\frac{M}{L}$라 하고 바닥에서 거리 $h$인 단면 위쪽의 부분을 생각하면, 중력과 접선가속도를 함께 고려한 굽힘모멘트 크기는 $\\frac{\\lambda g\\,\\sin \\theta \\cdot h\\left(L- h\\right)^{2}}{\\left(4L\\right)}$이다.",
+        "$h\\left(L- h\\right)^{2}$를 미분하면 $\\left(L- h\\right)\\left(L- 3h\\right)$이므로 내부 최대는 $h= \\frac{L}{3}$에서 생긴다. 따라서 균일한 막대는 이 단면에서 먼저 파손되며 ㄱ이 옳다. 파손 각도는 굽힘모멘트가 재료의 한계에 도달하는 때이므로 재료 강도에 의존하여 ㄴ은 틀리다.",
+        "부러진 윗부분에는 질량중심에 대한 중력 토크가 없으므로 자유낙하하며 자체 각속도는 유지된다. 반면 아랫부분은 $O$를 중심으로 계속 각가속도를 얻는다. 윗부분이 더 빨리 회전한다는 ㄷ은 틀려 정답은 ①이다."
       ],
       "formula": [
-        "α=3g sinθ/(2L)",
-        "|M_bend(h)|=(λg sinθ/(4L))h(L-h)²"
+        "$\\alpha = \\frac{3g\\,\\sin \\theta }{\\left(2L\\right)}$",
+        "$|M_{\\mathrm{bend}}\\left(h\\right)|= \\left(\\frac{\\lambda g\\,\\sin \\theta }{\\left(4L\\right)}\\right)h\\left(L- h\\right)^{2}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -58,14 +58,14 @@
       "answer": 4,
       "status": "verified",
       "explanation": [
-        "움직도르래와 B가 아래로 s만큼 내려가면 A는 위로 2s만큼 올라간다. 두 물체의 높이 차는 3s=h이고, B의 속력을 v라 하면 A의 속력은 2v이다. 움직도르래와 고정도르래의 각속력은 각각 v/R, 2v/R이다.",
-        "중력 퍼텐셜에너지 감소량은 (m+2m)gs-mg(2s)=mgh/3이다. A·B·움직도르래의 병진에너지 합은 (7/2)mv²이고 두 도르래의 회전에너지 합은 (5/2)mv²이다.",
-        "에너지 보존에서 mgh/3=6mv²이므로 v=√(gh/18)이다. 정답은 ④이다."
+        "움직도르래와 $B$가 아래로 $s$만큼 내려가면 $A$는 위로 $2s$만큼 올라간다. 두 물체의 높이 차는 $3s= h$이고, $B$의 속력을 $v$라 하면 $A$의 속력은 $2v$이다. 움직도르래와 고정도르래의 각속력은 각각 $\\frac{v}{R}, \\frac{2v}{R}$이다.",
+        "중력 퍼텐셜에너지 감소량은 $(m+2m)gs-mg(2s)=mgh/3$이다. $A$·$B$·움직도르래의 병진에너지 합은 $(7/2)mv^2$이고 두 도르래의 회전에너지 합은 $(5/2)mv^2$이다.",
+        "에너지 보존에서 $\\frac{mgh}{3}= 6mv^{2}$이므로 $v= \\sqrt{\\frac{gh}{18}}$이다. 정답은 ④이다."
       ],
       "formula": [
-        "s=h/3",
-        "K_total=6mv²",
-        "vB=√(gh/18)"
+        "$s= \\frac{h}{3}$",
+        "$K_{\\mathrm{total}}= 6mv^{2}$",
+        "$v_B= \\sqrt{\\frac{gh}{18}}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -83,13 +83,13 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "부은 물 280 g의 부피는 280 cm³이고 오른쪽 관 단면적은 10 cm²이므로 물기둥 높이는 28 cm이다. 수은의 부피 보존에서 2h=10H, 즉 h=5H이다.",
-        "같은 높이의 수은 압력을 맞추면 ρm g(h+H)=ρw g·28 cm이다. ρm/ρw=14이므로 h+H=2 cm이다. 두 식을 풀면 h=5/3 cm, H=1/3 cm이다. 정답은 ①이다."
+        "부은 물 $280\\,g$의 부피는 $280\\,\\mathrm{cm^{3}}$이고 오른쪽 관 단면적은 $10\\,\\mathrm{cm^{2}}$이므로 물기둥 높이는 $28\\,\\mathrm{cm}$이다. 수은의 부피 보존에서 $2h= 10H$, 즉 $h= 5H$이다.",
+        "같은 높이의 수은 압력을 맞추면 $\\rho_m\\,g\\left(h+ H\\right)= \\rho_w\\,g\\cdot 28\\,\\mathrm{cm}$이다. $\\frac{\\rho_m}{\\rho_w}= 14$이므로 $h+ H= 2\\,\\mathrm{cm}$이다. 두 식을 풀면 $h= \\frac{5}{3}\\,\\mathrm{cm}, H= \\frac{1}{3}\\,\\mathrm{cm}$이다. 정답은 ①이다."
       ],
       "formula": [
-        "h=5H",
-        "14(h+H)=28 cm",
-        "h=5/3 cm, H=1/3 cm"
+        "$h= 5H$",
+        "$14\\left(h+ H\\right)= 28\\,\\mathrm{cm}$",
+        "$h= \\frac{5}{3}\\,\\mathrm{cm}, H= \\frac{1}{3}\\,\\mathrm{cm}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -107,14 +107,14 @@
       "answer": 4,
       "status": "verified",
       "explanation": [
-        "외부 수평 힘이 없으므로 수평운동량 보존에서 mv2=2mV1이다. 따라서 v2=2V1이고, 이탈 직전 원판의 비탈면에 대한 상대속력은 v2+V1=3V1이다. ㄷ은 옳다.",
-        "비탈면 끝이 완만하므로 이탈할 때 충격성 회전 변화가 없고 각속력은 연속이다. ㄱ은 옳다. 굴림조건은 rω=v2+V1=3V1이므로 바닥에 대해 v2=rω가 되지 않는다. h를 바꾸어도 이 비율은 같아 ㄴ은 틀리다.",
-        "균일 원판의 I=mr²/2를 에너지 보존에 넣으면 mgh=(21/4)mV1²이고 v2²=16gh/21이다. 속력은 반지름에 무관하여 ㄹ은 틀리다. 정답은 ㄱ, ㄷ인 ④이다."
+        "외부 수평 힘이 없으므로 수평운동량 보존에서 $mv_{2}= 2mV_{1}$이다. 따라서 $v_{2}= 2V_{1}$이고, 이탈 직전 원판의 비탈면에 대한 상대속력은 $v_{2}+ V_{1}= 3V_{1}$이다. ㄷ은 옳다.",
+        "비탈면 끝이 완만하므로 이탈할 때 충격성 회전 변화가 없고 각속력은 연속이다. ㄱ은 옳다. 굴림조건은 $r\\omega = v_{2}+ V_{1}= 3V_{1}$이므로 바닥에 대해 $v_{2}= r\\omega $가 되지 않는다. $h$를 바꾸어도 이 비율은 같아 ㄴ은 틀리다.",
+        "균일 원판의 $I= \\frac{mr^{2}}{2}$를 에너지 보존에 넣으면 $mgh= \\left(\\frac{21}{4}\\right)mV_{1}^{2}$이고 $v_{2}^{2}= \\frac{16gh}{21}$이다. 속력은 반지름에 무관하여 ㄹ은 틀리다. 정답은 ㄱ, ㄷ인 ④이다."
       ],
       "formula": [
-        "v2=2V1",
-        "rω=3V1",
-        "v2²=16gh/21"
+        "$v_{2}= 2V_{1}$",
+        "$r\\omega = 3V_{1}$",
+        "$v_{2}^{2}= \\frac{16gh}{21}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -132,14 +132,14 @@
       "answer": 3,
       "status": "verified",
       "explanation": [
-        "정지 직전 위 물체에 대해 Tcrit=μs mg이고, 아래 물체에는 장력과 마찰력이 모두 왼쪽으로 작용하므로 Fc=2μs mg=6μk mg이다.",
-        "운동 중 두 물체 가속도 크기는 a로 같다. 위 물체에서 Tmoving-μk mg=ma, 아래 물체에서 Fc-Tmoving-μk mg=3ma이다. 합하면 a=μk g이고 Tmoving=2μk mg이다.",
-        "따라서 Tmoving/Tcrit=2/3이다. 정답은 ③이다."
+        "정지 직전 위 물체에 대해 $T_{\\mathrm{crit}}= \\mu _{s}\\,mg$이고, 아래 물체에는 장력과 마찰력이 모두 왼쪽으로 작용하므로 $F_{C}= 2\\mu _{s}\\,mg= 6\\mu _{k}\\,mg$이다.",
+        "운동 중 두 물체 가속도 크기는 $a$로 같다. 위 물체에서 $T_{\\mathrm{moving}}- \\mu _{k}\\,mg= ma$, 아래 물체에서 $F_{C}- T_{\\mathrm{moving}}- \\mu _{k}\\,mg= 3ma$이다. 합하면 $a= \\mu _{k}\\,g$이고 $T_{\\mathrm{moving}}= 2\\mu _{k}\\,mg$이다.",
+        "따라서 $\\frac{T_{\\mathrm{moving}}}{T_{\\mathrm{crit}}}= \\frac{2}{3}$이다. 정답은 ③이다."
       ],
       "formula": [
-        "Tcrit=3μk mg",
-        "Tmoving=2μk mg",
-        "Tmoving/Tcrit=2/3"
+        "$T_{\\mathrm{crit}}= 3\\mu _{k}\\,mg$",
+        "$T_{\\mathrm{moving}}= 2\\mu _{k}\\,mg$",
+        "$\\frac{T_{\\mathrm{moving}}}{T_{\\mathrm{crit}}}= \\frac{2}{3}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -157,12 +157,12 @@
       "answer": 3,
       "status": "verified",
       "explanation": [
-        "한 꼭짓점의 +q가 나머지 두 +q로부터 받는 힘의 크기는 각각 kq²/a²이고 두 힘 사이 각도는 60°이다. 합력은 중심에서 바깥으로 √3kq²/a²이다.",
-        "중심과 꼭짓점 거리는 a/√3이므로 중심의 -Q가 당기는 힘은 3kQq/a²이다. 두 힘을 같게 놓으면 Q/q=√3/3이다. 정답은 ③이다."
+        "한 꼭짓점의 $+q$가 나머지 두 $+q$로부터 받는 힘의 크기는 각각 $\\frac{kq^{2}}{a^{2}}$이고 두 힘 사이 각도는 $60^\\circ $이다. 합력은 중심에서 바깥으로 $\\frac{\\sqrt{3}\\,kq^{2}}{a^{2}}$이다.",
+        "중심과 꼭짓점 거리는 $\\frac{a}{\\sqrt{3}}$이므로 중심의 $-Q$가 당기는 힘은 $\\frac{3kQq}{a^{2}}$이다. 두 힘을 같게 놓으면 $\\frac{Q}{q}= \\frac{\\sqrt{3}}{3}$이다. 정답은 ③이다."
       ],
       "formula": [
-        "√3kq²/a²=3kQq/a²",
-        "Q/q=√3/3"
+        "$\\frac{\\sqrt{3}\\,kq^{2}}{a^{2}}= \\frac{3kQq}{a^{2}}$",
+        "$\\frac{Q}{q}= \\frac{\\sqrt{3}}{3}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -180,12 +180,12 @@
       "answer": 3,
       "status": "verified",
       "explanation": [
-        "그림에서 R1=4 Ω은 R2=6 Ω과 R3=12 Ω의 병렬 묶음과 직렬이다. 병렬 등가저항은 6×12/(6+12)=4 Ω이다.",
-        "전체 저항은 8 Ω이고 전압은 12 V이므로 R1을 흐르는 전체 전류는 12/8=1.5 A이다. 정답은 ③이다."
+        "그림에서 $R_{1}= 4\\,\\mathrm{\\Omega }$은 $R_{2}= 6\\,\\mathrm{\\Omega }$과 $R_{3}= 12\\,\\mathrm{\\Omega }$의 병렬 묶음과 직렬이다. 병렬 등가저항은 $\\frac{6\\times 12}{\\left(6+ 12\\right)}= 4\\,\\mathrm{\\Omega }$이다.",
+        "전체 저항은 $8\\,\\mathrm{\\Omega }$이고 전압은 $12\\,\\mathrm{V}$이므로 $R_{1}$을 흐르는 전체 전류는 $\\frac{12}{8}= 1.5\\,\\mathrm{A}$이다. 정답은 ③이다."
       ],
       "formula": [
-        "R_parallel=4 Ω",
-        "I1=12/(4+4)=1.5 A"
+        "$R_{\\mathrm{parallel}}= 4\\,\\mathrm{\\Omega }$",
+        "$I_{1}= \\frac{12}{\\left(4+ 4\\right)}= 1.5\\,\\mathrm{A}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -204,11 +204,11 @@
       "status": "verified",
       "explanation": [
         "그림의 자기장은 위쪽이다. 오른손 법칙에 의해 양전하가 위에서 볼 때 시계 방향으로 원운동하므로 ㄱ은 옳다.",
-        "자기력 qv×B는 속도에 수직이어서 일을 하지 않는다. 따라서 속력은 일정하고 ㄴ이 옳다. 수직 운동의 반지름은 r=mv⊥/(|q|B)이므로 자기장이 세질수록 작아져 ㄷ도 옳다. 정답은 ⑤이다."
+        "자기력 $qv\\times B$는 속도에 수직이어서 일을 하지 않는다. 따라서 속력은 일정하고 ㄴ이 옳다. 수직 운동의 반지름은 $r= \\frac{m v_{\\perp}}{\\left(|q|B\\right)}$이므로 자기장이 세질수록 작아져 ㄷ도 옳다. 정답은 ⑤이다."
       ],
       "formula": [
-        "r=mv_perp/(|q|B)",
-        "magnetic power=q(v×B)·v=0"
+        "$r= \\frac{m v_{\\perp}}{\\left(|q|B\\right)}$",
+        "자기력의 일률: $q\\left(v\\times B\\right)\\cdot v= 0$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -226,11 +226,11 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "전원을 연결한 채 유지하므로 두 극판 사이 전위차 V는 일정하다. 극판 거리를 d에서 2d로 늘리면 전기장 E=V/d는 절반으로 감소하므로 ㄱ은 틀리다.",
-        "정전용량 C=ε0A/d도 절반으로 감소한다. U=CV²/2와 Q=CV에서 저장 에너지와 전하량 모두 절반이다. 따라서 ㄴ만 옳고 정답은 ①이다."
+        "전원을 연결한 채 유지하므로 두 극판 사이 전위차 $V$는 일정하다. 극판 거리를 $d$에서 $2d$로 늘리면 전기장 $E= \\frac{V}{d}$는 절반으로 감소하므로 ㄱ은 틀리다.",
+        "정전용량 $C= \\frac{\\epsilon _{0}A}{d}$도 절반으로 감소한다. $U= \\frac{CV^{2}}{2}$와 $Q= CV$에서 저장 에너지와 전하량 모두 절반이다. 따라서 ㄴ만 옳고 정답은 ①이다."
       ],
       "formula": [
-        "E'=E/2, C'=C/2, U'=U/2, Q'=Q/2"
+        "$E^{\\prime}= \\frac{E}{2}, C^{\\prime}= \\frac{C}{2}, U^{\\prime}= \\frac{U}{2}, Q^{\\prime}= \\frac{Q}{2}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -249,12 +249,12 @@
       "status": "verified",
       "explanation": [
         "두 막대의 상대속도 때문에 폐회로의 자속이 변하고 전류가 흐른다. 렌츠 법칙에 따라 왼쪽 막대는 감속하고 오른쪽 막대는 가속하므로 ㄱ은 틀리다.",
-        "전류가 흐르는 동안 저항에서 I²R의 열이 발생하여 운동에너지 일부가 열로 바뀐다. ㄴ은 옳다. 두 막대에 작용하는 수평 자기력은 크기가 같고 방향이 반대이므로 전체 운동량은 일정하다.",
-        "오랜 시간이 지나면 상대속도와 유도전류가 0으로 수렴하여 두 막대 모두 v0/2로 움직인다. ㄷ도 옳으므로 정답은 ④이다."
+        "전류가 흐르는 동안 저항에서 $I^{2}R$의 열이 발생하여 운동에너지 일부가 열로 바뀐다. ㄴ은 옳다. 두 막대에 작용하는 수평 자기력은 크기가 같고 방향이 반대이므로 전체 운동량은 일정하다.",
+        "오랜 시간이 지나면 상대속도와 유도전류가 $0$으로 수렴하여 두 막대 모두 $\\frac{v_{0}}{2}$로 움직인다. ㄷ도 옳으므로 정답은 ④이다."
       ],
       "formula": [
-        "v_left+v_right=v0",
-        "v_left(∞)=v_right(∞)=v0/2"
+        "$v_{\\mathrm{left}}+ v_{\\mathrm{right}}= v_{0}$",
+        "$v_{\\mathrm{left}}\\left(\\infty \\right)= v_{\\mathrm{right}}\\left(\\infty \\right)= \\frac{v_{0}}{2}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -291,12 +291,12 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "A 광자의 에너지는 hc/λ=1240/400=3.10 eV이다. 광전자의 최대 운동에너지는 3.10-2.50=0.60 eV이므로 ㄱ은 옳다.",
-        "B 광자의 에너지는 1240/500=2.48 eV로 일함수보다 작아 광전자가 방출되지 않는다. 따라서 ㄴ은 틀리다. 빛의 세기를 높여도 광자 하나의 에너지는 그대로이므로 최대 운동에너지는 변하지 않아 ㄷ도 틀리다. 정답은 ①이다."
+        "$A$ 광자의 에너지는 $\\frac{hc}{\\lambda }= \\frac{1240}{400}= 3.10\\,\\mathrm{eV}$이다. 광전자의 최대 운동에너지는 $3.10- 2.50= 0.60\\,\\mathrm{eV}$이므로 ㄱ은 옳다.",
+        "$B$ 광자의 에너지는 $\\frac{1240}{500}= 2.48\\,\\mathrm{eV}$로 일함수보다 작아 광전자가 방출되지 않는다. 따라서 ㄴ은 틀리다. 빛의 세기를 높여도 광자 하나의 에너지는 그대로이므로 최대 운동에너지는 변하지 않아 ㄷ도 틀리다. 정답은 ①이다."
       ],
       "formula": [
-        "KA,max=0.60 eV",
-        "EB=2.48 eV<2.50 eV"
+        "$K_{A,\\mathrm{max}}= 0.60\\,\\mathrm{eV}$",
+        "$E_B= 2.48\\,\\mathrm{eV}< 2.50\\,\\mathrm{eV}$"
       ]
     },
     {
@@ -304,13 +304,13 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "회절격자의 주극대 조건은 인접 슬릿 경로차 d sinθ=mλ인 정수배 조건이다. 반정수배라는 ㄱ은 틀리다.",
-        "|m|≤d/λ=10/3이므로 m=-3,-2,-1,0,1,2,3의 7개 주극대가 가능하다. ㄴ은 옳다. 작은 각 근사로 첫 극대 거리는 y≈Lλ/d=1×0.30=0.30 m이므로 0.12 m라는 ㄷ은 틀리다. 정답은 ②이다."
+        "회절격자의 주극대 조건은 인접 슬릿 경로차 $d\\,\\sin \\theta = m\\lambda $인 정수배 조건이다. 반정수배라는 ㄱ은 틀리다.",
+        "$|m|\\leq \\frac{d}{\\lambda }= \\frac{10}{3}$이므로 $m= -3, -2, -1, 0, 1, 2, 3$의 7개 주극대가 가능하다. ㄴ은 옳다. 작은 각 근사로 첫 극대 거리는 $y\\approx \\frac{L\\lambda }{d}= 1\\times 0.30= 0.30\\,\\mathrm{m}$이므로 $0.12\\,\\mathrm{m}$라는 ㄷ은 틀리다. 정답은 ②이다."
       ],
       "formula": [
-        "d sinθ=mλ",
-        "m=0,±1,±2,±3",
-        "y1≈0.30 m"
+        "$d\\,\\sin \\theta = m\\lambda $",
+        "$m= 0, \\pm 1, \\pm 2, \\pm 3$",
+        "$y_{1}\\approx 0.30\\,\\mathrm{m}$"
       ]
     },
     {
@@ -318,13 +318,13 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "v=0.8c일 때 길이수축 인자는 √(1-v²/c²)=0.6이다. 사다리계에서 움직이는 터널 길이는 8×0.6=4.8 m로 4 m가 아니므로 ㄱ은 틀리다.",
-        "터널계에서는 사다리가 10×0.6=6 m로 수축하여 8 m 터널 안에 완전히 들어가는 순간이 존재한다. ㄴ은 옳다. 사다리계에서는 길이 10 m인 사다리와 길이 4.8 m인 터널을 같은 시각에 비교하므로 완전히 들어가는 순간이 없다.",
+        "$v= 0.8c$일 때 길이수축 인자는 $\\sqrt{1- \\frac{v^{2}}{c^{2}}}= 0.6$이다. 사다리계에서 움직이는 터널 길이는 $8\\times 0.6= 4.8\\,\\mathrm{m}$로 $4\\,\\mathrm{m}$가 아니므로 ㄱ은 틀리다.",
+        "터널계에서는 사다리가 $10\\times 0.6= 6\\,\\mathrm{m}$로 수축하여 $8\\,\\mathrm{m}$ 터널 안에 완전히 들어가는 순간이 존재한다. ㄴ은 옳다. 사다리계에서는 길이 $10\\,\\mathrm{m}$인 사다리와 길이 $4.8\\,\\mathrm{m}$인 터널을 같은 시각에 비교하므로 완전히 들어가는 순간이 없다.",
         "두 끝이 터널 안에 있다는 동시성 조건은 관성계에 따라 달라진다. 물리 법칙의 동일성이 동시성의 동일성을 뜻하지 않으므로 ㄷ은 틀리고 정답은 ②이다."
       ],
       "formula": [
-        "L_tunnel_in_ladder_frame=4.8 m",
-        "L_ladder_in_tunnel_frame=6 m"
+        "사다리 기준계에서의 터널 길이: $L=4.8\\,\\mathrm{m}$",
+        "터널 기준계에서의 사다리 길이: $L=6\\,\\mathrm{m}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1c_KO.pdf",
@@ -342,12 +342,12 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "분자 한 개의 평균 병진에너지는 3kBT/2이므로 vrms=√(3kBT/m)이다. 같은 온도에서 질량 m 분자의 RMS 속력은 질량 2m 분자의 √2배여서 ㄱ이 옳다.",
-        "압력은 P=NkBT/V이므로 두 기체의 압력은 같다. ㄴ은 틀리다. 온도가 두 배가 되면 RMS 속력은 √2배로 증가하므로 ㄷ도 틀리다. 정답은 ①이다."
+        "분자 한 개의 평균 병진에너지는 $\\frac{3k_{B}T}{2}$이므로 $v_{\\mathrm{rms}}= \\sqrt{\\frac{3k_{B}T}{m}}$이다. 같은 온도에서 질량 $m$ 분자의 $\\mathrm{RMS}$ 속력은 질량 $2m$ 분자의 $\\sqrt{2}$배여서 ㄱ이 옳다.",
+        "압력은 $P= \\frac{Nk_{B}T}{V}$이므로 두 기체의 압력은 같다. ㄴ은 틀리다. 온도가 두 배가 되면 $\\mathrm{RMS}$ 속력은 $\\sqrt{2}$배로 증가하므로 ㄷ도 틀리다. 정답은 ①이다."
       ],
       "formula": [
-        "vrms=√(3kBT/m)",
-        "P=NkBT/V"
+        "$v_{\\mathrm{rms}}= \\sqrt{\\frac{3k_{B}T}{m}}$",
+        "$P= \\frac{Nk_{B}T}{V}$"
       ]
     },
     {
@@ -355,14 +355,14 @@
       "answer": 3,
       "status": "verified",
       "explanation": [
-        "가역 단열 과정 A에서는 엔트로피가 일정하지만 비가역 단열 과정 B에서는 엔트로피가 생성된다. 따라서 단열이면 항상 엔트로피가 일정하다는 ㄱ은 틀리다.",
-        "A의 최종 압력은 P1·2^(CP/CV)이다. B는 같은 최종 부피에서 엔트로피가 더 커서 최종 온도와 압력이 A보다 높다. 가역 단열식으로 B의 압력을 구한 ㄴ은 틀리다.",
-        "두 과정 모두 Q=0이므로 기체에 한 일은 내부에너지 증가량 CV(T2-T1)이다. B의 최종 온도가 더 높으므로 B에서 더 많은 일이 필요하다. ㄷ만 옳고 정답은 ③이다."
+        "가역 단열 과정 $A$에서는 엔트로피가 일정하지만 비가역 단열 과정 $B$에서는 엔트로피가 생성된다. 따라서 단열이면 항상 엔트로피가 일정하다는 ㄱ은 틀리다.",
+        "$A$의 최종 압력은 $P_{1}\\cdot 2^{\\frac{C_{P}}{C_{V}}}$이다. $B$는 같은 최종 부피에서 엔트로피가 더 커서 최종 온도와 압력이 $A$보다 높다. 가역 단열식으로 $B$의 압력을 구한 ㄴ은 틀리다.",
+        "두 과정 모두 $Q= 0$이므로 기체에 한 일은 내부에너지 증가량 $C_{V}\\left(T_{2}- T_{1}\\right)$이다. $B$의 최종 온도가 더 높으므로 $B$에서 더 많은 일이 필요하다. ㄷ만 옳고 정답은 ③이다."
       ],
       "formula": [
-        "ΔS_B>0=ΔS_A",
-        "T2B>T2A",
-        "W_on,B>W_on,A"
+        "$\\Delta S_{B}> 0= \\Delta S_{A}$",
+        "$T_{2}B> T_{2}A$",
+        "$W_{o}n, B> W_{o}n, A$"
       ]
     },
     {
@@ -370,14 +370,14 @@
       "answer": 5,
       "status": "verified",
       "explanation": [
-        "에너지 보존에서 고열원으로 방출하는 열은 QH=QL+W=500+400=900 J이다. 따라서 ㄱ은 틀리다.",
-        "한 주기 후 냉동기 자체 엔트로피는 원래대로이고 두 열원의 엔트로피 변화는 900/300-500/250=1 J/K이다. ㄴ은 옳다.",
-        "카르노 냉동기의 최대 성능계수는 TL/(TH-TL)=250/(300-250)=5이다. ㄷ도 옳으므로 정답은 ⑤이다."
+        "에너지 보존에서 고열원으로 방출하는 열은 $Q_H= Q_L+ W= 500+ 400= 900\\,\\mathrm{J}$이다. 따라서 ㄱ은 틀리다.",
+        "한 주기 후 냉동기 자체 엔트로피는 원래대로이고 두 열원의 엔트로피 변화는 $\\frac{900}{300}- \\frac{500}{250}= 1\\,\\mathrm{J/K}$이다. ㄴ은 옳다.",
+        "카르노 냉동기의 최대 성능계수는 $\\frac{T_L}{\\left(T_H- T_L\\right)}= \\frac{250}{\\left(300- 250\\right)}= 5$이다. ㄷ도 옳으므로 정답은 ⑤이다."
       ],
       "formula": [
-        "QH=900 J",
-        "ΔS_total=1 J/K",
-        "COP_Carnot=5"
+        "$Q_H= 900\\,\\mathrm{J}$",
+        "$\\Delta S_{\\mathrm{total}}= 1\\,\\mathrm{J/K}$",
+        "$\\mathrm{COP}_{\\mathrm{Carnot}}= 5$"
       ]
     }
   ],
@@ -387,13 +387,13 @@
       "answer": 4,
       "status": "verified",
       "explanation": [
-        "해밀토니안은 H=mR²θdot²/2+Ueff이고 Ueff=-(mR²Ω²/2)sin²θ-mgR cosθ이다. Ueff는 최상점 θ=π에서 최댓값 mgR을 가지므로 H>mgR이면 최상점을 통과할 수 있다. ㄱ은 옳다.",
-        "최하점의 Ueff''(0)=mR(g-RΩ²)이다. Ω=√(2g/R)이면 음수여서 불안정하므로 ㄴ은 틀리다.",
-        "Ω²R>g이면 cosθ0=g/(RΩ²)를 만족하는 평형점들이 있고 그곳에서 Ueff''=mR²Ω² sin²θ0>0이다. 따라서 주어진 더 강한 조건에서도 ㄷ은 옳다. 정답은 ④이다."
+        "해밀토니안은 $H= \\frac{mR^{2}\\dot{\\theta }^{2}}{2}+ U_{\\mathrm{eff}}$이고 $U_{\\mathrm{eff}}= -\\left(\\frac{mR^{2}\\Omega ^{2}}{2}\\right)\\sin ^{2}\\theta - mgR\\,\\cos \\theta $이다. $U_{\\mathrm{eff}}$는 최상점 $\\theta = \\pi $에서 최댓값 $mgR$을 가지므로 $H> mgR$이면 최상점을 통과할 수 있다. ㄱ은 옳다.",
+        "최하점의 $U_{\\mathrm{eff}}^{\\prime\\prime}\\left(0\\right)= mR\\left(g- R\\Omega ^{2}\\right)$이다. $\\Omega = \\sqrt{\\frac{2g}{R}}$이면 음수여서 불안정하므로 ㄴ은 틀리다.",
+        "$\\Omega ^{2}R> g$이면 $\\cos \\theta _{0}= \\frac{g}{\\left(R\\Omega ^{2}\\right)}$를 만족하는 평형점들이 있고 그곳에서 $U_{\\mathrm{eff}}^{\\prime\\prime}= mR^{2}\\Omega ^{2}\\,\\sin ^{2}\\theta _{0}> 0$이다. 따라서 주어진 더 강한 조건에서도 ㄷ은 옳다. 정답은 ④이다."
       ],
       "formula": [
-        "Ueff=-(mR²Ω²/2)sin²θ-mgR cosθ",
-        "Ueff''(0)=mR(g-RΩ²)"
+        "$U_{\\mathrm{eff}}= -\\left(\\frac{mR^{2}\\Omega ^{2}}{2}\\right)\\sin ^{2}\\theta - mgR\\,\\cos \\theta $",
+        "$U_{\\mathrm{eff}}^{\\prime\\prime}\\left(0\\right)= mR\\left(g- R\\Omega ^{2}\\right)$"
       ],
       "figure": {
         "source": "KPhE_2026_T1d_KO.pdf",
@@ -411,13 +411,13 @@
       "answer": 4,
       "status": "verified",
       "explanation": [
-        "c=cosθ라 놓고 Ω²R=3g를 대입하면 Ueff/(mgR)=(3/2)c²-c-3/2이다. c=1/3에서 최솟값 -5/3을 가지므로 가능한 에너지의 하한은 a=-(5/3)mgR이다.",
-        "θ=0의 유효퍼텐셜은 -mgR이다. 이 장벽에 못 미치는 H<-mgR인 운동은 최하점에 도달하지 못한다. 따라서 b=-mgR이고 (b-a)/(mgR)=2/3이다. 정답은 ④이다."
+        "$c= \\cos \\theta $라 놓고 $\\Omega ^{2}R= 3g$를 대입하면 $\\frac{U_{\\mathrm{eff}}}{\\left(mgR\\right)}= \\left(\\frac{3}{2}\\right)c^{2}- c- \\frac{3}{2}$이다. $c= \\frac{1}{3}$에서 최솟값 $\\frac{-5}{3}$을 가지므로 가능한 에너지의 하한은 $a= -\\left(\\frac{5}{3}\\right)mgR$이다.",
+        "$\\theta = 0$의 유효퍼텐셜은 $-mgR$이다. 이 장벽에 못 미치는 $H< -mgR$인 운동은 최하점에 도달하지 못한다. 따라서 $b= -mgR$이고 $\\frac{\\left(b- a\\right)}{\\left(mgR\\right)}= \\frac{2}{3}$이다. 정답은 ④이다."
       ],
       "formula": [
-        "a=-(5/3)mgR",
-        "b=-mgR",
-        "(b-a)/(mgR)=2/3"
+        "$a= -\\left(\\frac{5}{3}\\right)mgR$",
+        "$b= -mgR$",
+        "$\\frac{\\left(b- a\\right)}{\\left(mgR\\right)}= \\frac{2}{3}$"
       ],
       "figure": {
         "source": "KPhE_2026_T1d_KO.pdf",
@@ -435,12 +435,12 @@
       "answer": 3,
       "status": "verified",
       "explanation": [
-        "별 표면에 간신히 닿는 궤도의 최근접점은 r=R이고 이 점의 속도는 접선 방향이다. 에너지 보존에서 vR²=v∞²+2GM/R=3GM/R이다.",
-        "각운동량 보존 bv∞=RvR에서 bmax²=R²(vR²/v∞²)=3R²이다. 따라서 α²=3이며 정답은 ③이다."
+        "별 표면에 간신히 닿는 궤도의 최근접점은 $r= R$이고 이 점의 속도는 접선 방향이다. 에너지 보존에서 $v_{R}^{2}= v_{\\infty }^{2}+ \\frac{2GM}{R}= \\frac{3GM}{R}$이다.",
+        "각운동량 보존 $bv_{\\infty }= Rv_{R}$에서 $b_{\\mathrm{max}}^{2}= R^{2}\\left(\\frac{v_{R}^{2}}{v_{\\infty }^{2}}\\right)= 3R^{2}$이다. 따라서 $\\alpha ^{2}= 3$이며 정답은 ③이다."
       ],
       "formula": [
-        "vR²=3GM/R",
-        "bmax²=3R²"
+        "$v_{R}^{2}= \\frac{3GM}{R}$",
+        "$b_{\\mathrm{max}}^{2}= 3R^{2}$"
       ]
     },
     {
@@ -448,14 +448,14 @@
       "answer": 4,
       "status": "verified",
       "explanation": [
-        "최근접점 rp에서 에너지와 각운동량 보존을 결합하면 b²=rp²+2Rrp이다. b=2√2R을 대입하면 rp=2R이다.",
-        "감속 직후 속력은 (√3/2)v∞이므로 단위질량당 에너지는 ε'=3GM/(8R)-GM/(2R)=-GM/(8R)이다. 타원궤도 관계 ε'=-GM/(2a)에서 장반경 a=4R이다.",
-        "케플러 제3법칙에서 T=2π√(a³/(GM))=16π√(R³/(GM))이다. 주어진 식과 비교하면 β=4, 정답은 ④이다."
+        "최근접점 $r_{p}$에서 에너지와 각운동량 보존을 결합하면 $b^{2}= r_{p}^{2}+ 2Rr_{p}$이다. $b= 2\\sqrt{2}\\,R$을 대입하면 $r_{p}= 2R$이다.",
+        "감속 직후 속력은 $\\left(\\frac{\\sqrt{3}}{2}\\right)v_{\\infty }$이므로 단위질량당 에너지는 $\\epsilon ^{\\prime}= \\frac{3GM}{\\left(8R\\right)}- \\frac{GM}{\\left(2R\\right)}= \\frac{-GM}{\\left(8R\\right)}$이다. 타원궤도 관계 $\\epsilon ^{\\prime}= \\frac{-GM}{\\left(2a\\right)}$에서 장반경 $a= 4R$이다.",
+        "케플러 제3법칙에서 $T= 2\\pi \\sqrt{\\frac{a^{3}}{\\left(GM\\right)}}= 16\\pi \\sqrt{\\frac{R^{3}}{\\left(GM\\right)}}$이다. 주어진 식과 비교하면 $\\beta = 4$, 정답은 ④이다."
       ],
       "formula": [
-        "rp=2R",
-        "a=4R",
-        "T=16π√(R³/(GM))"
+        "$r_{p}= 2R$",
+        "$a= 4R$",
+        "$T= 16\\pi \\sqrt{\\frac{R^{3}}{\\left(GM\\right)}}$"
       ]
     },
     {
@@ -469,12 +469,12 @@
       "official_correction_url": "https://kphe.kps.or.kr/notice/notice_detail/355",
       "explanation": [
         "이 문항은 방향 조건이 누락된 오류가 있어 학회가 ②와 ③을 복수정답으로 처리했다. 따라서 원래 정답표의 ③만으로 채점하면 안 된다.",
-        "균일하게 대전된 회전 구껍질의 자기쌍극자 모멘트는 μ=QωR²/3이다. 외부 자기장 크기는 B=μ0μ/(4πX³)·√(1+3cos²θ)이며 θ는 회전축과 관측점 방향 사이 각도이다.",
-        "문제의 정규화된 값은 √(1+3cos²θ)로 적도면에서는 1(②), 회전축 위에서는 2(③)이다. r=X라는 거리 조건만으로는 방향을 정할 수 없다는 점이 오류의 원인이다."
+        "균일하게 대전된 회전 구껍질의 자기쌍극자 모멘트는 $\\mu=\\frac{Q\\omega R^2}{3}$이다. 외부 자기장 크기는 $B=\\frac{\\mu_0\\mu}{4\\pi X^3}\\cdot\\sqrt{1+3\\cos^2\\theta}$이며 $\\theta$는 회전축과 관측점 방향 사이 각도이다.",
+        "문제의 정규화된 값은 $\\sqrt{1+3\\cos^2\\theta}$로 적도면에서는 $1$(②), 회전축 위에서는 $2$(③)이다. $r=X$라는 거리 조건만으로는 방향을 정할 수 없다는 점이 오류의 원인이다."
       ],
       "formula": [
-        "μ=QωR²/3",
-        "12πX³B/(μ0QR²ω)=√(1+3cos²θ)"
+        "$\\mu = \\frac{Q\\omega R^{2}}{3}$",
+        "$\\frac{12\\pi X^{3}B}{\\left(\\mu _{0}QR^{2}\\omega \\right)}= \\sqrt{1+ 3\\cos ^{2}\\theta }$"
       ]
     },
     {
@@ -482,12 +482,12 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "위도 θ의 좁은 고리 전하를 dq라 하면 회전 주기는 2π/ω, 고리 전류는 dq·ω/(2π), 면적은 πR²sin²θ이다. 이를 적분하면 자기쌍극자 모멘트 μ=QωR²/3을 얻는다.",
-        "μ는 +z방향이고 외부 자기장은 +x방향으로 서로 수직이다. 따라서 돌림힘 크기는 τ=μB0=QωR²B0/3이다. 30τ/(QRωB0)=10R이므로 정답은 ②이다."
+        "위도 $\\theta $의 좁은 고리 전하를 $dq$라 하면 회전 주기는 $\\frac{2\\pi }{\\omega }$, 고리 전류는 $\\frac{dq\\cdot \\omega }{\\left(2\\pi \\right)}$, 면적은 $\\pi R^{2}\\sin ^{2}\\theta $이다. 이를 적분하면 자기쌍극자 모멘트 $\\mu = \\frac{Q\\omega R^{2}}{3}$을 얻는다.",
+        "$\\mu $는 $+z$방향이고 외부 자기장은 $+x$방향으로 서로 수직이다. 따라서 돌림힘 크기는 $\\tau = \\mu B_{0}= \\frac{Q\\omega R^{2}B_{0}}{3}$이다. $\\frac{30\\tau }{\\left(QR\\omega B_{0}\\right)}= 10R$이므로 정답은 ②이다."
       ],
       "formula": [
-        "μ=(ω/2)∫R²sin²θ dq=QωR²/3",
-        "30τ/(QRωB0)=10R"
+        "$\\mu = \\left(\\frac{\\omega }{2}\\right)\\int R^{2}\\sin ^{2}\\theta \\,dq= \\frac{Q\\omega R^{2}}{3}$",
+        "$\\frac{30\\tau }{\\left(QR\\omega B_{0}\\right)}= 10R$"
       ]
     },
     {
@@ -495,13 +495,13 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "평면대칭으로 전기장은 z에만 의존하며 z방향이다. 판 전체의 단위면적 전하량은 σ=∫0^a ρ0z/a dz=ρ0a/2이다. 외부 전기장은 위쪽 +σ/(2ε0), 아래쪽 -σ/(2ε0)여서 두 외부점의 전기장이 상쇄된다.",
-        "내부 전기장은 E(z)=-ρ0a/(4ε0)+∫0^z ρ0s/(aε0) ds=ρ0z²/(2aε0)-ρ0a/(4ε0)이다. z=a/2에서는 -ρ0a/(8ε0)이다.",
-        "따라서 4ε0 Es·z방향/(ρ0a)=-1/2이며 정답은 ②이다."
+        "평면대칭으로 전기장은 $z$에만 의존하며 $z$방향이다. 판 전체의 단위면적 전하량은 $\\sigma=\\int_0^a\\frac{\\rho_0 z}{a}\\,\\mathrm{d}z=\\frac{\\rho_0 a}{2}$이다. 외부 전기장은 위쪽 $+\\sigma/(2\\epsilon_0)$, 아래쪽 $-\\sigma/(2\\epsilon_0)$여서 두 외부점의 전기장이 상쇄된다.",
+        "내부 전기장은 $E(z)=-\\frac{\\rho_0a}{4\\epsilon_0}+\\int_0^z\\frac{\\rho_0s}{a\\epsilon_0}\\,\\mathrm{d}s=\\frac{\\rho_0z^2}{2a\\epsilon_0}-\\frac{\\rho_0a}{4\\epsilon_0}$이다. $z=a/2$에서는 $-\\rho_0a/(8\\epsilon_0)$이다.",
+        "따라서 $\\frac{4\\epsilon_0}{\\rho_0a}\\vec E_s\\cdot\\hat z=-\\frac{1}{2}$이며 정답은 ②이다."
       ],
       "formula": [
-        "E(z)=ρ0z²/(2aε0)-ρ0a/(4ε0)",
-        "4ε0 Es,z/(ρ0a)=-1/2"
+        "$E\\left(z\\right)= \\frac{\\rho _{0}z^{2}}{\\left(2a\\epsilon _{0}\\right)}- \\frac{\\rho _{0}a}{\\left(4\\epsilon _{0}\\right)}$",
+        "$\\frac{4\\epsilon_0}{\\rho_0a}\\vec E_s\\cdot\\hat z=-\\frac{1}{2}$"
       ]
     },
     {
@@ -509,12 +509,12 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "전기장 E(z)=ρ0z²/(2aε0)-ρ0a/(4ε0)을 이용한다. E(0)=-ρ0a/(4ε0), E(a)=+ρ0a/(4ε0)이므로 에너지밀도 u=ε0E²/2는 두 표면에서 같다. ㄱ은 옳다.",
-        "z=a/2에서는 E=-ρ0a/(8ε0)로 0이 아니므로 ㄴ은 틀리다. 전위차는 V(a)-V(0)=-∫0^a E(z)dz=ρ0a²/(12ε0)이다. 1/4라는 ㄷ도 틀리다. 정답은 ①이다."
+        "전기장 $E\\left(z\\right)= \\frac{\\rho _{0}z^{2}}{\\left(2a\\epsilon _{0}\\right)}- \\frac{\\rho _{0}a}{\\left(4\\epsilon _{0}\\right)}$을 이용한다. $E\\left(0\\right)= \\frac{-\\rho _{0}a}{\\left(4\\epsilon _{0}\\right)}, E\\left(a\\right)= \\frac{+\\rho _{0}a}{\\left(4\\epsilon _{0}\\right)}$이므로 에너지밀도 $u= \\frac{\\epsilon _{0}E^{2}}{2}$는 두 표면에서 같다. ㄱ은 옳다.",
+        "$z= \\frac{a}{2}$에서는 $E= \\frac{-\\rho _{0}a}{\\left(8\\epsilon _{0}\\right)}$로 $0$이 아니므로 ㄴ은 틀리다. 전위차는 $V\\left(a\\right)- V\\left(0\\right)= -\\int _{0}^{a}\\,E\\left(z\\right)dz= \\frac{\\rho _{0}a^{2}}{\\left(12\\epsilon _{0}\\right)}$이다. $\\frac{1}{4}$라는 ㄷ도 틀리다. 정답은 ①이다."
       ],
       "formula": [
-        "u=ε0E²/2",
-        "V(a)=ρ0a²/(12ε0)"
+        "$u= \\frac{\\epsilon _{0}E^{2}}{2}$",
+        "$V\\left(a\\right)= \\frac{\\rho _{0}a^{2}}{\\left(12\\epsilon _{0}\\right)}$"
       ]
     },
     {
@@ -522,12 +522,12 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "기저상태는 각운동량 l=0인 구대칭 상태이다. u(r)=rψ(r)에 대한 방정식은 0<r<a의 1차원 자유입자 방정식이며, 원점의 정칙성과 벽의 경계조건으로 u(0)=u(a)=0이다.",
-        "따라서 가장 작은 파수는 k=π/a이고 E1=ħ²π²/(2ma²)이다. α=1/2이므로 정답은 ②이다."
+        "기저상태는 각운동량 $l= 0$인 구대칭 상태이다. $u\\left(r\\right)= r\\psi \\left(r\\right)$에 대한 방정식은 $0< r< a$의 1차원 자유입자 방정식이며, 원점의 정칙성과 벽의 경계조건으로 $u\\left(0\\right)= u\\left(a\\right)= 0$이다.",
+        "따라서 가장 작은 파수는 $k= \\frac{\\pi }{a}$이고 $E_{1}= \\frac{\\hbar ^{2}\\pi ^{2}}{\\left(2ma^{2}\\right)}$이다. $\\alpha = \\frac{1}{2}$이므로 정답은 ②이다."
       ],
       "formula": [
-        "u(r)∝sin(πr/a)",
-        "E1=ħ²π²/(2ma²)"
+        "$u\\left(r\\right)\\propto \\sin \\left(\\frac{\\pi r}{a}\\right)$",
+        "$E_{1}= \\frac{\\hbar ^{2}\\pi ^{2}}{\\left(2ma^{2}\\right)}$"
       ]
     },
     {
@@ -535,11 +535,11 @@
       "answer": 2,
       "status": "verified",
       "explanation": [
-        "비섭동 기저상태의 정규화된 방사확률밀도는 |u(r)|²=(2/a)sin²(πr/a)이다. 1차 섭동에너지는 ΔE=V0∫0^(a/2)|u(r)|²dr이다.",
-        "sin²(πr/a)는 r=a/2를 중심으로 대칭이고 전체 적분이 1이므로 절반 구간의 확률은 1/2이다. 따라서 ΔE=V0/2이고 |β|=1/2, 정답은 ②이다."
+        "비섭동 기저상태의 정규화된 방사확률밀도는 $|u\\left(r\\right)|^{2}= \\left(\\frac{2}{a}\\right)\\sin ^{2}\\left(\\frac{\\pi r}{a}\\right)$이다. $1$차 섭동에너지는 $\\Delta E= V_{0}\\int_{0}^{a/2}|u\\left(r\\right)|^{2}dr$이다.",
+        "$\\sin ^{2}\\left(\\frac{\\pi r}{a}\\right)$는 $r= \\frac{a}{2}$를 중심으로 대칭이고 전체 적분이 $1$이므로 절반 구간의 확률은 $\\frac{1}{2}$이다. 따라서 $\\Delta E= \\frac{V_{0}}{2}$이고 $|\\beta |= \\frac{1}{2}$, 정답은 ②이다."
       ],
       "formula": [
-        "β=(2/a)∫0^(a/2)sin²(πr/a)dr=1/2"
+        "$\\beta = \\left(\\frac{2}{a}\\right)\\int_{0}^{a/2}\\sin ^{2}\\left(\\frac{\\pi r}{a}\\right)dr= \\frac{1}{2}$"
       ]
     },
     {
@@ -547,12 +547,12 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "열역학 항등식 (∂U/∂V)T=T(∂P/∂T)V-P를 사용한다. 상태방정식 P=RT/V-a/V²에서 (∂P/∂T)V=R/V이다.",
-        "따라서 (∂U/∂V)T=RT/V-(RT/V-a/V²)=a/V²이다. α=1, β=0이므로 정답은 ①이다. 정적 열용량까지 적분하면 U=(3/2)RT-a/V+상수이다."
+        "열역학 항등식 $\\left(\\frac{\\partial U}{\\partial V}\\right)_{T}= T\\left(\\frac{\\partial P}{\\partial T}\\right)_{V}- P$를 사용한다. 상태방정식 $P= \\frac{RT}{V}- \\frac{a}{V^{2}}$에서 $\\left(\\frac{\\partial P}{\\partial T}\\right)_{V}= \\frac{R}{V}$이다.",
+        "따라서 $\\left(\\frac{\\partial U}{\\partial V}\\right)_{T}= \\frac{RT}{V}- \\left(\\frac{RT}{V}- \\frac{a}{V^{2}}\\right)= \\frac{a}{V^{2}}$이다. $\\alpha = 1, \\beta = 0$이므로 정답은 ①이다. 정적 열용량까지 적분하면 $U= \\left(\\frac{3}{2}\\right)RT- \\frac{a}{V}+ $상수이다."
       ],
       "formula": [
-        "(∂U/∂V)T=a/V²",
-        "U=(3/2)RT-a/V+constant"
+        "$\\left(\\frac{\\partial U}{\\partial V}\\right)_{T}= \\frac{a}{V^{2}}$",
+        "$U= \\left(\\frac{3}{2}\\right)RT- \\frac{a}{V}+ \\mathrm{const}$"
       ]
     },
     {
@@ -560,13 +560,13 @@
       "answer": 1,
       "status": "verified",
       "explanation": [
-        "등압 조건 P1=RT1/V1-a/V1²=RT2/(2V1)-a/(4V1²)에서 T2=2T1-3a/(2RV1)이다.",
-        "U=(3/2)RT-a/V를 이용하면 ΔU=(3/2)RT1-7a/(4V1)이다. 기체가 한 일은 W=P1(V2-V1)=P1V1=RT1-a/V1이다.",
-        "제1법칙에서 Q=ΔU+W=(5/2)RT1-11a/(4V1)이다. (α,β)=(5/2,-11/4)이므로 정답은 ①이다."
+        "등압 조건 $P_{1}= \\frac{RT_{1}}{V_{1}}- \\frac{a}{V_{1}^{2}}= \\frac{RT_{2}}{\\left(2V_{1}\\right)}- \\frac{a}{\\left(4V_{1}^{2}\\right)}$에서 $T_{2}= 2T_{1}- \\frac{3a}{\\left(2RV_{1}\\right)}$이다.",
+        "$U= \\left(\\frac{3}{2}\\right)RT- \\frac{a}{V}$를 이용하면 $\\Delta U= \\left(\\frac{3}{2}\\right)RT_{1}- \\frac{7a}{\\left(4V_{1}\\right)}$이다. 기체가 한 일은 $W= P_{1}\\left(V_{2}- V_{1}\\right)= P_{1}V_{1}= RT_{1}- \\frac{a}{V_{1}}$이다.",
+        "제1법칙에서 $Q= \\Delta U+ W= \\left(\\frac{5}{2}\\right)RT_{1}- \\frac{11a}{\\left(4V_{1}\\right)}$이다. $\\left(\\alpha , \\beta \\right)= \\left(\\frac{5}{2}, \\frac{-11}{4}\\right)$이므로 정답은 ①이다."
       ],
       "formula": [
-        "T2=2T1-3a/(2RV1)",
-        "Q=(5/2)RT1-11a/(4V1)"
+        "$T_{2}= 2T_{1}- \\frac{3a}{\\left(2RV_{1}\\right)}$",
+        "$Q= \\left(\\frac{5}{2}\\right)RT_{1}- \\frac{11a}{\\left(4V_{1}\\right)}$"
       ]
     }
   ]
