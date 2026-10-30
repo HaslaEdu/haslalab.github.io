@@ -69,7 +69,10 @@ show run 1
 export run 1 format csv
 
 # 관 길이를 바꾸어 손실 계수를 분리
+probe clear
 set pipe length 40
+probe add pressure crest unit kPa_abs
+probe add pressure valve unit kPa_abs
 prime
 run duration 6 sample 0.001</pre>
 <div><p><code>help</code>에서 조작 범위와 센서 분해능을 알려 주고, <code>set</code>으로 장치를 조절한다. <code>prime</code>은 기포 없는 초기 정상류를 다시 준비한다. <code>run</code>의 출력은 측정값과 실험 ID이며 숨은 매개변수는 반환하지 않는다.</p>
