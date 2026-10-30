@@ -32,7 +32,7 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
-  if (item.audit_schema === 'cpho-native-problems') {
+  if (['cpho-native-problems', 'cpho-native-raster-problems'].includes(item.audit_schema)) {
     assert.equal(qa.sha256, item.sha256);
     assert.equal(qa.passed, true);
     assert.equal(qa.pages.length, item.pages);
@@ -43,6 +43,25 @@ for (const item of published) {
       for (const key of ['changed_pixels_in_native_glyph_neighborhood', 'changed_pixels_outside_prose', 'unexpected_nul']) assert.equal(page[key], 0);
       assert.equal(page.original_images_identical, true);
       assert.equal(page.original_font_programs_identical, true);
+    }
+    if (item.audit_schema === 'cpho-native-raster-problems') {
+      for (const page of qa.pages) {
+        assert.equal(page.unexplained_original_image_pixel_changes, 0);
+        assert.equal(page.original_image_pixels_changed_outside_caption_text, page.inherited_footer_prose_at_image_antialias_edge);
+        assert.ok(page.caption_number_pixels_changed.every(x => x.changed_pixels === 0));
+        assert.deepEqual(page.translation_style_violations, []);
+        assert.ok(page.translation_baseline_max_delta_pt < 0.0001);
+        assert.ok(page.translation_size_max_delta_pt < 0.0001);
+      }
+      if (item.language === 'ko') {
+        assert.deepEqual(qa.hangul_visibility.unexpected_components, []);
+        assert.equal(qa.hangul_visibility.flagged_components, qa.hangul_visibility.inherited_source_footer_occlusion.length);
+        assert.ok(qa.hangul_visibility.inherited_source_footer_occlusion.every(x => x.page === 2 && x.rect[1] > 750));
+      }
+      const poppler = read(item.poppler_qa).filter(row => row.lang === item.language.toUpperCase());
+      assert.equal(poppler.length, item.pages);
+      assert.ok(poppler.every(row => row.outside_prose_changed_pixels === 0));
+      continue;
     }
     if (item.language === 'ko') assert.equal(qa.hangul_visibility.flagged_components, 0);
     const poppler = read(item.poppler_qa).filter(row => row.lang === item.language.toUpperCase());
