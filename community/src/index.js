@@ -1646,8 +1646,8 @@ const GRADE_SCHEMA = { type: "object", properties: {
     id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
     checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" },
-    rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: N({ type: "string" }),
-  }, required: ["id", "found", "page", "score", "rules", "note"] } },
+    rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" },
+  }, required: ["id", "found", "page", "score", "rules", "note", "quote"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
   review: { type: "object", properties: {
     summary: { type: "string" },
@@ -2019,7 +2019,7 @@ function labScore(scheme, raw, pages) {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
       /* R13: a step earns marks only where it is written; the grader's quote of it must be on the page it cites */
-      if (it.role === "step" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))) return zero("R13");
+      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))) return zero("R13");
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
     if (nmin && (it.type === "graph" || it.type === "table") && !(it.checks || []).some(c => c.check === "points_min" || c.check === "rows_min")) {
