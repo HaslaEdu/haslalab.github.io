@@ -189,6 +189,7 @@
   </aside>
 </div>
 
+<script src="apho2023-wiring.js"></script>
 <script>
 "use strict";
 
@@ -207,6 +208,19 @@ const I18N = {
   itBig: ["Steel ball, big (d = 31.75 mm)", "강철 공 · 큰 것 (d = 31.75 mm)"],
   itSmall: ["Steel ball, small (d = 25.42 mm)", "강철 공 · 작은 것 (d = 25.42 mm)"],
   itWire: ["Thin metal wire + toothpick (Part D)", "얇은 금속선 + 이쑤시개 (Part D)"],
+  itBox: ["Control box + 12 V adaptor (on the other bench)", "컨트롤 박스 + 12 V 어댑터 (다른 실험대에 있음)"],
+  wbLeft: ["left wall", "왼쪽 옆면"], wbRight: ["right wall", "오른쪽 옆면"], wbFront: ["front end", "앞면"], wbBack: ["back end", "뒷면"],
+  wbMag: ["magnet holder (coil)", "전자석 홀더 (코일)"], wbLive: ["coil energised", "코일에 전류가 흐름"], wbGate: ["photogate", "광게이트"],
+  wbWallIn: ["12 V adaptor — in the wall", "12 V 어댑터 — 콘센트에 꽂힘"], wbWallOut: ["12 V adaptor — not in the wall", "12 V 어댑터 — 콘센트에서 빠짐"],
+  wbClickWall: ["click: in / out of the socket", "클릭: 콘센트에 꽂기 / 빼기"],
+  wbScopeOn: ["oscilloscope inputs — switched on", "오실로스코프 입력 — 켜짐"], wbScopeOff: ["oscilloscope inputs — switched off", "오실로스코프 입력 — 꺼짐"],
+  wbHang: ["terminals on the two hangers (top of the pendulums)", "두 진자 걸이의 단자 (진자 위쪽)"], wbPend1: ["pendulum 1 (red)", "진자 1 (빨강)"], wbPend2: ["pendulum 2 (black)", "진자 2 (검정)"],
+  wbNoPend: ["no ball hanging", "공이 걸려 있지 않음"], wbWireOn: ["metal wire to the ball fitted", "공에 금속선 연결됨"], wbWireOff: ["no metal wire to the ball", "공에 금속선 없음"],
+  wbAway: ["The control box and its adaptor are on the other bench.", "컨트롤 박스와 어댑터는 다른 실험대에 있습니다."],
+  wbTake: ["Bring them to this bench", "이 실험대로 가져오기"],
+  noMains: ["The oscilloscope's mains cord is not in the wall socket: click its plug behind the scope.", "오실로스코프 전원 코드가 콘센트에 꽂혀 있지 않습니다 — 오실로스코프 뒤의 플러그를 클릭해 벽 콘센트에 꽂으세요."],
+  gripped: ["The magnet holds the ball. Throw the box's ON/OFF lever down to let it go.", "전자석이 공을 붙잡았습니다. 상자의 ON/OFF 레버를 내리면 공이 놓입니다."],
+  handrelease: ["Let go by hand (the magnet is not live: no reading of the first swing is to be trusted).", "손으로 놓았습니다 (전자석에 전류가 없음 — 처음 흔들림은 믿을 수 없습니다)."],
   hWire: ["the contact circuit runs through the balls: fit a thin metal wire to each ball (parts box, then click the ball) and hang the second pendulum.",
           "접촉 회로는 공을 지나야 합니다. 부품함의 얇은 금속선을 각 공에 끼우고(부품함 클릭 후 공 클릭) 두 번째 진자도 거세요."],
   trayTake: ["click to pick up (reusable)", "클릭해서 집기 (여러 번)"],
@@ -214,13 +228,12 @@ const I18N = {
   bs1: ["pendulum 1", "진자 1"], bs2: ["pendulum 2", "진자 2"], bsNone: ["—", "없음"],
   bsBig: ["big ball", "큰 공"], bsSmall: ["small ball", "작은 공"],
   dialhint: ["click a dial, then the mouse wheel", "다이얼 클릭 후 마우스 휠"],
-  vt3d: ["3D bench", "3D 실험대"], vtbench: ["bench, front", "실험대 정면"], vtside: ["pendulum, side", "진자 옆면"], vtscope: ["oscilloscope, front", "오실로스코프 정면"], vtwire: ["cabling", "배선 (접속 상자)"],
-  cap_3d: ["the bench in 3D — drag to turn, right-drag (or Shift+drag) to pan, wheel to zoom / drag the photogate along the rail / click a plug or socket to wire it (the adaptor in the wall socket too) / click the oscilloscope, the junction box or the pendulums to look at them close (R-click: back)",
-           "3D 실험대 — 끌면 회전, 우클릭 끌기(또는 Shift+끌기) 이동, 휠 확대 / 광게이트를 끌어 레일을 따라 이동 / 플러그·소켓을 클릭해 배선 (벽 콘센트의 어댑터도 클릭해 뽑고 꽂기) / 오실로스코프·접속 상자·진자를 클릭하면 가까이 보기 (우클릭: 돌아가기)"],
+  vt3d: ["3D bench", "3D 실험대"], vtbench: ["bench, front", "실험대 정면"], vtside: ["pendulum, side", "진자 옆면"], vtscope: ["oscilloscope, front", "오실로스코프 정면"], vtwire: ["cabling (control box)", "배선 (컨트롤 박스)"],
+  cap_3d: ["the bench in 3D — drag to turn, right-drag (or Shift+drag) to pan, wheel to zoom / drag ball 1 aside: a live magnet takes it, otherwise it swings from there / drag the photogate along the rail / a plug, a socket or the control box opens the wiring board / the plug behind the oscilloscope goes in the wall socket on a click (R-click: back)", "3D 실험대 — 끌면 회전, 우클릭 끌기(또는 Shift+끌기) 이동, 휠 확대 / 공 1을 옆으로 끌면 전자석에 전류가 있을 때 붙고, 없으면 그 자리에서 놓입니다 / 광게이트를 끌어 레일을 따라 이동 / 플러그·소켓·컨트롤 박스를 클릭하면 배선 보드 / 오실로스코프 뒤 전원 플러그를 클릭하면 벽 콘센트에 꽂힘 (우클릭: 돌아가기)"],
   cap_bench: ["the bench face on — read the angle on the protractor screens; wheel: zoom, drag: move / R-click: back to 3D", "실험대 정면 — 각도판의 눈금을 직접 읽습니다. 휠: 확대, 끌기: 이동 / 우클릭: 3D로"],
   cap_side: ["the pendulum from the side — the two wires of each pendulum and the photogate; wheel: zoom, drag: move / R-click: back to 3D", "진자 옆면 — 진자마다 두 가닥 와이어와 광게이트를 옆에서 봅니다. 휠: 확대, 끌기: 이동 / 우클릭: 3D로"],
   cap_scope: ["SIGLENT SDS1202X-E face on — press keys and the soft keys under the screen; turn a dial with the mouse wheel over it (push it: click its centre); wheel elsewhere: zoom, drag: move / R-click: back to 3D", "SIGLENT SDS1202X-E 정면 — 키와 화면 아래 소프트키를 누르고, 다이얼 위에서 마우스 휠로 돌리세요(가운데 클릭은 누르기). 패널 밖 휠: 확대, 끌기: 이동 / 우클릭: 3D로"],
-  cap_wire: ["cabling — click a plug or socket, then the one it goes to; R-click a socket pulls its lead; the red lever is the box's ON/OFF switch / R-click elsewhere: back to 3D", "배선 — 플러그나 소켓을 클릭한 뒤 이을 곳을 클릭, 소켓을 우클릭하면 선이 빠집니다. 빨간 레버가 상자의 ON/OFF 스위치 / 빈 곳 우클릭: 3D로"],
+  cap_wire: ["the control box opened out — drag a plug onto a socket it fits (green rings), drag it off to pull it out; click the levers on the lid / R-click: back to 3D", "펼친 컨트롤 박스 — 플러그를 끌어 맞는 소켓(초록 고리)에 놓으면 꽂히고, 끌어내면 빠집니다. 뚜껑의 레버를 클릭해 켜고 끕니다 / 우클릭: 3D로"],
   tab0: ["Oscilloscope", "오실로스코프"],
   tab1: ["Cabling (junction box)", "배선 (접속 상자)"],
   balls: ["Balls on the hangers", "행어에 매단 공"],
@@ -234,8 +247,8 @@ const I18N = {
   phi: ["pull the ball aside, phi0", "공을 옆으로 당김, phi0"],
   nohint: ["the angle is not printed anywhere: read it off the protractor, as on the bench", "각도는 어디에도 표시되지 않습니다. 실제 실험처럼 각도판에서 직접 읽으세요"],
   holder: ["Electromagnet holder", "전자석 홀더"],
-  coilUp: ["COIL lever: UP - holding, click to release", "COIL 레버: 올림 - 잡고 있음, 누르면 놓습니다"],
-  coilDown: ["COIL lever: DOWN - click to grip the ball", "COIL 레버: 내림 - 누르면 공을 잡습니다"],
+  coilUp: ["Box ON/OFF lever: ON — click to switch off (lets the ball go)", "상자 ON/OFF 레버: ON — 누르면 OFF (공을 놓음)"],
+  coilDown: ["Box ON/OFF lever: OFF — click to switch on (the magnet takes the ball)", "상자 ON/OFF 레버: OFF — 누르면 ON (전자석이 공을 잡음)"],
   stop: ["■ stop the pendulum", "■ 진자 정지"],
   gripOn: ["ATTACHED to the holder", "홀더에 붙어 있음"],
   gripFree: ["hanging free", "자유로이 매달림"],
@@ -946,6 +959,31 @@ const MULTI = new Set(["box_ball"]);
 const key = (a, b) => [a, b].sort().join("|");
 const linked = (a, b) => S.links.has(key(a, b));
 
+/* ---- the leads, plug by plug -----------------------------------
+   Every lead ends in the plug it has on the bench, and each plug is in a socket or lying on the desk:
+   the photogate's and the holder's 3.5 mm plugs, the adaptor's barrel plug, the probe (its BNC, its
+   hook tip and its ground clip), and the ball-wire lead (a banana plug and two clips).  The links the
+   circuit is read from follow from where the plugs are. */
+S.at = {pg: null, mg: null, dc: null, bnc: null, tip: null, pgnd: null, bw: null, bw1: null, bw2: null};
+S.scopeMains = false;              /* the oscilloscope's mains cord, in the wall or lying behind it */
+function rebuildLinks(){
+  const a = S.at; S.links.clear();
+  if (a.pg) S.links.add(key("photogate", a.pg));
+  if (a.mg) S.links.add(key("magnet", a.mg));
+  if (a.dc) S.links.add(key("adaptor", a.dc));
+  /* the probe carries the signal from its tip and its ground from its clip, once its BNC is in */
+  if (a.bnc){ if (a.tip) S.links.add(key(a.tip, a.bnc)); if (a.pgnd) S.links.add(key(a.pgnd, "gnd")); }
+  if (a.bw === "box_ball") for (const c of ["bw1", "bw2"]) if (a[c]) S.links.add(key("box_ball", a[c]));
+}
+/* a plug went in or came out: the circuit is read again, and a coil that lost its current lets go */
+function leadsChanged(){
+  rebuildLinks(); wiringChanged(); syncCoil();
+  if (S.held && !circuit().coil){ S.held = false; document.getElementById("coil").textContent = tr("coilDown"); release(); }
+  drawScope(); drawWire();
+}
+/* one box for both experiments in the exam (sim/apho2023-wiring.js) */
+const SB = SharedBox("E1", (here) => { if (typeof boxAway === "function") boxAway(here); });
+
 /* A live coil is a magnet: it takes the ball as soon as the circuit is
    made, and drops it the moment the circuit is broken.  Nothing else on
    the bench decides this. */
@@ -957,9 +995,10 @@ function syncCoil(){
     btn.textContent = tr("coilUp");
     warn("");
   } else if (!live && S.held){
-    S.held = false;
-    btn.textContent = tr("coilDown");
+    S.held = false;                       /* the field collapses: the ball goes */
+    release();
   }
+  btn.textContent = tr(S.boxOn ? "coilUp" : "coilDown");
 }
 
 function circuit(){
@@ -1014,8 +1053,6 @@ function wireHint(){
 /* ---- release and acquisition ------------------------------------ */
 function release(){
   const c = circuit();
-  if (!c.coil){ warn("no 12 V on the box: plug the adaptor into DC 12V and "
-    + "the holder coil into MAGNET on the cabling page."); return; }
   const b = S.bench;
   b.two = document.getElementById("two").checked;
   b.ball = [+document.getElementById("b1").value,
@@ -1044,12 +1081,7 @@ function release(){
   if (S.run) S.delay = r.recT0 + 0.5 * NX * S.tdiv;
   S.playT = 0; S.playing = true; S.frozen = null;
   S.growing = false;                      /* the tail is grown as it plays */
-  S.faultMsg = {open:"nothing is feeding CH1: check the source lead and the "
-             + "CH1/2 lead on the cabling page.",
-        wrongch:"the lead is in a channel that is switched off: press its channel key.",
-        trigsrc:"the trigger is taken from the other channel: press Auto Setup, or set the source in Trigger Setup.",
-        float:"the ground lead is missing, so the input is floating: what "
-              + "you see is mains pickup and drift, not your signal."}[f] || "";
+  S.faultMsg = f ? tr({open:"hOpen", wrongch:"hWrongch", trigsrc:"hTrigsrc", float:"hFloat"}[f]) : "";
   warn(S.faultMsg);
 }
 function spoil(r){
@@ -1667,148 +1699,147 @@ function state(){
   /* the desktop version is explicit about this: the coil grips ball 1
      and pulls it aside to wherever the holder is, and when it is not
      gripped the ball just hangs straight down */
-  if (!S.held) return {p: [[h[0], -l[0]], [h[1], -l[1]]]};
+  if (!S.held && !S.dragBall) return {p: [[h[0], -l[0]], [h[1], -l[1]]]};
   const th = -(+document.getElementById("phi").value) * Math.PI / 180;
   return {p: [[h[0] + l[0] * Math.sin(th), -l[0] * Math.cos(th)],
               [h[1], -l[1]]]};
 }
 
-/* ---- the cabling page ------------------------------------------- */
-const WW = WIRE_ART.w, WH = WIRE_ART.h;
-const wire = document.getElementById("wire"), wx = fit(wire, WW, WH);
-function bez(a, b, f){ return [a.x + (b.x - a.x) * f,
-  a.y + (b.y - a.y) * f + 24 * Math.sin(Math.PI * f)]; }
-function drawWire(){
-  const c = wx;
-  /* the lever shows where the switch is, whatever is plugged in; the
-     lamp beside it shows whether the coil is actually live */
-  tkPlay(c, WIRE_ART_OFF);        /* the box with a bare base */
-  /* the lever itself, at the desktop program's coordinates */
-  const upx = S.boxOn ? 426 : 398, upy = S.boxOn ? 152 : 204;
-  c.strokeStyle = "#c42030"; c.lineWidth = 9; c.lineCap = "butt";
-  c.beginPath(); c.moveTo(412, 178); c.lineTo(upx, upy); c.stroke();
-  c.beginPath(); c.arc(upx, upy, 6, 0, 6.283);
-  c.fillStyle = "#e04050"; c.fill();
-  c.strokeStyle = "#8a1620"; c.lineWidth = 1; c.stroke();
-  /* the indicator on the face of the box: it lights when the box has
-     its 12 V, which is the adaptor plus the ON/OFF lever */
-  const pw = circuit().powered;
-  c.beginPath(); c.arc(470, 108, 8, 0, 6.283);
-  c.fillStyle = pw ? "#ff3b30" : "#5a1a18"; c.fill();
-  c.strokeStyle = "#7a1218"; c.lineWidth = 2; c.stroke();
-  if (pw){
-    const g = c.createRadialGradient(470, 108, 2, 470, 108, 28);
-    g.addColorStop(0, "rgba(255,60,45,0.55)");
-    g.addColorStop(1, "rgba(255,60,45,0)");
-    c.fillStyle = g;
-    c.beginPath(); c.arc(470, 108, 28, 0, 6.283); c.fill();
-  }
-  /* the holder coil, when it is in circuit, is energised: the lead
-     glows and the magnet on the bench takes the ball */
-  if (circuit().coil){
-    const t = T.magnet;
-    const g2 = c.createRadialGradient(t.x, t.y, 2, t.x, t.y, 22);
-    g2.addColorStop(0, "rgba(160,90,220,0.45)");
-    g2.addColorStop(1, "rgba(160,90,220,0)");
-    c.fillStyle = g2;
-    c.beginPath(); c.arc(t.x, t.y, 22, 0, 6.283); c.fill();
-  }
-  /* the leads and the terminals are live, so they are drawn on top */
-  for (const k of S.links){
-    const [a2, b2] = k.split("|");
-    c.strokeStyle = T[a2].c; c.lineWidth = 3; c.beginPath();
-    for (let i = 0; i <= 26; i++){
-      const [x, y] = bez(T[a2], T[b2], i / 26);
-      i ? c.lineTo(x, y) : c.moveTo(x, y);
-    }
-    c.stroke();
-  }
-  if (S.pick){
-    const d = T[S.pick];
-    c.strokeStyle = d.c; c.lineWidth = 3; c.setLineDash([6, 4]);
-    c.beginPath(); c.moveTo(d.x, d.y); c.lineTo(S.mouse[0], S.mouse[1]);
-    c.stroke(); c.setLineDash([]);
-  }
-  for (const k in T){
-    const d = T[k], used = [...S.links].some(l => l.split("|").includes(k));
-    const r = k === S.pick ? 12 : 9;
-    c.fillStyle = used ? d.c : "#f4f4f0";
-    c.beginPath(); c.arc(d.x, d.y, r, 0, 6.283); c.fill();
-    c.strokeStyle = k === S.pick ? "#e03030" : d.c;
-    c.lineWidth = k === S.pick ? 3 : 2; c.stroke();
-    if (d.lab){ c.fillStyle = "#e6e8ea"; c.font = "bold 12px 'Segoe UI'";
-      c.textAlign = "left"; c.textBaseline = "middle";
-      c.fillText(d.lab, d.x + 16, d.y); }
-  }
-  c.textAlign = "left"; c.textBaseline = "alphabetic";
-}
-
-function termAt(x, y){
-  for (const k in T) if (Math.hypot(x - T[k].x, y - T[k].y) <= 16) return k;
-  return null;
-}
-function leadAt(x, y){
-  for (const k of S.links){
-    const [a, b] = k.split("|");
-    for (let i = 0; i <= 40; i++){
-      const [px, py] = bez(T[a], T[b], i / 40);
-      if (Math.hypot(x - px, y - py) < 8) return k;
-    }
-  }
-  return null;
-}
-wire.addEventListener("mousemove", ev => {
-  const R = wire.getBoundingClientRect();
-  S.mouse = [(ev.clientX - R.left) * WW / R.width,
-             (ev.clientY - R.top) * WH / R.height];
-  if (S.pick) drawWire();
+/* ---- the cabling page: the wiring board (sim/apho2023-wiring.js) -----------------------------
+   The box with its walls folded out, the photogate, the magnet holder and the wall adaptor on the
+   left with their leads, the oscilloscope's CH1 and CH2 and its probe on the right, the posts on
+   the two pendulum hangers and the ball-wire lead below.  Plugs are dragged into the sockets they fit. */
+const WBW = 1200, WBH = 800, WBOX = {x: 560, y: 390, s: 26, L: 5.2};
+const LX0 = WBOX.x - 4.1 * WBOX.s, LY0 = WBOX.y - 8.1 * WBOX.s;
+const wallL = (v, h) => [LX0 - (WBOX.L - h) * WBOX.s, LY0 + v * WBOX.s], wallR = (v, h) => [LX0 + 8.2 * WBOX.s + (WBOX.L - h) * WBOX.s, LY0 + v * WBOX.s];
+const wallF = (u, h) => [LX0 + u * WBOX.s, LY0 + 16.2 * WBOX.s + (WBOX.L - h) * WBOX.s];
+const SCOPE2 = {x: 905, y: 70, w: 270, h: 150};
+const HANG2 = {x: 905, y: 580, w: 270, h: 160};
+const BOX_SOCKETS = {
+  box_mag:  Object.assign({kind: "j35", dir: Math.PI, la: "right", label: "COIL / LASER"}, xyOf(wallL(1.95, 2.2))),
+  box_gate: Object.assign({kind: "j35", dir: Math.PI, la: "right", label: "PHOTOGATE"}, xyOf(wallL(7.45, 2.2))),
+  box_dc:   Object.assign({kind: "barrel", dir: Math.PI, la: "right", label: "DC 12V"}, xyOf(wallL(10.15, 2.2))),
+  box_ch:   Object.assign({kind: "lug", dir: 0, cap: 2, la: "left", label: "CH1/2"}, xyOf(wallR(6.35, 2.6))),
+  box_gnd:  Object.assign({kind: "lug", dir: 0, cap: 2, la: "left", label: "GND"}, xyOf(wallR(8.95, 2.6))),
+  box_ball: Object.assign({kind: "banana", dir: Math.PI / 2, la: "left", label: "BALL WIRES", col: "#c8262b"}, xyOf(wallF(6.3, 2.2))),
+};
+function xyOf(p){ return {x: p[0], y: p[1]}; }
+for (const k in BOX_SOCKETS){ const s = BOX_SOCKETS[k]; if (s.dir === Math.PI){ s.lx = s.x - 4; s.ly = s.y - 22; } else if (s.dir === 0){ s.lx = s.x + 6; s.ly = s.y - 20; } else { s.lx = s.x + 18; s.ly = s.y + 4; } }
+const SOCKETS2 = Object.assign({}, BOX_SOCKETS, {
+  ch1: {kind: "bnc", x: SCOPE2.x + 70, y: SCOPE2.y + 112, dir: Math.PI / 2, col: "#ecd51f", label: "CH1", lx: SCOPE2.x + 70, ly: SCOPE2.y + 82},
+  ch2: {kind: "bnc", x: SCOPE2.x + 150, y: SCOPE2.y + 112, dir: Math.PI / 2, col: "#ec4f9d", label: "CH2", lx: SCOPE2.x + 150, ly: SCOPE2.y + 82},
+  ball1: {kind: "post", x: HANG2.x + 70, y: HANG2.y + 70, dir: Math.PI / 2, cap: 2, col: "#c0392b", label: "", },
+  ball2: {kind: "post", x: HANG2.x + 190, y: HANG2.y + 70, dir: Math.PI / 2, cap: 2, col: "#26282c", label: ""},
 });
-wire.addEventListener("contextmenu", ev => { ev.preventDefault();
-  S.pick = null; drawWire(); });
-wire.addEventListener("mousedown", ev => {
-  if (ev.button) return;
-  const R = wire.getBoundingClientRect();
-  const x = (ev.clientX - R.left) * WW / R.width;
-  const y = (ev.clientY - R.top) * WH / R.height;
-  if (x >= 388 && x <= 436 && y >= 146 && y <= 220){ toggleBox(); return; }
-  const k = termAt(x, y);
-  if (k){ wireClick(k); return; }
-  const l = leadAt(x, y);
-  if (l){ S.links.delete(l); S.pick = null; wiringChanged();
-    syncCoil(); drawWire(); drawBench(); drawScope(); return; }
-  S.pick = null; drawWire();
-});
+const WSOCK = Object.assign({}, SOCKETS2);
+/* where the leads come from, and where their plugs lie when they are out */
+const ROOT2 = {pg: [92, 380], mg: [92, 150], dc: [92, 610]};
+const ENDS2 = {
+  mg:   {kind: "j35", rest: [250, 205, Math.PI], col: "#1b1c1f"},
+  pg:   {kind: "j35", rest: [250, 410, Math.PI], col: "#1b1c1f"},
+  dc:   {kind: "barrel", rest: [250, 640, Math.PI], col: "#1b1c1f"},
+  bnc:  {kind: "bnc", rest: [SCOPE2.x + 110, 330, Math.PI / 2], col: "#1d1f22"},
+  tip:  {kind: "hook", rest: [820, 470, 0], col: "#2b2d30"},
+  pgnd: {kind: "clip", rest: [830, 530, 0], col: "#1b1c1f"},
+  bw:   {kind: "banana", rest: [760, 700, Math.PI / 2], col: "#c8262b"},
+  bw1:  {kind: "clip", rest: [830, 760, Math.PI], col: "#d0352b"},
+  bw2:  {kind: "clip", rest: [880, 780, Math.PI], col: "#d0352b"},
+};
+const BOX2_IDS = Object.keys(BOX_SOCKETS);
+const WENDS = Object.assign({}, ENDS2);
+let BOARD = null;
+function boardUnder(g){
+  const L = (t, x, y, o) => WB.label(g, t, x, y, o);
+  /* the photogate, the holder and the adaptor, each with its own lead */
+  const dev = (x, y, w, h, col, t1, t2) => { g.fillStyle = col; g.strokeStyle = "#5c6168"; g.lineWidth = 1; g.beginPath(); g.roundRect(x, y, w, h, 8); g.fill(); g.stroke();
+    L(t1, x + w / 2, y + h + 14, {px: 12}); if (t2) L(t2, x + w / 2, y + h + 30, {px: 11, w: "400", col: "#9aa3ab"}); };
+  /* the magnet holder: the black coil on its arm */
+  dev(36, 112, 112, 74, "#26282c", tr("wbMag"), circuit().coil ? tr("wbLive") : "");
+  g.fillStyle = "#1a1b1e"; g.beginPath(); g.roundRect(52, 136, 58, 26, 6); g.fill(); g.fillStyle = "#9aa0a6"; g.fillRect(108, 140, 6, 18);
+  g.fillStyle = "#c9ced3"; g.fillRect(118, 146, 26, 6);
+  if (circuit().coil){ const gr = g.createRadialGradient(80, 149, 4, 80, 149, 46); gr.addColorStop(0, "rgba(170,110,255,0.5)"); gr.addColorStop(1, "rgba(170,110,255,0)"); g.fillStyle = gr; g.beginPath(); g.arc(80, 149, 46, 0, 6.3); g.fill(); }
+  /* the photogate: a black U between two white plates */
+  dev(36, 330, 112, 92, "#2c2f34", tr("wbGate"));
+  g.fillStyle = "#f2f2ef"; g.fillRect(56, 342, 72, 66); g.fillStyle = "#1b1d20"; g.fillRect(62, 348, 60, 54); g.fillStyle = "#2c2f34"; g.fillRect(80, 342, 24, 40);
+  g.fillStyle = "#ff4b3a"; g.beginPath(); g.arc(84, 366, 2.5, 0, 6.3); g.fill(); g.fillStyle = "#3a8cff"; g.beginPath(); g.arc(100, 366, 2.5, 0, 6.3); g.fill();
+  /* the wall adaptor, in its socket or lying beside it (a click puts it in or takes it out) */
+  if (SB.here){ dev(36, 560, 112, 96, "#3c3a36", tr(S.mains ? "wbWallIn" : "wbWallOut"), tr("wbClickWall"));
+  g.fillStyle = "#ecebe5"; g.fillRect(48, 572, 52, 52); g.fillStyle = "#d9d7cf"; g.beginPath(); g.arc(74, 598, 18, 0, 6.3); g.fill();
+  if (S.mains){ g.fillStyle = "#151617"; g.beginPath(); g.roundRect(60, 576, 42, 56, 6); g.fill(); g.fillStyle = "#d9dbd6"; g.fillRect(66, 586, 30, 12); L("12V", 81, 592, {px: 8, col: "#333"}); }
+  else { for (const dx of [-7, 7]){ g.fillStyle = "#1b1b1b"; g.beginPath(); g.arc(74 + dx, 598, 3, 0, 6.3); g.fill(); } g.fillStyle = "#151617"; g.beginPath(); g.roundRect(108, 600, 34, 46, 6); g.fill(); } }
+  /* the oscilloscope's input row */
+  g.fillStyle = "#e4e6e3"; g.strokeStyle = "#8f959b"; g.beginPath(); g.roundRect(SCOPE2.x, SCOPE2.y, SCOPE2.w, SCOPE2.h, 10); g.fill(); g.stroke();
+  g.fillStyle = "#4a515b"; g.fillRect(SCOPE2.x + 10, SCOPE2.y + 10, SCOPE2.w - 20, 40);
+  L("SIGLENT  SDS1202X-E", SCOPE2.x + SCOPE2.w / 2, SCOPE2.y + 30, {px: 12, col: "#dfe3e7"});
+  L(S.power ? tr("wbScopeOn") : tr("wbScopeOff"), SCOPE2.x + SCOPE2.w / 2, SCOPE2.y + SCOPE2.h + 16, {px: 11, w: "400", col: "#9aa3ab"});
+  L("EXT TRIG", SCOPE2.x + 230, SCOPE2.y + 82, {px: 10, col: "#555"}); g.fillStyle = "#b9bdc1"; g.beginPath(); g.arc(SCOPE2.x + 230, SCOPE2.y + 112, 10, 0, 6.3); g.fill();
+  /* the two hanger terminals and what is fitted to each ball */
+  g.fillStyle = "#c9ced3"; g.strokeStyle = "#8f959b"; g.beginPath(); g.roundRect(HANG2.x, HANG2.y, HANG2.w, HANG2.h, 10); g.fill(); g.stroke();
+  L(tr("wbHang"), HANG2.x + HANG2.w / 2, HANG2.y + 20, {px: 12, col: "#2a2d31"});
+  for (const [i, x] of [[0, HANG2.x + 70], [1, HANG2.x + 190]]){
+    L(tr(i ? "wbPend2" : "wbPend1"), x, HANG2.y + 42, {px: 11, col: "#2a2d31"});
+    const ok = i === 0 || S.bench.two;
+    L(!ok ? tr("wbNoPend") : S.wire[i] ? tr("wbWireOn") : tr("wbWireOff"), x, HANG2.y + 104, {px: 10.5, w: "400", col: S.wire[i] && ok ? "#1d6b2a" : "#8a2a24"}); }
+}
+function boardDraw(g, P){
+  /* the leads */
+  const C = WB.cable, T = (e) => WB.tail(P(e), ENDS2[e].kind), Bh = (e, d) => WB.behind(P(e), ENDS2[e].kind, d);
+  C(g, [[148, 150], [190, 150], Bh("mg", 30), T("mg")], "#26282c", 4);
+  C(g, [[148, 380], [190, 380], Bh("pg", 30), T("pg")], "#1b1c1f", 4);
+  if (WENDS.dc) C(g, [S.mains ? [102, 632] : [125, 646], [190, 660], Bh("dc", 30), T("dc")], "#151617", 4.5);
+  /* the probe: a long lead from its BNC to the probe body, and the short ground lead with its clip */
+  const head = T("tip"), hb = Bh("tip", 26);
+  C(g, [T("bnc"), Bh("bnc", 40), [hb[0] + 30, hb[1] + 60], hb, head], "#1d1f22", 4);
+  const gm = [head[0] - 10 * Math.cos(P("tip")[2]), head[1] - 10 * Math.sin(P("tip")[2])];
+  C(g, [gm, [gm[0] + 18, gm[1] + 26], Bh("pgnd", 18), T("pgnd")], "#1b1c1f", 2.2);
+  /* the ball-wire lead: a red banana plug splitting into two clips */
+  const bt = T("bw"), sp = [bt[0] + 40, bt[1] + 40];
+  C(g, [bt, Bh("bw", 20), sp], "#c0392b", 3);
+  for (const e of ["bw1", "bw2"]) C(g, [sp, Bh(e, 30), T(e)], "#d84a2a", 2.2);
+}
+function boardLid(g, B, s){
+  if (!SB.here) return;
+  const pw = circuit().powered, at = JB_AT;
+  WB.lamp(g, ...B(at.led[0], at.led[1]), pw, s);
+  WB.toggleTop(g, ...B(at.sw1[0], at.sw1[1]), S.boxOn, s);
+  WB.toggleTop(g, ...B(at.sw2[0], at.sw2[1]), S.srcGate, s);
+  WB.knobTop(g, ...B(at.knob[0], at.knob[1]), 0.6, s);
+  const [px, py] = B(at.sw2[0] + 1.3, at.sw2[1]); WB.label(g, S.srcGate ? "▲ PHOTOGATE" : "▼ BALL WIRES", px, py, {px: 11, al: "left", col: "#fff"});
+}
+function boardHit(x, y, probe){
+  if (!SB.here){ const r = AWAY_BTN; if (x > r[0] && x < r[0] + r[2] && y > r[1] && y < r[1] + r[3]){ if (!probe) takeBox(); return true; } return false; }
+  const B = (u, v) => [LX0 + u * WBOX.s, LY0 + v * WBOX.s], near = (p, r) => Math.hypot(x - p[0], y - p[1]) < r;
+  if (near(B(JB_AT.sw1[0], JB_AT.sw1[1]), 30)){ if (!probe) toggleBox(); return true; }
+  if (near(B(JB_AT.sw2[0], JB_AT.sw2[1]), 30)){ if (!probe){ S.srcGate = !S.srcGate; wiringChanged(); drawScope(); } return true; }
+  if (SB.here && x > 36 && x < 148 && y > 560 && y < 656){ if (!probe){ S.mains = !S.mains; leadsChanged(); } return true; }
+  return false; }
+const AWAY_BTN = [WBOX.x - 120, WBOX.y + 20, 240, 44];
+function boardAfter(g){
+  if (SB.here) return;
+  g.fillStyle = "rgba(30,33,38,0.94)"; g.fillRect(LX0 - WBOX.L * WBOX.s - 4, LY0 - WBOX.L * WBOX.s - 4, 8.2 * WBOX.s + 2 * WBOX.L * WBOX.s + 8, 16.2 * WBOX.s + 2 * WBOX.L * WBOX.s + 8);
+  g.setLineDash([8, 6]); g.strokeStyle = "#6b727b"; g.lineWidth = 2; g.strokeRect(LX0, LY0, 8.2 * WBOX.s, 16.2 * WBOX.s); g.setLineDash([]);
+  WB.label(g, tr("wbAway"), WBOX.x, WBOX.y - 30, {px: 14}); const r = AWAY_BTN;
+  g.fillStyle = "#f2c14e"; g.beginPath(); g.roundRect(r[0], r[1], r[2], r[3], 8); g.fill(); WB.label(g, tr("wbTake"), r[0] + r[2] / 2, r[1] + r[3] / 2, {px: 14, col: "#1c2027"}); }
+function drawWire(){ if (BOARD) BOARD.draw(); }
+/* the box and its adaptor are carried to the other bench (exam): every plug that was in it comes out */
+function boxAway(here){
+  for (const k of BOX2_IDS){ if (here) WSOCK[k] = BOX_SOCKETS[k]; else delete WSOCK[k]; }
+  if (here) WENDS.dc = ENDS2.dc; else delete WENDS.dc;
+  if (!here){ for (const e in S.at) if (BOX2_IDS.includes(S.at[e])) S.at[e] = null; S.boxOn = false; S.mains = false; }
+  leadsChanged(); if (typeof trayLayout === "function") trayLayout(); }
+function takeBox(){ SB.take(); }
 
-/* the mains lever on the junction box */
 function toggleBox(){
+  if (!SB.here){ warn(tr("wbAway")); return; }
   S.boxOn = !S.boxOn;
-  syncCoil();
-  if (!S.boxOn && S.held){       /* the coil cannot hold without it */
-    S.held = false;
-    document.getElementById("coil").textContent = tr("coilDown");
-    release();
-  }
+  syncCoil();                    /* on: the coil takes the ball; off: it lets it go */
+  if (S.boxOn && !circuit().coil) warn(tr("nopower"));
   drawWire(); drawBench(); drawScope();
 }
-/* a terminal clicked: the first one takes the lead's end, the second one plugs it in */
-function wireClick(k){
-  if (!S.pick || S.pick === k) S.pick = S.pick === k ? null : k;
-  else {
-    for (const end of [S.pick, k]) if (!MULTI.has(end))
-      for (const l of [...S.links]) if (l.split("|").includes(end))
-        S.links.delete(l);
-    S.links.add(key(S.pick, k)); S.pick = null;
-    wiringChanged();
-  }
-  syncCoil(); drawWire(); drawBench(); drawScope();
-}
-/* every lead on terminal k pulled out */
-function unplug(k){
-  let any = false;
-  for (const l of [...S.links]) if (l.split("|").includes(k)){ S.links.delete(l); any = true; }
-  S.pick = null; if (any) wiringChanged();
-  syncCoil(); drawWire(); drawBench(); drawScope();
-}
+/* a socket or a plug clicked on the bench: the wiring board opens */
+function wireClick(k){ showView("wire"); }
+/* every plug in socket k pulled out */
+function unplug(k){ let any = false; for (const e in S.at) if (S.at[e] === k){ S.at[e] = null; any = true; } if (any) leadsChanged(); }
 
 /* The leads have moved, so whatever the instrument was set up for is no
    longer what is on its input: it has to be Auto Set again, and anything
@@ -1821,20 +1852,7 @@ function wiringChanged(){
 }
 
 /* ---- controls --------------------------------------------------- */
-function toggleCoil(){
-  const btn = document.getElementById("coil");
-  if (!S.held){
-    if (!circuit().coil){ warn(tr("nopower")); return; }
-    S.held = true; S.playing = false; S.played = null; S.frozen = null;
-    btn.textContent = tr("coilUp");
-    warn("");
-  } else {
-    S.held = false;
-    btn.textContent = tr("coilDown");
-    release();
-  }
-  drawBench(); drawScope(); drawWire();
-}
+function toggleCoil(){ toggleBox(); }
 document.getElementById("coil").onclick = toggleCoil;
 document.getElementById("stopp").onclick = () => {
   S.playing = false; drawBench();
@@ -2115,6 +2133,7 @@ function drawOverlay(c, gx, gy, gw, gh){
 function scopeClick(x, y){
   const hit = (fx, fy, r) => Math.hypot(x - QX(fx), y - QY(fy)) < r;
   if (hit(0.1103, 0.1270, 0.0153 * IW + 6)){
+    if (!S.power && !S.scopeMains){ warn(tr("noMains")); toast(tr("noMains")); return; }
     S.power = !S.power;
     if (S.power){ S.autoDone = false; S.run = null; S.frozen = null; S.cont = true; S.armed = true; S.mode = "Auto"; toast("SIGLENT  SDS1202X-E"); }
     warn(S.power ? wireHint() : ""); drawScope(); return; }
@@ -2369,11 +2388,13 @@ function drawFoot(c){
 
 /* ---- the parts box: balls for the hangers ------------------------ */
 const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d");
-const TRAY = [["big", "itBig"], ["small", "itSmall"], ["wire", "itWire"]], TROW = 44;
+const TRAY0 = [["big", "itBig"], ["small", "itSmall"], ["wire", "itWire"]], TROW = 44;
+let TRAY = TRAY0;
+function trayItems(){ TRAY = SB.shared() && !SB.here ? TRAY0.concat([["box", "itBox"]]) : TRAY0; return TRAY; }
 let hand = null, TRW = 190, trayCells = [];
 function trayLayout(){
   const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
-  TRW = Math.max(150, Math.floor(r.width - 16)); const h = TRAY.length * TROW + 44;
+  TRW = Math.max(150, Math.floor(r.width - 16)); const h = trayItems().length * TROW + 44;
   trayCv.style.height = h + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(h * dpr);
   drawTray();
 }
@@ -2392,6 +2413,8 @@ function drawTray(){
     c.strokeStyle = sel ? "#f2c14e" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
     if (k === "wire"){ c.strokeStyle = "#c8732f"; c.lineWidth = 1.4; c.beginPath(); for (let t = 0; t <= 40; t++){ const a = t / 40 * 6.283 * 2.5; const px = 26 + 9 * Math.cos(a) + t * 0.15 - 3, py = y + (TROW - 4) / 2 + 7 * Math.sin(a); t ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke();
       c.strokeStyle = "#e2c792"; c.lineWidth = 2; c.beginPath(); c.moveTo(14, y + 30); c.lineTo(36, y + 10); c.stroke(); }
+    else if (k === "box"){ const yy = y + (TROW - 4) / 2; c.fillStyle = "#16171a"; c.beginPath(); c.roundRect(12, yy - 15, 28, 30, 4); c.fill();
+      c.fillStyle = "#33a8e2"; c.beginPath(); c.roundRect(14, yy - 13, 24, 26, 3); c.fill(); c.fillStyle = "#74db8e"; c.fillRect(24, yy - 4, 12, 9); }
     else ballIcon(c, 26, y + (TROW - 4) / 2, k === "big" ? 12 : 9.6);
     c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
     c.fillStyle = "#e8eef2"; let nm = tr(lab); while (c.measureText(nm).width > wd - 52 && nm.length > 4) nm = nm.slice(0, -2) + "…";
@@ -2413,7 +2436,7 @@ function setHand(k){ hand = k; bench.style.cursor = k ? "copy" : "default"; draw
 trayCv.addEventListener("contextmenu", e => { e.preventDefault(); setHand(null); });
 trayCv.addEventListener("mousedown", e => {
   if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
-  for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){ setHand(hand === k ? null : k); return; }
+  for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){ if (k === "box"){ takeBox(); return; } setHand(hand === k ? null : k); return; }
 });
 bench.addEventListener("contextmenu", e => e.preventDefault());
 bench.addEventListener("mousedown", e => {
@@ -2462,6 +2485,14 @@ function onPlane(px,py,h){
   const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
   const zr=((h-CAM.ty)*cp-up)/sp;
   return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane z = z0 (the plane the pendulums swing in) */
+function onPlaneZ(px,py,z0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k, dz=z0-CAM.tz;
+  if(Math.abs(c)<1e-3||Math.abs(cp)<1e-3) return null;
+  const dx=(xr+dz*s)/c, zr=dx*s+dz*c, dy=(up+zr*sp)/cp;
+  return [CAM.tx+dx, CAM.ty+dy, z0];
 }
 /* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
 function onPlaneX(px,py,x0){
@@ -3096,9 +3127,10 @@ function wall3(){
   face(orient([[-90,0,WALL.z],[80,0,WALL.z],[80,46,WALL.z],[-90,46,WALL.z]],[0,0,1]), {fill:"#5d5a55", flat:true, cull:true, layer:-3});
   box3(-90, 80, 0, 1.4, WALL.z, WALL.z + 0.6, "#2f2d2b", {layer:-2, top:"#3a3835"});
 }
-function outlet3(plugged){
-  const {x, y, z} = WALL, zf = z + 0.9;
-  box3(x - 4.2, x + 4.2, y - 4.2, y + 4.2, z, zf, "#ecebe5", {id:"mains", top:"#f4f3ee"});
+const WALL2 = {x:-52, y:10.5};          /* the second socket, by the oscilloscope */
+function outlet3(plugged, X, id){
+  const {x, y} = X || WALL, z = WALL.z, zf = z + 0.9; id = id || "mains";
+  box3(x - 4.2, x + 4.2, y - 4.2, y + 4.2, z, zf, "#ecebe5", {id, top:"#f4f3ee"});
   face(orient(rrect2(x, y, 3.9, 3.9, 0.6, 3).map(([a, b]) => [a, b, zf + 0.005]), [0,0,1]), {fill:"#f2f1ec", flat:true, stroke:"#d4d2cb", lw:0.8});
   /* the round well with its two pin holes and the earth clips top and bottom */
   face(orient(Array.from({length:28}, (_, i) => { const t = i / 28 * 6.2832; return [x + 1.95 * Math.cos(t), y + 1.95 * Math.sin(t), zf + 0.01]; }), [0,0,1]), {fill:"#d9d7cf", flat:true, stroke:"#bdbab1", lw:1});
@@ -3141,6 +3173,8 @@ function box3d(){
   for (const [dx, dz] of [[-3.3,-7.3],[3.3,-7.3],[-3.3,7.3],[3.3,7.3]]) cyl3("y",-0.05,0.05,x+dx,z+dz,0.6,"#0d0d0e",{seg:10});
   jboxBody(x, z, BXH, BXL, {body:"box", sw1:"boxsw", sw2:"boxsel", knob:"box", lugs:[5.4]}, {lit:circuit().powered, on:S.boxOn, sel:S.srcGate, knob:0.6});
   for (const k of ["box_mag","box_gate","box_dc","box_ch","box_gnd","box_ball"]) socket3(k);
+  for (const k of ["box_mag","box_gate","box_dc","box_ch","box_gnd","box_ball"]){ const t = term3(k);       /* a generous grip for the click */
+    sphere3(t, 1.0, "rgba(0,0,0,0)", {id:"t:" + k}); }
 }
 const SC0 = [-66, 0, 16], SCW = 31, SCH = 15.9, SCD = 12;
 /* a point of the scope's front panel art (fx from the left, fy from the bottom) on the 3D face */
@@ -3199,7 +3233,7 @@ const TERM = {
   photogate:{n:[0,0,1], kind:"jack"}, magnet:{n:[0,0,1], kind:"jack"}, adaptor:{n:[1,0,0], kind:"barrel"} };
 function term3(k){
   const [bx, , bz] = BOX, h = S.bench.hang(), ys = 2.2;
-  const P = {box_mag:[bx-4,ys,bz-6.15], box_gate:[bx-4,ys,bz-0.65], box_dc:[bx-4,ys,bz+2.05], box_ch:[bx+4,2.6,bz-1.0], box_gnd:[bx+4,2.6,bz+1.6], box_ball:[bx+2.2,ys,bz+8],
+  const P = {box_mag:[bx-4,ys,bz-6.15], box_gate:[bx-4,ys,bz-0.65], box_dc:[bx-4,ys,bz+2.05], box_ch:[bx+4,2.6,bz-1.75], box_gnd:[bx+4,2.6,bz+0.85], box_ball:[bx+2.2,ys,bz+8],
     ch1:SCF(0.6418,0.2341,1.0), ch2:SCF(0.7457,0.2341,1.0), gnd:SCF(0.937,0.235,0.3), ball1:[h[0]*100,PIV+5.4,-0.4], ball2:[h[1]*100,PIV+5.4,-0.4]}[k];
   return P || plugAt(k); }
 const PLUGS = {photogate:"box_gate", magnet:"box_mag", adaptor:"box_dc"};
@@ -3212,7 +3246,7 @@ function partnerOf(k){ for (const l of S.links){ const [a, b] = l.split("|"); if
 /* the plug at the end of a device's lead: in its socket, or lying on the desk */
 function plugAt(k){ const o = partnerOf(k); if (o && !PLUGS[o]) return term3(o); return k === "photogate" ? [S.bench.xGate / 10 + REST.photogate[0], REST.photogate[1], REST.photogate[2]] : REST[k]; }
 const plugDir = k => { const o = partnerOf(k); return o && !PLUGS[o] ? TERM[o].n : [0, 0, 1]; };
-const pickCol = k => S.pick === k ? "#ff8a2a" : null;
+const pickCol = k => null;
 /* obstacles on the desk, as x-z rectangles a lead must go round */
 function holderK(){ if (S.held){ const p = state().p[0], n = Math.hypot(p[0], p[1]) || 1, b = S.bench; return [(p[0] + p[0] / n * b.R(0)) * 100 + p[0] / n * 3.2, PIV + (p[1] + p[1] / n * b.R(0)) * 100 + p[1] / n * 3.2]; } return [-27.2, 16]; }
 function obstacles(){ const [bx, , bz] = BOX, kx = holderK()[0];
@@ -3251,6 +3285,9 @@ function plugModel(kind, p, n, col, id){ const o = id ? {id} : {}, at = d => [p[
   if (kind === "banana"){ cylAB(p, at(0.5), 0.2, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.5), at(2.4), 0.42, col, Object.assign({seg:12}, o)); cylAB(at(1.0), at(1.4), 0.5, col, Object.assign({seg:12}, o)); }
   else if (kind === "bnc"){ cylAB(p, at(1.1), 0.68, "#c4c8cc", Object.assign({seg:14}, o)); cylAB(at(1.1), at(2.8), 0.48, "#1d1f22", Object.assign({seg:12}, o)); }
   else if (kind === "jack" || kind === "barrel"){ cylAB(p, at(0.3), 0.3, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.3), at(2.0), kind === "barrel" ? 0.48 : 0.38, "#1b1c1f", Object.assign({seg:12}, o)); }
+  else if (kind === "hook"){ /* the probe: a sprung hook at the tip of a slim grey body */
+    cylAB(p, at(0.5), 0.07, "#d9dde1", Object.assign({seg:6}, o)); cylAB(at(0.5), at(1.6), 0.32, "#8e949a", Object.assign({seg:12}, o)); cylAB(at(1.6), at(3.4), 0.45, col, Object.assign({seg:12}, o));
+    cylAB(at(2.6), at(2.75), 0.47, "#e7c843", Object.assign({seg:12}, o)); }
   else if (kind === "post" || kind === "lug"){ /* an alligator clip on the post */ cylAB(p, at(0.6), 0.25, "#c9ced3", Object.assign({seg:8}, o)); cylAB(at(0.6), at(2.6), 0.42, col, Object.assign({seg:10}, o)); }
 }
 function socket3(k){ const t = term3(k), n = TERM[k].n, col = pickCol(k), at = d => [t[0] + n[0] * d, t[1] + n[1] * d, t[2] + n[2] * d], id = "t:" + k, kind = TERM[k].kind;
@@ -3260,31 +3297,44 @@ function socket3(k){ const t = term3(k), n = TERM[k].n, col = pickCol(k), at = d
   else if (kind === "post"){ cylAB(at(-0.02), at(0.8), 0.3, "#d8dcdf", {seg:10, id}); cylAB(at(0.4), at(0.75), 0.5, col || "#c9ced3", {seg:14, id, cap:"#e2e5e8"}); }
   else if (kind === "banana"){ cylAB(at(-0.02), at(0.45), 0.6, col || "#d0352b", {seg:14, id, cap:"#3a0e0b"}); } }
 function cables3(){
-  for (const k of ["ch1","ch2"]){ const t = term3(k); if (pickCol(k)) cyl3("z", t[2] - 0.1, t[2] + 0.05, t[0], t[1], 0.7, "#ff8a2a", {seg:14}); sphere3([t[0], t[1], t[2] - 0.2], 0.5, "rgba(0,0,0,0)", {id:"t:" + k}); }
-  { const t = term3("gnd"); box3(t[0]-0.32,t[0]+0.32,t[1]-0.9,t[1]+0.9,t[2]-0.3,t[2],pickCol("gnd")||"#c4c8cc",{id:"t:gnd"}); }
-  for (const k of ["ball1","ball2"]) if (k === "ball1" || S.bench.two){ const t = term3(k); sphere3(t, 0.45, pickCol(k) || "#d6493a", {id:"t:" + k}); }
+  for (const k of ["ch1","ch2"]){ const t = term3(k); sphere3([t[0], t[1], t[2] - 0.2], 0.5, "rgba(0,0,0,0)", {id:"t:" + k}); }
+  { const t = term3("gnd"); box3(t[0]-0.32,t[0]+0.32,t[1]-0.9,t[1]+0.9,t[2]-0.3,t[2],"#c4c8cc",{id:"t:gnd"}); }
+  for (const k of ["ball1","ball2"]) if (k === "ball1" || S.bench.two){ const t = term3(k); sphere3(t, 0.45, "#d6493a", {id:"t:" + k}); }
+  const E = e => end3(e), at = (p, n, d) => [p[0] + n[0] * d, p[1] + n[1] * d, p[2] + n[2] * d];
   /* the leads fixed to their instruments, to their plugs */
-  for (const k of ["photogate","magnet","adaptor"]){ if (S.pick === k) continue; const r = leadRoot(k), e = plugAt(k), n = plugDir(k), o = partnerOf(k);
-    const end = [e[0] + n[0] * 2.0, e[1] + n[1] * 2.0, e[2] + n[2] * 2.0];
-    poly3(o ? leadPath(r.p, r.n, end, n) : leadPath(r.p, r.n, end, n).slice(0, -1).concat([end]), k === "magnet" ? "#2a2a2a" : "#151517", 1.8);
-    plugModel(k === "adaptor" ? "barrel" : "jack", e, n, pickCol(k) || "#1b1c1f", "t:" + k); }
-  /* the patch leads: the scope probe (BNC to the CH post), the ground lead, the thin red ball wires */
-  for (const l of S.links){ const [a, b] = l.split("|"); if (PLUGS[a] || PLUGS[b]) continue;
-    const A = term3(a), B = term3(b), na = TERM[a].n, nb = TERM[b].n, col = a === "box_ch" || b === "box_ch" ? "#151515" : (a.startsWith("ball") || b.startsWith("ball") || a === "box_ball" || b === "box_ball") ? "#d84a2a" : "#2a2a2a";
-    const ea = [A[0] + na[0] * 2.4, A[1] + na[1] * 2.4, A[2] + na[2] * 2.4], eb = [B[0] + nb[0] * 2.4, B[1] + nb[1] * 2.4, B[2] + nb[2] * 2.4];
-    poly3(leadPath(ea, na, eb, nb), col, col === "#d84a2a" ? 1.1 : 1.8);
-    for (const [k, P, n] of [[a, A, na], [b, B, nb]]) plugModel(TERM[k].kind, P, n, TERM[k].kind === "bnc" ? "#1d1f22" : k === "box_ball" ? "#d0352b" : k.startsWith("ball") ? "#d84a2a" : "#2a2a2a"); }
-  /* the lead in the hand: its plug hangs under the pointer, tip down, and the lead follows it */
-  if (S.pick){ const k = S.pick, own = !!PLUGS[k], A = own ? leadRoot(k).p : term3(k), n = own ? leadRoot(k).n : TERM[k].n, H = onPlane(m3[0], m3[1], HAND_Y);
-    const kind = own ? (k === "adaptor" ? "barrel" : "jack") : (TERM[k].kind === "bnc" ? "bnc" : "banana"), col = k.startsWith("ball") || k === "box_ball" ? "#d84a2a" : "#1d1f22";
-    if (!own) plugModel(TERM[k].kind, A, n, col);
-    const S0 = own ? A : [A[0] + n[0] * 2.4, A[1] + n[1] * 2.4, A[2] + n[2] * 2.4], top = [H[0], H[1] + 2.3, H[2]];
-    poly3(handLead(S0, n, top), col === "#d84a2a" ? col : "#151517", col === "#d84a2a" ? 1.2 : 1.8);
-    plugModel(kind, H, [0, 1, 0], "#ff8a2a");
-    face(Array.from({length:14}, (_, i) => { const t = -i / 14 * 6.2832; return [H[0] + 0.9 * Math.cos(t), 0.02, H[2] + 0.6 * Math.sin(t)]; }), {fill:"rgba(0,0,0,0.25)", flat:true, layer:-1}); }
+  for (const [e, k, kind] of [["pg", "photogate", "jack"], ["mg", "magnet", "jack"], ["dc", "adaptor", "barrel"]]){
+    if (k === "adaptor" && !SB.here) continue;
+    const r = leadRoot(k), q = E(e);
+    poly3(leadPath(r.p, r.n, at(q.p, q.n, 2.0), q.n), k === "magnet" ? "#2a2a2a" : "#151517", 1.8);
+    plugModel(kind, q.p, q.n, "#1b1c1f", "t:" + e); }
+  /* the probe: BNC, the long lead to the probe body, its hook tip, the short ground lead and clip */
+  { const b = E("bnc"), h = E("tip"), gq = E("pgnd");
+    plugModel("bnc", b.p, b.n, "#1d1f22", "t:bnc");
+    const hb = at(h.p, h.n, 3.4);
+    poly3(leadPath(at(b.p, b.n, 2.8), b.n, hb, h.n), "#151515", 1.8);
+    plugModel("hook", h.p, h.n, "#2b2d30", "t:tip");
+    const g0 = at(h.p, h.n, 2.4), g1 = at(gq.p, gq.n, 2.6), mid = [(g0[0] + g1[0]) / 2, Math.max(0.3, Math.min(g0[1], g1[1]) - 1.5), (g0[2] + g1[2]) / 2];
+    poly3([g0, mid, g1], "#1b1b1b", 1.3); plugModel("post", gq.p, gq.n, "#1b1c1f", "t:pgnd"); }
+  /* the ball-wire lead: a banana plug, then a fork to two clips */
+  { const b = E("bw"), bt = at(b.p, b.n, 2.4); plugModel("banana", b.p, b.n, "#d0352b", "t:bw");
+    for (const e of ["bw1", "bw2"]){ const c = E(e), ct = at(c.p, c.n, 2.6);
+      poly3(leadPath(bt, b.n, ct, c.n), "#d84a2a", 1.1); plugModel("post", c.p, c.n, "#d84a2a", "t:" + e); } }
+  /* the oscilloscope's mains cord: from the inlet at its back to the wall, or lying on the desk */
+  { const inl = [SC0[0] + SCW - 5, 3.2, SC0[2] - 8.5], plug = S.scopeMains ? [WALL2.x, WALL2.y - 0.4, WALL.z + 0.9 + 3.6] : [SC0[0] + SCW - 9, 1.2, SC0[2] - 16];
+    cyl3("z", SC0[2] - 8.9, SC0[2] - 8.5, inl[0], inl[1], 0.9, "#141414", {seg:12, id:"smains"});
+    poly3(leadPath(inl, [0, 0, -1], S.scopeMains ? [plug[0], plug[1] - 3, plug[2]] : [plug[0], 0.4, plug[2] - 2.6], S.scopeMains ? [0, -1, 0] : [0, 0, -1]), "#141414", 2.2);
+    if (S.scopeMains) cyl3("z", WALL.z + 0.9, WALL.z + 0.9 + 3.6, plug[0], plug[1], 1.9, "#1a1a1b", {seg:18, id:"smains", cap:"#222"});
+    else { cyl3("y", 0, 2.4, plug[0], plug[2], 1.9, "#1a1a1b", {seg:18, id:"smains", cap:"#222"}); for (const dx of [-0.95, 0.95]) cyl3("z", plug[2] - 2.0, plug[2] - 0.4, plug[0] + dx, 1.2, 0.24, "#c9ced3", {seg:8, id:"smains"}); } }
 }
+/* where the plug at the end of lead e is: in its socket, sticking out along the socket's direction, or lying on the desk */
+function rest3(e){ const [bx, , bz] = BOX, gx = S.bench.xGate / 10, kx = holderK()[0];
+  return {pg:[gx - 4, 0.6, 14], mg:[kx + 3, 0.6, 15], dc:[WALL.x - 6, 0.6, WALL.z + 14], bnc:[SC0[0] + 14, 0.6, SC0[2] + SCD + 5],
+    tip:[SC0[0] + 24, 0.6, SC0[2] + SCD + 8], pgnd:[SC0[0] + 25, 0.6, SC0[2] + SCD + 12], bw:[bx + 1, 0.6, bz + 12], bw1:[bx + 4, 0.6, bz + 14], bw2:[bx + 6, 0.6, bz + 13]}[e]; }
+function end3(e){ const s = S.at[e];
+  if (s && (!s.startsWith("box_") || SB.here)){ const n = TERM[s].n; return {p:term3(s), n}; }
+  return {p:rest3(e), n:{pg:[1,0,0], mg:[1,0,0], dc:[-1,0,0], bnc:[0,0,-1], tip:[-1,0,0], pgnd:[-1,0,0], bw:[0,0,-1], bw1:[-1,0,0], bw2:[-1,0,0]}[e]}; }
 function scene3(){
-  desk3(); wall3(); outlet3(S.mains); adaptor3(S.mains); base3(); fans3(); column3(); gate3(); balls3(); holder3(); box3d(); scope3d(); cables3();
+  desk3(); wall3(); outlet3(S.mains && SB.here); if (SB.here) adaptor3(S.mains); outlet3(S.scopeMains, WALL2, "smains"); base3(); fans3(); column3(); gate3(); balls3(); holder3(); if (SB.here) box3d(); scope3d(); cables3();
 }
 /* ---- camera and pointer --------------------------------------------- */
 function layout3(){
@@ -3318,14 +3368,16 @@ function draw3(){
 }
 function showView(v){
   if (v !== view3){
-    if (window.HLzoom) HLzoom(cv3, {out: v === "3d"});
+    if (window.HLzoom && v !== "wire" && view3 !== "wire") HLzoom(cv3, {out: v === "3d"});
     if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
     Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v));
   }
   view3 = v;
   for (const k of ["3d","bench","side","scope","wire"]) document.getElementById("vt" + k).className = k === v ? "on" : "";
-  for (const k of ["bench","scope","wire"]) document.getElementById("v-" + k).hidden = true;
-  document.getElementById("v-3d").hidden = false;
+  for (const k of ["bench","scope"]) document.getElementById("v-" + k).hidden = true;
+  document.getElementById("v-wire").hidden = v !== "wire";
+  document.getElementById("v-3d").hidden = v === "wire";
+  if (v === "wire"){ if (BOARD) BOARD.layout(); }
   document.getElementById("t-cap3").textContent = tr("cap_" + v);
   drawScope();
 }
@@ -3336,8 +3388,7 @@ const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 function rclick3(e){ if (hand){ setHand(null); return; }
   const p = p3e(e), id = pick3(p[0], p[1]);
-  if (S.pick){ S.pick = null; drawWire(); return; }
-  if (id && id.startsWith("t:")){ unplug(id.slice(2)); return; }
+  if (id && id.startsWith("t:")){ showView("wire"); return; }
   if (view3 !== "3d"){ showView("3d"); return; }
   if ((id === "ball0" || id === "ball1") && S.wire[+id.slice(-1)]){ S.wire[+id.slice(-1)] = false; wiringChanged(); drawScope(); return; }
   if (id === "ball1" || id === "hang1"){ S.wire[1] = false; document.getElementById("two").checked = false; document.getElementById("two").oninput(); ballState(); } }
@@ -3354,22 +3405,29 @@ cv3.addEventListener("pointerdown", e => {
       if (right) document.getElementById("two").checked = true;
       document.getElementById("b1").oninput(); ballState(); setHand(null); }
     return; }
-  if (id && id.startsWith("t:")){ const k = id.slice(2);
-    if (!S.pick && PLUGS[k] && partnerOf(k)){ for (const l of [...S.links]) if (l.split("|").includes(k)) S.links.delete(l); wiringChanged(); syncCoil(); }
-    wireClick(k); return; }
+  if (id && id.startsWith("t:")){ showView("wire"); return; }
+  if (id === "smains"){ S.scopeMains = !S.scopeMains; if (!S.scopeMains && S.power){ S.power = false; warn(""); } drawScope(); return; }
+  if (id === "ball0" && !hand){ down3 = {p, id, moved:false, ball:true}; S.playing = false; return; }
   if (id === "boxsw"){ toggleBox(); return; }
   if (id === "boxsel"){ S.srcGate = !S.srcGate; wiringChanged(); drawWire(); drawScope(); return; }
   if (id === "mains"){ S.mains = !S.mains; syncCoil(); if (!circuit().coil && S.held){ S.held = false; document.getElementById("coil").textContent = tr("coilDown"); release(); } drawWire(); drawScope(); return; }
   if (view3 === "scope" && id === "scope"){ const q = scopeAt(p); if (q){ scopeClick(q[0], q[1]); return; } }
-  if (S.pick){ S.pick = null; drawWire(); }
   down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
 cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
   if (!down3) return; if (Math.hypot(p[0]-down3.p[0], p[1]-down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
+  if (down3.ball){ const q = onPlaneZ(p[0], p[1], 0); if (q){ const h0 = S.bench.hang()[0] * 100, a = -Math.atan2(q[0] - h0, PIV - q[1]) * 180 / Math.PI;
+      const ph = document.getElementById("phi"); ph.value = Math.max(3, Math.min(80, Math.round(a * 2) / 2)); S.bench.phi0 = +ph.value; S.dragBall = true; S.held = false; S.playing = false; drawBench(); } return; }
   if (down3.id === "gate" && (view3 === "3d" || view3 === "bench")){ const q = onPlane(p[0], p[1], RAILY); const g = document.getElementById("gate");
     g.value = Math.max(-60, Math.min(60, Math.round(q[0] * 10))); g.oninput(); return; }
   if (down3.shift){ CAM.px += dx; CAM.py += dy; } else { CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.45, Math.max(0.1, CAM.pitch + dy * 0.006)); }
   cv3.classList.add("grabbing"); });
 cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
+  if (down3 && down3.ball){ const moved = down3.moved; down3 = null; S.dragBall = false;
+    if (!moved){ drawBench(); return; }
+    /* let go by hand: a live magnet takes the ball where it is, otherwise it swings from there */
+    if (circuit().coil){ S.held = true; S.played = null; S.frozen = null; warn(tr("gripped")); }
+    else { release(); if (!S.faultMsg) warn(tr("handrelease")); }
+    drawBench(); drawScope(); return; }
   if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; }
   if (down3 && !down3.moved && view3 === "3d"){ const id = down3.id;
     if (id === "scope") showView("scope"); else if (id === "box") showView("wire");
@@ -3385,6 +3443,10 @@ cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e
 for (const id of ["v-bench","v-scope","v-wire"]) document.getElementById(id).addEventListener("contextmenu", e => { if (e.target.id === "wire") return; e.preventDefault(); showView("3d"); });
 window.addEventListener("resize", layout3);
 (function loop3(){ draw3(); requestAnimationFrame(loop3); })();
+/* the wiring board, once everything it draws exists */
+BOARD = new WiringBoard(document.getElementById("wire"), {W: WBW, H: WBH, box: Object.assign({tex: JBTEX}, WBOX), sockets: WSOCK, ends: WENDS, at: S.at,
+  under: boardUnder, draw: boardDraw, drawLid: boardLid, lidHit: boardHit, after: boardAfter, changed: leadsChanged, tr, back: () => showView("3d")});
+window.addEventListener("resize", () => { if (view3 === "wire") BOARD.layout(); });
 applyLang();
 
 </script>

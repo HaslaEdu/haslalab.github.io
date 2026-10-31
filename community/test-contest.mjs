@@ -48,7 +48,7 @@ globalThis.fetch = async (input, init = {}) => {
     providerCalls.push(prompt);
     providerBodies.push(req);
     let result;
-    if (prompt.includes("[TASK: read page]")) result = { header: { task: "Q5", sheet: "answer", page: 1 }, legible: "good", items: [{ label: "proof", kind: "text", text: "Let n be an integer. This is the submitted proof.", crossed_out: false }] };
+    if (prompt.includes("[TASK: read page]")) result = { text:"Let n be an integer. This is the submitted proof.",header: { task: "Q5", sheet: "answer", page: 1 }, legible: "good", items: [{ label: "proof", kind: "text", text: "Let n be an integer. This is the submitted proof.", crossed_out: false }] };
     else {
       const number = +(prompt.match(/Review ONLY problem (\d+)/)?.[1] || 0), no = +(prompt.match(/\[Page (\d+);/)?.[1] || 1);
       result = { problem_no: number, score: 7, confidence: 0.96, verdict: "valid", summary: proofSummary || "검토한 논증입니다.", strengths: ["조건을 사용했습니다."], gaps: [], evidence: [{ page: no, quote: proofMode === "ungrounded" ? "invented unsupported words" : "Let n be an integer.", note: "제출한 문장" }] };
@@ -66,7 +66,7 @@ async function request(path, body, id = 1, method = body === undefined ? "GET" :
   }), env);
   return { status: response.status, data: await response.json() };
 }
-const start = (id, extra = {}) => request(base + "/start", { examId, purpose: "review", runId: "run-" + id, ...extra }, id);
+const start = (id, extra = {}) => request(base + "/start", { provider:"gemini", examId, purpose: "review", runId: "run-" + id, ...extra }, id);
 const save = (sid, id, answers) => request(`${base}/sessions/${sid}/text`, { answers }, id);
 async function drainQueue(settings=env){
   while(messages.length){const body=messages.shift();await worker.queue({messages:[{body,ack(){},retry(){throw Error('unexpected retry in completed-review fixture');}}]},settings);}
@@ -195,8 +195,10 @@ test("math-specific admin reference and manual review preserve 7-point maximum",
   const r = await start(8), sid = r.data.session.id; await save(sid, 8, { 5: "Let n be an integer." });
   const noGrader = { ...env }; delete noGrader.GEMINI_API_KEY;
   const response = await worker.fetch(new Request("http://worker.local" + sessionBase(sid) + "/submit", { method: "POST", headers: { Authorization: "Bearer " + tokens[8], "Content-Type": "application/json" }, body: "{}" }), noGrader);
-  assert.equal((await response.json()).session.status,"grading");await drainQueue(noGrader);
-  const pending=(await request(sessionBase(sid),undefined,8)).data; assert.equal(pending.session.status, "pending"); assert.equal(pending.session.detail.tasks.Q5.why, "no_grader");
+  assert.equal(response.status,503); assert.equal((await response.json()).error,'provider_unavailable');
+  assert.equal(sqlite.prepare('SELECT charged FROM lab_sessions WHERE id=?').get(sid).charged,0,'no token is spent when selected provider is unavailable');
+  assert.equal((await request(sessionBase(sid)+'/submit',{},8)).data.session.status,'grading');await drainQueue(noGrader);
+  const pending=(await request(sessionBase(sid),undefined,8)).data; assert.equal(pending.session.status, "pending"); assert.equal(pending.session.detail.tasks.Q5.why, "provider_unavailable");
   assert.equal((await request(`/api/admin/lab/${sid}`, { task: "Q5", score: 8, points: 8 }, 14)).status, 400);
   const manual = await request(`/api/admin/lab/${sid}`, { task: "Q5", score: 4, points: 7, note: "수동 검토" }, 14);
   assert.equal(manual.status, 200); assert.equal(manual.data.session.detail.tasks.Q5.reviewed_by_admin, true); assert.equal(manual.data.session.official, false);
@@ -225,23 +227,23 @@ test("provider disagreement and unexpected problem identities remain pending", a
   const valid = { problem_no: 5, score: 7, confidence: 0.95, verdict: "valid", summary: "Study review", strengths: [], gaps: [], evidence: [{ page: 1, quote: "Let n be an integer.", note: "Visible argument" }] };
   let calls = 0;
   const disagree = await contestGradeTask(env, stored, "Q5", [page], null, "ko", {}, { b64: v => Buffer.from(v).toString("base64"),
-    async gemini() { calls++; return { model: "mock", raw: calls === 1 ? valid : { ...valid, score: 2, verdict: "partial" } }; } });
+    async labVision() { calls++; return { model: "mock", raw: calls === 1 ? valid : { ...valid, score: 2, verdict: "partial" } }; } });
   assert.equal(disagree.status, "pending"); assert.equal(disagree.why, "review_disagreement"); assert.equal(disagree.score, null);
-  const wrongTask = await contestGradeTask(env, stored, "Q5", [page], null, "ko", {}, { b64: v => Buffer.from(v).toString("base64"), async gemini() { return { model: "mock", raw: { ...valid, problem_no: 1 } }; } });
+  const wrongTask = await contestGradeTask(env, stored, "Q5", [page], null, "ko", {}, { b64: v => Buffer.from(v).toString("base64"), async labVision() { return { model: "mock", raw: { ...valid, problem_no: 1 } }; } });
   assert.equal(wrongTask.why, "uncertain_proof");
-  const tooLong = await contestGradeTask(env, stored, "Q5", [{ ...page, text: "x".repeat(150001) }], null, "ko", {}, { async gemini() { assert.fail("oversized answer reached provider"); } });
+  const tooLong = await contestGradeTask(env, stored, "Q5", [{ ...page, text: "x".repeat(150001) }], null, "ko", {}, { async labVision() { assert.fail("oversized answer reached provider"); } });
   assert.equal(tooLong.why, "answer_too_long");
 });
 
 test("untrusted redirects and non-PDF official-server responses never reach the grader", async () => {
   const stored = sqlite.prepare("SELECT * FROM lab_sessions WHERE user_id=9").get(), ex = CONTEST_PROOF_EXAMS["kmo-2025-T5"];
-  const sources = { _contest: { examId: ex.id, purpose: "review" } };
+  const sources = { _provider:"gemini",_contest: { examId: ex.id, purpose: "review" } };
   const s = { ...stored, exam_key: "contest:" + ex.id, year: ex.year, tasks: '["Q1","Q2","Q3"]', sources: JSON.stringify(sources) };
   const fake = async mode => {
     const previous = globalThis.fetch, urls = [];
     globalThis.fetch = async url => { urls.push(String(url)); return mode === "redirect" ? new Response(null, { status: 302, headers: { location: "https://attacker.invalid/problem.pdf" } }) : new Response("<html>not a problem paper</html>"); };
     try {
-      const result = await contestGradeTask(env, s, "Q1", [{ no: 1, text: "Let n be an integer.", edited: 1 }], null, "ko", {}, { b64: v => Buffer.from(v).toString("base64"), async gemini() { assert.fail("untrusted document reached provider"); } });
+      const result = await contestGradeTask(env, s, "Q1", [{ no: 1, text: "Let n be an integer.", edited: 1 }], null, "ko", {}, { b64: v => Buffer.from(v).toString("base64"), async labVision() { assert.fail("untrusted document reached provider"); } });
       assert.equal(result.why, "problem_unavailable"); assert.equal(result.score, null); assert.equal(urls.length, 1); assert.ok(!urls[0].includes("attacker.invalid"));
     } finally { globalThis.fetch = previous; }
   };
@@ -249,7 +251,7 @@ test("untrusted redirects and non-PDF official-server responses never reach the 
 });
 
 test("ordinary experiment/theory session timing, physics rules and single-round cost still work", async () => {
-  const r = await request("/api/lab/start", { comp: "ipho", year: 2024, tasks: ["E1"], pair: true, sources: { E1: { sol: "IPhO_2024_S1.pdf" }, _contest: { examId, purpose: "review" } } }, 10);
+  const r = await request("/api/lab/start", { provider:"gemini",comp: "ipho", year: 2024, tasks: ["E1"], pair: true, sources: { E1: { sol: "IPhO_2024_S1.pdf" }, _contest: { examId, purpose: "review" } } }, 10);
   assert.equal(r.status, 200); assert.equal(r.data.session.exam_sec, 5 * 3600); assert.equal(r.data.session.status, "running"); assert.equal(r.data.session.cost, 0.3);
   assert.equal(r.data.session.purpose, undefined); assert.ok(r.data.session.regulation.rules.some(r => r.id === "R1"));
   const sid = r.data.session.id;

@@ -32,6 +32,10 @@ def policy(year,kind,number):
             selected.update(glyph_key(c)for c in chars)
         native=[c for run in runs.values()for c in legacy.characters(run)if c['c'].strip()and glyph_key(c)not in selected]
         baselines=[];baseline_tolerance=.75 if kind=='TS'else.1
+        # The source's prose word following beta on 2022TS4 is printed
+        # 5.04pt below the other words of its physical sentence. Treat this as
+        # one logical row without changing that word's real original y.
+        if(year,kind,number)==(2022,'TS',4):baseline_tolerance=5.1
         for item in work:
             if not any(abs(item['baseline']-y)<baseline_tolerance for y in baselines):baselines.append(item['baseline'])
         images=[list(info['bbox'])for i,info in enumerate(page.get_image_info())if i not in data.get('inline_math_images',[])]
@@ -56,9 +60,21 @@ def policy(year,kind,number):
         separators=[]
         if kind=='TS':
             for drawing in page.get_drawings():
-                r=fitz.Rect(drawing['rect'])
-                if r.width<.5 and r.height>25 and not any(box.contains(r)for box in math_bounds):
-                    separators.append([r.x0,r.y0,r.y1])
+                # Word often paints an entire grading table as one compound
+                # path. Its overall bbox hides each vertical cell boundary.
+                # Inspect the real line/rectangle primitives, not that bbox.
+                segments=[fitz.Rect(drawing['rect'])]
+                for primitive in drawing['items']:
+                    if primitive[0]=='l':
+                        a,b=primitive[1:3];segments.append(fitz.Rect(min(a.x,b.x),min(a.y,b.y),max(a.x,b.x),max(a.y,b.y)))
+                    elif primitive[0]=='re':
+                        r=fitz.Rect(primitive[1]);segments.extend([fitz.Rect(r.x0,r.y0,r.x0,r.y1),fitz.Rect(r.x1,r.y0,r.x1,r.y1)])
+                for r in segments:
+                    # Single-line grading rows can be only 15–20pt high;
+                    # their short original cell borders still divide columns.
+                    if r.width<.5 and r.height>10 and not any(box.contains(r)for box in math_bounds):
+                        candidate=[r.x0,r.y0,r.y1]
+                        if candidate not in separators:separators.append(candidate)
         content_right=max(v['rect'][2]for v in work if v['baseline']>60)
         regions=[];deferred=[]
         for y in sorted(baselines):
@@ -127,6 +143,8 @@ def policy(year,kind,number):
         return dict(year=year,kind=kind,page=number,source=str(source),source_sha256=sha(source),
             original_plan=str(plan),original_plan_sha256=sha(plan),regions=regions,deferred_lines=deferred,excluded_figure_rects=images+figures,
             locked_display_equation_rects=locked_display,
+            stationary_table_column_boundaries=separators,
+            logical_baseline_tolerance_pt=5.1 if(year,kind,number)==(2022,'TS',4)else(.75 if kind=='TS'else.12),
             policy='Only x positions change. Exact original glyphs/font programs/point sizes/baselines and display-equation/figure positions are retained.')
 
 def prepare(year,kind,number):

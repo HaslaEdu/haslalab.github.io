@@ -1,0 +1,53 @@
+{
+  "output_sha256": "8a82896ddaabaf607b06b390b764465041a937236fa342681306ab09fb81f40d",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\T\\page08.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\T\\page08.pdf",
+    "final_page": 1,
+    "source_sha256": "a628d4de32b50682bbaa6b5390c1956a6dce329e3fa93565f167dff95481eb78",
+    "output_sha256": "8a82896ddaabaf607b06b390b764465041a937236fa342681306ab09fb81f40d",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 272,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 272,
+      "expected_signature_count": 272,
+      "matched_outline_uses": 272,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 33347,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      367.5,
+      303.75,
+      367.75,
+      304.0
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "method": "One exact unhinted SVG/native-font raster phase sample. Source encoded CID reference at the measured destination is authoritative; global SVG thresholds unchanged.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_original_CID_reference_missing_pixels": 0,
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\T\\e-phase-witness\\witness.json",
+    "witness_sha256": "7c7d59e700d37fb8fba2894b35eb32fc0375be083ff1adcdfb50798732396f70",
+    "original_font_resource": "/F7",
+    "original_encoded_CID": "0087",
+    "original_gid": 135,
+    "original_font": "CambriaMath",
+    "original_point_size": 12,
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2026/T/natural-spacing/witnesses/page08-native-cid.json"
+  }
+}

@@ -156,12 +156,16 @@
     <p class="hint" id="tx-slide"></p>
     <div class="row"><button id="sL">&#9664;</button><button id="sU">&#9650;</button><button id="sD">&#9660;</button><button id="sR">&#9654;</button></div>
     <div class="read" id="spot"></div>
+    <h2 id="lg-focus"></h2>
+    <p class="hint" id="tx-focus"></p>
+    <div class="row"><button id="fL">&#8630; 1</button><button id="fl">&#8630; &#188;</button><button id="fr">&#188; &#8631;</button><button id="fR">1 &#8631;</button></div>
     <h2 id="lg-notes"></h2>
     <p class="hint" id="tx-notes"></p>
     <div class="status"><div id="wwarn"></div><div class="serial" id="serial"></div></div>
   </aside>
 </div>
 
+<script src="apho2023-wiring.js"></script>
 <script>
 "use strict";
 /* ====================================================================
@@ -197,14 +201,21 @@ const I18N = {
   cap:     ["the optical bench (drag the screen or the target along the rail) and the control box with the two multimeters",
             "광학대 (스크린이나 시료를 레일 위에서 끌어 옮기기)와 컨트롤 박스·멀티미터 두 대"],
   scrcap:  ["the screen, face on — the reflected pattern", "스크린 정면 — 반사된 무늬"],
+  wbLeft: ["left wall", "왼쪽 옆면"], wbRight: ["right wall", "오른쪽 옆면"], wbFront: ["front end", "앞면"], wbBack: ["back end", "뒷면"],
+  wbWallIn: ["12 V adaptor — in the wall", "12 V 어댑터 — 콘센트에 꽂힘"], wbWallOut: ["12 V adaptor — not in the wall", "12 V 어댑터 — 콘센트에서 빠짐"],
+  wbClickWall: ["click: in / out of the socket", "클릭: 콘센트에 꽂기 / 빼기"],
+  wbAway: ["The control box and its adaptor are on the other bench.", "컨트롤 박스와 어댑터는 다른 실험대에 있습니다."],
+  wbTake: ["Bring them to this bench", "이 실험대로 가져오기"],
+  itBox: ["Control box + 12 V adaptor (on the other bench)", "컨트롤 박스 + 12 V 어댑터 (다른 실험대에 있음)"],
+  wbFine: ["fine steps (click the middle)", "미세 조절 (가운데 클릭)"], wbCoarse: ["coarse steps (click the middle)", "거친 조절 (가운데 클릭)"],
+  wbLeads: ["meter leads (banana plug at both ends)", "멀티미터 연결선 (양 끝 바나나 플러그)"],
   vt3d: ["3D bench", "3D 실험대"], vtbench: ["optical bench, side", "광학대 측면"], vtscreen: ["screen, face on", "스크린 정면"], vtctrl: ["control box · meters", "컨트롤 박스 · 멀티미터"], vtwire: ["cabling", "배선"],
   cap_3d: ["the bench in 3D — drag to turn, right-drag (or Shift+drag) to pan, wheel to zoom / drag the screen or the target along the rail / click a plug or socket to wire it (the adaptor in the wall socket too) / click the screen, the control box or the rail to look at it close",
            "3D 실험대 — 끌면 회전, 우클릭 끌기(또는 Shift+끌기) 이동, 휠 확대 / 스크린이나 시료를 끌어 레일을 따라 이동 / 플러그·소켓을 클릭해 배선 (벽 콘센트의 어댑터도 클릭해 뽑고 꽂기) / 스크린·컨트롤 박스·레일을 클릭하면 가까이 보기"],
   cap_bench: ["the optical bench from the side — drag the screen or the target along the rail; wheel: zoom, drag elsewhere: move / R-click: back to 3D", "광학대 측면 — 스크린·시료를 끌어 레일을 따라 옮기기, 휠: 확대, 빈 곳 끌기: 이동 / 우클릭: 3D로"],
   cap_screen: ["the screen face on — the reflected pattern; take the ruler from the parts box and click to lay it, drag it, wheel over it to turn it (R-click: back in the box); wheel elsewhere: zoom", "스크린 정면 — 반사 무늬. 부품함에서 자를 꺼내 클릭해 올리고, 끌어 옮기고, 자 위에서 휠로 돌립니다 (자 우클릭: 부품함으로). 빈 곳 휠: 확대"],
   cap_ctrl: ["the control box and the two multimeters from above — wheel or click the knob, click the power switch; wheel elsewhere: zoom / R-click: back to 3D", "컨트롤 박스와 멀티미터 (위에서) — 노브는 휠이나 클릭, 전원 스위치 클릭, 빈 곳 휠: 확대 / 우클릭: 3D로"],
-  cap_wire: ["cabling — click a plug or socket, then the one it goes to; R-click a socket pulls its leads / R-click elsewhere: back to 3D",
-            "배선 — 플러그나 소켓을 클릭한 뒤 이을 곳을 클릭, 소켓을 우클릭하면 선이 빠집니다 / 빈 곳 우클릭: 3D로"],
+  cap_wire: ["the control box opened out, the meters and the laser — drag a plug onto a socket it fits (green rings), drag it off to pull it out; the lever and the ADJUST knob on the lid work (wheel over the knob) / R-click: back to 3D", "펼친 컨트롤 박스와 멀티미터·레이저 — 플러그를 끌어 맞는 소켓(초록 고리)에 놓으면 꽂히고, 끌어내면 빠집니다. 뚜껑의 레버와 ADJUST 노브도 조작됩니다(노브 위 휠) / 우클릭: 3D로"],
   title:   ["APhO 2023 \u2014 Experimental Problem 2 \u2014 interference from a thermally deformed surface",
             "APhO 2023 \u2014 실험 문제 2 \u2014 열변형 표면에 의한 간섭"],
   tab0:    ["Screen", "스크린"],
@@ -214,6 +225,15 @@ const I18N = {
   slide:   ["slide the plate:", "판 이동:"],
   spot:    ["spot", "지점"],
   notes:   ["Notes", "안내"],
+  focus:   ["focusing ring", "초점 링"],
+  focushint:["Turn the ring at the front of the laser module (in 3D, roll the "
+            + "wheel over it) until the spot on the white paper side of the "
+            + "plate is smallest.  In focus the pattern spreads widest; the "
+            + "waist moves with the ring, so refocus after moving the plate.",
+            "레이저 모듈 앞의 링을 돌려(3D에서는 링 위에서 휠을 굴려) 판의 "
+            + "흰 종이 면에 비친 빛점이 가장 작아지게 맞추세요.  초점이 맞으면 "
+            + "무늬가 가장 넓게 퍼집니다.  판을 레일에서 옮기면 초점을 다시 "
+            + "맞춰야 합니다."],
   notetext:["Turn the current knob with the mouse wheel over it, or click "
             + "its left and right half.  Click the centre of the knob to "
             + "switch between the coarse and the fine step.",
@@ -260,10 +280,10 @@ function tr(k){ const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k;
 
 /* ------------------------- constants ------------------------------ */
 const LAMBDA = 650.0e-9;
-const R_BASE_LAMBDA = 167.82;
-const P_THRESHOLD = 287.0;
+const P_THRESHOLD = 280.5;   /* every order, the three lost in the central spot included */
 const N_SLOPE = 0.4632;
 const P_YIELD_NOM = 363.6;
+const X_LASER = 72.0, X_FRONT = 66.0;   /* the laser module and the front end of the rail, cm */
 
 /* ------------------------- randomness ----------------------------- */
 function mulberry(seed){
@@ -281,32 +301,103 @@ function gauss(rng){                                     /* Box-Muller */
 /* ==================================================================
    ThermoModel  -  laser diode -> PMMA surface -> reflected pattern
 
-     height of the bump    h      = m_max * lambda / 2
-     number of fringes     m_max  = 0.4632 (P - 287)      [official fit]
-     dark fringe           R_base sin(alpha_m) = m lambda
-                           R_base = 167.82 lambda
-   The two innermost orders are hidden inside the bright central spot,
-   so the order you can actually count is m' = m - 2.  Above the yield
-   power the surface melts and the deformation is frozen in.
+   The diode both heats the plate and probes it.  The light it puts out
+   above its lasing threshold raises a smooth thermal bump
+       h(r) = h0 exp(-r^2 / wb^2),   h0 = m_max lambda / 2
+       m_max = 0.4632 (P - 280.5)
+   The official B.3 fit, N = 0.4632 (P - 287), counts the rings you can
+   see; about three more are lost in the bright central spot (C.3), so the
+   whole phase swing is that line moved up by three orders.
+   and the pattern on the screen is the far field of the Gaussian beam
+   reflected from it: the Hankel transform of
+       exp(-r^2 / w0^2) exp(i 4 pi h(r) / lambda).
+   Nothing about the rings is put in by hand.  Their number is the phase
+   swing, 2 h0 / lambda; the outermost, brightest ring sits where the
+   reflected ray leaves the steepest flank of the bump,
+       sin(alpha_out) ~ 2 max|h'| = 0.858 m_max lambda / wb,
+   and the rings crowd near the centre and open out towards the edge, so
+   alpha against m is not a straight line (C.2, C.4).
+
+   The bump width follows the spot the focusing ring makes on the plate:
+   wb = 118 lambda (77 um) in focus, which puts the outermost ring of the
+   yield power at D = 27.5 cm on a screen 49.2 cm away (A.2) and the last
+   dark ring of a 15-order pattern at R = 5 cm (the last row of C.1).  Out of
+   focus the spot, the bump and the yield power all grow and the pattern
+   shrinks.  The innermost orders are lost in the bright central spot.
+   Above the yield power the surface melts and the deformation is frozen.
    ================================================================== */
+const WB_FOCUS = 118.0;            /* bump 1/e radius in focus, wavelengths */
+const W0_OVER_WB = 0.8;            /* probe beam radius over bump radius */
+const Z_R = 4.0;                   /* depth of focus of the module, cm */
+const Q_CORE = 0.0075;              /* angular radius of the central spot */
+function besselJ0(x){
+  const ax = Math.abs(x);
+  if (ax < 8){
+    const y = x * x;
+    return (57568490574.0 + y * (-13362590354.0 + y * (651619640.7 + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456)))))
+         / (57568490411.0 + y * (1029532985.0 + y * (9494680.718 + y * (59272.64853 + y * (267.8532712 + y)))));
+  }
+  const z = 8 / ax, y = z * z, xx = ax - 0.785398164;
+  const p = 1.0 + y * (-0.1098628627e-2 + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
+  const q = -0.1562499995e-1 + y * (0.1430488765e-3 + y * (-0.6911147651e-5 + y * (0.7621095161e-6 - y * 0.934935152e-7)));
+  return Math.sqrt(0.636619772 / ax) * (Math.cos(xx) * p - z * Math.sin(xx) * q);
+}
+/* J0 tabulated once, read with linear interpolation: the far field needs
+   millions of values every time the bump changes */
+const J0_STEP = 0.02, J0_TAB = (() => { const n = Math.ceil(1400 / J0_STEP) + 2, t = new Float64Array(n);
+  for (let i = 0; i < n; i++) t[i] = besselJ0(i * J0_STEP); return t; })();
+/* |far field|^2 of the reflected beam against q = sin(alpha), normalised
+   to the brightest ring; lengths in wavelengths */
+function farField(mmax, wb){
+  const h0 = mmax / 2, w0 = W0_OVER_WB * wb;
+  const qEdge = 0.858 * mmax / wb, qmax = Math.min(0.95, 1.25 * qEdge + 0.03);
+  const rmax = 3.2 * wb, nr = Math.max(700, Math.ceil(9 * (mmax + qmax * rmax))), dr = rmax / nr;
+  const nq = 900, re = new Float64Array(nr), im = new Float64Array(nr), rr = new Float64Array(nr);
+  for (let i = 0; i < nr; i++){
+    const r = (i + 0.5) * dr, A = Math.exp(-r * r / (w0 * w0)) * r * dr;
+    const ph = 4 * Math.PI * h0 * Math.exp(-r * r / (wb * wb));
+    re[i] = A * Math.cos(ph); im[i] = A * Math.sin(ph); rr[i] = r / J0_STEP;
+  }
+  const I = new Float64Array(nq + 1), T = J0_TAB, last = T.length - 2;
+  let top = 0;
+  for (let j = 0; j <= nq; j++){
+    const k = 2 * Math.PI * qmax * j / nq;
+    let a = 0, b = 0;
+    for (let i = 0; i < nr; i++){
+      let t = k * rr[i], n = t | 0; if (n > last){ n = last; t = last; }
+      const J = T[n] + (T[n + 1] - T[n]) * (t - n);
+      a += re[i] * J; b += im[i] * J;
+    }
+    I[j] = a * a + b * b;
+    if (qmax * j / nq > 1.6 * Q_CORE) top = Math.max(top, I[j]);
+  }
+  for (let j = 0; j <= nq; j++) I[j] /= top || 1;
+  return {qmax, nq, I};
+}
+
 class ThermoModel {
   constructor(rng){
     this.rng = rng;
-    this.R_base_lam = R_BASE_LAMBDA * (1 + 0.015 * gauss(rng));
-    this.P_th = P_THRESHOLD * (1 + 0.004 * gauss(rng));
-    this.slope = N_SLOPE * (1 + 0.03 * gauss(rng));
-    this.P_yield = P_YIELD_NOM * (1 + 0.02 * gauss(rng));
-    this.hidden = 2.0 + 0.10 * gauss(rng);
+    this.wb_spot = 1 + 0.003 * gauss(rng);       /* the plate under the beam */
+    this.P_th = P_THRESHOLD * (1 + 0.001 * gauss(rng));
+    /* each plate differs a little from the next, but the official values are what a careful measurement gives */
+    this.slope = N_SLOPE * (1 + 0.005 * gauss(rng));
+    this.P_yield = P_YIELD_NOM * (1 + 0.005 * gauss(rng));
     this.iv_a = 0.35928;
     this.iv_b = 0.73823 * (1 + 0.004 * gauss(rng));
+    /* where the focusing ring puts the waist, cm in front of the module:
+       where the last user left it, a depth of focus or two off the plate */
+    this.d_plate = X_LASER;                    /* laser to plate, kept by the app */
+    this.waist = X_LASER + (0.6 + 1.2 * rng()) * Z_R * (rng() < 0.5 ? -1 : 1);
     this.spot_key = "0,0";
     this.spots = new Map();
     this.melted = false;
-    this.melt_extra = 0.0;
     this.m_frozen = 0.0;
+    this.wb_frozen = 0.0;
     this.dirty = Math.abs(0.35 * gauss(rng));      /* contamination */
     this.ellipticity = 1.0 + Math.abs(0.012 * gauss(rng));
     this.tilt = rng() * Math.PI;
+    this._ff = null;
   }
   diode_voltage(mA){
     if (mA <= 1.0) return 0.0;
@@ -318,11 +409,18 @@ class ThermoModel {
     return [Math.round(i * 10) / 10, Math.round(v * 100) / 100];
   }
   power_true(mA){ return mA * this.diode_voltage(mA); }
+  /* the spot on the plate against the spot in focus */
+  spot_scale(){ const u = (this.d_plate - this.waist) / Z_R; return Math.sqrt(1 + u * u); }
+  wb(){ return this.melted && this.wb_frozen ? this.wb_frozen : WB_FOCUS * this.wb_spot * this.spot_scale(); }
 
   m_max(mA){
     const P = this.power_true(mA);
     const n_th = Math.max(this.slope * (P - this.P_th), 0.0);
-    if (P > this.P_yield){
+    /* the surface yields at a peak temperature: a wider spot needs more
+       light above the lasing threshold to get there */
+    const P_y = this.P_th + (this.P_yield - this.P_th) * this.spot_scale();
+    if (P > P_y){
+      if (!this.melted) this.wb_frozen = this.wb();
       this.melted = true;
       /* the plastic part takes over from the thermal one, so nothing
          jumps as the surface starts to yield */
@@ -333,24 +431,34 @@ class ThermoModel {
   }
   height_lambda(mA){ return this.m_max(mA) / 2.0; }
 
-  intensity(nu, mmax){
-    const core = 1.35 * Math.exp(-Math.pow(nu / 1.55, 2));
-    const env = 0.80 * Math.exp(-0.85 * Math.pow(nu / Math.max(mmax, 1.0), 2));
-    const cutoff = 0.5 * (1.0 - Math.tanh((nu - mmax) / 0.55));
-    const s = Math.sin(Math.PI * nu);
-    let ring = env * cutoff * s * s;
-    ring *= 0.5 * (1.0 + Math.tanh((nu - this.hidden) / 0.55));
+  /* the radial pattern, kept until the bump or the focus changes */
+  pattern(mmax){
+    const wb = this.wb(), key = mmax.toFixed(3) + "|" + wb.toFixed(2);
+    if (!this._ff || this._ff.key !== key) this._ff = Object.assign(farField(Math.max(mmax, 0.05), wb), {key});
+    return this._ff;
+  }
+  intensity(q, ff){
+    const core = 1.35 * Math.exp(-Math.pow(q / Q_CORE, 2));
+    let ring = 0;
+    if (q < ff.qmax){
+      const t = q / ff.qmax * ff.nq, j = Math.floor(t), f = t - j;
+      /* the eye (and the photograph in Fig. 2) squeezes the range: the
+         dim inner rings still show, the dark rings stay dark */
+      ring = 0.95 * Math.pow(Math.max(ff.I[j] * (1 - f) + ff.I[Math.min(j + 1, ff.nq)] * f, 0), 0.55);
+    }
+    /* the rings inside the central spot drown in it */
+    ring *= 0.5 * (1.0 + Math.tanh((q - 1.45 * Q_CORE) / (0.35 * Q_CORE)));
     return core + ring;
   }
 
   /* one point of the pattern, in cm on the screen, before the speckle */
-  pixel(mA, L_cm, X, Y, mmax, Pw){
+  pixel(mA, L_cm, X, Y, mmax, Pw, ff){
     const ca = Math.cos(this.tilt), sa = Math.sin(this.tilt);
     const Xr = X * ca + Y * sa, Yr = -X * sa + Y * ca;
     const Rr = Math.hypot(Xr / this.ellipticity, Yr * this.ellipticity);
-    const nu = this.R_base_lam * Math.sin(Math.atan2(Rr, L_cm));
-    let img = (mmax > 0.4) ? this.intensity(nu, mmax)
-                           : 1.35 * Math.exp(-Math.pow(nu / 1.55, 2));
+    const q = Math.sin(Math.atan2(Rr, L_cm));
+    let img = (mmax > 0.4) ? this.intensity(q, ff)
+                           : 1.35 * Math.exp(-Math.pow(q / Q_CORE, 2));
     /* brightness follows the drive: below the fringe threshold the knob
        still does something visible, as it does on the bench */
     img *= Math.min(Math.max(Pw / 300.0, 0.0), 1.6);
@@ -363,18 +471,18 @@ class ThermoModel {
      own history, so a shot that has been melted is still melted when
      you wind the stand back to it. */
   goto_spot(key){
-    this.spots.set(this.spot_key, [this.melted, this.melt_extra,
-                                   this.R_base_lam, this.m_frozen]);
+    this.spots.set(this.spot_key, [this.melted, this.wb_frozen,
+                                   this.wb_spot, this.m_frozen]);
     this.spot_key = key;
     if (this.spots.has(key)){
       const s = this.spots.get(key);
-      this.melted = s[0]; this.melt_extra = s[1];
-      this.R_base_lam = s[2]; this.m_frozen = s[3];
+      this.melted = s[0]; this.wb_frozen = s[1];
+      this.wb_spot = s[2]; this.m_frozen = s[3];
     } else {
       this.melted = false;
-      this.melt_extra = 0.0;
+      this.wb_frozen = 0.0;
       this.m_frozen = 0.0;
-      this.R_base_lam = R_BASE_LAMBDA * (1 + 0.015 * gauss(this.rng));
+      this.wb_spot = 1 + 0.015 * gauss(this.rng);
     }
   }
 }
@@ -498,6 +606,8 @@ const WP = {
     volt_com: {x: 800, y: 176, col: "#2b2e32", lab: ""},
     laser_p:  {x: 620, y: 330, col: "#c02020", lab: "+"},
     laser_n:  {x: 620, y: 410, col: "#2b2e32", lab: "\u2212"},
+    amp_10a:  {x: 560, y: 136, col: "#c02020", lab: ""},
+    volt_10a: {x: 800, y: 136, col: "#c02020", lab: ""},
   },
   /* only these pairs can be joined - including the classic mistakes,
      which are allowed precisely so that they can be made */
@@ -628,7 +738,6 @@ function line(g, pts, col, w, dash){
    THE OPTICAL BENCH  (class BenchCanvas)
    ================================================================== */
 const BW = 560, BH = 434;
-const X_LASER = 72.0, X_FRONT = 66.0;
 const bpx = cm => 40 + cm * (BW - 90) / 80.0;
 const bcm = px => (px - 40) * 80.0 / (BW - 90);
 
@@ -643,10 +752,13 @@ function plateViews(g, x0, y0){
   const hot = h > 0.05;
   const SLICE_M = 250e-6;
   const rise = Math.min(h * LAMBDA / SLICE_M * 60.0, 34.0);
-  const base = m.R_base_lam * LAMBDA / SLICE_M * 60.0;
+  const base = m.wb() * LAMBDA / SLICE_M * 60.0;
 
   rect(g, x0 - 30, y0 - 30, x0 + 30, y0 + 30, "#dff0f5", "#7fa3ad", 2);
-  oval(g, x0 - 2, y0 - 2, x0 + 2, y0 + 2, hot ? "#ff9a3c" : "#d9c4b0");
+  /* the spot the beam makes on it: smallest in focus */
+  const sp = app.lit && app.cur > 2.0 ? 2 * m.spot_scale() : 2;
+  if (app.lit && app.cur > 2.0) oval(g, x0 - sp - 2, y0 - sp - 2, x0 + sp + 2, y0 + sp + 2, "rgba(255,70,50,0.35)");
+  oval(g, x0 - sp, y0 - sp, x0 + sp, y0 + sp, hot ? "#ff9a3c" : app.lit && app.cur > 2.0 ? "#ff5a45" : "#d9c4b0");
   txt(g, x0, y0 + 42, tr("pfront"), "#5c6169", 10);
 
   const ex = x0 + 128, ey = y0;
@@ -839,7 +951,8 @@ const offg = offc.getContext("2d");
 let SCR_SIG = "", PAT = null;
 function drawScreen(){
   const R0 = app.ruler, live0 = app.lit && app.cur > 2.0, m0 = app.model;
-  const pkey = live0 ? [app.cur, app.L(), m0.spot_key, m0.melted, m0.melt_extra, m0.m_frozen].join("|") : "dark";
+  m0.d_plate = X_LASER - app.x_target;
+  const pkey = live0 ? [app.cur, app.L(), m0.spot_key, m0.melted, m0.m_frozen, m0.wb().toFixed(3)].join("|") : "dark";
   const sig = pkey + "|" + (R0.on ? [R0.x, R0.y, R0.ang].join(",") : "-");
   if (sig === SCR_SIG) return; SCR_SIG = sig; SCRCV._ver = (SCRCV._ver || 0) + 1;
   const g = ctxOf("screen");
@@ -854,13 +967,13 @@ function drawScreen(){
   else if (live){
     const m = app.model, L = app.L();
     const mmax = m.m_max(app.cur);          /* this is where it can melt */
-    const Pw = m.power_true(app.cur);
+    const Pw = m.power_true(app.cur), ff = m.pattern(mmax);
     const rg = mulberry(7);                 /* the speckle is fixed */
     for (let j = 0; j < NGRID; j++){
       const Y = -HALF + 2 * HALF * j / (NGRID - 1);
       for (let i2 = 0; i2 < NGRID; i2++){
         const X = -HALF + 2 * HALF * i2 / (NGRID - 1);
-        let I = m.pixel(app.cur, L, X, Y, mmax, Pw);
+        let I = m.pixel(app.cur, L, X, Y, mmax, Pw, ff);
         /* the speckle scales with the light that is actually there: a
            flat dither would put false minima in the black background
            outside the pattern and make the ring count ambiguous */
@@ -980,104 +1093,126 @@ function wireMeter(g, x0, y0, title, value, unit, live){
   txt(g, x0 + 105, y0 + 133, unit, "#f3dedd", 11, true);
 }
 
-function drawWire(){
-  const g = ctxOf("wire");
-  g.clearRect(0, 0, WP.W, WP.H);
-  g.fillStyle = "#41454a"; g.fillRect(0, 0, WP.W, WP.H);
-  g.strokeStyle = "#22252a"; g.lineWidth = 1;
-  g.strokeRect(0.5, 0.5, WP.W - 1, WP.H - 1);
-
-  const st = wireState();
-  const [i, v] = app.reading;
-
-  rect(g, 300, 60, 420, 520, WP.BODY, "#1b1d1f", 2);
-  rect(g, 312, 74, 408, 506, WP.FACE, "#3d8ec0", 1);
-  txt(g, 320, 100, "\u25c4 LASER +", "#c02020", 11, true, "left");
-  txt(g, 320, 214, "\u25c4 LASER \u2212", WP.NAVY, 11, true, "left");
-  oval(g, 346, 118, 374, 146, st.lit ? "#ff4030" : "#603030", "#7a1218", 1);
-  rect(g, 300, 300, 360, 350, app.on ? "#3fbf5f" : "#8b3030", "#123", 2);
-  txt(g, 330, 325, app.on ? "ON" : "OFF", "#ffffff", 12, true);
-  txt(g, 330, 364, tr("power"), WP.NAVY, 10, true);
-  txt(g, 320, 440, "\u25c4 DC 12V", WP.NAVY, 11, true, "left");
-  txt(g, 360, 490, tr("ctrlbox"), WP.NAVY, 11, true);
-
-  rect(g, 96, 446, 180, 494, "#3b3f44", "#1b1d1f", 2);
-  rect(g, 104, 454, 148, 466, "#d8dade");
-  txt(g, 138, 512, tr("adaptor"), "#c9ccd1", 11);
-
-  wireMeter(g, 452, 60, tr("dcA"), i !== null ? i.toFixed(1) : "", "mA", st.amp);
-  wireMeter(g, 692, 60, tr("dcV"), v !== null ? v.toFixed(2) : "", "V", st.volt);
-
-  rect(g, 560, 330, 700, 412, "#7d848c", "#4a4f55", 2);
-  rect(g, 700, 356, 730, 386, "#2b2e32", "#1b1d1f", 1);
-  txt(g, 630, 434, tr("diode"), "#c9ccd1", 11);
-  if (st.lit){
-    const bw = 1 + Math.floor(4.0 * Math.min(
-      app.model.power_true(app.cur) / 380.0, 1.0));
-    line(g, [730, 371, 800, 371], "#ff5040", bw);
-  }
-
-  for (const lk of [...WP.links].sort()){
-    const [a, b] = lk.split("|");
-    const pts = [];
-    for (let n = 0; n <= 25; n++)
-      pts.push(...bezPoint(WP.T[a], WP.T[b], n / 25));
-    line(g, pts, WP.T[a].col, 3);
-  }
-  if (WP.held !== null){
-    const d = WP.T[WP.held];
-    line(g, [d.x, d.y, WP.mouse[0], WP.mouse[1]], d.col, 3, [6, 4]);
-  }
-  for (const k in WP.T){
-    const d = WP.T[k];
-    let used = false;
-    for (const lk of WP.links) if (lk.split("|").includes(k)) used = true;
-    const rr = WP.R + (k === WP.held ? 3 : 0);
-    oval(g, d.x - rr, d.y - rr, d.x + rr, d.y + rr,
-         used ? d.col : "#f4f4f0",
-         k === WP.held ? "#e03030" : d.col, k === WP.held ? 3 : 2);
-    if (d.lab) txt(g, d.x + 16, d.y, d.lab, "#e6e8ea", 12, true, "left");
-  }
-  txt(g, 20, 24, tr("wirehint"), "#aeb4ba", 11, false, "left");
-  document.getElementById("wwarn").textContent = st.shorted ? tr("shorted") : "";
+/* ==================================================================
+   the leads, plug by plug, and the wiring board (sim/apho2023-wiring.js)
+   The adaptor's barrel plug, the red and black pair that comes out of the box's COIL / LASER jack,
+   and the four multimeter leads with a banana plug at each end: each plug is in a socket or lying
+   on the desk, and the links the circuit is read from follow from where they are.
+   ================================================================== */
+const ENDS_E2 = {dc: "adaptor", lp: "box_lp", ln: "box_ln"};
+const PATCH = [["a1", "a2", "#c8262b"], ["b1", "b2", "#c8262b"], ["c1", "c2", "#1b1c1f"], ["d1", "d2", "#1b1c1f"]];
+WP.at = {dc: null, lp: null, ln: null, a1: null, a2: null, b1: null, b2: null, c1: null, c2: null, d1: null, d2: null};
+function rebuildLinks(){
+  const a = WP.at; WP.links.clear();
+  for (const e in ENDS_E2) if (a[e]) WP.links.add(key2(ENDS_E2[e], a[e]));
+  for (const [e1, e2] of PATCH) if (a[e1] && a[e2]) WP.links.add(key2(a[e1], a[e2]));
 }
+function leadsChanged(){ rebuildLinks(); readMeters(); refresh(); }
+const SB = SharedBox("E2", (here) => { if (typeof boxAway === "function") boxAway(here); });
 
-(function(){
-  const cv = document.getElementById("wire");
-  const at = ev => {
-    const b = cv.getBoundingClientRect();
-    return [(ev.clientX - b.left) * WP.W / b.width,
-            (ev.clientY - b.top) * WP.H / b.height];
-  };
-  cv.addEventListener("click", ev => {
-    const [x, y] = at(ev);
-    if (x >= 300 && x <= 360 && y >= 300 && y <= 350){    /* ON / OFF */
-      app.on = !app.on; readMeters(); refresh(); return;
-    }
-    const k = wireAt(x, y);
-    if (k !== null){ wireClick(k); return; }
-    const c = cableAt(x, y);
-    if (c !== null){
-      WP.links.delete(c); WP.held = null; readMeters(); refresh(); return;
-    }
-    WP.held = null; drawWire();
-  });
-  cv.addEventListener("mousemove", ev => {
-    WP.mouse = at(ev);
-    if (WP.held !== null) drawWire();
-  });
-  cv.addEventListener("contextmenu", ev => {
-    ev.preventDefault(); WP.held = null; drawWire();
-  });
-})();
+const WBW = 1200, WBH = 800, WBOX = {x: 470, y: 380, s: 26, L: 5.2};
+const LX0 = WBOX.x - 4.1 * WBOX.s, LY0 = WBOX.y - 8.1 * WBOX.s;
+const wallL = (v, h) => [LX0 - (WBOX.L - h) * WBOX.s, LY0 + v * WBOX.s];
+const METER2 = [{x: 780, y: 40}, {x: 990, y: 40}], MW2 = 180, MH2 = 250;
+const LASER2 = {x: 780, y: 340, w: 390, h: 130};
+const jackX = (k, i) => METER2[k].x + 32 + i * 58;
+const BOX_SOCK2 = {box_dc: {kind: "barrel", x: wallL(10.15, 2.2)[0], y: wallL(10.15, 2.2)[1], dir: Math.PI, label: "DC 12V", lx: wallL(10.15, 2.2)[0] - 4, ly: wallL(10.15, 2.2)[1] - 22, la: "right"}};
+const SOCK_E2 = Object.assign({}, BOX_SOCK2, {
+  amp_10a: {kind: "banana", x: jackX(0, 0), y: METER2[0].y + 218, dir: Math.PI / 2, col: "#c8262b", label: "10A", lx: jackX(0, 0), ly: METER2[0].y + 192},
+  amp_com: {kind: "banana", x: jackX(0, 1), y: METER2[0].y + 218, dir: Math.PI / 2, col: "#1b1c1f", label: "COM", lx: jackX(0, 1), ly: METER2[0].y + 192},
+  amp_in:  {kind: "banana", x: jackX(0, 2), y: METER2[0].y + 218, dir: Math.PI / 2, col: "#c8262b", label: "VΩmA", lx: jackX(0, 2), ly: METER2[0].y + 192},
+  volt_10a:{kind: "banana", x: jackX(1, 0), y: METER2[1].y + 218, dir: Math.PI / 2, col: "#c8262b", label: "10A", lx: jackX(1, 0), ly: METER2[1].y + 192},
+  volt_com:{kind: "banana", x: jackX(1, 1), y: METER2[1].y + 218, dir: Math.PI / 2, col: "#1b1c1f", label: "COM", lx: jackX(1, 1), ly: METER2[1].y + 192},
+  volt_in: {kind: "banana", x: jackX(1, 2), y: METER2[1].y + 218, dir: Math.PI / 2, col: "#c8262b", label: "VΩmA", lx: jackX(1, 2), ly: METER2[1].y + 192},
+  laser_p: {kind: "banana", x: LASER2.x + 110, y: LASER2.y + 92, dir: Math.PI / 2, cap: 3, col: "#c8262b", label: "+", lx: LASER2.x + 84, ly: LASER2.y + 92},
+  laser_n: {kind: "banana", x: LASER2.x + 280, y: LASER2.y + 92, dir: Math.PI / 2, cap: 3, col: "#1b1c1f", label: "−", lx: LASER2.x + 254, ly: LASER2.y + 92},
+});
+const WSOCK2 = Object.assign({}, SOCK_E2);
+const COILJ = wallL(1.95, 2.2);                      /* the jack the laser pair comes out of */
+const ENDS2 = {
+  dc: {kind: "barrel", rest: [210, 640, Math.PI], col: "#1b1c1f"},
+  lp: {kind: "banana", rest: [700, 160, Math.PI], col: "#c8262b"},
+  ln: {kind: "banana", rest: [700, 210, Math.PI], col: "#1b1c1f"},
+};
+PATCH.forEach(([e1, e2, col], i) => { const y = 560 + i * 52; ENDS2[e1] = {kind: "banana", rest: [790, y, 0], col}; ENDS2[e2] = {kind: "banana", rest: [1150, y, Math.PI], col}; });
+const WENDS2 = Object.assign({}, ENDS2);
+let BOARD = null;
+function boardUnder(g){
+  const L = (t, x, y, o) => WB.label(g, t, x, y, o);
+  /* the wall adaptor (it goes with the box) */
+  if (SB.here){ g.fillStyle = "#3c3a36"; g.strokeStyle = "#5c6168"; g.beginPath(); g.roundRect(36, 560, 112, 96, 8); g.fill(); g.stroke();
+  g.fillStyle = "#ecebe5"; g.fillRect(48, 572, 52, 52); g.fillStyle = "#d9d7cf"; g.beginPath(); g.arc(74, 598, 18, 0, 6.3); g.fill();
+  if (app.mains){ g.fillStyle = "#151617"; g.beginPath(); g.roundRect(60, 576, 42, 56, 6); g.fill(); g.fillStyle = "#d9dbd6"; g.fillRect(66, 586, 30, 12); L("12V", 81, 592, {px: 8, col: "#333"}); }
+  else { for (const dx of [-7, 7]){ g.fillStyle = "#1b1b1b"; g.beginPath(); g.arc(74 + dx, 598, 3, 0, 6.3); g.fill(); } g.fillStyle = "#151617"; g.beginPath(); g.roundRect(108, 600, 34, 46, 6); g.fill(); }
+  L(tr(app.mains ? "wbWallIn" : "wbWallOut"), 92, 670, {px: 12}); L(tr("wbClickWall"), 92, 686, {px: 11, w: "400", col: "#9aa3ab"}); }
+  /* the two meters: holster, the reading, the dial's setting, the three jacks */
+  const st = wireState(), [i, v] = app.reading;
+  for (const k of [0, 1]){ const m = METER2[k];
+    g.fillStyle = "#c8262b"; g.beginPath(); g.roundRect(m.x, m.y, MW2, MH2, 18); g.fill();
+    g.fillStyle = "#2c2f34"; g.beginPath(); g.roundRect(m.x + 10, m.y + 10, MW2 - 20, MH2 - 20, 12); g.fill();
+    g.fillStyle = "#b9c4b0"; g.fillRect(m.x + 22, m.y + 24, MW2 - 44, 52);
+    const val = k === 0 ? (i === null ? "" : i.toFixed(1)) : (v === null ? "" : v.toFixed(2));
+    L(val || (k === 0 ? "0.0" : "0.00"), m.x + MW2 / 2 + 6, m.y + 52, {px: 30, w: "700", col: val ? "#1d2420" : "rgba(29,36,32,0.35)", al: "center"});
+    L(k === 0 ? "mA" : "V", m.x + MW2 - 30, m.y + 68, {px: 11, col: "#1d2420"});
+    L(tr(k === 0 ? "dcA" : "dcV") + " · " + (k === 0 ? "200 mA ⎓" : "20 V ⎓"), m.x + MW2 / 2, m.y + 98, {px: 11, col: "#e8e8e6"});
+    g.fillStyle = "#1d1f22"; g.beginPath(); g.arc(m.x + MW2 / 2, m.y + 140, 26, 0, 6.3); g.fill();
+    g.strokeStyle = "#c9ced3"; g.lineWidth = 4; g.beginPath(); g.moveTo(m.x + MW2 / 2, m.y + 140); g.lineTo(m.x + MW2 / 2 + 18, m.y + 124); g.stroke();
+    L("UNI-T UT33C+", m.x + MW2 / 2, m.y + MH2 + 14, {px: 11, w: "400", col: "#9aa3ab"}); }
+  /* the laser and its two terminals */
+  g.fillStyle = "#7d848c"; g.strokeStyle = "#4a4f55"; g.beginPath(); g.roundRect(LASER2.x, LASER2.y, LASER2.w, LASER2.h, 10); g.fill(); g.stroke();
+  g.fillStyle = "#2b2e32"; g.fillRect(LASER2.x + LASER2.w - 70, LASER2.y + 30, 54, 36);
+  if (st.lit){ g.strokeStyle = "#ff5040"; g.lineWidth = 2 + 3 * Math.min(1, app.model.power_true(app.cur) / 380); g.beginPath(); g.moveTo(LASER2.x + LASER2.w - 16, LASER2.y + 48); g.lineTo(LASER2.x + LASER2.w + 20, LASER2.y + 48); g.stroke(); }
+  L(tr("diode"), LASER2.x + 130, LASER2.y + 30, {px: 13, col: "#1c2027"});
+  L(tr("wbLeads"), 970, 532, {px: 12, col: "#c9d1d9"});
+}
+function boardDraw(g, P){
+  const C = WB.cable, T = e => WB.tail(P(e), ENDS2[e].kind), Bh = (e, d) => WB.behind(P(e), ENDS2[e].kind, d);
+  if (WENDS2.dc) C(g, [app.mains ? [102, 632] : [125, 646], [180, 660], Bh("dc", 30), T("dc")], "#151617", 4.5);
+  if (SB.here){ const j = [COILJ[0] - 10, COILJ[1]];
+    /* the pair leaves the jack sideways and goes round the back of the box */
+    const top = LY0 - WBOX.L * WBOX.s - 18;
+    C(g, [j, [j[0] - 46, j[1] - 4], [j[0] - 46, top + 4], [LX0 + 8.2 * WBOX.s + 40, top + 4], Bh("lp", 50), T("lp")], "#c8262b", 3.5);
+    C(g, [j, [j[0] - 40, j[1] + 4], [j[0] - 40, top + 12], [LX0 + 8.2 * WBOX.s + 60, top + 12], Bh("ln", 50), T("ln")], "#1b1c1f", 3.5);
+    g.fillStyle = "#1b1c1f"; g.beginPath(); g.roundRect(j[0] - 22, j[1] - 7, 24, 14, 4); g.fill(); }
+  for (const [e1, e2, col] of PATCH){ const a = T(e1), b = T(e2), m = [(a[0] + b[0]) / 2, Math.max(a[1], b[1]) + 30];
+    C(g, [a, Bh(e1, 30), m, Bh(e2, 30), b], col, 3); }
+}
+function boardLid(g, B, s){
+  if (!SB.here) return;
+  const at = JB_AT;
+  WB.lamp(g, ...B(at.led[0], at.led[1]), app.lit && app.cur > 2.0, s);
+  WB.toggleTop(g, ...B(at.sw1[0], at.sw1[1]), app.on, s);
+  WB.toggleTop(g, ...B(at.sw2[0], at.sw2[1]), boxSel, s);
+  WB.knobTop(g, ...B(at.knob[0], at.knob[1]), app.knob_a, s);
+}
+function boardHit(x, y, probe){
+  if (!SB.here){ const r = AWAY_BTN; if (x > r[0] && x < r[0] + r[2] && y > r[1] && y < r[1] + r[3]){ if (!probe) SB.take(); return true; } return false; }
+  const B = (u, v) => [LX0 + u * WBOX.s, LY0 + v * WBOX.s], near = (p, r) => Math.hypot(x - p[0], y - p[1]) < r;
+  if (near(B(JB_AT.sw1[0], JB_AT.sw1[1]), 30)){ if (!probe){ app.on = !app.on; readMeters(); refresh(); } return true; }
+  if (near(B(JB_AT.sw2[0], JB_AT.sw2[1]), 30)){ if (!probe) boxSel = !boxSel; return true; }
+  const k = B(JB_AT.knob[0], JB_AT.knob[1]);
+  if (near(k, 26)){ if (!probe){ if (near(k, 9)){ app.fine = !app.fine; refresh(); } else turnKnob(x > k[0] ? 1 : -1); } return true; }
+  if (x > 36 && x < 148 && y > 560 && y < 656){ if (!probe){ app.mains = !app.mains; leadsChanged(); } return true; }
+  return false; }
+function boardWheel(x, y, s){ if (!SB.here) return false; const k = [LX0 + JB_AT.knob[0] * WBOX.s, LY0 + JB_AT.knob[1] * WBOX.s];
+  if (Math.hypot(x - k[0], y - k[1]) < 30){ turnKnob(s); return true; } return false; }
+const AWAY_BTN = [WBOX.x - 120, WBOX.y + 20, 240, 44];
+function boardAfter(g){
+  if (SB.here) return;
+  g.fillStyle = "rgba(30,33,38,0.94)"; g.fillRect(LX0 - WBOX.L * WBOX.s - 4, LY0 - WBOX.L * WBOX.s - 4, 8.2 * WBOX.s + 2 * WBOX.L * WBOX.s + 8, 16.2 * WBOX.s + 2 * WBOX.L * WBOX.s + 8);
+  g.setLineDash([8, 6]); g.strokeStyle = "#6b727b"; g.lineWidth = 2; g.strokeRect(LX0, LY0, 8.2 * WBOX.s, 16.2 * WBOX.s); g.setLineDash([]);
+  WB.label(g, tr("wbAway"), WBOX.x, WBOX.y - 30, {px: 14}); const r = AWAY_BTN;
+  g.fillStyle = "#f2c14e"; g.beginPath(); g.roundRect(r[0], r[1], r[2], r[3], 8); g.fill(); WB.label(g, tr("wbTake"), r[0] + r[2] / 2, r[1] + r[3] / 2, {px: 14, col: "#1c2027"}); }
+/* the box and its adaptor are carried to the other bench (exam): every plug in the box comes out, and the laser pair goes with it */
+function boxAway(here){
+  for (const k in BOX_SOCK2){ if (here) WSOCK2[k] = BOX_SOCK2[k]; else delete WSOCK2[k]; }
+  for (const e of ["dc", "lp", "ln"]){ if (here) WENDS2[e] = ENDS2[e]; else delete WENDS2[e]; }
+  if (!here){ WP.at.dc = null; WP.at.lp = null; WP.at.ln = null; app.on = false; app.mains = false; }
+  leadsChanged(); if (typeof trayLayout === "function") trayLayout(); }
 
-/* a terminal clicked: the first one takes a lead's end, the second one plugs it in (where the pair is allowed) */
-function wireClick(k){
-  if (WP.held === null || WP.held === k) WP.held = (WP.held === k) ? null : k;
-  else if (WP.ALLOWED.has(key2(WP.held, k))){ plug(WP.held, k); WP.held = null; readMeters(); refresh(); return; }
-  else WP.held = k;
-  drawWire(); }
-function unplug(k){ for (const l of [...WP.links]) if (l.split("|").includes(k)) WP.links.delete(l); WP.held = null; readMeters(); refresh(); }
+function drawWire(){ if (BOARD) BOARD.draw(); const w = document.getElementById("wwarn"); if (w) w.textContent = wireState().shorted ? tr("shorted") : ""; }
+function wireClick(k){ showView("wire"); }
+function unplug(k){ let any = false; for (const e in WP.at) if (WP.at[e] === k){ WP.at[e] = null; any = true; } if (any) leadsChanged(); }
 
 /* ==================================================================
    the stand, the tabs, and the language switch
@@ -1090,6 +1225,10 @@ function moveStand(dx, dy){
 [["sL", -1, 0], ["sU", 0, 1], ["sD", 0, -1], ["sR", 1, 0]].forEach(b =>
   document.getElementById(b[0]).addEventListener(
     "click", () => moveStand(b[1], b[2])));
+/* one turn of the ring moves the waist 4 mm along the beam */
+function turnFocus(turns){ app.model.waist = Math.min(X_LASER + 30, Math.max(X_LASER - 30, app.model.waist + 0.4 * turns)); refresh(); }
+[["fL", -1], ["fl", -0.25], ["fr", 0.25], ["fR", 1]].forEach(b =>
+  document.getElementById(b[0]).addEventListener("click", () => turnFocus(b[1])));
 
 function spotLabel(){
   const k = app.model.spot_key.split(",").map(Number);
@@ -1135,6 +1274,8 @@ function applyLang(){
   document.getElementById("lg-stand").textContent = tr("stand");
   document.getElementById("lg-notes").textContent = tr("notes");
   document.getElementById("tx-slide").textContent = tr("slide");
+  document.getElementById("lg-focus").textContent = tr("focus");
+  document.getElementById("tx-focus").textContent = tr("focushint");
   document.getElementById("tx-notes").textContent = tr("notetext");
   document.getElementById("ruler").textContent = tr("rulhint");
   document.getElementById("btn-en").className = LANG === "en" ? "on" : "";
@@ -1153,8 +1294,8 @@ const trayCv = document.getElementById("tray"), tctx = trayCv.getContext("2d"), 
 let hand = null, TRW = 190;
 function trayLayout(){
   const dpr = window.devicePixelRatio || 1, r = trayCv.parentElement.getBoundingClientRect();
-  TRW = Math.max(150, Math.floor(r.width - 16));
-  trayCv.style.height = (TROW + 52) + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round((TROW + 52) * dpr);
+  TRW = Math.max(150, Math.floor(r.width - 16)); const H = TROW * (boxRow() ? 2 : 1) + 52;
+  trayCv.style.height = H + "px"; trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(H * dpr);
   drawTray();
 }
 function drawTray(){
@@ -1169,12 +1310,20 @@ function drawTray(){
   c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
   c.fillStyle = av || hand ? "#e8eef2" : "#868e96"; c.fillText(tr("itRuler"), 50, 19);
   c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = "#69717a"; c.fillText(hand ? "" : (app.ruler.on ? tr("trayOut") : tr("trayTake")), 50, 34);
-  c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top";
-  tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, TROW + 12 + i * 14));
+  const y2 = boxRow() ? TROW : 0;
+  if (y2){ c.fillStyle = "#1f242b"; c.fillRect(6, 6 + y2, wd, TROW - 4); c.strokeStyle = "#353b43"; c.strokeRect(6.5, 6.5 + y2, wd - 1, TROW - 5);
+    c.fillStyle = "#16171a"; c.fillRect(14, 12 + y2, 26, 28); c.fillStyle = "#33a8e2"; c.fillRect(16, 14 + y2, 22, 24); c.fillStyle = "#74db8e"; c.fillRect(25, 22 + y2, 11, 8);
+    c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle"; c.fillStyle = "#e8eef2";
+    let nm = tr("itBox"); while (c.measureText(nm).width > wd - 52 && nm.length > 4) nm = nm.slice(0, -2) + "…"; c.fillText(nm, 50, 19 + y2);
+    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = "#f2c14e"; c.fillText(tr("wbTake"), 50, 34 + y2); }
+  c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
+  tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, TROW + y2 + 12 + i * 14));
 }
+function boxRow(){ return typeof SB !== "undefined" && SB.shared() && !SB.here; }
 trayCv.addEventListener("contextmenu", e => { e.preventDefault(); hand = null; drawTray(); });
 trayCv.addEventListener("mousedown", e => {
   if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
+  if (boxRow() && y >= 6 + TROW && y <= 6 + 2 * TROW){ SB.take(); return; }
   if (y >= 6 && y <= 6 + TROW){ if (hand) hand = null; else if (!app.ruler.on) hand = "ruler"; drawTray();
     document.getElementById("screen").style.cursor = hand ? "copy" : "default"; }
 });
@@ -1680,7 +1829,7 @@ function laser3(){ const x = X_LASER;
   cyl3("y",BEAM+3.0,BEAM+4.0,x+0.6,1.8,0.18,"#c9ced3",{seg:8}); knurl3("y",BEAM+4.0,BEAM+4.8,x+0.6,1.8,0.45,"#b8ab8a",{id:"laser"});
   /* the module: through both plates, its weight over the post; the focusing ring at the output */
   cyl3("x",x-3.4,x+2.6,BEAM,0,0.75,"#141518",{seg:18,id:"laser",cap:"#2a2c30"});
-  knurl3("x",x-3.7,x-2.4,BEAM,0,0.85,"#1d1f22",{id:"laser"});
+  knurl3("x",x-3.7,x-2.4,BEAM,0,0.85,"#1d1f22",{id:"focus"});
   cyl3("x",x-3.85,x-3.7,BEAM,0,0.32,app.lit&&app.cur>2?"#ff5040":"#552222",{seg:12,id:"laser"});
   if (app.lit && app.cur > 2) sphere3([x-3.9,BEAM,0],0.6,"rgba(255,60,40,0.35)");
   /* its two leads, down to the red and black posts on the carriage */
@@ -1847,7 +1996,8 @@ const KNOB3 = [BX - JB_W / 2 + 0.2 + JB_AT.knob[0] * (JB_W - 0.4) / JB_W, BZ - J
 let boxSel = true;
 function jbox3(){ const lit = app.lit && app.cur > 2.0;
   jboxBody(BX, BZ, BXH, BXL, {body:"ctrl", sw1:"boxsw", sw2:"boxsw2", knob:"knob"}, {lit, on:app.on, sel:boxSel, knob:app.knob_a});
-  for (const k of ["box_dc"]) socket3(k);
+  for (const k of ["box_dc"]){ socket3(k); sphere3(term3(k), 1.0, "rgba(0,0,0,0)", {id:"t:" + k}); }
+  sphere3([BX - 4, 2.2, BZ - 6.2], 1.0, "rgba(0,0,0,0)", {id:"t:coil"});
   /* the COIL / LASER jack the laser's pair of leads comes out of, the PHOTOGATE jack (empty here), the red BALL WIRES socket */
   { const t = [BX - 4, 2.2, BZ - 6.2]; cylAB([t[0] + 0.02, t[1], t[2]], [t[0] - 0.3, t[1], t[2]], 0.5, "#c9ced3", {seg:14, cap:"#0b0b0b"});
     cylAB([t[0] - 0.3, t[1], t[2]], [t[0] - 1.6, t[1], t[2]], 0.42, "#1b1c1f", {seg:12}); }
@@ -1949,15 +2099,15 @@ function meter3(k){ const [x, z] = MC[k], id = "ctrl", out = holsterPts(k, false
   /* the jacks: a shroud round each hole */
   for (const [j, du] of MJACK.entries()){ const jx = U(cu + du), jz = V(MJV()), ring = j === 0 ? "#cfd2d4" : j === 1 ? "#1b1d20" : "#d0352b";
     cyl3("y", MF, MF + 0.18, jx, jz, 0.58, ring, {seg:18}); cyl3("y", MF - 0.4, MF + 0.19, jx, jz, 0.3, "#070707", {seg:14}); } }
-function ctrl3(){ jbox3(); meter3(0); meter3(1); }
+function ctrl3(){ if (SB.here) jbox3(); meter3(0); meter3(1); }
 /* ---- terminals and leads: each lead leaves its terminal along its direction, drops to the desk clear of
    everything and runs round the instruments; banana plugs, a barrel plug, the posts ---- */
-const TERM = {box_dc:{n:[-1,0,0], kind:"barrel"}, adaptor:{n:[-1,0,0], kind:"barrel"}, box_lp:{n:[0,1,0], kind:"banana"}, box_ln:{n:[0,1,0], kind:"banana"},
+const TERM = {amp_10a:{n:[0,1,0], kind:"banana"}, volt_10a:{n:[0,1,0], kind:"banana"}, box_dc:{n:[-1,0,0], kind:"barrel"}, adaptor:{n:[-1,0,0], kind:"barrel"}, box_lp:{n:[0,1,0], kind:"banana"}, box_ln:{n:[0,1,0], kind:"banana"},
   amp_in:{n:[0,1,0], kind:"banana"}, amp_com:{n:[0,1,0], kind:"banana"}, volt_in:{n:[0,1,0], kind:"banana"}, volt_com:{n:[0,1,0], kind:"banana"},
   laser_p:{n:[0,0,1], kind:"banana"}, laser_n:{n:[0,0,1], kind:"banana"}};
 const PLUGS3 = {adaptor:1, box_lp:1, box_ln:1};
 const sockZ = k => MC[k][1] - MI.top + MJV();
-function term3(k){ const T3 = {box_dc:[BX-4,2.2,BZ+2.0], amp_in:[MC[0][0]+MI.a-MDIAL[0]+MJACK[2],MF,sockZ(0)], amp_com:[MC[0][0]+MI.a-MDIAL[0]+MJACK[1],MF,sockZ(0)],
+function term3(k){ const T3 = {amp_10a:[MC[0][0]+MI.a-MDIAL[0]+MJACK[0],MF,sockZ(0)], volt_10a:[MC[1][0]+MI.a-MDIAL[0]+MJACK[0],MF,sockZ(1)], box_dc:[BX-4,2.2,BZ+2.0], amp_in:[MC[0][0]+MI.a-MDIAL[0]+MJACK[2],MF,sockZ(0)], amp_com:[MC[0][0]+MI.a-MDIAL[0]+MJACK[1],MF,sockZ(0)],
     volt_in:[MC[1][0]+MI.a-MDIAL[0]+MJACK[2],MF,sockZ(1)], volt_com:[MC[1][0]+MI.a-MDIAL[0]+MJACK[1],MF,sockZ(1)],
     laser_p:[X_LASER-1.6,RT3+0.9,5.9], laser_n:[X_LASER+1.6,RT3+0.9,5.9]};
   return T3[k] || plugAt(k); }
@@ -2001,25 +2151,26 @@ function socket3(k){ const t = term3(k), n = TERM[k].n, col = WP.held === k ? "#
   if (TERM[k].kind === "barrel") cylAB(at(-0.02), at(0.25), 0.55, col || "#c9ced3", {seg:14, id, cap:"#0b0b0b"});
   else cylAB(at(-0.02), at(0.45), 0.6, col || WP.T[k].col, {seg:14, id, cap:"#0b0b0b"}); }
 const sag3 = (a, b, col, w) => poly3(leadPath(a, [0, 0, 0], b, [0, 1, 0]), col, w);
+/* where a plug is in 3-D: in its socket, sticking out along the socket's direction, or lying on the desk */
+const REST_N = {dc:[-1,0,0], lp:[-1,0,0], ln:[-1,0,0]};
+function rest3e(e){ const fixed = {dc:[BX-10,0.6,BZ+6], lp:[BX-9,0.6,BZ-1.5], ln:[BX-9,0.6,BZ+0.5]}; if (fixed[e]) return fixed[e];
+  const i = PATCH.findIndex(l => l[0] === e || l[1] === e), first = PATCH[i][0] === e;
+  return [MC[0][0] - 2 + (first ? 0 : 9), 0.6, MC[0][1] + 10 + i * 1.6]; }
+function end3e(e){ const s = WP.at[e]; if (s && (s !== "box_dc" || SB.here)) return {p:term3(s), n:TERM[s].n};
+  const i = PATCH.findIndex(l => l[0] === e || l[1] === e); return {p:rest3e(e), n:REST_N[e] || (PATCH[i][0] === e ? [-1,0,0] : [1,0,0])}; }
 function cables3(){
-  for (const k of ["amp_in","amp_com","volt_in","volt_com","laser_p","laser_n"]) socket3(k);
-  /* the leads fixed at one end: the adaptor's, and the pair from the box's COIL / LASER jack (not the one in the hand) */
-  for (const k of ["adaptor","box_lp","box_ln"]){ if (WP.held === k) continue; const r = leadRoot(k), e = plugAt(k), n = plugDir(k), end = [e[0] + n[0] * 2.2, e[1] + n[1] * 2.2, e[2] + n[2] * 2.2];
-    poly3(leadPath(r.p, r.n, end, n), leadCol(k), 1.7);
-    plugModel(TERM[k].kind, e, n, tCol(k), "t:" + k); }
-  /* the patch leads with a banana plug at each end */
-  for (const l of WP.links){ const [a, b] = l.split("|"); if (PLUGS3[a] || PLUGS3[b]) continue;
-    const A = term3(a), B = term3(b), na = TERM[a].n, nb = TERM[b].n, ea = [A[0] + na[0] * 2.2, A[1] + na[1] * 2.2, A[2] + na[2] * 2.2], eb = [B[0] + nb[0] * 2.2, B[1] + nb[1] * 2.2, B[2] + nb[2] * 2.2];
-    poly3(leadPath(ea, na, eb, nb), WP.T[a].col, 1.8); plugModel("banana", A, na, WP.T[a].col, "t:" + a); plugModel("banana", B, nb, WP.T[a].col, "t:" + b); }
-  /* the lead in the hand: its plug hangs under the pointer, tip down, and the lead follows it */
-  if (WP.held !== null){ const k = WP.held, own = PLUGS3[k], A = own ? leadRoot(k).p : term3(k), n = own ? leadRoot(k).n : TERM[k].n, H = onPlane(m3[0], m3[1], HAND_Y);
-    if (!own) plugModel("banana", A, n, leadCol(k));
-    const S0 = own ? A : [A[0] + n[0] * 2.2, A[1] + n[1] * 2.2, A[2] + n[2] * 2.2], top = [H[0], H[1] + 2.3, H[2]];
-    poly3(handLead(S0, n, top), leadCol(k), 1.8);
-    plugModel(own ? TERM[k].kind : "banana", H, [0, 1, 0], own ? "#ff8a2a" : leadCol(k));
-    face(Array.from({length:14}, (_, i) => { const t = -i / 14 * 6.2832; return [H[0] + 0.9 * Math.cos(t), 0.02, H[2] + 0.6 * Math.sin(t)]; }), {fill:"rgba(0,0,0,0.25)", flat:true, layer:-1}); }
+  for (const k of ["amp_10a","amp_in","amp_com","volt_10a","volt_in","volt_com","laser_p","laser_n"]) socket3(k);
+  const at = (p, n, d) => [p[0] + n[0] * d, p[1] + n[1] * d, p[2] + n[2] * d];
+  /* the leads fixed at one end: the adaptor's, and the pair from the box's COIL / LASER jack */
+  if (SB.here) for (const [e, k, kind, col] of [["dc","adaptor","barrel","#141414"],["lp","box_lp","banana","#c02020"],["ln","box_ln","banana","#2b2e32"]]){
+    const r = leadRoot(k), q = end3e(e);
+    poly3(leadPath(r.p, r.n, at(q.p, q.n, 2.2), q.n), col, 1.7); plugModel(kind, q.p, q.n, kind === "barrel" ? "#1b1c1f" : col, "t:" + e); }
+  /* the four meter leads, a banana plug at each end */
+  for (const [e1, e2, col] of PATCH){ const A = end3e(e1), B = end3e(e2);
+    poly3(leadPath(at(A.p, A.n, 2.2), A.n, at(B.p, B.n, 2.2), B.n), col, 1.8);
+    plugModel("banana", A.p, A.n, col, "t:" + e1); plugModel("banana", B.p, B.n, col, "t:" + e2); }
 }
-function scene3(){ desk3(); wall3(); outlet3(app.mains); adaptor3(app.mains); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
+function scene3(){ desk3(); wall3(); outlet3(app.mains && SB.here); if (SB.here) adaptor3(app.mains); rail3(); laser3(); target3(); screen3(); beam3(); ctrl3(); cables3(); }
 function layout3(){
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
   const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
@@ -2036,7 +2187,7 @@ function viewCam(v){ const W = CAM.W, H = CAM.H;
 function sceneView(v){
   if (v === "screen"){ screen3(); return; }
   if (v === "bench"){ desk3(); rail3(); laser3(); target3(); screen3(); beam3(); cables3(); return; }
-  if (v === "ctrl"){ desk3(); wall3(); outlet3(app.mains); adaptor3(app.mains); ctrl3(); cables3(); return; }
+  if (v === "ctrl"){ desk3(); wall3(); outlet3(app.mains && SB.here); if (SB.here) adaptor3(app.mains); ctrl3(); cables3(); return; }
   scene3(); }
 /* a screen point on a textured rectangle O + u U + v V, as (u, v) in 0..1 (or null) */
 function onFace(p, O, U, V){ const a = P3(O[0], O[1], O[2]), b = P3(O[0] + U[0], O[1] + U[1], O[2] + U[2]), c = P3(O[0] + V[0], O[1] + V[1], O[2] + V[2]);
@@ -2058,12 +2209,13 @@ function draw3(){
 }
 function showView(v){
   if (v !== view3){
-    if (window.HLzoom) HLzoom(cv3, {out: v === "3d"});
+    if (window.HLzoom && v !== "wire" && view3 !== "wire") HLzoom(cv3, {out: v === "3d"});
     if (view3 === "3d") freeCam = {yaw:CAM.yaw, pitch:CAM.pitch, k:CAM.k, tx:CAM.tx, ty:CAM.ty, tz:CAM.tz, px:CAM.px, py:CAM.py};
     Object.assign(CAM, v === "3d" ? (freeCam || CAM0) : viewCam(v));
   }
   view3 = v;
-  for (const k of ["3d","bench","screen","ctrl","wire"]){ document.getElementById("v-" + k).hidden = k !== "3d"; document.getElementById("vt" + k).className = k === v ? "on" : ""; }
+  for (const k of ["3d","bench","screen","ctrl","wire"]){ document.getElementById("v-" + k).hidden = k !== (v === "wire" ? "wire" : "3d"); document.getElementById("vt" + k).className = k === v ? "on" : ""; }
+  if (v === "wire" && BOARD) BOARD.layout();
   document.getElementById("t-cap3").textContent = tr("cap_" + v);
   refresh();
 }
@@ -2074,28 +2226,23 @@ const p3e = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 function rclick3(e){ const p = p3e(e), id = pick3(p[0], p[1]);
   if (hand){ hand = null; drawTray(); return; }
-  if (WP.held !== null){ WP.held = null; drawWire(); return; }
-  if (id && id.startsWith("t:")){ unplug(id.slice(2)); return; }
+  if (id && id.startsWith("t:")){ showView("wire"); return; }
   if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.on = false; drawScreen(); drawTray(); return; } }
   if (view3 !== "3d") showView("3d"); }
 cv3.addEventListener("pointerdown", e => {
   if (e.button === 1 || e.button === 2){ e.preventDefault(); const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId); down3 = {p, id:null, moved:false, shift:true, btn:e.button}; return; }
   if (e.button) return; const p = p3e(e); m3 = p; cv3.setPointerCapture(e.pointerId);
   const id = pick3(p[0], p[1]);
-  if (id && id.startsWith("t:")){ const k = id.slice(2);
-    /* picking up a plug takes it out of whatever it was in */
-    if (WP.held === null && PLUGS3[k] && partnersOf(k).length){ for (const l of [...WP.links]) if (l.split("|").includes(k)) WP.links.delete(l); readMeters(); refresh(); }
-    wireClick(k); return; }
+  if (id && id.startsWith("t:")){ showView("wire"); return; }
   /* the adaptor in the wall socket: click to pull it out or push it back in */
   if (id === "mains"){ app.mains = !app.mains; readMeters(); refresh(); return; }
   if (id === "boxsw2"){ boxSel = !boxSel; return; }
   /* the box's ON/OFF toggle, and its ADJUST knob: its right half turns it up, its left half down, its middle switches coarse/fine */
-  if (id === "boxsw"){ app.on = !app.on; readMeters(); refresh(); return; }
+  if (id === "boxsw"){ if (SB.here){ app.on = !app.on; readMeters(); refresh(); } return; }
   if (id === "knob"){ const c = P3(KNOB3[0], BXL + 1.6, KNOB3[1]), d = p[0] - c[0]; if (Math.hypot(p[0] - c[0], p[1] - c[1]) < 0.3 * CAM.k){ app.fine = !app.fine; refresh(); } else turnKnob(d > 0 ? 1 : -1); return; }
   if (view3 === "screen"){ const q = screenAt(p);
     if (q && hand === "ruler"){ app.ruler.x = q[0]; app.ruler.y = q[1]; app.ruler.ang = 0; app.ruler.on = true; hand = null; drawScreen(); drawTray(); return; }
     if (q && rulerGrab(q[0], q[1])){ down3 = {p, id:"ruler", moved:true}; return; } }
-  if (WP.held !== null){ WP.held = null; drawWire(); }
   down3 = {p, id, moved:false, shift:e.shiftKey || view3 !== "3d"}; });
 cv3.addEventListener("pointermove", e => { const p = p3e(e), dx = p[0] - m3[0], dy = p[1] - m3[1]; m3 = p;
   if (!down3) return; if (Math.hypot(p[0]-down3.p[0], p[1]-down3.p[1]) > 4) down3.moved = true; if (!down3.moved) return;
@@ -2110,10 +2257,12 @@ cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
   if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; } rulerDrop();
   if (down3 && !down3.moved && view3 === "3d"){ const id = down3.id;
     if (id === "screen3") showView("screen"); else if (id === "ctrl") showView("ctrl");
-    else if (id === "rail" || id === "laser" || id === "target") showView("bench"); }
+    else if (id === "rail" || id === "laser" || id === "focus" || id === "target") showView("bench"); }
   down3 = null; });
 cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
-  if (pick3(p[0], p[1]) === "knob"){ turnKnob(s); return; }
+  const hit = pick3(p[0], p[1]);
+  if (hit === "knob"){ turnKnob(s); return; }
+  if (hit === "focus"){ turnFocus(0.25 * s); return; }
   if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.ang += s * Math.PI / 90; drawScreen(); return; } }
   const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
@@ -2121,6 +2270,9 @@ for (const id of ["v-bench","v-ctrl"]) document.getElementById(id).addEventListe
 window.addEventListener("resize", layout3);
 (function loop3(){ draw3(); requestAnimationFrame(loop3); })();
 
+BOARD = new WiringBoard(document.getElementById("wire"), {W: WBW, H: WBH, box: Object.assign({tex: JBTEX}, WBOX), sockets: WSOCK2, ends: WENDS2, at: WP.at,
+  under: boardUnder, draw: boardDraw, drawLid: boardLid, lidHit: boardHit, lidWheel: boardWheel, after: boardAfter, changed: leadsChanged, tr, back: () => showView("3d")});
+window.addEventListener("resize", () => { if (view3 === "wire") BOARD.layout(); });
 readMeters();
 applyLang();
 </script>

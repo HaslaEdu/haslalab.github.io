@@ -4,19 +4,28 @@ This is an analysis mask only: it never modifies the source or proof. Include
 every nonwhite SVG glyph sample, including faint antialiasing and one-pixel
 components; source-font metric boxes are not used as ink substitutes.
 """
-import re
+import re,math
+from collections import defaultdict
 import cv2
 import numpy as np
 import pymupdf as fitz
+
+def _origin_selector(origins,tolerance=.001):
+    """Select the same physical origin without decimal half-even aliases."""
+    scale=1/tolerance;grid=defaultdict(list)
+    for x,y in origins:grid[(math.floor(x*scale),math.floor(y*scale))].append((x,y))
+    def selected(x,y):
+        ix,iy=math.floor(x*scale),math.floor(y*scale)
+        return any(abs(px-x)<=tolerance and abs(py-y)<=tolerance
+            for dx in(-1,0,1)for dy in(-1,0,1)
+            for px,py in grid.get((ix+dx,iy+dy),()))
+    return selected
 
 def ink_envelope(page,origins,scale=4):
     svg=page.get_svg_image(text_as_path=True)
     defs=re.search(r'<defs>[\s\S]*?</defs>',svg)
     definition=re.sub(r'<image\b[^>]*?/?>','',defs[0])if defs else'<defs/>'
-    points={(round(x,2),round(y,2))for x,y in origins}
-    def selected(x,y):
-        # Input positions can differ by a sub-pixel native PDF float ULP.
-        return any((round(x+dx,2),round(y+dy,2))in points for dx in[-.02,-.01,0,.01,.02]for dy in[-.02,-.01,0,.01,.02])
+    selected=_origin_selector(origins)
     uses=[]
     for use in re.findall(r'<use\b[^>]*data-text=[^>]*?/?>',svg):
         match=re.search(r'transform="matrix\(([^)]+)\)"',use)

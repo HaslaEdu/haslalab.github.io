@@ -16,8 +16,8 @@ const sql = q => execSync(`npx wrangler d1 execute haslalab-community --local --
 sql("DELETE FROM lab_schemes; DELETE FROM lab_rubrics; DELETE FROM ratelimits");
 const X = { comp: "ipho", year: 2024, tasks: ["E1", "E2"], lang: "ko", sources: { E1: { sol: "IPhO_2024_S1_KO.pdf" }, E2: { sol: "IPhO_2099_missing.pdf" } } };
 const toScan = async (tok, x) => {
-  const [, j] = await call("POST", "/lab/start", x, tok);
-  await call("POST", `/lab/sessions/${j.session.id}/pay`, {}, tok);                       // grading asked for: pages are read on arrival
+  const [, j] = await call("POST", "/lab/start", {...x,provider:"gemini"}, tok);
+  await call("POST", `/lab/sessions/${j.session.id}/pay`, {provider:"gemini"}, tok);       // selected provider is pinned before paid reading
   await call("POST", `/lab/sessions/${j.session.id}/finish`, null, tok);
   return { sid: j.session.id, key: j.token };
 };
@@ -32,9 +32,9 @@ ok(s === 200 && j.task === "E2" && j.kind === "working" && j.moved, "page 2: the
 [s, j] = await up(sid, key, "E1", "working", pad(800));
 ok(s === 200 && j.legible === "poor", "page 3: a poor page is marked poor");
 const P3 = j.id;
-ok((await (await fetch("http://127.0.0.1:8799/seen")).json()).ocrIntoRead >= 3, "each page went through Upstage first, its transcript beside the image for Gemini");
+ok((await (await fetch("http://127.0.0.1:8799/seen")).json()).imageReads >= 3, "the selected provider reads each original image directly in one call");
 [s, j] = await up(sid, key, "E1", "answer", pad(450));
-ok(s === 200 && j.legible === "partial", "Upstage unsure of a page (confidence 0.5) → at best «partial», although Gemini called it good " + JSON.stringify(j));
+ok(s === 200 && j.legible === "partial", "the selected model marks an uncertain photographed page as partial " + JSON.stringify(j));
 await call("DELETE", `/lab/sessions/${sid}/pages/${j.id}`, null, G);
 [s, j] = await call("GET", `/lab/up/${sid}`, null, null, { "X-Lab-Token": key });
 ok(j.pages.map(p => p.legible).join() === "good,good,poor", "the phone sees how each page was read");
@@ -44,7 +44,7 @@ ok(j.session.pages[0].read && j.session.pages[0].read.items.length === 4 && j.se
 ok(s === 400 && j.error === "read_only", "the candidate cannot type answers in after the exam");
 
 /* submit: E1 from the scheme of the official solution; E2's solution does not exist */
-[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, G);
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {provider:"gemini"}, G);
 const e1 = j.session.detail.tasks.E1, e2 = j.session.detail.tasks.E2, it = id => e1.items.find(x => x.id === id);
 ok(e1.status === "graded" && e1.points === 3.5 && e1.regulation === "2026-10-29", "E1 graded against the 3.5-point scheme, regulation version recorded");
 ok(it("A.1").got === 0.4 && it("A.1").by === "code" && it("A.1").value === 108.2, "A.1: 108.2 in [105, 111] → full 0.4, decided by the code (the model said half)");
@@ -64,7 +64,7 @@ ok(/IPhO_2024_S1_KO\.pdf/.test(kept) && (kept.match(/"source"/g) || []).length =
 const H = await sign("grB");
 ({ sid, key } = await toScan(H, { ...X, tasks: ["E1"], sources: { E1: { sol: "IPhO_2024_S1.pdf" } } }));
 await up(sid, key, "E1", "working", png);
-[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, H);
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {provider:"gemini"}, H);
 const w = j.session.detail.tasks.E1;
 ok(w.status === "graded" && w.items.filter(x => x.id !== "C.1").every(x => x.got === 0 && x.rules.includes("R1")) && w.score === 0.5,
   "only a working sheet: every answer-sheet item 0 (R1), the method mark stays → 0.5 " + JSON.stringify(w.items.map(x => [x.id, x.got, x.rules])));
@@ -87,7 +87,7 @@ const par = await Promise.all([1, 2, 3, 4, 5].map(() => up(sid, key, "E1", "answ
 const nos = par.map(([, x]) => x.no).sort();
 ok(par.every(([st]) => st === 200) && new Set(nos).size === 5 && nos.join() === "1,2,3,4,5", "5 pages sent at once are numbered 1–5 " + JSON.stringify(nos));
 /* the solution could not be fetched this time: an error, graded again by itself later */
-[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, M);
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {provider:"gemini"}, M);
 ok(j.session.status === "error" && j.session.detail.tasks.E1.why === "scheme_failed", "solution fetch failed → error (not «no solution») " + j.session.status);
 await sleep(3500);                                                  // the retry waits more than LAB_TEST_RETRY_SEC (2) whole seconds
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, M);
@@ -98,7 +98,7 @@ const Q = await sign("grE");
 ({ sid, key } = await toScan(Q, { ...X, tasks: ["E1"], sources: { E1: { sol: "IPhO_2024_table" + rnd + ".pdf" } } }));
 [s, j] = await up(sid, key, "E1", "answer", pad(120));
 ok(s === 200 && j.items === 7, "a page with two tables and a graph read " + JSON.stringify(j));
-[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, Q);
+[s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {provider:"gemini"}, Q);
 const tq = j.session.detail.tasks.E1, iq = id => tq.items.find(x => x.id === id);
 ok(iq("D.1").got === 0.2 && iq("D.1").rules.includes("R11") && iq("D.1").rules.includes("R8"), "D.1 table: 4 rows < the 5 the scheme asks → no marks for the count, columns kept (R8, R11) " + JSON.stringify(iq("D.1")));
 ok(iq("D.2").got === 0.3 && iq("D.2").n_min === 7 && iq("D.2").rules.includes("R11"), "D.2 graph of a many-point measurement: 6 points < 7 → no marks for the count (R11) " + JSON.stringify(iq("D.2")));

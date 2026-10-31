@@ -1,0 +1,235 @@
+{
+  "status": "READY_NATURAL_SPACING_ORIGINAL_RESOURCES",
+  "year": 2007,
+  "generated_at": "2026-10-31T18:55:21.346900",
+  "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\source-audit\\CPhO_2007_T_ZH.pdf",
+  "source_sha256": "2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9",
+  "source_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "files": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_KO.pdf",
+      "sha256": "758718e0c6351261d8def831859a2960859cea159d808cf1ef22da828e0b5f8a",
+      "bytes": 9762573,
+      "pages": 4,
+      "language": "KO",
+      "kind": "T",
+      "qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_KO.qa.json",
+      "qa_sha256": "09486396f756a5fae33cbb6b25bd74225ba984cda67b121563f89caf13723afe",
+      "immutable_translation_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_KO.pdf",
+      "immutable_translation_input_sha256": "7612c585b4419fa20eca486f2d83ccd69b65bf0ba11409b703d98c1608312db1"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_EN.pdf",
+      "sha256": "65e1effc40c26bf0581e9bfdf0cc708349ce76e07d8a27ecbf9f9051b20f1e6f",
+      "bytes": 1740897,
+      "pages": 4,
+      "language": "EN",
+      "kind": "T",
+      "qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_EN.qa.json",
+      "qa_sha256": "2453cc14f7346d6c7d6936e6462c8a6a515289f240934670c012a704d78916a3",
+      "immutable_translation_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_EN.pdf",
+      "immutable_translation_input_sha256": "f48bd7047f147f45585d6e4d58c95e597839028c7937fa45ce7c79ddb10fdee7"
+    }
+  ],
+  "style_policy": "Original figures and encoded native mathematics/Latin keep font, GID, program, point size, paint and y; reviewed x translation only. Regular Korean serif uses Batang at original size. English SimSun and official full SimHei5.03 actual families; quarter-em prose spaces, no justification/scaling.",
+  "all_eight_page_native_ink_missing_pixels": 0,
+  "raw_SVG_reference_candidates": 0,
+  "native_reference_policy": "Exact original encoded-CID witness is authoritative for a documented hinted-font/SVG raster-phase discrepancy. Raw SVG diagnostics remain in the report.",
+  "all_eight_page_nonselected_graphics_changes": 0,
+  "all_eight_page_original_expression_relative_geometry_preserved": true,
+  "native_script_base_pairs_checked": 130,
+  "complete_native_expressions_checked": 10,
+  "maximum_native_script_base_relative_x_error_pt": 3.0517578125e-05,
+  "maximum_complete_expression_relative_x_error_pt": 3.0517578125e-05,
+  "all_eight_page_changes_outside_text_and_declared_math_motion": 0,
+  "all_eight_page_Hangul_visibility_components": 0,
+  "all_eight_page_unexpected_Hangul_visibility_components": 0,
+  "inherited_original_footer_profiles": [],
+  "all_eight_page_image_palette_ICC_SMask_graphs_preserved": true,
+  "all_eight_page_combined_vs_proof_both_renderers_changed_pixels": 0,
+  "authoring_files": [
+    {
+      "path": "tools/cpho_natural_spacing.py",
+      "sha256": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75"
+    },
+    {
+      "path": "tools/cpho_natural_spacing_qa.py",
+      "sha256": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b"
+    },
+    {
+      "path": "tools/cpho_natural_full_qa.py",
+      "sha256": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e"
+    },
+    {
+      "path": "tools/cpho_natural_inventory.py",
+      "sha256": "cdcca3d9fab790d135f7eecf2f40d9341f8113406bd523f7fef61f7dd311e121"
+    },
+    {
+      "path": "tools/cpho_natural_atoms.py",
+      "sha256": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35"
+    },
+    {
+      "path": "tools/cpho_natural_english_fonts.py",
+      "sha256": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435"
+    },
+    {
+      "path": "tools/cpho_natural_prose_edits.py",
+      "sha256": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca"
+    },
+    {
+      "path": "tools/cpho_natural_rotated_labels.py",
+      "sha256": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429"
+    },
+    {
+      "path": "tools/pdf_native_glyph_raster_witness.py",
+      "sha256": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e"
+    },
+    {
+      "path": "tools/pdf_native_glyph_promote.py",
+      "sha256": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80"
+    },
+    {
+      "path": "tools/pdf_native_inline_reposition.py",
+      "sha256": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862"
+    },
+    {
+      "path": "tools/pdf_native_inline_reposition_regression.py",
+      "sha256": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0"
+    },
+    {
+      "path": "tools/pdf_moved_native_ink.py",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7"
+    },
+    {
+      "path": "tools/test_pdf_native_image_motion.py",
+      "sha256": "d9cd33cb8b941f0cfbdf2e354a74eabbf04858b34b6bc45331e6c37a40df582b"
+    },
+    {
+      "path": "tools/pdf_new_hangul_graphics_overlap.py",
+      "sha256": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620"
+    },
+    {
+      "path": "tools/pdf_native_script_motion_audit.py",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76"
+    },
+    {
+      "path": "tools/pdf_korean_natural_composer.py",
+      "sha256": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb"
+    },
+    {
+      "path": "tools/izho_natural_spacing.py",
+      "sha256": "86a53ff3052324c20c32cca0e7afcb5e4d5f24b604219e5975ef8d7fbc8d358e"
+    },
+    {
+      "path": "tools/izho_native_atomic_tokens.py",
+      "sha256": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377"
+    },
+    {
+      "path": "tools/pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230"
+    },
+    {
+      "path": "tools/pdf_original_style_fonts.py",
+      "sha256": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758"
+    },
+    {
+      "path": "tools/pdf_native_geometry_motion.py",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf"
+    },
+    {
+      "path": "tools/pdf_text_motion_ink.py",
+      "sha256": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0"
+    },
+    {
+      "path": "tools/pdf_original_graphics_ink.py",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a"
+    },
+    {
+      "path": "tools/pdf_original_image_ink.py",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea"
+    },
+    {
+      "path": "tools/pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436"
+    },
+    {
+      "path": "tools/pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473"
+    },
+    {
+      "path": "tools/izho_natural_spacing_qa.py",
+      "sha256": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943"
+    },
+    {
+      "path": "tools/izho_early_fixed_style.py",
+      "sha256": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826"
+    },
+    {
+      "path": "tools/izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9"
+    },
+    {
+      "path": "tools/cpho_original_latin_fonts.py",
+      "sha256": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2"
+    },
+    {
+      "path": "tools/ko/cpho/2007/original/page01.tsv",
+      "sha256": "e17f3ea7a385fce5d1c2ecb65e9925f813520a67e98090c778a8f13259a182b7"
+    },
+    {
+      "path": "tools/ko/cpho/2007/original/page02.tsv",
+      "sha256": "c6ef97fa3f641bab0f81d09ff30504517a852c7673e540d7eeab18f066bfda75"
+    },
+    {
+      "path": "tools/ko/cpho/2007/original/page03.tsv",
+      "sha256": "fb4b400562c4298989cc8a5b38a00e5f62183fc7fe3cdbf105b26797b716a9c2"
+    },
+    {
+      "path": "tools/ko/cpho/2007/original/page04.tsv",
+      "sha256": "d172f5db20b5f92cf9a36355750f39677ae8564751596d20e4e078402e00087e"
+    },
+    {
+      "path": "tools/ko/cpho/2007/natural/atomic-inline.json",
+      "sha256": "00c59368d00d9a6bde4f4ebaa5342a25cacf7e08dc269cf34db70b8f14a0d097"
+    }
+  ],
+  "source_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\authoring-snapshot",
+  "source_snapshot_authoring_hashes_verified": true,
+  "authoring_dependency_files": [
+    {
+      "path": "tools/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514"
+    },
+    {
+      "path": "tools/pdf_grading_columns_stationary.py",
+      "sha256": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c"
+    },
+    {
+      "path": "tools/izho_natural_spacing_rebuild.py",
+      "sha256": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e"
+    },
+    {
+      "path": "tools/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8"
+    },
+    {
+      "path": "tools/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e"
+    },
+    {
+      "path": "tools/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e"
+    },
+    {
+      "path": "tools/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65"
+    }
+  ],
+  "source_plan_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\authoring-snapshot\\tmp\\original-style-repair\\2007\\slots.json",
+  "source_plan_snapshot_sha256": "f343edd02822c86d52aec4a98f7e63a66ecc2d68cc1b2270b63e6b69254e3078"
+}

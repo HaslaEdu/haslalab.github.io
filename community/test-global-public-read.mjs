@@ -238,7 +238,7 @@ test('public mutations authenticate inside a first-primary session while balance
   assert.equal(h.edgeModes.length, 0);
 });
 
-test('monthly attempt validation and unconfigured grading use the raw primary binding without a checkpoint session', async () => {
+test('monthly attempt validation and an unavailable selected grader stay on raw primary without spending an attempt', async () => {
   const h = await fixture({ actualBackend: true });
   // Publish/setup through the normal primary path before adding a separate structured fixture.
   assert.equal((await h.request('/monthly?week=2099-W01', { auth: true, headers: { 'Cache-Control': 'no-cache' } })).status, 200);
@@ -249,14 +249,15 @@ test('monthly attempt validation and unconfigured grading use the raw primary bi
   const invalid = await h.request('/problems/4/submit', { auth: true, method: 'POST', body: { request_id: 'invalid', parts: [] } });
   assert.equal(invalid.status, 400); assert.equal(invalid.data.error, 'bad_answer_sheet');
   assert.equal(invalid.headers.has('X-D1-Bookmark'), false);
+  const beforeSubmissions=h.sql.prepare('SELECT count(*) n FROM submissions').get().n;
   const accepted = await h.request('/problems/4/submit', { auth: true, method: 'POST', body: {
-    request_id: 'local-monthly-request'.padEnd(32, 'x'), parts: [{ id: 'a', answer: 'Submitted equation', working: 'Submitted derivation' }],
+    provider:'gemini',request_id: 'local-monthly-request'.padEnd(32, 'x'), parts: [{ id: 'a', answer: 'Submitted equation', working: 'Submitted derivation' }],
   } });
-  assert.equal(accepted.status, 200); assert.equal(accepted.data.status, 'pending', 'no grader key is configured');
-  assert.equal(accepted.data.attempts.used, 1); assert.equal(accepted.headers.has('X-D1-Bookmark'), false);
+  assert.equal(accepted.status,503);assert.equal(accepted.data.error,'provider_unavailable','an unavailable selected model cannot consume a grading attempt');
+  assert.equal(h.sql.prepare('SELECT count(*) n FROM submissions').get().n,beforeSubmissions);assert.equal(accepted.headers.has('X-D1-Bookmark'),false);
   assert.equal(h.primaryModes.length, 0); assert.equal(h.edgeModes.length, 0);
   assert.ok(h.queries.some(row => /FROM sessions/.test(row.query)));
-  assert.ok(h.queries.some(row => /INSERT INTO submissions/.test(row.query)));
+  assert.ok(!h.queries.some(row => /INSERT INTO submissions/.test(row.query)));
   assert.ok(h.queries.every(row => row.lane === 'primary'));
   for (const path of ['/api/problems/4/submit', '/api/problems', '/api/submissions', '/api/admin/problems', '/api/admin/submissions/1']) {
     assert.equal(primaryCheckpointRequest(new Request('https://primary.test' + path, { method: 'POST' })), false);

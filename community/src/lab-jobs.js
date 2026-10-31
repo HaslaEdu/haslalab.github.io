@@ -28,13 +28,13 @@ export async function requireLabQueue(env) {
   if (!hasLabQueue(env)) throw Object.assign(new Error('jobs_unavailable'), { code: 'jobs_unavailable', status: 503 });
   await ensureLabJobs(env);
 }
-export async function enqueueLabJobs(env, jobs, { retryFailed = false,leadingStatements=[] } = {}) {
+export async function enqueueLabJobs(env, jobs, { retryFailed = false,leadingStatements=[],admission } = {}) {
   await requireLabQueue(env);
   if (!jobs.length) return [];
   const at = clock();
   await env.DB.batch([...leadingStatements,...jobs.flatMap(j => [
     env.DB.prepare(`INSERT OR IGNORE INTO lab_jobs(job_key,kind,session_id,page_id,task,lang,status,available_at,created_at,updated_at)
-      VALUES(?,?,?,?,?,?,'pending',?,?,?)`).bind(j.key, j.kind, j.sessionId, j.pageId || null, j.task || null, j.lang === 'en' ? 'en' : 'ko', at, at, at),
+      SELECT ?,?,?,?,?,?,'pending',?,?,?${admission?' WHERE '+admission.sql:''}`).bind(j.key, j.kind, j.sessionId, j.pageId || null, j.task || null, j.lang === 'en' ? 'en' : 'ko', at, at, at,...(admission?.args||[])),
     ...(retryFailed ? [env.DB.prepare(`UPDATE lab_jobs SET status='pending',attempts=0,available_at=?,error=NULL,lease_until=NULL,lease_token=NULL,updated_at=?
       WHERE job_key=? AND status='failed'`).bind(at, at, j.key)] : []),
   ])]);
@@ -106,7 +106,7 @@ export async function consumeLabJobs(batch, env, handlers) {
       const why = String(e?.code || e?.message || 'job_failed').slice(0, 100);
       console.error('lab job', row.kind, row.id, why);
       if (e?.retryable === false || row.attempts >= MAX_ATTEMPTS) {
-        await finish(await handlers.failure(env, row, why), true);
+        await finish(await handlers.failure(env, row, why, e), true);
         message.ack();
       } else {
         const delaySeconds = Math.min(300, 15 * 2 ** (row.attempts - 1));

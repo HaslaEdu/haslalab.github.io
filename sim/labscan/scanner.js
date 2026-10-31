@@ -1,23 +1,24 @@
 /* ------------------------------------------------------------------
-   문서 스캔 엔진 v2
+   기기 내 문서 스캔 엔진
    ------------------------------------------------------------------
-   답안지를 찍은 사진 한 장을 A4 비율의 반듯한 흑백 문서로 만듭니다.
+   사진의 문서 모서리를 찾아 원근을 보정합니다. 기본 출력은 원래 색상이며
+   A4 비율은 사용자가 선택한 경우에만 적용합니다.
 
    흐름:
      사진 → (EXIF 회전 보정) → 작업용 캔버스
-          → 네 꼭짓점 찾기  ① 인쇄된 검은 마커
-                            ② 종이 테두리 (마커 실패 시)
-                            ③ 전체 화면 (둘 다 실패 시 · 사용자가 조정)
+          → Worker의 인쇄 마커 / DocAligner 추론 + 원본 경계 검증
+          → 불확실하면 작업 이미지 유지 · 수동 모서리 확인
           → 원근 보정 (겹샘플링 + 이중선형)
-          → 그림자 제거 · 이진화
+          → 선택한 경우에만 그림자 제거 · 이진화
           → 품질 점검 (흔들림 · 반사광)
 
    설계 원칙
    - 계산의 핵심은 캔버스를 모르는 순수 함수입니다. (data, W, H) 만 받습니다.
-     그래서 node 에서 그대로 테스트할 수 있고, 나중에 Worker 로 옮기기도 쉽습니다.
+     그래서 node 에서 그대로 테스트하고 Worker에서도 공유합니다.
    - 적분영상 대신 **슬라이딩 합**을 씁니다. A4 200dpi(1654×2339)에서
      적분영상은 Float64 로 30MB 넘게 잡아먹어 저사양 폰에서 터집니다.
-   - 외부 라이브러리 없음. 폰 브라우저에서 바로 돕니다.
+   - 모델·ONNX Runtime은 같은 출처의 고정 정적 파일로 지연 로드합니다.
+     사진이나 토큰을 모델 다운로드·추론 요청에 보내지 않습니다. 라이선스는 README 참조.
 ------------------------------------------------------------------- */
 
 /* A4 = 210 × 297 mm */
@@ -834,6 +835,19 @@ export function enhancePixels(data, W, H, mode = 'clean') {
 
   const out = new Uint8ClampedArray(W * H * 4);
 
+  // Document colour mode corrects uneven illumination without the clean mode's
+  // hard paper/ink threshold. Faint grid lines and coloured directional marks
+  // remain distinct; all channels use the same local lighting correction.
+  if (mode === 'color') {
+    const st = localStats(gray, W, H, r, ds, false);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const o = (y * W + x) * 4, gain = 255 / Math.max(70, st.mean(x, y));
+      for (let c = 0; c < 3; c++) out[o + c] = Math.max(0, Math.min(255, Math.round((data[o + c] * gain - 8) * 255 / 247)));
+      out[o + 3] = 255;
+    }
+    return out;
+  }
+
   if (mode === 'mono') {
     const st = localStats(gray, W, H, r, ds, true);
     const k = 0.18, R = 96; // R = 밝기 편차의 최대 기대치
@@ -1000,6 +1014,54 @@ export function detectQuad(canvas) {
   return detectDocumentQuadGray(toGray(img.data, W, H), W, H);
 }
 
+/** Lazy, entirely on-device detector. No camera image is sent to an API.
+ * Classical candidates remain editable when a worker/model is unavailable. */
+export async function detectDocumentQuad(canvas, options = {}) {
+  if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
+    try {
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
+      return await getDocumentDetector().detect(canvas, options);
+    } catch (error) { if (error?.name === 'AbortError') throw error; }
+  }
+  // A failed browser worker must not hide every outline only in live mode.
+  // Keep classical preview work bounded and retain its corners strictly as an
+  // editable proposal, just like the still-photo fallback.
+  const working = options.preview ? toCanvas(canvas, 384) : canvas;
+  const proposed = detectQuad(working);
+  if (working !== canvas && proposed.corners) proposed.corners = proposed.corners.map(p => ({ x: p.x * canvas.width / working.width, y: p.y * canvas.height / working.height }));
+  return { ...proposed, engine: 'manual-fallback', scanEligible: false, autoCaptureEligible: false,
+    reason: 'document_model_unavailable' };
+}
+
+export async function warmDocumentDetector(options) {
+  if (typeof Worker === 'undefined') return false;
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  catch { return false; }
+}
+
+async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
+  if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
+  try {
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
+    return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
+  } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
+}
+
+/** Auto preserves the observed document aspect; only an explicit A4 choice
+ * applies the A-series ratio. Neither a quadrilateral nor an ML model measures
+ * physical sheet size. The output short side targets the existing 200dpi size. */
+export function documentOutputSize(corners, outW = dpiToWidth(DEFAULT_DPI), pageFormat = 'auto', inset = null) {
+  const pts = orderCorners(corners), length = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const horizontal = Math.max(length(pts[0], pts[1]), length(pts[2], pts[3]));
+  const vertical = Math.max(length(pts[0], pts[2]), length(pts[1], pts[3]));
+  const landscape = horizontal > vertical * 1.12;
+  const measured = vertical / horizontal * (inset ? (inset.right - inset.left) / (inset.bottom - inset.top) : 1);
+  const ratio = pageFormat === 'a4' ? (landscape ? 1 / A4_RATIO : A4_RATIO) : Math.max(.2, Math.min(5, measured));
+  let width = ratio >= 1 ? outW : outW / ratio, height = width * ratio;
+  const cap = Math.min(1, 3200 / Math.max(width, height));
+  return { width: Math.max(2, Math.round(width * cap)), height: Math.max(2, Math.round(height * cap)) };
+}
+
 /**
  * 캔버스를 A4 직사각형으로 폅니다.
  *
@@ -1010,14 +1072,9 @@ export function detectQuad(canvas) {
  *   자리를 알려주면 지면 전체를 정확한 A4 로 복원합니다.
  *   종이 테두리로 찾은 경우에는 null 을 주세요.
  */
-export function warp(canvas, corners, outW = dpiToWidth(DEFAULT_DPI), inset = null) {
+export function warp(canvas, corners, outW = dpiToWidth(DEFAULT_DPI), inset = null, options = {}) {
   const pts = orderCorners(corners);
-  const top = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
-  const left = Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y);
-  /* 가로로 누운 종이면 A4 가로로 냅니다 */
-  const landscape = top > left * 1.12;
-  const w = landscape ? Math.round(outW * A4_RATIO) : outW;
-  const h = landscape ? outW : Math.round(outW * A4_RATIO);
+  const { width: w, height: h } = documentOutputSize(pts, outW, options.pageFormat || 'a4', inset);
 
   let dstQuad = null;
   if (inset) {
@@ -1099,8 +1156,10 @@ export async function rotatePhoto(file) {
 }
 
 /** Optional desktop/weekly corner editor. The caller still decides when to upload. */
-export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko' } = {}) {
+export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'auto', signal } = {}) {
+  if (signal?.aborted) return null;
   const image = await loadImage(baseUrl), W = image.naturalWidth || image.width, H = image.naturalHeight || image.height;
+  if (signal?.aborted) return null;
   const ko = lang !== 'en', txt = (a, b) => ko ? a : b;
   const points = (corners || [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: 0, y: H }, { x: W, y: H }]).map(p => ({ ...p }));
   const dialog = document.createElement('dialog');
@@ -1111,6 +1170,11 @@ export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko
     const option = document.createElement('option'); option.value = value; option.textContent = label; select.append(option);
   }
   select.value = marker ? 'marker' : 'page'; select.setAttribute('aria-label', txt('기준점', 'Corner reference'));
+  const format = document.createElement('select');
+  for (const [value, label] of [['auto', txt('문서 비율 유지', 'Keep document proportions')], ['a4', txt('A4 답안지 · 200dpi', 'A4 answer sheet · 200dpi')]]) {
+    const option = document.createElement('option'); option.value = value; option.textContent = label; format.append(option);
+  }
+  format.value = pageFormat === 'a4' ? 'a4' : 'auto'; format.setAttribute('aria-label', txt('출력 용지', 'Output format'));
   const hint = document.createElement('p'); hint.textContent = txt('네 점을 선택한 기준에 맞게 끌어 옮기세요.', 'Drag all four points to the selected reference.'); hint.style.fontSize = '13px';
   const wrap = document.createElement('div'); Object.assign(wrap.style, { position: 'relative', width: 'fit-content', maxWidth: '100%', margin: '16px auto' });
   Object.assign(image.style, { display: 'block', maxWidth: '100%', maxHeight: '64vh', width: 'auto', height: 'auto' }); wrap.append(image);
@@ -1126,20 +1190,39 @@ export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko
   });
   const controls = document.createElement('div'); Object.assign(controls.style, { display: 'flex', gap: '10px' });
   const cancel = document.createElement('button'), apply = document.createElement('button');
-  cancel.textContent = txt('취소', 'Cancel'); apply.textContent = txt('A4로 보정', 'Correct as A4');
+  cancel.textContent = txt('취소', 'Cancel'); apply.textContent = txt('모서리 적용', 'Apply corners');
   for (const button of [cancel, apply]) { button.type = 'button'; Object.assign(button.style, { flex: '1', padding: '12px', cursor: 'pointer', borderRadius: '7px' }); controls.append(button); }
-  dialog.append(title, select, hint, wrap, controls); document.body.append(dialog);
+  dialog.append(title, select, format, hint, wrap, controls); document.body.append(dialog);
   return new Promise(resolve => {
     let done = false;
-    const finish = result => { if (done) return; done = true; dialog.close(); dialog.remove(); resolve(result); };
+    const abort = () => finish(null);
+    const finish = result => { if (done) return; done = true; signal?.removeEventListener('abort', abort); dialog.close(); dialog.remove(); resolve(result); };
     cancel.onclick = () => finish(null); dialog.oncancel = e => { e.preventDefault(); finish(null); }; dialog.onclose = () => finish(null);
-    apply.onclick = () => { const ordered = orderCorners(points); if (quadScore(ordered, W, H) < 0.1) { hint.textContent = txt('네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.', 'Place the four points at four different corners.'); return; } finish({ corners: ordered, marker: select.value === 'marker' }); };
+    apply.onclick = () => { const ordered = orderCorners(points); if (quadScore(ordered, W, H) < 0.1) { hint.textContent = txt('네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.', 'Place the four points at four different corners.'); return; } finish({ corners: ordered, marker: select.value === 'marker', pageFormat: format.value }); };
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) return finish(null);
     dialog.showModal(); handles[0].focus();
   });
 }
 
 /* 무거운 단계 사이에 한 틱 쉬어 화면이 얼지 않게 합니다 */
 const breathe = () => new Promise((r) => setTimeout(r, 0));
+const blobPreview = blob => new Promise((resolve, reject) => {
+  const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('bad_image')); reader.readAsDataURL(blob);
+});
+
+/** Only a detector result from these exact captured video pixels may bypass a
+ * second detector pass. Native-camera photos can have another field of view and
+ * must be detected independently. Normalised coordinates survive working-size
+ * downscaling without leaking preview coordinates into full-size geometry. */
+export function validatedDetectionHint(hint, width, height) {
+  if (hint?.source !== 'same-video-frame' || hint.scanEligible !== true || !['ml', 'marker', 'page'].includes(hint.method) ||
+      !Number.isFinite(hint.score) || hint.score < .25 || !Array.isArray(hint.corners) || hint.corners.length !== 4 ||
+      hint.corners.some(p => !p || !Number.isFinite(p.x) || !Number.isFinite(p.y) || p.x <= 0 || p.y <= 0 || p.x >= 1 || p.y >= 1)) return null;
+  const corners = orderCorners(hint.corners.map(p => ({ x: p.x * width, y: p.y * height })));
+  if (quadScore(corners, width, height) < .1) return null;
+  return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
+}
 
 /**
  * 사진 한 장을 답안지로 다듬습니다.
@@ -1149,7 +1232,7 @@ const breathe = () => new Promise((r) => setTimeout(r, 0));
  * @returns {{blob, previewUrl, corners, autoScore, method, quality, width, height, baseUrl, baseW, baseH}}
  */
 export async function processShot(file, opts = {}) {
-  const { corners = null, mode = 'clean', dpi = DEFAULT_DPI, onProgress } = opts;
+  const { corners = null, mode = 'color', dpi = DEFAULT_DPI, onProgress, pageFormat = 'auto' } = opts;
   const say = (pct, label) => { try { onProgress?.(pct, label); } catch { /* 무시 */ } };
 
   say(5, '사진 읽는 중');
@@ -1160,46 +1243,55 @@ export async function processShot(file, opts = {}) {
 
   say(25, '모서리 찾는 중');
   let pts = corners ? orderCorners(corners) : null;
-  let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = 'manual_a4';
+  let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = pageFormat === 'a4' ? 'manual_a4' : 'manual', scanEligible = !!pts;
+  let detectionReason = null;
   if (!pts) {
-    const d = detectQuad(base);
-    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.autoCaptureEligible === true; paperStatus = d.paperStatus || 'not_found';
+    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectDocumentQuad(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
+    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true;
+    paperStatus = d.paperStatus || 'not_found'; scanEligible = d.scanEligible === true;
+    detectionReason = d.reason || null;
   }
   await breathe();
 
-  const a4WarpApplied = paperStatus === 'a4_candidate' || paperStatus === 'manual_a4';
-  say(50, a4WarpApplied ? '기울기 펴는 중' : '원본 유지');
+  const warpApplied = scanEligible && method !== 'frame', outputFormat = pageFormat === 'a4' ? 'a4' : 'auto';
+  const a4WarpApplied = warpApplied && outputFormat === 'a4';
+  say(50, warpApplied ? '기울기 펴는 중' : '원본 유지');
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
-  let out = a4WarpApplied ? warp(base, pts, dpiToWidth(dpi), method === 'marker' ? MARKER_INSET : null) : base;
-  const quality = inspectDocument(out);
+  const inset = method === 'marker' ? MARKER_INSET : null;
+  const rendered = warpApplied ? await renderInWorker(base, pts, mode, dpi, inset, outputFormat, opts.signal, true) : null;
+  let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  const quality = rendered?.quality || inspectDocument(out);
   await breathe();
 
   say(72, '그림자 지우는 중');
-  if (a4WarpApplied) out = enhance(out, mode);
+  if (warpApplied && out) out = enhance(out, mode);
   await breathe();
 
   say(90, '선명도 확인 중');
 
-  const blob = await new Promise((r) =>
-    !a4WarpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
+  const blob = rendered?.blob || await new Promise((r) =>
+    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
 
   return {
     blob,
-    previewUrl: out.toDataURL('image/jpeg', 0.92),
+    previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94),
     corners: pts,
     cornersReliable,
     paperStatus,
+    detectionReason,
     a4WarpApplied,
+    warpApplied,
+    outputFormat,
     autoScore,
     method,
     quality,
-    width: out.width,
-    height: out.height,
-    baseUrl: base.toDataURL('image/png'), // lossless baseline: repeated corner/mode edits keep pencil detail
+    width: rendered?.width || out.width,
+    height: rendered?.height || out.height,
+    baseUrl: rendered?.baseBlob ? await blobPreview(rendered.baseBlob) : base.toDataURL('image/png'), // lossless editable baseline
     baseW: base.width,
     baseH: base.height,
     sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)),
@@ -1207,18 +1299,20 @@ export async function processShot(file, opts = {}) {
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
-export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFAULT_DPI, inset = null, options = {}) {
+export async function reprocess(baseDataUrl, corners, mode = 'color', dpi = DEFAULT_DPI, inset = null, options = {}) {
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
-  const a4WarpApplied = options.preserveOriginal !== true;
-  let out = a4WarpApplied ? warp(base, orderCorners(corners), dpiToWidth(dpi), inset) : base;
-  const quality = inspectDocument(out);
-  if (a4WarpApplied) out = enhance(out, mode);
-  const blob = await new Promise((r) =>
-    !a4WarpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
+  const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'a4' ? 'a4' : 'auto';
+  const a4WarpApplied = warpApplied && outputFormat === 'a4';
+  const ordered = orderCorners(corners), rendered = warpApplied ? await renderInWorker(base, ordered, mode, dpi, inset, outputFormat, options.signal) : null;
+  let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  const quality = rendered?.quality || inspectDocument(out);
+  if (warpApplied && out) out = enhance(out, mode);
+  const blob = rendered?.blob || await new Promise((r) =>
+    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
   const pts = orderCorners(corners);
-  return { blob, previewUrl: out.toDataURL('image/jpeg', 0.92), quality, width: out.width, height: out.height, a4WarpApplied,
+  return { blob, previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94), quality, width: rendered?.width || out.width, height: rendered?.height || out.height, a4WarpApplied, warpApplied, outputFormat,
     sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)) };
 }

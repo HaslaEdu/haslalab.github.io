@@ -63,4 +63,20 @@ assert.ok(cards.includes(cpho.papers.zh));
 assert.ok(cards.includes('Problem paper · 한국어'));
 const nativeCard = context.theoryHtml('eotvos',{y:2026});
 assert.ok(nativeCard.includes('Magyar'));
+
+// Korean archive cards use the translated paper once, without a redundant language badge.
+context.lang='ko';
+context.UI.ko={thyPaper:'문제지',thySol:'해설',thyOrigChip:'원문',thyKoChip:'한국어판',thyKo:'한국어'};
+const renderedCards=[];context.probCard=card=>{renderedCards.push(card);return '';};
+context.theoryHtml('cpho',{y:2023});
+const koreanCards=renderedCards[0];
+assert.ok(koreanCards.main[0].includes('href="'+cpho.ko.paper+'"'));
+assert.match(koreanCards.main[0],/>문제지<\/a>/);
+assert.ok(!koreanCards.main[0].includes('lgtag'));
+assert.ok(!koreanCards.docs.some(doc=>doc.includes(cpho.paper)||doc.includes(cpho.papers.zh)));
+// Untranslated papers remain available and identify their actual source language.
+renderedCards.length=0;context.theoryHtml('eotvos',{y:2026});
+const koreanNative=renderedCards[0];
+assert.ok(koreanNative.main[0].includes(hu.paper));
+assert.ok(koreanNative.main[0].includes('Magyar'));
 console.log('Paper language catalogue, practice links, exam URLs and input validation passed.');

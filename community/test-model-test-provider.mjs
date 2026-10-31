@@ -47,14 +47,14 @@ test('capabilities expose only configured stage models and preserve a vision mod
 
 for (const [pipeline,providers] of [
   ['gemini-gemini',['gemini','gemini']],['gemini-deepseek',['gemini','deepseek']],['deepseek-deepseek',['deepseek','deepseek']],
-]) test(pipeline+' runs exactly the selected OCR and grader; images never enter grading',async()=>{
+]) test(pipeline+' runs exactly the selected OCR and grader; original images also reach grading',async()=>{
   const mock=fixture(),result=await runModelTest(env,body(pipeline),mock);
   assert.deepEqual(mock.calls.map(call=>call.provider),providers);
   assert.equal(mock.calls.length,2);
   const first=mock.calls[0].body,second=mock.calls[1].body;
   assert.ok(JSON.stringify(first).includes(png));
   assert.ok(!JSON.stringify(first).includes('Calculate 2+2.'));
-  assert.ok(!JSON.stringify(second).includes(png));
+  assert.ok(JSON.stringify(second).includes(png));
   assert.ok(JSON.stringify(second).includes('[Page 1] 2 + 2 = 4'));
   assert.ok(JSON.stringify(second).includes('One point for stating 4.'));
   assert.equal(result.ocr.provider,providers[0]);
@@ -64,7 +64,7 @@ for (const [pipeline,providers] of [
   assert.ok(result.usage.input_tokens>0&&result.usage.output_tokens>0);
   assert.ok(result.elapsed_ms>=0);
   for(const call of mock.calls){
-    assert.equal(call.options.redirect,'error');
+    assert.equal(call.options.redirect,'manual');
     assert.ok(call.options.signal instanceof AbortSignal);
     if(call.provider==='deepseek'){
       assert.equal(call.url,'https://api.deepseek.com/chat/completions');
@@ -85,9 +85,9 @@ test('Gemini and DeepSeek keep the shared exam and policy before language and pr
       const policy=gemini?request.systemInstruction.parts[0].text:request.messages[0].content;
       const serialized=gemini?request.contents[0].parts[0].text:request.messages[1].content[0].text;
       const input=JSON.parse(serialized), boundary=serialized.indexOf('"language":');
-      assert.deepEqual(Object.keys(input),['task','problem','rubric','points','min_score','language','transcript','uncertainties','legible']);
+      assert.deepEqual(Object.keys(input),['task','problem','rubric','points','min_score','language','page_count','visuals','transcript','uncertainties','legible']);
       assert.ok(boundary>serialized.indexOf('"rubric":')); assert.ok(boundary<serialized.indexOf('"transcript":'));
-      assert.ok(policy.includes('Every evidence.quote must be copied exactly')); assert.ok(!policy.includes(marker));
+      assert.ok(policy.includes('Every evidence.quote for text evidence must be copied exactly')); assert.ok(!policy.includes(marker));
       assert.ok(serialized.includes(marker)); assert.ok(!serialized.slice(0,boundary).includes(marker));
       assert.ok(!Object.hasOwn(request,'cachedContent')); assert.ok(!JSON.stringify(request).includes('"cache_control"'));
       assert.ok(mock.calls.every(call=>call.url.endsWith(':generateContent')||call.url.endsWith('/chat/completions')));
@@ -174,6 +174,27 @@ test('unsupported scores, ungrounded quotations and uncertain OCR are explicitly
 test('zero is accepted only when the grader explicitly supplies a valid zero and grounded evidence',async()=>{
   const result=await runModelTest(env,body(),fixture([read(),grade({score:0})]));
   assert.equal(result.grading.status,'graded');assert.equal(result.grading.score,0);
+});
+
+for(const pipeline of ['gemini-gemini','gemini-deepseek','deepseek-deepseek'])test(pipeline+' grades image-only directional diagrams using bounded original-page evidence',async()=>{
+  const visual={page:1,kind:'diagram',box:[.1,.2,.8,.9],description:'A vector arrow points upward beside the labelled axis.'};
+  const evidence={source:'image',page:1,box:[.1,.2,.8,.9],description:visual.description,quote:'',reason:'The actual diagram meets the directional criterion.'};
+  const mock=fixture([read({text:'',visuals:[visual]}),grade({evidence:[evidence]})]);
+  const result=await runModelTest(env,body(pipeline),mock);
+  assert.equal(result.ocr.text,'');assert.deepEqual(result.ocr.visuals,[visual]);assert.equal(result.grading.status,'graded');assert.equal(result.grading.score,1);
+  assert.equal(result.grading.evidence[0].source,'image');assert.ok(JSON.stringify(mock.calls[1].body).includes(png));assert.equal(mock.calls.length,2);
+});
+
+test('nonexistent visual pages and degenerate image evidence cannot manufacture a numerical grade',async()=>{
+  const visual={page:2,kind:'graph',box:[.1,.1,.9,.9],description:'A graph on an absent second page.'};
+  const invalidOcr=fixture([read({text:'',visuals:[visual]})]);
+  await assert.rejects(runModelTest(env,body(),invalidOcr),error=>error.code==='model_test_invalid_response'&&error.stage==='ocr'&&error.usage.calls===1);
+  assert.equal(invalidOcr.calls.length,1);
+  for(const evidence of [{source:'image',page:2,box:[.1,.1,.9,.9],description:'A copied reference figure, not a submitted page.',reason:'Wrong page',quote:''},
+    {source:'image',page:1,box:[0,0,0,0],description:'An empty region is not image evidence.',reason:'Empty region',quote:''}]){
+    const result=await runModelTest(env,body(),fixture([read(),grade({evidence:[evidence]})]));
+    assert.equal(result.grading.status,'needs_review');assert.equal(result.grading.score,null);assert.ok(result.grading.review_reasons.includes('ungrounded_evidence'));
+  }
 });
 test('Unicode/whitespace normalization validates quotations without changing the saved OCR',async()=>{
   const result=await runModelTest(env,body(),fixture([read({text:'[Page 1] Ａ = ４\nunits'}),grade({evidence:[{quote:'A = 4 units',reason:'same visible text'}]})]));

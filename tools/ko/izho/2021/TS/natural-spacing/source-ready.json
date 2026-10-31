@@ -1,0 +1,3660 @@
+{
+  "status": "READY",
+  "year": 2021,
+  "kind": "TS",
+  "pages": 16,
+  "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\editions\\IZhO_2021_TS_KO.pdf",
+  "sha256": "8d5036e681319d0748feec60d40e9e383ca29bb5711af047661b7d6df7592e88",
+  "bytes": 40005618,
+  "assembly": "pikepdf native page append; no page rasterization or font rewriting",
+  "font_policy": "Regular source Times-like Hangul uses Windows Batang at the original point size; existing native ASCII, Latin, math, bold, sans and italic glyphs retain their original programs and painting.",
+  "spacing_policy": "Natural left-to-right inline horizontal packing with one quarter-em word spaces; source display equations and figures remain at original positions; source content centers retained.",
+  "native_actual_glyph_missing": 0,
+  "new_batang_empty_outlines": 0,
+  "original_source_requested_dx_audited_pages": 16,
+  "original_source_requested_dx_newly_missing_native_ink_pixels": 0,
+  "new_hangul_native_graphics_overlap_pixels": 0,
+  "eligible_body_hangul_coverage_missing": 0,
+  "original_stationary_grading_glyphs_checked": 512,
+  "hangul_visibility_loss_candidates": 0,
+  "outside_motion_ink_pixels": 0,
+  "figure_changed_pixels": 0,
+  "reviewed_native_math_over_white_margin_pixels": 0,
+  "original_fonts_and_image_programs_retained": true,
+  "page_groups_preserved": true,
+  "measurements_tolerance_pt": 0.001,
+  "original_point_sizes_scaled": false,
+  "original_prose_and_formula_language_content_unchanged": true,
+  "no_added_editorial_notes": true,
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "1bfea15e01d041b9f7decb54f5b42592f2f1e085c35925eb259eb3a5461ef3c5",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "9e4be2c6e623915e15734692734d3e2a2d341326719dcf6f08fa859282acdf28",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 280,
+        "shifted_top_level_glyphs": 93,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 13,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "bf8e9e7065174e2b579c3e05884ae8e773a0d5fc65d7834a8d089615e2e693b2",
+        "expected_native_glyphs": 986,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 5.1975250244140625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 5.1975250244140625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "bf8e9e7065174e2b579c3e05884ae8e773a0d5fc65d7834a8d089615e2e693b2",
+        "resolved_outline_uses": 480,
+        "protected_actual_native_pixels": 82676,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page1.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page1.pdf",
+        "final_page": 1,
+        "source_sha256": "9e4be2c6e623915e15734692734d3e2a2d341326719dcf6f08fa859282acdf28",
+        "output_sha256": "1bfea15e01d041b9f7decb54f5b42592f2f1e085c35925eb259eb3a5461ef3c5",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 157,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 157,
+          "expected_signature_count": 157,
+          "matched_outline_uses": 157,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 35849,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 280,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 280,
+          "expected_signature_count": 280,
+          "matched_outline_uses": 280,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page1.pdf",
+        "source_sha256": "9e4be2c6e623915e15734692734d3e2a2d341326719dcf6f08fa859282acdf28",
+        "proof_sha256": "1bfea15e01d041b9f7decb54f5b42592f2f1e085c35925eb259eb3a5461ef3c5",
+        "eligible_regular_body_hangul": 280,
+        "covered_regular_body_hangul": 280,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 6,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 2,
+      "proof_sha256": "71bf611757017bc20c7f7d834001faee8768c8baa52494f97c17cf645831bc5e",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "7291ea48938d8df13e45fdff33306b4019e543139cd030fbd881f3861556723f",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 163,
+        "shifted_top_level_glyphs": 78,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 15,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "f06fa4714062fd61e52ca5b9e1ebe3ce2b5264af1095e556cc4f59ca6b0f16bf",
+        "expected_native_glyphs": 808,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.639770508494621e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.639770508494621e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "f06fa4714062fd61e52ca5b9e1ebe3ce2b5264af1095e556cc4f59ca6b0f16bf",
+        "resolved_outline_uses": 438,
+        "protected_actual_native_pixels": 87022,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page2.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page2.pdf",
+        "final_page": 1,
+        "source_sha256": "7291ea48938d8df13e45fdff33306b4019e543139cd030fbd881f3861556723f",
+        "output_sha256": "71bf611757017bc20c7f7d834001faee8768c8baa52494f97c17cf645831bc5e",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 324,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 324,
+          "expected_signature_count": 324,
+          "matched_outline_uses": 324,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 34535,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 163,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 163,
+          "expected_signature_count": 163,
+          "matched_outline_uses": 163,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page2.pdf",
+        "source_sha256": "7291ea48938d8df13e45fdff33306b4019e543139cd030fbd881f3861556723f",
+        "proof_sha256": "71bf611757017bc20c7f7d834001faee8768c8baa52494f97c17cf645831bc5e",
+        "eligible_regular_body_hangul": 163,
+        "covered_regular_body_hangul": 163,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [
+          [
+            202.52000427246094,
+            535.364013671875,
+            392.77001953125,
+            633.3099975585938
+          ]
+        ],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 42,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 3,
+      "proof_sha256": "0a8537c6c1126b1edb4f7ae34c95929d055920eee0ef84da2e6b72e5328a4a20",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "808c370ce57367fcd03cb7efd33ff7d6bb7c508d5a442ac8c9e84da52c564661",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 199,
+        "shifted_top_level_glyphs": 89,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 21,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "8b1417ecbc2e4ac36fb29f0fdfdbe8891a9c243632286449e755e8a037f98ba0",
+        "expected_native_glyphs": 748,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.002716064453125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.002716064453125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "8b1417ecbc2e4ac36fb29f0fdfdbe8891a9c243632286449e755e8a037f98ba0",
+        "resolved_outline_uses": 355,
+        "protected_actual_native_pixels": 68196,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page3.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page3.pdf",
+        "final_page": 1,
+        "source_sha256": "808c370ce57367fcd03cb7efd33ff7d6bb7c508d5a442ac8c9e84da52c564661",
+        "output_sha256": "0a8537c6c1126b1edb4f7ae34c95929d055920eee0ef84da2e6b72e5328a4a20",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 208,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 208,
+          "expected_signature_count": 208,
+          "matched_outline_uses": 208,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 26840,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 199,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 199,
+          "expected_signature_count": 199,
+          "matched_outline_uses": 199,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page3.pdf",
+        "source_sha256": "808c370ce57367fcd03cb7efd33ff7d6bb7c508d5a442ac8c9e84da52c564661",
+        "proof_sha256": "0a8537c6c1126b1edb4f7ae34c95929d055920eee0ef84da2e6b72e5328a4a20",
+        "eligible_regular_body_hangul": 199,
+        "covered_regular_body_hangul": 199,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 48,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 4,
+      "proof_sha256": "3c5053bb9e21a1be3277ffe1f68548e1cace95ba0843f78414faa454998026c0",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "ac9df9e215ac8854304d54d4feee606d84a91cbcdd414f2d5e5d45436e8a0461",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 398,
+        "shifted_top_level_glyphs": 37,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 10,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "7bef3c0c7a55927d57f1cbcb4d338f685a29ee24bbbf1f60495fb343b84766c8",
+        "expected_native_glyphs": 982,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.166748049603484e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.166748049603484e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "7bef3c0c7a55927d57f1cbcb4d338f685a29ee24bbbf1f60495fb343b84766c8",
+        "resolved_outline_uses": 368,
+        "protected_actual_native_pixels": 40850,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page4.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page4.pdf",
+        "final_page": 1,
+        "source_sha256": "ac9df9e215ac8854304d54d4feee606d84a91cbcdd414f2d5e5d45436e8a0461",
+        "output_sha256": "3c5053bb9e21a1be3277ffe1f68548e1cace95ba0843f78414faa454998026c0",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 58,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 58,
+          "expected_signature_count": 58,
+          "matched_outline_uses": 58,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 4303,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 398,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 398,
+          "expected_signature_count": 398,
+          "matched_outline_uses": 398,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page4.pdf",
+        "source_sha256": "ac9df9e215ac8854304d54d4feee606d84a91cbcdd414f2d5e5d45436e8a0461",
+        "proof_sha256": "3c5053bb9e21a1be3277ffe1f68548e1cace95ba0843f78414faa454998026c0",
+        "eligible_regular_body_hangul": 398,
+        "covered_regular_body_hangul": 398,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 5,
+      "proof_sha256": "addc53c40aa5b37b653fe9fa94ecd051ffb9ae309bebac06e9a504a1a71d363e",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "29a46d440350b7e8092e1d11ea05f438c78785b4cd8fee71b93f06d8fd53dab4",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 208,
+        "shifted_top_level_glyphs": 82,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 20,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "bfc4db1e66417a1979360978f6545cbb7089c0917c072369c99fa5bad5be1122",
+        "expected_native_glyphs": 868,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.5400390629547474e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.5400390629547474e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "bfc4db1e66417a1979360978f6545cbb7089c0917c072369c99fa5bad5be1122",
+        "resolved_outline_uses": 505,
+        "protected_actual_native_pixels": 79305,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page5.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page5.pdf",
+        "final_page": 1,
+        "source_sha256": "29a46d440350b7e8092e1d11ea05f438c78785b4cd8fee71b93f06d8fd53dab4",
+        "output_sha256": "addc53c40aa5b37b653fe9fa94ecd051ffb9ae309bebac06e9a504a1a71d363e",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 353,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 353,
+          "expected_signature_count": 353,
+          "matched_outline_uses": 353,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 33277,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 208,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 208,
+          "expected_signature_count": 208,
+          "matched_outline_uses": 208,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page5.pdf",
+        "source_sha256": "29a46d440350b7e8092e1d11ea05f438c78785b4cd8fee71b93f06d8fd53dab4",
+        "proof_sha256": "addc53c40aa5b37b653fe9fa94ecd051ffb9ae309bebac06e9a504a1a71d363e",
+        "eligible_regular_body_hangul": 208,
+        "covered_regular_body_hangul": 208,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 48,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 6,
+      "proof_sha256": "fcef1660cba70f93b8257ab514ea6d77849938f990b393ca2ceee2864b06822c",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "97fd2c6de28a80bf7db57e21af348b53176d29f740ef38193886a3d108646572",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 305,
+        "shifted_top_level_glyphs": 51,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 4,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "fcc30d5e671df28a5ece8198a509fdea0432d7cdc1ee1c2835487620bef3993f",
+        "expected_native_glyphs": 829,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.4429962195426924e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.4429962195426924e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "fcc30d5e671df28a5ece8198a509fdea0432d7cdc1ee1c2835487620bef3993f",
+        "resolved_outline_uses": 332,
+        "protected_actual_native_pixels": 55039,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page6.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page6.pdf",
+        "final_page": 1,
+        "source_sha256": "97fd2c6de28a80bf7db57e21af348b53176d29f740ef38193886a3d108646572",
+        "output_sha256": "fcef1660cba70f93b8257ab514ea6d77849938f990b393ca2ceee2864b06822c",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 55,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 55,
+          "expected_signature_count": 55,
+          "matched_outline_uses": 55,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 15710,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 305,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 305,
+          "expected_signature_count": 305,
+          "matched_outline_uses": 305,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page6.pdf",
+        "source_sha256": "97fd2c6de28a80bf7db57e21af348b53176d29f740ef38193886a3d108646572",
+        "proof_sha256": "fcef1660cba70f93b8257ab514ea6d77849938f990b393ca2ceee2864b06822c",
+        "eligible_regular_body_hangul": 305,
+        "covered_regular_body_hangul": 305,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 7,
+      "proof_sha256": "e29a1497b910d8b9765116d5907c9b641ba2156d0cd34172249f7f4e06d0a520",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "d8b68ea61efe5e4dd222c9dcde18978c7ca4e84a3b590259630530927991da60",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 455,
+        "shifted_top_level_glyphs": 31,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 4,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "68cb9a1c40dfda1cc8e2ecc3bc86eb7e31323d4e6f3e5ab222f60fb05daa252d",
+        "expected_native_glyphs": 969,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.52587890625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.52587890625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "68cb9a1c40dfda1cc8e2ecc3bc86eb7e31323d4e6f3e5ab222f60fb05daa252d",
+        "resolved_outline_uses": 366,
+        "protected_actual_native_pixels": 45403,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page7.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page7.pdf",
+        "final_page": 1,
+        "source_sha256": "d8b68ea61efe5e4dd222c9dcde18978c7ca4e84a3b590259630530927991da60",
+        "output_sha256": "e29a1497b910d8b9765116d5907c9b641ba2156d0cd34172249f7f4e06d0a520",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 37,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 37,
+          "expected_signature_count": 37,
+          "matched_outline_uses": 37,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 2262,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 455,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 455,
+          "expected_signature_count": 455,
+          "matched_outline_uses": 455,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page7.pdf",
+        "source_sha256": "d8b68ea61efe5e4dd222c9dcde18978c7ca4e84a3b590259630530927991da60",
+        "proof_sha256": "e29a1497b910d8b9765116d5907c9b641ba2156d0cd34172249f7f4e06d0a520",
+        "eligible_regular_body_hangul": 455,
+        "covered_regular_body_hangul": 455,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 8,
+      "proof_sha256": "39862771175c4f633d19dba274d46d3b328e98c18140f3077ff1ee0eacd281ba",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "8f25161977ae7b574030b12eb934d70380fc732a67e2c55f1547c56046b309b6",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 481,
+        "shifted_top_level_glyphs": 52,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 15,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c93d4b7a327e1c8dc27d4fb7bdab6e6bee2d582d8a38dc38d47889c603a39f7e",
+        "expected_native_glyphs": 1111,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.143933199429739e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.143933199429739e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "c93d4b7a327e1c8dc27d4fb7bdab6e6bee2d582d8a38dc38d47889c603a39f7e",
+        "resolved_outline_uses": 448,
+        "protected_actual_native_pixels": 55208,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page8.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page8.pdf",
+        "final_page": 1,
+        "source_sha256": "8f25161977ae7b574030b12eb934d70380fc732a67e2c55f1547c56046b309b6",
+        "output_sha256": "39862771175c4f633d19dba274d46d3b328e98c18140f3077ff1ee0eacd281ba",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 104,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 104,
+          "expected_signature_count": 104,
+          "matched_outline_uses": 104,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 10918,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 481,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 481,
+          "expected_signature_count": 481,
+          "matched_outline_uses": 481,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page8.pdf",
+        "source_sha256": "8f25161977ae7b574030b12eb934d70380fc732a67e2c55f1547c56046b309b6",
+        "proof_sha256": "39862771175c4f633d19dba274d46d3b328e98c18140f3077ff1ee0eacd281ba",
+        "eligible_regular_body_hangul": 481,
+        "covered_regular_body_hangul": 481,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [
+          [
+            431.1000061035156,
+            337.239990234375,
+            556.9500122070312,
+            466.739990234375
+          ]
+        ],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 9,
+      "proof_sha256": "bc79622fa404d9f8165432948ac0d12f0ca93190da7ec78425c5c86949bbf01e",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "5b131f62120c159cd836db08bfdc5104b6dba02ed2de3f043e7ba0e3d2e58a56",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 102,
+        "shifted_top_level_glyphs": 75,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 16,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "5dc18bf1e856b6886662530c91a4d210fbd81cfb597fbc5806697b292af5f0e7",
+        "expected_native_glyphs": 799,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.8005371089202526e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8005371089202526e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "5dc18bf1e856b6886662530c91a4d210fbd81cfb597fbc5806697b292af5f0e7",
+        "resolved_outline_uses": 445,
+        "protected_actual_native_pixels": 77256,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page9.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page9.pdf",
+        "final_page": 1,
+        "source_sha256": "5b131f62120c159cd836db08bfdc5104b6dba02ed2de3f043e7ba0e3d2e58a56",
+        "output_sha256": "bc79622fa404d9f8165432948ac0d12f0ca93190da7ec78425c5c86949bbf01e",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 256,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 256,
+          "expected_signature_count": 256,
+          "matched_outline_uses": 256,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 28440,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 102,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 102,
+          "expected_signature_count": 102,
+          "matched_outline_uses": 102,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page9.pdf",
+        "source_sha256": "5b131f62120c159cd836db08bfdc5104b6dba02ed2de3f043e7ba0e3d2e58a56",
+        "proof_sha256": "bc79622fa404d9f8165432948ac0d12f0ca93190da7ec78425c5c86949bbf01e",
+        "eligible_regular_body_hangul": 102,
+        "covered_regular_body_hangul": 102,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 60,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 10,
+      "proof_sha256": "faa27505b28a1a502dffeacdd91499f3b7a28152eae67a91d1563e388278efbb",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "2ae781a4cb21f6d4ccbb3b5304d746dd50f2bd30fa556bf934e83f0ff4e21025",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 37,
+        "shifted_top_level_glyphs": 125,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 25,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c81d7fa801bf58406260aa9196984b780e3abfc18dce41aabe5972c81ad68882",
+        "expected_native_glyphs": 812,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.8005371089202526e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8005371089202526e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "c81d7fa801bf58406260aa9196984b780e3abfc18dce41aabe5972c81ad68882",
+        "resolved_outline_uses": 571,
+        "protected_actual_native_pixels": 100114,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page10.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page10.pdf",
+        "final_page": 1,
+        "source_sha256": "2ae781a4cb21f6d4ccbb3b5304d746dd50f2bd30fa556bf934e83f0ff4e21025",
+        "output_sha256": "faa27505b28a1a502dffeacdd91499f3b7a28152eae67a91d1563e388278efbb",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 466,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 466,
+          "expected_signature_count": 466,
+          "matched_outline_uses": 466,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 48648,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 37,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 37,
+          "expected_signature_count": 37,
+          "matched_outline_uses": 37,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page10.pdf",
+        "source_sha256": "2ae781a4cb21f6d4ccbb3b5304d746dd50f2bd30fa556bf934e83f0ff4e21025",
+        "proof_sha256": "faa27505b28a1a502dffeacdd91499f3b7a28152eae67a91d1563e388278efbb",
+        "eligible_regular_body_hangul": 37,
+        "covered_regular_body_hangul": 37,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 90,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 11,
+      "proof_sha256": "297dd94826b3077625140039e5b3b1baff496b34a1c3a76df5cdd325f7378528",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "5ce49124363afc39e38ac593bdccee914d8e46b07eff25c501c6f70aa33cac11",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 182,
+        "shifted_top_level_glyphs": 79,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 13,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "036e64362c106b975a9ebba5d616b2ba9e0d7dfd0e7c08f0d83947dcb7f26f46",
+        "expected_native_glyphs": 860,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.002716064453125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "036e64362c106b975a9ebba5d616b2ba9e0d7dfd0e7c08f0d83947dcb7f26f46",
+        "resolved_outline_uses": 479,
+        "protected_actual_native_pixels": 81138,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page11.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page11.pdf",
+        "final_page": 1,
+        "source_sha256": "5ce49124363afc39e38ac593bdccee914d8e46b07eff25c501c6f70aa33cac11",
+        "output_sha256": "297dd94826b3077625140039e5b3b1baff496b34a1c3a76df5cdd325f7378528",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 269,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 269,
+          "expected_signature_count": 269,
+          "matched_outline_uses": 269,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 33681,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 182,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 182,
+          "expected_signature_count": 182,
+          "matched_outline_uses": 182,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page11.pdf",
+        "source_sha256": "5ce49124363afc39e38ac593bdccee914d8e46b07eff25c501c6f70aa33cac11",
+        "proof_sha256": "297dd94826b3077625140039e5b3b1baff496b34a1c3a76df5cdd325f7378528",
+        "eligible_regular_body_hangul": 182,
+        "covered_regular_body_hangul": 182,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 37,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 12,
+      "proof_sha256": "2f2c758b0028ccee561111b634b3c01fed246e2b7a9aa6eaa662ff1c776c3158",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "1ad6738dd59820cf6a7580fcd198aa31e392b2c6e9560a59c920062c2c2ed4e7",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 360,
+        "shifted_top_level_glyphs": 29,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 5,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "91d02e377c9648066c9990039e6a4a7525ba78ad03d4b0c5b04a7f2304e8c10e",
+        "expected_native_glyphs": 924,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.545534126989878e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "91d02e377c9648066c9990039e6a4a7525ba78ad03d4b0c5b04a7f2304e8c10e",
+        "resolved_outline_uses": 400,
+        "protected_actual_native_pixels": 53456,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page12.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page12.pdf",
+        "final_page": 1,
+        "source_sha256": "1ad6738dd59820cf6a7580fcd198aa31e392b2c6e9560a59c920062c2c2ed4e7",
+        "output_sha256": "2f2c758b0028ccee561111b634b3c01fed246e2b7a9aa6eaa662ff1c776c3158",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 53,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 53,
+          "expected_signature_count": 53,
+          "matched_outline_uses": 53,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 4416,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 360,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 360,
+          "expected_signature_count": 360,
+          "matched_outline_uses": 360,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page12.pdf",
+        "source_sha256": "1ad6738dd59820cf6a7580fcd198aa31e392b2c6e9560a59c920062c2c2ed4e7",
+        "proof_sha256": "2f2c758b0028ccee561111b634b3c01fed246e2b7a9aa6eaa662ff1c776c3158",
+        "eligible_regular_body_hangul": 360,
+        "covered_regular_body_hangul": 360,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [
+          [
+            235.02000427246094,
+            75.13995361328125,
+            360.27001953125,
+            173.13995361328125
+          ]
+        ],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 13,
+      "proof_sha256": "07f95aa75b5c8f1a1c05b0d73cdc68dbf2ceb15c514f1c22d2259640e0c53487",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "1233dbaf37cb265d3cf3390efc2ad822b785eafceea9529e462a2504607aa083",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 315,
+        "shifted_top_level_glyphs": 51,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 12,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "fab988eaacbeb7857773ce2355f6938f948f54e1fad585cb48e31aa315c08077",
+        "expected_native_glyphs": 983,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.2073165041547327e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.2073165041547327e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "fab988eaacbeb7857773ce2355f6938f948f54e1fad585cb48e31aa315c08077",
+        "resolved_outline_uses": 471,
+        "protected_actual_native_pixels": 65628,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page13.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page13.pdf",
+        "final_page": 1,
+        "source_sha256": "1233dbaf37cb265d3cf3390efc2ad822b785eafceea9529e462a2504607aa083",
+        "output_sha256": "07f95aa75b5c8f1a1c05b0d73cdc68dbf2ceb15c514f1c22d2259640e0c53487",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 90,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 90,
+          "expected_signature_count": 90,
+          "matched_outline_uses": 90,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 10170,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 315,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 315,
+          "expected_signature_count": 315,
+          "matched_outline_uses": 315,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page13.pdf",
+        "source_sha256": "1233dbaf37cb265d3cf3390efc2ad822b785eafceea9529e462a2504607aa083",
+        "proof_sha256": "07f95aa75b5c8f1a1c05b0d73cdc68dbf2ceb15c514f1c22d2259640e0c53487",
+        "eligible_regular_body_hangul": 315,
+        "covered_regular_body_hangul": 315,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 14,
+      "proof_sha256": "c45a322d11b841b527ccd2b2245307283c41424d73ccd48d5a70763c5d522219",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "60a556eb2c55423ff3c744e8e98c555a71c3183e63d75ce77163dccd4101bcbf",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 476,
+        "shifted_top_level_glyphs": 37,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 10,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "e9b5b46d1b4f259843470fc4d101b5c5d82dddf08d2e6aba81d9a72becd1b4bb",
+        "expected_native_glyphs": 915,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.381460962576966e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.381460962576966e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "e9b5b46d1b4f259843470fc4d101b5c5d82dddf08d2e6aba81d9a72becd1b4bb",
+        "resolved_outline_uses": 348,
+        "protected_actual_native_pixels": 41033,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page14.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page14.pdf",
+        "final_page": 1,
+        "source_sha256": "60a556eb2c55423ff3c744e8e98c555a71c3183e63d75ce77163dccd4101bcbf",
+        "output_sha256": "c45a322d11b841b527ccd2b2245307283c41424d73ccd48d5a70763c5d522219",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 74,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 74,
+          "expected_signature_count": 74,
+          "matched_outline_uses": 74,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 6136,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 476,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 476,
+          "expected_signature_count": 476,
+          "matched_outline_uses": 476,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page14.pdf",
+        "source_sha256": "60a556eb2c55423ff3c744e8e98c555a71c3183e63d75ce77163dccd4101bcbf",
+        "proof_sha256": "c45a322d11b841b527ccd2b2245307283c41424d73ccd48d5a70763c5d522219",
+        "eligible_regular_body_hangul": 476,
+        "covered_regular_body_hangul": 476,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 0,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 15,
+      "proof_sha256": "e9860d4826c26bd70cb184765b744a680a26fe5fbe2894d5ef63df13dc334cf8",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 67,
+        "shifted_top_level_glyphs": 91,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 19,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "05b007d839333e0afbd12b1cf591aefe8bc82dbdd6bf7847ad0ffc4ae7c434ac",
+        "expected_native_glyphs": 848,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.4719238268744448e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.4719238268744448e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "05b007d839333e0afbd12b1cf591aefe8bc82dbdd6bf7847ad0ffc4ae7c434ac",
+        "resolved_outline_uses": 596,
+        "protected_actual_native_pixels": 103449,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page15.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page15.pdf",
+        "final_page": 1,
+        "source_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+        "output_sha256": "e9860d4826c26bd70cb184765b744a680a26fe5fbe2894d5ef63df13dc334cf8",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 389,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 389,
+          "expected_signature_count": 389,
+          "matched_outline_uses": 389,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 42814,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true,
+        "missing_bbox": [
+          163.5,
+          499.0,
+          200.0,
+          691.5
+        ],
+        "validation_method": "Source-pinned exact original complete native Form replay resolves only the two reviewed unhinted SVG edge samples. Original native raster and final are byte-identical RGB at both samples; complete Form actual dark ink loss is zero.",
+        "raw_svg_outline_audit": {
+          "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page15.pdf",
+          "source_page": 1,
+          "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page15.pdf",
+          "final_page": 1,
+          "source_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+          "output_sha256": "e9860d4826c26bd70cb184765b744a680a26fe5fbe2894d5ef63df13dc334cf8",
+          "scale": 4,
+          "position_tolerance_pt": 0.001,
+          "protected_native_glyphs": 389,
+          "missing_requested_source_glyphs": [],
+          "missing_final_native_glyphs": [],
+          "source_outline_audit": {
+            "protected_physical_glyphs": 389,
+            "expected_signature_count": 389,
+            "matched_outline_uses": 389,
+            "missing_source_outline_signatures": [],
+            "ancestor_transforms_flattened": true,
+            "passed": true
+          },
+          "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+          "expected_native_dark_pixels": 42814,
+          "inherited_stationary_source_occluded_pixels": 0,
+          "newly_missing_native_ink_pixels": 2,
+          "passed": false,
+          "missing_bbox": [
+            163.5,
+            499.0,
+            200.0,
+            691.5
+          ]
+        },
+        "raw_svg_outline_difference_pixels": 2,
+        "source_native_program_witnesses": [
+          {
+            "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page15.pdf",
+            "source_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+            "source_page": 1,
+            "source_form_path": [
+              2478
+            ],
+            "source_form": {
+              "path": [
+                2478
+              ],
+              "source_objgen": [
+                154,
+                0
+              ],
+              "native_page_bbox": [
+                151.58,
+                479.32971254471227,
+                309.5736027592,
+                513.6299829101563
+              ],
+              "entry_ctm": [
+                0.9958626079999999,
+                0.0,
+                0.0,
+                0.997274826,
+                151.58,
+                328.29
+              ],
+              "page_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                -1.0,
+                0.0,
+                841.9199829101562
+              ],
+              "invocation_ctm": [
+                2.1944,
+                0.0,
+                0.0,
+                0.47639,
+                151.58,
+                328.29
+              ],
+              "own_vector_paths": [
+                {
+                  "operator_indices": [
+                    14,
+                    15,
+                    16
+                  ],
+                  "rect": [
+                    243.548907711408,
+                    496.3581801986623,
+                    261.12488688,
+                    496.3581801986623
+                  ],
+                  "paint_operator": "S"
+                },
+                {
+                  "operator_indices": [
+                    17,
+                    18,
+                    19
+                  ],
+                  "rect": [
+                    278.36326862448,
+                    496.3581801986623,
+                    293.31116637056,
+                    496.3581801986623
+                  ],
+                  "paint_operator": "S"
+                }
+              ],
+              "glyphs": [
+                {
+                  "c": "(",
+                  "font": "SymbolMT",
+                  "size": 11.816130638122559,
+                  "origin": [
+                    166.33071899414062,
+                    499.2891845703125
+                  ],
+                  "bbox": [
+                    166.33071899414062,
+                    489.5633850097656,
+                    170.2655792236328,
+                    501.3795166015625
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 11,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": ")",
+                  "font": "SymbolMT",
+                  "size": 11.816130638122559,
+                  "origin": [
+                    184.71533203125,
+                    499.2891845703125
+                  ],
+                  "bbox": [
+                    184.71533203125,
+                    489.5633850097656,
+                    188.6501922607422,
+                    501.3795166015625
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 12,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": ",",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    176.08419799804688,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    176.08419799804688,
+                    489.70751953125,
+                    179.08323669433594,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 15,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "0",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 6.9976277351379395,
+                  "origin": [
+                    161.1376953125,
+                    502.3677673339844
+                  ],
+                  "bbox": [
+                    161.1376953125,
+                    496.73553466796875,
+                    164.63650512695312,
+                    503.733154296875
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 19,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "0",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 6.9976277351379395,
+                  "origin": [
+                    214.89993286132812,
+                    502.3677673339844
+                  ],
+                  "bbox": [
+                    214.89993286132812,
+                    496.73553466796875,
+                    218.39874267578125,
+                    503.733154296875
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 19,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "2",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    200.58740234375,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    200.58740234375,
+                    489.70751953125,
+                    206.58547973632812,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 21,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "2",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    249.5220947265625,
+                    508.74395751953125
+                  ],
+                  "bbox": [
+                    249.5220947265625,
+                    499.0885009765625,
+                    255.52017211914062,
+                    511.0846862792969
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 21,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "2",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    283.02392578125,
+                    508.74395751953125
+                  ],
+                  "bbox": [
+                    283.02392578125,
+                    499.0885009765625,
+                    289.0220031738281,
+                    511.0846862792969
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 21,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "=",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    190.8349151611328,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    190.8349151611328,
+                    489.4889831542969,
+                    197.4187469482422,
+                    501.4851379394531
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 32,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "A",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    154.3351593017578,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    154.3351593017578,
+                    489.70751953125,
+                    161.6628875732422,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 36,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "E",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    207.14614868164062,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    207.14614868164062,
+                    489.70751953125,
+                    214.473876953125,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 40,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "c",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    221.43478393554688,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    221.43478393554688,
+                    489.70751953125,
+                    226.75924682617188,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 70,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "k",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    286.489501953125,
+                    491.7896728515625
+                  ],
+                  "bbox": [
+                    286.489501953125,
+                    482.13421630859375,
+                    291.81396484375,
+                    494.1304016113281
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 78,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "o",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    226.76107788085938,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    226.76107788085938,
+                    489.70751953125,
+                    232.7591552734375,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 82,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "s",
+                  "font": "TimesNewRomanPSMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    232.69918823242188,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    232.69918823242188,
+                    489.70751953125,
+                    237.36761474609375,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 86,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "t",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    180.20408630371094,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    180.20408630371094,
+                    489.70751953125,
+                    183.53700256347656,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 87,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "t",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    262.8078918457031,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    262.8078918457031,
+                    489.70751953125,
+                    266.14080810546875,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 87,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "x",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    170.64678955078125,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    170.64678955078125,
+                    489.70751953125,
+                    175.97125244140625,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 91,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "x",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    295.9501953125,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    295.9501953125,
+                    489.70751953125,
+                    301.274658203125,
+                    501.7037048339844
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 91,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "−",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    269.17144775390625,
+                    499.36297607421875
+                  ],
+                  "bbox": [
+                    269.17144775390625,
+                    489.4889831542969,
+                    275.7552795410156,
+                    501.4851379394531
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 16,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    244.37747192382812,
+                    491.7896728515625
+                  ],
+                  "bbox": [
+                    244.37747192382812,
+                    481.9156799316406,
+                    251.7169189453125,
+                    493.9118347167969
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 39,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    279.169921875,
+                    491.7896728515625
+                  ],
+                  "bbox": [
+                    279.169921875,
+                    481.9156799316406,
+                    286.5093688964844,
+                    493.9118347167969
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 39,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    251.69406127929688,
+                    491.7896728515625
+                  ],
+                  "bbox": [
+                    251.69406127929688,
+                    481.9156799316406,
+                    259.9238586425781,
+                    493.9118347167969
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 90,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    237.35565185546875,
+                    492.6692810058594
+                  ],
+                  "bbox": [
+                    237.35565185546875,
+                    482.7952880859375,
+                    241.9596405029297,
+                    494.79144287109375
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 167,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    237.35565185546875,
+                    500.3642578125
+                  ],
+                  "bbox": [
+                    237.35565185546875,
+                    490.4902648925781,
+                    241.9596405029297,
+                    502.4864196777344
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 168,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    237.35565185546875,
+                    510.185302734375
+                  ],
+                  "bbox": [
+                    237.35565185546875,
+                    500.3113098144531,
+                    241.9596405029297,
+                    512.3074951171875
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 169,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    302.50299072265625,
+                    492.6692810058594
+                  ],
+                  "bbox": [
+                    302.50299072265625,
+                    482.7952880859375,
+                    307.10699462890625,
+                    494.79144287109375
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 183,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    302.50299072265625,
+                    500.3642578125
+                  ],
+                  "bbox": [
+                    302.50299072265625,
+                    490.4902648925781,
+                    307.10699462890625,
+                    502.4864196777344
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 184,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 11.996160507202148,
+                  "origin": [
+                    302.50299072265625,
+                    510.185302734375
+                  ],
+                  "bbox": [
+                    302.50299072265625,
+                    500.3113098144531,
+                    307.10699462890625,
+                    512.3074951171875
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 185,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                }
+              ],
+              "original_raw_sha256": "f05e4686eeb31ec474cbe9f8f850a882b7f7e196d35971c652d9afd11a07d932"
+            },
+            "dx": -28.63400848388673,
+            "source_native_form_raw_program_retained": true,
+            "source_ancestor_ctm_and_clip_preserved": true,
+            "replay_glyphs": 29,
+            "font_gid_size_baseline_and_requested_dx_verified": true,
+            "scale": 4,
+            "reference": "Exact original complete Form native program, resources and original ancestor clips, with requested dx; other original page painting suppressed.",
+            "actual_original_native_replay_missing_dark_pixels": 0,
+            "passed": true,
+            "diagnostic_pixels": [
+              {
+                "pixel": [
+                  799,
+                  1996
+                ],
+                "native_rgb": [
+                  222,
+                  222,
+                  222
+                ],
+                "final_rgb": [
+                  222,
+                  222,
+                  222
+                ]
+              }
+            ],
+            "replay_pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\page15-original-Form-2478-native-replay.pdf",
+            "replay_pdf_sha256": "0280e23f6169473fecab777438be7bf71d01bfffd379b69b4b1e349858b26704"
+          },
+          {
+            "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page15.pdf",
+            "source_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+            "source_page": 1,
+            "source_form_path": [
+              3626
+            ],
+            "source_form": {
+              "path": [
+                3626
+              ],
+              "source_objgen": [
+                161,
+                0
+              ],
+              "native_page_bbox": [
+                151.58,
+                680.4292633586803,
+                196.72884571736,
+                711.6799829101562
+              ],
+              "entry_ctm": [
+                0.98984578,
+                0.0,
+                0.0,
+                0.9843366370000001,
+                151.58,
+                130.24
+              ],
+              "page_matrix": [
+                1.0,
+                0.0,
+                0.0,
+                -1.0,
+                0.0,
+                841.9199829101562
+              ],
+              "invocation_ctm": [
+                0.62708,
+                0.0,
+                0.0,
+                0.43403,
+                151.58,
+                130.24
+              ],
+              "own_vector_paths": [
+                {
+                  "operator_indices": [
+                    4,
+                    5,
+                    6
+                  ],
+                  "rect": [
+                    176.59043332326002,
+                    696.6088046610492,
+                    194.20869836148,
+                    696.6088046610492
+                  ],
+                  "paint_operator": "S"
+                }
+              ],
+              "glyphs": [
+                {
+                  "c": "=",
+                  "font": "SymbolMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    166.87213134765625,
+                    699.6474609375
+                  ],
+                  "bbox": [
+                    166.87213134765625,
+                    689.6139526367188,
+                    173.56231689453125,
+                    701.8038940429688
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 32,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "g",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 7.125009059906006,
+                  "origin": [
+                    158.826171875,
+                    702.6857299804688
+                  ],
+                  "bbox": [
+                    158.826171875,
+                    696.9509887695312,
+                    162.388671875,
+                    704.0759887695312
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 74,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "k",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    186.06622314453125,
+                    709.0033569335938
+                  ],
+                  "bbox": [
+                    186.06622314453125,
+                    699.1919555664062,
+                    191.47669982910156,
+                    711.3818969726562
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 78,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "v",
+                  "font": "TimesNewRomanPS-ItalicMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    153.20375061035156,
+                    699.6474609375
+                  ],
+                  "bbox": [
+                    153.20375061035156,
+                    689.8360595703125,
+                    158.61422729492188,
+                    702.0260009765625
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 89,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    177.4139862060547,
+                    692.1241455078125
+                  ],
+                  "bbox": [
+                    177.4139862060547,
+                    682.0906372070312,
+                    184.8719940185547,
+                    694.2805786132812
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 39,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    178.72256469726562,
+                    709.0033569335938
+                  ],
+                  "bbox": [
+                    178.72256469726562,
+                    698.9698486328125,
+                    186.18057250976562,
+                    711.1597900390625
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 39,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                },
+                {
+                  "c": "",
+                  "font": "SymbolMT",
+                  "size": 12.189950942993164,
+                  "origin": [
+                    184.75765991210938,
+                    692.1241455078125
+                  ],
+                  "bbox": [
+                    184.75765991210938,
+                    682.0906372070312,
+                    193.12039184570312,
+                    694.2805786132812
+                  ],
+                  "render_mode": 0,
+                  "trace_gid": 90,
+                  "color": [
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "opacity": 1.0,
+                  "linewidth": null,
+                  "direction": [
+                    1.0,
+                    0.0
+                  ],
+                  "stroke_color": null,
+                  "stroke_opacity": null,
+                  "wmode": 0,
+                  "colorspace": 3
+                }
+              ],
+              "original_raw_sha256": "acaad46784632ce372306ef605b7a671933ae5cf4205ea40b2ea4952a9e811bd"
+            },
+            "dx": -28.63400848388673,
+            "source_native_form_raw_program_retained": true,
+            "source_ancestor_ctm_and_clip_preserved": true,
+            "replay_glyphs": 7,
+            "font_gid_size_baseline_and_requested_dx_verified": true,
+            "scale": 4,
+            "reference": "Exact original complete Form native program, resources and original ancestor clips, with requested dx; other original page painting suppressed.",
+            "actual_original_native_replay_missing_dark_pixels": 0,
+            "passed": true,
+            "diagnostic_pixels": [
+              {
+                "pixel": [
+                  654,
+                  2765
+                ],
+                "native_rgb": [
+                  227,
+                  227,
+                  227
+                ],
+                "final_rgb": [
+                  227,
+                  227,
+                  227
+                ]
+              }
+            ],
+            "replay_pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\page15-original-Form-3626-native-replay.pdf",
+            "replay_pdf_sha256": "8e82e7be18f2e2399acb2ee169e98e5738a7977aa9ac47f5dc8ce1d3557f05f2"
+          }
+        ],
+        "source_native_program_witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\page15-source-native-raster-witness.json",
+        "witness_authoring_sha256": {
+          "izho_2021_ts15_native_raster_profile.py": "e7e539daea8a93c11e0daf251774abc6d51f89559bd8b193e88cf0d8e4f9af79",
+          "pdf_native_form_raster_witness.py": "74f2d15e78903390d2e619a3feee4c8af3ce2c9ce89766a080c4afabcc4148c9",
+          "test_pdf_native_form_raster_witness.py": "e1d582c4d099ad49bf93405dcc11fc6cfea8ce9e0c68c2800a8c2ea2ab3a8af9"
+        }
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 67,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 67,
+          "expected_signature_count": 67,
+          "matched_outline_uses": 67,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page15.pdf",
+        "source_sha256": "6be1dbb33aa48abbe9f77b51907ada7d97bc22dd69d72c4409777d76640a713e",
+        "proof_sha256": "e9860d4826c26bd70cb184765b744a680a26fe5fbe2894d5ef63df13dc334cf8",
+        "eligible_regular_body_hangul": 67,
+        "covered_regular_body_hangul": 67,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 90,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    },
+    {
+      "page": 16,
+      "proof_sha256": "a746e0a4317d1e16c532c83e401edd8a7fd4e6667ce939e0db3880aa8e2f73d6",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "source_pdf_sha256": "cb00b5d2dd6df547ae969c4a940339f8e539f949b900d9851eb4b253388b41de",
+      "old_korean_proof_sha256": "975ef1cf373d665f7b7645e0b5209687d7149e08e383f901fd863d0f549fffa3",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 27,
+        "shifted_top_level_glyphs": 97,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 22,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "d3f5b6684147ed4457018796059fd104527e4390d8bcbca82b60a21213c541b7",
+        "expected_native_glyphs": 730,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.471923824032274e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.471923824032274e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "actual_native_math_visible_ink": {
+        "method": "After native x movement, before new Hangul insertion: actual clip-aware retained-body glyph ink versus final rendered proof; original clips/Form/vector programs also verified by native movement QA.",
+        "native_control_sha256": "d3f5b6684147ed4457018796059fd104527e4390d8bcbca82b60a21213c541b7",
+        "resolved_outline_uses": 543,
+        "protected_actual_native_pixels": 105558,
+        "missing_actual_native_pixels": 0
+      },
+      "changed_figures": 0,
+      "original_source_requested_dx_ink_audit": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page16.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page16.pdf",
+        "final_page": 1,
+        "source_sha256": "975ef1cf373d665f7b7645e0b5209687d7149e08e383f901fd863d0f549fffa3",
+        "output_sha256": "a746e0a4317d1e16c532c83e401edd8a7fd4e6667ce939e0db3880aa8e2f73d6",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 418,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 418,
+          "expected_signature_count": 418,
+          "matched_outline_uses": 418,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 45587,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "new_hangul_native_graphics_overlap": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 27,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 27,
+          "expected_signature_count": 27,
+          "matched_outline_uses": 27,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "body_hangul_replacement_coverage": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2021\\TS\\page16.pdf",
+        "source_sha256": "975ef1cf373d665f7b7645e0b5209687d7149e08e383f901fd863d0f549fffa3",
+        "proof_sha256": "a746e0a4317d1e16c532c83e401edd8a7fd4e6667ce939e0db3880aa8e2f73d6",
+        "eligible_regular_body_hangul": 27,
+        "covered_regular_body_hangul": 27,
+        "missing_eligible_body_hangul": [],
+        "ambiguous_style_classifications": [],
+        "figures_excluded": [],
+        "method": "All actual source regular-serif Hangul body glyphs outside reviewed figure bounds, with original placement italic-role exclusions, must occur exactly in the erasure journal.",
+        "passed": true
+      },
+      "stationary_original_grading_columns": {
+        "method": "Independent source vertical cell primitives plus original top-level, non-prose numeric glyphs in the page right grading columns; every original grading glyph must remain at its source position.",
+        "original_grading_glyphs_checked": 91,
+        "grading_glyphs_moved_from_source_cells": [],
+        "passed": true
+      },
+      "new_empty_hangul_outlines": 0
+    }
+  ],
+  "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\visual-review-natural.json",
+  "page_audits": [
+    {
+      "page": 1,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page1.qa.json",
+      "sha256": "8c3f4a5d5d67ba293dddb2e9e96717b4813a5df119c77df50b3c135ceea703bd"
+    },
+    {
+      "page": 2,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page2.qa.json",
+      "sha256": "715dc1b0c03b6e6683e0887ba565040edc6d44eb045c13ddd8d014f8eba3e297"
+    },
+    {
+      "page": 3,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page3.qa.json",
+      "sha256": "be886b963b083c771363dd49585f92665980cbd11895c1244b75d02aa5daa136"
+    },
+    {
+      "page": 4,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page4.qa.json",
+      "sha256": "61df6b0ee7ae29cc48e2666b826fbb018803debbcbaf12b0e3512160f9e41c5b"
+    },
+    {
+      "page": 5,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page5.qa.json",
+      "sha256": "9714c31246c1bece9d32a24e9de0039fe5e6d0997b1cf780086b6327b61e5340"
+    },
+    {
+      "page": 6,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page6.qa.json",
+      "sha256": "fa20cead442d336cb006fdc005a2bd82267e72d4b571e8e8f3a5ea002d8aee8d"
+    },
+    {
+      "page": 7,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page7.qa.json",
+      "sha256": "e7c42cb55c048f6bc63e24a5909134424ed01cd13728ed9a70d8c2c2362aadbe"
+    },
+    {
+      "page": 8,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page8.qa.json",
+      "sha256": "99b1108317fc76dfb248142d405427f8ac00cc3aa7eed8142a773f7959ad1c17"
+    },
+    {
+      "page": 9,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page9.qa.json",
+      "sha256": "7800cea65070b14adf7ed99f719c832cef1cc7a37bab39cb1ecd37d58afb2879"
+    },
+    {
+      "page": 10,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page10.qa.json",
+      "sha256": "fecf359852f5c6eebf899b0a368314f4b778961d2e38f5ffbf3fc06606e6f39e"
+    },
+    {
+      "page": 11,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page11.qa.json",
+      "sha256": "cec983546184b493355e9b4492674fbb1c2126efaa4261016dca853e368ee8f3"
+    },
+    {
+      "page": 12,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page12.qa.json",
+      "sha256": "671be7fa3e7b6e29958f8471fa92e6b3c8bff572ff2454c8d64ae38ef86338c5"
+    },
+    {
+      "page": 13,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page13.qa.json",
+      "sha256": "6c9752a20b36f809b7541be6ff9551a27b75d362771f9a2cc6144f56b05b0ed3"
+    },
+    {
+      "page": 14,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page14.qa.json",
+      "sha256": "37a433263d0d44c2025d95c07b7734e3c3579a676a785f24c368e9455e0d57ea"
+    },
+    {
+      "page": 15,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page15.qa.json",
+      "sha256": "d4b77a7606a562731185ae4e890768d8697c59a722930d9a24d318da75b82b92"
+    },
+    {
+      "page": 16,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021\\TS\\batang-page16.qa.json",
+      "sha256": "8d050ac12b192a06d01866a69fd7ddf80ebef637c4ab344d9a641519adfde796"
+    }
+  ],
+  "authoring_files": {
+    "tools\\izho_2021_2022_natural_ready.py": "8cc505dc828ff2b5c5e3ebabcaf990bc7d5b4a56ca1a8f701fcd1e44620a623a",
+    "tools\\izho_2021_2022_batang_rebuild.py": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+    "tools\\izho_2021_2022_natural_spacing.py": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+    "tools\\izho_2021_2022_header_spacing.py": "1e8bd348f6115beded64d8864c1b6138e25d207cb9d42b92c02a697d9b0bdfc1",
+    "tools\\izho_native_atomic_tokens.py": "40c44a626b772ce630dab39679dfea088294c1bbd1df00ba0152717a168745ab",
+    "tools\\izho_natural_spacing.py": "95feeaac2a35a6d615ed6f4b4f09b2aceb996bd9a8774447339b27826ccb12d1",
+    "tools\\pdf_korean_natural_composer.py": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+    "tools\\pdf_native_inline_reposition.py": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+    "tools\\pdf_text_motion_ink.py": "556bdea67fc2851273f03c1ed205a25bdfda98c4967c86059a65ad15fa718690",
+    "tools\\pdf_native_geometry_motion.py": "b4f507d0c357fb9727aa464dcb1843ed6429a8416f5991fa37888547f6a309cd",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\izho_2022_t2_native_margin.py": "467b98ed527e3f11bcc99cbedd08c98b4bf9ebb2383f9f2257b38afc8311a9e4",
+    "tools\\pdf_new_hangul_graphics_overlap.py": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+    "tools\\test_pdf_new_hangul_graphics_overlap.py": "22e6690b59b908b0dc1f6de361d0b2d3d82f0ef07f848fccd0b2630f36133e76",
+    "tools\\izho_2021_2022_batang_coverage.py": "606c2a8ca1d2d0c47da9d874c04c7e218ac19f61b218c68cb120fdc4eb09346b",
+    "tools\\izho_2021_ts15_native_raster_profile.py": "e7e539daea8a93c11e0daf251774abc6d51f89559bd8b193e88cf0d8e4f9af79",
+    "tools\\pdf_native_form_raster_witness.py": "f1487d361683148fcd0b125b06a8b2a78df721897af388ab44c940179d5ff9ef",
+    "tools\\test_pdf_native_form_raster_witness.py": "e1d582c4d099ad49bf93405dcc11fc6cfea8ce9e0c68c2800a8c2ea2ab3a8af9",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c"
+  },
+  "authoring_snapshotroot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\2021-TS-authoring",
+  "authoring_snapshot_sha256": {
+    "tools\\izho_2021_2022_natural_ready.py": "8cc505dc828ff2b5c5e3ebabcaf990bc7d5b4a56ca1a8f701fcd1e44620a623a",
+    "tools\\izho_2021_2022_batang_rebuild.py": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+    "tools\\izho_2021_2022_natural_spacing.py": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+    "tools\\izho_2021_2022_header_spacing.py": "1e8bd348f6115beded64d8864c1b6138e25d207cb9d42b92c02a697d9b0bdfc1",
+    "tools\\izho_native_atomic_tokens.py": "40c44a626b772ce630dab39679dfea088294c1bbd1df00ba0152717a168745ab",
+    "tools\\izho_natural_spacing.py": "95feeaac2a35a6d615ed6f4b4f09b2aceb996bd9a8774447339b27826ccb12d1",
+    "tools\\pdf_korean_natural_composer.py": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+    "tools\\pdf_native_inline_reposition.py": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+    "tools\\pdf_text_motion_ink.py": "556bdea67fc2851273f03c1ed205a25bdfda98c4967c86059a65ad15fa718690",
+    "tools\\pdf_native_geometry_motion.py": "b4f507d0c357fb9727aa464dcb1843ed6429a8416f5991fa37888547f6a309cd",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\izho_2022_t2_native_margin.py": "467b98ed527e3f11bcc99cbedd08c98b4bf9ebb2383f9f2257b38afc8311a9e4",
+    "tools\\pdf_new_hangul_graphics_overlap.py": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+    "tools\\test_pdf_new_hangul_graphics_overlap.py": "22e6690b59b908b0dc1f6de361d0b2d3d82f0ef07f848fccd0b2630f36133e76",
+    "tools\\izho_2021_2022_batang_coverage.py": "606c2a8ca1d2d0c47da9d874c04c7e218ac19f61b218c68cb120fdc4eb09346b",
+    "tools\\izho_2021_ts15_native_raster_profile.py": "e7e539daea8a93c11e0daf251774abc6d51f89559bd8b193e88cf0d8e4f9af79",
+    "tools\\pdf_native_form_raster_witness.py": "f1487d361683148fcd0b125b06a8b2a78df721897af388ab44c940179d5ff9ef",
+    "tools\\test_pdf_native_form_raster_witness.py": "e1d582c4d099ad49bf93405dcc11fc6cfea8ce9e0c68c2800a8c2ea2ab3a8af9",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c"
+  },
+  "historical_source_drift": [
+    {
+      "page": 1,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 1,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 1,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 1,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 2,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 2,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 2,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 2,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 3,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 3,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 3,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 3,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 4,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 4,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 4,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 4,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 5,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 5,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 5,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 5,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 6,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 6,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 6,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "c404f6ac6540a958287ef14ff78f9052fbe75b61f59ff51e22ec6a6abda0525f",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 6,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 7,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 7,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 7,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 7,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 8,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 8,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 8,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 8,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 10,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 10,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 10,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 10,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 11,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 11,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 11,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 11,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 12,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 12,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 12,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 12,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 13,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 13,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 13,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 13,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 14,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 14,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 14,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 14,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 16,
+      "file": "tools\\izho_2021_2022_batang_rebuild.py",
+      "recorded_build_sha": "429c5a1ca3c5ee28719c353b57d291b234263e752cd2264869a74f14ed11cb74",
+      "snapshot_sha": "3df9c4ed04c1fe546da52eebe43d18105e0fd9564c146e94908cc8a83637e2ea",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 16,
+      "file": "tools\\izho_2021_2022_natural_spacing.py",
+      "recorded_build_sha": "245aae8a9329cb5bc7e406e3fb1ecc73a9627420cca35120a1c6fee6c5aaf008",
+      "snapshot_sha": "e0a919d8edd6770feb17c4539e3d6ff787f924d27691e4ba0ad526d5ebb4c831",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 16,
+      "file": "tools\\pdf_korean_natural_composer.py",
+      "recorded_build_sha": "3273ff5422bfd6c7350a92df2a74b07ceb3efdc5036c149f3c987ea151378253",
+      "snapshot_sha": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    },
+    {
+      "page": 16,
+      "file": "tools\\pdf_native_inline_reposition.py",
+      "recorded_build_sha": "5021332f00a71acab16713f1921699db74fb21e69cedaa49a8e9fd84b8e659a6",
+      "snapshot_sha": "617f380b4541b91b9354ca87f6b5d9346ae02f928f8cbe54705be28f4e1070e2",
+      "note": "Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative."
+    }
+  ]
+}

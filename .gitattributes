@@ -3,5 +3,5 @@ src/ipho2019_E1_sim_KO.py -text
 # Vendored upstream runtime files must remain byte-identical.
 vendor/pyodide/* -text
 # QA evidence and immutable source snapshots carry exact byte hashes.
-tools/ko/izho/**/natural-spacing/** -text whitespace=-blank-at-eol,cr-at-eol
-tools/ko/cpho/**/natural-spacing/** -text whitespace=-blank-at-eol,cr-at-eol
+tools/ko/izho/**/natural-spacing/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tools/ko/cpho/**/natural-spacing/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

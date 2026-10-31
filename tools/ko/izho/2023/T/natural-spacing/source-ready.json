@@ -1,0 +1,570 @@
+{
+  "status": "READY",
+  "year": 2023,
+  "kind": "T",
+  "pages": 6,
+  "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2023_T_KO.pdf",
+  "sha256": "c53adc0d8508907cb2aa62f599bf0830850d73db1049b0f1f10332ebfc5098bf",
+  "bytes": 16485146,
+  "original_source_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+  "input_korean_source_sha256": "c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423",
+  "input_archives": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\input-bases\\c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423\\IZhO_2023_T_KO.pdf",
+      "sha256": "c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423",
+      "bytes": 14765998
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\input-bases\\f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646\\IZhO_2023_T_EN.pdf",
+      "sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "bytes": 665153
+    }
+  ],
+  "font_policy": "Original-point-size Batang for regular serif Hangul; all existing native Latin/math/ASCII, bold, sans, italic and paint retained.",
+  "spacing_policy": "Quarter-em prose word spaces; whole inline native expressions move horizontally with internal geometry retained; original display equations and figures stay fixed; source content centers retained.",
+  "original_point_sizes_scaled": false,
+  "equations_rasterized": false,
+  "no_added_pdf_editorial_notes": true,
+  "original_physical_native_glyphs_checked": 902,
+  "verified_original_native_ink_missing_pixels": 0,
+  "raw_unhinted_svg_reference_deltas": 1,
+  "retained_native_control_ink_missing_pixels": 0,
+  "changed_pixels_outside_text_and_intended_native_math_motion": 0,
+  "changed_nonselected_native_graphical_pixels": 0,
+  "figure_and_locked_display_math_changed_pixels": 0,
+  "new_batang_empty_outlines": 0,
+  "new_batang_hangul_glyphs_checked": 3317,
+  "hangul_visibility_loss_candidates": 0,
+  "unconverted_regular_body_hangul": 0,
+  "stationary_table_math_glyphs": 0,
+  "table_math_internal_geometry_mismatches": 0,
+  "original_grading_glyphs_checked": 0,
+  "grading_glyphs_moved_from_source_cells": 0,
+  "reviewed_complete_inline_expressions": 0,
+  "reviewed_inline_expression_geometry_mismatches": 0,
+  "original_script_base_pairs_checked": 130,
+  "script_base_relative_dx_mismatches": 0,
+  "original_font_image_palette_icc_mask_programs_and_page_groups_retained": true,
+  "assembly": "pikepdf native page append; fresh-process 4x RGB exact comparison to reviewed proofs",
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "ac11ec2b07ad3a3c13e11cc012f85707bcba0ec65c95353c7b5ef13f54c703bb",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 27,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 258,
+        "shifted_top_level_glyphs": 104,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 0,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "fe2df0ed36de1ec93448f9d576af7927af5007dbd59f48125f916cbedd59c3a3",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 445,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.814697265625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.814697265625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 2,
+      "proof_sha256": "449a5689713fa035c946399e701d66f3e6ed415fbae242d2bb41aa770c614bcf",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 149,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 2,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 609,
+        "shifted_top_level_glyphs": 91,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 18,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c16e2d81101eb2f75fafe3c2623cf09e343e83655839e7db86f3aa2b799246b2",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 50,
+            "source_origin": [
+              228.40818786621094,
+              132.67401123046875
+            ],
+            "dx": -44.93112564086914
+          },
+          {
+            "source_trace_index": 60,
+            "source_origin": [
+              305.1756896972656,
+              132.67401123046875
+            ],
+            "dx": -54.62057876586914
+          },
+          {
+            "source_trace_index": 142,
+            "source_origin": [
+              179.82847595214844,
+              190.64495849609375
+            ],
+            "dx": -37.35395812988281
+          },
+          {
+            "source_trace_index": 185,
+            "source_origin": [
+              202.8901824951172,
+              411.3399963378906
+            ],
+            "dx": -26.90381622314453
+          },
+          {
+            "source_trace_index": 197,
+            "source_origin": [
+              409.8598937988281,
+              411.4239807128906
+            ],
+            "dx": -122.5758285522461
+          },
+          {
+            "source_trace_index": 217,
+            "source_origin": [
+              401.80657958984375,
+              427.7419738769531
+            ],
+            "dx": -103.28900146484375
+          },
+          {
+            "source_trace_index": 234,
+            "source_origin": [
+              231.7694091796875,
+              443.7249755859375
+            ],
+            "dx": -9.2459716796875
+          },
+          {
+            "source_trace_index": 335,
+            "source_origin": [
+              468.1932067871094,
+              564.7750244140625
+            ],
+            "dx": -115.70962905883789
+          },
+          {
+            "source_trace_index": 382,
+            "source_origin": [
+              409.05517578125,
+              583.1599731445312
+            ],
+            "dx": -95.30400085449219
+          },
+          {
+            "source_trace_index": 406,
+            "source_origin": [
+              232.25381469726562,
+              601.875
+            ],
+            "dx": -58.79100036621094
+          },
+          {
+            "source_trace_index": 500,
+            "source_origin": [
+              299.7364196777344,
+              665.60546875
+            ],
+            "dx": -28.605728149414062
+          }
+        ],
+        "expected_native_glyphs": 889,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": {
+        "method": "One exact original Times-Roman comma SVG/native-font raster phase sample. Original encoded-byte reference at the measured destination is authoritative; global thresholds unchanged.",
+        "original_4x_svg_dark_pixel_delta": 1,
+        "native_original_CID_reference_missing_pixels": 0,
+        "svg_8x_missing_pixels": 0,
+        "svg_12x_missing_pixels": 0,
+        "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\comma-phase-witness\\witness.json",
+        "witness_sha256": "0ebb7cac10ab126a701010f24deef9ec5b4ff7e0efa5c66b5b64b06b44fc74f0",
+        "original_font_resource": "/R18",
+        "original_encoded_CID": "2c",
+        "original_gid": 71,
+        "original_font": "Times-Roman",
+        "original_point_size": 12,
+        "proof_unmodified": true
+      }
+    },
+    {
+      "page": 3,
+      "proof_sha256": "b052d8729c60442cbe9d39a6abeba134309a4c38dbbdfa285c8acb592ccafa51",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 156,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 3,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 608,
+        "shifted_top_level_glyphs": 122,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 26,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 6,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "de7b8926f2751e596737b3e3873dc0dbc09d954fe893b77dfb7298e95add74d2",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 123,
+            "source_origin": [
+              268.6095886230469,
+              183.875
+            ],
+            "dx": -47.75220489501953
+          },
+          {
+            "source_trace_index": 142,
+            "source_origin": [
+              525.2402954101562,
+              183.875
+            ],
+            "dx": -60.52338409423828
+          },
+          {
+            "source_trace_index": 165,
+            "source_origin": [
+              274.6761169433594,
+              198.375
+            ],
+            "dx": -29.959228515625
+          },
+          {
+            "source_trace_index": 257,
+            "source_origin": [
+              518.5120849609375,
+              327.625
+            ],
+            "dx": -96.75544738769531
+          },
+          {
+            "source_trace_index": 402,
+            "source_origin": [
+              166.213134765625,
+              549.375
+            ],
+            "dx": -12.322357177734375
+          }
+        ],
+        "expected_native_glyphs": 935,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.52587890625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 4,
+      "proof_sha256": "23a1df1e1a8932de7d174836dcbc499bec0d0fa33ab76f76dea5e2b7e8482ee9",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 138,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 4,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 560,
+        "shifted_top_level_glyphs": 78,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 24,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 1,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "66364f047e6ed1aaf095331278e3654e333c6f167f4a4fee05917543f66fa70b",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 840,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 5,
+      "proof_sha256": "82b3c253f1bb6fb5fb8bb978d9991f9187657c7547f5df6d5c41675f95247cb7",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 182,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 5,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 789,
+        "shifted_top_level_glyphs": 106,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 37,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "d70a0c187a54c79814ae530e2562f4f4de1cbc1aae20e310c2f1fb000d2d87b5",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1146,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.288818359375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 6,
+      "proof_sha256": "f95f24fa4353be043c7c78600370343f5fda7c62778aed979cf52c1559cf3fd7",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 250,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 6,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 493,
+        "shifted_top_level_glyphs": 78,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 26,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "5ec72e4094864ab428718e773a27985d666c28bb859da36f5eba45663c0919f9",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 212,
+            "source_origin": [
+              533.4315795898438,
+              244.74200439453125
+            ],
+            "dx": -17.761707305908203
+          },
+          {
+            "source_trace_index": 281,
+            "source_origin": [
+              305.91839599609375,
+              287.32598876953125
+            ],
+            "dx": -42.878692626953125
+          },
+          {
+            "source_trace_index": 307,
+            "source_origin": [
+              282.39288330078125,
+              303.32391357421875
+            ],
+            "dx": -30.166229248046875
+          }
+        ],
+        "expected_native_glyphs": 842,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.814697265625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.814697265625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    }
+  ],
+  "audit_reports": [
+    {
+      "page": 1,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page01.audit.json",
+      "sha256": "076ea2d54df483799a56312039dfc4cb661b60b0fe8404bad9b1b10188b47366"
+    },
+    {
+      "page": 2,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page02.audit.json",
+      "sha256": "16205b7ef97c386e138db8b8b1928d0dafc3b78e5bb20039655eaef0204036f9"
+    },
+    {
+      "page": 3,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page03.audit.json",
+      "sha256": "6c38a3add0bf3aa27b206ab4cc12bb8fc689a204529ea5ff82740d51aba4cef8"
+    },
+    {
+      "page": 4,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page04.audit.json",
+      "sha256": "ad6de94bdcaa6e07ed6dfad0bd4b76dd9b424f35ae7d9d78de58ccbb82b53b13"
+    },
+    {
+      "page": 5,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page05.audit.json",
+      "sha256": "521b644a82539304b5e3897a285e78083fdbb96614a427bafdc1123c1467ebc7"
+    },
+    {
+      "page": 6,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page06.audit.json",
+      "sha256": "72731f84f3736553e30bc703112e892bb72403961afc62045898de22ebbb29d3"
+    }
+  ],
+  "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\visual-review.json",
+  "authoring_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring",
+  "authoring_files": {
+    "tools\\izho_natural_spacing.py": "407f1c4f3674c83b4ff8083591c84ab24e676c0b4d4e4264af03eb4ead22521b",
+    "tools\\pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_text_motion_ink.py": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\izho_natural_spacing_rebuild.py": "2e7672b9e46a793bb86aa4e5c26c66925edf0462acee5321e1d939848de488e1",
+    "tools\\izho_natural_spacing_qa.py": "23bba4eaa4754666934cb0d1d7fd2dca89d359fd49163cfd9f6e10c1c0f8cf1a",
+    "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
+    "tools\\izho_natural_spacing_ready.py": "7694c21e7aabb10fd5fd89d2a9d6829ca8279c3c273ade367f3e8312640b88c1",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools\\pdf_native_script_motion_audit.py": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+    "tools\\test_pdf_text_motion_ink_origins.py": "f4be2879ffcf0904777a1a67ccf82254aac6f55f9fca49693677fbe73290b270",
+    "tools\\test_izho_natural_spacing.py": "9980fa2aed2c5e0d112e654d7c417c67a962553befb64a1143d9075669164a6a",
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2"
+  },
+  "note": "The exact unhinted SVG/native-font raster phase sample is documented per page with the original encoded native-font reference and SVG8x/12x zero loss; proof unchanged.",
+  "reviewed_native_CID_bitmap_expressions": 2,
+  "native_CID_bitmap_relative_dx_mismatches": 0,
+  "native_ink_witness_archives": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring\\native-witnesses\\page02\\witness.json",
+      "sha256": "0ebb7cac10ab126a701010f24deef9ec5b4ff7e0efa5c66b5b64b06b44fc74f0"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring\\native-witnesses\\page02\\original-input-page.pdf",
+      "sha256": "0eb38bc924e25d23248e471e406fd814ebc85b5d7943d92f5b3ed5f194504719"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring\\native-witnesses\\page02\\source-crop.pdf",
+      "sha256": "e8c98648b71db22e89c7237aa41bd1fda1c2aa6850989ed8c23b550f74638c51"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring\\native-witnesses\\page02\\final-crop.pdf",
+      "sha256": "e5c643fa547d24629b35b9d4f3bcbdf63759b56f706ad2df6d26bac8f3df422b"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023-T-authoring\\native-witnesses\\page02\\comma_native_phase_witness.py",
+      "sha256": "4b4fbd7cd9bd1c45d4bc53082f0bdcb8fb93fb77d631d6ecbdab8e08ed24848e"
+    }
+  ],
+  "original_source_artifact_notes": [
+    {
+      "page": 5,
+      "source_mask_raw_sha256": "0b1cb3de0119a460d55e7fe7de28fc382eedbac50106721a80e999a26f49ca6c",
+      "note": "The source English PDF and input Korean PDF share the same fully transparent32x7 mask near delta-u. It remains unchanged; no absent mathematical operator is reconstructed or added to the publication PDF."
+    }
+  ]
+}
