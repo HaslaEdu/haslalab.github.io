@@ -86,3 +86,12 @@ test("a value's interval is kept only with both ends", () => {
   assert.deepEqual(a.partial, []);
   assert.deepEqual([b.full_min, b.full_max, b.partial.length], [1.9, 2.1, 1]);
 });
+
+test("each item keeps whether the answer alone earns it (R13): result or step, nothing else", () => {
+  const [a, b, c] = tidySchemeItems([
+    { id: "A.1.1", points: .1, type: "derivation", sheet: "any", what: "Using Newton's second law", role: "step" },
+    { id: "A.1.2", points: .1, type: "derivation", sheet: "answer", what: "Expression of the velocity", role: "result" },
+    { id: "A.1.3", points: .1, type: "value", sheet: "answer", what: "v", role: "maybe" },
+  ]);
+  assert.deepEqual([a.role, b.role, c.role], ["step", "result", undefined]);
+});

@@ -85,12 +85,14 @@ test("a session shows the union of its papers' rules under one family title", ()
   assert.equal(regulationId("ipho", "theory"), REG_VERSION + "/ipho/theory");
 });
 
-test("IPhO-style theory: a correct boxed answer earns its question's method marks unless a derivation is required", () => {
-  const ip8 = rulesFor("ipho", "theory").find(r => r.id === "IP8");
-  assert.ok(ip8, "IPhO, APhO and the base family grade theory with IP8");
-  assert.match(ip8.en, /correct final answer .* earns every mark of its question/);
-  assert.match(ip8.en, /derive, show or prove/); assert.match(ip8.en, /without derivation earns nothing/);
-  for (const c of ["ipho", "apho", "eupho"]) assert.ok(rulesFor(familyOf(c), "theory").includes(ip8), c);
-  assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "IP8"), "experiments keep their own evidence rules");
-  assert.ok(!rulesFor("usapho", "theory").some(r => r.id === "IP8") && !rulesFor("general", "theory").some(r => r.id === "IP8"));
+test("theory, every competition: a result item is earned by the answer alone, a step item only where it is written", () => {
+  for (const family of Object.keys(FAMILY_LIST)) {
+    const r13 = rulesFor(family, "theory").find(r => r.id === "R13");
+    assert.ok(r13, `${family} theory has R13`);
+    assert.match(r13.en, /A result earns its marks from the correct answer .* with or without working/);
+    assert.match(r13.en, /A step earns its marks only where it is written/);
+    assert.match(r13.en, /Newton's second law/);
+  }
+  assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "R13"), "experiments keep their own evidence rules");
+  assert.ok(!rulesFor("ipho", "theory").some(r => r.id === "IP8"), "R13 replaces the all-or-nothing IP8");
 });
