@@ -295,12 +295,12 @@ test('generic and exam error categories share the same safe bilingual explanatio
   }
 });
 
-test('an uncorrected camera photo is not called a scan; corner confirmation makes and uploads a corrected color image',async()=>{
+test('an uncorrected camera photo is not called a scan; corner confirmation makes and uploads a corrected clean image',async()=>{
   const {context}=app(),fixture=scannerForm(),corners=[{x:20,y:10},{x:80,y:10},{x:20,y:110},{x:80,y:110}];let rendered=0,uploaded;
   context.testScanner={canProcess:()=>true,MARKER_INSET:.02,processShot:async(_file,options)=>{
-    assert.equal(options.mode,'color');return{blob:fixture.capture,baseUrl:'data:original',corners,warpApplied:false,outputFormat:'auto'};
+    assert.equal(options.mode,'clean');return{blob:fixture.capture,baseUrl:'data:original',corners,warpApplied:false,outputFormat:'auto'};
   },editCorners:async()=>({corners,marker:false,pageFormat:'auto'}),reprocess:async(base,points,mode,_dpi,inset,options)=>{
-    rendered++;assert.equal(base,'data:original');assert.deepEqual(clone(points),corners);assert.equal(mode,'color');assert.equal(inset,null);assert.equal(options.preserveOriginal,false);
+    rendered++;assert.equal(base,'data:original');assert.deepEqual(clone(points),corners);assert.equal(mode,'clean');assert.equal(inset,null);assert.equal(options.preserveOriginal,false);
     return{blob:fixture.clean,warpApplied:true,outputFormat:'auto'};
   },encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
   context.fetch=async(_url,options)=>{uploaded=await options.body.get('image').text();return{ok:true,json:async()=>({text:'recognized working'})};};

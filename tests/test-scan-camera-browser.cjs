@@ -9,7 +9,7 @@ try{
  executable=process.env.CHROME_BIN||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':['/usr/bin/google-chrome','/usr/bin/chromium',chromium.executablePath()].find(file=>fs.existsSync(file)));
  if(!fs.existsSync(executable))chromium=null;
 }catch{}
-test('actual live camera keeps accepted video geometry separate from native still photos and creates a colour scan',
+test('actual live camera keeps accepted video geometry separate from native still photos and creates a clean scan that keeps colours',
  {skip:!chromium&&'Set HASLA_PLAYWRIGHT_PATH and CHROME_BIN for camera UI integration',timeout:120000},async()=>{
  const server=http.createServer((request,response)=>{
   const target=path.resolve(root,'.'+new URL(request.url,'http://localhost').pathname);
@@ -74,7 +74,7 @@ test('actual live camera keeps accepted video geometry separate from native stil
   assert.equal(fallback.width,1654);assert.ok(fallback.height>2200&&fallback.height<2700);
   assert.deepEqual([fallback.baseW,fallback.baseH],[900,1200],'fallback uses the same portrait video frame, not the different native crop');
   assert.equal(fallback.calls.length,2);assert.equal(fallback.calls[0].hint,null);
-  assert.equal(fallback.calls[1].hint.source,'same-video-frame');assert.equal(fallback.calls[1].mode,'color');
+  assert.equal(fallback.calls[1].hint.source,'same-video-frame');assert.equal(fallback.calls[1].mode,'clean');
   assert.equal(fallback.stopped,1);assert.equal(await page.locator('.lv').count(),0);
   assert.equal(fallback.captureMatchesFile,true,'monthly original evidence uses the matching video frame, not the failed native still');
   const colours=await page.evaluate(async()=>{
@@ -97,7 +97,7 @@ test('actual live camera keeps accepted video geometry separate from native stil
   await page.waitForFunction(()=>window.__scan.getShot()?.file.name==='phone-camera.jpg'&&!window.__scan.getShot().busy,{timeout:45000});
   const cameraFile=await page.evaluate(()=>{const s=window.__scan.getShot();return{warp:s.warpApplied,width:s.width,height:s.height,calls:window.__scanCalls,captureMatchesFile:s.captureFile===s.file};});
   assert.equal(cameraFile.warp,true);assert.equal(cameraFile.width,1654);assert.equal(cameraFile.captureMatchesFile,true);
-  assert.equal(cameraFile.calls.length,1);assert.equal(cameraFile.calls[0].mode,'color');assert.equal(cameraFile.calls[0].hint,null);
+  assert.equal(cameraFile.calls.length,1);assert.equal(cameraFile.calls[0].mode,'clean');assert.equal(cameraFile.calls[0].hint,null);
   assert.deepEqual(errors,[]);assert.deepEqual(outside,[]);
   console.log(JSON.stringify({fallback:{width:fallback.width,height:fallback.height,method:fallback.method},native:{width:native.width,height:native.height},colours,externalRequests:outside.length}));
  }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

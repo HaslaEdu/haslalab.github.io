@@ -237,7 +237,7 @@ test('a newer phone photo survives late progress, correction errors and rotation
   const editingB = context.phone.redo([], 'mono'), takingC = context.phone.take(c);
   rebuilt[0].reject(new Error('older correction failed')); await editingB;
   assert.equal(context.phone.getShot().file, c); assert.equal(context.phone.getShot().busy, true);
-  assert.equal(context.phone.getMode(), 'color');
+  assert.equal(context.phone.getMode(), 'clean');
   processed[2].resolve(result('current-c')); await takingC;
 
   const rotatingC = node('rotate').onclick(), takingD = context.phone.take(d);

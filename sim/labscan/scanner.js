@@ -1131,7 +1131,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1147,14 +1147,14 @@ export async function detectDocumentQuad(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1268,7 +1268,7 @@ export async function rotatePhoto(file) {
 }
 
 /** Optional desktop/weekly corner editor. The caller still decides when to upload. */
-export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'auto', signal } = {}) {
+export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'a4', signal } = {}) {
   if (signal?.aborted) return null;
   const image = await loadImage(baseUrl), W = image.naturalWidth || image.width, H = image.naturalHeight || image.height;
   if (signal?.aborted) return null;
@@ -1353,7 +1353,10 @@ const shortSide = pts => Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts
  * @returns {{blob, previewUrl, corners, autoScore, method, quality, width, height, baseUrl, baseW, baseH}}
  */
 export async function processShot(file, opts = {}) {
-  const { corners = null, mode = 'color', dpi = DEFAULT_DPI, onProgress, pageFormat = 'auto' } = opts;
+  /* The defaults are those of the first exam-mode scans (IPhO 2023, b900f59), whose pages read and graded well: the
+     clean mode (shadows divided out, ink contrast raised) on an A4 page at 200dpi. Colour and auto proportions remain
+     choices. */
+  const { corners = null, mode = 'clean', dpi = DEFAULT_DPI, onProgress, pageFormat = 'a4' } = opts;
   const say = (pct, label) => { try { onProgress?.(pct, label); } catch { /* 무시 */ } };
 
   say(5, '사진 읽는 중');
@@ -1422,10 +1425,10 @@ export async function processShot(file, opts = {}) {
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
-export async function reprocess(baseDataUrl, corners, mode = 'color', dpi = DEFAULT_DPI, inset = null, options = {}) {
+export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFAULT_DPI, inset = null, options = {}) {
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
-  const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'a4' ? 'a4' : 'auto';
+  const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'auto' ? 'auto' : 'a4';
   const a4WarpApplied = warpApplied && outputFormat === 'a4';
   /* options.source: the photo processShot read (its result's sourceBlob), straightened again at full resolution */
   let source = base;

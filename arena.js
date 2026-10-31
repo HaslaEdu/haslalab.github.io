@@ -407,7 +407,7 @@ function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=bc509c5941c5").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=76f39416d73a").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -466,9 +466,9 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     const token=generation,keep=photo;keep.preparing=true;paint();
     try {
       const scanner=await arLoadScanner();if(!current(token))return;
-      const edit=await scanner.editCorners(keep.result.baseUrl,keep.result.corners,{marker:keep.result.method==="marker",lang,pageFormat:keep.result.outputFormat||"auto",signal:keep.abort.signal});
+      const edit=await scanner.editCorners(keep.result.baseUrl,keep.result.corners,{marker:keep.result.method==="marker",lang,pageFormat:keep.result.outputFormat||"a4",signal:keep.abort.signal});
       if(!current(token)||!edit)return;
-      const result=await scanner.reprocess(keep.result.baseUrl,edit.corners,"color",undefined,edit.marker?scanner.MARKER_INSET:null,{preserveOriginal:false,pageFormat:edit.pageFormat||"auto",signal:keep.abort.signal,source:keep.result.sourceBlob});
+      const result=await scanner.reprocess(keep.result.baseUrl,edit.corners,"clean",undefined,edit.marker?scanner.MARKER_INSET:null,{preserveOriginal:false,pageFormat:edit.pageFormat||"a4",signal:keep.abort.signal,source:keep.result.sourceBlob});
       if(!current(token))return;
       if(keep.cleanUrl){URL.revokeObjectURL(keep.cleanUrl);urls.delete(keep.cleanUrl);}
       keep.result={...keep.result,...result,corners:edit.corners,cornersReliable:true,method:edit.marker?"marker":"manual",autoScore:1};
@@ -535,7 +535,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     try {
       const scanner = await arLoadScanner(); if (!current(token)) return;
       if (!scanner.canProcess()) { photo.warning = T.scanUnavailable; return; }
-      const result = await scanner.processShot(file, { mode: "color",signal:photo.abort.signal });
+      const result = await scanner.processShot(file, { mode: "clean",signal:photo.abort.signal });
       if (!current(token)) return;
       photo.result = result;
       if((result.warpApplied??result.a4WarpApplied)!==false){photo.clean=result.blob;photo.cleanUrl=imageUrl(result.blob);photo.selected="clean";}

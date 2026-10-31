@@ -112,7 +112,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=bc509c5941c5";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=76f39416d73a";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -143,7 +143,7 @@ const T = {
     shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 바탕과 구분되는 곳에 놓고, 종이의 네 모서리와 테두리가 모두 보이게 위에서 찍으세요. 검은 표식이 없어도 됩니다. 한 번에 한 쪽씩 찍습니다.",
     live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.", lvCandidate: "테두리 후보입니다. 촬영 후 네 모서리를 확인해 스캔하세요.",
     lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
-    working0: "다듬는 중…", corners: "모서리 확인·스캔 만들기", modes: { color: "컬러 스캔", clean: "또렷하게", mono: "흑백", original: "색 보정 없음" },
+    working0: "다듬는 중…", corners: "모서리 확인·스캔 만들기", modes: { clean: "또렷하게", color: "컬러 스캔", mono: "흑백", original: "색 보정 없음" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     a4Shape: "A4 비율을 확인하지 못해 사진을 자르거나 늘리지 않았습니다. A4 답안지라면 «모서리 맞추기»에서 확인한 뒤 A4로 보정하거나 원본 그대로 보내세요.",
     lvAspect: "A4 비율과 다릅니다. A4 용지인지 확인하고 카메라를 종이와 평행하게 맞춰 주세요.", lvPerspective: "A4 비율을 확인하려면 카메라를 종이와 평행하게 맞춰 주세요. 직접 촬영하면 원본을 유지합니다.",
@@ -170,7 +170,7 @@ const T = {
     shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a contrasting surface and shoot from above with all four paper corners and edges visible. Black markers are optional. One page per photo.",
     live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.", lvCandidate: "Possible page outline. Take a photo, then confirm its four corners to create a scan.",
     lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
-    working0: "Straightening…", corners: "Confirm corners and scan", modes: { color: "Color scan", clean: "Clean", mono: "B&W", original: "No color correction" },
+    working0: "Straightening…", corners: "Confirm corners and scan", modes: { clean: "Clean", color: "Color scan", mono: "B&W", original: "No color correction" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     a4Shape: "The A4 aspect ratio could not be verified, so the photo was not cropped or stretched. For an A4 sheet, confirm its corners and correct as A4, or send the original.",
     lvAspect: "This does not match the A4 aspect ratio. Check the sheet and hold the camera parallel to it.", lvPerspective: "Hold the camera parallel to the sheet to check its A4 aspect ratio. Manual capture keeps the original.",
@@ -222,7 +222,7 @@ const NETWORK=window.HLExamNetwork,transport=NETWORK.createTransport({getBase:()
 let mutationEpoch=0;
 function api(method,path,body,type){if(method!=='GET')mutationEpoch++;return transport.request(method,path,body,{binary:true,headers:{'X-Lab-Token':KEY,...(type?{'Content-Type':type}:{})}});}
 
-let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "original";
+let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
 let shotRevision = 0, closeShotEditor = null, monthlySending = false;
 const srvNow = () => Date.now() / 1000 + SKEW;
 
@@ -286,7 +286,7 @@ async function take(file, live, internal = false, captureOptions = {}) {
   releaseShot();
   const revision = shotRevision;
   shot = { file, captureFile, originalUrl: URL.createObjectURL(file), abort: new AbortController(), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
-  mode = "color"; paintShot();
+  mode = "clean"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
     const options = { mode, signal: shot.abort.signal, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } };
@@ -328,7 +328,7 @@ function paintShot() {
     <div class="row"><button id="compare">${shot.showOriginal ? t().processed : t().compare}</button><button id="zoom">${t().zoom}</button>${canProcess() ? `<button id="rotate">${t().rotate}</button>` : ""}</div>
     ${warn.map(w => `<div class="note w">${w}</div>`).join("")}
     ${shot.baseUrl ? `<div class="chips" style="margin-top:10px">${Object.entries(t().modes).map(([k, v]) => `<button data-m="${k}" class="${k === mode ? "on" : ""}">${v}</button>`).join("")}</div>` : ""}
-    ${shot.baseUrl ? `<label style="display:block;margin-top:10px">${lang === "ko" ? "출력 비율" : "Output proportions"} <select id="paper-format"><option value="auto" ${shot.outputFormat !== "a4" ? "selected" : ""}>${lang === "ko" ? "문서 비율 유지" : "Keep document proportions"}</option><option value="a4" ${shot.outputFormat === "a4" ? "selected" : ""}>A4 · 200dpi</option></select></label>` : ""}
+    ${shot.baseUrl ? `<label style="display:block;margin-top:10px">${lang === "ko" ? "출력 비율" : "Output proportions"} <select id="paper-format"><option value="auto" ${shot.outputFormat === "auto" ? "selected" : ""}>${lang === "ko" ? "문서 비율 유지" : "Keep document proportions"}</option><option value="a4" ${shot.outputFormat !== "auto" ? "selected" : ""}>A4 · 200dpi</option></select></label>` : ""}
     <div class="row">${shot.baseUrl ? `<button id="fix">${t().corners}</button>` : ""}<button id="again">${t().retake}</button></div>
     <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
   box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
@@ -346,7 +346,7 @@ async function redo(corners, m) {
   if ((shot.warpApplied ?? shot.a4WarpApplied) === false) { mode = m; paintShot(); return cornerEditor(); }
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "auto", signal: keep.abort?.signal, source: keep.sourceBlob }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "a4", signal: keep.abort?.signal, source: keep.sourceBlob }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
   catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }
