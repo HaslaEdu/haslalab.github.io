@@ -156,6 +156,9 @@
     <p class="hint" id="tx-slide"></p>
     <div class="row"><button id="sL">&#9664;</button><button id="sU">&#9650;</button><button id="sD">&#9660;</button><button id="sR">&#9654;</button></div>
     <div class="read" id="spot"></div>
+    <h2 id="lg-focus"></h2>
+    <p class="hint" id="tx-focus"></p>
+    <div class="row"><button id="fL">&#8630; 1</button><button id="fl">&#8630; &#188;</button><button id="fr">&#188; &#8631;</button><button id="fR">1 &#8631;</button></div>
     <h2 id="lg-notes"></h2>
     <p class="hint" id="tx-notes"></p>
     <div class="status"><div id="wwarn"></div><div class="serial" id="serial"></div></div>
@@ -222,6 +225,15 @@ const I18N = {
   slide:   ["slide the plate:", "판 이동:"],
   spot:    ["spot", "지점"],
   notes:   ["Notes", "안내"],
+  focus:   ["focusing ring", "초점 링"],
+  focushint:["Turn the ring at the front of the laser module (in 3D, roll the "
+            + "wheel over it) until the spot on the white paper side of the "
+            + "plate is smallest.  In focus the pattern spreads widest; the "
+            + "waist moves with the ring, so refocus after moving the plate.",
+            "레이저 모듈 앞의 링을 돌려(3D에서는 링 위에서 휠을 굴려) 판의 "
+            + "흰 종이 면에 비친 빛점이 가장 작아지게 맞추세요.  초점이 맞으면 "
+            + "무늬가 가장 넓게 퍼집니다.  판을 레일에서 옮기면 초점을 다시 "
+            + "맞춰야 합니다."],
   notetext:["Turn the current knob with the mouse wheel over it, or click "
             + "its left and right half.  Click the centre of the knob to "
             + "switch between the coarse and the fine step.",
@@ -268,10 +280,10 @@ function tr(k){ const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k;
 
 /* ------------------------- constants ------------------------------ */
 const LAMBDA = 650.0e-9;
-const R_BASE_LAMBDA = 167.82;
-const P_THRESHOLD = 287.0;
+const P_THRESHOLD = 280.5;   /* every order, the three lost in the central spot included */
 const N_SLOPE = 0.4632;
 const P_YIELD_NOM = 363.6;
+const X_LASER = 72.0, X_FRONT = 66.0;   /* the laser module and the front end of the rail, cm */
 
 /* ------------------------- randomness ----------------------------- */
 function mulberry(seed){
@@ -289,33 +301,103 @@ function gauss(rng){                                     /* Box-Muller */
 /* ==================================================================
    ThermoModel  -  laser diode -> PMMA surface -> reflected pattern
 
-     height of the bump    h      = m_max * lambda / 2
-     number of fringes     m_max  = 0.4632 (P - 287)      [official fit]
-     dark fringe           R_base sin(alpha_m) = m lambda
-                           R_base = 167.82 lambda
-   The two innermost orders are hidden inside the bright central spot,
-   so the order you can actually count is m' = m - 2.  Above the yield
-   power the surface melts and the deformation is frozen in.
+   The diode both heats the plate and probes it.  The light it puts out
+   above its lasing threshold raises a smooth thermal bump
+       h(r) = h0 exp(-r^2 / wb^2),   h0 = m_max lambda / 2
+       m_max = 0.4632 (P - 280.5)
+   The official B.3 fit, N = 0.4632 (P - 287), counts the rings you can
+   see; about three more are lost in the bright central spot (C.3), so the
+   whole phase swing is that line moved up by three orders.
+   and the pattern on the screen is the far field of the Gaussian beam
+   reflected from it: the Hankel transform of
+       exp(-r^2 / w0^2) exp(i 4 pi h(r) / lambda).
+   Nothing about the rings is put in by hand.  Their number is the phase
+   swing, 2 h0 / lambda; the outermost, brightest ring sits where the
+   reflected ray leaves the steepest flank of the bump,
+       sin(alpha_out) ~ 2 max|h'| = 0.858 m_max lambda / wb,
+   and the rings crowd near the centre and open out towards the edge, so
+   alpha against m is not a straight line (C.2, C.4).
+
+   The bump width follows the spot the focusing ring makes on the plate:
+   wb = 118 lambda (77 um) in focus, which puts the outermost ring of the
+   yield power at D = 27.5 cm on a screen 49.2 cm away (A.2) and the last
+   dark ring of a 15-order pattern at R = 5 cm (the last row of C.1).  Out of
+   focus the spot, the bump and the yield power all grow and the pattern
+   shrinks.  The innermost orders are lost in the bright central spot.
+   Above the yield power the surface melts and the deformation is frozen.
    ================================================================== */
+const WB_FOCUS = 118.0;            /* bump 1/e radius in focus, wavelengths */
+const W0_OVER_WB = 0.8;            /* probe beam radius over bump radius */
+const Z_R = 4.0;                   /* depth of focus of the module, cm */
+const Q_CORE = 0.0075;              /* angular radius of the central spot */
+function besselJ0(x){
+  const ax = Math.abs(x);
+  if (ax < 8){
+    const y = x * x;
+    return (57568490574.0 + y * (-13362590354.0 + y * (651619640.7 + y * (-11214424.18 + y * (77392.33017 + y * -184.9052456)))))
+         / (57568490411.0 + y * (1029532985.0 + y * (9494680.718 + y * (59272.64853 + y * (267.8532712 + y)))));
+  }
+  const z = 8 / ax, y = z * z, xx = ax - 0.785398164;
+  const p = 1.0 + y * (-0.1098628627e-2 + y * (0.2734510407e-4 + y * (-0.2073370639e-5 + y * 0.2093887211e-6)));
+  const q = -0.1562499995e-1 + y * (0.1430488765e-3 + y * (-0.6911147651e-5 + y * (0.7621095161e-6 - y * 0.934935152e-7)));
+  return Math.sqrt(0.636619772 / ax) * (Math.cos(xx) * p - z * Math.sin(xx) * q);
+}
+/* J0 tabulated once, read with linear interpolation: the far field needs
+   millions of values every time the bump changes */
+const J0_STEP = 0.02, J0_TAB = (() => { const n = Math.ceil(1400 / J0_STEP) + 2, t = new Float64Array(n);
+  for (let i = 0; i < n; i++) t[i] = besselJ0(i * J0_STEP); return t; })();
+/* |far field|^2 of the reflected beam against q = sin(alpha), normalised
+   to the brightest ring; lengths in wavelengths */
+function farField(mmax, wb){
+  const h0 = mmax / 2, w0 = W0_OVER_WB * wb;
+  const qEdge = 0.858 * mmax / wb, qmax = Math.min(0.95, 1.25 * qEdge + 0.03);
+  const rmax = 3.2 * wb, nr = Math.max(700, Math.ceil(9 * (mmax + qmax * rmax))), dr = rmax / nr;
+  const nq = 900, re = new Float64Array(nr), im = new Float64Array(nr), rr = new Float64Array(nr);
+  for (let i = 0; i < nr; i++){
+    const r = (i + 0.5) * dr, A = Math.exp(-r * r / (w0 * w0)) * r * dr;
+    const ph = 4 * Math.PI * h0 * Math.exp(-r * r / (wb * wb));
+    re[i] = A * Math.cos(ph); im[i] = A * Math.sin(ph); rr[i] = r / J0_STEP;
+  }
+  const I = new Float64Array(nq + 1), T = J0_TAB, last = T.length - 2;
+  let top = 0;
+  for (let j = 0; j <= nq; j++){
+    const k = 2 * Math.PI * qmax * j / nq;
+    let a = 0, b = 0;
+    for (let i = 0; i < nr; i++){
+      let t = k * rr[i], n = t | 0; if (n > last){ n = last; t = last; }
+      const J = T[n] + (T[n + 1] - T[n]) * (t - n);
+      a += re[i] * J; b += im[i] * J;
+    }
+    I[j] = a * a + b * b;
+    if (qmax * j / nq > 1.6 * Q_CORE) top = Math.max(top, I[j]);
+  }
+  for (let j = 0; j <= nq; j++) I[j] /= top || 1;
+  return {qmax, nq, I};
+}
+
 class ThermoModel {
   constructor(rng){
     this.rng = rng;
-    this.R_base_lam = R_BASE_LAMBDA * (1 + 0.003 * gauss(rng));
+    this.wb_spot = 1 + 0.003 * gauss(rng);       /* the plate under the beam */
     this.P_th = P_THRESHOLD * (1 + 0.001 * gauss(rng));
     /* each plate differs a little from the next, but the official values are what a careful measurement gives */
     this.slope = N_SLOPE * (1 + 0.005 * gauss(rng));
     this.P_yield = P_YIELD_NOM * (1 + 0.005 * gauss(rng));
-    this.hidden = 2.0 + 0.10 * gauss(rng);
     this.iv_a = 0.35928;
     this.iv_b = 0.73823 * (1 + 0.004 * gauss(rng));
+    /* where the focusing ring puts the waist, cm in front of the module:
+       where the last user left it, a depth of focus or two off the plate */
+    this.d_plate = X_LASER;                    /* laser to plate, kept by the app */
+    this.waist = X_LASER + (0.6 + 1.2 * rng()) * Z_R * (rng() < 0.5 ? -1 : 1);
     this.spot_key = "0,0";
     this.spots = new Map();
     this.melted = false;
-    this.melt_extra = 0.0;
     this.m_frozen = 0.0;
+    this.wb_frozen = 0.0;
     this.dirty = Math.abs(0.35 * gauss(rng));      /* contamination */
     this.ellipticity = 1.0 + Math.abs(0.012 * gauss(rng));
     this.tilt = rng() * Math.PI;
+    this._ff = null;
   }
   diode_voltage(mA){
     if (mA <= 1.0) return 0.0;
@@ -327,11 +409,18 @@ class ThermoModel {
     return [Math.round(i * 10) / 10, Math.round(v * 100) / 100];
   }
   power_true(mA){ return mA * this.diode_voltage(mA); }
+  /* the spot on the plate against the spot in focus */
+  spot_scale(){ const u = (this.d_plate - this.waist) / Z_R; return Math.sqrt(1 + u * u); }
+  wb(){ return this.melted && this.wb_frozen ? this.wb_frozen : WB_FOCUS * this.wb_spot * this.spot_scale(); }
 
   m_max(mA){
     const P = this.power_true(mA);
     const n_th = Math.max(this.slope * (P - this.P_th), 0.0);
-    if (P > this.P_yield){
+    /* the surface yields at a peak temperature: a wider spot needs more
+       light above the lasing threshold to get there */
+    const P_y = this.P_th + (this.P_yield - this.P_th) * this.spot_scale();
+    if (P > P_y){
+      if (!this.melted) this.wb_frozen = this.wb();
       this.melted = true;
       /* the plastic part takes over from the thermal one, so nothing
          jumps as the surface starts to yield */
@@ -342,24 +431,34 @@ class ThermoModel {
   }
   height_lambda(mA){ return this.m_max(mA) / 2.0; }
 
-  intensity(nu, mmax){
-    const core = 1.35 * Math.exp(-Math.pow(nu / 1.55, 2));
-    const env = 0.80 * Math.exp(-0.85 * Math.pow(nu / Math.max(mmax, 1.0), 2));
-    const cutoff = 0.5 * (1.0 - Math.tanh((nu - mmax) / 0.55));
-    const s = Math.sin(Math.PI * nu);
-    let ring = env * cutoff * s * s;
-    ring *= 0.5 * (1.0 + Math.tanh((nu - this.hidden) / 0.55));
+  /* the radial pattern, kept until the bump or the focus changes */
+  pattern(mmax){
+    const wb = this.wb(), key = mmax.toFixed(3) + "|" + wb.toFixed(2);
+    if (!this._ff || this._ff.key !== key) this._ff = Object.assign(farField(Math.max(mmax, 0.05), wb), {key});
+    return this._ff;
+  }
+  intensity(q, ff){
+    const core = 1.35 * Math.exp(-Math.pow(q / Q_CORE, 2));
+    let ring = 0;
+    if (q < ff.qmax){
+      const t = q / ff.qmax * ff.nq, j = Math.floor(t), f = t - j;
+      /* the eye (and the photograph in Fig. 2) squeezes the range: the
+         dim inner rings still show, the dark rings stay dark */
+      ring = 0.95 * Math.pow(Math.max(ff.I[j] * (1 - f) + ff.I[Math.min(j + 1, ff.nq)] * f, 0), 0.55);
+    }
+    /* the rings inside the central spot drown in it */
+    ring *= 0.5 * (1.0 + Math.tanh((q - 1.45 * Q_CORE) / (0.35 * Q_CORE)));
     return core + ring;
   }
 
   /* one point of the pattern, in cm on the screen, before the speckle */
-  pixel(mA, L_cm, X, Y, mmax, Pw){
+  pixel(mA, L_cm, X, Y, mmax, Pw, ff){
     const ca = Math.cos(this.tilt), sa = Math.sin(this.tilt);
     const Xr = X * ca + Y * sa, Yr = -X * sa + Y * ca;
     const Rr = Math.hypot(Xr / this.ellipticity, Yr * this.ellipticity);
-    const nu = this.R_base_lam * Math.sin(Math.atan2(Rr, L_cm));
-    let img = (mmax > 0.4) ? this.intensity(nu, mmax)
-                           : 1.35 * Math.exp(-Math.pow(nu / 1.55, 2));
+    const q = Math.sin(Math.atan2(Rr, L_cm));
+    let img = (mmax > 0.4) ? this.intensity(q, ff)
+                           : 1.35 * Math.exp(-Math.pow(q / Q_CORE, 2));
     /* brightness follows the drive: below the fringe threshold the knob
        still does something visible, as it does on the bench */
     img *= Math.min(Math.max(Pw / 300.0, 0.0), 1.6);
@@ -372,18 +471,18 @@ class ThermoModel {
      own history, so a shot that has been melted is still melted when
      you wind the stand back to it. */
   goto_spot(key){
-    this.spots.set(this.spot_key, [this.melted, this.melt_extra,
-                                   this.R_base_lam, this.m_frozen]);
+    this.spots.set(this.spot_key, [this.melted, this.wb_frozen,
+                                   this.wb_spot, this.m_frozen]);
     this.spot_key = key;
     if (this.spots.has(key)){
       const s = this.spots.get(key);
-      this.melted = s[0]; this.melt_extra = s[1];
-      this.R_base_lam = s[2]; this.m_frozen = s[3];
+      this.melted = s[0]; this.wb_frozen = s[1];
+      this.wb_spot = s[2]; this.m_frozen = s[3];
     } else {
       this.melted = false;
-      this.melt_extra = 0.0;
+      this.wb_frozen = 0.0;
       this.m_frozen = 0.0;
-      this.R_base_lam = R_BASE_LAMBDA * (1 + 0.015 * gauss(this.rng));
+      this.wb_spot = 1 + 0.015 * gauss(this.rng);
     }
   }
 }
@@ -639,7 +738,6 @@ function line(g, pts, col, w, dash){
    THE OPTICAL BENCH  (class BenchCanvas)
    ================================================================== */
 const BW = 560, BH = 434;
-const X_LASER = 72.0, X_FRONT = 66.0;
 const bpx = cm => 40 + cm * (BW - 90) / 80.0;
 const bcm = px => (px - 40) * 80.0 / (BW - 90);
 
@@ -654,10 +752,13 @@ function plateViews(g, x0, y0){
   const hot = h > 0.05;
   const SLICE_M = 250e-6;
   const rise = Math.min(h * LAMBDA / SLICE_M * 60.0, 34.0);
-  const base = m.R_base_lam * LAMBDA / SLICE_M * 60.0;
+  const base = m.wb() * LAMBDA / SLICE_M * 60.0;
 
   rect(g, x0 - 30, y0 - 30, x0 + 30, y0 + 30, "#dff0f5", "#7fa3ad", 2);
-  oval(g, x0 - 2, y0 - 2, x0 + 2, y0 + 2, hot ? "#ff9a3c" : "#d9c4b0");
+  /* the spot the beam makes on it: smallest in focus */
+  const sp = app.lit && app.cur > 2.0 ? 2 * m.spot_scale() : 2;
+  if (app.lit && app.cur > 2.0) oval(g, x0 - sp - 2, y0 - sp - 2, x0 + sp + 2, y0 + sp + 2, "rgba(255,70,50,0.35)");
+  oval(g, x0 - sp, y0 - sp, x0 + sp, y0 + sp, hot ? "#ff9a3c" : app.lit && app.cur > 2.0 ? "#ff5a45" : "#d9c4b0");
   txt(g, x0, y0 + 42, tr("pfront"), "#5c6169", 10);
 
   const ex = x0 + 128, ey = y0;
@@ -850,7 +951,8 @@ const offg = offc.getContext("2d");
 let SCR_SIG = "", PAT = null;
 function drawScreen(){
   const R0 = app.ruler, live0 = app.lit && app.cur > 2.0, m0 = app.model;
-  const pkey = live0 ? [app.cur, app.L(), m0.spot_key, m0.melted, m0.melt_extra, m0.m_frozen].join("|") : "dark";
+  m0.d_plate = X_LASER - app.x_target;
+  const pkey = live0 ? [app.cur, app.L(), m0.spot_key, m0.melted, m0.m_frozen, m0.wb().toFixed(3)].join("|") : "dark";
   const sig = pkey + "|" + (R0.on ? [R0.x, R0.y, R0.ang].join(",") : "-");
   if (sig === SCR_SIG) return; SCR_SIG = sig; SCRCV._ver = (SCRCV._ver || 0) + 1;
   const g = ctxOf("screen");
@@ -865,13 +967,13 @@ function drawScreen(){
   else if (live){
     const m = app.model, L = app.L();
     const mmax = m.m_max(app.cur);          /* this is where it can melt */
-    const Pw = m.power_true(app.cur);
+    const Pw = m.power_true(app.cur), ff = m.pattern(mmax);
     const rg = mulberry(7);                 /* the speckle is fixed */
     for (let j = 0; j < NGRID; j++){
       const Y = -HALF + 2 * HALF * j / (NGRID - 1);
       for (let i2 = 0; i2 < NGRID; i2++){
         const X = -HALF + 2 * HALF * i2 / (NGRID - 1);
-        let I = m.pixel(app.cur, L, X, Y, mmax, Pw);
+        let I = m.pixel(app.cur, L, X, Y, mmax, Pw, ff);
         /* the speckle scales with the light that is actually there: a
            flat dither would put false minima in the black background
            outside the pattern and make the ring count ambiguous */
@@ -1123,6 +1225,10 @@ function moveStand(dx, dy){
 [["sL", -1, 0], ["sU", 0, 1], ["sD", 0, -1], ["sR", 1, 0]].forEach(b =>
   document.getElementById(b[0]).addEventListener(
     "click", () => moveStand(b[1], b[2])));
+/* one turn of the ring moves the waist 4 mm along the beam */
+function turnFocus(turns){ app.model.waist = Math.min(X_LASER + 30, Math.max(X_LASER - 30, app.model.waist + 0.4 * turns)); refresh(); }
+[["fL", -1], ["fl", -0.25], ["fr", 0.25], ["fR", 1]].forEach(b =>
+  document.getElementById(b[0]).addEventListener("click", () => turnFocus(b[1])));
 
 function spotLabel(){
   const k = app.model.spot_key.split(",").map(Number);
@@ -1168,6 +1274,8 @@ function applyLang(){
   document.getElementById("lg-stand").textContent = tr("stand");
   document.getElementById("lg-notes").textContent = tr("notes");
   document.getElementById("tx-slide").textContent = tr("slide");
+  document.getElementById("lg-focus").textContent = tr("focus");
+  document.getElementById("tx-focus").textContent = tr("focushint");
   document.getElementById("tx-notes").textContent = tr("notetext");
   document.getElementById("ruler").textContent = tr("rulhint");
   document.getElementById("btn-en").className = LANG === "en" ? "on" : "";
@@ -1721,7 +1829,7 @@ function laser3(){ const x = X_LASER;
   cyl3("y",BEAM+3.0,BEAM+4.0,x+0.6,1.8,0.18,"#c9ced3",{seg:8}); knurl3("y",BEAM+4.0,BEAM+4.8,x+0.6,1.8,0.45,"#b8ab8a",{id:"laser"});
   /* the module: through both plates, its weight over the post; the focusing ring at the output */
   cyl3("x",x-3.4,x+2.6,BEAM,0,0.75,"#141518",{seg:18,id:"laser",cap:"#2a2c30"});
-  knurl3("x",x-3.7,x-2.4,BEAM,0,0.85,"#1d1f22",{id:"laser"});
+  knurl3("x",x-3.7,x-2.4,BEAM,0,0.85,"#1d1f22",{id:"focus"});
   cyl3("x",x-3.85,x-3.7,BEAM,0,0.32,app.lit&&app.cur>2?"#ff5040":"#552222",{seg:12,id:"laser"});
   if (app.lit && app.cur > 2) sphere3([x-3.9,BEAM,0],0.6,"rgba(255,60,40,0.35)");
   /* its two leads, down to the red and black posts on the carriage */
@@ -2149,10 +2257,12 @@ cv3.addEventListener("pointerup", e => { cv3.classList.remove("grabbing");
   if (down3 && down3.btn){ const d = down3; down3 = null; if (!d.moved && d.btn === 2) rclick3(e); return; } rulerDrop();
   if (down3 && !down3.moved && view3 === "3d"){ const id = down3.id;
     if (id === "screen3") showView("screen"); else if (id === "ctrl") showView("ctrl");
-    else if (id === "rail" || id === "laser" || id === "target") showView("bench"); }
+    else if (id === "rail" || id === "laser" || id === "focus" || id === "target") showView("bench"); }
   down3 = null; });
 cv3.addEventListener("wheel", e => { e.preventDefault(); const p = p3e(e), s = e.deltaY < 0 ? 1 : -1;
-  if (pick3(p[0], p[1]) === "knob"){ turnKnob(s); return; }
+  const hit = pick3(p[0], p[1]);
+  if (hit === "knob"){ turnKnob(s); return; }
+  if (hit === "focus"){ turnFocus(0.25 * s); return; }
   if (view3 === "screen"){ const q = screenAt(p); if (q && app.ruler.on && app.ruler.contains(q[0], q[1])){ app.ruler.ang += s * Math.PI / 90; drawScreen(); return; } }
   const f = s > 0 ? 1.12 : 1 / 1.12, nk = Math.min(40, Math.max(2, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0]-CAM.W/2) - (p[0]-CAM.W/2-CAM.px) * r; CAM.py = (p[1]-CAM.H/2) - (p[1]-CAM.H/2-CAM.py) * r; CAM.k = nk; }, {passive:false});
