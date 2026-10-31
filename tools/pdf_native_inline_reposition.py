@@ -155,7 +155,7 @@ def _font_programs(page):
     walk(page.Resources);return programs
 
 
-def _verify_glyphs(source_page, result, erase, offsets, tolerance=.0001):
+def _verify_glyphs(source_page, result, erase, offsets, tolerance=.0001, occurrence_offsets=None):
     proof=fitz.open(stream=result,filetype='pdf');a=_traces(source_page);b=_traces(proof[0])
     buckets=defaultdict(list)
     def identity(c):
@@ -165,10 +165,10 @@ def _verify_glyphs(source_page, result, erase, offsets, tolerance=.0001):
                 c['wmode'],c['colorspace'],str(c['stroke_color']),c['stroke_opacity'])
     for c in b:buckets[identity(c)].append(c)
     failures=[];space_rounding=[];max_dx=max_dy=0.;visible_dx=visible_dy=0.;expected=0
-    for c in a:
+    for source_index,c in enumerate(a):
         key=glyph_key(c)
         if key in erase:continue
-        expected+=1;dx=offsets.get(key,0.);x,y=c['origin'];x+=dx
+        expected+=1;dx=(occurrence_offsets or {}).get(source_index,offsets.get(key,0.));x,y=c['origin'];x+=dx
         candidates=buckets[identity(c)]
         if not candidates:
             failures.append(dict(reason='missing native glyph',glyph=c));continue
@@ -260,6 +260,8 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
         groups.append(dict(keys=keys,glyphs=glyphs,dx=dx,form_path=shift.get('form_path'),
                            vector_refs=shift.get('vector_paths',[])))
     requested=set(offsets)|erase
+    requested_offsets=dict(offsets)
+    trace_indices={id(c):i for i,c in enumerate(trace)}
     occurrences=Counter(glyph_key(c) for c in trace)
     for key in requested:
         if occurrences[key]<1:raise ValueError('Requested glyph is missing: '+repr(key))
@@ -275,6 +277,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
     source_pdf=pikepdf.Pdf.open(BytesIO(raw_source));out=pikepdf.Pdf.new()
     out.pages.append(source_pdf.pages[page_number-1]);p=out.pages[0]
 
+    suffix_alias_font_ids=set()
     def resource_fonts(resources):
         info={}
         for name,font in resources.get('/Font',{}).items():
@@ -287,6 +290,16 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                         if value is not None:face_names.append(family_name(bytes(value).decode('latin1')))
                 aliases={v for f in face_names for v in names
                          if f==v or f.startswith(v) or folded(f)==folded(v)}
+                if not aliases:
+                    # Old Word Symbol subsets can expose only their literal
+                    # suffix (e.g. Symbol+FPEF -> FPEF) to MuPDF. Accept this
+                    # only for embedded Identity CID-to-GID fonts, and verify
+                    # every original encoded CID against its actual trace GID
+                    # below. The font resource/program itself is never changed.
+                    face=font.get('/DescendantFonts',[font])[0]
+                    suffix={v for f in face_names for v in names if len(v)>=4 and f.endswith('+'+v)}
+                    if len(suffix)==1 and str(font.get('/Encoding'))=='/Identity-H' and str(face.get('/CIDToGIDMap'))=='/Identity' and '/FontFile2'in face.get('/FontDescriptor',{}):
+                        aliases=suffix;suffix_alias_font_ids.add(font.objgen)
                 if len(aliases)==1:family=aliases.pop()
             # All resources in a selected family participate in trace order,
             # including read-only nested Forms sharing that family.
@@ -306,7 +319,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
         st=dict(active='',tc=0.,tw=0.,tf=1.,tr=0,th=1.,ts=0.,ctm=IDENTITY,clips=()) if state is None else dict(state)
         tm=IDENTITY;stack=[];active_q=[];fonts=resource_fonts(resources)
         node=dict(container=container,resources=resources,parent=parent,invocation=invocation,
-                  records=[],children=[],replacements={},keys=set(),shift=0.,vector_paths=[],clip_groups=[],entry_ctm=st['ctm'])
+                  records=[],children=[],replacements={},keys=set(),trace_indices=set(),shift=0.,vector_paths=[],clip_groups=[],entry_ctm=st['ctm'])
         node['path']=[] if parent is None else parent['path']+[invocation['index']]
         if parent is not None:
             node['original_raw_sha256']=hashlib.sha256(container.read_raw_bytes()).hexdigest()
@@ -357,7 +370,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                 # is outside the narrow, reviewed pure-path profile.
                 pending_path['safe']=False
             if op=='q':
-                stack.append(dict(st));active_q.append(dict(start=index,keys=set(),has_clip=False,
+                stack.append(dict(st));active_q.append(dict(start=index,keys=set(),trace_indices=set(),has_clip=False,
                                                             own_clips=[],ctm=st['ctm'],parent_clips=st['clips']))
             elif op=='Q':
                 if not stack:raise ValueError('Unbalanced source Q')
@@ -383,7 +396,9 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                     call=dict(index=index,name=operands[0],ctm=st['ctm'],clips=st['clips'])
                     n=walk(child,child.get('/Resources',resources),childstate,node,call,ancestors+(child.objgen,))
                     node['children'].append(n);node['keys'].update(n['keys'])
-                    for qgroup in active_q:qgroup['keys'].update(n['keys'])
+                    node['trace_indices'].update(n['trace_indices'])
+                    for qgroup in active_q:
+                        qgroup['keys'].update(n['keys']);qgroup['trace_indices'].update(n['trace_indices'])
             if op not in ['Tj','TJ',"'",'"'] or st['active'] not in fonts:continue
             family,encoding,cb,identity,font=fonts[st['active']]
             items=list(operands[0]) if op=='TJ' else [operands[-1]]
@@ -403,6 +418,8 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                     cluster=queues[family][qi:qi+len(decoded)];counters[family]+=len(decoded)
                     if len(cluster)!=len(decoded) or ''.join(c['c'] for c in cluster)!=decoded:
                         raise ValueError(f'CID/trace association failed: {family} CID {code}')
+                    if font.objgen in suffix_alias_font_ids and (cluster[0]['trace_gid']!=code or any(c['trace_gid']!=-1 for c in cluster[1:])):
+                        raise ValueError('A shortened native font alias lacks exact original CID/GID identity')
                     if any(c['render_mode']!=st['tr'] for c in cluster):raise ValueError('Source Tr/trace mismatch')
                     keys={glyph_key(c) for c in cluster}
                     if len(cluster)>1 and keys&requested:
@@ -416,7 +433,10 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                             raise ValueError('Multi-Unicode CID requires every continuation at one atomic dx')
                     part=dict(raw=data,code=code,cluster=cluster,keys=keys)
                     record['parts'].append(part);node['keys'].update(keys)
-                    for qgroup in active_q:qgroup['keys'].update(keys)
+                    members={trace_indices[id(c)] for c in cluster}
+                    node['trace_indices'].update(members)
+                    for qgroup in active_q:
+                        qgroup['keys'].update(keys);qgroup['trace_indices'].update(members)
             records.append(record);node['records'].append(record)
         if stack:raise ValueError('Unbalanced source q')
         node['exit_ctm']=st['ctm']
@@ -437,6 +457,8 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
         inventory=dict(page_number=page_number,forms=[dict(
             path=n['path'],source_objgen=list(n['container'].objgen),
             native_page_bbox=native_form_bbox(n),
+            entry_ctm=n['entry_ctm'],page_matrix=page_matrix,
+            invocation_ctm=n['invocation']['ctm'],
             own_vector_paths=[dict(operator_indices=v['indices'],rect=v['rect'],paint_operator=v['paint_operator']) for v in n['vector_paths']],
             glyphs=[by_key[k] for k in sorted(n['keys'])],
             original_raw_sha256=n['original_raw_sha256']) for n in nodes[1:]],
@@ -514,7 +536,19 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
             if glyph_key(ch) not in v['keys']:continue
             r=fitz.Rect(ch['bbox']);dx=item['dx'];moved=fitz.Rect(r.x0+dx,r.y0,r.x1+dx,r.y1)
             for clip in v['parent_clips']:
-                if clip['rect'] is None or not fitz.Rect(clip['rect']).contains(moved):
+                if clip['rect'] is None:
+                    raise ValueError('Moved atomic clip group has an unknown unchanged ancestor clip')
+                if fitz.Rect(clip['rect']).contains(moved):continue
+                # Word repeats a row clip inside an identical ancestor clip.
+                # Original ascender/descender metric boxes may already exceed
+                # the row vertically. The group's own unchanged clip program
+                # moves together with its glyphs: its visible source portion,
+                # rather than invisible metric overshoot, must fit the ancestor.
+                visible=fitz.Rect(r)
+                for own in v['own_clips']:
+                    if own['rect'] is None:raise ValueError('Atomic native clip has unknown visible physical bounds')
+                    visible &= fitz.Rect(own['rect'])
+                if not v['own_clips'] or (not visible.is_empty and not fitz.Rect(clip['rect']).contains(visible+(dx,0,dx,0))):
                     raise ValueError('Moved atomic clip group would leave an unchanged ancestor clip')
         fragment=raw_content[a:z]
         tx,ty=_inverse_vector(_multiply(v['ctm'],page_matrix),item['dx'])
@@ -726,7 +760,19 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
             native_atomic_clip_bytes_preserved=all(item['fragment'] in p.Contents.read_bytes() for item in atomic_clips),
             output_sha256=hashlib.sha256(result).hexdigest())
     if validate:
-        qa.update(_verify_glyphs(page,result,erase,offsets,tolerance=float(position_tolerance_pt)))
+        # Two original encoded ASCII-space occurrences may share the exact
+        # same family/size/origin while belonging to different q/clip groups.
+        # Group expansion must not claim that an untouched outside occurrence
+        # moved. Keep source CID/trace occurrence membership authoritative.
+        occurrence_offsets={i:requested_offsets.get(glyph_key(c),0.) for i,c in enumerate(trace)}
+        for item in atomic_clips:
+            for i in item['group']['trace_indices']:occurrence_offsets[i]=item['dx']
+        for node in nodes[1:]:
+            if node['shift']:
+                for i in node['trace_indices']:occurrence_offsets[i]=node['shift']
+        qa['atomic_nonpainting_space_occurrence_shifts']=[dict(source_trace_index=i,source_origin=c['origin'],dx=occurrence_offsets[i])
+            for i,c in enumerate(trace) if c['c']==' ' and occurrence_offsets[i]!=requested_offsets.get(glyph_key(c),0.)]
+        qa.update(_verify_glyphs(page,result,erase,offsets,tolerance=float(position_tolerance_pt),occurrence_offsets=occurrence_offsets))
         qa['passed']=not qa['native_glyph_mismatches'] and not qa['unexpected_glyphs'] and qa['font_programs_unchanged'] and qa['original_form_streams_unchanged'] and qa['native_vector_path_bytes_preserved'] and qa['native_atomic_clip_bytes_preserved']
         if not qa['passed']:raise ValueError('Native inline move failed its glyph invariant: '+repr(qa))
     else:qa['passed']=None

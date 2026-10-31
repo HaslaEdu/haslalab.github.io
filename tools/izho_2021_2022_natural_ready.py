@@ -7,6 +7,7 @@ import numpy as np
 from izho_2021_2022_natural_spacing import ROOT,OUT,sha
 from pdf_memory_gate import page_worker
 from izho_2021_2022_batang_coverage import audit as coverage_audit
+from pdf_grading_columns_stationary import audit as grading_audit
 
 COUNTS={(2021,'T'):6,(2021,'TS'):16,(2022,'T'):7,(2022,'TS'):15}
 
@@ -18,7 +19,9 @@ def finalize(year,kind):
         'pdf_text_motion_ink.py','pdf_native_geometry_motion.py','pdf_memory_gate.py',
         'pdf_moved_native_ink.py','pdf_native_glyph_promote.py','izho_2022_t2_native_margin.py',
         'pdf_new_hangul_graphics_overlap.py','test_pdf_new_hangul_graphics_overlap.py',
-        'izho_2021_2022_batang_coverage.py']
+        'izho_2021_2022_batang_coverage.py','izho_2021_ts15_native_raster_profile.py',
+        'pdf_native_form_raster_witness.py','test_pdf_native_form_raster_witness.py','pdf_grading_columns_stationary.py',
+        'izho_2022_ts_native_raster_profiles.py']
     # Freeze the exact source bytes when their hashes are read, before any
     # shared engine can be edited by a parallel authoring task.
     frozen={str(Path('tools')/name):(ROOT/'tools'/name).read_bytes()for name in authoring_names}
@@ -44,6 +47,10 @@ def finalize(year,kind):
         coverage=coverage_audit(year,kind,page)
         if not coverage['passed']:raise ValueError('Eligible regular Korean body prose was omitted from font/spacing repair')
         qa['body_hangul_replacement_coverage']=coverage
+        old_qa=json.loads(Path(qa['source']).with_suffix('.qa.json').read_text('utf8'))
+        grading=grading_audit(qa['source'],proof,old_qa['placements'])if kind=='TS'else dict(passed=True,original_grading_glyphs_checked=0,grading_glyphs_moved_from_source_cells=[])
+        if not grading['passed']:raise ValueError(('Original grading numerals moved out of their source table cells',page,grading))
+        qa['stationary_original_grading_columns']=grading
         if page not in reviewed or not reviewed[page]['reviewed']or reviewed[page]['proof_sha256']!=sha(proof):
             raise ValueError('Every final page needs a visual review of this exact proof')
         proofs.append(proof);audits.append(qa)
@@ -71,6 +78,7 @@ def finalize(year,kind):
         original_source_requested_dx_newly_missing_native_ink_pixels=sum(q.get('original_source_requested_dx_ink_audit',{}).get('newly_missing_native_ink_pixels',0)for q in audits),
         new_hangul_native_graphics_overlap_pixels=sum(q.get('new_hangul_native_graphics_overlap',{}).get('new_hangul_dark_pixels_over_native_foreground',0)for q in audits),
         eligible_body_hangul_coverage_missing=sum(len(q['body_hangul_replacement_coverage']['missing_eligible_body_hangul'])for q in audits),
+        original_stationary_grading_glyphs_checked=sum(q['stationary_original_grading_columns']['original_grading_glyphs_checked']for q in audits),
         hangul_visibility_loss_candidates=sum(q['hangul_visibility']['flagged_components']for q in audits),
         outside_motion_ink_pixels=sum(q['changed_pixels_outside_old_and_new_text_ink']for q in audits),
         figure_changed_pixels=sum(r.get('changed_visible_figure_ink_or_unreviewed_pixels',r['changed_pixels'])for q in audits for r in q['figure_pixel_audits']),
@@ -85,11 +93,16 @@ def finalize(year,kind):
             original_source_requested_dx_ink_audit=qa.get('original_source_requested_dx_ink_audit'),
             new_hangul_native_graphics_overlap=qa.get('new_hangul_native_graphics_overlap'),
             body_hangul_replacement_coverage=qa['body_hangul_replacement_coverage'],
+            stationary_original_grading_columns=qa['stationary_original_grading_columns'],
             new_empty_hangul_outlines=len(qa['new_batang_outlines']['empty']))
             for row,qa in zip(assembly,audits)],visual_review=str(folder/'visual-review-natural.json'),
         page_audits=[dict(page=i+1,path=str(p.with_suffix('.qa.json')),sha256=sha(p.with_suffix('.qa.json')))for i,p in enumerate(proofs)],
         authoring_files=hashes,authoring_snapshotroot=str(snapshot),authoring_snapshot_sha256=hashes,
-        historical_source_drift=[])
+        historical_source_drift=[dict(page=i+1,file=str(Path('tools')/name),recorded_build_sha=recorded,
+            snapshot_sha=hashes[str(Path('tools')/name)],
+            note='Exact per-page build hashes remain in the page QA. The frozen current snapshot includes later compatible inspection/profile additions; reviewed final page bytes and final binary QA remain authoritative.')
+            for i,qa in enumerate(audits)for name,recorded in qa.get('authoring_sha256',{}).items()
+            if str(Path('tools')/name)in hashes and recorded!=hashes[str(Path('tools')/name)]])
     target.with_suffix('.ready.json').write_text(json.dumps(inventory,ensure_ascii=False,indent=2),'utf8')
     print(json.dumps(inventory,ensure_ascii=False,indent=2))
     return target,inventory

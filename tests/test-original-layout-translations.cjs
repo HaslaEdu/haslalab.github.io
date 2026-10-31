@@ -48,6 +48,10 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'natural-spacing-v2') {
+    require('./helpers/natural-spacing-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'natural-spacing-reviewed') {
     assert.equal(qa.status, 'READY');
     assert.equal(qa.sha256, item.sha256);
