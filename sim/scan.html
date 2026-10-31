@@ -112,7 +112,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=76f39416d73a";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=5c3425ad59a1";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -327,11 +327,9 @@ function paintShot() {
     <p style="font-size:12.5px;color:var(--muted)">${t().detail}${shot.width ? ` · ${shot.width}×${shot.height}px` : ""}</p>
     <div class="row"><button id="compare">${shot.showOriginal ? t().processed : t().compare}</button><button id="zoom">${t().zoom}</button>${canProcess() ? `<button id="rotate">${t().rotate}</button>` : ""}</div>
     ${warn.map(w => `<div class="note w">${w}</div>`).join("")}
-    ${shot.baseUrl ? `<div class="chips" style="margin-top:10px">${Object.entries(t().modes).map(([k, v]) => `<button data-m="${k}" class="${k === mode ? "on" : ""}">${v}</button>`).join("")}</div>` : ""}
     ${shot.baseUrl ? `<label style="display:block;margin-top:10px">${lang === "ko" ? "출력 비율" : "Output proportions"} <select id="paper-format"><option value="auto" ${shot.outputFormat === "auto" ? "selected" : ""}>${lang === "ko" ? "문서 비율 유지" : "Keep document proportions"}</option><option value="a4" ${shot.outputFormat !== "auto" ? "selected" : ""}>A4 · 200dpi</option></select></label>` : ""}
     <div class="row">${shot.baseUrl ? `<button id="fix">${t().corners}</button>` : ""}<button id="again">${t().retake}</button></div>
     <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
-  box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
   if ($("paper-format")) $("paper-format").onchange = () => { shot.outputFormat = $("paper-format").value; redo(shot.corners, mode); };
   if ($("fix")) $("fix").onclick = () => cornerEditor();
   $("compare").onclick = () => { shot.showOriginal = !shot.showOriginal; paintShot(); };
@@ -433,6 +431,8 @@ async function cornerEditor() {
 
 /* ── The live preview uses the still-photo detector. Complete markers or a validated paper outline can trigger
       a photo only after a sharp, steady view. Uncertain outlines remain available for the manual shutter. ── */
+/* the document model (about 16 MB, cached after the first visit) is prepared while the student reads the page */
+if (typeof warmDocumentDetector === "function" && canProcess()) (window.requestIdleCallback || (f => setTimeout(f, 1500)))(() => { void warmDocumentDetector().catch(() => {}); });
 const LIVE_OK = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && canProcess();
 let AUTO = true;
 try { AUTO = localStorage.getItem("hlScanAuto") !== "0"; } catch (e) {}
@@ -447,7 +447,7 @@ async function liveCamera() {
   const v = ov.querySelector("video"), cv = ov.querySelector("canvas"), g = cv.getContext("2d"), msg = ov.querySelector(".msg");
   v.srcObject = stream; await v.play().catch(() => {});
   const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
-  let alive = true, busy = false, hist = [], last = null, timer = null, verifiedFrame = null;
+  let alive = true, busy = false, hist = [], last = null, timer = null, verifiedFrame = null, spareFrame = null;
   const detectorAbort = new AbortController();
   const close = () => { if (!alive) return; alive = false; detectorAbort.abort(); clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
@@ -476,8 +476,11 @@ async function liveCamera() {
     if (!alive) return;
     if (v.videoWidth) {
       const frameCapturedAt = performance.now();
-      const frameSource = document.createElement("canvas"), fullScale = Math.min(1, 2560 / Math.max(v.videoWidth, v.videoHeight));
-      frameSource.width = Math.round(v.videoWidth * fullScale); frameSource.height = Math.round(v.videoHeight * fullScale);
+      /* one frame buffer is reused unless the last verified frame still holds it */
+      const frameSource = spareFrame && spareFrame !== verifiedFrame?.canvas ? spareFrame : document.createElement("canvas"), fullScale = Math.min(1, 2560 / Math.max(v.videoWidth, v.videoHeight));
+      spareFrame = frameSource;
+      const fw = Math.round(v.videoWidth * fullScale), fh = Math.round(v.videoHeight * fullScale);
+      if (frameSource.width !== fw || frameSource.height !== fh) { frameSource.width = fw; frameSource.height = fh; }
       frameSource.getContext("2d").drawImage(v, 0, 0, frameSource.width, frameSource.height);
       const k = Math.min(1, 1024 / Math.max(frameSource.width, frameSource.height)), w = Math.round(frameSource.width * k), h = Math.round(frameSource.height * k);
       if (small.width !== w || small.height !== h) { small.width = w; small.height = h; }
@@ -488,7 +491,7 @@ async function liveCamera() {
       catch { if (!alive) return; candidate = null; }
       if (!alive || busy) return;
       const d = candidate?.corners && candidate.method !== "frame" && candidate.score > .25 ? candidate : null;
-      verifiedFrame = d?.scanEligible === true ? { canvas: frameSource, time: frameCapturedAt, detectionHint: {
+      verifiedFrame = d?.scanEligible === true && d.verified !== false ? { canvas: frameSource, time: frameCapturedAt, detectionHint: {
         source: "same-video-frame", scanEligible: true, method: d.method, score: d.score,
         corners: d.corners.map(point => ({ x: point.x / w, y: point.y / h })), paperStatus: d.paperStatus,
       } } : null;
@@ -501,7 +504,7 @@ async function liveCamera() {
         const s = Math.min(cv.width / w, cv.height / h), ox = (cv.width - w * s) / 2, oy = (cv.height - h * s) / 2;
         const q = [0, 1, 3, 2].map(i => ({ x: ox + d.corners[i].x * s, y: oy + d.corners[i].y * s }));
         g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : MONTHLY ? "rgba(197,163,245,.18)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : SCAN_ACCENT; g.lineWidth = 3 * dpr;
-        g.setLineDash?.(d.scanEligible === true ? [] : [8 * dpr, 6 * dpr]);
+        g.setLineDash?.(d.scanEligible === true && d.verified !== false ? [] : [8 * dpr, 6 * dpr]);
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
       /* Paper edges need a longer, tighter hold than printed markers. Geometry alone never enables capture. */

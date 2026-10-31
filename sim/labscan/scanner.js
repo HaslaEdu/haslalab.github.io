@@ -34,6 +34,10 @@ const WORK_MAX_SIDE = 2400;
    photo to 2400px and then enlarging the page to 1654px wide lost about a third of the stroke sharpness. Detection,
    the editable baseline and corner coordinates stay in the working copy's space. */
 export const SOURCE_MAX_SIDE = 4096;
+/* corners are found on a copy at most this large (about three times faster than on the working copy); the page is
+   cut out of the decoded photo and resampled so that its short side is at most PAGE_SOURCE_SIDE (1.45 × the 1654px
+   output) before it is straightened in the worker */
+const DETECT_MAX_SIDE = 1280, PAGE_SOURCE_SIDE = 2400;
 
 /**
  * 답안지에 인쇄한 마커 **중심**이 A4 지면에서 차지하는 위치 (0~1).
@@ -1131,7 +1135,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1141,20 +1145,29 @@ export async function detectDocumentQuad(canvas, options = {}) {
   const working = options.preview ? toCanvas(canvas, 384) : canvas;
   const proposed = detectQuad(working);
   if (working !== canvas && proposed.corners) proposed.corners = proposed.corners.map(p => ({ x: p.x * canvas.width / working.width, y: p.y * canvas.height / working.height }));
-  return { ...proposed, engine: 'manual-fallback', scanEligible: false, autoCaptureEligible: false,
-    reason: 'document_model_unavailable' };
+  return { ...proposed, engine: 'manual-fallback', scanEligible: !!proposed.corners && proposed.method !== 'frame', verified: false,
+    autoCaptureEligible: false, reason: 'document_model_unavailable' };
+}
+
+/* corners on a copy of at most DETECT_MAX_SIDE, returned in the canvas's own coordinates */
+export async function detectOnProbe(canvas, options = {}) {
+  const probe = Math.max(canvas.width, canvas.height) > DETECT_MAX_SIDE ? toCanvas(canvas, DETECT_MAX_SIDE) : canvas;
+  const d = await detectDocumentQuad(probe, options);
+  if (probe === canvas || !d?.corners) return d;
+  const sx = canvas.width / probe.width, sy = canvas.height / probe.height;
+  return { ...d, corners: d.corners.map(p => ({ x: p.x * sx, y: p.y * sy })) };
 }
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=76f39416d73a', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1336,13 +1349,21 @@ export function validatedDetectionHint(hint, width, height) {
   return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
 }
 
-/* the canvas the page is straightened from: the photo itself up to SOURCE_MAX_SIDE, or the working copy when the
-   photo is no larger than it, so that each pixel is resampled once */
-function sourceCanvas(bmp, base) {
-  const side = Math.max(bmp.width || 0, bmp.height || 0);
-  return side > Math.max(base.width, base.height) + 1 ? toCanvas(bmp, SOURCE_MAX_SIDE) : base;
+/* the page cut out of the decoded photo for the worker: the quad's bounding box, scaled down only when the page's
+   short side exceeds PAGE_SOURCE_SIDE, with the corners moved into the piece. Null where it cannot be cut. */
+async function pagePiece(photo, cornersOnBase, base) {
+  if (typeof createImageBitmap !== 'function' || !photo || !(photo.width > 0)) return null;
+  const fx = photo.width / base.width, fy = photo.height / base.height, pts = cornersOnBase.map(p => ({ x: p.x * fx, y: p.y * fy }));
+  const pad = 4, x0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p.x)) - pad)), y0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p.y)) - pad));
+  const x1 = Math.min(photo.width, Math.ceil(Math.max(...pts.map(p => p.x)) + pad)), y1 = Math.min(photo.height, Math.ceil(Math.max(...pts.map(p => p.y)) + pad));
+  if (!(x1 - x0 > 8 && y1 - y0 > 8)) return null;
+  const k = Math.min(1, PAGE_SOURCE_SIDE / Math.max(1, shortSide(orderCorners(pts))));
+  const w = Math.max(1, Math.round((x1 - x0) * k)), h = Math.max(1, Math.round((y1 - y0) * k));
+  try {
+    const bitmap = await createImageBitmap(photo, x0, y0, x1 - x0, y1 - y0, k < 1 ? { resizeWidth: w, resizeHeight: h, resizeQuality: 'high' } : undefined);
+    return { bitmap, corners: pts.map(p => ({ x: (p.x - x0) * bitmap.width / (x1 - x0), y: (p.y - y0) * bitmap.height / (y1 - y0) })), photoCorners: pts };
+  } catch { return null; }
 }
-const toSource = (pts, base, source) => source === base ? pts : pts.map(p => ({ x: p.x * source.width / base.width, y: p.y * source.height / base.height }));
 const shortSide = pts => Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y));
 
 /**
@@ -1361,8 +1382,8 @@ export async function processShot(file, opts = {}) {
 
   say(5, '사진 읽는 중');
   const bmp = await loadBitmap(file);
-  const base = toCanvas(bmp), source = sourceCanvas(bmp, base);
-  try { bmp.close?.(); } catch { /* 무시 */ }
+  try {
+  const base = toCanvas(bmp);
   await breathe();
 
   say(25, '모서리 찾는 중');
@@ -1370,8 +1391,8 @@ export async function processShot(file, opts = {}) {
   let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = pageFormat === 'a4' ? 'manual_a4' : 'manual', scanEligible = !!pts;
   let detectionReason = null;
   if (!pts) {
-    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectDocumentQuad(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
-    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true;
+    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectOnProbe(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
+    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true && d.verified !== false;
     paperStatus = d.paperStatus || 'not_found'; scanEligible = d.scanEligible === true;
     detectionReason = d.reason || null;
   }
@@ -1383,20 +1404,23 @@ export async function processShot(file, opts = {}) {
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
   const inset = method === 'marker' ? MARKER_INSET : null;
-  const sourcePts = toSource(pts, base, source);
-  const rendered = warpApplied ? await renderInWorker(source, sourcePts, mode, dpi, inset, outputFormat, opts.signal, source === base) : null;
-  let out = rendered ? null : warpApplied ? warp(source, sourcePts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  const piece = warpApplied ? await pagePiece(bmp, pts, base) : null;
+  let rendered;
+  try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || pts, mode, dpi, inset, outputFormat, opts.signal) : null; }
+  finally { try { piece?.bitmap.close(); } catch { /* 무시 */ } }
+  /* a photo whose corners were not found is still cleaned, as a scan is, at its own proportions */
+  let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   await breathe();
 
   say(72, '그림자 지우는 중');
-  if (warpApplied && out) out = enhance(out, mode);
+  if (out) out = enhance(out, mode);
   await breathe();
 
   say(90, '선명도 확인 중');
 
   const blob = rendered?.blob || await new Promise((r) =>
-    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
@@ -1420,8 +1444,9 @@ export async function processShot(file, opts = {}) {
     baseW: base.width,
     baseH: base.height,
     sourceBlob: file,            // reprocess straightens from it again, at full resolution
-    sourceShortSide: shortSide(sourcePts),
+    sourceShortSide: shortSide(piece?.photoCorners || pts.map(p => ({ x: p.x * bmp.width / base.width, y: p.y * bmp.height / base.height }))),
   };
+  } finally { try { bmp.close?.(); } catch { /* 무시 */ } }
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
@@ -1431,19 +1456,22 @@ export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFA
   const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'auto' ? 'auto' : 'a4';
   const a4WarpApplied = warpApplied && outputFormat === 'a4';
   /* options.source: the photo processShot read (its result's sourceBlob), straightened again at full resolution */
-  let source = base;
+  const ordered = orderCorners(corners);
+  let piece = null, photo = null;
   if (warpApplied && options.source) {
-    try { const bmp = await loadBitmap(options.source); try { source = sourceCanvas(bmp, base); } finally { try { bmp.close?.(); } catch {} } }
-    catch { source = base; }
+    try { photo = await loadBitmap(options.source); piece = await pagePiece(photo, ordered, base); }
+    catch { piece = null; } finally { try { photo?.close?.(); } catch {} }
   }
-  const ordered = toSource(orderCorners(corners), base, source), rendered = warpApplied ? await renderInWorker(source, ordered, mode, dpi, inset, outputFormat, options.signal) : null;
-  let out = rendered ? null : warpApplied ? warp(source, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  let rendered;
+  try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || ordered, mode, dpi, inset, outputFormat, options.signal) : null; }
+  finally { try { piece?.bitmap.close(); } catch {} }
+  let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
-  if (warpApplied && out) out = enhance(out, mode);
+  if (out) out = enhance(out, mode);
   const blob = rendered?.blob || await new Promise((r) =>
-    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
   return { blob, previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94), quality, width: rendered?.width || out.width, height: rendered?.height || out.height, a4WarpApplied, warpApplied, outputFormat,
-    ...(options.source ? { sourceBlob: options.source } : {}), sourceShortSide: shortSide(ordered) };
+    ...(options.source ? { sourceBlob: options.source } : {}), sourceShortSide: shortSide(piece?.photoCorners || ordered) };
 }

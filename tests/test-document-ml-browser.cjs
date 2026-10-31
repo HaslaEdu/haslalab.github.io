@@ -73,7 +73,7 @@ test('real local document model scans perspective graphs in colour, stays off th
         const scan=await scanner.processShot(file);
         return {warp:scan.warpApplied,a4:scan.a4WarpApplied,format:scan.outputFormat,width:scan.width,height:scan.height,type:scan.blob.type};
       });
-      assert.deepEqual(fallback,{warp:false,a4:false,format:'a4',width:900,height:1200,type:'image/png'},'unavailable model keeps the complete original-proportion image for manual confirmation; the A4 format applies once the corners are confirmed');
+      assert.deepEqual(fallback,{warp:true,a4:true,format:'a4',width:1654,height:2339,type:'image/jpeg'},'without the model the classical page finder still makes an A4 scan, flagged for a corner check');
       await fallbackPage.route('**/sim/labscan/document-worker.mjs*',route=>route.abort());
       await fallbackPage.reload();
       const manual=await fallbackPage.evaluate(async corners=>{
