@@ -268,7 +268,7 @@ const T = {
     regH: "채점 규정", regV: v => `규정 ${v}`, graph: (n, f) => `그래프 · 점 ${n}개${f ? " · 맞춤선" : ""}`, table: (c, r) => `표 · ${c}열 × ${r}행`,
     submit: "제출하고 채점받기", submitting: "채점하는 중… (실험마다 30초~1분)", submitQ: "제출할까요? 제출하면 더 보낼 수 없습니다.",
     noServer: "채점 서버가 아직 실전 모드를 지원하지 않습니다. 잠시 후 다시 와 주세요.",
-    resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중", ended: "채점 안 함"},
+    resultH: "채점 결과", statusOf: {graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", scanning: "스캔 중", grading: "채점 중", running: "진행 중", ended: "채점 안 함", cancelled: "채점 취소됨"},
     pendingWhy: {ocr_failed: "사진 원문을 읽지 못해 점수를 보류했습니다. 답안을 확인하고 재촬영 또는 검토가 필요합니다.", ocr_structure: "사진 원문은 보관했지만 풀이 구조를 확인하지 못해 점수를 보류했습니다. 관리자 검토가 필요합니다.", no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 아직 연결되지 않아 관리자가 채점합니다."},
     errorNote: "채점 서버가 응답하지 않았습니다. 답안은 저장되었고 관리자가 다시 채점합니다.",
     detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기",
@@ -326,7 +326,7 @@ const T = {
     regH: "Grading regulation", regV: v => `regulation ${v}`, graph: (n, f) => `graph · ${n} points${f ? " · fitted line" : ""}`, table: (c, r) => `table · ${c} columns × ${r} rows`,
     submit: "Submit and grade", submitting: "Grading… (30 s to a minute per experiment)", submitQ: "Submit now? No more pages can be sent afterwards.",
     noServer: "The grading server does not support exam mode yet. Please come back shortly.",
-    resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress", ended: "not graded"},
+    resultH: "Result", statusOf: {graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", scanning: "scanning", grading: "grading", running: "in progress", ended: "not graded", cancelled: "grading cancelled"},
     pendingWhy: {ocr_failed: "The original photo could not be read. The score is held for a retake or review.", ocr_structure: "The original text is saved, but the solution structure could not be verified. The score is held for manual review.", no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected yet, so an admin will grade it."},
     errorNote: "The grading server did not answer. Your pages are saved and an admin will grade them.",
     detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again",
@@ -963,7 +963,7 @@ function paintPages(s) {
   };
   const legBadge = p => p.ocr_status === "failed" ? `<span class="leg poor">${esc(EXAM_NETWORK.ocrErrorMessage?.(p.ocr_error||p.read?.ocr?.error,lang)||t().ocrFailed)}</span>` : p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : EXAM_NETWORK.reading(p) ? `<span class="leg">${lang==="en"?"Reading answer…":"답안을 판독하는 중…"}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
   box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div>
-      ${s.paid ? `<span class="leg good">${t().paid}</span><button class="pri" id="sub">${t().submit}</button>`
+      ${s.paid ? `<span class="leg good">${t().paid}</span><button id="cancelGrade">${lang === "ko" ? "채점 취소" : "Cancel grading"}</button><button class="pri" id="sub">${t().submit}</button>`
         : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
     ${s.paid ? "" : `<div class="note w">${t().payNote}</div>`}<div class="note">${t().noEdit}</div>` +
     (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
@@ -982,6 +982,7 @@ function paintPages(s) {
     try { await api("DELETE", `/lab/sessions/${SES.id}/pages/${b.dataset.rm}`); pagesSeen = ""; poll(); } catch (e) { toast(errMsg(e)); } }));
   $("sub").onclick = () => confirmBox(s.paid ? t().submit : t().payBtn, t().submitQ, s.paid ? t().submit : t().payBtn, () => submitNow(true));
   if ($("noGrade")) $("noGrade").onclick = () => confirmBox(t().endNoGrade, t().endNoGradeQ, t().endNoGrade, () => submitNow(false));
+  if (typeof bindCancelGrade === "function") bindCancelGrade();
 }
 async function thumb(el, id) {
   const identity=transport.fingerprint();
@@ -1000,6 +1001,18 @@ async function thumb(el, id) {
   el.onclick = () => { const z = document.createElement("div"); z.className = "zoom"; z.innerHTML = `<img alt="" src="${url}">`; z.onclick = () => z.remove(); document.body.append(z); };
 }
 /* grading and the review: the quoted fee, once per sitting (the server takes it; see /lab/sessions/:id/pay) */
+/* cancelling stops reading and grading where they stand; the token already spent is not refunded */
+function bindCancelGrade() {
+  const button = $("cancelGrade"); if (!button) return;
+  button.onclick = () => confirmBox(lang === "ko" ? "채점 취소" : "Cancel grading",
+    lang === "ko" ? "채점을 취소할까요? 답안 판독과 채점이 멈추며, 이미 사용한 실전 토큰은 돌려받을 수 없습니다." : "Cancel this grading? Reading and grading stop, and the exam token already spent is not refunded.",
+    lang === "ko" ? "채점 취소" : "Cancel grading", async () => {
+      const identity = transport.fingerprint(), id = SES?.id; if (!id) return;
+      button.disabled = true;
+      try { const r = await api("POST", `/lab/sessions/${id}/cancel`, {}); if (identity !== transport.fingerprint() || SES?.id !== id) return; ME.tokens = r.tokens; setSession(r.session); shown = ""; render(); }
+      catch (e) { button.disabled = false; toast(errMsg(e)); }
+    });
+}
 async function payNow(quiet) {
   let quoteChanged=false;
   const provider=gradingProvider(),identity=transport.fingerprint(),id=SES.id;
@@ -1055,9 +1068,10 @@ function doneView() {
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
     ${retryOcr?`<div class="note noprint"><p>${lang==="ko"?"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다.":"Read failed pages again from the saved answer photos with the same provider."}</p><button class="pri" id="retryOcr">${lang==="ko"?"실패한 판독 다시 시도 · 추가 토큰 없음":"Retry failed reading · no additional exam token"}</button><p id="retryOcrMsg" role="status"></p></div>`:""}
     <div id="medal"></div>
-    <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
+    <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a>${["grading", "pending", "error"].includes(s.status) ? `<button id="cancelGrade">${lang === "ko" ? "채점 취소" : "Cancel grading"}</button>` : ""}<button id="prn">${t().print}</button>
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
+  if (typeof bindCancelGrade === "function") bindCancelGrade();
   if(retryOcr)bindOcrRetry(s);
   bindProvider();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });

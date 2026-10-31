@@ -1065,7 +1065,7 @@ const LBT = {
        adNote: (d) => `휴대폰에서만 볼 수 있습니다. 하루 ${d}편까지(토큰 ${Math.floor(d / 3) || "1/3"}개분).`, adLoading: "광고를 불러오는 중…", adNone: "지금은 보여 줄 광고가 없습니다. 잠시 뒤 다시 시도해 주세요.",
        adMobile: "보상형 광고는 휴대폰 화면에서만 지원됩니다. 휴대폰으로 이 페이지를 열어 주세요.", adGot: (k, n) => `토큰 1/3을 받았습니다 (${k}/3)${n ? ` · 토큰 ${n}개` : ""}`, adToken: "광고 3편을 다 봐서 토큰 1개를 받았습니다!",
        adClosed: "광고를 끝까지 보지 않아 보상이 없습니다.", adDaily: (d) => `오늘은 광고를 ${d}편 다 보셨습니다. 내일 다시 오세요.`, adOff: "광고 충전은 준비 중입니다.", resume: "이어하기", active: "진행 중인 시험", total: "총점", pages: "보낸 쪽",
-       st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", ended: "채점 안 함"},
+       st: {running: "실험 중", scanning: "스캔 중", grading: "채점 중", graded: "채점 완료", pending: "채점 대기", error: "채점 오류", empty: "제출 없음", ended: "채점 안 함", cancelled: "채점 취소됨"},
        payH: "채점 · 첨삭 받기", payNote: "채점하지 않고 끝낸 시험입니다. 보낸 답안은 7일 동안 보관되며, 그 안에 0.3토큰으로 채점과 첨삭(총평 · 고칠 습관 · 글씨)을 받을 수 있습니다.", payBtn: "0.3토큰으로 채점받기", payBusy: "채점하는 중… (1–2분)", payNo: "채점에 필요한 실전 토큰이 부족합니다. 위 «토큰 충전»에서 충전하세요.",
        why: {ocr_failed: "사진 원문을 읽지 못해 점수를 보류했습니다. 답안을 확인하고 재촬영 또는 검토가 필요합니다.", ocr_structure: "사진 원문은 보관했지만 풀이 구조를 확인하지 못해 점수를 보류했습니다. 관리자 검토가 필요합니다.", no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다.", no_official_points: "공식 해설에 배점이 없어 수치 점수를 확정하지 않았습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
@@ -1093,7 +1093,7 @@ const LBT = {
        adNote: (d) => `Phones only. Up to ${d} ads a day.`, adLoading: "Loading the ad…", adNone: "No ad is available right now. Please try again later.",
        adMobile: "Rewarded ads only run on a phone screen. Open this page on your phone.", adGot: (k, n) => `You got 1/3 of a token (${k}/3)${n ? ` · ${n} tokens` : ""}`, adToken: "Three ads watched: you got a token!",
        adClosed: "The ad was closed before the end, so there is no reward.", adDaily: (d) => `You have watched today's ${d} ads. Come back tomorrow.`, adOff: "Ads are not open yet.", resume: "Resume", active: "In progress", total: "Total", pages: "Pages sent",
-       st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", ended: "not graded"},
+       st: {running: "experiments running", scanning: "scanning", grading: "grading", graded: "graded", pending: "waiting for a grader", error: "grading error", empty: "nothing sent", ended: "not graded", cancelled: "grading cancelled"},
        payH: "Get it graded and reviewed", payNote: "This sitting ended ungraded. Its pages are kept for 7 days; within that time 0.3 token gets them graded and reviewed (summary, habits to fix, handwriting).", payBtn: "Grade it for 0.3 token", payBusy: "Grading… (1–2 minutes)", payNo: "You do not have enough exam tokens for grading. Get some under «Get tokens» on the exam mode page.",
        why: {ocr_failed: "The original photo could not be read. The score is held for a retake or review.", ocr_structure: "The original text is saved, but the solution structure could not be verified. The score is held for manual review.", no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn.", no_official_points: "The published solution has no point values, so no numerical score has been assigned."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
@@ -1114,6 +1114,8 @@ const arIsContest = s => s && s.comp === "kmo" && s.purpose === "review" && type
 const arReviewOnly = s => !!(s && (s.review_only || arIsContest(s)));
 const arQualitative = x => !!(x && (x.grading_mode === "qualitative_review" || x.reference === "published_problem_only"));
 const arLabHasScore = x => !!(x && Number.isFinite(x.score) && Number.isFinite(x.points) && x.points > 0);
+/* the states in which a sitting's grading can still be cancelled (the Worker's LAB_CANCELLABLE) */
+const AR_LAB_CANCELLABLE = ["running", "scanning", "grading", "pending", "error"];
 /* the language a sitting was taken in (and is graded and reported in); older records without one follow the page */
 const arLabLang = s => s && (s.lang === "en" || s.lang === "ko") ? s.lang : lang;
 const arLabModeLabel = s => arReviewOnly(s) ? (lang === "en" ? "Grading & feedback" : "채점·첨삭") : (lang === "en" ? "Timed attempt" : "실전 응시");
@@ -1379,7 +1381,7 @@ async function arLabOne(root, alive, id,preloaded) {
   if (!alive()) return;
   root.innerHTML = `
     <div class="cmtop"><div><h1>${reviewOnly?"✎":"⏱"} ${esc(s.comp.toUpperCase())} ${s.year} · ${esc(s.tasks.join(" + "))}</h1><p>${arLabModeLabel(s)} · ${cmFull(s.started_at).slice(0, 16)} · ${L.st[s.status] || esc(s.status)}</p></div>
-      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/${reviewOnly?"review":"exam"}">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}</div></div>
+      <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/${esc(s.comp)}/${reviewOnly?"review":"exam"}">${L.examList}</a><a class="cmbtn sm" href="#/lab">${L.all}</a>${(open || isContest) && arLabHref(s) ? `<a class="cmbtn sm pri" href="${esc(arLabHref(s))}">${L.resume}</a>` : ""}${AR_LAB_CANCELLABLE.includes(s.status) ? `<button class="cmbtn sm" id="arLabCancel">${english ? "Cancel grading" : "채점 취소"}</button>` : ""}</div></div>
     ${isContest ? `<div class="cmnote">${L.regNote}</div>` : ""}
     <div class="arpanel arrep"><h3>📄 ${L.reportH}</h3><table class="cmtbl artbl ar-score-meta"><tbody>
       <tr><th>${L.examNo}</th><td><b>HL-${esc((s.comp + s.year).toUpperCase())}-${String(s.id).padStart(6, "0")}</b></td><th>${L.cand}</th><td>${esc(s.nickname || cm.me.nickname)}</td></tr>
@@ -1443,6 +1445,14 @@ async function arLabOne(root, alive, id,preloaded) {
     const panel = b.closest(".arpanel"), items = [...panel.querySelectorAll("[data-ref]")].filter((x) => x.value !== "").map((x) => ({id: x.dataset.ref, ref: +x.value}));
     try { const r = await cmApi("POST", `/admin/lab/${id}/review`, {task: b.dataset.rev, items}); cmToast(T.saved + " · " + r.saved); } catch (e) { cmToast(arErr(e)); }
   });
+  /* cancelling stops reading and grading where they stand; the token already spent is not refunded */
+  const cancel = root.querySelector("#arLabCancel");
+  if (cancel) cancel.onclick = async () => {
+    if (!alive() || !confirm(english ? "Cancel this grading? The exam token already spent is not refunded." : "채점을 취소할까요? 이미 사용한 실전 토큰은 돌려받을 수 없습니다.")) return;
+    cancel.disabled = true;
+    try { const r = await cmApi("POST", `/lab/sessions/${s.id}/cancel`, {}); if (alive()) await arLabOne(root, alive, id, r.session); }
+    catch (e) { cancel.disabled = false; cmToast(arErr(e)); }
+  };
   const del = root.querySelector("#arLabDel");
   if (del) del.onclick = async () => { if (!confirm(L.delQ)) return; try { await cmApi("DELETE", `/lab/sessions/${id}`); location.hash = "#/lab"; } catch (e) { cmToast(arErr(e)); } };
 }

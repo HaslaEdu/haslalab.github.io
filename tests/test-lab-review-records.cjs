@@ -135,3 +135,17 @@ test('a report is shown in the language the exam was sat in, whatever the page l
   assert.ok(host2.innerHTML.includes('Grading & feedback')&&!host2.innerHTML.includes('채점·첨삭'),'an English sitting reads in English on a Korean page');
   await Promise.resolve();assert.equal(b.context.lang,'ko');
 });
+
+test('a sitting that is still being read or graded offers cancelling, and cancelling posts once after a no-refund confirmation',async()=>{
+  const a=app('ko'),s=qualitativeSession(),nodes=new Map(),calls=[];
+  s.status='grading';s.lang='ko';s.detail={tasks:{}};
+  const node=key=>{if(!nodes.has(key))nodes.set(key,{disabled:false});return nodes.get(key);};
+  const host={innerHTML:'',querySelector:node,querySelectorAll:()=>[]};
+  let confirmed='';a.context.confirm=text=>{confirmed=text;return true;};a.context.cmToast=()=>{};
+  a.context.cmApi=async(method,path)=>{calls.push(method+' '+path);return{session:{...s,status:'cancelled'}};};
+  await a.context.arLabOne(host,()=>true,s.id,s);
+  assert.ok(host.innerHTML.includes('채점 취소'));
+  await node('#arLabCancel').onclick();
+  assert.match(confirmed,/돌려받을 수 없습니다/);assert.deepEqual(calls,['POST /lab/sessions/77/cancel']);
+  assert.ok(host.innerHTML.includes('채점 취소됨'));assert.ok(!host.innerHTML.includes('id="arLabCancel"'),'a cancelled sitting offers no second cancel');
+});
