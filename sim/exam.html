@@ -203,7 +203,7 @@
 <script src="../examdur.js?v=20261030-archives"></script>
 <script src="../paper-languages.js?v=1"></script>
 <script src="result-comparison.js?v=b2d9019528e0"></script>
-<script src="exam-network.js?v=470e9c866d5d"></script>
+<script src="exam-network.js?v=78b6a42ed001"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
@@ -462,7 +462,7 @@ const EXAM_NETWORK=window.HLExamNetwork,transport=EXAM_NETWORK.createTransport({
 let requestEpoch=0;
 function api(method,path,body){if(method!=='GET')requestEpoch++;return transport.request(method,path,body);}
 
-const errMsg = e => ({provider_required:lang==="ko"?"채점 제공자를 선택하세요.":"Choose a grading provider.",provider_locked:lang==="ko"?"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다.":"The provider is fixed once reading or grading starts.",provider_unavailable:lang==="ko"?"선택한 제공자를 현재 사용할 수 없습니다.":"This provider is currently unavailable."})[e?.code] || (t().err[e && e.code]) || (e && e.code) || "error";
+const errMsg = e => window.HLExamNetwork.ocrErrorMessage?.(e?.code,lang) || ({provider_required:lang==="ko"?"채점 제공자를 선택하세요.":"Choose a grading provider.",provider_locked:lang==="ko"?"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다.":"The provider is fixed once reading or grading starts.",provider_unavailable:lang==="ko"?"선택한 제공자를 현재 사용할 수 없습니다.":"This provider is currently unavailable."})[e?.code] || (t().err[e && e.code]) || (e && e.code) || "error";
 
 /* ── the session, as the server has it.  The server keeps the clock; this page only shows it.
       SES: the session; SKEW: server time minus this computer's time, so a wrong local clock does not matter. ── */
@@ -945,7 +945,7 @@ function poll(){
 function paintPages(s) {
   const box = $("pages"); if (!box) return;
   const select=$("gradingProvider");if(select){if(s.provider_locked)select.value=s.provider;select.disabled=!!s.provider_locked;}
-  const sig = JSON.stringify([s.paid, s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible])]);
+  const sig = JSON.stringify([s.paid, s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.ocr_error, p.read?.ocr?.error, p.legible])]);
   if (sig === pagesSeen) return;
   pagesSeen = sig;
   const opt = (v, cur, txt) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`;
@@ -960,7 +960,7 @@ function paintPages(s) {
       : i.kind === "table" ? t().table((i.columns || []).length, i.rows || 0) + (i.columns && i.columns.length ? " (" + esc(i.columns.join(", ")) + ")" : "")
       : esc(i.text)}${i.crossed_out ? ` <i>${t().crossed}</i>` : ""}</li>`).join("")}</ul>`;
   };
-  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : EXAM_NETWORK.reading(p) ? `<span class="leg">${lang==="en"?"Reading answer…":"답안을 판독하는 중…"}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
+  const legBadge = p => p.ocr_status === "failed" ? `<span class="leg poor">${esc(EXAM_NETWORK.ocrErrorMessage?.(p.ocr_error||p.read?.ocr?.error,lang)||t().ocrFailed)}</span>` : p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : EXAM_NETWORK.reading(p) ? `<span class="leg">${lang==="en"?"Reading answer…":"답안을 판독하는 중…"}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
   box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div>
       ${s.paid ? `<span class="leg good">${t().paid}</span><button class="pri" id="sub">${t().submit}</button>`
         : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
@@ -1017,8 +1017,20 @@ async function submitNow(grade) {
 }
 
 /* ── the result ── */
+function bindOcrRetry(s){
+  const button=$("retryOcr");if(!button)return;
+  let pending=false;const identity=transport.fingerprint(),id=s.id;
+  const current=()=>transport.fingerprint()===identity&&SES?.id===id;
+  button.onclick=async()=>{
+    if(pending||BUSY||!current())return;pending=true;button.disabled=true;
+    const info=$("retryOcrMsg");if(info)info.textContent=lang==="ko"?"다시 판독을 요청하는 중…":"Requesting reading…";
+    try{const response=await api("POST",`/lab/sessions/${id}/retry-ocr`,{provider:s.provider});if(!current())return;setSession(response.session);shown="";render();}
+    catch(error){if(!current())return;if(info)info.textContent=errMsg(error);pending=false;button.disabled=false;}
+  };
+}
 function doneView() {
   const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
+  const retryOcr=!!s.paid&&["pending","error"].includes(s.status)&&["deepseek","gemini"].includes(s.provider)&&pg.some(p=>p.ocr_status==="failed");
   const comparison = window.labComparison?.hasScore?.(s) && typeof window.labComparison.mount === 'function';
   const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
     const sc = x.grading_mode === "qualitative_review" ? (lang === "ko" ? "학습용 첨삭 · 점수 없음" : "Qualitative feedback · no score") : x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
@@ -1040,10 +1052,12 @@ function doneView() {
     </tbody></table>
     ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div>${providerHtml()}<div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
+    ${retryOcr?`<div class="note noprint"><p>${lang==="ko"?"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다.":"Read failed pages again from the saved answer photos with the same provider."}</p><button class="pri" id="retryOcr">${lang==="ko"?"실패한 판독 다시 시도 · 추가 토큰 없음":"Retry failed reading · no additional exam token"}</button><p id="retryOcrMsg" role="status"></p></div>`:""}
     <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
+  if(retryOcr)bindOcrRetry(s);
   bindProvider();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
   if (comparison) window.labComparison.mount($("medal"),

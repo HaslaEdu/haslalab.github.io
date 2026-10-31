@@ -235,7 +235,7 @@ export async function modelTestProviderCall(env, selected, stage, policy, input,
     const serialized=JSON.stringify(body);
     if(new TextEncoder().encode(serialized).byteLength>20000000)fail('model_test_reference_too_large',413,detail);
     attempted = true;
-    const response = await options.fetchImpl(url, { method: 'POST', headers, body: serialized, signal: controller.signal, redirect: 'error' });
+    const response = await options.fetchImpl.call(globalThis, url, { method: 'POST', headers, body: serialized, signal: controller.signal, redirect: 'manual' });
     if (!response.ok) {
       // Upstream bodies can repeat credentials or submitted text. Never read or expose them.
       try { await response.body?.cancel(); } catch {}

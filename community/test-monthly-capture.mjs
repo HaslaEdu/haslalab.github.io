@@ -41,7 +41,7 @@ async function environment(run) {
     providerCalls.push({provider:gemini?'gemini':'deepseek',request,schema});
     let raw;
     if(schema.properties.visuals){calls.ocr++;await beforeOcr();assert.ok(JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')));raw={text:transcript,confidence:0.98,legible:true,uncertainties:[],visuals:[]};}
-    else if(schema.properties.parts){calls.extract++;await beforeExtract();raw={parts:extracted};}
+    else if(schema.properties.parts){calls.extract++;const response=await beforeExtract();if(response instanceof Response)return response;raw={parts:extracted};}
     else if(schema.properties.assessment){calls.screen++;raw={assessment:'uncertain',confidence:0.5,signals:[]};}
     else{
       calls.grade++;await beforeGrade();
@@ -119,6 +119,22 @@ test('full pages retain originals and exact OCR-derived parts; removal detaches 
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);assert.deepEqual(calls,{ocr:1,extract:1,grade:0,screen:0});
     assert.equal((await phone(scan,'/pages/'+result.data.id,{method:'DELETE'})).status,200);
     assert.equal((await phone(scan)).data.pages.length,0);assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photos').get().n,1,'original retention is independent of active answer pages');
+  });
+});
+
+test('monthly extraction failures retain a safe provider cause across receipt replay, phone reload and owner view',async()=>{
+  await environment(async({grant,phone,upload,api,beforeExtract,sql,calls})=>{
+    const scan=(await grant({provider:'deepseek'})).data.scan;
+    beforeExtract(()=>new Response('sensitive fixture-secret provider body',{status:503}));
+    const request_id=requestId('extraction-provider-outage'),first=await upload(scan,{request_id});
+    assert.equal(first.status,200);assert.equal(first.data.ocr_status,'failed');assert.equal(first.data.ocr_error,'vision_provider_failed');
+    const replay=await upload(scan,{request_id});assert.deepEqual(replay.data,{...first.data,replayed:true});assert.equal(calls.ocr,1);assert.equal(calls.extract,1);
+    const mobile=(await phone(scan)).data,owner=(await api('/monthly/problems/4/scan?scan_id='+scan.id)).data.scan;
+    assert.equal(mobile.pages[0].ocr_error,'vision_provider_failed');assert.equal(owner.pages[0].ocr_error,'vision_provider_failed');
+    assert.ok(!JSON.stringify([first.data,mobile,owner]).includes('fixture-secret'));
+    assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);
+    sql.prepare("UPDATE monthly_capture_pages SET ocr_error='arbitrary private diagnostic'").run();
+    assert.equal((await phone(scan)).data.pages[0].ocr_error,'capture_read_failed');
   });
 });
 

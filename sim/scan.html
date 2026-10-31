@@ -110,7 +110,7 @@
   <div id="app"><div class="note">…</div></div>
 </div>
 
-<script src="exam-network.js"></script>
+<script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
 import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=7a972b90a395";
 let monthlyScanModule;
@@ -268,7 +268,7 @@ function sentList() {
   const ps = INFO.pages || [];
   return `<div class="card"><h2>${t().sentH} · ${ps.length}</h2>${ps.length ? `<ul class="sent">${ps.map(p =>
     `<li style="flex-wrap:wrap"><b>${esc(p.task)}</b>${p.kind === "answer" ? t().answer : t().working} #${p.no}<span class="s ${p.ocr_status === "failed" ? "poor" : p.legible || ""}">${p.ocr_status === "failed" ? t().ocr.failed : p.legible ? t().legS[p.legible] : t().ocr[p.ocr_status] || ""}</span>
-      ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}${p.ocr_status === "failed" ? `<div class="note w" style="width:100%">${p.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed}</div>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
+      ${INFO.open ? `<button class="x" data-del="${p.id}">${t().del}</button>` : ""}${p.ocr_status === "failed" ? `<div class="note w" style="width:100%">${esc(NETWORK.ocrErrorMessage?.(p.ocr_error,lang)||(p.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed))}</div>` : ""}</li>`).join("")}</ul>` : `<div style="color:var(--muted);font-size:13.5px">${t().none}</div>`}</div>`;
 }
 function wireSent() {
   document.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
@@ -362,7 +362,7 @@ async function send() {
     if (revision !== shotRevision || !shot) return;
     const msg = [t().sentOk(r.no)];
     if (r.moved) msg.push(t().moved(r.task, r.kind === "answer" ? t().answer : t().working));
-    if (r.ocr_status === "failed") msg.push(r.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed);
+    if (r.ocr_status === "failed") msg.push(NETWORK.ocrErrorMessage?.(r.ocr_error,lang)||(r.ocr_error === "ocr_storage_limit" ? t().ocrStorage : t().ocrFailed));
     else if (r.legible) msg.push(t().legH[r.legible]);
     toast(msg.join(" "), r.ocr_status === "failed" || r.legible === "poor" ? 12000 : 5500);
     const lv = sending.live; releaseShot(); await refresh();

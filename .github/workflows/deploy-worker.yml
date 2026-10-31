@@ -30,7 +30,8 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
-      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs
+      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs
+      - run: node --test test-vision-runtime.mjs
       - run: node ../tools/build-site-catalogue.cjs --check
       - run: node --test test-lab-call-pricing.mjs test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
       - run: node weekly/build-seed.mjs --check

@@ -9,6 +9,22 @@ const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models'
 const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY' };
 const MIME = new Set(['image/jpeg','image/png','image/webp']);
 const MAX_RESPONSE = 2 * 1024 * 1024;
+const PROVIDER_CODES=new Set(['invalid_api_key','authentication_error','insufficient_balance','insufficient_quota','rate_limit_exceeded','context_length_exceeded','invalid_request_error','model_not_found','unsupported_content_type','invalid_image','invalid_image_format','invalid_parameter','content_filter']);
+async function providerErrorCode(response){
+  const reader=response.body?.getReader();if(!reader)return null;
+  const chunks=[];let size=0;
+  try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>8192){await reader.cancel();return null;}chunks.push(value);}
+    const bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.length;}
+    const parsed=JSON.parse(new TextDecoder().decode(bytes)),code=parsed?.error?.code||parsed?.error?.type||parsed?.code;
+    return typeof code==='string'&&PROVIDER_CODES.has(code)?code:null;
+  }catch{return null;}finally{try{reader.releaseLock();}catch{}}
+}
+function jsonExample(schema,depth=0){
+  if(!schema||depth>5)return null;if(schema.nullable)return null;
+  if(schema.type==='object')return Object.fromEntries((schema.required||Object.keys(schema.properties||{})).map(key=>[key,jsonExample(schema.properties?.[key],depth+1)]));
+  if(schema.type==='array')return [];if(schema.enum?.length)return schema.enum[0];
+  return schema.type==='boolean'?true:['number','integer'].includes(schema.type)?0:'';
+}
 export class VisionProviderError extends Error {
   constructor(status, code, detail = {}) { super(code); this.name='VisionProviderError'; this.status=status; this.code=code; Object.assign(this,detail); }
 }
@@ -77,7 +93,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   timeoutMs=110000,signal,fetchImpl=globalThis.fetch}={}) {
   provider=requireVisionProvider(env,provider);
   const model=VISION_MODELS[provider],url=endpoint(env,provider),started=Date.now();
-  let usage=null,timer,aborted=false;
+  let usage=null,timer,aborted=false,providerStatus,providerCode;
   let rejectAbort;
   const controller=new AbortController(),abort=()=>{controller.abort();rejectAbort?.(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));};
   if(signal?.aborted)fail(504,'vision_provider_timeout',{provider,stage});
@@ -91,7 +107,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
   const body=provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:0,maxOutputTokens:count}}:
-    {model,messages:[{role:'system',content:rules+'\nJSON schema:\n'+JSON.stringify(schema||{})},
+    {model,messages:[{role:'system',content:rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{})},
       {role:'user',content}],response_format:{type:'json_object'},thinking:{type:'disabled'},temperature:0,max_tokens:count};
   const encoded=JSON.stringify(body);
   if(new TextEncoder().encode(encoded).length>(provider==='gemini'?20000000:48*1024*1024))fail(413,'vision_images_too_large');
@@ -101,18 +117,28 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const request=async()=>{
     const response=await fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
       ...(provider==='gemini'?{'x-goog-api-key':env[KEYS[provider]]}:{Authorization:'Bearer '+env[KEYS[provider]]})},
-      body:encoded,signal:controller.signal,redirect:'error'});
-    if(!response.ok){try{await response.body?.cancel();}catch{}fail(502,response.status===401||response.status===403?'vision_provider_auth':
-      response.status===429?'vision_provider_rate_limited':response.status===404?'vision_model_unavailable':'vision_provider_failed');}
+      // workerd rejects redirect:'error' before sending any request. Manual
+      // keeps credentials on this origin; every non-2xx response fails below.
+      body:encoded,signal:controller.signal,redirect:'manual'});
+    providerStatus=response.status;
+    if(!response.ok){providerCode=await providerErrorCode(response);fail(502,response.status===401||response.status===403?'vision_provider_auth':
+      response.status===402?'vision_provider_credits':response.status===429?'vision_provider_rate_limited':response.status===404?'vision_model_unavailable':
+      [400,413,422].includes(response.status)?'vision_request_rejected':'vision_provider_failed');}
     const parsed=await boundedJSON(response),meter=provider==='gemini'?geminiLabUsage(parsed,started):deepseekLabUsage(parsed,started);
     const ended=Date.now();usage={...meter,provider,model,stage,ms:Math.max(0,ended-started),calls:1,
       input_tokens:meter.in,cached_tokens:meter.cached,uncached_input_tokens:meter.in!=null&&meter.cached!=null?meter.in-meter.cached:null,
       output_tokens:meter.out,started_at:new Date(started).toISOString(),finished_at:new Date(ended).toISOString(),ok:true};
     usage.pricing=priceModelTestStage(usage);
     let content;
-    if(provider==='gemini') {const candidate=parsed?.candidates?.[0];if(!candidate||(candidate.finishReason&&candidate.finishReason!=='STOP'))fail(502,'vision_invalid_response');
+    if(provider==='gemini') {const candidate=parsed?.candidates?.[0];if(parsed?.promptFeedback?.blockReason)fail(502,'vision_response_blocked');
+      if(candidate?.finishReason==='MAX_TOKENS')fail(502,'vision_response_truncated');
+      if(candidate?.finishReason&&['SAFETY','RECITATION','BLOCKLIST','PROHIBITED_CONTENT','SPII'].includes(candidate.finishReason))fail(502,'vision_response_blocked');
+      if(!candidate||(candidate.finishReason&&candidate.finishReason!=='STOP'))fail(502,'vision_invalid_response');
       content=(candidate.content?.parts||[]).filter(part=>!part.thought).map(part=>part.text||'').join('');}
-    else {const choice=parsed?.choices?.[0];if(!choice||(choice.finish_reason&&choice.finish_reason!=='stop'))fail(502,'vision_invalid_response');content=choice.message?.content;}
+    else {const choice=parsed?.choices?.[0];if(choice?.finish_reason==='length')fail(502,'vision_response_truncated');
+      if(choice?.finish_reason==='content_filter')fail(502,'vision_response_blocked');
+      if(!choice||(choice.finish_reason&&choice.finish_reason!=='stop'))fail(502,'vision_invalid_response');content=choice.message?.content;}
+    if(typeof content!=='string'||!content.trim())fail(502,'vision_response_empty');
     let raw;try{raw=JSON.parse(String(content).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
     if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
     return{raw,provider,model:provider+':'+(meter.resolved_model||model),usage};
@@ -120,7 +146,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   try{return await Promise.race([request(),timeout,cancelled]);}
   catch(error){const failure=error instanceof VisionProviderError?error:new VisionProviderError(aborted||controller.signal.aborted?504:502,
     aborted||controller.signal.aborted?'vision_provider_timeout':'vision_provider_failed');
-    failure.provider=provider;failure.stage=stage;if(usage)failure.usage={...usage,ok:false};throw failure;}
+    failure.provider=provider;failure.stage=stage;failure.ms=Math.max(0,Date.now()-started);
+    if(Number.isInteger(providerStatus))failure.provider_status=providerStatus;if(providerCode)failure.provider_code=providerCode;
+    if(usage)failure.usage={...usage,ok:false};throw failure;}
   finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
 }
 
@@ -128,7 +156,7 @@ export async function visionTranscript(env,provider,images,options={}) {
   const result=await visionJSON(env,{...options,provider,stage:'ocr',policy:TRANSCRIPT_POLICY,input:{task:'transcribe',pages:images.length},images,schema:TRANSCRIPT_SCHEMA});
   const raw=result.raw;
   if(typeof raw.text!=='string'||raw.text.length>160000||typeof raw.legible!=='boolean'||!Array.isArray(raw.uncertainties)||raw.uncertainties.length>100||raw.uncertainties.some(item=>typeof item!=='string'||item.length>2000)||!Array.isArray(raw.visuals)||raw.visuals.length>100||raw.visuals.some(item=>!item||!Number.isInteger(item.page)||item.page<1||item.page>images.length||!['graph','diagram','direction','table','other'].includes(item.kind)||typeof item.description!=='string'||!item.description.trim()||item.description.length>4000||item.box!==undefined&&(!Array.isArray(item.box)||item.box.length!==4||item.box.some(n=>!Number.isFinite(n)||n<0||n>1)||item.box[0]>=item.box[2]||item.box[1]>=item.box[3])))
-    fail(502,'vision_invalid_response',{provider,stage:'ocr',usage:result.usage});
+    fail(502,'vision_response_schema',{provider,stage:'ocr',provider_status:200,usage:result.usage});
   return {...result,text:raw.text,confidence:Number.isFinite(raw.confidence)?Math.max(0,Math.min(1,raw.confidence)):null,
     visuals:raw.visuals,uncertainties:raw.uncertainties,legible:raw.legible,engine:provider,format:'markdown-latex'};
 }

@@ -6,6 +6,50 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function timers(){let id=0;const pending=new Map();return{pending,setTimeout(fn,ms){pending.set(++id,{fn,ms});return id;},clearTimeout(id){pending.delete(id);},async fire(){const [id,next]=pending.entries().next().value||[];if(!next)return;pending.delete(id);await next.fn();},delay(){return pending.values().next().value?.ms;}};}
 function documentStub(){const events=new Map();return{hidden:false,addEventListener:(n,fn)=>events.set(n,fn),removeEventListener:(n,fn)=>{if(events.get(n)===fn)events.delete(n);},change(hidden){this.hidden=hidden;events.get('visibilitychange')?.();},events};}
 
+test('reading failures distinguish provider/account/response problems without exposing arbitrary error text',()=>{
+  const cases={vision_provider_auth:/authentication/,vision_provider_credits:/API credit/,vision_provider_rate_limited:/request limit/,
+    vision_model_unavailable:/model is unavailable/,vision_request_rejected:/rejected the image request/,
+    vision_provider_failed:/server error/,vision_provider_timeout:/timed out/,vision_response_empty:/empty response/,
+    vision_response_truncated:/cut off/,vision_response_blocked:/restricted/,vision_invalid_response:/decoded/,
+    vision_response_schema:/fields/,ocr_bad_response:/fields/};
+  for(const [code,pattern]of Object.entries(cases)){
+    assert.match(Network.ocrErrorMessage(code,'en'),pattern);
+    assert.ok(Network.ocrErrorMessage(code,'ko'));
+    assert.doesNotMatch(Network.ocrErrorMessage(code,'en'),/retake|photograph it again/i,'a provider failure is not advice to photograph the page again');
+  }
+  for(const code of ['<img src=x onerror=alert(1)>','Bearer secret-key',{},null,'toString','__proto__'])assert.equal(Network.ocrErrorMessage(code),'');
+  assert.match(Network.ocrErrorMessage('ocr_storage_limit','en'),/storage limit/);
+});
+
+test('a changed reading failure refreshes the same page without resetting account/session scope',()=>{
+  const s={id:1,status:'scanning',paid:true,pages:[{id:3,ocr_status:'failed',ocr_error:'vision_provider_failed'}]};
+  assert.notEqual(Network.sessionSignature(s),Network.sessionSignature({...s,pages:[{...s.pages[0],ocr_error:'vision_provider_credits'}]}));
+});
+
+test('the actual phone page shows the stored provider reason even with an old good-legibility value',()=>{
+  const html=fs.readFileSync(require.resolve('../sim/scan.html'),'utf8'),source=html.slice(html.indexOf('function sentList()'),html.indexOf('function wireSent()'));
+  const escape=value=>String(value).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ctx=vm.createContext({NETWORK:Network,esc:escape,lang:'en',INFO:{open:true,pages:[{id:3,no:1,task:'T1',kind:'answer',ocr_status:'failed',ocr_error:'vision_provider_credits',legible:'good'}]},
+    t:()=>({sentH:'Sent',answer:'Answer',working:'Working',del:'Remove',ocr:{failed:'Reading failed'},legS:{good:'Read well'},ocrFailed:'Generic failure',none:'None'})});
+  vm.runInContext(source,ctx);const rendered=ctx.sentList();
+  assert.match(rendered,/insufficient API credit/);assert.match(rendered,/class="s poor"/);assert.doesNotMatch(rendered,/Read well|retake/);
+  ctx.INFO.pages[0].ocr_error='<script>private secret</script>';
+  assert.doesNotMatch(ctx.sentList(),/private secret|<script>/);
+});
+
+test('the actual exam page prioritizes a failed provider result and refreshes changed error categories',()=>{
+  const html=fs.readFileSync(require.resolve('../sim/exam.html'),'utf8'),source=html.slice(html.indexOf('function paintPages(s)'),html.indexOf('async function thumb('));
+  const nodes=new Map([['pages',{innerHTML:'',querySelectorAll:()=>[]}],['sub',{}]]);
+  const escape=value=>String(value).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ctx=vm.createContext({$:id=>nodes.get(id)||null,esc:escape,EXAM_NETWORK:Network,pagesSeen:'',lang:'en',
+    t:()=>({pagesH:'Pages',paid:'Paid',submit:'Submit',noEdit:'No editing',readH:'Reading',nothing:'No text',answer:'Answer',working:'Working',ocrFailed:'Generic failure',leg:{good:'Read well'}})});
+  vm.runInContext(source,ctx);const page={id:3,no:1,task:'T1',kind:'answer',ocr_status:'failed',ocr_error:'vision_response_truncated',legible:'good'};
+  const session={paid:true,tasks:['T1'],pages:[page]};ctx.paintPages(session);
+  assert.match(nodes.get('pages').innerHTML,/response was cut off/);assert.doesNotMatch(nodes.get('pages').innerHTML,/Read well/);
+  page.ocr_error='vision_provider_credits';ctx.paintPages(session);
+  assert.match(nodes.get('pages').innerHTML,/insufficient API credit/);
+});
+
 test('identical in-flight GETs share one request, while accounts, bases and mutations remain isolated',async()=>{
   let token='account-a',base='https://a.test',calls=[];const first=deferred();
   const transport=Network.createTransport({getToken:()=>token,getBase:()=>base,fetch:async(url,opts)=>{calls.push({url,...opts});return calls.length===1?first.promise:response({n:calls.length});}});

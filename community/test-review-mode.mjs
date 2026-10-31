@@ -165,7 +165,9 @@ test('qualitative scans preserve the original OCR once, include the image, and r
     if (String(url) === 'https://ortvay.elte.hu/2026/E26.pdf') return new Response('%PDF-1.7\nOfficial problem');
         assert.ok(String(url).includes(':generateContent'));
     const parts = JSON.parse(options.body).contents[0].parts, prompt = parts.map(p => p.text || '').join('\n'); let raw;
-    if (prompt.includes('[TASK: read page]')) raw = { text:oversized?original.repeat(10000):original,confidence:.94,header: { task: 'T', sheet: 'answer' }, legible: 'good', items: [{ label: '1', kind: 'text', text: 'Short auxiliary index.' }] };
+    // Keep the transcription inside the schema's character bound while its
+    // UTF-8 bytes plus the retained original exceed D1's row budget.
+    if (prompt.includes('[TASK: read page]')) raw = { text:oversized?original+'한'.repeat(90000):original,confidence:.94,header: { task: 'T', sheet: 'answer' }, legible: 'good', items: [{ label: '1', kind: 'text', text: 'Short auxiliary index.' }] };
     else { reviewCalls++; assert.ok(parts.some(p => p.inline_data?.mime_type === 'image/png')); assert.ok(prompt.includes(original)); raw = { summary: 'The stated law is explicit.', strengths: ['A force law.'], gaps: [], evidence: [{ page: 1, quote: 'F = ma', note: 'Original transcript.' }] }; }
     return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(raw) }] } }] });
   };

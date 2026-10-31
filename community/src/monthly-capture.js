@@ -2,6 +2,7 @@ import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { MonthlyAnswerError, normalizeMonthlyParts } from './monthly-answers.js';
 import { ensureMonthlyPhotoSchema, ensureMonthlyProviderColumn, storePhoto, boundedForm, MONTHLY_MAX_OCR_BYTES } from './monthly-photos.js';
 import { requireVisionProvider, visionProvider } from './vision-provider.js';
+import {safeOcrFailureCode} from './ocr-errors.js';
 
 const ready = new WeakMap(), UUID = /^[a-f0-9-]{36}$/, TTL = 7200, MAX = 4*1024*1024;
 const UPLOAD_STALE = 300, MAX_UPLOAD_REQUESTS = 80;
@@ -13,6 +14,11 @@ const binaryDigest = async value => [...new Uint8Array(await crypto.subtle.diges
 const random = () => btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const photoMarker=(photoId,partId)=>`[PHOTO:${photoId}:${partId}]`;
 const imageBase64=bytes=>{let text='';for(let i=0;i<bytes.length;i+=24576)text+=btoa(String.fromCharCode(...bytes.subarray(i,i+24576)));return text;};
+async function ensureCaptureOcrErrorColumn(db){
+  const columns=(await db.prepare('PRAGMA table_info(monthly_capture_pages)').all()).results;
+  if(!columns.some(column=>column.name==='ocr_error'))try{await db.prepare('ALTER TABLE monthly_capture_pages ADD COLUMN ocr_error TEXT').run();}
+  catch(error){if(!/duplicate column/i.test(String(error?.message||error)))throw error;}
+}
 
 export function ensureMonthlyCaptureSchema(db,key=db) {
   let p = ready.get(key);
@@ -32,7 +38,7 @@ export function ensureMonthlyCaptureSchema(db,key=db) {
         photo_id TEXT,receipt TEXT,created_at INTEGER NOT NULL,updated_at INTEGER NOT NULL,
         PRIMARY KEY(session_id,request_id)
       )`),
-    ])).then(()=>ensureMonthlyProviderColumn(db,'monthly_capture_sessions')).then(()=>db.batch([
+    ])).then(()=>ensureMonthlyProviderColumn(db,'monthly_capture_sessions')).then(()=>ensureCaptureOcrErrorColumn(db)).then(()=>db.batch([
       db.prepare('CREATE INDEX IF NOT EXISTS monthly_capture_owner ON monthly_capture_sessions(user_id,problem_id,created_at)'),
       db.prepare('CREATE INDEX IF NOT EXISTS monthly_capture_page_session ON monthly_capture_pages(session_id,active,created_at)'),
     ]));
@@ -105,7 +111,7 @@ async function view(db,session,problem,token) {
     expires_at:session.expires_at,scan_until:session.expires_at,now:now(),revision:session.revision,
     tasks:sheet.pages.map((_,i)=>String(i+1)),parts:mergedParts(sheet,pages),photo_ids:pages.map(p=>p.photo_id).sort(),
     pages:pages.map((p,i)=>({id:p.photo_id,task:String(p.page_no),page_no:p.page_no,kind:p.kind,no:i+1,
-      ocr_status:p.ocr_status,ocr_error:p.ocr_status==='failed'?'capture_read_failed':null,legible:p.ocr_status==='done'?'good':'poor',
+      ocr_status:p.ocr_status,ocr_error:p.ocr_status==='failed'?safeOcrFailureCode(p.ocr_error,'capture_read_failed'):null,legible:p.ocr_status==='done'?'good':'poor',
       text:p.ocr_text,parts:JSON.parse(p.parts),mime:p.mime,bytes:p.bytes,provider:session.provider||null})),provider:session.provider||null,provider_locked:!!session.provider,...(token?{token}:{})};
 }
 
@@ -275,25 +281,25 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
         const result=await ocr(env,image,'math',undefined,provider),transcript=String(result.text||'');
         if(new TextEncoder().encode(transcript).byteLength>MONTHLY_MAX_OCR_BYTES)fail('ocr_too_big',413);
         const photoId=crypto.randomUUID(),images=[{mime:imageType(data),data:imageBase64(data),label:'Original student answer-sheet photograph; printed page '+pageNo}];
-        let parts=sheet.pages[pageNo-1].map(id=>({id,answer:'',working:''})),status='done';
+        let parts=sheet.pages[pageNo-1].map(id=>({id,answer:'',working:''})),status='done',ocrError=null;
         try{parts=await extractMonthlyCaptureParts(sheet,pageNo,transcript,kind,(prompt,schema,originals)=>invoke(env,prompt,schema,originals,provider),{images,photoId});}
-        catch{status='failed';}
+        catch(error){status='failed';ocrError=safeOcrFailureCode(error?.code,'capture_read_failed');}
         const timestamp=now(),guard=liveGuard(session,timestamp);
         const authorization={sql:`(${guard.sql}) AND EXISTS(SELECT 1 FROM monthly_capture_uploads up
           WHERE up.session_id=? AND up.request_id=? AND up.claim=? AND up.photo_id IS NULL)`,
           args:[...guard.args,session.id,requestId,reservation.claim]};
         await storePhoto(env.DB,{userId:session.user_id,problemId:problem.id,partId:sheet.pages[pageNo-1][0],mime:imageType(data),
           data,transcript,provider,id:photoId,timestamp,authorization,afterInsert:photoId=>[
-            env.DB.prepare(`INSERT INTO monthly_capture_pages(photo_id,session_id,page_no,kind,parts,ocr_status,created_at)
-              SELECT ?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM monthly_answer_photos WHERE id=?)`)
-              .bind(photoId,session.id,pageNo,kind,JSON.stringify(parts),status,timestamp,photoId),
+            env.DB.prepare(`INSERT INTO monthly_capture_pages(photo_id,session_id,page_no,kind,parts,ocr_status,ocr_error,created_at)
+              SELECT ?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM monthly_answer_photos WHERE id=?)`)
+              .bind(photoId,session.id,pageNo,kind,JSON.stringify(parts),status,ocrError,timestamp,photoId),
             env.DB.prepare(`UPDATE monthly_capture_sessions SET revision=revision+1 WHERE id=?
               AND EXISTS(SELECT 1 FROM monthly_answer_photos WHERE id=?)`).bind(session.id,photoId),
             env.DB.prepare(`UPDATE monthly_capture_uploads SET photo_id=?,receipt=json_object('id',?,'task',?,'kind',?,
-              'no',(SELECT COUNT(*) FROM monthly_capture_pages WHERE session_id=? AND active=1),'ocr_status',?,'legible',?,'provider',?),updated_at=?
+              'no',(SELECT COUNT(*) FROM monthly_capture_pages WHERE session_id=? AND active=1),'ocr_status',?,'ocr_error',?,'legible',?,'provider',?),updated_at=?
               WHERE session_id=? AND request_id=? AND claim=? AND photo_id IS NULL
               AND EXISTS(SELECT 1 FROM monthly_answer_photos WHERE id=?)`)
-              .bind(photoId,photoId,String(pageNo),kind,session.id,status,status==='done'?'good':'poor',provider,timestamp,
+              .bind(photoId,photoId,String(pageNo),kind,session.id,status,ocrError,status==='done'?'good':'poor',provider,timestamp,
                 session.id,requestId,reservation.claim,photoId),
           ]});
         const completed=await env.DB.prepare('SELECT receipt FROM monthly_capture_uploads WHERE session_id=? AND request_id=?').bind(session.id,requestId).first();

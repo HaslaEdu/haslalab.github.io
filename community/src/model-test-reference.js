@@ -80,7 +80,7 @@ async function fetchPdf(value, options, total) {
   });
   const load = async () => {
     for (let hop = 0; hop < 4; hop++) {
-      const response = await options.fetchImpl(url.href, { redirect: 'manual', signal: controller.signal });
+      const response = await options.fetchImpl.call(globalThis, url.href, { redirect: 'manual', signal: controller.signal });
       if ([301, 302, 303, 307, 308].includes(response.status)) {
         const location = response.headers.get('location');
         cancelBody(response.body);
