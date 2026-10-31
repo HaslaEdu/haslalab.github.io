@@ -1,15 +1,16 @@
 /* ------------------------------------------------------------------
-   기기 내 문서 스캔 엔진
+   기기 내 문서 스캔 엔진 (v2)
    ------------------------------------------------------------------
-   사진의 문서 모서리를 찾아 원근을 보정합니다. 기본 출력은 원래 색상이며
-   A4 비율은 사용자가 선택한 경우에만 적용합니다.
+   사진의 종이 모서리를 찾아 원근을 보정하고 또렷하게(clean) 다듬습니다.
+   모델도, 외부 요청도 없습니다. 모든 계산은 이 기기 안에서 끝납니다.
 
    흐름:
      사진 → (EXIF 회전 보정) → 작업용 캔버스
-          → Worker의 인쇄 마커 / DocAligner 추론 + 원본 경계 검증
-          → 불확실하면 작업 이미지 유지 · 수동 모서리 확인
-          → 원근 보정 (겹샘플링 + 이중선형)
-          → 선택한 경우에만 그림자 제거 · 이진화
+          → 인쇄 마커가 있으면 마커로
+          → 없으면 아래 findPage (nonsul 스캐너의 방식): 가운데에서 자라는
+            밝고 무채색인 영역 = 종이 → 네 변 → 각 변을 실제 경계선에 직선으로 맞춤
+          → 원근 보정 (원본 해상도에서 겹샘플링 + 이중선형)
+          → 그림자 제거 · 대비 (clean)
           → 품질 점검 (흔들림 · 반사광)
 
    설계 원칙
@@ -17,8 +18,6 @@
      그래서 node 에서 그대로 테스트하고 Worker에서도 공유합니다.
    - 적분영상 대신 **슬라이딩 합**을 씁니다. A4 200dpi(1654×2339)에서
      적분영상은 Float64 로 30MB 넘게 잡아먹어 저사양 폰에서 터집니다.
-   - 모델·ONNX Runtime은 같은 출처의 고정 정적 파일로 지연 로드합니다.
-     사진이나 토큰을 모델 다운로드·추론 요청에 보내지 않습니다. 라이선스는 README 참조.
 ------------------------------------------------------------------- */
 
 /* A4 = 210 × 297 mm */
@@ -37,7 +36,7 @@ export const SOURCE_MAX_SIDE = 4096;
 /* corners are found on a copy at most this large (about three times faster than on the working copy); the page is
    cut out of the decoded photo and resampled so that its short side is at most PAGE_SOURCE_SIDE (1.45 × the 1654px
    output) before it is straightened in the worker */
-const DETECT_MAX_SIDE = 1280, PAGE_SOURCE_SIDE = 2400;
+const DETECT_MAX_SIDE = 1600, PAGE_SOURCE_SIDE = 2400;
 
 /**
  * 답안지에 인쇄한 마커 **중심**이 A4 지면에서 차지하는 위치 (0~1).
@@ -413,34 +412,353 @@ export function findSheetMarkersGray(gray, W, H) {
 
 /* ---------- ② 종이 테두리 찾기 (마커 없는 사진) ---------- */
 
-const pageCross = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-function pageHull(points) {
+/* ---------- page finder (v2, after nonsul's scanner): where the sheet of paper is, from the photo's own pixels, with no model.
+
+   1. Region. On a copy of about 320px, every pixel gets a "paperness": bright and colourless (paper) against coloured or
+      dark (wood, desks, cloth). Otsu splits it, and the bright region grown from the middle of the frame is the sheet.
+      Small detail (writing, grid lines, boxes) disappears at that size, so the sheet is one piece. Unlike edge or model
+      based finders this does not depend on the sheet being whole in the frame or evenly lit.
+   2. Four sides. The region's convex hull is cut down to four corners by dropping, one at a time, the corner whose
+      removal loses the least area.
+   3. Edges. At about 1600px each side is fitted again on the same paperness (so a dark seam in light wood beside the
+      sheet is not an edge): along 64 normals the step from bright inside to darker outside is measured, and a straight line is fitted through those points (outliers dropped twice). Sides lying on the border of
+      the frame, where the sheet runs out of the photo, stay on the border. Neighbouring lines meet at the corners.
+
+   The result is verified when every side inside the frame was seen along most of its length. */
+
+const COARSE = 320, FINE = 1600, SAMPLES = 64;
+
+const pfCross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+
+/** corners as top-left, top-right, bottom-left, bottom-right */
+function orderFour(pts) {
+  const c = pts.reduce((s, p) => ({ x: s.x + p.x / 4, y: s.y + p.y / 4 }), { x: 0, y: 0 });
+  const byAngle = [...pts].sort((a, b) => Math.atan2(a.y - c.y, a.x - c.x) - Math.atan2(b.y - c.y, b.x - c.x));
+  let start = 0, least = Infinity;
+  byAngle.forEach((p, i) => { if (p.x + p.y < least) { least = p.x + p.y; start = i; } });
+  const ring = [0, 1, 2, 3].map(i => byAngle[(start + i) % 4]);       // clockwise from top-left: tl, tr, br, bl
+  return [ring[0], ring[1], ring[3], ring[2]];
+}
+
+function pfHull(points) {
   points.sort((a, b) => a.x - b.x || a.y - b.y);
   const lower = [], upper = [];
-  for (const p of points) { while (lower.length > 1 && pageCross(lower.at(-2), lower.at(-1), p) <= 0) lower.pop(); lower.push(p); }
-  for (let i = points.length - 1; i >= 0; i--) { const p = points[i]; while (upper.length > 1 && pageCross(upper.at(-2), upper.at(-1), p) <= 0) upper.pop(); upper.push(p); }
+  for (const p of points) { while (lower.length > 1 && pfCross(lower.at(-2), lower.at(-1), p) <= 0) lower.pop(); lower.push(p); }
+  for (let i = points.length - 1; i >= 0; i--) { const p = points[i]; while (upper.length > 1 && pfCross(upper.at(-2), upper.at(-1), p) <= 0) upper.pop(); upper.push(p); }
   lower.pop(); upper.pop(); return lower.concat(upper);
 }
-function pageFour(hull) {
-  if (hull.length < 4) return null;
-  hull = [...hull];
-  while (hull.length > 4) {
+
+function fourOf(ring) {
+  if (ring.length < 4) return null;
+  ring = [...ring];
+  while (ring.length > 4) {
     let at = 0, least = Infinity;
-    for (let i = 0; i < hull.length; i++) { const area = Math.abs(pageCross(hull[(i + hull.length - 1) % hull.length], hull[i], hull[(i + 1) % hull.length])); if (area < least) { least = area; at = i; } }
-    hull.splice(at, 1);
+    for (let i = 0; i < ring.length; i++) {
+      const area = Math.abs(pfCross(ring[(i + ring.length - 1) % ring.length], ring[i], ring[(i + 1) % ring.length]));
+      if (area < least) { least = area; at = i; }
+    }
+    ring.splice(at, 1);
   }
-  return orderCorners(hull);
+  return orderFour(ring);
 }
-function pagePixel(g, w, h, x, y) {
-  x = Math.max(0, Math.min(w - 1, x)); y = Math.max(0, Math.min(h - 1, y));
-  const ix = Math.floor(x), iy = Math.floor(y), fx = x - ix, fy = y - iy;
-  const j = iy * w + ix, right = Math.min(ix + 1, w - 1), down = Math.min(iy + 1, h - 1) * w;
-  return (g[j] * (1 - fx) + g[iy * w + right] * fx) * (1 - fy) + (g[down + ix] * (1 - fx) + g[down + right] * fx) * fy;
+
+function pfOtsu(values) {
+  const hist = new Float64Array(256);
+  for (const v of values) hist[v]++;
+  const n = values.length; let sum = 0;
+  for (let i = 0; i < 256; i++) sum += i * hist[i];
+  let sumB = 0, wB = 0, best = 0, t = 128;
+  for (let i = 0; i < 256; i++) {
+    wB += hist[i]; if (!wB) continue;
+    const wF = n - wB; if (!wF) break;
+    sumB += i * hist[i];
+    const mB = sumB / wB, mF = (sum - sumB) / wF, between = wB * wF * (mB - mF) ** 2;
+    if (between > best) { best = between; t = i; }
+  }
+  return t;
 }
-function pageIntersection(a, b) {
+
+/* an area-averaged copy: paperness (from RGBA) or grey, of at most `side` pixels on the long side */
+function pfShrink(src, W, H, side, rgba) {
+  const k = Math.max(1, Math.ceil(Math.max(W, H) / side)), w = Math.max(1, Math.floor(W / k)), h = Math.max(1, Math.floor(H / k));
+  const out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0, n = 0;
+    for (let yy = y * k; yy < (y + 1) * k; yy++) for (let xx = x * k; xx < (x + 1) * k; xx++) {
+      const i = yy * W + xx;
+      if (rgba) {
+        const r = src[i * 4], g = src[i * 4 + 1], b = src[i * 4 + 2], hi = Math.max(r, g, b), lo = Math.min(r, g, b);
+        s += Math.max(0, (r * 299 + g * 587 + b * 114) / 1000 - 1.6 * (hi - lo));    // bright and colourless
+      } else s += src[i];
+      n++;
+    }
+    out[y * w + x] = Math.round(s / n);
+  }
+  return { data: out, w, h, k };
+}
+
+/* the brightest value around each cell: paper keeps its own white though writing darkens part of every cell */
+function pfMax3(src, w, h) {
+  const out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let m = 0;
+    for (let dy = -1; dy <= 1; dy++) { const yy = y + dy; if (yy < 0 || yy >= h) continue; for (let dx = -1; dx <= 1; dx++) { const xx = x + dx; if (xx >= 0 && xx < w && src[yy * w + xx] > m) m = src[yy * w + xx]; } }
+    out[y * w + x] = m;
+  }
+  return out;
+}
+function pfBlur(src, w, h) {
+  const tmp = new Float32Array(w * h), out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0, n = 0; for (let d = -2; d <= 2; d++) { const xx = x + d; if (xx >= 0 && xx < w) { s += src[y * w + xx]; n++; } }
+    tmp[y * w + x] = s / n;
+  }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0, n = 0; for (let d = -2; d <= 2; d++) { const yy = y + d; if (yy >= 0 && yy < h) { s += tmp[yy * w + x]; n++; } }
+    out[y * w + x] = Math.round(s / n);
+  }
+  return out;
+}
+
+/* a binary mask closed by `r` cells: thin dark lines (a printed frame, ruled lines, writing) no longer split the sheet */
+function pfClose(mask, w, h, r) {
+  const pass = (src, grow) => {
+    const tmp = new Uint8Array(w * h), out = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) { let run = 0; for (let x = -r; x < w; x++) {
+      if (x + r < w) run += src[y * w + x + r]; if (x - r - 1 >= 0) run -= src[y * w + x - r - 1];
+      if (x >= 0) tmp[y * w + x] = grow ? +(run > 0) : +(run === Math.min(w, x + r + 1) - Math.max(0, x - r)); } }
+    for (let x = 0; x < w; x++) { let run = 0; for (let y = -r; y < h; y++) {
+      if (y + r < h) run += tmp[(y + r) * w + x]; if (y - r - 1 >= 0) run -= tmp[(y - r - 1) * w + x];
+      if (y >= 0) out[y * w + x] = grow ? +(run > 0) : +(run === Math.min(h, y + r + 1) - Math.max(0, y - r)); } }
+    return out;
+  };
+  return pass(pass(mask, true), false);
+}
+/* connected pieces of a mask, each with its cells and the frame sides it touches */
+function pfPieces(mask, w, h, allowed = null) {
+  const label = new Int32Array(w * h).fill(-1), stack = new Int32Array(w * h), pieces = [];
+  for (let start = 0; start < w * h; start++) {
+    if (!mask[start] || label[start] >= 0 || (allowed && !allowed[start])) continue;
+    const id = pieces.length, cells = []; let sp = 0, sides = 0; stack[sp++] = start; label[start] = id;
+    while (sp) {
+      const cur = stack[--sp]; cells.push(cur);
+      const y = (cur / w) | 0, x = cur - y * w;
+      if (x === 0) sides |= 1; if (x === w - 1) sides |= 2; if (y === 0) sides |= 4; if (y === h - 1) sides |= 8;
+      for (const next of [x + 1 < w ? cur + 1 : -1, x > 0 ? cur - 1 : -1, y + 1 < h ? cur + w : -1, y > 0 ? cur - w : -1])
+        if (next >= 0 && mask[next] && label[next] < 0 && (!allowed || allowed[next])) { label[next] = id; stack[sp++] = next; }
+    }
+    pieces.push({ cells, sides: [1, 2, 4, 8].filter(bit => sides & bit).length });
+  }
+  return pieces;
+}
+/* how sheet-like a piece is: its four-sided outline, how fully (and not more than fully) the piece fills it, how
+   smooth it is inside, how large and central */
+function pfSheet(piece, small, w, h) {
+  const n = piece.cells.length, frame = w * h;
+  if (n < frame * .04 || n > frame * .92 || piece.sides > 2) return null;
+  let x0 = w, x1 = 0, y0 = h, y1 = 0, sum = 0, sq = 0;
+  const inPiece = new Uint8Array(frame); for (const i of piece.cells) inPiece[i] = 1;
+  const edge = [];
+  for (const i of piece.cells) {
+    const y = (i / w) | 0, x = i - y * w; sum += small[i]; sq += small[i] * small[i];
+    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || !inPiece[i - 1] || !inPiece[i + 1] || !inPiece[i - w] || !inPiece[i + w]) edge.push({ x: x + .5, y: y + .5 });
+  }
+  if (Math.min(x1 - x0, y1 - y0) < Math.min(w, h) * .14) return null;                 // a stripe or a sliver
+  const four = fourOf(pfHull(edge));
+  if (!four) return null;
+  const fill = n / Math.max(1, pfArea(four));
+  if (fill < .82 || fill > 1.12) return null;                                            // not a filled four-sided shape (a blob of glare is round)
+  const cx = (x0 + x1) / 2 / w - .5, cy = (y0 + y1) / 2 / h - .5, mean = sum / n;
+  return { four, inPiece, n, mean, spread: Math.sqrt(Math.max(0, sq / n - mean * mean)), sides: piece.sides,
+    score: Math.min(1, fill) ** 2 * Math.sqrt(n / frame) * (1 - Math.hypot(cx, cy)) * (piece.sides ? .8 : 1) };
+}
+/* whether a quad's sides are steps: most of the change across ±10 cells happens within ±3 */
+function pfSharp(small, w, h, four) {
+  const ring = [four[0], four[1], four[3], four[2]], cx = ring.reduce((s, p) => s + p.x, 0) / 4, cy = ring.reduce((s, p) => s + p.y, 0) / 4, ratios = [];
+  const at = (x, y) => small[Math.max(0, Math.min(h - 1, Math.round(y))) * w + Math.max(0, Math.min(w - 1, Math.round(x)))];
+  for (let side = 0; side < 4; side++) {
+    const a = ring[side], b = ring[(side + 1) % 4], len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    let nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
+    if ((cx - a.x) * nx + (cy - a.y) * ny < 0) { nx = -nx; ny = -ny; }
+    for (let s = 1; s < 16; s++) {
+      const x = a.x + (b.x - a.x) * s / 16, y = a.y + (b.y - a.y) * s / 16;
+      const near = at(x + nx * 3, y + ny * 3) - at(x - nx * 3, y - ny * 3), far = at(x + nx * 10, y + ny * 10) - at(x - nx * 10, y - ny * 10);
+      if (far > 4) ratios.push(near / far);
+    }
+  }
+  if (ratios.length < 24) return false;
+  ratios.sort((p, q) => p - q);
+  return ratios[ratios.length >> 1] >= .6;
+}
+/* cells of a piece within `r` of its outside */
+function pfBand(inPiece, w, h, r) {
+  const outside = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) outside[i] = inPiece[i] ? 0 : 1;
+  const near = pfClose(outside, w, h, 0);                                                // copy
+  const grown = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (near[y * w + x])
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < w && yy < h) grown[yy * w + xx] = 1; }
+  for (let i = 0; i < w * h; i++) grown[i] &= inPiece[i];
+  return grown;
+}
+const pfOtsuOf = (small, keep) => { const v = []; for (let i = 0; i < small.length; i++) if (keep(small[i])) v.push(small[i]); return v.length > 50 ? pfOtsu(v) : null; };
+/* the sheet: the most sheet-like piece at any of three thresholds (Otsu, and Otsu again within each side of it), bright
+   on a darker surface or, if smooth and not black, grey on a brighter one; then, inside a bright one, a clearly brighter
+   sheet-like piece clear of its border (paper lying on a desk) */
+function pfRegion(small, w, h) {
+  const t = pfOtsu(small), r = Math.max(2, Math.round(Math.min(w, h) / 80)), best = [];
+  const thresholds = [t, pfOtsuOf(small, v => v > t), pfOtsuOf(small, v => v <= t)].filter(v => v != null);
+  for (const level of thresholds) for (const polarity of [1, -1]) {
+    const mask = new Uint8Array(w * h);
+    for (let i = 0; i < mask.length; i++) mask[i] = polarity > 0 ? +(small[i] > level) : +(small[i] <= level);
+    for (const piece of pfPieces(pfClose(mask, w, h, r), w, h)) {
+      const sheet = pfSheet(piece, small, w, h);
+      if (!sheet) continue;
+      if (polarity < 0) {                                                                  // grey paper on a brighter surface:
+        if (sheet.mean < 80 || sheet.spread > 22) continue;                                // ink, diagrams and writing are not paper
+        const band = pfBand(sheet.inPiece.map(v => 1 - v), w, h, Math.max(2, r));         // just outside it
+        let out = 0, outN = 0; for (let i = 0; i < w * h; i++) if (band[i]) { out += small[i]; outN++; }
+        if (!outN || out / outN - sheet.mean < 25) continue;                               // and clearly darker than what is around it
+      }
+      best.push({ ...sheet, polarity, score: sheet.score * (polarity > 0 ? 1 : .9) });
+    }
+  }
+  if (!best.length) return null;
+  best.sort((a, b) => b.score - a.score);
+  let chosen = best[0];
+  if (chosen.polarity > 0) {
+    const band = pfBand(chosen.inPiece, w, h, Math.max(2, r * 2)), values = [];
+    for (let i = 0; i < w * h; i++) if (chosen.inPiece[i]) values.push(small[i]);
+    /* writing splits off first; the paper/desk split is the second threshold, among the brighter values */
+    const levels = [pfOtsu(values)];
+    for (let k = 0; k < 2; k++) { const upper = values.filter(v => v > levels.at(-1)); if (upper.length < 50) break; levels.push(pfOtsu(upper)); }
+    search: for (const level of levels) {
+    const inner = new Uint8Array(w * h);
+    for (let i = 0; i < w * h; i++) inner[i] = +(chosen.inPiece[i] && small[i] > level);
+    for (const piece of pfPieces(pfClose(inner, w, h, r), w, h, chosen.inPiece)) {
+      if (piece.cells.length > chosen.n * .85) continue;
+      const sheet = pfSheet(piece, small, w, h);
+      if (!sheet) continue;
+      let onBand = 0; for (const i of piece.cells) onBand += band[i];
+      if (onBand > piece.cells.length * .02) continue;                                     // a brighter half of the same sheet reaches its border
+      if (!pfSharp(small, w, h, sheet.four)) continue;                                      // glare fades out; paper ends in a step
+      let rest = 0, restN = 0; for (let i = 0; i < w * h; i++) if (chosen.inPiece[i] && !sheet.inPiece[i]) { rest += small[i]; restN++; }
+      if (restN && sheet.mean - rest / restN >= 6) { chosen = { ...sheet, polarity: 1 }; break search; }
+    }
+    }
+  }
+  return { four: chosen.four, polarity: chosen.polarity };
+}
+
+const pfPixel = (g, w, h, x, y) => {
+  x = Math.max(0, Math.min(w - 1.001, x)); y = Math.max(0, Math.min(h - 1.001, y));
+  const ix = x | 0, iy = y | 0, fx = x - ix, fy = y - iy, j = iy * w + ix;
+  return (g[j] * (1 - fx) + g[j + 1] * fx) * (1 - fy) + (g[j + w] * (1 - fx) + g[j + w + 1] * fx) * fy;
+};
+
+/* a line n·p = r through points, least squares on the normal direction, outliers dropped twice */
+function lineThrough(pts, nx, ny) {
+  const mx = pts.reduce((s, p) => s + p.x, 0) / pts.length, my = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+  let sxx = 0, sxy = 0, syy = 0;
+  for (const p of pts) { const dx = p.x - mx, dy = p.y - my; sxx += dx * dx; sxy += dx * dy; syy += dy * dy; }
+  const angle = .5 * Math.atan2(2 * sxy, sxx - syy);
+  let lnx = -Math.sin(angle), lny = Math.cos(angle);
+  if (lnx * nx + lny * ny < 0) { lnx = -lnx; lny = -lny; }
+  return { nx: lnx, ny: lny, r: lnx * mx + lny * my, n: pts.length };
+}
+function fitLine(points, nx, ny) {
+  let line = lineThrough(points, nx, ny), pts = points;
+  for (let round = 0; round < 2; round++) {
+    const res = pts.map(p => Math.abs(line.nx * p.x + line.ny * p.y - line.r)), sorted = [...res].sort((a, b) => a - b);
+    const kept = pts.filter((_, i) => res[i] <= Math.max(1.5, 2.5 * sorted[sorted.length >> 1]));
+    if (kept.length < 6) break;
+    pts = kept; line = lineThrough(pts, nx, ny);
+  }
+  return line;
+}
+
+const pfMeet = (a, b) => {
   const det = a.nx * b.ny - a.ny * b.nx;
-  return Math.abs(det) < .12 ? null : { x: (a.r * b.ny - a.ny * b.r) / det, y: (a.nx * b.r - a.r * b.nx) / det };
+  return Math.abs(det) < .15 ? null : { x: (a.r * b.ny - a.ny * b.r) / det, y: (a.nx * b.r - a.r * b.nx) / det };
+};
+
+/* each side of a coarse quad moved onto the measured edge */
+function pfRefine(gray, w, h, quad, polarity = 1) {
+  const ring = [quad[0], quad[1], quad[3], quad[2]], cx = ring.reduce((s, p) => s + p.x, 0) / 4, cy = ring.reduce((s, p) => s + p.y, 0) / 4;
+  const border = Math.max(2, Math.max(w, h) * .006), search = Math.max(6, Math.max(w, h) * .035), lines = [], support = [], onFrame = [];
+  /* the paper's own level: the median over a grid inside the quad (writing is a small share of it) */
+  const grid = [];
+  for (let u = .15; u < .9; u += .1) for (let v = .15; v < .9; v += .1)
+    grid.push(pfPixel(gray, w, h, (quad[0].x * (1 - u) + quad[1].x * u) * (1 - v) + (quad[2].x * (1 - u) + quad[3].x * u) * v,
+      (quad[0].y * (1 - u) + quad[1].y * u) * (1 - v) + (quad[2].y * (1 - u) + quad[3].y * u) * v));
+  grid.sort((p, q) => p - q);
+  const level = grid[grid.length >> 1], tolerance = Math.max(18, level * .15);
+  for (let side = 0; side < 4; side++) {
+    const a = ring[side], b = ring[(side + 1) % 4], len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    let nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
+    if ((cx - a.x) * nx + (cy - a.y) * ny < 0) { nx = -nx; ny = -ny; }                 // n points into the sheet
+    const along = (p, q) => (Math.abs(p.x - q.x) < border * 2 && (p.x < border || p.x > w - 1 - border)) || (Math.abs(p.y - q.y) < border * 2 && (p.y < border || p.y > h - 1 - border));
+    if (along(a, b)) { lines.push({ nx, ny, r: nx * a.x + ny * a.y }); support.push(1); onFrame.push(true); continue; }
+    const found = [];
+    for (let s = 0; s < SAMPLES; s++) {
+      const t = .08 + .84 * (s + .5) / SAMPLES, x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+      /* the sheet's edge is the outermost strong step: ruled lines and answer boxes inside it step the same way */
+      const steps = [];
+      for (let o = -search; o <= search; o += .5) {
+        const px = x + nx * o, py = y + ny * o;
+        steps.push(px < 1 || py < 1 || px > w - 2 || py > h - 2 ? 0 : polarity * (pfPixel(gray, w, h, px + nx * 2, py + ny * 2) - pfPixel(gray, w, h, px - nx * 2, py - ny * 2)));
+      }
+      /* from outside (o = -search) inwards, the first step that leads onto the paper itself: a seam in the floor leads
+         onto more floor, a printed line inside the sheet is preceded by the sheet's real edge */
+      let at = -1;
+      for (let i = 0; i < steps.length; i++) {
+        if (steps[i] < 8) continue;
+        const o = -search + i * .5, inside = pfPixel(gray, w, h, x + nx * (o + 4), y + ny * (o + 4));
+        if (Math.abs(inside - level) <= tolerance) { at = i; break; }
+      }
+      if (at < 0) continue;
+      while (at + 1 < steps.length && steps[at + 1] >= steps[at]) at++;               // up to that step's peak
+      const o = -search + at * .5;
+      found.push({ x: x + nx * o, y: y + ny * o });
+    }
+    const line = found.length >= SAMPLES * .3 ? fitLine(found, nx, ny) : null;
+    lines.push(line || { nx, ny, r: nx * a.x + ny * a.y });
+    support.push(line ? line.n / SAMPLES : 0); onFrame.push(false);
+  }
+  const met = [pfMeet(lines[3], lines[0]), pfMeet(lines[0], lines[1]), pfMeet(lines[1], lines[2]), pfMeet(lines[2], lines[3])];   // tl, tr, br, bl
+  if (met.some(p => !p || p.x < -w * .02 || p.y < -h * .02 || p.x > w * 1.02 || p.y > h * 1.02)) return { corners: quad, support, onFrame, refined: false };
+  const clip = p => ({ x: Math.max(0, Math.min(w - 1, p.x)), y: Math.max(0, Math.min(h - 1, p.y)) });
+  return { corners: [clip(met[0]), clip(met[1]), clip(met[3]), clip(met[2])], support, onFrame, refined: true };
 }
+
+const pfArea = q => Math.abs(pfCross(q[0], q[1], q[3]) + pfCross(q[0], q[3], q[2])) / 2;
+
+/**
+ * The sheet in a photo.
+ * @param {Uint8Array|Uint8ClampedArray} gray  luminance, W×H
+ * @param {Uint8ClampedArray} [rgba]           the same photo's RGBA, to tell colourless paper from coloured surfaces
+ * @returns {{corners, score, method:'page', verified, edgeSupport, weakestEdge, sidesOnFrame}|{corners:null}}
+ */
+export function findPage(gray, W, H, rgba = null) {
+  const coarse = pfShrink(rgba || gray, W, H, COARSE, !!rgba), small = pfMax3(pfBlur(coarse.data, coarse.w, coarse.h), coarse.w, coarse.h);
+  const found = pfRegion(small, coarse.w, coarse.h);
+  if (!found) return { corners: null, score: 0, method: 'page', verified: false };
+  const { w, h } = coarse, four = found.four;
+  /* the fine copy, where the edges are fitted */
+  const fine = pfShrink(rgba || gray, W, H, FINE, !!rgba), fs = coarse.k / fine.k;
+  const snap = p => ({ x: p.x < 1 ? 0 : p.x > w - 1 ? fine.w - 1 : p.x * fs, y: p.y < 1 ? 0 : p.y > h - 1 ? fine.h - 1 : p.y * fs });
+  const r = pfRefine(fine.data, fine.w, fine.h, four.map(snap), found.polarity);
+  const corners = r.corners.map(p => ({ x: (p.x + .5) * fine.k, y: (p.y + .5) * fine.k }));
+  const inner = r.support.filter((_, i) => !r.onFrame[i]), cover = pfArea(corners) / (W * H);
+  const edgeSupport = inner.length ? inner.reduce((a, b) => a + b, 0) / inner.length : 1, weakestEdge = inner.length ? Math.min(...inner) : 1;
+  const edgeOfPhoto = Math.max(2, Math.min(W, H) * .008), onBorder = corners.some(p => p.x < edgeOfPhoto || p.y < edgeOfPhoto || p.x > W - 1 - edgeOfPhoto || p.y > H - 1 - edgeOfPhoto);
+  const sidesOnFrame = r.onFrame.filter(Boolean).length + (onBorder && !r.onFrame.some(Boolean) ? 1 : 0);
+  /* a sheet running out of the photo is cropped to what is visible, but never counts as verified */
+  const verified = r.refined && cover >= .06 && weakestEdge >= .45 && sidesOnFrame === 0;
+  const score = Math.min(1, .35 + .45 * edgeSupport + .2 * Math.min(1, cover / .3));
+  return { corners, score, method: 'page', verified, edgeSupport, weakestEdge, sidesOnFrame, cover };
+}
+
 /** Projected A-series shape candidate, never a physical size measurement.
  * A3/A4/A5 share a ratio, and an unknown camera pose can make another rectangle
  * look identical. Keep perspective-ambiguous corners for manual confirmation.
@@ -474,71 +792,6 @@ function assessedDocument(result, W, H) {
   return { ...result, paperStatus: paperAssessment.status, paperAssessment,
     autoCaptureEligible: result.autoCaptureEligible === true && paperAssessment.status === 'a4_candidate' };
 }
-/* a page that wins by itself covers at least PAGE_COVER of the frame; a sheet found lying inside a larger
-   rectangle (paperOnDesk) may be as small as SHEET_COVER */
-const PAGE_COVER = .095, SHEET_COVER = .04;
-function pageEvidence(corners, g, w, h, refine = false, minCover = PAGE_COVER) {
-  if (!corners || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
-  const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]], margin = Math.max(1.5, Math.min(w, h) * .007);
-  if (quadScore(q, w, h) < .18 || q.some(p => p.x < margin || p.y < margin || p.x > w - 1 - margin || p.y > h - 1 - margin)) return null;
-  let area = 0; for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
-  area = Math.abs(area) / 2; const cover = area / (w * h);
-  if (cover < minCover || cover > .94) return null;
-  const lengths = poly.map((p, i) => Math.hypot(p.x - poly[(i + 1) % 4].x, p.y - poly[(i + 1) % 4].y));
-  if (Math.min(...lengths) < Math.min(w, h) * .14 || Math.max(...lengths) / Math.min(...lengths) > 5) return null;
-  const cx = q.reduce((s, p) => s + p.x, 0) / 4, cy = q.reduce((s, p) => s + p.y, 0) / 4;
-  const interior = [];
-  for (const u of [.25, .5, .75]) for (const v of [.25, .5, .75]) {
-    const x = (q[0].x * (1 - u) + q[1].x * u) * (1 - v) + (q[2].x * (1 - u) + q[3].x * u) * v;
-    const y = (q[0].y * (1 - u) + q[1].y * u) * (1 - v) + (q[2].y * (1 - u) + q[3].y * u) * v;
-    interior.push(pagePixel(g, w, h, x, y));
-  }
-  interior.sort((a, b) => a - b);
-  if (interior[4] < 55) return null; // a solid black diagram is not white paper
-  const supports = [], contrasts = [], lines = [];
-  for (let side = 0; side < 4; side++) {
-    const a = poly[side], b = poly[(side + 1) % 4], len = lengths[side];
-    let nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
-    if ((cx - (a.x + b.x) / 2) * nx + (cy - (a.y + b.y) / 2) * ny < 0) { nx = -nx; ny = -ny; }
-    const far = Math.max(3, Math.min(8, len * .028)), count = refine ? 36 : 18, offsets = [];
-    let supported = 0, contrast = 0;
-    for (let i = 0; i < count; i++) {
-      const t = .06 + .88 * (i + .5) / count, x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
-      let best = -1, bestOffset = 0;
-      const range = refine ? 5 : 2;
-      for (let offset = -range; offset <= range; offset++) {
-        const px = x + nx * offset, py = y + ny * offset;
-        const gradient = Math.abs(pagePixel(g, w, h, px + nx * 1.3, py + ny * 1.3) - pagePixel(g, w, h, px - nx * 1.3, py - ny * 1.3));
-        const value = gradient - Math.abs(offset) * .3;
-        if (value > best) { best = value; bestOffset = offset; }
-      }
-      const px = x + nx * bestOffset, py = y + ny * bestOffset;
-      const inside = (pagePixel(g, w, h, px + nx * far, py + ny * far) + pagePixel(g, w, h, px + nx * far * 1.5, py + ny * far * 1.5)) / 2;
-      const outside = (pagePixel(g, w, h, px - nx * far, py - ny * far) + pagePixel(g, w, h, px - nx * far * 1.5, py - ny * far * 1.5)) / 2;
-      const difference = Math.abs(inside - outside);
-      const innerSlope = Math.abs(pagePixel(g, w, h, px + nx * (far + 1.3), py + ny * (far + 1.3)) - pagePixel(g, w, h, px + nx * (far - 1.3), py + ny * (far - 1.3)));
-      const outerSlope = Math.abs(pagePixel(g, w, h, px - nx * (far + 1.3), py - ny * (far + 1.3)) - pagePixel(g, w, h, px - nx * (far - 1.3), py - ny * (far - 1.3)));
-      // A broad illumination ramp is not a paper boundary: the transition must
-      // be sharper than the normal gradient on either side of it.
-      if (best >= Math.max(2.2, Math.max(innerSlope, outerSlope) * 1.35 + .8) && difference >= 4) { supported++; contrast += difference; offsets.push(bestOffset); }
-    }
-    supports.push(supported / count); contrasts.push(supported ? contrast / supported : 0);
-    offsets.sort((a, b) => a - b); const shift = offsets.length ? offsets[offsets.length >> 1] : 0;
-    lines.push({ nx, ny, r: nx * a.x + ny * a.y + shift });
-  }
-  const support = supports.reduce((s, v) => s + v, 0) / 4, weakest = Math.min(...supports);
-  if (weakest < .44 || support < .64 || Math.min(...contrasts) < 4) return null;
-  if (refine) {
-    const fitted = lines.map((line, i) => pageIntersection(lines[(i + 3) % 4], line));
-    const improved = pageEvidence(fitted, g, w, h, false, minCover);
-    if (improved) return improved;
-  }
-  const strength = Math.min(1, Math.min(...contrasts) / 18);
-  const score = Math.min(.96, .34 + .32 * support + .16 * weakest + .12 * strength + .02 * Math.min(1, cover / .3));
-  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover, interior: interior[4],
-    autoCaptureEligible: score >= .78 && support >= .83 && weakest >= .72 };
-}
-
 /** The width/height ratio of the rectangle a quad is the picture of, with the perspective undone
  * (Zhang & He, "Whiteboard scanning and image enhancement", 2007: the focal length and the aspect ratio follow from
  * the quad's two vanishing points, square pixels and the principal point at the image centre). With fewer than two
@@ -577,196 +830,20 @@ export function a4RatioMiss(corners, W, H) {
   return best;
 }
 const a4Miss = a4RatioMiss;
-function insideQuad(p, q, slack = 0) {
-  const poly = [q[0], q[1], q[3], q[2]]; let sign = 0;
-  for (let i = 0; i < 4; i++) {
-    const a = poly[i], b = poly[(i + 1) % 4], len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-    const c = ((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)) / len;
-    if (Math.abs(c) <= slack) continue;
-    if (sign && Math.sign(c) !== sign) return false;
-    sign = Math.sign(c);
-  }
-  return true;
-}
-/* the median brightness of the band inside an outer quad but outside an inner one */
-function ringBrightness(outer, inner, g, w, h) {
-  const values = [];
-  for (let i = 1; i < 12; i++) for (let j = 1; j < 12; j++) {
-    const u = i / 12, v = j / 12;
-    const p = { x: (outer[0].x * (1 - u) + outer[1].x * u) * (1 - v) + (outer[2].x * (1 - u) + outer[3].x * u) * v,
-      y: (outer[0].y * (1 - u) + outer[1].y * u) * (1 - v) + (outer[2].y * (1 - u) + outer[3].y * u) * v };
-    if (!insideQuad(p, inner, -2)) values.push(pagePixel(g, w, h, p.x, p.y));
-  }
-  if (values.length < 8) return null;
-  values.sort((a, b) => a - b); return values[values.length >> 1];
-}
-/** Paper lying on a desk: the desk is the larger rectangle, often wholly in view with edges as clear as the
- * paper's, so the largest enclosing quad is the desk. Scanning apps judge what a quad encloses and constrain its
- * shape (Apple Vision's aspect-ratio window; contour-and-contrast detectors); here a measured quad inside the
- * winner replaces it when it is a sheet lying on it: clearly brighter than the band of the winner around it, or —
- * where the two are alike in brightness — A4-shaped once the perspective is undone while the winner is not.
- * A darker or A4-shaped printed region on a non-A4 object, and a printed frame on an A4 page, keep the outside. */
-function paperOnDesk(best, pool, g, w, h) {
-  if (!best || !pool.length) return best;
-  const outerMiss = a4Miss(best.corners, w, h);
-  let pick = null;
-  for (const c of pool) {
-    if (!c || c === best || !c.corners.every(p => insideQuad(p, best.corners, 2))) continue;
-    const share = c.cover / best.cover;
-    if (share < .12 || share > .82 || !(c.interior >= 120)) continue;
-    const ring = ringBrightness(best.corners, c.corners, g, w, h);
-    if (ring == null) continue;
-    const miss = a4Miss(c.corners, w, h), a4 = miss <= .08;
-    if (!(c.interior >= ring + 14 || a4 && outerMiss > .12 && c.interior >= ring - 4)) continue;
-    if (!pick || a4 && !pick.a4 || a4 === pick.a4 && c.cover > pick.cover) pick = { ...c, a4, onDesk: true };
-  }
-  return pick || best;
-}
-
-/** A bounded, markerless detector: both intensity polarities, closed edge regions,
- * and gradient-directed lines propose quads. Only four supported OUTER paper
- * transitions may win; an inner printed frame or the image boundary is not a page. */
-export function findPageQuadGray(gray, W, H) {
+/** v2 page finder on a grey image, with the photo's RGBA when there is one (paper is colourless, wood and desks are not) */
+export function findPageQuadGray(gray, W, H, rgba = null) {
   const none = { corners: null, score: 0, method: 'page', edgeSupport: 0, clipped: false, autoCaptureEligible: false, paperStatus: 'not_found', paperAssessment: null };
   if (W < 32 || H < 32 || gray.length < W * H) return none;
-  const scale = Math.min(1, 320 / Math.max(W, H)), w = Math.round(W * scale), h = Math.round(H * scale), n = w * h;
-  const g = new Uint8Array(n), sx = W / w, sy = H / h;
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    let sum = 0, count = 0;
-    for (let j = Math.floor(y * sy); j < Math.floor((y + 1) * sy); j++) for (let i = Math.floor(x * sx); i < Math.floor((x + 1) * sx); i++) { sum += gray[j * W + i]; count++; }
-    g[y * w + x] = sum / count;
-  }
-  const smooth = boxMean(g, w, h, 1), bytes = Uint8Array.from(smooth), gx = new Float32Array(n), gy = new Float32Array(n), mag = new Float32Array(n);
-  let strong = 0, low = 255, high = 0;
-  for (let i = 0; i < n; i++) { if (g[i] < low) low = g[i]; if (g[i] > high) high = g[i]; }
-  if (high - low < 5) return none;
-  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
-    const i = y * w + x;
-    gx[i] = (smooth[i - w + 1] + 2 * smooth[i + 1] + smooth[i + w + 1] - smooth[i - w - 1] - 2 * smooth[i - 1] - smooth[i + w - 1]) / 4;
-    gy[i] = (smooth[i + w - 1] + 2 * smooth[i + w] + smooth[i + w + 1] - smooth[i - w - 1] - 2 * smooth[i - w] - smooth[i - w + 1]) / 4;
-    mag[i] = Math.abs(gx[i]) + Math.abs(gy[i]); if (mag[i] >= 4) strong++;
-  }
-  const candidates = [], stack = new Int32Array(n), seen = new Uint8Array(n), mask = new Uint8Array(n);
-  const regions = () => {
-    seen.fill(0);
-    for (let seed = 0; seed < n; seed++) {
-      if (!mask[seed] || seen[seed]) continue;
-      let sp = 0, size = 0, x0 = w, x1 = 0, y0 = h, y1 = 0; const boundary = [];
-      stack[sp++] = seed; seen[seed] = 1;
-      while (sp) {
-        const i = stack[--sp], y = (i / w) | 0, x = i - y * w; size++;
-        x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
-        let edge = false;
-        if (!x || !mask[i - 1]) edge = true; else if (!seen[i - 1]) { seen[i - 1] = 1; stack[sp++] = i - 1; }
-        if (x === w - 1 || !mask[i + 1]) edge = true; else if (!seen[i + 1]) { seen[i + 1] = 1; stack[sp++] = i + 1; }
-        if (!y || !mask[i - w]) edge = true; else if (!seen[i - w]) { seen[i - w] = 1; stack[sp++] = i - w; }
-        if (y === h - 1 || !mask[i + w]) edge = true; else if (!seen[i + w]) { seen[i + w] = 1; stack[sp++] = i + w; }
-        if (edge) boundary.push(i);
-      }
-      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * SHEET_COVER || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
-      const quad = pageFour(pageHull(boundary.map(i => ({ x: i % w, y: (i / w) | 0 })))); if (quad) candidates.push(quad);
-    }
-  };
-  const border = [];
-  for (let y = 0; y < h; y += 3) for (let x = 0; x < w; x += 3) if (x < w * .06 || x > w * .94 || y < h * .06 || y > h * .94) border.push(g[y * w + x]);
-  border.sort((a, b) => a - b); const background = border[border.length >> 1];
-  const thresholds = [...new Set([otsu(bytes), background - 6, background + 6].map(v => Math.max(1, Math.min(254, Math.round(v)))))];
-  for (const threshold of thresholds) for (const polarity of [1, -1]) { for (let i = 0; i < n; i++) mask[i] = polarity > 0 ? smooth[i] > threshold : smooth[i] < threshold; regions(); }
-  for (const threshold of [5, 16]) {
-    mask.fill(1);
-    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if (mag[y * w + x] >= threshold) {
-      const i = y * w + x; mask[i] = mask[i - 1] = mask[i + 1] = mask[i - w] = mask[i + w] = 0;
-    }
-    regions();
-  }
-  const finish = best => {
-    const fitted = pageEvidence(best.corners, smooth, w, h, true, SHEET_COVER) || best;
-    // Classify only the winning outer boundary. An A4-shaped printed rectangle
-    // inside a different object must never replace its real outside corners.
-    return assessedDocument({ ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' }, W, H);
-  };
-  /* A region traced from the gradient mask sits a pixel or two inside a sheet whose surroundings are not uniform
-     (paper on a desk), beyond the coarse edge search. Refit such a candidate, but only for paperOnDesk: it never
-     competes for the outer page, so the outer choice stays exactly as it was. */
-  // At most 12 refits, and only of quads whose middle is paper-bright, so busy frames stay cheap.
-  let refits = 0;
-  const measured = [], sheetOnly = candidate => {
-    if (refits >= 12 || candidate.some(p => !p)) return;
-    const q = orderCorners(candidate), mid = [];
-    for (const u of [.3, .5, .7]) for (const v of [.3, .5, .7]) mid.push(pagePixel(smooth, w, h,
-      (q[0].x * (1 - u) + q[1].x * u) * (1 - v) + (q[2].x * (1 - u) + q[3].x * u) * v, (q[0].y * (1 - u) + q[1].y * u) * (1 - v) + (q[2].y * (1 - u) + q[3].y * u) * v));
-    mid.sort((a, b) => a - b); if (mid[4] < 120 || mid[1] < 60) return;
-    refits++; const sheet = pageEvidence(candidate, smooth, w, h, true, SHEET_COVER); if (sheet) measured.push(sheet);
-  };
-  let regionBest = null;
-  for (const candidate of candidates) {
-    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
-    if (result) measured.push(result); else sheetOnly(candidate);
-    if (result && result.cover >= PAGE_COVER && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
-  }
-  regionBest = paperOnDesk(regionBest, measured, smooth, w, h);
-  // A closed region with four measured boundaries already supplies the outer
-  // page. Avoid letting noisier Hough intersections move its corners outward.
-  // A rectangle that is not A4-shaped may be the desk under the sheet; then the line search below runs as well, so
-  // that a sheet whose edges the regions missed can still be found inside it.
-  const settled = regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72;
-  if (settled && (regionBest.onDesk || a4Miss(regionBest.corners, w, h) <= .12)) return finish(regionBest);
-  // At most 10k points, 60 normal directions, 24 lines and 24 opposite-line
-  // pairs: dense handwriting/noise cannot create an unbounded combinatorial pass.
-  const regionCount = candidates.length;
-  const points = [], stride = Math.max(1, Math.ceil(strong / 10000)); let at = 0;
-  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; if (mag[i] >= 4 && at++ % stride === 0) points.push({ x, y, nx: gx[i] / Math.hypot(gx[i], gy[i]), ny: gy[i] / Math.hypot(gx[i], gy[i]) }); }
-  const bins = 60, diag = Math.ceil(Math.hypot(w, h)), width = 2 * diag + 1, votes = new Uint16Array(bins * width);
-  const cos = Array.from({ length: bins }, (_, i) => Math.cos(i * Math.PI / bins)), sin = cos.map((_, i) => Math.sin(i * Math.PI / bins));
-  for (const p of points) { let angle = Math.atan2(p.ny, p.nx); if (angle < 0) angle += Math.PI; const center = Math.round(angle * bins / Math.PI) % bins;
-    for (let d = -1; d <= 1; d++) { const t = (center + d + bins) % bins, r = Math.round(p.x * cos[t] + p.y * sin[t]) + diag; votes[t * width + r]++; } }
-  const peaks = [];
-  for (let t = 0; t < bins; t++) for (let r = 0; r < width; r++) if (votes[t * width + r] >= Math.max(10, Math.min(w, h) * .08)) peaks.push({ nx: cos[t], ny: sin[t], r: r - diag, votes: votes[t * width + r] });
-  peaks.sort((a, b) => b.votes - a.votes); const lines = [];
-  for (const p of peaks) {
-    if (lines.some(q => Math.abs(p.nx * q.nx + p.ny * q.ny) > .99 && Math.abs(p.r - (p.nx * q.nx + p.ny * q.ny > 0 ? q.r : -q.r)) < 7)) continue;
-    lines.push(p); if (lines.length === 24) break;
-  }
-  const pairs = [];
-  for (let i = 0; i < lines.length; i++) for (let j = i + 1; j < lines.length; j++) {
-    const a = lines[i], b = lines[j], dot = a.nx * b.nx + a.ny * b.ny, sign = dot > 0 ? 1 : -1;
-    const distance = Math.abs(a.r - a.nx * w / 2 - a.ny * h / 2 - sign * (b.r - b.nx * w / 2 - b.ny * h / 2));
-    if (Math.abs(dot) > .80 && distance > Math.min(w, h) * .18) pairs.push({ a, b, score: (a.votes + b.votes) * distance });
-  }
-  pairs.sort((a, b) => b.score - a.score); pairs.length = Math.min(pairs.length, 24);
-  for (let i = 0; i < pairs.length; i++) for (let j = i + 1; j < pairs.length; j++) {
-    const a = pairs[i], b = pairs[j]; if (Math.abs(a.a.nx * b.a.nx + a.a.ny * b.a.ny) > .82) continue;
-    const quad = [pageIntersection(a.a, b.a), pageIntersection(a.a, b.b), pageIntersection(a.b, b.a), pageIntersection(a.b, b.b)];
-    if (quad.every(p => p && p.x > 0 && p.x < w && p.y > 0 && p.y < h)) candidates.push(quad);
-  }
-  // Rank and merge cheap geometric hypotheses before sampling any pixels.
-  // Large enclosing boundaries precede strong printed rectangles inside a page.
-  const unique = new Map();
-  for (let index = 0; index < candidates.length; index++) {
-    const candidate = candidates[index];
-    if (candidate.some(p => !p)) continue;
-    const q = orderCorners(candidate);
-    if (quadScore(q, w, h) < .18) continue;
-    const poly = [q[0], q[1], q[3], q[2]]; let area = 0;
-    for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
-    const cover = Math.abs(area) / (2 * n);
-    if (cover < SHEET_COVER || cover > .94) continue;
-    const key = q.map(p => Math.round(p.x / 5) + ',' + Math.round(p.y / 5)).join('|');
-    if (!unique.has(key)) unique.set(key, { q, cover, region: index < regionCount });
-  }
-  const shortlist = [...unique.values()].sort((a, b) => b.cover - a.cover).slice(0, 40);
-  let best = null;
-  for (const { q: candidate, region } of shortlist) {
-    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
-    if (result) measured.push(result); else sheetOnly(candidate);
-    if (result && result.cover >= PAGE_COVER && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
-        result.cover > best.cover * 1.06 && !(best.region && best.score >= .90 && result.cover < best.cover * 1.14) ||
-        result.cover >= best.cover * .94 && result.score > best.score)) best = { ...result, region };
-  }
-  // the region winner stands unless a sheet was found lying inside it
-  if (settled) return finish(paperOnDesk(regionBest, measured, smooth, w, h));
-  if (!best) return none;
-  return finish(paperOnDesk(best, measured, smooth, w, h));
+  const found = findPage(gray, W, H, rgba && rgba.length >= W * H * 4 ? rgba : null);
+  if (!found.corners) return none;
+  const corners = orderCorners(found.corners);
+  /* the A-series shape is reported, but a sheet seen at an angle is still a sheet: automatic capture asks for four
+     strongly measured edges and a sheet that fills a fair part of the frame, not a front-on view */
+  const paperAssessment = assessA4Candidate(corners, W, H);
+  return { corners, score: found.score, method: 'page', edgeSupport: found.edgeSupport, weakestEdge: found.weakestEdge,
+    verified: found.verified, clipped: found.sidesOnFrame > 0, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment,
+    autoCaptureEligible: found.verified && found.weakestEdge >= .7 && found.edgeSupport >= .8 && found.cover >= .12 &&
+      (paperAssessment.status === 'a4_candidate' || paperAssessment.status === 'perspective_uncertain' && a4RatioMiss(corners, W, H) < .07) };   // Letter misses A4 by .085
 }
 
 /* ---------- 원근 보정 ---------- */
@@ -1103,10 +1180,10 @@ export function findMarkers(canvas) {
 
 /** Shared by live camera and full-resolution capture. Partial dark blobs never
  * acquire marker insets, and automatic capture requires measured edge evidence. */
-export function detectDocumentQuadGray(g, W, H) {
+export function detectDocumentQuadGray(g, W, H, rgba = null) {
   const marker = findSheetMarkersGray(g, W, H);
   if (marker && marker.score >= .75) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: true }, W, H);
-  const page = findPageQuadGray(g, W, H);
+  const page = findPageQuadGray(g, W, H, rgba);
   if (page.corners) return page;
   if (marker && marker.score >= .5) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: false }, W, H);
   const legacy = findMarkersGray(g, W, H);
@@ -1127,26 +1204,23 @@ export function detectDocumentQuadGray(g, W, H) {
 
 export function detectQuad(canvas) {
   const img = imgData(canvas), W = canvas.width, H = canvas.height;
-  return detectDocumentQuadGray(toGray(img.data, W, H), W, H);
+  return detectDocumentQuadGray(toGray(img.data, W, H), W, H, img.data);
 }
 
-/** Lazy, entirely on-device detector. No camera image is sent to an API.
- * Classical candidates remain editable when a worker/model is unavailable. */
+/** The page in a canvas, found in the scanner's worker (or here, where there is no worker). Entirely on-device:
+ * no model, no request. A quad whose edges were not measured is still offered (cropped, for a check), but only a
+ * verified one may be used for automatic capture or for reusing a live frame. */
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
-  // A failed browser worker must not hide every outline only in live mode.
-  // Keep classical preview work bounded and retain its corners strictly as an
-  // editable proposal, just like the still-photo fallback.
-  const working = options.preview ? toCanvas(canvas, 384) : canvas;
-  const proposed = detectQuad(working);
-  if (working !== canvas && proposed.corners) proposed.corners = proposed.corners.map(p => ({ x: p.x * canvas.width / working.width, y: p.y * canvas.height / working.height }));
-  return { ...proposed, engine: 'manual-fallback', scanEligible: !!proposed.corners && proposed.method !== 'frame', verified: false,
-    autoCaptureEligible: false, reason: 'document_model_unavailable' };
+  const found = detectQuad(canvas), usable = !!found.corners && found.method !== 'frame';
+  const verified = usable && (found.method === 'marker' || found.verified === true);
+  return { ...found, engine: 'main-thread', scanEligible: usable, verified, autoCaptureEligible: verified && found.autoCaptureEligible === true,
+    paperStatus: usable ? found.paperStatus || 'document' : 'not_found' };
 }
 
 /* corners on a copy of at most DETECT_MAX_SIDE, returned in the canvas's own coordinates */
@@ -1160,14 +1234,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1391,7 +1465,7 @@ export async function processShot(file, opts = {}) {
   let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = pageFormat === 'a4' ? 'manual_a4' : 'manual', scanEligible = !!pts;
   let detectionReason = null;
   if (!pts) {
-    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectOnProbe(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
+    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectOnProbe(base, { retry: true, signal: opts.signal, onProgress: () => say(30, '문서 모서리 찾는 중') });
     pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true && d.verified !== false;
     paperStatus = d.paperStatus || 'not_found'; scanEligible = d.scanEligible === true;
     detectionReason = d.reason || null;

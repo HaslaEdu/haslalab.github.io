@@ -1,90 +1,21 @@
-import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=5c3425ad59a1';
-import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=5c3425ad59a1';
+/* The scanner's worker: finds the page and renders the scan off the main thread. No model and no network: the page is
+   found by printed markers or by findPage in scanner.js (v2), both plain arithmetic on the photo's pixels. */
+import { toGray, detectDocumentQuadGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=8e31e6b73e0b';
 
-const CACHE = 'haslalab-document-assets-' + DOCUMENT_ASSETS.version;
-let ort, session, initializing, modelFailure = null, modelRetryAt = 0, modelFailures = 0;
-const digest = async bytes => [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(v => v.toString(16).padStart(2, '0')).join('');
-async function asset(info, signal) {
-  const url = new URL(info.path, import.meta.url), request = new Request(url, { credentials: 'omit' });
-  let cache; try { cache = await caches.open(CACHE); } catch {}
-  let response = await cache?.match(request), bytes;
-  if (response) {
-    bytes = await response.arrayBuffer();
-    if (bytes.byteLength !== info.bytes || await digest(bytes) !== info.sha256) { await cache.delete(request); response = null; }
-  }
-  if (!response) {
-    response = await fetch(request, { cache: 'force-cache', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000) });
-    if (!response.ok || Number(response.headers.get('Content-Length') || 0) > info.bytes) throw new Error('document_asset_unavailable');
-    const reader = response.body.getReader(), parts = []; let count = 0;
-    for (;;) { const part = await reader.read(); if (part.done) break; count += part.value.byteLength; if (count > info.bytes) { await reader.cancel(); throw new Error('document_asset_size'); } parts.push(part.value); }
-    bytes = new Uint8Array(count); let offset = 0; for (const part of parts) { bytes.set(part, offset); offset += part.byteLength; }
-    if (count !== info.bytes || await digest(bytes) !== info.sha256) throw new Error('document_asset_integrity');
-    try { await cache?.put(request, new Response(bytes, { headers: { 'Content-Type': 'application/octet-stream', 'Cache-Control': 'public,max-age=31536000,immutable' } })); } catch {}
-  }
-  return new Uint8Array(bytes);
-}
-async function initialize(retry = false) {
-  if (session) return;
-  if (initializing) return initializing;
-  if (modelFailure && !retry && Date.now() < modelRetryAt) throw new Error(modelFailure);
-  initializing = (async () => {
-    self.postMessage({ type: 'progress', stage: 'download' });
-    const assetsAbort = new AbortController(); let model, wasm;
-    try { [model, wasm] = await Promise.all([asset(DOCUMENT_ASSETS.model, assetsAbort.signal), asset(DOCUMENT_ASSETS.wasm, assetsAbort.signal)]); }
-    finally { assetsAbort.abort(); }
-    ort = await import(new URL(DOCUMENT_ASSETS.runtime, import.meta.url).href);
-    ort.env.wasm.numThreads = 1; ort.env.wasm.proxy = false;
-    ort.env.wasm.wasmPaths = { mjs: new URL(DOCUMENT_ASSETS.runtimeModule, import.meta.url).href };
-    ort.env.wasm.wasmBinary = wasm;
-    self.postMessage({ type: 'progress', stage: 'compile' });
-    session = await ort.InferenceSession.create(model, { executionProviders: ['wasm'], graphOptimizationLevel: 'all' });
-    /* the first run of a WASM session is several times slower than the next ones; spend it while the page is idle */
-    self.postMessage({ type: 'progress', stage: 'prime' });
-    try { await session.run({ [session.inputNames[0]]: new ort.Tensor('float32', new Float32Array(3 * 256 * 256), [1, 3, 256, 256]) }); } catch {}
-    modelFailure = null; modelFailures = 0; modelRetryAt = 0;
-  })().catch(error => {
-    modelFailure = 'document_model_unavailable';
-    modelRetryAt = Date.now() + Math.min(60000, 5000 * 2 ** Math.min(4, modelFailures++));
-    throw error;
-  }).finally(() => { initializing = null; });
-  return initializing;
-}
-const tiny = new OffscreenCanvas(256, 256), tinyContext = tiny.getContext('2d', { willReadFrequently: true });
-async function detect(message) {
+function detect(message) {
   const bitmap = message.bitmap, width = bitmap.width, height = bitmap.height;
   const canvas = new OffscreenCanvas(width, height), context = canvas.getContext('2d', { willReadFrequently: true });
   context.drawImage(bitmap, 0, 0); bitmap.close();
-  const rgba = context.getImageData(0, 0, width, height), gray = toGray(rgba.data, width, height);
-  const printed = findSheetMarkersGray(gray, width, height);
-  if (printed?.score >= .85) return { ...printed, paperStatus: 'document', engine: 'printed-markers', scanEligible: true, verified: true,
-    autoCaptureEligible: true, clipped: false };
-  let modelReady = true;
-  try { await initialize(message.retry === true); } catch { modelReady = false; }
-  if (modelReady) {
-    tinyContext.drawImage(canvas, 0, 0, 256, 256);
-    const data = tinyContext.getImageData(0, 0, 256, 256).data, tensor = new Float32Array(3 * 256 * 256);
-    for (let i = 0; i < 256 * 256; i++) { tensor[i] = data[i * 4] / 255; tensor[i + 65536] = data[i * 4 + 1] / 255; tensor[i + 131072] = data[i * 4 + 2] / 255; }
-    const started = performance.now(), outputs = await session.run({ [session.inputNames[0]]: new ort.Tensor('float32', tensor, [1, 3, 256, 256]) });
-    const output = outputs[session.outputNames[0]], decoded = decodeDocumentHeatmap(output.data, output.dims, width, height);
-    const geometry = decoded && documentGeometry(decoded.corners, width, height);
-    if (geometry) {
-      const refined = refineDocumentEdges(gray, width, height, geometry.corners);
-      const verified = refined && refined.edgeSupport >= .52 && refined.weakestEdge >= .28;
-      if (verified) return { ...refined, score: Math.min(1, decoded.score), modelConfidence: decoded.confidence,
-        corners: refined.corners, method: 'ml', engine: 'docaligner-lcnet', paperStatus: 'document', scanEligible: true, verified: true,
-        autoCaptureEligible: decoded.score >= .5 && refined.edgeSupport >= .72 && refined.weakestEdge >= .5,
-        clipped: false, inferenceMs: performance.now() - started };
-      /* Scanning apps crop with their best quadrilateral and ask for a check rather than leave the photo as it is.
-         The model's quad (refined where its edges were measured) is used; only automatic capture needs verified edges. */
-      return { corners: refined?.corners || geometry.corners, score: Math.min(1, decoded.score), modelConfidence: decoded.confidence,
-        edgeSupport: refined?.edgeSupport ?? 0, weakestEdge: refined?.weakestEdge ?? 0, method: 'ml', engine: 'docaligner-lcnet',
-        paperStatus: 'document', scanEligible: true, verified: false, autoCaptureEligible: false, clipped: false, reason: 'document_edges_weak',
-        inferenceMs: performance.now() - started };
-    }
-  }
-  const proposal = detectDocumentQuadGray(gray, width, height), usable = !!proposal.corners && proposal.method !== 'frame';
-  return { ...proposal, engine: 'cv-fallback', scanEligible: usable, verified: false, autoCaptureEligible: false,
-    reason: modelFailure || 'document_corners_uncertain' };
+  const rgba = context.getImageData(0, 0, width, height).data;
+  return classify(detectDocumentQuadGray(toGray(rgba, width, height), width, height, rgba));
+}
+/* what the scan page needs to know: a usable quad (cropped and offered for a check), and whether its edges were measured */
+export function classify(found) {
+  const usable = !!found.corners && found.method !== 'frame';
+  const verified = usable && (found.method === 'marker' || found.verified === true);
+  return { ...found, engine: found.method === 'marker' ? 'printed-markers' : 'page-finder-v2', scanEligible: usable, verified,
+    paperStatus: usable ? (found.paperStatus && found.paperStatus !== 'not_found' ? found.paperStatus : 'document') : 'not_found',
+    autoCaptureEligible: verified && found.autoCaptureEligible === true, ...(verified || !usable ? {} : { reason: 'document_edges_weak' }) };
 }
 async function render(message) {
   const bitmap = message.bitmap, width = bitmap.width, height = bitmap.height;
@@ -114,10 +45,10 @@ self.onmessage = event => {
   chain = chain.then(async () => {
     if (!inbox.has(message.id)) return;
     try {
-      if (message.type === 'warm') { await initialize(message.retry === true); self.postMessage({ type: 'ready', id: message.id }); }
-      else if (message.type === 'detect') self.postMessage({ type: 'result', id: message.id, result: await detect(message) });
+      if (message.type === 'warm') self.postMessage({ type: 'ready', id: message.id });
+      else if (message.type === 'detect') self.postMessage({ type: 'result', id: message.id, result: detect(message) });
       else if (message.type === 'render') self.postMessage({ type: 'result', id: message.id, result: await render(message) });
-    } catch { try { message.bitmap?.close(); } catch {} self.postMessage({ type: 'error', id: message.id, code: 'document_model_unavailable' }); }
+    } catch { try { message.bitmap?.close(); } catch {} self.postMessage({ type: 'error', id: message.id, code: 'document_worker_failed' }); }
     finally { inbox.delete(message.id); }
   });
 };
