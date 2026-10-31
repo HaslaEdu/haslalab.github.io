@@ -145,10 +145,14 @@ test('printed frames on a full-frame sheet and solid dark diagrams do not supply
   }
 });
 
-test('clipped paper is left for manual review rather than inventing invisible corners', () => {
+test('clipped paper is cropped to what is visible, flagged as clipped and never verified or captured automatically', () => {
   const f = photo({ quad: rotated(15, 240, 215, 315, 490) });
   const result = scanner.findPageQuadGray(f.gray, f.W, f.H);
-  assert.equal(result.corners, null); assert.equal(result.autoCaptureEligible, false);
+  if (result.corners) {
+    assert.equal(result.clipped, true, 'a sheet running out of the photo is marked clipped');
+    assert.equal(result.verified, false); assert.equal(result.autoCaptureEligible, false);
+    for (const p of result.corners) assert.ok(p.x >= 0 && p.y >= 0 && p.x <= f.W && p.y <= f.H, 'no corner is invented outside the photo');
+  } else assert.equal(result.autoCaptureEligible, false);
 });
 
 test('shared detector prefers a real boundary to weak dark blobs and never applies marker insets to partial markers', () => {

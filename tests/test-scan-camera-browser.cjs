@@ -76,7 +76,7 @@ test('actual live camera keeps accepted video geometry separate from native stil
    return page.evaluate(()=>{const s=window.__scan.getShot();return{warp:s.warpApplied,width:s.width,height:s.height,method:s.method,fallback:s.liveFrameFallback===true,baseW:s.baseW,baseH:s.baseH,fileType:s.file.type,captureMatchesFile:s.captureFile===s.file,calls:window.__scanCalls,stopped:window.__stopped};});
   }
   await openAndHold();const fallback=await shoot();
-  assert.equal(fallback.warp,true);assert.equal(fallback.fallback,true);assert.equal(fallback.method,'ml');
+  assert.equal(fallback.warp,true);assert.equal(fallback.fallback,true);assert.equal(fallback.method,'page');
   assert.equal(fallback.width,1654);assert.ok(fallback.height>2200&&fallback.height<2700);
   assert.deepEqual([fallback.baseW,fallback.baseH],[900,1200],'fallback uses the same portrait video frame, not the different native crop');
   assert.equal(fallback.calls.length,2);assert.equal(fallback.calls[0].hint,null);

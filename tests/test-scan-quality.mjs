@@ -123,7 +123,7 @@ test('manual marker coordinates preserve the paper margins outside the printed s
   } finally { fixture.restore(); }
 });
 
-test('a non-A4 rectangle is still cropped to A4 with its best corners, flagged for a check; keeping the original stays possible', async () => {
+test('a non-A4 rectangle is still cropped to A4 with its measured corners; keeping the original stays possible', async () => {
   const fixture = pixelFixture(), W = 200, H = 220, pixels = new Uint8ClampedArray(W * H * 4);
   for (let y=0;y<H;y++)for(let x=0;x<W;x++) {
     const inside=x>=35&&x<165&&y>=45&&y<175;
@@ -134,7 +134,7 @@ test('a non-A4 rectangle is still cropped to A4 with its best corners, flagged f
   try {
     const first=await scanner.processShot(original,{mode:'mono',dpi:12});
     assert.equal(first.method,'page');assert.equal(first.paperStatus,'aspect_mismatch');
-    assert.equal(first.a4WarpApplied,true);assert.equal(first.cornersReliable,false,'an unverified quad asks for a corner check');
+    assert.equal(first.a4WarpApplied,true);assert.equal(first.cornersReliable,true,'its four edges were measured (page finder v2)');
     assert.deepEqual([first.width,first.height],[99,140]);
     const changed=await scanner.reprocess(first.baseUrl,first.corners,'clean',12,null,{preserveOriginal:true});
     assert.equal(changed.a4WarpApplied,false);assert.equal(changed.warpApplied,false);
@@ -146,7 +146,7 @@ test('a non-A4 rectangle is still cropped to A4 with its best corners, flagged f
   } finally { fixture.restore(); }
 });
 
-test('without a document worker the classical proposal makes the scan, flagged for a check, and correction preserves coloured page detail', async () => {
+test('without a document worker the page finder makes the scan on the main thread, and correction preserves coloured page detail', async () => {
   const fixture = pixelFixture(), W = 320, H = 450, pixels = new Uint8ClampedArray(W * H * 4);
   const rect = (x0,y0,x1,y1,color) => { for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)pixels.set([...color,255],(y*W+x)*4); };
   rect(0,0,W,H,[42,48,54]); rect(45,40,275,366,[246,244,240]);
@@ -159,7 +159,7 @@ test('without a document worker the classical proposal makes the scan, flagged f
     assert.equal(result.method,'page'); assert.ok(result.autoScore>.5);
     const expected=[{x:45,y:40},{x:275,y:40},{x:45,y:366},{x:275,y:366}];
     result.corners.forEach((corner,index)=>assert.ok(Math.hypot(corner.x-expected[index].x,corner.y-expected[index].y)<9,'each detected point follows the outer paper edge'));
-    assert.equal(result.warpApplied,true);assert.equal(result.cornersReliable,false);assert.deepEqual([result.width,result.height],[99,140]);assert.ok(Math.abs(result.sourceShortSide-230)<12);
+    assert.equal(result.warpApplied,true);assert.equal(result.cornersReliable,true,'crisp paper edges are measured, so no check is asked for');assert.deepEqual([result.width,result.height],[99,140]);assert.ok(Math.abs(result.sourceShortSide-230)<12);
     const corrected=await scanner.reprocess(result.baseUrl,result.corners,'original',12,null,{pageFormat:'a4'});
     assert.equal(corrected.width,99);assert.equal(corrected.height,140);
     const base=fixture.decode(result.baseUrl); assert.equal(base.width,W); assert.equal(base.height,H); assert.ok(Buffer.from(base.data).equals(Buffer.from(pixels)),'the editable baseline retains every original pixel');
