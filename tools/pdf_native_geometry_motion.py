@@ -43,7 +43,16 @@ def audit(source,target,shifts,scale=4):
             # The actual original Form/BBox is transformed through its entry
             # CTM. It includes native fraction/radical paths and bitmaps beyond
             # text glyph metrics, while the mask below still uses painted ink.
-            found.append(dict(kind='complete original Form',rect=list(r),form_path=group['path']))
+            found.append(dict(kind='complete original Form',rect=list(r),form_path=group['path'],
+                painted_image_rects=group.get('painted_image_rects',[])))
+        if 'image_path'in shift:
+            matches=[g for g in inv.get('images',[])if g['path']==shift['image_path']]
+            if len(matches)!=1:raise ValueError('A moved original mathematical image invocation cannot be identified exactly')
+            image=matches[0];r=fitz.Rect(image['bbox'])
+            if len(image['path'])!=1 or r.width>350 or r.height>100:
+                raise ValueError('An original inline image needs a complete reviewed native mathematical container')
+            found.append(dict(kind='complete original image invocation',rect=list(r),image_path=image['path'],
+                original_raw_sha256=image['original_raw_sha256'],painted_image_rects=[list(r)]))
         for path in shift.get('vector_paths',[]):
             found.append(dict(kind='explicit original mathematical path',rect=path['rect'],operator_indices=path['operator_indices']))
         for item in found:regions.append(dict(item,dx=dx))

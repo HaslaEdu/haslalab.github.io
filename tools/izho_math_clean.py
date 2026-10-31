@@ -5,6 +5,7 @@ delete an equation while targeting an adjacent English letter. An SVG outline
 mask uses only the exact paths of the prose glyphs and leaves equation ink alone.
 """
 import copy
+import hashlib
 import re
 import xml.etree.ElementTree as ET
 from PIL import Image, ImageFilter
@@ -15,7 +16,7 @@ _source_glyphs = {}
 
 
 def math_pixmap(page, rect, protected_origins=()):
-    key = (id(page.parent), page.number)
+    key = (page.parent.name, page.number, hashlib.sha256(page.read_contents()).digest())
     if key not in _source_glyphs:
         positions = set()
         for block in page.get_text('rawdict')['blocks']:

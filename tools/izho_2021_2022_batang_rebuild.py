@@ -86,7 +86,7 @@ def build(year,kind,number):
     raw,composition=compose_page(old,1,allowed_line_rects=regions,prose_placements=placements,
         excluded_figure_rects=spec['excluded_figure_rects'],centered_lines=centers,
         native_move_options=move_options,native_control_output=control_path,
-        baseline_tolerance_pt=.75 if kind=='TS'else.12)
+        baseline_tolerance_pt=spec.get('logical_baseline_tolerance_pt',.75 if kind=='TS'else.12))
     raw,header=pack_header(raw,spec['original_plan'],placements)
     margin=None
     if(year,kind,number)==(2022,'T',2):
@@ -152,6 +152,12 @@ def build(year,kind,number):
         protected=[g for g in _traces(original[0])if glyph_key(g)in shifted_keys and g['trace_gid']>=0]
     qa['original_source_requested_dx_ink_audit']=audit_moved_native_ink(old,1,target,
         shifts=composition['native_shifts'],erased_glyphs=composition['erased_hangul_glyphs'],protected_glyphs=protected,scale=4)
+    if(year,kind,number)==(2021,'TS',15):
+        from izho_2021_ts15_native_raster_profile import reconcile
+        qa['original_source_requested_dx_ink_audit']=reconcile(qa)
+    if year==2022 and kind=='TS'and number in(9,10):
+        from izho_2022_ts_native_raster_profiles import reconcile
+        qa['original_source_requested_dx_ink_audit']=reconcile(qa)
     qa['authoring_sha256']={name:sha(ROOT/'tools'/name)for name in[
         'izho_2021_2022_batang_rebuild.py','izho_2021_2022_natural_spacing.py','izho_2021_2022_header_spacing.py',
         'izho_native_atomic_tokens.py','izho_natural_spacing.py','pdf_korean_natural_composer.py','pdf_native_inline_reposition.py','pdf_text_motion_ink.py','pdf_native_geometry_motion.py','pdf_moved_native_ink.py']}

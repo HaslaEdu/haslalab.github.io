@@ -1,0 +1,941 @@
+{
+  "status": "READY",
+  "file": "IZhO_2025_T_KO.pdf",
+  "year": 2025,
+  "kind": "T",
+  "language": "ko",
+  "pages": 7,
+  "bytes": 7931069,
+  "sha256": "12a6bb27c548bedb9ad0d0934aa9755b363d6d4c61bd4a790f55e7245977ab51",
+  "validation": {
+    "native_ink_missing_pixels": 0,
+    "new_batang_empty_outlines": 0,
+    "hangul_visibility_loss_candidates": 0,
+    "original_point_sizes_scaled": false,
+    "outside_text_and_intended_math_motion": 0,
+    "changed_figures": 0,
+    "original_font_image_programs_and_page_groups_retained": true,
+    "no_added_editorial_notes": true
+  },
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "edaf82b0799741943d22194ee8ad8b7677ceb9c6c21ca3155b9e92c65d84656c",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 262,
+        "shifted_top_level_glyphs": 136,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 0,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "8edd281701f80983f28d42c6a23b354151c62b93267e70fa2face14f19a3fbdc",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 495,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.9550323486328125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page01.qa.json",
+      "qa_sha256": "13f0141330638e9d94dd23f5f58be8cdb8044c455e39f1a0586b691487ec98bc",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page01-native-ink.json",
+      "original_native_ink_sha256": "4d84eccdd414114dccff0b9c1b42a40b53c892c6b025be7d74521cbf052d15e3"
+    },
+    {
+      "page": 2,
+      "proof_sha256": "346ddbde128c40fae5aa2f7c50e46e7b1a6de80675b3ac8a720c2678f2970981",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 2,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 543,
+        "shifted_top_level_glyphs": 86,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 82,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 3,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "20f7ea824697c0a417ae29c023f0a55666f6a3e4ef9368ca8f32da7923bec1e2",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 271,
+            "source_origin": [
+              482.5460205078125,
+              266.7099609375
+            ],
+            "dx": -43.2499885559082
+          },
+          {
+            "source_trace_index": 272,
+            "source_origin": [
+              500.7620544433594,
+              266.7099609375
+            ],
+            "dx": -43.2499885559082
+          },
+          {
+            "source_trace_index": 273,
+            "source_origin": [
+              543.194091796875,
+              266.7099609375
+            ],
+            "dx": -43.2499885559082
+          },
+          {
+            "source_trace_index": 274,
+            "source_origin": [
+              559.2501220703125,
+              266.7099609375
+            ],
+            "dx": -43.2499885559082
+          },
+          {
+            "source_trace_index": 290,
+            "source_origin": [
+              173.54600524902344,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 291,
+            "source_origin": [
+              196.32199096679688,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 292,
+            "source_origin": [
+              216.45797729492188,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 293,
+            "source_origin": [
+              261.7699890136719,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 294,
+            "source_origin": [
+              324.8179931640625,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 295,
+            "source_origin": [
+              339.20599365234375,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 296,
+            "source_origin": [
+              359.3420104980469,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 297,
+            "source_origin": [
+              380.69000244140625,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 298,
+            "source_origin": [
+              416.89398193359375,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 299,
+            "source_origin": [
+              430.32196044921875,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 300,
+            "source_origin": [
+              461.7379455566406,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 301,
+            "source_origin": [
+              476.8339538574219,
+              280.8699951171875
+            ],
+            "dx": -19.82400131225586
+          },
+          {
+            "source_trace_index": 467,
+            "source_origin": [
+              513.2979736328125,
+              406.1999816894531
+            ],
+            "dx": -28.621994018554688
+          },
+          {
+            "source_trace_index": 468,
+            "source_origin": [
+              535.833984375,
+              406.1999816894531
+            ],
+            "dx": -28.621994018554688
+          },
+          {
+            "source_trace_index": 469,
+            "source_origin": [
+              559.3299560546875,
+              406.1999816894531
+            ],
+            "dx": -28.621994018554688
+          },
+          {
+            "source_trace_index": 487,
+            "source_origin": [
+              310.427978515625,
+              420.3599853515625
+            ],
+            "dx": 7.124004364013672
+          },
+          {
+            "source_trace_index": 488,
+            "source_origin": [
+              360.53997802734375,
+              420.3599853515625
+            ],
+            "dx": 7.124004364013672
+          },
+          {
+            "source_trace_index": 489,
+            "source_origin": [
+              374.1839904785156,
+              420.3599853515625
+            ],
+            "dx": 7.124004364013672
+          },
+          {
+            "source_trace_index": 490,
+            "source_origin": [
+              402.2519836425781,
+              420.3599853515625
+            ],
+            "dx": 7.124004364013672
+          },
+          {
+            "source_trace_index": 491,
+            "source_origin": [
+              450.73199462890625,
+              420.3599853515625
+            ],
+            "dx": 7.124004364013672
+          },
+          {
+            "source_trace_index": 504,
+            "source_origin": [
+              539.968017578125,
+              420.3599853515625
+            ],
+            "dx": -57.2700080871582
+          },
+          {
+            "source_trace_index": 505,
+            "source_origin": [
+              559.3840942382812,
+              420.3599853515625
+            ],
+            "dx": -57.2700080871582
+          }
+        ],
+        "expected_native_glyphs": 821,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.9550323486328125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page02.qa.json",
+      "qa_sha256": "29c9b4f14ef3e5d487b07ecf3c93680aaa4b1d76816f97368d6b3a8c373e8f79",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page02-native-ink.json",
+      "original_native_ink_sha256": "0ecd6af1e6a4a9731784a87c724a80d45d3bc6eac9886f9ec333cb3d9a30eb9f"
+    },
+    {
+      "page": 3,
+      "proof_sha256": "bfa2059944681d639d2b73168a48dab06ba5c197a26af24922cdc106f3916772",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 3,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 950,
+        "shifted_top_level_glyphs": 129,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 103,
+        "shifted_reviewed_vector_paths": 2,
+        "unchanged_white_background_panels_ignored": 5,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c2ffb550ff342ba2b0145bcf74620c3d8472ee4c14e4cbe91f463978e787281f",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 402,
+            "source_origin": [
+              402.3680114746094,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 403,
+            "source_origin": [
+              415.2920227050781,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 404,
+            "source_origin": [
+              441.6800231933594,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 405,
+            "source_origin": [
+              457.25604248046875,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 406,
+            "source_origin": [
+              475.4720764160156,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 407,
+            "source_origin": [
+              513.3681030273438,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 408,
+            "source_origin": [
+              526.7841186523438,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 409,
+            "source_origin": [
+              535.6521606445312,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 410,
+            "source_origin": [
+              559.148193359375,
+              409.79998779296875
+            ],
+            "dx": -33.947998046875
+          },
+          {
+            "source_trace_index": 723,
+            "source_origin": [
+              559.4199829101562,
+              745.1759643554688
+            ],
+            "dx": -41.635498046875
+          }
+        ],
+        "expected_native_glyphs": 1232,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.6702880859375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page03.qa.json",
+      "qa_sha256": "dc256429bd48cbff99048a961562e7116b1ce8953d9553c13c21cdd560ec93a0",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page03-native-ink.json",
+      "original_native_ink_sha256": "b184d67dc70a4031be70268c31cd2ca961f94a33879d8c3463ef5979919e8969"
+    },
+    {
+      "page": 4,
+      "proof_sha256": "6a90bfedebf1ce23d7b7bbe39d40ce28515ebfd84169b0edc51959803223f322",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 4,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 733,
+        "shifted_top_level_glyphs": 88,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 62,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "52d35a774f37cb8e21c2964f95f221a3057d31202597aa19c08e1ef4c06750b0",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 237,
+            "source_origin": [
+              386.2879943847656,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 238,
+            "source_origin": [
+              407.6239929199219,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 239,
+            "source_origin": [
+              433.7359924316406,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 240,
+            "source_origin": [
+              472.5920104980469,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 241,
+            "source_origin": [
+              503.5160217285156,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 242,
+            "source_origin": [
+              516.4640502929688,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 243,
+            "source_origin": [
+              527.2400512695312,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 244,
+            "source_origin": [
+              540.8960571289062,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 245,
+            "source_origin": [
+              559.112060546875,
+              412.67999267578125
+            ],
+            "dx": -101.98800659179688
+          },
+          {
+            "source_trace_index": 268,
+            "source_origin": [
+              466.4779968261719,
+              426.5999755859375
+            ],
+            "dx": -144.4759864807129
+          },
+          {
+            "source_trace_index": 269,
+            "source_origin": [
+              488.0419921875,
+              426.5999755859375
+            ],
+            "dx": -144.4759864807129
+          },
+          {
+            "source_trace_index": 270,
+            "source_origin": [
+              504.3739929199219,
+              426.5999755859375
+            ],
+            "dx": -144.4759864807129
+          },
+          {
+            "source_trace_index": 271,
+            "source_origin": [
+              548.2700805664062,
+              426.5999755859375
+            ],
+            "dx": -144.4759864807129
+          },
+          {
+            "source_trace_index": 272,
+            "source_origin": [
+              559.298095703125,
+              426.5999755859375
+            ],
+            "dx": -144.4759864807129
+          },
+          {
+            "source_trace_index": 357,
+            "source_origin": [
+              373.7959899902344,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 358,
+            "source_origin": [
+              406.3999938964844,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 359,
+            "source_origin": [
+              424.61602783203125,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 360,
+            "source_origin": [
+              454.1000671386719,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 361,
+            "source_origin": [
+              481.424072265625,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 362,
+            "source_origin": [
+              492.69207763671875,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 363,
+            "source_origin": [
+              501.5600891113281,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 364,
+            "source_origin": [
+              525.5241088867188,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 365,
+            "source_origin": [
+              549.9801635742188,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 366,
+            "source_origin": [
+              559.076171875,
+              502.219970703125
+            ],
+            "dx": -116.97600173950195
+          },
+          {
+            "source_trace_index": 380,
+            "source_origin": [
+              158.18600463867188,
+              516.3800048828125
+            ],
+            "dx": -4.320003509521484
+          },
+          {
+            "source_trace_index": 390,
+            "source_origin": [
+              402.3799743652344,
+              516.3800048828125
+            ],
+            "dx": -12.906002044677734
+          },
+          {
+            "source_trace_index": 434,
+            "source_origin": [
+              311.3999938964844,
+              530.5399780273438
+            ],
+            "dx": -7.189544677734375
+          },
+          {
+            "source_trace_index": 575,
+            "source_origin": [
+              411.260009765625,
+              626.8099975585938
+            ],
+            "dx": -15.89569091796875
+          },
+          {
+            "source_trace_index": 576,
+            "source_origin": [
+              437.6239929199219,
+              626.8099975585938
+            ],
+            "dx": -15.89569091796875
+          },
+          {
+            "source_trace_index": 577,
+            "source_origin": [
+              455.3600158691406,
+              626.8099975585938
+            ],
+            "dx": -15.89569091796875
+          },
+          {
+            "source_trace_index": 578,
+            "source_origin": [
+              491.08404541015625,
+              626.8099975585938
+            ],
+            "dx": -15.89569091796875
+          }
+        ],
+        "expected_native_glyphs": 941,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.6702880859375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page04.qa.json",
+      "qa_sha256": "5f0e4aef97bd223076cf4caa4615a4de2fc7b2a2e86142637c88ba27e907a340",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page04-native-ink.json",
+      "original_native_ink_sha256": "222e76bccc434ae5148bb6e25fd596dd5412b2a696cae37e0b28d93c427cd556"
+    },
+    {
+      "page": 5,
+      "proof_sha256": "1dbdaf3c810eee77531c06c6102aa15e766619b96a873ad8caf0e542628b4e9c",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 5,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 977,
+        "shifted_top_level_glyphs": 104,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 91,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "6fdd34cc2d41dd70d613b10d6484f45c20945944507e3498015c5d3f12351577",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 206,
+            "source_origin": [
+              559.4199829101562,
+              249.66998291015625
+            ],
+            "dx": -132.85952758789062
+          },
+          {
+            "source_trace_index": 251,
+            "source_origin": [
+              216.7779998779297,
+              283.989990234375
+            ],
+            "dx": -30.14600372314453
+          }
+        ],
+        "expected_native_glyphs": 1150,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.9550323486328125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.9550323486328125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page05.qa.json",
+      "qa_sha256": "8c5c484f7890b8d3238b4c1b8c7de27e632446289fb591f5c39fec7aebf38266",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page05-native-ink.json",
+      "original_native_ink_sha256": "c2ca65dce641f73e4498ea402135b30271caaa43898e69b7d119369a3ed3340c"
+    },
+    {
+      "page": 6,
+      "proof_sha256": "998473678da5c95b2fc0d4681fefa09192cde85a556f7ec1409a64c46462ce03",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 6,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 957,
+        "shifted_top_level_glyphs": 93,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 60,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "a3675a6407e43ef6759f75c5c39f4378367fea0d07e7047c69040df51cfa48af",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1085,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.288818359375e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.288818359375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page06.qa.json",
+      "qa_sha256": "334b8ba9c83c08a8bbe46b41bd7b4d30f89c8d70738edf733a4a27c73466fc8b",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page06-native-ink.json",
+      "original_native_ink_sha256": "78117566b8739bb0b5c6c13f57f0e3b7cff2235f337f2eb0d141f71677e0f761"
+    },
+    {
+      "page": 7,
+      "proof_sha256": "98984164ce674dbc95dad4722a348bf7d4bc25bbbc91000aa97ece074b8e4c24",
+      "source_pdf_sha256": "389e0250c9d9a7dd637a7b0656b2e7e0508c0ea3fa550ec7de24fd75b6963b8b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 7,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 90,
+        "shifted_top_level_glyphs": 45,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 110,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            149,
+            150
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "05fa07adf23efd0c8332f7b3e6e51f512b1d8e2b2bc427d4dfdf9cee634d5733",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 50,
+            "source_origin": [
+              348.6199951171875,
+              111.13995361328125
+            ],
+            "dx": -37.94548034667969
+          },
+          {
+            "source_trace_index": 109,
+            "source_origin": [
+              304.20001220703125,
+              152.45001220703125
+            ],
+            "dx": -5.180023193359375
+          }
+        ],
+        "expected_native_glyphs": 430,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 7.62939453125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 7.62939453125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2025/T/natural-spacing/page07.qa.json",
+      "qa_sha256": "63bf6228e86c791f93327d5bc5dbe6b871bf92635f8835c30b2d5385c145416b",
+      "original_native_ink": "tools/ko/izho/2025/T/natural-spacing/page07-native-ink.json",
+      "original_native_ink_sha256": "bf797525eb5bd11f285821d9ac0e05d072cbaf71f122e686a6a6aac40c7f7f8e"
+    }
+  ],
+  "source_ready": "tools/ko/izho/2025/T/natural-spacing/source-ready.json",
+  "source_ready_sha256": "0420e07d2f1c3f75146caa563e11f84f28a218c74d2f55d500a99348f3a43c0e",
+  "visual_review": "tools/ko/izho/2025/T/natural-spacing/visual-review.json",
+  "visual_review_sha256": "e8cefe34602a39c828747e3d1eba3859158ac9ff984e76e226df7f102c4a4084",
+  "authoring_snapshotroot": "tools/ko/izho/2025/T/natural-spacing/authoring",
+  "authoring_snapshot_sha256": {
+    "tools\\izho_natural_spacing.py": "46d5123b66bc15083868687fbb5abe8b60b36c02d6fb8e7e3726efc6e9bdb773",
+    "tools\\pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_text_motion_ink.py": "556bdea67fc2851273f03c1ed205a25bdfda98c4967c86059a65ad15fa718690",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\izho_natural_spacing_rebuild.py": "82f03151b4610f2f22ffeccaab1cd8ad6f3d461870ffbb71870dc0e0435f2ca0",
+    "tools\\izho_natural_spacing_qa.py": "b34ddb267f9f4b715835abcfd73f689d7ce2a5c2ade5fb848b0bd2d0c3a2311f",
+    "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
+    "tools\\izho_natural_spacing_ready.py": "37c4e9aecdba28bedb92e3744bc230fdf156478190afa89df964eba33c69b3f8",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools\\test_izho_natural_spacing.py": "81fd37809b234b39bec14d3dab6d4b399b71db4ecafd662ea125e98745bd6d48",
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2"
+  },
+  "extra_evidence": []
+}

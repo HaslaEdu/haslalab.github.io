@@ -29,62 +29,49 @@
   },
   {
     "file": "CPhO_2006_T_EN.pdf",
-    "pages": 4,
-    "bytes": 931429,
-    "sha256": "041642afe4d01d11e20c324a9bc091a0a327231467b9e66447369a0f3e780b56",
-    "qa": "tools/ko/cpho/2006/original/qa-en-same-face.json",
-    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2006\\editions\\CPhO_2006_T_EN.pdf",
-    "audit_schema": "cpho-same-face-problems",
     "language": "en",
-    "poppler_qa": "tools/ko/cpho/2006/original/qa-en-same-face-poppler.json",
-    "raster_caption_provenance": "tools/ko/cpho/2006/original/raster-caption-provenance.json",
-    "source_notes": "tools/ko/cpho/2006/original/source-notes.json",
+    "pages": 4,
+    "bytes": 897533,
+    "sha256": "cfac26ceba92e599d1f747a1d2272620b28412ef994a89ff24b6664066d81c9b",
+    "qa": "tools/ko/cpho/2006/T/natural-spacing/en/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\editions\\CPhO_2006_T_EN.pdf",
+    "audit_schema": "natural-spacing-cpho",
     "aliases": [
       "CPhO_2006_T_BAUPC_EN.pdf"
-    ],
-    "font_policy": "tools/ko/cpho/2006/original/english-face-policy.json"
+    ]
   },
   {
     "file": "CPhO_2006_T_KO.pdf",
-    "pages": 4,
-    "bytes": 551434,
-    "sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
-    "qa": "tools/ko/cpho/2006/original/qa-ko.json",
-    "generated_file": "tmp/original-style-repair/2006/editions/CPhO_2006_T_KO.pdf",
-    "audit_schema": "cpho-native-raster-problems",
     "language": "ko",
-    "poppler_qa": "tools/ko/cpho/2006/original/qa-poppler.json",
-    "raster_caption_provenance": "tools/ko/cpho/2006/original/raster-caption-provenance.json",
-    "source_notes": "tools/ko/cpho/2006/original/source-notes.json"
+    "pages": 4,
+    "bytes": 3009107,
+    "sha256": "af8943f63916e46684e78289e8505f5ed3b06fa8c070ac11d5eb6a255c80a204",
+    "qa": "tools/ko/cpho/2006/T/natural-spacing/ko/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\editions\\CPhO_2006_T_KO.pdf",
+    "audit_schema": "natural-spacing-cpho"
   },
   {
     "file": "CPhO_2007_T_EN.pdf",
+    "language": "en",
     "pages": 4,
-    "bytes": 1258644,
-    "sha256": "f48bd7047f147f45585d6e4d58c95e597839028c7937fa45ce7c79ddb10fdee7",
-    "qa": "tools/ko/cpho/2007/original/qa-en-same-face.json",
-    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_EN.pdf",
-    "audit_schema": "cpho-same-face-problems",
+    "bytes": 1740897,
+    "sha256": "65e1effc40c26bf0581e9bfdf0cc708349ce76e07d8a27ecbf9f9051b20f1e6f",
+    "qa": "tools/ko/cpho/2007/T/natural-spacing/en/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_EN.pdf",
+    "audit_schema": "natural-spacing-cpho",
     "aliases": [
       "CPhO_2007_T_BAUPC_EN.pdf"
-    ],
-    "language": "en",
-    "poppler_qa": "tools/ko/cpho/2007/original/qa-en-same-face-poppler.json",
-    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
-    "font_policy": "tools/ko/cpho/2007/original/english-face-policy.json"
+    ]
   },
   {
     "file": "CPhO_2007_T_KO.pdf",
-    "pages": 4,
-    "bytes": 2498728,
-    "sha256": "7612c585b4419fa20eca486f2d83ccd69b65bf0ba11409b703d98c1608312db1",
-    "qa": "tools/ko/cpho/2007/original/qa-ko-same-face.json",
-    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_KO.pdf",
-    "audit_schema": "cpho-same-face-problems",
     "language": "ko",
-    "poppler_qa": "tools/ko/cpho/2007/original/qa-ko-same-face-poppler.json",
-    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
-    "font_policy": "tools/ko/cpho/2007/original/english-face-policy.json"
+    "pages": 4,
+    "bytes": 9762573,
+    "sha256": "758718e0c6351261d8def831859a2960859cea159d808cf1ef22da828e0b5f8a",
+    "qa": "tools/ko/cpho/2007/T/natural-spacing/ko/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\editions\\CPhO_2007_T_KO.pdf",
+    "audit_schema": "natural-spacing-cpho"
   },
   {
     "file": "CPhO_2013_T_EN.pdf",
@@ -145,91 +132,93 @@
   },
   {
     "file": "CPhO_2023_Combined_EN.pdf",
-    "pages": 36,
-    "bytes": 5780902,
-    "sha256": "ace65fc20c6704de037fc2dc8d549bc9699ed477d9753e2c04696a62b2b31e8e",
     "language": "en",
-    "qa": "tools/ko/cpho/2023/original/qa-en.json",
-    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2023\\strict-en\\editions\\CPhO_2023_Combined_EN.pdf",
-    "audit_schema": "cpho-original-combined",
-    "poppler_qa": "tools/ko/cpho/2023/original/qa-poppler-en.json",
-    "font_ink_qa": "tools/ko/cpho/2023/original/qa-fonts-en.json",
-    "visual_qa": "tools/ko/cpho/2023/original/visual-en.json",
-    "provenance": "tools/ko/cpho/2023/original/english-font-provenance.json"
+    "pages": 36,
+    "bytes": 16168223,
+    "sha256": "326f63909a4e846d985b3f1536e6bc72581e7d5f0db72c1c6431dddb492cc64e",
+    "qa": "tools/ko/cpho/2023/combined/natural-spacing/en/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2023\\natural-layout\\editions\\CPhO_2023_Combined_EN.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "CPhO_2023_Combined_KO.pdf",
-    "pages": 36,
-    "bytes": 43734229,
-    "sha256": "c312c828202d236f51baa799e5828e79693316921ef2b7647a57f449e0c6a6c4",
-    "qa": "tools/ko/cpho/2023/original/qa-ko.json",
-    "generated_file": "tmp/original-style-repair/2023/editions/CPhO_2023_Combined_KO.pdf",
-    "audit_schema": "cpho-original-combined",
     "language": "ko",
-    "poppler_qa": "tools/ko/cpho/2023/original/qa-poppler-ko.json",
-    "font_ink_qa": "tools/ko/cpho/2023/original/qa-fonts-ko.json",
-    "visual_qa": "tools/ko/cpho/2023/original/visual-ko.json",
-    "hangul_qa": "tools/ko/cpho/2023/original/qa-hangul.json"
+    "pages": 36,
+    "bytes": 64788804,
+    "sha256": "361e0c87728eb847cf837c393f81ae3bc4be7b6444853365e4d69e582e54981f",
+    "qa": "tools/ko/cpho/2023/combined/natural-spacing/ko/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2023\\natural-layout\\editions\\CPhO_2023_Combined_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2010_T_KO.pdf",
+    "language": "ko",
     "pages": 5,
-    "bytes": 2833967,
-    "sha256": "570cd8a1430268a73e7261cfea0158740c7f70291bc89c72b9cefbaa3e2b001f",
-    "qa": "tools/qa/original-style/IZhO_2010_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2010_T_KO.pdf"
+    "bytes": 4421914,
+    "sha256": "f5a696827c8828c8d1223c2360ee3b422bf8370d2c02002a0b25809aa65bc2d7",
+    "qa": "tools/ko/izho/2010/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2010_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2011_T_KO.pdf",
+    "language": "ko",
     "pages": 6,
-    "bytes": 3483002,
-    "sha256": "f0ee3c03e8f655f81b5b646987eaaba9804fe5e982a4f2bd5e64201ad5a15af3",
-    "qa": "tools/qa/original-style/IZhO_2011_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2011_T_KO.pdf"
+    "bytes": 5318554,
+    "sha256": "4cdc2332b732c518053531ca94eec2726dec2940a83497e901694e985efaea8f",
+    "qa": "tools/ko/izho/2011/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2011_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2013_T_KO.pdf",
+    "language": "ko",
     "pages": 4,
-    "bytes": 2932009,
-    "sha256": "f2a13308d8853dff444b36dd2f7bb5a0855a3ab01202111ae594661c22c6aeb0",
-    "original_style": true,
-    "qa": "tools/qa/original-style/IZhO_2013_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2013_T_KO.pdf"
+    "bytes": 4254045,
+    "sha256": "6d2113323271773afafddd133faf62de12e7e0b6e576df9077e8d00e54861424",
+    "qa": "tools/ko/izho/2013/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2013_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2015_T_KO.pdf",
+    "language": "ko",
     "pages": 5,
-    "bytes": 3580016,
-    "sha256": "27bbd0ee97961d7462f25707c8a268c44e57ee4f5498bbdeb59e4ffc93af71aa",
-    "qa": "tools/qa/original-style/IZhO_2015_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2015_T_KO.pdf"
+    "bytes": 5255630,
+    "sha256": "7980a336304f4a54abf8f7dbdc6f19513c600390ae7132800b1cd71c1fa38eb8",
+    "qa": "tools/ko/izho/2015/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2015_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2016_T_KO.pdf",
+    "language": "ko",
     "pages": 6,
-    "bytes": 3667131,
-    "sha256": "73de2de1684d429b1c5eb921d47689e038165bf6a88f5864fe6bfbaf95b8f3b8",
-    "qa": "tools/qa/original-style/IZhO_2016_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2016_T_KO.pdf"
+    "bytes": 5017049,
+    "sha256": "69c06c267b0becbb6ee32bb46b4e38fa64b4fd49b52d9cbf4946ed10b1828512",
+    "qa": "tools/ko/izho/2016/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2016_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2020_T_KO.pdf",
+    "language": "ko",
     "pages": 5,
-    "bytes": 3261235,
-    "sha256": "fe08ad7d3d3db5399c5f72e62c99d76622e6906fca47a474bb847c22ffbb7d09",
-    "qa": "tools/qa/original-style/IZhO_2020_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2020_T_KO.pdf"
+    "bytes": 4815461,
+    "sha256": "87da88b9270f992bdd738629fb3b9ee1fd68379c4ee6666474877b07375ffaa6",
+    "qa": "tools/ko/izho/2020/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2020_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2021_TS_KO.pdf",
+    "language": "ko",
     "pages": 16,
-    "bytes": 36281410,
-    "sha256": "dcc72d0162266ade439cf54ac81ba55bae2f639d9e69f257029190d3f3fdb25f",
-    "qa": "tools/qa/original-style/IZhO_2021_TS_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2021_TS_KO.pdf",
-    "audit_schema": "legacy-reviewed-ready",
-    "hangul_qa": "tools/qa/original-style/IZhO_2021_TS_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2021/TS/original_style/native-ascii-audit.json"
+    "bytes": 40005618,
+    "sha256": "8d5036e681319d0748feec60d40e9e383ca29bb5711af047661b7d6df7592e88",
+    "qa": "tools/ko/izho/2021/TS/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\editions\\IZhO_2021_TS_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2021_T_KO.pdf",
@@ -244,14 +233,13 @@
   },
   {
     "file": "IZhO_2022_TS_KO.pdf",
+    "language": "ko",
     "pages": 15,
-    "bytes": 34474435,
-    "sha256": "bc47fddc9f1fb9846b16591a200acb9ef4d97277a31d24e49cdeeb63b5092895",
-    "qa": "tools/qa/original-style/IZhO_2022_TS_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2022_TS_KO.pdf",
-    "audit_schema": "legacy-reviewed-ready",
-    "hangul_qa": "tools/qa/original-style/IZhO_2022_TS_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2022/TS/original_style/native-ascii-audit.json"
+    "bytes": 38088128,
+    "sha256": "30b212bd5824817fdd96ecbce78bc1e78587d357f9d6c3a7a2c06605195721b4",
+    "qa": "tools/ko/izho/2022/TS/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\editions\\IZhO_2022_TS_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2022_T_KO.pdf",
@@ -277,14 +265,13 @@
   },
   {
     "file": "IZhO_2023_T_KO.pdf",
+    "language": "ko",
     "pages": 6,
-    "bytes": 14765998,
-    "sha256": "c7cc9ee694050524afd6a1b0675a20b5a65e992a6c6eec318a5ca2653d35f423",
-    "qa": "tools/qa/original-style/IZhO_2023_T_KO.qa.json",
-    "generated_file": "tmp/original-style-repair/2023/T/IZhO_2023_T_KO.pdf",
-    "audit_schema": "legacy-fixed-native",
-    "hangul_qa": "tools/qa/original-style/IZhO_2023_T_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2023/T/original_style/native-ascii-audit.json"
+    "bytes": 16485146,
+    "sha256": "c53adc0d8508907cb2aa62f599bf0830850d73db1049b0f1f10332ebfc5098bf",
+    "qa": "tools/ko/izho/2023/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2023_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2024_TS_KO.pdf",
@@ -299,14 +286,13 @@
   },
   {
     "file": "IZhO_2024_T_KO.pdf",
+    "language": "ko",
     "pages": 6,
-    "bytes": 17149596,
-    "sha256": "0c5d4060c432a1b0cc9676156eaf0821dc86474c710ecba47a7ed3ec5ef014c8",
-    "qa": "tools/qa/original-style/IZhO_2024_T_KO.qa.json",
-    "generated_file": "tmp/original-style-repair/2024/T/IZhO_2024_T_KO.pdf",
-    "audit_schema": "legacy-fixed-native",
-    "hangul_qa": "tools/qa/original-style/IZhO_2024_T_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2024/T/original_style/native-ascii-audit.json"
+    "bytes": 19368164,
+    "sha256": "15712ad31e30ff2686925f2a709f34caa2a8570b2bd59abcd116d107d4701772",
+    "qa": "tools/ko/izho/2024/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2024_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2025_TS_KO.pdf",
@@ -321,36 +307,32 @@
   },
   {
     "file": "IZhO_2025_T_KO.pdf",
+    "language": "ko",
     "pages": 7,
-    "bytes": 5508499,
-    "sha256": "16a6afed6cb36aa739345d101788242e1f261f4f1d268e1da07589446741bdca",
-    "qa": "tools/qa/original-style/IZhO_2025_T_KO.qa.json",
-    "generated_file": "tmp/original-style-repair/2025/T/IZhO_2025_T_KO.pdf",
-    "audit_schema": "legacy-fixed-native",
-    "hangul_qa": "tools/qa/original-style/IZhO_2025_T_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2025/T/original_style/native-ascii-audit.json"
+    "bytes": 7931069,
+    "sha256": "12a6bb27c548bedb9ad0d0934aa9755b363d6d4c61bd4a790f55e7245977ab51",
+    "qa": "tools/ko/izho/2025/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2025_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2026_TS_KO.pdf",
+    "language": "ko",
     "pages": 11,
-    "bytes": 8512469,
-    "sha256": "07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400",
-    "qa": "tools/qa/original-style/IZhO_2026_TS_KO.qa.json",
-    "generated_file": "tmp/original-style-repair/2026/TS/IZhO_2026_TS_KO.pdf",
-    "audit_schema": "native-outlines-and-control",
-    "hangul_qa": "tools/qa/original-style/IZhO_2026_TS_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2026/TS/original_style/native-ascii-audit.json"
+    "bytes": 12469774,
+    "sha256": "cf1e13b07d5ea5ead49cbb43596ad4988d120f8f712720f35904623bc526eafe",
+    "qa": "tools/ko/izho/2026/TS/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2026_TS_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   },
   {
     "file": "IZhO_2026_T_KO.pdf",
+    "language": "ko",
     "pages": 8,
-    "bytes": 6585384,
-    "sha256": "3217bd6317b40b46e1f36c357ef849ee78b999b8ddaac95a57928fda60c8511c",
-    "original_style": true,
-    "qa": "tools/qa/original-style/IZhO_2026_T_KO.qa.json",
-    "audit_schema": "native-outlines-and-control",
-    "hangul_qa": "tools/qa/original-style/IZhO_2026_T_KO.hangul.json",
-    "generated_file": "tmp/original-style-repair/2026/T/IZhO_2026_T_KO.pdf",
-    "native_ascii_qa": "tools/ko/izho/2026/T/original_style/native-ascii-audit.json"
+    "bytes": 9650879,
+    "sha256": "14160081877fe7c63651566185bcb60878ec7f5efd091366dba6599429b24f3a",
+    "qa": "tools/ko/izho/2026/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2026_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
   }
 ]

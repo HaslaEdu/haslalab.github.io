@@ -1,0 +1,53 @@
+{
+  "output_sha256": "449a5689713fa035c946399e701d66f3e6ed415fbae242d2bb41aa770c614bcf",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page02.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\page02.pdf",
+    "final_page": 1,
+    "source_sha256": "0eb38bc924e25d23248e471e406fd814ebc85b5d7943d92f5b3ed5f194504719",
+    "output_sha256": "449a5689713fa035c946399e701d66f3e6ed415fbae242d2bb41aa770c614bcf",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 149,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 149,
+      "expected_signature_count": 149,
+      "matched_outline_uses": 149,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 19075,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      204.0,
+      603.0,
+      204.25,
+      603.25
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "method": "One exact original Times-Roman comma SVG/native-font raster phase sample. Original encoded-byte reference at the measured destination is authoritative; global thresholds unchanged.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_original_CID_reference_missing_pixels": 0,
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2023\\T\\comma-phase-witness\\witness.json",
+    "witness_sha256": "0ebb7cac10ab126a701010f24deef9ec5b4ff7e0efa5c66b5b64b06b44fc74f0",
+    "original_font_resource": "/R18",
+    "original_encoded_CID": "2c",
+    "original_gid": 71,
+    "original_font": "Times-Roman",
+    "original_point_size": 12,
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2023/T/natural-spacing/witnesses/page02-native-cid.json"
+  }
+}

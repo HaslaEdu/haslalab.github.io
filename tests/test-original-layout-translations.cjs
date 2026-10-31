@@ -48,6 +48,14 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'natural-spacing-v2') {
+    require('./helpers/natural-spacing-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'natural-spacing-cpho') {
+    require('./helpers/cpho-natural-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'natural-spacing-reviewed') {
     assert.equal(qa.status, 'READY');
     assert.equal(qa.sha256, item.sha256);
@@ -83,6 +91,20 @@ for (const item of published) {
       assert.equal(ink.newly_missing_native_ink_pixels, 0);
       assert.deepEqual(ink.missing_final_native_glyphs, []);
       assert.deepEqual(ink.source_outline_audit.missing_source_outline_signatures, []);
+    }
+    if (qa.independent_native_script_geometry_audits) {
+      assert.equal(qa.independent_native_script_geometry_audits.length, item.pages);
+      for (const row of qa.independent_native_script_geometry_audits) {
+        const raw = fs.readFileSync(path.join(root, row.path));
+        assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), row.sha256);
+        const geometry = JSON.parse(raw);
+        assert.equal(geometry.passed, true);
+        assert.equal(geometry.final_sha256, qa.page_proofs.find(p => p.page === row.page).proof_sha256);
+        assert.deepEqual(geometry.glyph_signature_or_position_errors, []);
+        assert.deepEqual(geometry.relative_geometry_failures, []);
+        for (const pair of geometry.script_base_pairs) assert.equal(pair.passed, true);
+        for (const group of geometry.reviewed_expression_groups) assert.equal(group.passed, true);
+      }
     }
     const review = read(item.visual_qa);
     assert.ok(review);

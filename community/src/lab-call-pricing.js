@@ -39,7 +39,7 @@ export function deepseekLabUsage(response = {}, startedAt) {
   let cached = token(value.prompt_cache_hit_tokens ?? value.prompt_tokens_details?.cached_tokens);
   if (cached === null && miss !== null && input !== null && miss <= input) cached = input - miss;
   let known = input !== null && output !== null && cached !== null;
-  if (cached !== null && input !== null && (cached > input || miss !== null && cached + miss !== input)) known = false;
+  if (cached !== null && input !== null && (cached > input || miss !== null && cached + miss !== input)) { cached = null; known = false; }
   const resolved = modelId(response?.model);
   const result = { in: input, out: output, cached, usage_known: known, resolved_model: resolved, model_unknown: response?.model !== undefined && !resolved };
   if (typeof startedAt === 'number' && Number.isFinite(startedAt)) result.started_at = new Date(startedAt).toISOString();

@@ -6,6 +6,50 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function timers(){let id=0;const pending=new Map();return{pending,setTimeout(fn,ms){pending.set(++id,{fn,ms});return id;},clearTimeout(id){pending.delete(id);},async fire(){const [id,next]=pending.entries().next().value||[];if(!next)return;pending.delete(id);await next.fn();},delay(){return pending.values().next().value?.ms;}};}
 function documentStub(){const events=new Map();return{hidden:false,addEventListener:(n,fn)=>events.set(n,fn),removeEventListener:(n,fn)=>{if(events.get(n)===fn)events.delete(n);},change(hidden){this.hidden=hidden;events.get('visibilitychange')?.();},events};}
 
+test('reading failures distinguish provider/account/response problems without exposing arbitrary error text',()=>{
+  const cases={vision_provider_auth:/authentication/,vision_provider_credits:/API credit/,vision_provider_rate_limited:/request limit/,
+    vision_model_unavailable:/model is unavailable/,vision_request_rejected:/rejected the image request/,
+    vision_provider_failed:/server error/,vision_provider_timeout:/timed out/,vision_response_empty:/empty response/,
+    vision_response_truncated:/cut off/,vision_response_blocked:/restricted/,vision_invalid_response:/decoded/,
+    vision_response_schema:/fields/,ocr_bad_response:/fields/};
+  for(const [code,pattern]of Object.entries(cases)){
+    assert.match(Network.ocrErrorMessage(code,'en'),pattern);
+    assert.ok(Network.ocrErrorMessage(code,'ko'));
+    assert.doesNotMatch(Network.ocrErrorMessage(code,'en'),/retake|photograph it again/i,'a provider failure is not advice to photograph the page again');
+  }
+  for(const code of ['<img src=x onerror=alert(1)>','Bearer secret-key',{},null,'toString','__proto__'])assert.equal(Network.ocrErrorMessage(code),'');
+  assert.match(Network.ocrErrorMessage('ocr_storage_limit','en'),/storage limit/);
+});
+
+test('a changed reading failure refreshes the same page without resetting account/session scope',()=>{
+  const s={id:1,status:'scanning',paid:true,pages:[{id:3,ocr_status:'failed',ocr_error:'vision_provider_failed'}]};
+  assert.notEqual(Network.sessionSignature(s),Network.sessionSignature({...s,pages:[{...s.pages[0],ocr_error:'vision_provider_credits'}]}));
+});
+
+test('the actual phone page shows the stored provider reason even with an old good-legibility value',()=>{
+  const html=fs.readFileSync(require.resolve('../sim/scan.html'),'utf8'),source=html.slice(html.indexOf('function sentList()'),html.indexOf('function wireSent()'));
+  const escape=value=>String(value).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ctx=vm.createContext({NETWORK:Network,esc:escape,lang:'en',INFO:{open:true,pages:[{id:3,no:1,task:'T1',kind:'answer',ocr_status:'failed',ocr_error:'vision_provider_credits',legible:'good'}]},
+    t:()=>({sentH:'Sent',answer:'Answer',working:'Working',del:'Remove',ocr:{failed:'Reading failed'},legS:{good:'Read well'},ocrFailed:'Generic failure',none:'None'})});
+  vm.runInContext(source,ctx);const rendered=ctx.sentList();
+  assert.match(rendered,/insufficient API credit/);assert.match(rendered,/class="s poor"/);assert.doesNotMatch(rendered,/Read well|retake/);
+  ctx.INFO.pages[0].ocr_error='<script>private secret</script>';
+  assert.doesNotMatch(ctx.sentList(),/private secret|<script>/);
+});
+
+test('the actual exam page prioritizes a failed provider result and refreshes changed error categories',()=>{
+  const html=fs.readFileSync(require.resolve('../sim/exam.html'),'utf8'),source=html.slice(html.indexOf('function paintPages(s)'),html.indexOf('async function thumb('));
+  const nodes=new Map([['pages',{innerHTML:'',querySelectorAll:()=>[]}],['sub',{}]]);
+  const escape=value=>String(value).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ctx=vm.createContext({$:id=>nodes.get(id)||null,esc:escape,EXAM_NETWORK:Network,pagesSeen:'',lang:'en',
+    t:()=>({pagesH:'Pages',paid:'Paid',submit:'Submit',noEdit:'No editing',readH:'Reading',nothing:'No text',answer:'Answer',working:'Working',ocrFailed:'Generic failure',leg:{good:'Read well'}})});
+  vm.runInContext(source,ctx);const page={id:3,no:1,task:'T1',kind:'answer',ocr_status:'failed',ocr_error:'vision_response_truncated',legible:'good'};
+  const session={paid:true,tasks:['T1'],pages:[page]};ctx.paintPages(session);
+  assert.match(nodes.get('pages').innerHTML,/response was cut off/);assert.doesNotMatch(nodes.get('pages').innerHTML,/Read well/);
+  page.ocr_error='vision_provider_credits';ctx.paintPages(session);
+  assert.match(nodes.get('pages').innerHTML,/insufficient API credit/);
+});
+
 test('identical in-flight GETs share one request, while accounts, bases and mutations remain isolated',async()=>{
   let token='account-a',base='https://a.test',calls=[];const first=deferred();
   const transport=Network.createTransport({getToken:()=>token,getBase:()=>base,fetch:async(url,opts)=>{calls.push({url,...opts});return calls.length===1?first.promise:response({n:calls.length});}});
@@ -42,10 +86,10 @@ test('server timestamps alone do not reset backoff and OCR queue statuses stay u
   assert.equal(Network.reading({ocr_status:'reading'}),true);assert.equal(Network.reading({ocr_status:'done'}),false);assert.equal(Network.reading({source:'typed',ocr_status:'queued'}),false);
 });
 
-function examSyncContext(api,identity=()=> 'test-account',extra={}){
+function examSyncContext(api,identity=()=> 'test-account'){
   const source=fs.readFileSync(require.resolve('../sim/exam.html'),'utf8'),part=source.slice(source.indexOf('let syncPromise=null'),source.indexOf('\nasync function introView()'));
-  const context=vm.createContext({transport:{fingerprint:identity},requestEpoch:0,SES:null,ME:null,SKEW:0,LABOK:null,REG:null,shown:'',pagesSeen:'',imgCache:new Map(),imgPending:new Map(),URL:{revokeObjectURL(){}},stopTimers(){},OK_EXAM:true,REVIEW:false,KEY:'ipho2024',EX:{tasks:['E1']},tok:()=>identity(),api,document:{hidden:false,addEventListener(){}},addEventListener(){},poller:null,render(){context.renders=(context.renders||0)+1;},setSession(s){context.SES=s;},Date,encodeURIComponent});
-  Object.assign(context,{REG_EXAM:null,REG_ASKED:true},extra);vm.runInContext(part,context);return context;
+  const context=vm.createContext({transport:{fingerprint:identity},requestEpoch:0,SES:null,ME:null,SKEW:0,LABOK:null,REG:null,VISION:null,selectedProvider: "gemini",shown:'',pagesSeen:'',imgCache:new Map(),imgPending:new Map(),URL:{revokeObjectURL(){}},stopTimers(){},OK_EXAM:true,REVIEW:false,KEY:'ipho2024',EX:{tasks:['E1']},tok:()=>identity(),api,document:{hidden:false,addEventListener(){}},addEventListener(){},poller:null,render(){context.renders=(context.renders||0)+1;},setSession(s){context.SES=s;},Date,encodeURIComponent});
+  vm.runInContext(part,context);return context;
 }
 
 test('the real exam sync hydrates identity, balance, health and active clock in one deduplicated request',async()=>{
@@ -53,16 +97,6 @@ test('the real exam sync hydrates identity, balance, health and active clock in 
   const a=context.sync(),b=context.sync();assert.equal(a,b);assert.equal(calls.length,1);assert.match(calls[0].path,/^\/lab\/bootstrap\?include=health,pages$/);
   gate.resolve({user:{nickname:'Candidate'},tokens:4,parts:0,active:{id:2,exam_key:'ipho2024',tasks:['E1'],status:'running',started_at:100},health:{lab:true,lab_reg:{version:'test'}},now:Math.floor(Date.now()/1000)+30});await a;
   assert.equal(context.ME.nickname,'Candidate');assert.equal(context.ME.tokens,4);assert.equal(context.SES.id,2);assert.equal(context.LABOK,true);assert.ok(context.SKEW>=29&&context.SKEW<=31);assert.equal(context.renders,1);
-});
-
-test('the exam page asks once for the regulation of its own competition and papers',async()=>{
-  const calls=[],context=examSyncContext((method,path)=>{calls.push(path);return Promise.resolve(path.startsWith('/lab/regulation')
-    ?{regulation:{version:'v',family:'ioaa',title:{ko:'IOAA',en:'IOAA'},rules:[{id:'OB1',ko:'관측',en:'observation'}]}}
-    :{user:{nickname:'Candidate'},tokens:1,health:{lab:true,lab_reg:{version:'general',rules:[]}},now:Math.floor(Date.now()/1000)});},
-    undefined,{REG_ASKED:false,EX:{c:'ioaa',tasks:['D1','O1']},isThy:()=>false});
-  await context.sync();await flush();await context.sync();await flush();
-  assert.deepEqual(calls.filter(p=>p.startsWith('/lab/regulation')),['/lab/regulation?c=ioaa&e=D1%2CO1&t=0,0']);
-  assert.equal(context.REG.family,'ioaa','the competition rules replace the general ones and survive the next sync');
 });
 
 test('the real exam sync ignores an old account response after sign-out',async()=>{

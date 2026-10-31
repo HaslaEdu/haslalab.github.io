@@ -81,7 +81,7 @@ test('native monthly provenance is absent from the header while other contest at
 });
 
 function binding(context,p=clone(problem),ocr=false,withModes=false) {
-  const fields=new Map(),previews=new Map(),button={disabled:false},out={innerHTML:''},counter={textContent:''};
+  const fields=new Map(),previews=new Map(),button={disabled:false},out={innerHTML:''},counter={textContent:''},provider={value:'gemini',disabled:false};
   const typedPanel={hidden:false},photoPanel={hidden:true};
   const modes=['typed','photo'].map(sheetMode=>({dataset:{sheetMode},classList:{toggle(){}},setAttribute(name,value){this[name]=value;}}));
   for(const part of p.answerSheet.parts)for(const kind of ['answer','working']){
@@ -90,6 +90,7 @@ function binding(context,p=clone(problem),ocr=false,withModes=false) {
   }
   const form={photo_part:{value:'a'},querySelector(selector){
     if(selector==='button[type=submit]')return button;
+    if(selector==='[data-vision-provider]')return provider;
     if(selector==='.arsheet-typed')return typedPanel;if(selector==='.arsheet-photo')return photoPanel;
     let match=/^\[data-sheet-(answer|working)="([^"]+)"\]$/.exec(selector);if(match)return fields.get(`${match[1]}:${match[2]}`);
     match=/^\[data-sheet-(answer|working)-preview="([^"]+)"\]$/.exec(selector);if(match)return previews.get(`${match[1]}:${match[2]}`);
@@ -97,7 +98,7 @@ function binding(context,p=clone(problem),ocr=false,withModes=false) {
   },querySelectorAll:selector=>selector.startsWith('[data-sheet-answer]')?[...fields.values()]:selector==='[data-sheet-mode]'&&withModes?modes:[]};
   const root={querySelector:selector=>({'#arSheetF':form,'#arOut':out,'#arSheetAttempts':counter}[selector])};
   context.arBindMonthlyAnswer(root,p,()=>true,ocr);
-  return {form,fields,button,out,p,modes,typedPanel,photoPanel};
+  return {form,fields,button,out,p,modes,typedPanel,photoPanel,provider};
 }
 
 test('legacy photographed draft attachments remain deduplicated when reopened in LaTeX mode',async()=>{
@@ -254,11 +255,71 @@ test('a late scanner grant is hidden and revoked with original credentials after
 function scannerForm() {
   const capture=new Blob(['capture'],{type:'image/jpeg'}),clean=new Blob(['clean'],{type:'image/png'});
   const file={files:[capture],value:'',click(){}},info={hidden:true},destination={value:'',maxLength:16000,dataset:{sheetWorking:'a'},focus(){}},buttons={};
-  for(const key of ['original','clean','new','cancel','read'])buttons[key]={dataset:{photo:key}};
-  const box={hidden:true,innerHTML:'',querySelector:selector=>({'[data-new-photo]':buttons.new,'[data-cancel-photo]':buttons.cancel,'[data-read-photo]':buttons.read}[selector]),querySelectorAll:()=>[buttons.original,buttons.clean]};
+  for(const key of ['original','clean','new','cancel','read','fix'])buttons[key]={dataset:{photo:key}};
+  const box={hidden:true,innerHTML:'',querySelector:selector=>({'[data-new-photo]':buttons.new,'[data-cancel-photo]':buttons.cancel,'[data-read-photo]':buttons.read,'[data-fix-photo]':buttons.fix}[selector]),querySelectorAll:()=>[buttons.original,buttons.clean]};
   const form={math:{checked:true},querySelector:selector=>({'input[type=file]':file,'.arinfo':info,'.arshot':box,'textarea':destination}[selector])};
-  return {form,file,info,destination,buttons,capture,clean};
+  return {form,file,info,destination,buttons,capture,clean,box};
 }
+
+test('generic photo OCR displays a provider credit error without calling it a bad photo or exposing provider text',async()=>{
+  const {context}=app(),fixture=scannerForm();
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async()=>({ok:false,json:async()=>({error:'vision_provider_credits',message:'private-provider-secret-body'})});
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>assert.fail('failed reading cannot produce answers'));
+  await fixture.file.onchange();await fixture.buttons.read.onclick();
+  assert.match(fixture.info.textContent,/API 잔액/);assert.doesNotMatch(fixture.info.textContent,/다시 찍|private-provider|secret/);
+});
+
+test('monthly capture pages display stored response failures while unknown diagnostic text remains hidden',async()=>{
+  const {context}=app(),ui=captureFixture(context);
+  const scan={id:'scan-error',open:true,status:'scanning',revision:1,pages:[{id:'photo-1',page_no:1,ocr_status:'failed',ocr_error:'vision_response_empty',text:''}],parts:[]};
+  context.cmApi=async()=>({scan:clone(scan)});
+  const controller=context.arBindMonthlyCapture(ui.root,clone(problem),()=>true);await controller.start();
+  const message=ui.pages.innerHTML.match(/<span class="arnote">([^<]+)<\/span>/)[1];
+  assert.match(message,/응답이 비어/);assert.doesNotMatch(message,/다시 촬영/);
+  scan.pages[0].ocr_error='<script>private-provider-error</script>';scan.revision++;
+  await controller.refresh(true);
+  assert.doesNotMatch(ui.pages.innerHTML,/private-provider-error|<script>/);controller.dispose();
+});
+
+test('generic and exam error categories share the same safe bilingual explanations',()=>{
+  const {context}=app(),Network=require('../sim/exam-network.js');
+  for(const lang of ['ko','en']){
+    context.lang=lang;
+    for(const code of ['vision_provider_auth','vision_provider_credits','vision_provider_rate_limited','vision_model_unavailable',
+      'vision_request_rejected','vision_provider_failed','vision_provider_timeout','vision_response_empty','vision_response_truncated',
+      'vision_response_blocked','vision_invalid_response','vision_response_schema','ocr_bad_response','ocr_storage_limit'])
+      assert.equal(context.arVisionError(code),Network.ocrErrorMessage(code,lang));
+    assert.equal(context.arVisionError('<script>provider-secret</script>'),'');
+  }
+});
+
+test('an uncorrected camera photo is not called a scan; corner confirmation makes and uploads a corrected color image',async()=>{
+  const {context}=app(),fixture=scannerForm(),corners=[{x:20,y:10},{x:80,y:10},{x:20,y:110},{x:80,y:110}];let rendered=0,uploaded;
+  context.testScanner={canProcess:()=>true,MARKER_INSET:.02,processShot:async(_file,options)=>{
+    assert.equal(options.mode,'color');return{blob:fixture.capture,baseUrl:'data:original',corners,warpApplied:false,outputFormat:'auto'};
+  },editCorners:async()=>({corners,marker:false,pageFormat:'auto'}),reprocess:async(base,points,mode,_dpi,inset,options)=>{
+    rendered++;assert.equal(base,'data:original');assert.deepEqual(clone(points),corners);assert.equal(mode,'color');assert.equal(inset,null);assert.equal(options.preserveOriginal,false);
+    return{blob:fixture.clean,warpApplied:true,outputFormat:'auto'};
+  },encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(_url,options)=>{uploaded=await options.body.get('image').text();return{ok:true,json:async()=>({text:'recognized working'})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),text=>fixture.destination.value=text);
+  await fixture.file.onchange();assert.doesNotMatch(fixture.box.innerHTML,/data-photo="clean"/);assert.match(fixture.box.innerHTML,/스캔 만들기/);
+  await fixture.buttons.fix.onclick();assert.equal(rendered,1);assert.match(fixture.box.innerHTML,/data-photo="clean"/);
+  await fixture.buttons.read.onclick();assert.equal(uploaded,'clean');
+});
+
+test('cancelling a camera photo aborts its corner editor and prevents a late crop from reappearing',async()=>{
+  const {context}=app(),fixture=scannerForm();let finish,signal,crops=0;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.capture,baseUrl:'data:original',corners:[],warpApplied:false}),
+    editCorners:async(_base,_corners,options)=>{signal=options.signal;return new Promise(resolve=>finish=resolve);},reprocess:async()=>{crops++;}};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>{});
+  await fixture.file.onchange();const pending=fixture.buttons.fix.onclick();await new Promise(resolve=>setImmediate(resolve));
+  fixture.buttons.cancel.onclick();assert.equal(signal.aborted,true);finish({corners:[],marker:false});await pending;
+  assert.equal(crops,0);assert.equal(fixture.box.innerHTML,'');
+});
 
 test('monthly OCR sends the selected scan and a separately preserved capture with bearer authorization',async()=>{
   const {context}=app(),fixture=scannerForm(),encoded=[];let request,result;
@@ -268,12 +329,23 @@ test('monthly OCR sends the selected scan and a separately preserved capture wit
   context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,destination,response)=>{result={text,destination,response};destination.value=text;},
     {target:()=>fixture.destination,request:destination=>({path:'/monthly/problems/4/photos',fields:{part_id:destination.dataset.sheetWorking},original:true})});
   await fixture.file.onchange();await fixture.buttons.read.onclick();
-  assert.equal(request.url,'https://api.test/api/monthly/problems/4/photos?mode=math');
+  assert.equal(request.url,'https://api.test/api/monthly/problems/4/photos?mode=math&provider=gemini');
   assert.equal(request.options.headers.Authorization,'Bearer owner-token');assert.ok(!request.url.includes('owner-token'));
   assert.equal(await request.options.body.get('image').text(),'clean');
   assert.equal(await request.options.body.get('original_image').text(),'capture');
   assert.equal(request.options.body.get('part_id'),'a');assert.equal(encoded.length,2);
   assert.equal(result.response.photo_id,'photo-1');assert.equal(result.destination,fixture.destination);
+});
+
+test('another-tab account change aborts the open photo corner editor and removes its private preview',async()=>{
+  const {context,setAuth,emit}=app(),fixture=scannerForm();let finish,signal,crops=0;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.capture,baseUrl:'data:original',corners:[],warpApplied:false}),
+    editCorners:async(_base,_corners,options)=>{signal=options.signal;return new Promise(resolve=>finish=resolve);},reprocess:async()=>{crops++;}};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>{});
+  await fixture.file.onchange();const pending=fixture.buttons.fix.onclick();await new Promise(resolve=>setImmediate(resolve));
+  setAuth('other-account');emit('storage');assert.equal(signal.aborted,true);finish({corners:[],marker:false});await pending;
+  assert.equal(crops,0);assert.equal(fixture.box.innerHTML,'');assert.equal(fixture.box.hidden,true);
 });
 
 test('photo reading does not attach a response to a different signed-in account',async()=>{
@@ -294,8 +366,50 @@ test('legacy photo OCR keeps its existing endpoint and sends no monthly capture 
   context.fetch=async(url,options)=>{request={url,options};return{ok:true,json:async()=>({text:'legacy working'})};};
   context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,destination)=>{(destination||fixture.destination).value=text;});
   await fixture.file.onchange();await fixture.buttons.read.onclick();
-  assert.equal(request.url,'https://api.test/api/ocr?mode=math');assert.equal(request.options.body.has('original_image'),false);
+  assert.equal(request.url,'https://api.test/api/ocr?mode=math&provider=gemini');assert.equal(request.options.body.has('original_image'),false);
   assert.equal(fixture.destination.value,'legacy working');
+});
+
+test('explicit photo OCR sends and pins the selected available provider without model names or cross-account requests',async()=>{
+  const {context,setAuth}=app(),fixture=scannerForm(),capabilities={vision:{providers:[{id:'deepseek',available:true,model:'private-model'},{id:'gemini',available:true}]}};let request,pinned;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(url,options)=>{request={url,options};return{ok:true,json:async()=>({text:'Visible graph and answer',provider:'deepseek'})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),text=>{fixture.destination.value=text;},{provider:()=> 'deepseek',capabilities,onProviderPinned:value=>pinned=value});
+  await fixture.file.onchange();assert.equal(request,undefined,'file choice is local only');await fixture.buttons.read.onclick();
+  assert.match(request.url,/provider=deepseek$/);assert.equal(request.options.body.get('provider'),'deepseek');assert.equal(pinned,'deepseek');assert.equal(fixture.destination.value,'Visible graph and answer');
+  const stale=scannerForm();let encode,network=0;context.testScanner.encodeUpload=()=>new Promise(resolve=>encode=resolve);context.fetch=async()=>{network++;return{ok:true,json:async()=>({text:'stale'})};};
+  context.arBindAnswerPhoto(stale.form,()=>true,vm.runInContext('arT()',context),()=>assert.fail('stale OCR rendered'),{provider:()=> 'deepseek',capabilities});
+  await stale.file.onchange();const pending=stale.buttons.read.onclick();await new Promise(done=>setImmediate(done));setAuth('new-owner');encode(stale.clean);await pending;assert.equal(network,0);
+});
+
+test('graph-only photo evidence reaches the callback without invented transcription or an empty OCR failure',async()=>{
+  const {context}=app(),fixture=scannerForm();let received,request;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(url)=>{request=url;return{ok:true,json:async()=>({text:'',photo_id:'owned-photo',visuals:[{page:1,kind:'direction',description:'blue arrow'}]})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,_target,result)=>{received={text,result};},{problemId:7});
+  await fixture.file.onchange();await fixture.buttons.read.onclick();
+  assert.equal(request,'https://api.test/api/ocr?mode=math&provider=gemini&problem_id=7');
+  assert.equal(received.text,'');assert.equal(received.result.photo_id,'owned-photo');assert.match(fixture.info.textContent,/그림 답안/);
+  assert.match(context.arSheetWorkingPreview('[PHOTO:11111111-1111-4111-8111-111111111111:a]'),/사진의 그래프/);
+});
+
+test('monthly QR grants use the chosen server provider and renewal cannot override it in the URL',async()=>{
+  const {context}=app(),ui=captureFixture(context),requests=[],p=clone(problem);let choice='deepseek';p.vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]};
+  const scan={id:'capture-provider',token:'opaque-grant',provider:'deepseek',provider_locked:true,open:true,status:'scanning',revision:1,pages:[],parts:[]};
+  context.cmApi=async(method,path,body)=>{requests.push({method,path,body:clone(body)});return{scan:clone(scan)};};
+  const controller=context.arBindMonthlyCapture(ui.root,p,()=>true,{provider:()=>choice});await controller.start();assert.equal(requests[0].body.provider,'deepseek');
+  choice='gemini';await controller.start();assert.equal(requests[1].body.provider,'deepseek','renewing an existing grant uses its server-stored provider');
+  for(const value of ui.urls){const hash=new URLSearchParams(new URL(value).hash.slice(1));assert.equal(hash.has('provider'),false);assert.equal(hash.get('c'),'opaque-grant');}
+  controller.dispose();
+});
+
+test('photo answer submission locks to the provider already stored by the capture',async()=>{
+  const {context}=app(),p=clone(problem);p.vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]};let hooks,body;
+  const scan={id:'capture-deepseek',provider:'deepseek',provider_locked:true,open:true,status:'scanning',pages:[{id:'page',ocr_status:'done'}],parts:[{id:'a',answer:'42',working:'Drawn graph'}]};
+  context.arBindMonthlyCapture=(_form,_p,_alive,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},resume(){},pause(){},refresh(){},setBusy(value){hooks.onBusy(value);}};};
+  context.cmApi=async(_method,_path,payload)=>{body=clone(payload);return{status:'pending',attempts:{remaining:2}};};
+  const f=binding(context,p,true,true);f.provider.value='deepseek';f.modes[1].onclick();assert.equal(f.provider.value,'deepseek');assert.equal(f.provider.disabled,true);
+  await f.form.onsubmit({preventDefault(){}});assert.equal(body.provider,'deepseek');assert.equal(body.scan_id,'capture-deepseek');assert.equal(body.parts,undefined);
 });
 
 test('original photos are fetched privately, remain owner-scoped and release blob URLs on navigation',async()=>{

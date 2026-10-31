@@ -203,7 +203,7 @@
 <script src="../examdur.js?v=20261030-archives"></script>
 <script src="../paper-languages.js?v=1"></script>
 <script src="result-comparison.js?v=b2d9019528e0"></script>
-<script src="exam-network.js?v=470e9c866d5d"></script>
+<script src="exam-network.js?v=78b6a42ed001"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
@@ -462,13 +462,33 @@ const EXAM_NETWORK=window.HLExamNetwork,transport=EXAM_NETWORK.createTransport({
 let requestEpoch=0;
 function api(method,path,body){if(method!=='GET')requestEpoch++;return transport.request(method,path,body);}
 
-const errMsg = e => (t().err[e && e.code]) || (e && e.code) || "error";
+const errMsg = e => window.HLExamNetwork.ocrErrorMessage?.(e?.code,lang) || ({provider_required:lang==="ko"?"채점 제공자를 선택하세요.":"Choose a grading provider.",provider_locked:lang==="ko"?"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다.":"The provider is fixed once reading or grading starts.",provider_unavailable:lang==="ko"?"선택한 제공자를 현재 사용할 수 없습니다.":"This provider is currently unavailable."})[e?.code] || (t().err[e && e.code]) || (e && e.code) || "error";
 
 /* ── the session, as the server has it.  The server keeps the clock; this page only shows it.
       SES: the session; SKEW: server time minus this computer's time, so a wrong local clock does not matter. ── */
-let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null, REG_EXAM = null, REG_ASKED = false;
+let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null;
+let VISION = null, selectedProvider = "gemini";
+function providerAvailable(id) { return VISION?.providers?.some(p=>p.id===id&&p.available===true) ?? id==="gemini"; }
+function gradingProvider() { return SES?.provider_locked ? SES.provider : $("gradingProvider")?.value || SES?.provider || selectedProvider; }
+function providerHtml(session = SES) {
+  const chosen = session?.provider || selectedProvider;
+  return `<label style="display:block;margin:14px 0">${lang==="ko"?"OCR·채점·첨삭":"OCR, grading and feedback"} <select id="gradingProvider" aria-label="${lang==="ko"?"채점 제공자":"Grading provider"}" ${session?.provider_locked?"disabled":""} style="font:inherit;padding:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px">${["deepseek","gemini"].map(id=>`<option value="${id}" ${chosen===id?"selected":""} ${providerAvailable(id)?"":"disabled"}>${id}</option>`).join("")}</select></label>`;
+}
+function bindProvider() {
+  const select=$("gradingProvider");if(!select)return;
+  select.onchange=async()=>{
+    const provider=select.value,identity=transport.fingerprint(),id=SES?.id;
+    if(!providerAvailable(provider)||BUSY||SES?.provider_locked)return;
+    selectedProvider=provider;
+    if(!id)return;
+    select.disabled=true;
+    try{const r=await api("POST",`/lab/sessions/${id}/provider`,{provider});if(identity!==transport.fingerprint()||SES?.id!==id)return;setSession(r.session);}
+    catch(e){if(identity!==transport.fingerprint()||SES?.id!==id)return;select.value=SES.provider||"gemini";toast(errMsg(e));}
+    finally{if(identity===transport.fingerprint()&&SES?.id===id&&select.isConnected)select.disabled=!!SES.provider_locked;}
+  };
+}
 const srvNow = () => Math.floor(Date.now() / 1000) + SKEW;
-function setSession(s) { SES = s; if (s && s.now) SKEW = s.now - Math.floor(Date.now() / 1000); }
+function setSession(s) { SES = s;if(s?.vision)VISION=s.vision;if(["deepseek","gemini"].includes(s?.provider))selectedProvider=s.provider; if (s && s.now) SKEW = s.now - Math.floor(Date.now() / 1000); }
 /* the phone's upload token is shown once by the server; this computer keeps it per session.  Another computer
    (or a cleared browser) asks for a new one, which retires the old QR code. */
 const upKey = id => "hlExamUp:" + id;
@@ -531,7 +551,7 @@ function render() {
 }
 /* ask the server where things stand (on load, every half minute while running, and when the tab comes back) */
 let syncPromise=null,syncKey='',account=transport.fingerprint();
-function clearAccount(){if(account===transport.fingerprint())return;account=transport.fingerprint();requestEpoch++;ME=null;SES=null;shown='';pagesSeen='';for(const url of imgCache.values())URL.revokeObjectURL(url);imgCache.clear();imgPending.clear();stopTimers();render();}
+function clearAccount(){if(account===transport.fingerprint())return;account=transport.fingerprint();requestEpoch++;ME=null;SES=null;selectedProvider='gemini';shown='';pagesSeen='';for(const url of imgCache.values())URL.revokeObjectURL(url);imgCache.clear();imgPending.clear();stopTimers();render();}
 function sync(){
   clearAccount();const identity=transport.fingerprint(),epoch=requestEpoch,oldId=SES?.id,key=identity+'\n'+epoch+'\n'+(oldId||'');
   if(syncPromise&&syncKey===key)return syncPromise;syncKey=key;
@@ -543,7 +563,7 @@ function sync(){
       if(oldId)a.session=(await api('GET','/lab/sessions/'+oldId)).session;
     }
     if(identity!==transport.fingerprint()||epoch!==requestEpoch)return;
-    if(a.health){LABOK=!!a.health.lab;REG=REG_EXAM||a.health.lab_reg||REG;}if(LABOK&&!REG_ASKED&&OK_EXAM){REG_ASKED=true;loadRegulation();}if(Number.isFinite(a.now))SKEW=a.now-Math.floor(Date.now()/1000);
+    if(a.health){LABOK=!!a.health.lab;REG=a.health.lab_reg||REG;VISION=a.health.vision||a.health.arena?.vision||VISION;}if(a.vision)VISION=a.vision;if(Number.isFinite(a.now))SKEW=a.now-Math.floor(Date.now()/1000);
     ME=a.user?{...a.user,tokens:a.tokens,other:null}:null;
     if(!ME||LABOK===false){SES=null;return render();}
     if(a.session)setSession(a.session);
@@ -553,9 +573,6 @@ function sync(){
   }catch(e){if(identity!==transport.fingerprint()||epoch!==requestEpoch)return;if(e.status===401){ME=null;SES=null;}LABOK=LABOK===true?true:null;render();}})();
   syncPromise=promise;promise.finally(()=>{if(syncPromise===promise)syncPromise=null;});return promise;
 }
-/* the rules of this competition and these papers (theory, experiment, data analysis, observation) */
-function loadRegulation(){api('GET','/lab/regulation?c='+encodeURIComponent(EX.c)+'&e='+encodeURIComponent(EX.tasks.join(','))+'&t='+EX.tasks.map((x,i)=>isThy(i)?1:0).join(','))
-  .then(r=>{if(r&&r.regulation&&Array.isArray(r.regulation.rules)){REG_EXAM=REG=r.regulation;render();}}).catch(()=>{});}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&OK_EXAM&&!poller)void sync();});
 addEventListener('storage',e=>{if(e.key==='hlCmTok'||e.key==='hlCmApi'){clearAccount();void sync();}});
 
@@ -591,11 +608,11 @@ async function introView() {
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
       : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
-    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${REG.title ? esc(lang === "en" ? REG.title.en : REG.title.ko) + " · " : ""}${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
-    ${paperLanguageHtml()}${gate}
+    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
+    ${paperLanguageHtml()}${providerHtml()}${gate}
     <div class="row"><a href="${back}">${t().back}</a></div>
   </div></div>`;
-  bindPaperLanguage();
+  bindPaperLanguage();bindProvider();
   const go = $("go");
   if (go) {
     const boxes = [...document.querySelectorAll("[data-ag]")];
@@ -618,14 +635,16 @@ function reviewIntroView() {
     <p>${ko ? `접수와 답안 저장은 무료이며, 채점 · 첨삭을 요청할 때만 실전 토큰 ${COST()}개를 사용합니다.` : `Opening a review and saving work are free. Grading and feedback cost ${COST()} exam token only when requested.`}</p>
     ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
     <div>${EX.tasks.map((task, i) => `<p><b>${esc(task)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? ` · <a class="reviewPaperLink" data-paper="${i}" href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${ko ? "문제지 보기" : "View problem paper"}</a>` : ""}</p>`).join("")}</div>
-    ${paperLanguageHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
-  bindPaperLanguage();
+    ${paperLanguageHtml()}${providerHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
+  bindPaperLanguage();bindProvider();
   const select = $("paperLanguage");
   if (select) { const update = select.onchange; select.onchange = () => { update(); document.querySelectorAll(".reviewPaperLink").forEach(a => { a.href = pdfUrl(EX.pdfs[+a.dataset.paper]); }); }; }
   if ($("go")) $("go").onclick = () => startExam(false);
 }
 async function startExam(pay) {
   if (BUSY) return; BUSY = true;
+  const provider=gradingProvider(),identity=transport.fingerprint();
+  if(!providerAvailable(provider)){BUSY=false;toast(errMsg({code:"provider_unavailable"}));return;}
   const go = $("go"); if (go) go.disabled = true;
   try {
     /* each experiment's official solution: the marking scheme is drawn from it */
@@ -633,12 +652,14 @@ async function startExam(pay) {
     const sources = Object.fromEntries(EX.tasks.map((k, i) => [k, { sol: clean(EX.sols[i]), ...(REVIEW && EX.pdfs[i] ? { paper: EX.pdfs[i] } : {}),
       ...(isThy(i) ? { kind: "theory", ...(EX.marks[i] ? { mark: clean(EX.marks[i]) } : {}), ...(MIX && EX.skip ? { skip: EX.skip } : {}) } : {}),
       ...(EX.nos[i] ? { no: EX.nos[i] } : {}) }]).filter(([, v]) => v.sol || v.kind || v.paper));
-    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, entry: entryQuery(), sources, ...(REVIEW ? { review: true } : {}), ...(EX.pair && !MIX ? { pair: true } : {}) });
+    const r = await api("POST", "/lab/start", { comp: EX.c, year: EX.y, tasks: EX.tasks, lang, provider, entry: entryQuery(), sources, ...(REVIEW ? { review: true } : {}), ...(EX.pair && !MIX ? { pair: true } : {}) });
+    if(identity!==transport.fingerprint())return;
     if (r.token) upTok(r.session.id, r.token);
     ME.tokens = r.tokens; setSession(r.session);
     if (pay && !r.session.paid) await payNow(true);
     if (r.resumed) toast(t().resume, 6000);
   } catch (e) {
+    if(identity!==transport.fingerprint())return;
     if (e.code === "other_active") { ME.other = e.other; ME.tokens = e.tokens; }
     else toast(errMsg(e));
   } finally { BUSY = false; }
@@ -826,6 +847,7 @@ function afterPick(st) {
 let finishing = false;
 async function finishExam() {
   if (finishing || !SES || SES.status !== "running") return;
+  const identity=transport.fingerprint(),id=SES.id;
   finishing = true; clearInterval(tick);
   PAPER.ticket = (PAPER.ticket || 0) + 1; closePaper();
   /* switch the experiments off: the frames go blank and are removed, nothing keeps running */
@@ -836,32 +858,37 @@ async function finishExam() {
   document.body.append(dark);
   let tries = 0;
   for (;;) {
-    try { setSession((await api("POST", `/lab/sessions/${SES.id}/finish`)).session); break; }
-    catch (e) { if (++tries > 20 || e.status === 404) break; await new Promise(r => setTimeout(r, 3000)); }   // offline: keep trying, the server ends it on time anyway
+    if(identity!==transport.fingerprint()||SES?.id!==id)break;
+    try { const response=await api("POST", `/lab/sessions/${id}/finish`);if(identity!==transport.fingerprint()||SES?.id!==id)break;setSession(response.session);break; }
+    catch (e) { if(identity!==transport.fingerprint()||SES?.id!==id||e.code==='account_changed'||++tries>20||e.status===404)break;await new Promise(r=>setTimeout(r,3000)); }   // offline: keep trying, the server ends it on time anyway
   }
   finishing = false;
-  setTimeout(() => { dark.remove(); shown = ""; render(); }, 1800);
+  setTimeout(() => { dark.remove();if(identity!==transport.fingerprint()||SES?.id!==id)return;shown="";render(); }, 1800);
 }
 
 /* ── thirty minutes to scan ── */
 let pagesSeen = "", imgCache = new Map(),imgPending=new Map(),typedDirty=false;
 async function saveTypedAnswers() {
   const form = $("typedAnswers"); if (!form || !typedDirty) return;
+  const identity=transport.fingerprint(),id=SES?.id;
+  if(!id)return;
   const answers = Object.fromEntries([...form.querySelectorAll("[data-answer]")].map(input => [input.dataset.answer, input.value]));
-  const r = await api("POST", `/lab/sessions/${SES.id}/text`, { answers });
+  const r = await api("POST", `/lab/sessions/${id}/text`, { answers });
+  if(identity!==transport.fingerprint()||SES?.id!==id)return;
   setSession(r.session); typedDirty = false; pagesSeen = ""; paintPages(SES);
   $("typedSaved").textContent = lang === "ko" ? " 저장됨" : " Saved";
 }
 async function scanView() {
-  const sessionId=SES.id;
-  if(REVIEW&&!Array.isArray(SES.pages)){try{setSession((await api("GET", `/lab/sessions/${SES.id}`)).session);}catch(e){}}
+  const sessionId=SES.id,identity=transport.fingerprint();
+  if(REVIEW&&!Array.isArray(SES.pages)){try{const response=await api("GET", `/lab/sessions/${sessionId}`);if(identity!==transport.fingerprint()||SES?.id!==sessionId)return;setSession(response.session);}catch(e){}}
   if(SES?.id!==sessionId||SES.status!=="scanning")return render();
   $("main").innerHTML = `<div class="page"><div class="scan">
     <div class="qrbox"><h2>${t().scanH}</h2><div style="color:var(--muted);font-size:12.5px">${t().scanLeft}</div>
       ${REVIEW ? "" : `<div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>`}
-      <div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}</div>
+      ${providerHtml()}<div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}</div>
     <div class="pages" id="pages"></div></div></div>`;
   pagesSeen = "";
+  bindProvider();
   let closedShown = false;
   if (!REVIEW) tick = setInterval(() => {
     const left = SES.scan_until - srvNow(), c = $("sClock"); if (!c) return;
@@ -877,7 +904,7 @@ async function scanView() {
     finally { button.disabled = false; }
   };
   let k = upTok(SES.id);
-  if (!k) { try { k = upTok(SES.id, (await api("POST", `/lab/sessions/${SES.id}/qr`)).token); } catch (e) {} }
+  if(!k){try{const response=await api("POST",`/lab/sessions/${sessionId}/qr`);if(identity!==transport.fingerprint()||SES?.id!==sessionId)return;k=upTok(sessionId,response.token);}catch(e){}}
   if(SES?.id!==sessionId||SES.status!=='scanning'||shown!=='scan')return;
   paintQr(k);
   if(Array.isArray(SES.pages))paintPages(SES);else await poll();
@@ -899,7 +926,9 @@ function paintQr(k) {
     <a href="${esc(url)}" target="_blank" rel="noopener" style="font-size:12.5px">${t().openHere} ↗</a> ·
     <a href="#" id="newQr" style="font-size:12.5px">${t().newQr}</a>
     <ol>${t().steps.map(x => `<li>${x}</li>`).join("")}</ol>`;
-  $("newQr").onclick = async e => { e.preventDefault(); try { paintQr(upTok(SES.id, (await api("POST", `/lab/sessions/${SES.id}/qr`)).token)); } catch (er) { toast(errMsg(er)); } };
+  $("newQr").onclick=async e=>{e.preventDefault();const identity=transport.fingerprint(),id=SES?.id;if(!id)return;
+    try{const response=await api("POST",`/lab/sessions/${id}/qr`);if(identity!==transport.fingerprint()||SES?.id!==id)return;paintQr(upTok(id,response.token));}
+    catch(error){if(identity===transport.fingerprint()&&SES?.id===id)toast(errMsg(error));}};
 }
 let pagePoll=null,pagePollKey='';
 function poll(){
@@ -915,7 +944,8 @@ function poll(){
 
 function paintPages(s) {
   const box = $("pages"); if (!box) return;
-  const sig = JSON.stringify([s.paid, s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.legible])]);
+  const select=$("gradingProvider");if(select){if(s.provider_locked)select.value=s.provider;select.disabled=!!s.provider_locked;}
+  const sig = JSON.stringify([s.paid, s.pages.map(p => [p.id, p.task, p.kind, p.ocr_status, p.ocr_error, p.read?.ocr?.error, p.legible])]);
   if (sig === pagesSeen) return;
   pagesSeen = sig;
   const opt = (v, cur, txt) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`;
@@ -930,7 +960,7 @@ function paintPages(s) {
       : i.kind === "table" ? t().table((i.columns || []).length, i.rows || 0) + (i.columns && i.columns.length ? " (" + esc(i.columns.join(", ")) + ")" : "")
       : esc(i.text)}${i.crossed_out ? ` <i>${t().crossed}</i>` : ""}</li>`).join("")}</ul>`;
   };
-  const legBadge = p => p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : EXAM_NETWORK.reading(p) ? `<span class="leg">${lang==="en"?"Reading answer…":"답안을 판독하는 중…"}</span>` : p.ocr_status === "failed" ? `<span class="leg poor">${t().ocrFailed}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
+  const legBadge = p => p.ocr_status === "failed" ? `<span class="leg poor">${esc(EXAM_NETWORK.ocrErrorMessage?.(p.ocr_error||p.read?.ocr?.error,lang)||t().ocrFailed)}</span>` : p.legible ? `<span class="leg ${p.legible}">${t().leg[p.legible]}</span>` : EXAM_NETWORK.reading(p) ? `<span class="leg">${lang==="en"?"Reading answer…":"답안을 판독하는 중…"}</span>` : p.ocr_status === "off" ? `<span class="leg">${t().ocrOff}</span>` : p.ocr_status === "unpaid" ? `<span class="leg">${t().unpaidPage}</span>` : "";
   box.innerHTML = `<div class="head"><h2>${t().pagesH} · ${s.pages.length}</h2><div class="sp"></div>
       ${s.paid ? `<span class="leg good">${t().paid}</span><button class="pri" id="sub">${t().submit}</button>`
         : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
@@ -971,22 +1001,36 @@ async function thumb(el, id) {
 /* grading and the review: the quoted fee, once per sitting (the server takes it; see /lab/sessions/:id/pay) */
 async function payNow(quiet) {
   let quoteChanged=false;
-  try { const r = await api("POST", `/lab/sessions/${SES.id}/pay?lang=${lang}`, { lang,max_cost:COST() }); ME.tokens = r.tokens; setSession(r.session); pagesSeen = ""; return true; }
-  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (e.tokens != null) ME.tokens = e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} return false; }
-  finally { if (!quiet && SES) { if (SES.status === "scanning"&&!quoteChanged) poll(); else { shown = ""; render(); } } }
+  const provider=gradingProvider(),identity=transport.fingerprint(),id=SES.id;
+  try { const r = await api("POST", `/lab/sessions/${id}/pay?lang=${lang}`, { lang,provider,max_cost:COST() });if(identity!==transport.fingerprint()||SES?.id!==id)return false; ME.tokens = r.tokens; setSession(r.session); pagesSeen = ""; return true; }
+  catch (e) { if(identity!==transport.fingerprint()||SES?.id!==id)return false;toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if (e.tokens != null) ME.tokens = e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} return false; }
+  finally { if (!quiet && SES?.id===id&&identity===transport.fingerprint()) { if (SES.status === "scanning"&&!quoteChanged) poll(); else { shown = ""; render(); } } }
 }
 async function submitNow(grade) {
   if (BUSY) return; BUSY = true; let quoteChanged=false;
+  const provider=gradingProvider(),identity=transport.fingerprint(),id=SES.id;
   const sub = $("sub"); if (sub) { sub.disabled = true; sub.textContent = t().submitting; }
   poller?.stop();
-  try { if (REVIEW) await saveTypedAnswers(); const r = await api("POST", `/lab/sessions/${SES.id}/submit?lang=${lang}`, { lang, grade: grade !== false,max_cost:COST() }); if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
-  catch (e) { toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if(Number.isFinite(e.tokens)&&ME)ME.tokens=e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } startPoll(poll,'scanning'); }
+  try { if (REVIEW) await saveTypedAnswers();if(identity!==transport.fingerprint()||SES?.id!==id)return; const r = await api("POST", `/lab/sessions/${id}/submit?lang=${lang}`, { lang,provider, grade: grade !== false,max_cost:COST() });if(identity!==transport.fingerprint()||SES?.id!==id)return; if (r.tokens != null) ME.tokens = r.tokens; setSession(r.session); render(); }
+  catch (e) { if(identity!==transport.fingerprint()||SES?.id!==id)return;toast(e.code === "no_tokens" ? t().noTokens : errMsg(e), 6000); if(Number.isFinite(e.tokens)&&ME)ME.tokens=e.tokens; if(e.code==="price_changed"&&Number.isFinite(e.cost)){SES={...SES,cost:e.cost,price_estimate:true,paired_with:null,discount:0};quoteChanged=true;} if (sub) { sub.disabled = false; sub.textContent = SES.paid ? t().submit : t().payBtn; } startPoll(poll,'scanning'); }
   finally { BUSY = false; if(quoteChanged){shown="";render();} }
 }
 
 /* ── the result ── */
+function bindOcrRetry(s){
+  const button=$("retryOcr");if(!button)return;
+  let pending=false;const identity=transport.fingerprint(),id=s.id;
+  const current=()=>transport.fingerprint()===identity&&SES?.id===id;
+  button.onclick=async()=>{
+    if(pending||BUSY||!current())return;pending=true;button.disabled=true;
+    const info=$("retryOcrMsg");if(info)info.textContent=lang==="ko"?"다시 판독을 요청하는 중…":"Requesting reading…";
+    try{const response=await api("POST",`/lab/sessions/${id}/retry-ocr`,{provider:s.provider});if(!current())return;setSession(response.session);shown="";render();}
+    catch(error){if(!current())return;if(info)info.textContent=errMsg(error);pending=false;button.disabled=false;}
+  };
+}
 function doneView() {
   const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
+  const retryOcr=!!s.paid&&["pending","error"].includes(s.status)&&["deepseek","gemini"].includes(s.provider)&&pg.some(p=>p.ocr_status==="failed");
   const comparison = window.labComparison?.hasScore?.(s) && typeof window.labComparison.mount === 'function';
   const rows = EX.tasks.map((id, i) => { const x = per[id] || {};
     const sc = x.grading_mode === "qualitative_review" ? (lang === "ko" ? "학습용 첨삭 · 점수 없음" : "Qualitative feedback · no score") : x.status === "graded" || x.status === "empty" ? `<b>${x.score ?? 0}</b>${x.points ? " / " + x.points : ""}` : "—";
@@ -1006,12 +1050,15 @@ function doneView() {
       <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
       <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${!comparison && s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}</td></tr>
     </tbody></table>
-    ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div><div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
+    ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div>${providerHtml()}<div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
+    ${retryOcr?`<div class="note noprint"><p>${lang==="ko"?"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다.":"Read failed pages again from the saved answer photos with the same provider."}</p><button class="pri" id="retryOcr">${lang==="ko"?"실패한 판독 다시 시도 · 추가 토큰 없음":"Retry failed reading · no additional exam token"}</button><p id="retryOcrMsg" role="status"></p></div>`:""}
     <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a><button id="prn">${t().print}</button>
       <button id="again">${t().again}</button><a href="../#/${esc(EX.c)}/${REVIEW ? "review" : "exam"}">${t().back}</a></div></div></div>`;
   $("prn").onclick = () => print();
+  if(retryOcr)bindOcrRetry(s);
+  bindProvider();
   if ($("payLater")) $("payLater").onclick = () => confirmBox(t().payBtn, t().endedNote, t().payBtn, async () => { $("payLater").disabled = true; $("payLater").textContent = t().submitting; await payNow(); });
   if (comparison) window.labComparison.mount($("medal"),
     {...s,comp:s.comp||EX.c,year:s.year||EX.y,tasks:s.tasks||EX.tasks},lang,{base:'results/',isCurrent:()=>SES===s});

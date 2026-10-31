@@ -27,9 +27,6 @@ dead_letter_queue = "haslalab-lab-jobs-dead"
 
 [vars]
 ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
-# Gemini reads the answer pages, builds marking schemes and grades experiments with this exact model (an alias such as
-# gemini-flash-latest has no pinned price). GEMINI_GRADE_MODEL / GEMINI_SCHEME_MODEL may override the last two.
-GEMINI_MODEL = "gemini-3.5-flash-lite"
 
 [[d1_databases]]
 binding = "DB"

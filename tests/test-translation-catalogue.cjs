@@ -77,7 +77,11 @@ for (let year = 1997; year <= 2026; year++) {
   const file = window.THEORY.usapho[String(year)].f.T;
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.sol] > 0);
-  assert.ok(assets[file.ko.paper] > 0);
+  if (file.ko.paper.startsWith('pdfx/usapho/')) {
+    const local = path.join(root, file.ko.paper);
+    assert.ok(fs.statSync(local).size > 0, 'The local Korean print edition must be published');
+    assert.equal(fs.readFileSync(local).subarray(0, 5).toString(), '%PDF-');
+  } else assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
 for (const year of ['2005', '2006', '2007', '2013', '2022', '2023', '2024', '2025']) {

@@ -1,0 +1,484 @@
+{
+  "status": "READY",
+  "file": "IZhO_2023_T_KO.pdf",
+  "year": 2023,
+  "kind": "T",
+  "language": "ko",
+  "pages": 6,
+  "bytes": 16485146,
+  "sha256": "c53adc0d8508907cb2aa62f599bf0830850d73db1049b0f1f10332ebfc5098bf",
+  "validation": {
+    "native_ink_missing_pixels": 0,
+    "new_batang_empty_outlines": 0,
+    "hangul_visibility_loss_candidates": 0,
+    "original_point_sizes_scaled": false,
+    "outside_text_and_intended_math_motion": 0,
+    "changed_figures": 0,
+    "original_font_image_programs_and_page_groups_retained": true,
+    "no_added_editorial_notes": true
+  },
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "ac11ec2b07ad3a3c13e11cc012f85707bcba0ec65c95353c7b5ef13f54c703bb",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 258,
+        "shifted_top_level_glyphs": 104,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 0,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "fe2df0ed36de1ec93448f9d576af7927af5007dbd59f48125f916cbedd59c3a3",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 445,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.814697265625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.814697265625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page01.qa.json",
+      "qa_sha256": "076ea2d54df483799a56312039dfc4cb661b60b0fe8404bad9b1b10188b47366",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page01-native-ink.json",
+      "original_native_ink_sha256": "21f42c0abd5ace33cc3e6cd9b49287ad69fe35a6529090a761116f02d2312927"
+    },
+    {
+      "page": 2,
+      "proof_sha256": "449a5689713fa035c946399e701d66f3e6ed415fbae242d2bb41aa770c614bcf",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 2,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 609,
+        "shifted_top_level_glyphs": 91,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 18,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c16e2d81101eb2f75fafe3c2623cf09e343e83655839e7db86f3aa2b799246b2",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 50,
+            "source_origin": [
+              228.40818786621094,
+              132.67401123046875
+            ],
+            "dx": -44.93112564086914
+          },
+          {
+            "source_trace_index": 60,
+            "source_origin": [
+              305.1756896972656,
+              132.67401123046875
+            ],
+            "dx": -54.62057876586914
+          },
+          {
+            "source_trace_index": 142,
+            "source_origin": [
+              179.82847595214844,
+              190.64495849609375
+            ],
+            "dx": -37.35395812988281
+          },
+          {
+            "source_trace_index": 185,
+            "source_origin": [
+              202.8901824951172,
+              411.3399963378906
+            ],
+            "dx": -26.90381622314453
+          },
+          {
+            "source_trace_index": 197,
+            "source_origin": [
+              409.8598937988281,
+              411.4239807128906
+            ],
+            "dx": -122.5758285522461
+          },
+          {
+            "source_trace_index": 217,
+            "source_origin": [
+              401.80657958984375,
+              427.7419738769531
+            ],
+            "dx": -103.28900146484375
+          },
+          {
+            "source_trace_index": 234,
+            "source_origin": [
+              231.7694091796875,
+              443.7249755859375
+            ],
+            "dx": -9.2459716796875
+          },
+          {
+            "source_trace_index": 335,
+            "source_origin": [
+              468.1932067871094,
+              564.7750244140625
+            ],
+            "dx": -115.70962905883789
+          },
+          {
+            "source_trace_index": 382,
+            "source_origin": [
+              409.05517578125,
+              583.1599731445312
+            ],
+            "dx": -95.30400085449219
+          },
+          {
+            "source_trace_index": 406,
+            "source_origin": [
+              232.25381469726562,
+              601.875
+            ],
+            "dx": -58.79100036621094
+          },
+          {
+            "source_trace_index": 500,
+            "source_origin": [
+              299.7364196777344,
+              665.60546875
+            ],
+            "dx": -28.605728149414062
+          }
+        ],
+        "expected_native_glyphs": 889,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page02.qa.json",
+      "qa_sha256": "16205b7ef97c386e138db8b8b1928d0dafc3b78e5bb20039655eaef0204036f9",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page02-native-ink.json",
+      "original_native_ink_sha256": "6ca8546d46c89621abf1d75f10fcf5573dafed154ea94815cde0719d15b66bf0"
+    },
+    {
+      "page": 3,
+      "proof_sha256": "b052d8729c60442cbe9d39a6abeba134309a4c38dbbdfa285c8acb592ccafa51",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 3,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 608,
+        "shifted_top_level_glyphs": 122,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 26,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 6,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "de7b8926f2751e596737b3e3873dc0dbc09d954fe893b77dfb7298e95add74d2",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 123,
+            "source_origin": [
+              268.6095886230469,
+              183.875
+            ],
+            "dx": -47.75220489501953
+          },
+          {
+            "source_trace_index": 142,
+            "source_origin": [
+              525.2402954101562,
+              183.875
+            ],
+            "dx": -60.52338409423828
+          },
+          {
+            "source_trace_index": 165,
+            "source_origin": [
+              274.6761169433594,
+              198.375
+            ],
+            "dx": -29.959228515625
+          },
+          {
+            "source_trace_index": 257,
+            "source_origin": [
+              518.5120849609375,
+              327.625
+            ],
+            "dx": -96.75544738769531
+          },
+          {
+            "source_trace_index": 402,
+            "source_origin": [
+              166.213134765625,
+              549.375
+            ],
+            "dx": -12.322357177734375
+          }
+        ],
+        "expected_native_glyphs": 935,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.52587890625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page03.qa.json",
+      "qa_sha256": "6c38a3add0bf3aa27b206ab4cc12bb8fc689a204529ea5ff82740d51aba4cef8",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page03-native-ink.json",
+      "original_native_ink_sha256": "72993a0c79688ec25def309fcc0d499bb18cc6b4bb964a5f26d033c70e0e30aa"
+    },
+    {
+      "page": 4,
+      "proof_sha256": "23a1df1e1a8932de7d174836dcbc499bec0d0fa33ab76f76dea5e2b7e8482ee9",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 4,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 560,
+        "shifted_top_level_glyphs": 78,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 24,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 1,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "66364f047e6ed1aaf095331278e3654e333c6f167f4a4fee05917543f66fa70b",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 840,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page04.qa.json",
+      "qa_sha256": "ad6de94bdcaa6e07ed6dfad0bd4b76dd9b424f35ae7d9d78de58ccbb82b53b13",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page04-native-ink.json",
+      "original_native_ink_sha256": "74ac99609556d671e2be68eec2be724950cab8cf61ac8d93dc852f79593a3291"
+    },
+    {
+      "page": 5,
+      "proof_sha256": "82b3c253f1bb6fb5fb8bb978d9991f9187657c7547f5df6d5c41675f95247cb7",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 5,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 789,
+        "shifted_top_level_glyphs": 106,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 37,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "d70a0c187a54c79814ae530e2562f4f4de1cbc1aae20e310c2f1fb000d2d87b5",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1146,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.288818359375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page05.qa.json",
+      "qa_sha256": "521b644a82539304b5e3897a285e78083fdbb96614a427bafdc1123c1467ebc7",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page05-native-ink.json",
+      "original_native_ink_sha256": "3c7d26be21055c3d1122dcbc54c5fd34e03c7e5568a5a1beec64b3d0ed67cc4b"
+    },
+    {
+      "page": 6,
+      "proof_sha256": "f95f24fa4353be043c7c78600370343f5fda7c62778aed979cf52c1559cf3fd7",
+      "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 6,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 493,
+        "shifted_top_level_glyphs": 78,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 26,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            23,
+            24
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "5ec72e4094864ab428718e773a27985d666c28bb859da36f5eba45663c0919f9",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 212,
+            "source_origin": [
+              533.4315795898438,
+              244.74200439453125
+            ],
+            "dx": -17.761707305908203
+          },
+          {
+            "source_trace_index": 281,
+            "source_origin": [
+              305.91839599609375,
+              287.32598876953125
+            ],
+            "dx": -42.878692626953125
+          },
+          {
+            "source_trace_index": 307,
+            "source_origin": [
+              282.39288330078125,
+              303.32391357421875
+            ],
+            "dx": -30.166229248046875
+          }
+        ],
+        "expected_native_glyphs": 842,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.814697265625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.814697265625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "qa": "tools/ko/izho/2023/T/natural-spacing/page06.qa.json",
+      "qa_sha256": "72731f84f3736553e30bc703112e892bb72403961afc62045898de22ebbb29d3",
+      "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page06-native-ink.json",
+      "original_native_ink_sha256": "0fce652d284b85e676c89043d424180d20a6f0785ae4d2e9ad5adf0a3511da90"
+    }
+  ],
+  "source_ready": "tools/ko/izho/2023/T/natural-spacing/source-ready.json",
+  "source_ready_sha256": "d003cd308df54ee1b50bd1fce106681fc7c9aad42ae525e6053e129eb9ffe292",
+  "visual_review": "tools/ko/izho/2023/T/natural-spacing/visual-review.json",
+  "visual_review_sha256": "b637a35a7bd8bbff8c4e98e8fc15875da7f316886c196ab9b1749af4ff0613e5",
+  "authoring_snapshotroot": "tools/ko/izho/2023/T/natural-spacing/authoring",
+  "authoring_snapshot_sha256": {
+    "tools\\izho_natural_spacing.py": "407f1c4f3674c83b4ff8083591c84ab24e676c0b4d4e4264af03eb4ead22521b",
+    "tools\\pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_text_motion_ink.py": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\izho_natural_spacing_rebuild.py": "2e7672b9e46a793bb86aa4e5c26c66925edf0462acee5321e1d939848de488e1",
+    "tools\\izho_natural_spacing_qa.py": "23bba4eaa4754666934cb0d1d7fd2dca89d359fd49163cfd9f6e10c1c0f8cf1a",
+    "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
+    "tools\\izho_natural_spacing_ready.py": "7694c21e7aabb10fd5fd89d2a9d6829ca8279c3c273ade367f3e8312640b88c1",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools\\pdf_native_script_motion_audit.py": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+    "tools\\test_pdf_text_motion_ink_origins.py": "f4be2879ffcf0904777a1a67ccf82254aac6f55f9fca49693677fbe73290b270",
+    "tools\\test_izho_natural_spacing.py": "9980fa2aed2c5e0d112e654d7c417c67a962553befb64a1143d9075669164a6a",
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2"
+  },
+  "extra_evidence": [
+    {
+      "path": "tools/ko/izho/2023/T/natural-spacing/witnesses/page02-native-cid.json",
+      "sha256": "0ebb7cac10ab126a701010f24deef9ec5b4ff7e0efa5c66b5b64b06b44fc74f0"
+    }
+  ]
+}

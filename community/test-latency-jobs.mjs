@@ -21,7 +21,7 @@ globalThis.fetch=async(input,options={})=>{
   if(!url.includes(':generateContent'))throw Error('unexpected external request');
   providerCalls++;if(providerFailure){providerFailure=false;return new Response('{}',{status:503});}
   const req=JSON.parse(options.body),prompt=req.contents[0].parts.filter(p=>p.text).map(p=>p.text).join('\n');let value;
-  if(prompt.startsWith('[TASK: read page]'))value={header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
+  if(prompt.startsWith('[TASK: read page]'))value={text:'Let n be an integer. Submitted proof.',header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
   else if(prompt.startsWith('[TASK: grade]'))value={items:[{id:'A',found:true,page:1,score:1,rules:[],checks_met:[],note:'submitted argument'}],feedback:[],review:null};
   else{const no=+(prompt.match(/Review ONLY problem (\d+)/)?.[1]||0),page=+(prompt.match(/\[Page (\d+);/)?.[1]||1);value={problem_no:no,score:7,confidence:.96,verdict:'valid',summary:'검토한 풀이',strengths:[],gaps:[],evidence:[{page,quote:'Let n be an integer.',note:'제출한 문장'}]};}
   return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(value)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50}});
@@ -31,7 +31,7 @@ async function api(path,{id=1,body,method=body===undefined?'GET':'POST',headers=
   const req=new Request('https://worker.local/api'+path,{method,headers:{...(id?{Authorization:'Bearer '+tokens[id]}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});
   const response=await worker.fetch(req,settings,context);return{status:response.status,data:await response.json(),headers:response.headers};
 }
-async function start(id){return(await api('/lab/contest/start',{id,body:{examId:'kmo-2025-T2-s2',runId:'latency-'+id}})).data;}
+async function start(id){return(await api('/lab/contest/start',{id,body:{provider:'gemini',examId:'kmo-2025-T2-s2',runId:'latency-'+id}})).data;}
 async function save(sid,id,answers){return api(`/lab/contest/sessions/${sid}/text`,{id,body:{answers}});}
 async function drain(settings=env){let safety=0;while(pending.length){assert.ok(++safety<100);const item=pending.shift();sql.prepare('UPDATE lab_jobs SET available_at=0 WHERE id=?').run(item.body.jobId);await worker.queue({messages:[{body:item.body,ack(){},retry(){pending.push(item);}}]},settings);}}
 async function upload(code,task='Q5'){
@@ -117,7 +117,7 @@ test('a stale worker lease can be recovered once and a duplicate completed deliv
 });
 
 test('a failed ordinary scan with an error read object stays pending and cannot become an empty zero score',async()=>{
-  const started=await api('/lab/start',{id:6,body:{comp:'ipho',year:2024,tasks:['E1'],sources:{E1:{kind:'theory'}},entry:'?c=ipho&y=2024'}}),sid=started.data.session.id;
+  const started=await api('/lab/start',{id:6,body:{provider:'gemini',comp:'ipho',year:2024,tasks:['E1'],sources:{E1:{kind:'theory'}},entry:'?c=ipho&y=2024'}}),sid=started.data.session.id;
   await api(`/lab/sessions/${sid}/pay`,{id:6,body:{}});sql.prepare("UPDATE lab_sessions SET status='scanning',scan_until=? WHERE id=?").run(time+1800,sid);
   const page=await upload(started.data.token,'E1');assert.equal(page.data.ocr_status,'queued');
   sql.prepare("UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=?").run(JSON.stringify({items:[],structure_status:'failed',ocr:{error:'ocr_failed'}}),page.data.id);

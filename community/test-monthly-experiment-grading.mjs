@@ -12,7 +12,7 @@ const NOW=Date.parse('2026-11-02T12:00:00+09:00')/1000;
 const ids=['A.1','A.2','B.1','B.2','B.3','C.1','C.2'];
 const evidence=(user,id)=>`Evidence user ${user} part ${id}: measured data and calculation.`;
 const part=(user,id)=>({id,answer:`Final user ${user} part ${id}`,working:evidence(user,id)});
-const payload=(key,user=1,partIds=ids)=>({request_id:key.padEnd(32,'x'),parts:partIds.map(id=>part(user,id)),lang:'ko'});
+const payload=(key,user=1,partIds=ids)=>({provider:'gemini',request_id:key.padEnd(32,'x'),parts:partIds.map(id=>part(user,id)),lang:'ko'});
 const png=size=>{const bytes=new Uint8Array(size).fill(79);bytes.set([137,80,78,71,13,10,26,10]);return bytes;};
 
 async function environment(run){
@@ -35,19 +35,16 @@ async function environment(run){
       .run(id,'instrument-grade-'+id,'Instrument '+id,id===3?'admin':'user',NOW-100);
     sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash,id,NOW-100,NOW+60*86400);
   }
-  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',GEMINI_API_KEY:'local-stand-in-only',UPSTAGE_API_KEY:'local-ocr-only',LAB_KEEP_HOURS:'off'};
+  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',GEMINI_API_KEY:'local-stand-in-only',LAB_KEEP_HOURS:'off'};
   const calls={screen:0,grade:0,ocr:0,extract:0},grades=[];
   let problemId;
   globalThis.fetch=async(url,init)=>{
-    if(String(url).includes('document-digitization')){
-      calls.ocr++;const p=part(1,'A.2');
-      return Response.json({content:{markdown:`Answer Sheet A.2\n${p.answer}\n${p.working}\nHand-drawn graph with x and t axes.`},confidence:.99,usage:{pages:1}});
-    }
     assert.match(String(url),/:generateContent$/,'only the stand-in Gemini endpoint is reachable');
     const request=JSON.parse(init.body),schema=request.generationConfig.responseSchema;
     const prompt=request.contents[0].parts.map(p=>p.text||'').join('\n');
     let raw;
-    if(schema.properties.parts){calls.extract++;raw={parts:[part(1,'A.2')]};}
+    if(schema.properties.uncertainties){calls.ocr++;const p=part(1,'A.2');raw={text:`Answer Sheet A.2\n${p.answer}\n${p.working}\nHand-drawn graph with x and t axes.`,confidence:.99,legible:true,uncertainties:[],visuals:[{page:1,kind:'graph',description:'Hand-drawn graph with x and t axes.'}]};}
+    else if(schema.properties.parts){calls.extract++;raw={parts:[part(1,'A.2')]};}
     else if(schema.properties.assessment){
       calls.screen++;assert.ok(!prompt.includes('[Private session reference'));
       raw={assessment:'uncertain',confidence:.5,signals:[]};
@@ -176,11 +173,11 @@ test('admin regrading reuses the frozen original owner reference and preserves a
 test('photographed experimental graphs reach the grader with frozen observations and captured retries append evidence once',async()=>{
   await environment(async({initialize,instrument,api,id,submit,command,calls,grades,score,sql})=>{
     await initialize();await instrument();score(15);
-    const granted=await api(`/monthly/problems/${id()}/scan`,{body:{}});assert.equal(granted.status,200);const scan=granted.data.scan;
+    const granted=await api(`/monthly/problems/${id()}/scan`,{body:{provider:'gemini'}});assert.equal(granted.status,200);const scan=granted.data.scan;
     const form=new FormData();form.set('image',new File([png(32)],'scan.png',{type:'image/png'}));form.set('original_image',new File([png(200)],'original.png',{type:'image/png'}));form.set('request_id',crypto.randomUUID());
     const upload=await api('/monthly/up/pages?task=2&kind=answer',{user:0,body:form,headers:{'X-Lab-Token':scan.token}});
     assert.equal(upload.status,200);assert.equal(upload.data.ocr_status,'done');
-    const body={scan_id:scan.id,request_id:'captured-graph-submission-key-123456',lang:'ko'};
+    const body={provider:'gemini',scan_id:scan.id,request_id:'captured-graph-submission-key-123456',lang:'ko'};
     const first=await submit(body);assert.equal(first.status,200);assert.equal(first.data.score,15);assert.equal(first.data.detail,null);
     assert.equal(calls.screen,0,'server-verified photo-derived parts are not screened as typed prose');assert.equal(calls.grade,1);
     const request=grades[0].request,images=request.contents[0].parts.filter(p=>p.inline_data);
