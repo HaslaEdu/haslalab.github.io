@@ -79,8 +79,31 @@ export function numbersIn(text) {
   const out = [], re = /(-?\d+(?:[.,]\d+)?)(?:\s*x\s*10\s*\^\s*(-?\d+)|\s*[eE](-?\d+))?/g;
   for (let m; (m = re.exec(t));) {
     const base = +m[1].replace(",", "."), exp = m[2] ?? m[3];
-    if (Number.isFinite(base)) { out.push(exp != null ? base * 10 ** +exp : base); if (exp != null) out.push(base); }
+    if (Number.isFinite(base)) out.push(exp != null ? base * 10 ** +exp : base);   // never the mantissa alone: 1.04·10⁻⁹ is not 1.04
   }
   return out;
 }
 export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
+
+/* LaTeX the model put into its JSON without doubling the backslash comes back with JSON escapes turned into control
+   characters: «\frac» as a form feed + «rac», «\beta» as a backspace + «eta», «\theta» / «\times» / «\text» as a tab,
+   «\rho» / «\right» as a carriage return, «\nabla» as a newline (seen in IPhO 2025 T1: «Η = \x0crac{R}{G}»). Form
+   feeds and backspaces never belong in a transcript; a tab or carriage return directly before letters is a command. */
+export function restoreLatex(text) {
+  return typeof text !== "string" ? text : text.replace(/\f/g, "\\f").replace(/\x08/g, "\\b")
+    .replace(/\t(?=[a-zA-Z])/g, "\\t").replace(/\r(?=[a-zA-Z])/g, "\\r").replace(/\n(?=abla\b)/g, "\\n");
+}
+
+/* R13: a step of the working earns its marks only where it is written. The grader quotes it; the quote must be found
+   on the page it cites (its transcript), allowing for how differently a formula can be typed: both are reduced to
+   letters, digits and Hangul, and at least 75 % of the quote's character pairs must occur on the page. Gemini had given
+   every step of IPhO 2025 T2 C.1–C.5 its marks from final answers alone. */
+const flat = t => String(t || "").toLowerCase().replace(/\\(?:mathrm|text|left|right|cdot|times|frac|sqrt)\b/g, "").replace(/[^a-z0-9\u3131-\uD79D\u0370-\u03FF]/g, "");
+export function quoteOnPage(quote, page) {
+  const q = flat(quote), p = flat(page);
+  if (q.length < 3) return false;
+  if (p.includes(q)) return true;
+  const pairs = new Set(); for (let i = 0; i < p.length - 1; i++) pairs.add(p.slice(i, i + 2));
+  let hit = 0; for (let i = 0; i < q.length - 1; i++) if (pairs.has(q.slice(i, i + 2))) hit++;
+  return hit / (q.length - 1) >= .75;
+}
