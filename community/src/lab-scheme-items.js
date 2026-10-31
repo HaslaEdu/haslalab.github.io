@@ -69,3 +69,18 @@ export function cappedSum(items, parts, total, value = i => i.points) {
 
 /* the paper's points: its items, bounded by the printed headings and total */
 export const schemeTotal = scheme => cappedSum(scheme.items, scheme.parts, scheme.total);
+
+/* Every number written in a transcribed answer, scientific notation included: «5.31 \\cdot 10^{-11} m», «2.2 × 10^9»,
+   «1.0 * 10^-10», «3e8», «−4.5». A value the grader reports must be one of the numbers on its page; the reader's own
+   value field sometimes keeps only the mantissa (IPhO 2025 T1 A.2.3 read «5.31» for 5.31·10⁻¹¹ m, so a correct answer
+   scored 0 under R9). */
+export function numbersIn(text) {
+  const t = String(text || "").replace(/\\(?:cdot|times)|[×·⋅*]/g, " x ").replace(/[−–]/g, "-").replace(/\{\s*(-?\d+)\s*\}/g, "$1");
+  const out = [], re = /(-?\d+(?:[.,]\d+)?)(?:\s*x\s*10\s*\^\s*(-?\d+)|\s*[eE](-?\d+))?/g;
+  for (let m; (m = re.exec(t));) {
+    const base = +m[1].replace(",", "."), exp = m[2] ?? m[3];
+    if (Number.isFinite(base)) { out.push(exp != null ? base * 10 ** +exp : base); if (exp != null) out.push(base); }
+  }
+  return out;
+}
+export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
