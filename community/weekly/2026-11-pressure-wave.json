@@ -1,0 +1,286 @@
+{
+  "version": "monthly-2026-11-pressure-wave-v1",
+  "problems": [
+    {
+      "week": "2026-11",
+      "no": 5,
+      "kind": "essay",
+      "subject": "physics",
+      "level": 16,
+      "points": 100,
+      "title_ko": "압력파를 이용한 관의 내부 지름 측정",
+      "title_en": "Determining a pipe's internal diameter using pressure waves",
+      "body_ko": "큰 수조와 밸브를 잇는 관에 물이 흐르고 있다. 관의 벽은 두껍고, 내부 지름은 위치에 따라 완만하게 변한다. 이 실험에서는 밸브를 닫을 때 발생하는 압력파를 이용하여 물의 체적 탄성률과 관의 내부 지름을 위치의 함수로 결정한다.\n\n## 장치와 모형\n\n길이 $L=120.0\\,\\mathrm{m}$인 수평 관의 왼쪽 끝은 큰 수조에 연결되어 있고, 오른쪽 끝에는 밸브가 있다. 수조의 수면은 관보다 $H=20.0\\,\\mathrm{m}$ 높으며 실험 중 일정하다. 좌표 $x$는 밸브에서 수조를 향해 잰 거리이다. 물은 $x$가 감소하는 방향으로 흐른다. 관 벽의 변형은 무시한다. 물의 밀도는 $\\rho=1000\\,\\mathrm{kg\\,m^{-3}}$이다.\n\n관의 내부 지름은 $D(x)=D_0[1+a(x/L)+b(x/L)^2]$이다. 미지수의 범위는 $40\\leq D_0/\\mathrm{mm}\\leq60$, $0.03\\leq a\\leq0.12$, $0.01\\leq b\\leq0.08$이다. 위치 $x$에서 관의 단면적은 $A(x)=\\pi D(x)^2/4$이다.\n\n압력 센서 $S_0$부터 $S_7$까지의 위치는 차례로 $x=0,\\,15,\\,30,\\,45,\\,60,\\,75,\\,90,\\,105\\,\\mathrm{m}$이다. 모든 센서는 같은 시계를 사용하며, $0.10\\,\\mathrm{ms}$ 간격으로 압력을 기록한다. 기록 구간은 $-3.0\\,\\mathrm{ms}$부터 $160\\,\\mathrm{ms}$까지이다. 폐쇄 전 압력을 구할 수 있도록 밸브 구동 시작 전의 $3.0\\,\\mathrm{ms}$가 포함되어 있다. 첫 도달 시각은 압력 표시값의 문턱 대신 별도의 도달 트리거에서 읽는다. 출구 유량의 크기 $Q_0>0$은 유량계에서 $\\mathrm{L\\,s^{-1}}$ 단위로 읽는다. 밸브 부근의 초기 유동 속력은 $u_0>0$으로 나타낸다.\n\n센서 $S_i$의 표시값 $r_i$와 실제 게이지압 $p_i$는 $r_i=g_i p_i+b_i$의 관계를 만족한다. 보정 모드에서는 모든 센서에 $0.0\\,\\mathrm{kPa}$ 또는 $200.0\\,\\mathrm{kPa}$의 기준압을 가할 수 있다.\n\n밸브 구동기는 폐쇄 시간 $\\tau$ 동안 출구 유량을 $Q_0$에서 $0$으로 선형 감소시킨다. 선택 가능한 폐쇄 시간은 $\\tau=2,\\,5,\\,10,\\,20,\\,50\\,\\mathrm{ms}$이다. run 명령을 실행하면 같은 초기 정상류에서 새 기록을 얻는다.\n\n물의 압축성을 고려하며 관의 변형과 점성 감쇠는 무시한다. 수조는 압력이 일정한 경계이므로 입사 압력파를 부호가 반대인 압력파로 반사한다. 이 실험에서는 단면이 완만하게 변하는 관의 첫 진행파를 분석한다.\n\n계산에 사용한 CAL/RUN ID와 측정 조건을 기록하라. 같은 기록을 다시 읽거나 CSV로 내보내는 것은 새 측정에 해당하지 않는다.\n\n![그림 1. 큰 수조와 밸브를 잇는 관 및 압력 센서 $S_0$-$S_7$. 좌표 $x$는 밸브의 $x=0$에서 수조의 $x=L$을 향해 증가한다. 관의 내부 경계와 지름 변화는 확대하여 그렸다.](weekly/figures/pressure-wave-apparatus.svg)\n\n## 장치 조작\n\nCMD 실험실에서 ./waterhammer를 실행한다. 명령어를 입력한 뒤 Enter를 누른다. ↑/↓로 이전 명령을 불러오고 Ctrl+C로 프로그램을 종료한다. 화면을 지워도 측정 기록은 유지된다. 계산에 사용한 측정값, 그래프와 분석 과정을 답안지에 기록하라.\n\nhelp — 조작법과 단위 확인\ncal 0 — 기준압 $0.0\\,\\mathrm{kPa}$의 보정 자료 기록\ncal 200 — 기준압 $200.0\\,\\mathrm{kPa}$의 보정 자료 기록\ncal history — CAL ID와 기준압 기록 열람\ncal stats — 기준압별 기록 수와 통계량 열람\nset close 2 — 폐쇄 시간 $2\\,\\mathrm{ms}$ 설정\nrun — 초기 정상류로 재설정 후 새 RUN 1회 기록\nread 1 — RUN 1의 유량·도달 시각·상승 전후 표시값 열람\nstats 2 — 폐쇄 시간 $2\\,\\mathrm{ms}$의 측정 기록 집계\ntrace S4 1 — RUN 1의 S4 시간-표시압 파형 열람\nexport 1 — RUN 1의 전체 파형 CSV\nexport all — 모든 CAL/RUN의 측정표 요약 CSV\n\n## Part A. 센서와 압력파 (25점)\n\n압력 센서의 영점과 감도는 센서마다 다르다. 두 기준압의 측정값으로 다음 관계의 계수 $g_i$와 $b_i$를 정할 수 있다.\n\n$$\nr_i=g_i p_i+b_i\n$$\n\n물의 부피가 $\\Delta V$만큼 변할 때 압력 변화는 $\\Delta p=-K\\Delta V/V$이다. 여기서 $K$는 물의 체적 탄성률이다. 관 벽의 변형을 무시하면 압력파의 속력은 다음과 같다.\n\n$$\nc=\\sqrt{\\frac{K}{\\rho}}\n$$\n\n첫 도달 시각은 밸브 구동 시작 표식을 기준으로 읽는다. 모든 도달 트리거의 공통 지연을 $t_{\\mathrm{off}}$라 하면, 위치 $x_i$에서 도달 시각은 다음과 같다.\n\n$$\nt_i=t_{\\mathrm{off}}+\\frac{x_i}{c}\n$$\n\n압력 표시값, 도달 시각, 유량의 분해능은 각각 $0.1\\,\\mathrm{kPa}$, $0.1\\,\\mathrm{ms}$, $0.0001\\,\\mathrm{L\\,s^{-1}}$이다. 측정 자료와 계기 분해능을 바탕으로 결과의 불확도를 평가하라. 그래프에는 이에 맞는 오차 막대를 표시하라. 매개변수 전체의 공분산 계산은 요구하지 않는다.\n\n### A.1 압력 센서 보정 (10점)\n\n두 기준압 $0.0\\,\\mathrm{kPa}$와 $200.0\\,\\mathrm{kPa}$에서 각 센서의 표시값과 CAL ID를 표에 기록하라. 각 센서의 감도 $g_i$와 영점 $b_i$를 결정하고 보정의 불확도를 평가하라. 표시값 변화 $\\Delta r_i$로부터 실제 압력 진폭 $P_i$를 구하는 식을 제시하라.\n\n### A.2 압력파의 속도 (15점)\n\n폐쇄 시간을 $2\\,\\mathrm{ms}$로 설정하라. 초기 유량 $Q_0$, 각 센서의 도달 시각 $t_i$ 및 RUN ID를 표에 기록하라. $t_i$를 $x_i$에 대한 그래프로 나타내고 직선을 맞추어 $c$와 $t_{\\mathrm{off}}$를 결정하라. 이어서 $K$를 계산하라. 결과는 각각 $\\mathrm{m\\,s^{-1}}$, $\\mathrm{ms}$, $\\mathrm{Pa}$ 단위로 제시하라.\n\n## Part B. 관의 지름 (50점)\n\n폐쇄 시간 $\\tau=2\\,\\mathrm{ms}$의 첫 압축파를 조사한다. 센서 $S_i$에서 폐쇄 직전 압력을 빼고 보정한 첫 압력 증가를 $P_i$라 하자. 압력 상승이 끝난 뒤 $3.0\\,\\mathrm{ms}$ 구간의 평균을 사용하되, 수조에서 반사된 파가 도달하기 전의 구간을 선택한다.\n\n빠른 폐쇄에서 밸브 부근의 초기 속력 $u_0$와 첫 압력 증가는 다음 관계를 만족한다. 출구 유량의 크기는 초기 단면적과 속력의 곱이다.\n\n$$\nP_0=\\rho c u_0,\\qquad Q_0=A_0u_0\n$$\n\n단면이 완만하게 변하는 관에서 첫 진행파가 운반하는 에너지의 전달률은 다음과 같다. 파가 진행하는 동안 이 값을 일정하게 근사한다.\n\n$$\n\\mathcal{F}(x)\\simeq\\frac{A(x)P(x)^2}{\\rho c}=\\text{constant}\n$$\n\n### B.1 직접파의 측정 구간 (10점)\n\n위치 $x$에서 직접파와 수조 반사파의 첫 도달 시각 차 $\\Delta t(x)$를 $L$, $x$, $c$로 나타내라. $S_7$에서 $\\Delta t$를 계산하고, $3.0\\,\\mathrm{ms}$의 평균 구간을 확보할 수 있는 $\\tau$의 상한을 구하라. A.2의 기록에서 각 센서의 진폭 $P_i$를 구하고 불확도와 함께 $\\mathrm{kPa}$ 단위로 표에 기록하라.\n\n### B.2 센서 위치의 내부 지름 (20점)\n\n측정한 $Q_0$, $c$, $P_0$로부터 밸브 쪽 내부 지름 $D_0$를 계산하라. 에너지 전달률의 식을 이용하여 $P(x)$와 $D(x)$ 사이의 관계를 구하라. 모든 센서 위치의 지름 $D_i$를 계산하여 $\\mathrm{mm}$ 단위로 표에 기록하라. 계산에 사용한 압력과 유량의 단위 및 분해능도 명시하라.\n\n### B.3 지름 함수의 결정 (20점)\n\n$S_0$, $S_2$, $S_4$, $S_6$의 측정값을 이용하여 $D_0$, $a$, $b$를 결정하라. 최종 함수 $D(x)$의 단위와 정의역을 명시하라. 사용한 측정점과 맞춘 곡선을 같은 $x$-$D$ 그래프에 나타내라. 이차식 맞춤에 최소제곱법을 사용해도 된다.\n\n## Part C. 측정 조건의 검증 (25점)\n\n지름 함수를 결정하는 데 사용하지 않은 센서 $S_1$, $S_3$, $S_5$, $S_7$로 결과를 검증한다. 측정한 지름을 $D_i$, 결정한 함수의 예측값을 $D_{\\mathrm{fit}}(x_i)$라 할 때, 상대 차이의 RMS를 다음과 같이 정의한다.\n\n$$\n\\eta=\\sqrt{\\frac{1}{4}\\sum_{i\\in\\{1,3,5,7\\}}\\left[\\frac{D_{\\mathrm{fit}}(x_i)-D_i}{D_i}\\right]^2}\n$$\n\n모든 센서에서 직접파의 상승과 $3.0\\,\\mathrm{ms}$의 평균 구간이 수조 반사파의 도달 전에 끝나도록 폐쇄 시간을 선택해야 한다. 또한 첫 진행파 근사는 다음 조건에서 사용한다. 단면적 $A(x)$는 측정으로 결정한 지름 함수로 계산한다.\n\n$$\n\\varepsilon=c\\tau\\max_{0\\leq x\\leq L}\\left|\\frac{\\mathrm{d}\\ln A}{\\mathrm{d}x}\\right|\\leq0.020\n$$\n\n### C.1 독립 센서로 검증 (10점)\n\nB.3에서 사용하지 않은 $S_1$, $S_3$, $S_5$, $S_7$의 지름을 예측하라. 예측값과 B.2의 측정값 $D_i$, 두 값의 상대 차이를 표에 기록하고 $\\eta$를 계산하라. 또한 $D(60.0\\,\\mathrm{m})$와 $D(120.0\\,\\mathrm{m})$를 $\\mathrm{mm}$ 단위로 구하라.\n\n### C.2 폐쇄 시간의 선택 (15점)\n\n결정한 $D(x)$로부터 $\\max|\\mathrm{d}\\ln A/\\mathrm{d}x|$를 $\\mathrm{m^{-1}}$ 단위로 계산하라. $\\varepsilon$ 조건과 모든 센서의 반사파 도달 조건을 함께 만족하는 $\\tau$의 범위를 구하라. 선택 가능한 값 중 가장 느린 폐쇄 시간을 정하고, 그 조건에서 새로 측정하여 지름 함수를 결정하라. 초기 결과와 새 결과의 $D_0$, $a$, $b$를 수치로 비교하라. 선택한 시간이 다시 $2\\,\\mathrm{ms}$여도 초기 맞춤과 별도의 기록을 사용하라.\n",
+      "body_en": "Water flows through a pipe connecting a large reservoir to a valve. Its walls are thick and its internal diameter varies slowly with position. In this experiment, use the pressure wave produced by closing the valve to determine the bulk modulus of water and the internal diameter as a function of position.\n\n## Apparatus and model\n\nA horizontal pipe of length $L=120.0\\,\\mathrm{m}$ connects a large reservoir at its left end to a valve at its right end. The water surface is $H=20.0\\,\\mathrm{m}$ above the pipe and remains constant. The coordinate $x$ is measured from the valve towards the reservoir. Water flows towards decreasing $x$. Neglect deformation of the pipe wall. The water density is $\\rho=1000\\,\\mathrm{kg\\,m^{-3}}$.\n\nThe internal diameter is $D(x)=D_0[1+a(x/L)+b(x/L)^2]$. The unknown parameters satisfy $40\\leq D_0/\\mathrm{mm}\\leq60$, $0.03\\leq a\\leq0.12$, and $0.01\\leq b\\leq0.08$. The cross-sectional area is $A(x)=\\pi D(x)^2/4$.\n\nPressure sensors $S_0$ to $S_7$ are at $x=0,\\,15,\\,30,\\,45,\\,60,\\,75,\\,90,\\,105\\,\\mathrm{m}$, respectively. They share a clock and record pressure every $0.10\\,\\mathrm{ms}$. Each record extends from $-3.0\\,\\mathrm{ms}$ to $160\\,\\mathrm{ms}$, including $3.0\\,\\mathrm{ms}$ before valve actuation to determine the initial pressure. A separate arrival trigger measures the first arrival time; it is not obtained by applying a threshold to the displayed pressure. The outlet flow-rate magnitude $Q_0>0$ is read in $\\mathrm{L\\,s^{-1}}$. Denote the initial speed near the valve by $u_0>0$.\n\nFor sensor $S_i$, the displayed reading $r_i$ and actual gauge pressure $p_i$ satisfy $r_i=g_i p_i+b_i$. In calibration mode, all sensors can be subjected to reference pressures of $0.0\\,\\mathrm{kPa}$ or $200.0\\,\\mathrm{kPa}$.\n\nThe actuator decreases the outlet flow linearly from $Q_0$ to zero during the closure time $\\tau$. Available closure times are $\\tau=2,\\,5,\\,10,\\,20,\\,50\\,\\mathrm{ms}$. The run command starts a new record from the same initial steady flow.\n\nInclude water compressibility, but neglect pipe deformation and viscous damping. The reservoir is a constant-pressure boundary and reflects an incident pressure wave with opposite sign. Analyse the first travelling wave in the slowly varying pipe.\n\nRecord the CAL/RUN IDs and conditions used in your calculations. Reading or exporting an existing record does not create a new measurement.\n\n![Figure 1. The pipe connecting a large reservoir to the valve, with pressure sensors $S_0$-$S_7$. The coordinate $x$ increases from the valve at $x=0$ towards the reservoir at $x=L$. The bore boundaries and diameter variation are exaggerated.](weekly/figures/pressure-wave-apparatus.svg)\n\n## Operating the apparatus\n\nOpen the CMD laboratory and enter ./waterhammer. Press Enter after each command. The up/down arrow keys recall previous commands; Ctrl+C exits the program. Records remain available after clearing the screen. Record the data, graphs and analysis used to obtain each result on the answer sheet.\n\nhelp — Show commands and units\ncal 0 — Record calibration data at $0.0\\,\\mathrm{kPa}$\ncal 200 — Record calibration data at $200.0\\,\\mathrm{kPa}$\ncal history — List CAL IDs and reference pressures\ncal stats — Display calibration counts and statistics\nset close 2 — Set the closure time to $2\\,\\mathrm{ms}$\nrun — Restore the initial steady flow and acquire a new RUN\nread 1 — Display the flow, arrival times and pressures before and after the rise for RUN 1\nstats 2 — Display statistics for records at $2\\,\\mathrm{ms}$\ntrace S4 1 — Display the S4 pressure-time trace for RUN 1\nexport 1 — Download all sensor traces for RUN 1 as CSV\nexport all — Download the CAL/RUN measurement summaries as CSV\n\n## Part A. Sensors and pressure waves (25 points)\n\nThe sensor offsets and sensitivities differ. The two reference pressures determine the coefficients $g_i$ and $b_i$ in\n\n$$\nr_i=g_i p_i+b_i\n$$\n\nA volume change $\\Delta V$ produces a pressure change $\\Delta p=-K\\Delta V/V$, where $K$ is the bulk modulus of water. Neglecting pipe-wall deformation, the wave speed is\n\n$$\nc=\\sqrt{\\frac{K}{\\rho}}\n$$\n\nArrival times are measured relative to the valve-actuation marker. If all arrival triggers have the same delay $t_{\\mathrm{off}}$, the arrival at $x_i$ is\n\n$$\nt_i=t_{\\mathrm{off}}+\\frac{x_i}{c}\n$$\n\nThe resolutions of displayed pressure, arrival time and flow rate are $0.1\\,\\mathrm{kPa}$, $0.1\\,\\mathrm{ms}$ and $0.0001\\,\\mathrm{L\\,s^{-1}}$, respectively. Evaluate uncertainties from the data and instrument resolution, and include appropriate error bars on graphs. A full parameter-covariance calculation is not required.\n\n### A.1 Calibration of the pressure sensors (10 points)\n\nTabulate the displayed reading of every sensor and its CAL ID at the reference pressures $0.0\\,\\mathrm{kPa}$ and $200.0\\,\\mathrm{kPa}$. Determine each sensor's sensitivity $g_i$ and offset $b_i$, and evaluate the calibration uncertainty. Give an expression for the actual pressure amplitude $P_i$ in terms of the displayed change $\\Delta r_i$.\n\n### A.2 Pressure-wave speed (15 points)\n\nSet the closure time to $2\\,\\mathrm{ms}$. Tabulate $Q_0$, the arrival times $t_i$ and the RUN ID. Plot $t_i$ against $x_i$ and fit a straight line to determine $c$ and $t_{\\mathrm{off}}$. Then calculate $K$. Give the three results in $\\mathrm{m\\,s^{-1}}$, $\\mathrm{ms}$ and $\\mathrm{Pa}$, respectively.\n\n## Part B. The pipe diameter (50 points)\n\nInvestigate the first compression wave for $\\tau=2\\,\\mathrm{ms}$. Let $P_i$ be the calibrated first pressure increase at $S_i$, relative to the pressure immediately before closure. Use a $3.0\\,\\mathrm{ms}$ average after the rise has ended and before the reservoir reflection arrives.\n\nFor rapid closure, the initial valve speed $u_0$, first pressure increase and outlet flow obey\n\n$$\nP_0=\\rho c u_0,\\qquad Q_0=A_0u_0\n$$\n\nFor a slowly varying cross-section, approximate the energy transfer rate of the first travelling wave as constant along the pipe:\n\n$$\n\\mathcal{F}(x)\\simeq\\frac{A(x)P(x)^2}{\\rho c}=\\text{constant}\n$$\n\n### B.1 The direct-wave measurement interval (10 points)\n\nExpress the difference $\\Delta t(x)$ between the first direct-wave and reservoir-reflection arrival times in terms of $L$, $x$ and $c$. Calculate $\\Delta t$ at $S_7$ and find the upper bound on $\\tau$ that leaves a $3.0\\,\\mathrm{ms}$ averaging interval. Use the A.2 records to determine and tabulate each $P_i$ with its uncertainty in $\\mathrm{kPa}$.\n\n### B.2 Internal diameter at the sensors (20 points)\n\nCalculate the valve-end diameter $D_0$ from the measured $Q_0$, $c$ and $P_0$. Use the energy-transfer expression to obtain the relation between $P(x)$ and $D(x)$. Calculate and tabulate $D_i$ at every sensor in $\\mathrm{mm}$. State the units and resolutions of the pressure and flow data used.\n\n### B.3 Determining the diameter function (20 points)\n\nUse the measurements from $S_0$, $S_2$, $S_4$, $S_6$ to determine $D_0$, $a$ and $b$. State the units and domain of your final function $D(x)$. Plot the measurements used and the fitted curve on the same $x$-$D$ graph. A least-squares quadratic fit may be used.\n\n## Part C. Checking the measurement conditions (25 points)\n\nUse sensors $S_1$, $S_3$, $S_5$, $S_7$, which were not used to determine the diameter function, to test it. Let $D_i$ be the measured diameter and $D_{\\mathrm{fit}}(x_i)$ the fitted prediction. Define the RMS relative difference by\n\n$$\n\\eta=\\sqrt{\\frac14\\sum_{i\\in\\{1,3,5,7\\}}\\left[\\frac{D_{\\mathrm{fit}}(x_i)-D_i}{D_i}\\right]^2}\n$$\n\nAt every sensor, the direct-wave rise and the $3.0\\,\\mathrm{ms}$ averaging interval must end before the reservoir reflection arrives. In addition, use the first-wave approximation only when the following condition holds. Calculate $A(x)$ from the diameter function determined experimentally.\n\n$$\n\\varepsilon=c\\tau\\max_{0\\leq x\\leq L}\\left|\\frac{\\mathrm{d}\\ln A}{\\mathrm{d}x}\\right|\\leq0.020\n$$\n\n### C.1 Validation with independent sensors (10 points)\n\nPredict the diameters at $S_1$, $S_3$, $S_5$, $S_7$, which were not used in B.3. Tabulate these predictions, the measured $D_i$ from B.2, and their relative differences. Calculate $\\eta$. Also determine $D(60.0\\,\\mathrm{m})$ and $D(120.0\\,\\mathrm{m})$ in $\\mathrm{mm}$.\n\n### C.2 Selecting the closure time (15 points)\n\nCalculate $\\max|\\mathrm{d}\\ln A/\\mathrm{d}x|$ in $\\mathrm{m^{-1}}$ from your diameter function. Find the range of $\\tau$ satisfying both the $\\varepsilon$ condition and the reflection-arrival condition at every sensor. Select the slowest available closure time in that range. Acquire new data at this setting and determine the diameter function again. Compare the initial and new values of $D_0$, $a$ and $b$ numerically. Use records separate from the initial fit even if the chosen time is again $2\\,\\mathrm{ms}$.\n",
+      "unit": null,
+      "answer": null,
+      "rubric": [
+        {
+          "id": "A.1.cal0",
+          "name": "A.1 · 압력 센서 보정 · cal0",
+          "max": 1,
+          "requirement": "기준압 0 kPa에서 모든 센서의 유효한 보정 자료 확보",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.1.cal200",
+          "name": "A.1 · 압력 센서 보정 · cal200",
+          "max": 1,
+          "requirement": "기준압 200 kPa에서 모든 센서의 유효한 보정 자료 확보",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.1.table",
+          "name": "A.1 · 압력 센서 보정 · table",
+          "max": 2,
+          "requirement": "8개 센서의 두 기준압 표시값·원자료 ID·단위를 표에 기록",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.1.coefficients",
+          "name": "A.1 · 압력 센서 보정 · coefficients",
+          "max": 2,
+          "requirement": "b_i=r_i(0), g_i=[r_i(200)-r_i(0)]/200; 적절히 집계한 표시값도 인정",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.1.uncertainty",
+          "name": "A.1 · 압력 센서 보정 · uncertainty",
+          "max": 2,
+          "requirement": "분해능과 사용 자료에 근거하여 보정의 불확도를 일관되게 평가",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.1.conversion",
+          "name": "A.1 · 압력 센서 보정 · conversion",
+          "max": 2,
+          "requirement": "P_i=Δr_i/g_i, 영점은 같은 센서의 차에서 소거됨",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.2.records",
+          "name": "A.2 · 압력파의 속도 · records",
+          "max": 3,
+          "requirement": "폐쇄 시간 2 ms에서 초기 유량과 모든 센서의 유효한 도달 시각 자료 확보",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.2.summary",
+          "name": "A.2 · 압력파의 속도 · summary",
+          "max": 3,
+          "requirement": "도달 시각·유량·단위를 표로 정리하고 원자료 ID 및 불확도 평가 근거를 기록",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.2.graph",
+          "name": "A.2 · 압력파의 속도 · graph",
+          "max": 3,
+          "requirement": "위치-도달 시각의 8점, 단위·불확도 막대·맞춘 직선",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.2.fit",
+          "name": "A.2 · 압력파의 속도 · fit",
+          "max": 2,
+          "requirement": "절편 자유 직선의 기울기와 공통 지연을 구함; 원점 강제 맞춤하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "A.2.cK",
+          "name": "A.2 · 압력파의 속도 · cK",
+          "max": 4,
+          "requirement": "c=1/기울기 및 K=ρc²의 식·단위·수치(각 2점). 수치는 이 참가자의 trusted server session reference 및 측정 불확도와 비교한다. 기준 장치 예시값을 강제하지 않는다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.1.echo",
+          "name": "B.1 · 직접파의 측정 구간 · echo",
+          "max": 3,
+          "requirement": "직접 경로 x, 수조 반사 경로 2L-x에서 Δt=2(L-x)/c",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.1.s7",
+          "name": "B.1 · 직접파의 측정 구간 · s7",
+          "max": 2,
+          "requirement": "S7의 시간차를 Δt7=2(L-105 m)/c로 계산한다. 해당 참가자의 측정 파속 및 trusted session reference를 사용하며 고정된 예시 시간차를 강제하지 않는다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.1.closure",
+          "name": "B.1 · 직접파의 측정 구간 · closure",
+          "max": 2,
+          "requirement": "τ+3 ms<Δt7에서 τ<Δt7-3 ms의 상한을 구한다. 해당 장치의 파속과 단위를 적용하고 경계에서는 엄격 부등식을 사용한다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.1.window",
+          "name": "B.1 · 직접파의 측정 구간 · window",
+          "max": 2,
+          "requirement": "상승 완료 후 3ms 창을 택하고 반사파와 겹친 기록을 사용하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.1.pressure",
+          "name": "B.1 · 직접파의 측정 구간 · pressure",
+          "max": 1,
+          "requirement": "초기 자료의 보정된 압력 진폭과 불확도를 기록하고 계산에 사용한 자료를 명시",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.d0formula",
+          "name": "B.2 · 센서 위치의 내부 지름 · d0formula",
+          "max": 4,
+          "requirement": "D0=sqrt[4ρcQ0/(πP0)] 유도 또는 관계식 결합",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.d0value",
+          "name": "B.2 · 센서 위치의 내부 지름 · d0value",
+          "max": 4,
+          "requirement": "이 참가자의 측정 유량·보정 진폭·파속에 따른 D0 수치와 단위 변환. trusted session reference의 D0와 약1% 범위에서 비교하며 고정된50 mm를 요구하지 않는다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.relative",
+          "name": "B.2 · 센서 위치의 내부 지름 · relative",
+          "max": 4,
+          "requirement": "A P² 일정, 양의 진폭에서 D(x)P(x)=D0P0",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.sensors",
+          "name": "B.2 · 센서 위치의 내부 지름 · sensors",
+          "max": 4,
+          "requirement": "8개 센서의 보정된 P로 D_i 산출, 센서마다 0.5점",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.units",
+          "name": "B.2 · 센서 위치의 내부 지름 · units",
+          "max": 2,
+          "requirement": "L/s→m³/s, kPa→Pa, 최종 지름 단위 정확",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.2.precision",
+          "name": "B.2 · 센서 위치의 내부 지름 · precision",
+          "max": 2,
+          "requirement": "입력 자료의 분해능과 유효숫자를 유지하며 불확도를 0으로 단정하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.3.method",
+          "name": "B.3 · 지름 함수의 결정 · method",
+          "max": 5,
+          "requirement": "S0/2/4/6만 사용하여 이차식 계수 추정; 방법과 사용 자료 명시",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.3.parameters",
+          "name": "B.3 · 지름 함수의 결정 · parameters",
+          "max": 5,
+          "requirement": "이 참가자의 D0,a,b 추정값. trusted session reference를 기준으로 a,b 각각 약0.02 또는 전체 지름 함수 RMS 상대오차≤1.5%인 추정도 인정한다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.3.graph",
+          "name": "B.3 · 지름 함수의 결정 · graph",
+          "max": 5,
+          "requirement": "위치-내부지름 그래프의 사용 측정점과 맞춘 곡선, 축·단위",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.3.function",
+          "name": "B.3 · 지름 함수의 결정 · function",
+          "max": 3,
+          "requirement": "단위 및 0≤x≤L 정의역을 포함한 최종 D(x)",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "B.3.consistency",
+          "name": "B.3 · 지름 함수의 결정 · consistency",
+          "max": 2,
+          "requirement": "사용 자료와 집계 방법이 일관되며 보정되지 않은 표시값을 직접 지름으로 오인하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.1.holdout",
+          "name": "C.1 · 독립 센서로 검증 · holdout",
+          "max": 3,
+          "requirement": "S1/3/5/7의 예측·측정 지름과 상대 차이 표",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.1.rms",
+          "name": "C.1 · 독립 센서로 검증 · rms",
+          "max": 3,
+          "requirement": "지름의 상대 차이로 정의한 RMS η 계산; 표시압 RMS와 혼동하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.1.locations",
+          "name": "C.1 · 독립 센서로 검증 · locations",
+          "max": 2,
+          "requirement": "복원한 참가자별 함수에서 D(60 m),D(120 m)의 수치 및 단위. trusted session reference와 일관되게 비교하며 기준 장치의52.5/56 mm를 강제하지 않는다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.1.comparison",
+          "name": "C.1 · 독립 센서로 검증 · comparison",
+          "max": 2,
+          "requirement": "맞춤에 사용하지 않은 센서임을 구분하고 불확도 수준과 수치 비교",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.gradient",
+          "name": "C.2 · 폐쇄 시간의 선택 · gradient",
+          "max": 3,
+          "requirement": "복원한 참가자별 함수에서 |d ln A/dx|의 최대값을 계산한다. trusted session reference 및 사용한 추정 계수에 맞는 값인지 확인한다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.bounds",
+          "name": "C.2 · 폐쇄 시간의 선택 · bounds",
+          "max": 3,
+          "requirement": "ε 제한 τ≤0.020/(c max|d ln A/dx|)과 모든 센서의 반사 창 제한 τ<min_i[2(L-x_i)/c]-3 ms를 각각 계산하고 교집합을 구한다. 참가자별 trusted session reference를 적용한다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.choice",
+          "name": "C.2 · 폐쇄 시간의 선택 · choice",
+          "max": 2,
+          "requirement": "이 참가자의 조건을 모두 만족하는 후보2,5,10,20,50 ms 중 가장 느린 값을 선택한다. trusted session reference의 selected candidate를 사용하며 장치에 따라2 ms 또는5 ms일 수 있다. 고정된5 ms를 강제하지 않는다.",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.validation",
+          "name": "C.2 · 폐쇄 시간의 선택 · validation",
+          "max": 3,
+          "requirement": "선택 조건에서 초기 맞춤 자료와 별개인 유효한 새 압력파 자료 확보 및 RUN ID 기록",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.refit",
+          "name": "C.2 · 폐쇄 시간의 선택 · refit",
+          "max": 2,
+          "requirement": "새 자료로 함수 재추정 및 초기 계수/지름과 수치 비교",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        },
+        {
+          "id": "C.2.uncertainty",
+          "name": "C.2 · 폐쇄 시간의 선택 · uncertainty",
+          "max": 2,
+          "requirement": "자료와 계기 분해능을 바탕으로 검증 결과의 불확도를 일관되게 평가; 오차 0 단정하지 않음",
+          "partial": "Award only supported components in this subquestion. Accept equivalent methods, consistent carry-forward estimates and instrument-limited rounding. Assess data adequacy and uncertainty, never a prescribed repeat count. Unsupported or missing results receive no corresponding marks."
+        }
+      ],
+      "model_ko": "아래 수치는 기준 장치에 대한 예시이다. 참가자별 저장된 실험 장치의 매개변수는 다르다. 실제 채점에서는 서버가 제공하는 해당 계정의 실험 기준값을 우선하며, 지름·파속·탄성률·유량·진폭·폐쇄 시간 상한·선택 후보를 아래 예시값에 맞추도록 요구하지 않는다. 조건을 만족하는 후보는 장치에 따라 2 ms 또는 5 ms일 수 있다.\n\n## A.1\n센서별 기준압 표시값으로 $b_i=r_i(0)$, $g_i=[r_i(200)-r_i(0)]/(200\\,\\mathrm{kPa})$를 구한다. 같은 센서의 차에서는 영점이 소거되므로 $P_i=\\Delta r_i/g_i$이다. 실제 CAL ID와 표시값은 저장된 실험 기록을 사용한다. 분해능과 사용 자료에 맞는 불확도 평가를 인정하며, 단일 관측에 표본 표준편차·SEM을 0으로 부여하지 않는다. 측정 횟수 자체는 채점하지 않는다.\n\n## A.2\n$t_i=\\alpha x_i+\\beta$를 절편 자유 직선으로 맞추면 $c=1/\\alpha$, $t_{\\mathrm{off}}=\\beta$, $K=\\rho c^2$이다. 기준값은 $c\\simeq1483.24\\,\\mathrm{m\\,s^{-1}}$, $K\\simeq2.200\\times10^9\\,\\mathrm{Pa}$, $t_{\\mathrm{off}}\\simeq0.30\\,\\mathrm{ms}$이다. 유량은 약 $0.1500\\,\\mathrm{L\\,s^{-1}}=1.500\\times10^{-4}\\,\\mathrm{m^3\\,s^{-1}}$이다. 기울기 계산에서 ms를 s로 변환한다.\n\n## B.1\n직접 경로와 수조 반사 경로의 길이는 각각 $x$, $2L-x$이므로\n$$\\Delta t(x)=\\frac{2(L-x)}c.$$\n$S_7$에서 $\\Delta t_7\\simeq20.2260\\,\\mathrm{ms}$이다. 상승이 완료된 뒤 평균 구간을 확보하려면 $\\tau+3.0\\,\\mathrm{ms}<\\Delta t_7$, 즉 $\\tau<17.2260\\,\\mathrm{ms}$이다. 반사와 겹치지 않는 구간에서 전후 표시값 차를 구하고 감도로 나누어 보정한다. 밸브 쪽 첫 진폭은 약 $113.311\\,\\mathrm{kPa}$이다.\n\n## B.2\n$P_0=\\rho c u_0$, $Q_0=A_0u_0$를 결합하면\n$$D_0=\\sqrt{\\frac{4\\rho cQ_0}{\\pi P_0}}\\simeq50.0\\,\\mathrm{mm}.$$\n에너지 전달률이 일정하므로 $AP^2=A_0P_0^2$이고, 양의 진폭에서 $D(x)P(x)=D_0P_0$이다. 따라서 $D_i=D_0P_0/P_i$이다. $S_0$부터 $S_7$까지의 기준 지름은 mm 단위로 $50.0000,50.53125,51.1250,51.78125,52.5000,53.28125,54.1250,55.03125$이다. 실제 측정값의 잡음·분해능에 따른 차이를 인정한다.\n\n## B.3\n$u=x/L$로 놓고 $S_0,S_2,S_4,S_6$의 자료로 $D=A+Bu+Cu^2$를 맞춘다. $D_0=A$, $a=B/A$, $b=C/A$이다. 기준 함수는\n$$D(x)=50.0\\left[1+0.0800\\left(\\frac{x}{120.0}\\right)+0.0400\\left(\\frac{x}{120.0}\\right)^2\\right]\\,\\mathrm{mm},\\qquad0\\leq x\\leq120.0\\,\\mathrm m,$$\n여기서 $x$의 단위는 m이다. 사용한 측정점과 맞춘 곡선을 축·단위와 함께 나타낸다. 계수 간 상관을 고려하여 전체 지름 함수가 정확한 추정도 인정한다.\n\n## C.1\n맞춤에 쓰지 않은 $S_1,S_3,S_5,S_7$에서 예측 지름과 측정 지름의 상대 차이로 $\\eta$를 계산한다. 잡음 없는 기준 함수에서는 0이나, 측정 자료의 $\\eta$가 정확히 0일 필요는 없다. $D(60.0\\,\\mathrm m)\\simeq52.5\\,\\mathrm{mm}$, $D(120.0\\,\\mathrm m)\\simeq56.0\\,\\mathrm{mm}$이다.\n\n## C.2\n$$\\left|\\frac{\\mathrm d\\ln A}{\\mathrm dx}\\right|=\\frac2L\\left|\\frac{a+2bu}{1+au+bu^2}\\right|,\\qquad u=x/L.$$\n기준 계수에서는 수조 끝에서 최대이며 $1/420\\,\\mathrm{m^{-1}}$이다. 근사 조건은 $\\tau\\leq5.66328\\,\\mathrm{ms}$, 반사 조건은 $\\tau<17.2260\\,\\mathrm{ms}$이므로 공통 구간은 $0<\\tau\\leq5.66328\\,\\mathrm{ms}$이다. 후보 중 가장 느린 값은 $5\\,\\mathrm{ms}$이다. 초기 맞춤과 별개인 기록으로 다시 함수를 결정하고 두 추정값의 $D_0,a,b$를 불확도와 함께 수치로 비교한다.\n\n## 채점 원칙\n총점은 100점이며 반복 횟수에 배점·감점하지 않는다. 단일 관측도 목적에 충분하고 분해능에 맞는 불확도 평가가 있으면 인정한다. 동일한 상위 문항의 오차로 연쇄 감점하지 않는다. 기준 허용 범위는 $c$ 약 1%, $K$ 약 3%, 센서 지름 약 1%이며, $a,b$ 각각 약 0.02 이내 또는 전체 지름 함수 RMS 상대오차 1.5% 이내의 추정도 인정한다. 이 수치 기준만으로 유도·측정표·그래프의 타당성을 대체하지 않는다.\n",
+      "model_en": "This worked example uses nominal apparatus parameters only. Every participant's stored instrument session has its own parameters. For grading, the trusted server-side session reference overrides every nominal numerical value below, including diameters, wave speed, bulk modulus, flow, pressure amplitudes, closure bounds and the selected closure candidate. Correct experimental results need not agree with the nominal example. A valid selected candidate may be 2 ms or 5 ms.\n\n## A.1\nFor each sensor, the calibration readings give\n$$b_i=r_i(0),\\qquad g_i=\\frac{r_i(200)-r_i(0)}{200\\,\\mathrm{kPa}},\\qquad P_i=\\frac{\\Delta r_i}{g_i}.$$\nThe readings and CAL IDs depend on the student's stored apparatus records. A difference on the same sensor removes the offset. Use the pressure resolution and an uncertainty model consistent with the actual data. A single reading is valid when sufficient. Sample standard deviation and SEM are undefined for a single reading, not zero. Do not require a repeated-measurement count or award marks for the count itself.\n\n## A.2\nFit $t_i=\\alpha x_i+\\beta$ with a free intercept. Then $c=1/\\alpha$, $t_{\\mathrm{off}}=\\beta$, and $K=\\rho c^2$. Use seconds when converting the slope to SI units. Expected values are approximately $c=1483.24\\,\\mathrm{m\\,s^{-1}}$, $K=2.200\\times10^9\\,\\mathrm{Pa}$ and $t_{\\mathrm{off}}=0.30\\,\\mathrm{ms}$. Arrival-trigger quantization and noise produce small record-dependent differences. The measured flow is approximately $Q_0=0.1500\\,\\mathrm{L\\,s^{-1}}=1.500\\times10^{-4}\\,\\mathrm{m^3\\,s^{-1}}$.\n\n## B.1\nThe direct and first reflected path lengths to $x$ are $x$ and $2L-x$:\n$$\\Delta t(x)=\\frac{2(L-x)}{c}.$$\nThe shortest separation is at $S_7$, where $x=105\\,\\mathrm{m}$ and $\\Delta t_7=20.2260\\,\\mathrm{ms}$. An isolated $3.0\\,\\mathrm{ms}$ plateau average requires $\\tau+3.0\\,\\mathrm{ms}<\\Delta t_7$, hence $\\tau<17.2260\\,\\mathrm{ms}$. Exclude the rise and the reflected wave from the averaging window. Subtract the pre-closure pressure, then divide the displayed increase by the calibrated gain. The valve amplitude is approximately $113.311\\,\\mathrm{kPa}$.\n\n## B.2\nCombining $P_0=\\rho c u_0$, $Q_0=A_0u_0$ and $A_0=\\pi D_0^2/4$ gives\n$$D_0=\\sqrt{\\frac{4\\rho cQ_0}{\\pi P_0}}\\simeq50.0\\,\\mathrm{mm}.$$\nConstant energy flux gives $A(x)P(x)^2=A_0P_0^2$. Since the incident amplitude is positive and $A\\propto D^2$,\n$$D(x)P(x)=D_0P_0,\\qquad D_i=D_0\\frac{P_0}{P_i}.$$\nAt $S_0$ to $S_7$, the reference diameters in mm are $50.0000,50.53125,51.1250,51.78125,52.5000,53.28125,54.1250,55.03125$. Reference incident pressures in kPa are $113.31117,112.11989,110.81777,109.41332,107.91540,106.33306,104.67544,102.95166$. Use the student's valid measured values rather than requiring exact noiseless readings.\n\n## B.3\nPut $u=x/L$. Fit $D=A+Bu+Cu^2$ using only $S_0,S_2,S_4,S_6$. Recover $D_0=A$, $a=B/A$ and $b=C/A$. The reference is\n$$D(x)=50.0\\left[1+0.0800\\left(\\frac{x}{120.0}\\right)+0.0400\\left(\\frac{x}{120.0}\\right)^2\\right]\\,\\mathrm{mm},\\qquad 0\\leq x\\leq120.0\\,\\mathrm{m},$$\nwhere $x$ is expressed in metres. Plot the used measurements and the fitted function with labelled axes and units. Correlated errors in $a,b$ are possible; an accurate diameter function need not match each coefficient to excessive precision.\n\n## C.1\nAt the unused sensors $S_1,S_3,S_5,S_7$, compare $D_{\\mathrm{fit}}(x_i)$ with independently measured $D_i$ and calculate the specified RMS of relative diameter differences. The noiseless model has $\\eta=0$, but real simulated readings give a small nonzero value. Do not demand zero measured error. Report $D(60.0\\,\\mathrm{m})\\simeq52.5\\,\\mathrm{mm}$ and $D(120.0\\,\\mathrm{m})\\simeq56.0\\,\\mathrm{mm}$.\n\n## C.2\nFor $f(u)=1+au+bu^2$,\n$$\\left|\\frac{\\mathrm d\\ln A}{\\mathrm dx}\\right|=\\frac2L\\left|\\frac{a+2bu}{1+au+bu^2}\\right|.$$\nFor the fitted reference coefficients, the expression increases over $0\\leq u\\leq1$. Its maximum is $1/420\\,\\mathrm{m^{-1}}=2.380952\\times10^{-3}\\,\\mathrm{m^{-1}}$ at the reservoir end. The approximation criterion gives $\\tau\\leq0.020/(c\\max|\\mathrm d\\ln A/\\mathrm dx|)=5.66328\\,\\mathrm{ms}$. The reflection condition gives the weaker bound $\\tau<17.2260\\,\\mathrm{ms}$. The common interval is $0<\\tau\\leq5.66328\\,\\mathrm{ms}$ and its slowest available setting is $5\\,\\mathrm{ms}$. Acquire new records at that setting, refit the same function and compare the new $D_0,a,b$ numerically with the initial estimates using uncertainties. Reusing the initial RUN records does not independently validate the result.\n\n## Marking conventions\nThe total is 100 points. Assess only the submitted subquestion's data and analysis. Accept equivalent methods and reasonable carry-forward values; do not repeatedly penalize the same upstream numerical error. No measurement-count quota applies. Accept well-supported single readings and appropriate resolution-based uncertainty; repeated records may be analysed with sample statistics when used. A waveform's time samples are not separate RUNs. Reference tolerances are about 1% for $c$, 3% for $K$ and 1% for sensor diameters. Accept $a,b$ within about 0.02 individually, or a recovered diameter function with RMS relative error at most 1.5%. Instrument record IDs and conditions must be consistent with the submitted data. Numerical tolerances do not replace credit for valid equations, graphs or analysis.\n",
+      "source": "HaslaLab · pressure-wave-experiment-v1",
+      "opens_at": 1793372400,
+      "closes_at": 1796050800,
+      "created_at": 1793372400
+    }
+  ]
+}

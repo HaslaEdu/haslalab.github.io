@@ -456,7 +456,7 @@ function drawTray(){
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
 const TABS=["disk","etalon","holder","meter"];
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 /* ── the disk, the detector and two loupes ── */
 function loupe(lx,ly,LR,val,lab){ const zz=LR/6; circ(lx,ly,LR,"#e9eef1","#555",2); ctx.save(); ctx.beginPath(); ctx.arc(lx,ly,LR-2,0,7); ctx.clip();
   for(let dg=Math.floor(val)-8;dg<=Math.ceil(val)+8;dg++){ const x=lx+(dg-val)*zz, L=dg%10===0?LR*0.5:dg%5===0?LR*0.36:LR*0.24; ctx.strokeStyle="#222"; ctx.lineWidth=dg%10===0?2:1.2; ctx.beginPath(); ctx.moveTo(x,ly-LR); ctx.lineTo(x,ly-LR+L); ctx.stroke();

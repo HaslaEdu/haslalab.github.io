@@ -1,0 +1,32 @@
+name: Site performance contracts
+
+on:
+  push:
+    branches: [main]
+    paths: ["index.html", "pdf-assets.json", "community/src/model-test-catalog.js", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "developer-server-guide.js", "tests/test-developer-guide.cjs", "tests/test-model-test-*.cjs", "tools/model-test-catalogue.cjs", "monthly-figures.js", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "sim/monthly-pressure-wave/**", "weekly/figures/**", "sim/monthly-answer-sheet.mjs", "tests/test-monthly-*.cjs", "catalogue/**", "sim/*.js", "sim/labscan/**", "tests/test-markerless-scanner.mjs", "tests/test-scan-quality.mjs", "tests/test-contest-review.cjs", "sim/*.html", "sim/ipho2019/**", "vendor/three/**", "vendor/pyodide/**", "src/ipho2019_E1_sim_KO.py", "tests/fixtures/ipho2019-e1-*", "tests/test-ipho2019-*.mjs", "tests/test-learn-coming-soon.cjs", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
+  pull_request:
+    paths: ["index.html", "pdf-assets.json", "community/src/model-test-catalog.js", "pay.html", "site-*.js", "theory.js", "contest-exams.js", "iypt.js", "usaco.js", "rupho*.js", "arena.js", "developer-server-guide.js", "tests/test-developer-guide.cjs", "tests/test-model-test-*.cjs", "tools/model-test-catalogue.cjs", "monthly-figures.js", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "sim/monthly-pressure-wave/**", "weekly/figures/**", "sim/monthly-answer-sheet.mjs", "tests/test-monthly-*.cjs", "catalogue/**", "sim/*.js", "sim/labscan/**", "tests/test-markerless-scanner.mjs", "tests/test-scan-quality.mjs", "tests/test-contest-review.cjs", "sim/*.html", "sim/ipho2019/**", "vendor/three/**", "vendor/pyodide/**", "src/ipho2019_E1_sim_KO.py", "tests/fixtures/ipho2019-e1-*", "tests/test-ipho2019-*.mjs", "tests/test-learn-coming-soon.cjs", "sim/results/**", "tools/results/**", "tools/build-result-comparisons.py", "tools/build-site-catalogue.cjs", "tests/test-site-*.cjs", "tests/test-api-endpoint-migration.cjs", "tests/test-exam-network.cjs", "tests/test-result-comparison.cjs", "tests/test-*-results.cjs", ".github/workflows/site-performance.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/build-site-catalogue.cjs --check
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/build-result-comparisons.py --check
+      - run: node --test tests/test-site-runtime.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs tests/test-result-comparison.cjs tests/test-*-results.cjs
+      - run: node --test tests/test-weekly-rendering.cjs tests/test-monthly-*.cjs
+      - run: node --test tests/test-markerless-scanner.mjs tests/test-scan-quality.mjs tests/test-contest-review.cjs
+
+      - run: node --check developer-server-guide.js && node --test tests/test-developer-guide.cjs tests/test-model-test-ui.cjs tests/test-model-test-exam-ui.cjs tests/test-model-test-catalogue.cjs
+
+      - run: node --test tests/test-ipho2019-e1-physics.mjs tests/test-ipho2019-e1-python.mjs tests/test-ipho2019-e1-scene.mjs tests/test-learn-coming-soon.cjs

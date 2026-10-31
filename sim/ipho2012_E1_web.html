@@ -590,7 +590,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["top","cal","paper","refl"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
 
 /* ── 1. the support plate from above (x to the right, y towards you = down) ── */

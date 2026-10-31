@@ -1,0 +1,278 @@
+{
+  "source": "IZhO_2023_TS.pdf",
+  "source_sha256": "f71699850bf7313579b273c6b40e17984edfeb8fadde30354c8afe1b526ce93d",
+  "source_total_pages": 62,
+  "source_edition_pages_1based": [
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ],
+  "source_edition": "Complete19-page English edition; preceding24Kazakh and following19Russian pages are alternate editions.",
+  "translation_policy": "Translate only the source prose. Retain native equations, variables, numerical data, font programs, page geometry, and original diagram and inline-image programs. No new PDF titles, editorial notes, or errata are inserted.",
+  "matched_korean_faces": "Preserve source serif/sans, bold/italic, point size, baseline, alignment, and title hierarchy. Use matched Noto CJK only for Korean glyphs absent from original fonts; reuse original Latin and mathematical resources unchanged.",
+  "source_italic_slant_measurements": [
+    {
+      "source_page": 25,
+      "font": "Times-BoldItalic",
+      "source_alias": "/R830",
+      "font_program_sha256": "3053be0348bc7d819a38247d4c294d034bdfbc6fd355c646909af8b7049cb21b",
+      "declared_fontdescriptor_angle": 0,
+      "declared_cff_angle": 0,
+      "font_matrix": [
+        0.001,
+        0.0,
+        0.0,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+      "estimated_angle_deg": 15.201117041844357,
+      "segments": [
+        {
+          "glyph": "I",
+          "start": [
+            210,
+            152
+          ],
+          "end": [
+            324,
+            572
+          ],
+          "dx_em": 0.114,
+          "dy_em": 0.42,
+          "slope": 0.27142857142857146,
+          "angle_deg": 15.185837262201323
+        },
+        {
+          "glyph": "I",
+          "start": [
+            171,
+            546
+          ],
+          "end": [
+            48,
+            97
+          ],
+          "dx_em": -0.123,
+          "dy_em": -0.449,
+          "slope": 0.27394209354120264,
+          "angle_deg": 15.319884063016515
+        },
+        {
+          "glyph": "H",
+          "start": [
+            609,
+            175
+          ],
+          "end": [
+            718,
+            572
+          ],
+          "dx_em": 0.109,
+          "dy_em": 0.397,
+          "slope": 0.27455919395465994,
+          "angle_deg": 15.352767998393867
+        },
+        {
+          "glyph": "H",
+          "start": [
+            178,
+            546
+          ],
+          "end": [
+            56,
+            97
+          ],
+          "dx_em": -0.122,
+          "dy_em": -0.449,
+          "slope": 0.2717149220489978,
+          "angle_deg": 15.201117041844357
+        }
+      ]
+    },
+    {
+      "source_page": 26,
+      "font": "Times-BoldItalic",
+      "source_alias": "/R830",
+      "font_program_sha256": "3053be0348bc7d819a38247d4c294d034bdfbc6fd355c646909af8b7049cb21b",
+      "declared_fontdescriptor_angle": 0,
+      "declared_cff_angle": 0,
+      "font_matrix": [
+        0.001,
+        0.0,
+        0.0,
+        0.001,
+        0.0,
+        0.0
+      ],
+      "method": "Weighted median dx/dy of actual embedded CFF l/i/I/H/h lineTo stem edges with absolute transformed dy > 0.35 em; weight is absolute transformed dy.",
+      "estimated_angle_deg": 15.201117041844357,
+      "segments": [
+        {
+          "glyph": "I",
+          "start": [
+            210,
+            152
+          ],
+          "end": [
+            324,
+            572
+          ],
+          "dx_em": 0.114,
+          "dy_em": 0.42,
+          "slope": 0.27142857142857146,
+          "angle_deg": 15.185837262201323
+        },
+        {
+          "glyph": "I",
+          "start": [
+            171,
+            546
+          ],
+          "end": [
+            48,
+            97
+          ],
+          "dx_em": -0.123,
+          "dy_em": -0.449,
+          "slope": 0.27394209354120264,
+          "angle_deg": 15.319884063016515
+        },
+        {
+          "glyph": "H",
+          "start": [
+            609,
+            175
+          ],
+          "end": [
+            718,
+            572
+          ],
+          "dx_em": 0.109,
+          "dy_em": 0.397,
+          "slope": 0.27455919395465994,
+          "angle_deg": 15.352767998393867
+        },
+        {
+          "glyph": "H",
+          "start": [
+            178,
+            546
+          ],
+          "end": [
+            56,
+            97
+          ],
+          "dx_em": -0.122,
+          "dy_em": -0.449,
+          "slope": 0.2717149220489978,
+          "angle_deg": 15.201117041844357
+        }
+      ]
+    }
+  ],
+  "missing_source_italic_angle_policy": "The explicitly reviewed original italic CFF and FontDescriptor both report zero despite leaning outlines. Measure long stems from the actual embedded CFF with its FontMatrix; apply the measured slant only to new Korean prose. Original font programs and glyphs are unchanged.",
+  "duplicated_source_language_passages": [
+    {
+      "source_page": 32,
+      "english_page": 8,
+      "description": "The English edition contains a preceding Russian version of the kinetic-energy-increase condition. Translate both original passages into Korean while retaining their source lines."
+    },
+    {
+      "source_page": 38,
+      "english_page": 14,
+      "description": "The maximum-coordinate velocity paragraph is preceded by Russian prose interspersed with native x,u,z variables. Translate both language passages, keeping each mathematical glyph at its original coordinate."
+    },
+    {
+      "source_page": 40,
+      "english_page": 16,
+      "description": "The Biot-Savart thin-ring paragraph starts with Russian prose and then repeats in English. Translate both passages, retaining all original equations, duplicated variables, and line baselines."
+    }
+  ],
+  "source_anomalies_kept": [
+    {
+      "source_page": 29,
+      "description": "The problem1.3heading prints4.0points while the problem1heading prints10.0points; original values are retained."
+    },
+    {
+      "source_page": 30,
+      "description": "The two native numerical lines in equation(7) both print N3; native subscripts and values are retained."
+    },
+    {
+      "source_page": 32,
+      "description": "The source prints a doubled semicolon after the explanation of equation(19); native punctuation/information is retained."
+    },
+    {
+      "source_page": 36,
+      "description": "The original grading table calls the kinetic-energy condition Inequalities(7); that source reference is translated as printed."
+    },
+    {
+      "source_page": 39,
+      "description": "The original English calls equation(25)the cyclotron condition. Translate the source name as written."
+    },
+    {
+      "source_pages": [
+        32,
+        40,
+        41,
+        43
+      ],
+      "description": "Original tiny comparison-operator images, their alpha masks, clipping/painting, and all source render idiosyncrasies are retained without replacing symbols or bitmap programs."
+    },
+    {
+      "description": "Original Celsius/Kelvin-like Cyrillic glyphs, Cyrillic SI letters, decimal commas, units, and mathematical expressions are retained unchanged wherever source-native."
+    }
+  ],
+  "native_number_label_handling": {
+    "source_page": 43,
+    "source_slot": [
+      3,
+      0,
+      0
+    ],
+    "description": "Keep the original(33):number and punctuation at their exact source coordinates. Translate only the preceding Numerical value in formula prose to 다음 식의 수치값. This preserves the original ink in a source-image projection overlap without any audit exception."
+  },
+  "actual_prose_whitespace_policy": "Only actual whitespace belonging to explicitly journaled source prose slots is classified as translated prose. All unselected and mathematical whitespace remains in the native audit.",
+  "remaining_foreign_text_review": "All unselected normal and italic source spans in pages25–43were checked by exact glyph identities. Remaining text consists of mathematical variables/functions, SI units, numerical values, graph/circuit symbols, and original a/b case identifiers. No unselected source prose remains.",
+  "bitmap_language_review": "bitmap-language-review.json",
+  "validation": {
+    "native_glyphs": 11009,
+    "native_geometry_changes": 0,
+    "native_outline_neighborhood_changed_pixels": 0,
+    "changed_pixels_outside_reviewed_prose": 0,
+    "final_vs_proof_changed_pixels": 0,
+    "source_image_programs_raw_and_decoded_and_filters_and_smask_unchanged": true,
+    "source_font_programs_and_vector_drawings_unchanged": true,
+    "new_native_ascii_codes_checked": 2726,
+    "nonpositive_native_ascii_widths": 0,
+    "independent_hangul_visibility_candidates": 0,
+    "all19pages_visually_reviewed": true
+  },
+  "reproducibility": {
+    "builder": "python tools/izho_legacy_style_rebuild.py 2023 TS",
+    "source_selection": "Every page plan explicitly binds source physical pages25–43.",
+    "assembly": "pikepdf native page append; compress_streams=False",
+    "original_prose_suppression": "tools/pdf_original_text_ops.py",
+    "source_ascii_width_audit": "tools/izho_native_ascii_audit.py",
+    "no_autoshrink": true,
+    "no_paragraph_reflow": true,
+    "no_equation_rasterization": true
+  }
+}

@@ -1,0 +1,509 @@
+{
+  "year": 2006,
+  "problem_count": 6,
+  "source_sha256": "4ca77258299918a44f26320027466b81cc70c97e7e467ee190282be0f4516042",
+  "source_solution_available": false,
+  "figures_redrawn": 3,
+  "languages": [
+    "ko",
+    "en"
+  ],
+  "notes": [
+    "Four original pages and both displayed mathematical equations retained.",
+    "All six problem statements translated in both languages.",
+    "Shared formula constants validate matching bilingual mathematical data.",
+    "The source unit for gravitational acceleration in Problem 3 is corrected with an explicit translator note.",
+    "Page-2 source illustration covered its footer; the two diagram panels are fitted above the restored footer."
+  ],
+  "files": [
+    {
+      "file": "CPhO_2006_T_BAUPC_EN.pdf",
+      "pages": 4,
+      "geometry_matches_source": true,
+      "bytes": 1909328,
+      "sha256": "973331e1c384c79edcf67f13fd6d2b5f150af8e073a2fadbaf76ca54fc0be2c3"
+    },
+    {
+      "file": "CPhO_2006_T_KO.pdf",
+      "pages": 4,
+      "geometry_matches_source": true,
+      "bytes": 5318622,
+      "sha256": "c5ce0a0326f1a7def47a53dee4dfe750e55e2c9ce86ecd130b561d20580e2487"
+    }
+  ],
+  "original_region_map": [
+    {
+      "key": "title",
+      "page": 1,
+      "original_blocks": [
+        5,
+        5
+      ],
+      "source_text": "23 届物理奥林匹克竞赛决赛试题   "
+    },
+    {
+      "key": "q1",
+      "page": 1,
+      "original_blocks": [
+        6,
+        14
+      ],
+      "source_text": "一、  建造一条能通向太空的天梯，是人们长期的梦想．当今在美国宇航局 （NASA ）支持下，洛斯阿拉莫斯国家实验室的科学家已在进行这方面的研 究。一种简单的设计是把天梯看作一条长度达千万层楼高的质量均匀分布的 缆绳，它由一种高强度、很轻的纳米碳管制成，由传统的太空飞船运到太空 上，然后慢慢垂到地球表面．最后达到这样的状态和位置：天梯本身呈直线 状；其上端指向太空，下端刚与地面接触但与地面之间无相互作用；整个天 梯相对于地球静止不动．如果只考虑地球对天梯的万有引力，试求此天梯的 长度。已知地球半径R 0 =6. 37×10  6 m ，地球表面处的重力加速度g=9.80m·s -2 .  "
+    },
+    {
+      "key": "q2_intro",
+      "page": 1,
+      "original_blocks": [
+        16,
+        18
+      ],
+      "source_text": "二、如图所示，一内半径为R 的圆筒（图中2R 为其内直径）位于水平地面上．筒 内放一矩形物．矩形物中的A 、B 是两根长度相等、质量皆为m 的细圆棍，它 们平行地固连在一质量可以不计的，长为 l  ＝ 3  R 的矩形薄片的两端．初始时矩"
+    },
+    {
+      "key": "q2_wrap",
+      "page": 1,
+      "original_blocks": [
+        19,
+        27
+      ],
+      "source_text": "形物位于水平位置且处于静止状态，A 、B 皆与圆筒 内表面接触．已知A 、B 与圆筒内表面间的静摩擦因 数μ都等于1 .       现令圆筒绕其中心轴线非常缓慢地转动，使A 逐 渐升高．  1.矩形物转过多大角度后，它开始与圆筒之间不再能 保持相对静止？  答：                          （只要求写出数值， 不要求写出推导过程） "
+    },
+    {
+      "key": "q2_b",
+      "page": 1,
+      "original_blocks": [
+        28,
+        31
+      ],
+      "source_text": "2．如果矩形物与圆筒之间刚不能保持相对静止时，立即令圆筒停止转动．令θ 表示A 的中点和B 的中点的连线与竖直线之间的夹角，求此后θ等于多少度时， B 相对于圆筒开始滑动．（要求在卷面上写出必要的推导过程．最后用计算器对 方程式进行数值求解，最终结果要求写出三位数字．)  "
+    },
+    {
+      "key": "q3_intro",
+      "page": 1,
+      "original_blocks": [
+        32,
+        34
+      ],
+      "source_text": "三、由于地球的自转及不同高度处的大气对太阳辐射吸收的差异，静止的大气中 不同高度处气体的温度、密度都是不同的．对于干燥的静止空气，在离地面的高 度小于20km 的大气层内，大气温度T e 随高度的增大而降低，已知其变化率 "
+    },
+    {
+      "key": "q3_body",
+      "page": 2,
+      "original_blocks": [
+        41,
+        57
+      ],
+      "source_text": "z 为竖直向上的坐标．  现考查大气层中的一质量一定的微小空气团（在确定它在空间的位置时可当 作质点处理），取其初始位置为坐标原点( z = 0 ) ，这时气团的温度T 、密 度ρ、压强p 都分别与周围大气的温度Te 、密度ρe 、压强p e 相等．由于某 种原因，该微气团发生向上的小位移．因为大气的压强随高度的增加而减小，微 气团在向上移动的过程中，其体积要膨胀，温度要变化（温度随高度变化可视为 线性的）．由于过程进行得不是非常快，微气团内气体的压强已来得及随时调整 到与周围大气的压强相等，但尚来不及与周围大气发生热交换，因而可以把过程 视为绝热过程．现假定大气可视为理想气体，理想气体在绝热过程中，其压强p  与体积v 满足绝热过程方程P V γ =C ．式中C 和γ都是常量，但γ与气体种类 有关，对空气，γ=1.40 ．已知空气的摩尔质量μ=0.029 kg· mol -1 ，普适气体 恒量R＝8.3lJ·（K·mol ） -1 ．试在上述条件下定量讨论微气团以后的运动．      设重力加速度g=9.8m·s -1 , ：z=0 处大气的温度T eo  =300K .  "
+    },
+    {
+      "key": "q4_intro",
+      "page": 2,
+      "original_blocks": [
+        59,
+        71
+      ],
+      "source_text": "四、图1 中K 为带电粒子发射源，从中可持续不断地射出质量、电荷都相 同的带正电的粒子流，它们的速度方向都沿图中虚线O / O，速度的大小具有一切 可能值但都是有限的．当粒子打在垂直于O / O 的屏NN / 上时，会在屏上留下永久 性的痕迹．屏内有一与虚线垂直的坐标轴Y ，其原点位于屏与虚线的交点O 处， Y 的正方向由O 指向N ．虚线上的A 、B 两处，各有一电子阀门a 和b ．阀 门可以根据指令开启或关闭．开始时两阀门都处于关闭状态，挡住粒子流，M 、 M / 是两块较大的平行金属平板，到虚线O / O 的距离都是d ，板M 接地．在两板间 加上如图2 所示的周期为2T 的交变电压u, u 的正向最大值为2U ，负向最大"
+    },
+    {
+      "key": "q4_wrap",
+      "page": 2,
+      "original_blocks": [
+        72,
+        77
+      ],
+      "source_text": "值为U ．已知当带电粒子处在 两平板间的空间时，若两平板 间的电压为U , 则粒子在电场 作用下的加速度a 、电压u 的 半周期T 和平板到虚线的距离 d 满足以下关系 "
+    },
+    {
+      "key": "q4_distances",
+      "page": 2,
+      "original_blocks": [
+        80,
+        81
+      ],
+      "source_text": "已知AB 间的距离、B 到金 属板左端的距离、金属板的长"
+    },
+    {
+      "key": "q4_continue",
+      "page": 3,
+      "original_blocks": [
+        4,
+        7
+      ],
+      "source_text": "度以及金属板右端到屏的距离都是 l  . 不计重力的作用．不计带电粒子间的相互 作用．打在阀门上的粒子被阀门吸收，不会影响以后带电粒子的运动． 只考虑 MM / 之间的电场并把它视为匀强电场． "
+    },
+    {
+      "key": "q4_a",
+      "page": 3,
+      "original_blocks": [
+        8,
+        13
+      ],
+      "source_text": "1 ．假定阀门从开启到关闭经历的时间δ比T 小得多，可忽略不计．现在某时 刻突然开启阀门a 又立即关闭；经过时间T ,再次开启阀门a 又立即关闭；再经 过时间T ，第3 次开启阀门a 同时开启阀门b ，立即同时关闭a 、b ．若以 开启阀门b 的时刻作为图2 中t = O 的时刻，则屏上可能出现的粒子痕迹的Y 坐 标（只要写出结果，不必写出计算过程）为                                                         。 "
+    },
+    {
+      "key": "q4_b",
+      "page": 3,
+      "original_blocks": [
+        14,
+        20
+      ],
+      "source_text": "2 ．假定阀门从开启到关闭经历的时间δ=  10 T   ，现在某时刻突然开启阀门a ，经 过时间δ立即关闭a ；从刚开启a 的时刻起，经过时间T ，突然开启阀门b ， 经过时间δ关闭b ．若以刚开启阀门b 的时刻作为图2 中t = 0 的时刻，则从 B 处射出的具有最大速率的粒子射到屏上所产生的痕迹的Y 坐标（只要写出结 果，不必写出计算过程）为                                        。  具有最小速率的粒子射到屏上所产生的痕迹的坐标（只要写出结果，不必写 出计算过程）为                                                  。 "
+    },
+    {
+      "key": "q5_intro",
+      "page": 3,
+      "original_blocks": [
+        22,
+        26
+      ],
+      "source_text": "五、如图所示，坐标系Oxyz 的x 轴和z 轴都位于纸面内，y 轴垂直纸面向里．两 无限大金属极板P 和Q 分别位于x=-d 和x=d 处，磁感应强度大小为B 的匀强 磁场的方向平行于Oxz 坐标平面，与z 轴的夹角为α ．在坐标原点O 处，有一 电荷为q（＞0 ）、质量为m 的带电粒子，以沿y 轴正方向的初速度v 0 开始运 动．不计重力作用． "
+    },
+    {
+      "key": "q5_a",
+      "page": 3,
+      "original_blocks": [
+        27,
+        28
+      ],
+      "source_text": "1 ．若两极板间未加电场，欲使该粒子在空间上恰好能到达极板（但与板不接触）， 则初速度v。应为多大？所需最短时间t 0 是多少？ "
+    },
+    {
+      "key": "q5_b",
+      "page": 3,
+      "original_blocks": [
+        29,
+        31
+      ],
+      "source_text": "2 ，若在两极板间沿x 轴正方向加上一场强为E 的匀强电场，使该粒子能在第 1 问中所求得的时间t 0 到达极板，则该粒子初速度v。应为多大？若α＝ 4  ，求 粒子到达极板时粒子的坐标。 "
+    },
+    {
+      "key": "q6",
+      "page": 4,
+      "original_blocks": [
+        5,
+        11
+      ],
+      "source_text": "六、在高能物理中，实验证明，在实验室参考系中，一个运动的质子与一个静止 的质子相碰时，碰后可能再产生一个质子和一个反质子，即总共存在三个质子和 一个反质子．试求发生这一情况时，碰前那个运动质子的能量（对实验室参考系） 的最小值（即阀值）是多少．      已知质子和反质子的静止质量都是m。=1.67×10  一27 kg . 不考虑粒子间的 静电作用． "
+    }
+  ],
+  "font_checks": {
+    "ko": [
+      {
+        "page": 1,
+        "key": "title",
+        "scale": 1.0,
+        "font_points": 14.0
+      },
+      {
+        "page": 1,
+        "key": "q1",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "q2_intro",
+        "scale": 0.926337554923753,
+        "font_points": 11.116050659085037
+      },
+      {
+        "page": 1,
+        "key": "q2_wrap",
+        "scale": 0.8747864290944593,
+        "font_points": 10.49743714913351
+      },
+      {
+        "page": 1,
+        "key": "q2_b",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "q3_intro",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q3_body",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_intro",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_wrap",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_distances",
+        "scale": 0.9270563890325919,
+        "font_points": 11.124676668391103
+      },
+      {
+        "page": 3,
+        "key": "q4_continue",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q4_a",
+        "scale": 0.9755035383777898,
+        "font_points": 11.706042460533478
+      },
+      {
+        "page": 3,
+        "key": "q4_b",
+        "scale": 0.8275225121219117,
+        "font_points": 9.930270145462941
+      },
+      {
+        "page": 3,
+        "key": "q5_intro",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q5_a",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q5_b",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 4,
+        "key": "q6",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 1,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 2,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 2,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 3,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 3,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "note",
+        "scale": 1.0,
+        "font_points": 9.0
+      }
+    ],
+    "en": [
+      {
+        "page": 1,
+        "key": "title",
+        "scale": 1.0,
+        "font_points": 14.0
+      },
+      {
+        "page": 1,
+        "key": "q1",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "q2_intro",
+        "scale": 0.9827255278310938,
+        "font_points": 11.792706333973126
+      },
+      {
+        "page": 1,
+        "key": "q2_wrap",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "q2_b",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "q3_intro",
+        "scale": 0.9660377358490566,
+        "font_points": 11.59245283018868
+      },
+      {
+        "page": 2,
+        "key": "q3_body",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_intro",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_wrap",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 2,
+        "key": "q4_distances",
+        "scale": 0.8951048951048951,
+        "font_points": 10.741258741258742
+      },
+      {
+        "page": 3,
+        "key": "q4_continue",
+        "scale": 0.9499072356215214,
+        "font_points": 11.398886827458256
+      },
+      {
+        "page": 3,
+        "key": "q4_a",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q4_b",
+        "scale": 0.9925228468568263,
+        "font_points": 11.910274162281915
+      },
+      {
+        "page": 3,
+        "key": "q5_intro",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q5_a",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 3,
+        "key": "q5_b",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 4,
+        "key": "q6",
+        "scale": 1.0,
+        "font_points": 12.0
+      },
+      {
+        "page": 1,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 1,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 2,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 2,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 3,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 3,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "header",
+        "scale": 1.0,
+        "font_points": 10.0
+      },
+      {
+        "page": 4,
+        "key": "note",
+        "scale": 1.0,
+        "font_points": 9.0
+      }
+    ]
+  },
+  "dash_validation": "tools/cpho_dash_validation.json",
+  "font_validation": "tools/translation_font_validation.json"
+}

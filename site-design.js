@@ -1,0 +1,162 @@
+/* Shared presentation; community data and authentication use the existing API. */
+const SITE_DESIGN_TEXT = {
+  ko: {recent:"커뮤니티 최신 글",updates:"공지 · 업데이트",more:"더보기",title:"제목",board:"게시판",date:"작성일",empty:"등록된 글이 없습니다.",notice:"공지",update:"업데이트",retry:"다시 불러오기",failed:"최신 글을 불러오지 못했습니다.",all:"전체",close:"닫기",pinned:"상단 고정",pin:"공지 상단 고정",unpin:"상단 고정 해제",loading:"공지를 불러오는 중…",noticeFailed:"공지를 불러오지 못했습니다.",loadMore:"이전 공지 더 보기",openPost:"게시글 열기",openArchive:"관련 페이지 열기",hint:"항목을 선택하면 내용을 펼쳐 볼 수 있습니다."},
+  en: {recent:"Latest community posts",updates:"Notices & updates",more:"More",title:"Title",board:"Board",date:"Date",empty:"No posts yet.",notice:"Notice",update:"Update",retry:"Retry",failed:"Could not load the latest posts.",all:"All",close:"Close",pinned:"Pinned",pin:"Pin notice",unpin:"Unpin notice",loading:"Loading notices…",noticeFailed:"Could not load notices.",loadMore:"Load older notices",openPost:"Open post",openArchive:"Open related page",hint:"Select an item to expand and read it."}
+};
+
+/* Actual repository changes. Add new entries here when publishing archive updates. */
+const SITE_UPDATES = [
+  {date:"2026-10-31",ko:"공지·업데이트 편지함과 공지 상단 고정",en:"Notice mailbox and pinned announcements",body:{ko:"홈의 공지·업데이트 ‘더보기’에서 전체 목록을 펼쳐 읽을 수 있습니다. 관리자는 공지 작성 버튼으로 새 공지를 등록하고 상단에 고정할 수 있습니다. 고정 공지는 홈 요약과 전체 목록에 먼저 표시됩니다.",en:"Open More in the home notice panel to read all announcements and updates without leaving the page. Admins can write and pin notices. Pinned notices appear first in the summary and full list."},href:"#/"},
+  {date:"2026-10-31",ko:"랭킹 프로필 표시와 모바일 목록 개선",en:"Leaderboard profiles and mobile layout improved",body:{ko:"랭킹에서 프로필 사진과 닉네임을 더 읽기 쉽게 정리하고, 화면이 좁아도 사용자와 점수를 확인할 수 있게 개선했습니다.",en:"Leaderboard profile pictures and nicknames are easier to read, with user identities and scores kept visible on smaller screens."},href:"#/rank"},
+  {date:"2026-10-31",ko:"AI 채점 0.3토큰 · 이론·실험 세트 0.5토큰",en:"AI grading: 0.3 tokens, theory + experiment set: 0.5",body:{ko:"AI 채점 비용을 단일 채점 0.3토큰, 이론·실험 세트 채점 0.5토큰으로 조정했습니다. 채점을 시작하기 전에 표시되는 비용을 확인할 수 있습니다.",en:"AI grading now costs 0.3 tokens for a single grading and 0.5 tokens for a theory + experiment set. The cost is shown before starting."},href:"#/lab"},
+  {date:"2026-10-30",ko:"PLANCKS 국제 결선 2014~2026 기출 추가",en:"PLANCKS international finals 2014–2026 added",body:{ko:"PLANCKS 국제 결선의 2014~2026년 문제 자료를 연도별 기출에서 확인할 수 있습니다.",en:"Problem papers from the 2014–2026 PLANCKS international finals are available in the archive by year."},href:"#/plancks"},
+  {date:"2026-10-30",ko:"Eötvös 기출·보고서 45개 연도로 확대",en:"Eötvös archive expanded to 45 years",body:{ko:"확인된 45개 연도의 문제와 보고서를 추가했습니다. 해설이 함께 있는 보고서와 일부 문제만 수록한 자료는 자료 설명에 구분해 표시합니다.",en:"Verified papers and reports now cover 45 years. Reports containing solutions and sources with only part of a year's problems are labelled in the archive."},href:"#/eotvos"},
+  {date:"2026-10-30",ko:"중학생생물챌린지 공식 예시문항 추가",en:"Official MSKBO sample questions added",body:{ko:"중학생생물챌린지 대회 안내에서 공식 예시문항과 출처를 확인할 수 있습니다.",en:"The MSKBO page now links to official sample questions and their source."},href:"#/mskbo"},
+  {date:"2026-10-30",ko:"AMC 8·10·12 문제·해설 130회차 추가",en:"130 AMC 8, 10 and 12 papers with solutions added",body:{ko:"AMC 8·10·12의 총 130회차 문제와 해설을 대회·연도별로 찾아볼 수 있습니다.",en:"Browse 130 AMC 8, 10 and 12 papers and their solutions by contest and year."},href:"#/amc"},
+  {date:"2026-10-30",ko:"IZhO 2024 한국어 풀이 수식 보완",en:"Full equations restored in IZhO 2024 Korean solutions",body:{ko:"IZhO 2024 한국어 풀이에 누락되었던 수식을 보완했습니다. 해당 연도의 한국어 해설에서 확인할 수 있습니다.",en:"Missing equations in the IZhO 2024 Korean solutions have been restored. Open the year's Korean solution files to read the corrected version."},href:"#/izho/2024"},
+  {date:"2026-10-30",ko:"RuPhO 단계 선택 화면 통합",en:"RuPhO stage selection unified",body:{ko:"RuPhO 대회 화면에서 연도와 단계를 함께 선택하고 해당 자료로 이동할 수 있게 정리했습니다.",en:"RuPhO year and stage selection are now available together on the competition page."},href:"#/rupho"},
+  {date:"2026-10-30",ko:"CPhO 2006 한국어 · 영어 자료 추가",en:"CPhO 2006 papers added in Korean and English",body:{ko:"CPhO 2006년 자료에 한국어와 영어 버전을 추가했습니다. 연도별 자료의 언어 선택에서 열 수 있습니다.",en:"Korean and English versions of the CPhO 2006 papers are available through the year's paper language options."},href:"#/cpho/2006"},
+  {date:"2026-10-30",ko:"커뮤니티 글쓴이 프로필 · 글과 댓글 조회",en:"Public community profiles and activity history",body:{ko:"커뮤니티의 글쓴이 이름을 선택하면 공개 프로필과 작성한 글·댓글을 모아 볼 수 있습니다.",en:"Select an author's name in the community to view their public profile, posts and comments."},href:"#/community"}
+];
+
+function paintSiteTheme(){
+  const dark=document.documentElement.dataset.theme==="dark",button=document.getElementById("siteTheme");
+  const label=lang==="ko"?(dark?"화이트 모드":"다크 모드"):(dark?"Light mode":"Dark mode");
+  button.setAttribute("aria-label",label);button.setAttribute("title",label);button.setAttribute("aria-pressed",String(dark));button.textContent=dark?"☀":"◐";
+  document.querySelector('meta[name="theme-color"]').content=dark?"#111017":"#2E3945";
+  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261030-logos";
+  if(icon&&icon.getAttribute("href")!==href)icon.setAttribute("href",href);
+  document.querySelectorAll("img[data-logo-key]").forEach(img=>{
+    const src=logoSource(img.dataset.logoKey)+"?v="+LOGO_V;
+    img.dataset.logoVariant=src.match(/\/(dark|light)\//)?.[1]||"original";
+    if(img.getAttribute("src")!==src)img.setAttribute("src",src);
+  });
+}
+
+function initSiteDesign(){
+  document.getElementById("siteTheme").onclick=()=>{
+    const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";
+    document.documentElement.dataset.theme=theme;
+    try{localStorage.setItem("hlTheme",theme);}catch(e){}
+    paintSiteTheme();
+  };
+}
+
+function viewHome(){
+  const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div"),archive=document.createElement("div");
+  original.innerHTML=viewOriginalHome();
+  archive.innerHTML=viewComps(undefined,4);
+  const experiment=original.querySelector("figure.screen").outerHTML;
+  const homeText=original.querySelector(".hero > div").innerHTML;
+  const subjects=archive.querySelector(".subjs").outerHTML,cards=archive.querySelector(".comps");
+  const updateRows=SITE_UPDATES.slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
+  return `<div class="shell hl-home">
+    <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
+    <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
+    <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><div class="hl-panel-actions"><span id="homeNoticeWrite"></span><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div></div><div id="homeNotices"></div>${updateRows}</section></div>
+    <section class="hl-home-archive"><div class="hl-section-head"><h2>${UI[lang].navComps}</h2><a href="#/comps">${T.more} →</a></div>${subjects}${cards.outerHTML}</section>
+  </div>${adFitBanner("home")}`;
+}
+
+async function mountHomeActivity(){
+  const latest=document.getElementById("homeLatest"),notices=document.getElementById("homeNotices"),current=lang,T=SITE_DESIGN_TEXT[lang];
+  if(!latest||!notices)return;
+  const alive=()=>lang===current&&document.getElementById("homeLatest")===latest;
+  const paintWriter=()=>{const slot=document.getElementById('homeNoticeWrite');if(alive()&&slot)slot.innerHTML=siteNoticeWriteLink();};
+  paintWriter();cmLoadMe().then(paintWriter).catch(()=>{});
+  try{
+    const result=await cmApi("GET","/posts?lang="+current+"&page=1");
+    if(!alive())return;
+    latest.innerHTML=result.posts.length?`<table class="hl-post-table"><thead><tr><th>${T.title}</th><th>${T.board}</th><th>${T.date}</th></tr></thead><tbody>${result.posts.slice(0,7).map(post=>`<tr><td><a href="#/community/post/${post.id}">${esc(post.title)}</a>${post.n_comments?` <span class="hl-comment-count">[${post.n_comments}]</span>`:""}</td><td>${esc(CMT[current].boards[post.board]||post.board)}</td><td><time>${cmShort(post.created_at)}</time></td></tr>`).join("")}</tbody></table>`:`<p class="hl-empty">${T.empty}</p>`;
+    notices.innerHTML=(result.notices||[]).slice(0,2).map(post=>`<a class="hl-update" href="#/community/post/${post.id}"><span class="hl-update-type">${post.pinned?"⌖ "+T.pinned:T.notice}</span><b>${esc(post.title)}</b><time>${cmShort(post.created_at)}</time></a>`).join("");
+  }catch(error){
+    if(!alive())return;
+    latest.innerHTML=`<p class="hl-empty">${T.failed} <button type="button" class="cmbtn sm">${T.retry}</button></p>`;
+    latest.querySelector("button").onclick=mountHomeActivity;
+  }
+}
+
+// A native modal keeps the current page in place and makes the background inert.
+// Notice bodies remain escaped text, formatted exactly like community posts.
+let siteMailboxState = null;
+function siteNoticeWriteLink(){
+  return cm.me?.role==='admin'?`<a class="cmbtn sm hl-notice-write" href="#/community/write/free?tag=notice">＋ ${lang==='ko'?'공지 작성':'Write a notice'}</a>`:'';
+}
+function siteMailboxRows(state){
+  const T=SITE_DESIGN_TEXT[state.language],items=[];
+  if(state.filter!=="updates")for(const post of state.posts)items.push({kind:"notice",id:String(post.id),at:post.created_at,pinned:!!post.pinned,post});
+  if(state.filter!=="notices")SITE_UPDATES.forEach((item,index)=>items.push({kind:"update",id:String(index),at:Date.parse(item.date+"T00:00:00+09:00")/1000,pinned:false,item}));
+  items.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.at-a.at||(a.kind===b.kind?(a.kind==="notice"?Number(b.id)-Number(a.id):Number(a.id)-Number(b.id)):a.kind==="notice"?-1:1));
+  return items.map(row=>{
+    const notice=row.kind==="notice",post=row.post,item=row.item,key=row.kind+":"+row.id;
+    const title=notice?post.title:item[state.language],date=notice?cmFull(post.created_at):item.date;
+    return `<details class="hl-mail-item${row.pinned?" is-pinned":""}" data-mail-key="${key}"${state.expanded.has(key)?" open":""}>
+      <summary><span class="hl-mail-kind">${notice?T.notice:T.update}</span><span class="hl-mail-title">${row.pinned?`<span class="hl-pin-badge">⌖ ${T.pinned}</span>`:""}${esc(title)}</span><time>${esc(date)}</time><span class="hl-mail-chevron" aria-hidden="true">⌄</span></summary>
+      <div class="hl-mail-body">${notice?`<div class="hl-mail-copy">${cmFmt(post.body||"")}</div>`:`<p>${esc(item.body?.[state.language]||title)}</p>`}
+        <div class="hl-mail-actions"><a class="cmbtn sm" href="${notice?"#/community/post/"+post.id:item.href}">${notice?T.openPost:T.openArchive} →</a>
+        ${notice&&cm.me?.role==="admin"?`<button class="cmbtn sm" type="button" data-mail-pin="${post.id}" aria-pressed="${row.pinned}"${state.loading||state.pinning?" disabled":""}>${row.pinned?T.unpin:T.pin}</button>`:""}</div>
+      </div></details>`;
+  }).join("")||`<p class="hl-empty">${T.empty}</p>`;
+}
+function paintSiteMailbox(state){
+  if(siteMailboxState!==state||!state.dialog.open)return;
+  if(lang!==state.language){state.dialog.close();return;}
+  const T=SITE_DESIGN_TEXT[state.language],dialog=state.dialog;
+  const compose=dialog.querySelector('.hl-mail-compose');if(compose)compose.innerHTML=siteNoticeWriteLink();
+  dialog.querySelector(".hl-mail-list").innerHTML=siteMailboxRows(state);
+  dialog.querySelectorAll("[data-mail-filter]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.mailFilter===state.filter)));
+  const status=dialog.querySelector(".hl-mail-status"),more=dialog.querySelector(".hl-mail-more");
+  status.innerHTML=state.error?`${T.noticeFailed} <button type="button" class="cmbtn sm" data-mail-retry>${T.retry}</button>`:state.loading?T.loading:"";
+  more.hidden=state.filter==="updates"||state.posts.length>=state.total||!!state.error;
+  more.disabled=state.loading;more.textContent=T.loadMore;
+  dialog.querySelectorAll("[data-mail-key]").forEach(details=>details.ontoggle=()=>{
+    if(details.open)state.expanded.add(details.dataset.mailKey);else state.expanded.delete(details.dataset.mailKey);
+  });
+  const retry=dialog.querySelector("[data-mail-retry]");if(retry)retry.onclick=()=>loadSiteMailboxNotices(state);
+  dialog.querySelectorAll("[data-mail-pin]").forEach(button=>button.onclick=async()=>{
+    const post=state.posts.find(item=>item.id===Number(button.dataset.mailPin));if(!post)return;
+    if(state.loading||state.pinning)return;state.pinning=true;paintSiteMailbox(state);
+    try{
+      const result=await cmApi("PATCH",`/posts/${post.id}/pin`,{pinned:!post.pinned});
+      if(siteMailboxState!==state||lang!==state.language)return;
+      post.pinned=result.pinned;state.posts=[];state.page=1;state.total=Infinity;state.pinning=false;
+      await loadSiteMailboxNotices(state);
+      dialog.querySelector(`[data-mail-pin="${post.id}"]`)?.focus();
+      if(document.getElementById("homeLatest"))mountHomeActivity();
+    }catch(error){if(siteMailboxState===state){state.pinning=false;paintSiteMailbox(state);cmToast(cmErr(error));}}
+  });
+}
+async function loadSiteMailboxNotices(state){
+  if(state.loading||siteMailboxState!==state)return;
+  state.loading=true;state.error=false;paintSiteMailbox(state);
+  try{
+    const result=await cmApi("GET",`/posts?notices=1&lang=${state.language}&page=${state.page}`);
+    if(siteMailboxState!==state||lang!==state.language)return;
+    const seen=new Set(state.posts.map(post=>post.id));
+    state.posts.push(...result.posts.filter(post=>!seen.has(post.id)));
+    state.total=result.total;state.page++;
+  }catch(error){if(siteMailboxState===state)state.error=true;}
+  finally{state.loading=false;paintSiteMailbox(state);}
+}
+function openSiteMailbox(trigger){
+  if(siteMailboxState?.dialog.open){siteMailboxState.dialog.querySelector(".hl-mail-close").focus();return;}
+  const T=SITE_DESIGN_TEXT[lang],dialog=document.createElement("dialog"),previousOverflow=document.body.style.overflow;
+  dialog.className="hl-mailbox";dialog.setAttribute("aria-labelledby","hlMailboxTitle");dialog.setAttribute("aria-describedby","hlMailboxHint");
+  dialog.innerHTML=`<div class="hl-mail-head"><div><h2 id="hlMailboxTitle">${T.updates}</h2><p id="hlMailboxHint">${T.hint}</p></div><div class="hl-mail-head-actions"><span class="hl-mail-compose"></span><button type="button" class="hl-mail-close" aria-label="${T.close}" autofocus>×</button></div></div>
+    <div class="hl-mail-tabs" role="group" aria-label="${T.updates}">${[["all",T.all],["notices",T.notice],["updates",T.update]].map(([key,label])=>`<button type="button" data-mail-filter="${key}" aria-pressed="${key==="all"}">${label}</button>`).join("")}</div>
+    <div class="hl-mail-scroll"><div class="hl-mail-list"></div><p class="hl-mail-status" role="status" aria-live="polite"></p><button class="cmbtn hl-mail-more" type="button" hidden>${T.loadMore}</button></div>`;
+  const state={dialog,language:lang,posts:[],page:1,total:Infinity,loading:false,error:false,filter:"all",expanded:new Set()};siteMailboxState=state;
+  document.body.append(dialog);
+  dialog.addEventListener("close",()=>{
+    if(siteMailboxState===state)siteMailboxState=null;
+    document.body.style.overflow=previousOverflow;dialog.remove();
+    if(trigger?.isConnected)trigger.focus();
+  },{once:true});
+  dialog.querySelector(".hl-mail-close").onclick=()=>dialog.close();
+  dialog.querySelector(".hl-mail-more").onclick=()=>loadSiteMailboxNotices(state);
+  dialog.querySelectorAll("[data-mail-filter]").forEach(button=>button.onclick=()=>{state.filter=button.dataset.mailFilter;paintSiteMailbox(state);});
+  dialog.addEventListener("click",event=>{if(event.target.closest?.('a[href^="#/"]'))dialog.close();});
+  dialog.showModal();document.body.style.overflow="hidden";
+  paintSiteMailbox(state);loadSiteMailboxNotices(state);
+  cmLoadMe().then(()=>paintSiteMailbox(state)).catch(()=>{});
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>스캔 비교 · Scan bench · HaslaLab</title>
+<!-- Admins only.  Which AI finds the corners of a photographed A4 page best: a phone photo goes to every provider the
+     community Worker has a key for (Gemini, OpenAI, Claude — each with its cheapest vision model — and Upstage, which
+     has no page finder and is shown by the extent of the words it reads), and to HaslaLab's own on-device finder
+     (labscan/scanner.js).  The admin then drags the four true corners; the table ranks the providers by the mean
+     distance of their corners from the true ones (% of the photo's diagonal), failures and time.  The photos and
+     results stay in the Worker's scan_bench table, for a look afterwards. -->
+<style>
+  :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:14px 16px 40px}
+  h1{font-size:18px;color:var(--accent);margin:0 0 6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}
+  button,label.btn{font:inherit;cursor:pointer;border-radius:9px;border:1px solid var(--line);background:#2b2f36;color:var(--ink);padding:10px 14px;display:inline-block}
+  .pri{background:var(--accent)!important;border-color:var(--accent)!important;color:#1c2027!important;font-weight:700}
+  input[type=file]{display:none}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  td,th{border-bottom:1px solid var(--line);padding:6px 5px;text-align:left}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  canvas{width:100%;display:block;border-radius:8px;background:#000;touch-action:none}
+  .muted{color:var(--muted);font-size:12.5px}
+  .err{color:#ffb4a9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>스캔 AI 비교 (관리자)</h1>
+  <p class="muted">A4 종이를 실제로 찍어 올리면, 연결된 AI마다 가장 싼 모델로 종이 네 귀퉁이를 찾게 하고 HaslaLab 기기 안 탐지와 비교합니다. 사진마다 노란 점 네 개를 실제 종이 귀퉁이에 맞춰 «정답 저장»을 누르세요. 여러 조건(책상 위, 기울여서, 어두운 곳, 그림자, 손가락이 걸친 것, 인쇄한 답안지와 빈 종이)으로 10장쯤 찍으면 결과가 믿을 만해집니다.</p>
+  <div class="card">
+    <label class="btn pri">📷 찍기<input id="cam" type="file" accept="image/*" capture="environment"></label>
+    <label class="btn">사진 고르기<input id="gal" type="file" accept="image/*"></label>
+    <span id="st" class="muted" style="margin-left:8px"></span>
+  </div>
+  <div class="card" id="shot" hidden>
+    <canvas id="cv"></canvas>
+    <div id="legend" style="margin-top:8px;font-size:13px"></div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="pri" id="save">정답 저장</button><span class="muted">노란 점(정답)을 끌어 <b>실제 종이 귀퉁이</b>에 정확히 맞추세요(끄는 동안 확대경이 뜹니다). 처음 위치는 HaslaLab 탐지 결과라, 그대로 두면 HaslaLab에 유리하게 매겨집니다.</span></div>
+  </div>
+  <div class="card"><b>결과 (정답을 저장한 사진만)</b><div id="sum" style="margin-top:8px"></div></div>
+</div>
+<script type="module">
+import { detectQuad, solveHomography, MARKER_INSET } from "./labscan/scanner.js?v=27c09e666503";
+const COMMUNITY_API="https://haslalab-community-edge.haslalab.workers.dev";
+const API = (() => { let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; })();
+const TOK = (() => { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } })();
+const COL = { haslalab: "#57ab5a", gemini: "#4c8bf5", openai: "#c678dd", claude: "#e5534b", upstage: "#56b6c2", gt: "#f2c14e" };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+async function api(m, p, b) {
+  const r = await fetch(API + "/api" + p, { method: m, headers: { "Content-Type": "application/json", Authorization: "Bearer " + TOK }, body: b ? JSON.stringify(b) : undefined });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || r.status); return j;
+}
+/* HaslaLab's own finder, as paper corners (0–1000): printed corner squares are carried out to the paper's edge */
+function local(c) {
+  const d = detectQuad(c); let q = d.corners;                      // tl, tr, bl, br
+  if (d.method === "marker") {
+    const I = MARKER_INSET, H = solveHomography([{ x: I.left, y: I.top }, { x: I.right, y: I.top }, { x: I.left, y: I.bottom }, { x: I.right, y: I.bottom }], q);
+    const at = (x, y) => { const w = H[6] * x + H[7] * y + 1; return { x: (H[0] * x + H[1] * y + H[2]) / w, y: (H[3] * x + H[4] * y + H[5]) / w }; };
+    q = [at(0, 0), at(1, 0), at(0, 1), at(1, 1)];
+  }
+  return { name: "haslalab", model: "on-device · " + d.method, quad: [q[0], q[1], q[3], q[2]].map(p => [p.x / c.width * 1000, p.y / c.height * 1000]) };
+}
+let CUR = null;
+async function take(file) {
+  if (!file) return;
+  $("st").textContent = "준비 중…";
+  const bmp = await createImageBitmap(file, { imageOrientation: "from-image" }).catch(() => createImageBitmap(file));
+  const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height)), c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k); c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  const t0 = performance.now(), mine = local(c); mine.ms = Math.round(performance.now() - t0);
+  const b64 = c.toDataURL("image/jpeg", 0.88).split(",")[1];
+  CUR = { c, results: [mine], gt: mine.quad.map(p => [...p]), id: null };
+  draw(); $("shot").hidden = false;
+  $("st").textContent = "AI들에게 묻는 중… (10~30초)";
+  try { const r = await api("POST", "/admin/lab/scanbench", { image: b64, w: c.width, h: c.height, local: mine }); CUR.id = r.id; CUR.results = [mine, ...r.results]; $("st").textContent = ""; }
+  catch (e) { $("st").innerHTML = `<span class="err">실패: ${esc(e.message)}</span>`; }
+  draw();
+}
+function draw() {
+  const cv = $("cv"), c = CUR.c; cv.width = c.width; cv.height = c.height;
+  const g = cv.getContext("2d"); g.drawImage(c, 0, 0);
+  const P = q => [q[0] / 1000 * c.width, q[1] / 1000 * c.height], lw = Math.max(2, c.width / 300);
+  for (const r of CUR.results) if (r.quad) { g.strokeStyle = COL[r.name] || "#fff"; g.lineWidth = lw; g.beginPath(); r.quad.forEach((q, i) => { const [x, y] = P(q); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.closePath(); g.stroke(); }
+  g.fillStyle = COL.gt; CUR.gt.forEach(q => { const [x, y] = P(q); g.beginPath(); g.arc(x, y, lw * 4, 0, 7); g.fill(); });
+  if (drag >= 0) {                                                  // a loupe on the corner being moved, in the opposite corner
+    const [x, y] = P(CUR.gt[drag]), R = c.width / 7, z = 4, mx = x < c.width / 2 ? c.width - R - 8 : R + 8, my = R + 8;
+    g.save(); g.beginPath(); g.arc(mx, my, R, 0, 7); g.clip(); g.drawImage(c, x - R / z, y - R / z, 2 * R / z, 2 * R / z, mx - R, my - R, 2 * R, 2 * R);
+    g.strokeStyle = COL.gt; g.lineWidth = lw / 2; g.beginPath(); g.moveTo(mx - 14, my); g.lineTo(mx + 14, my); g.moveTo(mx, my - 14); g.lineTo(mx, my + 14); g.stroke(); g.restore();
+  }
+  $("legend").innerHTML = CUR.results.map(r => `<div><span class="sw" style="background:${COL[r.name]}"></span><b>${esc(r.name)}</b> <span class="muted">${esc(r.model)} · ${r.ms ?? "–"} ms${r.usage && r.usage.in ? ` · ${r.usage.in}+${r.usage.out} tok` : ""}</span>${r.quad ? "" : ` <span class="err">${esc(r.error || "no answer")}</span>`}</div>`).join("");
+}
+/* drag the true corners */
+let drag = -1;
+const at = e => { const r = $("cv").getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 1000, (e.clientY - r.top) / r.height * 1000]; };
+$("cv").onpointerdown = e => { if (!CUR) return; const p = at(e); let b = -1, bd = 1e9; CUR.gt.forEach((q, i) => { const d = Math.hypot(q[0] - p[0], q[1] - p[1]); if (d < bd) { bd = d; b = i; } }); if (bd < 80) { drag = b; $("cv").setPointerCapture(e.pointerId); } };
+$("cv").onpointermove = e => { if (drag < 0) return; CUR.gt[drag] = at(e); draw(); };
+$("cv").onpointerup = () => { drag = -1; if (CUR) draw(); };
+$("save").onclick = async () => { if (!CUR || !CUR.id) return; try { await api("PATCH", "/admin/lab/scanbench/" + CUR.id, { gt: CUR.gt }); $("st").textContent = "저장했습니다. 다음 사진을 찍으세요."; $("shot").hidden = true; CUR = null; summary(); } catch (e) { $("st").textContent = "저장 실패: " + e.message; } };
+$("cam").onchange = e => take(e.target.files[0]); $("gal").onchange = e => take(e.target.files[0]);
+/* the table: mean corner distance from the truth, as % of the photo's diagonal */
+async function summary() {
+  let j; try { j = await api("GET", "/admin/lab/scanbench"); } catch (e) { $("sum").innerHTML = `<span class="err">${esc(e.message === "forbidden" ? "관리자 계정으로 로그인해야 합니다." : e.message)}</span>`; return; }
+  const by = {};
+  for (const row of j.rows) if (row.gt) {
+    const W = row.w || 1000, H = row.h || 1000, diag = Math.hypot(W, H);
+    for (const r of [row.local, ...row.results].filter(Boolean)) {
+      const o = by[r.name] || (by[r.name] = { model: r.model, n: 0, fail: 0, errs: [], ms: [] });
+      o.n++; if (r.ms != null) o.ms.push(r.ms);
+      if (!r.quad) { o.fail++; continue; }
+      const e = r.quad.reduce((a, q, i) => a + Math.hypot((q[0] - row.gt[i][0]) / 1000 * W, (q[1] - row.gt[i][1]) / 1000 * H), 0) / 4 / diag * 100;
+      o.errs.push(e);
+    }
+  }
+  const med = a => { const b = [...a].sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : null; };
+  const rows = Object.entries(by).map(([k, o]) => ({ k, ...o, mean: o.errs.length ? o.errs.reduce((a, b) => a + b, 0) / o.errs.length : null, med: med(o.errs), good: o.errs.filter(e => e < 1).length, msm: med(o.ms) }))
+    .sort((a, b) => (a.mean ?? 1e9) - (b.mean ?? 1e9));
+  $("sum").innerHTML = `<div class="muted">연결된 AI: ${j.providers.map(p => esc(p.name + " (" + p.model + ")")).join(", ") || "없음"} · 정답이 있는 사진 ${j.rows.filter(r => r.gt).length}장</div>
+    <table><thead><tr><th>방식</th><th>평균 오차</th><th>중앙값</th><th>오차 1% 미만</th><th>실패</th><th>시간(중앙값)</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td><span class="sw" style="background:${COL[r.k]}"></span><b>${esc(r.k)}</b><div class="muted">${esc(r.model)}</div></td><td>${r.mean == null ? "–" : r.mean.toFixed(2) + "%"}</td><td>${r.med == null ? "–" : r.med.toFixed(2) + "%"}</td><td>${r.good} / ${r.n}</td><td>${r.fail}</td><td>${r.msm ?? "–"} ms</td></tr>`).join("")}</tbody></table>
+    <p class="muted">오차 = 네 귀퉁이가 정답에서 떨어진 거리의 평균 ÷ 사진 대각선. A4를 반듯하게 펴려면 1% 안쪽이어야 글씨가 휘지 않습니다.</p>`;
+}
+if (!TOK) $("sum").innerHTML = `<span class="err">로그인이 필요합니다. 사이트에서 관리자 계정으로 로그인한 뒤 이 페이지를 여세요.</span>`; else summary();
+</script>
+</body>
+</html>

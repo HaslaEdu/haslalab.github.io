@@ -1,0 +1,86 @@
+{
+  "year": 2007,
+  "status": "T_READY_TS_UNREVIEWED",
+  "source": "CPhO_2007_T_ZH.pdf",
+  "source_sha256": "2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9",
+  "source_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_total_pages": 20,
+  "problems": 7,
+  "prose_slots": 230,
+  "restoration": "Original figures, native math glyphs, tables, font programs, sizes, baselines and render states are retained. Only selected prose CIDs are suppressed, with exact native text advances.",
+  "translation_fonts": {
+    "ko": "Source Song -> official Noto Serif CJK KR Regular 400; source Hei -> official Noto Sans CJK KR Regular 400. Source prose is Tr0 and has no actual bold/italic.",
+    "en": "Original Word CJK/Latin correspondence: Song body -> actual Times New Roman Latin family, same point size/baseline; Hei headings -> official Sans Regular 400."
+  },
+  "limitations": [
+    "All original mathematical list punctuation remains native.",
+    "Two English ASCII word gaps in slot 3-23-2 are each 0.4pt narrower to preserve the full term unstable equilibrium without touching native math.",
+    "English label vacuum lightspeed uses 4.2pt of the genuine empty gap preceding its original label slot. Its baseline and point size remain unchanged.",
+    "TS16 pages are not ready and are excluded from this publication inventory."
+  ],
+  "files": [
+    {
+      "path": "tmp/original-style-repair/2007/editions/CPhO_2007_T_KO.pdf",
+      "file": "CPhO_2007_T_KO.pdf",
+      "language": "ko",
+      "pages": 4,
+      "bytes": 770276,
+      "sha256": "6d45fbd4ab984933febe512157a0d9dea839714169f4d01064f1bf5333c69aa2",
+      "qa": "tools/ko/cpho/2007/original/qa-problems-ko.json"
+    },
+    {
+      "path": "tmp/original-style-repair/2007/editions/CPhO_2007_T_EN.pdf",
+      "file": "CPhO_2007_T_EN.pdf",
+      "language": "en",
+      "pages": 4,
+      "bytes": 575812,
+      "sha256": "3fe3fc3f05e97c1605ebc8d003bbc7daa974e7fe2159074752a55497553c0641",
+      "qa": "tools/ko/cpho/2007/original/qa-problems-en.json"
+    }
+  ],
+  "authoring_files": [
+    "tools/cpho_2007_original_build.py",
+    "tools/cpho_2007_original_qa.py",
+    "tools/cpho_original_style.py",
+    "tools/cpho_cjk_translate.py",
+    "tools/pdf_original_text_ops.py",
+    "tools/pdf_original_style_fonts.py",
+    "tools/pdf_original_style_audit.py",
+    "tools/pdf_hangul_visibility.py",
+    "tools/izho_native_math_audit.py",
+    "tools/ko/cpho/2007/original/page01.tsv",
+    "tools/ko/cpho/2007/original/page02.tsv",
+    "tools/ko/cpho/2007/original/page03.tsv",
+    "tools/ko/cpho/2007/original/page04.tsv",
+    "tools/ko/cpho/2007/original/page05.tsv",
+    "tools/ko/cpho/2007/original/page06.tsv",
+    "tools/ko/cpho/2007/original/page07.tsv",
+    "tools/ko/cpho/2007/original/page08.tsv",
+    "tools/ko/cpho/2007/original/page09.tsv",
+    "tools/ko/cpho/2007/original/page10.tsv",
+    "tools/ko/cpho/2007/original/page11.tsv",
+    "tools/ko/cpho/2007/original/page12.tsv",
+    "tools/ko/cpho/2007/original/page13.tsv",
+    "tools/ko/cpho/2007/original/page14.tsv",
+    "tools/ko/cpho/2007/original/page15.tsv",
+    "tools/ko/cpho/2007/original/page16.tsv",
+    "tools/ko/cpho/2007/original/page17.tsv",
+    "tools/ko/cpho/2007/original/page18.tsv",
+    "tools/ko/cpho/2007/original/page19.tsv",
+    "tools/ko/cpho/2007/original/page20.tsv",
+    "tools/ko/cpho/2007/original/qa-problems-en.json",
+    "tools/ko/cpho/2007/original/qa-problems-ko.json",
+    "tools/ko/cpho/2007/original/qa-problems-poppler.json",
+    "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
+    "tools/ko/cpho/2007/original/reviewed-pages.json"
+  ],
+  "qa_summary": "Both languages: 4x MuPDF outside-prose/native-ink changes 0; all original nonspace glyph font/gid/size/origin/color/render mode bit-identical; original font programs and raster image bytes/bboxes identical; Chinese prose and new NUL glyphs 0. KO Hangul visibility candidates 0. Independent Poppler outside changes 0 for all 8 pages; final editions render identically to reviewed previews. All pages visually checked in both renderers.",
+  "printed_editorial_notes": 0,
+  "new_edition_labels": 0,
+  "redrawn_figures": 0
+}

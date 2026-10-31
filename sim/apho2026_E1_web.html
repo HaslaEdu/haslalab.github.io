@@ -1947,7 +1947,7 @@ function drop(px,py){
   }else if(name==="ruler" && inZone(S.zones.bin,px,py)
            && !(w.on.tankA&&inZone(S.zones.tankA,px,py))
            && !(w.on.tankB&&inZone(S.zones.tankB,px,py))){
-    S.plan=true; S.toolOut.ruler=true;
+    if(window.HLzoom) HLzoom(cv); S.plan=true; S.toolOut.ruler=true;
     S.toolPos.ruler=[BIN_X0+BIN_WALL, BIN_Z0+BIN_WALL-0.15];
     S.rulerAng=0.0; S.touched=true;
     S.zoom=Math.max(0.4,Math.min(6.0, Math.min(CW/56.0,CH/40.0)/S.basePpcm));
@@ -1971,7 +1971,7 @@ function drop(px,py){
   S.carry=null; S.moving=null; drawTray();
 }
 function openSide(tk){
-  S.side=tk; S.plan=false;
+  if(window.HLzoom) HLzoom(cv); S.side=tk; S.plan=false;
   const b = tk==="tankA"?tankABox():tankBBox();
   const [x0,x1,y0,y1]=[b[0],b[1],b[2],b[3]];
   S.toolOut.ruler=true;
@@ -1987,7 +1987,7 @@ function openSide(tk){
 function onRClick(p){
   const [x,y]=p;
   if(S.plan||S.side){
-    S.plan=false; S.side=null; S.touched=false;
+    if(window.HLzoom) HLzoom(cv,{out:true}); S.plan=false; S.side=null; S.touched=false;
     fit(); say("backView");
     return;
   }

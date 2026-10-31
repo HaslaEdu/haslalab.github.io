@@ -1,11 +1,31 @@
 name = "haslalab-community"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
+# Variables set in the dashboard (PADDLE_PRICES, LAB_KEEP_HOURS …) survive `wrangler deploy`; secrets always do.
+keep_vars = true
 
 # Run the Worker next to its database rather than next to the visitor: a page makes several
 # database queries, and each one is a round trip, so this cuts the waiting the most.
 [placement]
-mode = "smart"
+# Production D1 metadata reports HKG primary. Place HTTP database work nearby.
+region = "aws:ap-east-1"
+
+# Recover interrupted job delivery within a minute; the handler gates photo cleanup to 15 minutes.
+[triggers]
+crons = ["* * * * *"]
+
+# Only small job IDs enter the queue; answer scans remain in the existing D1/R2 storage.
+[[queues.producers]]
+binding = "LAB_JOBS"
+queue = "haslalab-lab-jobs"
+
+[[queues.consumers]]
+queue = "haslalab-lab-jobs"
+max_batch_size = 1
+max_batch_timeout = 1
+max_retries = 3
+max_concurrency = 4
+dead_letter_queue = "haslalab-lab-jobs-dead"
 
 # Sites allowed to call the API from the browser (comma-separated).
 [vars]

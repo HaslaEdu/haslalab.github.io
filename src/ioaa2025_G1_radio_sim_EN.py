@@ -28,6 +28,22 @@ Design rule (non-negotiable):
     mobile tower the write-up warns about.  Only what the students see is
     shown; --seed N repeats a session.
 
+    The evening is the one it was (ERA5 reanalysis via Open-Meteo, GFZ
+    Potsdam): overcast, light monsoon rain 0.3-1.3 mm/h, 25.9 C, humidity
+    90 %, precipitable water 71 mm; Kp 3.3 then 2.0, F10.7 156 sfu, total
+    electron content about 35 TECU (an estimate).  So the measurement
+    carries the errors that evening gave it: the air adds 2.5 K at the
+    zenith and 14 K near the horizon; the wet terrace is a ~255 K emitter,
+    not the 300 K black body the calibration assumes, and the sky is near
+    14 K, not 5 K, so the temperature scale is ~20 % off; the receiver
+    warms up and its gain wanders; the dongle's band ripple slides as it
+    warms, so a calibration taken at one time does not quite remove it
+    from a record taken at another; the dongle keeps 35 % of its samples
+    and has spurs of its own; the city adds impulsive noise, more towards
+    the horizon; the N mark is off by ~2 deg and each hand setting of the
+    horn by ~1.5 deg in azimuth and ~0.7 deg in altitude.  The ionosphere
+    is there too, and at 1.42 GHz it does next to nothing (~0.001 K).
+
     Run:   python3 ioaa2025_G1_radio_sim_EN.py   [--seed N]
 """
 import math
@@ -225,6 +241,48 @@ def hi_line(l, b):
     return [TS * (1 - math.exp(-t)) for t in tau]
 
 
+# ======================================================================
+#   THE EVENING: AIR, GROUND, CITY
+# ======================================================================
+# ERA5 reanalysis (via Open-Meteo), hourly at 19.10 N 72.85 E, 24 July 2025, IST 20:00-23:00
+WX = {"T": [25.8, 25.9, 26.0, 26.0], "rain": [0.3, 1.3, 0.4, 1.3], "p": [999.1, 999.6, 1000.2, 1000.1],
+      "pwv": [70.7, 71.2, 70.5, 70.8], "soil": [26.1, 25.8, 25.7, 25.6], "cloud": [100, 98, 100, 100], "rh": [90, 90, 90, 89]}
+# GFZ Potsdam: Kp 3.3 (15-18 UT) then 2.0 (18-21 UT), F10.7 156.2 sfu, sunspot number 114; vertical TEC is an
+# estimate (night-time equatorial-anomaly crest, high solar activity), there being no open map for that hour
+SPACE = {"kp": [3.33, 2.0], "f107": 156.2, "sn": 114, "tec": 35}
+
+
+def wx(k):
+    h = 50 / 60 + CLOCK.t() / 3600
+    i = max(0, min(2, int(math.floor(h))))
+    f = max(0.0, min(1.0, h - i))
+    return WX[k][i] * (1 - f) + WX[k][i + 1] * f
+
+
+def sky_air(alt):
+    # the air at 1.42 GHz: oxygen, vapour, cloud water and rain - a zenith opacity near 0.009, a few kelvin of emission
+    tz = 0.0085 * wx("p") / 1013 + 6e-6 * wx("pwv") + 3e-4 * wx("cloud") / 100 + 3.5e-5 * wx("rain")
+    tmean = wx("T") + 273.15 - 20
+    am = 1 / max(0.06, math.sin(max(0.5, alt) * D2R))
+    # the night ionosphere: free-free absorption ~1e-6 at this TEC, so ~0.001 K; refraction and Faraday rotation
+    # do not matter for the HI line
+    return tmean * (1 - math.exp(-tz * am)) + 1000 * 2.5e-8 * SPACE["tec"] * am
+
+
+# the terrace is wet: emissivity below 1, it reflects the cold sky - not the 300 K the calibration assumes
+GND_EPS0 = 0.90 + 0.02 * RNG.gauss(0, 1)
+
+
+def ground_tb():
+    e = max(0.78, GND_EPS0 - 0.06 * min(1.0, wx("rain")))
+    return e * (wx("soil") + 273.15) + (1 - e) * 8
+
+
+def urban_t(alt):
+    # the city through the sidelobes (man-made noise, ITU-R P.372 urban curve, a few per cent of it)
+    return 0.8 * (0.5 + math.exp(-max(0.0, alt) / 15))
+
+
 def cont_t(l, b):
     L = (l + 180) % 360 - 180
     return 3.3 + 1.2 * math.exp(-abs(b) / 15) + 9 * math.exp(-b * b / 8) * math.exp(-abs(L) / 35)
@@ -249,7 +307,18 @@ for _f in FREQ:
 class Telescope:
     def __init__(self):
         self.az, self.alt = 180.0, 60.0
-        self.az_err, self.alt_err = 0.3 * RNG.gauss(0, 1), 0.05 * RNG.gauss(0, 1)
+        # N mark set with a phone compass indoors; inclinometer zeroed on the table
+        self.az_err, self.alt_err = 2.0 * RNG.gauss(0, 1), 0.3 * RNG.gauss(0, 1)
+        # and each time the horn is set by hand to a new alt/az it lands a little off: the az scale is read by eye,
+        # the inclinometer sits on a wet, slightly bowed horn
+        self.aims = {}
+
+    def aim(self):
+        k = (round(self.alt, 2), round(self.az, 1))
+        if k not in self.aims:
+            self.aims[k] = (0.7 * RNG.gauss(0, 1), 1.5 * RNG.gauss(0, 1))
+        e = self.aims[k]
+        return self.alt + self.alt_err + e[0], self.az + self.az_err + e[1]
 
 
 TEL = Telescope()
@@ -298,7 +367,7 @@ def antenna_t(alt, az, J):
             ground += w
             continue
         l, b = hor2gal(sa, sz, J)
-        cont += w * (cont_t(l, b) + 2.2 / max(0.15, math.sin(sa * D2R)) * 0.6)
+        cont += w * (cont_t(l, b) + sky_air(sa))
         H = hi_line(l, b)
         for i in range(VGN):
             line[i] += w * H[i]
@@ -306,12 +375,13 @@ def antenna_t(alt, az, J):
     vc = vcorr(l0, b0, J)
     Ta = []
     rfi = tower_hit(alt, az)
+    gnd = (ground + 0.03) * ground_tb() + urban_t(alt)
     for f in FREQ:
         vl = C_KMS * (F0 - f) / F0 + vc
         c = vl - VG0
         k = int(math.floor(c))
         hv = line[k] * (k + 1 - c) + line[k + 1] * (c - k) if 0 <= k < VGN - 1 else 0.0
-        t = cont + hv + ground * 290 + 9.0
+        t = cont + hv + gnd
         if rfi > 0:
             t += 18 * rfi + sum(A * 8 * rfi * math.exp(-0.5 * ((f - f1) / w) ** 2) for f1, A, w in RFI_LINES)
         Ta.append(t)
@@ -319,13 +389,46 @@ def antenna_t(alt, az, J):
     return Ta
 
 
+# one integration of t seconds: relative power per bin.  The receiver drifts (warming up since it was switched on at
+# 20:40, the room's temperature, a random walk of its gain), the dongle keeps only part of the samples, the city's
+# impulsive noise comes in now and then (more towards the horizon), and the dongle has spurs of its own.  The cable
+# and the dongle's filter leave a ripple across the band that slides as they warm, so a calibration made at one
+# time does not quite remove it from a record made at another.
+RXD = {"t": None, "w": 0.0, "tilt": 0.0, "ph": 0.0, "ph0": RNG.random() * 2 * math.pi}
+DUTY, SPURS = 0.35, [(1419.931, 1.4, 0.003), (1420.744, 2.2, 0.004)]
+
+
+def rx_state():
+    t = CLOCK.t()
+    if RXD["t"] is None:
+        RXD["t"] = math.floor(t)
+    while RXD["t"] < t:
+        RXD["t"] += 1
+        RXD["w"] += 3e-4 * RNG.gauss(0, 1)
+        RXD["tilt"] += 6e-5 * RNG.gauss(0, 1)
+        RXD["ph"] += 0.01 * RNG.gauss(0, 1)
+    on = t + 600
+    warm = 1 - math.exp(-on / 1200)
+    return {"g": (1 - 0.018 * warm) * (1 - 0.004 * (wx("T") - 25.9)) * (1 + RXD["w"]), "dT": 3.2 * warm,
+            "tilt": RXD["tilt"], "ph": RXD["ph0"] + 2.2 * warm + RXD["ph"]}
+
+
 def integrate(t):
-    Ta = antenna_t(TEL.alt + TEL.alt_err, TEL.az + TEL.az_err, jd_now())
+    alt, az = TEL.aim()
+    Ta = antenna_t(alt, az, jd_now())
+    d = rx_state()
+    hz = 0.3 + 0.7 * math.exp(-max(0.0, alt) / 15)
+    burst = hz * (2 + 10 * RNG.random()) if RNG.random() < 0.06 * t else 0.0
     P = []
     for i in range(NB):
-        Tsys = Ta[i] + TRECV[i]
-        s = Tsys / math.sqrt(DF * 1e6 * t)
-        P.append(GAIN[i] * (Tsys + s * RNG.gauss(0, 1)) * (1.6 if i == NB // 2 else 1.0))
+        f = FREQ[i]
+        x = f - FC
+        Tsys = Ta[i] + TRECV[i] + d["dT"] + burst * (1 + 0.3 * x)
+        for f1, A, w in SPURS:
+            Tsys += A * math.exp(-0.5 * ((f - f1) / w) ** 2)
+        s = Tsys / math.sqrt(DF * 1e6 * t * DUTY)
+        g = d["g"] * (1 + d["tilt"] * x + 0.01 * math.sin(2 * math.pi * x / 0.62 + d["ph"]))
+        P.append(GAIN[i] * g * (Tsys + s * RNG.gauss(0, 1)) * (1.6 if i == NB // 2 else 1.0))
     return P
 
 

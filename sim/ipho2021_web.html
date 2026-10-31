@@ -646,7 +646,7 @@ cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; const r=benchCl
 cv.addEventListener("pointerup",()=>{ if(press&&press.k==="tablet") openTablet(); press=null; cv.classList.remove("pan"); });
 cv.addEventListener("pointercancel",()=>{ press=null; cv.classList.remove("pan"); });
 /* double-click: on the board, look at it closely; on the bare desk, see the whole desk */
-cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(hand) return; if(inPart("board",p)){ boardView(); applyView(); return; }
+cv.addEventListener("dblclick",e=>{ const p=lpos(e); if(hand) return; if(inPart("board",p)){ if(window.HLzoom) HLzoom(cv); boardView(); applyView(); return; }
   if(!["charger","cable","tablet","therm"].some(k=>inPart(k,p))){ fitView(); applyView(); } });
 cv.addEventListener("wheel",e=>{ e.preventDefault(); const p=lpos(e), r=cv.getBoundingClientRect();
   VIEW.z*=e.deltaY<0?1.15:1/1.15; VIEW.fit=false; clampView(); VIEW.x=p[0]-(e.clientX-r.left)/S/VIEW.z; VIEW.y=p[1]-(e.clientY-r.top)/S/VIEW.z; clampView(); applyView(); },{passive:false});
@@ -657,7 +657,7 @@ let devMode="bench";
 function setDevMode(m){ if(m!=="bench"&&LINK.mode!=="remote"&&!ST.on.tablet){ say("needTab"); m="bench"; } devMode=m;
   $("benchCard").hidden=m==="tablet"; $("devCard").hidden=m==="bench"; const v=d().view;
   $("devBack").textContent=m==="split"?v.close:v.back; $("devSplit").textContent=m==="split"?v.big:v.split; $("bTab").textContent=m==="bench"?v.show:v.hide;
-  layout(); droidSize(); if(m!=="bench") $("devCard").scrollIntoView({block:"nearest"}); }
+  layout(); droidSize(); if(m!=="bench") $("devCard").scrollIntoView({block:"nearest"}); if(m==="tablet"&&window.HLpop) HLpop($("devCard")); }
 function openTablet(){ if(!LINK.mode){ $("startOv").hidden=false; return; } setDevMode(devMode==="split"?"split":"tablet"); }
 $("devBack").onclick=()=>setDevMode("bench");
 $("devSplit").onclick=()=>setDevMode(devMode==="split"?"tablet":"split");
@@ -883,7 +883,7 @@ setInterval(()=>{ if(document.hidden) tick(true); },250);
 window.addEventListener("resize",layout);
 applyLang(); renderLinkUI(); droidSize(); $("startOv").hidden=false; requestAnimationFrame(tick);
 </script>
-<script src="vbrowser.js"></script>
+<script src="vbrowser.js?v=245260be94c3"></script>
 <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>

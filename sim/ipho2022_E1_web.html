@@ -104,14 +104,19 @@ function pad(s, n, right) {
 
 var PROGRAM = {
   title: 'IPhO 2022 Q1 — Planet',
-  subtitle: '주최측이 배포한 것은 콘솔 실행 파일뿐입니다. 이 페이지는 그 프로그램을 브라우저에서 그대로 돌리는 판입니다.',
-  notes: [
+  subtitle: { ko: '주최측이 배포한 것은 콘솔 실행 파일뿐입니다. CMD 모드는 그 프로그램을 브라우저에서 그대로 돌리고, 실험 모드는 같은 낙하 방정식을 3D로 그린 행성 위 2000 m 탑과 실제 측정 도구로 해 봅니다.',
+              en: 'The organisers handed out a console executable only. CMD mode runs it as it is in the browser; experiment mode runs the same equations of the fall at a 2000 m tower on the planet, in 3-D, with real measuring tools.' },
+  notes: { ko: [
     '공식 프로그램은 <code>IPhO-2022/official/problem_2022_EXP_programs/</code>에 Windows·Linux·macOS 빌드로 들어 있습니다. 이 페이지는 그것과 같은 프롬프트·범위·반올림·출력 형식을 씁니다.',
     '실행하면 인증 키를 묻습니다 — <b>12345678.888</b> (공식 문제지 Q1에 인쇄된 값).',
     '입력 범위: 0 &lt; h &lt; 2000 m (1 m 단위), 5 &le; r &le; 50 cm (1 cm), 0.1 &le; &rho; &le; 10 g/cm&sup3; (0.01).',
     '숨은 행성 값은 공식 해답이 제시하는 답과 맞습니다 — g = 15.8 m/s&sup2;, 바람 1.31 m/s, &rho;<sub>a0</sub> = 0.60 kg/m&sup3;, H&#8320; = 7500 m, 하루 28 000 s.',
-    'Ctrl+C 또는 "다시 시작"으로 처음부터 다시 실행합니다.'
-  ],
+    'Ctrl+C 또는 "다시 시작"으로 처음부터 다시 실행합니다.'], en: [
+    'The official programs are in <code>IPhO-2022/official/problem_2022_EXP_programs/</code> for Windows, Linux and macOS. This page uses the same prompts, ranges, rounding and output format.',
+    'On start it asks for an authorisation key — <b>12345678.888</b> (printed on the official Q1 sheet).',
+    'Input ranges: 0 &lt; h &lt; 2000 m (steps of 1 m), 5 &le; r &le; 50 cm (1 cm), 0.1 &le; &rho; &le; 10 g/cm&sup3; (0.01).',
+    'The hidden planet agrees with the answers of the official solution: g = 15.8 m/s&sup2;, wind 1.31 m/s, &rho;<sub>a0</sub> = 0.60 kg/m&sup3;, H&#8320; = 7500 m, a day of 28 000 s.',
+    'Ctrl+C or "Restart" runs it again from the start.'] },
   run: async function (term) {
     var key = await term.ask('Enter Valid Authorization Key: ');
     if (key.trim() !== AUTH_KEY) {
@@ -172,161 +177,152 @@ function l1Step(F, dtTotal) {                                    /* drop()'s RK4
     F.t += step; dtTotal -= step;
   }
 }
-var TOWER = { x: 150, gy: 585, top: 30 };
-function towerY(h) { return TOWER.gy - (TOWER.gy - TOWER.top) * h / 2100; }
+/* The 3-D bench: the tower on the planet's plain, its lift with a laser range finder looking down, the
+   release boom reaching out over the plumb mark, a control desk with the lift's panel, the ball workshop
+   and a stopwatch, and a 30 m tape hooked on the plumb mark. */
+var FLOOR = -76;                                                /* the plain, below the desk top */
+function towerHalf(hm) { return 1000 - 700 * hm / H_TOWER; }    /* cm: the tower's half-width at height h */
 PROGRAM.lab = {
-  intro: '행성 위 높이 2000 m의 탑입니다. 공방에서 반지름과 밀도를 맞춰 공을 만들어 바닥에 내려온 엘리베이터에 싣고, 원하는 높이까지 올립니다. ' +
-         '높이 h(공 아래쪽에서 땅까지)는 엘리베이터의 레이저 거리계가 보여 줍니다. RELEASE로 공을 놓고 착지할 때까지의 시간은 스톱워치로 직접 재고, ' +
-         '떨어진 자리는 오른쪽 아래 지면(위에서 본 모습)에서 낙하 기준점(+)부터 줄자를 끌어 재세요.',
-  howto: ['공방: <b>RADIUS</b>·<b>DENSITY</b> 손잡이 (끌기/휠, Shift+휠은 곱게) → 엘리베이터가 바닥에 있을 때 <b>LOAD</b>',
-          '엘리베이터: ▲ ▼ 버튼을 누르고 있는 동안 움직임 (가운데 버튼을 같이 누르면 천천히)',
-          '<b>RELEASE</b>: 공을 놓기 · 스톱워치는 직접 (스페이스바 = 시작·정지)',
-          '지면: 휠로 확대·축소, 빈 곳 끌기로 이동, 줄자 끝(노란 손잡이)을 끌어 자국 가운데에 맞추고 눈금 읽기',
-          '<b>CLEAR</b>: 지면의 자국 지우기'],
-  aspect: 0.62,
-  speeds: [1, 2, 5],
-  keys: [' '],
-  notePlaceholder: '예) r = 10 cm, ρ = 1.00 g/cm³, h = 1200.0 m → t = 17.3 s, s = 12.45 m',
-  init: function (S) {
+  intro: { ko: '행성의 평원에 높이 2000 m의 탑이 서 있습니다. 탑의 엘리베이터에서 남쪽으로 뻗은 붐 끝(바로 아래 땅에 낙하 기준점 +)에서 공을 놓습니다. 책상 위에는 엘리베이터 조작반(레이저 거리계 표시), 공방, 스톱워치가 있고, 땅에는 기준점에 고리를 건 30 m 줄자가 있습니다. ' +
+               '공방에서 반지름·밀도를 맞춰 공을 만들고, 엘리베이터가 바닥에 있을 때 싣고, 원하는 높이에서 놓습니다. 떨어지는 시간은 스톱워치로, 떨어진 거리는 줄자로 직접 잽니다.',
+           en: 'A 2000 m tower stands on the planet\'s plain. The ball is let go from the end of the boom reaching south from the tower\'s lift; the plumb mark + is on the ground right under it. On the desk: the lift\'s control panel (with the laser range finder\'s display), the ball workshop and a stopwatch; on the ground, a 30 m tape hooked on the plumb mark. ' +
+               'Make a ball of the radius and density you want, load it when the lift is down, and let it go at the height you want. Time the fall on the stopwatch and measure where it lands with the tape.' },
+  howto: { ko: ['조작반·공방·스톱워치를 클릭하면 가까이 보기 (Esc: 돌아가기), 빈 곳 끌기: 돌려 보기, 휠: 확대',
+                '공방: <b>RADIUS</b>·<b>DENSITY</b> 손잡이 → 엘리베이터가 바닥에 있을 때 <b>LOAD</b>',
+                '조작반: ▲ ▼ 버튼을 누르고 있는 동안 움직임(<b>SLOW</b>를 켜면 천천히), 높이는 레이저 거리계 표시, <b>RELEASE</b>로 공 놓기',
+                '스톱워치(스페이스바 = START/STOP)로 낙하 시간 재기',
+                '땅의 기준점(+)을 클릭하면 위에서 내려다보기 → 노란 줄자 손잡이를 끌어 자국 가운데에 맞추고 눈금 읽기 (휠로 확대할수록 눈금이 촘촘해짐)'],
+           en: ['Click the panel, the workshop or the stopwatch to look closely (Esc: back); drag empty space to turn, wheel to zoom',
+                'Workshop: the <b>RADIUS</b> and <b>DENSITY</b> knobs → <b>LOAD</b> while the lift is at the bottom',
+                'Panel: the lift moves while ▲ or ▼ is held (<b>SLOW</b> on for slowly); the height is on the range finder\'s display; <b>RELEASE</b> lets the ball go',
+                'Time the fall with the stopwatch (Space = START/STOP)',
+                'Click the plumb mark + to look down on the ground → drag the tape\'s yellow handle to the middle of the crater and read the tape (the closer you zoom, the finer the marks)'] },
+  notePlaceholder: { ko: '예) r = 10 cm, ρ = 1.00 g/cm³, h = 1200.0 m → t = 17.3 s, s = 12.45 m', en: 'e.g. r = 10 cm, ρ = 1.00 g/cm³, h = 1200.0 m → t = 17.3 s, s = 12.45 m' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
     L1.rfOff = S.sys('rfOff', 0.3); L1.rfGain = S.sys('rfGain', 0.0004);
     L1.rErr = S.sys('ballR', 0.08); L1.rhoErr = S.sys('ballRho', 0.004);
     L1.tapeK = S.sys('tapeK', 0.0012); L1.hook = S.sys('hook', 0.008);
-    L1.sw = new HL.Stopwatch(0.02 + S.uni('lat', 0, 0.05));
-  },
-  frame: function (ui) {
-    var g = ui.g, W = ui.W, H = ui.H, dt = ui.dt;
-    if (ui.keys.indexOf(' ') >= 0) L1.sw.startStop(ui.t);
-    /* ---------- physics ---------- */
-    L1.lift = Math.max(0, Math.min(H_TOWER, L1.lift + L1.liftV * dt));
-    if (L1.fall && !L1.fall.done && dt > 0) {
-      l1Step(L1.fall, dt);
-      if (L1.fall.st[1] <= 0) { L1.fall.done = true; L1.fall.tLand = ui.t;
-        L1.craters.push({ x: L1.fall.st[0], y: HL.gauss(0.01), r: L1.fall.rcm / 100, n: ++L1.n }); L1.msg = '쿵! 공이 땅에 닿았습니다.'; }
-    }
-    /* ---------- the tower, side view ---------- */
-    var sky = g.createLinearGradient(0, TOWER.top, 0, TOWER.gy);
-    sky.addColorStop(0, '#1d2a44'); sky.addColorStop(1, '#6c88a8');
-    g.fillStyle = sky; g.fillRect(0, 0, 300, H);
-    g.fillStyle = '#6b5a3d'; g.fillRect(0, TOWER.gy, 300, H - TOWER.gy);
-    var tw = function (h, sd) { var w = 30 + (10 - 30) * h / H_TOWER; return TOWER.x + sd * w / 2; };
-    g.strokeStyle = '#9aa4b0'; g.lineWidth = 1.5; g.beginPath();
-    g.moveTo(tw(0, -1), towerY(0)); g.lineTo(tw(H_TOWER, -1), towerY(H_TOWER)); g.moveTo(tw(0, 1), towerY(0)); g.lineTo(tw(H_TOWER, 1), towerY(H_TOWER)); g.stroke();
-    g.lineWidth = 0.6; g.strokeStyle = 'rgba(154,164,176,.7)'; g.beginPath();
-    for (var k = 0; k < 40; k++) { var za = H_TOWER * k / 40, zb = H_TOWER * (k + 1) / 40;
-      g.moveTo(tw(za, -1), towerY(za)); g.lineTo(tw(zb, 1), towerY(zb)); g.moveTo(tw(za, 1), towerY(za)); g.lineTo(tw(zb, -1), towerY(zb)); }
-    g.stroke();
-    /* the windsock on top */
-    var wy = towerY(H_TOWER) - 6; g.strokeStyle = '#ccc'; g.lineWidth = 1; g.beginPath(); g.moveTo(TOWER.x, wy); g.lineTo(TOWER.x, wy - 14); g.stroke();
-    var flap = Math.sin(ui.t * 3) * 1.5; g.fillStyle = '#e8743b'; g.beginPath(); g.moveTo(TOWER.x, wy - 14); g.lineTo(TOWER.x + 16, wy - 12 + flap); g.lineTo(TOWER.x + 16, wy - 7 + flap); g.lineTo(TOWER.x, wy - 9); g.fill();
-    /* the lift and its arm, the ball in the clamp */
-    var ly = towerY(L1.lift), armX = tw(L1.lift, 1) + 26;
-    HL.rr(g, tw(L1.lift, -1) - 3, ly - 8, tw(L1.lift, 1) - tw(L1.lift, -1) + 6, 8, 1, '#d7c46a', '#5a4f1f', 1);
-    g.strokeStyle = '#d7dde3'; g.lineWidth = 2; g.beginPath(); g.moveTo(tw(L1.lift, 1), ly - 4); g.lineTo(armX, ly - 4); g.stroke();
-    var bpx = function (rcm) { return Math.max(2.5, 2 + rcm / 50 * 4); };
-    if (L1.ball) HL.circle(g, armX, ly + bpx(L1.ball.rcm) - 2, bpx(L1.ball.rcm), L1.ball.col, '#222', 0.6);
-    if (L1.fall) {
-      var F = L1.fall, fy = F.done ? TOWER.gy - bpx(F.rcm) : towerY(F.st[1]) - bpx(F.rcm);
-      HL.circle(g, F.x0px, fy, bpx(F.rcm), F.col, '#222', 0.6);
-      if (F.done && ui.t - F.tLand < 1.5) { var q = (ui.t - F.tLand) / 1.5; g.fillStyle = 'rgba(200,180,140,' + (0.6 * (1 - q)) + ')';
-        g.beginPath(); g.ellipse(F.x0px, TOWER.gy, 6 + 22 * q, 3 + 8 * q, 0, 0, 7); g.fill(); }
-    }
-    for (var m = 0; m <= 2000; m += 500) HL.text(g, m + ' m', 8, towerY(m), 'rgba(235,240,245,.65)', 9.5);
-    /* ---------- the lift's control panel ---------- */
-    var cx = 315, cy = 15, cw = 245, ch = 270, zc = { x: cx - 6, y: cy - 6, w: cw + 12, h: ch + 12, title: '엘리베이터 조작반' };
-    ui.hit('ctl', { x: cx, y: cy, w: cw, h: ch }, { cursor: 'default', zoom: zc });
-    HL.rr(g, cx, cy, cw, ch, 8, '#c9cdd1', '#7c8287', 1.5);
-    HL.text(g, 'LIFT · LASER RANGE FINDER', cx + 12, cy + 16, '#2a2d31', 11, 'left', '700');
-    var shownH = L1.lift * (1 + L1.rfGain) + L1.rfOff;
-    HL.lcd(g, cx + 14, cy + 30, cw - 28, 40, 'h ' + Math.max(0, shownH).toFixed(1) + ' m');
-    var up = HL.button(ui, 'up', cx + 20, cy + 88, 58, 40, { label: '▲', col: '#3b6e9e', zoom: zc });
-    var slow = HL.button(ui, 'slow', cx + 94, cy + 88, 58, 40, { label: 'SLOW', col: '#555b62', size: 11, zoom: zc });
-    var dn = HL.button(ui, 'dn', cx + 168, cy + 88, 58, 40, { label: '▼', col: '#3b6e9e', zoom: zc });
-    var spd = slow.down ? 0.5 : 40;
-    L1.liftV = up.down ? spd : dn.down ? -spd : 0;
-    var rel = HL.button(ui, 'rel', cx + 20, cy + 146, 100, 46, { label: 'RELEASE', col: '#b8433a', size: 13, zoom: zc });
-    var clr = HL.button(ui, 'clr', cx + 134, cy + 146, 92, 46, { label: 'CLEAR', col: '#555b62', size: 12, zoom: zc });
-    if (rel.click) {
-      if (!L1.ball) L1.msg = '클램프에 공이 없습니다.';
-      else { var B = L1.ball, rm = B.rcm * 1e-2, rho = B.rho * 1e3, area = Math.PI * rm * rm, mass = 4 / 3 * Math.PI * rm * rm * rm * rho;
-        L1.fall = { st: [0, L1.lift, 0, 0], t: 0, kd: CD * area / mass, rcm: B.rcm, col: B.col, x0px: armX, done: L1.lift <= 0 };
-        L1.ball = null; L1.msg = L1.lift <= 0 ? '땅 위에서 놓았습니다.' : '공을 놓았습니다.'; }
-    }
-    if (clr.click) { L1.craters = []; L1.n = 0; L1.msg = '지면의 자국을 지웠습니다.'; }
-    HL.text(g, L1.msg, cx + 12, cy + 214, '#2a2d31', 11);
-    HL.text(g, L1.ball ? '클램프: 공 장착됨' : '클램프: 비어 있음', cx + 12, cy + 236, '#2a2d31', 11, 'left', '600');
-    /* ---------- the ball workshop ---------- */
-    var wx = 575, wyy = 15, ww = 410, wh = 225, zw = { x: wx - 6, y: wyy - 6, w: ww + 12, h: wh + 12, title: '공방' };
-    ui.hit('shop', { x: wx, y: wyy, w: ww, h: wh }, { cursor: 'default', zoom: zw });
-    HL.rr(g, wx, wyy, ww, wh, 8, '#3a3f46', '#15181c', 1.5);
-    HL.text(g, 'BALL WORKSHOP', wx + 12, wyy + 16, '#dfe5ea', 11, 'left', '700');
-    var det = []; for (var rr = 5; rr <= 50; rr++) det.push(rr);
-    L1.r = HL.knob(ui, 'rad', wx + 70, wyy + 105, 34, L1.r, { min: 5, max: 50, detents: det, sens: 45 / 260, label: 'RADIUS', zoom: zw,
-      marks: [[5, '5'], [20, '20'], [35, '35'], [50, '50']] });
-    L1.rho = HL.knob(ui, 'rho', wx + 200, wyy + 105, 34, L1.rho, { min: RHO_MIN, max: RHO_MAX, sens: 9.9 / 900, wheelStep: 0.1, label: 'DENSITY', zoom: zw,
-      marks: [[0.1, '0.1'], [5, '5'], [10, '10']] });
-    L1.rho = Math.round(L1.rho * 100) / 100;
-    HL.lcd(g, wx + 285, wyy + 42, 112, 34, L1.r + ' cm');
-    HL.lcd(g, wx + 285, wyy + 86, 112, 34, L1.rho.toFixed(2));
-    HL.text(g, 'g/cm³', wx + 395, wyy + 130, '#aab3bd', 10, 'right');
-    var load = HL.button(ui, 'load', wx + 285, wyy + 150, 112, 40, { label: 'LOAD', col: '#3b7a57', size: 13, zoom: zw });
-    if (load.click) {
-      if (L1.lift > 1) L1.msg = '엘리베이터를 바닥으로 내려야 싣습니다.';
-      else if (L1.ball) L1.msg = '이미 공이 실려 있습니다.';
-      else { var shade = Math.round(225 - 150 * Math.log(L1.rho / 0.1) / Math.log(100));
-        L1.ball = { rcm: L1.r + L1.rErr, rho: L1.rho * (1 + L1.rhoErr), col: 'rgb(' + shade + ',' + Math.round(shade * 0.85) + ',' + Math.round(shade * 0.62) + ')' };
-        L1.msg = '공을 실었습니다 (' + L1.r + ' cm, ' + L1.rho.toFixed(2) + ' g/cm³).'; }
-    }
-    /* ---------- the ground, from above ---------- */
-    var gx = 575, gy = 255, gw = 410, gh = 345, V = L1.view;
-    var zg = { x: gx, y: gy, w: gw, h: gh, title: '지면 (위에서)' };
-    var bgE = ui.hit('ground', { x: gx, y: gy, w: gw, h: gh }, { wheel: true, cursor: 'grab', zoom: zg });
-    if (bgE.wheel) { var f = bgE.wheel > 0 ? 1.25 : 0.8, mx = (bgE.x !== undefined ? bgE.x : gx + gw / 2);
-      var wxm = V.cx + (mx - gx - gw / 2) / V.s; V.s = Math.max(0.3, Math.min(3000, V.s * f)); V.cx = wxm - (mx - gx - gw / 2) / V.s; }
-    if (bgE.down) { V.cx -= bgE.dx / V.s; V.cy += bgE.dy / V.s; }
-    g.save(); g.beginPath(); g.rect(gx, gy, gw, gh); g.clip();
-    g.fillStyle = '#b39b72'; g.fillRect(gx, gy, gw, gh);
-    var G = function (x, y) { return [gx + gw / 2 + (x - V.cx) * V.s, gy + gh / 2 - (y - V.cy) * V.s]; };
-    /* the ground's grain, so it is clear when you zoom */
-    var step = Math.pow(10, Math.floor(Math.log10(40 / V.s)));
-    g.fillStyle = 'rgba(90,70,40,.12)';
-    for (var ix = Math.floor((V.cx - gw / 2 / V.s) / step); ix <= (V.cx + gw / 2 / V.s) / step; ix++)
-      for (var iy = Math.floor((V.cy - gh / 2 / V.s) / step); iy <= (V.cy + gh / 2 / V.s) / step; iy++) {
-        var h1 = Math.sin(ix * 12.9898 + iy * 78.233) * 43758.5453; h1 -= Math.floor(h1); var p = G(ix * step + h1 * step, iy * step + (h1 * 7 % 1) * step);
-        g.fillRect(p[0], p[1], 2, 2); }
-    /* the tower's foot, north of the plumb mark (the release arm reaches out south) */
-    var t0 = G(-10, 32), t1 = G(10, 12); g.fillStyle = '#6b737d'; g.fillRect(t0[0], t0[1], t1[0] - t0[0], t1[1] - t0[1]);
-    var tl = G(0, 22); HL.text(g, '탑', tl[0], tl[1], '#e8e8e8', 11, 'center', '600');
-    /* craters */
-    L1.craters.forEach(function (c) { var q = G(c.x, c.y), R = Math.max(2, c.r * V.s);
-      HL.circle(g, q[0], q[1], R * 1.25, 'rgba(90,70,45,.35)'); HL.circle(g, q[0], q[1], R, '#7d6644'); HL.circle(g, q[0], q[1], R * 0.6, '#6a5538');
-      HL.text(g, String(c.n), q[0] + R + 6, q[1] - R - 6, '#2a2215', 11, 'left', '700'); });
-    /* the plumb mark */
-    var o = G(0, 0); g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(o[0] - 8, o[1]); g.lineTo(o[0] + 8, o[1]); g.moveTo(o[0], o[1] - 8); g.lineTo(o[0], o[1] + 8); g.stroke();
-    /* the tape: hooked on the plumb mark, its case dragged out */
-    var T = L1.tape, te = G(T.x, T.y), len = Math.hypot(T.x, T.y), ux = T.x / (len || 1), uy = T.y / (len || 1);
-    g.strokeStyle = '#e6c63a'; g.lineWidth = Math.max(3, 0.013 * V.s); g.beginPath(); g.moveTo(o[0], o[1]); g.lineTo(te[0], te[1]); g.stroke();
-    /* its marks, printed every cm; what is drawn depends on how close you look */
-    var minor = V.s * 0.01 >= 4 ? 0.01 : V.s * 0.1 >= 4 ? 0.1 : V.s >= 4 ? 1 : 10;
-    for (var v = 0; v <= len / (1 + L1.tapeK) + 1e-9; v += minor) {
-      var dpos = v * (1 + L1.tapeK) + L1.hook, pt = G(ux * dpos, uy * dpos), major = Math.abs(v / (minor * 10) - Math.round(v / (minor * 10))) < 1e-6;
-      var tick = (major ? 0.6 : 0.35) * Math.max(3, 0.013 * V.s);
-      g.strokeStyle = '#1a1a1a'; g.lineWidth = major ? 1 : 0.6; g.beginPath(); g.moveTo(pt[0] - uy * tick, pt[1] - ux * tick); g.lineTo(pt[0] + uy * tick, pt[1] + ux * tick); g.stroke();
-      if (major && Math.max(3, 0.013 * V.s) >= 8) HL.text(g, minor >= 1 ? String(Math.round(v)) : minor >= 0.1 ? v.toFixed(1) : v.toFixed(2), pt[0], pt[1] - Math.max(3, 0.013 * V.s) * 0.9, '#1a1a1a', 9, 'center', '600');
-    }
-    var he = ui.hit('tapeEnd', { cx: te[0], cy: te[1], r: 9 }, { cursor: 'move' });
-    if (he.down) { T.x += he.dx / V.s; T.y -= he.dy / V.s; }
-    HL.rr(g, te[0] - 9, te[1] - 9, 18, 18, 4, '#f2c531', '#5a4a10', 1.2);
-    g.restore();
-    HL.rr(g, gx, gy, gw, gh, 4, null, '#1d1f22', 1.5);
-    HL.text(g, '지면 — 위에서 본 모습 (휠: 확대, 끌기: 이동)', gx + 8, gy + 12, '#2a2215', 10.5, 'left', '700');
-    var sb = Math.pow(10, Math.floor(Math.log10(120 / V.s))); g.strokeStyle = '#2a2215'; g.lineWidth = 2; g.beginPath(); g.moveTo(gx + 12, gy + gh - 12); g.lineTo(gx + 12 + sb * V.s, gy + gh - 12); g.stroke();
-    HL.text(g, sb >= 1 ? sb + ' m' : Math.round(sb * 100) + ' cm', gx + 18 + sb * V.s, gy + gh - 12, '#2a2215', 10, 'left', '600');
-    /* ---------- the stopwatch ---------- */
-    HL.drawStopwatch(ui, 'sw', L1.sw, 437, 440, 1.2);
+    L1.sw = new B3.Stopwatch(0.02 + S.uni('lat', 0, 0.05)); L1.slow = false;
+    var DX = -560, DZ = 320;                                     /* the control desk */
+    var bench = B3.bench(host, {
+      aspect: 0.6, lang: ctx.lang, speeds: [1, 2, 5], keys: [' '], bg: ['#6f8fb3', '#c9d8e6'],
+      home: { yaw: -0.62, pitch: 0.2, k: 0.32, tx: -250, ty: 420, tz: -300 },
+      views: {
+        ctl: { yaw: -0.35, pitch: 0.55, k: 22, tx: DX + 22, ty: 6, tz: DZ + 6, title: { ko: '엘리베이터 조작반 · 레이저 거리계', en: 'Lift control panel · laser range finder' } },
+        shop: { yaw: -0.35, pitch: 0.55, k: 22, tx: DX + 72, ty: 6, tz: DZ + 6, title: { ko: '공방', en: 'Ball workshop' } },
+        sw: { yaw: -0.2, pitch: 1.35, k: 60, tx: DX + 118, ty: 1.7, tz: DZ + 18, title: { ko: '스톱워치', en: 'Stopwatch' } },
+        ground: { yaw: 0, pitch: 1.52, k: 0.9, tx: 400, ty: FLOOR, tz: 0, title: { ko: '땅 (위에서) — 줄자', en: 'The ground from above — the tape' },
+                  hint: { ko: '줄자 손잡이를 끌기 · 휠로 확대해 눈금 읽기 · Esc: 돌아가기', en: 'Drag the tape\'s handle · zoom to read it · Esc: back' } },
+        tower: { yaw: -0.5, pitch: 0.08, k: 0.0026, tx: 0, ty: 100000, tz: -1500, title: { ko: '탑 전체 (2000 m)', en: 'The whole tower (2000 m)' } }
+      },
+      frame: function (b) {
+        var dt = b.dt;
+        if (b.keys.indexOf(' ') >= 0) L1.sw.startStop(b.t);
+        L1.lift = Math.max(0, Math.min(H_TOWER, L1.lift + L1.liftV * dt));
+        if (L1.fall && !L1.fall.done && dt > 0) {
+          l1Step(L1.fall, dt);
+          if (L1.fall.st[1] <= 0) { L1.fall.done = true; L1.fall.tLand = b.t;
+            L1.craters.push({ x: L1.fall.st[0], y: HL.gauss(0.01), r: L1.fall.rcm / 100, n: ++L1.n }); b.say('쿵! 공이 땅에 닿았습니다.', 'Thud! The ball has hit the ground.'); }
+        }
+        /* the plain */
+        B3.box3(-8000, 8000, FLOOR - 5, FLOOR, -9000, 3000, '#b39b72', { id: 'desk', top: '#bba37a' });
+        /* the tower: four tapered legs and cross-bracing, in sections */
+        var TZ = -2200, hl = function (hm) { return towerHalf(hm); };
+        for (var k = 0; k < 20; k++) {
+          var h0 = k * 100, h1 = (k + 1) * 100, a0 = hl(h0), a1 = hl(h1), y0 = FLOOR + h0 * 100, y1 = FLOOR + h1 * 100;
+          [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(function (c) { B3.cylAB([c[0] * a0, y0, TZ + c[1] * a0], [c[0] * a1, y1, TZ + c[1] * a1], 60, '#8d96a0', { seg: 6, id: 'm:tower' }); });
+          [[-1, 1, 1, 1], [-1, -1, -1, 1], [1, -1, 1, 1], [-1, -1, 1, -1]].forEach(function (c) {
+            B3.line3([c[0] * a0, y0, TZ + c[1] * a0], [c[2] * a1, y1, TZ + c[3] * a1], '#9aa3ad', 1.2); B3.line3([c[2] * a0, y0, TZ + c[3] * a0], [c[0] * a1, y1, TZ + c[1] * a1], '#9aa3ad', 1.2); });
+        }
+        /* the windsock on top */
+        var wy = FLOOR + H_TOWER * 100;
+        B3.cylAB([0, wy, TZ], [0, wy + 800, TZ], 40, '#ccc');
+        B3.cylAB([0, wy + 720, TZ], [1500, wy + 650 + 60 * Math.sin(b.t * 3), TZ], 160, '#e8743b', { r1: 80 });
+        /* the lift on the south face, the boom out to the release point over the plumb mark */
+        var lh = L1.lift, ly = FLOOR + lh * 100, face = TZ + hl(lh);
+        B3.box3(-260, 260, ly - 120, ly + 40, face, face + 220, '#d7c46a', { id: 'm:tower' });
+        B3.box3(-30, 30, ly + 10, ly + 40, face + 220, 40, '#cfd6dc');
+        B3.box3(-20, 20, ly - 10, ly + 10, 20, 40, '#4b5258');                            /* the clamp */
+        B3.box3(-25, 25, ly - 40, ly - 10, face + 220, face + 260, '#c0392b');            /* the range finder */
+        var ball = L1.ball;
+        if (ball) B3.sphere3([0, ly - 10 - ball.rcm, 30], ball.rcm, ball.col);
+        if (L1.fall) { var F = L1.fall, fx = F.st[0] * 100, fy = F.done ? FLOOR + F.rcm : FLOOR + Math.max(0, F.st[1]) * 100 + F.rcm;
+          B3.sphere3([fx, fy, 30], F.rcm, F.col);
+          if (F.done && b.t - F.tLand < 1.5) { var q = (b.t - F.tLand) / 1.5; B3.cyl3('y', FLOOR, FLOOR + 30 * q, fx, 30, F.rcm * (2 + 6 * q), 'rgba(200,180,140,' + (0.5 * (1 - q)) + ')', { seg: 16 }); } }
+        /* the plumb mark and the craters */
+        B3.box3(-30, 30, FLOOR, FLOOR + 0.3, 28.5, 31.5, '#ffffff', { id: 'c:plumb' }); B3.box3(-1.5, 1.5, FLOOR, FLOOR + 0.3, 0, 60, '#ffffff', { id: 'c:plumb' });
+        if (b.clicked('c:plumb')) { b.views.ground.tx = L1.tape.x * 50; b.go('ground'); }
+        L1.craters.forEach(function (c) { var cx = c.x * 100, cz = 30 - c.y * 100, R = c.r * 100;
+          B3.cyl3('y', FLOOR, FLOOR + 0.4, cx, cz, R * 1.3, '#9c8460', { seg: 24 }); B3.cyl3('y', FLOOR + 0.4, FLOOR + 0.6, cx, cz, R, '#6f5a3c', { seg: 24 });
+          B3.text3([cx + R * 1.4, FLOOR + 0.7, cz - R * 1.2], [1, 0, 0], [0, 0, -1], String(c.n), Math.max(6, R * 0.6), '#2a2215', { weight: '800' }); });
+        /* the tape: hooked on the plumb mark, its reel dragged out; its marks printed as finely as you look */
+        var T = L1.tape, m = b.moved('tape'); if (m[0] || m[1]) { T.x += m[0] / 100; T.y -= m[1] / 100; }
+        var ex = T.x * 100, ez = -T.y * 100 + 30, len = Math.hypot(ex, ez - 30), ux = ex / (len || 1), uz = (ez - 30) / (len || 1), nx = -uz, nz = ux, wdt = 1.3;
+        B3.face([[0, FLOOR + 0.5, 30], [ex, FLOOR + 0.5, ez], [ex + nx * wdt, FLOOR + 0.5, ez + nz * wdt], [nx * wdt, FLOOR + 0.5, 30 + nz * wdt]], { fill: '#f0cf3a', flat: true, id: 'm:tape' });
+        var kpx = B3.CAM.k, minor = kpx >= 3 ? 0.01 : kpx >= 0.35 ? 0.1 : 1, lenM = len / 100;
+        for (var v = 0; v <= lenM / (1 + L1.tapeK) + 1e-9; v += minor) {
+          var dpos = (v * (1 + L1.tapeK) + L1.hook) * 100, px = ux * dpos, pz = 30 + uz * dpos;
+          var major = Math.abs(v / (minor * 10) - Math.round(v / (minor * 10))) < 1e-6, tl = major ? wdt : wdt * 0.5;
+          B3.line3([px, FLOOR + 0.55, pz], [px + nx * tl, FLOOR + 0.55, pz + nz * tl], '#1a1a1a', major ? 1.2 : 0.7);
+          if (major && kpx * minor * 1000 >= 40) B3.text3([px + nx * (wdt + 0.4), FLOOR + 0.55, pz + nz * (wdt + 0.4)], [ux, 0, uz], [-nx, 0, -nz],
+            minor >= 1 ? String(Math.round(v)) : minor >= 0.1 ? v.toFixed(1) : v.toFixed(2), Math.min(40, minor * 30), '#1a1a1a', { weight: '700', align: 'center' });
+        }
+        B3.cyl3('y', FLOOR, FLOOR + 9, ex + nx * 0.6, ez + nz * 0.6, 8, '#f2c531', { id: 'm:tape', seg: 18, cap: '#2b2b2b' });
+        B3.text3([ex - 5, FLOOR + 9.1, ez + 3], [1, 0, 0], [0, 0, -1], 'STANLEY 30m', 1.8, '#1a1a1a', { weight: '800' });
+        /* the control desk */
+        B3.box3(DX, DX + 160, -4, 0, DZ - 40, DZ + 40, '#b8875a', { top: '#c99a6b' });
+        [[DX + 4, DZ - 36], [DX + 156, DZ - 36], [DX + 4, DZ + 36], [DX + 156, DZ + 36]].forEach(function (q) { B3.box3(q[0] - 2.5, q[0] + 2.5, FLOOR, -4, q[1] - 2.5, q[1] + 2.5, '#6d5034'); });
+        /* the lift's panel */
+        B3.box3(DX + 6, DX + 42, 0, 5, DZ - 14, DZ + 10, '#c9cdd1', { id: 'm:ctl' });
+        var ccv = b.panel('ctl', 360, 240, function (ui) {
+          var g = ui.g; HL.rr(g, 0, 0, 360, 240, 8, '#c9cdd1');
+          HL.text(g, 'LIFT  ·  LASER RANGE FINDER', 14, 18, '#2a2d31', 12, 'left', '800');
+          var shownH = L1.lift * (1 + L1.rfGain) + L1.rfOff;
+          HL.lcd(g, 14, 32, 332, 52, 'h ' + Math.max(0, shownH).toFixed(1) + ' m');
+          var up = HL.button(ui, 'up', 20, 100, 70, 46, { label: '▲', col: '#3b6e9e', size: 18 });
+          var sl = HL.button(ui, 'slow', 100, 100, 70, 46, { label: 'SLOW', col: L1.slow ? '#8a6a1a' : '#555b62', size: 12 });
+          var dn = HL.button(ui, 'dn', 180, 100, 70, 46, { label: '▼', col: '#3b6e9e', size: 18 });
+          if (sl.click) L1.slow = !L1.slow;
+          var spd = L1.slow ? 0.5 : 40; L1.liftV = up.down ? spd : dn.down ? -spd : 0;
+          var rel = HL.button(ui, 'rel', 262, 100, 84, 46, { label: 'RELEASE', col: '#b8433a', size: 12 });
+          var clr = HL.button(ui, 'clr', 262, 160, 84, 34, { label: 'CLEAR', col: '#555b62', size: 11 });
+          if (rel.click) {
+            if (!L1.ball) b.say('클램프에 공이 없습니다.', 'There is no ball in the clamp.');
+            else { var B = L1.ball, rm = B.rcm * 1e-2, rho = B.rho * 1e3, area = Math.PI * rm * rm, mass = 4 / 3 * Math.PI * rm * rm * rm * rho;
+              L1.fall = { st: [0, L1.lift, 0, 0], t: 0, kd: CD * area / mass, rcm: B.rcm, col: B.col, done: L1.lift <= 0 }; L1.ball = null; } }
+          if (clr.click) { L1.craters = []; L1.n = 0; }
+          HL.text(g, L1.ball ? (ctx.lang() === 'en' ? 'Clamp: ball loaded' : '클램프: 공 장착됨') : (ctx.lang() === 'en' ? 'Clamp: empty' : '클램프: 비어 있음'), 20, 176, '#2a2d31', 12, 'left', '700');
+          HL.circle(g, 30, 214, 7, L1.liftV ? '#ffb02e' : '#4a3a2a', '#222', 1); HL.text(g, 'MOTOR', 44, 214, '#2a2d31', 10, 'left', '700');
+        });
+        B3.tex3(ccv, 0, 0, ccv.width, ccv.height, [DX + 6, 5.01, DZ - 14], [36, 0, 0], [0, 0, 24], { id: 'p:ctl' });
+        /* the ball workshop */
+        B3.box3(DX + 52, DX + 92, 0, 5, DZ - 14, DZ + 10, '#3a3f46', { id: 'm:shop' });
+        var scv = b.panel('shop', 400, 240, function (ui) {
+          var g = ui.g; HL.rr(g, 0, 0, 400, 240, 8, '#3a3f46'); HL.text(g, 'BALL WORKSHOP', 14, 18, '#dfe5ea', 12, 'left', '800');
+          var det = []; for (var rr = 5; rr <= 50; rr++) det.push(rr);
+          L1.r = HL.knob(ui, 'rad', 70, 110, 38, L1.r, { min: 5, max: 50, detents: det, sens: 45 / 260, label: 'RADIUS', marks: [[5, '5'], [20, '20'], [35, '35'], [50, '50']] });
+          L1.rho = HL.knob(ui, 'rho', 200, 110, 38, L1.rho, { min: RHO_MIN, max: RHO_MAX, sens: 9.9 / 900, wheelStep: 0.1, label: 'DENSITY', marks: [[0.1, '0.1'], [5, '5'], [10, '10']] });
+          L1.rho = Math.round(L1.rho * 100) / 100;
+          HL.lcd(g, 278, 36, 110, 36, L1.r + ' cm'); HL.lcd(g, 278, 80, 110, 36, L1.rho.toFixed(2)); HL.text(g, 'g/cm³', 386, 128, '#aab3bd', 10, 'right');
+          var load = HL.button(ui, 'load', 278, 160, 110, 46, { label: 'LOAD', col: '#3b7a57', size: 14 });
+          if (load.click) {
+            if (L1.lift > 1) b.say('엘리베이터를 바닥으로 내려야 싣습니다.', 'Bring the lift down to load.');
+            else if (L1.ball) b.say('이미 공이 실려 있습니다.', 'A ball is loaded already.');
+            else { var sh = Math.round(225 - 150 * Math.log(L1.rho / 0.1) / Math.log(100)), hx = function (v) { return Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0'); };
+              L1.ball = { rcm: L1.r + L1.rErr, rho: L1.rho * (1 + L1.rhoErr), col: '#' + hx(sh) + hx(Math.round(sh * 0.85)) + hx(Math.round(sh * 0.62)) }; L1.fall = null; } }
+        });
+        B3.tex3(scv, 0, 0, scv.width, scv.height, [DX + 52, 5.01, DZ - 14], [40, 0, 0], [0, 0, 24], { id: 'p:shop' });
+        B3.stopwatch(b, 'sw', [DX + 118, DZ + 18], L1.sw);
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
   }
 };
 </script>
 <script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
 <script src="consolesim.js"></script>
   <script src="adfit.js"></script>
   <script src="simfull.js"></script>

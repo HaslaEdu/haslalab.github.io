@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3462 1200" role="img" aria-labelledby="title desc">
+  <title id="title">수조와 밸브 사이의 가변 지름 관 및 압력 센서</title>
+  <desc id="desc">APhO 2021의 수조와 밸브 배치를 따라 그린 투명 벡터 도식. 왼쪽 수조에서 오른쪽 밸브로 물이 흐르며 좌표 x는 밸브에서 수조 쪽으로 증가한다. S0은 밸브, S1부터 S7은 수조 방향으로 놓인 압력 센서이다. 네 개의 관 경계선은 두꺼운 관벽과 완만하게 달라지는 내부 지름을 구분한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" markerWidth="6" markerHeight="6" refX="8" refY="5" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round">
+    <!-- The reservoir surface and tank/pipe outline follow the supplied figure. -->
+    <path d="M106 194H857M857 166V582H2496V713H857V852H106" stroke-width="9"/>
+    <path d="M148 215H463M174 236H437M219 256H392M243 276H368M277 296H332" stroke-width="5"/>
+    <!-- Internal bore, exaggerated so both thick walls remain visible. -->
+    <path d="M857 600.4Q1676.5 603.0 2496 605.5M857 695.6Q1676.5 693.0 2496 690.5" stroke-width="5"/>
+    <!-- H is measured from the free surface to the pipe centre line. -->
+    <path d="M510 194H653M510 648H715M583 205V344M583 456V636" stroke-width="4"/>
+    <path d="M583 205L570 231M583 205L596 231M583 636L570 610M583 636L596 610" stroke-width="5"/>
+    <!-- Valve and its handle remain at the original pipe end. -->
+    <path d="M2496 582V542M2450 542H2542" stroke-width="10"/>
+    <!-- x points towards the reservoir; the separate internal arrow is flow. -->
+    <path d="M2295 219H1095" stroke-width="5" marker-end="url(#arrow)"/>
+    <path d="M1575 648H1815" stroke-width="5" marker-end="url(#arrow)"/>
+    <!-- Total length, with an open space for the label rather than a white mask. -->
+    <path d="M857 884V1052M2496 1010V1052M869 1030H1605M1750 1030H2484" stroke-width="4"/>
+    <path d="M869 1030L897 1016M869 1030L897 1044M2484 1030L2456 1016M2484 1030L2456 1044" stroke-width="5"/>
+    <!-- Diameter dimensions lie inside the transparent bore. -->
+    <path d="M1263 606V689M1263 606L1252 627M1263 606L1274 627M1263 689L1252 668M1263 689L1274 668M2260 611V685M2260 611L2249 632M2260 611L2271 632M2260 685L2249 664M2260 685L2271 664" stroke-width="4"/>
+    <!-- S0 is drawn below the valve so its tap does not overlap the handle. -->
+    <path d="M2496 690.5V850" stroke-width="4"/>
+  </g>
+  <circle cx="2496" cy="866" r="9" fill="currentColor"/>
+  <path d="M2291.125 604.862V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="2291.125" cy="449" r="9" fill="currentColor"/>
+  <path d="M2086.250 604.225V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="2086.250" cy="449" r="9" fill="currentColor"/>
+  <path d="M1881.375 603.587V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="1881.375" cy="449" r="9" fill="currentColor"/>
+  <path d="M1676.500 602.950V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="1676.500" cy="449" r="9" fill="currentColor"/>
+  <path d="M1471.625 602.312V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="1471.625" cy="449" r="9" fill="currentColor"/>
+  <path d="M1266.750 601.675V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="1266.750" cy="449" r="9" fill="currentColor"/>
+  <path d="M1061.875 601.038V462" fill="none" stroke="currentColor" stroke-width="4"/>
+  <circle cx="1061.875" cy="449" r="9" fill="currentColor"/>
+  <g fill="currentColor" font-family="Georgia,'Times New Roman',serif" text-anchor="middle" font-size="64">
+    <text x="583" y="420" font-style="italic">H</text>
+    <text x="1676.5" y="1050" font-style="italic">L</text>
+    <text x="1010" y="240" font-style="italic">x</text>
+    <text x="2496" y="510">T</text>
+    <text x="300" y="145" font-style="italic">p<tspan baseline-shift="sub" font-size="70%" font-style="normal">atm</tspan></text>
+    <text x="2780" y="674" font-style="italic">p<tspan baseline-shift="sub" font-size="70%" font-style="normal">atm</tspan></text>
+    <text x="1395" y="671" font-size="55" font-style="italic">D(x)</text>
+    <text x="2356" y="670" font-size="55" font-style="italic">D<tspan baseline-shift="sub" font-size="70%" font-style="normal">0</tspan></text>
+    <text x="1510" y="671" font-size="55" font-style="italic">u<tspan baseline-shift="sub" font-size="70%" font-style="normal">0</tspan></text>
+    <text x="857" y="1140" font-size="60" font-style="italic">x = L</text>
+    <text x="2496" y="1140" font-size="60" font-style="italic">x = 0</text>
+    <text x="2496" y="955" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">0</tspan></text>
+    <text x="2291.125" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">1</tspan></text>
+    <text x="2086.250" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">2</tspan></text>
+    <text x="1881.375" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">3</tspan></text>
+    <text x="1676.500" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">4</tspan></text>
+    <text x="1471.625" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">5</tspan></text>
+    <text x="1266.750" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">6</tspan></text>
+    <text x="1061.875" y="405" font-size="57" font-style="italic">S<tspan baseline-shift="sub" font-size="70%" font-style="normal">7</tspan></text>
+  </g>
+</svg>

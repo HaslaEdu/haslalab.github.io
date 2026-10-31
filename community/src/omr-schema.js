@@ -1,0 +1,2 @@
+/* Generated from migrations/0012_omr.sql. */
+export const OMR_SCHEMA = ["CREATE TABLE IF NOT EXISTS omr_attempts (\n id INTEGER PRIMARY KEY AUTOINCREMENT,\n user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,\n client_id TEXT NOT NULL,\n exam_key TEXT NOT NULL,\n policy_version TEXT NOT NULL,\n answers TEXT NOT NULL,\n score TEXT NOT NULL,\n comparison_score REAL NOT NULL,\n created_at INTEGER NOT NULL,\n UNIQUE(user_id,client_id)\n)", "CREATE INDEX IF NOT EXISTS omr_cohort ON omr_attempts(exam_key,policy_version,user_id,id)"];

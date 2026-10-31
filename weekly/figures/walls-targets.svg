@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="320" viewBox="0 0 1050 320" role="img" aria-labelledby="title desc">
+  <title id="title">연속 벽과 자유 표적의 충돌</title>
+  <desc id="desc">왼쪽은 접선 방향으로 입사해 고정 반원 벽 안쪽을 따라 움직이는 퍽, 가운데는 반원 위의 작은 자유 표적 배열, 오른쪽은 접촉 법선과 입사속도가 이루는 예각 세타이다. 실제 축척과 무관하다.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 1L7 4L0 7" fill="none" stroke="currentColor" stroke-width="1.2"/></marker>
+  </defs>
+  <g stroke="currentColor" stroke-width="1.8" fill="none">
+    <path d="M167 65 A90 90 0 0 1 167 245"/>
+    <path d="M75 65H132" marker-end="url(#arrow)"/>
+    <circle cx="70" cy="65" r="3" fill="currentColor"/>
+    <path d="M423 65H480" marker-end="url(#arrow)"/>
+    <circle cx="418" cy="65" r="3" fill="currentColor"/>
+    <g id="targets" fill="currentColor" stroke="none">
+      <circle cx="524" cy="65.5" r="2.2"/><circle cx="541.1" cy="68.9" r="2.2"/>
+      <circle cx="557.4" cy="75.6" r="2.2"/><circle cx="572.1" cy="85.4" r="2.2"/>
+      <circle cx="584.6" cy="97.9" r="2.2"/><circle cx="594.4" cy="112.6" r="2.2"/>
+      <circle cx="601.1" cy="128.9" r="2.2"/><circle cx="604.5" cy="146.2" r="2.2"/>
+      <circle cx="604.5" cy="163.8" r="2.2"/><circle cx="601.1" cy="181.1" r="2.2"/>
+      <circle cx="594.4" cy="197.4" r="2.2"/><circle cx="584.6" cy="212.1" r="2.2"/>
+      <circle cx="572.1" cy="224.6" r="2.2"/><circle cx="557.4" cy="234.4" r="2.2"/>
+      <circle cx="541.1" cy="241.1" r="2.2"/><circle cx="524" cy="244.5" r="2.2"/>
+    </g>
+    <path d="M124 61L132 65L124 69M472 61L480 65L472 69M991 173L999 177L991 181"/>
+    <circle cx="826" cy="177" r="57"/>
+    <circle cx="860" cy="119" r="10"/>
+    <path d="M826 177H999" marker-end="url(#arrow)"/>
+    <path d="M793 233L880 83" stroke-dasharray="6 5"/>
+    <path d="M826 177L860 119"/>
+    <path d="M858 177A32 32 0 0 0 842 149"/>
+    <path d="M826 177L786 217"/>
+  </g>
+  <g fill="currentColor" font-family="'Noto Sans KR','Malgun Gothic',sans-serif" text-anchor="middle" font-size="19">
+    <text x="70" y="48" font-style="italic">m</text><text x="111" y="48" font-style="italic">v₀</text>
+    <text x="209" y="160" font-style="italic">R, μ</text>
+    <text x="167" y="283">고정 벽 / fixed wall</text>
+    <text x="418" y="48" font-style="italic">m</text><text x="460" y="48" font-style="italic">v₀</text>
+    <text x="475" y="150" font-size="17">총질량 Nm</text>
+    <text x="475" y="173" font-size="15">total mass Nm</text>
+    <text x="515" y="278" font-size="17">자유 표적 N²개</text>
+    <text x="515" y="302" font-size="15">N² free targets</text>
+    <text x="888" y="83">법선 / normal</text>
+    <text x="879" y="129" font-style="italic">a</text>
+    <text x="874" y="166" font-style="italic">θ</text>
+    <text x="800" y="194" font-style="italic">r</text>
+    <text x="987" y="165" font-style="italic">v</text>
+    <text x="864" y="278" font-size="17">충돌과 입사각 θ</text>
+    <text x="864" y="302" font-size="15">collision and incidence angle θ</text>
+  </g>
+</svg>

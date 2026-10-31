@@ -524,7 +524,7 @@ function drawTray(){
 }
 function renderTabs(){ const box=$("tabs"); box.innerHTML="";
   for(const k of ["mm","boxes"]){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":"";
-    b.onclick=()=>{ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
+    b.onclick=()=>{ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }; box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h)=>HIT.push({k,x,y,w,h});
 function plug(x,y,r,col,t){ circ(x,y,r*1.35,"#b8bec4","#3a3e43",1.2); circ(x,y,r,col,"#000",1); circ(x,y,r*0.42,"#0b0b0c"); circ(x-r*0.3,y-r*0.35,r*0.18,"rgba(255,255,255,.5)");
   const n=ST.leads.filter(([a,b])=>a===t||b===t).length; if(n){ fillR(x-r*0.55,y-r*0.55,r*1.1,r*1.1,r*0.2,"#2a2d31","#000",1); text("×"+n,x,y,"#ffe9b0",Math.max(10,r*0.7),"center","700"); }

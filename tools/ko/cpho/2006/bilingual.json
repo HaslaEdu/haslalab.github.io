@@ -1,0 +1,78 @@
+{
+  "header": {
+    "ko": "중국과학기술대학교 물리학부 Ye Bangjiao 정리",
+    "en": "Compiled by Ye Bangjiao, School of Physics, USTC"
+  },
+  "title": {
+    "ko": "제23회 중국 물리 올림피아드 결선 문제",
+    "en": "23rd Chinese Physics Olympiad — Final Problems"
+  },
+  "q1": {
+    "ko": "1. 우주로 이어지는 우주 엘리베이터를 건설하는 것은 인류의 오랜 꿈이다. 현재 미국 항공우주국(NASA)의 지원으로 로스앨러모스 국립연구소의 과학자들이 이를 연구하고 있다. 간단한 설계에서는 수천만 층 건물에 달하는 길이의 엘리베이터를 질량이 균일하게 분포한 케이블로 생각한다. 케이블은 강도가 높고 매우 가벼운 탄소 나노튜브로 만들며, 기존 우주선으로 우주에 운반한 뒤 서서히 지표면까지 내려뜨린다. 최종 상태에서 케이블은 일직선이고, 위쪽 끝은 우주를 향하며 아래쪽 끝은 지면에 막 닿지만 지면과 힘을 주고받지 않는다. 케이블 전체는 지구에 대해 정지해 있다. 지구가 케이블에 가하는 만유인력만 고려하여 케이블의 길이를 구하여라. 지구 반지름은 [[earthR]], 지표면의 중력가속도는 [[surfaceG]]이다.",
+    "en": "1. Building a space elevator has long been a human dream. Scientists at Los Alamos National Laboratory are studying it with support from NASA. A simple design treats the elevator as a cable of uniform mass distribution, as tall as tens of millions of building storeys. It is made of strong, very light carbon nanotubes, carried into space by a conventional spacecraft, and then slowly lowered to the Earth's surface. In its final state the cable is straight, its upper end points into space, and its lower end just touches the ground without exerting or receiving any force there. The entire cable is stationary relative to the Earth. Considering only the Earth's gravitational attraction on the cable, find its length. The Earth's radius is [[earthR]] and the gravitational acceleration at its surface is [[surfaceG]]."
+  },
+  "q2_intro": {
+    "ko": "2. 그림과 같이 안쪽 반지름이 R인 원통이 수평 지면 위에 놓여 있다(그림의 2R은 안쪽 지름이다). 원통 안의 직사각형 물체는 길이가 같고 질량이 각각 m인 가는 원형 막대 A, B를, 길이 [[sheetL]]인 질량 없는 직사각형 얇은 판의 양 끝에 평행하게 고정하여 만든 것이다.",
+    "en": "2. A cylinder of inner radius R rests on a horizontal floor; 2R in the figure is its inner diameter. Inside it is a rectangular assembly: two parallel thin circular rods A and B, of equal length and mass m each, are rigidly attached to opposite ends of a massless rectangular sheet of length [[sheetL]]."
+  },
+  "q2_wrap": {
+    "ko": "처음에 물체는 수평으로 놓여 정지해 있고 A, B는 모두 원통의 안쪽 면과 접촉한다. A, B와 원통 안쪽 면 사이의 정지 마찰계수 μ는 모두 1이다.\n\n원통을 중심축 주위로 매우 천천히 회전시켜 A가 점차 올라가게 한다.\n\n(1) 물체가 몇 도 회전한 뒤 원통과 상대적으로 정지한 상태를 유지할 수 없게 되는가?\n\n답: ____________________\n(수치만 쓰고 유도 과정은 쓰지 않아도 된다.)",
+    "en": "Initially the assembly is horizontal and at rest, with both A and B touching the inner surface. The coefficient of static friction μ between either rod and the inner surface is 1.\n\nRotate the cylinder very slowly about its central axis so that A gradually rises.\n\n(1) Through what angle does the assembly rotate before it can no longer remain at rest relative to the cylinder?\n\nAnswer: ____________________\n(Give only the numerical value; no derivation is required.)"
+  },
+  "q2_b": {
+    "ko": "(2) 물체가 원통에 대해 막 미끄러지기 시작할 때 원통의 회전을 즉시 멈춘다. A와 B의 중점을 잇는 선분과 연직선 사이의 각을 θ라 하자. 이후 θ가 몇 도일 때 B가 원통에 대해 미끄러지기 시작하는가? 필요한 유도 과정을 답안에 쓰고, 마지막 방정식은 계산기로 수치적으로 풀어라. 최종 결과는 세 자리 숫자로 나타내어라.",
+    "en": "(2) Stop the cylinder immediately when the assembly can no longer remain at rest relative to it. Let θ be the angle between the vertical and the line joining the midpoints of A and B. At what subsequent value of θ does B begin to slide relative to the cylinder? Show the necessary derivation, solve the final equation numerically with a calculator, and give the final result to three digits."
+  },
+  "q3_intro": {
+    "ko": "3. 지구의 자전과 고도에 따른 대기의 태양복사 흡수 차이 때문에, 정지한 대기의 온도와 밀도는 고도에 따라 다르다. 건조하고 정지한 공기의 경우 고도 20 km 미만에서는 대기 온도 Tₑ가 높이에 따라 낮아지며, 변화율은 다음과 같다.",
+    "en": "3. Because of the Earth's rotation and differences in absorption of solar radiation at different altitudes, the temperature and density of a stationary atmosphere vary with height. For dry, stationary air below 20 km, the atmospheric temperature Tₑ decreases with height at the rate given below."
+  },
+  "q3_body": {
+    "ko": "z는 연직 위쪽을 양의 방향으로 하는 좌표이다.\n\n질량이 일정한 매우 작은 공기 덩어리를 생각하자. 위치를 정할 때는 질점으로 취급할 수 있다. 처음 위치를 원점(z = 0)으로 정하며, 이때 공기 덩어리의 온도 T, 밀도 ρ, 압력 p는 주위 대기의 온도 Tₑ, 밀도 ρₑ, 압력 pₑ와 각각 같다. 어떤 원인으로 공기 덩어리가 위쪽으로 조금 변위하였다. 대기압은 높이에 따라 감소하므로 공기 덩어리는 상승하면서 팽창하고 온도가 변한다. 온도의 높이 의존성은 선형으로 볼 수 있다. 과정이 아주 빠르지는 않아 내부 압력은 매 순간 주위 대기압과 같아질 수 있지만, 주위와 열을 교환할 시간은 없으므로 단열 과정으로 볼 수 있다. 대기를 이상기체로 취급하고 단열 과정의 압력 p와 부피 V가 [[adiabatic]]를 따른다고 하자. C와 γ는 상수이며 γ는 기체 종류에 따라 다르다. 공기는 [[gamma]]이고, 몰질량은 [[molar]], 보편기체상수는 [[gasR]]이다. 이러한 조건에서 공기 덩어리의 이후 운동을 정량적으로 논하여라. 중력가속도는 [[atmosG]], z = 0에서 대기 온도는 [[temp0]]이다.",
+    "en": "The coordinate z is positive vertically upwards.\n\nConsider a tiny parcel of air of fixed mass, treated as a point when specifying its position. Take its initial position as the origin, z = 0. Its temperature T, density ρ, and pressure p initially equal the surrounding atmospheric values Tₑ, ρₑ, and pₑ. For some reason the parcel is displaced slightly upwards. As atmospheric pressure decreases with height, the rising parcel expands and changes temperature; its temperature may be regarded as a linear function of height. The process is not so fast that its pressure cannot adjust to the surrounding atmospheric pressure at each instant, but there is insufficient time for heat exchange. Thus the process is adiabatic. Treat the atmosphere as an ideal gas, with pressure p and volume V obeying [[adiabatic]]. Here C and γ are constants, with γ depending on the gas. For air, [[gamma]], the molar mass is [[molar]], and the universal gas constant is [[gasR]]. Discuss the parcel's subsequent motion quantitatively under these conditions. Take the gravitational acceleration as [[atmosG]] and the atmospheric temperature at z = 0 as [[temp0]]."
+  },
+  "q4_intro": {
+    "ko": "4. 그림 1의 K는 질량과 전하량이 같은 양전하 입자를 연속적으로 방출하는 입자원이다. 입자는 모두 점선 O′O를 따라 움직이며 속력은 유한한 모든 값을 가질 수 있다. O′O에 수직인 스크린 NN′에 입자가 부딪치면 영구적인 흔적을 남긴다. 스크린 안의 좌표축 Y는 점선에 수직이고, 원점은 점선과 스크린의 교점 O이며, 양의 방향은 O에서 N을 향한다. 점선 위의 A, B에는 각각 전자식 게이트 a, b가 있다. 게이트는 명령에 따라 여닫을 수 있으며 처음에는 모두 닫혀 입자 흐름을 막고 있다. 큰 평행 금속판 M, M′는 점선 O′O에서 각각 거리 d만큼 떨어져 있고 M은 접지되어 있다. 두 판 사이에는 그림 2와 같이 주기가 2T인 교류 전압 u를 가한다. 양의 최댓값은 2U, 음의 최댓값의 크기는 U이다.",
+    "en": "4. In Fig. 1, source K continuously emits positively charged particles of identical mass and charge. All velocities are along the dashed line O′O; their speeds may have any finite value. Particles leave permanent marks on striking screen NN′, perpendicular to O′O. The coordinate axis Y lies in the screen, perpendicular to the dashed line, with origin at their intersection O and positive direction from O towards N. Electronic gates a and b are placed at A and B. They open or close on command and are initially both closed, blocking the beam. Two large parallel metal plates M and M′ are each a distance d from O′O; M is grounded. The alternating voltage u between them has period 2T, positive maximum 2U, and negative maximum magnitude U, as shown in Fig. 2."
+  },
+  "q4_wrap": {
+    "ko": "입자가 두 금속판 사이에 있고 판 사이 전압이 U일 때 입자의 가속도를 a라 하자. 이 a, 전압의 반주기 T, 판과 점선 사이의 거리 d는 다음 관계를 만족한다.",
+    "en": "Let a be a particle's acceleration when it is between the plates at voltage U. This acceleration, the voltage half-period T, and the plate-to-axis distance d satisfy the relation below."
+  },
+  "q4_distances": {
+    "ko": "AB 사이의 거리, B에서 금속판 왼쪽 끝까지의 거리, 금속판의 길이",
+    "en": "The distance AB, the distance from B to the left plate edge, the plate length,"
+  },
+  "q4_continue": {
+    "ko": "와 금속판 오른쪽 끝에서 스크린까지의 거리는 모두 l이다. 중력과 입자 사이의 상호작용은 무시한다. 게이트에 부딪친 입자는 흡수되어 이후 입자의 운동에 영향을 주지 않는다. M과 M′ 사이의 전기장만 고려하고 이를 균일하다고 보아라.",
+    "en": "and the distance from the right plate edge to the screen are all l. Neglect gravity and interactions between particles. Particles striking a gate are absorbed without affecting subsequent particles. Consider only the electric field between M and M′ and regard it as uniform."
+  },
+  "q4_a": {
+    "ko": "(1) 게이트를 열었다 닫을 때까지의 시간 δ는 T에 비해 매우 짧아 무시할 수 있다고 하자. 어느 순간 a를 열었다 즉시 닫고, T 뒤에 a를 다시 열었다 즉시 닫는다. 다시 T가 지난 뒤에는 세 번째로 a를 열면서 b도 동시에 열고, 즉시 두 게이트를 동시에 닫는다. b를 연 순간을 그림 2의 t = 0으로 정할 때 스크린에 나타날 수 있는 입자 흔적의 Y 좌표는 얼마인가? 결과만 쓰고 계산 과정은 쓰지 않아도 된다.\n\n답: ____________________________________________________",
+    "en": "(1) The time δ between opening and closing a gate is negligible compared with T. Open a momentarily and close it immediately. After time T, open a momentarily again. After another time T, open a for the third time and b simultaneously, then close both immediately. Taking the opening of b as t = 0 in Fig. 2, give the possible Y coordinates of particle marks on the screen. Results only; no calculation is required.\n\nAnswer: ____________________________________________________"
+  },
+  "q4_b": {
+    "ko": "(2) 게이트를 열었다 닫을 때까지의 시간을 [[gateDelta]]라 하자. 어느 순간 a를 열고 δ 뒤에 닫는다. a를 연 순간으로부터 T 뒤에 b를 열고 δ 뒤에 닫는다. b를 연 순간을 그림 2의 t = 0으로 정할 때, B를 통과한 입자 중 속력이 가장 큰 입자가 스크린에 남기는 흔적의 Y 좌표를 구하여라. 결과만 쓰고 계산 과정은 쓰지 않아도 된다.\n\n최대 속력 입자: ________________________________________\n\n속력이 가장 작은 입자의 흔적 좌표도 같은 방식으로 구하여라.\n\n최소 속력 입자: ________________________________________",
+    "en": "(2) Now let the interval between opening and closing a gate be [[gateDelta]]. Open a, then close it after δ. At time T after a was opened, open b, then close it after δ. Taking the opening of b as t = 0 in Fig. 2, give the Y coordinate of the mark made by the fastest particle emerging from B. Results only; no calculation is required.\n\nFastest particle: ________________________________________\n\nLikewise give the coordinate of the mark made by the slowest particle.\n\nSlowest particle: ________________________________________"
+  },
+  "q5_intro": {
+    "ko": "5. 그림의 좌표계 Oxyz에서 x축과 z축은 종이 면 안에 있고 y축은 종이 면에 수직으로 안쪽을 향한다. 무한히 큰 두 금속판 P, Q는 각각 x = −d, x = d에 놓여 있다. 크기가 B인 균일한 자기장은 Oxz 평면에 평행하고 z축과 각 α를 이룬다. 원점 O에서 전하량 q > 0, 질량 m인 입자가 y축의 양의 방향으로 초기 속력 v₀를 가지고 출발한다. 중력은 무시하여라.",
+    "en": "5. In the coordinate system Oxyz shown, the x and z axes lie in the page and the y axis points into it. Two infinite metal plates P and Q lie at x = −d and x = d respectively. A uniform magnetic field of magnitude B is parallel to the Oxz plane and makes angle α with the z axis. A particle of charge q > 0 and mass m starts at O with speed v₀ along the positive y direction. Neglect gravity."
+  },
+  "q5_a": {
+    "ko": "(1) 두 판 사이에 전기장을 가하지 않았을 때 입자가 금속판에 접촉하지 않으면서 공간적으로 막 도달할 수 있으려면 초기 속력 v₀는 얼마여야 하는가? 필요한 최소 시간 t₀도 구하여라.",
+    "en": "(1) With no electric field between the plates, what initial speed v₀ lets the particle just reach a plate's position without contacting it? Find the shortest required time t₀."
+  },
+  "q5_b": {
+    "ko": "(2) 두 판 사이에 x축의 양의 방향으로 크기 E인 균일한 전기장을 추가한다. 입자가 (1)에서 구한 시간 t₀에 금속판에 도달하려면 초기 속력 v₀는 얼마여야 하는가? [[alpha45]]일 때 입자가 판에 도달하는 위치의 좌표를 구하여라.",
+    "en": "(2) Add a uniform electric field of magnitude E along positive x. What initial speed v₀ lets the particle reach a plate at the time t₀ found in (1)? For [[alpha45]], find its coordinates on reaching the plate."
+  },
+  "q6": {
+    "ko": "6. 고에너지 물리 실험에서는 실험실 기준계에서 움직이는 양성자가 정지한 양성자와 충돌하면 양성자 하나와 반양성자 하나가 추가로 생성될 수 있음이 확인되었다. 즉 충돌 뒤에는 양성자 세 개와 반양성자 한 개가 존재한다. 이러한 반응이 일어나기 위해 충돌 전 움직이는 양성자가 가져야 하는 에너지의 최솟값, 즉 문턱 에너지를 실험실 기준계에서 구하여라. 양성자와 반양성자의 정지질량은 모두 [[protonMass]]이다. 입자 사이의 정전기적 상호작용은 무시하여라.",
+    "en": "6. High-energy experiments show that when a moving proton collides with a stationary proton in the laboratory frame, an additional proton–antiproton pair may be produced. Thus there are three protons and one antiproton after the collision. Find the minimum energy, or threshold energy, that the incident moving proton must have before the collision in the laboratory frame for this process to occur. The rest masses of the proton and antiproton are both [[protonMass]]. Ignore electrostatic interactions between particles."
+  },
+  "note": {
+    "ko": "옮긴이 주: 문제 3에서 원문에 적힌 중력가속도 단위 m·s⁻¹은 m·s⁻²의 오기로 보아 바로잡았다. 나머지 수치와 문항의 조건은 원문을 따른다. 그림은 원래 위치에서 선 도식으로 다시 그렸다.",
+    "en": "Translator's note: In Problem 3, the source unit m·s⁻¹ for gravitational acceleration is corrected to m·s⁻². Other numerical data and conditions follow the source. Figures have been redrawn as line diagrams at their original positions."
+  }
+}

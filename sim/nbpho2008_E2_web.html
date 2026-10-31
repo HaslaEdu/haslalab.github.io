@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NBPhO 2008 실험 — 유리판 · Glass Plate · HaslaLab</title>
+<meta name="description" content="NBPhO 2008 실험 문제 10 유리판을 브라우저에서 해 봅니다. 렌즈로 퍼뜨린 레이저 빛을 얇은 유리판에 비추어 두 면에서 반사된 빛의 간섭무늬 간격과 각도로 유리판의 두께를 구합니다.">
+<meta property="og:site_name" content="HaslaLab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NBPhO 2008 실험 — 유리판 · Glass Plate · HaslaLab">
+<meta property="og:description" content="NBPhO 2008 실험: 레이저·렌즈·자로 얇은 유리판의 두께 재기.">
+<style>
+:root{--bg:#0c0c0c;--fg:#cccccc;--dim:#7d7d7d;--accent:#4ec9b0;--line:#2a2a2a;--panel:#141414}
+*{box-sizing:border-box}
+body{margin:0;background:#1e1e1e;color:var(--fg);
+     font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI","Malgun Gothic",sans-serif;
+     height:100vh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:12px 16px 10px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0 0 3px;font-size:15px;color:#e8e8e8}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+header details{margin-top:7px}
+header summary{cursor:pointer;color:var(--accent);font-size:12.5px}
+header ul{margin:6px 0 0;padding-left:18px;color:var(--dim);font-size:12.5px}
+header li{margin:2px 0}
+#screen{flex:1;overflow-y:auto;background:var(--bg);padding:12px 16px;
+        font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;white-space:pre-wrap;
+        word-break:break-word}
+#screen .in{color:#9cdcfe}
+#bar{display:flex;align-items:center;gap:0;background:var(--bg);border-top:1px solid var(--line);
+     padding:6px 16px 10px}
+#ps{color:var(--fg);font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;
+    white-space:pre;flex:none}
+#inp{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#9cdcfe;
+     font:13px/1.45 ui-monospace,Consolas,"Courier New",monospace;padding:0}
+#tools{display:flex;gap:8px;padding:8px 16px;background:var(--panel);border-top:1px solid var(--line)}
+button{background:#2d2d2d;color:var(--fg);border:1px solid var(--line);border-radius:4px;
+       padding:5px 12px;font:12.5px inherit;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+
+</style>
+</head>
+<body>
+<script>
+/* NBPhO 2008 problem 10 "Glass plate" on the 3-D bench — the solution's first setup.  The lens brings the
+   laser beam to a focus and lets it spread, so the plate receives a fan of incidence angles; the beams
+   reflected from its two surfaces differ in path by 2nd·cos β and draw straight fringes on the screen.
+   One fringe is a change of incidence δα with δ(2nd·cos β) = λ, and the spacing on the screen is a = L·δα,
+   L being the path from the focus over the plate to the screen.  Without the lens the spot is too small to
+   show more than a fringe.  n = 1.52, d ≈ 0.20 mm (the official value). */
+var PROGRAM = {
+  title: { ko: 'NBPhO 2008 실험 10 — 유리판', en: 'NBPhO 2008 Problem 10 — Glass plate' },
+  subtitle: { ko: '장비: 레이저(λ = 650 nm), 얇은 유리판(스탠드에 고정 — 날카롭고 깨지기 쉬우니 만지지 마세요), 렌즈, 자. 유리판의 두께를 구하고 불확도를 어림하세요. 실험 장치의 도식을 그리세요.',
+              en: 'Equipment: a laser (λ = 650 nm), a thin glass plate (fixed to a stand — its edges are sharp and it breaks easily, do not touch the glass), a lens and a ruler. Find the thickness of the plate and estimate the uncertainty. Draw the scheme of your setup.' },
+  notes: { ko: [
+    '공식 해답의 첫째 방법: 렌즈로 빛을 퍼뜨려 유리판 두 면의 반사광이 화면에서 간섭하게 합니다. 무늬 하나는 경로차 2nd·cos β 가 λ 만큼 바뀌는 입사각 변화 δα 이고, 화면의 간격은 a = L·δα (L 은 초점에서 유리판을 거쳐 화면까지의 길이).',
+    '그래서 d = Lλ·n cos β / (2a sin α cos α), sin β = sin α / n. (해답 본문의 식은 경로 |AB| 를 잘못 써서 계수가 다릅니다 — 여기서는 정확한 2nd·cos β 로 계산합니다.) n 은 약 1.5 로 두거나 브루스터 각으로 잴 수 있습니다.',
+    '렌즈 받침에 초점 거리 f = 3.0 cm 가 적혀 있습니다. 해답의 두께는 d ≈ 0.20 mm 이고, 값은 방문할 때마다 조금 다릅니다.'], en: [
+    'The official solution\'s first setup: spread the beam with the lens so that the reflections from the plate\'s two faces interfere on the screen. One fringe is the change of incidence δα that changes the path difference 2nd·cos β by λ, and the spacing on the screen is a = L·δα (L the path from the focus over the plate to the screen).',
+    'So d = Lλ·n cos β / (2a sin α cos α), sin β = sin α / n. (The solution\'s text takes the path |AB| wrongly and gets another factor — here the exact 2nd·cos β is used.) Take n ≈ 1.5 or measure it by Brewster\'s angle.',
+    'The lens holder is marked f = 3.0 cm. The solution found d ≈ 0.20 mm; the value differs a little from visit to visit.'] }
+};
+
+var LAB = { lens: true, lx: 5, al: 45, s: 60 };
+PROGRAM.lab = {
+  intro: { ko: '책상 위: 레이저, 렌즈 받침(f = 3.0 cm), 각도판 위 스탠드에 고정한 유리판, 모눈 화면, 들어오는 빛 아래의 50 cm 자(유리판 축이 50 cm), 유리판에서 시작해 반사된 빛을 따라 놓인 1 m 줄자.',
+           en: 'On the desk: the laser, the lens on its holder (f = 3.0 cm), the glass plate fixed to a stand on a protractor, a graph-paper screen, a 50 cm ruler under the incoming beam (the plate\'s axis at 50 cm) and a 1 m tape from the plate along the reflected beam.' },
+  howto: { ko: ['렌즈 끌기: 빛을 따라 옮기기 · 클릭: 빛 속에 넣기 / 빼기',
+                '유리판(스탠드) 좌우로 끌기 또는 휠: 돌려서 입사각 α 바꾸기 · 각도판은 클릭해서 가까이',
+                '화면 끌기: 반사된 빛을 따라 옮기기 · 클릭: 화면 가까이 (모눈 1 mm, 휠로 확대)'],
+           en: ['Drag the lens: move it along the beam · click: put it in the beam / take it out',
+                'Drag the plate (stand) left/right or roll the wheel: turn it to change the incidence α · click the protractor to look closer',
+                'Drag the screen: move it along the reflected beam · click: look at it closely (1 mm grid, wheel to zoom)'] },
+  notePlaceholder: { ko: '예) α = 45°, 유리판 50.0 cm, 렌즈 28.0 cm(초점 31.0 cm → 19.0 cm), 화면 60.0 cm → L = 79.0 cm; 10 간격 = 34 mm', en: 'e.g. α = 45°, plate at 50.0 cm, lens at 28.0 cm (focus 31.0 cm → 19.0 cm), screen 60.0 cm → L = 79.0 cm; 10 spacings = 34 mm' },
+  mount: function (host, ctx) {
+    var S = ctx.S;
+    var d = 0.020 * (1 + S.sys('d', 0.06)), n = 1.52, lam = 6.5e-5, f = 3.0 * (1 + S.sys('f', 0.02)), BH = 12, PX = 20, SW = 16, SH = 10;
+    var rulerIn = B3.scaleTex(50, { horiz: true, width: 2.6, bg: '#e9eef2', label: 'cm' }), tape = B3.scaleTex(100, { horiz: true, width: 2.6, bg: '#f2d33c', label: 'cm' });
+    var prot = (function () { var c = document.createElement('canvas'); c.width = c.height = 400; c._static = true; var g = c.getContext('2d');
+      g.fillStyle = '#eef0f2'; g.beginPath(); g.arc(200, 200, 198, 0, 7); g.fill(); g.strokeStyle = '#222'; g.fillStyle = '#222'; g.font = '700 15px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      for (var i = 0; i < 360; i++) { var a = i * Math.PI / 180, r1 = i % 10 === 0 ? 160 : i % 5 === 0 ? 172 : 180; g.lineWidth = i % 10 === 0 ? 2 : 1;
+        g.beginPath(); g.moveTo(200 - Math.cos(a) * r1, 200 - Math.sin(a) * r1); g.lineTo(200 - Math.cos(a) * 196, 200 - Math.sin(a) * 196); g.stroke();
+        if (i % 10 === 0) { var lab = i <= 180 ? i : 360 - i; g.fillText(String(lab), 200 - Math.cos(a) * 143, 200 - Math.sin(a) * 143); } }
+      return c; })();
+    var glass = (function () { var c = document.createElement('canvas'); c.width = c.height = 8; c._static = true; var g = c.getContext('2d'); g.fillStyle = '#bfdde4'; g.fillRect(0, 0, 8, 8); return c; })();
+    var scr = document.createElement('canvas'); scr.width = 480; scr.height = 300; var sg = scr.getContext('2d'), key = '';
+    function drawScreen(L, w, lensIn, a0) {
+      var k2 = [L.toFixed(2), w.toFixed(3), lensIn, a0.toFixed(5)].join(); if (k2 === key) return; key = k2;
+      var img = sg.createImageData(480, 300), D = img.data, px = 480 / SW, col = new Float32Array(480), row = new Float32Array(300);
+      for (var i = 0; i < 480; i++) { var u = (i + 0.5) / px - SW / 2, al = a0 + u / L, sb = Math.sin(al) / n, cb = Math.sqrt(1 - sb * sb);
+        col[i] = Math.exp(-2 * u * u / (w * w)) * (1 + 0.96 * Math.cos(4 * Math.PI * n * d * cb / lam)); }
+      for (var j = 0; j < 300; j++) { var v = (j + 0.5) / px - SH / 2; row[j] = Math.exp(-2 * v * v / (w * w)); }
+      for (j = 0; j < 300; j++) for (i = 0; i < 480; i++) { var I = Math.min(1, col[i] * row[j] * 0.55), q = (j * 480 + i) * 4;
+        var mm = (i % 3 === 0 || j % 3 === 0) ? 0.06 : 0, cm = (i % 30 === 0 || j % 30 === 0) ? 0.16 : 0, g0 = 0.96 - mm - cm;
+        D[q] = Math.min(255, 255 * (g0 * (1 - I) + I)); D[q + 1] = Math.min(255, 255 * g0 * (1 - I) + 40 * I); D[q + 2] = Math.min(255, 255 * g0 * (1 - I) + 30 * I); D[q + 3] = 255; }
+      sg.putImageData(img, 0, 0);
+    }
+    var bench = B3.bench(host, {
+      aspect: 0.62, lang: ctx.lang, wheelIds: ['plate'],
+      home: { yaw: -0.5, pitch: 0.75, k: 5.2, tx: 5, ty: 5, tz: -25 },
+      views: {
+        screen: { yaw: 0, pitch: 0, k: 45, tx: 0, ty: BH, tz: 0, title: { ko: '화면', en: 'The screen' },
+                  hint: { ko: '휠: 확대 · 빈 곳 끌기: 옮겨 보기 · Esc: 돌아가기', en: 'Wheel: zoom · drag empty space: pan · Esc: back' } },
+        prot: { yaw: 0, pitch: 1.5, k: 40, tx: PX, ty: 2, tz: 0, title: { ko: '각도판 (위에서)', en: 'The protractor (from above)' } },
+        ruler: { yaw: 0, pitch: 1.3, k: 30, tx: 0, ty: 0, tz: 5, title: { ko: '들어오는 빛 쪽의 자', en: 'The ruler along the incoming beam' } }
+      },
+      frame: function (b) {
+        if (b.clicked('m:lens')) LAB.lens = !LAB.lens;
+        var ml = b.moved('lens'); if (ml[0]) LAB.lx = Math.max(-25, Math.min(PX - 6, LAB.lx + ml[0]));
+        var mp = b.screenMoved('plate'), wp = b.wheel('plate'); if (mp[0] || wp) LAB.al = Math.max(15, Math.min(75, LAB.al + mp[0] * 0.6 + wp * 0.2));
+        if (b.clicked('c:prot')) b.go('prot');
+        var a = LAB.al * Math.PI / 180, r = [-Math.cos(2 * a), 0, -Math.sin(2 * a)], e1 = [-r[2], 0, r[0]];
+        var ms = b.moved('screen'); if (ms[0] || ms[1]) LAB.s = Math.max(12, Math.min(110, LAB.s + ms[0] * r[0] + ms[1] * r[2]));
+        var sx = PX + r[0] * LAB.s, sz = r[2] * LAB.s;
+        if (sz < -78) { LAB.s = -78 / r[2]; sx = PX + r[0] * LAB.s; sz = -78; }
+        if (sx < -42) { LAB.s = (-42 - PX) / r[0]; sx = -42; sz = r[2] * LAB.s; }
+        var P = [PX, BH, 0];
+        B3.desk(-45, 60, -85, 20);
+        /* the laser */
+        B3.cylAB([-40, BH, 0], [-30, BH, 0], 1.3, '#2b2f35', { seg: 18 }); B3.box3(-38, -32, 0, BH - 1.2, -2, 2, '#3a3f46', { top: '#474c55' });
+        B3.cylAB([-30, BH, 0], [-29.6, BH, 0], 0.5, '#111', { seg: 12 });
+        /* the ruler along the incoming beam: 0 under the laser's front, the plate's axis at 50 cm */
+        B3.tex3(rulerIn, 0, 0, rulerIn.width, rulerIn.height, [PX - 50.5, 0.02, 1.4], [51, 0, 0], [0, 0, 2.6], { id: 'c:ruler' });
+        if (b.clicked('c:ruler')) b.go('ruler');
+        /* the lens */
+        var lz = LAB.lens ? 0 : 9;
+        B3.box3(LAB.lx - 1.5, LAB.lx + 1.5, 0, 0.8, lz - 2, lz + 2, '#3a3f46', { id: 'm:lens', top: '#474c55' });
+        B3.cyl3('y', 0.8, BH - 2, LAB.lx, lz, 0.35, '#c3c8cd', { id: 'm:lens', seg: 10 });
+        B3.cyl3('x', LAB.lx - 0.25, LAB.lx + 0.25, BH, lz, 2.0, 'rgba(190,225,240,.85)', { id: 'm:lens', seg: 24, cap: 'rgba(205,235,245,.8)' });
+        B3.text3([LAB.lx - 1.3, 0.81, lz + 1.8], [1, 0, 0], [0, 0, -1], 'f=3.0', 0.55, '#e8e8e8', { weight: '700' });
+        /* the plate on its stand and protractor */
+        B3.tex3(prot, 0, 0, 400, 400, [PX - 5, 0.03, -5], [10, 0, 0], [0, 0, 10], { id: 'c:prot' });
+        var nrm = [-Math.cos(a), 0, -Math.sin(a)], tg = [-nrm[2], 0, nrm[0]], hide = b.view === 'screen';
+        B3.line3([PX, 0.05, 0], [PX + nrm[0] * 4.8, 0.05, nrm[2] * 4.8], '#c0392b', 2.5);
+        if (!hide) B3.cyl3('y', 0.03, BH - 2.5, PX - nrm[0] * 0.8, -nrm[2] * 0.8, 0.4, '#9aa0a6', { id: 'm:plate', seg: 10 });
+        var pw = 3.0, ph = 5, tk = d * 6;
+        if (!hide) B3.tex3(glass, 0, 0, 8, 8, [PX - tg[0] * pw, BH - ph / 2, -tg[2] * pw], [tg[0] * 2 * pw, 0, tg[2] * 2 * pw], [0, ph, 0], { id: 'm:plate' });
+        if (!hide) B3.box3(PX - nrm[0] * 0.8 - 0.6, PX - nrm[0] * 0.8 + 0.6, BH - 3, BH - 2, -nrm[2] * 0.8 - 0.6, -nrm[2] * 0.8 + 0.6, '#2b2f35', { id: 'm:plate' });
+        if (!hide) B3.line3([PX - tg[0] * pw, BH - ph / 2, -tg[2] * pw], [PX + tg[0] * pw, BH - ph / 2, tg[2] * pw], 'rgba(150,200,210,.9)', 1.5);
+        if (!hide) B3.line3([PX - tg[0] * pw, BH + ph / 2, -tg[2] * pw], [PX + tg[0] * pw, BH + ph / 2, tg[2] * pw], 'rgba(150,200,210,.9)', 1.5);
+        /* the tape along the reflected beam: 0 at the plate */
+        B3.tex3(tape, 0, 0, tape.width, tape.height, [PX + e1[0] * 3 - r[0] * 0.5, 0.02, e1[2] * 3 - r[2] * 0.5], [r[0] * 101, 0, r[2] * 101], [e1[0] * 2.6, 0, e1[2] * 2.6], { id: 'c:tape' });
+        /* the screen square to the reflected beam */
+        var L = LAB.lens ? (PX - LAB.lx - f) + LAB.s : 1e9, w = LAB.lens ? Math.max(0.2, 0.1 / f * Math.abs(L)) : 0.15 + 0.001 * LAB.s;
+        if (LAB.lens && PX - LAB.lx - f < 0.5) w = 0.1 + 0.1 * (LAB.s / 60);
+        drawScreen(LAB.lens ? L : 1e6, w, LAB.lens, a);
+        B3.box3(sx - 3, sx + 3, 0, 1, sz - 3, sz + 3, '#3a3f46', { id: 'm:screen', top: '#474c55' });
+        B3.cyl3('y', 1, BH - SH / 2, sx, sz, 0.4, '#c3c8cd', { id: 'm:screen', seg: 10 });
+        var so = [sx - e1[0] * SW / 2 + r[0] * 0.05, BH + SH / 2, sz - e1[2] * SW / 2 + r[2] * 0.05];
+        B3.tex3(scr, 0, 0, 480, 300, so, [e1[0] * SW, 0, e1[2] * SW], [0, -SH, 0], { id: 'm:screen' });
+        /* the beams */
+        var red = 'rgba(255,40,40,.75)';
+        if (LAB.lens) { var fx = LAB.lx + f; B3.line3([-29.6, BH, 0], [LAB.lx, BH, 0], red, 1.6);
+          [-1, 1].forEach(function (sgn) { var hw = 0.1 / f * (PX - fx);
+            B3.line3([LAB.lx, BH + 0.1 * sgn, 0], [fx, BH, 0], 'rgba(255,40,40,.5)', 1);
+            B3.line3([fx, BH, 0], [PX, BH + hw * sgn, 0], 'rgba(255,40,40,.35)', 1);
+            B3.line3([PX, BH + hw * sgn, 0], [sx, BH + w * sgn, sz], 'rgba(255,40,40,.3)', 1); });
+          B3.line3([PX, BH, 0], [sx, BH, sz], 'rgba(255,40,40,.45)', 1.2); }
+        else { B3.line3([-29.6, BH, 0], [PX, BH, 0], red, 1.6); B3.line3([PX, BH, 0], [sx, BH, sz], red, 1.4); }
+        var V = b.views; V.screen.tx = sx; V.screen.tz = sz; V.screen.yaw = Math.atan2(-r[0], -r[2]);
+        V.ruler.tx = (LAB.lx + PX) / 2;
+        LAB.state = { L: L, w: w, a: LAB.al, s: LAB.s, d: d, spacing: L * lam * n * Math.sqrt(1 - Math.pow(Math.sin(a) / n, 2)) / (2 * d * Math.sin(a) * Math.cos(a)) };
+      }
+    });
+    ctx.onLang(function () { bench.renderText(); });
+  }
+};
+</script>
+<script src="handlab.js"></script>
+<script src="bench3d.js"></script>
+<script src="instruments3d.js"></script>
+<script src="consolesim.js"></script>
+  <script src="adfit.js"></script>
+  <script src="simfull.js"></script>
+</body>
+</html>

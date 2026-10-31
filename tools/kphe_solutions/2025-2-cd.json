@@ -1,0 +1,675 @@
+{
+  "_meta": {
+    "author": "HaslaLab 자체 작성 해설",
+    "official_solution": false,
+    "verification": "원문 문제·도형을 시각 확인하고 직접 유도하여 공식 정답과 대조. 고급3번은 공식 전원정답 공지 우선.",
+    "source_page": "https://kphe.kps.or.kr/board/board_detail/11"
+  },
+  "T2c": [
+    {
+      "number": 1,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "발사 방향은 최초 목표물 위치를 향하므로 수평·수직 초기 속도는 각각 $\\frac{v_{0}L}{\\sqrt{L^{2}+ H^{2}}}, \\frac{v_{0}H}{\\sqrt{L^{2}+ H^{2}}}$이다. 총알과 목표물은 같은 중력가속도를 받아 상대운동에서 중력항이 상쇄된다. 따라서 충돌 시각은 $t= \\frac{\\sqrt{L^{2}+ H^{2}}}{v_{0}}$이다.",
+        "목표물이 지면에 닿는 시각은 $\\sqrt{\\frac{2H}{g}}$이다. 충돌이 먼저 일어나려면 $v_{0}> \\sqrt{\\frac{g\\left(L^{2}+ H^{2}\\right)}{\\left(2H\\right)}}$이다. 최소 속력의 경계값은 $\\sqrt{\\left(\\frac{gH}{2}\\right)\\left(1+ \\frac{L^{2}}{H^{2}}\\right)}$로 ②이다. 엄밀히 지면 도달 전 충돌을 요구하면 이 경계값보다 커야 한다."
+      ],
+      "formula": [
+        "$t_{\\mathrm{hit}}= \\frac{\\sqrt{L^{2}+ H^{2}}}{v_{0}}$",
+        "$v_{\\mathrm{boundary}}= \\sqrt{\\frac{g\\left(L^{2}+ H^{2}\\right)}{\\left(2H\\right)}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          103.246,
+          256.371,
+          306.141,
+          378.681
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "무마찰 경사면 $A$에서는 회전하지 않고 가속도 $a_{A}= g\\,\\sin \\theta $로 미끄러진다. 순수 굴림 경사면 $B$에서는 $a_{B}= \\frac{g\\,\\sin \\theta }{\\left(1+ \\frac{I}{\\left(MR^{2}\\right)}\\right)}= \\left(\\frac{2}{3}\\right)g\\,\\sin \\theta $이다.",
+        "같은 거리를 정지상태에서 등가속도로 내려가므로 걸리는 시간은 가속도의 제곱근에 반비례한다. 따라서 $\\frac{t_{B}}{t_{A}}= \\sqrt{\\frac{a_{A}}{a_{B}}}= \\sqrt{\\frac{3}{2}}$이고 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\frac{t_{B}}{t_{A}}= \\sqrt{\\frac{3}{2}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          403.512,
+          285.869,
+          643.221,
+          345.705
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "answer": 2,
+      "accepted_answers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "full_credit": true,
+      "status": "verified",
+      "official_correction_url": "https://kphe.kps.or.kr/notice/notice_detail/319",
+      "explanation": [
+        "학회는 이 문항의 오류를 확인하여 2025년 9월 30일 전원 정답 처리를 공지했다. 따라서 원래 정답표에 적힌 ②를 유일한 정답으로 채점해서는 안 된다.",
+        "선형 부력 복원력만 가정하면 충돌 직후 속력은 $\\frac{\\sqrt{2gh}}{3}$이다. 새 평형점의 하강량을 $\\delta = \\frac{mg}{k}$라 하면 진동수 제곱은 $\\frac{k}{\\left(3m\\right)}$, 진폭은 $\\delta + \\frac{h}{12}$이다. 에너지 관계 $\\left(\\delta + \\frac{h}{12}\\right)^{2}= \\delta ^{2}+ \\frac{2h\\delta }{3}$에서 $\\delta = \\frac{h}{72}$이고 최저점 하강량은 $2\\delta + \\frac{h}{12}= \\frac{h}{9}$가 된다.",
+        "그러나 균일 단면의 선형 부력 모형에서는 충돌 전 잠긴 깊이가 $\\frac{2mg}{k}= 2\\delta = \\frac{h}{36}$이다. 제시된 위쪽 상승량 $\\frac{h}{12}$는 이 깊이보다 커서 물체가 액체에서 벗어나며 단진동 가정이 깨진다. 위 계산은 가정을 드러낸 조건부 계산이며 공식 오류 처리의 대체 정답이 아니다."
+      ],
+      "formula": [
+        "$\\delta = \\frac{h}{72}$",
+        "조건부 최저점 하강량: $\\frac{h}{9}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 2,
+        "rect": [
+          80.223,
+          264.285,
+          329.165,
+          383.837
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "정지 상태에서 축에 대한 토크평형은 $T\\left(\\frac{3L}{4}\\right)= Mg\\left(\\frac{L}{2}\\right)$이므로 $T= \\frac{2Mg}{3}$이다. 수직 힘의 평형에서 $F_{1}= Mg- T= \\frac{Mg}{3}$이어서 ㄴ이 옳다.",
+        "손을 놓는 순간의 각가속도는 $\\alpha = \\frac{\\left(\\frac{MgL}{2}\\right)}{\\left(\\frac{ML^{2}}{3}\\right)}= \\frac{3g}{\\left(2L\\right)}$이다. 질량중심의 아래쪽 가속도는 $\\frac{\\alpha L}{2}= \\frac{3g}{4}$이므로 $Mg- F_{2}= M\\left(\\frac{3g}{4}\\right)$에서 $F_{2}= \\frac{Mg}{4}$이다. ㄷ이 옳다.",
+        "최저점까지 질량중심이 $\\frac{L}{2}$만큼 내려가므로 $\\frac{MgL}{2}= \\left(\\frac{1}{2}\\right)\\left(\\frac{ML^{2}}{3}\\right)\\omega ^{2}$에서 $\\omega = \\sqrt{\\frac{3g}{L}}$이다. ㅂ도 옳다. 정답은 ㄴ, ㄷ, ㅂ을 고른 ④이다."
+      ],
+      "formula": [
+        "$F_{1}= \\frac{Mg}{3}$",
+        "$F_{2,\\mathrm{release}}= \\frac{Mg}{4}$",
+        "$\\omega _{\\mathrm{bottom}}= \\sqrt{\\frac{3g}{L}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 2,
+        "rect": [
+          380.608,
+          242.821,
+          666.244,
+          318.965
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "탱크 바닥 높이는 $50\\sqrt{3}\\,\\sin 60^\\circ = 75\\,\\mathrm{m}$이고 수면 높이는 $80\\,\\mathrm{m}$이다. 지상 관의 게이지압은 $8\\times 10^{5}\\,\\mathrm{Pa}$이고 대기압을 포함한 절대압은 $9\\times 10^{5}\\,\\mathrm{Pa}$이다. 공식 정답은 ㄱ을 절대압 기준으로 판단하여 틀린 보기로 처리한다.",
+        "높이 $35\\,\\mathrm{m}$인 구멍에서 대기 중으로 흘러나오는 물의 속력은 베르누이 식으로 $\\sqrt{2g\\left(80- 35\\right)}= 30\\,\\mathrm{m/s}$이다. ㄴ은 옳다. 탱크 수면보다 높은 22층까지는 자연 수두만으로 공급할 수 없어 ㄷ은 틀리다. 정답은 ②이다."
+      ],
+      "formula": [
+        "$h_{\\mathrm{surface}}= 80\\,\\mathrm{m}$",
+        "$P_{\\mathrm{ground}}, absolute= 9\\times 10^{5}\\,\\mathrm{Pa}$",
+        "$v_{\\mathrm{out}}= 30\\,\\mathrm{m/s}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 3,
+        "rect": [
+          101.927,
+          240.783,
+          307.58,
+          383.957
+        ]
+      }
+    },
+    {
+      "number": 6,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "두 물체가 함께 움직이면 공통 수평가속도는 $a= \\frac{F}{\\left(3m\\right)}$이다. 쐐기와 함께 움직이는 좌표계에서 위 블록에 작용하는 수평 유효힘은 $F- ma= \\frac{2F}{3}$이다.",
+        "$45^\\circ $ 비탈면 방향으로 필요한 마찰력은 $f= \\frac{\\left(mg- \\frac{2F}{3}\\right)}{\\sqrt{2}}$이고, 수직항력은 $N= \\frac{\\left(mg+ \\frac{2F}{3}\\right)}{\\sqrt{2}}$이다. 정지마찰 조건 $|f|\\leq \\mu _{s}N$에 $\\mu _{s}= \\frac{1}{2}$를 넣으면 $|mg-2F/3|\\leq \\frac{\\left(mg+ \\frac{2F}{3}\\right)}{2}$이다.",
+        "이를 풀면 $\\frac{mg}{2}\\leq F\\leq \\frac{9mg}{2}$이다. 따라서 $F_{\\mathrm{min}}= \\frac{mg}{2}, F_{\\mathrm{max}}= \\frac{9mg}{2}$로 정답은 ④이다."
+      ],
+      "formula": [
+        "$|mg-2F/3|\\leq \\frac{\\left(mg+ \\frac{2F}{3}\\right)}{2}$",
+        "$F_{\\mathrm{min}}= \\frac{mg}{2}, F_{\\mathrm{max}}= \\frac{9mg}{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 3,
+        "rect": [
+          418.981,
+          265.724,
+          627.752,
+          373.405
+        ]
+      }
+    },
+    {
+      "number": 7,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "중심 $A$에서 세 꼭짓점까지의 거리는 같다. 위쪽 $+Q$의 전기장은 아래쪽, 아래 왼쪽 $-3Q$의 전기장은 아래 왼쪽, 아래 오른쪽 $+Q$의 전기장은 위 왼쪽이다. $y$성분을 합하면 음수이므로 ㄱ은 틀리다.",
+        "밑변 중점 $B$에서는 양 끝 전하의 전기장이 수평이고 위 꼭짓점의 $+Q$가 아래쪽 전기장을 만든다. 따라서 $y$성분은 음수로 ㄴ은 옳다.",
+        "세 쌍의 전기에너지는 $\\frac{kQ^{2}}{L}, \\frac{-3kQ^{2}}{L}, \\frac{-3kQ^{2}}{L}$이므로 합은 $\\frac{-5kQ^{2}}{L}$이다. ㄷ도 옳아 정답은 ④이다."
+      ],
+      "formula": [
+        "$U_{\\mathrm{total}}= \\frac{-5kQ^{2}}{L}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          89.096,
+          137.898,
+          320.171,
+          304.695
+        ]
+      }
+    },
+    {
+      "number": 8,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "토로이드 내부의 원형 암페어 경로에 대해 $B\\left(2\\pi r\\right)= \\mu NI$이다. $\\mu = 400\\mu _{0}, N= 600, I= 0.1\\,\\mathrm{A}, r= 0.05\\,\\mathrm{m}$를 대입한다.",
+        "$B= \\frac{400\\left(4\\pi \\times 10^{-7}\\right)\\times 600\\times 0.1}{\\left(2\\pi \\times 0.05\\right)}= 0.096\\,\\mathrm{T}$이다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$B= \\frac{\\mu NI}{\\left(2\\pi r\\right)}= 0.096\\,\\mathrm{T}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          443.443,
+          155.645,
+          603.169,
+          326.759
+        ]
+      }
+    },
+    {
+      "number": 9,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "$\\mathrm{RC}$ 충전회로의 시정수는 $\\tau=RC=(100\\times10^3)(10\\times10^{-6})=1.0\\,\\mathrm{s}$이다. 처음 충전되지 않은 축전기의 전압은 $V_C(t)=V_0(1-\\exp(-t/(RC)))$이다.",
+        "$t= 1\\,\\mathrm{s}$이면 $V_{C}= 10\\left(1- e^{-1}\\right)= 10\\left(1- 0.368\\right)= 6.32\\,\\mathrm{V}$이다. 정답은 ③의 $6.3\\,\\mathrm{V}$이다."
+      ],
+      "formula": [
+        "$\\tau = 1.0\\,\\mathrm{s}$",
+        "$V_{C}\\left(1\\,\\mathrm{s}\\right)= 6.32\\,\\mathrm{V}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          85.979,
+          153.846,
+          323.529,
+          286.109
+        ]
+      }
+    },
+    {
+      "number": 10,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "구형 축전기의 전극 사이 전기장은 $E\\left(r\\right)= \\frac{Q}{\\left(4\\pi \\epsilon r^{2}\\right)}$로 반지름에 따라 달라진다. 따라서 ㄱ은 틀리다. 구대칭이고 전체 알짜전하가 $0$이면 바깥 가우스면의 전기장이 $0$이므로 ㄴ은 옳다.",
+        "정전용량은 $C= \\frac{4\\pi \\epsilon r_{1}r_{2}}{\\left(r_{2}- r_{1}\\right)}$이다. 전원에 연결하여 $V$가 일정할 때 유전율을 높이면 $C$와 저장 에너지 $U= \\frac{CV^{2}}{2}$가 증가한다. ㄷ도 옳으므로 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$E\\left(r\\right)= \\frac{Q}{\\left(4\\pi \\epsilon r^{2}\\right)}$",
+        "$C= \\frac{4\\pi \\epsilon r_{1}r_{2}}{\\left(r_{2}- r_{1}\\right)}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          456.154,
+          153.727,
+          590.458,
+          288.028
+        ]
+      }
+    },
+    {
+      "number": 11,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "패러데이·렌츠 법칙에 따라 자석이 코일에 접근할 때 증가하는 자속을 막는 전류가 흐르고, 코일을 지나 멀어질 때는 감소하는 자속을 막는 반대 전류가 흐른다. 원문 화살표 기준으로 처음은 양, 나중은 음이다.",
+        "자석은 속력이 증가하므로 뒤쪽 통과 구간에서 같은 위치 변화에 필요한 시간이 짧고 자속 변화율의 크기가 더 크다. 따라서 뒤쪽 음의 봉우리가 더 높고 좁은 그래프를 고른다. 전체 통과 후 자속 변화량은 $0$이어서 두 부호의 전류 시간적분도 상쇄된다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$I= \\frac{-\\left(\\frac{1}{R}\\right)d\\Phi }{dt}$",
+        "전체 통과 과정에서 $\\int I\\,\\mathrm{d}t=0$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 6,
+        "rect": [
+          97.37,
+          121.95,
+          312.137,
+          201.931
+        ]
+      }
+    },
+    {
+      "number": 12,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "다이아몬드는 띠틈이 큰 절연체이고 금은 자유전자가 있는 금속이다. 따라서 다이아몬드의 띠틈이 더 작다는 ㄱ과 전도도가 훨씬 높다는 ㄴ은 틀리다.",
+        "절연체에서도 외부 전기장에 의해 전자와 핵의 상대 위치가 변하여 분극이 일어난다. 또한 마찰로 전하를 주고받아 표면을 대전시킬 수 있다. ㄷ, ㄹ이 옳으므로 정답은 ④이다."
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 6,
+        "rect": [
+          421.379,
+          153.846,
+          625.353,
+          244.02
+        ]
+      }
+    },
+    {
+      "number": 13,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "고온 물체의 엔트로피 변화는 $\\frac{-150}{500}= -0.3\\,\\mathrm{J/K}$이고 저온 물체는 $\\frac{+150}{100}= +1.5\\,\\mathrm{J/K}$이다. 따라서 ㄱ은 옳다.",
+        "두 물체 전체의 증가량은 $1.5- 0.3= 1.2\\,\\mathrm{J/K}$이므로 ㄴ은 틀리다. 유한한 온도 차로 직접 열전달하여 전체 엔트로피가 증가하므로 비가역 과정이다. ㄷ은 옳고 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\Delta S_{\\mathrm{hot}}= -0.3\\,\\mathrm{J/K}$",
+        "$\\Delta S_{\\mathrm{cold}}= 1.5\\,\\mathrm{J/K}$",
+        "$\\Delta S_{\\mathrm{total}}= 1.2\\,\\mathrm{J/K}$"
+      ]
+    },
+    {
+      "number": 14,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "가역 등온팽창 후 온도는 $T_{0}$이고 가역 단열팽창 후에는 $T_{0}\\cdot 2^{1- \\gamma }$로 $T_{0}$보다 낮다. 따라서 ㄱ은 옳다.",
+        "등압팽창에서 $V$가 두 배면 $T$도 두 배여서 ㄴ은 틀리다. 이상기체의 진공 자유팽창은 $Q= W= 0$이므로 내부에너지와 온도가 일정하다. 등온팽창과 자유팽창의 최종 온도는 같아 ㄷ도 틀리다. 정답은 ①이다."
+      ],
+      "formula": [
+        "$T_{\\mathrm{isothermal}}= T_{\\mathrm{free}}= T_{0}$",
+        "$T_{\\mathrm{adiabatic}}= T_{0}\\cdot 2^{1- \\gamma }$",
+        "$T_{\\mathrm{isobaric}}= 2T_{0}$"
+      ]
+    },
+    {
+      "number": 15,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "기체분자운동론에서 압력은 $P= \\frac{Nm\\langle v^{2}\\rangle }{\\left(3V\\right)}$이다. 정육면체의 부피는 $\\left(0.1\\right)^{3}= 10^{-3}\\,\\mathrm{m^{3}}$이다.",
+        "$P= \\frac{\\left(2\\times 10^{23}\\right)\\left(6\\times 10^{-26}\\right)\\left(25000\\right)}{\\left(3\\times 10^{-3}\\right)}= 10^{5}\\,\\mathrm{Pa}$이다. 정답은 ④이다."
+      ],
+      "formula": [
+        "$P= \\frac{Nm\\langle v^{2}\\rangle }{\\left(3V\\right)}= 10^{5}\\,\\mathrm{Pa}$"
+      ]
+    },
+    {
+      "number": 16,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "진공에서 빛은 별도의 매질 기준계가 없으며 주어진 방사·관측 기하에서 상대운동으로 상대론적 도플러 이동이 결정된다. ㄱ은 옳다.",
+        "소리에서는 음원과 관측자의 매질에 대한 속도가 각각 중요하여 상대속도만 같아도 결과가 달라질 수 있다. ㄴ은 틀리다. 멀어지는 별빛은 파장이 길어지는 적색편이를 보이므로 ㄷ도 틀리다. 정답은 ①이다."
+      ]
+    },
+    {
+      "number": 17,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "마이컬슨 간섭계에서 거울을 $\\Delta x$ 이동시키면 해당 팔의 왕복 광로 길이는 $2\\Delta x$만큼 바뀐다. 이동한 간섭무늬 수 $N$은 $\\frac{2\\Delta x}{\\lambda }$이다.",
+        "$\\lambda = \\frac{2\\times 0.15\\,\\mathrm{mm}}{200}= 0.0015\\,\\mathrm{mm}= 1500\\,\\mathrm{nm}$이다. 정답은 ②이다."
+      ],
+      "formula": [
+        "$N\\lambda = 2\\Delta x$",
+        "$\\lambda = 1500\\,\\mathrm{nm}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2c_KO.pdf",
+        "page": 8,
+        "rect": [
+          102.167,
+          185.863,
+          307.221,
+          333.474
+        ]
+      }
+    },
+    {
+      "number": 18,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "문턱 파장이 $600\\,\\mathrm{nm}$이므로 일함수는 $\\frac{hc}{\\lambda _{0}}= \\frac{1200}{600}= 2\\,\\mathrm{eV}$이다. ㄱ은 옳다. $400\\,\\mathrm{nm}$ 광자의 에너지는 $3\\,\\mathrm{eV}$이므로 최대 광전자 운동에너지는 $3- 2= 1\\,\\mathrm{eV}$이다. 따라서 ㄴ은 틀리다.",
+        "콤프턴 파장 변화는 $\\Delta \\lambda = \\left(\\frac{h}{\\left(m_{e}c\\right)}\\right)\\left(1- \\cos \\theta \\right)$이다. 산란각이 증가하면 파장은 증가하므로 ㄷ도 틀리다. 정답은 ①이다."
+      ],
+      "formula": [
+        "일함수: $2\\,\\mathrm{eV}$",
+        "$K_{\\mathrm{max}}= 1\\,\\mathrm{eV}$",
+        "$\\Delta \\lambda = \\left(\\frac{h}{\\left(m_{e}c\\right)}\\right)\\left(1- \\cos \\theta \\right)$"
+      ]
+    }
+  ],
+  "T2d": [
+    {
+      "number": 1,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "고정된 천장의 강체 연결부가 외력을 전달하므로 세 물체의 질량중심은 일반적으로 움직인다. ㄱ은 틀리다. 진동하면서 용수철 길이가 변하고 탄성에너지가 운동·중력에너지와 교환되므로 ㄴ도 틀리다.",
+        "중력과 용수철 힘은 보존력이고 각 강체의 구속력은 순간 속도에 수직으로 작용하여 일을 하지 않는다. 손실이 없으므로 전체 역학적 에너지는 일정하다. ㄷ만 옳아 정답은 ③이다."
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          75.786,
+          249.176,
+          333.722,
+          382.158
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "작은 수평 변위를 $x_{1}, x_{2}, x_{3}$라 하면 운동방정식의 복원행렬은 $\\left(\\frac{g}{l}\\right)$단위행렬$+\\left(\\frac{k}{m}\\right)\\left[\\left[1, -1, 0\\right], \\left[-1, 2, -1\\right], \\left[0, -1, 1\\right]\\right]$이다.",
+        "용수철 부분의 고윳값은 $0, 1, 3$이므로 $\\omega ^{2}= \\frac{g}{l}, \\frac{g}{l}+ \\frac{k}{m}, \\frac{g}{l}+ \\frac{3k}{m}$이다. 제시된 보기 중에서는 ㄱ만 가능하다. 정답은 ①이다."
+      ],
+      "formula": [
+        "$\\omega ^{2}= \\frac{g}{l}+ \\left(\\frac{k}{m}\\right)\\lambda $",
+        "$\\lambda = 0, 1, 3$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          394.518,
+          268.722,
+          652.334,
+          401.584
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "초기 변위가 $\\left(-l\\theta _{0}, 0, +l\\theta _{0}\\right)$이므로 반대칭 모드 $\\left(1, 0, -1\\right)$만 들뜬다. 이 모드의 각진동수는 $\\omega = \\sqrt{\\frac{g}{l}+ \\frac{k}{m}}= \\sqrt{5+ 4}= 3\\,\\mathrm{rad/s}$이다.",
+        "정지상태에서 최대 변위로 출발하여 처음 평형점에 도달하는 시간은 $t_{1}= \\frac{\\pi }{\\left(2\\omega \\right)}= \\frac{\\pi }{6}$이다. 따라서 $\\left(\\frac{m}{k}\\right)\\left(\\frac{\\pi }{t_{1}}\\right)^{2}= \\left(\\frac{0.5}{2}\\right)\\times 36= 9$이고 정답은 ②이다."
+      ],
+      "formula": [
+        "$\\omega = 3\\,\\mathrm{rad/s}$",
+        "$t_{1}= \\frac{\\pi}{6}\\,\\mathrm{s}$",
+        "$\\left(\\frac{m}{k}\\right)\\left(\\frac{\\pi }{t_{1}}\\right)^{2}= 9$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          75.786,
+          268.722,
+          333.602,
+          401.584
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "매달린 물체의 아래쪽 좌표는 $c- r$이므로 계의 운동에너지는 $m\\dot{r}^{2}+ \\left(\\frac{1}{2}\\right)mr^{2}\\dot{\\theta }^{2}$이고 퍼텐셜은 $-mg\\left(c- r\\right)$이다. 라그랑지안은 시간에 명시적으로 의존하지 않아 해밀토니안, 즉 전체 에너지가 보존된다. ㄱ은 옳다.",
+        "$\\theta $는 순환좌표이므로 $p_{\\theta }= mr^{2}\\dot{\\theta }$가 보존된다. 이는 물체$1$의 $O$에 대한 각운동량이어서 ㄴ은 옳다. 라그랑지안 $T- U$ 자체가 보존되는 것은 아니며, $\\dot{\\theta }= 0$일 때도 중력에 의해 $r$과 $\\dot{r}$가 변하여 ㄷ은 틀리다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$L= m\\dot{r}^{2}+ \\left(\\frac{1}{2}\\right)mr^{2}\\dot{\\theta }^{2}+ mg\\left(c- r\\right)$",
+        "$p_{\\theta }= mr^{2}\\dot{\\theta }= \\mathrm{const}$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          409.508,
+          309.372,
+          637.345,
+          467.056
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "각운동량을 $\\ell $이라 하면 반지름 운동의 유효퍼텐셜은 $U_{\\mathrm{eff}}\\left(r\\right)= \\frac{\\ell ^{2}}{\\left(2mr^{2}\\right)}+ mgr- $상수이다. 원궤도에서 미분값이 $0$이어야 하므로 $\\frac{-\\ell ^{2}}{\\left(mr_{0}^{3}\\right)}+ mg= 0$이다.",
+        "따라서 $\\frac{gm^{2}r_{0}^{3}}{\\ell ^{2}}= 1$이다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$U_{\\mathrm{eff}}= \\frac{\\ell ^{2}}{\\left(2mr^{2}\\right)}+ mgr$",
+        "$\\frac{gm^{2}r_{0}^{3}}{\\ell ^{2}}= 1$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          90.775,
+          289.586,
+          318.612,
+          447.27
+        ]
+      }
+    },
+    {
+      "number": 6,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "$r$이 변하면 위와 아래의 두 물체가 모두 같은 속력 $|\\dot{r}|$로 움직인다. 따라서 반지름 운동의 유효질량은 $2m$이다.",
+        "$U_{\\mathrm{eff}}^{\\prime\\prime}\\left(r_{0}\\right)= \\frac{3\\ell ^{2}}{\\left(mr_{0}^{4}\\right)}= \\frac{3mg}{r_{0}}$이다. 작은 진동의 각진동수 제곱은 $\\frac{U_{\\mathrm{eff}}^{\\prime\\prime}}{\\left(2m\\right)}= \\frac{3g}{\\left(2r_{0}\\right)}$이므로 $\\frac{2\\omega ^{2}r_{0}}{g}= 3$이다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\omega ^{2}= \\frac{3g}{\\left(2r_{0}\\right)}$",
+        "$\\frac{2\\omega ^{2}r_{0}}{g}= 3$"
+      ],
+      "figure": {
+        "source": "KPhE_2025_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          409.508,
+          289.586,
+          637.345,
+          447.27
+        ]
+      }
+    },
+    {
+      "number": 7,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "주어진 $Q\\left(t\\right)$를 미분하면 $t= 0$의 $\\cos $ 미분항은 $0$이고 지수항 미분과 $\\sin $항 미분이 상쇄되어 $I\\left(0\\right)= 0$이다. ㄱ은 옳다.",
+        "전류가 극대일 때 $\\dot{I}= 0$이므로 회로식은 $RI+ \\frac{Q}{C}= 0$이다. $R\\ne 0$이면 $Q= -RCI$로 일반적으로 $0$이 아니어서 ㄴ은 틀리다.",
+        "전자기 에너지 $U= \\frac{Q^{2}}{\\left(2C\\right)}+ \\frac{LI^{2}}{2}$를 미분하면 $\\dot{U}= -RI^{2}$이다. $R= 0$이면 합에너지가 일정하여 ㄷ은 옳다. 정답은 ④이다."
+      ],
+      "formula": [
+        "$I\\left(0\\right)= 0$",
+        "$\\dot I=0$일 때: $Q= -RCI$",
+        "$\\frac{dU}{dt}= -RI^{2}$"
+      ]
+    },
+    {
+      "number": 8,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "처음에는 $Q= Q_{0}, I= 0$이므로 저장 에너지는 $\\frac{Q_{0}^{2}}{\\left(2C\\right)}$이다. $R> 0$인 회로에서는 충분한 시간이 지나면 전하와 전류가 모두 $0$이 되어 저장 에너지가 사라진다.",
+        "에너지 감소는 모두 저항의 열로 바뀌므로 $\\int_{0}^{\\infty} RI^{2}dt= \\frac{Q_{0}^{2}}{\\left(2C\\right)}$이다. 따라서 $\\gamma = \\frac{1}{2}$로 정답은 ③이다."
+      ],
+      "formula": [
+        "$W_{\\mathrm{heat}}= \\frac{Q_{0}^{2}}{\\left(2C\\right)}$"
+      ]
+    },
+    {
+      "number": 9,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "코일 에너지 $\\frac{LI^{2}}{2}$가 극대이면 $I\\ne 0$인 극대에서 $\\dot{I}= 0$이다. 회로 방정식에서 $Q= -RCI$이다.",
+        "축전기 에너지 $U_{2}= \\frac{Q^{2}}{\\left(2C\\right)}= \\frac{\\left(CR^{2}I^{2}\\right)}{2}$, 코일 에너지 $U_{1}= \\frac{LI^{2}}{2}$이므로 $\\frac{U_{2}}{U_{1}}= \\frac{CR^{2}}{L}$이다. $\\gamma = 1$이고 정답은 ②이다."
+      ],
+      "formula": [
+        "$Q= -RCI$",
+        "$\\frac{U_{2}}{U_{1}}= \\frac{CR^{2}}{L}$"
+      ]
+    },
+    {
+      "number": 10,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "복사장에 $\\sin \\theta $ 인자가 있으므로 진동축 방향 $\\theta = 0, \\pi $에서는 복사가 없다. ㄱ은 옳다. 전기장과 자기장은 $\\frac{1}{r}$에 비례하므로 에너지밀도는 $\\frac{1}{r^{2}}$에 비례하여 ㄴ도 옳다.",
+        "가속도는 $-A\\omega ^{2}\\cos \\omega t$이고 제곱 평균은 $\\frac{A^{2}\\omega ^{4}}{2}$이다. 이를 라모 공식에 대입하면 평균 복사일률은 $\\frac{q^{2}\\omega ^{4}A^{2}}{\\left(12\\pi \\epsilon _{0}c^{3}\\right)}$이다. ㄷ도 옳아 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\langle a^{2}\\rangle = \\frac{A^{2}\\omega ^{4}}{2}$",
+        "$\\langle P_{\\mathrm{rad}}\\rangle = \\frac{q^{2}\\omega ^{4}A^{2}}{\\left(12\\pi \\epsilon _{0}c^{3}\\right)}$"
+      ]
+    },
+    {
+      "number": 11,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "$\\vec B=(1/c)\\hat r\\times\\vec E$이고 $\\vec E$는 $\\hat r$에 수직이므로 포인팅벡터의 방사성분은 $S_r=\\epsilon_0cE^2$이다. 따라서 $r^2\\langle S_r\\rangle=\\frac{q^2\\langle a^2\\rangle\\sin^2\\theta}{16\\pi^2\\epsilon_0c^3}$이다.",
+        "$\\langle a^{2}\\rangle = \\frac{A^{2}\\omega ^{4}}{2}$를 대입하면 단위 입체각당 평균 복사일률은 $\\frac{q^{2}A^{2}\\omega ^{4}\\sin ^{2}\\theta }{\\left(32\\pi ^{2}\\epsilon _{0}c^{3}\\right)}$이다. $\\gamma = \\frac{1}{32}$이므로 정답은 ④이다."
+      ],
+      "formula": [
+        "$r^{2}\\langle S_r\\rangle = \\frac{q^{2}A^{2}\\omega ^{4}\\sin ^{2}\\theta }{\\left(32\\pi ^{2}\\epsilon _{0}c^{3}\\right)}$"
+      ]
+    },
+    {
+      "number": 12,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "천천히 감소하는 진폭에 대한 역학적 에너지는 $E= \\frac{m\\omega ^{2}A^{2}}{2}$이다. 시간미분하면 $\\dot{E}= m\\omega ^{2}A\\,\\dot{A}$이다.",
+        "에너지 손실률이 평균 복사일률과 같으므로 $m\\omega ^{2}A\\,\\dot{A}= \\frac{-q^{2}\\omega ^{4}A^{2}}{\\left(12\\pi \\epsilon _{0}c^{3}\\right)}$이다. 따라서 $\\dot{A}= \\frac{-q^{2}\\omega ^{2}A}{\\left(12\\pi \\epsilon _{0}c^{3}m\\right)}$이고 $\\gamma = \\frac{1}{12}$이다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\frac{dA}{dt}= \\frac{-q^{2}\\omega ^{2}A}{\\left(12\\pi \\epsilon _{0}c^{3}m\\right)}$"
+      ]
+    },
+    {
+      "number": 13,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "폭 $L$인 중심 대칭 무한우물의 에너지는 $E_{n}= \\frac{n^{2}\\pi ^{2}\\hbar ^{2}}{\\left(2mL^{2}\\right)}$이고 $n$이 홀수이면 $\\cos $형 짝함수, 짝수이면 $\\sin $형 홀함수이다. ㄱ은 옳다.",
+        "초기 상태는 정규화 고유함수 $u_{1}$과 $u_{2}$의 같은 비율 중첩 $\\frac{\\left(u_{1}+ u_{2}\\right)}{\\sqrt{2}}$이다. 따라서 $n= 3$ 에너지가 측정될 확률은 $0$이어서 ㄴ은 옳다.",
+        "$t= 0$에 두 함수의 교차항은 $x> 0$에서 양수, $x< 0$에서 음수이다. 오른쪽에서 발견할 확률이 더 크므로 ㄷ은 틀리다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$\\psi \\left(0\\right)= \\frac{\\left(u_{1}+ u_{2}\\right)}{\\sqrt{2}}$",
+        "$P\\left(E_{3}\\right)= 0$"
+      ]
+    },
+    {
+      "number": 14,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "초기 상태의 $n= 1, 2$ 성분 확률은 각각 $\\frac{1}{2}$이다. 에너지 기댓값은 $\\frac{\\left(E_{1}+ E_{2}\\right)}{2}$이고 $E_{2}= 4E_{1}$이다.",
+        "따라서 $\\langle E\\rangle = \\left(\\frac{5}{2}\\right)E_{1}= \\frac{5\\pi ^{2}\\hbar ^{2}}{\\left(4mL^{2}\\right)}$이다. $\\gamma = \\frac{5}{4}$로 정답은 ③이다."
+      ],
+      "formula": [
+        "$\\langle E\\rangle = \\frac{5\\pi ^{2}\\hbar ^{2}}{\\left(4mL^{2}\\right)}$"
+      ]
+    },
+    {
+      "number": 15,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "두 에너지 성분의 상대 위상 진동수는 $\\frac{\\left(E_{2}- E_{1}\\right)}{\\hbar }= \\frac{3\\pi ^{2}\\hbar }{\\left(2mL^{2}\\right)}$이므로 $\\gamma = 3$이다.",
+        "에렌페스트 관계 $\\langle p\\rangle = \\frac{m\\,d\\langle x\\rangle }{dt}$를 적용하면 $\\langle p\\rangle = -\\left(\\frac{8\\hbar }{\\left(3L\\right)}\\right)\\sin \\left(\\frac{3\\pi ^{2}\\hbar t}{\\left(2mL^{2}\\right)}\\right)$이다. $t_{1}= \\frac{mL^{2}}{\\left(\\pi \\hbar \\right)}$에서 위상은 $\\frac{3\\pi }{2}$여서 사인은 $-1$이다.",
+        "따라서 $\\langle p\\rangle t_{1}= \\frac{+8\\hbar }{\\left(3L\\right)}$이고 $\\beta = \\frac{8}{3}$이다. 정답은 ①이다."
+      ],
+      "formula": [
+        "$\\gamma = 3$",
+        "$\\langle p\\rangle = -\\left(\\frac{8\\hbar }{\\left(3L\\right)}\\right)\\sin \\left(\\frac{3\\pi ^{2}\\hbar t}{\\left(2mL^{2}\\right)}\\right)$",
+        "$\\beta = \\frac{8}{3}$"
+      ]
+    },
+    {
+      "number": 16,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "정압 조건에서 부피가 두 배면 온도도 두 배이므로 $\\Delta T= T_{1}$이다. 기체가 한 일은 $W= P_{1}\\left(V_{2}- V_{1}\\right)= RT_{1}$이다.",
+        "단원자 이상기체의 정압 몰열용량은 $\\frac{5R}{2}$이므로 $Q= \\left(\\frac{5}{2}\\right)RT_{1}$이다. 따라서 $\\frac{Q}{W}= \\frac{5}{2}$로 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$W= RT_{1}$",
+        "$Q= \\left(\\frac{5}{2}\\right)RT_{1}$",
+        "$\\frac{Q}{W}= \\frac{5}{2}$"
+      ]
+    },
+    {
+      "number": 17,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "자화 $M= 0$이므로 $N_{+} = N_{-}= \\frac{N_{s}}{2}$이고 빈자리 수는 $N- N_{s}$이다. 미시상태 수는 $\\Omega = \\frac{N!}{\\left[N_{+} !N_{-}!\\left(N- N_{s}\\right)!\\right]}$이다.",
+        "큰 $N$에서 점유율 $f= \\frac{N_{s}}{N}$에 대한 엔트로피는 $\\frac{S}{\\left(k_{B}N\\right)}= -f\\,\\ln \\left(\\frac{f}{2}\\right)- \\left(1- f\\right)\\ln \\left(1- f\\right)$이다. $f= 1$에서는 $\\ln 2, f= \\frac{2}{3}$에서는 $\\ln 3, f= \\frac{1}{2}$에서는 $\\left(\\frac{3}{2}\\right)\\ln 2$이다.",
+        "$\\ln 2< \\left(\\frac{3}{2}\\right)\\ln 2< \\ln 3$이므로 $S_{가}< S_{다}< S_{나}$이다. 정답은 ②이다."
+      ],
+      "formula": [
+        "$\\Omega = \\frac{N!}{\\left[N_{+} !N_{-}!\\left(N- N_{s}\\right)!\\right]}$",
+        "$\\frac{S}{\\left(k_{B}N\\right)}= -f\\,\\ln \\left(\\frac{f}{2}\\right)- \\left(1- f\\right)\\ln \\left(1- f\\right)$"
+      ]
+    },
+    {
+      "number": 18,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "$N_{s}= \\frac{N}{2}$이고 $M= 0$이면 $N+ = N- = \\frac{N}{4}$이며 빈자리는 $\\frac{N}{2}$이다. 따라서 $\\Omega = \\frac{N!}{\\left[\\left(\\frac{N}{4}\\right)!^{2}\\left(\\frac{N}{2}\\right)!\\right]}$이다.",
+        "스털링 근사를 사용하면 $S= k_{B}\\,\\ln \\Omega = k_{B}N\\left[-\\left(\\frac{1}{4}\\right)\\ln \\left(\\frac{1}{4}\\right)- \\left(\\frac{1}{4}\\right)\\ln \\left(\\frac{1}{4}\\right)- \\left(\\frac{1}{2}\\right)\\ln \\left(\\frac{1}{2}\\right)\\right]$ $= \\left(\\frac{3}{2}\\right)k_{B}N\\ln 2$이다. 비율은 $\\frac{3}{2}$이므로 정답은 ③이다."
+      ],
+      "formula": [
+        "$S= \\left(\\frac{3}{2}\\right)k_{B}N\\ln 2$"
+      ]
+    }
+  ]
+}

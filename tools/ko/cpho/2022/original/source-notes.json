@@ -1,0 +1,44 @@
+{
+  "source": "CPhO_2022_T_ZH.pdf",
+  "source_sha256": "89d1718db8a92afebb741b755beadd4476ac11654b50a5b79d4eaa2d13b91e04",
+  "source_pages": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "problems": 6,
+  "scope": "Complete four-page original Chinese 2022 final theory question paper; Korean and English prose translations only.",
+  "authoritative_translations": [
+    "page01.tsv",
+    "page02.tsv",
+    "page03.tsv",
+    "page04.tsv"
+  ],
+  "source_preservation": "Original native mathematics, vector diagrams and all original bitmap images/SMasks remain in the PDF with their source programs and coordinates. The six original figures are restored; no BAUPC replacement, mathematical PNG, reflow, autoshrink or new editorial text is used.",
+  "typography": {
+    "source_body": "Song/SimSun 10.56 pt Tr0; source Latin counterpart Times New Roman",
+    "source_heading": "Hei 15.96 pt; date12 pt; original Latin counterpart Calibri",
+    "source_footer": "9 pt",
+    "korean": "Official Noto Serif CJK KR Regular400 for Song, Noto Sans CJK KR Regular400 for Hei. Actual source font size and baseline retained.",
+    "english": "Times New Roman and Calibri, matching original document Latin font families. Actual source font size and baseline retained.",
+    "placement": "Prose slots between native math glyphs, at original baselines. Same-line ordinary score/figure-reference/Carnot-process/X-ray language groups are explicitly listed. ASCII inter-word gaps are recorded; one English prose start has a documented +0.65pt horizontal offset within its existing slot to keep antialiasing clear of native t. No scientific glyph is moved.",
+    "raster_limits": "The original raster labels have no recoverable font/size/baseline metadata. Serif structure and same-document Song outline measurements infer nominal 10.15pt FEL,11.60pt diffraction and10.67pt crystal labels. Those inferences, rotations and language-only erasure boxes are recorded in raster-labels.json."
+  },
+  "native_chinese_math": {
+    "count": 8,
+    "page": 2,
+    "text": "离心 / 科氏 in native centrifugal/Coriolis force and torque subscripts",
+    "policy": "Original physical notation retained; surrounding definitions are translated. No new explanatory notes are printed."
+  },
+  "raster_language_labels": 15,
+  "redrawn_figures": 0,
+  "new_edition_labels": 0,
+  "printed_editorial_notes": 0,
+  "qa": {
+    "mupdf": "4x rendering, all8 translated pages: exact native nonspace glyph metadata, fonts and original image/SMask programs identical; changed pixels outside prose, native glyph ink, bitmap ink and vector graphics all0. KO visibility loss0, new Han/NUL0.",
+    "poppler": "Independent Poppler26.07.0 at110dpi: all8 translated pages outside prose0 with a uniform1-raster-pixel prose-outline antialias allowance; independent native-only visible ink comparison0. Raw unexpanded outline fringe counts and original prose/math antialias mixing are separately reported, not claimed to be0.",
+    "poppler_configuration_warnings": "Source and proofs emit the same global display-font aliases warnings from the installed Poppler configuration. These are retained in qa-poppler.json; embedded source programs and actual rendered pages were independently inspected.",
+    "visual": "All four pages in both languages inspected in MuPDF and Poppler, plus original figure-language panels enlarged."
+  }
+}

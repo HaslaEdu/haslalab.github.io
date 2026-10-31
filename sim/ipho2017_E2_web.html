@@ -1367,8 +1367,8 @@ function pos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.
 /* 2-D views are drawn at 900 × 400 and scaled to the canvas */
 let VS=1, VX=0, VY=0, VZ=1, VPX=0, VPY=0;            /* fit, then the wheel zoom and the drag pan */
 const vpos=p=>[(p[0]-VX-VPX)/(VS*VZ),(p[1]-VY-VPY)/(VS*VZ)];
-function openView(v){ view=v; VZ=1; VPX=VPY=0; $("btnBack").hidden=false; say("mView"); renderCap(); }
-function closeView(){ view=null; $("btnBack").hidden=true; renderCap(); }
+function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; VZ=1; VPX=VPY=0; $("btnBack").hidden=false; say("mView"); renderCap(); }
+function closeView(){ if(view&&window.HLzoom) HLzoom(cv,{out:true}); view=null; $("btnBack").hidden=true; renderCap(); }
 $("btnBack").onclick=closeView;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
 cv.addEventListener("pointerenter",()=>{ overBench=true; });

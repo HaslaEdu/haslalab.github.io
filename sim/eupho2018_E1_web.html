@@ -922,7 +922,7 @@ function drawTray(){ const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
     trayCells.push([k,y,y+TROW-3]); y+=TROW; }
   c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a"; t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14)); }
 const TABS=["vessel","sensor","optics","meter"];
-function setTab(k){ tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
+function setTab(k){ if(k!==tab&&window.HLzoom) HLzoom(closeCv); tab=k; renderTabs(); $("t-closecap").textContent=d().closeCap[tab]; }
 function renderTabs(){ const box=$("tabs"); box.innerHTML=""; for(const k of TABS){ const b=document.createElement("button"); b.textContent=d().tabs[k]; b.className=k===tab?"on":""; b.onclick=()=>setTab(k); box.appendChild(b); } }
 const hitAdd=(k,x,y,w,h,extra)=>HIT.push(Object.assign({k,x,y,w,h},extra||{}));
 function sw(x,y,label,on,key){ fillR(x,y,96,30,6,on?"#2e5a3a":"#3a2a2a","#111",1); text(label,x+48,y+11,"#e8eef2",10.5,"center","700"); text(on?d().lab.on:d().lab.off,x+48,y+23,on?"#7fd39a":"#f0a79f",9.5,"center","700"); hitAdd(key,x,y,96,30); }

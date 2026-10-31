@@ -1,0 +1,37 @@
+<style>h2,h3{break-after:avoid}</style>
+<h1>문제 2. 접지된 도체 구 바깥에서 생각하기 (Thinking outside the conducting sphere) – 풀이</h1>
+
+<h3>a) <span class="pt">3.5 pt</span></h3>
+<p>도체 구가 접지되어 있으므로 두 점입자는 서로 상호작용하지 않는 것으로 다룰 수 있다. 따라서 힘을 계산하려면 도체 안과 밖의 전기장을 구해야 하며, 이를 위해 영상법(method of images)을 사용한다. 구의 표면에서 전위가 0이 되도록 안쪽 전하와 바깥쪽 전하에 대한 영상 전하(image charge)를 찾고자 한다. 이는 영상 전하를 구의 중심과 안쪽/바깥쪽 전하를 잇는 선 위에 두어 이루어진다. 안쪽 전하의 영상은 위치 $\vec p$에 전하 $\tilde q$로, 바깥쪽 전하의 영상은 위치 $\vec{p}^{\,\prime}$에 전하 $\tilde q'$으로 둔다. 구 안쪽의 위치 $\vec x$ $(|\vec x|&lt;R)$에서 전위는</p>
+\[V_{\text{inside}}(\vec x)=\frac{1}{4\pi\epsilon_0}\left[\frac{q}{|\vec x-\vec r|}+\frac{\tilde q}{|\vec x-\vec p|}\right].\tag{2.1}\]
+<p>로 주어진다. 이 전위가 구의 표면에서 0이 되도록 하면 다음을 얻는다. <span class="pt">1 pt</span></p>
+\[\tilde q=-q\frac{R}{r}\,,\qquad\vec p=\frac{R^2}{|\vec r|}\hat r,\]
+<p>따라서 이 영상 전하는 구 바깥에 있다. 마찬가지로 바깥쪽의 위치 $\vec x$ $(|\vec x|&gt;R)$에서는</p>
+\[V_{\text{outside}}(\vec x)=\frac{1}{4\pi\epsilon_0}\left[\frac{q'}{|\vec x-\vec{r}^{\,\prime}|}+\frac{\tilde q'}{|\vec x-\vec{p}^{\,\prime}|}\right].\tag{2.2}\]
+<p>이다. 다시 이것이 구의 표면에서 0이 되도록 하면 다음을 얻는다. <span class="pt">1 pt</span></p>
+\[\tilde q'=-q'\frac{R}{r'}\,,\qquad\vec{p}^{\,\prime}=\frac{R^2}{|\vec{r}^{\,\prime}|}\hat r'.\]
+<p>따라서 이 영상 전하는 구 안에 있다. 안쪽 입자에 작용하는 힘은 단순히 바깥쪽 영상 전하로의 인력으로 주어지고, 바깥쪽 입자에 작용하는 힘은 안쪽 영상 전하로의 인력으로 주어진다. 전자는 다음과 같다. <span class="pt">0.75 pt</span></p>
+\[\vec F_{\text{inside}}=\frac{1}{4\pi\epsilon_0}\frac{q^2R}{|\vec r|^3\left(\frac{R^2}{|\vec r|^2}-1\right)^2}\hat r,\]
+<p>후자는 다음과 같다. <span class="pt">0.75 pt</span></p>
+\[\vec F_{\text{outside}}=-\frac{1}{4\pi\epsilon_0}\frac{(q')^2R}{|\vec{r}^{\,\prime}|^3\left(1-\frac{R^2}{|\vec{r}^{\,\prime}|^2}\right)^2}\hat r'.\]
+
+<h3>b) <span class="pt">3.5 pt</span></h3>
+<p>점입자를 구로 바꿀 때 위의 풀이를 일반화하는 한 가지 방법은, 균일하게 대전된 두 구의 내부에 속한 각 전하 요소 $dq$에 대한 영상 전하를 찾는 것이다. 그러나 이는 불필요하게 복잡하다. 대신, 균일하게 대전된 구가 전위에 기여하는 것은 구의 중심에 놓인 대전 입자(안쪽은 전하 $q=\frac43\pi a^3\rho$, 바깥쪽은 전하 $q'=\frac43\pi(a')^3\rho'$)의 기여와 같으므로, a)에서 다룬 같은 영상 전하들이 도체의 표면에서 전위를 0으로 만든다는 것에 주목할 수 있다! 따라서 균일하게 대전된 구들의 부피 바깥에서, a)에서 구한 전위 (2.1)과 (2.2)는 변하지 않는다 <i>(2.0 pt)</i>. 그러므로 안쪽 구와 바깥쪽 구에 작용하는 힘은 다시 다음과 같다. <span class="pt">1.5 pt</span></p>
+\[\vec F_{\text{inside}}=\frac{1}{4\pi\epsilon_0}\frac{q^2R}{|\vec r|^3\left(\frac{R^2}{|\vec r|^2}-1\right)^2}\hat r,\qquad\vec F_{\text{outside}}=-\frac{1}{4\pi\epsilon_0}\frac{(q')^2R}{|\vec{r}^{\,\prime}|^3\left(1-\frac{R^2}{|\vec{r}^{\,\prime}|^2}\right)^2}\hat r'.,\]
+<p>여기서</p>
+\[q=\frac43\pi a^3\rho\,,\qquad q'=\frac43\pi(a')^3\rho'.\tag{2.3}\]
+
+<h3>c) <span class="pt">3 pt</span></h3>
+<p>입자(또는 구)들은 서로 상호작용하지 않으므로, 도체 안과 밖의 대전 입자(또는 구)에 대해 각각 따로 에너지 보존을 사용할 수 있다. 안쪽 입자나 구에 작용하는 힘은 항상 $\hat r_0$ 방향이고 (바깥쪽 입자나 구에 대해서는 $\hat r_0'$ 방향이므로), 속도의 성분은 $\hat r_0$ 방향(또는 $\hat r_0'$ 방향) 성분뿐이다. 안쪽 입자나 구에 대해 에너지 보존은 다음을 준다. <span class="pt">1.0 pt</span></p>
+\[\frac{m\dot r^2(t)}{2}=\int_{\vec r_0}^{\vec r}\vec F_{\text{inside}}(\vec x)d\vec x=\frac{1}{8\pi\epsilon_0}\frac{q^2R}{R^2-r^2}-\frac{1}{8\pi\epsilon_0}\frac{q^2R}{R^2-r_0^2}\]
+\[\Rightarrow\qquad\dot r=\left[\frac{q^2R}{4\pi\epsilon_0\,m}\left(\frac{1}{R^2-r^2}-\frac{1}{R^2-r_0^2}\right)\right]^{\frac12}.\tag{2.4}\]
+<p>안쪽 구가 도체의 표면에 부딪힐 때 다음을 얻는다. <span class="pt">0.5 pt</span></p>
+<div class="ans">\[\dot r_{\text{sph. inside}}=\left[\frac{q^2R}{4\pi\epsilon_0\,m}\left(\frac{1}{R^2-(R-a)^2}-\frac{1}{R^2-r_0^2}\right)\right]^{\frac12}.\tag{2.5}\]</div>
+<p>만약 점입자가 도체에 부딪힌다면$(a\to0)$ 그 속도는 무한대가 될 것이며, 자기 유도의 효과를 무시할 수 없을 것이라는 점에 유의하라.</p>
+<p>바깥쪽 입자나 구에 대해서도 마찬가지로 다음을 얻는다. <span class="pt">1.0 pt</span></p>
+\[\frac{m(\dot r'(t))^2}{2}=\int_{\vec r_0'}^{\vec{r}^{\,\prime}}\vec F_{\text{outside}}(\vec x)d\vec x=\frac{1}{8\pi\epsilon_0}\frac{q^2R}{(r')^2-R^2}-\frac{1}{8\pi\epsilon_0}\frac{q^2R}{(r_0')^2-R^2}\quad\Rightarrow\]
+\[\Rightarrow\qquad\dot r'=-\left[\frac{q^2R}{4\pi\epsilon_0\,m}\left(\frac{1}{(r')^2-R^2}-\frac{1}{(r_0')^2-R^2}\right)\right]^{\frac12}.\tag{2.6}\]
+<p>구가 도체에 닿을 때 <span class="pt">0.5 pt</span> 다음을 얻는다.</p>
+<div class="ans">\[\dot r_{\text{sph. outside}}=-\left[\frac{q^2R}{4\pi\epsilon_0\,m}\left(\frac{1}{(R+a)^2-R^2}-\frac{1}{(r_0')^2-R^2}\right)\right]^{\frac12}.\tag{2.7}\]</div>
+<p>구를 점입자로 바꾸면 속도는 다시 무한대가 될 것이다.</p>
+<p class="note">(번역 주: (2.6), (2.7)은 원문 그대로 옮겼다. 바깥쪽 입자에 대해서는 $q$, $a$ 대신 $q'$, $a'$(그리고 질량)을 쓰는 것이 일관된다.)</p>

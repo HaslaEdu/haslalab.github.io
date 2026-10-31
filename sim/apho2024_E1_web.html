@@ -1453,8 +1453,8 @@ const SWAPB={x:ZC[0]-150,y:ZC[1]+ZR*0.62,w:300,h:36};
 const ROTATING=id=>/^(mc|cs|db|cw)/.test(id);
 const HK_OUT=-2;           /* the hand knob comes out of the boss two turns past loose */
 const FOOT_PITCH=1e-3;     /* the star knobs under the stand are M6: one turn = 1 mm */
-function openZoom(id,which){ ZOOM={id,sel:id==="pol"?(which||"polA"):id,flash:null,strain:0}; }
-function closeZoom(){ ZOOM=null; zdrag=null; }
+function openZoom(id,which){ if(!ZOOM&&window.HLzoom) HLzoom(cv); ZOOM={id,sel:id==="pol"?(which||"polA"):id,flash:null,strain:0}; }
+function closeZoom(){ if(ZOOM&&window.HLzoom) HLzoom(cv,{out:true}); ZOOM=null; zdrag=null; }
 function zoomName(id){ const c=d().chk, z=d().zoom; if(/^mc/.test(id)) return z.mc(+id[2]+1); if(/^db/.test(id)) return z.db(+id[2]+1); if(/^pol/.test(id)) return z.term; if(/^foot/.test(id)) return z.foot(+id[4]+1); return c[id]; }
 const flash=s=>{ if(ZOOM) ZOOM.flash={s,t:performance.now()}; };
 /* turning: free while the thread runs, stiffer and stiffer as the head seats; a tight one needs a firm start to come loose */

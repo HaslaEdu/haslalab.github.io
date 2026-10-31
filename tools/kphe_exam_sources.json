@@ -1,0 +1,39 @@
+{
+  "verified_on": "2026-10-30",
+  "latest_session": "2026-2",
+  "exam_duration_minutes": {"초급": 60, "중급": 60, "고급": 60, "전문가": 60},
+  "timing_note": "중급·전문가 09:30-10:30, 초급·고급 11:30-12:30. 직전 30분은 신분 확인 및 환경 점검이며 답안 작성 시간이 아니다.",
+  "official_scratch_paper": "양면이 백지인 A4 연습지 1장",
+  "requested_practice_scratch_paper": "사용자 요청에 따른 HaslaLab 연습 규칙은 A4 최대 2장. 공식 대회 규정과 구분하여 표시한다.",
+  "scoring": {"wrong_answer_penalty_fraction_of_item_score": 0.25, "unanswered": "공식 공지·응시자 매뉴얼에 별도 명시 없음", "item_weights": "공개 2026-2 문제지·정답 파일에 문항별 배점 표기 없음"},
+  "actual_question_counts": {"초급": 25, "중급": 18, "고급": 18, "전문가": 12},
+  "official_instructions": [
+    "독립된 밝은 공간에서 응시하고 안정적인 인터넷과 전원을 준비한다.",
+    "응시용 PC, 정면 웹캠, 감독용 스마트폰의 모니토 앱을 준비한다. 모바일·태블릿으로 본 시험에 응시할 수 없다.",
+    "듀얼 모니터와 터치스크린을 사용하지 않는다.",
+    "입실 마감 시각 10분 전까지 접속·환경 설정을 완료하고 이후 자리 이동 및 타인과의 소통을 금한다.",
+    "책상에는 응시에 필요한 컴퓨터 기기, 감독용 스마트폰, 신분증, 연습지, 필기구만 둔다. 음식물·전자기기·메모·교재를 치운다.",
+    "다른 프로그램과 AI 도구를 사용하지 않는다.",
+    "연결이 끊겨 재접속하더라도 종료 시각은 연장되지 않는다.",
+    "공식 시험은 종료 전 퇴실할 수 없으며, 시작 시각 이후 신규 입실이 차단된다."
+  ],
+  "monito": {
+    "guide_url": "https://user-guide.grepp.co/ko/articles/%EA%B0%9D%EC%A3%BC%EA%B4%80%EC%8B%9D%EC%84%9C%EC%88%A0%ED%98%95-82b897e4",
+    "guide_access": "공개 HTML을 urllib로 읽고 공식 스크린샷을 시각 확인함",
+    "screen_image": "https://cf.channel.io/document/spaces/13845/usermedia/68c7be8b8d1b3ea30b45",
+    "multiple_choice_image": "https://cf.channel.io/document/spaces/13845/usermedia/68c7c2cad2917c51fdce",
+    "layout": ["상단 시험명·응시자·기기/네트워크 상태·시험 규정·시험 종료", "왼쪽 문제 목록: 파란 체크는 답 제출, 노란 깃발은 다시 풀 문제", "본문 문제와 보기, 문제별 검토 깃발", "오른쪽 남은 시간·언어/테마 설정·공지사항·감독관 채팅·문제별 메모·기기 상태", "하단 이전 문제·다음 문제"],
+    "answer_submission": "객관식 보기 번호를 누르면 답안이 제출된다. 최종 종료 시점에 자동 저장되며 시간이 지나면 자동 종료된다. 시험 종료 전에 제출 답안을 확인할 수 있다.",
+    "limits": "공개 공식 매뉴얼의 공통 UI를 확인했다. 2026-2 KPHE 실제 로그인 시험 세션의 모든 픽셀과 비공개 동작을 직접 확인한 것은 아니다. 모의 사이트에서 실 감독·카메라 연결을 허위 표시하지 않는다."
+  },
+  "sources": [
+    {"url": "https://kphe.kps.or.kr/notice/notice_detail/386", "title": "2026년 제2회 물리대회 본 시험 및 사전 테스트 체험 안내", "published": "2026-08-19"},
+    {"url": "https://kphe.kps.or.kr/notice/notice_detail/392", "title": "2026년 제2회 물리대회 응시자 요약 매뉴얼", "published": "2026-08-31"},
+    {"url": "https://kphe.kps.or.kr/notice/notice_detail/398", "title": "2026년 제2회 물리대회 기출문제 & 정답", "published": "2026-09-28"},
+    {"url": "https://kphadmin.kps.or.kr/uploads/notice/6fa05fa7-dc6d-4174-9590-54b0f9372ee1", "title": "2026-2 초급 응시자 매뉴얼"},
+    {"url": "https://kphadmin.kps.or.kr/uploads/notice/50cdff8a-26d4-472a-9444-093b6fbdbfee", "title": "2026-2 중급 응시자 매뉴얼"},
+    {"url": "https://kphadmin.kps.or.kr/uploads/notice/a9e1e209-7f25-40eb-9850-944ff1db767c", "title": "2026-2 고급 응시자 매뉴얼"},
+    {"url": "https://kphadmin.kps.or.kr/uploads/notice/f2e27b7e-aad6-4548-9dec-a4da8c4324af", "title": "2026-2 전문가 응시자 매뉴얼"}
+  ],
+  "pdf_style": {"source": "2026-2 공개 문제지와 정답 PDF", "source_media_box_points": [728, 1031], "normalized_media_box": "A4 portrait 210 x 297 mm", "question_style": "세로형 2단, 왼쪽 상단 KPS 로고, 중앙 대회명과 과정명, 두꺼운 가로 머리선, 중앙 세로 구분선, 하단 중앙 페이지 n / N", "answer_style": "세로형 2단, 위아래 가는 머리선, 왼쪽 로고, 중앙 [정답] 및 대회명, 오른쪽 과정명·일자, 본문 번호별 정답, 하단 페이지", "warning": "공식 정답 파일에는 정답표만 있으며 상세 해설은 없다. 직접 작성한 해설을 공식 해설이라고 표기하지 않는다."}
+}

@@ -1,0 +1,589 @@
+{
+ "files": 30,
+ "pages": 254,
+ "question_sets": 30,
+ "questions": 181,
+ "checks": [
+  "exact original page counts",
+  "exact original page dimensions",
+  "printed question IDs",
+  "nonblank rendered pages",
+  "original question headers",
+  "source/input/output SHA-256"
+ ],
+ "editions": [
+  {
+   "year": 1997,
+   "file": "USAPhO_1997_T_KO.pdf",
+   "pages": 8,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/1997.pdf",
+   "source_sha256": "48a4a30038a1cb6e50c5bd96a05a9d4e49967cd9da17fd3741db606ffed94088",
+   "translation_input_sha256": "cbcc62f504e9fbd7428e0128ca42c65a1c37ff3f0e28c70d4f01da36c371b27e",
+   "output_sha256": "a8648b4d62e802caa0345019f899b882eb116989ddd8ce17f7edb63132bc36fb",
+   "minimum_body_scale": 0.9019,
+   "layout_notes": []
+  },
+  {
+   "year": 1998,
+   "file": "USAPhO_1998_T_KO.pdf",
+   "pages": 6,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/1998.pdf",
+   "source_sha256": "fe02121584796919132199d74791e51d85e10748d5d668c5c9b89f34e1b2bf5d",
+   "translation_input_sha256": "8442323a20ffe6a5a3b3918399a656112db254ee94c5d133c75ff1ff56ccef84",
+   "output_sha256": "27cbb60185612add2715360a909d6e680564bfe3b747e3cc099f9fd6bfe8ba62",
+   "minimum_body_scale": 0.7958,
+   "layout_notes": []
+  },
+  {
+   "year": 1999,
+   "file": "USAPhO_1999_T_KO.pdf",
+   "pages": 3,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/1999.pdf",
+   "source_sha256": "3dfa8aa19b04a9b397aefcb0187b9f1f5610d84f5a4585300dc770199a503e7c",
+   "translation_input_sha256": "5f7af111f0020fd68af181c95b40b6219991bbf876538fd9eaab71c8a23333d0",
+   "output_sha256": "976d81889f531cc5a67a77d7ae65b5fcd5d1b92735bba72264866f82e19a2c8a",
+   "minimum_body_scale": 0.9785,
+   "layout_notes": []
+  },
+  {
+   "year": 2000,
+   "file": "USAPhO_2000_T_KO.pdf",
+   "pages": 5,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2000.pdf",
+   "source_sha256": "f7845c5229180f4f7ffde5fba28a5c8c113047c5921c026530204072d220df23",
+   "translation_input_sha256": "78b2fb3d4a3873cbca9697e859f9fcd6f9f2b0e799814634e1f5621dbcd4739b",
+   "output_sha256": "1685da47c507f3ad8967482c8a15962f653e5bd96265304538ae951e940396f4",
+   "minimum_body_scale": 0.6585,
+   "layout_notes": []
+  },
+  {
+   "year": 2001,
+   "file": "USAPhO_2001_T_KO.pdf",
+   "pages": 5,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2001.pdf",
+   "source_sha256": "25ab4a0c616c1fa0516976f66069f34645003526c920ca8b6367d92afb9f16a6",
+   "translation_input_sha256": "967f0f46bf302861714d4f6a2e8e3618e5d9e598220010fdb92a6a79a1699a62",
+   "output_sha256": "15c8d26ce54ad2e23b8d5619d385752a34e8756fac56e165cd8e2eea9d2904b7",
+   "minimum_body_scale": 1.0304,
+   "layout_notes": []
+  },
+  {
+   "year": 2002,
+   "file": "USAPhO_2002_T_KO.pdf",
+   "pages": 4,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2002.pdf",
+   "source_sha256": "f6d8dd420cd43f5ea76af6e50677459ee21ed78f51bef21072b0916cec645bd3",
+   "translation_input_sha256": "61e52d6b6a77faf600701dc619a553d6f0884cca18705883aa30a11c5564e9d8",
+   "output_sha256": "acdc69601079b3ca4392b236e77a5556063f43957a71e8978966761ee3276d08",
+   "minimum_body_scale": 0.9162,
+   "layout_notes": []
+  },
+  {
+   "year": 2003,
+   "file": "USAPhO_2003_T_KO.pdf",
+   "pages": 5,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2003.pdf",
+   "source_sha256": "6e71ecce14c0e27a1df2825bb4258e17b7df263990a7a0f99b1a174f50ce1d7c",
+   "translation_input_sha256": "e403115fe0cf6270d50d977d449792421dce8ac2e6952bab002d415b3e429c85",
+   "output_sha256": "2a98d5ab2d8607b98e7e05d46ccd7e75d26706227526d8e60c5fb7a0eb14969c",
+   "minimum_body_scale": 0.667,
+   "layout_notes": [
+    "Kept the complete illustration intact; Korean prose fits one original region."
+   ]
+  },
+  {
+   "year": 2004,
+   "file": "USAPhO_2004_T_KO.pdf",
+   "pages": 5,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2004.pdf",
+   "source_sha256": "f68b9c027deb29f7e725689220dd67eab500e28616719dc6d0c730d0af717960",
+   "translation_input_sha256": "75421daecb762ce66ab0136e2215e79de6783dcccfb811df59168450db807ddf",
+   "output_sha256": "8288d525c55da5f2fdfb0241c1790515280c160ec35e6e585832bbb4068dc274",
+   "minimum_body_scale": 0.9801,
+   "layout_notes": []
+  },
+  {
+   "year": 2005,
+   "file": "USAPhO_2005_T_KO.pdf",
+   "pages": 6,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2005.pdf",
+   "source_sha256": "9cebe493c5d81c0c815d54a4c85b2d14f0d2a3fd81f41b1d352882b6ead99123",
+   "translation_input_sha256": "6577ea45c14d4eca5a6bfbea80744faafe7894e009370d08528202078d0709be",
+   "output_sha256": "ec2a180718ad7b2f2aa981c658ac6a8b6851d4331ed8b8b015c45ee4adae559a",
+   "minimum_body_scale": 1.0442,
+   "layout_notes": []
+  },
+  {
+   "year": 2006,
+   "file": "USAPhO_2006_T_KO.pdf",
+   "pages": 7,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://cdn.phoxiv.org/olympiads/usapho/2006.pdf",
+   "source_sha256": "76400df1bc81b34ae41e1ad1636ac138507efa898e850f3644cc56b24d943976",
+   "translation_input_sha256": "e516be7be6cc2fd43f9073a1ffeb729819dae9a4b91436af26a6aa903f8deb08",
+   "output_sha256": "b575af72dacd7c0caea8e058c0190ceb6be71cc1cb49b3c13c93d3474146df84",
+   "minimum_body_scale": 0.9893,
+   "layout_notes": []
+  },
+  {
+   "year": 2007,
+   "file": "USAPhO_2007_T_KO.pdf",
+   "pages": 9,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/Programs/contests/upload/olympiad_2007_semi-final.pdf",
+   "source_sha256": "05c999522ee6f2b969074119bd38e085ea1f791620ebec93be39f02aefc6e118",
+   "translation_input_sha256": "c1dbac4d9821d17136faf482a7936f233538bf1b59c2dbd4c1e31c9cf1e121df",
+   "output_sha256": "47cdd0fcc82503fc5c0d3b87aacd961e0b12bc3b8dc00248e1715c0693085a97",
+   "minimum_body_scale": 0.9832,
+   "layout_notes": []
+  },
+  {
+   "year": 2008,
+   "file": "USAPhO_2008_T_KO.pdf",
+   "pages": 11,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2",
+    "C1"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2008.pdf",
+   "source_sha256": "0929dee7222e54b006f5d8de181603fe19495150367ae2d798ca48687a704b77",
+   "translation_input_sha256": "e8f66b4dd7023981aac733791dc35429c43776195e2b0ef6b34586343dc45f3e",
+   "output_sha256": "0aadab3c511124138ec973d358a98680e21d549ab8e5b930d56e295bc933217b",
+   "minimum_body_scale": 0.9847,
+   "layout_notes": []
+  },
+  {
+   "year": 2009,
+   "file": "USAPhO_2009_T_KO.pdf",
+   "pages": 7,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2009.pdf",
+   "source_sha256": "21046cb68f2d7bba5751772b947151b8d7a339c33dcacc5a5092ae54c2a689a3",
+   "translation_input_sha256": "1c7101e61a4d4a524171160e22a7e660c303f4b0f95165de21eb7167c2487139",
+   "output_sha256": "efe749e4b08e90cd6038563a2756b8a9c32f446ff7e814999866addd121c04ba",
+   "minimum_body_scale": 0.8284,
+   "layout_notes": []
+  },
+  {
+   "year": 2010,
+   "file": "USAPhO_2010_T_KO.pdf",
+   "pages": 7,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2010.pdf",
+   "source_sha256": "aa5531b1ce2a30e87be1bf0e5cf4b4961adb6a8e7579fc4d108badc1c2061be1",
+   "translation_input_sha256": "4d467a01da8999fc44e5183cb823fc2d55d73ff8c80196348ef99b8879480d06",
+   "output_sha256": "2c6207801b3ccca9535d9d80664b18e9a376c92f6d662cbcadf9663ce01615dd",
+   "minimum_body_scale": 0.9206,
+   "layout_notes": []
+  },
+  {
+   "year": 2011,
+   "file": "USAPhO_2011_T_KO.pdf",
+   "pages": 7,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2011.pdf",
+   "source_sha256": "4f266f58b471591e15017d1c57f2023c32947f629f60b3aa43bc605c1a6f3a65",
+   "translation_input_sha256": "b9ad5fdd06650bfd46967690a38b6bbdc4373074cf95585d89ed0e4aa728d3e8",
+   "output_sha256": "72df3a94238d4b3667d1ac65ab6181d464589bf9465703025e8701eee6218e5a",
+   "minimum_body_scale": 0.9835,
+   "layout_notes": []
+  },
+  {
+   "year": 2012,
+   "file": "USAPhO_2012_T_KO.pdf",
+   "pages": 7,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2012.pdf",
+   "source_sha256": "973ceea7a2be398f38656f56622fafc89560841345054ff950190dd34e62c60d",
+   "translation_input_sha256": "9b4d9bcc47883975b84d4c77b19ac55c05f8797975cb544ea70d41e3d9258a8f",
+   "output_sha256": "3103f3cdca51685c42de8d6c0828c4d2886ffc165e7e3f0484dc744f45794d9a",
+   "minimum_body_scale": 0.8501,
+   "layout_notes": []
+  },
+  {
+   "year": 2013,
+   "file": "USAPhO_2013_T_KO.pdf",
+   "pages": 8,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2013.pdf",
+   "source_sha256": "0af5cbdc6ce2286625a98823b15335c20e2830f0f19f7e6068b6cbddc8ff6967",
+   "translation_input_sha256": "89d1f387570646179239a4f33afc51b4479f6e9b9fe304a29a96aa05e6bbd6a1",
+   "output_sha256": "e7e8b9e98c571dbb14fac05edf8b1dd6abbf28a4483dd3f77368485d52457dbc",
+   "minimum_body_scale": 0.9807,
+   "layout_notes": []
+  },
+  {
+   "year": 2014,
+   "file": "USAPhO_2014_T_KO.pdf",
+   "pages": 13,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2014.pdf",
+   "source_sha256": "946c8cbf3c801e95391d646bae2999b2f470558b96565a64b615a12380e2316c",
+   "translation_input_sha256": "06021d16e52722be1c9f15182a3d67d9a813bcffe04bde78ff0aa9dd55449aa3",
+   "output_sha256": "e53bcbfdb467ed8aa3aa8ac1f8dc8511e9c9801c45ace86cdc3c07b9dc979f1a",
+   "minimum_body_scale": 0.8457,
+   "layout_notes": []
+  },
+  {
+   "year": 2015,
+   "file": "USAPhO_2015_T_KO.pdf",
+   "pages": 13,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2015.pdf",
+   "source_sha256": "3782fb4b0bf6ec1d2bd32c0017dcba4ffa8a76c39eea4d2bfecac4d80cee095f",
+   "translation_input_sha256": "158892e6561eb9f2e89c64c3e7a37ca5b05e3488185385992ca8f674f7bb2530",
+   "output_sha256": "056aac4ce42590deb161bd9d1bfc90aedc78fe045d279d317eedad1fd6879527",
+   "minimum_body_scale": 0.9265,
+   "layout_notes": []
+  },
+  {
+   "year": 2016,
+   "file": "USAPhO_2016_T_KO.pdf",
+   "pages": 12,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2016-2.pdf",
+   "source_sha256": "dce0f7bd8adf20e7f413083de1f920b1f73817fb42420aab957b46f01ecd7b61",
+   "translation_input_sha256": "e81aae8422cecef201a52727976538b1ef333489d3706391e52c3fa873b9bd1f",
+   "output_sha256": "053112ce0d8bda74bf9cb7e89a9e8f3f1b113b9600344c79235956c580198102",
+   "minimum_body_scale": 0.9877,
+   "layout_notes": []
+  },
+  {
+   "year": 2017,
+   "file": "USAPhO_2017_T_KO.pdf",
+   "pages": 10,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2017.pdf",
+   "source_sha256": "b94936ed2d01c1d7dadb5a31692507c4c18ae3b2b4aac9c84a9f6e9ad6acfda5",
+   "translation_input_sha256": "eb5b417f68b195f58ec54c0b1ac7f4abe9f5d96ad2a3c1ad0cfe73393b5c001e",
+   "output_sha256": "82b064be9c6c0bc0c5460edc878bc315e7142c8deda81fdfc7ce865e0b9096b3",
+   "minimum_body_scale": 0.9858,
+   "layout_notes": []
+  },
+  {
+   "year": 2018,
+   "file": "USAPhO_2018_T_KO.pdf",
+   "pages": 13,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2018.pdf",
+   "source_sha256": "7d530a96fc4dc086a8b7b2d3665fc8cbdf9f722eaea0d3bd0b6d3a14fa9652c4",
+   "translation_input_sha256": "3f06999f3907e5b79c208e0562d6e7d87710072f11321e0b94ffbd5763faf11b",
+   "output_sha256": "11b4a37cc287c16788a066d5133ab353a8e2d0d07b26655003d157f5525354c6",
+   "minimum_body_scale": 0.9619,
+   "layout_notes": []
+  },
+  {
+   "year": 2019,
+   "file": "USAPhO_2019_T_KO.pdf",
+   "pages": 13,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2019.pdf",
+   "source_sha256": "29847c38daa6fac5353a789304ea943df0b71e091ef425cb1cee7065e8d34e98",
+   "translation_input_sha256": "2f48f565b1ef0400fafe08f3707a8e5b1355da23b3cbf939ab17e1bc4cb39e9c",
+   "output_sha256": "16e4c81306f84ee9f51f48a4c3d17b244fa2dc43cf73f674a020e99a0be6d77c",
+   "minimum_body_scale": 0.9829,
+   "layout_notes": []
+  },
+  {
+   "year": 2020,
+   "file": "USAPhO_2020_T_KO.pdf",
+   "pages": 10,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2020.pdf",
+   "source_sha256": "bdee52d5efa3f5baa3d05ec083537e32df4d4120cc84e917960d89a03c1f26a6",
+   "translation_input_sha256": "a556834f25e7f217ed740532535412d44e41976c3326e722247bfcdc7ebb5bc0",
+   "output_sha256": "397578dfcc875fa975b9eb8001404b9fe3daef8f00a6ae7040cc712f6a19f158",
+   "minimum_body_scale": 0.9221,
+   "layout_notes": []
+  },
+  {
+   "year": 2021,
+   "file": "USAPhO_2021_T_KO.pdf",
+   "pages": 8,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2021.pdf",
+   "source_sha256": "83b753eb4e419328a93233a2c30198cb9d33fa1e776c6782cfb814fc5435481a",
+   "translation_input_sha256": "39d38b0e21ebf443579f654d0e0b961a2da9904d1a5f5e09ed772535054c48a5",
+   "output_sha256": "a8d4b2155b2c91b8e6a64cf339d61bb028884ae2a63e3455412b55cb4d7a1531",
+   "minimum_body_scale": 0.8705,
+   "layout_notes": []
+  },
+  {
+   "year": 2022,
+   "file": "USAPhO_2022_T_KO.pdf",
+   "pages": 10,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2022.pdf",
+   "source_sha256": "e25f434231d97da62f54d44331d483febc66bed45f6cdf537cc384a22e96715a",
+   "translation_input_sha256": "620687492fe654dfbb35d6bd9dab2cab4eddceef5c654a6d71c8c64dac15f853",
+   "output_sha256": "3ede5a9f2d21b17dffdf9798254afeee7502fab16cfda0187421b7546ccd54b9",
+   "minimum_body_scale": 0.9724,
+   "layout_notes": []
+  },
+  {
+   "year": 2023,
+   "file": "USAPhO_2023_T_KO.pdf",
+   "pages": 11,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2023.pdf",
+   "source_sha256": "e5f6e4f215fb17529dbb3adbaa051ec83728451adbe3db60738e21e2152441bd",
+   "translation_input_sha256": "f39c47057c8ba536400d2699608a2e098c3c199cca482f047bc13ba80bad24da",
+   "output_sha256": "1744523463888defe081e32b99eeb5f7955115afcb532e6b46b91be1d3cb96ea",
+   "minimum_body_scale": 0.9792,
+   "layout_notes": []
+  },
+  {
+   "year": 2024,
+   "file": "USAPhO_2024_T_KO.pdf",
+   "pages": 11,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO-2024.pdf",
+   "source_sha256": "2a93ac274a4c74b93711d98cc71ba522d9562a1730c6ce6040237d3a9777a4b1",
+   "translation_input_sha256": "607daefd3c8b792135e49853428fff19c14dfb384d43af87b4ca9531f9faacab",
+   "output_sha256": "282e5546ad72ab09d3d1ae017c968691b40aa306d7e0c79edd5df6eafd65729f",
+   "minimum_body_scale": 0.895,
+   "layout_notes": []
+  },
+  {
+   "year": 2025,
+   "file": "USAPhO_2025_T_KO.pdf",
+   "pages": 10,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/USAPhO_Exam_25.pdf",
+   "source_sha256": "2e8b438ad960749de7a09f905dde0eddf638d5e5d75d32222d4c860152f5059b",
+   "translation_input_sha256": "6316f775021f1b38b6c722026bd53aa92c5ba3dcd7670d03b6a7fc27d4468055",
+   "output_sha256": "84d3abf43b7460cb48e2f3e7159c8982c36d05c9b7867d149e51f57723a70a37",
+   "minimum_body_scale": 0.9851,
+   "layout_notes": []
+  },
+  {
+   "year": 2026,
+   "file": "USAPhO_2026_T_KO.pdf",
+   "pages": 10,
+   "questions": [
+    "A1",
+    "A2",
+    "A3",
+    "B1",
+    "B2",
+    "B3"
+   ],
+   "source_url": "https://www.aapt.org/physicsteam/upload/2026-USAPhO-AAPT.pdf",
+   "source_sha256": "95c2f0d278aa206d7386d868dca2a5af4f4135c12bae23a3dce6a55812cad982",
+   "translation_input_sha256": "3daa727003d8262fd013624fbf399371b0b7384230bb23ee41b76ef9b606191c",
+   "output_sha256": "8a30e278005fd5f177ceadf536705224abbfcab7a277f8d0cacd67f1e11ace7b",
+   "minimum_body_scale": 0.9769,
+   "layout_notes": []
+  }
+ ]
+}

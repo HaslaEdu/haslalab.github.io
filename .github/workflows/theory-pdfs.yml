@@ -1,0 +1,34 @@
+# Copies the theory papers listed in tools/theory/*.json into the GitHub releases (pdf-<prefix>), where the PDF
+# Worker serves them from.  Runs when the lists change on main, or by hand (optionally for some competitions only).
+name: Theory papers to releases
+
+on:
+  push:
+    branches: [main]
+    paths: ["tools/theory/**", "tools/theory_mirror.py", ".github/workflows/theory-pdfs.yml"]
+  workflow_dispatch:
+    inputs:
+      comps:
+        description: "Competitions to copy (e.g. ipho apho); empty = all"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: theory-pdfs
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/theory_mirror.py ${{ github.event.inputs.comps }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,21 @@
+name = "haslalab-community-edge"
+main = "src/edge-gateway.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+keep_vars = true
+
+# Stay at the visitor's edge. Private data, provider secrets and Queues stay in the backend.
+[vars]
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+GLOBAL_PUBLIC_READS = "1"
+
+# SELECT-only application lane; authentication, private data and writes keep using COMMUNITY.
+# Sessions choose a replica when the database has read replication enabled, otherwise primary.
+[[d1_databases]]
+binding = "PUBLIC_DB"
+database_name = "haslalab-community"
+database_id = "96761b6d-c194-4ee5-9836-7845b51a5f07"
+
+[[services]]
+binding = "COMMUNITY"
+service = "haslalab-community"

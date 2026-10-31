@@ -1,0 +1,72 @@
+<style>
+h2,h3{break-after:avoid}
+table.bar{width:100%;font-size:9.6pt} table.bar td{vertical-align:top} table.bar td.n{white-space:nowrap;font-weight:700;width:9mm}
+table.bar td.p{white-space:nowrap;text-align:right;width:14mm} table.bar td.t{white-space:nowrap;text-align:right;width:14mm;font-weight:700}
+table.bar tr.hd td{background:#eef2f8;font-weight:700} table.bar tr{break-inside:avoid}
+table.bar .katex-display{margin:1mm 0}
+table.cs td{text-align:center;padding:0.6mm 2.5mm}
+</style>
+<h1>이론 문제 2. 지구 기후 모델링 (Terrestrial climate modeling) — 채점 기준</h1>
+<p class="note">원문: Romanian Master of Physics 2014, Problema teoretică nr. 2 – Modelarea climei terestre, “Barem de evaluare şi de notare”(평가 및 채점 기준표; 루마니아어 원문에서 번역). 배점은 원문의 p를 pt로 표기하였고, 소수점 쉼표는 원문 그대로 두었다.</p>
+<p><b>채점 기준(Barem de evaluare şi de notare)</b> — 문제를 올바르게 푼 다른 모든 방법에도 그에 상응하는 점수를 준다.</p>
+
+<table class="bar">
+<tr class="hd"><td>번호</td><td>과제 1</td><td></td><td>배점</td></tr>
+<tr><td class="n">1.a.</td><td>다음에 대하여:
+\[w_S\cdot\pi\cdot R_P^2 = \sigma\cdot T_P^4\cdot4\cdot\pi\cdot R_P^2\]</td><td class="p">0,50 pt</td><td class="t">0,70 pt</td></tr>
+<tr><td></td><td>지구 표면의 평균 온도에 대한 식 \[T_P = \sqrt[4]{\frac{w_S}{4\cdot\sigma}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td class="n">1.b.</td><td>다음에 대하여: \[T_P \cong 279\,K\qquad t_P \cong 6^\circ C\]</td><td class="p">0,30 pt</td><td class="t">0,30 pt</td></tr>
+
+<tr class="hd"><td>번호</td><td>과제 2</td><td></td><td>배점</td></tr>
+<tr><td class="n">2.a.</td><td>다음에 대하여:
+\[\left(1-A\right)\cdot w_S\cdot\pi\cdot R_P^2 = \sigma\cdot T'^4_P\cdot4\cdot\pi\cdot R_P^2\]</td><td class="p">0,50 pt</td><td class="t">0,70 pt</td></tr>
+<tr><td></td><td>지구 표면의 평균 온도에 대한 식 \[T_P' = \sqrt[4]{\frac{\left(1-A\right)\cdot w_S}{4\cdot\sigma}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td class="n">2.b.</td><td>다음에 대하여: \[\begin{cases}T_P' \cong 255K\\ t_P' \cong -18^\circ C\end{cases}\]</td><td class="p">0,30 pt</td><td class="t">0,30 pt</td></tr>
+
+<tr class="hd"><td>번호</td><td>과제 3</td><td></td><td>배점</td></tr>
+<tr><td class="n">3.a.</td><td>다음에 대하여:<br>태양으로부터 단위 시간에 지구 표면에 도달하는 에너지에 대한 식
+\[E_S = \pi\cdot R_P^2\cdot w_s\cdot\left(1-A\right)\cdot\alpha_{vis}\]</td><td class="p">0,30 pt</td><td class="t">2,50 pt</td></tr>
+<tr><td></td><td>지구 표면에서의 일률 균형(power balance)
+\[\left(1-A\right)\cdot w_s\cdot\pi\cdot R_P^2\cdot\alpha_{vis}+E_A = \sigma\cdot T''^4_P\cdot4\cdot\pi\cdot R_P^2\]
+여기서 $E_A$는 대기에 의한 복사 일률이다.</td><td class="p">1,00 pt</td><td></td></tr>
+<tr><td></td><td>대기 상층부에서의 일률 균형
+\[\left(1-A\right)\cdot w_s\cdot\pi\cdot R_P^2 = \sigma\cdot T''^4_P\cdot4\cdot\pi\cdot R_P^2\cdot\alpha_{ir}+E_A\]</td><td class="p">1,00 pt</td><td></td></tr>
+<tr><td></td><td>지구 표면의 평균 온도에 대한 식
+\[T''_P = \sqrt[4]{\frac{w_s\cdot\left(1-A\right)\cdot\left(\alpha_{vis}+1\right)}{4\cdot\sigma\cdot\left(\alpha_{ir}+1\right)}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td class="n">3.b.</td><td>다음에 대하여: \[\begin{cases}T''_P \cong 288\,K\\ t''_P \cong 15^\circ C\end{cases}\]</td><td class="p">0,30 pt</td><td class="t">0,30 pt</td></tr>
+<tr><td class="n">3.c.</td><td>다음에 대하여:
+<table class="cs">
+<tr><td>경우</td><td>I</td><td>II</td><td>III</td><td>IV</td></tr>
+<tr><td>$w_s$</td><td>1370</td><td>1370</td><td>1370</td><td>1370</td></tr>
+<tr><td>$\alpha_{vis}$</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>$\alpha_{ir}$</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><td>$A$</td><td>0,3</td><td>0,0</td><td>0,0</td><td>0,3</td></tr>
+<tr><td>$T''_P\,(K)$</td><td>255</td><td>279</td><td>332</td><td>303</td></tr>
+<tr><td>$t''_P\,(^\circ C)$</td><td>-18</td><td>6</td><td>59</td><td>30</td></tr>
+</table></td><td class="p">4×0,30 pt</td><td class="t">1,20 pt</td></tr>
+
+<tr class="hd"><td>번호</td><td>과제 4</td><td></td><td>배점</td></tr>
+<tr><td class="n">4.a.</td><td>다음에 대하여: \[w'_s = \frac{w_s}{\left(1{,}01\right)^2}\]</td><td class="p">0,50 pt</td><td class="t">1,00 pt</td></tr>
+<tr><td></td><td>지구 표면의 평균 온도에 대한 식
+\[T'''_P = \sqrt[4]{\frac{w'_s\cdot\left(1-A\right)\cdot\left(\alpha_{vis}+1\right)}{4\cdot\sigma\cdot\left(\alpha_{ir}+1\right)}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>\[\begin{cases}T'''_P \cong 267K\\ t'''_P \cong -6^\circ C\end{cases}\]</td><td class="p">0,30 pt</td><td></td></tr>
+
+<tr class="hd"><td>번호</td><td>과제 5</td><td></td><td>배점</td></tr>
+<tr><td class="n">5.a.</td><td>다음에 대하여:<br>사하라 사막의 “유리 거울” 넓이에 대한 식 $\;s = x\cdot\pi\cdot R_P^2$</td><td class="p">0,10 pt</td><td class="t">3,00 pt</td></tr>
+<tr><td></td><td>태양 에너지를 “받아들이는(capture)” 면의 넓이에 대한 식
+\[\begin{cases}S_{captura} = \pi\cdot R_P^2-\dfrac x2\cdot\pi\cdot R_P^2\\[3mm] S_{captura} = \pi\cdot R_P^2\cdot\left(1-\dfrac x2\right)\end{cases}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>방출하는 면의 넓이에 대한 식
+\[\begin{cases}S_{emitator,P} = 4\cdot\pi\cdot R_P^2-x\cdot\pi\cdot R_P^2\\ S_{emitator,P} = \pi\cdot R_P^2\cdot\left(4-x\right)\end{cases}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>지구 표면에서의 일률 균형
+\[\left(1-A\right)\cdot w_s\cdot\pi\cdot R_P^2\cdot\left(1-\frac x2\right)\cdot\alpha_{vis}+E_A = \sigma\cdot\left(T'''_{P,Sahara}\right)^4\cdot\pi\cdot R_P^2\cdot\left(4-x\right)\]</td><td class="p">0,70 pt</td><td></td></tr>
+<tr><td></td><td>대기 상층부에서의 일률 균형
+\[\left(1-A\right)\cdot w_s\cdot\pi\cdot R_P^2\cdot\left(1-\frac x2\right) = \sigma\cdot\left(T'''_{P,Sahara}\right)^4\cdot\pi\cdot R_P^2\cdot\left(4-x\right)\cdot\alpha_{ir}+E_A\]</td><td class="p">0,70 pt</td><td></td></tr>
+<tr><td></td><td>\[T'''_{P,Sahara} = \sqrt[4]{\frac{w_s\cdot\left(1-A\right)}{\sigma}\cdot\frac{\left(\alpha_{vis}+1\right)}{\left(\alpha_{ir}+1\right)}\cdot\frac{1-\dfrac x2}{4-x}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>\[\frac{T'''_{P,Sahara}}{T''_P} = \sqrt[4]{\frac{1-\dfrac x2}{1-\dfrac x4}}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>\[\frac{1-\dfrac x2}{1-\dfrac x4} = \left(\frac{T'''_{P,Sahara}}{T''_P}\right)^4 = k\]
+여기서 $k = 0{,}9862$</td><td class="p">0,30 pt</td><td></td></tr>
+<tr><td></td><td>\[\begin{cases}x = \dfrac{4\cdot\left(1-k\right)}{2-k}\\[3mm] x = 0{,}0544\end{cases}\]</td><td class="p">0,20 pt</td><td></td></tr>
+<tr><td></td><td>사하라의 “유리 거울” 넓이 $\;s \cong 7\cdot10^6\,km^2$<br><i>참고: 사하라의 넓이는 $9\cdot10^6\,km^2$이다.</i></td><td class="p">0,20 pt</td><td></td></tr>
+<tr class="hd"><td colspan="3">총점 (TOTAL)</td><td class="t">10 pt</td></tr>
+</table>
+<p class="note">© 채점 기준 제안: Prof. dr. Delia DAVIDESCU, Conf. univ. dr. Adrian DAFINEI</p>

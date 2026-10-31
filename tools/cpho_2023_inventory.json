@@ -1,0 +1,76 @@
+{
+  "source_sha256": "956f132218ce6591d418a1faa998648b00a6195b2f2b522e6e16c1a405a418f0",
+  "source_pages": 36,
+  "bilingual_regions": 528,
+  "source_prose_regions": 538,
+  "booklet": "Combined problems and reference solutions, following the original interleaving",
+  "problems": 7,
+  "reference_solutions": 7,
+  "total_marks": 320,
+  "inline_math_fields": 1349,
+  "native_math_fields_preserved": 39,
+  "native_raster_math_fields_restored": 32,
+  "source_math_replacement_legend": {
+    "红": "R (red)",
+    "紫": "V (violet)",
+    "初": "i (initial)",
+    "末": "f (final)"
+  },
+  "editions": [
+    {
+      "language": "ko",
+      "file": "pdfx/cpho/CPhO_2023_Combined_KO.pdf",
+      "pages": 36,
+      "bytes": 7040697,
+      "sha256": "a40eea0e460552e276397efdc97b379db6f5eb6f32dd40054e342fa2dbdb7b24",
+      "minimum_scale": 0.7408019842910294,
+      "missing_glyphs": 0,
+      "untranslated_native_Han": 0,
+      "actual_inline_ink_clips": 0,
+      "inline_digest_ambiguities": 0,
+      "figures": 20,
+      "hidden_Hangul_components": 0
+    },
+    {
+      "language": "en",
+      "file": "pdfx/cpho/CPhO_2023_Combined_EN.pdf",
+      "pages": 36,
+      "bytes": 6415793,
+      "sha256": "6a2fbd105dfac9a2488fb8455acaf74bd3d00e238a338b8ed9997b6d9dc29980",
+      "minimum_scale": 0.7515202348500734,
+      "missing_glyphs": 0,
+      "untranslated_native_Han": 0,
+      "actual_inline_ink_clips": 0,
+      "inline_digest_ambiguities": 0,
+      "figures": 20
+    }
+  ],
+  "verification": {
+    "MuPDF_whole_pages_reviewed": {
+      "ko": 36,
+      "en": 36
+    },
+    "Poppler_whole_pages_reviewed": {
+      "ko": 36,
+      "en": 36
+    },
+    "native_math_accent_source_comparisons": 32,
+    "special_source_operators_checked": 32,
+    "omitted_source_operators": 0,
+    "notes": "All 72 pages reviewed, with original geometry, complete mathematical accents, and 20 redrawn figures per language."
+  },
+  "authoring_files": [
+    "tools/cpho_2023_build.py",
+    "tools/cpho_2023_preflight.py",
+    "tools/cpho_2023_validate.py",
+    "tools/cpho_native_math_accents.py",
+    "tools/cpho_inline_clip_audit.py",
+    "tools/cpho_cjk_translate.py",
+    "tools/pdf_hangul_visibility.py",
+    "tools/izho_native_math_audit.py",
+    "tools/ko/cpho/2023/combined/manual.txt",
+    "tools/ko/cpho/2023/combined/source_regions.json",
+    "tools/cpho_2023_figures.py",
+    "tools/ko/cpho/2023/figures"
+  ]
+}

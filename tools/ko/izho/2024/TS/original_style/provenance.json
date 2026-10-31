@@ -1,0 +1,66 @@
+{
+  "source": "IZhO_2024_TS.pdf",
+  "source_sha256": "b0caedaf42ed084821305e453962cb38563c926031c43d107fd46474b18e0e1b",
+  "source_edition_pages_1based": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "translation_policy": "Translate only the complete English fourteen-page edition in the multilingual original; preserve all native equations, variables, numerical data, source font programs, page geometry and original source anomalies. No editorial notes added to the PDF.",
+  "source_anomalies_kept": [
+    {
+      "page": 4,
+      "description": "The grading-table version of equation (17) prints P2 V2 = nu2 R without the final T. That original native expression is retained."
+    },
+    {
+      "page": 6,
+      "description": "The original sentence introducing L2 has a doubled comma after m2. Both commas are retained as native source glyphs."
+    },
+    {
+      "page": 12,
+      "description": "The original centimetre unit following equation (32) uses Cyrillic см. Its native source glyphs are retained."
+    }
+  ],
+  "prose_whitespace_journal": {
+    "page": 13,
+    "selected_source_slot": [
+      44,
+      2,
+      0
+    ],
+    "actual_source_spaces": 9,
+    "scope": "Only the actual spaces in the explicitly selected source grading-label sentence are classified as translated prose whitespace. Native equation spaces and all nonselected spaces remain locked."
+  },
+  "bitmap_language_translation": {
+    "labels": 18,
+    "images": 6,
+    "pages": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "image_raw_bytes_decoded_bytes_filters_and_transforms_preserved": true,
+    "method": "White PDF background and Korean text overlays in explicitly reviewed language regions. No source image is replaced, resampled, or additionally painted.",
+    "font_metadata": "Bitmap labels contain no font metadata. Times New Roman serif family, font size and baseline are inferred from the observed source ink and reference-family glyph metrics; matching Noto CJK serif is embedded.",
+    "terminology_note": "Screen is normally translated 스크린. In the narrow two-stroke label compartment on page12 it is translated 막, the physical screen/barrier, at the same measured original size and baseline. This avoids clipping or shrinking Korean glyphs against the original diagram strokes.",
+    "artifact_index": "bitmap-label-review.json"
+  },
+  "reproducibility": {
+    "builder": "tools/izho_legacy_style_rebuild.py 2024 TS",
+    "assembly": "pikepdf native page append; compress_streams=False",
+    "bitmap_helper": "tools/izho_bitmap_labels.py",
+    "review": "tools/izho_bitmap_review.py 2024 TS"
+  }
+}

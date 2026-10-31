@@ -1,0 +1,753 @@
+{
+  "_meta": {
+    "author": "HaslaLab 자체 작성 해설",
+    "official_solution": false,
+    "verification": "공식 문제 PDF 9쪽씩을 이미지로 확인하고 물리 법칙으로 독립 유도한 뒤 공식 정답표와 대조했다.",
+    "figure_coordinates": "figure.page는 1부터 시작하고 rect는 원문 PDF의 왼쪽 위 기준 point 좌표이다. source는 tmp/kphe_archive/originals의 파일명이다.",
+    "notation": "formula는 선형식이며 *는 곱셈, ^는 거듭제곱, sqrt는 제곱근이다."
+  },
+  "T2c": [
+    {
+      "number": 1,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "축은 엄마 자리에서 $1\\,\\mathrm{m}$ 오른쪽에 있다. 엄마와 영희가 만드는 반시계 방향 돌림힘의 크기는 각각 $50g\\times 1, 20g\\times 0.5$이다.",
+        "아빠의 질량을 $M$이라 하면 아빠는 축에서 $1\\,\\mathrm{m}$ 오른쪽에 있으므로 시계 방향 돌림힘은 $Mg\\times 1$이다. 평형 조건에서 $M= 50+ 10= 60\\,\\mathrm{kg}$이다. 정답은 ②이다."
+      ],
+      "formula": [
+        "$50g\\cdot 1+ 20g\\cdot 0.5= Mg\\cdot 1$",
+        "$M= 60\\,\\mathrm{kg}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          66,
+          183,
+          324,
+          333
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "돛이 받는 총 광출력은 $P= \\frac{100\\,\\mathrm{m^{2}}\\times 1000\\,\\mathrm{W}}{m^{2}}= 10^{5}\\,\\mathrm{W}$이다. 광자는 입사 방향의 반대 방향으로 반사되므로 한 광자당 운동량 변화의 크기는 $\\frac{2E}{c}$이다. 따라서 돛이 받는 힘은 $F= \\frac{2P}{c}$이다.",
+        "질량이 $1\\,\\mathrm{kg}$이므로 가속도는 $\\frac{2\\times 10^{5}}{\\left(3\\times 10^{8}\\right)}= 6.67\\times 10^{-4}\\,\\mathrm{m/s^{2}}$이다. 목표 속력은 광속의 $0.01\\% $, 즉 $3\\times 10^{4}\\,\\mathrm{m/s}$이다.",
+        "초기 정지 상태에서 필요한 시간은 $t= \\frac{v}{a}= 4.5\\times 10^{7}\\,\\mathrm{s}$이다. 목표 속력은 광속보다 매우 작아 이 근사에서 상대론 보정은 무시할 수 있다. 정답은 ④이다."
+      ],
+      "formula": [
+        "$F= \\frac{2P}{c}$",
+        "$a= \\frac{2P}{\\left(mc\\right)}$",
+        "$t= \\frac{mv\\,c}{\\left(2P\\right)}= 4.5\\cdot 10^{7}\\,\\mathrm{s}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 1,
+        "rect": [
+          408,
+          349,
+          640,
+          517
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "운동에너지가 최대인 $x= 3\\,\\mathrm{cm}$가 평형 위치이고, $K= 0$인 위치가 $2\\,\\mathrm{cm}$와 $4\\,\\mathrm{cm}$이므로 진폭은 $A= 1\\,\\mathrm{cm}= 0.01\\,\\mathrm{m}$이다. 최대 운동에너지 $1\\,\\mathrm{J}$는 $\\frac{kA^{2}}{2}$와 같으므로 $k= 2\\times 10^{4}\\,\\mathrm{N/m}$이다. ㄱ은 옳다.",
+        "최대 가속도는 평형점에서 가장 멀리 떨어졌을 때의 $\\frac{kA}{m}= 200\\,\\mathrm{m/s^{2}}$이다. ㄴ도 옳다.",
+        "주기는 $T= 2\\pi \\sqrt{\\frac{m}{k}}= \\frac{\\sqrt{2}\\pi}{100}\\,\\mathrm{s}$이다. ㄷ도 옳으므로 세 보기를 모두 고른 ⑤가 정답이다."
+      ],
+      "formula": [
+        "$A= 0.01\\,\\mathrm{m}$",
+        "$k= \\frac{2K_{\\mathrm{max}}}{A^{2}}= 2\\cdot 10^{4}\\,\\mathrm{N/m}$",
+        "$a_{\\mathrm{max}}= \\frac{kA}{m}= 200\\,\\mathrm{m/s^2}$",
+        "$T= \\frac{\\sqrt{2}\\pi}{100}\\,\\mathrm{s}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 2,
+        "rect": [
+          74.026,
+          138.537,
+          335.482,
+          249.258
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "출력 $P$가 모두 운동에너지로 바뀌면 $\\frac{mv^{2}}{2}= Pt$이므로 $v= \\sqrt{\\frac{2Pt}{m}}= 10\\sqrt{t}\\,\\mathrm{m/s}$이다. 보기의 $20\\sqrt{t}$와 다르므로 ㄱ은 틀리다.",
+        "일정한 출력을 전달하려면 구동력이 $F= \\frac{P}{v}$이어야 한다. 출발 직후 $v$가 $0$에 가까우면 요구되는 힘은 한없이 커지지만 지면이 제공할 최대 정지마찰력은 유한하다. 따라서 제시된 이상적 일정 출력 조건을 출발부터 적용하면 미끄러짐을 피할 수 없다는 ㄴ은 옳다.",
+        "저항력이 $\\alpha v$이면 저항에 소모되는 일률은 $\\alpha v^{2}$이다. $P= \\alpha v^{2}$인 종단 속력은 $\\sqrt{\\frac{10^{5}}{40}}= 50\\,\\mathrm{m/s}$이므로 이를 넘어서 계속 가속할 수 없다. ㄷ도 옳아 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$v= \\sqrt{\\frac{2Pt}{m}}= 10\\sqrt{t}$",
+        "$F= \\frac{P}{v}$",
+        "$v_{\\mathrm{terminal}}= \\sqrt{\\frac{P}{\\alpha }}= 50\\,\\mathrm{m/s}$"
+      ]
+    },
+    {
+      "number": 5,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "충돌 직후 위치는 같고 속도는 태양을 중심으로 한 접선 방향이다. 충돌 후 속력의 크기가 기존 원궤도 속력 $v$보다 작으면 중력이 필요한 구심력보다 커져 태양 쪽으로, 크면 바깥쪽으로 움직이기 시작한다.",
+        "완전비탄성 충돌의 공통 속도는 $\\frac{\\left(mv+ MV\\right)}{\\left(m+ M\\right)}$이다. ㄱ은 공통 속도가 $0$이므로 안쪽으로 움직인다. ㄴ은 공통 속도가 $\\frac{5v}{3}$이므로 바깥쪽으로 움직인다. 둘 다 옳다.",
+        "같은 질량의 1차원 탄성 충돌에서는 속도를 교환한다. ㄷ의 원래 입자는 $2v$를 얻어 바깥쪽으로 움직이므로 틀리다. ㄹ에서는 $-v$를 얻어 같은 원궤도를 반대 방향으로 도는 것이 가능하므로 옳다. ㅁ에서는 $0.5v$를 얻어 안쪽으로 움직이므로 틀리다. ㄱ·ㄴ·ㄹ을 고른 ②가 정답이다."
+      ],
+      "formula": [
+        "$u_{\\mathrm{inelastic}}= \\frac{\\left(mv+ MV\\right)}{\\left(m+ M\\right)}$",
+        "$m= M$인 탄성충돌: $u_{\\mathrm{original}}= V$"
+      ]
+    },
+    {
+      "number": 6,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "두 공이 만날 때까지의 시간을 $t, B$의 처음 위쪽 속력을 $u$라 하자. $A$의 아래쪽 속력은 $gt$이고 $B$의 위쪽 속력은 $u- gt$이다.",
+        "$A$의 속력이 $B$의 3배이므로 $gt= 3\\left(u- gt\\right)$, 즉 $u= \\frac{4gt}{3}$이다. $B$의 높이는 $h_{1}= ut- \\frac{gt^{2}}{2}= \\frac{5gt^{2}}{6}$이다.",
+        "$A$가 떨어진 거리는 $\\frac{gt^{2}}{2}$이므로 $h= h_{1}+ \\frac{gt^{2}}{2}= \\frac{4gt^{2}}{3}$이다. 따라서 $\\frac{h_{1}}{h}= \\frac{5}{8}$이며 정답은 ②이다."
+      ],
+      "formula": [
+        "$gt= 3\\left(u- gt\\right)$",
+        "$h_{1}= \\frac{5gt^{2}}{6}$",
+        "$h= \\frac{4gt^{2}}{3}$",
+        "$h_{1}= \\frac{5h}{8}$"
+      ]
+    },
+    {
+      "number": 7,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "무한 평면 하나가 만드는 전기장 크기는 $\\frac{\\sigma }{\\left(2\\epsilon _{0}\\right)}$으로 평면과의 거리에 무관하다. 평행한 $+\\sigma , -\\sigma $ 평면 바깥에서는 두 전기장이 상쇄되어 $0$이고, 사이에서는 더해져 $\\frac{\\sigma }{\\epsilon _{0}}$이다. 따라서 ㄱ과 ㄴ은 모두 틀리다.",
+        "서로 수직인 두 평면의 사이에서 각 평면이 만드는 전기장도 서로 직각이다. 합성 크기는 $\\frac{\\sqrt{2}\\sigma }{\\left(2\\epsilon _{0}\\right)}= \\frac{\\sigma }{\\left(\\sqrt{2}\\epsilon _{0}\\right)}$이다. 평행한 경우의 $\\frac{\\sigma }{\\epsilon _{0}}$보다 작으므로 ㄷ은 옳다.",
+        "무한 평면의 전기장은 거리와 무관하므로 같은 영역에서 교차점에서 멀어진다고 합성장이 감소하지 않는다. ㄹ은 틀리다. 정답은 ㄷ만 고른 ③이다."
+      ],
+      "formula": [
+        "$E_{\\mathrm{sheet}}= \\frac{\\sigma }{\\left(2\\epsilon _{0}\\right)}$",
+        "$E_{\\mathrm{parallel}}= \\frac{\\sigma }{\\epsilon _{0}}$",
+        "$E_{\\mathrm{perpendicular}}= \\frac{\\sigma }{\\left(\\sqrt{2}\\epsilon _{0}\\right)}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          72.827,
+          173.67,
+          336.561,
+          330.078
+        ]
+      }
+    },
+    {
+      "number": 8,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "자기장에 수직인 속도로 원운동할 때 $|Q|vB= \\frac{mv^{2}}{r}$이므로 $|Q|= \\frac{mv}{\\left(Br\\right)}$이다. 운동에너지 $K= \\frac{mv^{2}}{2}$를 이용하면 $|Q|= \\frac{\\sqrt{2mK}}{\\left(Br\\right)}$이다.",
+        "두 입자는 $K, B, r$이 같으므로 전하량의 크기는 질량의 제곱근에 비례한다. 그림에서 두 입자 모두 같은 방향으로 회전하므로 전하의 부호도 같다.",
+        "따라서 $Q_A: Q_B= \\sqrt{m_A}: \\sqrt{m_B}$이며 보기 ㄷ에 해당하는 ③이 정답이다."
+      ],
+      "formula": [
+        "$r= \\frac{mv}{\\left(|Q|B\\right)}$",
+        "$|Q|= \\frac{\\sqrt{2mK}}{\\left(Br\\right)}$",
+        "$Q_A: Q_B= \\sqrt{m_A}: \\sqrt{m_B}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 4,
+        "rect": [
+          395.636,
+          173.67,
+          651.096,
+          317.727
+        ]
+      }
+    },
+    {
+      "number": 9,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "자기장은 $x$에 따라 달라지므로 전체 자기선속은 면적에 대한 적분으로 구한다. 크기는 $\\Phi = B_{0}bt^{3}\\int _{0}^{a}\\,x^{2}dx= \\frac{B_{0}ba^{3}t^{3}}{3}$이다.",
+        "유도 기전력의 크기는 $|d\\Phi /dt|= B_{0}ba^{3}t^{2}$이므로 $t^{2}$과 세로 길이 $b$에 비례한다. 따라서 ㄴ과 ㄹ은 옳고 ㄱ은 틀리다.",
+        "$+y$ 방향 자기선속이 증가하므로 유도 전류는 $-y$ 방향 자기장을 만든다. 그림의 $xz$ 평면에서 이는 반시계 방향에 해당한다. 시계 방향이라는 ㄷ은 틀리며 정답은 ④이다."
+      ],
+      "formula": [
+        "$\\Phi = \\frac{B_{0}\\cdot b\\cdot a^{3}\\cdot t^{3}}{3}$",
+        "$|\\epsilon |= B_{0}\\cdot b\\cdot a^{3}\\cdot t^{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          123.191,
+          156.164,
+          286.317,
+          318.327
+        ]
+      }
+    },
+    {
+      "number": 10,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "무한 직선 도선에서 거리 $x$인 점의 자기장 크기는 $\\frac{\\mu _{0}I\\left(t\\right)}{\\left(2\\pi x\\right)}$이다. 회로 중심은 $x= d+ \\frac{a}{2}$이므로 ㄱ의 식은 옳다.",
+        "회로를 지나는 자기선속의 크기는 $\\Phi=\\frac{\\mu_0 bI(t)}{2\\pi}\\ln\\left(\\frac{d+a}{d}\\right)$이다. $I(t)=I_0\\exp(-\\lambda t)$를 미분하면 기전력 크기는 $\\frac{\\mu_0\\lambda bI_0\\exp(-\\lambda t)}{2\\pi}\\ln\\left(1+\\frac{a}{d}\\right)$가 된다. ㄴ도 옳다.",
+        "도선 오른쪽에서 원래 자기장은 종이 안쪽이며 시간이 지날수록 약해진다. 이를 보강할 유도 자기장을 만들려면 전류가 시계 방향이어야 한다. ㄷ은 틀리므로 정답은 ㄱ·ㄴ을 고른 ④이다."
+      ],
+      "formula": [
+        "$B_{\\mathrm{center}}= \\frac{\\mu _{0}\\cdot I_{0}\\cdot \\exp \\left(-\\lambda t\\right)}{\\left(2\\pi \\left(d+ \\frac{a}{2}\\right)\\right)}$",
+        "$|\\epsilon |= \\frac{\\mu _{0}\\cdot \\lambda \\cdot b\\cdot I_{0}\\cdot \\exp \\left(-\\lambda t\\right)\\cdot \\ln \\left(1+ \\frac{a}{d}\\right)}{\\left(2\\pi \\right)}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 5,
+        "rect": [
+          441.563,
+          179.426,
+          605.169,
+          357.058
+        ]
+      }
+    },
+    {
+      "number": 11,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "구면의 작은 전하 $dQ= \\sigma R^{2}\\sin \\theta \\,d\\theta d\\phi $가 중심에 만드는 전기장의 축 성분을 적분한다. 면적의 $R^{2}$과 전기장 분모의 $R^{2}$이 상쇄되므로 $E= 2\\pi k\\int_{0}^{\\pi/2}\\,\\sigma \\left(\\theta \\right)\\sin \\theta \\cos \\theta \\,d\\theta $이며 반지름과 무관하다. 따라서 ㄱ은 틀리고 ㄴ은 옳다.",
+        "균일한 $\\sigma = \\sigma _{0}$일 때 $E= \\pi k\\sigma _{0}$이다. $\\sigma = 1.25\\sigma _{0}\\sin \\theta $일 때에는 적분값이 $\\frac{1}{3}$이므로 $E= \\frac{5\\pi k\\sigma _{0}}{6}$이다. 균일한 경우가 오히려 크므로 ㄷ은 틀리다.",
+        "$\\sigma = \\sigma _{0}\\sin \\theta $와 $\\sigma = \\sigma _{0}\\cos \\theta $의 적분은 각각 $\\int \\sin ^{2}\\theta \\cos \\theta \\,d\\theta , \\int \\sin \\theta \\cos ^{2}\\theta \\,d\\theta $로 모두 $\\frac{1}{3}$이다. 따라서 전기장 크기가 같다는 ㄹ은 옳다. 정답은 ④이다."
+      ],
+      "formula": [
+        "$E= 2\\pi k\\int \\sigma \\left(\\theta \\right)\\sin \\theta \\cos \\theta \\,d\\theta $",
+        "$E_{\\mathrm{uniform}}= \\pi k\\sigma _{0}$",
+        "$E_{1.25\\sin \\theta }= \\frac{5\\pi k\\sigma _{0}}{6}$",
+        "$E_{s}in\\theta = E_{c}os\\theta = \\frac{2\\pi k\\sigma _{0}}{3}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 6,
+        "rect": [
+          134.343,
+          156.164,
+          275.045,
+          331.877
+        ]
+      }
+    },
+    {
+      "number": 12,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "각도 분해 광전자 분광은 광전효과를 이용해 방출된 전자의 에너지와 운동량을 측정하므로 아인슈타인의 광전효과 설명에 기반한다는 ㄱ은 옳다.",
+        "입사 광자 에너지 중 일부는 일함수와 물질 내부 결합에너지를 이기는 데 쓰인다. 따라서 방출 전자의 운동에너지가 광자 에너지와 반드시 같은 것은 아니며 ㄴ은 틀리다. 광자의 운동량과 표면에 평행한 운동량 보존도 고려해야 하므로 입사각에 전혀 의존하지 않는다는 ㄷ도 틀리다.",
+        "절연체에서는 입사 에너지가 내부 여기에는 충분하지만 진공으로 전자를 꺼내기에는 부족할 수 있다. 이때 가전자대에서 전도대로의 여기만 일어나고 외부 방출은 없을 수 있으므로 ㄹ은 옳다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$E_{\\mathrm{kin}}= h\\nu - W- E_{\\mathrm{binding}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 6,
+        "rect": [
+          409.426,
+          208.924,
+          637.426,
+          362.814
+        ]
+      }
+    },
+    {
+      "number": 13,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "정지한 전자와 광자의 충돌에서는 $\\lambda ^{\\prime}- \\lambda = \\frac{h\\left(1- \\cos \\theta \\right)}{\\left(mc\\right)}$이다. 따라서 산란 광자의 파장은 줄어들지 않으며 ㄱ은 틀리다.",
+        "전자가 얻은 운동에너지는 광자가 잃은 에너지 $\\frac{hc}{\\lambda }- \\frac{hc}{\\lambda ^{\\prime}}$이다. $\\lambda $가 고정되어 있을 때 전자의 속력이 클수록 얻은 에너지가 크고 $\\lambda ^{\\prime}$도 더 길어진다. 전자가 느릴수록 $\\lambda ^{\\prime}$가 크다는 ㄴ은 틀리다.",
+        "콤프턴 효과는 빛이 에너지와 운동량을 가진 광자로 전자와 충돌함을 보여 준다. 따라서 ㄷ만 옳으며 정답은 ②이다."
+      ],
+      "formula": [
+        "$\\lambda ^{\\prime}- \\lambda = \\frac{h\\left(1- \\cos \\theta \\right)}{\\left(mc\\right)}$",
+        "$K_{e}= \\frac{hc}{\\lambda }- \\frac{hc}{\\lambda ^{\\prime}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 7,
+        "rect": [
+          106.283,
+          168.275,
+          303.105,
+          300.82
+        ]
+      }
+    },
+    {
+      "number": 14,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "두 슬릿은 단일 슬릿에서 같은 거리에 있으므로 같은 위상으로 출발한다. 그러나 $P$는 두 번째 어두운 무늬이므로 도달한 두 빛의 경로차가 $\\frac{3\\lambda }{2}$이며, 위상차는 $3\\pi $로 상쇄 간섭을 한다. 따라서 ㄱ과 ㄴ은 틀리다.",
+        "밝은 중심에서 $n$번째 어두운 무늬까지의 작은 각도 위치는 $y= \\frac{\\left(n- \\frac{1}{2}\\right)\\lambda L}{d}$이다. 같은 장치에서는 $\\lambda $에 비례한다.",
+        "빨간빛의 파장이 파란빛보다 길므로 중심과 $P$ 사이 거리는 빨간빛일 때 더 크다. ㄷ만 옳아 정답은 ②이다."
+      ],
+      "formula": [
+        "$\\Delta _{P}= \\frac{3\\lambda }{2}$",
+        "$y_{\\mathrm{second\\ dark}}=\\frac{3\\lambda L}{2d}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 7,
+        "rect": [
+          412.064,
+          186.621,
+          634.668,
+          346.146
+        ]
+      }
+    },
+    {
+      "number": 15,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "특수 상대성 이론에서 지상 관측자에 대해 움직이는 위성의 시계에는 운동에 의한 시간 지연이 발생한다. 따라서 그 효과만 보면 위성 시계가 느려진다는 ㄱ은 옳다.",
+        "일반 상대성 이론에서는 중력 퍼텐셜이 높은 곳의 시계가 더 빨리 간다. 지표면보다 높은 위성은 이 효과 때문에 시계가 빨라질 수 있으므로 ㄴ도 옳다.",
+        "$\\mathrm{GPS}$는 빛의 전파 시간을 정밀하게 측정하므로 작은 시각 오차도 큰 거리 오차로 바뀐다. 상대론적 보정은 실제 위치 측정에 필요하므로 고려할 필요가 없다는 ㄷ은 틀리다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$\\frac{d\\tau }{dt}= \\sqrt{1- \\frac{v^{2}}{c^{2}}}$",
+        "$\\frac{\\Delta f}{f}\\approx \\frac{\\Delta \\Phi }{c^{2}}$"
+      ]
+    },
+    {
+      "number": 16,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "카르노 기관의 온도는 절대온도로 계산해야 한다. 고온은 $127+ 273= 400\\,\\mathrm{K}$, 저온은 $27+ 273= 300\\,\\mathrm{K}$이다.",
+        "한 주기에서 $\\frac{Q_{\\mathrm{out}}}{Q_{\\mathrm{in}}}= \\frac{T_{c}}{T_{h}}= \\frac{3}{4}$이므로 $Q_{\\mathrm{in}}= \\frac{150\\times 4}{3}= 200\\,\\mathrm{J}$이다. 기관이 한 일은 $W= Q_{\\mathrm{in}}- Q_{\\mathrm{out}}= 50\\,\\mathrm{J}$이다.",
+        "한 주기가 $0.5\\,\\mathrm{s}$이므로 일률은 $\\frac{50}{0.5}= 100\\,\\mathrm{W}$이다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$\\eta = 1- \\frac{T_{c}}{T_{h}}= \\frac{1}{4}$",
+        "$Q_{\\mathrm{in}}= 200\\,\\mathrm{J}$",
+        "$W= 50\\,\\mathrm{J}$",
+        "$P= \\frac{W}{\\Delta t}= 100\\,\\mathrm{W}$"
+      ]
+    },
+    {
+      "number": 17,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "가로축은 온도 $T$이므로 이상기체 법칙 $V= \\frac{nRT}{P}$로 각 상태의 부피를 비교한다. $A$에서 $B$로 갈 때 압력은 일정하고 온도가 $T_{0}$에서 $2T_{0}$로 증가하므로 부피는 두 배이다. ㄱ은 옳다.",
+        "$B$와 $C$를 잇는 직선의 연장선은 원점을 지나므로 $\\frac{P}{T}$가 일정하다. 따라서 $V= \\frac{nR}{\\left(\\frac{P}{T}\\right)}$가 일정한 등적 과정이고 ㄴ은 옳다.",
+        "$C$와 $A$는 같은 온도 $T_{0}$에 있다. $B$의 온도는 $2T_{0}$이고 압력이 $A$와 같으므로 원점을 지나는 $BC$선에서 $C$의 압력은 $A$의 절반이다. 따라서 $C$에서 $A$로 압력이 두 배가 된다는 ㄷ도 옳다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$V= \\frac{nRT}{P}$",
+        "$V_B= 2V_A$",
+        "$V_{C}= V_B$",
+        "$P_A= 2P_C$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2c_KO.pdf",
+        "page": 9,
+        "rect": [
+          97.409,
+          172.591,
+          312.098,
+          305.256
+        ]
+      }
+    },
+    {
+      "number": 18,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "외부와 단열되어 있으므로 두 물 사이의 열 교환만 고려한다. 비열이 같아 $50c\\left(T- 20\\right)= 100c\\left(80- T\\right)$이고, 평형 온도는 $60^\\circ C$이다. ㄱ은 옳다.",
+        "열이 유한한 온도 차이를 두고 고온 물에서 저온 물로 흐르는 비가역 과정이므로 전체 엔트로피는 증가한다. 직접 계산해도 $\\Delta S= c\\left[50\\ln \\left(\\frac{333.15}{293.15}\\right)+ 100\\ln \\left(\\frac{333.15}{353.15}\\right)\\right]> 0$이다. ㄴ은 옳다.",
+        "전체 에너지는 이 과정에서 보존된다. 저절로 처음 상태로 분리되지 않는 이유는 에너지 비보존이 아니라 열역학 제2법칙이다. 따라서 ㄷ은 틀리고 정답은 ③이다."
+      ],
+      "formula": [
+        "$50\\left(T- 20\\right)= 100\\left(80- T\\right)$",
+        "$T= 60\\,^\\circ C$",
+        "$\\Delta S= \\sum mc\\,\\ln \\left(\\frac{T_{f}}{T_{i}}\\right)> 0$"
+      ]
+    }
+  ],
+  "T2d": [
+    {
+      "number": 1,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "길이 $x_{0}$와 $l- x_{0}$인 두 용수철 부분의 상수는 각각 $\\frac{kl}{x_{0}}, \\frac{kl}{\\left(l- x_{0}\\right)}$이다. 평형점에서 왼쪽으로 $\\frac{x_{0}}{2}$만큼 당겼으므로 양쪽 용수철이 모두 복원력을 주며, 합성 상수는 $k_{\\mathrm{eff}}= \\frac{kl^{2}}{\\left[x_{0}\\left(l- x_{0}\\right)\\right]}$이다.",
+        "정지시켜 놓는 순간은 진동의 끝점이다. 운동에너지는 $0$, 퍼텐셜 에너지는 최대이며 복원력 크기도 최대이다. 따라서 $K- U$는 최솟값이므로 ㄱ은 틀리고 ㄴ·ㄷ은 옳다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$k_{\\mathrm{eff}}= \\frac{kl}{x_{0}}+ \\frac{kl}{\\left(l- x_{0}\\right)}= \\frac{kl^{2}}{\\left[x_{0}\\left(l- x_{0}\\right)\\right]}$",
+        "$A= \\frac{x_{0}}{2}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          120,
+          264,
+          290,
+          339
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "처음 끝점에서 정지한 입자가 평형점 $x= x_{0}$에 처음 도달하는 시간은 주기의 $\\frac{1}{4}$이다. $t_{1}= \\left(\\frac{\\pi }{2}\\right)\\sqrt{\\frac{m}{k_{\\mathrm{eff}}}}$이다.",
+        "$x_{0}= \\frac{l}{4}$를 대입하면 $k_{\\mathrm{eff}}= \\frac{16k}{3}$이므로 $t_{1}= \\frac{\\pi \\sqrt{\\frac{3m}{k}}}{8}$이다. 따라서 $\\frac{kt_{1}^{2}}{\\left(4\\pi ^{2}m\\right)}= \\frac{3}{256}$이다. 정답은 ②이다."
+      ],
+      "formula": [
+        "$t_{1}= \\frac{T}{4}= \\left(\\frac{\\pi }{2}\\right)\\sqrt{\\frac{m}{k_{\\mathrm{eff}}}}$",
+        "$k_{\\mathrm{eff}}= \\frac{16k}{3}$",
+        "$\\frac{kt_{1}^{2}}{\\left(4\\pi ^{2}m\\right)}= \\frac{3}{256}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 1,
+        "rect": [
+          440,
+          267,
+          607,
+          345
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "$t_{1}= \\left(\\frac{\\pi }{2}\\right)\\sqrt{\\frac{mx_{0}\\left(l- x_{0}\\right)}{\\left(kl^{2}\\right)}}$이므로 $t_{1}$은 $x_{0}\\left(l- x_{0}\\right)$가 최대일 때 최대이다. 허용 범위 안의 $x_{0}= \\frac{l}{2}$에서 최대가 된다.",
+        "이때 $k_{\\mathrm{eff}}= 4k$, 진폭 $A= \\frac{l}{4}$이므로 전체 진동에너지는 $E= \\frac{k_{\\mathrm{eff}}\\,A^{2}}{2}= \\frac{kl^{2}}{8}$이다. 끝점에서 평형점까지 $K\\left(t\\right)= E\\,\\sin ^{2}\\left(\\omega t\\right)$이다.",
+        "$0$부터 $\\frac{T}{4}$까지 $\\sin ^{2}$의 평균은 $\\frac{1}{2}$이므로 평균 운동에너지는 $\\frac{E}{2}= \\frac{kl^{2}}{16}$이다. 따라서 $\\frac{\\langle K\\rangle }{\\left(kl^{2}\\right)}= \\frac{1}{16}$이며 정답은 ①이다."
+      ],
+      "formula": [
+        "$x_{0}= \\frac{l}{2}$",
+        "$E= \\frac{kl^{2}}{8}$",
+        "$\\langle K\\rangle = \\frac{E}{2}= \\frac{kl^{2}}{16}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          120,
+          273,
+          292,
+          347
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "남은 물체의 질량중심은 큰 구 중심에서 공동의 반대쪽으로 $\\frac{R}{14}$ 치우쳐 있다. 굴러가면 질량중심 높이가 주기적으로 달라지고, 중력 퍼텐셜의 최솟값을 중심으로 되돌아오는 주기 운동을 한다. ㄱ은 옳다.",
+        "미끄러지지 않는 접촉점의 순간 속도는 $0$이므로 정지마찰력과 수직항력은 전체 물체에 일을 하지 않는다. 따라서 운동에너지와 중력 퍼텐셜의 합인 해밀토니언은 보존되어 ㄴ도 옳다.",
+        "질량중심에 대한 중력 돌림힘은 $0$이지만 접촉력은 일반적으로 질량중심에 대해 돌림힘을 준다. 따라서 질량중심에 대한 각운동량이 보존된다는 ㄷ은 틀리다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$a_{\\mathrm{CM}}= \\frac{R}{14}$",
+        "$K+ Mg\\,h_{\\mathrm{CM}}= \\mathrm{const}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 2,
+        "rect": [
+          451.396,
+          173.311,
+          595.216,
+          313.77
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "원래 완전한 구의 질량을 $M_{0}$라 하면 공동의 부피가 전체의 $\\frac{1}{8}$이므로 남은 질량 $M= \\frac{7M_{0}}{8}$이다. 제거한 구의 질량은 $\\frac{M}{7}$이고 $M_{0}= \\frac{8M}{7}$이다.",
+        "두 구 중심을 잇는 축은 남은 물체의 질량중심도 지난다. 그 축에 대한 관성모멘트는 $\\left(\\frac{2}{5}\\right)\\left(\\frac{8M}{7}\\right)R^{2}- \\left(\\frac{2}{5}\\right)\\left(\\frac{M}{7}\\right)\\left(\\frac{R}{2}\\right)^{2}= \\frac{31MR^{2}}{70}$이다.",
+        "그 축에 수직인 질량중심 축의 관성모멘트는 평행축 정리를 적용하면 $\\frac{197MR^{2}}{490}$으로 더 작다. 따라서 주관성 모멘트의 최댓값은 $\\frac{31MR^{2}}{70}$이고 정답은 ④이다."
+      ],
+      "formula": [
+        "$M_{0}= \\frac{8M}{7}, m_{\\mathrm{hole}}= \\frac{M}{7}$",
+        "$I_{\\mathrm{parallel}}= \\frac{31MR^{2}}{70}$",
+        "$I_{\\mathrm{perpendicular}}= \\frac{197MR^{2}}{490}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          132,
+          185,
+          282,
+          328
+        ]
+      }
+    },
+    {
+      "number": 6,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "평형에서는 질량중심이 큰 구 중심보다 $a= \\frac{R}{14}$ 아래에 있다. 작은 회전각 $\\theta $에 대한 퍼텐셜 변화는 $Mg\\,a\\left(1- \\cos \\theta \\right)\\approx \\frac{Mg\\,a\\,\\theta ^{2}}{2}$이다.",
+        "평형의 접촉점에서 질량중심까지의 거리는 $R- a= \\frac{13R}{14}$이다. 굴림 축에 대한 질량중심 관성모멘트는 $\\frac{197MR^{2}}{490}$이므로 접촉점에 대한 유효 관성모멘트는 $I_{\\mathrm{eff}}= \\frac{197MR^{2}}{490}+ M\\left(\\frac{13R}{14}\\right)^{2}= \\frac{177MR^{2}}{140}$이다.",
+        "미소 진동 방정식은 $I_{\\mathrm{eff}}\\,\\theta ^{\\prime\\prime}+ Mg\\,a\\,\\theta = 0$이다. 따라서 $\\omega ^{2}= \\frac{10g}{\\left(177R\\right)}, \\frac{\\omega ^{2}R}{g}= \\frac{10}{177}$이며 정답은 ③이다."
+      ],
+      "formula": [
+        "$a= \\frac{R}{14}$",
+        "$I_{\\mathrm{eff}}= \\frac{177MR^{2}}{140}$",
+        "$\\omega ^{2}= \\frac{Mga}{I_{\\mathrm{eff}}}= \\frac{10g}{\\left(177R\\right)}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 3,
+        "rect": [
+          450,
+          185,
+          598,
+          328
+        ]
+      }
+    },
+    {
+      "number": 7,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "위쪽 진공에서의 전기장은 실제 전하 $-q$와 경계 아래 $z= -d$에 둔 영상전하 $\\frac{+q}{3}$이 만드는 장으로 구할 수 있다. 실제 음전하는 양의 영상전하에 끌리므로 힘은 $-z$ 방향이다. ㄱ은 틀리다.",
+        "$O$에서는 접선 성분이 없고 법선 전속밀도가 연속이므로 $\\epsilon _{0}\\,E\\left(O+ \\right)= 2\\epsilon _{0}\\,E\\left(O- \\right)$이다. 따라서 $E\\left(O+ \\right)= 2E\\left(O- \\right)$로 ㄴ은 옳다.",
+        "$P+ = \\left(d, 0, 0+ \\right)$에서 실제 전하와 영상전하까지의 거리가 같다. 전기장 성분의 비는 $E_{x}: E_{z}= \\left(-1+ \\frac{1}{3}\\right): \\left(1+ \\frac{1}{3}\\right)= -1: 2$이다. $+z$축과 이루는 예각은 $\\arctan \\left(\\frac{1}{2}\\right)< \\frac{\\pi }{4}$이므로 ㄷ도 옳다. 정답은 ④이다."
+      ],
+      "formula": [
+        "$q_{i}mage= \\frac{+q}{3}$",
+        "$E\\left(O+ \\right)= 2E\\left(O- \\right)$",
+        "$E_{x}: E_{z}= -1: 2$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 4,
+        "rect": [
+          120.313,
+          216.239,
+          289.075,
+          355.739
+        ]
+      }
+    },
+    {
+      "number": 8,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "유전체 표면의 분극 전하 밀도는 표면에 수직한 내부 전기장 성분에 비례한다. 내부장은 경계 위 전하의 유효 크기를 바꾼 쿨롱장과 같으므로, 경계면에서 축으로부터의 수평거리 $\\rho $에 따른 밀도는 $\\frac{d}{\\left(\\rho ^{2}+ d^{2}\\right)^{\\frac{3}{2}}}$에 비례한다.",
+        "$O$에서는 $\\rho = 0$이고 $P$에서는 $\\rho = d$이다. 따라서 $\\frac{\\sigma_P}{\\sigma_O}= \\frac{d^{3}}{\\left(2d^{2}\\right)^{\\frac{3}{2}}}= 2^{\\frac{-3}{2}}$이다. $\\alpha = \\frac{-3}{2}$에 해당하는 ③이 정답이다."
+      ],
+      "formula": [
+        "$\\sigma \\left(\\rho \\right)\\propto \\frac{d}{\\left(\\rho ^{2}+ d^{2}\\right)^{\\frac{3}{2}}}$",
+        "$\\frac{\\sigma_P}{\\sigma_O}= 2^{\\frac{-3}{2}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 4,
+        "rect": [
+          438.925,
+          216.239,
+          607.687,
+          355.739
+        ]
+      }
+    },
+    {
+      "number": 9,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "진공 영역의 유전체 경계 효과는 $z= -d$의 영상전하 $\\frac{+q}{3}$으로 바꿀 수 있다. 실제 전하 $-q$와 영상전하 사이의 거리는 $2d$이다.",
+        "실제 전하가 받는 힘의 크기는 $\\frac{q\\left(\\frac{q}{3}\\right)}{\\left[4\\pi \\epsilon _{0}\\left(2d\\right)^{2}\\right]}= \\frac{\\left(\\frac{1}{12}\\right)q^{2}}{\\left(4\\pi \\epsilon _{0}d^{2}\\right)}$이다. 따라서 $\\beta = \\frac{1}{12}$이며 정답은 ①이다."
+      ],
+      "formula": [
+        "$F= \\frac{q^{2}}{\\left[48\\pi \\epsilon _{0}\\,d^{2}\\right]}$",
+        "$\\beta = \\frac{1}{12}$"
+      ]
+    },
+    {
+      "number": 10,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "같은 축 위에서 서로 반대인 두 자기쌍극자는 서로 밀어내며 자기력 크기는 $\\frac{6\\mu _{0}m^{2}}{\\left(4\\pi d^{4}\\right)}$이다. 처음에 $A$가 받는 알짜힘이 $0$이려면 전기력은 인력이어야 하므로 $q_{A}= -q_{B}$이다. ㄴ은 옳다.",
+        "두 자기모멘트를 동시에 뒤집어도 서로 반대라는 상대적 배치는 유지된다. 자기력과 전기력이 모두 처음과 같으므로 ㄱ도 옳다.",
+        "두 모멘트가 모두 $+x$일 때에는 같은 축 방향 자기쌍극자 사이의 자기력도 인력이다. 전기력과 자기력이 모두 $A$를 $B$ 쪽인 $+x$로 당기므로 ㄷ도 옳다. 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$F_{\\mathrm{mag,antiparallel}}=\\frac{6\\mu_0m^2}{4\\pi d^4}$",
+        "$q_{A}= -q_{B}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 5,
+        "rect": [
+          430.2,
+          207.0,
+          616.6,
+          291.0
+        ]
+      }
+    },
+    {
+      "number": 11,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "처음의 축 방향 반평행 배치에서는 반발 자기력 $\\frac{6\\mu _{0}m^{2}}{\\left(4\\pi d^{4}\\right)}$와 인력 $\\frac{q^{2}}{\\left(4\\pi \\epsilon _{0}d^{2}\\right)}$이 같으므로 $d^{2}= \\frac{6\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}$이다.",
+        "두 모멘트가 모두 $+y$이면 두 쌍극자는 연결선에 수직한 평행 배치가 된다. 이때 자기력은 반발력이고 크기는 $\\frac{3\\mu _{0}m^{2}}{\\left(4\\pi \\left(d^{\\prime}\\right)^{4}\\right)}$이다. 전기력과의 평형에서 $\\left(d^{\\prime}\\right)^{2}= \\frac{3\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}$이다.",
+        "따라서 $\\frac{d^{\\prime}}{d}= \\frac{1}{\\sqrt{2}}= 2^{\\frac{-1}{2}}$이다. $\\alpha = \\frac{-1}{2}$에 해당하는 ②가 정답이다."
+      ],
+      "formula": [
+        "$d^{2}= \\frac{6\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}$",
+        "$\\left(d^{\\prime}\\right)^{2}= \\frac{3\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}$",
+        "$\\frac{d^{\\prime}}{d}= 2^{\\frac{-1}{2}}$"
+      ],
+      "figure": {
+        "source": "KPhE_2024_T2d_KO.pdf",
+        "page": 6,
+        "rect": [
+          111.6,
+          207.0,
+          298.0,
+          291.0
+        ]
+      }
+    },
+    {
+      "number": 12,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "처음의 반평행 축 배치에서 자기적 반발력과 전기적 인력의 평형은 $\\frac{6\\mu _{0}m^{2}}{\\left(4\\pi d^{4}\\right)}= \\frac{q^{2}}{\\left(4\\pi \\epsilon _{0}d^{2}\\right)}$이다.",
+        "정리하면 $d^{2}= \\frac{6\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}$이다. 빛의 속력 관계 $\\mu _{0}\\epsilon _{0}= \\frac{1}{c^{2}}$를 사용하면 $d= \\frac{\\sqrt{6}m}{\\left(qc\\right)}$이다. 따라서 $\\beta = 6$이며 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$d^{2}= \\frac{6\\mu _{0}\\epsilon _{0}m^{2}}{q^{2}}= \\frac{6m^{2}}{\\left(q^{2}c^{2}\\right)}$",
+        "$\\beta = 6$"
+      ]
+    },
+    {
+      "number": 13,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "$V_{0}= 0$일 때 상자 범위는 각 축 $-a$부터 $a$까지이고 에너지는 $C\\left(n_{x}^{2}+ n_{y}^{2}+ n_{z}^{2}\\right), C= \\frac{\\pi ^{2}\\hbar ^{2}}{\\left(8ma^{2}\\right)}$이다. 바닥상태는 $\\left(1, 1, 1\\right)$로 $E_{0}= 3C$, 첫 들뜬 상태는 $\\left(2, 1, 1\\right)$의 순열로 $6C= 2E_{0}$이다. ㄱ은 옳다.",
+        "$V_{0}< 0$이면 양의 팔분공간에 인력 퍼텐셜이 추가된다. 원래 바닥상태를 시험함수로 써도 평균 에너지가 $E_{0}+ \\frac{V_{0}}{8}< E_{0}$이므로 실제 바닥상태 에너지도 $E_{0}$보다 작다. ㄴ은 옳다.",
+        "음의 퍼텐셜이 있는 영역에는 바닥상태가 더 집중되는 방향으로 변한다. 이 영역에서의 확률은 원래의 $\\frac{1}{8}$보다 작아지는 것이 아니므로 ㄷ은 틀리다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$E_{n}= C\\left(n_{x}^{2}+ n_{y}^{2}+ n_{z}^{2}\\right)$",
+        "$E_{\\mathrm{ground}}= 3C, E_{\\mathrm{first\\,excited}}= 6C$",
+        "$\\langle U\\rangle = \\frac{V_{0}}{8}$"
+      ]
+    },
+    {
+      "number": 14,
+      "answer": 2,
+      "status": "verified",
+      "explanation": [
+        "퍼텐셜의 $1$차 섭동 보정은 바닥상태에서의 평균값 $\\langle U\\rangle $이다. 원래 바닥상태의 확률밀도는 각 좌표에 대해 짝함수이다.",
+        "양의 $x, y, z$인 영역 $I$에 있을 확률은 $\\left(\\frac{1}{2}\\right)^{3}= \\frac{1}{8}$이다. 따라서 $\\Delta E= \\frac{V_{0}}{8}, \\alpha = \\frac{1}{8}$이며 $|\\alpha |= \\frac{1}{8}$에 해당하는 ②가 정답이다."
+      ],
+      "formula": [
+        "$\\Delta E^{1}= \\langle \\psi _{111}|U|\\psi _{111}\\rangle = \\frac{V_{0}}{8}$",
+        "$|\\alpha |= \\frac{1}{8}$"
+      ]
+    },
+    {
+      "number": 15,
+      "answer": 5,
+      "status": "verified",
+      "explanation": [
+        "첫 들뜬 상태의 축퇴 공간은 $|211>,\\,|121> , |112>$ 세 상태이다. 양의 절반 구간에서 같은 고유함수의 확률 적분은 $\\frac{1}{2}$이므로 섭동행렬의 대각 원소는 모두 $\\frac{V_{0}}{8}$이다.",
+        "정규화된 1차원 함수에 대해 양의 구간의 교차 적분은 $\\int _{0}^{a}\\,\\phi _{1}\\phi _{2}\\,dx= \\frac{4}{\\left(3\\pi \\right)}$이다. 따라서 서로 다른 두 상태 사이의 비대각 원소는 $V_{0}\\times \\left[\\frac{4}{\\left(3\\pi \\right)}\\right]^{2}\\times \\left(\\frac{1}{2}\\right)= \\frac{8V_{0}}{\\left(9\\pi ^{2}\\right)}$이다.",
+        "대각이 $A= \\frac{V_{0}}{8}$, 비대각이 $B= \\frac{8V_{0}}{\\left(9\\pi ^{2}\\right)}$인 행렬의 고유값은 $A+ 2B$ 하나와 $A- B$ 두 개이다. 갈라진 에너지 차이는 $3|B|= \\frac{8|V_{0}|}{\\left(3\\pi ^{2}\\right)}$이므로 $\\beta = \\frac{8}{3}$이며 정답은 ⑤이다."
+      ],
+      "formula": [
+        "$\\int _{0}^{a}\\,\\phi _{1}\\phi _{2}\\,dx= \\frac{4}{\\left(3\\pi \\right)}$",
+        "$A= \\frac{V_{0}}{8}, B= \\frac{8V_{0}}{\\left(9\\pi ^{2}\\right)}$",
+        "$\\Delta E_e= 3|B|= \\frac{8|V_{0}|}{\\left(3\\pi ^{2}\\right)}$"
+      ]
+    },
+    {
+      "number": 16,
+      "answer": 4,
+      "status": "verified",
+      "explanation": [
+        "상태방정식에서 $P= \\frac{RT}{\\left(V- b\\right)}- \\frac{a}{V^{2}}$이다. 열역학 관계 $\\left(\\frac{\\partial U}{\\partial V}\\right)_{T}= T\\left(\\frac{\\partial P}{\\partial T}\\right)_{V}- P$를 쓰면 $\\frac{a}{V^{2}}$이므로 $U= u\\left(T\\right)- \\frac{a}{V}$이다. 따라서 같은 부피에서 $T_{1}\\to T_{2}, T_{2}\\to T_{1}$인 두 등적 과정의 $\\Delta U$는 크기가 같고 부호가 반대이다. ㄱ은 옳다.",
+        "등온 과정의 헬름홀츠 자유에너지 변화는 $\\Delta F= -\\int P\\,dV$이다. 두 등온 과정의 합에는 $-R\\left(T_{2}- T_{1}\\right)\\ln \\left[\\frac{\\left(V_{2}- b\\right)}{\\left(V_{1}- b\\right)}\\right]$가 남아 일반적으로 $0$이 아니다. ㄴ은 틀리다.",
+        "맥스웰 관계로 $\\left(\\frac{\\partial S}{\\partial V}\\right)_{T}= \\left(\\frac{\\partial P}{\\partial T}\\right)_{V}= \\frac{R}{\\left(V- b\\right)}$이다. 등온 부피 변화의 $\\Delta S= R\\ln \\left[\\frac{\\left(V_{f}- b\\right)}{\\left(V_{i}- b\\right)}\\right]$는 온도와 무관하므로 두 반대 방향 등온 과정에서 같은 크기, 반대 부호이다. ㄷ도 옳아 정답은 ④이다."
+      ],
+      "formula": [
+        "$P= \\frac{RT}{\\left(V- b\\right)}- \\frac{a}{V^{2}}$",
+        "$U= u\\left(T\\right)- \\frac{a}{V}$",
+        "$\\Delta S_{\\mathrm{isothermal}}= R\\,\\ln \\left[\\frac{\\left(V_{f}- b\\right)}{\\left(V_{i}- b\\right)}\\right]$"
+      ]
+    },
+    {
+      "number": 17,
+      "answer": 1,
+      "status": "verified",
+      "explanation": [
+        "반데르발스 기체의 내부에너지는 $U= u\\left(T\\right)- \\frac{a}{V}$이다. 제시된 과정은 등온이므로 $\\Delta U= a\\left(\\frac{1}{V_{i}}- \\frac{1}{V_{f}}\\right)$이다.",
+        "$3b$에서 $5b$까지의 변화는 $\\Delta U_{1}= a\\left(\\frac{1}{3b}- \\frac{1}{5b}\\right)= \\frac{2a}{\\left(15b\\right)}$이다. $5b$에서 $7b$까지는 $\\Delta U_{2}= a\\left(\\frac{1}{5b}- \\frac{1}{7b}\\right)= \\frac{2a}{\\left(35b\\right)}$이다.",
+        "따라서 $\\frac{\\Delta U_{2}}{\\Delta U_{1}}= \\frac{15}{35}= \\frac{3}{7}$이며 정답은 ①이다."
+      ],
+      "formula": [
+        "$\\Delta U= a\\left(\\frac{1}{V_{i}}- \\frac{1}{V_{f}}\\right)$",
+        "$\\Delta U_{1}= \\frac{2a}{\\left(15b\\right)}, \\Delta U_{2}= \\frac{2a}{\\left(35b\\right)}$",
+        "$\\frac{\\Delta U_{2}}{\\Delta U_{1}}= \\frac{3}{7}$"
+      ]
+    },
+    {
+      "number": 18,
+      "answer": 3,
+      "status": "verified",
+      "explanation": [
+        "등온 엔트로피 변화는 맥스웰 관계를 적분해 $\\Delta S=\\int\\frac{R}{V-b}\\,\\mathrm{d}V=R\\ln[(V_f-b)/(V_i-b)]$이다.",
+        "$V_{i}= 3b, V_{f}= 5b$를 대입하면 $\\Delta S= R\\ln \\left(\\frac{4b}{2b}\\right)= R\\ln 2$이다. 부피가 증가하므로 양수이고 $\\frac{|\\Delta S|}{\\left(R\\ln 2\\right)}= 1$이다. 정답은 ③이다."
+      ],
+      "formula": [
+        "$\\Delta S= R\\,\\ln \\left[\\frac{\\left(5b- b\\right)}{\\left(3b- b\\right)}\\right]= R\\,\\ln 2$",
+        "$\\frac{|\\Delta S|}{\\left(R\\,\\ln 2\\right)}= 1$"
+      ]
+    }
+  ]
+}

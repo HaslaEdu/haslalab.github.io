@@ -1,0 +1,5338 @@
+{
+ "version": 4,
+ "method": "Separate source-color and grayscale ink masks are curve-fitted with Potrace 1.16. Tiny islands retain native contours in revision 2. Every final asset passes raw-source ink/local-edge/transparency checks and all source/vector pairs were visually compared. Failed automatic or visual candidates retain the preceding native contours byte-for-byte. No generated content or embedded raster.",
+ "potrace": {
+  "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+  "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+  "turdsize": 0,
+  "alphamax": 1,
+  "opticurve": true,
+  "opttolerance": 0.2,
+  "unit": 100,
+  "native_small_island_bbox_area_max_pixels": 80
+ },
+ "compression": {
+  "format": "SVGZ (gzip)",
+  "level": 9,
+  "mtime": 0,
+  "lossless": true,
+  "uncompressed_bytes": 90103696,
+  "compressed_bytes": 11992613,
+  "decompression_checked_for_all_assets": true
+ },
+ "visual_review": {
+  "status": "passed",
+  "unique_crops": 79,
+  "source_comparison_contact_sheets": 7,
+  "checked": "All source/vector pairs inspected for dots, thin/dashed lines, hard corners, arrowheads, numerical labels, N/S lettering, gray/color object shades and label contrast polarity. Six automatic passes were visually rejected for color-layer contrast/boundary degradation and restored to the checked original native contour assets."
+ },
+ "figures": {
+  "29adecc63abb5cf2": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 2,
+   "rect": [
+    164,
+    125,
+    331,
+    225
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 1,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 1,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p2-29adecc63abb5cf2.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "4c450a982cf0a81e92b045b85da1412c7b73d4dc8ec3c56c37ad187dedfef58f",
+   "svgBytes": 157872,
+   "uncompressedSvgSha256": "fbd2436c8936437f413985d67da6f864800816a36a18952de05e6db8b2843d53",
+   "uncompressedSvgBytes": 609943,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    501,
+    300
+   ],
+   "grayscale_levels": 32,
+   "paths": 64,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.926933,
+   "transparent_fraction": 0.847179,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 31,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "38353dc474884659": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 2,
+   "rect": [
+    552,
+    156,
+    690,
+    264
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 2,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 2,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p2-38353dc474884659.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "8b2ec0a12f2610ea5faae3c392a63beb47437761efbba574d424c0dc488aab0d",
+   "svgBytes": 89468,
+   "uncompressedSvgSha256": "0fb9e881142bdffeb817f00c348e580d86e8a3453a4f56e7f1077582488b039a",
+   "uncompressedSvgBytes": 329008,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    414,
+    324
+   ],
+   "grayscale_levels": 32,
+   "paths": 60,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.942225,
+   "transparent_fraction": 0.894346,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 20,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "6be32d06d5e21dd9": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 3,
+   "rect": [
+    540,
+    166.7,
+    685,
+    263
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 4,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 4,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p3-6be32d06d5e21dd9.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    435,
+    289
+   ],
+   "paths": 368,
+   "ink_recall_within_1_5_pixels": 0.997689,
+   "ink_precision_within_1_5_pixels": 0.999901,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999938,
+   "ink_iou": 0.970585,
+   "transparent_fraction": 0.863962,
+   "corner_alpha": [
+    255,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999938,
+   "svgSha256": "5a57f56b76eb34a10a3f6a42204fc40de5633e9c56b5dede543c9c24b5ddfdea",
+   "svgBytes": 41080,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "e077bb440604def9f1ad39df637f4507bdc0444b86c13e45c40261e2f0e064f7",
+   "uncompressedSvgBytes": 276426,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.996986,
+    "ink_precision_within_1_5_pixels": 0.999905,
+    "ink_precision_within_2_pixels": 0.999905,
+    "local_contrast_edge_recall_within_2_pixels": 0.999938,
+    "ink_iou": 0.904429,
+    "small_source_components_up_to_80_pixels": 23,
+    "small_source_components_without_nearby_vector_ink": 3
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "73de9812f22cedb2": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 4,
+   "rect": [
+    545,
+    145,
+    653,
+    253
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 6,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 6,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p4-73de9812f22cedb2.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "2d8bcf9b8de5757fb9895a47e27a3d2132d235616f83e6b8064b468ec485932d",
+   "svgBytes": 45771,
+   "uncompressedSvgSha256": "9166753ffad0e49a799c773cc7a26275b4ef3ae5fe2354ef640f4ad112187270",
+   "uncompressedSvgBytes": 360166,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    324,
+    324
+   ],
+   "grayscale_levels": 32,
+   "paths": 337,
+   "ink_recall_within_1_5_pixels": 0.999612,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999114,
+   "ink_iou": 0.939639,
+   "transparent_fraction": 0.822207,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 6,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "473a149ba2660e62": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 5,
+   "rect": [
+    165,
+    152,
+    315,
+    253
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 7,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 7,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p5-473a149ba2660e62.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    450,
+    303
+   ],
+   "paths": 277,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999591,
+   "ink_iou": 0.988264,
+   "transparent_fraction": 0.823454,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999455,
+   "svgSha256": "f2057dccb8979395c3cbb2a2fbcc8c389c4ff64d7bb69306e86b7cd2a382c8ad",
+   "svgBytes": 36757,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "a6c5288e4996a1016b03788dd194c3143936216c7d30764b65c8dd4bc505df68",
+   "uncompressedSvgBytes": 234217,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T1b Q7: colored graph boundary developed light gaps after separate-color curve fitting.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.991213,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.981132,
+    "ink_iou": 0.931582,
+    "small_source_components_up_to_80_pixels": 1,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "f9a4d41e348f1b1a": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 5,
+   "rect": [
+    508,
+    139,
+    720,
+    218
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 8,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 8,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p5-f9a4d41e348f1b1a.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "432e2ec62f392004747414a9da2520ea9794dbf7f74aa7f23056298e61b7aeb6",
+   "svgBytes": 42858,
+   "uncompressedSvgSha256": "ef18b86f3a1faa84aa07900bf1c494a732bc58cbe75e05d1ba953b63d6e77fab",
+   "uncompressedSvgBytes": 174120,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    636,
+    237
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999781,
+   "ink_iou": 0.969374,
+   "transparent_fraction": 0.893613,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 28,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "9780867b03f5e7b3": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 6,
+   "rect": [
+    111,
+    170,
+    403,
+    260
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 9,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 9,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p6-9780867b03f5e7b3.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    876,
+    270
+   ],
+   "paths": 250,
+   "ink_recall_within_1_5_pixels": 0.99958,
+   "ink_precision_within_1_5_pixels": 0.999812,
+   "ink_precision_within_2_pixels": 0.999841,
+   "local_contrast_edge_recall_within_2_pixels": 0.999736,
+   "ink_iou": 0.995508,
+   "transparent_fraction": 0.672053,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.99973,
+   "svgSha256": "cb38ddaa1d750a3723edc92d121fa4cb94ad1916db9cf0a8ca6f442e8d64c42c",
+   "svgBytes": 79444,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "38b118a937c9ef543995c32b1ecacd15f132ae2a938fba41031a5b563dcda4cb",
+   "uncompressedSvgBytes": 348409,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.999609,
+    "ink_precision_within_1_5_pixels": 0.99974,
+    "ink_precision_within_2_pixels": 0.999783,
+    "local_contrast_edge_recall_within_2_pixels": 0.99978,
+    "ink_iou": 0.990416,
+    "small_source_components_up_to_80_pixels": 27,
+    "small_source_components_without_nearby_vector_ink": 3
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "41c94783e19a37e2": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 7,
+   "rect": [
+    170,
+    145,
+    330,
+    239
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 11,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 11,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p7-41c94783e19a37e2.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    480,
+    282
+   ],
+   "paths": 199,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.998692,
+   "transparent_fraction": 0.346956,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "9942a4f853f1f25baaa49d19e03c78c3b59040430773eefc4d1bd92d94baa224",
+   "svgBytes": 12535,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "e4f83bee8d58e18b67418fa605e567220138a4b643e32d51a51d31d4b5f9ee75",
+   "uncompressedSvgBytes": 74310,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T1b Q11: dark m1/m2 labels inside green blocks lost their original contrast polarity.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.994374,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.999777,
+    "ink_iou": 0.982835,
+    "small_source_components_up_to_80_pixels": 0,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "03e979a1fb799a38": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 7,
+   "rect": [
+    505,
+    158,
+    740,
+    209
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 12,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 12,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p7-03e979a1fb799a38.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    705,
+    153
+   ],
+   "paths": 249,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999923,
+   "ink_precision_within_2_pixels": 0.999923,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.985995,
+   "transparent_fraction": 0.859908,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "da911403aeb61116426df2ac1ca0390e982f81dbc88722b68638b397889f3346",
+   "svgBytes": 16521,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "ce06ad5f68ae412000b6f1494506b40ba31e649f30ddda2e5b377de14ad380b5",
+   "uncompressedSvgBytes": 105242,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T1b Q12: the filled blue projectile developed pale gaps around its original marking.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.999157,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.999892,
+    "ink_iou": 0.963463,
+    "small_source_components_up_to_80_pixels": 40,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "883037f525752771": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 8,
+   "rect": [
+    130,
+    177,
+    332,
+    234
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 13,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 13,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p8-883037f525752771.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "d6b9f4c58ec780b778b15adea5919e1662c651bca0f02b287ab308e70b2e4e7e",
+   "svgBytes": 30785,
+   "uncompressedSvgSha256": "70f1fa7b35c14d5f11ce1487101f58fa56249a4cf3ed03be34965ca9edc07011",
+   "uncompressedSvgBytes": 92851,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    606,
+    171
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999925,
+   "ink_iou": 0.986045,
+   "transparent_fraction": 0.742729,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "7ffed449c1487b4d": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 8,
+   "rect": [
+    545,
+    136,
+    672,
+    240
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 14,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 14,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p8-7ffed449c1487b4d.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "759ce6706c9820f36111b812cb1ed1604876c8548fd2e5585380b2afaa9b31a7",
+   "svgBytes": 96690,
+   "uncompressedSvgSha256": "b2ebe4c9aacaadbf39fe842059035f84a7ef7a3bb7e625cd670dbd2e98fde0f2",
+   "uncompressedSvgBytes": 336583,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    381,
+    312
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999917,
+   "ink_iou": 0.953275,
+   "transparent_fraction": 0.790354,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 1,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0cf31a72ffa0e400": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 9,
+   "rect": [
+    127,
+    127,
+    368,
+    239
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 15,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 15,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p9-0cf31a72ffa0e400.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    723,
+    336
+   ],
+   "paths": 1283,
+   "ink_recall_within_1_5_pixels": 0.999724,
+   "ink_precision_within_1_5_pixels": 0.999615,
+   "ink_precision_within_2_pixels": 0.999697,
+   "local_contrast_edge_recall_within_2_pixels": 0.997326,
+   "ink_iou": 0.988143,
+   "transparent_fraction": 0.836211,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.997772,
+   "svgSha256": "646a31e822e84700c05642ededdaca15e3cab583b5e8724358f95581a6c77c51",
+   "svgBytes": 38440,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "bf11530a26490a5a938516f72678780578878c93dc76d01f272abab48b1b31f0",
+   "uncompressedSvgBytes": 307048,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.999724,
+    "ink_precision_within_1_5_pixels": 0.999698,
+    "ink_precision_within_2_pixels": 0.999753,
+    "local_contrast_edge_recall_within_2_pixels": 0.997456,
+    "ink_iou": 0.979321,
+    "small_source_components_up_to_80_pixels": 2,
+    "small_source_components_without_nearby_vector_ink": 2
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "513aa6bc3ed76095": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 9,
+   "rect": [
+    535,
+    124,
+    706,
+    261
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 16,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 16,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p9-513aa6bc3ed76095.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "7dbaff6237c800bebda065873b91b1b2e6d74a9376a75eaed92489b03f72a301",
+   "svgBytes": 115765,
+   "uncompressedSvgSha256": "30d5824c399cdf22f92d20eece2cf0d074352cf8af39cadffb14e2333e97fdd7",
+   "uncompressedSvgBytes": 392541,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    513,
+    411
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.948744,
+   "transparent_fraction": 0.864179,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "c5c863dca5e6aed0": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 10,
+   "rect": [
+    159,
+    125,
+    338,
+    272
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 17,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 17,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p10-c5c863dca5e6aed0.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "04a44114dd190028a9613e7c6e84ca86195ef64cdc9633623ac61ba046bfea0c",
+   "svgBytes": 180550,
+   "uncompressedSvgSha256": "d8ba422b9f5c2fc3c9d000085230f0784b93ebdae01d4d432a34f0c29059f53d",
+   "uncompressedSvgBytes": 608609,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    537,
+    441
+   ],
+   "grayscale_levels": 32,
+   "paths": 54,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.998663,
+   "ink_precision_within_2_pixels": 0.999037,
+   "local_contrast_edge_recall_within_2_pixels": 0.999802,
+   "ink_iou": 0.930996,
+   "transparent_fraction": 0.871753,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 41,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "566b09e3012b6a65": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 10,
+   "rect": [
+    509,
+    143,
+    718,
+    265
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 18,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 18,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p10-566b09e3012b6a65.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "a5c76e3c55ad107dfe4ad8642ef859ae41ff92032a7e18c1960e17ccb1456bc9",
+   "svgBytes": 198719,
+   "uncompressedSvgSha256": "3e17baad9be40c74390555cf689c9d3dc1aef9da0f98efab5cfaf4c392e362b6",
+   "uncompressedSvgBytes": 713969,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    627,
+    366
+   ],
+   "grayscale_levels": 32,
+   "paths": 64,
+   "ink_recall_within_1_5_pixels": 0.999769,
+   "ink_precision_within_1_5_pixels": 0.999773,
+   "ink_precision_within_2_pixels": 0.999811,
+   "local_contrast_edge_recall_within_2_pixels": 0.99772,
+   "ink_iou": 0.968379,
+   "transparent_fraction": 0.845918,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 45,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "e9fa0c7eda6366a9": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 13,
+   "rect": [
+    202,
+    129,
+    310,
+    266
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 23,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 23,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p13-e9fa0c7eda6366a9.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "9c2fc30b9c2fd952cb93d24aeaada2c656cab31e2e521f99a815fc48fcdc31ef",
+   "svgBytes": 156710,
+   "uncompressedSvgSha256": "7a523402030c3e14f5d5257d69c7a675e16c54c454fb2808b183efb98d22eeda",
+   "uncompressedSvgBytes": 1369791,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    324,
+    411
+   ],
+   "grayscale_levels": 32,
+   "paths": 2308,
+   "ink_recall_within_1_5_pixels": 0.999297,
+   "ink_precision_within_1_5_pixels": 0.999026,
+   "ink_precision_within_2_pixels": 0.999728,
+   "local_contrast_edge_recall_within_2_pixels": 0.996101,
+   "ink_iou": 0.981423,
+   "transparent_fraction": 0.503169,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "4c20db7bfac8de91": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 14,
+   "rect": [
+    180,
+    141,
+    295,
+    265
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 25,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 25,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p14-4c20db7bfac8de91.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "paper_luminance": 230,
+   "source_pixels": [
+    345,
+    372
+   ],
+   "paths": 682,
+   "ink_recall_within_1_5_pixels": 0.975002,
+   "ink_precision_within_1_5_pixels": 0.966897,
+   "ink_precision_within_2_pixels": 0.979796,
+   "local_contrast_edge_recall_within_2_pixels": 0.997397,
+   "ink_iou": 0.858095,
+   "transparent_fraction": 0.849868,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.99735,
+   "svgSha256": "a16b2373a3b8eaf8bf064a39298eb7da90078696f2f1a5ba9cd6eb9b17bfe562",
+   "svgBytes": 38633,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "d227bf5c3158184aabd3dd5c1dfe38be3299d892e8158b92b51ab352970c891d",
+   "uncompressedSvgBytes": 310199,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.951612,
+    "ink_precision_within_1_5_pixels": 0.970067,
+    "ink_precision_within_2_pixels": 0.982707,
+    "local_contrast_edge_recall_within_2_pixels": 0.985574,
+    "ink_iou": 0.827702,
+    "small_source_components_up_to_80_pixels": 109,
+    "small_source_components_without_nearby_vector_ink": 15
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "f8d91149e5bb8594": {
+   "source": "KPhE_2023_T1b_KO.pdf",
+   "page": 14,
+   "rect": [
+    495,
+    125,
+    765,
+    265
+   ],
+   "uses": [
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 26,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-b.json",
+     "part": "T1b",
+     "number": 26,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1b_KO-p14-f8d91149e5bb8594.svgz",
+   "sourceSha256": "fb9077ea00222e3750011e2da6d43851fbf212cba534b822ea38b1d7b727b31d",
+   "svgSha256": "ed4abab99ca4152ee3af9b1b34087a8b40e010d6cdbfccfe5349056cc2d79d7e",
+   "svgBytes": 783940,
+   "uncompressedSvgSha256": "89be70caf465ad288cbcbfa1105473de192c08030554571db77b9fcee93e7a52",
+   "uncompressedSvgBytes": 2521983,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 230,
+   "source_pixels": [
+    810,
+    420
+   ],
+   "grayscale_levels": 32,
+   "paths": 56,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999519,
+   "ink_iou": 0.948957,
+   "transparent_fraction": 0.698742,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 73,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "72c2a70bfad18d8d": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 2,
+   "rect": [
+    448.4,
+    322.18,
+    802.4,
+    667.93
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 1,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 1,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p2-72c2a70bfad18d8d.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "8248d24b38b7e9bb8356835481f6d8d7280efd0508c3673f0d3cf040faae027b",
+   "svgBytes": 94311,
+   "uncompressedSvgSha256": "e67f5995fd36f705d4320741c9cf8047504743863420a83dcf584b122fa5e09b",
+   "uncompressedSvgBytes": 1407992,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1063,
+    1038
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.99972,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.98906,
+   "ink_iou": 0.990879,
+   "transparent_fraction": 0.774316,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 129,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0c031c7412ab8290": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 3,
+   "rect": [
+    267.47,
+    374.36,
+    871.63,
+    750.3
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 3,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 3,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p3-0c031c7412ab8290.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1813,
+    1128
+   ],
+   "paths": 821,
+   "ink_recall_within_1_5_pixels": 0.996243,
+   "ink_precision_within_1_5_pixels": 0.983815,
+   "ink_precision_within_2_pixels": 0.985888,
+   "local_contrast_edge_recall_within_2_pixels": 0.998754,
+   "ink_iou": 0.973898,
+   "transparent_fraction": 0.783716,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999972,
+   "svgSha256": "c2fcaede696997dfdf621ca30328ac928e7e5bcfad59e009ae4983dfb26c5d19",
+   "svgBytes": 286652,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "49227ca415e48b809e40fcf998260546095b394a6e5c0870760eaa96d39e1a3e",
+   "uncompressedSvgBytes": 1067358,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.995946,
+    "ink_precision_within_1_5_pixels": 0.984869,
+    "ink_precision_within_2_pixels": 0.986695,
+    "local_contrast_edge_recall_within_2_pixels": 0.998352,
+    "ink_iou": 0.962167,
+    "small_source_components_up_to_80_pixels": 197,
+    "small_source_components_without_nearby_vector_ink": 14
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "e6f80672d00d928b": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 3,
+   "rect": [
+    1491.52,
+    377.51,
+    1947.79,
+    709.4
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 4,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 4,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p3-e6f80672d00d928b.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "55139cfb42e35bec65b930bb4d8c431b1e9d355aed6a8473c57793e471de5eec",
+   "svgBytes": 109468,
+   "uncompressedSvgSha256": "f117e762f529453badf8e4db76edf0fe4da27a7951e1e925cf6e71631347fdeb",
+   "uncompressedSvgBytes": 1849770,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1370,
+    997
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999993,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999836,
+   "ink_iou": 0.977272,
+   "transparent_fraction": 0.840191,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 204,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "3e21b93104915e41": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 4,
+   "rect": [
+    346.13,
+    369.48,
+    975.47,
+    767.27
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 5,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 5,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p4-3e21b93104915e41.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1889,
+    1194
+   ],
+   "paths": 2246,
+   "ink_recall_within_1_5_pixels": 0.999718,
+   "ink_precision_within_1_5_pixels": 0.999988,
+   "ink_precision_within_2_pixels": 0.999994,
+   "local_contrast_edge_recall_within_2_pixels": 0.997321,
+   "ink_iou": 0.999133,
+   "transparent_fraction": 0.492817,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.997588,
+   "svgSha256": "b7138211f198b8d731108033ae61f40321eb686329a771a404a63d02b9529ad5",
+   "svgBytes": 599337,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "bce1fad61a39777d244384383c9e91c567c76845c1b12a984d829ba83015195d",
+   "uncompressedSvgBytes": 2137045,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.99974,
+    "ink_precision_within_1_5_pixels": 0.999987,
+    "ink_precision_within_2_pixels": 0.999993,
+    "local_contrast_edge_recall_within_2_pixels": 0.996888,
+    "ink_iou": 0.996799,
+    "small_source_components_up_to_80_pixels": 194,
+    "small_source_components_without_nearby_vector_ink": 8
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "84e3671b4749cdcc": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 5,
+   "rect": [
+    264.32,
+    281.56,
+    991.2,
+    651.2
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 7,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 7,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p5-84e3671b4749cdcc.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2182,
+    1110
+   ],
+   "paths": 66,
+   "ink_recall_within_1_5_pixels": 0.996923,
+   "ink_precision_within_1_5_pixels": 0.999714,
+   "ink_precision_within_2_pixels": 0.999728,
+   "local_contrast_edge_recall_within_2_pixels": 0.991227,
+   "ink_iou": 0.995179,
+   "transparent_fraction": 0.546819,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.996361,
+   "svgSha256": "2c3e0e5b3fe329974e0756db42f59f5522cb8c6bf985dbc0e96c45ee932641e0",
+   "svgBytes": 241970,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "77af34b30dd95cef2047a8044f868187f5a6dc35a4771e2561dc8818e2681e1f",
+   "uncompressedSvgBytes": 922294,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.996976,
+    "ink_precision_within_1_5_pixels": 0.99971,
+    "ink_precision_within_2_pixels": 0.999724,
+    "local_contrast_edge_recall_within_2_pixels": 0.988372,
+    "ink_iou": 0.994142,
+    "small_source_components_up_to_80_pixels": 94,
+    "small_source_components_without_nearby_vector_ink": 13
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "8ccf2735804b491b": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 5,
+   "rect": [
+    1329.47,
+    338.19,
+    2155.47,
+    605.59
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 8,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 8,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p5-8ccf2735804b491b.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2479,
+    803
+   ],
+   "paths": 33,
+   "ink_recall_within_1_5_pixels": 0.997759,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.998399,
+   "ink_iou": 0.99543,
+   "transparent_fraction": 0.845386,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.9995,
+   "svgSha256": "5643bd3049a8e2f3ec612897459f0a0105e4771295c642366f19c7ab737bbedf",
+   "svgBytes": 148861,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "9a886a2e514393430b62f76f39333c07954a8630708b846ac54f4f94ef690a12",
+   "uncompressedSvgBytes": 729906,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.997881,
+    "ink_precision_within_1_5_pixels": 0.999987,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.997664,
+    "ink_iou": 0.987098,
+    "small_source_components_up_to_80_pixels": 181,
+    "small_source_components_without_nearby_vector_ink": 2
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "0879eb2f98febed0": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 6,
+   "rect": [
+    347.71,
+    490.55,
+    904.67,
+    872.61
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 9,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 9,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p6-0879eb2f98febed0.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1672,
+    1147
+   ],
+   "paths": 134,
+   "ink_recall_within_1_5_pixels": 0.994415,
+   "ink_precision_within_1_5_pixels": 0.99918,
+   "ink_precision_within_2_pixels": 0.999564,
+   "local_contrast_edge_recall_within_2_pixels": 0.999954,
+   "ink_iou": 0.985407,
+   "transparent_fraction": 0.888274,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999995,
+   "svgSha256": "4b304b0c7b38db6290f14671cf16d0dc944e2bd4940334ee657b70a70b7afb18",
+   "svgBytes": 368227,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "070b529bbe1b393a4d7524c86308cdcd68c5b732fe465d8f1d22e671fb716cba",
+   "uncompressedSvgBytes": 1264664,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.994711,
+    "ink_precision_within_1_5_pixels": 0.999195,
+    "ink_precision_within_2_pixels": 0.999562,
+    "local_contrast_edge_recall_within_2_pixels": 0.999908,
+    "ink_iou": 0.965802,
+    "small_source_components_up_to_80_pixels": 278,
+    "small_source_components_without_nearby_vector_ink": 22
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "0c9b3d7ba6e3cae4": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 6,
+   "rect": [
+    1285.41,
+    350.62,
+    2158.61,
+    742.11
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 10,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 10,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p6-0c9b3d7ba6e3cae4.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2620,
+    1176
+   ],
+   "paths": 79,
+   "ink_recall_within_1_5_pixels": 0.997413,
+   "ink_precision_within_1_5_pixels": 0.999796,
+   "ink_precision_within_2_pixels": 0.99991,
+   "local_contrast_edge_recall_within_2_pixels": 0.99988,
+   "ink_iou": 0.987603,
+   "transparent_fraction": 0.916553,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "d11d1696c54e9cfbb7d1c3ea80ce1497197b7ffbd4e09daaef5c2939fd390d9b",
+   "svgBytes": 710308,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "99987bb95605cea430062c27c3c0b6e213ec1ac59078447ee01b347e9d4cd195",
+   "uncompressedSvgBytes": 2353907,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.997521,
+    "ink_precision_within_1_5_pixels": 0.999774,
+    "ink_precision_within_2_pixels": 0.999887,
+    "local_contrast_edge_recall_within_2_pixels": 0.999848,
+    "ink_iou": 0.965773,
+    "small_source_components_up_to_80_pixels": 656,
+    "small_source_components_without_nearby_vector_ink": 10
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "0264070e1d632867": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 7,
+   "rect": [
+    354.0,
+    369.6,
+    904.67,
+    762.8
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 11,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 11,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p7-0264070e1d632867.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1653,
+    1181
+   ],
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999884,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_iou": 0.99642,
+   "transparent_fraction": 0.877627,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.997993,
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "cad5e14a23e6a8fe7e24fe5778f3fb88faa00cf096bc20b37eef94932bf5846e",
+   "svgBytes": 259729,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "19236dc13e59307da4a957e88648d1e58c5966e6a6366cd045bfaa8aa8ba2f5b",
+   "uncompressedSvgBytes": 1020613,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.99989,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.997759,
+    "ink_iou": 0.978312,
+    "small_source_components_up_to_80_pixels": 240,
+    "small_source_components_without_nearby_vector_ink": 1
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "e582def8c349c534": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 7,
+   "rect": [
+    1288.56,
+    369.6,
+    2086.24,
+    721.91
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 12,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 12,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p7-e582def8c349c534.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "48fafe3ed3fc045d3206c297248a359630c23516786bd2b9928e0c7d6c3bd366",
+   "svgBytes": 151515,
+   "uncompressedSvgSha256": "d85cb0d33aa8ac55586a4366c1a335975fc80c28fdd80e7e8e780fc03a8cf2f2",
+   "uncompressedSvgBytes": 2145955,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2394,
+    1058
+   ],
+   "grayscale_levels": 32,
+   "paths": 55,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.996951,
+   "ink_iou": 0.996995,
+   "transparent_fraction": 0.630903,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 250,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0c66214bd3def067": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 8,
+   "rect": [
+    155.56,
+    196.3,
+    1145.5,
+    431.86
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 13,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 13,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p8-0c66214bd3def067.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "1b969b4712517532d5f0ebe693183ba1bae780ba1814cf38c59040379ec21545",
+   "svgBytes": 258021,
+   "uncompressedSvgSha256": "e0760fcff2d6b817b0cc296cc9f7b966face3136e29aadc15fee312206bafbaf",
+   "uncompressedSvgBytes": 4015951,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2971,
+    708
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999328,
+   "ink_iou": 0.968065,
+   "transparent_fraction": 0.836965,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 579,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "983e0108cb5c256d": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 8,
+   "rect": [
+    1492.77,
+    193.16,
+    1945.31,
+    439.72
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 14,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 14,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p8-983e0108cb5c256d.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "034ffb6ab014131ea8c660ab0365f02694194721e31ed7febb72d3441a823e15",
+   "svgBytes": 50636,
+   "uncompressedSvgSha256": "2d85571c62a7a822eaa21873a8546c1c5159ae2508727923208bd81eb3819953",
+   "uncompressedSvgBytes": 650467,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1358,
+    741
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999443,
+   "ink_precision_within_2_pixels": 0.999653,
+   "local_contrast_edge_recall_within_2_pixels": 0.99646,
+   "ink_iou": 0.981137,
+   "transparent_fraction": 0.77262,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 124,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "3ce0938d42699c40": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 9,
+   "rect": [
+    1489.95,
+    191.82,
+    1963.52,
+    547.15
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 16,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 16,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p9-3ce0938d42699c40.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "a17cf3ed567de6ba8b1e657ffdffdfc7ca59be62cd578d3d488337dfaa4c7655",
+   "svgBytes": 88413,
+   "uncompressedSvgSha256": "407aa4533c9d4e771fac02b0b6d65771f5796d79e5e154bf24c21206547f234e",
+   "uncompressedSvgBytes": 1282604,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1422,
+    1067
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999919,
+   "ink_precision_within_1_5_pixels": 0.99998,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.99961,
+   "ink_iou": 0.972489,
+   "transparent_fraction": 0.901979,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 206,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "66e59dcb596ebdef": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 10,
+   "rect": [
+    472.0,
+    191.9,
+    786.67,
+    526.94
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 17,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 17,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p10-66e59dcb596ebdef.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "692c7b2139bbcaae7ff9b07f3a7850eac054742237b4a777441c4f494bfa1765",
+   "svgBytes": 121885,
+   "uncompressedSvgSha256": "7a2b629efeebf065e1bd505795f6df731d27ddbf27a34853ade6421cf8c79e5c",
+   "uncompressedSvgBytes": 2158588,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    945,
+    1006
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999878,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999878,
+   "ink_iou": 0.956901,
+   "transparent_fraction": 0.862464,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 335,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "23690aef274a3cfe": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 11,
+   "rect": [
+    472.0,
+    193.45,
+    810.27,
+    500.14
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 19,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 19,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p11-23690aef274a3cfe.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "ecfd28f91f74273dfaf9c0aa7b5fbcfea173c47bf796eb5d24c3eb9ed01ac463",
+   "svgBytes": 91518,
+   "uncompressedSvgSha256": "5a151156a5d5f335fe520b485776e35e329db884a0fde012a5a0e50506ab52d8",
+   "uncompressedSvgBytes": 1347824,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1015,
+    921
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.99997,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.99995,
+   "ink_iou": 0.961236,
+   "transparent_fraction": 0.876731,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 193,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "67c255547d8339aa": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 12,
+   "rect": [
+    177.79,
+    526.54,
+    1033.68,
+    1031.08
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 21,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 21,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p12-67c255547d8339aa.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "5b5fbcaf509e554e37b50d7fcf0a4a206ecca98c805e542887a79b254f139d6a",
+   "svgBytes": 189288,
+   "uncompressedSvgSha256": "bb1fa4b1794b2dc093a1a6ce0d9dac6123cf46fbafaa0d73cd4f39d086dc2d3b",
+   "uncompressedSvgBytes": 2681478,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2569,
+    1515
+   ],
+   "grayscale_levels": 32,
+   "paths": 231,
+   "ink_recall_within_1_5_pixels": 0.999944,
+   "ink_precision_within_1_5_pixels": 0.999998,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.992672,
+   "ink_iou": 0.989234,
+   "transparent_fraction": 0.836447,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 187,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "79894edc8f653224": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 12,
+   "rect": [
+    1290.13,
+    193.33,
+    2013.87,
+    517.11
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 22,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 22,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p12-79894edc8f653224.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    2172,
+    973
+   ],
+   "paths": 217,
+   "ink_recall_within_1_5_pixels": 0.993675,
+   "ink_precision_within_1_5_pixels": 0.996495,
+   "ink_precision_within_2_pixels": 0.998037,
+   "local_contrast_edge_recall_within_2_pixels": 0.999628,
+   "ink_iou": 0.984295,
+   "transparent_fraction": 0.820753,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999661,
+   "svgSha256": "85d95a02b392abd271e98b12279ce280581f2a4cc9ccd792d696a9953dd1d14b",
+   "svgBytes": 388294,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "5d8a7e219621ec364a61cff4b8007330061f8cb33767a6c923fbc9efc16e8c63",
+   "uncompressedSvgBytes": 1479446,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.99345,
+    "ink_precision_within_1_5_pixels": 0.996694,
+    "ink_precision_within_2_pixels": 0.998056,
+    "local_contrast_edge_recall_within_2_pixels": 0.999649,
+    "ink_iou": 0.973916,
+    "small_source_components_up_to_80_pixels": 307,
+    "small_source_components_without_nearby_vector_ink": 14
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "1240fa26d443e9d1": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 13,
+   "rect": [
+    426.37,
+    202.89,
+    866.91,
+    506.44
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 23,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 23,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p13-1240fa26d443e9d1.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "2dc6ed9f2fc679f73fa26a70d2c7b457c9402ecf0a08a8b30318d999a6ee3ccc",
+   "svgBytes": 99380,
+   "uncompressedSvgSha256": "84c101ee61116dfafbfd0e0a18e519dfb1cb5a60e3ea1f8f856e105482cf6948",
+   "uncompressedSvgBytes": 1532316,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 233,
+   "source_pixels": [
+    1322,
+    912
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999977,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999736,
+   "ink_iou": 0.979699,
+   "transparent_fraction": 0.876899,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 112,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "343db3401d79c179": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 13,
+   "rect": [
+    1565.47,
+    187.16,
+    2021.73,
+    605.52
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 24,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 24,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p13-343db3401d79c179.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1370,
+    1256
+   ],
+   "paths": 92,
+   "ink_recall_within_1_5_pixels": 0.991101,
+   "ink_precision_within_1_5_pixels": 0.997076,
+   "ink_precision_within_2_pixels": 0.997658,
+   "local_contrast_edge_recall_within_2_pixels": 0.998716,
+   "ink_iou": 0.979418,
+   "transparent_fraction": 0.818844,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999195,
+   "svgSha256": "4af1e4b530a921901337108033008a2ba49a8323222494d16b8ca1acd346d8c7",
+   "svgBytes": 258370,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "8621b88a08b84196dc5c1aac61c73f80a301b0400177816c95b1da399eb391ae",
+   "uncompressedSvgBytes": 1053282,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.991153,
+    "ink_precision_within_1_5_pixels": 0.996999,
+    "ink_precision_within_2_pixels": 0.997549,
+    "local_contrast_edge_recall_within_2_pixels": 0.998273,
+    "ink_iou": 0.966666,
+    "small_source_components_up_to_80_pixels": 231,
+    "small_source_components_without_nearby_vector_ink": 39
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "26f61b3c81d49751": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 14,
+   "rect": [
+    322.53,
+    193.47,
+    912.53,
+    583.57
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 25,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 25,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p14-26f61b3c81d49751.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "200ae7a1ddfb603287c922582905f019262b44f841297eb3331af172040578c7",
+   "svgBytes": 79291,
+   "uncompressedSvgSha256": "741538f4a4c02601fd03278668f70dd64a4fede7444a80cbf3c5b0abca22a4e8",
+   "uncompressedSvgBytes": 919092,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1771,
+    1171
+   ],
+   "grayscale_levels": 32,
+   "paths": 79,
+   "ink_recall_within_1_5_pixels": 0.998943,
+   "ink_precision_within_1_5_pixels": 0.99694,
+   "ink_precision_within_2_pixels": 0.997913,
+   "local_contrast_edge_recall_within_2_pixels": 0.999613,
+   "ink_iou": 0.982904,
+   "transparent_fraction": 0.835309,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 118,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "30c2fc3f450eff0b": {
+   "source": "KPhE_2023_T1c_KO.pdf",
+   "page": 14,
+   "rect": [
+    1486.8,
+    195.05,
+    2021.73,
+    550.53
+   ],
+   "uses": [
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 26,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-1-cd.json",
+     "part": "T1c",
+     "number": 26,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T1c_KO-p14-30c2fc3f450eff0b.svgz",
+   "sourceSha256": "e8ac688d9cdeb23e21c3c407e7f945c9d955d5772695cff21642e8a6d8bf2a9e",
+   "svgSha256": "225b75013ae9ea726d8afde33f68ade78df0d81650cc2605bdd20f6b0cd0f02c",
+   "svgBytes": 97850,
+   "uncompressedSvgSha256": "2cbbd91d6c233173d0fe67a11829fe4ef3bd9c210b575bce8f890d57c644cd5e",
+   "uncompressedSvgBytes": 1527119,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 232,
+   "source_pixels": [
+    1606,
+    1067
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999992,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999771,
+   "ink_iou": 0.977918,
+   "transparent_fraction": 0.892342,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 239,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "f4b57506554e7683": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 2,
+   "rect": [
+    125,
+    170,
+    320,
+    267
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 1,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 1,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p2-f4b57506554e7683.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "3242b32fb9cd708765e7518b24e9ea52ffb1f93f8cce70dca16d668c90448f85",
+   "svgBytes": 18478,
+   "uncompressedSvgSha256": "9b884d3c20783c8706e505340a9e6dfaf5361b552b10f31aab143bdff3a62c3f",
+   "uncompressedSvgBytes": 96927,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    585,
+    291
+   ],
+   "grayscale_levels": 32,
+   "paths": 194,
+   "ink_recall_within_1_5_pixels": 0.999942,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999835,
+   "ink_iou": 0.925518,
+   "transparent_fraction": 0.813141,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "08830bca982d18b3": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 2,
+   "rect": [
+    444,
+    170,
+    710,
+    263
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 2,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 2,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p2-08830bca982d18b3.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "7f222a9888c5b3b160618d5a39fa8aca1de33e1f1fd510fde42552fe2334662c",
+   "svgBytes": 174173,
+   "uncompressedSvgSha256": "1ec42785b2b2778dc3a6a65cc679cd4ad70587ef5c7d1e37fb3c734c22315197",
+   "uncompressedSvgBytes": 503887,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    798,
+    279
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999904,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.97015,
+   "transparent_fraction": 0.761968,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 6,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "3813fe5cccfcc811": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 3,
+   "rect": [
+    55,
+    211,
+    334,
+    272
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 3,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 3,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p3-3813fe5cccfcc811.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "paper_luminance": 255,
+   "source_pixels": [
+    837,
+    183
+   ],
+   "paths": 1047,
+   "ink_recall_within_1_5_pixels": 0.998067,
+   "ink_precision_within_1_5_pixels": 0.999451,
+   "ink_precision_within_2_pixels": 0.999756,
+   "local_contrast_edge_recall_within_2_pixels": 0.999519,
+   "ink_iou": 0.980189,
+   "transparent_fraction": 0.642152,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999034,
+   "svgSha256": "4085e53f0f4305acdc7dd5d2347d249fe8b3450411999cf6c4e5c5386fed94c9",
+   "svgBytes": 59748,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "e084a0864aca05170a067a84e4175655a1b5a9e8eb42b596fbfb0a250d5fac93",
+   "uncompressedSvgBytes": 380488,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.998128,
+    "ink_precision_within_1_5_pixels": 0.999396,
+    "ink_precision_within_2_pixels": 0.999728,
+    "local_contrast_edge_recall_within_2_pixels": 0.999519,
+    "ink_iou": 0.95822,
+    "small_source_components_up_to_80_pixels": 20,
+    "small_source_components_without_nearby_vector_ink": 7
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "f84bd9c77029be8d": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 3,
+   "rect": [
+    679,
+    119,
+    728,
+    205
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 4,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 4,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p3-f84bd9c77029be8d.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "211e58f51cf367446ffeafb6a9d379ecf5c9438097cb5afbb87d9191462885fc",
+   "svgBytes": 29778,
+   "uncompressedSvgSha256": "f699e80338da67bbac29c51e3d66f4928a28d97de43052327f68e7a52a4f4cf0",
+   "uncompressedSvgBytes": 85924,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    147,
+    258
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.965776,
+   "transparent_fraction": 0.654169,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "2f271e8411a9b898": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 4,
+   "rect": [
+    55,
+    191,
+    385,
+    337
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 5,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 5,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p4-2f271e8411a9b898.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "paper_luminance": 255,
+   "source_pixels": [
+    990,
+    438
+   ],
+   "paths": 489,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.998881,
+   "ink_precision_within_2_pixels": 0.999223,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.928161,
+   "transparent_fraction": 0.888437,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "e997a22807e3052c6e366b301c220eddf4ff94390e88301532beda77ada570f8",
+   "svgBytes": 101895,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "e8eda96505c47546d2104a5affc6c00c9ed7e84357b91d6b4ed42dc79d1f5b82",
+   "uncompressedSvgBytes": 566668,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T2b Q5: thin red graph segments became materially lighter and discontinuous.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.970406,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.984379,
+    "ink_iou": 0.823792,
+    "small_source_components_up_to_80_pixels": 185,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "b69cf88c5a538fde": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 4,
+   "rect": [
+    467,
+    171,
+    688,
+    274
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 6,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 6,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p4-b69cf88c5a538fde.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "ad0f4068b0cda7d9768ab3aef76ae1a80a03ca6381dc6fe9f59c6b980fae6e35",
+   "svgBytes": 67173,
+   "uncompressedSvgSha256": "84f14a627672e96c55b8d2fde846c3a875621411624d9de82ee9d338de5cf07f",
+   "uncompressedSvgBytes": 242933,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    663,
+    309
+   ],
+   "grayscale_levels": 32,
+   "paths": 28,
+   "ink_recall_within_1_5_pixels": 0.999681,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.99558,
+   "ink_iou": 0.927827,
+   "transparent_fraction": 0.862545,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 116,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0a6133c120484b25": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 5,
+   "rect": [
+    169,
+    160,
+    292,
+    227
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 7,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 7,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p5-0a6133c120484b25.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "1defa3baf742ae9ea7b49a28aa21049c8082b6988dc99805362c10a7a09d11bf",
+   "svgBytes": 29749,
+   "uncompressedSvgSha256": "dbe397b41e7141e59aed12f473e6854d1701cc2db764283b0b83e676716d407f",
+   "uncompressedSvgBytes": 91119,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    369,
+    201
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.985736,
+   "transparent_fraction": 0.675269,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "c7ef62ee33a44fab": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 5,
+   "rect": [
+    487,
+    172,
+    670,
+    250
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 8,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 8,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p5-c7ef62ee33a44fab.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "f32cf08555f96c909ccd6018f660fcad497c3aa0ac6b862eb3a88ed81be3ed8a",
+   "svgBytes": 51095,
+   "uncompressedSvgSha256": "44d3bbb56393411f6ddbcc0d6043d4ad50ff12731b304ec5860f494c3ee6df8a",
+   "uncompressedSvgBytes": 153201,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    549,
+    234
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.994575,
+   "ink_iou": 0.963977,
+   "transparent_fraction": 0.739892,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 19,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "44597d7bc85bb858": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 6,
+   "rect": [
+    263,
+    153,
+    380,
+    298
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 9,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 9,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p6-44597d7bc85bb858.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "6a7b6183479e3cf3f46a288f345c0a450c4a639957fe59cf921447baa28b7ee7",
+   "svgBytes": 53098,
+   "uncompressedSvgSha256": "b55e59fd1c8a6de3b98be3fc4ac2b0cd69fd22af3f89b8463eb8bff5c209f838",
+   "uncompressedSvgBytes": 175913,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    351,
+    435
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.99324,
+   "transparent_fraction": 0.455677,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 15,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "5d5663af105390c3": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 6,
+   "rect": [
+    450,
+    161,
+    710,
+    271
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 10,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 10,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p6-5d5663af105390c3.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "87450b70a4dc4364ac682deb3d5ccd3b921a067f1e1d56c20354decedf0854be",
+   "svgBytes": 82347,
+   "uncompressedSvgSha256": "8c12663114d929ca66d11983ccee1801c67ac2fed098244ff129cad9c7e82ad9",
+   "uncompressedSvgBytes": 270265,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    780,
+    330
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.996375,
+   "ink_iou": 0.950015,
+   "transparent_fraction": 0.836317,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 5,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "cce844c9e67c8a7f": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 7,
+   "rect": [
+    58,
+    158,
+    273,
+    269
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 11,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 11,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p7-cce844c9e67c8a7f.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "89e8bbdf2ee3566d493efb282407124d2ec422a6827dbd9a87b9d83e5cbc743f",
+   "svgBytes": 211178,
+   "uncompressedSvgSha256": "8fc1b0e91bef1a693a9810be7a6411a7feac64dfa9186b9da6800f51d05d967a",
+   "uncompressedSvgBytes": 691607,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    645,
+    333
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.995439,
+   "ink_iou": 0.915386,
+   "transparent_fraction": 0.693563,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 18,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "bfcb123eae9f183e": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 7,
+   "rect": [
+    418,
+    171,
+    521,
+    265
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 12,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 12,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p7-bfcb123eae9f183e.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "45ed219402de8a8e10207af1d7a9c8a32be558cf9bd3d655215842134ba1958e",
+   "svgBytes": 58003,
+   "uncompressedSvgSha256": "28e2f36c4a6ca3c139f2383a4908524bcd164b3ee9949666a2738655ef1b3c75",
+   "uncompressedSvgBytes": 241323,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    309,
+    282
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999851,
+   "ink_iou": 0.908382,
+   "transparent_fraction": 0.874027,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 117,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "6ca9a031cd33986e": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 8,
+   "rect": [
+    60,
+    147,
+    306,
+    244
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 13,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 13,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p8-6ca9a031cd33986e.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "553ddfbeb466c56daa014a4de2249b09199c1546ad8ab595611e4303f2cb2e58",
+   "svgBytes": 76006,
+   "uncompressedSvgSha256": "cec42eeb79c0a800df38ae3be1d3797e4fcc0b95ff8cc8c3902d9a2b26e90f18",
+   "uncompressedSvgBytes": 253728,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    738,
+    291
+   ],
+   "grayscale_levels": 32,
+   "paths": 47,
+   "ink_recall_within_1_5_pixels": 0.999836,
+   "ink_precision_within_1_5_pixels": 0.99998,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.984203,
+   "transparent_fraction": 0.726497,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 6,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "fe7e956eb7566650": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 8,
+   "rect": [
+    420,
+    148,
+    675,
+    252
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 14,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 14,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p8-fe7e956eb7566650.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "paper_luminance": 255,
+   "source_pixels": [
+    765,
+    312
+   ],
+   "paths": 2324,
+   "ink_recall_within_1_5_pixels": 0.986702,
+   "ink_precision_within_1_5_pixels": 0.997566,
+   "ink_precision_within_2_pixels": 0.998182,
+   "local_contrast_edge_recall_within_2_pixels": 0.999571,
+   "ink_iou": 0.953698,
+   "transparent_fraction": 0.820102,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999566,
+   "svgSha256": "aa78eadd0e94e708931a02fddcd0309f243a59276ec2050004a24fa6f10adbc2",
+   "svgBytes": 77033,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "bd144c92563eb9e0413de98d1cec33dfd9cb4ae80055b0e6944a9786c85c45a0",
+   "uncompressedSvgBytes": 593928,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.987023,
+    "ink_precision_within_1_5_pixels": 0.997376,
+    "ink_precision_within_2_pixels": 0.998134,
+    "local_contrast_edge_recall_within_2_pixels": 0.99951,
+    "ink_iou": 0.950601,
+    "small_source_components_up_to_80_pixels": 82,
+    "small_source_components_without_nearby_vector_ink": 40
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "81ab84f633918b44": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 9,
+   "rect": [
+    113,
+    155,
+    333,
+    285
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 15,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 15,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p9-81ab84f633918b44.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "b2f48280f41d4b8b9718f5932bbe6a9d13f91562b4be02cd973a6cc8edc0945d",
+   "svgBytes": 158878,
+   "uncompressedSvgSha256": "a97f4802b5aa2c029e50dee7321b720114ba9cf7fd873feca4e74394cb9b6593",
+   "uncompressedSvgBytes": 509520,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    660,
+    390
+   ],
+   "grayscale_levels": 32,
+   "paths": 31,
+   "ink_recall_within_1_5_pixels": 0.999955,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.900498,
+   "transparent_fraction": 0.850264,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 9,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "602f0007b1cf01f2": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 9,
+   "rect": [
+    420,
+    149,
+    598,
+    231
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 16,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 16,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p9-602f0007b1cf01f2.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "paper_luminance": 255,
+   "source_pixels": [
+    534,
+    246
+   ],
+   "paths": 348,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.992338,
+   "transparent_fraction": 0.644903,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 1.0,
+   "svgSha256": "1a2e048ec2a470f16fbdace293f68de3d4aa42051282a9095ea688fd88cfdc06",
+   "svgBytes": 19751,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "77d2c0ba3a70cdefae37302bd9b19c789a2fbfb17194363d0656e012ea3bda6a",
+   "uncompressedSvgBytes": 156213,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T2b Q16: water/container boundaries developed pale gaps against the black outlines.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.988521,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.986321,
+    "ink_iou": 0.928392,
+    "small_source_components_up_to_80_pixels": 1,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "4af79247bdadd1ac": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 10,
+   "rect": [
+    62,
+    146,
+    236,
+    249
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 17,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 17,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p10-4af79247bdadd1ac.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "paper_luminance": 255,
+   "source_pixels": [
+    522,
+    309
+   ],
+   "paths": 251,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.999862,
+   "ink_iou": 0.997545,
+   "transparent_fraction": 0.605184,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999859,
+   "svgSha256": "a73b7601335a7550d7d134e06f67daf8ced5b0fd8c7a0fc422fa083ed8c4fb6b",
+   "svgBytes": 24972,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "c358734849e20fe4401892c3bb8662a280a10f3de1ae0583d4f9a989e1b8dcb0",
+   "uncompressedSvgBytes": 135431,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "native-contours-fallback",
+   "visual_rejection": "T2b Q17: the colored support boundary developed light gaps at its original corners.",
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.993917,
+    "ink_precision_within_1_5_pixels": 1.0,
+    "ink_precision_within_2_pixels": 1.0,
+    "local_contrast_edge_recall_within_2_pixels": 0.996144,
+    "ink_iou": 0.981079,
+    "small_source_components_up_to_80_pixels": 1,
+    "small_source_components_without_nearby_vector_ink": 0
+   },
+   "fallback_reason": "Full source/vector visual comparison rejected the curve candidate; original verified native contours retained byte-for-byte."
+  },
+  "b7e169d21a503ab4": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 11,
+   "rect": [
+    69,
+    155,
+    268,
+    261
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 19,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 19,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p11-b7e169d21a503ab4.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "a6ee80cf2a63883c5df6662aa528ca0ef897c963d60bf08f53f2c45212b32b2d",
+   "svgBytes": 127335,
+   "uncompressedSvgSha256": "4871026a919a5f5d80b40bbd851bd8e028df43eb40efc23497365b7785b1d32f",
+   "uncompressedSvgBytes": 355353,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    597,
+    318
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.934059,
+   "transparent_fraction": 0.816167,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0b797b330bb88e2b": {
+   "source": "KPhE_2023_T2b_KO.pdf",
+   "page": 11,
+   "rect": [
+    417,
+    132,
+    742,
+    260
+   ],
+   "uses": [
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 20,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-b.json",
+     "part": "T2b",
+     "number": 20,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2b_KO-p11-0b797b330bb88e2b.svgz",
+   "sourceSha256": "becd164babbd5c92e3ef3cf6fdc942e820c229a82138b939f510a17434d329a4",
+   "svgSha256": "7d3f22aad903478e28dcb08d579b9dccb850e91823b670d86441eccd75f6356a",
+   "svgBytes": 428858,
+   "uncompressedSvgSha256": "df10779c9c2a1dd2d10b56a7bb8c2a526a65cc20276057640b7005b6856d4ed6",
+   "uncompressedSvgBytes": 1380050,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    975,
+    384
+   ],
+   "grayscale_levels": 32,
+   "paths": 31,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.99999,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 1.0,
+   "ink_iou": 0.941712,
+   "transparent_fraction": 0.652075,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 2,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "fff0be7987170f52": {
+   "source": "KPhE_2023_T2d_KO.pdf",
+   "page": 3,
+   "rect": [
+    1200,
+    535,
+    2060,
+    785
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 4,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 4,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 5,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 5,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 6,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 6,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2d_KO-p3-fff0be7987170f52.svgz",
+   "sourceSha256": "75891c22f66478f9ed611862612a622fd3af5af6c8cd2603688235a82bb347a1",
+   "svgSha256": "5f123e05b458dc2852d7485659232147e4c5a76adc786c2cf4d2c762ab6eec3b",
+   "svgBytes": 104480,
+   "uncompressedSvgSha256": "36141d5e99795b6ff587037f9e700e8195b9e267b1dadfc3258fe07d8df59f68",
+   "uncompressedSvgBytes": 266141,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2580,
+    750
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.99998,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.997635,
+   "ink_iou": 0.985747,
+   "transparent_fraction": 0.91489,
+   "corner_alpha": [
+    0,
+    0,
+    82,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "76475e5f7adc2412": {
+   "source": "KPhE_2023_T2d_KO.pdf",
+   "page": 5,
+   "rect": [
+    295,
+    405,
+    815,
+    675
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 7,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 7,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 8,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 8,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 9,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 9,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2d_KO-p5-76475e5f7adc2412.svgz",
+   "sourceSha256": "75891c22f66478f9ed611862612a622fd3af5af6c8cd2603688235a82bb347a1",
+   "svgSha256": "ab1b70f4848d4eaf2f1afeb5604e19befb82fdcb48c14112d8b152c28a860eb1",
+   "svgBytes": 272941,
+   "uncompressedSvgSha256": "c9f5ac55c98b2dd27c91461d22d01b58675a120bc7f1f64c9af7c9307ce523f1",
+   "uncompressedSvgBytes": 704341,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1560,
+    810
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.996621,
+   "ink_iou": 0.949348,
+   "transparent_fraction": 0.811756,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 176,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "754576ee873d8c64": {
+   "source": "KPhE_2023_T2d_KO.pdf",
+   "page": 6,
+   "rect": [
+    1420,
+    450,
+    1850,
+    765
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 10,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 10,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 11,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 11,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 12,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 12,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2d_KO-p6-754576ee873d8c64.svgz",
+   "sourceSha256": "75891c22f66478f9ed611862612a622fd3af5af6c8cd2603688235a82bb347a1",
+   "svgSha256": "f985ea35be7fd12dee67a0f4e259003ca32acccb08c74b247ae0e56d909bf8bf",
+   "svgBytes": 178049,
+   "uncompressedSvgSha256": "8afa01a32d1ad44b42a4b5742843a31a7b3af577b1895b952ccf24cbf3fecf95",
+   "uncompressedSvgBytes": 469775,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1290,
+    945
+   ],
+   "grayscale_levels": 32,
+   "paths": 26,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999984,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.998669,
+   "ink_iou": 0.967783,
+   "transparent_fraction": 0.878309,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "6983aa7331ce82ff": {
+   "source": "KPhE_2023_T2d_KO.pdf",
+   "page": 8,
+   "rect": [
+    375,
+    395,
+    710,
+    620
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 13,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 13,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 14,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 14,
+     "where": "problem"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 15,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2d",
+     "number": 15,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2d_KO-p8-6983aa7331ce82ff.svgz",
+   "sourceSha256": "75891c22f66478f9ed611862612a622fd3af5af6c8cd2603688235a82bb347a1",
+   "svgSha256": "47ebce00f8719ceb09ca429a2ee36f4619dce65f036cdfe92dd5c9d91c022a9c",
+   "svgBytes": 84422,
+   "uncompressedSvgSha256": "9d749af2a1f8f901b44cfb38843cb599fd0b7d0c4c4c24ddea05555941189266",
+   "uncompressedSvgBytes": 213830,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1005,
+    675
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999945,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.99993,
+   "ink_iou": 0.969236,
+   "transparent_fraction": 0.883693,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "a323efacf4b1fcce": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 2,
+   "rect": [
+    84.49,
+    238.86,
+    1056.08,
+    485.01
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 1,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 1,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p2-a323efacf4b1fcce.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "56aa7ab6b9c5faef7ebb6fdaf95870cd58fc7792a7194026e3c2fbb47458efdd",
+   "svgBytes": 323053,
+   "uncompressedSvgSha256": "b92480d0e35f482c755d8b7a255ea263eef37a652bec9f28487ac30f0e7f34ea",
+   "uncompressedSvgBytes": 6744272,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2916,
+    740
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.993654,
+   "ink_iou": 0.982329,
+   "transparent_fraction": 0.682572,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "0faf4810b849364c": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 2,
+   "rect": [
+    1740.72,
+    262.17,
+    2170.43,
+    648.13
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 2,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 2,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p2-0faf4810b849364c.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "400e049e4dc9916b0e36645a448e442d8fcc479e3d81040a5dddee9d670c2a55",
+   "svgBytes": 149914,
+   "uncompressedSvgSha256": "9778b5eddbd707d13f4aeb78a0ad127d5f15c7645956194362c37c2e2f1556bb",
+   "uncompressedSvgBytes": 2283686,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1290,
+    1159
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.99998,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.991864,
+   "ink_iou": 0.970658,
+   "transparent_fraction": 0.866279,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 1,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "aaabde708c75944d": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 3,
+   "rect": [
+    279.55,
+    261.93,
+    829.92,
+    787.26
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 3,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 3,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p3-aaabde708c75944d.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "37948734b9d1122a15e807f668cc9a30bdff54af7bb8e11d8565237c831ce687",
+   "svgBytes": 139685,
+   "uncompressedSvgSha256": "deafb6ee4e8e1347be1e5c46a3e866931b55f52a11979c1477a380a4f45a80e0",
+   "uncompressedSvgBytes": 2624219,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1652,
+    1577
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.995467,
+   "ink_iou": 0.977323,
+   "transparent_fraction": 0.898303,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "3d97fef2bac4e4e3": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 3,
+   "rect": [
+    1856.4,
+    240.11,
+    2125.76,
+    707.22
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 4,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 4,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p3-3d97fef2bac4e4e3.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "f3b3c50bfe369be674a0263f7903e11f88fdda59e23eb21907270f7942fbaf3e",
+   "svgBytes": 22502,
+   "uncompressedSvgSha256": "7f5fd68b07135396bd07e1f19fa37f926bf48ddfb1afadbbe76519671853dd3c",
+   "uncompressedSvgBytes": 362317,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    809,
+    1402
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.995982,
+   "ink_iou": 0.988755,
+   "transparent_fraction": 0.896988,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "3b19db5d51b00028": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 4,
+   "rect": [
+    116.48,
+    247.38,
+    934.75,
+    612.64
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 5,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 5,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p4-3b19db5d51b00028.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "c8e88f8c62daf5132f84ca06631f408123b365826b17ba6b9e2a4e3741f531ab",
+   "svgBytes": 130243,
+   "uncompressedSvgSha256": "0daaa468a71abaee04bdd95b49bcb103763b77a3afbbf5290d809ec81b76a4d8",
+   "uncompressedSvgBytes": 1772874,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2456,
+    1096
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999932,
+   "ink_precision_within_1_5_pixels": 0.993656,
+   "ink_precision_within_2_pixels": 0.996322,
+   "local_contrast_edge_recall_within_2_pixels": 0.989617,
+   "ink_iou": 0.975721,
+   "transparent_fraction": 0.870447,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "56ca2954ff93ad87": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 4,
+   "rect": [
+    1237.6,
+    229.92,
+    2089.36,
+    557.34
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 6,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 6,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p4-56ca2954ff93ad87.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "a529e613009f0600ff397a628447243fb486a937ac13dd71254e5182dadb8405",
+   "svgBytes": 139634,
+   "uncompressedSvgSha256": "6eaeb1d9e7e4922e15e6ae10f84248ae4cdf8b16e36ddfe97bcbefb1fd98e986",
+   "uncompressedSvgBytes": 2959491,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2557,
+    984
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.99996,
+   "ink_precision_within_1_5_pixels": 0.9997,
+   "ink_precision_within_2_pixels": 0.999883,
+   "local_contrast_edge_recall_within_2_pixels": 0.992032,
+   "ink_iou": 0.981419,
+   "transparent_fraction": 0.866734,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "a5ce798d9a6b8d57": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 6,
+   "rect": [
+    1364.06,
+    244.69,
+    1909.11,
+    645.22
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 10,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 10,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p6-a5ce798d9a6b8d57.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "22c8dcfbadb9a152dd1c5c3c441be4bc271ba1bc4e577f3810e646e4c136eecf",
+   "svgBytes": 78848,
+   "uncompressedSvgSha256": "9e507e70496cd99c5dc2764a90bb2f8fec2c95436b6e0d52cb59134710a9d9f9",
+   "uncompressedSvgBytes": 945139,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1636,
+    1202
+   ],
+   "grayscale_levels": 32,
+   "paths": 32,
+   "ink_recall_within_1_5_pixels": 0.999955,
+   "ink_precision_within_1_5_pixels": 0.992862,
+   "ink_precision_within_2_pixels": 0.995064,
+   "local_contrast_edge_recall_within_2_pixels": 0.995234,
+   "ink_iou": 0.983506,
+   "transparent_fraction": 0.689964,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "921becc39975369d": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 7,
+   "rect": [
+    160.31,
+    397.62,
+    1020.13,
+    642.31
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 11,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 11,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p7-921becc39975369d.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "62974ae61279072b6d9101318c0169338e3181276857349cb91e3678436dbfca",
+   "svgBytes": 79657,
+   "uncompressedSvgSha256": "62cd948c626697b46de7d90489a85becc6dffde86539d2d069e1a69be386a06a",
+   "uncompressedSvgBytes": 727956,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2581,
+    735
+   ],
+   "grayscale_levels": 32,
+   "paths": 121,
+   "ink_recall_within_1_5_pixels": 0.998997,
+   "ink_precision_within_1_5_pixels": 0.999434,
+   "ink_precision_within_2_pixels": 0.999673,
+   "local_contrast_edge_recall_within_2_pixels": 0.970399,
+   "ink_iou": 0.990204,
+   "transparent_fraction": 0.56749,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100
+   },
+   "tracing_revision": 1
+  },
+  "ff94a0e3be39c1e4": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 7,
+   "rect": [
+    1321.8,
+    445.68,
+    1983.43,
+    946.71
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 12,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 12,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p7-ff94a0e3be39c1e4.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "af1b6e252761ccd6fdc7723b8677e0f56a74acdae9aef6e6352dd47deed74578",
+   "svgBytes": 272730,
+   "uncompressedSvgSha256": "20bef3ddcb74abc941ff3af27aad8ca374554ecb63a117e4b58544ab4bae6cb3",
+   "uncompressedSvgBytes": 4600798,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1986,
+    1504
+   ],
+   "grayscale_levels": 256,
+   "paths": 508,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.99986,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.997372,
+   "ink_iou": 0.975332,
+   "transparent_fraction": 0.836618,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 7,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "a61efdadf1554425": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 8,
+   "rect": [
+    179.17,
+    419.47,
+    970.14,
+    853.5
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 13,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 13,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p8-a61efdadf1554425.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "1362b530b780ff3bf8b0493117b6ef0682709cd9d6475f7a1e280b08e549b36c",
+   "svgBytes": 178935,
+   "uncompressedSvgSha256": "4b12d9a7bf22e3b37ebf1e6a5ed870e46d4a44259cd3a608e551d4b487de83c1",
+   "uncompressedSvgBytes": 2499784,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2374,
+    1303
+   ],
+   "grayscale_levels": 32,
+   "paths": 61,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.98907,
+   "ink_iou": 0.96559,
+   "transparent_fraction": 0.890005,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "7c84b358fccc6c3a": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 8,
+   "rect": [
+    1185.73,
+    444.23,
+    2155.87,
+    751.55
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 14,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 14,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p8-7c84b358fccc6c3a.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "a5a41a045d55af36d007f1518650058da8dbfe258bbca838532080f4f4a01930",
+   "svgBytes": 374096,
+   "uncompressedSvgSha256": "1c77ac9ad4d7aae0c366602485376d2eb40bbd5f049ebf2bd21e23521d8e6bf8",
+   "uncompressedSvgBytes": 5190300,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2911,
+    923
+   ],
+   "grayscale_levels": 256,
+   "paths": 475,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.99998,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.997856,
+   "ink_iou": 0.978965,
+   "transparent_fraction": 0.845075,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "f7f54cbade78acd1": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 9,
+   "rect": [
+    233.17,
+    524.33,
+    890.43,
+    929.24
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 15,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 15,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p9-f7f54cbade78acd1.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "8418f7a03ce8dc87fe57bc9fe5f663d44b2ed7e1cd23d513593de8bf3e498313",
+   "svgBytes": 104568,
+   "uncompressedSvgSha256": "7e84210b872cc976531c76f5d2048b9651852448beb98113b3b3682f705a4708",
+   "uncompressedSvgBytes": 1586997,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1973,
+    1216
+   ],
+   "grayscale_levels": 32,
+   "paths": 63,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.98962,
+   "ink_iou": 0.972906,
+   "transparent_fraction": 0.914119,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 1,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "ab1ee17bb836a61d": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 9,
+   "rect": [
+    1195.01,
+    451.51,
+    2120.42,
+    700.57
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 16,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 16,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p9-ab1ee17bb836a61d.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2777,
+    748
+   ],
+   "paths": 193,
+   "ink_recall_within_1_5_pixels": 0.999102,
+   "ink_precision_within_1_5_pixels": 0.99972,
+   "ink_precision_within_2_pixels": 0.999919,
+   "local_contrast_edge_recall_within_2_pixels": 0.979572,
+   "ink_iou": 0.995183,
+   "transparent_fraction": 0.85733,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.999978,
+   "svgSha256": "18ea0335860599a8004484ef08bc32a1fa4c48dc3341d5bc914ffa9a5d1ca43c",
+   "svgBytes": 138553,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "16988e044264fad3abba42acd65fae47145d299c15c43e4fd2763c24039e1738",
+   "uncompressedSvgBytes": 865021,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.999127,
+    "ink_precision_within_1_5_pixels": 0.999655,
+    "ink_precision_within_2_pixels": 0.999852,
+    "local_contrast_edge_recall_within_2_pixels": 0.978617,
+    "ink_iou": 0.978867,
+    "small_source_components_up_to_80_pixels": 3,
+    "small_source_components_without_nearby_vector_ink": 2
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "c965d3a7622acfaa": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 10,
+   "rect": [
+    211.31,
+    415.1,
+    903.55,
+    825.83
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 17,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 17,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p10-c965d3a7622acfaa.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "e5c1a7bd4e123405df2f22b6c054ef298db12c06e68a413f353dd39739494b51",
+   "svgBytes": 85631,
+   "uncompressedSvgSha256": "caeac77d52fa8ab75b5af92fc43a3aa332c992515bbbe49348a1d0e69ad860f7",
+   "uncompressedSvgBytes": 1073772,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2078,
+    1233
+   ],
+   "grayscale_levels": 32,
+   "paths": 64,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.990411,
+   "ink_iou": 0.970134,
+   "transparent_fraction": 0.936022,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 88,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "83eb1ec8e52792f1": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 10,
+   "rect": [
+    1311.6,
+    458.79,
+    2011.12,
+    924.87
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 18,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 18,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p10-83eb1ec8e52792f1.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "e8ccd1dbb04698cf673c20c6dd07fed96e9618c7bc02a9fc04d68dbf4a839405",
+   "svgBytes": 50402,
+   "uncompressedSvgSha256": "773e4e2e3829b1d9fd0c0e1e0805e72e1e9ac1746817de50415dfb249699e6b1",
+   "uncompressedSvgBytes": 606105,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2100,
+    1399
+   ],
+   "grayscale_levels": 32,
+   "paths": 63,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 0.999934,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.987551,
+   "ink_iou": 0.980856,
+   "transparent_fraction": 0.871942,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 4,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  },
+  "f6754d400cfc297d": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 11,
+   "rect": [
+    128.25,
+    611.72,
+    1020.13,
+    1026.82
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 19,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 19,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p11-f6754d400cfc297d.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "paper_luminance": 255,
+   "source_pixels": [
+    2677,
+    1246
+   ],
+   "paths": 1465,
+   "ink_recall_within_1_5_pixels": 0.994169,
+   "ink_precision_within_1_5_pixels": 0.99836,
+   "ink_precision_within_2_pixels": 0.999245,
+   "local_contrast_edge_recall_within_2_pixels": 0.986653,
+   "ink_iou": 0.98738,
+   "transparent_fraction": 0.75761,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "normalized_edge_recall_within_2_pixels": 0.989078,
+   "svgSha256": "caaa1320bd2088d8ae4d15d7a22d3f88e5de1832189fa78e336c049ef029446d",
+   "svgBytes": 149649,
+   "paper_reference": "dominant bright neutral color along the crop perimeter",
+   "grayscale_levels": 32,
+   "uncompressedSvgSha256": "9f4626675f17708803a5aa13cc248d450408b082b8cecf2a20059f4f9789aaf1",
+   "uncompressedSvgBytes": 676862,
+   "compression": "gzip, level 9, mtime 0",
+   "generator_version": 4,
+   "tracing_method": "native-contours-fallback",
+   "tracing_revision": 2,
+   "potrace_candidate": {
+    "ink_recall_within_1_5_pixels": 0.992652,
+    "ink_precision_within_1_5_pixels": 0.998226,
+    "ink_precision_within_2_pixels": 0.99913,
+    "local_contrast_edge_recall_within_2_pixels": 0.990601,
+    "ink_iou": 0.982997,
+    "small_source_components_up_to_80_pixels": 14,
+    "small_source_components_without_nearby_vector_ink": 7
+   },
+   "fallback_reason": "Potrace candidate failed unchanged source-ink, local-edge, transparency or isolated-mark checks; previous verified contour asset retained byte-for-byte."
+  },
+  "88b6a1470b1899a0": {
+   "source": "KPhE_2023_T2c_KO.pdf",
+   "page": 11,
+   "rect": [
+    1378.64,
+    432.58,
+    1939.71,
+    1096.73
+   ],
+   "uses": [
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 20,
+     "where": "explanation"
+    },
+    {
+     "json": "2023-2-cd.json",
+     "part": "T2c",
+     "number": 20,
+     "where": "problem"
+    }
+   ],
+   "svg": "KPhE_2023_T2c_KO-p11-88b6a1470b1899a0.svgz",
+   "sourceSha256": "b60dcb951767fc0531c0b5c22705cdf647efeb082f9f664571767b29509f1720",
+   "svgSha256": "4a24a91dcc26e2580328ef6ffe7c3785ec8878e79390bb0ed4ccc5e2e57e7d29",
+   "svgBytes": 229211,
+   "uncompressedSvgSha256": "8e1a98ad4bf120a671b76d78140eea948d48cc2521dd3349f0e32e7d7b9367a7",
+   "uncompressedSvgBytes": 3332452,
+   "compression": "gzip, level 9, mtime 0",
+   "paper_luminance": 255,
+   "source_pixels": [
+    1685,
+    1994
+   ],
+   "grayscale_levels": 32,
+   "paths": 62,
+   "ink_recall_within_1_5_pixels": 1.0,
+   "ink_precision_within_1_5_pixels": 1.0,
+   "ink_precision_within_2_pixels": 1.0,
+   "local_contrast_edge_recall_within_2_pixels": 0.987716,
+   "ink_iou": 0.979063,
+   "transparent_fraction": 0.843075,
+   "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "status": "verified",
+   "generator_version": 4,
+   "tracing_revision": 2,
+   "tracing_method": "potrace-bezier",
+   "small_source_components_up_to_80_pixels": 0,
+   "small_source_components_without_nearby_vector_ink": 0,
+   "potrace": {
+    "version": "potrace 1.16. Copyright (C) 2001-2019 Peter Selinger.",
+    "binarySha256": "f1bcde040ae6576dc9c5868be7a72064957c5aea08e1dece240428319fc672a4",
+    "turdsize": 0,
+    "alphamax": 1,
+    "opticurve": true,
+    "opttolerance": 0.2,
+    "unit": 100,
+    "native_small_island_bbox_area_max_pixels": 80
+   }
+  }
+ },
+ "failures": [],
+ "potrace_fallbacks": [
+  "6be32d06d5e21dd9",
+  "473a149ba2660e62",
+  "9780867b03f5e7b3",
+  "41c94783e19a37e2",
+  "03e979a1fb799a38",
+  "0cf31a72ffa0e400",
+  "4c20db7bfac8de91",
+  "0c031c7412ab8290",
+  "3e21b93104915e41",
+  "84e3671b4749cdcc",
+  "8ccf2735804b491b",
+  "0879eb2f98febed0",
+  "0c9b3d7ba6e3cae4",
+  "0264070e1d632867",
+  "79894edc8f653224",
+  "343db3401d79c179",
+  "3813fe5cccfcc811",
+  "2f271e8411a9b898",
+  "fe7e956eb7566650",
+  "602f0007b1cf01f2",
+  "4af79247bdadd1ac",
+  "ab1ee17bb836a61d",
+  "f6754d400cfc297d"
+ ],
+ "visual_rejections": [
+  "473a149ba2660e62",
+  "41c94783e19a37e2",
+  "03e979a1fb799a38",
+  "2f271e8411a9b898",
+  "602f0007b1cf01f2",
+  "4af79247bdadd1ac"
+ ]
+}

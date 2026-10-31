@@ -1,0 +1,208 @@
+<style>h2,h3{break-after:avoid}</style>
+<h1>이론 문제 2. 단열 피스톤 (The adiabatic piston)</h1>
+<p>단열 벽으로 된 수직 실린더 안에 이상 기체로 간주하는 아르곤이 들어 있다(아르곤의 몰 질량은 $\mu=40\ \text{g/mol}$이다). 기체는 질량이 $m=0.64\ \text{kg}$인 단열 피스톤(adiabatic piston)에 의해 실린더 안에 갇혀 있다. 실린더의 안쪽 단면적은 $A=80\ \text{cm}^2$이다. 피스톤은 실린더 안에서 마찰 없이 움직일 수 있으며 기체가 새어 나가지 않게 한다. 실린더–피스톤 계를 둘러싼 공기는 모두 빼내어 진공이다. 처음에 기체의 온도는 $T_i=293\ \text{K}$이고, 피스톤이 정적 평형에 있는 높이(실린더 안 기체 기둥의 높이로 잰다)는 $y_i=1.0\ \text{m}$이다. 중력 가속도는 $g=9.81\ \text{m/s}^2$이고 이상 기체의 보편 상수는 $R=8.315\ \text{J mol}^{-1}\ \text{K}^{-1}$이다.</p>
+
+<h2>A. 처음 상태에서 기체의 상태량 [0.8 pt]</h2>
+<h3>A <span class="pt">0.8 pt</span></h3>
+<p>처음 평형 상태에서 기체의 압력과 실린더 안 아르곤의 질량에 대한 수식을 유도하고 그 수치를 계산하라.</p>
+<p><b>풀이:</b> 기체의 처음 압력은</p>
+<div><span class="pt">0.2 pt</span>\[\boxed{p_i=\frac{mg}{A}},\]</div>
+<p>이고, 그 수치는</p>
+<div><span class="pt">0.1 pt</span>\[p_i=785\ \text{Pa}\cong7.9\cdot10^2\ \text{Pa}.\]</div>
+<p>이다. 클라페롱–멘델레예프 방정식에 따르면 물질의 양은 다음과 같이 표현된다.</p>
+<div><span class="pt">0.2 pt</span>\[m_{Ar}=\frac{p_iV_i\mu}{RT_i}.\]</div>
+<p>그런데</p>
+<div><span class="pt">0.1 pt</span>\[V_i=Ay_i,\]</div>
+<p>이므로</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{m_{Ar}=\frac{mgy_i\mu}{RT_i}},\]</div>
+<p>이고, 그 수치는</p>
+<div><span class="pt">0.1 pt</span>\[m_{Ar}=1{,}03\cdot10^{-4}\ \text{kg}\cong1{,}0\cdot10^{-4}\ \text{kg}.\]</div>
+
+<h2>B. 매우 작은 섭동 [2.3 pt]</h2>
+<p>이 문제의 목적은 피스톤을 섭동시킨 뒤 기체와 피스톤에 어떤 일이 일어나는지 알아내는 것이다. 이를 위해 피스톤을 갑자기 밀어서, 피스톤의 처음 속력 $u_i$가 처음 상태에서 기체의 열속력(thermal speed) $v_{T_i}$보다 훨씬 작아 그 비를 무시할 수 있게 한다.</p>
+<h3>B1 <span class="pt">0.4 pt</span></h3>
+<p>기체의 온도 $T$가 $y$에 어떻게 의존하는지 수식으로 유도하라.</p>
+<p><b>풀이:</b></p>
+<p>생각을 정리하기 위해 피스톤이 위로 움직인다고 하자. 피스톤은 매우 느리게 움직이므로 기체의 팽창은 <i>준정적(quasistatic)</i>이며, 기체가 거치는 각 상태는 평형 상태이다. 준정적 단열 팽창에 대해서는 푸아송 방정식(Poisson equation)이 성립한다.</p>
+<div><span class="pt">0.2 pt</span>\[T_iV_i^{\gamma-1}=TV^{\gamma-1},\]</div>
+<p>또는</p>
+<div><span class="pt">0.1 pt</span>\[T_iy_i^{\gamma-1}=Ty^{\gamma-1}.\]</div>
+<p>따라서</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{T=T_i\left(\frac{y_i}{y}\right)^{2/3}},\]</div>
+<p>이다. 아르곤은 단원자 기체($\gamma=5/3$)이기 때문이다.</p>
+<p><b>참고:</b> <i>채택한 가정 아래에서 기체가 푸아송 법칙을 따른다는 것을 증명하기 위해, 피스톤의 운동 방정식과 열역학 제1법칙을 쓰자.</i></p>
+\[m\frac{du}{dt}=pA-mg=\frac{pV}{y}-mg=\frac{nRT}{y}-mg\tag*{(*)}\]
+<p><i>그리고</i></p>
+\[\frac{m}{2}\left(u^2-u_i^2\right)+nC_V(T-T_i)=-mg(y-y_i),\]
+<p><i>이를 미분하면</i></p>
+\[mudu+\frac{1}{\gamma-1}nRdT=-mgdy,\]
+<p><i>또는</i></p>
+\[m\frac{du}{dt}=-\frac{1}{\gamma-1}nR\frac{dT}{dy}-mg.\tag*{(**)}\]
+<p><i>(*)와 (**)로부터</i></p>
+\[\frac{nRT}{y}+\frac{1}{\gamma-1}nR\frac{dT}{dy}=0,\]
+<p><i>또는</i></p>
+\[(\gamma-1)\frac{dy}{y}+\frac{dT}{T}=0,\]
+<p><i>이고, 이를 적분하면</i></p>
+\[Ty^{\gamma-1}=const.\]
+
+<h3>B2 <span class="pt">1.6 pt</span></h3>
+<p>실린더 바닥을 기준으로 한 피스톤의 위치를 시간의 함수 $y(t)$로 나타내는 방정식을 유도하라.</p>
+<p><b>풀이:</b></p>
+<p>피스톤이 위로 움직인다고 생각하면, 피스톤의 운동 방정식</p>
+<div><span class="pt">0.2 pt</span>\[ma=pA-mg,\]</div>
+<p>에서</p>
+<div><span class="pt">0.1 pt</span>\[mg=p_iA\]</div>
+<p>이고, 푸아송 방정식으로부터</p>
+<div><span class="pt">0.4 pt</span>\[p=p_i\left(\frac{y_i}{y}\right)^\gamma=p_i\left(\frac{y_i}{y_i+\Delta y}\right)^\gamma=p_i\left(1+\frac{\Delta y}{y_i}\right)^{-\gamma}\cong p_i\left(1-\gamma\frac{\Delta y}{y_i}\right),\]</div>
+<p>이다. 섭동이 매우 작기 때문이다. 따라서</p>
+<div><span class="pt">0.1 pt</span>\[a=-\frac{\gamma g}{y_i}\Delta y,\]</div>
+<p>이며, 이는 피스톤의 운동이 다음 식으로 기술되는 조화 진동임을 뜻한다.</p>
+<div><span class="pt">0.2 pt</span>\[y=y_i+B\cos(\omega_0t+\varphi_0),\]</div>
+<p>여기서</p>
+<div><span class="pt">0.1 pt</span>\[\omega_0=\sqrt{\frac{\gamma g}{y_i}},\]</div>
+<p>이므로 진동수는 $f_0=\dfrac{1}{2\pi}\sqrt{\dfrac{\gamma g}{y_i}}=0.64\ \text{Hz}$이다.</p>
+<p>$B$와 $\varphi_0$를 구하려면 초기 조건을 사용해야 한다.</p>
+<div><span class="pt">2 × 0.1 pt</span>\[y(0)=y_i\quad\text{그리고}\quad u(0)=u_i\]</div>
+<p>결과는 다음과 같다.</p>
+<div><span class="pt">2 × 0.1 pt</span>\[\varphi_0=\frac{\pi}{2}\quad\text{그리고}\quad A=-\frac{u_i}{\omega_0}=-u_i\sqrt{\frac{y_i}{\gamma g}}.\]</div>
+<p class="note">(번역 주: 원문 그대로 진폭을 $A$로 표기하였으나, 이는 위 식의 $B$를 뜻한다.)</p>
+<p>따라서</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{y=y_i\left[1+\frac{u_i}{\sqrt{\gamma gy_i}}\sin\left(\sqrt{\frac{\gamma g}{y_i}}t\right)\right]}.\]</div>
+<p><b>참고:</b> 비 $\dfrac{u_i}{\sqrt{\gamma gy_i}}$는 무시할 수 없다. 왜냐하면</p>
+\[\frac{1}{\sqrt{\gamma gy_i}}\cong0.25\ \frac{\text{s}}{\text{m}}.\]
+<p>이기 때문이다.</p>
+
+<h3>B3 <span class="pt">0.3 pt</span></h3>
+<p>이 과정에서 기체의 엔트로피 변화를 계산하라.</p>
+<p><b>풀이:</b></p>
+<p>임의의 준정적 단열 과정에 대해</p>
+<div><span class="pt">0.3 pt</span>\[\boxed{\Delta S=0}.\]</div>
+
+<h2>C. 작은 섭동 [6.9 pt]</h2>
+<p>피스톤의 속력 $u$는 앞 부분의 경우보다 적어도 한 자릿수 크지만, 여전히 기체의 열속력보다는 훨씬 작다. 피스톤의 속력이 작으므로 기체 안에 난류는 없다. 또한 기체 부피 전체에서 압력이 같지 않다고 간주한다. 예를 들어 피스톤이 위로 움직이면 피스톤 바로 아래에 얇은 희박층(rarefaction thin layer)이 나타난다. 간단한 모형을 만들기 위해 기체 부피를 두 개의 유체역학적 영역으로 나눈다.</p>
+<p>– 피스톤 바로 아래에 있는 얇은 희박층으로, 다음 성질을 가진다.<br>
+&nbsp;&nbsp;▪ 그 부피$(\delta V)$는 기체 전체 부피에 비해 무시할 만하다.<br>
+&nbsp;&nbsp;▪ 층 안의 압력은 균일하지만 나머지 기체에서보다 약간 작다.<br>
+&nbsp;&nbsp;▪ 온도는 나머지 기체와 같다.<br>
+– 나머지 기체: 압력과 온도가 평형값이다.</p>
+<p>피스톤이 움직이는 동안, 그 아래의 유체역학적 층을 매개로 한 피스톤과 기체의 상호작용은 거시적인 효과를 낳는다. 즉 피스톤에 작용하는 끌림힘(drag force)이 나타난다. 이렇게 피스톤의 역학적 에너지는 열에너지로 소산되며 피스톤은 결국 멈추게 된다.</p>
+
+<h3>C1 <span class="pt">1.6 pt</span></h3>
+<p>실린더 바닥을 기준으로 잰 피스톤의 나중 위치$(y_f)$와 기체의 나중 온도$(T_f)$에 대한 식을 유도하라. $u_i=5.0\ \text{m/s}$로 놓고 그 수치를 계산하라.</p>
+<p><b>풀이:</b></p>
+<p>열역학 제1법칙은 다음 꼴이다.</p>
+<div><span class="pt">0.2 pt</span>\[\frac{m}{2}\left(u_f^2-u_i^2\right)+\Delta U=L_{ext},\]</div>
+<p>여기서</p>
+<div><span class="pt">0.1 pt</span>\[L_{ext}=-mg(y_f-y_i)\]</div>
+<p>이고</p>
+<div><span class="pt">0.3 pt</span>\[\Delta U=nC_V(T_f-T_i)=\frac32nR(T_f-T_i)=\frac32(p_fV_f-p_iV_i).\]</div>
+<p>이다. 나중 상태에서는</p>
+<div><span class="pt">0.1 pt</span>\[u_f=0\]</div>
+<p>이고</p>
+<div><span class="pt">0.1 pt</span>\[p_f=p_i=\frac{mg}{A},\]</div>
+<p>이므로</p>
+<div><span class="pt">0.2 pt</span>\[\Delta U=\frac32\frac{mg}{A}(Ay_f-Ay_i)=\frac32mg(y_f-y_i).\]</div>
+<p>결과적으로</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{y_f=y_i\left[1+\frac{u_i^2}{5gy_i}\right]}.\]</div>
+<p>수치로는</p>
+<div><span class="pt">0.1 pt</span>\[y_f=1.51\ \text{m}\cong1.5\ \text{m}.\]</div>
+<p>그런데</p>
+<div><span class="pt">0.2 pt</span>\[\frac{nRT_f}{V_f}=\frac{nRT_i}{V_i}\to T_f=T_i\frac{y_f}{y_i},\]</div>
+<p>이므로</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{T_f=T_i\left[1+\frac{u_i^2}{5gy_i}\right]}.\]</div>
+<p>수치로는</p>
+<div><span class="pt">0.1 pt</span>\[T_f=442\ \text{K}\cong440\ \text{K}.\]</div>
+
+<h3>C2 <span class="pt">0.8 pt</span></h3>
+<p>이 과정에서 엔트로피 변화 $\Delta S$를 구하고 그 수치를 계산하라.</p>
+<p><b>풀이:</b></p>
+<div><span class="pt">0.4 pt</span>\[\Delta S=nC_V\ln\frac{T_f}{T_i}+nR\ln\frac{V_f}{V_i}=\frac32nR\ln\frac{y_f}{y_i}+nR\ln\frac{y_f}{y_i}=\frac52nR\ln\frac{y_f}{y_i}.\]</div>
+<p>다음을 고려하면</p>
+<div><span class="pt">0.2 pt</span>\[nR=\frac{p_iV_i}{T_i}=\frac{\frac{mg}{A}Ay_i}{T_i}=\frac{mgy_i}{T_i}\]</div>
+<p>그리고</p>
+\[\frac{y_f}{y_i}=1+\frac{u_i^2}{5gy_i},\]
+<p>이므로</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{\Delta S=\frac52\frac{mgy_i}{T_i}\ln\left[1+\frac{u_i^2}{5gy_i}\right]}.\]</div>
+<p>수치로는</p>
+<div><span class="pt">0.1 pt</span>\[\Delta S=2.2\cdot10^{-2}\ \text{J/K}.\]</div>
+<p>강한 부등식 $u\ll v_T$는 비 $u/v_T$의 1보다 큰 정수 거듭제곱을 무시할 수 있음을 뜻한다.</p>
+
+<h3>C3 <span class="pt">1.6 pt</span></h3>
+<p>피스톤이 위로 움직이는 동안 피스톤 아래 기체층의 실제 압력 $p^*$를 구하라.</p>
+<p><b>풀이:</b></p>
+<p>구하는 압력은</p>
+<div><span class="pt">0.1 pt</span>\[p^*=\frac{\langle F\rangle}{A},\]</div>
+<p>이고, 여기서 원자들이 피스톤에 작용하는 평균 힘은</p>
+<div><span class="pt">0.1 pt</span>\[\langle F\rangle=\frac{\delta N\cdot\Delta p}{\delta t}.\]</div>
+<p>이다. 여기서 $\delta t$는 피스톤의 속력 $u$가 그 값을 유지할 정도로 매우 짧은 시간 간격이고, $\Delta p$는 원자 하나가 피스톤과 한 번 탄성 충돌하는 동안의 운동량 변화이며, $\delta N$은 위의 시간 간격 동안 피스톤과의 충돌 횟수이다.</p>
+<p>$\delta N$을 구하려면, 원자의 절반이 피스톤과 같은 방향으로 움직이고(줄의 가설, Joule’s hypothesis), 피스톤에 대한 원자의 상대 속력이 $v-u$라는 것을 고려해야 한다. 여기서 $u$와 $v$가 같은 방향이라고 가정하였다. 따라서</p>
+<div><span class="pt">0.3 pt</span>\[\delta N=\frac12\frac{N}{V}A(v-u)\delta t.\]</div>
+<p>피스톤과 충돌한 뒤 원자의 속력은</p>
+\[v'=v-2u,\]
+<p>이므로, 실린더에 대해 원자의 운동량 변화는</p>
+<div><span class="pt">0.1 pt</span>\[\Delta p=2m_0(v-u),\]</div>
+<p>이다. 여기서 $m_0$는 원자 하나의 질량이다. 이 조건에서</p>
+<div><span class="pt">0.2 pt</span>\[\begin{aligned}\langle F\rangle&amp;=\left\langle\frac12\frac{N}{V}A(v-u)2m_0(v-u)\right\rangle=m_0\frac{N}{V}A\left\langle(v-u)^2\right\rangle\\&amp;=m_0\frac{N}{V}A\left\langle v^2\left(1-\frac{u}{v}\right)^2\right\rangle\cong\\&amp;\cong m_0\frac{N}{V}A\left\langle v^2\left(1-2\frac{u}{v}\right)\right\rangle=m_0\frac{N}{V}A\left(\langle v^2\rangle-2u\langle v\rangle\right),\end{aligned}\]</div>
+<p>$\langle v^2\rangle=\dfrac{RT}{\mu}$이고 $\langle v\rangle=\sqrt{\dfrac{2RT}{\pi\mu}}$이므로</p>
+<div><span class="pt">0.2 pt</span>\[\begin{aligned}p^*&=m_0\frac{N}{V}\left(\frac{RT}{\mu}-2u\sqrt{\frac{2RT}{\pi\mu}}\right)=m_0\frac{N}{V}\frac{RT}{\mu}\left(1-2u\sqrt{\frac{2\mu}{\pi RT}}\right)\\&=\frac{m_{Ar}}{\mu}\frac{RT}{V}\left(1-2u\sqrt{\frac{2\mu}{\pi RT}}\right).\end{aligned}\]</div>
+<p>그런데</p>
+<div><span class="pt">0.5 pt</span>\[\frac{m_{Ar}}{\mu}RT=p^*\delta V+p(V-\delta V)=pV-(p-p^*)\delta V=pV-\delta p\delta V\cong pV,\]</div>
+<p>이므로</p>
+<div><span class="pt">0.1 pt</span>\[\boxed{p^*=p\left(1-2u\sqrt{\frac{2\mu}{\pi RT}}\right)=p\left(1-2\sqrt{\frac{6}{\pi}}\frac{u}{v_T}\right)}.\]</div>
+
+<p>기체와 피스톤의 동역학을 정확히 분석하려면 서로 연결된 두 비선형 미분방정식을 동시에 풀어야 하며, 이는 컴퓨터의 도움으로만 가능하다. 그러나 점근적 근사(asymptotic approximation), 즉 피스톤 운동의 마지막 단계 $y=y_f+z$, $z\ll y_f$를 분석하면 문제를 해석적으로 풀 수 있다. $y$와 $y_f$의 물리적 의미는 위와 같다. 또한 동역학의 마지막 단계에서는 $u\ll u_i$이므로 $\dfrac{mu^2}{m_{Ar}v_{Tf}^2}$을 무시할 수 있다. 처음에 $u_i\lesssim\sqrt{\dfrac{m_{Ar}}{m}}v_{T_i}$였더라도 그렇다.</p>
+
+<h3>C4 <span class="pt">2.4 pt</span></h3>
+<p>마지막 단계에서 피스톤의 운동이 감쇠 진동(oscillatory with damping)임을 증명하라. 이 진동의 유사 주기(pseudoperiod)에 대한 수식을 유도하고 그 수치를 계산하라.</p>
+<p><b>풀이:</b></p>
+<p>피스톤의 운동 방정식은</p>
+<div><span class="pt">0.2 pt</span>\[ma=p^*A-mg=\frac{p^*V}{y}-mg=\frac{m_{Ar}RT}{\mu y}\left(1-2u\sqrt{\frac{2\mu}{\pi RT}}\right)-mg,\]</div>
+<p>또는</p>
+<div><span class="pt">0.1 pt</span>\[a=\frac{m_{Ar}RT}{\mu my}\left(1-2u\sqrt{\frac{2\mu}{\pi RT}}\right)-g.\]</div>
+<p>이다. 인접한 층의 기체 압력, 따라서 피스톤에 작용하는 힘이 피스톤의 속력에 비례하는(그리고 기체 온도에도 비례하여 힘이 조금 더 복잡해지는) 끌림 성분을 가지므로 피스톤의 운동은 감쇠한다!</p>
+<p>계의 나중 상태 가까이에서 기체의 온도는 에너지 균형으로부터 구할 수 있다.</p>
+<div><span class="pt">0.1 pt</span>\[\frac{m}{2}\Big(\underbrace{u_f^2}_{=0}-u^2\Big)+nC_V(T_f-T)=-mg(y_f-y),\]</div>
+<p>또는 $C_V=3R/2$이므로</p>
+<div><span class="pt">0.2 pt</span>\[T=T_f\left(1-\frac{mu^2}{3nRT_f}-\frac{2mgz}{3nRT_f}\right)=T_f\left(1-\frac{mu^2}{m_{Ar}v_{Tf}^2}-\frac{2p_fAz}{3p_fV_f}\right).\]</div>
+<p>문제에서 말한 대로 비 $\dfrac{mu^2}{m_{Ar}v_{Tf}^2}$을 무시하면</p>
+<div><span class="pt">0.1 pt</span>\[T\cong T_f\left(1-\frac23\frac{z}{y_f}\right).\]</div>
+<p>그런데</p>
+\[\begin{aligned}u\sqrt{\frac{2\mu}{\pi RT}}&=u\sqrt{\frac{2\mu}{\pi RT_f}}\left(1-\frac23\frac{z}{y_f}\right)^{-\frac12}\cong\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\left(1+\frac13\frac{z}{y_f}\right)\\&=\sqrt{\frac6\pi}\left(\frac{u}{v_{Tf}}+\frac13\frac{u}{v_{Tf}}\frac{z}{y_f}\right)\cong\sqrt{\frac6\pi}\frac{u}{v_{Tf}},\end{aligned}\]
+<p>즉</p>
+<div><span class="pt">0.4 pt</span>\[u\sqrt{\frac{2\mu}{\pi RT}}\cong\sqrt{\frac6\pi}\frac{u}{v_{Tf}},\]</div>
+<p>이므로</p>
+<div><span class="pt">0.2 pt</span>\[\begin{aligned}a&amp;\cong\frac{m_{Ar}RT_f\left(1-\dfrac23\dfrac{z}{y_f}\right)}{\mu my_f\left(1+\dfrac{z}{y_f}\right)}\left(1-2\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\right)-g=\\&amp;=g\left(1-\frac23\frac{z}{y_f}\right)\left(1+\frac{z}{y_f}\right)^{-1}\left(1-2\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\right)-g,\end{aligned}\]</div>
+<p>또는</p>
+<div><span class="pt">0.4 pt</span>\[\begin{aligned}a&amp;\cong g\left(1-\frac23\frac{z}{y_f}\right)\left(1-\frac{z}{y_f}\right)\left(1-2\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\right)-g\cong\\&amp;\cong g\left(1-\frac53\frac{z}{y_f}\right)\left(1-2\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\right)-g\cong\\&amp;\cong g\left(1-\gamma\frac{z}{y_f}-2\sqrt{\frac6\pi}\frac{u}{v_{Tf}}\right)-g=-g\gamma\frac{z}{y_f}-2g\sqrt{\frac6\pi}\frac{u}{v_{Tf}}=-\omega_1^2z-2\delta u.\end{aligned}\]</div>
+<p>이것은 감쇠 진동자(damped oscillator)의 방정식이며, 고유 각진동수는</p>
+<div><span class="pt">0.1 pt</span>\[\omega_1=\sqrt{\frac{\gamma g}{y_f}}\]</div>
+<p>이고, 감쇠 계수(damping coefficient)는</p>
+<div><span class="pt">0.1 pt</span>\[\delta=\sqrt{\frac6\pi}\frac{g}{v_{Tf}}=g\sqrt{\frac{2\mu}{\pi RT_f}}=\sqrt{\frac{2m_{Ar}g}{\pi my_f}}.\]</div>
+<p>이다. 결론적으로, 운동의 마지막 단계에서 피스톤 진동의 고유 진동수는</p>
+\[f_1=\frac{1}{2\pi}\sqrt{\frac{\gamma g}{y_f}},\]
+<p>이고, 그 수치는</p>
+\[f_1=0.524\ \text{Hz}\cong0.52\ \text{Hz},\]
+<p>이며, 감쇠 계수의 수치는</p>
+\[\delta=2.58\cdot10^{-2}\ \text{s}^{-1}\cong2.6\cdot10^{-2}\ \text{s}^{-1}.\]
+<p>이다. 유사 각진동수(angular pseudofrequency)는</p>
+<div><span class="pt">0.2 pt</span>\[\omega_1'=\sqrt{\omega_1^2-\delta^2}=\sqrt{\frac{g}{y_f}\left(\gamma-\frac{2m_{Ar}}{\pi m}\right)},\]</div>
+<p>이므로, 유사 주기는</p>
+<div><span class="pt">0.2 pt</span>\[\boxed{T_1'=2\pi\sqrt{\frac{y_f}{g\left(\gamma-\dfrac{2m_{Ar}}{\pi m}\right)}}},\]</div>
+<p>이고, 그 수치는</p>
+<div><span class="pt">0.1 pt</span>\[T_1'=1.91\ \text{s}\cong1.9\ \text{s}.\]</div>
+
+<h3>C5 <span class="pt">0.5 pt</span></h3>
+<p>피스톤이 멈추기까지 얼마나 걸리는가? 이를 평가하기 위해 피스톤 진동의 이완 시간(relaxation time)을 나타내고, 감쇠 진동의 수명 $\tau_{tot}$의 수치를 계산하라. 수명은 이완 시간의 다섯 배로 간주한다. 또한 이 시간 동안 피스톤이 하는 진동의 횟수 $N$을 계산하라.</p>
+<p><b>풀이:</b></p>
+<div><span class="pt">0.2 pt</span>\[\boxed{\tau=\frac1\delta=\sqrt{\frac{\pi my_f}{2m_{Ar}g}}},\]</div>
+<p>이므로 진동의 수명은</p>
+<div><span class="pt">0.1 pt</span>\[\tau_{tot}=5\tau=194\ \text{s}\cong190\ \text{s}.\]</div>
+<p>이다. 진동 횟수는</p>
+<div><span class="pt">2 × 0.1 pt</span>\[N=\frac{\tau_{tot}}{T_1'}=101\cong100.\]</div>
+
+<p><b><i>참고:</i></b><br>
+<i>1. 이상 기체에서 피스톤 속도 방향으로의 기체 속력 $v$와 $v^2$의 평균값은 각각</i></p>
+\[\langle v\rangle=\sqrt{\frac{2RT}{\pi\mu}},\qquad\langle v^2\rangle=\frac{RT}{\mu}.\]
+<p><i>이다.<br>2. 필요하면 다음 근사식을 사용할 수 있다.</i></p>
+\[(1+x)^n\cong1+nx,\quad |x|\ll1\ \text{일 때}.\]
+<p style="text-align:right;margin-top:5mm">출제<br><b>Assoc. Prof. Sebastian POPESCU, PhD</b><br>Faculty of Physics, Alexandru Ioan Cuza University of Iasi, Romania</p>

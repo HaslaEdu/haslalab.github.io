@@ -1,0 +1,46 @@
+{
+  "source": "IZhO_2024_T_EN.pdf",
+  "source_sha256": "adad60cced7c5ca359544553ed41435fabc55043f2d8e165e7151f6526427865",
+  "source_edition_pages_1based": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "translation_policy": "Translate only the complete English six-page edition in the multilingual original; preserve all native equations, variables, numerical data, page geometry and original source anomalies. No editorial notes added to the PDF.",
+  "source_anomalies_kept": [
+    {
+      "page": 2,
+      "description": "The acceleration unit is printed m/c squared in the original; kept in its original native glyphs."
+    },
+    {
+      "page": 3,
+      "description": "The Earth orbital radius is printed as 1.50 x 10^8 without a length unit; native expression preserved."
+    }
+  ],
+  "bitmap_language_translation": {
+    "labels": 16,
+    "images": 4,
+    "pages": [
+      4,
+      5,
+      6
+    ],
+    "image_raw_bytes_decoded_bytes_filters_and_transforms_preserved": true,
+    "method": "PDF background restoration and Korean text overlay. Original visible feature masks are excluded from the new paint. No source image is replaced, resampled, or additionally painted.",
+    "dark_background": "Smooth local background estimated from surrounding RGB pixels; changes stay inside reviewed language regions.",
+    "font_metadata": "Bitmap labels contain no font metadata. Serif/sans family, size and baseline are measured estimates based on observed original ink and reference-family glyph metrics; matching Noto CJK serif/sans is embedded.",
+    "alignment_note": "The complete Korean Jupiter caption uses the original English caption right edge within the same language box, preserving estimated size and baseline and clearing the planet surface.",
+    "feature_masks": "Explicit conservative planet-surface bounds, neutral bright pixels covering the gray/white asteroid dots, and coloured orbit pixels. Masks deliberately retain some neighbouring non-language pixels as well.",
+    "artifact_index": "bitmap-label-review.json"
+  },
+  "reproducibility": {
+    "builder": "tools/izho_legacy_style_rebuild.py 2024 T",
+    "assembly": "pikepdf native page append; compress_streams=False",
+    "bitmap_helper": "tools/izho_bitmap_labels.py",
+    "feature_masks": "tools/izho_bitmap_features.py",
+    "review": "tools/izho_bitmap_review.py 2024 T"
+  }
+}
