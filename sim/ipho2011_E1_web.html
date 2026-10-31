@@ -885,16 +885,34 @@ function bez(P0, P1, P2, P3, n){ const out = []; for (let i = 0; i <= n; i++){ c
 const plen = pts => { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]); return s; };
 /* the things on the bench a cable has to go over: [x0, x1, z0, z1, top] */
 let OBST = [];
-/* a cable keeps out of the things on the bench and never sinks into the desk; it bends over an edge, never steps */
+/* a cable keeps out of the things on the bench and never sinks into the desk.  A point that falls inside a
+   box (with a margin for the cable's thickness) is moved by the least it takes: over the top, or out past
+   the nearest side to lie along it.  Then the line is eased so it bends round an edge instead of stepping,
+   and pushed out again, a few times over; the two ends stay where they are attached. */
+const CABLES = [];
 function avoid(pts, r){
-  const fine = [pts[0]];
-  for (let i = 1; i < pts.length; i++){ const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 0.5));
+  const step = 0.35, fine = [pts[0]];
+  for (let i = 1; i < pts.length; i++){ const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / step));
     for (let j = 1; j <= n; j++) fine.push([a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n, a[2] + (b[2] - a[2]) * j / n]); }
-  const out = fine.map(([x, y, z], i) => { if (i === 0 || i === fine.length - 1) return [x, y, z]; y = Math.max(y, r + 0.03);
-    for (const [x0, x1, z0, z1, top] of OBST) if (x > x0 - r && x < x1 + r && z > z0 - r && z < z1 + r && y < top + r) y = top + r + 0.02;
-    return [x, y, z]; });
-  for (let k = 0; k < 12; k++) for (let i = 1; i < out.length - 1; i++){ const m = 0.5 * (out[i - 1][1] + out[i + 1][1]) - 0.05; if (m > out[i][1]) out[i] = [out[i][0], m, out[i][2]]; }
-  return out;
+  const m = r + 0.3, N = fine.length;
+  const push = ([x, y, z]) => {
+    y = Math.max(y, r + 0.03);
+    for (let it = 0; it < 3; it++) for (const [x0, x1, z0, z1, top] of OBST){
+      if (!(x > x0 - m && x < x1 + m && z > z0 - m && z < z1 + m && y < top + m)) continue;
+      const opts = [[top + m - y, 0], [x - (x0 - m), 1], [(x1 + m) - x, 2], [z - (z0 - m), 3], [(z1 + m) - z, 4]];
+      opts.sort((a, b) => a[0] - b[0]); const k = opts[0][1];
+      if (k === 0) y = top + m; else if (k === 1) x = x0 - m; else if (k === 2) x = x1 + m; else if (k === 3) z = z0 - m; else z = z1 + m; }
+    return [x, y, z]; };
+  let out = fine.map((p, i) => i === 0 || i === N - 1 ? p : push(p));
+  for (let pass = 0; pass < 4; pass++){
+    for (let k = 0; k < 6; k++) for (let i = 1; i < N - 1; i++){ const a = out[i - 1], b = out[i + 1], c = out[i];
+      out[i] = [0.5 * c[0] + 0.25 * (a[0] + b[0]), Math.max(c[1], 0.5 * (a[1] + b[1]) - 0.04), 0.5 * c[2] + 0.25 * (a[2] + b[2])]; }
+    out = out.map((p, i) => i === 0 || i === N - 1 ? p : push(p)); }
+  /* last, the straight pieces between the points: halve them and keep the new points out too, so no chord cuts a corner */
+  const fin = [out[0]];
+  for (let i = 1; i < N; i++){ const a = out[i - 1], c = out[i], mid = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2];
+    fin.push(i === 1 || i === N - 1 ? mid : push(mid), c); }
+  return fin;
 }
 /* a cable of a given length from a fixed point (leaving along d0) to its end (arriving along d1): the slack hangs as a
    loop that lies on whatever is under it */
@@ -905,7 +923,7 @@ function cablePath(A, d0, B, d1, len, side){
   let nx = -(B[2] - A[2]), nz = B[0] - A[0]; const nl = Math.hypot(nx, nz) || 1; nx /= nl; nz /= nl;
   const bow = Math.min(slack * 0.3, 9) * (side || 1), drop = Math.min(slack * 0.15, 3);
   const P1 = add3(A, d0, k), P2 = add3(B, d1, -k);
-  P1[0] += nx * bow; P1[2] += nz * bow; P2[0] += nx * bow; P2[2] += nz * bow; P1[1] -= drop; P2[1] -= drop;
+  P1[0] += nx * bow * 0.3; P1[2] += nz * bow * 0.3; P2[0] += nx * bow; P2[2] += nz * bow; P1[1] -= drop; P2[1] -= drop;
   return bez(A, P1, P2, B, 30);
 }
 /* the spare length bows to whichever side keeps it lower, off the things on the bench */
@@ -914,7 +932,7 @@ function cableRoute(A, d0, B, d1, len, r){
   for (const side of [1, -1]){ const p = avoid(cablePath(A, d0, B, d1, len, side), r), h = p.reduce((s, q) => s + q[1], 0); if (h < bh){ bh = h; best = p; } }
   return best; }
 /* the cable itself: a dark ribbon as wide as the wire is on screen, with a lit stripe along it */
-function tube(pts, r, col, o){ o = o || {}; const lw = Math.max(1.4, 2 * r * CAM.k);
+function tube(pts, r, col, o){ o = o || {}; const lw = Math.max(1.4, 2 * r * CAM.k); CABLES.push(pts);
   poly3(pts, lerpC(col, "#000000", 0.30), lw + 1, {bias: o.bias || 0, cap: "butt"});
   poly3(pts, col, lw, {bias: (o.bias || 0) + 2, cap: "butt"});
   poly3(pts, lerpC(col.startsWith("#") ? col : "#888888", "#ffffff", 0.4), Math.max(0.6, lw * 0.28), {bias: (o.bias || 0) + 4, cap: "butt"});
@@ -984,6 +1002,9 @@ function carriedAt(key){
   const o = ORIGIN(key), dx = q[0] - o[0], dy = q[1] - o[1], dz = q[2] - o[2], d = Math.hypot(dx, dy, dz), R = REACH(key);
   UI.msgTaut = d > R;
   if (d > R) q = [o[0] + dx * R / d, o[1] + dy * R / d, o[2] + dz * R / d];
+  /* never inside anything: on top of whatever it is over */
+  let top = 0; for (const [x0, x1, z0, z1, h] of TOPS()) if (q[0] > x0 - 0.6 && q[0] < x1 + 0.6 && q[2] > z0 - 0.6 && q[2] < z1 + 0.6) top = Math.max(top, h);
+  q[1] = Math.max(q[1], top + lift);
   return q;
 }
 function endPos(key){
@@ -1154,6 +1175,7 @@ function capacitor(i){
 }
 
 function scene3(){
+  CABLES.length = 0;
   OBST = TOPS().concat([[TERM.JR[0] - 1, TERM.JR[0] + 1, TERM.JR[2] - 1, TERM.JR[2] + 1, POST_TOP], [TERM.JB[0] - 1, TERM.JB[0] + 1, TERM.JB[2] - 1, TERM.JB[2] + 1, POST_TOP]]);
   /* the desk (white, as in the photographs) */
   box3(-40, 110, -3, 0, -40, 60, "#d6d6d2", {noBot: true, top: "#e3e3df", id: "room"});
@@ -1224,7 +1246,6 @@ function scene3(){
   /* the battery in the hand, the terminal an end would snap to */
   if (UI.carry && UI.carry.kind === "tray" && UI.carry.item === "batt"){ const s = surfaceUnder(UI.mouse, TOPS()), q = onPlane(UI.mouse[0], UI.mouse[1], s[1] + 1.2);
     box3(q[0] - 2.4, q[0] + 2.4, q[1], q[1] + 1.75, q[2] - 1.3, q[2] + 1.3, "#141416", {top: "#2c5fb4"}); }
-  if (UI.hot){ const t = target(UI.hot); if (t) sphere3(t, 0.75, "rgba(242,193,78,0.5)"); }
 }
 
 /* ==================================================================
@@ -1270,6 +1291,12 @@ function draw3(){
   const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25");
   ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
   begin3(); scene3(); render3(ctx3);
+  /* with a lead end in the hand, every terminal it can go on is ringed in green, the one it would go on brightly */
+  if (UI.carry && UI.carry.kind === "end"){ const key = UI.carry.key, o = ORIGIN(key);
+    for (const n of targetsFor(key)){ const t = target(n); if (!t || Math.hypot(t[0] - o[0], t[1] - o[1], t[2] - o[2]) > REACH(key)) continue;
+      const s = P3(...t), near = n === UI.hot;
+      ctx3.strokeStyle = near ? "#7dff6a" : "rgba(125,255,106,0.55)"; ctx3.lineWidth = near ? 4 : 2;
+      ctx3.beginPath(); ctx3.arc(s[0], s[1], near ? 17 : 14, 0, 6.2832); ctx3.stroke(); } }
   /* a capacitor from the box, in the hand */
 }
 
