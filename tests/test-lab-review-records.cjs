@@ -149,3 +149,21 @@ test('a sitting that is still being read or graded offers cancelling, and cancel
   assert.match(confirmed,/돌려받을 수 없습니다/);assert.deepEqual(calls,['POST /lab/sessions/77/cancel']);
   assert.ok(host.innerHTML.includes('채점 취소됨'));assert.ok(!host.innerHTML.includes('id="arLabCancel"'),'a cancelled sitting offers no second cancel');
 });
+
+test('developers alone see each grading\'s AI tokens, cost and time, by step, by task and per call',async()=>{
+  const a=app('ko'),s=qualitativeSession(),host=a.host();
+  a.context.cmApi=async()=>({session:s});
+  await a.context.arLabOne(host,()=>true,s.id);
+  assert.doesNotMatch(host.innerHTML,/개발자 전용/,'a student never sees the cost section');
+  a.context.cm.me={nickname:'Admin',role:'admin'};
+  await a.context.arLabOne(host,()=>true,s.id);
+  assert.match(host.innerHTML,/개발자 전용: 이 채점의 AI 토큰 · 비용 · 시간/);
+  const calls=[{id:1,task:'T',page_id:5,step:'ocr',provider:'gemini',model:'gemini-3.5-flash-lite',in_tok:1700,cached_tok:0,out_tok:900,usd:.0028,ms:3800,ok:1},
+    {id:2,task:'T',page_id:null,step:'grade',provider:'gemini',model:'gemini-3.5-flash-lite',in_tok:22000,cached_tok:4000,out_tok:3000,usd:.0145,ms:19000,ok:1}];
+  a.context.cmApi=async(method,route)=>{assert.equal(route,'/admin/lab/77/calls');return{calls,total:{calls:2,failed:0,in_tok:23700,cached_tok:4000,out_tok:3900,usd:.0173,unknown_cost:0,ms:22800},
+    by_step:{ocr:{calls:1,failed:0,in_tok:1700,cached_tok:0,out_tok:900,usd:.0028,unknown_cost:0,ms:3800},grade:{calls:1,failed:0,in_tok:22000,cached_tok:4000,out_tok:3000,usd:.0145,unknown_cost:0,ms:19000}},
+    by_task:{T:{calls:2,failed:0,in_tok:23700,cached_tok:4000,out_tok:3900,usd:.0173,unknown_cost:0,ms:22800}}};};
+  const box={innerHTML:'',textContent:'',className:''};
+  await a.context.arLabDevCalls(box,77,'ko');
+  for(const text of ['총 비용','$0.0173','23,700 / 4,000 / 3,900','22.8 s','단계별','과제별','호출 전체 (2)','gemini:gemini-3.5-flash-lite','T · p5'])assert.ok(box.innerHTML.includes(text),text);
+});

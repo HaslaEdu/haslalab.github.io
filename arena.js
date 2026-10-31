@@ -1406,8 +1406,11 @@ async function arLabOne(root, alive, id,preloaded) {
     <div class="arpanel"><h3>${L.pages} · ${s.pages.length}</h3>${s.pages.map((p) => `<details class="arsub"><summary><b>${esc(p.task)}</b> ${p.kind === "answer" ? L.answer : L.working} #${p.no}${p.edited ? " ✎" : ""}</summary>
       ${p.ocr_status==="failed"?`<p class="arinfo bad">${esc(arVisionError(p.ocr_error||p.read?.ocr?.error)||(lang==="en"?"Reading failed. Contact the operator if it continues.":"판독에 실패했습니다. 계속 실패하면 운영자에게 알려 주세요."))}</p>`:""}
       <div style="display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:12px;margin-top:8px"><div data-img="${p.id}" style="background:#f3f4f6;border-radius:8px;min-height:120px"></div><pre class="aranswer">${esc(p.text)}</pre></div></details>`).join("") || `<p class="arempty">${T.empty}</p>`}
-      ${open ? "" : `<p style="margin:12px 0 0"><button class="cmbtn sm" id="arLabDel">${L.del}</button></p>`}</div>`;
+      ${open ? "" : `<p style="margin:12px 0 0"><button class="cmbtn sm" id="arLabDel">${L.del}</button></p>`}</div>
+    ${cm.me?.role === "admin" ? `<div class="arpanel" id="arLabDev"><details><summary style="cursor:pointer;font-weight:700">🛠 ${siteLang === "en" ? "Developers: AI tokens, cost and time of this grading" : "개발자 전용: 이 채점의 AI 토큰 · 비용 · 시간"}</summary><div data-dev class="arempty">…</div></details></div>` : ""}`;
   arMath(root);
+  const dev = root.querySelector("#arLabDev details");
+  if (dev) dev.ontoggle = () => { if (dev.open && !dev.loaded) { dev.loaded = true; arLabDevCalls(dev.querySelector("[data-dev]"), s.id, siteLang); } };
   if (comparison) window.labComparison.mount(root.querySelector('#arLabComparison'), s, lang, {base:'sim/results/',isCurrent:alive});
   const retryButton=root.querySelector("#arLabRetryOcr");
   if(retryButton&&retryOcr){
@@ -1457,12 +1460,29 @@ async function arLabOne(root, alive, id,preloaded) {
   if (del) del.onclick = async () => { if (!confirm(L.delQ)) return; try { await cmApi("DELETE", `/lab/sessions/${id}`); location.hash = "#/lab"; } catch (e) { cmToast(arErr(e)); } };
 }
 /* what grading costs, how long it takes and how right it is (admins) */
+/* developers only: every AI call a grading made, with totals by step and by task (tokens in / cached / out, cost, time) */
+async function arLabDevCalls(box, id, language) {
+  const en = language === "en", n = v => v == null ? "—" : (+v).toLocaleString(), usd = v => v == null ? "—" : "$" + (+v).toFixed(4), sec = ms => ms == null ? "—" : (ms / 1000).toFixed(1) + " s";
+  let r; try { r = await cmApi("GET", `/admin/lab/${id}/calls`); } catch (e) { box.textContent = arErr(e); return; }
+  const row = (k, x) => `<tr><td>${esc(k)}</td><td>${x.calls}${x.failed ? ` <span style="color:#c0392b">(${x.failed}✗)</span>` : ""}</td><td>${n(x.in_tok)}</td><td>${n(x.cached_tok)}</td><td>${n(x.out_tok)}</td><td>${usd(x.usd)}${x.unknown_cost ? " +?" : ""}</td><td>${sec(x.ms)}</td></tr>`;
+  const head = `<thead><tr><th></th><th>${en ? "calls" : "호출"}</th><th>${en ? "input" : "입력"}</th><th>${en ? "cached" : "캐시"}</th><th>${en ? "output" : "출력"}</th><th>${en ? "cost" : "비용"}</th><th>${en ? "time" : "시간"}</th></tr></thead>`;
+  const t = r.total;
+  box.className = "";
+  box.innerHTML = `<div class="arstats"><div><small>${en ? "Total cost" : "총 비용"}</small><b>${usd(t.usd)}</b></div><div><small>${en ? "Tokens in / cached / out" : "토큰 입력 / 캐시 / 출력"}</small><b>${n(t.in_tok)} / ${n(t.cached_tok)} / ${n(t.out_tok)}</b></div>
+      <div><small>${en ? "AI calls" : "AI 호출"}</small><b>${t.calls}${t.failed ? ` (${t.failed}✗)` : ""}</b></div><div><small>${en ? "AI time (sum)" : "AI 시간 (합계)"}</small><b>${sec(t.ms)}</b></div></div>
+    <h4 class="arh4">${en ? "By step" : "단계별"}</h4><table class="cmtbl artbl">${head}<tbody>${Object.entries(r.by_step).map(([k, x]) => row(k, x)).join("")}</tbody></table>
+    <h4 class="arh4">${en ? "By task" : "과제별"}</h4><table class="cmtbl artbl">${head}<tbody>${Object.entries(r.by_task).map(([k, x]) => row(k, x)).join("")}</tbody></table>
+    <details class="arsub"><summary>${en ? "Every call" : "호출 전체"} (${r.calls.length})</summary><table class="cmtbl artbl"><thead><tr><th>#</th><th>${en ? "step" : "단계"}</th><th>${en ? "task" : "과제"}</th><th>model</th><th>${en ? "in / cached / out" : "입력 / 캐시 / 출력"}</th><th>${en ? "cost" : "비용"}</th><th>${en ? "time" : "시간"}</th></tr></thead><tbody>
+      ${r.calls.map(c => `<tr${c.ok ? "" : ' style="color:#c0392b"'}><td>${c.id}</td><td>${esc(c.step)}</td><td>${esc(c.task || "")}${c.page_id ? " · p" + c.page_id : ""}</td><td>${esc(c.provider)}:${esc(c.model || "")}</td><td>${n(c.in_tok)} / ${n(c.cached_tok)} / ${n(c.out_tok)}</td><td>${usd(c.usd)}</td><td>${sec(c.ms)}${c.error ? " · " + esc(c.error) : ""}</td></tr>`).join("")}</tbody></table></details>`;
+}
 function arLabMetrics(m) {
   const L = lbt(), e = m.per_exam, n = (v, d) => v == null ? "—" : (+v).toLocaleString(undefined, {maximumFractionDigits: d ?? 0}), usd = (v) => v == null ? "—" : "$" + (+v).toFixed(4);
   const a = m.accuracy, st = m.storage || {};
   return `<h4 class="arh4">${L.mH} <small style="font-weight:400;color:var(--graphite)">${L.mDays}</small></h4>
     ${e.n ? `<div class="arstats"><div><small>${L.mExam} · ${L.mUsd}</small><b>${usd(e.avg_usd)}</b></div><div><small>${L.mTok}</small><b>${n(e.avg_in_tok)} / ${n(e.avg_out_tok)}</b></div>
       <div><small>${L.mCalls}</small><b>${n(e.avg_calls, 1)}</b></div><div><small>${L.mTime}</small><b>${e.avg_grade_ms == null ? "—" : n(e.avg_grade_ms / 1000, 1) + " s"}</b></div><div><small>${L.mWait}</small><b>${e.avg_wait_s == null ? "—" : n(e.avg_wait_s) + " s"}</b></div></div>` : `<p class="arempty">${L.mNone}</p>`}
+    ${m.providers && Object.keys(m.providers).length ? `<table class="cmtbl artbl" style="margin-top:8px"><thead><tr><th>${lang === "en" ? "provider" : "제공자"}</th><th>n</th><th>${lang === "en" ? "mean" : "평균"}</th><th>${lang === "en" ? "median" : "중앙값"}</th><th>p90</th><th>max</th><th>${lang === "en" ? "per page" : "쪽당"}</th><th>${lang === "en" ? "tokens in / out" : "토큰 입력 / 출력"}</th><th>${L.mWait}</th></tr></thead><tbody>
+      ${Object.entries(m.providers).map(([p, x]) => `<tr><td>${esc(p)}</td><td>${x.n}</td><td>${usd(x.mean_usd)}</td><td>${usd(x.median_usd)}</td><td>${usd(x.p90_usd)}</td><td>${usd(x.max_usd)}</td><td>${usd(x.usd_per_page)}</td><td>${n(x.mean_in_tok)} / ${n(x.mean_out_tok)}</td><td>${x.mean_wait_s == null ? "—" : n(x.mean_wait_s) + " s"}</td></tr>`).join("")}</tbody></table>` : ""}
     ${m.steps.length ? `<details class="arsub"><summary>${L.mStep}</summary><table class="cmtbl artbl"><thead><tr><th>step</th><th>model</th><th>n</th><th>in / out / cached</th><th>${L.mUsd}</th><th>ms</th></tr></thead><tbody>
       ${m.steps.map((x) => `<tr><td>${esc(x.step)}</td><td>${esc(x.provider)}:${esc(x.model || "")}</td><td>${x.n}${x.failed ? ` <span style="color:#c0392b">(${x.failed}✗)</span>` : ""}</td><td>${n(x.in_tok)} / ${n(x.out_tok)} / ${n(x.cached_tok)}${x.pages ? ` · ${x.pages}p` : ""}</td><td>${usd(x.usd)}</td><td>${n(x.avg_ms)}</td></tr>`).join("")}</tbody></table></details>` : ""}
     ${m.sessions.length ? `<details class="arsub"><summary>${L.mRecent} (${m.sessions.length})</summary><table class="cmtbl artbl"><tbody>${m.sessions.slice(0, 30).map((x) => `<tr><td><a href="#/lab/${x.id}">#${x.id}</a> ${esc(x.exam_key)}</td><td>${esc(x.status)}${x.score != null ? ` · ${x.score}/${x.points}` : ""}</td><td>${x.pages}p · ${x.calls || 0} calls</td><td>${usd(x.usd)}</td><td>${x.grade_ms == null ? "—" : n(x.grade_ms / 1000, 1) + " s"}</td></tr>`).join("")}</tbody></table></details>` : ""}

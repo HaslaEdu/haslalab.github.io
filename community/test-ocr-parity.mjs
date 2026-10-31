@@ -287,6 +287,11 @@ test("real admin metrics keep incomplete totals null while exposing known costs 
   assert.ok(step); assert.equal(step.n,2); assert.equal(step.failed,1); assert.equal(step.usd,null); assert.equal(step.known_usd,0.00234); assert.equal(step.unknown_cost_calls,1);
   assert.equal(step.cache_hit_calls,1); assert.equal(step.unknown_cache_calls,1);
   assert.ok(sitting); assert.equal(sitting.calls,2); assert.equal(sitting.usd,null); assert.equal(sitting.known_usd,0.00234); assert.equal(sitting.unknown_cost_calls,1);
+  const own=await api(`/admin/lab/${s.id}/calls`,{headers:{Authorization:"Bearer "+admin.token}});
+  assert.equal(own.status,200); assert.equal(own.data.calls.length,2); assert.equal(own.data.total.calls,2); assert.equal(own.data.total.failed,1);
+  assert.equal(own.data.total.usd,0.00234); assert.equal(own.data.total.unknown_cost,1); assert.equal(own.data.total.in_tok,1000); assert.equal(own.data.total.ms,50);
+  assert.equal(own.data.by_step.grade.calls,2); assert.equal(own.data.by_task.E1.out_tok,100);
+  assert.equal((await api(`/admin/lab/${s.id}/calls`,{headers:{Authorization:"Bearer "+s.token}})).status,403,"developers only");
   assert.equal(captures.length,0,"reading administrator metrics cannot call any provider");
 });
 
